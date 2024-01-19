@@ -1,85 +1,140 @@
-Received: from mail-4322.protonmail.ch (mail-4322.protonmail.ch [185.70.43.22])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 884F83C463;
-	Fri, 19 Jan 2024 09:43:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D87625772;
+	Fri, 19 Jan 2024 09:48:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705657429; cv=none; b=SDG+Rinvsvm2zJSBFtMqs6BRH/uu+ZmKvXuOn2IKapCPzxJdSfhWDRBvyZ8q0jeYuAFJYmntF9WaJbPDRAVsX9wLsLUlE/syOnwKerBsSQUiOGWqlLLkeYjAbCyiNfM9RJYJ8vXFe2VSyxxVgvB8nwY8fEJmycqKElR8FeFfxX4=
+	t=1705657734; cv=none; b=l1Q5R57bmWsbf7GLWNYVqZgbob3HY4fkGYsu2VFFnz8prjJDipqXOva3k1elv/dqRu2a8fxf3IjW4LUzJqvt+oJyzqJ9/ibJJWwQ37lUcP6wkJUdu42xje/c8kF4AoyjAXBTQAKR4MhjTmEbLXfpIhiZpZzgybqt7XhNweNmUd0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705657429; c=relaxed/simple;
-	bh=tG2zsCK8yQbCDBC3gzpjutSRIN2h2t3FmjArqi3HUsA=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qqf120H/RJtfrUaJ6l9NDkmdb04jPXb8mY8bdkpgIN+sgKuz0TjR8mR8OIAZOFra4Nhp8Ap90CYPL7n0DxIvbNK1S8XyqQrEZzH7COQGnrY82wyzNTjtAX63DWDlTNfMOa8Z2G7YJCsaIxgmbiVIEQ9dRBoJn99dM1Ez/EdZM10=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=TYzO3Kv3; arc=none smtp.client-ip=185.70.43.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+	s=arc-20240116; t=1705657734; c=relaxed/simple;
+	bh=qHqcD1XjlCcztEDcxsidNeeRlVSfFXwOAuGVi+/+A+o=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=k0KklHxkIM6lmUnTGcpiaZijujBK5vz7pgo5XRNT6fOw0AQKVGy4CMyave3XfevxddNIKNHOBny5yVQGsGLXG2B6MuCdx+hwBdU404dlMjKmz5Vk2NV2Ik7JeAenTUGy5XA5QGKPa7otunEYGZtDNgyWbEz98xqDPcWbP9UqX5c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=QZjAvf+j; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="TYzO3Kv3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=plqhpujkl5dg7mbbrfxmygange.protonmail; t=1705657418; x=1705916618;
-	bh=+LdiskQeHEZLdxUpn/S/pubmhIJOcYkLCINwk9ZEXhs=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=TYzO3Kv3NP/nXCpS9KlHhzYw6dzOjNA9WCqWMCaf5s5TZI4X9gF8CoshCPEzWGb2V
-	 Jw5CAxiB2CH0mQcsY6b6qehsWqgG/nc2AiC1LtSYGgstutdQpD5vPVE2i66PNAVCcT
-	 mGlQ0CwXXmzR1kUCg4CCaRL5LANeLg7TNEPsUt97XUIwr3fAASwnHkC78D2v8BbTwY
-	 22TBc1ACbb33Z6tDY59Y4hJlkaNQi9f+GZ2r2cTZVDmbhZlswHOvDsTbgjyhw8cEdk
-	 0V3v6zPEix1/sDRey8BIe+KlDmpFJeupanjDH4vpl6DKxg/LS0LQwLvXm7HM5SUwfx
-	 eJ3thEiUyWzfA==
-Date: Fri, 19 Jan 2024 09:43:23 +0000
-To: Alice Ryhl <aliceryhl@google.com>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@samsung.com>, Peter Zijlstra <peterz@infradead.org>, Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, =?utf-8?Q?Arve_Hj=C3=B8nnev=C3=A5g?= <arve@android.com>, Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>, Joel Fernandes <joel@joelfernandes.org>, Carlos Llamas <cmllamas@google.com>, Suren Baghdasaryan <surenb@google.com>
-From: Benno Lossin <benno.lossin@proton.me>
-Cc: Dan Williams <dan.j.williams@intel.com>, Kees Cook <keescook@chromium.org>, Matthew Wilcox <willy@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Daniel Xu <dxu@dxuuu.xyz>, linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v3 4/9] rust: types: add `NotThreadSafe`
-Message-ID: <a8caa050-4296-4b3f-aded-ef41bdf7972d@proton.me>
-In-Reply-To: <20240118-alice-file-v3-4-9694b6f9580c@google.com>
-References: <20240118-alice-file-v3-0-9694b6f9580c@google.com> <20240118-alice-file-v3-4-9694b6f9580c@google.com>
-Feedback-ID: 71780778:user:proton
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="QZjAvf+j"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40J8gi3f021328;
+	Fri, 19 Jan 2024 09:48:49 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:to:cc:subject:date:message-id:mime-version:content-type; s=
+	qcppdkim1; bh=GezNeHHYLAtAJNmL7Tj8YSoACy84Zqr//JdvOEMbiDI=; b=QZ
+	jAvf+jlL1wlwp8xin5I1smDsJF5enh9LzHO0dePRQMvVxWZhlvVgUR1soxtAzOI/
+	Yb3WdiBKz6ejr8zeixWyGsUSjymdrTdX7PV7fGQiEwgFkdPvbvywRF+uTKjb9doJ
+	9bF+7w71VfCSXIl74P+qGV7XCVqoy1de5aopbs4O4/zzuTqx9Gk0ErnEsFVVWXsm
+	eiH5vHaXB5VRvbiYS6a212BDOUr/6jfNkCwqlydm8wyauHdv50yWAkkTdB2rLuhU
+	SpA5ZO2heqVVTtCLY4lltF6QPGBD6KDfYrhvOP4iCSjgFcL6rkpQ7ECwnz+bGbT9
+	QDhrONVDXxu0GXHVxbBQ==
+Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vqn89g6f5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 19 Jan 2024 09:48:48 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 40J9ml3G028367
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 19 Jan 2024 09:48:47 GMT
+Received: from hu-uaggarwa-hyd.qualcomm.com (10.80.80.8) by
+ nasanex01a.na.qualcomm.com (10.52.223.231) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Fri, 19 Jan 2024 01:48:45 -0800
+From: Uttkarsh Aggarwal <quic_uaggarwa@quicinc.com>
+To: Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
+        Greg Kroah-Hartman
+	<gregkh@linuxfoundation.org>
+CC: <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
+        "Uttkarsh
+ Aggarwal" <quic_uaggarwa@quicinc.com>,
+        <stable@vger.kernel.org>
+Subject: [PATCH v3] usb: dwc3: gadget: Fix NULL pointer dereference in dwc3_gadget_suspend
+Date: Fri, 19 Jan 2024 15:18:25 +0530
+Message-ID: <20240119094825.26530-1-quic_uaggarwa@quicinc.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: kmENgVCmMH71Onh7VV_fAZtBusRnAycv
+X-Proofpoint-ORIG-GUID: kmENgVCmMH71Onh7VV_fAZtBusRnAycv
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-01-19_04,2024-01-19_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=900 clxscore=1011
+ suspectscore=0 phishscore=0 priorityscore=1501 lowpriorityscore=0
+ mlxscore=0 malwarescore=0 impostorscore=0 adultscore=0 bulkscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2311290000 definitions=main-2401190042
 
-On 1/18/24 15:36, Alice Ryhl wrote:
-> This introduces a new marker type for types that shouldn't be thread
-> safe. By adding a field of this type to a struct, it becomes non-Send
-> and non-Sync, which means that it cannot be accessed in any way from
-> threads other than the one it was created on.
->=20
-> This is useful for APIs that require globals such as `current` to remain
-> constant while the value exists.
->=20
-> We update two existing users in the Kernel to use this helper:
->=20
->  * `Task::current()` - moving the return type of this value to a
->    different thread would not be safe as you can no longer be guaranteed
->    that the `current` pointer remains valid.
->  * Lock guards. Mutexes and spinlocks should be unlocked on the same
->    thread as where they were locked, so we enforce this using the Send
->    trait.
->=20
-> There are also additional users in later patches of this patchset. See
-> [1] and [2] for the discussion that led to the introducion of this
-> patch.
->=20
-> Link: https://lore.kernel.org/all/nFDPJFnzE9Q5cqY7FwSMByRH2OAn_BpI4H53NQf=
-WIlN6I2qfmAqnkp2wRqn0XjMO65OyZY4h6P4K2nAGKJpAOSzksYXaiAK_FoH_8QbgBI4=3D@pro=
-ton.me/ [1]
-> Link: https://lore.kernel.org/all/nFDPJFnzE9Q5cqY7FwSMByRH2OAn_BpI4H53NQf=
-WIlN6I2qfmAqnkp2wRqn0XjMO65OyZY4h6P4K2nAGKJpAOSzksYXaiAK_FoH_8QbgBI4=3D@pro=
-ton.me/ [2]
-> Suggested-by: Benno Lossin <benno.lossin@proton.me>
-> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+In current scenario if Plug-out and Plug-In performed continuously
+there could be a chance while checking for dwc->gadget_driver in
+dwc3_gadget_suspend, a NULL pointer dereference may occur.
 
-Reviewed-by: Benno Lossin <benno.lossin@proton.me>
+Call Stack:
 
---=20
-Cheers,
-Benno
+	CPU1:                           CPU2:
+	gadget_unbind_driver            dwc3_suspend_common
+	dwc3_gadget_stop                dwc3_gadget_suspend
+                                        dwc3_disconnect_gadget
+
+CPU1 basically clears the variable and CPU2 checks the variable.
+Consider CPU1 is running and right before gadget_driver is cleared
+and in parallel CPU2 executes dwc3_gadget_suspend where it finds
+dwc->gadget_driver which is not NULL and resumes execution and then
+CPU1 completes execution. CPU2 executes dwc3_disconnect_gadget where
+it checks dwc->gadget_driver is already NULL because of which the
+NULL pointer deference occur.
+
+Cc: <stable@vger.kernel.org>
+Fixes: 9772b47a4c29 ("usb: dwc3: gadget: Fix suspend/resume during device mode")
+Acked-by: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+Signed-off-by: Uttkarsh Aggarwal <quic_uaggarwa@quicinc.com>
+---
+
+changes in v3:
+Corrected fixes tag and typo mistake in commit message dw3_gadget_stop -> dwc3_gadget_stop.
+
+Link to v2:
+https://lore.kernel.org/linux-usb/CAKzKK0r8RUqgXy1o5dndU21KuTKtyZ5rn5Fb9sZqTPZqAjT_9A@mail.gmail.com/T/#t
+
+Changes in v2:
+Added cc and fixes tag missing in v1.
+
+Link to v1:
+https://lore.kernel.org/linux-usb/20240110095532.4776-1-quic_uaggarwa@quicinc.com/T/#u
+
+ drivers/usb/dwc3/gadget.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
+index 019368f8e9c4..564976b3e2b9 100644
+--- a/drivers/usb/dwc3/gadget.c
++++ b/drivers/usb/dwc3/gadget.c
+@@ -4709,15 +4709,13 @@ int dwc3_gadget_suspend(struct dwc3 *dwc)
+ 	unsigned long flags;
+ 	int ret;
+ 
+-	if (!dwc->gadget_driver)
+-		return 0;
+-
+ 	ret = dwc3_gadget_soft_disconnect(dwc);
+ 	if (ret)
+ 		goto err;
+ 
+ 	spin_lock_irqsave(&dwc->lock, flags);
+-	dwc3_disconnect_gadget(dwc);
++	if (dwc->gadget_driver)
++		dwc3_disconnect_gadget(dwc);
+ 	spin_unlock_irqrestore(&dwc->lock, flags);
+ 
+ 	return 0;
+-- 
+2.17.1
 
