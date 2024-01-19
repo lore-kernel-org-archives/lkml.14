@@ -1,72 +1,65 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 435A7A21
-	for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 17:06:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECDC71C15;
+	Fri, 19 Jan 2024 17:07:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705683979; cv=none; b=JNE05fafemZKSGdaIV0HBK0L6L9ebRqvR94KQrMPxok3ShUTrExQ5uhRzJf74VFCTyz0do9SHV0Yp8wxzaxQhCAdidvhXs7fknGMa4ma5RaiMGvMimqzTeU6U6VFXxy9gGotdCFj0fLRADyLmtVTnjIlK0x5gW8Lyq2ucKW5Ps8=
+	t=1705684044; cv=none; b=FtZvH6iHR3YOpQza/QwPnTeO4UVqGixlFMuMdg8IolItQ5/ammqgb9/YMMUVvcmBAdr1aeMR2wZ6JBuBFsQSl0rsXpUjeju/IuHw3KIKWSqTib96twoA6lbIeAZiVFoflK/rGRW7Vz2fbRQdb7QqC+74kCDnMOndOtqsmPkDsEQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705683979; c=relaxed/simple;
-	bh=WwTWLHApJpL7oFB6z/WTaZRjRBFj9Gbq/YQh1U69I3I=;
+	s=arc-20240116; t=1705684044; c=relaxed/simple;
+	bh=UQKvrlIh2v6bhtJDIP6agbk3s+La60WIG/t2aFDjulQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZNXhPBTeR7csl7DqVdRhAHUC/sL4NUBtpWebs16gD4TlIleQHauSG2pujGh4u7zwOa9n/6wxFRY21h7iQpHDcKYe+XRaKIb/9wGU+LobFmJTA+8I4JD2coku1/qe9Xrl7zl3s120aFh/l+g3GC6pVh8wYZPGV5MWp/Mrw4oAw1s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=N4ykK8c4; arc=none smtp.client-ip=209.85.210.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=reMg+SkULaf4GAq2WN8B3qTOlca5mzG4RZ/9XqzX5E/5NSPA5Iu5wDUbA0wnEQeuOX4PaNBGs9mbtECwy9+7YCMl12pvxdX7YVUSKOC8ecFJuTBZ7apMz4/ToIRPBT3GaXzEZbq+EwWsXuzhVSYS6LSYIL9Bdu33Ck7cczD97OY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=I8kUq447; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="N4ykK8c4"
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-6d9bba6d773so938836b3a.1
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 09:06:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1705683977; x=1706288777; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=5pm5/KO3I3N/k8NKEcPj3kZdPyGnTD0Pk/IAEXHv4ns=;
-        b=N4ykK8c47VkYVafLA06Xx8ICnMKpfwR8CB19WJwSud6zCMpiVu/Z53ciS6qebzcn5q
-         mpk4tGlksKT7FipKENGPrlJGzkk/10ogUPxtgbEaPZxJmlr2klILn8FSEJzk8E9pbVo4
-         uGvffFVwZZ/hRIpjHIIWZ04sbbEJTj0UaaDHXsivsI25Nb+HKDk3IUuvixqJm6vl2yqd
-         VqLGYetQmH9H+SZ65F5/7xS0B8/WSIwBa8GsbJ/o35JyCKgfSniN7jJLrqE7ZkHLAoRY
-         aSdhpfY2WzHuf7P4Hw6DKpt8zFzPtg++2+yW0gOi9aeoQffBH+LdHzLUPlukAP9Bxwue
-         NK0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705683977; x=1706288777;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5pm5/KO3I3N/k8NKEcPj3kZdPyGnTD0Pk/IAEXHv4ns=;
-        b=UsiXL1Ha1kZRBXmjV8z9QTnIF1SrV7TiCiLMDrMPDDD0U6S7oa+ab57luuOLGmCyq6
-         vmphBTg5+lPEG8MQZgs/Yi/nXTapWkvoJnaEYOi44a0OsKGChUNOx7DLrxZJbMpa5piP
-         HKx54qRIbWtml6meyOGL9ACnrb4bQgbYv4pVOVwLmaL23xwydSex2+S0EqClNqxu/+J0
-         WH8umecEKDKIHL80yTKb0xHhEvn86oMsnRBO9+Q4BongURj5nl3XNpS/0fPhh+wJKZWH
-         rh4ZwWqR6tBLz2+viM8XU0Bq4OR6S9Jihj2I5C7d4clw+l2rdiY3vAnouxfEQgoWsOMy
-         McYg==
-X-Gm-Message-State: AOJu0Yzqag3jHknFrmVmNB4ntG7LtibeqZsJZZZ2MrXms6tOVzx1Ur+l
-	TtZ3PqeFjLsocqhPH377yFfzrRsQUInwnxvBKi5rN0CBIWh2tDflzCQrmAl4GA==
-X-Google-Smtp-Source: AGHT+IG3DzZgz1H4wFkqomGjQMHbhrs1iJKKi0BvCCS6dCcddik8WAc9qVLtoSuQ9tNE3iNQihXSlQ==
-X-Received: by 2002:a05:6a20:6da2:b0:19b:1edc:ded6 with SMTP id gl34-20020a056a206da200b0019b1edcded6mr118656pzb.85.1705683977538;
-        Fri, 19 Jan 2024 09:06:17 -0800 (PST)
-Received: from google.com (77.62.105.34.bc.googleusercontent.com. [34.105.62.77])
-        by smtp.gmail.com with ESMTPSA id f1-20020a63dc41000000b005c6617b52e6sm3767308pgj.5.2024.01.19.09.06.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Jan 2024 09:06:17 -0800 (PST)
-Date: Fri, 19 Jan 2024 17:06:13 +0000
-From: Carlos Llamas <cmllamas@google.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
-	Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Christian Brauner <brauner@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Brian Swetland <swetland@google.com>, linux-kernel@vger.kernel.org,
-	kernel-team@android.com, Alice Ryhl <aliceryhl@google.com>,
-	Greg Kroah-Hartman <gregkh@suse.de>, stable@vger.kernel.org
-Subject: Re: [PATCH v2 03/28] binder: fix race between mmput() and do_exit()
-Message-ID: <ZaqsBTQ1x5lQG9Rq@google.com>
-References: <20231201172212.1813387-1-cmllamas@google.com>
- <20231201172212.1813387-4-cmllamas@google.com>
- <Zal8A95q3jVl4nu5@google.com>
- <2024011935-placidly-justifier-4338@gregkh>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="I8kUq447"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1705684043; x=1737220043;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=UQKvrlIh2v6bhtJDIP6agbk3s+La60WIG/t2aFDjulQ=;
+  b=I8kUq447/ZGNB+MbHlG/NzbqEpBXCLiWvIHtLgWOJXrYaV+wAq0rAKxM
+   Vf5LKCyhuzKpw4bdVWwPFVnt2GLlv5Efq4USEsiL9q0QT+O7r1CuFBbdx
+   vSocu+ypqQfAkFbqwj/ET/nuNaBLD+p1i9rWGpyYqz6Z6iw2aK8jSgvJT
+   x4YXeD+IdE6RqZn4d0Xro41oImVgbS9/rrlxs/ZAaPVtWapFtoZloHFaA
+   qJ2z4CeHplcIWGFoEu+sQFGpGObIv/ItgopDvDiWzU1dcO5iD5d7YMRGO
+   WFurlR0USGX8tClHLz9+AemC9IudCXlOEFpM11CGqeQPPlMMkBao0nvwD
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10957"; a="14314026"
+X-IronPort-AV: E=Sophos;i="6.05,204,1701158400"; 
+   d="scan'208";a="14314026"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jan 2024 09:05:18 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,204,1701158400"; 
+   d="scan'208";a="19446853"
+Received: from lkp-server01.sh.intel.com (HELO 961aaaa5b03c) ([10.239.97.150])
+  by fmviesa002.fm.intel.com with ESMTP; 19 Jan 2024 09:05:10 -0800
+Received: from kbuild by 961aaaa5b03c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rQsIm-0004Hs-0L;
+	Fri, 19 Jan 2024 17:05:08 +0000
+Date: Sat, 20 Jan 2024 01:04:43 +0800
+From: kernel test robot <lkp@intel.com>
+To: Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>, 675146817@qq.com,
+	story_19872006@126.com, herbert@gondor.apana.org.au,
+	davem@davemloft.net, linux-crypto@vger.kernel.org,
+	linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
+	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+	hpa@zytor.com, seanjc@google.com, kim.phillips@amd.com,
+	kirill.shutemov@linux.intel.com, jmattson@google.com,
+	babu.moger@amd.com, kai.huang@intel.com, acme@redhat.com,
+	aik@amd.com, namhyung@kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, CobeChen@zhaoxin.com, TimGuo@zhaoxin.com,
+	LeoLiu-oc@zhaoxin.com, GeorgeXue@zhaoxin.com
+Subject: Re: [PATCH 3/3] crypto: Zhaoxin: Hardware Engine Driver for
+ SHA1/256/384/512
+Message-ID: <202401200020.g4KDJOTm-lkp@intel.com>
+References: <20240116063549.3016-4-TonyWWang-oc@zhaoxin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,66 +68,46 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2024011935-placidly-justifier-4338@gregkh>
+In-Reply-To: <20240116063549.3016-4-TonyWWang-oc@zhaoxin.com>
 
-On Fri, Jan 19, 2024 at 06:48:43AM +0100, Greg Kroah-Hartman wrote:
-> On Thu, Jan 18, 2024 at 07:29:07PM +0000, Carlos Llamas wrote:
-> > On Fri, Dec 01, 2023 at 05:21:32PM +0000, Carlos Llamas wrote:
-> > > Task A calls binder_update_page_range() to allocate and insert pages on
-> > > a remote address space from Task B. For this, Task A pins the remote mm
-> > > via mmget_not_zero() first. This can race with Task B do_exit() and the
-> > > final mmput() refcount decrement will come from Task A.
-> > > 
-> > >   Task A            | Task B
-> > >   ------------------+------------------
-> > >   mmget_not_zero()  |
-> > >                     |  do_exit()
-> > >                     |    exit_mm()
-> > >                     |      mmput()
-> > >   mmput()           |
-> > >     exit_mmap()     |
-> > >       remove_vma()  |
-> > >         fput()      |
-> > > 
-> > > In this case, the work of ____fput() from Task B is queued up in Task A
-> > > as TWA_RESUME. So in theory, Task A returns to userspace and the cleanup
-> > > work gets executed. However, Task A instead sleep, waiting for a reply
-> > > from Task B that never comes (it's dead).
-> > > 
-> > > This means the binder_deferred_release() is blocked until an unrelated
-> > > binder event forces Task A to go back to userspace. All the associated
-> > > death notifications will also be delayed until then.
-> > > 
-> > > In order to fix this use mmput_async() that will schedule the work in
-> > > the corresponding mm->async_put_work WQ instead of Task A.
-> > > 
-> > > Fixes: 457b9a6f09f0 ("Staging: android: add binder driver")
-> > > Reviewed-by: Alice Ryhl <aliceryhl@google.com>
-> > > Signed-off-by: Carlos Llamas <cmllamas@google.com>
-> > > ---
-> > 
-> > Sorry, I forgot to Cc: stable@vger.kernel.org.
-> 
-> <formletter>
-> 
-> This is not the correct way to submit patches for inclusion in the
-> stable kernel tree.  Please read:
->     https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html
-> for how to do this properly.
-> 
-> </formletter>
+Hi Tony,
 
-Oops, here is the complete info:
+kernel test robot noticed the following build errors:
 
-Commit ID: 9a9ab0d963621d9d12199df9817e66982582d5a5
-Subject:   "binder: fix race between mmput() and do_exit()"
-Reason:    Fixes a race condition in binder.
-Versions:  v4.19+
+[auto build test ERROR on herbert-cryptodev-2.6/master]
+[also build test ERROR on tip/x86/core linus/master v6.7 next-20240119]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Note this will have a trivial conflict in v4.19 and v5.10 kernels as
-commit d8ed45c5dcd4 is not there. Please let me know if I should send
-those patches separately.
+url:    https://github.com/intel-lab-lkp/linux/commits/Tony-W-Wang-oc/crypto-padlock-sha-Matches-CPU-with-Family-with-6-explicitly/20240116-144827
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/herbert/cryptodev-2.6.git master
+patch link:    https://lore.kernel.org/r/20240116063549.3016-4-TonyWWang-oc%40zhaoxin.com
+patch subject: [PATCH 3/3] crypto: Zhaoxin: Hardware Engine Driver for SHA1/256/384/512
+config: loongarch-allyesconfig (https://download.01.org/0day-ci/archive/20240120/202401200020.g4KDJOTm-lkp@intel.com/config)
+compiler: loongarch64-linux-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240120/202401200020.g4KDJOTm-lkp@intel.com/reproduce)
 
-Thanks,
---
-Carlos Llamas
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202401200020.g4KDJOTm-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+>> drivers/crypto/zhaoxin-sha.c:20:10: fatal error: asm/cpu_device_id.h: No such file or directory
+      20 | #include <asm/cpu_device_id.h>
+         |          ^~~~~~~~~~~~~~~~~~~~~
+   compilation terminated.
+
+
+vim +20 drivers/crypto/zhaoxin-sha.c
+
+  > 20	#include <asm/cpu_device_id.h>
+    21	#include <asm/fpu/api.h>
+    22	#include "zhaoxin-sha.h"
+    23	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
