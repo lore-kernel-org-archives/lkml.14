@@ -1,68 +1,40 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C529A1F60B;
-	Fri, 19 Jan 2024 16:33:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C6F51F60B
+	for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 16:34:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705682007; cv=none; b=YlH+9I2JoEoojkDe1Ngvp/6bHG7YHF2MWeLIc60PMPKap9lq71ySkG11r2JfkrWXVbEFUa3IfP4eIcCzR1SNSHH6oJO4l5nGX5S4OLwbcHGBt/gfAscynkIqM3LJDp/ihkW7bqBLNRkQ8SZA2cR46qcE3K+QPx22H1CdxrVePaU=
+	t=1705682050; cv=none; b=KSN/pSpJhj9iUJc80l6hNspPo7TSQneApjNFFH7Wqt14BNyqlwafAe9kBztkG9iPX/tVtlswKRrZ6c8bLeoAv1hmL9QD0n+NzIMNn1vUlwK9HWlSBKFM8bTWCXPUelci7NoPiUrcbhqJuCLKuOn+UswU5lc+fuF/+zy1Q9sbg3w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705682007; c=relaxed/simple;
-	bh=4MTHcTMRo8vaC78u9KaJGas7GabALp0/v9oyhzhuUno=;
+	s=arc-20240116; t=1705682050; c=relaxed/simple;
+	bh=rOnjjf8fI4jZQooTEJ2NyQy2pywFx1MKV3IZYwS1vJk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=maJZwOPNMCz4aHgZwF2GJ2b44Fvv7hv84lJjTpn+NAIFxir3oIDfwr1HoY70mKMbDAGPSiFmoOX1D1DlT6WQqtMYSQFv1xtrPfUj+Q7l1kC+wvIvR2C7K1uqRttm06YYJWCAOI1AVrF44LqnEox6oCeF2Uj0F5ujDF2+h0Yu/Dc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=M36cCNoO; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=G/KfFnx7mNoETfnjvKJASraW6h6wFIbcQIBTC+TtNDGwhc0K6O8Mmi4ap49YHaZ5GzbEkAFuBDDuqR3fZ63Zl1MsOgdcNSheYOv5OBJEbOIdnraY1S+Ul/v3QOYI61s1rC6fnylw13yEvRuuOrKBqDghDhshw/urLB7+yQVbnws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M8YDHL8Q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="M36cCNoO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1705682004; x=1737218004;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=4MTHcTMRo8vaC78u9KaJGas7GabALp0/v9oyhzhuUno=;
-  b=M36cCNoOtzFdGySNm9/zqm8BA5I3Iq7TT1HH49HDR9PqGPoq3mVUJdCN
-   Q7ucOIxS184Xxgve+2V1H1hewwXKTC2oU/tH6ATvDGok8wI99LO91jvFK
-   g3H9bGKdWE19ydJeHbjVoVTjxUCptG/OWn3e4IXjjqJb0w3yR4olKOq8S
-   KQ7eNt+W8v5X9WhfGLltGvtOxyWNvqHdEtTxM03ntMY++NEBPnsmco1Zg
-   XPOemhnmIKm+0COUqPVMoMeDKYlvMBhlmyB9BIyvziGxGb58RM5rahmv1
-   BRW1F8HglzViCrigcGEztm9yf9/vkLPRApCNxriuqQfoU8YqRsS7LQdUg
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10957"; a="676878"
-X-IronPort-AV: E=Sophos;i="6.05,204,1701158400"; 
-   d="scan'208";a="676878"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jan 2024 08:33:15 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,204,1701158400"; 
-   d="scan'208";a="27082145"
-Received: from lkp-server01.sh.intel.com (HELO 961aaaa5b03c) ([10.239.97.150])
-  by fmviesa001.fm.intel.com with ESMTP; 19 Jan 2024 08:33:09 -0800
-Received: from kbuild by 961aaaa5b03c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rQrnm-0004Fy-2T;
-	Fri, 19 Jan 2024 16:33:06 +0000
-Date: Sat, 20 Jan 2024 00:32:24 +0800
-From: kernel test robot <lkp@intel.com>
-To: Huang Shijie <shijie@os.amperecomputing.com>,
-	gregkh@linuxfoundation.org
-Cc: oe-kbuild-all@lists.linux.dev, patches@amperecomputing.com,
-	rafael@kernel.org, paul.walmsley@sifive.com, palmer@dabbelt.com,
-	aou@eecs.berkeley.edu, yury.norov@gmail.com, kuba@kernel.org,
-	vschneid@redhat.com, mingo@kernel.org, akpm@linux-foundation.org,
-	vbabka@suse.cz, rppt@kernel.org, tglx@linutronix.de,
-	jpoimboe@kernel.org, ndesaulniers@google.com,
-	mikelley@microsoft.com, mhiramat@kernel.org, arnd@arndb.de,
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, catalin.marinas@arm.com,
-	will@kernel.org, mark.rutland@arm.com, mpe@ellerman.id.au,
-	linuxppc-dev@lists.ozlabs.org, chenhuacai@kernel.org,
-	jiaxun.yang@flygoat.com, linux-mips@vger.kernel.org
-Subject: Re: [PATCH] NUMA: Early use of cpu_to_node() returns 0 instead of
- the correct node id
-Message-ID: <202401200006.wOMN1YgH-lkp@intel.com>
-References: <20240119033227.14113-1-shijie@os.amperecomputing.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M8YDHL8Q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A194C433F1;
+	Fri, 19 Jan 2024 16:34:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705682050;
+	bh=rOnjjf8fI4jZQooTEJ2NyQy2pywFx1MKV3IZYwS1vJk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=M8YDHL8QAiAJgeig7sJSmJCWOSvh+4xnc1G0AZKmqlGWm+i1HYdj9a4b74D3S4ZkK
+	 ez1dRi60Il+mIVFZNU+rL3yL+LeZNwi8ZZJ++difwiB8dE+8yIIBhPSeaOxAaj/LFV
+	 cfO2NSKrQmu5C7EtdJ4wXGYksyYJ3/8uOpH3/qdop3ofVsVKbaQboNi8nzMqcepLO+
+	 uKErXk35yogxayb1LLJfaP06Z9CSg3VH5/5scGfzUfsgPv62tVwPjXPoJqqMwEfJDr
+	 1bSJxT4ehdUPb45QtwspKfvgssGz7av2ZMkQSgRFQqWknIqFJxOGD/GpXfG4Uim8s9
+	 fxgvMP/xdKQJw==
+Date: Fri, 19 Jan 2024 10:34:08 -0600
+From: Rob Herring <robh@kernel.org>
+To: Will Deacon <will@kernel.org>
+Cc: torvalds@linux-foundation.org, catalin.marinas@arm.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	kernel-team@android.com
+Subject: Re: [GIT PULL] arm64 fixes for -rc1
+Message-ID: <20240119163408.GA468084-robh@kernel.org>
+References: <20240119160528.GA5336@willie-the-truck>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,56 +43,63 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240119033227.14113-1-shijie@os.amperecomputing.com>
+In-Reply-To: <20240119160528.GA5336@willie-the-truck>
 
-Hi Huang,
+On Fri, Jan 19, 2024 at 04:05:28PM +0000, Will Deacon wrote:
+> Hi Linus,
+> 
+> Please pull these arm64 fixes for -rc1. I think the main one is fixing
+> the dynamic SCS patching when full LTO is enabled (clang was silently
+> getting this horribly wrong), but it's all good stuff. Rob just pointed
+> out that the fix to the workaround for erratum #2966298 might not be
+> necessary, but in the worst case it's harmless and since the official
+> description leaves a little to be desired here, I've left it in.
+> 
+> Cheers,
+> 
+> Will
+> 
+> --->8
+> 
+> The following changes since commit db32cf8e280b46726065c518e90761bb0229bacf:
+> 
+>   Merge branch 'for-next/fixes' into for-next/core (2024-01-04 12:32:33 +0000)
+> 
+> are available in the Git repository at:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git tags/arm64-fixes
+> 
+> for you to fetch changes up to 1b20d0486a602417defb5bf33320d31b2a7a47f8:
+> 
+>   arm64: Fix silcon-errata.rst formatting (2024-01-18 11:15:43 +0000)
+> 
+> ----------------------------------------------------------------
+> arm64 fixes for -rc1
+> 
+> - Fix shadow call stack patching with LTO=full
+> 
+> - Fix voluntary preemption of the FPSIMD registers from assembly code
+> 
+> - Fix workaround for A520 CPU erratum #2966298 and extend to A510
+> 
+> - Fix SME issues that resulted in corruption of the register state
+> 
+> - Minor fixes (missing includes, formatting)
+> 
+> ----------------------------------------------------------------
+> Ard Biesheuvel (2):
+>       arm64: scs: Work around full LTO issue with dynamic SCS
+>       arm64: fpsimd: Bring cond_yield asm macro in line with new rules
+> 
+> Mark Brown (3):
+>       arm64/ptrace: Don't flush ZA/ZT storage when writing ZA via ptrace
+>       arm64/fpsimd: Remove spurious check for SVE support
+>       arm64/sme: Always exit sme_alloc() early with existing storage
+> 
+> Mark Rutland (2):
+>       arm64: entry: fix ARM64_WORKAROUND_SPECULATIVE_UNPRIV_LOAD
 
-kernel test robot noticed the following build errors:
+I've commented on the patch, but this doesn't fix anything. The original 
+work-around was fine.
 
-[auto build test ERROR on driver-core/driver-core-testing]
-[also build test ERROR on driver-core/driver-core-next driver-core/driver-core-linus akpm-mm/mm-everything linus/master v6.7 next-20240119]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Huang-Shijie/NUMA-Early-use-of-cpu_to_node-returns-0-instead-of-the-correct-node-id/20240119-113623
-base:   driver-core/driver-core-testing
-patch link:    https://lore.kernel.org/r/20240119033227.14113-1-shijie%40os.amperecomputing.com
-patch subject: [PATCH] NUMA: Early use of cpu_to_node() returns 0 instead of the correct node id
-config: x86_64-defconfig (https://download.01.org/0day-ci/archive/20240120/202401200006.wOMN1YgH-lkp@intel.com/config)
-compiler: gcc-11 (Debian 11.3.0-12) 11.3.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240120/202401200006.wOMN1YgH-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202401200006.wOMN1YgH-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   ld: vmlinux.o: in function `rapl_cpu_online':
->> rapl.c:(.text+0x75ec): undefined reference to `cpu_to_node'
-   ld: vmlinux.o: in function `amd_pmu_cpu_prepare':
->> core.c:(.text+0x8580): undefined reference to `cpu_to_node'
->> ld: core.c:(.text+0x85d6): undefined reference to `cpu_to_node'
-   ld: vmlinux.o: in function `amd_uncore_ctx_init.part.0':
->> uncore.c:(.text+0xc3bd): undefined reference to `cpu_to_node'
-   ld: vmlinux.o: in function `intel_cpuc_prepare':
->> (.text+0x129ee): undefined reference to `cpu_to_node'
-   ld: vmlinux.o:(.text+0x12a71): more undefined references to `cpu_to_node' follow
-   ld: vmlinux.o: in function `kernel_init_freeable':
->> main.c:(.init.text+0x1240): undefined reference to `_cpu_to_node'
-   ld: vmlinux.o: in function `check_timer':
->> io_apic.c:(.init.text+0x1ec1d): undefined reference to `cpu_to_node'
-   ld: vmlinux.o: in function `kvm_alloc_cpumask':
->> kvm.c:(.init.text+0x21678): undefined reference to `cpu_to_node'
-   ld: vmlinux.o: in function `fork_idle':
->> (.init.text+0x28fe2): undefined reference to `cpu_to_node'
-   ld: vmlinux.o: in function `cpus_share_numa':
->> workqueue.c:(.init.text+0x2a4c8): undefined reference to `cpu_to_node'
->> ld: workqueue.c:(.init.text+0x2a4d8): undefined reference to `cpu_to_node'
-   ld: vmlinux.o:workqueue.c:(.init.text+0x2a7bc): more undefined references to `cpu_to_node' follow
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Rob
