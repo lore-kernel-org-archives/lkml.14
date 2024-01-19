@@ -1,125 +1,99 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 762384A0C;
-	Fri, 19 Jan 2024 06:03:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 373FE4A0F;
+	Fri, 19 Jan 2024 06:07:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705644206; cv=none; b=QhWUeJL0luzKAbWI4S3F9WB1sopZt8ybrpsFPDV5S5VMV2jcE+HYka9WFEW8rAHMXVT0LBXmPIrLXCrCxAvCZcvr3cKQBSZ6BuAQ4W6Ed8K5PO+pDPMjyBibJU4k/KQgpDPfcuvUj++6k016rcQ5pFbekAUJ1aAKPj7xsaT2r8k=
+	t=1705644447; cv=none; b=N0vfXnxERLA8I80mZzLJeDuCmohriGi+UySz5C/bIxftfvlABIxycbH+lnczh4McLXz2NPy9KghG8Go5OW0sa2x7aNLCQ74D/t5Q9xNCJveM5XkvBY0x/ccpkfvSMgFfctVLkRQjhj3oVZTEeAGY6Vsu0gpJCrx8f6qIb+/KQuc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705644206; c=relaxed/simple;
-	bh=fElIcAvj+JU3H2ET/6sVLuziTay9kn5vl9dtRYelW34=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CAX2zKByS9dnJ0nSyWCfZ0bGIxiBTCPVKXEsVOLh5RaGu+py2KT+9CY48+hSc1JluAztawCXUupiiQRnKEpI1n2G2TwIKmlJCRnF5Zti26BzmgebLkEm/+NJyeFZYAJ34xRHC7yoJBvEhqfkRXSPKBUVpJQ+zBKolZ2YmS6V+5E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YeV+Fpez; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YeV+Fpez"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1705644206; x=1737180206;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=fElIcAvj+JU3H2ET/6sVLuziTay9kn5vl9dtRYelW34=;
-  b=YeV+FpezRSAXXMAndxGm44UCHMLNXvXs+2OMRKBoXVGiccubsVFQTclM
-   GhBT/bWpTevuwhReE3boaUrGVLZno//kQ5gx35IN6TMh+Fdwwqm8HtiZM
-   hjPHkja4qJPlmlxXaVdiAoau4nNYanry/lrLkqbJa+gtlXH2VZRRdFxs5
-   3Z9q8+2HgSvcfYtoAKibNj0Q1S8+aghSi+IlDDrRIupFO8bi85948iRMI
-   BJlo0cfC4xqYbdYxTanZG3fgnOI5A3mdUX7d9DJkbKghXry7/hvHBlads
-   fJXvFl6Zi4HwEnHuUUz+jF3LuraJPJRXjWNGip1isyHySkAHyXnK07pVm
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10956"; a="14192965"
-X-IronPort-AV: E=Sophos;i="6.05,204,1701158400"; 
-   d="scan'208";a="14192965"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2024 22:03:25 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10956"; a="875291857"
-X-IronPort-AV: E=Sophos;i="6.05,204,1701158400"; 
-   d="scan'208";a="875291857"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by FMSMGA003.fm.intel.com with ESMTP; 18 Jan 2024 22:03:22 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-	id 572EEE3; Fri, 19 Jan 2024 07:37:56 +0200 (EET)
-Date: Fri, 19 Jan 2024 07:37:56 +0200
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Mario Limonciello <mario.limonciello@amd.com>,
-	Esther Shimanovich <eshimanovich@chromium.org>,
-	Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <bhelgaas@google.com>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Rajat Jain <rajatja@google.com>
-Subject: Re: [PATCH v4] PCI: Relabel JHL6540 on Lenovo X1 Carbon 7,8
-Message-ID: <20240119053756.GC2543524@black.fi.intel.com>
-References: <20231221-thunderbolt-pci-patch-4-v4-1-2e136e57c9bc@chromium.org>
- <20231228132517.GA12586@wunner.de>
- <20231228133949.GG2543524@black.fi.intel.com>
- <CA+Y6NJFQq39WSSwHwm37ZQV8_rwX+6k5r+0uUs_d1+UyGGLqUw@mail.gmail.com>
- <20240118060002.GV2543524@black.fi.intel.com>
- <23ee70d5-d6c0-4dff-aeac-08cc48b11c54@amd.com>
- <ZalOCPrVA52wyFfv@google.com>
+	s=arc-20240116; t=1705644447; c=relaxed/simple;
+	bh=UBzZ49HqC2sWhE+aAm+H8+GVQvgeyj/loWZJwfPGEVk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=VYHMO5+QrnqeZHpDHWJgpSZyV7o3qhYldVAwx2bSdKwvsHG/oa8zyhbfI3bY/GJpj3RF1Ph0LQeuInH2IXozvs0iT4Ms8Dal4q85VYMX95PxNZIodoJVO5RPVOlyMGH0hbcsPuPPlvlnvAiLPqpm3aHDlnjpK14TttgbCu+Qjr0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: bce7ae8d548d4673ade61757093c66d8-20240119
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.35,REQID:1b893184-87f0-4021-8c3b-02909b61d1d6,IP:10,
+	URL:0,TC:0,Content:30,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACT
+	ION:release,TS:25
+X-CID-INFO: VERSION:1.1.35,REQID:1b893184-87f0-4021-8c3b-02909b61d1d6,IP:10,UR
+	L:0,TC:0,Content:30,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:25
+X-CID-META: VersionHash:5d391d7,CLOUDID:78906c8e-e2c0-40b0-a8fe-7c7e47299109,B
+	ulkID:240119140717LEZ98I33,BulkQuantity:0,Recheck:0,SF:38|24|17|19|44|66|1
+	02,TC:nil,Content:4,EDM:-3,IP:-2,URL:11|1,File:nil,Bulk:nil,QS:nil,BEC:nil
+	,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI,
+	TF_CID_SPAM_ULN
+X-UUID: bce7ae8d548d4673ade61757093c66d8-20240119
+Received: from mail.kylinos.cn [(39.156.73.10)] by mailgw
+	(envelope-from <chentao@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 1958869100; Fri, 19 Jan 2024 14:07:16 +0800
+Received: from mail.kylinos.cn (localhost [127.0.0.1])
+	by mail.kylinos.cn (NSMail) with SMTP id 64468E000EB9;
+	Fri, 19 Jan 2024 14:07:16 +0800 (CST)
+X-ns-mid: postfix-65AA1194-203573312
+Received: from kernel.. (unknown [172.20.15.234])
+	by mail.kylinos.cn (NSMail) with ESMTPA id 846B1E000EB9;
+	Fri, 19 Jan 2024 14:07:15 +0800 (CST)
+From: Kunwu Chan <chentao@kylinos.cn>
+To: rrameshbabu@nvidia.com,
+	jikos@kernel.org,
+	benjamin.tissoires@redhat.com
+Cc: linux-input@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Kunwu Chan <chentao@kylinos.cn>
+Subject: [PATCH] HID: nvidia-shield: Add some null pointer checks to the hid-nvidia-shield.c
+Date: Fri, 19 Jan 2024 14:07:14 +0800
+Message-Id: <20240119060714.258635-1-chentao@kylinos.cn>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZalOCPrVA52wyFfv@google.com>
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jan 18, 2024 at 08:12:56AM -0800, Dmitry Torokhov wrote:
-> On Thu, Jan 18, 2024 at 09:47:07AM -0600, Mario Limonciello wrote:
-> > On 1/18/2024 00:00, Mika Westerberg wrote:
-> > > > Before my patch, you see that the JHL6540 controller is inaccurately
-> > > > labeled “removable”:
-> > > > $ udevadm info -a -p /sys/bus/pci/devices/0000:05:00.0 | grep -e
-> > > > {removable} -e {device} -e {vendor} -e looking
-> > > >    looking at device '/devices/pci0000:00/0000:00:1d.4/0000:05:00.0':
-> > > >      ATTR{device}=="0x15d3"
-> > > >      ATTR{removable}=="removable"
-> > > >      ATTR{vendor}=="0x8086"
-> > > 
-> > > This is actually accurate. The Thunderbolt controller is itself
-> > > hot-removable and that BTW happens to be hot-removed when fwupd applies
-> > > firmware upgrades to the device.
-> 
-> This is quite interesting take. Does fwupd rip the controller out of the
-> box to update it? By that account your touchpad is also removable as it
-> may stop functioning when its firmware gets updated.
+devm_kasprintf() returns a pointer to dynamically allocated memory
+which can be NULL upon failure. Ensure the allocation was successful
+by checking the pointer validity.
 
-The Thunderbolt controller is connected to a hotpluggable PCIe root port
-so it will be dissappear from the userspace so that "removable" in that
-sense is accurate.
+Signed-off-by: Kunwu Chan <chentao@kylinos.cn>
+---
+ drivers/hid/hid-nvidia-shield.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-> > Depending on the consumers of this removable attribute I wonder if we need
-> > to a new ATTR of "external" instead of overloading "removable".
-> 
-> Isn't this the same thing? From
-> Documentation/ABI/testing/sysfs-devices-removable:
-> 
-> What:		/sys/devices/.../removable
-> Date:		May 2021
-> Contact:	Rajat Jain <rajatxjain@gmail.com>
-> Description:
-> 		Information about whether a given device can be removed from the
-> 		platform by the	user. This is determined by its subsystem in a
-> 		bus / platform-specific way. This attribute is only present for
-> 		devices that can support determining such information:
-> 
-> 		===========  ===================================================
-> 		"removable"  device can be removed from the platform by the user
-> 		"fixed"      device is fixed to the platform / cannot be removed
-> 			     by the user.
-> 
-> Note this "by the user". Maybe we should add word "physically" here to
-> qualify the meaning completely, but that is what it is. Not that it
-> disappears from the bus or stops operating for some time because of
-> firmware updates, but it can be physically detached from the
-> platform/system.
+diff --git a/drivers/hid/hid-nvidia-shield.c b/drivers/hid/hid-nvidia-shi=
+eld.c
+index 82d0a77359c4..58b15750dbb0 100644
+--- a/drivers/hid/hid-nvidia-shield.c
++++ b/drivers/hid/hid-nvidia-shield.c
+@@ -800,6 +800,8 @@ static inline int thunderstrike_led_create(struct thu=
+nderstrike *ts)
+=20
+ 	led->name =3D devm_kasprintf(&ts->base.hdev->dev, GFP_KERNEL,
+ 				   "thunderstrike%d:blue:led", ts->id);
++	if (!led->name)
++		return -ENOMEM;
+ 	led->max_brightness =3D 1;
+ 	led->flags =3D LED_CORE_SUSPENDRESUME | LED_RETAIN_AT_SHUTDOWN;
+ 	led->brightness_get =3D &thunderstrike_led_get_brightness;
+@@ -831,6 +833,8 @@ static inline int thunderstrike_psy_create(struct shi=
+eld_device *shield_dev)
+ 	shield_dev->battery_dev.desc.name =3D
+ 		devm_kasprintf(&ts->base.hdev->dev, GFP_KERNEL,
+ 			       "thunderstrike_%d", ts->id);
++	if (!shield_dev->battery_dev.desc.name)
++		return -ENOMEM;
+=20
+ 	shield_dev->battery_dev.psy =3D power_supply_register(
+ 		&hdev->dev, &shield_dev->battery_dev.desc, &psy_cfg);
+--=20
+2.39.2
 
-That would be good to fully qualify what this means. But I get you it is
-intented to identify devices that can be physically unplugged from the
-system.
