@@ -1,126 +1,93 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from out-186.mta1.migadu.com (out-186.mta1.migadu.com [95.215.58.186])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A11D854F9B
-	for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 14:54:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F2845465D
+	for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 14:55:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.186
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705676084; cv=none; b=OR+RKUa54kP/aLqdSBsZQCLFlBUZOnZWU2EyueGQczwHY04tg85qqNVnDIKbi9xyurPZVBEfHoQloS9IEDvLhGyMSYMlKxo2nGgdcY1q+ANm/+z135KhE7BH9sAfM/QJnw4MorfyMQKVn7MG1CWUd0fBcO831YSdrMUuIfOl7p0=
+	t=1705676131; cv=none; b=B6FozqOrhhxWHAAX93tbnrxKIQRpijpb7POrIdZbe1+tqyAjZ5hor51zVMUjod09IgBcJO5YieAFl6qOI6wtyFBTeoGjnR/9uC7lWui0zkEjvOBgB3hDm8edksRwenbCw9kNqVbxvDja0cAcbRK7dFkbosp2rAKVz1OcZj6a2YY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705676084; c=relaxed/simple;
-	bh=OUjhJFF9q7D4YR1pSHqAvZMEA4AEazo/hcoLLBgzWxI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-type; b=Ucu3HCi4bLLr2YGKs3+KpPYSR1DXIHYMqfkCmz9PF4+JKsxii6LCuznjwb9whYUWD6kk8C/CZVywRgyWg85EZhVqB0vZ7P/XQW4h7KZeOxO+OlAVju4PZKUkFHrTywGICLMVvUHEmeQGtLguD8LyCcoMpd4LO/1PpdTyN6PB7fo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AnmkdkQi; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1705676131; c=relaxed/simple;
+	bh=2vuvuZhE3Kv0/p2bla2HuOKxDw5tnq7PECF2bh4brnk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lRP+R/rpqKJ9cgC4hNScOYvjEFRT2ZWCKoBtT0ZTb5sXWWu0BwSTa9qnhmm6YV3NQs7FeARDB/Qn1pCJ9D0lggGWIakvciLM9rn+R3RObEDVIwLUKYiPUJTdkhKeGmXTqNbsKQpiRyUZDqEimvDyo3AuqEftHz1CL9OM+qqEsRA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=YNzferZw; arc=none smtp.client-ip=95.215.58.186
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AnmkdkQi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1705676081;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="YNzferZw"
+Message-ID: <fa628406-23db-47be-b9c1-ef8a88ecd062@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1705676127;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=jDvYJxBJvZegSwo4Kk9zAYMdDY4WlX7FhACBVJ8AwnU=;
-	b=AnmkdkQiYVCCYD+Hsc2i83b4MO211wqNi4AC/Ld0g3I68hjuNb9dKuZN5NDC9CXtNrm9YI
-	HoXK7Ps2hPy8/r7tyDeAi3K/ib4/3EOqkalo4B7YwoSMDbopXEeU9d8AWhIkUgz51L/NaD
-	5upeA4dRa7UgzSe/77HHrv4s3GcnmHA=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-648-osoDulHkOveZzpDk9NGWvg-1; Fri, 19 Jan 2024 09:54:38 -0500
-X-MC-Unique: osoDulHkOveZzpDk9NGWvg-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 12C54868A02;
-	Fri, 19 Jan 2024 14:54:37 +0000 (UTC)
-Received: from MiWiFi-R3L-srv.redhat.com (unknown [10.72.116.4])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id DBA8251D5;
-	Fri, 19 Jan 2024 14:54:30 +0000 (UTC)
-From: Baoquan He <bhe@redhat.com>
-To: linux-kernel@vger.kernel.org
-Cc: kexec@lists.infradead.org,
-	x86@kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-s390@vger.kernel.org,
-	linux-sh@vger.kernel.org,
-	linux-mips@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	loongarch@lists.linux.dev,
-	akpm@linux-foundation.org,
-	ebiederm@xmission.com,
-	hbathini@linux.ibm.com,
-	piliu@redhat.com,
-	viro@zeniv.linux.org.uk,
-	Baoquan He <bhe@redhat.com>
-Subject: [PATCH v2 14/14] loongarch, crash: wrap crash dumping code into crash related ifdefs
-Date: Fri, 19 Jan 2024 22:52:41 +0800
-Message-ID: <20240119145241.769622-15-bhe@redhat.com>
-In-Reply-To: <20240119145241.769622-1-bhe@redhat.com>
-References: <20240119145241.769622-1-bhe@redhat.com>
+	bh=h4qbCQgj12O8En/gusu3QK+XK6h8GB3JBzV0B53LnBI=;
+	b=YNzferZwWQ6R67NBzwQZe0NUaJQyAKDcurN5py4mjGZsPK/MyRETgjnkF//XD52NxPQuHX
+	qBmUyBX6t53kh3Lz/0imTLZHQr9RuadMvDoFEttEagqbv5QgvbI/UY/0fvdo5CbbANGqPW
+	hBGTY34pztOlyUYN8g3x4u5IO59/5/M=
+Date: Fri, 19 Jan 2024 23:05:11 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-type: text/plain
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
+Subject: Re: [PATCH v4 3/7] padata: dispatch works on different nodes
+Content-Language: en-US
+To: Tim Chen <tim.c.chen@linux.intel.com>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ David Hildenbrand <david@redhat.com>, David Rientjes <rientjes@google.com>,
+ Mike Kravetz <mike.kravetz@oracle.com>, Muchun Song <muchun.song@linux.dev>,
+ Andrew Morton <akpm@linux-foundation.org>, ligang.bdlg@bytedance.com
+References: <20240118123911.88833-1-gang.li@linux.dev>
+ <20240118123911.88833-4-gang.li@linux.dev>
+ <29695e89ae2d838c9b7537941b0231c3ff559e48.camel@linux.intel.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Gang Li <gang.li@linux.dev>
+In-Reply-To: <29695e89ae2d838c9b7537941b0231c3ff559e48.camel@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-Now crash codes under kernel/ folder has been split out from kexec
-code, crash dumping can be separated from kexec reboot in config
-items on loongarch with some adjustments.
 
-Here wrap up crash dumping codes with CONFIG_CRASH_DUMP ifdeffery, and
-use IS_ENABLED(CONFIG_CRASH_RESERVE) check to decide if compiling
-in the crashkernel reservation code.
 
-Signed-off-by: Baoquan He <bhe@redhat.com>
----
- arch/loongarch/kernel/setup.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+On 2024/1/19 07:04, Tim Chen wrote:
+> On Thu, 2024-01-18 at 20:39 +0800, Gang Li wrote:
+>> When a group of tasks that access different nodes are scheduled on the
+>> same node, they may encounter bandwidth bottlenecks and access latency.
+>>
+>> Thus, numa_aware flag is introduced here, allowing tasks to be
+>> distributed across different nodes to fully utilize the advantage of
+>> multi-node systems.
+>>
+>> Signed-off-by: Gang Li <gang.li@linux.dev>
+>> Tested-by: David Rientjes <rientjes@google.com>
+>> ---
+>>   include/linux/padata.h |  3 +++
+>>   kernel/padata.c        | 14 ++++++++++++--
+>>   mm/mm_init.c           |  1 +
+>>   3 files changed, 16 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/include/linux/padata.h b/include/linux/padata.h
+>> index 495b16b6b4d7..f79ccd50e7f4 100644
+>> --- a/include/linux/padata.h
+>> +++ b/include/linux/padata.h
+>> @@ -137,6 +137,8 @@ struct padata_shell {
+>>    *             appropriate for one worker thread to do at once.
+>>    * @max_threads: Max threads to use for the job, actual number may be less
+>>    *               depending on task size and minimum chunk size.
+>> + * @numa_aware: Dispatch jobs to different nodes. If a node only has memory but
+>> + *              no CPU, dispatch its jobs to a random CPU.
+> 
+> Suggest:
+> Distribute jobs to different nodes with CPU in a round robin fashion.
+> 
 
-diff --git a/arch/loongarch/kernel/setup.c b/arch/loongarch/kernel/setup.c
-index d183a745fb85..61f88dd97947 100644
---- a/arch/loongarch/kernel/setup.c
-+++ b/arch/loongarch/kernel/setup.c
-@@ -258,11 +258,13 @@ static void __init arch_reserve_vmcore(void)
- 
- static void __init arch_parse_crashkernel(void)
- {
--#ifdef CONFIG_KEXEC
- 	int ret;
- 	unsigned long long total_mem;
- 	unsigned long long crash_base, crash_size;
- 
-+	if (!IS_ENABLED(CONFIG_CRASH_RESERVE))
-+		return;
-+
- 	total_mem = memblock_phys_mem_size();
- 	ret = parse_crashkernel(boot_command_line, total_mem,
- 				&crash_size, &crash_base,
-@@ -283,7 +285,6 @@ static void __init arch_parse_crashkernel(void)
- 
- 	crashk_res.start = crash_base;
- 	crashk_res.end	 = crash_base + crash_size - 1;
--#endif
- }
- 
- static void __init fdt_setup(void)
-@@ -468,7 +469,7 @@ static void __init resource_init(void)
- 		request_resource(res, &bss_resource);
- 	}
- 
--#ifdef CONFIG_KEXEC
-+#ifdef CONFIG_CRASH_RESERVE
- 	if (crashk_res.start < crashk_res.end) {
- 		insert_resource(&iomem_resource, &crashk_res);
- 		pr_info("Reserving %ldMB of memory at %ldMB for crashkernel\n",
--- 
-2.41.0
+Good idea.
+Thanks.
 
+>>    */
+>>   struct padata_mt_job {
+> 
