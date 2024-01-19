@@ -1,46 +1,46 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2078.outbound.protection.outlook.com [40.107.223.78])
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2079.outbound.protection.outlook.com [40.107.212.79])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0688528E04
-	for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 05:54:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABEC728E0E
+	for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 05:54:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.212.79
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705643695; cv=fail; b=NVAmnVDGpjVJAvSMfSqy0+eaYBWFL/XYvJwLKW38AYEa4TppbOpaRhtd6vtuoYM094lPTIfE0EHD5iBXrmJ5szKd3eoW8yCLoy2LkTxv50pzctqrv0QL7ZDQX7uu6e9QF8rBvqEi4OztambTgMV2+FNZjQH9FMCNCwl7rZ+eTmE=
+	t=1705643696; cv=fail; b=bXEb4jnGm4ibBcsFwLA9mxNjLkLpPEh5bWKac2g1yhnZXKD23YN6hKzrk61Jw6+D/O2e/7ky1s7orEbYUYxdks9wAhY+f88yDE4nTJSRYnfT+WXw/9Gaeqx1TVKiT62hKuhBCEpEJc/wnrvHnUONJxWkkoiW62UCRCwttzvAcg8=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705643695; c=relaxed/simple;
-	bh=sVcDNeUh7fsYktx5246lAlf0oeTGsGFaF2eU6dNKmQI=;
+	s=arc-20240116; t=1705643696; c=relaxed/simple;
+	bh=0cFgbz6MukPY8F2xR2J2hRsVHUG0WauPn4BE42XcclI=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=m0S1KhL+Mq1BwyZ0w+ARPxLRQ/vsx+BTIoA6wZY968ip6cKkwacH+wu7RWTP4ffoRZNmiK2GixZMsRQX7be+EhU4p4fcmCATZGmH+PYlyHQaYEJ6zG6zzd36FVDMZOMg1lEyVm19Te0onmuMfm91mi4qnZsZ7aXI73TQURsQ8SA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=p8j09Rpa; arc=fail smtp.client-ip=40.107.223.78
+	 MIME-Version:Content-Type; b=iWcRn2L/MPs054THROb3QqsVXeZy8Cypo6ShLks+Mcg+fDGYhqf7ZDGE5HS6iCXJoQO9upbFccTFIC0M18/pwcvFcRkQUX9OSYu7XcwLJcsVgzQl2sCz69XUSeinkg6iLFZhXUC0QVnW4RYPZxT99dZRpypW/57zk7jXeP8Hxwg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=LQoVKSJ+; arc=fail smtp.client-ip=40.107.212.79
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="p8j09Rpa"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="LQoVKSJ+"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TjJsbJ1QlOCfwlZ7evOSrKKLkSz/hGH33287nFoGe8GR0dCTdbh2wcpDhqxy5LOD2KrSwBF3xpL9R6Ap+/9dY9KT8HPBWKIPgsOB1GAplj0JKQnsUih887cLQgvDAQKnwlFHCJBFOxPvgkrn/JlwLNnzRu0W6GgsIMq+iv9brhszTzxo7Q1E6cvKocAmD1YaBwnLolwRcDgx8h5xkr+vcd7DJLP+vLAixuabAb8DQ/aT9u+07G+SVy3hfcl61p9P17tKfRZ9o+vLhFNzM1fImxRP4mdpB1pHrDTc0QHmdVBgeu9UcPtzMY82vL2cRozFgQly+Azek16zNhffIkUMRA==
+ b=DnVDbiAwBz2F2MAwSHVueJ139CL/aBu106cdOWT92G6Z9AFjbJauLx1eb5tkIXVUtdbkm0UreKbqwpW9rSVpH/NCifEgoSmxmEs3tW4XZD9XDPxsXTTT02XCwlZiQ1OULL5ROSbOODAXhZrVwLPrct919tQEjWJfnfBn5k1ApOwlfe5ZNlpb0U5QyrJSTeLX0PC7qu7bdHsiKkfB9v2B4Ud/uGvyatANWlp/gme93bitQoPLR6S9SENwPwUqa0vPz1VJkng5mjsVINeM4OHejBiyYEGk0HbEY/Tgt52MxBqUa6rBGVJrvxfGodDGted2JnyC/3N10Yd0/RF7EFxZAQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=A078BbaAGY/zU6JL5BJwe7eSaF1X+L8idnxCjUVxvc0=;
- b=nS7Zz6mA6v3BrYfq2qQYX9jKcGBEDL0i5watj0sx2gfok84scRaG+lj9zE1jHsVy1v+QKh6QYmYVkpC5umlWMune55i48sGeZ018jBw3IFp5QSeLfFbgyLqT1BkicCsY/2jb4YwXeKrNa11+ryMy53blnTHhjmj3azDe9sB0gOkK8F9hZAUnkH84ikfi9XMB2oWzMOaaS69kK3/1ddd9qvCAi1fVD71PqPTyhXlnC/8isqLie8w4I0T6+3gz8cDGThsJLrRyhDxbq+WDGHF8pt66V1sMlXM/ykuKLZtBbymwbebkzsNMp5b7owY0wyNQ3QyobTE4YEItuNxviIp58A==
+ bh=qGfqYKlOF07yfK5bGVkIkrxAPdfk2HmdGVScqC2dKTU=;
+ b=mSg/4qE0V1lIBlJqPTxZq/unnYLzrFFQ/gCBESA83K/lmq/pIYUzMuIOT10qKJ0ceAqba1Ry2o2KdxLM5NgUY66UZUNZQj8uu5VAKgw4sM2pbbpr5+Ba4KUXYkax8g81MbrncglaTJ5bmt2VhB5a85ZiinUmE/0zFwsvO5aS3MzcM6KNaLi6hBOBm+BuQIQ/AxTlMgIvUXHAsX0QruNaps/xZARoRURRFttininL+4xtf3rL9zJVRzHCZ89mRPf2hi+MFexiPisc/fAGkfS5cISy8dtuijYULrhhKlwz9At0flJFatmd4/JCNxttqiM8s8jlFObNxCZSYrb1Op+dsQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=ideasonboard.com smtp.mailfrom=amd.com;
  dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
  header.from=amd.com; dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=A078BbaAGY/zU6JL5BJwe7eSaF1X+L8idnxCjUVxvc0=;
- b=p8j09RpanAOmiaolyjIrLJDpih6KABFdLll6QraG8SP6dV7BrYsKrrmWASaBOGeSOZv/ZJa2NDXId/l+IoUhekLSDFuBimivQ8sc4obF3je+8vdwr6/1o92/V7vPpFHa77Tmx0+5roLUemqWCQCR7bhOukxKL7nsVvM4cJL3f84=
-Received: from DS7PR05CA0053.namprd05.prod.outlook.com (2603:10b6:8:2f::34) by
- LV8PR12MB9208.namprd12.prod.outlook.com (2603:10b6:408:182::12) with
+ bh=qGfqYKlOF07yfK5bGVkIkrxAPdfk2HmdGVScqC2dKTU=;
+ b=LQoVKSJ+eMKSH9MzGC8taTCwgwwyOWvAVZdjrCVkkl1vHfVN6D6KsQHd74D291zvxkkBQk0sr0PUoGBMxwROT9oHzqYUdCodr/P5LiWe7voq0PnIBvaTV5/bwp/0v4Jv9YmiIQ+UZYtxq4mu6jOeYDoJu9XUE2yTj+FXtsCdEPo=
+Received: from DS7PR05CA0041.namprd05.prod.outlook.com (2603:10b6:8:2f::8) by
+ BL3PR12MB6571.namprd12.prod.outlook.com (2603:10b6:208:38e::18) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7202.24; Fri, 19 Jan
- 2024 05:54:50 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7202.23; Fri, 19 Jan
+ 2024 05:54:52 +0000
 Received: from DS3PEPF000099DC.namprd04.prod.outlook.com
- (2603:10b6:8:2f:cafe::62) by DS7PR05CA0053.outlook.office365.com
- (2603:10b6:8:2f::34) with Microsoft SMTP Server (version=TLS1_2,
+ (2603:10b6:8:2f:cafe::ee) by DS7PR05CA0041.outlook.office365.com
+ (2603:10b6:8:2f::8) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.9 via Frontend
- Transport; Fri, 19 Jan 2024 05:54:50 +0000
+ Transport; Fri, 19 Jan 2024 05:54:51 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -50,7 +50,7 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
  DS3PEPF000099DC.mail.protection.outlook.com (10.167.17.198) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7202.16 via Frontend Transport; Fri, 19 Jan 2024 05:54:50 +0000
+ 15.20.7202.16 via Frontend Transport; Fri, 19 Jan 2024 05:54:51 +0000
 Received: from SATLEXMB08.amd.com (10.181.40.132) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.34; Thu, 18 Jan
@@ -58,18 +58,18 @@ Received: from SATLEXMB08.amd.com (10.181.40.132) by SATLEXMB04.amd.com
 Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB08.amd.com
  (10.181.40.132) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.32; Thu, 18 Jan
- 2024 21:54:38 -0800
+ 2024 21:54:40 -0800
 Received: from xsjanatoliy50.xilinx.com (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server id 15.1.2507.34 via Frontend
- Transport; Thu, 18 Jan 2024 23:54:38 -0600
+ Transport; Thu, 18 Jan 2024 23:54:40 -0600
 From: Anatoliy Klymenko <anatoliy.klymenko@amd.com>
 To: <laurent.pinchart@ideasonboard.com>, <maarten.lankhorst@linux.intel.com>,
 	<mripard@kernel.org>, <tzimmermann@suse.de>, <airlied@gmail.com>,
 	<daniel@ffwll.ch>, <michal.simek@amd.com>, <dri-devel@lists.freedesktop.org>,
 	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 1/4] drm: xlnx: zynqmp_dpsub: Make drm bridge discoverable
-Date: Thu, 18 Jan 2024 21:54:34 -0800
-Message-ID: <20240119055437.2549149-2-anatoliy.klymenko@amd.com>
+Subject: [PATCH v2 3/4] drm: xlnx: zynqmp_dpsub: Filter interrupts against mask
+Date: Thu, 18 Jan 2024 21:54:36 -0800
+Message-ID: <20240119055437.2549149-4-anatoliy.klymenko@amd.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240119055437.2549149-1-anatoliy.klymenko@amd.com>
 References: <20240119055437.2549149-1-anatoliy.klymenko@amd.com>
@@ -83,63 +83,75 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS3PEPF000099DC:EE_|LV8PR12MB9208:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0ae4bcc8-a139-4356-6ced-08dc18b32681
+X-MS-TrafficTypeDiagnostic: DS3PEPF000099DC:EE_|BL3PR12MB6571:EE_
+X-MS-Office365-Filtering-Correlation-Id: 775e944d-6df9-4883-39c7-08dc18b32772
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	zZDWEeeNwCRCyldCEW83modsjzGVmXGuY+L+1U972nEos56MtM/etm9pX9rCR5CoPsOt2y2oAKiE/dGEt5iZJH+TYqsZD3VkJCsPYJOOgOSAJShENyb++J12tLhOreR16Ae9X6OeNzKVMwEJzGYD3vTdi9vZGLKiBq6A1b9JVYyveAXgA4Nlzhc5qct2EcT8CXdnjgObwYENgMcYuYUAWZzmCiarcErP9Yiq+uvdAC3GR2WSIF4xhSHBJpB8Fq/mtmcx7nIoGL08P3bqOdKhIyxg2qw8l+dELJ1PS07xwbe6XzJ8IifCEP5KngJQ7Y8eXcx7kwsP2lRX9cpJeVsKJUDKbv95wll8bc4QIQZyLaLnbI+/grXVFaZkXgjZxjCbqCZTUof8a6N9DRHPS4UXzEMOWlcXpEK4FdCYG2N1QBPJnoj7fCbDmn9I6Jn0IqQvRKGQfbi6c6xkbfVDZ+2RlAHd7pSiEvwZCGfxX9NIVLbnuE87GvHYCflu/AKr5vz3/DGwbAlmhCyD2AxSXBEWqiTIeHt0Tz+JOqFRW42hFBFh3+n7VDn9Gk4pkwV69K2F0XWNBozR0bcUIOW6K4Cq3Y4qMHhS5hG52Fgf/0RFTEU92eJlBe0PmVE6dSCPqj/kLeAxntzhj4m1+Y/dpc+YbKNW1uOM0WINhg0mjIs7uDRifCHBCCK87Db3BzQfReMed2vXMYtGCga/G7H8k+d15J6tq42ioP/CCUTcxA3t7HkGGYKb42Fjm06Ba7la3tMzpEgCnuXNMY7S304MgpB02ZwQdZSk7FVaBNXO81I/94pvs0nk/9s59PofC/8pfhn5PumznC8/HSMgpErbIzZFEBls62O/HqPVw8aNdsUKbbK2mzuY/Z8YEP3Ee+rAip2t
+	cij6rcgGxcRnOF8UYO3EVNQ+LQepNT2We0M+3iXPM/SZx8+aiJikrl/yaSluJobhiNMpxhORHzEmDAb3zXeSR3TxeErE8hnLyQO6ohvKOVelum4+4Ae2FiToez8/O5sOTvcgLDc0nm4b1ZR66HQzY2HC4tCuEmK7vlNCX4lFBhneUupr0g+iVMyS/PVgy48E1+gmf7OQli75KggOZlMOMDnvlo96vpl6o735ZSsbeedv5BN14w58NnojZR42p4lXz5aJLsiJ0NRMbm+PrgVqS+YtjAaq/PqP5po4+yXWMwh8ceqbaZrpb2QaQp75H/vdt9XdcFvTStYcJo8d7nVKyjcTcZul3vg0gAqY3NyaTJFgLjSPhqQny0duOA/UCxMKAuIkqahl4H042Nr6xYlz9dHirJn+gC9RuekIgBHyByJbVZre8R2suCxA7Xp/8BPHPCss48ISklS8nPyWR6xcSgElZ/hYiwqy65UNuBMzkMxTShFGMJMeDh81L2ZmDJ3xt85JmZ/FVjXzRRIVufNIXGglwn5gOun10e+1qPEEG7gfuFYc4jnFU1U3J3YUO/2rlVNXt1uIf6pJesBAsX8I3n81X3QNVgSMJaVSu/O0EmSD5/Y3cM3GrhwB3KmytWeKJ3zN1HEfwWwTxCRV5P3T0xxQQlT5F1PRRJMtOVw2hQ35cGf6rEPMoE0Fn5S4630cjvk7jY/qLBK7pDx/XVUWMXeu4Ir4t5Xaf7iPKuXpz0lYu3fQmoZNMmQsafp0ttLqOWVN0J+pW/9ex85W7MuC7V0FKV74Cgui/w2QeY3NFHD9sJcbdAOpC/OBxG4Kiar2Ypr5RNgmYO1nP7Lqh5FwRg==
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(346002)(136003)(376002)(39860400002)(396003)(230922051799003)(230273577357003)(230173577357003)(64100799003)(82310400011)(1800799012)(451199024)(186009)(40470700004)(36840700001)(46966006)(2906002)(36860700001)(36756003)(41300700001)(86362001)(81166007)(356005)(82740400003)(110136005)(70206006)(316002)(6666004)(70586007)(1076003)(478600001)(2616005)(5660300002)(47076005)(8676002)(83380400001)(336012)(426003)(8936002)(44832011)(26005)(921011)(40480700001)(40460700003)(36900700001)(2101003)(83996005);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(396003)(39860400002)(376002)(346002)(136003)(230922051799003)(64100799003)(186009)(451199024)(1800799012)(82310400011)(36840700001)(40470700004)(46966006)(26005)(36756003)(356005)(81166007)(478600001)(86362001)(40460700003)(2616005)(316002)(40480700001)(336012)(2906002)(41300700001)(426003)(1076003)(6666004)(70206006)(5660300002)(70586007)(83380400001)(110136005)(82740400003)(921011)(47076005)(8676002)(8936002)(36860700001)(44832011)(83996005)(2101003)(36900700001);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jan 2024 05:54:50.3215
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jan 2024 05:54:51.8996
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0ae4bcc8-a139-4356-6ced-08dc18b32681
+X-MS-Exchange-CrossTenant-Network-Message-Id: 775e944d-6df9-4883-39c7-08dc18b32772
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
 	DS3PEPF000099DC.namprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR12MB9208
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL3PR12MB6571
 
-ZynqMP DPSUB supports 2 input modes: DMA based and live video.
+Filter out status register against the interrupts' mask.
 
-In the first mode, the driver implements CRTC and DP encoder DRM bridge
-to model the complete display pipeline. In this case, DRM bridge is
-being directly instantiated within the driver, not using any bridge
-discovery mechanisms.
+Some events are being reported via DP status register, even if
+corresponding interrupts have been disabled. One instance of such event
+leads to generation of VBLANK when the driver is in DRM bridge mode,
+which in turn results in NULL pointer dereferencing. We should avoid
+processing such events in an interrupt handler context.
 
-In the live video input mode video signal is generated by FPGA fabric
-and passed into DPSUB over the connected bus. In this mode driver
-exposes the DP encoder as a DRM bridge, expecting external CRTC to
-discover it via drm_of_find_panel_or_bridge() or a similar call. This
-discovery relies on drm_bridge.of_node being properly set.
-
-Assign device OF node to the bridge prior to registering it. This will
-make said bridge discoverable by an external CRTC driver.
-
-Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+This problem is less noticeable when the driver operates in DMA mode, as
+in this case we have DRM CRTC object instantiated and DRM framework
+simply discards unwanted VBLANKs in drm_handle_vblank().
 
 Signed-off-by: Anatoliy Klymenko <anatoliy.klymenko@amd.com>
 ---
- drivers/gpu/drm/xlnx/zynqmp_dp.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/drm/xlnx/zynqmp_dp.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/gpu/drm/xlnx/zynqmp_dp.c b/drivers/gpu/drm/xlnx/zynqmp_dp.c
-index a0606fab0e22..d60b7431603f 100644
+index d60b7431603f..9ed12244a429 100644
 --- a/drivers/gpu/drm/xlnx/zynqmp_dp.c
 +++ b/drivers/gpu/drm/xlnx/zynqmp_dp.c
-@@ -1721,6 +1721,7 @@ int zynqmp_dp_probe(struct zynqmp_dpsub *dpsub)
- 	bridge->ops = DRM_BRIDGE_OP_DETECT | DRM_BRIDGE_OP_EDID
- 		    | DRM_BRIDGE_OP_HPD;
- 	bridge->type = DRM_MODE_CONNECTOR_DisplayPort;
-+	bridge->of_node = dp->dev->of_node;
- 	dpsub->bridge = bridge;
+@@ -1624,8 +1624,17 @@ static irqreturn_t zynqmp_dp_irq_handler(int irq, void *data)
+ 	u32 status, mask;
  
- 	/*
+ 	status = zynqmp_dp_read(dp, ZYNQMP_DP_INT_STATUS);
++	/* clear status register as soon as we read its content */
++	zynqmp_dp_write(dp, ZYNQMP_DP_INT_STATUS, status);
+ 	mask = zynqmp_dp_read(dp, ZYNQMP_DP_INT_MASK);
+-	if (!(status & ~mask))
++
++	/*
++	 * Status register may report some events, which corresponding interrupts
++	 * have been disabled. Filter out those events against interrupts' mask.
++	 */
++	status &= ~mask;
++
++	if (!status)
+ 		return IRQ_NONE;
+ 
+ 	/* dbg for diagnostic, but not much that the driver can do */
+@@ -1634,7 +1643,6 @@ static irqreturn_t zynqmp_dp_irq_handler(int irq, void *data)
+ 	if (status & ZYNQMP_DP_INT_CHBUF_OVERFLW_MASK)
+ 		dev_dbg_ratelimited(dp->dev, "overflow interrupt\n");
+ 
+-	zynqmp_dp_write(dp, ZYNQMP_DP_INT_STATUS, status);
+ 
+ 	if (status & ZYNQMP_DP_INT_VBLANK_START)
+ 		zynqmp_dpsub_drm_handle_vblank(dp->dpsub);
 -- 
 2.25.1
 
