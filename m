@@ -1,85 +1,90 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E85155785;
-	Fri, 19 Jan 2024 16:39:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-io1-f53.google.com (mail-io1-f53.google.com [209.85.166.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47D741F170
+	for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 16:41:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705682396; cv=none; b=t99A5ywsr6Qo/P8SEzzI1znxozmMDmdOVMAAXB6TDRAMfveTtY7FlAKdmKbBXGVWocnZTKwNUftCMSCZ274RpDHy4UqLYc1U7akrryEFcVAGle6fD5wKTDawzCoR9NYq8VEJOCoyMn14YyiErPdyut07G9pRYdC/yB+3IXxeol0=
+	t=1705682504; cv=none; b=NxDvXjHiuqoF4I9oIN7N6Iw0WlB0wknwmwqsTIXTCna5snllxJbYlZi6MJ3Yc9EuCumZSmOusZIn/QSnFzIDJshRoPUmRcKhKn6SXY/CSMoF7wdookqrWrkhwwTIeNU4sgtbz+TIBDgu/0gfvk7X2vZ6IcK9GnxoN8IefD+dDRk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705682396; c=relaxed/simple;
-	bh=lBmSUPtkwtCMjZIkdsZPZkuixbOXHdWTZ6M2mQb6yPM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=JH2oJFuXL4kzx1N/HOuYXjF4+9hA34plqLH2p8aoElIB2z/nJZKeGtVkD1EFrdzTep//iaRwn8EXSQWyIlZqKsAMLhoeZGMKCrg9PG1sOyfJTstBVl/hbmSABhPx3yu9O6yZZdPB8q6znOkybrT/m2XauFy1JIa9WXZimleW2OM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CC8D311FB;
-	Fri, 19 Jan 2024 08:40:38 -0800 (PST)
-Received: from e126817.. (e126817.cambridge.arm.com [10.2.3.5])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 168413F73F;
-	Fri, 19 Jan 2024 08:39:49 -0800 (PST)
-From: Ben Gainey <ben.gainey@arm.com>
-To: linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	namhyung@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	james.clark@arm.com,
-	Ben Gainey <ben.gainey@arm.com>
-Subject: [PATCH 1/1] perf: Support PERF_SAMPLE_READ with inherit_stat
-Date: Fri, 19 Jan 2024 16:39:24 +0000
-Message-ID: <20240119163924.2801678-2-ben.gainey@arm.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240119163924.2801678-1-ben.gainey@arm.com>
-References: <20240119163924.2801678-1-ben.gainey@arm.com>
+	s=arc-20240116; t=1705682504; c=relaxed/simple;
+	bh=azMRYqvk1Vz+HvUwch48zgp9sztbupEWVObn4s0Ufrw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OvO7yjh+hjOmEPGPME25AAA+vVfuzAg6X0NL8Rvmcpde8Eu8A4/tXYY0TXNoB/vyP8IBpRIePTPBJtf1j7W3M5zhjp4jz7qvQgPjj8GHo1u/zDsAYKo/FJbUwb98yI/6yUEENxMSvTzRP/V3TSlpV6hEDUGM777Kt9tPnlC3FUI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=X/jyD+VG; arc=none smtp.client-ip=209.85.166.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="X/jyD+VG"
+Received: by mail-io1-f53.google.com with SMTP id ca18e2360f4ac-7bb5be6742fso9700139f.1
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 08:41:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1705682501; x=1706287301; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=sQklyqCzykir7KyEueElXoaEtB+kuoHpU7ZGJJMiaxM=;
+        b=X/jyD+VGS71qIv4BgELKZBYQQ+4hnEHd+Dw8FYaBujRdjxxqsh3rPC/b0da7prMmSC
+         P8Cv6C0N6DyxCJcQ5WtD5Gnx226SILBaepvlqK0Gb8bm+hfdY5BoxRwU4Wb7m8fQbz/3
+         RqOjc1GwGx20G/+9XiystXGFUnmEAK9ZB2Yxlp061UCT8OEiDgi4rDszpWmfNKHsvWCq
+         CnprH6KaNOxvU60751CdRF0AaiIyvZY15oNiRCT7SIgUSzZQP3W3Czu9IuyW5zF00/aC
+         UMGawu75NKP47ijwUX6qz12Z8XkJdzJ/7pLqsntUNSORcrv+7cTVvITcl7mSrdG1x2fJ
+         R65Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705682501; x=1706287301;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=sQklyqCzykir7KyEueElXoaEtB+kuoHpU7ZGJJMiaxM=;
+        b=OjM8OMH32PYpSH34C5lcca/yw7J2gZE6fzDuGvtwwrZNUG71ZnX8f8cr2I1N6GVqy3
+         FLAIL+WluRg9xYEe9bckK/5v4pg2a8i7C0DBlvVk9iwVTeQnvyo+dcTor7qgNTcMgfyc
+         tWt0b8fdS4EmZL3CNIVBjZWKHIQpYxaqw2iEst22udZJozhBShKp7u3a++Jt5hNLiyQe
+         4hvfwhphWVCxWl1rgpDXRPD0cyOchsJGBQ7HLSxxkQoQsuDvKrARq1mwmlFrczcjeEIL
+         lQz9Vwb19CAIqhDsft1sNYdBJ0Fy7WmymJSuN6hKZ/NjdyZ9SSB6Pz/l4itpKR5A+c0L
+         H9Rw==
+X-Gm-Message-State: AOJu0YyLuyf4MIlp2kzW5PKw7bxBwyyguZLNwirJNyWXnjeOaio5eajC
+	2VbUcQz4VabEDrvIOHHMA9qlui5b3Ut09HfAKdMUsLjcVxh1XChMJC6+7hhc48Y=
+X-Google-Smtp-Source: AGHT+IEQzErgEl9CkxmRGuWHPrGq7DyyFeysApP9aPzAPnIao1mWImm82UBhKNq81p6iFjY047QXCg==
+X-Received: by 2002:a05:6e02:1be8:b0:360:702a:3f89 with SMTP id y8-20020a056e021be800b00360702a3f89mr260523ilv.0.1705682501472;
+        Fri, 19 Jan 2024 08:41:41 -0800 (PST)
+Received: from [192.168.1.116] ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id bb5-20020a056e02000500b003619ab760f1sm1359094ilb.24.2024.01.19.08.41.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 19 Jan 2024 08:41:40 -0800 (PST)
+Message-ID: <fe1f4fe8-48d8-4b09-bd50-36e8fd8e75cb@kernel.dk>
+Date: Fri, 19 Jan 2024 09:41:40 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] block: Remove unnecessary unlikely()
+Content-Language: en-US
+To: "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+ Linus Torvalds <torvalds@linux-foundation.org>, linux-block@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Cc: stable@vger.kernel.org
+References: <20240119163434.1357155-1-willy@infradead.org>
+From: Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <20240119163434.1357155-1-willy@infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-This change allows events to use PERF_SAMPLE READ with inherit
-so long as both inherit_stat and PERF_SAMPLE_TID are set.
+On 1/19/24 9:34 AM, Matthew Wilcox (Oracle) wrote:
+> Jens added unlikely() thinking that this was an error path.  It's
+> actually just the end of the iteration, so does not warrant an
+> unlikely().
 
-In this configuration, and event will be inherited into any
-child processes / threads, allowing convenient profiling of a
-multi-process or multi-threaded application, whilst allowing
-profiling tools to collect per-thread samples, in particular
-of groups of counters.
+This is because the previous fix (or my attempt at least) didn't do the
+i >= vcnt, it checked for an empty bio instead. Which then definitely
+did make it an error/unlikely path, but obviously this one is not.
 
-Signed-off-by: Ben Gainey <ben.gainey@arm.com>
----
- kernel/events/core.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+The bio iterator stuff has gotten terribly unwieldy and complicated, and
+not very efficient either. But I guess that's a story for another
+investigation...
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 9efd0d7775e7c..4b603463d888f 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -11988,10 +11988,13 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
- 	local64_set(&hwc->period_left, hwc->sample_period);
- 
- 	/*
--	 * We currently do not support PERF_SAMPLE_READ on inherited events.
-+	 * We do not support PERF_SAMPLE_READ on inherited events unless
-+	 * inherit_stat and PERF_SAMPLE_TID are also selected, which allows
-+	 * inherited events to collect per-thread samples.
- 	 * See perf_output_read().
- 	 */
--	if (attr->inherit && (attr->sample_type & PERF_SAMPLE_READ))
-+	if (attr->inherit && (attr->sample_type & PERF_SAMPLE_READ)
-+		&& !(attr->inherit_stat && (attr->sample_type & PERF_SAMPLE_TID)))
- 		goto err_ns;
- 
- 	if (!has_branch_stack(event))
 -- 
-2.43.0
+Jens Axboe
 
