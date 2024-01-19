@@ -1,37 +1,25 @@
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E4D054FBB;
-	Fri, 19 Jan 2024 16:08:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 06D7854659;
+	Fri, 19 Jan 2024 16:09:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705680505; cv=none; b=m84GWfpJcHwEXujRuBCjRCDweTB6ZwfOFPhFU8mkdCobaAL9bhbm8wXRPzZKSpoKorVyA/Q/qyNXhcvz5pELYloeRY4WtqmvVj22GCC4RnLU1tG7GAo2L/eIIj4WH1gdyd7Mb4QZpaLth2/iLt8cG5cXSWGL6qazgH2GSqNari0=
+	t=1705680591; cv=none; b=hknFLml6jATcJ3f7ksqKcyOzaEVU3nx/NzYxGr6WNFyqO/4v81T8Zv4jhHp9qUyaMzY2vEM4JXc3soxrQFvUEcAKFZ39W75jsLqAG4gLCX1OwXYJZBijpF5JeoyPdXQqLm/qZMLBAoZwT/PKStEudgaYAIMAWQfqiqMxLutsnNE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705680505; c=relaxed/simple;
-	bh=f1NTbZpi6beXqIjw6g6+qGt7w9p6IgHNGpWIbTLSFgs=;
+	s=arc-20240116; t=1705680591; c=relaxed/simple;
+	bh=+qVwNgKWyvVHNlIWEZ5n9M6EFS+J7PQq+oE9zH58ZMg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dxh05/nLCJwSqcpsrtgTcjV5t1tgpJ2Z+v4jWFSqv3mqLaluz+1ElzPkWTkGygPW7NRayKurHATPrx9IC7MMkXx1HyHkmD1lJj/0JaMFV7lCkwtgx50LaqDpdAZxGWC9rTbkq2xbIvPBIR5GqiqhSvkQLn/v5529gjcKLHbOwT8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=WONIpkeF; arc=none smtp.client-ip=217.70.183.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="WONIpkeF"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 65E85240008;
-	Fri, 19 Jan 2024 16:08:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1705680495;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/lcPvgWIm/QbVzXxcPjjQvz3cRLruCD/tBqEeHF3XX0=;
-	b=WONIpkeF6OM+U5keRwkDYZGMolP5XktgDBB6mIAe8MUTsy79HiG6aPHFRUwt+zvQnJD1yV
-	rhimS5Xv0eRylsTuhD2McG83J2YXfxvXNhUbjh/C+EXBuXMvv5+07L8LSuG0ozxWPYlwY/
-	aNSMECbf8FnizI8ADDg3l8yKMTxFLFAw5gxxCKPkDelc+OqObRloUw9fEpi35HIqKz+mBP
-	wPtcYc/iRsKufncWrvdORBHBKi/t3Zi4ATWX3EAfBtizCbIK5XiiUMupEJBg9I+eWfq8I+
-	stz/4f2GuyfGsCnAIosFOmQIF5TolDLgz4bAPmE8Q0y3roHYchplOYTQKxUDog==
-Message-ID: <223422cc-2a1c-417b-8fa1-20d3b3eb41ef@bootlin.com>
-Date: Fri, 19 Jan 2024 17:08:11 +0100
+	 In-Reply-To:Content-Type; b=i/H08cCNjyZCVuY4ukAhZ/4fMlKWeL+i6ohfTJxS2vYvTPe3FGjXuJTFeTYylXrQOCZMkqbWoi89u4hk6PNUmLOzdH889Yeylmr3wkLjF7nSQH58m9cI5y8E4XZ7FFZRM6c+YAf+CqF5hrLWJSX9EEvlLZXD4x5C7LeCQd251IA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 73B9D1042;
+	Fri, 19 Jan 2024 08:10:25 -0800 (PST)
+Received: from [10.57.77.97] (unknown [10.57.77.97])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 04F803F73F;
+	Fri, 19 Jan 2024 08:09:37 -0800 (PST)
+Message-ID: <ffdba8c4-f1a2-4141-a3d4-0c85dfea6fef@arm.com>
+Date: Fri, 19 Jan 2024 16:09:35 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -39,106 +27,83 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 02/14] pinctrl: pinctrl-single: move suspend/resume to
- suspend_noirq/resume_noirq
-Content-Language: en-US
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>,
- Tony Lindgren <tony@atomide.com>, Haojian Zhuang
- <haojian.zhuang@linaro.org>, Vignesh R <vigneshr@ti.com>,
- Aaro Koskinen <aaro.koskinen@iki.fi>,
- Janusz Krzysztofik <jmkrzyszt@gmail.com>, Andi Shyti
- <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>,
- Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
- Philipp Zabel <p.zabel@pengutronix.de>, Tom Joseph <tjoseph@cadence.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
- linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
- linux-i2c@vger.kernel.org, linux-phy@lists.infradead.org,
- linux-pci@vger.kernel.org, gregory.clement@bootlin.com,
- theo.lebrun@bootlin.com, thomas.petazzoni@bootlin.com, u-kumar1@ti.com
-References: <20240102-j7200-pcie-s2r-v1-0-84e55da52400@bootlin.com>
- <20240102-j7200-pcie-s2r-v1-2-84e55da52400@bootlin.com>
- <CAHp75Verff06LE0QFaDRoun=ANpGfVU1tHknvvQZd_KyzLVP5Q@mail.gmail.com>
-From: Thomas Richard <thomas.richard@bootlin.com>
-In-Reply-To: <CAHp75Verff06LE0QFaDRoun=ANpGfVU1tHknvvQZd_KyzLVP5Q@mail.gmail.com>
+Subject: Re: [PATCH] selftests/mm: run_vmtests.sh: add missing tests
+Content-Language: en-GB
+To: Muhammad Usama Anjum <usama.anjum@collabora.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Shuah Khan <shuah@kernel.org>
+Cc: kernel@collabora.com, linux-mm@kvack.org,
+ linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240116090641.3411660-1-usama.anjum@collabora.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <20240116090641.3411660-1-usama.anjum@collabora.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-GND-Sasl: thomas.richard@bootlin.com
+Content-Transfer-Encoding: 7bit
 
-On 1/15/24 21:02, Andy Shevchenko wrote:
-> On Mon, Jan 15, 2024 at 6:16 PM Thomas Richard
-> <thomas.richard@bootlin.com> wrote:
->>
->> The goal is to extend the active period of pinctrl.
->> Some devices may need active pinctrl after suspend and/or before resume.
->> So move suspend/resume to suspend_noirq/resume_noirq to have active
->> pinctrl until suspend_noirq (included), and from resume_noirq
->> (included).
-> 
-> ->...callback...()
-> (Same comment I have given for the first patch)
+Hi Muhammad,
 
-fixed
+Afraid this patch is causing a regression on our CI system when it turned up in
+linux-next today. Additionally, 2 of thetests you have added are failing because
+the scripts are not exported correctly...
 
+On 16/01/2024 09:06, Muhammad Usama Anjum wrote:
+> Add missing tests to run_vmtests.sh. The mm kselftests are run through
+> run_vmtests.sh. If a test isn't present in this script, it'll not run
+> with run_tests or `make -C tools/testing/selftests/mm run_tests`.
 > 
-> ...
+> Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
+> ---
+>  tools/testing/selftests/mm/run_vmtests.sh | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
->>         struct pcs_device *pcs;
->>
->> -       pcs = platform_get_drvdata(pdev);
->> +       pcs = dev_get_drvdata(dev);
->>         if (!pcs)
->>                 return -EINVAL;
-> 
-> Drop dead code.
-> This should be simple one line after your change.
-> 
->        struct pcs_device *pcs = dev_get_drvdata(dev);
-> 
+> diff --git a/tools/testing/selftests/mm/run_vmtests.sh b/tools/testing/selftests/mm/run_vmtests.sh
+> index 246d53a5d7f2..a5e6ba8d3579 100755
+> --- a/tools/testing/selftests/mm/run_vmtests.sh
+> +++ b/tools/testing/selftests/mm/run_vmtests.sh
+> @@ -248,6 +248,9 @@ CATEGORY="hugetlb" run_test ./map_hugetlb
+>  CATEGORY="hugetlb" run_test ./hugepage-mremap
+>  CATEGORY="hugetlb" run_test ./hugepage-vmemmap
+>  CATEGORY="hugetlb" run_test ./hugetlb-madvise
+> +CATEGORY="hugetlb" run_test ./charge_reserved_hugetlb.sh
+> +CATEGORY="hugetlb" run_test ./hugetlb_reparenting_test.sh
 
-dead code dropped
+These 2 tests are failing because the test scripts are not exported. You will
+need to add them to the TEST_FILES variable in the Makefile.
 
-> ...
-> 
->>         struct pcs_device *pcs;
->>
->> -       pcs = platform_get_drvdata(pdev);
->> +       pcs = dev_get_drvdata(dev);
->>         if (!pcs)
->>                 return -EINVAL;
-> 
-> Ditto.
-> 
-> ...
+> +CATEGORY="hugetlb" run_test ./hugetlb-read-hwpoison
 
-dead code dropped
+The addition of this test causes 2 later tests to fail with ENOMEM. I suspect
+its a side-effect of marking the hugetlbs as hwpoisoned? (just a guess based on
+the test name!). Once a page is marked poisoned, is there a way to un-poison it?
+If not, I suspect that's why it wasn't part of the standard test script in the
+first place.
 
-> 
->> +static const struct dev_pm_ops pinctrl_single_pm_ops = {
->> +       SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(pinctrl_single_suspend_noirq,
->> +                                     pinctrl_single_resume_noirq)
->> +};
-> 
-> Use proper / modern macro.
+These are the tests that start failing:
 
-fixed, use DEFINE_NOIRQ_DEV_PM_OPS now
+# # ------------------------------------
+# # running ./uffd-stress hugetlb 128 32
+# # ------------------------------------
+# # nr_pages: 64, nr_pages_per_cpu: 8
+# # ERROR: context init failed (errno=12, @uffd-stress.c:254)
+# # [FAIL]
+# not ok 18 uffd-stress hugetlb 128 32 # exit=1
+# # --------------------------------------------
+# # running ./uffd-stress hugetlb-private 128 32
+# # --------------------------------------------
+# # nr_pages: 64, nr_pages_per_cpu: 8
+# # bounces: 31, mode: rnd racing ver poll, ERROR: UFFDIO_COPY error: -12ERROR:
+UFFDIO_COPY error: -12 (errno=12, @uffd-common.c:614)
+# #  (errno=12, @uffd-common.c:614)
+# # [FAIL]
 
-> 
-> ...
-> 
->>  #endif
-> 
-> Why ifdeferry is needed (esp. taking into account pm_ptr() use below)?
+Quickest way to repo is:
 
-We may have an "unused variable" warning for pinctrl_single_pm_ops if
-CONFIG_PM is undefined (due to pm_ptr).
+$ sudo ./run_vmtests.sh -t "userfaultfd hugetlb"
 
--- 
-Thomas Richard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Thanks,
+Ryan
+
+
+>  
+>  nr_hugepages_tmp=$(cat /proc/sys/vm/nr_hugepages)
+>  # For this test, we need one and just one huge page
 
