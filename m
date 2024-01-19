@@ -1,38 +1,37 @@
 Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB8C71E4A8;
-	Fri, 19 Jan 2024 19:38:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E06E61E480;
+	Fri, 19 Jan 2024 19:38:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705693094; cv=none; b=aXFNFLQl/Em26Jl1MpRJtdqNEvofqeKDUBXNwej857ry2FKGA5GMiOMNph15BvQuyM9wdHJYT4hcqUYa1uCTbHRc0zWx6uHYBV8DSHVSpU7iEYydHiW3W6KhPN6Jgd98aCjtFI9VcbuQlx22vTdkZonyoAY+i5jAj5PNSZUdPX8=
+	t=1705693094; cv=none; b=iYlj4gCV8tsFqvthbScyJcirrcqAZhnma6NX3TpmcXbXYdpJIdhzD+GWgdYPWnmPm8tn7jqTFkR4SOtEXBYyJJeeMDB54s4fu9y7OGu7a9FAXZAcJuDklb6HKazP7PFLZcJ+mAzBZSlWQm8TVXwf4RkErAFQEUlGhEGA2xK4DGc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1705693094; c=relaxed/simple;
-	bh=UiKN/wzt2VTmVDCklnrDfyuyegL48RVt7U2udrBOTgo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SH1a5yE6Q3gHJKv6T5vXTY9pqS2aWeGLZDQepj+pvXKDKhJYXFtQU6CevRsfaaw49/GNvBpwY2AkaFEIbCiVAIzCmbzOu04E8A0+cgHyX0eXk6+nxr9YR0ncJp2si+EnDUgYjcrnnh/qLp1iUdFFSAGSWMtsE/6ISzS5XcQ80RU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=Y7esV1ww; arc=none smtp.client-ip=46.235.227.194
+	bh=MSkJacugMshatNwZ3mm7fqSw/GZZCUd/n7oLLvxCAvs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=V/14jxrzlX9J/grTz933y0HY4nyQ0dI1bRfTT4B1aJx4pOgPfwLy8t+zWemi86DZthK04BzCwdd9dmMG/vkeNu+UW/Z2XIzJtR6KjLqaYqw5xskao9cjBBLykksP2HFpPUIwXeilIUV0AwkaVBEkVk956VtnuvHo3NK42udVG3s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=Rxgl3i8Z; arc=none smtp.client-ip=46.235.227.194
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="Y7esV1ww"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="Rxgl3i8Z"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1705693091;
-	bh=UiKN/wzt2VTmVDCklnrDfyuyegL48RVt7U2udrBOTgo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Y7esV1ww9FoQwrw6eE23ZrECWdlVd6hxgSo5ucA047ZlPDkVwLqejHHeT/MkkALxx
-	 JeC6QdY5IIQg+2DfATdq0jZ7p9T4oaXCq8F6CAC6TD/zXAiYOmu6O+XJwWOeBgm5R+
-	 YnEj/qOUV79GykMJBV/2i2msA9yRplfM2Pszm3w1XyyF7w13Tk+3e+QtMdTyWX1RNb
-	 zPnM0Nk+hVC6q9VaRX7ZnYoNfSJf0kBgdVuyKfouAgbA9dRepyNCW2Ml0FMkfkXw5/
-	 oyUibKwmOWkxjJ5zlzYJM+uKvfbEMjdRY9nkFc6ufBNaC34OzFWNoRL8iwRwjLBAUy
-	 nRfGe8JwfyJww==
+	s=mail; t=1705693089;
+	bh=MSkJacugMshatNwZ3mm7fqSw/GZZCUd/n7oLLvxCAvs=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Rxgl3i8ZC+YWiCP+rPTZ2QDTXukFQrh1bPTN/H/BfTmKLhgU6mtTkKt8M9ewAtG2D
+	 v9bHvVKanfq7euV1l5e5F7hgbHIsoyYmUYgr6O9zyVcmalzptdw+irJ1OZ8LDYPe4w
+	 +LsczR86kyGUquu21EjkMK0/NvSzblrPC8Z9/Y+gML0e4thm0IsqRv9BSqgRUqJPAB
+	 PJZ1BP4kmAcvYp801UIHTQr5vSjW4XLzeyvCxGv/+ju/iiZga4KLPFdqi7pYDHs+kq
+	 G6ugB+C1lFT2wWgprRXLvfKh0SwUUFTbyjJ9hdSX9d81zGN4Z9yHrkAfMPTvkxN21j
+	 dOVpZAOHWO9Vg==
 Received: from localhost (cola.collaboradmins.com [195.201.22.229])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: cristicc)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 205CF3782088;
-	Fri, 19 Jan 2024 19:38:11 +0000 (UTC)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id DB8A03781FF2;
+	Fri, 19 Jan 2024 19:38:08 +0000 (UTC)
 From: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
 To: Vinod Koul <vkoul@kernel.org>,
 	Kishon Vijay Abraham I <kishon@kernel.org>,
@@ -52,12 +51,10 @@ Cc: linux-phy@lists.infradead.org,
 	linux-rockchip@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	kernel@collabora.com
-Subject: [PATCH 2/3] dt-bindings: phy: Add Rockchip HDMI/DP Combo PHY schema
-Date: Fri, 19 Jan 2024 21:38:02 +0200
-Message-ID: <20240119193806.1030214-3-cristian.ciocaltea@collabora.com>
+Subject: [PATCH 0/3] Add support for RK3588 HDMI/DP Combo PHY
+Date: Fri, 19 Jan 2024 21:38:00 +0200
+Message-ID: <20240119193806.1030214-1-cristian.ciocaltea@collabora.com>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240119193806.1030214-1-cristian.ciocaltea@collabora.com>
-References: <20240119193806.1030214-1-cristian.ciocaltea@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,117 +63,28 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add dt-binding schema for the Rockchip HDMI/DP Transmitter Combo PHY
+Add driver and bindings to support the Rockchip HDMI/eDP TX Combo PHY 
 found on RK3588 SoC.
 
-Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
----
- .../phy/rockchip,rk3588-hdptx-phy.yaml        | 96 +++++++++++++++++++
- 1 file changed, 96 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/rockchip,rk3588-hdptx-phy.yaml
+The PHY is based on a Samsung IP block and supports HDMI 2.1 TMDS, FRL
+and eDP links.
 
-diff --git a/Documentation/devicetree/bindings/phy/rockchip,rk3588-hdptx-phy.yaml b/Documentation/devicetree/bindings/phy/rockchip,rk3588-hdptx-phy.yaml
-new file mode 100644
-index 000000000000..dd357994ba1b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/rockchip,rk3588-hdptx-phy.yaml
-@@ -0,0 +1,96 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/phy/rockchip,rk3588-hdptx-phy.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Rockchip SoC HDMI/DP Transmitter Combo PHY
-+
-+maintainers:
-+  - Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - rockchip,rk3588-hdptx-phy
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    items:
-+      - description: Reference clock
-+      - description: APB clock
-+
-+  clock-names:
-+    items:
-+      - const: ref
-+      - const: apb
-+
-+  "#phy-cells":
-+    const: 0
-+
-+  resets:
-+    items:
-+      - description: PHY reset line
-+      - description: APB reset line
-+      - description: INIT reset line
-+      - description: CMN reset line
-+      - description: LANE reset line
-+      - description: ROPLL reset line
-+      - description: LCPLL reset line
-+
-+  reset-names:
-+    items:
-+      - const: phy
-+      - const: apb
-+      - const: init
-+      - const: cmn
-+      - const: lane
-+      - const: ropll
-+      - const: lcpll
-+
-+  rockchip,grf:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description: Some PHY related data is accessed through GRF regs.
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-names
-+  - "#phy-cells"
-+  - resets
-+  - reset-names
-+  - rockchip,grf
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/rockchip,rk3588-cru.h>
-+    #include <dt-bindings/reset/rockchip,rk3588-cru.h>
-+
-+    soc {
-+      #address-cells = <2>;
-+      #size-cells = <2>;
-+
-+      hdptxphy_grf: syscon@fd5e0000 {
-+        compatible = "rockchip,rk3588-hdptxphy-grf", "syscon";
-+        reg = <0x0 0xfd5e0000 0x0 0x100>;
-+      };
-+
-+      hdptxphy: phy@fed60000 {
-+        compatible = "rockchip,rk3588-hdptx-phy";
-+        reg = <0x0 0xfed60000 0x0 0x2000>;
-+        clocks = <&cru CLK_USB2PHY_HDPTXRXPHY_REF>, <&cru PCLK_HDPTX0>;
-+        clock-names = "ref", "apb";
-+        #phy-cells = <0>;
-+        resets = <&cru SRST_HDPTX0>, <&cru SRST_P_HDPTX0>,
-+                 <&cru SRST_HDPTX0_INIT>, <&cru SRST_HDPTX0_CMN>,
-+                 <&cru SRST_HDPTX0_LANE>, <&cru SRST_HDPTX0_ROPLL>,
-+                 <&cru SRST_HDPTX0_LCPLL>;
-+        reset-names = "phy", "apb", "init", "cmn", "lane", "ropll", "lcpll";
-+        rockchip,grf = <&hdptxphy_grf>;
-+      };
-+    };
+The HDMI link has been tested on Rock 5B and EVB1 boards.
+
+Cristian Ciocaltea (3):
+  dt-bindings: soc: rockchip: Add rk3588 hdptxphy syscon
+  dt-bindings: phy: Add Rockchip HDMI/DP Combo PHY schema
+  phy: rockchip: Add Samsung HDMI/DP Combo PHY driver
+
+ .../phy/rockchip,rk3588-hdptx-phy.yaml        |   96 +
+ .../devicetree/bindings/soc/rockchip/grf.yaml |    1 +
+ drivers/phy/rockchip/Kconfig                  |    8 +
+ drivers/phy/rockchip/Makefile                 |    1 +
+ .../phy/rockchip/phy-rockchip-samsung-hdptx.c | 2045 +++++++++++++++++
+ 5 files changed, 2151 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/rockchip,rk3588-hdptx-phy.yaml
+ create mode 100644 drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c
+
 -- 
 2.43.0
 
