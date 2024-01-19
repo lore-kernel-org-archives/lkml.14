@@ -1,101 +1,131 @@
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.systec-electronic.com (mail.systec-electronic.com [77.220.239.22])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F0F4138F;
-	Fri, 19 Jan 2024 03:02:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C636515A7;
+	Fri, 19 Jan 2024 03:05:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=77.220.239.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705633344; cv=none; b=LVCoehVkq9q9bpKVd2vs7wzbS0A5KU2Q2cyPfAaI3g2mlacewT2Fs9YqmUzoHSYX0zFxqfZx7mYyPofOU5go+UaZtvECi6QEt+/lYvtKq0kOLLxvnfGXE9agEpVmP+zXPWcHQqdbe/mskF1ed1/4Yu9ufinRG5iZY+DByz+evEU=
+	t=1705633549; cv=none; b=cHw+xUYgO3NqU03FllzGbzJqGoF5axU8cIwrcb0LKuniCY2hdnnnttMox2GMnEqW6AnbVpXwRKMuK1fWECYQOrw+7GUXoCIwfDbtfCWY4ISzEwuILz5LAUpPVQWgsmnJmyEYwvj/UT2XNe5qv9gngjyIfNEHNmNUB+cNkJPd2YQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705633344; c=relaxed/simple;
-	bh=oUJxG83KMUbt4dCXkDxt7l4cI50LzKxgafl4u4YyKSQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZwKQp/Rd85E3NFpL0TjRbY/rjtaybVKI9AhdTca8OMg8FFRTrnZs4EKy1aCWz15wJW6xqo9muaVoUbFXTWn6qALq33wIpW6SuFXcheSlreZGAPioXvpmfUGRi+z0bRlD/fqjK/oCXwa2Wfct5bSYLdw3eFXX9C8K11NheWJAS1o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QrB8UTV4; arc=none smtp.client-ip=209.85.167.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1705633549; c=relaxed/simple;
+	bh=MAH/+py/IyAwSUBrY2GBat3/b+orj4IxOAeho+Rq08Y=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=VfG1k6nlkmAQRcDKBWJotIyWMxH1eTL4wTLEB7Y+WXjgasB4ARwW/XSrMiHcc9IwcatETOjM6euXSgGxomIhWCj7rsCQ0lNmLtX9JlISc3Vut5Hnk7k9vhgflyuRaiThTQkY64UwPIJ7lBkFsFAslDP0PLgcpj9eUyGI+kA5YSk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=systec-electronic.com; spf=pass smtp.mailfrom=systec-electronic.com; dkim=pass (2048-bit key) header.d=systec-electronic.com header.i=@systec-electronic.com header.b=VdqIr0Fa; arc=none smtp.client-ip=77.220.239.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=systec-electronic.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=systec-electronic.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QrB8UTV4"
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-50e7c6f0487so296373e87.3;
-        Thu, 18 Jan 2024 19:02:22 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=systec-electronic.com header.i=@systec-electronic.com header.b="VdqIr0Fa"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.systec-electronic.com (Postfix) with ESMTP id 45EBB9400107;
+	Fri, 19 Jan 2024 04:05:43 +0100 (CET)
+Received: from mail.systec-electronic.com ([127.0.0.1])
+ by localhost (mail.systec-electronic.com [127.0.0.1]) (amavis, port 10032)
+ with ESMTP id dsLRexoTBQ2g; Fri, 19 Jan 2024 04:05:43 +0100 (CET)
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.systec-electronic.com (Postfix) with ESMTP id 16C8C940010D;
+	Fri, 19 Jan 2024 04:05:43 +0100 (CET)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.systec-electronic.com 16C8C940010D
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705633340; x=1706238140; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=q66bntN7QSO/os9dzasJoSSuv+HLCYEBJBs3UyFG0Ao=;
-        b=QrB8UTV4cfHO1bllEUGXqPCqvcCW4mSd97ESPlSwZ+7kjfKT/iM3Xzd+ZlX0pjblVu
-         UIN1olyVdl0/l1EUp/YUuOxJaS0jtlNY4vaNCgfvjPqvP9TrgbCIObgLsQCE3nBxTvex
-         Q/WqCvCDV/15OOMfGqeU3mGL0qLZal8h3ZhXCDq5Atllb2Y3owhx7KdjJvw6KJFhms/0
-         KXEH4cn7koV5mELosvrAciCGtS4eX5Can2n1O79zsHE5j0rXVuMxMLMvBqK4LCS6wpzQ
-         v1y3Jj4muH1r3QxyrzCUnHaANU/zneW7xOaYOkGdTf3cGBkiIv4iCztVz2UkZIx25otD
-         p4tA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705633340; x=1706238140;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=q66bntN7QSO/os9dzasJoSSuv+HLCYEBJBs3UyFG0Ao=;
-        b=MTPSKiH9ssjQ/JPgVrJ+RDX1oSzkDxfBJazwz9rWzBwd2r6nOotzvsanvYJOCxAhCp
-         FLU2OEFKp3WZAey4LN4VDXAjHjO0aE4K2T3Y4sC2wnEgCCAfcAztO5WblauYCAKxjIh7
-         BYNRJwirdfovaSoOVdIa/mOqxU/gKiruQDGPOVAjma/ASo+h1fawz71PSceGU6FReIGX
-         /6HRraow+9N7btsYoOC06uP6lmjeecuIRXeEZ5hxUZsh/TSEEM8gBsTEaUbb7t63iTKu
-         AEqLGw7S4EfWxqocjGOHetAh1/KDvclGLkeXZt5GcIs8YlATMnHkkUJ9UabATIi+Qypm
-         IYVg==
-X-Gm-Message-State: AOJu0YwIPtDbJ9O7/4Vs202LwF1WySIz42jiLczq8CEY6V2bCwJXz5Bi
-	uvfesaH6NVYNyX9CBYlFl/uh2wZ/LhainRiXSWCZTPw3maGhwVGHCtps4xTn7VFaXLMeKAITv3U
-	H3qEibJSu9w6nWmT1qPDcrqJ/tnI=
-X-Google-Smtp-Source: AGHT+IEd7MwUOENPLVCvF1ap8TBBFmbGRmlOWO1crHTJetcfbl7r8XHGJuGvyNHne7uciIfOWBUe2Mr4IwccyXG2gME=
-X-Received: by 2002:ac2:5b5a:0:b0:50e:a9c0:70a6 with SMTP id
- i26-20020ac25b5a000000b0050ea9c070a6mr206568lfp.43.1705633340309; Thu, 18 Jan
- 2024 19:02:20 -0800 (PST)
+	d=systec-electronic.com; s=B34D3B04-5DC7-11EE-83E3-4D8CAB78E8CD;
+	t=1705633543; bh=XDyUQ14+bRC9vIc77iJw5gWqww9IgCSfjxNxBFV+/uY=;
+	h=Date:From:To:Message-ID:MIME-Version;
+	b=VdqIr0FaPJqNIRt2aCGNAvRF1dkYCOJEuhoWY3/irkhtU8ouz2kaQYFpPNJr18PRl
+	 6dh+ndMzpu1SzzuxuJbFKHAwr4PeNd+KYKa6KbPMUXWdNh6SnqITLCd0xjLeM7u5wT
+	 gpkGLQU+RdFPcI15Dp8q6aphgQ491LqB5+S/X6wlC809uxx4D8CuumELr49S4+PGMA
+	 HBBdeQVy6oFgyZtsaafmmDsuBxc+4ma8iYHY8PyrRvELyaC2oJZHytwNfrittCesHR
+	 nCfISRmlWpMlxx0Pwfy4dlX5JlbLLT4or5qaLkODZYcr3gKvqDQrzyGhPNAMsds6dN
+	 iPl/7FSm8lbyg==
+X-Virus-Scanned: amavis at systec-electronic.com
+Received: from mail.systec-electronic.com ([127.0.0.1])
+ by localhost (mail.systec-electronic.com [127.0.0.1]) (amavis, port 10026)
+ with ESMTP id VDT-1pSJ9P0D; Fri, 19 Jan 2024 04:05:43 +0100 (CET)
+Received: from ws-565760.systec.local (unknown [212.185.67.148])
+	by mail.systec-electronic.com (Postfix) with ESMTPSA id B434E9400107;
+	Fri, 19 Jan 2024 04:05:42 +0100 (CET)
+Date: Fri, 19 Jan 2024 04:05:29 +0100 (CET)
+From: Andre Werner <andre.werner@systec-electronic.com>
+Reply-To: Andre Werner <andre.werner@systec-electronic.com>
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+cc: Andre Werner <andre.werner@systec-electronic.com>, andrew@lunn.ch, 
+    hkallweit1@gmail.com, davem@davemloft.net, edumazet@google.com, 
+    kuba@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org, 
+    linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: phy: adin1100: Fix nullptr exception for phy
+ interrupts
+In-Reply-To: <Zald7u8B+uKzCn42@shell.armlinux.org.uk>
+Message-ID: <48245ebe-babf-52ec-407b-9ce32ffe24d2@systec-electronic.com>
+References: <20240118104341.10832-1-andre.werner@systec-electronic.com> <Zald7u8B+uKzCn42@shell.armlinux.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240119124715.7be9a3d7@canb.auug.org.au>
-In-Reply-To: <20240119124715.7be9a3d7@canb.auug.org.au>
-From: Steve French <smfrench@gmail.com>
-Date: Thu, 18 Jan 2024 21:02:09 -0600
-Message-ID: <CAH2r5msKy0t-+s0c7HOxK2RzpSHE65itLH7YNhDFzZpRheAxZA@mail.gmail.com>
-Subject: Re: linux-next: build warning after merge of the cifs tree
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: CIFS <linux-cifs@vger.kernel.org>, Steve French <stfrench@microsoft.com>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	Linux Next Mailing List <linux-next@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-fixed
+On Thu, 18 Jan 2024, Russell King (Oracle) wrote:
 
-On Thu, Jan 18, 2024 at 7:47=E2=80=AFPM Stephen Rothwell <sfr@canb.auug.org=
-.au> wrote:
+> In addition to Andrew's comments:
 >
-> Hi all,
+> On Thu, Jan 18, 2024 at 11:43:41AM +0100, Andre Werner wrote:
+>> +static int adin_config_intr(struct phy_device *phydev)
+>> +{
+>> +	int ret, regval;
+>> +
+>> +	ret = adin_phy_ack_intr(phydev);
+>> +
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	regval = phy_read_mmd(phydev, MDIO_MMD_VEND2, ADIN_PHY_SUBSYS_IRQ_MASK);
+>> +	if (regval < 0)
+>> +		return regval;
+>> +
+>> +	if (phydev->interrupts == PHY_INTERRUPT_ENABLED)
+>> +		regval |= ADIN_LINK_STAT_CHNG_IRQ_EN;
+>> +	else
+>> +		regval &= ~ADIN_LINK_STAT_CHNG_IRQ_EN;
+>> +
+>> +	ret = phy_write_mmd(phydev, MDIO_MMD_VEND2,
+>> +			    ADIN_PHY_SUBSYS_IRQ_MASK,
+>> +			    regval);
+>> +	return ret;
 >
-> After merging the cifs tree, today's linux-next build (htmldocs) produced
-> this warning:
+> 	u16 irq_mask;
 >
-> Documentation/admin-guide/cifs/todo.rst:7: WARNING: Definition list ends =
-without a blank line; unexpected unindent.
-> Documentation/admin-guide/cifs/todo.rst:20: ERROR: Unexpected indentation=
-.
-> Documentation/admin-guide/cifs/todo.rst:21: WARNING: Block quote ends wit=
-hout a blank line; unexpected unindent.
->
-> Introduced by commit
->
->   e7dccb219fde ("smb3: minor documentation updates")
->
-> --
-> Cheers,
-> Stephen Rothwell
+> 	if (phydev->interrupts == PHY_INTERRUPT_ENABLED)
+> 		irq_mask = ADIN_LINK_STAT_CHNG_IRQ_EN;
+> 	else
+> 		irq_mask = 0;
 
+Unfortunately, I can not do this, because that phy ask for read-modify-write access to
+registers and some bits in this register are already set after reset and
+should not being modified.
 
+>
+> 	return phy_modify_mmd(phydev, MDIO_MMD_VEND2,
+> 			      ADIN_PHY_SUBSYS_IRQ_MASK,
+> 			      ADIN_LINK_STAT_CHNG_IRQ_EN, irq_mask);
+>
+>> +}
+>> +
+>> +static irqreturn_t adin_phy_handle_interrupt(struct phy_device *phydev)
+>> +{
+>> +	int irq_status;
+>> +
+>> +	irq_status = phy_read_mmd(phydev, MDIO_MMD_VEND2, ADIN_PHY_SUBSYS_IRQ_STATUS);
+>
+> Probably want to wrap this - if you're going to bother wrapping your
+> phy_write_mmd() above because it overflows 80 columns, then please do
+> so consistently.
 
---=20
-Thanks,
+Done.
 
-Steve
+>
+> Thanks.
+>
+> -- 
+> RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+> FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+>
