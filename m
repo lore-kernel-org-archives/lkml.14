@@ -1,96 +1,79 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-171.mta1.migadu.com (out-171.mta1.migadu.com [95.215.58.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DF2853E05;
-	Fri, 19 Jan 2024 14:44:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E53CF53E22
+	for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 14:45:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705675441; cv=none; b=oTd6WTgr2sUDEl0z7NSj7NzawpSDO/4uXwLqVtpzThAN2XeeZ7o12d6v3CqMk+GwIrzksGeVK/zhICDwVY+JkzbfduQ2Uvcky2Tws3odT6HC2XlWvi6pMRF6kLbStNeVnM59uuYeO1rvn322QXYM1k9GA8IAqaAdpwVKHWdb6nE=
+	t=1705675560; cv=none; b=GmmviuPtRxcTaoap7gG2aD0UIgJKVEQHF4ukvNOY4wDwwceNER6ErBVxT3/d7vDNMUy/m4Eqfzi98lBFHlE7dzkEdkl0QFw76cwz8Gg9Pl4JT1N4si734sY+MauKA0an6mgEcqlUb/CvPiLvB7VaQi28cJMwx01r29vm3XSxOkM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705675441; c=relaxed/simple;
-	bh=giuelcDxoe3oEfiTmrX+KQXnevAJ1smfRGB8PM+8Adg=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=mpn/GnjEaHF8LiMEx06lNgfSJYCK160Of0bu/dSsSPSqWwVfObCf0RlBwqpJqlPBKAO4bq3w0bJ/STWqXa53IW1kd9PI5+e4e0qJTngzTxEhhAz/OFV+1nK6sj5hTjwq+5lOaidL9CCrVXlqFQ1IA2mrV4MJ72ymXZ5+KHHthJ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U7z2tB1H; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1705675560; c=relaxed/simple;
+	bh=uXIL0jESnugspLmwRlY37WYBzsNGvLJzSoz+8nVRU50=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=n6BjdXbRmdHcu+u2e/lX29VwiG8ljl7RSKTxwiRSgna8/htDzHrnq1/3Q8iWD9nmZ8kcwAQ0yfERdmV+5tHffuFpAfPd7qpQduwhaBfvTIx24m41NuNDtH6lxs416nM7vuxP8u0BaszkwXczl0qCsUMNXlcAmd7roNt2e0iosYc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=UzeW2rWQ; arc=none smtp.client-ip=95.215.58.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U7z2tB1H"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CEDAC43390;
-	Fri, 19 Jan 2024 14:43:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705675440;
-	bh=giuelcDxoe3oEfiTmrX+KQXnevAJ1smfRGB8PM+8Adg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=U7z2tB1HM2Mscia1BP49rUvb2Pm0QJAEwzhItzgbUvZolkTju6FMB9KMN01GKaNqX
-	 zzEUKyWstHcd8bQAnYDjk6xdowuYUfc8KdPcUG2rZ+DTd2DCTxHmFTQDdRoDVbhRZ1
-	 MvS/6PBFmgj8EryvmC67XeZMP/oG6dmtOnkntl48QkIKwclBz93F6VzjUYmkCOZKB0
-	 UEC7p82/eeVs6hZIMvg+Man3IS1LhKr23s5w957zvZQ+hdbFW7eUC3fxCryAjRfDyv
-	 HfGjKqFJMPEK+7pz/nvrQgrDlY496wS5GA0EnC8fJZDtF7DMrDo3eXtyX8Ivm2HdcR
-	 B1CQ5hOYhIj9Q==
-Date: Fri, 19 Jan 2024 23:43:56 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Ye Bin <yebin10@huawei.com>
-Cc: <rostedt@goodmis.org>, <mathieu.desnoyers@efficios.com>,
- <linux-trace-kernel@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 0/3] support '%pd' and '%pD' for print file name
-Message-Id: <20240119234356.1598e760edbfa58f5440a941@kernel.org>
-In-Reply-To: <20240119013848.3111364-1-yebin10@huawei.com>
-References: <20240119013848.3111364-1-yebin10@huawei.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="UzeW2rWQ"
+Message-ID: <1969573f-586e-4011-89ec-ac87281662aa@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1705675556;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qn3+4lwprQBJM5nGY6FbzVrKjbGN9xFNXBt6g7Xu+1w=;
+	b=UzeW2rWQdKOWMi0qkrmRp3lqMEqSn71kEZjmF3Hb5LES9S0eu84aZtzHUS20vCM9nN1dCW
+	imeCr6sbBg9cpBsntHhqzpI4Wo57k7fYBYiuhhUbr0gg40B5v0XNYVl64khhQFr5m4DJl6
+	7r+9lEmYuIsT/c3fZbq+U89yNCvT/Vw=
+Date: Fri, 19 Jan 2024 22:45:46 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Subject: Re: [PATCH v4 7/7] hugetlb: parallelize 1G hugetlb initialization
+Content-Language: en-US
+To: Kefeng Wang <wangkefeng.wang@huawei.com>
+Cc: linux-mm@kvack.org, Mike Kravetz <mike.kravetz@oracle.com>,
+ Tim Chen <tim.c.chen@linux.intel.com>, linux-kernel@vger.kernel.org,
+ David Rientjes <rientjes@google.com>, David Hildenbrand <david@redhat.com>,
+ ligang.bdlg@bytedance.com, Andrew Morton <akpm@linux-foundation.org>,
+ Muchun Song <muchun.song@linux.dev>
+References: <20240118123911.88833-1-gang.li@linux.dev>
+ <20240118123911.88833-8-gang.li@linux.dev>
+ <f11526d6-463a-4e1a-979e-a93de1a24617@huawei.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Gang Li <gang.li@linux.dev>
+In-Reply-To: <f11526d6-463a-4e1a-979e-a93de1a24617@huawei.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Fri, 19 Jan 2024 09:38:45 +0800
-Ye Bin <yebin10@huawei.com> wrote:
 
-> During fault locating, the file name needs to be printed based on the
-> dentry/file address. The offset needs to be calculated each time, which
-> is troublesome. Similar to printk, kprobe supports printing file names
-> for dentry/file addresses.
 
-Hi Ye,
-
-Thanks for your proposal!
-
-Generically, I think this type of hack is not good for the tracing
-because there are already some ways to do that. e.g.
- - Use perf probe to specify dentry->name:string or file->name:string 
- - Use BTF to specify in the same way (but only for function entry)
-And those are more obvious what it does.
-
-However, if this is implemented in more generic syntax, it will be
-acceptable.
-For example, type specifying with "arg1:printfmt(%pD)" will be
-more generic because it is apparently one of the printfmt and output
-string. Or, maybe we can just allow to use ":%pD" as a fetch type
-(start with '%' means the printfmt)
-
-Also, could you update readme_msg[] in kernel/trace/trace.c if
-you add a type, and add a testcase of selftests/ftrace, for this
-feature? Documentation should also be updated with more syntax
-information.
-
-Thank you,
-
+On 2024/1/18 22:22, Kefeng Wang wrote:
+> On 2024/1/18 20:39, Gang Li wrote:
+>>   include/linux/hugetlb.h |  2 +-
+>>   mm/hugetlb.c            | 42 +++++++++++++++++++++++++++++++++--------
+>>   2 files changed, 35 insertions(+), 9 deletions(-)
+>>
+>> diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
+>> index c1ee640d87b1..77b30a8c6076 100644
+>> --- a/include/linux/hugetlb.h
+>> +++ b/include/linux/hugetlb.h
+>> @@ -178,7 +178,7 @@ pte_t *huge_pmd_share(struct mm_struct *mm, struct 
+>> vm_area_struct *vma,
+>>   struct address_space *hugetlb_page_mapping_lock_write(struct page 
+>> *hpage);
+>>   extern int sysctl_hugetlb_shm_group;
+>> -extern struct list_head huge_boot_pages;
+>> +extern struct list_head huge_boot_pages[MAX_NUMNODES];
 > 
-> Ye Bin (3):
->   tracing/probes: support '%pd' type for print struct dentry's name
->   tracing/probes: support '%pD' type for print struct file's name
->   Documentation: tracing: add new type 'pd' and 'pD' for kprobe
-> 
->  Documentation/trace/kprobetrace.rst |  3 +-
->  kernel/trace/trace_probe.c          | 50 +++++++++++++++++++++++++++++
->  2 files changed, 52 insertions(+), 1 deletion(-)
-> 
-> -- 
-> 2.31.1
+> Hi, please update arch/powerpc/mm/hugetlbpage.c too, since it
+> was used in ppc.
 > 
 
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Thanks, will do
