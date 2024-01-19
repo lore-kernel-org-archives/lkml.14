@@ -1,60 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BFDA3C2F;
-	Fri, 19 Jan 2024 01:08:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 647C4EC2
+	for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 01:08:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705626526; cv=none; b=tusQwXnw0D8X7gNmPq1MEhQdB5aLre4Rcq5MPoI3nVc/9r5VUVsyH7yl5H72CNJ9YQjF+DmYgAqVWWWPW/pZxykHsOwAw2rHdMPiffu7kb1mI8CTr3UIa4OO51tWw4MzqxrAUQBJdCVYk3sRGoUBPB8VVPPJHtWZq3X0gJLp+eg=
+	t=1705626526; cv=none; b=F6IxFwKAnOTilBU1DkcKTJgIWTWcQhkOtC9kssFNWU4YJ5CJOVugtYHAZo21a475Bt6KSihUjYLQTFwAjKAwONj1eG3rTSM0/Bw+p9PcBeB+d4fBQVbjo+1ch52meuWeNRR3zNm7rcJrOT+Wikz/kqNJSgdw+iTxhvZvbTV2hsI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1705626526; c=relaxed/simple;
-	bh=XDfbcGHP/y28g2YdfPBjeNCJEWD8ii8iInMWhyU8HZc=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=CJXh7e6CKS10iQ0fr5Yh7TIjjSt0yVOBTUi44Trnuls2xCKlAN0Pz1YElWRLcwS0NLXikpKBE67YpYAnZoannw19qRnQOqPw2qXAFoh7QDZu7k34XzXyTTj7F8peEWyK/62DtuD8HGUeH7S8EnSSF40QfNTts9hWSQCPJ4ekHOM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YmDOijC+; arc=none smtp.client-ip=10.30.226.201
+	bh=R9oV/ApzEW+tx+UFjUw1T8ZMV99hzFzci49Gmc53Wj0=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=nfRwX7n2e4SuJCBAJHXm5xPJlsAiNPkhMtJa7nDpdVeo0TCq0paGAPwzqr/2ZcTkkuXQv9xF7dTrd2HOK4IqUm3IIyfiXijCQkLoDIRwTb3uGHztQmAk0sh7fH6G1h7zzW/Tp5/iHi48C7kBCVYSojNMOY5dz1prLBR5L4nHGAI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ICnVjQwR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YmDOijC+"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id F33B4C433C7;
-	Fri, 19 Jan 2024 01:08:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ICnVjQwR"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 38F19C43390;
+	Fri, 19 Jan 2024 01:08:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1705626526;
-	bh=XDfbcGHP/y28g2YdfPBjeNCJEWD8ii8iInMWhyU8HZc=;
+	bh=R9oV/ApzEW+tx+UFjUw1T8ZMV99hzFzci49Gmc53Wj0=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=YmDOijC+fVw7SSodJcAPm23HxgXWdH/M2iMzUXbO1c60MZL33ALJJFtBQgrquF4Hj
-	 M24tFVXqmSJPR7gXs+CNwo6JWsHZB8QlyX7jfxsb6p0b8MBNXVU69pxHiu2ID6pyW2
-	 ousje6HK8REuNA/ZDFUToxfyt7gSUUnaewmBfgjSoOhEAQ0BTBllplk74N7/Cd4F7v
-	 TBi+gB1PvcUSKI+3fc6Vv7w3XEnFu7R6hcgHW6RCd+WpYF5pFfRuRd83gwayI0JrAc
-	 G82VGceqWDGiG+W6AqEBNfQqY9yad9n0afCqz1Jzv3UBayupAV7WxXzIgRgEzTa0lW
-	 plIHams2MI+gg==
+	b=ICnVjQwRyNTV/Je+78KmUIwj+pUcbAw7b6jH3WTMUIjHq8+9vDGMwMfGzqWTBgLCT
+	 Bl+CfbOVb8jRn0pD1HozAHihzdt+/1nTld3rqmZQK9qh2MuYutDtw7sstZHTNFOKex
+	 Nda8F7qr7cjxwrPWV4SXZAc1eP38oKLj0sIhKp89SuBvKa106CJJ27uS06s51WoNgD
+	 TibfWAJV1qz+7xNpoc/qchyt+2TSmpirsQvnP6M+TBKSokY4R1z+8aTVlsDxLwHTFw
+	 qvxOgEfRnHs0+Gs2wbx4iXDTE2KAMRw0xqyeYGQPZ0bITZe5OWH1PB73uzTzjhh8aB
+	 7FVIyLvfEDvJQ==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id E1110D8C970;
-	Fri, 19 Jan 2024 01:08:45 +0000 (UTC)
-Subject: Re: [GIT PULL] virtio: features, fixes
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 20BF3D8C970;
+	Fri, 19 Jan 2024 01:08:46 +0000 (UTC)
+Subject: Re: [GIT PULL] Backlight for v6.8
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <20240116112828-mutt-send-email-mst@kernel.org>
-References: <20240116112828-mutt-send-email-mst@kernel.org>
+In-Reply-To: <20240116164248.GL1920897@google.com>
+References: <20240116164248.GL1920897@google.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20240116112828-mutt-send-email-mst@kernel.org>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/mst/vhost.git tags/for_linus
-X-PR-Tracked-Commit-Id: f16d65124380ac6de8055c4a8e5373a1043bb09b
+X-PR-Tracked-Message-Id: <20240116164248.GL1920897@google.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/lee/backlight.git backlight-next-6.8
+X-PR-Tracked-Commit-Id: 7d84a63a39b78443d09f2b4edf7ecb1d586379b4
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 0b7359ccddaaa844044c62000734f0cb92ab6310
-Message-Id: <170562652591.16604.2931669549259177440.pr-tracker-bot@kernel.org>
-Date: Fri, 19 Jan 2024 01:08:45 +0000
-To: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, kvm@vger.kernel.org, virtualization@lists.linux-foundation.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, changyuanl@google.com, christophe.jaillet@wanadoo.fr, dtatulea@nvidia.com, eperezma@redhat.com, jasowang@redhat.com, michael.christie@oracle.com, mst@redhat.com, pasha.tatashin@soleen.com, rientjes@google.com, stevensd@chromium.org, tytso@mit.edu, xuanzhuo@linux.alibaba.com
+X-PR-Merge-Commit-Id: 21c91bb9367716f61f46a352aafdeda61cb91c73
+Message-Id: <170562652612.16604.9798354395320681504.pr-tracker-bot@kernel.org>
+Date: Fri, 19 Jan 2024 01:08:46 +0000
+To: Lee Jones <lee@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Lee Jones <lee@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Daniel Thompson <daniel.thompson@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Tue, 16 Jan 2024 11:28:28 -0500:
+The pull request you sent on Tue, 16 Jan 2024 16:42:48 +0000:
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/mst/vhost.git tags/for_linus
+> git://git.kernel.org/pub/scm/linux/kernel/git/lee/backlight.git backlight-next-6.8
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/0b7359ccddaaa844044c62000734f0cb92ab6310
+https://git.kernel.org/torvalds/c/21c91bb9367716f61f46a352aafdeda61cb91c73
 
 Thank you!
 
