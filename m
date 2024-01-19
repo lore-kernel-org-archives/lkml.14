@@ -1,114 +1,127 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 522DC41C98
-	for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 16:55:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2620A53E03
+	for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 16:58:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705683360; cv=none; b=hDUmM+RH8sO4+wlfmsqS8mwV4jGZ/UdtGibpZgFaJ4uIKYUaQRiC35n/WCO2KhVXNHqLQj62WHObWSaYH1gBE0+eMbLV5YAjDh/am7ViKSDG3RtRUFKXnBIZE1ULbETgNIPMQHG8NHtyBNGL5eJlR5ukSIVLhsztIeUvnIY3/9g=
+	t=1705683540; cv=none; b=P0wkw0FEWiRjgiVDexUfrnIhlNLER/vWeEYtdOZagbXe73pMaIv001LvZfkcfnepK8gdw4vY+MYSwG2YOPa72QYz+xVoBO/xDjGTwq6Rrl4/EmjBBv8Nuc4xwxdfSGkCDVi2P04Z5ChZfRXpoEJ4z7fbPFr+263Rn5JZf/Dkvgs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705683360; c=relaxed/simple;
-	bh=OadCu/m5vzfYd0qEMpWx2E4WJ5vsZOOq3PXuAaZQW4c=;
+	s=arc-20240116; t=1705683540; c=relaxed/simple;
+	bh=fqBOEKEg4Hj4a2jaXHGkAmSwRgJ5++JiGt7Wa7nQxT8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rhe/P4KUtlbIqzMWF4nj3B9ng/GKtNqJAQenBwWQ8EM2YNTMQV9SJKwBX6H4pyopwZCgyDhpWCNGV9vAxCR2hPijvyorYsXo8YigYrdZP/GIkf3WG8w5xIDhWm+37Lkdq4+hz/OAp5dz7wI6mPxTtU09LG4NPxnmbFrkmGgzqTs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=AB1ClfGu; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=O+sthhhaJFN33NJfZjgk7kRU8jk9VKHLXQERbRJpidC3+MfBXhLORbrbnofzPMNciEFMb83YD19vW1Xjxhn1w5vDKOJ6G7Gb0NG9z2dI/SgB+p7hqfGR5yriTaq046vFZt27AmzoHPbPZgn60MnSxjX39EGRYlk4iKGyhYWgxYY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X68lbgkK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AB1ClfGu"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1d47fae33e0so190975ad.0
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 08:55:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1705683358; x=1706288158; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HArH+f49lUIhW8lGbcTKSsHFS75tTmPsJ3Gy+DBQWIc=;
-        b=AB1ClfGux1P791HFjcnUTC39Bj8vFFPXv9kaYBNdp0GGVI++8FEXTTk3td0P/vjtWO
-         ofW8CktvvI6FBsV7tGDkLZGgDno/fT77vwI7ISmv003w8ISIwTK4fk5fHfGnFoJuPthQ
-         tBkijxsnzJ9sGSCUR+9m8O91o/iznDuXaQ/eRFyxdZHVMbzv2CZoqJ7BBdqZN3dPSSYf
-         LuEZ7g8x3Lf+4Fhq1Acu1hBOzVhZFCz0pX11UEVKcmISM1psB1mbF+xyxdLLpUEPMIyp
-         dNcnYfXB7OFeSVivPGEabQrMTIB+CrgTgdhyQm7jdl8q03YS970MrKEPSqrBFh0tKKvm
-         I2JQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705683358; x=1706288158;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HArH+f49lUIhW8lGbcTKSsHFS75tTmPsJ3Gy+DBQWIc=;
-        b=hnDLfL9FeFs7qmQRAMknzLhrxRQKNedspThDNUKkQwT7q/QsZKNEntB34gxToow+go
-         dzOepoXrrse0moDu7Feh+okFqtQ8f+AN3gZMwGdPYXwyhz52ryEurZZIFIjGfsmramgF
-         6Tmv3DKoP1y+Y2YQghs0NeF1/fbrku8BglbvPl+dYHTIYu4Xm8cNMDAC18UkceJwnAKp
-         AfHHxGbEN8RiPZ50WCzYsBABNGLkH2vXLmC38j6rjUaKW+SmVDDDEkz0Bh3zNtczIkw/
-         JrdHW4Mh55aog7afeMeUOlKov5ZeZ4f0au2XHO8YvE/Pj8ll6DwOxFJpoBM+GVNKYZdo
-         jd6A==
-X-Gm-Message-State: AOJu0YyPLQi9YdrgqsWlPflRJM9xw7G7HLTiu/cWVWwpbTSaqTN3wC3K
-	9dbyzrEL2N9oeqlOsaVzE++jHwQQw0sWL+Bw5kKxU2p9YbCOFxRmfteey/e7XjNMhOCo8BTSGJw
-	scQnD9qThwfIKkPQR+WACjWrwx+rYgczrgodI
-X-Google-Smtp-Source: AGHT+IEfQz88XP/75ySHFEIz3CgN+wCm/H16+6XqrsUJI2JsHKKpFviJRCbcGMBy/03nBkr0KqUEW0BmjzKTksLK400=
-X-Received: by 2002:a17:903:1104:b0:1d5:a2c9:6e7b with SMTP id
- n4-20020a170903110400b001d5a2c96e7bmr243041plh.14.1705683358337; Fri, 19 Jan
- 2024 08:55:58 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X68lbgkK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC8A2C43394
+	for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 16:58:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705683539;
+	bh=fqBOEKEg4Hj4a2jaXHGkAmSwRgJ5++JiGt7Wa7nQxT8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=X68lbgkK1OVnsJRtgycZodLBmHJqEfyUa73IjVwVIaA13n1J0uo+93UjrPJL/NPEW
+	 49Pj5rVP6YUK6aKMns8DXpvgmIZ39/fT1K+6Bf91bT8bnyg+4AM0xVho/mQefjfo5n
+	 AeXuugLv5AK73EJFx6ZU4H+3ccGfcoAy9UL/o82z4+EFuVPwxBaN2TucMO8WV0I9WP
+	 KFYAUmh/8znH10oYy/MigVfw/ZbZKyiDm1jxbcg53s8OikchYLNPYDuHI3mcAK4pGQ
+	 glL67xDDFDKFzfBzOOjy74bFFlBJTEPSZ1nkjxhtgWzLOYkvVNB/Qgmevvl7CEl+jo
+	 v7sG/kaHgEHlQ==
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2cd0f4797aaso10937121fa.0
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 08:58:59 -0800 (PST)
+X-Gm-Message-State: AOJu0YxjaNvfuOJoksru1U+oTpSgV4Q84pY7ZsOfSmuEgMZfblbswjHx
+	6YeluN0wI/4x/ZaobFAxoGPo2cpB+zaAyqzPPxrnLytKC1hCxwnIULw6sx9kPIPrxwo1vZKNcT6
+	76dn//Y+cKL6pSzThLf8nJx/R7Q==
+X-Google-Smtp-Source: AGHT+IG2KxV4qGtvyodScbrBpT5jBo5AONFS/VOMsNOPKVFpjTo3QwBI9D8ADQQwK4Y4uVPYM51mCl0kDBUqjIKBOuY=
+X-Received: by 2002:a19:6518:0:b0:50e:77c7:f6c1 with SMTP id
+ z24-20020a196518000000b0050e77c7f6c1mr791422lfb.27.1705683537909; Fri, 19 Jan
+ 2024 08:58:57 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240119155614.4501-1-n.zhandarovich@fintech.ru> <000000000000fe4ef1060f4f287f@google.com>
-In-Reply-To: <000000000000fe4ef1060f4f287f@google.com>
-From: Aleksandr Nogikh <nogikh@google.com>
-Date: Fri, 19 Jan 2024 17:55:46 +0100
-Message-ID: <CANp29Y5w86RrZPNdH0UqNi9m4po1swUH75153FEtkw0BduE9xw@mail.gmail.com>
-Subject: Re: [syzbot] [kvm?] KMSAN: uninit-value in em_ret_far
-To: syzbot <syzbot+579eb95e588b48b4499c@syzkaller.appspotmail.com>
-Cc: glider@google.com, linux-kernel@vger.kernel.org, n.zhandarovich@fintech.ru, 
-	syzkaller-bugs@googlegroups.com
+References: <20240119160528.GA5336@willie-the-truck> <20240119163408.GA468084-robh@kernel.org>
+In-Reply-To: <20240119163408.GA468084-robh@kernel.org>
+From: Rob Herring <robh@kernel.org>
+Date: Fri, 19 Jan 2024 10:58:45 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLu8A22OidU-n=nbpyoEZcB+nsc=5ZiXmT2A+s4VdrLkw@mail.gmail.com>
+Message-ID: <CAL_JsqLu8A22OidU-n=nbpyoEZcB+nsc=5ZiXmT2A+s4VdrLkw@mail.gmail.com>
+Subject: Re: [GIT PULL] arm64 fixes for -rc1
+To: Will Deacon <will@kernel.org>
+Cc: torvalds@linux-foundation.org, catalin.marinas@arm.com, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	kernel-team@android.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-I think it's not entirely correct to test it on the kmsan tree as the
-kmsan tree is actually quite old (the last commit was 6 months ago),
-which is way earlier than the point of time when the bug was detected
-(syzbot found it only in Nov 2023 -- 2 months ago).
+On Fri, Jan 19, 2024 at 10:34=E2=80=AFAM Rob Herring <robh@kernel.org> wrot=
+e:
+>
+> On Fri, Jan 19, 2024 at 04:05:28PM +0000, Will Deacon wrote:
+> > Hi Linus,
+> >
+> > Please pull these arm64 fixes for -rc1. I think the main one is fixing
+> > the dynamic SCS patching when full LTO is enabled (clang was silently
+> > getting this horribly wrong), but it's all good stuff. Rob just pointed
+> > out that the fix to the workaround for erratum #2966298 might not be
+> > necessary, but in the worst case it's harmless and since the official
+> > description leaves a little to be desired here, I've left it in.
+> >
+> > Cheers,
+> >
+> > Will
+> >
+> > --->8
+> >
+> > The following changes since commit db32cf8e280b46726065c518e90761bb0229=
+bacf:
+> >
+> >   Merge branch 'for-next/fixes' into for-next/core (2024-01-04 12:32:33=
+ +0000)
+> >
+> > are available in the Git repository at:
+> >
+> >   git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git tags/ar=
+m64-fixes
+> >
+> > for you to fetch changes up to 1b20d0486a602417defb5bf33320d31b2a7a47f8=
+:
+> >
+> >   arm64: Fix silcon-errata.rst formatting (2024-01-18 11:15:43 +0000)
+> >
+> > ----------------------------------------------------------------
+> > arm64 fixes for -rc1
+> >
+> > - Fix shadow call stack patching with LTO=3Dfull
+> >
+> > - Fix voluntary preemption of the FPSIMD registers from assembly code
+> >
+> > - Fix workaround for A520 CPU erratum #2966298 and extend to A510
+> >
+> > - Fix SME issues that resulted in corruption of the register state
+> >
+> > - Minor fixes (missing includes, formatting)
+> >
+> > ----------------------------------------------------------------
+> > Ard Biesheuvel (2):
+> >       arm64: scs: Work around full LTO issue with dynamic SCS
+> >       arm64: fpsimd: Bring cond_yield asm macro in line with new rules
+> >
+> > Mark Brown (3):
+> >       arm64/ptrace: Don't flush ZA/ZT storage when writing ZA via ptrac=
+e
+> >       arm64/fpsimd: Remove spurious check for SVE support
+> >       arm64/sme: Always exit sme_alloc() early with existing storage
+> >
+> > Mark Rutland (2):
+> >       arm64: entry: fix ARM64_WORKAROUND_SPECULATIVE_UNPRIV_LOAD
+>
+> I've commented on the patch, but this doesn't fix anything. The original
+> work-around was fine.
 
-https://syzkaller.appspot.com/bug?extid=3D579eb95e588b48b4499c
+Sorry, failed to read your commentary at the top. I suppose all this
+is fine. It would be nice to have a chance to see all this before it
+gets sent upstream.
 
-The bug was last hit today on the head of the torvalds tree:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/log/?id=
-=3D9f8413c4a66f2fb776d3dc3c9ed20bf435eb305e
-
-On Fri, Jan 19, 2024 at 5:42=E2=80=AFPM syzbot
-<syzbot+579eb95e588b48b4499c@syzkaller.appspotmail.com> wrote:
->
-> Hello,
->
-> syzbot has tested the proposed patch and the reproducer did not trigger a=
-ny issue:
->
-> Reported-and-tested-by: syzbot+579eb95e588b48b4499c@syzkaller.appspotmail=
-.com
->
-> Tested on:
->
-> commit:         d1d7f15c DO-NOT-SUBMIT: kmsan: add the kmsan_exceed_ma..
-> git tree:       https://github.com/google/kmsan.git master
-> console output: https://syzkaller.appspot.com/x/log.txt?x=3D1726e677e8000=
-0
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=3D6b301bd980290=
-807
-> dashboard link: https://syzkaller.appspot.com/bug?extid=3D579eb95e588b48b=
-4499c
-> compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for D=
-ebian) 2.40
->
-> Note: no patches were applied.
-> Note: testing is done by a robot and is best-effort only.
->
-> --
-> You received this message because you are subscribed to the Google Groups=
- "syzkaller-bugs" group.
-> To unsubscribe from this group and stop receiving emails from it, send an=
- email to syzkaller-bugs+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgi=
-d/syzkaller-bugs/000000000000fe4ef1060f4f287f%40google.com.
+Rob
