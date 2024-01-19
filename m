@@ -1,61 +1,53 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55A043C493;
-	Fri, 19 Jan 2024 12:58:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FA9351C38
+	for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 12:58:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705669099; cv=none; b=Ls9RfjiNaRO4jXiyj2hDtpegqtlUaEoTSUfYBIcX768gaIiJujOcbI6jIfor16VjDXsFtXh/j8KqIaUCyHt/j6gUOkWcbvbtqk3eOiX8s8iRuDXQPeihuBfCJSPcj2Ms8ozdSX1wzXd3k/fKA6QPy5M02St2FdKil1jiGKzxxM0=
+	t=1705669100; cv=none; b=T0LokoFtKxebuO3gx4YXL0Uo2Sxu1Pw2fhVCLBG62f9KWLlm3SypE6YwL3m4DeO/qw7jPL7RER2Q7tgmcLTT+u2CdVI8Es927Y6rcfpIZOwMcOuGX5tK5CU5+RPSAjrhCdzWXfi5DNE4WyAPla30JAlHP27/IIUhn6AXgENktTs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705669099; c=relaxed/simple;
-	bh=bGrbcVKvkDIoSfHBTxlivOML0alDs0Jm3cTz73DwTkU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DSVFISoFPfdQK9Ts1NHfQlGddDnFeYzG0kVAll6xBlnKl0uFDKw8Jauu8s4YfpBzlDZzIOsstaZOmhT2fUGVPEJOUqxPyeeoEGJPK3sOMbTz7/FGLXHabCpAqPwwxZwljyRPtSNlX0EnaADzjFle+OHaejSUi/6kovHH6aeiwDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=AfvubQDP; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1705669100; c=relaxed/simple;
+	bh=9oN8WEtKHa5I91ygCWQnS1mqKVl+6aTCIb+eEtvC21Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Y6vV+3mWQStj5UjwW/AxKHyqjiFgej28MN9A/Kgtn8XsSbEovYvJp1lD679LHnrgaQqmsfMW4xyixqF+UggD5p/NKReqaDDTelaFZb9S+vjlLtwsHoLI114li4exdiD7/CmPx2V9qpxAn1FQh+ys7n3N2ClRLrUF0FtvqRinunY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aSKS9lGr; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="AfvubQDP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1705669096;
-	bh=bGrbcVKvkDIoSfHBTxlivOML0alDs0Jm3cTz73DwTkU=;
-	h=From:To:Cc:Subject:Date:From;
-	b=AfvubQDPxx1z+zoJEr13Zm7CA4GIl5QXvLMMXzoULV6oQUHsAVLlwSLQrqWEojT4T
-	 QFBS0scpSnOD0UwuwQLt+7SnZP4BD2NRskBqR8IgbM1qB8ZPUQUNAned1tTVR3cElo
-	 i0OKPjxaaA5a+BlVnnqKOvcLwiAKnk/V/HhpXxTJFV+zp0TO6JSfkE94eYZotKpkjE
-	 KdePlcbHbSM4DfVxYafEOvokgtyfhhpyJkooH6f/CsD6GMGnQ3ew2ufWD4w7bXl8Wb
-	 63nEeQ+/U4IKpzefHJw4EKiinW7zWyBhwzWf/BxuLmNfTMjWHJsJEUBSCaCr2nOx2q
-	 eBzNy5ZfOCuhg==
-Received: from IcarusMOD.eternityproject.eu (cola.collaboradmins.com [195.201.22.229])
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aSKS9lGr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1705669097;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=tSl8vraS51FiTpTDwvXe67q3UpTXFaFfY6Fu62WAl5w=;
+	b=aSKS9lGrwXqJJHj1TYgcO3vzw2WJeCu8XJqCHafkVI0Sn/EjwuIQYrsGbF5FEvfiR5PdK1
+	Y2F/sypdGIUOKmON9RfMFmJEc9POgUYA57zGr975TL3q0RlBYISN51D3bEX1uzp+yknhCb
+	l+TAyoiYYAdCZEf+3LZmxUns7rgzriQ=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-396-56YpH6c8NtiCuO0XfASFRw-1; Fri, 19 Jan 2024 07:58:12 -0500
+X-MC-Unique: 56YpH6c8NtiCuO0XfASFRw-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 4532437803EE;
-	Fri, 19 Jan 2024 12:58:15 +0000 (UTC)
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-To: gregkh@linuxfoundation.org
-Cc: robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	heikki.krogerus@linux.intel.com,
-	matthias.bgg@gmail.com,
-	dmitry.baryshkov@linaro.org,
-	neil.armstrong@linaro.org,
-	andersson@kernel.org,
-	nathan@kernel.org,
-	luca.weiss@fairphone.com,
-	tianping.fang@mediatek.com,
-	linux-usb@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	kernel@collabora.com,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Subject: [PATCH v2 0/2] Add ITE IT5205 Passive MUX
-Date: Fri, 19 Jan 2024 13:58:10 +0100
-Message-ID: <20240119125812.239197-1-angelogioacchino.delregno@collabora.com>
-X-Mailer: git-send-email 2.43.0
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 3AB5585A597;
+	Fri, 19 Jan 2024 12:58:12 +0000 (UTC)
+Received: from localhost.redhat.com (unknown [10.22.32.164])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id A227DC1690E;
+	Fri, 19 Jan 2024 12:58:11 +0000 (UTC)
+From: Nico Pache <npache@redhat.com>
+To: linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	linux-mm@kvack.org
+Cc: akpm@linux-foundation.org,
+	shuah@kernel.org,
+	donettom@linux.vnet.ibm.com
+Subject: [PATCH] selftests: mm: fix map_hugetlb failure on 64K page size systems
+Date: Fri, 19 Jan 2024 05:57:53 -0700
+Message-ID: <20240119125753.152354-1-npache@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,27 +55,42 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
 
-This series adds a driver for the ITE IT5205/FN, found on various
-MediaTek board designs, including the MT8395Genio 1200 EVB and
-others following that.
+On systems with 64k page size and 512M huge page sizes, the allocation
+and test succeeds but errors out at the munmap. As the comment states,
+munmap will failure if its not HUGEPAGE aligned. This is due to the
+length of the mapping being 1/2 the size of the hugepage causing the
+munmap to not be hugepage aligned. Fix this by making the mapping length
+the full hugepage if the hugepage is larger than the length of the
+mapping.
 
-Changes in v2:
- - Reordered headers and removed unused ones
- - Added a check for altmode in it5205_mux_set()
+Signed-off-by: Nico Pache <npache@redhat.com>
+---
+ tools/testing/selftests/mm/map_hugetlb.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-AngeloGioacchino Del Regno (2):
-  dt-bindings: usb: Introduce ITE IT5205 Alt. Mode Passive MUX
-  usb: typec: mux: Add ITE IT5205 Alternate Mode Passive MUX driver
-
- .../devicetree/bindings/usb/ite,it5205.yaml   |  72 +++++
- drivers/usb/typec/mux/Kconfig                 |  10 +
- drivers/usb/typec/mux/Makefile                |   1 +
- drivers/usb/typec/mux/it5205.c                | 294 ++++++++++++++++++
- 4 files changed, 377 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/ite,it5205.yaml
- create mode 100644 drivers/usb/typec/mux/it5205.c
-
+diff --git a/tools/testing/selftests/mm/map_hugetlb.c b/tools/testing/selftests/mm/map_hugetlb.c
+index 193281560b61..dcb8095fcd45 100644
+--- a/tools/testing/selftests/mm/map_hugetlb.c
++++ b/tools/testing/selftests/mm/map_hugetlb.c
+@@ -58,10 +58,16 @@ int main(int argc, char **argv)
+ {
+ 	void *addr;
+ 	int ret;
++	size_t maplength;
+ 	size_t length = LENGTH;
+ 	int flags = FLAGS;
+ 	int shift = 0;
+ 
++	maplength = default_huge_page_size();
++	/* mmap with fail if the length is not page */
++	if (maplength > length)
++		length = maplength;
++
+ 	if (argc > 1)
+ 		length = atol(argv[1]) << 20;
+ 	if (argc > 2) {
 -- 
 2.43.0
 
