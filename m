@@ -1,151 +1,187 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C76D0524D4;
-	Fri, 19 Jan 2024 14:37:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F20304EB5B;
+	Fri, 19 Jan 2024 14:43:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705675046; cv=none; b=egQZjpuvYsFisz4knJoZ8h0a+QqFsR9jZeveuM6l4cRD5EFJmA5u45AKrSHunust1gK/2dlPf68pKVAm3EN9yGXU9LIsj0Fg7QC1X+VXlZS/Pn+pv0A6D6gasc7qxOZrT0qqg48qtZshIpvZDZoiPbgKh+tD1MN+msVpR00KhfM=
+	t=1705675383; cv=none; b=m52yS6tj0YIiwr4dEZNXgPWZnj+zlEwwiZm7E3mRkH8c7EgmkW35Ys1ndEA+OwQHC0kaHEFrJCYAJLMlxkmAWAKP1YtPRMkfZBR4hyRJUsIeVOL/hz8AQblhqv2ZAnG18OnGYvEt2hMiLFyN9sO2++cd8y0u7VS5pv5vuvbiZ8s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705675046; c=relaxed/simple;
-	bh=T2yJaX7UwbgDvliRWFpAINaJXHgC+01Fx7/x+PKmJMA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UFjBM1OoT9sgLNyJDyUiXgcM9/KBYzsqmeKdvItgrakMiCQAKQmz6PuoN4vGis+AMB3O7x7U09zva+Sh9pdrIhmoPPw0FGmP+jVuCzy/Y8i5pj3tBJXglGPFJgEjVQUCA/mNaUx74eNRefJxzgCwWE9D9Ph0xx4ncoeIiSSl3j0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=naNkM+aY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1705675383; c=relaxed/simple;
+	bh=P/iDfs1r4OMgOVX6uIoWqiz4AsKrEFdzTkeMea2vANg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oss+Lz58UUMErGYG95+miFGSFZOE9vyShVXOLYIAL2t9jVH8U4cgG4fKYSI2zTa/qZEuFknV2jCUSERvTITKSZyp8RJbTEzfzGsTC2YBhRZ9Z7scvjRjE8WLNIcoFHzHHYIRzQq0VFHtjSMn8jAIOTJr02jS4HhWGd8CcYJMC0A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JFBrrBmG; arc=none smtp.client-ip=209.85.210.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="naNkM+aY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C942C433C7;
-	Fri, 19 Jan 2024 14:37:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705675046;
-	bh=T2yJaX7UwbgDvliRWFpAINaJXHgC+01Fx7/x+PKmJMA=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=naNkM+aYQI79/kTXGLkKhTgHzwe822Bnvpmyv2ZQ3BrQz17lQhrdoJOOathBQbPGX
-	 yckHj1rsdksXD8wRDkgvLRfS9DTs5DwbQ+g/0wgkGh0Uf5+on1P6Xzjj06m81apWuy
-	 eJgn1WjcEDqyWlR1obLE/zq/NHbBoNQ1tEs5LrxXnUDlBfXPCOewWjINgPOL0X6xXk
-	 n4vWjiJ38qrSkqbbFodeS5h5Bsu76ffQIOHOxrBDwnl9ZR+1LO6KsFV0+dlaaBj9eW
-	 tUO+3n3VUvewfjYW0gHbN1+GizeB1VTPMHO8OmBijxChuO471pmCI/56KYlJkzL2d+
-	 Laqoe7MVKySpA==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 18B48CE04A0; Fri, 19 Jan 2024 06:37:26 -0800 (PST)
-Date: Fri, 19 Jan 2024 06:37:26 -0800
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Chen Zhongjin <chenzhongjin@huawei.com>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	yangjihong1@huawei.com, naveen.n.rao@linux.ibm.com,
-	anil.s.keshavamurthy@intel.com, davem@davemloft.net,
-	mhiramat@kernel.org, akpm@linux-foundation.org, tglx@linutronix.de,
-	peterz@infradead.org, pmladek@suse.com, dianders@chromium.org,
-	npiggin@gmail.com, mpe@ellerman.id.au, jkl820.git@gmail.com,
-	juerg.haefliger@canonical.com, rick.p.edgecombe@intel.com,
-	eric.devolder@oracle.com, mic@digikod.net
-Subject: Re: [PATCH v2] kprobes: Use synchronize_rcu_tasks_rude in
- kprobe_optimizer
-Message-ID: <bc485622-2e69-46e6-b95f-c1b4868e8d53@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <20240118021842.290665-1-chenzhongjin@huawei.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JFBrrBmG"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-6daf694b439so694931b3a.1;
+        Fri, 19 Jan 2024 06:43:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1705675381; x=1706280181; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=sa1sXPdFvr+b0W/h4FKPzOX5tpwwugPKaIt9F3h4/as=;
+        b=JFBrrBmGPWXOT6Nxbwg7ZAh0ArwnDXBU8Ll2O3RcInZL5yp6jqgqatQLI/FtcyXKzw
+         8g/u4TIfsYdTZrYBr+pIYUrKfBb3nSx3md53cuVrVUX/ZF0K60P4nLTLbdsXww9gdlWL
+         RcHdKbc+iOFfDVhD1koq4+M5ptx7JA4z0fMNS4Zlo1Ojbw5OONGGjg/qVImKQ9hcmXvo
+         mCHb9ejyYaPFA+o/kuowl4bFFy7n98Ri/MRDPEcwZNfDTZ7aDCQOLuUGfWvm4hoOPTKt
+         EhE0mOetF3V6e56HX4xxc89sfU7oDtDSI+3RcirfYJNPSMfngN8AJITlKYnqWvvIJNA+
+         eNBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705675381; x=1706280181;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=sa1sXPdFvr+b0W/h4FKPzOX5tpwwugPKaIt9F3h4/as=;
+        b=at+4m/7yTQCcw9khXqF9bnR20cn/YpqVLmDruwxarDPm0NB7IL3U2zutFL6PEC7ktq
+         qNcvIoXg9c8UBMPGdfuJkWGqunOiGvaUWaoFMyH2EpmlnW/7lMjwS1/49HRYIRfKESXI
+         9TDDhHf8Moz3PhfZafmp+znjSewGRgcEuBMtfz6vHT4E0XIQ8En81MDPPOAK1Tgfv5UT
+         23fePvZUiFX4RF1HTrWUXvzhY1wRILLgWAO9fcBCn1cfJoAYMZQ8eqsIxaPBEzfe5NFw
+         0wmqcVG0oO3NPoqBU8drSa7QGvW62x34J5IhALt9dHTIb8iBSRaBL4Omab7yDCitPSfk
+         hcuA==
+X-Gm-Message-State: AOJu0YzSFJZfiYZEV4HKpPTfMMh985Wj7OK4Y9FuKG/bTH4Y2SjauGyO
+	Dd7wXu2ZgvB8S3C/0NEcHRbM1FE4NGZvaSGLQ2FQMsaL6j1sV/SP
+X-Google-Smtp-Source: AGHT+IF7LeD6NBaGz3j6ZFdSNQqpzKu6IXYTJAgQvtVxmlB0o4e2NSwqhWPyJgXu9EM92JjVtMPJ/A==
+X-Received: by 2002:a05:6a21:4994:b0:199:b4ef:f8e with SMTP id ax20-20020a056a21499400b00199b4ef0f8emr1858905pzc.65.1705675381161;
+        Fri, 19 Jan 2024 06:43:01 -0800 (PST)
+Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id n10-20020a056a000d4a00b006db05a51868sm5348857pfv.99.2024.01.19.06.42.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 19 Jan 2024 06:43:00 -0800 (PST)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <b65b46a7-c65d-49bc-a5ce-5085da2fc112@roeck-us.net>
+Date: Fri, 19 Jan 2024 06:42:58 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240118021842.290665-1-chenzhongjin@huawei.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 0/3] Introduce EC-based watchdog
+Content-Language: en-US
+To: =?UTF-8?Q?=C5=81ukasz_Majczak?= <lma@chromium.org>
+Cc: Gwendal Grignou <gwendal@chromium.org>, Tzung-Bi Shih
+ <tzungbi@kernel.org>, Radoslaw Biernacki <biernacki@google.com>,
+ Wim Van Sebroeck <wim@linux-watchdog.org>, Lee Jones <lee@kernel.org>,
+ Benson Leung <bleung@chromium.org>, Guenter Roeck <groeck@chromium.org>,
+ Krzysztof Kozlowski <krzk@kernel.org>, linux-watchdog@vger.kernel.org,
+ linux-kernel@vger.kernel.org, chrome-platform@lists.linux.dev
+References: <20240119084328.3135503-1-lma@chromium.org>
+ <d2329494-2c57-41bb-a9ea-2c9903500d1e@roeck-us.net>
+ <CAE5UKNrU9YHoCQr8HLFf9-T4-NobQ4jWtryVqq9okFz8nVezgQ@mail.gmail.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+In-Reply-To: <CAE5UKNrU9YHoCQr8HLFf9-T4-NobQ4jWtryVqq9okFz8nVezgQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jan 18, 2024 at 02:18:42AM +0000, Chen Zhongjin wrote:
-> There is a deadlock scenario in kprobe_optimizer():
+On 1/19/24 06:10, Łukasz Majczak wrote:
+> On Fri, Jan 19, 2024 at 1:50 PM Guenter Roeck <linux@roeck-us.net> wrote:
+>>
+>> On 1/19/24 00:43, Lukasz Majczak wrote:
+>>> Chromeos devices are equipped with the embedded controller (EC)
+>>> that can be used as a watchdog. The following patches
+>>> updates the structures and definitions required to
+>>> communicate with EC-based watchdog and implements the
+>>> driver itself.
+>>>
+>>> The previous version of this patch was sent here:
+>>> https://patchwork.kernel.org/project/linux-watchdog/list/?series=817925
+>>>
+>>> Changelog
+>>> V2->V3:
+>>> * drop "-drv" from driver name
+>>> * use format #define<space>NAME<tab>value
+>>>
+>>
+>> I am a bit lost here. You dropped my Reviewed-by: tags, even though
+>> I specifically said that they applied with those changes made.
+>> Also, according to the above patch 1/3 was not changed at all.
+>>
+>> What else did you change that warrants dropping the tags ?
+>>
+>> Guenter
+>>
+> The "-drv" change was related to patch 2 and 3, and I have used
+> "format #define<space>NAME<tab>value" only in patch 3 (as
+> ec_commands.h is mixing those)
+> Sorry for dropping your "Reviewed-by" tag :( I've assumed (wrong) that
+> I cannot take it for granted sending V3.
+
+ From Documentation/process/submitting-patches.rst:
+
+Both Tested-by and Reviewed-by tags, once received on mailing list from tester
+or reviewer, should be added by author to the applicable patches when sending
+next versions.  However if the patch has changed substantially in following
+version, these tags might not be applicable anymore and thus should be removed.
+Usually removal of someone's Tested-by or Reviewed-by tags should be mentioned
+in the patch changelog (after the '---' separator).
+
+> Alos in such a case if there are changes in patch 2 and 3 and 1
+> remains untouched shall I send only 2 and 3 in the next version ?
 > 
-> pid A				pid B			pid C
-> kprobe_optimizer()		do_exit()		perf_kprobe_init()
-> mutex_lock(&kprobe_mutex)	exit_tasks_rcu_start()	mutex_lock(&kprobe_mutex)
-> synchronize_rcu_tasks()		zap_pid_ns_processes()	// waiting kprobe_mutex
-> // waiting tasks_rcu_exit_srcu	kernel_wait4()
-> 				// waiting pid C exit
-> 
-> To avoid this deadlock loop, use synchronize_rcu_tasks_rude() in kprobe_optimizer()
-> rather than synchronize_rcu_tasks(). synchronize_rcu_tasks_rude() can also promise
-> that all preempted tasks have scheduled, but it will not wait tasks_rcu_exit_srcu.
-> 
-> Fixes: a30b85df7d59 ("kprobes: Use synchronize_rcu_tasks() for optprobe with CONFIG_PREEMPT=y")
-> Signed-off-by: Chen Zhongjin <chenzhongjin@huawei.com>
 
-Just so you know, your email ends up in gmail's spam folder.  :-/
+Again, from Documentation/process/submitting-patches.rst:
 
-> ---
-> v1 -> v2: Add Fixes tag
-> ---
->  arch/Kconfig     | 2 +-
->  kernel/kprobes.c | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/Kconfig b/arch/Kconfig
-> index f4b210ab0612..dc6a18854017 100644
-> --- a/arch/Kconfig
-> +++ b/arch/Kconfig
-> @@ -104,7 +104,7 @@ config STATIC_CALL_SELFTEST
->  config OPTPROBES
->  	def_bool y
->  	depends on KPROBES && HAVE_OPTPROBES
-> -	select TASKS_RCU if PREEMPTION
-> +	select TASKS_RUDE_RCU
->  
->  config KPROBES_ON_FTRACE
->  	def_bool y
-> diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-> index d5a0ee40bf66..09056ae50c58 100644
-> --- a/kernel/kprobes.c
-> +++ b/kernel/kprobes.c
-> @@ -623,7 +623,7 @@ static void kprobe_optimizer(struct work_struct *work)
->  	 * Note that on non-preemptive kernel, this is transparently converted
->  	 * to synchronoze_sched() to wait for all interrupts to have completed.
->  	 */
-> -	synchronize_rcu_tasks();
-> +	synchronize_rcu_tasks_rude();
+... the patch (series) and its description should be self-contained.
+This benefits both the maintainers and reviewers.  Some reviewers
+probably didn't even receive earlier versions of the patch.
 
-Again, that comment reads in full as follows:
+Note that the same document also says:
 
-	/*
-	 * Step 2: Wait for quiesence period to ensure all potentially
-	 * preempted tasks to have normally scheduled. Because optprobe
-	 * may modify multiple instructions, there is a chance that Nth
-	 * instruction is preempted. In that case, such tasks can return
-	 * to 2nd-Nth byte of jump instruction. This wait is for avoiding it.
-	 * Note that on non-preemptive kernel, this is transparently converted
-	 * to synchronoze_sched() to wait for all interrupts to have completed.
-	 */
+Wait for a minimum of one week before resubmitting or pinging reviewers
+- possibly longer during busy times like merge windows.
 
-Please note well that first sentence.
+I could just send another series of Reviewed-by: tags, but quite frankly
+by now I am wary that you might drop those again, so I guess I'll wait
+a while to see if there is another version of the series.
 
-Unless that first sentence no longer holds, this patch cannot work
-because synchronize_rcu_tasks_rude() will not (repeat, NOT) wait for
-preempted tasks.
+Guenter
 
-So how to safely break this deadlock?  Reproducing Chen Zhongjin's
-diagram:
-
-pid A				pid B			pid C
-kprobe_optimizer()		do_exit()		perf_kprobe_init()
-mutex_lock(&kprobe_mutex)	exit_tasks_rcu_start()	mutex_lock(&kprobe_mutex)
-synchronize_rcu_tasks()		zap_pid_ns_processes()	// waiting kprobe_mutex
-// waiting tasks_rcu_exit_srcu	kernel_wait4()
-				// waiting pid C exit
-
-We need to stop synchronize_rcu_tasks() from waiting on tasks like
-pid B that are voluntarily blocked.  One way to do that is to replace
-SRCU with a set of per-CPU lists.  Then exit_tasks_rcu_start() adds the
-current task to this list and does ...
-
-OK, this is getting a bit involved.  If you would like to follow along,
-please feel free to look here:
-
-https://docs.google.com/document/d/1MEHHs5qbbZBzhN8dGP17pt-d87WptFJ2ZQcqS221d9I/edit?usp=sharing
-
-							Thanx, Paul
-
->  	/* Step 3: Optimize kprobes after quiesence period */
->  	do_optimize_kprobes();
-> -- 
-> 2.25.1
-> 
