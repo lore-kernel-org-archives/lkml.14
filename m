@@ -1,38 +1,40 @@
-Received: from mout.web.de (mout.web.de [217.72.192.78])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70BF5A53;
-	Fri, 19 Jan 2024 09:11:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00D99288CE;
+	Fri, 19 Jan 2024 09:12:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705655521; cv=none; b=NrdT4tlLaV3TCtr0cZS1GQn+Z3TlajFxDHMktcSGAwJHoKeXhL5z+ldO2+9I082/RIBLwi00F1+He9G/3kZNN9rCW5QJ4nVvVzpx5/Oah4OQAIOzC4EZOs59szYUS4DboYltwhwg1rynS9wwU2VdWtn7r/7cV4xi01bP3ZsO3S4=
+	t=1705655532; cv=none; b=Ie7iCQRIeQtNd1PoyOOxY6EgaRTWIcXHOGA7WtVW1CGkcM3rLvBa75g6Uo4zJDyQxZ+d/Jp1oFi0EkLpnblzY+SLD1GqbbnjsZhFeGPaI7v5/sUEnI/rIsefbBQGURsaCMkNEpaI47Pj1gbEVAWgd2aXMGVKRpWjdi89jnD0eIM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705655521; c=relaxed/simple;
-	bh=tXJxt9w/oJ0XNk3Nt2w4s8/VSDNpnSFcsu7XbSCZO8E=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=Y4QnYYf8Wa0yq4S5Fr62kqOmN+5T3AVKVbn8e75v8MV8WO4Q/UvKBmw/Z25J10xPmkp1Yv5lmWpXsPyh9Dy8oi9q09Pf2J54hPacUKmJDPnMmkj5CIKC2s+H7ZSjF7S1toUGGX5SY0kigFQoRLKmGUgB2/TMZZQgMVgcbUsKkvA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=EXuqvTcb; arc=none smtp.client-ip=217.72.192.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1705655532; c=relaxed/simple;
+	bh=eNiJDJdYOUFmY5BTiqxpKfPXrwPImnQUYyFSWE2ZSJU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Xflol//8rya1nkfqxS16TN4Oajd3vOxDGkkLQ1DvmkWlXkR+gYztNGV0yzKEdXbZSW5bR2PqCKua2d/V7j+MfrBVV3eqsHCKjrfgk/RsLG7lXFniXB5pq3q6VuGygErAp43gFswTGB4CTwExmqIZlfjoF8i8CmFgK3LdCO8zpto=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=z3P4C5rp; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="EXuqvTcb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de; s=s29768273;
-	t=1705655516; x=1706260316; i=markus.elfring@web.de;
-	bh=tXJxt9w/oJ0XNk3Nt2w4s8/VSDNpnSFcsu7XbSCZO8E=;
-	h=X-UI-Sender-Class:Date:To:Cc:References:Subject:From:
-	 In-Reply-To;
-	b=EXuqvTcbYD2Zi90s6T4Q1ox9PYgwfrpbV02TzQ5U+J24VRCAeO+kPE28tr2BImMS
-	 o/Gei0iJpLIid7iVOx64jjqKXoTFIslOXrLshxm35HyztQiAEAFco7qi83dCH83LW
-	 uItQtW9H+Vd5JgDVXq/KUyq/gnxCRw7rktoDZUHEU3ZQpY77/aIfRpL1KlnONHyc8
-	 x177psnPPbiFyttdzXKfYBjlJ2RhXC1o6o0bqVOxfga/8F81tUsWmPpfJ9F8h7DI2
-	 eo0CJ1BnnUticEI2AUMYRXw5rBWCxyWr6a+jCc3N2OxqwKv5oZYCrJ7qtjSpeHpKI
-	 kHNzlvMtWeLuUf4gkA==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.91.95]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1M2xrq-1rPeMg2Pe8-003JVi; Fri, 19
- Jan 2024 10:06:18 +0100
-Message-ID: <a5f974aa-826d-421b-bfe2-bb6c9b43ea9a@web.de>
-Date: Fri, 19 Jan 2024 10:06:02 +0100
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="z3P4C5rp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1705655528;
+	bh=eNiJDJdYOUFmY5BTiqxpKfPXrwPImnQUYyFSWE2ZSJU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=z3P4C5rpP4oH8MIrinLyBrZZZVLTwMNTKhUsEGxFrEAxX+qZsgt5wWovv3/SVw2fJ
+	 53XvZEQw3il/d9gtLpvQSnizwlBvKTmsszvqKYNG83lTWXA6MrWTUyyjVKlAArjymv
+	 yO8ffqW/6ynmiRhzqgVKPkPGtNvckK4eclAEexsP6mERqMYFkBEEWy1kejIJzeu22i
+	 RNpIa3zUaqQ7Ey8iWdTTVqueKPYTtEDWHEZWJPcsXvtBdFWWogxjKerYn+99eleMix
+	 e9og5Y4g/y6kVL+iLJVQScKWbw69vm1urU+qXOw/NNkLLgF203sYOqQl7hIv1MRFsn
+	 5SrxTe6HPTWGA==
+Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 419BA3781182;
+	Fri, 19 Jan 2024 09:12:08 +0000 (UTC)
+Message-ID: <064935d8-fbda-4eda-b013-8c8fc63b561c@collabora.com>
+Date: Fri, 19 Jan 2024 10:12:07 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,79 +42,68 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-To: Kunwu Chan <chentao@kylinos.cn>, linux-amlogic@lists.infradead.org,
- linux-arm-kernel@lists.infradead.org, kernel-janitors@vger.kernel.org,
- Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>,
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
- Neil Armstrong <neil.armstrong@linaro.org>
-Cc: LKML <linux-kernel@vger.kernel.org>
-References: <20240119074635.265218-1-chentao@kylinos.cn>
-Subject: Re: [PATCH] meson-mx-socinfo: Fix possible null-pointer dereference
- issues in meson_mx_socinfo_init
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20240119074635.265218-1-chentao@kylinos.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:hyKdlCkKgO+YTVOmB/GLcZr1wgCtUsa5eeb6696qbaPYs4p0tvm
- Wra2BA76jeC0HAYFadK3zTM811Z1GpZWxG4iCWQ5Bk+trVGnKthKiHdAFS2TbN04JmxxTCx
- WONU3Oho+j5ZwCDdVyNhs2AqyTtnjqq4XRtR/jwqQJatLceP9A53aOnjo5HdqunAr+ij8gY
- 32k/iA4rAfXkBY8Sfs/ZA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:UigNfyhaB4k=;UdHpO01shOQaaFwGIPHVxcK+HUZ
- VbqH4e0fYiE5esvL3Xw20BGCS6Cwt3LUi/oLUtC+x9bio1PMIX8BV2MAmQp3BTgYMMF20OV2s
- jqsL5x7oZ0o+ELhtDwM6es78LAWh771mbjZoRvBnaJC+CID8i5WAnCL/4zDH7p0AYLpeLy5Gv
- FB/3CTSv6IRRYiRbs2ORvYZwPgJuFdlyZX8VIcQKygJFT1AadFSzitsqNz5DnRkihyypVIdUs
- rDDY7k8bz1SJu7/2WKLHcuqF30COXLYj4n8Sb1B5Bh6i3X5VWChXMB9riXQn0qix6+P5f6WYb
- Xz/sBicYnxTLFEdn+zL9OVn7nmhKEm8ea2b5Z/fFFHBMY/uTdKL4ZA62LgKhxOEemfQk28Nzq
- 2Uhvl5cgCcMptCu7Je+FnAO9YhIU3iENkaphqjl0OF9zi5WnGnMt7/B/Dob4zlkidM3VX9VN8
- oNNOsCvDX/0q1srFjbJw9np1RCttc88P3DJl8sjhLYHl86id10e8U6JC68qkQ59aDvXguINBP
- EbauE4ekg6nsw57Vt4x22stfFyabslQHHx8ORWKZJgk30PB5iU0dJK56ssbDHop23VJY+WAbt
- iQvciVgpuNf0j+CVPcUPS60b2221yJJe2ltNkZS4kOLCtRfP2dFbsDG3Huoxo1vRnONbzLglq
- rso0SDsasPYbKcg1L8UUetmBcoVOT80Z7JWZGPlPXssPTjcqXvCNU5iv5PySJQwYz8hn1aySw
- xxrumNfL/u3EWOwNKRPpfr1aUqNwfpTZ2wJMuUbXHu3DR3DIwtrjXoeqx+1DaNcPD2q0t7a3S
- eppSn08LWTLSaqwodjD3PmTVi8pTRRlbdcEzoFsw6AOVha/U2VNPD7GKCBVftw79J1nwyKkwo
- UuoIn72v07Lx5z6Q+N3yo71kFM48JGGsEqVwUYE3vhSnFS27hm3KCGmJFjtpJ9wrtKOHvEcDU
- abogjg==
+Subject: Re: Probe failure of usb controller @11290000 on MT8195 after
+ next-20231221
+To: =?UTF-8?B?TsOtY29sYXMgRi4gUi4gQS4gUHJhZG8=?= <nfraprado@collabora.com>,
+ Matthias Brugger <matthias.bgg@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ kernel@collabora.com, Macpaul Lin <macpaul.lin@mediatek.com>,
+ Chunfeng Yun <chunfeng.yun@mediatek.com>, Chen-Yu Tsai <wenst@chromium.org>
+References: <9fce9838-ef87-4d1b-b3df-63e1ddb0ec51@notapiano>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <9fce9838-ef87-4d1b-b3df-63e1ddb0ec51@notapiano>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-> In meson_mx_socinfo_revision, kasprintf() returns a pointer
-> to dynamically allocated memory which can be NULL upon failure.
->
-> Similarly, the kstrdup_const in the meson_mx_socinfo_soc_id
-> returns a null pointer when it fails. Ensure the allocation was successf=
-ul
-> by checking the pointer validity. Avoid null pointer dereference issues.
+Il 18/01/24 19:36, Nícolas F. R. A. Prado ha scritto:
+> Hi,
+> 
+> KernelCI has identified a failure in the probe of one of the USB controllers on
+> the MT8195-Tomato Chromebook [1]:
+> 
+> [   16.336840] xhci-mtk 11290000.usb: uwk - reg:0x400, version:104
+> [   16.337081] xhci-mtk 11290000.usb: xHCI Host Controller
+> [   16.337093] xhci-mtk 11290000.usb: new USB bus registered, assigned bus number 5
+> [   16.357114] xhci-mtk 11290000.usb: clocks are not stable (0x1003d0f)
+> [   16.357119] xhci-mtk 11290000.usb: can't setup: -110
+> [   16.357128] xhci-mtk 11290000.usb: USB bus 5 deregistered
+> [   16.359484] xhci-mtk: probe of 11290000.usb failed with error -110
+> 
+> A previous message [2] suggests that a force-mode phy property that has been
+> merged might help with addressing the issue, however it's not clear to me how,
+> given that the controller at 1129000 uses a USB2 phy and the phy driver patch
+> only looks for the property on USB3 phys.
+> 
+> Worth noting that the issue doesn't always happen. For instance the test did
+> pass for next-20240110 and then failed again on today's next [3]. But it does
+> seem that the issue was introduced, or at least became much more likely, between
+> next-20231221 and next-20240103, given that it never happened out of 10 runs
+> before, and after that has happened 5 out of 7 times.
+> 
+> Note: On the Tomato Chromebook specifically this USB controller is not connected
+> to anything.
+> 
+> [1] https://linux.kernelci.org/test/case/id/659ce3506673076a8c52a428/
+> [2] https://lore.kernel.org/all/239def9b-437b-9211-7844-af4332651df0@mediatek.com/
+> [3] https://linux.kernelci.org/test/case/id/65a8c66ee89acb56ac52a405/
+> 
+> Thanks,
+> Nícolas
 
-Would you like to add the tag =E2=80=9CFixes=E2=80=9D for the completion o=
-f the error handling
-in this function implementation?
+Hey Nícolas,
 
+I wonder if this is happening because of async probe... I have seen those happening
+once in a (long) while on MT8186 as well with the same kind of flakiness and I am
+not even able to reproduce anymore.
 
-=E2=80=A6
-> +++ b/drivers/soc/amlogic/meson-mx-socinfo.c
-> @@ -160,6 +160,12 @@ static int __init meson_mx_socinfo_init(void)
->  							   metal_rev);
->  	soc_dev_attr->soc_id =3D meson_mx_socinfo_soc_id(major_ver, metal_rev)=
-;
->
-> +	if (!soc_dev_attr->revision || !soc_dev_attr->soc_id) {
+For MT8195 Tomato, I guess we can simply disable that controller without any side
+effects but, at the same time, I'm not sure that this would be the right thing to
+do in this case.
 
-I suggest to split such a check for null pointers.
+Besides, the controller at 11290000 is the only one that doesn't live behind MTU3,
+but I don't know if that can ring any bell....
 
-
-> +		kfree_const(soc_dev_attr->revision);
-> +		kfree_const(soc_dev_attr->soc_id);
-> +		kfree(soc_dev_attr);
-> +		return -ENOMEM;
-> +	}
->  	soc_dev =3D soc_device_register(soc_dev_attr);
->  	if (IS_ERR(soc_dev)) {
->  		kfree_const(soc_dev_attr->revision);
-
-Please use a goto chain for better exception handling.
-https://wiki.sei.cmu.edu/confluence/display/c/MEM12-C.+Consider+using+a+go=
-to+chain+when+leaving+a+function+on+error+when+using+and+releasing+resourc=
-es
-
-Regards,
-Markus
+Cheers,
+Angelo
