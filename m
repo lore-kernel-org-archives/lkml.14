@@ -1,133 +1,68 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail115-80.sinamail.sina.com.cn (mail115-80.sinamail.sina.com.cn [218.30.115.80])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DF48D51A
-	for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 07:37:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86BE5C2D6
+	for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 07:39:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=218.30.115.80
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705649839; cv=none; b=FbVLPrr13BOzrbEHK2hhZ0smZfPHZlETiZnArqk+AT7abEZb5uE4n/eHwtopRdE3NSE4Ne3tXdheEk1g02P5DkOkufnpxsFyXVTgnRMVL5l6dmRTd7GIclVG9z1/skqlTqe//LA988QCEcHWF8dVpGjVMqnR6CnVov2QeOyt8/Q=
+	t=1705649959; cv=none; b=JGKUsrfTBiB5rqdieD6fdgEsNGu2j5EyvL5HYOlHaHp6/q9CGoSt4dl+RO7ptYIuzPlHp04oa+6FbIqt3I+GVEUdcVzUS+k1BdHK3C0Zq+RTbJ0Q032DKS0TrBOnYBcVaPQUlJcHHsGvpYedU8l38YNphY124blOOqVoTAoF2TA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705649839; c=relaxed/simple;
-	bh=wnMv6grck/8JUvYsXcxoc9iHXWWkN00HXHmU8cOzKA8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=H5o6vqeNFTI2+wUQyX3y0CYUMHDpMGOiwC4kdylmyE84Qo4+5whdxCDgktR9MypgKXOlOROnef6hSQ1zflntFyE68DEBFLQrTZ7gezZOmBbkhAKcwByvxojBgHCtxO7A6B/n76nkDq7DILtG7P/qJp5iOuQTtPn9/870WLYZxnA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=I5+KXAKQ; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="I5+KXAKQ"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-40e60e135a7so4259475e9.0
-        for <linux-kernel@vger.kernel.org>; Thu, 18 Jan 2024 23:37:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1705649835; x=1706254635; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=gRVEGEADVnU1rj2ZsZLhkpAgQRXYe6tlf4fK3vtgXN8=;
-        b=I5+KXAKQik2A/4uaJFwGY78VJkT3ikShSZt9pp+gU0mn96D7lMYsT1IEABJZacB0Bk
-         uuxcQ2gR8sczJ8eV7KM9CH9rqVdKZ+MROm1xyCpuaZu0/B0mmgiaspPl84O+DEnrN3Hr
-         Rh5HkvwEpAaCZGtH17deI3J+MVD/dl9VXTTXVD+375JzbOoYztyCYhn529TONifCihvX
-         aw78e2LQtEOJcD+CnlRKNgHDVB4SbDmCMX3931jUSs8gasXkJM38qrvVWdpjq1EIyU8Q
-         xvNaDr+p/gp8PA0VvDu6BcK1rdpmkltlK0AeIrdzfp1tDJpbYBC1jyAJsKDv+9EKiW8U
-         p9yQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705649835; x=1706254635;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gRVEGEADVnU1rj2ZsZLhkpAgQRXYe6tlf4fK3vtgXN8=;
-        b=tV172KJUZU8/2qX+QwUpc3d7zpdJk0GBXdXodnNh/XTDrg76EvDkg0bYmSj8BcDcpZ
-         9O76qgaMto3iWVRmiK/PkEGqSmoYtrJNLPtwWJyRf8v3wxDcCfmj0hzuNUvsmsZmG0l6
-         aA2N6BsuWAsFWk5rzOAiIDiVrxBD7bVAP6eoo/42OWPk+HdNk5mcbUSsLxb5DxlqAH0G
-         YqE8mcTEpqQEAa7osJuvBp2uPUMjnVTY2yC4B7YBq/tLraFTn6KxWnT6FDu7ah2ume6y
-         w/dvgjOhocRzv3hjGxVUiXFmdii2+9JfLAFhww0W/ZjAmBzwCVGfOfgix6F+1VD3snb8
-         tXhw==
-X-Gm-Message-State: AOJu0YylYJAUTndYyAmaHAUfdR3MFfrN+FoGpBcwe4mrDMZk4iISKTAR
-	86VgqAzeYj13ARV3Nhobo20SrphZHbIjRZDhatfij+isgQU15/9xcxcaho1FW40=
-X-Google-Smtp-Source: AGHT+IGuGmikPGSsHZHY9FIadEyh4MkIKPIZmnPKnfXBLGan0KHUJRVxzqp0unv1usUGifgHR7kXog==
-X-Received: by 2002:a7b:cbd7:0:b0:40d:87eb:fa98 with SMTP id n23-20020a7bcbd7000000b0040d87ebfa98mr1344916wmi.28.1705649835643;
-        Thu, 18 Jan 2024 23:37:15 -0800 (PST)
-Received: from [192.168.1.195] ([5.133.47.210])
-        by smtp.googlemail.com with ESMTPSA id l22-20020a05600c4f1600b0040d6b91efd9sm31782328wmq.44.2024.01.18.23.37.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 18 Jan 2024 23:37:15 -0800 (PST)
-Message-ID: <ac6eb9f9-9a5c-472d-9a57-ee509d9589f9@linaro.org>
-Date: Fri, 19 Jan 2024 07:37:14 +0000
+	s=arc-20240116; t=1705649959; c=relaxed/simple;
+	bh=W/Jmw46U4UnoF6+JA4rYtU5Rvk2VYGhd7GxWe4Bfr+A=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=nYavQc+TOXCgiV7yIXSCIUl0NQFt+70l16OSAf+cJvAo15dKLrAJpFPCuqmK7btWcJQX32UIhFTXZhKZLU5NFkht8bPHcNdJ++3xevPIBlLyRQCX/o5cUL5PC4ZWCKbYamVQg7YNEDz4SC8yuN71mvneds5fHtxGOV+ybxSolWg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=218.30.115.80
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
+X-SMAIL-HELO: localhost.localdomain
+Received: from unknown (HELO localhost.localdomain)([116.24.10.220])
+	by sina.com (10.75.12.45) with ESMTP
+	id 65AA271500007C24; Fri, 19 Jan 2024 15:39:04 +0800 (CST)
+X-Sender: hdanton@sina.com
+X-Auth-ID: hdanton@sina.com
+Authentication-Results: sina.com;
+	 spf=none smtp.mailfrom=hdanton@sina.com;
+	 dkim=none header.i=none;
+	 dmarc=none action=none header.from=hdanton@sina.com
+X-SMAIL-MID: 20076631457703
+X-SMAIL-UIID: CAB9F0B1D5F04DBDB5F7CA5C3D28E3A1-20240119-153904-1
+From: Hillf Danton <hdanton@sina.com>
+To: syzbot <syzbot+bfde3bef047a81b8fde6@syzkaller.appspotmail.com>
+Cc: linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [net?] KASAN: use-after-free Read in __skb_flow_dissect (3)
+Date: Fri, 19 Jan 2024 15:38:50 +0800
+Message-Id: <20240119073850.1878-1-hdanton@sina.com>
+In-Reply-To: <000000000000498a02060de59162@google.com>
+References: <000000000000498a02060de59162@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/5] ASoC: qcom: sc8280xp: limit speaker volumes
-Content-Language: en-US
-To: Johan Hovold <johan+linaro@kernel.org>, Mark Brown <broonie@kernel.org>
-Cc: Banajit Goswami <bgoswami@quicinc.com>,
- Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>,
- Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
- linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org
-References: <20240118165811.13672-1-johan+linaro@kernel.org>
- <20240118165811.13672-4-johan+linaro@kernel.org>
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-In-Reply-To: <20240118165811.13672-4-johan+linaro@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-
-
-On 18/01/2024 16:58, Johan Hovold wrote:
-> The UCM configuration for the Lenovo ThinkPad X13s has up until now
-> been setting the speaker PA volume to -3 dB when enabling the speakers,
-> but this does not prevent the user from increasing the volume further.
+On Mon, 01 Jan 2024 09:18:16 -0800
+> syzbot found the following issue on:
 > 
-> Limit the PA volume to -3 dB in the machine driver to reduce the risk of
-> speaker damage until we have active speaker protection in place.
-> 
-> Note that this will probably need to be generalised using
-> machine-specific limits, but a common limit should do for now.
-> 
-> Cc: stable@vger.kernel.org	# 6.5
-> Reviewed-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
-> ---
->   sound/soc/qcom/sc8280xp.c | 8 +++++---
->   1 file changed, 5 insertions(+), 3 deletions(-)
-> 
-> diff --git a/sound/soc/qcom/sc8280xp.c b/sound/soc/qcom/sc8280xp.c
-> index ed4bb551bfbb..a19bfa354af8 100644
-> --- a/sound/soc/qcom/sc8280xp.c
-> +++ b/sound/soc/qcom/sc8280xp.c
-> @@ -32,12 +32,14 @@ static int sc8280xp_snd_init(struct snd_soc_pcm_runtime *rtd)
->   	case WSA_CODEC_DMA_RX_0:
->   	case WSA_CODEC_DMA_RX_1:
->   		/*
-> -		 * set limit of 0dB on Digital Volume for Speakers,
-> -		 * this can prevent damage of speakers to some extent without
-> -		 * active speaker protection
-> +		 * Set limit of 0 dB on Digital Volume and -3 dB on PA Volume
-> +		 * to reduce the risk of speaker damage until we have active
-> +		 * speaker protection in place.
+> HEAD commit:    f5837722ffec Merge tag 'mm-hotfixes-stable-2023-12-27-15-0..
+> git tree:       upstream
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=122dfc65e80000
 
-I would prefer a 0dB here instead of -3dB, this could become issue if we 
-are testing speakers without any pluseaudio or any software 
-amplification. ex: console
+#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git  master
 
-
->   		 */
->   		snd_soc_limit_volume(card, "WSA_RX0 Digital Volume", 84);
->   		snd_soc_limit_volume(card, "WSA_RX1 Digital Volume", 84);
-> +		snd_soc_limit_volume(card, "SpkrLeft PA Volume", 1);
-> +		snd_soc_limit_volume(card, "SpkrRight PA Volume", 1)
-
-It would be nice to consider using component->name_prefix here.
-
-
-thanks,
-srini
-;
-
->   		break;
->   	default:
->   		break;
+--- x/net/core/filter.c
++++ y/net/core/filter.c
+@@ -2161,6 +2161,10 @@ static int __bpf_redirect_no_mac(struct
+ 	}
+ 	skb_pop_mac_header(skb);
+ 	skb_reset_mac_len(skb);
++
++	if (skb->data[0] < 2)
++		flags = 0;
++
+ 	return flags & BPF_F_INGRESS ?
+ 	       __bpf_rx_skb_no_mac(dev, skb) : __bpf_tx_skb(dev, skb);
+ }
+--
