@@ -1,90 +1,89 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E06E61E480;
-	Fri, 19 Jan 2024 19:38:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01EDB57881
+	for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 19:38:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705693094; cv=none; b=iYlj4gCV8tsFqvthbScyJcirrcqAZhnma6NX3TpmcXbXYdpJIdhzD+GWgdYPWnmPm8tn7jqTFkR4SOtEXBYyJJeeMDB54s4fu9y7OGu7a9FAXZAcJuDklb6HKazP7PFLZcJ+mAzBZSlWQm8TVXwf4RkErAFQEUlGhEGA2xK4DGc=
+	t=1705693098; cv=none; b=G1tpsMC+coNyaYmnZWSvhwK0muvtmPHcvtvf6WUKtu4t8h5vdSCNW+6qCiRFQY3phKpLwsclTXNqfYHsTrh6TyAk2OKIujG78JDqCEaPpy2gFuFHrxLehnstS6B27z0Bol0gYGcYsRj3/WWXgk5xtiLz4L1ioKeWE0Ixia8T1FI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705693094; c=relaxed/simple;
-	bh=MSkJacugMshatNwZ3mm7fqSw/GZZCUd/n7oLLvxCAvs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=V/14jxrzlX9J/grTz933y0HY4nyQ0dI1bRfTT4B1aJx4pOgPfwLy8t+zWemi86DZthK04BzCwdd9dmMG/vkeNu+UW/Z2XIzJtR6KjLqaYqw5xskao9cjBBLykksP2HFpPUIwXeilIUV0AwkaVBEkVk956VtnuvHo3NK42udVG3s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=Rxgl3i8Z; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1705693098; c=relaxed/simple;
+	bh=jPPZFFZi33mDDSUrFYgbZMLWbgZcEuqtjLsvdrEY/mI=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Iq3UCy9jqQKgX6Sf1GyHN/x1S+b53a/ydmsFCj9fdg5UMqs9P+uo6mp3F7yq1ZDcpWXeeHK5U4mgG4I8ULil0IydwESXzM9Tz/xIQms5B7I2w1S7AYz+XX9WdxiYmqJrwIbSSiTYh7qyAku6esakPt2TVq2OSFeZaWZWOBk4v9Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=S9myda9Q; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=6XSVaLBp; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="Rxgl3i8Z"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1705693089;
-	bh=MSkJacugMshatNwZ3mm7fqSw/GZZCUd/n7oLLvxCAvs=;
-	h=From:To:Cc:Subject:Date:From;
-	b=Rxgl3i8ZC+YWiCP+rPTZ2QDTXukFQrh1bPTN/H/BfTmKLhgU6mtTkKt8M9ewAtG2D
-	 v9bHvVKanfq7euV1l5e5F7hgbHIsoyYmUYgr6O9zyVcmalzptdw+irJ1OZ8LDYPe4w
-	 +LsczR86kyGUquu21EjkMK0/NvSzblrPC8Z9/Y+gML0e4thm0IsqRv9BSqgRUqJPAB
-	 PJZ1BP4kmAcvYp801UIHTQr5vSjW4XLzeyvCxGv/+ju/iiZga4KLPFdqi7pYDHs+kq
-	 G6ugB+C1lFT2wWgprRXLvfKh0SwUUFTbyjJ9hdSX9d81zGN4Z9yHrkAfMPTvkxN21j
-	 dOVpZAOHWO9Vg==
-Received: from localhost (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: cristicc)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id DB8A03781FF2;
-	Fri, 19 Jan 2024 19:38:08 +0000 (UTC)
-From: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
-To: Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Johan Jonker <jbx6244@gmail.com>,
-	Sebastian Reichel <sebastian.reichel@collabora.com>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Andy Yan <andy.yan@rock-chips.com>,
-	Algea Cao <algea.cao@rock-chips.com>
-Cc: linux-phy@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	kernel@collabora.com
-Subject: [PATCH 0/3] Add support for RK3588 HDMI/DP Combo PHY
-Date: Fri, 19 Jan 2024 21:38:00 +0200
-Message-ID: <20240119193806.1030214-1-cristian.ciocaltea@collabora.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="S9myda9Q";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="6XSVaLBp"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1705693094;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CS/Cz7E66dmpGlXTZIlNFvN7PZ3LXC8YHR0LTyz+yfc=;
+	b=S9myda9Q4QQKDHAXOgv2l30R0dU7thICuNyHuVLF2/q6Lhrhct6JmttrbPou5M1/fPTc2Z
+	0m4el2NCOuf/4Sodvk21XcQfVnqMPuMHgO6HoZuaViQoHlz456i1t0iPZ2LaRUXuT6flkO
+	HVi7N8lDGYkKFACvIQoyLExMdx+HuyHw05azzONmZSPR1EpZyKkcDt5flfnZvRvmzYZ1co
+	9bIcWE45qlc183XnZyBifDeKfdAxMkRmJpuoispb9YfqegZTnXBFvvC17YT4kfrRadyIXa
+	vn8KgekHwwAFVSU19LXFbfwMHdmRgKyg23FcSEsNsuo4ti6CEy50BgkZGac9RQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1705693094;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CS/Cz7E66dmpGlXTZIlNFvN7PZ3LXC8YHR0LTyz+yfc=;
+	b=6XSVaLBporlkLVvcjBqv2dXk+MkOYB9Ka7tFZaRoKGt9VE1MncdixkCZVn4fnjaebs0btv
+	cet4xUArA67o0WBA==
+To: John Stultz <jstultz@google.com>, Pranav Prasad <pranavpp@google.com>
+Cc: sboyd@kernel.org, linux-kernel@vger.kernel.org, Kelly Rossmoyer
+ <krossmo@google.com>
+Subject: Re: [PATCH] alarmtimer: Expose information about next alarm to
+ userspace via sysfs
+In-Reply-To: <CANDhNCqyugdsais9bzaL8RxTxyBgme4W2ZdfayaS8HbqBHJraw@mail.gmail.com>
+References: <20240118181459.1663313-1-pranavpp@google.com>
+ <CANDhNCqyugdsais9bzaL8RxTxyBgme4W2ZdfayaS8HbqBHJraw@mail.gmail.com>
+Date: Fri, 19 Jan 2024 20:38:13 +0100
+Message-ID: <87y1cldsgq.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-Add driver and bindings to support the Rockchip HDMI/eDP TX Combo PHY 
-found on RK3588 SoC.
+On Thu, Jan 18 2024 at 14:11, John Stultz wrote:
+>   I'm always a bit cautious when exposing stuff to userland,
+> particularly if it's potentially racy as you mentioned in your
+> description. One thought I had was might adding a similar check
+> earlier in the suspend path on the kernel side provide similar benefit
+> (without requiring userland changes)?
+>
+> Basically, if I understand the problem:
+> echo mem > /sys/power/state
+> <kernel goes through suspending everything>
+> alarmtimer_suspend()
+>   if (next_alarm < TWO_SECONDS)
+>       return -EBUSY;
+> <kernel has to resume everything, and all that time was wasted>
+>
+> So if instead we did:
+> echo mem > /sys/power/state
+> enter_state()
+>    if (alarmtimer_immenent())
+>       retrun -EBUSY
+>
+> So the kernel would come back much faster if the suspend was going to abort.
+>
+> I suspect you all have considered this already but wanted to
+> understand what issues that approach has.
 
-The PHY is based on a Samsung IP block and supports HDMI 2.1 TMDS, FRL
-and eDP links.
+It has the same race issues as the user space readout has as far as I
+understand and it's much simpler.
 
-The HDMI link has been tested on Rock 5B and EVB1 boards.
+Thanks,
 
-Cristian Ciocaltea (3):
-  dt-bindings: soc: rockchip: Add rk3588 hdptxphy syscon
-  dt-bindings: phy: Add Rockchip HDMI/DP Combo PHY schema
-  phy: rockchip: Add Samsung HDMI/DP Combo PHY driver
-
- .../phy/rockchip,rk3588-hdptx-phy.yaml        |   96 +
- .../devicetree/bindings/soc/rockchip/grf.yaml |    1 +
- drivers/phy/rockchip/Kconfig                  |    8 +
- drivers/phy/rockchip/Makefile                 |    1 +
- .../phy/rockchip/phy-rockchip-samsung-hdptx.c | 2045 +++++++++++++++++
- 5 files changed, 2151 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/rockchip,rk3588-hdptx-phy.yaml
- create mode 100644 drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c
-
--- 
-2.43.0
-
+        tglx
