@@ -1,105 +1,120 @@
-Received: from www262.sakura.ne.jp (www262.sakura.ne.jp [202.181.97.72])
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 507142F2D;
-	Sat, 20 Jan 2024 10:34:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.181.97.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C59DBD502;
+	Sat, 20 Jan 2024 10:41:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705746874; cv=none; b=Hqm13JOiPkBTH7IknfihmNOh584GOXNTdy1OvjKWNxU3NTDTwgMvzRUewcE6SCqJ8M38plfg0dDtTv/Ux0D98YqCc/GFXOEizEHr3OusNqQtl0QSZhZjde9DO8nYJZ8+tNOtebPSunJLeZe6nO1vdy6tP4ZQRlmWSrtg3hu/4ZQ=
+	t=1705747282; cv=none; b=O4bFDLIevcCHGDa7Kn0s/b9zk/Bb53JMixQbVzpYlvZnoEfAlnAEWeSYxmqtWdedgsyJjZPmUj2DySskLNJ1odue4qm5kt4HRtmhYQWfjYgb/vob3Du0z2A0dOylpq/dXRt/GMoSrCq/Ea7AqhlFCYs56rHGV2pEcVjuCGpz6rg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705746874; c=relaxed/simple;
-	bh=MhFgpNUMuNHG64flCLc5tUHSf5b5DIG7JaB6eZIoyk4=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=mYZsqC1pZMtN2pKNJAG/MZ1p0/trGYUDW2JuXBxHzfyg/yoeJwefQWuWhWldMncM+uOR7GRRYkCvpT49G+GnEUnDiJSEo6IikoJe4FCqu2UUJXLU0LJSNoOfCI53UvQfixU0LvziKTYkOD6+erbjgU5OR7fVtbw+EThwk6o/+1s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp; spf=none smtp.mailfrom=I-love.SAKURA.ne.jp; arc=none smtp.client-ip=202.181.97.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=I-love.SAKURA.ne.jp
-Received: from fsav414.sakura.ne.jp (fsav414.sakura.ne.jp [133.242.250.113])
-	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 40KAY1hh090240;
-	Sat, 20 Jan 2024 19:34:01 +0900 (JST)
-	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav414.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav414.sakura.ne.jp);
- Sat, 20 Jan 2024 19:34:01 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav414.sakura.ne.jp)
-Received: from [192.168.1.6] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-	(authenticated bits=0)
-	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 40KAY13L090233
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
-	Sat, 20 Jan 2024 19:34:01 +0900 (JST)
-	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Message-ID: <9cd9d3eb-418f-44cc-afcf-7283d51252d6@I-love.SAKURA.ne.jp>
-Date: Sat, 20 Jan 2024 19:34:02 +0900
+	s=arc-20240116; t=1705747282; c=relaxed/simple;
+	bh=7f5Ea4YOXZsVcffF1Kp4uocWgltKhjuUuA7JtCWrFY0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=BwR6oGid3Ec/6XM4Xtheoij7y78mzY/ShrmYP0+yA/rpBsf4OLbm0InE8LkxQJkrNqEGWYoQgStK5c15awTY8yQ65DJu90FCu+sh8wHaESnVF4cBFzETzOcfaEvYgtjLfR7NeWHCMzGLVEE2ObRpZjDhnzgiKUWchbt0eA/V7lY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4THCh75rjtz4f3l1m;
+	Sat, 20 Jan 2024 18:41:11 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id 05CBA1A0B44;
+	Sat, 20 Jan 2024 18:41:18 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP1 (Coremail) with SMTP id cCh0CgAn+RFKo6tlY4mmBQ--.38494S7;
+	Sat, 20 Jan 2024 18:41:17 +0800 (CST)
+From: Yu Kuai <yukuai1@huaweicloud.com>
+To: mpatocka@redhat.com,
+	dm-devel@lists.linux.dev,
+	msnitzer@redhat.com,
+	heinzm@redhat.com,
+	song@kernel.org,
+	yukuai3@huawei.com
+Cc: linux-raid@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	yukuai1@huaweicloud.com,
+	yi.zhang@huawei.com,
+	yangerkun@huawei.com
+Subject: [PATCH 3/5] md: make sure md_do_sync() will set MD_RECOVERY_DONE
+Date: Sat, 20 Jan 2024 18:37:32 +0800
+Message-Id: <20240120103734.4155446-4-yukuai1@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240120103734.4155446-1-yukuai1@huaweicloud.com>
+References: <20240120103734.4155446-1-yukuai1@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: [PATCH] tty: vt: check for atomic context in con_write()
-Content-Language: en-US
-From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-To: syzbot <syzbot+06fa1063cca8163ea541@syzkaller.appspotmail.com>,
-        syzkaller-bugs@googlegroups.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org, linux-serial <linux-serial@vger.kernel.org>
-References: <00000000000039f237060f354ef7@google.com>
- <83414cb6-df16-4b6d-92e3-d54d22ba26cc@I-love.SAKURA.ne.jp>
-In-Reply-To: <83414cb6-df16-4b6d-92e3-d54d22ba26cc@I-love.SAKURA.ne.jp>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:cCh0CgAn+RFKo6tlY4mmBQ--.38494S7
+X-Coremail-Antispam: 1UD129KBjvJXoW7WF48JF18KF45Gw4rCFy7GFg_yoW8Ar1kpa
+	ykGF9IvrW8ArW3urW2qa4DXa45Aw1Ivry3CFyfuas8AF1fta1akFW5uF1UXaykta4fJayY
+	va15JF9xZF95C3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBK14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JrWl82xGYIkIc2
+	x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
+	Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM2
+	8EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AI
+	xVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20x
+	vE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xv
+	r2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxan2IY04
+	v7MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_
+	Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x
+	0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8
+	JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIx
+	AIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbJ73DUUUUU=
+	=
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-syzbot is reporting sleep in atomic context, for gsmld_write() is calling
-con_write() with spinlock held and IRQs disabled.
+From: Yu Kuai <yukuai3@huawei.com>
 
-Since include/linux/tty_ldisc.h says that "struct tty_ldisc_ops"->write
-(e.g. gsmld_write()) is allowed to sleep and include/linux/tty_driver.h
-says that "struct tty_operations"->write (e.g. con_write()) is not
-allowed to sleep, we should handle this problem on the con_write() side.
+stop_sync_thread() will interrupt md_do_sync(), and md_do_sync() must
+set MD_RECOVERY_DONE, so that follow up md_check_recovery() will
+unregister sync_thread, clear MD_RECOVERY_RUNNING and wake up
+stop_sync_thread().
 
-It seems that "Andrew Morton: console locking merge" in 2.4.10-pre11 added
-in_interrupt() check to do_con_write()/con_put_char()/con_flush_chars()
-in order to handle exceptional caller.
+Before this patch, if MD_RECOVERY_WAIT is set or the array is read-only,
+md_do_sync() will return without setting MD_RECOVERY_DONE, hence use
+stop_sync_thread() directly will hang because md_check_recovery() can't
+clear MD_RECOVERY_RUNNING, which is possible for dm-raid.
 
-Since include/linux/preempt.h says that in_atomic() cannot know about held
-spinlocks in non-preemptible kernels, but gsmld_write() is calling
-con_write() with IRQs disabled, we can add irqs_disabled() check to
-do_con_write()/con_flush_chars() in order to handle this case. Though,
-I'm not sure whether returning the bytes to write is appropriate behavior
-when do_con_write() can't work...
-
-Reported-by: syzbot+06fa1063cca8163ea541@syzkaller.appspotmail.com
-Closes: https://syzkaller.appspot.com/bug?extid=06fa1063cca8163ea541
-Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Signed-off-by: Yu Kuai <yukuai3@huawei.com>
 ---
- drivers/tty/vt/vt.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/md/md.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
-index 156efda7c80d..0d3d602ae147 100644
---- a/drivers/tty/vt/vt.c
-+++ b/drivers/tty/vt/vt.c
-@@ -2856,7 +2856,7 @@ static int do_con_write(struct tty_struct *tty, const u8 *buf, int count)
- 	struct vt_notifier_param param;
- 	bool rescan;
+diff --git a/drivers/md/md.c b/drivers/md/md.c
+index 6906d023f1d6..ba45c7be3dbe 100644
+--- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -8788,12 +8788,13 @@ void md_do_sync(struct md_thread *thread)
+ 	int ret;
  
--	if (in_interrupt())
-+	if (in_interrupt() || irqs_disabled())
- 		return count;
- 
- 	console_lock();
-@@ -3314,7 +3314,7 @@ static void con_flush_chars(struct tty_struct *tty)
- {
- 	struct vc_data *vc;
- 
--	if (in_interrupt())	/* from flush_to_ldisc */
-+	if (in_interrupt() || irqs_disabled()) /* from flush_to_ldisc */
+ 	/* just incase thread restarts... */
+-	if (test_bit(MD_RECOVERY_DONE, &mddev->recovery) ||
+-	    test_bit(MD_RECOVERY_WAIT, &mddev->recovery))
++	if (test_bit(MD_RECOVERY_DONE, &mddev->recovery))
  		return;
+-	if (!md_is_rdwr(mddev)) {/* never try to sync a read-only array */
++
++	if (test_bit(MD_RECOVERY_WAIT, &mddev->recovery) ||
++	    !md_is_rdwr(mddev)) {/* never try to sync a read-only array */
+ 		set_bit(MD_RECOVERY_INTR, &mddev->recovery);
+-		return;
++		goto out;
+ 	}
  
- 	/* if we race with con_close(), vt may be null */
+ 	if (mddev_is_clustered(mddev)) {
+@@ -9171,6 +9172,7 @@ void md_do_sync(struct md_thread *thread)
+ 						mddev->array_sectors);
+ 	}
+ 
++out:
+ 	spin_lock(&mddev->lock);
+ 	if (!test_bit(MD_RECOVERY_INTR, &mddev->recovery)) {
+ 		/* We completed so min/max setting can be forgotten if used. */
 -- 
-2.18.4
+2.39.2
 
