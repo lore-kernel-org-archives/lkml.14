@@ -1,121 +1,131 @@
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B05B617D4
-	for <linux-kernel@vger.kernel.org>; Sat, 20 Jan 2024 06:09:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 890F517D4
+	for <linux-kernel@vger.kernel.org>; Sat, 20 Jan 2024 06:17:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705730967; cv=none; b=V5wLkngyqDkHKmEX5tr52fCD7JyErBlbyxXVT6sUfaFmaECZ0BZ5aHHSkkZhpGNSHv5yu9jqQwiiLnD5PHFJGCWWt23Mcj/Yq2axw6PYOfZDWUSC7TDXfT9ACNL0sy1cWiK0Hu5noKYTLepsXoM+Gml5qPvZtPIk14jhZd8Kzco=
+	t=1705731476; cv=none; b=n6OujAoVG20Yz5vQ1QlRWDm3DdN+0oc2BHfVkYj6W3bxlMskYud0i5V+cONgSKz7fGZjypwRE/r43wZ2INIupmJzXIm+8dCI6BT96r8HlALk1AVewowRuEy0XyaOC1rmKlJM/F4k17qB1X8n1Pz6mE39AI+vW+4LI/weFT/FZDg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705730967; c=relaxed/simple;
-	bh=/sFV2h+bdopGqXwAbHSprshDUjsvNBZLXaDaFOj36LE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JzkQSswIabLP2rsG5s53WCEnYjVqw6Oz/NSCeMPowlLQXV1BFka+csHSY9DvMP1cJKZ6KNnvkzMbJXhEV9zydng31FjJd42wBw1DcBNCgtsvVl9IfUyEmxE6UcxLQcIc2s45k0n7l2g7BYMY+ELv/aRWrUomFpnujdDwdUB+kjQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0D+lB00v; arc=none smtp.client-ip=209.85.160.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1705731476; c=relaxed/simple;
+	bh=2TIFv5bWl4QoJ8YY6nQXuOBcbB39LBIAHax5xsKVXQQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BJ44PTvaHXAHlOYd2lOOlkZj+ad5y/SGcnDkBC2xVSVXfiODb4KmF6bctpGNwEoOw3rmrhAGVPorr1pW9EC1iamjID7atFJffvDXEccEGvYS9CeDmU+zl5K6vq9f8mLAEdcTc5JttLHFSwcA9oy9JyUCz2TqsdIvhxYi/5/KaRM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=M9DLcIbY; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0D+lB00v"
-Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-429bdb17616so127621cf.0
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 22:09:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1705730964; x=1706335764; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IhNlK+JQLQHesBMvW3n62OoJt8v0x6O0uKXTvgDlIjE=;
-        b=0D+lB00vuqIOlIFoJh7R3FVHcYGV3etGEwqPNXuyXiKBCBxS4lJUFDnOqrUrIV9muR
-         2CeSisSZoKESiFKbFWJ+MC0wSNoayOBcvLDdvMQfLM7fubXti6dj0r3F9sSiDGsreHzk
-         mm0xV/OFdtoDi77+XSaqefUgPisBrBeV8WpEocqLeUtLiWWm+ZieLs0wIZU1VxXZ9POL
-         vPxJHO+1DP+OIQPWebB6RowFTggA5Jk5sA5aKdvzpFAYemHwinQ1OctC76zcpTDEsKre
-         XI/pGcqMuKQT2OZpIBvDDkW2WplAOBbKpU4BuLsP1uitlv7wZF/AZOAWUpRtYkc8wXS/
-         Y+mQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705730964; x=1706335764;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=IhNlK+JQLQHesBMvW3n62OoJt8v0x6O0uKXTvgDlIjE=;
-        b=JAA60FZDYHKyc8Lv6Wao2KsZHlDvRDDxAiKDMdiEtrRwvNh+CmIqONYOY2QM/JjyGk
-         773lCQ2B2UORLAaZXfSyRBT9ifYDze6XBUgBKyLYWPc+79WXEVpBg4uz5FIpnQyG9fuZ
-         PbdzeK4FrzhN01wrbgOobxqhQglk+x1DzR9r5LMXyq1cQzC6WnkAWYAAN6XkJ8YGF6tz
-         4MgVu26Qfl8zWiozul0TRnvKLfAh9pebN8iHZLK/vbEAwl+hz21FYZBPjN8gSY+pDUZA
-         5jFg4rv1WDTkCgL4TRdBuhxIxzP1uxufNhhJba4wF3eJa3RHs68zodTkJmNSv5ABF0md
-         N5ZA==
-X-Gm-Message-State: AOJu0Ywo1IamrjxwycZTLhFD40KV7S+srPM5SnJvHbZgp/Q+Tn+D0vWB
-	4xrTA4Sd775CsOo/L7IQeDX1usYvkUGUczq1n3bj3duK34ny
-X-Google-Smtp-Source: AGHT+IGnfOWpHiTvOFGye2heWhER/hXbZ1yM58x5lyWtxxBqB1kQm4vmyoxlBhmkye7BGdU0z4wFT2ODijVrgLCGSE0=
-X-Received: by 2002:a05:622a:6092:b0:42a:2e9a:2841 with SMTP id
- hf18-20020a05622a609200b0042a2e9a2841mr22012qtb.1.1705730964503; Fri, 19 Jan
- 2024 22:09:24 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="M9DLcIbY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1705731473;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=KPagYGDCgd4YbmRF67JJPRGuQwCB9qdncajSxilqw6s=;
+	b=M9DLcIbY1PDwXvA5f+Hh+SOWkhWMet76xQH5P8QuZT38yZPNa00AVCkwkayS5Raxg5N7t7
+	N5hvB/rNyi6MHcvnTWYXxUEWlHfIZ1W5T59dbpePiu/8CvYGV11GZomM5OZ/NQkVCr83e9
+	L0MuZrxStWzQUJC4EUQ7WBiEw286egc=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-609-I_WqePedOoSQHcCvLPXnfg-1; Sat,
+ 20 Jan 2024 01:17:48 -0500
+X-MC-Unique: I_WqePedOoSQHcCvLPXnfg-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id DD9422825BA5;
+	Sat, 20 Jan 2024 06:17:47 +0000 (UTC)
+Received: from fedora (unknown [10.72.116.42])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id BCA58C0FDCA;
+	Sat, 20 Jan 2024 06:17:42 +0000 (UTC)
+Date: Sat, 20 Jan 2024 14:17:38 +0800
+From: Ming Lei <ming.lei@redhat.com>
+To: Yury Norov <yury.norov@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Breno Leitao <leitao@debian.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Zi Yan <ziy@nvidia.com>, ming.lei@redhat.com
+Subject: Re: [PATCH 4/9] lib/group_cpus: optimize outer loop in
+ grp_spread_init_one()
+Message-ID: <ZatlggW/8SH6od9O@fedora>
+References: <20240120025053.684838-1-yury.norov@gmail.com>
+ <20240120025053.684838-5-yury.norov@gmail.com>
+ <ZatDXvhvt0mLTi2m@fedora>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <ZYbm5L7tw7bdpDpE@kernel.org>
-In-Reply-To: <ZYbm5L7tw7bdpDpE@kernel.org>
-From: Ian Rogers <irogers@google.com>
-Date: Fri, 19 Jan 2024 22:09:10 -0800
-Message-ID: <CAP-5=fWVQ-7ijjK3-w1q+k2WYVNHbAcejb-xY0ptbjRw476VKA@mail.gmail.com>
-Subject: Re: perf test hybrid failing on 14700K
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Kan Liang <kan.liang@intel.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, linux-perf-users@vger.kernel.org, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZatDXvhvt0mLTi2m@fedora>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
 
-On Sat, Dec 23, 2023 at 5:55=E2=80=AFAM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> Hi Kan,
->
-> I noticed the following problem, are you able to reproduce it?
->
-> Happy solstice!
->
-> - Arnaldo
+On Sat, Jan 20, 2024 at 11:51:58AM +0800, Ming Lei wrote:
+> On Fri, Jan 19, 2024 at 06:50:48PM -0800, Yury Norov wrote:
+> > Similarly to the inner loop, in the outer loop we can use for_each_cpu()
+> > macro, and skip CPUs that have been moved.
+> > 
+> > With this patch, the function becomes O(1), despite that it's a
+> > double-loop.
+> > 
+> > While here, add a comment why we can't merge outer logic into the inner
+> > loop.
+> > 
+> > Signed-off-by: Yury Norov <yury.norov@gmail.com>
+> > ---
+> >  lib/group_cpus.c | 14 ++++++++------
+> >  1 file changed, 8 insertions(+), 6 deletions(-)
+> > 
+> > diff --git a/lib/group_cpus.c b/lib/group_cpus.c
+> > index 0a8ac7cb1a5d..952aac9eaa81 100644
+> > --- a/lib/group_cpus.c
+> > +++ b/lib/group_cpus.c
+> > @@ -17,16 +17,17 @@ static void grp_spread_init_one(struct cpumask *irqmsk, struct cpumask *nmsk,
+> >  	const struct cpumask *siblmsk;
+> >  	int cpu, sibl;
+> >  
+> > -	for ( ; cpus_per_grp > 0; ) {
+> > -		cpu = cpumask_first(nmsk);
+> > -
+> > -		/* Should not happen, but I'm too lazy to think about it */
+> > -		if (cpu >= nr_cpu_ids)
+> > +	for_each_cpu(cpu, nmsk) {
+> > +		if (cpus_per_grp-- == 0)
+> >  			return;
+> >  
+> > +		/*
+> > +		 * If a caller wants to spread IRQa on offline CPUs, we need to
+> > +		 * take care of it explicitly because those offline CPUS are not
+> > +		 * included in siblings cpumask.
+> > +		 */
+> >  		__cpumask_clear_cpu(cpu, nmsk);
+> >  		__cpumask_set_cpu(cpu, irqmsk);
+> > -		cpus_per_grp--;
+> >  
+> >  		/* If the cpu has siblings, use them first */
+> >  		siblmsk = topology_sibling_cpumask(cpu);
+> > @@ -38,6 +39,7 @@ static void grp_spread_init_one(struct cpumask *irqmsk, struct cpumask *nmsk,
+> >  
+> >  			__cpumask_clear_cpu(sibl, nmsk);
+> >  			__cpumask_set_cpu(sibl, irqmsk);
+> > +			cpu = sibl + 1;
+> 
+> It has been tricky enough to update condition variable of for_each_cpu()
+> (such kind of pattern can't build in Rust at all), and the above line could
+> be more tricky actually.
 
-Hi Arnaldo,
+Not only the above line is tricky, but also it is wrong, because 'cpu'
+local variable should always point to the 1st bit in 'nmsk'. However, if
+you set it to 'sibl + 1', some bits in 'nmsk' are skipped in the loop,
+aren't they?
 
-I'm seeing a test failure on Alderlake in perf-tools-next and wondered
-if it was on your radar:
-```
- 32: Session topology                                                :
---- start ---
-test child forked, pid 539222
-templ file: /tmp/perf-test-HMet21
-Using CPUID GenuineIntel-6-97-2
-------------------------------------------------------------
-perf_event_attr:
- type                             0 (PERF_TYPE_HARDWARE)
- config                           0x800000000
- disabled                         1
-------------------------------------------------------------
-sys_perf_event_open: pid 0  cpu -1  group_fd -1  flags 0x8 =3D 4
-------------------------------------------------------------
-perf_event_attr:
- type                             0 (PERF_TYPE_HARDWARE)
- config                           0x400000000
- disabled                         1
-------------------------------------------------------------
-sys_perf_event_open: pid 0  cpu -1  group_fd -1  flags 0x8 =3D 5
-non matching sample_type
-FAILED tests/topology.c:73 can't get session
-test child finished with -1
----- end ----
-Session topology: FAILED!
-```
-
-The code is hitting this line in evlist__valid_sample_type as
-core.nr_entries is 2 on hybrid not 1:
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/tools/perf/util/evlist.c?h=3Dperf-tools-next#n1215
-this causes perf_session__open to fail:
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/tools/perf/util/session.c?h=3Dperf-tools-next#n129
 
 Thanks,
-Ian
+Ming
+
