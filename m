@@ -1,122 +1,145 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from aposti.net (aposti.net [89.234.176.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33A02170;
-	Sat, 20 Jan 2024 00:12:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6B15170;
+	Sat, 20 Jan 2024 00:15:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.234.176.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705709532; cv=none; b=EfSqjcpLefn+zneokLT07HOrNr4Jlxdm3gITZVHhbvmK+ufpTJFiPJHfQ6rU8lEFxmfyLmUM1Cd29GhWFVTInwwLiyC9IJAdIR6hcziTUwyeY5BSTVa7/KXhKDYzZoNUzQnuhV17L4k57mwcaIobfbNE/fPsNRNTRNUBJqIRVFg=
+	t=1705709704; cv=none; b=hvbJLZQhZrZNDpP9jBhcsm/eeSEsP4Y2OuPyWuFaXBx3wUuVkiial0zC5K/NiLeZtVdYXq/6TAuUVSLFK9ZRy4l5fRuCEGHkXoEALfkXPiAkGKvXVKjz8ZhFcHudSsAJL88hUee5gAx96IROx9efyDPsutAeW8SnRKAvGWHPgjQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705709532; c=relaxed/simple;
-	bh=t2YKQSRZhMvKZWSEbQfEKkLCPogfqfSRvplfZIxNilc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rWd9zc90LThdn5GcwweVwfR4sRtRWNrK0T9MYbJVpc/AFYuEr4rNBw7aFfxLl/xcBea55bLOgsRmRspnrShYsWxqCZEcDRwkgu2jDNmR0zPJjTdruvb1BJ+BM/y7CPyCjpOczumO51dF6HJREg83mta8udlFdRDxUybJ3JqzgjE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=js/hoM1E; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1705709704; c=relaxed/simple;
+	bh=W7OnWjDgrb5ZNuxFpvFGDTPEYhVuCP6OSB6O3x5tm3Q=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=ktus0gD9mvJpeDSd1KfyWUaQSRFqveZLDhWAwaVumMFphV5zjFlIbozVVv7h9TQ7YauGYeDcdt8JuZEDlpcbHWfWeDNl7R1KnCwv2ELCOhv7p6NQlSFKGVBkpW8EIuuV2BGrNor3n76yrEc9Ic4MWSNmVH8jx4Y3clCvT49Cukw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=crapouillou.net; spf=pass smtp.mailfrom=crapouillou.net; dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b=JA265L43; arc=none smtp.client-ip=89.234.176.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=crapouillou.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crapouillou.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="js/hoM1E"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 40K05ma2031619;
-	Sat, 20 Jan 2024 00:11:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=FrqUNUAdbZExbZI/fVfv3yWEUzNTR44642+Bc6d0vy8=;
- b=js/hoM1E9NebuvFXZzPifYspl2Ik1AvIkmIk3Vmy6wThRf893PMd3sepPwGevPkAY6pe
- Djs2DZRZPpUH72oUoi+MwKWWsxiiMC1KVEa6ZMBD9OtskAUMsKU9jK3GjhUlKrh0UFiX
- +RqHGy6YzQnFFSIeQbUB2Mlw57JeG5xHdd2Z2wi0MPWQn5jvaA4+NwywarAE/Mk45vzP
- Pw9DOPbXZLg+uCRU5oLZ79cRialQXA0rDU+gVZFUdBkYMIyajVbk226q2IQM8p//FjcC
- YBuoSPmUm7bZxnNh9M4U9/9oqAJkj1AYrdLDtGozHPPRn4RhVdn1HQoC0dDpib265z5G VQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vr2wv8gnk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 20 Jan 2024 00:11:10 +0000
-Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 40K072BR003156;
-	Sat, 20 Jan 2024 00:11:09 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vr2wv8gjh-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 20 Jan 2024 00:11:09 +0000
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 40JKgAW1000441;
-	Sat, 20 Jan 2024 00:06:12 GMT
-Received: from smtprelay01.wdc07v.mail.ibm.com ([172.16.1.68])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3vm4utcpkh-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 20 Jan 2024 00:06:12 +0000
-Received: from smtpav03.dal12v.mail.ibm.com (smtpav03.dal12v.mail.ibm.com [10.241.53.102])
-	by smtprelay01.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 40K06BbH18809420
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sat, 20 Jan 2024 00:06:12 GMT
-Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8A7D058056;
-	Sat, 20 Jan 2024 00:06:11 +0000 (GMT)
-Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id AB8B95803F;
-	Sat, 20 Jan 2024 00:06:08 +0000 (GMT)
-Received: from [9.61.126.81] (unknown [9.61.126.81])
-	by smtpav03.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Sat, 20 Jan 2024 00:06:08 +0000 (GMT)
-Message-ID: <baeb57e5-a13e-41b3-b74c-76d1a5442821@linux.ibm.com>
-Date: Fri, 19 Jan 2024 18:06:08 -0600
+	dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="JA265L43"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+	s=mail; t=1705709694;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=uTRM9d6bvlbWT4CTU/U4qeImT68CpFKTYfre+yx+3OQ=;
+	b=JA265L43X+KVrNQQpKTeItKpNrS74hBHSilZLefH+GSdoIa6uDIXf4ZrMKJYw2cM106Vp6
+	BQC7TTWrnq9Vj+5LxaM33VHNWqeReEPckoCVSemlDGNc/QfOnOhmwjrJbAGucqHWZWf0ra
+	vjxOzGBKes+Jac25P3fz9YBWxAGp9Tk=
+Message-ID: <59799a40d8cc425dc5a847a0c8e25730db4fc5c8.camel@crapouillou.net>
+Subject: Re: [PATCH v4 1/4] usb: gadget: Support already-mapped DMA SGs
+From: Paul Cercueil <paul@crapouillou.net>
+To: Frank Li <Frank.li@nxp.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jonathan Corbet
+ <corbet@lwn.net>, Sumit Semwal <sumit.semwal@linaro.org>, Christian
+ =?ISO-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>, Jonathan Cameron
+ <jic23@kernel.org>, Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>,
+ Michael Hennerich <Michael.Hennerich@analog.com>, 
+ linux-usb@vger.kernel.org, linux-doc@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
+ dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org
+Date: Sat, 20 Jan 2024 01:14:52 +0100
+In-Reply-To: <ZaruU5BpQF8SeZZS@lizhi-Precision-Tower-5810>
+References: <20240117122646.41616-1-paul@crapouillou.net>
+	 <20240117122646.41616-2-paul@crapouillou.net>
+	 <ZaruU5BpQF8SeZZS@lizhi-Precision-Tower-5810>
+Autocrypt: addr=paul@crapouillou.net; prefer-encrypt=mutual;
+ keydata=mQENBF0KhcEBCADkfmrzdTOp/gFOMQX0QwKE2WgeCJiHPWkpEuPH81/HB2dpjPZNW03ZMLQfECbbaEkdbN4YnPfXgcc1uBe5mwOAPV1MBlaZcEt4M67iYQwSNrP7maPS3IaQJ18ES8JJ5Uf5UzFZaUawgH+oipYGW+v31cX6L3k+dGsPRM0Pyo0sQt52fsopNPZ9iag0iY7dGNuKenaEqkYNjwEgTtNz8dt6s3hMpHIKZFL3OhAGi88wF/21isv0zkF4J0wlf9gYUTEEY3Eulx80PTVqGIcHZzfavlWIdzhe+rxHTDGVwseR2Y1WjgFGQ2F+vXetAB8NEeygXee+i9nY5qt9c07m8mzjABEBAAG0JFBhdWwgQ2VyY3VlaWwgPHBhdWxAY3JhcG91aWxsb3UubmV0PokBTgQTAQoAOBYhBNdHYd8OeCBwpMuVxnPua9InSr1BBQJdCoXBAhsDBQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAAAoJEHPua9InSr1BgvIH/0kLyrI3V0f33a6D3BJwc1grbygPVYGuC5l5eMnAI+rDmLR19E2yvibRpgUc87NmPEQPpbbtAZt8On/2WZoE5OIPdlId/AHNpdgAtGXo0ZX4LGeVPjxjdkbrKVHxbcdcnY+zzaFglpbVSvp76pxqgVg8PgxkAAeeJV+ET4t0823Gz2HzCL/6JZhvKAEtHVulOWoBh368SYdolp1TSfORWmHzvQiCCCA+j0cMkYVGzIQzEQhX7Urf9N/nhU5/SGLFEi9DcBfXoGzhyQyLXflhJtKm3XGB1K/pPulbKaPcKAl6rIDWPuFpHkSbmZ9r4KFlBwgAhlGy6nqP7O3u7q23hRW5AQ0EXQqFwQEIAMo+MgvYHsyjX3Ja4Oolg1Txzm8woj30ch2nACFCqaO0R/1kLj2VVeLrDyQUOlXx9PD6IQI4M8wy8m0sR4wV2p/g/paw7k65cjzYYLh+FdLNyO7IW
+	YXndJO+wDPi3aK/YKUYepqlP+QsmaHNYNdXEQDRKqNfJg8t0f5rfzp9ryxd1tCnbV+tG8VHQWiZXNqN7062DygSNXFUfQ0vZ3J2D4oAcIAEXTymRQ2+hr3Hf7I61KMHWeSkCvCG2decTYsHlw5Erix/jYWqVOtX0roOOLqWkqpQQJWtU+biWrAksmFmCp5fXIg1Nlg39v21xCXBGxJkxyTYuhdWyu1yDQ+LSIUAEQEAAYkBNgQYAQoAIBYhBNdHYd8OeCBwpMuVxnPua9InSr1BBQJdCoXBAhsMAAoJEHPua9InSr1B4wsH/Az767YCT0FSsMNt1jkkdLCBi7nY0GTW+PLP1a4zvVqFMo/vD6uz1ZflVTUAEvcTi3VHYZrlgjcxmcGu239oruqUS8Qy/xgZBp9KF0NTWQSl1iBfVbIU5VV1vHS6r77W5x0qXgfvAUWOH4gmN3MnF01SH2zMcLiaUGF+mcwl15rHbjnT3Nu2399aSE6cep86igfCAyFUOXjYEGlJy+c6UyT+DUylpjQg0nl8MlZ/7Whg2fAU9+FALIbQYQzGlT4c71SibR9T741jnegHhlmV4WXXUD6roFt54t0MSAFSVxzG8mLcSjR2cLUJ3NIPXixYUSEn3tQhfZj07xIIjWxAYZo=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/3] dt-bindings: Add DPS310 as trivial device
-To: Rob Herring <robh@kernel.org>
-Cc: krzysztof.kozlowski+dt@linaro.org, linux-arm-kernel@lists.infradead.org,
-        jarkko@kernel.org, tony.luck@intel.com, jgg@ziepe.ca,
-        naresh.solanki@9elements.com, linux-kernel@vger.kernel.org,
-        linux-integrity@vger.kernel.org, linux-aspeed@lists.ozlabs.org,
-        bhelgaas@google.com, geert+renesas@glider.be, vincent@vtremblay.dev,
-        keescook@chromium.org, peterhuewe@gmx.de, robh+dt@kernel.org,
-        joel@jms.id.au, patrick.rudolph@9elements.com,
-        peteryin.openbmc@gmail.com, luca.ceresoli@bootlin.com,
-        andrew@codeconstruct.com.au, andre.werner@systec-electronic.com,
-        conor+dt@kernel.org, linux@roeck-us.net, geissonator@yahoo.com,
-        johannes.holland@infineon.com, broonie@kernel.org,
-        devicetree@vger.kernel.org, gpiccoli@igalia.com,
-        alexander.stein@ew.tq-group.com, festevam@denx.de,
-        linux-hardening@vger.kernel.org,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-References: <20240116183734.3944028-1-ninad@linux.ibm.com>
- <20240116183734.3944028-3-ninad@linux.ibm.com>
- <170569701502.1007352.2755613869226739924.robh@kernel.org>
-Content-Language: en-US
-From: Ninad Palsule <ninad@linux.ibm.com>
-In-Reply-To: <170569701502.1007352.2755613869226739924.robh@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: pwdJZ3JYFnkVn8MihU2LwPzvf_aNPGk-
-X-Proofpoint-GUID: vIj4mehuiT57tTptbXl5KJvHXJGn-UtM
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-19_12,2024-01-19_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 suspectscore=0
- spamscore=0 mlxscore=0 priorityscore=1501 impostorscore=0
- lowpriorityscore=0 mlxlogscore=999 bulkscore=0 clxscore=1011 adultscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2401190150
 
-Hello Rob,
-Thank you!
+Hi Frank,
 
-On 1/19/24 14:43, Rob Herring wrote:
-> On Tue, 16 Jan 2024 12:37:33 -0600, Ninad Palsule wrote:
->> Infineon DPS310 is a barometric pressure and temperature sensor.
->>
->> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
->> Signed-off-by: Ninad Palsule <ninad@linux.ibm.com>
->> ---
->>   Documentation/devicetree/bindings/trivial-devices.yaml | 2 ++
->>   1 file changed, 2 insertions(+)
->>
-> Applied, thanks!
->
+Le vendredi 19 janvier 2024 =C3=A0 16:49 -0500, Frank Li a =C3=A9crit=C2=A0=
+:
+> On Wed, Jan 17, 2024 at 01:26:43PM +0100, Paul Cercueil wrote:
+> > Add a new 'sg_was_mapped' field to the struct usb_request. This
+> > field
+> > can be used to indicate that the scatterlist associated to the USB
+> > transfer has already been mapped into the DMA space, and it does
+> > not
+> > have to be done internally.
+> >=20
+> > Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> > ---
+> > =C2=A0drivers/usb/gadget/udc/core.c | 7 ++++++-
+> > =C2=A0include/linux/usb/gadget.h=C2=A0=C2=A0=C2=A0 | 2 ++
+> > =C2=A02 files changed, 8 insertions(+), 1 deletion(-)
+> >=20
+> > diff --git a/drivers/usb/gadget/udc/core.c
+> > b/drivers/usb/gadget/udc/core.c
+> > index d59f94464b87..9d4150124fdb 100644
+> > --- a/drivers/usb/gadget/udc/core.c
+> > +++ b/drivers/usb/gadget/udc/core.c
+> > @@ -903,6 +903,11 @@ int usb_gadget_map_request_by_dev(struct
+> > device *dev,
+> > =C2=A0	if (req->length =3D=3D 0)
+> > =C2=A0		return 0;
+> > =C2=A0
+> > +	if (req->sg_was_mapped) {
+> > +		req->num_mapped_sgs =3D req->num_sgs;
+> > +		return 0;
+> > +	}
+> > +
+> > =C2=A0	if (req->num_sgs) {
+> > =C2=A0		int=C2=A0=C2=A0=C2=A0=C2=A0 mapped;
+> > =C2=A0
+> > @@ -948,7 +953,7 @@ EXPORT_SYMBOL_GPL(usb_gadget_map_request);
+> > =C2=A0void usb_gadget_unmap_request_by_dev(struct device *dev,
+> > =C2=A0		struct usb_request *req, int is_in)
+> > =C2=A0{
+> > -	if (req->length =3D=3D 0)
+> > +	if (req->length =3D=3D 0 || req->sg_was_mapped)
+> > =C2=A0		return;
+> > =C2=A0
+> > =C2=A0	if (req->num_mapped_sgs) {
+> > diff --git a/include/linux/usb/gadget.h
+> > b/include/linux/usb/gadget.h
+> > index a771ccc038ac..c529e4e06997 100644
+> > --- a/include/linux/usb/gadget.h
+> > +++ b/include/linux/usb/gadget.h
+> > @@ -52,6 +52,7 @@ struct usb_ep;
+> > =C2=A0 * @short_not_ok: When reading data, makes short packets be
+> > =C2=A0 *=C2=A0=C2=A0=C2=A0=C2=A0 treated as errors (queue stops advanci=
+ng till cleanup).
+> > =C2=A0 * @dma_mapped: Indicates if request has been mapped to DMA
+> > (internal)
+> > + * @sg_was_mapped: Set if the scatterlist has been mapped before
+> > the request
+> > =C2=A0 * @complete: Function called when request completes, so this
+> > request and
+> > =C2=A0 *	its buffer may be re-used.=C2=A0 The function will always be
+> > called with
+> > =C2=A0 *	interrupts disabled, and it must not sleep.
+> > @@ -111,6 +112,7 @@ struct usb_request {
+> > =C2=A0	unsigned		zero:1;
+> > =C2=A0	unsigned		short_not_ok:1;
+> > =C2=A0	unsigned		dma_mapped:1;
+> > +	unsigned		sg_was_mapped:1;
+>=20
+> why not use dma_mapped direclty?
+
+Because of the unmap case. We want to know whether we should unmap or
+not.
+
+>=20
+> Frank
+
+Cheers,
+-Paul
+
+>=20
+> > =C2=A0
+> > =C2=A0	void			(*complete)(struct usb_ep *ep,
+> > =C2=A0					struct usb_request *req);
+> > --=20
+> > 2.43.0
+> >=20
+
