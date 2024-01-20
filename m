@@ -1,63 +1,64 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAF14125D2
-	for <linux-kernel@vger.kernel.org>; Sat, 20 Jan 2024 19:42:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42F0411727;
+	Sat, 20 Jan 2024 19:54:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705779764; cv=none; b=XsmRJYWz/fuG4qKED+2SsSe1Vuq/y1qKrN07I0GQOKQ6vxCMwe4PcifOOmj1sYaA0nSdHI2ZfXvnmaQyj+iwFeuWbCKzTb0r1UReFJ0sXtZmUfpQ8IcSfoR0V01RKcaTrMRYU9j8gfQkxrkXPffg7Jd3PSBA+anl+hQTCt0Mtyg=
+	t=1705780473; cv=none; b=UJ2z8c2Tra3gzayz0pXKq9CpzA5+SXnAZDU8XHgiQivRCSVvDwSfT6ZgEjMs+5yZWPpDJddF/i8hnodIAnrxTk3TzEVYGNJD3RJUMQZv9mOOVi1lM1mRDbtc1gYIWKjKR8B/CsYBjSQqt9D09ESdLYVQMCesBWcjSDsBaAAGaeY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705779764; c=relaxed/simple;
-	bh=2mxFYdmBSkm/9gBvn8lI4Ab/gdegAATDGXuHWlqWSFU=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=XMUWEXRtXBOjM6QEzAbXv/C0Vb9GhlKxw+nuydL14OggP10f2qsqYI6Lh/Rb9hkEkkpeh1f4ayf2mQvVsypGUiq1iGtM5mNtheUYtfTgQUf51sQFPfY6VgRIOw7HVyEXN3asK+kcYQZs7J4tZhn7rMLXCxnmuY1xRmT9MvIrSVo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PK7YCndE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1705780473; c=relaxed/simple;
+	bh=tbOOeN6McKZXfmtSKXEcyKn8BTQPKrksBWnAPBQTyvE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DKbuWVukk5lFzBJrcGqRUl8E3nieKvJc2HfEFoFZotwVCZqgg5Cw+ahFnJbbp6qtmSAQ7dDW1achUyRJSu+h6pGY9RmxpEpzQWKKv+tknS+1zU0DZlRmt5oJdDReShjIH9yv4CjOYt0OVHtFzn97LNLIOOWmsM0P2SLsAAcKBpI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=1W+9pqF2; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PK7YCndE"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id C3CE3C433C7;
-	Sat, 20 Jan 2024 19:42:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705779763;
-	bh=2mxFYdmBSkm/9gBvn8lI4Ab/gdegAATDGXuHWlqWSFU=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=PK7YCndEEcTqo/onV8ZnLaH00M+ruFpVwFZp/GpHcmJmhKOXca7w1u04iCv6wILTe
-	 IQgcmdPFOOY1+c0ztAhS+Rm07JoUrYEmsqozwUKI+WEh3qc697LC45rxvBejUrrqoD
-	 V77ttEI8YSos/LyOyW/fpLNxdp6xl/0U5c95K8s5H2L+f87KcSYyUkp1dazwGzQ1+P
-	 dzU3bB8naUQ2VI1QtjI6RpucAa/7ogrquQSXEtCMDLwWLRw1cm3afeayIdB0n0LVm8
-	 yheGL+63Fx8tknv1wdHTUwjLe9n0/Z9RJlVuwEVVU03TXshorx5G1uB/SIPE1xEv6r
-	 QuB/zrFD5foxg==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id AB80AD8C978;
-	Sat, 20 Jan 2024 19:42:43 +0000 (UTC)
-Subject: Re: [GIT PULL] RISC-V Patches for the 6.8 Merge Window, Part 4
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <mhng-878cc879-7aa0-473f-91e4-8288072cdd4e@palmer-ri-x1c9>
-References: <mhng-878cc879-7aa0-473f-91e4-8288072cdd4e@palmer-ri-x1c9>
-X-PR-Tracked-List-Id: <linux-riscv.lists.infradead.org>
-X-PR-Tracked-Message-Id: <mhng-878cc879-7aa0-473f-91e4-8288072cdd4e@palmer-ri-x1c9>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git tags/riscv-for-linus-6.8-mw4
-X-PR-Tracked-Commit-Id: f24a70106dc1ad2a755b2d42f47cf1dcf24f0b27
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: e5075d8ec5647322fb9e699bfb76331cc8ee098d
-Message-Id: <170577976369.29448.6106762647083098483.pr-tracker-bot@kernel.org>
-Date: Sat, 20 Jan 2024 19:42:43 +0000
-To: Palmer Dabbelt <palmer@rivosinc.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="1W+9pqF2"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=eL91QtNhG/z4mZ22GAv/7KhK3UTnXQMTH/oaMziGrzQ=; b=1W+9pqF2JuajB+Fj+83VQqesO5
+	diYhbNkJOcGZq8qSbqiNflD67YJ45/O4whSDbTRt2g1jZV2IziP1s10tY+A9+rmgnwDqWMhe3qFnG
+	a1K7vSEpy67xujzQ/TE1p05ghQCRHRd3MIAeGQQdhIHdV3OUA95wDA1u43Mt3jqDs818=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1rRHQ4-005csb-EN; Sat, 20 Jan 2024 20:54:20 +0100
+Date: Sat, 20 Jan 2024 20:54:20 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: Martin Kaiser <martin@kaiser.cx>
+Cc: Shawn Guo <shawnguo@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, Peng Fan <peng.fan@nxp.com>,
+	linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/3] gpio: vf610: allow disabling the vf610 driver
+Message-ID: <a0ff7c6e-3c3d-4535-9033-439da0dc4b7e@lunn.ch>
+References: <20240120182929.1129183-1-martin@kaiser.cx>
+ <20240120182929.1129183-2-martin@kaiser.cx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240120182929.1129183-2-martin@kaiser.cx>
 
-The pull request you sent on Sat, 20 Jan 2024 10:17:18 -0800 (PST):
+On Sat, Jan 20, 2024 at 07:29:27PM +0100, Martin Kaiser wrote:
+> The vf610 gpio driver is enabled by default for all i.MX machines,
+> without any option to disable it in a board-specific config file.
+> 
+> Most i.MX chipsets have no hardware for this driver. Change the default
+> to enable GPIO_VF610 for SOC_VF610 and disable it otherwise.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git tags/riscv-for-linus-6.8-mw4
+Hi Martin
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/e5075d8ec5647322fb9e699bfb76331cc8ee098d
+Please ensure it is compiled when COMPILE_TEST is set. We don't want
+to reduce build test coverage.
 
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+   Andrew
