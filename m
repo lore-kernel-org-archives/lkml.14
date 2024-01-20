@@ -1,195 +1,151 @@
-Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EFC61856;
-	Sat, 20 Jan 2024 08:40:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F7133D7F;
+	Sat, 20 Jan 2024 08:45:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705740056; cv=none; b=OzU0yIZG8FnDVa2demniKTh6rTwY1+0XZiGSqDdzYti2lNg2hiR6NNlOat/2DYPgzJpQaUT4fitRipIyKnflkPCPQMgyzYrzZyl/VCPzWMRs+5pCaHHxpwrxHgqi6GmoUhDE0mrb0ZuoFb2yUoQK8m0noHg+qjvKU3yMSA/LwOM=
+	t=1705740325; cv=none; b=nSmUePOuCXIzJyG8UXKmn3ROKuaJnPr+P5DmSz86M3n8FZxKsuWN+JPk2GIlt15KIrsmqR3eiHKwErH2KaHv3MzyNflzUnBtn22kzK6mccKCiXd5fHRa1xzKEsr8744YQ3Oud408euhdRIhLdvKO4vZqXGuSMwBFmiQJ5WqBNU0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705740056; c=relaxed/simple;
-	bh=VCILXilS7lvM0gSbmUkKVowwb6zAPtexDaBfZwKyIKA=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=aGdVEgW5FqTWK7NR84ebL05a4jQzbcVL05IQ8XcVBXutMdy1hlDQZuewv7TjzQxAMaXPULy/mQ0doufg6534HlW1oUksO1szclI30AqWRoRsLCOlrm8KzKs6kbY3mJiDiETanKUDAz47I1pYT9bYDwwzKgCgMMCO7+kO5gXGzgo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=JsblyGWT; arc=none smtp.client-ip=60.244.123.138
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	s=arc-20240116; t=1705740325; c=relaxed/simple;
+	bh=a1DPUX1cmvhpZrjctxn5ECPNE3NiEQ76qsFCiU+2mGg=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Z9aFn6zShcd4NfTcK+XtChSmxBa+Ojqfu7DYtWIMT9itj8qXa8qHj/mzKGsYXUz8IF+ouDyAIQZNdngLdvVY/2bbRRxP9HPwM02z3c9pK1pZT42s0a1PM+IG6DnBq/VacCANKyYrpZ5if+/IXLCRCK2y+7UW3yFnAW3E0+1P9P8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jwTJDo9U; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="JsblyGWT"
-X-UUID: 96e6d9c8b76f11ee9e680517dc993faa-20240120
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=Lc4/23DkRGI5qBrNL2Ex6H1MwPnArQRDUGU87TnEkJA=;
-	b=JsblyGWT4QF/Tp8R5PWpB3PMwYFAl6QFMNCXCkUbY1DdHL9rRw/+e2BgjpmGsmuYpVhvGTrkIj0m0E5vFLS45cNweioqqVWijRUm5hOUGOQNwdRFiwiZdqsg7F1VQIocDLH40JPVnwLfzjY2TXUgPAbRb48ZmKc1lqzJ8iYGVYE=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.36,REQID:9e0d3f6d-f9eb-445d-8164-4aa6fa19b767,IP:0,U
-	RL:0,TC:0,Content:-25,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
-	N:release,TS:-25
-X-CID-META: VersionHash:6e16cf4,CLOUDID:49a58e7f-4f93-4875-95e7-8c66ea833d57,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
-	RL:11|1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES
-	:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULN
-X-UUID: 96e6d9c8b76f11ee9e680517dc993faa-20240120
-Received: from mtkmbs14n2.mediatek.inc [(172.21.101.76)] by mailgw01.mediatek.com
-	(envelope-from <yunfei.dong@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 419880287; Sat, 20 Jan 2024 16:40:39 +0800
-Received: from mtkmbs13n2.mediatek.inc (172.21.101.108) by
- mtkmbs10n2.mediatek.inc (172.21.101.183) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.26; Sat, 20 Jan 2024 16:40:38 +0800
-Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
- mtkmbs13n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1118.26 via Frontend Transport; Sat, 20 Jan 2024 16:40:37 +0800
-From: Yunfei Dong <yunfei.dong@mediatek.com>
-To: =?UTF-8?q?N=C3=ADcolas=20F=20=2E=20R=20=2E=20A=20=2E=20Prado?=
-	<nfraprado@collabora.com>, Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-	Hans Verkuil <hverkuil-cisco@xs4all.nl>, AngeloGioacchino Del Regno
-	<angelogioacchino.delregno@collabora.com>, Benjamin Gaignard
-	<benjamin.gaignard@collabora.com>, Nathan Hebert <nhebert@chromium.org>,
-	"Irui Wang" <irui.wang9@mediatek.com>
-CC: Hsin-Yi Wang <hsinyi@chromium.org>, Fritz Koenig <frkoenig@chromium.org>,
-	Daniel Vetter <daniel@ffwll.ch>, Steve Cho <stevecho@chromium.org>, "Yunfei
- Dong" <yunfei.dong@mediatek.com>, <linux-media@vger.kernel.org>,
-	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-mediatek@lists.infradead.org>,
-	<Project_Global_Chrome_Upstream_Group@mediatek.com>
-Subject: [PATCH 2/2] media: mediatek: vcodec: adding lock to protect encoder context list
-Date: Sat, 20 Jan 2024 16:40:35 +0800
-Message-ID: <20240120084035.22486-2-yunfei.dong@mediatek.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240120084035.22486-1-yunfei.dong@mediatek.com>
-References: <20240120084035.22486-1-yunfei.dong@mediatek.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jwTJDo9U"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id F051EC433C7;
+	Sat, 20 Jan 2024 08:45:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705740325;
+	bh=a1DPUX1cmvhpZrjctxn5ECPNE3NiEQ76qsFCiU+2mGg=;
+	h=From:Date:Subject:To:Cc:Reply-To:From;
+	b=jwTJDo9UY2tJCPoVoo/tdIHgO65sMPVzuwMHYERjh575UroXUF7WUqOuueuQDGjsF
+	 8ohGWzKRWej9TyQ8v0sR+O2JoYNMBs4D4L7KxCfdjdAEHYlgdy1pveZhf0vT49QK0V
+	 JCstGOqY+VSKRSPTRv8kddGiMiNm8zNOs1B+lRWwMQxoWNDpNi1jI/3ckmRq6KTXWB
+	 NzSJ8H+sJJ/qaGlyAnoeQRu4hHXxx2u4S8d1s3O5s0gvUConMKWMYbO2a506pyZTII
+	 qAYoLQjddkfbT1nbueDp97lOPL2S3q20CFEhYckm0p6rylrbPd8yfo+EjoXfN6Zdf/
+	 O96NLVdmLgkng==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D419EC47258;
+	Sat, 20 Jan 2024 08:45:24 +0000 (UTC)
+From: Rudraksha Gupta via B4 Relay <devnull+guptarud.gmail.com@kernel.org>
+Date: Sat, 20 Jan 2024 00:45:23 -0800
+Subject: [PATCH] ARM: dts: qcom: msm8960: expressatt: Add gpio-keys
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-TM-AS-Product-Ver: SMEX-14.0.0.3152-9.1.1006-23728.005
-X-TM-AS-Result: No-10--13.615200-8.000000
-X-TMASE-MatchedRID: kinNcrfyXcXUzvcPSorAlMNrWpY804TG5Y0kb0hqatxh2fnHe1cil9Qt
-	cQ4PjYUQWKuGHPyQzf50EP8QGYj3VpDE8A8BMmXzmqt7FrgJsRCwR/wKmchi2aBp/T5dSs2TMQ3
-	Kf7SbGZLTsNEaOlKWV4gmzRSnu+RY6fubsV+A+k905zsoB1UKTnyzymMiw5QHuqWf6Nh7tmHWYa
-	Evasc9F84usm+jBqu+p0J7CJ90iKY3+hnFgqdP4p4CIKY/Hg3AGdQnQSTrKGPEQdG7H66TyH4gK
-	q42LRYkeAVWlehCPnFCbrIcWs50uhskSjEMfqoWZdvlX918qWl+3BndfXUhXQ==
-X-TM-AS-User-Approved-Sender: No
-X-TM-AS-User-Blocked-Sender: No
-X-TMASE-Result: 10--13.615200-8.000000
-X-TMASE-Version: SMEX-14.0.0.3152-9.1.1006-23728.005
-X-TM-SNTS-SMTP: 3E3DD1D41D12FE889C99E0064538F5030A0B91F7B4078EA436A85C35594D2ECE2000:8
-X-MTK: N
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240120-expressatt-gpio-keys-v1-1-4da7e37440b1@gmail.com>
+X-B4-Tracking: v=1; b=H4sIACKIq2UC/x2MWwqAIBAAryL73YLak64SfYRttQQWrkQR3j3pc
+ 2BmXhAKTAK9eiHQxcKHz2AKBW6b/ErIc2aw2lbaWI10n4FEphhxPfnAnR5B17i608vcmpIgp1l
+ Z+P63w5jSBwpOfn9mAAAA
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Rudraksha Gupta <guptarud@gmail.com>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1705740324; l=2136;
+ i=guptarud@gmail.com; s=20240120; h=from:subject:message-id;
+ bh=T+B5s38HvE5wvfTx+enY1qi1SBEpEVBTYASUCLQBqwU=;
+ b=5UsFmbupML19LrX80fkEWOLZlRS9ScDP+D8wWQsRQdb5oi45aWI0aU0X8kJPWiAA2zsSUDwt8
+ JJWsV1VM4FBCOU6k8dRT6Emu/ieTQkcfTXdNy7HOfdTvgUn6zzY5diW
+X-Developer-Key: i=guptarud@gmail.com; a=ed25519;
+ pk=RGmug3GRHS4XYTXDcT2VrlTGXlEF2gY4L9/swGIU1ko=
+X-Endpoint-Received:
+ by B4 Relay for guptarud@gmail.com/20240120 with auth_id=114
+X-Original-From: Rudraksha Gupta <guptarud@gmail.com>
+Reply-To: <guptarud@gmail.com>
 
-The ctx_list will be deleted when scp getting unexpected behavior, then the
-ctx_list->next will be NULL, the kernel driver maybe access NULL pointer in
-function vpu_enc_ipi_handler when going through each context, then reboot.
+From: Rudraksha Gupta <guptarud@gmail.com>
 
-Need to add lock to protect the ctx_list to make sure the ctx_list->next isn't
-NULL pointer.
+Adds volume up, volume down, and home keys to expressatt
 
-'Fixes: 1972e32431ed ("media: mediatek: vcodec: Fix possible invalid memory access for encoder")'
-Signed-off-by: Yunfei Dong <yunfei.dong@mediatek.com>
+Signed-off-by: Rudraksha Gupta <guptarud@gmail.com>
 ---
- .../platform/mediatek/vcodec/common/mtk_vcodec_fw_vpu.c      | 4 ++--
- .../platform/mediatek/vcodec/encoder/mtk_vcodec_enc_drv.c    | 5 +++++
- .../platform/mediatek/vcodec/encoder/mtk_vcodec_enc_drv.h    | 2 ++
- drivers/media/platform/mediatek/vcodec/encoder/venc_vpu_if.c | 2 ++
- 4 files changed, 11 insertions(+), 2 deletions(-)
+Adds volume up, volume down, and home keys to expressatt.
 
-diff --git a/drivers/media/platform/mediatek/vcodec/common/mtk_vcodec_fw_vpu.c b/drivers/media/platform/mediatek/vcodec/common/mtk_vcodec_fw_vpu.c
-index 9a11a2c24804..8d578b690214 100644
---- a/drivers/media/platform/mediatek/vcodec/common/mtk_vcodec_fw_vpu.c
-+++ b/drivers/media/platform/mediatek/vcodec/common/mtk_vcodec_fw_vpu.c
-@@ -73,12 +73,12 @@ static void mtk_vcodec_vpu_reset_enc_handler(void *priv)
+Applies on top of 5c903b859aaced384c0cd01d515f3e43a115fd9e
+---
+ .../dts/qcom/qcom-msm8960-samsung-expressatt.dts   | 40 ++++++++++++++++++++++
+ 1 file changed, 40 insertions(+)
+
+diff --git a/arch/arm/boot/dts/qcom/qcom-msm8960-samsung-expressatt.dts b/arch/arm/boot/dts/qcom/qcom-msm8960-samsung-expressatt.dts
+index 1a5116336ff0..47e0e26ad9f0 100644
+--- a/arch/arm/boot/dts/qcom/qcom-msm8960-samsung-expressatt.dts
++++ b/arch/arm/boot/dts/qcom/qcom-msm8960-samsung-expressatt.dts
+@@ -4,6 +4,9 @@
  
- 	dev_err(&dev->plat_dev->dev, "Watchdog timeout!!");
+ #include "qcom-msm8960.dtsi"
+ #include "pm8921.dtsi"
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
++#include <dt-bindings/input/gpio-keys.h>
  
--	mutex_lock(&dev->dev_mutex);
-+	mutex_lock(&dev->dev_ctx_lock);
- 	list_for_each_entry(ctx, &dev->ctx_list, list) {
- 		ctx->state = MTK_STATE_ABORT;
- 		mtk_v4l2_vdec_dbg(0, ctx, "[%d] Change to state MTK_STATE_ABORT", ctx->id);
- 	}
--	mutex_unlock(&dev->dev_mutex);
-+	mutex_unlock(&dev->dev_ctx_lock);
- }
+ / {
+ 	model = "Samsung Galaxy Express SGH-I437";
+@@ -19,6 +22,36 @@ aliases {
+ 	chosen {
+ 		stdout-path = "serial0:115200n8";
+ 	};
++
++	gpio-keys {
++		compatible = "gpio-keys";
++
++		pinctrl-names = "default";
++		pinctrl-0 = <&gpio_keys_pin_a>;
++
++		key-home {
++			label = "Home";
++			gpios = <&msmgpio 40 GPIO_ACTIVE_LOW>;
++			debounce-interval = <5>;
++			linux,code = <KEY_HOMEPAGE>;
++			wakeup-event-action = <EV_ACT_ASSERTED>;
++			wakeup-source;
++		};
++
++		key-volume-up {
++			label = "Volume Up";
++			gpios = <&msmgpio 50 GPIO_ACTIVE_LOW>;
++			debounce-interval = <5>;
++			linux,code = <KEY_VOLUMEUP>;
++		};
++
++		key-volume-down {
++			label = "Volume Down";
++			gpios = <&msmgpio 81 GPIO_ACTIVE_LOW>;
++			debounce-interval = <5>;
++			linux,code = <KEY_VOLUMEDOWN>;
++		};
++	};
+ };
  
- static const struct mtk_vcodec_fw_ops mtk_vcodec_vpu_msg = {
-diff --git a/drivers/media/platform/mediatek/vcodec/encoder/mtk_vcodec_enc_drv.c b/drivers/media/platform/mediatek/vcodec/encoder/mtk_vcodec_enc_drv.c
-index 6319f24bc714..3cb8a1622222 100644
---- a/drivers/media/platform/mediatek/vcodec/encoder/mtk_vcodec_enc_drv.c
-+++ b/drivers/media/platform/mediatek/vcodec/encoder/mtk_vcodec_enc_drv.c
-@@ -177,7 +177,9 @@ static int fops_vcodec_open(struct file *file)
- 	mtk_v4l2_venc_dbg(2, ctx, "Create instance [%d]@%p m2m_ctx=%p ",
- 			  ctx->id, ctx, ctx->m2m_ctx);
+ &gsbi5 {
+@@ -83,6 +116,13 @@ clk-pins {
+ 			bias-disable;
+ 		};
+ 	};
++
++	gpio_keys_pin_a: gpio-keys-active-state {
++		pins = "gpio40", "gpio50", "gpio81";
++		function = "gpio";
++		drive-strength = <8>;
++		bias-disable;
++	};
+ };
  
-+	mutex_lock(&dev->dev_ctx_lock);
- 	list_add(&ctx->list, &dev->ctx_list);
-+	mutex_unlock(&dev->dev_ctx_lock);
- 
- 	mutex_unlock(&dev->dev_mutex);
- 	mtk_v4l2_venc_dbg(0, ctx, "%s encoder [%d]", dev_name(&dev->plat_dev->dev),
-@@ -212,7 +214,9 @@ static int fops_vcodec_release(struct file *file)
- 	v4l2_fh_exit(&ctx->fh);
- 	v4l2_ctrl_handler_free(&ctx->ctrl_hdl);
- 
-+	mutex_lock(&dev->dev_ctx_lock);
- 	list_del_init(&ctx->list);
-+	mutex_unlock(&dev->dev_ctx_lock);
- 	kfree(ctx);
- 	mutex_unlock(&dev->dev_mutex);
- 	return 0;
-@@ -294,6 +298,7 @@ static int mtk_vcodec_probe(struct platform_device *pdev)
- 
- 	mutex_init(&dev->enc_mutex);
- 	mutex_init(&dev->dev_mutex);
-+	mutex_init(&dev->dev_ctx_lock);
- 	spin_lock_init(&dev->irqlock);
- 
- 	snprintf(dev->v4l2_dev.name, sizeof(dev->v4l2_dev.name), "%s",
-diff --git a/drivers/media/platform/mediatek/vcodec/encoder/mtk_vcodec_enc_drv.h b/drivers/media/platform/mediatek/vcodec/encoder/mtk_vcodec_enc_drv.h
-index a042f607ed8d..0bd85d0fb379 100644
---- a/drivers/media/platform/mediatek/vcodec/encoder/mtk_vcodec_enc_drv.h
-+++ b/drivers/media/platform/mediatek/vcodec/encoder/mtk_vcodec_enc_drv.h
-@@ -178,6 +178,7 @@ struct mtk_vcodec_enc_ctx {
-  *
-  * @enc_mutex: encoder hardware lock.
-  * @dev_mutex: video_device lock
-+ * @dev_ctx_lock: the lock of context list
-  * @encode_workqueue: encode work queue
-  *
-  * @enc_irq: h264 encoder irq resource
-@@ -205,6 +206,7 @@ struct mtk_vcodec_enc_dev {
- 	/* encoder hardware mutex lock */
- 	struct mutex enc_mutex;
- 	struct mutex dev_mutex;
-+	struct mutex dev_ctx_lock;
- 	struct workqueue_struct *encode_workqueue;
- 
- 	int enc_irq;
-diff --git a/drivers/media/platform/mediatek/vcodec/encoder/venc_vpu_if.c b/drivers/media/platform/mediatek/vcodec/encoder/venc_vpu_if.c
-index 84ad1cc6ad17..3c4101e969c7 100644
---- a/drivers/media/platform/mediatek/vcodec/encoder/venc_vpu_if.c
-+++ b/drivers/media/platform/mediatek/vcodec/encoder/venc_vpu_if.c
-@@ -47,12 +47,14 @@ static bool vpu_enc_check_ap_inst(struct mtk_vcodec_enc_dev *enc_dev, struct ven
- 	struct mtk_vcodec_enc_ctx *ctx;
- 	int ret = false;
- 
-+	mutex_lock(&enc_dev->dev_ctx_lock);
- 	list_for_each_entry(ctx, &enc_dev->ctx_list, list) {
- 		if (!IS_ERR_OR_NULL(ctx) && ctx->vpu_inst == vpu) {
- 			ret = true;
- 			break;
- 		}
- 	}
-+	mutex_lock(&enc_dev->dev_ctx_lock);
- 
- 	return ret;
- }
+ &pm8921 {
+
+---
+base-commit: 9d64bf433c53cab2f48a3fff7a1f2a696bc5229a
+change-id: 20240120-expressatt-gpio-keys-c6c580fd713e
+
+Best regards,
 -- 
-2.18.0
+Rudraksha Gupta <guptarud@gmail.com>
 
