@@ -1,108 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-m17223.xmail.ntesmail.com (mail-m17223.xmail.ntesmail.com [45.195.17.223])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F84B8BF6;
-	Sat, 20 Jan 2024 14:34:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 744A3101FB;
+	Sat, 20 Jan 2024 14:34:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.195.17.223
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705761245; cv=none; b=NiWZQnLNN7Tr825e2sVoFcb1TU9zez+7pBU/lAIOUXV63fHqqUZ4tGOi7LsPcGorjtphjTJ0HqJyoofxXmLepQ78QJe+HkNPoEfl3uVunFUnCjZ2hYl95Sp1QDG+EbAa2NTpNQnKKFGIZtrmuqtVgyVnMlVwb0aAOmOV81eEKlc=
+	t=1705761261; cv=none; b=mB5QVslfzWuLBySYRWbF0sFRyZH8wjBjRgPG7Omrp5wODuUCE2yrxOWSpSplgUeRI/Agk0Xl+/VD0/U+SwLEs0MlGwkeEStcRatTFH9ZgpAlvNkkLH2VG9np6oj0Ss7x+/vK4whu6x8zQC36my/KuqZL1Of7MEW2d61ycW5DcjI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705761245; c=relaxed/simple;
-	bh=gVBiF1l1RwHoJevzizAeKdLrJpQJxoi4BCbAk/Wubww=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OYE/8Uu8G5+LiKfxpozznN++yZAze8Mcf2GhbaiGN8WtkKdMEpK28xtgXBiB3lVZ2m7RM70sZvhjUvd3VZpGlwnpmryPeot0XaDpwpBZ1wP7imtbEnMQF01+BzBV7qzvpmDoUTrRKhAiCxEL+vOwyZNJcsJ5rC7gwHjweKISrME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F657C433C7;
-	Sat, 20 Jan 2024 14:34:03 +0000 (UTC)
-Date: Sat, 20 Jan 2024 09:34:01 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Philippe Proulx
- <pproulx@efficios.com>
-Subject: Re: [PATCH] ring-buffer: Simplify reservation with try_cmpxchg()
- loop
-Message-ID: <20240120093401.0274a2e8@rorschach.local.home>
-In-Reply-To: <20240120084713.6eb7aa52@rorschach.local.home>
-References: <20240118181206.4977da2f@gandalf.local.home>
-	<504085e9-bf91-4948-a158-abae5dcb276a@efficios.com>
-	<20240119103754.154dc009@gandalf.local.home>
-	<cd3f37cc-31ba-4eb4-8d67-852d05570e7b@efficios.com>
-	<20240119164252.54ccb654@gandalf.local.home>
-	<5d323a65-8a04-4c73-8702-58869982a269@efficios.com>
-	<20240120084713.6eb7aa52@rorschach.local.home>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1705761261; c=relaxed/simple;
+	bh=4URthSY15sK7lJQCcSoPDUQBFNGS3hbY/fKmxox0XI4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fHyF/p+dhpwQV1Y/8z9VXf0WdUv/Vfz40i6FWFVWPRXD2MQIGlHUdVK+WEUNQrAZ5g54SqcjVucDyY/aYezc5K125YjLms65uJTDpWlG6xivU7pdHin2v4wh6XnvRW9bgURqOTGqBJSXFOsAeakqMa4WR2y2j7EqaatVDV0WV70=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=link.tyut.edu.cn; spf=pass smtp.mailfrom=link.tyut.edu.cn; arc=none smtp.client-ip=45.195.17.223
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=link.tyut.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=link.tyut.edu.cn
+Received: from [IPV6:2409:8a0c:267:1bc0:8491:d680:3103:8d17] (unknown [IPV6:2409:8a0c:267:1bc0:8491:d680:3103:8d17])
+	by mail-m121145.qiye.163.com (Hmail) with ESMTPA id 2914A800084;
+	Sat, 20 Jan 2024 22:24:43 +0800 (CST)
+Message-ID: <a567932c-d878-44e5-836f-90fa15999ba6@link.tyut.edu.cn>
+Date: Sat, 20 Jan 2024 22:24:42 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-
-On Sat, 20 Jan 2024 08:47:13 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
-
-> > I would also consider reducing code complexity as a worthwhile metric
-> > in addition to speed. It makes it easier to extend in the future,
-> > easier to understand for reviewers, and subtle bugs are less likely
-> > to creep in.  
-> 
-> Really, it wouldn't make it that much simpler. The addition of the
-> cmpxchg() of this patch removed the nasty part of the code.
-
-Now let's look at the difference of the two. You still need to save the
-current timestamp in one variable. I have to do it in two, so your
-algorithm does have that advantage. I currently have (eliminating the
-"always add absolute timestamp" switch):
-
-
-  w = write;
-  before = before_stamp;
-again:
-  after = write_stamp; (equivalent to your last_tsc)
-  ts = rdtsc();
-  if (!w)
-	delta = 0; // event has same ts as subbuf
-  else if (before == after)
-	delta = ts - after;
-  else {
-	delta = 0;
-	inject_absolute = true;
-  }
-
-  before_stamp = ts;
-
-  if (!try_cmpxchg(&write, w, w + length))
-	goto again;
-
-  write_stamp = ts;
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] docs/zh_CN/power: Use kcalloc() instead of kzalloc()
+To: Erick Archer <erick.archer@gmx.com>, Alex Shi <alexs@kernel.org>,
+ Yanteng Si <siyanteng@loongson.cn>, Jonathan Corbet <corbet@lwn.net>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <20240120122204.4287-1-erick.archer@gmx.com>
+From: Hu Haowen <2023002089@link.tyut.edu.cn>
+In-Reply-To: <20240120122204.4287-1-erick.archer@gmx.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlCTBpKVkNCQx0eTx4dQklKSVUTARMWGhIXJBQOD1
+	lXWRgSC1lBWUlPS0JBQxpLGEFJTUxBShkYS0FDT0JKQR9NQ0tBSEpLSEFDH0pMWVdZFhoPEhUdFF
+	lBWU9LSFVKSktISkNVSktLVUtZBg++
+X-HM-Tid: 0a8d274275c5b03akuuu2914a800084
+X-HM-MType: 10
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6PSI6Fgw4NjweEAoeEk8OGRws
+	NDpPCgNVSlVKTEtOTE1LTUNPS0lDVTMWGhIXVUlLSUhLS0lLQ0I7FxIVEFUPAg4PVR4fDlUYFUVZ
+	V1kSC1lBWUlPS0JBQxpLGEFJTUxBShkYS0FDT0JKQR9NQ0tBSEpLSEFDH0pMWVdZCAFZQU9LSEo3
+	Bg++
 
 
-Now if I were to updated it to use a delta from the last injected
-timestamp, where injecting a timestamp only happens on overflow.
+在 2024/1/20 20:22, Erick Archer 写道:
+> As noted in the "Deprecated Interfaces, Language Features, Attributes,
+> and Conventions" documentation [1], size calculations (especially
+> multiplication) should not be performed in memory allocator (or similar)
+> function arguments due to the risk of them overflowing. This could lead
+> to values wrapping around and a smaller allocation being made than the
+> caller was expecting. Using those allocations could lead to linear
+> overflows of heap memory and other misbehaviors.
+>
+> So, in the example code use the purpose specific kcalloc() function
+> instead of the argument size * count in the kzalloc() function.
+>
+> Link: https://www.kernel.org/doc/html/next/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments [1]
+> Link: https://github.com/KSPP/linux/issues/162
+> Signed-off-by: Erick Archer <erick.archer@gmx.com>
+> ---
+>   Documentation/translations/zh_CN/power/opp.rst | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/Documentation/translations/zh_CN/power/opp.rst b/Documentation/translations/zh_CN/power/opp.rst
+> index 8d6e3f6f6202..7470fa2d4c43 100644
+> --- a/Documentation/translations/zh_CN/power/opp.rst
+> +++ b/Documentation/translations/zh_CN/power/opp.rst
+> @@ -274,7 +274,7 @@ dev_pm_opp_get_opp_count
+>   	 {
+>   		/* 做一些事情 */
+>   		num_available = dev_pm_opp_get_opp_count(dev);
+> -		speeds = kzalloc(sizeof(u32) * num_available, GFP_KERNEL);
+> +		speeds = kcalloc(num_available, sizeof(u32), GFP_KERNEL);
 
-#define TS_BITS 27
-#define MAX_DELTA ((1 << TS_BITS) - 1)
-#define BITMASK (~MAX_DELTA)
 
-  w = write;
-again:
-  ts = rdtsc();
+If the translated version is modified, I think the original file should
+follow as well at Documentation/power/opp.rst line 308:
 
-  delta = ts & MAX_DELTA;
+diff --git a/Documentation/power/opp.rst b/Documentation/power/opp.rst
+index a7c03c470980..dca35018214a 100644
+--- a/Documentation/power/opp.rst
++++ b/Documentation/power/opp.rst
+@@ -305,7 +305,7 @@ dev_pm_opp_get_opp_count
+          {
+                 /* Do things */
+                 num_available = dev_pm_opp_get_opp_count(dev);
+-               speeds = kzalloc(sizeof(u32) * num_available, GFP_KERNEL);
++               speeds = kcalloc(sizeof(u32) * num_available, GFP_KERNEL);
+                 /* populate the table in increasing order */
+                 freq = 0;
+                 while (!IS_ERR(opp = dev_pm_opp_find_freq_ceil(dev, 
+&freq))) {
 
-  if (ts - (write_stamp & BITMASK) > MAX_DELTA)
-	inject_absolute = true;
+Thanks,
+Hu Haowen
 
-  if (!try_cmpxchg(&write, w, w + length))
-	goto again;
 
-  write_stamp = ts;
-
-I admit that it does simplify the code a little, but does it do it
-enough to be worth the process of deprecating an ABI with a new one?
-
--- Steve
+>   		/* 按升序填充表 */
+>   		freq = 0;
+>   		while (!IS_ERR(opp = dev_pm_opp_find_freq_ceil(dev, &freq))) {
+> --
+> 2.25.1
+>
+>
+>
