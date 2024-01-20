@@ -1,88 +1,137 @@
-Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0BB4EAF0;
-	Sat, 20 Jan 2024 01:29:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A34F10EC
+	for <linux-kernel@vger.kernel.org>; Sat, 20 Jan 2024 01:34:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705714201; cv=none; b=a/+w1GeY0DkMm/pnpyc+SRSGDKSg95hWj+0gO/szkD2DydESxpUAZcUH3IRCmkaLT2UJaDONIJgLn74mCbOThcbvussT00Zuq1NU9VJxE2/nil4isRMofY35QB/EeUor1wyM5wFxHradPPLgkA5xO/5VU9t47OShiBcdal0Q/mc=
+	t=1705714476; cv=none; b=B0alLvirk060tjOjB7HZu25lZFq+SMAo5nKlZfuPd1nIHX+efuCc2SqPW1xKO7UIT3ZvZ3jSUKuDNsy5PlqjlHwQIuo+cy8H5V0s27LHzm8RWF3/sKf1cuGAIto2n7VpXXhyQuSbgcFqs/O2TvDYV5X1QIPyNu4nh+kdFUGqHH4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705714201; c=relaxed/simple;
-	bh=MZAFcNUX42DvZWaPmJOQSQ4sUhdk2XNLvhFLOgAqkPc=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=UO2I68gTGwbFdJRnN1YPk/T/gPKnn9zizPjJJZatf6YgYa3sjjJ8OaACPU/Uwb0S1KRif+B7vlM42DHvTa/vZGeu2K4a2AEfsAwjdLONvaZWXMEQBDfdVqMMTKwze+z7gRxv9iFFbpkA7UfK+TTwS/naHYXIeV+DqkdVWJsfVzQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4TGzRv3Zygz4f3jHc;
-	Sat, 20 Jan 2024 09:29:47 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id B50F31A0171;
-	Sat, 20 Jan 2024 09:29:49 +0800 (CST)
-Received: from [10.174.176.117] (unknown [10.174.176.117])
-	by APP1 (Coremail) with SMTP id cCh0CgBXdQ4LIqtlqRR+BQ--.33617S2;
-	Sat, 20 Jan 2024 09:29:49 +0800 (CST)
-Subject: Re: [PATCH bpf 1/3] x86/mm: Move is_vsyscall_vaddr() into
- mm_internal.h
-To: Sohil Mehta <sohil.mehta@intel.com>, x86@kernel.org, bpf@vger.kernel.org
-Cc: Dave Hansen <dave.hansen@linux.intel.com>,
- Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>,
- linux-kernel@vger.kernel.org, xingwei lee <xrivendell7@gmail.com>,
- Jann Horn <jannh@google.com>, houtao1@huawei.com
-References: <20240119073019.1528573-1-houtao@huaweicloud.com>
- <20240119073019.1528573-2-houtao@huaweicloud.com>
- <8511e5c6-eddb-4deb-932e-125e34cddba6@intel.com>
-From: Hou Tao <houtao@huaweicloud.com>
-Message-ID: <979ee85e-6f36-fa9c-847f-a9be1b92063f@huaweicloud.com>
-Date: Sat, 20 Jan 2024 09:29:47 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.0
+	s=arc-20240116; t=1705714476; c=relaxed/simple;
+	bh=26huEc5Mwf9rHtDTIB9WAm8Uc/lRlNkBs+RET7bxIJ0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FIoPp5oi/LZ4FykqKc27DseWqL7DTajR5ZD+L34Ym4F82xFt8zXhMEUr9VKZ+qJ3opWYoO2rszs2zygC9AFKKpgPKauoC5tx8PH1jo1G3j3gzRtTJVkKfdyk6Nr0+4KOTb7VNOkjzO21J0UrQL4OX7GyDUDH1hGY7FUR2je97Og=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=UCp7uzu2; arc=none smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="UCp7uzu2"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-6dac225bf42so980546b3a.0
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 17:34:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1705714474; x=1706319274; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=1ESr1s1LQuOTutaWHm69OFuVr1y+EY8ccPvGNNNRU7c=;
+        b=UCp7uzu2SrCb+R9eaVctu2pPOqoDuEKPKwXpHR7XkhnHNkbRA3W+8E6RQb/J23CxWC
+         RAL5FkWrxUT1EU6Djq4IiFvT/uWQg2s15zio4t8pyN7OSoPkW/oO5oSh0158ilgdUh6N
+         dMd+oRMs9CqL8nlJGoi9JzSJCCTTaB7K9TztSsFvt0IkQVObSLRTkXrcLIB+YEbLuJ+t
+         JZoKjWH1T3vPRP30Tt+he4KvTS4SnuoqpZoqH+8IuwN5izgYWB89ubnxoGXAw6NkdDiE
+         mlVnBFYjOfqws2vOOy3XIE7c3faHIV7OIxavzWvRuROh9EPdL7BZO2vr1VM0d0XDYhyF
+         ++jg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705714474; x=1706319274;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1ESr1s1LQuOTutaWHm69OFuVr1y+EY8ccPvGNNNRU7c=;
+        b=wD1O5ap53ee6VRRMay2IeGuWVk5kAjH2aOehYwu4KcXqeKehP+IKOIy0okgucFwYg0
+         9aUWe4Jv0DIqg3QPL6GwupQ3E1sL/fra0s+Cu1n/yGhvPqDHj+2VUSXAqqnnYRjdCN7o
+         uzbkhxMeufW47YYGdER1XgED47MHvnC9ITOp3H6zpKn1goRfPDV4D3LhvYGRF+3o+JDz
+         GQauuYjva/sniybTP/cwD/S1CaxdzqmlM2AGWH3GnPCd9cgLb9rNnp9GedBXZJmjpO6t
+         DG6jBHFS/8nimSSA8qsGZ0A+FO9jn9yJCU+TOvJ1SnbZFmwXF/YjVoCortbgopK3Gi35
+         cULQ==
+X-Gm-Message-State: AOJu0YxSNhdAOkori66K3PAA0VhV0L6FofFsrUkth6bcraVcHAtDAkIg
+	CJ6V8XW7U/JuHcXOFNypGD4impsuzLJEyYzMmkONEiuZpj14j905Jbqv85/hcO0=
+X-Google-Smtp-Source: AGHT+IFpTaljaK+IhzjIUgqr3GVQ3I9VycDOb1FWOAfJMZG3m5Pa9z8B24GyjvedFp0KN3e6hXYsKA==
+X-Received: by 2002:a05:6a21:185:b0:19a:6830:2334 with SMTP id le5-20020a056a21018500b0019a68302334mr757399pzb.46.1705714474654;
+        Fri, 19 Jan 2024 17:34:34 -0800 (PST)
+Received: from ghost ([12.44.203.122])
+        by smtp.gmail.com with ESMTPSA id r9-20020a170903410900b001d71c89fb32sm1961666pld.269.2024.01.19.17.34.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 19 Jan 2024 17:34:34 -0800 (PST)
+Date: Fri, 19 Jan 2024 17:34:31 -0800
+From: Charlie Jenkins <charlie@rivosinc.com>
+To: Yangyu Chen <cyy@cyyself.name>
+Cc: alexghiti@rivosinc.com, anup@brainfault.org, aou@eecs.berkeley.edu,
+	conor@kernel.org, jrtc27@jrtc27.com, konstantin@linuxfoundation.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
+	linux-riscv@lists.infradead.org, mick@ics.forth.gr,
+	palmer@rivosinc.com, paul.walmsley@sifive.com,
+	rdunlap@infradead.org
+Subject: Re: [PATCH v10 0/4] RISC-V: mm: Make SV48 the default address space
+Message-ID: <ZasjJ3HPUVuxr2oG@ghost>
+References: <20230809232218.849726-1-charlie@rivosinc.com>
+ <tencent_F9568C6D8872E30EDFAF20ADF686A31D6E06@qq.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <8511e5c6-eddb-4deb-932e-125e34cddba6@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-CM-TRANSID:cCh0CgBXdQ4LIqtlqRR+BQ--.33617S2
-X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-	VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUYx7kC6x804xWl14x267AKxVW8JVW5JwAF
-	c2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII
-	0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xv
-	wVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7
-	xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40E
-	FcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr
-	0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY
-	04v7Mxk0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7
-	v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF
-	1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIx
-	AIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0D
-	MIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIda
-	VFxhVjvjDU0xZFpf9x07UWE__UUUUU=
-X-CM-SenderInfo: xkrx3t3r6k3tpzhluzxrxghudrp/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <tencent_F9568C6D8872E30EDFAF20ADF686A31D6E06@qq.com>
 
-Hi,
+On Sun, Jan 14, 2024 at 01:26:57AM +0800, Yangyu Chen wrote:
+> Hi, Charlie
+> 
+> Although this patchset has been merged I still have some questions about
+> this patchset. Because it breaks regular mmap if address >= 38 bits on
+> sv48 / sv57 capable systems like qemu. For example, If a userspace program
+> wants to mmap an anonymous page to addr=(1<<45) on an sv48 capable system,
+> it will fail and kernel will mmaped to another sv39 address since it does
 
-On 1/20/2024 8:35 AM, Sohil Mehta wrote:
-> On 1/18/2024 11:30 PM, Hou Tao wrote:
->> From: Hou Tao <houtao1@huawei.com>
->>
->> Moving is_vsyscall_vaddr() into mm_internal.h to make it available for
->> copy_from_kernel_nofault_allowed() in arch/x86/mm/maccess.c.
->>
-> Instead of mm_internal.h would a better place for is_vsyscall_vaddr() be
-> arch/x86/include/asm/vsyscall.h?
+Thank you for raising this concern. To make sure I am understanding
+correctly, you are passing a hint address of (1<<45) and expecting mmap
+to return 1<<45 and if it returns a different address you are describing
+mmap as failing? If you want an address that is in the sv48 space you
+can pass in an address that is greater than 1<<47.
 
-Yes, asm/vsyscall.h is better indeed. Will update in v2. Thanks for the
-suggestion.
->
-> Sohil
->
-> .
+> not meet the requirement to use sv48 as you wrote:
+> 
+> >	else if ((((_addr) >= VA_USER_SV48)) && (VA_BITS >= VA_BITS_SV48)) \
+> >		mmap_end = VA_USER_SV48;			\
+> >	else							\
+> >		mmap_end = VA_USER_SV39;			\
+> 
+> Then, How can a userspace program create a mmap with a hint if the address
+> >= (1<<38) after your patch without MAP_FIXED? The only way to do this is
+> to pass a hint >= (1<<47) on mmap syscall then kernel will return a random
+> address in sv48 address space but the hint address gets lost. I think this
+
+In order to force mmap to return the address provided you must use
+MAP_FIXED. Otherwise, the address is a "hint" and has no guarantees. The
+hint address on riscv is used to mean "don't give me an address that
+uses more bits than this". This behavior is not unique to riscv, arm64
+and powerpc use a similar scheme. In arch/arm64/include/asm/processor.h
+there is the following code:
+
+#define arch_get_mmap_base(addr, base) ((addr > DEFAULT_MAP_WINDOW) ? \
+					base + TASK_SIZE - DEFAULT_MAP_WINDOW :\
+					base)
+
+arm64/powerpc are only concerned with a single boundary so the code is simpler.
+
+> violate the principle of mmap syscall as kernel should take the hint and
+> attempt to create the mapping there.
+
+Although the man page for mmap does say "on Linux, the kernel will pick
+a nearby page boundary" it is still a hint address so there is no strict
+requirement (and the precedent has already been set by arm64/powerpc).
+
+> 
+> I don't think patching in this way is right. However, if we only revert
+> this patch, some programs relying on mmap to return address with effective
+> bits <= 48 will still be an issue and it might expand to other ISAs if
+> they implement larger virtual address space like RISC-V sv57. A better way
+> to solve this might be adding a MAP_48BIT flag to mmap like MAP_32BIT has
+> been introduced for decades.
+> 
+> Thanks,
+> Yangyu Chen
+> 
+
+- Charlie
 
