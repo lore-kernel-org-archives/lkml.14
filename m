@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 485E91772B;
-	Sat, 20 Jan 2024 21:09:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5107D17754
+	for <linux-kernel@vger.kernel.org>; Sat, 20 Jan 2024 21:09:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705784999; cv=none; b=EsC7VGWt0FchA3ApYShZm16jZj16U2bXjLMBvGTW/m0vZtovnic0c4SnZmNW+eBCGaaK0bqP/K6fG9syaYFkM3SmVvQswFzHb757iF9YVbfHzrvxOI3gGp3xavtSW6o3mS04lg0eGKRPjykOXmdTuJ/EY9VnTKvSUYz+n1Jxgp4=
+	t=1705784999; cv=none; b=JOuXFOBzMZ7aUZ/MrV1LZ5AFb6WpEaQ2wn2ViMFWx/6FhyEzlLUCQKAuy/xbeuemIK6mLrLHyChE0M23C55dTK83DnqFAXZK2cqM5nP5KY9I+secMTcCCW/G3imrKBdaA43rFUbYIi6MBhGzdIL9Q9Q3DIbBPejWm4zcUTtS5fo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1705784999; c=relaxed/simple;
-	bh=q+nub84U23nvD+cn7YvgYkoUGFiaXs85dZdXJ4xFhpU=;
+	bh=7lzodkQb8V/3EVEvAvA4s28Kz+AbZj+UdtAJn77t/Vg=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=qA5VpQA/38RgucgfkOaby+7+Xd7ylNGR8Eqsnl3aEyH3CR62PSGkKZh7BcvhOppkM/yf9H3yZx6VI52DGMmdfP7VTKQ7wr9Xf9/QSfCXmt98/J42FBqG7pFMZeAtvKYInHWfxmI4qZ3w/A3tp7KH6G6OXh3lYd226Sdwkfnt13Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d6RpqXL/; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=q4Az+MJP9d3akHLLHxpB+Ak355YYRD76/iukzMd9TyaIf06L902Ecjoah6dRsqDtKW4HlAm/70CBt1Ip58xp8mwugsSCKrPXogqjjH+bTeYOot1n5VUXSG93uAWksj4wgcwGO6ZWod/evu5jeGk408WUQ8GdfKBEUJIMAeTeH6c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nZrt/GFW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d6RpqXL/"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id BECB1C433F1;
-	Sat, 20 Jan 2024 21:09:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nZrt/GFW"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 264E9C43394;
+	Sat, 20 Jan 2024 21:09:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705784998;
-	bh=q+nub84U23nvD+cn7YvgYkoUGFiaXs85dZdXJ4xFhpU=;
+	s=k20201202; t=1705784999;
+	bh=7lzodkQb8V/3EVEvAvA4s28Kz+AbZj+UdtAJn77t/Vg=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=d6RpqXL/1LZrgglNCxscGX37U9C04RSJDlu9mrU8bupnby5ZS4JKTlFT4eeYAlWsC
-	 Rq9sXv9czypfWp6lI5AP8UmCHdyVB/BU1/0vRAbpo3oUfmrKIDev9To7g+kagjcGwt
-	 DPecFerWRld02oOeW9OUjgHXT8uCI5bt1XlZX7+o/HaLB4YZb058QLztbDYN6wjLmk
-	 rtaf91Q6Gp2xnO1AdFujjlrTfI6f1N4QzRCUm47BRCqcSpvyzqYt6Um9rrSsiIzMLt
-	 AW3dUIOZalnqBPYOn0FSC8c7gz007wJU4RrazDsq/0hR8JM06FSCGxYcYRQKLNlv00
-	 rvSGfy6pM1SUw==
+	b=nZrt/GFWs3IMUIg3JBeJKGApAgDTlt+hiUwtQRLs9+pGxoO6AMWtoBgmNsEkh2gMj
+	 1FRkkhROw8yblMXe2afOfh3qgFfVirAy92IPiRHfj5FbRUaKt+fGRQfwJOdeIb0FXm
+	 lzZXmGqYluHp0RCxJ1fiywjPX5lNtGDQY0oUeyZBf7FpSloPwQbtol4HmzHMMqi/B2
+	 nnfxdwM0oahirxSJxVOpDcCYXW7ZqU1tQPxTj2Yur4kVIeE72QV9yLCjsPhbjzxjcN
+	 tYljKDRMKUC3FmQIknC+cT2nmDC/GXOClqc1t99PAWfdDqdSo7x17A1ALbn8TL73KK
+	 1Xl9a6x7VkaqA==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id AE98BD8C96C;
-	Sat, 20 Jan 2024 21:09:58 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 130CED8C978;
+	Sat, 20 Jan 2024 21:09:59 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -37,38 +37,36 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v1] riscv: dts: sophgo: remove address-cells from intc node
+Subject: Re: [GIT PULL] RISC-V Patches for the 6.8 Merge Window, Part 4
 From: patchwork-bot+linux-riscv@kernel.org
 Message-Id: 
- <170578499871.24348.8897896227923136554.git-patchwork-notify@kernel.org>
-Date: Sat, 20 Jan 2024 21:09:58 +0000
-References: <20231024-maternity-slang-fd3dcfb211c0@spud>
-In-Reply-To: <20231024-maternity-slang-fd3dcfb211c0@spud>
-To: Conor Dooley <conor@kernel.org>
-Cc: linux-riscv@lists.infradead.org, conor.dooley@microchip.com,
- chao.wei@sophgo.com, unicorn_wang@outlook.com, robh+dt@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, paul.walmsley@sifive.com,
- palmer@dabbelt.com, aou@eecs.berkeley.edu, devicetree@vger.kernel.org,
+ <170578499907.24348.2424712213063362005.git-patchwork-notify@kernel.org>
+Date: Sat, 20 Jan 2024 21:09:59 +0000
+References: <mhng-878cc879-7aa0-473f-91e4-8288072cdd4e@palmer-ri-x1c9>
+In-Reply-To: <mhng-878cc879-7aa0-473f-91e4-8288072cdd4e@palmer-ri-x1c9>
+To: Palmer Dabbelt <palmer@rivosinc.com>
+Cc: linux-riscv@lists.infradead.org, torvalds@linux-foundation.org,
  linux-kernel@vger.kernel.org
 
 Hello:
 
-This patch was applied to riscv/linux.git (fixes)
-by Conor Dooley <conor.dooley@microchip.com>:
+This pull request was applied to riscv/linux.git (fixes)
+by Linus Torvalds <torvalds@linux-foundation.org>:
 
-On Tue, 24 Oct 2023 09:20:35 +0100 you wrote:
-> From: Conor Dooley <conor.dooley@microchip.com>
+On Sat, 20 Jan 2024 10:17:18 -0800 (PST) you wrote:
+> The following changes since commit cb51bfee7f62a8e26b694f9d84c0041b3e3ccc71:
 > 
-> A recent submission [1] from Rob has added additionalProperties: false
-> to the interrupt-controller child node of RISC-V cpus, highlighting that
-> the new cv1800b DT has been incorrectly using #address-cells.
-> It has no child nodes, so #address-cells is not needed. Remove it.
+>   Merge patch series "riscv: hwprobe: add Zicond, Zacas and Ztso support" (2024-01-09 20:14:51 -0800)
+> 
+> are available in the Git repository at:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git tags/riscv-for-linus-6.8-mw4
 > 
 > [...]
 
 Here is the summary with links:
-  - [v1] riscv: dts: sophgo: remove address-cells from intc node
-    https://git.kernel.org/riscv/c/e80ed63affc9
+  - [GIT,PULL] RISC-V Patches for the 6.8 Merge Window, Part 4
+    https://git.kernel.org/riscv/c/e5075d8ec564
 
 You are awesome, thank you!
 -- 
