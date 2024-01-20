@@ -1,91 +1,87 @@
-Received: from smtp.smtpout.orange.fr (smtp-21.smtpout.orange.fr [80.12.242.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-4324.protonmail.ch (mail-4324.protonmail.ch [185.70.43.24])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6DFAC8C4
-	for <linux-kernel@vger.kernel.org>; Sat, 20 Jan 2024 09:56:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C520CA64;
+	Sat, 20 Jan 2024 09:57:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705744574; cv=none; b=eFgHhZdh0YevGmBnE+cQsa5TU82vPVOo9Foi3wE+i5zQfwbV8OjoWtGU7Nq0uTwY0NW2/gba/wLBqdF8BVViwyKPXvN0fAtJ9gh1tAhvY2oXHvxUIG3PGVAm+IbEJgWOlKgNqMmUoogd9JyS6r9sGkKFc00qNJkQtlmaeGERKu8=
+	t=1705744680; cv=none; b=uV5cdM/vneltvJZTrMKHOLK5wz6gTJagWYgO46yP4u0Vp9bpOlfJGqZ6+pQsoBD5/iKyBARUQiKV8FZeFBBaijiXV3i0GCU0lyNFV8fz2G6lpTwUnrBOpy5D7D3TEXokTsbuVFLRs/zV0k3wq1RzHJaOzNw9UbGooyFGGKDTato=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705744574; c=relaxed/simple;
-	bh=BOcX8KWEnibygk4fjeA6ev0h6FDA5vSRBlJ1zvGoVtc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gzTyNsv8bgg7L+9H4yn6t80c44ZLGqR4e+3Rkhjv06K1/SEbf25C0NF67r8EQ+9Kqurzy61iXqGrlDZg2ljrpfSWNWqgJxTvWNy+hL0W3B30g75IQ8hmrStubXip0pciLsUGjOHttOv0ss9htB9VHVfitOrYu50X8ercW8/jhNU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=dlikXYNv; arc=none smtp.client-ip=80.12.242.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1705744680; c=relaxed/simple;
+	bh=pOaMVycWprd8m7qPwTf/dsfp7D7iXcZQxoNLXR9zW1U=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=FZcXZu+aBCpH2vjthJ3FEsZPGQbt8E4IMFIgKZJjc6+wAgQjrWcdF8glraISwGGBAgxkmw2sA5+ZFoZMc1L43iGTOn+hzH+FpyQJ9oYStW9NEgSHYNZ+AOjEjk33WqGZytrCCNH/7jDd3wF/BLmJegVn7ozz4OhmhjAwrNHlI44=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com; spf=pass smtp.mailfrom=protonmail.com; dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b=GslpJwm4; arc=none smtp.client-ip=185.70.43.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="dlikXYNv"
-Received: from fedora.home ([92.140.202.140])
-	by smtp.orange.fr with ESMTPA
-	id R859rc6amXxngR859rqY8F; Sat, 20 Jan 2024 10:56:09 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1705744569;
-	bh=6/Q426ZzIQUJLm346t0hoGiEGD7EVC/MiQvvpwN1st0=;
-	h=From:To:Cc:Subject:Date;
-	b=dlikXYNvorCGCI/zMlw+kQotCzT38LYn+0/29+wiIY+D+2X0okIBuyhrqgbaTeGCE
-	 MLiREdT44J3NpJ91NyxVIJW5JAzfiezWkZW4GDFgFi821WNWYGUbNzWWzbCRr6ufYm
-	 nGRStL1OW06bVoduZxNUjOatbL1M7gBTMsquonPrYmJ8uiWol4sU8cEu5fBOY5BxSc
-	 CnCYtDo7by24j06iVPoUz84OMhcVsDts9s9FXWA6xOikHfBwJTEDzltFQsJGbcw/OD
-	 QV3w9sOphKFjXX8Jl8b7kqp5BChAZd90U2SLDORzsqRgQMon3hYjIng0NZ/wx1IDUs
-	 gSdpIxW6k/3Dw==
-X-ME-Helo: fedora.home
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sat, 20 Jan 2024 10:56:09 +0100
-X-ME-IP: 92.140.202.140
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>
-Cc: linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	netdev@vger.kernel.org
-Subject: [PATCH] nfc: hci: Save a few bytes of memory when registering a 'nfc_llc' engine
-Date: Sat, 20 Jan 2024 10:56:06 +0100
-Message-ID: <6d2b8c390907dcac2e4dc6e71f1b2db2ef8abef1.1705744530.git.christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="GslpJwm4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+	s=protonmail3; t=1705744669; x=1706003869;
+	bh=2P2J+4Ct6tO2K+f9R9vJudtj9daoD8wfAXFUKvMfyMU=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=GslpJwm4zU249Y5eX8drurKFeVOorah9HH+Qvmp1cFKk5KC3Xn5rfMpYzj+r37Wqu
+	 AkMyaUtgo2xQDM6cOIEQCYn46SZFLscGzaIETjWr/KQs+7Gy2ouWyIzICYueUvum8E
+	 2NTnWwHVeHGV4IXY41oPt/oyF3GRkLxNtkn6gLFUSJyZViz7JSfwCuYaxkalsYsLUZ
+	 1CovjRrMqLfM37L3qxuMOlibgxM5GequZDksogMsjKPmKtGQHLk3hmAZUySbThWFh5
+	 +6he945aLwD2ikV9LHbdMRUlh3fhDOCvtNi7xcuPaCzfChlv9l+82G1onikKhkNeLi
+	 ErHKdzYzTXyfw==
+Date: Sat, 20 Jan 2024 09:57:38 +0000
+To: linux-kernel@vger.kernel.org
+From: Raymond Hackley <raymondhackley@protonmail.com>
+Cc: Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, Stephan Gerhold <stephan@gerhold.net>, Nikita Travkin <nikita@trvn.ru>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht, Rob Herring <robh@kernel.org>
+Subject: [PATCH v3 1/2] dt-bindings: qcom: Document new msm8916-samsung devices
+Message-ID: <20240120095715.13689-2-raymondhackley@protonmail.com>
+In-Reply-To: <20240120095715.13689-1-raymondhackley@protonmail.com>
+References: <20240120095715.13689-1-raymondhackley@protonmail.com>
+Feedback-ID: 49437091:user:proton
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-nfc_llc_register() calls pass a string literal as the 'name' parameter.
+Document the new following device tree bindings used in their
+device trees:
 
-So kstrdup_const() can be used instead of kfree() to avoid a memory
-allocation in such cases.
+- samsung,fortuna3g
+- samsung,gprimeltecan
+- samsung,grandprimelte
+- samsung,rossa
 
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: Raymond Hackley <raymondhackley@protonmail.com>
+Acked-by: Rob Herring <robh@kernel.org>
 ---
- net/nfc/hci/llc.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ Documentation/devicetree/bindings/arm/qcom.yaml | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/net/nfc/hci/llc.c b/net/nfc/hci/llc.c
-index 2140f6724644..8c7b5a817b25 100644
---- a/net/nfc/hci/llc.c
-+++ b/net/nfc/hci/llc.c
-@@ -49,7 +49,7 @@ int nfc_llc_register(const char *name, const struct nfc_llc_ops *ops)
- 	if (llc_engine == NULL)
- 		return -ENOMEM;
- 
--	llc_engine->name = kstrdup(name, GFP_KERNEL);
-+	llc_engine->name = kstrdup_const(name, GFP_KERNEL);
- 	if (llc_engine->name == NULL) {
- 		kfree(llc_engine);
- 		return -ENOMEM;
-@@ -83,7 +83,7 @@ void nfc_llc_unregister(const char *name)
- 		return;
- 
- 	list_del(&llc_engine->entry);
--	kfree(llc_engine->name);
-+	kfree_const(llc_engine->name);
- 	kfree(llc_engine);
- }
- 
--- 
-2.43.0
+diff --git a/Documentation/devicetree/bindings/arm/qcom.yaml b/Documentatio=
+n/devicetree/bindings/arm/qcom.yaml
+index 1a5fb889a444..337053ca700b 100644
+--- a/Documentation/devicetree/bindings/arm/qcom.yaml
++++ b/Documentation/devicetree/bindings/arm/qcom.yaml
+@@ -244,11 +244,15 @@ properties:
+               - samsung,a5u-eur
+               - samsung,e5
+               - samsung,e7
++              - samsung,fortuna3g
++              - samsung,gprimeltecan
+               - samsung,grandmax
++              - samsung,grandprimelte
+               - samsung,gt510
+               - samsung,gt58
+               - samsung,j5
+               - samsung,j5x
++              - samsung,rossa
+               - samsung,serranove
+               - thwc,uf896
+               - thwc,ufi001c
+--=20
+2.39.2
+
 
