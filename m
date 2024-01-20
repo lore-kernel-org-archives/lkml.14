@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C30412E5F
-	for <linux-kernel@vger.kernel.org>; Sat, 20 Jan 2024 21:09:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15D2014A86;
+	Sat, 20 Jan 2024 21:09:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705784988; cv=none; b=ozFn9y5YzZIMeGVU1DKEUDMinuBrvajiFYM27f28k3+0eSzELwie9gV50D9UCRWc+Qml4QEw9ciUC7726OOmNpuurBOAdfbXP7yOjtlBn0BEdPau6kLbNsbYt9lSHRFg7SuhppGaenHh1yQ/SrB6GqWg4aZgrIs8B9SviCA7tAg=
+	t=1705784989; cv=none; b=Lq2G81hRj7csw139FnAKhT/TwTJgAKPC/UBVssdxX2PqMvrLHh4+OWam4izCyJakFcT84WplcLrSDMgK7WF4cJEZH8j7GA07xkoGrgldz+yhOU5JpaNzpEPiqdclA+MLDonrc/RsZhrYu6PNt+e5aKLFNC6Q/+t1QrCvZtFv1hk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705784988; c=relaxed/simple;
-	bh=bNkiilsgov/ziqTxm0fKOOWZnPue85pExT1FEtv2t1w=;
+	s=arc-20240116; t=1705784989; c=relaxed/simple;
+	bh=2UTuaFwcqkRBRMR5A80pWR7ePvnb57nQBapA7qClW9g=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=ALQWfH7jeRqq4S2MQC55VZbRaEQHcyuxH9dZm4gf+dihN3JZ/yW5bZK/CGW1lmsEXY8XWcQ9NKo2jv7DTxtVounZ0SI8S8fXiHcBN0WoZ3up7GN3xiYVPZjBPgutdaAeGU49ujvCwd+gfa3XQ4j7kwmvF5HAJpTBhYpSloNnvn4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aOPKD02L; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=o6qNyKo9mCE3w+Dod5n3EoGuyclOAfZDGORWJGjic3dtXtaklh68aoz9vnou5dF2oL1qsEBwT87waXHFWAKT6QRpcoYGT5X5pg8nhpPytEOyr1aH5wRpciLnHzGXZ9alVh/o6IlD34vBkjhRJA/OPJpXjgTAoTsHT6DwKH0P43g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GCFgON7j; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aOPKD02L"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 8B6CCC433F1;
-	Sat, 20 Jan 2024 21:09:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GCFgON7j"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id D89D9C43141;
+	Sat, 20 Jan 2024 21:09:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705784987;
-	bh=bNkiilsgov/ziqTxm0fKOOWZnPue85pExT1FEtv2t1w=;
+	s=k20201202; t=1705784988;
+	bh=2UTuaFwcqkRBRMR5A80pWR7ePvnb57nQBapA7qClW9g=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=aOPKD02LaWcihHz6A2D2EmoHJGpZG+DenkDQxfZo9Vp/DXj/b+9K131PT5VChef1Z
-	 DRwsBO1507eN5pMwbW0oNXW6iwMhBcYh0FZ4ZHe/tBH4roGPDhfsSELwxiwaKZvYbl
-	 ITpvJ67ovyUnDjtvcOpmRsf3DAS5dvX/zrWjrr3HlY00cxT2VpgBKar0eMSTBaP8dY
-	 /1/PJtdv35ZGAjnQ5oTbz0WKdPlDWoQxxBqQoVQlvoJ3gZhopGMO+5pch5Zrybi/aO
-	 UBBvkq27YpD3FCA4MUMjost+pI9Ig19rAMRjRcRnV5j1oDtNvmMT3CSdySFzJ1AyXk
-	 Jkv0LqpS4LVkQ==
+	b=GCFgON7je9PmSZ4JWW4H7qhf2jXKJufA9RJF+aDPsUTPyFRTwt8720JgNMYl1nQOx
+	 5z96haFqCw4cJpkp/avsXwPOKPdGDhbXj2SmyVhUYirkdEWnRHr87oAbbTzbU2lToI
+	 XVGVCKWCtTJrgSY9ixOL95af/XN2w43U589ETZIDlAN7m5HYoAGz86IeUTqr7ON/B+
+	 SqUIGruWhHRoCJ3gX7h5s2NQCBRKIHV8+a7D51Uy6QB2F1x7hQECHLOdB+4mPO2C60
+	 jbnIPDaQPRrqq91pz4HFZIDD7ULmwvSv70Uq+YKiq4r8sUWZetzmMK1BBqbX1hUZZm
+	 OUJDHPoC6B8Ug==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 74393D8C978;
-	Sat, 20 Jan 2024 21:09:47 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id C48C5D8C96C;
+	Sat, 20 Jan 2024 21:09:48 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -37,37 +37,41 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v2] RISC-V: Implement archrandom when Zkr is available
+Subject: Re: [PATCH 1/2] riscv, crash: don't export some symbols when CONFIG_MMU=n
 From: patchwork-bot+linux-riscv@kernel.org
 Message-Id: 
- <170578498747.24348.16243159445263810097.git-patchwork-notify@kernel.org>
-Date: Sat, 20 Jan 2024 21:09:47 +0000
-References: <20231130111704.1319081-1-cleger@rivosinc.com>
-In-Reply-To: <20231130111704.1319081-1-cleger@rivosinc.com>
-To: =?utf-8?b?Q2zDqW1lbnQgTMOpZ2VyIDxjbGVnZXJAcml2b3NpbmMuY29tPg==?=@ci.codeaurora.org
-Cc: linux-riscv@lists.infradead.org, paul.walmsley@sifive.com,
- palmer@dabbelt.com, aou@eecs.berkeley.edu, linux-kernel@vger.kernel.org,
- sameo@rivosinc.com, ben.dooks@codethink.co.uk, conor.dooley@microchip.com
+ <170578498880.24348.17790461588886369808.git-patchwork-notify@kernel.org>
+Date: Sat, 20 Jan 2024 21:09:48 +0000
+References: <ZW03ODUKGGhP1ZGU@MiWiFi-R3L-srv>
+In-Reply-To: <ZW03ODUKGGhP1ZGU@MiWiFi-R3L-srv>
+To: Baoquan He <bhe@redhat.com>
+Cc: linux-riscv@lists.infradead.org, rdunlap@infradead.org,
+ sfr@canb.auug.org.au, akpm@linux-foundation.org, ignat@cloudflare.com,
+ linux-next@vger.kernel.org, linux-kernel@vger.kernel.org,
+ kexec@lists.infradead.org, eric_devolder@yahoo.com
 
 Hello:
 
-This patch was applied to riscv/linux.git (fixes)
-by Palmer Dabbelt <palmer@rivosinc.com>:
+This series was applied to riscv/linux.git (fixes)
+by Andrew Morton <akpm@linux-foundation.org>:
 
-On Thu, 30 Nov 2023 12:17:02 +0100 you wrote:
-> From: Samuel Ortiz <sameo@rivosinc.com>
-> 
-> The Zkr extension is ratified and provides 16 bits of entropy seed when
-> reading the SEED CSR.
-> 
-> We can implement arch_get_random_seed_longs() by doing multiple csrrw to
-> that CSR and filling an unsigned long with valid entropy bits.
+On Mon, 4 Dec 2023 10:19:36 +0800 you wrote:
+> When dropping select of KEXEC and dependency on ARCH_SUPPORTS_KEXEC
+> from CRASH_DUMP, compiling error is reported when below config items are
+> set:
+> -----------------------
+> CONFIG_CRASH_CORE=y
+> CONFIG_KEXEC_CORE=y
+> CONFIG_CRASH_DUMP=y
+> ......
 > 
 > [...]
 
 Here is the summary with links:
-  - [v2] RISC-V: Implement archrandom when Zkr is available
-    https://git.kernel.org/riscv/c/102434010592
+  - [1/2] riscv, crash: don't export some symbols when CONFIG_MMU=n
+    https://git.kernel.org/riscv/c/c41bd2514184
+  - [2/2] riscv, kexec: fix dependency of two items
+    (no matching commit)
 
 You are awesome, thank you!
 -- 
