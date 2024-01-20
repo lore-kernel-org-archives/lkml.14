@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5107D17754
-	for <linux-kernel@vger.kernel.org>; Sat, 20 Jan 2024 21:09:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 614E21798D;
+	Sat, 20 Jan 2024 21:09:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705784999; cv=none; b=JOuXFOBzMZ7aUZ/MrV1LZ5AFb6WpEaQ2wn2ViMFWx/6FhyEzlLUCQKAuy/xbeuemIK6mLrLHyChE0M23C55dTK83DnqFAXZK2cqM5nP5KY9I+secMTcCCW/G3imrKBdaA43rFUbYIi6MBhGzdIL9Q9Q3DIbBPejWm4zcUTtS5fo=
+	t=1705784999; cv=none; b=Pk5DlLGLgN3XpePZ8kkc7dxzg2gkm0x4thujEBpHynXOau9ZDpuMnDey49Tm8viP+HJ9joQKV6vNAW1HK7i1GDZ5VDO0Vuted+pOLAZ7lmkGdVYX0XQFUnxRSFra4PC3nQQvN1hOYzYZDvsn6l9J5J8oT5YLUWkcCrfNvW7/r4U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1705784999; c=relaxed/simple;
-	bh=7lzodkQb8V/3EVEvAvA4s28Kz+AbZj+UdtAJn77t/Vg=;
+	bh=Ak11chN7WclRj25UANXp4k7/EzZxe8YnZ7/DdCdJ/Eo=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=q4Az+MJP9d3akHLLHxpB+Ak355YYRD76/iukzMd9TyaIf06L902Ecjoah6dRsqDtKW4HlAm/70CBt1Ip58xp8mwugsSCKrPXogqjjH+bTeYOot1n5VUXSG93uAWksj4wgcwGO6ZWod/evu5jeGk408WUQ8GdfKBEUJIMAeTeH6c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nZrt/GFW; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=RZYO1k1oX9HGyUH9l6DJnupgImxSCm6c6ZsHuff6BvGGxFNHfa4O759TwVrqp+dpekbEYXp0o8dvmqJR3BnjrPY+DURN708Rc+cYosqJP+5g83kAza9rsmpwMBGYNXzqc4cYua/wjERLM86COmvd5aMeFNqAajnmB8qDhAyYhwo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IkVsrhLG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nZrt/GFW"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 264E9C43394;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IkVsrhLG"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 16022C43399;
 	Sat, 20 Jan 2024 21:09:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1705784999;
-	bh=7lzodkQb8V/3EVEvAvA4s28Kz+AbZj+UdtAJn77t/Vg=;
+	bh=Ak11chN7WclRj25UANXp4k7/EzZxe8YnZ7/DdCdJ/Eo=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=nZrt/GFWs3IMUIg3JBeJKGApAgDTlt+hiUwtQRLs9+pGxoO6AMWtoBgmNsEkh2gMj
-	 1FRkkhROw8yblMXe2afOfh3qgFfVirAy92IPiRHfj5FbRUaKt+fGRQfwJOdeIb0FXm
-	 lzZXmGqYluHp0RCxJ1fiywjPX5lNtGDQY0oUeyZBf7FpSloPwQbtol4HmzHMMqi/B2
-	 nnfxdwM0oahirxSJxVOpDcCYXW7ZqU1tQPxTj2Yur4kVIeE72QV9yLCjsPhbjzxjcN
-	 tYljKDRMKUC3FmQIknC+cT2nmDC/GXOClqc1t99PAWfdDqdSo7x17A1ALbn8TL73KK
-	 1Xl9a6x7VkaqA==
+	b=IkVsrhLG/8fIWEIS1jEMWek7Zvt5oHhH4iIiHcFrYKDuct84cFWNZbyPVw7aE5USn
+	 EdxvcG4HNDlt83k333dnvaOcO2tidVEdbhq0CJFxJ93Prs3gEH/p58Qy+GRyl8MbIG
+	 meRvcghCnLWoHc45/tNBHxbTKecNuou/KLSqasbtSvlo31zpH/vwXMEceiLwTJ5m7a
+	 YjChVCAqCod2OXw7UwGW23JceU1AUwebt/FMs3NKZ8hUGwmQQ5/Zq5DoX5UetCZ7iJ
+	 PdCbAB2zls/W0Ay7Xq8My+r1A2H2Yz4w3lrzw3EiKKtObnuVW7ravh/Ls8/tlKFzw/
+	 65jpJECS34fYQ==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 130CED8C978;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 0468BD8C96C;
 	Sat, 20 Jan 2024 21:09:59 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
@@ -37,36 +37,51 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [GIT PULL] RISC-V Patches for the 6.8 Merge Window, Part 4
+Subject: Re: [PATCH v4 0/7] kexec_file: print out debugging message if required
 From: patchwork-bot+linux-riscv@kernel.org
 Message-Id: 
- <170578499907.24348.2424712213063362005.git-patchwork-notify@kernel.org>
+ <170578499901.24348.12653685452300606867.git-patchwork-notify@kernel.org>
 Date: Sat, 20 Jan 2024 21:09:59 +0000
-References: <mhng-878cc879-7aa0-473f-91e4-8288072cdd4e@palmer-ri-x1c9>
-In-Reply-To: <mhng-878cc879-7aa0-473f-91e4-8288072cdd4e@palmer-ri-x1c9>
-To: Palmer Dabbelt <palmer@rivosinc.com>
-Cc: linux-riscv@lists.infradead.org, torvalds@linux-foundation.org,
- linux-kernel@vger.kernel.org
+References: <20231213055747.61826-1-bhe@redhat.com>
+In-Reply-To: <20231213055747.61826-1-bhe@redhat.com>
+To: Baoquan He <bhe@redhat.com>
+Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+ kexec@lists.infradead.org, x86@kernel.org,
+ linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+ linux-parisc@vger.kernel.org, akpm@linux-foundation.org, joe@perches.com,
+ nathan@kernel.org, conor@kernel.org
 
 Hello:
 
-This pull request was applied to riscv/linux.git (fixes)
-by Linus Torvalds <torvalds@linux-foundation.org>:
+This series was applied to riscv/linux.git (fixes)
+by Andrew Morton <akpm@linux-foundation.org>:
 
-On Sat, 20 Jan 2024 10:17:18 -0800 (PST) you wrote:
-> The following changes since commit cb51bfee7f62a8e26b694f9d84c0041b3e3ccc71:
+On Wed, 13 Dec 2023 13:57:40 +0800 you wrote:
+> Currently, specifying '-d' on kexec command will print a lot of debugging
+> informationabout kexec/kdump loading with kexec_load interface.
 > 
->   Merge patch series "riscv: hwprobe: add Zicond, Zacas and Ztso support" (2024-01-09 20:14:51 -0800)
-> 
-> are available in the Git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git tags/riscv-for-linus-6.8-mw4
+> However, kexec_file_load prints nothing even though '-d' is specified.
+> It's very inconvenient to debug or analyze the kexec/kdump loading when
+> something wrong happened with kexec/kdump itself or develper want to
+> check the kexec/kdump loading.
 > 
 > [...]
 
 Here is the summary with links:
-  - [GIT,PULL] RISC-V Patches for the 6.8 Merge Window, Part 4
-    https://git.kernel.org/riscv/c/e5075d8ec564
+  - [v4,1/7] kexec_file: add kexec_file flag to control debug printing
+    (no matching commit)
+  - [v4,2/7] kexec_file: print out debugging message if required
+    (no matching commit)
+  - [v4,3/7] kexec_file, x86: print out debugging message if required
+    (no matching commit)
+  - [v4,4/7] kexec_file, arm64: print out debugging message if required
+    (no matching commit)
+  - [v4,5/7] kexec_file, ricv: print out debugging message if required
+    https://git.kernel.org/riscv/c/eb7622d908a0
+  - [v4,6/7] kexec_file, power: print out debugging message if required
+    (no matching commit)
+  - [v4,7/7] kexec_file, parisc: print out debugging message if required
+    (no matching commit)
 
 You are awesome, thank you!
 -- 
