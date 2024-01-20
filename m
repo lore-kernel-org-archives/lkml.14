@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91F79208C9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91A2D208AE
 	for <linux-kernel@vger.kernel.org>; Sat, 20 Jan 2024 21:09:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705784999; cv=none; b=qLQae1dPrCFTyBP2nGgQdiBCzcKxbms+DorTVwylK+BH/ZoGh64ubk0NyAIA+khAh/OUP/he3g7LmGgyPxT274diYTU4Oz6gj4i3A/JX/DGllbrZv4PGNhh26u+I4CiIc82zo6pDA/z91NwbsQBpPfFrZ4j14Xl2MvSOj0/aGIs=
+	t=1705784999; cv=none; b=i5NbA32/3KuC40srAcx73B1zvX632zJzLQyOUI+y1nt3atZeToGPeEoCy5pI/0P4GJ71kDSsJs0EBU7sjIA9zQ2UuUYP9ZTu0U3wYST80w6YEIx+tKV63vbUzr7fQm3CREi5EymGG7Et/vZGsFKsVZw9QhH4up/CAdH22wVm4zw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1705784999; c=relaxed/simple;
-	bh=3pKI7Q2xGS+keEw8XPbBylHL6NJ5AoMP/3E4CwOX1y4=;
+	bh=Uc9RmMV/bChQHcwZy6eVR8V+6YZdJL9xxLXYJdzSFVk=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=SP4JqiJSpvLUYn3StXOPH6WNLYftY/9sU4qZ8GE2awVklgp30V1EFfo7yp2i+gEECOFnLas1I8C3e0BNF0gpGHl7fCl7fWmgHYBTbKVdTePuqAbR900FZPK4/uKI5zRY2WQ3UmTGBaqYma8eYKj+YxjX/cyKdmJlhr8BKZ4vGaI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=czTnM6gw; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=CLshllKXA/b0DlgxAU+sHbiZ77Y+3hPNFqMZn8NiWvsatvXS1Ctq8bOEf7Ns2YLA5AN/s6WoxLnXpAHDvScn34wjLD6WVrsujH5biTeMk9/E0TndE6YUU922NDE8WKtxTiORkTs8PoyewbgFi2fdM2Gfnbn/vufxkJdZnIZgpn8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iJI69Cs1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="czTnM6gw"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 49FEAC43142;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iJI69Cs1"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 3E057C43609;
 	Sat, 20 Jan 2024 21:09:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1705784999;
-	bh=3pKI7Q2xGS+keEw8XPbBylHL6NJ5AoMP/3E4CwOX1y4=;
+	bh=Uc9RmMV/bChQHcwZy6eVR8V+6YZdJL9xxLXYJdzSFVk=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=czTnM6gwEOanNR2SBguDowD8dYDt5D9AEwSrWTuZ6403O8NsPMTWl1uIrugYY4XrU
-	 ch15I+3JhjkOGIPDF7+ZjnBTbeEdT/buFVuwmm0Gbx3WQa3uyEKafNya5me4dQZTxh
-	 H76rd205lDGBMdMoYxs65rx5kPw+jo1beOiS+hdzpEyevReeopU2cwAA7LvCixnDUB
-	 MCoQj3Jg6JfhqI+Na/BRuNrKVf8xJ+38CXGG4owX4ROp9hXX8kS39MkJ7nGp8nEd/n
-	 uxb45lJoaO+BV2XFl4wfdQ6t0jHelXZooWN1ervcMAhjfeYU038JQ7oYPH88iVAK2z
-	 eREL0C7Y2PKkw==
+	b=iJI69Cs1UJUXFrDB1btlsmANpWWvbJ99kvEPHdb56qHFlu1bOBTkFRdZq4Ckr3JI8
+	 QHT0BnkadFAbz+TNz2sgLuhFWUqfxowUW7W+ZVz4S3rlltTYMg7Y224NGZ7Z0WuT5H
+	 JZmcRmlbghoIiCh5ek6oAGFAx0Xc8Or/vVZLO1B7GPdoGQxhB7mtw/RLe3EUuXaByU
+	 nEuPVTRQYF5W91pG2W4SfEkQMTQmDH6AXY86UWVlcdlm91iHhzLQDhm+dGsGAB0R2J
+	 ghXBKMjYzrhkbQFItYrWb0vVseuAA2gn3lzGaC0IZwNL6Bokpk2W1ObgxCLhYWVS+F
+	 GgYGa62h8iyVw==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 35B09D8C96C;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 2B217D8C970;
 	Sat, 20 Jan 2024 21:09:59 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
@@ -37,42 +37,38 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v5 1/1] riscv: optimize ELF relocation function in riscv
+Subject: Re: [PATCH v2] riscv: lib: Check if output in asm goto supported
 From: patchwork-bot+linux-riscv@kernel.org
 Message-Id: 
- <170578499921.24348.3990929964303626751.git-patchwork-notify@kernel.org>
+ <170578499917.24348.742461114194301217.git-patchwork-notify@kernel.org>
 Date: Sat, 20 Jan 2024 21:09:59 +0000
-References: <20231214063906.13612-1-fido_max@inbox.ru>
-In-Reply-To: <20231214063906.13612-1-fido_max@inbox.ru>
-To: Maxim Kochetkov <fido_max@inbox.ru>
-Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
- paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
- charlie@rivosinc.com, ajones@ventanamicro.com, conor.dooley@microchip.com,
- jszhang@kernel.org, kernel@esmil.dk, lixiaoyun@binary-semi.com
+References: <20240118-csum_remove_output_operands_asm_goto-v2-1-5d1b73cf93d4@rivosinc.com>
+In-Reply-To: <20240118-csum_remove_output_operands_asm_goto-v2-1-5d1b73cf93d4@rivosinc.com>
+To: Charlie Jenkins <charlie@rivosinc.com>
+Cc: linux-riscv@lists.infradead.org, paul.walmsley@sifive.com,
+ palmer@dabbelt.com, aou@eecs.berkeley.edu, linux-kernel@vger.kernel.org
 
 Hello:
 
 This patch was applied to riscv/linux.git (fixes)
 by Palmer Dabbelt <palmer@rivosinc.com>:
 
-On Thu, 14 Dec 2023 09:39:06 +0300 you wrote:
-> The patch can optimize the running times of insmod command by modify ELF
-> relocation function.
-> In the 5.10 and latest kernel, when install the riscv ELF drivers which
-> contains multiple symbol table items to be relocated, kernel takes a lot
-> of time to execute the relocation. For example, we install a 3+MB driver
-> need 180+s.
-> We focus on the riscv architecture handle R_RISCV_HI20 and R_RISCV_LO20
-> type items relocation function in the arch\riscv\kernel\module.c and
-> find that there are two-loops in the function. If we modify the begin
-> number in the second for-loops iteration, we could save significant time
-> for installation. We install the same 3+MB driver could just need 2s.
+On Thu, 18 Jan 2024 14:36:45 -0800 you wrote:
+> The output field of an asm goto statement is not supported by all
+> compilers. If it is not supported, fallback to the non-optimized code.
+> 
+> Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+> Fixes: a04c192eabfb ("riscv: Add checksum library")
+> ---
+> The OutputOperands field for asm goto statements is only supported
+> starting from GCC 11. Split the asm goto to remove the use of this
+> feature.
 > 
 > [...]
 
 Here is the summary with links:
-  - [v5,1/1] riscv: optimize ELF relocation function in riscv
-    https://git.kernel.org/riscv/c/080c4324fa5e
+  - [v2] riscv: lib: Check if output in asm goto supported
+    https://git.kernel.org/riscv/c/4525462dd0db
 
 You are awesome, thank you!
 -- 
