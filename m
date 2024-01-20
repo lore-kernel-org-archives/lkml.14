@@ -1,104 +1,95 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from mx.skole.hr (mx2.hosting.skole.hr [161.53.165.186])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3B2011727;
-	Sat, 20 Jan 2024 21:15:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51F2CEC9;
+	Sat, 20 Jan 2024 21:17:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=161.53.165.186
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705785357; cv=none; b=oIVw+UWZJBWP7GYm1BECPsOcY4MCtLiKT1idrN2Icg1Kj0vqPQVTNzYf7VsnrjJashWpNUgR/6ojh0qG6aKQDGF2So5ChzbizIcxb0AHSaUPUamtKkGUOOvAllqLwZVDc79ywXK4sxiqOlHabU6YhUd45bS0dm0Js33Ad4SYR5Q=
+	t=1705785450; cv=none; b=HX8DpIrQ+I2o1hzxDbINID27/R/J+et1sQ/PQA4Jxdl62zstg6EXvuGunazXOM0NDjv+dmAMwJuiuS6HgQsjD5VN8oBUnoZKjQjA+3zuFTdR3qwEUhtJzCjJ2HSrTTdtjEMrmfPlrJpCcm2N+aSTpGXSK1IiIfm/vxaZJAMVJLc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705785357; c=relaxed/simple;
-	bh=1g9bksCDLYBlnBEy5X9csgQBfOXwcWCj0kAH011US04=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QkhCMr2oiJ8gjr3qtCIT9z3PBKkfESR+Z0Owo63NlE0XaJRxjo2wKSIuBgsUvcKCFSnXTk5lTgHLNxWfEbsnTwotCW7ymc/dOjZk6YjnuCKGb8k/NPBzQwADf5REA5qkB4gyDgaWv+foglacvY2J/aPKwkhbRsqVWrWu9nKnmmw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=NchmfWpK; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="NchmfWpK"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=1aBK0Gktyu8z+XAOtZwM9ibKmLTWPXmi9JXFn46Moag=; b=NchmfWpKV8qW4oGh0F1Qvj2C/6
-	/9LiX34B1wlpHtipYkfPNQ+3G4sxN+nN75vc36dqQqjNMWNyQa5wFbXiDuuJCw81FAOfCSys3cLbS
-	IooU5FuZdHsgy/cCTasUw23eGZLHi8rqM87NA8xNGA8TZZ5t8ap1so2ig5rH24oATjRzXeNBH9G8b
-	ES6a95oRMX+OMy2zD9vQRKPlkHHSsMPeqUmu5H/RRAiTRt7YRBqjFrwcrblJ1oMA3AphMu0iwndBx
-	qYPvgpL249fguGP08RS7rSdcLn8m1HFKMQRGIg7MzbGLKydZ2bOvJvLHRY4wKgtirPXoSsCPXUNrl
-	VswDM4wg==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:40226)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1rRIgD-0007pB-1l;
-	Sat, 20 Jan 2024 21:15:05 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1rRIg9-0007ya-3x; Sat, 20 Jan 2024 21:15:01 +0000
-Date: Sat, 20 Jan 2024 21:15:01 +0000
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: patchwork-bot+linux-riscv@kernel.org
-Cc: Suren Baghdasaryan <surenb@google.com>, linux-riscv@lists.infradead.org,
-	akpm@linux-foundation.org, willy@infradead.org, will@kernel.org,
-	catalin.marinas@arm.com, palmer@dabbelt.com, mpe@ellerman.id.au,
-	christophe.leroy@csgroup.eu, agordeev@linux.ibm.com,
-	gerald.schaefer@linux.ibm.com, dave.hansen@linux.intel.com,
-	luto@kernel.org, peterz@infradead.org, x86@kernel.org,
-	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
-	linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] arch/mm/fault: fix major fault accounting when
- retrying under per-VMA lock
-Message-ID: <Zaw31DVa9q3JZASo@shell.armlinux.org.uk>
-References: <20231226214610.109282-1-surenb@google.com>
- <170578498755.24348.16166096320323933297.git-patchwork-notify@kernel.org>
+	s=arc-20240116; t=1705785450; c=relaxed/simple;
+	bh=TQbvdedocH+ZVWb2kPtn6fq1z3XkIwKlGuuer4LHqsM=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=jTLFbx8orpwX/w2jsPdFSysoK6/61NF4U7nNVfJUX4CI64YNKarNmvLIvd4LlbdRuFfAobmaDoyj0ktZTHvUsiqLWky0c3mwH98R/eOnukAZ2lDrWnxeK/Aj6xAEHhry7a67wR4rZcnZNLlMaMDd3R5f6hbHPUw44Xgwo5+vTi8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=skole.hr; spf=pass smtp.mailfrom=skole.hr; arc=none smtp.client-ip=161.53.165.186
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=skole.hr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=skole.hr
+Received: from mx2.hosting.skole.hr (localhost.localdomain [127.0.0.1])
+	by mx.skole.hr (mx.skole.hr) with ESMTP id 620FA86C66;
+	Sat, 20 Jan 2024 22:17:19 +0100 (CET)
+From: =?utf-8?q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
+Date: Sat, 20 Jan 2024 22:16:13 +0100
+Subject: [PATCH v2 2/3] dt-bindings: input: imagis: Document touch keys
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <170578498755.24348.16166096320323933297.git-patchwork-notify@kernel.org>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20240120-b4-imagis-keys-v2-2-d7fc16f2e106@skole.hr>
+References: <20240120-b4-imagis-keys-v2-0-d7fc16f2e106@skole.hr>
+In-Reply-To: <20240120-b4-imagis-keys-v2-0-d7fc16f2e106@skole.hr>
+To: Markuss Broks <markuss.broks@gmail.com>, 
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+ Rob Herring <robh+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: Karel Balej <balejk@matfyz.cz>, ~postmarketos/upstreaming@lists.sr.ht, 
+ phone-devel@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ =?utf-8?q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=openpgp-sha256; l=991;
+ i=duje.mihanovic@skole.hr; h=from:subject:message-id;
+ bh=TQbvdedocH+ZVWb2kPtn6fq1z3XkIwKlGuuer4LHqsM=;
+ b=owEBbQKS/ZANAwAIAZoRnrBCLZbhAcsmYgBlrDg698+s1stUHo6E4hlj8Bs2/NjFik9nJaD4F
+ TZyGdtFaWSJAjMEAAEIAB0WIQRT351NnD/hEPs2LXiaEZ6wQi2W4QUCZaw4OgAKCRCaEZ6wQi2W
+ 4Q2VD/9fBmq7wp16hYjZFFEYFLh4ZSsLjHfJOQZihoNJ4t6awI+4cdp9OdagsufIiEHoUGasHeo
+ sXibTy/3xflg0npikVBiuwUdGP8kuO/ZJfPML2DcZNpA0TCnueBD2+/Obd1B8RmPTsTKGeX1cX8
+ VnpsTzYISm7+JPOY/q2TrmkAi28cgMFPYfQlgpAtQw4rT3v2ouhGbCtw9PqfFdJ4geEpBkxx5eA
+ DYRtLJgg2ZyOzpu679VJWxB5DTUd44rnAMChwO3Q63LYrjW7hlXywNVaNX5qxwQ7jzIIicIudtv
+ mEWBcMs3997tJyE1KGuAYFOPfrdqRRPCD370YYa4TQyqCjHPNw56dBl9nfFE5Td8SUT5afpIvzk
+ mDef9BCtlq+PK5ktnnPtQqsrC7VeDl4GFfXPfxOjaa3kGHB70CiWFQiSTWd7hOEnxhSMgWesS6T
+ GHOx25VdTkNG5y160x7DHvRo/bATOTovsWjJDgZadIb2Z57/Nkg5R4OZszMFte03eKw6efu594s
+ u6mZqDuN1/hZBhhdsxPv52kTxG60/vPblkZj8s57mu65gLEHvV3jtg9aZsGDqS+AZVbSd+T53GP
+ mK97pxt8SbNOgp74BYJVmLR3ER8RE2xAZ4QzElDyXJivbDi9Xr7VVN57J/TOfjyq25Xv9gJ3/Bo
+ +z+czi7YqJrAusw==
+X-Developer-Key: i=duje.mihanovic@skole.hr; a=openpgp;
+ fpr=53DF9D4D9C3FE110FB362D789A119EB0422D96E1
 
-On Sat, Jan 20, 2024 at 09:09:47PM +0000, patchwork-bot+linux-riscv@kernel.org wrote:
-> Hello:
-> 
-> This patch was applied to riscv/linux.git (fixes)
-> by Andrew Morton <akpm@linux-foundation.org>:
-> 
-> On Tue, 26 Dec 2023 13:46:10 -0800 you wrote:
-> > A test [1] in Android test suite started failing after [2] was merged.
-> > It turns out that after handling a major fault under per-VMA lock, the
-> > process major fault counter does not register that fault as major.
-> > Before [2] read faults would be done under mmap_lock, in which case
-> > FAULT_FLAG_TRIED flag is set before retrying. That in turn causes
-> > mm_account_fault() to account the fault as major once retry completes.
-> > With per-VMA locks we often retry because a fault can't be handled
-> > without locking the whole mm using mmap_lock. Therefore such retries
-> > do not set FAULT_FLAG_TRIED flag. This logic does not work after [2]
-> > because we can now handle read major faults under per-VMA lock and
-> > upon retry the fact there was a major fault gets lost. Fix this by
-> > setting FAULT_FLAG_TRIED after retrying under per-VMA lock if
-> > VM_FAULT_MAJOR was returned. Ideally we would use an additional
-> > VM_FAULT bit to indicate the reason for the retry (could not handle
-> > under per-VMA lock vs other reason) but this simpler solution seems
-> > to work, so keeping it simple.
-> > 
-> > [...]
-> 
-> Here is the summary with links:
->   - [1/1] arch/mm/fault: fix major fault accounting when retrying under per-VMA lock
->     https://git.kernel.org/riscv/c/46e714c729c8
-> 
-> You are awesome, thank you!
+IST3032C (and possibly some other models) has touch keys. Document this.
 
-Now that 32-bit ARM has support for the per-VMA lock, does that also
-need to be patched?
+Signed-off-by: Duje Mihanović <duje.mihanovic@skole.hr>
+---
+ .../bindings/input/touchscreen/imagis,ist3038c.yaml           | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/imagis,ist3038c.yaml b/Documentation/devicetree/bindings/input/touchscreen/imagis,ist3038c.yaml
+index 2af71cbcc97d..960e5436642f 100644
+--- a/Documentation/devicetree/bindings/input/touchscreen/imagis,ist3038c.yaml
++++ b/Documentation/devicetree/bindings/input/touchscreen/imagis,ist3038c.yaml
+@@ -42,6 +42,17 @@ properties:
+   touchscreen-inverted-y: true
+   touchscreen-swapped-x-y: true
+ 
++if:
++  properties:
++    compatible:
++      contains:
++        const: imagis,ist3032c
++then:
++  properties:
++    linux,keycodes:
++      description: Keycodes for the touch keys
++      maxItems: 2
++
+ additionalProperties: false
+ 
+ required:
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+2.43.0
+
+
