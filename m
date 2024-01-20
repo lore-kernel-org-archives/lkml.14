@@ -1,46 +1,54 @@
-Received: from smtp.smtpout.orange.fr (smtp-14.smtpout.orange.fr [80.12.242.14])
+Received: from smtp.smtpout.orange.fr (smtp-13.smtpout.orange.fr [80.12.242.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D74A01FD2
-	for <linux-kernel@vger.kernel.org>; Sat, 20 Jan 2024 06:59:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BF931FD6
+	for <linux-kernel@vger.kernel.org>; Sat, 20 Jan 2024 07:02:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705733944; cv=none; b=c4JZOpSjDEhq46jFhGq9Cy9KkHBguxmkw93fo5ZXXahG2Oyn69fMv2XnOb+yMs7RsrAv5sRICnFSoOwAW7upUp4yJDBWj4bXN1lCi3JGPOqrJNq9hlccWS0RmvyDzNPFm85U1xN2m7xWpFT9KDi8hew60wuhU2wMg9tc7OQun6s=
+	t=1705734147; cv=none; b=kozBreftmK9l+03TBlyJLgdHOS/dyfi4jzERzAThN9IBUzCOLmzaNELhoYbbiTZ+Hklks8OM72yenb3YoD3olN5nCdBO+vuSD5mC0AC6CS47tfoBDV7x6RSxP8tpFrvCGwGaQ5z/SkKetF+yydOcgRN+++DNJI+7ZJWkef2pzvI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705733944; c=relaxed/simple;
-	bh=iLUdhhWo7aaI6NNBGbzsfYLNbVys8tgyc3bVY56Gjik=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ul8IapEfiNV6yzg7iHuaU44I1OhyHUfm+nHMTvrHD/9dO07Q0SvICwj74uA+zAMn8ivkx0p9hhA6Qvp+5/FIlRTDenQpqND05/EVoI1+jiKzxgc0cspMvKLReVwHAB3ey4ZX/367UPbgpRAERWh1wj+uwM11a7AP5hLeJ0sJ+GM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=HSIL+65R; arc=none smtp.client-ip=80.12.242.14
+	s=arc-20240116; t=1705734147; c=relaxed/simple;
+	bh=+raE6lOGseWsvkEpBBecN/MtD9iAHPDNgahekW3q5GU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TtXx2OxAAawQjmVwPi6L8axoroMdJkangVuDDQ2txlrZCUFI9/bXZTVFF4PE2c4XaiGAoQZz35bzRgyYEJYk4jMOlQfs0fCBW9Fs5ReeQVxHrGC4UEnRgZp5BVYUFabmUYMLq8FZRpgmvN33Z6ZU8Dy4pSwqAFn4EwqGXHShPC0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=YiMuukR6; arc=none smtp.client-ip=80.12.242.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="HSIL+65R"
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="YiMuukR6"
 Received: from fedora.home ([92.140.202.140])
 	by smtp.orange.fr with ESMTPA
-	id R5JcrkgoYBejiR5JdrgS2l; Sat, 20 Jan 2024 07:58:53 +0100
+	id R5N0rXUqwgeksR5N0rlBX4; Sat, 20 Jan 2024 08:02:24 +0100
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1705733933;
-	bh=swo29GFzf9xHjPXqHApVp1CpCySEKUtAyuh+ivXKxUQ=;
+	s=t20230301; t=1705734144;
+	bh=18XLp0+EYYrAsuDVOy2pHg/nOe1su8/7QeJJlWWEvhU=;
 	h=From:To:Cc:Subject:Date;
-	b=HSIL+65Rtj5Jv/agCYAK7LGEEezmUGxhWlpnklfHBQzQSvkYCVoQY8tEzYKv/hvN4
-	 5ZuhOgIzYgV/GlzzYRLJZUrAB/nUqZ0LydGQMlLNyBV3ei0Hyap9Zfb/27JAgrTc4c
-	 bruPR+pQJw2oiWZ8ov+4owF5XS60KWO4l+c5nysTCk4PRCv41fPFOoMfLUO5jLHzM1
-	 92j2radxR42JzL3myOoXxgtKf8I3uBaF0qv9WZHGw67b+i6lWu8yJPxgI+p1mudX76
-	 +1t2pR3x1zIj7zo8E1OnmmZpE9zcw4GoommMUUPbSrMFJoT6TnpMgDxvxYiS0Exx1f
-	 J5riGI+tz7y4Q==
+	b=YiMuukR6dGihg1Gp7l16Aam7/wZ7d2LC+OC01I779DK7RYfMMrugmalINYjN/lSWH
+	 hNYAqPISCeG8kZRyNAJW46GlAf0LOHCXOmvuITWTFRyC4qwHl+EI1PCyqYDWhDB0RE
+	 WMX99n5JDI8qDZgYxYPWIzP9SpphFKt3Dlnf6afAmm9i1ltQoWjgaE+SjhjB8cQVnu
+	 3h/rlrqEXkffCK3f3RWo4t34Ytk/qh07RQeDh6BOPaA43AYWKtlYvCFSkhxTcYCvEP
+	 QnBqFncfz+7iJ/RJ4NlLj9tEDNCyNdOYHE1ejbCOEOthmSwSzUahUVZc1axPngRjbh
+	 2+8MFBNdLsdWQ==
 X-ME-Helo: fedora.home
 X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sat, 20 Jan 2024 07:58:53 +0100
+X-ME-Date: Sat, 20 Jan 2024 08:02:24 +0100
 X-ME-IP: 92.140.202.140
 From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>
+To: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	"David S. Miller" <davem@davemloft.net>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Eric Dumazet <edumazet@google.com>,
+	Paolo Abeni <pabeni@redhat.com>
 Cc: linux-kernel@vger.kernel.org,
 	kernel-janitors@vger.kernel.org,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH] platform-msi: Remove usage of the deprecated ida_simple_xx() API
-Date: Sat, 20 Jan 2024 07:58:46 +0100
-Message-ID: <fd87836efa894aee0ae43e767369c85a2ee7e1ff.1705733916.git.christophe.jaillet@wanadoo.fr>
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	netdev@vger.kernel.org,
+	bpf@vger.kernel.org
+Subject: [PATCH net-next] xdp: Remove usage of the deprecated ida_simple_xx() API
+Date: Sat, 20 Jan 2024 08:02:20 +0100
+Message-ID: <8e889d18a6c881b09db4650d4b30a62d76f4fe77.1705734073.git.christophe.jaillet@wanadoo.fr>
 X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -54,37 +62,44 @@ ida_alloc() and ida_free() should be preferred to the deprecated
 ida_simple_get() and ida_simple_remove().
 
 Note that the upper limit of ida_simple_get() is exclusive, but the one of
-ida_alloc_max() is inclusive. So a -1 has been added when needed.
+ida_alloc_range() is inclusive. So a -1 has been added when needed.
 
 Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 ---
- drivers/base/platform-msi.c | 6 +++---
+ net/core/xdp.c | 6 +++---
  1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/base/platform-msi.c b/drivers/base/platform-msi.c
-index f37ad34c80ec..ca48d1f60865 100644
---- a/drivers/base/platform-msi.c
-+++ b/drivers/base/platform-msi.c
-@@ -172,8 +172,8 @@ static int platform_msi_alloc_priv_data(struct device *dev, unsigned int nvec,
- 	if (!datap)
- 		return -ENOMEM;
+diff --git a/net/core/xdp.c b/net/core/xdp.c
+index 4869c1c2d8f3..27b585f3fa81 100644
+--- a/net/core/xdp.c
++++ b/net/core/xdp.c
+@@ -75,7 +75,7 @@ static void __xdp_mem_allocator_rcu_free(struct rcu_head *rcu)
+ 	xa = container_of(rcu, struct xdp_mem_allocator, rcu);
  
--	datap->devid = ida_simple_get(&platform_msi_devid_ida,
--				      0, 1 << DEV_ID_SHIFT, GFP_KERNEL);
-+	datap->devid = ida_alloc_max(&platform_msi_devid_ida,
-+				     (1 << DEV_ID_SHIFT) - 1, GFP_KERNEL);
- 	if (datap->devid < 0) {
- 		err = datap->devid;
- 		kfree(datap);
-@@ -191,7 +191,7 @@ static void platform_msi_free_priv_data(struct device *dev)
- 	struct platform_msi_priv_data *data = dev->msi.data->platform_data;
+ 	/* Allow this ID to be reused */
+-	ida_simple_remove(&mem_id_pool, xa->mem.id);
++	ida_free(&mem_id_pool, xa->mem.id);
  
- 	dev->msi.data->platform_data = NULL;
--	ida_simple_remove(&platform_msi_devid_ida, data->devid);
-+	ida_free(&platform_msi_devid_ida, data->devid);
- 	kfree(data);
+ 	kfree(xa);
  }
+@@ -242,7 +242,7 @@ static int __mem_id_cyclic_get(gfp_t gfp)
+ 	int id;
  
+ again:
+-	id = ida_simple_get(&mem_id_pool, mem_id_next, MEM_ID_MAX, gfp);
++	id = ida_alloc_range(&mem_id_pool, mem_id_next, MEM_ID_MAX - 1, gfp);
+ 	if (id < 0) {
+ 		if (id == -ENOSPC) {
+ 			/* Cyclic allocator, reset next id */
+@@ -317,7 +317,7 @@ static struct xdp_mem_allocator *__xdp_reg_mem_model(struct xdp_mem_info *mem,
+ 	/* Insert allocator into ID lookup table */
+ 	ptr = rhashtable_insert_slow(mem_id_ht, &id, &xdp_alloc->node);
+ 	if (IS_ERR(ptr)) {
+-		ida_simple_remove(&mem_id_pool, mem->id);
++		ida_free(&mem_id_pool, mem->id);
+ 		mem->id = 0;
+ 		errno = PTR_ERR(ptr);
+ 		goto err;
 -- 
 2.43.0
 
