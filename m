@@ -1,57 +1,56 @@
-Received: from mail-oa1-f53.google.com (mail-oa1-f53.google.com [209.85.160.53])
+Received: from mail-oo1-f47.google.com (mail-oo1-f47.google.com [209.85.161.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1CB83FE6
-	for <linux-kernel@vger.kernel.org>; Sat, 20 Jan 2024 01:29:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2133F137D
+	for <linux-kernel@vger.kernel.org>; Sat, 20 Jan 2024 01:29:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705714196; cv=none; b=n+EbTI49Vx/Te7sl7zBJlYLG/4Nk/f/h75iYNxFO43VgjLnwTMQsY5PhPc7f9rFZiQJG6opyPpsJ9/AiTgyiIWXlfYYUUAH2Xk2GgA8KQ/Bww9xTWGCwAhwUSKt/X/AoA+DffZ3Lr4LEBM8u/8S2MEf/3L8r83wigFZelbMebhY=
+	t=1705714195; cv=none; b=W4WQHmih9fvvW1227nGmkV+w5yo9FCE3rZf11Iq9pJX6n5QXLAZnx2LfQT4Ja5XYEj5unokYJJ1WbzNUe4SpPx1rAnyPpnjfaG9CLjgIuniPVNvBxq7OGfcl3Ycmc5xJRfD9lWJ9mFS+4fcyZ1J1Ffqvob4EZd+GFhq7ed6KpYA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705714196; c=relaxed/simple;
-	bh=US4/f7DtHifTyJjMsaA2zuMdo1/hmfd1fXIE8CYBx8U=;
+	s=arc-20240116; t=1705714195; c=relaxed/simple;
+	bh=fmZuo3MrMT7m1VzAaoEXXShJ/CMEiRm/YGUn6I/FsxU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ZhnZUpbvHQW22oYPxMezZ7uw0Jqa4RqaxHDXJIJzh/6rukx0ZnjTQqYzdzMKW5A8Wtov0tzV4M34mzc49P9cTvlq/osYOzzEmQNJzsaSqPBelEkAGDQlGi0QG9KrYFolEwhmdBYKfzmbAc6OsJG5xPkoU/OzO3DaKTw4AIBXCC0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=sdn8f/Os; arc=none smtp.client-ip=209.85.160.53
+	 MIME-Version; b=pl1ZUe089Crevu+2jDxAabTmCBOsfdD2RRTZWd8FqejRbhSwbWXXM50RI/ohdZMu/NCBCaFX9G3+iBbxt5XgbzoR8ups4neXvt3Szv2zOcymrPM/INqmdSJ9JQg50yXYprwTsttr3P1i8YsVRMEgtqfFkWaXpkjSKGU+qIA2Xq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=GTAzW3rF; arc=none smtp.client-ip=209.85.161.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sdn8f/Os"
-Received: by mail-oa1-f53.google.com with SMTP id 586e51a60fabf-2108e106947so872285fac.3
-        for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 17:29:54 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GTAzW3rF"
+Received: by mail-oo1-f47.google.com with SMTP id 006d021491bc7-5988e55ede0so647808eaf.2
+        for <linux-kernel@vger.kernel.org>; Fri, 19 Jan 2024 17:29:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1705714194; x=1706318994; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1705714192; x=1706318992; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=vcj1RqWVb7ASEjA2e/fTkkwzyy8aS20A5sYtXAZlaEA=;
-        b=sdn8f/Os/3yG7W73uYVbLPC9EEJ1F+pxJiZG5XLfyGhcrpCeWe0ysEQSRHeE3y/vDD
-         d1bKRmJiiBhbzDJIg0Z6yCrLjz67g4pAug/abSyvTT7UmuUuzbKypejsZzGAtyToqtP9
-         F0mXmP32gBUAQXnc6RohOqnTNI6Oyn8gtn/G0iG0kW5Ytl+8f/WrnkMn8uQIvVQiIkwZ
-         muXDkaJzpNqS4Akz4fmG5Zzj/pqOUZqmY2ziWvNVuVD0EuWs3TYCGcoAIQ39cjNQdNna
-         9B8LDY3z7fp2s2ifOxS2V8XPriMlhQSXU8pwKrzPyRrNQOzRNcsTVHlnvySXszTUcG8l
-         i98Q==
+        bh=e4kmnGW+syMx6+ePR/dJeXumdAQD9FzNiPa26DzNGl4=;
+        b=GTAzW3rFJpdhONblMmNHGuDmmKhH2YBgd5Jb/qanlXb1XdSKQP9G8oj4NX2nfnFYcc
+         YrbyUv14sa9P6+ypEwHIxXUSI0wfW5XAtKkbHhRlhIqgwzO4ecjLkBBwV7HWk9SBCtZW
+         nKDf1sLcXHKV+jIRO9AfH5Y3QeYyVBcpgeGYoIOr9wdm0Ot+XxekqjdnxMEDJmAWAYPX
+         AQihUITVzgekhKYjoiXaRzDy1JM3mt+6/ua7QQeTw+HXdeSbRnElV1oQXnnNdjpvGwxh
+         Xu+GrnnxbLSWKEPNM1s4bJcYNZvd9Jzts0ghkqpIAbBM4IBF87UJ1P2+LwQD7Ai9VnLh
+         TvwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705714194; x=1706318994;
+        d=1e100.net; s=20230601; t=1705714192; x=1706318992;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=vcj1RqWVb7ASEjA2e/fTkkwzyy8aS20A5sYtXAZlaEA=;
-        b=Ub54Ta0AX+iY0ISOchF8UBxsU1TOBrTiqKMJixX/3VENU2/xXKk24pMKpnGG/jABwq
-         73Ioa+ArxzdHSRhgIYLmcSXogRyBS7sTn24T2CA/0HYbQLF+i00XLfu1jeBCF0tggFTY
-         iliiunnSD6/fMRaUpjirOKdXVEZsqK8lid2a1tw7y1G/Rkw6y2euKXgcfoncXqNyPftt
-         QTg5I6yL1Eb5xQVzsPD96vjytQ7UhTYe42oxN0VGJuUUrrIxK+cq6wLKItOZma+l4+2M
-         LbCZ5uM3cEvHTBSCVIjDw8/C06jYxqfNzhgDdEY82Wy/j+La+ZBSfwD5g899poNUJ0Uo
-         0X6Q==
-X-Gm-Message-State: AOJu0YyHwCmVFMjwRnOvVSQWrxhFqLt9ZL1ObmllX9lbC3NIeE+ydD8y
-	SpuKPKsPoSovbo9WRd663RWEx9ba6bUayWm7B5FYl3pZzZ2ST+Yurd2FhOBRSQIV9S3kaH1plxo
-	c
-X-Google-Smtp-Source: AGHT+IGhn8+HLMRqtKYZRNUVoodVl3V6xRiyc4pi0HMTeakTvQLfqysqG/v+QFQJgj+hdVgkkUnx6w==
-X-Received: by 2002:a05:6870:b52a:b0:210:b1a5:9c9f with SMTP id v42-20020a056870b52a00b00210b1a59c9fmr499811oap.49.1705714193963;
-        Fri, 19 Jan 2024 17:29:53 -0800 (PST)
+        bh=e4kmnGW+syMx6+ePR/dJeXumdAQD9FzNiPa26DzNGl4=;
+        b=daLCyDOn+dQDU0CCxSCbY08ikb2J+4q/GtRY2VMoGSqvvEvDQ59J+4bNKr29GXUMCm
+         19n8iLZYCt1Cy6RpvJ8M8+IJyKT7/OshqBanuusHAaFuJ7pppAQryz6HiZkNA4N8qqIr
+         RX4zCuomc2BYRnHalfuZVfLWH84sAa9mDIlg2SgV6a4HcIe1Ge88nSftn6MWISDWMclW
+         PafxcoKaVx8RaX03WvW5phWlAt3vHTd44+xBujBMXhi3f0Y6TZRgnt7QWVvJdFmFnfy5
+         bCrtt2iYwipnpEgkuEyC2VMRYjBwb6SAZrPYHZCtgqXpZOTnm0otoU/ELR/sdsHX1z4d
+         HrXQ==
+X-Gm-Message-State: AOJu0YyDkJsGfi3KPseqvAXw49qEUh4p0bUOGcntW1h7ebb+mWzt67HQ
+	eQK8svU0h+RUb1ek1Aba0R6AxmZg7yP+yK6Up+FmgZJjVwOuNZtXkCnzQT1X+G8=
+X-Google-Smtp-Source: AGHT+IH5/JX9LSbW5wTrCYXWFxWn7qX6WUiumWLUKYHOjovq6UJrsGgv0XJWVjmB230rfB8b0b/pOw==
+X-Received: by 2002:a05:6808:1691:b0:3bd:a8a3:7237 with SMTP id bb17-20020a056808169100b003bda8a37237mr728996oib.10.1705714192322;
+        Fri, 19 Jan 2024 17:29:52 -0800 (PST)
 Received: from localhost ([136.62.192.75])
-        by smtp.gmail.com with ESMTPSA id n15-20020a0568301e8f00b006dc6fbde692sm763928otr.23.2024.01.19.17.29.53
+        by smtp.gmail.com with ESMTPSA id zd27-20020a056871279b00b00210b451fe96sm1088971oab.47.2024.01.19.17.29.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Jan 2024 17:29:53 -0800 (PST)
+        Fri, 19 Jan 2024 17:29:51 -0800 (PST)
 From: Sam Protsenko <semen.protsenko@linaro.org>
 To: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
 	Andi Shyti <andi.shyti@kernel.org>,
@@ -68,9 +67,9 @@ Cc: Alim Akhtar <alim.akhtar@samsung.com>,
 	linux-kernel@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-clk@vger.kernel.org
-Subject: [PATCH 6/7] arm64: dts: exynos: Add PDMA node for Exynos850
-Date: Fri, 19 Jan 2024 19:29:47 -0600
-Message-Id: <20240120012948.8836-7-semen.protsenko@linaro.org>
+Subject: [PATCH 4/7] clk: samsung: exynos850: Propagate SPI IPCLK rate change
+Date: Fri, 19 Jan 2024 19:29:45 -0600
+Message-Id: <20240120012948.8836-5-semen.protsenko@linaro.org>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240120012948.8836-1-semen.protsenko@linaro.org>
 References: <20240120012948.8836-1-semen.protsenko@linaro.org>
@@ -82,38 +81,162 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Enable PDMA node. It's needed for multiple peripheral modules, like SPI.
-Use "arm,pl330-broken-no-flushp" quirk, as otherwise SPI transfers in
-DMA mode often fail with error like this:
+When SPI transfer is being prepared, the spi-s3c64xx driver will call
+clk_set_rate() to change the rate of SPI source clock (IPCLK). But IPCLK
+is a gate (leaf) clock, so it must propagate the rate change up the
+clock tree, so that corresponding DIV clocks can actually change their
+divider values. Add CLK_SET_RATE_PARENT flag to corresponding clocks for
+all SPI instances in Exynos850 (spi_0, spi_1 and spi_2) to make it
+possible. This change involves next clocks:
 
-    I/O Error: rx-1 tx-1 rx-f tx-f len-786 dma-1 res-(-5)
+usi_spi_0:
 
+    Clock                  Block       Div range
+    --------------------------------------------
+    gout_spi0_ipclk        CMU_PERI    -
+    dout_peri_spi0         CMU_PERI    /1..32
+    mout_peri_spi_user     CMU_PERI    -
+    dout_peri_ip           CMU_TOP     /1..16
+
+usi_cmgp0:
+
+    Clock                  Block       Div range
+    --------------------------------------------
+    gout_cmgp_usi0_ipclk   CMU_CMGP    -
+    dout_cmgp_usi0         CMU_CMGP    /1..32
+    mout_cmgp_usi0         CMU_CMGP    -
+    gout_clkcmu_cmgp_bus   CMU_APM     -
+    dout_apm_bus           CMU_APM     /1..8
+
+usi_cmgp1:
+
+    Clock                  Block       Div range
+    --------------------------------------------
+    gout_cmgp_usi1_ipclk   CMU_CMGP    -
+    dout_cmgp_usi1         CMU_CMGP    /1..32
+    mout_cmgp_usi1         CMU_CMGP    -
+    gout_clkcmu_cmgp_bus   CMU_APM     -
+    dout_apm_bus           CMU_APM     /1..8
+
+With input clock of 400 MHz, this scheme provides next IPCLK rate range,
+for each SPI block:
+
+    SPI0:   781 kHz ... 400 MHz
+    SPI1/2: 1.6 MHz ... 400 MHz
+
+Accounting for internal /4 divider in SPI blocks, and because the max
+SPI frequency is limited at 50 MHz, it gives us next SPI SCK rates:
+
+    SPI0:   200 kHz ... 49.9 MHz
+    SPI1/2: 400 kHz ... 49.9 MHz
+
+Which should cover all possible applications of SPI bus. Of course,
+setting SPI frequency to values as low as 500 kHz will also affect the
+common bus dividers (dout_apm_bus or dout_peri_ip), which in turn
+effectively lowers the rates for all leaf bus clocks derived from those
+dividers, like HSI2C and I3C clocks. But at least it gives the board
+designer a choice, whether to keep all clocks (SPI/HSI2C/I3C) at high
+frequencies, or make all those clocks have lower frequencies. Not
+propagating the rate change to those common dividers would limit this
+choice to "only high frequencies are allowed for SPI/HSI2C/I3C" option,
+making the common dividers useless. This decision follows the "Worse is
+better" approach, relying on the users/engineers to know the system
+internals when working with such low-level features, instead of trying
+to account for all possible use-cases.
+
+Fixes: 7dd05578198b ("clk: samsung: Introduce Exynos850 clock driver")
 Signed-off-by: Sam Protsenko <semen.protsenko@linaro.org>
 ---
- arch/arm64/boot/dts/exynos/exynos850.dtsi | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/clk/samsung/clk-exynos850.c | 32 ++++++++++++++---------------
+ 1 file changed, 16 insertions(+), 16 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/exynos/exynos850.dtsi b/arch/arm64/boot/dts/exynos/exynos850.dtsi
-index da3f4a791e68..cd0a452cd6b4 100644
---- a/arch/arm64/boot/dts/exynos/exynos850.dtsi
-+++ b/arch/arm64/boot/dts/exynos/exynos850.dtsi
-@@ -197,6 +197,16 @@ gic: interrupt-controller@12a01000 {
- 						 IRQ_TYPE_LEVEL_HIGH)>;
- 		};
+diff --git a/drivers/clk/samsung/clk-exynos850.c b/drivers/clk/samsung/clk-exynos850.c
+index 01913dc4eb27..32a8cb861702 100644
+--- a/drivers/clk/samsung/clk-exynos850.c
++++ b/drivers/clk/samsung/clk-exynos850.c
+@@ -605,7 +605,7 @@ static const struct samsung_div_clock apm_div_clks[] __initconst = {
  
-+		pdma0: dma-controller@120c0000 {
-+			compatible = "arm,pl330", "arm,primecell";
-+			reg = <0x120c0000 0x1000>;
-+			interrupts = <GIC_SPI 479 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cmu_core CLK_GOUT_PDMA_CORE_ACLK>;
-+			clock-names = "apb_pclk";
-+			arm,pl330-broken-no-flushp;
-+			#dma-cells = <1>;
-+		};
-+
- 		pmu_system_controller: system-controller@11860000 {
- 			compatible = "samsung,exynos850-pmu", "syscon";
- 			reg = <0x11860000 0x10000>;
+ static const struct samsung_gate_clock apm_gate_clks[] __initconst = {
+ 	GATE(CLK_GOUT_CLKCMU_CMGP_BUS, "gout_clkcmu_cmgp_bus", "dout_apm_bus",
+-	     CLK_CON_GAT_CLKCMU_CMGP_BUS, 21, 0, 0),
++	     CLK_CON_GAT_CLKCMU_CMGP_BUS, 21, CLK_SET_RATE_PARENT, 0),
+ 	GATE(CLK_GOUT_CLKCMU_CHUB_BUS, "gout_clkcmu_chub_bus",
+ 	     "mout_clkcmu_chub_bus",
+ 	     CLK_CON_GAT_GATE_CLKCMU_CHUB_BUS, 21, 0, 0),
+@@ -974,19 +974,19 @@ static const struct samsung_fixed_rate_clock cmgp_fixed_clks[] __initconst = {
+ static const struct samsung_mux_clock cmgp_mux_clks[] __initconst = {
+ 	MUX(CLK_MOUT_CMGP_ADC, "mout_cmgp_adc", mout_cmgp_adc_p,
+ 	    CLK_CON_MUX_CLK_CMGP_ADC, 0, 1),
+-	MUX(CLK_MOUT_CMGP_USI0, "mout_cmgp_usi0", mout_cmgp_usi0_p,
+-	    CLK_CON_MUX_MUX_CLK_CMGP_USI_CMGP0, 0, 1),
+-	MUX(CLK_MOUT_CMGP_USI1, "mout_cmgp_usi1", mout_cmgp_usi1_p,
+-	    CLK_CON_MUX_MUX_CLK_CMGP_USI_CMGP1, 0, 1),
++	MUX_F(CLK_MOUT_CMGP_USI0, "mout_cmgp_usi0", mout_cmgp_usi0_p,
++	    CLK_CON_MUX_MUX_CLK_CMGP_USI_CMGP0, 0, 1, CLK_SET_RATE_PARENT, 0),
++	MUX_F(CLK_MOUT_CMGP_USI1, "mout_cmgp_usi1", mout_cmgp_usi1_p,
++	    CLK_CON_MUX_MUX_CLK_CMGP_USI_CMGP1, 0, 1, CLK_SET_RATE_PARENT, 0),
+ };
+ 
+ static const struct samsung_div_clock cmgp_div_clks[] __initconst = {
+ 	DIV(CLK_DOUT_CMGP_ADC, "dout_cmgp_adc", "gout_clkcmu_cmgp_bus",
+ 	    CLK_CON_DIV_DIV_CLK_CMGP_ADC, 0, 4),
+-	DIV(CLK_DOUT_CMGP_USI0, "dout_cmgp_usi0", "mout_cmgp_usi0",
+-	    CLK_CON_DIV_DIV_CLK_CMGP_USI_CMGP0, 0, 5),
+-	DIV(CLK_DOUT_CMGP_USI1, "dout_cmgp_usi1", "mout_cmgp_usi1",
+-	    CLK_CON_DIV_DIV_CLK_CMGP_USI_CMGP1, 0, 5),
++	DIV_F(CLK_DOUT_CMGP_USI0, "dout_cmgp_usi0", "mout_cmgp_usi0",
++	    CLK_CON_DIV_DIV_CLK_CMGP_USI_CMGP0, 0, 5, CLK_SET_RATE_PARENT, 0),
++	DIV_F(CLK_DOUT_CMGP_USI1, "dout_cmgp_usi1", "mout_cmgp_usi1",
++	    CLK_CON_DIV_DIV_CLK_CMGP_USI_CMGP1, 0, 5, CLK_SET_RATE_PARENT, 0),
+ };
+ 
+ static const struct samsung_gate_clock cmgp_gate_clks[] __initconst = {
+@@ -1001,12 +1001,12 @@ static const struct samsung_gate_clock cmgp_gate_clks[] __initconst = {
+ 	     "gout_clkcmu_cmgp_bus",
+ 	     CLK_CON_GAT_GOUT_CMGP_GPIO_PCLK, 21, CLK_IGNORE_UNUSED, 0),
+ 	GATE(CLK_GOUT_CMGP_USI0_IPCLK, "gout_cmgp_usi0_ipclk", "dout_cmgp_usi0",
+-	     CLK_CON_GAT_GOUT_CMGP_USI_CMGP0_IPCLK, 21, 0, 0),
++	     CLK_CON_GAT_GOUT_CMGP_USI_CMGP0_IPCLK, 21, CLK_SET_RATE_PARENT, 0),
+ 	GATE(CLK_GOUT_CMGP_USI0_PCLK, "gout_cmgp_usi0_pclk",
+ 	     "gout_clkcmu_cmgp_bus",
+ 	     CLK_CON_GAT_GOUT_CMGP_USI_CMGP0_PCLK, 21, 0, 0),
+ 	GATE(CLK_GOUT_CMGP_USI1_IPCLK, "gout_cmgp_usi1_ipclk", "dout_cmgp_usi1",
+-	     CLK_CON_GAT_GOUT_CMGP_USI_CMGP1_IPCLK, 21, 0, 0),
++	     CLK_CON_GAT_GOUT_CMGP_USI_CMGP1_IPCLK, 21, CLK_SET_RATE_PARENT, 0),
+ 	GATE(CLK_GOUT_CMGP_USI1_PCLK, "gout_cmgp_usi1_pclk",
+ 	     "gout_clkcmu_cmgp_bus",
+ 	     CLK_CON_GAT_GOUT_CMGP_USI_CMGP1_PCLK, 21, 0, 0),
+@@ -1557,8 +1557,8 @@ static const struct samsung_mux_clock peri_mux_clks[] __initconst = {
+ 	    mout_peri_uart_user_p, PLL_CON0_MUX_CLKCMU_PERI_UART_USER, 4, 1),
+ 	MUX(CLK_MOUT_PERI_HSI2C_USER, "mout_peri_hsi2c_user",
+ 	    mout_peri_hsi2c_user_p, PLL_CON0_MUX_CLKCMU_PERI_HSI2C_USER, 4, 1),
+-	MUX(CLK_MOUT_PERI_SPI_USER, "mout_peri_spi_user", mout_peri_spi_user_p,
+-	    PLL_CON0_MUX_CLKCMU_PERI_SPI_USER, 4, 1),
++	MUX_F(CLK_MOUT_PERI_SPI_USER, "mout_peri_spi_user", mout_peri_spi_user_p,
++	    PLL_CON0_MUX_CLKCMU_PERI_SPI_USER, 4, 1, CLK_SET_RATE_PARENT, 0),
+ };
+ 
+ static const struct samsung_div_clock peri_div_clks[] __initconst = {
+@@ -1568,8 +1568,8 @@ static const struct samsung_div_clock peri_div_clks[] __initconst = {
+ 	    CLK_CON_DIV_DIV_CLK_PERI_HSI2C_1, 0, 5),
+ 	DIV(CLK_DOUT_PERI_HSI2C2, "dout_peri_hsi2c2", "gout_peri_hsi2c2",
+ 	    CLK_CON_DIV_DIV_CLK_PERI_HSI2C_2, 0, 5),
+-	DIV(CLK_DOUT_PERI_SPI0, "dout_peri_spi0", "mout_peri_spi_user",
+-	    CLK_CON_DIV_DIV_CLK_PERI_SPI_0, 0, 5),
++	DIV_F(CLK_DOUT_PERI_SPI0, "dout_peri_spi0", "mout_peri_spi_user",
++	    CLK_CON_DIV_DIV_CLK_PERI_SPI_0, 0, 5, CLK_SET_RATE_PARENT, 0),
+ };
+ 
+ static const struct samsung_gate_clock peri_gate_clks[] __initconst = {
+@@ -1611,7 +1611,7 @@ static const struct samsung_gate_clock peri_gate_clks[] __initconst = {
+ 	     "mout_peri_bus_user",
+ 	     CLK_CON_GAT_GOUT_PERI_PWM_MOTOR_PCLK, 21, 0, 0),
+ 	GATE(CLK_GOUT_SPI0_IPCLK, "gout_spi0_ipclk", "dout_peri_spi0",
+-	     CLK_CON_GAT_GOUT_PERI_SPI_0_IPCLK, 21, 0, 0),
++	     CLK_CON_GAT_GOUT_PERI_SPI_0_IPCLK, 21, CLK_SET_RATE_PARENT, 0),
+ 	GATE(CLK_GOUT_SPI0_PCLK, "gout_spi0_pclk", "mout_peri_bus_user",
+ 	     CLK_CON_GAT_GOUT_PERI_SPI_0_PCLK, 21, 0, 0),
+ 	GATE(CLK_GOUT_SYSREG_PERI_PCLK, "gout_sysreg_peri_pclk",
 -- 
 2.39.2
 
