@@ -1,103 +1,123 @@
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F5E111718
-	for <linux-kernel@vger.kernel.org>; Sat, 20 Jan 2024 16:40:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F82F101D5
+	for <linux-kernel@vger.kernel.org>; Sat, 20 Jan 2024 16:57:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705768833; cv=none; b=HOQp0an+ng9g4JMQ335sr3CmCMJHrAXPAghHqS16lRTo7B5chlGZwURSdDLlDdlNwwVvs6LGACVeO2AYJasaHMYUmqpHNV0hRSVWJ4YrxwvEI+PqctPiBUvEzL7ftwg4H72P72fRLDEkPXwBpWZHWWS4IW48h+9QjVpITcXpS2A=
+	t=1705769836; cv=none; b=YEQauWN3JcDW0cySBtpDzfebiPzShTgwXq5XX5s+Vln91z6PHA0J3QYPdHtVPD2AZ/0RD8XhU69BKPgTFYwrnTfEyb/1REyksk0HC8dMfLf41qqGZjz3rbjQzEGeAl+ZcS+Q6f11gQvZrsU1oV0MqSdHcfqoBI70sU3vOZC1GS4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705768833; c=relaxed/simple;
-	bh=YB/JxYQ/pIR3ToqU03uuFdu3N6gqG3VeZ/Otmp/LweM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Mkcr0gik5EQWokPnHWM+GsuHOUg+FTEUsiMGw0de1RIvZINWNUutSlMGWh2zLX/TPJtOzmCa9xO3San1FJ+ihm3x30BZ+DTzQlMbfL9lIczopONwMW97xIJ/oscmgKtAkAOJCTIPI0ueVyJF1BayZ+Ra916ZBN7udxuza+/7xvI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=FN6ejpF+; arc=none smtp.client-ip=209.85.208.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1705769836; c=relaxed/simple;
+	bh=ZGsBpgEMRShqEVubsqrqPTpj9Jf2Gr5Vk4sDR+iN44w=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jfM3ucKZoz1xZEACvZvchPra3jmB0mx9jTs4tO4Yv/JZFFP82iNN9lh5gOhjqPn9HfbO0QUZaLx8SBYa2VF9HOSENimbZKJO/8rYWBNd67EJ4lfp5zLwvJ6klZ3Q04J7rh66l55NV4vg9LOKt40pBp3lhjCQio08Fpj2Qp+DlXI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=J6yMl61m; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="FN6ejpF+"
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2cd64022164so26218431fa.3
-        for <linux-kernel@vger.kernel.org>; Sat, 20 Jan 2024 08:40:30 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J6yMl61m"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-40e490c2115so17299855e9.0
+        for <linux-kernel@vger.kernel.org>; Sat, 20 Jan 2024 08:57:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1705768828; x=1706373628; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=lKz6ORL5rgrlrEyJEOMpjmvWzW5nRmmd6FHj6yauGbM=;
-        b=FN6ejpF+L9dgp8KND9TPj9npiH5QvdRHTOcEDMd34HWarnbpQz9xYHsVXnlDhFcx4v
-         iBDv8ajaxN3O5jk2TTpeeeEVN9REF4FjhfpHCaNo0nJkElHIwnH6/UEKJFfPH7mdZIwE
-         bgCZgnT+GENXeGZl3tlAIZa+ulnTJEYHUvIsk=
+        d=gmail.com; s=20230601; t=1705769833; x=1706374633; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:subject:cc:to:from:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Tac42I2B9h9I8FHC3cTVBJpUPC7zDS2iMWbRy2mBu7A=;
+        b=J6yMl61mZlKSXnPqLRdQ0ezD4QsN3D0SKg6bSHzYR4VhdidpV4PLFqV48parMzCbpT
+         78jz5R8yibv3p1n88aXWEgEXzhEsDpGSHl7EctkRwqbxAnq/EEvFa12lAEF+56/ca1lG
+         e7b4UGjBoMnt9BdVjpSPOG49mynSK2tH1xb2wRqh/u8Qi5zDHpYdlowiDNpEC2C87j1T
+         9egv25hgHncY9L9PY7Bi0Yuj1rkz1HdVPkOpQNaosKTF8Ikan6GShX/XRYFy4giFuEFK
+         uTUqPXeISHSxJJ73rfYBh15TWoCIvJ++xyGl9tyz1nApnlMu89Y6Zjmf+qTHsKS39SIQ
+         wZKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705768828; x=1706373628;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=lKz6ORL5rgrlrEyJEOMpjmvWzW5nRmmd6FHj6yauGbM=;
-        b=K/nvXSgdv7S3JmRLQJKgPlFdblbA5qJwcExBxlFIfrh+ErWbnJzeAQNDsnaGYL3oim
-         RFn2kfmDy+dUBWj+Ml5R+ZuZWdsWgGuoFSE/PQ3EMlw7U8GoapWsoZYmj2isKim87lbJ
-         Johq3es4CCRYIEIyWZzZde1lAVyY16gXQMl8TM9AX1JZVt+9M/WVskb9kLfxoIFhTfNU
-         aSTwu2dqiLFApXHE5QAXaLYd/NbrmhXu8cG+l+B91wYDeb9NsK+CKuf3HSJ9wtgdtOjF
-         Ob1jyQbr1qsFJpYEh2t3aFumKSD4hAtrZBj9ZhSDvPST5wzurW9b1o5aWjXvuvevpx96
-         Y7Cw==
-X-Gm-Message-State: AOJu0Yz5pWZ/wMLGWtLnaz41NHhT6NuHax8nWWQvnG5yCSydd6WN7uJ+
-	64V2kqkANpjaW/9fjjrziYdQgbN0a3lxyiHbi/97oRH/qEFEmxNNxMYtF6JiNR8e211Ns0Iuh3q
-	BNCa0Ow==
-X-Google-Smtp-Source: AGHT+IFBhiKHLfhqhAo+Ajpiyl3MvAUmzevsBWF2y8fQyaO8o7k6bzzHXUSHt+8QKbk1g1lwNXifsw==
-X-Received: by 2002:a05:6512:558:b0:50e:44a5:57b0 with SMTP id h24-20020a056512055800b0050e44a557b0mr605594lfl.121.1705768828378;
-        Sat, 20 Jan 2024 08:40:28 -0800 (PST)
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com. [209.85.208.48])
-        by smtp.gmail.com with ESMTPSA id wk18-20020a170907055200b00a2808ee8ab1sm11528280ejb.150.2024.01.20.08.40.27
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 20 Jan 2024 08:40:27 -0800 (PST)
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-55a6833c21eso1183729a12.2
-        for <linux-kernel@vger.kernel.org>; Sat, 20 Jan 2024 08:40:27 -0800 (PST)
-X-Received: by 2002:a50:8d56:0:b0:558:d206:3bba with SMTP id
- t22-20020a508d56000000b00558d2063bbamr704311edt.20.1705768827089; Sat, 20 Jan
- 2024 08:40:27 -0800 (PST)
+        d=1e100.net; s=20230601; t=1705769833; x=1706374633;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:subject:cc:to:from:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Tac42I2B9h9I8FHC3cTVBJpUPC7zDS2iMWbRy2mBu7A=;
+        b=ZLHnLvKZzxuaUMsUnx0gNeftu7PZh9D3sW6g7whbVPrJiyU9LHzk9H9ROpC3YoJ/CP
+         7NnSXSlrlUZzcslqkh1eM3Vawnqz4090FmPF34pAQro4QNles72wNXiBEy7Pse+psa77
+         AZLof1ck8xk8hlNR9+fA1y1cfN3wIDD/dK3g8+4rQfhJbqxNcmy1tYkCpDyW+FpI0qwH
+         oGRZy0VYVfSWM1G0u2en6tdLnb88Dq7k28ClR2jpMYCLMuaPw8//DBcvNlLt2Q6etc5u
+         V2Ye4BXMJAFfme/GD5n95i1A5n+5+w7f+iztY58BT6lCCg0aj4nbazMG73B36j7JWlAF
+         vvgA==
+X-Gm-Message-State: AOJu0YzuocQdTdj/ei0kiRtZAwtYtfhuRnVwqUZC+ipL0tk67lBhAfET
+	+14u58SU7m0zvbODUU+qGxUfJnLNBX9/yszTm2lwvL8+YtUKkDHk
+X-Google-Smtp-Source: AGHT+IHqXHtcBrFWeCCx7UaFE9PsTHEOMhuDr5Y3VTvmTkPtbgZ/30M3IdFT+AV+lGvLLfmudrk7jQ==
+X-Received: by 2002:a05:600c:1709:b0:40e:45ae:1a83 with SMTP id c9-20020a05600c170900b0040e45ae1a83mr813583wmn.153.1705769833078;
+        Sat, 20 Jan 2024 08:57:13 -0800 (PST)
+Received: from Ansuel-xps. (93-34-89-13.ip49.fastwebnet.it. [93.34.89.13])
+        by smtp.gmail.com with ESMTPSA id u21-20020a05600c139500b0040e4a7a7ca3sm33194086wmf.43.2024.01.20.08.57.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 20 Jan 2024 08:57:12 -0800 (PST)
+Message-ID: <65abfb68.050a0220.a9c65.ecbc@mx.google.com>
+X-Google-Original-Message-ID: <Zav7ZbiB2AV3uUq-@Ansuel-xps.>
+Date: Sat, 20 Jan 2024 17:57:09 +0100
+From: Christian Marangi <ansuelsmth@gmail.com>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Russell King <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	"Mike Rapoport (IBM)" <rppt@kernel.org>,
+	Eric DeVolder <eric.devolder@oracle.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
+	Kees Cook <keescook@chromium.org>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@somainline.org>,
+	John Crispin <john@phrozen.org>
+Subject: Re: [PATCH 2/2] ARM: decompressor: add option to ignore MEM ATAGs
+References: <20240119201356.7903-1-ansuelsmth@gmail.com>
+ <20240119201356.7903-3-ansuelsmth@gmail.com>
+ <CACRpkdavA+OL-ek0JGBRFX=n_H4=j8DbB+nCr7=8htscAzrzFg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231212231706.2680890-1-jeffxu@chromium.org> <20231212231706.2680890-12-jeffxu@chromium.org>
- <CAHk-=wgn02cpoFEDQGgS+5BUqA2z-=Ks9+PNd-pEJy8h+NOs5g@mail.gmail.com>
- <CALmYWFu39nzHvBmRsA326GcmV9u=eM-2aCGOvLK31rrb2R9NEw@mail.gmail.com>
- <CAHk-=wh_VViVZxjiQ5jtB0q=p=JtJMj2R24UAmj-fL-RNLWxNw@mail.gmail.com>
- <CAEAAPHZpYXHNPdca+xfj77bwYaL6PY-c_oQ54r+=wtJa6_hmCA@mail.gmail.com>
- <CAHk-=wiVhHmnXviy1xqStLRozC4ziSugTk=1JOc8ORWd2_0h7g@mail.gmail.com>
- <CABi2SkUTdF6PHrudHTZZ0oWK-oU+T-5+7Eqnei4yCj2fsW2jHg@mail.gmail.com> <78111.1705764224@cvs.openbsd.org>
-In-Reply-To: <78111.1705764224@cvs.openbsd.org>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Sat, 20 Jan 2024 08:40:09 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wgdhbLeY=pEY27m4OQuDAn9xkzSLHwE9D8m1Dw8a++n=Q@mail.gmail.com>
-Message-ID: <CAHk-=wgdhbLeY=pEY27m4OQuDAn9xkzSLHwE9D8m1Dw8a++n=Q@mail.gmail.com>
-Subject: Re: [RFC PATCH v3 11/11] mseal:add documentation
-To: Theo de Raadt <deraadt@openbsd.org>
-Cc: Jeff Xu <jeffxu@chromium.org>, =?UTF-8?Q?Stephen_R=C3=B6ttger?= <sroettger@google.com>, 
-	Jeff Xu <jeffxu@google.com>, akpm@linux-foundation.org, keescook@chromium.org, 
-	jannh@google.com, willy@infradead.org, gregkh@linuxfoundation.org, 
-	jorgelo@chromium.org, groeck@chromium.org, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, pedro.falcato@gmail.com, 
-	dave.hansen@intel.com, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CACRpkdavA+OL-ek0JGBRFX=n_H4=j8DbB+nCr7=8htscAzrzFg@mail.gmail.com>
 
-On Sat, 20 Jan 2024 at 07:23, Theo de Raadt <deraadt@openbsd.org> wrote:
->
-> There is an one large difference remainig between mimmutable() and mseal(),
-> which is how other system calls behave.
->
-> We return EPERM for failures in all the system calls that fail upon
-> immutable memory (since Oct 2022).
->
-> You are returning EACESS.
->
-> Before it is too late, do you want to reconsider that return value, or
-> do you have a justification for the choice?
+On Sat, Jan 20, 2024 at 12:51:06PM +0100, Linus Walleij wrote:
+> On Fri, Jan 19, 2024 at 9:14 PM Christian Marangi <ansuelsmth@gmail.com> wrote:
+> 
+> > Some bootloaders can pass broken MEM ATAGs that provide hardcoded
+> > information about mounted RAM size and physical location.
+> > Example booloader provide RAM of size 1.7Gb but actual mounted RAM
+> > size is 512Mb causing kernel panic.
+> >
+> > Add option CONFIG_ARM_ATAG_DTB_COMPAT_IGNORE_MEM to ignore these ATAG
+> > and not augument appended DTB memory node.
+> >
+> > Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
+> 
+> So you cannot just ignore all the ATAGs I guess?
+> If it's the command line you need, you can pass an identical one in
+> chosen.
 
-I don't think there's any real reason for the difference.
+Ehhh it's not that trivial... Downstream we have a patch that takes just
+the bootargs from ATAGs but reality is that only MEM is broken.
 
-Jeff - mind changing the EACESS to EPERM, and we'll have something
-that is more-or-less compatible between Linux and OpenBSD?
+Also duplicating the bootargs from bootloader in chosen is problematic
+as have tons of device that use cmdlinepart to declare partitions and we
+are not aware of the partitions of every device.
+And also there are some device that supports dual partition and the
+value is provided by the bootloader bootargs so duplicating it would
+result in not having a good way to support this.
 
-             Linus
+> 
+> But if you really need this, it should be there.
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+> 
+
+-- 
+	Ansuel
