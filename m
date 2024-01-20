@@ -1,215 +1,111 @@
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B867FBF3
-	for <linux-kernel@vger.kernel.org>; Sat, 20 Jan 2024 15:03:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4967EDF69;
+	Sat, 20 Jan 2024 15:10:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705762995; cv=none; b=D1tVwTShBodCQnh/kEFmwo+JW4i6QE+KbaFUlEdkqSvOF50kDerrEAfxXSUWlb3Idrwckoy+MbYBqiiqqywH9p4z06tOrQ1Px4COhPid7069juwLTbf3vRpyn66pG9gicJTi9eTJTNyqNyOJvrGXMJYXgp9SKH1BER3qeMWkDUE=
+	t=1705763459; cv=none; b=r6e1Rv6Ocj7by8dZPxy5kx/JDmsjfcisJQC3VDDbmdft7EMICxoKSDYuGSkoMzQK6sJ4wKbw86X1rUFzRpJTL1gYT0wa4uUfbXBkD1+9Li7xi0Es3qI6YrQg3xE/I9/ygRi3ozs+63LTD/RXMR6NugkC1+157aCAThpV/tssGY8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705762995; c=relaxed/simple;
-	bh=9Nc4TyqG+r5zlvwlDzv/990T6nw9lYMWHgz1H2lzc8g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AzptGkg/7xkdabaF4KBGxqiDrSANMt4m2+pymVr6souGWpDBL44IIrwIlgAWvmWPGpslCPd7glCprak9RJTf+ZSxpyuH8qMfb3MgjrZOIRxQR9CAtHWNZKK2TAZ1UCSwuZFdgYhk5FXj4mXVh8Y3NrDTj9+CUGksu4V8V9Djgeo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=k1oQCuF7; arc=none smtp.client-ip=209.85.216.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1705763459; c=relaxed/simple;
+	bh=+uHVK/g0PLW+WPegroJn+bUpobfrkjR1dw/0UibCi00=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=i/mA4Fa7LCv1NCdzS0ejqISvNP/pr4oapYiJ2NZB9ydI6LYP6iyDG2FVhaJJNu02VEGNH27C68E5FyHjfNOVrnzW1sYb17zwYuJLs91eLMYCd0vILCbOdBxiNRiXRC8nIKc2+iq36Zcskd6MCkqqnJNKqBKPYfSnsqinPgnty6U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com; spf=pass smtp.mailfrom=gmx.com; dkim=pass (2048-bit key) header.d=gmx.com header.i=erick.archer@gmx.com header.b=eOC1AoXn; arc=none smtp.client-ip=212.227.17.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="k1oQCuF7"
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-28ffc37b63cso1243897a91.1
-        for <linux-kernel@vger.kernel.org>; Sat, 20 Jan 2024 07:03:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1705762993; x=1706367793; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=aqeZN7shB1TWVe9IvpTxqZEMMVop3gcQDbpsLD1ei1I=;
-        b=k1oQCuF7VUbfuyx/cjq3lXh/rPXIKV2bYbv8s004C/K5uVQeIK5hnOSpNqq3MBjzyz
-         L/ort3QKMBKNVZzmCJctqOyqwJuP5j0tGJvJaVi5l7IPrS/gDYc5o5/4ETSQbuwwKN/x
-         a99rcM02DhOYX/Cf0tJ845v8j1nxMyUlJmhn008oMJVvlRbcEhrHiDeq8afn54PjfLfk
-         MSOt+J4yakeBavo9yUPGIeGU+TxjsOJKUVdA7dAb+0rw1oyUp3R05jZBmNtvznnJpjpU
-         q/LMhF7eNqaPJASUVRUFT16BYxPz+F7JzE6WV1OWnV20vQcNgdnljDiIfzonK21W2YuS
-         waXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705762993; x=1706367793;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=aqeZN7shB1TWVe9IvpTxqZEMMVop3gcQDbpsLD1ei1I=;
-        b=uTFWVsEoBiD2FUo8WhaVSP0XctqekVNWUC0L+h8fFoP3nJ73Nb0rO6Z7nqzz40r3UL
-         lQFmhsDM2BheoeR+WehMlkB84hCHhgFTW5BoRSe3VzW9+bwBBBkXTpvzrUxGbTw4r38P
-         +tuMddQCwcfBrrZgn3K85UIBgfCUZ13pWSwlhG4ArdHOJ3nOVQYj/e18cT+wQqds4alF
-         d9V/tIkhr7iXVa5G7AqASHAAdf/zDhRHRPxElnWAOWNUlB2eky8Q1vfqaCmhU17TGm1j
-         WiwNWTvwG5Jir1GPa97ZqTexhbZeZ1fYwPCkpM/MPGdRVE1c0Kmu50PbWchfKathdlX4
-         IqDQ==
-X-Gm-Message-State: AOJu0YyV/SeSr8g9EseaEhiRisTJR716meZN/kRDKySeKTfqA21RKZ6I
-	Y/ZwGhpt9VbGFmVJKhE8Wsv5AsFw5g6+h6mUwvDH0nxc4C5NMLPDQ3dkMDk0YQ==
-X-Google-Smtp-Source: AGHT+IF9elycQzObJiXmLQq+7kgsfP/837fqR12nEVd9AChjMfbf9gdfFJ76v0f/vydjEopzP9fHtQ==
-X-Received: by 2002:a17:90a:c001:b0:28e:8e78:8ba6 with SMTP id p1-20020a17090ac00100b0028e8e788ba6mr1979052pjt.43.1705762992906;
-        Sat, 20 Jan 2024 07:03:12 -0800 (PST)
-Received: from thinkpad ([117.202.189.10])
-        by smtp.gmail.com with ESMTPSA id sl7-20020a17090b2e0700b0028b6759d8c1sm6219778pjb.29.2024.01.20.07.03.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 20 Jan 2024 07:03:12 -0800 (PST)
-Date: Sat, 20 Jan 2024 20:33:03 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Shradha Todi <shradha.t@samsung.com>
-Cc: linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-samsung-soc@vger.kernel.org, mturquette@baylibre.com,
-	sboyd@kernel.org, jingoohan1@gmail.com, lpieralisi@kernel.org,
-	kw@linux.com, robh@kernel.org, bhelgaas@google.com,
-	krzysztof.kozlowski@linaro.org, alim.akhtar@samsung.com,
-	linux@armlinux.org.uk, m.szyprowski@samsung.com
-Subject: Re: [PATCH v3 1/2] clk: Provide managed helper to get and enable
- bulk clocks
-Message-ID: <20240120150303.GB5405@thinkpad>
-References: <20240110110115.56270-1-shradha.t@samsung.com>
- <CGME20240110110156epcas5p36bac4093be0fa6eaa501d7eaed4d43d3@epcas5p3.samsung.com>
- <20240110110115.56270-2-shradha.t@samsung.com>
+	dkim=pass (2048-bit key) header.d=gmx.com header.i=erick.archer@gmx.com header.b="eOC1AoXn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.com;
+	s=s31663417; t=1705763439; x=1706368239; i=erick.archer@gmx.com;
+	bh=+uHVK/g0PLW+WPegroJn+bUpobfrkjR1dw/0UibCi00=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+	b=eOC1AoXndex6m0cp89Vg1Nqsnd3hOIYkqwOZw6RuzS49UVQ7Ej+6r/tn86FQgspI
+	 wnf+XiZXdniwtC4WO8rBIM1orvKCOOVT2O/Yb7AgU3jA3stQmqiR6YagL2iZ6Y5zW
+	 wm8+0FOXFWARezAcvH81VapSHvuqU4NuxazyIA036NY7+3vPc7j/ZmkcjFQDu750/
+	 o313gI8UR22E8iqDIxWAMPQiAYFcbHKu64Tg7pfvNzGQ6UgRpvWaNliDsyoY09OFM
+	 crOJrd/myZcfpy8fm4R53oV4xDfJvNArRoCUwheRcr2dF+TgrCTvU2UYXSEy4ng+U
+	 CiNLfxsY0Hg3qXu0Dw==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from localhost.localdomain ([79.157.194.183]) by mail.gmx.net
+ (mrgmx105 [212.227.17.174]) with ESMTPSA (Nemesis) id
+ 1MbRfl-1qpPOg202T-00bqSF; Sat, 20 Jan 2024 16:10:39 +0100
+From: Erick Archer <erick.archer@gmx.com>
+To: Oded Gabbay <ogabbay@kernel.org>,
+	Marco Pagani <marpagan@redhat.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Erick Archer <erick.archer@gmx.com>,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] accel/habanalabs: use kcalloc() instead of kzalloc()
+Date: Sat, 20 Jan 2024 16:10:28 +0100
+Message-Id: <20240120151028.11092-1-erick.archer@gmx.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240110110115.56270-2-shradha.t@samsung.com>
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:LTMJoGso7WL0bY6lGh/U0pZex8Eyp3xSFlhDAImF5EnyynE3/Sf
+ YoELrMft1Tj+WIC7i+n1sKFFACYDWfx4jxqdYkxKAprcoJsmJut0q6vKhYtefzcHURAS1/I
+ d1K9Z7bqkmVG0IEWI9hD5YhSgqXQgS+vPJ/FiVudDj6+TDfazkBUOwOf5pYjz5487TX5aei
+ uFD87FttWgS1Uj0LcAxUg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:5162j+Gh7BE=;7MwV3GYQV4AF6w3g4fXl1qNIOgg
+ klgJqKVusUiEanMLlbfQQShbn+gCqtIMdoGadz9LUHz//eQ01P4ou0oyfmWm2RIZx9xo+qdf6
+ iFk/BhVZeQT9zKKd8ZAZT3KGWMfzjKILLLHKgdkzAQ8oPBiyrcJDTDpsnDB1NUkdbdSYRdX9S
+ 3q/8h1bjjXJAV4lql9Jl6Jk1zN93f3htBaRN6g4c5oe+7yJItNwvBVH9esgsjBA0xiYRfJWm+
+ Okpb7vOSMl45/y+aMUc2kwr4S6dzX/a9H32AOU9oCnTtQI7WGHD6Av5wblmbF2VbxP4oRp/S8
+ ZBS4T+zjks4InudF+AYjNE9Wt9O/Clxx4Hrd8cRLD+kQUCFq9w/pdI96RXRXZQByXliTNMs3I
+ F2W4S8U2XDHn1od38zaVukTNjQ6G4QCgblXwi8P3311yK2YpYGXSRmF9TLz9bZDJ8hA92g/ZP
+ RNNqDrTUUskXd9BE7m2Hx30l5ums7U4KjdEdx/VRnOQIHbQQFwYOC38qkZDAf/r7KE6QnfTJu
+ jjTu0McZpz/za1RZdft/RamG7bU19QbEPIrJ1G4dMTxKyKf99UkpTF/THgv3gEtAv4H9O7snD
+ SMiWLFik9l+ZLKDaWX0+eETjdtQvw7ILPcdk2pX9tjSYjPNBkj1KA3a/lN6nZmv+ctYSs8twR
+ Fcl81hnurU4HFXsn/XWOve8qDyP2EvKmPBtzc6q/U/Q0XVg2xTHcYOe+3QQIXlyI3JTQ9xNUd
+ n8NXfk7PiDP/GD82ZRhKwbgNdMOS6c5iQxYRWG+gMMBgEfQ41MId8RSnuE/6CxknDie41iRFj
+ /WAPhit2ZwOLneFP1+nQOsKY/WbgYIsza1pAshlDCSlqvZ2GDDO7o7CQhT75dmd+k1mNm0FY2
+ eaPTOaRN9VMJgUey/xfRaG7YvWYCsXDBA9UKgaQWy3AqHSk2Z9S2Yet4D4ZeKk0mvbytJnXNj
+ GE/K9IaYaFIXj1mhDc+GCMeLzHE=
 
-On Wed, Jan 10, 2024 at 04:31:14PM +0530, Shradha Todi wrote:
-> Provide a managed devm_clk_bulk* wrapper to get and enable all
-> bulk clocks in order to simplify drivers that keeps all clocks
-> enabled for the time of driver operation.
-> 
-> Suggested-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> Signed-off-by: Shradha Todi <shradha.t@samsung.com>
-> ---
->  drivers/clk/clk-devres.c | 41 ++++++++++++++++++++++++++++++++++++++++
->  include/linux/clk.h      | 25 ++++++++++++++++++++++++
->  2 files changed, 66 insertions(+)
-> 
-> diff --git a/drivers/clk/clk-devres.c b/drivers/clk/clk-devres.c
-> index 4fb4fd4b06bd..05b0ff4bc1d4 100644
-> --- a/drivers/clk/clk-devres.c
-> +++ b/drivers/clk/clk-devres.c
-> @@ -102,6 +102,7 @@ EXPORT_SYMBOL_GPL(devm_clk_get_optional_enabled);
->  struct clk_bulk_devres {
->  	struct clk_bulk_data *clks;
->  	int num_clks;
-> +	void (*exit)(int num_clks, const struct clk_bulk_data *clks);
->  };
->  
->  static void devm_clk_bulk_release(struct device *dev, void *res)
-> @@ -182,6 +183,46 @@ int __must_check devm_clk_bulk_get_all(struct device *dev,
->  }
->  EXPORT_SYMBOL_GPL(devm_clk_bulk_get_all);
->  
-> +static void devm_clk_bulk_release_all_enabled(struct device *dev, void *res)
-> +{
-> +	struct clk_bulk_devres *devres = res;
-> +
-> +	if (devres->exit)
-> +		devres->exit(devres->num_clks, devres->clks);
-> +
-> +	clk_bulk_put_all(devres->num_clks, devres->clks);
-> +}
-> +
-> +int __must_check devm_clk_bulk_get_all_enabled(struct device *dev,
-> +				  struct clk_bulk_data **clks, int *num_clks)
+As noted in the "Deprecated Interfaces, Language Features, Attributes,
+and Conventions" documentation [1], size calculations (especially
+multiplication) should not be performed in memory allocator (or similar)
+function arguments due to the risk of them overflowing. This could lead
+to values wrapping around and a smaller allocation being made than the
+caller was expecting. Using those allocations could lead to linear
+overflows of heap memory and other misbehaviors.
 
-What is the user supposed to do with "num_clks" when you are already handling
-the enable part?
+So, use the purpose specific kcalloc() function instead of the argument
+size * count in the kzalloc() function.
 
-> +{
-> +	struct clk_bulk_devres *devres;
-> +	int ret;
-> +
-> +	devres = devres_alloc(devm_clk_bulk_release_all_enabled,
-> +			      sizeof(*devres), GFP_KERNEL);
-> +	if (!devres)
-> +		return -ENOMEM;
-> +
-> +	ret = clk_bulk_get_all(dev, &devres->clks);
-> +	if (ret > 0) {
-> +		*clks = devres->clks;
-> +		devres->num_clks = ret;
-> +		*num_clks = ret;
-> +		devres_add(dev, devres);
+Link: https://www.kernel.org/doc/html/next/process/deprecated.html#open-co=
+ded-arithmetic-in-allocator-arguments [1]
+Link: https://github.com/KSPP/linux/issues/162
 
-If you move the statements inside this condition to the end of this function,
-you could get rid of the exit() callback and directly use
-clk_bulk_disable_unprepare() in devm_clk_bulk_release_all_enabled().
+Signed-off-by: Erick Archer <erick.archer@gmx.com>
+=2D--
+ drivers/accel/habanalabs/common/mmu/mmu_v1.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> +	} else {
-> +		devres_free(devres);
-> +		return ret;
-> +	}
-> +
-> +	ret = clk_bulk_prepare_enable(devres->num_clks, *clks);
-> +	if (!ret)
-> +		devres->exit = clk_bulk_disable_unprepare;
+diff --git a/drivers/accel/habanalabs/common/mmu/mmu_v1.c b/drivers/accel/=
+habanalabs/common/mmu/mmu_v1.c
+index d925dc4dd097..e3d42cfead27 100644
+=2D-- a/drivers/accel/habanalabs/common/mmu/mmu_v1.c
++++ b/drivers/accel/habanalabs/common/mmu/mmu_v1.c
+@@ -232,7 +232,7 @@ static int dram_default_mapping_init(struct hl_ctx *ct=
+x)
+ 	/* add hop1 and hop2 */
+ 	total_hops =3D num_of_hop3 + 2;
 
-Here you can just do clk_bulk_put_all() and devres_free() directly because you
-know that the driver won't proceed after this error.
+-	ctx->dram_default_hops =3D kzalloc(HL_PTE_SIZE * total_hops,  GFP_KERNEL=
+);
++	ctx->dram_default_hops =3D kcalloc(total_hops, HL_PTE_SIZE,  GFP_KERNEL)=
+;
+ 	if (!ctx->dram_default_hops)
+ 		return -ENOMEM;
 
-- Mani
+=2D-
+2.25.1
 
-> +
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(devm_clk_bulk_get_all_enabled);
-> +
->  static int devm_clk_match(struct device *dev, void *res, void *data)
->  {
->  	struct clk **c = res;
-> diff --git a/include/linux/clk.h b/include/linux/clk.h
-> index 1ef013324237..bf3e9bee5754 100644
-> --- a/include/linux/clk.h
-> +++ b/include/linux/clk.h
-> @@ -438,6 +438,24 @@ int __must_check devm_clk_bulk_get_optional(struct device *dev, int num_clks,
->  int __must_check devm_clk_bulk_get_all(struct device *dev,
->  				       struct clk_bulk_data **clks);
->  
-> +/**
-> + * devm_clk_bulk_get_all_enabled - managed get multiple clk consumers and
-> + *					enable all clk
-> + * @dev: device for clock "consumer"
-> + * @clks: pointer to the clk_bulk_data table of consumer
-> + * @num_clks: out parameter to store the number of clk_bulk_data
-> + *
-> + * Returns success (0) or negative errno.
-> + *
-> + * This helper function allows drivers to get several clk
-> + * consumers and enable all of them in one operation with management.
-> + * The clks will automatically be disabled and freed when the device
-> + * is unbound.
-> + */
-> +
-> +int __must_check devm_clk_bulk_get_all_enabled(struct device *dev,
-> +				struct clk_bulk_data **clks, int *num_clks);
-> +
->  /**
->   * devm_clk_get - lookup and obtain a managed reference to a clock producer.
->   * @dev: device for clock "consumer"
-> @@ -960,6 +978,13 @@ static inline int __must_check devm_clk_bulk_get_all(struct device *dev,
->  	return 0;
->  }
->  
-> +static inline int __must_check devm_clk_bulk_get_all_enabled(struct device *dev,
-> +				struct clk_bulk_data **clks, int *num_clks)
-> +{
-> +
-> +	return 0;
-> +}
-> +
->  static inline struct clk *devm_get_clk_from_child(struct device *dev,
->  				struct device_node *np, const char *con_id)
->  {
-> -- 
-> 2.17.1
-> 
-
--- 
-மணிவண்ணன் சதாசிவம்
