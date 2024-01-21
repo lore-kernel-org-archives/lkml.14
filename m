@@ -1,91 +1,176 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF037273FB;
-	Sun, 21 Jan 2024 13:29:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01A1F36AFA;
+	Sun, 21 Jan 2024 13:33:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705843793; cv=none; b=s/onxu/J+eo2QAHXCcLy0InD41Eq7LD+EatSza69q9Fp/xEicErTsXdIe9wcdEcjPWAqlwCy8ncQ0Tfq2dTOPZNGs/spfjZaKigwzNGW/BHHG3dQaPCPkRT1+Qf0MvC1+R5VcocKFnjrE4or8Jk5MQ2QH487pqQ07svFHZg36yc=
+	t=1705843983; cv=none; b=bBV1S1NIAyq7MCWSD66n7V1+ZDdmzIYOQ5SoSHE5w7U5NpztrVlskFEVeDfPensv9EO3aXWDxriAFWfgHo/N0PX5vjSU8Ghv0a63qAO10JrdBAt7wUAhwzIDGEdKrYYrL/EAfe3QnV6MDivE/4sg1MtGwmkl8sm+Q8mY6bJ+O7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705843793; c=relaxed/simple;
-	bh=sxYYYs4lyOVZUnzoUjZf9ycyeZ4JTQhXdYqfoan8CJo=;
+	s=arc-20240116; t=1705843983; c=relaxed/simple;
+	bh=WO1X2k3Tcsgw0LmomtyLLfnR3lITak/6PftppiXMzfE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ooqBz76x4AYrr63/IZ7OvugdeYR8M37aw4Ik2NwHnxXnWKIksMQqVbbVzRsqnRvDoXWUDkyPLraS9p+wawGxUdQT1/eSvukM3XrXU2i029h9gUqiMrS/ok7lRH2C7GGgDAMjHWz8982UwHOwrDmf8mAoXte4Z1dXlcRSSKf5n+0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bFtsE/kJ; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=BL7arqdsKN4ltM4ddA0WHYFi7WqV6rmvVPWc1xb9IcI0FgGchxoHn8KmvD7gVZ7csa4QrmuySQ3V9nTukwsdX63WGuc/itjqfU4ek73z7TE7Nm8zfaAqIBfYVPo1LibDRF+GffM8gwRWbLnzMgcwQceGGSAtgb4q4CgIeGgSrLo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lEiJlW4C; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bFtsE/kJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1705843792; x=1737379792;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=sxYYYs4lyOVZUnzoUjZf9ycyeZ4JTQhXdYqfoan8CJo=;
-  b=bFtsE/kJktGMiznAsMkHlfWxgQv8JAaq+gncI+SwuIbHgZvO3iRYvvJt
-   g+E2GcpGGyE2gpX7kPqXnbDVPFM6AcQIRd6TlTZ2HsbcezA5qqTViQPdw
-   AcKqzvKgyvuErgoQCt0uPK44en0OnRgTjZlTsuVmdnyh5e9sj7o/YZKhr
-   EYFfSYNT4jXHrepaxZ4blyjcnjilu3FQsJUQuUFSLg48K3i8zWqF2DTbO
-   E60/vc/0szzt7zHITxvzfA+a+Bd47nm0vU55216bqu4c8AoykExRMG7sv
-   CoayK1BkuQAE/MhIygZBOfvx7BCgNPAriqSNU7lJu8DW2ap+cW17AezwB
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10959"; a="14541413"
-X-IronPort-AV: E=Sophos;i="6.05,209,1701158400"; 
-   d="scan'208";a="14541413"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jan 2024 05:29:51 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10960"; a="1116630109"
-X-IronPort-AV: E=Sophos;i="6.05,209,1701158400"; 
-   d="scan'208";a="1116630109"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jan 2024 05:29:49 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rRXoA-0000000FdSz-2EDX;
-	Sun, 21 Jan 2024 15:24:18 +0200
-Date: Sun, 21 Jan 2024 15:24:18 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Richard Acayan <mailingradian@gmail.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Hardik Gajjar <hgajjar@de.adit-jv.com>, linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] usb: gadget: u_ether: Re-attach netif device to mirror
- detachment
-Message-ID: <Za0bAlnCHXTX7Ih9@smile.fi.intel.com>
-References: <20231218164532.411125-2-mailingradian@gmail.com>
- <Za0a3tVpml9c0VFv@smile.fi.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lEiJlW4C"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5A2CC433F1;
+	Sun, 21 Jan 2024 13:32:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705843982;
+	bh=WO1X2k3Tcsgw0LmomtyLLfnR3lITak/6PftppiXMzfE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lEiJlW4Ca6fCl+Hnb5vYRfKXJdy+BoFzAQG23LXdeWDtfxunfmF0DEIjpCgGOrZ71
+	 VyhUcjAcrnGmrZQj6KoEf2Tc4hrhna0AB2n8+nwqmRJRb85CNOzuOuGGp+X5F9O6Z7
+	 7LtMmjELbNZcLMK06mu3+Z3mTXa9+H6fpBm7q/BPfVl47C1M65D+qirtmyAW3XiYn4
+	 qjHaCGf+VcYGpKz2+eEPCKfTNOIPQrGiMC2t1N/seOgzfViYZfFOzeC5MOYAkqGE8I
+	 KVIRMgHsny5TGcndhvECpwmAWQwwUs937cmzJEiI9emplhCXwmiOaev85HLgk2/SAP
+	 80fltvf5UuLUQ==
+Date: Sun, 21 Jan 2024 13:32:56 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Ghennadi Procopciuc <ghennadi.procopciuc@oss.nxp.com>
+Cc: Chester Lin <chester62515@gmail.com>, Andreas Farber <afaerber@suse.de>,
+	Matthias Brugger <mbrugger@suse.com>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, NXP S32 Linux Team <s32@nxp.com>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	NXP Linux Team <linux-imx@nxp.com>,
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+	Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>,
+	Ciprian Costea <ciprianmarian.costea@nxp.com>
+Subject: Re: [PATCH 1/3] dt-bindings: clock: s32g: add uSDHC clock IDs
+Message-ID: <20240121-statutory-endurance-6d03d7e734c9@spud>
+References: <20240119130231.2854146-1-ghennadi.procopciuc@oss.nxp.com>
+ <20240119130231.2854146-2-ghennadi.procopciuc@oss.nxp.com>
+ <20240119-magnetic-racing-0adf8e5fbd4a@spud>
+ <20240119-cattle-antarctic-432fa8e1c0ef@spud>
+ <75a16ac3-39eb-4874-9100-d605b2cfadfc@oss.nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="j8ddR5K2BQkdwnI0"
+Content-Disposition: inline
+In-Reply-To: <75a16ac3-39eb-4874-9100-d605b2cfadfc@oss.nxp.com>
+
+
+--j8ddR5K2BQkdwnI0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Za0a3tVpml9c0VFv@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, Jan 21, 2024 at 03:23:42PM +0200, Andy Shevchenko wrote:
-> On Mon, Dec 18, 2023 at 11:45:33AM -0500, Richard Acayan wrote:
-> > In 6.7-rc1, there was a netif_device_detach call added to the
-> > gether_disconnect function. This clears the __LINK_STATE_PRESENT bit of
-> > the netif device and suppresses pings (ICMP messages) and TCP connection
-> > requests from the connected host. If userspace temporarily disconnects
-> > the gadget, such as by temporarily removing configuration in the gadget
-> > configfs interface, network activity should continue to be processed
-> > when the gadget is re-connected. Mirror the netif_device_detach call
-> > with a netif_device_attach call in gether_connect to fix re-connecting
-> > gadgets.
-> 
-> Tested-by: From: Andy Shevchenko <andriy.shevchenko@linux.intel.com> # Intel Merrifield
+On Fri, Jan 19, 2024 at 11:25:57PM +0200, Ghennadi Procopciuc wrote:
+> On 1/19/24 18:14, Conor Dooley wrote:
+> > On Fri, Jan 19, 2024 at 04:11:37PM +0000, Conor Dooley wrote:
+> >> On Fri, Jan 19, 2024 at 03:02:28PM +0200, Ghennadi Procopciuc (OSS) wr=
+ote:
+> >>> From: Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>
+> >>>
+> >>> Add the SCMI clock IDs for the uSDHC controller present on
+> >>> S32G SoCs.
+> >>>
+> >>> Signed-off-by: Ciprian Costea <ciprianmarian.costea@nxp.com>
+> >>> Signed-off-by: Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>
+> >>> ---
+> >>>  include/dt-bindings/clock/s32g-scmi-clock.h | 14 ++++++++++++++
+> >>>  1 file changed, 14 insertions(+)
+> >>>  create mode 100644 include/dt-bindings/clock/s32g-scmi-clock.h
+> >>>
+> >>> diff --git a/include/dt-bindings/clock/s32g-scmi-clock.h b/include/dt=
+-bindings/clock/s32g-scmi-clock.h
+> >>> new file mode 100644
+> >>> index 000000000000..739f98a924c3
+> >>> --- /dev/null
+> >>> +++ b/include/dt-bindings/clock/s32g-scmi-clock.h
+> >>> @@ -0,0 +1,14 @@
+> >>> +/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause) */
+> >>> +/*
+> >>> + * Copyright 2020-2024 NXP
+> >>> + */
+> >>> +#ifndef _DT_BINDINGS_SCMI_CLK_S32G_H
+> >>> +#define _DT_BINDINGS_SCMI_CLK_S32G_H
+> >>> +
+> >>> +/* uSDHC */
+> >>> +#define S32G_SCMI_CLK_USDHC_AHB		31
+> >>> +#define S32G_SCMI_CLK_USDHC_MODULE	32
+> >>> +#define S32G_SCMI_CLK_USDHC_CORE	33
+> >>> +#define S32G_SCMI_CLK_USDHC_MOD32K	34
+> >>
+> >> Why do these numbers not start at 0?
+> >=20
+> > Ah, because these are the SCMI IDs directly. If these are numbers that
+> > are in the TRM, just use the numbers directly - there's no need to
+> > create bindings for that.
+> >=20
+>=20
+> Hi Conor,
+>=20
+> I appreciate you taking the time to review the proposed changes. I
+> wanted to clarify that the IDs mentioned in the header are SCMI IDs
+> exported by the TF-A and are utilized by the second patch of this
+> series. These IDs are for the uSDHC controller to control its clocks. As
+> other SoCs use this model, I have included all the necessary IDs in a
+> dedicated header file:
+> - rk3588s     (arch/arm64/boot/dts/rockchip/rk3588s.dtsi:97 [0])
+> - stm32mp157c (arch/arm/boot/dts/st/stm32mp157c-ed1-scmi.dts:73 [1])
+> - stm32mp131  (arch/arm/boot/dts/st/stm32mp131.dtsi:1372 [2])
+>=20
+> Should I remove the header and use raw numbers in the uSDHC node?
 
-Sorry, now correct tag.
+IMO, yes. There's no abstraction/binding being created here if they're
+the SCMI IDs.
 
-Tested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com> # Intel Merrifield
+Thanks,
+conor.
 
--- 
-With Best Regards,
-Andy Shevchenko
+> For
+> example:
+> > +		usdhc0: mmc@402f0000 {
+> > +			compatible =3D "nxp,s32g2-usdhc";
+> > +			reg =3D <0x402f0000 0x1000>;
+> > +			interrupts =3D <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
+> > +			clocks =3D <&clks 32>,
+> > +				 <&clks 31>,
+> > +				 <&clks 33>;
+> > +			clock-names =3D "ipg", "ahb", "per";
+> > +			bus-width =3D <8>;
+> > +			status =3D "disabled";
+> > +		};
+>=20
+> [0]
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/a=
+rch/arm64/boot/dts/rockchip/rk3588s.dtsi#n97
+> [1]
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/a=
+rch/arm/boot/dts/st/stm32mp157c-ed1-scmi.dts#n73
+> [2]
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/a=
+rch/arm/boot/dts/st/stm32mp131.dtsi#n1372
+>=20
+> --=20
+> Regards,
+> Ghennadi
+>=20
 
+--j8ddR5K2BQkdwnI0
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZa0dCAAKCRB4tDGHoIJi
+0tbDAP9C3Ddt9YZ9DP7wBYaBEycx/ESvtGWww99gkrH/japApgD+JACED+ImvaAK
+GI58nfW2LBnYdiQEN0HZ6OvxWPwZtw0=
+=dtqZ
+-----END PGP SIGNATURE-----
+
+--j8ddR5K2BQkdwnI0--
