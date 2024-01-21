@@ -1,178 +1,149 @@
-Received: from ahti.lucaweiss.eu (ahti.lucaweiss.eu [128.199.32.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7374512E61;
-	Sun, 21 Jan 2024 10:40:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=128.199.32.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6965364AD;
+	Sun, 21 Jan 2024 10:44:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705833650; cv=none; b=j0Bljdp66ecAfpx/G4bDeDjOuJ5OnzK6SStoa+eawaN3NL76Z/HbDzxRplUIyNbzfg+1KblwMK2t/RDwZQpq5HfCTc+d6bVFSETqvHJiWtALRoLlKg37YOXXQG52h6wbBEoqIuZ/V2xVRH9yinI58jXWoRXwWfhErKFfx/ULexU=
+	t=1705833879; cv=none; b=geE8JBOz328jzwBk/pURVX552sPCJJ1lBFZrlm2FQrIT1MT+HR25lWh8Ckd5AgajOJyB/UysYfRIGNOhE0oZuP8KrVPZ7DUYDh6dAxtefFLZpE+mdvU853m72wWjn7C9cc7uA1aDc5cIReG7s7PhPWYM3olqbaOcDiI5jKN4uvA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705833650; c=relaxed/simple;
-	bh=nBjQLwAVrLOtDklPZXhl6mSYmrwebasaPOxc4Nq5ooI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=kZrWej7gvRUJFX0PTH2fwqR+x08axqY9R5kwalkXZWF/YNqfKd/d13T0ZZ6ZxUryM0IPC5aLmCWfhd/7RCvVeFzzbObLguzhvYfdRLlJCMry3Jrqti4RqJxq5iVFueRz6N3ymYYitvic+dCJQIDwh74J6iKigSUV4F2rxel44B4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=z3ntu.xyz; spf=pass smtp.mailfrom=z3ntu.xyz; dkim=pass (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b=lciop4r4; arc=none smtp.client-ip=128.199.32.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=z3ntu.xyz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=z3ntu.xyz
+	s=arc-20240116; t=1705833879; c=relaxed/simple;
+	bh=RPCcOTTQ2/QJrCVFn+PrAgK6vltHWBOiPyWQ49750so=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=Ev2uZfau+kJz8Oid5DXPpG95xf258aiWibAHW9FRqCLKm4H4zf+G3kpQZO/If4Nz3thiWj53AapRzAAJFJQULhaWe6t+PHxm1WXYH/xx3kfmkio5bTkz9Z6apl/V78yK2Hq9DB9kXSOKZkMBZHVfNRiC9g9Q52sWaV2PxMlqcjM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com; spf=pass smtp.mailfrom=gmx.com; dkim=pass (2048-bit key) header.d=gmx.com header.i=erick.archer@gmx.com header.b=hb2ctEop; arc=none smtp.client-ip=212.227.17.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="lciop4r4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=z3ntu.xyz; s=s1;
-	t=1705833647; bh=nBjQLwAVrLOtDklPZXhl6mSYmrwebasaPOxc4Nq5ooI=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=lciop4r4CZbZekaT96/hHLsEzLdGobUf1m+PECD0gZ7By06vI7E1q2hC7vau/zay4
-	 kbHDk5tEGcd7poho8A1O817ifJypF4lQ07vBfANrLXZdJaz3hKjX09ZmuIyPY+R2Xx
-	 CxR0sp/5lth1Zn+Om2LC9LZOwaK2fpXhgzxnGTP8=
-From: Luca Weiss <luca@z3ntu.xyz>
-Date: Sun, 21 Jan 2024 11:40:39 +0100
-Subject: [PATCH v2 2/2] drm/msm/adreno: Add A305B support
+	dkim=pass (2048-bit key) header.d=gmx.com header.i=erick.archer@gmx.com header.b="hb2ctEop"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.com;
+	s=s31663417; t=1705833847; x=1706438647; i=erick.archer@gmx.com;
+	bh=RPCcOTTQ2/QJrCVFn+PrAgK6vltHWBOiPyWQ49750so=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+	b=hb2ctEopIU/QKXf9M0liOanu4zkVJgwo2uDZQEpXMyp97z0DjAdqHrPdIgWemUhH
+	 KDVTt6xOxrTFQzucA61YzkpqJJSIIyWrayRcrsVgqM3KQyrHMFx2I71DCqEBrwZUs
+	 tonZDxHXD2DzoXXIFwShYyO93ESMsHuJa5+3HfHZ7y59oG+y10NpCi1i9bvM1N3Ki
+	 bxJjZmY6d2iGI7hXpejkU1bHiZEm07MmsZCbk/IWS5/cIro2wEhe50fOph8Boc62r
+	 YxE/vArceWDUY4K1j4xStekBzw/Bp4xJ+upjSQgYk8Sd1a0f2MhH20kYmT4GudyXG
+	 +87W+LU8EiRA1s+Wnw==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from localhost.localdomain ([79.157.194.183]) by mail.gmx.net
+ (mrgmx104 [212.227.17.174]) with ESMTPSA (Nemesis) id
+ 1MOzOm-1rk7YJ2Gg0-00PM4y; Sun, 21 Jan 2024 11:44:07 +0100
+From: Erick Archer <erick.archer@gmx.com>
+To: Viresh Kumar <vireshk@kernel.org>,
+	Nishanth Menon <nm@ti.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <len.brown@intel.com>,
+	Pavel Machek <pavel@ucw.cz>,
+	Alex Shi <alexs@kernel.org>,
+	Yanteng Si <siyanteng@loongson.cn>,
+	Jonathan Corbet <corbet@lwn.net>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Hu Haowen <2023002089@link.tyut.edu.cn>
+Cc: Erick Archer <erick.archer@gmx.com>,
+	linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH v2] Documentation: power: Use kcalloc() instead of kzalloc()
+Date: Sun, 21 Jan 2024 11:43:44 +0100
+Message-Id: <20240121104344.5001-1-erick.archer@gmx.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240121-msm8226-gpu-v2-2-77f4a6fbbca4@z3ntu.xyz>
-References: <20240121-msm8226-gpu-v2-0-77f4a6fbbca4@z3ntu.xyz>
-In-Reply-To: <20240121-msm8226-gpu-v2-0-77f4a6fbbca4@z3ntu.xyz>
-To: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
- Rob Clark <robdclark@gmail.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>, 
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Sean Paul <sean@poorly.run>, 
- Marijn Suijten <marijn.suijten@somainline.org>, 
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- Rob Herring <robh+dt@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, Andy Gross <agross@kernel.org>, 
- Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konrad.dybcio@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
- freedreno@lists.freedesktop.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Luca Weiss <luca@z3ntu.xyz>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4454; i=luca@z3ntu.xyz;
- h=from:subject:message-id; bh=nBjQLwAVrLOtDklPZXhl6mSYmrwebasaPOxc4Nq5ooI=;
- b=owEBbQKS/ZANAwAIAXLYQ7idTddWAcsmYgBlrPSsW0f4/GUoP2msPZIz43/pVMSFAW/J8jCFF
- 8uFM08X8siJAjMEAAEIAB0WIQQ5utIvCCzakboVj/py2EO4nU3XVgUCZaz0rAAKCRBy2EO4nU3X
- Vjf1D/wJoKFlkmrss4tM5q/zh3php1RI54HNSU1btmt0TeA2mU+c2CrozvlbX5FONA9ychoGRa3
- 3Kpeid8w7gf+di16DsSUWjLSzdu9S55TNhINpBqAtxq31YVwlSrSWNlLI4YWxLUPHMtAztaMCEg
- tGvwHONkfBAkvao9N5q6/wvRVDuN/OYoRJuok3h1sGoJRHkZor8hEpthWGEk8ur6Qh82VBrKlja
- n1Eu35l1LizMbMZeNyx6YvwilEllnR/MJHmFCHiA0xdeGDMcd6FVwKzYVfoUpMcT1D0rA+rT338
- xhUNVjRv5wP10q6qEpRSmtrz4Chj47arr/YmrtKhEWX6p1xD8G16Q5oTsRoyvw7nUVjYNYehonG
- t4oMArs1NrruWMQz0Ayz61IrU4qc9+CLEUXD45Kkp44Z748h2p/8RjJi9WhKhQav0sykjvM5VGt
- ZDHd2p6VYFbjr2wYqnWMpjDNn81XSvhOw0GiWOlVA2EDzEKHqoTAZLrvmkGibWUvX5oVTqQjG+H
- HHihucKptvlQIc4Bmk6X3nGn8nS/RU9J+RrsE7uFwEzo0i87KvB5vN5cn1SmbWJ28jjrAJTmV2c
- ht+UwQE9zrZpBvjgC8f7IqSMzvMt5E3Jv60gdl/ZiORDwAbv/wiSIdQzDGJMrdVcMyGiV67vV8L
- juwKzKIIE4qxnAA==
-X-Developer-Key: i=luca@z3ntu.xyz; a=openpgp;
- fpr=BD04DA24C971B8D587B2B8D7FAF69CF6CD2D02CD
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:KJSV+DZUjVe7Gh+FcQDBwvgwYswAOy6jcdLWJW+0PTa02ZPGOMC
+ IiftB7LnAex/ZBdpuu5HteWTF/1i/jCRlAuCVFwKahxeJBiKKBw4ADJnWHIhhDQyRcyNuo+
+ JdUhaqpNQeIeR5dBzSQLQm16RRBZLEkqGXsRvujaHSQZMOd7VQzV9AzboSN7a5ra+YldiMv
+ Anav7vcXhx/pe8YlYACBQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:dcIaAJexKl0=;cVNvZ5I8HLKLzFl3wr+iiSeDjzL
+ 1ZON+ViU7WGhvkuahOyp1h4r4UBuqB5OC5CoZKKwsG1t3ScVoXbdxEMrGDINdaObI/WoCFL2N
+ yz73p9WbwsWKEb1bUnuHMpn8D+Cq1aiFsgsC3eh1KN7zQCvswg81KyDHFaBio/YQyTnfnV3SF
+ rQvuBX/XA0nlCED+HhYizCKdzmMjfYvR873OZ2sj0Hhq3ox8MrSzH6ggRRp6tXERi7I8yMSyX
+ UXYWL8aJx1q2BSunW9N6yX7vYWK47xg0IX9xsu2qpwq1a07vibr5Sbb98MoZTCg5QQlRWBKi4
+ r0BdM63UJlnzT2r7Q6WjIuwlVOKUxKIQS09Ic8x0Z5tkQz23rr/DBn47Jv+zk3LkF8tUnnygB
+ bKgo5JNEpglKudKEiPrIiXHIyTEtTnkKV0LFB2isaMNE7eN785TFi8eq2QU3+NAIlPsvKzac+
+ 3GAV3gqGjBFMJIznhOqZi84aB+ZixxCv6BsI8G+G3TIHs+QNokU/EhuXiqMK65+Sa5BKNmGhj
+ 53PB5gpX3YMM0WvL0dZU0VPEBX46yyF2qEljixNezkmjuLYpmHpU3V6lCpjYIINXkuj3W8ibn
+ 7HjFfvZSppKmaicaMtXY+TF4Dinerdd3AzxV6C7RmEFugH/Ew5fxX+NQ8D+T1AjlycOPFgP+W
+ LxxQe719VgGf8Lr/StLjTEFsIu8D78B7RrQw9bXUFL04SNXB1WvIWRZQX0fTwdUGxlcAGRsUG
+ iV0UBYtM1KolLlmS5j+ss5Q5Ri2v2un4lO3XLShrul3dQRQ7DLvuVeU5LOTk0fCkzTGXlCrVe
+ xpH6lz2ICvF3H8Qm5vZi/cLODrNGUUAs17hARpOGf/SEtVvcVqDgr47gWJmhdKub6Kca2gJeK
+ 99fmRa8p8Y7ssYFwVh0qaJkgxAS95bnO7Wrdkw9epoRtfZmya3412COH2F9nQTnHZeDtlVXwI
+ IP98Awf77QPnCjWVASpMOTlz8PU=
 
-Add support for the Adreno 305B GPU that is found in MSM8226(v2) SoC.
-Previously this was mistakenly claimed to be supported but using wrong
-a configuration.
+As noted in the "Deprecated Interfaces, Language Features, Attributes,
+and Conventions" documentation [1], size calculations (especially
+multiplication) should not be performed in memory allocator (or similar)
+function arguments due to the risk of them overflowing. This could lead
+to values wrapping around and a smaller allocation being made than the
+caller was expecting. Using those allocations could lead to linear
+overflows of heap memory and other misbehaviors.
 
-In MSM8226v1 there's also a A305B but with chipid 0x03000510 which
-should work with the same configuration but due to lack of hardware for
-testing this is not added.
+So, in the example code use the purpose specific kcalloc() function
+instead of the argument size * count in the kzalloc() function.
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
-Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
----
- drivers/gpu/drm/msm/adreno/a3xx_gpu.c      | 13 ++++++++++---
- drivers/gpu/drm/msm/adreno/adreno_device.c | 15 +++++++++++----
- drivers/gpu/drm/msm/adreno/adreno_gpu.h    |  5 +++++
- 3 files changed, 26 insertions(+), 7 deletions(-)
+At the same time, modify the translations accordingly.
 
-diff --git a/drivers/gpu/drm/msm/adreno/a3xx_gpu.c b/drivers/gpu/drm/msm/adreno/a3xx_gpu.c
-index c86b377f6f0d..5273dc849838 100644
---- a/drivers/gpu/drm/msm/adreno/a3xx_gpu.c
-+++ b/drivers/gpu/drm/msm/adreno/a3xx_gpu.c
-@@ -134,6 +134,13 @@ static int a3xx_hw_init(struct msm_gpu *gpu)
- 		/* Set up AOOO: */
- 		gpu_write(gpu, REG_A3XX_VBIF_OUT_AXI_AOOO_EN, 0x0000003c);
- 		gpu_write(gpu, REG_A3XX_VBIF_OUT_AXI_AOOO, 0x003c003c);
-+	} else if (adreno_is_a305b(adreno_gpu)) {
-+		gpu_write(gpu, REG_A3XX_VBIF_IN_RD_LIM_CONF0, 0x00181818);
-+		gpu_write(gpu, REG_A3XX_VBIF_IN_WR_LIM_CONF0, 0x00181818);
-+		gpu_write(gpu, REG_A3XX_VBIF_OUT_RD_LIM_CONF0, 0x00000018);
-+		gpu_write(gpu, REG_A3XX_VBIF_OUT_WR_LIM_CONF0, 0x00000018);
-+		gpu_write(gpu, REG_A3XX_VBIF_DDR_OUT_MAX_BURST, 0x00000303);
-+		gpu_write(gpu, REG_A3XX_VBIF_ROUND_ROBIN_QOS_ARB, 0x0003);
- 	} else if (adreno_is_a306(adreno_gpu)) {
- 		gpu_write(gpu, REG_A3XX_VBIF_ROUND_ROBIN_QOS_ARB, 0x0003);
- 		gpu_write(gpu, REG_A3XX_VBIF_OUT_RD_LIM_CONF0, 0x0000000a);
-@@ -230,7 +237,7 @@ static int a3xx_hw_init(struct msm_gpu *gpu)
- 	gpu_write(gpu, REG_A3XX_UCHE_CACHE_MODE_CONTROL_REG, 0x00000001);
- 
- 	/* Enable Clock gating: */
--	if (adreno_is_a306(adreno_gpu))
-+	if (adreno_is_a305b(adreno_gpu) || adreno_is_a306(adreno_gpu))
- 		gpu_write(gpu, REG_A3XX_RBBM_CLOCK_CTL, 0xaaaaaaaa);
- 	else if (adreno_is_a320(adreno_gpu))
- 		gpu_write(gpu, REG_A3XX_RBBM_CLOCK_CTL, 0xbfffffff);
-@@ -333,7 +340,7 @@ static int a3xx_hw_init(struct msm_gpu *gpu)
- 				AXXX_CP_QUEUE_THRESHOLDS_CSQ_IB1_START(2) |
- 				AXXX_CP_QUEUE_THRESHOLDS_CSQ_IB2_START(6) |
- 				AXXX_CP_QUEUE_THRESHOLDS_CSQ_ST_START(14));
--	} else if (adreno_is_a330(adreno_gpu)) {
-+	} else if (adreno_is_a330(adreno_gpu) || adreno_is_a305b(adreno_gpu)) {
- 		/* NOTE: this (value take from downstream android driver)
- 		 * includes some bits outside of the known bitfields.  But
- 		 * A330 has this "MERCIU queue" thing too, which might
-@@ -559,7 +566,7 @@ struct msm_gpu *a3xx_gpu_init(struct drm_device *dev)
- 		goto fail;
- 
- 	/* if needed, allocate gmem: */
--	if (adreno_is_a330(adreno_gpu)) {
-+	if (adreno_is_a330(adreno_gpu) || adreno_is_a305b(adreno_gpu)) {
- 		ret = adreno_gpu_ocmem_init(&adreno_gpu->base.pdev->dev,
- 					    adreno_gpu, &a3xx_gpu->ocmem);
- 		if (ret)
-diff --git a/drivers/gpu/drm/msm/adreno/adreno_device.c b/drivers/gpu/drm/msm/adreno/adreno_device.c
-index 2ce7d7b1690d..f2768e52ed12 100644
---- a/drivers/gpu/drm/msm/adreno/adreno_device.c
-+++ b/drivers/gpu/drm/msm/adreno/adreno_device.c
-@@ -55,10 +55,17 @@ static const struct adreno_info gpulist[] = {
- 		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
- 		.init  = a2xx_gpu_init,
- 	}, {
--		.chip_ids = ADRENO_CHIP_IDS(
--			0x03000512,
--			0x03000520
--		),
-+		.chip_ids = ADRENO_CHIP_IDS(0x03000512),
-+		.family = ADRENO_3XX,
-+		.fw = {
-+			[ADRENO_FW_PM4] = "a330_pm4.fw",
-+			[ADRENO_FW_PFP] = "a330_pfp.fw",
-+		},
-+		.gmem  = SZ_128K,
-+		.inactive_period = DRM_MSM_INACTIVE_PERIOD,
-+		.init  = a3xx_gpu_init,
-+	}, {
-+		.chip_ids = ADRENO_CHIP_IDS(0x03000520),
- 		.family = ADRENO_3XX,
- 		.revn  = 305,
- 		.fw = {
-diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.h b/drivers/gpu/drm/msm/adreno/adreno_gpu.h
-index bc14df96feb0..d3c41af706df 100644
---- a/drivers/gpu/drm/msm/adreno/adreno_gpu.h
-+++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.h
-@@ -256,6 +256,11 @@ static inline bool adreno_is_a305(const struct adreno_gpu *gpu)
- 	return adreno_is_revn(gpu, 305);
- }
- 
-+static inline bool adreno_is_a305b(const struct adreno_gpu *gpu)
-+{
-+	return gpu->info->chip_ids[0] == 0x03000512;
-+}
-+
- static inline bool adreno_is_a306(const struct adreno_gpu *gpu)
- {
- 	/* yes, 307, because a305c is 306 */
+Link: https://www.kernel.org/doc/html/next/process/deprecated.html#open-co=
+ded-arithmetic-in-allocator-arguments [1]
+Link: https://github.com/KSPP/linux/issues/162
+Signed-off-by: Erick Archer <erick.archer@gmx.com>
+=2D--
+Hi,
 
--- 
-2.43.0
+This patch is a merger of two previous ones [1] [2].
+As Hu Haowen and Jonathan Corbet suggested, the translation change
+only makes sense if the original file is modified. So, with this
+v2 version the original file and the translations are modified at
+the same time.
+
+[1] https://lore.kernel.org/linux-hardening/20240120120527.3866-1-erick.ar=
+cher@gmx.com/
+[2] https://lore.kernel.org/linux-hardening/20240120122204.4287-1-erick.ar=
+cher@gmx.com/
+
+Thanks,
+Erick
+=2D--
+ Documentation/power/opp.rst                    | 2 +-
+ Documentation/translations/zh_CN/power/opp.rst | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/power/opp.rst b/Documentation/power/opp.rst
+index a7c03c470980..1b7f1d854f14 100644
+=2D-- a/Documentation/power/opp.rst
++++ b/Documentation/power/opp.rst
+@@ -305,7 +305,7 @@ dev_pm_opp_get_opp_count
+ 	 {
+ 		/* Do things */
+ 		num_available =3D dev_pm_opp_get_opp_count(dev);
+-		speeds =3D kzalloc(sizeof(u32) * num_available, GFP_KERNEL);
++		speeds =3D kcalloc(num_available, sizeof(u32), GFP_KERNEL);
+ 		/* populate the table in increasing order */
+ 		freq =3D 0;
+ 		while (!IS_ERR(opp =3D dev_pm_opp_find_freq_ceil(dev, &freq))) {
+diff --git a/Documentation/translations/zh_CN/power/opp.rst b/Documentatio=
+n/translations/zh_CN/power/opp.rst
+index 8d6e3f6f6202..7470fa2d4c43 100644
+=2D-- a/Documentation/translations/zh_CN/power/opp.rst
++++ b/Documentation/translations/zh_CN/power/opp.rst
+@@ -274,7 +274,7 @@ dev_pm_opp_get_opp_count
+ 	 {
+ 		/* =E5=81=9A=E4=B8=80=E4=BA=9B=E4=BA=8B=E6=83=85 */
+ 		num_available =3D dev_pm_opp_get_opp_count(dev);
+-		speeds =3D kzalloc(sizeof(u32) * num_available, GFP_KERNEL);
++		speeds =3D kcalloc(num_available, sizeof(u32), GFP_KERNEL);
+ 		/* =E6=8C=89=E5=8D=87=E5=BA=8F=E5=A1=AB=E5=85=85=E8=A1=A8 */
+ 		freq =3D 0;
+ 		while (!IS_ERR(opp =3D dev_pm_opp_find_freq_ceil(dev, &freq))) {
+=2D-
+2.25.1
 
