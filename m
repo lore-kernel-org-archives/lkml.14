@@ -1,224 +1,159 @@
-Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9482A383BA;
-	Sun, 21 Jan 2024 15:37:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F10938F83
+	for <linux-kernel@vger.kernel.org>; Sun, 21 Jan 2024 15:37:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705851437; cv=none; b=ezkxdlLcmJIhQZrZDI/mu1MAxAnrRFDMSEssSFLf75m5Sup2jKYuy6w2jb7wvf5dRnaAOcL6ePSDY+7kXNvSsPg8Vl6tmOFiv1X0IW8caZ/LQm6ouh7C6HbByA3r9BBfp03iElUi3Nc/huXKZDlFJ7hbtGw8A//oX3ZKFR4CHEs=
+	t=1705851480; cv=none; b=oA7ejzXtO1I5YQdb1HXF/r1IVbBM/W3vRCFkik1LAP1508vOyHIOwLNpimueQcWfd6lNH1Zs9ihbHlCDRZ7CnTjnVb6pJvT6LcXjTATkautMPe4wbrSYrmKoT8rnCokqSiUHChuZZnCMWCTUGaKu5Qwrq178qr1DjZ6hkZNeV8g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705851437; c=relaxed/simple;
-	bh=/VqrbHUIRmrLzrdN+YUUNaTaIebnWjB3AeI+d3LBsk4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=tab9B317JCvR+flhM7eG0m/Om/QPW6BQZRD2fiVVhk3jHymM/qJbRIl/A4skEYah8dwShTH5aUbbVWd1cNBNHUKscRJ4YQ3WYP4QXGzV/cdIkpJoV9o16ZnWobsTUCAA8GK1vwukjxbu5JXjP7RuxO8ofGCtxbGaEe5HZo2N7IM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ucqf9o1m; arc=none smtp.client-ip=209.85.215.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1705851480; c=relaxed/simple;
+	bh=sk89c5wAA9T/eEk0jssFTcZ1m2eTx2B+mBNMYr5joLc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qQYTDKemioj9o1cAU940HrFq/3IO0ASYqEKd46wjXpnz9mLuAt5if52kE+mbV8LMjg6eSfH1JRlpgexFxoQj6GH93/AfUzKlYwOLNsYUIdAtswCUQVdSrhV5bOe94v7HonWjvG+I6FaFkZUqL/2LxWLRDARC05ak346aVPnmo7g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=A8KQKEVm; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ucqf9o1m"
-Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-5cdbc42f5efso194278a12.0;
-        Sun, 21 Jan 2024 07:37:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705851435; x=1706456235; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=l18zRlt2Y1RNd/KM4WSl1s19uASsIpnGpnt5xxTh/gA=;
-        b=Ucqf9o1mFallL8saWFNH6iKgwij3WAxUv6o7wEPAcXxfsLK73YZ+D03lYeObvioHmF
-         WKnrdpmC7zUD1Rj3hc/Catf+UX7BexD8vSjRK+zpLhQZG+d4jBhwFcnY6pGMpnypU8PV
-         yb8/qB9HPto9KejvsALTKtWrFKLh2iILHnFN5oCUh6WLFCvhg/bFqwnobjVqa37eby9F
-         IrEvc/KGD9CM4ZvxB/ZngpVjn2COxYY/UdlySyq/mES2JW95wwfXY10AqoZUO78bBBpe
-         91PF0fYTTHW4yH5Sc1MVucXKTqsxspMZVxSakNdzI5NCeMwxkIafTAHMDJtVSDkACXaf
-         PaCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705851435; x=1706456235;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=l18zRlt2Y1RNd/KM4WSl1s19uASsIpnGpnt5xxTh/gA=;
-        b=JTjG3exd8qK1AGpVxq/Ib1YMcO6ng6PlYvLYEEVyi6UOGQxBFhWLhjkplWZvDT6YIT
-         QxAnw9SBv8VvykOkMS8KnULab+GdeSaq+B868rL/W6lFR8bLVIEg+mo2jYNUUN3khf87
-         Yj/qYkOpicW7HqoX0OqbN44R0XzGqcRtWz72iHpWlDUROEXpUGjEtFzrPW6snR3QT5eU
-         6Bt9MxDsHP3VYZKxMEvZxupaGLiIc3CXf1SKsOxd+nQp0AbPh/EiPR2eSDuGLsxBSMgC
-         XTFJlWg/CRONsc1wx8+qWr5dEuDdyYf39xPDFbKoBJ3SrY+qMCRyGWFue9Xcu8eIv7Rh
-         RmDQ==
-X-Gm-Message-State: AOJu0Yxy5Xi7Pi1rzZEyP63oo4xsPeOPpXZh+yipc1Jbb/xSM2rnAHTG
-	fXjOsK50HjdlrmIwHIV0GxHmPSPu/hIamsxbUobeRQFlmEOUq7Se
-X-Google-Smtp-Source: AGHT+IEj47iqSM/u5cnpFwEi+Tlit4Kq3eDjT8Fcn9cvyD2BTStrxajADI0G6lDHkblf2BuAGIFa5Q==
-X-Received: by 2002:a17:902:ee05:b0:1d3:c5e4:b2f6 with SMTP id z5-20020a170902ee0500b001d3c5e4b2f6mr6021894plb.4.1705851434840;
-        Sun, 21 Jan 2024 07:37:14 -0800 (PST)
-Received: from localhost.localdomain ([140.116.154.65])
-        by smtp.gmail.com with ESMTPSA id sv13-20020a17090b538d00b0028d8fa0171asm7744347pjb.35.2024.01.21.07.37.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 21 Jan 2024 07:37:14 -0800 (PST)
-From: Kuan-Wei Chiu <visitorckw@gmail.com>
-To: colyli@suse.de,
-	kent.overstreet@linux.dev
-Cc: bfoster@redhat.com,
-	jserv@ccns.ncku.edu.tw,
-	linux-bcache@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-bcachefs@vger.kernel.org,
-	Kuan-Wei Chiu <visitorckw@gmail.com>
-Subject: [PATCH 5/5] bcache: Optimize number of comparisons in heap_sift
-Date: Sun, 21 Jan 2024 23:36:49 +0800
-Message-Id: <20240121153649.2733274-6-visitorckw@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240121153649.2733274-1-visitorckw@gmail.com>
-References: <20240121153649.2733274-1-visitorckw@gmail.com>
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="A8KQKEVm"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 7163540E01B2;
+	Sun, 21 Jan 2024 15:37:55 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id QxjcWj3ZGZWC; Sun, 21 Jan 2024 15:37:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1705851473; bh=zSxrQvmiuFKpwroAA+fwUMokTVMV35wjeMP3GTqLHvo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=A8KQKEVmmfyozyZtGrC0TCKQrRzZb0/O9wkh6sHG5V/j9vKmeBCQFYlhnqeKRyYgG
+	 ejyEAD6OD5tnuUhB7rzAGLwh9wR0r/4l6rd/I5RM9J8TWcFEcRNOk/HAzd2LGFm3SI
+	 5TvRGICkNYeSIJSb3xREMYYmTRfOMUUfdPSHxLjr3hiCi6L3WQ8SpV7LA+fxM6t+k8
+	 PVZ6GZr8zuVxsJCunRWtfIQ2zFZJtTs9BRWKtsmQNPCJ8Cg7froQPHW6SRMv4I7w7b
+	 niUX1q9UE6SfBW+gkvgBdOiMnBjNHWYaQwMAhX3a5kDmgqA+GseckbVgS3gGmDMAqF
+	 nY8OnUK4SpUq5dcVIjLWxKI3TDreLLL+P02n3TO4PumL/1q9lkZTWwJKs6yBvvcTuE
+	 3dWeIuoCi5xT8NE2QSR2wXQQQJWcQ3brKMZaR91n/y1ZeODaaAEiSy/w3TCZ0f7Ub9
+	 Dkv0Iutx6IrbjvW9NNiQligRVhFIH8ClnpLEwyz6kn/uU2TnbxW43r8Sh0U0Bm6KFu
+	 ZEOJJUIdne7C6PSXaTdqDnS8c9zBH/+oAmGcb4d0sy0AQ2RIcNdaymtltcM60I8UaA
+	 bliFNoNOl7f312tOpybQ3I530lF3TqHP2/Z3byBRpmq4/DqWjW8gULDqDudT9nPFQu
+	 BGtkzzAUp2OnQ5X0wrszQRcE=
+Received: from zn.tnic (pd953099d.dip0.t-ipconnect.de [217.83.9.157])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id D96C740E0196;
+	Sun, 21 Jan 2024 15:37:08 +0000 (UTC)
+Date: Sun, 21 Jan 2024 16:37:02 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: Kevin Loughlin <kevinloughlin@google.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	Michael Kelley <mikelley@microsoft.com>,
+	Pankaj Gupta <pankaj.gupta@amd.com>,
+	Stephen Rothwell <sfr@canb.auug.org.au>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Steve Rutherford <srutherford@google.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Hou Wenlong <houwenlong.hwl@antgroup.com>,
+	Vegard Nossum <vegard.nossum@oracle.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Yuntao Wang <ytcoode@gmail.com>,
+	Wang Jinchao <wangjinchao@xfusion.com>,
+	David Woodhouse <dwmw@amazon.co.uk>,
+	Brian Gerst <brgerst@gmail.com>, Hugh Dickins <hughd@google.com>,
+	Joerg Roedel <jroedel@suse.de>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Dionna Glaze <dionnaglaze@google.com>,
+	Brijesh Singh <brijesh.singh@amd.com>,
+	Michael Roth <michael.roth@amd.com>,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
+	linux-coco@lists.linux.dev, Ashish Kalra <ashish.kalra@amd.com>,
+	Andi Kleen <ak@linux.intel.com>, Adam Dunlap <acdunlap@google.com>,
+	Peter Gonda <pgonda@google.com>, Jacob Xu <jacobhxu@google.com>,
+	Sidharth Telang <sidtelang@google.com>
+Subject: Re: [RFC PATCH v2] x86/sev: enforce RIP-relative accesses in early
+ SEV/SME code
+Message-ID: <20240121153702.GAZa06Hvt8b0hQ4LjR@fat_crate.local>
+References: <ZZ7YuEexYSaZYmLK@tassilo>
+ <20240111223650.3502633-1-kevinloughlin@google.com>
+ <20240115204634.GHZaWZqsVyU_fvn_RW@fat_crate.local>
+ <CAMj1kXH=k26nNyB+LQJ7WUJgbD2f3PREyjCzSngMCGc+72XJ6w@mail.gmail.com>
+ <20240117130557.GDZafQtfRyeVFbBUXA@fat_crate.local>
+ <CAMj1kXEML99u7a8mZMhiWXXozsJYhVPaaTzYkegiSJcLw2pNJg@mail.gmail.com>
+ <CAMj1kXGO68zBNXtdxDXbcQ0U7NRFe4m9bF4L_qFmYZ6mkOvmww@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAMj1kXGO68zBNXtdxDXbcQ0U7NRFe4m9bF4L_qFmYZ6mkOvmww@mail.gmail.com>
 
-Optimize the heap_sift() macro, resulting in a significant reduction of
-approximately 50% in the number of comparisons for large random inputs,
-while maintaining identical results.
+On Sun, Jan 21, 2024 at 03:12:56PM +0100, Ard Biesheuvel wrote:
+> My preliminary conclusion confirms that the SEV code is quite
+> problematic in this regard (which is the reason for this patch, so we
+> already knew that, of course).
 
-The current implementation performs two comparisons per level to
-identify the maximum among three elements. In contrast, the proposed
-bottom-up variation uses only one comparison per level to assess two
-children until reaching the leaves. Then, it sifts up until the correct
-position is determined.
+So we can try to improve the situation gradually so that we don't
+break current usages.
 
-Typically, the process of sifting down proceeds to the leaf level,
-resulting in O(1) secondary comparisons instead of log2(n). This
-optimization significantly reduces the number of costly indirect
-function calls and improves overall performance.
+> TL;DR I think we will need a way to build certain objects with -fPIC
+> (as we do in other places and on other architectures), but we should
+> add instrumentation to ensure that these issues can be detected at
+> build time. The SEV boot code is especially tricky here as very few
+> people can even test it,
 
-The experimental data below is derived from first adding N elements
-generated by get_random_u32() to the heap, and then performing heap_pop
-until the heap is empty.
+No worries about that - us, the Google cloud folks, AWS and a bunch of
+others are people I could think of who could help out. :-)
 
-|   N   | comparisons(old) | comparisons(new) | time(old) | time(new) |
-|-------|------------------|------------------|-----------|-----------|
-| 10000 |     249215       |     164872       |   1253 us |    958 us |
-| 20000 |     539766       |     350113       |   2693 us |   2059 us |
-| 30000 |     843297       |     543037       |   4120 us |   3119 us |
-| 40000 |    1159127       |     739595       |   5624 us |   4221 us |
-| 50000 |    1482608       |     941655       |   7147 us |   5349 us |
-| 60000 |    1808772       |    1144716       |   8754 us |   6786 us |
-| 70000 |    2139443       |    1348878       |  10323 us |   8030 us |
-| 80000 |    2478304       |    1560892       |  11934 us |   9061 us |
-| 90000 |    2820532       |    1768678       |  13611 us |  10679 us |
-| 100000|    3163503       |    1983806       |  15244 us |  11745 us |
+> so applying this patch and hoping that the compiler will never
+> generate reachable code paths that only work correctly when executed
+> via the ordinary kernel virtual mapping is not sufficient.
 
-Signed-off-by: Kuan-Wei Chiu <visitorckw@gmail.com>
----
-This patch has undergone unit testing and micro benchmarking using the
-following code [1].
+...
 
-[1]:
-static long long int cmp_count = 0;
+> 1)
+> WARNING: modpost: vmlinux: section mismatch in reference:
+> startup_64_pi+0x33 (section: .pi.text) -> sme_enable (section:
+> .init.text)
 
-typedef DECLARE_HEAP(u32, heap);
+sme_enable() is in the 1:1 mapping TU
+arch/x86/mm/mem_encrypt_identity.c, see
 
-int mycmp(u32 a, u32 b)
-{
-    cmp_count++;
-    return a > b;
-}
+  1cd9c22fee3a ("x86/mm/encrypt: Move page table helpers into separate translation unit")
 
-int check_heap(heap *h, int (*cmp)(u32, u32))
-{
-    size_t i;
+so might as well move it to .pi.text
 
-    for (i = 0; i < h->used / 2; i++) {
-        if (i * 2 + 1 < h->used)
-            if (cmp(h->data[i], h->data[i * 2 + 1]))
-                return -1;
-        if (i * 2 + 2 < h->used)
-            if (cmp(h->data[i], h->data[i * 2 + 2]))
-                return -1;
-    }
-    return 0;
-}
+The rest below look like they'd need more serious untangling.
 
-static int test(void)
-{
-    size_t N, i;
-    u32 x;
-    heap myheap;
-    ktime_t start, end;
-	s64 delta;
+Btw, I just had another idea: we could remove -mcmodel=kernel from the
+build flags of the whole kernel once -fPIC is enabled so that gcc can be
+forced to do rIP-relative addressing.
 
-	/* Test for correctness. */
-    for (N = 1000; N <= 10000; N += 1000) {
-        init_heap(&myheap, N, GFP_KERNEL);
-        for (i = 0; i < N; i++) {
-            heap_add(&myheap, get_random_u32(), mycmp);
-            if (check_heap(&myheap, mycmp))
-                return -1;
-        }
-        for (i = 0; i < N; i++) {
-            heap_pop(&myheap, x, mycmp);
-            if (check_heap(&myheap, mycmp))
-                return -1;
-        }
-        free_heap(&myheap);
-    }
+I'm being told the reason it doesn't allow mcmodel=kernel with -fPIC is
+only a matter of removing that check and that it *should* otherwise work
+but someone needs to try that. And then there are older gccs which we
+cannot fix.
 
-	/* Micro-benchmark. */
-	for(N = 10000; N <= 100000; N += 10000) {
-		cmp_count = 0;
-        init_heap(&myheap, N, GFP_KERNEL);
+Thx.
 
-        start = ktime_get();
-        for (i = 0; i < N; i++)
-            heap_add(&myheap, get_random_u32(), mycmp);
-        for (i = 0; i < N; i++)
-            heap_pop(&myheap, x, mycmp);
-        end = ktime_get();
-		delta = ktime_us_delta(end, start);
-        printk(KERN_INFO "time: %lld\n", delta);
-        printk(KERN_INFO "comparisons: %lld\n", cmp_count);
-        free_heap(&myheap);
-    }
-
-    return 0;
-}
-
- drivers/md/bcache/util.h | 23 +++++++++++++----------
- 1 file changed, 13 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/md/bcache/util.h b/drivers/md/bcache/util.h
-index f61ab1bada6c..3aa74b0d7f0a 100644
---- a/drivers/md/bcache/util.h
-+++ b/drivers/md/bcache/util.h
-@@ -56,17 +56,20 @@ do {									\
- 
- #define heap_sift(h, i, cmp)						\
- do {									\
--	size_t _r, _j = i;						\
-+	size_t _j, _k;							\
- 									\
--	for (; _j * 2 + 1 < (h)->used; _j = _r) {			\
--		_r = _j * 2 + 1;					\
--		if (_r + 1 < (h)->used &&				\
--		    cmp((h)->data[_r], (h)->data[_r + 1]))		\
--			_r++;						\
--									\
--		if (cmp((h)->data[_r], (h)->data[_j]))			\
--			break;						\
--		heap_swap(h, _r, _j);					\
-+	for (_j = i; _k = 2 * _j + 1, _k + 1 < (h)->used;) {		\
-+		if (cmp((h)->data[_k], (h)->data[_k + 1]))		\
-+			_k++;						\
-+		_j = _k;						\
-+	}								\
-+	if (_j * 2 + 2 == (h)->used)					\
-+		_j = _j * 2 + 1;					\
-+	while (_j != i && cmp((h)->data[_j], (h)->data[i]))		\
-+		_j = (_j - 1) / 2;					\
-+	for (_k = _j; _j != i;) {					\
-+		_j = (_j - 1) / 2;					\
-+		heap_swap(h, _j, _k);					\
- 	}								\
- } while (0)
- 
 -- 
-2.25.1
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
