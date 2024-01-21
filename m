@@ -1,206 +1,85 @@
-Received: from relay01.th.seeweb.it (relay01.th.seeweb.it [5.144.164.162])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26C4438F89
-	for <linux-kernel@vger.kernel.org>; Sun, 21 Jan 2024 22:26:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.144.164.162
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBD8A31A61;
+	Sun, 21 Jan 2024 22:31:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705876004; cv=none; b=deulA9hkUDUzVuuajOEt3JpNAdG/Y+gZExLbaqroVNmj/19e4n02iN6pXqnsT3I2/rv/EFj3fMMCF3Hw/UUEzhh0Eg9bsEpBrcaqLs8kyUCynBkAxFu1NZzs0ivgUUhEXQQd/jOvJhD035s0qxA/JXiHErx1axBNUIuYXsvVZQs=
+	t=1705876318; cv=none; b=jFHB6++frrh14OWbjpkEfu2lk40aRy+dWWZfsOFNilpMkUP8gEIwHXtoHHk1lE2GpUDRIxipaM4CzvMzvF6ffwFRUZXMexfucrGsLuubOa6X5PCULwReFHND23Do0RjhuMsSh5+HgrCkC3iJo6xYjz11GoBARNNcx85Q5H53GHY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705876004; c=relaxed/simple;
-	bh=PXYpMSGdthUXJnhoTPbS8CoFfCy2vmnLSPU/3dNRZrE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dGtilTPPdC0zSxZMVhJIziFyQgnvcpPXadbXPbtOO7sRO8fdAJDOVRXIYp/2nN3kyrl2wYo4/q8xM1fKzcMqz9KYxz7UVPJzFIHk2vcpBNeeYW8Zq/rUSLL2F2iB2ch3UmGmjslb/Nn6OzQYIURTy7IOIb2p/VkrONSqyl7R24U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=somainline.org; spf=pass smtp.mailfrom=somainline.org; arc=none smtp.client-ip=5.144.164.162
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=somainline.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=somainline.org
-Received: from SoMainline.org (94-211-6-86.cable.dynamic.v4.ziggo.nl [94.211.6.86])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by m-r1.th.seeweb.it (Postfix) with ESMTPSA id 101771FF15;
-	Sun, 21 Jan 2024 23:16:42 +0100 (CET)
-Date: Sun, 21 Jan 2024 23:16:40 +0100
-From: Marijn Suijten <marijn.suijten@somainline.org>
-To: Adam Skladowski <a39.skl@gmail.com>
-Cc: phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht, 
-	Rob Clark <robdclark@gmail.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>, 
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Sean Paul <sean@poorly.run>, David Airlie <airlied@gmail.com>, 
-	Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Andy Gross <agross@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konrad.dybcio@linaro.org>, Krishna Manikandan <quic_mkrishn@quicinc.com>, 
-	linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 7/8] arm64: dts: qcom: msm8976: Declare and wire SDC pins
-Message-ID: <umllfip5rqeo5q65jbvdpisy5yaxpl54j4zdhi2hisdha5da4y@lwf2mjxuhiga>
-Mail-Followup-To: Marijn Suijten <marijn.suijten@somainline.org>, 
-	Adam Skladowski <a39.skl@gmail.com>, phone-devel@vger.kernel.org, 
-	~postmarketos/upstreaming@lists.sr.ht, Rob Clark <robdclark@gmail.com>, 
-	Abhinav Kumar <quic_abhinavk@quicinc.com>, Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
-	Sean Paul <sean@poorly.run>, David Airlie <airlied@gmail.com>, 
-	Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Andy Gross <agross@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konrad.dybcio@linaro.org>, Krishna Manikandan <quic_mkrishn@quicinc.com>, 
-	linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240121194221.13513-1-a39.skl@gmail.com>
- <20240121194221.13513-8-a39.skl@gmail.com>
+	s=arc-20240116; t=1705876318; c=relaxed/simple;
+	bh=rkM/sUveJZH/3tT1dW1uZCos4SbkOb6XoszRZAKTad0=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=HtpG1QxRQbNv3Ld0jOU29zAvcTFWMzMSA0d97uPyMASKLpKERDiRTox72RPVEh9oPZLr69cy+GMctFkgXGfK6kvHZ71nMSv9lBzOIRPkVtSjsm0Sz0bT9dNUD9ya+vnpCPgim3mdeUNvX59G/RkMEdIgpvVd+YcJIrVSQ2tcrgM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=x4DdY3Co; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="x4DdY3Co"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 875C4C433F1;
+	Sun, 21 Jan 2024 22:31:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1705876317;
+	bh=rkM/sUveJZH/3tT1dW1uZCos4SbkOb6XoszRZAKTad0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=x4DdY3Coz92mTQor+OYJ+Gu0tmUhkt3KAOd6xfdJ1+YRk8ff82QKalabBHoyjvGJT
+	 T+T1iJNXuJ/h5BCM9brDS7l8l7ef3BIcE39VyQ74274yQ/NZbP62vgezklm57PwJP2
+	 F/nnz7NzHCCben/wdY8WTm4XMTXVtpRUuk1DI4Qo=
+Date: Sun, 21 Jan 2024 14:31:53 -0800
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Audra Mitchell <audra@redhat.com>
+Cc: shuah@kernel.org, linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, raquini@redhat.com, Adam Sindelar
+ <adam@wowsignal.io>
+Subject: Re: [PATCH] selftests/mm: Update va_high_addr_switch.sh to check
+ CPU for la57 flag
+Message-Id: <20240121143153.5dcfe26dea53ba0e896dbf85@linux-foundation.org>
+In-Reply-To: <20240119205801.62769-1-audra@redhat.com>
+References: <20240119205801.62769-1-audra@redhat.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240121194221.13513-8-a39.skl@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 2024-01-21 20:41:05, Adam Skladowski wrote:
-> Declare pinctrls for SDC pins and wire them to consumers.
+On Fri, 19 Jan 2024 15:58:01 -0500 Audra Mitchell <audra@redhat.com> wrote:
+
+> In order for the page table level 5 to be in use, the CPU must have the
+> setting enabled in addition to the CONFIG option. Check for the flag to be
+> set to avoid false test failures on systems that do not have this cpu flag
+> set.
 > 
-> Signed-off-by: Adam Skladowski <a39.skl@gmail.com>
 
-Where'd the original sign-offs go?
+Thanks.
 
-https://lore.kernel.org/linux-arm-msm/20221214232049.703484-1-marijn.suijten@somainline.org/
+I'll add
 
-Thanks taking taking care of this SoC though.  My SM8976 Suzu device finally
-emitted the magic smoke after rebasing on the latest MSM8976 patches, and will
-need board repairs or a replacement before patches can be tested again :(
+Cc: Adam Sindelar <adam@wowsignal.io>
+Fixes: 4f2930c6718a ("selftests/vm: only run 128TBswitch with 5-level paging")
+Cc: <stable@vger.kernel.org>
 
-- Marijn
+A more complete description of these "test failures" would be helpful
+please.
 
-> ---
->  arch/arm64/boot/dts/qcom/msm8976.dtsi | 100 ++++++++++++++++++++++++++
->  1 file changed, 100 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/msm8976.dtsi b/arch/arm64/boot/dts/qcom/msm8976.dtsi
-> index 765c90ac14cb..5a7be93a0115 100644
-> --- a/arch/arm64/boot/dts/qcom/msm8976.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/msm8976.dtsi
-> @@ -771,6 +771,96 @@ blsp2_i2c4_sleep: blsp2-i2c4-sleep-state {
->  				drive-strength = <2>;
->  				bias-disable;
->  			};
-> +
-> +			sdc1_default: sdc1-default-state {
-> +				clk-pins {
-> +					pins = "sdc1_clk";
-> +					drive-strength = <16>;
-> +					bias-disable;
-> +				};
-> +
-> +				cmd-pins {
-> +					pins = "sdc1_cmd";
-> +					drive-strength = <10>;
-> +					bias-pull-up;
-> +				};
-> +
-> +				data-pins {
-> +					pins = "sdc1_data";
-> +					drive-strength = <10>;
-> +					bias-pull-up;
-> +				};
-> +
-> +				rclk-pins {
-> +					pins = "sdc1_rclk";
-> +					bias-pull-down;
-> +				};
-> +			};
-> +
-> +			sdc1_sleep: sdc1-sleep-state {
-> +				clk-pins {
-> +					pins = "sdc1_clk";
-> +					drive-strength = <2>;
-> +					bias-disable;
-> +				};
-> +
-> +				cmd-pins {
-> +					pins = "sdc1_cmd";
-> +					drive-strength = <2>;
-> +					bias-pull-up;
-> +				};
-> +
-> +				data-pins {
-> +					pins = "sdc1_data";
-> +					drive-strength = <2>;
-> +					bias-pull-up;
-> +				};
-> +
-> +				rclk-pins {
-> +					pins = "sdc1_rclk";
-> +					bias-pull-down;
-> +				};
-> +			};
-> +
-> +			sdc2_default: sdc2-default-state {
-> +				clk-pins {
-> +					pins = "sdc2_clk";
-> +					drive-strength = <16>;
-> +					bias-disable;
-> +				};
-> +
-> +				cmd-pins {
-> +					pins = "sdc2_cmd";
-> +					drive-strength = <10>;
-> +					bias-pull-up;
-> +				};
-> +
-> +				data-pins {
-> +					pins = "sdc2_data";
-> +					drive-strength = <10>;
-> +					bias-pull-up;
-> +				};
-> +			};
-> +
-> +			sdc2_sleep: sdc2-sleep-state {
-> +				clk-pins {
-> +					pins = "sdc2_clk";
-> +					drive-strength = <2>;
-> +					bias-disable;
-> +				};
-> +
-> +				cmd-pins {
-> +					pins = "sdc2_cmd";
-> +					drive-strength = <2>;
-> +					bias-pull-up;
-> +				};
-> +
-> +				data-pins {
-> +					pins = "sdc2_data";
-> +					drive-strength = <2>;
-> +					bias-pull-up;
-> +				};
-> +			};
->  		};
+> --- a/tools/testing/selftests/mm/va_high_addr_switch.sh
+> +++ b/tools/testing/selftests/mm/va_high_addr_switch.sh
+> @@ -29,9 +29,15 @@ check_supported_x86_64()
+>  	# See man 1 gzip under '-f'.
+>  	local pg_table_levels=$(gzip -dcfq "${config}" | grep PGTABLE_LEVELS | cut -d'=' -f 2)
 >  
->  		gcc: clock-controller@1800000 {
-> @@ -1246,6 +1336,11 @@ sdhc_1: mmc@7824900 {
->  				 <&gcc GCC_SDCC1_APPS_CLK>,
->  				 <&rpmcc RPM_SMD_XO_CLK_SRC>;
->  			clock-names = "iface", "core", "xo";
+> +	local cpu_supports_pl5=$(awk '/^flags/ {if (/la57/) {print 0;}
+> +		else {print 1}; exit}' /proc/cpuinfo 2>/dev/null)
 > +
-> +			pinctrl-0 = <&sdc1_default>;
-> +			pinctrl-1 = <&sdc1_sleep>;
-> +			pinctrl-names = "default", "sleep";
-> +
->  			status = "disabled";
->  		};
->  
-> @@ -1262,6 +1357,11 @@ sdhc_2: mmc@7864900 {
->  				 <&gcc GCC_SDCC2_APPS_CLK>,
->  				 <&rpmcc RPM_SMD_XO_CLK_SRC>;
->  			clock-names = "iface", "core", "xo";
-> +
-> +			pinctrl-0 = <&sdc2_default>;
-> +			pinctrl-1 = <&sdc2_sleep>;
-> +			pinctrl-names = "default", "sleep";
-> +
->  			status = "disabled";
->  		};
+>  	if [[ "${pg_table_levels}" -lt 5 ]]; then
+>  		echo "$0: PGTABLE_LEVELS=${pg_table_levels}, must be >= 5 to run this test"
+>  		exit $ksft_skip
+> +	elif [[ "${cpu_supports_pl5}" -ne 0 ]]; then
+> +		echo "$0: CPU does not have the necessary la57 flag to support page table level 5"
+> +		exit $ksft_skip
+>  	fi
+>  }
 >  
 > -- 
 > 2.43.0
-> 
