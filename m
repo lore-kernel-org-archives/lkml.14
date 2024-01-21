@@ -1,110 +1,137 @@
-Received: from mail.3ffe.de (0001.3ffe.de [159.69.201.130])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AE8BFBFA;
-	Sun, 21 Jan 2024 18:14:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.201.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 590C138382
+	for <linux-kernel@vger.kernel.org>; Sun, 21 Jan 2024 18:21:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705860869; cv=none; b=mkUqxYBi8XmwQgaZmt70mHZlK24CwLahC3CHJFhTAHMP7hww7IMl8l2/Mi7BVaStY3zURyFhag43xoeLjiGECMF4QwiCgLOze1HPlwvlcNQgh8Lx5XUgSwcplECeZX5AAkDgPkbeQewNGnr0EhccLOruGhXXSNEeTg/dTiABT/E=
+	t=1705861306; cv=none; b=TpJDM4NW9LA5BxOl8OLDwXPhWtN+INWffd80Fr9yXuRbxp9UgJKsYP1fhXrWf5EMe7RC3e0XXlTFF8A4arwcuDvKhx1msAer1xsVJRFnvgwalo5hefSVXfjOE7Em8lbsVQY9a6ldgNJj3E4R99Sn5h5vwoB8PSzapCOvytB9/Gs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705860869; c=relaxed/simple;
-	bh=N7OUZjKg0Z42XndQfe4qS1WdjqzPD6BmjTD9CLpxQpk=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=JpFpe+d4ywJ4z6/vff8yIoJ/STT+NwHHR6Zl5ze7IoMQrRSaw5Ta8JUB/Cy7SCG9oqUe8CFqbYoHbFZy0wCjhazCqOm//3YirMR8pkkDm23N7pfVb8Vi7QGto5D3GBSSfO52LtmrwTU5TkpWrFwaz/uuLYfhesjVZUF1Doy6aaY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=walle.cc; spf=pass smtp.mailfrom=walle.cc; dkim=pass (2048-bit key) header.d=walle.cc header.i=@walle.cc header.b=dbZCBvB/; arc=none smtp.client-ip=159.69.201.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=walle.cc
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=walle.cc
+	s=arc-20240116; t=1705861306; c=relaxed/simple;
+	bh=RQcsOSgWEkebJ4aFw/hm8jeagskSK6NIf06EChLFEFM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pLvbj49R0aj5xfDVCXw+4ocWKQSvJDknNKlvV9btSYDsvLE0zWgzNKj/rlRuHQwhUbVzcSFfxQFXN09eRPmnNOktMVL0qRAUzVcBuVpLwKb5wHsrG7D0ZsBCEXJTaEkFCJsraAPzs5Iaj3YDcDb4RBVv/LYaNLEc/CRGykiZ7wM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=AUFIZ7Hk; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=walle.cc header.i=@walle.cc header.b="dbZCBvB/"
-Received: from 3ffe.de (0001.3ffe.de [IPv6:2a01:4f8:c0c:9d57::1])
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="AUFIZ7Hk"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 0BC2C40E0196;
+	Sun, 21 Jan 2024 18:21:41 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id VCM38jTVkex4; Sun, 21 Jan 2024 18:21:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1705861298; bh=2hNU8iQHcvaHyKkIctC4wY2bSsuo5SQCshNeksB3b9A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=AUFIZ7Hk5hJYAryXMjEguN4LPCmbfR1Nng9ffvRWSHC+bsGYm64r6JfARdgqXJlFD
+	 Y/PYUqLriC0c9MrHq/sdO1CWZ7yBH6xyibOXFi1lDlNGzA6a+mB1CNOTL+VWvvKL73
+	 8RtnMSA2MszsvHeBMiMXZZ+Hf7atcfj2+K9S30DuYm9sMvDGmABj+SPLLBLhn35G4t
+	 F6VtYrIjqwQCEliQn3z6mTBXo3PvZ0Xg0a88ROqVayPGTLaoq91BgqmJ/lsR30pwQr
+	 Nu9MMyWiHp6mOz+JsS286w1D31wCvvxolniMU93s7OEOzs1kuaQo9YVH8U531CMvv4
+	 UruUYm6xk/NrFUcqP4mNTJN+6PBuAZpjR4wSDFJTBu4hSGj94vMuWVLkZnMuZc25YX
+	 8jscNfujSdUHFqzD7bMM7gzxUEaJ5aO/3I6if/dfH+zSbpoZH8gtkAXFdAtvCAa39/
+	 xzy327AuL5qiWo7Bvg/5JVj71/9ImNaAwepirfWi7O+IZ9ViEqSo2LL88nW5NZsZwM
+	 mTN7hsgPAPDuDeY/4UP2GKwgUKv+Qxo5ymGNeJFm2x6g7qhSURXocC+JDHSNi57w43
+	 pKX0LkDP3B+aHAcHthXCwl0wtKc4W5yZFjtU84endp4cn6q/bFIUbUEct31LRjZpUF
+	 Hzi1fCAvqvSzE3lnVRanRmXo=
+Received: from zn.tnic (pd953099d.dip0.t-ipconnect.de [217.83.9.157])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
 	(No client certificate requested)
-	by mail.3ffe.de (Postfix) with ESMTPSA id AB16D71;
-	Sun, 21 Jan 2024 19:06:31 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2022082101;
-	t=1705860391;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6LUlRcO6qAUslB/aQvN4+sncIp9HuXImWqN6ii290a0=;
-	b=dbZCBvB/tmsgJl20VVAvUddw5aNNE6egHwf0Na19PhkIglL6ehnwTzxLpop0zmv0cXC0Nu
-	iO3dPOywTLOn7ibsBQXExorSg8oN3hv5wjRi7GmBCXPro+RqCco4nQjju49zx5nGo4cD6w
-	eFqoqxSyvJUXQeBccdkxnnQ0dO1cTRqtP2y/kPUG75RkBRUTUlUYyxY/+esELRuA+jBmkF
-	uqgBW8ppJHC23L2OaH6lz1e2uPczEyMt5varDkqct2DYwS6c0U6yLN3n5AjgLX+3pfgJok
-	puFUea6zpmr+OtBh44bT/X02Hm2P0zrdX3HieqGZRQQAoJwAnv//pn8cf/lX6A==
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 0F8A840E016C;
+	Sun, 21 Jan 2024 18:20:54 +0000 (UTC)
+Date: Sun, 21 Jan 2024 19:20:40 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Ard Biesheuvel <ardb@kernel.org>, Peter Gonda <pgonda@google.com>
+Cc: Kevin Loughlin <kevinloughlin@google.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	Michael Kelley <mikelley@microsoft.com>,
+	Pankaj Gupta <pankaj.gupta@amd.com>,
+	Stephen Rothwell <sfr@canb.auug.org.au>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Steve Rutherford <srutherford@google.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Hou Wenlong <houwenlong.hwl@antgroup.com>,
+	Vegard Nossum <vegard.nossum@oracle.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Yuntao Wang <ytcoode@gmail.com>,
+	Wang Jinchao <wangjinchao@xfusion.com>,
+	David Woodhouse <dwmw@amazon.co.uk>,
+	Brian Gerst <brgerst@gmail.com>, Hugh Dickins <hughd@google.com>,
+	Joerg Roedel <jroedel@suse.de>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Dionna Glaze <dionnaglaze@google.com>,
+	Brijesh Singh <brijesh.singh@amd.com>,
+	Michael Roth <michael.roth@amd.com>,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
+	linux-coco@lists.linux.dev, Ashish Kalra <ashish.kalra@amd.com>,
+	Andi Kleen <ak@linux.intel.com>, Adam Dunlap <acdunlap@google.com>,
+	Jacob Xu <jacobhxu@google.com>,
+	Sidharth Telang <sidtelang@google.com>
+Subject: Re: [RFC PATCH v2] x86/sev: enforce RIP-relative accesses in early
+ SEV/SME code
+Message-ID: <20240121182040.GBZa1geI5NxWSslvt0@fat_crate.local>
+References: <ZZ7YuEexYSaZYmLK@tassilo>
+ <20240111223650.3502633-1-kevinloughlin@google.com>
+ <20240115204634.GHZaWZqsVyU_fvn_RW@fat_crate.local>
+ <CAMj1kXH=k26nNyB+LQJ7WUJgbD2f3PREyjCzSngMCGc+72XJ6w@mail.gmail.com>
+ <20240117130557.GDZafQtfRyeVFbBUXA@fat_crate.local>
+ <CAMj1kXEML99u7a8mZMhiWXXozsJYhVPaaTzYkegiSJcLw2pNJg@mail.gmail.com>
+ <CAMj1kXGO68zBNXtdxDXbcQ0U7NRFe4m9bF4L_qFmYZ6mkOvmww@mail.gmail.com>
+ <20240121153702.GAZa06Hvt8b0hQ4LjR@fat_crate.local>
+ <CAMj1kXFMe6WqKXJsK1Lqk++naM8D=MZADhgpO_FjUd0RuFQU2w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Sun, 21 Jan 2024 19:06:31 +0100
-From: Michael Walle <michael@walle.cc>
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Mark Brown <broonie@kernel.org>, Amit Kumar Mahapatra
- <amit.kumar-mahapatra@amd.com>, tudor.ambarus@linaro.org,
- pratyush@kernel.org, miquel.raynal@bootlin.com, richard@nod.at,
- vigneshr@ti.com, sbinding@opensource.cirrus.com, lee@kernel.org,
- james.schulman@cirrus.com, david.rhodes@cirrus.com,
- rf@opensource.cirrus.com, perex@perex.cz, tiwai@suse.com,
- linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-mtd@lists.infradead.org, nicolas.ferre@microchip.com,
- alexandre.belloni@bootlin.com, claudiu.beznea@tuxon.dev,
- michal.simek@amd.com, linux-arm-kernel@lists.infradead.org,
- alsa-devel@alsa-project.org, patches@opensource.cirrus.com,
- linux-sound@vger.kernel.org, git@amd.com, amitrkcian2002@gmail.com
-Subject: Re: [PATCH v11 03/10] spi: Add multi-cs memories support in SPI core
-In-Reply-To: <ec7e7972-d48d-4a47-bd03-eec0c4334471@roeck-us.net>
-References: <20231125092137.2948-1-amit.kumar-mahapatra@amd.com>
- <20231125092137.2948-4-amit.kumar-mahapatra@amd.com>
- <3d3a11b1-8396-4d8e-9bb3-61ecb67e7efa@roeck-us.net>
- <d3c93c4c-3754-480c-84c2-9455ec8af702@roeck-us.net>
- <Zaxtm0JlQYU0/K/v@finisterre.sirena.org.uk>
- <ec7e7972-d48d-4a47-bd03-eec0c4334471@roeck-us.net>
-Message-ID: <9806d99fab46c928f337b30b21057b3e@walle.cc>
-X-Sender: michael@walle.cc
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAMj1kXFMe6WqKXJsK1Lqk++naM8D=MZADhgpO_FjUd0RuFQU2w@mail.gmail.com>
 
->>> FWIW, the problem is due to
->> 
->>> +#define SPI_CS_CNT_MAX 4
->> 
->>> in the offending patch, but apeed2400 FMC supports up to 5 SPI chip 
->>> selects.
->>> 
->>>   static const struct aspeed_spi_data ast2400_fmc_data = {
->>>          .max_cs        = 5,
->>> 	^^^^^^^^^^^^^^^^^^^
->>>          .hastype       = true,
->> 
->>> Limiting .max_cs to 4 or increasing SPI_CS_CNT_MAX to 5 fixes the 
->>> problem,
->>> though of course I don't know if increasing SPI_CS_CNT_MAX has other 
->>> side
->>> effects.
->> 
->> Yeah, I was coming to a similar conclusion myself - the limit is just
->> too low.  I can't see any problem with increasing it.
-> 
-> It would cost a bit of memory and somewhat affect performance sine many
-> of the newly introduced loops are bound by SPI_CS_CNT_MAX and not by
-> num_chipselect.
-> 
-> It also might make sense to document the new limit somewhere. Prior
-> to this commit it was not limited at all.
-> Documentation/devicetree/bindings/spi/spi-davinci.txt lists 5 chip
-> selects in its example for the use of cs-gpios.
-> Documentation/devicetree/bindings/spi/spi-controller.yaml also does not
-> list a limit.
+On Sun, Jan 21, 2024 at 05:49:44PM +0100, Ard Biesheuvel wrote:
+> Yeah. I have been trying to find people internally at Google that can
+> help me set up some CI that I can throw kernel builds at and they will
+> be test booted in a SEV guest, but so far progress has been slow.
 
-Given that, that the rest of this series is under discussion (and esp. 
-whether
-it is the correct way to do it) it might make sense to just revert the 
-picked
-patches.
+Dunno, if you have some internal access to GCE, it does support SEV
+guests so you could test that side at least. Peter Gonda is on Cc, he
+should have an idea what to do, lemme move him to To.
 
--michael
+> -fPIE -mcmodel=small should work fine afaik. The only problem i
+> encountered is that it changes the default per-CPU base register to FS
+> but that can be overridden on the command line.
+
+Yeah, there's a gcc switch - I hope clang supports it too.
+
+> The problem with building the entire kernel -fPIE is that it increases
+> code size: RIP-relative LEA instructions are 1 byte longer than
+> absolute 32-bit MOVs.
+
+Right, but the folks who started this thread are already doing that
+anyway so...
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
