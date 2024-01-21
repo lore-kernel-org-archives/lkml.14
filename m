@@ -1,74 +1,135 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay02.th.seeweb.it (relay02.th.seeweb.it [5.144.164.163])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DD9138F86
-	for <linux-kernel@vger.kernel.org>; Sun, 21 Jan 2024 22:32:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BCCE38392
+	for <linux-kernel@vger.kernel.org>; Sun, 21 Jan 2024 22:33:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.144.164.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705876346; cv=none; b=W9k9sIo/RuMD64A+O+gbrRQjkHgzzIK7GJQGSzXA0YXN2bBHOi9DNPQQB0yS9G+2oUZHquEM0p5CoFzio+jFz/d9yO/k923ByiKPYjRJYBcRxd8moaK1UiijmsL/iuOwoAWxKzKGbXYgWb0Pz/fCU3MrkOyEeXYPzEeqJd2hW2Y=
+	t=1705876426; cv=none; b=purzPw8PAdtL1TlSe/B1sn/ltidMW6kZnKWI/7bky6Gu+HjecMoyiOsL3vqH0uJE/TYnydxiUPmfPe7//fLiTOxFF+t9ZDgR6Ju/8UeZ/n4X3eTPSlJ10uSol8/bbpGWBTyhW4ohbxKwXC92zKTcfy/l4fDcH/YK3PWZcx5hmT8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705876346; c=relaxed/simple;
-	bh=ik35T/x5yL4zn6sAO0sKXnsdeSg2LD9SzPHvJ/0RNT8=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=lC65dif1rfjcO/rjKQDrwIrbME50iOV9hwOQ+UGx/mgSFQLH2xEopI1QpAhUe1mAaTf+brhLNLP8W4YyDbya2dej0orkOim8IV+SqCtjeJe/3rjalkGFNo8Bq2v5TRHGG780RDp8kNO6QJoc2qSxv8xIsCB3cHCKYmtQNYNAa8s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=PGaYwXzz; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="PGaYwXzz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97F86C433C7;
-	Sun, 21 Jan 2024 22:32:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1705876345;
-	bh=ik35T/x5yL4zn6sAO0sKXnsdeSg2LD9SzPHvJ/0RNT8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=PGaYwXzzHGWG4VgNkuPqLiiBjg4UGPh4GoTikM9xUL+26806esokGGv0cw5IMXIUA
-	 8bcwNJn0eutJGycZcbQAJbum9cklN0otcpN3pUor+wm7zVMftnIkqq8fKSfBg+4VPY
-	 WSceVnFBT67FY6/47CIVu2sZ48OMLuIYDrSIhoDk=
-Date: Sun, 21 Jan 2024 14:32:18 -0800
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Dylan Hatch <dylanbhatch@google.com>
-Cc: Oleg Nesterov <oleg@redhat.com>, Kees Cook <keescook@chromium.org>,
- Frederic Weisbecker <frederic@kernel.org>, "Joel Fernandes (Google)"
- <joel@joelfernandes.org>, Ard Biesheuvel <ardb@kernel.org>,
- "Matthew Wilcox (Oracle)" <willy@infradead.org>, Thomas Gleixner
- <tglx@linutronix.de>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
- "Eric W. Biederman" <ebiederm@xmission.com>, Vincent Whitchurch
- <vincent.whitchurch@axis.com>, Dmitry Vyukov <dvyukov@google.com>, Luis
- Chamberlain <mcgrof@kernel.org>, Mike Christie
- <michael.christie@oracle.com>, David Hildenbrand <david@redhat.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Stefan Roesch
- <shr@devkernel.io>, Joey Gouly <joey.gouly@arm.com>, Josh Triplett
- <josh@joshtriplett.org>, Helge Deller <deller@gmx.de>, Ondrej Mosnacek
- <omosnace@redhat.com>, Florent Revest <revest@chromium.org>, Miguel Ojeda
- <ojeda@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] getrusage: use sig->stats_lock
-Message-Id: <20240121143218.35d3171018771e5c2b5820e3@linux-foundation.org>
-In-Reply-To: <CADBMgpxC+BP-wfrM-wP1nbZOcRb0LbsmMDQ3LQ8hUKYsF3QECw@mail.gmail.com>
-References: <20240117192534.1327608-1-dylanbhatch@google.com>
-	<20240119141501.GA23739@redhat.com>
-	<20240119141529.GB23739@redhat.com>
-	<CADBMgpxC+BP-wfrM-wP1nbZOcRb0LbsmMDQ3LQ8hUKYsF3QECw@mail.gmail.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1705876426; c=relaxed/simple;
+	bh=Ka0suA2f6Mht4+t9XWWJHrO4gwspsyTwEIQwdjMFPoc=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=m5ROh4ec+oxRymrZ1qku5+kgPhwiUcje/Hy+hqTvt+SiRBKkz+Da7RlDy/BTOHtgf2JgvKEhcWnglGE+gH7PpDgK3FFU12uE9tlihYStbVJXs1rNcvsjCEO4s7d4BNssH49vv4hJklbE0MqShVTJPKg5yolrjnCQCN7esiRViIQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=somainline.org; spf=pass smtp.mailfrom=somainline.org; arc=none smtp.client-ip=5.144.164.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=somainline.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=somainline.org
+Received: from Marijn-Arch-PC.localdomain (94-211-6-86.cable.dynamic.v4.ziggo.nl [94.211.6.86])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by m-r1.th.seeweb.it (Postfix) with ESMTPSA id 7436720385;
+	Sun, 21 Jan 2024 23:33:42 +0100 (CET)
+From: Marijn Suijten <marijn.suijten@somainline.org>
+Date: Sun, 21 Jan 2024 23:33:41 +0100
+Subject: [PATCH v2 4/6] arm64: dts: qcom: msm8976: Declare and use SDC1
+ pins
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20240121-msm8976-dt-v2-4-7b186a02dc72@somainline.org>
+References: <20240121-msm8976-dt-v2-0-7b186a02dc72@somainline.org>
+In-Reply-To: <20240121-msm8976-dt-v2-0-7b186a02dc72@somainline.org>
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Rob Herring <robh+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: ~postmarketos/upstreaming@lists.sr.ht, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+ Luca Weiss <luca@z3ntu.xyz>, Adam Skladowski <a39.skl@gmail.com>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>, 
+ Martin Botka <martin.botka@somainline.org>, 
+ Jami Kettunen <jami.kettunen@somainline.org>, linux-arm-msm@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Marijn Suijten <marijn.suijten@somainline.org>
+X-Mailer: b4 0.12.4
 
-On Fri, 19 Jan 2024 19:27:49 -0800 Dylan Hatch <dylanbhatch@google.com> wrote:
+Add the pinctrl states for SDC1 and use them on sdhc_1.
 
-> 
-> I applied these to a 5.10 kernel, and my repro (calling getrusage(RUSAGE_SELF)
-> from 200K threads) is no longer triggering a hard lockup.
+Signed-off-by: Marijn Suijten <marijn.suijten@somainline.org>
+---
+ arch/arm64/boot/dts/qcom/msm8976.dtsi | 55 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 55 insertions(+)
 
-Thanks, but...
+diff --git a/arch/arm64/boot/dts/qcom/msm8976.dtsi b/arch/arm64/boot/dts/qcom/msm8976.dtsi
+index d2bb1ada361a..1d06f9b8a0f1 100644
+--- a/arch/arm64/boot/dts/qcom/msm8976.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8976.dtsi
+@@ -669,6 +669,56 @@ tlmm: pinctrl@1000000 {
+ 			interrupt-controller;
+ 			#interrupt-cells = <2>;
+ 
++			sdc1_off_state: sdc1-off-state {
++				clk-pins {
++					pins = "sdc1_clk";
++					drive-strength = <2>;
++					bias-disable;
++				};
++
++				cmd-pins {
++					pins = "sdc1_cmd";
++					drive-strength = <2>;
++					bias-pull-up;
++				};
++
++				data-pins {
++					pins = "sdc1_data";
++					drive-strength = <2>;
++					bias-pull-up;
++				};
++
++				rclk-pins {
++					pins = "sdc1_rclk";
++					bias-pull-down;
++				};
++			};
++
++			sdc1_on_state: sdc1-on-state {
++				clk-pins {
++					pins = "sdc1_clk";
++					drive-strength = <16>;
++					bias-disable;
++				};
++
++				cmd-pins {
++					pins = "sdc1_cmd";
++					drive-strength = <10>;
++					bias-pull-up;
++				};
++
++				data-pins {
++					pins = "sdc1_data";
++					drive-strength = <10>;
++					bias-pull-up;
++				};
++
++				rclk-pins {
++					pins = "sdc1_rclk";
++					bias-pull-down;
++				};
++			};
++
+ 			spi1_default: spi0-default-state {
+ 				spi-pins {
+ 					pins = "gpio0", "gpio1", "gpio3";
+@@ -840,6 +890,11 @@ sdhc_1: mmc@7824900 {
+ 				 <&gcc GCC_SDCC1_APPS_CLK>,
+ 				 <&rpmcc RPM_SMD_XO_CLK_SRC>;
+ 			clock-names = "iface", "core", "xo";
++
++			pinctrl-names = "default", "sleep";
++			pinctrl-0 = <&sdc1_on_state>;
++			pinctrl-1 = <&sdc1_off_state>;
++
+ 			status = "disabled";
+ 		};
+ 
 
-The changelogs don't actually describe any hard lockup.  [1/2] does
-mention "the deadlock" but that's all the info we have.
-
-So could we please have a suitable description of the bug which these are
-addressing?  And a Reported-by:, a Closes: and a Fixes would be great too.
-
+-- 
+2.43.0
 
