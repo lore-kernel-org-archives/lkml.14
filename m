@@ -1,76 +1,67 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28A4F1D682;
-	Sun, 21 Jan 2024 16:35:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F8AD34CD5;
+	Sun, 21 Jan 2024 16:41:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705854950; cv=none; b=R1M8CUeesO4xrIC2PA6PnWC1U39YD4/fjy/4UtyaYuQNkjBdasjHaHb3bVZhxA6FXu3hAWyAWlmxtU/J9FH3r47JffvUhlNnfKtnzF5Ez/FJyQ/CAycrqsSOqcPtwSpfB0r1yyrqqeBxOGYtYVjJWdXu3w34mXSlqqGhTWYEGiA=
+	t=1705855299; cv=none; b=JjBDpCXk6/BYlPHZmZv2HAIPmSZ/IkrPrubMPUvwATLD6rCxXPDH3bWvF8mL9M57o1vNn4AaA6J0eEwMijvutyXuvAfu1UFTOhXNdTCYJDCuyDhBfLQnlxKncJJMl5zThRmlhC5wtfJjIj7io+BPekNNAG4IWXy7765wv1xFV0A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705854950; c=relaxed/simple;
-	bh=oXIDoCwWJnqHJqKehe0/596Q6ObG3BynFtSoQloYtpM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IycD3xxgOqMep4GZQGvYvKCbqQkOEJxwV0pczxTgZcQNdiR7mAK41ihwkW6HNE3Phe0XYwJ0JzUEFqSvoxBptxo+yJDdMlNOjEmGaYOEKwXCSpmnLzuP2TLHR2xtrvdi893oobJ1gOf4M+z+e1jRgP9R5cwGHsKIx59wfu+bR1U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=CiRXlYfV; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1705855299; c=relaxed/simple;
+	bh=51UlQqphSgXsPSJFl8/Rx05VZDKMVQU2uJ0P+iHg1FQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=aZVksqcY9P+9t8gOXgunHPCsIC2bJ813KjSqE6eS5Burpl08TUJSv3+yjI7HjkFvTax1nEGnWCtYaA0BMlV9hIwEQVrADsce4o19W/mYaOChTfwWrs3cm1wyVByU3gwEafN1GWVjFC5/FG1DLFx63q6zWoN1HC7K+oO22C4F41Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HDsQ32Go; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="CiRXlYfV"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=+ee0LVJaO5xx5GZobgreq3QpintDB0kzQxoNG6Nuq/Q=; b=CiRXlYfVKNnCf62BxY//FksKhE
-	ATDCOxtIR1lSIREWhqcUtHK3cRqyog9XQ4GH772UTukXmojvgCobskeCeXZ5ZcY9fXK9MYVU8G7xW
-	8V5HvUAVz2B6iAb9lDZXB8BkOdb4nxFLuGXjeTy9xUMCOjfQ7EoPwCi4LpAxqYcLX6kM=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1rRanN-005f4P-HR; Sun, 21 Jan 2024 17:35:41 +0100
-Date: Sun, 21 Jan 2024 17:35:41 +0100
-From: Andrew Lunn <andrew@lunn.ch>
-To: Ziyang Huang <hzyitc@outlook.com>
-Cc: mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com,
-	richardcochran@gmail.com, p.zabel@pengutronix.de,
-	matthias.bgg@gmail.com, angelogioacchino.delregno@collabora.com,
-	linux-kernel@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
-	linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH 6/8] net: mdio: ipq4019: support reset control
-Message-ID: <9ac4b153-2318-4d69-9771-1b3365104904@lunn.ch>
-References: <TYZPR01MB55563BD6A2B78402E4BB44D4C9762@TYZPR01MB5556.apcprd01.prod.exchangelabs.com>
- <TYZPR01MB55568177805D79143E8CF4E2C9762@TYZPR01MB5556.apcprd01.prod.exchangelabs.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HDsQ32Go"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DB35C433C7;
+	Sun, 21 Jan 2024 16:41:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705855298;
+	bh=51UlQqphSgXsPSJFl8/Rx05VZDKMVQU2uJ0P+iHg1FQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=HDsQ32GoN42KL6wglqQl+WgBmDJQyBdvAcTk6X6jDY5YhOPS8tv5OLD/c3sNkM3jC
+	 P18uOBmI73k5sIN++GkQzNw35AzG4qPzsfqOExSDryYwWujp/bJ1jWHxSOIighw1sz
+	 oC+EIVVtURl5lclzPSIobI1yd60VVw2i38ROjYynbdvuY4fgkJSA8fka+vBH9q0RNN
+	 hIPSyAw7MUVY7U1hJS0IO5pY5TtOezVkIFEn6NYQ7LXHCwaJcZXY7Rgcc622v3sqtp
+	 gSjPmhRSJ15twM9TlEgbQ0G5Yf05NSsMp+wgsixmz3y2y+BzU8BAjjns4DZt9+F7nZ
+	 u/5LWsoXfurNQ==
+Date: Sun, 21 Jan 2024 16:41:21 +0000
+From: Jonathan Cameron <jic23@kernel.org>
+To: =?UTF-8?B?TcOlcnRlbg==?= Lindahl <marten.lindahl@axis.com>
+Cc: Lars-Peter Clausen <lars@metafoo.de>, <linux-iio@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <kernel@axis.com>
+Subject: Re: [PATCH v3] iio: light: vcnl4000: Set ps high definition for
+ 4040/4200
+Message-ID: <20240121164121.159aea5e@jic23-huawei>
+In-Reply-To: <20231221-vcnl4000-ps-hd-v3-1-6dcc889372be@axis.com>
+References: <20231221-vcnl4000-ps-hd-v3-1-6dcc889372be@axis.com>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.40; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <TYZPR01MB55568177805D79143E8CF4E2C9762@TYZPR01MB5556.apcprd01.prod.exchangelabs.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, Jan 21, 2024 at 08:42:35PM +0800, Ziyang Huang wrote:
+On Mon, 15 Jan 2024 12:44:36 +0100
+M=C3=A5rten Lindahl <marten.lindahl@axis.com> wrote:
 
-In this case, you need to document why the MDIO core reset controller
-code does not work for you.
+> The vcnl4040/vcnl4200 proximity sensor defaults to 12 bit data
+> resolution, but the chip also supports 16 bit data resolution, which is
+> called proximity high definition (PS_HD).
+>=20
+> Make the vcnl4040/vcnl4200 proximity sensor use the high definition for
+> all data readings. Please note that in order to preserve the 12 bit
+> integer part of the in_proximity_raw output, the format is changed from
+> integer to fixed point.
+>=20
+> Signed-off-by: M=C3=A5rten Lindahl <marten.lindahl@axis.com>
+Applied to the togreg branch of iio.git and initially pushed out as testing
+for 0-day to see if it can find anything we missed.
 
-You are also missing the device tree binding again.
+Thanks,
 
-> @@ -248,6 +254,10 @@ static int ipq4019_mdio_probe(struct platform_device *pdev)
->  	if (IS_ERR(priv->membase))
->  		return PTR_ERR(priv->membase);
->  
-> +	priv->rst = devm_reset_control_array_get_optional_exclusive(&pdev->dev);
-> +	if (IS_ERR(priv->rst))
-> +		return PTR_ERR(priv->rst);
-
-How many resets does this MDIO controller have? Would
-devm_reset_control_get_optional_exclusive() be sufficient.
-
-
-    Andrew
-
----
-pw-bot: cr
+Jonathan
