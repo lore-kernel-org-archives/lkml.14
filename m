@@ -1,29 +1,29 @@
-Received: from relay01.th.seeweb.it (relay01.th.seeweb.it [5.144.164.162])
+Received: from relay02.th.seeweb.it (relay02.th.seeweb.it [5.144.164.163])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 964BF38392
-	for <linux-kernel@vger.kernel.org>; Sun, 21 Jan 2024 22:41:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.144.164.162
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9600638384;
+	Sun, 21 Jan 2024 22:41:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.144.164.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705876903; cv=none; b=R9vWYYkKlbuzXyFBpUULGg+38M4kdBElxPr8FoSKSRvCQ+QubKW9MBIyOmi945VMHMHX/7Z+wkEnt69s0P76whMyi8Dju+Yh4YbNfMc86N61XJDaRdm36Onh/2Bh+eeQUxXJIs6rnupPiCXSY4AhmnMONuYo12/YvTLraUi8Q3I=
+	t=1705876904; cv=none; b=r0pIWznhxuWOVaGh1POM6trHhNnhOvTgD856WzqzgKgovlPHXLaO6vpe8S+DfLswMAj9Wp6RS9W40wrnsVW2VkvPThso7R57pP3c2bkJumJNTH46IVN1JT9oIC2WijrXTcv2R5kDKKI4ONVQ31FhfKiaGS8m7WWSajrCesMrTfs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705876903; c=relaxed/simple;
-	bh=ZjsDfBtfx+AfvdgrvEbs+TSdw0CqYDKGBl6lNghc0SU=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=HV+oZ6RUXwktBEU+uEyRfDmhPuvh8wDqjjDxWg7EE/M9AO5gzui+7GaDTY08Y4BaHrEGnYE+resJFJxGDz2Wl2DjWqGxsFL6ywWHOJSWdLK2LU/mIQFktXV8+x3fI0+JS4Qc4ClasEwE/aG+CmdCDYLo2vzqmrckpBWLKAdApDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=somainline.org; spf=pass smtp.mailfrom=somainline.org; arc=none smtp.client-ip=5.144.164.162
+	s=arc-20240116; t=1705876904; c=relaxed/simple;
+	bh=WJ4yt2ceaxagRwjbxAaPjRX6Swf4XBTvvfUCXxi7z30=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=NlpNbgb7spG5SCcoARM4en9i7VOtcgfRqyYsf04AXD876HBTZdRuN0yek7VsklDVCgTwgSx9ApzQXMn0GUuBXusklf0HKJRMb89jY6vETjXawT+jU/ggRXfiRaH2G4GtHCoI2kzG5K/h8wxh8YLsgneKjOl9FyYpgFs7ixncgiQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=somainline.org; spf=pass smtp.mailfrom=somainline.org; arc=none smtp.client-ip=5.144.164.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=somainline.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=somainline.org
 Received: from Marijn-Arch-PC.localdomain (94-211-6-86.cable.dynamic.v4.ziggo.nl [94.211.6.86])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by m-r1.th.seeweb.it (Postfix) with ESMTPSA id 42C1520313;
-	Sun, 21 Jan 2024 23:33:39 +0100 (CET)
+	by m-r1.th.seeweb.it (Postfix) with ESMTPSA id 00E04203AA;
+	Sun, 21 Jan 2024 23:33:43 +0100 (CET)
 From: Marijn Suijten <marijn.suijten@somainline.org>
-Subject: [PATCH v2 0/6] arm64: dts: qcom: msm8956-loire: SDCard and USB
- support
-Date: Sun, 21 Jan 2024 23:33:37 +0100
-Message-Id: <20240121-msm8976-dt-v2-0-7b186a02dc72@somainline.org>
+Date: Sun, 21 Jan 2024 23:33:43 +0100
+Subject: [PATCH v2 6/6] arm64: dts: qcom: msm8956-loire: Add SD Card Detect
+ to SDC2 pin states
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -32,10 +32,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAMKbrWUC/zXMQQ6CMBBA0auQWVtSpo2AK+9hXFSYwhDbkikaE
- 8LdbUxc/sV/O2QSpgyXagehN2dOsQSeKhhmFydSPJYG1Gh1g40KOXR9e1bjplrjLRKRbx4DlGE
- V8vz5Ybd7aS8pqG0Wcn8Ci2DRoLZ93WpjO6uK6ISXWOcXLxvFa07BcXxypDrJBMfxBYT8DoKkA
- AAA
+Message-Id: <20240121-msm8976-dt-v2-6-7b186a02dc72@somainline.org>
+References: <20240121-msm8976-dt-v2-0-7b186a02dc72@somainline.org>
+In-Reply-To: <20240121-msm8976-dt-v2-0-7b186a02dc72@somainline.org>
 To: Bjorn Andersson <andersson@kernel.org>, 
  Rob Herring <robh+dt@kernel.org>, 
  Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
@@ -47,65 +46,50 @@ Cc: ~postmarketos/upstreaming@lists.sr.ht,
  Martin Botka <martin.botka@somainline.org>, 
  Jami Kettunen <jami.kettunen@somainline.org>, linux-arm-msm@vger.kernel.org, 
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Marijn Suijten <marijn.suijten@somainline.org>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@somainline.org>
+ Marijn Suijten <marijn.suijten@somainline.org>
 X-Mailer: b4 0.12.4
 
-Add pinctrl nodes to enable SD Cards to work on the Sony Loire platform,
-and define extcon nodes in PMI8950 to feed into the ci-hdrc driver as it
-cannot figure out the presence of a USB cable (nor the desired role
-based on the ID pin) on its own.  While at it, extend PMI8950 with some
-more channels with now-available VADC_ register constants.
+In addition to the SDC2 pins, set the SD Card Detect pin in a sane state
+to be used as an interrupt when an SD Card is slotted in or removed.
 
-Depends on:
-- dt-bindings: iio: qcom-spmi-vadc: Add definitions for USB DP/DM VADCs:
-  https://lore.kernel.org/linux-arm-msm/20221111120156.48040-2-angelogioacchino.delregno@collabora.com/
-
-Changes since v1:
-- Moved pinctrl-names before pinctrl-N (Konrad);
-- Keep status=okay last in OTG node (Konrad);
-- Rename `adc-chan@` node names to `channel@` (my own patch from a long
-  time ago).
-
-v1: https://lore.kernel.org/linux-arm-msm/60a40ace-d4e9-df74-88f9-4354d80efaac@linaro.org/
-
-Marijn Suijten (6):
-  arm64: dts: qcom: pmi8950: Add USB vbus and id sensing nodes
-  arm64: dts: qcom: msm8956-loire: Add usb vbus and id extcons to
-    ci-hdrc
-  arm64: dts: qcom: pmi8950: Add missing ADC channels
-  arm64: dts: qcom: msm8976: Declare and use SDC1 pins
-  arm64: dts: qcom: msm8976: Declare and use SDC2 pins
-  arm64: dts: qcom: msm8956-loire: Add SD Card Detect to SDC2 pin states
-
- .../qcom/msm8956-sony-xperia-loire-kugo.dts   |   6 ++
- .../dts/qcom/msm8956-sony-xperia-loire.dtsi   |  25 +++++
- arch/arm64/boot/dts/qcom/msm8976.dtsi         | 100 ++++++++++++++++++
- arch/arm64/boot/dts/qcom/pmi8950.dtsi         |  38 +++++++
- 4 files changed, 169 insertions(+)
-
---
-2.39.0
-
+Signed-off-by: Marijn Suijten <marijn.suijten@somainline.org>
 ---
-Marijn Suijten (6):
-      arm64: dts: qcom: pmi8950: Add USB vbus and id sensing nodes
-      arm64: dts: qcom: msm8956-loire: Add usb vbus and id extcons to ci-hdrc
-      arm64: dts: qcom: pmi8950: Add missing ADC channels
-      arm64: dts: qcom: msm8976: Declare and use SDC1 pins
-      arm64: dts: qcom: msm8976: Declare and use SDC2 pins
-      arm64: dts: qcom: msm8956-loire: Add SD Card Detect to SDC2 pin states
+ arch/arm64/boot/dts/qcom/msm8956-sony-xperia-loire.dtsi | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
- .../dts/qcom/msm8956-sony-xperia-loire-kugo.dts    |   6 ++
- .../boot/dts/qcom/msm8956-sony-xperia-loire.dtsi   |  25 ++++++
- arch/arm64/boot/dts/qcom/msm8976.dtsi              | 100 +++++++++++++++++++++
- arch/arm64/boot/dts/qcom/pmi8950.dtsi              |  38 ++++++++
- 4 files changed, 169 insertions(+)
----
-base-commit: ad5c60d66016e544c51ed98635a74073f761f45d
-change-id: 20240121-msm8976-dt-73f42eeef1bc
+diff --git a/arch/arm64/boot/dts/qcom/msm8956-sony-xperia-loire.dtsi b/arch/arm64/boot/dts/qcom/msm8956-sony-xperia-loire.dtsi
+index b0b83edd3627..75412e37334c 100644
+--- a/arch/arm64/boot/dts/qcom/msm8956-sony-xperia-loire.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8956-sony-xperia-loire.dtsi
+@@ -264,10 +264,27 @@ &sdhc_1 {
+ 	status = "okay";
+ };
+ 
++&sdc2_off_state {
++	sd-cd-pins {
++		pins = "gpio100";
++		function = "gpio";
++		drive-strength = <2>;
++		bias-disable;
++	};
++};
++
+ &sdc2_on_state {
+ 	clk-pins {
+ 		drive-strength = <10>;
+ 	};
++
++	sd-cd-pins {
++		pins = "gpio100";
++		function = "gpio";
++		drive-strength = <2>;
++		input-enable;
++		bias-pull-up;
++	};
+ };
+ 
+ &sdhc_2 {
 
-Best regards,
 -- 
-Marijn Suijten <marijn.suijten@somainline.org>
+2.43.0
 
