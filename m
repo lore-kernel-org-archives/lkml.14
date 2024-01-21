@@ -1,144 +1,94 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD73C39879;
-	Sun, 21 Jan 2024 16:59:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D67C3A1AA;
+	Sun, 21 Jan 2024 16:59:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705856367; cv=none; b=m6Mf3zJdZodOLCPPaQvHDXseNs1YA3mv/ioDWJbgKpZ+MPai+K8RNdwJE1AY7z5kvGQa1KX64pCl07gsnXNkrVo3hUBVJJpKWN81GDIzYQXpB4VOH+ErwVBCL6NykxQB18fHzfjZvp5hbqvvhhK2jXt9saxtuavZzlGED1ksO5A=
+	t=1705856371; cv=none; b=pDUGZK9ffBdD3cmJwJXYeAleizuWY3omqLkD8WUepKshQmK7PumXZfw1AvMuofBBVpG1M7BtCGi8KWr3UnvJPfhrGLjljN5H0KbtsXJOQwzDq7e3SLrIMVzuUczy1rKI/4U+IWSX7ACa85pjZyTuutJK0TTVyWj0QpCEl6jCpM8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705856367; c=relaxed/simple;
-	bh=qd6aa7QiaWspQR3ZEJA6WWRFbT5cIeORtS7lzfdU0Is=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=RNP4oL3CPX3b17qlN/2jcOUcr1STd32XFpi5CO3bBuVwz6dBB5Et9r9PxKktrErz3seA/xLQkCR3hiADLB2J5A/tbh/YtbJAapn4GCPty27hTkE08x3AY90nQzeFLmjFZVl8f/Ggz3j+9iJyF0UPgpbqnW4U31kJPgzBdVtZg64=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kedyQlzD; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1705856371; c=relaxed/simple;
+	bh=/lIv+VUUpsGxYSSv4VVFy0oNYdfHK3EeEkjk58z7vws=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=pO0QiCJgkIfJhDFrewRXxdUsMkaTMQ/nr9ipjQuzN97QmIc8WHUZWbIN9novnQxLVWXS2GBA6uFA58fd7aLOKaOZL1Ai7MmyIO+l5/6Y8qMl8YqTVM7KozOrYmpGgfN1nVvJrm4P5WbhL99f/IHlHOaUYrWGXmBR1ir2rDPPJGc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bUZCdhIe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kedyQlzD"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-40e8801221cso24261045e9.1;
-        Sun, 21 Jan 2024 08:59:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705856364; x=1706461164; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=gK5nK5PwrUn57SfZW8dbKzVdKzftzCnA6l6yN9PxC7A=;
-        b=kedyQlzDRde5ZC9i3GxBdTnCx4tccoqBnBdcuk5iEjkrnoMCYRL2U+rWmhJpyNXM3h
-         h96zsy4+rz1+SS30fXFBHTghBsz3ZR5PfnB9LXbeEkISiPKiBZFVJD3oqYpskhWgCTl0
-         1TCCOKl6OV69X7biy2QXO54k5u/etEXWlRYTm9yTZ2ll+rooloOwfY+mfLGzmyQy5MiO
-         W/3pdryJZA6CNbeUzolrRXSkNyOmfT6x1HxdHXw9QCXILC+dlgz8vvCJxnCn91gDWp/r
-         ySJpa01DDDbFG4IuS+I4mAvWlloHcwX9xZeReyJBjjvAqqVO92wrp2MlcoLPRZtFT8yL
-         Prug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705856364; x=1706461164;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gK5nK5PwrUn57SfZW8dbKzVdKzftzCnA6l6yN9PxC7A=;
-        b=HAdNLtnoKHwD59fuq2pYlOMcMEh3Sq66Z0oFtw+nUw8zWWyP87zQo0wL+MIcwbnWtY
-         VgASpNRQEnGklFDGQmCsffWwdUilGbzDR1elhfo6pA8j70IcN50vpMnztsfgYqS/nU9T
-         Mp3r2FZE6KpKN6glvQHIGosE7QHJRfnCNNDJuN8AzvjRuG4YF/ElaqyW5LlwaxZiWYH3
-         oEdu6jwFDYe7FXg7R04rEuoe4baOSHy2pHaJck5RymKUddsPtcvsmxBWOUh1OArR3/2I
-         4/mmBANEy/jIZw+T10PLHC90loG3S0XyOo1SW4oX4nAW+D7D2dfdWQMWix1zncnWm7ZM
-         Jf8g==
-X-Gm-Message-State: AOJu0Yx/kbt/nN+8mMR6yqHXtzxj6/tVipqveWCQR8x48ikjwEgGRVWU
-	9Rg0qksWnw1B9kbriKuJkRp9ddpER9/lbpqSahzk1WN4ul3StyE5Z7COsS6W
-X-Google-Smtp-Source: AGHT+IFsVH6k6ajfNQ3Ngf6ihWQLiw+5zO5HU7ToHaJReIYrKn3JxVQHaGOVUIXkWbhe2r1Bm4y/AA==
-X-Received: by 2002:adf:e58d:0:b0:337:c4d0:3ce9 with SMTP id l13-20020adfe58d000000b00337c4d03ce9mr1889216wrm.87.1705856363900;
-        Sun, 21 Jan 2024 08:59:23 -0800 (PST)
-Received: from david-ryuzu.localdomain ([178.26.111.181])
-        by smtp.googlemail.com with ESMTPSA id q5-20020adff505000000b00339214d70b5sm6541115wro.85.2024.01.21.08.59.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 21 Jan 2024 08:59:23 -0800 (PST)
-From: David Wronek <davidwronek@gmail.com>
-Date: Sun, 21 Jan 2024 17:57:48 +0100
-Subject: [PATCH v4 8/8] arm64: dts: qcom: Add support for Xiaomi Redmi Note
- 9S
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bUZCdhIe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE5F2C433C7;
+	Sun, 21 Jan 2024 16:59:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705856370;
+	bh=/lIv+VUUpsGxYSSv4VVFy0oNYdfHK3EeEkjk58z7vws=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=bUZCdhIebivnc+wfH++5dnJjGOB18ZtHPlpABi/SwFdNRaiauMUsMFs/eghUxK4RF
+	 Q2JkBEPVM3PWpE97XSLr/Mk6dDUPgSzp9eIcqQHADST1JaNmyCbTrX5EiI9WBGTBmU
+	 lrhp9WRXlPphcYiKECHYUarpj2WrXzGD0MBTD8ecPI7gbiNvnc9mbqe7aTutxdkfnj
+	 /r6OXvzb3baex4lPdaGp9K3U1Hiwh06+TC/W4NqxO2a0V+NskO2l5vh/8pa0XNpoIn
+	 t3PRIuWu2vc9iYFxE25nyUs3+vKeRz4oTdULG1aZrpGm5h96dGWrkChuT/OT2t0sG2
+	 J4VdupMUhA0Dw==
+Date: Sun, 21 Jan 2024 16:59:14 +0000
+From: Jonathan Cameron <jic23@kernel.org>
+To: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+Cc: Dan Carpenter <dan.carpenter@linaro.org>, Marcelo Schmitt
+ <marcelo.schmitt@analog.com>, Lars-Peter Clausen <lars@metafoo.de>, Michael
+ Hennerich <Michael.Hennerich@analog.com>, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] iio: adc: ad7091r8: Fix error code in
+ ad7091r8_gpio_setup()
+Message-ID: <20240121165914.21486583@jic23-huawei>
+In-Reply-To: <ZaCdNl6S1IRjyWru@debian-BULLSEYE-live-builder-AMD64>
+References: <fd905ad0-6413-489c-9a3b-90c0cdb35ec9@moroto.mountain>
+	<ZaCdNl6S1IRjyWru@debian-BULLSEYE-live-builder-AMD64>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.40; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240121-sm7125-upstream-v4-8-f7d1212c8ebb@gmail.com>
-References: <20240121-sm7125-upstream-v4-0-f7d1212c8ebb@gmail.com>
-In-Reply-To: <20240121-sm7125-upstream-v4-0-f7d1212c8ebb@gmail.com>
-To: Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konrad.dybcio@linaro.org>, 
- Herbert Xu <herbert@gondor.apana.org.au>, 
- "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
- Alim Akhtar <alim.akhtar@samsung.com>, Avri Altman <avri.altman@wdc.com>, 
- Bart Van Assche <bvanassche@acm.org>, Andy Gross <agross@kernel.org>, 
- Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, 
- cros-qcom-dts-watchers@chromium.org
-Cc: linux-arm-msm@vger.kernel.org, linux-crypto@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-scsi@vger.kernel.org, linux-phy@lists.infradead.org, 
- ~postmarketos/upstreaming@lists.sr.ht, David Wronek <davidwronek@gmail.com>, 
- Joe Mason <buddyjojo06@outlook.com>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1705856354; l=1769;
- i=davidwronek@gmail.com; s=20240121; h=from:subject:message-id;
- bh=sSzRKjO93UpTlJ8GvJQsTstGtWQctFuueHqgHmEaLmI=;
- b=KrhjqRs6MaRVLwt8z7GQUu3O8KHdE2udwZmCwSHa9BL7BkdLOzrrS2oaMXY4HjKggisfo+hCq
- zVjPjqKqSTMCv+Zem4h0Jtp8mBbAA6H2PjTlO1wTwkBIfA2u1sKOQjF
-X-Developer-Key: i=davidwronek@gmail.com; a=ed25519;
- pk=PJIYyFK3VrK6x+9W6ih8IGSJ5dxRXHiYay+gG1qQzqs=
 
-From: Joe Mason <buddyjojo06@outlook.com>
+On Thu, 11 Jan 2024 23:00:22 -0300
+Marcelo Schmitt <marcelo.schmitt1@gmail.com> wrote:
 
-Add a device tree for the Xiaomi Redmi Note 9S (curtana) phone, based on
-sm7125-xiaomi-common.dtsi.
+> On 01/08, Dan Carpenter wrote:
+> > There is a copy and paste error so it accidentally returns ->convst_gpio
+> > instead of ->reset_gpio.  Fix it.
+> > 
+> > Fixes: 0b76ff46c463 ("iio: adc: Add support for AD7091R-8")
+> > Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+> > ---  
+> 
+> Oops, that also slipped through.
+> Thanks for the fix.
+> 
+> Reviewed-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+Applied to the fixes-togreg branch of iio.git.
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
-Signed-off-by: Joe Mason <buddyjojo06@outlook.com>
-Signed-off-by: David Wronek <davidwronek@gmail.com>
----
- arch/arm64/boot/dts/qcom/Makefile                  |  1 +
- arch/arm64/boot/dts/qcom/sm7125-xiaomi-curtana.dts | 16 ++++++++++++++++
- 2 files changed, 17 insertions(+)
+Thanks,
 
-diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
-index 39889d5f8e12..2e6984bbbb83 100644
---- a/arch/arm64/boot/dts/qcom/Makefile
-+++ b/arch/arm64/boot/dts/qcom/Makefile
-@@ -210,6 +210,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= sm6125-sony-xperia-seine-pdx201.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sm6125-xiaomi-laurel-sprout.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sm6350-sony-xperia-lena-pdx213.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sm6375-sony-xperia-murray-pdx225.dtb
-+dtb-$(CONFIG_ARCH_QCOM)	+= sm7125-xiaomi-curtana.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sm7125-xiaomi-joyeuse.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sm7225-fairphone-fp4.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sm8150-hdk.dtb
-diff --git a/arch/arm64/boot/dts/qcom/sm7125-xiaomi-curtana.dts b/arch/arm64/boot/dts/qcom/sm7125-xiaomi-curtana.dts
-new file mode 100644
-index 000000000000..12f517a8492c
---- /dev/null
-+++ b/arch/arm64/boot/dts/qcom/sm7125-xiaomi-curtana.dts
-@@ -0,0 +1,16 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2023, Joe Mason <buddyjojo06@outlook.com>
-+ */
-+
-+/dts-v1/;
-+
-+#include "sm7125-xiaomi-common.dtsi"
-+
-+/ {
-+	model = "Xiaomi Redmi Note 9S";
-+	compatible = "xiaomi,curtana", "qcom,sm7125";
-+
-+	/* required for bootloader to select correct board */
-+	qcom,board-id = <0x20022 1>;
-+};
+Jonathan
 
--- 
-2.43.0
+> 
+> >  drivers/iio/adc/ad7091r8.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/iio/adc/ad7091r8.c b/drivers/iio/adc/ad7091r8.c
+> > index 57700f124803..700564305057 100644
+> > --- a/drivers/iio/adc/ad7091r8.c
+> > +++ b/drivers/iio/adc/ad7091r8.c
+> > @@ -195,7 +195,7 @@ static int ad7091r8_gpio_setup(struct ad7091r_state *st)
+> >  	st->reset_gpio = devm_gpiod_get_optional(st->dev, "reset",
+> >  						 GPIOD_OUT_HIGH);
+> >  	if (IS_ERR(st->reset_gpio))
+> > -		return dev_err_probe(st->dev, PTR_ERR(st->convst_gpio),
+> > +		return dev_err_probe(st->dev, PTR_ERR(st->reset_gpio),
+> >  				     "Error on requesting reset GPIO\n");
+> >  
+> >  	if (st->reset_gpio) {
+> > -- 
+> > 2.42.0
+> > 
+> >   
 
