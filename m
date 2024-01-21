@@ -1,130 +1,126 @@
-Received: from vps.xff.cz (vps.xff.cz [195.181.215.36])
+Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01147364B9;
-	Sun, 21 Jan 2024 11:15:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.181.215.36
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 596BB364B9;
+	Sun, 21 Jan 2024 11:18:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705835752; cv=none; b=Sa+ckYRZi+qRgIckULKmnjfYG8MzOiVEr4t7uOY3UfMkupU5cgIIMJFsFV8tU6Fi13vVO8fWyCozrjVeHS3RR0reoJAkkPTuSBk8qwmLZzc2tFK9QRGNo3j+xX5vQwTrDCM9f8B34cl0PCGcLmyCzn8oeEEmrPTq/PrC4aVAbxo=
+	t=1705835883; cv=none; b=WMNBxyGVuCiNfhV3N1hdnzUxX2xoUT8lEdhX0b82xs+Si7j83K0b7KN/n0AVdHuKp28GLpKYXeeWeKO2NPhzeEA4Pd4OotP/9g6Mkeyap2Tg3uUbfiefM3T8BBQR+hTtVYRzBlW4CVcC4qtklxR3f40zjzm6RXr48xWnKza9Czs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705835752; c=relaxed/simple;
-	bh=BJl6dRunfUdJhmlTiGBxhm3Khy2eKzAexEswACUFpvQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dDSFsyhNxE2cVv/Kbermh5PYXy/ZDRno6GPGK701ig51aMn4IS5S6N+kBvm3/H3GCnebgMI4rP5MdeAoyvF/pkZcfXP4Loav5Is2pqJTgg0TwhYlcN15iueEt86wJpwu0PBs8DFrPBZAchnxlzK9qJb9qDfm+76JkmJ1cY8BPuo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xff.cz; spf=pass smtp.mailfrom=xff.cz; dkim=pass (1024-bit key) header.d=xff.cz header.i=@xff.cz header.b=enYY0PYr; arc=none smtp.client-ip=195.181.215.36
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xff.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xff.cz
+	s=arc-20240116; t=1705835883; c=relaxed/simple;
+	bh=Ubv0rLJDHobpYSxs/pzdciuhtxNUUVVqLBL+5YRdYhY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=DFhF+SdPrEANI8fBasLkfMBRPzkUcjcMidVvjVhT3quwD9K0TIic0YciozTBnnX5qzflVv8+7opaTV4vPgbU9tDXyAbjeMZvaRSDLTbaJDtpeL1H8D23PX58ZEgerfHnACAHkjeMWpo/mPBx2nGnp4AHH92ON3t8R5UxcDzFpWM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=m24NhnmE; arc=none smtp.client-ip=209.85.167.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xff.cz header.i=@xff.cz header.b="enYY0PYr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xff.cz; s=mail;
-	t=1705835317; bh=BJl6dRunfUdJhmlTiGBxhm3Khy2eKzAexEswACUFpvQ=;
-	h=Date:From:To:Cc:Subject:X-My-GPG-KeyId:References:From;
-	b=enYY0PYrFfDg2fge47bPemI8U/Scz2W1AK+j/8fY0K9FuXo3bOKYg4voojmNNkaqT
-	 32ffl8bOq9TyIpEVa290gdVT6cTfc7Z0AHtCf/1Rc5l6oLivk2vZ/LG7qO582k3YkX
-	 SjR8KCkOdtBnKhDH4FzfI3r2rIn3yV7AWo+wfF2Y=
-Date: Sun, 21 Jan 2024 12:08:37 +0100
-From: =?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>
-To: Aren Moynihan <aren@peacevolution.org>
-Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Aidan MacDonald <aidanmacdonald.0x0@gmail.com>, Chen-Yu Tsai <wens@csie.org>, 
-	Quentin Schulz <quentin.schulz@bootlin.com>, Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH 3/3] power: supply: axp20x_usb_power: set input current
- limit in probe
-Message-ID: <tgejuevbkneg5vmo7lnxf7ml3z2g3jcjweii7lxqp5lrxs6srd@la3rdfiiqbun>
-Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>, 
-	Aren Moynihan <aren@peacevolution.org>, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Aidan MacDonald <aidanmacdonald.0x0@gmail.com>, Chen-Yu Tsai <wens@csie.org>, 
-	Quentin Schulz <quentin.schulz@bootlin.com>, Sebastian Reichel <sre@kernel.org>
-X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
- <https://xff.cz/key.txt>
-References: <20240121014057.1042466-1-aren@peacevolution.org>
- <20240121014057.1042466-7-aren@peacevolution.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m24NhnmE"
+Received: by mail-oi1-f178.google.com with SMTP id 5614622812f47-3bd6581bc66so1898085b6e.1;
+        Sun, 21 Jan 2024 03:18:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1705835881; x=1706440681; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=fnxOIz+fz6hhaph0nBIFemtok9zJmzQs5V2LHS3xYNM=;
+        b=m24NhnmESo0uXdGHtZ9ss/6jk1cijh12wdI6+hB/89S3QQnVzBK3WsbJBrqTmXF9l2
+         4wEqozVl7kyQMA7Nmz/JZ8hNUGwScXLV6igymKbne+0Uk4Y9TpFpvBwiw7a/i9lZq/un
+         rjR5oyIDDGPq2dy2o+yiui4Ewmf0Yzr2eFOyiie/q9wPpF6pYwpziTpD9h63vY7FPV9Q
+         quwHvCw4N4DnZHnyNxzOSiNZZ2VwxMZ6jNI2l1G13JVHKCqAJWT9bo1d1mEQrOncOQuz
+         /uXyoRtczfLNYGZyLTl9OwmMPg5/b56RlZtW8Suy1Dv844bbeINNsYwpjKRU9lNRWr0C
+         Cyuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705835881; x=1706440681;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=fnxOIz+fz6hhaph0nBIFemtok9zJmzQs5V2LHS3xYNM=;
+        b=Km08xr8HekDFLj62uzesJQkRIvJlzeoznpvUwSX3IhvzjJDSXK2O4NsKv6sJs7IECh
+         JOLA79EAcI8NH+08b+3W1XCkTN7HrkKhuB1LcUUjkGR78x9Q6IBa6KWfaEonBqs9Hz8P
+         ZhgYoKJQKXlvxFMXk8y/bgusbCCupuAenfzsGkb7UJ+P80uOeRqkgcPwUsXqgJ9lg/jJ
+         6z0uVy3lAytKe3aiKEvH2GYrI7ZhKPm0dRQdmZSfBOuMRAwORd6bGex46ki5BqO7rB9X
+         x1ESfM11V7Pk0U2nETkoiwAQRaXaI/fehCSjc9oojAC/SaYAsU/06ohFAIyQqWaoOK3Z
+         jbvg==
+X-Gm-Message-State: AOJu0YwU8oIxbNzTAl4Ni92deQxIpIP2wusZGZWz/QkEKBQCn0UqYuEK
+	YiGAEKuR+3M6Yn37SEaoBZgLla9byEKOOhTxch63oaoECELTpf9S
+X-Google-Smtp-Source: AGHT+IG3Sb3mLtHIrr1fyK95APSNwvKjlTtbHQLR6kwJ+gV7wS8XB+MFlCJhhOcPGHG5yoGxFQnm/w==
+X-Received: by 2002:a05:6808:3197:b0:3bd:9d4c:de with SMTP id cd23-20020a056808319700b003bd9d4c00demr3694920oib.30.1705835881179;
+        Sun, 21 Jan 2024 03:18:01 -0800 (PST)
+Received: from localhost.localdomain ([43.132.141.9])
+        by smtp.gmail.com with ESMTPSA id jc9-20020a17090325c900b001d7233f1a92sm3560255plb.221.2024.01.21.03.17.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 21 Jan 2024 03:18:00 -0800 (PST)
+From: Yi Wang <up2wing@gmail.com>
+X-Google-Original-From: Yi Wang <foxywang@tencent.com>
+To: seanjc@google.com,
+	pbonzini@redhat.com,
+	tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org,
+	hpa@zytor.com,
+	kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	wanpengli@tencent.com,
+	foxywang@tencent.com,
+	oliver.upton@linux.dev,
+	maz@kernel.org,
+	anup@brainfault.org,
+	atishp@atishpatra.org,
+	borntraeger@linux.ibm.com,
+	frankja@linux.ibm.com,
+	imbrenda@linux.ibm.com
+Cc: up2wing@gmail.com
+Subject: [v2 0/4] KVM: irqchip: synchronize srcu only if needed
+Date: Sun, 21 Jan 2024 19:17:26 +0800
+Message-Id: <20240121111730.262429-1-foxywang@tencent.com>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240121014057.1042466-7-aren@peacevolution.org>
+Content-Transfer-Encoding: 8bit
 
-Hello Aren,
+From: Yi Wang <foxywang@tencent.com>
 
-On Sat, Jan 20, 2024 at 08:40:04PM -0500, Aren Moynihan wrote:
-> axp803 sets the current limit to 3A by default if it doesn't detect a
-> battery. The datasheet says that reg 0x2D bit 6 is used to indicate
-> first power on status. According to it, if that bit is 0 and the
-> battery is not detected, it will set the input current limit to 3A,
-> however setting that bit to 1 doesn't to prevent the pmic from setting
-> the current limit to 3A.
-> 
-> Fixes: c279adafe6ab ("power: supply: axp20x_usb_power: add support for AXP813")
-> 
-> Signed-off-by: Aren Moynihan <aren@peacevolution.org>
-> ---
-> I'm not sure if the pmic simply ignores the first power on field, or if
-> it needs to be set in a specific way / at a specific time. I tried
-> setting it in arm-trusted-firmware, and the pmic still set the input
-> current limit to 3A.
-> 
-> The datasheet for axp813 says it has the same first power on bit, but I
-> don't have hardware to test if it behaves the same way. This driver uses
-> the same platform data for axp803 and axp813.
-> 
->  drivers/power/supply/axp20x_usb_power.c | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
-> 
-> diff --git a/drivers/power/supply/axp20x_usb_power.c b/drivers/power/supply/axp20x_usb_power.c
-> index 5656f6e57d54..95b136ee20f2 100644
-> --- a/drivers/power/supply/axp20x_usb_power.c
-> +++ b/drivers/power/supply/axp20x_usb_power.c
-> @@ -52,6 +52,7 @@ struct axp_data {
->  	const int			*curr_lim_table;
->  	int				input_curr_lim_table_size;
->  	const int			*input_curr_lim_table;
-> +	int				force_input_curr_lim;
->  	struct reg_field		curr_lim_fld;
->  	struct reg_field		input_curr_lim_fld;
->  	struct reg_field		vbus_valid_bit;
-> @@ -599,6 +600,7 @@ static const struct axp_data axp813_data = {
->  	.input_curr_lim_table_size = ARRAY_SIZE(axp_813_usb_input_curr_lim_table),
->  	.input_curr_lim_table = axp_813_usb_input_curr_lim_table,
->  	.input_curr_lim_fld = REG_FIELD(AXP22X_CHRG_CTRL3, 4, 7),
-> +	.force_input_curr_lim = 500000,
->  	.usb_bc_en_bit	= REG_FIELD(AXP288_BC_GLOBAL, 0, 0),
->  	.usb_bc_det_fld = REG_FIELD(AXP288_BC_DET_STAT, 5, 7),
->  	.vbus_disable_bit = REG_FIELD(AXP20X_VBUS_IPSOUT_MGMT, 7, 7),
-> @@ -786,6 +788,17 @@ static int axp20x_usb_power_probe(struct platform_device *pdev)
->  			return ret;
->  	}
->  
-> +	if (power->axp_data->force_input_curr_lim) {
-> +		/*
-> +		 * Certain chips set the input current limit to 3A when there is
-> +		 * no battery connected. Normally the default is 500mA.
-> +		 */
-> +		ret = axp20x_usb_power_set_input_current_limit(power,
-> +				power->axp_data->force_input_curr_lim);
-> +		if (ret)
-> +			return ret;
-> +	}
+We found that it may cost more than 20 milliseconds very accidentally
+to enable cap of KVM_CAP_SPLIT_IRQCHIP on a host which has many vms
+already.
 
-This will break the usecase of powering Pinephone from USB without a battery
-present (or fully discharged).
+The reason is that when vmm(qemu/CloudHypervisor) invokes
+KVM_CAP_SPLIT_IRQCHIP kvm will call synchronize_srcu_expedited() and
+might_sleep and kworker of srcu may cost some delay during this period.
+One way makes sence is setup empty irq routing when creating vm and
+so that x86/s390 don't need to setup empty/dummy irq routing.
 
-The phone can require more than 500mA before USB power supply detection manages
-to run and sets the higher limit. Linux should keep the limit set by the
-bootloader until it figures out something better based on BC 1.2 or USB-PD.
+Note: I have no s390 machine so the s390 patch has not been tested.
 
-You should only change the limit as the result of negotiation.
+Changelog:
+----------
+v1->v2:
+  - setup empty irq routing in kvm_create_vm
+  - don't setup irq routing in x86 KVM_CAP_SPLIT_IRQCHIP
+  - don't setup irq routing in s390 KVM_CREATE_IRQCHIP
 
-Kind regards,
-	o.
+v1: https://lore.kernel.org/kvm/20240112091128.3868059-1-foxywang@tencent.com/
 
->  	if (power->usb_bc_en_bit) {
->  		/* Enable USB Battery Charging specification detection */
->  		ret = regmap_field_write(power->usb_bc_en_bit, 1);
-> -- 
-> 2.43.0
-> 
+Yi Wang (4):
+  KVM: irqchip: add setup empty irq routing function
+  KVM: setup empty irq routing when create vm
+  KVM: x86: don't setup empty irq routing when KVM_CAP_SPLIT_IRQCHIP
+  KVM: s390: don't setup dummy routing when KVM_CREATE_IRQCHIP
+
+ arch/s390/kvm/kvm-s390.c | 13 +++++--------
+ arch/x86/kvm/irq.h       |  1 -
+ arch/x86/kvm/irq_comm.c  |  5 -----
+ arch/x86/kvm/x86.c       |  3 ---
+ include/linux/kvm_host.h |  1 +
+ virt/kvm/irqchip.c       | 19 +++++++++++++++++++
+ virt/kvm/kvm_main.c      |  4 ++++
+ 7 files changed, 29 insertions(+), 17 deletions(-)
+
+-- 
+2.39.3
+
