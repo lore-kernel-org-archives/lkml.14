@@ -1,95 +1,70 @@
-Received: from relay02.th.seeweb.it (relay02.th.seeweb.it [5.144.164.163])
+Received: from out-178.mta1.migadu.com (out-178.mta1.migadu.com [95.215.58.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9600638384;
-	Sun, 21 Jan 2024 22:41:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.144.164.163
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FD8038F99
+	for <linux-kernel@vger.kernel.org>; Sun, 21 Jan 2024 22:42:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705876904; cv=none; b=r0pIWznhxuWOVaGh1POM6trHhNnhOvTgD856WzqzgKgovlPHXLaO6vpe8S+DfLswMAj9Wp6RS9W40wrnsVW2VkvPThso7R57pP3c2bkJumJNTH46IVN1JT9oIC2WijrXTcv2R5kDKKI4ONVQ31FhfKiaGS8m7WWSajrCesMrTfs=
+	t=1705876971; cv=none; b=bEhXKldhW3i+0IImxoIm/u1/PYBakGGTtjW2jT94lLviSfjT2vxmVcdrdJpunnH9iTB/M7Bf3sf6mJlas63l2l4j1AN/XC3qosB/95olaojpCq7qJwIU4mC7ToVRUIq1upVn+yb8V64xl6g8GrzIofTmkbhEtggSLq8oeVZIMCs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705876904; c=relaxed/simple;
-	bh=WJ4yt2ceaxagRwjbxAaPjRX6Swf4XBTvvfUCXxi7z30=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=NlpNbgb7spG5SCcoARM4en9i7VOtcgfRqyYsf04AXD876HBTZdRuN0yek7VsklDVCgTwgSx9ApzQXMn0GUuBXusklf0HKJRMb89jY6vETjXawT+jU/ggRXfiRaH2G4GtHCoI2kzG5K/h8wxh8YLsgneKjOl9FyYpgFs7ixncgiQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=somainline.org; spf=pass smtp.mailfrom=somainline.org; arc=none smtp.client-ip=5.144.164.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=somainline.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=somainline.org
-Received: from Marijn-Arch-PC.localdomain (94-211-6-86.cable.dynamic.v4.ziggo.nl [94.211.6.86])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by m-r1.th.seeweb.it (Postfix) with ESMTPSA id 00E04203AA;
-	Sun, 21 Jan 2024 23:33:43 +0100 (CET)
-From: Marijn Suijten <marijn.suijten@somainline.org>
-Date: Sun, 21 Jan 2024 23:33:43 +0100
-Subject: [PATCH v2 6/6] arm64: dts: qcom: msm8956-loire: Add SD Card Detect
- to SDC2 pin states
+	s=arc-20240116; t=1705876971; c=relaxed/simple;
+	bh=mtq5Ct3DiF2+05ZYvmewRcHnK5+uLUY7o2GpBZ+pM0M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SBLQH5uWJOgNUOYya+CX8PdRXKQZSTg/CEouDxTBX9E9a+A9UFNd5WsBlTYISuRzpI2EJPe/sFjpqGlA/skNeW9bDFkq3YIFDf3MFHX8WdmD4sCk+gxQhGnfkLG+Jw1za/Qg05gMOWehbBf5YxroDnAsRtTGVghuQ1NuU5OcoCk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=WFdc0s9x; arc=none smtp.client-ip=95.215.58.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="WFdc0s9x"
+Date: Sun, 21 Jan 2024 17:42:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1705876967;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=K8eHWGuuA6Pwmzz/CjhK4EVo4x2Z5WhhRU/5WA4RF1s=;
+	b=WFdc0s9xUyn6nQEJNVxudMARxSnm7N014DcbqDkxHrMtM9UvqsxvsoscvY2tcL69HJI5ZY
+	3ihZAy4JTDeY8OhP9K8ZjUYKdrEbFcXjirw0Z7ZZ0REAAWZ+zuselHFLqksUbtzB/sl+ic
+	pHF42d6ehgj1JgxVpGpxROQgTZyFPfE=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [GIT PULL] More bcachefs updates for 6.8-rc1
+Message-ID: <ianqurcjmgjvciii3k4dxr5bwargskiwspnfzzy4dqhbn2sdgp@r3v2ysfo5dqq>
+References: <a34bqdrz33jw26a5px4ul3eid5zudgaxavc2xqoftk2tywgi5w@ghgoiavnkhtd>
+ <CAHk-=wjKjvytH19t2mMHZbkY2bpGurGbG4Tb7xmTjfzA71Lb7g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240121-msm8976-dt-v2-6-7b186a02dc72@somainline.org>
-References: <20240121-msm8976-dt-v2-0-7b186a02dc72@somainline.org>
-In-Reply-To: <20240121-msm8976-dt-v2-0-7b186a02dc72@somainline.org>
-To: Bjorn Andersson <andersson@kernel.org>, 
- Rob Herring <robh+dt@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: ~postmarketos/upstreaming@lists.sr.ht, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- Luca Weiss <luca@z3ntu.xyz>, Adam Skladowski <a39.skl@gmail.com>, 
- Konrad Dybcio <konrad.dybcio@linaro.org>, 
- Martin Botka <martin.botka@somainline.org>, 
- Jami Kettunen <jami.kettunen@somainline.org>, linux-arm-msm@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Marijn Suijten <marijn.suijten@somainline.org>
-X-Mailer: b4 0.12.4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wjKjvytH19t2mMHZbkY2bpGurGbG4Tb7xmTjfzA71Lb7g@mail.gmail.com>
+X-Migadu-Flow: FLOW_OUT
 
-In addition to the SDC2 pins, set the SD Card Detect pin in a sane state
-to be used as an interrupt when an SD Card is slotted in or removed.
+On Sun, Jan 21, 2024 at 02:05:55PM -0800, Linus Torvalds wrote:
+> On Sun, 21 Jan 2024 at 13:35, Kent Overstreet <kent.overstreet@linux.dev> wrote:
+> >
+> > Hi Linus, another small bcachefs pull. Some fixes, Some refactoring,
+> > some minor features.
+> 
+> I'm taking this, but only because bcachefs is new.
+> 
+> You need to be aware that the merge window is for *merging*. Not for
+> new development.
+> 
+> And almost all of the code here is new development.
+> 
+> What you send during the merge window is stuff that should all have
+> been ready *before* the merge window opened, not whatever random
+> changes you made during it.
+> 
+> Now, fixes happen any time, but for that argument to work they need to
+> be real fixes. Not "reorganize the code to make things easier to fix"
+> with the fix being something small on top of a big change.
 
-Signed-off-by: Marijn Suijten <marijn.suijten@somainline.org>
----
- arch/arm64/boot/dts/qcom/msm8956-sony-xperia-loire.dtsi | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/qcom/msm8956-sony-xperia-loire.dtsi b/arch/arm64/boot/dts/qcom/msm8956-sony-xperia-loire.dtsi
-index b0b83edd3627..75412e37334c 100644
---- a/arch/arm64/boot/dts/qcom/msm8956-sony-xperia-loire.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8956-sony-xperia-loire.dtsi
-@@ -264,10 +264,27 @@ &sdhc_1 {
- 	status = "okay";
- };
- 
-+&sdc2_off_state {
-+	sd-cd-pins {
-+		pins = "gpio100";
-+		function = "gpio";
-+		drive-strength = <2>;
-+		bias-disable;
-+	};
-+};
-+
- &sdc2_on_state {
- 	clk-pins {
- 		drive-strength = <10>;
- 	};
-+
-+	sd-cd-pins {
-+		pins = "gpio100";
-+		function = "gpio";
-+		drive-strength = <2>;
-+		input-enable;
-+		bias-pull-up;
-+	};
- };
- 
- &sdhc_2 {
-
--- 
-2.43.0
-
+I thought the merge window was still open until tonight?
