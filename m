@@ -1,176 +1,67 @@
-Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com [209.85.219.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from herc.mirbsd.org (bonn.mirbsd.org [217.91.129.195])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF79E195;
-	Mon, 22 Jan 2024 00:07:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92895195;
+	Mon, 22 Jan 2024 00:10:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.91.129.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705882034; cv=none; b=BGT9zmVnP0CUI8IrCM+iWyMFGDLEmQl8ABxM/jOWxXrJMzFSM3TBtkpoblCGreAlrw9+/zh5YStJb92ZBtsVSGYbNyWGWuUdSpEn178vVySrsFR2VfC90yUc+MeWkhZKzihXYoRyvnbZ5yty+sQg5iLYKqfjpU2B63RjwW3AEPE=
+	t=1705882251; cv=none; b=tm/1/Apb4oscfw/oCGhN3Es14hlYGOaoG8Zn2BzV6fPlZOkSe/H3u2sg7Ddcja3kQldoMSM3NgNbKjY6BOxkDy0fvJUIQpiUXoG6dUoCmJYp/sYMCQFphKNbckflhxvi/DTu18KM163CLQGwWBfxX52gNwBIL9iDmQaSKOxxH5U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705882034; c=relaxed/simple;
-	bh=v0w0LJ3uf4foFHSK8n0QTLvlcutBJjyEkJg91UgDdkA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ak/JiOzrTkjjQOW0eSU+4gUSRFQ+5X2a5nBpqELRYFJr1NQMAkqg7nt1FYzFm0oOyPCf5yPkNv4aDcKC6HFG2XK/M/lzH0sakqzYHrFE4TVSMnmVoZGlkmrEYWSD+mwcmuNqkHtRuKOo569sDaQk51qG/QhZQXHDHoupOrLkn9c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZCSjQ5i9; arc=none smtp.client-ip=209.85.219.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZCSjQ5i9"
-Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-dc256e97e0aso1433189276.2;
-        Sun, 21 Jan 2024 16:07:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705882032; x=1706486832; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZXaDrO6PrF2cmqEQPuS3YomJWnmAlkY/6Wq6iuyjQCw=;
-        b=ZCSjQ5i9Hmx/cFlAwa4+aJlnNKnUK4L/ZotpHOx+O0bQRzGeHCooeTRmxcuacYnSzq
-         QEUAfq/ZYhP685CguvR9Yzr7FWyfX6PfasLhAiJe77Hxnrg2ynzzHoK+YpWJyYwe2C0q
-         4QaDhK6ReMNveVOyMdSHB/xH1wUcHhSSvJ8ptG3wQZ7D5f+dP3rmSPxQs59EwH/giht2
-         woZ0plLQrtyUA/jv6vmihiuA8hSOyAH8gDzellFwVTZ1CofKyLst2bjBVIki+/xXIiO5
-         MBBP2AMFEHFfnVRqD8v4CuW6LQdhEla7QffBwk3hFaiwxMTNscZB1p+aQlnW8TpU4PYb
-         5V8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705882032; x=1706486832;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZXaDrO6PrF2cmqEQPuS3YomJWnmAlkY/6Wq6iuyjQCw=;
-        b=XSS393rWdBglsjDKKQ3nRNNBPr4SUA+05DD9R/UCx/OSJOu5UCzHgrt5ctTCFhUuq4
-         28eut9V5tLl/wyX81z3QOxMUbjz0kC541PDahGlTpe387D//KXhPosxUgJ9woB++Xjs0
-         9WHIxwTyFZE+r+jb9CwZi4E/p3MwpWRGHbiN2v61Av+qv5LNpU6Um+yRGIsAEcUOIRBa
-         g8bL41iilvNAiStU1YgNwcQ9S8X9a4iU3ERWw6Q+wma2QMdwFWyuIUUOo5yL0pK4qYcm
-         eJEk+zg1u36yJBXVaj9x2Bewu/pbcWv7Uqe+jfUdbsAlEhnAlx8Mbup151VxZq6EjGPA
-         XDmg==
-X-Gm-Message-State: AOJu0YxdUAtknssjTDPhtVDLUWhT4oVqeqcp2XlGljDd67l2rEVBZ/vO
-	CZ+t/H8NDHQ/Mk1kUHiYkbhs2h8CTrIIpFBAyvtdCwXkTkMB5NpzVfs2jQigB9y7yK1jMTzpVvn
-	8yIvffj3d//md9PBTwGJRBiA1d68=
-X-Google-Smtp-Source: AGHT+IGfIyZs2JIgn0r3Ml/E3UHsh7sPDcPhsDbKTC7E6gcGm2WrFhJcxFItNZ+lNdG5XLiux+DMqyIIdu1HWiJUbcg=
-X-Received: by 2002:a25:ea11:0:b0:dbe:6596:4813 with SMTP id
- p17-20020a25ea11000000b00dbe65964813mr1304993ybd.24.1705882031736; Sun, 21
- Jan 2024 16:07:11 -0800 (PST)
+	s=arc-20240116; t=1705882251; c=relaxed/simple;
+	bh=i1LLD5pj5IdOf6XxKkB7dJJ9iRSC3xD/bjbvPMftkak=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=Ezfi24SF349IrvBT//f+VkoiduTpFJIeH9I7u4bxDIBl2XtcRWVJlXDTM9VLrZcd5K8rozlJcnSJH+MiomIOFzS2zdJfMtw0Kff23PlqCLOPG/QrAjComIyjP4KtxvzWqWK2DcqPSfCR6DTkWsYyKwq6nR44RM2FaE2SGnHH9oo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=none smtp.mailfrom=debian.org; arc=none smtp.client-ip=217.91.129.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=debian.org
+Received: from herc.mirbsd.org (tg@herc.mirbsd.org [192.168.0.82])
+	by herc.mirbsd.org (8.14.9/8.14.5) with ESMTP id 40LNwBdR015513
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+	Sun, 21 Jan 2024 23:58:25 GMT
+Date: Sun, 21 Jan 2024 23:58:11 +0000 (UTC)
+From: Thorsten Glaser <tg@debian.org>
+X-X-Sender: tg@herc.mirbsd.org
+To: "H. Peter Anvin" <hpa@zytor.com>
+cc: Peter Zijlstra <peterz@infradead.org>, x86@kernel.org, rostedt@goodmis.org,
+        torvalds@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        linux-toolchains@vger.kernel.org, jpoimboe@redhat.com,
+        alexei.starovoitov@gmail.com, mhiramat@kernel.org
+Subject: Re: [PATCH 1/2] x86: Remove dynamic NOP selection
+In-Reply-To: <d23e1b70-7ac3-49cd-8d5f-1dedc0108603@zytor.com>
+Message-ID: <Pine.BSM.4.64L.2401212356390.999@herc.mirbsd.org>
+References: <20210312113253.305040674@infradead.org> <20210312115749.065275711@infradead.org>
+ <Pine.BSM.4.64L.2401200654480.19429@herc.mirbsd.org>
+ <CE53F232-3D2D-4910-94B4-A4304F5990C7@zytor.com>
+ <Pine.BSM.4.64L.2401201652490.29203@herc.mirbsd.org>
+ <d23e1b70-7ac3-49cd-8d5f-1dedc0108603@zytor.com>
+Content-Language: de-Zsym-DE-1901-u-em-text-rg-denw-tz-utc, en-Zsym-GB-u-cu-eur-em-text-fw-mon-hc-h23-ms-metric-mu-celsius-rg-denw-tz-utc-va-posix
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAKLYgeJ1tUuqLcsquwuFqjDXPSJpEiokrWK2gisPKDZLs8Y2TQ@mail.gmail.com>
- <39e3a4fe-d456-4de4-b481-51aabfa02b8d@leemhuis.info> <20240111155056.GG31555@twin.jikos.cz>
- <20240111170644.GK31555@twin.jikos.cz> <f45e5b7c-4354-87d3-c7f1-d8dd5f4d2abd@oracle.com>
-In-Reply-To: <f45e5b7c-4354-87d3-c7f1-d8dd5f4d2abd@oracle.com>
-From: Alex Romosan <aromosan@gmail.com>
-Date: Mon, 22 Jan 2024 01:07:01 +0100
-Message-ID: <CAKLYge+x9kxLBaJGyk_gTMK2kQ=+Lhg00jgXe=P=jmBUq=cmfA@mail.gmail.com>
-Subject: Re: [btrfs] commit bc27d6f0aa0e4de184b617aceeaf25818cc646de breaks update-grub
-To: Anand Jain <anand.jain@oracle.com>
-Cc: CHECK_1234543212345@protonmail.com, brauner@kernel.org, 
-	Thorsten Leemhuis <regressions@leemhuis.info>, linux-btrfs <linux-btrfs@vger.kernel.org>, 
-	Linux kernel regressions list <regressions@lists.linux.dev>, linux-kernel@vger.kernel.org, 
-	Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>, dsterba@suse.cz
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: TEXT/PLAIN; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-update-grub still doesn't work 6.8-rc1
+H. Peter Anvin dixit:
 
-so i did:
+> But yes, with all even remotely recent CPUs all actually handling nopl
+> properly, this isn't relevant anymore.
 
-# cat /proc/self/mountinfo | grep btrfs
-21 1 0:19 / / rw,relatime shared:1 - btrfs /dev/root
-rw,ssd,discard=3Dasync,space_cache,subvolid=3D5,subvol=3D/
+This was, incidentally, triggered by looking into a problem report that
+something did *not* work on a Geode LX system.
 
-the difference from your test case is that it doesn't reference
-the disk device but /dev/root which on my system doesn't exist. could this
-be the problem?
+People don=E2=80=99t just run Linux on =E2=80=9Crecent CPUs=E2=80=9D (thoug=
+h I at least got me
+an Atom and a Core2Duo for it and run BSD on my Pentium-M and VIA C7
+systems).
 
---alex--
-
-
-On Fri, Jan 12, 2024 at 12:24=E2=80=AFAM Anand Jain <anand.jain@oracle.com>=
- wrote:
->
->
->
-> On 11/01/2024 22:36, David Sterba wrote:
-> > On Thu, Jan 11, 2024 at 04:50:56PM +0100, David Sterba wrote:
-> >> On Thu, Jan 11, 2024 at 12:45:50PM +0100, Thorsten Leemhuis wrote:
-> >>> [Adding Anand Jain, the author of the culprit to the list of recipien=
-ts;
-> >>> furthermore CCing the the Btrfs maintainers and the btrfs list; also
-> >>> CCing regression list, as it should be in the loop for regressions:
-> >>> https://docs.kernel.org/admin-guide/reporting-regressions.html]
-> >>>
-> >>> On 08.01.24 15:11, Alex Romosan wrote:
-> >>>> Please Cc me as I am not subscribed to the list.
-> >>>>
-> >>>> Running my own compiled kernel without initramfs on a lenovo thinkpa=
-d
-> >>>> x1 carbon gen 7.
-> >>>>
-> >>>> Since version 6.7-rc1 i haven't been able to to a grub-update,
-> >>>>
-> >>>> instead i get this error:
-> >>>>
-> >>>> grub-probe: error: cannot find a device for / (is /dev mounted?) sol=
-id
-> >>>> state drive
-> >>>>
-> >>>> 6.6 was the last version that worked.
-> >>>>
-> >>>> Today I did a git-bisect between these two versions which identified
-> >>>> commit bc27d6f0aa0e4de184b617aceeaf25818cc646de btrfs: scan but don'=
-t
-> >>>> register device on single device filesystem as the culprit. revertin=
-g
-> >>>> this commit from 6.7 final allowed me to run update-grub again.
-> >>>>
-> >>>> not sure if this is the intended behavior or if i'm missing some oth=
-er
-> >>>> kernel options. any help/fixes would be appreciated.
-> >>>>
-> >>>> thank you.
-> >>>
-> >>> Thanks for the report. To be sure the issue doesn't fall through the
-> >>> cracks unnoticed, I'm adding it to regzbot, the Linux kernel regressi=
-on
-> >>> tracking bot:
-> >>>
-> >>> #regzbot ^introduced bc27d6f0aa0e4de184b617aceeaf25818cc646de
-> >>> #regzbot title btrfs: update-grub broken (cannot find a device for / =
-(is
-> >>> /dev mounted?))
-> >>> #regzbot ignore-activity
-> >>
-> >> The bug is also tracked at https://bugzilla.kernel.org/show_bug.cgi?id=
-=3D218353 .
-> >
-> > About the fix: we can't simply revert the patch because the temp_fsid
-> > depends on that. A workaround could be to check if the device path is
-> > "/dev/root" and still register the device. But I'm not sure if this doe=
-s
-> > not break the use case that Steamdeck needs, as it's for the root
-> > partition.
->
->
-> Thank you for the report.
->
-> The issue seems more complex than a simple scenario, as the following
-> test-case works well:
->
->    $ mount /dev/sdb1 /btrfs
->    $ cat /proc/self/mountinfo | grep btrfs
-> 345 63 0:34 / /btrfs rw,relatime shared:179 - btrfs /dev/sdb1
-> rw,space_cache=3Dv2,subvolid=3D5,subvol=3D/
->
-> However, the relevant part of the commit
-> bc27d6f0aa0e4de184b617aceeaf25818cc646de that may be failing could
-> be in identifying a device, whether it is the same or different
-> For this, we use:
->
->       lookup_bdev(path, &path_devt);
->
-> and match with the devt(MAJ:MIN) saved in the btrfs_device;
-> would this work during initrd? I need to dig more. Trying
-> to figure out how can I reproduce this.
->
-> Thanks, Anand
+bye,
+//mirabilos
+--=20
+=E2=80=9ECool, /usr/share/doc/mksh/examples/uhr.gz ist ja ein Grund,
+mksh auf jedem System zu installieren.=E2=80=9C
+=09-- XTaran auf der OpenRheinRuhr, ganz begeistert
+(EN: =E2=80=9C[=E2=80=A6]uhr.gz is a reason to install mksh on every system=
+=2E=E2=80=9D)
