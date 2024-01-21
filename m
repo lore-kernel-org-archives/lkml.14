@@ -1,56 +1,52 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from out-179.mta1.migadu.com (out-179.mta1.migadu.com [95.215.58.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57E3F1F60F
-	for <linux-kernel@vger.kernel.org>; Sun, 21 Jan 2024 12:14:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD0D936AFD
+	for <linux-kernel@vger.kernel.org>; Sun, 21 Jan 2024 12:20:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705839256; cv=none; b=C2bei/0PysqQDcvWLwb4yKtY8cv79+MCPkNnqlsnCSjB/7IkS66/lCKP9ZPldUmcTrHDQaS0FARn5IzHF5P08NMmKC+BYS6K0QtbNfpTrM4W+AoGf528TH+uzbBEZAZWZmGbF6jtINSkDETlUhmqH9DRxc2Ki8RJf5HzvxrUr3U=
+	t=1705839640; cv=none; b=h9afqXKLIP98AzRF9AJD8i78XbSgXwsetT6kStYoUWLTh2GetYvrBmzBcU7G62LTxJpdeGNTqpJLBEAwYhVb4tfjNEYhyhAr+EOgpuPZTTl3DjxtmbCQlKI9ze0nzQhsYusMEITtfBHVvIaPP4NBOhLW6fEGCLuSGXmwSnazH68=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705839256; c=relaxed/simple;
-	bh=dPoEJQL9XcvH4x7yyA3c/ZvRzsW/LD8//nyPAGW8uPU=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=Dy/IGXnj2dSfyZR4PFPOwRIa3/W9aJ+hZicuUCreDC1bH70FsVEe+30SoYD0V5aW+LzZ/oNu9jSn6wuoyLCSCLZGW/whBC/3330UX+wwXA/VBv1YzTcOD+lH59GSk0YaH+E0xUobZGm+9KgcDvOfzSPsQa+lgUkv+onJoMHjvYU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZbwWdjoT; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1705839640; c=relaxed/simple;
+	bh=JfMnjHNkzRw8i9j0k1upUxvHfwH7uPKDpAZHbblJyGo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SLV11LbGaJBmtn6Fxhg4kMUD8kb1RTlrZl0l3ug3tTKfpfP5z6B/yl03pFX8Wk4g1+IiitX6iAU9LB9JW7eBlfmMwDINOGQu3rYm4A0BNWsRM477j3FJ/2eKI2EukmoD32XPt+CHeVzLVAc0pFbPTw+DrrTICP/WbG3hTMHHqik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=UGshX6PL; arc=none smtp.client-ip=95.215.58.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZbwWdjoT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1705839254; x=1737375254;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=dPoEJQL9XcvH4x7yyA3c/ZvRzsW/LD8//nyPAGW8uPU=;
-  b=ZbwWdjoTdmXUtHuWjDu33IB8lljLNAR9+W77fHeEz2d+LdwBEUJZdCSB
-   xeYzGuTBlJCfrfHCb9vadKVDjLNX054HKLRtbPsDzDUcsIfRaAc7pLhUm
-   rKXUvLvDda0LFW3dC7/D0txN8PSDI9Yu6P/b5NkX5LWvL0oVZjIG89Fs2
-   MNdt5/VAV77TMEydMkBfaKIzMzWmVg/PF0LXvNtLX5qH20YayKlzxunUs
-   VFi1QwoO3/ejwu/B4yy7WYIHCMVJtVKx2m6P2xZ2Kfb1HPeHPlLRN8GIs
-   fJG0GTAVaWCzMvdmupwY8TBPyQaIzU2YEqUDvOqmw1QPhQc4p+3h4Vw4j
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10959"; a="22507344"
-X-IronPort-AV: E=Sophos;i="6.05,209,1701158400"; 
-   d="scan'208";a="22507344"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jan 2024 04:14:13 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10959"; a="908702950"
-X-IronPort-AV: E=Sophos;i="6.05,209,1701158400"; 
-   d="scan'208";a="908702950"
-Received: from lkp-server01.sh.intel.com (HELO 961aaaa5b03c) ([10.239.97.150])
-  by orsmga004.jf.intel.com with ESMTP; 21 Jan 2024 04:14:11 -0800
-Received: from kbuild by 961aaaa5b03c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rRWiH-0005uk-0D;
-	Sun, 21 Jan 2024 12:14:09 +0000
-Date: Sun, 21 Jan 2024 20:13:10 +0800
-From: kernel test robot <lkp@intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: drivers/mux/adg792a.c:134:34: warning: 'adg792a_of_match' defined
- but not used
-Message-ID: <202401212032.jgSOk2Zn-lkp@intel.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="UGshX6PL"
+Date: Sun, 21 Jan 2024 07:20:32 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1705839636;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=MhNPlaBEpE1xN4v3GTZA0CsrCRKrMbxj54/fyRMaXwg=;
+	b=UGshX6PLCyjkuZXe1ylBJ4pAZyxjp5sCWpvlS9QneLoRnDCEWuea+ffZ/c3Uy6IT3whTls
+	GqSzZQqyWVehRmwvIT0qPH+u/RoEyQ8Rlqd3f15b3le7T5mV3+HYeOw/OPnNRf7PyDYhH+
+	vhW2ETUg2IzOSP9rrlj/g/oFwsSZ5Ys=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: Theodore Ts'o <tytso@mit.edu>
+Cc: James Bottomley <James.Bottomley@hansenpartnership.com>, 
+	Greg KH <greg@kroah.com>, Mark Brown <broonie@kernel.org>, Neal Gompa <neal@gompa.dev>, 
+	Kees Cook <keescook@chromium.org>, Linus Torvalds <torvalds@linux-foundation.org>, 
+	linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org, Nikolai Kondrashov <spbnick@gmail.com>, 
+	Philip Li <philip.li@intel.com>, Luis Chamberlain <mcgrof@kernel.org>
+Subject: Re: [GIT PULL] bcachefs updates for 6.8
+Message-ID: <32cn5wzlryvq7z64uwo3ztooh7rthlp2ihmbgfyayvehtdbeyt@pnvumkjz4eve>
+References: <f8023872-662f-4c3f-9f9b-be73fd775e2c@sirena.org.uk>
+ <olmilpnd7jb57yarny6poqnw6ysqfnv7vdkc27pqxefaipwbdd@4qtlfeh2jcri>
+ <CAEg-Je8=RijGLavvYDvw3eOf+CtvQ_fqdLZ3DOZfoHKu34LOzQ@mail.gmail.com>
+ <40bcbbe5-948e-4c92-8562-53e60fd9506d@sirena.org.uk>
+ <2uh4sgj5mqqkuv7h7fjlpigwjurcxoo6mqxz7cjyzh4edvqdhv@h2y6ytnh37tj>
+ <2024011532-mortician-region-8302@gregkh>
+ <lr2wz4hos4pcavyrmswpvokiht5mmcww2e7eqyc2m7x5k6nbgf@6zwehwujgez3>
+ <20240117055457.GL911245@mit.edu>
+ <5b7154f86913a0957e0518b54365a1b0fce5fbea.camel@HansenPartnership.com>
+ <20240118024922.GB1353741@mit.edu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -59,54 +55,81 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20240118024922.GB1353741@mit.edu>
+X-Migadu-Flow: FLOW_OUT
 
-Hi Andy,
+On Wed, Jan 17, 2024 at 09:49:22PM -0500, Theodore Ts'o wrote:
+> On Wed, Jan 17, 2024 at 08:03:35AM -0500, James Bottomley wrote:
+> > Actually, this is partly our fault.  Companies behave exactly like a
+> > selfish contributor does:
+> > 
+> > https://archive.fosdem.org/2020/schedule/event/selfish_contributor/
+> > 
+> > The question they ask is "if I'm putting money into it, what am I
+> > getting out of it".  If the answer to that is that it benefits
+> > everybody, it's basically charity  to the entity being asked (and not
+> > even properly tax deductible at that), which goes way back behind even
+> > real charitable donations (which at least have a publicity benefit) and
+> > you don't even get to speak to anyone about it when you go calling with
+> > the collecting tin.  If you can say it benefits these 5 tasks your
+> > current employees are doing, you might have a possible case for the
+> > engineering budget (you might get in the door but you'll still be
+> > queuing behind every in-plan budget item).  The best case is if you can
+> > demonstrate some useful for profit contribution it makes to the actual
+> > line of business (or better yet could be used to spawn a new line of
+> > business), so when you're asking for a tool, it has to be usable
+> > outside the narrow confines of the kernel and you need to be able to
+> > articulate why it's generally useful (git is a great example, it was
+> > designed to solve a kernel specific problem, but not it's in use pretty
+> > much everywhere source control is a thing).
+> 
+> I have on occasion tried to make the "it benefits the whole ecosystem"
+> argument, and that will work on the margins.  But it's a lot harder
+> when it's more than a full SWE-year's worth of investment, at least
+> more recently.  I *have* tried to get more test investment. with an
+> eye towards benefitting not just one company, but in a much more
+> general fasion ---- but multi-engineer projects are a very hard sell,
+> especially recently.  If Kent wants to impugn my leadership skills,
+> that's fine; I invite him to try and see if he can get SVP's cough up
+> the dough.  :-)
 
-FYI, the error/warning still remains.
+Well, I've tried talking to you about improving our testing tooling - in
+particular, what we could do if we had better, more self contained
+tools, not just targeted at xfstests, in particular a VM testrunner that
+could run kselftests too - and as I recall, your reaction was pretty
+much "why would I be interested in that? What does that do for me?"
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   7a396820222d6d4c02057f41658b162bdcdadd0e
-commit: 879a52379704e479237d0b97822fd9302fed0675 iio: multiplexer: Make use of device properties
-date:   1 year, 10 months ago
-config: x86_64-randconfig-x063-20230716 (https://download.01.org/0day-ci/archive/20240121/202401212032.jgSOk2Zn-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240121/202401212032.jgSOk2Zn-lkp@intel.com/reproduce)
+So yeah, I would call that a fail in leadership. Us filesystem people
+have the highest testing requirements and ought to know how to do this
+best, and if the poeple with the most experience aren't trying share
+that knowledge and experience in the form of collaborating on tooling,
+what the fuck are we even doing here?
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202401212032.jgSOk2Zn-lkp@intel.com/
+If I sound frustrated, it's because I am.
 
-All warnings (new ones prefixed by >>):
+> I've certainly had a lot more success with the "Business quid pro quo"
+> argument; fscrypt and fsverity was developed for Android and Chrome;
+> casefolding support benefited Android and Steam; ext4 fast commits was
+> targetted at cloud-based NFS and Samba serving, etc.
 
->> drivers/mux/adg792a.c:134:34: warning: 'adg792a_of_match' defined but not used [-Wunused-const-variable=]
-     134 | static const struct of_device_id adg792a_of_match[] = {
-         |                                  ^~~~~~~~~~~~~~~~
+Yeah, I keep hearing you talking about the product management angle and
+I have to call bullshit. There's a lot more to maintaining the health of
+projects in the long term than just selling features to customers.
 
-Kconfig warnings: (for reference only)
-   WARNING: unmet direct dependencies detected for DRM_I915_DEBUG_GEM
-   Depends on [n]: HAS_IOMEM [=y] && DRM_I915 [=y] && EXPERT [=y] && DRM_I915_WERROR [=n]
-   Selected by [y]:
-   - DRM_I915_DEBUG [=y] && HAS_IOMEM [=y] && DRM_I915 [=y] && EXPERT [=y] && !COMPILE_TEST [=n]
+> Unfortunately, this effect fades over time.  It's a lot easier to fund
+> multi-engineer projects which run for more than a year, when a company
+> is just starting out, and when it's still trying to attract upstream
+> developers, and it has a sizeable "investment" budget.  ("IBM will
+> invest a billion dollars in Linux").  But then in later years, the
+> VP's have to justify their budget, and so companies tend to become
+> more and more "selfish".  After all, that's how capitalism works ---
+> "think of the children^H^H^H^H^H^H^H shareholders!"
 
+This stuff doesn't have to be huge multi engineer-year projects to get
+anything useful done.
 
-vim +/adg792a_of_match +134 drivers/mux/adg792a.c
-
-afda08c4caa948 drivers/mux/mux-adg792a.c Peter Rosin 2017-05-14  133  
-afda08c4caa948 drivers/mux/mux-adg792a.c Peter Rosin 2017-05-14 @134  static const struct of_device_id adg792a_of_match[] = {
-afda08c4caa948 drivers/mux/mux-adg792a.c Peter Rosin 2017-05-14  135  	{ .compatible = "adi,adg792a", },
-afda08c4caa948 drivers/mux/mux-adg792a.c Peter Rosin 2017-05-14  136  	{ .compatible = "adi,adg792g", },
-afda08c4caa948 drivers/mux/mux-adg792a.c Peter Rosin 2017-05-14  137  	{ }
-afda08c4caa948 drivers/mux/mux-adg792a.c Peter Rosin 2017-05-14  138  };
-afda08c4caa948 drivers/mux/mux-adg792a.c Peter Rosin 2017-05-14  139  MODULE_DEVICE_TABLE(of, adg792a_of_match);
-afda08c4caa948 drivers/mux/mux-adg792a.c Peter Rosin 2017-05-14  140  
-
-:::::: The code at line 134 was first introduced by commit
-:::::: afda08c4caa9489511557def51e322a5f2142a2f mux: adg792a: add mux controller driver for ADG792A/G
-
-:::::: TO: Peter Rosin <peda@axentia.se>
-:::::: CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+ktest has been a tiny side project for me. If I can turn that into a
+full blown CI that runs arbitrary self contained VM tests with quick
+turnaround and a nice git log UI, in my spare time, why can't we pitch
+in together instead of each running in different directions and
+collaborate and communicate a bit better instead of bitching so much?
