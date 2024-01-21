@@ -1,115 +1,88 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6378A381B9;
-	Sun, 21 Jan 2024 16:41:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38637EC4;
+	Sun, 21 Jan 2024 16:46:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705855314; cv=none; b=Nl3epM2FUZqzoOeJR4/fad2Od8/uKvqfv2ADubx/AdSpXGE0XEWy6BKDjohSCTtRCIvBl8VfNP2s3gk4Aa7FWXu8ckisYn2KzXKts6yT9H4sxUJzBkXppeA4B9A0+SlJ4UytIWWjSCLQtEz6in+Nz2qjIAYjh/PeidnOLzsOJ/Y=
+	t=1705855571; cv=none; b=QD8ZHewLVLD6i6NFTTB5Kdow4w28Be5CVOFydmqgUQnlu4jAyF0gUPseI1H5sDB0Jm7PBb8e26QgEnnuTvdypiKKHw+dFpbsS0BhFJzBVN4Zu9AZFmPG1/O4zYkJ3nfpRvn3Y1q3NrYA8h0wGA1y3uET4kurv0QV23ENOC+3bBE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705855314; c=relaxed/simple;
-	bh=45wkP8U/iOWMDIyqAxusjLpXiYYeRC8CCOH80xeHkDo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=rS/8px1zQuBX7SKDtfKEWM33Io7QF1jTugrtS2Rx8rr5rHN5JVI4zRgT3j4aVRSL6NR/0JJZO+h1k6tuL4gxZeyd6TLepZN5vXo2h+Toha1+raIt5xetSUUCO6c3O0Zu640sRDI4wwf8Eg7d3aq6gpOB1mIewiL0sQuCQiFQGKs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com; spf=pass smtp.mailfrom=gmx.com; dkim=pass (2048-bit key) header.d=gmx.com header.i=erick.archer@gmx.com header.b=plKXPz+Q; arc=none smtp.client-ip=212.227.17.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.com
+	s=arc-20240116; t=1705855571; c=relaxed/simple;
+	bh=SXpGnpIGQfJuOVAZ0umiygpDbMYgAaWjCZV42ZZzXjM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GQUOoz+D2yaVkKYCzFh1217OsDGJJdL/V+JFXkdeB9tvrh1E1bDSNahMFrz7tG0+GYMe4QRkCqA3kRCs5T5CizG01vMkcf/6cqJg8kMwLaAEJvoozANkBJfpZepwBuEGnDRdxd9CqySIr2lsM11XyBAxWBqnFcB8boTtCowWq24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=rJIjmPmD; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.com header.i=erick.archer@gmx.com header.b="plKXPz+Q"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.com;
-	s=s31663417; t=1705855259; x=1706460059; i=erick.archer@gmx.com;
-	bh=45wkP8U/iOWMDIyqAxusjLpXiYYeRC8CCOH80xeHkDo=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-	b=plKXPz+QWbQqY9/sF1zxo0lX6nUYj8vpdb4wgbzCv4Mwwj9Ad2dgnxR3kK5sbxv6
-	 +sK3E3RACXGzf03EKFCzBtAqZZRRmzhDn9GnjcRATuUXR7oeiM+VrLYza6cIWDCGl
-	 GrWwYnK0Y765jpyipUrOQTVvp9/lt4CpoMEXeQ8ot9PzXSHHYbSAgVyPRYtNKZOey
-	 DInj7c7CfUZsiXfdfgvFzVjwdGg4eiD918B+twb/oXs81mxcIUwIRr49a0D0BrvIG
-	 lNV8bV7rrKr+yiQVNHTnSXE5f5hNQx5mWHZovxGovt52HO9pTqEizx7ubMnoYdM47
-	 LCM79y63HG0PfPusig==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from localhost.localdomain ([79.157.194.183]) by mail.gmx.net
- (mrgmx105 [212.227.17.174]) with ESMTPSA (Nemesis) id
- 1MpDJX-1ql9r21ePP-00qfvG; Sun, 21 Jan 2024 17:40:59 +0100
-From: Erick Archer <erick.archer@gmx.com>
-To: Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>,
-	Erick Archer <erick.archer@gmx.com>,
-	Tero Kristo <tero.kristo@linux.intel.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Damian Muszynski <damian.muszynski@intel.com>,
-	Shashank Gupta <shashank.gupta@intel.com>,
-	Tom Zanussi <tom.zanussi@linux.intel.com>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: qat-linux@intel.com,
-	linux-crypto@vger.kernel.org,
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="rJIjmPmD"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=BHOFZcuTxHKtAFe+5SXsdTjosX9ZtBXP8Ft5m35WZew=; b=rJIjmPmDd+Ls+Hr9hu4nE6G5vU
+	P+4nn6S6zoEq1QaRKrNmnKbBQXlQey7L64fNlXwpar8zVrsIuvXfct4SNX8HYYHQAgtCRlWpTb3TX
+	Xz83hyOOws5wjAE37qqzF+/NYHSoLWQkvgf181YS+chDM4AVLVSjvgD9j5zGdoDcluZw=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1rRaxL-005f5v-RN; Sun, 21 Jan 2024 17:45:59 +0100
+Date: Sun, 21 Jan 2024 17:45:59 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: Ziyang Huang <hzyitc@outlook.com>
+Cc: mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com,
+	richardcochran@gmail.com, p.zabel@pengutronix.de,
+	matthias.bgg@gmail.com, angelogioacchino.delregno@collabora.com,
 	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH] crypto: qat - use kcalloc_node() instead of kzalloc_node()
-Date: Sun, 21 Jan 2024 17:40:43 +0100
-Message-Id: <20240121164043.11222-1-erick.archer@gmx.com>
-X-Mailer: git-send-email 2.25.1
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
+	linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH 7/8] arm64: dts: qcom: ipq5018: enable ethernet support
+Message-ID: <b8510b38-3669-4a04-9ca6-dbe937ecbec3@lunn.ch>
+References: <TYZPR01MB55563BD6A2B78402E4BB44D4C9762@TYZPR01MB5556.apcprd01.prod.exchangelabs.com>
+ <TYZPR01MB5556FA040B07F48AFE544680C9762@TYZPR01MB5556.apcprd01.prod.exchangelabs.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:X86R2S6O3Nk0sqc1AIm7SPvLRWYkmOew4svoTCxiKwDfMQakNbj
- z/VDlvAyiB0sKKvMrEs5N6V5M/Afkll3REGU0PxSx4oW+rM0LZnyBYGovxm0fp7oK4yznKm
- ZpxO2sPpFtJBRNK+ckGs5bW4nGrqQrNLRQktmeX2h32BzQUa8i9UbX0gK1GcW87bGYKJyG0
- 1uVhbOx5z1014E+1PF/iA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:LNvvB4XfrQE=;xm4iJMqcqcW3z9pKqpfiRjQ8hgI
- Rq3/8Yg4GQXoma4V9C/vYZsiydDrsdDVkPtyhi1dBGAp+fW6+jS4zsLh+/2TTUrcbtx1sisC2
- YK6Lus7q+ZZxBwmk2gRc3UwlKLYwPubAZvQW5yGeGvXU4jsarDhPtZiUCJUizu3wU4+DmGTLH
- qkq4UE4zv0LRJ7fp3mG9mAcXFQORPegM3Ig2I2IX3/c7HBfOkEhcGduRThA5seorzjI/xFCf5
- NIM6R9OQMTbs0RzuNd0blNsyhbiUb9u2eHIXtm6h6dXE0jo0mqcz7p/GNNsXL1PJsuatjw4Xh
- q/Sl/RcPMw8zEUwiQd+kTC8+hjI8YZl3ugcs6U2YDep/9Flxyp8XfyiFkqdOuAOGaVLUfsOLv
- 2IxgOt8LeUEqc4W6AE1hBgFvKqGLt8nL3IOxB+zS7YxadpQoi8zsrc+ZIWurVluJhVPrfvbj0
- h/WyWnrBYi7CqYYYUu8/KigZ+8VD9BPpdkO/tn6HGDNBPlKr5IJgOswKlgNgPr53k+38MoHrU
- VlHVk1y+kgfyMDPvG3yj5bAJf40iAq6UccIrmdS2wkyTzcSAWdxeEHbyd++7nmYl6hXbxAlJL
- auRbtW5pPwKsEVHtCkT45EWRyM4eQpISoqraF20YaZN8QoXf1A0KG6L34XWFQDELirAgTf7Si
- TKszUHhbfcM4agL+t+IkjhT6gL0SsxsUuamxarMjxt20oIKA5fx1HFWBBOV7a8W2uoxEdEsJx
- T8Ao4m4WBm875WIwsOUT7/U6F1ALJqrD42ON/fTTn+kZLDv5DUozay/ANNQ+lBV/3vk4gxWfY
- x7vklLuVYfXcxMk8hEU+JkKSQ24/bWuMhgKqb4+GqFwytu/TqVzJz/+oW4InB07jR62HXy8qg
- IqNH3JW5MWCuHWnX2nA0uSIqRjn61CF0wDI45RTXoOnOfgYuyYYOXuB2V07mCjRC8DjZ907bJ
- Iw9VSum+LtFnAgB+957SAQ30vFw=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <TYZPR01MB5556FA040B07F48AFE544680C9762@TYZPR01MB5556.apcprd01.prod.exchangelabs.com>
 
-As noted in the "Deprecated Interfaces, Language Features, Attributes,
-and Conventions" documentation [1], size calculations (especially
-multiplication) should not be performed in memory allocator (or similar)
-function arguments due to the risk of them overflowing. This could lead
-to values wrapping around and a smaller allocation being made than the
-caller was expecting. Using those allocations could lead to linear
-overflows of heap memory and other misbehaviors.
+On Sun, Jan 21, 2024 at 08:42:36PM +0800, Ziyang Huang wrote:
+> Signed-off-by: Ziyang Huang <hzyitc@outlook.com>
+> ---
+>  arch/arm64/boot/dts/qcom/ipq5018.dtsi | 120 +++++++++++++++++++++++++-
+>  1 file changed, 116 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/ipq5018.dtsi b/arch/arm64/boot/dts/qcom/ipq5018.dtsi
+> index e502a3ecf4b7..b36e5c2136b7 100644
+> --- a/arch/arm64/boot/dts/qcom/ipq5018.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/ipq5018.dtsi
+> @@ -94,6 +94,63 @@ soc: soc@0 {
+>  		#size-cells = <1>;
+>  		ranges = <0 0 0 0xffffffff>;
+>  
+> +		mdio0: mdio@88000 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			compatible = "qcom,ipq5018-mdio", "qcom,qca-mdio";
+> +			reg = <0x88000 0x64>;
+> +			resets = <&gcc GCC_GEPHY_MDC_SW_ARES>,
+> +				 <&gcc GCC_GEPHY_DSP_HW_ARES>;
 
-So, use the purpose specific kcalloc_node() function instead of the
-argument count * size in the kzalloc_node() function.
+What do these two resets do? An MDIO bus controller is unlikely to
+have a DSP in it. That is something a PHY is more likely to have. An
+MDIO bus controller does have an MDC line, but why is it
+GCC_GEPHY_MDC_SW_ARES not GCC_MDIO_MDC_SW_ARES? So this again makes me
+think this is a PHY reset, so should be in the PHY node.
 
-Link: https://www.kernel.org/doc/html/next/process/deprecated.html#open-co=
-ded-arithmetic-in-allocator-arguments [1]
-Link: https://github.com/KSPP/linux/issues/162
-Signed-off-by: Erick Archer <erick.archer@gmx.com>
-=2D--
- drivers/crypto/intel/qat/qat_common/adf_isr.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+A device tree binding will help sort this out.
 
-diff --git a/drivers/crypto/intel/qat/qat_common/adf_isr.c b/drivers/crypt=
-o/intel/qat/qat_common/adf_isr.c
-index 3557a0d6dea2..a13d9885d60f 100644
-=2D-- a/drivers/crypto/intel/qat/qat_common/adf_isr.c
-+++ b/drivers/crypto/intel/qat/qat_common/adf_isr.c
-@@ -272,7 +272,7 @@ static int adf_isr_alloc_msix_vectors_data(struct adf_=
-accel_dev *accel_dev)
- 	if (!accel_dev->pf.vf_info)
- 		msix_num_entries +=3D hw_data->num_banks;
 
--	irqs =3D kzalloc_node(msix_num_entries * sizeof(*irqs),
-+	irqs =3D kcalloc_node(msix_num_entries, sizeof(*irqs),
- 			    GFP_KERNEL, dev_to_node(&GET_DEV(accel_dev)));
- 	if (!irqs)
- 		return -ENOMEM;
-=2D-
-2.25.1
+    Andrew
 
+---
+pw-bot: cr
