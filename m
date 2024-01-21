@@ -1,60 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ED721E878
-	for <linux-kernel@vger.kernel.org>; Sun, 21 Jan 2024 19:33:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EC91383A6
+	for <linux-kernel@vger.kernel.org>; Sun, 21 Jan 2024 19:33:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705865632; cv=none; b=nez9DKZ8xo/dx1MPlkFPSdj4cgbmczZuONe6BqFjAmwrfiiFb5aBb3UBem5Rh8i2JYw5rpooebhcDUXipDz6lk3cgi+LyL6qzaFXFpdo2Dt28bG/FwRmBFxjJI6pdACzGubbRdvGFetAw5PVxIn+FS+hzRbLgPSCT87yhk8S238=
+	t=1705865634; cv=none; b=BGU0AQFPy2HmX+u7/L9IE32dA0n8Ck56mqUCuicva+dFqj3qQmKBnroO7QYIf6LD2ycbb4qge/Fx6X5Hco2mLkUj719quuMPRMMKuRPV/xnrcrvy9WYIubRehmvuJVwJIop8wOcaV/34On7bmnnDUOSrlcMNphBp0j2kVEUlcV0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705865632; c=relaxed/simple;
-	bh=JAcvexAQOm6zkXOa3WMMQlCf6u2vPqTfhHb8PUSao3s=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=oq4bPylr4UE9m2eZB/JZgkWYPn5zrQsZ7FC0FXKFcjtyL6Bl82obMi9bYMtPkZE6CVofhXsNh4gh9CwhV5+DIgKdQ0j32PdGtz977KgafXMJlfS87P7IW4HYmfP+/j1r2tbSkSc6VmdoqB76159xO+aW0gSxrupc6FX+g87JQE0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I1gJvvMO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1705865634; c=relaxed/simple;
+	bh=2bOoLdGbvNjKPjgT/9HjkEcaQwFb6Umi+JUAxYFTRzg=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=I6mhVTAb7zSNsiqmzlb45VI+Z5DvGCfqrRYtsozlwcZC+lT7vsO1XTFnDZQq3MqpMJV9j0FtYPHVKxVzKeMy3/OctSSp8kwu0b0V/7XkWqoAyx4moV/zxHFUDba90o7NyrIhm42VsgRGH34BkBxUGoO1yU8QXfvURthm6LbsU8k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VBRe6biR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I1gJvvMO"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 8E619C433C7;
-	Sun, 21 Jan 2024 19:33:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VBRe6biR"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 759D3C433F1;
+	Sun, 21 Jan 2024 19:33:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705865631;
-	bh=JAcvexAQOm6zkXOa3WMMQlCf6u2vPqTfhHb8PUSao3s=;
+	s=k20201202; t=1705865634;
+	bh=2bOoLdGbvNjKPjgT/9HjkEcaQwFb6Umi+JUAxYFTRzg=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=I1gJvvMOTynskAseAkPfz2P9q0EE3ScXkFBL/xETNfCGJc0dte/r1NRYM9tWzgZoU
-	 OQCCmkoC4RiXBZHtige4LmM95UYopVJVUTWQGA/Lp/tmRUYzPVnSgbz1jG0SHZkkAM
-	 BnDGtCiR6NxD9gjkIVLNuPf0f4Z+ieb9a9YYJLXPz31aQxvHNZM0i8SmYKOYGFc6N0
-	 2gi76+ggdQK9/GQJFHmecoHa0+jDRp2b5hKxVIdV9NEG9wZdfnbuKIcLmwLKOia0AT
-	 VBOss0EG0+x+rdgpdOJPYNhb2KP4kalvCZPsJchDgcXv6Dxxxn6gdpbpH+xx02K/Pn
-	 QOU9s+m/r0WEA==
+	b=VBRe6biRDSZK4aj1ZUjEmRD5xlU+YL2P90KSb3QAfE5cLy2ejB+MGjwqzUotJ4fKb
+	 vfgEtyS6MShKYn23q63s47qNXBje4mrL2dTJIlvOTk39WvIRirVrp2G9rEcVgHrgFV
+	 9I67oJzsnn0x3zZoblbb4/sIZ6w5vjSrQnXlyuSX5GCnjQsUSHdqlsU4QKVs8DPiKO
+	 fC/iRSFkCHdgkXQTVDQ5pSYytfCi+kArfhKOCQ+tMSjgoq3r0jI9EHJo2OaU+CmAsy
+	 z0s65jAZQxhOkCvkiwNL+jw+GHaJt8Pthm4VsflsOsWCEEModQzj3Y1HvcCw0Zn7rb
+	 pLRMPgSFKKMfg==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 7D524D8C978;
-	Sun, 21 Jan 2024 19:33:51 +0000 (UTC)
-Subject: Re: [GIT PULL] Please pull powerpc/linux.git powerpc-6.8-2 tag
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 65A53D8C970;
+	Sun, 21 Jan 2024 19:33:54 +0000 (UTC)
+Subject: Re: [GIT PULL] header cleanup fixups for 6.8-rc1
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <875xznql7c.fsf@kernel.org>
-References: <875xznql7c.fsf@kernel.org>
-X-PR-Tracked-List-Id: Linux on PowerPC Developers Mail List <linuxppc-dev.lists.ozlabs.org>
-X-PR-Tracked-Message-Id: <875xznql7c.fsf@kernel.org>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git tags/powerpc-6.8-2
-X-PR-Tracked-Commit-Id: 18f14afe281648e31ed35c9ad2fcb724c4838ad9
+In-Reply-To: <ips7d5lbyq76awhnj5ttnsbbvaykkemhnwe56rzphetm4zhn2k@nciievifs2fj>
+References: <ips7d5lbyq76awhnj5ttnsbbvaykkemhnwe56rzphetm4zhn2k@nciievifs2fj>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <ips7d5lbyq76awhnj5ttnsbbvaykkemhnwe56rzphetm4zhn2k@nciievifs2fj>
+X-PR-Tracked-Remote: https://evilpiepirate.org/git/bcachefs.git tags/header_cleanup-2024-01-20
+X-PR-Tracked-Commit-Id: 5f4c01f1e3c7b0c8d1e5dd6f080531de7aa5e47b
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 7b297a5cc9308b57c29635e00395f4005c9ba960
-Message-Id: <170586563148.13428.17843378059290885207.pr-tracker-bot@kernel.org>
-Date: Sun, 21 Jan 2024 19:33:51 +0000
-To: "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, aneesh.kumar@kernel.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, Nicholas Piggin <npiggin@gmail.com>
+X-PR-Merge-Commit-Id: 2368fcf341d3a6aa143e3cdfb0440fabd152c83b
+Message-Id: <170586563441.13428.16310859383451146662.pr-tracker-bot@kernel.org>
+Date: Sun, 21 Jan 2024 19:33:54 +0000
+To: Kent Overstreet <kent.overstreet@linux.dev>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Sun, 21 Jan 2024 11:31:11 +0530:
+The pull request you sent on Sat, 20 Jan 2024 20:42:37 -0500:
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git tags/powerpc-6.8-2
+> https://evilpiepirate.org/git/bcachefs.git tags/header_cleanup-2024-01-20
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/7b297a5cc9308b57c29635e00395f4005c9ba960
+https://git.kernel.org/torvalds/c/2368fcf341d3a6aa143e3cdfb0440fabd152c83b
 
 Thank you!
 
