@@ -1,99 +1,84 @@
-Received: from mout.web.de (mout.web.de [217.72.192.78])
+Received: from mail2-relais-roc.national.inria.fr (mail2-relais-roc.national.inria.fr [192.134.164.83])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33A631D53A
-	for <linux-kernel@vger.kernel.org>; Sun, 21 Jan 2024 10:54:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED76D3613E
+	for <linux-kernel@vger.kernel.org>; Sun, 21 Jan 2024 11:00:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.134.164.83
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705834469; cv=none; b=ZzW4rAx7ZADl83x1VtfUTuuRWMHKEU38zeViFLHlOAmTzIATZ37gyeBoaBWMhLTAsZDcA+JGKooOmmbAmFc/Z1rIymgqTAyq7cnqSI7Z9QXnsPrgUiW8fAp/TVG7NlW6cFQbw6ARDLtejK0imknDe+OwJ5qG7xoo2TQ2xeOXiNo=
+	t=1705834811; cv=none; b=qkw7RAcWforqSXMD/mT23Ck5DfiLUSjKya2PorDEUVfW0BgW83q18/AQnt0nZJxPwzq+o/UpOSzCcfLhr44VRoctdOZMEWV7gmc5KBNCwKr+MqoexxaVLCVO6FuulpMyb/La8KIFw0LmPQHfMVP1hOGTMnZbuj1IE6cAu6tBLQI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705834469; c=relaxed/simple;
-	bh=w7b+a0Dnlw4BjB3AmtaNqEWe+09AYCF0MSwPgQLh0d0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
-	 In-Reply-To:Content-Type; b=bj3MgNNh2YgYHuS4DHjquezUzNrSUJNDaASyEtfPijLreLLZDOdmyG3XuqDCKAGioNQEC3TkaSeTMi3oz73TNimGxdM/DIK94olfB/jJ2OpXCsQawflZUXMHlSqkWi2oTsT9ZE5yd/OYNmpW8ex8NyQQI/oqXk4mkZPVBsx5Jqs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=iDOOEdma; arc=none smtp.client-ip=217.72.192.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1705834811; c=relaxed/simple;
+	bh=mpx2L0PpidQmn6LII8E4mdM0zc9ViLhNoJxMy+C3hKc=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=SLz4me0usk1XsPIxGNPH6Fpm3k63H4XPwEwULgBnkuqI8mKooL2HwqwUvSJfyayximFcP11c4BpU7tnmJ3eXK1LOX5TwVci+qv3YIskUoPON3b1FzD0w1xLTKMDqh294PlUBcS2cvhbT1S8X85aa2WjoE+iYX8L3uXgytQ/6p10=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr; spf=pass smtp.mailfrom=inria.fr; dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b=pNUlJpFo; arc=none smtp.client-ip=192.134.164.83
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inria.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="iDOOEdma"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de; s=s29768273;
-	t=1705834459; x=1706439259; i=markus.elfring@web.de;
-	bh=w7b+a0Dnlw4BjB3AmtaNqEWe+09AYCF0MSwPgQLh0d0=;
-	h=X-UI-Sender-Class:Date:Subject:To:References:Cc:From:
-	 In-Reply-To;
-	b=iDOOEdmaNbaIGfbjhgPQ6eXzAU954YaWHx1LaQMJdfySCmspVW9Kiq74jVzQF+0Q
-	 OMeGIR4Mirk9B8XCXisBV1e9E13/ntjFPTVEmfN+WKBNPFRc363EW2LXSAL2E8VhJ
-	 FDMfTqRN+La1Fx4gAXGXaSPXTyc1A7z6ML2n3DG+i17sDzTxG0pIzXYxdQCHCpLN5
-	 fBAFscDXwHiut8BwL/CXxt4acesgbgnbMJBmsTPmgKS1bxCZHPriKj0OS/gjGt3IO
-	 7fr+OyTpD6HNIk8dDO/ikamtWBtFCQ74YDaMoA1W2R4MzRaQhJyFj8uJNMlTTs3P7
-	 pwK1R9TWaNi99JU2/w==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.89.95]) by smtp.web.de (mrweb106
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MEUW8-1rLPdh0vcY-00G62Z; Sun, 21
- Jan 2024 11:40:51 +0100
-Message-ID: <f34231dc-186b-4cb9-889b-b3be9224c5a9@web.de>
-Date: Sun, 21 Jan 2024 11:40:41 +0100
+	dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b="pNUlJpFo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=inria.fr; s=dc;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=UWN54G8DcZhwd8CcYCFZ1mep8750dTOYSTQEJt94oPc=;
+  b=pNUlJpFoM8WUIuaolUNsU5Nq6sK9B4liqDlyzJOIsDTh2M0+7139ZDf4
+   +9HohTrYH2FXLvQ+ikHA1Ub1rLTVaacZMuO94GJ30VRjoyVvKTiobSGcH
+   sLu1+D5MtTjtfxl8iiCrKtpuWtH3C2J/xqFv4EA9a33gyC6zrWhCK5S3A
+   U=;
+Authentication-Results: mail2-relais-roc.national.inria.fr; dkim=none (message not signed) header.i=none; spf=SoftFail smtp.mailfrom=julia.lawall@inria.fr; dmarc=fail (p=none dis=none) d=inria.fr
+X-IronPort-AV: E=Sophos;i="6.05,209,1701126000"; 
+   d="scan'208";a="147776685"
+Received: from 231.85.89.92.rev.sfr.net (HELO hadrien) ([92.89.85.231])
+  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jan 2024 12:00:01 +0100
+Date: Sun, 21 Jan 2024 12:00:00 +0100 (CET)
+From: Julia Lawall <julia.lawall@inria.fr>
+X-X-Sender: jll@hadrien
+To: Markus Elfring <Markus.Elfring@web.de>
+cc: Li Zhijian <lizhijian@fujitsu.com>, cocci@inria.fr, 
+    LKML <linux-kernel@vger.kernel.org>, Nicolas Palix <nicolas.palix@imag.fr>
+Subject: Re: [cocci] [v2] coccinelle: device_attr_show: Adapt to the latest
+ Documentation/filesystems/sysfs.rst
+In-Reply-To: <f34231dc-186b-4cb9-889b-b3be9224c5a9@web.de>
+Message-ID: <alpine.DEB.2.22.394.2401211159350.3743@hadrien>
+References: <20240119062057.4026888-1-lizhijian@fujitsu.com> <alpine.DEB.2.22.394.2401202217550.3267@hadrien> <f34231dc-186b-4cb9-889b-b3be9224c5a9@web.de>
+User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [cocci] [v2] coccinelle: device_attr_show: Adapt to the latest
- Documentation/filesystems/sysfs.rst
-To: Li Zhijian <lizhijian@fujitsu.com>, Julia Lawall <julia.lawall@inria.fr>,
- cocci@inria.fr
-References: <20240119062057.4026888-1-lizhijian@fujitsu.com>
- <alpine.DEB.2.22.394.2401202217550.3267@hadrien>
-Content-Language: en-GB
-Cc: LKML <linux-kernel@vger.kernel.org>, Nicolas Palix <nicolas.palix@imag.fr>
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <alpine.DEB.2.22.394.2401202217550.3267@hadrien>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:ry3PyjnlazkKSo/ejkzYISZWX/Ft/sTBSyzwE1f1GeXMS3evifg
- 6BOVJUj8a78gxC4QTXsy1uYEESwTQGE46OSDkw3mjkIDkZw1I8aFPBhX8ux9iHg+DichN8T
- Ajf3/pXPaFYGgd0NKFpEsOX0x0uXBYA8xpK0a+9twLqrS0peRtZXp/nHHaV6BiOF2IFYNT+
- 71JlLKQ3wIOjZW9Ljw+bQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:bIHMH+ua4MY=;12qu7BIXtxVpuHRwEKETm1ucy6a
- Yh8lw4YJziq0RmgMqgkdiuGUrwZM8Qa9jUcu6f+nLcswllXaWQfXAInWn4sejAt9MQ/Rr2Ffh
- RnxP9+vyEqYoBkUDKvU8IxhtnGjkGAuZRExmHG6anIlxo3bl9mXRg0K3n+d2U7/e+i7jyLwy8
- 2uHYRt4JhNG08MzvFacLOHqgilDop+3rnQTjuqecsro3hQPv7QnaLA58qEJkkI2kJzsXHbh/u
- CfkEfc7Wuf5MtzFfiUpHPIYCWxzYEbtqMyvPZvFUaE2O3CR54A5r13aQ6Q1J+nMos5Ml/Ief9
- PuJn+y52blxLHA1MuLUBWRv6TR/aTdSWy/cjg3A9Lhjwblxlo/+nwne008Sldff1zeJFNi/bg
- +eViDQU8FTh6o7JkjumeQWj20/de99YACGlOJFwCIiZQbZnNhXoyIqCYBvkW+30qgp7Gl/urS
- h+U7KFf3tvFaHMc+Qgp5rkot0IJO1Jvll7MmjqhmNGahYi55FwfH0IsOq2xgSpx9LkKyr/5ts
- kzDcOCAsYee56LjTtTYAAYedF7/54mVgxOQrKSqybPsXdTVRfLArvcwtar8Q+OPaN28SRaVaW
- WXfaImsv2xS6CQtGDkOu64ktUS/MalROqZMzHmHqjVW0El3E/Bx42APNpX7G683IE5P/ej4fo
- U1xMv+VzvboayqBCGpNyOclt6uVuHs+PD+M8qnjSyeapaRb6wuxLrMh2baUYa5aNBcTkSCvJb
- rqtNclAcPgg020UtvYZed+6y7gLikn/JMIK3HfNmAEw2Cv7TeGhq/W/UlWTISvN0fxgzD0icz
- KgnqGSVNx5WUAOaIxv9/5bmaHLiq0NOma1rrgD5K2q5kMTX/mTTL+10S8OodAloW27iENOgKe
- l4+CrxZdbd7FSYrEDTkIITbDfX+fmQOju7h6nVOd8K/ZHGxhlnElgtZ/0RtcNlpotLq4tmHFr
- XFDGK87SAuONQOMs+zkjG5llh1g=
+Content-Type: text/plain; charset=US-ASCII
 
-> I subsequently simplified the patch case to contain the following:
+
+
+On Sun, 21 Jan 2024, Markus Elfring wrote:
+
+> > I subsequently simplified the patch case to contain the following:
+> >
+> > -              snprintf(BUF, SZ, FORMAT
+> > +              sysfs_emit(BUF, FORMAT
+> >                                ,...);
+> >
+> > This also works for the case where there are only three arguments.
+> > It has the benefit that the change is recognized as a line replacement, so
+> > no extra {} are added when the call is in an if branch.
 >
-> -              snprintf(BUF, SZ, FORMAT
-> +              sysfs_emit(BUF, FORMAT
->                                ,...);
+> Would you like to consider the application of the following SmPL code variant?
 >
-> This also works for the case where there are only three arguments.
-> It has the benefit that the change is recognized as a line replacement, =
-so
-> no extra {} are added when the call is in an if branch.
+> -snprintf
+> +sysfs_emit
+>          (BUF,
+> -         SZ,
+>           FORMAT,
+>           ...
+>          );
 
-Would you like to consider the application of the following SmPL code vari=
-ant?
+It's ok too.
 
--snprintf
-+sysfs_emit
-         (BUF,
--         SZ,
-          FORMAT,
-          ...
-         );
+julia
 
-Regards,
-Markus
+>
+> Regards,
+> Markus
+>
