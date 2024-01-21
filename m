@@ -1,522 +1,156 @@
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-db3eur04on2065.outbound.protection.outlook.com [40.107.6.65])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82CF538F80
-	for <linux-kernel@vger.kernel.org>; Sun, 21 Jan 2024 22:24:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705875851; cv=none; b=QQvTq6g4iYrDjg62arLkbOZc/Bqx//1tDrPETaO/lzkzXU0ok1UWc2hX+XyA46vbiJfGADD++E8ew5LoV4S9JzVgTCxca++YYymRtcA9iRsEC/ca5RteRfdwDCiJ75GuGsKXkQRxsQctET7p63s6pE26WlHfHwcrZcrKy7wEHVA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705875851; c=relaxed/simple;
-	bh=dDa7C4QodUYbmIZJtAlK/HScrkg/lesQ4vI02/cljBc=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=lUli3OP9fKrpmcgahETPmdz38WFJwj5gMwrutBHA+y/kOX1/AAAwzqELQD8vyzwS0N89PJ8u2ekj7CVoN29YrUcPzKdFmuADhB3PwWY9F9W5GlXRrki2PCKa4LK+7CtN3HWx8L5iT8vmGMaFYKzEqQXDdJN4YX7rY345ZNvkPyk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=ORs2HL8L; arc=none smtp.client-ip=209.85.167.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 234BF38DE7;
+	Sun, 21 Jan 2024 22:24:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.6.65
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1705875893; cv=fail; b=HQ42j9+t99cvhFnhXWHRyLWHLxn1I6VlikM7lPMT05N7LRuMSyBXgI/97ImWFHeEyJFQsdFPzZ3H4CONGexzxjwkga5dNSlvo64CPa5P+yKA5ylnzQQbpn4nNhAuw+vHNNMXgxSlTCylKBA+qHRXWPdFKetFLZA0ifSdWWJyKQg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1705875893; c=relaxed/simple;
+	bh=UZbK0F4GYapwC5GnfiWRWtb/RKBmxqcRn80ohg9mt0Q=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=LJgt9pdBY9viH3Cis7Swd0vd23VjN19lOj+9lRv4jsCJk/IE2K1lxNVbk0kyctVie5AgAHlh3Gp/LzGK3WPr4QOfyfv7E7VIGdlyTCKjFevr8DdFvN0Fg3I3wclhFYErzvXZDya67InsCSEhQxITeDXm10oig0o8xb/clAvzujc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=IfSO81QN; arc=fail smtp.client-ip=40.107.6.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="ORs2HL8L"
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-50f1c524010so2020150e87.3
-        for <linux-kernel@vger.kernel.org>; Sun, 21 Jan 2024 14:24:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1705875847; x=1706480647; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=iamfUYmIh3/KxPOhtvGIyneJhbVYXx6PKYDWghiAEHs=;
-        b=ORs2HL8Le5kJFV1rbeU0YJcbK/T3Iz/2yGYGJ0k2KR+jX+ytCvVwlZRsFESCn4YuYp
-         garkFNhhLXZKPnmCi8fIWrUTpcgyZho7nO7s+oefvVPqbCwxMr6m/kCcsLRL5ybs9TF4
-         PUZjkfkzvILf9JWlyG3dlgrPj/muZE1D3Ume8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705875847; x=1706480647;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=iamfUYmIh3/KxPOhtvGIyneJhbVYXx6PKYDWghiAEHs=;
-        b=jJyj6zm/5CfVe3IIZn2WXEsxVQYin57c77K6b7yIknpM3OStuFym6FPAPIL/cHx1Ga
-         mM1T8PoVuEkt6iYjoHPXRhAuxWs+TBqN6xmB4SU8E/9WApIZLzs6GYDo3+ejlgw8HEyq
-         bRkpjH/EFJoNka57seC1/Y9eyHTgwBpDpiDYUmVhvTLhsvqKha5yFDKWlB8ZOMxCiplr
-         1j3n4xWc3JX/qED2TD1pHK6QmxX0h6Q11NN/pGdwgzGqgW1HmoBUMTsiW5PYZZeRQ2Ip
-         CW4R2mUEbhEr5Wsjy2/YtT35xIBrz3Z1Cw1tFftcZW6w2opHxPxy0rKjsEIR9dyzoFej
-         PLLg==
-X-Gm-Message-State: AOJu0Yw5sBfaISlaZ7Cgc7WrhG6V6iCZQbGDZ3U/iTW8jMCMocMd13sD
-	iiX1l/V9Iw/CiP2vubxAQDabGuGqbOs2lmsCg6xaNV4TAcNGBkyQwha7G2eCrUnqZgx9rNasBjv
-	5tnV+Vw==
-X-Google-Smtp-Source: AGHT+IHE/2c8BRioo2t2s4Pg5Igtn40d8P/WqP7S0H18h7L7TBXtP6ZpFG0Vw1MTF7w358FB0HLtBw==
-X-Received: by 2002:a05:6512:52b:b0:50f:96b:8caa with SMTP id o11-20020a056512052b00b0050f096b8caamr510288lfc.198.1705875847125;
-        Sun, 21 Jan 2024 14:24:07 -0800 (PST)
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com. [209.85.208.169])
-        by smtp.gmail.com with ESMTPSA id o11-20020ac24c4b000000b0050e8223688fsm1755432lfk.30.2024.01.21.14.24.06
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 21 Jan 2024 14:24:06 -0800 (PST)
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2cdeb80fdfdso26667221fa.2
-        for <linux-kernel@vger.kernel.org>; Sun, 21 Jan 2024 14:24:06 -0800 (PST)
-X-Received: by 2002:a2e:9f44:0:b0:2cc:a65e:ec65 with SMTP id
- v4-20020a2e9f44000000b002cca65eec65mr500201ljk.12.1705875845987; Sun, 21 Jan
- 2024 14:24:05 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="IfSO81QN"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=gOkpZl9ZH7GP2TUFtLwiHxBce9nW6zFbXrus0ebkAtKT7wqYAQXmSKnILsJ2ULRoNl6jF0/+/paMECuwENAwS4UDIWHfOOgAul7IMNEdMC2TgEKpTnfU1ZDwgdJoyy9Ya1rP1SqcDrXV/V38KvcIo0FcXeGMvOVULoaT13OzrCPpO8BieRjyGy3Lrrc1A0CbiHaRHnx6OAYIPqCHWi44OCORYFCG1uMuteovYnrBjcqLaPe8hq1f08DVGwsnUwxPIkgkMOiDnEnwMCGwAhxMK3aWxgoPZV9PN7uSAePw/TAuMsIBqtCkpdvn6NhMmNVo43r3PaFbWz+Hn90dXLzRgw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=thkdAMXk+T5jFDijiZX4Z1FVddyobFgdaE7WeZlKSBI=;
+ b=OqYLuPzCQUDIvZA3vl3w3iDjBbqgEa1F+9UIqH+Z0J0qcqtkI/uVAKcZseoDG2WFxyqDYZAnd+FSH9KGFNY8LvPRnCjOa1dAhFWseZBsIS7H3PiAViST7UNqOp3Uz8AJenYt0wVqHI3+TiiyU1w1wqvGmPkGyZrPHEDshO10B7/EtNwuYN1xnPkVyuavaISgtLsyW616v26iZ8POnb0E9e1MyXhaYw+D25y83RbKWU9KNMboDVUQpFvEwvqltHl1K9d6raUfZiDgcwp1esfWuUJfFNmPQmtuHA+YFclT/RB6K0b5DKRnq2Ly6BnhRyGYWj9Vppvvi6Ycgxw6s47vLw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=thkdAMXk+T5jFDijiZX4Z1FVddyobFgdaE7WeZlKSBI=;
+ b=IfSO81QNevwbEZBQd6nYLkpvurCMjqkUDnfj91H70QKZ2kiQraA/ktCNjQuZRiUuiJqULdEfTnjc86DwUXocYuGgyxKTjF7zdk0MPy2DFPj8nLr7xrk8KHPImtOtvRFijLUSeFR3NngqAdKobGmFcGJPONlKFEg792In3CDH8Do=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by PAXPR04MB9074.eurprd04.prod.outlook.com (2603:10a6:102:227::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7202.31; Sun, 21 Jan
+ 2024 22:24:47 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::c8b4:5648:8948:e85c]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::c8b4:5648:8948:e85c%3]) with mapi id 15.20.7202.031; Sun, 21 Jan 2024
+ 22:24:47 +0000
+From: Frank Li <Frank.Li@nxp.com>
+To: frank.li@nxp.com,
+	mathias.nyman@intel.com
+Cc: Thinh.Nguyen@synopsys.com,
+	balbi@kernel.org,
+	devicetree@vger.kernel.org,
+	gregkh@linuxfoundation.org,
+	linux-kernel@vger.kernel.org,
+	linux-usb@vger.kernel.org,
+	mark.rutland@arm.com,
+	pku.leo@gmail.com,
+	ran.wang_1@nxp.com,
+	robh+dt@kernel.org,
+	sergei.shtylyov@cogentembedded.com,
+	imx@lists.linux.dev
+Subject: [PATCH v2 0/3] USB: dwc:  Add workaround for host mode VBUS glitch when boot
+Date: Sun, 21 Jan 2024 17:24:25 -0500
+Message-Id: <20240121222428.3396428-1-Frank.Li@nxp.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: BY5PR17CA0063.namprd17.prod.outlook.com
+ (2603:10b6:a03:167::40) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Sun, 21 Jan 2024 14:23:49 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wiB4iHTtfZKiy5pC24uOjun4fbj4kSX0=ZnGsOXadMf6g@mail.gmail.com>
-Message-ID: <CAHk-=wiB4iHTtfZKiy5pC24uOjun4fbj4kSX0=ZnGsOXadMf6g@mail.gmail.com>
-Subject: Linux 6.8-rc1
-To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|PAXPR04MB9074:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5ea9af4c-8b76-4d81-d6f9-08dc1acfc675
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	0r2iCx7RjOu4esFKZ4Giv3CWvMkbIknrPD7UZg5ouCgJH3rgCwz39ZXz2G/Ft0DnMLnZjyLAITXDbYhuRoWmVJh7RNqc1uKReIJKYw/hVEs42Ngb1u2XJmpugahTliM+Ftk3sbXUBeVf/pPX1EWQuUF2g39meNyx9BHt9SJy9pDI52U5X5HcHRLbdq4sO8Z1F/KraETFpwHRTdq1zZ0pca75ui4ZQ04z7GCIfGZUkGvNICEAx3kwj1MDrgjuFv7ICfSY7dShr/vfiao8LUjfxPjOpMz7xflAWfxYxeGbJI4QVPIK86YKHxJOH1muwKI8IIej39NHPUH24Uw8BBSU/wECs4opx8vndpz0faS6Fzl+v+DTXpurT6lRvqlnNuWXuub99+BHb8EMkzAx4YiYwClv+CmavHzqxskXFN7cpSa/VRA0rilEGl883ZkJQbEPTPBFfIHi/E/Aft0e4+temEWceRJxazUozJ6Y4rLnc9E2L0muOHcY9lLe7mkA2PSNO3cai+7b5laMszTe8ZqGya/+B9Hn2N4rwiaZAo+pOViXr6oLJB1SZKjr8hAdgWD+fFZMyFHC7XSxiO+Odf00IauF4wsQW8GxJ1KoMVRkt9n+01NhTnW4Uccwobe2FNFkkdmIyDxQ+PyM7SUmeK1AUoB0/OleIVB9gzP/VgrPY1A=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(346002)(136003)(396003)(39860400002)(376002)(230922051799003)(230273577357003)(230173577357003)(186009)(1800799012)(64100799003)(451199024)(86362001)(8936002)(4326008)(8676002)(316002)(66556008)(66476007)(66946007)(36756003)(5660300002)(6506007)(6486002)(2906002)(41300700001)(52116002)(4744005)(7416002)(38100700002)(38350700005)(83380400001)(26005)(1076003)(2616005)(6512007)(6666004)(478600001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?Q3e6lqyFlMf1v15vlnQaP61ix0eGHojo2/tNcbuy/06o3UIVWjbHCmHWmPhx?=
+ =?us-ascii?Q?VM/tIb0/FIEiOJxV9E5uA4K584SSYPWZeuKvv6T/qWbH1w/VgXPVCOTxIxr3?=
+ =?us-ascii?Q?yoCfE51s93rWtmLtP1V3ZGNw3u/yGtWzp0xxlsiDkxFzG89Ahjnza203og5Y?=
+ =?us-ascii?Q?4O3eBk0OVMrkQuDdDGDXfH8kQpmsTERGnbc7sSsN3qvF7k+Z0rPuqpgta6V3?=
+ =?us-ascii?Q?pJWeYyBC6/O7pKUiHytOkE90slaRD1jiX4RMA0E4tzm9nxh8az2LxO0qlipi?=
+ =?us-ascii?Q?NgI3GHZtyKT5iV1HedwsONMmQDELvfPDlA+JMu3r/Ui+0gU4YevxHnPXrjf1?=
+ =?us-ascii?Q?s/w0iTe3M3k2whkFsWi+EXI98Wd1el3kXfJLWVuL3Phr1zEt5lUUt2x4j5MQ?=
+ =?us-ascii?Q?6puWJBN4Yg07OI3bNMpI8SH29NttjydjulVqytjW3NTnLnMhlf2zJ9+j5Wmj?=
+ =?us-ascii?Q?wFnnDhqeSkM3svWphD9jsvyfgH86gL6Xt0SKiRma49OkZEGTtjxSL4E+OYFR?=
+ =?us-ascii?Q?eRa5DKmAcjbP5EJtNkgG29UF4nTO5lsXSu+Nd8KUYvxsk9c6K80EBDMLdjWn?=
+ =?us-ascii?Q?bMELtVLtJFJhKeSlGEfE7iZWW5CFZSKyxeEVbB14gHn9AQ2zs0qQ/95zQPrH?=
+ =?us-ascii?Q?0twmPfL9QjUNICWMSvCmEpeYftnPiDgye8tZByPksFViz3HP9t7LielYiAaq?=
+ =?us-ascii?Q?DvCiK4h6Qtz4G/uogjzhu8K8kZdoeN0NoAki3EkRAdtiVhyF9TJXn+W0t8D9?=
+ =?us-ascii?Q?kCVMCNgfvhMuiL4kwYnY3smbqIVAPqQfdvzSJFBr6lFIVGT2BpFqjFhLfWBF?=
+ =?us-ascii?Q?/0K0R2DN59wh56/AzIeXvleHQ9cv/Pc6x7QG5nW9XZBqxbSm/Cc/U44qZpS5?=
+ =?us-ascii?Q?eTfyL6ndWopWYod0lH6MZJA2feptsKdQjJJX7Md5/WLItKuqSunaod8R86kh?=
+ =?us-ascii?Q?LpUJHnXOdYA8dATUsj8ANaa4vm7bM/1mUjUq+4KP+SGWCpJh3/0sfxUOYTtc?=
+ =?us-ascii?Q?eTHCj57KfUxPmA9VfJK4339IXsMP2yWOFx28pxJvq9aQqwTVsS6tsB3Nrh1j?=
+ =?us-ascii?Q?vVjvqP+Yf5bWFYhGD0LDg1Zw1M9kvvIGmwm/6x48apfGxOieydQlhRIjsKm9?=
+ =?us-ascii?Q?oZO2gNZ9b1a7DE1jxPiS49b7zS2S5V+8tf8Wr+nBW/KbWq5KLvOqNpYIoIot?=
+ =?us-ascii?Q?SSRfXt4VFAvQkWv6ickGYb1e0+f9ImYAVH+VpDX4OByGKgxSQNf4JrqsuPl/?=
+ =?us-ascii?Q?5xZrGHildOq/JEwJ/fwNokQ5eUQRcDUJo6AYSCgYnIXwVbW1XqrhCauHiJIF?=
+ =?us-ascii?Q?ViFwquV+ZH0bBEg7iwfFPfokwtO7MBU4v1A5KYHIAgHuG+sS3Yd/UWGQfzFk?=
+ =?us-ascii?Q?c853Hehg27HU/ZGgi4Z1uzuyMoPKBypT4gxvBO9CXm7t9eg7ym0wZ+UoxwqS?=
+ =?us-ascii?Q?FvcN5mlMunY/CABA0MaqPCwIBDcyQUY3uXkjq5UbLq94Mqysb//viHpGKhqi?=
+ =?us-ascii?Q?ELY6+LeVXAaBnPT8H+CIFAvpxy5RHnWdfOCyhToHWgFlsu2erkLrjuSoRe1Z?=
+ =?us-ascii?Q?eXdbJiC+L8VfesB0hw4=3D?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5ea9af4c-8b76-4d81-d6f9-08dc1acfc675
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jan 2024 22:24:47.3592
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 0BviCV8h7YoviBYM3K84vjHDWEGxlvMUquK0zWEFCn9vkTlz2yqO/lcK6PuVjUO7rfUz+8TiO+nVTiLnirutvQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB9074
+
+Change from v1 to v2:
+- splite xhci.h to xchi-port.h and xhci-caps.h to shared marco.
+- add quirk subfix
+- fixed checkpatch error with --strict.
+
+left one warning to align existed code style.
+
+CHECK: Alignment should match open parenthesis
++	dwc->host_vbus_glitches_quirk = device_property_read_bool(dev,
++				"snps,host-vbus-glitches-quirk");
+
+Frank Li (1):
+  XHCI: Separate PORT and CAPs macros into dedicated file
+
+Ran Wang (2):
+  dt-bindings: usb: dwc3: Add snps,host-vbus-glitches-quirk avoid vbus
+    glitch
+  usb: dwc3: Add workaround for host mode VBUS glitch when boot
+
+ .../devicetree/bindings/usb/snps,dwc3.yaml    |   7 +
+ drivers/usb/dwc3/core.c                       |   3 +
+ drivers/usb/dwc3/core.h                       |   2 +
+ drivers/usb/dwc3/host.c                       |  48 ++++
+ drivers/usb/host/xhci-caps.h                  |  85 ++++++
+ drivers/usb/host/xhci-port.h                  | 176 ++++++++++++
+ drivers/usb/host/xhci.h                       | 262 +-----------------
+ 7 files changed, 324 insertions(+), 259 deletions(-)
+ create mode 100644 drivers/usb/host/xhci-caps.h
+ create mode 100644 drivers/usb/host/xhci-port.h
+
+-- 
+2.34.1
 
-So this wasn't the most pleasant merge window, but most of the
-unpleasantness was entirely unrelated to the code base and almost
-entirely related to nasty weather. Just a few technical hiccups. And
-after a very big 6.7 release, 6.8 looks to actually be smaller than
-average, although not really all that significantly so.
-
-And while maybe a bit smaller than usual (I blame the holidays),
-things generally look pretty normal. The bulk is driver updates (GPU
-and networking drivers are the big areas as always, but there's a bit
-of everything), but we've also got a fair chunk of filesystem updates
-(mainly core vfs, bcachefs, xfs and btrfs) and obviously all the usual
-arch updates.
-
-The rest is all over: docs, tooling, core kernel, mm and networking.
-My mergelog below gives some kind of high-level overview.
-
-Let the testing and calming down begin,
-
-                 Linus
-
---
-
-Al Viro (6):
-    minixfs updates
-    rename updates
-    dcache updates
-    misc filesystem updates
-    nfsctl update
-    bcachefs locking fix
-
-Alex Williamson (1):
-    VFIO updates
-
-Alexander Gordeev (2):
-    s390 updates
-    more s390 updates
-
-Alexandre Belloni (2):
-    i3c updates
-    RTC updates
-
-Amir Goldstein (1):
-    overlayfs updates
-
-Andreas Gruenbacher (1):
-    gfs2 updates
-
-Andrew Morton (3):
-    MM updates
-    non-MM updates
-    misc hotfixes
-
-Aneesh Kumar (1):
-    powerpc fixes
-
-Anna Schumaker (1):
-    nfs client updates
-
-Ard Biesheuvel (1):
-    EFI updates
-
-Arnaldo Carvalho de Melo (1):
-    perf tools updates
-
-Arnd Bergmann (5):
-    asm-generic cleanups
-    SoC DT updates
-    SoC driver updates
-    ARM SoC code updates
-    ARM SoC defconfig updates
-
-Bartosz Golaszewski (2):
-    gpio updates
-    gpio fixes
-
-Bjorn Andersson (3):
-    rpmsg updates
-    remoteproc updates
-    hwspinlock updates
-
-Bjorn Helgaas (1):
-    pci updates
-
-Borislav Petkov (7):
-    EDAC updates
-    x86 microcode updates
-    misc x86 updates
-    x86 paravirt updates
-    x86 SEV updates
-    x86 cpu feature updates
-    x86 RAS updates
-
-Chandan Babu (2):
-    xfs updates
-    xfs fix
-
-Christian Brauner (8):
-    misc vfs updates
-    vfs super updates
-    vfs mount updates
-    vfs rw updates
-    vfs cachefiles updates
-    vfs iov_iter cleanups
-    vfs fixes
-    netfs updates
-
-Christoph Hellwig (2):
-    dma-mapping updates
-    dma-mapping fixes
-
-Chuck Lever (1):
-    nfsd updates
-
-Corey Minyard (1):
-    IPMI updates
-
-Damien Le Moal (1):
-    ata updates
-
-Dan Williams (1):
-    CXL (Compute Express Link) updates
-
-Daniel Thompson (1):
-    kgdb update
-
-Dave Airlie (3):
-    drm updates
-    drm fixes
-    more drm fixes
-
-Dave Hansen (2):
-    x86 SGX updates
-    x86 TDX updates
-
-David Howells (1):
-    afs updates
-
-David Kleikamp (1):
-    jfs updates
-
-David Sterba (1):
-    btrfs updates
-
-David Teigland (1):
-    dlm updates
-
-Dennis Zhou (1):
-    percpu updates
-
-Dmitry Torokhov (1):
-    input updates
-
-Eric Biggers (2):
-    fscrypt updates
-    fscrypt fix
-
-Gabriel Krisman Bertazi (1):
-    unicode updates
-
-Gao Xiang (2):
-    erofs updates
-    erofs fixes
-
-Geert Uytterhoeven (1):
-    m68k updates
-
-Greg KH (5):
-    char/misc and other driver updates
-    driver core updates
-    staging driver updates
-    tty / serial updates
-    USB / Thunderbolt updates
-
-Guenter Roeck (2):
-    hwmon updates
-    hwmonfix
-
-Hans de Goede (1):
-    x86 platform driver updates
-
-Helge Deller (3):
-    fbdev updates
-    parisc updates
-    fbdev fix
-
-Herbert Xu (1):
-    crypto updates
-
-Huacai Chen (1):
-    LoongArch updates
-
-Ilya Dryomov (1):
-    ceph updates
-
-Ingo Molar (1):
-    locking updates
-
-Ingo Molnar (16):
-    x86 apic updates
-    x86 asm updates
-    x86 boot updates
-    x86 build updates
-    x86 cleanups
-    x86 core updates
-    x86 entry updates
-    objtool fixlet
-    debugobject update
-    generic syscall updates
-    CPU hotplug updates
-    timer subsystem updates
-    irq subsystem updates
-    performance events updates
-    scheduler updates
-    scheduler fix
-
-Ira Weiny (1):
-    libnvdimm updates
-
-Jaegeuk Kim (1):
-    f2fs update
-
-Jakub Kicinski (1):
-    networking fixes
-
-James Bottomley (2):
-    SCSI updates
-    SCSI updates
-
-Jan Kara (2):
-    small quota cleanup
-    fsnotify updates
-
-Jarkko Sakkinen (1):
-    tpm updates
-
-Jason Gunthorpe (2):
-    rdma updates
-    iommufd updates
-
-Jassi Brar (1):
-    mailbox updates
-
-Jens Axboe (4):
-    block updates
-    io_uring updates
-    io_uring fixes
-    block fixes
-
-Jiri Kosina (1):
-    HID updates
-
-Joerg Roedel (1):
-    iommu updates
-
-Johan Hovold (1):
-    GNSS updates
-
-John Johansen (1):
-    AppArmor updates
-
-John Paul Adrian Glaubitz (1):
-    sh updates
-
-Jonathan Corbet (2):
-    documentation update
-    documentation fixes
-
-Juergen Gross (1):
-    xen updates
-
-Julia Lawall (1):
-    coccinelle updates
-
-Kees Cook (3):
-    pstore updates
-    hardening updates
-    strlcpy removal
-
-Kent Overstreet (4):
-    bcachefs updates
-    header cleanups
-    header fix
-    more bcachefs updates
-
-Lee Jones (3):
-    mfd updates
-    LED updates
-    backlight updates
-
-Linus Walleij (1):
-    pin control updates
-
-Luis Chamberlain (2):
-    sysctl updates
-    module updates
-
-Mark Brown (4):
-    regmap updates
-    regulator updates
-    spi updates
-    spi fix
-
-Masahiro Yamada (1):
-    Kbuild updates
-
-Masami Hiramatsu (1):
-    probes update
-
-Mauro Carvalho Chehab (1):
-    media updates
-
-Max Filippov (1):
-    Xtensa updates
-
-Michael Ellerman (1):
-    powerpc updates
-
-Michael Tsirkin (1):
-    virtio updates
-
-Michal Simek (1):
-    microblaze updates
-
-Micka=C3=ABl Sala=C3=BCn (1):
-    Landlock updates
-
-Miguel Ojeda (3):
-    Rust updates
-    clang-format updates
-    auxdisplay update
-
-Mike Rapoport (1):
-    memblock update
-
-Mimi Zohar (1):
-    integrity updates
-
-Miquel Raynal (1):
-    mtd updates
-
-Namjae Jeon (1):
-    exfat updates
-
-Neeraj Upadhyay (1):
-    RCU updates
-
-Palmer Dabbelt (2):
-    RISC-V updates
-    more RISC-V updates
-
-Paolo Abeni (1):
-    networking updates
-
-Paolo Bonzini (1):
-    kvm updates
-
-Paul Moore (3):
-    audit updates
-    selinux updates
-    security module updates
-
-Rafael Wysocki (6):
-    ACPI updates
-    thermal control updates
-    power management updates
-    more power management updates
-    more ACPI updates
-    more thermal control updates
-
-Richard Weinberger (2):
-    UBI and UBIFS updates
-    UML updates
-
-Rob Herring (2):
-    devicetree updates
-    devicetree header detangling
-
-Russell King (1):
-    ARM updates
-
-Sebastian Reichel (2):
-    HSI update
-    power supply and reset updates
-
-Shuah Khan (3):
-    nolibc updates
-    KUnit updates
-    kselftest update
-
-Stephen Boyd (1):
-    clk updates
-
-Steve French (4):
-    smb client fixes
-    smb server updates
-    more smb server updates
-    smb client updates
-
-Steven Rostedt (2):
-    tracing updates
-    eventfs updates
-
-Takashi Iwai (2):
-    sound updates
-    sound fixes
-
-Takashi Sakamoto (1):
-    firewire updates
-
-Ted Ts'o (1):
-    ext4 updates
-
-Tejun Heo (1):
-    cgroup updates
-
-Thierry Reding (1):
-    pwm updates
-
-Thomas Bogendoerfer (1):
-    MIPS updates
-
-Thomas Gleixner (1):
-    timer updates
-
-Tzung-Bi Shih (2):
-    chrome platform updates
-    chrome platform firmware updates
-
-Ulf Hansson (2):
-    pmdomain updates
-    MMC updates
-
-Uwe Kleine-K=C3=B6nig (1):
-    pwm fixes
-
-Vinod Koul (3):
-    soundwire updates
-    phy updates
-    dmaengine updates
-
-Vlastimil Babka (1):
-    slab updates
-
-Will Deacon (2):
-    arm64 updates
-    arm64 fixes
-
-Wim Van Sebroeck (1):
-    watchdog updates
-
-Wolfram Sang (1):
-    i2c updates
