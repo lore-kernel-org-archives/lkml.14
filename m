@@ -1,117 +1,206 @@
-Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from relay01.th.seeweb.it (relay01.th.seeweb.it [5.144.164.162])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB57138DE7;
-	Sun, 21 Jan 2024 22:25:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26C4438F89
+	for <linux-kernel@vger.kernel.org>; Sun, 21 Jan 2024 22:26:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.144.164.162
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705875941; cv=none; b=YszetmINPp5VFXQHGqe6icK4P7xWSjI4AHFamADFaJpmRWYtJp3qeSRGbaZMqvces6zyWZ1gVDMBqN8FuXYi1W1dcr0TPqWAhj46mjB8SgfeVyL3fofvlMy8T5qi43LjvuOie6lbGW3YqF1zK3yEx9qc3eiDxW7dpmYGB0OLPkU=
+	t=1705876004; cv=none; b=deulA9hkUDUzVuuajOEt3JpNAdG/Y+gZExLbaqroVNmj/19e4n02iN6pXqnsT3I2/rv/EFj3fMMCF3Hw/UUEzhh0Eg9bsEpBrcaqLs8kyUCynBkAxFu1NZzs0ivgUUhEXQQd/jOvJhD035s0qxA/JXiHErx1axBNUIuYXsvVZQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705875941; c=relaxed/simple;
-	bh=E4gq6a9zOlIEmJ40gwnnHLl9HxWFk9Dhksp7/qOACdg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BNBo/YPfuOO7W8qgF7mfTgmD3KLqkicEIi5oZTTZzjC/kM/tEf4nBrC9IWcWgBZmbOGyZ4b0FgSD6KFu0O8fsINdA/opQIOQSHTS7zr9oYrNg1pwxiG4+a8xH6VeeLtZKVVxP0743PYMTy/VNjJOSaMf7dBUIklXA17/ofzUu3A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=jyv+MI1w; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="jyv+MI1w"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1705875934;
-	bh=r1mbkvsH1Tw6GErB5aGRuFX4QTAhmff/iRgdLLRbQds=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=jyv+MI1wWW+BA4ZFuA/cwmMAocUqbSHOT9RvEvqB2APqOyV3SPeLgANM9wjz8traO
-	 4W4YslnVZei6GI+Xh6m605VjU7+ggypB8+laAoLXhf40ssme2G0IBHSBhxoyP99ULa
-	 sovznKvecigIzs5kiSIFfGKpnXtFvePlz5hkpZ98dlT1jVHzgQe7DMHj3QxC9spv8I
-	 rzl/7x0xKItkrdzuqGtxwS5X5eepG4U4JDnuy+Bl5SmzRmO7Hpq2q5JetXh2yHKNGy
-	 0nIAupwnIu3DujY1ut0yIcN1K1f0IJDWDhnJHsB6SgWJTC5K4coX8v8UWVSv5ivust
-	 DEmxH+54I8ZDQ==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	s=arc-20240116; t=1705876004; c=relaxed/simple;
+	bh=PXYpMSGdthUXJnhoTPbS8CoFfCy2vmnLSPU/3dNRZrE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dGtilTPPdC0zSxZMVhJIziFyQgnvcpPXadbXPbtOO7sRO8fdAJDOVRXIYp/2nN3kyrl2wYo4/q8xM1fKzcMqz9KYxz7UVPJzFIHk2vcpBNeeYW8Zq/rUSLL2F2iB2ch3UmGmjslb/Nn6OzQYIURTy7IOIb2p/VkrONSqyl7R24U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=somainline.org; spf=pass smtp.mailfrom=somainline.org; arc=none smtp.client-ip=5.144.164.162
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=somainline.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=somainline.org
+Received: from SoMainline.org (94-211-6-86.cable.dynamic.v4.ziggo.nl [94.211.6.86])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4TJ7GN5N6Zz4wyl;
-	Mon, 22 Jan 2024 09:25:32 +1100 (AEDT)
-Date: Mon, 22 Jan 2024 09:25:20 +1100
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Jani Nikula <jani.nikula@linux.intel.com>
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>, Joonas Lahtinen
- <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>,
- Intel Graphics <intel-gfx@lists.freedesktop.org>, DRI
- <dri-devel@lists.freedesktop.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: build warning after merge of the drm-intel tree
-Message-ID: <20240122092520.68a86f48@canb.auug.org.au>
-In-Reply-To: <87y1f0sol1.fsf@intel.com>
-References: <20231114141715.6f435118@canb.auug.org.au>
-	<8734x8u4la.fsf@intel.com>
-	<87y1f0sol1.fsf@intel.com>
+	by m-r1.th.seeweb.it (Postfix) with ESMTPSA id 101771FF15;
+	Sun, 21 Jan 2024 23:16:42 +0100 (CET)
+Date: Sun, 21 Jan 2024 23:16:40 +0100
+From: Marijn Suijten <marijn.suijten@somainline.org>
+To: Adam Skladowski <a39.skl@gmail.com>
+Cc: phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht, 
+	Rob Clark <robdclark@gmail.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>, 
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Sean Paul <sean@poorly.run>, David Airlie <airlied@gmail.com>, 
+	Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Andy Gross <agross@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
+	Konrad Dybcio <konrad.dybcio@linaro.org>, Krishna Manikandan <quic_mkrishn@quicinc.com>, 
+	linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 7/8] arm64: dts: qcom: msm8976: Declare and wire SDC pins
+Message-ID: <umllfip5rqeo5q65jbvdpisy5yaxpl54j4zdhi2hisdha5da4y@lwf2mjxuhiga>
+Mail-Followup-To: Marijn Suijten <marijn.suijten@somainline.org>, 
+	Adam Skladowski <a39.skl@gmail.com>, phone-devel@vger.kernel.org, 
+	~postmarketos/upstreaming@lists.sr.ht, Rob Clark <robdclark@gmail.com>, 
+	Abhinav Kumar <quic_abhinavk@quicinc.com>, Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
+	Sean Paul <sean@poorly.run>, David Airlie <airlied@gmail.com>, 
+	Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Andy Gross <agross@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
+	Konrad Dybcio <konrad.dybcio@linaro.org>, Krishna Manikandan <quic_mkrishn@quicinc.com>, 
+	linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240121194221.13513-1-a39.skl@gmail.com>
+ <20240121194221.13513-8-a39.skl@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/wRTTQqaNc4XzgCWXZZqmNJE";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240121194221.13513-8-a39.skl@gmail.com>
 
---Sig_/wRTTQqaNc4XzgCWXZZqmNJE
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 2024-01-21 20:41:05, Adam Skladowski wrote:
+> Declare pinctrls for SDC pins and wire them to consumers.
+> 
+> Signed-off-by: Adam Skladowski <a39.skl@gmail.com>
 
-Hi all,
+Where'd the original sign-offs go?
 
-On Tue, 14 Nov 2023 10:53:30 +0200 Jani Nikula <jani.nikula@linux.intel.com=
-> wrote:
->
-> On Tue, 14 Nov 2023, Jani Nikula <jani.nikula@linux.intel.com> wrote:
-> > On Tue, 14 Nov 2023, Stephen Rothwell <sfr@canb.auug.org.au> wrote: =20
-> >>
-> >> After merging the drm-intel tree, today's linux-next build (htmldocs)
-> >> produced this warning:
-> >>
-> >> Documentation/gpu/drm-kms-helpers:296: drivers/gpu/drm/display/drm_dp_=
-mst_topology.c:5484: ERROR: Unexpected indentation.
-> >> Documentation/gpu/drm-kms-helpers:296: drivers/gpu/drm/display/drm_dp_=
-mst_topology.c:5488: WARNING: Block quote ends without a blank line; unexpe=
-cted unindent.
-> >>
-> >> Introduced by commit
-> >>
-> >>   1cd0a5ea4279 ("drm/dp_mst: Factor out a helper to check the atomic s=
-tate of a topology manager") =20
-> >
-> > Imre, please fix this. =20
->=20
-> Just noticed there's a fix [1]. Need to merge that via drm-intel.
->=20
-> BR,
-> Jani.
->=20
-> [1] https://patchwork.freedesktop.org/patch/msgid/20231114081033.27343-1-=
-bagasdotme@gmail.com
+https://lore.kernel.org/linux-arm-msm/20221214232049.703484-1-marijn.suijten@somainline.org/
 
-This is still not fixed.
+Thanks taking taking care of this SoC though.  My SM8976 Suzu device finally
+emitted the magic smoke after rebasing on the latest MSM8976 patches, and will
+need board repairs or a replacement before patches can be tested again :(
 
---=20
-Cheers,
-Stephen Rothwell
+- Marijn
 
---Sig_/wRTTQqaNc4XzgCWXZZqmNJE
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmWtmdAACgkQAVBC80lX
-0Gx3RAf/YnenmQC4D8I1Oh5yglRdacM2m/Scpo+6Cw2VWloUSrj2PAKrU6+CjvI/
-MJuf/g1YBhFLJeBvOhweBu2kTO0h+8+GbaD9SgEwixf+9jIdAZTx4Y3YYarXJ3u5
-shAYBQwKwvo0ff0wqeC9LTth/Vg8RHKv8PV5L9XXA8K4qYWsxQc3cTQVJB3J1e8O
-ktRUQyhv995RViXnyLMaIiM2hzjDF3Q5UcaPEGUpUrkUE8v6z0sElnrQNw2mkeTt
-KfnPDpmcD/MtFXQA9Q5vCPzHTsSd96ea+C+pNPoYihMKvMPjzvqZJvz2I+3cAi02
-t6UBTgpftELqtsgP/2t1nqaVE6vrEg==
-=wuPD
------END PGP SIGNATURE-----
-
---Sig_/wRTTQqaNc4XzgCWXZZqmNJE--
+> ---
+>  arch/arm64/boot/dts/qcom/msm8976.dtsi | 100 ++++++++++++++++++++++++++
+>  1 file changed, 100 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/msm8976.dtsi b/arch/arm64/boot/dts/qcom/msm8976.dtsi
+> index 765c90ac14cb..5a7be93a0115 100644
+> --- a/arch/arm64/boot/dts/qcom/msm8976.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/msm8976.dtsi
+> @@ -771,6 +771,96 @@ blsp2_i2c4_sleep: blsp2-i2c4-sleep-state {
+>  				drive-strength = <2>;
+>  				bias-disable;
+>  			};
+> +
+> +			sdc1_default: sdc1-default-state {
+> +				clk-pins {
+> +					pins = "sdc1_clk";
+> +					drive-strength = <16>;
+> +					bias-disable;
+> +				};
+> +
+> +				cmd-pins {
+> +					pins = "sdc1_cmd";
+> +					drive-strength = <10>;
+> +					bias-pull-up;
+> +				};
+> +
+> +				data-pins {
+> +					pins = "sdc1_data";
+> +					drive-strength = <10>;
+> +					bias-pull-up;
+> +				};
+> +
+> +				rclk-pins {
+> +					pins = "sdc1_rclk";
+> +					bias-pull-down;
+> +				};
+> +			};
+> +
+> +			sdc1_sleep: sdc1-sleep-state {
+> +				clk-pins {
+> +					pins = "sdc1_clk";
+> +					drive-strength = <2>;
+> +					bias-disable;
+> +				};
+> +
+> +				cmd-pins {
+> +					pins = "sdc1_cmd";
+> +					drive-strength = <2>;
+> +					bias-pull-up;
+> +				};
+> +
+> +				data-pins {
+> +					pins = "sdc1_data";
+> +					drive-strength = <2>;
+> +					bias-pull-up;
+> +				};
+> +
+> +				rclk-pins {
+> +					pins = "sdc1_rclk";
+> +					bias-pull-down;
+> +				};
+> +			};
+> +
+> +			sdc2_default: sdc2-default-state {
+> +				clk-pins {
+> +					pins = "sdc2_clk";
+> +					drive-strength = <16>;
+> +					bias-disable;
+> +				};
+> +
+> +				cmd-pins {
+> +					pins = "sdc2_cmd";
+> +					drive-strength = <10>;
+> +					bias-pull-up;
+> +				};
+> +
+> +				data-pins {
+> +					pins = "sdc2_data";
+> +					drive-strength = <10>;
+> +					bias-pull-up;
+> +				};
+> +			};
+> +
+> +			sdc2_sleep: sdc2-sleep-state {
+> +				clk-pins {
+> +					pins = "sdc2_clk";
+> +					drive-strength = <2>;
+> +					bias-disable;
+> +				};
+> +
+> +				cmd-pins {
+> +					pins = "sdc2_cmd";
+> +					drive-strength = <2>;
+> +					bias-pull-up;
+> +				};
+> +
+> +				data-pins {
+> +					pins = "sdc2_data";
+> +					drive-strength = <2>;
+> +					bias-pull-up;
+> +				};
+> +			};
+>  		};
+>  
+>  		gcc: clock-controller@1800000 {
+> @@ -1246,6 +1336,11 @@ sdhc_1: mmc@7824900 {
+>  				 <&gcc GCC_SDCC1_APPS_CLK>,
+>  				 <&rpmcc RPM_SMD_XO_CLK_SRC>;
+>  			clock-names = "iface", "core", "xo";
+> +
+> +			pinctrl-0 = <&sdc1_default>;
+> +			pinctrl-1 = <&sdc1_sleep>;
+> +			pinctrl-names = "default", "sleep";
+> +
+>  			status = "disabled";
+>  		};
+>  
+> @@ -1262,6 +1357,11 @@ sdhc_2: mmc@7864900 {
+>  				 <&gcc GCC_SDCC2_APPS_CLK>,
+>  				 <&rpmcc RPM_SMD_XO_CLK_SRC>;
+>  			clock-names = "iface", "core", "xo";
+> +
+> +			pinctrl-0 = <&sdc2_default>;
+> +			pinctrl-1 = <&sdc2_sleep>;
+> +			pinctrl-names = "default", "sleep";
+> +
+>  			status = "disabled";
+>  		};
+>  
+> -- 
+> 2.43.0
+> 
