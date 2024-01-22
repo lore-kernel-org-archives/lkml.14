@@ -1,151 +1,92 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A4374B5D2;
-	Mon, 22 Jan 2024 15:08:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DA58768E6;
+	Mon, 22 Jan 2024 15:08:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705936085; cv=none; b=qKLlkOrV2zLkXD5irrhiqLiEKNDnSwXcaMo5273jijxCRPa3eRmmu5RJ/H6vsJM29Dheq4lqb+5I5HgFTgKjXtQpkP04/vdJst+H2p1rb9LY9F68bjCQBsd2UbJH01CFdI60uE0QTmzpkWOYcH+tCeswHWz0qbageP5gHJRKTOs=
+	t=1705936089; cv=none; b=jELLSyLt5eTbs8lXBaK1UrZQ02eV8tpw9YgYa1E9ZazrJ1+isO1T1frhvR0togT1/VP2KqUJLdtyqRcqNRtxdY0vefFZV/724BR26sWJc9pJnVHAftxRmgzkDk9fWrmcu9Q1PdrNunZIjU0xPUySpZGmfPds7q4HOl99ruGpqMQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705936085; c=relaxed/simple;
-	bh=4fYcXhWiSJkRIg6Ip7urrvrUSXMdsY9G0tmUF8/+f4s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NNfKb719+3M+hKu6+L5EljWn8dU0KL357DlyS7TqpQFZRwGZf8IQ1CB8RRk6uwHI8XUYxF/zZkQXLuU4AtD5cQ48uI1b1r6HKOcFggi4beyeKVLBjXecSFoadx7tActgTrcODiQriJ9DW1b5S5ZsbJLNqMf1eDNxpx45FI0ZzEI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=Vt73Fi4M; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=Vt73Fi4M; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1705936089; c=relaxed/simple;
+	bh=GiIQV0fB/wKLdgMeKTrjGy1g4IAgHmZH/YQFcJLmGaA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hQeahy3NgvQok3/6vc/UkWD+Tvs+5r3I976R5Z/fy9IwIYx3ojEPLSGFIY0ztoknIPuC/58kr2PKPvlh3S80+40qPHSwABGkEAGB6jA1dPOcA2EdVPbMn0ZDELdLkxOg9gO6ZBgXIiPnEhz80J7a3VmPPE8wf8BXqLaG6bFpcPI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=seVONTCB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="Vt73Fi4M";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="Vt73Fi4M"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 065781FC07;
-	Mon, 22 Jan 2024 15:08:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1705936080; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4fYcXhWiSJkRIg6Ip7urrvrUSXMdsY9G0tmUF8/+f4s=;
-	b=Vt73Fi4MXs9fhjCF+W13yZlgGJsMKcIyp7vNlFUQs8CZf06PhXzd4sYXvo6iQLN3kdss75
-	yxXbdsT6u9j7YX1kBBdoamwNEMzhqOu9EoH0Z8OQg6fr+YxHO29NYuosqo/k3E9wic4q4b
-	ARFTkK7bq0IcHQE0Ka91kbR3qrm+tfI=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1705936080; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4fYcXhWiSJkRIg6Ip7urrvrUSXMdsY9G0tmUF8/+f4s=;
-	b=Vt73Fi4MXs9fhjCF+W13yZlgGJsMKcIyp7vNlFUQs8CZf06PhXzd4sYXvo6iQLN3kdss75
-	yxXbdsT6u9j7YX1kBBdoamwNEMzhqOu9EoH0Z8OQg6fr+YxHO29NYuosqo/k3E9wic4q4b
-	ARFTkK7bq0IcHQE0Ka91kbR3qrm+tfI=
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id ACD86136A4;
-	Mon, 22 Jan 2024 15:07:58 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id s81AKM6ErmW9YgAAD6G6ig
-	(envelope-from <mkoutny@suse.com>); Mon, 22 Jan 2024 15:07:58 +0000
-Date: Mon, 22 Jan 2024 16:07:57 +0100
-From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
-To: Waiman Long <longman@redhat.com>
-Cc: Tejun Heo <tj@kernel.org>, Zefan Li <lizefan.x@bytedance.com>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Frederic Weisbecker <frederic@kernel.org>, 
-	Jonathan Corbet <corbet@lwn.net>, "Paul E. McKenney" <paulmck@kernel.org>, 
-	Neeraj Upadhyay <quic_neeraju@quicinc.com>, Joel Fernandes <joel@joelfernandes.org>, 
-	Josh Triplett <josh@joshtriplett.org>, Boqun Feng <boqun.feng@gmail.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Lai Jiangshan <jiangshanlai@gmail.com>, Zqiang <qiang.zhang1211@gmail.com>, 
-	Davidlohr Bueso <dave@stgolabs.net>, Shuah Khan <shuah@kernel.org>, cgroups@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, rcu@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, Mrunal Patel <mpatel@redhat.com>, 
-	Ryan Phillips <rphillips@redhat.com>, Brent Rowsell <browsell@redhat.com>, 
-	Peter Hunt <pehunt@redhat.com>, Cestmir Kalina <ckalina@redhat.com>, 
-	Nicolas Saenz Julienne <nsaenz@kernel.org>, Alex Gladkov <agladkov@redhat.com>, 
-	Marcelo Tosatti <mtosatti@redhat.com>, Phil Auld <pauld@redhat.com>, 
-	Paul Gortmaker <paul.gortmaker@windriver.com>, Daniel Bristot de Oliveira <bristot@kernel.org>, 
-	Juri Lelli <juri.lelli@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Costa Shulyupin <cshulyup@redhat.com>
-Subject: Re: [RFC PATCH 0/8] cgroup/cpuset: Support RCU_NOCB on isolated
- partitions
-Message-ID: <bql5g22ovp2dm33llmq5oxpmuuhysvdyppj7j6xvrm643xuniv@pkqrwvmqzneh>
-References: <20240117163511.88173-1-longman@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="seVONTCB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91D9FC43399;
+	Mon, 22 Jan 2024 15:08:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705936088;
+	bh=GiIQV0fB/wKLdgMeKTrjGy1g4IAgHmZH/YQFcJLmGaA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=seVONTCBpxBJ+lf+D/aWyLwc8IT/ZDGaN/gTgrhr3vGN86HHoss6pGUepO6RDyo1D
+	 hZ0SyAugfZwnAGsCrUIMX1P+krudM83D9n3LpC8x3/6Romf0nO1hX6Y6bSKyc32Hf/
+	 gUhMh9z/zDtSo7cZMEnWHYEzcvQ56lu4me1HUjhNSZoWmzqriF6o3B2BnegAfJHVar
+	 TvYHgUd1NlMhjc6CqdwJRhKLKGEWose5hQJ935Lv/2sk33jgLIoGZQQqrIUIr/IMo0
+	 z+/kRuJsECBBz4hgIsprkmM1yN9V4vZ8TZS8DGBUMqYjteNFt3NEYDcXgxevvE9O0e
+	 gbsa7YtS9XHqg==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Felix Kuehling <Felix.Kuehling@amd.com>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Sasha Levin <sashal@kernel.org>,
+	Xinhui.Pan@amd.com,
+	airlied@gmail.com,
+	daniel@ffwll.ch,
+	amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 6.6 62/73] drm/amdgpu: Let KFD sync with VM fences
+Date: Mon, 22 Jan 2024 10:02:16 -0500
+Message-ID: <20240122150432.992458-62-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240122150432.992458-1-sashal@kernel.org>
+References: <20240122150432.992458-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="btekknw55nvxl4ky"
-Content-Disposition: inline
-In-Reply-To: <20240117163511.88173-1-longman@redhat.com>
-Authentication-Results: smtp-out2.suse.de;
-	none
-X-Spamd-Result: default: False [-0.21 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 BAYES_HAM(-0.01)[51.13%];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 TAGGED_RCPT(0.00)[];
-	 MIME_GOOD(-0.20)[multipart/signed,text/plain];
-	 R_RATELIMIT(0.00)[to_ip_from(RL6j1h7wxugqfdyj8pnx7tibp9)];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	 RCPT_COUNT_TWELVE(0.00)[36];
-	 SIGNED_PGP(-2.00)[];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+,1:+,2:~];
-	 MID_RHS_NOT_FQDN(0.50)[];
-	 FREEMAIL_CC(0.00)[kernel.org,bytedance.com,cmpxchg.org,lwn.net,quicinc.com,joelfernandes.org,joshtriplett.org,gmail.com,goodmis.org,efficios.com,stgolabs.net,vger.kernel.org,redhat.com,windriver.com,infradead.org];
-	 RCVD_TLS_ALL(0.00)[];
-	 SUSPICIOUS_RECIPS(1.50)[]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spam-Score: -0.21
+Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.6.13
+Content-Transfer-Encoding: 8bit
 
+From: Felix Kuehling <Felix.Kuehling@amd.com>
 
---btekknw55nvxl4ky
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+[ Upstream commit ec9ba4821fa52b5efdbc4cdf0a77497990655231 ]
 
-Hello Waiman.
+Change the rules for amdgpu_sync_resv to let KFD synchronize with VM
+fences on page table reservations. This fixes intermittent memory
+corruption after evictions when using amdgpu_vm_handle_moved to update
+page tables for VM mappings managed through render nodes.
 
-On Wed, Jan 17, 2024 at 11:35:03AM -0500, Waiman Long <longman@redhat.com> wrote:
-> This patch series is based on the RFC patch from Frederic [1]. Instead
-> of offering RCU_NOCB as a separate option, it is now lumped into a
-> root-only cpuset.cpus.isolation_full flag that will enable all the
-> additional CPU isolation capabilities available for isolated partitions
-> if set. RCU_NOCB is just the first one to this party. Additional dynamic
-> CPU isolation capabilities will be added in the future.
+Signed-off-by: Felix Kuehling <Felix.Kuehling@amd.com>
+Reviewed-by: Christian König <christian.koenig@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/gpu/drm/amd/amdgpu/amdgpu_sync.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-IIUC this is similar to what I suggested back in the day and you didn't
-consider it [1]. Do I read this right that you've changed your mind?
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_sync.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_sync.c
+index dcd8c066bc1f..1b013a44ca99 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_sync.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_sync.c
+@@ -191,7 +191,8 @@ static bool amdgpu_sync_test_fence(struct amdgpu_device *adev,
+ 
+ 	/* Never sync to VM updates either. */
+ 	if (fence_owner == AMDGPU_FENCE_OWNER_VM &&
+-	    owner != AMDGPU_FENCE_OWNER_UNDEFINED)
++	    owner != AMDGPU_FENCE_OWNER_UNDEFINED &&
++	    owner != AMDGPU_FENCE_OWNER_KFD)
+ 		return false;
+ 
+ 	/* Ignore fences depending on the sync mode */
+-- 
+2.43.0
 
-(It's fine if you did, I'm only asking to follow the heading of cpuset
-controller.)
-
-Thanks,
-Michal
-
-[1] https://lore.kernel.org/r/58c87587-417b-1498-185f-1db6bb612c82@redhat.com/
-
---btekknw55nvxl4ky
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQQpEWyjXuwGT2dDBqAGvrMr/1gcjgUCZa6EywAKCRAGvrMr/1gc
-jnziAQDeS/BPCM9qEVgM7AdJJ1sdTzQsMQ5YiQ3EnDS8nw0THQD+IlhGeiHOP8eY
-Fif9SqmbUs3GzGds3uUPWNBUWQDsjws=
-=EAx6
------END PGP SIGNATURE-----
-
---btekknw55nvxl4ky--
