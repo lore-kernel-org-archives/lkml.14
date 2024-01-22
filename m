@@ -1,158 +1,168 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 667BA46559;
-	Mon, 22 Jan 2024 15:02:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D53AD46B9B;
+	Mon, 22 Jan 2024 15:03:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.149.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705935763; cv=none; b=osobGjl2zqOXpPDGfJ9mIRGUBmOVoKIgb9m8A39qIjhZHsySttnQUzkV9EUKAgo5W3hLKzgZDfbERIo3/S4Zk7zCQs0UeHkUv/0fF0+jijd2JqZKjk3GkUIqifpmZWMU3KM5ch68bC3vs0w6gZa8EM80yLheETi2XEMmkWhhR8Y=
+	t=1705935782; cv=none; b=JjPeGHA9fMTzYque9MvDCViV+Eh7hHMHH2FkzssVjWX2Z4z68i7CYUmwi/gFhODJlRFiNwnmi0JsPs0Vc76MpJrcx/rdGg6yuE2+q/UcdgtiHfDelmAiF0JtxtP3m5GWyQAhsjZsMv3M2XNkxXAW9Y39qFZfRN3njCniFOWjmmQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705935763; c=relaxed/simple;
-	bh=8bGFmix80U9/t8wZwLZ5Rw+q5Uz4pSAAPOUtF8Qbh94=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:CC:References:
-	 In-Reply-To:Content-Type; b=GhLIvtxxxHKnAUWxvWGXwoNlRMigW6piUH2xXbbfIgMhyTnybgm1s4gspC+cLD2q6yQBVsi0O6FVq5w8aTTIm+eW2Jk9jcc6oHSYWxIcBB2AgeSZ4Ec+Jm4o85ETzCn4laps2/Gd3+UtPKLmwVlkUMfLRorejL2DgZxoAlVfxy0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=LLE5PCUi; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1705935782; c=relaxed/simple;
+	bh=SQf3HCTG9nGeUY31xrUKwFz3cZXNrJIrlswKVlLqEiM=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=bZQmPOUU1A2EAd1WDZdziub4ViXjksoFQ0TBnHUXMotapikyUIZv6Ry09tlCk+imDlcBuqaVJpJ+PgXBq3NsueFwFkgz+9ZRjMMgLkQzFcVWUVOiAenaXc3LlIYQ9FVnQkR1S15q6GPckuOSeuw7tSqhp3+p7PeRRSQRRq8bOp4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=bjFtEG/P; arc=none smtp.client-ip=67.231.149.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="LLE5PCUi"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40MEEKRt023856;
-	Mon, 22 Jan 2024 15:01:42 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:from:subject:to:cc:references
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=HQT4IJbpgLyZu2gWdGASTg7GGU/7nlJGfQLF+O8FORE=; b=LL
-	E5PCUiZBDKg8XqVuua7R999Yh9pC48m4tqG18SD1WAx0xYI+itnKZPLYT8clKoV1
-	9moXCOpKjo/n/9ZtvP1MRVOL5QfrxYO2RqrF0v8cucDiLRw5tOJnDo/xLq2cbRtr
-	9JyTOEdnirWWl/NG1i43JA7jnaNP3+HTPwGyJ94Td+MdK0mvgnCHw5oOMtc0xgDN
-	fiA8nMxxoI/X9LoDFpMjBo2VOomcTwaHZNrk+OdEzQ+37l5EyBaQ8jV5j94d99mX
-	ZJ1sUdS60CwKF5Wnc+IIUceB2UB0aHHc26pw0vkUK4i9yHY1EcYiPGzOyzd6U0cc
-	vtQESgHJVipbP86uichg==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vsq7w0n1t-1
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="bjFtEG/P"
+Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
+	by mx0a-001ae601.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40M5k6nu030313;
+	Mon, 22 Jan 2024 09:02:32 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=
+	from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding:content-type; s=PODMain02222019; bh=0
+	mPLhPK6fWPpvy8GLu7GR7nSQ3cSYPV0tcLCns0FbBg=; b=bjFtEG/PKALsZBM41
+	t96ASCeK0uTEF3J4zRfPJbUYzJ8p72ykL5/JwoIfcELfMXUb2KDPpDLtrVgFFmvA
+	n8pjGiinAEA9qY1ybIjdKv7kJIvFb/LSwm8f8PSQzmzVKHyzluWl8H1RzoIK77bT
+	QESYfLEDMKikMSUcjD/n4VuyRUvvci5MtHliDgXjo5JSMJXDZ4E70+x+XguqTxFY
+	+FUP53PBVovepA+B35UazteitlP3TEw+BTuMHQfw+2myLBCX4EGz1tJRNhB/EkD4
+	BoLoQhMBLQYNf2LKFg+rGgzBiRxqZSOJlZoWQ6TGyqqvD2nixnpjDUdL/vBxaxUN
+	Ierdg==
+Received: from ediex01.ad.cirrus.com ([84.19.233.68])
+	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 3vrcf32k5g-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 22 Jan 2024 15:01:39 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 40MF1c2U009224
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 22 Jan 2024 15:01:38 GMT
-Received: from [10.253.15.239] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
+	Mon, 22 Jan 2024 09:02:30 -0600 (CST)
+Received: from ediex02.ad.cirrus.com (198.61.84.81) by ediex01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Mon, 22 Jan
- 2024 07:01:28 -0800
-Message-ID: <fc9c3e08-a83c-4748-89e4-8b7b0c62da7f@quicinc.com>
-Date: Mon, 22 Jan 2024 23:01:26 +0800
+ 2024 15:01:57 +0000
+Received: from ediswmail.ad.cirrus.com (198.61.86.93) by
+ anon-ediex02.ad.cirrus.com (198.61.84.81) with Microsoft SMTP Server id
+ 15.2.1118.40 via Frontend Transport; Mon, 22 Jan 2024 15:01:57 +0000
+Received: from upx-tgl-008-ubuntu.ad.cirrus.com (upx-tgl-008-ubuntu.ad.cirrus.com [198.90.251.167])
+	by ediswmail.ad.cirrus.com (Postfix) with ESMTP id C5C6511CC;
+	Mon, 22 Jan 2024 15:01:57 +0000 (UTC)
+From: Maciej Strozek <mstrozek@opensource.cirrus.com>
+To: Mark Brown <broonie@kernel.org>
+CC: Cezary Rojewski <cezary.rojewski@intel.com>,
+        Liam Girdwood
+	<lgirdwood@gmail.com>,
+        Pierre-Louis Bossart
+	<pierre-louis.bossart@linux.intel.com>,
+        Peter Ujfalusi
+	<peter.ujfalusi@linux.intel.com>,
+        Bard Liao
+	<yung-chuan.liao@linux.intel.com>,
+        Ranjani Sridharan
+	<ranjani.sridharan@linux.intel.com>,
+        Kai Vehmanen
+	<kai.vehmanen@linux.intel.com>,
+        <alsa-devel@alsa-project.org>, <patches@opensource.cirrus.com>,
+        <linux-sound@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Maciej Strozek
+	<mstrozek@opensource.cirrus.com>
+Subject: [PATCH] ASoC: Intel: mtl-match: Add cs42l43_l0 cs35l56_l23 for MTL
+Date: Mon, 22 Jan 2024 15:01:56 +0000
+Message-ID: <20240122150156.68983-1-mstrozek@opensource.cirrus.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Lei Wei <quic_leiwei@quicinc.com>
-Subject: Re: [PATCH net-next 18/20] net: ethernet: qualcomm: Add PPE MAC
- support for phylink
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>,
-        Luo Jie
-	<quic_luoj@quicinc.com>
-CC: <agross@kernel.org>, <andersson@kernel.org>, <konrad.dybcio@linaro.org>,
-        <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
-        <pabeni@redhat.com>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <corbet@lwn.net>, <catalin.marinas@arm.com>, <will@kernel.org>,
-        <p.zabel@pengutronix.de>, <shannon.nelson@amd.com>,
-        <anthony.l.nguyen@intel.com>, <jasowang@redhat.com>,
-        <brett.creeley@amd.com>, <rrameshbabu@nvidia.com>,
-        <joshua.a.hay@intel.com>, <arnd@arndb.de>, <geert+renesas@glider.be>,
-        <neil.armstrong@linaro.org>, <dmitry.baryshkov@linaro.org>,
-        <nfraprado@collabora.com>, <m.szyprowski@samsung.com>,
-        <u-kumar1@ti.com>, <jacob.e.keller@intel.com>, <andrew@lunn.ch>,
-        <netdev@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-doc@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <ryazanov.s.a@gmail.com>, <ansuelsmth@gmail.com>,
-        <quic_kkumarcs@quicinc.com>, <quic_suruchia@quicinc.com>,
-        <quic_soni@quicinc.com>, <quic_pavir@quicinc.com>,
-        <quic_souravp@quicinc.com>, <quic_linchen@quicinc.com>
-References: <20240110114033.32575-1-quic_luoj@quicinc.com>
- <20240110114033.32575-19-quic_luoj@quicinc.com>
- <ZZ6LGiSde4hHM+6j@shell.armlinux.org.uk>
-Content-Language: en-US
-In-Reply-To: <ZZ6LGiSde4hHM+6j@shell.armlinux.org.uk>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: rEqqTzP-nAa7s86SsOJYcDTm33YE2naW
-X-Proofpoint-ORIG-GUID: rEqqTzP-nAa7s86SsOJYcDTm33YE2naW
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-22_05,2024-01-22_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
- lowpriorityscore=0 spamscore=0 clxscore=1015 suspectscore=0
- priorityscore=1501 malwarescore=0 bulkscore=0 impostorscore=0
- mlxlogscore=742 phishscore=0 mlxscore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.19.0-2311290000
- definitions=main-2401220102
+Content-Type: text/plain
+X-Proofpoint-ORIG-GUID: W96pIoV5lf3ndjQOFSHOoXeQrBWQTuJU
+X-Proofpoint-GUID: W96pIoV5lf3ndjQOFSHOoXeQrBWQTuJU
+X-Proofpoint-Spam-Reason: safe
 
+Signed-off-by: Maciej Strozek <mstrozek@opensource.cirrus.com>
+---
+ .../intel/common/soc-acpi-intel-mtl-match.c   | 56 +++++++++++++++++++
+ 1 file changed, 56 insertions(+)
 
-
-On 1/10/2024 8:18 PM, Russell King (Oracle) wrote:
-> On Wed, Jan 10, 2024 at 07:40:30PM +0800, Luo Jie wrote:
->> +static void ppe_phylink_mac_link_up(struct ppe_device *ppe_dev, int port,
->> +				    struct phy_device *phy,
->> +				    unsigned int mode, phy_interface_t interface,
->> +				    int speed, int duplex, bool tx_pause, bool rx_pause)
->> +{
->> +	struct phylink_pcs *pcs = ppe_phylink_mac_select_pcs(ppe_dev, port, interface);
->> +	struct ppe_uniphy *uniphy = pcs_to_ppe_uniphy(pcs);
->> +	struct ppe_port *ppe_port = ppe_port_get(ppe_dev, port);
->> +
->> +	/* Wait uniphy auto-negotiation completion */
->> +	ppe_uniphy_autoneg_complete_check(uniphy, port);
-> 
-> Way too late...
-> 
-
-
-Yes agree, this will be removed. If inband autoneg is used, 
-.pcs_get_state should report the link status.  Then this function call 
-should not be needed and should be removed.
-
->> @@ -352,6 +1230,12 @@ static int ppe_port_maxframe_set(struct ppe_device *ppe_dev,
->>   }
->>   
->>   static struct ppe_device_ops qcom_ppe_ops = {
->> +	.phylink_setup = ppe_phylink_setup,
->> +	.phylink_destroy = ppe_phylink_destroy,
->> +	.phylink_mac_config = ppe_phylink_mac_config,
->> +	.phylink_mac_link_up = ppe_phylink_mac_link_up,
->> +	.phylink_mac_link_down = ppe_phylink_mac_link_down,
->> +	.phylink_mac_select_pcs = ppe_phylink_mac_select_pcs,
->>   	.set_maxframe = ppe_port_maxframe_set,
->>   };
-> 
-> Why this extra layer of abstraction? If you need separate phylink
-> operations, why not implement separate phylink_mac_ops structures?
-> 
-
-This PPE driver will serve as the base driver for higher level drivers
-such as the ethernet DMA (EDMA) driver and the DSA switch driver. The
-ppe_device_ops is exported to these higher level drivers, to allow 
-access to PPE operations. For example, the EDMA driver (ethernet 
-netdevice driver to be pushed for review after the PPE driver) will use 
-the phylink_setup/destroy ops for managing netdevice to PHY linkage. The 
-set_maxframe op is also to be used by the EDMA driver during MTU change 
-operation on the ethernet port.
-
-I also mentioned it in the section "Exported PPE Device Operations" in 
-PPE driver documentation:
-https://lore.kernel.org/netdev/20240110114033.32575-2-quic_luoj@quicinc.com/
-
-Whereas the PPE DSA switch driver is expected to use the phylink_mac 
-ops. However，we will remove the phylink_mac ops from this patch now 
-since it is currently unused.
+diff --git a/sound/soc/intel/common/soc-acpi-intel-mtl-match.c b/sound/soc/intel/common/soc-acpi-intel-mtl-match.c
+index feb12c6c85d1..625f991b1ad4 100644
+--- a/sound/soc/intel/common/soc-acpi-intel-mtl-match.c
++++ b/sound/soc/intel/common/soc-acpi-intel-mtl-match.c
+@@ -377,6 +377,36 @@ static const struct snd_soc_acpi_adr_device cs35l56_2_adr[] = {
+ 	}
+ };
+ 
++static const struct snd_soc_acpi_adr_device cs35l56_2_r_adr[] = {
++	{
++		.adr = 0x00023301FA355601ull,
++		.num_endpoints = 1,
++		.endpoints = &spk_r_endpoint,
++		.name_prefix = "AMP3"
++	},
++	{
++		.adr = 0x00023201FA355601ull,
++		.num_endpoints = 1,
++		.endpoints = &spk_3_endpoint,
++		.name_prefix = "AMP4"
++	}
++};
++
++static const struct snd_soc_acpi_adr_device cs35l56_3_l_adr[] = {
++	{
++		.adr = 0x00033001fa355601ull,
++		.num_endpoints = 1,
++		.endpoints = &spk_l_endpoint,
++		.name_prefix = "AMP1"
++	},
++	{
++		.adr = 0x00033101fa355601ull,
++		.num_endpoints = 1,
++		.endpoints = &spk_2_endpoint,
++		.name_prefix = "AMP2"
++	}
++};
++
+ static const struct snd_soc_acpi_link_adr rt5682_link2_max98373_link0[] = {
+ 	/* Expected order: jack -> amp */
+ 	{
+@@ -554,6 +584,26 @@ static const struct snd_soc_acpi_link_adr mtl_cs42l43_cs35l56[] = {
+ 	{}
+ };
+ 
++static const struct snd_soc_acpi_link_adr cs42l43_link0_cs35l56_link2_link3[] = {
++	/* Expected order: jack -> amp */
++	{
++		.mask = BIT(0),
++		.num_adr = ARRAY_SIZE(cs42l43_0_adr),
++		.adr_d = cs42l43_0_adr,
++	},
++	{
++		.mask = BIT(2),
++		.num_adr = ARRAY_SIZE(cs35l56_2_r_adr),
++		.adr_d = cs35l56_2_r_adr,
++	},
++	{
++		.mask = BIT(3),
++		.num_adr = ARRAY_SIZE(cs35l56_3_l_adr),
++		.adr_d = cs35l56_3_l_adr,
++	},
++	{}
++};
++
+ /* this table is used when there is no I2S codec present */
+ struct snd_soc_acpi_mach snd_soc_acpi_intel_mtl_sdw_machines[] = {
+ 	/* mockup tests need to be first */
+@@ -599,6 +649,12 @@ struct snd_soc_acpi_mach snd_soc_acpi_intel_mtl_sdw_machines[] = {
+ 		.drv_name = "sof_sdw",
+ 		.sof_tplg_filename = "sof-mtl-rt1318-l12-rt714-l0.tplg"
+ 	},
++	{
++		.link_mask = BIT(0) | BIT(2) | BIT(3),
++		.links = cs42l43_link0_cs35l56_link2_link3,
++		.drv_name = "sof_sdw",
++		.sof_tplg_filename = "sof-mtl-cs42l43-l0-cs35l56-l23.tplg",
++	},
+ 	{
+ 		.link_mask = GENMASK(2, 0),
+ 		.links = mtl_cs42l43_cs35l56,
+-- 
+2.34.1
 
