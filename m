@@ -1,210 +1,123 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EED439FEB;
-	Mon, 22 Jan 2024 10:07:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED78A3A1DC
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 10:07:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705918058; cv=none; b=QZSZhDz9WgNpAxE0inXJE/Uvae+mo6wEN9RLSb7iAezGA97PKgsOQ3fZRn6zQhA6EAj5u+HfkBcq2pOJSUNqmkBRWFcCazxDbh61N7QkRXLePTw/lePAl2/zBGD983KSMhA7ewiQBwBIycyJic7qg8wAZEmx8KlYWrmZaayjfUs=
+	t=1705918063; cv=none; b=fXSM2M4fXR/ykcK1J3w9Y1U7aD1yRtlROjvKuuC2dqNkSYwy8bGZJth7KLpBQVm6IbGau8itEMAY5UDG2CrAcB09pNXwjWlJfDomvzVXare8g7J8P44YhcIZH+7SMqjmH06bfmfxUSjqdwpLP1ME6gdw1mpwpUnVNvomEfR5Yvs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705918058; c=relaxed/simple;
-	bh=0DBCtBL7EIQT2jBc+2uIH7Ya0F0CfhR/U4M8QK0l2zQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=jbxdbNku1oHTGNl+qRHokns26DjAgtyC4MbmFe00GSxGZL1BPs8KE3A1DKApWpKVNvMl7NRR5hYMGz2mYvesD9Lxeow0i/64yXQxrCRG2vL+E8vf1uTXp1TZMifl2J28vxX40ibuxdEYud/tDO2ZWu7F7/xqwUANZ5/89tpVFY4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=OG0f6K9+; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1705918063; c=relaxed/simple;
+	bh=7hfseNti4KOg7rK9baauGbMNt7pApk4b65kBVK61lRM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XiEPnuFpRFnoUJSfddO579KsjRRGvziFZuL8of250LRfBIyHMCqYnAyl9FS1UaInC7m4Qpu0oyOa5mdZqty6J432VSxEbbmUnAkyLdg+9/oF/fYGcFuvKOScc85rKirQFWM8G9OWK+etw0N7wqliH/CClciGW4ye54V0f6Q44sY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tweaklogic.com; spf=pass smtp.mailfrom=tweaklogic.com; dkim=pass (2048-bit key) header.d=tweaklogic.com header.i=@tweaklogic.com header.b=OfRjt8QW; arc=none smtp.client-ip=209.85.210.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tweaklogic.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tweaklogic.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="OG0f6K9+"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40M5brQI028656;
-	Mon, 22 Jan 2024 10:07:25 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=C/vkJQ/dVUcxOvXvJM0Z+onrH+j+Sst7yDaKR3InxDY=; b=OG
-	0f6K9+9hUXEorDjkYrkxoF1fdAHr7iQrAH82gOHnJwdJad2ESCBUgLaeE77aqxF3
-	z2S2FvBq5Z+O6MjB3OaFPC2jpqss3t+NKsYKmItDd5l73ESgtW+Y3MPICegflLRv
-	nmBoGHgq28G4ep/wc/CNfL8GODnPlzjGqIyO5WdlRVgTKG2X76LteIyvhOHPdDzW
-	Q5KfQuGI05kXp0nF1txktrUIaS6I+nx0pBsjhoswPFzKlXo4eP0udHgfmSdPySG7
-	8dObQ098YhzN20TmfpVFVdHVM0m+xzqlmlUABgkS8QrlvPQzGL3r9dCnWyF3+1yw
-	20OsKnVcra+cipViU3zA==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vr54wum0b-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 22 Jan 2024 10:07:25 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 40MA7OlM029669
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 22 Jan 2024 10:07:24 GMT
-Received: from [10.216.25.125] (10.80.80.8) by nalasex01b.na.qualcomm.com
- (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Mon, 22 Jan
- 2024 02:07:17 -0800
-Message-ID: <391f8f48-d1f5-702d-20d4-ae8b8a7ace58@quicinc.com>
-Date: Mon, 22 Jan 2024 15:37:14 +0530
+	dkim=pass (2048-bit key) header.d=tweaklogic.com header.i=@tweaklogic.com header.b="OfRjt8QW"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-6dbe3fc1421so227543b3a.1
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 02:07:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tweaklogic.com; s=google; t=1705918060; x=1706522860; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=7SZ6TVtvqO7xS+FN5Shbzs8pDYcUTB61xRBtZe0By+M=;
+        b=OfRjt8QWrGSQCDS9EbbbtG+FrNaVTL6vPTnUtshkgbUB19HjnZEumH4sKuKYnaN1Zx
+         FsLKoKGueE/+xeL9S0a/cGimMfbRuPbC/wnRry43IaV1n9NxGSfhnyJkMLEueO1q+z59
+         CmNev0L+hFeNv9F3GW+7LBImF9OY5yVBZmshcXSecGloHjovUvtrAzyKomeEDinJ6h3n
+         HrEK9glHVQLoQsZd4JJzoq6nr5uiOsY9rar0li+QnkYMILC/v82Rp/9XkqKuIftvIu13
+         6QY6vADYa8GXc9M5LKyNY8fDS21KwImF6NozidqSiSf5LdtGiPilsBELp8DcUMFNHtIS
+         Tekw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705918060; x=1706522860;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=7SZ6TVtvqO7xS+FN5Shbzs8pDYcUTB61xRBtZe0By+M=;
+        b=CLVKSOlD9dDYAcUsgKA+6HH25Vmo/qM80Igsw92tT131KPSr5a6DikGiNa42qFlDEp
+         OFQkOk/BajJMHvNKV1OMmB1RX98gsBIdvI/ZsGnaCmnOYahf7woTN16FvSTwQrFNBgUC
+         kY6vqmBe14kQgpUVxS0cgCrGQvd5HTrlKF19KhCk3CZAM1HARI8r70QY/gWkGwUJzvg5
+         vDVfHg+e6nqQjJA7rYcbmyLQTRzemSTHDn/hGV+v3n/h6pRynj6ygkmC9cO6Pe5j56CS
+         W+V6EtikOucTuPCMdtZiAmMt2mJrXWRsw30cqFDG79vEkcWteoQgedpjCmSXArNquilT
+         Nibw==
+X-Gm-Message-State: AOJu0YzN8glCA8PqhOGZybcImEQUQP7hFxxiBNZqNdD38Ck0YogHPrfm
+	7Zh+bY2OK5p69pDgHYmwi16LD1/l2lRZjz8mzFljaLkOPFO4p5ByCNcGN1D7RXY=
+X-Google-Smtp-Source: AGHT+IFOmDwDqyifPwJRFILel0xXFOZg55zuqJ0ufInqRPYJxdwGgQjTGWuazVH1pqkRIehl9L8Msw==
+X-Received: by 2002:a17:903:1251:b0:1d7:657:8ab1 with SMTP id u17-20020a170903125100b001d706578ab1mr1864860plh.76.1705918060314;
+        Mon, 22 Jan 2024 02:07:40 -0800 (PST)
+Received: from [192.168.20.11] ([180.150.112.156])
+        by smtp.gmail.com with ESMTPSA id w14-20020a170902a70e00b001d75c26e857sm811322plq.288.2024.01.22.02.07.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 22 Jan 2024 02:07:39 -0800 (PST)
+Message-ID: <478fc1b0-aba4-4f36-bdb6-bf5fc7eb8609@tweaklogic.com>
+Date: Mon, 22 Jan 2024 20:37:32 +1030
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Subject: Re: [PATCH 2/2] dt-bindings: hwinfo: Add Qualcomm's board-id types
-To: Konrad Dybcio <konrad.dybcio@linaro.org>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <agross@kernel.org>, <andersson@kernel.org>
-CC: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <kernel@quicinc.com>,
-        Elliot Berman
-	<quic_eberman@quicinc.com>
-References: <1705749649-4708-1-git-send-email-quic_amrianan@quicinc.com>
- <1705749649-4708-3-git-send-email-quic_amrianan@quicinc.com>
- <54426665-90c5-4355-a174-f512004e11e5@linaro.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 2/3] dt-bindings: iio: light: Avago APDS9306
 Content-Language: en-US
-From: Amrit Anand <quic_amrianan@quicinc.com>
-In-Reply-To: <54426665-90c5-4355-a174-f512004e11e5@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
+ Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Matti Vaittinen <mazziesaccount@gmail.com>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Marek Vasut <marex@denx.de>, Anshul Dalal <anshulusr@gmail.com>,
+ Javier Carrasco <javier.carrasco.cruz@gmail.com>
+Cc: Matt Ranostay <matt@ranostay.sg>,
+ Stefan Windfeldt-Prytz <stefan.windfeldt-prytz@axis.com>,
+ linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240121051735.32246-1-subhajit.ghosh@tweaklogic.com>
+ <20240121051735.32246-3-subhajit.ghosh@tweaklogic.com>
+ <a317aeaf-6b4c-43c9-b5d6-78d93ba6f9af@linaro.org>
+From: Subhajit Ghosh <subhajit.ghosh@tweaklogic.com>
+In-Reply-To: <a317aeaf-6b4c-43c9-b5d6-78d93ba6f9af@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: _nwZ8vsPmPDLgjgNQrNUDMbBvQBAACKm
-X-Proofpoint-GUID: _nwZ8vsPmPDLgjgNQrNUDMbBvQBAACKm
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-21_04,2024-01-22_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- impostorscore=0 mlxlogscore=999 clxscore=1015 suspectscore=0 mlxscore=0
- adultscore=0 lowpriorityscore=0 bulkscore=0 phishscore=0 malwarescore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2311290000 definitions=main-2401220072
 
-
-On 1/20/2024 7:02 PM, Konrad Dybcio wrote:
-> On 20.01.2024 12:20, Amrit Anand wrote:
->> Qualcomm based DT uses two or three different identifiers. The SoC
->> based idenfier which signifies chipset and the revision for those
->> chipsets. The board based identifier is used to distinguish different
->> boards (e.g. IDP, MTP) along with the different types of same boards.
->> The PMIC attached to the board can also be used as a identifier for
->> device tree.
->>
->> Signed-off-by: Elliot Berman <quic_eberman@quicinc.com>
->> Signed-off-by: Amrit Anand <quic_amrianan@quicinc.com>
->> ---
->>   .../devicetree/bindings/hwinfo/qcom,board-id.yaml  | 86 ++++++++++++++++++++++
->>   include/dt-bindings/arm/qcom,ids.h                 | 68 +++++++++++++++--
->>   2 files changed, 146 insertions(+), 8 deletions(-)
->>   create mode 100644 Documentation/devicetree/bindings/hwinfo/qcom,board-id.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/hwinfo/qcom,board-id.yaml b/Documentation/devicetree/bindings/hwinfo/qcom,board-id.yaml
->> new file mode 100644
->> index 0000000..807f134
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/hwinfo/qcom,board-id.yaml
->> @@ -0,0 +1,86 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/hwinfo/qcom,board-id.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+On 22/1/24 20:21, Krzysztof Kozlowski wrote:
+> On 21/01/2024 06:17, Subhajit Ghosh wrote:
+>> Adding device tree support for APDS9306 Ambient Light Sensor.
+>> Updating datasheet hyperlinks.
+>> Adding interrupt definition macro and header file.
+>> Adding vdd-supply property.
+> 
+> Why? Do other devices have it?
+Are you referring to vdd-supply? No, I guess, haven't checked actually.
+If other devices don't have, can you suggest the best way to handle that?
+> 
+> 
+>>   required:
+>> @@ -33,6 +37,8 @@ required:
+>>   
+>>   examples:
+>>     - |
+>> +    #include <dt-bindings/interrupt-controller/irq.h>
 >> +
->> +title: QCOM Board Identifier for Devicetree Selection
->> +
->> +maintainers:
->> +  - Amrit Anand <quic_amrianan@quicinc.com>
->> +  - Elliot Berman <quic_eberman@quicinc.com>
->> +
->> +description: |
-> The '|'s are unnecessary in both commits, IIRC they're used for
-> preserving formatting which we don't really need for non-styled
-> plaintext
-Sure, will do.
->> +  Qualcomm uses two and sometimes three hardware identifiers to describe
->> +  its boards
->> +      - a SoC identifier is used to match chipsets (e.g. sm8550 vs sm8450)
->> +      - a board identifier is used to match board form factor (e.g. MTP, QRD,
->> +        ADP, CRD)
->> +      - a PMIC identifier is occasionally used when different PMICs are used
->> +        for a given board/SoC combination.
->> +  Each field and helper macros are defined at::
->> +      - include/dt-bindings/arm/qcom,ids.h
->> +
->> +  For example,
->> +    / {
->> +        #board-id-cells = <2>;
->> +        board-id = <456 0>, <457 0>, <10 0>;
->> +        board-id-types = "qcom,soc-id", "qcom,soc-id", "qcom,board-id";
->> +     }
->> +
->> +allOf:
->> +  - $ref: board-id.yaml#
->> +
->> +properties:
->> +  board-id:
->> +    minItems: 2
-> I believe some older platforms match exclusively based on socid, so
-> perhaps 1 would be okay as well.
->
-> [...]
-
-Ok, considering legacy targets we can make it 1.
-
-But i think ideally it should always be recommended to have a board ID 
-associated with a SoC ID, correct me if my understanding is wrong.
-
->> +examples:
->> +   - |
->> +     #include <dt-bindings/arm/qcom,ids.h>
->> +     / {
->> +         model = "Qualcomm Technologies, Inc. sc7280 IDP SKU1 platform";
->> +         compatible = "qcom,sc7280-idp", "google,senor", "qcom,sc7280";
->> +
->> +         #board-id-cells = <2>;
->> +         board-id = <QCOM_SOC_ID(SC7280) QCOM_SOC_REVISION(1)>,
->> +                    <QCOM_SOC_ID(SC7280) QCOM_SOC_REVISION(2)>,
->> +                    <QCOM_BOARD_ID(IDP, 1, 0) QCOM_BOARD_SUBTYPE(UFS, ANY, 1)>;
->> +         board-id-types = "qcom,soc-id",
->> +                          "qcom,soc-id",
->> +                          "qcom,board-id";
-> So, would the matching here would be:
->
-> loop over disctinct board-id-types
-> 	check if there's at least 1 match for all of them
-> 		use this dtb if that's the case
->
-> stop booting / "best guess match"
->
-> ?
->
-> [...]
-
-Yes, But the "if" checking would have preference in place.
-The preference logic would look something like this,
-
-First will check for SoC-ID, if we have an exact match for SoC-ID then 
-will proceed for board-ID match. Otherwise the DT would be discarded.
-Once (exact) board-ID found, will proceed for subtype , pmic and so on.
-Exact match and best match logic is used. Parameters like SoC-ID, 
-board-ID are required to be best matched. Other few fields follow best 
-match logic and best of the DT can be picked.
-
->> +#define QCOM_BOARD_ID_MTP		0x8
->> +#define QCOM_BOARD_ID_DRAGONBOARD	0x10
->> +#define QCOM_BOARD_ID_QRD		0x11
->> +#define QCOM_BOARD_ID_HDK		0x1F
->> +#define QCOM_BOARD_ID_ATP		0x21
->> +#define QCOM_BOARD_ID_IDP		0x22
->> +#define QCOM_BOARD_ID_SBC		0x24
->> +#define QCOM_BOARD_ID_QXR		0x26
->> +#define QCOM_BOARD_ID_CRD		0x28
-> Missing ADP/QCP/Ride (if they're separate)
-
-Sure, will update. Would need to work with teams.
-
-Thanks,
-Amrit.
+>>       i2c {
+>>           #address-cells = <1>;
+>>           #size-cells = <0>;
+>> @@ -41,7 +47,8 @@ examples:
+>>               compatible = "avago,apds9300";
+>>               reg = <0x39>;
+>>               interrupt-parent = <&gpio2>;
+>> -            interrupts = <29 8>;
+>> +            interrupts = <29 IRQ_TYPE_LEVEL_LOW>;
+> 
+> Separate change.
+Understood.
+> 
+> Best regards,
+> Krzysztof
+> 
+Regards,
+Subhajit Ghosh
 
