@@ -1,64 +1,45 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DBA43FE36;
-	Mon, 22 Jan 2024 11:04:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3657E41210;
+	Mon, 22 Jan 2024 11:04:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705921496; cv=none; b=bG6/cX1kLn9kNmTKpxM4d0gu+WCeuNYEgE6IRM5nvMb6CeYIh5lTCJ+86y4qyQFjXaid5VCPyzK8ha9cTWTbTZGUSwLXUt3jzW3Ds0YAmUZodQ/2CM3p1Ym40/v8y7ndnFOYYHHHmuPKK9cssYLLEwGBsQDJcPsvfq4RUSpBnys=
+	t=1705921499; cv=none; b=B+YjMHqaYH1+d+/vITwDdwGV1wGA0RPdUduVivAY8SADC7EnRnnzNIuRaXAREJV7utsGExs/+CurruzRaidkhQ62S7TW6mIS/8GGXroHDn+SRH4QQeaXOlkqTRjV+osSbRl0Iz+VAAAdJgmIOqgDS/2ASwL75h/TTQWKQihdILY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705921496; c=relaxed/simple;
-	bh=0zQkqLtn79o0lyqbEw47gxFTbI/GITrO28ITGThAX0o=;
+	s=arc-20240116; t=1705921499; c=relaxed/simple;
+	bh=hodsiss2mfg9U0y8pa9F8/ETqHl8RGY45rKju+KRcEw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mnRTE89LVxcCWcE+K5giZ6PyII3dNE28a4Idmp7vyXE/uKX2d/XijtT7sWT/KNg2tCLbdWSDtH9MonyD4xf8e40QlTr/SuoRIfp3tQBssrpNDv5E19fEzd5vxAfp6AuzgNNfvFyZ/1khM19oVY+ys2nMu6j336tOAvHWIqUmBcY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=YVahK3+z; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	 MIME-Version; b=TZ4Tz3RmiTBKB8MmyKbbzRAqTFd7p3ORbz0aE3RdxxFbAyZWbI5D3ogKeGg0PLIYqrC0FMiAl5+Yslo1c4JJlIxdaLLf55pn3xvCZ85rKdLakHBkhHsgPqGwZ17NptkkGd5rAkykC/pGNNntKp61BbA3xtAOmektS/Dbuwn6p+k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VB8M2U7u; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="YVahK3+z"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1705921492;
-	bh=0zQkqLtn79o0lyqbEw47gxFTbI/GITrO28ITGThAX0o=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VB8M2U7u"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DB84C433F1;
+	Mon, 22 Jan 2024 11:04:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705921498;
+	bh=hodsiss2mfg9U0y8pa9F8/ETqHl8RGY45rKju+KRcEw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=YVahK3+znmzpTZY4URp2ARJReTX1JdlNFnjYrlNvErYZ+5tQlDnMWi997UiVFJQmn
-	 fLS2qIhX1nUyngrvVfTtvRQyc5mdyS/GeNU1HeKtdYkcxk+119xmJI/K9uoIXn1NAW
-	 9nN/4SRcAi70vWEFjYscBWjX/Z+C+8N+sR3gHcD/7sWYAH1z89x/+EV9Z8/yujXgNM
-	 bekApc+n9jC01kC4UCMmX234UEpMBEfQSZTcz5vuuXG8iYDnlag470WzEtR1pnyoab
-	 oHU+Tz2nZ9LS/OqfAMTD6mpmUIwvxhwUyiBY0jjEHShIHXL/nnri2ToHziwSt2DZJr
-	 QYUoOFRJccmLw==
-Received: from IcarusMOD.eternityproject.eu (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 7807F3781FE3;
-	Mon, 22 Jan 2024 11:04:51 +0000 (UTC)
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+	b=VB8M2U7uJLE8CpgfTcZ8Jms/TclXLPSWzKd3y5NTvJiI17nhJ3QAtxd7VF1fKTv5Y
+	 XzuqRA+XEdq19ibARo3Xzx4xLbKzg7sI8HOQl5Jrzi+H251EyAnYkiAnmRUKSCnhBU
+	 MQSchj+m4uG73RexbpvYargbPw1+ZJXAOEdZaozv+apTb49pryPpIV8S7iO3qseM6f
+	 u3J114Ff+w3ZvRFfAZdyUmaoJ5Sid0Ezm6VUbGaMQsHTY0eRUC/L2ACGeQmOghzI0Y
+	 76hXV+ZJ6XIB3Ym+wMshxo9cvM2iSjwx/t7zuPce0PoVyvTp2hHLNqaTkoxtESmIsO
+	 SJexQtBTtWmaA==
+From: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
 To: gregkh@linuxfoundation.org
-Cc: robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	heikki.krogerus@linux.intel.com,
-	matthias.bgg@gmail.com,
-	dmitry.baryshkov@linaro.org,
-	neil.armstrong@linaro.org,
-	andersson@kernel.org,
-	nathan@kernel.org,
-	luca.weiss@fairphone.com,
-	tianping.fang@mediatek.com,
-	linux-usb@vger.kernel.org,
-	devicetree@vger.kernel.org,
+Cc: linux-serial@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	kernel@collabora.com,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Subject: [PATCH v3 2/2] usb: typec: mux: Add ITE IT5205 Alternate Mode Passive MUX driver
-Date: Mon, 22 Jan 2024 12:04:46 +0100
-Message-ID: <20240122110446.140226-3-angelogioacchino.delregno@collabora.com>
+	"Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
+	Helge Deller <deller@gmx.de>,
+	linux-fbdev@vger.kernel.org,
+	dri-devel@lists.freedesktop.org
+Subject: [PATCH v2 27/47] consoles: use if instead of switch-case in consw::con_cursor()
+Date: Mon, 22 Jan 2024 12:03:41 +0100
+Message-ID: <20240122110401.7289-28-jirislaby@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240122110446.140226-1-angelogioacchino.delregno@collabora.com>
-References: <20240122110446.140226-1-angelogioacchino.delregno@collabora.com>
+In-Reply-To: <20240122110401.7289-1-jirislaby@kernel.org>
+References: <20240122110401.7289-1-jirislaby@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,352 +48,182 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The ITE IT5202 is a USB Type-C Alternate Mode Passive MUX, used for
-muxing the SBU lines of a Type-C port with DisplayPort altmode and
-also providing an orientation switch.
+This is only a preparation for the following cleanup patch to make it
+easier. Provided CM_ERASE is the only different, use 'if' instead of
+'switch+case' in all those.
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
+Cc: Helge Deller <deller@gmx.de>
+Cc: linux-fbdev@vger.kernel.org
+Cc: dri-devel@lists.freedesktop.org
 ---
- drivers/usb/typec/mux/Kconfig  |  10 ++
- drivers/usb/typec/mux/Makefile |   1 +
- drivers/usb/typec/mux/it5205.c | 294 +++++++++++++++++++++++++++++++++
- 3 files changed, 305 insertions(+)
- create mode 100644 drivers/usb/typec/mux/it5205.c
+ drivers/video/console/newport_con.c | 26 +++++-------
+ drivers/video/console/sticon.c      | 27 ++++++------
+ drivers/video/console/vgacon.c      | 66 +++++++++++++----------------
+ 3 files changed, 53 insertions(+), 66 deletions(-)
 
-diff --git a/drivers/usb/typec/mux/Kconfig b/drivers/usb/typec/mux/Kconfig
-index d2cb5e733e57..399c7b0983df 100644
---- a/drivers/usb/typec/mux/Kconfig
-+++ b/drivers/usb/typec/mux/Kconfig
-@@ -36,6 +36,16 @@ config TYPEC_MUX_INTEL_PMC
- 	  control the USB role switch and also the multiplexer/demultiplexer
- 	  switches used with USB Type-C Alternate Modes.
+diff --git a/drivers/video/console/newport_con.c b/drivers/video/console/newport_con.c
+index 5e65ee0b7c07..f852717b88f0 100644
+--- a/drivers/video/console/newport_con.c
++++ b/drivers/video/console/newport_con.c
+@@ -443,24 +443,20 @@ static void newport_cursor(struct vc_data *vc, int mode)
+ 	unsigned short treg;
+ 	int xcurs, ycurs;
  
-+config TYPEC_MUX_IT5205
-+	tristate "ITE IT5205 Type-C USB Alt Mode Passive MUX driver"
-+	depends on I2C
-+	select REGMAP_I2C
-+	help
-+	  Driver for the ITE IT5205 Type-C USB Alternate Mode Passive MUX
-+	  which provides support for muxing DisplayPort and sideband signals
-+	  on a common USB Type-C connector.
-+	  If compiled as a module, the module will be named it5205.
+-	switch (mode) {
+-	case CM_ERASE:
+-		treg = newport_vc2_get(npregs, VC2_IREG_CONTROL);
+-		newport_vc2_set(npregs, VC2_IREG_CONTROL,
+-				(treg & ~(VC2_CTRL_ECDISP)));
+-		break;
++	treg = newport_vc2_get(npregs, VC2_IREG_CONTROL);
+ 
+-	case CM_MOVE:
+-	case CM_DRAW:
+-		treg = newport_vc2_get(npregs, VC2_IREG_CONTROL);
++	if (mode == CM_ERASE) {
+ 		newport_vc2_set(npregs, VC2_IREG_CONTROL,
+-				(treg | VC2_CTRL_ECDISP));
+-		xcurs = (vc->vc_pos - vc->vc_visible_origin) / 2;
+-		ycurs = ((xcurs / vc->vc_cols) << 4) + 31;
+-		xcurs = ((xcurs % vc->vc_cols) << 3) + xcurs_correction;
+-		newport_vc2_set(npregs, VC2_IREG_CURSX, xcurs);
+-		newport_vc2_set(npregs, VC2_IREG_CURSY, ycurs);
++				(treg & ~(VC2_CTRL_ECDISP)));
++		return;
+ 	}
 +
- config TYPEC_MUX_NB7VPQ904M
- 	tristate "On Semiconductor NB7VPQ904M Type-C redriver driver"
- 	depends on I2C
-diff --git a/drivers/usb/typec/mux/Makefile b/drivers/usb/typec/mux/Makefile
-index 57dc9ac6f8dc..bb96f30267af 100644
---- a/drivers/usb/typec/mux/Makefile
-+++ b/drivers/usb/typec/mux/Makefile
-@@ -4,6 +4,7 @@ obj-$(CONFIG_TYPEC_MUX_FSA4480)		+= fsa4480.o
- obj-$(CONFIG_TYPEC_MUX_GPIO_SBU)	+= gpio-sbu-mux.o
- obj-$(CONFIG_TYPEC_MUX_PI3USB30532)	+= pi3usb30532.o
- obj-$(CONFIG_TYPEC_MUX_INTEL_PMC)	+= intel_pmc_mux.o
-+obj-$(CONFIG_TYPEC_MUX_IT5205)		+= it5205.o
- obj-$(CONFIG_TYPEC_MUX_NB7VPQ904M)	+= nb7vpq904m.o
- obj-$(CONFIG_TYPEC_MUX_PTN36502)	+= ptn36502.o
- obj-$(CONFIG_TYPEC_MUX_WCD939X_USBSS)	+= wcd939x-usbss.o
-diff --git a/drivers/usb/typec/mux/it5205.c b/drivers/usb/typec/mux/it5205.c
-new file mode 100644
-index 000000000000..5535932e42cd
---- /dev/null
-+++ b/drivers/usb/typec/mux/it5205.c
-@@ -0,0 +1,294 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * ITE IT5205 Type-C USB alternate mode passive mux
-+ *
-+ * Copyright (c) 2020 MediaTek Inc.
-+ * Copyright (c) 2024 Collabora Ltd.
-+ *                    AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-+ *
-+ */
++	newport_vc2_set(npregs, VC2_IREG_CONTROL, (treg | VC2_CTRL_ECDISP));
++	xcurs = (vc->vc_pos - vc->vc_visible_origin) / 2;
++	ycurs = ((xcurs / vc->vc_cols) << 4) + 31;
++	xcurs = ((xcurs % vc->vc_cols) << 3) + xcurs_correction;
++	newport_vc2_set(npregs, VC2_IREG_CURSX, xcurs);
++	newport_vc2_set(npregs, VC2_IREG_CURSY, ycurs);
+ }
+ 
+ static int newport_switch(struct vc_data *vc)
+diff --git a/drivers/video/console/sticon.c b/drivers/video/console/sticon.c
+index 906da1fde7c8..42480874db00 100644
+--- a/drivers/video/console/sticon.c
++++ b/drivers/video/console/sticon.c
+@@ -95,23 +95,20 @@ static void sticon_cursor(struct vc_data *conp, int mode)
+ 	return;
+ 
+     car1 = conp->vc_screenbuf[conp->state.x + conp->state.y * conp->vc_cols];
+-    switch (mode) {
+-    case CM_ERASE:
++    if (mode == CM_ERASE) {
+ 	sti_putc(sticon_sti, car1, conp->state.y, conp->state.x,
+ 		 font_data[conp->vc_num]);
+-	break;
+-    case CM_MOVE:
+-    case CM_DRAW:
+-	switch (CUR_SIZE(conp->vc_cursor_type)) {
+-	case CUR_UNDERLINE:
+-	case CUR_LOWER_THIRD:
+-	case CUR_LOWER_HALF:
+-	case CUR_TWO_THIRDS:
+-	case CUR_BLOCK:
+-	    sti_putc(sticon_sti, (car1 & 255) + (0 << 8) + (7 << 11),
+-		     conp->state.y, conp->state.x, font_data[conp->vc_num]);
+-	    break;
+-	}
++	return;
++    }
 +
-+#include <linux/delay.h>
-+#include <linux/i2c.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of_platform.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+#include <linux/regulator/consumer.h>
-+#include <linux/usb/tcpm.h>
-+#include <linux/usb/typec.h>
-+#include <linux/usb/typec_dp.h>
-+#include <linux/usb/typec_mux.h>
++    switch (CUR_SIZE(conp->vc_cursor_type)) {
++    case CUR_UNDERLINE:
++    case CUR_LOWER_THIRD:
++    case CUR_LOWER_HALF:
++    case CUR_TWO_THIRDS:
++    case CUR_BLOCK:
++	sti_putc(sticon_sti, (car1 & 255) + (0 << 8) + (7 << 11),
++		 conp->state.y, conp->state.x, font_data[conp->vc_num]);
+ 	break;
+     }
+ }
+diff --git a/drivers/video/console/vgacon.c b/drivers/video/console/vgacon.c
+index aa0589085847..82d01a9ccd6d 100644
+--- a/drivers/video/console/vgacon.c
++++ b/drivers/video/console/vgacon.c
+@@ -514,47 +514,41 @@ static void vgacon_cursor(struct vc_data *c, int mode)
+ 
+ 	c_height = c->vc_cell_height;
+ 
+-	switch (mode) {
+-	case CM_ERASE:
+-		write_vga(14, (c->vc_pos - vga_vram_base) / 2);
++	write_vga(14, (c->vc_pos - vga_vram_base) / 2);
 +
-+#define IT5205_REG_CHIP_ID(x)	(0x4 + (x))
-+#define IT5205FN_CHIP_ID	0x35323035 /* "5205" */
-+
-+/* MUX power down register */
-+#define IT5205_REG_MUXPDR        0x10
-+#define IT5205_MUX_POWER_DOWN    BIT(0)
-+
-+/* MUX control register */
-+#define IT5205_REG_MUXCR         0x11
-+#define IT5205_POLARITY_INVERTED BIT(4)
-+#define IT5205_DP_USB_CTRL_MASK  GENMASK(3, 0)
-+#define IT5205_DP                0x0f
-+#define IT5205_DP_USB            0x03
-+#define IT5205_USB               0x07
-+
-+/* Vref Select Register */
-+#define IT5205_REG_VSR            0x10
-+#define IT5205_VREF_SELECT_MASK   GENMASK(5, 4)
-+#define IT5205_VREF_SELECT_3_3V   0x00
-+#define IT5205_VREF_SELECT_OFF    0x20
-+
-+/* CSBU Over Voltage Protection Register */
-+#define IT5205_REG_CSBUOVPSR      0x1e
-+#define IT5205_OVP_SELECT_MASK    GENMASK(5, 4)
-+#define IT5205_OVP_3_90V          0x00
-+#define IT5205_OVP_3_68V          0x10
-+#define IT5205_OVP_3_62V          0x20
-+#define IT5205_OVP_3_57V          0x30
-+
-+/* CSBU Switch Register */
-+#define IT5205_REG_CSBUSR         0x22
-+#define IT5205_CSBUSR_SWITCH      BIT(0)
-+
-+/* Interrupt Switch Register */
-+#define IT5205_REG_ISR            0x25
-+#define IT5205_ISR_CSBU_MASK      BIT(4)
-+#define IT5205_ISR_CSBU_OVP       BIT(0)
-+
-+struct it5205 {
-+	struct i2c_client *client;
-+	struct regmap *regmap;
-+	struct typec_switch_dev *sw;
-+	struct typec_mux_dev *mux;
-+};
-+
-+static int it5205_switch_set(struct typec_switch_dev *sw, enum typec_orientation orientation)
-+{
-+	struct it5205 *it = typec_switch_get_drvdata(sw);
-+
-+	switch (orientation) {
-+	case TYPEC_ORIENTATION_NORMAL:
-+		regmap_update_bits(it->regmap, IT5205_REG_MUXCR,
-+				   IT5205_POLARITY_INVERTED, 0);
++	if (mode == CM_ERASE) {
+ 	        if (vga_video_type >= VIDEO_TYPE_VGAC)
+ 			vgacon_set_cursor_size(31, 30);
+ 		else
+ 			vgacon_set_cursor_size(31, 31);
+-		break;
++		return;
++	}
+ 
+-	case CM_MOVE:
+-	case CM_DRAW:
+-		write_vga(14, (c->vc_pos - vga_vram_base) / 2);
+-		switch (CUR_SIZE(c->vc_cursor_type)) {
+-		case CUR_UNDERLINE:
+-			vgacon_set_cursor_size(c_height -
+-					       (c_height < 10 ? 2 : 3),
+-					       c_height -
+-					       (c_height < 10 ? 1 : 2));
+-			break;
+-		case CUR_TWO_THIRDS:
+-			vgacon_set_cursor_size(c_height / 3, c_height -
+-					       (c_height < 10 ? 1 : 2));
+-			break;
+-		case CUR_LOWER_THIRD:
+-			vgacon_set_cursor_size(c_height * 2 / 3, c_height -
+-					       (c_height < 10 ? 1 : 2));
+-			break;
+-		case CUR_LOWER_HALF:
+-			vgacon_set_cursor_size(c_height / 2, c_height -
+-					       (c_height < 10 ? 1 : 2));
+-			break;
+-		case CUR_NONE:
+-			if (vga_video_type >= VIDEO_TYPE_VGAC)
+-				vgacon_set_cursor_size(31, 30);
+-			else
+-				vgacon_set_cursor_size(31, 31);
+-			break;
+-		default:
+-			vgacon_set_cursor_size(1, c_height);
+-			break;
+-		}
++	switch (CUR_SIZE(c->vc_cursor_type)) {
++	case CUR_UNDERLINE:
++		vgacon_set_cursor_size(c_height - (c_height < 10 ? 2 : 3),
++				       c_height - (c_height < 10 ? 1 : 2));
 +		break;
-+	case TYPEC_ORIENTATION_REVERSE:
-+		regmap_update_bits(it->regmap, IT5205_REG_MUXCR,
-+				   IT5205_POLARITY_INVERTED, IT5205_POLARITY_INVERTED);
++	case CUR_TWO_THIRDS:
++		vgacon_set_cursor_size(c_height / 3,
++				       c_height - (c_height < 10 ? 1 : 2));
 +		break;
-+	case TYPEC_ORIENTATION_NONE:
-+		fallthrough;
++	case CUR_LOWER_THIRD:
++		vgacon_set_cursor_size(c_height * 2 / 3,
++				       c_height - (c_height < 10 ? 1 : 2));
++		break;
++	case CUR_LOWER_HALF:
++		vgacon_set_cursor_size(c_height / 2,
++				       c_height - (c_height < 10 ? 1 : 2));
++		break;
++	case CUR_NONE:
++		if (vga_video_type >= VIDEO_TYPE_VGAC)
++			vgacon_set_cursor_size(31, 30);
++		else
++			vgacon_set_cursor_size(31, 31);
++		break;
 +	default:
-+		regmap_write(it->regmap, IT5205_REG_MUXCR, 0);
-+		break;
-+	}
-+
-+	return 0;
-+}
-+
-+static int it5205_mux_set(struct typec_mux_dev *mux, struct typec_mux_state *state)
-+{
-+	struct it5205 *it = typec_mux_get_drvdata(mux);
-+	u8 val;
-+
-+	if (state->mode >= TYPEC_STATE_MODAL &&
-+	    state->alt->svid != USB_TYPEC_DP_SID)
-+		return -EINVAL;
-+
-+	switch (state->mode) {
-+	case TYPEC_STATE_USB:
-+		val = IT5205_USB;
-+		break;
-+	case TYPEC_DP_STATE_C:
-+		fallthrough;
-+	case TYPEC_DP_STATE_E:
-+		val = IT5205_DP;
-+		break;
-+	case TYPEC_DP_STATE_D:
-+		val = IT5205_DP_USB;
-+		break;
-+	case TYPEC_STATE_SAFE:
-+		fallthrough;
-+	default:
-+		val = 0;
-+		break;
-+	}
-+
-+	return regmap_update_bits(it->regmap, IT5205_REG_MUXCR,
-+				  IT5205_DP_USB_CTRL_MASK, val);
-+}
-+
-+static irqreturn_t it5205_irq_handler(int irq, void *data)
-+{
-+	struct it5205 *it = data;
-+	int ret;
-+	u32 val;
-+
-+	ret = regmap_read(it->regmap, IT5205_REG_ISR, &val);
-+	if (ret)
-+		return IRQ_NONE;
-+
-+	if (val & IT5205_ISR_CSBU_OVP) {
-+		dev_warn(&it->client->dev, "Overvoltage detected!\n");
-+
-+		/* Reset CSBU */
-+		regmap_update_bits(it->regmap, IT5205_REG_CSBUSR,
-+				   IT5205_CSBUSR_SWITCH, 0);
-+		regmap_update_bits(it->regmap, IT5205_REG_CSBUSR,
-+				   IT5205_CSBUSR_SWITCH, IT5205_CSBUSR_SWITCH);
-+	}
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static void it5205_enable_ovp(struct it5205 *it)
-+{
-+	/* Select Vref 3.3v */
-+	regmap_update_bits(it->regmap, IT5205_REG_VSR,
-+			   IT5205_VREF_SELECT_MASK, IT5205_VREF_SELECT_3_3V);
-+
-+	/* Trigger OVP at 3.68V */
-+	regmap_update_bits(it->regmap, IT5205_REG_CSBUOVPSR,
-+			   IT5205_OVP_SELECT_MASK, IT5205_OVP_3_68V);
-+
-+	/* Unmask OVP interrupt */
-+	regmap_update_bits(it->regmap, IT5205_REG_ISR,
-+			   IT5205_ISR_CSBU_MASK, 0);
-+
-+	/* Enable CSBU Interrupt */
-+	regmap_update_bits(it->regmap, IT5205_REG_CSBUSR,
-+			   IT5205_CSBUSR_SWITCH, IT5205_CSBUSR_SWITCH);
-+}
-+
-+static const struct regmap_config it5205_regmap = {
-+	.max_register = 0x2f,
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+};
-+
-+static int it5205_probe(struct i2c_client *client)
-+{
-+	struct typec_switch_desc sw_desc = { };
-+	struct typec_mux_desc mux_desc = { };
-+	struct device *dev = &client->dev;
-+	struct it5205 *it;
-+	u32 val, chipid = 0;
-+	int i, ret;
-+
-+	it = devm_kzalloc(dev, sizeof(*it), GFP_KERNEL);
-+	if (!it)
-+		return -ENOMEM;
-+
-+	ret = devm_regulator_get_enable(dev, "vcc");
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Failed to get regulator\n");
-+
-+	it->client = client;
-+
-+	it->regmap = devm_regmap_init_i2c(client, &it5205_regmap);
-+	if (IS_ERR(it->regmap))
-+		return dev_err_probe(dev, PTR_ERR(it->regmap),
-+				     "Failed to init regmap\n");
-+
-+	/* IT5205 needs a long time to power up after enabling regulator */
-+	msleep(50);
-+
-+	/* Unset poweroff bit */
-+	ret = regmap_write(it->regmap, IT5205_REG_MUXPDR, 0);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Failed to set power on\n");
-+
-+	/* Read the 32 bits ChipID */
-+	for (i = 3; i >= 0; i--) {
-+		ret = regmap_read(it->regmap, IT5205_REG_CHIP_ID(i), &val);
-+		if (ret)
-+			return ret;
-+
-+		chipid |= val << (i * 8);
-+	}
-+
-+	if (chipid != IT5205FN_CHIP_ID)
-+		return dev_err_probe(dev, -EINVAL,
-+				     "Unknown ChipID 0x%x\n", chipid);
-+
-+	/* Initialize as USB mode with default (non-inverted) polarity */
-+	ret = regmap_write(it->regmap, IT5205_REG_MUXCR, IT5205_USB);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Cannot set mode to USB\n");
-+
-+	sw_desc.drvdata = it;
-+	sw_desc.fwnode = dev_fwnode(dev);
-+	sw_desc.set = it5205_switch_set;
-+
-+	it->sw = typec_switch_register(dev, &sw_desc);
-+	if (IS_ERR(it->sw))
-+		return dev_err_probe(dev, PTR_ERR(it->sw),
-+				     "failed to register typec switch\n");
-+
-+	mux_desc.drvdata = it;
-+	mux_desc.fwnode = dev_fwnode(dev);
-+	mux_desc.set = it5205_mux_set;
-+
-+	it->mux = typec_mux_register(dev, &mux_desc);
-+	if (IS_ERR(it->mux)) {
-+		typec_switch_unregister(it->sw);
-+		return dev_err_probe(dev, PTR_ERR(it->mux),
-+				     "failed to register typec mux\n");
-+	}
-+
-+	i2c_set_clientdata(client, it);
-+
-+	if (of_property_read_bool(dev->of_node, "ite,ovp-enable") && client->irq) {
-+		it5205_enable_ovp(it);
-+
-+		ret = devm_request_threaded_irq(dev, client->irq, NULL,
-+						it5205_irq_handler,
-+						IRQF_ONESHOT, dev_name(dev), it);
-+		if (ret) {
-+			typec_mux_unregister(it->mux);
-+			typec_switch_unregister(it->sw);
-+			return dev_err_probe(dev, ret, "Failed to request irq\n");
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static void it5205_remove(struct i2c_client *client)
-+{
-+	struct it5205 *it = i2c_get_clientdata(client);
-+
-+	typec_mux_unregister(it->mux);
-+	typec_switch_unregister(it->sw);
-+}
-+
-+static const struct i2c_device_id it5205_table[] = {
-+	{ "it5205" },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(i2c, it5205_table);
-+
-+static const struct of_device_id it5205_of_table[] = {
-+	{ .compatible = "ite,it5205" },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, it5205_of_table);
-+
-+static struct i2c_driver it5205_driver = {
-+	.driver = {
-+		.name = "it5205",
-+		.of_match_table = it5205_of_table,
-+	},
-+	.probe = it5205_probe,
-+	.remove = it5205_remove,
-+	.id_table = it5205_table,
-+};
-+module_i2c_driver(it5205_driver);
-+
-+MODULE_AUTHOR("Tianping Fang <tianping.fang@mediatek.com>");
-+MODULE_AUTHOR("AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>");
-+MODULE_DESCRIPTION("ITE IT5205 alternate mode passive MUX driver");
-+MODULE_LICENSE("GPL");
++		vgacon_set_cursor_size(1, c_height);
+ 		break;
+ 	}
+ }
 -- 
 2.43.0
 
