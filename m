@@ -1,128 +1,88 @@
-Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f46.google.com (mail-oo1-f46.google.com [209.85.161.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8F70610C
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 06:16:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 627F263D0
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 06:21:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705904210; cv=none; b=FGneIkxqFzpg7GrIQdsrWBIfBmKv79DQuxswSqQ8329X0KlQIFp1+L5UiCdSm3DyK4tibg2aBiIAVbQVMUJ+2+MofsZMvvK2HieBn5dcwlhZdIX58evrQsqvaJVAJwOMzmuXXOfMvnQOoK5tqkVca5dG7+6m8/nTowChY4yesXI=
+	t=1705904505; cv=none; b=jFSDux/IAllBWCO6PEzcxZ3eYL4Kxer3Xfvw7fsY4rgDhBcbkGhfAr96XQTT0HrplirCG5ldDwYH1N5F11/pjvwBgjAxY1NuNb5mmu8HGPj7TSQi9PG/rdMv0jghpNK51T8ihNRVKSOhzDQ/ZYPB/Mil1edYN0J4g9X8kvg5/l8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705904210; c=relaxed/simple;
-	bh=l6asL2N89M7lkNOnDBE2rHIir7CAoLNLt5T1osqgjv0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OpzvsrkNbuT88GvOBd7bQkmTMmzyVNJ8Miq8nvzMR/ouiXhuzfGt96pOUA+jQBsPdJyyXSUD4/d1VO7BcHGghYzmodvcD5bMsb1CIRm99i6K5tH5D6vLpMG7WTN8o1jYwwQ2qz+rhfefBSvMl7ZtLgXVFN1JDQO5dUp3KlGcx7Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Cv8EMnSK; arc=none smtp.client-ip=95.215.58.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1705904505; c=relaxed/simple;
+	bh=z0DhQ74I23LpCzfNU90saOifU6ICU81Zx1v2ffbAwbI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AvSONwrG14Y1iloikhEOr5g9emE4CZl6g4y5mrk2rYEaobeaxFOgs274WtlIaH7VUUKl6v6EUuODaxfx1UrDZQ5PN4Wm03b9OaPEU002iCjhLbDHBRQF4ykJMWzSQz86pC1xYuMCqwMXNp0iRTmKJtCCNJAIBm7ACQi1CCB5NXY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=ZlZ7zrgO; arc=none smtp.client-ip=209.85.161.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Cv8EMnSK"
-Message-ID: <f7e072c0-4b41-40d3-bf2e-19d4fdf7bc0d@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1705904205;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8Pb80DoRWEyZoi0wqPXsfRRerxvgd/0OhZbYr/fDW1k=;
-	b=Cv8EMnSK34A8/z8rlXk13g6F0z8uk3JfdETFL7MOLnZgIcCjw4qv3uKqH8gA3DPi89fLWm
-	kz+S8S+k58QCbd8m6mSfsPNA0gxiQDFtMTWT8QOj+34W6OGnudn9vUj0IGAiC0CwMFl+6g
-	MQARgoJzjqEMSyHitrjFOE4E0nUVxkk=
-Date: Mon, 22 Jan 2024 14:16:30 +0800
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZlZ7zrgO"
+Received: by mail-oo1-f46.google.com with SMTP id 006d021491bc7-58e256505f7so1502429eaf.3
+        for <linux-kernel@vger.kernel.org>; Sun, 21 Jan 2024 22:21:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1705904502; x=1706509302; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=XWX+6Hx9DA0gw8Icz4XnPpdw7Tg6JqdCSrJaZKV5w2Y=;
+        b=ZlZ7zrgOI8/PrpfBaEdQLH4C6LO9YgQoX5/jLx1ihNjdu4BcjRoMbXIPOmGeaMms2n
+         TQ9oIc4slew3xqZe1HsfNGQNHqJlqyaFwM9wfD77yauk0wJj81CtRgt+i4JjCih4bqH7
+         HCBFu/ySnlnroXv/fmFTdSGKZLpwFxW+t4lig=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705904502; x=1706509302;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=XWX+6Hx9DA0gw8Icz4XnPpdw7Tg6JqdCSrJaZKV5w2Y=;
+        b=HZN1frqmgnM2r29S6KCnWPZ8TwkhnCdXK3J64fPJhefMuPIWW4Uub2N21RV0Gld7O+
+         qUeHZNjm8e7bsGGmfNhxdVbqizKnGkEm2MUmFDDmTqDdYZ+4sTHC/v6bTUkZxORy+Bhb
+         CBw0XQiPB28r5FSA/jzfBVfefx7M5WOPVsiOAhdozxBWixBfSpjpsqoudblaAXqhsksN
+         IosPvnjo1gi/+bnI0VH8tK1j+X2nPWKsrokJ0aazmp6/yy0mSFZaxd9g6LkExTzbKXWa
+         xIOSJ8ed/31/y02OVugzR40W3g1opWPH88aSVPfMym55/bIe9YjgJZ7Y+dsDnrtb74Q6
+         LFVg==
+X-Gm-Message-State: AOJu0YyeaCvpGT3vy7SOnDHRB5ZIDTiSrVgZKoGvpxe9MRhYtkDEFkLs
+	m/5XnxI+fThfFZ2zNqvEoKOxAg+K2WBV84vpShx2OU8+uFUtMV7iV4PvcSQlPA==
+X-Google-Smtp-Source: AGHT+IELmfF3o5DTiZfbSeuQZLzrFVr9vWKEU2iVV2tyv9Tduic2C8Fuiy6w8NEZen4LQJ1OzIoHyQ==
+X-Received: by 2002:a05:6358:d181:b0:175:76bd:2c36 with SMTP id ka1-20020a056358d18100b0017576bd2c36mr1697587rwb.37.1705904502499;
+        Sun, 21 Jan 2024 22:21:42 -0800 (PST)
+Received: from fshao-p620.tpe.corp.google.com ([2401:fa00:1:10:f43c:6707:f29f:6787])
+        by smtp.gmail.com with ESMTPSA id b7-20020aa78107000000b006dbd9501028sm1984401pfi.92.2024.01.21.22.21.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 21 Jan 2024 22:21:42 -0800 (PST)
+From: Fei Shao <fshao@chromium.org>
+To: Mark Brown <broonie@kernel.org>
+Cc: Fei Shao <fshao@chromium.org>,
+	Alexey Firago <a.firago@yadro.com>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Takashi Iwai <tiwai@suse.com>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+	Yang Yingliang <yangyingliang@huawei.com>,
+	Zhu Ning <zhuning0077@gmail.com>,
+	linux-kernel@vger.kernel.org,
+	linux-sound@vger.kernel.org
+Subject: [PATCH] ASoC: codecs: ES8326: Remove executable bit
+Date: Mon, 22 Jan 2024 14:20:27 +0800
+Message-ID: <20240122062055.1673597-1-fshao@chromium.org>
+X-Mailer: git-send-email 2.43.0.429.g432eaa2c6b-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v4 4/7] hugetlb: pass *next_nid_to_alloc directly to
- for_each_node_mask_to_alloc
-To: Gang Li <gang.li@linux.dev>, David Hildenbrand <david@redhat.com>,
- David Rientjes <rientjes@google.com>, Mike Kravetz
- <mike.kravetz@oracle.com>, Andrew Morton <akpm@linux-foundation.org>,
- Tim Chen <tim.c.chen@linux.intel.com>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- ligang.bdlg@bytedance.com
-References: <20240118123911.88833-1-gang.li@linux.dev>
- <20240118123911.88833-5-gang.li@linux.dev>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Muchun Song <muchun.song@linux.dev>
-In-Reply-To: <20240118123911.88833-5-gang.li@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
 
+Remove the executable bit that was unintentionally turned on.
 
+Fixes: ee09084fbf9f ("ASoC: codecs: ES8326: Add chip version flag")
+Signed-off-by: Fei Shao <fshao@chromium.org>
+---
 
-On 2024/1/18 20:39, Gang Li wrote:
-> With parallelization of hugetlb allocation across different threads, each
-> thread works on a differnet node to allocate pages from, instead of all
-> allocating from a common node h->next_nid_to_alloc.  To address this, it's
-> necessary to assign a separate next_nid_to_alloc for each thread.
->
-> Consequently, the hstate_next_node_to_alloc and for_each_node_mask_to_alloc
-> have been modified to directly accept a *next_nid_to_alloc parameter,
-> ensuring thread-specific allocation and avoiding concurrent access issues.
->
-> Signed-off-by: Gang Li <gang.li@linux.dev>
-> Tested-by: David Rientjes <rientjes@google.com>
-> ---
->   mm/hugetlb.c | 22 ++++++++++++----------
->   1 file changed, 12 insertions(+), 10 deletions(-)
->
-> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-> index 98ae108e1fac..effe5539e545 100644
-> --- a/mm/hugetlb.c
-> +++ b/mm/hugetlb.c
-> @@ -1464,15 +1464,15 @@ static int get_valid_node_allowed(int nid, nodemask_t *nodes_allowed)
->    * next node from which to allocate, handling wrap at end of node
->    * mask.
->    */
-> -static int hstate_next_node_to_alloc(struct hstate *h,
-> +static int hstate_next_node_to_alloc(int *next_node,
->   					nodemask_t *nodes_allowed)
->   {
->   	int nid;
->   
->   	VM_BUG_ON(!nodes_allowed);
->   
-> -	nid = get_valid_node_allowed(h->next_nid_to_alloc, nodes_allowed);
-> -	h->next_nid_to_alloc = next_node_allowed(nid, nodes_allowed);
-> +	nid = get_valid_node_allowed(*next_node, nodes_allowed);
-> +	*next_node = next_node_allowed(nid, nodes_allowed);
->   
->   	return nid;
->   }
-> @@ -1495,10 +1495,10 @@ static int hstate_next_node_to_free(struct hstate *h, nodemask_t *nodes_allowed)
->   	return nid;
->   }
->   
-> -#define for_each_node_mask_to_alloc(hs, nr_nodes, node, mask)		\
-> +#define for_each_node_mask_to_alloc(next_node, nr_nodes, node, mask)		\
->   	for (nr_nodes = nodes_weight(*mask);				\
->   		nr_nodes > 0 &&						\
-> -		((node = hstate_next_node_to_alloc(hs, mask)) || 1);	\
-> +		((node = hstate_next_node_to_alloc(next_node, mask)) || 1);	\
->   		nr_nodes--)
->   
->   #define for_each_node_mask_to_free(hs, nr_nodes, node, mask)		\
-> @@ -2350,12 +2350,13 @@ static void prep_and_add_allocated_folios(struct hstate *h,
->    */
->   static struct folio *alloc_pool_huge_folio(struct hstate *h,
->   					nodemask_t *nodes_allowed,
-> -					nodemask_t *node_alloc_noretry)
-> +					nodemask_t *node_alloc_noretry,
-> +					int *next_node)
->   {
->   	gfp_t gfp_mask = htlb_alloc_mask(h) | __GFP_THISNODE;
->   	int nr_nodes, node;
->   
-> -	for_each_node_mask_to_alloc(h, nr_nodes, node, nodes_allowed) {
-> +	for_each_node_mask_to_alloc(next_node, nr_nodes, node, nodes_allowed) {
+ sound/soc/codecs/es8326.c | 0
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ mode change 100755 => 100644 sound/soc/codecs/es8326.c
 
-
-A small question here, why not pass h->next_nid_to_alloc to
-for_each_node_mask_to_alloc()? What's the purpose of the third
-parameter of alloc_pool_huge_folio()?
-
-Thanks.
+diff --git a/sound/soc/codecs/es8326.c b/sound/soc/codecs/es8326.c
+old mode 100755
+new mode 100644
+-- 
+2.43.0.429.g432eaa2c6b-goog
 
