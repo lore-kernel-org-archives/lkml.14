@@ -1,114 +1,94 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31EDB63107;
-	Mon, 22 Jan 2024 15:05:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31C9263134;
+	Mon, 22 Jan 2024 15:05:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705935930; cv=none; b=aystO0rLxC6Dj77FJkEx85bM5xRehThCDMXHnYsYL1LqveqvlWD4GpBA1Hh45lQJBTbIc/0NNV4DYehzXdc6XkJ7OxsmfQ0DH/3Tm+KDzqh3SX90+19gyWhFr/dTjcO3Q0f3ER8fninIPgeUBhjM5tuKjd8WDAMbkqiuYovadnM=
+	t=1705935932; cv=none; b=MZ/nefuvF40O2gJVqwK6a64nvCjHDPa6kysHWiQpR6Ic6k/mkxziduLBX+11aKo33eoPUL7ljgzwlk1w9ZuiWtPbXQmipNobkvPgVTFSyWz9naG3EXaMZAB5EUj8gTb8YISif4kZrlEpZPFYnmJla3IuINtUYUepL8gPZBSGeJk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705935930; c=relaxed/simple;
-	bh=F68i9hM8sovM7L3HP/urMxCAyGFLBSAzNVces5MUfjk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=drUR0jymZfwv6ypjMsGCQOK6DjvUHG69/M1RKR+rpRfgArXO+fUk8y24DXmfZs2OOrUZ76T0vb8peGMeiMetftjhUnu2o6g3PcFfyFruSjgbY2VExuSrBWivFZ/acAnAzIo8qqB4BfaFAuer0+1mqR4aN2vt+qPyixMRTeMtw84=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=sRmiSZjQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1705935932; c=relaxed/simple;
+	bh=LvbTF2FPVsG1VC5whCyaKO3erI9yAIOQKDXJy016miQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=k5jXnONTQzZ65Oa5DMZ4bV5MsvY2Nxa9NDiFHeFU1/CB9XTPjBkOA+xDofCgW4G/HADg64uwTi8ZHO/P0ywuoyyJC2unjq7cIFTuxYFgANu7xtyFY2Deqsr+KoN32Lzx3ELblISpK4fIUtTXHG7WMtcDNL+BJtDt8UhwWsV1jwY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qw2Beozq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="sRmiSZjQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD9ACC43399;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qw2Beozq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08E51C43390;
 	Mon, 22 Jan 2024 15:05:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1705935930;
-	bh=F68i9hM8sovM7L3HP/urMxCAyGFLBSAzNVces5MUfjk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sRmiSZjQU/5ajgL+XobTaF6guD5KVFVFiRyahpHp1sxqe6jEavU4Dsx38RUhG/Mek
-	 uFa/gpf4NbLutvtobDxiEjPsSaATb6Zk4KCPJX4hhSJvBVObuo/AtNs1M80aJ+TJJ7
-	 W2WhTEMBBAyzL/6fSccXN6n24NX513TUqE4YDwPo=
-Date: Mon, 22 Jan 2024 07:05:29 -0800
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Carlos Llamas <cmllamas@google.com>
-Cc: Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
-	Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Christian Brauner <brauner@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Sherry Yang <sherryy@android.com>, linux-kernel@vger.kernel.org,
-	kernel-team@android.com, stable@vger.kernel.org
-Subject: Re: [PATCH v2 05/28] binder: fix unused alloc->free_async_space
-Message-ID: <2024012214-ideology-curvature-febb@gregkh>
-References: <20231201172212.1813387-1-cmllamas@google.com>
- <20231201172212.1813387-6-cmllamas@google.com>
- <Zal9HFZcC3rFjogI@google.com>
- <2024011955-quotation-zone-7f20@gregkh>
- <Zaqw9k4x7IUh6ys-@google.com>
- <2024012203-expedited-job-1d79@gregkh>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705935932;
+	bh=LvbTF2FPVsG1VC5whCyaKO3erI9yAIOQKDXJy016miQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=qw2Beozq8ILk2PsGlESqJ93Z+egIppaV5edscxZXXanXH5kdCYQjZvtdo1IimzKJd
+	 iJfbseeWXlhOMRnwJRMXCj7+LXfg25yUQyrY8SmcXPk8iAdGELuP59DWwo+1VD/Tz4
+	 fC/DGaIzQm64/nOuqq1i2PeDH58zvxJEGtFstuw2Bv5Oh16XLnavil9vmGEfDIz9rN
+	 7lfrE2hLdbA03y/l2v/WZjLdoS1craR5xe3vOJbuIsJZ6dZy/4VGaopVWrXGcoMijd
+	 qfIRqXO+2vN94yk1l2vH5kzhSZjSNNACofY4wciamhYyupJSJWikpIivxF8N/JyJ7j
+	 pz9IOgBKemLGw==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Sasha Levin <sashal@kernel.org>,
+	maarten.lankhorst@linux.intel.com,
+	tzimmermann@suse.de,
+	airlied@gmail.com,
+	daniel@ffwll.ch,
+	dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 6.6 19/73] drm/framebuffer: Fix use of uninitialized variable
+Date: Mon, 22 Jan 2024 10:01:33 -0500
+Message-ID: <20240122150432.992458-19-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240122150432.992458-1-sashal@kernel.org>
+References: <20240122150432.992458-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2024012203-expedited-job-1d79@gregkh>
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.6.13
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jan 22, 2024 at 07:04:20AM -0800, Greg Kroah-Hartman wrote:
-> On Fri, Jan 19, 2024 at 05:27:18PM +0000, Carlos Llamas wrote:
-> > On Fri, Jan 19, 2024 at 06:49:00AM +0100, Greg Kroah-Hartman wrote:
-> > > On Thu, Jan 18, 2024 at 07:33:48PM +0000, Carlos Llamas wrote:
-> > > > On Fri, Dec 01, 2023 at 05:21:34PM +0000, Carlos Llamas wrote:
-> > > > > Each transaction is associated with a 'struct binder_buffer' that stores
-> > > > > the metadata about its buffer area. Since commit 74310e06be4d ("android:
-> > > > > binder: Move buffer out of area shared with user space") this struct is
-> > > > > no longer embedded within the buffer itself but is instead allocated on
-> > > > > the heap to prevent userspace access to this driver-exclusive info.
-> > > > > 
-> > > > > Unfortunately, the space of this struct is still being accounted for in
-> > > > > the total buffer size calculation, specifically for async transactions.
-> > > > > This results in an additional 104 bytes added to every async buffer
-> > > > > request, and this area is never used.
-> > > > > 
-> > > > > This wasted space can be substantial. If we consider the maximum mmap
-> > > > > buffer space of SZ_4M, the driver will reserve half of it for async
-> > > > > transactions, or 0x200000. This area should, in theory, accommodate up
-> > > > > to 262,144 buffers of the minimum 8-byte size. However, after adding
-> > > > > the extra 'sizeof(struct binder_buffer)', the total number of buffers
-> > > > > drops to only 18,724, which is a sad 7.14% of the actual capacity.
-> > > > > 
-> > > > > This patch fixes the buffer size calculation to enable the utilization
-> > > > > of the entire async buffer space. This is expected to reduce the number
-> > > > > of -ENOSPC errors that are seen on the field.
-> > > > > 
-> > > > > Fixes: 74310e06be4d ("android: binder: Move buffer out of area shared with user space")
-> > > > > Signed-off-by: Carlos Llamas <cmllamas@google.com>
-> > > > > ---
-> > > > 
-> > > > Sorry, I forgot to Cc: stable@vger.kernel.org.
-> > > 
-> > > 
-> > > <formletter>
-> > > 
-> > > This is not the correct way to submit patches for inclusion in the
-> > > stable kernel tree.  Please read:
-> > >     https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html
-> > > for how to do this properly.
-> > > 
-> > > </formletter>
-> > 
-> > Oops, here is the complete info:
-> > 
-> > Commit ID: c6d05e0762ab276102246d24affd1e116a46aa0c
-> > Subject:   "binder: fix unused alloc->free_async_space"
-> > Reason:    Fixes an incorrect calculation of available space.
-> > Versions:  v4.19+
-> > 
-> > Note this patch will also have trivial conflicts in v4.19 and v5.4
-> > kernels as commit 261e7818f06e is missing there. Please let me know and
-> > I can send the corresponding patches separately.
-> 
-> It doesn't even apply to 6.7.y either, so we need backports for all
-> affected trees, thanks.
+From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
 
-Now I got it to apply, but we need backports for 5.4.y and 4.19.y,
-thanks.
+[ Upstream commit f9af8f0c1dc567a5a6a6318ff324c45d80d4a60f ]
 
-greg k-h
+smatch reports:
+
+drivers/gpu/drm/drm_framebuffer.c:654 drm_mode_getfb2_ioctl() error: uninitialized symbol 'ret'.
+
+'ret' is possibly not set when there are no errors, causing the error
+above. I can't say if that ever happens in real-life, but in any case I
+think it is good to initialize 'ret' to 0.
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Acked-by: Maxime Ripard <mripard@kernel.org>
+Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20231103-uninit-fixes-v2-2-c22b2444f5f5@ideasonboard.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/gpu/drm/drm_framebuffer.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/drm_framebuffer.c b/drivers/gpu/drm/drm_framebuffer.c
+index aff3746dedfb..1955eaeba0ab 100644
+--- a/drivers/gpu/drm/drm_framebuffer.c
++++ b/drivers/gpu/drm/drm_framebuffer.c
+@@ -570,7 +570,7 @@ int drm_mode_getfb2_ioctl(struct drm_device *dev,
+ 	struct drm_mode_fb_cmd2 *r = data;
+ 	struct drm_framebuffer *fb;
+ 	unsigned int i;
+-	int ret;
++	int ret = 0;
+ 
+ 	if (!drm_core_check_feature(dev, DRIVER_MODESET))
+ 		return -EINVAL;
+-- 
+2.43.0
+
