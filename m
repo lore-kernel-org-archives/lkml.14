@@ -1,98 +1,146 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtpout.efficios.com (smtpout.efficios.com [167.114.26.122])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D25B453812;
-	Mon, 22 Jan 2024 18:35:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA10D53812
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 18:35:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=167.114.26.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705948517; cv=none; b=Vmbs7zG/MUvuEmXxvXnuzJ26pHDiFrPQ9xKfXAZ/iW1S/QJ9fml30ZzNq9UaytCQPfvvCvH3uVJ7CgIG53yJEyaGKsSEOPWMpj7vQG8dVz0AcAeAnbdOtyz71aPyhVwWm3sR5VEhC2ZPOpInscISYpF4aV1tBpMNq0dSwL/29r8=
+	t=1705948546; cv=none; b=B/Hbob7781HHxo8KB7s5d/sZKr6RGGjvV5u/0wCTyAQXtHDnGWYamq5NIXdbmi0LeG2lvsZJPNEepAgcMdVA8w1xIT7zyfKJIUQ7B+BxvENtqWOS7TV+8kbAuhnx/LAtM34VFbvALYa/L/tFeNhAmNcAU+gunqo4I642bOK7oPQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705948517; c=relaxed/simple;
-	bh=AmKgOrFYeZcl7xeSVP/i13Nb5YyEv45rIRjYAFiF5gI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ly2aj2+PcDBk6Rl0H9bBzPj4Jfj1jHzNInhEADO4x82RtrgKUjG1nHdH1NX78LBN4EvTivBL282PL5qK2VwhdHOzswTEsv0ChErHV/d6TJr09++TfjYD05WL80x9LPNowE6eCw3lrqWPcSO7pq2OHrVMt7P4G8A6pkvSisu9Sto=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Du/KA8rT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1705948546; c=relaxed/simple;
+	bh=X4oiGtQDe6Pom+07coqzxMStwwOl6rmxWTszP465WXw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QwsO6IcmP7PjhHmfuhtyccbiswY30Qt3la7Qy2QCZrYEln2W8DMwYzIRn2+a1YpWJivRzArIoCKqXPUY4JBOS+bGe2Js9pi7LiSLA83jq88pIRMsGbP3eoqkalPLImv75rgs6Luf75ZePSmtLKe+sNuww5IfaLFfpWEa1ACfNbo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=qMCmsA20; arc=none smtp.client-ip=167.114.26.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Du/KA8rT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C189C433C7;
-	Mon, 22 Jan 2024 18:35:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705948517;
-	bh=AmKgOrFYeZcl7xeSVP/i13Nb5YyEv45rIRjYAFiF5gI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Du/KA8rTpObMYrHbsX0TJWCfGISbIuCM4nY6qZSAADOkvC6cav9798q8/U8Pizkbg
-	 pHGsKbB2zXH/0jzJ45zsMY/q/oEmRjv2oFJLYvPrfJWgJyzOb8ZsgS1sS3r7gskaxO
-	 iDMkW47V3WdGF6QV0uNUfIMGwMjvZF+1ZNlYSQyPi9VG7Qh5u+Gp9S50WXBckpvh03
-	 nnH10xMyjwXDJPLwQnwsLPsJM2zdhsU6Xm+iB22RobgXHb+IEIoslMaU3FSj5yleNA
-	 6bxH9DLdCwIb4YJIoGfP4uP5/kEBkTA7iNqosh1nvPLwQpn9FcrKylZhZMGt4qA5nl
-	 XfyQmHOqNGlPA==
-Date: Mon, 22 Jan 2024 18:35:13 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Klaus Kudielka <klaus.kudielka@gmail.com>
-Cc: linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [GIT PULL] SPI updates for v6.8
-Message-ID: <be96e4bc-0a4d-444c-88cf-fc77fefd64fd@sirena.org.uk>
-References: <20240107223817.EDB59C433C7@smtp.kernel.org>
- <d8724cd416494bb5cd5b0350266fce0cb7b3b210.camel@gmail.com>
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="qMCmsA20"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=efficios.com;
+	s=smtpout1; t=1705948542;
+	bh=X4oiGtQDe6Pom+07coqzxMStwwOl6rmxWTszP465WXw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=qMCmsA208S8p1KrKg6EzKEwWItsKQWq9ZUStNcaiBge9iAvo6axs0oc9XG8u7PK6D
+	 LbbAYAmCmqvwWpvEuIaHyebfUb6g8wnJfP2Qujjgwz5Ak+EeJocW+ClNYyAG+9zVV6
+	 vU0u0HZPE+wwccycrQV+bgjxSnmFnR+YvhvGGC/4NhvuqKtvP5zpafiBnXiLfAs9sn
+	 CWaePidFWfWHL+q+sM+hBPhA84VmvQBREnW7m4rsHzGreD8e4xbGNAaoomggakSdm6
+	 5HaVCCFTQ6MtikFKJvtjMJLcVd4HVptMhz/YKGua5XcxkHseJCTKlpn34Gt0/0sgGw
+	 1/UYLoFQ3xEuA==
+Received: from [172.16.0.134] (192-222-143-198.qc.cable.ebox.net [192.222.143.198])
+	by smtpout.efficios.com (Postfix) with ESMTPSA id 4TJf6k373fzTbb;
+	Mon, 22 Jan 2024 13:35:42 -0500 (EST)
+Message-ID: <c8982677-64bf-4078-be1a-e5e18c35ecb4@efficios.com>
+Date: Mon, 22 Jan 2024 13:35:43 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="k67nLMvRnMsshTbL"
-Content-Disposition: inline
-In-Reply-To: <d8724cd416494bb5cd5b0350266fce0cb7b3b210.camel@gmail.com>
-X-Cookie: Nice guys don't finish nice.
+User-Agent: Mozilla Thunderbird
+Subject: Re: [for-linus][PATCH 1/3] eventfs: Have the inodes all for files and
+ directories all be the same
+Content-Language: en-US
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>,
+ Kees Cook <keescook@chromium.org>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ linux-kernel@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Christian Brauner <brauner@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>,
+ Ajay Kaher <ajay.kaher@broadcom.com>
+References: <20240117143548.595884070@goodmis.org>
+ <20240117143810.531966508@goodmis.org>
+ <CAMuHMdXKiorg-jiuKoZpfZyDJ3Ynrfb8=X+c7x0Eewxn-YRdCA@mail.gmail.com>
+ <20240122100630.6a400dd3@gandalf.local.home>
+ <ccc4234d-8a47-4c0f-808a-95e61c9c9171@efficios.com>
+ <20240122125004.7bbf0b70@gandalf.local.home>
+From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+In-Reply-To: <20240122125004.7bbf0b70@gandalf.local.home>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+
+On 2024-01-22 12:50, Steven Rostedt wrote:
+> On Mon, 22 Jan 2024 12:14:36 -0500
+> Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
+[...]
+>> On my 6.1.0 kernel:
+>>
+>> find /sys/kernel/tracing | wc -l
+>> 15598
+>>
+>> (mainly due to TRACE_EVENT ABI files)
+>>
+>> Hashing risks:
+>>
+>> - Exposing kernel addresses if the hashing algorithm is broken,
+> 
+> Well this was my biggest concern, but if I truncate at least a nibble, with
+> the unique salt to the algorithm for each file, how easily does that expose
+> kernel addresses.
+> 
+> The ei itself, is created from kmalloc() so you would at best get a heap
+> address. But with the missing nibble (if I mask it with ((1 << 28) - 1),
+> and much more taken away for 64 bit systems), and the added unique salt, is
+> it possible for this to expose anything that could be used in an attack?
+
+I don't know, which is why I am concerned about it.
+
+But I don't think we should spend time trying to understand all
+possible attack scenarios associated with hashing of kernel addresses
+when there are much simpler options available.
+
+> 
+>> - Collisions if users are unlucky (which could trigger those
+>>     'find' errors).
+>>
+>> Those 15598 inode values fit within a single page (bitmap of
+>> 1922 bytes).
+>>
+>> So I would recommend simply adding a bitmap per tracefs filesystem
+>> instance to keep track of inode number allocation.
+> 
+> And how do I recover this bit after the inode is freed, but then referenced
+> again?
+
+You would keep the allocated inode number value within your data
+structure associated with the inode.
+
+If you never free inodes, then you can just use a static increment
+as Linus suggested. But AFAIU there are cases where you free inodes,
+hence my suggestion of bitmap.
+
+When the inode is freed, you know which inode number is associated from
+the field in your data structure, so you can clear this bit in the bitmap.
+
+On the next inode allocation, you find-first-zero-bit in the bitmap, and
+set it to one to reserve it.
+
+> 
+>>
+>> Creation/removal of files/directories in tracefs should not be
+>> a fast-path anyway, so who cares about the speed of a find first
+>> bit within a single page ?
+>>
+> 
+> When an inode is no longer referenced, it is freed. When it is referenced
+> again, I want it to be recreated with the same inode number it had
+> previously. How would having a bitmask help with that? I need a way to map
+> an ei structure with a unique number without adding another 4 bytes to the
+> structure itself.
+
+As discussed in a separate exchange with Linus, why do you care so much about
+not adding a 4 bytes field to the structure ?
+
+Thanks,
+
+Mathieu
 
 
---k67nLMvRnMsshTbL
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jan 22, 2024 at 07:30:09PM +0100, Klaus Kudielka wrote:
-> On Sun, 2024-01-07 at 22:38 +0000, Mark Brown wrote:
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+https://www.efficios.com
 
-> > =A0- Support for multiple chip selects.
-
-> [skipped the rest]
->=20
-> Hi, it seems I have an issue related with this new feature.
->=20
-> I just booted 6.8.0-rc1 on Turris Omnia (CONFIG_SPI_ORION=3Dy,
-> device tree: arch/arm/boot/dts/marvell/armada-385-turris-omnia.dts)
-
-> and got the following error:
->=20
-> [    0.090231] spi_master spi0: No. of CS is more than max. no. of suppor=
-ted CS
-> [    0.097358] spi_master spi0: Failed to create SPI device for /soc/spi@=
-10600/flash@0
-
-> End result: the three MTD partitions I used to have on the SPI-NOR are go=
-ne.
-
-Yes, this was found on another platform - there's a patch which should
-address this (unless the number is more than 8) in CI:
-
-   https://lore.kernel.org/linux-spi/20240122-spi-multi-cs-max-v1-1-a7e98cd=
-5f6c7@kernel.org/T/#u
-
---k67nLMvRnMsshTbL
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmWutWAACgkQJNaLcl1U
-h9B5/wf/SRB9JrlDYGQrKjFySIk9gFKcuIZfZCDsIWyBn3BglO2sWATPBvDGv8rw
-//0ay00R3qHUh2q88MvrBYLc28daRTIIhBSICBw2ialw9vtHcoxRffkhfhoVNmfq
-1dNLGNQZjOaR7C/lco1b51XMmJDb7AQAi86mZPUeXRoGV6LUaeFwYUmMQYsNYdya
-SchkQs3GmY+OG8AFalVQjZ2x1Y6cKp5mjkLcDNBjpGGCkGLQy+CkkOKBMCr58X/9
-c8v2wNZi1yMaOS3fIWYJNllqjV3EjgtNdOjBdM8p6uTYb8o/5pHEbY/LWOK/NP9f
-XovzpLM3mmhqZO4jcoPWr2oQ28zr2w==
-=K8aC
------END PGP SIGNATURE-----
-
---k67nLMvRnMsshTbL--
