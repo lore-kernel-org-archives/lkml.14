@@ -1,47 +1,54 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDFCA3F8C7;
-	Mon, 22 Jan 2024 11:04:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88DA63EA7B
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 11:04:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705921488; cv=none; b=taFOFkYI5oc/hvIzlwxQ08q6bg/OclHW34SWWfUnp8QtROJWRbf7G0LPTgKo9MLUL56ng1acNPZ8mXXUPYswHLjYZLnonpfs9AwrcptVTKAWUQdtPUkE/QcQ+oQI/O5M4mshoVXUxQ7EXe21USJcmARebqJcJmFkZ98f0jGs1VI=
+	t=1705921490; cv=none; b=UsIa+N8LnMW2JNqa9spW9tl1RBCyoaZavgdqtTMAxaF+JCcB68a4FMWgNG6/RQmNZO4hzylNQZ/8smh6XoczBsomvwL9/8BgFcbqh8Xomij33ZSOE/TYjSjqpvCeDzWFeJnGV1m32cOu+3KedY6i+f6o3ocWVjcAJFCfVOqAbWY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705921488; c=relaxed/simple;
-	bh=/HUcPJ1BjPv5GMtQ1xgKekTdrhD9fVd1hk++uDzgCqs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SO+HY94d/gm7scp85Mons5NQN7qIi7lCSv1VxAJATRN0E3N7DSHnzMdqNKM5M1RfRoL/A7M9CPkH+WQ42R5YJF9D2xaQjU5cRc6UzZhRVpUKRCh1TJhGc4Bd2EYmPxsaMN1843xQQ3clgKx7feZ4k4OXIPTx8n8aevS/QTCusbA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GXbOocbL; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GXbOocbL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 890A8C433F1;
-	Mon, 22 Jan 2024 11:04:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705921488;
-	bh=/HUcPJ1BjPv5GMtQ1xgKekTdrhD9fVd1hk++uDzgCqs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=GXbOocbLT0ABXMV2bnERsN9uywnmn32QE1DxP0RPGKVWf8/czfcvQdQsXJlpgw3ca
-	 31LnHSn/3LN0BOPake745sz7M5VbvfBkfzWgF35j3pHzM3A+zJAeQiywh2v+n+dcHe
-	 VYxdUNsWrsyqxLyNwt172Kbg6KwoAdjvvcfFwbTYywLVH1nGeI6fCQV7sIQuoVB4pZ
-	 EMuOjN1WBzH86YiQpxGtdzO6XEYj/afiTBkXxWbvJhwRSfBjB6nNakU6Kr8AsKKYJC
-	 ENNakA+0bkF+/pROEgWKv49RDHnRWCSnSFGU+EN0d5qy2cWOVpOP6Nq5jFkgYf+dAY
-	 PWP/RL22+7V/g==
-From: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
-To: gregkh@linuxfoundation.org
-Cc: linux-serial@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
-	Helge Deller <deller@gmx.de>,
-	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-	linux-fbdev@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	linux-parisc@vger.kernel.org
-Subject: [PATCH v2 22/47] tty: vt: remove checks for count in consw::con_clear() implementations
-Date: Mon, 22 Jan 2024 12:03:36 +0100
-Message-ID: <20240122110401.7289-23-jirislaby@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240122110401.7289-1-jirislaby@kernel.org>
-References: <20240122110401.7289-1-jirislaby@kernel.org>
+	s=arc-20240116; t=1705921490; c=relaxed/simple;
+	bh=eqirOGjCZP2NBSEkK8uc5P/vksk2IIWKQWYB/n+5qkY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=E2kxXKBPea6hOHXm8U7wp1ZcJWLcoumKJqkc76cpzzeqeGsUnvG0wQ4b3Z/E4+9wkqMuJdNHTm86s3oVVMDAfI0RJNgBVGPSqb3+WHNsqptI8y4AJPTBQ0mRxtZo5222nOAciEiJF2BGJd48MUUaDW52PBeImbhxXvhoDW6+wNM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <fpf@pengutronix.de>)
+	id 1rRs6K-0003nV-7r; Mon, 22 Jan 2024 12:04:24 +0100
+Received: from [2a0a:edc0:0:1101:1d::54] (helo=dude05.red.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <fpf@pengutronix.de>)
+	id 1rRs6I-001Zhh-Mi; Mon, 22 Jan 2024 12:04:22 +0100
+Received: from fpf by dude05.red.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <fpf@pengutronix.de>)
+	id 1rRs6I-00BSQd-23;
+	Mon, 22 Jan 2024 12:04:22 +0100
+From: Fabian Pfitzner <f.pfitzner@pengutronix.de>
+To: Michael Hennerich <michael.hennerich@analog.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Alexandru Tachici <alexandru.tachici@analog.com>
+Cc: kernel@pengutronix.de,
+	Fabian Pfitzner <f.pfitzner@pengutronix.de>,
+	netdev@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] net: phy: adin: add missing clock option
+Date: Mon, 22 Jan 2024 12:03:12 +0100
+Message-Id: <20240122110311.2725036-1-f.pfitzner@pengutronix.de>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,55 +56,60 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: fpf@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-'count' in consw::con_clear() is guaranteed to be positive. csi_X() (the
-only caller) takes the minimum of the vc parameter (which is at least 1)
-and count of characters till the end of the line. The latter is computed
-as a subtraction of vc->vc_cols (count) and vc->state.x (offset). So for
-the worst case, full line, it is 1.
+The GP_CLK pin on Adin1300 PHY's offers three different output clocks.
+This patch adds the missing 125MHz recovered clock option which is not
+yet availible in the driver.
 
-Therefore, there is no point in checking zero or negative values (width
-is now unsigned anyway).
-
-Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
-Cc: Helge Deller <deller@gmx.de>
-Cc: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
-Cc: linux-fbdev@vger.kernel.org
-Cc: dri-devel@lists.freedesktop.org
-Cc: linux-parisc@vger.kernel.org
+Signed-off-by: Fabian Pfitzner <f.pfitzner@pengutronix.de>
 ---
- drivers/video/console/mdacon.c | 3 ---
- drivers/video/console/sticon.c | 3 ---
- 2 files changed, 6 deletions(-)
+ Documentation/devicetree/bindings/net/adi,adin.yaml | 7 +++++--
+ drivers/net/phy/adin.c                              | 2 ++
+ 2 files changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/video/console/mdacon.c b/drivers/video/console/mdacon.c
-index 1ddbb6cd5b0c..2ff2c9394d40 100644
---- a/drivers/video/console/mdacon.c
-+++ b/drivers/video/console/mdacon.c
-@@ -448,9 +448,6 @@ static void mdacon_clear(struct vc_data *c, unsigned int y, unsigned int x,
- 	u16 *dest = mda_addr(x, y);
- 	u16 eattr = mda_convert_attr(c->vc_video_erase_char);
+diff --git a/Documentation/devicetree/bindings/net/adi,adin.yaml b/Documentation/devicetree/bindings/net/adi,adin.yaml
+index 929cf8c0b0fd..cd1b4efa692b 100644
+--- a/Documentation/devicetree/bindings/net/adi,adin.yaml
++++ b/Documentation/devicetree/bindings/net/adi,adin.yaml
+@@ -38,14 +38,17 @@ properties:
  
--	if (width <= 0)
--		return;
--
- 	scr_memsetw(dest, eattr, width * 2);
- }
+   adi,phy-output-clock:
+     description: |
+-      Select clock output on GP_CLK pin. Two clocks are available:
+-      A 25MHz reference and a free-running 125MHz.
++      Select clock output on GP_CLK pin. Three clocks are available:
++        - 25MHz reference
++        - free-running 125MHz 
++        - recovered 125MHz
+       The phy can alternatively automatically switch between the reference and
+       the 125MHz clocks based on its internal state.
+     $ref: /schemas/types.yaml#/definitions/string
+     enum:
+       - 25mhz-reference
+       - 125mhz-free-running
++      - 125mhz-recovered
+       - adaptive-free-running
  
-diff --git a/drivers/video/console/sticon.c b/drivers/video/console/sticon.c
-index d99c2a659bfd..b1d972d9a31c 100644
---- a/drivers/video/console/sticon.c
-+++ b/drivers/video/console/sticon.c
-@@ -303,9 +303,6 @@ static void sticon_deinit(struct vc_data *c)
- static void sticon_clear(struct vc_data *conp, unsigned int sy, unsigned int sx,
- 			 unsigned int width)
- {
--    if (!width)
--	return;
--
-     sti_clear(sticon_sti, sy, sx, 1, width,
- 	      conp->vc_video_erase_char, font_data[conp->vc_num]);
- }
+   adi,phy-output-reference-clock:
+diff --git a/drivers/net/phy/adin.c b/drivers/net/phy/adin.c
+index 2e1a46e121d9..b1ed6fd24763 100644
+--- a/drivers/net/phy/adin.c
++++ b/drivers/net/phy/adin.c
+@@ -508,6 +508,8 @@ static int adin_config_clk_out(struct phy_device *phydev)
+ 		sel |= ADIN1300_GE_CLK_CFG_25;
+ 	} else if (strcmp(val, "125mhz-free-running") == 0) {
+ 		sel |= ADIN1300_GE_CLK_CFG_FREE_125;
++	} else if (strcmp(val, "125mhz-recovered") == 0) {
++		sel |= ADIN1300_GE_CLK_CFG_RCVR_125;
+ 	} else if (strcmp(val, "adaptive-free-running") == 0) {
+ 		sel |= ADIN1300_GE_CLK_CFG_HRT_FREE;
+ 	} else {
+
+base-commit: 6613476e225e090cc9aad49be7fa504e290dd33d
 -- 
-2.43.0
+2.39.2
 
