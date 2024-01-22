@@ -1,120 +1,149 @@
-Received: from zg8tndyumtaxlji0oc4xnzya.icoremail.net (zg8tndyumtaxlji0oc4xnzya.icoremail.net [46.101.248.176])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 027FE405C1;
-	Mon, 22 Jan 2024 17:36:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.101.248.176
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9581059B69
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 17:37:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705945018; cv=none; b=ndYPsoc/sU3dn6F6q4RrmxfBN9mCb/wdzS7s54OxtLtajIapNbc6OIWFmEg/6aeFdWyKo9MMwdDzoIjXjEFp2uANjBbTrPK/T0JZVIe6qHuy3aI7tRcuUlS6+my0RjhLAcXk1n5NwnAUd/n6RIgPkDZqRSyEEercna9xVXQYQFk=
+	t=1705945042; cv=none; b=V2s5J7iVHtWTJHuuCcbdLFo87RODfR7NZGh6Z8i/02vMqYSaxPl4XJRjje6k3MzVCHT+/Z40YJ+eiCi9NLTFMtT7wZgZxkrhFbjheWQvIGga4IVwscWSfyUM1J9xx/CArPfbisnMX5neP0ld6m1tEiQvFdy0r4w5Arz17foXQyA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705945018; c=relaxed/simple;
-	bh=i72cJ4XFiJ0tpwKQAmgnTBVwkuYQVUv9RJhyiyqLK+o=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=qRCi844cvUn1AxLdcHQof2Kb2QDlrveu9FGFD/zmZNIH9MJodScNVewiC1BVx+QRgMrl/boDjxL68ulSUmAX65cAaSooIgkhurEZnPD7tmlt89xP36PNf5bHDTpVEGcsONtCJMIonL0tUQpTB5MIL8sCxrRPInIiCuxYPIenmt0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn; spf=pass smtp.mailfrom=zju.edu.cn; arc=none smtp.client-ip=46.101.248.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zju.edu.cn
-Received: from luzhipeng.223.5.5.5 (unknown [39.174.92.167])
-	by mail-app3 (Coremail) with SMTP id cC_KCgBnSTOlp65lU814AA--.4097S2;
-	Tue, 23 Jan 2024 01:36:38 +0800 (CST)
-From: Zhipeng Lu <alexious@zju.edu.cn>
-To: alexious@zju.edu.cn
-Cc: Jesse Brandeburg <jesse.brandeburg@intel.com>,
-	Tony Nguyen <anthony.l.nguyen@intel.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Piotr Marczak <piotr.marczak@intel.com>,
-	Alice Michael <alice.michael@intel.com>,
-	Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-	intel-wired-lan@lists.osuosl.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] i40e: fix a memleak in i40e_init_recovery_mode
-Date: Tue, 23 Jan 2024 01:36:33 +0800
-Message-Id: <20240122173633.3843715-1-alexious@zju.edu.cn>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1705945042; c=relaxed/simple;
+	bh=m8kPm/j1LsdrYXYN+YQDJ7r2rWymD6BOjcIeRkuQtHQ=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=cMyZCcKfnHiKjkY+Eqa3a8Nkzqz+7cz7Z+5iQPVX/h916gxGvkTLJXHjfyIyjBRs1Cmrt56YfukiVTRNR6/XnZSDH1fkFG6xja5W6O4lXT/uV1/0Qqs0X6mu3fdffDVg3cUOwgvLmDkutV5Xv/TbmLj53dAZxHR+zeyvAmurSzk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=BfY0v7rd; arc=none smtp.client-ip=209.85.208.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="BfY0v7rd"
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2ccae380df2so33438761fa.1
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 09:37:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1705945038; x=1706549838; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=s9fIVUDS4JPjZqnrZBBkM7zrxIcZN1SBne4vcNi0x/g=;
+        b=BfY0v7rdDpiZmmLYYWoDuF0YGEp4K60GdHWqajby71boVGC+Cx4MCVWe2LEGjUDLSF
+         W3PgujIF3cQnKaeevPdoqwDC4p6jFFYyZC89Tcpww66tRVUTjpmO19rM2IVK4h9YavVy
+         9mbH4cJuneSFhXQkUvwKzqhmvxCqSEmMIQKFGPsvDMxGvVVTPzJrdeEn6xME3pz3EIFF
+         XbobTiM2JA5pM8Bov8H4Bd+3voY0WLU95PnjM5MZmHUxd5ZwsYQxSJVmgnb5HCsSfxYt
+         pEbW56jgInd/J19p/bpeQ9bRZEezjH6CP2j93CvjnuNANu4L4357o86RMqe23ct+Si3A
+         rf1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705945038; x=1706549838;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=s9fIVUDS4JPjZqnrZBBkM7zrxIcZN1SBne4vcNi0x/g=;
+        b=J2m3jjChfkiHC7ShytuZ1Ap+05x6aaEy9YqaSf9un3hKr82+TRVNbsJk+OoZ+V16en
+         SL9D7+M/N/NUREwzzqkf9GQ47AisSer+QgZas5LkyJauxaui3r8D1vp+rWj6ny7URdZP
+         I52IbUxXzbCLFwZmQzE70pj7vdqHYSpoHiylGrDzXmOxqHGSd1F8v8IzaogWajZEZqHI
+         /t7Ck9cbEfg8qCxE630jvf5/vZ+nKQWZMOZubB83tkcvP6ToQEZKSJ8QJPYh2BJJRfKm
+         gUuxQ9FyzB/lUQKM4jLdgPR7cuvISw8YslzN3K+NKVioW0y6HPpFoTbwakoiukBp6znb
+         9CoQ==
+X-Gm-Message-State: AOJu0Yz9tej+0uTiXqSEXTrkjlf52bJvs5ECSn3VMQv19uI8U/MkNhTc
+	xLgHErwKDGNFMClVlW6EXSuj9MWZbESWtqHvxfqUwfUPFXmIbakK6jZ1167Shuo=
+X-Google-Smtp-Source: AGHT+IGtMtcqWkvVLEoaIeMoHtV2CsA0V+GTi7mnCKwegjzg2YjeUcTa13uMM6pmGiJG+dRvm4j+ag==
+X-Received: by 2002:a2e:a4a7:0:b0:2cc:ceb2:372a with SMTP id g7-20020a2ea4a7000000b002ccceb2372amr1541040ljm.96.1705945038673;
+        Mon, 22 Jan 2024 09:37:18 -0800 (PST)
+Received: from ?IPv6:2804:30c:974:ac00:1b02:e2fd:23be:79bc? ([2804:30c:974:ac00:1b02:e2fd:23be:79bc])
+        by smtp.gmail.com with ESMTPSA id j26-20020a056e02221a00b00361a166564csm3015628ilf.4.2024.01.22.09.37.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Jan 2024 09:37:18 -0800 (PST)
+Message-ID: <dfcf46def7a4b27e30bed0e832fbf24fd7b36310.camel@suse.com>
+Subject: Re: [PATCH v6 1/3] kselftests: lib.mk: Add TEST_GEN_MODS_DIR
+ variable
+From: Marcos Paulo de Souza <mpdesouza@suse.com>
+To: Shuah Khan <skhan@linuxfoundation.org>, Shuah Khan <shuah@kernel.org>, 
+ Jonathan Corbet <corbet@lwn.net>, Heiko Carstens <hca@linux.ibm.com>,
+ Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev
+ <agordeev@linux.ibm.com>, Christian Borntraeger
+ <borntraeger@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>, Josh
+ Poimboeuf <jpoimboe@kernel.org>, Jiri Kosina <jikos@kernel.org>, Miroslav
+ Benes <mbenes@suse.cz>, Petr Mladek <pmladek@suse.com>, Joe Lawrence
+ <joe.lawrence@redhat.com>
+Cc: linux-kselftest@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org, 
+	live-patching@vger.kernel.org
+Date: Mon, 22 Jan 2024 14:37:09 -0300
+In-Reply-To: <5aceb855-2862-4d53-b27b-50e2956e099b@linuxfoundation.org>
+References: <20240112-send-lp-kselftests-v6-0-79f3e9a46717@suse.com>
+	 <20240112-send-lp-kselftests-v6-1-79f3e9a46717@suse.com>
+	 <5aceb855-2862-4d53-b27b-50e2956e099b@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cC_KCgBnSTOlp65lU814AA--.4097S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7KrWkZr17Zr1xKr45GrWrGrg_yoW8CryDpF
-	4DWa4kGry0qr43Was7Gw48CFZ5J3y3tryUWa13Kan5urnYyF1kXFy8tFyUCFy8ArZ3X3Zx
-	Jrn7ArWxuryDGw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9K14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
-	6r4UJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
-	Y2ka0xkIwI1lc7CjxVAaw2AFwI0_Jw0_GFylc2xSY4AK67AK6r4l42xK82IYc2Ij64vIr4
-	1l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK
-	67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI
-	8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAv
-	wI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14
-	v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfU0sjjDUUUU
-X-CM-SenderInfo: qrsrjiarszq6lmxovvfxof0/
 
-In i40e_init_recovery_mode, pf->vsi is allocated without free, causing
-a memleak. This patch adds deallocation operations for pf->vsi in each
-and every error-handling paths after pf->vsi's.
+On Mon, 2024-01-22 at 10:15 -0700, Shuah Khan wrote:
+> On 1/12/24 10:43, Marcos Paulo de Souza wrote:
+> > Add TEST_GEN_MODS_DIR variable for kselftests. It can point to
+> > a directory containing kernel modules that will be used by
+> > selftest scripts.
+> >=20
+> > The modules are built as external modules for the running kernel.
+> > As a result they are always binary compatible and the same tests
+> > can be used for older or newer kernels.
+> >=20
+> > The build requires "kernel-devel" package to be installed.
+> > For example, in the upstream sources, the rpm devel package
+> > is produced by "make rpm-pkg"
+> >=20
+> > The modules can be built independently by
+> >=20
+> > =C2=A0=C2=A0 make -C tools/testing/selftests/livepatch/
+> >=20
+> > or they will be automatically built before running the tests via
+> >=20
+> > =C2=A0=C2=A0 make -C tools/testing/selftests/livepatch/ run_tests
+> >=20
+> > Note that they are _not_ built when running the standalone
+> > tests by calling, for example, ./test-state.sh.
+> >=20
+> > Along with TEST_GEN_MODS_DIR, it was necessary to create a new
+> > install
+> > rule. INSTALL_MODS_RULE is needed because INSTALL_SINGLE_RULE would
+> > copy the entire TEST_GEN_MODS_DIR directory to the destination,
+> > even
+> > the files created by Kbuild to compile the modules. The new install
+> > rule copies only the .ko files, as we would expect the gen_tar to
+> > work.
+> >=20
+> > Reviewed-by: Joe Lawrence <joe.lawrence@redhat.com>
+> > Reviewed-by: Petr Mladek <pmladek@suse.com>
+> > Signed-off-by: Marcos Paulo de Souza <mpdesouza@suse.com>
+> > ---
+> > =C2=A0 Documentation/dev-tools/kselftest.rst |=C2=A0 4 ++++
+> > =C2=A0 tools/testing/selftests/lib.mk=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 | 26 +++++++++++++++++++++-
+> > ----
+>=20
+>=20
+> Hi Marcos,
+>=20
+> I would like the doc patch and lib.mk patch separate. If lib.mk needs
+> changes
+> we don't have to touch the doc patch.
 
-Fixes: 4ff0ee1af016 ("i40e: Introduce recovery mode support")
-Signed-off-by: Zhipeng Lu <alexious@zju.edu.cn>
----
- drivers/net/ethernet/intel/i40e/i40e_main.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+Hi Shuah,
+on patch 2/3 you also said that you would like to have the
+documentation changes split in the future, and that you picked the
+changes into a testing branch. Does it also applies to this patch?
 
-diff --git a/drivers/net/ethernet/intel/i40e/i40e_main.c b/drivers/net/ethernet/intel/i40e/i40e_main.c
-index 1ab8dbe2d880..a2ed6bb3b2dc 100644
---- a/drivers/net/ethernet/intel/i40e/i40e_main.c
-+++ b/drivers/net/ethernet/intel/i40e/i40e_main.c
-@@ -15598,27 +15598,27 @@ static int i40e_init_recovery_mode(struct i40e_pf *pf, struct i40e_hw *hw)
- 	v_idx = i40e_vsi_mem_alloc(pf, I40E_VSI_MAIN);
- 	if (v_idx < 0) {
- 		err = v_idx;
--		goto err_switch_setup;
-+		goto err_vsis;
- 	}
- 	pf->lan_vsi = v_idx;
- 	vsi = pf->vsi[v_idx];
- 	if (!vsi) {
- 		err = -EFAULT;
--		goto err_switch_setup;
-+		goto err_vsis;
- 	}
- 	vsi->alloc_queue_pairs = 1;
- 	err = i40e_config_netdev(vsi);
- 	if (err)
--		goto err_switch_setup;
-+		goto err_vsis;
- 	err = register_netdev(vsi->netdev);
- 	if (err)
--		goto err_switch_setup;
-+		goto err_vsis;
- 	vsi->netdev_registered = true;
- 	i40e_dbg_pf_init(pf);
- 
- 	err = i40e_setup_misc_vector_for_recovery_mode(pf);
- 	if (err)
--		goto err_switch_setup;
-+		goto err_vsis;
- 
- 	/* tell the firmware that we're starting */
- 	i40e_send_version(pf);
-@@ -15628,7 +15628,8 @@ static int i40e_init_recovery_mode(struct i40e_pf *pf, struct i40e_hw *hw)
- 		  round_jiffies(jiffies + pf->service_timer_period));
- 
- 	return 0;
--
-+err_vsis:
-+	kfree(pf->vsi);
- err_switch_setup:
- 	i40e_reset_interrupt_capability(pf);
- 	timer_shutdown_sync(&pf->service_timer);
--- 
-2.34.1
+Do I need to resend the three patches and separate the documentation
+part into a new one, or can I apply this rationale to future changes to
+lib.mk? Sorry, I'm confused.
+
+Thanks in advance,
+  Marcos
+
+>=20
+> thanks,
+> -- Shuah
 
