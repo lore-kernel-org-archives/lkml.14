@@ -1,54 +1,48 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88DA63EA7B
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 11:04:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 855D03B191;
+	Mon, 22 Jan 2024 11:04:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705921490; cv=none; b=UsIa+N8LnMW2JNqa9spW9tl1RBCyoaZavgdqtTMAxaF+JCcB68a4FMWgNG6/RQmNZO4hzylNQZ/8smh6XoczBsomvwL9/8BgFcbqh8Xomij33ZSOE/TYjSjqpvCeDzWFeJnGV1m32cOu+3KedY6i+f6o3ocWVjcAJFCfVOqAbWY=
+	t=1705921487; cv=none; b=nCywzUJKrDWocLITslX9uBdrl0WLUl7uEgJRTK8xqkFNuxsoOKtxHGILyz6N5uWcOk97fyZcgz6KJvehpi1606darDeyLR1PX854BJVUe6wopEb/8MkOEN6TF2Rvlg5MvUm/WYcw3VzwZ7W++PNijX1Cs8piRK/SNLBQLmNW6Ao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705921490; c=relaxed/simple;
-	bh=eqirOGjCZP2NBSEkK8uc5P/vksk2IIWKQWYB/n+5qkY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=E2kxXKBPea6hOHXm8U7wp1ZcJWLcoumKJqkc76cpzzeqeGsUnvG0wQ4b3Z/E4+9wkqMuJdNHTm86s3oVVMDAfI0RJNgBVGPSqb3+WHNsqptI8y4AJPTBQ0mRxtZo5222nOAciEiJF2BGJd48MUUaDW52PBeImbhxXvhoDW6+wNM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <fpf@pengutronix.de>)
-	id 1rRs6K-0003nV-7r; Mon, 22 Jan 2024 12:04:24 +0100
-Received: from [2a0a:edc0:0:1101:1d::54] (helo=dude05.red.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <fpf@pengutronix.de>)
-	id 1rRs6I-001Zhh-Mi; Mon, 22 Jan 2024 12:04:22 +0100
-Received: from fpf by dude05.red.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <fpf@pengutronix.de>)
-	id 1rRs6I-00BSQd-23;
-	Mon, 22 Jan 2024 12:04:22 +0100
-From: Fabian Pfitzner <f.pfitzner@pengutronix.de>
-To: Michael Hennerich <michael.hennerich@analog.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Alexandru Tachici <alexandru.tachici@analog.com>
-Cc: kernel@pengutronix.de,
-	Fabian Pfitzner <f.pfitzner@pengutronix.de>,
-	netdev@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] net: phy: adin: add missing clock option
-Date: Mon, 22 Jan 2024 12:03:12 +0100
-Message-Id: <20240122110311.2725036-1-f.pfitzner@pengutronix.de>
-X-Mailer: git-send-email 2.39.2
+	s=arc-20240116; t=1705921487; c=relaxed/simple;
+	bh=2fSZN99XZQUnAa9CnsJObtPdAd0ZIH+IG8ptjKVVkpQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=iWo3gC751UZa8gvlmc9yYHhh//wm5Y+xdC1cZhxwEL+yIoituajPkANOF0Y+Vo6gMi12a3B+gJVM85ZQ6tRvpV0HLTSu/Jg6oiDlEOkgoH4znjo5zwqEIu29CDISrb/4/FLRRpTTjatW4267sJEbyxva28PfHyEk7lDr0NmwcN0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IrAAUZf5; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IrAAUZf5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBF0EC43394;
+	Mon, 22 Jan 2024 11:04:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705921486;
+	bh=2fSZN99XZQUnAa9CnsJObtPdAd0ZIH+IG8ptjKVVkpQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=IrAAUZf5/cjo+lkybIjA2lDmJqnzyywtkzmOl1arxuNSXnQJ8mQ5yV3UbVYBdzQ9I
+	 HfBDs7ipLWd2fZB7vWII7J2e8Tulp37UWe5CWJlUx+xidYnBrl3+FreUPHJurJj1jk
+	 j/zQELLH6ZVH/m++18yORLIZE3KgjFnoEyXoAjvc1ktRxM6yRJvs8a/Cl7gR9crcSX
+	 PW2HLlEB3PPsLXVYMH6cRsVgM/MEBZZlJ8q0bUY9xy/959jQ7BTlP7IPh8A/BDwntj
+	 KLQnt9P8BrIOI9a46fi8f2IKmBbSDZ0JnatTypR0VykckemKT3ziCbICrSizKH9QYo
+	 4H7J4ffyCSafQ==
+From: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
+To: gregkh@linuxfoundation.org
+Cc: linux-serial@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
+	Helge Deller <deller@gmx.de>,
+	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	linux-fbdev@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	linux-parisc@vger.kernel.org
+Subject: [PATCH v2 21/47] tty: vt: sanitize arguments of consw::con_clear()
+Date: Mon, 22 Jan 2024 12:03:35 +0100
+Message-ID: <20240122110401.7289-22-jirislaby@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240122110401.7289-1-jirislaby@kernel.org>
+References: <20240122110401.7289-1-jirislaby@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -56,60 +50,303 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: fpf@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-The GP_CLK pin on Adin1300 PHY's offers three different output clocks.
-This patch adds the missing 125MHz recovered clock option which is not
-yet availible in the driver.
+In consw::con_clear():
+* Height is always 1, so drop it.
+* Offsets and width are always unsigned values, so re-type them as such.
 
-Signed-off-by: Fabian Pfitzner <f.pfitzner@pengutronix.de>
+This needs a new __fbcon_clear() in the fbcon code to still handle
+height which might not be 1 when called internally.
+
+Note that tests for negative count/width are left in place -- they are
+taken care of in the next patches.
+
+And document the hook.
+
+Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
+Cc: Helge Deller <deller@gmx.de>
+Cc: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
+Cc: Daniel Vetter <daniel@ffwll.ch>
+Cc: linux-fbdev@vger.kernel.org
+Cc: dri-devel@lists.freedesktop.org
+Cc: linux-parisc@vger.kernel.org
 ---
- Documentation/devicetree/bindings/net/adi,adin.yaml | 7 +++++--
- drivers/net/phy/adin.c                              | 2 ++
- 2 files changed, 7 insertions(+), 2 deletions(-)
+ drivers/tty/vt/vt.c                 |  2 +-
+ drivers/video/console/dummycon.c    |  4 ++--
+ drivers/video/console/mdacon.c      | 15 +++++---------
+ drivers/video/console/newport_con.c |  6 +++---
+ drivers/video/console/sticon.c      |  8 ++++----
+ drivers/video/console/vgacon.c      |  4 ++--
+ drivers/video/fbdev/core/fbcon.c    | 32 +++++++++++++++++------------
+ include/linux/console.h             |  5 +++--
+ 8 files changed, 39 insertions(+), 37 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/net/adi,adin.yaml b/Documentation/devicetree/bindings/net/adi,adin.yaml
-index 929cf8c0b0fd..cd1b4efa692b 100644
---- a/Documentation/devicetree/bindings/net/adi,adin.yaml
-+++ b/Documentation/devicetree/bindings/net/adi,adin.yaml
-@@ -38,14 +38,17 @@ properties:
+diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
+index fcb41c8724f3..b6f1449421bc 100644
+--- a/drivers/tty/vt/vt.c
++++ b/drivers/tty/vt/vt.c
+@@ -1585,7 +1585,7 @@ static void csi_X(struct vc_data *vc)
+ 	vc_uniscr_clear_line(vc, vc->state.x, count);
+ 	scr_memsetw((unsigned short *)vc->vc_pos, vc->vc_video_erase_char, 2 * count);
+ 	if (con_should_update(vc))
+-		vc->vc_sw->con_clear(vc, vc->state.y, vc->state.x, 1, count);
++		vc->vc_sw->con_clear(vc, vc->state.y, vc->state.x, count);
+ 	vc->vc_need_wrap = 0;
+ }
  
-   adi,phy-output-clock:
-     description: |
--      Select clock output on GP_CLK pin. Two clocks are available:
--      A 25MHz reference and a free-running 125MHz.
-+      Select clock output on GP_CLK pin. Three clocks are available:
-+        - 25MHz reference
-+        - free-running 125MHz 
-+        - recovered 125MHz
-       The phy can alternatively automatically switch between the reference and
-       the 125MHz clocks based on its internal state.
-     $ref: /schemas/types.yaml#/definitions/string
-     enum:
-       - 25mhz-reference
-       - 125mhz-free-running
-+      - 125mhz-recovered
-       - adaptive-free-running
+diff --git a/drivers/video/console/dummycon.c b/drivers/video/console/dummycon.c
+index f2cef9d9a4b5..0a69d5c216ee 100644
+--- a/drivers/video/console/dummycon.c
++++ b/drivers/video/console/dummycon.c
+@@ -109,8 +109,8 @@ static void dummycon_init(struct vc_data *vc, bool init)
+ }
  
-   adi,phy-output-reference-clock:
-diff --git a/drivers/net/phy/adin.c b/drivers/net/phy/adin.c
-index 2e1a46e121d9..b1ed6fd24763 100644
---- a/drivers/net/phy/adin.c
-+++ b/drivers/net/phy/adin.c
-@@ -508,6 +508,8 @@ static int adin_config_clk_out(struct phy_device *phydev)
- 		sel |= ADIN1300_GE_CLK_CFG_25;
- 	} else if (strcmp(val, "125mhz-free-running") == 0) {
- 		sel |= ADIN1300_GE_CLK_CFG_FREE_125;
-+	} else if (strcmp(val, "125mhz-recovered") == 0) {
-+		sel |= ADIN1300_GE_CLK_CFG_RCVR_125;
- 	} else if (strcmp(val, "adaptive-free-running") == 0) {
- 		sel |= ADIN1300_GE_CLK_CFG_HRT_FREE;
- 	} else {
-
-base-commit: 6613476e225e090cc9aad49be7fa504e290dd33d
+ static void dummycon_deinit(struct vc_data *vc) { }
+-static void dummycon_clear(struct vc_data *vc, int sy, int sx, int height,
+-			   int width) { }
++static void dummycon_clear(struct vc_data *vc, unsigned int sy, unsigned int sx,
++			   unsigned int width) { }
+ static void dummycon_cursor(struct vc_data *vc, int mode) { }
+ 
+ static bool dummycon_scroll(struct vc_data *vc, unsigned int top,
+diff --git a/drivers/video/console/mdacon.c b/drivers/video/console/mdacon.c
+index c5b255c96879..1ddbb6cd5b0c 100644
+--- a/drivers/video/console/mdacon.c
++++ b/drivers/video/console/mdacon.c
+@@ -442,23 +442,18 @@ static void mdacon_putcs(struct vc_data *c, const unsigned short *s,
+ 	}
+ }
+ 
+-static void mdacon_clear(struct vc_data *c, int y, int x, 
+-			  int height, int width)
++static void mdacon_clear(struct vc_data *c, unsigned int y, unsigned int x,
++			 unsigned int width)
+ {
+ 	u16 *dest = mda_addr(x, y);
+ 	u16 eattr = mda_convert_attr(c->vc_video_erase_char);
+ 
+-	if (width <= 0 || height <= 0)
++	if (width <= 0)
+ 		return;
+ 
+-	if (x==0 && width==mda_num_columns) {
+-		scr_memsetw(dest, eattr, height*width*2);
+-	} else {
+-		for (; height > 0; height--, dest+=mda_num_columns)
+-			scr_memsetw(dest, eattr, width*2);
+-	}
++	scr_memsetw(dest, eattr, width * 2);
+ }
+-                        
++
+ static int mdacon_switch(struct vc_data *c)
+ {
+ 	return 1;	/* redrawing needed */
+diff --git a/drivers/video/console/newport_con.c b/drivers/video/console/newport_con.c
+index 12c64ef47087..55c6106b3507 100644
+--- a/drivers/video/console/newport_con.c
++++ b/drivers/video/console/newport_con.c
+@@ -346,12 +346,12 @@ static void newport_deinit(struct vc_data *c)
+ 	}
+ }
+ 
+-static void newport_clear(struct vc_data *vc, int sy, int sx, int height,
+-			  int width)
++static void newport_clear(struct vc_data *vc, unsigned int sy, unsigned int sx,
++			  unsigned int width)
+ {
+ 	int xend = ((sx + width) << 3) - 1;
+ 	int ystart = ((sy << 4) + topscan) & 0x3ff;
+-	int yend = (((sy + height) << 4) + topscan - 1) & 0x3ff;
++	int yend = (((sy + 1) << 4) + topscan - 1) & 0x3ff;
+ 
+ 	if (logo_active)
+ 		return;
+diff --git a/drivers/video/console/sticon.c b/drivers/video/console/sticon.c
+index 0bfeabc3f7c7..d99c2a659bfd 100644
+--- a/drivers/video/console/sticon.c
++++ b/drivers/video/console/sticon.c
+@@ -300,13 +300,13 @@ static void sticon_deinit(struct vc_data *c)
+ 	sticon_set_def_font(i);
+ }
+ 
+-static void sticon_clear(struct vc_data *conp, int sy, int sx, int height,
+-			 int width)
++static void sticon_clear(struct vc_data *conp, unsigned int sy, unsigned int sx,
++			 unsigned int width)
+ {
+-    if (!height || !width)
++    if (!width)
+ 	return;
+ 
+-    sti_clear(sticon_sti, sy, sx, height, width,
++    sti_clear(sticon_sti, sy, sx, 1, width,
+ 	      conp->vc_video_erase_char, font_data[conp->vc_num]);
+ }
+ 
+diff --git a/drivers/video/console/vgacon.c b/drivers/video/console/vgacon.c
+index 5d523753def8..85f29dec2c3d 100644
+--- a/drivers/video/console/vgacon.c
++++ b/drivers/video/console/vgacon.c
+@@ -1191,8 +1191,8 @@ static bool vgacon_scroll(struct vc_data *c, unsigned int t, unsigned int b,
+  *  The console `switch' structure for the VGA based console
+  */
+ 
+-static void vgacon_clear(struct vc_data *vc, int sy, int sx, int height,
+-			 int width) { }
++static void vgacon_clear(struct vc_data *vc, unsigned int sy, unsigned int sx,
++			 unsigned int width) { }
+ static void vgacon_putc(struct vc_data *vc, int c, int ypos, int xpos) { }
+ static void vgacon_putcs(struct vc_data *vc, const unsigned short *s,
+ 			 int count, int ypos, int xpos) { }
+diff --git a/drivers/video/fbdev/core/fbcon.c b/drivers/video/fbdev/core/fbcon.c
+index 939c5d893dfb..8a31a36483ea 100644
+--- a/drivers/video/fbdev/core/fbcon.c
++++ b/drivers/video/fbdev/core/fbcon.c
+@@ -1235,8 +1235,8 @@ static void fbcon_deinit(struct vc_data *vc)
+  *  restriction is simplicity & efficiency at the moment.
+  */
+ 
+-static void fbcon_clear(struct vc_data *vc, int sy, int sx, int height,
+-			int width)
++static void __fbcon_clear(struct vc_data *vc, unsigned int sy, unsigned int sx,
++			  unsigned int height, unsigned int width)
+ {
+ 	struct fb_info *info = fbcon_info_from_console(vc->vc_num);
+ 	struct fbcon_ops *ops = info->fbcon_par;
+@@ -1273,6 +1273,12 @@ static void fbcon_clear(struct vc_data *vc, int sy, int sx, int height,
+ 		ops->clear(vc, info, real_y(p, sy), sx, height, width);
+ }
+ 
++static void fbcon_clear(struct vc_data *vc, unsigned int sy, unsigned int sx,
++			unsigned int width)
++{
++	__fbcon_clear(vc, sy, sx, 1, width);
++}
++
+ static void fbcon_putcs(struct vc_data *vc, const unsigned short *s,
+ 			int count, int ypos, int xpos)
+ {
+@@ -1760,7 +1766,7 @@ static bool fbcon_scroll(struct vc_data *vc, unsigned int t, unsigned int b,
+ 		case SCROLL_MOVE:
+ 			fbcon_redraw_blit(vc, info, p, t, b - t - count,
+ 				     count);
+-			fbcon_clear(vc, b - count, 0, count, vc->vc_cols);
++			__fbcon_clear(vc, b - count, 0, count, vc->vc_cols);
+ 			scr_memsetw((unsigned short *) (vc->vc_origin +
+ 							vc->vc_size_row *
+ 							(b - count)),
+@@ -1783,7 +1789,7 @@ static bool fbcon_scroll(struct vc_data *vc, unsigned int t, unsigned int b,
+ 					    b - t - count, vc->vc_cols);
+ 			else
+ 				goto redraw_up;
+-			fbcon_clear(vc, b - count, 0, count, vc->vc_cols);
++			__fbcon_clear(vc, b - count, 0, count, vc->vc_cols);
+ 			break;
+ 
+ 		case SCROLL_PAN_REDRAW:
+@@ -1801,7 +1807,7 @@ static bool fbcon_scroll(struct vc_data *vc, unsigned int t, unsigned int b,
+ 							  vc->vc_rows - b, b);
+ 			} else
+ 				fbcon_redraw_move(vc, p, t + count, b - t - count, t);
+-			fbcon_clear(vc, b - count, 0, count, vc->vc_cols);
++			__fbcon_clear(vc, b - count, 0, count, vc->vc_cols);
+ 			break;
+ 
+ 		case SCROLL_PAN_MOVE:
+@@ -1824,14 +1830,14 @@ static bool fbcon_scroll(struct vc_data *vc, unsigned int t, unsigned int b,
+ 					    b - t - count, vc->vc_cols);
+ 			else
+ 				goto redraw_up;
+-			fbcon_clear(vc, b - count, 0, count, vc->vc_cols);
++			__fbcon_clear(vc, b - count, 0, count, vc->vc_cols);
+ 			break;
+ 
+ 		case SCROLL_REDRAW:
+ 		      redraw_up:
+ 			fbcon_redraw(vc, t, b - t - count,
+ 				     count * vc->vc_cols);
+-			fbcon_clear(vc, b - count, 0, count, vc->vc_cols);
++			__fbcon_clear(vc, b - count, 0, count, vc->vc_cols);
+ 			scr_memsetw((unsigned short *) (vc->vc_origin +
+ 							vc->vc_size_row *
+ 							(b - count)),
+@@ -1848,7 +1854,7 @@ static bool fbcon_scroll(struct vc_data *vc, unsigned int t, unsigned int b,
+ 		case SCROLL_MOVE:
+ 			fbcon_redraw_blit(vc, info, p, b - 1, b - t - count,
+ 				     -count);
+-			fbcon_clear(vc, t, 0, count, vc->vc_cols);
++			__fbcon_clear(vc, t, 0, count, vc->vc_cols);
+ 			scr_memsetw((unsigned short *) (vc->vc_origin +
+ 							vc->vc_size_row *
+ 							t),
+@@ -1871,7 +1877,7 @@ static bool fbcon_scroll(struct vc_data *vc, unsigned int t, unsigned int b,
+ 					    b - t - count, vc->vc_cols);
+ 			else
+ 				goto redraw_down;
+-			fbcon_clear(vc, t, 0, count, vc->vc_cols);
++			__fbcon_clear(vc, t, 0, count, vc->vc_cols);
+ 			break;
+ 
+ 		case SCROLL_PAN_MOVE:
+@@ -1893,7 +1899,7 @@ static bool fbcon_scroll(struct vc_data *vc, unsigned int t, unsigned int b,
+ 					    b - t - count, vc->vc_cols);
+ 			else
+ 				goto redraw_down;
+-			fbcon_clear(vc, t, 0, count, vc->vc_cols);
++			__fbcon_clear(vc, t, 0, count, vc->vc_cols);
+ 			break;
+ 
+ 		case SCROLL_PAN_REDRAW:
+@@ -1910,14 +1916,14 @@ static bool fbcon_scroll(struct vc_data *vc, unsigned int t, unsigned int b,
+ 					fbcon_redraw_move(vc, p, count, t, 0);
+ 			} else
+ 				fbcon_redraw_move(vc, p, t, b - t - count, t + count);
+-			fbcon_clear(vc, t, 0, count, vc->vc_cols);
++			__fbcon_clear(vc, t, 0, count, vc->vc_cols);
+ 			break;
+ 
+ 		case SCROLL_REDRAW:
+ 		      redraw_down:
+ 			fbcon_redraw(vc, b - 1, b - t - count,
+ 				     -count * vc->vc_cols);
+-			fbcon_clear(vc, t, 0, count, vc->vc_cols);
++			__fbcon_clear(vc, t, 0, count, vc->vc_cols);
+ 			scr_memsetw((unsigned short *) (vc->vc_origin +
+ 							vc->vc_size_row *
+ 							t),
+@@ -2196,7 +2202,7 @@ static void fbcon_generic_blank(struct vc_data *vc, struct fb_info *info,
+ 
+ 		oldc = vc->vc_video_erase_char;
+ 		vc->vc_video_erase_char &= charmask;
+-		fbcon_clear(vc, 0, 0, vc->vc_rows, vc->vc_cols);
++		__fbcon_clear(vc, 0, 0, vc->vc_rows, vc->vc_cols);
+ 		vc->vc_video_erase_char = oldc;
+ 	}
+ }
+diff --git a/include/linux/console.h b/include/linux/console.h
+index fc9450e0c78f..8fd96a5fca5f 100644
+--- a/include/linux/console.h
++++ b/include/linux/console.h
+@@ -38,6 +38,7 @@ enum vc_intensity;
+  *
+  * @con_init:   initialize the console on @vc. @init is true for the very first
+  *		call on this @vc.
++ * @con_clear:  erase @count characters at [@x, @y] on @vc. @count >= 1.
+  * @con_scroll: move lines from @top to @bottom in direction @dir by @lines.
+  *		Return true if no generic handling should be done.
+  *		Invoked by csi_M and printing to the console.
+@@ -50,8 +51,8 @@ struct consw {
+ 	const char *(*con_startup)(void);
+ 	void	(*con_init)(struct vc_data *vc, bool init);
+ 	void	(*con_deinit)(struct vc_data *vc);
+-	void	(*con_clear)(struct vc_data *vc, int sy, int sx, int height,
+-			int width);
++	void	(*con_clear)(struct vc_data *vc, unsigned int y,
++			     unsigned int x, unsigned int count);
+ 	void	(*con_putc)(struct vc_data *vc, int c, int ypos, int xpos);
+ 	void	(*con_putcs)(struct vc_data *vc, const unsigned short *s,
+ 			int count, int ypos, int xpos);
 -- 
-2.39.2
+2.43.0
 
