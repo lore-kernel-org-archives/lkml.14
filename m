@@ -1,45 +1,45 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EB833CF43
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 12:39:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 031B93EA78
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 12:39:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705927156; cv=none; b=VNdGNeZd/G+lZHiepmsXGgIlj1KCH7kRfI7T7y1C8Kfg2NcToCJ73A7xEKBIGvCq4PEBpkmXDy2f+BZyJSTWUjTjAspcR+veH6vpv1ZtCbV+S28waNkO6YEXovmwr54u5GYsn+WDfBx2CYmT69D+7Kyl1AJq3ySQ8Qv0Qj73SoI=
+	t=1705927160; cv=none; b=PtOBDbcIkCwCRkYIzS2Vqj0qUXeBpHmy++Lvzl40X8evEroEXmk6OSC1SnUhfdB+8XEvo6A1WbISQSqeUR4j9k3EOrnz+qWRMPv1WjcsUMkBBIqHeVtnrMcX0Nb0DDjtU1YbNjhnTTNz0tEjp9XvEFI8KZQm06Hy15/j0vikQ8s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705927156; c=relaxed/simple;
-	bh=6H3U2xFlfhw33p6fngsaEo/JwWggI7/BGAeipSgCLFM=;
+	s=arc-20240116; t=1705927160; c=relaxed/simple;
+	bh=u1NZ5oJ45qo+iUmBVeXgQl020jMPO7hETF1JUMYSA/M=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Z+jfKH+7By4U/T6Z6Yjl8xsp1XyU5xje3VPZsXArckmZ4b4JOa3gY1FKsV1AXsmxvTEI83q7ZFvRXR3mQjFp3treXdFSfS3AQCQLbl6gfQRfk/z/xzwMY/EswtyQA9ZvEu1RemlubXsjTVJsOcZUGP4Nwnw28SgovO8x+xqllS0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=H9SPVxQH; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=QM3KC5ifKKBFrhZDEBGRZKCrzKVK7eNZqvbXp9WZDmZO4IbmDCy7ywj1T97Eeja7Bh+lzevUM5ZSzdveuJERqTbVDii1uNEtKlZhfS9dTc2wdB9/OZpAp5i9M1c16FY/FJ6vPgfZdJ8vG2CtQC4oCCFMmAOBcG2Tz8cj9SNzM50=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=d+5JFY3M; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="H9SPVxQH"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="d+5JFY3M"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1705927154;
+	s=mimecast20190719; t=1705927158;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=AQmuqxaeIGZelSODTss8gWd4P9SrQf4vDlsO0SnTpdE=;
-	b=H9SPVxQHF/T8m/Xg+PL+h0/sOVy8oYrsGttidz3Hq+ydhxd/iAAaPizagU+DhHRnlhL7jc
-	SekqssKcun8UCdkE0f49aI+qkRItTxyeFNy5tbZnZAHBA0HLrOxKh5xIWmmUzkAwC2Yv89
-	S8fLxaRKhTZnvioTzhz1blhnFRME3Us=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-494-LKHoZoERMie5-61Ndg59yw-1; Mon,
- 22 Jan 2024 07:39:11 -0500
-X-MC-Unique: LKHoZoERMie5-61Ndg59yw-1
-Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
+	bh=4H/QyaTEJT6yM0W34T+DHhl8mPiadWYAfCey1J2x+wk=;
+	b=d+5JFY3MtD/FiJVUgAEu0WCeEk2QopeYN1nSQT072BetzTu+AouA3UwyI6lTRaVTQ0ye7U
+	LFIWzXqILPD/CBt4fom0suRpVDIYg9zznX0ARSrrsJEwq5ON4EU8NSj2UMLXd+TcLhMrC6
+	S/sipEVNT3cfLxJUlrZ8WHLct4KoSHM=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-491-8WwqpJQRMMC-Y1cHcAnhdA-1; Mon, 22 Jan 2024 07:39:17 -0500
+X-MC-Unique: 8WwqpJQRMMC-Y1cHcAnhdA-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 958913C000A4;
-	Mon, 22 Jan 2024 12:39:10 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 2CE6688D286;
+	Mon, 22 Jan 2024 12:39:16 +0000 (UTC)
 Received: from warthog.procyon.org.com (unknown [10.42.28.67])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id A65D8492BC6;
-	Mon, 22 Jan 2024 12:39:08 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id E7049C0FDCC;
+	Mon, 22 Jan 2024 12:39:13 +0000 (UTC)
 From: David Howells <dhowells@redhat.com>
 To: Christian Brauner <christian@brauner.io>
 Cc: David Howells <dhowells@redhat.com>,
@@ -55,10 +55,11 @@ Cc: David Howells <dhowells@redhat.com>,
 	linux-fsdevel@vger.kernel.org,
 	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
 	Marc Dionne <marc.dionne@auristor.com>
-Subject: [PATCH 07/10] afs: Hide silly-rename files from userspace
-Date: Mon, 22 Jan 2024 12:38:40 +0000
-Message-ID: <20240122123845.3822570-8-dhowells@redhat.com>
+Subject: [PATCH 09/10] afs: Remove afs_dynroot_d_revalidate() as it is redundant
+Date: Mon, 22 Jan 2024 12:38:42 +0000
+Message-ID: <20240122123845.3822570-10-dhowells@redhat.com>
 In-Reply-To: <20240122123845.3822570-1-dhowells@redhat.com>
 References: <20240122123845.3822570-1-dhowells@redhat.com>
 Precedence: bulk
@@ -68,47 +69,39 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.9
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
 
-There appears to be a race between silly-rename files being created/removed
-and various userspace tools iterating over the contents of a directory,
-leading to such errors as:
+Remove afs_dynroot_d_revalidate() as it is redundant as all it does is
+return 1 and the caller assumes that if the op is not given.
 
-	find: './kernel/.tmp_cpio_dir/include/dt-bindings/reset/.__afs2080': No such file or directory
-	tar: ./include/linux/greybus/.__afs3C95: File removed before we read it
-
-when building a kernel.
-
-Fix afs_readdir() so that it doesn't return .__afsXXXX silly-rename files
-to userspace.  This doesn't stop them being looked up directly by name as
-we need to be able to look them up from within the kernel as part of the
-silly-rename algorithm.
-
-Fixes: 79ddbfa500b3 ("afs: Implement sillyrename for unlink and rename")
+Suggested-by: Alexander Viro <viro@zeniv.linux.org.uk>
 Signed-off-by: David Howells <dhowells@redhat.com>
 cc: Marc Dionne <marc.dionne@auristor.com>
 cc: linux-afs@lists.infradead.org
+cc: linux-fsdevel@vger.kernel.org
 ---
- fs/afs/dir.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ fs/afs/dynroot.c | 9 ---------
+ 1 file changed, 9 deletions(-)
 
-diff --git a/fs/afs/dir.c b/fs/afs/dir.c
-index 3f73d61f7c8a..eface67ccc06 100644
---- a/fs/afs/dir.c
-+++ b/fs/afs/dir.c
-@@ -474,6 +474,14 @@ static int afs_dir_iterate_block(struct afs_vnode *dvnode,
- 			continue;
- 		}
+diff --git a/fs/afs/dynroot.c b/fs/afs/dynroot.c
+index d3bc4a2d7085..c4d2711e20ad 100644
+--- a/fs/afs/dynroot.c
++++ b/fs/afs/dynroot.c
+@@ -258,16 +258,7 @@ const struct inode_operations afs_dynroot_inode_operations = {
+ 	.lookup		= afs_dynroot_lookup,
+ };
  
-+		/* Don't expose silly rename entries to userspace. */
-+		if (nlen > 6 &&
-+		    dire->u.name[0] == '.' &&
-+		    ctx->actor != afs_lookup_filldir &&
-+		    ctx->actor != afs_lookup_one_filldir &&
-+		    memcmp(dire->u.name, ".__afs", 6) == 0)
-+			continue;
-+
- 		/* found the next entry */
- 		if (!dir_emit(ctx, dire->u.name, nlen,
- 			      ntohl(dire->u.vnode),
+-/*
+- * Dirs in the dynamic root don't need revalidation.
+- */
+-static int afs_dynroot_d_revalidate(struct dentry *dentry, unsigned int flags)
+-{
+-	return 1;
+-}
+-
+ const struct dentry_operations afs_dynroot_dentry_operations = {
+-	.d_revalidate	= afs_dynroot_d_revalidate,
+ 	.d_delete	= always_delete_dentry,
+ 	.d_release	= afs_d_release,
+ 	.d_automount	= afs_d_automount,
 
