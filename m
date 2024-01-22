@@ -1,115 +1,245 @@
-Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8DBE3A8C2;
-	Mon, 22 Jan 2024 09:15:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B94BC3984F;
+	Mon, 22 Jan 2024 09:17:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705914925; cv=none; b=IZ6TIMXf5s/Fd7Dm59s1ONc9PGLvgUx7bX91TZ4zR1dxOwkSXhbcYp7zCxjVuZjMTKYArxsF4u7efuySp98PAInqJVjc2ndmc5ce2aDGYGScla3A5vKGxwxFhWboIpIfaargroxvy0os5ffGxGzCiqVuIB6LzFx1QLxY64s6z9Y=
+	t=1705915020; cv=none; b=jmZSiIpd6d+7GvZMGbNoILHd2fd8YjLmNDlCXmXWvRgnZQXLLNpc7MLVREw84ZoKhyG7NFWESgPUCLhUAVHjmul0o0tRw9crTpGzcdyGQDlY7YHB2iEr35axy5e24pHgyJFaDjMJkVLW40ZqFIQFfJDmCCWO0mKZvFNI7fyj8Zw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705914925; c=relaxed/simple;
-	bh=QOMGLQ8Zx+wPiL92sY2/XSGqt6AVHmJbZBY431fESWI=;
+	s=arc-20240116; t=1705915020; c=relaxed/simple;
+	bh=O0zUoL0uiBX5x9ypl74qZkXUXOnXX3J9rjb6Fig41B0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EqOa88ciVXuMQiDUw8DsssDlLT+XVRiJ6aFlmVrgGe5x8dqBJHZQWKqOir1CFtPxqE+zxnbsKG8h9ChOZN7isQlhiSaB5vqBw7Ls5uZoUJ1QAchP9d6PLK5lT9lj1OWmKgA3lGFeCAzmtPWHtrQdmx8YDT5nwceKpsHnvM5lMpA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=SFDc5YZj; arc=none smtp.client-ip=217.70.183.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=V8AYnNM1iG6C6FuKoFuXHrfKVVJaaVTWhwBac6c9yjuUCJHvcLQREqixH/qweJcwkfO7Vp8vOh8PnBRz7ED9fxpzd7F4zVE38CBnU9USqDnKFaQw9pIoxdUY3HRWm7YNZA2v45S4Gap6PEeKJer2WFKf5vgKW4MMIKRMp05tJPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XvgfRLDT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="SFDc5YZj"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id E828C1C0008;
-	Mon, 22 Jan 2024 09:15:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1705914914;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LrG9+46KuXtBlxIUOx0DyHU7sjn1FkhruzlXHAOP5As=;
-	b=SFDc5YZjAYVRO1aKvOuFt3JAr6qRfWGKwPgTbdbQ/8JLd8rtm9JbE+BvXMa0rqbH5G+TNI
-	iFBNBhJw6VvJBsBwjBLnZJ4eFrzgxCIWgFYFZgM+5rKAjSv7Qv5be3ayicmtSpg99/LiEE
-	ZArtLOhhmbouLIJYFK9bDQuasJJcksq4VSNVFdU7J1TujI7vjCB+tp7dRrO06BVCGmqhYx
-	ygT/I2wQJmN+ud0cuf3cgD3x0J3Uq3qOKFfzH6kHinnuAwmtZ0wzqwnaRphmMWLC32FRoY
-	euogrM+TTpBI1BpgrfHqLzuyN6j6EmGrcMiUg+m7KKfJ9PUVei+uOHtSipZj0Q==
-Date: Mon, 22 Jan 2024 10:15:11 +0100
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-To: Jingbao Qiu <qiujingbao.dlmu@gmail.com>
-Cc: robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org, chao.wei@sophgo.com, unicorn_wang@outlook.com,
-	paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
-	linux-rtc@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-	dlan@gentoo.org
-Subject: Re: [PATCH v7 2/3] rtc: sophgo: add rtc support for Sophgo CV1800 SoC
-Message-ID: <2024012209151130867663@mail.local>
-References: <20240122080631.2880-1-qiujingbao.dlmu@gmail.com>
- <20240122081722868bdda5@mail.local>
- <CAJRtX8QU8iHY1oQJ1uDN3YOmCeN7SH+vPC8nD29WS5+2DT1oKQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XvgfRLDT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 839A7C43390;
+	Mon, 22 Jan 2024 09:16:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705915020;
+	bh=O0zUoL0uiBX5x9ypl74qZkXUXOnXX3J9rjb6Fig41B0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XvgfRLDTcWaxrwgqM0+Q4FJzTVBAMpxVF/SD4Jwugk3lpw2omNaK6Gpsa9xrO8jUb
+	 IfBMr612gRCKl0iFjt1DtBv3T64CRUOQAJ/3iGU4XJkdrqJLPaTaj+q0nU54Q5h0gH
+	 xgbfbEwMTwhvgxbdk/d7QDgab+Pl0bVAqF6/hILgxBlmxYox98RLOY7a3iAnFm820K
+	 vpI4M/HwiKbLAeRILyXkkxCUufg7APD9EmHyGBbVgR+0tojWfwo4+MpCN4u59Hf5B8
+	 I2itgs/7FGPMbc5wkhh3XWGv8ZeNvGFlfctHORHP2T8qNqpNqW8s+skVoyPVm5uoCM
+	 Y7N0kMQYmrEnA==
+Date: Mon, 22 Jan 2024 09:16:53 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Dharma.B@microchip.com
+Cc: Conor.Dooley@microchip.com, sam@ravnborg.org, bbrezillon@kernel.org,
+	maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+	tzimmermann@suse.de, airlied@gmail.com, daniel@ffwll.ch,
+	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org, Nicolas.Ferre@microchip.com,
+	alexandre.belloni@bootlin.com, claudiu.beznea@tuxon.dev,
+	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	lee@kernel.org, thierry.reding@gmail.com,
+	u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org,
+	Linux4Microchip@microchip.com
+Subject: Re: [PATCH v3 3/3] dt-bindings: mfd: atmel,hlcdc: Convert to DT
+ schema format
+Message-ID: <20240122-stark-duress-2f59294dcf27@spud>
+References: <20240118092612.117491-1-dharma.b@microchip.com>
+ <20240118092612.117491-4-dharma.b@microchip.com>
+ <20240118-recent-glorified-fd35d72e006e@spud>
+ <c33868c8-dc42-4800-885c-5e5f24c2044e@microchip.com>
+ <20240119-character-mardi-43571d7fe7d5@wendy>
+ <da60f9f3-f955-4a87-a020-5710185953c0@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="fSFFnBC92FdCkh8G"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJRtX8QU8iHY1oQJ1uDN3YOmCeN7SH+vPC8nD29WS5+2DT1oKQ@mail.gmail.com>
-X-GND-Sasl: alexandre.belloni@bootlin.com
-
-On 22/01/2024 16:34:00+0800, Jingbao Qiu wrote:
-> On Mon, Jan 22, 2024 at 4:17 PM Alexandre Belloni
-> <alexandre.belloni@bootlin.com> wrote:
-> >
-> > On 22/01/2024 16:06:30+0800, Jingbao Qiu wrote:
-> > > Implement the RTC driver for CV1800, which able to provide time alarm
-> > > and calibrate functionality.
-> > >
-> > > Signed-off-by: Jingbao Qiu <qiujingbao.dlmu@gmail.com>
-> > > ---
-> > >
-> > > Depends on https://lore.kernel.org/all/IA1PR20MB4953C774D41EDF1EADB6EC18BB6D2@IA1PR20MB4953.namprd20.prod.outlook.com/
-> >
-> > What is the dependency?
-> >
-> 
-> Thank you, this driver requires support from the CLK driver.
-> I will add an explanation in the next version.
-> 
-> >
-> > Also, please fix the checkpatch.pl --strict warnings
-> 
-> I will use the -- strict option for testing.
-> 
-> >
-> > > +/**
-> > > + * cv1800_rtc_32k_coarse_val_calib() - Using an external
-> > > + * clock to coarse calibrate the crystal oscillator
-> > > + * @info: the device of calibrated
-> > > + *
-> > > + * @return 0 on success, or -1 on fail
-> > > + *
-> > > + * This RTC has an independent 32KHz oscillator. However,
-> > > + * the accuracy of this oscillator is easily affected by
-> > > + * external environmental interference,resulting in lower
-> > > + * accuracy than the internal oscillator.Therefore, a 25M
-> > > + * crystal oscillator is used as a reference source to
-> > > + * calibrate the RTC and improve its accuracy.Calibration
-> > > + * is completed through two steps, namely rough calibration
-> > > + * and fine calibration.
-> > > + */
-> > > +static int cv1800_rtc_32k_coarse_val_calib(struct cv1800_rtc_priv *info)
-> >
-> > This is still not working as well as you think it is. You should
-> > Implement the offset callbacks instead.
-> >
-> I'm sorry, I don't quite understand offset callbacks.
-> Do you mean that this function needs to be executed periodically.
-
-I mean implement read_offset and set_offset here:
-https://elixir.bootlin.com/linux/v6.7/source/include/linux/rtc.h#L67
+In-Reply-To: <da60f9f3-f955-4a87-a020-5710185953c0@microchip.com>
 
 
--- 
-Alexandre Belloni, co-owner and COO, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+--fSFFnBC92FdCkh8G
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Jan 22, 2024 at 03:38:41AM +0000, Dharma.B@microchip.com wrote:
+> Hi Conor,
+> On 19/01/24 5:33 pm, Conor Dooley - M52691 wrote:
+> > On Fri, Jan 19, 2024 at 03:32:49AM +0000, Dharma.B@microchip.com wrote:
+> >> On 18/01/24 9:10 pm, Conor Dooley wrote:
+> >>> On Thu, Jan 18, 2024 at 02:56:12PM +0530, Dharma Balasubiramani wrote:
+> >>>> Convert the atmel,hlcdc binding to DT schema format.
+> >>>>
+> >>>> Adjust the clock-names property to clarify that the LCD controller e=
+xpects
+> >>>> one of these clocks (either sys_clk or lvds_pll_clk to be present bu=
+t not
+> >>>> both) along with the slow_clk and periph_clk. This alignment with th=
+e actual
+> >>>> hardware requirements will enable accurate device tree configuration=
+ for
+> >>>> systems using the HLCDC IP.
+> >>>>
+> >>>> Signed-off-by: Dharma Balasubiramani<dharma.b@microchip.com>
+> >>>> ---
+> >>>> changelog
+> >>>> v2 -> v3
+> >>>> - Rename hlcdc-display-controller and hlcdc-pwm to generic names.
+> >>>> - Modify the description by removing the unwanted comments and '|'.
+> >>>> - Modify clock-names simpler.
+> >>>> v1 -> v2
+> >>>> - Remove the explicit copyrights.
+> >>>> - Modify title (not include words like binding/driver).
+> >>>> - Modify description actually describing the hardware and not the dr=
+iver.
+> >>>> - Add details of lvds_pll addition in commit message.
+> >>>> - Ref endpoint and not endpoint-base.
+> >>>> - Fix coding style.
+> >>>> ...
+> >>>>    .../devicetree/bindings/mfd/atmel,hlcdc.yaml  | 97 ++++++++++++++=
++++++
+> >>>>    .../devicetree/bindings/mfd/atmel-hlcdc.txt   | 56 -----------
+> >>>>    2 files changed, 97 insertions(+), 56 deletions(-)
+> >>>>    create mode 100644 Documentation/devicetree/bindings/mfd/atmel,hl=
+cdc.yaml
+> >>>>    delete mode 100644 Documentation/devicetree/bindings/mfd/atmel-hl=
+cdc.txt
+> >>>>
+> >>>> diff --git a/Documentation/devicetree/bindings/mfd/atmel,hlcdc.yaml =
+b/Documentation/devicetree/bindings/mfd/atmel,hlcdc.yaml
+> >>>> new file mode 100644
+> >>>> index 000000000000..eccc998ac42c
+> >>>> --- /dev/null
+> >>>> +++ b/Documentation/devicetree/bindings/mfd/atmel,hlcdc.yaml
+> >>>> @@ -0,0 +1,97 @@
+> >>>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> >>>> +%YAML 1.2
+> >>>> +---
+> >>>> +$id:http://devicetree.org/schemas/mfd/atmel,hlcdc.yaml#
+> >>>> +$schema:http://devicetree.org/meta-schemas/core.yaml#
+> >>>> +
+> >>>> +title: Atmel's HLCD Controller
+> >>>> +
+> >>>> +maintainers:
+> >>>> +  - Nicolas Ferre<nicolas.ferre@microchip.com>
+> >>>> +  - Alexandre Belloni<alexandre.belloni@bootlin.com>
+> >>>> +  - Claudiu Beznea<claudiu.beznea@tuxon.dev>
+> >>>> +
+> >>>> +description:
+> >>>> +  The Atmel HLCDC (HLCD Controller) IP available on Atmel SoCs expo=
+ses two
+> >>>> +  subdevices, a PWM chip and a Display Controller.
+> >>>> +
+> >>>> +properties:
+> >>>> +  compatible:
+> >>>> +    enum:
+> >>>> +      - atmel,at91sam9n12-hlcdc
+> >>>> +      - atmel,at91sam9x5-hlcdc
+> >>>> +      - atmel,sama5d2-hlcdc
+> >>>> +      - atmel,sama5d3-hlcdc
+> >>>> +      - atmel,sama5d4-hlcdc
+> >>>> +      - microchip,sam9x60-hlcdc
+> >>>> +      - microchip,sam9x75-xlcdc
+> >>>> +
+> >>>> +  reg:
+> >>>> +    maxItems: 1
+> >>>> +
+> >>>> +  interrupts:
+> >>>> +    maxItems: 1
+> >>>> +
+> >>>> +  clocks:
+> >>>> +    maxItems: 3
+> >>> Hmm, one thing I probably should have said on the previous version, b=
+ut
+> >>> I missed somehow: It would be good to add an items list to the clocks
+> >>> property here to explain what the 3 clocks are/are used for - especia=
+lly
+> >>> since there is additional complexity being added here to use either t=
+he
+> >>> sys or lvds clocks.
+> >> May I inquire if this approach is likely to be effective?
+> >>
+> >>     clocks:
+> >>       items:
+> >>         - description: peripheral clock
+> >>         - description: generic clock or lvds pll clock
+> >>             Once the LVDS PLL is enabled, the pixel clock is used as t=
+he
+> >>             clock for LCDC, so its GCLK is no longer needed.
+> >>         - description: slow clock
+> >>       maxItems: 3
+> >=20
+> > Hmm that sounds very suspect to me. "Once the lvdspll is enabled the
+> > generic clock is no longer needed" sounds like both clocks can be provi=
+ded
+> > to the IP on different pins and their provision is not mutually
+> > exclusive, just that the IP will only actually use one at a time. If
+> > that is the case, then this patch is nott correct and the binding should
+> > allow for 4 clocks, with both the generic clock and the lvds pll being
+> > present in the DT at the same time.
+> >=20
+> > I vaguely recall internal discussion about this problem some time back
+> > but the details all escape me.
+>=20
+> Let's delve deeper into the clock configuration for LCDC_PCK.
+>=20
+> Considering the flexibility of the design, it appears that both clocks,=
+=20
+> sys_clk (generic clock) and lvds_pll_clk, can indeed be provided to the=
+=20
+> IP simultaneously. The crucial aspect, however, is that the IP will=20
+> utilize only one of these clocks at any given time. This aligns with the=
+=20
+> specific requirements of the application, where the choice of clock=20
+> depends on whether the LVDS interface or MIPI/DSI is in use.
+
+If both clocks can physically be provided to the IP then both of them
+should be in the dt. The hcldc appears to me to be a part of the SoC and
+the clock routing to the IP is likely fixed.
+
+> To ensure proper configuration of the pixel clock period, we need to=20
+> distinctly identify which clocks are being utilized. For instance, in=20
+> the LVDS interface scenario, the lvds_pll_clk is essential, resulting in=
+=20
+> LCDC_PCK being set to the source clock. Conversely, in the MIPI/DSI=20
+> case, the LCDC GCLK is required, leading to LCDC_PCK being defined as=20
+> source clock/CLKDIV+2.
+>=20
+> Considering the potential coexistence of sys_clk and lvds_pll_clk in the=
+=20
+> Device Tree (DT), we may need to introduce an additional flag in the DT.=
+=20
+> This flag could serve as a clear indicator of whether the LVDS interface=
+=20
+> or MIPI/DSI is being employed. As we discussed to drop this flag and=20
+> just have any one of the clocks I believe that this approach provides a=
+=20
+> sensible and scalable solution, allowing for a comprehensive=20
+> representation of the clocking configuration.
+
+This is probably a question for the folks on the DRM or media side of
+things, but is it not possible to determine based on the endpoint what
+protocol is required?
+I know that on the media side of things there's an endpoint property
+that can be used to specific the bus-type - is there an equivalent
+property for DRM stuff?
+
+Cheers,
+Conor.
+
+--fSFFnBC92FdCkh8G
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZa4yhQAKCRB4tDGHoIJi
+0sMDAP0c3HEL+1Ig0hd1OqjdKgyyXhWgUHymexBR+pGPnteR8AEArSSf7rMlOQn2
+Mx+/ZN+8H7ncpBa1xwIKSYBKhCK7sQk=
+=l0SJ
+-----END PGP SIGNATURE-----
+
+--fSFFnBC92FdCkh8G--
