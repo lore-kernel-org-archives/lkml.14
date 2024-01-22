@@ -1,85 +1,88 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B0D4482C8;
-	Mon, 22 Jan 2024 15:05:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E3376168B;
+	Mon, 22 Jan 2024 15:05:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705935908; cv=none; b=Fbx05r5qB22/f56+hBURhDG/j8bZBpoPmTUPjAMi0X3dN0UNMVDskQ+6JfCa5H0dli6XlZ5Li2m7lN1grLRKXZi01/pxLeTlPLSu0G2hH017pFxZ+j5R4eh4LRQ3stViWUJQSYNywuluxrld1efGr8BD33PwQdgt+nvNmgvrFAA=
+	t=1705935910; cv=none; b=R61hGPOk/9d3I5hYlUwCg5VBZkhFfF0RviL9cZBenn0SPfwoBCVzDOrjRevt1vfRUDHDh9A6upcQX15L/LRX1WD4/rlZdGKIdHj6xHzLS2CYxRAAcVMhPICZAVAafoag+EHj7JbYVq+9KJVm9fid6MvOZSJOVg3C6CnSjyoVOrE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705935908; c=relaxed/simple;
-	bh=78geT9fVOQTEOWX4gyPh1xA3/6G3VJHkoN6RKZ9rGu4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pYDWOcCzL7aVOZqdeaGK4mYuonQ0fH3LOdO0HzVQv442n7JedfLmg+Y+QnOtVdBQNoM8KiNGbTQPo0NKSWjl/Djp9zCwftTt08RbiaWZsQ0cymCVc9hNDScMH/gHqQD6A8FZ3BGoXmnUvPYBnln4MciKoKZpsTNt5Kh/wc+GIKE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DXbwIliP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1705935910; c=relaxed/simple;
+	bh=B4sPbgPwhh4ajjcdmVrXlnMDl7BpbIwe14BcLn2f5UY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IarkE0m0L0KyStNkdv1AMGio8yEwnweLbpPew712K6+rF6CsO9TKMcDRVCxoFrOq9xbcSbvaGdl6HEaJDmueRxA2oHzhI8WfLSDcry1e/wJkJABdgL8W9EW+S+dnG4GcCmnqt/uLSQwWu9KagafL0C0Ociqq9KOTx8vxUha3Zts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=XT9gcDbW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DXbwIliP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E5B4C43390;
-	Mon, 22 Jan 2024 15:05:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705935907;
-	bh=78geT9fVOQTEOWX4gyPh1xA3/6G3VJHkoN6RKZ9rGu4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=DXbwIliPqn/P2ZpWtB+N7gFXpP7miUZH9xSrxg3YB5vtG/GNJ4z7QY/R3rb5mFVli
-	 7+l9LT6KksGIAxqNRNUjF0kyGRch4VikRpz0Vqg1iTaVfVNzojrq86g+qlLbEmjWJv
-	 sFPSuzGDNUqc8GjHTXriUrU8EMyQwB3jMseQy3R4CNOAUpZNm73DSCbjTrOy6cGxAA
-	 DBp/5kMl9/hj9YOZjjgH1KMz33IfCJVBjLOdjktXw45DOKEYUg6hfunMfKLIZHHEbx
-	 H+G77qsnXnre/nYjw0aHIB/fRirSi1k0visbWmheN/4tiEGunyeN+tfiOxRHCmwVi9
-	 LscWGxVokJIQg==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="XT9gcDbW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C63B0C4166D;
+	Mon, 22 Jan 2024 15:05:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1705935909;
+	bh=B4sPbgPwhh4ajjcdmVrXlnMDl7BpbIwe14BcLn2f5UY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XT9gcDbWSQvnWqzW2XsCxrKlUDpCS26wJ/I5zCtWFk1MMfzCuRj4QP5YeN0hPrtE4
+	 aaJoFeOEVI4rxcnjk/CdmmuBTChSKbqbO7UfrfMXR40WZgmnOqrscWhI8IXmdt9ZBr
+	 oIvgaOA+CuUOzUGREUcQA8iAQTH8OM1ClE1CtTuM=
+Date: Mon, 22 Jan 2024 07:05:09 -0800
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Carlos Llamas <cmllamas@google.com>
+Cc: Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
+	Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Christian Brauner <brauner@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Sherry Yang <sherryy@android.com>, linux-kernel@vger.kernel.org,
+	kernel-team@android.com, Alice Ryhl <aliceryhl@google.com>,
 	stable@vger.kernel.org
-Cc: Jaegeuk Kim <jaegeuk@kernel.org>,
-	Daeho Jeong <daehojeong@google.com>,
-	Sasha Levin <sashal@kernel.org>,
-	chao@kernel.org,
-	linux-f2fs-devel@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 6.6 13/73] f2fs: fix write pointers on zoned device after roll forward
-Date: Mon, 22 Jan 2024 10:01:27 -0500
-Message-ID: <20240122150432.992458-13-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240122150432.992458-1-sashal@kernel.org>
-References: <20240122150432.992458-1-sashal@kernel.org>
+Subject: Re: [PATCH v2 04/28] binder: fix async space check for 0-sized
+ buffers
+Message-ID: <2024012202-raking-frenzied-7da8@gregkh>
+References: <20231201172212.1813387-1-cmllamas@google.com>
+ <20231201172212.1813387-5-cmllamas@google.com>
+ <Zal8uGqP2lLZz_oz@google.com>
+ <2024011948-sulfate-tartly-7f97@gregkh>
+ <ZaqtPrVhmfvDYzCU@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.6.13
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZaqtPrVhmfvDYzCU@google.com>
 
-From: Jaegeuk Kim <jaegeuk@kernel.org>
+On Fri, Jan 19, 2024 at 05:11:26PM +0000, Carlos Llamas wrote:
+> On Fri, Jan 19, 2024 at 06:48:53AM +0100, Greg Kroah-Hartman wrote:
+> > On Thu, Jan 18, 2024 at 07:32:08PM +0000, Carlos Llamas wrote:
+> > > On Fri, Dec 01, 2023 at 05:21:33PM +0000, Carlos Llamas wrote:
+> > > > Move the padding of 0-sized buffers to an earlier stage to account for
+> > > > this round up during the alloc->free_async_space check.
+> > > > 
+> > > > Fixes: 74310e06be4d ("android: binder: Move buffer out of area shared with user space")
+> > > > Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+> > > > Signed-off-by: Carlos Llamas <cmllamas@google.com>
+> > > > ---
+> > > 
+> > > Sorry, I forgot to Cc: stable@vger.kernel.org.
+> > 
+> > 
+> > <formletter>
+> > 
+> > This is not the correct way to submit patches for inclusion in the
+> > stable kernel tree.  Please read:
+> >     https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html
+> > for how to do this properly.
+> > 
+> > </formletter>
+> 
+> Oops, here is the complete info:
+> 
+> Commit ID: 3091c21d3e9322428691ce0b7a0cfa9c0b239eeb
+> Subject:   "binder: fix async space check for 0-sized buffers"
+> Reason:    Fixes an incorrect calculation of available space.
+> Versions:  v4.19+
 
-[ Upstream commit 9dad4d964291295ef48243d4e03972b85138bc9f ]
+Now queued up, thanks.
 
-1. do roll forward recovery
-2. update current segments pointers
-3. fix the entire zones' write pointers
-4. do checkpoint
-
-Reviewed-by: Daeho Jeong <daehojeong@google.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- fs/f2fs/recovery.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/fs/f2fs/recovery.c b/fs/f2fs/recovery.c
-index f0de36ef73c2..c8ba9f1551b6 100644
---- a/fs/f2fs/recovery.c
-+++ b/fs/f2fs/recovery.c
-@@ -917,6 +917,8 @@ int f2fs_recover_fsync_data(struct f2fs_sb_info *sbi, bool check_only)
- 	if (!err && fix_curseg_write_pointer && !f2fs_readonly(sbi->sb) &&
- 			f2fs_sb_has_blkzoned(sbi)) {
- 		err = f2fs_fix_curseg_write_pointer(sbi);
-+		if (!err)
-+			err = f2fs_check_write_pointer(sbi);
- 		ret = err;
- 	}
- 
--- 
-2.43.0
-
+greg k-h
