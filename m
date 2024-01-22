@@ -1,237 +1,196 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B05821DFF3;
-	Mon, 22 Jan 2024 10:31:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B878A3A262;
+	Mon, 22 Jan 2024 10:31:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705919468; cv=none; b=O9gSOp8Bpxl56woXLbsBUV+Oh0zvsjnZGk0eqClIXy9T/KL8NYV+p2rJuAJuQ/Lg1AWEVLFMw6F5Exbj6ASOavF2VwjrDqQW+coKwQhTbPQlRHjtqLkXkDg5iKD17AnKE0Ssydhg5XCI7eZQsihk/zV9rJBYbiD8XRcNK/BT5tY=
+	t=1705919515; cv=none; b=AnTRGq3HEHpb0Fs3dBJpVwmveZ2F3EaT5pP8cqTvH5FYKABHmRM8TmIEPI5QsCSVr2Kh1UGi2cWU9cXl6wGB/X7v27youXsuLl2A052fLx3AmGvYStSjKKrqzTPrgW9jYilcr/2uZj2rkdysfgQKYjpDcW//6To0RZ4uOsO31DA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705919468; c=relaxed/simple;
-	bh=Adk4o/syB8kwb6hMdHdd8CxVfC3VENFja8OPDajgNt8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hMW/rcA1rWoxzNrt1smP4YO5GJu7aMmVEdoFjeykTygwCLT0sLMus8Ibu5pdwmeR7hDuzD1QUz2aFmdUdvNnNkRYVbkuDeNA254tQyXNQHurI811NnEZKJRepV+aVxGBtq/fO3Gw12oKjHzcCG697W5vDeJ+K+IaibCZj5ph1ts=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VXYiQi5z; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1705919515; c=relaxed/simple;
+	bh=3MlX9iGWyIhVvgtO5vkH1utrGmEPUsa+siylSAZ+4FE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=pRNQF/BAz8y1rRyMUC4uiyKy9OVVzNp9KjkN0NIL4JiEkB5S6EoNqkdEBNZ+4xDj4KdLnA6KMgspUS4Ocr5JJhDMIGcRAO3ydUz3iVR5Zdewd1Ln4euUIRsNtWNXoo3cxvQ9rZjJkK3lfzGRMMbP2RDCMDtZ7RUwC2qC5CbBkbI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rCu0/mcs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VXYiQi5z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F258C43390;
-	Mon, 22 Jan 2024 10:31:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rCu0/mcs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64BA2C433F1;
+	Mon, 22 Jan 2024 10:31:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705919468;
-	bh=Adk4o/syB8kwb6hMdHdd8CxVfC3VENFja8OPDajgNt8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VXYiQi5zdrm6D/arV+leoLROlbr7Rb91J3KkdLkhJFacvol55XCXpGBRHkReoQ+wS
-	 MkW8a9h0UGD2duiJuDVOIRQc078qQhCdjKiWa7YZ0JajQZT3g7KahEljOb9k9u4+L0
-	 SarFw28EbOctK+w9oDuislDN8TCphzc4XCNBhJM2xZHh4GJsXbOdYpiurVhYnFUbSZ
-	 hDzRTkr8ZuZ39SzKyQg1H82b1R5/uANddhFrvfCs4Uxxn1eX18NofmN0nwOXZi936R
-	 6fNa0KMEOiAcpeAHyHYvOfNhPE6/J+R7WSebFfcC47s9rnezA6PZInjFYR6EvpMXUq
-	 c/Nbd7OHGXp9g==
-Date: Mon, 22 Jan 2024 10:31:00 +0000
-From: Simon Horman <horms@kernel.org>
-To: Danielle Ratson <danieller@nvidia.com>
-Cc: netdev@vger.kernel.org, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, corbet@lwn.net,
-	linux@armlinux.org.uk, sdf@google.com, kory.maincent@bootlin.com,
-	maxime.chevallier@bootlin.com, vladimir.oltean@nxp.com,
-	przemyslaw.kitszel@intel.com, ahmed.zaki@intel.com,
-	richardcochran@gmail.com, shayagr@amazon.com,
-	paul.greenwalt@intel.com, jiri@resnulli.us,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	mlxsw@nvidia.com, petrm@nvidia.com, idosch@nvidia.com
-Subject: Re: [RFC PATCH net-next 7/9] ethtool: cmis_cdb: Add a layer for
- supporting CDB commands
-Message-ID: <20240122103100.GA126470@kernel.org>
-References: <20240122084530.32451-1-danieller@nvidia.com>
- <20240122084530.32451-8-danieller@nvidia.com>
+	s=k20201202; t=1705919515;
+	bh=3MlX9iGWyIhVvgtO5vkH1utrGmEPUsa+siylSAZ+4FE=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=rCu0/mcsmI0Ix8l017V62+/Elst5qRKhRr/59QLPK9ERjpJ+q8N8YY1RpBAw6NsOT
+	 b5OqMB1FoXP9+S7e/LWXMMqQS+EEOn4SizRrzRil/xYA0YFW6hotcSLm3J5FuEA2hr
+	 9cZxuzxGVe6t19KWiLPDKMT7iu0dwdmI7TlbOofJZFYSF6BoqFFp1DXcXT5y3c8hGB
+	 hILUnPVGg0TSflYoV0VBDCAYoIFL4fUrUG1Ka+41Q/Pzguxfk++k3t1sGUj/H7EZoK
+	 KHPNVPWk8NWXlhJTan+SODgvd674q+pcc9fhechF2jScASGfpmWEKvkZePOny9KVrL
+	 MmFyBHyIA5C7Q==
+Message-ID: <1e7b8590-7dc7-47a8-8105-6d01db627f85@kernel.org>
+Date: Mon, 22 Jan 2024 11:31:47 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240122084530.32451-8-danieller@nvidia.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/3] watchdog: Add ChromeOS EC-based watchdog driver
+Content-Language: en-US
+To: Lukasz Majczak <lma@chromium.org>, Gwendal Grignou
+ <gwendal@chromium.org>, Tzung-Bi Shih <tzungbi@kernel.org>,
+ Radoslaw Biernacki <biernacki@google.com>,
+ Wim Van Sebroeck <wim@linux-watchdog.org>, Lee Jones <lee@kernel.org>,
+ Benson Leung <bleung@chromium.org>, Guenter Roeck <groeck@chromium.org>,
+ linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
+ chrome-platform@lists.linux.dev
+References: <20240119084328.3135503-1-lma@chromium.org>
+ <20240119084328.3135503-3-lma@chromium.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Autocrypt: addr=krzk@kernel.org; keydata=
+ xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
+ cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
+ JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
+ gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
+ J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
+ NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
+ BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
+ vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
+ Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
+ TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
+ S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
+ FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJgPO8PBQkUX63hAAoJEBuTQ307
+ QWKbBn8P+QFxwl7pDsAKR1InemMAmuykCHl+XgC0LDqrsWhAH5TYeTVXGSyDsuZjHvj+FRP+
+ gZaEIYSw2Yf0e91U9HXo3RYhEwSmxUQ4Fjhc9qAwGKVPQf6YuQ5yy6pzI8brcKmHHOGrB3tP
+ /MODPt81M1zpograAC2WTDzkICfHKj8LpXp45PylD99J9q0Y+gb04CG5/wXs+1hJy/dz0tYy
+ iua4nCuSRbxnSHKBS5vvjosWWjWQXsRKd+zzXp6kfRHHpzJkhRwF6ArXi4XnQ+REnoTfM5Fk
+ VmVmSQ3yFKKePEzoIriT1b2sXO0g5QXOAvFqB65LZjXG9jGJoVG6ZJrUV1MVK8vamKoVbUEe
+ 0NlLl/tX96HLowHHoKhxEsbFzGzKiFLh7hyboTpy2whdonkDxpnv/H8wE9M3VW/fPgnL2nPe
+ xaBLqyHxy9hA9JrZvxg3IQ61x7rtBWBUQPmEaK0azW+l3ysiNpBhISkZrsW3ZUdknWu87nh6
+ eTB7mR7xBcVxnomxWwJI4B0wuMwCPdgbV6YDUKCuSgRMUEiVry10xd9KLypR9Vfyn1AhROrq
+ AubRPVeJBf9zR5UW1trJNfwVt3XmbHX50HCcHdEdCKiT9O+FiEcahIaWh9lihvO0ci0TtVGZ
+ MCEtaCE80Q3Ma9RdHYB3uVF930jwquplFLNF+IBCn5JRzsFNBFVDXDQBEADNkrQYSREUL4D3
+ Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
+ MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
+ OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
+ GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
+ 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
+ YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
+ 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
+ BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
+ JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
+ 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
+ YpsFAmA872oFCRRflLYACgkQG5NDfTtBYpvScw/9GrqBrVLuJoJ52qBBKUBDo4E+5fU1bjt0
+ Gv0nh/hNJuecuRY6aemU6HOPNc2t8QHMSvwbSF+Vp9ZkOvrM36yUOufctoqON+wXrliEY0J4
+ ksR89ZILRRAold9Mh0YDqEJc1HmuxYLJ7lnbLYH1oui8bLbMBM8S2Uo9RKqV2GROLi44enVt
+ vdrDvo+CxKj2K+d4cleCNiz5qbTxPUW/cgkwG0lJc4I4sso7l4XMDKn95c7JtNsuzqKvhEVS
+ oic5by3fbUnuI0cemeizF4QdtX2uQxrP7RwHFBd+YUia7zCcz0//rv6FZmAxWZGy5arNl6Vm
+ lQqNo7/Poh8WWfRS+xegBxc6hBXahpyUKphAKYkah+m+I0QToCfnGKnPqyYIMDEHCS/RfqA5
+ t8F+O56+oyLBAeWX7XcmyM6TGeVfb+OZVMJnZzK0s2VYAuI0Rl87FBFYgULdgqKV7R7WHzwD
+ uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
+ 7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
+ 5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
+In-Reply-To: <20240119084328.3135503-3-lma@chromium.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jan 22, 2024 at 10:45:28AM +0200, Danielle Ratson wrote:
+On 19/01/2024 09:43, Lukasz Majczak wrote:
+> Embedded Controller (EC) present on Chromebook devices
+> can be used as a watchdog.
+> Implement a driver to support it.
+> 
+
 
 ...
 
-> +/**
-> + * struct ethtool_cmis_cdb_request - CDB commands request fields as decribed in
-> + *				the CMIS standard
-> + * @id: Command ID.
-> + * @epl_len: EPL memory length.
-> + * @lpl_len: LPL memory length.
-> + * @chk_code: Check code for the previous field and the payload.
-> + * @resv1: Added to match the CMIS standard request continuity.
-> + * @resv2: Added to match the CMIS standard request continuity.
-> + * @payload: Payload for the CDB commands.
-> + */
-> +struct ethtool_cmis_cdb_request {
-> +	__be16 id;
-> +	struct_group(body,
-> +		u16 epl_len;
-> +		u8 lpl_len;
-> +		u8 chk_code;
-> +		u8 resv1;
-> +		u8 resv2;
-> +		u8 payload[ETHTOOL_CMIS_CDB_LPL_MAX_PL_LENGTH];
-> +	);
-> +};
-> +
-> +#define CDB_F_COMPLETION_VALID		BIT(0)
-> +#define CDB_F_STATUS_VALID		BIT(1)
-> +
-> +/**
-> + * struct ethtool_cmis_cdb_cmd_args - CDB commands execution arguments
-> + * @req: CDB command fields as described in the CMIS standard.
-> + * @max_duration: Maximum duration time for command completion in msec.
-> + * @read_write_len_ext: Allowable additional number of byte octets to the LPL
-> + *			in a READ or a WRITE commands.
-> + * @rpl_exp_len: Expected reply length in bytes.
-> + * @flags: Validation flags for CDB commands.
-> + */
-> +struct ethtool_cmis_cdb_cmd_args {
-> +	struct ethtool_cmis_cdb_request req;
-> +	u16				max_duration;
-> +	u8				read_write_len_ext;
-> +	u8                              rpl_exp_len;
-> +	u8				flags;
-> +};
-
-...
-
-> +int ethtool_cmis_page_init(struct ethtool_module_eeprom *page_data,
-> +			   u8 page, u32 offset, u32 length)
+> +static int cros_ec_wdt_probe(struct platform_device *pdev)
 > +{
-> +	page_data->page = page;
-> +	page_data->offset = offset;
-> +	page_data->length = length;
-> +	page_data->i2c_address = ETHTOOL_CMIS_CDB_PAGE_I2C_ADDR;
-> +	page_data->data = kmalloc(page_data->length, GFP_KERNEL);
-> +	if (!page_data->data)
+> +	struct device *dev = &pdev->dev;
+> +	struct cros_ec_dev *ec_dev = dev_get_drvdata(dev->parent);
+> +	struct cros_ec_device *cros_ec = ec_dev->ec_dev;
+> +	struct watchdog_device *wdd;
+> +	union cros_ec_wdt_data arg;
+> +	int ret = 0;
+> +
+> +	wdd = devm_kzalloc(&pdev->dev, sizeof(struct watchdog_device), GFP_KERNEL);
+
+sizeof(*)
+
+> +	if (!wdd)
 > +		return -ENOMEM;
 > +
-> +	return 0;
+> +	arg.req.command = EC_HANG_DETECT_CMD_GET_STATUS;
+> +	ret = cros_ec_wdt_send_cmd(cros_ec, &arg);
+> +	if (ret < 0)
+> +		return dev_err_probe(dev, ret, "Failed to get watchdog bootstatus");
+> +
+> +	wdd->parent = &pdev->dev;
+> +	wdd->info = &cros_ec_wdt_ident;
+> +	wdd->ops = &cros_ec_wdt_ops;
+> +	wdd->timeout = CROS_EC_WATCHDOG_DEFAULT_TIME;
+> +	wdd->min_timeout = EC_HANG_DETECT_MIN_TIMEOUT;
+> +	wdd->max_timeout = EC_HANG_DETECT_MAX_TIMEOUT;
+> +	if (arg.resp.status == EC_HANG_DETECT_AP_BOOT_EC_WDT)
+> +		wdd->bootstatus = WDIOF_CARDRESET;
+> +
+> +	arg.req.command = EC_HANG_DETECT_CMD_CLEAR_STATUS;
+> +	ret = cros_ec_wdt_send_cmd(cros_ec, &arg);
+> +	if (ret < 0)
+> +		return dev_err_probe(dev, ret, "Failed to clear watchdog bootstatus");
+> +
+> +	watchdog_stop_on_reboot(wdd);
+> +	watchdog_stop_on_unregister(wdd);
+> +	watchdog_set_drvdata(wdd, cros_ec);
+> +	platform_set_drvdata(pdev, wdd);
+> +
+> +	return devm_watchdog_register_device(dev, wdd);
 > +}
-
-...
-
-> +static int
-> +__ethtool_cmis_cdb_execute_cmd(struct net_device *dev,
-> +			       struct ethtool_module_eeprom *page_data,
-> +			       u32 offset, u32 length, void *data)
+> +
+> +static int __maybe_unused cros_ec_wdt_suspend(struct platform_device *pdev, pm_message_t state)
 > +{
-> +	const struct ethtool_ops *ops = dev->ethtool_ops;
-> +	struct netlink_ext_ack extack = {};
-> +	int err;
+> +	struct watchdog_device *wdd = platform_get_drvdata(pdev);
+> +	int ret = 0;
 > +
-> +	page_data->offset = offset;
-> +	page_data->length = length;
+> +	if (watchdog_active(wdd))
+> +		ret = cros_ec_wdt_stop(wdd);
 > +
-> +	memset(page_data->data, 0, ETHTOOL_CMIS_CDB_LPL_MAX_PL_LENGTH);
-> +	memcpy(page_data->data, data, page_data->length);
-> +
-> +	err = ops->set_module_eeprom_by_page(dev, page_data, &extack);
-> +	if (err < 0) {
-> +		if (extack._msg)
-> +			netdev_err(dev, "%s\n", extack._msg);
-> +	}
-> +
-> +	return err;
+> +	return ret;
 > +}
-
-...
-
-> +int ethtool_cmis_cdb_execute_cmd(struct net_device *dev,
-> +				 struct ethtool_cmis_cdb_cmd_args *args)
+> +
+> +static int __maybe_unused cros_ec_wdt_resume(struct platform_device *pdev)
 > +{
-> +	struct ethtool_module_eeprom page_data = {};
-> +	u32 offset;
-> +	int err;
+> +	struct watchdog_device *wdd = platform_get_drvdata(pdev);
+> +	int ret = 0;
 > +
-> +	args->req.chk_code =
-> +		cmis_cdb_calc_checksum(&args->req, sizeof(args->req));
+> +	if (watchdog_active(wdd))
+> +		ret = cros_ec_wdt_start(wdd);
 > +
-> +	if (args->req.lpl_len > args->read_write_len_ext) {
-> +		ethnl_module_fw_flash_ntf_err(dev,
-> +					      "LPL length is longer than CDB read write length extension allows");
-> +		return -EINVAL;
-> +	}
-> +
-> +	err = ethtool_cmis_page_init(&page_data, ETHTOOL_CMIS_CDB_CMD_PAGE, 0,
-> +				     ETHTOOL_CMIS_CDB_LPL_MAX_PL_LENGTH);
-
-ETHTOOL_CMIS_CDB_LPL_MAX_PL_LENGTH is passed as the length argument
-of ethtool_cmis_page_init, which will allocate that many
-bytes for page_data->data.
-
-> +	if (err < 0)
-> +		return err;
-> +
-> +	/* According to the CMIS standard, there are two options to trigger the
-> +	 * CDB commands. The default option is triggering the command by writing
-> +	 * the CMDID bytes. Therefore, the command will be split to 2 calls:
-> +	 * First, with everything except the CMDID field and then the CMDID
-> +	 * field.
-> +	 */
-> +	offset = CMIS_CDB_CMD_ID_OFFSET +
-> +		offsetof(struct ethtool_cmis_cdb_request, body);
-> +	err = __ethtool_cmis_cdb_execute_cmd(dev, &page_data, offset,
-> +					     sizeof(args->req.body),
-> +					     &args->req.body);
-
-Hi Danielle,
-
-However, here sizeof(args->req.body) is passed as the length
-argument of __ethtool_cmis_cdb_execute_cmd() which will:
-
-1. Zero ETHTOOL_CMIS_CDB_LPL_MAX_PL_LENGTH bytes of page_data->data
-2. Copy sizeof(args->req.body) bytes into page_data->data
-
-args->req.body includes several fields, one of which is
-ETHTOOL_CMIS_CDB_LPL_MAX_PL_LENGTH bytes long. So,
-args->req.body > ETHTOOL_CMIS_CDB_LPL_MAX_PL_LENGTH
-and it seems that step 2 above causes a buffer overrun.
-
-Flagged by clang-17 W=1 build
-
- In file included from net/ethtool/cmis_cdb.c:3:
- In file included from ./include/linux/ethtool.h:16:
- In file included from ./include/linux/bitmap.h:12:
- In file included from ./include/linux/string.h:295:
- ./include/linux/fortify-string.h:579:4: error: call to '__write_overflow_field' declared with 'warning' attribute: detected write beyond size of field (1st parameter); maybe use struct_group()? [-Werror,-Wattribute-warning]
-   579 |                         __write_overflow_field(p_size_field, size);
-       |                         ^
- ./include/linux/fortify-string.h:579:4: error: call to '__write_overflow_field' declared with 'warning' attribute: detected write beyond size of field (1st parameter); maybe use struct_group()? [-Werror,-Wattribute-warning]
- ./include/linux/fortify-string.h:579:4: error: call to '__write_overflow_field' declared with 'warning' attribute: detected write beyond size of field (1st parameter); maybe use struct_group()? [-Werror,-Wattribute-warning]
-
-
-> +	if (err < 0)
-> +		goto out;
-> +
-> +	offset = CMIS_CDB_CMD_ID_OFFSET +
-> +		offsetof(struct ethtool_cmis_cdb_request, id);
-> +	err = __ethtool_cmis_cdb_execute_cmd(dev, &page_data, offset,
-> +					     sizeof(args->req.id),
-> +					     &args->req.id);
-> +	if (err < 0)
-> +		goto out;
-> +
-> +	err = cmis_cdb_wait_for_completion(dev, args);
-> +	if (err < 0)
-> +		goto out;
-> +
-> +	err = cmis_cdb_wait_for_status(dev, args);
-> +	if (err < 0)
-> +		goto out;
-> +
-> +	err = cmis_cdb_process_reply(dev, &page_data, args);
-> +
-> +out:
-> +	ethtool_cmis_page_fini(&page_data);
-> +	return err;
+> +	return ret;
 > +}
+> +
+> +static struct platform_driver cros_ec_wdt_driver = {
+> +	.probe		= cros_ec_wdt_probe,
+> +	.suspend	= pm_ptr(cros_ec_wdt_suspend),
+> +	.resume		= pm_ptr(cros_ec_wdt_resume),
+> +	.driver		= {
+> +		.name	= DRV_NAME,
+> +	},
+> +};
+> +
+> +module_platform_driver(cros_ec_wdt_driver);
+> +
+> +static const struct platform_device_id cros_ec_wdt_id[] = {
+> +	{ DRV_NAME, 0 },
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(platform, cros_ec_wdt_id);
 
-...
+device_id is not placed here, please open existing drivers for
+reference. Why this isn't referenced in driver structure?
+
+> +MODULE_DESCRIPTION("Cros EC Watchdog Device Driver");
+> +MODULE_LICENSE("GPL");
+
+Best regards,
+Krzysztof
+
