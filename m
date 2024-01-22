@@ -1,132 +1,75 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1BBA3FB36;
-	Mon, 22 Jan 2024 17:35:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A5DC58119;
+	Mon, 22 Jan 2024 17:35:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705944930; cv=none; b=oN/0Dyu+SJtg+3bq4/7ROEfOOTkuDj+MKA4JPkiA6PtkGTyXiZdMzaDv0/fdtYmvQV6omWuDF5phujBPRqdzeB4ph8WtJBQUbqGqqMRX0phaACeNGrNzricar7oHZb4s8GQtdzX1paJgcP9fIDbCC/A7davcti+jfGpVDIeQn28=
+	t=1705944931; cv=none; b=YejaTd/8De+QRim2k43J1jt7bdIrMS4ptymMvPeuZSu1CY7H0I0d5at+yBWXTwBRZ7SK+58EubRmNWyyfACeOAQzhslvU0x70/bclnVp6p+HbAUgvgqaTCZfdSBDOK6ZT/LkCSATGf1Xlz/1mQfyAPETpPnX/7Lw8pAhHqscxKU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705944930; c=relaxed/simple;
-	bh=XfQM0Oq8bhchKaV3+vsc5joKpUAvSeJRZhoVmelAvR0=;
+	s=arc-20240116; t=1705944931; c=relaxed/simple;
+	bh=U0VMj6mx08CLyOci8ZYFzeqCoBasIPEMjUZ6q/bTr8M=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=c1G1IH0K2dQtPKxeyXus5Fq+/G6TTeiAR27/BDrk/VnkHn2gW869Tis+WE/JdctKq6GwSTYG5NZaIzkKbSKAANbXH9RQtE9To8jCZWKW0kSkJvsIUcyg4zEcw5QxIDmcweIul06Oa5wDZzVoRjwbnrdrNyTygmxx55GCZ/rZvb8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W8QhUiIs; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=P0FZjvuLdIEPtmUuzHBSup/8w1+LbFKQIN8cXL5IG1ykiGP5KoxFoEPAQVSjLzYYdD5kpQc7uuAnKX925jsY7NM76MsHXGA44+dLTat4tPo25tI8EFiufx0AFxAvj+VHVUbre1tRy4IM6dVTPm8kAvuYaB67fKYk6dCYY0znENA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=ovw9h5AC; arc=none smtp.client-ip=217.194.8.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W8QhUiIs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A599EC433F1;
-	Mon, 22 Jan 2024 17:35:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705944930;
-	bh=XfQM0Oq8bhchKaV3+vsc5joKpUAvSeJRZhoVmelAvR0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=W8QhUiIsbnGzfIxc6KFXpmIaDt3BUwNKWwmu0bYNI4ZHXrIN9FdllQuxQDUOpLkUO
-	 Lh/1oHxgfXg3Vs6ej9AxQwA5Bf1FqP3rg4zPq7Alk9NpK2WvnwGqB7P2nNgwBp3Cuu
-	 5wMpQQe5uJZGgM1kUtuvRJAxEOlcOFGBwWQqC2EpCQWpjUPwJKvkCfK2gnL+sIZxzR
-	 fRZdcuEIoWHeGZ9NW8qNtH/ubZIgFetySsKWr0AgSpOzFicCeKhyJuTYIFIyO6qGHE
-	 3+95CO3njR9+Zhy/bTD/gWvWwgPcwpeL+aj4THbNA/UbgkmlU/rTQd5HB1Y+EVZkE3
-	 dDcfXYQuVaaRg==
-Date: Mon, 22 Jan 2024 17:35:24 +0000
-From: Conor Dooley <conor@kernel.org>
-To: "Paller, Kim Seer" <KimSeer.Paller@analog.com>
-Cc: "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	"Hennerich, Michael" <Michael.Hennerich@analog.com>,
+	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="ovw9h5AC"
+Received: from francesco-nb (31-10-206-125.static.upc.ch [31.10.206.125])
+	by mail11.truemail.it (Postfix) with ESMTPA id C6AC522DCD;
+	Mon, 22 Jan 2024 18:35:17 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
+	s=default; t=1705944918;
+	bh=JZ9TX5NOgqL4MXL/9WyEXmX3gOnlcshdJ3hnptH5oGc=; h=From:To:Subject;
+	b=ovw9h5ACq/pp5BSH7zuUuwr+NBAQAWs6o81fr7YUUXJrxhPq0BCG8R4xq7KsXNEhT
+	 wBy7IPcvLEDKwqmJ2TUc59BBGJd1pqNRlpItrDeqXF/uvsKTtnewF3CnjfzaHAdPxL
+	 qLnXM3Y51ag0F3gJZ8faEs8ORenivATep20PSCvgzGimQC2Y3yYLR21bWoVtk6YiP4
+	 Q/2CWVSJsywwl6NQXG8cRuufGCVlPJJRZUEWw5779DQtGx7AYYE2UWOR+WxfTJfK8q
+	 8i7dY4DZg7fwCqITcQZpyHW8obJyAgIwkvTz7ATJDiIXsj7GZea8FvvhLicKBOVu4W
+	 paqp9PdBR7YoA==
+Date: Mon, 22 Jan 2024 18:35:13 +0100
+From: Francesco Dolcini <francesco@dolcini.it>
+To: Hiago De Franco <hiagofranco@gmail.com>
+Cc: Shawn Guo <shawnguo@kernel.org>, linux-arm-kernel@lists.infradead.org,
 	Rob Herring <robh+dt@kernel.org>,
 	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, Crt Mori <cmo@melexis.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Nuno =?iso-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-Subject: Re: [PATCH v7 1/2] dt-bindings: iio: frequency: add admfm2000
-Message-ID: <20240122-postbox-slimy-248a2e521896@spud>
-References: <20240122090228.28363-1-kimseer.paller@analog.com>
- <20240122-legible-fossil-25349ef9ad6c@spud>
- <PH0PR03MB7141A46C8DD0041775CD0E96F9752@PH0PR03MB7141.namprd03.prod.outlook.com>
+	Conor Dooley <conor+dt@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	NXP Linux Team <linux-imx@nxp.com>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Hiago De Franco <hiago.franco@toradex.com>
+Subject: Re: [PATCH v1 2/2] arm: dts: nxp: imx: Add support for Apalis
+ Evaluation Board v1.2
+Message-ID: <20240122173513.GA32711@francesco-nb>
+References: <20240122123526.43400-1-hiagofranco@gmail.com>
+ <20240122123526.43400-3-hiagofranco@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="MCbfwdcDBzV4nvA+"
-Content-Disposition: inline
-In-Reply-To: <PH0PR03MB7141A46C8DD0041775CD0E96F9752@PH0PR03MB7141.namprd03.prod.outlook.com>
-
-
---MCbfwdcDBzV4nvA+
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20240122123526.43400-3-hiagofranco@gmail.com>
 
-On Mon, Jan 22, 2024 at 11:06:08AM +0000, Paller, Kim Seer wrote:
-> > > +      adi,mixer-mode:
-> > > +        description:
-> > > +          Enable mixer mode.
-> > > +        type: boolean
-> > > +
-> > > +      switch-gpios:
-> > > +        description: |
-> > > +          GPIOs to select the RF path for the channel.
-> > > +          SW-CH1   CTRL-A   CTRL-B
-> > > +          SW-CH2   CTRL-A   CTRL-B    CH1 Status        CH2 Status
-> > > +                   1        0         Direct IF mode    Mixer mode
-> > > +                   0        1         Mixer mode        Direct IF mo=
-de
-> >=20
-> > I cannot make sense of this table you have here, the double header row =
-you
-> > have going on is hard to follow. There's also no mention here of what h=
-appens
-> > when both GPIOs are 0 or both GPIO are 1. Are these configurations perm=
-itted?
->=20
-> I also feel that it's quite hard to understand without the gridlines. In =
-the preliminary
-> datasheet, it's a switch control table, and I'm trying to replicate the w=
-ay it is presented.
->=20
-> On the table, each channel has control pins (CTRL-A and CTRL-B). For a mi=
-xer mode
-> configuration on channel 1, CTRL-A GPIO should be 0, and CTRL-B GPIO shou=
-ld be 1.
-> It's not permitted when both GPIOs are 0 or both GPIOs are 1. The state f=
-or the GPIO
-> should strictly follow the truth table.
->=20
-> I'm considering making it much easier to understand by creating two separ=
-ate tables for
-> each channel, just like the example below. Or is it preferred if it could=
- be discussed in=20
-> a sort of paragraph form?
->=20
-> SW-CH1   CTRL-A   CTRL-B    CH1 Status            CH2 Status
-> 	   1              0              Direct IF mode     Mixer
->=20
-> SW-CH2   CTRL-A   CTRL-B    CH1 Status            CH2 Status
->           	    0            1               Direct IF mode     Mixer
+On Mon, Jan 22, 2024 at 09:35:00AM -0300, Hiago De Franco wrote:
+> From: Hiago De Franco <hiago.franco@toradex.com>
+> 
+> Add support for the new Apalis Evaluation Board v1.2. Because
+> only the imx6q-apalis-eval.dts was available, the imx6q-apalis-eval.dtsi
+> has been created which has common hardware configurations for v1.0, v1.1
+> and v1.2. Both imx6q-apalis-eval.dts and imx6q-apalis-eval-v1.2.dts
+> files include imx6q-apalis-eval.dtsi.
+> 
+> Versions 1.0 and 1.1 are compatible with each other and should
+> use imx6q-apalis-eval.dts file. Now for v1.2, the new device-tree file
+> should be used.
+> 
+> Signed-off-by: Hiago De Franco <hiago.franco@toradex.com>
 
-I think it would be sufficient to cut down the original table to
-something like:
- CTRL-A   CTRL-B    CH1 Status        CH2 Status
- 1        0         Direct IF mode    Mixer mode
- 0        1         Mixer mode        Direct IF mode
+Reviewed-by: Francesco Dolcini <francesco.dolcini@toradex.com>
 
-And state that the configurations where A =3D=3D B are not permitted.
-
---MCbfwdcDBzV4nvA+
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZa6nXAAKCRB4tDGHoIJi
-0gftAP40Y10Z/PEZG3hrDgMfGcEP2C/NdkdxryZWr/keJTMJ6gEAhZHQWc5ETow6
-nk4YRriQIquAgLUZulArlOI5DOOyWw4=
-=ZKhg
------END PGP SIGNATURE-----
-
---MCbfwdcDBzV4nvA+--
