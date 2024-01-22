@@ -1,216 +1,122 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA2DA3D3BD
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 14:14:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F3803D0AB;
+	Mon, 22 Jan 2024 14:21:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705932873; cv=none; b=ma+ChYFJNEjN0KqOou9ZcQ/B5fVJd1yoHsyIz+HRoXCbweg/2xBntfbm0Ipyycr1WKq1iOsdOMraPTEjOlzqKgOmBWEk+jstgVOfUZjypt02YpbeJfrbgP4Lj1kdHWNm2uLMYUqP+xPFNmACtDKhg6vXtr//JMI7ERHS5lg2i2Y=
+	t=1705933271; cv=none; b=jwfaoPP1RtrCADVCphMXxuEPjs1ZlIlgzU9oNIvBAgzOFjn2bE3Vn9mI3w2PDa7rmwnmGwLjc9DFBHD7yidULBwxFBdXOTF6/bfJM54a0/uDmKZvhMnf5TZCnPUWxgabY1p+tCVRoMoq2+m8Q5ztj7sxEnuZfcfjwal6s3ZpCbM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705932873; c=relaxed/simple;
-	bh=BQ6gFzHqZAx03sLDR1/WL2v2QuZhXNI1WhQrc0qkpQg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=S5kXdOSxX209zJGXmwB6HM0EU61fInmvvJLOY5NUUcHbBNywGKIoBwWFfoA7RRkyWDM7n7msyuMXX6sK6dxXedWZNsNXahhfLxik8O/WQGQn4XdR7387FYDqEjAkVCk7Pjp7/7DLC9/D35G2pAH8m54O1X2RUI4swruQPoXBw4o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UyEMlHbL; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1705933271; c=relaxed/simple;
+	bh=sx/SZLbzMQXRoEFA2HncNv0TFxOKZA5thjdd5ftlYe0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gCauYN+R2AovxEL+GbzfHBReJjofTmYR/97kabCpFe7qq0ckLHnggLbZHxHMjj9fDO/4MQvEC/0l1JT4aUYIjSEQUu62fs1PYwvaWrXJzZnpch28X1AeBBxIqLt2w5+NPGmQbWBE6eVZccBgoY93gsBrfUXWEqS5L1s5jP6/Sq4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aULTBvzO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UyEMlHbL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1705932870;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3XEEjzdk0Rf+nEQCD7UZIB/maeiQi36/Xok7ETyhddQ=;
-	b=UyEMlHbLlFkB0dIGR2uYSi7WJuQPe5r5tamTloIpYaLJj8rRcErsPN+skeMuhEsD5t7aj/
-	58f+BOOT/1e/DhKvQm8fbu5jbtfP6Qg5iJP97xqCUXppjIG3aGU3sRxIj8/k0I2dN4wjH5
-	INg2pCFYUzSvNPj0ziS/AwTaksIlr3U=
-Received: from mail-lf1-f72.google.com (mail-lf1-f72.google.com
- [209.85.167.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-627-DVBJW_3POF2yF7RO89NINQ-1; Mon, 22 Jan 2024 09:14:28 -0500
-X-MC-Unique: DVBJW_3POF2yF7RO89NINQ-1
-Received: by mail-lf1-f72.google.com with SMTP id 2adb3069b0e04-50edc80b859so2700461e87.1
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 06:14:27 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705932866; x=1706537666;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3XEEjzdk0Rf+nEQCD7UZIB/maeiQi36/Xok7ETyhddQ=;
-        b=aEhGZhLmxqgoTJU3kkEHEG1xb3MYG/vUmKeCxtevAwQO1n1K+3BaiB6OSGXdQD5xhp
-         MsPbnwF+oZYCSCeh93WZ1mcOboaZCx2qSxpSTRHQ3F1VBTobAwioCFnPznLrvPY3mdl6
-         vqX32UdbuOWxv0upTkfvNCm4XItvVgBfOWR/o4iV9RmYev1SBg7++Oz8HDlF4/mU1Sc+
-         mJ5aoZ4SwFpIBPgiElbXHylfGc9Yyhpn7sRrBSCxuCcmtgjigZuHqRWmAqo/VxvY2H6/
-         O+Rqi/mn9hunnIM0aGAKLypq9PQf3rmR7Q1KRXrX6w8IYm3LVYkFiKci/qAp4g1kyaVM
-         jicg==
-X-Gm-Message-State: AOJu0Yx9n6pncRH8umc47geJQyX0U+G6SUStWONWpmXcH6wv3mOQ5YE8
-	gsOzT64orhAJpUM6sh7mU0t8VnBlL24/kudOYrK3MY38uFd/WuMJ/KivGnq3YglZfDjVslInLUH
-	MnSWoBTLGl9Dhe8DjGQphIHxHAApamlXT00dzkbedcQ8/VT546Hc+UPuF1okvxg==
-X-Received: by 2002:a05:6512:108b:b0:50e:76ca:52c6 with SMTP id j11-20020a056512108b00b0050e76ca52c6mr2125852lfg.52.1705932866706;
-        Mon, 22 Jan 2024 06:14:26 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHo40sQ0u2EUJVSZcUQzW6OuIefuJhXgUD9VxMgB9KIi+Q5twdhyWeqfEVGEgtkcTDbUjvOLw==
-X-Received: by 2002:a05:6512:108b:b0:50e:76ca:52c6 with SMTP id j11-20020a056512108b00b0050e76ca52c6mr2125825lfg.52.1705932866304;
-        Mon, 22 Jan 2024 06:14:26 -0800 (PST)
-Received: from [192.168.0.182] (host-79-47-205-27.retail.telecomitalia.it. [79.47.205.27])
-        by smtp.gmail.com with ESMTPSA id vi8-20020a170907d40800b00a3025e05665sm1645538ejc.14.2024.01.22.06.14.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 22 Jan 2024 06:14:25 -0800 (PST)
-Message-ID: <3f002616-0975-49b8-a2bf-04abd0446b95@redhat.com>
-Date: Mon, 22 Jan 2024 15:14:23 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aULTBvzO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69F2FC43390;
+	Mon, 22 Jan 2024 14:21:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705933270;
+	bh=sx/SZLbzMQXRoEFA2HncNv0TFxOKZA5thjdd5ftlYe0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=aULTBvzOcVWXQIjlnSyRyEMNDtqOjd3XEOyS8vuVrbiYHUA7YtaRnRjRc9Z9d25Sg
+	 CqrCc9VQ5U02axVUdBL8THASd0iD3CqiiczGwsv7P61HCxDSa06iAOLsKxkDi3rSsd
+	 ZIzh1VlKgWGaVRF94JjyzQaeednEnO9saZS0FFK1SI2klZPrtrs5wa6hrfwEbmz3/q
+	 kxGxwBcIBe7DQDGX/ASVUHH6GwMt/wcTDX4D9G6GpY+dVUV+761IJsAKRUVXec2mjb
+	 GnO2zyWh5L/nRHdrDKXj0npYtFpVBowpgjCjlzqfJ0ZwAij3KGddkhl1l+C3/APBSZ
+	 zplaUPlvFcPpA==
+Date: Mon, 22 Jan 2024 14:21:04 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Marc Kleine-Budde <mkl@pengutronix.de>
+Cc: linux-riscv@lists.infradead.org,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Daire McNamara <daire.mcnamara@microchip.com>,
+	Wolfgang Grandegger <wg@grandegger.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, linux-can@vger.kernel.org,
+	netdev@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+Subject: Re: [PATCH v2 2/7] dt-bindings: can: mpfs: add missing required clock
+Message-ID: <20240122-cruelly-dainty-002081f0beb2@spud>
+References: <20240122-catty-roast-d3625dbb02fe@spud>
+ <20240122-breeder-lying-0d3668d98886@spud>
+ <20240122-surely-crimp-ba4a8c55106d-mkl@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 7/7] sched/fair: Fair server interface
-To: Joel Fernandes <joel@joelfernandes.org>,
- Daniel Bristot de Oliveira <bristot@kernel.org>
-Cc: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
- Juri Lelli <juri.lelli@redhat.com>,
- Vincent Guittot <vincent.guittot@linaro.org>,
- Dietmar Eggemann <dietmar.eggemann@arm.com>,
- Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>,
- Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>,
- linux-kernel@vger.kernel.org, Luca Abeni <luca.abeni@santannapisa.it>,
- Tommaso Cucinotta <tommaso.cucinotta@santannapisa.it>,
- Thomas Gleixner <tglx@linutronix.de>,
- Vineeth Pillai <vineeth@bitbyteword.org>,
- Shuah Khan <skhan@linuxfoundation.org>, Phil Auld <pauld@redhat.com>,
- suleiman@google.com
-References: <cover.1699095159.git.bristot@kernel.org>
- <26adad2378c8b15533e4f6216c2863341e587f57.1699095159.git.bristot@kernel.org>
- <20240119015513.GA2187855@google.com>
-Content-Language: en-US, pt-BR, it-IT
-From: Daniel Bristot de Oliveira <bristot@redhat.com>
-In-Reply-To: <20240119015513.GA2187855@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="DgDTawVh/uoBk6a9"
+Content-Disposition: inline
+In-Reply-To: <20240122-surely-crimp-ba4a8c55106d-mkl@pengutronix.de>
 
-On 1/19/24 02:55, Joel Fernandes wrote:
-> On Sat, Nov 04, 2023 at 11:59:24AM +0100, Daniel Bristot de Oliveira wrote:
->> Add an interface for fair server setup on debugfs.
->>
->> Each rq have three files under /sys/kernel/debug/sched/rq/CPU{ID}:
->>
->>  - fair_server_runtime: set runtime in ns
->>  - fair_server_period: set period in ns
->>  - fair_server_defer: on/off for the defer mechanism
->>
->> Signed-off-by: Daniel Bristot de Oliveira <bristot@kernel.org>
-> 
-> Hi Daniel, Peter,
-> I am writing on behalf of the ChromeOS scheduler team.
-> 
-> We had to revert the last 3 patches in this series because of a syzkaller
-> reported bug, this happens on the sched/more branch in Peter's tree:
-> 
->  WARNING: CPU: 0 PID: 2404 at kernel/sched/fair.c:5220
->  place_entity+0x240/0x290 kernel/sched/fair.c:5147
->  Call Trace:
->  <TASK>
->   enqueue_entity+0xdf/0x1130 kernel/sched/fair.c:5283
->   enqueue_task_fair+0x241/0xbd0 kernel/sched/fair.c:6717
->   enqueue_task+0x199/0x2f0 kernel/sched/core.c:2117
->   activate_task+0x60/0xc0 kernel/sched/core.c:2147
->   ttwu_do_activate+0x18d/0x6b0 kernel/sched/core.c:3794
->   ttwu_queue kernel/sched/core.c:4047 [inline]
->   try_to_wake_up+0x805/0x12f0 kernel/sched/core.c:4368
->   kick_pool+0x2e7/0x3b0 kernel/workqueue.c:1142
->   __queue_work+0xcf8/0xfe0 kernel/workqueue.c:1800
->   queue_delayed_work_on+0x15a/0x260 kernel/workqueue.c:1986
->   queue_delayed_work include/linux/workqueue.h:577 [inline]
->   srcu_funnel_gp_start kernel/rcu/srcutree.c:1068 [inline]
-> 
-> which is basically this warning in place_entity:
-> 		if (WARN_ON_ONCE(!load))
-> 			load = 1;
-> 
-> Full log (scroll to the bottom as there is console/lockdep side effects which
-> are likely not relevant to this issue): https://paste.debian.net/1304579/
-> 
-> Side note, we are also looking into a KASAN nullptr deref but this happens
-> only on our backport of the patches to a 5.15 kernel, as far as we know.
-> 
-> KASAN: null-ptr-deref in range [0x0000000000000000-0x0000000000000007]
-> CPU: 0 PID: 1592 Comm: syz-executor.0 Not tainted [...]
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 11/17/2023
->  RIP: 0010:____rb_erase_color lib/rbtree.c:354 [inline] 
->  RIP: 0010:rb_erase+0x664/0xe1e lib/rbtree.c:445
->  [...]
-> Call Trace:
->  <TASK>
->   set_next_entity+0x6e/0x576 kernel/sched/fair.c:4728
->   set_next_task_fair+0x1bb/0x355 kernel/sched/fair.c:11943
->   set_next_task kernel/sched/sched.h:2241 [inline] 
->   pick_next_task kernel/sched/core.c:6014 [inline] 
->   __schedule+0x36fb/0x402d kernel/sched/core.c:6378
->   preempt_schedule_common+0x74/0xc0 kernel/sched/core.c:6590
->   preempt_schedule+0xd6/0xdd kernel/sched/core.c:6615
-> 
-> Full splat: https://paste.debian.net/1304573/
 
-Interesting, does it keep any task hung? I am having a case where I see
-a hung task, but I do not get the splat because the system freezes (printk
-with rq_lock I guess)...
+--DgDTawVh/uoBk6a9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-It might be the same problem.
+On Mon, Jan 22, 2024 at 02:13:16PM +0100, Marc Kleine-Budde wrote:
+> On 22.01.2024 12:19:50, Conor Dooley wrote:
+> > From: Conor Dooley <conor.dooley@microchip.com>
+> >=20
+> > The CAN controller on PolarFire SoC has an AHB peripheral clock _and_ a
+> > CAN bus clock. The bus clock was omitted when the binding was written,
+> > but is required for operation. Make up for lost time and add it.
+> >=20
+> > Cautionary tale in adding bindings without having implemented a real
+> > user for them perhaps.
+> >=20
+> > Fixes: c878d518d7b6 ("dt-bindings: can: mpfs: document the mpfs CAN con=
+troller")
+> > Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
+> > ---
+> >  .../devicetree/bindings/net/can/microchip,mpfs-can.yaml     | 6 ++++--
+> >  1 file changed, 4 insertions(+), 2 deletions(-)
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/net/can/microchip,mpfs-c=
+an.yaml b/Documentation/devicetree/bindings/net/can/microchip,mpfs-can.yaml
+> > index 45aa3de7cf01..01e4d4a54df6 100644
+> > --- a/Documentation/devicetree/bindings/net/can/microchip,mpfs-can.yaml
+> > +++ b/Documentation/devicetree/bindings/net/can/microchip,mpfs-can.yaml
+> > @@ -24,7 +24,9 @@ properties:
+> >      maxItems: 1
+> > =20
+> >    clocks:
+> > -    maxItems: 1
+> > +    items:
+> > +      - description: AHB peripheral clock
+> > +      - description: CAN bus clock
+>=20
+> What about adding clock-names, so that the order can be checked
+> automatically?
 
-> Investigation is on going but could you also please take a look at these? It
-> is hard to reproduce and only syzbot has luck reproducing these.
-> 
-> Also I had a comment below:
-> 
->> +int dl_server_apply_params(struct sched_dl_entity *dl_se, u64 runtime, u64 period, bool init)
->> +{
->> +	u64 old_bw = init ? 0 : to_ratio(dl_se->dl_period, dl_se->dl_runtime);
->> +	u64 new_bw = to_ratio(period, runtime);
->> +	struct rq *rq = dl_se->rq;
->> +	int cpu = cpu_of(rq);
->> +	struct dl_bw *dl_b;
->> +	unsigned long cap;
->> +	int retval = 0;
->> +	int cpus;
->> +
->> +	dl_b = dl_bw_of(cpu);
->> +	raw_spin_lock(&dl_b->lock);
->> +	cpus = dl_bw_cpus(cpu);
->> +	cap = dl_bw_capacity(cpu);
->> +
->> +	if (__dl_overflow(dl_b, cap, old_bw, new_bw)) {
-> 
-> The dl_overflow() call here seems introducing an issue with our conceptual
-> understanding of how the dl server is supposed to work.
-> 
-> Suppose we have a 4 CPU system. Also suppose RT throttling is disabled.
-> Suppose the DL server params are 50ms runtime in 100ms period (basically we
-> want to dedicate 50% of the bandwidth of each CPU to CFS).
-> 
-> In such a situation, __dl_overflow() will return an error right? Because
-> total bandwidth will exceed 100% (4 times 50% is 200%).
+I don't personally care for doing so, but if your heart is set on having
+them, then sure.
 
-I might be missing something in your case, but, it accepts:
+Cheers,
+Conor.
 
-root@fedora:/sys/kernel/debug/sched/fair_server# find . -type f -exec cat {} \;
-1
-1000000000
-500000000
-1
-1000000000
-500000000
-1
-1000000000
-500000000
-1
-1000000000
-500000000
+--DgDTawVh/uoBk6a9
+Content-Type: application/pgp-signature; name="signature.asc"
 
-your system accepts 400%... the percentage is "global".
+-----BEGIN PGP SIGNATURE-----
 
-is it failing in your system?
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZa550AAKCRB4tDGHoIJi
+0mG6AQCzkwjYc3ET9xROc6H+kOYEOP7ViMXoh/nf1GZddfy7NQD+Ny8uVB9lFx5n
+5oK3FNCWB0tKkiI3fXCZswAn1hOjGA0=
+=3HmK
+-----END PGP SIGNATURE-----
 
--- Daniel
-
+--DgDTawVh/uoBk6a9--
