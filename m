@@ -1,101 +1,109 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A12D54CB31;
-	Mon, 22 Jan 2024 17:50:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC06E3D57C
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 17:50:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705945811; cv=none; b=RNm/R1UrxoS2Kaort5y+6ghPKQJVvrctR00aBGvPW9JL9OnqunfqwblBdTs8kY1YEb8Ez7s1U6ht1ITv2qTaxuIBlxSw7t2CEox/HuWXOlRf4JYPwoICRLRBO3ES/CExCszCv7ewQ+U4Rk/lpBbizDcga4wy3rvMjNItH7VubaM=
+	t=1705945837; cv=none; b=DIRY7AH2Q/3gIJ7QdsBo0BKDjrLJDNVlI1DGPJD1ISHPFqcbm8DTmhOXIcvWm/OLgg0dqUlI85Okt01IZa9Xdi+MPxallTcA4f+wM+6bQBimjsbqvv33RIyKh2sRcsQuAZ+JGRRiqeLy8Ed8vftucm8vJr0qs9+xWH9dQ5ailmQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705945811; c=relaxed/simple;
-	bh=nrjMhgFBwkaAZ6DvfofhjPey8YCxeJKDIVmE6A5ckUE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=lWq4UjQ8NadYmJonOlC0UCkj6p6Vw4wb56QzF+TSaXYAylt0GC+OwXuccK+ehnlGwji5pF37o9a/missZcfRJ9QYiDuP1lpvtunSzw2VPVdse1as0H29W5REaC0Qiwy5E5gXxc18/+KHgsaSP+80ELKjxNLDmpEXqIbqXQjLXvc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=HSbkB7nq; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1705945837; c=relaxed/simple;
+	bh=xLPMMOi9U5aA2QOUyNYRwdev7zD4A+KnUqD+T4+EA/Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=K4B589bBKi5jJz4OnS0cpIayZ77SyGxsnL3D3MUkTWc1z7sXywTuR4MPyHnZzXO5nmweq/0+zC+S7QjOZQG6Ln/lmlocNAonEcsoJXcP6IP/otCopF3dHrnGSuGylOhH1i5VpO0KJ7pGEwb87PqZOinkpcfiARC9xMeXhOA9kWk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=F3SK6Tjl; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="HSbkB7nq"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40MDaFQe003288;
-	Mon, 22 Jan 2024 17:50:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=gmrF2yQZXmlhVvRx/bjIoxB2JXFJsegupGpfsEiApCE=; b=HS
-	bkB7nqo1xBBC828dhvRL3EKRNeEZuF4dpKmSxLV03TYc6SmwvkB5qas1x4ku/w0F
-	a2j4WQUEvZPjzrBA1Mkyd/b3vWuJFus9Y144+eGU9ptly4gv5gX0N4kyUB9r0A9S
-	OhVDV4xOOjG2rv4xA5ZwHsXtF7XQUXZM2ceEgobPGg7wJBIXxJjWNxkI72VXhsHM
-	T61mqykPZORWX3qOV2mgRIsODFVqkA1Tsw4TnTLv3DhpjyICPuV3OISf0G5175+p
-	4gIkx7gGMmmDNmucn5N9EkjpdqMNyn9PohAHtH9TLcWGvah2HxH4CKGSdLIw1aPz
-	AUq72JIUdCB7WJTAhaog==
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vspw8s4hf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 22 Jan 2024 17:50:05 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 40MHo4ED020349
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 22 Jan 2024 17:50:04 GMT
-Received: from [10.110.104.139] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Mon, 22 Jan
- 2024 09:50:00 -0800
-Message-ID: <dff70941-709c-4043-802a-16bfeb8ba4f8@quicinc.com>
-Date: Mon, 22 Jan 2024 09:50:00 -0800
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="F3SK6Tjl"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3367a304091so3816839f8f.3
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 09:50:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1705945834; x=1706550634; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=sYGuiuUN/VCPpW9oWOQ4p73+grZOykVwihNpjjDuv0Q=;
+        b=F3SK6TjlNfQnBS4iXAAc0b9u8u04WFz0BR17agbw8LPd7czINCOtAvlubBLCcdN8SN
+         Iptkxj8v2kLA1hD8xExxhw//T+icNkTpoyiLV3tbzGANVQY8vtzflRJ4r49vQ/iL+d/C
+         T2e6K3UOUeJl3D94hie4a2pHfJb0Lp+CWygjk7wPIWElGw2A0AZMOntSoFSLLEXc9IVc
+         LPDmA5F2W5g9kOfjmr+DYpXc9hKbpTnEN5jQ649bqx64YApBYnLYKZBdI/3OFrstB2jA
+         HJgRegE0xklM7YWjyHkSVYILVlofiME+Pzn1sqc4YipxIbM57oRgigJtixgInp/J21m4
+         vVnw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705945834; x=1706550634;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=sYGuiuUN/VCPpW9oWOQ4p73+grZOykVwihNpjjDuv0Q=;
+        b=mjUGhs0B/8jV3ssB/1GRgO9N+bLLSKd0Q+GiVEd3Pf0UCqz2nZSjdFnq52clry4JHP
+         TUdKuKS99L8AJHtINDKZIL+f84Rl+I9wp/SsdEMZ7ZY6PR6sCCaMAgSTJRuZQGyp8NB3
+         +fBs/AOT3G/udKOWU0M2p++to653jfTYZq5un0FrmcpZ9+mmE9rOH3pgTh/l7r5jgu9v
+         WZ/nEcBT3CgMqj6k8ajBn8p+XzjC/IG+1zkBfPM6ap/OvemqJBg4O8RZehuV2jzv5aHX
+         BhaaQ/glzsofqG/k7SeKU9kZTNY6CcpZrchtdNlM1FJxMSYw0sqFcu47ZzXLlE1RHNlH
+         f88A==
+X-Gm-Message-State: AOJu0YziQbQLMvhGLyKzPe00WUHv+T0N5RFZk6R/aFJxcmvdtw/Az0+Q
+	BV2NgRMxHt3fIFuhnW0KiN4FOra50FqwH6vf751FNu1lR1DB2gMuwPcSRoqrRzNhnsgox5ttY1/
+	yq6M=
+X-Google-Smtp-Source: AGHT+IGMKjXfBPPqRjfBziR7QI5pQ0EzWnQZly3+fsLmJWUOsG/MDJPaYvuxqQs8u+NniIHlytAXNQ==
+X-Received: by 2002:adf:a199:0:b0:337:bdf2:26fe with SMTP id u25-20020adfa199000000b00337bdf226femr2086857wru.161.1705945834114;
+        Mon, 22 Jan 2024 09:50:34 -0800 (PST)
+Received: from aspen.lan (aztw-34-b2-v4wan-166919-cust780.vm26.cable.virginm.net. [82.37.195.13])
+        by smtp.gmail.com with ESMTPSA id s15-20020a5d6a8f000000b00336898daceasm11996072wru.96.2024.01.22.09.50.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Jan 2024 09:50:33 -0800 (PST)
+Date: Mon, 22 Jan 2024 17:50:31 +0000
+From: Daniel Thompson <daniel.thompson@linaro.org>
+To: Duje =?utf-8?Q?Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
+Cc: Lee Jones <lee@kernel.org>, Jingoo Han <jingoohan1@gmail.com>,
+	Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, Helge Deller <deller@gmx.de>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Karel Balej <balejk@matfyz.cz>,
+	~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
+	dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-fbdev@vger.kernel.org
+Subject: Re: [PATCH v3 1/3] leds: ktd2692: move ExpressWire code to library
+Message-ID: <20240122175031.GC8815@aspen.lan>
+References: <20240120-ktd2801-v3-0-fe2cbafffb21@skole.hr>
+ <20240122165011.GA8815@aspen.lan>
+ <23373359.6Emhk5qWAg@radijator>
+ <3603320.R56niFO833@radijator>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/2] Add board-id support for multiple DT selection
-To: Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Amrit Anand
-	<quic_amrianan@quicinc.com>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <agross@kernel.org>, <andersson@kernel.org>
-CC: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <kernel@quicinc.com>,
-        <devicetree-spec@vger.kernel.org>
-References: <1705749649-4708-1-git-send-email-quic_amrianan@quicinc.com>
- <6ceb3c5d-4171-4f0e-a1c0-22a8488ea2bc@linaro.org>
-Content-Language: en-US
-From: Elliot Berman <quic_eberman@quicinc.com>
-In-Reply-To: <6ceb3c5d-4171-4f0e-a1c0-22a8488ea2bc@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: 00ZgLwGHbsDfPXQ8AKTa0gTrYi7OTktY
-X-Proofpoint-ORIG-GUID: 00ZgLwGHbsDfPXQ8AKTa0gTrYi7OTktY
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-22_07,2024-01-22_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 malwarescore=0
- adultscore=0 mlxscore=0 spamscore=0 lowpriorityscore=0 bulkscore=0
- clxscore=1011 suspectscore=0 impostorscore=0 mlxlogscore=601
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2311290000 definitions=main-2401220124
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <3603320.R56niFO833@radijator>
 
-+devicetree-spec
+On Mon, Jan 22, 2024 at 06:26:04PM +0100, Duje Mihanović wrote:
+> On Monday, January 22, 2024 5:57:53 PM CET Duje Mihanović wrote:
+> > On Monday, January 22, 2024 5:50:11 PM CET Daniel Thompson wrote:
+> > > AFAICT nothing will inhibit setting GPIOLIB so allyes- and allmodconfig
+> > > builds will always end up with GPIOLIB enabled. If we are happy to
+> > > select it then I think that is enough!
+> >
+> > In that case I guess I'll just make it select GPIOLIB.
+>
+> Nevermind that, it'll have to be 'depends on' after all:
+>
+> drivers/gpio/Kconfig:6:error: recursive dependency detected!
+> drivers/gpio/Kconfig:6: symbol GPIOLIB is selected by LEDS_EXPRESSWIRE
+> drivers/leds/Kconfig:184:       symbol LEDS_EXPRESSWIRE depends on NEW_LEDS
 
-On 1/20/2024 5:04 AM, Konrad Dybcio wrote:
-> On 20.01.2024 12:20, Amrit Anand wrote:
->> Device manufacturers frequently ship multiple boards or SKUs under a
->> single software package. These software packages will ship multiple
->> devicetree blobs and require some mechanism to pick the correct DTB for
->> the board the software package was deployed. Introduce a common
->> definition for adding board identifiers to device trees. board-id
->> provides a mechanism for bootloaders to select the appropriate DTB which
->> is vendor/OEM-agnostic.
-> 
-> Maybe it'd be a good idea to add it to the base spec!
-> 
-> https://github.com/devicetree-org/devicetree-specification
-> 
+Can this dependency could be broken by declaring LEDS_EXPRESSWIRE at
+the top (or bottom) of the KConfig file (it's an option without a UI
+and does not need to be within the if NEW_LEDS block).
 
-I agree. Rob, what do you think?
+I'm aware this kind of change could provoke an argument about which
+sub-system the expresswire code should live in... but I think it's
+a worthwhile change anyway! We shouldn't need NEW_LEDS for this.
+
+
+Daniel.
