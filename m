@@ -1,192 +1,99 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07A143FE57
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 19:42:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F143F47A6C;
+	Mon, 22 Jan 2024 19:42:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705952574; cv=none; b=DjtU3qULHXSq6yrJpKR3h3L2YusaTeUVVFd2lAAg0pgTI5Ru0kas5PgknG57DUsNYpIxf2nLW1WlkPuW4CggHX+QPeMErTL/BR92gYoFk6QE7o0RuoKxz4k9Z+bAXGpbEkSOhL2qONmsAe0B0/XMejjwNNEQbv6HRU6ogPK8M+s=
+	t=1705952577; cv=none; b=qGFkk8tDZKIB3lVGQvja4bUtQglsv8Ls3gRveL3U1tQO6vPuS35bc3zo0NyGwyPQmvV70l0dUUm7v5bupm9d+V0jtvSt2iYYz9P7V1PCICtXzmlDYhwkpMMUyotS/4AWl82OOAnM0Gvt52n+M9TDha5ZPgnux/2YgR4b9UcEikQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705952574; c=relaxed/simple;
-	bh=NbEQcOnB7H8EdKo3GSKPQlbo4RmfFSlQlC73a0ZWeIw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Vyu/wGSc1LFdrMlmKGNkDVZoH3fhooV8r4rzJj7Tb8gDozTBQxiBnqKss1++PiROz9iWQ6ZjPKFF02qjd7CBfGvNeHYLLcNe6b3eitKhfRgPiS8fVj9uGnuy557CAgT9VJ00E2kqNFvRC3BZ049DsqbY+bKBajYLW1uA4dVY9hE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JS0Qs/Mm; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JS0Qs/Mm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1705952572;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=aezdbNXr3jeNg/oq4Ir7c4pnUJMPrBPlV8tZyKwBKMo=;
-	b=JS0Qs/MmKwkKUVOnblmSpXiRAtjpFzoGCcTwnDeRxEgvj2Q+DwsBWzJFhIxOuW+fWkig3H
-	K0PH+2tNBe4D1pmLeuhXsONO1ZYyudSFy834/pW9JZpGZFGk7YuWeY+FbrPSViLlEORtuz
-	MGNV/cJpWe2eiYobNw1KRIhQiCteXuA=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-284-dLhPkRjVM62_BryuXLzoyw-1; Mon,
- 22 Jan 2024 14:42:48 -0500
-X-MC-Unique: dLhPkRjVM62_BryuXLzoyw-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 175DA3806063;
-	Mon, 22 Jan 2024 19:42:47 +0000 (UTC)
-Received: from t14s.redhat.com (unknown [10.39.195.114])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id B54363C2E;
-	Mon, 22 Jan 2024 19:42:41 +0000 (UTC)
-From: David Hildenbrand <david@redhat.com>
-To: linux-kernel@vger.kernel.org
-Cc: linux-mm@kvack.org,
-	David Hildenbrand <david@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Ryan Roberts <ryan.roberts@arm.com>,
+	s=arc-20240116; t=1705952577; c=relaxed/simple;
+	bh=tGx+wjv2kD7SWo6vWGqt+QOeT37RD+iUKyRyzGjc+4c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SOfx9W4I1ljcKI/AoQtPX1zw3LtvjibP8EPOPSZH6mrIFaU9jypL7MMP4Oi15YdoWGZq5RDYQKV0h0qRJkAtRN6Wi8P4WyO0n/0oEC711t2d4jiMHjs78Aua0Nv8ea9qWDfNZrKKqqf/O1MDnIQmFeHhKo3h7qRI6m2G2MWgPpU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a2d7e2e7fe0so606916266b.1;
+        Mon, 22 Jan 2024 11:42:55 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705952574; x=1706557374;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cSz9MgcaBEj1PDlX4xVuO8K29ToCXliySSzjMUOEVTU=;
+        b=I8BHz6QzUnpYT+f9W76zkVNvwtOKmnZ0Ppi4rEJ6enNdr7aefLS/G7izqmIPXZrAf/
+         YOIWLZfIe912bnEVDZRKQVsuwXWr64tb/+6WV20b/EFjPi1udchWKd1gMx25tgjKcFqJ
+         Tonm5KnGAa96dRrvqSfzzpRVhorrFo7oOhdjltViNZe79mUDpgzICjLIuuRmNloBeAuJ
+         l8WOTR4k8NUtEFwt52Qps5eqJegIZZolWc7fF4eKBaj4mVL8GlXzMlqAHiDC0/tDr77+
+         qJ4WLZ/2GLh3tPZCjgcEe8zckkXbEwfBx9pNBrosg4wiRb24FP2oRprBuP9lwwr1wftM
+         AkIA==
+X-Gm-Message-State: AOJu0YyBhea/wxspPhi4N9BXE5JsMzxZIqXv7eqKPQkTvB0E+x9wwpSi
+	0lUVnWPdR2hJ7GLXM4hBXa4Gyyh3DMDsdBKPj+wEvQZNc8T7K4HY
+X-Google-Smtp-Source: AGHT+IFQFCGpmLYtrnRwSCjHHeNf9K+eWlAMbY6MH7qysKYu0OOCBDzmRNRSH/REALQ1FNXviTDUFQ==
+X-Received: by 2002:a17:906:3a92:b0:a29:32bf:9c8 with SMTP id y18-20020a1709063a9200b00a2932bf09c8mr4714272ejd.39.1705952574020;
+        Mon, 22 Jan 2024 11:42:54 -0800 (PST)
+Received: from gmail.com (fwdproxy-cln-009.fbsv.net. [2a03:2880:31ff:9::face:b00c])
+        by smtp.gmail.com with ESMTPSA id ca23-20020a170906a3d700b00a2bd01c2349sm13594158ejb.169.2024.01.22.11.42.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Jan 2024 11:42:53 -0800 (PST)
+Date: Mon, 22 Jan 2024 11:42:51 -0800
+From: Breno Leitao <leitao@debian.org>
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: kuba@kernel.org, davem@davemloft.net, abeni@redhat.com,
+	edumazet@google.com, Ioana Ciornei <ioana.ciornei@nxp.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
 	Russell King <linux@armlinux.org.uk>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	linux-arm-kernel@lists.infradead.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org,
-	sparclinux@vger.kernel.org
-Subject: [PATCH v1 07/11] mm/memory: factor out copying the actual PTE in copy_present_pte()
-Date: Mon, 22 Jan 2024 20:41:56 +0100
-Message-ID: <20240122194200.381241-8-david@redhat.com>
-In-Reply-To: <20240122194200.381241-1-david@redhat.com>
-References: <20240122194200.381241-1-david@redhat.com>
+	Paolo Abeni <pabeni@redhat.com>, Alexander Couzens <lynxis@fe80.eu>,
+	Daniel Golle <daniel@makrotopia.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Jose Abreu <Jose.Abreu@synopsys.com>, dsahern@kernel.org,
+	weiwan@google.com,
+	"open list:LYNX PCS MODULE" <netdev@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	"moderated list:ARM/Mediatek SoC support" <linux-arm-kernel@lists.infradead.org>,
+	"moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>
+Subject: Re: [PATCH net-next 03/22] net: fill in MODULE_DESCRIPTION()s for
+ PCS Layer
+Message-ID: <Za7FO7yBZ1a2KQ3B@gmail.com>
+References: <20240122184543.2501493-1-leitao@debian.org>
+ <20240122184543.2501493-4-leitao@debian.org>
+ <52e39a1b-c551-4eea-9606-62be0cbad39f@lunn.ch>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <52e39a1b-c551-4eea-9606-62be0cbad39f@lunn.ch>
 
-Let's prepare for further changes.
+On Mon, Jan 22, 2024 at 08:33:31PM +0100, Andrew Lunn wrote:
+> On Mon, Jan 22, 2024 at 10:45:24AM -0800, Breno Leitao wrote:
+> > W=1 builds now warn if module is built without a MODULE_DESCRIPTION().
+> > Add descriptions to the LynxI PCS MediaTek's SoC.
+> 
+> That patch now does more than that.
+> 
+> > Signed-off-by: Breno Leitao <leitao@debian.org>
+> > ---
+> >  drivers/net/pcs/pcs-lynx.c      | 1 +
+> >  drivers/net/pcs/pcs-mtk-lynxi.c | 1 +
+> >  drivers/net/pcs/pcs-xpcs.c      | 1 +
+> >  3 files changed, 3 insertions(+)
+> > 
+> > diff --git a/drivers/net/pcs/pcs-lynx.c b/drivers/net/pcs/pcs-lynx.c
+> > index dc3962b2aa6b..d51d09beaab3 100644
+> > --- a/drivers/net/pcs/pcs-lynx.c
+> > +++ b/drivers/net/pcs/pcs-lynx.c
+> > @@ -398,4 +398,5 @@ void lynx_pcs_destroy(struct phylink_pcs *pcs)
+> >  }
+> >  EXPORT_SYMBOL(lynx_pcs_destroy);
+> >  
+> > +MODULE_DESCRIPTION("MediaTek SGMII library for Lynx PCS");
+> 
+> pcs-lynx is for NXP hardware, not MediaTek.
 
-Signed-off-by: David Hildenbrand <david@redhat.com>
----
- mm/memory.c | 60 ++++++++++++++++++++++++++++-------------------------
- 1 file changed, 32 insertions(+), 28 deletions(-)
-
-diff --git a/mm/memory.c b/mm/memory.c
-index 7e1f4849463aa..2aa2051ee51d3 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -930,6 +930,29 @@ copy_present_page(struct vm_area_struct *dst_vma, struct vm_area_struct *src_vma
- 	return 0;
- }
- 
-+static inline void __copy_present_pte(struct vm_area_struct *dst_vma,
-+		struct vm_area_struct *src_vma, pte_t *dst_pte, pte_t *src_pte,
-+		pte_t pte, unsigned long addr)
-+{
-+	struct mm_struct *src_mm = src_vma->vm_mm;
-+
-+	/* If it's a COW mapping, write protect it both processes. */
-+	if (is_cow_mapping(src_vma->vm_flags) && pte_write(pte)) {
-+		ptep_set_wrprotect(src_mm, addr, src_pte);
-+		pte = pte_wrprotect(pte);
-+	}
-+
-+	/* If it's a shared mapping, mark it clean in the child. */
-+	if (src_vma->vm_flags & VM_SHARED)
-+		pte = pte_mkclean(pte);
-+	pte = pte_mkold(pte);
-+
-+	if (!userfaultfd_wp(dst_vma))
-+		pte = pte_clear_uffd_wp(pte);
-+
-+	set_pte_at(dst_vma->vm_mm, addr, dst_pte, pte);
-+}
-+
- /*
-  * Copy one pte.  Returns 0 if succeeded, or -EAGAIN if one preallocated page
-  * is required to copy this pte.
-@@ -939,16 +962,16 @@ copy_present_pte(struct vm_area_struct *dst_vma, struct vm_area_struct *src_vma,
- 		 pte_t *dst_pte, pte_t *src_pte, unsigned long addr, int *rss,
- 		 struct folio **prealloc)
- {
--	struct mm_struct *src_mm = src_vma->vm_mm;
--	unsigned long vm_flags = src_vma->vm_flags;
- 	pte_t pte = ptep_get(src_pte);
- 	struct page *page;
- 	struct folio *folio;
- 
- 	page = vm_normal_page(src_vma, addr, pte);
--	if (page)
--		folio = page_folio(page);
--	if (page && folio_test_anon(folio)) {
-+	if (unlikely(!page))
-+		goto copy_pte;
-+
-+	folio = page_folio(page);
-+	if (folio_test_anon(folio)) {
- 		/*
- 		 * If this page may have been pinned by the parent process,
- 		 * copy the page immediately for the child so that we'll always
-@@ -963,34 +986,15 @@ copy_present_pte(struct vm_area_struct *dst_vma, struct vm_area_struct *src_vma,
- 						 addr, rss, prealloc, page);
- 		}
- 		rss[MM_ANONPAGES]++;
--	} else if (page) {
-+		VM_WARN_ON_FOLIO(PageAnonExclusive(page), folio);
-+	} else {
- 		folio_get(folio);
- 		folio_dup_file_rmap_pte(folio, page);
- 		rss[mm_counter_file(page)]++;
- 	}
- 
--	/*
--	 * If it's a COW mapping, write protect it both
--	 * in the parent and the child
--	 */
--	if (is_cow_mapping(vm_flags) && pte_write(pte)) {
--		ptep_set_wrprotect(src_mm, addr, src_pte);
--		pte = pte_wrprotect(pte);
--	}
--	VM_BUG_ON(page && folio_test_anon(folio) && PageAnonExclusive(page));
--
--	/*
--	 * If it's a shared mapping, mark it clean in
--	 * the child
--	 */
--	if (vm_flags & VM_SHARED)
--		pte = pte_mkclean(pte);
--	pte = pte_mkold(pte);
--
--	if (!userfaultfd_wp(dst_vma))
--		pte = pte_clear_uffd_wp(pte);
--
--	set_pte_at(dst_vma->vm_mm, addr, dst_pte, pte);
-+copy_pte:
-+	__copy_present_pte(dst_vma, src_vma, dst_pte, src_pte, pte, addr);
- 	return 0;
- }
- 
--- 
-2.43.0
-
+Thanks. I will update!
