@@ -1,134 +1,150 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BB1E18C20
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 08:30:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1EAC38386;
+	Mon, 22 Jan 2024 08:30:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705912209; cv=none; b=MpKlXwtbGmZDvYcHwiP4fXsvej/32FY1kw0wWwqZglBsCeC2Cq+85pb7O3310aJN8UZyYOyqHFmo3IlSLJGz26ukPVA7vR5ttzEY5p2+jywPsl9stERg1htMxZ5bNTLktBx8q985b+IL2+h+rYaxewBqPx+q3Tz9JcsTwTBvjNM=
+	t=1705912217; cv=none; b=qgslJjqK6hX3o8s2doLF7av4QY/N9EnpRL0o9QHAgTCW2xGCms4xlwPE3GMlDE4nPQQSD0NarL9WjuoziRoIvJRyb127kTdDCx3zxkrpnUjnU2PSxrJl96lDZrRlNNis7b6PAzWKctY5DVc0YsDkFqRTrb9z8C4vO2UnNyOEZek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705912209; c=relaxed/simple;
-	bh=pMUV4op1QVmaWaTXq7UmoOws2OnRP5AvymPcOZREQRM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NrSkJaZDot22deW/pwv0X1lcsXwKpZUfdYX4xc4TTyFd/l//cwImF/3dG5+HfH9Cj5OWDoCVkei54lY5jnnNKyAr60nc82+0cNaPHSeflYhZWqlaPo1ios8n8qo/4jaWbQFYhwwBBwUeFVFOAQqEiRFn1HIXEUeim+9Yft85zqw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ZDQ2aEWv; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1705912217; c=relaxed/simple;
+	bh=Rf5MI82lZHhYGSDhwKtyN1xGV0ZqSdRkhIta/II4uNE=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=BVE72F1WWVp+kbfJEowWWEOPGTlHYQVr/iNl+paKNGHqkl1ObgXiSDMT6/zOYeMZ2dMgPajVun3wVJ6vi4xLBt8fJUEWwNMl9LoDHVXXIf2BnxlYzqRsqDp+FluAgfY69iKyl+FMH/Cr9ZObrlls2Tz7CFVTc7iLTPiHv+/F9fM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=Ms03aeg4; arc=none smtp.client-ip=68.232.154.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZDQ2aEWv"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-338aca547d9so2253353f8f.0
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 00:30:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1705912206; x=1706517006; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=SFCiLnY6xBPrqdHIolQZod6apPlIVJ6Tq13E5RZi33g=;
-        b=ZDQ2aEWvgcLL3mtV6o2Rv4sEmLDjBkBQHtjN+PMeI9eHXU9jVtTVyIWe/B/V8cFlNP
-         T0sOUoAxILun50TTK8as3sRruvPmlNPc+oN4lj5P7jqqX3pBgcMjgaFLLClNFwKsJjgG
-         Fi0YXidBTxa5HbaDQPRhnHk20gtf3tZ4+18kcPElMKYQ8/mmXw96oc3qYsS2ET6XJyq+
-         1lc7/5KZ/UnRhntfbBQyV5qXLEADRpQBiln5AM7Br4OY3+wsqLsO+cJbaHPIwlBHlRNN
-         PiGYO0j+2YeEil7DJxawzBea3kiJtAVmVSo0ORWtc3rejbc6nk/d/mZKZ9LOrDGiAwBs
-         QU8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705912206; x=1706517006;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SFCiLnY6xBPrqdHIolQZod6apPlIVJ6Tq13E5RZi33g=;
-        b=BVUQ/XvdtQf0eHTWM485O6vHeHCw4/53CRWLl8lUGvEIltymebcrLbWiNxUXN1dy51
-         4dmO3QmiTt57ZuPwoWOborJCBhFVy1vzk3Y8iYY5cfnqO1YXGyVFCVwUv9xLQT8F4h6L
-         ixhaDc6VqtCdpDNbJZ0AqAtoR2NboaPYqsmVCeUEZodHYTpRH2UojMdOhZhNIjHoeK55
-         sYO1YWIkdvc/rm1im2ITRN+TNZU2KQmIrBt6xv2FjjmBsZp+7eQym6GdsYp0MAYKn1Fq
-         aJNsUBZVM68O1SQ+eXsPNGUET45LdL4Xm2dQhtk2ymks75euCWnSS/FDN/oJHgojIY94
-         tkQg==
-X-Gm-Message-State: AOJu0YyJiko3/rG4yJ93EUrqI2xFOGQLRbuOWXuEmUIQLmu/25IWN2UH
-	wxQeEJ5GMgpwP01dAotAwXRie3Or9SJ0FVdN4dHwey0Y8+WwEor+RFsY0mdJEso=
-X-Google-Smtp-Source: AGHT+IFVQ0c6+n6QcK4dPQ4aInfuFL5IaA5u36sUVkTkA1RNClaCwWZfy6oJvnyLXS/5fMx7uCKTPg==
-X-Received: by 2002:adf:a18a:0:b0:337:828b:dd72 with SMTP id u10-20020adfa18a000000b00337828bdd72mr907642wru.55.1705912205784;
-        Mon, 22 Jan 2024 00:30:05 -0800 (PST)
-Received: from localhost ([102.140.209.237])
-        by smtp.gmail.com with ESMTPSA id d21-20020adfa355000000b003392a486758sm5511850wrb.99.2024.01.22.00.30.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jan 2024 00:30:05 -0800 (PST)
-Date: Mon, 22 Jan 2024 11:30:02 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Kunwu Chan <chentao@kylinos.cn>
-Cc: Markus Elfring <Markus.Elfring@web.de>, xen-devel@lists.xenproject.org,
-	kernel-janitors@vger.kernel.org,
-	LKML <linux-kernel@vger.kernel.org>,
-	kernel test robot <lkp@intel.com>,
-	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-	=?iso-8859-1?Q?J=FCrgen_Gro=DF?= <jgross@suse.com>,
-	Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org
-Subject: Re: [PATCH v2] x86/xen: Add some null pointer checking to smp.c
-Message-ID: <dfb6de51-3ebc-41fc-a750-cf5ca2ac05aa@moroto.mountain>
-References: <20240117090018.152031-1-chentao@kylinos.cn>
- <1705655941162581.825.seg@mailgw>
- <517fae75-c4e7-4576-81ff-6a14a3eb9cd7@kylinos.cn>
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="Ms03aeg4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1705912215; x=1737448215;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=Rf5MI82lZHhYGSDhwKtyN1xGV0ZqSdRkhIta/II4uNE=;
+  b=Ms03aeg47J/n5pf0XBWeuT9dbvr5sf3ru0WJHdAIPi3LZW+WFEF8oiBX
+   DG45oUCKc2rODgCKrrt7Z+Yn+85Y4ArPt0NZRwvjpdLBv0UP+rjRBMuwZ
+   ETOJxRkk2AQP2vAfmM2NwDKJe7FydCBiNKxUSy0iysnbrCG17ytMrBkmm
+   9CqAB3j3DjdM7w7rIzlnxRf2FtvnJ0QhljBIOOgbp1/eTFR4FPVTXgfYi
+   zd1lHXP7WUmki4Qn9QioWiCOMklu3n/yX6l94779D6xOrnXBkV5DthlQl
+   c2IomLIDC9HG7x6dOzvNjjK+mJioQNwcd4YmNXKJBrvb2/RNipXFLcqHl
+   w==;
+X-CSE-ConnectionGUID: C6zQ2Iq3QDa7pYOudyjy+g==
+X-CSE-MsgGUID: iDsarLzDRj6WJ7QX1eoRtg==
+X-IronPort-AV: E=Sophos;i="6.05,211,1701154800"; 
+   d="scan'208";a="15086355"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa4.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 22 Jan 2024 01:30:14 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Mon, 22 Jan 2024 01:30:04 -0700
+Received: from che-lt-i70843lx.microchip.com (10.10.85.11) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
+ 15.1.2507.35 via Frontend Transport; Mon, 22 Jan 2024 01:29:57 -0700
+From: Dharma Balasubiramani <dharma.b@microchip.com>
+To: <manikandan.m@microchip.com>, <dharma.b@microchip.com>,
+	<andrzej.hajda@intel.com>, <neil.armstrong@linaro.org>, <rfoss@kernel.org>,
+	<Laurent.pinchart@ideasonboard.com>, <jonas@kwiboo.se>,
+	<jernej.skrabec@gmail.com>, <airlied@gmail.com>, <daniel@ffwll.ch>,
+	<maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
+	<tzimmermann@suse.de>, <robh+dt@kernel.org>,
+	<krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+	<dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+CC: <linux4microchip@microchip.com>
+Subject: [PATCH 1/3] dt-bindings: display: bridge: add sam9x7-lvds compatible
+Date: Mon, 22 Jan 2024 13:59:45 +0530
+Message-ID: <20240122082947.21645-2-dharma.b@microchip.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240122082947.21645-1-dharma.b@microchip.com>
+References: <20240122082947.21645-1-dharma.b@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <517fae75-c4e7-4576-81ff-6a14a3eb9cd7@kylinos.cn>
+Content-Type: text/plain
 
-On Fri, Jan 19, 2024 at 05:22:25PM +0800, Kunwu Chan wrote:
-> On 2024/1/17 18:40, Markus Elfring wrote:
-> > > kasprintf() returns a pointer to dynamically allocated memory
-> > > which can be NULL upon failure. Ensure the allocation was successful
-> > > by checking the pointer validity.
-> > …
-> > > +++ b/arch/x86/xen/smp.c
-> > > @@ -61,10 +61,14 @@ void xen_smp_intr_free(unsigned int cpu)
-> > > 
-> > >   int xen_smp_intr_init(unsigned int cpu)
-> > >   {
-> > > -	int rc;
-> > > +	int rc = 0;
-> > 
-> > I find the indication of a successful function execution sufficient by
-> > the statement “return 0;” at the end.
-> > How do you think about to omit such an extra variable initialisation?
-> Thanks, it's no need now. I'll remove it in v3.
+Add the 'sam9x7-lvds' compatible binding, which describes the
+Low Voltage Differential Signaling (LVDS) Controller found on Microchip's
+sam9x7 series System-on-Chip (SoC) devices. This binding will be used to
+define the properties and configuration for the LVDS Controller in DT.
 
-This advice is good.  Don't do unnecessary assignments.
+Signed-off-by: Dharma Balasubiramani <dharma.b@microchip.com>
+---
+ .../display/bridge/microchip,sam9x7-lvds.yaml | 59 +++++++++++++++++++
+ 1 file changed, 59 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/microchip,sam9x7-lvds.yaml
 
-> > 
-> > 
-> > >   	char *resched_name, *callfunc_name, *debug_name;
-> > > 
-> > >   	resched_name = kasprintf(GFP_KERNEL, "resched%d", cpu);
-> > > +	if (!resched_name) {
-> > > +		rc = -ENOMEM;
-> > > +		goto fail;
-> > > +	}
-> > >   	per_cpu(xen_resched_irq, cpu).name = resched_name;
-> > >   	rc = bind_ipi_to_irqhandler(XEN_RESCHEDULE_VECTOR,
-> > >   				    cpu,
-> > 
-> > You propose to apply the same error code in four if branches.
-> > I suggest to avoid the specification of duplicate assignment statements
-> > for this purpose.
-> > How do you think about to use another label like “e_nomem”?
-> I'll add a new label to simply the code.
-
-I'm not a Xen maintainer so I can't really comment on their style
-choices.  However, as one of the kernel-janitors list people, I would
-say that not everyone agrees with Markus's style preferences.  Markus
-was banned from the list for a while, but we unbanned everyone when we
-transitioned to the new list infrastructure.  Do a search on lore to
-find out more.  https://lore.kernel.org/all/?q=Elfring
-
-Perhaps wait for feedback from the maintainers for how to proceed?
-
-regards,
-dan carpenter
+diff --git a/Documentation/devicetree/bindings/display/bridge/microchip,sam9x7-lvds.yaml b/Documentation/devicetree/bindings/display/bridge/microchip,sam9x7-lvds.yaml
+new file mode 100644
+index 000000000000..8c2c5b858c85
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/bridge/microchip,sam9x7-lvds.yaml
+@@ -0,0 +1,59 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/display/bridge/microchip,sam9x7-lvds.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Microchip SAM9X7 LVDS Controller
++
++maintainers:
++  - Dharma Balasubiramani <dharma.b@microchip.com>
++
++description: |
++  The Low Voltage Differential Signaling Controller (LVDSC) manages data
++  format conversion from the LCD Controller internal DPI bus to OpenLDI
++  LVDS output signals. LVDSC functions include bit mapping, balanced mode
++  management, and serializer.
++
++properties:
++  compatible:
++    const: microchip,sam9x7-lvds
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    items:
++      - description: Peripheral Bus Clock
++
++  clock-names:
++    items:
++      - const: pclk
++      - const: gclk
++    minItems: 1
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - clock-names
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/at91.h>
++    #include <dt-bindings/dma/at91.h>
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++
++    lvds-controller@f8060000 {
++      compatible = "microchip,sam9x7-lvds";
++      reg = <0xf8060000 0x100>;
++      interrupts = <56 IRQ_TYPE_LEVEL_HIGH 0>;
++      clocks = <&pmc PMC_TYPE_PERIPHERAL 56>;
++      clock-names = "pclk";
++    };
+-- 
+2.25.1
 
