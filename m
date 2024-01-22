@@ -1,39 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 934DB4C89;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3A464C90;
 	Mon, 22 Jan 2024 05:35:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705901758; cv=none; b=O7iKWdD9mc5PFB74DsSjkffaZ9ZwI8t/8qFkJQiQwxd6GQvslIGjxfTZhpn+s/WCasogXLDMNhmmoH7NBH6JmQhbIWhG474iFSFtk8bjGByaupXHqoCdorhE3HVD8SjQ4WhfGsLxOU/EUqc4Pfg9ruxLlZJusfH98IdbnFL1GSA=
+	t=1705901758; cv=none; b=g9zpgTK76lQ+k9ZfhnAUhQEK1b9/+B3vMeo0hPJhtOBwvQyOtEyy78NXpTrZtaHivio0JdE+RnLvcljEPQLZHJhpy6G/Hy4ZqpgICyT+B8oKJ9D/gPFkmkAB88NxM9N9FIGbmmvtcw57WUpDnlR3Bcw/T236MHb8EEJcxx8Qb3I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1705901758; c=relaxed/simple;
-	bh=BJnOeS65sq0ctJq5UOVZ2WxdttW9vz25dwKp4xbPBfc=;
+	bh=Bgfx+EXSTylXwbNtkkMqzd6UQvp2lUWMn2C6vtoawQg=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=IqiISEDFc+nb+/WUx84sDQYfPa9PGjwjNZHhgREnzol9r4R3HvvG8vY4RiMN3fl+PmMwnwHEzqES+kehAxhvUkUID3T4r9RWbwHB4FZ2UWhK05gEeIu/FOYqmoZwch1TtTtxgfYBZES6ff7iltWRDqQmKkdwNgaoMKtJCxlw80c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O58BuPXm; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=U50AbJiJTt7KUIlY8nVn+nRwiMf++KzVgS8QQAJ99rCX+ncjmxoR2qk2mT5NvnRJIeXmAg/5+2mQXLbivtT5D+Izf8SJwSCcqh1GCw4sRihzhNI9KxRDDGRLzn8puq/wFU/4T9KqBY54zxHO+w1rPDqBWaD7tzpcDAx7e5CMLVo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XKE25fjz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O58BuPXm"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 37309C433F1;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XKE25fjz"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 581CCC433A6;
 	Mon, 22 Jan 2024 05:35:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1705901758;
-	bh=BJnOeS65sq0ctJq5UOVZ2WxdttW9vz25dwKp4xbPBfc=;
+	bh=Bgfx+EXSTylXwbNtkkMqzd6UQvp2lUWMn2C6vtoawQg=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=O58BuPXmDB3kntKMblO13Z8kSWaTk2SeOjB/cNBiY4q4ET0d+WajAYCGaxy1C24/X
-	 5eYJzqKIPfpT7ejDHYEhAoHW1Fk7tUULodwryVm7hDVg4qA2T8+uWsUXM2ZBluV+/R
-	 EVB4NoOsntfxjilrt9+HZpwjCUiq1uMVuayHfN4ItQJAhPtS0okpG7qDV2GVUE4mI2
-	 IPYopn/kn3If9zQ2DfwloS9Zq16tESXx/ILtYjEM/0I9MHaHANp5Oler/HurMjbIaV
-	 ef8dR+4gwhSmr74N1Qt7NKi9p97y1n5HnkUYgfKldryh38V4ZjZMA1mBR//rB0jnXj
-	 1TGefU2/xruXA==
+	b=XKE25fjzDV/7nvKO1u8VP9DMhM4FhykMky9I7YxP8Ezrkm9QY7pv+FO95Z043mrav
+	 eEJCD5NR0gWNVOBdMvdGMF/64rVCHR8VdszdOzqujUgwA1AYRLikEVEe2Xuuz6QU4w
+	 wU6E00CpxkfFXKjP1MVUCbYuSoDUR0VA9UMEV7M0XIXLiFyULO51ccUN+lAb4Ho5/y
+	 G7VkyEmEvUeeXrwq7IZYU0FWwAn28snmS8EBGNtqvOSpRucBB09FX0fbnKNk6qnBoQ
+	 HbHAjTaPSFUFOZqfVFkiAUY+Umpkpxfhn/QgTa14ASLcn2FnykpOblx5rxujemZSy/
+	 +G+zKzzDpSJ7Q==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EC98C47DD3;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 457C5C47DDF;
 	Mon, 22 Jan 2024 05:35:58 +0000 (UTC)
 From: =?utf-8?b?QXLEsW7DpyDDnE5BTA==?= via B4 Relay
  <devnull+arinc.unal.arinc9.com@kernel.org>
-Date: Mon, 22 Jan 2024 08:35:52 +0300
-Subject: [PATCH net-next v3 1/7] net: dsa: mt7530: always trap frames to
- active CPU port on MT7530
+Date: Mon, 22 Jan 2024 08:35:55 +0300
+Subject: [PATCH net-next v3 4/7] net: dsa: mt7530: improve comments
+ regarding switch ports
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,7 +43,7 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Message-Id:
- <20240122-for-netnext-mt7530-improvements-1-v3-1-042401f2b279@arinc9.com>
+ <20240122-for-netnext-mt7530-improvements-1-v3-4-042401f2b279@arinc9.com>
 References:
  <20240122-for-netnext-mt7530-improvements-1-v3-0-042401f2b279@arinc9.com>
 In-Reply-To:
@@ -64,11 +64,11 @@ Cc: mithat.guner@xeront.com, erkin.bozoglu@xeront.com,
  linux-mediatek@lists.infradead.org, 
  =?utf-8?q?Ar=C4=B1n=C3=A7_=C3=9CNAL?= <arinc.unal@arinc9.com>
 X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1705901755; l=4314;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1705901755; l=4567;
  i=arinc.unal@arinc9.com; s=arinc9-patatt; h=from:subject:message-id;
- bh=OahuM/i2rvjHeE74Gk7po9F6EBBznn5IwSvSniGSaV0=;
- b=Tdp4jqS5p+QOFq8gzefgBM65crsiy194Phw6aAQVLvMNPC2qLMjNXHRYGMeSIs66WwnOrc0YK
- KoKmm10jNroBRbt3dDStrqDwLZQ3izsAPTX+dvPz1aKJnhYJNVNrne+
+ bh=rLcHCbYDzkt28v28nq9XIDczR9kM3jpJ8YmzJ0uoUlo=;
+ b=P9VOv8+icSWtarQqBoOfyPHXdJUQtTer/Hw1RKxWe3HptZ6UWnYL15uVjd13g8sHELrl5aVez
+ DZ0Bb8gDDuYBbL8SBFGTOYBY/b98Q7SFPz4h42o7MxTgYsK7IPd7/fB
 X-Developer-Key: i=arinc.unal@arinc9.com; a=ed25519;
  pk=VmvgMWwm73yVIrlyJYvGtnXkQJy9CvbaeEqPQO9Z4kA=
 X-Endpoint-Received:
@@ -78,123 +78,130 @@ Reply-To: <arinc.unal@arinc9.com>
 
 From: Arınç ÜNAL <arinc.unal@arinc9.com>
 
-On the MT7530 switch, the CPU_PORT field indicates which CPU port to trap
-frames to, regardless of the affinity of the inbound user port.
+There's no logic to numerically order the CPU ports. Just state the port
+number instead.
 
-When multiple CPU ports are in use, if the DSA conduit interface is down,
-trapped frames won't be passed to the conduit interface.
+Remove the irrelevant PHY muxing information from
+mt7530_mac_port_get_caps(). Explain the supported MII modes instead.
 
-To make trapping frames work including this case, implement
-ds->ops->conduit_state_change() on this subdriver and set the CPU_PORT
-field to the numerically smallest CPU port whose conduit interface is up.
-Introduce the active_cpu_ports field to store the information of the active
-CPU ports. Correct the macros, CPU_PORT is bits 4 through 6 of the
-register.
+Remove the out of place PHY muxing information from
+mt753x_phylink_mac_config(). The function is for MT7530, MT7531, and the
+switch on the MT7988 SoC but there's no PHY muxing on MT7531 or the switch
+on the MT7988 SoC.
 
-Add a comment to explain frame trapping for this switch.
+These comments were gradually introduced with the commits below.
+commit ca366d6c889b ("net: dsa: mt7530: Convert to PHYLINK API")
+commit 38f790a80560 ("net: dsa: mt7530: Add support for port 5")
+commit 88bdef8be9f6 ("net: dsa: mt7530: Extend device data ready for adding
+a new hardware")
+commit c288575f7810 ("net: dsa: mt7530: Add the support of MT7531 switch")
 
-Currently, the driver doesn't support the use of multiple CPU ports so this
-is not necessarily a bug fix.
-
-Suggested-by: Vladimir Oltean <olteanv@gmail.com>
-Suggested-by: Russell King (Oracle) <linux@armlinux.org.uk>
 Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
+Acked-by: Daniel Golle <daniel@makrotopia.org>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Reviewed-by: Vladimir Oltean <olteanv@gmail.com>
 ---
- drivers/net/dsa/mt7530.c | 35 +++++++++++++++++++++++++++++++----
- drivers/net/dsa/mt7530.h |  6 ++++--
- 2 files changed, 35 insertions(+), 6 deletions(-)
+ drivers/net/dsa/mt7530.c | 30 ++++++++++++++++++++----------
+ 1 file changed, 20 insertions(+), 10 deletions(-)
 
 diff --git a/drivers/net/dsa/mt7530.c b/drivers/net/dsa/mt7530.c
-index 391c4dbdff42..761c4804449a 100644
+index c77092506c3f..93d8498ce274 100644
 --- a/drivers/net/dsa/mt7530.c
 +++ b/drivers/net/dsa/mt7530.c
-@@ -1035,10 +1035,6 @@ mt753x_cpu_port_enable(struct dsa_switch *ds, int port)
- 	mt7530_set(priv, MT7530_MFC, BC_FFP(BIT(port)) | UNM_FFP(BIT(port)) |
- 		   UNU_FFP(BIT(port)));
- 
--	/* Set CPU port number */
--	if (priv->id == ID_MT7530 || priv->id == ID_MT7621)
--		mt7530_rmw(priv, MT7530_MFC, CPU_MASK, CPU_EN | CPU_PORT(port));
--
- 	/* Add the CPU port to the CPU port bitmap for MT7531 and the switch on
- 	 * the MT7988 SoC. Trapped frames will be forwarded to the CPU port that
- 	 * is affine to the inbound user port.
-@@ -3075,6 +3071,36 @@ static int mt753x_set_mac_eee(struct dsa_switch *ds, int port,
- 	return 0;
- }
- 
-+static void
-+mt753x_conduit_state_change(struct dsa_switch *ds,
-+			    const struct net_device *conduit,
-+			    bool operational)
-+{
-+	struct dsa_port *cpu_dp = conduit->dsa_ptr;
-+	struct mt7530_priv *priv = ds->priv;
-+	int val = 0;
-+	u8 mask;
-+
-+	/* Set the CPU port to trap frames to for MT7530. Trapped frames will be
-+	 * forwarded to the numerically smallest CPU port whose conduit
-+	 * interface is up.
-+	 */
-+	if (priv->id != ID_MT7530 && priv->id != ID_MT7621)
-+		return;
-+
-+	mask = BIT(cpu_dp->index);
-+
-+	if (operational)
-+		priv->active_cpu_ports |= mask;
-+	else
-+		priv->active_cpu_ports &= ~mask;
-+
-+	if (priv->active_cpu_ports)
-+		val = CPU_EN | CPU_PORT(__ffs(priv->active_cpu_ports));
-+
-+	mt7530_rmw(priv, MT7530_MFC, CPU_EN | CPU_PORT_MASK, val);
-+}
-+
- static int mt7988_pad_setup(struct dsa_switch *ds, phy_interface_t interface)
+@@ -2520,12 +2520,14 @@ static void mt7530_mac_port_get_caps(struct dsa_switch *ds, int port,
+ 				     struct phylink_config *config)
  {
- 	return 0;
-@@ -3130,6 +3156,7 @@ const struct dsa_switch_ops mt7530_switch_ops = {
- 	.phylink_mac_link_up	= mt753x_phylink_mac_link_up,
- 	.get_mac_eee		= mt753x_get_mac_eee,
- 	.set_mac_eee		= mt753x_set_mac_eee,
-+	.conduit_state_change	= mt753x_conduit_state_change,
- };
- EXPORT_SYMBOL_GPL(mt7530_switch_ops);
+ 	switch (port) {
+-	case 0 ... 4: /* Internal phy */
++	/* Ports which are connected to switch PHYs. There is no MII pinout. */
++	case 0 ... 4:
+ 		__set_bit(PHY_INTERFACE_MODE_GMII,
+ 			  config->supported_interfaces);
+ 		break;
  
-diff --git a/drivers/net/dsa/mt7530.h b/drivers/net/dsa/mt7530.h
-index 17e42d30fff4..ebfb3a7acfcd 100644
---- a/drivers/net/dsa/mt7530.h
-+++ b/drivers/net/dsa/mt7530.h
-@@ -41,8 +41,8 @@ enum mt753x_id {
- #define  UNU_FFP(x)			(((x) & 0xff) << 8)
- #define  UNU_FFP_MASK			UNU_FFP(~0)
- #define  CPU_EN				BIT(7)
--#define  CPU_PORT(x)			((x) << 4)
--#define  CPU_MASK			(0xf << 4)
-+#define  CPU_PORT_MASK			GENMASK(6, 4)
-+#define  CPU_PORT(x)			FIELD_PREP(CPU_PORT_MASK, x)
- #define  MIRROR_EN			BIT(3)
- #define  MIRROR_PORT(x)			((x) & 0x7)
- #define  MIRROR_MASK			0x7
-@@ -760,6 +760,7 @@ struct mt753x_info {
-  * @irq_domain:		IRQ domain of the switch irq_chip
-  * @irq_enable:		IRQ enable bits, synced to SYS_INT_EN
-  * @create_sgmii:	Pointer to function creating SGMII PCS instance(s)
-+ * @active_cpu_ports:	Holding the active CPU ports
-  */
- struct mt7530_priv {
- 	struct device		*dev;
-@@ -786,6 +787,7 @@ struct mt7530_priv {
- 	struct irq_domain *irq_domain;
- 	u32 irq_enable;
- 	int (*create_sgmii)(struct mt7530_priv *priv, bool dual_sgmii);
-+	u8 active_cpu_ports;
- };
+-	case 5: /* 2nd cpu port with phy of port 0 or 4 / external phy */
++	/* Port 5 supports rgmii with delays, mii, and gmii. */
++	case 5:
+ 		phy_interface_set_rgmii(config->supported_interfaces);
+ 		__set_bit(PHY_INTERFACE_MODE_MII,
+ 			  config->supported_interfaces);
+@@ -2533,7 +2535,8 @@ static void mt7530_mac_port_get_caps(struct dsa_switch *ds, int port,
+ 			  config->supported_interfaces);
+ 		break;
  
- struct mt7530_hw_vlan_entry {
+-	case 6: /* 1st cpu port */
++	/* Port 6 supports rgmii and trgmii. */
++	case 6:
+ 		__set_bit(PHY_INTERFACE_MODE_RGMII,
+ 			  config->supported_interfaces);
+ 		__set_bit(PHY_INTERFACE_MODE_TRGMII,
+@@ -2548,19 +2551,24 @@ static void mt7531_mac_port_get_caps(struct dsa_switch *ds, int port,
+ 	struct mt7530_priv *priv = ds->priv;
+ 
+ 	switch (port) {
+-	case 0 ... 4: /* Internal phy */
++	/* Ports which are connected to switch PHYs. There is no MII pinout. */
++	case 0 ... 4:
+ 		__set_bit(PHY_INTERFACE_MODE_GMII,
+ 			  config->supported_interfaces);
+ 		break;
+ 
+-	case 5: /* 2nd cpu port supports either rgmii or sgmii/8023z */
++	/* Port 5 supports rgmii with delays on MT7531BE, sgmii/802.3z on
++	 * MT7531AE.
++	 */
++	case 5:
+ 		if (!priv->p5_sgmii) {
+ 			phy_interface_set_rgmii(config->supported_interfaces);
+ 			break;
+ 		}
+ 		fallthrough;
+ 
+-	case 6: /* 1st cpu port supports sgmii/8023z only */
++	/* Port 6 supports sgmii/802.3z. */
++	case 6:
+ 		__set_bit(PHY_INTERFACE_MODE_SGMII,
+ 			  config->supported_interfaces);
+ 		__set_bit(PHY_INTERFACE_MODE_1000BASEX,
+@@ -2579,11 +2587,13 @@ static void mt7988_mac_port_get_caps(struct dsa_switch *ds, int port,
+ 	phy_interface_zero(config->supported_interfaces);
+ 
+ 	switch (port) {
+-	case 0 ... 4: /* Internal phy */
++	/* Ports which are connected to switch PHYs. There is no MII pinout. */
++	case 0 ... 4:
+ 		__set_bit(PHY_INTERFACE_MODE_INTERNAL,
+ 			  config->supported_interfaces);
+ 		break;
+ 
++	/* Port 6 is connected to SoC's XGMII MAC. There is no MII pinout. */
+ 	case 6:
+ 		__set_bit(PHY_INTERFACE_MODE_INTERNAL,
+ 			  config->supported_interfaces);
+@@ -2747,12 +2757,12 @@ mt753x_phylink_mac_config(struct dsa_switch *ds, int port, unsigned int mode,
+ 	u32 mcr_cur, mcr_new;
+ 
+ 	switch (port) {
+-	case 0 ... 4: /* Internal phy */
++	case 0 ... 4:
+ 		if (state->interface != PHY_INTERFACE_MODE_GMII &&
+ 		    state->interface != PHY_INTERFACE_MODE_INTERNAL)
+ 			goto unsupported;
+ 		break;
+-	case 5: /* 2nd cpu port with phy of port 0 or 4 / external phy */
++	case 5:
+ 		if (priv->p5_interface == state->interface)
+ 			break;
+ 
+@@ -2762,7 +2772,7 @@ mt753x_phylink_mac_config(struct dsa_switch *ds, int port, unsigned int mode,
+ 		if (priv->p5_intf_sel != P5_DISABLED)
+ 			priv->p5_interface = state->interface;
+ 		break;
+-	case 6: /* 1st cpu port */
++	case 6:
+ 		if (priv->p6_interface == state->interface)
+ 			break;
+ 
 
 -- 
 2.40.1
