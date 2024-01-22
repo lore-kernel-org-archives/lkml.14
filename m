@@ -1,215 +1,136 @@
-Received: from EUR01-DB5-obe.outbound.protection.outlook.com (mail-db5eur01on2082.outbound.protection.outlook.com [40.107.15.82])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEA973D976;
-	Mon, 22 Jan 2024 14:06:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.15.82
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705932388; cv=fail; b=eLG1+IS9aYKBYITuNRxZDwV0SJfoicCTYkjlqTB8y0kS7Hpuwb3obgghOw20XLav1vvjunk5Gl888MIhs2QZzFbZyKXUjkH9SCAcb3/bglr8lNrHqi4n7wky929lY/4OnGbJ7Aht23DxfyuuQ+ZZcCcaLV4gtowumqVf27Rm9H8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705932388; c=relaxed/simple;
-	bh=YWQxw3IFWmQ7EpqPO/Gwf7EaQ3BVsVWBxcNBP0uhodY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=i7tNBhRO1WfkvK29g0NUHVlN8aODpsLGZMPLUT4jQM3VX7h5ra9/SOwnc2WIhN8lmbO01rUVGEM2bkKlWc46O0Qc9DXUrcs1p4Q/5YfGdNe9+PGmdQrdO1a83UxmCDBMr6C9O/BV3zkzkXKWlVhRTiTKYsTR0nE8W+k01lOgdxY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=J/lEUqOA; arc=fail smtp.client-ip=40.107.15.82
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B6A420DF0
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 14:09:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1705932559; cv=none; b=uIcSdoRK1mSv88ikzWJeKcjR873/7JLajwJENqpIn3/z+VcrT17dEFU/RjYsulWzhviRRGXk5lHDb1BDFGS2rj+pqvSl84TnReUibwxnX6Qw2jqkxhwsl7l/GkjfykOeIHu1W6D3q8Xv2IIRys+cYW8jyqR1JIpOAia9LwiUlCI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1705932559; c=relaxed/simple;
+	bh=znrIct7rUFWksSd+UC6un02EtdkHnndXakyNpVQ9a5Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Hs7FJG+LsR2LWUbIGczj7JpaMeR7HSLDS3Cj5eymsNcJnNZyfa1Qb7RTk4HJcwGq356FY2UeVNIllOy9Ze7+lnDLpjUbYAcgwZ7sS6kXdOgMvMQzU2uH7anL2tisqHH9D8aCU8tM28lz7v1dlAePTbL1peQLPSVj3JZ1HAtOwro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Tm/N0MHP; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="J/lEUqOA"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TxYbXgPeRBdoym3xI0GhYoAx0Jl3X4f1RDjljWW/OuO+6haNHGVdgHQxUoQpNoPxpOvJVIGDXKM1O959BDbQI/zG76PklOmhxkEnzktkqBTiTh9TE12e785cW8DuWJdQDG2KDqCk+8jUjpLXRr9KnmlMr0ETtVg/avauDq6gQm3yHuWObIDZ6dQ+qVUR6++3W8UuwuQ4Yzr1Zu6cPkXzqr5NR98NUSKWUDVd2ofLGVRydsDwXoZyboWU65usRhatX07nEc3H0B5Pu104XbM8Wm/ih78J0czOer9bIBtnuGXDdVw+xrSkmTj0VXi0hvBORCys4BJJGdWyneV1jVgQkQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=orMrRCqw24CVOqdyIU7ec0WaG1tebdD5twBNvy5ojTE=;
- b=ZZzyMV2Xg9rHoS+LI6uUmdrMr/jLcIPp5JPeT67Qt+FlHlc7zEV4NQki4HQulpxzJB1n6MJjypctCKbszekWkbd8RWw+isBXFXL5ITtgKX3VYE0fu5V8J9fI0faWI86fQ4U4WYESh01f5AJ/0m0wLSILC6wgzQYcaSI756mCdupQZL/ayLS/AKQ0eODKeUcX7nz1EYtD3km0HGSzB4nErsg3AXCI3G5ygZx9HzHVC0zFGMMWzeB3zu5RW/yMtajMlVXgEgxl/1co9dIAcZEhh8yB0yzx9k+oZ8ChFP32ywKQ3815nrp87yy2xYYaLH7rA26s9aVzUVhZ3FuoI/n5Iw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector2-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=orMrRCqw24CVOqdyIU7ec0WaG1tebdD5twBNvy5ojTE=;
- b=J/lEUqOAmmKw+uxKkJ6VsYp7x5TIYLeV7DMzJjIwtIr504CxKxLbVP+sXay92EugG0g8rnAp704sKC3ueREM21LM6TwUq7AQe3w0Edt6tgKh8FWKuVEGX73WJ60DoJt+qpnGUsZHU8tdCHOEGN+GBHMiiLgbPuMIB2KiptElJBE=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=oss.nxp.com;
-Received: from DU2PR04MB8582.eurprd04.prod.outlook.com (2603:10a6:10:2d9::24)
- by AM9PR04MB7635.eurprd04.prod.outlook.com (2603:10a6:20b:285::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7202.31; Mon, 22 Jan
- 2024 14:06:23 +0000
-Received: from DU2PR04MB8582.eurprd04.prod.outlook.com
- ([fe80::195c:9861:96a1:56ed]) by DU2PR04MB8582.eurprd04.prod.outlook.com
- ([fe80::195c:9861:96a1:56ed%4]) with mapi id 15.20.7202.031; Mon, 22 Jan 2024
- 14:06:23 +0000
-From: Ghennadi Procopciuc <ghennadi.procopciuc@oss.nxp.com>
-To: Chester Lin <chester62515@gmail.com>,
-	Andreas Farber <afaerber@suse.de>,
-	Matthias Brugger <mbrugger@suse.com>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	ghennadi.procopciuc@oss.nxp.com
-Cc: NXP S32 Linux Team <s32@nxp.com>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	NXP Linux Team <linux-imx@nxp.com>,
-	linux-arm-kernel@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-clk@vger.kernel.org,
-	Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>,
-	Ciprian Costea <ciprianmarian.costea@nxp.com>
-Subject: [PATCH v2 2/2] arm64: dts: s32g: add uSDHC node
-Date: Mon, 22 Jan 2024 16:06:01 +0200
-Message-ID: <20240122140602.1006813-3-ghennadi.procopciuc@oss.nxp.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240122140602.1006813-1-ghennadi.procopciuc@oss.nxp.com>
-References: <20240122140602.1006813-1-ghennadi.procopciuc@oss.nxp.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: VI1PR07CA0294.eurprd07.prod.outlook.com
- (2603:10a6:800:130::22) To DU2PR04MB8582.eurprd04.prod.outlook.com
- (2603:10a6:10:2d9::24)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Tm/N0MHP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1705932556;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=seqmVAFBDnuLvzwL3rN06iKmJlHsjwn1tq37k8ac87U=;
+	b=Tm/N0MHP1bRE93JiRT5A9fkwKpBLB4OFKQs8W7npKkfgf2htGYMjWRJSlR8K/PDacSD8SB
+	wtPntu6lHNrLR1IeGKZ0LtbA9LTtpuypbe4ty58q3w7zy14VnLe7q+eVezMDOSzu481Mdz
+	sIrns0YR2KlliUfXy1ZV4HB5SM2RrCs=
+Received: from mail-yw1-f199.google.com (mail-yw1-f199.google.com
+ [209.85.128.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-97-zdwixl2wNleA2iZVv0LN8Q-1; Mon, 22 Jan 2024 09:09:15 -0500
+X-MC-Unique: zdwixl2wNleA2iZVv0LN8Q-1
+Received: by mail-yw1-f199.google.com with SMTP id 00721157ae682-5f874219ff9so42977697b3.0
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 06:09:14 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705932554; x=1706537354;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=seqmVAFBDnuLvzwL3rN06iKmJlHsjwn1tq37k8ac87U=;
+        b=m06WdKEeCxA72R2uoybkBuKU1Zuz1s387JsSBPIaE7RadUCK/pXq8WrHUnkstkLlkG
+         M2uvFVi2l/e7OZI0l258f9fvXK8w4oXV+ZikJOlHbxaTxOT2z7njMJusTGPW0YA0tszm
+         fZH6dIf820a3zSAhLxrGU/Zp+UnelNkhOdVn/sXNSGui/0Clw5G1G/HQEdvfqeDVcirX
+         7kqnbhG/utTh00vx/gEarqJM8xA8pu54W/2KKwEJD2WkAfSHDTX58PnVJXCEVd6KOAip
+         TSGULDSlwZa38sZk3TKMy7WkQmLNJwFnGKuPklsjomnRgMIuyHT/4//rv/cmAsNTcDOS
+         Xv7w==
+X-Gm-Message-State: AOJu0YyRHfdtLYqXC5x/Oa7AkYCvDb6itPCGxwZ8AwSwSx5rudY9RyTn
+	ukm15HEqgxYhdUhCeAWaB/waYzqxdvOLUWkuc4o3HtVZ3wS8pWrwl3UeawgXD1JXs+BB83P+5cU
+	0UXN4BOwFMmOAKtGvPVkAWJ/EQvLRRayHeXLQTZzpZVztgxlmiGSbETUmwxREzmFu5LO1TTU5nc
+	AbMq/6P0xPvO9jpTv//xPOfp0eeG9B0nnULDzH
+X-Received: by 2002:a81:8411:0:b0:5ff:b07b:e534 with SMTP id u17-20020a818411000000b005ffb07be534mr1742477ywf.9.1705932554313;
+        Mon, 22 Jan 2024 06:09:14 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IF5TYT+m+Db5kWU9mkYv5aX43/bLG4o8DXbKxjOnIgv6IVDOYqnnpHQAvVW5nvty8UP/kaTKK+uoXudOp0V9CI=
+X-Received: by 2002:a81:8411:0:b0:5ff:b07b:e534 with SMTP id
+ u17-20020a818411000000b005ffb07be534mr1742466ywf.9.1705932554072; Mon, 22 Jan
+ 2024 06:09:14 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DU2PR04MB8582:EE_|AM9PR04MB7635:EE_
-X-MS-Office365-Filtering-Correlation-Id: ae839d35-9886-40d8-d3b9-08dc1b5350ba
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	kIBcC/P8zyOhip9kkT2Bw1B5xu9i+gbT9owM5V3LK5ZMvr53P3PK/ZJAl0msWh/QEgv+p+qj4ra7h1sjMqx2L8RTN23w/jE1ph4Vp04NiYEdY2Gj5DF+gto22fn2vZO8XNulfwvyiAGk5Q7H9js+qDMp/uOOAPdgOskW8PXMz8NxYOh8qTJ6u8VIblfL1i11xtWs4L450M7JiggFniZ6rKR5NStw1WJkb0pzCbdCc6Ty8JLjEHHh3b6Ad+0fN9i4Tm+JGfU/0u5diN6Dm28/m3ZXPbd0KUKiG3VJIDBYECqilQWiCJAddJobcnDFIo2rgFbvd7aDBLuETUQEefxu3+Oe55tVasNLJNy5BL8km5bKLOZZEH2wqInwKgavCBGtyoRmt1fC87Vmm5YEvOCMcJgupxIulUbtEI+XOud+YKU21MO6E04kwX2vXPdumhJ/nGESwGLehBe6+3R/clXs5ztoySKgIicHpj/K2IyXHxW5CX8zvLxdIrpueqKvZpDHsnXy4BYGjkF41+oneIl01UZfRr09jjL8F5HHq8IwuXvoBqDW66KFuEDCtJoh0aR46fiHs1CPEWBd1zAJGMg6MumszaFe3pDY5eOPD2ONJW0QIHsC9gY2/jDdYuaroXXtQjMqyok7TNyjKW1AOB4Rnw==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU2PR04MB8582.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(396003)(136003)(366004)(376002)(39860400002)(230922051799003)(1800799012)(186009)(64100799003)(451199024)(38350700005)(921011)(2906002)(66476007)(54906003)(66946007)(66556008)(26005)(6486002)(6666004)(6506007)(110136005)(478600001)(52116002)(316002)(4326008)(8936002)(8676002)(6512007)(7416002)(5660300002)(1076003)(44832011)(2616005)(83380400001)(38100700002)(41300700001)(86362001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?ZirDk7x3ooOXfWLTKXlIGe2D4/vOD8DgKhoIwo864w9YUYuQLSWCD9WyFcVj?=
- =?us-ascii?Q?tP/ydsLedYpuC3dVZt20JrShKj9fswl47J4lgHk15OiYUXVXl9/ysCzdL7Ri?=
- =?us-ascii?Q?hUenWwswL7ugMlszVVBqoPG/BmuV9tfkdux8hYUhkWxdN8MwxEXRTaqjx2Qn?=
- =?us-ascii?Q?wrwS4X/z3ZMHc694CyNpQuoOamWGZrdROG7m5f8zF1l/zz+1t5iVoMauOwf0?=
- =?us-ascii?Q?Fy8CMS/nz7N4UL8IvE5F29z214iLIbZFGpk1WF0H3gJ6dfWPbomcOm7tTSwU?=
- =?us-ascii?Q?7n5zHd1gdCtR/To/Zku6grV5Wtef43CPhPd1qnGACKCh+KS+uZw98x9IOBpm?=
- =?us-ascii?Q?sexa9+xECTuzbroFax3RV5t8aDpjbOAK0jI95OGEakAZmavHq0Fgw/9utLQ6?=
- =?us-ascii?Q?nHkbyLYXKw65Y7nmB1wOEgVUTrUfX1CUPNR8HyuZtEdwPTRgOQSFY7eMoaeM?=
- =?us-ascii?Q?eJF48nn6Lm754t/f+BM6dTXB+TMl+3zJh5RXZ/dCq5e7GLrMaEb6GdMRZwM7?=
- =?us-ascii?Q?tcIXT57zvNfL7r9NwsNt7XN8si1o5PqP3YWrKusg3+eThsZA74qt1V0JVkLP?=
- =?us-ascii?Q?Ti6pJraimXfKoh9RPo9JaqWOC4rioKjcgm8nH9aZB6gCuG8C2zOe+qsSbAV/?=
- =?us-ascii?Q?A/eY3eU84OjLAQ/blR+CcTAU5uLjNPDOLyNnN+Oc3fv6ixXaszhK+BG9++mK?=
- =?us-ascii?Q?IEaHASL/ODpa/Zv1H8vNUnTqYwO/6dGY1zuhTBSdnRhSQyULM9LxGlceFb/s?=
- =?us-ascii?Q?t44Khixj/x8/gj8bg0gADcX6foE43hpzwhV8ZCMfNBkv7lrrzzLycSWpgdj3?=
- =?us-ascii?Q?CzyvyzPoo9QfyfEIGet3UuLLv/s/qGuFCjC14HAIHrhCB2QxHi0bkD16q8zj?=
- =?us-ascii?Q?YmnAugI9E1dGq5cAPK2yiL/0tmBBWBE60Ot6UNDQSYf63NGOMHDDeMjFLAu3?=
- =?us-ascii?Q?m/thTj2dffk6YJXZuSWkBKNOcKJR+1bQtFkYTpRYkk3U/wU2UpEXgIv1FmHp?=
- =?us-ascii?Q?rqj5HxDOJoBJfZ6A8kU9WB44xyiUT629EZOkzoloDuU9XYEQTuFIOC2ZRa8E?=
- =?us-ascii?Q?wSmVmJ48SGzPkzPRThmsn2iGHns5oeEpt+ND+4e9mrpMDFZY6Y9KqpdgPCPE?=
- =?us-ascii?Q?7QqFZrexJ8kZcpGaHv/Etjjww6Dm2GDO6uSLh4d/isXnOJmL+pt9ewyZbFtw?=
- =?us-ascii?Q?3Lf0wAheCY856rcMrvH3zR7KWpJviEBxfGZfsExRQGcuugmEvm+0+7oFlC/z?=
- =?us-ascii?Q?bxyheGrZJI5L0fm0ucLji181ksz+P2gFFgsU04FU7FLkrfzM0uaY/q/E8oRu?=
- =?us-ascii?Q?qdvR+pY9DS6kSQ5L+CU30o6l04eHDPJnjLlTf61xEcRU0jz0osZq5c/oH2/X?=
- =?us-ascii?Q?5EnyR2Fr8cAQeuMWnOk5qFaypph5RHhieX3fO4k8c05cGfpf8FV7mTHwg1ca?=
- =?us-ascii?Q?6P5z5aqYLNE8b5o6Llc7T5r8DbSp+9p2wg7Hw6jXWIU5Tc8uMn7YuwtabkEy?=
- =?us-ascii?Q?MaEgYYtMmVq4xsm68punb+J0ZD8rLv9FZiqqzHVaS31EbyyXrHxJOjCR9ck6?=
- =?us-ascii?Q?A8Ns2KonnrfbHYt65yvorurDZp1PGL5tiiIS4fcqUr/AnCkMno4jy7XzKsRd?=
- =?us-ascii?Q?4g=3D=3D?=
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ae839d35-9886-40d8-d3b9-08dc1b5350ba
-X-MS-Exchange-CrossTenant-AuthSource: DU2PR04MB8582.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jan 2024 14:06:23.2004
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: /dRHT0xtQJaDLYY3XBIuaaFbkxGiUOREo+RCFtOL/ePmWJQwxkNwFxCZcRtkHha4rwEno4G5A6VTBv8tKKDslp99lc0vk07PgLX0/9H4Uuc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR04MB7635
+References: <20240119131429.172448-1-npache@redhat.com> <20240120203904.8f36140cd2f507b25e9a09a3@linux-foundation.org>
+In-Reply-To: <20240120203904.8f36140cd2f507b25e9a09a3@linux-foundation.org>
+From: Nico Pache <npache@redhat.com>
+Date: Mon, 22 Jan 2024 07:08:48 -0700
+Message-ID: <CAA1CXcANbz75MHKkJPEVa8AJBX4g8k7kq8i0ZCe9w_j9Oeg=ZA@mail.gmail.com>
+Subject: Re: [PATCH v2] selftests: mm: fix map_hugetlb failure on 64K page
+ size systems
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-mm@kvack.org, shuah@kernel.org, donettom@linux.vnet.ibm.com, 
+	Christophe Leroy <christophe.leroy@c-s.fr>, Michael Ellerman <mpe@ellerman.id.au>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>
+Hi Andrew,
 
-Add the uSDHC node for the boards that are based on S32G SoCs.
+No, I think it's always been broken-- I don't think the test was
+written with 512M huge page sizes in mind.
 
-Signed-off-by: Ciprian Costea <ciprianmarian.costea@nxp.com>
-Signed-off-by: Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>
----
- arch/arm64/boot/dts/freescale/s32g2.dtsi        | 10 ++++++++++
- arch/arm64/boot/dts/freescale/s32g274a-evb.dts  |  6 +++++-
- arch/arm64/boot/dts/freescale/s32g274a-rdb2.dts |  6 +++++-
- 3 files changed, 20 insertions(+), 2 deletions(-)
+-- Nico
 
-diff --git a/arch/arm64/boot/dts/freescale/s32g2.dtsi b/arch/arm64/boot/dts/freescale/s32g2.dtsi
-index ef1a1d61f2ba..fc19ae2e8d3b 100644
---- a/arch/arm64/boot/dts/freescale/s32g2.dtsi
-+++ b/arch/arm64/boot/dts/freescale/s32g2.dtsi
-@@ -138,6 +138,16 @@ uart2: serial@402bc000 {
- 			status = "disabled";
- 		};
- 
-+		usdhc0: mmc@402f0000 {
-+			compatible = "nxp,s32g2-usdhc";
-+			reg = <0x402f0000 0x1000>;
-+			interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clks 32>, <&clks 31>, <&clks 33>;
-+			clock-names = "ipg", "ahb", "per";
-+			bus-width = <8>;
-+			status = "disabled";
-+		};
-+
- 		gic: interrupt-controller@50800000 {
- 			compatible = "arm,gic-v3";
- 			reg = <0x50800000 0x10000>,
-diff --git a/arch/arm64/boot/dts/freescale/s32g274a-evb.dts b/arch/arm64/boot/dts/freescale/s32g274a-evb.dts
-index 9118d8d2ee01..00070c949e2a 100644
---- a/arch/arm64/boot/dts/freescale/s32g274a-evb.dts
-+++ b/arch/arm64/boot/dts/freescale/s32g274a-evb.dts
-@@ -1,7 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0-or-later OR MIT
- /*
-  * Copyright (c) 2021 SUSE LLC
-- * Copyright (c) 2019-2021 NXP
-+ * Copyright 2019-2021, 2024 NXP
-  */
- 
- /dts-v1/;
-@@ -32,3 +32,7 @@ memory@80000000 {
- &uart0 {
- 	status = "okay";
- };
-+
-+&usdhc0 {
-+	status = "okay";
-+};
-diff --git a/arch/arm64/boot/dts/freescale/s32g274a-rdb2.dts b/arch/arm64/boot/dts/freescale/s32g274a-rdb2.dts
-index e05ee854cdf5..b3fc12899cae 100644
---- a/arch/arm64/boot/dts/freescale/s32g274a-rdb2.dts
-+++ b/arch/arm64/boot/dts/freescale/s32g274a-rdb2.dts
-@@ -1,7 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0-or-later OR MIT
- /*
-  * Copyright (c) 2021 SUSE LLC
-- * Copyright (c) 2019-2021 NXP
-+ * Copyright 2019-2021, 2024 NXP
-  */
- 
- /dts-v1/;
-@@ -38,3 +38,7 @@ &uart0 {
- &uart1 {
- 	status = "okay";
- };
-+
-+&usdhc0 {
-+	status = "okay";
-+};
--- 
-2.43.0
+On Sat, Jan 20, 2024 at 9:39=E2=80=AFPM Andrew Morton <akpm@linux-foundatio=
+n.org> wrote:
+>
+> On Fri, 19 Jan 2024 06:14:29 -0700 Nico Pache <npache@redhat.com> wrote:
+>
+> > On systems with 64k page size and 512M huge page sizes, the allocation
+> > and test succeeds but errors out at the munmap. As the comment states,
+> > munmap will failure if its not HUGEPAGE aligned. This is due to the
+> > length of the mapping being 1/2 the size of the hugepage causing the
+> > munmap to not be hugepage aligned. Fix this by making the mapping lengt=
+h
+> > the full hugepage if the hugepage is larger than the length of the
+> > mapping.
+>
+> Is
+>
+> Fixes: fa7b9a805c79 ("tools/selftest/vm: allow choosing mem size and page=
+ size in map_hugetlb")
+>
+> a suitable Fixes: target for this?
+>
+> > --- a/tools/testing/selftests/mm/map_hugetlb.c
+> > +++ b/tools/testing/selftests/mm/map_hugetlb.c
+> > @@ -15,6 +15,7 @@
+> >  #include <unistd.h>
+> >  #include <sys/mman.h>
+> >  #include <fcntl.h>
+> > +#include "vm_util.h"
+> >
+> >  #define LENGTH (256UL*1024*1024)
+> >  #define PROTECTION (PROT_READ | PROT_WRITE)
+> > @@ -58,10 +59,16 @@ int main(int argc, char **argv)
+> >  {
+> >       void *addr;
+> >       int ret;
+> > +     size_t hugepage_size;
+> >       size_t length =3D LENGTH;
+> >       int flags =3D FLAGS;
+> >       int shift =3D 0;
+> >
+> > +     hugepage_size =3D default_huge_page_size();
+> > +     /* munmap with fail if the length is not page aligned */
+> > +     if (hugepage_size > length)
+> > +             length =3D hugepage_size;
+> > +
+> >       if (argc > 1)
+> >               length =3D atol(argv[1]) << 20;
+> >       if (argc > 2) {
+> > --
+> > 2.43.0
+>
 
