@@ -1,154 +1,144 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2070.outbound.protection.outlook.com [40.107.243.70])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2CA74BA94
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 23:34:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.70
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705966463; cv=fail; b=K7s4VQGQzp+MXaWPY9Wxttbq7VBUZKk8Md4cykCx9iZQ+tb2NOzuJXd3cC3Lhl3CbSZMbXtYr4FRYrhClNSmQDzLYnBNbYN0dngIB82ytpPbIxzFj3OflBelsuIFTxVWFLHILAafrNLYPwynHHXN57CCPOmPJnLYb/XUceBLb14=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705966463; c=relaxed/simple;
-	bh=i+fGfV1iKzd4P2HVtc5fY8RpyxEYmysiupZzf0YpwxU=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=WallW0DKwCJ6zs5cpl0CPd25kstmgSqNjZTA80RGqUgkYpRjgnsSSEAUWhj4k9ZAxh7wgrdt0tz8GfBHbe2K+E2y4Zc2qw09dNS8V66cbPs6seOz0ct0iLlH3VEGpSLOdvNoEhCurY/3vDLLLsCgjygtN+s9eON5cjLdDb9w9gs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=fos0+rK3; arc=fail smtp.client-ip=40.107.243.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28BDA3984A;
+	Mon, 22 Jan 2024 23:37:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1705966654; cv=none; b=mz970picJTHYMjVf4WWpwppdK6EOky+HNxDw1uVi1pJXBwXK/8sq9Xi3eNHCXTAjguJbax16l4v+5vQW7aNB9nf4W0bZxZWxYTuVIU8C0+oJC5nw21p/QKNjGXe1FErv5yU6spUdQxdMao0gC6edH8WXvRPS/pB2drdHeJ/6r8Y=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1705966654; c=relaxed/simple;
+	bh=bFI9taIrnXtbiXPEufAdPBtLCLiLu4UVHc3GG4nClhw=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=S8cw2/zMnfohoMyFdn5tUUQCGzxNKWlMu1yTy37Ir83CWSz24ujcq42+9m+pIhmoURowwmUFuIlKHGcoxqo+IkigqtPMLo/Vgri1oPKMZZOHGietzRbgpJKzLEvdy93j/tPKyiUzBtn/GR3sP5db554S+8ZWzPq01JnNxuuzvnA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OwICVcvb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="fos0+rK3"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hLYCp8UC5SMB3o5DoTGTVBYDtraw/kqTzXn8SqxcKkspi4oRzJqb7RluoMxZESL1ObROgqSW19I3AdwK/AVlleIGMr+fxbrl+0TQtLwd6hHcI7/g857vZ9hw/hhgVqmqHiAx5EnZVaP9xosv0zHHTqkhwGajdsc7FoZXuyRASN1ib/YLAo2JIGfDQJCYTdSqKlsRZZLbyxLNTv2FwmEThXbGdyv8KIyHIPYm/IDFYAqpqUkyGrGPUiUn8vL4+n9TMqwMYeXW09QVmEd4gT3QMR+QPHzfFjWm1DLbrk0W7NIL9LJ089ovko5SHkr+mJvYb7AygeHvzSWhF5p6p9w3zg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=7fKlV/EM0/bnJ2JznlbEW8mLgjj8l1TFF1Ra0adSE9Y=;
- b=YGDifNLXzwut+yoBimBN13wH7So0sIK+Q8NFMcAnlUOZqiJTSIyrCg03CIkNWZqNAG4sRd1H6cq/pfo/34ubv1a3Q3XedE9z2oSQle2XLYjfooWW1esLD49qDiGAdqG4N7NGQMXeDGBjfgXkFXjVKya4k8pW/WDscvuXie2lM434FpoEjbREgwDj2dZwJdvgJ9xnhKQ2OXq8NfHmwhtJzrDzZixZ3aQD4aOXA1IW+tc0uYrlJqYXqC3QFb2QRbGZVdimSbzPQ1l4wLck0A6owB8kz6Y3Gm45Y3uSCjNG2yhGSuEp++bNW4hckxfirP84dwY22Xi9gwDDITO+sCiekQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=8bytes.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7fKlV/EM0/bnJ2JznlbEW8mLgjj8l1TFF1Ra0adSE9Y=;
- b=fos0+rK3OJ2KioeedGkmaZECuFMaqOEKgRtNYVaVa/ltGZ41rdj+mO1sAO+z7sILYI5umdEh/PJTVBHm2ncYKrynhgD9nsLDhaHuZYoSWFvWQPlQEP5Dc3oYVPMIZ/ySzZD+pn9Vn9d1q2yz/IcduAoFLP+NkcG5zp325am8a7Q=
-Received: from SA1P222CA0182.NAMP222.PROD.OUTLOOK.COM (2603:10b6:806:3c4::20)
- by BL1PR12MB5900.namprd12.prod.outlook.com (2603:10b6:208:398::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7202.32; Mon, 22 Jan
- 2024 23:34:19 +0000
-Received: from SN1PEPF00026369.namprd02.prod.outlook.com
- (2603:10b6:806:3c4:cafe::8) by SA1P222CA0182.outlook.office365.com
- (2603:10b6:806:3c4::20) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7202.33 via Frontend
- Transport; Mon, 22 Jan 2024 23:34:19 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SN1PEPF00026369.mail.protection.outlook.com (10.167.241.134) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7202.16 via Frontend Transport; Mon, 22 Jan 2024 23:34:18 +0000
-Received: from AUS-P9-MLIMONCI.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.34; Mon, 22 Jan
- 2024 17:34:16 -0600
-From: Mario Limonciello <mario.limonciello@amd.com>
-To: <joro@8bytes.org>, <suravee.suthikulpanit@amd.com>, <Vasant.Hegde@amd.com>
-CC: <will@kernel.org>, <robin.murphy@arm.com>, <iommu@lists.linux.dev>,
-	<linux-kernel@vger.kernel.org>, Mario Limonciello <mario.limonciello@amd.com>
-Subject: [PATCH] iommu/amd: Mark interrupt as managed
-Date: Mon, 22 Jan 2024 17:34:00 -0600
-Message-ID: <20240122233400.1802-1-mario.limonciello@amd.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OwICVcvb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57147C43394;
+	Mon, 22 Jan 2024 23:37:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705966653;
+	bh=bFI9taIrnXtbiXPEufAdPBtLCLiLu4UVHc3GG4nClhw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=OwICVcvbQxSLC8jasEM24VJKS3vTz+1LDb+FcmZZDLCW7bpfPqjxs0dEHl4ACIFjn
+	 YcnhQuWeJ/IJc/q28szM0TWGQ2E3A4jDGh0jegpsrwaXzNjlLY5EmlP3VhwQt5djZ8
+	 dvYklSc8kUb/da5OKZgd/+PCthhVLxNI17WlTaUY+1ed1duP4ZsD+t6TNvaHa+Q6Yd
+	 hWr+An7oFQQaV3KzfoIrZ2Xq9oh/FzyCS20dGjuQe0/x/KbqjnqYo+10pPWqvmrG2U
+	 81dQwoBE36+Ox3tW3E4UlIrVQ7fohxhRc+OO/N1D6fwteHL8r16J3lcy3OXjEp8PJx
+	 o2wSyCnzhnk/A==
+Date: Mon, 22 Jan 2024 17:37:31 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Jiqian Chen <Jiqian.Chen@amd.com>
+Cc: Juergen Gross <jgross@suse.com>,
+	Stefano Stabellini <sstabellini@kernel.org>,
+	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
+	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>,
+	Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>,
+	xen-devel@lists.xenproject.org, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+	Stewart Hildebrand <Stewart.Hildebrand@amd.com>,
+	Huang Rui <Ray.Huang@amd.com>
+Subject: Re: [RFC KERNEL PATCH v4 3/3] PCI/sysfs: Add gsi sysfs for pci_dev
+Message-ID: <20240122233731.GA291870@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN1PEPF00026369:EE_|BL1PR12MB5900:EE_
-X-MS-Office365-Filtering-Correlation-Id: b5e79ceb-9970-46ff-fc24-08dc1ba2a78d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	mnenekLSYFpbvs6/rG0R44cKa5nkEzv68ApkwSInoBDDa1/WRdf5xpPAPV8kP+3WDytd45GbQYkrD5cljTFWz3z5sfyCbVPhMidkyloimIKOCTBIYaJ+Kema7YxWpMzIOnS1kE2MDvFH6YWPXdVjQce9vzXSIIezRZDz5N2gmZgGxpVdq53whH1HpdauvpbICH1Fnf7rE+JVG5qJLqb+bk6Of7zIT25OVwjoW1A9y2mROV5YYZdxK46v5r8LpR4H2CXBiNMbwQG9UItAUKVKscxiXEq3i5cD7QAKFnXLh1N3YO8RRr7UKtRlQ8Q6CyYVNYPkkIhqfGzcY1bnCADehP6nu6m2RtUR8g2RhWUfflQ/EG8+lkELc+g4Genb2Le51Jj2frns6QRWnpEkVYWC7f6T10DfneAti4Nc9FDRm0v7hKGndSbc5kLYWy/O1T4SCLpukXmA6yMfgSeEwYRGtLcWF7RP296MVVAbvCvslLoWRxJQNJSRiv2/j8O+PhDQU1v24ONIwZXdn56533WUx6u56V5EtK+vAORgA54DNSR8iC1vtPd4LMcNYP+QX/fReykzucFbszJRykgl6M7PuWY3bd9rWbCSH8lkaWs4gUuK+QPWE9DW+HlQWE5mmHEV9ty6oCfp9dtZvS9UWhKvvjUAXeJS6hEAt9hBXnk1C/CaAymKjvfvfDAbCnABWbCg4LljqiVKlb/HDBe/HQn1sb+c82lqfoWO8BbQ7RfPJyuZWmRas/DG8z+Av5u5QvRPF3ExVbuxSP8ZNwOlDX93a5G8zm65vzccyFDlXkLX9dhr63U9pyraKHy+ZcwKn42m
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(39860400002)(396003)(346002)(376002)(136003)(230922051799003)(230273577357003)(230173577357003)(1800799012)(64100799003)(186009)(82310400011)(451199024)(46966006)(40470700004)(36840700001)(86362001)(40460700003)(40480700001)(81166007)(356005)(36756003)(26005)(1076003)(2616005)(47076005)(82740400003)(36860700001)(83380400001)(336012)(16526019)(426003)(110136005)(70586007)(8936002)(70206006)(8676002)(7696005)(316002)(6666004)(6636002)(966005)(54906003)(44832011)(5660300002)(4326008)(2906002)(478600001)(41300700001)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jan 2024 23:34:18.7019
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: b5e79ceb-9970-46ff-fc24-08dc1ba2a78d
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SN1PEPF00026369.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5900
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240105062217.349645-4-Jiqian.Chen@amd.com>
 
-On many systems that have an AMD IOMMU the following sequence of
-warnings is observed during bootup.
+On Fri, Jan 05, 2024 at 02:22:17PM +0800, Jiqian Chen wrote:
+> There is a need for some scenarios to use gsi sysfs.
+> For example, when xen passthrough a device to dumU, it will
+> use gsi to map pirq, but currently userspace can't get gsi
+> number.
+> So, add gsi sysfs for that and for other potential scenarios.
 
-```
-pci 0000:00:00.2  can't derive routing for PCI INT A
-pci 0000:00:00.2: PCI INT A: not connected
-```
+Isn't GSI really an ACPI-specific concept?
 
-This series of events happens because of the IOMMU initialization
-sequence order and the lack of _PRT entries for the IOMMU.
+I don't know enough about Xen to know why it needs the GSI in
+userspace.  Is this passthrough brand new functionality that can't be
+done today because we don't expose the GSI yet?
 
-During initialization the IOMMU driver first enables the PCI device
-using pci_enable_device().  This will call acpi_pci_irq_enable()
-which will check if the interrupt is declared in a PCI routing table
-(_PRT) entry. According to the PCI spec [1] these routing entries
-are only required under PCI root bridges:
-	The _PRT object is required under all PCI root bridges
+How does userspace use the GSI?  I see "to map pirq", but I think we
+should have more concrete details about exactly what is needed and how
+it is used before adding something new in sysfs.
 
-The IOMMU is directly connected to the root complex, so there is no
-parent bridge to look for a _PRT entry. The first warning is emitted
-since no entry could be found in the hierarchy. The second warning is
-then emitted because the interrupt hasn't yet been configured to any
-value.  The pin was configured in pci_read_irq() but the byte in
-PCI_INTERRUPT_LINE return 0xff which means "Unknown".
+Is there some more generic kernel interface we could use
+for this?
 
-After that sequence of events pci_enable_msi() is called and this
-will allocate an interrupt.
+s/dumU/DomU/ ?  (I dunno, but https://www.google.com/search?q=xen+dumu
+suggests it :))
 
-That is both of these warnings are totally harmless because the IOMMU
-uses MSI for interrupts.  To avoid even trying to probe for a _PRT
-entry mark the IOMMU as IRQ managed. This avoids both warnings.
-
-Link: https://uefi.org/htmlspecs/ACPI_Spec_6_4_html/06_Device_Configuration/Device_Configuration.html?highlight=_prt#prt-pci-routing-table [1]
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
----
- drivers/iommu/amd/init.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/drivers/iommu/amd/init.c b/drivers/iommu/amd/init.c
-index c83bd0c2a1c9..40979b0f5250 100644
---- a/drivers/iommu/amd/init.c
-+++ b/drivers/iommu/amd/init.c
-@@ -2068,6 +2068,9 @@ static int __init iommu_init_pci(struct amd_iommu *iommu)
- 	/* Prevent binding other PCI device drivers to IOMMU devices */
- 	iommu->dev->match_driver = false;
- 
-+	/* ACPI _PRT won't have an IRQ for IOMMU */
-+	iommu->dev->irq_managed = 1;
-+
- 	pci_read_config_dword(iommu->dev, cap_ptr + MMIO_CAP_HDR_OFFSET,
- 			      &iommu->cap);
- 
-
-base-commit: 75f74f85a42eb294b657f847c33e1bb7921dbec9
--- 
-2.34.1
-
+> Co-developed-by: Huang Rui <ray.huang@amd.com>
+> Signed-off-by: Jiqian Chen <Jiqian.Chen@amd.com>
+> ---
+>  drivers/acpi/pci_irq.c  |  1 +
+>  drivers/pci/pci-sysfs.c | 11 +++++++++++
+>  include/linux/pci.h     |  2 ++
+>  3 files changed, 14 insertions(+)
+> 
+> diff --git a/drivers/acpi/pci_irq.c b/drivers/acpi/pci_irq.c
+> index 630fe0a34bc6..739a58755df2 100644
+> --- a/drivers/acpi/pci_irq.c
+> +++ b/drivers/acpi/pci_irq.c
+> @@ -449,6 +449,7 @@ int acpi_pci_irq_enable(struct pci_dev *dev)
+>  		kfree(entry);
+>  		return 0;
+>  	}
+> +	dev->gsi = gsi;
+>  
+>  	rc = acpi_register_gsi(&dev->dev, gsi, triggering, polarity);
+>  	if (rc < 0) {
+> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+> index 2321fdfefd7d..c51df88d079e 100644
+> --- a/drivers/pci/pci-sysfs.c
+> +++ b/drivers/pci/pci-sysfs.c
+> @@ -71,6 +71,16 @@ static ssize_t irq_show(struct device *dev,
+>  }
+>  static DEVICE_ATTR_RO(irq);
+>  
+> +static ssize_t gsi_show(struct device *dev,
+> +			struct device_attribute *attr,
+> +			char *buf)
+> +{
+> +	struct pci_dev *pdev = to_pci_dev(dev);
+> +
+> +	return sysfs_emit(buf, "%u\n", pdev->gsi);
+> +}
+> +static DEVICE_ATTR_RO(gsi);
+> +
+>  static ssize_t broken_parity_status_show(struct device *dev,
+>  					 struct device_attribute *attr,
+>  					 char *buf)
+> @@ -596,6 +606,7 @@ static struct attribute *pci_dev_attrs[] = {
+>  	&dev_attr_revision.attr,
+>  	&dev_attr_class.attr,
+>  	&dev_attr_irq.attr,
+> +	&dev_attr_gsi.attr,
+>  	&dev_attr_local_cpus.attr,
+>  	&dev_attr_local_cpulist.attr,
+>  	&dev_attr_modalias.attr,
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index dea043bc1e38..0618d4a87a50 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -529,6 +529,8 @@ struct pci_dev {
+>  
+>  	/* These methods index pci_reset_fn_methods[] */
+>  	u8 reset_methods[PCI_NUM_RESET_METHODS]; /* In priority order */
+> +
+> +	unsigned int	gsi;
+>  };
+>  
+>  static inline struct pci_dev *pci_physfn(struct pci_dev *dev)
+> -- 
+> 2.34.1
+> 
+> 
