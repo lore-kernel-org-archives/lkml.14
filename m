@@ -1,45 +1,45 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF57E56450;
-	Mon, 22 Jan 2024 23:55:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2CCD57316;
+	Mon, 22 Jan 2024 23:55:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705967706; cv=none; b=bOuPZHiLxiLu8W3/TtAF6ofuIC7bzxbE+t/CkmL6lwyJOhqgv2kvF+j1to1aX+NFrEcybQyRHVmOc4JfaacFCbMYXeJMutsVyEwvYKXanjt0Y/GLosSbRv/GV3OuRb679bgCW3p8bAv5C/mmPPWaHyZnW+TyK8GZJYJNfbm5h/k=
+	t=1705967708; cv=none; b=E1L0O4SYfNcaJ3tXc88+mgWvB67snUulhtZDr9oBhOplFg59qm1tpzbh97ylTFENVpHcoT7Yl6BF0GGKgxEnsIRHUeOAOV7Zwx2OuKzFTc3E8Ji11ZiIj5dwQjWK1EPXbYfAoNGLXrpTdcN7CPnXr2hvaGz4IDyiQk0gzUhYVZs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705967706; c=relaxed/simple;
-	bh=DLPNi9jXjbr4HdbjAnuHBOpBxwIVUIeOA5wtFcSAGOI=;
+	s=arc-20240116; t=1705967708; c=relaxed/simple;
+	bh=ZF11mj6dOid+ewMs/d+5wakaEsG23KEAuAapce9+K/k=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=WEzvfY+el/nORcFbwQmILSpW4x82V65URuQEfrUymPOnppb19r1HJUiYHZnnXZf0YCG9eP++t0UJF99fW5JSlCG7W8MS33VEjwMsJQh+HZePNLQfhLFTgih1Om3iFs+Knbrv6tg8jE62rrkSN61GxSPTx7eryj9yxs8Bk8dBQn4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=m3Ahw8jI; arc=none smtp.client-ip=198.175.65.15
+	 MIME-Version; b=nTzrxzS32I8nMI91cKiVFDAH4TBxJ07dgWDkgZs56I6SxU9mzMZa3ZXqFWNgcW0OlNfP0aATDcq4+c4OZ459fhuLI7isr1hXtpL+w192rS6zNwo7/H1eC02uRPFhFyQXwEvgKpXKAaEUJ8yRL8iUkln6ubbADt4jcxocngsWIts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hY5mcFvT; arc=none smtp.client-ip=198.175.65.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="m3Ahw8jI"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hY5mcFvT"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1705967705; x=1737503705;
+  t=1705967707; x=1737503707;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=DLPNi9jXjbr4HdbjAnuHBOpBxwIVUIeOA5wtFcSAGOI=;
-  b=m3Ahw8jI/S3kPF/MtsyG2lizj/e9dwon7hUupbu7SRSfURFQ+hnf4osA
-   9UwdCXtgf7LWX/wmrH8eSvoht6ZwGAUYLN2X5BgNYeE3ueDux0vnnTICD
-   0TUCyPnVHubBYnnECrNtm+aos3ITArmwmK8zlKU2A12xiR+hLi12SkjOZ
-   c1FTsNYADNz3YK7Im3n/aU+R3qsZ7SVvDdXIk/t1f4VqSHqZ+0dIFzMWw
-   Zec3088F3yiLkf6SureoxoWiBPwMIpVYfJvbQS14ZkbB1OW+xkB7QymIe
-   X5q9aVsT8Knqmm1o0A4g7X8IwvDRd6kSWzCEKZ2OVj2QdQBzM0Bp3b8Es
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10961"; a="1243766"
+  bh=ZF11mj6dOid+ewMs/d+5wakaEsG23KEAuAapce9+K/k=;
+  b=hY5mcFvTgVwcJiNb8lKNsk8o289uakYuexavwyOpk/U/EXTLJ3+xyOlA
+   k3wH7syqTipHSSGmzXe0HMF0wewJvwdoYD08ViMqOYxDqFhZvf3Scznxd
+   ITnEN6AUfoqFzuQTehTfp3+jGN8BebeQG0BOey14yPVkebkX4EeofVEPL
+   1pQWU0F9LAoO0QRm1h1V1uBDOK1xMzLZBcnFfqUtt8tWrQGT9Tb61uTbZ
+   tBjPW2Q17lq5y5oA42lR4DkKpi7Mtk7j3JJJYfrEO3cTS/cVZKXNeim9B
+   tsgON9Ijd7XstkLZYQ+CJO9E+rAWroRhd1XPjI0DSxio84cDmtE78fX6h
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10961"; a="1243775"
 X-IronPort-AV: E=Sophos;i="6.05,212,1701158400"; 
-   d="scan'208";a="1243766"
+   d="scan'208";a="1243775"
 Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 15:55:04 -0800
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 15:55:06 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10961"; a="819888413"
+X-IronPort-AV: E=McAfee;i="6600,9927,10961"; a="819888459"
 X-IronPort-AV: E=Sophos;i="6.05,212,1701158400"; 
-   d="scan'208";a="819888413"
+   d="scan'208";a="819888459"
 Received: from ls.sc.intel.com (HELO localhost) ([172.25.112.31])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 15:55:03 -0800
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 15:55:05 -0800
 From: isaku.yamahata@intel.com
 To: kvm@vger.kernel.org,
 	linux-kernel@vger.kernel.org
@@ -53,9 +53,9 @@ Cc: isaku.yamahata@intel.com,
 	chen.bo@intel.com,
 	hang.yuan@intel.com,
 	tina.zhang@intel.com
-Subject: [PATCH v18 017/121] [MARKER] The start of TDX KVM patch series: TD VM creation/destruction
-Date: Mon, 22 Jan 2024 15:52:53 -0800
-Message-Id: <62f74aea92e18aa6299c129e46126f7f4952466b.1705965634.git.isaku.yamahata@intel.com>
+Subject: [PATCH v18 019/121] KVM: TDX: Add helper function to read TDX metadata in array
+Date: Mon, 22 Jan 2024 15:52:55 -0800
+Message-Id: <b058a756a2679e7c570836a0fb6cef6cfd0a7663.1705965634.git.isaku.yamahata@intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1705965634.git.isaku.yamahata@intel.com>
 References: <cover.1705965634.git.isaku.yamahata@intel.com>
@@ -69,29 +69,83 @@ Content-Transfer-Encoding: 8bit
 
 From: Isaku Yamahata <isaku.yamahata@intel.com>
 
-This empty commit is to mark the start of patch series of TD VM
-creation/destruction.
+To read meta data in series, use table.
+Instead of metadata_read(fid0, &data0); metadata_read(...); ...
+table = { {fid0, &data0}, ...}; metadata-read(tables).
+TODO: Once the TDX host code introduces its framework to read TDX metadata,
+drop this patch and convert the code that uses this.
 
 Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
 ---
- Documentation/virt/kvm/intel-tdx-layer-status.rst | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+v18:
+- newly added
+---
+ arch/x86/kvm/vmx/tdx.c | 45 ++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 45 insertions(+)
 
-diff --git a/Documentation/virt/kvm/intel-tdx-layer-status.rst b/Documentation/virt/kvm/intel-tdx-layer-status.rst
-index f11ea701dc19..098150da6ea2 100644
---- a/Documentation/virt/kvm/intel-tdx-layer-status.rst
-+++ b/Documentation/virt/kvm/intel-tdx-layer-status.rst
-@@ -16,8 +16,8 @@ Patch Layer status
-   Patch layer                          Status
+diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
+index ee9d6a687d93..1608bdf2381d 100644
+--- a/arch/x86/kvm/vmx/tdx.c
++++ b/arch/x86/kvm/vmx/tdx.c
+@@ -6,6 +6,7 @@
+ #include "capabilities.h"
+ #include "x86_ops.h"
+ #include "x86.h"
++#include "tdx_arch.h"
+ #include "tdx.h"
  
- * TDX, VMX coexistence:                 Applied
--* TDX architectural definitions:        Applying
--* TD VM creation/destruction:           Not yet
-+* TDX architectural definitions:        Applied
-+* TD VM creation/destruction:           Applying
- * TD vcpu creation/destruction:         Not yet
- * TDX EPT violation:                    Not yet
- * TD finalization:                      Not yet
+ #undef pr_fmt
+@@ -40,6 +41,50 @@ static void __used tdx_guest_keyid_free(int keyid)
+ 	ida_free(&tdx_guest_keyid_pool, keyid);
+ }
+ 
++#define TDX_MD_MAP(_fid, _ptr)			\
++	{ .fid = MD_FIELD_ID_##_fid,		\
++	  .ptr = (_ptr), }
++
++struct tdx_md_map {
++	u64 fid;
++	void *ptr;
++};
++
++static size_t tdx_md_element_size(u64 fid)
++{
++	switch (TDX_MD_ELEMENT_SIZE_CODE(fid)) {
++	case TDX_MD_ELEMENT_SIZE_8BITS:
++		return 1;
++	case TDX_MD_ELEMENT_SIZE_16BITS:
++		return 2;
++	case TDX_MD_ELEMENT_SIZE_32BITS:
++		return 4;
++	case TDX_MD_ELEMENT_SIZE_64BITS:
++		return 8;
++	default:
++		WARN_ON_ONCE(1);
++		return 0;
++	}
++}
++
++int tdx_md_read(struct tdx_md_map *maps, int nr_maps)
++{
++	struct tdx_md_map *m;
++	int ret, i;
++	u64 tmp;
++
++	for (i = 0; i < nr_maps; i++) {
++		m = &maps[i];
++		ret = tdx_sys_metadata_field_read(m->fid, &tmp);
++		if (ret)
++			return ret;
++
++		memcpy(m->ptr, &tmp, tdx_md_element_size(m->fid));
++	}
++
++	return 0;
++}
++
+ static int __init tdx_module_setup(void)
+ {
+ 	int ret;
 -- 
 2.25.1
 
