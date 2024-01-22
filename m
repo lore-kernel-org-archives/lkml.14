@@ -1,216 +1,257 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A0A755C1C;
-	Mon, 22 Jan 2024 18:10:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E3D956B8C
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 18:10:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705947034; cv=none; b=QFp6lNN6HuhqCtn/q+j9R20nSHVnrUbuHFkfRqRFFTJ22JV25VJcu7pNZzTy9Z4RN+fEJYQKe+C2GLSEabWWtbMO/JNOzw12LRvN2XuWBNCBG6ebexVYFWoAWFOXmIkaykcDyh7qHj4ebIIbJOAKgiEVrDzY0P/GJsnFpBlE0vg=
+	t=1705947039; cv=none; b=J8zaAkAfAmSmbTEOOxSqe+CBAd0AuDiGTG+tp5KwuoJWtsaFKYFj+a1ySmmRiKSUg2jub3JVWm/bSqPsx7rHO4zcFf4ZXrs5IZ58GuZ5woTi4BUPdAygJ5Wz3uxMdQZ9qzGEVpSwGoak+AyFtd8JOxl2LqAv7ro+huzYHJuB5hg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705947034; c=relaxed/simple;
-	bh=Xusyv3mBYFLW+DNBPX8VAqokOl7QRg+X35ewNVGZS6c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=P7R6vPs5gwo/UQK4KggRW/vWbssgIL/PH5gS1Os9XoCo/5fUx6yz0vYgtbWFZkOqiRVz9sBK7CLCCduHI1bKO+YEDuvLQnqxuwoRuZ5SIbxYYMm68pae8LaOyissY72c0uaD2FlsZjJMx1263o2zTvANBHaT2kOXnIzDupOVYns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=RdccNVhK; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="RdccNVhK"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40MFoJnE006867;
-	Mon, 22 Jan 2024 18:10:28 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=egVvBAlS2e19BKe70ueRMcJh/S6ha3Y7vrwBm+Ktx0s=; b=Rd
-	ccNVhKjVZL8P+itVGfIATo6FLe/lnojmalcvpdrBx/BIED/AycRBLgGcm2TH3bVG
-	YfTWAiwXKiTEkI/aQJApXj8bGXDUtPEA7R1Fm+W1ICRcdMOK+9i+TxwhrGoR44vb
-	vajrRh0Y8Nk0eQVIPpy4ulVnyZaOLIWpfUsGkheKH8j2VR9WqGtzcqdBXROWrCNE
-	tKAAosjQNQUFZ25WitEMtyrneo7AjKvz0LVF2dmTYM4r6lRyHzMPSA5iEe7owBWj
-	ghPmkuf3nwBqNFVEl0Rhdz7p4d2kZu6PFxHc+hguP1zPShEMwNOZyFrwWOEanfVF
-	dUrvUTlFuFUDemMnS5+A==
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vst8w8h6n-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 22 Jan 2024 18:10:27 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 40MIARYi014026
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 22 Jan 2024 18:10:27 GMT
-Received: from [10.110.104.139] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Mon, 22 Jan
- 2024 10:10:23 -0800
-Message-ID: <065601d3-92e7-46cc-a7aa-116cd02b3c36@quicinc.com>
-Date: Mon, 22 Jan 2024 10:10:22 -0800
+	s=arc-20240116; t=1705947039; c=relaxed/simple;
+	bh=r4hNLx1axTK9D2SO1h2Nidy6wdhcdwS0oI6JMP4mupU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=eFjRB3ZmJFvqSdnEDdEFqAedH7B4BIcRB/9KWB8H4QKxQ2hs625DFBk25YJiP6zfGaaXTps7NhupQsEynooe2W4ybAZ32C65FubwsUApxaunr4CIfh84dY5CZ4ZFTLWfvAvzY5AmCdc74GBntFdFXGrJvTV+qVpH2WPobBikvgY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rRyiY-0001lP-N0; Mon, 22 Jan 2024 19:08:18 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rRyiS-001ePE-PM; Mon, 22 Jan 2024 19:08:12 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rRyiS-005Zwj-1m;
+	Mon, 22 Jan 2024 19:08:12 +0100
+From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: Mark Brown <broonie@kernel.org>
+Cc: kernel@pengutronix.de,
+	Moritz Fischer <mdf@kernel.org>,
+	Wu Hao <hao.wu@intel.com>,
+	Xu Yilun <yilun.xu@intel.com>,
+	Tom Rix <trix@redhat.com>,
+	linux-fpga@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Alexander Aring <alex.aring@gmail.com>,
+	Stefan Schmidt <stefan@datenfreihafen.org>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	linux-wpan@vger.kernel.org,
+	netdev@vger.kernel.org,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Michael Hennerich <Michael.Hennerich@analog.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	linux-iio@vger.kernel.org,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	linux-input@vger.kernel.org,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Rayyan Ansari <rayyan@ansari.sh>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Martin Tuma <martin.tuma@digiteqautomotive.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	linux-media@vger.kernel.org,
+	Sergey Kozlov <serjk@netup.ru>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Yang Yingliang <yangyingliang@huawei.com>,
+	linux-mmc@vger.kernel.org,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Rob Herring <robh@kernel.org>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Michal Simek <michal.simek@amd.com>,
+	Amit Kumar Mahapatra via Alsa-devel <alsa-devel@alsa-project.org>,
+	linux-mtd@lists.infradead.org,
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	=?utf-8?q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
+	Simon Horman <horms@kernel.org>,
+	Ronald Wahl <ronald.wahl@raritan.com>,
+	Benson Leung <bleung@chromium.org>,
+	Tzung-Bi Shih <tzungbi@kernel.org>,
+	Guenter Roeck <groeck@chromium.org>,
+	chrome-platform@lists.linux.dev,
+	Max Filippov <jcmvbkbc@gmail.com>,
+	linux-spi@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	linux-arm-msm@vger.kernel.org,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	linux-mediatek@lists.infradead.org,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Javier Martinez Canillas <javierm@redhat.com>,
+	Amit Kumar Mahapatra <amit.kumar-mahapatra@amd.com>,
+	dri-devel@lists.freedesktop.org,
+	linux-fbdev@vger.kernel.org,
+	linux-staging@lists.linux.dev,
+	Viresh Kumar <vireshk@kernel.org>,
+	Rui Miguel Silva <rmfrfs@gmail.com>,
+	Johan Hovold <johan@kernel.org>,
+	Alex Elder <elder@kernel.org>,
+	greybus-dev@lists.linaro.org,
+	Peter Huewe <peterhuewe@gmx.de>,
+	Jarkko Sakkinen <jarkko@kernel.org>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	linux-integrity@vger.kernel.org,
+	Herve Codina <herve.codina@bootlin.com>,
+	Alan Stern <stern@rowland.harvard.edu>,
+	Aaro Koskinen <aaro.koskinen@iki.fi>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	linux-usb@vger.kernel.org,
+	Helge Deller <deller@gmx.de>,
+	Dario Binacchi <dario.binacchi@amarulasolutions.com>,
+	Kalle Valo <kvalo@kernel.org>,
+	Dmitry Antipov <dmantipov@yandex.ru>,
+	libertas-dev@lists.infradead.org,
+	linux-wireless@vger.kernel.org,
+	Jonathan Corbet <corbet@lwn.net>,
+	James Clark <james.clark@arm.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	linux-doc@vger.kernel.org
+Subject: [PATCH v2 00/33] spi: get rid of some legacy macros
+Date: Mon, 22 Jan 2024 19:06:55 +0100
+Message-ID: <cover.1705944943.git.u.kleine-koenig@pengutronix.de>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] dt-bindings: hwinfo: Add Qualcomm's board-id types
-Content-Language: en-US
-To: Amrit Anand <quic_amrianan@quicinc.com>,
-        Konrad Dybcio
-	<konrad.dybcio@linaro.org>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <agross@kernel.org>, <andersson@kernel.org>
-CC: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <kernel@quicinc.com>
-References: <1705749649-4708-1-git-send-email-quic_amrianan@quicinc.com>
- <1705749649-4708-3-git-send-email-quic_amrianan@quicinc.com>
- <54426665-90c5-4355-a174-f512004e11e5@linaro.org>
- <391f8f48-d1f5-702d-20d4-ae8b8a7ace58@quicinc.com>
-From: Elliot Berman <quic_eberman@quicinc.com>
-In-Reply-To: <391f8f48-d1f5-702d-20d4-ae8b8a7ace58@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5874; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=r4hNLx1axTK9D2SO1h2Nidy6wdhcdwS0oI6JMP4mupU=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBlrq7CRGL5rco/IZ7baQyO1t3S9it11eXvRLZKR GbQbTfz3/2JATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZa6uwgAKCRCPgPtYfRL+ TlSmB/4k7WiBaRL3saK9pl+Gkw8Hqk7HVFstVTQ/rkaYbIsJGY0xZw8/1EJjSObFeB+APA4aMQh I79wzfj/BAi6u9wIsVNiQ9y/G7wHtwifXCuuRBAfRSQICGNo++YWb4VjoViqUrlwFz1on55YRHO fF0At9RAUzuTpDwaPQlercYTSV2fRZOyE6oFjYu50ibPS5RDRAlt5RMXKu+KeNvZIt1a7rYblZd 3X+5IV8boWAzqfA2x+ESE9bxy64tcf4U55YuI4LIo7T/6pTUUmJEXiJK3Hqi+KdRcDIt0RoY0Co KLQSX3Yu+cnQoWcdVVqzWe5P2RjCFOxbxIHkvh+IxoWx5PzK
+X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: qOUMnVfP2JRU_numX321G8M85lX_W9GY
-X-Proofpoint-ORIG-GUID: qOUMnVfP2JRU_numX321G8M85lX_W9GY
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-22_07,2024-01-22_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 bulkscore=0
- impostorscore=0 phishscore=0 mlxlogscore=999 malwarescore=0
- lowpriorityscore=0 priorityscore=1501 adultscore=0 suspectscore=0
- spamscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2311290000 definitions=main-2401220127
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+
+Hello,
+
+this is v2 of this patch set.
+
+Changes since (implicit) v1, sent with Message-Id:
+cover.1705348269.git.u.kleine-koenig@pengutronix.de:
+
+ - Rebase to v6.8-rc1
+ - Fix a build failure on sh
+ - Added the tags received in (implicit) v1.
+
+The slave-mt27xx driver needs some more work. The patch presented here
+is enough however to get rid of the defines handled in patch 32.
+Cleaning that up is out-of-scope for this series, so I'll delay that
+until later.
+
+Note that Jonathan Cameron has already applied patch 3 to his tree, it
+didn't appear in a public tree though yet. I still included it here to
+make the kernel build bots happy.
+
+Best regards
+Uwe
+
+Uwe Kleine-König (33):
+  fpga: ice40-spi: Follow renaming of SPI "master" to "controller"
+  ieee802154: ca8210: Follow renaming of SPI "master" to "controller"
+  iio: adc: ad_sigma_delta: Follow renaming of SPI "master" to
+    "controller"
+  Input: pxspad - follow renaming of SPI "master" to "controller"
+  Input: synaptics-rmi4 - follow renaming of SPI "master" to
+    "controller"
+  media: mgb4: Follow renaming of SPI "master" to "controller"
+  media: netup_unidvb: Follow renaming of SPI "master" to "controller"
+  media: usb/msi2500: Follow renaming of SPI "master" to "controller"
+  media: v4l2-subdev: Follow renaming of SPI "master" to "controller"
+  misc: gehc-achc: Follow renaming of SPI "master" to "controller"
+  mmc: mmc_spi: Follow renaming of SPI "master" to "controller"
+  mtd: dataflash: Follow renaming of SPI "master" to "controller"
+  mtd: rawnand: fsl_elbc: Let .probe retry if local bus is missing
+  net: ks8851: Follow renaming of SPI "master" to "controller"
+  net: vertexcom: mse102x: Follow renaming of SPI "master" to
+    "controller"
+  platform/chrome: cros_ec_spi: Follow renaming of SPI "master" to
+    "controller"
+  spi: bitbang: Follow renaming of SPI "master" to "controller"
+  spi: cadence-quadspi: Don't emit error message on allocation error
+  spi: cadence-quadspi: Follow renaming of SPI "master" to "controller"
+  spi: cavium: Follow renaming of SPI "master" to "controller"
+  spi: geni-qcom: Follow renaming of SPI "master" to "controller"
+  spi: loopback-test: Follow renaming of SPI "master" to "controller"
+  spi: slave-mt27xx: Follow renaming of SPI "master" to "controller"
+  spi: spidev: Follow renaming of SPI "master" to "controller"
+  staging: fbtft: Follow renaming of SPI "master" to "controller"
+  staging: greybus: spi: Follow renaming of SPI "master" to "controller"
+  tpm_tis_spi: Follow renaming of SPI "master" to "controller"
+  usb: gadget: max3420_udc: Follow renaming of SPI "master" to
+    "controller"
+  video: fbdev: mmp: Follow renaming of SPI "master" to "controller"
+  wifi: libertas: Follow renaming of SPI "master" to "controller"
+  spi: fsl-lib: Follow renaming of SPI "master" to "controller"
+  spi: Drop compat layer from renaming "master" to "controller"
+  Documentation: spi: Update documentation for renaming "master" to
+    "controller"
+
+ .../driver-api/driver-model/devres.rst        |  2 +-
+ Documentation/spi/spi-summary.rst             | 74 +++++++++----------
+ drivers/char/tpm/tpm_tis_spi_main.c           |  4 +-
+ drivers/fpga/ice40-spi.c                      |  4 +-
+ drivers/iio/adc/ad_sigma_delta.c              | 14 ++--
+ drivers/input/joystick/psxpad-spi.c           |  4 +-
+ drivers/input/rmi4/rmi_spi.c                  |  2 +-
+ drivers/media/pci/mgb4/mgb4_core.c            | 14 ++--
+ .../media/pci/netup_unidvb/netup_unidvb_spi.c | 48 ++++++------
+ drivers/media/usb/msi2500/msi2500.c           | 38 +++++-----
+ drivers/media/v4l2-core/v4l2-spi.c            |  4 +-
+ drivers/misc/gehc-achc.c                      |  8 +-
+ drivers/mmc/host/mmc_spi.c                    |  6 +-
+ drivers/mtd/devices/mtd_dataflash.c           |  2 +-
+ drivers/mtd/nand/raw/fsl_elbc_nand.c          |  3 +-
+ drivers/net/ethernet/micrel/ks8851_spi.c      |  4 +-
+ drivers/net/ethernet/vertexcom/mse102x.c      |  2 +-
+ drivers/net/ieee802154/ca8210.c               |  2 +-
+ .../net/wireless/marvell/libertas/if_spi.c    |  2 +-
+ drivers/platform/chrome/cros_ec_spi.c         |  8 +-
+ drivers/spi/spi-ath79.c                       |  4 +-
+ drivers/spi/spi-bitbang.c                     | 64 ++++++++--------
+ drivers/spi/spi-butterfly.c                   |  6 +-
+ drivers/spi/spi-cadence-quadspi.c             |  7 +-
+ drivers/spi/spi-cavium.c                      |  6 +-
+ drivers/spi/spi-cavium.h                      |  2 +-
+ drivers/spi/spi-davinci.c                     |  6 +-
+ drivers/spi/spi-fsl-lib.c                     | 14 ++--
+ drivers/spi/spi-geni-qcom.c                   |  2 +-
+ drivers/spi/spi-gpio.c                        |  2 +-
+ drivers/spi/spi-lm70llp.c                     |  6 +-
+ drivers/spi/spi-loopback-test.c               |  4 +-
+ drivers/spi/spi-oc-tiny.c                     |  6 +-
+ drivers/spi/spi-omap-uwire.c                  |  4 +-
+ drivers/spi/spi-sh-sci.c                      | 10 +--
+ drivers/spi/spi-slave-mt27xx.c                |  2 +-
+ drivers/spi/spi-xilinx.c                      |  4 +-
+ drivers/spi/spi-xtensa-xtfpga.c               |  2 +-
+ drivers/spi/spi.c                             |  2 +-
+ drivers/spi/spidev.c                          |  2 +-
+ drivers/staging/fbtft/fbtft-core.c            |  4 +-
+ drivers/staging/greybus/spilib.c              | 66 ++++++++---------
+ drivers/usb/gadget/udc/max3420_udc.c          |  2 +-
+ drivers/video/fbdev/mmp/hw/mmp_spi.c          | 26 +++----
+ include/linux/spi/spi.h                       | 20 +----
+ include/linux/spi/spi_bitbang.h               |  2 +-
+ include/media/v4l2-common.h                   |  6 +-
+ 47 files changed, 254 insertions(+), 272 deletions(-)
 
 
+base-commit: 6613476e225e090cc9aad49be7fa504e290dd33d
+-- 
+2.43.0
 
-On 1/22/2024 2:07 AM, Amrit Anand wrote:
-> 
-> On 1/20/2024 7:02 PM, Konrad Dybcio wrote:
->> On 20.01.2024 12:20, Amrit Anand wrote:
->>> Qualcomm based DT uses two or three different identifiers. The SoC
->>> based idenfier which signifies chipset and the revision for those
->>> chipsets. The board based identifier is used to distinguish different
->>> boards (e.g. IDP, MTP) along with the different types of same boards.
->>> The PMIC attached to the board can also be used as a identifier for
->>> device tree.
->>>
->>> Signed-off-by: Elliot Berman <quic_eberman@quicinc.com>
->>> Signed-off-by: Amrit Anand <quic_amrianan@quicinc.com>
->>> ---
->>>   .../devicetree/bindings/hwinfo/qcom,board-id.yaml  | 86 ++++++++++++++++++++++
->>>   include/dt-bindings/arm/qcom,ids.h                 | 68 +++++++++++++++--
->>>   2 files changed, 146 insertions(+), 8 deletions(-)
->>>   create mode 100644 Documentation/devicetree/bindings/hwinfo/qcom,board-id.yaml
->>>
->>> diff --git a/Documentation/devicetree/bindings/hwinfo/qcom,board-id.yaml b/Documentation/devicetree/bindings/hwinfo/qcom,board-id.yaml
->>> new file mode 100644
->>> index 0000000..807f134
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/hwinfo/qcom,board-id.yaml
->>> @@ -0,0 +1,86 @@
->>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->>> +%YAML 1.2
->>> +---
->>> +$id: http://devicetree.org/schemas/hwinfo/qcom,board-id.yaml#
->>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->>> +
->>> +title: QCOM Board Identifier for Devicetree Selection
->>> +
->>> +maintainers:
->>> +  - Amrit Anand <quic_amrianan@quicinc.com>
->>> +  - Elliot Berman <quic_eberman@quicinc.com>
->>> +
->>> +description: |
->> The '|'s are unnecessary in both commits, IIRC they're used for
->> preserving formatting which we don't really need for non-styled
->> plaintext
-> Sure, will do.
->>> +  Qualcomm uses two and sometimes three hardware identifiers to describe
->>> +  its boards
->>> +      - a SoC identifier is used to match chipsets (e.g. sm8550 vs sm8450)
->>> +      - a board identifier is used to match board form factor (e.g. MTP, QRD,
->>> +        ADP, CRD)
->>> +      - a PMIC identifier is occasionally used when different PMICs are used
->>> +        for a given board/SoC combination.
->>> +  Each field and helper macros are defined at::
->>> +      - include/dt-bindings/arm/qcom,ids.h
->>> +
->>> +  For example,
->>> +    / {
->>> +        #board-id-cells = <2>;
->>> +        board-id = <456 0>, <457 0>, <10 0>;
->>> +        board-id-types = "qcom,soc-id", "qcom,soc-id", "qcom,board-id";
->>> +     }
->>> +
->>> +allOf:
->>> +  - $ref: board-id.yaml#
->>> +
->>> +properties:
->>> +  board-id:
->>> +    minItems: 2
->> I believe some older platforms match exclusively based on socid, so
->> perhaps 1 would be okay as well.
->>
->> [...]
-> 
-> Ok, considering legacy targets we can make it 1.
-> 
-> But i think ideally it should always be recommended to have a board ID associated with a SoC ID, correct me if my understanding is wrong.
-> 
-
-There is no "legacy" support needed here: Qualcomm's bootloaders
-need to be updated to adhere to the new proposed spec. I suppose
-we need to consider whether we have targets that only need SoC to
-differentiate?
-
->>> +examples:
->>> +   - |
->>> +     #include <dt-bindings/arm/qcom,ids.h>
->>> +     / {
->>> +         model = "Qualcomm Technologies, Inc. sc7280 IDP SKU1 platform";
->>> +         compatible = "qcom,sc7280-idp", "google,senor", "qcom,sc7280";
->>> +
->>> +         #board-id-cells = <2>;
->>> +         board-id = <QCOM_SOC_ID(SC7280) QCOM_SOC_REVISION(1)>,
->>> +                    <QCOM_SOC_ID(SC7280) QCOM_SOC_REVISION(2)>,
->>> +                    <QCOM_BOARD_ID(IDP, 1, 0) QCOM_BOARD_SUBTYPE(UFS, ANY, 1)>;
->>> +         board-id-types = "qcom,soc-id",
->>> +                          "qcom,soc-id",
->>> +                          "qcom,board-id";
->> So, would the matching here would be:
->>
->> loop over disctinct board-id-types
->>     check if there's at least 1 match for all of them
->>         use this dtb if that's the case
->>
->> stop booting / "best guess match"
->>
->> ?
->>
->> [...]
-> 
-> Yes, But the "if" checking would have preference in place.
-> The preference logic would look something like this,
-> 
-> First will check for SoC-ID, if we have an exact match for SoC-ID then will proceed for board-ID match. Otherwise the DT would be discarded.
-> Once (exact) board-ID found, will proceed for subtype , pmic and so on.
-> Exact match and best match logic is used. Parameters like SoC-ID, board-ID are required to be best matched. Other few fields follow best match logic and best of the DT can be picked.
-> 
->>> +#define QCOM_BOARD_ID_MTP        0x8
->>> +#define QCOM_BOARD_ID_DRAGONBOARD    0x10
->>> +#define QCOM_BOARD_ID_QRD        0x11
->>> +#define QCOM_BOARD_ID_HDK        0x1F
->>> +#define QCOM_BOARD_ID_ATP        0x21
->>> +#define QCOM_BOARD_ID_IDP        0x22
->>> +#define QCOM_BOARD_ID_SBC        0x24
->>> +#define QCOM_BOARD_ID_QXR        0x26
->>> +#define QCOM_BOARD_ID_CRD        0x28
->> Missing ADP/QCP/Ride (if they're separate)
-> 
-> Sure, will update. Would need to work with teams.
-
-There are probably more boards that we aren't aware of.
-
-Amrit, please add board IDs for all the boards that are
-in kernel.org.
