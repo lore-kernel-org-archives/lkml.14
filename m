@@ -1,122 +1,111 @@
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out198-163.us.a.mail.aliyun.com (out198-163.us.a.mail.aliyun.com [47.90.198.163])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BA781C2D
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 03:58:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 340FE1C2D;
+	Mon, 22 Jan 2024 04:03:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=47.90.198.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705895937; cv=none; b=kcJu90vCRfNKok435w+wjzX9W8H5ds5B3ug9j1QehtNnRKeOnS3jHUHR6ar8Foz6PJzS/bHyn8prUy0+WxWAFOMG0oXYKEbVq9rYlIiMMEICpWXi6PSrx0KOc2dBkzJQoRfE3SWBVazXM+zgQu972CpD1GujvwRSVY+ZezKLZdg=
+	t=1705896244; cv=none; b=cplRWshcbkNX9ll0JMkrDwp0ji+ii0E1Sw1AJP/pU1SQtNTYOYh7pc2o5P+jlD5L0VfTQ2GcoZ0RXkIOOP50WVCDPwHuTFLQDjnYlor8sYZYwnrHPXsY70Bdt1C6lvU8kcRmaOuBMcwxt1raGloC5zSwnk32UiX6ZbOUCgD8LLo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705895937; c=relaxed/simple;
-	bh=tLXsqPP7DZTbGqeWxVioSmb1fX8OXB2SzYiah5WXtgc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pyFux5opaJ6dRhM/mbzh7Qcjxm+/DTf68of02U6OeN+bUFMPVdsXMdjIvkXEbVnDNot97ezPFcVnkLY3UrCCV5AwWyt3JYDQfN7ywZafocn5sDtbvtEPdxBn7l1Kp2P+6tb9Hoceu15dYUyfD13CnMl+fN3Kp0uWj0nvwGId/4w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=U43mwVvr; arc=none smtp.client-ip=209.85.208.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U43mwVvr"
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2cef994d4e6so7129201fa.2
-        for <linux-kernel@vger.kernel.org>; Sun, 21 Jan 2024 19:58:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705895934; x=1706500734; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0nTrFT7rRpBWds3+I6H31jRLE1XMXyJqWuOdYqlemoc=;
-        b=U43mwVvrnNbyhUXtAeFnKL8CnOHfPT4mOtsBL4PbJhOv5gVNr8hQOULZZpwRFaQi0X
-         oUkyQR01OK4NMz+gJ4S7WZD30Y7vE7cx5n62V5mc1Z8Q83fk2fmSK0ugF71kEpkXyiDW
-         b/lSsdGTvsFZStYe9EaJiqPohvfEODx3S3vG/djyGFN5eEhaNcmvYdz2m68GWOP6VKQ5
-         /3X2mu6b8S5KS4p/jWJ4M89KdSXK1Yg+VZq12kPUmcj2FM/He9xTygAg8y4DTKcb0jbZ
-         dVKZ5bPg04CF7J5+8+39lxt3j6g0/9qhaK2cS31eTCbhhBbCuIw+1svjeew3DUpvuqF1
-         cuWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705895934; x=1706500734;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0nTrFT7rRpBWds3+I6H31jRLE1XMXyJqWuOdYqlemoc=;
-        b=kTPEYU3/ktX5WLoHJWAzED1BnrWvRIT0RCezFNildwaa6WjCqxeEOTg49SIfcShDn5
-         +aTS6Vo3rR5RoJYWMFTJ9DGFj3iFq9PLGKRB5HNmkuYcpKh87ZH/EiMa+tyMB1w+UR0f
-         5bH2E+L85hJCtJcL02m/u9cbOl/e5RWLMYUqtCLY8atKuLARBTEiZ5Ti9BxYysZ037ij
-         dKypm1mSzDeK32I+ajCyu8HMoIkFR8DBAmOMWoYgMLYdWdRcC5lIATQQZ5KpMHPupIeJ
-         w0ocAokGyCRcKH789kpkUnK/LwskOeLItYJV8gX3yD9jAp71ovRJJyAVGiq3nR5gdnJR
-         OYMw==
-X-Gm-Message-State: AOJu0YzYhBWYUVxHO70ONI+u1Ig8eYlQjO94hCgiUcJgIua/Nu5+lIlw
-	t2/6Dlub5gwJMi2/Xfnl/QQduplVvw5A+FdFS6MfWy/R+HGlFuwRY5egfYoTwsv6Vw9nCHiw+EG
-	iTQNGNCSq3MqnAVHKbgs6duY/H6Y=
-X-Google-Smtp-Source: AGHT+IEE2b90Y6392Ag2hM7Vsg78r+ea3Vn7jT132azgHsbhwikxozW66belbEyks/1gcyZRatZRM5OWzKmTvlOVi7c=
-X-Received: by 2002:a2e:3519:0:b0:2cc:31e9:745e with SMTP id
- z25-20020a2e3519000000b002cc31e9745emr1165912ljz.60.1705895934035; Sun, 21
- Jan 2024 19:58:54 -0800 (PST)
+	s=arc-20240116; t=1705896244; c=relaxed/simple;
+	bh=3uTSwpfMRwcsYBt+Dz+A8Ezli5jNjRKJfEuBqJRftCM=;
+	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=mJdHC4XDeLLPOw+c9orX3oBLm9Q3h/chnrHn5EeRk3wr7BdoLWHJu3DS32ytb9lHBjaNcin5jMMLsut/OjjAxBQFlHYrPFcCr8AIh+AtAv/ghS+SI415b+iNaE+b4/DqQjyPK9rmeX4X6p93BrJFrvnWT/OCQKKvBbjn5KIKeSE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aibsd.com; spf=pass smtp.mailfrom=aibsd.com; arc=none smtp.client-ip=47.90.198.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aibsd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aibsd.com
+X-Alimail-AntiSpam:AC=CONTINUE;BC=0.07436566|-1;BR=01201311R611S53rulernew998_84748_2000303;CH=blue;DM=|CONTINUE|false|;DS=CONTINUE|ham_alarm|0.00183697-6.09629e-05-0.998102;FP=0|0|0|0|0|-1|-1|-1;HT=ay29a033018047205;MF=aiden.leong@aibsd.com;NM=1;PH=DS;RN=6;RT=6;SR=0;TI=SMTPD_---.WBsaEmE_1705895283;
+Received: from 192.168.31.5(mailfrom:aiden.leong@aibsd.com fp:SMTPD_---.WBsaEmE_1705895283)
+          by smtp.aliyun-inc.com;
+          Mon, 22 Jan 2024 11:48:05 +0800
+Message-ID: <d9ac2960-6644-4a87-b5e4-4bfb6e0364a8@aibsd.com>
+Date: Mon, 22 Jan 2024 11:48:03 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240116234901.3238852-1-avagin@google.com> <30cd0be4-705f-4d63-bdad-fc57301e7eda@intel.com>
- <CANaxB-xu+zG=5_EAe4zapC5a_x4CkkDovmVX7LjiLk+E7kU75g@mail.gmail.com>
- <b3e5456a-7113-4868-b8ce-020421e898ba@intel.com> <CANaxB-zQYC8=7frWGU2pRTDJrkVu0iR8QZCmUxSzGmBG-_b1cg@mail.gmail.com>
- <54bcb902-0fab-4a53-8b8e-85b6e4484b03@intel.com> <87cytyfmd8.ffs@tglx>
- <5bddbb34-4081-494b-8c12-c2e70898a608@intel.com> <877ck6fg0z.ffs@tglx>
-In-Reply-To: <877ck6fg0z.ffs@tglx>
-From: Andrei Vagin <avagin@gmail.com>
-Date: Sun, 21 Jan 2024 19:58:42 -0800
-Message-ID: <CANaxB-zaa0nMFmep9jtJh_QDdAj=2K9G5PAKF4iTuNbNnYj4bg@mail.gmail.com>
-Subject: Re: [PATCH] x86/fpu: verify xstate buffer size according with
- requested features
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Dave Hansen <dave.hansen@intel.com>, Andrei Vagin <avagin@google.com>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, LKML <linux-kernel@vger.kernel.org>, 
-	x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+To: masahiroy@kernel.org
+Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+ nathan@kernel.org, ndesaulniers@google.com, nicolas@fjasle.eu
+From: Aiden Leong <aiden.leong@aibsd.com>
+Subject: Re: [PATCH v2 2/4] modpost: inform compilers that fatal() never
+ returns
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jan 18, 2024 at 2:11=E2=80=AFPM Thomas Gleixner <tglx@linutronix.de=
-> wrote:
->
-> On Thu, Jan 18 2024 at 14:02, Dave Hansen wrote:
-> > On 1/18/24 11:54, Thomas Gleixner wrote:
-> >> On Thu, Jan 18 2024 at 10:27, Dave Hansen wrote:
-> >>> If we have nice, reliable fault handling and then decide that we've g=
-ot
-> >>> XRSTOR's running amok reading random memory all over the place that n=
-eed
-> >>> a nicer error message, then we can add that code to predict the futur=
-e.
-> >>> If our "predict the future" code goes wrong, then we lose an error
-> >>> message -- not a big deal.
-> >> After staring more at it, it's arguable to pass fpstate->user_size to
-> >> fault_in_readable() and ignore fx_sw->xstate_size completely.
-> >>
-> >> That's a guaranteed to be reliable size which prevents endless loops
-> >> because arguably that's the maximum size which can be touched by XRSTO=
-R,
-> >> no?
 
-fpstate->user_size isn't constant.  It can be modified from the XFD #NM
-handler. For example, it happens when a process invokes one of amx
-instructions for the first time. It means we have to be able to restore
-an fpu state from signal frames generated with a smaller
-fpstate->user_size. Can it trigger any issues?
+ > The function fatal() never returns because modpost_log() calls exit(1)
 
-> >
-> > I like it.  It takes fx_sw completely out of the picture, which was the
-> > root of the problem in the first place.
->
-> Correct.
->
-> I really don't care about the esoteric case where this might
-> theoretically result in a unjustified application abort.
->
-> You really need to twist your brain around 6 corners and then squint
-> twice to construct that case. Of course syzcaller might trigger it, but
-> fuzzing the sigreturn frame is a #GP, #PF and whatever lottery anyway.
+ > when LOG_FATAL is passed.
+ >
+ > Inform compilers of this fact so that unreachable code flow can be
+ > identified at compile time.
+ >
+ > Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+ > Reviewed-by: Nathan Chancellor <nathan@kernel.org>
+ > ---
+ >
+ > Changes in v2:
+ >   - Use noreturn attribute together with alias
+ >
+ >  scripts/mod/modpost.c | 3 +++
+ >  scripts/mod/modpost.h | 5 ++++-
+ >  2 files changed, 7 insertions(+), 1 deletion(-)
+ >
+ > diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
+ > index ca0a90158f85..c13bc9095df3 100644
+ > --- a/scripts/mod/modpost.c
+ > +++ b/scripts/mod/modpost.c
+ > @@ -90,6 +90,9 @@ void modpost_log(enum loglevel loglevel, const char 
+*fmt, ...)
+ >          error_occurred = true;
+ >  }
+ >
+ > +void __attribute__((alias("modpost_log")))
 
-In my case, the bug was triggered by gVisor (it is like the user-mode
-Linux).
+Hi Masahiro,
+I cross-compile kernel on Apple Silicon MacBook Pro
+and every thing works well until this patch.
 
-Thanks,
-Andrei
+My build command:
+make ARCH=arm CROSS_COMPILE=arm-none-eabi- \
+HOSTCFLAGS="-I/opt/homebrew/opt/openssl/include" \
+HOSTLDFLAGS="-L/opt/homebrew/opt/openssl/lib"
+
+Error message:
+scripts/mod/modpost.c:93:21: error: aliases are not supported on darwin
+
+Aiden Leong
+
+ > +modpost_log_noret(enum loglevel loglevel, const char *fmt, ...);
+ > +
+ >  static inline bool strends(const char *str, const char *postfix)
+ >  {
+ >      if (strlen(str) < strlen(postfix))
+ > diff --git a/scripts/mod/modpost.h b/scripts/mod/modpost.h
+ > index 9fe974dc1a52..835cababf1b0 100644
+ > --- a/scripts/mod/modpost.h
+ > +++ b/scripts/mod/modpost.h
+ > @@ -200,6 +200,9 @@ enum loglevel {
+ >  void __attribute__((format(printf, 2, 3)))
+ >  modpost_log(enum loglevel loglevel, const char *fmt, ...);
+ >
+ > +void __attribute__((format(printf, 2, 3), noreturn))
+ > +modpost_log_noret(enum loglevel loglevel, const char *fmt, ...);
+ > +
+ >  /*
+ >   * warn - show the given message, then let modpost continue running, 
+still
+ >   *        allowing modpost to exit successfully. This should be used 
+when
+ > @@ -215,4 +218,4 @@ modpost_log(enum loglevel loglevel, const char 
+*fmt, ...);
+ >   */
+ >  #define warn(fmt, args...)    modpost_log(LOG_WARN, fmt, ##args)
+ >  #define error(fmt, args...)    modpost_log(LOG_ERROR, fmt, ##args)
+ > -#define fatal(fmt, args...)    modpost_log(LOG_FATAL, fmt, ##args)
+ > +#define fatal(fmt, args...)    modpost_log_noret(LOG_FATAL, fmt, ##args)
+ > --
+ > 2.40.1
