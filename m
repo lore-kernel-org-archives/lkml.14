@@ -1,44 +1,44 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44CFD4F897;
-	Mon, 22 Jan 2024 23:54:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DADEF50A62;
+	Mon, 22 Jan 2024 23:54:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705967699; cv=none; b=pR2hJFoSA50l9yFeHa8ihMMm5LrzIF3efnX6JFbIMP3XARoeW0ElOe6JB+qh1aAh6D2XCug74NArWZQbL9lYL/XmhmVYUSwZtixzfsnbXN/qglxB3YqzCWPv2kxv8S8n9tmMg8d8iEVE0VucctLvdguhHz3XSsn8uOijiu4u8uI=
+	t=1705967700; cv=none; b=Ic+qFV4r1+mw5M2CcNX+cQCErOl8qdXBt3y29HaFsRoU9PJP5w3M44H9/5ypKNDM7kVyZbdnHsflCRCpSKiiR6Ph+soGUaHv0ZOQiBXwrsk/c3BZeXsg8STltsCiLLUacY8p4aFAVl1Da2PxH85R0DXp2eIHeCHuVR3NvH05bgQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705967699; c=relaxed/simple;
-	bh=E0vdis4b+ufttVkH77KTfBZATmw5lvhWlGxIIMKiLdA=;
+	s=arc-20240116; t=1705967700; c=relaxed/simple;
+	bh=A7ezAzNW+x3LYZ1OfRN3x39U1CeFY05u8ohC5GQp9qA=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=kIHCf/3jMN8WjqZJzNMqprTT7vqyPbYLubhsjvdFVTyRzbopK8+vr+4mo7CyaMnO6ZGdCYUyQ45QimGIZKB5aMEVi43vMiT4W5DeQkabx35dTC2duu87kqFSloYCMCKemDK4OMuHJfilGQpShZzbLfN2LEyMnq6QCpHbNGEF624=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Mnj/zLJx; arc=none smtp.client-ip=192.198.163.12
+	 MIME-Version; b=DRBIjcraYau9zVCch3DbT/wIxDVDAbIRlqwjUtKr9rXQUrIVdmsEwPCn0bH8IMjcOrxzhd3/Pf4+TxcosErdS+FFSdmbvP4axPDOo2Le9tTkh9OIylzg/71KquHCDAdqfQBwX3EUz5pQqEM+1L3OBmE0RcDZzih0FaOy6zr4sZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QPdcS5+2; arc=none smtp.client-ip=192.198.163.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Mnj/zLJx"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QPdcS5+2"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1705967697; x=1737503697;
+  t=1705967699; x=1737503699;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=E0vdis4b+ufttVkH77KTfBZATmw5lvhWlGxIIMKiLdA=;
-  b=Mnj/zLJxxX0eKLLXFuDyDzHsh6SRno1wdXTD3ugDm7YlnhSOLLiLnFNa
-   lvv9BChwGQHpJ5bJyOxjIZBMc8Bw8v0hhzXUaZrEgslanU32WV12kwkBh
-   KzPNyjtydLtkEkcA6XaKDX5x9cafhcoyqr3T0UigY7Y33CVtreTKUjW3D
-   HLZqsur/ERdFPVfSYBPC5AVZV1/8035mxpRHyKr4537gcVMwOhQHRFvd0
-   R0cd5ZBhslMG8eNWFRIRaWaJgJtcbSBX8M98AS0PjNchXejme6jYkfWu+
-   o7+fzGPfqytaK47Tqm3iQADLQDliOu9j92jAhUcdqTQMOYjmWA/p/HLhi
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10961"; a="1217833"
+  bh=A7ezAzNW+x3LYZ1OfRN3x39U1CeFY05u8ohC5GQp9qA=;
+  b=QPdcS5+2Tvxm/9DDpjLdfAJbZMzSQl/bkXstXiMOcJqHM6se0abeSGQD
+   ZEUehi8h3qb9rcqXXutw8Wvlw5pvEpmSuKAYNRw9v3ovi1TetmlVOzv49
+   F4aGtrwH5Fyksh1n1sX1WAVztctI/z6SvQAPAf9ZSb+/iqfsCPt92hGr3
+   AazqnjRgie1dTOkLaeLHB+pgB/Mh1tb6S4NpTYL6b+Xmwb1slUccHXK6e
+   EUkEX8KnuwvnOrMOx+kEq8L28ct++eFwM103S/rF4cLIRoOWYegNkv2W0
+   tQjtWpcLw574GguZULe+PIQApIwtsZAH9snRMQkSBhhcAFf1YsNFC3vs5
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10961"; a="1217841"
 X-IronPort-AV: E=Sophos;i="6.05,212,1701158400"; 
-   d="scan'208";a="1217833"
+   d="scan'208";a="1217841"
 Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 15:54:56 -0800
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 15:54:58 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.05,212,1701158400"; 
-   d="scan'208";a="1350135"
+   d="scan'208";a="1350147"
 Received: from ls.sc.intel.com (HELO localhost) ([172.25.112.31])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 15:54:56 -0800
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 15:54:58 -0800
 From: isaku.yamahata@intel.com
 To: kvm@vger.kernel.org,
 	linux-kernel@vger.kernel.org
@@ -52,9 +52,9 @@ Cc: isaku.yamahata@intel.com,
 	chen.bo@intel.com,
 	hang.yuan@intel.com,
 	tina.zhang@intel.com
-Subject: [PATCH v18 008/121] KVM: TDX: Initialize the TDX module when loading the KVM intel kernel module
-Date: Mon, 22 Jan 2024 15:52:44 -0800
-Message-Id: <9804cc9409d6773115e70bbb3bdc4adb67234cd6.1705965634.git.isaku.yamahata@intel.com>
+Subject: [PATCH v18 010/121] KVM: TDX: Make TDX VM type supported
+Date: Mon, 22 Jan 2024 15:52:46 -0800
+Message-Id: <a8b53239da7a1962c5a0f7e51f99818cc1f39b7f.1705965634.git.isaku.yamahata@intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1705965634.git.isaku.yamahata@intel.com>
 References: <cover.1705965634.git.isaku.yamahata@intel.com>
@@ -68,231 +68,124 @@ Content-Transfer-Encoding: 8bit
 
 From: Isaku Yamahata <isaku.yamahata@intel.com>
 
-TDX requires several initialization steps for KVM to create guest TDs.
-Detect CPU feature, enable VMX (TDX is based on VMX) on all online CPUs,
-detect the TDX module availability, initialize it and disable VMX.
+NOTE: This patch is in position of the patch series for developers to be
+able to test codes during the middle of the patch series although this
+patch series doesn't provide functional features until the all the patches
+of this patch series.  When merging this patch series, this patch can be
+moved to the end.
 
-To enable/disable VMX on all online CPUs, utilize
-vmx_hardware_enable/disable().  The method also initializes each CPU for
-TDX.  TDX requires calling a TDX initialization function per logical
-processor (LP) before the LP uses TDX.  When the CPU is becoming online,
-call the TDX LP initialization API.  If it fails to initialize TDX, refuse
-CPU online for simplicity instead of TDX avoiding the failed LP.
+As first step TDX VM support, return that TDX VM type supported to device
+model, e.g. qemu.  The callback to create guest TD is vm_init callback for
+KVM_CREATE_VM.
 
-There are several options on when to initialize the TDX module.  A.) kernel
-module loading time, B.) the first guest TD creation time.  A.) was chosen.
-With B.), a user may hit an error of the TDX initialization when trying to
-create the first guest TD.  The machine that fails to initialize the TDX
-module can't boot any guest TD further.  Such failure is undesirable and a
-surprise because the user expects that the machine can accommodate guest
-TD, but not.  So A.) is better than B.).
-
-Introduce a module parameter, kvm_intel.tdx, to explicitly enable TDX KVM
-support.  It's off by default to keep the same behavior for those who don't
-use TDX.  Implement hardware_setup method to detect TDX feature of CPU and
-initialize TDX module.
-
-Suggested-by: Sean Christopherson <seanjc@google.com>
 Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
 ---
-v18:
-- Added comment in vt_hardware_enable() by Binbin.
----
- arch/x86/kvm/Makefile      |  1 +
- arch/x86/kvm/vmx/main.c    | 38 ++++++++++++++++-
- arch/x86/kvm/vmx/tdx.c     | 84 ++++++++++++++++++++++++++++++++++++++
- arch/x86/kvm/vmx/x86_ops.h |  8 ++++
- 4 files changed, 129 insertions(+), 2 deletions(-)
- create mode 100644 arch/x86/kvm/vmx/tdx.c
+ arch/x86/kvm/vmx/main.c    | 18 ++++++++++++++++--
+ arch/x86/kvm/vmx/tdx.c     |  6 ++++++
+ arch/x86/kvm/vmx/vmx.c     |  6 ------
+ arch/x86/kvm/vmx/x86_ops.h |  3 ++-
+ 4 files changed, 24 insertions(+), 9 deletions(-)
 
-diff --git a/arch/x86/kvm/Makefile b/arch/x86/kvm/Makefile
-index 274df24b647f..5b85ef84b2e9 100644
---- a/arch/x86/kvm/Makefile
-+++ b/arch/x86/kvm/Makefile
-@@ -24,6 +24,7 @@ kvm-intel-y		+= vmx/vmx.o vmx/vmenter.o vmx/pmu_intel.o vmx/vmcs12.o \
- 
- kvm-intel-$(CONFIG_X86_SGX_KVM)	+= vmx/sgx.o
- kvm-intel-$(CONFIG_KVM_HYPERV)	+= vmx/hyperv.o vmx/hyperv_evmcs.o
-+kvm-intel-$(CONFIG_INTEL_TDX_HOST)	+= vmx/tdx.o
- 
- kvm-amd-y		+= svm/svm.o svm/vmenter.o svm/pmu.o svm/nested.o svm/avic.o \
- 			   svm/sev.o
 diff --git a/arch/x86/kvm/vmx/main.c b/arch/x86/kvm/vmx/main.c
-index 443db8ec5cd5..1e1feaacac59 100644
+index f6b66f18c070..62236bde3779 100644
 --- a/arch/x86/kvm/vmx/main.c
 +++ b/arch/x86/kvm/vmx/main.c
-@@ -6,6 +6,40 @@
- #include "nested.h"
- #include "pmu.h"
+@@ -10,6 +10,12 @@
+ static bool enable_tdx __ro_after_init;
+ module_param_named(tdx, enable_tdx, bool, 0444);
  
-+static bool enable_tdx __ro_after_init;
-+module_param_named(tdx, enable_tdx, bool, 0444);
-+
-+static int vt_hardware_enable(void)
++static bool vt_is_vm_type_supported(unsigned long type)
 +{
-+	int ret;
-+
-+	ret = vmx_hardware_enable();
-+	if (ret || !enable_tdx)
-+		return ret;
-+
-+	ret = tdx_cpu_enable();
-+	if (ret)
-+		/*
-+		 * In error case, we keep the CPU offline in error case.  So
-+		 * need to revert VMXON.
-+		 */
-+		vmx_hardware_disable();
-+	return ret;
++	return __kvm_is_vm_type_supported(type) ||
++		(enable_tdx && tdx_is_vm_type_supported(type));
 +}
 +
-+static __init int vt_hardware_setup(void)
+ static int vt_hardware_enable(void)
+ {
+ 	int ret;
+@@ -41,6 +47,14 @@ static __init int vt_hardware_setup(void)
+ 	return 0;
+ }
+ 
++static int vt_vm_init(struct kvm *kvm)
 +{
-+	int ret;
++	if (is_td(kvm))
++		return -EOPNOTSUPP;	/* Not ready to create guest TD yet. */
 +
-+	ret = vmx_hardware_setup();
-+	if (ret)
-+		return ret;
-+
-+	enable_tdx = enable_tdx && !tdx_hardware_setup(&vt_x86_ops);
-+
-+	return 0;
++	return vmx_vm_init(kvm);
 +}
 +
  #define VMX_REQUIRED_APICV_INHIBITS				\
  	(BIT(APICV_INHIBIT_REASON_DISABLE)|			\
  	 BIT(APICV_INHIBIT_REASON_ABSENT) |			\
-@@ -22,7 +56,7 @@ struct kvm_x86_ops vt_x86_ops __initdata = {
- 
- 	.hardware_unsetup = vmx_hardware_unsetup,
- 
--	.hardware_enable = vmx_hardware_enable,
-+	.hardware_enable = vt_hardware_enable,
+@@ -61,9 +75,9 @@ struct kvm_x86_ops vt_x86_ops __initdata = {
  	.hardware_disable = vmx_hardware_disable,
  	.has_emulated_msr = vmx_has_emulated_msr,
  
-@@ -161,7 +195,7 @@ struct kvm_x86_ops vt_x86_ops __initdata = {
- };
+-	.is_vm_type_supported = vmx_is_vm_type_supported,
++	.is_vm_type_supported = vt_is_vm_type_supported,
+ 	.vm_size = sizeof(struct kvm_vmx),
+-	.vm_init = vmx_vm_init,
++	.vm_init = vt_vm_init,
+ 	.vm_destroy = vmx_vm_destroy,
  
- struct kvm_x86_init_ops vt_init_ops __initdata = {
--	.hardware_setup = vmx_hardware_setup,
-+	.hardware_setup = vt_hardware_setup,
- 	.handle_intel_pt_intr = NULL,
- 
- 	.runtime_ops = &vt_x86_ops,
+ 	.vcpu_precreate = vmx_vcpu_precreate,
 diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
-new file mode 100644
-index 000000000000..8a378fb6f1d4
---- /dev/null
+index 1c9884164566..9d3f593eacb8 100644
+--- a/arch/x86/kvm/vmx/tdx.c
 +++ b/arch/x86/kvm/vmx/tdx.c
-@@ -0,0 +1,84 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <linux/cpu.h>
-+
-+#include <asm/tdx.h>
-+
-+#include "capabilities.h"
-+#include "x86_ops.h"
-+#include "x86.h"
-+
-+#undef pr_fmt
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-+
-+static int __init tdx_module_setup(void)
+@@ -24,6 +24,12 @@ static int __init tdx_module_setup(void)
+ 	return 0;
+ }
+ 
++bool tdx_is_vm_type_supported(unsigned long type)
 +{
-+	int ret;
-+
-+	ret = tdx_enable();
-+	if (ret) {
-+		pr_info("Failed to initialize TDX module.\n");
-+		return ret;
-+	}
-+
-+	return 0;
++	/* enable_tdx check is done by the caller. */
++	return type == KVM_X86_TDX_VM;
 +}
 +
-+struct vmx_tdx_enabled {
-+	cpumask_var_t vmx_enabled;
-+	atomic_t err;
-+};
-+
-+static void __init vmx_tdx_on(void *_vmx_tdx)
-+{
-+	struct vmx_tdx_enabled *vmx_tdx = _vmx_tdx;
-+	int r;
-+
-+	r = vmx_hardware_enable();
-+	if (!r) {
-+		cpumask_set_cpu(smp_processor_id(), vmx_tdx->vmx_enabled);
-+		r = tdx_cpu_enable();
-+	}
-+	if (r)
-+		atomic_set(&vmx_tdx->err, r);
-+}
-+
-+static void __init vmx_off(void *_vmx_enabled)
-+{
-+	cpumask_var_t *vmx_enabled = (cpumask_var_t *)_vmx_enabled;
-+
-+	if (cpumask_test_cpu(smp_processor_id(), *vmx_enabled))
-+		vmx_hardware_disable();
-+}
-+
-+int __init tdx_hardware_setup(struct kvm_x86_ops *x86_ops)
-+{
-+	struct vmx_tdx_enabled vmx_tdx = {
-+		.err = ATOMIC_INIT(0),
-+	};
-+	int r = 0;
-+
-+	if (!enable_ept) {
-+		pr_warn("Cannot enable TDX with EPT disabled\n");
-+		return -EINVAL;
-+	}
-+
-+	if (!zalloc_cpumask_var(&vmx_tdx.vmx_enabled, GFP_KERNEL)) {
-+		r = -ENOMEM;
-+		goto out;
-+	}
-+
-+	/* tdx_enable() in tdx_module_setup() requires cpus lock. */
-+	cpus_read_lock();
-+	on_each_cpu(vmx_tdx_on, &vmx_tdx, true);	/* TDX requires vmxon. */
-+	r = atomic_read(&vmx_tdx.err);
-+	if (!r)
-+		r = tdx_module_setup();
-+	else
-+		r = -EIO;
-+	on_each_cpu(vmx_off, &vmx_tdx.vmx_enabled, true);
-+	cpus_read_unlock();
-+	free_cpumask_var(vmx_tdx.vmx_enabled);
-+
-+out:
-+	return r;
-+}
+ struct vmx_tdx_enabled {
+ 	cpumask_var_t vmx_enabled;
+ 	atomic_t err;
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 3f4dad3acb13..69f5e0597534 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -7531,12 +7531,6 @@ int vmx_vcpu_create(struct kvm_vcpu *vcpu)
+ 	return err;
+ }
+ 
+-bool vmx_is_vm_type_supported(unsigned long type)
+-{
+-	/* TODO: Check if TDX is supported. */
+-	return __kvm_is_vm_type_supported(type);
+-}
+-
+ #define L1TF_MSG_SMT "L1TF CPU bug present and SMT on, data leak possible. See CVE-2018-3646 and https://www.kernel.org/doc/html/latest/admin-guide/hw-vuln/l1tf.html for details.\n"
+ #define L1TF_MSG_L1D "L1TF CPU bug present and virtualization mitigation disabled, data leak possible. See CVE-2018-3646 and https://www.kernel.org/doc/html/latest/admin-guide/hw-vuln/l1tf.html for details.\n"
+ 
 diff --git a/arch/x86/kvm/vmx/x86_ops.h b/arch/x86/kvm/vmx/x86_ops.h
-index bca2d27b3dfd..b44cb681f74d 100644
+index b44cb681f74d..5da7a5fd91cb 100644
 --- a/arch/x86/kvm/vmx/x86_ops.h
 +++ b/arch/x86/kvm/vmx/x86_ops.h
-@@ -18,6 +18,8 @@ bool kvm_is_vmx_supported(void);
- int __init vmx_init(void);
- void vmx_exit(void);
+@@ -28,7 +28,6 @@ void vmx_hardware_unsetup(void);
+ int vmx_check_processor_compat(void);
+ int vmx_hardware_enable(void);
+ void vmx_hardware_disable(void);
+-bool vmx_is_vm_type_supported(unsigned long type);
+ int vmx_vm_init(struct kvm *kvm);
+ void vmx_vm_destroy(struct kvm *kvm);
+ int vmx_vcpu_precreate(struct kvm *kvm);
+@@ -137,8 +136,10 @@ void vmx_setup_mce(struct kvm_vcpu *vcpu);
  
-+__init int vmx_hardware_setup(void);
-+
- extern struct kvm_x86_ops vt_x86_ops __initdata;
- extern struct kvm_x86_init_ops vt_init_ops __initdata;
- 
-@@ -133,4 +135,10 @@ void vmx_cancel_hv_timer(struct kvm_vcpu *vcpu);
+ #ifdef CONFIG_INTEL_TDX_HOST
+ int __init tdx_hardware_setup(struct kvm_x86_ops *x86_ops);
++bool tdx_is_vm_type_supported(unsigned long type);
+ #else
+ static inline int tdx_hardware_setup(struct kvm_x86_ops *x86_ops) { return -EOPNOTSUPP; }
++static inline bool tdx_is_vm_type_supported(unsigned long type) { return false; }
  #endif
- void vmx_setup_mce(struct kvm_vcpu *vcpu);
  
-+#ifdef CONFIG_INTEL_TDX_HOST
-+int __init tdx_hardware_setup(struct kvm_x86_ops *x86_ops);
-+#else
-+static inline int tdx_hardware_setup(struct kvm_x86_ops *x86_ops) { return -EOPNOTSUPP; }
-+#endif
-+
  #endif /* __KVM_X86_VMX_X86_OPS_H */
 -- 
 2.25.1
