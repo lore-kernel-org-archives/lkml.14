@@ -1,601 +1,186 @@
-Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFD003CF50;
-	Mon, 22 Jan 2024 12:37:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15DF33D0A4;
+	Mon, 22 Jan 2024 12:37:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.134.136.31
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705927051; cv=none; b=Oi3RBPvN5jXp+bkRVnGMKT8MRK1yubaEwnjmlXAEhku2c2/D7vg/mLoDTRlWAzI/naoIG9jr1evPVGdEb5QMGhHOUMx3mg2mzkj5VuFb5csLjVpilBlHUYmJcdsU/VmQQ90EcPe13xy7PNTnyE2RiCO1pGM/JZ1m1cLsZ+c1YVw=
+	t=1705927064; cv=none; b=isUoaOmQXRtNx10qty/OqzVetiPHAAwGeeXgl6VZqECbWPJH2I+OV/YtteRJC3vKEJr91TR816GfstOds34+8S7Q7It+eIdfVNd4hJzCPa2Hfa050H4UNxjIdtFKsILtRAW5sr2hcAoDMsuGkG+tvVHqom0eFLPy1F9uI/MqVpw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705927051; c=relaxed/simple;
-	bh=2V+YBexIdHp/QwN1FpmdpxIaDEdAlqrAt2nwl+lbC2o=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=iFg2MDZSijIwPzXitNB8mdyYKHqdLopT6AuS1RCCHnEZyxRq+cvRpWfDEcQn+6Qr6hKJOtuWoBVknyXv8oN/AofwpozPpDTrffTG0k31LarRwASpCOQGFQ6If/AfwXtFVfYGjWqH0G6lP/5a0t3oLbJnjOdV4IyrZEudbmTFvRc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QEWbcmnQ; arc=none smtp.client-ip=209.85.215.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1705927064; c=relaxed/simple;
+	bh=zZ7VyaY9jknU4h6LzfcJIs/cUxR9mreT6SqqwuqVAtk=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=uK0fdrk/d8jgtN3Q7kD0/2TP6lP2TCeXyWtkTgeZQ17YKiSYNsy3586m9oqIE3QDjoE+FI8oBX77wqacpAl5yeaO8GtBoulEJz9xeaGGVWbsEngqtvkDjzmE38IPftZYFKotAfI1i0EqXXVH2QIm21mev8y4fsT5znnfyCqC3Co=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WnJqEA5P; arc=none smtp.client-ip=134.134.136.31
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QEWbcmnQ"
-Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-5ce0efd60ddso1537959a12.0;
-        Mon, 22 Jan 2024 04:37:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705927049; x=1706531849; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BsRTlx9xbCoqaCvD8LXyePi0QNIMmxANnBnMlPU8zzE=;
-        b=QEWbcmnQ3Kf8HPkmGqv7YhJ736ZQ31eYNKY4shwe8eq1G3hKkop8MIQLguBnJh0l74
-         ZUkL54qDmO/V5HvuHIOgY6kfMMo316oMtmedqUh9u+3HXVqjCQ6gc1jVAeW/ZSA/vVLw
-         mVR2R5B08Dr1wB0Z/1aF7/pGzzrAAI3lwbmMG9ZRWUHKcY7X5dPTH/jBj+sDuwNvxMWT
-         G7dV0ZRvPjqaCWfgdbrZtfPMDtfHpU2qVD/EtZi3G0Dd7A2nHXDSK4UVZKyYN2ULTOBD
-         yqHbdlUviLS/dM3dhREKoBOmE88FbB3rVKVkrI4BHVytCxOfr1bF/t5w3iul8Qjq939x
-         jz7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705927049; x=1706531849;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=BsRTlx9xbCoqaCvD8LXyePi0QNIMmxANnBnMlPU8zzE=;
-        b=FMZ7soRSQxWvshZL3Jq2jozsiWqpiJNNF0WmdcJ7Nr5W13d7QQsygG32Y6GHs1+lTK
-         7lupHBjfgH2NxfUPa9xhsmeok91wdhWoSyao39wovPeyliUNc9LEj+NS3e0STLd/z+C9
-         EPGdF+6hqDIA29vz+ba1oNgQtxNM9t0pV41HU8lLb5TWswQ5k8F8T4x05N+FeydfY5tH
-         cjQo1sUZTNE+AyGn2LoXSjRsjGD7Ex9kuHTowGxROiCBVvaw03UwQJPXv+5cLmps/CGy
-         eaTXnWkhJkO8fEL98U+dUoy4N7DYDizlLkbtEnoLWKLQetngA5XDS7Te1Iu6bJLGHCxV
-         7XKw==
-X-Gm-Message-State: AOJu0YyecYMbBuc3qQJe/mYL0MMK9CqH7G7cgFhkVP0jRmlHbjrjSBzg
-	SLabwJlpe19lJSAS2yzEHVpzzHoqt1UEifWz3g9/zzJLvR8A7+31
-X-Google-Smtp-Source: AGHT+IFaf2gr60RGOvxF0Pyzhs/WGx+AfLZGSZeFMFLhjwi7AWW26087rmz+hNu4w1deABHBKovGlQ==
-X-Received: by 2002:a05:6a20:1611:b0:19a:ef9e:989d with SMTP id l17-20020a056a20161100b0019aef9e989dmr1927897pzj.22.1705927048984;
-        Mon, 22 Jan 2024 04:37:28 -0800 (PST)
-Received: from hdebian.corp.toradex.com ([201.82.41.210])
-        by smtp.gmail.com with ESMTPSA id t19-20020a056a0021d300b006d9be753ac7sm9452933pfj.108.2024.01.22.04.37.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jan 2024 04:37:28 -0800 (PST)
-From: Hiago De Franco <hiagofranco@gmail.com>
-To: Shawn Guo <shawnguo@kernel.org>,
-	linux-arm-kernel@lists.infradead.org
-Cc: Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	NXP Linux Team <linux-imx@nxp.com>,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Hiago De Franco <hiago.franco@toradex.com>
-Subject: [PATCH v1 2/2] arm: dts: nxp: imx: Add support for Apalis Evaluation Board v1.2
-Date: Mon, 22 Jan 2024 09:35:00 -0300
-Message-ID: <20240122123526.43400-3-hiagofranco@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240122123526.43400-1-hiagofranco@gmail.com>
-References: <20240122123526.43400-1-hiagofranco@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WnJqEA5P"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1705927062; x=1737463062;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=zZ7VyaY9jknU4h6LzfcJIs/cUxR9mreT6SqqwuqVAtk=;
+  b=WnJqEA5PkKC0c3ng30TKjUveovo+bQylu08DcEx5fWN21K7In5obl4B/
+   SdLLGPtu4PE7fOT3HC+2owsvUmRWWs4FEiapFF/xwzIi3ujDKqW+ZQ4F4
+   Iwl8zb0F21aycFUiiVE36D+7HW9ql/6SRbcQp2q+Q0C2tnybbbjxmtfuu
+   mdXYItm/zt6/o8dRZ1/zRl8MNnwFrduV/ytK7Syyzt8diEPFzFbHdfw+T
+   dM2T3u/+k0rUvkOgvlJvaRUysvBzNlb8CfTVrRZ2g1CjNFxocOcbAfpXH
+   04EklTdnnv12hgVDJj0EgL39C97+py+zshaSPOe2nxkjOIdNTADr31j/T
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10960"; a="465459070"
+X-IronPort-AV: E=Sophos;i="6.05,211,1701158400"; 
+   d="scan'208";a="465459070"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 04:37:41 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,211,1701158400"; 
+   d="scan'208";a="1273050"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.94.249.150])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 04:37:38 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Mon, 22 Jan 2024 14:37:32 +0200 (EET)
+To: Jonathan Woithe <jwoithe@just42.net>
+cc: Andy Shevchenko <andriy.shevchenko@intel.com>, 
+    Igor Mammedov <imammedo@redhat.com>, linux-pci@vger.kernel.org, 
+    Bjorn Helgaas <bhelgaas@google.com>, 
+    Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, 
+    Rob Herring <robh@kernel.org>, 
+    =?ISO-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>, 
+    Lukas Wunner <lukas@wunner.de>, 
+    Mika Westerberg <mika.westerberg@linux.intel.com>, 
+    "Rafael J . Wysocki" <rafael@kernel.org>, 
+    LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 0/7] PCI: Solve two bridge window sizing issues
+In-Reply-To: <Za2YtnwLKKeMquv6@marvin.atrad.com.au>
+Message-ID: <62b66d58-7824-3650-6a73-12068a22563e@linux.intel.com>
+References: <20231228165707.3447-1-ilpo.jarvinen@linux.intel.com> <20240104131210.71f44d4b@imammedo.users.ipa.redhat.com> <ZZaiLOR4aO84CG2S@marvin.atrad.com.au> <ZZ+gEmxI/TxdbmyQ@marvin.atrad.com.au> <ZajJzcquyvRebAFN@marvin.atrad.com.au>
+ <Za0T_siv79qz1jkk@smile.fi.intel.com> <Za2YtnwLKKeMquv6@marvin.atrad.com.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/mixed; boundary="8323328-707510617-1705927052=:994"
 
-From: Hiago De Franco <hiago.franco@toradex.com>
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Add support for the new Apalis Evaluation Board v1.2. Because
-only the imx6q-apalis-eval.dts was available, the imx6q-apalis-eval.dtsi
-has been created which has common hardware configurations for v1.0, v1.1
-and v1.2. Both imx6q-apalis-eval.dts and imx6q-apalis-eval-v1.2.dts
-files include imx6q-apalis-eval.dtsi.
+--8323328-707510617-1705927052=:994
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-Versions 1.0 and 1.1 are compatible with each other and should
-use imx6q-apalis-eval.dts file. Now for v1.2, the new device-tree file
-should be used.
+On Mon, 22 Jan 2024, Jonathan Woithe wrote:
 
-Signed-off-by: Hiago De Franco <hiago.franco@toradex.com>
----
- arch/arm/boot/dts/nxp/imx/Makefile            |   1 +
- .../dts/nxp/imx/imx6q-apalis-eval-v1.2.dts    | 198 ++++++++++++++++++
- .../boot/dts/nxp/imx/imx6q-apalis-eval.dts    | 108 +---------
- .../boot/dts/nxp/imx/imx6q-apalis-eval.dtsi   | 120 +++++++++++
- 4 files changed, 321 insertions(+), 106 deletions(-)
- create mode 100644 arch/arm/boot/dts/nxp/imx/imx6q-apalis-eval-v1.2.dts
- create mode 100644 arch/arm/boot/dts/nxp/imx/imx6q-apalis-eval.dtsi
+> On Sun, Jan 21, 2024 at 02:54:22PM +0200, Andy Shevchenko wrote:
+> > On Thu, Jan 18, 2024 at 05:18:45PM +1030, Jonathan Woithe wrote:
+> > > On Thu, Jan 11, 2024 at 06:30:22PM +1030, Jonathan Woithe wrote:
+> > > > On Thu, Jan 04, 2024 at 10:48:53PM +1030, Jonathan Woithe wrote:
+> > > > > On Thu, Jan 04, 2024 at 01:12:10PM +0100, Igor Mammedov wrote:
+> > > > > > On Thu, 28 Dec 2023 18:57:00 +0200
+> > > > > > Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com> wrote:
+> > > > > >=20
+> > > > > > > Hi all,
+> > > > > > >=20
+> > > > > > > Here's a series that contains two fixes to PCI bridge window =
+sizing
+> > > > > > > algorithm. Together, they should enable remove & rescan cycle=
+ to work
+> > > > > > > for a PCI bus that has PCI devices with optional resources an=
+d/or
+> > > > > > > disparity in BAR sizes.
+> > > > > > >=20
+> > > > > > > For the second fix, I chose to expose find_empty_resource_slo=
+t() from
+> > > > > > > kernel/resource.c because it should increase accuracy of the =
+cannot-fit
+> > > > > > > decision (currently that function is called find_resource()).=
+ In order
+> > > > > > > to do that sensibly, a few improvements seemed in order to ma=
+ke its
+> > > > > > > interface and name of the function sane before exposing it. T=
+hus, the
+> > > > > > > few extra patches on resource side.
+> > > > > > >=20
+> > > > > > > Unfortunately I don't have a reason to suspect these would he=
+lp with
+> > > > > > > the issues related to the currently ongoing resource regressi=
+on
+> > > > > > > thread [1].
+> > > > > >=20
+> > > > > > Jonathan,
+> > > > > > can you test this series on affected machine with broken kernel=
+ to see if
+> > > > > > it's of any help in your case?
+> > > > >=20
+> > > > > Certainly, but it will have to wait until next Thursday (11 Jan 2=
+024).  I'm
+> > > > > still on leave this week, and when at work I only have physical a=
+ccess to
+> > > > > the machine concerned on Thursdays at present.
+> > > > >=20
+> > > > > Which kernel would you prefer I apply the series to?
+> > > >=20
+> > > > I was very short of time today but I did apply the above series to =
+the
+> > > > 5.15.y branch (since I had this source available), resulting in ver=
+sion
+> > > > 5.15.141+.  Unfortunately, in the rush I forgot to do a clean after=
+ the
+> > > > bisect reset, so the resulting kernel was not correctly built.  It =
+booted
+> > > > but thought it was a different version and therefore none of the mo=
+dules
+> > > > could be found.  As a result, the test is invalid.
+> > > >=20
+> > > > I will try again in a week when I next have physical access to the =
+system.=20
+> > > > Apologies for the delay.  In the meantime, if there's a specific ke=
+rnel I
+> > > > should apply the patch series against please let me know.  As I und=
+erstand
+> > > > it, you want it applied to one of the kernels which failed, making =
+5.15.y
+> > > > (for y < 145) a reasonable choice.
+> > >=20
+> > > I did a "make clean" to reset the source tree and recompiled.  Howeve=
+r, it
+> > > errored out:
+> > >=20
+> > >   drivers/pci/setup-bus.c:988:24: error: =E2=80=98RESOURCE_SIZE_MAX=
+=E2=80=99 undeclared
+> > >   drivers/pci/setup-bus.c:998:17: error: =E2=80=98pci_bus_for_each_re=
+source=E2=80=99 undeclared
+> > >=20
+> > > This was with the patch series applied against 5.15.141.  It seems th=
+e patch
+> > > targets a kernel that's too far removed from 5.15.x.
+> > >=20
+> > > Which kernel would you like me to apply the patch series to and test?
+> >=20
+> > The rule of thumb is to test against latest vanilla (as of today v6.7).
+> > Also makes sense to test against Linux Next. The v5.15 is way too old f=
+or
+> > a new code.
+>=20
+> Thanks, and understood.  In this case the request from Igor was=20
+>=20
+>     can you test this series on affected machine with broken kernel to se=
+e if
+>     it's of any help in your case?
+>=20
+> The latest vanilla kernel (6.7) has (AFAIK) had the offending commit
+> reverted, so it's not a "broken" kernel in this respect.  Therefore, if I=
+'ve
+> understood the request correctly, working with that kernel won't produce =
+the
+> desired test.
 
-diff --git a/arch/arm/boot/dts/nxp/imx/Makefile b/arch/arm/boot/dts/nxp/imx/Makefile
-index a724d1a7a9a0..0473f9b86ec7 100644
---- a/arch/arm/boot/dts/nxp/imx/Makefile
-+++ b/arch/arm/boot/dts/nxp/imx/Makefile
-@@ -147,6 +147,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
- 	imx6dl-yapp4-phoenix.dtb \
- 	imx6dl-yapp4-ursa.dtb \
- 	imx6q-apalis-eval.dtb \
-+	imx6q-apalis-eval-v1.2.dtb \
- 	imx6q-apalis-ixora.dtb \
- 	imx6q-apalis-ixora-v1.1.dtb \
- 	imx6q-apalis-ixora-v1.2.dtb \
-diff --git a/arch/arm/boot/dts/nxp/imx/imx6q-apalis-eval-v1.2.dts b/arch/arm/boot/dts/nxp/imx/imx6q-apalis-eval-v1.2.dts
-new file mode 100644
-index 000000000000..2fba7ed1061c
---- /dev/null
-+++ b/arch/arm/boot/dts/nxp/imx/imx6q-apalis-eval-v1.2.dts
-@@ -0,0 +1,198 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
-+/*
-+ * Copyright 2024 Toradex
-+ */
-+
-+/dts-v1/;
-+
-+#include "imx6q-apalis-eval.dtsi"
-+
-+/ {
-+	model = "Toradex Apalis iMX6Q/D Module on Apalis Evaluation Board v1.2";
-+	compatible = "toradex,apalis_imx6q-eval-v1.2", "toradex,apalis_imx6q",
-+		     "fsl,imx6q";
-+
-+	reg_3v3_mmc: regulator-3v3-mmc {
-+		compatible = "regulator-fixed";
-+		enable-active-high;
-+		gpio = <&gpio2 0 GPIO_ACTIVE_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_enable_3v3_mmc>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-min-microvolt = <3300000>;
-+		regulator-name = "3.3V_MMC";
-+		startup-delay-us = <100>;
-+	};
-+
-+	reg_3v3_sd: regulator-3v3-sd {
-+		compatible = "regulator-fixed";
-+		enable-active-high;
-+		gpio = <&gpio2 1 GPIO_ACTIVE_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_enable_3v3_sd>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-min-microvolt = <3300000>;
-+		regulator-name = "3.3V_SD";
-+		startup-delay-us = <100>;
-+	};
-+
-+	reg_can1: regulator-can1 {
-+		compatible = "regulator-fixed";
-+		enable-active-high;
-+		gpio = <&gpio2 3 GPIO_ACTIVE_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_enable_can1_power>;
-+		regulator-name = "5V_SW_CAN1";
-+		startup-delay-us = <1000>;
-+	};
-+
-+	reg_can2: regulator-can2 {
-+		compatible = "regulator-fixed";
-+		enable-active-high;
-+		gpio = <&gpio2 2 GPIO_ACTIVE_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_enable_can2_power>;
-+		regulator-name = "5V_SW_CAN2";
-+		startup-delay-us = <1000>;
-+	};
-+
-+	sound-carrier {
-+		compatible = "simple-audio-card";
-+		simple-audio-card,bitclock-master = <&codec_dai>;
-+		simple-audio-card,format = "i2s";
-+		simple-audio-card,frame-master = <&codec_dai>;
-+		simple-audio-card,name = "apalis-nau8822";
-+		simple-audio-card,routing =
-+			"Headphones", "LHP",
-+			"Headphones", "RHP",
-+			"Speaker", "LSPK",
-+			"Speaker", "RSPK",
-+			"Line Out", "AUXOUT1",
-+			"Line Out", "AUXOUT2",
-+			"LAUX", "Line In",
-+			"RAUX", "Line In",
-+			"LMICP", "Mic In",
-+			"RMICP", "Mic In";
-+		simple-audio-card,widgets =
-+			"Headphones", "Headphones",
-+			"Line Out", "Line Out",
-+			"Speaker", "Speaker",
-+			"Microphone", "Mic In",
-+			"Line", "Line In";
-+
-+		codec_dai: simple-audio-card,codec {
-+			sound-dai = <&nau8822_1a>;
-+			system-clock-frequency = <12288000>;
-+		};
-+
-+		simple-audio-card,cpu {
-+			sound-dai = <&ssi2>;
-+		};
-+	};
-+};
-+
-+&can1 {
-+	xceiver-supply = <&reg_can1>;
-+	status = "okay";
-+};
-+
-+&can2 {
-+	xceiver-supply = <&reg_can2>;
-+	status = "okay";
-+};
-+
-+/* I2C1_SDA/SCL on MXM3 209/211 */
-+&i2c1 {
-+	/* Audio Codec */
-+	nau8822_1a: audio-codec@1a {
-+		compatible = "nuvoton,nau8822";
-+		reg = <0x1a>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_nau8822>;
-+		#sound-dai-cells = <0>;
-+	};
-+
-+	/* Current measurement into module VCC */
-+	hwmon@40 {
-+		compatible = "ti,ina219";
-+		reg = <0x40>;
-+		shunt-resistor = <5000>;
-+	};
-+
-+	/* Temperature Sensor */
-+	temperature-sensor@4f {
-+		compatible = "ti,tmp75c";
-+		reg = <0x4f>;
-+	};
-+
-+	/* EEPROM */
-+	eeprom@57 {
-+		compatible = "st,24c02", "atmel,24c02";
-+		reg = <0x57>;
-+		pagesize = <16>;
-+		size = <256>;
-+	};
-+};
-+
-+&pcie {
-+	status = "okay";
-+};
-+
-+&ssi2 {
-+	status = "okay";
-+};
-+
-+/* MMC1 */
-+&usdhc1 {
-+	bus-width = <4>;
-+	pinctrl-0 = <&pinctrl_usdhc1_4bit &pinctrl_mmc_cd>;
-+	vmmc-supply = <&reg_3v3_mmc>;
-+	status = "okay";
-+};
-+
-+/* SD1 */
-+&usdhc2 {
-+	cd-gpios = <&gpio6 14 GPIO_ACTIVE_LOW>;
-+	pinctrl-0 = <&pinctrl_usdhc2 &pinctrl_sd_cd>;
-+	vmmc-supply = <&reg_3v3_sd>;
-+	status = "okay";
-+};
-+
-+&iomuxc {
-+	pinctrl_enable_3v3_mmc: enable3v3mmcgrp {
-+		fsl,pins = <
-+			/* MMC1_PWR_CTRL */
-+			MX6QDL_PAD_NANDF_D0__GPIO2_IO00 0xb000
-+		>;
-+	};
-+
-+	pinctrl_enable_3v3_sd: enable3v3sdgrp {
-+		fsl,pins = <
-+			/* SD1_PWR_CTRL */
-+			MX6QDL_PAD_NANDF_D1__GPIO2_IO01 0xb000
-+		>;
-+	};
-+
-+	pinctrl_enable_can1_power: enablecan1powergrp {
-+		fsl,pins = <
-+			/* CAN1_PWR_EN */
-+			MX6QDL_PAD_NANDF_D3__GPIO2_IO03 0xb000
-+		>;
-+	};
-+
-+	pinctrl_enable_can2_power: enablecan2powergrp {
-+		fsl,pins = <
-+			/* CAN2_PWR_EN */
-+			MX6QDL_PAD_NANDF_D2__GPIO2_IO02 0xb000
-+		>;
-+	};
-+
-+	pinctrl_nau8822: nau8822grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_DISP0_DAT16__AUD5_TXC	0x130b0
-+			MX6QDL_PAD_DISP0_DAT17__AUD5_TXD	0x130b0
-+			MX6QDL_PAD_DISP0_DAT18__AUD5_TXFS	0x130b0
-+			MX6QDL_PAD_DISP0_DAT19__AUD5_RXD	0x130b0
-+		>;
-+	};
-+};
-diff --git a/arch/arm/boot/dts/nxp/imx/imx6q-apalis-eval.dts b/arch/arm/boot/dts/nxp/imx/imx6q-apalis-eval.dts
-index 3fc079dfd61e..e1077e2da5f4 100644
---- a/arch/arm/boot/dts/nxp/imx/imx6q-apalis-eval.dts
-+++ b/arch/arm/boot/dts/nxp/imx/imx6q-apalis-eval.dts
-@@ -7,29 +7,13 @@
- 
- /dts-v1/;
- 
--#include <dt-bindings/gpio/gpio.h>
--#include <dt-bindings/input/input.h>
--#include <dt-bindings/interrupt-controller/irq.h>
--#include "imx6q.dtsi"
--#include "imx6qdl-apalis.dtsi"
-+#include "imx6q-apalis-eval.dtsi"
- 
- / {
- 	model = "Toradex Apalis iMX6Q/D Module on Apalis Evaluation Board";
- 	compatible = "toradex,apalis_imx6q-eval", "toradex,apalis_imx6q",
- 		     "fsl,imx6q";
- 
--	aliases {
--		i2c0 = &i2c1;
--		i2c1 = &i2c3;
--		i2c2 = &i2c2;
--		rtc0 = &rtc_i2c;
--		rtc1 = &snvs_rtc;
--	};
--
--	chosen {
--		stdout-path = "serial0:115200n8";
--	};
--
- 	reg_pcie_switch: regulator-pcie-switch {
- 		compatible = "regulator-fixed";
- 		enable-active-high;
-@@ -40,14 +24,6 @@ reg_pcie_switch: regulator-pcie-switch {
- 		startup-delay-us = <100000>;
- 		status = "okay";
- 	};
--
--	reg_3v3_sw: regulator-3v3-sw {
--		compatible = "regulator-fixed";
--		regulator-always-on;
--		regulator-max-microvolt = <3300000>;
--		regulator-min-microvolt = <3300000>;
--		regulator-name = "3.3V_SW";
--	};
- };
- 
- &can1 {
-@@ -62,102 +38,22 @@ &can2 {
- 
- /* I2C1_SDA/SCL on MXM3 209/211 (e.g. RTC on carrier board) */
- &i2c1 {
--	status = "okay";
--
-+	/* PCIe Switch */
- 	pcie-switch@58 {
- 		compatible = "plx,pex8605";
- 		reg = <0x58>;
- 	};
--
--	/* M41T0M6 real time clock on carrier board */
--	rtc_i2c: rtc@68 {
--		compatible = "st,m41t0";
--		reg = <0x68>;
--	};
--};
--
--/*
-- * I2C3_SDA/SCL (CAM) on MXM3 pin 201/203 (e.g. camera sensor on carrier
-- * board)
-- */
--&i2c3 {
--	status = "okay";
- };
- 
- &pcie {
--	pinctrl-names = "default";
--	pinctrl-0 = <&pinctrl_reset_moci>;
--	/* active-high meaning opposite of regular PERST# active-low polarity */
--	reset-gpio = <&gpio1 28 GPIO_ACTIVE_HIGH>;
--	reset-gpio-active-high;
- 	vpcie-supply = <&reg_pcie_switch>;
- 	status = "okay";
- };
- 
--&pwm1 {
--	status = "okay";
--};
--
--&pwm2 {
--	status = "okay";
--};
--
--&pwm3 {
--	status = "okay";
--};
--
--&pwm4 {
--	status = "okay";
--};
--
--&reg_usb_host_vbus {
--	status = "okay";
--};
--
--&reg_usb_otg_vbus {
--	status = "okay";
--};
--
--&sata {
--	status = "okay";
--};
--
- &sound_spdif {
- 	status = "okay";
- };
- 
--&spdif {
--	status = "okay";
--};
--
--&uart1 {
--	status = "okay";
--};
--
--&uart2 {
--	status = "okay";
--};
--
--&uart4 {
--	status = "okay";
--};
--
--&uart5 {
--	status = "okay";
--};
--
--&usbh1 {
--	disable-over-current;
--	vbus-supply = <&reg_usb_host_vbus>;
--	status = "okay";
--};
--
--&usbotg {
--	disable-over-current;
--	vbus-supply = <&reg_usb_otg_vbus>;
--	status = "okay";
--};
--
- /* MMC1 */
- &usdhc1 {
- 	status = "okay";
-diff --git a/arch/arm/boot/dts/nxp/imx/imx6q-apalis-eval.dtsi b/arch/arm/boot/dts/nxp/imx/imx6q-apalis-eval.dtsi
-new file mode 100644
-index 000000000000..b6c45ad3f430
---- /dev/null
-+++ b/arch/arm/boot/dts/nxp/imx/imx6q-apalis-eval.dtsi
-@@ -0,0 +1,120 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
-+/*
-+ * Copyright 2014-2024 Toradex
-+ */
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
-+#include <dt-bindings/interrupt-controller/irq.h>
-+#include "imx6q.dtsi"
-+#include "imx6qdl-apalis.dtsi"
-+
-+/ {
-+	aliases {
-+		i2c0 = &i2c1;
-+		i2c1 = &i2c3;
-+		i2c2 = &i2c2;
-+		rtc0 = &rtc_i2c;
-+		rtc1 = &snvs_rtc;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	reg_3v3_sw: regulator-3v3-sw {
-+		compatible = "regulator-fixed";
-+		regulator-always-on;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-min-microvolt = <3300000>;
-+		regulator-name = "3.3V_SW";
-+	};
-+};
-+
-+&i2c1 {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	status = "okay";
-+
-+	/* M41T0M6 real time clock on carrier board */
-+	rtc_i2c: rtc@68 {
-+		compatible = "st,m41t0";
-+		reg = <0x68>;
-+	};
-+};
-+
-+/*
-+ * I2C3_SDA/SCL (CAM) on MXM3 pin 201/203 (e.g. camera sensor on carrier
-+ * board)
-+ */
-+&i2c3 {
-+	status = "okay";
-+};
-+
-+&pcie {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_reset_moci>;
-+	/* active-high meaning opposite of regular PERST# active-low polarity */
-+	reset-gpio = <&gpio1 28 GPIO_ACTIVE_HIGH>;
-+	reset-gpio-active-high;
-+};
-+
-+&pwm1 {
-+	status = "okay";
-+};
-+
-+&pwm2 {
-+	status = "okay";
-+};
-+
-+&pwm3 {
-+	status = "okay";
-+};
-+
-+&pwm4 {
-+	status = "okay";
-+};
-+
-+&reg_usb_host_vbus {
-+	status = "okay";
-+};
-+
-+&reg_usb_otg_vbus {
-+	status = "okay";
-+};
-+
-+&sata {
-+	status = "okay";
-+};
-+
-+&spdif {
-+	status = "okay";
-+};
-+
-+&uart1 {
-+	status = "okay";
-+};
-+
-+&uart2 {
-+	status = "okay";
-+};
-+
-+&uart4 {
-+	status = "okay";
-+};
-+
-+&uart5 {
-+	status = "okay";
-+};
-+
-+&usbh1 {
-+	disable-over-current;
-+	vbus-supply = <&reg_usb_host_vbus>;
-+	status = "okay";
-+};
-+
-+&usbotg {
-+	disable-over-current;
-+	vbus-supply = <&reg_usb_otg_vbus>;
-+	status = "okay";
-+};
--- 
-2.43.0
+Well, you can revert the revert again to get back to the broken state.
 
+--=20
+ i.
+
+--8323328-707510617-1705927052=:994--
