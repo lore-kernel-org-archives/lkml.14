@@ -1,253 +1,203 @@
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F353A39AED;
-	Mon, 22 Jan 2024 05:49:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.134.136.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AD335667;
+	Mon, 22 Jan 2024 05:57:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705902583; cv=none; b=GAxQ3nsAJNoB3RZv/Fe3dx7xB/y8wLVbLSKE4SEFbJ4OJsWBU0ifpasodUjwqzJ43NQ5q1nyxV9+sdGpohg6MCexmE7kcr6i+znnwEPCe3riLIZodke5eqXt6dm6BEZDvwqgIh82KG/WfaVrGncKhj6eNF5x862hTIqOrSR7Mjk=
+	t=1705903044; cv=none; b=ICoKJv956RwEi1o6RI3YDgwpJ1mq1KOFZsN2VyfsE+pUoQOsv/tLrpS0AcfL7pwttMD2Mv1On4FmgIkb+g5aZeek08Qj8w29nNsXR++XVQHi26Iqx5Yrl9hfi6QQeTCAuIH9XBE5GfTKr0Biee3x0wQqrWln0KlLoHUrIn/QHKU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705902583; c=relaxed/simple;
-	bh=BLtxq+XOleGqe8WYTNfjgRlN9LqjjrbkeOKmLxK4Prk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Anqe+q5b94p30eOXMW7zMx8rE8D4kwVE1HMzaCLsYazkMlPR9H/I2ar/G/6zVeT9v1Irc3W2fKA6i+niFenN8D57rO+iWQpxt59wky5gZ/5wiYh5kuE0bP/tqeZeyYpVeE3LcohzX5JdYGWfVxQuM6wvsoXD3Fj8gPYyaPbOxPA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Uwyc6mhh; arc=none smtp.client-ip=134.134.136.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1705903044; c=relaxed/simple;
+	bh=tp4JlQSpqF7YVv6UlYVYHQprrGoJsNWCQt1u+rfyTqY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NGwVCoQcUD/L0kQaVtgSO4CkzxFOSGro3fBaEoYhTfd5OHqS+JqWu67CKjrNyMXunWZ87E/f2ccua3Ku5J9ey/wc/SG29OFiuVPgJAsA2mudiO5GsMV0hOQp6pCkaHDViXXl2Rq3KIEN1VaAqYCgg1l2BZGBTgK1NvOLZtAHmks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mPk/Z4kv; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Uwyc6mhh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1705902581; x=1737438581;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=BLtxq+XOleGqe8WYTNfjgRlN9LqjjrbkeOKmLxK4Prk=;
-  b=Uwyc6mhhGX1WfOLOUz/tiw8ZzaKB9Hu3KD6SBA2PMBAmhztiKzDQd1UM
-   JKxmjn5HRzbzSnoXi3FCsV5SPIlwL74mPDn4nHnAtHOkoj50J7Q1z7/dt
-   9xILUkXORr/DZEwZ9Uk120hh1CUpjaLWo4NI/KbDNpEno9e3PzgVfr1NC
-   pM04l1aMcDKJg6JlAlBf6NAz0PGksaujfTSIkRomsLNRqJ7eO6Qy+HFWp
-   9UGGIZvTyBNKpqlgFBOOu2TTUOnbVrsiw2eH16xUmD8SQDssxJ1L8FtiV
-   OXFI+4GLtMh/ml1W3gVdFgDw8SqAjhywQXi/dCaSfJstMsiblg2j/Ldic
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10960"; a="467487308"
-X-IronPort-AV: E=Sophos;i="6.05,211,1701158400"; 
-   d="scan'208";a="467487308"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jan 2024 21:49:40 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10960"; a="1116764074"
-X-IronPort-AV: E=Sophos;i="6.05,211,1701158400"; 
-   d="scan'208";a="1116764074"
-Received: from allen-box.sh.intel.com ([10.239.159.127])
-  by fmsmga005.fm.intel.com with ESMTP; 21 Jan 2024 21:49:36 -0800
-From: Lu Baolu <baolu.lu@linux.intel.com>
-To: Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Jean-Philippe Brucker <jean-philippe@linaro.org>,
-	Nicolin Chen <nicolinc@nvidia.com>
-Cc: Yi Liu <yi.l.liu@intel.com>,
-	Jacob Pan <jacob.jun.pan@linux.intel.com>,
-	Longfang Liu <liulongfang@huawei.com>,
-	Yan Zhao <yan.y.zhao@intel.com>,
-	iommu@lists.linux.dev,
-	kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Lu Baolu <baolu.lu@linux.intel.com>,
-	Jason Gunthorpe <jgg@nvidia.com>
-Subject: [PATCH v10 16/16] iommu: Make iommu_report_device_fault() reutrn void
-Date: Mon, 22 Jan 2024 13:43:08 +0800
-Message-Id: <20240122054308.23901-17-baolu.lu@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240122054308.23901-1-baolu.lu@linux.intel.com>
-References: <20240122054308.23901-1-baolu.lu@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mPk/Z4kv"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-40e87d07c07so36071765e9.1;
+        Sun, 21 Jan 2024 21:57:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1705903041; x=1706507841; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7MTYZForVvLZ2hb0Ye49WxTmxEl3DOOa/vhUliBrzGQ=;
+        b=mPk/Z4kvxJ7zXvDg3erVc0CwFjbxrL55Gz4bnudcWf/FkzL1G5hQMmeFR+DKQKLqKP
+         hyCB8VNRR1ofSkSWWFQRLVLERFFQsFxTXccqf/5p9pz9vBhDxMPBOtmMMMvEV9WXQQyH
+         2PKYN3UYe6YswTH2hb60TFklAkaWYt3l9YhN8R/yG1xw2BLWhcfpfE6VLLHsmGAzz1Xx
+         0ruJLwEiW+/JcFpvqCSplRLdnC2/NcH5N0EyZi6q/GsSbDBld/lsK33TKGl5QzP2zGyR
+         XbckhMb/FiQIN1vEfzREqnd3km771zU8bqIrqFeM9t9aANTHRoCmHQGetqh8WcBoMa4u
+         zcWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705903041; x=1706507841;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7MTYZForVvLZ2hb0Ye49WxTmxEl3DOOa/vhUliBrzGQ=;
+        b=iiepJEm1pna7XyReFIk4OZb8hPVg9S+6Qf6KL9/gNGwaitkvYgiDI9Ro4ccJOzwJ1b
+         50c6p317CX2Nu0ct6xfZJrQZ5WDK/05fWwkR+SbV/w+eWQH4dbzwxKBiS2haYN90Zo9B
+         SIULASaG8IqGTFOHTbFheuYMjrUII0gXV1Yp8DNICRtiaE/pHMJkZmQCYyc9YD03pSs3
+         3I7oJaMF4n1V8LKGAYl3kgfjkvtZZFEG4tQqxlQ2q3SIYdIBigoGtJTm949iKF9TmQZW
+         jPzEqkOybPhygwCmJJlEIhfHnGzoBfYRX3tPt19sEUQDB/ZP7CCeBHq8yor7d9UH1AUn
+         SwTQ==
+X-Gm-Message-State: AOJu0Ywc95jhskftdXHtLiQ7AR8WU1NMkDMrUI/GW/JBRUgHcW0CA6A2
+	rIrxqhkTOBwyPQ1mgmYQrAhym9UOq25c8nfXzgQqPRujWWhlSH+N+ED5Bdxc5F8E2rLQupDSc8B
+	aMREFloACMcTvxWbleCNun4b1KvA=
+X-Google-Smtp-Source: AGHT+IFGYBIivqZ62ulzHX/smTjXQMJkimNwpt40QKZKF3Q0PXUrtMTpMu7iUstJl6HpzLg6Hcm7DHGwZH6T22Pbz5U=
+X-Received: by 2002:a05:600c:290c:b0:40e:6ea4:bf57 with SMTP id
+ i12-20020a05600c290c00b0040e6ea4bf57mr2212703wmd.126.1705903040462; Sun, 21
+ Jan 2024 21:57:20 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240106222357.23835-1-alchark@gmail.com> <20240109192608.5981-1-alchark@gmail.com>
+ <c517f26c-34bc-4b99-b744-8e2549cd28b5@linaro.org> <CABjd4YxYpsvf+ghHTn1z8TAZxQb-2dFOQaVSm8zHKSSWOokqww@mail.gmail.com>
+ <e45f72c2-0b5b-44dd-ad39-e7e5bd17ae26@linaro.org>
+In-Reply-To: <e45f72c2-0b5b-44dd-ad39-e7e5bd17ae26@linaro.org>
+From: Alexey Charkov <alchark@gmail.com>
+Date: Mon, 22 Jan 2024 09:57:08 +0400
+Message-ID: <CABjd4YyL1ZwNOJrWPwZtc7=e4h18a9tQOnuKP6soy=iTHv-WEA@mail.gmail.com>
+Subject: Re: [PATCH v2] arm64: dts: rockchip: enable built-in thermal
+ monitoring on rk3588
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Heiko Stuebner <heiko@sntech.de>, Sebastian Reichel <sebastian.reichel@collabora.com>, 
+	Cristian Ciocaltea <cristian.ciocaltea@collabora.com>, 
+	Christopher Obbard <chris.obbard@collabora.com>, =?UTF-8?B?VGFtw6FzIFN6xbFjcw==?= <szucst@iit.uni-miskolc.hu>, 
+	Shreeya Patel <shreeya.patel@collabora.com>, Kever Yang <kever.yang@rock-chips.com>, 
+	Jagan Teki <jagan@edgeble.ai>, Chris Morgan <macromorgan@hotmail.com>, devicetree@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-As the iommu_report_device_fault() has been converted to auto-respond a
-page fault if it fails to enqueue it, there's no need to return a code
-in any case. Make it return void.
+On Mon, Jan 22, 2024 at 4:04=E2=80=AFAM Daniel Lezcano
+<daniel.lezcano@linaro.org> wrote:
+>
+>
+> Hi Alexey,
+>
+>
+> On 21/01/2024 20:57, Alexey Charkov wrote:
+> > On Fri, Jan 19, 2024 at 8:21=E2=80=AFPM Daniel Lezcano
+> > <daniel.lezcano@linaro.org> wrote:
+> > Hello Daniel,
+> >
+> > Thanks a lot for your review and comments! Please see some reflections =
+below.
+> >
+> >> On 09/01/2024 20:19, Alexey Charkov wrote:
+> >>> Include thermal zones information in device tree for rk3588 variants
+> >>> and enable the built-in thermal sensing ADC on RADXA Rock 5B
+> >>>
+> >>> Signed-off-by: Alexey Charkov <alchark@gmail.com>
+> >>> ---
+> >>> Changes in v2:
+> >>>    - Dropped redundant comments
+> >>>    - Included all CPU cores in cooling maps
+> >>>    - Split cooling maps into more granular ones utilizing TSADC
+> >>>      channels 1-3 which measure temperature by separate CPU clusters
+> >>>      instead of channel 0 which measures the center of the SoC die
+> >>> ---
+> >>>    .../boot/dts/rockchip/rk3588-rock-5b.dts      |   4 +
+> >>>    arch/arm64/boot/dts/rockchip/rk3588s.dtsi     | 151 ++++++++++++++=
+++++
+> >>>    2 files changed, 155 insertions(+)
+> >>>
+> >>> diff --git a/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts b/arch/a=
+rm64/boot/dts/rockchip/rk3588-rock-5b.dts
+> >>> index a5a104131403..f9d540000de3 100644
+> >>> --- a/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
+> >>> +++ b/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
+> >>> @@ -772,3 +772,7 @@ &usb_host1_ehci {
+> >>>    &usb_host1_ohci {
+> >>>        status =3D "okay";
+> >>>    };
+> >>> +
+> >>> +&tsadc {
+> >>> +     status =3D "okay";
+> >>> +};
+> >>> diff --git a/arch/arm64/boot/dts/rockchip/rk3588s.dtsi b/arch/arm64/b=
+oot/dts/rockchip/rk3588s.dtsi
+> >>> index 8aa0499f9b03..8d54998d0ecc 100644
+> >>> --- a/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
+> >>> +++ b/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
+> >>> @@ -10,6 +10,7 @@
+> >>>    #include <dt-bindings/reset/rockchip,rk3588-cru.h>
+> >>>    #include <dt-bindings/phy/phy.h>
+> >>>    #include <dt-bindings/ata/ahci.h>
+> >>> +#include <dt-bindings/thermal/thermal.h>
+> >>>
+> >>>    / {
+> >>>        compatible =3D "rockchip,rk3588";
+> >>> @@ -2112,6 +2113,156 @@ tsadc: tsadc@fec00000 {
+> >>>                status =3D "disabled";
+> >>>        };
+> >>>
+> >>> +     thermal_zones: thermal-zones {
+> >>> +             /* sensor near the center of the whole chip */
+> >>> +             soc_thermal: soc-thermal {
+> >>> +                     polling-delay-passive =3D <20>;
+> >>
+> >> There is no mitigation set for this thermal zone. It is pointless to
+> >> specify a passive polling.
+> >
+> > Indeed, it makes sense to me. There seems to be a catch though in that
+> > the driver calls the generic thermal_of_zone_register during the
+> > initial probe, which expects both of those polling delays to be
+> > present in the device tree, otherwise it simply refuses to add the
+> > respective thermal zone, see drivers/thermal/thermal_of.c:502
+>
+> Usually:
+>
+> polling-delay-passive =3D <0>;
+> polling-delay =3D <0>;
+>
+> cf:
+>
+> git grep "polling-delay =3D <0>" arch/arm64/boot/dts
 
-Suggested-by: Jason Gunthorpe <jgg@nvidia.com>
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
----
- include/linux/iommu.h                       |  5 ++---
- drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c |  4 ++--
- drivers/iommu/intel/svm.c                   | 19 +++++++----------
- drivers/iommu/io-pgfault.c                  | 23 +++++++--------------
- 4 files changed, 19 insertions(+), 32 deletions(-)
+Indeed, thanks a lot for the pointer! Somehow it slipped my attention.
+Will test and amend accordingly.
 
-diff --git a/include/linux/iommu.h b/include/linux/iommu.h
-index d7b6f4017254..1ccad10e8164 100644
---- a/include/linux/iommu.h
-+++ b/include/linux/iommu.h
-@@ -1549,7 +1549,7 @@ struct iopf_queue *iopf_queue_alloc(const char *name);
- void iopf_queue_free(struct iopf_queue *queue);
- int iopf_queue_discard_partial(struct iopf_queue *queue);
- void iopf_free_group(struct iopf_group *group);
--int iommu_report_device_fault(struct device *dev, struct iopf_fault *evt);
-+void iommu_report_device_fault(struct device *dev, struct iopf_fault *evt);
- void iopf_group_response(struct iopf_group *group,
- 			 enum iommu_page_response_code status);
- #else
-@@ -1587,10 +1587,9 @@ static inline void iopf_free_group(struct iopf_group *group)
- {
- }
- 
--static inline int
-+static inline void
- iommu_report_device_fault(struct device *dev, struct iopf_fault *evt)
- {
--	return -ENODEV;
- }
- 
- static inline void iopf_group_response(struct iopf_group *group,
-diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
-index 42eb59cb99f4..02580364acda 100644
---- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
-+++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
-@@ -1455,7 +1455,7 @@ arm_smmu_find_master(struct arm_smmu_device *smmu, u32 sid)
- /* IRQ and event handlers */
- static int arm_smmu_handle_evt(struct arm_smmu_device *smmu, u64 *evt)
- {
--	int ret;
-+	int ret = 0;
- 	u32 perm = 0;
- 	struct arm_smmu_master *master;
- 	bool ssid_valid = evt[0] & EVTQ_0_SSV;
-@@ -1511,7 +1511,7 @@ static int arm_smmu_handle_evt(struct arm_smmu_device *smmu, u64 *evt)
- 		goto out_unlock;
- 	}
- 
--	ret = iommu_report_device_fault(master->dev, &fault_evt);
-+	iommu_report_device_fault(master->dev, &fault_evt);
- out_unlock:
- 	mutex_unlock(&smmu->streams_mutex);
- 	return ret;
-diff --git a/drivers/iommu/intel/svm.c b/drivers/iommu/intel/svm.c
-index 2f8716636dbb..b644d57da841 100644
---- a/drivers/iommu/intel/svm.c
-+++ b/drivers/iommu/intel/svm.c
-@@ -561,14 +561,11 @@ static int prq_to_iommu_prot(struct page_req_dsc *req)
- 	return prot;
- }
- 
--static int intel_svm_prq_report(struct intel_iommu *iommu, struct device *dev,
--				struct page_req_dsc *desc)
-+static void intel_svm_prq_report(struct intel_iommu *iommu, struct device *dev,
-+				 struct page_req_dsc *desc)
- {
- 	struct iopf_fault event = { };
- 
--	if (!dev || !dev_is_pci(dev))
--		return -ENODEV;
--
- 	/* Fill in event data for device specific processing */
- 	event.fault.type = IOMMU_FAULT_PAGE_REQ;
- 	event.fault.prm.addr = (u64)desc->addr << VTD_PAGE_SHIFT;
-@@ -601,7 +598,7 @@ static int intel_svm_prq_report(struct intel_iommu *iommu, struct device *dev,
- 		event.fault.prm.private_data[0] = ktime_to_ns(ktime_get());
- 	}
- 
--	return iommu_report_device_fault(dev, &event);
-+	iommu_report_device_fault(dev, &event);
- }
- 
- static void handle_bad_prq_event(struct intel_iommu *iommu,
-@@ -704,12 +701,10 @@ static irqreturn_t prq_event_thread(int irq, void *d)
- 		if (!pdev)
- 			goto bad_req;
- 
--		if (intel_svm_prq_report(iommu, &pdev->dev, req))
--			handle_bad_prq_event(iommu, req, QI_RESP_INVALID);
--		else
--			trace_prq_report(iommu, &pdev->dev, req->qw_0, req->qw_1,
--					 req->priv_data[0], req->priv_data[1],
--					 iommu->prq_seq_number++);
-+		intel_svm_prq_report(iommu, &pdev->dev, req);
-+		trace_prq_report(iommu, &pdev->dev, req->qw_0, req->qw_1,
-+				 req->priv_data[0], req->priv_data[1],
-+				 iommu->prq_seq_number++);
- 		pci_dev_put(pdev);
- prq_advance:
- 		head = (head + sizeof(*req)) & PRQ_RING_MASK;
-diff --git a/drivers/iommu/io-pgfault.c b/drivers/iommu/io-pgfault.c
-index 6e63e5a02884..b64229dab976 100644
---- a/drivers/iommu/io-pgfault.c
-+++ b/drivers/iommu/io-pgfault.c
-@@ -179,23 +179,21 @@ static struct iopf_group *iopf_group_alloc(struct iommu_fault_param *iopf_param,
-  *
-  * Return: 0 on success and <0 on error.
-  */
--int iommu_report_device_fault(struct device *dev, struct iopf_fault *evt)
-+void iommu_report_device_fault(struct device *dev, struct iopf_fault *evt)
- {
- 	struct iommu_fault *fault = &evt->fault;
- 	struct iommu_fault_param *iopf_param;
- 	struct iopf_group abort_group = {};
- 	struct iopf_group *group;
--	int ret;
- 
- 	iopf_param = iopf_get_dev_fault_param(dev);
- 	if (WARN_ON(!iopf_param))
--		return -ENODEV;
-+		return;
- 
- 	if (!(fault->prm.flags & IOMMU_FAULT_PAGE_REQUEST_LAST_PAGE)) {
--		ret = report_partial_fault(iopf_param, fault);
-+		report_partial_fault(iopf_param, fault);
- 		iopf_put_dev_fault_param(iopf_param);
- 		/* A request that is not the last does not need to be ack'd */
--		return ret;
- 	}
- 
- 	/*
-@@ -207,25 +205,21 @@ int iommu_report_device_fault(struct device *dev, struct iopf_fault *evt)
- 	 * leaving, otherwise partial faults will be stuck.
- 	 */
- 	group = iopf_group_alloc(iopf_param, evt, &abort_group);
--	if (group == &abort_group) {
--		ret = -ENOMEM;
-+	if (group == &abort_group)
- 		goto err_abort;
--	}
- 
- 	group->domain = get_domain_for_iopf(dev, fault);
--	if (!group->domain) {
--		ret = -EINVAL;
-+	if (!group->domain)
- 		goto err_abort;
--	}
- 
- 	/*
- 	 * On success iopf_handler must call iopf_group_response() and
- 	 * iopf_free_group()
- 	 */
--	ret = group->domain->iopf_handler(group);
--	if (ret)
-+	if (group->domain->iopf_handler(group))
- 		goto err_abort;
--	return 0;
-+
-+	return;
- 
- err_abort:
- 	iopf_group_response(group, IOMMU_PAGE_RESP_FAILURE);
-@@ -233,7 +227,6 @@ int iommu_report_device_fault(struct device *dev, struct iopf_fault *evt)
- 		__iopf_free_group(group);
- 	else
- 		iopf_free_group(group);
--	return ret;
- }
- EXPORT_SYMBOL_GPL(iommu_report_device_fault);
- 
--- 
-2.34.1
+> >>> +                     polling-delay =3D <1000>;
+> >>
+> >> The driver is interrupt driven. No need to poll.
+> >
+> > Same here as above
+> >
+> >>> +                     sustainable-power =3D <2100>;
+> >>
+> >> There is no mitigation with this thermal zone. Specifying a sustainabl=
+e
+> >> power does not make sense.
+> >
+> > Thanks, will drop this in v3!
+> >
+> >>> +                     thermal-sensors =3D <&tsadc 0>;
+> >>> +
+> >>> +                     trips {
+> >>> +                             soc_crit: soc-crit {
+> >>> +                                     temperature =3D <115000>;
+> >>> +                                     hysteresis =3D <2000>;
+> >>
+> >> This trip point leads to a system shutdown / reboot. It is not necessa=
+ry
+> >> to specify a hysteresis.
+> >
+> > Similar to the above, the generic thermal_of code refuses to add the
+> > trip point if it has no hysteresis property defined (regardless of the
+> > trip type), see drivers/thermal/thermal_of.c:109
+>
+> hysteresis =3D <0>;
 
+Makes sense, thank you! Will amend accordingly.
+
+Best regards,
+Alexey
