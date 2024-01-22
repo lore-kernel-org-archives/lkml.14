@@ -1,114 +1,95 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02FBE1C20;
-	Mon, 22 Jan 2024 12:32:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5423A31A61;
+	Mon, 22 Jan 2024 12:33:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705926776; cv=none; b=kbnYQ2bWG4ziq3bf++mLRJ3HlOCqTMhOj5Y/NRFa3dGddEHCZMAIYjpYIQT9Y51P2BAcKAc4Li6A9gQlvyuNy3gbQFm4S94MShogx24Oni19CFBwFaMkoTcDzrw+bfyKnsNzpcojEFkNwo2HPAWyeYvZaRYQqr2ZJ1q5NEfkTds=
+	t=1705926835; cv=none; b=FdeCRydcyFojSVxXwp99R13Se/QsM4S66uwpQAcypStoIXuTytUpgHnzE5N2ks2aM0IUZTDhkKFmDnXErhnlozyGb9ZaVdB8jzpEA8Q8MHn5UCwVwK71EIWjQ+3twu+WdrF1dYEWy6ZaZbwxbsXBFdOeWTwlpGMgrFZNthcKu10=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705926776; c=relaxed/simple;
-	bh=m4yg/uTaxSFSsVGNh/moyXbzRJ66JeZYtZp5y+z2OmQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lj1AowVARc3bC5Ikgr24fCL6Qn2ahs4S5VqOVu1osGtQYqoJnygJDNJ+Q1VJSilR17hShIt1JK/+IS+Z3gyRbV3Y85PJg/dHDR6g9soWMqbQa3Kab/pLVSB1xnNkDt5UMR2J4t47MeZFM7PqfKnkG54y+BT9dY5MMi1vnmGfClQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=PTPR8+Tr; arc=none smtp.client-ip=212.227.17.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
+	s=arc-20240116; t=1705926835; c=relaxed/simple;
+	bh=XTDB6//crJGG/H3m1XnEvHrPWpGka2r/ZPypNjVQ76w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZtX0nEL1T3fVJdoDThT46inC30R64wFu+TJDn8Yc5rWBmwYqgytvfnBAGtCDv03hT/j1TQNKREkzxB0v+ZRr8nr7JEm0O3h8QJlPPy23uwadDpwYTju/O+Q3eIli5oXBxYk2gnx+dkbYcsOU+L6TW0JEcy1DhadRy+6MEOXUVT0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=e5+MoYN6; arc=none smtp.client-ip=209.85.167.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="PTPR8+Tr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-	s=s31663417; t=1705926742; x=1706531542; i=wahrenst@gmx.net;
-	bh=m4yg/uTaxSFSsVGNh/moyXbzRJ66JeZYtZp5y+z2OmQ=;
-	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
-	 In-Reply-To;
-	b=PTPR8+TrpMhuxLd3fX+WJU9QjJg/4PnPhEnFgXrfFTZA/O7jEBypK3rIroNNFUlP
-	 xuK0oED/0dp5/8nSAeghlwtOV6seKmI9ESb42dmnlDsJ3II9uoPk5ggTDCETptFIT
-	 I2lspeXHnvOIifoHDmf1K58HhCzZR7wvcTto0Vk3OobI0eJQn1Rm4RNZHLtsx1Wug
-	 mVJ4RGkIAkWWFwXkDwK7zF/oE9kgN1dQzZ7nxxfgIkJWVRrhxyHdDwvzANZcQfLuE
-	 JNeE+Uj2Pz+MpeY5OcV/HUyn5CraWXEvRwEVzsaauawYiAdyUAZolvW8rkQmIRwJi
-	 bdB25tGOdlrtbcgErg==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.1.167] ([37.4.248.43]) by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MQ5rU-1rnqAX3ke0-00M26S; Mon, 22
- Jan 2024 13:32:21 +0100
-Message-ID: <83233559-8c31-4568-a943-8bdb9ca20bdc@gmx.net>
-Date: Mon, 22 Jan 2024 13:32:20 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e5+MoYN6"
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-50ec948ad31so3291941e87.2;
+        Mon, 22 Jan 2024 04:33:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1705926832; x=1706531632; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=bFxRSXpfyegZX74xz8OgyH0TqgyPmSRwyVAL2eqo6Q0=;
+        b=e5+MoYN6jNiDGC3rkIDjt65kly1odEFlx95Qv8pbnLFOT9JJU1Je3RH/FBHgp1hEXf
+         Ph3MUr6nBNqxOoAzV9z7JMBkmXyzo+9zWGP9orMd8X5/pW8YTErOWX13Cw+5L/ig6Ipv
+         nhSEZX8HkyKvx6RQ3kV2+1/LyQNKtb1SMVObxnwEpgbq2TnpcjJd+541HC2FiV0My9Wg
+         ydHwI1eCjmztKgoafFRu3MNYNPCD+MNaPuNuB79wPBmiP2sXLjedmMF9hilyNxJbVVJ5
+         Zbl0TckF4QFk7BLNZzz3IP9ckkMosJ4rqlDr79Zp3RwSumaJLNGO6mV/nV5IDHvyqXME
+         jASA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705926832; x=1706531632;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bFxRSXpfyegZX74xz8OgyH0TqgyPmSRwyVAL2eqo6Q0=;
+        b=d8Qpy5gCDVdSb5nOd9NOO6dYM7KTL5re3oDyWi5L2EdOZxS6XsrW7x8Y/bWdG2x3tN
+         sbMlF3OYEV1rcp1pureOojeEVDXuizWmI6lwRTsTtdbB033xmNckA6sK385A8MUg01Jy
+         Eu85hSdSPs+efGQS6gTidHZOBUBXky8az0bNOIPheD4q2il3W2ttrP/gccqTv/FdvSL4
+         0ALVu2fOdBA42v6aBxSkmQkvZV+65iQk77vQr7khHgaiC3zNjLpfQRKn1WfTSwsnIXqr
+         RvlfRiFdeXlQhK1qlQP4bSKvpdp1/2ffN96zgSIU/xWpWio1Lzd5N1vatGHJ/ZFlErQe
+         M3uw==
+X-Gm-Message-State: AOJu0YywLhMdYz2JW4aYrrAOoj7OVdxMxoNNzqPuAp2rIE2mjeNtX7Ev
+	tBUPNoepLatojUZw6HY4l3lZZcgA8C/aE/mfNE5jVmT/b8RVzxSE
+X-Google-Smtp-Source: AGHT+IE27PJB1NHdKUDjIrtru5lVJQa/6wd07V7mmwsTZ2/nxlWmOfso3vPr5kcpEXy5gjqP7xfJ8A==
+X-Received: by 2002:a05:6512:a8b:b0:50e:ccd8:f9d9 with SMTP id m11-20020a0565120a8b00b0050eccd8f9d9mr1771847lfu.24.1705926831991;
+        Mon, 22 Jan 2024 04:33:51 -0800 (PST)
+Received: from skbuf ([188.25.255.36])
+        by smtp.gmail.com with ESMTPSA id q9-20020aa7cc09000000b00558a3e892b3sm14008365edt.41.2024.01.22.04.33.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Jan 2024 04:33:51 -0800 (PST)
+Date: Mon, 22 Jan 2024 14:33:49 +0200
+From: Vladimir Oltean <olteanv@gmail.com>
+To: Tim Menninger <tmenninger@purestorage.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, f.fainelli@gmail.com, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: dsa: mv88e6xxx: Make *_c45 callbacks agree with
+ phy_*_c45 callbacks
+Message-ID: <20240122123349.cxx2i2kzrhuqnasp@skbuf>
+References: <20240116193542.711482-1-tmenninger@purestorage.com>
+ <04d22048-737a-4281-a43f-b125ebe0c896@lunn.ch>
+ <CAO-L_44YVi0HDk4gC9QijMZrYNGoKtfH7qsXOwtDwM4VrFRDHw@mail.gmail.com>
+ <da87ce82-7337-4be4-a2af-bd2136626c56@lunn.ch>
+ <CAO-L_46kqBrDdYP7p3He0cBF1OP7TJKnhYK1NR_gMZf2n_928A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/3] dt-bindings: gpio: gpio-vf610: add gpio-line-names
-To: Mathieu Othacehe <othacehe@gnu.org>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
- Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>,
- Li Yang <leoyang.li@nxp.com>, Primoz Fiser <primoz.fiser@norik.com>,
- Christoph Stoidner <c.stoidner@phytec.de>, Wadim Egorov <w.egorov@phytec.de>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org
-References: <20240122095306.14084-1-othacehe@gnu.org>
- <20240122095306.14084-3-othacehe@gnu.org>
-Content-Language: en-US
-From: Stefan Wahren <wahrenst@gmx.net>
-In-Reply-To: <20240122095306.14084-3-othacehe@gnu.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:V6p4+fte5woXIrETEXXt1d44iD0rPrg6HritPpkFjcyrZVeQQtT
- if8ShQfNrShhUKFrD23chAIxUt/4B2URyUKW5LkQ6C6ebJUhowj+WSM81QgAUvJz15plLQr
- ZNe9a0zKBUl0JCYj6+m9rIwVnrpGJH7G71fPecDO2sgUq+wHkbMssZcZzSAPFSRn+2VFUuW
- DwAYN9SC4sYpPrMv1Q8jA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:XCv6kFjnUmY=;V93RjjE7MKqQtGGse44zMWh6okp
- tkQrq4OHr6nhBKDy5hqJpqmXFkMFFW0MPkmlx2PtUHVvEZBLIaeKw7HpJtBI5hpQL8QitCkA2
- IOeJGhp9ACGcdPjqvtpSf8uYk3YW8HpE+Bz3mD9PH5ktD/J4sUIOY7oYSJSLz0+REtKjQdfpV
- zk6q6to/xVry9UUXiq1dxyzq/YpYQKwh2ZM7pdmVTyO8fauonwGYrzwk17s7Ohw3JN/XLGfH5
- yYyo49iEV8BAoGEOsQFRG6cQW6HTVPMq8pC0ZXm+KnvemLgtX61QyuLbTLRWexZimmb0FSz//
- qGvfmDzJQC0l/mt65rDv//slz8Q+eJxY4Aevoun3XR7jyuON8+zx7E0EYL2kqp1yFXSgqpxSc
- TIsPPfICEOTGTbKeQ8lEndGUR/UtYuZeBnPLFcn937oa0u9+B5yVrQtIWZUGFfJKmqIh0Kr+S
- 4zZOh6w1V5Tq5UZkIXbFgvv0DVtqSW8gJ7yPMQ8xAELWRmjTIu+vuxpCoznDd83rycb8jNx1M
- qQSdB3TcHbpQTDn6810gkvpUWxuJ/YgY6WzW50pxoLv0ETmwe3hjVjdBnPJOy/SM0zAZAPTQL
- Z7sz71jRzYPbhUJiItF+WOoprWl3FMzok2MJuectAQ/0fchHQV3M0dHb9S1ebk9d6a1IvFaft
- kDLkvyejhsWZTxFmyu/C+3SY4ADV/owilYq9Pc7azZacMh+ubEmeu6FkOUVzotjRaPzURtDMr
- x92j6gyO14xiu7C2Axe7/98zek00m1t3UMqSZ4U4ppKmnv5BUAZ8QHO8qsh23M7tWgvuobFuC
- mkyopOSu+mSZp/EbxOsvCl7oxUGdb+Izp9II20CciQuCilXP88aZ3OmpNtnHRbnWYqSmB2FNf
- lO6AZ12sl5/NVQYRbceuiSS6UK/biF/2BIWKZbwU863y1DrIDZN2GI1dYLTsqL8eOUHZTpQZM
- va38KA==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAO-L_46kqBrDdYP7p3He0cBF1OP7TJKnhYK1NR_gMZf2n_928A@mail.gmail.com>
 
-Hi Mathieu,
+On Tue, Jan 16, 2024 at 05:51:13PM -0800, Tim Menninger wrote:
+> My impression is still that the read_c45 function should agree with the
+> phy_read_c45 function, but that isn't a hill I care to die on if you still
+> think otherwise. Thoughts?
 
-Am 22.01.24 um 10:53 schrieb Mathieu Othacehe:
-> Describe common "gpio-line-names" property to fix dtbs_check warnings
-> like:
->
-> /home/mathieu/linux/arch/arm64/boot/dts/freescale/imx93-phyboard-segin.d=
-tb:
-> gpio@43830000: 'gpio-line-names' does not match any of the regexes:
-> '^.+-hog(-[0-9]+)?$', 'pinctrl-[0-9]+' from schema $id:
-> http://devicetree.org/schemas/gpio/gpio-vf610.yaml#
->
-> Signed-off-by: Mathieu Othacehe <othacehe@gnu.org>
-> ---
->   Documentation/devicetree/bindings/gpio/gpio-vf610.yaml | 1 +
->   1 file changed, 1 insertion(+)
->
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio-vf610.yaml b/Do=
-cumentation/devicetree/bindings/gpio/gpio-vf610.yaml
-> index a27f92950257..7230ba1a386a 100644
-> --- a/Documentation/devicetree/bindings/gpio/gpio-vf610.yaml
-> +++ b/Documentation/devicetree/bindings/gpio/gpio-vf610.yaml
-> @@ -50,6 +50,7 @@ properties:
->       const: 2
->
->     gpio-controller: true
-> +  gpio-line-names: true
-thanks for addressing this. Could you please add an extra newline
-between gpio-controller and gpio-line-names?
->
->     clocks:
->       items:
+FWIW, Tim's approach is consistent with what drivers/net/mdio/mdio-mux.c does.
 
+		if (parent_bus->read)
+			cb->mii_bus->read = mdio_mux_read;
+		if (parent_bus->write)
+			cb->mii_bus->write = mdio_mux_write;
+		if (parent_bus->read_c45)
+			cb->mii_bus->read_c45 = mdio_mux_read_c45;
+		if (parent_bus->write_c45)
+			cb->mii_bus->write_c45 = mdio_mux_write_c45;
+
+My only objection to his patch (apart from the commit message which
+should indeed be more detailed) is that I would have preferred the same
+"if" syntax rather than the use of a ternary operator with NULL.
