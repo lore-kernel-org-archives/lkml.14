@@ -1,105 +1,94 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4C023DBAB
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 18:19:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CA31482EE;
+	Mon, 22 Jan 2024 18:19:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705947564; cv=none; b=rcNWU2zuPdgGoMZM4ldXmphSFJBk/hCU9EYIb16UVhsoK0gJCYlXMCSnKPaenGs/LaLXvXgRtqnKVEfR/7awAiFDYTJYN19I6d8PNpKDkwdn1CLrk75+TypWwKjlkVy8nPNSBj0CMie/zXlgFHh6WWMK6Z7fwAhG91ZQnO3r4YI=
+	t=1705947566; cv=none; b=a3cCYEe94IOoYuRFrtB6673zy3LTKmxM94juZ9mayZxBdapO6wLN1JNqi7/WT0AiKKZ1GJNYMuV5fsX8dHr0hOF2K79hlHglPe571b+khJm8WS2yWoOmj22uuLaFcWql/vJIheEVwzw1KwdC1N941CqxP4HIdwQopqgCHH4OmOk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705947564; c=relaxed/simple;
-	bh=h4PO0st/1IuYHBIEltga1Ivy97tEPnri+qjxZXMW6hM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Hqqpu6khzEMRYklGJGGslM8E8r2bIzcnOuX1SrFJWDdOB9V85YTAOJ7I+Vg4fgrl/vU3ZsmjtsySe18qVgYupwDfPx6tPw0Bi/HoJB6CJMY19/2H9mFWcrr5CmXtfKOyphxa8rMTblZVT9+aTxoWiGuorUjxZtCgZZ3g+zDJPVU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CDSOMCTL; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1705947566; c=relaxed/simple;
+	bh=OZcPk2pggxtjOS+ubRNC6FIXTbmLJjawsJ9rn934CeU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JlGISmwDcjsdyTW+RAKBCuQTNIna7ZABnWTuZxS7dqXrE2JHNnoGhxJPX6udWS2sGIrOarBWK2panzfROG5aZLf2ZMjytlBumWl29zK+5aiTHefX0VuX4dox0vVrmm+jiHX6ysYTg03UbjtAW6fWZJeP9GD33Ce5aBMRpyKH+Rg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DF4/hJWL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CDSOMCTL"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1d72043fa06so5475ad.1
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 10:19:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1705947562; x=1706552362; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=p0Y9E+3pzP2s+EQdBjSE77FjET8jy9DFccLp3B3IzFI=;
-        b=CDSOMCTLhpdPfghCsAKPFwC+4ARoHxLhob5RAo9m2XPGn96aumgVKHx1DKfEPioDTp
-         B9WUp68IdZmQvFHk7vvIGpE+zVdoaCdjlsCMAdFBfoxpGjorsTOHvjQqiFzntala1Xza
-         +G4Sgrxjt5AgAwewPkAjIErxJl09TCdGafkLG8qVJI4J2mgFhtQbeW+t3jyGbPoEvpWG
-         ZBqErZgwLzeOJ4+gK6kZwpxh2AhcWftYeuMVaAWEOJUI2ZKA7EcIq3Onof2nZ5EI/ucT
-         RobNz5DxN+cZavhGqrwnrME+Koj2pD6EJRcIftUUed9yjx+DIlXzNe1ZQQISkVfodvf3
-         cB7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705947562; x=1706552362;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=p0Y9E+3pzP2s+EQdBjSE77FjET8jy9DFccLp3B3IzFI=;
-        b=QyV9SpPZ8/CHdKYxX7xpB9QRZg3fStNSMqTH5vCz2LoeC135ZGH8xunrpHx/9WVRjA
-         fD2gK8uz3MiLAysu/nWjwaAivhmDM9kbBX6u0cByL8E2US2S3I2PrgC4dBvtjwyts9nL
-         yUcjrsJo0PYdOqFfR9AVvp0gozdphztJNuDp0Ntbk9A2wbDtrxWw9wVQLK/ulBgiqpwO
-         LzFBy7EDHdwLxf7C0deG0ncwiAGSH5+V3DPJnQE8ynZsGFUbnyJ8yb4ctIHtcLe5xRVA
-         Qpi7XDf9DvBe7iI3l+ggNQYqsGtNooITxZSSz+DCnOIN0rmpm9x+EkvdR1zz7o/MDv2D
-         r0Iw==
-X-Gm-Message-State: AOJu0YzteWAeNo9TL51/EAWoLreLICQiGBh4kEbQOHXx+cIbiZsPUAS2
-	tssqNfHXj5pNz+fpq/htqxuDdm9Lhay/C8MNwtEV62kxWX5u
-X-Google-Smtp-Source: AGHT+IFeVSUQFJ2B79/oJNPkrOM8pRveuwd/OkPvv+mFDyuckhWdMgfmz1t4fln+zp+sRW8MxNoLyC5nZnyI1h1DfJY=
-X-Received: by 2002:a17:902:fb46:b0:1d6:fb94:10d5 with SMTP id
- lf6-20020a170902fb4600b001d6fb9410d5mr10331plb.27.1705947562078; Mon, 22 Jan
- 2024 10:19:22 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DF4/hJWL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37B5CC433F1;
+	Mon, 22 Jan 2024 18:19:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705947565;
+	bh=OZcPk2pggxtjOS+ubRNC6FIXTbmLJjawsJ9rn934CeU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DF4/hJWL3mS83HQGPCR7yGPwCxscFDTWAWGOcdO342ngnj39pm8CmNGp0Hod/mDKH
+	 AqYm9z4uQK2qLhRso6VfzQGJtuNoEzE1o/aVNYdDilw8YQsaPcb5zLac1mZg0UrD9J
+	 n92DIxNOQZfKvc9dm9igYaWVKyajcmj3jGFrrK5f1gvMe/WYTZGNWHO0bjRPm+e+CS
+	 TI1AK9C5/DPHuNEjvFGWHNt5NTsKUF1QjSgxJHJd7zsGq6Au2nw1V8rptaW5dmjNw0
+	 RDjGDvrVpOCoO3XQoo7U15PXOJ/VBUOV/nqWcCYrsb2CRtHtgH7xdd5OyUs8x7RJm0
+	 2yROrjWBAQNcQ==
+Date: Mon, 22 Jan 2024 18:19:19 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Chen-Yu Tsai <wens@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>, Vinod Koul <vkoul@kernel.org>,
+	Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
+	linux-sound@vger.kernel.org, dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/7] dt-bindings: sound: sun4i-spdif: Add Allwinner H616
+ compatible
+Message-ID: <20240122-richly-mural-817d7e39bc33@spud>
+References: <20240122170518.3090814-1-wens@kernel.org>
+ <20240122170518.3090814-3-wens@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240118184235.618164-1-shakeelb@google.com> <jazycqhefxn6oigmt6mitn2cfoonscbdwqxy5g7gs2j74w3ia5@qwcu3v7kmk4h>
-In-Reply-To: <jazycqhefxn6oigmt6mitn2cfoonscbdwqxy5g7gs2j74w3ia5@qwcu3v7kmk4h>
-From: Shakeel Butt <shakeelb@google.com>
-Date: Mon, 22 Jan 2024 10:19:10 -0800
-Message-ID: <CALvZod4XUrQMxptBo56Fm6-ETQy_DtVq-g4NKokVvSyGwDOnxg@mail.gmail.com>
-Subject: Re: [PATCH] mm: writeback: ratelimit stat flush from mem_cgroup_wb_stats
-To: =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Jens Axboe <axboe@kernel.dk>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Tejun Heo <tj@kernel.org>, Jan Kara <jack@suse.cz>, 
-	Roman Gushchin <roman.gushchin@linux.dev>, Michal Hocko <mhocko@kernel.org>, 
-	Muchun Song <muchun.song@linux.dev>, cgroups@vger.kernel.org, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="mkTWaXxeQ3jWqT6J"
+Content-Disposition: inline
+In-Reply-To: <20240122170518.3090814-3-wens@kernel.org>
+
+
+--mkTWaXxeQ3jWqT6J
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jan 22, 2024 at 7:20=E2=80=AFAM Michal Koutn=C3=BD <mkoutny@suse.co=
-m> wrote:
->
-> Hello.
->
-> On Thu, Jan 18, 2024 at 06:42:35PM +0000, Shakeel Butt <shakeelb@google.c=
-om> wrote:
-> > One of our workloads (Postgres 14) has regressed when migrated from 5.1=
-0
-> > to 6.1 upstream kernel. The regression can be reproduced by sysbench's
-> > oltp_write_only benchmark.
-> > It seems like the always on rstat flush in
-> > mem_cgroup_wb_stats() is causing the regression.
->
-> Is the affected benchmark running in a non-root cgroup?
->
-> I'm asking whether this would warrant a
->   Fixes: fd25a9e0e23b ("memcg: unify memcg stat flushing")
-> that introduced the global flush (in v6.1) but it was removed later in
->   7d7ef0a4686a ("mm: memcg: restore subtree stats flushing")
-> (so v6.8 could be possibly unaffected).
->
+On Tue, Jan 23, 2024 at 01:05:13AM +0800, Chen-Yu Tsai wrote:
+> From: Chen-Yu Tsai <wens@csie.org>
+>=20
+> The SPDIF hardware block found in the H616 SoC has the same layout as
+> the one found in the H6 SoC, except that it is missing the receiver
+> side.
+>=20
+> Add a new compatible string for it.
+>=20
+> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 
-Yes, the benchmark and the workload were running in non-root cgroups.
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
 
-Regarding the Fixes, please note that the regression was still there
-with 7d7ef0a4686a ("mm: memcg: restore subtree stats flushing"), so I
-would say that our first conversion to rstat infra would most probably
-have the issue as well which was 2d146aa3aa84 ("mm: memcontrol: switch
-to rstat").
+Cheers,
+Conor.
 
-So, the following fixes tag makes sense to me:
 
-Fixes: 2d146aa3aa84 ("mm: memcontrol: switch to rstat")
+--mkTWaXxeQ3jWqT6J
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZa6xpwAKCRB4tDGHoIJi
+0pzhAP4vbwr67N1BpFd6xUJIlq99pUjw5fzLzySX7UT8R92OPwEAin0EoMfu94Wv
+bBg4ZMSrcxLD+zno+DXZGKS5Zk1u2gk=
+=AdwN
+-----END PGP SIGNATURE-----
+
+--mkTWaXxeQ3jWqT6J--
