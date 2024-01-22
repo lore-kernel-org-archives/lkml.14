@@ -1,133 +1,100 @@
-Received: from mail-m17207.xmail.ntesmail.com (mail-m17207.xmail.ntesmail.com [45.195.17.207])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16BED3D3A7;
-	Mon, 22 Jan 2024 20:50:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.195.17.207
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 796103D3A7;
+	Mon, 22 Jan 2024 20:51:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705956653; cv=none; b=gya9l4RRfZ00NaEavug8WjTpzCSa8hYYebPide7mqTWrOSxictC7EpTnzr6PxykK0IuWwfTaz8+9J/+vf4i5QJFTISm/6aOsE2RYp2rIlp03Wjz1AvhyHBUQBBSbOUi1ePr3xTBGUod1meZH7230uTTC1Twv08u+BerhPjkDLx8=
+	t=1705956664; cv=none; b=Aocf2QCE+RLkE2yPe5E/hzdonIlER+UfXx2pumEumwvEOQ/ILGUeUGd8yu1X60sOXhM5Pr3Gd7ZKFxEuCrut2CqzGBVmKt1nXzjPLMFzIla4SSCmeoL8qAJLcpP+iQHcslpxB6Kb2eOe1wJx2iWq2pxc+rC7qozv/awN/VY5fs0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705956653; c=relaxed/simple;
-	bh=iKziXW5nSbJLL99tAPoPAh//iFGA+h98wNVjisnajQ8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Dl9GIyy5hiovh0IHBjuJx2JB8BpCj/ahoLGtbq/2qrifQKQUKHHTFN2Fh5xw+AF/iNp3ohHPkepf5wgIjGn9RL6NDR66eoiLeemgxkgQ7Sv9h0ZntLSKV8HGshxsZU76Hlm0IJgp0dE75CDGCgE8QxSXGuAwDDMn2RIkF4mTUtk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=link.tyut.edu.cn; spf=pass smtp.mailfrom=link.tyut.edu.cn; arc=none smtp.client-ip=45.195.17.207
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=link.tyut.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=link.tyut.edu.cn
-Received: from [192.168.2.76] (unknown [113.251.4.85])
-	by mail-m121145.qiye.163.com (Hmail) with ESMTPA id 3AD9F80010E;
-	Tue, 23 Jan 2024 01:11:59 +0800 (CST)
-Message-ID: <b8823223-e735-4d5a-b90e-6e2f2a6cd104@link.tyut.edu.cn>
-Date: Tue, 23 Jan 2024 01:11:58 +0800
+	s=arc-20240116; t=1705956664; c=relaxed/simple;
+	bh=cD2X26TCLky80GPoDVS7IZ4B/2/aC8m0TzrgrR2pAl4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=agOyMJW6dFivkecC00edG3epAaV1ybEoIQVO06jq4UAS7J8eAvHQvYoV2BHLjIWJlwExz6knrU8i7O0x8+NTi4F3BlBYoh2UpSto/gukkXiothCRlITEbvXB4quWmhGg2JrbNv4UbTd+Aa1fJTjoM2BFWDSrFhvlMeFnGvHUxU0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tlVgspKR; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tlVgspKR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2388EC433F1;
+	Mon, 22 Jan 2024 20:51:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705956664;
+	bh=cD2X26TCLky80GPoDVS7IZ4B/2/aC8m0TzrgrR2pAl4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=tlVgspKRLXT64aZlDEUrm580u6cSI3uGk3uXztzHuCUOuIn1ir55bWdzRhWh6mqcz
+	 DXBawWcQ8oeo4s7uzmXKf13oB9svg3exL+hNwzEqGeLb4txve2/s5geRtfYIZvk+tP
+	 kJWBh92NpvpZWha4whVzLj0wJAhXIsiYXFaVPVIawBuTO3oTMiMJQILUBHoKysEvM8
+	 TbNhlKyBJJr735OnqYcZokBoomnYkvQVKSe+kgt7ugkYhK0C8b1d4iQycS0cfy8wAE
+	 onPk31WX93H5xNgrLAboH21GZiStC0nF2lH0BghVJCFjLGLp5f8BWdBPe4P2iJPVPE
+	 cO5RpXyAmhBmA==
+From: Rob Herring <robh@kernel.org>
+To: Andrzej Hajda <andrzej.hajda@intel.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Robert Foss <rfoss@kernel.org>,
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+	Jonas Karlman <jonas@kwiboo.se>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Russell King <linux@armlinux.org.uk>
+Cc: dri-devel@lists.freedesktop.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] dt-bindings: display: nxp,tda998x: Fix 'audio-ports' constraints
+Date: Mon, 22 Jan 2024 14:49:58 -0600
+Message-ID: <20240122204959.1665970-1-robh@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] Documentation: power: Use kcalloc() instead of
- kzalloc()
-Content-Language: en-US
-To: Erick Archer <erick.archer@gmx.com>, Viresh Kumar <vireshk@kernel.org>,
- Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <len.brown@intel.com>,
- Pavel Machek <pavel@ucw.cz>, Alex Shi <alexs@kernel.org>,
- Yanteng Si <siyanteng@loongson.cn>, Jonathan Corbet <corbet@lwn.net>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-hardening@vger.kernel.org
-References: <20240121104344.5001-1-erick.archer@gmx.com>
-From: Hu Haowen <2023002089@link.tyut.edu.cn>
-In-Reply-To: <20240121104344.5001-1-erick.archer@gmx.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkZS0pPVkhOTBkeTEoYGh5CSlUTARMWGhIXJBQOD1
-	lXWRgSC1lBWUpKSFVJTkpVT1VDTllXWRYaDxIVHRRZQVlPS0hVSkpLSEpDVUpLS1VLWQY+
-X-HM-Tid: 0a8d32285244b03akuuu3ad9f80010e
-X-HM-MType: 10
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6N0k6Eww*EDwZPg4yAU4JUS0R
-	Tg8KCzFVSlVKTEtOQk9ITklLSENLVTMWGhIXVUlLSUhLS0lLQ0I7FxIVEFUPAg4PVR4fDlUYFUVZ
-	V1kSC1lBWUpKSFVJTkpVT1VDTllXWQgBWUFPQkhINwY+
 
+The constraints for 'audio-ports' don't match the description. There can
+be 1 or 2 DAI entries and each entry is exactly 2 values. Also, the
+values' sizes are 32-bits, not 8-bits. Move the size constraints to the
+outer dimension (number of DAIs) and add constraints on inner array
+values.
 
-在 2024/1/21 18:43, Erick Archer 写道:
-> As noted in the "Deprecated Interfaces, Language Features, Attributes,
-> and Conventions" documentation [1], size calculations (especially
-> multiplication) should not be performed in memory allocator (or similar)
-> function arguments due to the risk of them overflowing. This could lead
-> to values wrapping around and a smaller allocation being made than the
-> caller was expecting. Using those allocations could lead to linear
-> overflows of heap memory and other misbehaviors.
->
-> So, in the example code use the purpose specific kcalloc() function
-> instead of the argument size * count in the kzalloc() function.
->
-> At the same time, modify the translations accordingly.
->
-> Link: https://www.kernel.org/doc/html/next/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments [1]
-> Link: https://github.com/KSPP/linux/issues/162
-> Signed-off-by: Erick Archer <erick.archer@gmx.com>
-> ---
-> Hi,
->
-> This patch is a merger of two previous ones [1] [2].
-> As Hu Haowen and Jonathan Corbet suggested, the translation change
-> only makes sense if the original file is modified. So, with this
-> v2 version the original file and the translations are modified at
-> the same time.
->
-> [1] https://lore.kernel.org/linux-hardening/20240120120527.3866-1-erick.archer@gmx.com/
-> [2] https://lore.kernel.org/linux-hardening/20240120122204.4287-1-erick.archer@gmx.com/
->
-> Thanks,
-> Erick
-> ---
->   Documentation/power/opp.rst                    | 2 +-
->   Documentation/translations/zh_CN/power/opp.rst | 2 +-
->   2 files changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/Documentation/power/opp.rst b/Documentation/power/opp.rst
-> index a7c03c470980..1b7f1d854f14 100644
-> --- a/Documentation/power/opp.rst
-> +++ b/Documentation/power/opp.rst
-> @@ -305,7 +305,7 @@ dev_pm_opp_get_opp_count
->   	 {
->   		/* Do things */
->   		num_available = dev_pm_opp_get_opp_count(dev);
-> -		speeds = kzalloc(sizeof(u32) * num_available, GFP_KERNEL);
-> +		speeds = kcalloc(num_available, sizeof(u32), GFP_KERNEL);
->   		/* populate the table in increasing order */
->   		freq = 0;
->   		while (!IS_ERR(opp = dev_pm_opp_find_freq_ceil(dev, &freq))) {
-> diff --git a/Documentation/translations/zh_CN/power/opp.rst b/Documentation/translations/zh_CN/power/opp.rst
-> index 8d6e3f6f6202..7470fa2d4c43 100644
-> --- a/Documentation/translations/zh_CN/power/opp.rst
-> +++ b/Documentation/translations/zh_CN/power/opp.rst
-> @@ -274,7 +274,7 @@ dev_pm_opp_get_opp_count
->   	 {
->   		/* 做一些事情 */
->   		num_available = dev_pm_opp_get_opp_count(dev);
-> -		speeds = kzalloc(sizeof(u32) * num_available, GFP_KERNEL);
-> +		speeds = kcalloc(num_available, sizeof(u32), GFP_KERNEL);
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+ .../devicetree/bindings/display/bridge/nxp,tda998x.yaml    | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
+diff --git a/Documentation/devicetree/bindings/display/bridge/nxp,tda998x.yaml b/Documentation/devicetree/bindings/display/bridge/nxp,tda998x.yaml
+index 21d995f29a1e..b8e9cf6ce4e6 100644
+--- a/Documentation/devicetree/bindings/display/bridge/nxp,tda998x.yaml
++++ b/Documentation/devicetree/bindings/display/bridge/nxp,tda998x.yaml
+@@ -29,19 +29,22 @@ properties:
+ 
+   audio-ports:
+     description:
+-      Array of 8-bit values, 2 values per DAI (Documentation/sound/soc/dai.rst).
++      Array of 2 values per DAI (Documentation/sound/soc/dai.rst).
+       The implementation allows one or two DAIs.
+       If two DAIs are defined, they must be of different type.
+     $ref: /schemas/types.yaml#/definitions/uint32-matrix
++    minItems: 1
++    maxItems: 2
+     items:
+-      minItems: 1
+       items:
+         - description: |
+             The first value defines the DAI type: TDA998x_SPDIF or TDA998x_I2S
+             (see include/dt-bindings/display/tda998x.h).
++          enum: [ 1, 2 ]
+         - description:
+             The second value defines the tda998x AP_ENA reg content when the
+             DAI in question is used.
++          maximum: 0xff
+ 
+   '#sound-dai-cells':
+     enum: [ 0, 1 ]
+-- 
+2.43.0
 
-For the zh_CN translation,
-
-Reviewed-by: Hu Haowen <2023002089@link.tyut.edu.cn>
-
-
-Thanks,
-
-Hu Haowen
-
-
->   		/* 按升序填充表 */
->   		freq = 0;
->   		while (!IS_ERR(opp = dev_pm_opp_find_freq_ceil(dev, &freq))) {
-> --
-> 2.25.1
->
->
->
