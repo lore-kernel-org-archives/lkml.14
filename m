@@ -1,130 +1,204 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from out-181.mta1.migadu.com (out-181.mta1.migadu.com [95.215.58.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 033EFD304
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 07:03:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D3D7F4F5
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 07:10:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705907024; cv=none; b=rQzRszhQGr0Qp3rr/QtSWkpfo2D/zpEAl3TGuhd/REazO0XD5hml1Ccyx2L2EgeVqQ//En4riXYO59/3XwxnyemAhopAQQK0OqikjXGWotz5zPxG7ZWh/gHW3EPq9iG+bWY13Tc2crXMNPHWQ3T7X2bUorAQrfgThqsxbkFGnHg=
+	t=1705907420; cv=none; b=laso1Lm587vYA4y0/3wJB6j4ayasgMie46CR8WdNWwcFZF7SK7c24KFyVhfZa1GZgIUrRXWne+dMclUSc69xiMEgemxnmcq3R5S0A7Ncn03VzsBRfZ1MF248oFyyqRHYRY1D0wP28jgY/5iyfxo1j3Q1/qgTZ1ZpHBH7UKYaszs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705907024; c=relaxed/simple;
-	bh=rzud68lYImSBZGAdjSKStx7SsEtIebtGlt/awI8vQXQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qb5e/KU78+kldkZ8yibw88KhyT3M/V/A7wrYabYsxXhYCBD67HibrTUbibT5LZ4Y01mYOKaKzP5lO+1ZpN+huNJdzKM5RT60Hq9bgDiAL2RAEdqrbikoQC/qj90EQ+tU6K2Gt8yAToVzRgPwUg9hMmWdSu6CkrF+ItfkLbgqzQ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rRoKv-0001Kj-Pb; Mon, 22 Jan 2024 08:03:13 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rRoKt-001X1U-Jg; Mon, 22 Jan 2024 08:03:11 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rRoKt-0055nr-1T;
-	Mon, 22 Jan 2024 08:03:11 +0100
-Date: Mon, 22 Jan 2024 07:56:18 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Erick Archer <erick.archer@gmx.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Conor Dooley <conor.dooley@microchip.com>, 
-	Heiko Stuebner <heiko@sntech.de>, Dinh Nguyen <dinguyen@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Nick Alcock <nick.alcock@oracle.com>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
-	linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] clk: hisilicon: Use devm_kcalloc() instead of
- devm_kzalloc()
-Message-ID: <ikfbonqfodfiq2hpqibb23ctaq6nxwynjjytfygonpncdkcfct@ygfjvunzkn7c>
-References: <20240121142946.2796-1-erick.archer@gmx.com>
+	s=arc-20240116; t=1705907420; c=relaxed/simple;
+	bh=fdQqLeJ2/ZlSkyF9jseU0abA/T96mvJg06JE3DRUvPU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LSFh4v3U5/31An3V6lax7Vb12L+eNZxdEziITf4heBltSX/qxSiENYNT05mON/EPNU2l94PMjh5YaSsSfa+CJPBgwh0YfqLgfBPqlYv3W93JanwYRKzHQB890I/X4DnppV/NPAhdx5T/reRBq0pgd5JtQhPQv3L3MkDQPCAdghI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=HjAY91BB; arc=none smtp.client-ip=95.215.58.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="HjAY91BB"
+Message-ID: <ddf37da4-4cbc-478a-be9b-3060b0aebc90@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1705907415;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4i/R4tEjyXJlQ2GdaUYgCeui42zB/Fr0UkVlcgTOFHE=;
+	b=HjAY91BBvrJ8KqkPbIbfCAZDXZfnDDPokY4TMh1OS31WpmCnLpzr3dY+HF4f2coKPIFJoA
+	KzbFppeJRF7xI14GMDmXPFcGabiXukFr1wuLOraPcYyzre2zkAgrAax68+TZiuAJVH2DSK
+	ZVG0EoWMp+YmEKV1L3OUuV4df+IygQI=
+Date: Mon, 22 Jan 2024 15:10:07 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ssqmcul6zy7posmr"
-Content-Disposition: inline
-In-Reply-To: <20240121142946.2796-1-erick.archer@gmx.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 6/7] hugetlb: parallelize 2M hugetlb allocation and
+ initialization
+To: Gang Li <gang.li@linux.dev>, David Hildenbrand <david@redhat.com>,
+ David Rientjes <rientjes@google.com>, Mike Kravetz
+ <mike.kravetz@oracle.com>, Andrew Morton <akpm@linux-foundation.org>,
+ Tim Chen <tim.c.chen@linux.intel.com>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ ligang.bdlg@bytedance.com
+References: <20240118123911.88833-1-gang.li@linux.dev>
+ <20240118123911.88833-7-gang.li@linux.dev>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Muchun Song <muchun.song@linux.dev>
+In-Reply-To: <20240118123911.88833-7-gang.li@linux.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
 
---ssqmcul6zy7posmr
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Sun, Jan 21, 2024 at 03:29:46PM +0100, Erick Archer wrote:
-> As noted in the "Deprecated Interfaces, Language Features, Attributes,
-> and Conventions" documentation [1], size calculations (especially
-> multiplication) should not be performed in memory allocator (or similar)
-> function arguments due to the risk of them overflowing. This could lead
-> to values wrapping around and a smaller allocation being made than the
-> caller was expecting. Using those allocations could lead to linear
-> overflows of heap memory and other misbehaviors.
->=20
-> So, use the purpose specific devm_kcalloc() function instead of the
-> argument size * count in the devm_kzalloc() function.
->=20
-> Link: https://www.kernel.org/doc/html/next/process/deprecated.html#open-c=
-oded-arithmetic-in-allocator-arguments [1]
-> Link: https://github.com/KSPP/linux/issues/162
-> Signed-off-by: Erick Archer <erick.archer@gmx.com>
+On 2024/1/18 20:39, Gang Li wrote:
+> By distributing both the allocation and the initialization tasks across
+> multiple threads, the initialization of 2M hugetlb will be faster,
+> thereby improving the boot speed.
+>
+> Here are some test results:
+>          test          no patch(ms)   patched(ms)   saved
+>   ------------------- -------------- ------------- --------
+>    256c2t(4 node) 2M           3336          1051   68.52%
+>    128c1t(2 node) 2M           1943           716   63.15%
+>
+> Signed-off-by: Gang Li <gang.li@linux.dev>
+> Tested-by: David Rientjes <rientjes@google.com>
 > ---
->  drivers/clk/hisilicon/clk-hi3559a.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
->=20
-> diff --git a/drivers/clk/hisilicon/clk-hi3559a.c b/drivers/clk/hisilicon/=
-clk-hi3559a.c
-> index ff4ca0edce06..da476f940326 100644
-> --- a/drivers/clk/hisilicon/clk-hi3559a.c
-> +++ b/drivers/clk/hisilicon/clk-hi3559a.c
-> @@ -461,8 +461,7 @@ static void hisi_clk_register_pll(struct hi3559av100_=
-pll_clock *clks,
->  	struct clk_init_data init;
->  	int i;
->=20
-> -	p_clk =3D devm_kzalloc(dev, sizeof(*p_clk) * nums, GFP_KERNEL);
+>   mm/hugetlb.c | 70 ++++++++++++++++++++++++++++++++++++++--------------
+>   1 file changed, 52 insertions(+), 18 deletions(-)
+>
+> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+> index effe5539e545..9b348ba418f5 100644
+> --- a/mm/hugetlb.c
+> +++ b/mm/hugetlb.c
+> @@ -35,6 +35,7 @@
+>   #include <linux/delayacct.h>
+>   #include <linux/memory.h>
+>   #include <linux/mm_inline.h>
+> +#include <linux/padata.h>
+>   
+>   #include <asm/page.h>
+>   #include <asm/pgalloc.h>
+> @@ -3510,43 +3511,76 @@ static void __init hugetlb_hstate_alloc_pages_errcheck(unsigned long allocated,
+>   	}
+>   }
+>   
+> -static unsigned long __init hugetlb_gigantic_pages_alloc_boot(struct hstate *h)
+> +static void __init hugetlb_alloc_node(unsigned long start, unsigned long end, void *arg)
+>   {
+> -	unsigned long i;
+> +	struct hstate *h = (struct hstate *)arg;
+> +	int i, num = end - start;
+> +	nodemask_t node_alloc_noretry;
+> +	unsigned long flags;
+> +	int next_node = 0;
+
+This should be first_online_node which may be not zero.
+
+>   
+> -	for (i = 0; i < h->max_huge_pages; ++i) {
+> -		if (!alloc_bootmem_huge_page(h, NUMA_NO_NODE))
+> +	/* Bit mask controlling how hard we retry per-node allocations.*/
+> +	nodes_clear(node_alloc_noretry);
+> +
+> +	for (i = 0; i < num; ++i) {
+> +		struct folio *folio = alloc_pool_huge_folio(h, &node_states[N_MEMORY],
+> +						&node_alloc_noretry, &next_node);
+> +		if (!folio)
+>   			break;
+> +		spin_lock_irqsave(&hugetlb_lock, flags);
+
+I suspect there will more contention on this lock when parallelizing.
+I want to know why you chose to drop prep_and_add_allocated_folios()
+call in the original hugetlb_pages_alloc_boot()?
+
+> +		__prep_account_new_huge_page(h, folio_nid(folio));
+> +		enqueue_hugetlb_folio(h, folio);
+> +		spin_unlock_irqrestore(&hugetlb_lock, flags);
+>   		cond_resched();
+>   	}
+> +}
+>   
+> -	return i;
+> +static void __init hugetlb_vmemmap_optimize_node(unsigned long start, unsigned long end, void *arg)
+> +{
+> +	struct hstate *h = (struct hstate *)arg;
+> +	int nid = start;
+> +
+> +	hugetlb_vmemmap_optimize_folios(h, &h->hugepage_freelists[nid]);
+>   }
+>   
+> -static unsigned long __init hugetlb_pages_alloc_boot(struct hstate *h)
+> +static unsigned long __init hugetlb_gigantic_pages_alloc_boot(struct hstate *h)
+>   {
+>   	unsigned long i;
+> -	struct folio *folio;
+> -	LIST_HEAD(folio_list);
+> -	nodemask_t node_alloc_noretry;
 > -
-> +	p_clk =3D devm_kcalloc(dev, nums, sizeof(*p_clk), GFP_KERNEL);
->  	if (!p_clk)
->  		return;
+> -	/* Bit mask controlling how hard we retry per-node allocations.*/
+> -	nodes_clear(node_alloc_noretry);
+>   
+>   	for (i = 0; i < h->max_huge_pages; ++i) {
+> -		folio = alloc_pool_huge_folio(h, &node_states[N_MEMORY],
+> -						&node_alloc_noretry);
+> -		if (!folio)
+> +		if (!alloc_bootmem_huge_page(h, NUMA_NO_NODE))
+>   			break;
+> -		list_add(&folio->lru, &folio_list);
+>   		cond_resched();
+>   	}
+>   
+> -	prep_and_add_allocated_folios(h, &folio_list);
+> -
+>   	return i;
+>   }
+>   
+> +static unsigned long __init hugetlb_pages_alloc_boot(struct hstate *h)
+> +{
+> +	struct padata_mt_job job = {
+> +		.fn_arg		= h,
+> +		.align		= 1,
+> +		.numa_aware	= true
+> +	};
+> +
+> +	job.thread_fn	= hugetlb_alloc_node;
+> +	job.start	= 0;
+> +	job.size	= h->max_huge_pages;
+> +	job.min_chunk	= h->max_huge_pages / num_node_state(N_MEMORY) / 2;
+> +	job.max_threads	= num_node_state(N_MEMORY) * 2;
 
-Looks good,
+I am curious the magic number of 2 used in assignments of ->min_chunk
+and ->max_threads, does it from your experiment? I thinke it should
+be a comment here.
 
-Reviewed-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+And I am also sceptical about the optimization for a small amount of
+allocation of hugepages. Given 4 hugepags needed to be allocated on UMA
+system, job.min_chunk will be 2, job.max_threads will be 2. Then, 2
+workers will be scheduled, however each worker will just allocate 2 pages,
+how much the cost of scheduling? What if allocate 4 pages in single
+worker? Do you have any numbers on parallelism vs non-parallelism in
+a small allocation case? If we cannot gain from this case, I think we shold
+assign a reasonable value to ->min_chunk based on experiment.
 
-My first impulse was to ask why hisi_clk_register_pll doesn't return an
-error if the allocation fails, but I guess that happens so early that no
-sensible error handling is possible?
+Thanks.
 
-Best regards
-Uwe
+> +	padata_do_multithreaded(&job);
+> +
+> +	job.thread_fn	= hugetlb_vmemmap_optimize_node;
+> +	job.start	= 0;
+> +	job.size	= num_node_state(N_MEMORY);
+> +	job.min_chunk	= 1;
+> +	job.max_threads	= num_node_state(N_MEMORY);
+> +	padata_do_multithreaded(&job);
+> +
+> +	return h->nr_huge_pages;
+> +}
+> +
+>   /*
+>    * NOTE: this routine is called in different contexts for gigantic and
+>    * non-gigantic pages.
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---ssqmcul6zy7posmr
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmWuEZEACgkQj4D7WH0S
-/k5Whgf+IryHEKthLbUXpxCs9TrkdjTk2tWZpkoZoz0Hk+Fzyp1PTLnzYoRkBCr2
-AdqbpkeTvpfg9++BZu61V5OBCk0SnfaLgBFi/hUa7tOpcEMbrriJxgZNrb4x2HK0
-g5RQWR4Yxj1zdkdGHu1ErYLLDBUg+DhpsIFLZGhLR2f6B2yEGFXT3EgKoUP59xpP
-hNbEoARWh2N135qifza2toHuMVju9X9anph73dq2a+FWup+oKFyL2j7zKgEtJkO1
-fX/c2c/oFZoDXFmQOAHEpeihL9DFyOBlBp4rQktixbyzIDLjqbK7VjK/dx7DBUCw
-8omlOgsxwtmAuO6r7A6eNlLpzFbK4g==
-=p4Xd
------END PGP SIGNATURE-----
-
---ssqmcul6zy7posmr--
