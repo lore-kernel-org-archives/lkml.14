@@ -1,79 +1,152 @@
-Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83C3744381;
-	Mon, 22 Jan 2024 18:17:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA2B84653A;
+	Mon, 22 Jan 2024 18:17:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705947423; cv=none; b=CMqhh30dRKZDhdase0baAWroImeJX0CT3tz6Ew+muONph3mgT7EAr5RJIQMnJ13vG+LdSbUijhKXKy/D2UC4OSd2JbFQ4a4SePicX6+iNidV4YaKfXoeDHh/4jpTyg5qJQNV7f/3wVVbAG2ohUyzGQw9droKXpIhaq/U8YrwE0U=
+	t=1705947445; cv=none; b=PtQqvQU/31MVrnsqSV+gKJP+Z9PXg5W+OQbh0Mbnvp+DkabaJy5hqkDCNtN0vlj+2YdGpf2uuqtF09p+mcmI7YC2NythethqlIXix8LVdKVO1adDMSx0n06QdfmeP+CmmyWW687GT9kMvFwCD8IQgufvRQKIw5mvwfnOgVGO8mY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705947423; c=relaxed/simple;
-	bh=EJO7ijoy/QEyNtkXI5m0dLezfhXMbbi40EIs5xDpTNw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=K9V2gpGj24ZXp89mmVPiUJRQUXpTHqmnkln2MJtyTLV4oRTOTmE9jDFlibSbiDZuK5BZG8H96MshREkDW0Tew8c+KJ+8YR8kuPK8e1OkG/F0S0KLBHZZI4A5tse5Qxa6nIU+4urvLYeG1Ey41m7LurDDWDISlYAJKunDS85yG4Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=CiwkLTW3; arc=none smtp.client-ip=217.70.183.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1705947445; c=relaxed/simple;
+	bh=cosRaykSzlaNE/xIMf6y8xZWCugy57DK7yvFXqv2wsw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=utqWGw57Erc2p1O2Thy8G2Jz8eR/AUq2i+Ty/28E+lkV24KVMcFeIeCWiP5rK9M/1CFdMjWE1ue0NC7j9Y8sG1zvPHoBXW2W+FgHfpngcu3Y5+B6IUDxp57ugGcE+wJrHgO/R8L5Nh/PIili8O1+6NbzJGXYV/XzwA/K8hjo89A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com; spf=pass smtp.mailfrom=gmx.com; dkim=pass (2048-bit key) header.d=gmx.com header.i=erick.archer@gmx.com header.b=asFTSnUv; arc=none smtp.client-ip=212.227.17.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="CiwkLTW3"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 199FB1C0006;
-	Mon, 22 Jan 2024 18:16:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1705947418;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=EJO7ijoy/QEyNtkXI5m0dLezfhXMbbi40EIs5xDpTNw=;
-	b=CiwkLTW30HAq8YFrXK6atoT0l2XdjZd3qmaXQJ/VjXYEmI5zC8E7u17mfvI++Icaf62caw
-	BZeks39EpN24q6ATPbYW2L6YoHBHRWiK0/asNvq6O2fQG2EbH/RcwCpq8lXwiEyT3s5zGW
-	xMSDGjKTdOvFbxenrPd17/Sjn0W7CB260iJXHm0MvUSFxzMMb1zkihOynkvcnFlIe2MTW1
-	TGgKKVg0DGh49LtJd46zd0eCTRaubE+yWNOdV6EvBJWMumk/DWGCqCBIz9/bwWvkdmGXsu
-	oRCBVb/1PJN4BI8odcy52PRWMmDP0NEBole9OU7Wzy8qj/u3juWzN3e2vn3teQ==
-Date: Mon, 22 Jan 2024 19:16:45 +0100
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-To: Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <u.kleine-koenig@pengutronix.de>
-Cc: Mark Brown <broonie@kernel.org>, kernel@pengutronix.de, Alexander Aring
- <alex.aring@gmail.com>, Stefan Schmidt <stefan@datenfreihafen.org>, "David
- S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub
- Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- linux-wpan@vger.kernel.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, Simon Horman
- <horms@kernel.org>
-Subject: Re: [PATCH v2 02/33] ieee802154: ca8210: Follow renaming of SPI
- "master" to "controller"
-Message-ID: <20240122191026.1041a09f@xps-13>
-In-Reply-To: <145fba5c430e40114ab861229e52efd3ff941e42.1705944943.git.u.kleine-koenig@pengutronix.de>
-References: <cover.1705944943.git.u.kleine-koenig@pengutronix.de>
-	<145fba5c430e40114ab861229e52efd3ff941e42.1705944943.git.u.kleine-koenig@pengutronix.de>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmx.com header.i=erick.archer@gmx.com header.b="asFTSnUv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.com;
+	s=s31663417; t=1705947426; x=1706552226; i=erick.archer@gmx.com;
+	bh=cosRaykSzlaNE/xIMf6y8xZWCugy57DK7yvFXqv2wsw=;
+	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:
+	 In-Reply-To;
+	b=asFTSnUvt7vOfO1EW2cykrwxv2DolQbZuOz3O+TJ1CwWvztMqMCQQHYkg+LttasR
+	 nubKVaZDhhSFpx3bYUtx3hBCFU4uovVSvU0V9I8RGIpbmy1IZqrwkOadY7oiFMH+K
+	 5yR8Q4VWJFOqK4Ju3tGmtBl+dSU23ghwEHGmmI/PkFfQaG22XZ2MlA8b1TtvsmDf1
+	 9Ial8Yp9p8fV7jYLfCdhtELXKqJ4UvJl8IGD5Mr6c3zmEDlzJlLoHkeKLrmra5ycu
+	 QZ5Ffuk9SeTIQUzAhQM5ZQc5vMc7eVimsHUIMOiD8Y+fcMMswpxEX+IaTMFsAc+NO
+	 4/DA6kSvT22Iyt0V/w==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from titan ([79.157.194.183]) by mail.gmx.net (mrgmx104
+ [212.227.17.174]) with ESMTPSA (Nemesis) id 1M9Fnj-1rUzfK3gxz-006Qns; Mon, 22
+ Jan 2024 19:17:06 +0100
+Date: Mon, 22 Jan 2024 19:16:54 +0100
+From: Erick Archer <erick.archer@gmx.com>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Erick Archer <erick.archer@gmx.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Franziska Naepelt <franziska.naepelt@googlemail.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Johannes Berg <johannes.berg@intel.com>,
+	Jeff Johnson <quic_jjohnson@quicinc.com>,
+	Aloka Dixit <quic_alokad@quicinc.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] staging: rtl8723bs: Use kcalloc() instead of kzalloc()
+Message-ID: <20240122181654.GA2834@titan>
+References: <20240119173900.11035-1-erick.archer@gmx.com>
+ <a5d8a5f1-432d-46f0-84fe-7b5b22ff5f32@moroto.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a5d8a5f1-432d-46f0-84fe-7b5b22ff5f32@moroto.mountain>
+X-Provags-ID: V03:K1:kGUntj6tvEvcPAKpBTFIgN0eg54Wxu/RZsRWwgOejcbTX86gVAE
+ c+89FsizxElgdv2Q1wx7RPCiLqLqxGqic389bTiIbE09FGqxTnHjihUBgwd+KgCmrkHrQTJ
+ xnbd6lmjVSHdhp80teC53hPi+Zkk3s1fbqe6MdKEg3VZo7BBll2oEGKifbZIJ8v1Is92sYx
+ q9bLZOu5N8oCk7fUnzABA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:UsolengSshc=;iH0T6UGqXMqk89ahnVw5eMaTrWO
+ Yr8qNqI5zZBV9KGn7C30KszUZthd3jRUXDgx/Yk0Ft28ZxlmF0LPJ9zZBPiKbjl/eFWnFSiTY
+ pDf6DYxOYaDHVmeAy14wYthaFg0hmS5NoAXjaLwZkiiGf5gz0ynGqYPnSxaUTa2lNGa5AJrKF
+ apOd5cRSM3aljlqXBK944RpUAkfkahXL5Fvt/NWnYuZxYCE0VcLpOZaxFjD/yQM05fI8iEhTr
+ UieHEXvzpWM9PV/0eaEbfidyIMYCydIx4kXvyDtb5L8iK0H1oLCWp9CUpuNrXFq9O5BcSdI3y
+ Z/WW+jYH0YWaDtJugFFkq3vl2x0boNky4ovdMh76SY5UB3rF5EDHxRt9Zji2aR28iO1d+iBJH
+ jNnlP1TSn2RRopQ2HGvtKaza0/Js3b2kiOVx/+YudnwrUbO+sYjk5g3LB/H1uPVsbI2PrgLoK
+ MIKhIiG9Qv8zAaKbrZYf1gToUMdEdQwA0v338Hosxx3mPvsPPKm7aQBkXKLCsNxnizttK8YDr
+ O/gC5EHKGu8WVsU4P4IAMwpEZ/lJ+Wq7cGHFBC2tTBEICoaLMgSyBW51MDGi3GHUZ7X9G97ju
+ LLZYQZwU74N5ZnLXwvuQ1CisU2dW3VjSSxjVGDwdIEjueT/EQ/MTtG5QTtNMEgDt67q34OXc2
+ v98+a/M/cXjKk8ScPfLv3WWegKkcU5j/rovtyvQcf8vTr5qMRkmqAK0eyslxVAkmci/LwK5kx
+ 6LCHU9P3iewRwGdjj4U26yL4vI8WVY0JpQI0JyoAahF20whb3SygHxHog5IPO1Mjj0Q5z1NaW
+ jgtongx7dlOXwWBc4ptHU8VvNGVF6RrKpAxKOdrVZiIhgIjcu0kWgDzfuv3AJ8H5JBe08OONb
+ l9joLlKR9+0zPVs9FG/yGbMHstpBPPZa0s4J02U+3PHjp8kyxSTd4HGC3Ti+Ueo2ule/3mBvM
+ 8cVJZ9qfdGfWIhDO6DSux0ph4SA=
 Content-Transfer-Encoding: quoted-printable
-X-GND-Sasl: miquel.raynal@bootlin.com
 
-Hi Uwe,
+Hi Dan,
 
-u.kleine-koenig@pengutronix.de wrote on Mon, 22 Jan 2024 19:06:57 +0100:
+On Mon, Jan 22, 2024 at 09:55:11AM +0300, Dan Carpenter wrote:
+> On Fri, Jan 19, 2024 at 06:39:00PM +0100, Erick Archer wrote:
+> > As noted in the "Deprecated Interfaces, Language Features, Attributes,
+> > and Conventions" documentation [1], size calculations (especially
+> > multiplication) should not be performed in memory allocator (or simila=
+r)
+> > function arguments due to the risk of them overflowing. This could lea=
+d
+> > to values wrapping around and a smaller allocation being made than the
+> > caller was expecting. Using those allocations could lead to linear
+> > overflows of heap memory and other misbehaviors.
+> >
+> > So, use the purpose specific kcalloc() function instead of the argumen=
+t
+> > count * size in the kzalloc() function.
+> >
+> > Also, it is preferred to use sizeof(*pointer) instead of sizeof(type)
+> > due to the type of the variable can change and one needs not change th=
+e
+> > former (unlike the latter).
+> >
+> > Link: https://www.kernel.org/doc/html/next/process/deprecated.html#ope=
+n-coded-arithmetic-in-allocator-arguments [1]
+> > Link: https://github.com/KSPP/linux/issues/162
+> > Signed-off-by: Erick Archer <erick.archer@gmx.com>
+>
+> I quite often write responses to patches and then never send them.  I
+> wrote this response and debated sending it but in the end I decided to
+> send it because you have sent multiple patches.  If you had only sent
+> one patch then I wouldn't have bothered.
 
-> In commit 8caab75fd2c2 ("spi: Generalize SPI "master" to "controller"")
-> some functions and struct members were renamed. To not break all drivers
-> compatibility macros were provided.
->=20
-> To be able to remove these compatibility macros push the renaming into
-> this driver.
->=20
-> Reviewed-by: Simon Horman <horms@kernel.org>
-> Acked-by: Stefan Schmidt <stefan@datenfreihafen.org>
-> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
+My intention is not to bother anyone. I'm a linux kernel developer newbie
+and I try to do my best.
 
-Acked-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> Generally, commit messages should say what the user visible effects of
+> a patch are.  Sometimes with these sorts of commits, it's hard to
+> determine the effect.  For example, Kees went through and changed dozens
+> or hundreds of these allocations to use safer constructs and we don't
+> necessarily expect him to audit all the code.  They should already have
+> been fine, but it's better to be safe.
+>
+> However in this case obviously the patch is small and just by glancing
+> at it we can see that it has no effect on rutime.
+>
+> But if someone is reviewing patches with "git log" instead of
+> "git log -p" they aren't going to see the patch. I can almost always
+> figure out what a commit does without looking at the commit message,
+> that doesn't mean that the commit messages are unnecessary.
+>
+> So I really prefer if commit message say, "This commit is just to make
+> static checkers happy and to make the code more readable.  It has no
+> effect on runtime."  The commit message you wrote is way more scary than
+> is warranted.  Here is my proposed commit message:
+>
+> "We are trying to get rid of all multiplications from allocation
+> functions to prevent integer overflows.  Here the multiplication is
+> obviously safe, but using kcalloc() is more appropriate and improves
+> readability.  This patch has no effect on runtime behavior."
+>
 
-Thanks,
-Miqu=C3=A8l
+Understood. Thank you very much for your guidance and advices. I will
+change the commit message and I will send a more appropiate v2 patch.
+
+Best regards,
+Erick
+
+> regards,
+> dan carpenter
+>
