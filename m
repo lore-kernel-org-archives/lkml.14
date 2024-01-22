@@ -1,243 +1,136 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from irl.hu (irl.hu [95.85.9.111])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D00213E474;
-	Mon, 22 Jan 2024 18:15:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F357740C1E;
+	Mon, 22 Jan 2024 18:15:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.85.9.111
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705947312; cv=none; b=ox3NRb0LSUwJo308mZ6SVAp4VDGTADYU65DoMSL9fUNPPL4KSvdAyqvhuEb24MOjqxwbuvymAq4WcQX67SxWyEHINecTjCwcNTcOEJDYAjHt4FhhSC+0GWY5Fl6yekdo+OHMzZAgcJ69IO0kFf2TFmchJRQRuReTVdxC+2N9hL4=
+	t=1705947335; cv=none; b=bDxUPy6tP7E+vnW9OnvLiVTQd2qx9ZTihyVy2VHbMrEJshW3843DAdHP1nyFkVMJUDXUl0Tt3mgWePnEt7XG5s9EbclkGQizJ5F8t6kKOJyXHYb6YbGYCEyOs64EV5KAoOmBOFAQaPgiAeI3agrn8QEnBjY1dl4LyMBH59iFp8c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705947312; c=relaxed/simple;
-	bh=5C6exGsza/X9DUjMWBVUbMQ8kIAdM/dB4GnTMkspNvg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ABdTO+hevpqrU46SddQBuAnx/RVNeUysT7JsdgK3j+k3uq1wbR/u55iJ1zgP6dPXZCCdA/odbhbjlj6RQZwXQGbUoMjQqeRFlAn8KdSj16vjFfFkzOfwwhTG29x+GbuR8qb2pkIPaSI4gwT9Eg3qy72Uvoa5libcA3PI1y2cNnU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JFH6ERSa; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JFH6ERSa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7914C433F1;
-	Mon, 22 Jan 2024 18:15:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705947312;
-	bh=5C6exGsza/X9DUjMWBVUbMQ8kIAdM/dB4GnTMkspNvg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JFH6ERSazTj7JSLmqipaSOie1Xtw42+N/ydXvMtTYFTdI/xdEmwl8spUQrD9xEteI
-	 sJbHLiw+QOjxZU5e4ldpPhlW7guyekXTNG/U2KFDuhwUqTSoiMCAjsB1oNMenhqwG3
-	 vxAJVbKuQPkxuclBO7fm1OmmcpMAUmSB72t68Y9DpEJ/rIQrvggqjGDAR71AxjbN5W
-	 yn45wlO9Zcjv4p2RhIkV+FmCfp1I1T7qgPKngZGfM4QtJ+r5fQqbWOCPiEWz6OALVh
-	 e+wgfqn9Vr2LbO/XqpfJf0JNrl3ETT6/5usALK9UfgSatJMVABZVYyOD0GYgJ81RGA
-	 Dv8QWnwfvLxAw==
-Date: Mon, 22 Jan 2024 18:15:07 +0000
-From: Conor Dooley <conor@kernel.org>
-To: marius.cristea@microchip.com
-Cc: jic23@kernel.org, lars@metafoo.de, robh+dt@kernel.org,
-	jdelvare@suse.com, linux@roeck-us.net, linux-hwmon@vger.kernel.org,
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 1/2] dt-bindings: iio: adc: adding support for PAC193X
-Message-ID: <20240122-fernlike-resolute-b16772806147@spud>
-References: <20240122084712.11507-1-marius.cristea@microchip.com>
- <20240122084712.11507-2-marius.cristea@microchip.com>
+	s=arc-20240116; t=1705947335; c=relaxed/simple;
+	bh=69GGm0pNRQTM69t2Rq+BKa1TrZijGf27F8TvqUvTRV4=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=X4NB6i20KD+2doRKCHEBztaYmgFJwDQyVmV+mTjThnWxG4AutEZpOVX5zfzLFSWWE3xK8qfYCyRNEo57J2PH/istrguDBjX1DwuDctYgqS5OfT8Qh8+vvJcBUsvkjqua905CoSgMMq3Ly6RyahwmP0Spe/2l99sNoIRvKvzaBx8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu; spf=pass smtp.mailfrom=irl.hu; arc=none smtp.client-ip=95.85.9.111
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=irl.hu
+Received: from [192.168.2.4] (51b68f75.dsl.pool.telekom.hu [::ffff:81.182.143.117])
+  (AUTH: CRAM-MD5 soyer@irl.hu, )
+  by irl.hu with ESMTPSA
+  id 00000000000736C1.0000000065AEAF8C.00184B08; Mon, 22 Jan 2024 19:10:20 +0100
+Message-ID: <3ce7c90b5cebb56b1035eb51d7a75f49acfcbed9.camel@irl.hu>
+Subject: Re: [PATCH AUTOSEL 6.7 72/88] ALSA: hda/tas2781: add fixup for
+ Lenovo 14ARB7
+From: Gergo Koteles <soyer@irl.hu>
+To: Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
+  stable@vger.kernel.org
+Cc: Takashi Iwai <tiwai@suse.de>, perex@perex.cz, tiwai@suse.com,
+  sbinding@opensource.cirrus.com, kailang@realtek.com, luke@ljones.dev,
+  andy.chi@canonical.com, shenghao-ding@ti.com,
+  ruinairas1992@gmail.com, vitalyr@opensource.cirrus.com,
+  linux-sound@vger.kernel.org
+Date: Mon, 22 Jan 2024 19:10:19 +0100
+In-Reply-To: <20240122145608.990137-72-sashal@kernel.org>
+References: <20240122145608.990137-1-sashal@kernel.org>
+	 <20240122145608.990137-72-sashal@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.3 (3.50.3-1.fc39) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="qi0TL78qGZaNp8GQ"
-Content-Disposition: inline
-In-Reply-To: <20240122084712.11507-2-marius.cristea@microchip.com>
 
+Hi Sasha,
 
---qi0TL78qGZaNp8GQ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This patch needs additional patches to work:
 
-Hey Marius,
+dcaca1b5f0d4 ALSA: hda/tas2781: annotate calibration data endianness
+c3ca4458cc2f ALSA: hda/tas2781: add TAS2563 support for 14ARB7
+c021ca729fe8 ALSA: hda/tas2781: add configurable global i2c address
+76f5f55c45b9 ALSA: hda/tas2781: add ptrs to calibration functions
+68f7f3ff6c2a ALSA: hda/tas2781: configure the amp after firmware load
 
-On Mon, Jan 22, 2024 at 10:47:11AM +0200, marius.cristea@microchip.com wrot=
-e:
-> From: Marius Cristea <marius.cristea@microchip.com>
->=20
-> This is the device tree schema for iio driver for
-> Microchip PAC193X series of Power Monitors with Accumulator.
->=20
-> Signed-off-by: Marius Cristea <marius.cristea@microchip.com>
-
-I like how this is looking now. I have two minor comments that if you
-resend for some other reason you could change, but otherwise:
-Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
-
-> ---
->  .../bindings/iio/adc/microchip,pac1934.yaml   | 120 ++++++++++++++++++
->  1 file changed, 120 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/microchip,p=
-ac1934.yaml
->=20
-> diff --git a/Documentation/devicetree/bindings/iio/adc/microchip,pac1934.=
-yaml b/Documentation/devicetree/bindings/iio/adc/microchip,pac1934.yaml
-> new file mode 100644
-> index 000000000000..cd9cb2a71566
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/adc/microchip,pac1934.yaml
-> @@ -0,0 +1,120 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/adc/microchip,pac1934.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Microchip PAC1934 Power Monitors with Accumulator
-> +
-> +maintainers:
-> +  - Marius Cristea <marius.cristea@microchip.com>
-> +
-> +description: |
-> +  This device is part of the Microchip family of Power Monitors with
-> +  Accumulator.
-> +  The datasheet for PAC1931, PAC1932, PAC1933 and PAC1934 can be found h=
-ere:
-> +    https://ww1.microchip.com/downloads/aemDocuments/documents/OTH/Produ=
-ctDocuments/DataSheets/PAC1931-Family-Data-Sheet-DS20005850E.pdf
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - microchip,pac1931
-> +      - microchip,pac1932
-> +      - microchip,pac1933
-> +      - microchip,pac1934
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  "#address-cells":
-> +    const: 1
-> +
-> +  "#size-cells":
-> +    const: 0
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  slow-io-gpios:
-> +    description: |
-
-This...
-
-> +      A GPIO used to trigger a change is sampling rate (lowering the chi=
-p power
-> +      consumption). If configured in SLOW mode, if this pin is forced hi=
-gh,
-> +      sampling rate is forced to eight samples/second. When it is forced=
- low,
-> +      the sampling rate is 1024 samples/second unless a different sample=
- rate
-> +      has been programmed.
-> +
-> +patternProperties:
-> +  "^channel@[1-4]+$":
-> +    type: object
-> +    $ref: adc.yaml
-> +    description: |
-
-=2E..and this...
-
-> +        Represents the external channels which are connected to the ADC.
-> +
-> +    properties:
-> +      reg:
-> +        items:
-> +          minimum: 1
-> +          maximum: 4
-> +
-> +      shunt-resistor-micro-ohms:
-> +        description: |
-
-=2E..and this | are not needed here as you have no formatting to preserve.
-
-> +          Value in micro Ohms of the shunt resistor connected between
-> +          the SENSE+ and SENSE- inputs, across which the current is meas=
-ured.
-> +          Value is needed to compute the scaling of the measured current.
-> +
-> +    required:
-> +      - reg
-> +      - shunt-resistor-micro-ohms
-> +
-> +    unevaluatedProperties: false
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - "#address-cells"
-> +  - "#size-cells"
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    i2c {
-> +        #address-cells =3D <1>;
-> +        #size-cells =3D <0>;
-> +
-> +        pac193x: power-monitor@10 {
-
-This "pac193x" label is not used and should be removed.
+Please add these if possible, or drop this patch from 6.6 and 6.7.
 
 Thanks,
-Conor.
+Gergo
 
-> +            compatible =3D "microchip,pac1934";
-> +            reg =3D <0x10>;
-> +
-> +            #address-cells =3D <1>;
-> +            #size-cells =3D <0>;
-> +
-> +            channel@1 {
-> +                reg =3D <0x1>;
-> +                shunt-resistor-micro-ohms =3D <24900000>;
-> +                label =3D "CPU";
-> +            };
-> +
-> +            channel@2 {
-> +                reg =3D <0x2>;
-> +                shunt-resistor-micro-ohms =3D <49900000>;
-> +                label =3D "GPU";
-> +            };
-> +
-> +            channel@3 {
-> +                reg =3D <0x3>;
-> +                shunt-resistor-micro-ohms =3D <75000000>;
-> +                label =3D "MEM";
-> +                bipolar;
-> +            };
-> +
-> +            channel@4 {
-> +                reg =3D <0x4>;
-> +                shunt-resistor-micro-ohms =3D <100000000>;
-> +                label =3D "NET";
-> +                bipolar;
-> +            };
-> +        };
-> +    };
-> +
-> +...
-> --=20
-> 2.34.1
+
+On Mon, 2024-01-22 at 09:51 -0500, Sasha Levin wrote:
+> From: Gergo Koteles <soyer@irl.hu>
 >=20
+> [ Upstream commit b5cb53fd32779f3a971c45bcd997ae2608aa1086 ]
+>=20
+> The 14ARB7 has two tas2563 amplifier on i2c.
+> Connect it to the tas2781 driver.
+>=20
+> Signed-off-by: Gergo Koteles <soyer@irl.hu>
+> Link: https://lore.kernel.org/r/abce9ee55689523562feb72383377171a489ddc7.=
+1703891777.git.soyer@irl.hu
+> Signed-off-by: Takashi Iwai <tiwai@suse.de>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>  sound/pci/hda/patch_realtek.c | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+>=20
+> diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.=
+c
+> index 70b17b08d4ff..9606f2448fda 100644
+> --- a/sound/pci/hda/patch_realtek.c
+> +++ b/sound/pci/hda/patch_realtek.c
+> @@ -6984,6 +6984,12 @@ static void tas2781_fixup_i2c(struct hda_codec *cd=
+c,
+>  	 tas2781_generic_fixup(cdc, action, "i2c", "TIAS2781");
+>  }
+> =20
+> +static void yoga7_14arb7_fixup_i2c(struct hda_codec *cdc,
+> +	const struct hda_fixup *fix, int action)
+> +{
+> +	 tas2781_generic_fixup(cdc, action, "i2c", "INT8866");
+> +}
+> +
+>  /* for alc295_fixup_hp_top_speakers */
+>  #include "hp_x360_helper.c"
+> =20
+> @@ -7454,6 +7460,7 @@ enum {
+>  	ALC236_FIXUP_DELL_DUAL_CODECS,
+>  	ALC287_FIXUP_CS35L41_I2C_2_THINKPAD_ACPI,
+>  	ALC287_FIXUP_TAS2781_I2C,
+> +	ALC287_FIXUP_YOGA7_14ARB7_I2C,
+>  	ALC245_FIXUP_HP_MUTE_LED_COEFBIT,
+>  	ALC245_FIXUP_HP_X360_MUTE_LEDS,
+>  	ALC287_FIXUP_THINKPAD_I2S_SPK,
+> @@ -9568,6 +9575,12 @@ static const struct hda_fixup alc269_fixups[] =3D =
+{
+>  		.chained =3D true,
+>  		.chain_id =3D ALC269_FIXUP_THINKPAD_ACPI,
+>  	},
+> +	[ALC287_FIXUP_YOGA7_14ARB7_I2C] =3D {
+> +		.type =3D HDA_FIXUP_FUNC,
+> +		.v.func =3D yoga7_14arb7_fixup_i2c,
+> +		.chained =3D true,
+> +		.chain_id =3D ALC285_FIXUP_THINKPAD_HEADSET_JACK,
+> +	},
+>  	[ALC245_FIXUP_HP_MUTE_LED_COEFBIT] =3D {
+>  		.type =3D HDA_FIXUP_FUNC,
+>  		.v.func =3D alc245_fixup_hp_mute_led_coefbit,
+> @@ -10221,6 +10234,7 @@ static const struct snd_pci_quirk alc269_fixup_tb=
+l[] =3D {
+>  	SND_PCI_QUIRK(0x17aa, 0x3853, "Lenovo Yoga 7 15ITL5", ALC287_FIXUP_YOGA=
+7_14ITL_SPEAKERS),
+>  	SND_PCI_QUIRK(0x17aa, 0x3855, "Legion 7 16ITHG6", ALC287_FIXUP_LEGION_1=
+6ITHG6),
+>  	SND_PCI_QUIRK(0x17aa, 0x3869, "Lenovo Yoga7 14IAL7", ALC287_FIXUP_YOGA9=
+_14IAP7_BASS_SPK_PIN),
+> +	SND_PCI_QUIRK(0x17aa, 0x3870, "Lenovo Yoga 7 14ARB7", ALC287_FIXUP_YOGA=
+7_14ARB7_I2C),
+>  	SND_PCI_QUIRK(0x17aa, 0x387d, "Yoga S780-16 pro Quad AAC", ALC287_FIXUP=
+_TAS2781_I2C),
+>  	SND_PCI_QUIRK(0x17aa, 0x387e, "Yoga S780-16 pro Quad YC", ALC287_FIXUP_=
+TAS2781_I2C),
+>  	SND_PCI_QUIRK(0x17aa, 0x3881, "YB9 dual power mode2 YC", ALC287_FIXUP_T=
+AS2781_I2C),
 
---qi0TL78qGZaNp8GQ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZa6wqwAKCRB4tDGHoIJi
-0q6hAP0QD1uLecPK8JtF9dahFAlvXtAIK2MF/bEG/+d2xCVPwAD+NitieK6tvevt
-VhVPZLPjU6FN4abGu0j2yODLo75rmQg=
-=CcoM
------END PGP SIGNATURE-----
-
---qi0TL78qGZaNp8GQ--
