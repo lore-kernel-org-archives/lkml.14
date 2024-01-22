@@ -1,77 +1,32 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A56D1549F;
-	Mon, 22 Jan 2024 07:11:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A510F9C4
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 07:12:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705907463; cv=none; b=PurFz2/5y8f314VooCYT+Wbx2UAsQO4VJhdxQ9/PQVXrcHNu5dcDmgKEdlzu2Xc4EQK5EoI/ctA+plMNciCBILriQ0AhcY/L0t5/CSg7TWBUhR8mwZbV0+X1l1xsjcpnZkb4sIuHlvfekPdi4LhEIzaP95hOAZWaoUOKaYhDKkk=
+	t=1705907580; cv=none; b=ZqEciaDDjU7RxfXs2IcJc22ahyK5Kf6K/3cr9c7uqc2HvktNJ/CBNTz9t/Ajg0z6ffFueTSKjTowxr8/1lWya7OeuOGa7l2SLW24ZdKIJ36Oic6ZA7uRrSSbLF22K2ty4h6R/bbkZDPUX3+z3WtVXkF8uLqjemDjhfbKVDf5EVg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705907463; c=relaxed/simple;
-	bh=GiCGWYYpI/zBmzmXTbTU7hU/gSeRqY9wIRiNhNMugk0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lHvQVQ14lbgALzqDWbGGrmhm3yzfD7a9k8PZhe+FXjnN7XPNcFBAhUnqMMklKcBEpYvkGyKnveMMwi83mDYT3VmxrN5UyEoTtw+RIAnyFFD63zVtMV4xZmFb8xq4Rgp4K7pudjc4p7RupmzYGTRh6VHxbdAssnQbOR9m6bjeYD8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j2v3DQfn; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j2v3DQfn"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1d51ba18e1bso25148275ad.0;
-        Sun, 21 Jan 2024 23:11:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705907461; x=1706512261; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kZ5LQrtGOef2RhCQexh0DzGghwnp1zT6hJb7zIaDJYU=;
-        b=j2v3DQfn5mK8AoWP+TzKsd6QnToH0h7yJH88PMANbvIy+ZnxB1HnmiZHe/lK9FvS++
-         rxLMzyVNNb+bCDVjyAY4wiOCMnVZHM3efOSxeoWxCjkwAj4fUflqhH+0KbuDgsKHILWv
-         cNv85NtKBoIc2ci74HqzB4trpAF39wBZPz+4n4e/yaxFfgvfQGUy7D7UkV3PTh92az6X
-         qL1pJTlqs78SRV0SIqJVdGuvaV2s1VsWf/S8XfwXSor6kr3AnKVisXxXtLaMbILNgLSl
-         wzoVAjCnBfR2WKFQJByvFsWA2jWsExnoFfSu2SeKqbaOQOhQIrlDogVVeks2SNvK4Tht
-         FFwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705907461; x=1706512261;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kZ5LQrtGOef2RhCQexh0DzGghwnp1zT6hJb7zIaDJYU=;
-        b=hLg5z8iXnZep8Gd4v4Pn1fG17Jrs6o1Fpl21Ol2z9+eaX/1q3PaPcZI74Zgc1kxuBX
-         /A5f1R3mFgmeNUeuYL1SoFCsOUbOVc+1VAqYo+If+ge1G2RUK3W0kL1zTNnWajvbxs4Q
-         pPZGtyfkRkEYRUJ07NLS68laXygt4Np64p1sV782iaaZVYZw7ugtf8duHFsker40kBHn
-         ofXnOzescvy00Qvf5wh/3wHT6dqEdgl8niS0npmeIQYsAnNe4NjuJ25FEuLY+ZNFZYAg
-         2uC0a0otLjGidndpVXVT+YNmRhomyWXOnKjE2eqdEUBcIarfnM7x6gI6uIo4yl7ENwog
-         Ow/g==
-X-Gm-Message-State: AOJu0YwEocY8rPhfsYqdMXWw9nI4xOmW2aeGaRbxnQs1+ckYACDlZ8g7
-	NmZy5J847kZmokIwrs6iOwM1DDani2xZTxnPTpxHrWO/C8LrsEyn
-X-Google-Smtp-Source: AGHT+IH8N/aRIYyc67Ff6jyaVTTxBKkJJGE87EtIPf5gzDu/V/a/IH1tcJTXnt029qA6gCu/mB7xrw==
-X-Received: by 2002:a17:902:e852:b0:1d7:41b7:332b with SMTP id t18-20020a170902e85200b001d741b7332bmr3187637plg.14.1705907461571;
-        Sun, 21 Jan 2024 23:11:01 -0800 (PST)
-Received: from localhost.localdomain ([43.132.98.45])
-        by smtp.googlemail.com with ESMTPSA id t10-20020a170902d28a00b001d72b3b0ee6sm3463365plc.248.2024.01.21.23.10.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 21 Jan 2024 23:11:01 -0800 (PST)
-From: Ze Gao <zegao2021@gmail.com>
-X-Google-Original-From: Ze Gao <zegao@tencent.com>
-To: Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Ze Gao <zegao@tencent.com>
-Subject: [PATCH v2 4/4] perf sched: Commit to evsel__taskstate() to parse task state info
-Date: Mon, 22 Jan 2024 02:08:59 -0500
-Message-ID: <20240122070859.1394479-6-zegao@tencent.com>
-X-Mailer: git-send-email 2.41.0
-In-Reply-To: <20240122070859.1394479-2-zegao@tencent.com>
-References: <20240122070859.1394479-2-zegao@tencent.com>
+	s=arc-20240116; t=1705907580; c=relaxed/simple;
+	bh=ph/lpLNdQA9SfY0A/zbplG5wCHE+cXCrdEl+/dGa44Y=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Gn2OptrDiuNWyDOfE8gYYYsOKGJ0SKkUXgboyPe9q19gUiZ98URKaau1RSe7ZvofKKg44ANLxVWSwDiUPUT8YgO8h/KLTtr26bEoa//lXdAEbTLui75VOl9lgu/nqCpmJHpC30ke+vCRLBovBMpyy04dlb8OLyuLTGAMnR30w4w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; arc=none smtp.client-ip=115.124.30.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R631e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045170;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0W.33wn._1705907574;
+Received: from localhost(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0W.33wn._1705907574)
+          by smtp.aliyun-inc.com;
+          Mon, 22 Jan 2024 15:12:54 +0800
+From: Jingbo Xu <jefflexu@linux.alibaba.com>
+To: xiang@kernel.org,
+	chao@kernel.org,
+	linux-erofs@lists.ozlabs.org
+Cc: huyue2@coolpad.com,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] erofs: make iov_iter describe target buffer when read from fscache
+Date: Mon, 22 Jan 2024 15:12:53 +0800
+Message-Id: <20240122071253.119004-1-jefflexu@linux.alibaba.com>
+X-Mailer: git-send-email 2.19.1.6.gb485710b
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -80,152 +35,380 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Now that we have evsel__taskstate() which no longer relies on the
-hardcoded task state string and has good backward compatibility,
-we have a good reason to use it.
+So far the fscache mode supports uncompressed data only, and the data
+read from fscache is put directly into the target page cache.  As the
+support for compressed data in fscache mode is going to be introduced,
+refactor the interface of reading fscache so that the following
+compressed part could make the raw data read from fscache be directed to
+the target buffer it wants, decompress the raw data, and finally fill
+the page cache with the decompressed data.
 
-Note TASK_STATE_TO_CHAR_STR and task bitmasks are useless now so
-we remove them for good. And now we pass the state info back and
-forth in a symbolic char which explains itself well instead.
+As the first step, a new structure, i.e. erofs_fscache_io (cio), is
+introduced to describe a generic read request from the fscache, while
+the caller can specify the target buffer it wants in the iov_iter
+structure (cio->iter).  Besides, the caller can also specify its
+completion callback and private data through cio, which will be called
+to make further handling, e.g. unlocking the page cache for uncompressed
+data or decompressing the read raw data, when the read request from the
+fscache completes.  Now erofs_fscache_read_io_async() serves as a
+generic interface for reading raw data from fscache for both compressed
+and uncompressed data.
 
-Signed-off-by: Ze Gao <zegao@tencent.com>
+The erofs_fscache_request structure is kept to describe a request to
+fill the page cache in the specified range.
+
+Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
 ---
- tools/perf/builtin-sched.c | 46 +++++++++-----------------------------
- 1 file changed, 10 insertions(+), 36 deletions(-)
+ fs/erofs/fscache.c | 219 ++++++++++++++++++++++++---------------------
+ 1 file changed, 118 insertions(+), 101 deletions(-)
 
-diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-index ced6fffe8110..f1d62f6b6cab 100644
---- a/tools/perf/builtin-sched.c
-+++ b/tools/perf/builtin-sched.c
-@@ -92,13 +92,6 @@ struct sched_atom {
- 	struct task_desc	*wakee;
+diff --git a/fs/erofs/fscache.c b/fs/erofs/fscache.c
+index bc12030393b2..10709f20bef5 100644
+--- a/fs/erofs/fscache.c
++++ b/fs/erofs/fscache.c
+@@ -13,8 +13,6 @@ static LIST_HEAD(erofs_domain_cookies_list);
+ static struct vfsmount *erofs_pseudo_mnt;
+ 
+ struct erofs_fscache_request {
+-	struct erofs_fscache_request *primary;
+-	struct netfs_cache_resources cache_resources;
+ 	struct address_space	*mapping;	/* The mapping being accessed */
+ 	loff_t			start;		/* Start position */
+ 	size_t			len;		/* Length of the request */
+@@ -23,42 +21,13 @@ struct erofs_fscache_request {
+ 	refcount_t		ref;
  };
  
--#define TASK_STATE_TO_CHAR_STR "RSDTtXZPI"
+-static struct erofs_fscache_request *erofs_fscache_req_alloc(struct address_space *mapping,
+-					     loff_t start, size_t len)
+-{
+-	struct erofs_fscache_request *req;
 -
--/* task state bitmask, copied from include/linux/sched.h */
--#define TASK_RUNNING		0
--#define TASK_INTERRUPTIBLE	1
--#define TASK_UNINTERRUPTIBLE	2
+-	req = kzalloc(sizeof(struct erofs_fscache_request), GFP_KERNEL);
+-	if (!req)
+-		return ERR_PTR(-ENOMEM);
 -
- enum thread_state {
- 	THREAD_SLEEPING = 0,
- 	THREAD_WAIT_CPU,
-@@ -255,7 +248,7 @@ struct thread_runtime {
- 	u64 total_preempt_time;
- 	u64 total_delay_time;
+-	req->mapping = mapping;
+-	req->start   = start;
+-	req->len     = len;
+-	refcount_set(&req->ref, 1);
+-
+-	return req;
+-}
+-
+-static struct erofs_fscache_request *erofs_fscache_req_chain(struct erofs_fscache_request *primary,
+-					     size_t len)
+-{
+-	struct erofs_fscache_request *req;
+-
+-	/* use primary request for the first submission */
+-	if (!primary->submitted) {
+-		refcount_inc(&primary->ref);
+-		return primary;
+-	}
+-
+-	req = erofs_fscache_req_alloc(primary->mapping,
+-			primary->start + primary->submitted, len);
+-	if (!IS_ERR(req)) {
+-		req->primary = primary;
+-		refcount_inc(&primary->ref);
+-	}
+-	return req;
+-}
++struct erofs_fscache_io {
++	struct netfs_cache_resources cache_resources;
++	struct iov_iter		iter;
++	netfs_io_terminated_t	end_io;
++	void			*private;
++	refcount_t		ref;
++};
  
--	int last_state;
-+	char last_state;
- 
- 	char shortname[3];
- 	bool comm_changed;
-@@ -425,7 +418,7 @@ static void add_sched_event_wakeup(struct perf_sched *sched, struct task_desc *t
+ static void erofs_fscache_req_complete(struct erofs_fscache_request *req)
+ {
+@@ -83,82 +52,116 @@ static void erofs_fscache_req_complete(struct erofs_fscache_request *req)
+ static void erofs_fscache_req_put(struct erofs_fscache_request *req)
+ {
+ 	if (refcount_dec_and_test(&req->ref)) {
+-		if (req->cache_resources.ops)
+-			req->cache_resources.ops->end_operation(&req->cache_resources);
+-		if (!req->primary)
+-			erofs_fscache_req_complete(req);
+-		else
+-			erofs_fscache_req_put(req->primary);
++		erofs_fscache_req_complete(req);
+ 		kfree(req);
+ 	}
  }
  
- static void add_sched_event_sleep(struct perf_sched *sched, struct task_desc *task,
--				  u64 timestamp, u64 task_state __maybe_unused)
-+				  u64 timestamp, const char task_state __maybe_unused)
+-static void erofs_fscache_subreq_complete(void *priv,
++static struct erofs_fscache_request *erofs_fscache_req_alloc(struct address_space *mapping,
++						loff_t start, size_t len)
++{
++	struct erofs_fscache_request *req;
++
++	req = kzalloc(sizeof(*req), GFP_KERNEL);
++	if (req) {
++		req->mapping = mapping;
++		req->start = start;
++		req->len = len;
++		refcount_set(&req->ref, 1);
++	}
++	return req;
++}
++
++static bool erofs_fscache_io_put(struct erofs_fscache_io *cio)
++{
++	if (refcount_dec_and_test(&cio->ref)) {
++		if (cio->cache_resources.ops)
++			cio->cache_resources.ops->end_operation(&cio->cache_resources);
++		kfree(cio);
++		return true;
++	}
++	return false;
++}
++
++static void erofs_fscache_req_io_put(struct erofs_fscache_io *cio)
++{
++	struct erofs_fscache_request *req = cio->private;
++
++	if (erofs_fscache_io_put(cio))
++		erofs_fscache_req_put(req);
++}
++
++static void erofs_fscache_req_end_io(void *priv,
+ 		ssize_t transferred_or_error, bool was_async)
  {
- 	struct sched_atom *event = get_new_event(task, timestamp);
+-	struct erofs_fscache_request *req = priv;
++	struct erofs_fscache_io *cio = priv;
++	struct erofs_fscache_request *req = cio->private;
++
++	if (IS_ERR(transferred_or_error))
++		req->error = transferred_or_error;
++	erofs_fscache_req_io_put(cio);
++}
++
++static struct erofs_fscache_io *erofs_fscache_req_io_alloc(struct erofs_fscache_request *req)
++{
++	struct erofs_fscache_io *cio;
  
-@@ -849,7 +842,7 @@ static int replay_switch_event(struct perf_sched *sched,
- 		   *next_comm  = evsel__strval(evsel, sample, "next_comm");
- 	const u32 prev_pid = evsel__intval(evsel, sample, "prev_pid"),
- 		  next_pid = evsel__intval(evsel, sample, "next_pid");
--	const u64 prev_state = evsel__intval(evsel, sample, "prev_state");
-+	const char prev_state = evsel__taskstate(evsel, sample, "prev_state");
- 	struct task_desc *prev, __maybe_unused *next;
- 	u64 timestamp0, timestamp = sample->time;
- 	int cpu = sample->cpu;
-@@ -1039,13 +1032,6 @@ static int thread_atoms_insert(struct perf_sched *sched, struct thread *thread)
+-	if (IS_ERR_VALUE(transferred_or_error)) {
+-		if (req->primary)
+-			req->primary->error = transferred_or_error;
+-		else
+-			req->error = transferred_or_error;
++	cio = kzalloc(sizeof(*cio), GFP_KERNEL);
++	if (cio) {
++		cio->end_io = erofs_fscache_req_end_io;
++		cio->private = req;
++		refcount_inc(&req->ref);
++		refcount_set(&cio->ref, 1);
+ 	}
+-	erofs_fscache_req_put(req);
++	return cio;
+ }
+ 
+ /*
+- * Read data from fscache (cookie, pstart, len), and fill the read data into
+- * page cache described by (req->mapping, lstart, len). @pstart describeis the
+- * start physical address in the cache file.
++ * Read data from fscache described by cookie at pstart physical address
++ * offset, and fill the read data into buffer described by cio->iter.
+  */
+-static int erofs_fscache_read_folios_async(struct fscache_cookie *cookie,
+-		struct erofs_fscache_request *req, loff_t pstart, size_t len)
++static int erofs_fscache_read_io_async(struct fscache_cookie *cookie,
++		loff_t pstart, struct erofs_fscache_io *cio)
+ {
+ 	enum netfs_io_source source;
+-	struct super_block *sb = req->mapping->host->i_sb;
+-	struct netfs_cache_resources *cres = &req->cache_resources;
+-	struct iov_iter iter;
+-	loff_t lstart = req->start + req->submitted;
+-	size_t done = 0;
++	struct netfs_cache_resources *cres = &cio->cache_resources;
++	struct iov_iter *iter = &cio->iter;
+ 	int ret;
+ 
+-	DBG_BUGON(len > req->len - req->submitted);
+-
+ 	ret = fscache_begin_read_operation(cres, cookie);
+ 	if (ret)
+ 		return ret;
+ 
+-	while (done < len) {
+-		loff_t sstart = pstart + done;
+-		size_t slen = len - done;
++	while (iov_iter_count(iter)) {
++		size_t len, remain = iov_iter_count(iter);
+ 		unsigned long flags = 1 << NETFS_SREQ_ONDEMAND;
+ 
++		len = remain;
+ 		source = cres->ops->prepare_ondemand_read(cres,
+-				sstart, &slen, LLONG_MAX, &flags, 0);
+-		if (WARN_ON(slen == 0))
++				pstart, &len, LLONG_MAX, &flags, 0);
++		if (WARN_ON(len == 0))
+ 			source = NETFS_INVALID_READ;
+ 		if (source != NETFS_READ_FROM_CACHE) {
+-			erofs_err(sb, "failed to fscache prepare_read (source %d)", source);
++			erofs_err(NULL, "prepare_read failed (source %d)", source);
+ 			return -EIO;
+ 		}
+ 
+-		refcount_inc(&req->ref);
+-		iov_iter_xarray(&iter, ITER_DEST, &req->mapping->i_pages,
+-				lstart + done, slen);
+-
+-		ret = fscache_read(cres, sstart, &iter, NETFS_READ_HOLE_FAIL,
+-				   erofs_fscache_subreq_complete, req);
++		iov_iter_truncate(iter, len);
++		refcount_inc(&cio->ref);
++		ret = fscache_read(cres, pstart, iter, NETFS_READ_HOLE_FAIL,
++				   cio->end_io, cio);
+ 		if (ret == -EIOCBQUEUED)
+ 			ret = 0;
+ 		if (ret) {
+-			erofs_err(sb, "failed to fscache_read (ret %d)", ret);
++			erofs_err(NULL, "fscache_read failed (ret %d)", ret);
+ 			return ret;
+ 		}
++		if (WARN_ON(iov_iter_count(iter)))
++			return -EIO;
+ 
+-		done += slen;
++		iov_iter_reexpand(iter, remain - len);
++		pstart += len;
+ 	}
+-	DBG_BUGON(done != len);
  	return 0;
  }
  
--static char sched_out_state(u64 prev_state)
--{
--	const char *str = TASK_STATE_TO_CHAR_STR;
--
--	return str[prev_state];
--}
--
- static int
- add_sched_out_event(struct work_atoms *atoms,
- 		    char run_state,
-@@ -1121,7 +1107,7 @@ static int latency_switch_event(struct perf_sched *sched,
- {
- 	const u32 prev_pid = evsel__intval(evsel, sample, "prev_pid"),
- 		  next_pid = evsel__intval(evsel, sample, "next_pid");
--	const u64 prev_state = evsel__intval(evsel, sample, "prev_state");
-+	const char prev_state = evsel__taskstate(evsel, sample, "prev_state");
- 	struct work_atoms *out_events, *in_events;
- 	struct thread *sched_out, *sched_in;
- 	u64 timestamp0, timestamp = sample->time;
-@@ -1157,7 +1143,7 @@ static int latency_switch_event(struct perf_sched *sched,
- 			goto out_put;
- 		}
- 	}
--	if (add_sched_out_event(out_events, sched_out_state(prev_state), timestamp))
-+	if (add_sched_out_event(out_events, prev_state, timestamp))
- 		return -1;
+@@ -167,33 +170,43 @@ static int erofs_fscache_meta_read_folio(struct file *data, struct folio *folio)
+ 	int ret;
+ 	struct erofs_fscache *ctx = folio->mapping->host->i_private;
+ 	struct erofs_fscache_request *req;
++	struct erofs_fscache_io *cio;
  
- 	in_events = thread_atoms_search(&sched->atom_root, sched_in, &sched->cmp_pid);
-@@ -2022,24 +2008,12 @@ static void timehist_header(struct perf_sched *sched)
- 	printf("\n");
++	ret = -ENOMEM;
+ 	req = erofs_fscache_req_alloc(folio->mapping,
+ 				folio_pos(folio), folio_size(folio));
+-	if (IS_ERR(req)) {
++	if (!req) {
+ 		folio_unlock(folio);
+-		return PTR_ERR(req);
++		return ret;
+ 	}
+ 
+-	ret = erofs_fscache_read_folios_async(ctx->cookie, req,
+-				folio_pos(folio), folio_size(folio));
++	cio = erofs_fscache_req_io_alloc(req);
++	if (!cio) {
++		req->error = ret;
++		goto out;
++	}
++	iov_iter_xarray(&cio->iter, ITER_DEST, &folio->mapping->i_pages,
++			folio_pos(folio), folio_size(folio));
++
++	ret = erofs_fscache_read_io_async(ctx->cookie, folio_pos(folio), cio);
+ 	if (ret)
+ 		req->error = ret;
+ 
++	erofs_fscache_req_io_put(cio);
++out:
+ 	erofs_fscache_req_put(req);
+ 	return ret;
  }
  
--static char task_state_char(struct thread *thread, int state)
--{
--	static const char state_to_char[] = TASK_STATE_TO_CHAR_STR;
--	unsigned bit = state ? ffs(state) : 0;
--
--	/* 'I' for idle */
--	if (thread__tid(thread) == 0)
--		return 'I';
--
--	return bit < sizeof(state_to_char) - 1 ? state_to_char[bit] : '?';
--}
--
- static void timehist_print_sample(struct perf_sched *sched,
- 				  struct evsel *evsel,
- 				  struct perf_sample *sample,
- 				  struct addr_location *al,
- 				  struct thread *thread,
--				  u64 t, int state)
-+				  u64 t, const char state)
+-static int erofs_fscache_data_read_slice(struct erofs_fscache_request *primary)
++static int erofs_fscache_data_read_slice(struct erofs_fscache_request *req)
  {
- 	struct thread_runtime *tr = thread__priv(thread);
- 	const char *next_comm = evsel__strval(evsel, sample, "next_comm");
-@@ -2080,7 +2054,7 @@ static void timehist_print_sample(struct perf_sched *sched,
- 	print_sched_time(tr->dt_run, 6);
+-	struct address_space *mapping = primary->mapping;
++	struct address_space *mapping = req->mapping;
+ 	struct inode *inode = mapping->host;
+ 	struct super_block *sb = inode->i_sb;
+-	struct erofs_fscache_request *req;
++	struct erofs_fscache_io *cio;
+ 	struct erofs_map_blocks map;
+ 	struct erofs_map_dev mdev;
+-	struct iov_iter iter;
+-	loff_t pos = primary->start + primary->submitted;
++	loff_t pos = req->start + req->submitted;
+ 	size_t count;
+ 	int ret;
  
- 	if (sched->show_state)
--		printf(" %5c ", task_state_char(thread, state));
-+		printf(" %5c ", thread->tid == 0 ? 'I' : state);
+@@ -204,6 +217,7 @@ static int erofs_fscache_data_read_slice(struct erofs_fscache_request *primary)
  
- 	if (sched->show_next) {
- 		snprintf(nstr, sizeof(nstr), "next: %s[%d]", next_comm, next_pid);
-@@ -2152,9 +2126,9 @@ static void timehist_update_runtime_stats(struct thread_runtime *r,
- 		else if (r->last_time) {
- 			u64 dt_wait = tprev - r->last_time;
+ 	if (map.m_flags & EROFS_MAP_META) {
+ 		struct erofs_buf buf = __EROFS_BUF_INITIALIZER;
++		struct iov_iter iter;
+ 		erofs_blk_t blknr;
+ 		size_t offset, size;
+ 		void *src;
+@@ -224,15 +238,17 @@ static int erofs_fscache_data_read_slice(struct erofs_fscache_request *primary)
+ 		}
+ 		iov_iter_zero(PAGE_SIZE - size, &iter);
+ 		erofs_put_metabuf(&buf);
+-		primary->submitted += PAGE_SIZE;
++		req->submitted += PAGE_SIZE;
+ 		return 0;
+ 	}
  
--			if (r->last_state == TASK_RUNNING)
-+			if (r->last_state == 'R')
- 				r->dt_preempt = dt_wait;
--			else if (r->last_state == TASK_UNINTERRUPTIBLE)
-+			else if (r->last_state == 'D')
- 				r->dt_iowait = dt_wait;
- 			else
- 				r->dt_sleep = dt_wait;
-@@ -2579,7 +2553,7 @@ static int timehist_sched_change_event(struct perf_tool *tool,
- 	struct thread_runtime *tr = NULL;
- 	u64 tprev, t = sample->time;
- 	int rc = 0;
--	int state = evsel__intval(evsel, sample, "prev_state");
-+	const char state = evsel__taskstate(evsel, sample, "prev_state");
+-	count = primary->len - primary->submitted;
++	count = req->len - req->submitted;
+ 	if (!(map.m_flags & EROFS_MAP_MAPPED)) {
++		struct iov_iter iter;
++
+ 		iov_iter_xarray(&iter, ITER_DEST, &mapping->i_pages, pos, count);
+ 		iov_iter_zero(count, &iter);
+-		primary->submitted += count;
++		req->submitted += count;
+ 		return 0;
+ 	}
  
- 	addr_location__init(&al);
- 	if (machine__resolve(machine, &al, sample) < 0) {
+@@ -247,14 +263,15 @@ static int erofs_fscache_data_read_slice(struct erofs_fscache_request *primary)
+ 	if (ret)
+ 		return ret;
+ 
+-	req = erofs_fscache_req_chain(primary, count);
+-	if (IS_ERR(req))
+-		return PTR_ERR(req);
++	cio = erofs_fscache_req_io_alloc(req);
++	if (!cio)
++		return -ENOMEM;
++	iov_iter_xarray(&cio->iter, ITER_DEST, &mapping->i_pages, pos, count);
++	ret = erofs_fscache_read_io_async(mdev.m_fscache->cookie,
++			mdev.m_pa + (pos - map.m_la), cio);
++	erofs_fscache_req_io_put(cio);
+ 
+-	ret = erofs_fscache_read_folios_async(mdev.m_fscache->cookie,
+-			req, mdev.m_pa + (pos - map.m_la), count);
+-	erofs_fscache_req_put(req);
+-	primary->submitted += count;
++	req->submitted += count;
+ 	return ret;
+ }
+ 
+@@ -278,9 +295,9 @@ static int erofs_fscache_read_folio(struct file *file, struct folio *folio)
+ 
+ 	req = erofs_fscache_req_alloc(folio->mapping,
+ 			folio_pos(folio), folio_size(folio));
+-	if (IS_ERR(req)) {
++	if (!req) {
+ 		folio_unlock(folio);
+-		return PTR_ERR(req);
++		return -ENOMEM;
+ 	}
+ 
+ 	ret = erofs_fscache_data_read(req);
+@@ -297,7 +314,7 @@ static void erofs_fscache_readahead(struct readahead_control *rac)
+ 
+ 	req = erofs_fscache_req_alloc(rac->mapping,
+ 			readahead_pos(rac), readahead_length(rac));
+-	if (IS_ERR(req))
++	if (!req)
+ 		return;
+ 
+ 	/* The request completion will drop refs on the folios. */
 -- 
-2.41.0
+2.19.1.6.gb485710b
 
