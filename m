@@ -1,121 +1,142 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3508C495DA;
-	Mon, 22 Jan 2024 15:06:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B719495D9;
+	Mon, 22 Jan 2024 15:06:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705936020; cv=none; b=YrSZlRI/EZnwK5y1REg5pcMKUnlVOovh2oSm6eV98z010K4S3l+jv4ogOOBP/UUU69Ckm8NU5Ltz56s4TTL91Bmq6X8Vj0pKCQ54aTqahKgMnUlXYv5/LeZ4qT3yWCZRCA30rUEUg15hmOdUIEqDM2RuR2mkQ6Dqva0j42kNzhM=
+	t=1705936020; cv=none; b=LzRYYQK2+VunwFDw6La6wxfmfUGVeSbfi7OYD/8Rju0tjPu5UWux3wuP1njvyGtVQq67kkZbtPz4Wt7aOA4281rhN7uxaEr56oKATOncOixDE9pirhbPRouPVtnrxXRybdkOWjkVCPRVZBb/s3HhbW4uyGS28JQ2a2aS3k2U+kY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1705936020; c=relaxed/simple;
-	bh=q2HinNqA/JahO3h55rGwIUPeodaQILiqpXhJsL6cvFA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VGV6rKmkhJipfXEDPT4D0Tp2yD95igGkazBAtK8ASXCxlegD8iOdV/lNx1OFbFovmfzQRzHjaxF9CVrEPC4V8LwH9ca9A3l/yrCq5woazgmJvCN7T2BBgiTQSWa4oKA23OYkP/842ZC8JlWcuVVmROkkBcvayXu0v9xk1w2mnvA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bytXXwgC; arc=none smtp.client-ip=10.30.226.201
+	bh=4UjfoZOWKhz9CUcE2OAu1F/mEKNnn+MN6pIwNPWP0kE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dJTz7LG5Z7SPibbTDRNnIsPrAXSP9I8aQZpWTjLguI59B0gIZFK2uFW6EZhi29khyXTTgq0kIE++UxNaStPaHW6CrqpxQaXyZWbk/KfRo4M66AtXKYjCNS4VOBhRIdZK0j38YPt+18VpqFtmAKskXcICuWoHmI/HuPEX9NjQrf4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DCO8JNh+; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bytXXwgC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF3B5C433B2;
-	Mon, 22 Jan 2024 15:06:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705936019;
-	bh=q2HinNqA/JahO3h55rGwIUPeodaQILiqpXhJsL6cvFA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=bytXXwgC1mLcJgr/RvxWSlThnJZh/dVuvpXlehEa7qvqqG8qszHmyfEGSTKlnjxNr
-	 VJ23wEttEnbZqA1Y8ZQBVhiXoTHnP5hEy7qYUDrolwFgNk67YwmbK/ofSdv+D3lM+o
-	 b3FMSM563RTu0ggdcKlaT4tFxwmrZgo5VDAkkV/KiU82ReLKwtxp2N1xfhWo/VbjkK
-	 MfAcn4/LmP+DpqUkCl+7Us1fSA4MKeOX7HNiNgKFJe2yZqxsWi3WqeUnxcbT8qU4Qj
-	 l+fsla0Ou0TjTBhUZomaOXM3Uh9+wIolhNsgkd1XYZUnTS3DT8Qv1s+MmixXYSePhr
-	 HoFCUir7kfFCw==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Rob Clark <robdclark@chromium.org>,
-	Abhinav Kumar <quic_abhinavk@quicinc.com>,
-	Marijn Suijten <marijn.suijten@somainline.org>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Sasha Levin <sashal@kernel.org>,
-	robdclark@gmail.com,
-	airlied@gmail.com,
-	daniel@ffwll.ch,
-	quic_jesszhan@quicinc.com,
-	quic_khsieh@quicinc.com,
-	quic_vpolimer@quicinc.com,
-	quic_kalyant@quicinc.com,
-	dan.carpenter@linaro.org,
-	linux-arm-msm@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	freedreno@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 6.6 48/73] drm/msm/dpu: Ratelimit framedone timeout msgs
-Date: Mon, 22 Jan 2024 10:02:02 -0500
-Message-ID: <20240122150432.992458-48-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240122150432.992458-1-sashal@kernel.org>
-References: <20240122150432.992458-1-sashal@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DCO8JNh+"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1d7517fe9d4so836105ad.0;
+        Mon, 22 Jan 2024 07:06:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1705936018; x=1706540818; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=pB8swrgfuo82HJIoA7WtzOzLJAOPh3SgeZ4ldwd4D6U=;
+        b=DCO8JNh+kOCXQkxFVcIdv8AcW4E/R8N5fKeFvWpNMb+7COl2LdAgDEXLWoZYn9hdQB
+         I1TTWhw/23Uh5CvgsXZH6Fbd/P4FIylo4IH0wJS5vxvsyNwICHtrpzu5Dex4gQ6nzWpc
+         BhgB5CPJl3OLZqIH8Eyhhh3DNT2uP1HHtGNiq0vjdndC9xhgwdE4uqo/qIs8ZuTqSbYV
+         tQqo9WQERPxePqEhTwdhAgLV0+dcnutFDUWh2CraCjnPWCrrtkHe3fJ026G6qfr9Hx/a
+         /ZGFM2AYQwPJpz4NzOAqg+MfG8ocONBSTD6mQmowPZS3/TVVBY6n2Q5CNEi+RfIicdzf
+         xDfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705936018; x=1706540818;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pB8swrgfuo82HJIoA7WtzOzLJAOPh3SgeZ4ldwd4D6U=;
+        b=L8yVn5/VjB7kLjt4jxyODeAFodMFAsMpnKslNcSuX/uYikvETGz9WRS01CCiJCi1jv
+         dtTK+3lLbNo1qBrz7SkrEN12ST/6A1xiwc971hmXgVuwACZfEEVDDtnC4IGKSA2aNG6f
+         4Btkmc6LhPlp/VYLqDfm/TSpehnYBo2zIUTEs31E/9OuxNWfWD/wY9HZoafscjGDVCRr
+         s029z9wAOEf+CXzbc6II9t9rgN/SqlsUtU175l/sEnExIAIWDjQAP4ltNaY0gHXkZWHo
+         lUQDPk7C3Ar1O2rQbNMS5InXa2swgS+DTnB2Q9jXCl+rT6vKuwOkCC4NAdCW2jD1nNt/
+         ucxg==
+X-Gm-Message-State: AOJu0Yz20wVZuVHul23rDwmjfsXs8kXgd0FXq4HAS0mdS1s4mcPXxGjO
+	x9R3HBRIuzLXy+D/0bV7eTuskz8Tg4My+q4xRMLP7zSYFEFIhRnq
+X-Google-Smtp-Source: AGHT+IHqAgflk104ZbHizf63K/+tBR8ze0aFA/FPCHNIZ4lPx6NazJ9AFhqEO6Jbnej/ZCpb1JDW9g==
+X-Received: by 2002:a17:903:54a:b0:1d5:f667:10a1 with SMTP id jo10-20020a170903054a00b001d5f66710a1mr8439165plb.6.1705936018228;
+        Mon, 22 Jan 2024 07:06:58 -0800 (PST)
+Received: from visitorckw-System-Product-Name (IP-216-168.cs.nctu.edu.tw. [140.113.216.168])
+        by smtp.gmail.com with ESMTPSA id t1-20020a1709028c8100b001d7505a6894sm2020913plo.230.2024.01.22.07.06.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Jan 2024 07:06:57 -0800 (PST)
+Date: Mon, 22 Jan 2024 23:06:54 +0800
+From: Kuan-Wei Chiu <visitorckw@gmail.com>
+To: Kent Overstreet <kent.overstreet@linux.dev>
+Cc: colyli@suse.de, bfoster@redhat.com, jserv@ccns.ncku.edu.tw,
+	linux-bcache@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-bcachefs@vger.kernel.org
+Subject: Re: [PATCH 0/5] Optimize number of comparisons for heap/heapsort
+ implementaion
+Message-ID: <Za6EjshZWFUPLJef@visitorckw-System-Product-Name>
+References: <20240121153649.2733274-1-visitorckw@gmail.com>
+ <nl6kvjxg4gia5pbfb4jibxusvavmlwumrvy3swfs33ciub32wt@2kmeqnqycxxh>
+ <Za1Ml/ZUBXdYXOIt@visitorckw-System-Product-Name>
+ <ioyfizrzq7w7mjrqcadtzsfgpuntowtjdw5pgn4qhvsdp4mqqg@nrlek5vmisbu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.6.13
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ioyfizrzq7w7mjrqcadtzsfgpuntowtjdw5pgn4qhvsdp4mqqg@nrlek5vmisbu>
 
-From: Rob Clark <robdclark@chromium.org>
+On Sun, Jan 21, 2024 at 12:41:55PM -0500, Kent Overstreet wrote:
+> On Mon, Jan 22, 2024 at 12:55:51AM +0800, Kuan-Wei Chiu wrote:
+> > On Sun, Jan 21, 2024 at 11:21:06AM -0500, Kent Overstreet wrote:
+> > > On Sun, Jan 21, 2024 at 11:36:44PM +0800, Kuan-Wei Chiu wrote:
+> > > > Hello,
+> > > > 
+> > > > The existing implementations of heap/heapsort follow the conventional
+> > > > textbook approach, where each heapify operation requires approximately
+> > > > 2*log2(n) comparisons. In this series, I introduce a bottom-up variant
+> > > > that reduces the number of comparisons during heapify operations to
+> > > > approximately log2(n), while maintaining the same number of swap
+> > > > operations.
+> > > > 
+> > > > Thanks,
+> > > > Kuan-Wei
+> > > > 
+> > > > Kuan-Wei Chiu (5):
+> > > >   bcachefs: Optimize eytzinger0_sort() using bottom-up heapsort
+> > > >   bcachefs: Introduce parent function for sort_cmp_size()
+> > > >   bcachefs: Optimize sort_cmp_size() using bottom-up heapsort
+> > > >   bcachefs: Optimize number of comparisons in heap_sift_down
+> > > >   bcache: Optimize number of comparisons in heap_sift
+> > > > 
+> > > >  drivers/md/bcache/util.h |  23 +++++----
+> > > >  fs/bcachefs/util.c       | 109 ++++++++++++++++++++++++++-------------
+> > > >  fs/bcachefs/util.h       |  23 +++++----
+> > > >  3 files changed, 98 insertions(+), 57 deletions(-)
+> > > 
+> > > Good stuff
+> > > 
+> > > While we're looking at this code, we should be doing some cleanup too -
+> > > there's no reason for the heap code to be duplicated in bcache and
+> > > bcachefs anymore, and it'd also be nice to get fs/bcachefs/eytzinger.h
+> > > moved to include/linux and bcache converted to use it.
+> > > 
+> > > I also would not be surprised if there's another heap implementation in
+> > > include/linux; we'll want to check for that and if there is decide which
+> > > is worth keeping.
+> > >
+> > Yes, we have 'min_heap.h' in include/linux.
+> 
+> So that has the advantage of more readable code - functions instead of
+> macros - whereas my version has the type safe interface.
+> 
+> We could combine the two approaches, and put a type-safe interface on
+> top of the min_heap.h code with some small macro wrappers - see
+> generic-radix-tree.h for an example of how that's done.
 
-[ Upstream commit 2b72e50c62de60ad2d6bcd86aa38d4ccbdd633f2 ]
+Without modifying the interface provided by min_heap.h, it seems
+challenging to implement the functionality of heap_add due to the
+relationship with heap_setbackpointer.
 
-When we start getting these, we get a *lot*.  So ratelimit it to not
-flood dmesg.
+Additionally, when looking into the code in generic-radix-tree.h,
+should we replace type[0] with type[]? This is because zero-length
+arrays are deprecated language features mentioned in document [1].
 
-Signed-off-by: Rob Clark <robdclark@chromium.org>
-Reviewed-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
-Reviewed-by: Marijn Suijten <marijn.suijten@somainline.org>
-Patchwork: https://patchwork.freedesktop.org/patch/571584/
-Link: https://lore.kernel.org/r/20231211182000.218088-1-robdclark@gmail.com
-Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c | 5 ++++-
- drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h     | 1 +
- 2 files changed, 5 insertions(+), 1 deletion(-)
+Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays [1]
+> 
+> min_heap.h has only one user though? I don't think I can quite believe
+> that's the only other code in the kernel using a heap, there must be
+> more open coded out there...
 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-index d34e684a4178..da9b171d7979 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder.c
-@@ -39,6 +39,9 @@
- #define DPU_ERROR_ENC(e, fmt, ...) DPU_ERROR("enc%d " fmt,\
- 		(e) ? (e)->base.base.id : -1, ##__VA_ARGS__)
- 
-+#define DPU_ERROR_ENC_RATELIMITED(e, fmt, ...) DPU_ERROR_RATELIMITED("enc%d " fmt,\
-+		(e) ? (e)->base.base.id : -1, ##__VA_ARGS__)
-+
- /*
-  * Two to anticipate panels that can do cmd/vid dynamic switching
-  * plan is to create all possible physical encoder types, and switch between
-@@ -2327,7 +2330,7 @@ static void dpu_encoder_frame_done_timeout(struct timer_list *t)
- 		return;
- 	}
- 
--	DPU_ERROR_ENC(dpu_enc, "frame done timeout\n");
-+	DPU_ERROR_ENC_RATELIMITED(dpu_enc, "frame done timeout\n");
- 
- 	event = DPU_ENCODER_FRAME_EVENT_ERROR;
- 	trace_dpu_enc_frame_done_timeout(DRMID(drm_enc), event);
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h
-index b6f53ca6e962..f5473d4dea92 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h
-@@ -51,6 +51,7 @@
- 	} while (0)
- 
- #define DPU_ERROR(fmt, ...) pr_err("[dpu error]" fmt, ##__VA_ARGS__)
-+#define DPU_ERROR_RATELIMITED(fmt, ...) pr_err_ratelimited("[dpu error]" fmt, ##__VA_ARGS__)
- 
- /**
-  * ktime_compare_safe - compare two ktime structures
--- 
-2.43.0
-
+I'm not sure why, but it seems that in the kernel, other places using
+the heap implement their own subsystem-specific solutions rather than
+utilizing a generic heap interface. For instance,
+kernel/sched/cpudeadline.c and net/sched/sch_cake.c both have their own
+implementations.
