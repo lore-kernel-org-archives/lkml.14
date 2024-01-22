@@ -1,45 +1,45 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F6BD12E5A
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 22:32:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B844B381DB
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 22:32:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705962765; cv=none; b=GMnTjHp2LxyNu5qyyvXKM1ya4MGmwII8wKtk6qzNUdGDbvFchXPMx/m8ZaXVd889ZGq/rflxbQWym1yR70Y42lOPvO7SM+6h8JP6sYTZ2A4A6Q/lwTeiQ18MgX2E+YTGyBwVXH0LX4DoPIaBm10EcmoA3Jy+TtifUs/R8DK+Hwg=
+	t=1705962769; cv=none; b=cBCKIvrhKkYHtdBwwYODc7jzj+O6Dqdl28Uly3+/nSd3O3cma01freTnT++ZoJHzQXBtG+Ku0B1tLFfOy69fi0PqepKHatpuLUWLXFF7nFLhj+dpVlov8iHTs+QJGxJsMeUEWtRE/5IdMoBF2beEaopvSeeICfoeqUqnGWpkpOA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705962765; c=relaxed/simple;
-	bh=JEs4RqYiSoI49Qw73u2UBX3kUiWa0hT8IDD1MVdDGGw=;
+	s=arc-20240116; t=1705962769; c=relaxed/simple;
+	bh=dBNU2+LVkE55FYFG/WjTfMApHZmROR3sCYtSv/humlQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gLWLqYf5NAJq83hupE10LXTqWN8kouCO/f065SeYHgEyrCmPqVnSTC6eAr4Cr+uS+w0FRiStRzCIZW3Phl3BNW99pFQA7A2tsvby4url8LhfZjmPfzlV+xWJeUcALgdRb2JjPK0XsVjLd2p0YWzyl4ULbizdjCyIbM32jBakUZw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Yy73Klin; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version; b=rqp4JBkL71MAzu9f/+DR0egDeGhixDg2s3taSEteNi6u4iedhWdQnaMC/gaZHAapWpAbLiDPIprz4qbhQiFPEe9r7ouhw9tEutXo4bKzzmQLyseb/hrmutyHAUnvZD9Gy/sHcUeg4B1tT4FSIt4hBTfNcF6QFO7xcWMebpC6erc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=e24iaAaU; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Yy73Klin"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="e24iaAaU"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1705962762;
+	s=mimecast20190719; t=1705962766;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ZMPTPTYWTetkbwHAgXIcAqcSHq6C+WaS/axDb6+0Ntc=;
-	b=Yy73KlinbwjwqsCoX4jRXifFU9bo/tTfZTV6I8i03xjX3TX28kaCI8z7uqZxGIux2Zlw1j
-	JIosrIElgOPb0iU7Wneoz4QXr0ny/pke8IcogM1mzmgSqFk8Ww2USlh3Iv+gCDwoi37LZv
-	CX/LeIYmpy7JDto8ovt3aLu+qQ4KTfw=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-637-MOFBrXaaP02W9WWm7hMMww-1; Mon, 22 Jan 2024 17:32:37 -0500
-X-MC-Unique: MOFBrXaaP02W9WWm7hMMww-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
+	bh=+7nRZBtb5KDB8wnGQb/hos72IWYUGI+6olZnmjBvpQE=;
+	b=e24iaAaUZCMp8IWhqpDPG/pUrbwpEYRU/FQexLFG1xAaOLb/wlJWV5h33X/a2srdkjn5PU
+	4eGqBe1Un4IvPf+j88DhIKdrEdLY/YMpvgZSjhD/P5QgdzgPw0sBKqTEAIDjYtIGJsrPd9
+	9JoUla/NVPhRDPGz4wLjxCE6/u1hwS8=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-212-Tq0oefjDMG-ND3l08DWx1w-1; Mon,
+ 22 Jan 2024 17:32:43 -0500
+X-MC-Unique: Tq0oefjDMG-ND3l08DWx1w-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 826C6863062;
-	Mon, 22 Jan 2024 22:32:36 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 419341C04181;
+	Mon, 22 Jan 2024 22:32:42 +0000 (UTC)
 Received: from warthog.procyon.org.com (unknown [10.42.28.67])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id A24DE2026D66;
-	Mon, 22 Jan 2024 22:32:34 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id C03651121312;
+	Mon, 22 Jan 2024 22:32:39 +0000 (UTC)
 From: David Howells <dhowells@redhat.com>
 To: Christian Brauner <christian@brauner.io>
 Cc: David Howells <dhowells@redhat.com>,
@@ -55,10 +55,14 @@ Cc: David Howells <dhowells@redhat.com>,
 	linux-fsdevel@vger.kernel.org,
 	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org,
-	linux-cachefs@redhat.com
-Subject: [PATCH v2 01/10] netfs: Don't use certain unnecessary folio_*() functions
-Date: Mon, 22 Jan 2024 22:32:14 +0000
-Message-ID: <20240122223230.4000595-2-dhowells@redhat.com>
+	Steve French <sfrench@samba.org>,
+	Paulo Alcantara <pc@manguebit.com>,
+	Ronnie Sahlberg <lsahlber@redhat.com>,
+	Shyam Prasad N <sprasad@microsoft.com>,
+	Tom Talpey <tom@talpey.com>
+Subject: [PATCH v2 03/10] cifs: Don't use certain unnecessary folio_*() functions
+Date: Mon, 22 Jan 2024 22:32:16 +0000
+Message-ID: <20240122223230.4000595-4-dhowells@redhat.com>
 In-Reply-To: <20240122223230.4000595-1-dhowells@redhat.com>
 References: <20240122223230.4000595-1-dhowells@redhat.com>
 Precedence: bulk
@@ -68,7 +72,7 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.4
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.3
 
 Filesystems should use folio->index and folio->mapping, instead of
 folio_index(folio), folio_mapping() and folio_file_mapping() since
@@ -76,154 +80,71 @@ they know that it's in the pagecache.
 
 Change this automagically with:
 
-perl -p -i -e 's/folio_mapping[(]([^)]*)[)]/\1->mapping/g' fs/netfs/*.c
-perl -p -i -e 's/folio_file_mapping[(]([^)]*)[)]/\1->mapping/g' fs/netfs/*.c
-perl -p -i -e 's/folio_index[(]([^)]*)[)]/\1->index/g' fs/netfs/*.c
+perl -p -i -e 's/folio_mapping[(]([^)]*)[)]/\1->mapping/g' fs/smb/client/*.c
+perl -p -i -e 's/folio_file_mapping[(]([^)]*)[)]/\1->mapping/g' fs/smb/client/*.c
+perl -p -i -e 's/folio_index[(]([^)]*)[)]/\1->index/g' fs/smb/client/*.c
 
 Reported-by: Matthew Wilcox <willy@infradead.org>
 Signed-off-by: David Howells <dhowells@redhat.com>
 cc: Jeff Layton <jlayton@kernel.org>
-cc: linux-afs@lists.infradead.org
-cc: linux-cachefs@redhat.com
+cc: Steve French <sfrench@samba.org>
+cc: Paulo Alcantara <pc@manguebit.com>
+cc: Ronnie Sahlberg <lsahlber@redhat.com>
+cc: Shyam Prasad N <sprasad@microsoft.com>
+cc: Tom Talpey <tom@talpey.com>
 cc: linux-cifs@vger.kernel.org
-cc: linux-erofs@lists.ozlabs.org
 cc: linux-fsdevel@vger.kernel.org
 ---
- fs/netfs/buffered_read.c  | 12 ++++++------
- fs/netfs/buffered_write.c | 10 +++++-----
- fs/netfs/io.c             |  2 +-
- fs/netfs/misc.c           |  2 +-
- 4 files changed, 13 insertions(+), 13 deletions(-)
+ fs/smb/client/file.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/fs/netfs/buffered_read.c b/fs/netfs/buffered_read.c
-index a59e7b2edaac..3298c29b5548 100644
---- a/fs/netfs/buffered_read.c
-+++ b/fs/netfs/buffered_read.c
-@@ -101,7 +101,7 @@ void netfs_rreq_unlock_folios(struct netfs_io_request *rreq)
+diff --git a/fs/smb/client/file.c b/fs/smb/client/file.c
+index 3a213432775b..90da81d0372a 100644
+--- a/fs/smb/client/file.c
++++ b/fs/smb/client/file.c
+@@ -87,7 +87,7 @@ void cifs_pages_written_back(struct inode *inode, loff_t start, unsigned int len
+ 			continue;
+ 		if (!folio_test_writeback(folio)) {
+ 			WARN_ONCE(1, "bad %x @%llx page %lx %lx\n",
+-				  len, start, folio_index(folio), end);
++				  len, start, folio->index, end);
+ 			continue;
  		}
  
- 		if (!test_bit(NETFS_RREQ_DONT_UNLOCK_FOLIOS, &rreq->flags)) {
--			if (folio_index(folio) == rreq->no_unlock_folio &&
-+			if (folio->index == rreq->no_unlock_folio &&
- 			    test_bit(NETFS_RREQ_NO_UNLOCK_FOLIO, &rreq->flags))
- 				_debug("no unlock");
- 			else
-@@ -246,13 +246,13 @@ EXPORT_SYMBOL(netfs_readahead);
-  */
- int netfs_read_folio(struct file *file, struct folio *folio)
- {
--	struct address_space *mapping = folio_file_mapping(folio);
-+	struct address_space *mapping = folio->mapping;
- 	struct netfs_io_request *rreq;
- 	struct netfs_inode *ctx = netfs_inode(mapping->host);
- 	struct folio *sink = NULL;
- 	int ret;
- 
--	_enter("%lx", folio_index(folio));
-+	_enter("%lx", folio->index);
- 
- 	rreq = netfs_alloc_request(mapping, file,
- 				   folio_file_pos(folio), folio_size(folio),
-@@ -460,7 +460,7 @@ int netfs_write_begin(struct netfs_inode *ctx,
- 		ret = PTR_ERR(rreq);
- 		goto error;
- 	}
--	rreq->no_unlock_folio	= folio_index(folio);
-+	rreq->no_unlock_folio	= folio->index;
- 	__set_bit(NETFS_RREQ_NO_UNLOCK_FOLIO, &rreq->flags);
- 
- 	ret = netfs_begin_cache_read(rreq, ctx);
-@@ -518,7 +518,7 @@ int netfs_prefetch_for_write(struct file *file, struct folio *folio,
- 			     size_t offset, size_t len)
- {
- 	struct netfs_io_request *rreq;
--	struct address_space *mapping = folio_file_mapping(folio);
-+	struct address_space *mapping = folio->mapping;
- 	struct netfs_inode *ctx = netfs_inode(mapping->host);
- 	unsigned long long start = folio_pos(folio);
- 	size_t flen = folio_size(folio);
-@@ -535,7 +535,7 @@ int netfs_prefetch_for_write(struct file *file, struct folio *folio,
- 		goto error;
- 	}
- 
--	rreq->no_unlock_folio = folio_index(folio);
-+	rreq->no_unlock_folio = folio->index;
- 	__set_bit(NETFS_RREQ_NO_UNLOCK_FOLIO, &rreq->flags);
- 	ret = netfs_begin_cache_read(rreq, ctx);
- 	if (ret == -ENOMEM || ret == -EINTR || ret == -ERESTARTSYS)
-diff --git a/fs/netfs/buffered_write.c b/fs/netfs/buffered_write.c
-index 93dc76f34e39..e7f9ba6fb16b 100644
---- a/fs/netfs/buffered_write.c
-+++ b/fs/netfs/buffered_write.c
-@@ -343,7 +343,7 @@ ssize_t netfs_perform_write(struct kiocb *iocb, struct iov_iter *iter,
- 			break;
- 		default:
- 			WARN(true, "Unexpected modify type %u ix=%lx\n",
--			     howto, folio_index(folio));
-+			     howto, folio->index);
- 			ret = -EIO;
- 			goto error_folio_unlock;
+@@ -120,7 +120,7 @@ void cifs_pages_write_failed(struct inode *inode, loff_t start, unsigned int len
+ 			continue;
+ 		if (!folio_test_writeback(folio)) {
+ 			WARN_ONCE(1, "bad %x @%llx page %lx %lx\n",
+-				  len, start, folio_index(folio), end);
++				  len, start, folio->index, end);
+ 			continue;
  		}
-@@ -648,7 +648,7 @@ static void netfs_pages_written_back(struct netfs_io_request *wreq)
- 	xas_for_each(&xas, folio, last) {
- 		WARN(!folio_test_writeback(folio),
- 		     "bad %zx @%llx page %lx %lx\n",
--		     wreq->len, wreq->start, folio_index(folio), last);
-+		     wreq->len, wreq->start, folio->index, last);
  
- 		if ((finfo = netfs_folio_info(folio))) {
- 			/* Streaming writes cannot be redirtied whilst under
-@@ -795,7 +795,7 @@ static void netfs_extend_writeback(struct address_space *mapping,
+@@ -151,7 +151,7 @@ void cifs_pages_write_redirty(struct inode *inode, loff_t start, unsigned int le
+ 	xas_for_each(&xas, folio, end) {
+ 		if (!folio_test_writeback(folio)) {
+ 			WARN_ONCE(1, "bad %x @%llx page %lx %lx\n",
+-				  len, start, folio_index(folio), end);
++				  len, start, folio->index, end);
+ 			continue;
+ 		}
+ 
+@@ -2651,7 +2651,7 @@ static void cifs_extend_writeback(struct address_space *mapping,
  				continue;
  			if (xa_is_value(folio))
  				break;
--			if (folio_index(folio) != index) {
-+			if (folio->index != index) {
- 				xas_reset(xas);
+-			if (folio_index(folio) != index)
++			if (folio->index != index)
  				break;
+ 			if (!folio_try_get_rcu(folio)) {
+ 				xas_reset(&xas);
+@@ -2899,7 +2899,7 @@ static int cifs_writepages_region(struct address_space *mapping,
+ 					goto skip_write;
  			}
-@@ -901,7 +901,7 @@ static ssize_t netfs_write_back_from_locked_folio(struct address_space *mapping,
- 	long count = wbc->nr_to_write;
- 	int ret;
  
--	_enter(",%lx,%llx-%llx,%u", folio_index(folio), start, end, caching);
-+	_enter(",%lx,%llx-%llx,%u", folio->index, start, end, caching);
- 
- 	wreq = netfs_alloc_request(mapping, NULL, start, folio_size(folio),
- 				   NETFS_WRITEBACK);
-@@ -1047,7 +1047,7 @@ static ssize_t netfs_writepages_begin(struct address_space *mapping,
- 
- 	start = folio_pos(folio); /* May regress with THPs */
- 
--	_debug("wback %lx", folio_index(folio));
-+	_debug("wback %lx", folio->index);
- 
- 	/* At this point we hold neither the i_pages lock nor the page lock:
- 	 * the page may be truncated or invalidated (changing page->mapping to
-diff --git a/fs/netfs/io.c b/fs/netfs/io.c
-index 4309edf33862..e8ff1e61ce79 100644
---- a/fs/netfs/io.c
-+++ b/fs/netfs/io.c
-@@ -124,7 +124,7 @@ static void netfs_rreq_unmark_after_write(struct netfs_io_request *rreq,
- 			/* We might have multiple writes from the same huge
- 			 * folio, but we mustn't unlock a folio more than once.
- 			 */
--			if (have_unlocked && folio_index(folio) <= unlocked)
-+			if (have_unlocked && folio->index <= unlocked)
- 				continue;
- 			unlocked = folio_next_index(folio) - 1;
- 			trace_netfs_folio(folio, netfs_folio_trace_end_copy);
-diff --git a/fs/netfs/misc.c b/fs/netfs/misc.c
-index 0e3af37fc924..90051ced8e2a 100644
---- a/fs/netfs/misc.c
-+++ b/fs/netfs/misc.c
-@@ -180,7 +180,7 @@ void netfs_invalidate_folio(struct folio *folio, size_t offset, size_t length)
- 	struct netfs_folio *finfo = NULL;
- 	size_t flen = folio_size(folio);
- 
--	_enter("{%lx},%zx,%zx", folio_index(folio), offset, length);
-+	_enter("{%lx},%zx,%zx", folio->index, offset, length);
- 
- 	folio_wait_fscache(folio);
- 
+-			if (folio_mapping(folio) != mapping ||
++			if (folio->mapping != mapping ||
+ 			    !folio_test_dirty(folio)) {
+ 				start += folio_size(folio);
+ 				folio_unlock(folio);
 
