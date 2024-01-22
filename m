@@ -1,81 +1,106 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 894B552F6A;
-	Mon, 22 Jan 2024 17:22:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F60A612C6
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 17:22:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705944173; cv=none; b=G/5TZDSr7S/lWEwKl00XKvn0T4ARBjF6kiwhDxFxFdL2qbWtZ3OloyYW5sEFhoRBWBlG5iBsKTjNkUwuNlKlDg3iwF2QcfenCm+Wbfarwnv0xWqqQm0ePVZp5HWu2aJrYP8GbBbTu24Ej01whxISLm6NESt+OT9e4WFMeIRUuG0=
+	t=1705944179; cv=none; b=Ly2uI3OC+L7hBuhpD3AaCilzrd0802501ztAi93khH/JMVJsSM/bQjFPLXiQcWV+w66w3Lfd/Z8cBKRgJ0cx1Y16EEfEaSLJXOwJ5vcd+42d0xln/rbVhuuebG4LeRQ/yQy6dYXFCG4Gtb7+/GkDekBiGrTMAXq8PJJnVZpNPd0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705944173; c=relaxed/simple;
-	bh=nMd8l1R4VjnN4kwtNc6jWq5EKtW15kh24YWU3Q+Oyi4=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=etNyUP2T/R0rqCpX5MoBE6WX4/DaVE63riUFACeK+hD86LH4rmxI+ymwrBsLwvambpFY3SzF0x4a9MkY5vkTYOFc3tfMw9RM9XKU6PzGp8tcgtN6QKGnluUJ+XGzW0oZyOsS3G83OY4BdP1ekodb9LsoFEMYMFG/WkdT6J9utps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PyPltJOG; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1705944179; c=relaxed/simple;
+	bh=bEHwRRHZEZ5muODAZZTChjTXAGcN8GLNJSdSobXIA0I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bb2LZIzEGJI6pFlqCL9ShIumPS6I0vLwkLOUedUy3A+wVB4ZptkkxDLRErXvclsimGGsECtG90NxMQKjIqG1KrmQu9UH0R6fD1NO7cAaHgLxM0yRYdgrsvqxGUYxESsFrjVvrujQCljB35EuUgBKBlEGtkI2hzmKemjzfjb9++c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=NCIqAD7c; arc=none smtp.client-ip=209.85.210.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PyPltJOG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1705944172; x=1737480172;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=nMd8l1R4VjnN4kwtNc6jWq5EKtW15kh24YWU3Q+Oyi4=;
-  b=PyPltJOGt7QrF0nktKDt8ECABUJ4lCMkGQZt27K0DT6vAhQZc0MkKbCH
-   pxOZ/x6VxYXzNd4KymGP2zw42uIyiCT0qyHtd5YKDe96lDKCSSLO7f75x
-   7epaRecX7zp2Cv0mJNavA/JzFQ4NTx9zS6BCSkwO1fl8wChyQ6LdkHkrj
-   4aBDPUXhTsEadhYVTyNQopFacJVVw8QYjdXwxtzeeAdSGPldW3VQm0Gsi
-   yJ4UBj2RQP63PVIjuIVi1o/95WjlGZMMnRQl9RsHwvmSAia0rxQ9lccC/
-   y9sHWxDzbBT+OpT1Ez5O6+Xx0717B5VY0H/byB+vYPbtie/Ruh2p3wSzF
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10961"; a="8379604"
-X-IronPort-AV: E=Sophos;i="6.05,211,1701158400"; 
-   d="scan'208";a="8379604"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 09:22:43 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10961"; a="735237565"
-X-IronPort-AV: E=Sophos;i="6.05,211,1701158400"; 
-   d="scan'208";a="735237565"
-Received: from mshelego-mobl3.ger.corp.intel.com (HELO localhost) ([10.252.40.242])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 09:22:39 -0800
-From: Jani Nikula <jani.nikula@linux.intel.com>
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>, Joonas Lahtinen
- <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>,
- Intel Graphics <intel-gfx@lists.freedesktop.org>, DRI
- <dri-devel@lists.freedesktop.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: build warning after merge of the drm-intel tree
-In-Reply-To: <20240122092520.68a86f48@canb.auug.org.au>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20231114141715.6f435118@canb.auug.org.au>
- <8734x8u4la.fsf@intel.com> <87y1f0sol1.fsf@intel.com>
- <20240122092520.68a86f48@canb.auug.org.au>
-Date: Mon, 22 Jan 2024 19:22:35 +0200
-Message-ID: <87o7ddnuzo.fsf@intel.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="NCIqAD7c"
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-6d9ac0521c6so830651b3a.0
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 09:22:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1705944177; x=1706548977; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=3cKBLusi5odBbefyu3q7+UJ6/M6hhfLrmEnRO/AYdSg=;
+        b=NCIqAD7cPTDcHzPOjo+YrAdQhZRnfiXAizEgkmFr/YbQQIzPn5dYBRVoS31a+ULPw8
+         /R5CcIGj6Mm8eLJg3DZK7ZCJPQpjgbfXu8Q11j91CGCoGCU8BY1JBVY6JepkTDzF5D1c
+         axZaTBWHcjXBZ4ya9oqXJyJ/HDv68Y293Vi/M=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705944177; x=1706548977;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=3cKBLusi5odBbefyu3q7+UJ6/M6hhfLrmEnRO/AYdSg=;
+        b=YZNgBC+pXyb1ufPl9oETO36F0Dd8/BkvRL5CjLvhZF3H6jeyHuimCjcBhDFDXYz4Mb
+         UHIyiX2HBku2GeEhqQVH8jBz6oiOyTgRNSw/xmn2/QV+pMiIUfv4QWCia3KgxMUXfw0U
+         7vZFBZhEqlS/VtZ7B/DQQFA3hkt89t+EnGGRJ7cGOqb1kZ84fQRgLUtf6vlcrdtUH5k8
+         za00ZAVYOqGDy/SS8xCSklKJIZhNziAGDf4jAMJs8rbWv2ULGdO+O7bjEIJUTBmYGmjh
+         fekolGRzM2KjU1ZKuiVcOIgb1G2BLkhYHVvA0sMqNqj6Hue8rWvgfND+8km7UyO26Thk
+         L5mA==
+X-Gm-Message-State: AOJu0YwKek2ZZP7LFVOozPSecL9y3aU5Ue0fdAzlR8YLpDsrKUIXlsfK
+	Y0SBkpWSfOQTTI3HjopbHhQMN8IK8QcYVCH/kyemzTOZOd6n1A7TtJKVzOG4XWA=
+X-Google-Smtp-Source: AGHT+IGjgFJLDdAfyqDNErB5PR6R2A+VDqHcrvgpf1rrqIFIthJVkNUJsACPjPjML0hqNb41Xog8zQ==
+X-Received: by 2002:a62:6204:0:b0:6d9:383b:d91a with SMTP id w4-20020a626204000000b006d9383bd91amr8897256pfb.1.1705944176719;
+        Mon, 22 Jan 2024 09:22:56 -0800 (PST)
+Received: from [128.240.1.152] ([206.170.126.10])
+        by smtp.gmail.com with ESMTPSA id y74-20020a62ce4d000000b006d9a48882f7sm10245573pfg.118.2024.01.22.09.22.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 22 Jan 2024 09:22:56 -0800 (PST)
+Message-ID: <f3ba4181-ab38-4779-987f-9bda47f003be@linuxfoundation.org>
+Date: Mon, 22 Jan 2024 10:22:54 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 2/3] livepatch: Move tests from lib/livepatch to
+ selftests/livepatch
+Content-Language: en-US
+To: Marcos Paulo de Souza <mpdesouza@suse.com>,
+ Alexander Gordeev <agordeev@linux.ibm.com>
+Cc: Shuah Khan <shuah@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+ Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+ Christian Borntraeger <borntraeger@linux.ibm.com>,
+ Sven Schnelle <svens@linux.ibm.com>, Josh Poimboeuf <jpoimboe@kernel.org>,
+ Jiri Kosina <jikos@kernel.org>, Miroslav Benes <mbenes@suse.cz>,
+ Petr Mladek <pmladek@suse.com>, Joe Lawrence <joe.lawrence@redhat.com>,
+ linux-kselftest@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+ live-patching@vger.kernel.org, skhan@linuxfoundation.org
+References: <20240112-send-lp-kselftests-v6-0-79f3e9a46717@suse.com>
+ <20240112-send-lp-kselftests-v6-2-79f3e9a46717@suse.com>
+ <Zap04ddls7ZvbL/U@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
+ <Zap26MINbbxREt4c@li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com>
+ <53cf93b2efadc0f42712eb92436bd575b5622664.camel@suse.com>
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <53cf93b2efadc0f42712eb92436bd575b5622664.camel@suse.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, 22 Jan 2024, Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->> [1] https://patchwork.freedesktop.org/patch/msgid/20231114081033.27343-1-bagasdotme@gmail.com
->
-> This is still not fixed.
+On 1/22/24 05:55, Marcos Paulo de Souza wrote:
+> On Fri, 2024-01-19 at 14:19 +0100, Alexander Gordeev wrote:
+>> On Fri, Jan 19, 2024 at 02:11:01PM +0100, Alexander Gordeev wrote:
+>>> FWIW, for s390 part:
+>>>
+>>> Alexander Gordeev <agordeev@linux.ibm.com>
+>>
+>> Acked-by: Alexander Gordeev <agordeev@linux.ibm.com>
+> 
+> Thanks Alexandre and Joe for testing and supporting the change.
+> 
+> Shuah, now that the issue found by that Joe was fixed, do you think the
+> change is ready to be merged? The patches were reviewed by three
+> different people already, and I don't know what else can be missing at
+> this point.
+> 
 
-Thanks for the reminder. Commit 1a84c213146a ("drm/dp_mst: Separate
-@failing_port list in drm_dp_mst_atomic_check_mgr() comment") in
-drm-misc-fixes, likely to show up in -rc2.
+I would have liked doc patch and lib.mk separate. However, I am pulling this
+now to get testing done. In the future please keep them separate.
 
-BR,
-Jani.
+thanks,
+-- Shuah
 
-
--- 
-Jani Nikula, Intel
