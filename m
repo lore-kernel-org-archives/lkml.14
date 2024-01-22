@@ -1,143 +1,139 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18B663CF5A
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 13:26:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D7903CF63;
+	Mon, 22 Jan 2024 13:28:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705929966; cv=none; b=e+ScO9/aT7grcZop5kEyvFygu+rIxXLbeUrXBjq2bB6/ANLhhH4kCkI6TuIiOIQZ4PRE/OAlP8GFU1cFXGIp5VRsf69aw0po18+dHEYLPHI1Wys6qB8y6/WDdMF0kU/kmxtvkGf3O+LEU4NwO8GJVcGq2gYW9RyjBcGmz8KOfWY=
+	t=1705930120; cv=none; b=m6cS1cQTZjOEu9hGfOOmRmcveM7q8pbFqPclY9Xvha5+OEwqPfIziwcWSGGYqfaoy2SBbkDhYUuk2nyaHU/WPspYddsnX1qMqIrqIS1s3lCD4UKVDqpeu9Gmf5CTOIBx529DmAuaM5z+ZrUFsala4iIdck+LtUM24aMW53sDv+A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705929966; c=relaxed/simple;
-	bh=AdkQZSRn2mxv5gZ8faSB3eUvx2yITrTIfL7sVlooOF4=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=p5fS/cDN/YXrBlYrt+4uXmJYh67tGeQlVwBN90ig2LdAdi07IufI/hqraRIOUwzFxhKAFfo6i9Uf7l2F6wnktAfImlS5DBWcvv2kzMW4mll0DuXAdTJPZpbVjOy23Wj0vt73MgxZ8wKCryYKtHxV37vEJS/shhIAac+jBOdTUuA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Q1nfMhaa; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=AA2wTtB2; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1705930120; c=relaxed/simple;
+	bh=AznU8j2SdYTSEwJC02gNSrCDmEKaUE5Gb5SSkPG/ikk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=T5anx7uZMEB28NQ9rLf5QBfGVhaMYjLobVh/teqb84YjfhaNi2D3EHK5J2131MWQ2824I+sggrWfm6FH3Si2yGheQ9A/BZEcNO6inJ4ViJTRE6JMYQ/jVuyCHD+WqpOH3k3yYrSvY4+BwxlQrn9tUMh0CeOrb+nsPu1/dcu3BH8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Orqi7aiC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Q1nfMhaa";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="AA2wTtB2"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1705929962;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/42ekYY9I1DYMe5I59ciu8BkLOqVsXg7fjJStaWmaBQ=;
-	b=Q1nfMhaaYGWZB3nLG8/NJ0JyXepz6AbLtfWS34hs02HOvENNS8y5II53DWOkMicdIK0LOh
-	sq5aJ2a715lP0GtXsilAOBfO+88pSpQjDa7r5aD2bnMt5honXPhorTmvBTvuneeufYr9wt
-	goWCUl4mVzK0kXaxArdrbOe7DPSkPaKI02xi1cfwAXI+oakXDJcPxhImHjsJdHclNdMje6
-	6GfuGAQ8OaRvSavNZIFuMoQn5cFkGgN9VPtFRiSujdskjYrkKInpqJBCGVLT+/c9nUXync
-	ZlESjJ0azB2oS+68IjaL1N4H8x35KNeRAzGRO13DNCcNwthcckUBCXKPSxAn1g==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1705929962;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/42ekYY9I1DYMe5I59ciu8BkLOqVsXg7fjJStaWmaBQ=;
-	b=AA2wTtB2+KVnci+jSJ7YPI8GWO4VdIGMf8gzCiU1EKe/aB9PFvV+xciQfcuIiDQCHWgzKG
-	kPAeklacqGZhPADw==
-To: Andrei Vagin <avagin@gmail.com>
-Cc: Dave Hansen <dave.hansen@intel.com>, Andrei Vagin <avagin@google.com>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave
- Hansen <dave.hansen@linux.intel.com>, LKML <linux-kernel@vger.kernel.org>,
- x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>
-Subject: Re: [PATCH] x86/fpu: verify xstate buffer size according with
- requested features
-In-Reply-To: <CANaxB-zaa0nMFmep9jtJh_QDdAj=2K9G5PAKF4iTuNbNnYj4bg@mail.gmail.com>
-References: <20240116234901.3238852-1-avagin@google.com>
- <30cd0be4-705f-4d63-bdad-fc57301e7eda@intel.com>
- <CANaxB-xu+zG=5_EAe4zapC5a_x4CkkDovmVX7LjiLk+E7kU75g@mail.gmail.com>
- <b3e5456a-7113-4868-b8ce-020421e898ba@intel.com>
- <CANaxB-zQYC8=7frWGU2pRTDJrkVu0iR8QZCmUxSzGmBG-_b1cg@mail.gmail.com>
- <54bcb902-0fab-4a53-8b8e-85b6e4484b03@intel.com> <87cytyfmd8.ffs@tglx>
- <5bddbb34-4081-494b-8c12-c2e70898a608@intel.com> <877ck6fg0z.ffs@tglx>
- <CANaxB-zaa0nMFmep9jtJh_QDdAj=2K9G5PAKF4iTuNbNnYj4bg@mail.gmail.com>
-Date: Mon, 22 Jan 2024 14:26:02 +0100
-Message-ID: <87v87lebyt.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Orqi7aiC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 597BAC433F1;
+	Mon, 22 Jan 2024 13:28:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705930119;
+	bh=AznU8j2SdYTSEwJC02gNSrCDmEKaUE5Gb5SSkPG/ikk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Orqi7aiC+MyAfrSUnAhgP70oXz5dI7MFqSKqRDMj+ItUyiUhpnc0EkdZbiF1uRd+D
+	 GdGn4aHFa0wrO8UzM9Lkl+JoDb2gEv35fDMn+p0fxkZTjAIHV6cPgHrcNWIaZ69yvA
+	 qbsE1jDGAnMzcPieSig70g02DgIo49lf3PGqweQlCUmu4y2CayoEBVFM+k8InFT7BV
+	 doe8bzRFgDFwtVt44nIb74UYVfLOyH7TAhKTZT54VlcPWJc1fXJYZRX2QhClsuE54n
+	 7T4BR/ILR3EK8ORRDsOuKacfvP4q01IQZa5WVgNsyWavrLNpSgDt44NtpjTJ+IjyNd
+	 Jj/Cw4KQG62tQ==
+Date: Mon, 22 Jan 2024 14:28:32 +0100
+From: Niklas Cassel <cassel@kernel.org>
+To: Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
+Cc: dlemoal@kernel.org, richardcochran@gmail.com, piyush.mehta@xilinx.com,
+	axboe@kernel.dk, michal.simek@amd.com, linux-ide@vger.kernel.org,
+	linux-kernel@vger.kernel.org, git@amd.com,
+	Piyush Mehta <piyush.mehta@amd.com>
+Subject: Re: [PATCH 2/2] ata: ahci_ceva: add missing enable regulator API for
+ Xilinx GT PHY support
+Message-ID: <Za5tgFKxylHR91KF@x1-carbon>
+References: <1705604904-471889-1-git-send-email-radhey.shyam.pandey@amd.com>
+ <1705604904-471889-3-git-send-email-radhey.shyam.pandey@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1705604904-471889-3-git-send-email-radhey.shyam.pandey@amd.com>
 
-On Sun, Jan 21 2024 at 19:58, Andrei Vagin wrote:
-> On Thu, Jan 18, 2024 at 2:11=E2=80=AFPM Thomas Gleixner <tglx@linutronix.=
-de> wrote:
->> >> After staring more at it, it's arguable to pass fpstate->user_size to
->> >> fault_in_readable() and ignore fx_sw->xstate_size completely.
->> >>
->> >> That's a guaranteed to be reliable size which prevents endless loops
->> >> because arguably that's the maximum size which can be touched by XRST=
-OR,
->> >> no?
->
-> fpstate->user_size isn't constant.  It can be modified from the XFD #NM
-> handler. For example, it happens when a process invokes one of amx
-> instructions for the first time. It means we have to be able to restore
-> an fpu state from signal frames generated with a smaller
-> fpstate->user_size. Can it trigger any issues?
+Hello Radhey,
 
-I know, but the #NM handler does not run in the signal restore
-path. fpstate->user_size is guaranteed to be correct at that point.
+On Fri, Jan 19, 2024 at 12:38:24AM +0530, Radhey Shyam Pandey wrote:
+> From: Piyush Mehta <piyush.mehta@amd.com>
+> 
+> The regulators API are disabled and enabled, during suspend and resume,
+> respectively. The following warning notice shows up on the initial suspend
+> because the enable regulators API is unaddressed in the probe:
 
-The untested below should just work.
+Please be a bit more specific in your commit message.
 
-Thanks,
+e.g. during system suspend, ahci_platform_suspend() calls
+ahci_platform_disable_resources() which calls
+ahci_platform_disable_regulators() which calls
+regulator_disable() for all regulators found in the controller.
 
-        tglx
----
---- a/arch/x86/kernel/fpu/signal.c
-+++ b/arch/x86/kernel/fpu/signal.c
-@@ -274,8 +274,7 @@ static int __restore_fpregs_from_user(vo
-  * Attempt to restore the FPU registers directly from user memory.
-  * Pagefaults are handled and any errors returned are fatal.
-  */
--static bool restore_fpregs_from_user(void __user *buf, u64 xrestore,
--				     bool fx_only, unsigned int size)
-+static bool restore_fpregs_from_user(void __user *buf, u64 xrestore, bool =
-fx_only)
- {
- 	struct fpu *fpu =3D &current->thread.fpu;
- 	int ret;
-@@ -309,7 +308,7 @@ static bool restore_fpregs_from_user(voi
- 		if (ret !=3D X86_TRAP_PF)
- 			return false;
-=20
--		if (!fault_in_readable(buf, size))
-+		if (!fault_in_readable(buf, fpu->fpstate->user_size))
- 			goto retry;
- 		return false;
- 	}
-@@ -339,7 +338,6 @@ static bool __fpu_restore_sig(void __use
- 	struct user_i387_ia32_struct env;
- 	bool success, fx_only =3D false;
- 	union fpregs_state *fpregs;
--	unsigned int state_size;
- 	u64 user_xfeatures =3D 0;
-=20
- 	if (use_xsave()) {
-@@ -349,17 +347,14 @@ static bool __fpu_restore_sig(void __use
- 			return false;
-=20
- 		fx_only =3D !fx_sw_user.magic1;
--		state_size =3D fx_sw_user.xstate_size;
- 		user_xfeatures =3D fx_sw_user.xfeatures;
- 	} else {
- 		user_xfeatures =3D XFEATURE_MASK_FPSSE;
--		state_size =3D fpu->fpstate->user_size;
- 	}
-=20
- 	if (likely(!ia32_fxstate)) {
- 		/* Restore the FPU registers directly from user memory. */
--		return restore_fpregs_from_user(buf_fx, user_xfeatures, fx_only,
--						state_size);
-+		return restore_fpregs_from_user(buf_fx, user_xfeatures, fx_only);
- 	}
-=20
- 	/*
+
+> 
+> regulator-dummy: Underflow of regulator enable count
+> 
+> Added the ahci_platform_enable_regulators API in probe to maintain the
+> regulator enabled and disabled ref count.
+
+s/Added/Add/
+
+"Describe your changes in imperative mood, e.g. "make xyzzy do frotz" instead of "[This patch] makes xyzzy do frotz" or "[I] changed xyzzy to do frotz", as if you are giving orders to the codebase to change its behaviour."
+
+see:
+https://www.kernel.org/doc/html/latest/process/submitting-patches.html#describe-your-changes
+
+
+> 
+> Fixes: 9a9d3abe24bb ("ata: ahci: ceva: Update the driver to support xilinx GT phy")
+> Signed-off-by: Piyush Mehta <piyush.mehta@amd.com>
+> Signed-off-by: Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
+> ---
+>  drivers/ata/ahci_ceva.c | 10 +++++++++-
+>  1 file changed, 9 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/ata/ahci_ceva.c b/drivers/ata/ahci_ceva.c
+> index bfc513f1d0b3..1c56f0cabb11 100644
+> --- a/drivers/ata/ahci_ceva.c
+> +++ b/drivers/ata/ahci_ceva.c
+> @@ -219,9 +219,14 @@ static int ceva_ahci_probe(struct platform_device *pdev)
+>  		if (rc)
+>  			return rc;
+>  	} else {
+> -		rc = ahci_platform_enable_clks(hpriv);
+> +		rc = ahci_platform_enable_regulators(hpriv);
+>  		if (rc)
+>  			return rc;
+> +
+> +		rc = ahci_platform_enable_clks(hpriv);
+> +		if (rc)
+> +			goto disable_regulator;
+> +
+
+Like I wrote in patch 1/2, I would prefer if you could somehow get
+ahci_platform_enable_resources() to work for your platform, so that you
+don't need to copy paste all of ahci_platform_enable_resources() to
+your driver.
+
+If it does not work to simply add a reset_control_assert() + usleep(),
+considering that this function is essentially a copy paste of
+ahci_platform_enable_resources(), I would still prefer the addition of
+a new flag, and keep the extra logic needed in libahci_platform.c, so that
+the code is kept in the same place, rather than to copy paste the whole
+function to your driver.
+
+
+Kind regards,
+Niklas
+
+>  		/* Assert the controller reset */
+>  		reset_control_assert(cevapriv->rst);
+>  
+> @@ -340,6 +345,9 @@ static int ceva_ahci_probe(struct platform_device *pdev)
+>  disable_clks:
+>  	ahci_platform_disable_clks(hpriv);
+>  
+> +disable_regulator:
+> +	ahci_platform_disable_regulators(hpriv);
+> +
+>  	return rc;
+>  }
+>  
+> -- 
+> 2.34.1
+> 
