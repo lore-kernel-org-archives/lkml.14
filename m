@@ -1,58 +1,78 @@
-Received: from eggs.gnu.org (eggs.gnu.org [209.51.188.92])
+Received: from APC01-TYZ-obe.outbound.protection.outlook.com (mail-tyzapc01on2059.outbound.protection.outlook.com [40.107.117.59])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EB7439FF9;
-	Mon, 22 Jan 2024 09:53:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.51.188.92
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705917220; cv=none; b=OVQtGkbPWTepzR0T5kN5bX5a9Ip51qkMrEGlmz/hjAoH8MzUSZqkbumCPRHs49YcAk0Dh177fRGtdE8jkkPQCMwq1yNx4VCNuvRfw4/QVuw38EbdzaipWaNi4d9B9Va5ZG36HI2im8AcveB2YxzHYj87fizpG/sTcYc8KGEYNyE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705917220; c=relaxed/simple;
-	bh=/4UYVWoRDV+kEO3U8Y1l39uRpYsiH1KNcPCNJ5mLcgE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XS54VqD6qsXNtmMasHWCLXXkyilTUHJNecPAhXAdf4/sm12RUjwgkPyKdlx0pO9YzSobTVZAX5iWCb7qlu0NvLQuPwVpjzQqBtuyzEn6aUOg59fVMmqLCYUbYW9KSdeHTCyel/vrpX0a3w5zErRPgOYLFyo9/Fy9rFvCrVaXuSc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gnu.org; spf=pass smtp.mailfrom=gnu.org; dkim=pass (2048-bit key) header.d=gnu.org header.i=@gnu.org header.b=oqpnkX0U; arc=none smtp.client-ip=209.51.188.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gnu.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gnu.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A8C439AF6;
+	Mon, 22 Jan 2024 09:56:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.117.59
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1705917423; cv=fail; b=eNeTxgYbmg49Ub2MiEGiFvEz2qu2F9Oh1OVHSB+qpjw8DrosEiSsMn9CUpJwLvq2JNeY9mhCxQ2sFb3sTgQnWZErjTYHr/tCxHcF8P3QL6LmoKoYxJXCdPrIIpT/dp82kEwgAQicLC8gIijjQrT4otW+uINBhQTKkB6VmbHU1xE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1705917423; c=relaxed/simple;
+	bh=Cw9LUkWqLf+p1uKjSB6kqijldO/4Y5vSJRZpg7KwLXU=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=sla+1Y6rd99LX25SJ1CIM7exLmODWzLZtn58lXwrakE1JOrYsHg8gbi8ptcAbJuc7X62RVNBqPzzPIVrThSN2Tl5beVve+CgWkAHgpKqNU/XPkEjis7h1l7c03wxZR+i5Rs18zVS/UpBpqP70VaTdT4DMN+aZu/QkMSkTp/MKLM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=nuvoton.com; spf=pass smtp.mailfrom=nuvoton.com; dkim=pass (1024-bit key) header.d=nuvoton.com header.i=@nuvoton.com header.b=CoG45rmC; arc=fail smtp.client-ip=40.107.117.59
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=nuvoton.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nuvoton.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gnu.org header.i=@gnu.org header.b="oqpnkX0U"
-Received: from fencepost.gnu.org ([2001:470:142:3::e])
-	by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.90_1)
-	(envelope-from <othacehe@gnu.org>)
-	id 1rRqzp-00048s-Id; Mon, 22 Jan 2024 04:53:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=gnu.org;
-	s=fencepost-gnu-org; h=MIME-Version:References:In-Reply-To:Date:Subject:To:
-	From; bh=nrund9baS9Vmb7CoYoNskY55PsEFb9lHldK7YlvotBA=; b=oqpnkX0UfNsYYvWB5tXK
-	+SQyipP69BPvstoBgNagTLpltYVqgO1LZiYQCRFkl5bazV8A77eiFm+gTOLvdujq2Latp1K6hOj05
-	7k3lp2rszUIHqTGUOD7EmZfU52L/Kyqz8RUAgbGk5SIKf4OgipRpjaLvhPJd1uumUcXpP4TLUJ0Fp
-	72Ukh1b0XU4dNmKTtH2wDTgPU9YoAu6dhIRb109CJwZh0/lA1XwzqQaTCYI2q7+8UnuyioDc9kGFN
-	8p4btZkeHc59gvOkFW1RwJzjdNkIZqGVZwlzgUYGQoofdwcZ6NNaqVp0OJHdTcmws6cMPeI0d1UOA
-	sFuhGWpCpe9Ayg==;
-From: Mathieu Othacehe <othacehe@gnu.org>
-To: Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	NXP Linux Team <linux-imx@nxp.com>,
-	Li Yang <leoyang.li@nxp.com>,
-	Primoz Fiser <primoz.fiser@norik.com>,
-	Stefan Wahren <wahrenst@gmx.net>,
-	Christoph Stoidner <c.stoidner@phytec.de>,
-	Wadim Egorov <w.egorov@phytec.de>
-Cc: devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	Mathieu Othacehe <othacehe@gnu.org>
-Subject: [PATCH v4 3/3] arm64: dts: imx93: Add phyBOARD-Segin-i.MX93 support
-Date: Mon, 22 Jan 2024 10:53:06 +0100
-Message-ID: <20240122095306.14084-4-othacehe@gnu.org>
-X-Mailer: git-send-email 2.41.0
-In-Reply-To: <20240122095306.14084-1-othacehe@gnu.org>
-References: <20240122095306.14084-1-othacehe@gnu.org>
+	dkim=pass (1024-bit key) header.d=nuvoton.com header.i=@nuvoton.com header.b="CoG45rmC"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=kyoArDNsQRO4a2W2AydXCQ3ddJHod+VyiFI1EObjJ/QTaTGQPDSeBGxn5TWEFh1zKRQypZgKj+7Q8KP99PrekZyN9VvMfZMzPEeGUvpGyRULgIFQBtsTtic3z+DB721O8RscBhxrCQu0mBUF6SM8/+dWWc0v3kzD6DJ7E0mOD7uRLVeikPsGsrxHqj3OtyVhW3tBuV41CXNT4v7X/mFeJPt1P8+HZczoJhXJkuphLi2k6pK1sGs3Yf657rlTswk7yiEw5F6AbgPvpeFuCOwt4srs4E0qfqbp3NXCixD84r7vQot7xESeptzKXyffdN70AhHrDaDp+VTw3t/pxA5yqg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=O7VRYe0I3IM6rlKllm7eKeJGfoggF+J4EvaHVLxshLg=;
+ b=lOcacH9nx6+0+7QFjv9aBcJPf6E7D9GTZTDrvgZHSnBpcBbrjCp85HZLehKYNhX96ud9cKpVmoFj0t3d8lMZijxTvuJk3cRsuFkRQWQTBaiOXU+/bvlFPOYAdINLhabpxosNIIyKD23TI8Jrt+cY4XYZNGmllUUzLEE7LExWyLwrDVqGAx2TgDRddOWShD6hb3Y8bBYyRSxSw7SKKHZxrsIyP4v/17XhUGvJLhB3djMVbb3xXIKoYRavJbK/0nidCKOnRYCRu00n82ywi5jX+ALP/8cBxrFFySOVkwIqRqiwD3b3/NpcaDfiNWtVtpb/uqBrmN5d1cZNkrr1XZwNxA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 211.75.126.7) smtp.rcpttodomain=kernel.org smtp.mailfrom=nuvoton.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=nuvoton.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nuvoton.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=O7VRYe0I3IM6rlKllm7eKeJGfoggF+J4EvaHVLxshLg=;
+ b=CoG45rmCSSoPRn3cprBdZ4eQYRatuNt6P8UwQjJThabBs4XSslemOMnbnFxIu5ODSVFz7pMWwKm/ftW7GeFmWrMxUH1iy8z1TUnrZfuoF11h1P/qBF3N1F9VkWaAmjacGgkp566qjdh0c7iWT8DHamD6ZVV412HhOK/paZRz5R0=
+Received: from SI1PR02CA0044.apcprd02.prod.outlook.com (2603:1096:4:1f6::6) by
+ SI2PR03MB7261.apcprd03.prod.outlook.com (2603:1096:4:1bd::7) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7202.32; Mon, 22 Jan 2024 09:56:56 +0000
+Received: from SG2PEPF000B66CB.apcprd03.prod.outlook.com
+ (2603:1096:4:1f6:cafe::71) by SI1PR02CA0044.outlook.office365.com
+ (2603:1096:4:1f6::6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7202.31 via Frontend
+ Transport; Mon, 22 Jan 2024 09:56:56 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 211.75.126.7)
+ smtp.mailfrom=nuvoton.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nuvoton.com;
+Received-SPF: Pass (protection.outlook.com: domain of nuvoton.com designates
+ 211.75.126.7 as permitted sender) receiver=protection.outlook.com;
+ client-ip=211.75.126.7; helo=NTHCCAS01.nuvoton.com; pr=C
+Received: from NTHCCAS01.nuvoton.com (211.75.126.7) by
+ SG2PEPF000B66CB.mail.protection.outlook.com (10.167.240.24) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7202.16 via Frontend Transport; Mon, 22 Jan 2024 09:56:55 +0000
+Received: from NTHCCAS02.nuvoton.com (10.1.9.121) by NTHCCAS01.nuvoton.com
+ (10.1.8.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Mon, 22 Jan
+ 2024 17:56:53 +0800
+Received: from NTHCCAS01.nuvoton.com (10.1.8.28) by NTHCCAS02.nuvoton.com
+ (10.1.9.121) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2176.14; Mon, 22 Jan
+ 2024 17:56:53 +0800
+Received: from localhost.localdomain (10.11.36.27) by NTHCCAS01.nuvoton.com
+ (10.1.8.28) with Microsoft SMTP Server id 15.1.2375.34 via Frontend
+ Transport; Mon, 22 Jan 2024 17:56:53 +0800
+From: Seven Lee <wtli@nuvoton.com>
+To: <broonie@kernel.org>
+CC: <lgirdwood@gmail.com>, <alsa-devel@alsa-project.org>,
+	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<robh+dt@kernel.org>, <conor+dt@kernel.org>, <YHCHuang@nuvoton.com>,
+	<KCHSU0@nuvoton.com>, <CTLIN0@nuvoton.com>, <SJLIN0@nuvoton.com>,
+	<wtli@nuvoton.com>, <scott6986@gmail.com>, <supercraig0719@gmail.com>,
+	<dardar923@gmail.com>
+Subject: [PATCH 1/2] ASoC: dt-bindings: Added schema for "nuvoton,nau8325"
+Date: Mon, 22 Jan 2024 17:56:49 +0800
+Message-ID: <20240122095650.60523-1-wtli@nuvoton.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,315 +80,127 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-NotSetDelaration: True
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SG2PEPF000B66CB:EE_|SI2PR03MB7261:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0f51fdcc-5198-4e59-059d-08dc1b3077b6
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	zAG2AztBZ4c6e56rfSAm0FQ1F4C2VE6UokutDdp1xqUYjp61I34JWU0hMVHV0KdijCqCS70p8LmFZJgXNKcuoHD6KIbIrqZXT3hTGBm5Bm/cJBZMhklFdACr2AEI/VEArpJoT9hQtmi0/14CyEi9FY2ix4OR0yunY0tcUVtnKzNCfRd1kqb7YX3wOW7d42yo8wwXyDNnPBbC5QwNdldKBA83wMOn7teJ4pB91kcuKijnFevEtpwF9mLQmj7iPWXIvnFoz97PvkmepjGUnKAOKlE5nD1gmFR4NpA6o1gEVIoPBhkvPEkrS+4sfcLBQvj/U9XRpXbGas0sl5FfOZ/ZKZdyZ0VhJcs6rTtbRyWd8Ab4117911qs/L2j5ChI9LWVWDfSeFBRHX+pp5shyCqPD879FY5QVTpACJATjprPOtos95Hk8VoO3qlwvaA9FX6LPxLIekSQBPVJXwebOLc8i14uk24OWDRb8U5uGjkWEQJcG/O6sP+Xf2derFJzJRvLp7Db33fc64CcF4M9DyYF3a7hkLIFpxULNpklY2ur8g8LDCgjhY1KD/ISGDYqC3kE7wcfn2eCns4M5NYxCY/wQrjKt7zk4+YqjlvEQVPtkqEqaLaAerWv73dPvvQyY+dfoEVxdcs7OxefU4oHko1IPgtS7Ct1gld9Vf/deIzYeOBhiUFXdesxkjX39t7YHQG7+ngT6WW5H7kfwUWRsfRF0as5z6WAE8Sw53zfc7DxZhU=
+X-Forefront-Antispam-Report:
+	CIP:211.75.126.7;CTRY:TW;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:NTHCCAS01.nuvoton.com;PTR:211-75-126-7.hinet-ip.hinet.net;CAT:NONE;SFS:(13230031)(4636009)(346002)(396003)(376002)(39860400002)(136003)(230922051799003)(64100799003)(451199024)(1800799012)(186009)(82310400011)(40470700004)(36840700001)(46966006)(40480700001)(40460700003)(336012)(6666004)(426003)(2616005)(1076003)(26005)(356005)(82740400003)(86362001)(81166007)(36756003)(41300700001)(83380400001)(36860700001)(47076005)(5660300002)(7416002)(2906002)(478600001)(966005)(70206006)(4326008)(8936002)(8676002)(70586007)(316002)(54906003)(6916009);DIR:OUT;SFP:1101;
+X-OriginatorOrg: nuvoton.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jan 2024 09:56:55.9471
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0f51fdcc-5198-4e59-059d-08dc1b3077b6
+X-MS-Exchange-CrossTenant-Id: a3f24931-d403-4b4a-94f1-7d83ac638e07
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=a3f24931-d403-4b4a-94f1-7d83ac638e07;Ip=[211.75.126.7];Helo=[NTHCCAS01.nuvoton.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SG2PEPF000B66CB.apcprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SI2PR03MB7261
 
-Add basic support for phyBOARD-Segin-i.MX93.
-Main features are:
-* eMMC
-* Ethernet
-* SD-Card
-* UART
+Added a DT schema for describing nau8325 audio amplifiers.
 
-Signed-off-by: Mathieu Othacehe <othacehe@gnu.org>
+Signed-off-by: Seven Lee <wtli@nuvoton.com>
 ---
- arch/arm64/boot/dts/freescale/Makefile        |   1 +
- .../dts/freescale/imx93-phyboard-segin.dts    | 141 ++++++++++++++++++
- .../boot/dts/freescale/imx93-phycore-som.dtsi | 127 ++++++++++++++++
- 3 files changed, 269 insertions(+)
- create mode 100644 arch/arm64/boot/dts/freescale/imx93-phyboard-segin.dts
- create mode 100644 arch/arm64/boot/dts/freescale/imx93-phycore-som.dtsi
+ .../bindings/sound/nuvoton,nau8325.yaml       | 82 +++++++++++++++++++
+ 1 file changed, 82 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/nuvoton,nau8325.yaml
 
-diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
-index 2e027675d7bb..65db918c821c 100644
---- a/arch/arm64/boot/dts/freescale/Makefile
-+++ b/arch/arm64/boot/dts/freescale/Makefile
-@@ -201,6 +201,7 @@ dtb-$(CONFIG_ARCH_MXC) += imx8qxp-colibri-iris-v2.dtb
- dtb-$(CONFIG_ARCH_MXC) += imx8qxp-mek.dtb
- dtb-$(CONFIG_ARCH_MXC) += imx8ulp-evk.dtb
- dtb-$(CONFIG_ARCH_MXC) += imx93-11x11-evk.dtb
-+dtb-$(CONFIG_ARCH_MXC) += imx93-phyboard-segin.dtb
- dtb-$(CONFIG_ARCH_MXC) += imx93-tqma9352-mba93xxca.dtb
- dtb-$(CONFIG_ARCH_MXC) += imx93-tqma9352-mba93xxla.dtb
- 
-diff --git a/arch/arm64/boot/dts/freescale/imx93-phyboard-segin.dts b/arch/arm64/boot/dts/freescale/imx93-phyboard-segin.dts
+diff --git a/Documentation/devicetree/bindings/sound/nuvoton,nau8325.yaml b/Documentation/devicetree/bindings/sound/nuvoton,nau8325.yaml
 new file mode 100644
-index 000000000000..5433c33d1322
+index 000000000000..9105985357aa
 --- /dev/null
-+++ b/arch/arm64/boot/dts/freescale/imx93-phyboard-segin.dts
-@@ -0,0 +1,141 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (C) 2023 PHYTEC Messtechnik GmbH
-+ * Author: Wadim Egorov <w.egorov@phytec.de>, Christoph Stoidner <c.stoidner@phytec.de>
-+ * Copyright (C) 2024 Mathieu Othacehe <m.othacehe@gmail.com>
-+ *
-+ * Product homepage:
-+ * phyBOARD-Segin carrier board is reused for the i.MX93 design.
-+ * https://www.phytec.de/produkte/single-board-computer/phyboard-segin-imx6ul/
-+ */
++++ b/Documentation/devicetree/bindings/sound/nuvoton,nau8325.yaml
+@@ -0,0 +1,82 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/sound/nuvoton,nau8325.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+#include "imx93-phycore-som.dtsi"
++title: NAU8325 audio Amplifier
 +
-+/{
-+	model = "PHYTEC phyBOARD-Segin-i.MX93";
-+	compatible = "phytec,imx93-phyboard-segin", "phytec,imx93-phycore-som",
-+		     "fsl,imx93";
++maintainers:
++  - Seven Lee <WTLI@nuvoton.com>
 +
-+	chosen {
-+		stdout-path = &lpuart1;
-+	};
++allOf:
++  - $ref: dai-common.yaml#
 +
-+	reg_usdhc2_vmmc: regulator-usdhc2 {
-+		compatible = "regulator-fixed";
-+		enable-active-high;
-+		gpio = <&gpio3 7 GPIO_ACTIVE_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_reg_usdhc2_vmmc>;
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-name = "VCC_SD";
-+	};
-+};
++properties:
++  compatible:
++    const: nuvoton,nau8325
 +
-+/* GPIOs */
-+&gpio1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_gpio1>;
-+	gpio-line-names = "X_GPIO1_3";
-+};
++  reg:
++    maxItems: 1
 +
-+&gpio4 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_gpio4>;
-+	gpio-line-names = "", "", "", "", "", "", "", "X_GPIO5_9";
-+};
++  nuvoton,vref-impedance:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description:
++      VREF impedance selection.
++    enum:
++      - 0 # Open
++      - 1 # 25kOhm
++      - 2 # 125kOhm
++      - 3 # 2.5kOhm
++    default: 2
 +
-+/* Console */
-+&lpuart1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart1>;
-+	status = "okay";
-+};
++  nuvoton,dac-vref:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description:
++      DAC Reference Voltage Setting.
++    enum:
++      - 0 # VDDA
++      - 1 # VDDA*1.5/1.8V
++      - 2 # VDDA*1.6/1.8V
++      - 3 # VDDA*1.7/1.8V
++    default: 2
 +
-+/* eMMC */
-+&usdhc1 {
-+	no-1-8-v;
-+};
++  nuvoton,alc-enable:
++    description:
++      Enable digital automatic level control (ALC) function.
++    type: boolean
 +
-+/* SD-Card */
-+&usdhc2 {
-+	pinctrl-names = "default", "state_100mhz", "state_200mhz";
-+	pinctrl-0 = <&pinctrl_usdhc2_default>, <&pinctrl_usdhc2_cd>;
-+	pinctrl-1 = <&pinctrl_usdhc2_100mhz>, <&pinctrl_usdhc2_cd>;
-+	pinctrl-2 = <&pinctrl_usdhc2_200mhz>, <&pinctrl_usdhc2_cd>;
-+	bus-width = <4>;
-+	cd-gpios = <&gpio3 0 GPIO_ACTIVE_LOW>;
-+	no-mmc;
-+	no-sdio;
-+	vmmc-supply = <&reg_usdhc2_vmmc>;
-+	status = "okay";
-+};
++  nuvoton,clock-detection-disable:
++    description:
++      When clock detection is enabled, it will detect whether MCLK
++      and FS are within the range. MCLK range is from 2.048MHz to 24.576MHz.
++      FS range is from 8kHz to 96kHz.
++    type: boolean
 +
-+&iomuxc {
-+	pinctrl_gpio1: gpio1grp {
-+		fsl,pins = <
-+			MX93_PAD_I2C1_SCL__GPIO1_IO00		0x10
-+		>;
-+	};
++  nuvoton,clock-det-data:
++    description:
++      Request clock detection to require 2048 non-zero samples before enabling
++      the audio paths. If set then non-zero samples is required, otherwise it
++      doesn't matter.
++    type: boolean
 +
-+	pinctrl_gpio4: gpio4grp {
-+		fsl,pins = <
-+			MX93_PAD_ENET1_TXC__GPIO4_IO07		0x10
-+		>;
-+	};
++required:
++  - compatible
++  - reg
 +
-+	pinctrl_uart1: uart1grp {
-+		fsl,pins = <
-+			MX93_PAD_UART1_RXD__LPUART1_RX		0x31e
-+			MX93_PAD_UART1_TXD__LPUART1_TX		0x30e
-+		>;
-+	};
++unevaluatedProperties: false
 +
-+	pinctrl_reg_usdhc2_vmmc: regusdhc2vmmcgrp {
-+		fsl,pins = <
-+			MX93_PAD_SD2_RESET_B__GPIO3_IO07	0x31e
-+		>;
-+	};
-+
-+	pinctrl_usdhc2_cd: usdhc2cdgrp {
-+		fsl,pins = <
-+			MX93_PAD_SD2_CD_B__GPIO3_IO00		0x31e
-+		>;
-+	};
-+
-+	pinctrl_usdhc2_default: usdhc2grp {
-+		fsl,pins = <
-+			MX93_PAD_SD2_CLK__USDHC2_CLK		0x179e
-+			MX93_PAD_SD2_CMD__USDHC2_CMD		0x139e
-+			MX93_PAD_SD2_DATA0__USDHC2_DATA0	0x138e
-+			MX93_PAD_SD2_DATA1__USDHC2_DATA1	0x138e
-+			MX93_PAD_SD2_DATA2__USDHC2_DATA2	0x138e
-+			MX93_PAD_SD2_DATA3__USDHC2_DATA3	0x139e
-+			MX93_PAD_SD2_VSELECT__USDHC2_VSELECT	0x51e
-+		>;
-+	};
-+
-+	pinctrl_usdhc2_100mhz: usdhc2grp {
-+		fsl,pins = <
-+			MX93_PAD_SD2_CLK__USDHC2_CLK            0x179e
-+			MX93_PAD_SD2_CMD__USDHC2_CMD            0x139e
-+			MX93_PAD_SD2_DATA0__USDHC2_DATA0        0x138e
-+			MX93_PAD_SD2_DATA1__USDHC2_DATA1        0x138e
-+			MX93_PAD_SD2_DATA2__USDHC2_DATA2        0x139e
-+			MX93_PAD_SD2_DATA3__USDHC2_DATA3        0x139e
-+			MX93_PAD_SD2_VSELECT__USDHC2_VSELECT    0x51e
-+		>;
-+	};
-+
-+	pinctrl_usdhc2_200mhz: usdhc2grp {
-+		fsl,pins = <
-+			MX93_PAD_SD2_CLK__USDHC2_CLK            0x178e
-+			MX93_PAD_SD2_CMD__USDHC2_CMD            0x139e
-+			MX93_PAD_SD2_DATA0__USDHC2_DATA0        0x139e
-+			MX93_PAD_SD2_DATA1__USDHC2_DATA1        0x139e
-+			MX93_PAD_SD2_DATA2__USDHC2_DATA2        0x139e
-+			MX93_PAD_SD2_DATA3__USDHC2_DATA3        0x139e
-+			MX93_PAD_SD2_VSELECT__USDHC2_VSELECT    0x51e
-+		>;
-+	};
-+};
-diff --git a/arch/arm64/boot/dts/freescale/imx93-phycore-som.dtsi b/arch/arm64/boot/dts/freescale/imx93-phycore-som.dtsi
-new file mode 100644
-index 000000000000..439ea4176f8c
---- /dev/null
-+++ b/arch/arm64/boot/dts/freescale/imx93-phycore-som.dtsi
-@@ -0,0 +1,127 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (C) 2023 PHYTEC Messtechnik GmbH
-+ * Author: Wadim Egorov <w.egorov@phytec.de>, Christoph Stoidner <c.stoidner@phytec.de>
-+ * Copyright (C) 2024 Mathieu Othacehe <m.othacehe@gmail.com>
-+ *
-+ * Product homepage:
-+ * https://www.phytec.de/produkte/system-on-modules/phycore-imx-91-93/
-+ */
-+/dts-v1/;
-+
-+#include <dt-bindings/leds/common.h>
-+
-+#include "imx93.dtsi"
-+
-+/{
-+	model = "PHYTEC phyCORE-i.MX93";
-+	compatible = "phytec,imx93-phycore-som", "fsl,imx93";
-+
-+	reserved-memory {
-+		ranges;
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+
-+		linux,cma {
-+			compatible = "shared-dma-pool";
-+			reusable;
-+			alloc-ranges = <0 0x80000000 0 0x40000000>;
-+			size = <0 0x10000000>;
-+			linux,cma-default;
-+		};
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_leds>;
-+
-+		led-0 {
-+			color = <LED_COLOR_ID_GREEN>;
-+			function = LED_FUNCTION_HEARTBEAT;
-+			gpios = <&gpio1 1 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "heartbeat";
-+		};
-+	};
-+};
-+
-+/* Ethernet */
-+&fec {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_fec>;
-+	phy-mode = "rmii";
-+	phy-handle = <&ethphy1>;
-+	fsl,magic-packet;
-+	assigned-clocks = <&clk IMX93_CLK_ENET_TIMER1>,
-+			  <&clk IMX93_CLK_ENET_REF>,
-+			  <&clk IMX93_CLK_ENET_REF_PHY>;
-+	assigned-clock-parents = <&clk IMX93_CLK_SYS_PLL_PFD1_DIV2>,
-+				 <&clk IMX93_CLK_SYS_PLL_PFD1_DIV2>,
-+				 <&clk IMX93_CLK_SYS_PLL_PFD1_DIV2>;
-+	assigned-clock-rates = <100000000>, <50000000>, <50000000>;
-+	status = "okay";
-+
-+	mdio: mdio {
-+		clock-frequency = <5000000>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		ethphy1: ethernet-phy@1 {
-+			compatible = "ethernet-phy-ieee802.3-c22";
-+			reg = <1>;
-+		};
-+	};
-+};
-+
-+/* eMMC */
-+&usdhc1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usdhc1>;
-+	bus-width = <8>;
-+	non-removable;
-+	status = "okay";
-+};
-+
-+/* Watchdog */
-+&wdog3 {
-+	status = "okay";
-+};
-+
-+&iomuxc {
-+	pinctrl_fec: fecgrp {
-+		fsl,pins = <
-+			MX93_PAD_ENET2_MDC__ENET1_MDC			0x50e
-+			MX93_PAD_ENET2_MDIO__ENET1_MDIO			0x502
-+			MX93_PAD_ENET2_RD0__ENET1_RGMII_RD0		0x57e
-+			MX93_PAD_ENET2_RD1__ENET1_RGMII_RD1		0x57e
-+			MX93_PAD_ENET2_RXC__ENET1_RX_ER			0x5fe
-+			MX93_PAD_ENET2_RX_CTL__ENET1_RGMII_RX_CTL	0x57e
-+			MX93_PAD_ENET2_TD0__ENET1_RGMII_TD0		0x50e
-+			MX93_PAD_ENET2_TD1__ENET1_RGMII_TD1		0x50e
-+			MX93_PAD_ENET2_TX_CTL__ENET1_RGMII_TX_CTL	0x50e
-+			MX93_PAD_ENET2_TD2__ENET1_TX_CLK		0x4000050e
-+		>;
-+	};
-+
-+	pinctrl_leds: ledsgrp {
-+		fsl,pins = <
-+			MX93_PAD_I2C1_SDA__GPIO1_IO01		0x31e
-+		>;
-+	};
-+
-+	pinctrl_usdhc1: usdhc1grp {
-+		fsl,pins = <
-+			MX93_PAD_SD1_CLK__USDHC1_CLK		0x179e
-+			MX93_PAD_SD1_CMD__USDHC1_CMD		0x1386
-+			MX93_PAD_SD1_DATA0__USDHC1_DATA0	0x138e
-+			MX93_PAD_SD1_DATA1__USDHC1_DATA1	0x1386
-+			MX93_PAD_SD1_DATA2__USDHC1_DATA2	0x138e
-+			MX93_PAD_SD1_DATA3__USDHC1_DATA3	0x1386
-+			MX93_PAD_SD1_DATA4__USDHC1_DATA4	0x1386
-+			MX93_PAD_SD1_DATA5__USDHC1_DATA5	0x1386
-+			MX93_PAD_SD1_DATA6__USDHC1_DATA6	0x1386
-+			MX93_PAD_SD1_DATA7__USDHC1_DATA7	0x1386
-+			MX93_PAD_SD1_STROBE__USDHC1_STROBE	0x179e
-+		>;
-+	};
-+};
++examples:
++  - |
++    i2c {
++        #address-cells = <1>;
++        #size-cells = <0>;
++        codec@21 {
++            compatible = "nuvoton,nau8325";
++            reg = <0x21>;
++            nuvoton,vref-impedance = <2>;
++            nuvoton,dac-vref = <2>;
++            nuvoton,alc-enable;
++            nuvoton,clock-det-data;
++        };
++    };
 -- 
-2.41.0
+2.25.1
 
