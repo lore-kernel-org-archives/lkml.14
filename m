@@ -1,64 +1,62 @@
-Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
+Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 024293E464;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D10E3E477;
 	Mon, 22 Jan 2024 14:56:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705935368; cv=none; b=UuHaeHUY3WSvM2AsN8etVPpvqANZYY3fQ/OaosUP3Pp6Xc2k5qRTClKuDNfmfXOOV3x0zC/JiDzuV/gcMW1MXiTqjV2r+Jt2PmfEP9eW8uYrBKAhqwYuxAwIJ4x465tyX9RNZMjCxD5mkNZaJj6zlauYG/sX9WojOAbf6Nx4PmE=
+	t=1705935370; cv=none; b=BC0jGFxcjGXvOAFR6qFqb0UK1M027qZ3nEQhz6tIvY/qPpXUDRtpfDBIzs/ExPcOe1WK6G9rIStnYonNre4C/+VBL17/mY5R714on4o2bxIDMds9O1BV0qK1vPscxAKKBLoOmVAKKlmPNMMiIoLp07z4LAApTyJ/oUWVOs3RXNU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705935368; c=relaxed/simple;
-	bh=zyb9jtg/eSOySXlkihvfsaBuql4RA7ga4oR4++oAFgQ=;
+	s=arc-20240116; t=1705935370; c=relaxed/simple;
+	bh=yn1d0VNKAyAV7lkKjKKhZxzzmDLqIJ320J6JzxiyEA4=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=VRc5hTQanI46no12rOaYrM7nB9uOxgy1QDNpZlzKDwdHkWVzgP4A4DYrYAdfiv3jgrCb0Rlox5Bhhy+jWuTUB2WYt2Q8v1VnuoKtqir1bPUjjL3YioHYvL3I8fxLkRviaX0CMTkPWfpLVVIcyvT63aHIV/ff9ztIUCFE8g27GZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=vQMALpxr; arc=none smtp.client-ip=198.47.23.248
+	 MIME-Version:Content-Type; b=KlDiQ/K32HiLzlVAnyVY50OSLKQKTyZa9B/SGFW6MhdIYnibuGm/O61Wefy+c/qRljryaKr0B4X6Esn6RnXemaJljKsAoyBVLja+dUFsUzawoXOPp4ABM1kN5OEQVb6niMgBfR3KRhmrZ6bmjSAEa8WJxrr4jmV8lhZhM9fwCk8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=P/tvF7iX; arc=none smtp.client-ip=198.47.19.141
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="vQMALpxr"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 40MEtiYf045403;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="P/tvF7iX"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 40MEtiYn038208;
 	Mon, 22 Jan 2024 08:55:44 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
 	s=ti-com-17Q1; t=1705935344;
-	bh=Z+jT13pIGuzPLJE2TPkaS+wnygJQ1VoX5ToCUHF0I8w=;
+	bh=IgLvqQ2esFmcvHXcKzHz/ujO3qKLVrVyC+W5YB13SoI=;
 	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=vQMALpxro5oP1KN8FQGliM6FO1r6EIrUmvgAjpD/VfSld97KpDNFXkvKqvqDJb77R
-	 svYBD3337tN5bLPxOLeucndE5j+G1GNP0v1psm2meIup85aQsQrjFzJBflhYgFNciT
-	 8wmb1dQWywelZCIco4mrDP1q+7XXwUTBgeGXXIns=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 40MEti6M038765
+	b=P/tvF7iX5uJNgw1APxrX9oVWInZ0rO5C0TI4M2ROeMNa+PQ12QrZj8fVrQ/zj6Ml9
+	 uFdg7kiJMQilPCGJqpqX+PWX9jC8bvApIrPLmxuGn3pxZIXIJfo0mOjhAfF0RzbW1W
+	 UmwXxYSRLNnteKDuRHlaPW5umvlHfkjNV07hICdw=
+Received: from DLEE101.ent.ti.com (dlee101.ent.ti.com [157.170.170.31])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 40MEtiaC126210
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
 	Mon, 22 Jan 2024 08:55:44 -0600
-Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 22
- Jan 2024 08:55:43 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ Jan 2024 08:55:44 -0600
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
  Frontend Transport; Mon, 22 Jan 2024 08:55:44 -0600
 Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 40MEthBB021997;
-	Mon, 22 Jan 2024 08:55:43 -0600
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 40MEtiYE014469;
+	Mon, 22 Jan 2024 08:55:44 -0600
 From: Nishanth Menon <nm@ti.com>
 To: Tero Kristo <kristo@kernel.org>, Vignesh Raghavendra <vigneshr@ti.com>
 CC: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Rob Herring
 	<robh+dt@kernel.org>, <linux-kernel@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        Nishanth Menon <nm@ti.com>,
-        Christian Gmeiner <christian.gmeiner@gmail.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Matthias Schiffer
-	<matthias.schiffer@ew.tq-group.com>,
-        Pierre Gondois <pierre.gondois@arm.com>,
-        Roger Quadros <rogerq@kernel.org>, Tony Lindgren <tony@atomide.com>,
-        Wadim
- Egorov <w.egorov@phytec.de>
-Subject: [PATCH V2 05/16] arm64: dts: ti: k3-am64: Add MIT license along with GPL-2.0
-Date: Mon, 22 Jan 2024 08:55:28 -0600
-Message-ID: <20240122145539.194512-6-nm@ti.com>
+        Nishanth Menon <nm@ti.com>, Ayush Singh <ayushdevel1325@gmail.com>,
+        Jason
+ Kridner <jkridner@beagleboard.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski@linaro.org>,
+        Robert Nelson <robertcnelson@gmail.com>,
+        Tony Lindgren <tony@atomide.com>, Wadim Egorov <w.egorov@phytec.de>
+Subject: [PATCH V2 13/16] arm64: dts: ti: beagle*: Add MIT license along with GPL-2.0
+Date: Mon, 22 Jan 2024 08:55:36 -0600
+Message-ID: <20240122145539.194512-14-nm@ti.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240122145539.194512-1-nm@ti.com>
 References: <20240122145539.194512-1-nm@ti.com>
@@ -73,30 +71,27 @@ Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
 Modify license to include dual licensing as GPL-2.0-only OR MIT
-license for SoC and TI evm device tree files. This allows for Linux
-kernel device tree to be used in other Operating System ecosystems
-such as Zephyr or FreeBSD.
+license for device trees belonging to BeagleBoard.org Foundation
+platforms. This allows for Linux kernel device tree to be used in
+other Operating System ecosystems such as Zephyr or FreeBSD.
 
 While at this, update the GPL-2.0 to be GPL-2.0-only to be in sync
 with latest SPDX conventions (GPL-2.0 is deprecated).
 
-While at this, update the TI copyright year to sync with current year
-to indicate license change (and add it at least for one file which was
-missing TI copyright).
+While at this, update the copyright year to sync with current year
+to indicate license change.
 
-Cc: Christian Gmeiner <christian.gmeiner@gmail.com>
+Cc: Ayush Singh <ayushdevel1325@gmail.com>
+Cc: Jason Kridner <jkridner@beagleboard.org>
 Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-Cc: Pierre Gondois <pierre.gondois@arm.com>
-Cc: Roger Quadros <rogerq@kernel.org>
+Cc: Robert Nelson <robertcnelson@gmail.com>
 Cc: Tony Lindgren <tony@atomide.com>
 Cc: Wadim Egorov <w.egorov@phytec.de>
 
-Acked-by: Christian Gmeiner <christian.gmeiner@gmail.com>
+Acked-by: Ayush Singh <ayushdevel1325@gmail.com>
+Acked-by: Jason Kridner <jkridner@beagleboard.org>
 Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Acked-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-Acked-by: Pierre Gondois <pierre.gondois@arm.com>
-Acked-by: Roger Quadros <rogerq@kernel.org>
+Acked-by: Robert Nelson <robertcnelson@gmail.com>
 Acked-by: Tony Lindgren <tony@atomide.com>
 Acked-by: Wadim Egorov <w.egorov@phytec.de>
 Signed-off-by: Nishanth Menon <nm@ti.com>
@@ -104,113 +99,74 @@ Signed-off-by: Nishanth Menon <nm@ti.com>
 Changes Since v1:
 * Picked up acks - all acks recieved
 
-V1: https://lore.kernel.org/r/20240110140903.4090946-6-nm@ti.com
+V1: https://lore.kernel.org/r/20240110140903.4090946-14-nm@ti.com
 
- arch/arm64/boot/dts/ti/k3-am64-main.dtsi    | 4 ++--
- arch/arm64/boot/dts/ti/k3-am64-mcu.dtsi     | 4 ++--
- arch/arm64/boot/dts/ti/k3-am64-thermal.dtsi | 5 ++++-
- arch/arm64/boot/dts/ti/k3-am64.dtsi         | 4 ++--
- arch/arm64/boot/dts/ti/k3-am642-evm.dts     | 4 ++--
- arch/arm64/boot/dts/ti/k3-am642-sk.dts      | 4 ++--
- arch/arm64/boot/dts/ti/k3-am642.dtsi        | 4 ++--
- 7 files changed, 16 insertions(+), 13 deletions(-)
+ .../boot/dts/ti/k3-am625-beagleplay-csi2-ov5640.dtso      | 4 ++--
+ .../boot/dts/ti/k3-am625-beagleplay-csi2-tevi-ov5640.dtso | 4 ++--
+ arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts            | 6 +++---
+ arch/arm64/boot/dts/ti/k3-j721e-beagleboneai64.dts        | 8 ++++----
+ 4 files changed, 11 insertions(+), 11 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am64-main.dtsi b/arch/arm64/boot/dts/ti/k3-am64-main.dtsi
-index e348114f42e0..4d8a8cc4dfec 100644
---- a/arch/arm64/boot/dts/ti/k3-am64-main.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am64-main.dtsi
-@@ -1,8 +1,8 @@
+diff --git a/arch/arm64/boot/dts/ti/k3-am625-beagleplay-csi2-ov5640.dtso b/arch/arm64/boot/dts/ti/k3-am625-beagleplay-csi2-ov5640.dtso
+index 5e80ca7033ba..3b4643b7d19c 100644
+--- a/arch/arm64/boot/dts/ti/k3-am625-beagleplay-csi2-ov5640.dtso
++++ b/arch/arm64/boot/dts/ti/k3-am625-beagleplay-csi2-ov5640.dtso
+@@ -1,7 +1,7 @@
 -// SPDX-License-Identifier: GPL-2.0
 +// SPDX-License-Identifier: GPL-2.0-only OR MIT
  /*
-  * Device Tree Source for AM642 SoC Family Main Domain peripherals
-  *
-- * Copyright (C) 2020-2021 Texas Instruments Incorporated - https://www.ti.com/
-+ * Copyright (C) 2020-2024 Texas Instruments Incorporated - https://www.ti.com/
-  */
- 
- #include <dt-bindings/phy/phy-cadence.h>
-diff --git a/arch/arm64/boot/dts/ti/k3-am64-mcu.dtsi b/arch/arm64/boot/dts/ti/k3-am64-mcu.dtsi
-index b9508072bebb..ec17285869da 100644
---- a/arch/arm64/boot/dts/ti/k3-am64-mcu.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am64-mcu.dtsi
-@@ -1,8 +1,8 @@
--// SPDX-License-Identifier: GPL-2.0
-+// SPDX-License-Identifier: GPL-2.0-only OR MIT
- /*
-  * Device Tree Source for AM64 SoC Family MCU Domain peripherals
-  *
-- * Copyright (C) 2020-2021 Texas Instruments Incorporated - https://www.ti.com/
-+ * Copyright (C) 2020-2024 Texas Instruments Incorporated - https://www.ti.com/
-  */
- 
- &cbass_mcu {
-diff --git a/arch/arm64/boot/dts/ti/k3-am64-thermal.dtsi b/arch/arm64/boot/dts/ti/k3-am64-thermal.dtsi
-index 036db56ba797..b1cd5542428c 100644
---- a/arch/arm64/boot/dts/ti/k3-am64-thermal.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am64-thermal.dtsi
-@@ -1,4 +1,7 @@
--// SPDX-License-Identifier: GPL-2.0
-+// SPDX-License-Identifier: GPL-2.0-only OR MIT
-+/*
-+ * Copyright (C) 2023-2024 Texas Instruments Incorporated - https://www.ti.com/
-+ */
- 
- #include <dt-bindings/thermal/thermal.h>
- 
-diff --git a/arch/arm64/boot/dts/ti/k3-am64.dtsi b/arch/arm64/boot/dts/ti/k3-am64.dtsi
-index 0187c42aed4f..74e56cc68d46 100644
---- a/arch/arm64/boot/dts/ti/k3-am64.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am64.dtsi
-@@ -1,8 +1,8 @@
--// SPDX-License-Identifier: GPL-2.0
-+// SPDX-License-Identifier: GPL-2.0-only OR MIT
- /*
-  * Device Tree Source for AM642 SoC Family
-  *
-- * Copyright (C) 2020-2021 Texas Instruments Incorporated - https://www.ti.com/
-+ * Copyright (C) 2020-2024 Texas Instruments Incorporated - https://www.ti.com/
-  */
- 
- #include <dt-bindings/gpio/gpio.h>
-diff --git a/arch/arm64/boot/dts/ti/k3-am642-evm.dts b/arch/arm64/boot/dts/ti/k3-am642-evm.dts
-index 8c5651d2cf5d..f6032c4b251c 100644
---- a/arch/arm64/boot/dts/ti/k3-am642-evm.dts
-+++ b/arch/arm64/boot/dts/ti/k3-am642-evm.dts
-@@ -1,6 +1,6 @@
--// SPDX-License-Identifier: GPL-2.0
-+// SPDX-License-Identifier: GPL-2.0-only OR MIT
- /*
-- * Copyright (C) 2020-2021 Texas Instruments Incorporated - https://www.ti.com/
-+ * Copyright (C) 2020-2024 Texas Instruments Incorporated - https://www.ti.com/
+  * ALINX AN5641 & Digilent PCam 5C - OV5640 camera module
+- * Copyright (C) 2022-2023 Texas Instruments Incorporated - https://www.ti.com/
++ * Copyright (C) 2022-2024 Texas Instruments Incorporated - https://www.ti.com/
   */
  
  /dts-v1/;
-diff --git a/arch/arm64/boot/dts/ti/k3-am642-sk.dts b/arch/arm64/boot/dts/ti/k3-am642-sk.dts
-index 1dddd6fc1a0d..f9c8ec4983b6 100644
---- a/arch/arm64/boot/dts/ti/k3-am642-sk.dts
-+++ b/arch/arm64/boot/dts/ti/k3-am642-sk.dts
-@@ -1,6 +1,6 @@
+diff --git a/arch/arm64/boot/dts/ti/k3-am625-beagleplay-csi2-tevi-ov5640.dtso b/arch/arm64/boot/dts/ti/k3-am625-beagleplay-csi2-tevi-ov5640.dtso
+index 5e1cbbc27c8f..81a2763d43c6 100644
+--- a/arch/arm64/boot/dts/ti/k3-am625-beagleplay-csi2-tevi-ov5640.dtso
++++ b/arch/arm64/boot/dts/ti/k3-am625-beagleplay-csi2-tevi-ov5640.dtso
+@@ -1,7 +1,7 @@
 -// SPDX-License-Identifier: GPL-2.0
 +// SPDX-License-Identifier: GPL-2.0-only OR MIT
  /*
-- * Copyright (C) 2021 Texas Instruments Incorporated - https://www.ti.com/
-+ * Copyright (C) 2024 Texas Instruments Incorporated - https://www.ti.com/
+  * Technexion TEVI-OV5640-*-RPI - OV5640 camera module
+- * Copyright (C) 2022-2023 Texas Instruments Incorporated - https://www.ti.com/
++ * Copyright (C) 2022-2024 Texas Instruments Incorporated - https://www.ti.com/
   */
  
  /dts-v1/;
-diff --git a/arch/arm64/boot/dts/ti/k3-am642.dtsi b/arch/arm64/boot/dts/ti/k3-am642.dtsi
-index 7a6eedea3aae..8589ee55ef09 100644
---- a/arch/arm64/boot/dts/ti/k3-am642.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am642.dtsi
-@@ -1,8 +1,8 @@
+diff --git a/arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts b/arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts
+index eadbdd9ffe37..600db09b8ad3 100644
+--- a/arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts
++++ b/arch/arm64/boot/dts/ti/k3-am625-beagleplay.dts
+@@ -1,9 +1,9 @@
 -// SPDX-License-Identifier: GPL-2.0
 +// SPDX-License-Identifier: GPL-2.0-only OR MIT
  /*
-  * Device Tree Source for AM642 SoC family in Dual core configuration
+  * https://beagleplay.org/
   *
-- * Copyright (C) 2020-2021 Texas Instruments Incorporated - https://www.ti.com/
-+ * Copyright (C) 2020-2024 Texas Instruments Incorporated - https://www.ti.com/
+- * Copyright (C) 2022-2023 Texas Instruments Incorporated - https://www.ti.com/
+- * Copyright (C) 2022-2023 Robert Nelson, BeagleBoard.org Foundation
++ * Copyright (C) 2022-2024 Texas Instruments Incorporated - https://www.ti.com/
++ * Copyright (C) 2022-2024 Robert Nelson, BeagleBoard.org Foundation
+  */
+ 
+ /dts-v1/;
+diff --git a/arch/arm64/boot/dts/ti/k3-j721e-beagleboneai64.dts b/arch/arm64/boot/dts/ti/k3-j721e-beagleboneai64.dts
+index 2f954729f353..dfc9adacd511 100644
+--- a/arch/arm64/boot/dts/ti/k3-j721e-beagleboneai64.dts
++++ b/arch/arm64/boot/dts/ti/k3-j721e-beagleboneai64.dts
+@@ -1,9 +1,9 @@
+-// SPDX-License-Identifier: GPL-2.0
++// SPDX-License-Identifier: GPL-2.0-only OR MIT
+ /*
+  * https://beagleboard.org/ai-64
+- * Copyright (C) 2022 Texas Instruments Incorporated - https://www.ti.com/
+- * Copyright (C) 2022 Jason Kridner, BeagleBoard.org Foundation
+- * Copyright (C) 2022 Robert Nelson, BeagleBoard.org Foundation
++ * Copyright (C) 2022-2024 Texas Instruments Incorporated - https://www.ti.com/
++ * Copyright (C) 2022-2024 Jason Kridner, BeagleBoard.org Foundation
++ * Copyright (C) 2022-2024 Robert Nelson, BeagleBoard.org Foundation
   */
  
  /dts-v1/;
