@@ -1,58 +1,46 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B4A639FC6
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 09:58:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77F2139FC3;
+	Mon, 22 Jan 2024 09:59:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705917510; cv=none; b=cbparoj1nT1zn2wZ2R6JsBpSl7KMBTj9PMgNKvG/LBwsvtfdeUqTptTI9ph76iIqvAvtNNAROGNDr9lWwxoMRvEsf7votr8fGox8IvmpP6eI9hwGN5K/s3V+TIS3w/cKwDlvQcl/gzB2y5YpFYuaenTmV0PQY24yw/OhIPVrv94=
+	t=1705917564; cv=none; b=sCyzVXPsiYjD0ulecNRl6MoIDTwAG7QMJtzyCIYye83YgJSIM6jdG3qeFYT0iee6XLofEqL4bqPpqgm1tcSX5tRcn/5B/nbWTQIUB2KjNHA5XSoCa4Sqf5Rud1O1+lNqvM9VMeBRwurrYBGx389yyDUhZG7VVDScN640hI2odF0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705917510; c=relaxed/simple;
-	bh=gELjH+KX0/rA4qx7//5Nome4OCqmT9IxOo93luUA218=;
+	s=arc-20240116; t=1705917564; c=relaxed/simple;
+	bh=yI7BkxiARwJDyFyiI+RWi3YWMjcFaJI85oGbC+zm07U=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=i0X3ec+xIwlEhK9e3wlbFMMbLDYifBQOZPSKYpDIudmX98UP/IDvXDxQYexPuFmIWXhVQ02DHirl+9RHr42REUsI8UE1E0SYO/750PmjJNM3PiCaOTA79P0N2R5ebZJboeSPen6hRokGCgLltNMvvI+7K2dgmAOqLBYTOEpzRKQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tweaklogic.com; spf=pass smtp.mailfrom=tweaklogic.com; dkim=pass (2048-bit key) header.d=tweaklogic.com header.i=@tweaklogic.com header.b=M9Ez7rlP; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tweaklogic.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tweaklogic.com
+	 In-Reply-To:Content-Type; b=TaVmq9aq8Yeu+FbCu0idveUd/sj2nQIHTpTIO7nk73WYVOfeZU1EQWMIVKbCbVPyLTARKECq8Qs6NmOVzHm7DB08tW9bbQeqvrfPCC+07Lzpovn7JxXWZsWiPhGkdHqvgUAzPEn4uF7N6TLOIhZNfRzKI2mm1q82gRocKW5p+g8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=n+nEUDLj; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tweaklogic.com header.i=@tweaklogic.com header.b="M9Ez7rlP"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1d71e1d7c78so12908935ad.3
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 01:58:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tweaklogic.com; s=google; t=1705917508; x=1706522308; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Ar0+/R5zg7/etbhMp1vh5sjI6Zb7oH6GKFRH8tUiMSQ=;
-        b=M9Ez7rlPtoHYoxGO3MBzkbopA2rifgQrNPYd2MLnXEUjni/9O9okAdOgeEEXnB1HFC
-         teEq/PGnPX7E0CyFM5yZmO4WuxKxNjyhCM5yvu84KXPzIOjJp5yU4R8fdF8smK095V29
-         oVQQs/v4VvH1dKcFrB8HzCvtxFTJSLxDjc2kNIMY2SwCqEtMp3QUlrFQPeWcLFcpI3t4
-         jvrN/A8dNXsmwQ3M6AoZ5NrOIi3Pg+e8/UY8kpRGSRj+RlEEFSBazRA1j2Zj9hRvVynD
-         AsmrgMjrnZQSckVY8hmyAbDxQKO0R6J4mijjs8rPsh1s8VC478U8o4o71ijOAbNJJn19
-         ACXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705917508; x=1706522308;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ar0+/R5zg7/etbhMp1vh5sjI6Zb7oH6GKFRH8tUiMSQ=;
-        b=t6pjaXvHRy/Yf3BaWuw1g+t9XGn9jrfiy+qYp0/JizpQ2MmF9SF21oXr2NqNd3IVDe
-         tFm3aKJOKiEfQvPoYRlk24mSpqKk1jX2S0wF8lw+Z5uEsWsL7U7KoI1RWDJ5sEnxVdeR
-         2Hc1QwKZxbUeQtMeDVOl9CqJeU0s77mWz5LtbIZeTHjw7py/b0CuBtyYR3A2YL9TNnSj
-         ck98e3vqaOpVKDJBYB2KfTHYv6B0Wt2gd3RRt1TRqmXwPRAJ999lWfKn3PA7kXgj6I7H
-         vwA+JWvqrKqCYQZj7WTGavWV5h5Dlqql+UrS4/bu3bD8+eoQMGSd10BunzeBzK6JJmGQ
-         5lJQ==
-X-Gm-Message-State: AOJu0YyIbpBV7TQPaJ7M+OQqPsiLTn3LftUk3kfbQNw3pP1p5zTXgyjv
-	l7nyjR5fo6BGEjBSDf0/zUE4YaMm78M+oQ+rbxY1pegi3SVYiT2aytDMcuehLes=
-X-Google-Smtp-Source: AGHT+IHKENnHYqVAboNe6UKYbPrLe/qUracm76Q0elN96Cw/1VSOUCEjcWH3HSRF/EA0sR1/aZNq7g==
-X-Received: by 2002:a17:903:2287:b0:1d7:584c:d1e9 with SMTP id b7-20020a170903228700b001d7584cd1e9mr553307plh.73.1705917507748;
-        Mon, 22 Jan 2024 01:58:27 -0800 (PST)
-Received: from [192.168.20.11] ([180.150.112.156])
-        by smtp.gmail.com with ESMTPSA id h4-20020a170902f7c400b001d70953f166sm6591501plw.155.2024.01.22.01.58.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 22 Jan 2024 01:58:27 -0800 (PST)
-Message-ID: <3742308c-d063-4179-a4cb-80db021ede46@tweaklogic.com>
-Date: Mon, 22 Jan 2024 20:28:22 +1030
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="n+nEUDLj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1705917563; x=1737453563;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=yI7BkxiARwJDyFyiI+RWi3YWMjcFaJI85oGbC+zm07U=;
+  b=n+nEUDLjxiMlGLQXgZBRdX3FT1v1sixGX2DCjyzSEyyVGrx/urUPm61a
+   H5jff2brU8IP/M9JXAN7ssQJvaO0/RY9pWo4RbVdCRkUbfzp+4dapZJVH
+   VQGLkFhzAzgmmfqgTAiFUz/kDX5SsCX6qW0liuXs9l/hgFd9p28uezq/T
+   yyP7brbV/lz3kWCHvoXx1Z7IP7AWT7ifUIvSspWSwJ1msCghj0XyEbCPb
+   NFOXn4g3EKt8wqpclWM93ZnK8YBei5Lii/eol+vcRq7YAAGxrbeLJW4CW
+   MS/kAdVQqnd8fc1evd4xmK/mL1RDrZ4cgbz+SaOdPz0n1G7b4iMKcl4g3
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10960"; a="58037"
+X-IronPort-AV: E=Sophos;i="6.05,211,1701158400"; 
+   d="scan'208";a="58037"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 01:59:22 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,211,1701158400"; 
+   d="scan'208";a="1162228"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.249.40.86])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 01:59:17 -0800
+Message-ID: <e8e5ea25-326b-4565-b0e8-1583b09dba65@intel.com>
+Date: Mon, 22 Jan 2024 11:59:13 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,115 +48,121 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] iio: gts-helper: Fix division loop
-To: Matti Vaittinen <mazziesaccount@gmail.com>,
- Jonathan Cameron <jic23@kernel.org>
-Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
- Lars-Peter Clausen <lars@metafoo.de>, linux-iio@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <ZZZ7pJBGkTdFFqiY@dc78bmyyyyyyyyyyyyydt-3.rev.dnainternet.fi>
- <20240107162253.66c1f0f1@jic23-huawei>
- <a41ef2c9-bd74-4b0e-afb7-12e198847609@tweaklogic.com>
- <717b7e70-5cf8-4671-8a6b-005eefd0535e@gmail.com>
+Subject: Re: [PATCH v4 3/5] perf: script: add field 'disasm' to display
+ mnemonic instructions
 Content-Language: en-US
-From: Subhajit Ghosh <subhajit.ghosh@tweaklogic.com>
-In-Reply-To: <717b7e70-5cf8-4671-8a6b-005eefd0535e@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+To: Changbin Du <changbin.du@huawei.com>
+Cc: Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+ Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
+ Thomas Richter <tmricht@linux.ibm.com>, changbin.du@gmail.com,
+ Peter Zijlstra <peterz@infradead.org>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>, Ingo Molnar <mingo@redhat.com>
+References: <20240119104856.3617986-1-changbin.du@huawei.com>
+ <20240119104856.3617986-4-changbin.du@huawei.com>
+ <e840bd05-a9e0-4463-8597-b67c7627809b@intel.com>
+ <20240120074009.zmywqj6irtedivqk@M910t>
+From: Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <20240120074009.zmywqj6irtedivqk@M910t>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 22/1/24 17:20, Matti Vaittinen wrote:
-> On 1/19/24 13:56, Subhajit Ghosh wrote:
->> On 8/1/24 02:52, Jonathan Cameron wrote:
->>> On Thu, 4 Jan 2024 11:34:28 +0200
->>> Matti Vaittinen <mazziesaccount@gmail.com> wrote:
+On 20/01/24 09:40, Changbin Du wrote:
+> On Fri, Jan 19, 2024 at 08:39:36PM +0200, Adrian Hunter wrote:
+>> On 19/01/24 12:48, Changbin Du wrote:
+>>> In addition to the 'insn' field, this adds a new field 'disasm' to
+>>> display mnemonic instructions instead of the raw code.
 >>>
->>>> The loop based 64bit division may run for a long time when dividend is a
->>>> lot bigger than the divider. Replace the division loop by the
->>>> div64_u64() which implementation may be significantly faster.
->>>>
->>>> Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
->>>> Fixes: 38416c28e168 ("iio: light: Add gain-time-scale helpers")
+>>> $ sudo perf script -F +disasm
+>>>        perf-exec 1443864 [006] 2275506.209848:          psb:  psb offs: 0                                      0 [unknown] ([unknown])
+>>>        perf-exec 1443864 [006] 2275506.209848:          cbr:  cbr: 41 freq: 4100 MHz (114%)                    0 [unknown] ([unknown])
+>>>               ls 1443864 [006] 2275506.209905:          1  branches:uH:      7f216b426100 _start+0x0 (/usr/lib/x86_64-linux-gnu/ld-2.31.so) insn: movq %rsp, %rdi
+>>>               ls 1443864 [006] 2275506.209908:          1  branches:uH:      7f216b426103 _start+0x3 (/usr/lib/x86_64-linux-gnu/ld-2.31.so) insn: callq _dl_start+0x0
 >>>
->>> Hmm. Fix or not perf improvement?  I'm going to take the middle ground
->>> and leave the fixes tag, but not rush this in.
+>>> Signed-off-by: Changbin Du <changbin.du@huawei.com>
+>>> ---
+>>>  tools/perf/Documentation/perf-script.txt | 7 ++++---
+>>>  tools/perf/builtin-script.c              | 8 +++++++-
+>>>  2 files changed, 11 insertions(+), 4 deletions(-)
 >>>
->>> So applied to the togreg branch of iio.git and for now just pushed out
->>> as testing for 0-day etc to take a look before I rebase that tree after
->>> rc1.
->>>
->>>
->>>
->>>> ---
->>>>
->>>> I've implemented also a fixup series for supporting rounding of
->>>> gains/scales:
->>>> https://lore.kernel.org/lkml/37d3aa193e69577353d314e94463a08d488ddd8d.1701780964.git.mazziesaccount@gmail.com/
->>>>
->>>> That series does also remove the offending loop.
->>>>
->>>> We don't currently have any in-tree users of GTS helpers which would
->>>> need the rounding support so pushing the rounding is not urgent (and I
->>>> haven't heard of Subjahit whose driver required the rounding). Hence, we
->>>> may want to only take this loop fix in for now (?) and reconsider
->>>> rounding when someone need that.
->>>>
->>>> Jonathan, what's your take on this?
->>> Agreed - let us wait for the rounding to have a user, but makes sense
->>> to tidy this corner up in the meantime.
->>>
->>> Thanks,
->>>
->>> Jonathan
->>>
->>>>
->>>>   drivers/iio/industrialio-gts-helper.c | 5 ++---
->>>>   1 file changed, 2 insertions(+), 3 deletions(-)
->>>>
->>>> diff --git a/drivers/iio/industrialio-gts-helper.c b/drivers/iio/industrialio-gts-helper.c
->>>> index 7653261d2dc2..abcab2d38589 100644
->>>> --- a/drivers/iio/industrialio-gts-helper.c
->>>> +++ b/drivers/iio/industrialio-gts-helper.c
->>>> @@ -34,7 +34,7 @@
->>>>   static int iio_gts_get_gain(const u64 max, const u64 scale)
->>>>   {
->>>>       u64 full = max;
->>>> -    int tmp = 1;
->>>> +    int tmp = 0;
->>>>       if (scale > full || !scale)
->>>>           return -EINVAL;
->>>> @@ -48,8 +48,7 @@ static int iio_gts_get_gain(const u64 max, const u64 scale)
->>>>           tmp++;
->>>>       }
->>>> -    while (full > scale * (u64)tmp)
->>>> -        tmp++;
->>>> +    tmp += div64_u64(full, scale);
->>>>       return tmp;
->>>>   }
->>>>
->>>> base-commit: 2cc14f52aeb78ce3f29677c2de1f06c0e91471ab
->>>
->>>
->> Hi Matti,
+>>> diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
+>>> index ff9a52e44688..fc79167c6bf8 100644
+>>> --- a/tools/perf/Documentation/perf-script.txt
+>>> +++ b/tools/perf/Documentation/perf-script.txt
+>>> @@ -132,9 +132,10 @@ OPTIONS
+>>>          Comma separated list of fields to print. Options are:
+>>>          comm, tid, pid, time, cpu, event, trace, ip, sym, dso, dsoff, addr, symoff,
+>>>          srcline, period, iregs, uregs, brstack, brstacksym, flags, bpf-output,
+>>> -        brstackinsn, brstackinsnlen, brstackoff, callindent, insn, insnlen, synth,
+>>> -        phys_addr, metric, misc, srccode, ipc, data_page_size, code_page_size, ins_lat,
+>>> -        machine_pid, vcpu, cgroup, retire_lat.
+>>> +        brstackinsn, brstackinsnlen, brstackoff, callindent, insn, disasm,
+>>> +        insnlen, synth, phys_addr, metric, misc, srccode, ipc, data_page_size,
+>>> +        code_page_size, ins_lat, machine_pid, vcpu, cgroup, retire_lat.
+>>> +
 >>
->> Your fix works beautifully with the latest version of apds9306 driver which I am working on.
->> All available scale values can be set without any errors. Thank you.
+>> Further down, there are explanations for insn and insnlen.  disasm
+>> could be added there.
+>>
+> Updated as:
 > 
-> Thanks for testing Subhajit! Just to ensure we have no miscommunication - did you test just this division fix, or the rounding fix here:
-> https://lore.kernel.org/lkml/37d3aa193e69577353d314e94463a08d488ddd8d.1701780964.git.mazziesaccount@gmail.com/
-You are most welcome. I did not check the above rounding fix pointed out by the link. I will be happy to check it and let you know by the end of this month.
-I checked this division fix.
+> 	When doing instruction trace decoding, insn, disasm and insnlen give the
+> 	instruction bytes, disassembled instructions and the instruction length
+> 	of the current instruction respectively.
+
+I wondered about mentioning that disasm needs perf to be compiled with
+disassembler support, but with a permissive license it seems likely
+that libcapstone support would generally be built into perf, so that
+should be fine.
 
 > 
->> Moving to a new city with a new full time job with the assumption of getting more time
->> for my list of opensource projects and contributions proved to be utterly wrong!
+>>>          Field list can be prepended with the type, trace, sw or hw,
+>>>          to indicate to which event type the field list applies.
+>>>          e.g., -F sw:comm,tid,time,ip,sym  and -F trace:time,cpu,trace
+>>> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+>>> index 4817a37f16e2..12d886694f6c 100644
+>>> --- a/tools/perf/builtin-script.c
+>>> +++ b/tools/perf/builtin-script.c
+>>> @@ -135,6 +135,7 @@ enum perf_output_field {
+>>>  	PERF_OUTPUT_CGROUP          = 1ULL << 39,
+>>>  	PERF_OUTPUT_RETIRE_LAT      = 1ULL << 40,
+>>>  	PERF_OUTPUT_DSOFF           = 1ULL << 41,
+>>> +	PERF_OUTPUT_DISASM          = 1ULL << 42,
+>>>  };
+>>>  
+>>>  struct perf_script {
+>>> @@ -190,6 +191,7 @@ struct output_option {
+>>>  	{.str = "bpf-output",   .field = PERF_OUTPUT_BPF_OUTPUT},
+>>>  	{.str = "callindent", .field = PERF_OUTPUT_CALLINDENT},
+>>>  	{.str = "insn", .field = PERF_OUTPUT_INSN},
+>>> +	{.str = "disasm", .field = PERF_OUTPUT_DISASM},
+>>>  	{.str = "insnlen", .field = PERF_OUTPUT_INSNLEN},
+>>>  	{.str = "brstackinsn", .field = PERF_OUTPUT_BRSTACKINSN},
+>>>  	{.str = "brstackoff", .field = PERF_OUTPUT_BRSTACKOFF},
+>>> @@ -1515,6 +1517,10 @@ static int perf_sample__fprintf_insn(struct perf_sample *sample,
+>>>  		printed += fprintf(fp, " insn: ");
+>>>  		printed += sample__fprintf_insn_raw(sample, fp);
+>>>  	}
+>>> +	if (PRINT_FIELD(DISASM) && sample->insn_len) {
+>>> +		printed += fprintf(fp, " insn: ");
+>>> +		printed += sample__fprintf_insn(sample, thread, machine, fp);
+>>> +	}
+>>>  	if (PRINT_FIELD(BRSTACKINSN) || PRINT_FIELD(BRSTACKINSNLEN))
+>>>  		printed += perf_sample__fprintf_brstackinsn(sample, thread, attr, machine, fp);
+>>>  
+>>> @@ -3900,7 +3906,7 @@ int cmd_script(int argc, const char **argv)
+>>>  		     "Fields: comm,tid,pid,time,cpu,event,trace,ip,sym,dso,dsoff,"
+>>>  		     "addr,symoff,srcline,period,iregs,uregs,brstack,"
+>>>  		     "brstacksym,flags,data_src,weight,bpf-output,brstackinsn,"
+>>> -		     "brstackinsnlen,brstackoff,callindent,insn,insnlen,synth,"
+>>> +		     "brstackinsnlen,brstackoff,callindent,insn,disasm,insnlen,synth,"
+>>>  		     "phys_addr,metric,misc,srccode,ipc,tod,data_page_size,"
+>>>  		     "code_page_size,ins_lat,machine_pid,vcpu,cgroup,retire_lat",
+>>>  		     parse_output_fields),
+>>
 > 
-> Well, I can't blame you :) Being in a new work at new city sounds like you have a lot on your plate right now. Give it half a year and things will stabilize though :) Oh, and falsely assuming that "when XXX, I will have the time to do YYY" - been there done that :)
-> 
-> Good luck on the new work and city!
-Thank you Matti.
-> 
-> Yours,
->      -- Matti
-> 
-Regards,
-Subhajit Ghosh
+
