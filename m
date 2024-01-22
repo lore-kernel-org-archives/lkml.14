@@ -1,92 +1,156 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ECEE39AE8;
-	Mon, 22 Jan 2024 11:03:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8A653A8C0;
+	Mon, 22 Jan 2024 11:04:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705921409; cv=none; b=AhoBnrGJaKNrp5vZlSTZ1d4H6Yzth0pQURsWR+/fC/6arnq1lfq6GA+SfgIBA1BPPfVHxtEhsPkiuqy/AfPBOoLTMbTWZcahdD5XKfsFMk23CxiE9QAaKF4Qe0upfxyaHSzmGSI64h/PKBL5sL4XfKOpbaQJCeLVZtslPnWOnt8=
+	t=1705921448; cv=none; b=m1HWafvl2kke2E1HImwzgQvB08zkf7ep46yz5EgkR33b4PgO4rpk2mIBPPVEuAji1VlA++gjhiQHxptMY6v8lo6cscURE++keKWfnbH8G0+YGGR98l/KpDZ3gTEX3i2CLySIxNAzKrkdl9Lj6GIZyzqlLDrGw5b9n9TFYtYZgzQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705921409; c=relaxed/simple;
-	bh=6CpJyM0xC2SpZ3IfFq61UhU8u/PyEEKm2vh2F1bgl/Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HuPrFRMtdRVNCNMNjaOSNRhOUqaNIwk76eXbGk5RDlC8tXSDzlfogVrXyJtlEjLBzmjGNKOROCJhXjKNQU/vqXWkQY4BPAuuDEI1GFGS0sacgk6XS7vGC1eNqyn1LhI/UxJgGsoiAwiSeQpL50zctQQCntTVKlULjQGE3Ui2Yeo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LMuaBy7Y; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1705921448; c=relaxed/simple;
+	bh=6WGGhf/BTgLnnKlxdbNPCXyuwYCekxPpegnJq4vX000=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jkGE9vmFaBeFO9sQxtrB7c8K2JxA3AJIGpnc3HfSjbmA7KF6ih3ZNmFQT6NTjZ94ExnQtSexu6s1GzMJuKiPVu9sKF9mkkm/8exDPVYlF281KD06eSrdXXcNh/JCJaI66UT0EOYN3j2ETaNE0XAQyoFoX+VbqPcEeVxMnPoF5SQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WuV6cvDj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LMuaBy7Y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 933F0C433F1;
-	Mon, 22 Jan 2024 11:03:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WuV6cvDj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CC00C433F1;
+	Mon, 22 Jan 2024 11:04:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705921408;
-	bh=6CpJyM0xC2SpZ3IfFq61UhU8u/PyEEKm2vh2F1bgl/Q=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=LMuaBy7YNKqgXP+g1PazxNm6iFgYjRZsO/SreZ3fHp1L07OjTeEWUyoto0uB15z2I
-	 LruRKHar2RsEJ9jliqdpoD9cC/TwnhWEz6giO016jChY/LYP64VfSHYrScThnTg0KH
-	 aUM4418m4mG0S+BLLUkd1Ra2eFcukz+9/7HNZNzMkJmkWsPtX3g/BxmGltGAywp4SZ
-	 OcfnKjx1AalLGM+zTafg9hcZ/DDjabEgv6Fvgy5hfS+fnyZTNq3SU3oT+MDpMioPWf
-	 Bf9pBf8dQG3vW9t5+LFkjw368OYE6TB8O+394fqtfX44TUoy6F9U8ejwOc0bBMe3g8
-	 LjekVriBjwrwQ==
-From: Christian Brauner <brauner@kernel.org>
-To: Nikita Zhandarovich <n.zhandarovich@fintech.ru>
-Cc: Christian Brauner <brauner@kernel.org>,
-	Jeff Layton <jlayton@kernel.org>,
-	Amir Goldstein <amir73il@gmail.com>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Jan Kara <jack@suse.cz>,
-	linux-fsdevel@vger.kernel.org,
-	linux-nfs@vger.kernel.org,
+	s=k20201202; t=1705921447;
+	bh=6WGGhf/BTgLnnKlxdbNPCXyuwYCekxPpegnJq4vX000=;
+	h=From:To:Cc:Subject:Date:From;
+	b=WuV6cvDj37O15oSjTHGuaol6bCLP78ejj/Qqj1SW7SBKckvvka5v+47PF1FXP7ypE
+	 z8bPKsEWzCACA0JC2QjeWs5bx4hHkyPxxpf2/rOeSXpfpDwA4EToI+diq8ckf2NpRQ
+	 gT3IDlQYVaCkI8ue4DJEhWrjdt4UClq0ZCqZv34eAaDCNgBrnhDszRFT/ajus6C8Pq
+	 IXAl0s6zN0bR928g3H2mCH46U7WbujMk9bSlgl97yrRcnon3yzPubDbl8y8xv7/78B
+	 DzHXQS7rE/VOJKvdmiuPb+5XWlbzGPmKIB/MRaftvwXs3cqCHcSMTXn4tikwKLJlvP
+	 LUNtsz4+7e+QA==
+From: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
+To: gregkh@linuxfoundation.org
+Cc: linux-serial@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	syzbot+09b349b3066c2e0b1e96@syzkaller.appspotmail.com,
-	Chuck Lever <chuck.lever@oracle.com>
-Subject: Re: [PATCH] do_sys_name_to_handle(): use kzalloc() to fix kernel-infoleak
-Date: Mon, 22 Jan 2024 12:03:10 +0100
-Message-ID: <20240122-dahin-werden-289c66dfc773@brauner>
+	"Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	dri-devel@lists.freedesktop.org,
+	Helge Deller <deller@gmx.de>,
+	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	linux-doc@vger.kernel.org,
+	linux-fbdev@vger.kernel.org,
+	linux-parisc@vger.kernel.org,
+	Martin Hostettler <textshell@uchuujin.de>,
+	Thomas Zimmermann <tzimmermann@suse.de>
+Subject: [PATCH v2 00/47] tty: vt: cleanup and documentation
+Date: Mon, 22 Jan 2024 12:03:14 +0100
+Message-ID: <20240122110401.7289-1-jirislaby@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240119153906.4367-1-n.zhandarovich@fintech.ru>
-References: <20240119153906.4367-1-n.zhandarovich@fintech.ru>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1572; i=brauner@kernel.org; h=from:subject:message-id; bh=6CpJyM0xC2SpZ3IfFq61UhU8u/PyEEKm2vh2F1bgl/Q=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaSu864IvHuoxiVFwZUnwXSSjNxy5Yzai3v8Gs9tmBBoz h8zP/NxRykLgxgXg6yYIotDu0m43HKeis1GmRowc1iZQIYwcHEKwEQ232Vk2KwW6n3zfYymsHHD iWuvnEqeOnv7PurnX7N5fsWakgV3VRkZnluy/TCt5tTMrqt3i2fdk7fD5+Ch42apHu7uy1+2BSS wAgA=
-X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 Content-Transfer-Encoding: 8bit
 
-On Fri, 19 Jan 2024 07:39:06 -0800, Nikita Zhandarovich wrote:
-> syzbot identified a kernel information leak vulnerability in
-> do_sys_name_to_handle() and issued the following report [1].
-> 
-> [1]
-> "BUG: KMSAN: kernel-infoleak in instrument_copy_to_user include/linux/instrumented.h:114 [inline]
-> BUG: KMSAN: kernel-infoleak in _copy_to_user+0xbc/0x100 lib/usercopy.c:40
->  instrument_copy_to_user include/linux/instrumented.h:114 [inline]
->  _copy_to_user+0xbc/0x100 lib/usercopy.c:40
->  copy_to_user include/linux/uaccess.h:191 [inline]
->  do_sys_name_to_handle fs/fhandle.c:73 [inline]
->  __do_sys_name_to_handle_at fs/fhandle.c:112 [inline]
->  __se_sys_name_to_handle_at+0x949/0xb10 fs/fhandle.c:94
->  __x64_sys_name_to_handle_at+0xe4/0x140 fs/fhandle.c:94
->  ...
-> 
-> [...]
+Push the console code (vt.c, vt.h, console.h, ...) into a bit more
+maintainable state. Especially all around consw structure and document
+it.
 
-Applied to the vfs.misc branch of the vfs/vfs.git tree.
-Patches in the vfs.misc branch should appear in linux-next soon.
+CSI parser is also a bit cleaned up. More to follow some time in the
+next round.
 
-Please report any outstanding bugs that were missed during review in a
-new review to the original patch series allowing us to drop it.
+[v2] See respective patches for changes. The major changes:
+ * vesa.h introduced
+ * parameters of csi*() simplified
 
-It's encouraged to provide Acked-bys and Reviewed-bys even though the
-patch has now been applied. If possible patch trailers will be updated.
+Cc: Daniel Vetter <daniel@ffwll.ch>
+Cc: dri-devel@lists.freedesktop.org
+Cc: Helge Deller <deller@gmx.de>
+Cc: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: linux-doc@vger.kernel.org
+Cc: linux-fbdev@vger.kernel.org
+Cc: linux-parisc@vger.kernel.org
+Cc: Martin Hostettler <textshell@uchuujin.de>
+Cc: Thomas Zimmermann <tzimmermann@suse.de>
 
-Note that commit hashes shown below are subject to change due to rebase,
-trailer updates or similar. If in doubt, please check the listed branch.
+Jiri Slaby (SUSE) (47):
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
-branch: vfs.misc
+  vgacon: inline vc_scrolldelta_helper() into vgacon_scrolldelta()
+  fbcon: make display_desc a static array in fbcon_startup()
+  tty: vt: fix 20 vs 0x20 typo in EScsiignore
+  tty: vt: expect valid vc when in tty ops
+  tty: vt: pass proper pointers from tioclinux()
+  tty: vt: push console lock from tioclinux() down to 2 functions
+  tty: vt: pass vc_resize_user as a parameter
+  tty: vt: make vc_is_sel()'s vc const
+  tty: vt: define an enum for CSI+m codes
+  tty: vt: use case ranges for CSI+m fg/bg colors
+  tty: vt: define an enum for CSI+J codes
+  tty: vt: reflow csi_J()
+  use clamp() for counts in csi_?() handlers
+  don't pass vc->vc_par[0] to csi_?() handlers
+  tty: vt: define an enum for CSI+K codes
+  tty: vt: reflow csi_K()
+  tty: vt: define an enum for ascii characters
+  tty: vt: remove extern from functions in selection.h
+  tty: vt: make consw::con_debug_*() return void
+  tty: vt: make init parameter of consw::con_init() a bool
+  tty: vt: sanitize arguments of consw::con_clear()
+  tty: vt: remove checks for count in consw::con_clear() implementations
+  tty: vt: add con_putc() helper
+  tty: vt: eliminate unneeded consw::con_putc() implementations
+  tty: vt: sanitize consw::con_putc() parameters
+  tty: vt: sanitize consw::con_putcs() parameters
+  consoles: use if instead of switch-case in consw::con_cursor()
+  fbdev/core: simplify cursor_state setting in fbcon_ops::cursor()
+  tty: vt: remove CM_* constants
+  tty: vt: make consw::con_switch() return a bool
+  tty: vt: stop using -1 for blank mode in consw::con_blank()
+  tty: vt: define a common enum for VESA blanking constants
+  tty: vt: use VESA blanking constants
+  tty: vt: use enum constants for VESA blanking modes
+  tty: vt: make types around consw::con_blank() bool
+  tty: vt: make font of consw::con_font_set() const
+  tty: vt: make consw::con_font_default()'s name const
+  tty: vt: change consw::con_set_origin() return type
+  fbcon: remove consw::con_screen_pos()
+  tty: vt: remove consw::con_screen_pos()
+  tty: vt: make types of screenpos() more consistent
+  fbcon: remove fbcon_getxy()
+  tty: vt: remove consw::con_getxy()
+  tty: vt: remove unused consw::con_flush_scrollback()
+  tty: vt: document the rest of struct consw
+  tty: vt: fix up kernel-doc
+  Documentation: add console.rst
 
-[1/1] do_sys_name_to_handle(): use kzalloc() to fix kernel-infoleak
-      https://git.kernel.org/vfs/vfs/c/1b380b340f19
+ Documentation/driver-api/tty/console.rst |  45 ++
+ Documentation/driver-api/tty/index.rst   |   1 +
+ drivers/tty/vt/selection.c               |  43 +-
+ drivers/tty/vt/vt.c                      | 645 +++++++++++------------
+ drivers/tty/vt/vt_ioctl.c                |   6 +-
+ drivers/video/console/dummycon.c         |  38 +-
+ drivers/video/console/mdacon.c           |  43 +-
+ drivers/video/console/newport_con.c      |  69 +--
+ drivers/video/console/sticon.c           |  79 ++-
+ drivers/video/console/vgacon.c           | 152 +++---
+ drivers/video/fbdev/core/bitblit.c       |  13 +-
+ drivers/video/fbdev/core/fbcon.c         | 123 ++---
+ drivers/video/fbdev/core/fbcon.h         |   4 +-
+ drivers/video/fbdev/core/fbcon_ccw.c     |  13 +-
+ drivers/video/fbdev/core/fbcon_cw.c      |  13 +-
+ drivers/video/fbdev/core/fbcon_ud.c      |  13 +-
+ drivers/video/fbdev/core/tileblit.c      |   4 +-
+ include/linux/console.h                  | 124 +++--
+ include/linux/console_struct.h           |   1 -
+ include/linux/selection.h                |  56 +-
+ include/linux/vt_kern.h                  |  12 +-
+ include/uapi/linux/fb.h                  |   8 +-
+ include/uapi/linux/vesa.h                |  18 +
+ 23 files changed, 755 insertions(+), 768 deletions(-)
+ create mode 100644 Documentation/driver-api/tty/console.rst
+ create mode 100644 include/uapi/linux/vesa.h
+
+-- 
+2.43.0
+
