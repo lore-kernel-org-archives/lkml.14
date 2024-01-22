@@ -1,111 +1,187 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB20548CC1
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 17:48:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B291B48CF0;
+	Mon, 22 Jan 2024 17:48:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705945717; cv=none; b=bnP9vv1h9qm07P7A2flle5VuKjiy+APSYFVhwlZ7lDiKPp87YcVv76aoSRWIMA5WYXC72jmKxsm0gvxJLX1tLHapfzy+Av65yBBlUeBR1XzOkuzu47MMkq7pm7ni7Qlrg4AluNGX0sY7f2vCXTL+2gfari/MDDZ9MUHZvLCW27E=
+	t=1705945731; cv=none; b=t1U9g1Cm9sEGRJqIDUN8x0Cmhn/3SZuGTtm1ljSqVI6ABQ6YlRUOKlwn9IKnHZcoGEgJNxgg0LICiUXSa0EtE4hGJfZv2+gGs8oz17m7t/iAhoESneeFJUW4D1vkKkDrcHFWoykcTTHWPbf3APwda3GttMLUB8ENqyxqxML6WGw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705945717; c=relaxed/simple;
-	bh=3F3G5Ww1SUZQsUMoJIkzqcCLWxQapyaD7dFyElSipKM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GtJi/W0hQfmbxUC09e2E+7hLIU4K5ZxY8zaSaY0xYwjZ5dJFiOpwr0kzfAB/OTlmZxzKlFTnagKSBnB0cVJ1Qm/kztjvNngGKcMfZFPv7TXXhUf0QEMl34QZ4tLWNUhYB3RwjHaJWeucIyjsD7HpKDApx/KhyTtZt3PgmYlmbqc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E05E7C433F1;
-	Mon, 22 Jan 2024 17:48:35 +0000 (UTC)
-Date: Mon, 22 Jan 2024 12:50:04 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Kees Cook
- <keescook@chromium.org>, Linus Torvalds <torvalds@linux-foundation.org>,
- linux-kernel@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, Mark
- Rutland <mark.rutland@arm.com>, Andrew Morton <akpm@linux-foundation.org>,
- Christian Brauner <brauner@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>,
- Ajay Kaher <ajay.kaher@broadcom.com>
-Subject: Re: [for-linus][PATCH 1/3] eventfs: Have the inodes all for files
- and directories all be the same
-Message-ID: <20240122125004.7bbf0b70@gandalf.local.home>
-In-Reply-To: <ccc4234d-8a47-4c0f-808a-95e61c9c9171@efficios.com>
-References: <20240117143548.595884070@goodmis.org>
-	<20240117143810.531966508@goodmis.org>
-	<CAMuHMdXKiorg-jiuKoZpfZyDJ3Ynrfb8=X+c7x0Eewxn-YRdCA@mail.gmail.com>
-	<20240122100630.6a400dd3@gandalf.local.home>
-	<ccc4234d-8a47-4c0f-808a-95e61c9c9171@efficios.com>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1705945731; c=relaxed/simple;
+	bh=hgeoLm3uwg0td5z993vUSVC7oy/nuqOImO96wn1PMjM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=g11LGkm83H2wPnHdnRn8Ybwh8+6ehFT1RG+S9GkzNzS0UUhSNw5WF5cAUUjvcpI4T04I1Teuj/dm7oQyJQuYomS2qAbXVPB0TyNAn/qawXu7sEER0AJVt+0tP15Yz/sz3mEdpIPBYJ45UY2tWMVeBycvXTWmmS9NuudOCfzsyjI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AABn7R/x; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AABn7R/x"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FBAFC433F1;
+	Mon, 22 Jan 2024 17:48:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705945731;
+	bh=hgeoLm3uwg0td5z993vUSVC7oy/nuqOImO96wn1PMjM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=AABn7R/xM+sFo+KOU71jD3AWD77zQjvu96pxhT5YNoFsNI2JSJ70u/Be0vLKHGpf1
+	 VJSWfBH1Zf8ywdwmrrARCuKdJ8xHzzfgyqZFM3ABE7Bljf4XaAnzOLVIrrkwUNRI6e
+	 HnxuRqO1KjIYQVzwWxxC74P9IilqhKbfDl93Dmb2XyRW3jeyw4ZZbbpZfx7+FaES3l
+	 1uWr2lKi1C+lXKVcSacKYWQouKrVjTZCkoR820fJB0gFHuQLWVHYAEV/bcD78k2ynP
+	 KLlxgoMSmRshS4OxEdXFZjytfjILIZi8BDWWl00ufIzzE8FG6v94RjdvriP3cZpnR0
+	 Ff5XTEdUd8h9g==
+Date: Mon, 22 Jan 2024 17:48:44 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Ceclan Dumitru <mitrutzceclan@gmail.com>, linus.walleij@linaro.org,
+	brgl@bgdev.pl, andy@kernel.org, linux-gpio@vger.kernel.org,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Michael Walle <michael@walle.cc>,
+	Andy Shevchenko <andy.shevchenko@gmail.com>,
+	Arnd Bergmann <arnd@arndb.de>, ChiaEn Wu <chiaen_wu@richtek.com>,
+	Niklas Schnelle <schnelle@linux.ibm.com>,
+	Leonard =?iso-8859-1?Q?G=F6hrs?= <l.goehrs@pengutronix.de>,
+	Mike Looijmans <mike.looijmans@topic.nl>,
+	Haibo Chen <haibo.chen@nxp.com>,
+	Hugo Villeneuve <hvilleneuve@dimonoff.com>,
+	David Lechner <dlechner@baylibre.com>,
+	Ceclan Dumitru <dumitru.ceclan@analog.com>,
+	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v12 1/2] dt-bindings: adc: add AD7173
+Message-ID: <20240122-bloating-dyslexic-cbc0258c898a@spud>
+References: <20240118125001.12809-1-mitrutzceclan@gmail.com>
+ <20240118-lunar-anthem-31bf3b9b351d@spud>
+ <b96d5bfc-cc38-44c7-a88f-e7ac5e4eb71d@gmail.com>
+ <20240118-freebase-uptake-ec5fdf786d20@spud>
+ <20240121154118.389e4e87@jic23-huawei>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="dlghW/7VOeuyh/eL"
+Content-Disposition: inline
+In-Reply-To: <20240121154118.389e4e87@jic23-huawei>
 
-On Mon, 22 Jan 2024 12:14:36 -0500
-Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
 
-> 
-> Why use an improvised hashing function (re-purposed from
-> scripts/kconfig/symbol.c to a use-case which is exposed through a
+--dlghW/7VOeuyh/eL
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-That hash is just salt to the real hash function, which is the
-siphash_1u32(). I added the name hash so that each file will get a little
-different salt to the hash.
+On Sun, Jan 21, 2024 at 03:41:18PM +0000, Jonathan Cameron wrote:
+> On Thu, 18 Jan 2024 16:06:29 +0000
+> Conor Dooley <conor@kernel.org> wrote:
+> > On Thu, Jan 18, 2024 at 05:51:20PM +0200, Ceclan Dumitru wrote:
+> > > On 1/18/24 17:23, Conor Dooley wrote: =20
+> > > > On Thu, Jan 18, 2024 at 02:49:22PM +0200, Dumitru Ceclan wrote: =20
+> > > >> +  adi,clock-select:
+> > > >> +    description: |
+> > > >> +      Select the ADC clock source. Valid values are:
+> > > >> +      int         : Internal oscillator
+> > > >> +      int-out     : Internal oscillator with output on XTAL2 pin
+> > > >> +      ext-clk     : External clock input on XTAL2 pin
+> > > >> +      xtal        : External crystal on XTAL1 and XTAL2 pins
+> > > >> +
+> > > >> +    $ref: /schemas/types.yaml#/definitions/string
+> > > >> +    enum:
+> > > >> +      - int
+> > > >> +      - int-out
+> > > >> +      - ext-clk
+> > > >> +      - xtal
+> > > >> +    default: int =20
+> > > > I am not a fan of properties like this one, that in my view reimple=
+ment
+> > > > things that are supported by the regular clocks properties. I've got
+> > > > some questions for you so I can understand whether or not this cust=
+om
+> > > > property is required.
+> > > >=20
+> > > > Whether or not the ext-clk or xtal is used is known based on
+> > > > clock-names - why is the custom property required to determine that=
+? =20
+> >=20
+> > > > If neither of those clocks are present, then the internal clock wou=
+ld be
+> > > > used. Choosing to use the internal clock if an external one is prov=
+ided
+> > > > sounds to me like a software policy decision made by the operating
+> > > > system. =20
+> > >=20
+> > > If there was no int-out, sure. I considered that the choice between i=
+nt
+> > > and int-out could be made here. So better for driver to choose int/in=
+t-out? =20
+> >=20
+> > This part of my comments was specifically about choosing between use of
+> > the internal clock when ext-clk or xtal are provided, which I think
+> > excludes the possibility of using int-out, since the XTAL2 pin is an
+> > input.
+> >=20
+> > There's 3 situations:
+> > - no external clock provided
+> > - ext-clk provided
+> > - xtal provided
+> >=20
+> > For the former, you know you're in that state when no "clocks" property
+> > is present. The latter two you can differentiate based on "clock-names".
+> >=20
+> > Choosing to use the internal clock if an external clock is provided
+> > seems to be a software policy decision, unless I am mistaken.
+>=20
+> Agreed, though it rarely makes sense as if someone put down a precision
+> clock they normally wanted you to use it!
+>=20
+> So as a general rule we don't both providing policy controls beyond if
+> there is extra hardware (external clock source) then use that.
+>=20
+> If someone has a good reason to want to do something else then we can
+> probably figure out a reasonable way to control it.
 
-The siphash_1u32() is what the rest of the kernel uses for hashing kernel
-address space.
+Yah, I figured there'd be few situations, outside of maybe debugging
+hardware issues, where that internal clock is more desirable to use.
 
-> userspace ABI prone to kernel address leaks) rather than simply
-> reserving values by setting bits in a bitmap ?
-> 
-> How many inodes do we realistically expect to have there ?
+> > > > Finally, if the ADC has a clock output, why can that not be represe=
+nted
+> > > > by making the ADC a clock-controller?
+> > > >  =20
+> > >=20
+> > > Was not familiar with this/did not cross my mind. So if xtal/ext-clk =
+is
+> > > present, the driver should detect it and disable the option for clock
+> > > output? (Common pin XTAL2) =20
+> >=20
+> > Yeah, if those clocks are provided you would not register as a clock
+> > controller. If there is a user of the output clock, it should have its
+> > own "clocks" property that references the ADC's output.
+> >=20
+> > Your dt-binding could also make clocks/clock-names & clock-controller
+> > mutually exclusive.
+>=20
+> That would indeed be the nicest solution.  How this has been done
+> in drivers has somewhat 'evolved' over time, but this is the nicest
+> option from point of view of standard bindings and clarity over what
+> is going on.
 
-If I only do directories, it is actually significantly less.
+Yeah, I know that this has not really been normal thing to do in some
+corners of the kernel (ethernet PHYs in particular I think have been
+rolling their own clock controller stuff) and I've been trying to push
+back on these kinds of things for new devices.
 
-> 
-> On my 6.1.0 kernel:
-> 
-> find /sys/kernel/tracing | wc -l
-> 15598
-> 
-> (mainly due to TRACE_EVENT ABI files)
-> 
-> Hashing risks:
-> 
-> - Exposing kernel addresses if the hashing algorithm is broken,
+Thanks,
+Conor.
 
-Well this was my biggest concern, but if I truncate at least a nibble, with
-the unique salt to the algorithm for each file, how easily does that expose
-kernel addresses.
+--dlghW/7VOeuyh/eL
+Content-Type: application/pgp-signature; name="signature.asc"
 
-The ei itself, is created from kmalloc() so you would at best get a heap
-address. But with the missing nibble (if I mask it with ((1 << 28) - 1),
-and much more taken away for 64 bit systems), and the added unique salt, is
-it possible for this to expose anything that could be used in an attack?
+-----BEGIN PGP SIGNATURE-----
 
-> - Collisions if users are unlucky (which could trigger those
->    'find' errors).
-> 
-> Those 15598 inode values fit within a single page (bitmap of
-> 1922 bytes).
-> 
-> So I would recommend simply adding a bitmap per tracefs filesystem
-> instance to keep track of inode number allocation.
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZa6qfAAKCRB4tDGHoIJi
+0vMQAQCkGjF6Fel/gAV0+3hyoOgjeGJlUQke4fQTA7TAyHhtgAD8D09ND39sB4Fl
+GkrIpXdiwl4J3kvcv2KuxONa90Pj3QY=
+=LJJG
+-----END PGP SIGNATURE-----
 
-And how do I recover this bit after the inode is freed, but then referenced
-again?
-
-> 
-> Creation/removal of files/directories in tracefs should not be
-> a fast-path anyway, so who cares about the speed of a find first
-> bit within a single page ?
-> 
-
-When an inode is no longer referenced, it is freed. When it is referenced
-again, I want it to be recreated with the same inode number it had
-previously. How would having a bitmask help with that? I need a way to map
-an ei structure with a unique number without adding another 4 bytes to the
-structure itself.
-
--- Steve
+--dlghW/7VOeuyh/eL--
