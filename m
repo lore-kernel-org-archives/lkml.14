@@ -1,129 +1,144 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C67FE48CED;
-	Mon, 22 Jan 2024 11:05:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09B483A8CF;
+	Mon, 22 Jan 2024 11:06:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705921542; cv=none; b=NXhbMbv3+drrQXcO8okgPRNYnQa1vMzPLPY98XCIrl/Xqg2gTImwbmd2Qs/SWtuf7ROjnCdVWJayhJI7WhfPq0UngHAhUg7HZ+WDmTwH3pDf23KgolrVJv/Sh/afhWY6xAqWSPijuY9zzlIDYjmQP3kIGIkZoxB79nur9fNJo00=
+	t=1705921571; cv=none; b=KbhVNuO+FcKtHczjMqQBaJzYy75mhNWPltY6SKQI9rncK8P4ow+tgE7kCJuUKSQaGA/xhOLrxhTFH0GQg/Ma06seqkz0EWMtrvPYZfBrVHbRv42fa5V0pz6GI4H278zP4XLc1/Ix/9vPUF/imPLkh1Ll1L7m1DMu0iX1A+ZAceM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705921542; c=relaxed/simple;
-	bh=PNbtJZXcgSDfB9xk9l5CL+n1+oj48eBhvhkVHBH+k0w=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=iPsLMcPaywCsi2xXo3hUhmJTpCCkSGYDClib3jRgvmPv/KEMP6Ong2QizBUA61InMwkaann6PUo8stCuWofuxcTkmI95aWJhwwyVER8TOUxw/9NxncsX7JwMXY1aTzZKo+g472Z607uhDL3KiL9tFPn2W5HcHbhuUAA1HC1RK08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TEVDK4S3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1705921571; c=relaxed/simple;
+	bh=V/MmW1yVoK0TjvFsg0TJRYR3IjhkDr66kgUMy4s5icQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dvcnf1pF4l77Sqj6ZNXFA4DxtlwbXEKdUgirGkxng48oV2DZ7+TJMmKncGJVFb5EukEqa2xLluY/ztj47MH/6VFro1hbhQyAvPPdxAjDDleLOntZNMOH9EQp+2WTYZt7an2HpEqN1qtxhdI4hnZITZsU4FFnHcMlYFskgglijVo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sT8RYILN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TEVDK4S3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29F34C43394;
-	Mon, 22 Jan 2024 11:05:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sT8RYILN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C865C433C7;
+	Mon, 22 Jan 2024 11:06:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705921542;
-	bh=PNbtJZXcgSDfB9xk9l5CL+n1+oj48eBhvhkVHBH+k0w=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=TEVDK4S3pi9aHh2qIUZ8YthAxfDTy1qpxHhBe04Mu9HGxtpePJsIRZ71LlgJraCdb
-	 PPi55hzg59GxoAhBAvQ7mfIv4w2ML59x2/ZLpM8bnS1L/ur/FI3v8KlkIpSaScRrVg
-	 N8CvndJ3hxW7VGPRivNSHiNUj9ITCULL8uZQ4kBL5mox2uNkBo6tbw13L2Bsj6S2oE
-	 YejjWEJ+vZXvc6EU+wmpIDl1VOvkEjYJpk2U/nbbUSj7wYysCXLLzeGMB10RcubNK6
-	 J9GCryGA01Q6m2iGNjoZ2OfsCM5B0uwzMj657ick0Sd4CqE+f8QCotcLXhaaF7k5lw
-	 4Yeg2733bQCeA==
-From: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
-To: gregkh@linuxfoundation.org
-Cc: linux-serial@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	linux-doc@vger.kernel.org
-Subject: [PATCH v2 47/47] Documentation: add console.rst
-Date: Mon, 22 Jan 2024 12:04:01 +0100
-Message-ID: <20240122110401.7289-48-jirislaby@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240122110401.7289-1-jirislaby@kernel.org>
-References: <20240122110401.7289-1-jirislaby@kernel.org>
+	s=k20201202; t=1705921570;
+	bh=V/MmW1yVoK0TjvFsg0TJRYR3IjhkDr66kgUMy4s5icQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=sT8RYILNkg7DURq+DonPfOgYKWZzT9z1t7mKh5x8C8ZtDBgG2Ac0So6ocPeViznQk
+	 +b371knvzEQWiydLKI1rfHATW4gAcoP59HbiRavhYPxlUmUDhWQYFGir8/FVGINZd4
+	 4pbOy4f0jZXJrLq+pJ3U/hqDcEQirBEh7ORQTHlbVbDWuK1Bz5xSiDRJ61ytOBjCy+
+	 MIKGPKdVLBk54rOk1kK1ZfjKmuXIlY6qfkGds5xNN06kmh+7o/uJaxX7pptL30KyeJ
+	 KtePRH0INjn0SKiK3esQsx8GBl9w/Z8ZG+lbA3GAdrOUfJSnUjJhBs97oG+pTIzNU4
+	 jhoAF4LEG4IIA==
+Date: Mon, 22 Jan 2024 16:36:06 +0530
+From: Vinod Koul <vkoul@kernel.org>
+To: Paul Cercueil <paul@crapouillou.net>
+Cc: Jonathan Cameron <jic23@kernel.org>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+	linux-iio@vger.kernel.org, linux-media@vger.kernel.org,
+	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+	Nuno =?iso-8859-1?Q?S=E1?= <noname.nuno@gmail.com>,
+	Michael Hennerich <Michael.Hennerich@analog.com>
+Subject: Re: [Linaro-mm-sig] Re: [PATCH v5 3/8] dmaengine: Add API function
+ dmaengine_prep_slave_dma_vec()
+Message-ID: <Za5MHkzSjyVUoytI@matsya>
+References: <20231219175009.65482-1-paul@crapouillou.net>
+ <20231219175009.65482-4-paul@crapouillou.net>
+ <ZYRWbROAuMXftH07@matsya>
+ <86a30af0db2232bd473a38cd001342156cd4012e.camel@crapouillou.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <86a30af0db2232bd473a38cd001342156cd4012e.camel@crapouillou.net>
 
-Now, that the console kernel-doc is in better shape, include it in the
-tty/ docs.
+Hi Paul,
 
-It's not supernice, but it is what it is. At least for the beginning.
 
-Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
-Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: linux-doc@vger.kernel.org
----
- Documentation/driver-api/tty/console.rst | 45 ++++++++++++++++++++++++
- Documentation/driver-api/tty/index.rst   |  1 +
- 2 files changed, 46 insertions(+)
- create mode 100644 Documentation/driver-api/tty/console.rst
+On 08-01-24, 13:20, Paul Cercueil wrote:
+> Hi Vinod,
+> 
+> Le jeudi 21 décembre 2023 à 20:44 +0530, Vinod Koul a écrit :
+> > On 19-12-23, 18:50, Paul Cercueil wrote:
+> > > This function can be used to initiate a scatter-gather DMA
+> > > transfer,
+> > > where the address and size of each segment is located in one entry
+> > > of
+> > > the dma_vec array.
+> > > 
+> > > The major difference with dmaengine_prep_slave_sg() is that it
+> > > supports
+> > > specifying the lengths of each DMA transfer; as trying to override
+> > > the
+> > > length of the transfer with dmaengine_prep_slave_sg() is a very
+> > > tedious
+> > > process. The introduction of a new API function is also justified
+> > > by the
+> > > fact that scatterlists are on their way out.
+> > > 
+> > > Note that dmaengine_prep_interleaved_dma() is not helpful either in
+> > > that
+> > > case, as it assumes that the address of each segment will be higher
+> > > than
+> > > the one of the previous segment, which we just cannot guarantee in
+> > > case
+> > > of a scatter-gather transfer.
+> > > 
+> > > Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> > > 
+> > > ---
+> > > v3: New patch
+> > > 
+> > > v5: Replace with function dmaengine_prep_slave_dma_vec(), and
+> > > struct
+> > >     'dma_vec'.
+> > >     Note that at some point we will need to support cyclic
+> > > transfers
+> > >     using dmaengine_prep_slave_dma_vec(). Maybe with a new "flags"
+> > >     parameter to the function?
+> > > ---
+> > >  include/linux/dmaengine.h | 25 +++++++++++++++++++++++++
+> > >  1 file changed, 25 insertions(+)
+> > > 
+> > > diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+> > > index 3df70d6131c8..ee5931ddb42f 100644
+> > > --- a/include/linux/dmaengine.h
+> > > +++ b/include/linux/dmaengine.h
+> > > @@ -160,6 +160,16 @@ struct dma_interleaved_template {
+> > >  	struct data_chunk sgl[];
+> > >  };
+> > >  
+> > > +/**
+> > > + * struct dma_vec - DMA vector
+> > > + * @addr: Bus address of the start of the vector
+> > > + * @len: Length in bytes of the DMA vector
+> > > + */
+> > > +struct dma_vec {
+> > > +	dma_addr_t addr;
+> > > +	size_t len;
+> > > +};
+> 
+> I don't want to be pushy, but I'd like to know how to solve this now,
+> otherwise I'll just send the same patches for my v6.
+> 
+> > so you want to transfer multiple buffers, right? why not use
+> > dmaengine_prep_slave_sg(). If there is reason for not using that one?
+> 
+> The reason is that we want to have the possibility to transfer less
+> than the total size of the scatterlist, and that's currently very hard
+> to do - scatterlists were designed to not be tampered with.
+> 
+> Christian König then suggested to introduce a "dma_vec" which had been
+> on his TODO list for a while now.
 
-diff --git a/Documentation/driver-api/tty/console.rst b/Documentation/driver-api/tty/console.rst
-new file mode 100644
-index 000000000000..4348e36cd33b
---- /dev/null
-+++ b/Documentation/driver-api/tty/console.rst
-@@ -0,0 +1,45 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+=======
-+Console
-+=======
-+
-+.. contents:: :local:
-+
-+Struct Console
-+==============
-+
-+.. kernel-doc:: include/linux/console.h
-+   :identifiers: console cons_flags
-+
-+Internals
-+---------
-+
-+.. kernel-doc:: include/linux/console.h
-+   :identifiers: nbcon_state nbcon_prio nbcon_context nbcon_write_context
-+
-+Struct Consw
-+============
-+
-+.. kernel-doc:: include/linux/console.h
-+   :identifiers: consw
-+
-+Console functions
-+=================
-+
-+.. kernel-doc:: include/linux/console.h
-+   :identifiers: console_srcu_read_flags console_srcu_write_flags
-+        console_is_registered for_each_console_srcu for_each_console
-+
-+.. kernel-doc:: drivers/tty/vt/selection.c
-+   :export:
-+.. kernel-doc:: drivers/tty/vt/vt.c
-+   :export:
-+
-+Internals
-+---------
-+
-+.. kernel-doc:: drivers/tty/vt/selection.c
-+   :internal:
-+.. kernel-doc:: drivers/tty/vt/vt.c
-+   :internal:
-diff --git a/Documentation/driver-api/tty/index.rst b/Documentation/driver-api/tty/index.rst
-index b490da11f257..c1ffe3d1ec46 100644
---- a/Documentation/driver-api/tty/index.rst
-+++ b/Documentation/driver-api/tty/index.rst
-@@ -38,6 +38,7 @@ In-detail description of the named TTY structures is in separate documents:
-    tty_buffer
-    tty_ioctl
-    tty_internals
-+   console
- 
- Writing TTY Driver
- ==================
+Yeah for this interleaved seems overkill. Lets go with this api. I would
+suggest change the name of the API replacing slave with peripheral
+though
+
 -- 
-2.43.0
-
+~Vinod
