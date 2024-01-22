@@ -1,117 +1,183 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74EE75A78A
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 17:38:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 368913E47B
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 17:38:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705945092; cv=none; b=KD/ZbwfwFz+bJiR5CHCyRrk/YA52gPfPdzgYTLMJCPSEW0e7O6gj+bNyigACzFLkS1PwfNUA1IU1w2YGyBZ51kpp0/qErdTdE/9j67VOxuAXge7rBIKCXHk6Em4dfqMdD7v/Lwg0zIpnrTOboJ4GcevNfY3VogBTSNi58gHrpII=
+	t=1705945119; cv=none; b=rj9TscLYE4DhreSFghG057ohTzLZSzApOytn5LM4S6SdSXvDvlHQ7pYbK1oj6+f1FjGp6xW2chQUX0SULS0hpvR0U5suzg8tziTUGRMqfEDnhMvpFazRuYDX51ToqviwpZSqyIXM73WbRWV09tIL6nYQNVp6rj1H9dKRVQgZ1gg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705945092; c=relaxed/simple;
-	bh=ORjgQoCGX6sY9TNPJWaMAKB5cO6XOlCarSbw3Ewmkno=;
+	s=arc-20240116; t=1705945119; c=relaxed/simple;
+	bh=lx13kHG0tJJSdUreOeJdloyx12tNITbn9wmXA6Zx684=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=u/IKHa39Pb2OZ7ikqwDS0dEd7tAHPeecXkAhusJDopLNjP8oBjIDnGRVaaM3VShHchCXGRfQvIFH6fn35tTVscTMDYPdBhKjCdASbCFZcmZypQWB8FeqDo2wq7DxIZMgFDcVIGqev1o1NUNqfJWEWuCUS9Y/hg65Ccb0DWn4VE8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=LjMw9/h/; arc=none smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	 To:Cc:Content-Type; b=KWCgUIgmyYyKtCX25E42TnkD4XKSGT06QuuLPegrsxUM+2++QblGyUJ3TTc9Z2AXbD7rz/AK1jYbkVIBjKKYXf0Xu4wGPLdx5O5P/RgwaxijZMo+3mDsfHi6AII+TambC5GGknBIX8S9WLyPd8Nit7iG2X1Sb9ONTKdtGCTPHPs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=yPCF1fbJ; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="LjMw9/h/"
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-55c1ac8d2f2so1825606a12.2
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 09:38:10 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yPCF1fbJ"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1d72d240c69so253815ad.1
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 09:38:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1705945088; x=1706549888; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=bPMaTABmuCocd7Tl83q+z2HLFXNalK+rLT2nyykRvN4=;
-        b=LjMw9/h/91S/3sbuO0uxQVTEnquNrIWAuMUjZB2ZPsKBBerKdPk4XH/+VtixmmPUeU
-         /iOWSzmPzNiT9gLChmSrpSfcYPMv9enTvvLa+cAAdmh2z7w8PD6ULWl9GOZhXQHfd0uK
-         N8O+oNO9J8S8IURju3PR1Z7cYEWXS3IJaCoko=
+        d=google.com; s=20230601; t=1705945117; x=1706549917; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5UuQsVtmQQmr5HjqyMtyAk8R8Y84z4aC4k61fXm7dcc=;
+        b=yPCF1fbJt88udfi4IbYvyaXYX1RwZVyFK5gY8d4VgFcIHQfE23M7XwhosOmHMl7BSw
+         1f2ch0AVVFdaRvBeDfwm1Dx3LPBiol/n1wR7FJJuAo5L6FDFzvUlHz1gV6X5bPTy1Kmx
+         RKhjIETiDmyPys3CDehoYWfEpHESDMTCapSKiGdGka7ryTwq/zKsrJqHCsMbu+yVxXlA
+         49lYvZyMLr7jiTPTi/pmV/HGwBC+sOJv9BVuM2L3UTGKoH1ffNCyTzQfpoVteKAulTit
+         kiPRTYXLk7smW4XpMxCIX25uXX/RsApCHtPRHd7o4ihYa9OBLGk9EX7cdiupmcQmgTiK
+         DKJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705945088; x=1706549888;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=bPMaTABmuCocd7Tl83q+z2HLFXNalK+rLT2nyykRvN4=;
-        b=XMK2bK/w3DSYA5HUiRbGjtiGpwBICS9WccbmLK9EdqoSrrMZynO2iZ57mr/sA548Pb
-         cEa7th1hS+WE20Ncnlh9knu5JsOjuVtprEoDvI8BwKmietyvT3x5oro+2fWueD6o4iF0
-         VKMHLb42GV+M+J0b3Nw1TVJF+OYKT7VWA/3Qp4CP8JZfJcjFgxmHl6jFtkDqkneLDc89
-         QYlEBVR1FHha0rP3Is+4BNm0Np2eqsgpT45BUI7/1Wa1uvchzAQlTxzZdhmHBIhgP9/C
-         GbGwCwXsSbjuwkksiIHZwJkP8ymhgUzVp+AmBkCR685dTT1kWW1tdPGwW43Va0U0JnXs
-         hHIA==
-X-Gm-Message-State: AOJu0YwPY57fZ6p9LSJ6Ucb281N5UBMp15dX5VMkqArQhjbZtnlwv5rn
-	2JSNcGvkfeqWJ/ru0QJYr1rES1LHtQ4qJ3OkvJHD+sromZi+FA2a4NE4MsjojaXO+gXHi7+48ny
-	5jE3jwA==
-X-Google-Smtp-Source: AGHT+IE7OTAYAnfdFWTZZXMFPRs3a4E8LOpe+dKpYjUf7TctxxVVz9dO6jg6c+JaX15NMvDmROmU3g==
-X-Received: by 2002:a17:906:8a55:b0:a2a:2498:93c5 with SMTP id gx21-20020a1709068a5500b00a2a249893c5mr2129350ejc.73.1705945088544;
-        Mon, 22 Jan 2024 09:38:08 -0800 (PST)
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com. [209.85.208.47])
-        by smtp.gmail.com with ESMTPSA id vk6-20020a170907cbc600b00a2ea02e4162sm7223859ejc.214.2024.01.22.09.38.07
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 22 Jan 2024 09:38:07 -0800 (PST)
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-55c1ac8d2f2so1825562a12.2
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 09:38:07 -0800 (PST)
-X-Received: by 2002:a05:6402:313b:b0:55b:fda0:4f07 with SMTP id
- dd27-20020a056402313b00b0055bfda04f07mr121004edb.9.1705945086903; Mon, 22 Jan
- 2024 09:38:06 -0800 (PST)
+        d=1e100.net; s=20230601; t=1705945117; x=1706549917;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5UuQsVtmQQmr5HjqyMtyAk8R8Y84z4aC4k61fXm7dcc=;
+        b=Il7LklUAX+JQLY/P7fxLO9K/DhZBfwTEynKUtTMubVAqCouk5GTOkzDARrXorC8hk6
+         ur55utvOR+JuT8Bnkj622PKjvbq/7DcNwRk4PGCKu2UWvah4rkMExgWTnwgM/wdZMrqG
+         rVT2rY5+bvB2AKJQcFF/j3kFxQkxlV2QpR8VawE22RfGDLxz/zU2OQB/Wlz0MUlxaa5/
+         +5yORuMLNIqABcp4RKQLBLi8tVII4d1o1MCU+FP5TpDhRp06HD4zWgVSlnk+GQ8ktiKo
+         fC35Dsk4HDlLpwtBSMTtQno0m+myrIG1FiZuUOtHf49+A2ll8ra9JdtYNPA8BCdNfx1+
+         Ravg==
+X-Gm-Message-State: AOJu0YxIk8lllqEZizqmv1P48rgxKkVlbEuGx/FBhzMMjI3g/mfhN+0O
+	xxVzYdHkSnTOcAZ7nEVEbDwM1u/+hRS6NpN7zFyfiXqASgchrJhLRp+/Iau7ZvLIkmLBAr59DaL
+	cHvYTExW45Z/aB9ohgFJNK61Re2MjEphu26pz
+X-Google-Smtp-Source: AGHT+IFYv5tHX1WQPl3UKkucHmsgclS/9mQvJ8BtkspQnHW8INm/bfJkBEp88NMt7Nyb4tbGmP3GUFNzcPfeUEN4+yY=
+X-Received: by 2002:a17:902:e747:b0:1d6:f66b:1057 with SMTP id
+ p7-20020a170902e74700b001d6f66b1057mr2985plf.28.1705945117286; Mon, 22 Jan
+ 2024 09:38:37 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240117143548.595884070@goodmis.org> <20240117143810.531966508@goodmis.org>
- <CAMuHMdXKiorg-jiuKoZpfZyDJ3Ynrfb8=X+c7x0Eewxn-YRdCA@mail.gmail.com>
- <20240122100630.6a400dd3@gandalf.local.home> <CAMuHMdXD0weO4oku8g2du6fj-EzxGaF+0i=zrPScSXwphFAZgg@mail.gmail.com>
- <20240122114743.7e46b7cb@gandalf.local.home>
-In-Reply-To: <20240122114743.7e46b7cb@gandalf.local.home>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Mon, 22 Jan 2024 09:37:49 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wiq5mr+wSb6pmtt7QqBhQo_xr7ip=yMwQ5ryWVwCyMhfg@mail.gmail.com>
-Message-ID: <CAHk-=wiq5mr+wSb6pmtt7QqBhQo_xr7ip=yMwQ5ryWVwCyMhfg@mail.gmail.com>
-Subject: Re: [for-linus][PATCH 1/3] eventfs: Have the inodes all for files and
- directories all be the same
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Kees Cook <keescook@chromium.org>, 
-	linux-kernel@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Christian Brauner <brauner@kernel.org>, 
-	Al Viro <viro@zeniv.linux.org.uk>, Ajay Kaher <ajay.kaher@broadcom.com>
+References: <cover.1705507931.git.jpoimboe@kernel.org> <ac84a832feba5418e1b58d1c7f3fe6cc7bc1de58.1705507931.git.jpoimboe@kernel.org>
+ <6667b799702e1815bd4e4f7744eddbc0bd042bb7.camel@kernel.org>
+ <20240117193915.urwueineol7p4hg7@treble> <CAHk-=wg_CoTOfkREgaQQA6oJ5nM9ZKYrTn=E1r-JnvmQcgWpSg@mail.gmail.com>
+ <CALvZod6LgX-FQOGgNBmoRACMBK4GB+K=a+DYrtExcuGFH=J5zQ@mail.gmail.com>
+ <ZahSlnqw9yRo3d1v@P9FQF9L96D.corp.robot.car> <CALvZod4V3QTULTW5QxgqCbDpNtVO6fXzta33HR7GN=L2LUU26g@mail.gmail.com>
+ <CAHk-=whYOOdM7jWy5jdrAm8LxcgCMFyk2bt8fYYvZzM4U-zAQA@mail.gmail.com>
+In-Reply-To: <CAHk-=whYOOdM7jWy5jdrAm8LxcgCMFyk2bt8fYYvZzM4U-zAQA@mail.gmail.com>
+From: Shakeel Butt <shakeelb@google.com>
+Date: Mon, 22 Jan 2024 09:38:23 -0800
+Message-ID: <CALvZod6tCb=3+W18V7kntjJZBRMigGnyPQGjQK0no9Q1KmpcRQ@mail.gmail.com>
+Subject: Re: [PATCH RFC 1/4] fs/locks: Fix file lock cache accounting, again
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Roman Gushchin <roman.gushchin@linux.dev>, Josh Poimboeuf <jpoimboe@kernel.org>, 
+	Vlastimil Babka <vbabka@suse.cz>, Jeff Layton <jlayton@kernel.org>, 
+	Chuck Lever <chuck.lever@oracle.com>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Michal Hocko <mhocko@kernel.org>, linux-kernel@vger.kernel.org, 
+	Jens Axboe <axboe@kernel.dk>, Tejun Heo <tj@kernel.org>, Vasily Averin <vasily.averin@linux.dev>, 
+	Michal Koutny <mkoutny@suse.com>, Waiman Long <longman@redhat.com>, 
+	Muchun Song <muchun.song@linux.dev>, Jiri Kosina <jikos@kernel.org>, cgroups@vger.kernel.org, 
+	linux-mm@kvack.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 22 Jan 2024 at 08:46, Steven Rostedt <rostedt@goodmis.org> wrote:
+Hi Linus,
+
+On Sun, Jan 21, 2024 at 9:16=E2=80=AFPM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
 >
-> I can add this patch to make sure directory inodes are unique, as it causes
-> a regression in find, but keep the file inodes the same.
+> On Wed, 17 Jan 2024 at 14:56, Shakeel Butt <shakeelb@google.com> wrote:
+> > >
+> > > So I don't see how we can make it really cheap (say, less than 5% ove=
+rhead)
+> > > without caching pre-accounted objects.
+> >
+> > Maybe this is what we want. Now we are down to just SLUB, maybe such
+> > caching of pre-accounted objects can be in SLUB layer and we can
+> > decide to keep this caching per-kmem-cache opt-in or always on.
+>
+> So it turns out that we have another case of SLAB_ACCOUNT being quite
+> a big expense, and it's actually the normal - but failed - open() or
+> execve() case.
+>
+> See the thread at
+>
+>     https://lore.kernel.org/all/CAHk-=3Dwhw936qzDLBQdUz-He5WK_0fRSWwKAjtb=
+VsMGfX70Nf_Q@mail.gmail.com/
+>
+> and to see the effect in profiles, you can use this EXTREMELY stupid
+> test program:
+>
+>     #include <fcntl.h>
+>
+>     int main(int argc, char **argv)
+>     {
+>         for (int i =3D 0; i < 10000000; i++)
+>                 open("nonexistent", O_RDONLY);
+>     }
+>
+> where the point of course is that the "nonexistent" pathname doesn't
+> actually exist (so don't create a file called that for the test).
+>
+> What happens is that open() allocates a 'struct file *' early from the
+> filp kmem_cache, which has SLAB_ACCOUNT set. So we'll do accounting
+> for it, failt the pathname open, and free it again, which uncharges
+> the accounting.
+>
+> Now, in this case, I actually have a suggestion: could we please just
+> make SLAB_ACCOUNT be something that we do *after* the allocation, kind
+> of the same way the zeroing works?
+>
+> IOW, I'd love to get rid of slab_pre_alloc_hook() entirely, and make
+> slab_post_alloc_hook() do all the "charge the memcg if required".
+>
+> Obviously that means that now a failure to charge the memcg would have
+> to then de-allocate things, but that's an uncommon path and would be
+> marked unlikely and not be in the hot path at all.
+>
+> Now, the reason I would prefer that is that the *second* step would be to
+>
+>  (a) expose a "kmem_cache_charge()" function that takes a
+> *non*-accounted slab allocation, and turns it into an accounted one
+> (and obviously this is why you want to do everything in the post-alloc
+> hook: just try to share this code)
+>
+>  (b) remote the SLAB_ACCOUNT from the filp_cachep, making all file
+> allocations start out unaccounted.
+>
+>  (c) when we have *actually* looked up the pathname and open the file
+> successfully, at *that* point we'd do a
+>
+>         error =3D kmem_cache_charge(filp_cachep, file);
+>
+>     in do_dentry_open() to turn the unaccounted file pointer into an
+> accounted one (and if that fails, we do the cleanup and free it, of
+> course, exactly like we do when file_get_write_access() fails)
+>
+> which means that now the failure case doesn't unnecessarily charge the
+> allocation that never ends up being finalized.
+>
+> NOTE! I think this would clean up mm/slub.c too, simply because it
+> would get rid of that memcg_slab_pre_alloc_hook() entirely, and get
+> rid of the need to carry the "struct obj_cgroup **objcgp" pointer
+> along until the post-alloc hook: everything would be done post-alloc.
+>
+> The actual kmem_cache_free() code already deals with "this slab hasn't
+> been accounted" because it obviously has to deal with allocations that
+> were done without __GFP_ACCOUNT anyway. So there's no change needed on
+> the freeing path, it already has to handle this all gracefully.
+>
+> I may be missing something, but it would seem to have very little
+> downside, and fix a case that actually is visible right now.
+>
 
-Yeah, limiting it to directories will at least somewhat help the
-address leaking.
+Thanks for the idea. Actually I had a discussion with Vlastimil at LPC
+'22 on a similar idea but for a different problem i.e. allocation in
+irq context or more specifically charging sockets for incoming TCP
+connections. If you see inet_csk_accept() we solved this for TCP
+memory by charging at accept() syscall but the kernel memory holding
+socket is still uncharged.
 
-However, I also note that you never did the "set i_nlink to one"
-trick, which is the traditional thing to do to tell 'find' that it
-cannot do its directory optimization thing.
+So, I think having the framework you suggested would help more
+use-cases. I will take a stab at this in the next couple of days
+(sorry stuck in some other stuff atm).
 
-I'm not sure that the nlink trick disables this part of the find
-sanity checks, but the *first* thing to check would be something like
-this
-
-  --- a/fs/tracefs/inode.c
-  +++ b/fs/tracefs/inode.c
-  @@ -182,6 +182,7 @@ static int tracefs_getattr(struct mnt_idmap *idmap,
-
-        set_tracefs_inode_owner(inode);
-        generic_fillattr(idmap, request_mask, inode, stat);
-  +     stat->nlink = 1;
-        return 0;
-   }
-
-because it might just fix the issue.
-
-Having nlink == 1 is how non-unix filesystems (like FAT etc) indicate
-that you can't try to count directory entries to optimize traversal.
-
-And it is possible that that is where the whole find thing comes from,
-but who knows, it could be a generic loop detector that runs
-independently of the usual link detection.
-
-               Linus
+thanks,
+Shakeel
