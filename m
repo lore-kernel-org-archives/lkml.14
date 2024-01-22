@@ -1,148 +1,420 @@
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 444513A8CF
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 09:48:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 845C839AF0;
+	Mon, 22 Jan 2024 09:48:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705916912; cv=none; b=K7n2tiYqI7c0nRuVbUbZVqKc9QhnkPnXtcQ/DwoODBsybLdmbtbBS2cvx5t/m5SWeAtH6YgIZBKGeK24WSgTmnGqflVCFJFpDI3BvVlN3l9QWMAnfcNCguopc2QWXGZTtJ2ecBGlxPGr6ryvrnJD/4D+U6L8LwiJi86oJWUVH10=
+	t=1705916910; cv=none; b=Vrdds6N+50ZYM2UlPLKgmeoh5GDC29XqLqBley5PGTXrMgqJOOQZCQwRrlei5RxbCzoKMXh1509s8VH1gaafiKZawNiwsN/H5HMsw4TsG7LZdCnS5npVl5DRDgS+MnmUgnavPeHEtFe50kdhp9HsDNsbei/4GyBA5FN2+rdpLVs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705916912; c=relaxed/simple;
-	bh=GHXNHGnWBoujjSR/eQtHQpeS/SHwk5cxAZOS/b+R4yk=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=HMe3BMw/knsAn1F+rupZjRFx6OJzywz9n0cK2Ocn3bIUHGpvM2Uij4rnduLTHBn7RKUvMjXBCHkxSL04Ly2BYVkseZ38a2ykQq2FddbSUABFqNptApkaLlgbZn5elbx4L4O4hW2VfSvMV5Kuk1DI8XD8LLIOiHVLjdxEtH8a/rs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-360a0a5a87dso26595425ab.0
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 01:48:30 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705916910; x=1706521710;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Ct1ERqM8hnJD4Wmb1AvKYZCdcYP1ircWk6jl9QOBlUM=;
-        b=CxKH+gwp4czvdBMMPQYUW9W0ajDaD6mC7gfhecrVJn5WsQRsC7waXj5KevVmbpTd6W
-         ubyq9YqjJcaR4wPNjhPuHb8rFIdRdOE9AkdNIsF3YS+/3AE0Gjsb/IxwrUESFxl5Nbck
-         hBaPRL5GZPf+Mc4L00Wu4uZnMReZOrlKfl3oOexOT9RQMslW6C98CASbVubUhc1d9CuV
-         gJ1v234HkYgn8uaIWM9VcPmx6U1H6+PDbwCyVno+s015bChmY11Bf+Ra3fRr0JhitU9b
-         otbz52v8pzTK1Lyuew5L12u4R8Qv1cLU8PtKKSawXBiqElQ9lEv2vOqa+dycjO5Q+zb6
-         is9Q==
-X-Gm-Message-State: AOJu0YyRJcHpv6w/RKVqA5wM7Vw9NxuBf2utEj+0dMJXuqZxCYuoLwVI
-	ThN+3+njFsHtOoU+QjEos+lclED0vZgs4+k0FMZ6eypyyDT9JVCtPkoJ7XrNn+cLUqtlw/N2GOi
-	/EFcFiGFSA/896qUGrz5KVyPJO5gEy1kb/pCeFSNWInNhabps/hMuTzQ=
-X-Google-Smtp-Source: AGHT+IH8TuX8cwVVjuo3CoDWJuKdvUSncWtuq/VFUP0Ae7/9BbYzaAotqyQkpwfuiM4kae7O87pK9NHVaAS6qUpahWdHjJr7hvms
+	s=arc-20240116; t=1705916910; c=relaxed/simple;
+	bh=1XO9eEdspJUyiQNfOySiSxKbv3KYnLFim284FfulR8k=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=X8+E7ZoiQVE/Eep9teoGusHcI0llNDkRfxVGSDmNUXxHEffrbI7fywNkZxrZWvPsSliC8zbBIJeQjf4tTZZII2OVMeOi0SGk7q22HRSo+E3ZqVfYM7mJMOmzROJaHnSp+qNNSyKj60bBkKpFpGsdeGEE6les7z9GmS1V73aBBSU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JDea/qXJ; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JDea/qXJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1705916909; x=1737452909;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=1XO9eEdspJUyiQNfOySiSxKbv3KYnLFim284FfulR8k=;
+  b=JDea/qXJa6Mng02KeTXZxtciEKLLzMPGAZiKf9whoa2yNPQPQWQM1fXR
+   yy5Cv0pusjryZCV9OBUTfO2m+IIZj9h7/EXsYG0cTTFe5r8hYo2Ylwrsr
+   /C8ONCN15x7xC11DYrrP0pJyiOMeVQZRrv6MWFx6PY43gRN0y98GpYvSx
+   yeqAOKu4mQGyxXDrekXc71aY6Uu4wvbLr8p9t31m6oN9Q9Z3ZLEbUQk/5
+   Kb8IZ5fXN1tsf4b3osflWv7d+93ZZXtgl3kvz4fLoiFlax7ZPBGz+yj2F
+   T7qXSK2Tf7idAgdrQzEXCR+YAKwfA5R2PUmfBx7Lbtm6E3TUIvHK+uxbH
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10960"; a="22642103"
+X-IronPort-AV: E=Sophos;i="6.05,211,1701158400"; 
+   d="scan'208";a="22642103"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 01:48:27 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10960"; a="778535602"
+X-IronPort-AV: E=Sophos;i="6.05,211,1701158400"; 
+   d="scan'208";a="778535602"
+Received: from haibo-optiplex-7090.sh.intel.com ([10.239.159.132])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 01:48:18 -0800
+From: Haibo Xu <haibo1.xu@intel.com>
+To: 
+Cc: xiaobo55x@gmail.com,
+	ajones@ventanamicro.com,
+	Haibo Xu <haibo1.xu@intel.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Shuah Khan <shuah@kernel.org>,
+	Marc Zyngier <maz@kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	James Morse <james.morse@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	Anup Patel <anup@brainfault.org>,
+	Atish Patra <atishp@atishpatra.org>,
+	Guo Ren <guoren@kernel.org>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Mayuresh Chitale <mchitale@ventanamicro.com>,
+	Greentime Hu <greentime.hu@sifive.com>,
+	Minda Chen <minda.chen@starfivetech.com>,
+	Samuel Holland <samuel@sholland.org>,
+	Jisheng Zhang <jszhang@kernel.org>,
+	Sean Christopherson <seanjc@google.com>,
+	Like Xu <likexu@tencent.com>,
+	Peter Xu <peterx@redhat.com>,
+	Vipin Sharma <vipinsh@google.com>,
+	Thomas Huth <thuth@redhat.com>,
+	Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>,
+	Aaron Lewis <aaronlewis@google.com>,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	kvm@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev,
+	kvm-riscv@lists.infradead.org
+Subject: [PATCH v5 12/12] KVM: riscv: selftests: Add sstc timer test
+Date: Mon, 22 Jan 2024 17:58:42 +0800
+Message-Id: <f20fbb9657f586f159c7b8171c9163226e2d52c1.1705916069.git.haibo1.xu@intel.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <cover.1705916069.git.haibo1.xu@intel.com>
+References: <cover.1705916069.git.haibo1.xu@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1d8e:b0:360:968d:bfb9 with SMTP id
- h14-20020a056e021d8e00b00360968dbfb9mr282113ila.5.1705916910039; Mon, 22 Jan
- 2024 01:48:30 -0800 (PST)
-Date: Mon, 22 Jan 2024 01:48:30 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000707b50060f85bb0e@google.com>
-Subject: [syzbot] [hfs?] KASAN: out-of-bounds Read in hfsplus_bnode_move
-From: syzbot <syzbot+6df204b70bf3261691c5@syzkaller.appspotmail.com>
-To: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hello,
+Add a KVM selftests to validate the Sstc timer functionality.
+The test was ported from arm64 arch timer test.
 
-syzbot found the following issue on:
-
-HEAD commit:    125514880ddd Merge tag 'sh-for-v6.8-tag1' of git://git.ker..
-git tree:       upstream
-console+strace: https://syzkaller.appspot.com/x/log.txt?x=15edd643e80000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=7a6ff9d9d5d2dc4a
-dashboard link: https://syzkaller.appspot.com/bug?extid=6df204b70bf3261691c5
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=169c2d57e80000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11109193e80000
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/86a8a3ee9ef1/disk-12551488.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/b73f0ed65615/vmlinux-12551488.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/7aa088345217/bzImage-12551488.xz
-mounted in repro: https://storage.googleapis.com/syzbot-assets/3a894fc3d764/mount_0.gz
-
-Bisection is inconclusive: the issue happens on the oldest tested release.
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=12fdd643e80000
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=11fdd643e80000
-console output: https://syzkaller.appspot.com/x/log.txt?x=16fdd643e80000
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+6df204b70bf3261691c5@syzkaller.appspotmail.com
-
-loop0: detected capacity change from 0 to 1024
-==================================================================
-BUG: KASAN: out-of-bounds in hfsplus_bnode_move+0x5f3/0x910 fs/hfsplus/bnode.c:228
-Read of size 18446744073709551602 at addr 000508800000104e by task syz-executor353/5048
-
-CPU: 0 PID: 5048 Comm: syz-executor353 Not tainted 6.7.0-syzkaller-12829-g125514880ddd #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 11/17/2023
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:88 [inline]
- dump_stack_lvl+0x1e7/0x2d0 lib/dump_stack.c:106
- print_report+0xe6/0x540 mm/kasan/report.c:491
- kasan_report+0x142/0x170 mm/kasan/report.c:601
- kasan_check_range+0x27e/0x290 mm/kasan/generic.c:189
- __asan_memmove+0x29/0x70 mm/kasan/shadow.c:94
- hfsplus_bnode_move+0x5f3/0x910 fs/hfsplus/bnode.c:228
- hfsplus_brec_insert+0x61c/0xdd0 fs/hfsplus/brec.c:128
- hfsplus_create_attr+0x49e/0x630 fs/hfsplus/attributes.c:252
- __hfsplus_setxattr+0x6fe/0x22d0 fs/hfsplus/xattr.c:354
- hfsplus_initxattrs+0x158/0x220 fs/hfsplus/xattr_security.c:59
- security_inode_init_security+0x2a7/0x470 security/security.c:1752
- hfsplus_fill_super+0x14d3/0x1c90 fs/hfsplus/super.c:567
- mount_bdev+0x206/0x2d0 fs/super.c:1663
- legacy_get_tree+0xef/0x190 fs/fs_context.c:662
- vfs_get_tree+0x8c/0x2a0 fs/super.c:1784
- do_new_mount+0x2be/0xb40 fs/namespace.c:3352
- do_mount fs/namespace.c:3692 [inline]
- __do_sys_mount fs/namespace.c:3898 [inline]
- __se_sys_mount+0x2d9/0x3c0 fs/namespace.c:3875
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xf5/0x230 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x63/0x6b
-RIP: 0033:0x7fd7936b4d3a
-Code: d8 64 89 02 48 c7 c0 ff ff ff ff eb a6 e8 5e 04 00 00 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 49 89 ca b8 a5 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007fff572a70a8 EFLAGS: 00000286 ORIG_RAX: 00000000000000a5
-RAX: ffffffffffffffda RBX: 00007fff572a70c0 RCX: 00007fd7936b4d3a
-RDX: 0000000020000040 RSI: 0000000020000240 RDI: 00007fff572a70c0
-RBP: 0000000000000004 R08: 00007fff572a7100 R09: 00000000000006c8
-R10: 0000000000800000 R11: 0000000000000286 R12: 0000000000800000
-R13: 00007fff572a7100 R14: 0000000000000003 R15: 0000000000080000
- </TASK>
-==================================================================
-
-
+Signed-off-by: Haibo Xu <haibo1.xu@intel.com>
+Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ tools/testing/selftests/kvm/Makefile          |   1 +
+ .../selftests/kvm/aarch64/arch_timer.c        |  12 +-
+ tools/testing/selftests/kvm/arch_timer.c      |  10 +-
+ .../selftests/kvm/include/riscv/arch_timer.h  |  71 +++++++++++
+ .../selftests/kvm/include/riscv/processor.h   |  10 ++
+ .../selftests/kvm/include/timer_test.h        |   5 +-
+ .../testing/selftests/kvm/riscv/arch_timer.c  | 111 ++++++++++++++++++
+ 7 files changed, 210 insertions(+), 10 deletions(-)
+ create mode 100644 tools/testing/selftests/kvm/include/riscv/arch_timer.h
+ create mode 100644 tools/testing/selftests/kvm/riscv/arch_timer.c
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selftests/kvm/Makefile
+index f514c81877ce..77004220763e 100644
+--- a/tools/testing/selftests/kvm/Makefile
++++ b/tools/testing/selftests/kvm/Makefile
+@@ -183,6 +183,7 @@ TEST_GEN_PROGS_s390x += rseq_test
+ TEST_GEN_PROGS_s390x += set_memory_region_test
+ TEST_GEN_PROGS_s390x += kvm_binary_stats_test
+ 
++TEST_GEN_PROGS_riscv += arch_timer
+ TEST_GEN_PROGS_riscv += demand_paging_test
+ TEST_GEN_PROGS_riscv += dirty_log_test
+ TEST_GEN_PROGS_riscv += guest_print_test
+diff --git a/tools/testing/selftests/kvm/aarch64/arch_timer.c b/tools/testing/selftests/kvm/aarch64/arch_timer.c
+index a4732ec9f761..77393be9236d 100644
+--- a/tools/testing/selftests/kvm/aarch64/arch_timer.c
++++ b/tools/testing/selftests/kvm/aarch64/arch_timer.c
+@@ -194,10 +194,14 @@ struct kvm_vm *test_vm_create(void)
+ 	vm_init_descriptor_tables(vm);
+ 	vm_install_exception_handler(vm, VECTOR_IRQ_CURRENT, guest_irq_handler);
+ 
+-	if (!test_args.offset.reserved) {
+-		if (kvm_has_cap(KVM_CAP_COUNTER_OFFSET))
+-			vm_ioctl(vm, KVM_ARM_SET_COUNTER_OFFSET, &test_args.offset);
+-		else
++	if (!test_args.reserved) {
++		if (kvm_has_cap(KVM_CAP_COUNTER_OFFSET)) {
++			struct kvm_arm_counter_offset offset = {
++				.counter_offset = test_args.counter_offset,
++				.reserved = 0,
++			};
++			vm_ioctl(vm, KVM_ARM_SET_COUNTER_OFFSET, &offset);
++		} else
+ 			TEST_FAIL("no support for global offset\n");
+ 	}
+ 
+diff --git a/tools/testing/selftests/kvm/arch_timer.c b/tools/testing/selftests/kvm/arch_timer.c
+index 113d40f7bb14..e4eb6cacc356 100644
+--- a/tools/testing/selftests/kvm/arch_timer.c
++++ b/tools/testing/selftests/kvm/arch_timer.c
+@@ -36,7 +36,7 @@ struct test_args test_args = {
+ 	.timer_period_ms = TIMER_TEST_PERIOD_MS_DEF,
+ 	.migration_freq_ms = TIMER_TEST_MIGRATION_FREQ_MS,
+ 	.timer_err_margin_us = TIMER_TEST_ERR_MARGIN_US,
+-	.offset = { .reserved = 1 },
++	.reserved = 1,
+ };
+ 
+ struct kvm_vcpu *vcpus[KVM_MAX_VCPUS];
+@@ -75,6 +75,8 @@ static void *test_vcpu_run(void *arg)
+ 		TEST_FAIL("Unexpected guest exit\n");
+ 	}
+ 
++	pr_info("PASS(vCPU-%d).\n", vcpu_idx);
++
+ 	return NULL;
+ }
+ 
+@@ -190,7 +192,7 @@ static void test_print_help(char *name)
+ 		TIMER_TEST_PERIOD_MS_DEF);
+ 	pr_info("\t-m: Frequency (in ms) of vCPUs to migrate to different pCPU. 0 to turn off (default: %u)\n",
+ 		TIMER_TEST_MIGRATION_FREQ_MS);
+-	pr_info("\t-o: Counter offset (in counter cycles, default: 0)\n");
++	pr_info("\t-o: Counter offset (in counter cycles, default: 0) [aarch64-only]\n");
+ 	pr_info("\t-e: Interrupt arrival error margin (in us) of the guest timer (default: %u)\n",
+ 		TIMER_TEST_ERR_MARGIN_US);
+ 	pr_info("\t-h: print this help screen\n");
+@@ -223,8 +225,8 @@ static bool parse_args(int argc, char *argv[])
+ 			test_args.timer_err_margin_us = atoi_non_negative("Error Margin", optarg);
+ 			break;
+ 		case 'o':
+-			test_args.offset.counter_offset = strtol(optarg, NULL, 0);
+-			test_args.offset.reserved = 0;
++			test_args.counter_offset = strtol(optarg, NULL, 0);
++			test_args.reserved = 0;
+ 			break;
+ 		case 'h':
+ 		default:
+diff --git a/tools/testing/selftests/kvm/include/riscv/arch_timer.h b/tools/testing/selftests/kvm/include/riscv/arch_timer.h
+new file mode 100644
+index 000000000000..225d81dad064
+--- /dev/null
++++ b/tools/testing/selftests/kvm/include/riscv/arch_timer.h
+@@ -0,0 +1,71 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * RISC-V Arch Timer(sstc) specific interface
++ *
++ * Copyright (c) 2024 Intel Corporation
++ */
++
++#ifndef SELFTEST_KVM_ARCH_TIMER_H
++#define SELFTEST_KVM_ARCH_TIMER_H
++
++#include <asm/csr.h>
++#include <asm/vdso/processor.h>
++
++static unsigned long timer_freq;
++
++#define msec_to_cycles(msec)	\
++	((timer_freq) * (uint64_t)(msec) / 1000)
++
++#define usec_to_cycles(usec)	\
++	((timer_freq) * (uint64_t)(usec) / 1000000)
++
++#define cycles_to_usec(cycles) \
++	((uint64_t)(cycles) * 1000000 / (timer_freq))
++
++static inline uint64_t timer_get_cycles(void)
++{
++	return csr_read(CSR_TIME);
++}
++
++static inline void timer_set_cmp(uint64_t cval)
++{
++	csr_write(CSR_STIMECMP, cval);
++}
++
++static inline uint64_t timer_get_cmp(void)
++{
++	return csr_read(CSR_STIMECMP);
++}
++
++static inline void timer_irq_enable(void)
++{
++	csr_set(CSR_SIE, IE_TIE);
++}
++
++static inline void timer_irq_disable(void)
++{
++	csr_clear(CSR_SIE, IE_TIE);
++}
++
++static inline void timer_set_next_cmp_ms(uint32_t msec)
++{
++	uint64_t now_ct = timer_get_cycles();
++	uint64_t next_ct = now_ct + msec_to_cycles(msec);
++
++	timer_set_cmp(next_ct);
++}
++
++static inline void __delay(uint64_t cycles)
++{
++	uint64_t start = timer_get_cycles();
++
++	while ((timer_get_cycles() - start) < cycles)
++		cpu_relax();
++}
++
++static inline void udelay(unsigned long usec)
++{
++	__delay(usec_to_cycles(usec));
++}
++
++#endif /* SELFTEST_KVM_ARCH_TIMER_H */
+diff --git a/tools/testing/selftests/kvm/include/riscv/processor.h b/tools/testing/selftests/kvm/include/riscv/processor.h
+index bd27e1c67579..3e7f6b369a5e 100644
+--- a/tools/testing/selftests/kvm/include/riscv/processor.h
++++ b/tools/testing/selftests/kvm/include/riscv/processor.h
+@@ -158,4 +158,14 @@ struct sbiret sbi_ecall(int ext, int fid, unsigned long arg0,
+ 			unsigned long arg3, unsigned long arg4,
+ 			unsigned long arg5);
+ 
++static inline void local_irq_enable(void)
++{
++	csr_set(CSR_SSTATUS, SR_SIE);
++}
++
++static inline void local_irq_disable(void)
++{
++	csr_clear(CSR_SSTATUS, SR_SIE);
++}
++
+ #endif /* SELFTEST_KVM_PROCESSOR_H */
+diff --git a/tools/testing/selftests/kvm/include/timer_test.h b/tools/testing/selftests/kvm/include/timer_test.h
+index 256e2d2137cf..9b6edaafe6d4 100644
+--- a/tools/testing/selftests/kvm/include/timer_test.h
++++ b/tools/testing/selftests/kvm/include/timer_test.h
+@@ -23,8 +23,9 @@ struct test_args {
+ 	uint32_t timer_period_ms;
+ 	uint32_t migration_freq_ms;
+ 	uint32_t timer_err_margin_us;
+-	/* TODO: Change arm specific type to a common one */
+-	struct kvm_arm_counter_offset offset;
++	/* Members of struct kvm_arm_counter_offset */
++	uint64_t counter_offset;
++	uint64_t reserved;
+ };
+ 
+ /* Shared variables between host and guest */
+diff --git a/tools/testing/selftests/kvm/riscv/arch_timer.c b/tools/testing/selftests/kvm/riscv/arch_timer.c
+new file mode 100644
+index 000000000000..1bbd0ce2923c
+--- /dev/null
++++ b/tools/testing/selftests/kvm/riscv/arch_timer.c
+@@ -0,0 +1,111 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * arch_timer.c - Tests the riscv64 sstc timer IRQ functionality
++ *
++ * The test validates the sstc timer IRQs using vstimecmp registers.
++ * It's ported from the aarch64 arch_timer test.
++ *
++ * Copyright (c) 2024, Intel Corporation.
++ */
++
++#define _GNU_SOURCE
++
++#include "arch_timer.h"
++#include "kvm_util.h"
++#include "processor.h"
++#include "timer_test.h"
++
++static int timer_irq = IRQ_S_TIMER;
++
++static void guest_irq_handler(struct ex_regs *regs)
++{
++	uint64_t xcnt, xcnt_diff_us, cmp;
++	unsigned int intid = regs->cause & ~CAUSE_IRQ_FLAG;
++	uint32_t cpu = guest_get_vcpuid();
++	struct test_vcpu_shared_data *shared_data = &vcpu_shared_data[cpu];
++
++	timer_irq_disable();
++
++	xcnt = timer_get_cycles();
++	cmp = timer_get_cmp();
++	xcnt_diff_us = cycles_to_usec(xcnt - shared_data->xcnt);
++
++	/* Make sure we are dealing with the correct timer IRQ */
++	GUEST_ASSERT_EQ(intid, timer_irq);
++
++	__GUEST_ASSERT(xcnt >= cmp,
++			"xcnt = 0x%llx, cmp = 0x%llx, xcnt_diff_us = 0x%llx",
++			xcnt, cmp, xcnt_diff_us);
++
++	WRITE_ONCE(shared_data->nr_iter, shared_data->nr_iter + 1);
++}
++
++static void guest_run(struct test_vcpu_shared_data *shared_data)
++{
++	uint32_t irq_iter, config_iter;
++
++	shared_data->nr_iter = 0;
++	shared_data->guest_stage = 0;
++
++	for (config_iter = 0; config_iter < test_args.nr_iter; config_iter++) {
++		/* Setup the next interrupt */
++		timer_set_next_cmp_ms(test_args.timer_period_ms);
++		shared_data->xcnt = timer_get_cycles();
++		timer_irq_enable();
++
++		/* Setup a timeout for the interrupt to arrive */
++		udelay(msecs_to_usecs(test_args.timer_period_ms) +
++			test_args.timer_err_margin_us);
++
++		irq_iter = READ_ONCE(shared_data->nr_iter);
++		__GUEST_ASSERT(config_iter + 1 == irq_iter,
++				"config_iter + 1 = 0x%lx, irq_iter = 0x%lx.\n"
++				"  Guest timer interrupt was not trigged within the specified\n"
++				"  interval, try to increase the error margin by [-e] option.\n",
++				config_iter + 1, irq_iter);
++	}
++}
++
++static void guest_code(void)
++{
++	uint32_t cpu = guest_get_vcpuid();
++	struct test_vcpu_shared_data *shared_data = &vcpu_shared_data[cpu];
++
++	timer_irq_disable();
++	local_irq_enable();
++
++	guest_run(shared_data);
++
++	GUEST_DONE();
++}
++
++struct kvm_vm *test_vm_create(void)
++{
++	struct kvm_vm *vm;
++	int nr_vcpus = test_args.nr_vcpus;
++
++	vm = vm_create_with_vcpus(nr_vcpus, guest_code, vcpus);
++	__TEST_REQUIRE(__vcpu_has_ext(vcpus[0], KVM_RISCV_ISA_EXT_SSTC),
++				   "SSTC not available, skipping test\n");
++
++	vm_init_vector_tables(vm);
++	vm_install_interrupt_handler(vm, guest_irq_handler);
++
++	for (int i = 0; i < nr_vcpus; i++)
++		vcpu_init_vector_tables(vcpus[i]);
++
++	/* Initialize guest timer frequency. */
++	vcpu_get_reg(vcpus[0], RISCV_TIMER_REG(frequency), &timer_freq);
++	sync_global_to_guest(vm, timer_freq);
++	pr_debug("timer_freq: %lu\n", timer_freq);
++
++	/* Make all the test's cmdline args visible to the guest */
++	sync_global_to_guest(vm, test_args);
++
++	return vm;
++}
++
++void test_vm_cleanup(struct kvm_vm *vm)
++{
++	kvm_vm_free(vm);
++}
+-- 
+2.34.1
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
