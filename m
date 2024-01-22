@@ -1,174 +1,111 @@
-Received: from gauss.telenet-ops.be (gauss.telenet-ops.be [195.130.132.49])
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC3663D56A
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 14:33:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.132.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F99E3D546;
+	Mon, 22 Jan 2024 14:33:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705934019; cv=none; b=YAGlQ34Wo689S851alx1ciS5c29dsUTKtbZqCKIRbwYmFnwSmqjuXgl53eAPltB4VYUX6H188LSDiVaC0wFDPAKgmuFgoo8VLiYeyXQ/Lzj0cIobNovkmfDv+QAl7g/e7wQcQpP0KvYLbQEJMiNqCcwKLkznsbQqwfnsoQtbTAI=
+	t=1705934033; cv=none; b=qKGFoaake9yXOX8EjMVSaqqRfLHGs+6mgbucwHIAgoMdcFzLZc2nY3YEMgQTvjBMMX8tju25GLENn/9jrrv+0im+TUQvqyDB/q5igh+mwEALd3cQWYeI8FrmPV0uUttAR4HLwbmGfwSCHnGZ7wXhxBLKC5wqhA+/S+wT7asjew0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705934019; c=relaxed/simple;
-	bh=iTv19rICNpl1lnVCWMxVhw3rYmY8g6Kbzqytd3+JnzI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=PoMr7ZIO9mH5rH6vfU1Cr2KMHsi6EPdRKzNI5LQssGui50ZZ60idQVRsCTVG3kMZZm9IqjQClhy4fgkfjuIqNZxpmMpH1l46O/ZKM+J492xDxkKR1zE8El7XjZ+N4zaMsv4rP/kQSTbsP/UY/m4vW91PFsd58Z1zXXh0Ak3M9R4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.132.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
-Received: from michel.telenet-ops.be (michel.telenet-ops.be [IPv6:2a02:1800:110:4::f00:18])
-	by gauss.telenet-ops.be (Postfix) with ESMTPS id 4TJXY62YBGz4x1X5
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 15:24:42 +0100 (CET)
-Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed40:955e:bba5:7ff4:cfb6])
-	by michel.telenet-ops.be with bizsmtp
-	id dqQb2B0010ZxL6o06qQbSv; Mon, 22 Jan 2024 15:24:35 +0100
-Received: from rox.of.borg ([192.168.97.57])
-	by ramsan.of.borg with esmtp (Exim 4.95)
-	(envelope-from <geert@linux-m68k.org>)
-	id 1rRvDF-00GGww-Rw;
-	Mon, 22 Jan 2024 15:24:34 +0100
-Received: from geert by rox.of.borg with local (Exim 4.95)
-	(envelope-from <geert@linux-m68k.org>)
-	id 1rRvE2-00CFAf-Sl;
-	Mon, 22 Jan 2024 15:24:34 +0100
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Magnus Damm <magnus.damm@gmail.com>
-Cc: linux-staging@lists.linux.dev,
-	linux-usb@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2 3/4] staging: board: Remove Armadillo-800-EVA board staging code
-Date: Mon, 22 Jan 2024 15:24:32 +0100
-Message-Id: <6d51e06a8586997b31eecead55a369f01c5696a7.1705932585.git.geert+renesas@glider.be>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <cover.1705932585.git.geert+renesas@glider.be>
-References: <cover.1705932585.git.geert+renesas@glider.be>
+	s=arc-20240116; t=1705934033; c=relaxed/simple;
+	bh=Rf7Jgcc8Z6wSO7zZHP0dF/g0jawoHIFG5QnvQX8+fDQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BnI9BZKjacPkRbDG5R5f2bihHLfK7u47tYcxFl4bwIuLf2BqqUCRj8wtxcsnHTGWVc7wiAPIXw/5N8NIa8BMa7rI7dIujXBkEX+Bl3j0fccYT4ceViF+Tki0TglYPp4oztuCsvCRfSu7GdoIj3ZJXsP21MVDQch3xxIq0EOOSrE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=iyDQ3mV2; arc=none smtp.client-ip=217.70.183.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="iyDQ3mV2"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id B9AD3C0005;
+	Mon, 22 Jan 2024 14:33:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1705934029;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ECi8ka7o1qBq74OdBGRcMDsclI+BCMKdvpZSkSVLU5c=;
+	b=iyDQ3mV2HYp9n6jneaoazt/KuPqicWfJiZkwpHsB42dxKDV8a1uDS6ss0GeAMuass4XZhM
+	RynadnWy/eWHcEfPdnp6xnFS/nRFlSVsPxhu3zGw5+7itca99ey3jHqb9PKY5tB0Sblduw
+	BK4sHegl3lmj6Uz2+oX/9fpruduP/U35zav7+2dMH+/nGHfinVAYM06VL8fD/sMoz+qEWp
+	K2waEve2OrLdorRlnfCMTPUgfIzWiR9Ou4I65R8Hr//9gwjVSeOh9JaAqgmfuxPnNBVgy0
+	lUt+dPqyOEpAQUpnIYdZG1BWm9x1fP/pacpIWJbdT7Hiud0xlghzcBww476yAg==
+Message-ID: <b59067f0-fdba-40d1-bb52-9f66fd833f40@bootlin.com>
+Date: Mon, 22 Jan 2024 15:33:47 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 02/14] pinctrl: pinctrl-single: move suspend/resume to
+ suspend_noirq/resume_noirq
+Content-Language: en-US
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>,
+ Tony Lindgren <tony@atomide.com>, Haojian Zhuang
+ <haojian.zhuang@linaro.org>, Vignesh R <vigneshr@ti.com>,
+ Aaro Koskinen <aaro.koskinen@iki.fi>,
+ Janusz Krzysztofik <jmkrzyszt@gmail.com>, Andi Shyti
+ <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>,
+ Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
+ Philipp Zabel <p.zabel@pengutronix.de>, Tom Joseph <tjoseph@cadence.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
+ linux-i2c@vger.kernel.org, linux-phy@lists.infradead.org,
+ linux-pci@vger.kernel.org, gregory.clement@bootlin.com,
+ theo.lebrun@bootlin.com, thomas.petazzoni@bootlin.com, u-kumar1@ti.com
+References: <20240102-j7200-pcie-s2r-v1-0-84e55da52400@bootlin.com>
+ <20240102-j7200-pcie-s2r-v1-2-84e55da52400@bootlin.com>
+ <CAHp75Verff06LE0QFaDRoun=ANpGfVU1tHknvvQZd_KyzLVP5Q@mail.gmail.com>
+ <223422cc-2a1c-417b-8fa1-20d3b3eb41ef@bootlin.com>
+ <CAHp75VcaABafPh7o1TjrHW2txXRRSxjT443XJe33gfS1YD4bhA@mail.gmail.com>
+From: Thomas Richard <thomas.richard@bootlin.com>
+In-Reply-To: <CAHp75VcaABafPh7o1TjrHW2txXRRSxjT443XJe33gfS1YD4bhA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-GND-Sasl: thomas.richard@bootlin.com
 
-Since commits 1399ebacbf590dfb ("drm: renesas: shmobile: Add DT
-support"), 138588e9fa237f97 ("ARM: dts: renesas: r8a7740: Add LCDC
-nodes"), and c9a0ed13382660c9 ("ARM: dts: renesas: armadillo800eva: Add
-LCD panel"), there is no longer any use for the Atmark Techno
-Armadillo-800-EVA board staging code.
+On 1/19/24 17:11, Andy Shevchenko wrote:
+> On Fri, Jan 19, 2024 at 6:08 PM Thomas Richard
+> <thomas.richard@bootlin.com> wrote:
+>> On 1/15/24 21:02, Andy Shevchenko wrote:
+>>> On Mon, Jan 15, 2024 at 6:16 PM Thomas Richard
+>>> <thomas.richard@bootlin.com> wrote:
+> 
+> ...
+> 
+>>>> +static const struct dev_pm_ops pinctrl_single_pm_ops = {
+>>>> +       SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(pinctrl_single_suspend_noirq,
+>>>> +                                     pinctrl_single_resume_noirq)
+>>>> +};
+>>>
+>>> Use proper / modern macro.
+>>
+>> fixed, use DEFINE_NOIRQ_DEV_PM_OPS now
+> 
+> ...
+> 
+>>>>  #endif
+>>>
+>>> Why ifdeferry is needed (esp. taking into account pm_ptr() use below)?
+>>
+>> We may have an "unused variable" warning for pinctrl_single_pm_ops if
+>> CONFIG_PM is undefined (due to pm_ptr).
+> 
+> This is coupled with the above. Fixing above will automatically make
+> the right thing.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-v2:
-  - New.
----
- drivers/staging/board/Makefile          |  1 -
- drivers/staging/board/armadillo800eva.c | 88 -------------------------
- 2 files changed, 89 deletions(-)
- delete mode 100644 drivers/staging/board/armadillo800eva.c
+Yes you're right.
+By the way I can use pm_sleep_ptr instead of pm_ptr.
 
-diff --git a/drivers/staging/board/Makefile b/drivers/staging/board/Makefile
-index 5db091b5ca01596a..b6a00c93c2cc10dd 100644
---- a/drivers/staging/board/Makefile
-+++ b/drivers/staging/board/Makefile
-@@ -1,3 +1,2 @@
- # SPDX-License-Identifier: GPL-2.0
- obj-y	:= board.o
--obj-$(CONFIG_ARCH_R8A7740)	+= armadillo800eva.o
-diff --git a/drivers/staging/board/armadillo800eva.c b/drivers/staging/board/armadillo800eva.c
-deleted file mode 100644
-index 0225234dd7aa6b1c..0000000000000000
---- a/drivers/staging/board/armadillo800eva.c
-+++ /dev/null
-@@ -1,88 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--/*
-- * Staging board support for Armadillo 800 eva.
-- * Enable not-yet-DT-capable devices here.
-- *
-- * Based on board-armadillo800eva.c
-- *
-- * Copyright (C) 2012 Renesas Solutions Corp.
-- * Copyright (C) 2012 Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-- */
--
--#include <linux/dma-mapping.h>
--#include <linux/fb.h>
--#include <linux/kernel.h>
--#include <linux/platform_device.h>
--#include <linux/videodev2.h>
--
--#include <video/sh_mobile_lcdc.h>
--
--#include "board.h"
--
--static struct fb_videomode lcdc0_mode = {
--	.name		= "AMPIER/AM-800480",
--	.xres		= 800,
--	.yres		= 480,
--	.left_margin	= 88,
--	.right_margin	= 40,
--	.hsync_len	= 128,
--	.upper_margin	= 20,
--	.lower_margin	= 5,
--	.vsync_len	= 5,
--	.sync		= 0,
--};
--
--static struct sh_mobile_lcdc_info lcdc0_info = {
--	.clock_source	= LCDC_CLK_BUS,
--	.ch[0] = {
--		.chan		= LCDC_CHAN_MAINLCD,
--		.fourcc		= V4L2_PIX_FMT_RGB565,
--		.interface_type	= RGB24,
--		.clock_divider	= 5,
--		.flags		= 0,
--		.lcd_modes	= &lcdc0_mode,
--		.num_modes	= 1,
--		.panel_cfg = {
--			.width	= 111,
--			.height = 68,
--		},
--	},
--};
--
--static struct resource lcdc0_resources[] = {
--	DEFINE_RES_MEM_NAMED(0xfe940000, 0x4000, "LCD0"),
--	DEFINE_RES_IRQ(177 + 32),
--};
--
--static struct platform_device lcdc0_device = {
--	.name		= "sh_mobile_lcdc_fb",
--	.num_resources	= ARRAY_SIZE(lcdc0_resources),
--	.resource	= lcdc0_resources,
--	.id		= 0,
--	.dev	= {
--		.platform_data	= &lcdc0_info,
--		.coherent_dma_mask = DMA_BIT_MASK(32),
--	},
--};
--
--static const struct board_staging_clk lcdc0_clocks[] __initconst = {
--	{ "lcdc0", NULL, "sh_mobile_lcdc_fb.0" },
--};
--
--static const struct board_staging_dev armadillo800eva_devices[] __initconst = {
--	{
--		.pdev	 = &lcdc0_device,
--		.clocks	 = lcdc0_clocks,
--		.nclocks = ARRAY_SIZE(lcdc0_clocks),
--		.domain	 = "/system-controller@e6180000/pm-domains/c5/a4lc@1"
--	},
--};
--
--static void __init armadillo800eva_init(void)
--{
--	board_staging_gic_setup_xlate("arm,pl390", 32);
--	board_staging_register_devices(armadillo800eva_devices,
--				       ARRAY_SIZE(armadillo800eva_devices));
--}
--
--board_staging("renesas,armadillo800eva", armadillo800eva_init);
 -- 
-2.34.1
+Thomas Richard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
