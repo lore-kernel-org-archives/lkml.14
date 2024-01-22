@@ -1,44 +1,44 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4965F60ECA;
-	Mon, 22 Jan 2024 23:55:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.120
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 847B560DE4;
+	Mon, 22 Jan 2024 23:55:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705967746; cv=none; b=qQmrQdKRWcS4xIg3FfypucnlvBqZQZTTOFU5Iiw1VsqVAr21qB/LPV8hAS6u2W5Vynkadgxyxpd+s1U0zb9x73kt3zbzEGLSiQeV2JsAOVksz4PwpZ1aV8OUM6naY3oWrloFO6kfsdrBA8K8dPwlUlYw82GUUIK3hyY9GVUZwCc=
+	t=1705967745; cv=none; b=CxFF8DEJJyyZV+WuMbG0YSfkgyZ2usw+QXMGgeGdwsfx4jvaD8pnnwRKXM7UK8fQYM2+MebMxg+el8Waafep1saTeps8wL3Vp2zxnD6Is9P5X7Pos47MEJnABi7zxoOxtKSBm4uTpeFz9eAjtQjp/V708a/JZspFsIfAr2gmWXs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705967746; c=relaxed/simple;
-	bh=T3zzp82ffDW6xJPkTdQ5XEAQN5qO3N9Dr5YafHIr2ho=;
+	s=arc-20240116; t=1705967745; c=relaxed/simple;
+	bh=n73/5UOAhzQ9QyTV4Ct+NOyk/hG8SoHeEMqddbIaAF0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=aGbxqyIRR8zRhRwA/eoJb83m9qksIOoarvFDsQ34P4xV/X1aMX0IQaQrdx2dak3TXRJPAcHoHLoasSTREwnLD5KroR0TDk913CVsb6febDmCHocur3IYBQGXGbbTC/NTPoq4v8IVlVwCPJ9PEhwkWPwyOFplWCuWTnKMDVQOJiI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=h7B9E1tj; arc=none smtp.client-ip=192.55.52.120
+	 MIME-Version; b=p4ZvctrM/lMjyA6GWhqwGYKT97ZPCMcm9urpVwIvzDepna24qi7jJKl4SWcmy1CCfojpltqcyEH2Ept87wxRHWl0pYpU7lIubZLBDA5WFzpW99YMMQQ7qDhfiZnKdAxjPT4bpPuTdQhd2+Qlgea67/8tuILNEksKSs4skej6eVg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=joOy3cC2; arc=none smtp.client-ip=198.175.65.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="h7B9E1tj"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="joOy3cC2"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1705967744; x=1737503744;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=T3zzp82ffDW6xJPkTdQ5XEAQN5qO3N9Dr5YafHIr2ho=;
-  b=h7B9E1tjO8XWBs0IYyD/uDC4PGsQhovEkGlZx6wJEuhCcwsn9+xaeFfe
-   LgjWVY+A7mOaC7ASxUipcJtsXzP0FG0y9YSF0N+i3E5PS23eYaUQIwntm
-   9Pw7MSjniHOaClmIcwrQ6pmra16u425fcRLDNEhzItMiT1Siqyou82sFH
-   YLe3zMUlt3dxBe/RslB45Gq57+8NIMCv+Gyb86nu8IpBM5T/QuIDuK2Zv
-   y2dECCsdZYYGSgV7AF7vAxPj1sPT2NipBdx0kO9gPawnscOfK3FxQ/rBY
-   nzaAgmaMZWLqNI8MBo7p9wha2P8cmHi4mXqJ0PPAxMovS1f4hT+vXUKhE
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10961"; a="400217760"
+  bh=n73/5UOAhzQ9QyTV4Ct+NOyk/hG8SoHeEMqddbIaAF0=;
+  b=joOy3cC2tSphWQkOJlOqrxMDmqeraQ/F0aWgBlk2iVV/lDPp8OUdkAyo
+   +o/QBmpkgBRKxX1ImnJrYNyu9hw5W6AM/9TktCu0KumzvFnHepXS6w5JD
+   XBlxO9szfFI9LlBAWNv8TubMUWj2jhKfGEhZCzzKBoTMI7GAxvwMKmZ3g
+   wSULgH3PkWlVSdoW/c84yHgL8qYIwpowWZCTVlsfoWVgly2Oyd0oYU5ID
+   kdJsrxN17dL8+310zgXrm2GacHYIlC4uQE7p/5cJP7vUph7oVc3v96Orv
+   lGs910nULRVYI4Fxa6nuD2osdWk4GszxvvikkXxIhZik2atVV/5hsqlXb
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10961"; a="8016431"
 X-IronPort-AV: E=Sophos;i="6.05,212,1701158400"; 
-   d="scan'208";a="400217760"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 15:55:41 -0800
+   d="scan'208";a="8016431"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 15:55:36 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.05,212,1701158400"; 
-   d="scan'208";a="27817904"
+   d="scan'208";a="1468184"
 Received: from ls.sc.intel.com (HELO localhost) ([172.25.112.31])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 15:55:41 -0800
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 15:55:34 -0800
 From: isaku.yamahata@intel.com
 To: kvm@vger.kernel.org,
 	linux-kernel@vger.kernel.org
@@ -51,10 +51,11 @@ Cc: isaku.yamahata@intel.com,
 	Kai Huang <kai.huang@intel.com>,
 	chen.bo@intel.com,
 	hang.yuan@intel.com,
-	tina.zhang@intel.com
-Subject: [PATCH v18 075/121] KVM: TDX: restore debug store when TD exit
-Date: Mon, 22 Jan 2024 15:53:51 -0800
-Message-Id: <7eaf9c55acb56cb6d3d74cac34fdf1436fa2465b.1705965635.git.isaku.yamahata@intel.com>
+	tina.zhang@intel.com,
+	Yuan Yao <yuan.yao@intel.com>
+Subject: [PATCH v18 058/121] KVM: TDX: Retry seamcall when TDX_OPERAND_BUSY with operand SEPT
+Date: Mon, 22 Jan 2024 15:53:34 -0800
+Message-Id: <d854fa4415ca6d2b5d055d0b29b147a5cdf232f7.1705965635.git.isaku.yamahata@intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1705965634.git.isaku.yamahata@intel.com>
 References: <cover.1705965634.git.isaku.yamahata@intel.com>
@@ -66,38 +67,164 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Isaku Yamahata <isaku.yamahata@intel.com>
+From: Yuan Yao <yuan.yao@intel.com>
 
-Because debug store is clobbered, restore it on TD exit.
+TDX module internally uses locks to protect internal resources.  It tries
+to acquire the locks.  If it fails to obtain the lock, it returns
+TDX_OPERAND_BUSY error without spin because its execution time limitation.
 
+TDX SEAMCALL API reference describes what resources are used.  It's known
+which TDX SEAMCALL can cause contention with which resources.  VMM can
+avoid contention inside the TDX module by avoiding contentious TDX SEAMCALL
+with, for example, spinlock.  Because OS knows better its process
+scheduling and its scalability, a lock at OS/VMM layer would work better
+than simply retrying TDX SEAMCALLs.
+
+TDH.MEM.* API except for TDH.MEM.TRACK operates on a secure EPT tree and
+the TDX module internally tries to acquire the lock of the secure EPT tree.
+They return TDX_OPERAND_BUSY | TDX_OPERAND_ID_SEPT in case of failure to
+get the lock.  TDX KVM allows sept callbacks to return error so that TDP
+MMU layer can retry.
+
+TDH.VP.ENTER is an exception with zero-step attack mitigation.  Normally
+TDH.VP.ENTER uses only TD vcpu resources and it doesn't cause contention.
+When a zero-step attack is suspected, it obtains a secure EPT tree lock and
+tracks the GPAs causing a secure EPT fault.  Thus TDG.VP.ENTER may result
+in TDX_OPERAND_BUSY | TDX_OPERAND_ID_SEPT.  Also TDH.MEM.* SEAMCALLs may
+result in TDX_OPERAN_BUSY | TDX_OPERAND_ID_SEPT.
+
+Retry TDX TDH.MEM.* API and TDH.VP.ENTER on the error because the error is
+a rare event caused by zero-step attack mitigation and spinlock can not be
+used for TDH.VP.ENTER due to indefinite time execution.
+
+Signed-off-by: Yuan Yao <yuan.yao@intel.com>
 Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
-Reviewed-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- arch/x86/events/intel/ds.c | 1 +
- arch/x86/kvm/vmx/tdx.c     | 1 +
- 2 files changed, 2 insertions(+)
+ arch/x86/kvm/vmx/tdx_ops.h | 48 +++++++++++++++++++++++++++++++-------
+ 1 file changed, 39 insertions(+), 9 deletions(-)
 
-diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
-index d49d661ec0a7..25670d8a485b 100644
---- a/arch/x86/events/intel/ds.c
-+++ b/arch/x86/events/intel/ds.c
-@@ -2428,3 +2428,4 @@ void perf_restore_debug_store(void)
+diff --git a/arch/x86/kvm/vmx/tdx_ops.h b/arch/x86/kvm/vmx/tdx_ops.h
+index cd12e9c2a421..53a6c3f692b0 100644
+--- a/arch/x86/kvm/vmx/tdx_ops.h
++++ b/arch/x86/kvm/vmx/tdx_ops.h
+@@ -52,6 +52,36 @@ static inline u64 tdx_seamcall(u64 op, struct tdx_module_args *in,
+ void pr_tdx_error(u64 op, u64 error_code, const struct tdx_module_args *out);
+ #endif
  
- 	wrmsrl(MSR_IA32_DS_AREA, (unsigned long)ds);
++/*
++ * TDX module acquires its internal lock for resources.  It doesn't spin to get
++ * locks because of its restrictions of allowed execution time.  Instead, it
++ * returns TDX_OPERAND_BUSY with an operand id.
++ *
++ * Multiple VCPUs can operate on SEPT.  Also with zero-step attack mitigation,
++ * TDH.VP.ENTER may rarely acquire SEPT lock and release it when zero-step
++ * attack is suspected.  It results in TDX_OPERAND_BUSY | TDX_OPERAND_ID_SEPT
++ * with TDH.MEM.* operation.  Note: TDH.MEM.TRACK is an exception.
++ *
++ * Because TDP MMU uses read lock for scalability, spin lock around SEAMCALL
++ * spoils TDP MMU effort.  Retry several times with the assumption that SEPT
++ * lock contention is rare.  But don't loop forever to avoid lockup.  Let TDP
++ * MMU retry.
++ */
++#define TDX_ERROR_SEPT_BUSY    (TDX_OPERAND_BUSY | TDX_OPERAND_ID_SEPT)
++
++static inline u64 tdx_seamcall_sept(u64 op, struct tdx_module_args *in,
++				    struct tdx_module_args *out)
++{
++#define SEAMCALL_RETRY_MAX     16
++	int retry = SEAMCALL_RETRY_MAX;
++	u64 ret;
++
++	do {
++		ret = tdx_seamcall(op, in, out);
++	} while (ret == TDX_ERROR_SEPT_BUSY && retry-- > 0);
++	return ret;
++}
++
+ static inline u64 tdh_mng_addcx(hpa_t tdr, hpa_t addr)
+ {
+ 	struct tdx_module_args in = {
+@@ -74,7 +104,7 @@ static inline u64 tdh_mem_page_add(hpa_t tdr, gpa_t gpa, hpa_t hpa, hpa_t source
+ 	};
+ 
+ 	clflush_cache_range(__va(hpa), PAGE_SIZE);
+-	return tdx_seamcall(TDH_MEM_PAGE_ADD, &in, out);
++	return tdx_seamcall_sept(TDH_MEM_PAGE_ADD, &in, out);
  }
-+EXPORT_SYMBOL_GPL(perf_restore_debug_store);
-diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
-index 3b2ba9f974be..68a8d01c03bd 100644
---- a/arch/x86/kvm/vmx/tdx.c
-+++ b/arch/x86/kvm/vmx/tdx.c
-@@ -715,6 +715,7 @@ fastpath_t tdx_vcpu_run(struct kvm_vcpu *vcpu)
- 	tdx_vcpu_enter_exit(tdx);
  
- 	tdx_user_return_update_cache(vcpu);
-+	perf_restore_debug_store();
- 	tdx_restore_host_xsave_state(vcpu);
- 	tdx->host_state_need_restore = true;
+ static inline u64 tdh_mem_sept_add(hpa_t tdr, gpa_t gpa, int level, hpa_t page,
+@@ -87,7 +117,7 @@ static inline u64 tdh_mem_sept_add(hpa_t tdr, gpa_t gpa, int level, hpa_t page,
+ 	};
  
+ 	clflush_cache_range(__va(page), PAGE_SIZE);
+-	return tdx_seamcall(TDH_MEM_SEPT_ADD, &in, out);
++	return tdx_seamcall_sept(TDH_MEM_SEPT_ADD, &in, out);
+ }
+ 
+ static inline u64 tdh_mem_sept_rd(hpa_t tdr, gpa_t gpa, int level,
+@@ -98,7 +128,7 @@ static inline u64 tdh_mem_sept_rd(hpa_t tdr, gpa_t gpa, int level,
+ 		.rdx = tdr,
+ 	};
+ 
+-	return tdx_seamcall(TDH_MEM_SEPT_RD, &in, out);
++	return tdx_seamcall_sept(TDH_MEM_SEPT_RD, &in, out);
+ }
+ 
+ static inline u64 tdh_mem_sept_remove(hpa_t tdr, gpa_t gpa, int level,
+@@ -109,7 +139,7 @@ static inline u64 tdh_mem_sept_remove(hpa_t tdr, gpa_t gpa, int level,
+ 		.rdx = tdr,
+ 	};
+ 
+-	return tdx_seamcall(TDH_MEM_SEPT_REMOVE, &in, out);
++	return tdx_seamcall_sept(TDH_MEM_SEPT_REMOVE, &in, out);
+ }
+ 
+ static inline u64 tdh_vp_addcx(hpa_t tdvpr, hpa_t addr)
+@@ -133,7 +163,7 @@ static inline u64 tdh_mem_page_relocate(hpa_t tdr, gpa_t gpa, hpa_t hpa,
+ 	};
+ 
+ 	clflush_cache_range(__va(hpa), PAGE_SIZE);
+-	return tdx_seamcall(TDH_MEM_PAGE_RELOCATE, &in, out);
++	return tdx_seamcall_sept(TDH_MEM_PAGE_RELOCATE, &in, out);
+ }
+ 
+ static inline u64 tdh_mem_page_aug(hpa_t tdr, gpa_t gpa, hpa_t hpa,
+@@ -146,7 +176,7 @@ static inline u64 tdh_mem_page_aug(hpa_t tdr, gpa_t gpa, hpa_t hpa,
+ 	};
+ 
+ 	clflush_cache_range(__va(hpa), PAGE_SIZE);
+-	return tdx_seamcall(TDH_MEM_PAGE_AUG, &in, out);
++	return tdx_seamcall_sept(TDH_MEM_PAGE_AUG, &in, out);
+ }
+ 
+ static inline u64 tdh_mem_range_block(hpa_t tdr, gpa_t gpa, int level,
+@@ -157,7 +187,7 @@ static inline u64 tdh_mem_range_block(hpa_t tdr, gpa_t gpa, int level,
+ 		.rdx = tdr,
+ 	};
+ 
+-	return tdx_seamcall(TDH_MEM_RANGE_BLOCK, &in, out);
++	return tdx_seamcall_sept(TDH_MEM_RANGE_BLOCK, &in, out);
+ }
+ 
+ static inline u64 tdh_mng_key_config(hpa_t tdr)
+@@ -307,7 +337,7 @@ static inline u64 tdh_mem_page_remove(hpa_t tdr, gpa_t gpa, int level,
+ 		.rdx = tdr,
+ 	};
+ 
+-	return tdx_seamcall(TDH_MEM_PAGE_REMOVE, &in, out);
++	return tdx_seamcall_sept(TDH_MEM_PAGE_REMOVE, &in, out);
+ }
+ 
+ static inline u64 tdh_sys_lp_shutdown(void)
+@@ -335,7 +365,7 @@ static inline u64 tdh_mem_range_unblock(hpa_t tdr, gpa_t gpa, int level,
+ 		.rdx = tdr,
+ 	};
+ 
+-	return tdx_seamcall(TDH_MEM_RANGE_UNBLOCK, &in, out);
++	return tdx_seamcall_sept(TDH_MEM_RANGE_UNBLOCK, &in, out);
+ }
+ 
+ static inline u64 tdh_phymem_cache_wb(bool resume)
 -- 
 2.25.1
 
