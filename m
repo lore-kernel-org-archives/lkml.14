@@ -1,42 +1,64 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FD4840BFE;
-	Mon, 22 Jan 2024 11:04:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DBA43FE36;
+	Mon, 22 Jan 2024 11:04:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705921497; cv=none; b=QOckveEoG2K0wuzgSB4FbYalTvxys8sr7qKdjNFSoOipn9Oll5h8SsNOr4YqfjDSXHLU5zbAjFzaqzIxcCQXqC10dhG5F81/Al8oAcqQCoY38kT38kacJr+Sk5HA159Vqa2GSmmXuxMdRw9nQ5to9RcR5aOz1XNp9HzWW3JqMss=
+	t=1705921496; cv=none; b=bG6/cX1kLn9kNmTKpxM4d0gu+WCeuNYEgE6IRM5nvMb6CeYIh5lTCJ+86y4qyQFjXaid5VCPyzK8ha9cTWTbTZGUSwLXUt3jzW3Ds0YAmUZodQ/2CM3p1Ym40/v8y7ndnFOYYHHHmuPKK9cssYLLEwGBsQDJcPsvfq4RUSpBnys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705921497; c=relaxed/simple;
-	bh=DAOYyLo1oRnD4iTPfOiMEY1vdjbEkdytO8nE0RBybMQ=;
+	s=arc-20240116; t=1705921496; c=relaxed/simple;
+	bh=0zQkqLtn79o0lyqbEw47gxFTbI/GITrO28ITGThAX0o=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=i9SQuROg1Ikj5wSapqYnw9bNKMElybJ2Yw+HiJaAAu/+Drtpa8DaE0Cy6BCQce9xVHRRMXi/cMMfWRpZ27yId5+bytTnqKTvYVQjupk592+dWZ33s3vJS8KZeXTOmBTm50JL00Soqwl7JsSHdknCnKFJuNvFlncMWY+5STvgpgk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XziewYsx; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=mnRTE89LVxcCWcE+K5giZ6PyII3dNE28a4Idmp7vyXE/uKX2d/XijtT7sWT/KNg2tCLbdWSDtH9MonyD4xf8e40QlTr/SuoRIfp3tQBssrpNDv5E19fEzd5vxAfp6AuzgNNfvFyZ/1khM19oVY+ys2nMu6j336tOAvHWIqUmBcY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=YVahK3+z; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XziewYsx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 847A9C433C7;
-	Mon, 22 Jan 2024 11:04:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705921496;
-	bh=DAOYyLo1oRnD4iTPfOiMEY1vdjbEkdytO8nE0RBybMQ=;
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="YVahK3+z"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1705921492;
+	bh=0zQkqLtn79o0lyqbEw47gxFTbI/GITrO28ITGThAX0o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=XziewYsxLLlD/hclxqdGpQyzU2GoZaBhkVJilxHVkKwxonK+sZh6dEAtI5MTEfLS6
-	 vKJ+mrX4C4Fggy3aisQd/L1XN9j7HC2xUKdE8qDofM1zr0PMXg1c6e3Zf5yduWzw21
-	 PJr7LctUU352ia16qtex2WUWJsQffWiPUcCGGaE36gv+Rqfmc7HtBT2gyZa/cojTxe
-	 k9Y1rybMlEPWL7LI/IVTEquwEJ/JbT9rqeIsukDTUfAPVRfruAOu6d0WHfEwlh1BI1
-	 kfbZEA8KeAKg04aBgHZ1FGNTOwHbYUsZy6KT0dRjGuiN+cVVSK3RzqJrSnAy/meCSi
-	 hcvCnkxIuRjgw==
-From: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
+	b=YVahK3+znmzpTZY4URp2ARJReTX1JdlNFnjYrlNvErYZ+5tQlDnMWi997UiVFJQmn
+	 fLS2qIhX1nUyngrvVfTtvRQyc5mdyS/GeNU1HeKtdYkcxk+119xmJI/K9uoIXn1NAW
+	 9nN/4SRcAi70vWEFjYscBWjX/Z+C+8N+sR3gHcD/7sWYAH1z89x/+EV9Z8/yujXgNM
+	 bekApc+n9jC01kC4UCMmX234UEpMBEfQSZTcz5vuuXG8iYDnlag470WzEtR1pnyoab
+	 oHU+Tz2nZ9LS/OqfAMTD6mpmUIwvxhwUyiBY0jjEHShIHXL/nnri2ToHziwSt2DZJr
+	 QYUoOFRJccmLw==
+Received: from IcarusMOD.eternityproject.eu (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 7807F3781FE3;
+	Mon, 22 Jan 2024 11:04:51 +0000 (UTC)
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 To: gregkh@linuxfoundation.org
-Cc: linux-serial@vger.kernel.org,
+Cc: robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	heikki.krogerus@linux.intel.com,
+	matthias.bgg@gmail.com,
+	dmitry.baryshkov@linaro.org,
+	neil.armstrong@linaro.org,
+	andersson@kernel.org,
+	nathan@kernel.org,
+	luca.weiss@fairphone.com,
+	tianping.fang@mediatek.com,
+	linux-usb@vger.kernel.org,
+	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	"Jiri Slaby (SUSE)" <jirislaby@kernel.org>
-Subject: [PATCH v2 26/47] tty: vt: sanitize consw::con_putcs() parameters
-Date: Mon, 22 Jan 2024 12:03:40 +0100
-Message-ID: <20240122110401.7289-27-jirislaby@kernel.org>
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	kernel@collabora.com,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Subject: [PATCH v3 2/2] usb: typec: mux: Add ITE IT5205 Alternate Mode Passive MUX driver
+Date: Mon, 22 Jan 2024 12:04:46 +0100
+Message-ID: <20240122110446.140226-3-angelogioacchino.delregno@collabora.com>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240122110401.7289-1-jirislaby@kernel.org>
-References: <20240122110401.7289-1-jirislaby@kernel.org>
+In-Reply-To: <20240122110446.140226-1-angelogioacchino.delregno@collabora.com>
+References: <20240122110446.140226-1-angelogioacchino.delregno@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,158 +67,352 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Similar to con_putc() in the previous patch:
-* make the pointer to charattr a pointer to u16, and
-* make x, y, and count unsigned as they are strictly non-negative.
+The ITE IT5202 is a USB Type-C Alternate Mode Passive MUX, used for
+muxing the SBU lines of a Type-C port with DisplayPort altmode and
+also providing an orientation switch.
 
-And again, document that hook.
-
-Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 ---
- drivers/video/console/dummycon.c    | 10 +++++-----
- drivers/video/console/mdacon.c      |  4 ++--
- drivers/video/console/newport_con.c |  9 +++++----
- drivers/video/console/sticon.c      |  4 ++--
- drivers/video/console/vgacon.c      |  4 ++--
- drivers/video/fbdev/core/fbcon.c    |  4 ++--
- include/linux/console.h             |  6 ++++--
- 7 files changed, 22 insertions(+), 19 deletions(-)
+ drivers/usb/typec/mux/Kconfig  |  10 ++
+ drivers/usb/typec/mux/Makefile |   1 +
+ drivers/usb/typec/mux/it5205.c | 294 +++++++++++++++++++++++++++++++++
+ 3 files changed, 305 insertions(+)
+ create mode 100644 drivers/usb/typec/mux/it5205.c
 
-diff --git a/drivers/video/console/dummycon.c b/drivers/video/console/dummycon.c
-index 1874beed0325..188d9f3e201c 100644
---- a/drivers/video/console/dummycon.c
-+++ b/drivers/video/console/dummycon.c
-@@ -59,10 +59,10 @@ static void dummycon_putc(struct vc_data *vc, u16 c, unsigned int y,
- 	raw_notifier_call_chain(&dummycon_output_nh, 0, NULL);
- }
+diff --git a/drivers/usb/typec/mux/Kconfig b/drivers/usb/typec/mux/Kconfig
+index d2cb5e733e57..399c7b0983df 100644
+--- a/drivers/usb/typec/mux/Kconfig
++++ b/drivers/usb/typec/mux/Kconfig
+@@ -36,6 +36,16 @@ config TYPEC_MUX_INTEL_PMC
+ 	  control the USB role switch and also the multiplexer/demultiplexer
+ 	  switches used with USB Type-C Alternate Modes.
  
--static void dummycon_putcs(struct vc_data *vc, const unsigned short *s,
--			   int count, int ypos, int xpos)
-+static void dummycon_putcs(struct vc_data *vc, const u16 *s, unsigned int count,
-+			   unsigned int ypos, unsigned int xpos)
- {
--	int i;
-+	unsigned int i;
- 
- 	if (!dummycon_putc_called) {
- 		/* Ignore erases */
-@@ -87,8 +87,8 @@ static int dummycon_blank(struct vc_data *vc, int blank, int mode_switch)
- #else
- static void dummycon_putc(struct vc_data *vc, u16 c, unsigned int y,
- 			  unsigned int x) { }
--static void dummycon_putcs(struct vc_data *vc, const unsigned short *s,
--			   int count, int ypos, int xpos) { }
-+static void dummycon_putcs(struct vc_data *vc, const u16 *s, unsigned int count,
-+			   unsigned int ypos, unsigned int xpos) { }
- static int dummycon_blank(struct vc_data *vc, int blank, int mode_switch)
- {
- 	return 0;
-diff --git a/drivers/video/console/mdacon.c b/drivers/video/console/mdacon.c
-index 01e779943c00..b8822b615b2f 100644
---- a/drivers/video/console/mdacon.c
-+++ b/drivers/video/console/mdacon.c
-@@ -427,8 +427,8 @@ static inline u16 *mda_addr(unsigned int x, unsigned int y)
- 	return mda_vram_base + y * mda_num_columns + x;
- }
- 
--static void mdacon_putcs(struct vc_data *c, const unsigned short *s,
--		         int count, int y, int x)
-+static void mdacon_putcs(struct vc_data *c, const u16 *s, unsigned int count,
-+			 unsigned int y, unsigned int x)
- {
- 	u16 *dest = mda_addr(x, y);
- 
-diff --git a/drivers/video/console/newport_con.c b/drivers/video/console/newport_con.c
-index 9b5c0118873e..5e65ee0b7c07 100644
---- a/drivers/video/console/newport_con.c
-+++ b/drivers/video/console/newport_con.c
-@@ -396,12 +396,13 @@ static void newport_putc(struct vc_data *vc, u16 charattr, unsigned int ypos,
- 	RENDER(npregs, p);
- }
- 
--static void newport_putcs(struct vc_data *vc, const unsigned short *s,
--			  int count, int ypos, int xpos)
-+static void newport_putcs(struct vc_data *vc, const u16 *s,
-+			  unsigned int count, unsigned int ypos,
-+			  unsigned int xpos)
- {
--	int i;
--	int charattr;
- 	unsigned char *p;
-+	unsigned int i;
-+	u16 charattr;
- 
- 	charattr = (scr_readw(s) >> 8) & 0xff;
- 
-diff --git a/drivers/video/console/sticon.c b/drivers/video/console/sticon.c
-index 2f87b5909d0d..906da1fde7c8 100644
---- a/drivers/video/console/sticon.c
-+++ b/drivers/video/console/sticon.c
-@@ -71,8 +71,8 @@ static const char *sticon_startup(void)
-     return "STI console";
- }
- 
--static void sticon_putcs(struct vc_data *conp, const unsigned short *s,
--			 int count, int ypos, int xpos)
-+static void sticon_putcs(struct vc_data *conp, const u16 *s, unsigned int count,
-+			 unsigned int ypos, unsigned int xpos)
- {
-     if (vga_is_gfx || console_blanked)
- 	    return;
-diff --git a/drivers/video/console/vgacon.c b/drivers/video/console/vgacon.c
-index 4beab11f87eb..aa0589085847 100644
---- a/drivers/video/console/vgacon.c
-+++ b/drivers/video/console/vgacon.c
-@@ -1193,8 +1193,8 @@ static bool vgacon_scroll(struct vc_data *c, unsigned int t, unsigned int b,
- 
- static void vgacon_clear(struct vc_data *vc, unsigned int sy, unsigned int sx,
- 			 unsigned int width) { }
--static void vgacon_putcs(struct vc_data *vc, const unsigned short *s,
--			 int count, int ypos, int xpos) { }
-+static void vgacon_putcs(struct vc_data *vc, const u16 *s, unsigned int count,
-+			 unsigned int ypos, unsigned int xpos) { }
- 
- const struct consw vga_con = {
- 	.owner = THIS_MODULE,
-diff --git a/drivers/video/fbdev/core/fbcon.c b/drivers/video/fbdev/core/fbcon.c
-index 38de0f8723aa..7a7b2ac0d7a9 100644
---- a/drivers/video/fbdev/core/fbcon.c
-+++ b/drivers/video/fbdev/core/fbcon.c
-@@ -1279,8 +1279,8 @@ static void fbcon_clear(struct vc_data *vc, unsigned int sy, unsigned int sx,
- 	__fbcon_clear(vc, sy, sx, 1, width);
- }
- 
--static void fbcon_putcs(struct vc_data *vc, const unsigned short *s,
--			int count, int ypos, int xpos)
-+static void fbcon_putcs(struct vc_data *vc, const u16 *s, unsigned int count,
-+			unsigned int ypos, unsigned int xpos)
- {
- 	struct fb_info *info = fbcon_info_from_console(vc->vc_num);
- 	struct fbcon_display *p = &fb_display[vc->vc_num];
-diff --git a/include/linux/console.h b/include/linux/console.h
-index 92d57e5b3009..82d55764a66f 100644
---- a/include/linux/console.h
-+++ b/include/linux/console.h
-@@ -41,6 +41,7 @@ enum vc_intensity;
-  * @con_clear:  erase @count characters at [@x, @y] on @vc. @count >= 1.
-  * @con_putc:   emit one character with attributes @ca to [@x, @y] on @vc.
-  *		(optional -- @con_putcs would be called instead)
-+ * @con_putcs:  emit @count characters with attributes @s to [@x, @y] on @vc.
-  * @con_scroll: move lines from @top to @bottom in direction @dir by @lines.
-  *		Return true if no generic handling should be done.
-  *		Invoked by csi_M and printing to the console.
-@@ -57,8 +58,9 @@ struct consw {
- 			     unsigned int x, unsigned int count);
- 	void	(*con_putc)(struct vc_data *vc, u16 ca, unsigned int y,
- 			    unsigned int x);
--	void	(*con_putcs)(struct vc_data *vc, const unsigned short *s,
--			int count, int ypos, int xpos);
-+	void	(*con_putcs)(struct vc_data *vc, const u16 *s,
-+			     unsigned int count, unsigned int ypos,
-+			     unsigned int xpos);
- 	void	(*con_cursor)(struct vc_data *vc, int mode);
- 	bool	(*con_scroll)(struct vc_data *vc, unsigned int top,
- 			unsigned int bottom, enum con_scroll dir,
++config TYPEC_MUX_IT5205
++	tristate "ITE IT5205 Type-C USB Alt Mode Passive MUX driver"
++	depends on I2C
++	select REGMAP_I2C
++	help
++	  Driver for the ITE IT5205 Type-C USB Alternate Mode Passive MUX
++	  which provides support for muxing DisplayPort and sideband signals
++	  on a common USB Type-C connector.
++	  If compiled as a module, the module will be named it5205.
++
+ config TYPEC_MUX_NB7VPQ904M
+ 	tristate "On Semiconductor NB7VPQ904M Type-C redriver driver"
+ 	depends on I2C
+diff --git a/drivers/usb/typec/mux/Makefile b/drivers/usb/typec/mux/Makefile
+index 57dc9ac6f8dc..bb96f30267af 100644
+--- a/drivers/usb/typec/mux/Makefile
++++ b/drivers/usb/typec/mux/Makefile
+@@ -4,6 +4,7 @@ obj-$(CONFIG_TYPEC_MUX_FSA4480)		+= fsa4480.o
+ obj-$(CONFIG_TYPEC_MUX_GPIO_SBU)	+= gpio-sbu-mux.o
+ obj-$(CONFIG_TYPEC_MUX_PI3USB30532)	+= pi3usb30532.o
+ obj-$(CONFIG_TYPEC_MUX_INTEL_PMC)	+= intel_pmc_mux.o
++obj-$(CONFIG_TYPEC_MUX_IT5205)		+= it5205.o
+ obj-$(CONFIG_TYPEC_MUX_NB7VPQ904M)	+= nb7vpq904m.o
+ obj-$(CONFIG_TYPEC_MUX_PTN36502)	+= ptn36502.o
+ obj-$(CONFIG_TYPEC_MUX_WCD939X_USBSS)	+= wcd939x-usbss.o
+diff --git a/drivers/usb/typec/mux/it5205.c b/drivers/usb/typec/mux/it5205.c
+new file mode 100644
+index 000000000000..5535932e42cd
+--- /dev/null
++++ b/drivers/usb/typec/mux/it5205.c
+@@ -0,0 +1,294 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * ITE IT5205 Type-C USB alternate mode passive mux
++ *
++ * Copyright (c) 2020 MediaTek Inc.
++ * Copyright (c) 2024 Collabora Ltd.
++ *                    AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
++ *
++ */
++
++#include <linux/delay.h>
++#include <linux/i2c.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/of_platform.h>
++#include <linux/platform_device.h>
++#include <linux/regmap.h>
++#include <linux/regulator/consumer.h>
++#include <linux/usb/tcpm.h>
++#include <linux/usb/typec.h>
++#include <linux/usb/typec_dp.h>
++#include <linux/usb/typec_mux.h>
++
++#define IT5205_REG_CHIP_ID(x)	(0x4 + (x))
++#define IT5205FN_CHIP_ID	0x35323035 /* "5205" */
++
++/* MUX power down register */
++#define IT5205_REG_MUXPDR        0x10
++#define IT5205_MUX_POWER_DOWN    BIT(0)
++
++/* MUX control register */
++#define IT5205_REG_MUXCR         0x11
++#define IT5205_POLARITY_INVERTED BIT(4)
++#define IT5205_DP_USB_CTRL_MASK  GENMASK(3, 0)
++#define IT5205_DP                0x0f
++#define IT5205_DP_USB            0x03
++#define IT5205_USB               0x07
++
++/* Vref Select Register */
++#define IT5205_REG_VSR            0x10
++#define IT5205_VREF_SELECT_MASK   GENMASK(5, 4)
++#define IT5205_VREF_SELECT_3_3V   0x00
++#define IT5205_VREF_SELECT_OFF    0x20
++
++/* CSBU Over Voltage Protection Register */
++#define IT5205_REG_CSBUOVPSR      0x1e
++#define IT5205_OVP_SELECT_MASK    GENMASK(5, 4)
++#define IT5205_OVP_3_90V          0x00
++#define IT5205_OVP_3_68V          0x10
++#define IT5205_OVP_3_62V          0x20
++#define IT5205_OVP_3_57V          0x30
++
++/* CSBU Switch Register */
++#define IT5205_REG_CSBUSR         0x22
++#define IT5205_CSBUSR_SWITCH      BIT(0)
++
++/* Interrupt Switch Register */
++#define IT5205_REG_ISR            0x25
++#define IT5205_ISR_CSBU_MASK      BIT(4)
++#define IT5205_ISR_CSBU_OVP       BIT(0)
++
++struct it5205 {
++	struct i2c_client *client;
++	struct regmap *regmap;
++	struct typec_switch_dev *sw;
++	struct typec_mux_dev *mux;
++};
++
++static int it5205_switch_set(struct typec_switch_dev *sw, enum typec_orientation orientation)
++{
++	struct it5205 *it = typec_switch_get_drvdata(sw);
++
++	switch (orientation) {
++	case TYPEC_ORIENTATION_NORMAL:
++		regmap_update_bits(it->regmap, IT5205_REG_MUXCR,
++				   IT5205_POLARITY_INVERTED, 0);
++		break;
++	case TYPEC_ORIENTATION_REVERSE:
++		regmap_update_bits(it->regmap, IT5205_REG_MUXCR,
++				   IT5205_POLARITY_INVERTED, IT5205_POLARITY_INVERTED);
++		break;
++	case TYPEC_ORIENTATION_NONE:
++		fallthrough;
++	default:
++		regmap_write(it->regmap, IT5205_REG_MUXCR, 0);
++		break;
++	}
++
++	return 0;
++}
++
++static int it5205_mux_set(struct typec_mux_dev *mux, struct typec_mux_state *state)
++{
++	struct it5205 *it = typec_mux_get_drvdata(mux);
++	u8 val;
++
++	if (state->mode >= TYPEC_STATE_MODAL &&
++	    state->alt->svid != USB_TYPEC_DP_SID)
++		return -EINVAL;
++
++	switch (state->mode) {
++	case TYPEC_STATE_USB:
++		val = IT5205_USB;
++		break;
++	case TYPEC_DP_STATE_C:
++		fallthrough;
++	case TYPEC_DP_STATE_E:
++		val = IT5205_DP;
++		break;
++	case TYPEC_DP_STATE_D:
++		val = IT5205_DP_USB;
++		break;
++	case TYPEC_STATE_SAFE:
++		fallthrough;
++	default:
++		val = 0;
++		break;
++	}
++
++	return regmap_update_bits(it->regmap, IT5205_REG_MUXCR,
++				  IT5205_DP_USB_CTRL_MASK, val);
++}
++
++static irqreturn_t it5205_irq_handler(int irq, void *data)
++{
++	struct it5205 *it = data;
++	int ret;
++	u32 val;
++
++	ret = regmap_read(it->regmap, IT5205_REG_ISR, &val);
++	if (ret)
++		return IRQ_NONE;
++
++	if (val & IT5205_ISR_CSBU_OVP) {
++		dev_warn(&it->client->dev, "Overvoltage detected!\n");
++
++		/* Reset CSBU */
++		regmap_update_bits(it->regmap, IT5205_REG_CSBUSR,
++				   IT5205_CSBUSR_SWITCH, 0);
++		regmap_update_bits(it->regmap, IT5205_REG_CSBUSR,
++				   IT5205_CSBUSR_SWITCH, IT5205_CSBUSR_SWITCH);
++	}
++
++	return IRQ_HANDLED;
++}
++
++static void it5205_enable_ovp(struct it5205 *it)
++{
++	/* Select Vref 3.3v */
++	regmap_update_bits(it->regmap, IT5205_REG_VSR,
++			   IT5205_VREF_SELECT_MASK, IT5205_VREF_SELECT_3_3V);
++
++	/* Trigger OVP at 3.68V */
++	regmap_update_bits(it->regmap, IT5205_REG_CSBUOVPSR,
++			   IT5205_OVP_SELECT_MASK, IT5205_OVP_3_68V);
++
++	/* Unmask OVP interrupt */
++	regmap_update_bits(it->regmap, IT5205_REG_ISR,
++			   IT5205_ISR_CSBU_MASK, 0);
++
++	/* Enable CSBU Interrupt */
++	regmap_update_bits(it->regmap, IT5205_REG_CSBUSR,
++			   IT5205_CSBUSR_SWITCH, IT5205_CSBUSR_SWITCH);
++}
++
++static const struct regmap_config it5205_regmap = {
++	.max_register = 0x2f,
++	.reg_bits = 8,
++	.val_bits = 8,
++};
++
++static int it5205_probe(struct i2c_client *client)
++{
++	struct typec_switch_desc sw_desc = { };
++	struct typec_mux_desc mux_desc = { };
++	struct device *dev = &client->dev;
++	struct it5205 *it;
++	u32 val, chipid = 0;
++	int i, ret;
++
++	it = devm_kzalloc(dev, sizeof(*it), GFP_KERNEL);
++	if (!it)
++		return -ENOMEM;
++
++	ret = devm_regulator_get_enable(dev, "vcc");
++	if (ret)
++		return dev_err_probe(dev, ret, "Failed to get regulator\n");
++
++	it->client = client;
++
++	it->regmap = devm_regmap_init_i2c(client, &it5205_regmap);
++	if (IS_ERR(it->regmap))
++		return dev_err_probe(dev, PTR_ERR(it->regmap),
++				     "Failed to init regmap\n");
++
++	/* IT5205 needs a long time to power up after enabling regulator */
++	msleep(50);
++
++	/* Unset poweroff bit */
++	ret = regmap_write(it->regmap, IT5205_REG_MUXPDR, 0);
++	if (ret)
++		return dev_err_probe(dev, ret, "Failed to set power on\n");
++
++	/* Read the 32 bits ChipID */
++	for (i = 3; i >= 0; i--) {
++		ret = regmap_read(it->regmap, IT5205_REG_CHIP_ID(i), &val);
++		if (ret)
++			return ret;
++
++		chipid |= val << (i * 8);
++	}
++
++	if (chipid != IT5205FN_CHIP_ID)
++		return dev_err_probe(dev, -EINVAL,
++				     "Unknown ChipID 0x%x\n", chipid);
++
++	/* Initialize as USB mode with default (non-inverted) polarity */
++	ret = regmap_write(it->regmap, IT5205_REG_MUXCR, IT5205_USB);
++	if (ret)
++		return dev_err_probe(dev, ret, "Cannot set mode to USB\n");
++
++	sw_desc.drvdata = it;
++	sw_desc.fwnode = dev_fwnode(dev);
++	sw_desc.set = it5205_switch_set;
++
++	it->sw = typec_switch_register(dev, &sw_desc);
++	if (IS_ERR(it->sw))
++		return dev_err_probe(dev, PTR_ERR(it->sw),
++				     "failed to register typec switch\n");
++
++	mux_desc.drvdata = it;
++	mux_desc.fwnode = dev_fwnode(dev);
++	mux_desc.set = it5205_mux_set;
++
++	it->mux = typec_mux_register(dev, &mux_desc);
++	if (IS_ERR(it->mux)) {
++		typec_switch_unregister(it->sw);
++		return dev_err_probe(dev, PTR_ERR(it->mux),
++				     "failed to register typec mux\n");
++	}
++
++	i2c_set_clientdata(client, it);
++
++	if (of_property_read_bool(dev->of_node, "ite,ovp-enable") && client->irq) {
++		it5205_enable_ovp(it);
++
++		ret = devm_request_threaded_irq(dev, client->irq, NULL,
++						it5205_irq_handler,
++						IRQF_ONESHOT, dev_name(dev), it);
++		if (ret) {
++			typec_mux_unregister(it->mux);
++			typec_switch_unregister(it->sw);
++			return dev_err_probe(dev, ret, "Failed to request irq\n");
++		}
++	}
++
++	return 0;
++}
++
++static void it5205_remove(struct i2c_client *client)
++{
++	struct it5205 *it = i2c_get_clientdata(client);
++
++	typec_mux_unregister(it->mux);
++	typec_switch_unregister(it->sw);
++}
++
++static const struct i2c_device_id it5205_table[] = {
++	{ "it5205" },
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(i2c, it5205_table);
++
++static const struct of_device_id it5205_of_table[] = {
++	{ .compatible = "ite,it5205" },
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(of, it5205_of_table);
++
++static struct i2c_driver it5205_driver = {
++	.driver = {
++		.name = "it5205",
++		.of_match_table = it5205_of_table,
++	},
++	.probe = it5205_probe,
++	.remove = it5205_remove,
++	.id_table = it5205_table,
++};
++module_i2c_driver(it5205_driver);
++
++MODULE_AUTHOR("Tianping Fang <tianping.fang@mediatek.com>");
++MODULE_AUTHOR("AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>");
++MODULE_DESCRIPTION("ITE IT5205 alternate mode passive MUX driver");
++MODULE_LICENSE("GPL");
 -- 
 2.43.0
 
