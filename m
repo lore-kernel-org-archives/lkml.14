@@ -1,44 +1,145 @@
-Received: from abrecht.li (75-128-16-94.static.cable.fcom.ch [94.16.128.75])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C0CA3A264;
-	Mon, 22 Jan 2024 09:46:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=94.16.128.75
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD3F23A28B;
+	Mon, 22 Jan 2024 09:47:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705916818; cv=none; b=t7dtp3gxkcU2/LwcnTP/WakENpgkJpEAm9bgGUypQmAmYeO1LNmPEAnlazw+LKJAgKgRnwNmviDsb/lZHJdo4WPaDuuTYHNadGdEoPBOOYqoP6rPj+p2THLsdOfwoRAyDsFPAd4sqPHbP6C4PcQQLMaecleRwefm/V9G1pePoyo=
+	t=1705916823; cv=none; b=brdYjUrH8Ajn48kujKyqfCJ2iVVjTGVXCVHcYnoKRK0cSBiqwEgiccedGLZw49uXqEuaDdKMo5gL9mcquUyVqGd/g6HGHnjke2MBfAPf+zDSpfE2M/2PmDat+dTq5kubyeCX6iimDTWdWaexJsUrlMLPmIalW6/njhcDuRiQWkQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705916818; c=relaxed/simple;
-	bh=nNE+TrGPWGFZ57cqJwRJqwzuf0I8IesCha8kr8iEvXk=;
-	h=MIME-Version:Date:From:To:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=f0TZmr78rEacoSwr8TinW4zdqk/iakqonjikCdbyqqTT1XDwbhQEML0BxNWfoPxHnKlBlx48dPazJuMc5ByWGKiJ2XMUqxzN4eUf0wCfv6BRtOlamXu0X9M1Tm767jtRJTNa1AcHJAXfBL6ugQ9KCl3BvGZuYiB0XUp5b9wc/Ew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nodmarc.danielabrecht.ch; spf=pass smtp.mailfrom=nodmarc.danielabrecht.ch; arc=none smtp.client-ip=94.16.128.75
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nodmarc.danielabrecht.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nodmarc.danielabrecht.ch
-DKIM-Filter: OpenDKIM Filter v2.11.0 abrecht.li EB9312752AC3
-Received: from toucan.dmz.abrecht.li (unknown [IPv6:fc00:4::a3c:111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by abrecht.li (Postfix) with ESMTPSA id EB9312752AC3;
-	Mon, 22 Jan 2024 09:46:52 +0000 (UTC)
+	s=arc-20240116; t=1705916823; c=relaxed/simple;
+	bh=XjbRb6KLhs3MMD3Cdz5D4prMhpH/m5EAMfKa/Xyq4Ak=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Z70yQoQmq8/7ZKs0DfsHPG8gmPUrhAe2CuOmoD/HIekWTrs68v+DzN2WafY5i23rpYG56DVKhT/k90ULXMYst7tae242rnPx40mTgq3piio4li0B5eLaET4ou6NSqHWmOYrF7y5lwErj/J0pVLRpcWD4kG7F1Fe2A9c82gWoMn0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fuWFVtWJ; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fuWFVtWJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1705916822; x=1737452822;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=XjbRb6KLhs3MMD3Cdz5D4prMhpH/m5EAMfKa/Xyq4Ak=;
+  b=fuWFVtWJjp0hxeOF7qSKNxZysDfToApMIx+fEJ1283vIBi0xnqf4/Wfp
+   dIiTDTmys8IhILgmlfl6qBZyAYrt14R7vP4sK7f0CEcsFF1t69rF1LKQs
+   lehPR3bMmc5aEaCgTXwZ7X5J3eo5OvXFdSRh2WIFPJAjBgvMgYQQXDSbi
+   Hk9IxmmpGbV6aW4A0Q7EIRn+RJZFlLxGaaK3VY3HUet+2UX48L5LDZvxZ
+   f039jDtBpJT/O8I6pyZYIGjPJfh/rI1rEylPEV4vhFduEGgf800BfaDUt
+   NKPfKBYscioNOrgAlh0zIxuVPbljLre89+zYEuL8vq2NWB0qTk4LvHzO2
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10960"; a="22641852"
+X-IronPort-AV: E=Sophos;i="6.05,211,1701158400"; 
+   d="scan'208";a="22641852"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 01:47:01 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10960"; a="778535468"
+X-IronPort-AV: E=Sophos;i="6.05,211,1701158400"; 
+   d="scan'208";a="778535468"
+Received: from haibo-optiplex-7090.sh.intel.com ([10.239.159.132])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 01:46:52 -0800
+From: Haibo Xu <haibo1.xu@intel.com>
+To: 
+Cc: xiaobo55x@gmail.com,
+	ajones@ventanamicro.com,
+	Haibo Xu <haibo1.xu@intel.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Shuah Khan <shuah@kernel.org>,
+	Marc Zyngier <maz@kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	James Morse <james.morse@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	Anup Patel <anup@brainfault.org>,
+	Atish Patra <atishp@atishpatra.org>,
+	Guo Ren <guoren@kernel.org>,
+	Mayuresh Chitale <mchitale@ventanamicro.com>,
+	Greentime Hu <greentime.hu@sifive.com>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Minda Chen <minda.chen@starfivetech.com>,
+	Samuel Holland <samuel@sholland.org>,
+	Jisheng Zhang <jszhang@kernel.org>,
+	Sean Christopherson <seanjc@google.com>,
+	Like Xu <likexu@tencent.com>,
+	Peter Xu <peterx@redhat.com>,
+	Vipin Sharma <vipinsh@google.com>,
+	Aaron Lewis <aaronlewis@google.com>,
+	Thomas Huth <thuth@redhat.com>,
+	Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	kvm@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev,
+	kvm-riscv@lists.infradead.org
+Subject: [PATCH v5 07/12] tools: riscv: Add header file vdso/processor.h
+Date: Mon, 22 Jan 2024 17:58:37 +0800
+Message-Id: <212d0d848e54c887944ec38bd9f9729df8d1a27f.1705916069.git.haibo1.xu@intel.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <cover.1705916069.git.haibo1.xu@intel.com>
+References: <cover.1705916069.git.haibo1.xu@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Mon, 22 Jan 2024 10:46:52 +0100
-From: Daniel Abrecht <linux-sound@nodmarc.danielabrecht.ch>
-To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
- linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] ASoC: soc-core.c: Add "Unknown" and "Unknown Product"
- to dmi_blacklist
-In-Reply-To: <7d11d0711ad93f2208efb9ab13fe915b@abrecht.li>
-References: <7d11d0711ad93f2208efb9ab13fe915b@abrecht.li>
-Message-ID: <ea2e1e0c40aa9cbc9d08ec014ae06e90@nodmarc.danielabrecht.ch>
-X-Sender: linux-sound@nodmarc.danielabrecht.ch
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-I think this time it should work. It's surprisingly difficult to get roundcube to not alter plain text messages. Sorry about that.
+Borrow the cpu_relax() definitions from kernel's
+arch/riscv/include/asm/vdso/processor.h to tools/ for riscv.
+
+Signed-off-by: Haibo Xu <haibo1.xu@intel.com>
+Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
+---
+ tools/arch/riscv/include/asm/vdso/processor.h | 32 +++++++++++++++++++
+ 1 file changed, 32 insertions(+)
+ create mode 100644 tools/arch/riscv/include/asm/vdso/processor.h
+
+diff --git a/tools/arch/riscv/include/asm/vdso/processor.h b/tools/arch/riscv/include/asm/vdso/processor.h
+new file mode 100644
+index 000000000000..662aca039848
+--- /dev/null
++++ b/tools/arch/riscv/include/asm/vdso/processor.h
+@@ -0,0 +1,32 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++#ifndef __ASM_VDSO_PROCESSOR_H
++#define __ASM_VDSO_PROCESSOR_H
++
++#ifndef __ASSEMBLY__
++
++#include <asm-generic/barrier.h>
++
++static inline void cpu_relax(void)
++{
++#ifdef __riscv_muldiv
++	int dummy;
++	/* In lieu of a halt instruction, induce a long-latency stall. */
++	__asm__ __volatile__ ("div %0, %0, zero" : "=r" (dummy));
++#endif
++
++#ifdef CONFIG_TOOLCHAIN_HAS_ZIHINTPAUSE
++	/*
++	 * Reduce instruction retirement.
++	 * This assumes the PC changes.
++	 */
++	__asm__ __volatile__ ("pause");
++#else
++	/* Encoding of the pause instruction */
++	__asm__ __volatile__ (".4byte 0x100000F");
++#endif
++	barrier();
++}
++
++#endif /* __ASSEMBLY__ */
++
++#endif /* __ASM_VDSO_PROCESSOR_H */
+-- 
+2.34.1
+
