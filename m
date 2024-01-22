@@ -1,137 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from ni.piap.pl (ni.piap.pl [195.187.100.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F9305681;
-	Mon, 22 Jan 2024 05:35:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 277875673;
+	Mon, 22 Jan 2024 05:38:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.187.100.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705901759; cv=none; b=KMdIp+EIqR9myquDk1OV/M0iHEyfES+6tVC3HzmAgzvELloFKbIyqfw+YpDlCEobsSKC0rbyz5t403gY5wH4HBC5Nyn2u86XaCbmwF0yk64M/TC/yWMrAm8NBJWdx8eV6bno34amnZWhQg57CDZK46HFCUXSJ9jfsreuXWkXWfE=
+	t=1705901935; cv=none; b=JEs1mpUQAAW2l/TJucbpZTG/bpYKPuJ7Yjur8mMZlfij4JDP2KRvCpxZdo1JdHqEGZjY20i9Hl0yY3CUQwi1J+FYxNvu4MPt5ZaW/rEiGrcNrt6RggN3MTxG/wXawsTH0siEOMsQqV7NTRVygWPNy1Yybm2GlzoZPr1YObJFcMo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705901759; c=relaxed/simple;
-	bh=02D8c8Gk39bt/B0GonHwJ2qvn4sYlrkgLzM0SjuJwjk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Ui85SN3TYWvciDGFN8qXHQiv2bUzgNoRtclF2OeivgOqZh2Uc+kyVoo7gaFrdicNv1/AyfqlqxjA/E5O4UDMHSyo0enBsw3qCO1fZL8Lle+gNnZ26ChdOQfRYyWni0OApuadjQYJOVmVoNV9cJfW5ZLMgMcKrVObTMNqjkkRpa8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PnL4vkGc; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PnL4vkGc"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 7A8BAC43142;
-	Mon, 22 Jan 2024 05:35:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705901758;
-	bh=02D8c8Gk39bt/B0GonHwJ2qvn4sYlrkgLzM0SjuJwjk=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=PnL4vkGcfSFlPBy6bjD/rwlbY/fS6UtzUxCRdZtpKRTLIx72EnMsY6WJD/IODjmEU
-	 9TwLLvG6QIORKrch8mJ6WOeCJLozFmhoAXImEWCXN710+vsmLAqaYcW29BkyKAYmJQ
-	 63TuawI2iEQIUzFiAbe6TZpCDZDk6XZ3x0LLmZ2XkRh7tfeI/vzjF0vTH0lKgKiYMY
-	 PwiM7BbMjWxB7/4QKTtegqBJo47L0EKEKMElxOuc7yWcp7DfAihdL+gB+GCcZMLuCs
-	 KaNhxFcMQ7wgte3eTwJtjVUbrOtYiywr583yuivI6yMqsXA36YGVdnzla5BOgaP6dC
-	 v/Bp+DENr7zJA==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69553C47DDB;
-	Mon, 22 Jan 2024 05:35:58 +0000 (UTC)
-From: =?utf-8?b?QXLEsW7DpyDDnE5BTA==?= via B4 Relay
- <devnull+arinc.unal.arinc9.com@kernel.org>
-Date: Mon, 22 Jan 2024 08:35:58 +0300
-Subject: [PATCH net-next v3 7/7] net: dsa: mt7530: do not run
- mt7530_setup_port5() if port 5 is disabled
+	s=arc-20240116; t=1705901935; c=relaxed/simple;
+	bh=1sisWpA0oLBoywGGJoqzMdCk3uVhcDAAv42idkjUAiI=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=EJihzt0lgHnsqSZkWcop2gCCzDV+Ls7GRd1NtruzrL8g3dvoEzkr3WbIbnRdfeMJ/YAUUekaP/wQRUec8aIVcMY6JuHhkEjuheAYk76hI7pnHpTn38PTI84kmlphZEbArZh9HiCdPaGijvzc65v8gcRugFF7pBq5ristN5FcqAs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=piap.pl; spf=pass smtp.mailfrom=piap.pl; arc=none smtp.client-ip=195.187.100.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=piap.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=piap.pl
+Received: from t19.piap.pl (OSB1819.piap.pl [10.0.9.19])
+	by ni.piap.pl (Postfix) with ESMTPS id E1899C3F2A57;
+	Mon, 22 Jan 2024 06:28:41 +0100 (CET)
+DKIM-Filter: OpenDKIM Filter v2.11.0 ni.piap.pl E1899C3F2A57
+From: =?utf-8?Q?Krzysztof_Ha=C5=82asa?= <khalasa@piap.pl>
+To: Randy Dunlap <rdunlap@infradead.org>
+Cc: linux-kernel@vger.kernel.org,  Shawn Guo <shawnguo@kernel.org>,  Sascha
+ Hauer <s.hauer@pengutronix.de>,  Mauro Carvalho Chehab
+ <mchehab@kernel.org>,  Sakari Ailus <sakari.ailus@linux.intel.com>,
+  linux-arm-kernel@lists.infradead.org,  linux-media@vger.kernel.org
+Subject: Re: [PATCH] media: i2c: ar0521: fix spellos
+In-Reply-To: <20240111043302.15641-1-rdunlap@infradead.org> (Randy Dunlap's
+	message of "Wed, 10 Jan 2024 20:33:01 -0800")
+References: <20240111043302.15641-1-rdunlap@infradead.org>
+Sender: khalasa@piap.pl
+Date: Mon, 22 Jan 2024 06:28:41 +0100
+Message-ID: <m3y1ci543a.fsf@t19.piap.pl>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id:
- <20240122-for-netnext-mt7530-improvements-1-v3-7-042401f2b279@arinc9.com>
-References:
- <20240122-for-netnext-mt7530-improvements-1-v3-0-042401f2b279@arinc9.com>
-In-Reply-To:
- <20240122-for-netnext-mt7530-improvements-1-v3-0-042401f2b279@arinc9.com>
-To: Daniel Golle <daniel@makrotopia.org>, 
- Landen Chao <Landen.Chao@mediatek.com>, DENG Qingfang <dqfext@gmail.com>, 
- Sean Wang <sean.wang@mediatek.com>, Andrew Lunn <andrew@lunn.ch>, 
- Florian Fainelli <f.fainelli@gmail.com>, 
- Vladimir Oltean <olteanv@gmail.com>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- Russell King <linux@armlinux.org.uk>
-Cc: mithat.guner@xeront.com, erkin.bozoglu@xeront.com, 
- Bartel Eerdekens <bartel.eerdekens@constell8.be>, netdev@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-mediatek@lists.infradead.org, 
- =?utf-8?q?Ar=C4=B1n=C3=A7_=C3=9CNAL?= <arinc.unal@arinc9.com>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1705901755; l=1954;
- i=arinc.unal@arinc9.com; s=arinc9-patatt; h=from:subject:message-id;
- bh=CX1ZTLft5JNnPSpvgA9ppPM0W5zZnVzbF5jhuxeYZts=;
- b=m7xRK80HiKn4Yf5gYVKbcOAJuPiW2ZQjrweTiy/ng47qxoKCiENascUa+CONss3MADnR3scXe
- bi2arpEKxnkDpyM3moD6BJkZxd+h2xHCHl22YVS7vuxFGjITKlV6wVM
-X-Developer-Key: i=arinc.unal@arinc9.com; a=ed25519;
- pk=VmvgMWwm73yVIrlyJYvGtnXkQJy9CvbaeEqPQO9Z4kA=
-X-Endpoint-Received:
- by B4 Relay for arinc.unal@arinc9.com/arinc9-patatt with auth_id=115
-X-Original-From: =?utf-8?b?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
-Reply-To: <arinc.unal@arinc9.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-KLMS-Rule-ID: 3
+X-KLMS-Message-Action: skipped
+X-KLMS-AntiSpam-Status: not scanned, whitelist
+X-KLMS-AntiPhishing: not scanned, whitelist
+X-KLMS-AntiVirus: Kaspersky Security for Linux Mail Server, version 8.0.3.30, not scanned, whitelist
 
-From: Arınç ÜNAL <arinc.unal@arinc9.com>
+Hi Randy,
 
-There's no need to run all the code on mt7530_setup_port5() if port 5 is
-disabled. The only case for calling mt7530_setup_port5() from
-mt7530_setup() is when PHY muxing is enabled. That is because port 5 is not
-defined as a port on the devicetree, therefore, it cannot be controlled by
-phylink.
+Good catches, thanks for your work.
 
-Because of this, run mt7530_setup_port5() if priv->p5_intf_sel is
-P5_INTF_SEL_PHY_P0 or P5_INTF_SEL_PHY_P4. Remove the P5_DISABLED case from
-mt7530_setup_port5().
+Randy Dunlap <rdunlap@infradead.org> writes:
 
-Stop initialising the interface variable as the remaining cases will always
-call mt7530_setup_port5() with it initialised.
+> Fix spelling mistakes as reported by codespell.
 
-Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
-Reviewed-by: Vladimir Oltean <olteanv@gmail.com>
----
- drivers/net/dsa/mt7530.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+Acked-by: Krzysztof Ha=C5=82asa <khalasa@piap.pl>
 
-diff --git a/drivers/net/dsa/mt7530.c b/drivers/net/dsa/mt7530.c
-index 5394d8c6a40e..cd7673ecea51 100644
---- a/drivers/net/dsa/mt7530.c
-+++ b/drivers/net/dsa/mt7530.c
-@@ -942,9 +942,6 @@ static void mt7530_setup_port5(struct dsa_switch *ds, phy_interface_t interface)
- 		/* MT7530_P5_MODE_GMAC: P5 -> External phy or 2nd GMAC */
- 		val &= ~MHWTRAP_P5_DIS;
- 		break;
--	case P5_DISABLED:
--		interface = PHY_INTERFACE_MODE_NA;
--		break;
- 	default:
- 		dev_err(ds->dev, "Unsupported p5_intf_sel %d\n",
- 			priv->p5_intf_sel);
-@@ -2313,8 +2310,6 @@ mt7530_setup(struct dsa_switch *ds)
- 		 * Set priv->p5_intf_sel to the appropriate value if PHY muxing
- 		 * is detected.
- 		 */
--		interface = PHY_INTERFACE_MODE_NA;
--
- 		for_each_child_of_node(dn, mac_np) {
- 			if (!of_device_is_compatible(mac_np,
- 						     "mediatek,eth-mac"))
-@@ -2346,7 +2341,9 @@ mt7530_setup(struct dsa_switch *ds)
- 			break;
- 		}
- 
--		mt7530_setup_port5(ds, interface);
-+		if (priv->p5_intf_sel == P5_INTF_SEL_PHY_P0 ||
-+		    priv->p5_intf_sel == P5_INTF_SEL_PHY_P4)
-+			mt7530_setup_port5(ds, interface);
- 	}
- 
- #ifdef CONFIG_GPIOLIB
+> --- a/drivers/media/i2c/ar0521.c
+> +++ b/drivers/media/i2c/ar0521.c
+> @@ -314,7 +314,7 @@ static void ar0521_calc_pll(struct ar052
+>          * In the clock tree:
+>          * MIPI_CLK =3D PIXEL_CLOCK * bpp / 2 / 2
+>          *
+> -        * Generic pixel_rate to bus clock frequencey equation:
+> +        * Generic pixel_rate to bus clock frequency equation:
+>          * MIPI_CLK =3D V4L2_CID_PIXEL_RATE * bpp / lanes / 2
+>          *
+>          * From which we derive the PIXEL_CLOCK to use in the clock tree:
+> @@ -327,7 +327,7 @@ static void ar0521_calc_pll(struct ar052
+>          *
+>          * TODO: in case we have less data lanes we have to reduce the de=
+sired
+>          * VCO not to exceed the limits specified by the datasheet and
+> -        * consequentially reduce the obtained pixel clock.
+> +        * consequently reduce the obtained pixel clock.
+>          */
+>         pixel_clock =3D AR0521_PIXEL_CLOCK_RATE * 2 / sensor->lane_count;
+>         bpp =3D ar0521_code_to_bpp(sensor);
+> @@ -806,7 +806,7 @@ static const struct initial_reg {
+>         REGS(be(0x3F00),
+>              be(0x0017),  /* 3F00: BM_T0 */
+>              be(0x02DD),  /* 3F02: BM_T1 */
+> -            /* 3F04: if Ana_gain less than 2, use noise_floor0, multipl =
+*/
+> +            /* 3F04: if Ana_gain less than 2, use noise_floor0, multiply=
+ */
+>              be(0x0020),
+>              /* 3F06: if Ana_gain between 4 and 7, use noise_floor2 and */
+>              be(0x0040),
+>
+>
 
--- 
-2.40.1
+--=20
+Krzysztof "Chris" Ha=C5=82asa
 
+Sie=C4=87 Badawcza =C5=81ukasiewicz
+Przemys=C5=82owy Instytut Automatyki i Pomiar=C3=B3w PIAP
+Al. Jerozolimskie 202, 02-486 Warszawa
