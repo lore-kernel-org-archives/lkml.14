@@ -1,234 +1,177 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FF8E3C693;
-	Mon, 22 Jan 2024 13:02:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A60A3C6A4
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 13:02:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705928578; cv=none; b=d4YxRHdTmmBYv7d+BNZun9B1HeznnyFZNxyYaiFCPCetuxAZmOyNeg/c/6I6eYrAzwfbzRjsn6jfPXxUvPbEZ9+IGXQqRdCQBC5ua0TNsZYZdX1RfonbuUnnvprX+MiWbhcmP7IOM6rfuG+rDg0i7hStbU1L808valnIfJzsBOg=
+	t=1705928580; cv=none; b=SmW3e55r0CKm31WN98/uRhhwlsMF1TeKPF7XJZXlzC+DsbJ/1lXFfVuayfdn7eC1TH0kx4WWAuJnUJaJlhlmoaiE5j8en1+DyCAbQM72lR7MMev/7qVE+o1Un9ol2viSgd6/Gnk+IqqWu3C9Q7kOn0Q4LYLd5coWbIQz/Pf9gIQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705928578; c=relaxed/simple;
-	bh=HyHjYdHa+L59MRE2OXPZJnIepLxyNNeoKImVqWz4UOo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SKx/wI/pb0yKLujb+17srcxZ+ZusKjhT+zCrqz7AeX1iX1CsII8dzEn2+iJJAR+O89LG+Pa9fkaP4ok47N0iyEYJT6WcnnHCXeFWQ/CYTyI2+xvAOfULbRBuoFfePBxLUSuswuyqlMvxW1K63OeNxOk+aJc+c7htuuZMMyVQzhg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jZxcRMHt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1705928580; c=relaxed/simple;
+	bh=xmAzmwtsz1HRk80aYsft+aaG6rAVmlDuN9frR0Y4G4s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=q1gAycUIuDvr+RAxWtoAUlnydArCeKOVWbJsxyzLNn3XHGEchhBJYz/Y5bLDOWK+euXJTcq5TDUg0LxpgcJG0OuWpUwlLd982AIkAfpbreoKYO4f/rH76RPqsZ+apg7G4CBciSH/YqZwkoP0xweC+nBYMdLcwbpdnHxmSkM+JsM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=meeMVr/C; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jZxcRMHt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6313EC43394;
-	Mon, 22 Jan 2024 13:02:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705928577;
-	bh=HyHjYdHa+L59MRE2OXPZJnIepLxyNNeoKImVqWz4UOo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jZxcRMHtb0FwHVxpUFkqUmkIFmkxdncVqtzpfyOPF6x1irzegi2AhaiocRE4emT+S
-	 DghN1LP9G0ctAKEX60ln2k8dFAjAkhsANBOt1TNnA6M15Z+yDtFmWV4kNOVwXEpDll
-	 20kR7PWBmirzynSbndcCTQLbGxq1avq+6b7o87e7ZlQxfQ8vEtW8/xjD+eBVGRS3S3
-	 xf4SvifTr62lmmXsDolcQZg5YEU94BuXPsT7YB1/0aZ6VNmvJE00/MJvw3H7IRL76J
-	 ZJY8Y48xrBjNfw+19qgXLeXLWVik4llhztCcpD6DJgZWelfETSvvHuY+BM3n57sq3q
-	 dcEKEu+vMEuxw==
-Date: Mon, 22 Jan 2024 14:02:48 +0100
-From: Niklas Cassel <cassel@kernel.org>
-To: Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
-Cc: dlemoal@kernel.org, richardcochran@gmail.com, piyush.mehta@xilinx.com,
-	axboe@kernel.dk, michal.simek@amd.com, linux-ide@vger.kernel.org,
-	linux-kernel@vger.kernel.org, git@amd.com,
-	Piyush Mehta <piyush.mehta@amd.com>
-Subject: Re: [PATCH 1/2] ata: ahci_ceva: fix error handling for Xilinx GT PHY
- support
-Message-ID: <Za5neDYN9Dh+GwRG@x1-carbon>
-References: <1705604904-471889-1-git-send-email-radhey.shyam.pandey@amd.com>
- <1705604904-471889-2-git-send-email-radhey.shyam.pandey@amd.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="meeMVr/C"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-40e86a9fbd9so34793125e9.1
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 05:02:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1705928577; x=1706533377; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ETHK121tTwhB53jLp6JK8rotxF5sZ3uZp3Qk/Z/yNDc=;
+        b=meeMVr/CrjHTJX38QFsL/TYvwvBKGLY+044rAyCT4Ypy5S8Pz2sAvuozRYP9/x17PM
+         L7IzwexOtF69yt3tZ9hookyDlNOk+enb3yi+D4C3Z8W/8GjwOfUk3DaqiAWFP18zQetO
+         Na8neLOXqf8byVnWEQ+qOHUukJShGMWIr5Nh7tfAzwiq3NHNUXRL4gJmZOH1Y3lbWWVL
+         knbeJo+JTaEF2h55sqbV9lzk21ShMqELjC8Qjc0REry0HBSK1zkOoCstXqXIcfHx7PG+
+         c4C7+2VC37eLxdmO3BlrKszO9rzT9u4br8zUIFTkcpp7Qd4LvPXnsq1H/pYBGTfksg1b
+         oVNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705928577; x=1706533377;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ETHK121tTwhB53jLp6JK8rotxF5sZ3uZp3Qk/Z/yNDc=;
+        b=ICgzlf2cml5Bi0k0FrvBjWnUYo4yVqt7OnNqgytODmSInhYUyRKwrTRembzneLyLxf
+         oaiYpmcfuvpo2AxJprr2rh4WrqQQzA+PsFoy0bkmqOU7ThtJha96FTpXZndmWnVGzzwq
+         ayD2PqKDz0mceNn6wBYggH8VQrL8NOPYQO9RWcm9bCe64uZjOU1OY4A/Sjqkp+6aPZ5U
+         O1uEMUpsP0z7dq959O5qLQDvuhdnVuBjw99xI726Y1IL7eRyT4XsgPCxsYaR0S+a9BZF
+         QvwpJ8rFaVVGU3DC2xPf3BBrRmSm7nAwiwCIVfuD0NtVdomLY2+blGFdL5dF1KDSC0xq
+         BP4g==
+X-Gm-Message-State: AOJu0YxwBNQ7U3vCOLk/CHtf49Jfjp7YevPAhl/KPF4eagiqrOBnIk7B
+	e0Twpyuu+3IAUraqcJcjQjpkWhUt8uqrYC1WYXErGQKkNhlUerxhDgkjp9LwSnY=
+X-Google-Smtp-Source: AGHT+IHjhga5STJbV02oRXI/BNBMQmIKHn8X83W6HyeUu7gqwO1G1fKcH4rG2AkPIAz6O+Cp3CySmA==
+X-Received: by 2002:a7b:c41a:0:b0:40e:83a0:63a0 with SMTP id k26-20020a7bc41a000000b0040e83a063a0mr2328940wmi.58.1705928576507;
+        Mon, 22 Jan 2024 05:02:56 -0800 (PST)
+Received: from [192.168.1.20] ([178.197.215.66])
+        by smtp.gmail.com with ESMTPSA id fl21-20020a05600c0b9500b0040e9d507424sm12698275wmb.5.2024.01.22.05.02.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 22 Jan 2024 05:02:56 -0800 (PST)
+Message-ID: <64f125e8-53c9-4a2d-9629-cb2011443d58@linaro.org>
+Date: Mon, 22 Jan 2024 14:02:54 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1705604904-471889-2-git-send-email-radhey.shyam.pandey@amd.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/5] reset: Instantiate reset GPIO controller for
+ shared reset-gpios
+Content-Language: en-US
+To: Philipp Zabel <p.zabel@pengutronix.de>,
+ Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konrad.dybcio@linaro.org>,
+ Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+ Banajit Goswami <bgoswami@quicinc.com>, Liam Girdwood <lgirdwood@gmail.com>,
+ Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Peter Rosin <peda@axentia.se>,
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+ linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org,
+ linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
+ Chris Packham <chris.packham@alliedtelesis.co.nz>,
+ Sean Anderson <sean.anderson@seco.com>
+References: <20240112163608.528453-1-krzysztof.kozlowski@linaro.org>
+ <20240112163608.528453-3-krzysztof.kozlowski@linaro.org>
+ <CAMRc=MdcCZP5kgv7JBdy2m_naNbTSeq4MDE_3mk+1-5UD4ntwQ@mail.gmail.com>
+ <7f311659-9f49-44dc-ad40-977d34066d98@linaro.org>
+ <289c4af00bcc46e83555dacbc76f56477126d645.camel@pengutronix.de>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <289c4af00bcc46e83555dacbc76f56477126d645.camel@pengutronix.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hello Radhey,
-
-On Fri, Jan 19, 2024 at 12:38:23AM +0530, Radhey Shyam Pandey wrote:
-> From: Piyush Mehta <piyush.mehta@amd.com>
+On 15/01/2024 18:32, Philipp Zabel wrote:
+> On Mo, 2024-01-15 at 17:13 +0100, Krzysztof Kozlowski wrote:
+>> On 15/01/2024 17:06, Bartosz Golaszewski wrote:
+>>>> +
+>>>> +static int __reset_add_reset_gpio_lookup(int id, struct device_node *np,
+>>>> +                                        unsigned int gpio,
+>>>> +                                        unsigned int of_flags)
+>>>> +{
+>>>> +       struct gpiod_lookup_table *lookup __free(kfree) = NULL;
+>>>> +       struct gpio_device *gdev __free(gpio_device_put) = NULL;
+>>>> +       char *label __free(kfree) = NULL;
+>>>
+>>> I got yelled at by Linus Torvalds personally for doing it like this. I
+>>> know this is a common pattern in code using GLib but Linus wants auto
+>>> variables to be initialized where they're declared...
+>>
+>> Declaration is here. Initialization is here. Therefore this is
+>> initialized where it is declared. What's more it is initialized to a
+>> valid value, because __free() accepts NULLs.
+> [...]
+>>> ... so this should become:
+>>>
+>>>   struct gpio_device *gdev __free(gpio_device_put) = gpio_device_find(...)
+>>>
+>>> and same for the rest.
+>>>
+>>> Don't get me wrong, I love cleanup.h but there's a (unofficial for
+>>> now) coding style.
+>>
+>> So you just want to declare it not in top-part of the function but just
+>> before first use?
 > 
-> Platform clock and phy error resources are not cleaned up in Xilinx GT PHY
-> error path. To fix introduce error label for ahci_platform_disable_clks and
-> phy_power_off/exit and call them in error path. No functional change.
+> IIUC, Linus wants exactly this:
 > 
-> Fixes: 9a9d3abe24bb ("ata: ahci: ceva: Update the driver to support xilinx GT phy")
-> Signed-off-by: Piyush Mehta <piyush.mehta@amd.com>
-> Signed-off-by: Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
-> ---
-> ---
->  drivers/ata/ahci_ceva.c | 47 +++++++++++++++++++++++++++++------------
->  1 file changed, 33 insertions(+), 14 deletions(-)
-> 
-> diff --git a/drivers/ata/ahci_ceva.c b/drivers/ata/ahci_ceva.c
-> index 64f7f7d6ba84..bfc513f1d0b3 100644
-> --- a/drivers/ata/ahci_ceva.c
-> +++ b/drivers/ata/ahci_ceva.c
-> @@ -196,7 +196,7 @@ static int ceva_ahci_probe(struct platform_device *pdev)
->  	struct ahci_host_priv *hpriv;
->  	struct ceva_ahci_priv *cevapriv;
->  	enum dev_dma_attr attr;
-> -	int rc;
-> +	int rc, i;
->  
->  	cevapriv = devm_kzalloc(dev, sizeof(*cevapriv), GFP_KERNEL);
->  	if (!cevapriv)
-> @@ -219,8 +219,6 @@ static int ceva_ahci_probe(struct platform_device *pdev)
->  		if (rc)
->  			return rc;
->  	} else {
-> -		int i;
-> -
->  		rc = ahci_platform_enable_clks(hpriv);
->  		if (rc)
->  			return rc;
-> @@ -229,8 +227,11 @@ static int ceva_ahci_probe(struct platform_device *pdev)
->  
->  		for (i = 0; i < hpriv->nports; i++) {
->  			rc = phy_init(hpriv->phys[i]);
-> -			if (rc)
-> -				return rc;
-> +			if (rc) {
-> +				while (--i >= 0)
-> +					phy_exit(hpriv->phys[i]);
+> https://lore.kernel.org/all/CAHk-=wgRHiV5VSxtfXA4S6aLUmcQYEuB67u3BJPJPtuESs1JyA@mail.gmail.com/
 
-It is ugly to have a loop both here and at the end of the function.
-Why don't you just goto disable_phys here?
-
-Just like how it is done in ahci_platform_enable_phys():
-https://github.com/torvalds/linux/blob/v6.7/drivers/ata/libahci_platform.c#L52-L54
+Sure.
 
 
-> +				goto disable_clks;
-> +			}
->  		}
->  
->  		/* De-assert the controller reset */
-> @@ -240,7 +241,7 @@ static int ceva_ahci_probe(struct platform_device *pdev)
->  			rc = phy_power_on(hpriv->phys[i]);
->  			if (rc) {
->  				phy_exit(hpriv->phys[i]);
-> -				return rc;
-> +				goto disable_phys;
->  			}
->  		}
->  	}
-> @@ -252,52 +253,60 @@ static int ceva_ahci_probe(struct platform_device *pdev)
->  	if (of_property_read_u8_array(np, "ceva,p0-cominit-params",
->  					(u8 *)&cevapriv->pp2c[0], 4) < 0) {
->  		dev_warn(dev, "ceva,p0-cominit-params property not defined\n");
-> -		return -EINVAL;
-> +		rc = -EINVAL;
-> +		goto disable_phys;
->  	}
->  
->  	if (of_property_read_u8_array(np, "ceva,p1-cominit-params",
->  					(u8 *)&cevapriv->pp2c[1], 4) < 0) {
->  		dev_warn(dev, "ceva,p1-cominit-params property not defined\n");
-> -		return -EINVAL;
-> +		rc = -EINVAL;
-> +		goto disable_phys;
->  	}
->  
->  	/* Read OOB timing value for COMWAKE from device-tree*/
->  	if (of_property_read_u8_array(np, "ceva,p0-comwake-params",
->  					(u8 *)&cevapriv->pp3c[0], 4) < 0) {
->  		dev_warn(dev, "ceva,p0-comwake-params property not defined\n");
-> -		return -EINVAL;
-> +		rc = -EINVAL;
-> +		goto disable_phys;
->  	}
->  
->  	if (of_property_read_u8_array(np, "ceva,p1-comwake-params",
->  					(u8 *)&cevapriv->pp3c[1], 4) < 0) {
->  		dev_warn(dev, "ceva,p1-comwake-params property not defined\n");
-> -		return -EINVAL;
-> +		rc = -EINVAL;
-> +		goto disable_phys;
->  	}
->  
->  	/* Read phy BURST timing value from device-tree */
->  	if (of_property_read_u8_array(np, "ceva,p0-burst-params",
->  					(u8 *)&cevapriv->pp4c[0], 4) < 0) {
->  		dev_warn(dev, "ceva,p0-burst-params property not defined\n");
-> -		return -EINVAL;
-> +		rc = -EINVAL;
-> +		goto disable_phys;
->  	}
->  
->  	if (of_property_read_u8_array(np, "ceva,p1-burst-params",
->  					(u8 *)&cevapriv->pp4c[1], 4) < 0) {
->  		dev_warn(dev, "ceva,p1-burst-params property not defined\n");
-> -		return -EINVAL;
-> +		rc = -EINVAL;
-> +		goto disable_phys;
->  	}
->  
->  	/* Read phy RETRY interval timing value from device-tree */
->  	if (of_property_read_u16_array(np, "ceva,p0-retry-params",
->  					(u16 *)&cevapriv->pp5c[0], 2) < 0) {
->  		dev_warn(dev, "ceva,p0-retry-params property not defined\n");
-> -		return -EINVAL;
-> +		rc = -EINVAL;
-> +		goto disable_phys;
->  	}
->  
->  	if (of_property_read_u16_array(np, "ceva,p1-retry-params",
->  					(u16 *)&cevapriv->pp5c[1], 2) < 0) {
->  		dev_warn(dev, "ceva,p1-retry-params property not defined\n");
-> -		return -EINVAL;
-> +		rc = -EINVAL;
-> +		goto disable_phys;
->  	}
->  
->  	/*
-> @@ -321,6 +330,16 @@ static int ceva_ahci_probe(struct platform_device *pdev)
->  
->  disable_resources:
->  	ahci_platform_disable_resources(hpriv);
 
-Looking at ahci_platform_disable_resources(),
-it calls ahci_platform_disable_phys(), which calls
-phy_power_off() and phy_exit().
+Best regards,
+Krzysztof
 
-This means that if you jump to disable_resources,
-you will call phy_power_off() and phy_exit() twice.
-Looking at the phy code, it does not handle these functions being called
-twice.
-
-
-You already call ahci_platform_get_resources(), so why don't you just set
-AHCI_PLATFORM_GET_RESETS, that way you should be able to remove a bunch of
-duplicated code from this driver.
-
-One major difference seems to be that ahci_platform_enable_resources() does
-not assert reset before deasserting it.
-Can't we just add a reset_control_assert() + some small usleep
-(e.g. usleep_range(1000, 1500)) before the reset_control_deassert()?
-Have you tried doing that?
-
-
-Kind regards,
-Niklas
-
-> +
-> +disable_phys:
-> +	while (--i >= 0) {
-> +		phy_power_off(hpriv->phys[i]);
-> +		phy_exit(hpriv->phys[i]);
-> +	}
-> +
-> +disable_clks:
-> +	ahci_platform_disable_clks(hpriv);
-> +
->  	return rc;
->  }
->  
-> -- 
-> 2.34.1
-> 
