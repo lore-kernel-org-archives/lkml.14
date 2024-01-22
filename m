@@ -1,23 +1,23 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE6B63A1B8;
-	Mon, 22 Jan 2024 10:03:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB72C3A8CF;
+	Mon, 22 Jan 2024 10:03:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705917799; cv=none; b=gU/rc4+3YOdP6XBVeV7V0P/6LoQm9IdR0Pb0eTzgkwuBkJvume041rGsJUzborHUnSgXg0Wb7Gz3pv/ZbAZx/TRq8LNN+zW3qOrZx0PsBmjE7z6ERDCYR3Nw8WOGyR2W0+xhW39DtXNEgMdkg6MbJGUuLD3crP1X912T+BqsoT8=
+	t=1705917802; cv=none; b=alsA/jSXUWIvFkfbkJssPlqQCfCWekUbMLAQrnkBWMLO0P7/GIiav3i8PZe3Q1i89QwP1mRmtS23sFvnNuLinwwpx03qzfAXNQBROHBNNNpTOnM8ucg5KZNMrlNd8EyCPKuDr8LxM0Ex/dIlKDZ9FtQvnXnDHiZHTRLbf5VJpNc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705917799; c=relaxed/simple;
-	bh=BA2wpIPVvuZJCTybFk3vWj0vkcf9At457SNaIv9Hyw8=;
+	s=arc-20240116; t=1705917802; c=relaxed/simple;
+	bh=69o2erjt0bDqDZLKaNM25t1oSlGlB/P4WEPVOvyRNCE=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=kPyQQ6Qj4Wfgisb9FiJbyiZBseLTn5w0ydfhtH7XH2wqB5xHyDLzoHLLCJPL9WI166kxU8TJiUQDrEvwn4Z1/nML3xMcRPpoevZiZeMS6PtzgqgBKk4VOhyV/mymdu5wD5Ju4MTX7nwqNYQux0+Z1Fdd7MQhm6TJyt0eQfX4gFE=
+	 MIME-Version; b=evaQcJ05QaQfR2ZJvTHjDbsySUe6Ou2Cy0mMyoDtomOsh+2DwHJFl9UBs3YbCsrqqbccWbx1nc4UPm/NGQ+5l5vGEGsltmkGCROG7cYTw6v7MwyCmEXsWtMq2MxSyFA+82Y1x5vzruUbmW6fPgTSSsISU/yRGj9D1FMuh4XP5tQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8BxTOljPa5l_oMDAA--.4257S3;
-	Mon, 22 Jan 2024 18:03:15 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8AxjutlPa5lC4QDAA--.14130S3;
+	Mon, 22 Jan 2024 18:03:17 +0800 (CST)
 Received: from localhost.localdomain (unknown [10.2.5.213])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxXs1hPa5l52oRAA--.11303S3;
-	Mon, 22 Jan 2024 18:03:14 +0800 (CST)
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxXs1hPa5l52oRAA--.11303S7;
+	Mon, 22 Jan 2024 18:03:15 +0800 (CST)
 From: Bibo Mao <maobibo@loongson.cn>
 To: Huacai Chen <chenhuacai@kernel.org>,
 	Tianrui Zhao <zhaotianrui@loongson.cn>,
@@ -27,9 +27,9 @@ Cc: loongarch@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	virtualization@lists.linux.dev,
 	kvm@vger.kernel.org
-Subject: [PATCH v3 1/6] LoongArch/smp: Refine ipi ops on LoongArch platform
-Date: Mon, 22 Jan 2024 18:03:08 +0800
-Message-Id: <20240122100313.1589372-2-maobibo@loongson.cn>
+Subject: [PATCH v3 5/6] LoongArch: KVM: Add physical cpuid map support
+Date: Mon, 22 Jan 2024 18:03:12 +0800
+Message-Id: <20240122100313.1589372-6-maobibo@loongson.cn>
 X-Mailer: git-send-email 2.39.3
 In-Reply-To: <20240122100313.1589372-1-maobibo@loongson.cn>
 References: <20240122100313.1589372-1-maobibo@loongson.cn>
@@ -40,14 +40,14 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8BxXs1hPa5l52oRAA--.11303S3
+X-CM-TRANSID:AQAAf8BxXs1hPa5l52oRAA--.11303S7
 X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoW3KryfCFWrGry3Gw47Xw1kZwc_yoWkuw4fpF
-	y3Aw4DKr4rWFnYv3sYya98Zr15AFnYgwsFqa17KayxAF12q3s8XF4kGF9FvF10k3yrua40
-	vFZ5Gr4IgF1UAacCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
+X-Coremail-Antispam: 1Uk129KBj93XoWxKryDJrWrGrW5tF13KF1Dtwc_yoWxtFy7pF
+	ZF9ws8XrWrGr17G348tw4kurZ09rWvgw1SvasFgay3Ar1qqr98ZrZYkFyUZF98Jw1rWF4I
+	qF13J3W5uF40yagCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
 	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
 	0xBIdaVrnRJUUUBIb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1a6r1DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
 	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
 	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
 	xVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
@@ -56,367 +56,236 @@ X-Coremail-Antispam: 1Uk129KBj93XoW3KryfCFWrGry3Gw47Xw1kZwc_yoWkuw4fpF
 	AKI48JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY
 	6r1j6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7
 	xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xII
-	jxv20xvE14v26r4j6ryUMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw2
+	jxv20xvE14v26ryj6F1UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw2
 	0EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x02
-	67AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU1mii3UUUUU==
+	67AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0epB3UUUUU==
 
-This patch refines ipi handling on LoongArch platform, there are
-three changes with this patch.
-1. Add generic get_percpu_irq api, replace some percpu irq function
-such as get_ipi_irq/get_pmc_irq/get_timer_irq with get_percpu_irq.
-
-2. Change parameter action definition with function
-loongson_send_ipi_single and loongson_send_ipi_mask. Code encoding is used
-here rather than bitmap encoding for ipi action, ipi hw sender uses action
-code, and ipi receiver will get action bitmap encoding, the ipi hw will
-convert it into bitmap in ipi message buffer.
-
-3. Add smp_ops on LoongArch platform so that pv ipi can be used later.
+Physical cpuid is used to irq routing for irqchips such as ipi/msi/
+extioi interrupt controller. And physical cpuid is stored at CSR
+register LOONGARCH_CSR_CPUID, it can not be changed once vcpu is
+created. Since different irqchips have different size definition
+about physical cpuid, KVM uses the smallest cpuid from extioi, and
+the max cpuid size is defines as 256.
 
 Signed-off-by: Bibo Mao <maobibo@loongson.cn>
 ---
- arch/loongarch/include/asm/hardirq.h |  4 ++
- arch/loongarch/include/asm/irq.h     | 10 ++++-
- arch/loongarch/include/asm/smp.h     | 31 +++++++--------
- arch/loongarch/kernel/irq.c          | 22 +----------
- arch/loongarch/kernel/perf_event.c   | 14 +------
- arch/loongarch/kernel/smp.c          | 58 +++++++++++++++++++---------
- arch/loongarch/kernel/time.c         | 12 +-----
- 7 files changed, 71 insertions(+), 80 deletions(-)
+ arch/loongarch/include/asm/kvm_host.h | 26 ++++++++
+ arch/loongarch/include/asm/kvm_vcpu.h |  1 +
+ arch/loongarch/kvm/vcpu.c             | 93 ++++++++++++++++++++++++++-
+ arch/loongarch/kvm/vm.c               | 11 ++++
+ 4 files changed, 130 insertions(+), 1 deletion(-)
 
-diff --git a/arch/loongarch/include/asm/hardirq.h b/arch/loongarch/include/asm/hardirq.h
-index 0ef3b18f8980..9f0038e19c7f 100644
---- a/arch/loongarch/include/asm/hardirq.h
-+++ b/arch/loongarch/include/asm/hardirq.h
-@@ -12,6 +12,10 @@
- extern void ack_bad_irq(unsigned int irq);
- #define ack_bad_irq ack_bad_irq
+diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
+index 2d62f7b0d377..57399d7cf8b7 100644
+--- a/arch/loongarch/include/asm/kvm_host.h
++++ b/arch/loongarch/include/asm/kvm_host.h
+@@ -64,6 +64,30 @@ struct kvm_world_switch {
  
-+enum ipi_msg_type {
-+	IPI_RESCHEDULE,
-+	IPI_CALL_FUNCTION,
-+};
- #define NR_IPI	2
+ #define MAX_PGTABLE_LEVELS	4
  
- typedef struct {
-diff --git a/arch/loongarch/include/asm/irq.h b/arch/loongarch/include/asm/irq.h
-index 218b4da0ea90..00101b6d601e 100644
---- a/arch/loongarch/include/asm/irq.h
-+++ b/arch/loongarch/include/asm/irq.h
-@@ -117,8 +117,16 @@ extern struct fwnode_handle *liointc_handle;
- extern struct fwnode_handle *pch_lpc_handle;
- extern struct fwnode_handle *pch_pic_handle[MAX_IO_PICS];
- 
--extern irqreturn_t loongson_ipi_interrupt(int irq, void *dev);
-+static inline int get_percpu_irq(int vector)
-+{
-+	struct irq_domain *d;
++/*
++ * Physical cpu id is used for interrupt routing, there are different
++ * definitions about physical cpuid on different hardwares.
++ *  For LOONGARCH_CSR_CPUID register, max cpuid size if 512
++ *  For IPI HW, max dest CPUID size 1024
++ *  For extioi interrupt controller, max dest CPUID size is 256
++ *  For MSI interrupt controller, max supported CPUID size is 65536
++ *
++ * Currently max CPUID is defined as 256 for KVM hypervisor, in future
++ * it will be expanded to 4096, including 16 packages at most. And every
++ * package supports at most 256 vcpus
++ */
++#define KVM_MAX_PHYID		256
 +
-+	d = irq_find_matching_fwnode(cpuintc_handle, DOMAIN_BUS_ANY);
-+	if (d)
-+		return irq_create_mapping(d, vector);
- 
-+	return -EINVAL;
-+}
- #include <asm-generic/irq.h>
- 
- #endif /* _ASM_IRQ_H */
-diff --git a/arch/loongarch/include/asm/smp.h b/arch/loongarch/include/asm/smp.h
-index f81e5f01d619..330f1cb3741c 100644
---- a/arch/loongarch/include/asm/smp.h
-+++ b/arch/loongarch/include/asm/smp.h
-@@ -12,6 +12,13 @@
- #include <linux/threads.h>
- #include <linux/cpumask.h>
- 
-+struct smp_ops {
-+	void (*call_func_ipi)(const struct cpumask *mask, unsigned int action);
-+	void (*call_func_single_ipi)(int cpu, unsigned int action);
-+	void (*ipi_init)(void);
++struct kvm_phyid_info {
++	struct kvm_vcpu	*vcpu;
++	bool		enabled;
 +};
 +
-+extern struct smp_ops smp_ops;
- extern int smp_num_siblings;
- extern int num_processors;
- extern int disabled_cpus;
-@@ -24,8 +31,6 @@ void loongson_prepare_cpus(unsigned int max_cpus);
- void loongson_boot_secondary(int cpu, struct task_struct *idle);
- void loongson_init_secondary(void);
- void loongson_smp_finish(void);
--void loongson_send_ipi_single(int cpu, unsigned int action);
--void loongson_send_ipi_mask(const struct cpumask *mask, unsigned int action);
- #ifdef CONFIG_HOTPLUG_CPU
- int loongson_cpu_disable(void);
- void loongson_cpu_die(unsigned int cpu);
-@@ -59,9 +64,12 @@ extern int __cpu_logical_map[NR_CPUS];
++struct kvm_phyid_map {
++	int max_phyid;
++	struct kvm_phyid_info phys_map[KVM_MAX_PHYID];
++};
++
+ struct kvm_arch {
+ 	/* Guest physical mm */
+ 	kvm_pte_t *pgd;
+@@ -71,6 +95,8 @@ struct kvm_arch {
+ 	unsigned long invalid_ptes[MAX_PGTABLE_LEVELS];
+ 	unsigned int  pte_shifts[MAX_PGTABLE_LEVELS];
+ 	unsigned int  root_level;
++	struct mutex  phyid_map_lock;
++	struct kvm_phyid_map  *phyid_map;
  
- #define cpu_physical_id(cpu)	cpu_logical_map(cpu)
+ 	s64 time_offset;
+ 	struct kvm_context __percpu *vmcs;
+diff --git a/arch/loongarch/include/asm/kvm_vcpu.h b/arch/loongarch/include/asm/kvm_vcpu.h
+index e71ceb88f29e..2402129ee955 100644
+--- a/arch/loongarch/include/asm/kvm_vcpu.h
++++ b/arch/loongarch/include/asm/kvm_vcpu.h
+@@ -81,6 +81,7 @@ void kvm_save_timer(struct kvm_vcpu *vcpu);
+ void kvm_restore_timer(struct kvm_vcpu *vcpu);
  
--#define SMP_BOOT_CPU		0x1
--#define SMP_RESCHEDULE		0x2
--#define SMP_CALL_FUNCTION	0x4
-+#define ACTTION_BOOT_CPU	0
-+#define ACTTION_RESCHEDULE	1
-+#define ACTTION_CALL_FUNCTION	2
-+#define SMP_BOOT_CPU		BIT(ACTTION_BOOT_CPU)
-+#define SMP_RESCHEDULE		BIT(ACTTION_RESCHEDULE)
-+#define SMP_CALL_FUNCTION	BIT(ACTTION_CALL_FUNCTION)
- 
- struct secondary_data {
- 	unsigned long stack;
-@@ -71,7 +79,8 @@ extern struct secondary_data cpuboot_data;
- 
- extern asmlinkage void smpboot_entry(void);
- extern asmlinkage void start_secondary(void);
--
-+extern void arch_send_call_function_single_ipi(int cpu);
-+extern void arch_send_call_function_ipi_mask(const struct cpumask *mask);
- extern void calculate_cpu_foreign_map(void);
+ int kvm_vcpu_ioctl_interrupt(struct kvm_vcpu *vcpu, struct kvm_interrupt *irq);
++struct kvm_vcpu *kvm_get_vcpu_by_cpuid(struct kvm *kvm, int cpuid);
  
  /*
-@@ -79,16 +88,6 @@ extern void calculate_cpu_foreign_map(void);
-  */
- extern void show_ipi_list(struct seq_file *p, int prec);
- 
--static inline void arch_send_call_function_single_ipi(int cpu)
--{
--	loongson_send_ipi_single(cpu, SMP_CALL_FUNCTION);
--}
--
--static inline void arch_send_call_function_ipi_mask(const struct cpumask *mask)
--{
--	loongson_send_ipi_mask(mask, SMP_CALL_FUNCTION);
--}
--
- #ifdef CONFIG_HOTPLUG_CPU
- static inline int __cpu_disable(void)
- {
-diff --git a/arch/loongarch/kernel/irq.c b/arch/loongarch/kernel/irq.c
-index 883e5066ae44..1b58f7c3eed9 100644
---- a/arch/loongarch/kernel/irq.c
-+++ b/arch/loongarch/kernel/irq.c
-@@ -87,23 +87,9 @@ static void __init init_vec_parent_group(void)
- 	acpi_table_parse(ACPI_SIG_MCFG, early_pci_mcfg_parse);
+  * Loongarch KVM guest interrupt handling
+diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
+index 27701991886d..97ca9c7160e6 100644
+--- a/arch/loongarch/kvm/vcpu.c
++++ b/arch/loongarch/kvm/vcpu.c
+@@ -274,6 +274,95 @@ static int _kvm_getcsr(struct kvm_vcpu *vcpu, unsigned int id, u64 *val)
+ 	return 0;
  }
  
--static int __init get_ipi_irq(void)
--{
--	struct irq_domain *d = irq_find_matching_fwnode(cpuintc_handle, DOMAIN_BUS_ANY);
--
--	if (d)
--		return irq_create_mapping(d, INT_IPI);
--
--	return -EINVAL;
--}
--
- void __init init_IRQ(void)
++static inline int kvm_set_cpuid(struct kvm_vcpu *vcpu, u64 val)
++{
++	int cpuid;
++	struct loongarch_csrs *csr = vcpu->arch.csr;
++	struct kvm_phyid_map  *map;
++
++	if (val >= KVM_MAX_PHYID)
++		return -EINVAL;
++
++	cpuid = kvm_read_sw_gcsr(csr, LOONGARCH_CSR_ESTAT);
++	map = vcpu->kvm->arch.phyid_map;
++	mutex_lock(&vcpu->kvm->arch.phyid_map_lock);
++	if (map->phys_map[cpuid].enabled) {
++		/*
++		 * Cpuid is already set before
++		 * Forbid changing different cpuid at runtime
++		 */
++		if (cpuid != val) {
++			/*
++			 * Cpuid 0 is initial value for vcpu, maybe invalid
++			 * unset value for vcpu
++			 */
++			if (cpuid) {
++				mutex_unlock(&vcpu->kvm->arch.phyid_map_lock);
++				return -EINVAL;
++			}
++		} else {
++			 /* Discard duplicated cpuid set */
++			mutex_unlock(&vcpu->kvm->arch.phyid_map_lock);
++			return 0;
++		}
++	}
++
++	if (map->phys_map[val].enabled) {
++		/*
++		 * New cpuid is already set with other vcpu
++		 * Forbid sharing the same cpuid between different vcpus
++		 */
++		if (map->phys_map[val].vcpu != vcpu) {
++			mutex_unlock(&vcpu->kvm->arch.phyid_map_lock);
++			return -EINVAL;
++		}
++
++		/* Discard duplicated cpuid set operation*/
++		mutex_unlock(&vcpu->kvm->arch.phyid_map_lock);
++		return 0;
++	}
++
++	kvm_write_sw_gcsr(csr, LOONGARCH_CSR_CPUID, val);
++	map->phys_map[val].enabled	= true;
++	map->phys_map[val].vcpu		= vcpu;
++	if (map->max_phyid < val)
++		map->max_phyid = val;
++	mutex_unlock(&vcpu->kvm->arch.phyid_map_lock);
++	return 0;
++}
++
++struct kvm_vcpu *kvm_get_vcpu_by_cpuid(struct kvm *kvm, int cpuid)
++{
++	struct kvm_phyid_map  *map;
++
++	if (cpuid >= KVM_MAX_PHYID)
++		return NULL;
++
++	map = kvm->arch.phyid_map;
++	if (map->phys_map[cpuid].enabled)
++		return map->phys_map[cpuid].vcpu;
++
++	return NULL;
++}
++
++static inline void kvm_drop_cpuid(struct kvm_vcpu *vcpu)
++{
++	int cpuid;
++	struct loongarch_csrs *csr = vcpu->arch.csr;
++	struct kvm_phyid_map  *map;
++
++	map = vcpu->kvm->arch.phyid_map;
++	cpuid = kvm_read_sw_gcsr(csr, LOONGARCH_CSR_ESTAT);
++	if (cpuid >= KVM_MAX_PHYID)
++		return;
++
++	if (map->phys_map[cpuid].enabled) {
++		map->phys_map[cpuid].vcpu = NULL;
++		map->phys_map[cpuid].enabled = false;
++		kvm_write_sw_gcsr(csr, LOONGARCH_CSR_CPUID, 0);
++	}
++}
++
+ static int _kvm_setcsr(struct kvm_vcpu *vcpu, unsigned int id, u64 val)
  {
- 	int i;
--#ifdef CONFIG_SMP
--	int r, ipi_irq;
--	static int ipi_dummy_dev;
--#endif
- 	unsigned int order = get_order(IRQ_STACK_SIZE);
- 	struct page *page;
+ 	int ret = 0, gintc;
+@@ -291,7 +380,8 @@ static int _kvm_setcsr(struct kvm_vcpu *vcpu, unsigned int id, u64 val)
+ 		kvm_set_sw_gcsr(csr, LOONGARCH_CSR_ESTAT, gintc);
  
-@@ -113,13 +99,7 @@ void __init init_IRQ(void)
- 	init_vec_parent_group();
- 	irqchip_init();
- #ifdef CONFIG_SMP
--	ipi_irq = get_ipi_irq();
--	if (ipi_irq < 0)
--		panic("IPI IRQ mapping failed\n");
--	irq_set_percpu_devid(ipi_irq);
--	r = request_percpu_irq(ipi_irq, loongson_ipi_interrupt, "IPI", &ipi_dummy_dev);
--	if (r < 0)
--		panic("IPI IRQ request failed\n");
-+	smp_ops.ipi_init();
- #endif
- 
- 	for (i = 0; i < NR_IRQS; i++)
-diff --git a/arch/loongarch/kernel/perf_event.c b/arch/loongarch/kernel/perf_event.c
-index 0491bf453cd4..3265c8f33223 100644
---- a/arch/loongarch/kernel/perf_event.c
-+++ b/arch/loongarch/kernel/perf_event.c
-@@ -456,16 +456,6 @@ static void loongarch_pmu_disable(struct pmu *pmu)
- static DEFINE_MUTEX(pmu_reserve_mutex);
- static atomic_t active_events = ATOMIC_INIT(0);
- 
--static int get_pmc_irq(void)
--{
--	struct irq_domain *d = irq_find_matching_fwnode(cpuintc_handle, DOMAIN_BUS_ANY);
--
--	if (d)
--		return irq_create_mapping(d, INT_PCOV);
--
--	return -EINVAL;
--}
--
- static void reset_counters(void *arg);
- static int __hw_perf_event_init(struct perf_event *event);
- 
-@@ -473,7 +463,7 @@ static void hw_perf_event_destroy(struct perf_event *event)
- {
- 	if (atomic_dec_and_mutex_lock(&active_events, &pmu_reserve_mutex)) {
- 		on_each_cpu(reset_counters, NULL, 1);
--		free_irq(get_pmc_irq(), &loongarch_pmu);
-+		free_irq(get_percpu_irq(INT_PCOV), &loongarch_pmu);
- 		mutex_unlock(&pmu_reserve_mutex);
- 	}
- }
-@@ -562,7 +552,7 @@ static int loongarch_pmu_event_init(struct perf_event *event)
- 	if (event->cpu >= 0 && !cpu_online(event->cpu))
- 		return -ENODEV;
- 
--	irq = get_pmc_irq();
-+	irq = get_percpu_irq(INT_PCOV);
- 	flags = IRQF_PERCPU | IRQF_NOBALANCING | IRQF_NO_THREAD | IRQF_NO_SUSPEND | IRQF_SHARED;
- 	if (!atomic_inc_not_zero(&active_events)) {
- 		mutex_lock(&pmu_reserve_mutex);
-diff --git a/arch/loongarch/kernel/smp.c b/arch/loongarch/kernel/smp.c
-index a16e3dbe9f09..46735ba49815 100644
---- a/arch/loongarch/kernel/smp.c
-+++ b/arch/loongarch/kernel/smp.c
-@@ -66,11 +66,6 @@ static cpumask_t cpu_core_setup_map;
- struct secondary_data cpuboot_data;
- static DEFINE_PER_CPU(int, cpu_state);
- 
--enum ipi_msg_type {
--	IPI_RESCHEDULE,
--	IPI_CALL_FUNCTION,
--};
--
- static const char *ipi_types[NR_IPI] __tracepoint_string = {
- 	[IPI_RESCHEDULE] = "Rescheduling interrupts",
- 	[IPI_CALL_FUNCTION] = "Function call interrupts",
-@@ -123,24 +118,19 @@ static u32 ipi_read_clear(int cpu)
- 
- static void ipi_write_action(int cpu, u32 action)
- {
--	unsigned int irq = 0;
--
--	while ((irq = ffs(action))) {
--		uint32_t val = IOCSR_IPI_SEND_BLOCKING;
-+	uint32_t val;
- 
--		val |= (irq - 1);
--		val |= (cpu << IOCSR_IPI_SEND_CPU_SHIFT);
--		iocsr_write32(val, LOONGARCH_IOCSR_IPI_SEND);
--		action &= ~BIT(irq - 1);
+ 		return ret;
 -	}
-+	val = IOCSR_IPI_SEND_BLOCKING | action;
-+	val |= (cpu << IOCSR_IPI_SEND_CPU_SHIFT);
-+	iocsr_write32(val, LOONGARCH_IOCSR_IPI_SEND);
- }
++	} else if (id == LOONGARCH_CSR_CPUID)
++		return kvm_set_cpuid(vcpu, val);
  
--void loongson_send_ipi_single(int cpu, unsigned int action)
-+static void loongson_send_ipi_single(int cpu, unsigned int action)
- {
- 	ipi_write_action(cpu_logical_map(cpu), (u32)action);
- }
+ 	kvm_write_sw_gcsr(csr, id, val);
  
--void loongson_send_ipi_mask(const struct cpumask *mask, unsigned int action)
-+static void loongson_send_ipi_mask(const struct cpumask *mask, unsigned int action)
- {
- 	unsigned int i;
+@@ -925,6 +1015,7 @@ void kvm_arch_vcpu_destroy(struct kvm_vcpu *vcpu)
+ 	hrtimer_cancel(&vcpu->arch.swtimer);
+ 	kvm_mmu_free_memory_cache(&vcpu->arch.mmu_page_cache);
+ 	kfree(vcpu->arch.csr);
++	kvm_drop_cpuid(vcpu);
  
-@@ -148,6 +138,16 @@ void loongson_send_ipi_mask(const struct cpumask *mask, unsigned int action)
- 		ipi_write_action(cpu_logical_map(i), (u32)action);
- }
+ 	/*
+ 	 * If the vCPU is freed and reused as another vCPU, we don't want the
+diff --git a/arch/loongarch/kvm/vm.c b/arch/loongarch/kvm/vm.c
+index 0a37f6fa8f2d..6fd5916ebef3 100644
+--- a/arch/loongarch/kvm/vm.c
++++ b/arch/loongarch/kvm/vm.c
+@@ -30,6 +30,14 @@ int kvm_arch_init_vm(struct kvm *kvm, unsigned long type)
+ 	if (!kvm->arch.pgd)
+ 		return -ENOMEM;
  
-+void arch_send_call_function_single_ipi(int cpu)
-+{
-+	smp_ops.call_func_single_ipi(cpu, ACTTION_CALL_FUNCTION);
-+}
++	kvm->arch.phyid_map = kvzalloc(sizeof(struct kvm_phyid_map),
++				GFP_KERNEL_ACCOUNT);
++	if (!kvm->arch.phyid_map) {
++		free_page((unsigned long)kvm->arch.pgd);
++		kvm->arch.pgd = NULL;
++		return -ENOMEM;
++	}
 +
-+void arch_send_call_function_ipi_mask(const struct cpumask *mask)
-+{
-+	smp_ops.call_func_ipi(mask, ACTTION_CALL_FUNCTION);
-+}
-+
- /*
-  * This function sends a 'reschedule' IPI to another CPU.
-  * it goes straight through and wastes no time serializing
-@@ -155,11 +155,11 @@ void loongson_send_ipi_mask(const struct cpumask *mask, unsigned int action)
-  */
- void arch_smp_send_reschedule(int cpu)
- {
--	loongson_send_ipi_single(cpu, SMP_RESCHEDULE);
-+	smp_ops.call_func_single_ipi(cpu, ACTTION_RESCHEDULE);
- }
- EXPORT_SYMBOL_GPL(arch_smp_send_reschedule);
+ 	kvm_init_vmcs(kvm);
+ 	kvm->arch.gpa_size = BIT(cpu_vabits - 1);
+ 	kvm->arch.root_level = CONFIG_PGTABLE_LEVELS - 1;
+@@ -44,6 +52,7 @@ int kvm_arch_init_vm(struct kvm *kvm, unsigned long type)
+ 	for (i = 0; i <= kvm->arch.root_level; i++)
+ 		kvm->arch.pte_shifts[i] = PAGE_SHIFT + i * (PAGE_SHIFT - 3);
  
--irqreturn_t loongson_ipi_interrupt(int irq, void *dev)
-+static irqreturn_t loongson_ipi_interrupt(int irq, void *dev)
- {
- 	unsigned int action;
- 	unsigned int cpu = smp_processor_id();
-@@ -179,6 +179,26 @@ irqreturn_t loongson_ipi_interrupt(int irq, void *dev)
- 	return IRQ_HANDLED;
++	mutex_init(&kvm->arch.phyid_map_lock);
+ 	return 0;
  }
  
-+static void loongson_ipi_init(void)
-+{
-+	int r, ipi_irq;
-+
-+	ipi_irq = get_percpu_irq(INT_IPI);
-+	if (ipi_irq < 0)
-+		panic("IPI IRQ mapping failed\n");
-+
-+	irq_set_percpu_devid(ipi_irq);
-+	r = request_percpu_irq(ipi_irq, loongson_ipi_interrupt, "IPI", &irq_stat);
-+	if (r < 0)
-+		panic("IPI IRQ request failed\n");
-+}
-+
-+struct smp_ops smp_ops = {
-+	.call_func_single_ipi	= loongson_send_ipi_single,
-+	.call_func_ipi		= loongson_send_ipi_mask,
-+	.ipi_init		= loongson_ipi_init,
-+};
-+
- static void __init fdt_smp_setup(void)
+@@ -51,7 +60,9 @@ void kvm_arch_destroy_vm(struct kvm *kvm)
  {
- #ifdef CONFIG_OF
-@@ -256,7 +276,7 @@ void loongson_boot_secondary(int cpu, struct task_struct *idle)
- 
- 	csr_mail_send(entry, cpu_logical_map(cpu), 0);
- 
--	loongson_send_ipi_single(cpu, SMP_BOOT_CPU);
-+	loongson_send_ipi_single(cpu, ACTTION_BOOT_CPU);
+ 	kvm_destroy_vcpus(kvm);
+ 	free_page((unsigned long)kvm->arch.pgd);
++	kvfree(kvm->arch.phyid_map);
+ 	kvm->arch.pgd = NULL;
++	kvm->arch.phyid_map = NULL;
  }
  
- /*
-diff --git a/arch/loongarch/kernel/time.c b/arch/loongarch/kernel/time.c
-index e7015f7b70e3..fd5354f9be7c 100644
---- a/arch/loongarch/kernel/time.c
-+++ b/arch/loongarch/kernel/time.c
-@@ -123,16 +123,6 @@ void sync_counter(void)
- 	csr_write64(init_offset, LOONGARCH_CSR_CNTC);
- }
- 
--static int get_timer_irq(void)
--{
--	struct irq_domain *d = irq_find_matching_fwnode(cpuintc_handle, DOMAIN_BUS_ANY);
--
--	if (d)
--		return irq_create_mapping(d, INT_TI);
--
--	return -EINVAL;
--}
--
- int constant_clockevent_init(void)
- {
- 	unsigned int cpu = smp_processor_id();
-@@ -142,7 +132,7 @@ int constant_clockevent_init(void)
- 	static int irq = 0, timer_irq_installed = 0;
- 
- 	if (!timer_irq_installed) {
--		irq = get_timer_irq();
-+		irq = get_percpu_irq(INT_TI);
- 		if (irq < 0)
- 			pr_err("Failed to map irq %d (timer)\n", irq);
- 	}
+ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
 -- 
 2.39.3
 
