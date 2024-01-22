@@ -1,109 +1,157 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05olkn2054.outbound.protection.outlook.com [40.92.89.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E12DD3D0B0;
-	Mon, 22 Jan 2024 18:32:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705948323; cv=none; b=JOOApoaFPpUwhXM3VXyZeoZaBhe5r2PlZtujpAVz0voZnpKeEKtzACH0NFlVnnbeqR7PZCV8HognVVNT12BbMo1GsJ4Fm/WR4s7qmEbTyFTUzDgAn8ChQoSqrNPf/8KVz0ru5vVcDQSeNxgrJXv1iBF5tVqwCEYKqKSRd0iA5NE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705948323; c=relaxed/simple;
-	bh=kQYBY/jXz8XA7HEvelLlvWZgjv2fyiFiZrCrN+kAE08=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=NnhqfN1cU0YDAhbV7Qu45jPpwWNUbMTgh9PQ0kzmDswsDObraD89e2gDRUKET7LZyS4QxI1hmtxlPKbGidCAz0EHlB57d5ZKp/mpOvPukyIowF2RVv+xENCMbaFLV3v4uU8WUEvHaUnD73nSCyFoHvQIsLvg6+M128Q5i+Eer3M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=B1RosA8X; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="B1RosA8X"
-Received: from [127.0.0.1] ([76.133.66.138])
-	(authenticated bits=0)
-	by mail.zytor.com (8.17.2/8.17.1) with ESMTPSA id 40MIT1AI2664504
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Mon, 22 Jan 2024 10:29:02 -0800
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 40MIT1AI2664504
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2024011201; t=1705948144;
-	bh=QCjl5w8ff3CMR72Hnb5PjbDlccx4tDMem9MqU3fld3c=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=B1RosA8XsV29moVdedwgLHhWvwsgILXvhW0cnqL3kqssx8+LP2fpVpgeXP9elD+pG
-	 NvP3sVoclLIjbwKnJtlAMdYoFQMsyieqlPFdo6OwulQ/CTo54EDpJIA9BovLdM+pmu
-	 d01iK1nRDbI/rd8sIVmU8kcgadwO7+KRZB7EUefGT2GJ1ua6yaK5wDWwrmFekPex5M
-	 mGs21wFLqCpmX3iylKsnWRYBebobQrpZzaC7JYOqHM0t0KQmyPnueVibdAVZFRxSTX
-	 43ctnDUMiixOANgCaQYJixq3Kjoe0zg/DosWuidgtZ/8IjJfD5RJ2+c0LiUsfjpQVW
-	 V2QG0At5ci/BQ==
-Date: Mon, 22 Jan 2024 10:28:58 -0800
-From: "H. Peter Anvin" <hpa@zytor.com>
-To: Dave Hansen <dave.hansen@intel.com>,
-        Alexey Makhalov <alexey.makhalov@broadcom.com>,
-        linux-kernel@vger.kernel.org, virtualization@lists.linux.dev,
-        bp@alien8.de, dave.hansen@linux.intel.com, mingo@redhat.com,
-        tglx@linutronix.de
-CC: x86@kernel.org, netdev@vger.kernel.org, richardcochran@gmail.com,
-        linux-input@vger.kernel.org, dmitry.torokhov@gmail.com,
-        zackr@vmware.com, linux-graphics-maintainer@vmware.com,
-        pv-drivers@vmware.com, namit@vmware.com, timothym@vmware.com,
-        akaher@vmware.com, jsipek@vmware.com, dri-devel@lists.freedesktop.org,
-        daniel@ffwll.ch, airlied@gmail.com, tzimmermann@suse.de,
-        mripard@kernel.org, maarten.lankhorst@linux.intel.com,
-        horms@kernel.org, kirill.shutemov@linux.intel.com
-Subject: Re: [PATCH v6 7/7] x86/vmware: Add TDX hypercall support
-User-Agent: K-9 Mail for Android
-In-Reply-To: <ff370e42-f48b-4c62-9b44-9d4031cd78b0@intel.com>
-References: <20240109084052.58661-1-amakhalov@vmware.com> <20240109084052.58661-8-amakhalov@vmware.com> <ff370e42-f48b-4c62-9b44-9d4031cd78b0@intel.com>
-Message-ID: <4CF87BC4-E8C8-4584-A275-5A985D5A18A1@zytor.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F93A3CF75;
+	Mon, 22 Jan 2024 18:33:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.89.54
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1705948405; cv=fail; b=UvZfCCxwc1xpTIv6Ct0hn+dlxcNNWrmcbpKiSv78lcXQ8ZafUi3jm22mUc6n7zgAF1bPFOutBevvXvFkym60TLe8rReg3QC2OzRLdpl/ixpKPB+BjphhnDZxiT20/LYav3ts8UC1uroEXZPNDQg3Yw8d0q/CtorFmay0/tx/N2M=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1705948405; c=relaxed/simple;
+	bh=Ecvv2e9tns5KE1K6Jzhlh0/48ShEbOyp0+SrsRTurUk=;
+	h=Message-ID:Date:Subject:From:To:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=XFj+xEvB39R+szNcz0a1dZNOWKkeUsvRQxCwffYGqP+r/FscbDXulRofQ9YeCyPFUkQiwMylaPGwfDH7ancKtqpXXmPRQL9gE2DWE4mmBGVgIOD7+MGl0maZJnt3d/qBAmhcCaXEm6FIMZO0FUXUHHIszGVWfOQ7Y0WOP7CmbDE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hotmail.de; spf=pass smtp.mailfrom=hotmail.de; arc=fail smtp.client-ip=40.92.89.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hotmail.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hotmail.de
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jkOdTRwSE6+PIQIH4NYVDoXe90P+bT856Eg6iELqh+OIu0gWDikP0T19jJ1uPF1EWcvW0qVvgBwkNR1ZolQOupqP1B6QxbCJaltt4ocofTVUdE7BTBRfW2p3t/6knwFeEguQe+VLZN9y6Rr1XybMJwrgvoXC6CKydKmUadXo724EV7CDQqk/EEye5c4mtwKIc3uJTl8E/CDVINNH5rOb3En8YFX3k4gLa1tirXiZwLFRDw+H9AnLJskwhVXf1+yJjN4RR68g9TyKXwldQKzNlPEUqUXyC6WWXsejGY6XmHe/LN6XnFvwCIJL3LGOy9KHn4pXBOHJJ/A9flUuGJytAg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=WkLkCMGS0Kslf9FUZQDS7mtYKmevNVfHKUnmnRDYttI=;
+ b=hbDK0LcsR7lawkduQtpnV63zn7KkogsCdg1k6N6x6Vl6Z2CyEVs6tBDZCTDRP0VHA4Cdf2hLNpUxtr4/UA7EKbugBjki2ggzoBinPM5qLa0n+5YbUFaPIKMnFRTUGh1J6Iy9ze2+uQiu/j/ILngLD1X5c2mXhez5m7gCXxKKMx6VBCvBjIHW9EF23EamhaxtH0+FaKe/QDms+UVTp6s7sC/xmKgGIE9bIJlYULEtf9LeFRTojTLLTG6bvN23nKs8ECqtkQgrze6DOyaOfJgYhzqfMdiVd+pju4UvLU0pP0WB+aHnsUPHPQOJapT0h1WRbiF8tzepiGrCLC/s9RJ1sw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+Received: from AS8P193MB1285.EURP193.PROD.OUTLOOK.COM (2603:10a6:20b:333::21)
+ by AS8P193MB2111.EURP193.PROD.OUTLOOK.COM (2603:10a6:20b:44d::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7202.32; Mon, 22 Jan
+ 2024 18:33:22 +0000
+Received: from AS8P193MB1285.EURP193.PROD.OUTLOOK.COM
+ ([fe80::897e:cfd5:b29b:c611]) by AS8P193MB1285.EURP193.PROD.OUTLOOK.COM
+ ([fe80::897e:cfd5:b29b:c611%6]) with mapi id 15.20.7202.031; Mon, 22 Jan 2024
+ 18:33:22 +0000
+Message-ID:
+ <AS8P193MB128517ADB5EFF29E04389EDAE4752@AS8P193MB1285.EURP193.PROD.OUTLOOK.COM>
+Date: Mon, 22 Jan 2024 19:34:21 +0100
+User-Agent: Mozilla Thunderbird
+Subject: [PATCH v3] Fix error handling in begin_new_exec
+From: Bernd Edlinger <bernd.edlinger@hotmail.de>
+To: Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Kees Cook <keescook@chromium.org>,
+ "Eric W. Biederman" <ebiederm@xmission.com>,
+ "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+ linux-mm@kvack.org,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>
+References: <AM8PR10MB47081071E64EAAB343196D5AE4399@AM8PR10MB4708.EURPRD10.PROD.OUTLOOK.COM>
+ <AS8P193MB1285304CE97348D62021C878E46C2@AS8P193MB1285.EURP193.PROD.OUTLOOK.COM>
+Content-Language: en-US
+In-Reply-To: <AS8P193MB1285304CE97348D62021C878E46C2@AS8P193MB1285.EURP193.PROD.OUTLOOK.COM>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-TMN: [FGDY1yHzdZc6FFv+Zt52tbL3ygr+LKpoOcr/HFmWL0igZMlPLETmsvVpaEXSjg6t]
+X-ClientProxiedBy: BE1P281CA0479.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:b10:7e::23) To AS8P193MB1285.EURP193.PROD.OUTLOOK.COM
+ (2603:10a6:20b:333::21)
+X-Microsoft-Original-Message-ID:
+ <1656ab24-26f4-4572-8bfc-663b533db78b@hotmail.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AS8P193MB1285:EE_|AS8P193MB2111:EE_
+X-MS-Office365-Filtering-Correlation-Id: 59987384-b291-4ad9-0ba0-08dc1b789cad
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	1esE7zODz6EQvuNjGr+whIqrgLTYUoN/wLktW+mrjG5HP+1Ri+7rRIrQp3RyhMz9eQNEofwkI8C8tuh0lOP1iTeEydh2bONLWQ7EatyH3Ma8YMvzIA9en5+0yssdRhCC8LDTbkBMTvxqWkzrXGypTe5ckz/dbjeZWh71e3I0nfZzhq1chVqf5iXu2YuMFVIxX3sa5rKY8UTVyvyTWTCyC5KuD/a6qA3iysOcWhWHo2no6jPEGjTmwLMUaBb2inPyNvqGqeqMcnez+fjleK0JtYVlj6C+e+TbO6BxX0l7feS1iZAI0Rj9RMtrBrBUIm88iEhZVEMmGHAD2YHrrf5PydVFa89aKO8A6t8sH6eaQw99cNd0uUSvfQfTd8gG6CrAxv/MduedwBmYcOlKIcXo+Kwn1x6F1qc5C1H08adQSClyTI3Cw9IrZGb7vz1mLun4Q7OLBqVsQy3oWIMyGX8Bsr2zoao+KWTLMXvLBHDXfUfw8oEsyNTc1Kaep995A5R8lRmtCnbpZs2H6MUf5dhdcVW+gwGY45mzfubIt8eUgNpGw2Oqrz8SukLDhrFcLKAa9aOzMLT3tf45R6A1FZ6p/RR31MpiRY7CG1oo510P2NE=
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?akdybzU1VGhaKy9heERWT3kvUzlvTkxOelBQY0N4YVF4MlJodjV2V0pnWnFP?=
+ =?utf-8?B?NmtXTDFtNGtnZUlMdko1RS9wZWN3SWw5dTFYTXU3d2dXSHVmQVhkQWw3eG5D?=
+ =?utf-8?B?akdIZ2ZRUHF5NThSNk5TdExsSzV3Wm9lMFp2ZHdCOHFLNm1nMzBJRnFVaXNu?=
+ =?utf-8?B?ZlF0ZmIyWUZ2Q0xtZDlRNDY1UG9wTlphTGtReE5nV3RBSFVZZXBQZGZia091?=
+ =?utf-8?B?RTBYMWEvUTZSMjIrS0pJcC91WXY0dldLWGlPajJod2Y0RXJLUUhEc0ZaVmRq?=
+ =?utf-8?B?eVFabmpzcGYvSEFJdDVMWHFhR0d2SnlQcVo5K1kyNnFYSWdkb3lQUWpoK3dn?=
+ =?utf-8?B?RnNISG5Zb2w2TEpHTWQwd3pFUDNOeDF6aEhaUG92anpkZ1VnT3p1K1pNRmY2?=
+ =?utf-8?B?S1A5K3d2a2JoWWlpcUttelNVOGZoMlV1TVBWMy8yeXI4TC96dzJ5WWN6aCt5?=
+ =?utf-8?B?ZnBrQUtJOEUrTVFBYTJCV3AxcDVzV09tUnlXamQxbHZONEhqYzJxblpEVFox?=
+ =?utf-8?B?ejFHL3JRbjR6SjRmaW1Ld2ZKS1h1bDBHaDdkdGJMUGRjVVhaVGI0UkF3eGFu?=
+ =?utf-8?B?M3BLTHBkQjNiaG02Y1pvOUdxOS9rdmRraHpWMk5WMjhKWmNzSTRhT2llUWZO?=
+ =?utf-8?B?emdHaGJaemxZaUhRUm15ZE5YMFV1cTdVMWJXcUppdGJQdXJ6OS90VVlZMjNm?=
+ =?utf-8?B?OTRpT2FzcUpEUStxTWR4Qm41R1NVVFNhMFV0eVZDRGNPRmhUNFpoRG52SSs3?=
+ =?utf-8?B?OFJ3a24vVHNwbGhicDNWM1JKV1FkT2xmSEw3aU56TUU2YTlyemJPWGVmaGha?=
+ =?utf-8?B?YkdGOUVudXRpdk1BRkxZdTVLa0ZTMkZjMXE3ME5sOWgwdm41cHM0MlFHU2l1?=
+ =?utf-8?B?bW5Od0g4YXBuaW5ZSjBTQzl5eEFWOS85NzFuS29yM3IrSWQrRzNJWVp3bm5Q?=
+ =?utf-8?B?UlZqWmxyL3hmTkRUN2YrbFRIVEdyeE1IRjF5ZHM5Y1VjcXRVSEJsSXprNlNJ?=
+ =?utf-8?B?MWFOYnBNRWdEdHh3YWYwRFE5bEp1NUV6aWlWazJodTlZOVpxUHFjelJZb0sx?=
+ =?utf-8?B?YWpyWWdIeVV6Z0pleU9ici9zZitnbTdVeEh5U2FyZU1KSDZCcE1HRWw0TU9l?=
+ =?utf-8?B?QXp1WEJnUnJRTmxnSm9peDVsN1NzS3FpNXFwNllHWGl2a3VPTUZPZlVFVGdQ?=
+ =?utf-8?B?a1pxREUvTlBMR1VIeVRVNTBlb2hDaEhJeEFId3pnZ0d5dFR0eFZIczV1S3Bp?=
+ =?utf-8?B?cURUS0MxTkdyRXlQdlNNSmdvRUE2YWpmU3VPZ1drNjhRZG9JWTh6UUo0NW0y?=
+ =?utf-8?B?V0dnMTZqZFFQbFFjZW5sYUhDdTg5dS9vUldJSGpEd1pMa3JQY3Mvc21IazhQ?=
+ =?utf-8?B?R1BHTnpUNEZNSzk2MEZkR1pXSGdNSDZCWUp0MnBiT1pKY3VYQ3ZnczByaDkw?=
+ =?utf-8?B?dEpRSzdDMWxmODBmNjZFM3F2Q3hiVHRRcFdQWXRUMG9oWFQxbHNtb0RWL3F0?=
+ =?utf-8?B?NGtMRXNVZzlVQXRPZGhWS0tjSS95Y0RNakE1UlR5TGdBTGg1NVhrYkt6WUxE?=
+ =?utf-8?B?alpKZlRFZVBZcUcxWnBWMXZ0eU9ncEZhQ01CNGF2aDJMQUtsNSswaVppSDdZ?=
+ =?utf-8?B?czNLWFIveXZFMitmalRML0N0TWZyRkc5ZjZkNW0reDA1ZXM4OFhnc2p5ME13?=
+ =?utf-8?B?bzE1dGJ1MmtzZ2hoUzN6d1doSXpvNUlPN0FnajB6YWFsTDFnc1RqZm0vOTVo?=
+ =?utf-8?Q?/UyhavO8ZZ4Mbt61ig=3D?=
+X-OriginatorOrg: sct-15-20-4755-11-msonline-outlook-80ceb.templateTenant
+X-MS-Exchange-CrossTenant-Network-Message-Id: 59987384-b291-4ad9-0ba0-08dc1b789cad
+X-MS-Exchange-CrossTenant-AuthSource: AS8P193MB1285.EURP193.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jan 2024 18:33:22.0774
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8P193MB2111
 
-On January 22, 2024 8:32:22 AM PST, Dave Hansen <dave=2Ehansen@intel=2Ecom>=
- wrote:
->On 1/9/24 00:40, Alexey Makhalov wrote:
->> +#ifdef CONFIG_INTEL_TDX_GUEST
->> +unsigned long vmware_tdx_hypercall(unsigned long cmd,
->> +				   struct tdx_module_args *args)
->> +{
->> +	if (!hypervisor_is_type(X86_HYPER_VMWARE))
->> +		return ULONG_MAX;
->> +
->> +	if (cmd & ~VMWARE_CMD_MASK) {
->> +		pr_warn_once("Out of range command %lx\n", cmd);
->> +		return ULONG_MAX;
->> +	}
->> +
->> +	args->r10 =3D VMWARE_TDX_VENDOR_LEAF;
->> +	args->r11 =3D VMWARE_TDX_HCALL_FUNC;
->> +	args->r12 =3D VMWARE_HYPERVISOR_MAGIC;
->> +	args->r13 =3D cmd;
->> +	args->r15 =3D 0; /* CPL */
->> +
->> +	__tdx_hypercall(args);
->> +
->> +	return args->r12;
->> +}
->> +EXPORT_SYMBOL_GPL(vmware_tdx_hypercall);
->> +#endif
->
->This is the kind of wrapper that I was hoping for=2E  Thanks=2E
->
->Acked-by: Dave Hansen <dave=2Ehansen@linux=2Eintel=2Ecom>
->
+If get_unused_fd_flags() fails, the error handling is incomplete
+because bprm->cred is already set to NULL, and therefore
+free_bprm will not unlock the cred_guard_mutex.
+Note there are two error conditions which end up here,
+one before and one after bprm->cred is cleared.
 
-I'm slightly confused by this TBH=2E
+Fixes: b8a61c9e7b4a ("exec: Generic execfd support")
+Signed-off-by: Bernd Edlinger <bernd.edlinger@hotmail.de>
+Acked-by: "Eric W. Biederman" <ebiederm@xmission.com>
+---
+ fs/exec.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Why are the arguments passed in as a structure, which is modified by the w=
-rapper to boot? This is analogous to a system call interface=2E
+v2: rebased to v6.7, retested and updated the commit message
+to fix a checkpatch.pl style nit about the too short sha1 hash
+in the Fixes: statement.
+And retained Eric's Acked-by from:
+https://lore.kernel.org/lkml/87mts2kcrm.fsf@disp2133/
 
-Furthermore, this is an out-of-line function; it should never be called wi=
-th !X86_HYPER_VMWARE or you are introducing overhead for other hypervisors;=
- I believe a pr_warn_once() is in order at least, just as you have for the =
-out-of-range test=2E
+v3: removed empty lines after Fixes: and Signed-off-by: header.
 
 
+Thanks
+Bernd.
 
+diff --git a/fs/exec.c b/fs/exec.c
+index 8cdd5b2dd09c..e88249a1ce07 100644
+--- a/fs/exec.c
++++ b/fs/exec.c
+@@ -1409,6 +1409,9 @@ int begin_new_exec(struct linux_binprm * bprm)
+ 
+ out_unlock:
+ 	up_write(&me->signal->exec_update_lock);
++	if (!bprm->cred)
++		mutex_unlock(&me->signal->cred_guard_mutex);
++
+ out:
+ 	return retval;
+ }
+-- 
+2.39.2
