@@ -1,329 +1,163 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E16424CE0D;
-	Mon, 22 Jan 2024 23:23:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE29A4B5A6;
+	Mon, 22 Jan 2024 23:27:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705965793; cv=none; b=JEvfnQGrwycOjUfv/zUCQH3vtbXehhQMts+hSiMo25wgREfiAH6AdQq6PW6Ssbl8L9jm7j29NtNqDfpSqSwsOYmE+LMQbnM+VArRWXv6dqId2241BhEDEZ83PeFjSiXlkGNmrUO2hJWCTSsQGYINjXR0djd2ofTLSC7bz401d2c=
+	t=1705966064; cv=none; b=Q5RWkdu1XyZMqWVygBTnB8blBfw8xKlaVzFMYlfpju+amBq4Niw8Z0uVHmbVGVpJPNWfSBKVPE/hLyoNFjyor2x91F7d3Ls39JaHiUmpG99WjMv3ckd/+Iw56V6DaWRHKuDZGik9exzS2Q6IA1HyhGHmoWksoLfmFjXiYeGJmgE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705965793; c=relaxed/simple;
-	bh=0LFsgCOEAKQuUhPYaH18UHRI+EXA5/9whqnOJwq764w=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=iONj1FS06RUxYGp9IRHs4LbJM8kRbm1BJNPKzJIlMWVF34ooFp6wvAqZfyMrZ+mudZ7eEzlvlYoaWaquH5i/76D+OWoP9Jx1uY7aM3NZlfqI5OA+MoM/IVekZi4imnSIb2+gcDG6TMoUBVsOoBtptgTCLE7SkpuBpObsar3bZHo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=G6g1O0ZA; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1705966064; c=relaxed/simple;
+	bh=594BwK7mvu1HQwBaIY2Xo3HEKqrdu9uTJlsJkT01tJg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KatElTQddZL26jqaHXE5Cfznx7J7ksgxnrmpUSQEsJU5mRKXvAdUi+V1CXhesIy/d2diZjhewU9SXa18Q9WD994am12UizYsCENK3/Ar3EWT6xFV381j6Hs4G99MKcQbnvzsH4KZRNfJPxUanx6uPj6YaeuxhnrZyg+fBBajfi8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com; spf=pass smtp.mailfrom=gmx.com; dkim=pass (2048-bit key) header.d=gmx.com header.i=quwenruo.btrfs@gmx.com header.b=rnliwtKo; arc=none smtp.client-ip=212.227.17.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="G6g1O0ZA"
-Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (linux.microsoft.com [13.77.154.182])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 8D86420E2C27;
-	Mon, 22 Jan 2024 15:23:10 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 8D86420E2C27
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1705965790;
-	bh=w9zdnuTxkmqxVLuXq4ixPdoQsRbzumRtRMxFJfk7Hs4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=G6g1O0ZAOHL1JxMnIVL9JtMJEquFsPw7kQEswo5O0vTTBy7YETy8fKi8+2N3DkvSM
-	 KfPcFhhdTzoIrXhrVx7yKX+ub7qa3TyVAaRiCAzMqDVMJBcAsorvyNvvpy8zJ2y02i
-	 QT1GMFkdKlU8KiUW8nUM19zTVzflVhM3Rw+qXztQ=
-From: Konstantin Taranov <kotaranov@linux.microsoft.com>
-To: kotaranov@microsoft.com,
-	sharmaajay@microsoft.com,
-	longli@microsoft.com,
-	jgg@ziepe.ca,
-	leon@kernel.org
-Cc: linux-rdma@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH rdma-next v1 1/3] RDMA/mana_ib: introduce mdev_to_gc helper function
-Date: Mon, 22 Jan 2024 15:22:59 -0800
-Message-Id: <1705965781-3235-2-git-send-email-kotaranov@linux.microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1705965781-3235-1-git-send-email-kotaranov@linux.microsoft.com>
-References: <1705965781-3235-1-git-send-email-kotaranov@linux.microsoft.com>
+	dkim=pass (2048-bit key) header.d=gmx.com header.i=quwenruo.btrfs@gmx.com header.b="rnliwtKo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.com;
+	s=s31663417; t=1705966058; x=1706570858; i=quwenruo.btrfs@gmx.com;
+	bh=594BwK7mvu1HQwBaIY2Xo3HEKqrdu9uTJlsJkT01tJg=;
+	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
+	 In-Reply-To;
+	b=rnliwtKognca61/cSz+XRxp6A9uzg58g6Biit17Y32DmvZY1mmo+7CAUkV55BaBX
+	 UxkX3idixNNdCJzUqswWuETTXLI2zX4up0RfEWHRyWKvSgai+wMk8HSY4Y1uG/1Yy
+	 IfNEECjWlMwAq77JgYlEnF+VAaUfvYDPYLh5/Zw1Ro03svDMijtXD24nGAn3TVmhq
+	 p6hnFujTjL14qb893UuUEVxIXYnpLV9AUUY9n7/6RrITBTg1nlAcX8q2szPTqq/2U
+	 rI+9PY4RwOM2I95RLF9BEEHtlie3lBBy8mn/WdCm0Ge15ITaPEN3IsolPJmijUcfi
+	 O49ngM3q+ubEiTYWJw==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [172.16.0.153] ([61.245.157.120]) by mail.gmx.net (mrgmx104
+ [212.227.17.174]) with ESMTPSA (Nemesis) id 1MpDNf-1qkh422EIx-00qkIg; Tue, 23
+ Jan 2024 00:27:38 +0100
+Message-ID: <b55a95be-38e8-4db7-9653-f864788b475c@gmx.com>
+Date: Tue, 23 Jan 2024 09:57:33 +1030
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [GIT PULL] Btrfs fixes for 6.8-rc2
+To: dsterba@suse.cz, Linus Torvalds <torvalds@linux-foundation.org>
+Cc: David Sterba <dsterba@suse.com>, Qu Wenruo <wqu@suse.com>,
+ linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <cover.1705946889.git.dsterba@suse.com>
+ <CAHk-=wgHDYsNm7CG3szZUotcNqE_w+ojcF+JG88gn5px7uNs0Q@mail.gmail.com>
+ <CAHk-=wiroGW6OMrPXrFg8mxYJa+362XJTsD5HkHXUHffcMieAA@mail.gmail.com>
+ <20240122230526.GF31555@twin.jikos.cz>
+Content-Language: en-US
+From: Qu Wenruo <quwenruo.btrfs@gmx.com>
+Autocrypt: addr=quwenruo.btrfs@gmx.com; keydata=
+ xsBNBFnVga8BCACyhFP3ExcTIuB73jDIBA/vSoYcTyysFQzPvez64TUSCv1SgXEByR7fju3o
+ 8RfaWuHCnkkea5luuTZMqfgTXrun2dqNVYDNOV6RIVrc4YuG20yhC1epnV55fJCThqij0MRL
+ 1NxPKXIlEdHvN0Kov3CtWA+R1iNN0RCeVun7rmOrrjBK573aWC5sgP7YsBOLK79H3tmUtz6b
+ 9Imuj0ZyEsa76Xg9PX9Hn2myKj1hfWGS+5og9Va4hrwQC8ipjXik6NKR5GDV+hOZkktU81G5
+ gkQtGB9jOAYRs86QG/b7PtIlbd3+pppT0gaS+wvwMs8cuNG+Pu6KO1oC4jgdseFLu7NpABEB
+ AAHNIlF1IFdlbnJ1byA8cXV3ZW5ydW8uYnRyZnNAZ214LmNvbT7CwJQEEwEIAD4CGwMFCwkI
+ BwIGFQgJCgsCBBYCAwECHgECF4AWIQQt33LlpaVbqJ2qQuHCPZHzoSX+qAUCY00iVQUJDToH
+ pgAKCRDCPZHzoSX+qNKACACkjDLzCvcFuDlgqCiS4ajHAo6twGra3uGgY2klo3S4JespWifr
+ BLPPak74oOShqNZ8yWzB1Bkz1u93Ifx3c3H0r2vLWrImoP5eQdymVqMWmDAq+sV1Koyt8gXQ
+ XPD2jQCrfR9nUuV1F3Z4Lgo+6I5LjuXBVEayFdz/VYK63+YLEAlSowCF72Lkz06TmaI0XMyj
+ jgRNGM2MRgfxbprCcsgUypaDfmhY2nrhIzPUICURfp9t/65+/PLlV4nYs+DtSwPyNjkPX72+
+ LdyIdY+BqS8cZbPG5spCyJIlZonADojLDYQq4QnufARU51zyVjzTXMg5gAttDZwTH+8LbNI4
+ mm2YzsBNBFnVga8BCACqU+th4Esy/c8BnvliFAjAfpzhI1wH76FD1MJPmAhA3DnX5JDORcga
+ CbPEwhLj1xlwTgpeT+QfDmGJ5B5BlrrQFZVE1fChEjiJvyiSAO4yQPkrPVYTI7Xj34FnscPj
+ /IrRUUka68MlHxPtFnAHr25VIuOS41lmYKYNwPNLRz9Ik6DmeTG3WJO2BQRNvXA0pXrJH1fN
+ GSsRb+pKEKHKtL1803x71zQxCwLh+zLP1iXHVM5j8gX9zqupigQR/Cel2XPS44zWcDW8r7B0
+ q1eW4Jrv0x19p4P923voqn+joIAostyNTUjCeSrUdKth9jcdlam9X2DziA/DHDFfS5eq4fEv
+ ABEBAAHCwHwEGAEIACYCGwwWIQQt33LlpaVbqJ2qQuHCPZHzoSX+qAUCY00ibgUJDToHvwAK
+ CRDCPZHzoSX+qK6vB/9yyZlsS+ijtsvwYDjGA2WhVhN07Xa5SBBvGCAycyGGzSMkOJcOtUUf
+ tD+ADyrLbLuVSfRN1ke738UojphwkSFj4t9scG5A+U8GgOZtrlYOsY2+cG3R5vjoXUgXMP37
+ INfWh0KbJodf0G48xouesn08cbfUdlphSMXujCA8y5TcNyRuNv2q5Nizl8sKhUZzh4BascoK
+ DChBuznBsucCTAGrwPgG4/ul6HnWE8DipMKvkV9ob1xJS2W4WJRPp6QdVrBWJ9cCdtpR6GbL
+ iQi22uZXoSPv/0oUrGU+U5X4IvdnvT+8viPzszL5wXswJZfqfy8tmHM85yjObVdIG6AlnrrD
+In-Reply-To: <20240122230526.GF31555@twin.jikos.cz>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:W1dfWQ5ZXwpCKKhC+n129uDN3Sy9Vd/Lm0aqg7YNd97SRAJ7I7W
+ 90DEfSyUZwbvaL3J9hw2OF5IBFnhHPYh+U2GaTtjer8yQSX2xmNZIA6VeeKdEHDUYqC7p/9
+ 0OaFAerGpJblGUSgT3W4pYlvsGQ7dwVcmuxqXEinuuSn1+cwem5XU6s103fxXUick9iBICW
+ W/f+cnxgZnUMNRNgowNug==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:YLR9kyS6L6k=;6lznmeudGg0lYSx7TxfomiCtTTG
+ Um5zcO+07YMO40YrUi30k6xFbD44ru58wPyMF5z0RJTNUgfh9B+mfO8ii/kvncZA/BwtN0Rxo
+ jto+1hpI1O4jEXfLRWAOtdjoqa+JF2uivpbawepLefKshwSrFbJuhToNbQb2+4qp5PzboVFSP
+ nRVoP1IpZpQwR56JV+890luSDx9npfhBHLnTQ4fWn5vmPxqwdqaS0x7phdZdBX8j1Yxbo0xNY
+ cCFTSANaC7kSUALvJuCwZcFBVlTpIGAwMcR17Rfljy6H/rk1qYeOBGtuXKBDWxkW+oC25Ml2D
+ R+VkzCrjWAuc2fZa8Le+bQEpYR7EkhdEj4kPM2JIvRAAeBW0R7q+lUeLIABaj1mQVdd2XuCng
+ aq6es1Par+doh1Acz//CgYQrpLfeX54+C/uSZBxPsXQq8nDvzY9RQ4/eiqlIDj+A1OsHx3Jgu
+ ycp6W/P5HdOtHjkl3Y4LieCMc2KKzA3tF4qWE2Dr1SDkahjuONozgf1MVvxGFtgeBsAgYr9rA
+ showmK30xFp28Iky1E6N0p161nEzaZp8onbTi3IL0+iRk11Vdpdp5d8GTYWzrpYH3LgXZOsUf
+ G6A/6htgQnp9Hrh75c+sOEwlnakDIrIMK6Ha53PZRLFyppAqESnbcFGMV41iu5GIlXddtPO7x
+ tXo7OX+PqtbprD8nW4lndu3jSqWOlnKAYqHuf1Wr2hQ1giV+ilRzyfxjlAfbCTgMIQ2Fay6ps
+ N9LP8Qf7KF0k9gMyFjik9/qJXEhrRMxoX9zYHaZL9KP2BIrMrRzU4Jr1cJeFcOL6INntfMTiQ
+ W2Cf341KsagFObr23ryFigP3lKF226XsWH3B5IREf0pX6Mqb2BQ/1+HNioQCl0/O7AfUdRDjq
+ FLXLGLc4yFT0cWjFXDH2u5uFwzUi5mQpHhfrkUIxTQYY9S2+vlnT6EEyGxnnuEt7l8ypdTvD/
+ tzGqloq94f7W5R1wCP8v+QnphgA=
 
-From: Konstantin Taranov <kotaranov@microsoft.com>
 
-Use a helper function to access gdma_context from mana_ib_dev.
-This patch removes code repetitions as well as removes the need
-to explicitly use gdma_dev, which was error-prone.
 
-Signed-off-by: Konstantin Taranov <kotaranov@microsoft.com>
----
- drivers/infiniband/hw/mana/cq.c      |  4 ++--
- drivers/infiniband/hw/mana/main.c    | 30 +++++++++++-----------------
- drivers/infiniband/hw/mana/mana_ib.h |  5 +++++
- drivers/infiniband/hw/mana/mr.c      | 13 +++---------
- drivers/infiniband/hw/mana/qp.c      | 12 +++++------
- 5 files changed, 27 insertions(+), 37 deletions(-)
+On 2024/1/23 09:35, David Sterba wrote:
+> On Mon, Jan 22, 2024 at 02:54:31PM -0800, Linus Torvalds wrote:
+>> On Mon, 22 Jan 2024 at 14:34, Linus Torvalds
+>> <torvalds@linux-foundation.org> wrote:
+>>>
+>>> Bah. These fixes are garbage. Now my machine doesn't even boot. I'm
+>>> bisecting
+>
+> Ah, sorry.
+>
+>> My bisection says
+>>
+>>     1e7f6def8b2370ecefb54b3c8f390ff894b0c51b is the first bad commit
+>
+> We got a report today [1] that this commit is indeed bad,
+>
+> https://lore.kernel.org/linux-btrfs/CABq1_vj4GpUeZpVG49OHCo-3sdbe2-2ROcu=
+_xDvUG-6-5zPRXg@mail.gmail.com/
+>
+> the timing was also unfortuate and too late to recall the pull request.
 
-diff --git a/drivers/infiniband/hw/mana/cq.c b/drivers/infiniband/hw/mana/cq.c
-index 83ebd070535a..3369e7b665f9 100644
---- a/drivers/infiniband/hw/mana/cq.c
-+++ b/drivers/infiniband/hw/mana/cq.c
-@@ -16,7 +16,7 @@ int mana_ib_create_cq(struct ib_cq *ibcq, const struct ib_cq_init_attr *attr,
- 	int err;
- 
- 	mdev = container_of(ibdev, struct mana_ib_dev, ib_dev);
--	gc = mdev->gdma_dev->gdma_context;
-+	gc = mdev_to_gc(mdev);
- 
- 	if (udata->inlen < sizeof(ucmd))
- 		return -EINVAL;
-@@ -81,7 +81,7 @@ int mana_ib_destroy_cq(struct ib_cq *ibcq, struct ib_udata *udata)
- 	int err;
- 
- 	mdev = container_of(ibdev, struct mana_ib_dev, ib_dev);
--	gc = mdev->gdma_dev->gdma_context;
-+	gc = mdev_to_gc(mdev);
- 
- 	err = mana_ib_gd_destroy_dma_region(mdev, cq->gdma_region);
- 	if (err) {
-diff --git a/drivers/infiniband/hw/mana/main.c b/drivers/infiniband/hw/mana/main.c
-index faca092456fa..e0f5138ca088 100644
---- a/drivers/infiniband/hw/mana/main.c
-+++ b/drivers/infiniband/hw/mana/main.c
-@@ -79,17 +79,17 @@ int mana_ib_alloc_pd(struct ib_pd *ibpd, struct ib_udata *udata)
- 	struct gdma_create_pd_req req = {};
- 	enum gdma_pd_flags flags = 0;
- 	struct mana_ib_dev *dev;
--	struct gdma_dev *mdev;
-+	struct gdma_context *gc;
- 	int err;
- 
- 	dev = container_of(ibdev, struct mana_ib_dev, ib_dev);
--	mdev = dev->gdma_dev;
-+	gc = mdev_to_gc(dev);
- 
- 	mana_gd_init_req_hdr(&req.hdr, GDMA_CREATE_PD, sizeof(req),
- 			     sizeof(resp));
- 
- 	req.flags = flags;
--	err = mana_gd_send_request(mdev->gdma_context, sizeof(req), &req,
-+	err = mana_gd_send_request(gc, sizeof(req), &req,
- 				   sizeof(resp), &resp);
- 
- 	if (err || resp.hdr.status) {
-@@ -119,17 +119,17 @@ int mana_ib_dealloc_pd(struct ib_pd *ibpd, struct ib_udata *udata)
- 	struct gdma_destory_pd_resp resp = {};
- 	struct gdma_destroy_pd_req req = {};
- 	struct mana_ib_dev *dev;
--	struct gdma_dev *mdev;
-+	struct gdma_context *gc;
- 	int err;
- 
- 	dev = container_of(ibdev, struct mana_ib_dev, ib_dev);
--	mdev = dev->gdma_dev;
-+	gc = mdev_to_gc(dev);
- 
- 	mana_gd_init_req_hdr(&req.hdr, GDMA_DESTROY_PD, sizeof(req),
- 			     sizeof(resp));
- 
- 	req.pd_handle = pd->pd_handle;
--	err = mana_gd_send_request(mdev->gdma_context, sizeof(req), &req,
-+	err = mana_gd_send_request(gc, sizeof(req), &req,
- 				   sizeof(resp), &resp);
- 
- 	if (err || resp.hdr.status) {
-@@ -206,13 +206,11 @@ int mana_ib_alloc_ucontext(struct ib_ucontext *ibcontext,
- 	struct ib_device *ibdev = ibcontext->device;
- 	struct mana_ib_dev *mdev;
- 	struct gdma_context *gc;
--	struct gdma_dev *dev;
- 	int doorbell_page;
- 	int ret;
- 
- 	mdev = container_of(ibdev, struct mana_ib_dev, ib_dev);
--	dev = mdev->gdma_dev;
--	gc = dev->gdma_context;
-+	gc = mdev_to_gc(mdev);
- 
- 	/* Allocate a doorbell page index */
- 	ret = mana_gd_allocate_doorbell_page(gc, &doorbell_page);
-@@ -238,7 +236,7 @@ void mana_ib_dealloc_ucontext(struct ib_ucontext *ibcontext)
- 	int ret;
- 
- 	mdev = container_of(ibdev, struct mana_ib_dev, ib_dev);
--	gc = mdev->gdma_dev->gdma_context;
-+	gc = mdev_to_gc(mdev);
- 
- 	ret = mana_gd_destroy_doorbell_page(gc, mana_ucontext->doorbell);
- 	if (ret)
-@@ -322,15 +320,13 @@ int mana_ib_gd_create_dma_region(struct mana_ib_dev *dev, struct ib_umem *umem,
- 	size_t max_pgs_create_cmd;
- 	struct gdma_context *gc;
- 	size_t num_pages_total;
--	struct gdma_dev *mdev;
- 	unsigned long page_sz;
- 	unsigned int tail = 0;
- 	u64 *page_addr_list;
- 	void *request_buf;
- 	int err;
- 
--	mdev = dev->gdma_dev;
--	gc = mdev->gdma_context;
-+	gc = mdev_to_gc(dev);
- 	hwc = gc->hwc.driver_data;
- 
- 	/* Hardware requires dma region to align to chosen page size */
-@@ -426,10 +422,8 @@ int mana_ib_gd_create_dma_region(struct mana_ib_dev *dev, struct ib_umem *umem,
- 
- int mana_ib_gd_destroy_dma_region(struct mana_ib_dev *dev, u64 gdma_region)
- {
--	struct gdma_dev *mdev = dev->gdma_dev;
--	struct gdma_context *gc;
-+	struct gdma_context *gc = mdev_to_gc(dev);
- 
--	gc = mdev->gdma_context;
- 	ibdev_dbg(&dev->ib_dev, "destroy dma region 0x%llx\n", gdma_region);
- 
- 	return mana_gd_destroy_dma_region(gc, gdma_region);
-@@ -447,7 +441,7 @@ int mana_ib_mmap(struct ib_ucontext *ibcontext, struct vm_area_struct *vma)
- 	int ret;
- 
- 	mdev = container_of(ibdev, struct mana_ib_dev, ib_dev);
--	gc = mdev->gdma_dev->gdma_context;
-+	gc = mdev_to_gc(mdev);
- 
- 	if (vma->vm_pgoff != 0) {
- 		ibdev_dbg(ibdev, "Unexpected vm_pgoff %lu\n", vma->vm_pgoff);
-@@ -531,7 +525,7 @@ int mana_ib_gd_query_adapter_caps(struct mana_ib_dev *dev)
- 	req.hdr.resp.msg_version = GDMA_MESSAGE_V3;
- 	req.hdr.dev_id = dev->gdma_dev->dev_id;
- 
--	err = mana_gd_send_request(dev->gdma_dev->gdma_context, sizeof(req),
-+	err = mana_gd_send_request(mdev_to_gc(dev), sizeof(req),
- 				   &req, sizeof(resp), &resp);
- 
- 	if (err) {
-diff --git a/drivers/infiniband/hw/mana/mana_ib.h b/drivers/infiniband/hw/mana/mana_ib.h
-index 6bdc0f5498d5..ebb6537620ee 100644
---- a/drivers/infiniband/hw/mana/mana_ib.h
-+++ b/drivers/infiniband/hw/mana/mana_ib.h
-@@ -142,6 +142,11 @@ struct mana_ib_query_adapter_caps_resp {
- 	u32 max_inline_data_size;
- }; /* HW Data */
- 
-+static inline struct gdma_context *mdev_to_gc(struct mana_ib_dev *mdev)
-+{
-+	return mdev->gdma_dev->gdma_context;
-+}
-+
- int mana_ib_gd_create_dma_region(struct mana_ib_dev *dev, struct ib_umem *umem,
- 				 mana_handle_t *gdma_region);
- 
-diff --git a/drivers/infiniband/hw/mana/mr.c b/drivers/infiniband/hw/mana/mr.c
-index 351207c60eb6..ee4d4f83467c 100644
---- a/drivers/infiniband/hw/mana/mr.c
-+++ b/drivers/infiniband/hw/mana/mr.c
-@@ -30,12 +30,9 @@ static int mana_ib_gd_create_mr(struct mana_ib_dev *dev, struct mana_ib_mr *mr,
- {
- 	struct gdma_create_mr_response resp = {};
- 	struct gdma_create_mr_request req = {};
--	struct gdma_dev *mdev = dev->gdma_dev;
--	struct gdma_context *gc;
-+	struct gdma_context *gc = mdev_to_gc(dev);
- 	int err;
- 
--	gc = mdev->gdma_context;
--
- 	mana_gd_init_req_hdr(&req.hdr, GDMA_CREATE_MR, sizeof(req),
- 			     sizeof(resp));
- 	req.pd_handle = mr_params->pd_handle;
-@@ -77,12 +74,9 @@ static int mana_ib_gd_destroy_mr(struct mana_ib_dev *dev, u64 mr_handle)
- {
- 	struct gdma_destroy_mr_response resp = {};
- 	struct gdma_destroy_mr_request req = {};
--	struct gdma_dev *mdev = dev->gdma_dev;
--	struct gdma_context *gc;
-+	struct gdma_context *gc = mdev_to_gc(dev);
- 	int err;
- 
--	gc = mdev->gdma_context;
--
- 	mana_gd_init_req_hdr(&req.hdr, GDMA_DESTROY_MR, sizeof(req),
- 			     sizeof(resp));
- 
-@@ -164,8 +158,7 @@ struct ib_mr *mana_ib_reg_user_mr(struct ib_pd *ibpd, u64 start, u64 length,
- 	return &mr->ibmr;
- 
- err_dma_region:
--	mana_gd_destroy_dma_region(dev->gdma_dev->gdma_context,
--				   dma_region_handle);
-+	mana_gd_destroy_dma_region(mdev_to_gc(dev), dma_region_handle);
- 
- err_umem:
- 	ib_umem_release(mr->umem);
-diff --git a/drivers/infiniband/hw/mana/qp.c b/drivers/infiniband/hw/mana/qp.c
-index 21ac9fcadf3f..0c8d6ecfbb2a 100644
---- a/drivers/infiniband/hw/mana/qp.c
-+++ b/drivers/infiniband/hw/mana/qp.c
-@@ -17,12 +17,10 @@ static int mana_ib_cfg_vport_steering(struct mana_ib_dev *dev,
- 	struct mana_cfg_rx_steer_resp resp = {};
- 	mana_handle_t *req_indir_tab;
- 	struct gdma_context *gc;
--	struct gdma_dev *mdev;
- 	u32 req_buf_size;
- 	int i, err;
- 
--	gc = dev->gdma_dev->gdma_context;
--	mdev = &gc->mana;
-+	gc = mdev_to_gc(dev);
- 
- 	req_buf_size =
- 		sizeof(*req) + sizeof(mana_handle_t) * MANA_INDIRECT_TABLE_SIZE;
-@@ -39,7 +37,7 @@ static int mana_ib_cfg_vport_steering(struct mana_ib_dev *dev,
- 	req->rx_enable = 1;
- 	req->update_default_rxobj = 1;
- 	req->default_rxobj = default_rxobj;
--	req->hdr.dev_id = mdev->dev_id;
-+	req->hdr.dev_id = gc->mana.dev_id;
- 
- 	/* If there are more than 1 entries in indirection table, enable RSS */
- 	if (log_ind_tbl_size)
-@@ -99,6 +97,7 @@ static int mana_ib_create_qp_rss(struct ib_qp *ibqp, struct ib_pd *pd,
- 	struct mana_ib_qp *qp = container_of(ibqp, struct mana_ib_qp, ibqp);
- 	struct mana_ib_dev *mdev =
- 		container_of(pd->device, struct mana_ib_dev, ib_dev);
-+	struct gdma_context *gc = mdev_to_gc(mdev);
- 	struct ib_rwq_ind_table *ind_tbl = attr->rwq_ind_tbl;
- 	struct mana_ib_create_qp_rss_resp resp = {};
- 	struct mana_ib_create_qp_rss ucmd = {};
-@@ -109,7 +108,6 @@ static int mana_ib_create_qp_rss(struct ib_qp *ibqp, struct ib_pd *pd,
- 	unsigned int ind_tbl_size;
- 	struct mana_context *mc;
- 	struct net_device *ndev;
--	struct gdma_context *gc;
- 	struct mana_ib_cq *cq;
- 	struct mana_ib_wq *wq;
- 	struct gdma_dev *gd;
-@@ -120,7 +118,6 @@ static int mana_ib_create_qp_rss(struct ib_qp *ibqp, struct ib_pd *pd,
- 	u32 port;
- 	int ret;
- 
--	gc = mdev->gdma_dev->gdma_context;
- 	gd = &gc->mana;
- 	mc = gd->driver_data;
- 
-@@ -307,6 +304,7 @@ static int mana_ib_create_qp_raw(struct ib_qp *ibqp, struct ib_pd *ibpd,
- 		rdma_udata_to_drv_context(udata, struct mana_ib_ucontext,
- 					  ibucontext);
- 	struct gdma_dev *gd = &mdev->gdma_dev->gdma_context->mana;
-+	struct gdma_context *gc = mdev_to_gc(mdev);
- 	struct mana_ib_create_qp_resp resp = {};
- 	struct mana_ib_create_qp ucmd = {};
- 	struct gdma_queue *gdma_cq = NULL;
-@@ -450,7 +448,7 @@ static int mana_ib_create_qp_raw(struct ib_qp *ibqp, struct ib_pd *ibpd,
- 
- err_release_gdma_cq:
- 	kfree(gdma_cq);
--	gd->gdma_context->cq_table[send_cq->id] = NULL;
-+	gc->cq_table[send_cq->id] = NULL;
- 
- err_destroy_wq_obj:
- 	mana_destroy_wq_obj(mpc, GDMA_SQ, qp->tx_object);
--- 
-2.43.0
+All my fault.
 
+The offending line is:
+
++	memcpy_to_page(dest_page, dest_pgoff + to_copy, workspace->out_buf.dst,
++		       to_copy);
+
+I'm using the bad pg_off for the memcpy_to_page() call.
+And zstd is the only affected algo.
+
+All the other algos go like this:
+
++	memcpy_to_page(dest_page, dest_pgoff, workspace->buf, out_len);
+
+So that's why it's screwing up the zstd compressed inline extent
+decompression, as we can easily write beyond the page boundary and write
+into the next innocent page.
+
+And the existing compression group didn't catch it at all.
+
+Would fix it and add new test cases for the regression.
+
+Thanks,
+Qu
+>
+>> but I'll still have to verify by testing the revert on top of my curren=
+t tree.
+>>
+>> It did revert cleanly, but I also note that if the zstd case is wrong,
+>> I assume the other very similar commits (for zlib and lzo) are
+>> potentially also wrong.
+>>
+>> Let me reboot to verify that at least my machine boots.
+>
+> Per the report revert makes it work again and zlib and lzo cases are not
+> affected.
+>
+> I can send a pull request reverting all the three until we figure out
+> what's wrong, or you can do it as all revert cleanly.
+>
