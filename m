@@ -1,172 +1,281 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from APC01-PSA-obe.outbound.protection.outlook.com (mail-psaapc01olkn2085.outbound.protection.outlook.com [40.92.52.85])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42B0D47784
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 15:38:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705937904; cv=none; b=NTntq38LNUoq2znbzf+WhCW2L+ieqh33yIfxRaQMZrw+2iTqzjWHDH3gfbM8UpPTiW+EDG5sg8xpNy6EUQ3ZN2hMlRzJcUinaBOCM+GbmSAekDHivl9/GMNayCVenYoPKoB2ZbYk4FlJWNt9yO6WW04gG5Ve1iM1Tb+9Of4ZY5E=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705937904; c=relaxed/simple;
-	bh=JrTlR1yh1kUdkwX7KafITLJvsRjLZG25nzdjxKTbheM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Uhf1lOdbaPkvGQhSvXRILk9Nqu+hgjoZ6eEodr9NJOVa4OdB9JEnW5TQiH5yhhJV/UP4wKyjL9BdAqHd2ff42v/4OeAcPuLjIe7QvP704QOHfF3SQMpQnTFBfMmGLraaPkCeCfnezgN6tHfausOvFyR0Oe+Eb265Kia9K2wNf/k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HdS7dzKc; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 306513D984;
+	Mon, 22 Jan 2024 15:38:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.52.85
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1705937906; cv=fail; b=IZSbXLZIYjp0gSJCXK7fbLTC9IExV2/fNYrDqcLDNNIpoH+S7EnuYa7XplewJWfxrXANHS/gZPWWAH6gmsFrtwAThzCwEZDjV+L+hv4gRPOtjGq4VeVjHlLSdoD1+VO9bQAK992dHowDXvB77vLfwXtqESJ01t37HqtGkSiLgKk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1705937906; c=relaxed/simple;
+	bh=Zhjk3nSIpZiReas9c9aj295F5Z4XsZ7TS2Ky+4jlP60=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=q74V+05ZgN5ya6PZjkm9P7eZW0aPcs3f9ymxT+BcuMIpfVF21lp/9IJ5CaxsHguhogJaBJGSpesndydj9fnGh2W9Z03f0o4xlApNZBvy9tjQLH9mauExPU/uH7rHHF+BuHNqBayZDKYrPO3qxFJuq1gLcv0hTTeKsd425Ck7HCI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=Q/8TY6+3; arc=fail smtp.client-ip=40.92.52.85
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HdS7dzKc"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-40e7065b692so36479645e9.3
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 07:38:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1705937901; x=1706542701; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=wjrEpWeMJdq09/Vth3t/64U8dNgnTEbo+R/yOccaErE=;
-        b=HdS7dzKcRiF18BSJIuqaayov2/RNaqOKRLp+sMT0eYiq45sT+r/AxHBXRcm/KaWbL+
-         SGDpcuGIOWKA42pfhTZty785ww9UsLRop2TadwxpcUEQA4XXEgXqbuf4KiQ2NBebfDb+
-         aedeJOEoL6w9tCI2ktWUoaBt4JB/U3HcSySceib8X9mBU9v7FkSn4AgvWyrEEJxnZnPr
-         gS4gahNqWuuu/m+v5tnM9Hh7Q5xjUMhnzTNrKFzBxoO+Yu8406VZl3gMdohjljrfO6+5
-         V/FfcZY6JSOVnyur7MkH4dJjtlF4omuYYSz8DS6S/xFhVwEOsmMZQjYbEkCM1swn1uTN
-         sxgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705937901; x=1706542701;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wjrEpWeMJdq09/Vth3t/64U8dNgnTEbo+R/yOccaErE=;
-        b=nyfK1LpNyfJNTeoFjvWP0agPyJtZSmEn4FUSKYvBlLHvCJ9And25bbezWK1kUdFcY1
-         vji8yi9ho9P5C0+h4o7c1UC2gNvMDc3a0cd12C/2UFZWJUOWMvRFySDVcJskEbDqZsN9
-         +KvMEXjAym7SGW3Pdl/xDJBYqqLWdgRvOgWXW1mJfU5VClNj/yt3+xEqbhuxE5nkIfrR
-         aEKZYZbbRTI+IMrqttZ7TcjC75PVKUpGEHZdFquArN1fg2sgjgatMPtnLklK62RWzVV3
-         6KvdebQFf9xb8118DOt/8dM8wJZHPcovyBeXb/7EGmSPSDe8z5u2Gwu8Io7iddyljEXT
-         JVcg==
-X-Gm-Message-State: AOJu0Yy8bbh4Pq5l+++QTsi20qomY8Be/C/JdQmPawk5LwVrZqgwvgI0
-	elznN1rw1tdKml+QrlVn2LS4SKq7/wRhNIRrlZ13tgGyYzmpCuKUHa5y3crHBaw=
-X-Google-Smtp-Source: AGHT+IHtTraeTNo/j0x8myQ20pblTIX4ITUkbtxQP7MBf8dxu4qn14b7VISoC/ZpBbAhfDC9W4fc2w==
-X-Received: by 2002:a05:600c:3d0e:b0:40e:6272:b5ac with SMTP id bh14-20020a05600c3d0e00b0040e6272b5acmr2456111wmb.99.1705937901536;
-        Mon, 22 Jan 2024 07:38:21 -0800 (PST)
-Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:52eb:f6ff:feb3:451a])
-        by smtp.gmail.com with ESMTPSA id h5-20020a05600c314500b0040e5e21cd7bsm38969066wmo.11.2024.01.22.07.38.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jan 2024 07:38:21 -0800 (PST)
-From: Neil Armstrong <neil.armstrong@linaro.org>
-Date: Mon, 22 Jan 2024 16:38:17 +0100
-Subject: [PATCH v2] arm64: dts: qcom: sm8550: Use GIC-ITS for PCIe0 and
- PCIe1
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="Q/8TY6+3"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=TBXc1PgWehCr7+bbPsBk8zAfr66aR8xbthV5EJmJox3kXvjZdi0fwrPNEjKB9TJQ/NZFtwFvOiaXA6isH4VKjtyAi3FgpbT5ffUD4G380WeeORwQh1PDCDb1EpOWE2sst3cwucXqoYftFhN568sDAaaoC1Y+gHFOhnMruDWEn9UtgZG5WvFb5qyaeSiJLfDZcMEId0IkpePqMOv0bNFhlB9PwEb1xtQmus/M9CQvDGyCOhYsYBz2AXtoQGNvckY+j8rZCZ8C9an6CWIPAtUPKb+Nvg3et9yi3oWXITQLQpA1O1g/0N5Uzyebz7cDt2NXHx0Ndpor3En+GDnQtpZVZg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Gd3AM4ycXzqKvJSkpDQ+zqlx9I0ku7Fzlq3RQ4YVMLI=;
+ b=JSb2bc2m/91Vgg8QkzK6jVDhfSBs7XCOjB6gKGTg2QQED6nsdCBLwYl4aCVGbnQ1y1nKU5Q2KJyh+GzHvGgt46YEzXd6Ew1p16EKC8DC03LxCAQ0aRw2qr+UpONHVwoprsI832gsRRBra96I7x6sBfuw3kbeE+gZEZqQnJTDxBcNyBLKNZsSoKZ7yp/RlA+qfT9+1xuwJIt1Xbv3T+9eNsXthN2Qaur8Ls2C8DRwEUaW7Ls8elZfOTTmksaeMOTm4DGcxz68/pYMxNZjIjQLL9yP7sb6cvsOUenM0mhIgq6j2KtMuSCo9ZsVgQDVR1eunC7L7CUhkzGQC04x1u4HWA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Gd3AM4ycXzqKvJSkpDQ+zqlx9I0ku7Fzlq3RQ4YVMLI=;
+ b=Q/8TY6+3wkX4z612kdLpzkmCy8mfcxYVsmowjk9U8uRWtdYv32eiHR+T3EmrRrWfsZxKImYIvdKAUDFrmKzJYTMGkxMhYCNILtzF+yl/2egaFuV1ULf3sNduzxOZYvkiZg1bscHhE3VuxAD2Wjo3WK5dj1vrsLMXZN5epfYNeeurK2HP8E9XGxMnIRqe97jVmV4wNAj2/R5Halm53n65nV+ZfoIP9Wv44gdmYsHL8WCoz41kUehilGcnub1FIEU6BMGJYjcGVVtjAtYtTBIRVlHRF5BKUilTB8Wn8A5SO+CBoNiR7v+nhHla8qwYCn1UuWrDB8AUw2JmQ21nH0q+pQ==
+Received: from TYZPR01MB5556.apcprd01.prod.exchangelabs.com
+ (2603:1096:400:363::9) by TYZPR01MB4140.apcprd01.prod.exchangelabs.com
+ (2603:1096:400:1c8::7) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7202.36; Mon, 22 Jan
+ 2024 15:38:20 +0000
+Received: from TYZPR01MB5556.apcprd01.prod.exchangelabs.com
+ ([fe80::a639:b02c:5189:7140]) by TYZPR01MB5556.apcprd01.prod.exchangelabs.com
+ ([fe80::a639:b02c:5189:7140%7]) with mapi id 15.20.7202.031; Mon, 22 Jan 2024
+ 15:38:20 +0000
+Message-ID:
+ <TYZPR01MB5556D035D9A13962844BB553C9752@TYZPR01MB5556.apcprd01.prod.exchangelabs.com>
+Date: Mon, 22 Jan 2024 23:37:29 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/8] net: phy: Introduce Qualcomm IPQ5018 internal PHY
+ driver
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com,
+ richardcochran@gmail.com, p.zabel@pengutronix.de, matthias.bgg@gmail.com,
+ angelogioacchino.delregno@collabora.com, linux-kernel@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
+ linux-mediatek@lists.infradead.org
+References: <TYZPR01MB55563BD6A2B78402E4BB44D4C9762@TYZPR01MB5556.apcprd01.prod.exchangelabs.com>
+ <TYZPR01MB5556D5568546D6DA4313209EC9762@TYZPR01MB5556.apcprd01.prod.exchangelabs.com>
+ <2c6c0d72-5d4e-4ec4-beb6-d30852108a67@lunn.ch>
+From: Ziyang Huang <hzyitc@outlook.com>
+In-Reply-To: <2c6c0d72-5d4e-4ec4-beb6-d30852108a67@lunn.ch>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-TMN: [Oh1qiFh2IHUx/3VqvPrf7zR1oLIFn71a]
+X-ClientProxiedBy: SG2PR04CA0183.apcprd04.prod.outlook.com
+ (2603:1096:4:14::21) To TYZPR01MB5556.apcprd01.prod.exchangelabs.com
+ (2603:1096:400:363::9)
+X-Microsoft-Original-Message-ID:
+ <653a547e-076a-4972-b724-d8ab87927d84@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240122-topic-sm8550-upstream-pcie-its-v2-1-b3398d86d1f1@linaro.org>
-X-B4-Tracking: v=1; b=H4sIAOiLrmUC/42NTQ6CMBBGr0Jm7Zi2AfxZeQ/DojItTCK0mVaiI
- dzdyglcvi9f3lshOWGX4FqtIG7hxGEuYA4V9KOdB4dMhcEoUyttDOYQucc0nZtG4SumLM5OGHs
- uz5xQtb5+tJq8uxAUSRTn+b0H7l3hkVMO8tl7i/6tf6sXjRqt9w0pOlFLdHvybCUcgwzQbdv2B
- T+q/zjNAAAA
-To: Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh+dt@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Neil Armstrong <neil.armstrong@linaro.org>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5170;
- i=neil.armstrong@linaro.org; h=from:subject:message-id;
- bh=JrTlR1yh1kUdkwX7KafITLJvsRjLZG25nzdjxKTbheM=;
- b=owEBbQKS/ZANAwAKAXfc29rIyEnRAcsmYgBlrovsPRxor1Hb6gKIHm7/1VE8wAxfG+GPN7tPdRLq
- gi5kiLKJAjMEAAEKAB0WIQQ9U8YmyFYF/h30LIt33NvayMhJ0QUCZa6L7AAKCRB33NvayMhJ0eNKD/
- 0QNbjFpU19ERNfyesK5PgMCelH/N0ULCkVyAa7cNkmn3jifkrCzPpzeEKfw4GAATXqXtI4yUIrOK2f
- bR1dfmFS7t4Ic/7UOxexZvXc3PxDnsNKYMfHy1boBX7L50KMbGltkFBcjmxVl9fzFuqvGCCXs9s45D
- BAeP+LMARQoRwO6ZH9yF1hSuzn1lfKeNp1sewRCOKwqdyaTZewaPLbdta/a5y6A6N7DrBcBK9+Kiv7
- uSLrObdLqqHr1nr8qQv51yIiow8McbTLBei3Dh5zlbPpjlIyz6ke1D5d7fT/b7iz0LsCmp7uchh4Wg
- 4/0ouBntvNsRSqcADXrk6iDiM6FRzcU8Cwi9vVOKpVTpgSlK7e5pG+9VrrfkXXN92AJRRQuQdJEjeL
- BwnjApD01zGK8/wmMrPE6GGp77P9BLct3rkWgPCLmMT/q6CxvCkmgp5izblVd7MRYZDC2m9wmOe9Vv
- 2dKjrIj97/rExnM3SVuDSQI7fNFx0sa9qlcttEyREDIREulBlo53QbEq7i7QqLjTG8u6MRctarVc2b
- LS9tswl3cGtOVPUwb0BwCZLGGcC76hLeO4mdNbR4wByvDw3nLcm6ixaPWCqKxljyK88IUbrH66dTRM
- /GFJB+0UAI9B5hAOg6x/pGlu8j6av2nxStOpNJ7g8aR3Lji3QrrWvJnrKGZQ==
-X-Developer-Key: i=neil.armstrong@linaro.org; a=openpgp;
- fpr=89EC3D058446217450F22848169AB7B1A4CFF8AE
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: TYZPR01MB5556:EE_|TYZPR01MB4140:EE_
+X-MS-Office365-Filtering-Correlation-Id: c36c5ebe-df8d-4d20-c1eb-08dc1b6028f1
+X-MS-Exchange-SLBlob-MailProps:
+	obhAqMD0nT+gBgqCImLTqb4mdYBvtNPTcUa0ds0qCvxIgx1MOHjgLBIbWMTJgDZgIDtkvqYG4exCZnpjord051PFyqzVmfJwZumPIDrbDrrxtQZSz+N3wXDmqBlBNj81hoTHIL4xbu0d5lY/lWUl55hrgjooBEhn8tzb3tbtrNly3XadAv1UjFxATCSiCNfutnCJtJLTs7P8jgBHWfr7VlYN6OUAZdF87c72bqsvrd/aTFaw5sXfGPX2B/wsNZ+9ZDolIv0UdyVjVy40EZWY98VApMBz78JqAtF/BwDMg6Au4+zDsHM0IoDxl0S7KTrpRbx73TaZMuij68EW+zRYg6uqbsRRTRwt3EGxXnBPTcevqeV8XNvJ2EONk4WWK+3ZdQGKebei9qcU6QJcd1B59gXfMBQCBjLaYRmElMBdWIY8tSlb2Y4q+AMfwntQMyTc/vTwK7PwC64W3WoDdu8jPYl5Bjphb7pV6hnK7rGsFxOrvVflnfr0GT75Lcg/d3zCSKO4fqtyVi3+EkRXUyoiUEtXz0vM7ttZ5T8BudDb6reeao4ZGOait4FDIPBZI1/Jw7a5TCLjnkLfV+jb6nyi9r6dztHES4dZh90P/u+gTq7LXAk3R2TxPBrjnQdTu5tdZGOM8RX3H17M9F2xHDyhyIzeqmUY/T9/LZZJvzup/7qwv0n6f8D9i5zmSUyvrhTwDkMPtncQol+2KvrmspCWtLG0xt8OAnE3o7365s3432VEGxeGgEmF26ZKwio+wHdn8EbRL6ANIZIyJ3ckj99z9NkmazlukqpeILjEg7Y49tsBhL3PsrRnLFZWtr+HU/dF
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	5g1/5mY5i+TX+ri/4oSI3pSYf2qbuVn60fNmiMmiaqGfUJUMCwhN1Lj+YjA6Oz3V4Pb6F4qkocDiypTuUcC6UWA6iew0v1tv1VzbX2bCFa7MIf/5ffk1vMxbgFmvczk0nmXSZteEpXEHg0/4SYhWjVsk+La5AgOaFYoa3j54ZNsEgHi4mFReeErlnRmZffbT8Q2lXOpmGEbFoKguUkDNq7RoddaT+W782dkefKrATpqCu9RvAhWjyc+OEy6yd+O2mzBXtAhqjS+Fg+ekvOFezMWeU+QN0J5TYTnbmVWy+9vcdmzzh22CDua2AmOZsBT6n4K1w1uyiz5rWrsY6PlifI/snT2kuHOL80x2GJtnag0icgvaRrw4GuJVU5g7bNCTkXeKbg98/KXLqdH06HxHBNbdIYkwraOt7w8tV+BrRG8rxPFMqNIWWUMiwWsD5SW387BoTzX+8TTbwFWtORyihRIn7T7vC/srVxYNGK76+qXnKiINVZqfqLWOm26kkGB0yC+Q4o7ypQ/bkF2AYeJ2zR7IztT3tfIhGSdaOHyIuDbWg2doDswacfTQ89xGes6Dnd2RSGoakRb+1L9H1MW9LuWQIQXqEKfzjJ8I/+F/7Vs=
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?ZzdYd2tmVUFOMk4xZ2s2dW5vUm5oUkJEZ0RBZGQ2eUlvcFBSTjErWGxtcHIw?=
+ =?utf-8?B?OWtlTjA5N3BhUVdORmtEdnVZSXhiYzRKZFQ5anBxWjZMeDUzZi9YNkdWYUg5?=
+ =?utf-8?B?aG5iMmljV3pOSGtYc2RkZHovSTVvSGZFd1M0UVpja3I1ZGpxYU1vUFF1NTQ4?=
+ =?utf-8?B?ZS9wbFlOdk5ubTVncG0xUDFySG81UmxMVXlHczdUQU1Hc3FnR2Y5ZGd0RG9F?=
+ =?utf-8?B?aFVGM0J4bXRKZHRUZE9rTTNycG9LNGhLbmQrVXpIbjVqcm5VMEZibjd1NCtK?=
+ =?utf-8?B?S3lFZzJEcXl2YWxaNFc2NStSZ0tuODY3bTg1Rll2S3A3aVlrcmYvVm1UNUF3?=
+ =?utf-8?B?YURIKzlWWStQWnJXcXhhYlNNMjA0eDhYZ2FLUkJWb2pBM1dmWXd4T1U1THJD?=
+ =?utf-8?B?NnYzQ1J1MWtaQkxPLythb1FVQktKV0FaTXN4c0FsNXB2ZmxtYUJJbUJ3SmVi?=
+ =?utf-8?B?OVExVWRweEVXcGYyMFZaVlVxdFJjRkVUWGhqYTk4NDdMZXhTTWIwNitPTDMx?=
+ =?utf-8?B?Qjh0Sld2WjFZNTJUUm12ZDRIUWU1NGxNMithVlIyZ2VmZG5SZG5nVE5hbHZq?=
+ =?utf-8?B?Q0h6cy81cjdFVkN4dlNjanJFc0hhQkJtZkYrVmFIU09wL05SODlaSXA0K2dh?=
+ =?utf-8?B?Y2krbEdJWmJIOGxqaTg4MEthNDN5dm5kMDcyRlZ1K0R4SmM1cjJIM3RNMnUr?=
+ =?utf-8?B?U0YzcTJjMjhsZ0xJWFlZRExXYnMzaXg2cjROSVZsTy9uWnZtWlgweTJWTFRh?=
+ =?utf-8?B?VlErdy9uY0IraGhvWkFLTW93NXk1SmZqeFlhL1NrWXJ3SitieUlVVjdUSjlK?=
+ =?utf-8?B?bkVSakxMUkc5WCsrTTd0d1RyMjFoNU8wWThhbEtOdmpLa290QTZwd1p2NE9L?=
+ =?utf-8?B?ZjM4aTlIaXc2TDZ3WGxuaks4UkdOQXVTT0U1UUxLYnBjempCRlJpVm9GNHZK?=
+ =?utf-8?B?aUw5bTMyVVJjdlZVL1oxdUNOa0pJSmpnL1pRdDJ0SCt1czRWM0YzMTlsa1ZJ?=
+ =?utf-8?B?SzFZZjZiV0NCaStFbjNGRlNWdHphbzFGWW1GSzB0MUppRy9qajRaNlpjL3p4?=
+ =?utf-8?B?Z0tESUdVb2hEZ1BJMzRXcjFVNmFVRzJtU1ZZc3lWMVk3dGV3SzlzWmNIQlc5?=
+ =?utf-8?B?ZjNsQjM2TktHdkt4cmF3K0pLNHRpU3ZsVFhNS25NblEyMVBzQ1VNWElxMDF2?=
+ =?utf-8?B?ZFRrRUFGeldYR2JhTUVDUTAzQXlDbXhLNktybzcyaUdqOHk3NllkVU9xS2l1?=
+ =?utf-8?B?Z0w2T2FQYit2WHl5QldmVU96dlVoRjVGZE1aS1JrWm16dmpEQ1pPcThnSkMw?=
+ =?utf-8?B?SjNTekNwdFNSbG1CU0lmeXhWbWp0NzlyNEwxejBSdXN0VWhRc0NtaC9LTFN2?=
+ =?utf-8?B?UkZzUHRqNXBmYW9FNnFvek93STB0YWw3bUE1MDlqNkpkVkplOHdDaktnOVdq?=
+ =?utf-8?B?ZTFXUzN4WnVyZGJXMGpkMGN3Y3hMUXBSZExiVUhUMGNmYVVNcWpJNU5yTXBq?=
+ =?utf-8?B?K3d3Q05ZTTJ6Q2pIUWVUZkV3cGpXRDNta1dqRkYvb0xpbXBodXM5d1U2aDVU?=
+ =?utf-8?B?bWhUZ1N4WjBRRTkxVjdwNnVWMW1MV2NwVzl3clM4U0x5VnpYditDOXVMSlJJ?=
+ =?utf-8?B?NENMeHE0cW4vc3p6TU5ZdnBrRUExM3c9PQ==?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c36c5ebe-df8d-4d20-c1eb-08dc1b6028f1
+X-MS-Exchange-CrossTenant-AuthSource: TYZPR01MB5556.apcprd01.prod.exchangelabs.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jan 2024 15:38:19.9353
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYZPR01MB4140
 
-Both PCIe0 and PCIe1 controllers are capable of signalling the MSIs
-received from endpoint devices to the CPU using GIC-ITS MSI controller.
-Add support for it.
+在 2024/1/22 0:19, Andrew Lunn 写道:
+> On Sun, Jan 21, 2024 at 08:42:30PM +0800, Ziyang Huang wrote:
+>> Signed-off-by: Ziyang Huang <hzyitc@outlook.com>
+> 
+> You need to say something in the commit message. One obvious thing is
+> to justify not using the at803x driver, since
 
-The GIC-ITS MSI implementation provides an advantage over internal MSI
-implementation using Locality-specific Peripheral Interrupts (LPI) that
-would allow MSIs to be targeted for each CPU core.
+I want add more descriptions here. But I have no idea what to write. 
+This is a mininal driver for a special phy.
 
-Like SM8450, the IDs are swapped, but works fine on PCIe0 and PCIe1.
+Here is the thing, at first, I was tring to add these into at803x 
+driver, then I found that the IPQ5018 internel phy is a special device. 
+The initialization sequence is initing GCC clock and reset control, then 
+registering clocks providers, which is very different from other devices.
 
-WiFi PCIe Device on SM8550-QRD using GIC-ITS:
-218:          0          4          0          0          0          0          0          0   ITS-MSI 524288 Edge      bhi
-219:          0          0          5          0          0          0          0          0   ITS-MSI 524289 Edge      mhi
-220:          0          0          0         33          0          0          0          0   ITS-MSI 524290 Edge      mhi
-221:          0          0          0          0          3          0          0          0   ITS-MSI 524291 Edge      ce0
-222:          0          0          0          0          0          1          0          0   ITS-MSI 524292 Edge      ce1
-223:          0          0          0          0          0          0         38          0   ITS-MSI 524293 Edge      ce2
-224:          0          0          0          0          0          0          0         31   ITS-MSI 524294 Edge      ce3
-225:          0          0          0          0          0          0          0          0   ITS-MSI 524295 Edge      ce5
-226:          0          0          0          0          0          0          0          0   ITS-MSI 524296 Edge      DP_EXT_IRQ
-227:          0          0          0          0          0          0          0          0   ITS-MSI 524297 Edge      DP_EXT_IRQ
-228:          0          0          0          0          0          0          0          0   ITS-MSI 524298 Edge      DP_EXT_IRQ
-229:          0          0          0          0          0          0          0          0   ITS-MSI 524299 Edge      DP_EXT_IRQ
-230:          0          0          0          0          0          0          0          0   ITS-MSI 524300 Edge      DP_EXT_IRQ
-231:          0          0          0          0          0          0          0          0   ITS-MSI 524301 Edge      DP_EXT_IRQ
-232:          0          0          0          0          0          0          0          0   ITS-MSI 524302 Edge      DP_EXT_IRQ
+What's more, I remembered it *wrongly* and thought it need to be 
+accessed through MMIO. After checking the vendor code again, this 
+doesn't exist.
 
-NVMe in SM8550-HDK M.2 Slot using GIC-ITS:
-212:          0          0         22          0          0          0          0          0   ITS-MSI 134742016 Edge      nvme0q0
-213:     133098          0          0          0          0          0          0          0   ITS-MSI 134742017 Edge      nvme0q1
-214:          0     139450          0          0          0          0          0          0   ITS-MSI 134742018 Edge      nvme0q2
-215:          0          0     139476          0          0          0          0          0   ITS-MSI 134742019 Edge      nvme0q3
-216:          0          0          0      69767          0          0          0          0   ITS-MSI 134742020 Edge      nvme0q4
-217:          0          0          0          0      80368          0          0          0   ITS-MSI 134742021 Edge      nvme0q5
-218:          0          0          0          0          0      77315          0          0   ITS-MSI 134742022 Edge      nvme0q6
-219:          0          0          0          0          0          0      73022          0   ITS-MSI 134742023 Edge      nvme0q7
-220:          0          0          0          0          0          0          0     329993   ITS-MSI 134742024 Edge      nvme0q8
+So it seem like that it's a good idea to move it back to at803x driver.
 
-Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
----
-Changes in v2:
-- fixed commit msg
-- Link to v1: https://lore.kernel.org/r/20240122-topic-sm8550-upstream-pcie-its-v1-1-aff5d0d7d6dd@linaro.org
----
- arch/arm64/boot/dts/qcom/sm8550.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/sm8550.dtsi b/arch/arm64/boot/dts/qcom/sm8550.dtsi
-index ee1ba5a8c8fc..9860bda3be1d 100644
---- a/arch/arm64/boot/dts/qcom/sm8550.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sm8550.dtsi
-@@ -1742,6 +1742,9 @@ pcie0: pcie@1c00000 {
- 					<&gem_noc MASTER_APPSS_PROC 0 &cnoc_main SLAVE_PCIE_0 0>;
- 			interconnect-names = "pcie-mem", "cpu-pcie";
- 
-+			/* Entries are reversed due to the unusual ITS DeviceID encoding */
-+			msi-map = <0x0 &gic_its 0x1401 0x1>,
-+				  <0x100 &gic_its 0x1400 0x1>;
- 			iommu-map = <0x0   &apps_smmu 0x1400 0x1>,
- 				    <0x100 &apps_smmu 0x1401 0x1>;
- 
-@@ -1838,6 +1841,9 @@ pcie1: pcie@1c08000 {
- 					<&gem_noc MASTER_APPSS_PROC 0 &cnoc_main SLAVE_PCIE_1 0>;
- 			interconnect-names = "pcie-mem", "cpu-pcie";
- 
-+			/* Entries are reversed due to the unusual ITS DeviceID encoding */
-+			msi-map = <0x0 &gic_its 0x1481 0x1>,
-+				  <0x100 &gic_its 0x1480 0x1>;
- 			iommu-map = <0x0   &apps_smmu 0x1480 0x1>,
- 				    <0x100 &apps_smmu 0x1481 0x1>;
- 
+> 
+>> +#define IPQ5018_PHY_ID			0x004dd0c0
+> 
+> is in the Atheros OUI range.
+> 
+>> +static int ipq5018_probe(struct phy_device *phydev)
+>> +{
+>> +	struct ipq5018_phy *priv;
+>> +	struct device *dev = &phydev->mdio.dev;
+>> +	char name[64];
+>> +	int ret;
+> 
+> I guess you are new to mainline network. Please read:
+> 
+> https://www.kernel.org/doc/html/latest/process/maintainer-netdev.html
+> 
+> Section 1.6.4.
 
----
-base-commit: 6613476e225e090cc9aad49be7fa504e290dd33d
-change-id: 20240122-topic-sm8550-upstream-pcie-its-06f4b61dfe9d
+Sorry for missing it, will read it later.
 
-Best regards,
--- 
-Neil Armstrong <neil.armstrong@linaro.org>
+> 
+>> +
+>> +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+>> +	if (!priv)
+>> +		return dev_err_probe(dev, -ENOMEM,
+>> +				     "failed to allocate priv\n");
+> 
+> Please read the documentation of dev_err_probe() and this fix the
+> obvious problem with this.
+
+I had read it and I had known this helper function is to resolve the 
+duplicate code for EPROBE_DEFER.
+
+But it also say "Note that it is deemed acceptable to use this function 
+for error prints during probe even if the @err is known to never be 
+-EPROBE_DEFER. The benefit compared to a normal dev_err() is the 
+standardized format of the error code and the fact that the error code 
+is returned."
+
+And I can find the same code in other driver, so I thought it is a 
+standard. Or should I just return -ENOMEM? Please let me known.
+
+> 
+>> +	snprintf(name, sizeof(name), "%s#rx", dev_name(dev));
+>> +	priv->clk_rx = clk_hw_register_fixed_rate(dev, name, NULL, 0,
+>> +						  TX_RX_CLK_RATE);
+>> +	if (IS_ERR_OR_NULL(priv->clk_rx))
+>> +		return dev_err_probe(dev, PTR_ERR(priv->clk_rx),
+>> +				     "failed to register rx clock\n");
+>> +
+>> +	snprintf(name, sizeof(name), "%s#tx", dev_name(dev));
+>> +	priv->clk_tx = clk_hw_register_fixed_rate(dev, name, NULL, 0,
+>> +						  TX_RX_CLK_RATE);
+>> +	if (IS_ERR_OR_NULL(priv->clk_tx))
+>> +		return dev_err_probe(dev, PTR_ERR(priv->clk_tx),
+>> +				     "failed to register tx clock\n");
+>> +
+>> +	priv->clk_data = devm_kzalloc(dev,
+>> +				      struct_size(priv->clk_data, hws, 2),
+>> +				      GFP_KERNEL);
+>> +	if (!priv->clk_data)
+>> +		return dev_err_probe(dev, -ENOMEM,
+>> +				     "failed to allocate clk_data\n");
+>> +
+>> +	priv->clk_data->num = 2;
+>> +	priv->clk_data->hws[0] = priv->clk_rx;
+>> +	priv->clk_data->hws[1] = priv->clk_tx;
+>> +	ret = of_clk_add_hw_provider(dev->of_node, of_clk_hw_onecell_get,
+>> +				     priv->clk_data);
+>> +	if (ret)
+>> +		return dev_err_probe(dev, ret,
+>> +				     "fail to register clock provider\n");
+> 
+> This needs an explanation. Why register two fixed clocks, which you
+> never use? Why not put these two clocks in DT?
+
+Without documentions, here is my guess:
+
+This is required by GCC controller. GCC driver require TX and RX clocks 
+from GEPHY/UNIPHY. Then throught some sel or div cells, output clocks to 
+GEPHY/UNIPHY and MAC. So I need to register them to make them can be 
+refered in GCC controller. Will add a figure describing the clock tree 
+in UNIPHY driver.
+
+The frequency of these clocks is depends on the mode. For GEPHY, it only 
+supports SGMII ( Or something similar, this is a internal bus ) and the 
+clock is fixed at 1.25G. But for UNIPHY, is supports more mode like 
+SGMII+ which used 3.125G.
+
+> 
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int ipq5018_soft_reset(struct phy_device *phydev)
+>> +{
+>> +	int ret;
+>> +
+>> +	ret = phy_modify(phydev, IPQ5018_PHY_FIFO_CONTROL,
+>> +			 IPQ5018_PHY_FIFO_RESET, 0);
+>> +	if (ret < 0)
+>> +		return ret;
+>> +
+>> +	msleep(50);
+>> +
+>> +	ret = phy_modify(phydev, IPQ5018_PHY_FIFO_CONTROL,
+>> +			 IPQ5018_PHY_FIFO_RESET, IPQ5018_PHY_FIFO_RESET);
+>> +	if (ret < 0)
+>> +		return ret;
+>> +
+>> +	return 0;
+>> +}
+> 
+> This needs an explanation. It is also somewhat like
+> qca808x_link_change_notify(). Is it really sufficient to only do this
+> reset FIFO during a soft reset, or is it needed when ever the link
+> changes?
+
+I'm not sure here, this is what u-boot does. But I guess, we can reset 
+GCC_GEPHY_* serial reset_controls.
+
+> 
+> You also appear to be missing device tree bindings.
+
+Sorry for forgeting to add a WiP tag. Will add dt-bindings documentions 
+in next patches.
+
+> 
+>      Andrew
+> 
+> ---
+> pw-bot: cr
+> 
+
 
