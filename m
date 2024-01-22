@@ -1,147 +1,84 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mail-m12772.qiye.163.com (mail-m12772.qiye.163.com [115.236.127.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8CB021362
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 10:48:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75BB939863;
+	Mon, 22 Jan 2024 10:48:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.236.127.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705920485; cv=none; b=m5jOptErBo/KDyZVxReeDnS/MnwqOhEOYxft/lTrNiKrHK81uePj0kzBcM3MQwQlH63s1rrtV3Ew/H69kNeEzIXHxPihdnvPXIUo2DyAV3hY0e5koD0LzYZTV366OTQpVjo1UVhd04+bMvICAcbFmSRdjzDyT80o0BFIy6jDEXI=
+	t=1705920525; cv=none; b=DxWsuncJZzZCy0+ygX5fw2tsnC7PH8AabmL77aLpQqbCSsq3BGQeZm6woLHogNvUu+A6Lz3hLwjrPIAHG++2huhEXVVdGB2KvIZek7plxhjltcyn+tTCjnr1XwzX98xHin/smuVt9PfDcwq5GnRvBPbi0AWtiXrSy8v+cYLBdzc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705920485; c=relaxed/simple;
-	bh=UMEPrzsFfMwcLb6gpEQxDtl8Y3dVJdxWPuxxS76bS/E=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=C/+FAgqPb/NfOo+wLh4ibOfhZ5tKmKAcIbxphpahMRQw5nEIYR05GSX/3F/Bk+3xAgideJn27Ex2evOCUPnQON0evzKHMt3crvJ10EAHT0x43yJQqZI49jeXF/2WzyaXeFh2lkN/CNwD9tpXr3Kk0aHie0Ji5EKCqSs2KhFzSgo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IlnEHFP5; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1705920525; c=relaxed/simple;
+	bh=2D2Bz6kHSRQ55n//fD6i/rFr8iCWh5oGDoAjdduw0V8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Whe4I+WCpWtLFYmWEnVke/rUa74wvg7+IOZEHD2YqvFjI2EFuqLnVUjguvayzjRQabiXtvosQuDm2usoFgkskg2i1zl+GKlP/32LAMqFnkRiHM0zOU8nw0p4AGaIAQSiYGGToHN28V2hP5fxbCy0rmt90MX85o9MmeDqo74RYkM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=JcARR62G; arc=none smtp.client-ip=115.236.127.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IlnEHFP5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1705920482;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SAQacrX86fqUD9K4Yvf7W+7v6QcN6oGZap2bo4/kXUo=;
-	b=IlnEHFP5obKsWJLjfj6TjV1OmZg5Dq4lx8slAphgF8HPCWMR98o3glL5hZdNEuM/K7SlDB
-	LLEFA95XYkpeB2JDvlDAxwV7VYttDDVwxJtWp1YtU4IdH+CsTE9v2B4u4JDHX4SPFt1Ohe
-	AP9RhuwOcn0Gc6ZQlaMMDeI42r6N8QE=
-Received: from mail-yw1-f199.google.com (mail-yw1-f199.google.com
- [209.85.128.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-303-Rtdmxc_aPIiYyu3HbYW08g-1; Mon, 22 Jan 2024 05:47:59 -0500
-X-MC-Unique: Rtdmxc_aPIiYyu3HbYW08g-1
-Received: by mail-yw1-f199.google.com with SMTP id 00721157ae682-5ffc7ce3343so15606737b3.1
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 02:47:59 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705920479; x=1706525279;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SAQacrX86fqUD9K4Yvf7W+7v6QcN6oGZap2bo4/kXUo=;
-        b=p6a/UsFny0u4zowilHMt/o+HueI2wSdM/F1r+GZhkMwsX9QGbmAaYOuI+A2yTCxwSN
-         ghcNpqjA31Qmn736gT+rGxsPNiDPzSriCr0JMs+gA21iTC02AE7phYYFobrHJeENdxPL
-         uPC+oebLmeqJ7C30Q0G/Kjw7JWjaBaTpe4BBoq+tLfsKSWuc1zlowZKVODVrk5QiivSH
-         M3j7JGUko5lViWCpx3YV9tOk64JkSaYns9vqqMkEzmpqi1SlFXqTdDPXzNoqEEQ/BYq/
-         7IBEnqLinhUPYOWdUEqdY8pR4iIK6F/1noF+imOyMLHzjJkp09ZRFOEIt++JfkhNdYcq
-         2xFQ==
-X-Gm-Message-State: AOJu0YzIaqp/9FZCqIW90yEFodSgT/SlTlv3gxEl72RJ+iRiFCaeJk0W
-	OfouCDZqQjohmeh657HQI1aJqCUvvRwFimA6fgbraDXYJVlX0ucPAVjuywoH/wWI5VYpu5Ar+he
-	R30heca8oFBfVMSivh4A1SVlSsFjJ3tnkf2ofLU4jK7/fuKMhMvF7712zL27o8BH77uIm7lGDsw
-	3exovNQQx0PZBH6jdMKsu29OY8xh9lQRt6P4SI
-X-Received: by 2002:a0d:dbd5:0:b0:5ff:956d:8b7f with SMTP id d204-20020a0ddbd5000000b005ff956d8b7fmr3052786ywe.10.1705920479006;
-        Mon, 22 Jan 2024 02:47:59 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEL9kWBkFrWysbj41gcH1s65ao+SK2QQzY/6YTjr57S5jDjOuIcHyA9BD2Aa+0IG0Ml8khImO/AtDyOFc4vg/0=
-X-Received: by 2002:a0d:dbd5:0:b0:5ff:956d:8b7f with SMTP id
- d204-20020a0ddbd5000000b005ff956d8b7fmr3052778ywe.10.1705920478772; Mon, 22
- Jan 2024 02:47:58 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="JcARR62G"
+DKIM-Signature: a=rsa-sha256;
+	b=JcARR62G5KtOTczFX/WYMFJwV/BvIRt2AmOWqsI1F5xn2azbR1xwfIQam//ayqB3aKfspGrMC9fY0tBB9FZzT3sHJBj+EPjveLpBsCzGMyHfQlzypNXyQiP9gFsfBZu93//q/pt3zAbRPddIoN9HshO+YNMClt/SwMbIfbfH+ZI=;
+	c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
+	bh=BomGdr3zph+RbyeW62SV+s3dc8I4NnnTpRyEiySaDz8=;
+	h=date:mime-version:subject:message-id:from;
+Received: from [172.16.12.141] (unknown [58.22.7.114])
+	by mail-m12758.qiye.163.com (Hmail) with ESMTPA id E3EF3AE04E2;
+	Mon, 22 Jan 2024 18:10:13 +0800 (CST)
+Message-ID: <a7e5304a-1cfd-4f38-8708-bfca30f0ef7f@rock-chips.com>
+Date: Mon, 22 Jan 2024 18:10:13 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <1705519403-255169-1-git-send-email-steven.sistare@oracle.com> <mhnsrwlvqjeftu5aa77iaowdk2wrq366yofjchbn5fwchgcbna@kcjtoj46fawi>
-In-Reply-To: <mhnsrwlvqjeftu5aa77iaowdk2wrq366yofjchbn5fwchgcbna@kcjtoj46fawi>
-From: Eugenio Perez Martin <eperezma@redhat.com>
-Date: Mon, 22 Jan 2024 11:47:22 +0100
-Message-ID: <CAJaqyWcLj7Y0rm3_jdfP8KgS4gkE9ns286XJywBGE0iijMireQ@mail.gmail.com>
-Subject: Re: [PATCH V1] vdpa_sim: reset must not run
-To: Stefano Garzarella <sgarzare@redhat.com>
-Cc: Steve Sistare <steven.sistare@oracle.com>, virtualization@lists.linux-foundation.org, 
-	linux-kernel@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>, 
-	Jason Wang <jasowang@redhat.com>, Si-Wei Liu <si-wei.liu@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/3] Add support for RK3588 HDMI/DP Combo PHY
+To: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
+ Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
+ Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
+ Philipp Zabel <p.zabel@pengutronix.de>, Johan Jonker <jbx6244@gmail.com>,
+ Sebastian Reichel <sebastian.reichel@collabora.com>,
+ Sascha Hauer <s.hauer@pengutronix.de>, Algea Cao <algea.cao@rock-chips.com>
+Cc: linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
+ linux-kernel@vger.kernel.org, kernel@collabora.com
+References: <20240119193806.1030214-1-cristian.ciocaltea@collabora.com>
+ <417281cd-23b1-4948-8c5a-b9820dff65aa@collabora.com>
+Content-Language: en-US
+From: Andy Yan <andy.yan@rock-chips.com>
+In-Reply-To: <417281cd-23b1-4948-8c5a-b9820dff65aa@collabora.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGUxIGlZDSEwdGU1LHkodSxlVEwETFh
+	oSFyQUDg9ZV1kYEgtZQVlOQ1VJSVVMVUpKT1lXWRYaDxIVHRRZQVlPS0hVSk1PSU5IVUpLS1VKQk
+	tLWQY+
+X-HM-Tid: 0a8d30a6318cb225kuuue3ef3ae04e2
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6KzY6FRw*HTwhEA83TjcdMxAS
+	TAFPCTNVSlVKTEtOQkpDSUpOS0pLVTMWGhIXVRoVHwJVAhoVOwkUGBBWGBMSCwhVGBQWRVlXWRIL
+	WUFZTkNVSUlVTFVKSk9ZV1kIAVlBSEpJSjcG
 
-On Mon, Jan 22, 2024 at 11:22=E2=80=AFAM Stefano Garzarella <sgarzare@redha=
-t.com> wrote:
->
-> On Wed, Jan 17, 2024 at 11:23:23AM -0800, Steve Sistare wrote:
-> >vdpasim_do_reset sets running to true, which is wrong, as it allows
-> >vdpasim_kick_vq to post work requests before the device has been
-> >configured.  To fix, do not set running until VIRTIO_CONFIG_S_FEATURES_O=
-K
-> >is set.
-> >
-> >Fixes: 0c89e2a3a9d0 ("vdpa_sim: Implement suspend vdpa op")
-> >Signed-off-by: Steve Sistare <steven.sistare@oracle.com>
-> >Reviewed-by: Eugenio P=C3=A9rez <eperezma@redhat.com>
-> >---
-> > drivers/vdpa/vdpa_sim/vdpa_sim.c | 3 ++-
-> > 1 file changed, 2 insertions(+), 1 deletion(-)
-> >
-> >diff --git a/drivers/vdpa/vdpa_sim/vdpa_sim.c b/drivers/vdpa/vdpa_sim/vd=
-pa_sim.c
-> >index be2925d0d283..6304cb0b4770 100644
-> >--- a/drivers/vdpa/vdpa_sim/vdpa_sim.c
-> >+++ b/drivers/vdpa/vdpa_sim/vdpa_sim.c
-> >@@ -160,7 +160,7 @@ static void vdpasim_do_reset(struct vdpasim *vdpasim=
-, u32 flags)
-> >               }
-> >       }
-> >
-> >-      vdpasim->running =3D true;
-> >+      vdpasim->running =3D false;
-> >       spin_unlock(&vdpasim->iommu_lock);
-> >
-> >       vdpasim->features =3D 0;
-> >@@ -483,6 +483,7 @@ static void vdpasim_set_status(struct vdpa_device *v=
-dpa, u8 status)
-> >
-> >       mutex_lock(&vdpasim->mutex);
-> >       vdpasim->status =3D status;
-> >+      vdpasim->running =3D (status & VIRTIO_CONFIG_S_FEATURES_OK) !=3D =
-0;
-> >       mutex_unlock(&vdpasim->mutex);
->
-> Should we do something similar also in vdpasim_resume() ?
->
-> I mean something like this:
->
-> diff --git a/drivers/vdpa/vdpa_sim/vdpa_sim.c b/drivers/vdpa/vdpa_sim/vdp=
-a_sim.c
-> index be2925d0d283..55e4633d5442 100644
-> --- a/drivers/vdpa/vdpa_sim/vdpa_sim.c
-> +++ b/drivers/vdpa/vdpa_sim/vdpa_sim.c
-> @@ -520,7 +520,7 @@ static int vdpasim_resume(struct vdpa_device *vdpa)
->          int i;
->
->          mutex_lock(&vdpasim->mutex);
-> -       vdpasim->running =3D true;
-> +       vdpasim->running =3D (vdpasim->status & VIRTIO_CONFIG_S_FEATURES_=
-OK) !=3D 0;
->
->          if (vdpasim->pending_kick) {
->                  /* Process pending descriptors */
->
-> Thanks,
-> Stefano
->
+Hi Cristian:
 
-The suspend and resume operation should not be called before
-DRIVER_OK, so maybe we should add that protection at
-drivers/vhost/vdpa.c actually?
+On 1/20/24 07:41, Cristian Ciocaltea wrote:
+> On 1/19/24 21:38, Cristian Ciocaltea wrote:
+>> Add driver and bindings to support the Rockchip HDMI/eDP TX Combo PHY
+>> found on RK3588 SoC.
+>>
+>> The PHY is based on a Samsung IP block and supports HDMI 2.1 TMDS, FRL
+>> and eDP links.
+>>
+>> The HDMI link has been tested on Rock 5B and EVB1 boards.
+> 
+> I missed to highlight there is no eDP support provided by the current
+> implementation.  Downstream kernel has a separate driver for that and at
+> the moment I don't have the hardware to wire this up.
+> 
+> Will include this statement in v2.
 
-Thanks!
-
+The PHY is used for HDMI and eDP on rk3588, and should used be exclusively.
+so I think should s/DP/eDP/ in  all description.
