@@ -1,149 +1,126 @@
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9581059B69
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 17:37:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A66B66B50;
+	Mon, 22 Jan 2024 17:37:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705945042; cv=none; b=V2s5J7iVHtWTJHuuCcbdLFo87RODfR7NZGh6Z8i/02vMqYSaxPl4XJRjje6k3MzVCHT+/Z40YJ+eiCi9NLTFMtT7wZgZxkrhFbjheWQvIGga4IVwscWSfyUM1J9xx/CArPfbisnMX5neP0ld6m1tEiQvFdy0r4w5Arz17foXQyA=
+	t=1705945056; cv=none; b=InSuGj+sut7AB6e3+oqh7dHsAVJtIco/4MeUg/7HmLS2IPgyFYRBtcTrlZLrfp3LVSqhcS6Oxn+xAIUVQWBWIE+m7pjU0jRe/HBRAsAJHwiuy1GE1QPMzGf+qEo1XRI0RCIjyQyO8xJLoooNNObEwayx0/amNCxk6Lr/jkNjd40=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705945042; c=relaxed/simple;
-	bh=m8kPm/j1LsdrYXYN+YQDJ7r2rWymD6BOjcIeRkuQtHQ=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=cMyZCcKfnHiKjkY+Eqa3a8Nkzqz+7cz7Z+5iQPVX/h916gxGvkTLJXHjfyIyjBRs1Cmrt56YfukiVTRNR6/XnZSDH1fkFG6xja5W6O4lXT/uV1/0Qqs0X6mu3fdffDVg3cUOwgvLmDkutV5Xv/TbmLj53dAZxHR+zeyvAmurSzk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=BfY0v7rd; arc=none smtp.client-ip=209.85.208.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1705945056; c=relaxed/simple;
+	bh=8WYz4IV5sJnk5aen6jbAq+q3NiEqFAzxRle76P/6Bcg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bHEUgjEpNrcwO2M4nSU0PXdsHvawUl8PF2rt599eW0kBLAmpmp/EB6JbKdoUzf+vdGyCBNXFc+MeLNgssLZCy89vN88LncP5E0AvxVRFtOfC8ZcJw+xgTOxyO9nm5E7I2XEJ3qXwcXWXsdJeNDJ3hV8CAASyi7YsGmbUvY7D7rQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=GxcCDIxd; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="BfY0v7rd"
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2ccae380df2so33438761fa.1
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 09:37:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1705945038; x=1706549838; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=s9fIVUDS4JPjZqnrZBBkM7zrxIcZN1SBne4vcNi0x/g=;
-        b=BfY0v7rdDpiZmmLYYWoDuF0YGEp4K60GdHWqajby71boVGC+Cx4MCVWe2LEGjUDLSF
-         W3PgujIF3cQnKaeevPdoqwDC4p6jFFYyZC89Tcpww66tRVUTjpmO19rM2IVK4h9YavVy
-         9mbH4cJuneSFhXQkUvwKzqhmvxCqSEmMIQKFGPsvDMxGvVVTPzJrdeEn6xME3pz3EIFF
-         XbobTiM2JA5pM8Bov8H4Bd+3voY0WLU95PnjM5MZmHUxd5ZwsYQxSJVmgnb5HCsSfxYt
-         pEbW56jgInd/J19p/bpeQ9bRZEezjH6CP2j93CvjnuNANu4L4357o86RMqe23ct+Si3A
-         rf1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705945038; x=1706549838;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=s9fIVUDS4JPjZqnrZBBkM7zrxIcZN1SBne4vcNi0x/g=;
-        b=J2m3jjChfkiHC7ShytuZ1Ap+05x6aaEy9YqaSf9un3hKr82+TRVNbsJk+OoZ+V16en
-         SL9D7+M/N/NUREwzzqkf9GQ47AisSer+QgZas5LkyJauxaui3r8D1vp+rWj6ny7URdZP
-         I52IbUxXzbCLFwZmQzE70pj7vdqHYSpoHiylGrDzXmOxqHGSd1F8v8IzaogWajZEZqHI
-         /t7Ck9cbEfg8qCxE630jvf5/vZ+nKQWZMOZubB83tkcvP6ToQEZKSJ8QJPYh2BJJRfKm
-         gUuxQ9FyzB/lUQKM4jLdgPR7cuvISw8YslzN3K+NKVioW0y6HPpFoTbwakoiukBp6znb
-         9CoQ==
-X-Gm-Message-State: AOJu0Yz9tej+0uTiXqSEXTrkjlf52bJvs5ECSn3VMQv19uI8U/MkNhTc
-	xLgHErwKDGNFMClVlW6EXSuj9MWZbESWtqHvxfqUwfUPFXmIbakK6jZ1167Shuo=
-X-Google-Smtp-Source: AGHT+IGtMtcqWkvVLEoaIeMoHtV2CsA0V+GTi7mnCKwegjzg2YjeUcTa13uMM6pmGiJG+dRvm4j+ag==
-X-Received: by 2002:a2e:a4a7:0:b0:2cc:ceb2:372a with SMTP id g7-20020a2ea4a7000000b002ccceb2372amr1541040ljm.96.1705945038673;
-        Mon, 22 Jan 2024 09:37:18 -0800 (PST)
-Received: from ?IPv6:2804:30c:974:ac00:1b02:e2fd:23be:79bc? ([2804:30c:974:ac00:1b02:e2fd:23be:79bc])
-        by smtp.gmail.com with ESMTPSA id j26-20020a056e02221a00b00361a166564csm3015628ilf.4.2024.01.22.09.37.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jan 2024 09:37:18 -0800 (PST)
-Message-ID: <dfcf46def7a4b27e30bed0e832fbf24fd7b36310.camel@suse.com>
-Subject: Re: [PATCH v6 1/3] kselftests: lib.mk: Add TEST_GEN_MODS_DIR
- variable
-From: Marcos Paulo de Souza <mpdesouza@suse.com>
-To: Shuah Khan <skhan@linuxfoundation.org>, Shuah Khan <shuah@kernel.org>, 
- Jonathan Corbet <corbet@lwn.net>, Heiko Carstens <hca@linux.ibm.com>,
- Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev
- <agordeev@linux.ibm.com>, Christian Borntraeger
- <borntraeger@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>, Josh
- Poimboeuf <jpoimboe@kernel.org>, Jiri Kosina <jikos@kernel.org>, Miroslav
- Benes <mbenes@suse.cz>, Petr Mladek <pmladek@suse.com>, Joe Lawrence
- <joe.lawrence@redhat.com>
-Cc: linux-kselftest@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org, 
-	live-patching@vger.kernel.org
-Date: Mon, 22 Jan 2024 14:37:09 -0300
-In-Reply-To: <5aceb855-2862-4d53-b27b-50e2956e099b@linuxfoundation.org>
-References: <20240112-send-lp-kselftests-v6-0-79f3e9a46717@suse.com>
-	 <20240112-send-lp-kselftests-v6-1-79f3e9a46717@suse.com>
-	 <5aceb855-2862-4d53-b27b-50e2956e099b@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.1 
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="GxcCDIxd"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=Tpq99Xn3oyUQ1UeFUe2J523sJUHds2quY0PBRgIFX08=; b=GxcCDIxdcwixCbMs9SgULyWG0E
+	wCMQM9VlMDAwLQxTgpHTEnRfE7msH3WejKCDAHDyw87vHsUC+aNXNRD5jNUUHo0qapTZA38hZrvJZ
+	53K0QFJlwd5MNlRh0P8e6SnP37AmP2XpUWXxNWqzhwcI/X3UQ95Ykmav1x5+PGmO4et3HnLPPxJ0m
+	Ovo2XLa+Jaq5M5MgSObj3Z+PHWiB4+DorhpvG0pA59gH/tQGUs3xQUfmp57dswHCfYH54aZiBnGwQ
+	aGo7q/CvW8kcAt7Ga7nDj7uHEPQQsZl1YGmuv0vUAqKgOCyJXWhLwIOjPfq76ejYFSQo4GqGevKVU
+	rqsU1+RQ==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:56168)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1rRyEA-0001Ho-0p;
+	Mon, 22 Jan 2024 17:36:54 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1rRyE0-0001CD-Mi; Mon, 22 Jan 2024 17:36:44 +0000
+Date: Mon, 22 Jan 2024 17:36:44 +0000
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Lei Wei <quic_leiwei@quicinc.com>
+Cc: Luo Jie <quic_luoj@quicinc.com>, agross@kernel.org,
+	andersson@kernel.org, konrad.dybcio@linaro.org, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org, corbet@lwn.net, catalin.marinas@arm.com,
+	will@kernel.org, p.zabel@pengutronix.de, shannon.nelson@amd.com,
+	anthony.l.nguyen@intel.com, jasowang@redhat.com,
+	brett.creeley@amd.com, rrameshbabu@nvidia.com,
+	joshua.a.hay@intel.com, arnd@arndb.de, geert+renesas@glider.be,
+	neil.armstrong@linaro.org, dmitry.baryshkov@linaro.org,
+	nfraprado@collabora.com, m.szyprowski@samsung.com, u-kumar1@ti.com,
+	jacob.e.keller@intel.com, andrew@lunn.ch, netdev@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, ryazanov.s.a@gmail.com,
+	ansuelsmth@gmail.com, quic_kkumarcs@quicinc.com,
+	quic_suruchia@quicinc.com, quic_soni@quicinc.com,
+	quic_pavir@quicinc.com, quic_souravp@quicinc.com,
+	quic_linchen@quicinc.com
+Subject: Re: [PATCH net-next 18/20] net: ethernet: qualcomm: Add PPE MAC
+ support for phylink
+Message-ID: <Za6nrICG8gjwTsJ9@shell.armlinux.org.uk>
+References: <20240110114033.32575-1-quic_luoj@quicinc.com>
+ <20240110114033.32575-19-quic_luoj@quicinc.com>
+ <ZZ6LGiSde4hHM+6j@shell.armlinux.org.uk>
+ <fc9c3e08-a83c-4748-89e4-8b7b0c62da7f@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fc9c3e08-a83c-4748-89e4-8b7b0c62da7f@quicinc.com>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-On Mon, 2024-01-22 at 10:15 -0700, Shuah Khan wrote:
-> On 1/12/24 10:43, Marcos Paulo de Souza wrote:
-> > Add TEST_GEN_MODS_DIR variable for kselftests. It can point to
-> > a directory containing kernel modules that will be used by
-> > selftest scripts.
-> >=20
-> > The modules are built as external modules for the running kernel.
-> > As a result they are always binary compatible and the same tests
-> > can be used for older or newer kernels.
-> >=20
-> > The build requires "kernel-devel" package to be installed.
-> > For example, in the upstream sources, the rpm devel package
-> > is produced by "make rpm-pkg"
-> >=20
-> > The modules can be built independently by
-> >=20
-> > =C2=A0=C2=A0 make -C tools/testing/selftests/livepatch/
-> >=20
-> > or they will be automatically built before running the tests via
-> >=20
-> > =C2=A0=C2=A0 make -C tools/testing/selftests/livepatch/ run_tests
-> >=20
-> > Note that they are _not_ built when running the standalone
-> > tests by calling, for example, ./test-state.sh.
-> >=20
-> > Along with TEST_GEN_MODS_DIR, it was necessary to create a new
-> > install
-> > rule. INSTALL_MODS_RULE is needed because INSTALL_SINGLE_RULE would
-> > copy the entire TEST_GEN_MODS_DIR directory to the destination,
-> > even
-> > the files created by Kbuild to compile the modules. The new install
-> > rule copies only the .ko files, as we would expect the gen_tar to
-> > work.
-> >=20
-> > Reviewed-by: Joe Lawrence <joe.lawrence@redhat.com>
-> > Reviewed-by: Petr Mladek <pmladek@suse.com>
-> > Signed-off-by: Marcos Paulo de Souza <mpdesouza@suse.com>
-> > ---
-> > =C2=A0 Documentation/dev-tools/kselftest.rst |=C2=A0 4 ++++
-> > =C2=A0 tools/testing/selftests/lib.mk=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 | 26 +++++++++++++++++++++-
-> > ----
->=20
->=20
-> Hi Marcos,
->=20
-> I would like the doc patch and lib.mk patch separate. If lib.mk needs
-> changes
-> we don't have to touch the doc patch.
+On Mon, Jan 22, 2024 at 11:01:26PM +0800, Lei Wei wrote:
+> 
+> 
+> On 1/10/2024 8:18 PM, Russell King (Oracle) wrote:
+> > On Wed, Jan 10, 2024 at 07:40:30PM +0800, Luo Jie wrote:
+> > > @@ -352,6 +1230,12 @@ static int ppe_port_maxframe_set(struct ppe_device *ppe_dev,
+> > >   }
+> > >   static struct ppe_device_ops qcom_ppe_ops = {
+> > > +	.phylink_setup = ppe_phylink_setup,
+> > > +	.phylink_destroy = ppe_phylink_destroy,
+> > > +	.phylink_mac_config = ppe_phylink_mac_config,
+> > > +	.phylink_mac_link_up = ppe_phylink_mac_link_up,
+> > > +	.phylink_mac_link_down = ppe_phylink_mac_link_down,
+> > > +	.phylink_mac_select_pcs = ppe_phylink_mac_select_pcs,
+> > >   	.set_maxframe = ppe_port_maxframe_set,
+> > >   };
+> > 
+> > Why this extra layer of abstraction? If you need separate phylink
+> > operations, why not implement separate phylink_mac_ops structures?
+> > 
+> 
+> This PPE driver will serve as the base driver for higher level drivers
+> such as the ethernet DMA (EDMA) driver and the DSA switch driver.
 
-Hi Shuah,
-on patch 2/3 you also said that you would like to have the
-documentation changes split in the future, and that you picked the
-changes into a testing branch. Does it also applies to this patch?
+Why not have the higher level drivers provide a pointer to the
+appropriate phylink_mac_ops structure? Having extra levels of
+indirection makes my future maintenance of phylink harder (I'm already
+bugged by DSA doing this, and it's a right pain.)
 
-Do I need to resend the three patches and separate the documentation
-part into a new one, or can I apply this rationale to future changes to
-lib.mk? Sorry, I'm confused.
+For example, if one of your higher level drivers needs the mac_prepare
+or mac_finish functionality, you have to add a shim, extra function
+pointers and so on.
 
-Thanks in advance,
-  Marcos
+If I need to add an extra parameter to a method, then I have to fix
+up your shim layer _as well_ as all the called methods - in other
+words, it adds extra maintenance burden.
 
->=20
-> thanks,
-> -- Shuah
+It also makes detecting whether an implementation provides something
+or not harder - see the problems when mac_select_pcs() was introduced
+and rather than testing to see whether the method is populated, we
+have to call the method with a dummy value to discover whether the
+sub-driver implements it or not. Honestly, I would really like to get
+rid of DSA's phylink_mac_ops shim layer.
 
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
