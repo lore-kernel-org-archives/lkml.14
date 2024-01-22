@@ -1,141 +1,232 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C981220DDA;
-	Mon, 22 Jan 2024 07:55:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18BB017BD2
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 07:56:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705910117; cv=none; b=dvV5Ewq9B3+aUeIPNjoC3fo/bcovJ4jz0wcS7ZJWDLqsV3NX0w5S0vGEIG7u/h+tkWlg5scvmDL0AAzrctxMos34r5mGY/K9dCQTUF2mNpp1JHIwzMJx6l9/cp/y8bTqxOLaF2YMME9hHeR/kPNFbaTyPPLpQYtH4q8lgYqMhbY=
+	t=1705910181; cv=none; b=LbaS/lo1GMOMZ1weMPmHqpRxEAkv9EJlVzaEeKHgMtFRc3SddV4xhKMbQGoPnTgCLQNMhHtsKx0BnHFDJVCstO8xiX7O9959dnhh2XH3Zn37RaZUAWhlZOlSy08/mGhTftLgZX4ODETcKiyy4M9HZ41MzvEb8RND78GF6Dbeha8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705910117; c=relaxed/simple;
-	bh=OlIF/YgaBAY0KyswtUOGGdnsqxNRgTdzZnKd+teQ718=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=g3hsWDB2OFBYmoO1zrlSvvkHYHdvRa9GHMBD+AedHJvMN0AFWvNYRZ2rCvlvI4/bD8LsoPVbCqzzqmIkrfM2gWXV+5/ONsRbQhdCQSEV6rVmxYsbHUW+1kB+7dUImPeXWfznWWUZY9ZdJOSeBZzgyJGNwu0MwA1VNjNeCEnwarA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uDyYzwoQ; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uDyYzwoQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D660EC433F1;
-	Mon, 22 Jan 2024 07:55:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705910117;
-	bh=OlIF/YgaBAY0KyswtUOGGdnsqxNRgTdzZnKd+teQ718=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=uDyYzwoQ8xCvf7wsWZYBF72Aa+S38tDJDyaj4uJmgonltMWcHGjY/BO/Hy5cGn886
-	 uoB70SMEzpuE9X/6YakmQOIYpELnIj9ehkCXV1+WZf50U6VVuTgakTKvseAj7U7QPX
-	 arbEXg1qPFoID/WpCszL6c7s8sTHRkAxAAVNV6x0pqoKhZae+KDBeMdLcWRNh6cxf8
-	 Qfk8S809uuwjxvUmVu7ZljaalsBEU7KPIMi9oJ5xv4WO8lq7GIl0preIJw/EPsaEyK
-	 fL6s1jGVTBqLYrtGiNb7QMJkswWkL+vpPtIIdPmqymVXEV+CK8JtTmZlUP6+WvZ0nx
-	 GskgLhvwPsg6A==
-Message-ID: <01c61975-cc78-4045-8c60-bb11045a7c97@kernel.org>
-Date: Mon, 22 Jan 2024 08:55:13 +0100
+	s=arc-20240116; t=1705910181; c=relaxed/simple;
+	bh=lIkp4WS6tsZeLM/HOMKd7E5IP/q50HZVhoOHHjaOCZE=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=bwQr69iVJLn8jYWFeENVYyuVkpQ6I6z5f9jURogTGCAS+vc+WEa5XzX+4G2C4OAZ5VUJ/zsr/kEUulz2CcPYynveHNdPI+DqikvIYL61oMiSoW+55kLJo9BOf1sHuGh3r7mjzCa7KV9fMXsqX+rv+bc0SSN146GngUtl2UbnfIc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-36280fd2213so1399145ab.1
+        for <linux-kernel@vger.kernel.org>; Sun, 21 Jan 2024 23:56:19 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705910179; x=1706514979;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Zplnq0PvF89EcZVIkc+zWSM0JISJ0UOuIUavi6LXGuQ=;
+        b=LweTuAPAVwWuKm9QkYTtbuDLmYUpOir9n+TSDyrkasljl5wurvh/iP/+mx+ugVZ14Z
+         yQOp88TEKPfX4VYnuwjMQcWYiSAZsqScEuGqq7maRZUqrSpw3MNpl1kriQvoZmvr6x4v
+         TdXIaUbKsKgXOfw5Ow3BsNaVNNBf0rARDja3w0R2wCaK/C76p5BOjXFMpkzFe0cSRPU4
+         /f3hhSdQpvWS4kSOj5R47TiTH6aY+8RjtGP4QcAuvCiQmj1orOIaQiXqfqzp6b1Jr8/M
+         Q1VkuXwXSIMdMXq4tOkCTARL5Qv5H0LxJc8lvJVcTtSY8atNGnil7DBuG6Jn6RZjwo+e
+         NuaA==
+X-Gm-Message-State: AOJu0YyVcfacWpJiuACcKGj9owC7cAaQhr9CIWCkGr54lOAISQhVHwVt
+	zDmXBAf6pZ/75zMLWDrYeDmOG0TWaZXO+T7fzfGmIc6hDMXYECI0bD301LANa4S17ful11vD1zh
+	PDWrKkftetRdb84KUrykNpdS9Ym8v8mPJ2Qxc+pldmYttsNa6ipYAGKs=
+X-Google-Smtp-Source: AGHT+IFrD5pUxmYmPjVk3EP68yHhTH5K0W8jCBZpcee0xdmOfkiw0lxRvFC6BTT0S2z60Yx9jKFSTeppiPxMQ3Lod1sso3tv7uRr
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5/8] clk: qcom: support for duplicate freq in RCG2 freq
- table
-Content-Language: en-US
-To: Ziyang Huang <hzyitc@outlook.com>, mcoquelin.stm32@gmail.com
-Cc: alexandre.torgue@foss.st.com, richardcochran@gmail.com,
- p.zabel@pengutronix.de, matthias.bgg@gmail.com,
- angelogioacchino.delregno@collabora.com, linux-kernel@vger.kernel.org,
- linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
- linux-mediatek@lists.infradead.org, Praveenkumar I <ipkumar@codeaurora.org>,
- Abhishek Sahu <absahu@codeaurora.org>
-References: <TYZPR01MB55563BD6A2B78402E4BB44D4C9762@TYZPR01MB5556.apcprd01.prod.exchangelabs.com>
- <TYZPR01MB5556DEA3D4740441EC561414C9762@TYZPR01MB5556.apcprd01.prod.exchangelabs.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <TYZPR01MB5556DEA3D4740441EC561414C9762@TYZPR01MB5556.apcprd01.prod.exchangelabs.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:1a25:b0:35f:d9cc:1c9b with SMTP id
+ g5-20020a056e021a2500b0035fd9cc1c9bmr600668ile.0.1705910179369; Sun, 21 Jan
+ 2024 23:56:19 -0800 (PST)
+Date: Sun, 21 Jan 2024 23:56:19 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000042993b060f842a0c@google.com>
+Subject: [syzbot] [perf?] WARNING in ctx_sched_in (2)
+From: syzbot <syzbot+4ac05c048fbcdd0e3444@syzkaller.appspotmail.com>
+To: acme@kernel.org, adrian.hunter@intel.com, 
+	alexander.shishkin@linux.intel.com, irogers@google.com, jolsa@kernel.org, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	mark.rutland@arm.com, mingo@redhat.com, namhyung@kernel.org, 
+	peterz@infradead.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On 21/01/2024 13:42, Ziyang Huang wrote:
-> From: Praveenkumar I <ipkumar@codeaurora.org>
-> 
-> Currently RCG code looks up the frequency table during set
-> rate and return the first available frequency greater than
-> requested rate. If CLK_SET_RATE_PARENT flag is set then the
-> set_rate request will go to its parent otherwise the clock
-> framework will configure pre-div, m and n according to the
-> returned frequency table entry. In this case, it is assuming
-> that parent clock will run in the same frequency with which
-> pre-div, m and n has been derived. But it may be possible
-> that the parent clock supports multiple frequency and the
-> same frequency can be derived with different pre-div, m and
-> n values depending upon current frequency.  Also, the same
-> frequency can be derived from different parent sources and
-> currently there is no option for having duplicate
-> frequencies in frequency table and choosing the best one
-> according to current rate.
-> 
-> Now this patch adds the support for having duplicate
-> frequencies in frequency table. During set rate, it will
-> compare the actual rate for each entry with requested rate
-> and will select the best entry in which the difference will
-> be less.
-> 
-> The existing functionality won’t be affected with this code
-> change since this code change will hit only if frequency
-> table has duplicate values.
-> 
-> Change-Id: I97d9e1b55d8f3ee095f6f01729af527ba90e50e5
-> Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
-> (cherry picked from commit 775e7d3b69ffc97afb5bd5a6c9c423f2f4d8a0b2)
-> Signed-off-by: Praveenkumar I <ipkumar@codeaurora.org>
-> 
-> Change-Id: If10193fc79a3c1375ab73597813745ff1f4df0ad
+Hello,
 
-Please run scripts/checkpatch.pl and fix reported warnings. Some
-warnings can be ignored, but the code here looks like it needs a fix.
-Feel free to get in touch if the warning is not clear.
+syzbot found the following issue on:
 
-Best regards,
-Krzysztof
+HEAD commit:    1b1934dbbdcf Merge tag 'docs-6.8-2' of git://git.lwn.net/l..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1275fc93e80000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=68ea41b98043e6e8
+dashboard link: https://syzkaller.appspot.com/bug?extid=4ac05c048fbcdd0e3444
+compiler:       aarch64-linux-gnu-gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+userspace arch: arm64
 
+Unfortunately, I don't have any reproducer for this issue yet.
+
+Downloadable assets:
+disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/384ffdcca292/non_bootable_disk-1b1934db.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/00b728a4f3de/vmlinux-1b1934db.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/5a3fe8452d59/Image-1b1934db.gz.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+4ac05c048fbcdd0e3444@syzkaller.appspotmail.com
+
+------------[ cut here ]------------
+WARNING: CPU: 1 PID: 11671 at kernel/events/core.c:3923 ctx_sched_in+0xb0/0x14c kernel/events/core.c:3936
+Modules linked in:
+CPU: 1 PID: 11671 Comm: syz-executor.0 Not tainted 6.7.0-syzkaller-10085-g1b1934dbbdcf #0
+Hardware name: linux,dummy-virt (DT)
+pstate: 004000c9 (nzcv daIF +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+pc : ctx_sched_in+0xb0/0x14c kernel/events/core.c:3923
+lr : perf_event_sched_in kernel/events/core.c:2677 [inline]
+lr : perf_event_context_sched_in kernel/events/core.c:3983 [inline]
+lr : __perf_event_task_sched_in+0x11c/0x1d0 kernel/events/core.c:4012
+sp : ffff8000835e3940
+x29: ffff8000835e3940 x28: f2ff00002c4d7570 x27: 000000000000000e
+x26: 0000000000000001 x25: f5ff00004b7fbc78 x24: f5ff00004b7fb600
+x23: f9ff000002eab600 x22: 0000000000000002 x21: 0000000000000007
+x20: faff000014d8c900 x19: ffff00007f9d00b8 x18: ffff800083abbba8
+x17: ffff7ffffd514000 x16: ffff800080008000 x15: 0000000000000001
+x14: 000000000000006e x13: 0000000000000000 x12: ffff8000824dfe70
+x11: 0000000000000001 x10: 68221d39881c888f x9 : 9edf92a6ba7012f5
+x8 : f5ff00004b7fc7a8 x7 : 0000000000000004 x6 : 0000000000000001
+x5 : ffff7ffffd514000 x4 : 0000000000000000 x3 : ffff7ffffd514000
+x2 : f5ff00004b7fb600 x1 : 0000000000000002 x0 : 0000000000000000
+Call trace:
+ ctx_sched_in+0xb0/0x14c kernel/events/core.c:3936
+ perf_event_sched_in kernel/events/core.c:2677 [inline]
+ perf_event_context_sched_in kernel/events/core.c:3983 [inline]
+ __perf_event_task_sched_in+0x11c/0x1d0 kernel/events/core.c:4012
+ perf_event_task_sched_in include/linux/perf_event.h:1484 [inline]
+ finish_task_switch.isra.0+0x104/0x248 kernel/sched/core.c:5269
+ context_switch kernel/sched/core.c:5403 [inline]
+ __schedule+0x328/0x8a8 kernel/sched/core.c:6727
+ preempt_schedule_common kernel/sched/core.c:6904 [inline]
+ preempt_schedule+0x48/0x60 kernel/sched/core.c:6928
+ __raw_spin_unlock_irqrestore include/linux/spinlock_api_smp.h:152 [inline]
+ _raw_spin_unlock_irqrestore+0x34/0x44 kernel/locking/spinlock.c:194
+ spin_unlock_irqrestore include/linux/spinlock.h:406 [inline]
+ unlock_page_lruvec_irqrestore include/linux/memcontrol.h:1672 [inline]
+ release_pages+0xf4/0x530 mm/swap.c:1039
+ free_pages_and_swap_cache+0x58/0x68 mm/swap_state.c:316
+ tlb_batch_pages_flush+0x54/0x8c mm/mmu_gather.c:98
+ tlb_flush_mmu_free mm/mmu_gather.c:293 [inline]
+ tlb_flush_mmu mm/mmu_gather.c:300 [inline]
+ tlb_finish_mmu+0x74/0x1c0 mm/mmu_gather.c:392
+ exit_mmap+0x144/0x280 mm/mmap.c:3290
+ __mmput+0x3c/0x170 kernel/fork.c:1343
+ mmput+0x50/0x5c kernel/fork.c:1365
+ exit_mm kernel/exit.c:569 [inline]
+ do_exit+0x288/0x960 kernel/exit.c:858
+ __do_sys_exit kernel/exit.c:987 [inline]
+ __se_sys_exit kernel/exit.c:985 [inline]
+ do_group_exit+0x0/0x90 kernel/exit.c:985
+ __invoke_syscall arch/arm64/kernel/syscall.c:37 [inline]
+ invoke_syscall+0x48/0x114 arch/arm64/kernel/syscall.c:51
+ el0_svc_common.constprop.0+0x40/0xe0 arch/arm64/kernel/syscall.c:136
+ do_el0_svc+0x1c/0x28 arch/arm64/kernel/syscall.c:155
+ el0_svc+0x34/0xd8 arch/arm64/kernel/entry-common.c:678
+ el0t_64_sync_handler+0x100/0x12c arch/arm64/kernel/entry-common.c:696
+ el0t_64_sync+0x19c/0x1a0 arch/arm64/kernel/entry.S:595
+---[ end trace 0000000000000000 ]---
+Unable to handle kernel NULL pointer dereference at virtual address 0000000000000028
+Mem abort info:
+  ESR = 0x0000000096000005
+  EC = 0x25: DABT (current EL), IL = 32 bits
+  SET = 0, FnV = 0
+  EA = 0, S1PTW = 0
+  FSC = 0x05: level 1 translation fault
+Data abort info:
+  ISV = 0, ISS = 0x00000005, ISS2 = 0x00000000
+  CM = 0, WnR = 0, TnD = 0, TagAccess = 0
+  GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
+user pgtable: 4k pages, 48-bit VAs, pgdp=0000000054ec7000
+[0000000000000028] pgd=0800000045bd1003, p4d=0800000045bd1003, pud=0000000000000000
+Internal error: Oops: 0000000096000005 [#1] PREEMPT SMP
+Modules linked in:
+CPU: 1 PID: 11671 Comm: syz-executor.0 Tainted: G        W          6.7.0-syzkaller-10085-g1b1934dbbdcf #0
+Hardware name: linux,dummy-virt (DT)
+pstate: 004000c9 (nzcv daIF +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+pc : perf_ctx_sched_task_cb+0x14/0x80 kernel/events/core.c:3484
+lr : perf_event_context_sched_in kernel/events/core.c:3985 [inline]
+lr : __perf_event_task_sched_in+0x140/0x1d0 kernel/events/core.c:4012
+sp : ffff8000835e3950
+x29: ffff8000835e3950 x28: f2ff00002c4d7570 x27: 000000000000000e
+x26: 0000000000000001 x25: f5ff00004b7fbc78 x24: f5ff00004b7fb600
+x23: f9ff000002eab600 x22: f5ff00004b7fb600 x21: faff000014d8c900
+x20: 0000000000000000 x19: ffff8000824bc0b8 x18: ffff800083abbba8
+x17: ffff7ffffd514000 x16: ffff800080008000 x15: 0000000000000001
+x14: 000000000000006e x13: 0000000000000000 x12: ffff8000824dfe70
+x11: 0000000000000001 x10: 68221d39881c888f x9 : 9edf92a6ba7012f5
+x8 : f5ff00004b7fc7a8 x7 : 0000000000000004 x6 : 0000000000000001
+x5 : ffff7ffffd514000 x4 : 0000000000000000 x3 : ffff7ffffd514000
+x2 : f5ff00004b7fb600 x1 : 0000000000000001 x0 : 0000000000000000
+Call trace:
+ perf_ctx_sched_task_cb+0x14/0x80 kernel/events/core.c:3484
+ perf_event_context_sched_in kernel/events/core.c:3985 [inline]
+ __perf_event_task_sched_in+0x140/0x1d0 kernel/events/core.c:4012
+ perf_event_task_sched_in include/linux/perf_event.h:1484 [inline]
+ finish_task_switch.isra.0+0x104/0x248 kernel/sched/core.c:5269
+ context_switch kernel/sched/core.c:5403 [inline]
+ __schedule+0x328/0x8a8 kernel/sched/core.c:6727
+ preempt_schedule_common kernel/sched/core.c:6904 [inline]
+ preempt_schedule+0x48/0x60 kernel/sched/core.c:6928
+ __raw_spin_unlock_irqrestore include/linux/spinlock_api_smp.h:152 [inline]
+ _raw_spin_unlock_irqrestore+0x34/0x44 kernel/locking/spinlock.c:194
+ spin_unlock_irqrestore include/linux/spinlock.h:406 [inline]
+ unlock_page_lruvec_irqrestore include/linux/memcontrol.h:1672 [inline]
+ release_pages+0xf4/0x530 mm/swap.c:1039
+ free_pages_and_swap_cache+0x58/0x68 mm/swap_state.c:316
+ tlb_batch_pages_flush+0x54/0x8c mm/mmu_gather.c:98
+ tlb_flush_mmu_free mm/mmu_gather.c:293 [inline]
+ tlb_flush_mmu mm/mmu_gather.c:300 [inline]
+ tlb_finish_mmu+0x74/0x1c0 mm/mmu_gather.c:392
+ exit_mmap+0x144/0x280 mm/mmap.c:3290
+ __mmput+0x3c/0x170 kernel/fork.c:1343
+ mmput+0x50/0x5c kernel/fork.c:1365
+ exit_mm kernel/exit.c:569 [inline]
+ do_exit+0x288/0x960 kernel/exit.c:858
+ __do_sys_exit kernel/exit.c:987 [inline]
+ __se_sys_exit kernel/exit.c:985 [inline]
+ do_group_exit+0x0/0x90 kernel/exit.c:985
+ __invoke_syscall arch/arm64/kernel/syscall.c:37 [inline]
+ invoke_syscall+0x48/0x114 arch/arm64/kernel/syscall.c:51
+ el0_svc_common.constprop.0+0x40/0xe0 arch/arm64/kernel/syscall.c:136
+ do_el0_svc+0x1c/0x28 arch/arm64/kernel/syscall.c:155
+ el0_svc+0x34/0xd8 arch/arm64/kernel/entry-common.c:678
+ el0t_64_sync_handler+0x100/0x12c arch/arm64/kernel/entry-common.c:696
+ el0t_64_sync+0x19c/0x1a0 arch/arm64/kernel/entry.S:595
+Code: a9bd7bfd 910003fd a90153f3 aa0003f4 (f8428e80) 
+---[ end trace 0000000000000000 ]---
+----------------
+Code disassembly (best guess):
+   0:	a9bd7bfd 	stp	x29, x30, [sp, #-48]!
+   4:	910003fd 	mov	x29, sp
+   8:	a90153f3 	stp	x19, x20, [sp, #16]
+   c:	aa0003f4 	mov	x20, x0
+* 10:	f8428e80 	ldr	x0, [x20, #40]! <-- trapping instruction
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
