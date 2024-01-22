@@ -1,77 +1,114 @@
-Received: from azure-sdnproxy.icoremail.net (azure-sdnproxy.icoremail.net [20.231.56.155])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15646664AD;
-	Mon, 22 Jan 2024 17:36:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=20.231.56.155
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CD563FE28;
+	Mon, 22 Jan 2024 17:36:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705944967; cv=none; b=fWQL0uD8M7czFq4XQmrfbaV7qbtaw6HJvxFHGLkiCK9r+pDKIP1CBJHtjT/cCuyovxASy+eSbFLH4AumPfbXonNmeXh9HJ1eP4OBfbX/MuP9HN9+C4MCpjHEyMmmNjm1DJkn8uHMETD17PotPgIgSjNe7IVpyQSinZQSgdoKzcU=
+	t=1705945001; cv=none; b=OGRkyB/d1mZ+KeHKbI8cbqbZIN0tVA6F6w1D3MhTNbt0sALGkRjTxj29hYqD1sQOs1QMacZJdVgbI04ZnmXdBzj7F9Od+NDuXlmlATyancA1ZPV8lDPb3hXOuc7HsxgKGVlxpbTS6GnqhMU4kj8fc0QxU8YCgqICtnDKbDYOEkc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705944967; c=relaxed/simple;
-	bh=lM7DH+/8lrtwvXiSqC/z22MGKWTe1DZd0HfSUOD4Jxc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=hKfG3tNrzBn3NWypciyVFiYqFsRjPx4TYxLdYuoyjcdgLVUDjj62i97nHp0Es6cAl/jL0Ci6nLoexEf5L7bX6HMIaZV881ZnxqoO9tF0etHmsuc2LZ8Rt1nOoAM7bmmA/YvKXsleyIQEB6xmPxIYm8aWIIIM1HvczMCqb6HvJVw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn; spf=pass smtp.mailfrom=zju.edu.cn; arc=none smtp.client-ip=20.231.56.155
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zju.edu.cn
-Received: from luzhipeng.223.5.5.5 (unknown [39.174.92.167])
-	by mail-app3 (Coremail) with SMTP id cC_KCgBnSTN7p65lk8t4AA--.4094S2;
-	Tue, 23 Jan 2024 01:35:56 +0800 (CST)
-From: Zhipeng Lu <alexious@zju.edu.cn>
-To: alexious@zju.edu.cn
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Desmond Cheong Zhi Xi <desmondcheongzx@gmail.com>,
-	Viacheslav Dubeyko <slava@dubeyko.com>,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] hfs: fix a memleak in hfs_find_init
-Date: Tue, 23 Jan 2024 01:27:17 +0800
-Message-Id: <20240122172719.3843098-1-alexious@zju.edu.cn>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1705945001; c=relaxed/simple;
+	bh=Do6GH6AFLzNEnY0lWxGGX8GYLxuoxZy9j7mds6kAXtI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=byK4cZRH7HSQx7DPSAFL0xOjk07ujLQcQwFl4egwRPw6q6LiwKHnDgLpo7cR4bzhW8KUI3TX/jk/9LTdWL1G7qjli1pkisODiVmOOK1wTeE/NXNK1J547m8LCs2OT6esc4M6UD9bKwiOXikSu8ApmpsCaMA/dcweztY2uD3xrqY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NNydHcMc; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NNydHcMc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E3F0C433F1;
+	Mon, 22 Jan 2024 17:36:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705945000;
+	bh=Do6GH6AFLzNEnY0lWxGGX8GYLxuoxZy9j7mds6kAXtI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NNydHcMc7/QEWugoSfbb5DWGOsn4aK0LhJI/R6p3sYhfcxjihuoQJMsx+CLWiP4Rp
+	 iEjmCVn28bQmDNgNOSCty7gUppgoTTJ5FcGqnSqk1yYwm0oZcfd1F1MaNdFGsQN5Hp
+	 nOCX5iUjak5ju5xd7nDQ0NU4HQAd6ixUqMn6AOJqwyvTzVur3V9rp+ZjN4u3GEOWtT
+	 Ncr++vP9S2Q0J33y/DRBGQpE9xQpt7CTGuOCHMTy8LItf/pZAfCCyDUdEqelwLgOho
+	 QWYZvo5owITvfDI1bS5prylQ1daAB6DvisORykBpQ3ichc1dv+WW5Xe+0c0izoy8Ix
+	 FC+xyP+nhIApA==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1rRyE7-000000000su-3oVt;
+	Mon, 22 Jan 2024 18:36:52 +0100
+Date: Mon, 22 Jan 2024 18:36:51 +0100
+From: Johan Hovold <johan@kernel.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Johan Hovold <johan+linaro@kernel.org>,
+	Marijn Suijten <marijn.suijten@somainline.org>,
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Konrad Dybcio <konrad.dybcio@somainline.org>
+Subject: Re: [PATCH 1/3] arm64: dts: qcom: sc8280xp: Fix PCIe PHY
+ power-domains
+Message-ID: <Za6ns-xhN3N-cmIr@hovoldconsulting.com>
+References: <20231227-topic-8280_pcie_dts-v1-0-13d12b1698ff@linaro.org>
+ <20231227-topic-8280_pcie_dts-v1-1-13d12b1698ff@linaro.org>
+ <ZY6sh8nlEUyEfL0u@hovoldconsulting.com>
+ <20231229170334.GA9098@thinkpad>
+ <20240122172528.GE3176@thinkpad>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cC_KCgBnSTN7p65lk8t4AA--.4094S2
-X-Coremail-Antispam: 1UD129KBjvdXoW7JFW7Aw1kJw1UZr15AFyUGFg_yoWxZFg_Wa
-	yxuwn29w1rGFyaya4aya9YgFWDWw4fur1fGr47KF1UCa9xKayxXrsF9r98AF9xWF47tryx
-	JryUt34rCFn8tjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbsxFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_
-	Gr1UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY1x0262kKe7AKxVWU
-	AVWUtwCY02Avz4vE14v_GwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8Jw
-	C20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAF
-	wI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjx
-	v20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2
-	jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0x
-	ZFpf9x0JUntxhUUUUU=
-X-CM-SenderInfo: qrsrjiarszq6lmxovvfxof0/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240122172528.GE3176@thinkpad>
 
-When the switch statment goes to default and return an error, ptr should
-be freed since it is allocated in hfs_find_init.
+On Mon, Jan 22, 2024 at 10:55:28PM +0530, Manivannan Sadhasivam wrote:
+> On Fri, Dec 29, 2023 at 10:33:34PM +0530, Manivannan Sadhasivam wrote:
+> > On Fri, Dec 29, 2023 at 12:24:55PM +0100, Johan Hovold wrote:
+> > > On Wed, Dec 27, 2023 at 11:28:26PM +0100, Konrad Dybcio wrote:
+> > > > The PCIe GDSCs are only related to the RCs. The PCIe PHYs on the other
+> > > > hand, are powered by VDD_MX and their specific VDDA_PHY/PLL regulators.
+> > > 
+> > > No, that does not seem to be entirely correct. I added the power-domains
+> > > here precisely because they were needed to enable the PHYs.
+> > > 
+> > > This is something I stumbled over when trying to figure out how to
+> > > add support for the second lane pair (i.e. four-lane mode), and I just
+> > > went back and confirmed that this is still the case.
+> > > 
+> > > If you try to enable one of these PHYs without the corresponding GDSC
+> > > being enabled, you end up with:
+> > > 
+> > > [   37.709324] ------------[ cut here ]------------
+> > > [   37.718196] gcc_pcie_3b_aux_clk status stuck at 'off'
+> > > [   37.718205] WARNING: CPU: 4 PID: 482 at drivers/clk/qcom/clk-branch.c:86 clk_branch_wait+0x144/0x15c
+> > > 	
+> > 
+> > Technically this patch is correct. PHYs are backed by MX domain only and not
+> > GDSCs. Only the controllers (PCIe, UFS, USB) are backed by GDSCs. The fact that
+> > you are seeing issue with PCIe Aux clock suggests me that this clock may not be
+> > applicable to the PHY but it needs to be enabled for working of the PHY somehow.
+> > I'll try to find the details on how exactly it is needed.
+> > 
+> > But if I get the answer like, "This clock is also sourced to PHY directly", then
+> > we may need to add dual power domain for PHY (both GDSC and MX).
+> > 
+> 
+> So I answer I got from Qcom is that this clock is only applicable to the PCIe
+> controller and not PHYs. On some platforms, there is a separate PCIE_PHY_AUX_CLK
+> coming from GCC that is used during L1SS state. I think that caused confusion
+> while adding PHY support for followup platforms and folks just used PCIE_AUX_CLK
+> since they couldn't find the actual PCIE_PHY_AUX_CLK.
 
-Fixes: b3b2177a2d79 ("hfs: add lock nesting notation to hfs_find_init")
-Signed-off-by: Zhipeng Lu <alexious@zju.edu.cn>
----
- fs/hfs/bfind.c | 1 +
- 1 file changed, 1 insertion(+)
+Thanks for sorting that out.
 
-diff --git a/fs/hfs/bfind.c b/fs/hfs/bfind.c
-index ef9498a6e88a..7aa3b9aba4d1 100644
---- a/fs/hfs/bfind.c
-+++ b/fs/hfs/bfind.c
-@@ -36,6 +36,7 @@ int hfs_find_init(struct hfs_btree *tree, struct hfs_find_data *fd)
- 		mutex_lock_nested(&tree->tree_lock, ATTR_BTREE_MUTEX);
- 		break;
- 	default:
-+		kfree(fd->search_key);
- 		return -EINVAL;
- 	}
- 	return 0;
--- 
-2.34.1
+> I've prepared a series to fix this mess, but I want to know how you end up
+> seeing the above "clk status stuck at off" issue. Is there an actual usecase for
+> powering up PHY without controller or you just experimented with it?
 
+As I mentioned, I ran into this when experimenting with how to enable
+the "companion" PHY for four-lane support. There shouldn't be any use
+case for it (apart from using it to determine that the current
+description of the PHY resources is incomplete or incorrect).
+
+Johan
