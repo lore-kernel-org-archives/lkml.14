@@ -1,130 +1,122 @@
-Received: from out-171.mta1.migadu.com (out-171.mta1.migadu.com [95.215.58.171])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34A15657BB
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 16:06:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46DFD3EA85;
+	Mon, 22 Jan 2024 16:07:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705939606; cv=none; b=Q6eoAe6Yh/RJ7HNw1AjIPl8Tw1Wl/brdI85PuLc6OdHHneOnweQ1plKYMYvhHPDfQSzEOL0tOpsZ4/oJ23s+7gd5POvQOYl1NdipKtHts7d1k4j7VZlgbWQmf9fMMRsiC3vkxuZ22YsnnEVxxXpX3puVC3FgcJuSoe4WoMDok4Q=
+	t=1705939643; cv=none; b=pxKpJFxMGmnwaxYq2MHfbWqVUXpt8OU7I6jC3IsOBqAVulJmotJCjGoPNXJQmQKU4j6Bim223BtcDucL0Qi9jc34N1/fqJpTLSzl0argAp9dYSGuTK2MGeXaEpWkA7xOEBBC8JHu5DPDP4e2wt6Rju4yAD2wYtySO3Mbe8quaUo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705939606; c=relaxed/simple;
-	bh=fsmtq2XF8bbAr6rNw2kj7QtYSt4c9bDE/aZE2TVghmY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M8mJyFsdnNzIZXMYB9RymLtryphboHZdeH/PhpofoMp6zIuzUnPLXgOxNsbQeC98Mv8lZJ73wuEe0Z7938ygSLDMhZ//rJH9y2WaqREVry3X8epDBC3epJPmI7ThbXsaUd9LbqZ3eteTonSz/FR+WL8N1hdj+Gehox0uAKsxYxI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=uGXmZNt2; arc=none smtp.client-ip=95.215.58.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="uGXmZNt2"
-Date: Mon, 22 Jan 2024 11:06:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1705939602;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=55SCyM8CEbCM9qBiiJ38WDhwyohhGRMvyGZuunU3L6U=;
-	b=uGXmZNt2uUm+IaoPPbYv6wnl01a+haxm2bkGN0EhzSumcgRoACV/fmma7oNeW9V49ceyMA
-	8pHpHtR1I0PLvtFfmVlDlr/mQDU+osZtvXyyfGrWLGopCx0vhxGFBnc7sQPAie2waB++Is
-	4ZDqikiFimgmbYabsvGMEJtowwtFqY4=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Kuan-Wei Chiu <visitorckw@gmail.com>
-Cc: colyli@suse.de, bfoster@redhat.com, jserv@ccns.ncku.edu.tw, 
-	linux-bcache@vger.kernel.org, linux-kernel@vger.kernel.org, linux-bcachefs@vger.kernel.org
-Subject: Re: [PATCH 0/5] Optimize number of comparisons for heap/heapsort
- implementaion
-Message-ID: <zwcm35flig23fttyybenorsu27ki3dsurqjkjxhrlbnk5zg3n7@vmagssufbuy2>
-References: <20240121153649.2733274-1-visitorckw@gmail.com>
- <nl6kvjxg4gia5pbfb4jibxusvavmlwumrvy3swfs33ciub32wt@2kmeqnqycxxh>
- <Za1Ml/ZUBXdYXOIt@visitorckw-System-Product-Name>
- <ioyfizrzq7w7mjrqcadtzsfgpuntowtjdw5pgn4qhvsdp4mqqg@nrlek5vmisbu>
- <Za6EjshZWFUPLJef@visitorckw-System-Product-Name>
+	s=arc-20240116; t=1705939643; c=relaxed/simple;
+	bh=Y0YnSaZ7rJJoYHHQKixkCTtvD+62+VNE4Ysym1ByEns=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=uHABAz5PoBr4BEurcx+ljmp5HVrimzmD4pI+/N0XY04fqBlqzwOZuqKuQ7J2MSXvLXSgKVE3lw03w4sMbts3bI8mcBYu+FDnHYibf9x41Jmoe1uUa4oW5hYaNyRP4wgZcvbpEaJ2EFdydbfSFu3H3rUGzoNoIJ/E8Wsdkih7wJo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EFA5C433F1;
+	Mon, 22 Jan 2024 16:07:22 +0000 (UTC)
+Date: Mon, 22 Jan 2024 11:08:50 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Ye Bin <yebin10@huawei.com>
+Cc: <mhiramat@kernel.org>, <mathieu.desnoyers@efficios.com>,
+ <linux-trace-kernel@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 2/7] tracing/probes: add
+ traceprobe_expand_dentry_args() helper
+Message-ID: <20240122110850.4978f510@gandalf.local.home>
+In-Reply-To: <20240122074015.4042575-3-yebin10@huawei.com>
+References: <20240122074015.4042575-1-yebin10@huawei.com>
+	<20240122074015.4042575-3-yebin10@huawei.com>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Za6EjshZWFUPLJef@visitorckw-System-Product-Name>
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jan 22, 2024 at 11:06:54PM +0800, Kuan-Wei Chiu wrote:
-> On Sun, Jan 21, 2024 at 12:41:55PM -0500, Kent Overstreet wrote:
-> > On Mon, Jan 22, 2024 at 12:55:51AM +0800, Kuan-Wei Chiu wrote:
-> > > On Sun, Jan 21, 2024 at 11:21:06AM -0500, Kent Overstreet wrote:
-> > > > On Sun, Jan 21, 2024 at 11:36:44PM +0800, Kuan-Wei Chiu wrote:
-> > > > > Hello,
-> > > > > 
-> > > > > The existing implementations of heap/heapsort follow the conventional
-> > > > > textbook approach, where each heapify operation requires approximately
-> > > > > 2*log2(n) comparisons. In this series, I introduce a bottom-up variant
-> > > > > that reduces the number of comparisons during heapify operations to
-> > > > > approximately log2(n), while maintaining the same number of swap
-> > > > > operations.
-> > > > > 
-> > > > > Thanks,
-> > > > > Kuan-Wei
-> > > > > 
-> > > > > Kuan-Wei Chiu (5):
-> > > > >   bcachefs: Optimize eytzinger0_sort() using bottom-up heapsort
-> > > > >   bcachefs: Introduce parent function for sort_cmp_size()
-> > > > >   bcachefs: Optimize sort_cmp_size() using bottom-up heapsort
-> > > > >   bcachefs: Optimize number of comparisons in heap_sift_down
-> > > > >   bcache: Optimize number of comparisons in heap_sift
-> > > > > 
-> > > > >  drivers/md/bcache/util.h |  23 +++++----
-> > > > >  fs/bcachefs/util.c       | 109 ++++++++++++++++++++++++++-------------
-> > > > >  fs/bcachefs/util.h       |  23 +++++----
-> > > > >  3 files changed, 98 insertions(+), 57 deletions(-)
-> > > > 
-> > > > Good stuff
-> > > > 
-> > > > While we're looking at this code, we should be doing some cleanup too -
-> > > > there's no reason for the heap code to be duplicated in bcache and
-> > > > bcachefs anymore, and it'd also be nice to get fs/bcachefs/eytzinger.h
-> > > > moved to include/linux and bcache converted to use it.
-> > > > 
-> > > > I also would not be surprised if there's another heap implementation in
-> > > > include/linux; we'll want to check for that and if there is decide which
-> > > > is worth keeping.
-> > > >
-> > > Yes, we have 'min_heap.h' in include/linux.
-> > 
-> > So that has the advantage of more readable code - functions instead of
-> > macros - whereas my version has the type safe interface.
-> > 
-> > We could combine the two approaches, and put a type-safe interface on
-> > top of the min_heap.h code with some small macro wrappers - see
-> > generic-radix-tree.h for an example of how that's done.
+On Mon, 22 Jan 2024 15:40:10 +0800
+Ye Bin <yebin10@huawei.com> wrote:
+
+> Add traceprobe_expand_dentry_args() to expand dentry args. this API is
+> prepare to support "%pd" print format for kprobe.
 > 
-> Without modifying the interface provided by min_heap.h, it seems
-> challenging to implement the functionality of heap_add due to the
-> relationship with heap_setbackpointer.
-
-min_heap.h has the same functionality, different interface - updating
-the callers for an interface change is fine.
-
+> Signed-off-by: Ye Bin <yebin10@huawei.com>
+> ---
+>  kernel/trace/trace_probe.c | 34 ++++++++++++++++++++++++++++++++++
+>  kernel/trace/trace_probe.h |  2 ++
+>  2 files changed, 36 insertions(+)
 > 
-> Additionally, when looking into the code in generic-radix-tree.h,
-> should we replace type[0] with type[]? This is because zero-length
-> arrays are deprecated language features mentioned in document [1].
+> diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+> index 4dc74d73fc1d..1599c0c3e6b7 100644
+> --- a/kernel/trace/trace_probe.c
+> +++ b/kernel/trace/trace_probe.c
+> @@ -1565,6 +1565,40 @@ const char **traceprobe_expand_meta_args(int argc, const char *argv[],
+>  	return ERR_PTR(ret);
+>  }
+>  
+> +int traceprobe_expand_dentry_args(int argc, const char *argv[], char *buf,
+> +				  int bufsize)
+> +{
+> +	int i, used, ret;
 
-Zero length arrays are deprecated as VLAs, but this isn't a VLA - we're
-not storing anything there, the variable is just so that macros have
-access to the type.
+	size_t idx;
 
-> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays [1]
-> > 
-> > min_heap.h has only one user though? I don't think I can quite believe
-> > that's the only other code in the kernel using a heap, there must be
-> > more open coded out there...
-> 
-> I'm not sure why, but it seems that in the kernel, other places using
-> the heap implement their own subsystem-specific solutions rather than
-> utilizing a generic heap interface. For instance,
-> kernel/sched/cpudeadline.c and net/sched/sch_cake.c both have their own
-> implementations.
+> +
+> +	used = 0;
+> +	for (i = 0; i < argc; i++) {
+> +		if (str_has_suffix(argv[i], ":%pd")) {
 
-Sounds like a fun cleanup project :)
+If we were to update str_has_suffix() as I said in my reply to the previous
+patch, then we could do:
+
+		if (str_has_suffix(argv[i], ":%pd", &idx) {
+
+> +			char *tmp = kstrdup(argv[i], GFP_KERNEL);
+> +			char *equal;
+> +
+> +			if (!tmp)
+> +				return -ENOMEM;
+> +
+> +			equal = strchr(tmp, '=');
+> +			if (equal)
+> +				*equal = '\0';
+> +			tmp[strlen(argv[i]) - 4] = '\0';
+
+			tmp[idx] = '\0';
+
+-- Steve
+
+> +			ret = snprintf(buf + used, bufsize - used,
+> +				       "%s%s+0x0(+0x%zx(%s)):string",
+> +				       equal ? tmp : "", equal ? "=" : "",
+> +				       offsetof(struct dentry, d_name.name),
+> +				       equal ? equal + 1 : tmp);
+> +			kfree(tmp);
+> +			if (ret >= bufsize - used)
+> +				return -ENOMEM;
+> +			argv[i] = buf + used;
+> +			used += ret + 1;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  void traceprobe_finish_parse(struct traceprobe_parse_context *ctx)
+>  {
+>  	clear_btf_context(ctx);
+> diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
+> index 850d9ecb6765..553371a4e0b1 100644
+> --- a/kernel/trace/trace_probe.h
+> +++ b/kernel/trace/trace_probe.h
+> @@ -402,6 +402,8 @@ extern int traceprobe_parse_probe_arg(struct trace_probe *tp, int i,
+>  const char **traceprobe_expand_meta_args(int argc, const char *argv[],
+>  					 int *new_argc, char *buf, int bufsize,
+>  					 struct traceprobe_parse_context *ctx);
+> +extern int traceprobe_expand_dentry_args(int argc, const char *argv[], char *buf,
+> +					 int bufsize);
+>  
+>  extern int traceprobe_update_arg(struct probe_arg *arg);
+>  extern void traceprobe_free_probe_arg(struct probe_arg *arg);
+
