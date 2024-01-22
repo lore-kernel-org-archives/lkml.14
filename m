@@ -1,200 +1,75 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A9B84A986;
-	Mon, 22 Jan 2024 15:51:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C401E60DDC
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 15:51:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705938684; cv=none; b=YUYN5fig9K8quQg9mNv4RLaxUTujxGmKOYcesvNZpC8yrpy6bE4YZg5Iadi50pVNPvS7QIyJXz9gU/4Z2PCyGXBAbfNdUL+e5eAvcN6Wggtwri/mGjoT9/O0uO7SKYRxYKVjKLQ54TbEbGDRn46f2V4Tl7zdl+2sz1BeAcWU7wk=
+	t=1705938703; cv=none; b=ZmM8x7viu1FMwokyWmxFVACHhHTxIssg86KGIvQri84ZEiTjz5VeVR7e1R8nThne/v5SvwW3xIUAY25vNXR09BmWGdkiNwUwfjEJyqzFFWMlVJyBsb9+ckr4H6BYWSti64gEygvtEn5Fv4WKFfYla0qOqJZ+SFy8xJwgxwM5er0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705938684; c=relaxed/simple;
-	bh=lZj1NhD+BrgwByiozIOGjYtEGNtDXVvBjToxv7HKJbE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IbhN3g3OKyrDzNBDGKyYpj+tey9C7zMXuyeCfraHkoCMT9s7gV/e2T9nCCACf884jB4M2pW2d8voFEnTmbbtj+EQ0QaGWED3qZcOszGTvmkP5q2oyINU0auDhYjl3FUVFKzf/0lBH6z7KgBIoSBGhXnokf6mn4uV6L7pN/ntBFE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bizdc4Mi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1705938703; c=relaxed/simple;
+	bh=gNgSY7sQ/cryH2DH25H1X6wmZ7bJL/OuzyuB3hWtsNI=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=PTbR8UDRB9U5Tcrq3OdVcfV6WJBBl/go6CdrZaYC96vSR4XS6IXgeVIKmuDTUqLl+TuWOr9d2VtMGg+7jSJxyLQ8JcsTctrU+imKmoptA2J3r8MUEFpsxtoxluxVuZ6yMPfe/1uShns3561oEvOAQ+yOT5wxpqUNzliswbbBl+c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GkQ+KH9u; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bizdc4Mi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04596C43399;
-	Mon, 22 Jan 2024 15:51:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705938683;
-	bh=lZj1NhD+BrgwByiozIOGjYtEGNtDXVvBjToxv7HKJbE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Bizdc4MiGP8lgs0tziWkCzRzJtmMsaJNe+Plj1W5AqETf+BmoUwlhS/lba3O0FQmx
-	 p5Asrr0WKBpxw3/2dAznrAvHFzL05R1A4XsCGu4QIFJgMO5hdNRpq8gdymmbWbXw18
-	 35N1UuvXGEARt3G2eZDIjW/wFIsDJNk6c+NFxcJQw+gZI4ttkKRAHMC6BnQtUv7XOZ
-	 UhL1k6LP3ouY7Uru+1roEovQOdv5fOmbqH0ImwV2upImEfnkcoBKx51Ygr5mSss/jO
-	 mlxH9YJRnB2udActExYA8hJCv3/3YpS9/kYzi4GxB4vxI3dnY7CNbuXKPFrZh2oDfb
-	 uZqeiDD/1O4kA==
-Message-ID: <10a88fc6-2c4c-4f77-850f-f15b21a8ed49@kernel.org>
-Date: Mon, 22 Jan 2024 16:51:16 +0100
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GkQ+KH9u"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1705938700;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+	bh=CJbFZnFVE0k9sLXl6WCeQPUBH9kz6oFaPydheeALry0=;
+	b=GkQ+KH9upMXP5O7xOxAXFFb7+ZY+5tDMcNKi5wt2W9gQbc80N/7LTaked5VQTuGQ36rhmZ
+	0hk0s8R412nQyS+zWzsdHedff61ZM0LyuEpjxD6/vnhv7w3jxuMsFgTiuOxexUCT3YUIg0
+	CP88Vl8wDV8JlPAr1o0cu1rmDo9PBfM=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-244-bxwumBEdMMCGfgN4KiHJ6Q-1; Mon, 22 Jan 2024 10:51:39 -0500
+X-MC-Unique: bxwumBEdMMCGfgN4KiHJ6Q-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id D884985A58B;
+	Mon, 22 Jan 2024 15:51:38 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.26])
+	by smtp.corp.redhat.com (Postfix) with SMTP id C2CC851D5;
+	Mon, 22 Jan 2024 15:51:37 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Mon, 22 Jan 2024 16:50:25 +0100 (CET)
+Date: Mon, 22 Jan 2024 16:50:23 +0100
+From: Oleg Nesterov <oleg@redhat.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: "Eric W. Biederman" <ebiederm@xmission.com>,
+	Dylan Hatch <dylanbhatch@google.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/2] getrusage: use sig->stats_lock
+Message-ID: <20240122155023.GA26169@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] dt-bindings: display: bridge: add sam9x7-lvds
- compatible
-Content-Language: en-US
-To: Dharma Balasubiramani <dharma.b@microchip.com>,
- manikandan.m@microchip.com, andrzej.hajda@intel.com,
- neil.armstrong@linaro.org, rfoss@kernel.org,
- Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
- jernej.skrabec@gmail.com, airlied@gmail.com, daniel@ffwll.ch,
- maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de,
- robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
- dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Cc: linux4microchip@microchip.com
-References: <20240122082947.21645-1-dharma.b@microchip.com>
- <20240122082947.21645-2-dharma.b@microchip.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20240122082947.21645-2-dharma.b@microchip.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
 
-On 22/01/2024 09:29, Dharma Balasubiramani wrote:
-> Add the 'sam9x7-lvds' compatible binding, which describes the
-> Low Voltage Differential Signaling (LVDS) Controller found on Microchip's
-> sam9x7 series System-on-Chip (SoC) devices. This binding will be used to
-> define the properties and configuration for the LVDS Controller in DT.
-> 
-> Signed-off-by: Dharma Balasubiramani <dharma.b@microchip.com>
-> ---
->  .../display/bridge/microchip,sam9x7-lvds.yaml | 59 +++++++++++++++++++
->  1 file changed, 59 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/bridge/microchip,sam9x7-lvds.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/display/bridge/microchip,sam9x7-lvds.yaml b/Documentation/devicetree/bindings/display/bridge/microchip,sam9x7-lvds.yaml
-> new file mode 100644
-> index 000000000000..8c2c5b858c85
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/bridge/microchip,sam9x7-lvds.yaml
-> @@ -0,0 +1,59 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/bridge/microchip,sam9x7-lvds.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Microchip SAM9X7 LVDS Controller
+Andrew,
 
-What is the "X"?
+this series replaces
 
-> +
-> +maintainers:
-> +  - Dharma Balasubiramani <dharma.b@microchip.com>
-> +
-> +description: |
+	getrusage-move-thread_group_cputime_adjusted-outside-of-lock_task_sighand.patch
+	getrusage-use-sig-stats_lock.patch
 
-Do not need '|' unless you need to preserve formatting.
+in mm-nonmm-unstable.
 
-> +  The Low Voltage Differential Signaling Controller (LVDSC) manages data
-> +  format conversion from the LCD Controller internal DPI bus to OpenLDI
-> +  LVDS output signals. LVDSC functions include bit mapping, balanced mode
-> +  management, and serializer.
-> +
-> +properties:
-> +  compatible:
-> +    const: microchip,sam9x7-lvds
+The patches are same, I only tried to improve the changelogs as we discussed.
 
-What is "x"? Wildcard? Then no, don't use it and instead use proper SoC
-version number.
+Dylan, do you have something to add?
 
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    items:
-> +      - description: Peripheral Bus Clock
-> +
-> +  clock-names:
-> +    items:
-> +      - const: pclk
-> +      - const: gclk
-> +    minItems: 1
-
-No, you just said you have one clock.
-
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - clocks
-> +  - clock-names
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/at91.h>
-> +    #include <dt-bindings/dma/at91.h>
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-
-This header is not used. Include only used ones (and missing interrupt).
-
-> +
-> +    lvds-controller@f8060000 {
-> +      compatible = "microchip,sam9x7-lvds";
-> +      reg = <0xf8060000 0x100>;
-> +      interrupts = <56 IRQ_TYPE_LEVEL_HIGH 0>;
-
-What is "0"?
-
-> +      clocks = <&pmc PMC_TYPE_PERIPHERAL 56>;
-> +      clock-names = "pclk";
-> +    };
-
-Best regards,
-Krzysztof
+Oleg.
 
