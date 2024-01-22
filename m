@@ -1,133 +1,178 @@
-Received: from mail.avm.de (mail.avm.de [212.42.244.119])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBE455A7A4;
-	Mon, 22 Jan 2024 14:59:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.42.244.119
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF06A5A7B3;
+	Mon, 22 Jan 2024 14:59:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705935591; cv=none; b=sIdaC9OjomMKnTs3UIZzyP90jAgH+offTOSZDsH+NM27O9Far+Cirs33sxRIlsiTFJzlTMnipncZjIBMkeDlHuzha2uNqQUocYH4SIaRtv50fGdidw7rzRGn22yzUWBm70V8n2SgmqNXcsc4f7DHtb5T/2re7O8V5ZYlsxB63HM=
+	t=1705935593; cv=none; b=ARjOgLmODmuQZfUb5CjEiCxdsBfy1U0NdKz0e485YxUz0BXUcWQRCX/KhntkKr89e1q3bkYobDlX2tNPR8VHb7SdGSGtYtz4hLBoL9X9ocG7OnbjC9iofbNgMRXlXBJir/31y9dNyP+8xZveFg+T4BWw2LdejTELGdnn6elkhTY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705935591; c=relaxed/simple;
-	bh=iZ+Iu2pChYgh9YzjA7aD5HcSr1Qpkml4SPwC7povsjE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=A8n8F6ULMehcgjcHpN1RLXNMadxPqwnVH2DftYJYQjhqo6RTfvROdWIFwyKbCXeQCNuZklMjcWqjTJgZMwmnhlfHcZagMKlVUf9yU32P0OiKkf0QAEQTny4XLBDfdgan6Cx4tCYbm6iHBs7XrjjhATXkiNiKDlyTGXyRWUIhQJE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=avm.de; spf=pass smtp.mailfrom=avm.de; dkim=pass (1024-bit key) header.d=avm.de header.i=@avm.de header.b=e25liS0B; arc=none smtp.client-ip=212.42.244.119
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=avm.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=avm.de
+	s=arc-20240116; t=1705935593; c=relaxed/simple;
+	bh=9oQY2nlqZpvXgpcB9Y+B2gmJcaPcux2UKvXEAgFpgdw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=RfwIE4c7rSDSCTxkogpz2hXeUbAQoJHVozq4P2+1tfdpaESebR7SuMvYLXyj59xPl3cvWvIGoMUUrlzWVe/HvNJNQrnhifuamz2xHUaaDivXEgL+sCfsXZm+VkaJitd4ye+yx+UgXx/KS51CKn8GpOcN+IqXkvX9DatEkfFmTg4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EzxW3g4s; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=avm.de header.i=@avm.de header.b="e25liS0B"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=avm.de; s=mail;
-	t=1705935580; bh=iZ+Iu2pChYgh9YzjA7aD5HcSr1Qpkml4SPwC7povsjE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=e25liS0BORpBZo+Ha9eU0ylakpuDPJTVs/+9XZPXgdHqDwjGvkkD/fKmX6Lh06sBG
-	 VAGDON0rlmFRjZZcAecLYsApLQiupxkVM0nncJ2/wXukHha2LHFIoMA9/ymZSwTE0E
-	 /PFf9NODSup4m793jrdUCGZesTbVhkCeQJII9QT0=
-Received: from mail-auth.avm.de (unknown [IPv6:2001:bf0:244:244::71])
-	by mail.avm.de (Postfix) with ESMTPS;
-	Mon, 22 Jan 2024 15:59:40 +0100 (CET)
-Received: from buildd.core.avm.de (buildd-sv-01.avm.de [172.16.0.225])
-	by mail-auth.avm.de (Postfix) with ESMTPA id 06292800EC;
-	Mon, 22 Jan 2024 15:59:40 +0100 (CET)
-Received: by buildd.core.avm.de (Postfix, from userid 1000)
-	id EE3FD180F5A; Mon, 22 Jan 2024 15:59:39 +0100 (CET)
-Date: Mon, 22 Jan 2024 15:59:37 +0100
-From: Nicolas Schier <n.schier@avm.de>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Masahiro Yamada <masahiroy@kernel.org>, linux-kbuild@vger.kernel.org,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Nicolas Schier <nicolas@fjasle.eu>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] kbuild: resolve symlinks for O= properly
-Message-ID: <Za6C2w0QIZDayA48@buildd.core.avm.de>
-Mail-Followup-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	linux-kbuild@vger.kernel.org, Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	linux-kernel@vger.kernel.org
-References: <20231215160637.842748-1-masahiroy@kernel.org>
- <20240122141203.CWe3n5rG@linutronix.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EzxW3g4s"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDA73C433C7;
+	Mon, 22 Jan 2024 14:59:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705935592;
+	bh=9oQY2nlqZpvXgpcB9Y+B2gmJcaPcux2UKvXEAgFpgdw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=EzxW3g4sfUf8gKRfMEHGvdj6VxysbeQun/Js6QbQORLfnOcleGRjRKQlSRQm7gkBV
+	 wMDY01g9A6usFv22sdXva4AYhQ/qTGGuCIKnABn/UJ4951j/xDjc0nkGpqaOV4bQ+T
+	 +4W5shsVtR+4/VVhELF2pz9Q4v0D9szHT6CuLOOlApF29j9VUYmufLXN3PnWpenZn7
+	 rOIzV8KU9n4QaAm18/4DW7DsPdCxggz2lVrT6mu92iOq9t8SeFCG67Lgn4NhLB+oMl
+	 NXwpJkkCkSeYCiS4DdSMG7Cm66ek5axe9DVbSoVwfMDbkl4mNUxUlv87/TH48hQYtT
+	 POMHXWpRTYACw==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: "Wang, Beyond" <Wang.Beyond@amd.com>,
+	Wang,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Sasha Levin <sashal@kernel.org>,
+	Xinhui.Pan@amd.com,
+	airlied@gmail.com,
+	daniel@ffwll.ch,
+	Felix.Kuehling@amd.com,
+	Philip.Yang@amd.com,
+	guchun.chen@amd.com,
+	Arunpravin.PaneerSelvam@amd.com,
+	Hongkun.Zhang@amd.com,
+	marek.olsak@amd.com,
+	pierre-eric.pelloux-prayer@amd.com,
+	Jun.Ma2@amd.com,
+	maarten.lankhorst@linux.intel.com,
+	mukul.joshi@amd.com,
+	lijo.lazar@amd.com,
+	srinivasan.shanmugam@amd.com,
+	rajneesh.bhardwaj@amd.com,
+	amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 6.7 58/88] drm/amdgpu: fix ftrace event amdgpu_bo_move always move on same heap
+Date: Mon, 22 Jan 2024 09:51:31 -0500
+Message-ID: <20240122145608.990137-58-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240122145608.990137-1-sashal@kernel.org>
+References: <20240122145608.990137-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="M+Z3urJkjmGAoQ8z"
-Content-Disposition: inline
-In-Reply-To: <20240122141203.CWe3n5rG@linutronix.de>
-Organization: AVM GmbH
-X-purgate-ID: 149429::1705935580-41F1F6D9-60525429/0/0
-X-purgate-type: clean
-X-purgate-size: 2698
-X-purgate-Ad: Categorized by eleven eXpurgate (R) http://www.eleven.de
-X-purgate: This mail is considered clean (visit http://www.eleven.de for further information)
-X-purgate: clean
+Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.7.1
+Content-Transfer-Encoding: 8bit
 
+From: "Wang, Beyond" <Wang.Beyond@amd.com>
 
---M+Z3urJkjmGAoQ8z
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 22 Jan 2024 15:59:37 +0100
-From: Nicolas Schier <n.schier@avm.de>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Masahiro Yamada <masahiroy@kernel.org>, linux-kbuild@vger.kernel.org,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Nicolas Schier <nicolas@fjasle.eu>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] kbuild: resolve symlinks for O= properly
+[ Upstream commit 94aeb4117343d072e3a35b9595bcbfc0058ee724 ]
 
-On Mon, Jan 22, 2024 at 03:12:03PM +0100, Sebastian Andrzej Siewior wrote:
-> On 2023-12-16 01:06:37 [+0900], Masahiro Yamada wrote:
-> =E2=80=A6
-> > Using the physical directory structure for the O=3D option seems more
-> > reasonable.
-> >=20
-> > The comment says "expand a shell special character '~'", but it has
-> > already been expanded to the home directory in the command line.
->=20
-> It might have been expanded, it might have not been expanded. Having a
-> shell script:
-> | #!/bin/sh
-> |=20
-> | exec make O=3D~/scratch/mk-check defconfig
->=20
-> with bin/sh =3D dash results in:
->=20
-> | make[1]: Entering directory '/home/bigeasy/linux/~/scratch/mk-check'
->=20
-> while bin/sh =3D bash expands the ~ properly before for O=3D. Would it be
-> too much to ask, to expand the ~?
+Issue: during evict or validate happened on amdgpu_bo, the 'from' and
+'to' is always same in ftrace event of amdgpu_bo_move
 
-Expanding tilde expandos is traditionally a shell feature, as you
-already mentioned; and bash supports also expandos like '~+' and '~-'.
-I think, we should leave the shell things in shells.
+where calling the 'trace_amdgpu_bo_move', the comment says move_notify
+is called before move happens, but actually it is called after move
+happens, here the new_mem is same as bo->resource
 
-Thus, please update your shell scripts to be compliant to their
-interpreting shell (e.g. use '$HOME' or switch the shell).
+Fix: move trace_amdgpu_bo_move from move_notify to amdgpu_bo_move
 
-Kind regards,
-Nicolas
+Signed-off-by: Wang, Beyond <Wang.Beyond@amd.com>
+Reviewed-by: Christian König <christian.koenig@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/gpu/drm/amd/amdgpu/amdgpu_object.c | 13 +------------
+ drivers/gpu/drm/amd/amdgpu/amdgpu_object.h |  4 +---
+ drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c    |  5 +++--
+ 3 files changed, 5 insertions(+), 17 deletions(-)
 
---M+Z3urJkjmGAoQ8z
-Content-Type: application/pgp-signature; name="signature.asc"
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_object.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_object.c
+index 5ad03f2afdb4..425cebcc5cbf 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_object.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_object.c
+@@ -1245,19 +1245,15 @@ int amdgpu_bo_get_metadata(struct amdgpu_bo *bo, void *buffer,
+  * amdgpu_bo_move_notify - notification about a memory move
+  * @bo: pointer to a buffer object
+  * @evict: if this move is evicting the buffer from the graphics address space
+- * @new_mem: new information of the bufer object
+  *
+  * Marks the corresponding &amdgpu_bo buffer object as invalid, also performs
+  * bookkeeping.
+  * TTM driver callback which is called when ttm moves a buffer.
+  */
+-void amdgpu_bo_move_notify(struct ttm_buffer_object *bo,
+-			   bool evict,
+-			   struct ttm_resource *new_mem)
++void amdgpu_bo_move_notify(struct ttm_buffer_object *bo, bool evict)
+ {
+ 	struct amdgpu_device *adev = amdgpu_ttm_adev(bo->bdev);
+ 	struct amdgpu_bo *abo;
+-	struct ttm_resource *old_mem = bo->resource;
+ 
+ 	if (!amdgpu_bo_is_amdgpu_bo(bo))
+ 		return;
+@@ -1274,13 +1270,6 @@ void amdgpu_bo_move_notify(struct ttm_buffer_object *bo,
+ 	/* remember the eviction */
+ 	if (evict)
+ 		atomic64_inc(&adev->num_evictions);
+-
+-	/* update statistics */
+-	if (!new_mem)
+-		return;
+-
+-	/* move_notify is called before move happens */
+-	trace_amdgpu_bo_move(abo, new_mem->mem_type, old_mem->mem_type);
+ }
+ 
+ void amdgpu_bo_get_memory(struct amdgpu_bo *bo,
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_object.h b/drivers/gpu/drm/amd/amdgpu/amdgpu_object.h
+index d28e21baef16..a3ea8a82db23 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_object.h
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_object.h
+@@ -344,9 +344,7 @@ int amdgpu_bo_set_metadata (struct amdgpu_bo *bo, void *metadata,
+ int amdgpu_bo_get_metadata(struct amdgpu_bo *bo, void *buffer,
+ 			   size_t buffer_size, uint32_t *metadata_size,
+ 			   uint64_t *flags);
+-void amdgpu_bo_move_notify(struct ttm_buffer_object *bo,
+-			   bool evict,
+-			   struct ttm_resource *new_mem);
++void amdgpu_bo_move_notify(struct ttm_buffer_object *bo, bool evict);
+ void amdgpu_bo_release_notify(struct ttm_buffer_object *bo);
+ vm_fault_t amdgpu_bo_fault_reserve_notify(struct ttm_buffer_object *bo);
+ void amdgpu_bo_fence(struct amdgpu_bo *bo, struct dma_fence *fence,
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c
+index ab4a762aed5b..75c9fd2c6c2a 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c
+@@ -545,10 +545,11 @@ static int amdgpu_bo_move(struct ttm_buffer_object *bo, bool evict,
+ 			return r;
+ 	}
+ 
++	trace_amdgpu_bo_move(abo, new_mem->mem_type, old_mem->mem_type);
+ out:
+ 	/* update statistics */
+ 	atomic64_add(bo->base.size, &adev->num_bytes_moved);
+-	amdgpu_bo_move_notify(bo, evict, new_mem);
++	amdgpu_bo_move_notify(bo, evict);
+ 	return 0;
+ }
+ 
+@@ -1553,7 +1554,7 @@ static int amdgpu_ttm_access_memory(struct ttm_buffer_object *bo,
+ static void
+ amdgpu_bo_delete_mem_notify(struct ttm_buffer_object *bo)
+ {
+-	amdgpu_bo_move_notify(bo, false, NULL);
++	amdgpu_bo_move_notify(bo, false);
+ }
+ 
+ static struct ttm_device_funcs amdgpu_bo_driver = {
+-- 
+2.43.0
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEDv+Fiet06YHnC6RpiMa8nIiabbgFAmWugtkACgkQiMa8nIia
-bbidNQ/+PChz3YchNvwJsNx1T31zdo9pMPxMfhQswSRBAXU1v6UVIogye14Tuee5
-gyAZrEwjzyLMe1gt6EziHUGI46uampWwOKjYUV1I4FPXgROWjg3L8wUTzR1ntlde
-Hj/c6QMJbfsYUopTaEg/wSfAdur5Jq8dPWi6H/MRgSfrv+/n2wqWhQAIV3uOskJT
-UvmHeWdqeZcqQWnn+YJv1JIpkezfVObemJG5rYpNqZZ6LsGqm5CaGP1EpwJ+mTLn
-5nKroGpTAAHDrvDCnAjrNeWaEEv3g1PAVCHYNFQkKqD+ajjUnVYmYaamR6RNVWcW
-PnCHz6PWD7Kr3j7kV3GoEFsifTHPHazZkLS8fW/TpTbjrDxpgGyTVP4EEcjWejTh
-Yog4is9E0KPXlCUCHTOB0Z6GKtKroMZAfwG3avXdyimx/XGzNkBR/vdZqhno3ARa
-IClL/WnlK0vT89rnpLfd5aWfPtlSQi2Uyf2f2TNmQ/9gwUXIkBnQmpp3n0zsonYf
-aed7eXPxPiAB9ISB1rFrY9KT/xGUGPjFVjK/vKzAJG6rGxoObuUlU3yE3/8MmhEV
-bwbGnU/V4xGxcLLy8VFHD+9m8EEAR2XrhBr+pWqvSrxDZYApT6sv49wavXWLRi98
-xTBjWToWSxEBFluzNYCIFeQuyWLatqEVEyEU2seUbIVafZ6PKK8=
-=1xdJ
------END PGP SIGNATURE-----
-
---M+Z3urJkjmGAoQ8z--
