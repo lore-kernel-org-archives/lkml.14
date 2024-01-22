@@ -1,41 +1,49 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 450C9482D8;
-	Mon, 22 Jan 2024 20:44:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22DCD487A0;
+	Mon, 22 Jan 2024 20:44:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705956267; cv=none; b=DaIXiyvH+v/Ms63Z2koJdF03yelcoMKcbr+nk6cuelEdqG/XZqZmAOhvU9FlP+dUefG8HofwFOy+BR1p/XGTdtMuHJ7zDabRePeIB3af4pekgQY7ACFrLepiZkyMO3G54T4t/nfKx+PjKhGJzl2U11jN0ptxU7oAOH3wADkOoAU=
+	t=1705956270; cv=none; b=DejQSvA0MIAOwMTFHKuQekpnKfGh1nFapg9dpNh43WOnocD5gKxcfFbH5V/1WhOxTs6ksHD2bHKYBTxGSt2EzQwIhl+G/xAzdxy5ehKG/0gRkxpywL4FTRjP53XyO/0eXUFtFJ6QI64Broor5G82KJAglAzzaMD81iMMSHHqhAU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705956267; c=relaxed/simple;
-	bh=sOJcyfOm6rvDelLgbGyKsvv4g+uQMAxj3f4722CTJoM=;
-	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=u3hXJiK9Vu5NQzAitMppmF5rnlVt0fPdTMl8J4u+w9azvrX0A3pWf8/IBhgop9Pgb900y2NCpvzW1YWCV/H6GrvUfo9cIJlcNjfeXtCeU6YoS+3wy28Cr+aZ/pV3049GgOviq88W025NBGTvgSbFBn/gD4kktaYMoeWrJN15Gxg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o+x75yHj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1705956270; c=relaxed/simple;
+	bh=pcmQCWSJ7Hn4aUv4ouaZQqEO5FRMjYPHna+YeTWwauw=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=kgxm1935dpnefnLTCeqeUnpA6g8/5T13W1l/xFBM803dP4A9qv57UjgR1+3iTIZ0KCQp9j9KQSdpzqSLi6+7RtXEToXWqgQgSkqoYkzdZlzUtNJH+q5ZtJ2BqUBLsuoLVbcBQQe2kuEX7bVDGcI9z9bODxZ4yPxqe2BljVs+4ko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dRNP+FyK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o+x75yHj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72C42C43390;
-	Mon, 22 Jan 2024 20:44:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dRNP+FyK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 291FFC43394;
+	Mon, 22 Jan 2024 20:44:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705956266;
-	bh=sOJcyfOm6rvDelLgbGyKsvv4g+uQMAxj3f4722CTJoM=;
-	h=From:To:In-Reply-To:References:Subject:Date:From;
-	b=o+x75yHjhYoZYA6elBvkde4MD0PRCdNvnq/SwI4JnjG72QPCOgLvUE7AdnFM4/m1e
-	 JPnz6NxMtzBGp7rxp7TeqkJGfP4dlPFFQEvA4/bOK6VpUk8wCrSVciirq1mTMxoxhx
-	 B+IvVCE8lSioryBf2ZV2N4YwTNg6QAvVNZXIsOk+OCj+sJGN1bqN7gagNyg5MhKlGd
-	 ApqfXIaOsNsxBSa0Ts9HBIRGV9lSjO/QaLcMGQ79wYZGTC9nv9+Yp6Mr0cp0HXxneE
-	 FXyhACymnFqHDmLpcQ/sQA7y61Z68VqC6W5gSbc+Edxf/Bd97CDcmfWicA1ONn0LkW
-	 n3POBV4+bMslg==
+	s=k20201202; t=1705956270;
+	bh=pcmQCWSJ7Hn4aUv4ouaZQqEO5FRMjYPHna+YeTWwauw=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=dRNP+FyKx5WE1dzaEAME0NJ501LGgyxqatdBMof/xz6qz0Bv93Y4X7rpyIoPpunhx
+	 PlghgOit+OxQk1yHyVA4JCHBHXeLsbw7AM/sz+IastQRnLNCBZtyX0JUeeFRiVyG6l
+	 K2vL6ykE7/V1W86ODRQolCf03EhzMceejNC6NkcqxgsV8udHkdeWGzYrRKvHx2owXm
+	 vsXV/HUCcpmAMMkh4O3hRs3l8R2ZScEkz+eNbNmLE3+IQTHbYJTDoyPAjO9kwco5w3
+	 zMTC0XnpUQV1CKMT6wVeByfexCiFNlqJgrRO3BL1sje3qHAy1zix+uJS0kZ31Ouqgl
+	 JdmVyEONL6PNA==
 From: Mark Brown <broonie@kernel.org>
-To: Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, 
- Takashi Iwai <tiwai@suse.com>, linux-sound@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20240117160144.1305127-1-krzysztof.kozlowski@linaro.org>
-References: <20240117160144.1305127-1-krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH] ASoC: allow up to eight CPU/codec DAIs
-Message-Id: <170595626519.145475.15163514397565186066.b4-ty@kernel.org>
-Date: Mon, 22 Jan 2024 20:44:25 +0000
+To: alsa-devel@alsa-project.org, 
+ Venkata Prasad Potturu <venkataprasad.potturu@amd.com>
+Cc: Vijendar.Mukunda@amd.com, Basavaraj.Hiregoudar@amd.com, 
+ Sunil-kumar.Dommati@amd.com, syed.sabakareem@amd.com, 
+ Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, 
+ Takashi Iwai <tiwai@suse.com>, Syed Saba Kareem <Syed.SabaKareem@amd.com>, 
+ Alper Nebi Yasak <alpernebiyasak@gmail.com>, 
+ Marian Postevca <posteuca@mutex.one>, 
+ Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, 
+ "open list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." <linux-sound@vger.kernel.org>, 
+ open list <linux-kernel@vger.kernel.org>
+In-Reply-To: <20240118143023.1903984-1-venkataprasad.potturu@amd.com>
+References: <20240118143023.1903984-1-venkataprasad.potturu@amd.com>
+Subject: Re: [PATCH 1/3] ASoC: amd: acp: Enable rt5682s clocks in acp slave
+ mode
+Message-Id: <170595626688.145475.10620006643082770477.b4-ty@kernel.org>
+Date: Mon, 22 Jan 2024 20:44:26 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,9 +54,9 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.13-dev-5c066
 
-On Wed, 17 Jan 2024 17:01:44 +0100, Krzysztof Kozlowski wrote:
-> Sound card on Qualcomm X1E80100 CRD board will use eight DAIs in one DAI
-> link, so increase the limit.
+On Thu, 18 Jan 2024 20:00:19 +0530, Venkata Prasad Potturu wrote:
+> Set and enable rt5682s codec bclk and lrclk rates when
+> acp is in slave mode.
 > 
 > 
 
@@ -58,8 +66,12 @@ Applied to
 
 Thanks!
 
-[1/1] ASoC: allow up to eight CPU/codec DAIs
-      commit: 70b4769956651e986591dd94b3ff9649122b1513
+[1/3] ASoC: amd: acp: Enable rt5682s clocks in acp slave mode
+      commit: 1d565de8d53cfa823576abac84e82ab1561f04eb
+[2/3] ASoC: amd: acp: Update platform name for different boards
+      commit: 4bae2029ffcccfbefb8f31563556494464e7bf2d
+[3/3] ASoC: amd: acp: Add check for cpu dai link initialization
+      commit: 6cc2aa9a75f2397d42b78d4c159bc06722183c78
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
