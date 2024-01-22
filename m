@@ -1,126 +1,120 @@
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFA0E16410
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 07:46:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56DD217BDB;
+	Mon, 22 Jan 2024 07:47:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705909582; cv=none; b=SBHGWpfyqUkt9APGwwIUSEObW+T6/x5NAp12mXIVs7scx8uTbsJMpGTvO4O0hjflfIemLVLaBms/HPu8KDKuwgtIkpGbPiGnFYDcFTHpOlwh3oBFJAABbvWsHplQy/yqPrQuVl4Mn9AJ2u6TYd9vO6jvjKfTZizt6RJ5Go1SVGY=
+	t=1705909644; cv=none; b=rt/OCWpt6bRbOOvTS1af7ZmYenbYCkycwrRB3NDOf+Ias4ddCqie4faRm4J+uKRJfqtoW7n5kIzj9zxouUZUOh6jTo62YYOOCpnW7bUk1XGXKWl3X7nC5DazJDhFaOeuktu3LmwpBPfJRn7w+G02W1bqKmuItMCdZDHbVuIpKWo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705909582; c=relaxed/simple;
-	bh=1HWLd6cjnAiSE/YB5UYmIsvsAzIoN1hxyldr9FPzPqw=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=ogZV8d2nXD1blskk+9/1Nx0N4jqaSPHM+e2VV3S79NWKsKGdjDTpO3kuoGehGN0PaLt/vmheiO8fvH4NSGcqJZePB67IsQ4gfGPQs73z9gS/C+GOvnF1+iovl3fGNI/d+4wYmsMRmMrSp2pL7w2a/yFA0+eu6Xd2vKMo1WFOM94=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-361a5c2e84eso31296585ab.3
-        for <linux-kernel@vger.kernel.org>; Sun, 21 Jan 2024 23:46:20 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705909580; x=1706514380;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hjeBalkypix5uZnv6/78S45Th9Z+D06qXD3yIf7OfY4=;
-        b=M/Ra7S+8xu2hceMoLtkCc1yYOCSsvobqX+mdDAc0FhIJ4BcX+PKBj/1PukxERgpiGS
-         THcdiV+wGwDpV5I1rSBAdW2y2ZKYy9R2vmSq+E9ijazTmKNmAWb0xqjDfrblXTHlI4xz
-         hUO0toq4BDfvyzU5SHvuQSP84lSGOcL3QY21Ozhk74CtAVgC8YCydKMik9HUNZ9QUD7b
-         LzRlZcqZozYfKMmQtqPcQL4arefjYftuU5Kp1mnK972r4e+9ylvyYbk/kjx+OEqxs9L8
-         LyEW6v4ukx1bVyDoW+TTbnVRe702wzzQ9C3FxlTxqSZre+b1loKeW9V1Z4yfUMw6tiSC
-         H9CQ==
-X-Gm-Message-State: AOJu0YxQRRKckTEic0MMubZCkh1xY67bc/6IpIg+eXsZG1vBu2cw9mZA
-	i6DHGso+i5DJVwW9QiS8AATuqNf6bBvXRblcbBf4EA1fkPr8d5QaBFhYcJkZw7mJTL/UFWgOK05
-	CK1S5TQw7VbRwC/XbD3xwHEbaMTA1U3KQqdutpkHPyOA2tugE8T0SVHI=
-X-Google-Smtp-Source: AGHT+IGDeiT4cYa7qy6TL+jNU2foUYiDtAN/raMgagLIOwAy6tiJrqYuiFXsmgM1zsSG8rY5E6u72oz9hGAMgXb+rFd4QF0uhBEY
+	s=arc-20240116; t=1705909644; c=relaxed/simple;
+	bh=Uv+psVs71l3mYBTEtoJ9zpYjshD94k7VzSuOI7ZEPY8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=iHA/WrxIV+5A2cZTjcnGOW+yo3eeqPCyh1DL6v3lYdIYaT8o+MirBWforJWCYrPqBjIa1p0pKQ3JEGUVE4Z+DZ2FIGRImjBRg1ZHSpyqEsaKTNErRG81MbkKP16Jk3nHE7yOw/c+9Oe/9rF2hMosACr9tYtf3BKdycb5m5DF0nw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 565b878a508849b98085f4b287cfd53f-20240122
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.35,REQID:341d19ce-db61-4755-8c58-6ce5c2018139,IP:10,
+	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-3,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:7
+X-CID-INFO: VERSION:1.1.35,REQID:341d19ce-db61-4755-8c58-6ce5c2018139,IP:10,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-3,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:7
+X-CID-META: VersionHash:5d391d7,CLOUDID:6bb26d2f-1ab8-4133-9780-81938111c800,B
+	ulkID:240119184126L868QB56,BulkQuantity:15,Recheck:0,SF:66|38|24|100|19|44
+	|64|17|101|102,TC:nil,Content:0,EDM:-3,IP:-2,URL:0,File:nil,Bulk:40,QS:nil
+	,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI,
+	TF_CID_SPAM_OBB
+X-UUID: 565b878a508849b98085f4b287cfd53f-20240122
+Received: from mail.kylinos.cn [(39.156.73.10)] by mailgw
+	(envelope-from <chentao@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 935448798; Mon, 22 Jan 2024 15:47:13 +0800
+Received: from mail.kylinos.cn (localhost [127.0.0.1])
+	by mail.kylinos.cn (NSMail) with SMTP id EB762E000EB9;
+	Mon, 22 Jan 2024 15:47:12 +0800 (CST)
+X-ns-mid: postfix-65AE1D80-872727190
+Received: from [172.20.15.234] (unknown [172.20.15.234])
+	by mail.kylinos.cn (NSMail) with ESMTPA id 0A1E9E000EB9;
+	Mon, 22 Jan 2024 15:47:01 +0800 (CST)
+Message-ID: <e7a6add0-5526-4efd-8b00-07e399e292c1@kylinos.cn>
+Date: Mon, 22 Jan 2024 15:47:01 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1d88:b0:360:d7:186b with SMTP id
- h8-20020a056e021d8800b0036000d7186bmr495290ila.0.1705909580012; Sun, 21 Jan
- 2024 23:46:20 -0800 (PST)
-Date: Sun, 21 Jan 2024 23:46:19 -0800
-In-Reply-To: <000000000000dea025060d6bc3bc@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000893270060f840665@google.com>
-Subject: Re: [syzbot] [bpf?] KMSAN: uninit-value in ___bpf_prog_run (4)
-From: syzbot <syzbot+853242d9c9917165d791@syzkaller.appspotmail.com>
-To: andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org, 
-	daniel@iogearbox.net, haoluo@google.com, john.fastabend@gmail.com, 
-	jolsa@kernel.org, kpsingh@kernel.org, linux-kernel@vger.kernel.org, 
-	martin.lau@linux.dev, sdf@google.com, song@kernel.org, 
-	syzkaller-bugs@googlegroups.com, yonghong.song@linux.dev
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] x86/xen: Add some null pointer checking to smp.c
+Content-Language: en-US
+To: Markus Elfring <Markus.Elfring@web.de>, xen-devel@lists.xenproject.org,
+ kernel-janitors@vger.kernel.org, Boris Ostrovsky
+ <boris.ostrovsky@oracle.com>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
+ Ingo Molnar <mingo@redhat.com>, =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?=
+ <jgross@suse.com>, Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org
+Cc: kernel test robot <lkp@intel.com>, LKML <linux-kernel@vger.kernel.org>
+References: <20240119094948.275390-1-chentao@kylinos.cn>
+ <91af4a8c-d2e2-416f-b02e-5d69553c5998@web.de>
+From: Kunwu Chan <chentao@kylinos.cn>
+In-Reply-To: <91af4a8c-d2e2-416f-b02e-5d69553c5998@web.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 
-syzbot has found a reproducer for the following issue on:
+On 2024/1/19 18:40, Markus Elfring wrote:
+>> kasprintf() returns a pointer to dynamically allocated memory
+>> which can be NULL upon failure. Ensure the allocation was successful
+>> by checking the pointer validity.
+> =E2=80=A6
+>> ---
+>> Changes in v3:
+>>      - Remove rc initialization
+>>      - Simply error paths by adding a new label 'fail_mem'
+> =E2=80=A6
+>=20
+> I became curious if you would like to simplify further source code plac=
+es.
+This function hasn't changed in years, so it's OK for now.
+>=20
+>=20
+>> +++ b/arch/x86/xen/smp.c
+>> @@ -65,6 +65,8 @@ int xen_smp_intr_init(unsigned int cpu)
+>>   	char *resched_name, *callfunc_name, *debug_name;
+>>
+>>   	resched_name =3D kasprintf(GFP_KERNEL, "resched%d", cpu);
+>> +	if (!resched_name)
+>> +		goto fail_mem;
+>=20
+> Would you like to add a blank line after such a statement?
+Sure, I could do it in next patch.
+>=20
+>=20
+>>   	per_cpu(xen_resched_irq, cpu).name =3D resched_name;
+> =E2=80=A6
+>=20
+> Please compare with your subsequent suggestion.
+I=E2=80=99ve seend a reply.
+>=20
+> =E2=80=A6
+>> @@ -101,6 +108,9 @@ int xen_smp_intr_init(unsigned int cpu)
+>>   	}
+>>
+>>   	callfunc_name =3D kasprintf(GFP_KERNEL, "callfuncsingle%d", cpu);
+>> +	if (!callfunc_name)
+>> +		goto fail_mem;
+>> +
+>>   	per_cpu(xen_callfuncsingle_irq, cpu).name =3D callfunc_name;
+> =E2=80=A6
+>=20
+> Regards,
+> Markus
+--=20
+Thanks,
+   Kunwu
 
-HEAD commit:    9f8413c4a66f Merge tag 'cgroup-for-6.8' of git://git.kerne..
-git tree:       upstream
-console+strace: https://syzkaller.appspot.com/x/log.txt?x=1493fa3de80000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=656820e61b758b15
-dashboard link: https://syzkaller.appspot.com/bug?extid=853242d9c9917165d791
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=139d21e7e80000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12d6066fe80000
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/79d9f2f4b065/disk-9f8413c4.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/cbc68430d9c6/vmlinux-9f8413c4.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/9740ad9fc172/bzImage-9f8413c4.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+853242d9c9917165d791@syzkaller.appspotmail.com
-
-=====================================================
-BUG: KMSAN: uninit-value in ___bpf_prog_run+0xa766/0xdb80 kernel/bpf/core.c:2037
- ___bpf_prog_run+0xa766/0xdb80 kernel/bpf/core.c:2037
- __bpf_prog_run512+0xb5/0xe0 kernel/bpf/core.c:2203
- bpf_dispatcher_nop_func include/linux/bpf.h:1196 [inline]
- __bpf_prog_run include/linux/filter.h:651 [inline]
- bpf_prog_run include/linux/filter.h:658 [inline]
- bpf_test_run+0x482/0xb00 net/bpf/test_run.c:423
- bpf_prog_test_run_skb+0x14e5/0x1f20 net/bpf/test_run.c:1045
- bpf_prog_test_run+0x6af/0xac0 kernel/bpf/syscall.c:4040
- __sys_bpf+0x649/0xd60 kernel/bpf/syscall.c:5401
- __do_sys_bpf kernel/bpf/syscall.c:5487 [inline]
- __se_sys_bpf kernel/bpf/syscall.c:5485 [inline]
- __x64_sys_bpf+0xa0/0xe0 kernel/bpf/syscall.c:5485
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0x6d/0x140 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x63/0x6b
-
-Uninit was stored to memory at:
- ___bpf_prog_run+0x8567/0xdb80
- __bpf_prog_run512+0xb5/0xe0 kernel/bpf/core.c:2203
- bpf_dispatcher_nop_func include/linux/bpf.h:1196 [inline]
- __bpf_prog_run include/linux/filter.h:651 [inline]
- bpf_prog_run include/linux/filter.h:658 [inline]
- bpf_test_run+0x482/0xb00 net/bpf/test_run.c:423
- bpf_prog_test_run_skb+0x14e5/0x1f20 net/bpf/test_run.c:1045
- bpf_prog_test_run+0x6af/0xac0 kernel/bpf/syscall.c:4040
- __sys_bpf+0x649/0xd60 kernel/bpf/syscall.c:5401
- __do_sys_bpf kernel/bpf/syscall.c:5487 [inline]
- __se_sys_bpf kernel/bpf/syscall.c:5485 [inline]
- __x64_sys_bpf+0xa0/0xe0 kernel/bpf/syscall.c:5485
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0x6d/0x140 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x63/0x6b
-
-Local variable stack created at:
- __bpf_prog_run512+0x45/0xe0 kernel/bpf/core.c:2203
- bpf_dispatcher_nop_func include/linux/bpf.h:1196 [inline]
- __bpf_prog_run include/linux/filter.h:651 [inline]
- bpf_prog_run include/linux/filter.h:658 [inline]
- bpf_test_run+0x482/0xb00 net/bpf/test_run.c:423
-
-CPU: 0 PID: 5010 Comm: syz-executor315 Not tainted 6.7.0-syzkaller-00562-g9f8413c4a66f #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 11/17/2023
-=====================================================
-
-
----
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
