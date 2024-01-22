@@ -1,138 +1,81 @@
-Received: from wout4-smtp.messagingengine.com (wout4-smtp.messagingengine.com [64.147.123.20])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E55E47A70
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 20:51:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11937405CF;
+	Mon, 22 Jan 2024 20:51:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705956683; cv=none; b=u6ZV7iIatkHwcucv/etDMoTyOTcqFyQ6cAhWNISc75eDt4rs2dk+KRf3PrNixQMyGzGHC5bZzWYU+s+3LBHEIZBJC0SEiLNTkyj/+OsU4NQx1EinAnyP82cRXFoGM1Ux2jpEcbDHWcZUwpNdckdrtoFZxQwoINz2oj5+x/aT45M=
+	t=1705956703; cv=none; b=qbsJFev1DMAtC2gRdEERyZ6blmuk9UdHgDGf0L79IyOPO3nps78NS4VJ31cbcL0w7BXStw8TPjX6W+0jF/kxSXlXtpgLuePucW984qWgYMOsrCvzmoyqC6bZ+KNm+YzezkH9WFuJvtZOVxW2Z+hO4Bk0ivne+1gzq1Yw2WRFQTQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705956683; c=relaxed/simple;
-	bh=P7+Q0co7AmFpvNFHcy0Jwqq8do84FC57zbRO0tNEkh4=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=VdXcO16b6QIYGG4INS22SfPN5jvAg5bWue+0lEJflKtHeRLOSdJ+z8trFZqHYPwl2D3lhxRwuIuZWRJqJjcYfU9LAlWNXaHycG46tMHYxxIpG5tTXureWZWi2y1lqx/QbvYZuyDlNi4jfBG2NZaGdvJOfQgd+kGURbc7fUTsr3U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jannau.net; spf=pass smtp.mailfrom=jannau.net; dkim=pass (2048-bit key) header.d=jannau.net header.i=@jannau.net header.b=wrP0NJ2V; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=ZiyhvjvE; arc=none smtp.client-ip=64.147.123.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jannau.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jannau.net
+	s=arc-20240116; t=1705956703; c=relaxed/simple;
+	bh=kBy1Gyk4KwbMYdlczXCSVyblnX5b1/z4nvmDyE4PLA4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JCnVj8IzJgYCDvlH5Pq4arTWNAKCgwCDG8II28dLqsAvxtzWYiDFxK6HSjXEptf9edJ+YK/DFGKavAt+dFGrVIyxoPVbgFq1rFfTqcOtQuiiISY+Y95PWeZuEQuxZyUkkBDBvqj+hDVmlMxjGIyFYPcroohuKEkATzrQRf4Jxyo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EPWsA64Q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=jannau.net header.i=@jannau.net header.b="wrP0NJ2V";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ZiyhvjvE"
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-	by mailout.west.internal (Postfix) with ESMTP id C677A320046F;
-	Mon, 22 Jan 2024 15:51:19 -0500 (EST)
-Received: from imap53 ([10.202.2.103])
-  by compute1.internal (MEProxy); Mon, 22 Jan 2024 15:51:20 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jannau.net; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm1; t=1705956679; x=1706043079; bh=HAFVDSjmtG
-	uSNBOsIjxRld4wZCro6SBlL7gz48ZG4+0=; b=wrP0NJ2VJPnD5L05SmaHeNndf6
-	PHoJKM6MXwzyNnpEYrPGMzaVuFypoY0el0nxfPx1kKZ/ZtbfwGWgiTnEaEyJ414x
-	Sti2RPm7roMkV40gCwErXrFIHpAgXtNfixjXzZBprSy95hLVdtGuTpn64vDfdfBq
-	n6/WdS/f/d/Rh/amCM+BZ9uBu0oZetLfPHINqDRbcShwo9mCvgV21SR130Wq3GlW
-	Xa9RbAwGMxiwoIY82g9px26Z0FLXbXUM0CbTD40vMUnGnHXs0cFGDqpx1+LRvqkS
-	Xq1ccu61I4WPurjcseAYpLL3FiX5Txh7yPjsNJyt0bwPZCatGITCoF3/Bi6g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm3; t=1705956679; x=1706043079; bh=HAFVDSjmtGuSNBOsIjxRld4wZCro
-	6SBlL7gz48ZG4+0=; b=ZiyhvjvE9MkiMJZcvPcZuBAEDkx0Sl8W18pam+aMKUDL
-	nkYvPdMUSm01qfMGpBvR+rgMby/MldT9IlsE9rVftMe0cnn9BZBxKzDjGYG4baJy
-	XUQ0ADDvEJiOnjzCifFPOcydH0nt/aRPzOZMgwkAtKIIrcL4roHXqOLA4CdraD0U
-	NFe4yft0+YJXgrSPbDbvqcKhczLiQNhz+/b/dK0vRcX4iZXY8FtBCWa4ajuBse54
-	Mlw4+3Ubn4DBTjkVg06i08/Q9WKu6Q4QhByPl/E++t3ssCWxDWPX7xDZunzYqFLJ
-	BlLh0yryk+2OjhETIVNEr4qnO78BoMA8nwcDuHLL/g==
-X-ME-Sender: <xms:RtWuZSd5RX0CJfTBay7tGr_4AyZgoBZ_uGhUzSTQlGnPZK4mP9quVw>
-    <xme:RtWuZcO7V4tsc8vrYkx6CC-s5yf_xWOSYIb5LCKb32OAvQLIOdYxx5X_K3uPd5vYX
-    HS7vtkHCAw7vTKMOSo>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrvdekiedgudeflecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdfl
-    rghnnhgvucfirhhunhgruhdfuceojhesjhgrnhhnrghurdhnvghtqeenucggtffrrghtth
-    gvrhhnpeegteelvdfghedugefffeejgfehffdtffehgefhieelhfehffetteduteehieev
-    feenucffohhmrghinhepghhithhhuhgsrdgtohhmnecuvehluhhsthgvrhfuihiivgeptd
-    enucfrrghrrghmpehmrghilhhfrhhomhepjhesjhgrnhhnrghurdhnvght
-X-ME-Proxy: <xmx:RtWuZTh8MFC1Ey7NLOPtKVQlZsfO61KCLAiKf1-Q-Ek94RQLuDNAww>
-    <xmx:RtWuZf-fwgzKAq1f0Cfe-D3KCNV43qh0JQ770xpF0hFxPV-LKtnd_A>
-    <xmx:RtWuZev99CdA1t7WuoppbTUxhJp1dC8k5M73z7Yylvy6_amHX4dCFA>
-    <xmx:R9WuZb-8gzf3BYryG8WZjMYjaJbe6N1vt661L6bVKccM5EDVPdLQYw>
-Feedback-ID: i47b949f6:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 0EA65364006B; Mon, 22 Jan 2024 15:51:18 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-119-ga8b98d1bd8-fm-20240108.001-ga8b98d1b
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EPWsA64Q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6596EC433C7;
+	Mon, 22 Jan 2024 20:51:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705956702;
+	bh=kBy1Gyk4KwbMYdlczXCSVyblnX5b1/z4nvmDyE4PLA4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=EPWsA64QiIJiR5DEKExhPQM45t/lykkdoZuwLhoV9qa+hsveaxJx69OxBa/F/lttl
+	 8mcarfEKPnDixdfMXPTmx8P8sNxYiNicA2r/9EbkMiGkN6JNadMqgArG0N+L7Dp4LI
+	 ZMdOY8bk1HQDwQhlGiV/xjr6XXLZPsz4of0y+bEzh3Pzlr3e/mCmP1cXB7YLHD4hFX
+	 1BLcFb2ODHKE5LBI2OX1zFMzprz3/sdPLD3t5cdDxdxEnbA8LDwoMygQjEOwCbIfdj
+	 oLY98/Kr7+ilOZkPyfeLiK9MJEPNyMW1n7Bc1d10tubvdK6pz64h1LY9AnD9sNrkVi
+	 G5SPSU89GeJcg==
+Date: Mon, 22 Jan 2024 20:51:37 +0000
+From: Simon Horman <horms@kernel.org>
+To: Suresh Kumar <suresh2514@gmail.com>
+Cc: jesse.brandeburg@intel.com, anthony.l.nguyen@intel.com,
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, intel-wired-lan@lists.osuosl.org,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH iwl v2] i40e: print correct hw max rss count in kernel
+ ring buffer
+Message-ID: <20240122205137.GH126470@kernel.org>
+References: <20240120072806.8554-1-suresh2514@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <efebd848-c952-41f8-9422-fe2235d92259@app.fastmail.com>
-In-Reply-To: <20240117104448.6852-1-arnd@kernel.org>
-References: <20240117104448.6852-1-arnd@kernel.org>
-Date: Mon, 22 Jan 2024 21:50:56 +0100
-From: "Janne Grunau" <j@jannau.net>
-To: "Arnd Bergmann" <arnd@kernel.org>,
- "Alyssa Rosenzweig" <alyssa@rosenzweig.io>,
- =?UTF-8?Q?Martin_Povi=C5=A1er?= <povik+lin@cutebit.org>
-Cc: asahi@lists.linux.dev, "Hector Martin" <marcan@marcan.st>,
- "Arnd Bergmann" <arnd@arndb.de>, "Sven Peter" <sven@svenpeter.dev>,
- "Asahi Lina" <lina@asahilina.net>, dri-devel@lists.freedesktop.org,
- LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] drm: apple: mark local functions static
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240120072806.8554-1-suresh2514@gmail.com>
 
-Hej,
-
-On Wed, Jan 17, 2024, at 11:44, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
->
-> With linux-6.8, the kernel warns about functions that have no
-> extern declaration, so mark both of these static.
->
-> Fixes: 2d782b0d007d ("gpu: drm: apple: Add sound mode parsing")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
-> This is for the bits/200-dcp branch in https://github.com/AsahiLinux/linux,
-> the code is not yet upstream.
-> ---
->  drivers/gpu/drm/apple/parser.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/gpu/drm/apple/parser.c 
-> b/drivers/gpu/drm/apple/parser.c
-> index 44aad9a64f9a..ea9f40bb7de2 100644
-> --- a/drivers/gpu/drm/apple/parser.c
-> +++ b/drivers/gpu/drm/apple/parser.c
-> @@ -694,7 +694,7 @@ int parse_epic_service_init(struct dcp_parse_ctx 
-> *handle, const char **name,
->  	return ret;
->  }
+On Sat, Jan 20, 2024 at 12:58:06PM +0530, Suresh Kumar wrote:
+> pf->rss_size_max is hardcoded and always prints max rss count as 64.
 > 
-> -int parse_sample_rate_bit(struct dcp_parse_ctx *handle, unsigned int 
-> *ratebit)
-> +static int parse_sample_rate_bit(struct dcp_parse_ctx *handle, 
-> unsigned int *ratebit)
->  {
->  	s64 rate;
->  	int ret = parse_int(handle, &rate);
-> @@ -715,7 +715,7 @@ int parse_sample_rate_bit(struct dcp_parse_ctx 
-> *handle, unsigned int *ratebit)
->  	return 0;
->  }
+> Eg:
+>   kernel: i40e 0000:af:00.1: User requested queue count/HW max RSS count:  104/64
 > 
-> -int parse_sample_fmtbit(struct dcp_parse_ctx *handle, u64 *fmtbit)
-> +static int parse_sample_fmtbit(struct dcp_parse_ctx *handle, u64 *fmtbit)
->  {
->  	s64 sample_size;
->  	int ret = parse_int(handle, &sample_size);
+> whereas  ethtool reports the correct value from "vsi->num_queue_pairs"
+> 
+> Channel parameters for eno33:
+> Pre-set maximums:
+> RX:     n/a
+> TX:     n/a
+> Other:      1
+> Combined:   104
+> Current hardware settings:
+> RX:     n/a
+> TX:     n/a
+> Other:      1
+> Combined:   104  <-------
+> 
+> and is misleading.
+> 
+> Change it to vsi->num_queue_pairs
+> 
+> Signed-off-by: Suresh Kumar <suresh2514@gmail.com>
 
-thanks, patch included in my dev branch and will be in the next pull request I'll send to Hector.
+Hi Suresh,
 
-I suppose the recipients are generated by an automated get_maintainers.pl invocation. Is that desired for out of tree drivers?
+following-up on our earlier emails.
 
-best regards,
-Janne
+I do think that if this it is a fix it should have a fixes tag.
+Which should be for the commit where the bug was first visible to users.
