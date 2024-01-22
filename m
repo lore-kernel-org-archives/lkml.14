@@ -1,106 +1,67 @@
-Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com [209.85.222.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from abrecht.li (75-128-16-94.static.cable.fcom.ch [94.16.128.75])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2034239AD6
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 09:33:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71B8C1E89B;
+	Mon, 22 Jan 2024 09:36:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=94.16.128.75
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705916021; cv=none; b=RaxR2Q6M6jjw0mhiH0HuGMKhEr1m8ZEx5OJ/EMked8LiAkWEjEmcUmIP+NOOdhpLWdWhiOU6XW9FMd6TuFed90i/FrqLwV4AD+bm6GFTff63OHb63DnTJz4Jrhkycm7xmlv1HhaUHjIK57EtVJ7RHgVg1LlAWC3ITtP9mRjnEqM=
+	t=1705916203; cv=none; b=J6FbXBpca7K81LtQr0AQkRBLHtSkHCy/5iHlrQ12XwegTFZ6OfCaDqQsY7xNWTInHgb0XUYiZrb4FWPqJjeP92+LkAb1kUf49bOqaycAfFKV6HU+7UKCFKBxWMRmDM+Y/wKKZ6ccQT+uDnc8VThfh2fDxaetW9/pOfzm6RDWp+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705916021; c=relaxed/simple;
-	bh=A4OLVR1U5sP3BcJwe2KfRh8bKYvqXPPv7B/ABm1pOgU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Zi+94b21jWkI3LSRhewzfrCOaDXZQ/u8wdqNICwvpG4v5qGKRNNOavIcP0WwVqXn9CCQxyr+hVukTF4pYcDcFJLhA2+42tXHZa8dScRf0IrjYWuhVAMH09t6gdho6gHIXq39UDF1JPERoCA14cF2I1GYJgh1h4qQs9f75dosxeA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=mCg0coWk; arc=none smtp.client-ip=209.85.222.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="mCg0coWk"
-Received: by mail-ua1-f49.google.com with SMTP id a1e0cc1a2514c-7cecc0a662dso901357241.1
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 01:33:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1705916019; x=1706520819; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OB0KQZsTaykP5uaI0wj0BAvpVtT3DPRwwyH1LKYHhoo=;
-        b=mCg0coWkBjwnf7wK7DC161CYnF2ZyxFAiWVYPCy5b4H6fJmnYQxdLN4gZkgS5j9suw
-         ATi5hX845GjlCfppl1K2Fqoicx6edSahUeAXYpDaOecctovkPtpfCzmUbcolLYEsl75h
-         Szgiy6/j0pn65B0+ikJUPqjLDoIFgkR2q2l2flUuqww6Cab96Cz8+AeoTbnp1XS+HQ1E
-         13LM86MkbcV+oB/Cn/HOdZemKOX/1bXNzwiImWlLsLgpQU76IkGyXSzXUZ5FVJjIGco6
-         8vkltjpEaX23na4NAsJ5wUNSNx8fu5FFVzVFqVQZPC6CqpPYaxKhmXZAZop8oLeocycP
-         P0EA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705916019; x=1706520819;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OB0KQZsTaykP5uaI0wj0BAvpVtT3DPRwwyH1LKYHhoo=;
-        b=SrwCyb882P+N9OVJRZVqb9qhY7BPmlM0Bp3yWPKyAbwiYxUnyFPh7DJPfmvpaCd3gL
-         mIBoqUVgJdfj9M+cyUqczTo5p/g62CFtm3mqEaoxlM6a+VAY4nVu+tFjRXeCO152ypB4
-         Emh3lwlJYsZheb6snh7z9QLXrmCEplti7ao+whHgc46t+tFdBbzTe3KD9b+OC9tX+3PO
-         86xFgXsoCHvnzeOGAVh22luEN5cpanulMf+rOP+Zj6wCh24ZQTU1wcHImKbQcdLYQpfH
-         D52/uF+3WuSvF6KcAYGI4aBF3uAoxqjb6ze71D2aCI+3OwtT8zbE0w45RgRsvbwKZBBz
-         +hOQ==
-X-Gm-Message-State: AOJu0Yz/ZDWQIoT0JrhPx+mYWXMmEk5526YJPoUi6sPtlJ0eG/x3dnA0
-	KNAwS0fJG4AB/uPnfzKfQoCFy36+y+QhToxGOtLBwvNggHubcwxP1o3jnOXvuZnauposSaaVsQH
-	372Nybc3crIAhAWJTtqKoeAkv+HZtSLqSrD3uWA==
-X-Google-Smtp-Source: AGHT+IFpe/zMWRW1pGpT6CeZ0tmnmNb2Td5Ajn3RviQSYC9NVUJEaRRmoCGLuplnb/dOV9OwpbBaqVjkAInLQpJCjfc=
-X-Received: by 2002:a1f:4a87:0:b0:4b7:6c2f:fdb0 with SMTP id
- x129-20020a1f4a87000000b004b76c2ffdb0mr733556vka.0.1705916019043; Mon, 22 Jan
- 2024 01:33:39 -0800 (PST)
+	s=arc-20240116; t=1705916203; c=relaxed/simple;
+	bh=P/K2p5qOybuu8S9ukoXzFxZFZq0Al91xSKb0Dcn300M=;
+	h=MIME-Version:Date:From:To:Subject:Message-ID:Content-Type; b=jZz8BRYHA5UK4OxTQsmzI02uEwNSFBMatJywhlmUo0Y7cTAYqtbTLpl9fBqGoOloXNlRVqggaES+y55vnux3Dq7S+e+9bsPbM3JWFBJFjWDO/rn2fPpevWF+IPSrvmDc4M/3auY0xl9EYYu4IJ9LXBCCCfpMzQICgSUEGLCQ0Nw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nodmarc.danielabrecht.ch; spf=pass smtp.mailfrom=nodmarc.danielabrecht.ch; arc=none smtp.client-ip=94.16.128.75
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nodmarc.danielabrecht.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nodmarc.danielabrecht.ch
+DKIM-Filter: OpenDKIM Filter v2.11.0 abrecht.li 677BA27525E9
+Received: from toucan.dmz.abrecht.li (unknown [IPv6:fc00:4::a3c:111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by abrecht.li (Postfix) with ESMTPSA id 677BA27525E9;
+	Mon, 22 Jan 2024 09:36:31 +0000 (UTC)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240109073849.10791-1-Wenhua.Lin@unisoc.com>
-In-Reply-To: <20240109073849.10791-1-Wenhua.Lin@unisoc.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 22 Jan 2024 10:33:28 +0100
-Message-ID: <CAMRc=Mei0w8tCXFd-vO_SZLxYkNUWCqbEBV59Go-2LdXKs11nA@mail.gmail.com>
-Subject: Re: [PATCH V4 0/2] gpio: sprd: Modification of UNISOC Platform EIC Driver
-To: Wenhua Lin <Wenhua.Lin@unisoc.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Andy Shevchenko <andy@kernel.org>, 
-	Orson Zhai <orsonzhai@gmail.com>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
-	Chunyan Zhang <zhang.lyra@gmail.com>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, wenhua lin <wenhua.lin1994@gmail.com>, 
-	Xiongpeng Wu <xiongpeng.wu@unisoc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Date: Mon, 22 Jan 2024 10:36:31 +0100
+From: Daniel Abrecht <linux-sound@nodmarc.danielabrecht.ch>
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+ linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3] ASoC: soc-core.c: Add "Unknown" and "Unknown Product" to
+ dmi_blacklist
+Message-ID: <7d11d0711ad93f2208efb9ab13fe915b@abrecht.li>
+X-Sender: linux-sound@nodmarc.danielabrecht.ch
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Message-ID: <20240122093631.0jxZwO_o0F-SoUA1doBdRVAHfskd3z9WuBmKQMwjQ3E@z>
 
-On Tue, Jan 9, 2024 at 8:39=E2=80=AFAM Wenhua Lin <Wenhua.Lin@unisoc.com> w=
-rote:
->
-> Recently, some bugs have been discovered during use, and patch1
-> are bug fixes. Also, this patchset add optimization:
-> patch2 optimization the calculation method of eic number.
->
-> Change in V4:
->
-> -Add Fixes tag in PATCH 1/2.
-> -Change commit message in PATCH 1/2.
-> -Add clearing interrupt to debounce and latch mode in PATCH 1/2.
->
-> -Change commit message in PATCH 2/2.
-> -Delete SPRD_EIC_VAR_DATA macro in PATCH 2/2.
->
-> Wenhua Lin (2):
->   gpio: eic-sprd: Clear interrupt after set the interrupt type
->   gpio: eic-sprd: Optimize the calculation method of eic number
->
->  drivers/gpio/gpio-eic-sprd.c | 42 +++++++++++++++++++++++++++---------
->  1 file changed, 32 insertions(+), 10 deletions(-)
->
-> --
-> 2.17.1
->
->
+In U-Boot, the default for DMI vendor / product if not set is "Unknown" and "Unknown Product".
+See https://source.denx.de/u-boot/u-boot/-/blob/v2023.10/lib/smbios.c?ref_type=tags#L272
 
-Hey,
+This patch adds them to the dmi_blacklist.
 
-Can we get an Ack and (preferably) a Tested-by from the SPRD
-maintainers, please?
+Signed-off-by: Daniel Abrecht <public@danielabrecht.ch>
+Acked-by: Jaroslav Kysela <perex@perex.cz>
+---
+ sound/soc/soc-core.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Bart
+diff --git a/sound/soc/soc-core.c b/sound/soc/soc-core.c
+index f8524b5bfb33..aa1a31abbe3a 100644
+--- a/sound/soc/soc-core.c
++++ b/sound/soc/soc-core.c
+@@ -1804,6 +1804,8 @@ static const char * const dmi_blacklist[] = {
+ 	"Board Manufacturer",
+ 	"Board Vendor Name",
+ 	"Board Product Name",
++	"Unknown",
++	"Unknown Product",
+ 	NULL,	/* terminator */
+ };
+ 
+-- 
+2.39.2
