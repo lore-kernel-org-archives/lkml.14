@@ -1,139 +1,149 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D7903CF63;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FB2B3CF57;
 	Mon, 22 Jan 2024 13:28:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705930120; cv=none; b=m6cS1cQTZjOEu9hGfOOmRmcveM7q8pbFqPclY9Xvha5+OEwqPfIziwcWSGGYqfaoy2SBbkDhYUuk2nyaHU/WPspYddsnX1qMqIrqIS1s3lCD4UKVDqpeu9Gmf5CTOIBx529DmAuaM5z+ZrUFsala4iIdck+LtUM24aMW53sDv+A=
+	t=1705930121; cv=none; b=AGGR+Ht7cYlfLO9x3BzCuBlsdQiP5ncEhgJ1Y22Ix3pY9If8qpuas7YtwuxAo18IZ9KMNbaVrzd7fE0EDhOKijF977h++l65LkQ85udttMAtxy7s9x4QeRakFe6xLR7dJyZ39HnGbQ7bA0Uj2aV3ZdLX2W/fykC2pv5Zi8gyyrE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705930120; c=relaxed/simple;
-	bh=AznU8j2SdYTSEwJC02gNSrCDmEKaUE5Gb5SSkPG/ikk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=T5anx7uZMEB28NQ9rLf5QBfGVhaMYjLobVh/teqb84YjfhaNi2D3EHK5J2131MWQ2824I+sggrWfm6FH3Si2yGheQ9A/BZEcNO6inJ4ViJTRE6JMYQ/jVuyCHD+WqpOH3k3yYrSvY4+BwxlQrn9tUMh0CeOrb+nsPu1/dcu3BH8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Orqi7aiC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1705930121; c=relaxed/simple;
+	bh=KD9CzXDI3FSpEchHjIpMd6dRa37p1zEkYPrCD6KgGOk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=rEStQrC7Z9rI1bVD4KcwBx/D3Ibru33gkzdWDs3L4UmVZByBsgjpTiS0Fpvm3Et4RXh0JHry/bODDcFm0ISxot0Wdp4hELpY+VnJ4VGVf/NBorohoSL1+Ibp2CEPUrQgB9OGRnU26kr+GxJBstUIflIxeSAHvZK+l6OfqkvpNbk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Raor0MWw; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=q8TzPILh; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Orqi7aiC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 597BAC433F1;
-	Mon, 22 Jan 2024 13:28:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705930119;
-	bh=AznU8j2SdYTSEwJC02gNSrCDmEKaUE5Gb5SSkPG/ikk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Orqi7aiC+MyAfrSUnAhgP70oXz5dI7MFqSKqRDMj+ItUyiUhpnc0EkdZbiF1uRd+D
-	 GdGn4aHFa0wrO8UzM9Lkl+JoDb2gEv35fDMn+p0fxkZTjAIHV6cPgHrcNWIaZ69yvA
-	 qbsE1jDGAnMzcPieSig70g02DgIo49lf3PGqweQlCUmu4y2CayoEBVFM+k8InFT7BV
-	 doe8bzRFgDFwtVt44nIb74UYVfLOyH7TAhKTZT54VlcPWJc1fXJYZRX2QhClsuE54n
-	 7T4BR/ILR3EK8ORRDsOuKacfvP4q01IQZa5WVgNsyWavrLNpSgDt44NtpjTJ+IjyNd
-	 Jj/Cw4KQG62tQ==
-Date: Mon, 22 Jan 2024 14:28:32 +0100
-From: Niklas Cassel <cassel@kernel.org>
-To: Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
-Cc: dlemoal@kernel.org, richardcochran@gmail.com, piyush.mehta@xilinx.com,
-	axboe@kernel.dk, michal.simek@amd.com, linux-ide@vger.kernel.org,
-	linux-kernel@vger.kernel.org, git@amd.com,
-	Piyush Mehta <piyush.mehta@amd.com>
-Subject: Re: [PATCH 2/2] ata: ahci_ceva: add missing enable regulator API for
- Xilinx GT PHY support
-Message-ID: <Za5tgFKxylHR91KF@x1-carbon>
-References: <1705604904-471889-1-git-send-email-radhey.shyam.pandey@amd.com>
- <1705604904-471889-3-git-send-email-radhey.shyam.pandey@amd.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Raor0MWw";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="q8TzPILh"
+From: Anna-Maria Behnsen <anna-maria@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1705930118;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=uKZCnmT0rQ7xvCextkDvrtIUvMCCC3PPe7T7/Wyualk=;
+	b=Raor0MWwk1oF1SxQ7Ze8VNww2sdo/sPpop0PCrLNm2ls02Ioq0GJW6O+i/E1B+Zqwp0IIL
+	O5BJPhKiCyfmXIrWDnAYqCiVypvpei5kMDFuEP4EB5odb3IoiWv6o+h5kKGxjllOdwGs1j
+	4pyM764bjLDuC1+LaLcr0pQlsxxU3rS3WSUi9JYjQfeLXmOkafzXh1gL9WU1J6rtPiJkss
+	Mm+jcCtBP3vtS6UOOBQv0WHV+JMQRi0xCEiduOWw7nkyrxqlVYHkpr99iAKAGRVU7TlgHp
+	WplPkTMYrUz3dSt3wA/wQVWhLV4OsGJaob2LsvTUG8PjlSmHeQWmAK7bMrlLVw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1705930118;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=uKZCnmT0rQ7xvCextkDvrtIUvMCCC3PPe7T7/Wyualk=;
+	b=q8TzPILh4eJvE7QAeIHvk96RAVdnuUUBDtMZ11+lHqDQxwHvsd24EbagSL8sK2DZ8tPQUr
+	vczrSi1+FGylKKCg==
+To: linux-doc@vger.kernel.org
+Cc: Jonathan Corbet <corbet@lwn.net>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	x86@kernel.org,
+	Mike Rapoport <rppt@kernel.org>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>,
+	Marco Elver <elver@google.com>,
+	Alexander Potapenko <glider@google.com>,
+	Shuah Khan <shuah@kernel.org>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	Moritz Fischer <mdf@kernel.org>,
+	Wu Hao <hao.wu@intel.com>,
+	Xu Yilun <yilun.xu@intel.com>,
+	Dipen Patel <dipenp@nvidia.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Jiri Kosina <jikos@kernel.org>,
+	Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+	linux-kernel@vger.kernel.org,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>
+Subject: [PATCH 0/2] kernel-doc: Remove deprecated kernel-doc option 'functions'
+Date: Mon, 22 Jan 2024 14:28:18 +0100
+Message-Id: <20240122132820.46633-1-anna-maria@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1705604904-471889-3-git-send-email-radhey.shyam.pandey@amd.com>
+Content-Transfer-Encoding: 8bit
 
-Hello Radhey,
+Hi,
 
-On Fri, Jan 19, 2024 at 12:38:24AM +0530, Radhey Shyam Pandey wrote:
-> From: Piyush Mehta <piyush.mehta@amd.com>
-> 
-> The regulators API are disabled and enabled, during suspend and resume,
-> respectively. The following warning notice shows up on the initial suspend
-> because the enable regulators API is unaddressed in the probe:
+the kernel-doc option 'functions' is marked deprecated and is simply an
+alias for 'identifiers' and the conversion didn't looked that bad. So the
+first patch replaces all existing users of 'functions' and the second
+removes all parts in documentation and also inside the scripts.
 
-Please be a bit more specific in your commit message.
+Thanks,
 
-e.g. during system suspend, ahci_platform_suspend() calls
-ahci_platform_disable_resources() which calls
-ahci_platform_disable_regulators() which calls
-regulator_disable() for all regulators found in the controller.
+	Anna-Maria
 
 
-> 
-> regulator-dummy: Underflow of regulator enable count
-> 
-> Added the ahci_platform_enable_regulators API in probe to maintain the
-> regulator enabled and disabled ref count.
 
-s/Added/Add/
+Anna-Maria Behnsen (2):
+  Documentation: Replace deprecated 'functions' by 'identifiers'
+  Documentation: Remove deprecated kernel-doc option 'functions'
 
-"Describe your changes in imperative mood, e.g. "make xyzzy do frotz" instead of "[This patch] makes xyzzy do frotz" or "[I] changed xyzzy to do frotz", as if you are giving orders to the codebase to change its behaviour."
+ Documentation/PCI/pci.rst                     |  4 +-
+ Documentation/arch/x86/sgx.rst                | 16 ++---
+ Documentation/core-api/boot-time-mm.rst       |  2 +-
+ Documentation/core-api/debug-objects.rst      | 14 ++--
+ Documentation/core-api/genalloc.rst           | 34 +++++-----
+ Documentation/core-api/generic-radix-tree.rst |  2 +-
+ .../core-api/gfp_mask-from-fs-io.rst          |  4 +-
+ Documentation/core-api/idr.rst                |  4 +-
+ Documentation/core-api/kernel-api.rst         | 12 ++--
+ Documentation/core-api/mm-api.rst             |  6 +-
+ Documentation/core-api/printk-basics.rst      |  4 +-
+ Documentation/crypto/api-aead.rst             |  6 +-
+ Documentation/crypto/api-akcipher.rst         |  6 +-
+ Documentation/crypto/api-digest.rst           |  8 +--
+ Documentation/crypto/api-kpp.rst              | 10 +--
+ Documentation/crypto/api-rng.rst              |  4 +-
+ Documentation/crypto/api-skcipher.rst         |  8 +--
+ Documentation/dev-tools/kcsan.rst             |  6 +-
+ Documentation/dev-tools/kfence.rst            | 10 +--
+ Documentation/dev-tools/kselftest.rst         | 16 ++---
+ Documentation/doc-guide/kernel-doc.rst        |  3 -
+ Documentation/driver-api/80211/cfg80211.rst   | 16 ++---
+ .../driver-api/80211/mac80211-advanced.rst    | 26 ++++----
+ Documentation/driver-api/80211/mac80211.rst   | 12 ++--
+ Documentation/driver-api/device_link.rst      |  2 +-
+ .../firmware/fallback-mechanisms.rst          |  4 +-
+ .../driver-api/firmware/other_interfaces.rst  | 10 +--
+ .../driver-api/firmware/request_firmware.rst  | 14 ++--
+ Documentation/driver-api/fpga/fpga-bridge.rst |  8 +--
+ Documentation/driver-api/fpga/fpga-mgr.rst    | 18 +++---
+ .../driver-api/fpga/fpga-programming.rst      |  8 +--
+ Documentation/driver-api/fpga/fpga-region.rst | 22 +++----
+ Documentation/driver-api/hte/hte.rst          |  4 +-
+ Documentation/driver-api/i2c.rst              |  2 +-
+ Documentation/driver-api/infiniband.rst       | 16 ++---
+ Documentation/driver-api/mei/hdcp.rst         |  2 +-
+ Documentation/driver-api/reset.rst            | 34 +++++-----
+ Documentation/driver-api/spi.rst              |  2 +-
+ Documentation/driver-api/usb/typec.rst        | 26 ++++----
+ Documentation/driver-api/usb/typec_bus.rst    | 10 +--
+ .../gpu/amdgpu/display/display-manager.rst    | 10 +--
+ Documentation/gpu/drm-kms-helpers.rst         | 10 +--
+ Documentation/gpu/i915.rst                    | 64 +++++++++----------
+ Documentation/gpu/rfc/i915_scheduler.rst      |  2 +-
+ Documentation/gpu/rfc/i915_small_bar.rst      |  4 +-
+ Documentation/gpu/vga-switcheroo.rst          | 14 ++--
+ Documentation/hid/hid-bpf.rst                 |  6 +-
+ Documentation/mm/ksm.rst                      |  2 +-
+ Documentation/security/tpm/tpm_vtpm_proxy.rst |  2 +-
+ Documentation/sphinx/kerneldoc.py             |  5 --
+ 50 files changed, 263 insertions(+), 271 deletions(-)
 
-see:
-https://www.kernel.org/doc/html/latest/process/submitting-patches.html#describe-your-changes
+-- 
+2.39.2
 
-
-> 
-> Fixes: 9a9d3abe24bb ("ata: ahci: ceva: Update the driver to support xilinx GT phy")
-> Signed-off-by: Piyush Mehta <piyush.mehta@amd.com>
-> Signed-off-by: Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
-> ---
->  drivers/ata/ahci_ceva.c | 10 +++++++++-
->  1 file changed, 9 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/ata/ahci_ceva.c b/drivers/ata/ahci_ceva.c
-> index bfc513f1d0b3..1c56f0cabb11 100644
-> --- a/drivers/ata/ahci_ceva.c
-> +++ b/drivers/ata/ahci_ceva.c
-> @@ -219,9 +219,14 @@ static int ceva_ahci_probe(struct platform_device *pdev)
->  		if (rc)
->  			return rc;
->  	} else {
-> -		rc = ahci_platform_enable_clks(hpriv);
-> +		rc = ahci_platform_enable_regulators(hpriv);
->  		if (rc)
->  			return rc;
-> +
-> +		rc = ahci_platform_enable_clks(hpriv);
-> +		if (rc)
-> +			goto disable_regulator;
-> +
-
-Like I wrote in patch 1/2, I would prefer if you could somehow get
-ahci_platform_enable_resources() to work for your platform, so that you
-don't need to copy paste all of ahci_platform_enable_resources() to
-your driver.
-
-If it does not work to simply add a reset_control_assert() + usleep(),
-considering that this function is essentially a copy paste of
-ahci_platform_enable_resources(), I would still prefer the addition of
-a new flag, and keep the extra logic needed in libahci_platform.c, so that
-the code is kept in the same place, rather than to copy paste the whole
-function to your driver.
-
-
-Kind regards,
-Niklas
-
->  		/* Assert the controller reset */
->  		reset_control_assert(cevapriv->rst);
->  
-> @@ -340,6 +345,9 @@ static int ceva_ahci_probe(struct platform_device *pdev)
->  disable_clks:
->  	ahci_platform_disable_clks(hpriv);
->  
-> +disable_regulator:
-> +	ahci_platform_disable_regulators(hpriv);
-> +
->  	return rc;
->  }
->  
-> -- 
-> 2.34.1
-> 
