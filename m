@@ -1,283 +1,83 @@
-Received: from luna.linkmauve.fr (luna.linkmauve.fr [82.65.109.163])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0DD147A40;
-	Mon, 22 Jan 2024 20:40:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.65.109.163
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF6D23AC08;
+	Mon, 22 Jan 2024 20:42:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705956046; cv=none; b=Kn9sSa0m/V2qG6xZCh32hzV7agcovPr9x8i+49tP1b/A57Qp397e/b0O9SjA5kvCqjj0Mwz9/UXYMcIluhEzPGc1gKvWTOn4QF95hKd20ug8XJxe+J+ap91xZLUdVT28ad9Ks233YOZBHcCKY9yZUS54Q0irUv3siAjy7/ICZ/E=
+	t=1705956136; cv=none; b=MoTZ6r2Kgj7tNVphVnhTWV1ULCqIJkOgCy/o/+SI6vspFiJ/cXYvrwwovFkUKsBkhnodwoUw212lJGTgQ2nsliIckwFV2jlMntsOCHRKKewf400mH3mECVg8uC7O4b9zXRjDtpy3ADIpbx6su8LxSgxD7YvlNeNKQhOvUvyKa1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705956046; c=relaxed/simple;
-	bh=95e9LKMr1i7TcQv/j6xkAELrGzQGpKGG89U02mGQQO4=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nT+3KMD75mP6+bjidCA3lsYvr5eQ4BQR1erCG+JNJPx6ALu2q+Bb4oSMAdbkAOhoLJkuA8kNBp0F7GXddSasndH2DhTQrUaEJcWiynYPRgYZVet1hkIKBB11hHgPyLx2Xxh0oXMrVuzCNHaod4TpLsP1ODwUwn+w9SssSecx76c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linkmauve.fr; spf=pass smtp.mailfrom=linkmauve.fr; arc=none smtp.client-ip=82.65.109.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linkmauve.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linkmauve.fr
-Received: by luna.linkmauve.fr (Postfix, from userid 1000)
-	id 371E5DDADC3; Mon, 22 Jan 2024 21:35:15 +0100 (CET)
-From: Emmanuel Gil Peyrot <linkmauve@linkmauve.fr>
-To: Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Sebastian Reichel <sebastian.reichel@collabora.com>,
-	Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
-	=?UTF-8?q?Tam=C3=A1s=20Sz=C5=B1cs?= <szucst@iit.uni-miskolc.hu>,
-	Christopher Obbard <chris.obbard@collabora.com>,
-	Shreeya Patel <shreeya.patel@collabora.com>,
-	John Clark <inindev@gmail.com>,
-	Dragan Simic <dsimic@manjaro.org>,
-	Chris Morgan <macromorgan@hotmail.com>,
-	Emmanuel Gil Peyrot <linkmauve@linkmauve.fr>,
-	Andy Yan <andy.yan@rock-chips.com>,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Nicolas Frattaroli <frattaroli.nicolas@gmail.com>
-Subject: [PATCH 1/2] arm64: dts: rockchip: Add the rk3588 thermal zones
-Date: Mon, 22 Jan 2024 21:34:57 +0100
-Message-ID: <20240122203502.3311520-2-linkmauve@linkmauve.fr>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240122203502.3311520-1-linkmauve@linkmauve.fr>
-References: <20240122203502.3311520-1-linkmauve@linkmauve.fr>
+	s=arc-20240116; t=1705956136; c=relaxed/simple;
+	bh=ndBfH8M4wh+LrVK1JOcjyzRIPSTgi1rdv7agVd5PKng=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=VnyyYDSCiZ6Ipq6UlxHbGOzwym33eKIAyrVLuNMuUbvCV6NUFNJoIk8TKLx/qmpWnLDPbfa0RyyqrlWHVqNL6sKwIRSFb/f85qCOrmsBemon7bGgbqM3xmoScEpZqgfa/YM93nm2Vrth+BKgMEXpzYgN55HnVaZhUCPZxWENMBU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LknJED++; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LknJED++"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D2E8C43390;
+	Mon, 22 Jan 2024 20:42:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705956135;
+	bh=ndBfH8M4wh+LrVK1JOcjyzRIPSTgi1rdv7agVd5PKng=;
+	h=From:Subject:Date:To:Cc:From;
+	b=LknJED++2Z6EWV/GHzdIfrwbnJW0fN2BZZUSHTv2bxMYQrJ3N//2GJdPxIfUn1MKo
+	 aBg82e36z6Vj1W2kdrWSAyu8LFT3jjjEti4+rt8gcF7b5vtajVd9ZjLcl575gMaN5F
+	 Mw197UIv8OnT1Xf+0NAJNNVGGlfTT7mA9JnE/s5J5HUWOSr8B+An4MYZDHZQsupILG
+	 i2u3cPu2gjMDBM8qUV+jIGpl4NK3QklcdOh2KD+bW4MH5pEMty4emGrPhg0SuFxesY
+	 E48XLBKWDgeZKSHYz+HG4yfaNXEreuK8Jmenhfz944HuNjGmwmGT8/QzkkiRqd3tQK
+	 7hNpfLxSdkpLw==
+From: Mark Brown <broonie@kernel.org>
+Subject: [PATCH 0/4] arm64/fp: Documentation cleanups and clarifications
+Date: Mon, 22 Jan 2024 20:41:50 +0000
+Message-Id: <20240122-arm64-sve-sme-doc-v1-0-3d492e45265b@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAA7TrmUC/x3MMQqAMAxA0auUzAbSUh28ijjUGjWDVRoQofTuF
+ sc3/F9AOQsrjKZA5kdUrtRgOwPxCGlnlLUZHDlP1hKGfA4e9WHUk3G9Ii5xcBxtcEQ9tO7OvMn
+ 7P6e51g+4fwnXYwAAAA==
+To: Catalin Marinas <catalin.marinas@arm.com>, 
+ Will Deacon <will@kernel.org>, Jonathan Corbet <corbet@lwn.net>
+Cc: Dave Martin <dave.martin@arm.com>, linux-arm-kernel@lists.infradead.org, 
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Mark Brown <broonie@kernel.org>, 
+ Edmund Grimley-Evans <edmund.grimley-evans@arm.com>
+X-Mailer: b4 0.13-dev-5c066
+X-Developer-Signature: v=1; a=openpgp-sha256; l=740; i=broonie@kernel.org;
+ h=from:subject:message-id; bh=ndBfH8M4wh+LrVK1JOcjyzRIPSTgi1rdv7agVd5PKng=;
+ b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBlrtMgTmWXzoC+aNHeEG60GTON7PoDQD9++sM2Yy2M
+ wq/WbtaJATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCZa7TIAAKCRAk1otyXVSH0C1vB/
+ 9SiLUpeZW48xBAzLThoxTz5Gdj1NdtL02NUlki6mm6WJYfWXeYIF5PkFuvxz3sZHRWEd1RmwVJyTDq
+ GCIyAtlk6SHdFLNx51NQmNaZoOUQ677u2As8Y6QNDyMiKhx7tMdcOQr8pNOMK2fUykcVdHnZro8R0X
+ yrM3McC/IlDmKD/kXEzlcU0nRpxuTLCNrVbz6CZ7pBvvXmAyaN4TpWD4ivyxZsgNK7Dt4cpLMUF+ch
+ NtNRf3bwV4/8caXb/euC6y980YCIyGeZkYQpyF0Lm7X2MLFy+FYMByZw4wFWaG0lcVU2cQjZsdZcUw
+ d5wi/SX6+Eju+5dgqMWtwwL9Nmtqu7
+X-Developer-Key: i=broonie@kernel.org; a=openpgp;
+ fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
 
-The driver got added back in 45d7b3867a5cabb97fc31f16122cda8540c3a30c,
-but the dts never got updated, so here it is!
+Edwin noticed some issues with the SVE and SME documentation which are
+corrected by this series.
 
-I’ve added it to the rk3588s because that’s where most of the
-definitions are, but I’ve only tested on a rk3588 so maybe there are
-subtle changes.
-
-The rk3588 TRM also documents slightly different values (in part 1
-section 14.5.3) than the driver, but I’ve left the values alone since I
-have no way to determine which one is (more) correct.
-
-Only the CPU is properly mapped, as neither the GPU nor the NPU have
-been added to the dts for now, I’ve left some TODOs there.
-
-All of the thermal zones report almost the same value on my rock-5b
-board, I’m not sure if this is due to a programming error or if this is
-to be expected.  For instance, after running for a while, all of the
-zones report 44384 m℃, despite having used neither the GPU nor the NPU.
-
-Additionally, the alert and crit temperatures have been arbitrarily
-chosen based on other dts files, not based on any knowledge of the
-thermal behaviours of this specific SoC.
-
-Signed-off-by: Emmanuel Gil Peyrot <linkmauve@linkmauve.fr>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- arch/arm64/boot/dts/rockchip/rk3588s.dtsi | 181 ++++++++++++++++++++++
- 1 file changed, 181 insertions(+)
+Mark Brown (4):
+      arm64/sve: Remove bitrotted comment about syscall behaviour
+      arm64/sme: Fix cut'n'paste in ABI document
+      arm64/fp: Clarify effect of setting an unsupported system VL
+      arm64/sme: Remove spurious 'is' in SME documentation
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3588s.dtsi b/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
-index 36b1b7acfe6a..c7a2078960b7 100644
---- a/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
-@@ -10,6 +10,7 @@
- #include <dt-bindings/reset/rockchip,rk3588-cru.h>
- #include <dt-bindings/phy/phy.h>
- #include <dt-bindings/ata/ahci.h>
-+#include <dt-bindings/thermal/thermal.h>
- 
- / {
- 	compatible = "rockchip,rk3588";
-@@ -436,6 +437,186 @@ scmi_shmem: sram@0 {
- 		};
- 	};
- 
-+	thermal_zones: thermal-zones {
-+		soc-thermal {
-+			polling-delay-passive = <250>; /* milliseconds */
-+			polling-delay = <1000>; /* milliseconds */
-+			thermal-sensors = <&tsadc 0>;
-+
-+			trips {
-+				soc_alert: trip-alert {
-+					temperature = <80000>;
-+					hysteresis = <2000>;
-+					type = "passive";
-+				};
-+				soc_crit: trip-crit {
-+					temperature = <100000>;
-+					hysteresis = <2000>;
-+					type = "critical";
-+				};
-+			};
-+			cooling-maps {
-+				map0 {
-+					trip = <&soc_alert>;
-+					cooling-device = <&cpu_b0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+					                 <&cpu_b1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+					                 <&cpu_b2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+					                 <&cpu_b3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+					                 <&cpu_l0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+					                 <&cpu_l1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+					                 <&cpu_l2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+					                 <&cpu_l3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+				};
-+			};
-+		};
-+
-+		cluster1-thermal {
-+			polling-delay-passive = <250>; /* milliseconds */
-+			polling-delay = <1000>; /* milliseconds */
-+			thermal-sensors = <&tsadc 1>;
-+
-+			trips {
-+				cluster1_alert: trip-alert {
-+					temperature = <80000>;
-+					hysteresis = <2000>;
-+					type = "passive";
-+				};
-+				cluster1_crit: trip-crit {
-+					temperature = <100000>;
-+					hysteresis = <2000>;
-+					type = "critical";
-+				};
-+			};
-+			cooling-maps {
-+				map0 {
-+					trip = <&cluster1_alert>;
-+					cooling-device = <&cpu_b0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+					                 <&cpu_b1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+				};
-+			};
-+		};
-+
-+		cluster2-thermal {
-+			polling-delay-passive = <250>; /* milliseconds */
-+			polling-delay = <1000>; /* milliseconds */
-+			thermal-sensors = <&tsadc 2>;
-+
-+			trips {
-+				cluster2_alert: trip-alert {
-+					temperature = <80000>;
-+					hysteresis = <2000>;
-+					type = "passive";
-+				};
-+				cluster2_crit: trip-crit {
-+					temperature = <100000>;
-+					hysteresis = <2000>;
-+					type = "critical";
-+				};
-+			};
-+			cooling-maps {
-+				map0 {
-+					trip = <&cluster2_alert>;
-+					cooling-device = <&cpu_b2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+					                 <&cpu_b3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+				};
-+			};
-+		};
-+
-+		cluster0-thermal {
-+			polling-delay-passive = <250>; /* milliseconds */
-+			polling-delay = <1000>; /* milliseconds */
-+			thermal-sensors = <&tsadc 3>;
-+
-+			trips {
-+				cluster0_alert: trip-alert {
-+					temperature = <80000>;
-+					hysteresis = <2000>;
-+					type = "passive";
-+				};
-+				cluster0_crit: trip-crit {
-+					temperature = <100000>;
-+					hysteresis = <2000>;
-+					type = "critical";
-+				};
-+			};
-+			cooling-maps {
-+				map0 {
-+					trip = <&cluster0_alert>;
-+					cooling-device = <&cpu_l0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+					                 <&cpu_l1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+					                 <&cpu_l2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+					                 <&cpu_l3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+				};
-+			};
-+		};
-+
-+		center-thermal {
-+			polling-delay-passive = <250>; /* milliseconds */
-+			polling-delay = <1000>; /* milliseconds */
-+			thermal-sensors = <&tsadc 4>;
-+
-+			trips {
-+				center_alert: trip-alert {
-+					temperature = <80000>;
-+					hysteresis = <2000>;
-+					type = "passive";
-+				};
-+				center_crit: trip-crit {
-+					temperature = <100000>;
-+					hysteresis = <2000>;
-+					type = "critical";
-+				};
-+			};
-+			cooling-maps {
-+				/* TODO: what exactly is "center"? */
-+			};
-+		};
-+
-+		gpu-thermal {
-+			polling-delay-passive = <250>; /* milliseconds */
-+			polling-delay = <1000>; /* milliseconds */
-+			thermal-sensors = <&tsadc 5>;
-+
-+			trips {
-+				gpu_alert: trip-alert {
-+					temperature = <80000>;
-+					hysteresis = <2000>;
-+					type = "passive";
-+				};
-+				gpu_crit: trip-crit {
-+					temperature = <100000>;
-+					hysteresis = <2000>;
-+					type = "critical";
-+				};
-+			};
-+			cooling-maps {
-+				/* TODO: Add the GPU here once it is supported. */
-+			};
-+		};
-+
-+		npu-thermal {
-+			polling-delay-passive = <250>; /* milliseconds */
-+			polling-delay = <1000>; /* milliseconds */
-+			thermal-sensors = <&tsadc 6>;
-+
-+			trips {
-+				npu_alert: trip-alert {
-+					temperature = <80000>;
-+					hysteresis = <2000>;
-+					type = "passive";
-+				};
-+				npu_crit: trip-crit {
-+					temperature = <100000>;
-+					hysteresis = <2000>;
-+					type = "critical";
-+				};
-+			};
-+			cooling-maps {
-+				/* TODO: Add the NPU here once it is supported. */
-+			};
-+		};
-+	};
-+
- 	usb_host0_ehci: usb@fc800000 {
- 		compatible = "rockchip,rk3588-ehci", "generic-ehci";
- 		reg = <0x0 0xfc800000 0x0 0x40000>;
+ Documentation/arch/arm64/sme.rst | 11 +++++------
+ Documentation/arch/arm64/sve.rst | 10 ++--------
+ 2 files changed, 7 insertions(+), 14 deletions(-)
+---
+base-commit: 6613476e225e090cc9aad49be7fa504e290dd33d
+change-id: 20240110-arm64-sve-sme-doc-bc62ec1a2005
+
+Best regards,
 -- 
-2.43.0
+Mark Brown <broonie@kernel.org>
 
