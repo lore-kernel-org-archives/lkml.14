@@ -1,28 +1,27 @@
 Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0FAEF3A1A9;
-	Mon, 22 Jan 2024 10:16:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6408F3A1A3;
+	Mon, 22 Jan 2024 10:16:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.175.24.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705918585; cv=none; b=PiMpntOGwKDq59D07PSjxHg4otTtomOr374RRSJ+Bqmbbg9VQC5I4smS/UyjtWHNUdYniITluA0/wadIibydmwrCYO/YRjTd0JrpvEV+at+qSCb1sluPpG4JgceF+tI+pupkJTgFe5lXC3f9Tf8a9xALx7a9cJ5Lyf6C5uVqRwY=
+	t=1705918585; cv=none; b=S3/zBe1OVTZ/WAu0YqfxeH41Exkqw6dFS34FhRoUKyo6axf5xokS4tpY5TM+hnxutus2niTrHR3MKDKNOSwCHrhr6bTeDscNGm5bn8QioM5jTWzpog4EivHONZVlnO5g6HrR0PPyab7iKefmWTz327+HTy3COHiaD9+5W4Z6rEg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1705918585; c=relaxed/simple;
-	bh=Z9YZSMcv09QPVSHCStJEBNSuKdEaMXl1kZD3GfXL9TE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ccxy6FBK/0kfeu7Qq3Ot0N5pG7r0rdiagVxYTGZtweRJibBPlH9M28xPET6jyDrUboFalpvTeeCZ49ji59EM874AdtoUeAKs0arSEltEI0dAfNHy9ldX9g2yRornea3mhQK4PVxcHNPB/PcArXnHhsxZ2TuLHyH67PI9LfnU3BI=
+	bh=P8/Ubm/1PBIHe3pGHIlv2TBxqViTD4v2CslJiEztukw=;
+	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Wo9TzS6/2I49gpi5DxQD5RBJKA1pBiW6/NgJA4mK+ZpylLsAsxnzhKfpYjDuM+Xm9MlUYSmKSNSpZnUHRs/YTrBxombpdMyCIKttFWqq7CrKGa9TKLP2wWL3FJKDs2MUWAejoh/kE+ukifftKqVVvqLcdkQAVNhtBg/Gs/mt0+U=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
 Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
-	id 1rRrLi-0000Sa-00; Mon, 22 Jan 2024 11:16:14 +0100
+	id 1rRrLi-0000Sg-00; Mon, 22 Jan 2024 11:16:14 +0100
 Received: by alpha.franken.de (Postfix, from userid 1000)
-	id 66D34C04A1; Mon, 22 Jan 2024 11:13:59 +0100 (CET)
-Date: Mon, 22 Jan 2024 11:13:59 +0100
+	id BDD36C0671; Mon, 22 Jan 2024 11:15:38 +0100 (CET)
+Date: Mon, 22 Jan 2024 11:15:38 +0100
 From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: linux-mips@vger.kernel.org, open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] MIPS: Alchemy: Fix missing prototypes
-Message-ID: <Za4/5/uZ18poliXu@alpha.franken.de>
-References: <20240117234948.923273-1-f.fainelli@gmail.com>
+To: linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] MIPS: sgi-ip32: Fix missing prototypes
+Message-ID: <Za5ASnKPMNE6Dhle@alpha.franken.de>
+References: <20240119135252.112460-1-tsbogend@alpha.franken.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -31,23 +30,25 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240117234948.923273-1-f.fainelli@gmail.com>
+In-Reply-To: <20240119135252.112460-1-tsbogend@alpha.franken.de>
 
-On Wed, Jan 17, 2024 at 03:49:44PM -0800, Florian Fainelli wrote:
-> We have a number of missing prototypes warnings for board_setup(),
-> alchemy_set_lpj() and prom_init_cmdline(), prom_getenv() and
-> prom_get_ethernet_addr(). Fix those by providing definitions for the
-> first two functions in au1000.h which is included everywhere relevant,
-> and including prom.h for the last three.
+On Fri, Jan 19, 2024 at 02:52:51PM +0100, Thomas Bogendoerfer wrote:
+> Fix interrupt function prototypes, move all prototypes into a new
+> file ip32-common.h and include it where needed.
 > 
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 > ---
->  arch/mips/alchemy/common/prom.c            | 1 +
->  arch/mips/alchemy/common/setup.c           | 4 +---
->  arch/mips/include/asm/mach-au1x00/au1000.h | 3 +++
->  3 files changed, 5 insertions(+), 3 deletions(-)
+>  arch/mips/sgi-ip32/crime.c       |  6 ++++--
+>  arch/mips/sgi-ip32/ip32-berr.c   |  2 ++
+>  arch/mips/sgi-ip32/ip32-common.h | 15 +++++++++++++++
+>  arch/mips/sgi-ip32/ip32-irq.c    |  6 ++----
+>  arch/mips/sgi-ip32/ip32-memory.c |  1 +
+>  arch/mips/sgi-ip32/ip32-reset.c  |  2 ++
+>  arch/mips/sgi-ip32/ip32-setup.c  |  3 +--
+>  7 files changed, 27 insertions(+), 8 deletions(-)
+>  create mode 100644 arch/mips/sgi-ip32/ip32-common.h
 
-applied to mips-fixes.
+applied to mips-fixes
 
 Thomas.
 
