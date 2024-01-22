@@ -1,21 +1,20 @@
 Received: from luna.linkmauve.fr (luna.linkmauve.fr [82.65.109.163])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0DF847A47;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0E4047A53;
 	Mon, 22 Jan 2024 20:40:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=82.65.109.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705956044; cv=none; b=JNFycJDmvWMSG+CVwbpyMllqhDE5CtTs6JRGt8E9dCHxEpPZjD46jIcJJ59avPKVuYxTpjUC4lIrfHoVdoyk91RfWVDgCMXZp8yHe7Q8ymu3aHWgl0QwihfBTGtKVFT/s7jX8KE+nL5wqq+rqFBnxV14afY0LBA+vWM//JMeRTA=
+	t=1705956045; cv=none; b=I4zcP04Sy2lKyrs8kPw0xmFzE3aszcoLu1MpXZuKeFS5WhTAVHyi0utibevmuO6egU2x0WX1hOrpxldltjEneT3oexjYpbdn9q+FQvt1yhT9OlqDOBgm6mIjsimRlyasY4Cqusij/1jnEOrseqdPD5dK4GpT/VZ7GGK3DHAiZqI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705956044; c=relaxed/simple;
-	bh=wa2q5VeAeHSK8/v7xNiCttEJHM7/1mu/kHRQUwDAqlI=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bH95+OS+o7P//lHb5J3AsaQLgjCYftMr9pnylhzeH0qsr+iRFbFu7vBzHYJQrw/SE9beQYULcMYXnW8syezQcg5n2s+HSfPbjLrPktu8y/FytoM5DVjZCAYtYO5OdFhFbJxXOn1Db2vj/fgYSEN5dy1q45QT6mLPr2XZXHJbI3w=
+	s=arc-20240116; t=1705956045; c=relaxed/simple;
+	bh=bAPGFNo77+D9kNCksfSqKSycd65DXYyf8t7nE08TAF8=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=tTwujwy2xOJRUpq4iubghjK2rT1ZvYvh6yUsfF9WjEUL8YuDucwQAq3I4A4AV0QSx0jkaSSVPxnwBowgr8pJPFiDhmo56UTrMPOD6aj44QEreJDurYAdLqd5yl+a6LSSB3F2jb6X8CUPYVR2uGnKKZnnmYddxZf5xQER8k7t90Y=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linkmauve.fr; spf=pass smtp.mailfrom=linkmauve.fr; arc=none smtp.client-ip=82.65.109.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linkmauve.fr
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linkmauve.fr
 Received: by luna.linkmauve.fr (Postfix, from userid 1000)
-	id E22CEDDADC6; Mon, 22 Jan 2024 21:35:15 +0100 (CET)
+	id 79E38DDADBF; Mon, 22 Jan 2024 21:35:14 +0100 (CET)
 From: Emmanuel Gil Peyrot <linkmauve@linkmauve.fr>
 To: Rob Herring <robh+dt@kernel.org>,
 	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
@@ -36,12 +35,10 @@ To: Rob Herring <robh+dt@kernel.org>,
 	linux-rockchip@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	Nicolas Frattaroli <frattaroli.nicolas@gmail.com>
-Subject: [PATCH 2/2] arm64: dts: rockchip: Enable the tsadc on Rock-5B
-Date: Mon, 22 Jan 2024 21:34:58 +0100
-Message-ID: <20240122203502.3311520-3-linkmauve@linkmauve.fr>
+Subject: [PATCH 0/2] Add the thermal zones of the rk3588 to its dts
+Date: Mon, 22 Jan 2024 21:34:56 +0100
+Message-ID: <20240122203502.3311520-1-linkmauve@linkmauve.fr>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240122203502.3311520-1-linkmauve@linkmauve.fr>
-References: <20240122203502.3311520-1-linkmauve@linkmauve.fr>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,28 +48,37 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-This is the board I’ve tested the previous commit on.
+The driver got added back in 45d7b3867a5cabb97fc31f16122cda8540c3a30c,
+but the dts never got updated, so here it is!
 
-Signed-off-by: Emmanuel Gil Peyrot <linkmauve@linkmauve.fr>
----
- arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts | 4 ++++
- 1 file changed, 4 insertions(+)
+I’ve added it to the rk3588s because that’s where most of the
+definitions are, but I’ve only tested on a rk3588 so maybe there are
+subtle changes.
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts b/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
-index a0e303c3a1dc..2c6e55f0a5fa 100644
---- a/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
-@@ -731,6 +731,10 @@ regulator-state-mem {
- 	};
- };
- 
-+&tsadc {
-+	status = "okay";
-+};
-+
- &uart2 {
- 	pinctrl-0 = <&uart2m0_xfer>;
- 	status = "okay";
+The rk3588 TRM also documents slightly different values (in part 1
+section 14.5.3) than the driver, but I’ve left the values alone since I
+have no way to determine which one is (more) correct.
+
+Only the CPU is properly mapped, as neither the GPU nor the NPU have
+been added to the dts for now, I’ve left some TODOs there.
+
+All of the thermal zones report almost the same value on my rock-5b
+board, I’m not sure if this is due to a programming error or if this is
+to be expected.  For instance, after running for a while, all of the
+zones report 44384 m℃, despite having used neither the GPU nor the NPU.
+
+Additionally, the alert and crit temperatures have been arbitrarily
+chosen based on other dts files, not based on any knowledge of the
+thermal behaviours of this specific SoC.
+
+Emmanuel Gil Peyrot (2):
+  arm64: dts: rockchip: Add the rk3588 thermal zones
+  arm64: dts: rockchip: Enable the tsadc on Rock-5B
+
+ .../boot/dts/rockchip/rk3588-rock-5b.dts      |   4 +
+ arch/arm64/boot/dts/rockchip/rk3588s.dtsi     | 181 ++++++++++++++++++
+ 2 files changed, 185 insertions(+)
+
 -- 
 2.43.0
 
