@@ -1,173 +1,316 @@
-Received: from EUR01-DB5-obe.outbound.protection.outlook.com (mail-db5eur01on2040.outbound.protection.outlook.com [40.107.15.40])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F57117C68;
-	Mon, 22 Jan 2024 08:00:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.15.40
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705910431; cv=fail; b=XscHBRFAcRBpEmCw+4wp7l7Qhe0v70AI9B3TLTEmW1rNa8WAJfyPy+SNQyIilRpA4Upb9gm20Q8d7RO5lTpscGR3EI6/RMr4HjNYq9NS31CoGXKzgAeueaShmjH8bY9BXJ97XZbdimrXfsVbTmd5csNLWRHygou+DLnRTtWe/Ak=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705910431; c=relaxed/simple;
-	bh=26Ah53ogv1RuFrHV72FthULZUHBDgAlP66A+g2KntIg=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=CS4PSz9PnZRVAD/v/udm5n+o1UR4sdvcY54mKG/mPumQZ/6867v9/AN4Hco7TLiw3x/BCguaMCvjTEplAQI+AgQ+ogD0eJJ3yhnoaf89Qd3Uv0lhr6M2gD/Zf1mNP8tGTZsN6R3bdKYkuavMYonA7o/IbkRPJWEQqagTOwDiRvs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=Wux7hChM; arc=fail smtp.client-ip=40.107.15.40
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB7DA17C68;
+	Mon, 22 Jan 2024 08:02:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1705910581; cv=none; b=KwidRjN/8oNCYyYvUckE0TzwGgvV/7MUS6e7hhgBaLcm4Kjx79PMjQDaB1kx2xTkjzdpiVa3l0rupJPs9/3MVX9rPUqm/NrISr+x7r+ngl/5t6Z4s0QEce/PAhqBnY5RmNA7McO2wlOni4Zg7xGZPnltJI3g2HW5OzcXHrcQCqA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1705910581; c=relaxed/simple;
+	bh=WCL2HAPFSfzn/qaSLH4XXDInqiOUekK9lc9KWvkOr9U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=K+hVp34bUeBwF7Y0Y1J1ghtvyRX6xQynYkM6pqrMBfN09+5txs5edZk083bXex+25KizpVHzGrFP8Lp4NLU71sVAHN6gAdFWhHPJHWbxjQMi7hN3zUZZaw9UhCkmFKtco03hVCR8ou13mJL43eI3L5fWoGB+t0T13KgbBuScGdw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iSeWhYHO; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="Wux7hChM"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lkXzRXX3QYPoRXg/Bm3D13EIoL1klRN55u177xwAK5OKJTW1iS7bBc5OTBJJ79BVloD2gOvF6LqYXUF4ljZeovFfLydkZCVpl4cQa+ua1TjXE37N5mQZKgQZ9iQKZey9lHdeybfMAWQqk87OaxennJ4uu1UeYQvQxGZ+JELU9KzDz+YSXKbk6BUeynsIU6tYxNRHEOynioqlZyF4bkHjvgLTHnb18RS1s3KplOJFEJ2UQI8+eU8XZyPfqSvcFSgt1a1CqyjnKmQ9Z7zKwY3kVgQncmHxHGLbshPcwofwXkdcU3viMusxlAoI01NW9xEqASIQ8uIS0c6RW4F2OJwNpg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Y9kmDS80mo593DsrjqavbETC0IgjsyOsNnaCt6c156E=;
- b=fOUH37Xv4TNWH8b21OJNJrnZeEyvfjv36jw9pU3JIXdE0NCSa5RpVtk0AReC413YpLHLX0j5yWWMMRFTfeNuwFVBzyOhHdI0/0SlQOl6MJAPLT6YAC+a6XTPSR3p4Y853LbaugS2mHvQgoUweXxQdqRGtXHwHbAd9F4kUKyAz2GV39SW22W4elAP3PyEt2GyWjMFmfyDPNR5PBZ2c3RFjShkCB7y3ikD23zCpw3LtLXqRT7S8rgTOaovm8iqGQoxNmZcta55vFcOkpiPEV979qYYHOuGsDkyHvam1xg1HGgy4pWeAt79AFh93pThLPjRYOrNpwG78VfqQ+dMVl+Wow==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector2-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Y9kmDS80mo593DsrjqavbETC0IgjsyOsNnaCt6c156E=;
- b=Wux7hChMsVZxEpwjd3UGZqtx5xu+XQBoTbZsWu5UHdQSWO9xl4Ew+48OZ6UQy69FhXQ+Dy3DKnS8TV3GybmwtITM/PCMZVwtP2uupMejB9h7Cnd12T6O+rAvZuiSE7sqUorJKQSt4YF1YppV8aBEAkXMrtyxld2bPezjqo5/30U=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=oss.nxp.com;
-Received: from DU0PR04MB9417.eurprd04.prod.outlook.com (2603:10a6:10:358::11)
- by AM8PR04MB7313.eurprd04.prod.outlook.com (2603:10a6:20b:1c5::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7202.32; Mon, 22 Jan
- 2024 08:00:24 +0000
-Received: from DU0PR04MB9417.eurprd04.prod.outlook.com
- ([fe80::c499:8cef:9bb1:ced6]) by DU0PR04MB9417.eurprd04.prod.outlook.com
- ([fe80::c499:8cef:9bb1:ced6%3]) with mapi id 15.20.7202.031; Mon, 22 Jan 2024
- 08:00:24 +0000
-From: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-To: sudeep.holla@arm.com,
-	cristian.marussi@arm.com,
-	jdelvare@suse.com,
-	linux@roeck-us.net
-Cc: linux-hwmon@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Peng Fan <peng.fan@nxp.com>
-Subject: [PATCH] hwmon: scmi-hwmon: implement change_mode
-Date: Mon, 22 Jan 2024 16:04:41 +0800
-Message-Id: <20240122080441.1957022-1-peng.fan@oss.nxp.com>
-X-Mailer: git-send-email 2.37.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SI2P153CA0015.APCP153.PROD.OUTLOOK.COM
- (2603:1096:4:140::21) To DU0PR04MB9417.eurprd04.prod.outlook.com
- (2603:10a6:10:358::11)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iSeWhYHO"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-336c8ab0b20so2865759f8f.1;
+        Mon, 22 Jan 2024 00:02:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1705910578; x=1706515378; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=gQQhKweIL/MfaRqaUUsl9viWbACAS6aXTW7gfUp7M7k=;
+        b=iSeWhYHOzdaQLISrQm7r4+8uIEub4k4cXbINumB3nNPVlnRLZ60i/fpdjATZQ0l2+I
+         7P0sFWSwPPrgT2bHKgfYQBjHDbGbFk+OgE23FEXq3GJ6OCPEMkAx3N4M5x7zKIJ7KtM7
+         ZkAAgSb51nn5r3LKjUDBBCcwmpe+8kN9sX38xVBWHOz9yUYiydN8s5oPTpiBmmeysZAX
+         yGkD+faZYd8z5A4r1RKHipW4vygaRnWs+j5SIXZuRipFdtS9Oe78wSna2ZU/aDzN+pqy
+         GLlaFWMf4G46m4qDLmV2ky845222hIM44HzKHZQJNvsIxgmyZq5H/zs+MmVZK9/NnO/z
+         Yymw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705910578; x=1706515378;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=gQQhKweIL/MfaRqaUUsl9viWbACAS6aXTW7gfUp7M7k=;
+        b=UmMUKOP/K3NBBuNKgF5bmjhgLKPmAtvMBMO1Mi2rMak0cFr2KPfBnRwsXAdyuWiDSk
+         NMLeEy8LaZpO7UxYEgp+u94PiLzKicTl5q/Th6ZB8oLK8nlQ0EFthguygo35Rn+UlDZk
+         puz7/AgiZhrwWOvB/eMxUIcz5VujVndZGDq2bVzHLzqngaHlu0PxkYSTIAR+a69f2/xy
+         Vwjq2zhf+EmUsFlkBj7rlytPu7f3PFBe0cQ1tdNNY21RE5UEMtCLbY50ZFwq2uiv/nBq
+         ICYVBwl4YwtkLIkKoVBn1uiTqZKrLJEQPsHh6CPagVSe9uWIorEn71qqxBfByyjzyX5Z
+         WfCA==
+X-Gm-Message-State: AOJu0YzXhp6+y8IouhWZHAeiIavsnIEkzg+nq5dsFNCzYSZ7pR1FZFs/
+	StsLUKjcEdAaLgmLPH7Bsh6nynd0v/jmgSU4AZUwLqJT9hLtz//m
+X-Google-Smtp-Source: AGHT+IG9+JuJqbT2TuU8J7qhPDQqp/HN08f8j/6H+CK0ZJJJOenew6gN7m8yBjpTbDcLQA3dWIudrA==
+X-Received: by 2002:adf:fa04:0:b0:337:c528:c0e8 with SMTP id m4-20020adffa04000000b00337c528c0e8mr2558951wrr.49.1705910577824;
+        Mon, 22 Jan 2024 00:02:57 -0800 (PST)
+Received: from [192.168.2.177] ([207.188.161.188])
+        by smtp.gmail.com with ESMTPSA id b13-20020a05600010cd00b003392c1f40acsm4527284wrx.28.2024.01.22.00.02.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 22 Jan 2024 00:02:56 -0800 (PST)
+Message-ID: <d16723a6-5602-4fa8-9cfc-589846b75f5b@gmail.com>
+Date: Mon, 22 Jan 2024 09:02:55 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DU0PR04MB9417:EE_|AM8PR04MB7313:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3d393467-ac53-4c44-faa8-08dc1b202fff
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	7rW6dfvRHvtiQ8r0K0ozpzF5ae+AHNzaCmwy9qEAa6j+qgOyGkiwvqpjYak2PG2YOUp2FlZqGpnFJZTlA1gbBdx3cO0paJamfw58gU6uUcNzZgykVmTI4Qsr1UtrAp5CYaLC5jbVpYQJ07+QFNET6HSzSvaYq0oP66bXrus3pqu/6vZ5A3oTnfdVBv+KkxAGrls/wfLNsTYxl1m3FcutSJzQ49XycyRcQUyB5zhyMCbf5l5KzdeZ1RfQ6TfoFAKe33K8EeZa8hDA/YBiyQC+aC4MDjai0biPBWnPqvUaR5xClU/koyIlflVY5Je0pX1DQJcaMjaDFwiETWy9LKCDLGA1pw7T7msClM5iy15exkFJ2mI88+e5vggsXwJenyeLFroaY2S9uRWbAnrjNj7giEbPEWACh//dgho+0X7Ktng4nzhlfafX0Xy1vC9whLKWaIfH1dl6ty3FmCekrLtzOAaXe6I2iRo8w7dOa34nWBX6Jpu3+832e1wWTVgTeXA3GONx2JNTKUs+JpmDOrPjoCzrAUSzSAmK++wwoMczGMvqSD06usIJyZdkXwTyKVVmlc5qHE2x30o73Nl/g5E7PRYwVmi3pP0RGiDdqbDTiSxNgbgYcg5h4hzKbP0ee7xZ
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU0PR04MB9417.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(396003)(366004)(376002)(39860400002)(136003)(230922051799003)(1800799012)(451199024)(64100799003)(186009)(41300700001)(1076003)(26005)(38350700005)(6506007)(478600001)(52116002)(2616005)(6666004)(83380400001)(38100700002)(6512007)(6486002)(66476007)(316002)(66946007)(66556008)(86362001)(5660300002)(8676002)(8936002)(2906002)(4326008);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?1qrBRvoxnAYlD6pz9ntoy2SvfP7b44IplU+VskmRKUL0ztJxebDLfPrLQc4H?=
- =?us-ascii?Q?w84ej1juNmVlOHVpJN5ANwG8EkDtinbaaCpQJL0BwiHzTs1mBX8kaHrtLVlA?=
- =?us-ascii?Q?hHwpcClACgVWaEnL+3N6pVSyUCqF48B9RhAAw9GH8M8eDJ3gVMPOKTvXXFfz?=
- =?us-ascii?Q?7NDFJCVKoRUeBRnkcT7ma+GJQ2kw1Noc14UuIta+XLAbvlCzGzViW88pwqZ6?=
- =?us-ascii?Q?R7be6xEZPSzSpEkjByf+O8sp1UYVg7DnUWI5xZb+Jv2El8dZWNJSA8RZvI1y?=
- =?us-ascii?Q?jwAsVTQdih0UV/8PEAHoYJKRrdh/3ocyuaRtfsE3RocbZjEFkUpn6RNM8TpL?=
- =?us-ascii?Q?FU7pTTERSLllGfYR5qfLFKTCa8S4YYbMEXnurMMlGfQSNbQkObVQO3pBqQWJ?=
- =?us-ascii?Q?A+ns552Nb1JYZERQGiPhFaROyPquu0nGIXvrUIVW1keyo70lYVgKUlqV8/ES?=
- =?us-ascii?Q?jBxmXd7HdKUn5uGc8JKIbLIDC+w6kjEQ1woh/cCOHXOXeII+Y02WczJPx/WS?=
- =?us-ascii?Q?Y9G4/N7wlQX9+KtgOrZVX1QKPMLVPioxQ2q51zVxqnTk8P//0O+JRX7qMWaN?=
- =?us-ascii?Q?pa1aREcEh8fCfKBrlZwofRfR46VVMzbE2ZpTjSDfL5lfIq7tvIoTWeKtueFl?=
- =?us-ascii?Q?cTqqqqQtEsCBqzToyN8vr1AsHAqE0rVxxuwTmabUdGGFYtld+xldIaJvGmAW?=
- =?us-ascii?Q?PyQpMJEQVTliJVDH/DC5aPDIpp+R3u8enBTlWGX6lqfBhFGZ3CGepTBs2YTM?=
- =?us-ascii?Q?tfYb9AklNKRt8jHPyUtcqMIecgemXVkFcrmkueOt9ixZw8m7bJ2vdc6bixqI?=
- =?us-ascii?Q?MoCqyzLo4O3rSfFAQLjRlEurKSvdLPy+huyePDkCoy8CwX9Tvw/PBEVqUWWS?=
- =?us-ascii?Q?AVFoR49BBzdNg3cOFaQfBwvfmPZRvSmWTBhO0UQqMSYeBgzNqPKyIgiXuP6x?=
- =?us-ascii?Q?2Ig30HrznnLjdDZKhNA+rXJFZwwNNb1PEdD9e7ukHXedEisgBBhabt0Xritq?=
- =?us-ascii?Q?js2vvTWj0WW7/pbjqAPkavUJvITECZG48MEDhVyGZIDH6kx6mGWKe0mCAygt?=
- =?us-ascii?Q?dochnGCh89kQoutzjbkO8Bb/oQZo8r3F1BYkq+y/xW6WJ1Wtuiu/oKmuVARG?=
- =?us-ascii?Q?PxKBd5iAvJm343APPPSCSMsgflsULUBexn7DeCNL7eLIemBRWCYGNSxXEkPo?=
- =?us-ascii?Q?aSUqFL3a9KuIBR/2yXF2B0kDLc0mRNBn81MHksAhE10FaO+fuLCHrMoCpysF?=
- =?us-ascii?Q?gNSBIzrY9xI/9RR0zoxuROL4T2EAx8EdNjKJmg8yWE+UYuYlhhsUYieBF9mB?=
- =?us-ascii?Q?nHsPMyEMym8w2D16nxWsKYWYD99D9iwybmgORzXsgNdsDMnoystJGcvcrlwv?=
- =?us-ascii?Q?Oadiyg/xdgq4G2NjIw9gKmJtCTWJODOieLblr4vjs6kRpOfyzTN4d3c5bYx/?=
- =?us-ascii?Q?3ADhwbRYaZBaneWYR4gA6oXIXy1yniW2TgIY15SbFwiXSBIH7QKL68MKpFm0?=
- =?us-ascii?Q?KvMZDeVJ7Rl9QGMuYgXX0eDNOyO8lp2GFN1HQhzSiiLEejum/DUvUm4gLKZG?=
- =?us-ascii?Q?BlImLYNMUf065ghp304wjjpESdnr6EWxQP/h01za?=
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3d393467-ac53-4c44-faa8-08dc1b202fff
-X-MS-Exchange-CrossTenant-AuthSource: DU0PR04MB9417.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jan 2024 08:00:24.2955
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: MC85hmU5e1YXe+nGSDucCKahsOGauiF7rTwRsu4JXy4SyyK+w+6NXma0CNwgWSGOW3j5EJhN+69WVgn1YGRUEg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM8PR04MB7313
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/9] dt-bindings: arm: mediatek: Sort entries by SoC
+ then board compatibles
+Content-Language: en-US, ca-ES, es-ES
+To: Chen-Yu Tsai <wenst@chromium.org>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
+ linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, Eugen Hristev <eugen.hristev@collabora.com>,
+ Conor Dooley <conor.dooley@microchip.com>
+References: <20231213150435.4134390-1-wenst@chromium.org>
+ <20231213150435.4134390-2-wenst@chromium.org>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Autocrypt: addr=matthias.bgg@gmail.com; keydata=
+ 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
+In-Reply-To: <20231213150435.4134390-2-wenst@chromium.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Peng Fan <peng.fan@nxp.com>
 
-The sensor maybe disabled before kernel boot, so add change_mode
-to support configuring the sensor to enabled state.
 
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
----
- drivers/hwmon/scmi-hwmon.c | 29 +++++++++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
+On 13/12/2023 16:04, Chen-Yu Tsai wrote:
+> Some of the new MediaTek board entries were inserted in a chronological
+> order, or just randomly. This makes it harder to search for an entry.
+> 
+> Sort the entries by first grouping by SoC, then sorting by board
+> compatible strings. Also add a comment at the top asking people to do
+> the same.
+> 
+> Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
+> Acked-by: Conor Dooley <conor.dooley@microchip.com>
+> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 
-diff --git a/drivers/hwmon/scmi-hwmon.c b/drivers/hwmon/scmi-hwmon.c
-index 364199b332c0..f7bd63d52d15 100644
---- a/drivers/hwmon/scmi-hwmon.c
-+++ b/drivers/hwmon/scmi-hwmon.c
-@@ -151,7 +151,36 @@ static int scmi_hwmon_thermal_get_temp(struct thermal_zone_device *tz,
- 	return ret;
- }
- 
-+static int scmi_hwmon_thermal_change_mode(struct thermal_zone_device *tz,
-+					  enum thermal_device_mode new_mode)
-+{
-+	int ret;
-+	u32 config;
-+	enum thermal_device_mode cur_mode = THERMAL_DEVICE_DISABLED;
-+	struct scmi_thermal_sensor *th_sensor = thermal_zone_device_priv(tz);
-+
-+	ret = sensor_ops->config_get(th_sensor->ph, th_sensor->info->id,
-+				     &config);
-+	if (ret)
-+		return ret;
-+
-+	if (config & BIT(0))
-+		cur_mode = THERMAL_DEVICE_ENABLED;
-+
-+	if (cur_mode == new_mode)
-+		return 0;
-+
-+	if (new_mode == THERMAL_DEVICE_ENABLED)
-+		config |= SCMI_SENS_CFG_SENSOR_ENABLED_MASK;
-+	else
-+		config &= ~SCMI_SENS_CFG_SENSOR_ENABLED_MASK;
-+
-+	return sensor_ops->config_set(th_sensor->ph, th_sensor->info->id,
-+				      config);
-+}
-+
- static const struct thermal_zone_device_ops scmi_hwmon_thermal_ops = {
-+	.change_mode = scmi_hwmon_thermal_change_mode,
- 	.get_temp = scmi_hwmon_thermal_get_temp,
- };
- 
--- 
-2.37.1
+Does not apply cleanly, would you mind to rebase the whole series onto v6.8-rc1.
 
+Regards,
+Matthias
+
+> ---
+> Changes since v3:
+> - Collected reviewed-by from Angelo
+> Changes since v2:
+> - none
+> Changes since v1:
+> - Collected ack from Conor
+> ---
+>   .../devicetree/bindings/arm/mediatek.yaml     | 123 +++++++++---------
+>   1 file changed, 62 insertions(+), 61 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/mediatek.yaml b/Documentation/devicetree/bindings/arm/mediatek.yaml
+> index a5999b3afc35..60337b439744 100644
+> --- a/Documentation/devicetree/bindings/arm/mediatek.yaml
+> +++ b/Documentation/devicetree/bindings/arm/mediatek.yaml
+> @@ -17,6 +17,7 @@ properties:
+>       const: '/'
+>     compatible:
+>       oneOf:
+> +      # Sort by SoC (last) compatible, then board compatible
+>         - items:
+>             - enum:
+>                 - mediatek,mt2701-evb
+> @@ -129,71 +130,10 @@ properties:
+>             - enum:
+>                 - mediatek,mt8173-evb
+>             - const: mediatek,mt8173
+> -      - items:
+> -          - enum:
+> -              - mediatek,mt8183-evb
+> -          - const: mediatek,mt8183
+> -      - description: Google Hayato rev5
+> -        items:
+> -          - const: google,hayato-rev5-sku2
+> -          - const: google,hayato-sku2
+> -          - const: google,hayato
+> -          - const: mediatek,mt8192
+> -      - description: Google Hayato
+> -        items:
+> -          - const: google,hayato-rev1
+> -          - const: google,hayato
+> -          - const: mediatek,mt8192
+> -      - description: Google Spherion rev4 (Acer Chromebook 514)
+> -        items:
+> -          - const: google,spherion-rev4
+> -          - const: google,spherion
+> -          - const: mediatek,mt8192
+> -      - description: Google Spherion (Acer Chromebook 514)
+> -        items:
+> -          - const: google,spherion-rev3
+> -          - const: google,spherion-rev2
+> -          - const: google,spherion-rev1
+> -          - const: google,spherion-rev0
+> -          - const: google,spherion
+> -          - const: mediatek,mt8192
+> -      - description: Acer Tomato (Acer Chromebook Spin 513 CP513-2H)
+> -        items:
+> -          - enum:
+> -              - google,tomato-rev2
+> -              - google,tomato-rev1
+> -          - const: google,tomato
+> -          - const: mediatek,mt8195
+> -      - description: Acer Tomato rev3 - 4 (Acer Chromebook Spin 513 CP513-2H)
+> -        items:
+> -          - const: google,tomato-rev4
+> -          - const: google,tomato-rev3
+> -          - const: google,tomato
+> -          - const: mediatek,mt8195
+> -      - items:
+> -          - enum:
+> -              - mediatek,mt8186-evb
+> -          - const: mediatek,mt8186
+> -      - items:
+> -          - enum:
+> -              - mediatek,mt8192-evb
+> -          - const: mediatek,mt8192
+> -      - items:
+> -          - enum:
+> -              - mediatek,mt8195-demo
+> -              - mediatek,mt8195-evb
+> -          - const: mediatek,mt8195
+>         - description: Google Burnet (HP Chromebook x360 11MK G3 EE)
+>           items:
+>             - const: google,burnet
+>             - const: mediatek,mt8183
+> -      - description: Google Krane (Lenovo IdeaPad Duet, 10e,...)
+> -        items:
+> -          - enum:
+> -              - google,krane-sku0
+> -              - google,krane-sku176
+> -          - const: google,krane
+> -          - const: mediatek,mt8183
+>         - description: Google Cozmo (Acer Chromebook 314)
+>           items:
+>             - const: google,cozmo
+> @@ -244,6 +184,13 @@ properties:
+>                 - google,kodama-sku32
+>             - const: google,kodama
+>             - const: mediatek,mt8183
+> +      - description: Google Krane (Lenovo IdeaPad Duet, 10e,...)
+> +        items:
+> +          - enum:
+> +              - google,krane-sku0
+> +              - google,krane-sku176
+> +          - const: google,krane
+> +          - const: mediatek,mt8183
+>         - description: Google Willow (Acer Chromebook 311 C722/C722T)
+>           items:
+>             - enum:
+> @@ -251,10 +198,64 @@ properties:
+>                 - google,willow-sku1
+>             - const: google,willow
+>             - const: mediatek,mt8183
+> +      - items:
+> +          - enum:
+> +              - mediatek,mt8183-evb
+> +          - const: mediatek,mt8183
+>         - items:
+>             - enum:
+>                 - mediatek,mt8183-pumpkin
+>             - const: mediatek,mt8183
+> +      - items:
+> +          - enum:
+> +              - mediatek,mt8186-evb
+> +          - const: mediatek,mt8186
+> +      - description: Google Hayato
+> +        items:
+> +          - const: google,hayato-rev1
+> +          - const: google,hayato
+> +          - const: mediatek,mt8192
+> +      - description: Google Hayato rev5
+> +        items:
+> +          - const: google,hayato-rev5-sku2
+> +          - const: google,hayato-sku2
+> +          - const: google,hayato
+> +          - const: mediatek,mt8192
+> +      - description: Google Spherion (Acer Chromebook 514)
+> +        items:
+> +          - const: google,spherion-rev3
+> +          - const: google,spherion-rev2
+> +          - const: google,spherion-rev1
+> +          - const: google,spherion-rev0
+> +          - const: google,spherion
+> +          - const: mediatek,mt8192
+> +      - description: Google Spherion rev4 (Acer Chromebook 514)
+> +        items:
+> +          - const: google,spherion-rev4
+> +          - const: google,spherion
+> +          - const: mediatek,mt8192
+> +      - items:
+> +          - enum:
+> +              - mediatek,mt8192-evb
+> +          - const: mediatek,mt8192
+> +      - description: Acer Tomato (Acer Chromebook Spin 513 CP513-2H)
+> +        items:
+> +          - enum:
+> +              - google,tomato-rev2
+> +              - google,tomato-rev1
+> +          - const: google,tomato
+> +          - const: mediatek,mt8195
+> +      - description: Acer Tomato rev3 - 4 (Acer Chromebook Spin 513 CP513-2H)
+> +        items:
+> +          - const: google,tomato-rev4
+> +          - const: google,tomato-rev3
+> +          - const: google,tomato
+> +          - const: mediatek,mt8195
+> +      - items:
+> +          - enum:
+> +              - mediatek,mt8195-demo
+> +              - mediatek,mt8195-evb
+> +          - const: mediatek,mt8195
+>         - items:
+>             - enum:
+>                 - mediatek,mt8365-evk
