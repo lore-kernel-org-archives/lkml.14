@@ -1,169 +1,225 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACD2B5224;
-	Mon, 22 Jan 2024 05:42:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CB7B5227
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 05:46:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705902181; cv=none; b=bMKz/rp/m89R5q+eFabHvTB/53lIvZ8UInBz0L7CjnOlkhpAttxxmQafbGoh56XpTmi6OZMpVU1DevFctvSgZWFpwPnwyCHSY6wURz3L9zFT29GOAJotwpGowiB4nED8AkdwyizYQzV2G47wN9CZuoq3ayJH3/St89vs9rvcgT4=
+	t=1705902399; cv=none; b=qysX0kU251za0j4geOGPf76+eyz1PjYDCubABYpZ0lYuwW9aDdb8ksnno1HRdhYhekZdDSA0K2VRYBbdt/MpVvROPvF4kEg5Ne13vPH/AJod0JKoCZg/dgWK6edX6KUz00Dr+NAe6BMILD6XkcIwOZPrCPo3XbdFoJuuWg9WL44=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705902181; c=relaxed/simple;
-	bh=KTDF5JXouoXNHw+T2UtDAb3KDuO0Iau+xrPwTY17JJk=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
-	 In-Reply-To:Content-Type; b=F5wis64n4kS1UvgxV2exF7oC2V2xvOmYlBUQdaRHcRCocXCCxEHkeTfxPVNoXtk7xzDrDmOmZmlpEemT3IYQ04zS2CxmPZiYLxR0J17tAFO981Go4HtjLWQ0j16plK/bKxeMzO+KvLn2CBnkDhgkBfqVtL/OzF2fXmEeZ13Wfjo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=kggplw5O; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1705902399; c=relaxed/simple;
+	bh=1rBvZM1Ljwa8WBCUNlYPqcVcf0Xlz7obw+J+fO/FviM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gJgLUeWvZACikjPk2+HVOUl8hpdwAwPAMHmc7sE+Zt3aMWEQctxJhJseZj5Q1vwmZw8z+AzfWsZfHN4L5Pe/4UVgPLlDKie3q5OkYyqf5Gox91pakVi2O51OV5Y9voqxyi57B8D3Y401iGTwJTVfzZa0YzDiRNgfzqLka39AwHA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=equt+5O5; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="kggplw5O"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40M5VVo1015227;
-	Mon, 22 Jan 2024 05:42:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:from:to:cc:references
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=EQiuCVaaz2sTka8+zIhbPz3RNN3Z899nVMq77Z4yWrE=; b=kg
-	gplw5O/RzYbP0LGTuMMK6uNjs2pNrQujnEPWxiW2JjciHbQhqMEtH04XjrTR8mBP
-	nORK/L3LZYu8ubkV3UzJGuwErdxfPjIyGvFAsMz1CY6TtElQM0uF3xguy41bSnE+
-	hf3GpKw+ofNdRrCLMDRrY1S3wmg+lfyihML3vaijIDJ2vNWeVL4JKDmavhmrFYYu
-	KSh635ZV1/gzTflfeFOFeynSnJzUAHF8dyO4OAzpTPxL6PBk+5geW6uMiALqQsgc
-	7Uq/wp3nFZrfrRDXujvdGgs1CGJ4k+NMHp4fsB54rvqDIrAwwY5QBSVSnnMjv2o4
-	RHOF8i274uKIFC4HC2Kg==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vr6jbu0f0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 22 Jan 2024 05:42:55 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 40M5griV028733
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 22 Jan 2024 05:42:53 GMT
-Received: from [10.238.139.231] (10.80.80.8) by nalasex01c.na.qualcomm.com
- (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Sun, 21 Jan
- 2024 21:42:50 -0800
-Message-ID: <5f6c2be1-faf9-4e64-ab3a-88046d75e2cf@quicinc.com>
-Date: Mon, 22 Jan 2024 13:42:47 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="equt+5O5"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1d748d43186so1681065ad.0
+        for <linux-kernel@vger.kernel.org>; Sun, 21 Jan 2024 21:46:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1705902396; x=1706507196; darn=vger.kernel.org;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IflNS6Etc8g12+qLnuO+gXfIx3jLJ1iHCnSoNRmsAEY=;
+        b=equt+5O5HIPZygVQBPm7jwu5J7KklWMyCJOCD9tKn4XHb93Rl9vlW7SV1/SwccK4ze
+         TH4M0BljvL8SrDPIDaB/KRSfyYsqNPBKMZgIFWDC7YC6pbqqtmEibMLnvETazSs7qG3a
+         d06Cll2ZotG7EzInEixrngYevcfJqbJiak8BrE8jvnNSCiy1YVvpz3ibkwMS28DXGhun
+         bWfTZpf5ZjvaRY1RqJ94RoSp+eRngu391HTQpAnfz449xBBvJAlLzAx+x+tqIvPlUlNk
+         tWF8YuZYOiouVJvUEe0qQX2CW3EVoTGJKI2dTud8AcnlpaAwRy7IGaYMw0WV0/blt0RQ
+         6FJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705902396; x=1706507196;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=IflNS6Etc8g12+qLnuO+gXfIx3jLJ1iHCnSoNRmsAEY=;
+        b=iRpIeQWaw7gYHXdPXNHlVhgU8tfAaYG5Uv79qPbOC0LKyrCXznk4vUZ6wzSteNeUOz
+         aEhG0BaO/b5HAepcBEQaqPuJwi51roEfOOuaoCH03VZ+g+2Ibrd0ocVC0oEnV9jrIbaN
+         xqzf95DA1swxQZFAcPv0vvckiUkZl2ZdwgzZi8oFg3YgUoch9iqMtMON6+eLNcZ/GwK0
+         gSgJ8tbolqdQ2VKL5x+gXz5TbJVM4cpn77MxlUHTkaAHZMTQLdHamXv4rzK1b7hIIwlD
+         RZ3YqDIVhKmr3+PJ1ebDpE9oRPJmQbtON05NcgfOG4Uh1jOKSDpFH70xIxCbc7/O6Fpj
+         sfyg==
+X-Gm-Message-State: AOJu0Yyg8m+MBwN8MDIANhWQERQ0WNkxhWg+KUw0fKu9Kt+MVJfU+wQ9
+	/6T4pgWZrzHE41fyyQRh1uZLsCg20kfT4+zNW0lcoi3L2qqkKgSqiM9EtaX4
+X-Google-Smtp-Source: AGHT+IHG1N155t3rfeAWb6fP/BEBG5N33Go4BNyWCFzghW9M1uDKo4TALaThs42HCSbSIuc5tQvc6w==
+X-Received: by 2002:a17:902:7794:b0:1d0:6ffd:6e85 with SMTP id o20-20020a170902779400b001d06ffd6e85mr1471333pll.125.1705902396245;
+        Sun, 21 Jan 2024 21:46:36 -0800 (PST)
+Received: from cuiyangpei ([43.224.245.227])
+        by smtp.gmail.com with ESMTPSA id kl5-20020a170903074500b001d72d445778sm3233018plb.204.2024.01.21.21.46.34
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 21 Jan 2024 21:46:35 -0800 (PST)
+Date: Mon, 22 Jan 2024 13:46:31 +0800
+From: cuiyangpei <cuiyangpei@gmail.com>
+To: SeongJae Park <sj@kernel.org>, akpm@linux-foundation.org,
+	damon@lists.linux.dev, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Cc: xiongping1@xiaomi.com
+Subject: Re: [PATCH 1/2] mm/damon/sysfs: Implement recording feature
+Message-ID: <20240122054631.GA7880@cuiyangpei>
+References: <20231203054313.GA14316@cuiyangpei>
+ <20231203193745.57035-1-sj@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5] arm64: dts: qcom: qcm6490-idp: Add definition for
- three LEDs
-From: hui liu <quic_huliu@quicinc.com>
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-CC: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Andy Gross
-	<agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konrad.dybcio@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "Krzysztof
- Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <quic_fenglinw@quicinc.com>
-References: <20240115-lpg-v5-1-3c56f77f9cec@quicinc.com>
- <CAA8EJpoemnXTmshWrArVOCm0GRSkWZ5tH557nbAjRL1Tgg-Dig@mail.gmail.com>
- <e16f5ff1-9b12-4f90-89d5-f95cbfb859e7@quicinc.com>
- <6c29ce72-e303-406a-bb75-5b36b0cd8ee4@linaro.org>
- <44ab50c4-c63b-436c-af46-9b4543181446@quicinc.com>
- <CAA8EJpq8exe6n3OQnreLCsV+BnZKcu24d==rEKup=+n28nnDHw@mail.gmail.com>
- <4c82f1f0-1c5a-498f-9845-b5b26cd76468@quicinc.com>
-In-Reply-To: <4c82f1f0-1c5a-498f-9845-b5b26cd76468@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: KBf4OPrCMOOYOdHPybzya2e9u6Nl6KTo
-X-Proofpoint-ORIG-GUID: KBf4OPrCMOOYOdHPybzya2e9u6Nl6KTo
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-21_04,2024-01-19_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 phishscore=0
- mlxscore=0 bulkscore=0 adultscore=0 impostorscore=0 lowpriorityscore=0
- suspectscore=0 priorityscore=1501 malwarescore=0 spamscore=0
- mlxlogscore=959 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2311290000 definitions=main-2401220039
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231203193745.57035-1-sj@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 
-
-
-On 1/18/2024 10:06 AM, hui liu wrote:
+On Sun, Dec 03, 2023 at 07:37:45PM +0000, SeongJae Park wrote:
+> On 2023-12-03T13:43:13+08:00 cuiyangpei <cuiyangpei@gmail.com> wrote:
 > 
+> > On Fri, Dec 01, 2023 at 05:31:12PM +0000, SeongJae Park wrote:
+> > > Hi Cuiyangpei,
+> > > 
+> > > On Fri, 1 Dec 2023 20:25:07 +0800 cuiyangpei <cuiyangpei@gmail.com> wrote:
+> > > 
+> > > > On Thu, Nov 30, 2023 at 07:44:20PM +0000, SeongJae Park wrote:
+> > > > > Hi Cuiyangpei,
+> > > > > 
+> > > > > On Thu, 30 Nov 2023 17:14:26 +0800 cuiyangpei <cuiyangpei@gmail.com> wrote:
+> > > > > 
+> > > > > > Hi SeongJae,
+> > > > > > 
+> > > > > > We also investigated the operation schemes you mentioned, but we don't
+> > > > > > think it can fit our needs.
+> > > > > > 
+> > > > > > On android, user will open many apps and switch between these apps as
+> > > > > > needs. We hope to monitor apps' memory access only when they are on
+> > > > > > foreground and record the memory access pattern when they are switched
+> > > > > > to the background. 
+> > > > > > 
+> > > > > > When avaliable memory reaches a threshold, we will use these access
+> > > > > > patterns with some strategies to recognize those memory that will have
+> > > > > > little impact on user experience and to reclaim them proactively.  
+> > > > > > 
+> > > > > > I'm not sure I have clarified it clearly, if you still have questions
+> > > > > > on this, please let us know.
+> > > > > 
+> > > > > So, to my understanding, you expect applications may keep similar access
+> > > > > pattern when they are in foreground, but have a different, less aggressive
+> > > > > access pattern in background, and therefore reclaim memory based on the
+> > > > > foreground-access pattern, right?
+> > > > >
+> > > > 
+> > > > Different apps may have different access pattern. On android, the apps will
+> > > > join in freeze cgroup and be frozen after switch to the background. So we 
+> > > > monitor apps' memory access only when they are in foreground.
+> > > 
+> > > Thank you for this enlightening me :)
+> > > 
+> > > > > Very interesting idea, thank you for sharing!
+> > > > > 
+> > > > > Then, yes, I agree current DAMOS might not that helpful for the situation, and
+> > > > > this record feature could be useful for your case.
+> > > > > 
+> > > > > That said, do you really need full recording of the monitoring results?  If
+> > > > > not, DAMOS provides DAMOS tried regions feature[1], which allows users get the
+> > > > > monitoring results snapshot that include both frequency and recency of all
+> > > > > regions in an efficient way.  If single snapshot is not having enough
+> > > > > information for you, you could collect multiple snapshots.
+> > > > > 
+> > > > > You mentioned absence of Python on Android as a blocker of DAMOS use on the
+> > > > > previous reply[2], but DAMOS tried regions feature is not depend on tracepoints
+> > > > > or Python.
+> > > > > 
+> > > > > Of course, I think you might already surveyed it but found some problems.
+> > > > > Could you please share that in detail if so?
+> > > > > 
+> > > > DAMOS tried regions feature you mentioned is not fully applicable. It needs to
+> > > > apply schemes on regions. There is no available scheme we can use for our use
+> > > > case. What we need is to return regions with access frequency and recency to
+> > > > userspace for later use.
+> > > 
+> > > 
+> > > Thank you for the answer, I understand your concern.  One of the available
+> > > DAMOS action is 'stat'[1], which does nothing but just count the statistic.
+> > > Using DAMOS scheme for any access pattern with 'stat' action, you can extract
+> > > the access pattern via DAMOS tried regions feature of DAMON sysfs interface,
+> > > without making any unnecessary impact to the workload.
+> > > 
+> > > Quote from [2]:
+> > > 
+> > >     The expected usage of this directory is investigations of schemes' behaviors,
+> > >     and query-like efficient data access monitoring results retrievals. For the
+> > >     latter use case, in particular, users can set the action as stat and set the
+> > >     access pattern as their interested pattern that they want to query.
+> > > 
+> > > For example, you could
+> > > 
+> > > # cd /sys/kernel/mm/damon/admin
+> > > #
+> > > # # populate directories
+> > > # echo 1 > kdamonds/nr_kdamonds; echo 1 > kdamonds/0/contexts/nr_contexts;
+> > > # echo 1 > kdamonds/0/contexts/0/schemes/nr_schemes
+> > > # cd kdamonds/0/contexts/0/schemes/0
+> > > #
+> > > # # set the access pattern for any case (max as 2**64 - 1), and action as stat
+> > > # echo 0 > access_pattern/sz/min
+> > > # echo 18446744073709551615 > access_pattern/sz/max
+> > > # echo 0 > access_pattern/nr_accesses/min
+> > > # echo 18446744073709551615 > access_pattern/nr_accesses/max
+> > > # echo 0 > access_pattern/age/min
+> > > # echo 18446744073709551615 > access_pattern/age/max
+> > > # echo stat > action
+> > > 
+> > > And this is how DAMON user-space tool is getting the snapshot with 'damo show'
+> > > command[3].
+> > > 
+> > > Could this be used for your case?  Please ask any question if you have :)
+> > > 
+> > > [1] https://docs.kernel.org/admin-guide/mm/damon/usage.html#schemes-n
+> > > [2] https://docs.kernel.org/admin-guide/mm/damon/usage.html#schemes-n-tried-regions,
+> > > [3] https://github.com/awslabs/damo/blob/next/USAGE.md#damo-show
+> > 
+> > Thank you for your detailed response, it is very helpful to us. We will look into it
+> > and contact you if we have any questions.
 > 
-> On 1/17/2024 11:41 AM, Dmitry Baryshkov wrote:
->> On Wed, 17 Jan 2024 at 05:02, hui liu <quic_huliu@quicinc.com> wrote:
->>>
->>>
->>>
->>> On 1/15/2024 6:26 PM, Krzysztof Kozlowski wrote:
->>>> On 15/01/2024 11:18, hui liu wrote:
->>>>>
->>>>>
->>>>> On 1/15/2024 5:56 PM, Dmitry Baryshkov wrote:
->>>>>> On Mon, 15 Jan 2024 at 11:48, Hui Liu via B4 Relay
->>>>>> <devnull+quic_huliu.quicinc.com@kernel.org> wrote:
->>>>>>>
->>>>>>> From: Hui Liu <quic_huliu@quicinc.com>
->>>>>>>
->>>>>>> Add definition for three LEDs to make sure they can
->>>>>>> be enabled base on QCOM LPG LED driver.
->>>>>>
->>>>>> The "function" property is still placed incorrectly. Posting the next
->>>>>> iteration before concluding the discussion on the previous one is not
->>>>>> the best idea.
->>>>> Do you mean I should update it as below? Seems there is no consumer to
->>>>> use the function config, do we need to add now?
->>>>
->>>> Paste the output of dtbs_check for your board (or CHECK_DTBS=y for your
->>>> Makefile target).
->>> I checked the dt-binding file of LPG LED, I will update the dts as
->>> below, if you think it's correct, I will push v6.
->>
->> Is there any reason why you are defining three different LEDs instead
->> of multi-led with three components?
+> So glad to hear this.  Please let me know if you have any questions or need any
+> help :)
 > 
-Hi Dmitry,
-  If there is no other issue, can I push the V6?
-Thanks,
-Hui
-
-> In the HW design, they are three seprete LEDs, there are three LEDs on 
-> device. why do we need to add for multi-led?
 > 
 > Thanks,
-> Hui
->>
->>>
->>> +&pm8350c_pwm {
->>> +       #address-cells = <1>;
->>> +       #size-cells = <0>;
->>> +       status = "okay";
->>> +
->>> +       led@1 {
->>> +               reg = <1>;
->>> +               color = <LED_COLOR_ID_RED>;
->>> +               function = LED_FUNCTION_STATUS;
->>> +       };
->>> +
->>> +       led@2 {
->>> +               reg = <2>;
->>> +               color = <LED_COLOR_ID_GREEN>;
->>> +               function = LED_FUNCTION_STATUS;
->>> +       };
->>> +
->>> +       led@3 {
->>> +               reg = <3>;
->>> +               color = <LED_COLOR_ID_BLUE>;
->>> +               function = LED_FUNCTION_STATUS;
->>> +       };
->>> +};
->>
->>
->>
+> SJ
+> 
+> > 
+> > > 
+> > > 
+> > > Thanks,
+> > > SJ
+> > > 
+> > > > > [1] https://docs.kernel.org/admin-guide/mm/damon/usage.html#schemes-n-tried-regions 
+> > > > > [2] https://lore.kernel.org/damon/20231129131315.GB12957@cuiyangpei/
+> > > > > 
+> > > > > 
+> > > > > Thanks,
+> > > > > SJ
+> > > > > 
+> > > > > > 
+> > > > > > Thanks.
+
+Hi SeongJae,
+
+We set 'access_pattern' and 'stat' action in schemes when apps are on
+foreground, record apps' memory access pattern when they are switched
+to the background with 'update_schemes_tried_regions' state. But it
+catch the snapshot after next aggregation interval. DAMON is still
+sampling during the app switches to the background and the next
+aggregation time, which can cause the value of "age" to change. The
+sampling results during this period cannot accurately reflect the app's
+foreground access pattern.
+
+Is there any way to catch sampling result immediately after setting the
+"update_schemes_tried_regions" state? Alternatively, can it return the
+"last_nr_accesses" and "last_age" values in tried_regions/<N> directory?
+
+Do you have any other suggestions?
+
+Thanks.
+
