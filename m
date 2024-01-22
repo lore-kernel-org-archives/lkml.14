@@ -1,57 +1,139 @@
-Received: from abrecht.li (75-128-16-94.static.cable.fcom.ch [94.16.128.75])
+Received: from omta40.uswest2.a.cloudfilter.net (omta40.uswest2.a.cloudfilter.net [35.89.44.39])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F6A44F201;
-	Mon, 22 Jan 2024 17:53:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=94.16.128.75
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 711254F5E4
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 17:53:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.39
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705946028; cv=none; b=uMNEI42JE2H7Zu9gz2kYwigcQdEveLK0o8FqZ0sIhP1c0fR3fwwgRe/gsF4qSzWmaLDT8sHVcx/cPSfUoqf7uU2QIHPCFE+7m6BuMR1UBwKxoqCk6d22zQewD/j/MLe5NKOq0btDrkaC4nRlFyodcHB74MDzPEf49C/MKCZExjo=
+	t=1705946031; cv=none; b=DgtXUFZjSgXM2dPvkqa9DWfInpBxskfSE1R8907HPTpL2WX8OnxdVJBQ+YpkPCvm7W1V4DbqZBWgiFaGNElZddpnJTDgbP0HSH7mhomtCvX2h9QMUIHKuT8rlIiLKGrtvuOBBLwbgySVYzc/wLM09iESAvIxNK2DSc1H7pAWjZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705946028; c=relaxed/simple;
-	bh=MS+usYHqIFe+mQvkXUp3rrEmu5yhwLRfK6rfrQOCPpM=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=kwdatplhQ0FHYB/i3cOlMN9QVTK0FieYr0kscPVDwyZlVN8PhHy9n+WthLDoBzqmUHX7oRWON6ydMAuZrdC816SvxFQ5vwMbl9ruvj0wfffWK0DSQ2nfWhsunqRB8Yui2QH0wuhxEkLxwHa/xq/qTPyeMHMPhCX0C0iI4YS/kTI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nodmarc.danielabrecht.ch; spf=pass smtp.mailfrom=nodmarc.danielabrecht.ch; arc=none smtp.client-ip=94.16.128.75
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nodmarc.danielabrecht.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nodmarc.danielabrecht.ch
-DKIM-Filter: OpenDKIM Filter v2.11.0 abrecht.li 71223276322E
-Received: from toucan.dmz.abrecht.li (unknown [IPv6:fc00:4::a3c:111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by abrecht.li (Postfix) with ESMTPSA id 71223276322E;
-	Mon, 22 Jan 2024 17:53:42 +0000 (UTC)
+	s=arc-20240116; t=1705946031; c=relaxed/simple;
+	bh=qELrPQW+cBpnYsG2PAKmtPwimyiW6brT7BtW/BMBCtA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JK1L9drCl652l4ZqJOWQtQ5pYezajWmhBz2B8rripM5qfbWpZVWTBK5e/YbCQU8IPhz3tz/fWDXFWi/VmoOriS8/R1JREny8+iYcQ8NpsLeW35SM7lpMEdWdcArmU0pViqm8c9G4xgQZojy73AqFGMzKDFEoycTz35QDIUtvP7k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=c6iGIMVa; arc=none smtp.client-ip=35.89.44.39
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="c6iGIMVa"
+Received: from eig-obgw-6007a.ext.cloudfilter.net ([10.0.30.247])
+	by cmsmtp with ESMTPS
+	id RvUnrtZv680oiRyUYrTzpr; Mon, 22 Jan 2024 17:53:50 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id RyUXrovMRyxR5RyUXrGB9p; Mon, 22 Jan 2024 17:53:49 +0000
+X-Authority-Analysis: v=2.4 cv=JYOvEGGV c=1 sm=1 tr=0 ts=65aeabad
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=WzbPXH4gqzPVN0x6HrNMNA==:17
+ a=IkcTkHD0fZMA:10 a=dEuoMetlWLkA:10 a=wYkD_t78qR0A:10 a=VwQbUJbxAAAA:8
+ a=NEAV23lmAAAA:8 a=7YfXLusrAAAA:8 a=CsOLvDfn09n0XjjTB6sA:9 a=QEXdDO2ut3YA:10
+ a=9cHFzqQdt-sA:10 a=PUnBvhIW4WwA:10 a=AjGcO6oz07-iQ99wixmX:22
+ a=SLz71HocmBbuEhFRYD3r:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=HnBhTN2Qswqklqa5h1VDuRxzPmCKbJjTZLHYO8QIxWw=; b=c6iGIMVa+eG37rAI6qKtUzqRcp
+	xGUl5ldFfByNWlilB8Oci0BltbK/89REty8IxwtOM53jwd8dt7qtz4HUZFwfFZz4TwGM8PRk7Nccr
+	bTB1b1SDEVPpM0jaR70qY1yCd10aQwNwnUKD6krMawX3LRfB1RrnHPaXPOilmXqqsU8anGCKrMSce
+	AEXt+dX2wNOkHRZvvc8NGKtF/gUWNQNWhhp9P5YUWEZyi2WgW3+4U//FTxWDbj+7XHPlBimHWxVPa
+	rM1kmIwpaGgANpVwiNUXvoCNlZuKbL7Czw3PlRgFvums82syh0gKtA8N1oDJuFlCbx8lYzWXDSpfv
+	ANG431Hw==;
+Received: from 187-162-21-192.static.axtel.net ([187.162.21.192]:37538 helo=[192.168.15.10])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96.2)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1rRyUV-001MU8-17;
+	Mon, 22 Jan 2024 11:53:47 -0600
+Message-ID: <cb313841-4540-419a-bb89-5ae806df12b7@embeddedor.com>
+Date: Mon, 22 Jan 2024 11:53:45 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Mon, 22 Jan 2024 18:53:42 +0100
-From: Daniel Abrecht <linux-sound@nodmarc.danielabrecht.ch>
-To: Mark Brown <broonie@kernel.org>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>,
- Takashi Iwai <tiwai@suse.com>, linux-sound@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] ASoC: soc-core.c: Add "Unknown" and "Unknown Product"
- to dmi_blacklist
-In-Reply-To: <e90440a5-587b-48b2-a61f-0800aa8200d5@sirena.org.uk>
-References: <7d11d0711ad93f2208efb9ab13fe915b@abrecht.li>
- <e90440a5-587b-48b2-a61f-0800aa8200d5@sirena.org.uk>
-Message-ID: <83d18087378efb6b6f1133573719ca57@nodmarc.danielabrecht.ch>
-X-Sender: linux-sound@nodmarc.danielabrecht.ch
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] crypto: sun8i-ce - Use kcalloc() instead of kzalloc()
+Content-Language: en-US
+To: Erick Archer <erick.archer@gmx.com>,
+ Corentin Labbe <clabbe.montjoie@gmail.com>,
+ Herbert Xu <herbert@gondor.apana.org.au>,
+ "David S. Miller" <davem@davemloft.net>, Chen-Yu Tsai <wens@csie.org>,
+ Jernej Skrabec <jernej.skrabec@gmail.com>,
+ Samuel Holland <samuel@sholland.org>, Jonathan Corbet <corbet@lwn.net>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <20240121153407.8348-1-erick.archer@gmx.com>
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <20240121153407.8348-1-erick.archer@gmx.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.162.21.192
+X-Source-L: No
+X-Exim-ID: 1rRyUV-001MU8-17
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 187-162-21-192.static.axtel.net ([192.168.15.10]) [187.162.21.192]:37538
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 40
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfGvK75E4f2xrmLhAnasG3twN9lEppEBlYTGi3llgrnrwvb9fn0uT6cd7NvF9v8Y+sX/g4wjLlxpuTk0u9SOYoI/bOkUA7jhVfOT7o7iwWc4B2mLMwv0A
+ avCgSEXnLFIOYZi6PFI9ZdAnmXfZhYIoDtT/IAQfGPh1zcRmR8MlvuDON7oJXpiYgHxGOUdo2s26iLQjxIQYqGhdT7tUusQUYScVcCx/ORSlI+tAY/55k4Iq
 
-Am 2024-01-22 16:30, schrieb Mark Brown:
-> On Wed, Jan 17, 2024 at 02:44:43PM +0100, Daniel Abrecht wrote:
->> In U-Boot, the default for DMI vendor / product if not set is "Unknown" and
->> "Unknown Product".
->> See https://source.denx.de/u-boot/u-boot/-/blob/v2023.10/lib/smbios.c?ref_type=tags#L272
+
+
+On 1/21/24 09:34, Erick Archer wrote:
+> As noted in the "Deprecated Interfaces, Language Features, Attributes,
+> and Conventions" documentation [1], size calculations (especially
+> multiplication) should not be performed in memory allocator (or similar)
+> function arguments due to the risk of them overflowing. This could lead
+> to values wrapping around and a smaller allocation being made than the
+> caller was expecting. Using those allocations could lead to linear
+> overflows of heap memory and other misbehaviors.
 > 
-> This is still corrupted according to git am unfortunately.  I can't
-> immediately spot the issue.
+> So, use the purpose specific kcalloc() function instead of the argument
+> size * count in the kzalloc() function.
+> 
+> Link: https://www.kernel.org/doc/html/next/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments [1]
+> Link: https://github.com/KSPP/linux/issues/162
+> Signed-off-by: Erick Archer <erick.archer@gmx.com>
 
-The v3 I sent applies just fine with "git am" as far as I can tell. I just tested it again with the mail form the list.
-I think the v3 patch is fine, but this time, the v3 message ended up with the same message ID as the v2 message.
-Because of this, some mail clients may get confused, and the threading in mail clients is going to be broken.
+Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+
+Thanks!
+-- 
+Gustavo
+
+> ---
+>   drivers/crypto/allwinner/sun8i-ce/sun8i-ce-hash.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-hash.c b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-hash.c
+> index d358334e5981..ee2a28c906ed 100644
+> --- a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-hash.c
+> +++ b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-hash.c
+> @@ -362,7 +362,7 @@ int sun8i_ce_hash_run(struct crypto_engine *engine, void *breq)
+>   		digestsize = SHA512_DIGEST_SIZE;
+> 
+>   	/* the padding could be up to two block. */
+> -	buf = kzalloc(bs * 2, GFP_KERNEL | GFP_DMA);
+> +	buf = kcalloc(2, bs, GFP_KERNEL | GFP_DMA);
+>   	if (!buf) {
+>   		err = -ENOMEM;
+>   		goto theend;
+> --
+> 2.25.1
+> 
