@@ -1,182 +1,205 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C37D73F8F8
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 19:43:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDF023FE35
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 19:44:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705952606; cv=none; b=k3J7nxyn0dmlqSOVN0PcMQ+3YpAiSbHXgYhBVGUf8kKwjbZ+twlRplUOEzYdLgWDSMhirlfYwpmsf6QDjJdJoE0AGewu+c/uBeg3A3VteRIDKrJvRC5dHzSJwDHptuQsd9Whvr4qQdu6i0E4cPHy6r0g+L1zAChpmF/dqg2TEIM=
+	t=1705952648; cv=none; b=Zxj3vEZMT6H9q0rR79PCz4tZqTrr0MhJrq0DO6o2XSw8IKkkyKrt5CmVwGYyK8+4cFV4JtP5F15L2qFyp30E02lF4rOVnu+spbzOY2EMwSQXUajq8+v/b0wY8LQe0Lm/fKXEj7h4JfaP1iokFuTjJF1QVl5an1w1GnwFLU0K5Bs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705952606; c=relaxed/simple;
-	bh=+D3SaXuaqQwzE9ncRc3UUmq2axp2FJWdRXhF/fUl0+w=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=sGKpUJs091VOzgae7Wu+Hpg7WJAcRYkg/mNKSseOHnCnT3hh+JHoX1adNru9F9Vr5KqAxtKKqxWUX8ceKRxOprWkQtfCrz1U50CCgUIA7hJG4CEvVxldBdP4HASKeszseYdgxJe1/zTR8/3Uuf6pqArIVYz1C4+fp+GPLFDaT88=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=epISbfNM; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1705952648; c=relaxed/simple;
+	bh=8YtNK/+ycoZlfj6U3vKhn9f5tGwOc+MSst2Orzy0QWI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Tzm1rF39MgZSw+G9r0MgmaDGG+vK6uY8PE3eMrsKVndnYaMvCWGyAwk3mHZ+UGgZtVqfZ+FfJPWURpR/9CcnnnrUsO9HZ+uzn+/YjZpGDJxxarxyEAg37+dcMUcyYfX0jJcABfzY8JGe2gqdJHoEd0vIMnpmhoemgPSKmEHWjio=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fNPmfxRM; arc=none smtp.client-ip=209.85.215.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="epISbfNM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1705952604;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=tPsvEkVgYnC21FVdKrk6yuEGSmSqLr856lIR4lg3IVs=;
-	b=epISbfNMsFymD8bEd6Gm/XAxGGp/qvluvDYWJZKLuaRZlKTUbkJc9plqovX5P5OAsFL5bP
-	VNAdgmM9xuyQRlzHWEhXmStfBWVItleAfwUyeUgIPZRTTKG5SoFrVJ0BYCdxeOiFfCIdmR
-	F8bHg61fXVmOLKZxn7f1KTHPJio/pfI=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-678-YpW0JN5UPxiQRu3cMsFdBw-1; Mon, 22 Jan 2024 14:43:18 -0500
-X-MC-Unique: YpW0JN5UPxiQRu3cMsFdBw-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 2508C87A38D;
-	Mon, 22 Jan 2024 19:43:15 +0000 (UTC)
-Received: from t14s.redhat.com (unknown [10.39.195.114])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 192C124ED;
-	Mon, 22 Jan 2024 19:43:08 +0000 (UTC)
-From: David Hildenbrand <david@redhat.com>
-To: linux-kernel@vger.kernel.org
-Cc: linux-mm@kvack.org,
-	David Hildenbrand <david@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	linux-arm-kernel@lists.infradead.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org,
-	sparclinux@vger.kernel.org
-Subject: [PATCH v1 11/11] mm/memory: ignore writable bit in folio_pte_batch()
-Date: Mon, 22 Jan 2024 20:42:00 +0100
-Message-ID: <20240122194200.381241-12-david@redhat.com>
-In-Reply-To: <20240122194200.381241-1-david@redhat.com>
-References: <20240122194200.381241-1-david@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fNPmfxRM"
+Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-5ce942efda5so2766818a12.2
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 11:44:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1705952646; x=1706557446; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PhvnJ1zPFZKF2xF5l7klcYJLTNgBFSu49KaFf3uRqbM=;
+        b=fNPmfxRMJiuV+WHllYzGP73rf1czFPlHEQhA0diktRGjZRjVN6M4d/+A9NmHnd2w18
+         7+eqtRFCSFrfbU1t0gmKTfNPAXm9XuCo9JgG73FP9e3h+7O4mxRzBVqiUWx5vS2pPwll
+         o5mo74Bs3e2fIkfFOA/n1FFmkgEHDTthgBo7Qr5H3WE9bNLwQdyByf9aqkw//YOJey0s
+         FsxJvkULNn0SdoM9pv8bz/E/YqxfJ5SLE7OXoFn7+iYK0BMzMn+QGkb8zPa0LnRVleGl
+         I9vrVlvt4ciTpigDwRiGZ91prJdd85vcRiR6I96uSu9ZGkXH0JNvIHYtDsJQ2C3AaZ4B
+         Q/mg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705952646; x=1706557446;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=PhvnJ1zPFZKF2xF5l7klcYJLTNgBFSu49KaFf3uRqbM=;
+        b=H/rNFhcoRZReIUMNKzJbPyMgHXthcwqM1xh5pdImB2yFveSxqQl22YwtR+cZYvGpYc
+         1/zEga+gS+J8ceI6xmMxSXSEN4pFXMmO82/PH/RX3m9PtRUk8S0rZ+CnCWQP3vQYEkJN
+         PQ20i7KshzkCZZ/e1sifTbUSW1+6yyD0y2JYO9MVFZ1owPWRsdiyu0z/rU7BD/AazBTR
+         CU2APXQSXFGTMHubmAcWgLshihvHb9lYkNEl9uWZbLBtb4GYcDuca6RKx8FK3n4Dtk3N
+         4KgGjYwPCLfAZNEMyWpoNTF87AUk7eyo2jM1yAd758k9Adko9mc+r48nzy+7wo3T+Ln9
+         X9ww==
+X-Gm-Message-State: AOJu0YxzvJ3b+GHj6LJJ5Aph/zBkzqHgbnm6twhJGLLu7aLyZa+atJYk
+	/3PREcu3GnkfoPy83xDavvZfEfODCUk0QYPRK+zm9Z7tZj6aqJ8TNI5vg8wuqHa3Sr7sJBxfQb+
+	Hj4WGN/JKzyujmkGNskvCBTqSmO9jqWuGy7g=
+X-Google-Smtp-Source: AGHT+IEy30QcCOvpCXa3tuPzVS8jmnDIyVxIJztKYFfTkJPPcRsEgf0PNlmHT/LsFK4+3FQczRsiQFTMJVYJmrLy/Mw=
+X-Received: by 2002:a17:90a:8d0d:b0:290:1451:2cd0 with SMTP id
+ c13-20020a17090a8d0d00b0029014512cd0mr2215010pjo.35.1705952646125; Mon, 22
+ Jan 2024 11:44:06 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
+References: <20231214223423.1133074-1-yang@os.amperecomputing.com>
+ <1e8f5ac7-54ce-433a-ae53-81522b2320e1@arm.com> <Zav3UK7ESNxCMjyP@casper.infradead.org>
+ <b75cb59a-734f-43d5-b565-fc9bb8c5ed05@arm.com>
+In-Reply-To: <b75cb59a-734f-43d5-b565-fc9bb8c5ed05@arm.com>
+From: Yang Shi <shy828301@gmail.com>
+Date: Mon, 22 Jan 2024 11:43:53 -0800
+Message-ID: <CAHbLzkpT6padaDo8GimCcQReSGybQn_ntzj+wsZbTXe3urtK-g@mail.gmail.com>
+Subject: Re: [RESEND PATCH] mm: align larger anonymous mappings on THP boundaries
+To: Ryan Roberts <ryan.roberts@arm.com>
+Cc: Matthew Wilcox <willy@infradead.org>, Yang Shi <yang@os.amperecomputing.com>, riel@surriel.com, 
+	cl@linux.com, akpm@linux-foundation.org, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-... and conditionally return to the caller if any pte except the first one
-is writable. fork() has to make sure to properly write-protect in case any
-PTE is writable. Other users (e.g., page unmaping) won't care.
+On Mon, Jan 22, 2024 at 3:37=E2=80=AFAM Ryan Roberts <ryan.roberts@arm.com>=
+ wrote:
+>
+> On 20/01/2024 16:39, Matthew Wilcox wrote:
+> > On Sat, Jan 20, 2024 at 12:04:27PM +0000, Ryan Roberts wrote:
+> >> However, after this patch, each allocation is in its own VMA, and ther=
+e is a 2M
+> >> gap between each VMA. This causes 2 problems: 1) mmap becomes MUCH slo=
+wer
+> >> because there are so many VMAs to check to find a new 1G gap. 2) It fa=
+ils once
+> >> it hits the VMA limit (/proc/sys/vm/max_map_count). Hitting this limit=
+ then
+> >> causes a subsequent calloc() to fail, which causes the test to fail.
+> >>
+> >> Looking at the code, I think the problem is that arm64 selects
+> >> ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT. But __thp_get_unmapped_area() a=
+llocates
+> >> len+2M then always aligns to the bottom of the discovered gap. That ca=
+uses the
+> >> 2M hole. As far as I can see, x86 allocates bottom up, so you don't ge=
+t a hole.
+> >
+> > As a quick hack, perhaps
+> > #ifdef ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT
+> > take-the-top-half
+> > #else
+> > current-take-bottom-half-code
+> > #endif
+> >
+> > ?
 
-Signed-off-by: David Hildenbrand <david@redhat.com>
----
- mm/memory.c | 26 +++++++++++++++++++++-----
- 1 file changed, 21 insertions(+), 5 deletions(-)
+Thanks for the suggestion. It makes sense to me. Doing the alignment
+needs to take into account this.
 
-diff --git a/mm/memory.c b/mm/memory.c
-index 341b2be845b6e..a26fd0669016b 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -955,7 +955,7 @@ static __always_inline void __copy_present_ptes(struct vm_area_struct *dst_vma,
- 
- static inline pte_t __pte_batch_clear_ignored(pte_t pte)
- {
--	return pte_clear_soft_dirty(pte_mkclean(pte_mkold(pte)));
-+	return pte_wrprotect(pte_clear_soft_dirty(pte_mkclean(pte_mkold(pte))));
- }
- 
- /*
-@@ -963,20 +963,29 @@ static inline pte_t __pte_batch_clear_ignored(pte_t pte)
-  * pages of the same folio.
-  *
-  * All PTEs inside a PTE batch have the same PTE bits set, excluding the PFN.
-- * the accessed bit, dirty bit and soft-dirty bit.
-+ * the accessed bit, dirty bit, soft-dirty bit and writable bit.
-+ . If "any_writable" is set, it will indicate if any other PTE besides the
-+ * first (given) PTE is writable.
-  */
- static inline int folio_pte_batch(struct folio *folio, unsigned long addr,
--		pte_t *start_ptep, pte_t pte, int max_nr)
-+		pte_t *start_ptep, pte_t pte, int max_nr, bool *any_writable)
- {
- 	unsigned long folio_end_pfn = folio_pfn(folio) + folio_nr_pages(folio);
- 	const pte_t *end_ptep = start_ptep + max_nr;
- 	pte_t expected_pte = __pte_batch_clear_ignored(pte_next_pfn(pte));
- 	pte_t *ptep = start_ptep + 1;
-+	bool writable;
-+
-+	if (any_writable)
-+		*any_writable = false;
- 
- 	VM_WARN_ON_FOLIO(!pte_present(pte), folio);
- 
- 	while (ptep != end_ptep) {
--		pte = __pte_batch_clear_ignored(ptep_get(ptep));
-+		pte = ptep_get(ptep);
-+		if (any_writable)
-+			writable = !!pte_write(pte);
-+		pte = __pte_batch_clear_ignored(pte);
- 
- 		if (!pte_same(pte, expected_pte))
- 			break;
-@@ -989,6 +998,9 @@ static inline int folio_pte_batch(struct folio *folio, unsigned long addr,
- 		if (pte_pfn(pte) == folio_end_pfn)
- 			break;
- 
-+		if (any_writable)
-+			*any_writable |= writable;
-+
- 		expected_pte = pte_next_pfn(expected_pte);
- 		ptep++;
- 	}
-@@ -1010,6 +1022,7 @@ copy_present_ptes(struct vm_area_struct *dst_vma, struct vm_area_struct *src_vma
- {
- 	struct page *page;
- 	struct folio *folio;
-+	bool any_writable;
- 	int err, nr;
- 
- 	page = vm_normal_page(src_vma, addr, pte);
-@@ -1024,7 +1037,8 @@ copy_present_ptes(struct vm_area_struct *dst_vma, struct vm_area_struct *src_vma
- 	 * by keeping the batching logic separate.
- 	 */
- 	if (unlikely(!*prealloc && folio_test_large(folio) && max_nr != 1)) {
--		nr = folio_pte_batch(folio, addr, src_pte, pte, max_nr);
-+		nr = folio_pte_batch(folio, addr, src_pte, pte, max_nr,
-+				     &any_writable);
- 		if (folio_test_anon(folio)) {
- 			folio_ref_add(folio, nr);
- 			if (unlikely(folio_try_dup_anon_rmap_ptes(folio, page,
-@@ -1039,6 +1053,8 @@ copy_present_ptes(struct vm_area_struct *dst_vma, struct vm_area_struct *src_vma
- 			folio_dup_file_rmap_ptes(folio, page, nr);
- 			rss[mm_counter_file(page)] += nr;
- 		}
-+		if (any_writable)
-+			pte = pte_mkwrite(pte, src_vma);
- 		__copy_present_ptes(dst_vma, src_vma, dst_pte, src_pte, pte,
- 				    addr, nr);
- 		return nr;
--- 
-2.43.0
+>
+> There is a general problem though that there is a trade-off between abutt=
+ing
+> VMAs, and aligning them to PMD boundaries. This patch has decided that in
+> general the latter is preferable. The case I'm hitting is special though,=
+ in
+> that both requirements could be achieved but currently are not.
+>
+> The below fixes it, but I feel like there should be some bitwise magic th=
+at
+> would give the correct answer without the conditional - but my head is go=
+ne and
+> I can't see it. Any thoughts?
 
+Thanks Ryan for the patch. TBH I didn't see a bitwise magic without
+the conditional either.
+
+>
+> Beyond this, though, there is also a latent bug where the offset provided=
+ to
+> mmap() is carried all the way through to the get_unmapped_area()
+> impelementation, even for MAP_ANONYMOUS - I'm pretty sure we should be
+> force-zeroing it for MAP_ANONYMOUS? Certainly before this change, for arc=
+hes
+> that use the default get_unmapped_area(), any non-zero offset would not h=
+ave
+> been used. But this change starts using it, which is incorrect. That said=
+, there
+> are some arches that override the default get_unmapped_area() and do use =
+the
+> offset. So I'm not sure if this is a bug or a feature that user space can=
+ pass
+> an arbitrary value to the implementation for anon memory??
+
+Thanks for noticing this. If I read the code correctly, the pgoff used
+by some arches to workaround VIPT caches, and it looks like it is for
+shared mapping only (just checked arm and mips). And I believe
+everybody assumes 0 should be used when doing anonymous mapping. The
+offset should have nothing to do with seeking proper unmapped virtual
+area. But the pgoff does make sense for file THP due to the alignment
+requirements. I think it should be zero'ed for anonymous mappings,
+like:
+
+diff --git a/mm/mmap.c b/mm/mmap.c
+index 2ff79b1d1564..a9ed353ce627 100644
+--- a/mm/mmap.c
++++ b/mm/mmap.c
+@@ -1830,6 +1830,7 @@ get_unmapped_area(struct file *file, unsigned
+long addr, unsigned long len,
+                pgoff =3D 0;
+                get_area =3D shmem_get_unmapped_area;
+        } else if (IS_ENABLED(CONFIG_TRANSPARENT_HUGEPAGE)) {
++               pgoff =3D 0;
+                /* Ensures that larger anonymous mappings are THP aligned. =
+*/
+                get_area =3D thp_get_unmapped_area;
+        }
+
+>
+> Finally, the second test failure I reported (ksm_tests) is actually cause=
+d by a
+> bug in the test code, but provoked by this change. So I'll send out a fix=
+ for
+> the test code separately.
+>
+>
+> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+> index 4f542444a91f..68ac54117c77 100644
+> --- a/mm/huge_memory.c
+> +++ b/mm/huge_memory.c
+> @@ -632,7 +632,7 @@ static unsigned long __thp_get_unmapped_area(struct f=
+ile *filp,
+>  {
+>         loff_t off_end =3D off + len;
+>         loff_t off_align =3D round_up(off, size);
+> -       unsigned long len_pad, ret;
+> +       unsigned long len_pad, ret, off_sub;
+>
+>         if (off_end <=3D off_align || (off_end - off_align) < size)
+>                 return 0;
+> @@ -658,7 +658,13 @@ static unsigned long __thp_get_unmapped_area(struct =
+file *filp,
+>         if (ret =3D=3D addr)
+>                 return addr;
+>
+> -       ret +=3D (off - ret) & (size - 1);
+> +       off_sub =3D (off - ret) & (size - 1);
+> +
+> +       if (current->mm->get_unmapped_area =3D=3D arch_get_unmapped_area_=
+topdown &&
+> +           !off_sub)
+> +               return ret + size;
+> +
+> +       ret +=3D off_sub;
+>         return ret;
+>  }
+
+I didn't spot any problem, would you please come up with a formal patch?
