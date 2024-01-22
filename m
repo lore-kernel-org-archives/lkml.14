@@ -1,146 +1,92 @@
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31BA43D38D;
-	Mon, 22 Jan 2024 11:21:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FAC94776B;
+	Mon, 22 Jan 2024 11:21:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705922505; cv=none; b=bUHlAQLFMosnVaccwniHrg7f3SBbk3WoNQ1q+z/MWzptKM2vumiVqKdZ/8wRS6+aNAr/ExaSRnQ+Zp1mv/54YwNryyycuJnm8QqRGk4VOSFgrCljCpvEpjTdYf+aZN3qmwpNOkahAFK2zr0WB0qrH1wXig+beNTAo2j+09G6yls=
+	t=1705922513; cv=none; b=IRKNQFApo05PYVgESUaRElV+4UhSKGu2Jl1dl5+XqB2GJFR6DMQpq6Ep6/UKoajzkQjQOQijLNSdIgr7rrz30iNR+AkcaqMsp/9gna/Yh8XfWTZC9QFiiSXCWiVJUa8NXXTDGNCxjzpJEEXkiR7lQe0ej+5snNUvljJ2pp7+Oo4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705922505; c=relaxed/simple;
-	bh=Gbf2F1MJ1UAl/YFXKyBKb4o0wX0Ule48bi2xlmu4/OM=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pdfeITlOhnb8Bbet8ca2xzXFpWVyLtkE5qc7C59e9ghVNk1DDXVfwAGTcaJDS+q5zaI6Z1ZXmfzHW/3R+nEwVIGBAne+0t+8H927rm/PsO8wOjxLQb3HLaTErkYFJJpciSmjgniMUAt2fBddTdASB6ldnj6fhQBwycKExA/Tvbo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.214])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4TJSNx1847z1FJf0;
-	Mon, 22 Jan 2024 19:17:21 +0800 (CST)
-Received: from kwepemd100002.china.huawei.com (unknown [7.221.188.184])
-	by mail.maildlp.com (Postfix) with ESMTPS id 8F9CC1A0170;
-	Mon, 22 Jan 2024 19:21:25 +0800 (CST)
-Received: from M910t.huawei.com (10.110.54.157) by
- kwepemd100002.china.huawei.com (7.221.188.184) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.2.1258.28; Mon, 22 Jan 2024 19:21:10 +0800
-From: Changbin Du <changbin.du@huawei.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>
-CC: Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin
-	<alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung
- Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, Adrian Hunter
-	<adrian.hunter@intel.com>, <linux-kernel@vger.kernel.org>,
-	<linux-perf-users@vger.kernel.org>, Andi Kleen <ak@linux.intel.com>, Thomas
- Richter <tmricht@linux.ibm.com>, <changbin.du@gmail.com>, Changbin Du
-	<changbin.du@huawei.com>
-Subject: [PATCH v5 3/5] perf: script: add field 'disasm' to display mnemonic instructions
-Date: Mon, 22 Jan 2024 19:20:52 +0800
-Message-ID: <20240122112054.1576835-4-changbin.du@huawei.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240122112054.1576835-1-changbin.du@huawei.com>
-References: <20240122112054.1576835-1-changbin.du@huawei.com>
+	s=arc-20240116; t=1705922513; c=relaxed/simple;
+	bh=Aoa2uD6JhnOWVhqPLVHgP+kBp2d3drpGdH+IsOITYSQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PDTtodwYEZ3okafor2qeDHQjGbxZw3MkR/l21P5RYYpb6AcQwOcvf8aDJ80vsMpUzctAcA7bR4HuwqC5vR9Fhlg+SexnycCdmxyTlJu6hE5a4BB1AYqnabCmm0fchZjYQUcpbqtdlPGxHzKdI2IUV1GWU9xSP3kvftIyfoE+q5M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WMrHQv8z; arc=none smtp.client-ip=209.85.128.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WMrHQv8z"
+Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-5fc2e997804so25452057b3.3;
+        Mon, 22 Jan 2024 03:21:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1705922511; x=1706527311; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Aoa2uD6JhnOWVhqPLVHgP+kBp2d3drpGdH+IsOITYSQ=;
+        b=WMrHQv8zwFo3Dvox9r3jp13jSM8o1d0aRYSjxjukF9d863tT1x1PS6CZMYSDofoWKb
+         DNjFpGJfj4++YgUKCmGY+4dNykQKYRYMeIJqAhaDX4i/1YyP0WD3jr/uZzNhHEkrxGMi
+         A6VtFYkweLyuONStIr3feIWV/QOt5/Mm24tJBzvXKN1esXdgV9vTBLcJSF5yvOR4BRuE
+         wW74f/AlmrwcB9BRzZHtWGJgwLIgOs3V7xZmWZINqgYA+u8KQSUtueHU72AfZngOJdot
+         XJg3cqWhukQ86nuIQQTnpe82R1tzHDk78kDj9Z3L4W/ZMYacY62gWSTofz6PltzgBjjT
+         S81Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705922511; x=1706527311;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Aoa2uD6JhnOWVhqPLVHgP+kBp2d3drpGdH+IsOITYSQ=;
+        b=O4nHF3835SjN87MwowKDJCIz2VfSvxwlcMCMlb4bu6zGvIO7D0PA7vsrtW8W6A38hk
+         /rGtPFy1ps04IBOmVha0JKs4+yR0FELT4GKwQUTkbkTCTM2+k7t6R/niVTGeH3kUOSS1
+         9JOQBxmaw+Xufvuf2sQZdmdy98nbdiZp7F1DOO/MQQeW9DPtpOcoMWnWTsVRN/jS/sQv
+         Ts+8pGhWKa/Q+5LdbZU1b7wRY3c/7vCotN6M0deefIUu5Map5ZZUwwvOEMi1Mll3LAN0
+         xR0wQfzeESGJX+/2Z1JMklzWPqbjYDjgaZAtjfuEcPdq1uNpRggPiUbOvYx928CK3/uy
+         T9yQ==
+X-Gm-Message-State: AOJu0Ywohywwu7aVjDgs/JgXi9/GKApYtNpfjcKGvL4iv+rC+IJJ2mUD
+	wU7seCHIub89Z47pIswIEBHBhtceYwTx4wwcCF2MaQsIQSrK4ERtimdvjk2BO/DCjoUJkIUl62A
+	usPgICsqFM7qRhhX19oJKU4zFTA==
+X-Google-Smtp-Source: AGHT+IF3tNBm3AaqbWBH2APl+K+A1l2FMfhzy88eG1EvSwkSOyNPO716qqkCrAEbgCBTWnAKulQ6FYnzhC/hyyHotkE=
+X-Received: by 2002:a81:5384:0:b0:5ff:617e:6edf with SMTP id
+ h126-20020a815384000000b005ff617e6edfmr2939801ywb.34.1705922511434; Mon, 22
+ Jan 2024 03:21:51 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- kwepemd100002.china.huawei.com (7.221.188.184)
+References: <20240122092338.25047-2-rsalvaterra@gmail.com> <0b6f3998-135f-4059-a8a8-e924281353f8@linux.intel.com>
+In-Reply-To: <0b6f3998-135f-4059-a8a8-e924281353f8@linux.intel.com>
+From: Rui Salvaterra <rsalvaterra@gmail.com>
+Date: Mon, 22 Jan 2024 11:21:40 +0000
+Message-ID: <CALjTZvZoH-+yZz5Z7237rhM5BxknFbG_Bt-dkperpgfLKfcAuQ@mail.gmail.com>
+Subject: Re: [PATCH] ALSA: hda: Increase default bdl_pos_adj for Apollo Lake
+To: =?UTF-8?B?QW1hZGV1c3ogU8WCYXdpxYRza2k=?= <amadeuszx.slawinski@linux.intel.com>
+Cc: tiwai@suse.com, linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-In addition to the 'insn' field, this adds a new field 'disasm' to
-display mnemonic instructions instead of the raw code.
+Hi, Amadeusz,
 
-$ sudo perf script -F +disasm
-       perf-exec 1443864 [006] 2275506.209848:          psb:  psb offs: 0                                      0 [unknown] ([unknown])
-       perf-exec 1443864 [006] 2275506.209848:          cbr:  cbr: 41 freq: 4100 MHz (114%)                    0 [unknown] ([unknown])
-              ls 1443864 [006] 2275506.209905:          1  branches:uH:      7f216b426100 _start+0x0 (/usr/lib/x86_64-linux-gnu/ld-2.31.so)	movq %rsp, %rdi
-              ls 1443864 [006] 2275506.209908:          1  branches:uH:      7f216b426103 _start+0x3 (/usr/lib/x86_64-linux-gnu/ld-2.31.so)	callq _dl_start+0x0
+On Mon, 22 Jan 2024 at 11:05, Amadeusz S=C5=82awi=C5=84ski
+<amadeuszx.slawinski@linux.intel.com> wrote:
+>
 
-Signed-off-by: Changbin Du <changbin.du@huawei.com>
+[snipped]
 
----
-v2:
-  - update Documentation.
----
- tools/perf/Documentation/perf-script.txt | 13 +++++++------
- tools/perf/builtin-script.c              |  8 +++++++-
- 2 files changed, 14 insertions(+), 7 deletions(-)
+> And seems like I've missed some IDs, when doing PCI IDs conversion.
+> Anyway, can you use PCI_DEVICE_ID_INTEL_HDA_APL instead of 0x5a98 as it
+> is self describing (no need for comment)?
 
-diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
-index ff9a52e44688..578fa59f51a5 100644
---- a/tools/perf/Documentation/perf-script.txt
-+++ b/tools/perf/Documentation/perf-script.txt
-@@ -132,9 +132,10 @@ OPTIONS
-         Comma separated list of fields to print. Options are:
-         comm, tid, pid, time, cpu, event, trace, ip, sym, dso, dsoff, addr, symoff,
-         srcline, period, iregs, uregs, brstack, brstacksym, flags, bpf-output,
--        brstackinsn, brstackinsnlen, brstackoff, callindent, insn, insnlen, synth,
--        phys_addr, metric, misc, srccode, ipc, data_page_size, code_page_size, ins_lat,
--        machine_pid, vcpu, cgroup, retire_lat.
-+        brstackinsn, brstackinsnlen, brstackoff, callindent, insn, disasm,
-+        insnlen, synth, phys_addr, metric, misc, srccode, ipc, data_page_size,
-+        code_page_size, ins_lat, machine_pid, vcpu, cgroup, retire_lat.
-+
-         Field list can be prepended with the type, trace, sw or hw,
-         to indicate to which event type the field list applies.
-         e.g., -F sw:comm,tid,time,ip,sym  and -F trace:time,cpu,trace
-@@ -217,9 +218,9 @@ OPTIONS
- 	Instruction Trace decoding. For calls and returns, it will display the
- 	name of the symbol indented with spaces to reflect the stack depth.
- 
--	When doing instruction trace decoding insn and insnlen give the
--	instruction bytes and the instruction length of the current
--	instruction.
-+	When doing instruction trace decoding, insn, disasm and insnlen give the
-+	instruction bytes, disassembled instructions (requires libcapstone support)
-+	and the instruction length of the current instruction respectively.
- 
- 	The synth field is used by synthesized events which may be created when
- 	Instruction Trace decoding.
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 4817a37f16e2..4ac9670704ff 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -135,6 +135,7 @@ enum perf_output_field {
- 	PERF_OUTPUT_CGROUP          = 1ULL << 39,
- 	PERF_OUTPUT_RETIRE_LAT      = 1ULL << 40,
- 	PERF_OUTPUT_DSOFF           = 1ULL << 41,
-+	PERF_OUTPUT_DISASM          = 1ULL << 42,
- };
- 
- struct perf_script {
-@@ -190,6 +191,7 @@ struct output_option {
- 	{.str = "bpf-output",   .field = PERF_OUTPUT_BPF_OUTPUT},
- 	{.str = "callindent", .field = PERF_OUTPUT_CALLINDENT},
- 	{.str = "insn", .field = PERF_OUTPUT_INSN},
-+	{.str = "disasm", .field = PERF_OUTPUT_DISASM},
- 	{.str = "insnlen", .field = PERF_OUTPUT_INSNLEN},
- 	{.str = "brstackinsn", .field = PERF_OUTPUT_BRSTACKINSN},
- 	{.str = "brstackoff", .field = PERF_OUTPUT_BRSTACKOFF},
-@@ -1515,6 +1517,10 @@ static int perf_sample__fprintf_insn(struct perf_sample *sample,
- 		printed += fprintf(fp, " insn: ");
- 		printed += sample__fprintf_insn_raw(sample, fp);
- 	}
-+	if (PRINT_FIELD(DISASM) && sample->insn_len) {
-+		printed += fprintf(fp, "\t\t");
-+		printed += sample__fprintf_insn(sample, thread, machine, fp);
-+	}
- 	if (PRINT_FIELD(BRSTACKINSN) || PRINT_FIELD(BRSTACKINSNLEN))
- 		printed += perf_sample__fprintf_brstackinsn(sample, thread, attr, machine, fp);
- 
-@@ -3900,7 +3906,7 @@ int cmd_script(int argc, const char **argv)
- 		     "Fields: comm,tid,pid,time,cpu,event,trace,ip,sym,dso,dsoff,"
- 		     "addr,symoff,srcline,period,iregs,uregs,brstack,"
- 		     "brstacksym,flags,data_src,weight,bpf-output,brstackinsn,"
--		     "brstackinsnlen,brstackoff,callindent,insn,insnlen,synth,"
-+		     "brstackinsnlen,brstackoff,callindent,insn,disasm,insnlen,synth,"
- 		     "phys_addr,metric,misc,srccode,ipc,tod,data_page_size,"
- 		     "code_page_size,ins_lat,machine_pid,vcpu,cgroup,retire_lat",
- 		     parse_output_fields),
--- 
-2.25.1
+Oh, of course! I would have done it if I knew we had those constants define=
+d. :)
 
+> And if you want more patches in kernel - convert first 0x0f04 & 0x2284
+> to PCI_DEVICE_ID_INTEL_HDA_BYT & PCI_DEVICE_ID_INTEL_HDA_BSW and then do
+> the above change ;)
+
+Killing magic numbers is always a worthwhile goal. Expect a two-patch
+series soon, then. ;)
+
+Cheers,
+Rui
