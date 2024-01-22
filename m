@@ -1,44 +1,44 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FA2D60DFF;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E32860DE2;
 	Mon, 22 Jan 2024 23:55:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.120
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705967746; cv=none; b=jC5N+hjrCxW2wEEs1vot3SGJdkG+Be1T9mK0o5/LSyWZ36EjzGS/VwaRHvstvzJk8DprRin8FBml9GsPmAg+wNNWtT4I45c2XPdtTt6ACawoxS9W53zd4ZkmzX1fQPShyZb/lXLm7k8peF5yVE7iIhl7m6NwFKQkJ9iyR7lOjPU=
+	t=1705967745; cv=none; b=UCTGlsQQVwmAfcgCgHZ6Zws/UUwWxvOkTzfwARQ0x7SEFNjzOvMQxyIMa2bm5eidTV2xUGVYmcjyXuTFznQYe4JVRkF4Try9ZNLBvO156/oQqt4h7jHRchGWfs11k21z4XRd5TzumeZZoxDmqTzhX2XK8NqNbPBmCxkIoz8/ONU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705967746; c=relaxed/simple;
-	bh=KsELaHqSLNMNbHeP9XgAGtJCYPW/1dOm4Lq2BnuTLEg=;
+	s=arc-20240116; t=1705967745; c=relaxed/simple;
+	bh=okbuOt5t7tIRDQS7vcT+s6srZiBX/84k2CBwwGBVL70=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=d2cmgKKtpgYjluib2t0k/ggH4N5aqj45kn7xFUWEEN8k5wzv2hjShaVBIijE+fWEhqvS9YJM/6cMTQDzC/qKUSL27AwxVRkXacHZTNRP5A1wtjJJ6H4BAVW6BGwXsgReC8XswTBZfcxv2Jmg5GazGuoVdIyzMieZom3jYmysr3w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZNP2P0cj; arc=none smtp.client-ip=192.55.52.120
+	 MIME-Version; b=DxJ94sJDbBfU9E9FrlTshdD6g+mTD5xG9MNxhKuJx3GmwQBgvzXCbG36FzkiqMtA39ed2VAQE9NymxX/qrMgUjJeRl2CJ+bY49QHqRQHpBMyqnFAOftc6bf4u/TgrEB7rIyrqSMm6TkOLL6WNA9WUFd7w5fnpK6jDis7ekEGEpA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BsiFvztl; arc=none smtp.client-ip=198.175.65.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZNP2P0cj"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BsiFvztl"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1705967744; x=1737503744;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=KsELaHqSLNMNbHeP9XgAGtJCYPW/1dOm4Lq2BnuTLEg=;
-  b=ZNP2P0cjxJs9OYGyJ66FP5hWdE5akZXgs29obGblcBLaHXWnFz5MK8op
-   drX+fW+8NHYKCI70Ehkw4cDPNVGtu86+u3v6iHkcBxBgVKnxHzTNj2ymV
-   zNdaY1S1GwhnEmNkB+g/aG6HZ1p4k4plL1xE8BCbZdvFx+xnCmRjsfCET
-   aF2FVmDEiZsdYk4wccmXMfPEMQGXYRDQe8531l3smGABcpfM3IAGiTNsO
-   IaUvNGdNE3FhG4b53lP4ecaaob6GRYrM1nWyFbIUD9cXwRPmimr0XjtKP
-   izx+QqHT1wehYiesCO43actcGKoG3TR7lGUqyBnf+y8tFbeR24Xrx6tAv
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10961"; a="400217754"
+  bh=okbuOt5t7tIRDQS7vcT+s6srZiBX/84k2CBwwGBVL70=;
+  b=BsiFvztlquKpsCceO8y1dUUJ9cfG0Lj37zwfes4lKyleJ7n73Zbt0wp0
+   Ia/FZqVZaXujEuzNLcPgCtHkTNaKGfQGdRq6tznPsFIPpBGg1j1oU6GOm
+   zfyVGGsqjsR8GC26IiTYehh/JcOhBQNjoNARFSra61IHkqWKbkkU23AFp
+   9hO+VeVIMv7t8yMLMLOBqVvB1ojtU0qd/E5eEXF5hZy1eManht2pJseLZ
+   R8oSJ0K6sza9Ohi6ifipAjnkAFXMwdTJk5iRLb1/TdMJM9yxdWXv+bL1C
+   J4aMsgYNE56IYbtztdH2xlXgDN38VYv8ZzH2ykBLUIwkYMn8FndS86/Xl
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10961"; a="8016412"
 X-IronPort-AV: E=Sophos;i="6.05,212,1701158400"; 
-   d="scan'208";a="400217754"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 15:55:41 -0800
+   d="scan'208";a="8016412"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 15:55:36 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.05,212,1701158400"; 
-   d="scan'208";a="27817900"
+   d="scan'208";a="1468159"
 Received: from ls.sc.intel.com (HELO localhost) ([172.25.112.31])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 15:55:41 -0800
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 15:55:33 -0800
 From: isaku.yamahata@intel.com
 To: kvm@vger.kernel.org,
 	linux-kernel@vger.kernel.org
@@ -51,10 +51,11 @@ Cc: isaku.yamahata@intel.com,
 	Kai Huang <kai.huang@intel.com>,
 	chen.bo@intel.com,
 	hang.yuan@intel.com,
-	tina.zhang@intel.com
-Subject: [PATCH v18 074/121] KVM: TDX: complete interrupts after tdexit
-Date: Mon, 22 Jan 2024 15:53:50 -0800
-Message-Id: <379b4d2e8995f0f8b5e6635010b4fd12f4c2571f.1705965635.git.isaku.yamahata@intel.com>
+	tina.zhang@intel.com,
+	Sean Christopherson <sean.j.christopherson@intel.com>
+Subject: [PATCH v18 054/121] KVM: VMX: Split out guts of EPT violation to common/exposed function
+Date: Mon, 22 Jan 2024 15:53:30 -0800
+Message-Id: <4aa3aaa6d12640ee9948308116c6f57ad3a0c1ba.1705965635.git.isaku.yamahata@intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1705965634.git.isaku.yamahata@intel.com>
 References: <cover.1705965634.git.isaku.yamahata@intel.com>
@@ -66,59 +67,120 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Isaku Yamahata <isaku.yamahata@intel.com>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-This corresponds to VMX __vmx_complete_interrupts().  Because TDX
-virtualize vAPIC, KVM only needs to care NMI injection.
+The difference of TDX EPT violation is how to retrieve information, GPA,
+and exit qualification.  To share the code to handle EPT violation, split
+out the guts of EPT violation handler so that VMX/TDX exit handler can call
+it after retrieving GPA and exit qualification.
 
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
 Reviewed-by: Paolo Bonzini <pbonzini@redhat.com>
+Reviewed-by: Kai Huang <kai.huang@intel.com>
 ---
- arch/x86/kvm/vmx/tdx.c | 10 ++++++++++
- arch/x86/kvm/vmx/tdx.h |  2 ++
- 2 files changed, 12 insertions(+)
+ arch/x86/kvm/vmx/common.h | 33 +++++++++++++++++++++++++++++++++
+ arch/x86/kvm/vmx/vmx.c    | 25 +++----------------------
+ 2 files changed, 36 insertions(+), 22 deletions(-)
+ create mode 100644 arch/x86/kvm/vmx/common.h
 
-diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
-index 71c6fc10e8c4..3b2ba9f974be 100644
---- a/arch/x86/kvm/vmx/tdx.c
-+++ b/arch/x86/kvm/vmx/tdx.c
-@@ -585,6 +585,14 @@ void tdx_vcpu_reset(struct kvm_vcpu *vcpu, bool init_event)
- 	 */
- }
- 
-+static void tdx_complete_interrupts(struct kvm_vcpu *vcpu)
+diff --git a/arch/x86/kvm/vmx/common.h b/arch/x86/kvm/vmx/common.h
+new file mode 100644
+index 000000000000..235908f3e044
+--- /dev/null
++++ b/arch/x86/kvm/vmx/common.h
+@@ -0,0 +1,33 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++#ifndef __KVM_X86_VMX_COMMON_H
++#define __KVM_X86_VMX_COMMON_H
++
++#include <linux/kvm_host.h>
++
++#include "mmu.h"
++
++static inline int __vmx_handle_ept_violation(struct kvm_vcpu *vcpu, gpa_t gpa,
++					     unsigned long exit_qualification)
 +{
-+	/* Avoid costly SEAMCALL if no nmi was injected */
-+	if (vcpu->arch.nmi_injected)
-+		vcpu->arch.nmi_injected = td_management_read8(to_tdx(vcpu),
-+							      TD_VCPU_PEND_NMI);
++	u64 error_code;
++
++	/* Is it a read fault? */
++	error_code = (exit_qualification & EPT_VIOLATION_ACC_READ)
++		     ? PFERR_USER_MASK : 0;
++	/* Is it a write fault? */
++	error_code |= (exit_qualification & EPT_VIOLATION_ACC_WRITE)
++		      ? PFERR_WRITE_MASK : 0;
++	/* Is it a fetch fault? */
++	error_code |= (exit_qualification & EPT_VIOLATION_ACC_INSTR)
++		      ? PFERR_FETCH_MASK : 0;
++	/* ept page table entry is present? */
++	error_code |= (exit_qualification & EPT_VIOLATION_RWX_MASK)
++		      ? PFERR_PRESENT_MASK : 0;
++
++	error_code |= (exit_qualification & EPT_VIOLATION_GVA_TRANSLATED) != 0 ?
++	       PFERR_GUEST_FINAL_MASK : PFERR_GUEST_PAGE_MASK;
++
++	return kvm_mmu_page_fault(vcpu, gpa, error_code, NULL, 0);
 +}
 +
- struct tdx_uret_msr {
- 	u32 msr;
- 	unsigned int slot;
-@@ -713,6 +721,8 @@ fastpath_t tdx_vcpu_run(struct kvm_vcpu *vcpu)
- 	vcpu->arch.regs_avail &= ~VMX_REGS_LAZY_LOAD_SET;
- 	trace_kvm_exit(vcpu, KVM_ISA_VMX);
++#endif /* __KVM_X86_VMX_COMMON_H */
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 89f31263fe9c..185e22a2e101 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -50,6 +50,7 @@
+ #include <asm/vmx.h>
  
-+	tdx_complete_interrupts(vcpu);
-+
- 	return EXIT_FASTPATH_NONE;
+ #include "capabilities.h"
++#include "common.h"
+ #include "cpuid.h"
+ #include "hyperv.h"
+ #include "kvm_onhyperv.h"
+@@ -5779,11 +5780,8 @@ static int handle_task_switch(struct kvm_vcpu *vcpu)
+ 
+ static int handle_ept_violation(struct kvm_vcpu *vcpu)
+ {
+-	unsigned long exit_qualification;
++	unsigned long exit_qualification = vmx_get_exit_qual(vcpu);
+ 	gpa_t gpa;
+-	u64 error_code;
+-
+-	exit_qualification = vmx_get_exit_qual(vcpu);
+ 
+ 	/*
+ 	 * EPT violation happened while executing iret from NMI,
+@@ -5798,23 +5796,6 @@ static int handle_ept_violation(struct kvm_vcpu *vcpu)
+ 
+ 	gpa = vmcs_read64(GUEST_PHYSICAL_ADDRESS);
+ 	trace_kvm_page_fault(vcpu, gpa, exit_qualification);
+-
+-	/* Is it a read fault? */
+-	error_code = (exit_qualification & EPT_VIOLATION_ACC_READ)
+-		     ? PFERR_USER_MASK : 0;
+-	/* Is it a write fault? */
+-	error_code |= (exit_qualification & EPT_VIOLATION_ACC_WRITE)
+-		      ? PFERR_WRITE_MASK : 0;
+-	/* Is it a fetch fault? */
+-	error_code |= (exit_qualification & EPT_VIOLATION_ACC_INSTR)
+-		      ? PFERR_FETCH_MASK : 0;
+-	/* ept page table entry is present? */
+-	error_code |= (exit_qualification & EPT_VIOLATION_RWX_MASK)
+-		      ? PFERR_PRESENT_MASK : 0;
+-
+-	error_code |= (exit_qualification & EPT_VIOLATION_GVA_TRANSLATED) != 0 ?
+-	       PFERR_GUEST_FINAL_MASK : PFERR_GUEST_PAGE_MASK;
+-
+ 	vcpu->arch.exit_qualification = exit_qualification;
+ 
+ 	/*
+@@ -5828,7 +5809,7 @@ static int handle_ept_violation(struct kvm_vcpu *vcpu)
+ 	if (unlikely(allow_smaller_maxphyaddr && !kvm_vcpu_is_legal_gpa(vcpu, gpa)))
+ 		return kvm_emulate_instruction(vcpu, 0);
+ 
+-	return kvm_mmu_page_fault(vcpu, gpa, error_code, NULL, 0);
++	return __vmx_handle_ept_violation(vcpu, gpa, exit_qualification);
  }
  
-diff --git a/arch/x86/kvm/vmx/tdx.h b/arch/x86/kvm/vmx/tdx.h
-index 883eb05d207f..9082a2604ec6 100644
---- a/arch/x86/kvm/vmx/tdx.h
-+++ b/arch/x86/kvm/vmx/tdx.h
-@@ -201,6 +201,8 @@ TDX_BUILD_TDVPS_ACCESSORS(16, VMCS, vmcs);
- TDX_BUILD_TDVPS_ACCESSORS(32, VMCS, vmcs);
- TDX_BUILD_TDVPS_ACCESSORS(64, VMCS, vmcs);
- 
-+TDX_BUILD_TDVPS_ACCESSORS(8, MANAGEMENT, management);
-+
- static __always_inline u64 td_tdcs_exec_read64(struct kvm_tdx *kvm_tdx, u32 field)
- {
- 	struct tdx_module_args out;
+ static int handle_ept_misconfig(struct kvm_vcpu *vcpu)
 -- 
 2.25.1
 
