@@ -1,115 +1,144 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85F4212CD98;
-	Mon, 22 Jan 2024 15:12:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5B0B12DD82;
+	Mon, 22 Jan 2024 15:12:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.152.168
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705936351; cv=none; b=JxOl9CEop29wpByLZhTVXfNNRN94L+fZkKI1HOA+iyv/oU9riIGT14X0YQ1D0FSfY+HFKBRSBGOKl+XWOPCgiKxDVpV2BqTWv48MMTNTs5xqwA8T5Ikw1/N1b4Ah3kI8YNOXiTSTzKGpA8RsRF6bvJs92t2WToHtiwo+2zeD4nw=
+	t=1705936363; cv=none; b=b1jr+QSNnJUD8vLgFU1r6E7qKnwReJqCH+QE3DJU1OhSyhXbgZm0JxVkpqV1DeosN3PY2kJloHKkxlkId9FJZ/M/lNNmLmWM5C/wpdbjTdMN47yt5cIHR4unysvMSEZ7kx+ixiW8N8txHgD8nzNywXuJNOpLQX7WmGaPZRYAwBM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705936351; c=relaxed/simple;
-	bh=IM0mBk72pQQiITIsPzOisHFy07r4WeQvg4rA/rcSlsQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NZNLwzgfGB4RYmA+aIKIV3briHdIMP6k6u2ourKoTZbQy/2gCEsByN+EXj/HFVXbkt3hi/hUxDzkDyp8rTq/q8F6MGHNVlpKEHlZtBw4lHe8raWlY1PPDQvxRvRN17F7JyOQQRkqye68hfnlDxqULql/0y4r/DQv2WDqyYC3NFw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q00Xc0Jy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1705936363; c=relaxed/simple;
+	bh=o205dA9KTuKJnFXhFeL4SaTHyssuKFB0zM0G0NFc6Dc=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Nxkyqf27KIEBmiAiYHtSXnLRab4qffWqzwNH+9ViGxwPuGr+TQ4fdQOdseTBcMVzG5Byw1K4b1k+BlBm443SmQBCBJaTo5WOeuuFtAgTtqFIiF9L0QLOve+6hTCjqoSOwyH8qSngmMgSINvZXspa3F8xs1CqX0ShVu5U3aRP+ao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=joUCGuQr; arc=none smtp.client-ip=67.231.152.168
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q00Xc0Jy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F265C433C7;
-	Mon, 22 Jan 2024 15:12:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705936351;
-	bh=IM0mBk72pQQiITIsPzOisHFy07r4WeQvg4rA/rcSlsQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=q00Xc0JytyD5dxmQSURnpfXK1+Jr5xcT+BH+wc1u7mXsbZlLu3dG6gyrLsZt3olTI
-	 cG3R1os75i+YRmWiSu4KVbsW0lOPr8xsz/83CauqLvoF2/WCI5gxFu3GTVE2fHlyNn
-	 ZQSvPrN4T96o1Lw5iL0GmpSEieN+nnWV+467in6EBJAqenCuH8K4OJO2N3Ml/BmzJj
-	 /emEm3ILOIhFl0ViSxaCDdRqmtDt6BPPlzNXhXkZexdxAjMGi9gQtSoMaaGuvcjFEb
-	 +FbqZFJfKyihSSFMQgBbzNNkjzFcLG9cMKlH1vFweFzUQuQ6N4QjoFqC5QHktY0LzP
-	 isuyyeh+xAh4g==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Namjae Jeon <linkinjeon@kernel.org>,
-	Steve French <stfrench@microsoft.com>,
-	Sasha Levin <sashal@kernel.org>,
-	sfrench@samba.org,
-	linux-cifs@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.1 53/53] ksmbd: send lease break notification on FILE_RENAME_INFORMATION
-Date: Mon, 22 Jan 2024 10:08:54 -0500
-Message-ID: <20240122150949.994249-53-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240122150949.994249-1-sashal@kernel.org>
-References: <20240122150949.994249-1-sashal@kernel.org>
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="joUCGuQr"
+Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
+	by mx0b-001ae601.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40M6XGBI015332;
+	Mon, 22 Jan 2024 09:12:20 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=
+	date:from:to:cc:subject:message-id:references:mime-version
+	:content-type:in-reply-to; s=PODMain02222019; bh=+iHALaXLYA4PNuX
+	W2xwffrmv76Pc5m+6eQ7rN8n4yUU=; b=joUCGuQrbAiS9epo0w4DT6gwxCTLMGd
+	RUo7xWc54xxvTQe7ly0QDbt402qnW6pMD+t5abbtA/qg0um7a7Vp4xto4RSK51EB
+	sPQcql+eftDQVb2nLz05GOZDvlPdkJJCmBsw0wxK3Kf6fXjxszEMYaxZXG4Crlf7
+	x2rxJ8GeUPvrApgypnflCRLz3peLFdiuKwjqRnI8Bu7vYvnDfw7drB0QrfFu3E0C
+	JDimN5FAPUSfq2nfrKXXTcJKnqqqgY1RvU03PkDZGcdnA+LcxZKENlQAv3Blny3j
+	Jx765v2RduX3Hjf42Z/oJOp1nzqpkddTwf9HyHj1kMSllq1IkoOoGPA==
+Received: from ediex01.ad.cirrus.com ([84.19.233.68])
+	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 3vrbfptn44-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 22 Jan 2024 09:12:20 -0600 (CST)
+Received: from ediex01.ad.cirrus.com (198.61.84.80) by ediex01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Mon, 22 Jan
+ 2024 15:12:18 +0000
+Received: from ediswmail.ad.cirrus.com (198.61.86.93) by ediex01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server id 15.2.1118.40 via Frontend
+ Transport; Mon, 22 Jan 2024 15:12:18 +0000
+Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
+	by ediswmail.ad.cirrus.com (Postfix) with ESMTP id B385915B7;
+	Mon, 22 Jan 2024 15:12:18 +0000 (UTC)
+Date: Mon, 22 Jan 2024 15:12:18 +0000
+From: Charles Keepax <ckeepax@opensource.cirrus.com>
+To: Maciej Strozek <mstrozek@opensource.cirrus.com>
+CC: Mark Brown <broonie@kernel.org>,
+        Cezary Rojewski
+	<cezary.rojewski@intel.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Peter Ujfalusi
+	<peter.ujfalusi@linux.intel.com>,
+        Bard Liao
+	<yung-chuan.liao@linux.intel.com>,
+        Ranjani Sridharan
+	<ranjani.sridharan@linux.intel.com>,
+        Kai Vehmanen
+	<kai.vehmanen@linux.intel.com>,
+        <alsa-devel@alsa-project.org>, <patches@opensource.cirrus.com>,
+        <linux-sound@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ASoC: Intel: mtl-match: Add cs42l43_l0 cs35l56_l23 for
+ MTL
+Message-ID: <20240122151218.GD16899@ediswmail.ad.cirrus.com>
+References: <20240122150156.68983-1-mstrozek@opensource.cirrus.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.1.74
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20240122150156.68983-1-mstrozek@opensource.cirrus.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Proofpoint-ORIG-GUID: MkOKC_22gdf3RxtPlb-7QnD4K_IGM8IL
+X-Proofpoint-GUID: MkOKC_22gdf3RxtPlb-7QnD4K_IGM8IL
+X-Proofpoint-Spam-Reason: safe
 
-From: Namjae Jeon <linkinjeon@kernel.org>
+On Mon, Jan 22, 2024 at 03:01:56PM +0000, Maciej Strozek wrote:
+> Signed-off-by: Maciej Strozek <mstrozek@opensource.cirrus.com>
+> ---
+>  .../intel/common/soc-acpi-intel-mtl-match.c   | 56 +++++++++++++++++++
+>  1 file changed, 56 insertions(+)
+> 
+> diff --git a/sound/soc/intel/common/soc-acpi-intel-mtl-match.c b/sound/soc/intel/common/soc-acpi-intel-mtl-match.c
+> index feb12c6c85d1..625f991b1ad4 100644
+> --- a/sound/soc/intel/common/soc-acpi-intel-mtl-match.c
+> +++ b/sound/soc/intel/common/soc-acpi-intel-mtl-match.c
+> @@ -377,6 +377,36 @@ static const struct snd_soc_acpi_adr_device cs35l56_2_adr[] = {
+>  	}
+>  };
+>  
+> +static const struct snd_soc_acpi_adr_device cs35l56_2_r_adr[] = {
+> +	{
+> +		.adr = 0x00023301FA355601ull,
+> +		.num_endpoints = 1,
+> +		.endpoints = &spk_r_endpoint,
+> +		.name_prefix = "AMP3"
+> +	},
+> +	{
+> +		.adr = 0x00023201FA355601ull,
+> +		.num_endpoints = 1,
+> +		.endpoints = &spk_3_endpoint,
+> +		.name_prefix = "AMP4"
+> +	}
+> +};
 
-[ Upstream commit 3fc74c65b367476874da5fe6f633398674b78e5a ]
+Sorry the amp ordering is still weird here, can we have:
 
-Send lease break notification on FILE_RENAME_INFORMATION request.
-This patch fix smb2.lease.v2_epoch2 test failure.
+static const struct snd_soc_acpi_adr_device cs35l56_2_r_adr[] = {
+	{
+		.adr = 0x00023201FA355601ull,
+		.num_endpoints = 1,
+		.endpoints = &spk_r_endpoint,
+		.name_prefix = "AMP3"
+	},
+	{
+		.adr = 0x00023301FA355601ull,
+		.num_endpoints = 1,
+		.endpoints = &spk_3_endpoint,
+		.name_prefix = "AMP4"
+	}
+};
 
-Signed-off-by: Namjae Jeon <linkinjeon@kernel.org>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- fs/smb/server/oplock.c  | 9 +++++++--
- fs/smb/server/smb2pdu.c | 1 +
- 2 files changed, 8 insertions(+), 2 deletions(-)
+Thanks,
+Charles
 
-diff --git a/fs/smb/server/oplock.c b/fs/smb/server/oplock.c
-index ebb7d100c851..252f5b96862b 100644
---- a/fs/smb/server/oplock.c
-+++ b/fs/smb/server/oplock.c
-@@ -546,6 +546,7 @@ static struct oplock_info *same_client_has_lease(struct ksmbd_inode *ci,
- 			     atomic_read(&ci->sop_count)) == 1) {
- 				if (lease->state != SMB2_LEASE_NONE_LE &&
- 				    lease->state == (lctx->req_state & lease->state)) {
-+					lease->epoch++;
- 					lease->state |= lctx->req_state;
- 					if (lctx->req_state &
- 						SMB2_LEASE_WRITE_CACHING_LE)
-@@ -556,13 +557,17 @@ static struct oplock_info *same_client_has_lease(struct ksmbd_inode *ci,
- 				    atomic_read(&ci->sop_count)) > 1) {
- 				if (lctx->req_state ==
- 				    (SMB2_LEASE_READ_CACHING_LE |
--				     SMB2_LEASE_HANDLE_CACHING_LE))
-+				     SMB2_LEASE_HANDLE_CACHING_LE)) {
-+					lease->epoch++;
- 					lease->state = lctx->req_state;
-+				}
- 			}
- 
- 			if (lctx->req_state && lease->state ==
--			    SMB2_LEASE_NONE_LE)
-+			    SMB2_LEASE_NONE_LE) {
-+				lease->epoch++;
- 				lease_none_upgrade(opinfo, lctx->req_state);
-+			}
- 		}
- 		read_lock(&ci->m_lock);
- 	}
-diff --git a/fs/smb/server/smb2pdu.c b/fs/smb/server/smb2pdu.c
-index 8d4e2c666c34..f5468cfb523d 100644
---- a/fs/smb/server/smb2pdu.c
-+++ b/fs/smb/server/smb2pdu.c
-@@ -5567,6 +5567,7 @@ static int smb2_rename(struct ksmbd_work *work,
- 	if (!file_info->ReplaceIfExists)
- 		flags = RENAME_NOREPLACE;
- 
-+	smb_break_all_levII_oplock(work, fp, 0);
- 	rc = ksmbd_vfs_rename(work, &fp->filp->f_path, new_name, flags);
- out:
- 	kfree(new_name);
--- 
-2.43.0
-
+> +
+> +static const struct snd_soc_acpi_adr_device cs35l56_3_l_adr[] = {
+> +	{
+> +		.adr = 0x00033001fa355601ull,
+> +		.num_endpoints = 1,
+> +		.endpoints = &spk_l_endpoint,
+> +		.name_prefix = "AMP1"
+> +	},
+> +	{
+> +		.adr = 0x00033101fa355601ull,
+> +		.num_endpoints = 1,
+> +		.endpoints = &spk_2_endpoint,
+> +		.name_prefix = "AMP2"
+> +	}
+> +};
