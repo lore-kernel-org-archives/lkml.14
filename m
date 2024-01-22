@@ -1,156 +1,186 @@
-Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02on2088.outbound.protection.partner.outlook.cn [139.219.17.88])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFBF37FA;
-	Mon, 22 Jan 2024 03:07:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.17.88
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705892843; cv=fail; b=IH6peLBO9/rqNcb6tdrjzPTrURFrgebrrIszcHCOTI+lzvQNJFQRp8USxvjOU/y7FaZGrBPm7OxmRUZgN+gMjf1nKoXKi8Br8HWI6fI4Q1aP3c3kCdiLXezLKlhPhOJDUI9L1fYvWJMYmdCyr2FrQeg9ZjfSzyDFOpY9QwHXDo8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705892843; c=relaxed/simple;
-	bh=ydVI5f489jD/xG4iuTRnvfHsxFu7GpTr44frS69nH40=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=Zh7rQ4LkyZ84lCjJYZRydcxmGK7jGkUIbyxIaj+9mphEwIna+Z50onkSvScq2kcJ76KYxDaLV6NABUGqKwPGIX24+snZXuCpOfdFPUmCjERgzIeP9rFmW8aTy6ThTsXRIUoPfsTlFnFXYzX03ms1UexqNDCZAcxB979hK1LH0jM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.17.88
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ebGI955NjbfqAavMTU9D//gLQz6exEHyjMfIycPOyAWfNgDruPgXNez0T06k8HpJ3iBMlNDgydmJAQnK3lvM41NW7ss7tQqZyv6LwhcinB4/cq50+YyYgoGC38Ga2v6QrunVPPO2U1nTVm6AbXRD7SkbWxmvC8x/yl0kr6VuTpCN5E7Yc1USsBeuckeI2ZnfUh13rEzW/xAiwx4qb8Z5+CjqQkcZs8M4zdrI3eEor30NJ0MCJb/k3QhTriheovSpqRM5osLZYeQgr4phInoLxFDsBcZp2APJ7TB99JJAr2zk8a7k9PdIvbaEFzdmTdSvQOy9h3umNUYxW2UVtVBylA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ydVI5f489jD/xG4iuTRnvfHsxFu7GpTr44frS69nH40=;
- b=nKZ2gSHl1OnFMt/wlzyA+OAaZKR00C91nFcDmZvc/EQMSSAW2RZZ7jqNwL4Jrx8xfuD0cggx1U0210C4LrooVwD4O94bHaRnOnO3uWPtMj5k5yeedbqF03vk+ME9kfN+tzO/ZnYPgdz1GECyQMuycY+6wesA1+VMC30LugGgQRXFVVW6dXtME/4VdRE/PM11mEVv4cFEe+RZl/3CyasRY+fItLwRgKWWLHf6z2tTKp3k4N5oCSSCbMB4QKBOIKeE8VpAgZRqt5L0W6RdS4NMF1iZzuyf6eg+/D1k0GbyM6/XQEgQ8iyKSmfL9NIrkoG+0ZH53Mv8BgLdJjvTUayNsQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=starfivetech.com; dmarc=pass action=none
- header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
-Received: from BJXPR01MB0662.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c211:1b::21) by BJXPR01MB0549.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c211:15::20) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7181.32; Mon, 22 Jan
- 2024 01:33:57 +0000
-Received: from BJXPR01MB0662.CHNPR01.prod.partner.outlook.cn
- ([fe80::5d18:ac28:b012:299d]) by
- BJXPR01MB0662.CHNPR01.prod.partner.outlook.cn ([fe80::5d18:ac28:b012:299d%4])
- with mapi id 15.20.7202.031; Mon, 22 Jan 2024 01:33:56 +0000
-From: Changhuang Liang <changhuang.liang@starfivetech.com>
-To: Conor Dooley <conor.dooley@microchip.com>
-CC: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring
-	<robh+dt@kernel.org>, Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, Emil
- Renner Berthing <kernel@esmil.dk>, Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Jack
- Zhu <jack.zhu@starfivetech.com>, "linux-media@vger.kernel.org"
-	<linux-media@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-riscv@lists.infradead.org"
-	<linux-riscv@lists.infradead.org>, "devicetree@vger.kernel.org"
-	<devicetree@vger.kernel.org>
-Subject:
- =?utf-8?B?5Zue5aSNOiDlm57lpI06IFtQQVRDSCB2MSAxLzJdIGR0LWJpbmRpbmdzOiBt?=
- =?utf-8?B?ZWRpYTogc3RhcmZpdmU6IE1hdGNoIGRyaXZlciBhbmQgeWFtbCBwcm9wZXJ0?=
- =?utf-8?Q?y_names?=
-Thread-Topic:
- =?utf-8?B?5Zue5aSNOiBbUEFUQ0ggdjEgMS8yXSBkdC1iaW5kaW5nczogbWVkaWE6IHN0?=
- =?utf-8?Q?arfive:_Match_driver_and_yaml_property_names?=
-Thread-Index: AQHaSr81E8nk9BtrhUGN5g0sexXYkLDg67gAgAAseFCAABFwgIAD5i7g
-Date: Mon, 22 Jan 2024 01:33:56 +0000
-Message-ID:
- <BJXPR01MB0662E6EEEEF888BD90A1FCE5F275A@BJXPR01MB0662.CHNPR01.prod.partner.outlook.cn>
-References: <20240119100639.84029-1-changhuang.liang@starfivetech.com>
- <20240119100639.84029-2-changhuang.liang@starfivetech.com>
- <20240119-despair-festival-59ab2d4d896b@wendy>
- <SHXPR01MB0671E2150D9A2707F12E0901F270A@SHXPR01MB0671.CHNPR01.prod.partner.outlook.cn>
- <20240119-preamble-calm-7724e17fcebc@wendy>
-In-Reply-To: <20240119-preamble-calm-7724e17fcebc@wendy>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=starfivetech.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BJXPR01MB0662:EE_|BJXPR01MB0549:EE_
-x-ms-office365-filtering-correlation-id: a38cad0e-6cee-45e6-82a0-08dc1aea3380
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- 6r2LJ+aKQAZjuCtEWEkG2quCBEquD+/2TVV7jy0uu+MPU0vch6dWhWeq+ZUZe0c0k1EsYSW8yYABJdWIxxaVgqaRY2bnNVK5Q7iDH36JC5xJwiXOLBbc8LBKT+4M16CDd6qn+lN/W7mCPzBfcX9cHZgRdCYOs8SPdmTDUIIvO8cTl21DIz7QZ9t8IGyjuPx65ksGqp/ToND+RrTu1eAF1taPc3HARFCrv05WeKpEhjTreH44t/ScKvhxCDx7PtBJjoMRe+Hhd0yxTqVjolo9mfS0CjxAdDMibc+KLb50/oBW4bnrjgAjMlPMTCGa9VURDJmBHrR+vSajc8CrE+azHqnQPgM8w/avl+CrwRKfhzVmrXH/oENNxKo1y41WeXFcMuMidI0aEM631B3H9S6snKD8uK5htE020XS5inn/K6vgLTq9msXj729iBq63QMiEqcHbQpu1RaFIcFgRl2R9s7iLUA/TS0Lc4LUkBFViACa+lDeI0orpwg6rVPxHsCBLurWpexuUb0lUAjGH9dck1IUDFnoZTnUTJ6CDFqZ1AUpPyBg286ITRU18ZZutgcRZXBbhawJYrRZE5rAeqHsl8bdlCQdAmBq1tEyUolJqhbI=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BJXPR01MB0662.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(396003)(346002)(136003)(39830400003)(366004)(230922051799003)(230273577357003)(230173577357003)(64100799003)(1800799012)(451199024)(186009)(41320700001)(55016003)(7696005)(9686003)(40160700002)(71200400001)(26005)(38070700009)(38100700002)(224303003)(41300700001)(40180700001)(33656002)(86362001)(8936002)(44832011)(4744005)(66946007)(6916009)(122000001)(5660300002)(7416002)(83380400001)(4326008)(2906002)(76116006)(66446008)(64756008)(66556008)(508600001)(54906003)(66476007);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?d1RPRWVYdVA2NFZvcWZJSVNtcGtESVF4VldRQ1NUU2tseWlHSE1tVThmZUlX?=
- =?utf-8?B?NFhDODNLSXl5QnFNdmg3SFl0ZzNTUmJWT2hjTkpzbmFUSFczeFdsWlQ0T3VB?=
- =?utf-8?B?VXl4RjVoY0xPbk9kb2NkckIrcXl0cUtYNWNTT0xiTVJqYjZEYnNpOCs0L3JW?=
- =?utf-8?B?eUUvNExuWER2NW9CVHMwZW55Z3JsNWRwaHZ2RjM1MmwwNlBTUU5waXhuQ29O?=
- =?utf-8?B?YXlaSWxZZitzOXArNzJTZFR6M3BYZld6SjFrZm80UkZYZHZRZGNQOWdCR2Rs?=
- =?utf-8?B?UnJPc3lHYXFuRTcveDN0M0ZpdDBUVjdYNTdzVDZ2UlgyZXlkYndZcjQyTFJU?=
- =?utf-8?B?U25vMnN5NlhKR3JoVFVZR0xMUGd0bkh2amIwTmhZR2FnWXAyQjdpYmNNTnFM?=
- =?utf-8?B?ODNWMEpJZ0d2MnZUYlpUYjgwZDQ0NGcrcTZFZWk3RDhWVkxOVVBXSS8yV0NT?=
- =?utf-8?B?Q2JlTjY4ZmR2aHA0TnlKbnNkWWFDY1ZZTTlqZ3p1VVhsQ1BlckgzaDVNaTgw?=
- =?utf-8?B?UFEzQ3hWRFhpVUdtdlVlUDZyL09oU2sveCtLLzFPRzNPaFdIMmQ3UGovRmlO?=
- =?utf-8?B?TU1nTTF4dFZLTVVkVUx0bWZib2VDZlcvN29wMTR3STFkeiszdEFHekVrZWQ2?=
- =?utf-8?B?MDVyQ1pLa2grVWNQWmY2a0Z1Z2NpSC93NURBcFozTXNJZnh4Qll6a1VpRzhq?=
- =?utf-8?B?YXMvK3RXNnBZZFVLbTFKNEhBVVZvb1l1aE9sRDJ1RnBrTWFqYzhGbzIxWkdl?=
- =?utf-8?B?TnllblNXK3lLRmFrZGh1Um1PWkFNUkhpMllTVG8zTml4VkFlU1FwVnpZWFZ0?=
- =?utf-8?B?cWUwRzZkdlJWUElLKysxUDhrOTVkVEhwQmRTTlMyNWp0UEFHMDFId2N0RVR3?=
- =?utf-8?B?Snh0eDhHZ05QOTZWcWFVS1VteVZBRytGMHdTQ2F6L1A3VGYvc2FKS3FCZFlo?=
- =?utf-8?B?bUlRMVdDUTk1VU51VGQ5WnhaUUs0QW5JZmJDc0RwZG4yV1ZmUVNuZ2dDa3F5?=
- =?utf-8?B?RnlCa3pUR0tGQmVPSERjdjQ0S1FhaHAvRUpRdUFxQTk2NWN3MDhYdTBqb3Rt?=
- =?utf-8?B?ck9LRTlWbDFpWFR3YnhJYkljWDhIUUcyT24wQy9xNzdWYW9IWE1qUUtZUkdz?=
- =?utf-8?B?L1V3V3pQK0VVenZLbERxWkdZSHFaK0dPWlozb1JWV05sdGhHSmltMjZsNDFo?=
- =?utf-8?B?ZGtDZnJlNUFQekpJbE9SNmN5L3dHcVJ1dXlFUkthZ25KRUgvSW84SjNOV1pu?=
- =?utf-8?B?N0tXYS9NQURSTWtwUFRWQVQxL0szMHZpaUlXRkxEV2NMdU1BbWpCS3dkakpP?=
- =?utf-8?B?eE9ybkRuOTk2TzFYcEtuWXl3TDAvbE9NTGxuYXJBaFYxenFMRUxqWkVNV05w?=
- =?utf-8?B?VDQvakE0Wko3dENaRldvbHZOYTBjK3dsQzAwQjNjRThnQ2VtVHVvVHFyZlBx?=
- =?utf-8?B?SHAwZVlteEVLbllwVHJwa0tmN3ZMOXRISFFTSDJZc2ZMWWxEVExVQlZWSkR0?=
- =?utf-8?B?cTlKMU05dEJsRTZTYjFrc0J0K0JyYjl4TFVUTGRyUFl5UXN4NHhKaFV3T2Z4?=
- =?utf-8?B?Q2hMRDU3UjB0V0daaHhkY3ZENHAxWkxrUmxSK3pvbGNiblkvUXhEc24yTWhB?=
- =?utf-8?B?ZEtXdmFqSklXc3JVdEVBeVIyem5RWFlvWDYwMk8wV2Q1d0dEOHV1bm5OOXRu?=
- =?utf-8?B?ckEvbURMbFl0endzQWROVEZ5cFRpQzBLenRsK25XOGgvNy9CR2VqVUM4emhH?=
- =?utf-8?B?YjFMUmJiaTNNbWxwSHk0THAydlhaem51bnUrOHNyNVgvUGRPNlFPM2s3MWp3?=
- =?utf-8?B?Ym5ZRzZWTTkyZWRub3lSWW1wUjVxd09JTitFRVc5bXppU2FqRmxZMm1rSzZU?=
- =?utf-8?B?cEtNYlFoMHBKclBzRFQ4TU1PSEJ2OU1SZkNhYjg5MjNUVFgvVGdueEVvWFd6?=
- =?utf-8?B?Y2cyQUhQNGlFMjJUUUlCdVN2Zy9IOXh0eDRab1VmbHc2czVmV0R2R04yM2E3?=
- =?utf-8?B?RkwzS0RISzJoNWpOaXlBQmdUbGU4U1J1VlBUSWJ5NzE0czJkb2M2dU9INkFG?=
- =?utf-8?B?cktYVFhTOXEydmM1UkltYWVYQ25VNEM0QnZsSnM2ZjhOUVV0UWU3aUY0YTlo?=
- =?utf-8?B?K2RVclZna3d3cVJla1JLOXNhSHRoSXhrQnNUVG56TVBqRkJnTCsyUzQ4QjVu?=
- =?utf-8?B?UFE9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7F9C1368;
+	Mon, 22 Jan 2024 03:08:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1705892910; cv=none; b=D2Ry5AM4CcrWNC7LCD8PrsORzuf5WYuANXYkNcnJuZyZZ4RqAY+U3wxvxkKJ5xO4CVc9Jpsk0O4lG/wXmuJvrv+dGEUOJILiKhP07nQWQmT5woxfRuPPQnLYR90mD/he9UTUQ4zgtK2uKdYEVRTGtKrwgNasLT78XTUck88e/EU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1705892910; c=relaxed/simple;
+	bh=uc0WWNGVpuEIEI8luKtG8sjMWn7TPiRNIepgYelNZ/w=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=l2ft3qCh9E13VvfkbmmYSNWfs7NPlwkmGAjY4ec+puow6NIP8jceWAzSAE5VyeuAnFJnp0BQwA/Em0pCJNgrEeXDhZ/9d7WDsbxd3uxXxM2tGNHNXDThM7G/VuE2/a0NVNBalcVfCaHAEwda0nRJhvr/FdZ4yDdwH8J3H3HYRKY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kRtPZ3Rq; arc=none smtp.client-ip=209.85.208.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kRtPZ3Rq"
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-55790581457so3437127a12.3;
+        Sun, 21 Jan 2024 19:08:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1705892907; x=1706497707; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ucXkS6oMg4EwL+WlxCpHjCV2h93GplxRsfWmGVUkm58=;
+        b=kRtPZ3RqBIvJb8d18R9m05RxLCA0fU1Jpe4JuG6m97Orzl0/uNgjmhAEfcVGWJfP8e
+         /+ncxwyGxQ4h5CmkpokVGc044FvMqXcQFG2r5LppuIPeZa8ZJDe97QX1xBph0jK0UPNM
+         3L7l4WKiz8s+tPcatB0x0IR7lC1jbLIXtUm3uB/oj7gH/R1Z5L04DZSMoto84XEbh3yK
+         tMH+9y/M/Q1Wc8re3zOke4HpC77qeOlfWZz0wRqDY3lBgvJyKGPWuGjPhLEdw+anlW1/
+         UjKfhXRhdycpE6NviIMo0XfCLI56CajR5qTscJNKmDLosozvjZ1xNqQtbykrC2LgUhcx
+         COLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705892907; x=1706497707;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ucXkS6oMg4EwL+WlxCpHjCV2h93GplxRsfWmGVUkm58=;
+        b=vTeA/fZg9cjn3Ev8clWJH3rmQSxZzXjbxts5UDhdK1GBZ0MYGqPF694oe9V87Jx8HI
+         rFYmVdzxpR7hWKX9qvWkBYtptxJl208ESSsq455kxplqj4p3DtZwMjlq1WtQM8YHf+pK
+         oyyIsuYeo3eq2Qk1C5kfLeBoLT/RpyU+gCfDwNZLU1oF51yNNh9To1uPbh6r9u6jPo8h
+         rLMEsupbHiXZUnxHWdX4IDq7RIZTuGSA/DaSIRFQMtUm8E2rR37hwWiJv6yONzPm6R/W
+         JnlBQu+wIxItWnHkin8fgChoPT7uMwkTnAdlJdOk02QNgMaSwydZySYs6vYIJlBu9/Ix
+         eqCQ==
+X-Gm-Message-State: AOJu0Yw/HJV8lwifajD7Vo8A5eqlm8HK0AMLPgLTjaGOQm5EpZFqloqg
+	GnXSCPYKJc1NRflAQkJmc6GbYWK65bEig6r/u7Tnrudh2oxUeRTCn1kntyKTyENLzU7OWWxw4Tx
+	s+rMBTWnWbKf8XvPcN/RVjRo66c0=
+X-Google-Smtp-Source: AGHT+IHBlEQTzABTAwFE9MXlg4x8B1g0JUsY8wfw5I1aoumrrxknzpwe2TnErBwPeHVHKfCfTkvjJfMjA5SqsT4J1Yo=
+X-Received: by 2002:a05:6402:1618:b0:55a:179f:5eee with SMTP id
+ f24-20020a056402161800b0055a179f5eeemr1599278edv.64.1705892906608; Sun, 21
+ Jan 2024 19:08:26 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: starfivetech.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BJXPR01MB0662.CHNPR01.prod.partner.outlook.cn
-X-MS-Exchange-CrossTenant-Network-Message-Id: a38cad0e-6cee-45e6-82a0-08dc1aea3380
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Jan 2024 01:33:56.8451
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: CKp2vAwgf7AqHn29cXcZTL+dVtXr0cKzUjKfZtAP19m+ooU5gaboQvzHyxEYU1Msk2zjTIHTDstMVJAWtU6s6d364jJCYFptpiAOpZtomM4BMHeQUpu/4b5djr0HRqAD
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BJXPR01MB0549
+References: <20240115072306.303993-1-zegao@tencent.com> <CAM9d7cgXKaKTnfx9YJae2qqv0pXtWLVQPBN=2H0WZkenBjHFnQ@mail.gmail.com>
+ <CAD8CoPA6xBT9hbGZoviyyQm1bwn2Oh=v8QCMjxkMMOSN2zfC-A@mail.gmail.com>
+ <CAD8CoPA0YgVHVW1Ya1O0-vhmpCbiw2h3i29ayzKmg4YTu-zeKQ@mail.gmail.com>
+ <CAM9d7ciiKeVJzCjNyJp8hDsMe2ZiVyOKT3ses_SQMfdEQnWiog@mail.gmail.com>
+ <CAD8CoPCSDcB+-qvwEZGOrdi01C3W8N3dYN3XQUQ2jrpn1mSf=Q@mail.gmail.com> <CAM9d7cigWxAN_nmT2rO-o7YG0hkmPNjDPeLtsn=z1YqRSjMEjA@mail.gmail.com>
+In-Reply-To: <CAM9d7cigWxAN_nmT2rO-o7YG0hkmPNjDPeLtsn=z1YqRSjMEjA@mail.gmail.com>
+From: Ze Gao <zegao2021@gmail.com>
+Date: Mon, 22 Jan 2024 11:08:15 +0800
+Message-ID: <CAD8CoPChgx_h9KU4nBJ+0__g6J=LvTBuMdbc0-F0dHz4=kjY0g@mail.gmail.com>
+Subject: Re: [PATCH 0/4] perf sched: Fix task state report
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, Ze Gao <zegao@tencent.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-DQo+IE9uIEZyaSwgSmFuIDE5LCAyMDI0IGF0IDEyOjU3OjIyUE0gKzAwMDAsIENoYW5naHVhbmcg
-TGlhbmcgd3JvdGU6DQo+ID4gRVhURVJOQUwgRU1BSUw6IERvIG5vdCBjbGljayBsaW5rcyBvciBv
-cGVuIGF0dGFjaG1lbnRzIHVubGVzcyB5b3Uga25vdw0KPiA+IHRoZSBjb250ZW50IGlzIHNhZmUN
-Cj4gPg0KPiA+IEhpICwgQ29ub3INCj4gPg0KPiA+ID4g5Li76aKYOiBSZTogW1BBVENIIHYxIDEv
-Ml0gZHQtYmluZGluZ3M6IG1lZGlhOiBzdGFyZml2ZTogTWF0Y2ggZHJpdmVyDQo+ID4gPiBhbmQg
-eWFtbCBwcm9wZXJ0eSBuYW1lcw0KPiA+ID4NCj4gPiA+IE9uIEZyaSwgSmFuIDE5LCAyMDI0IGF0
-IDAyOjA2OjM4QU0gLTA4MDAsIENoYW5naHVhbmcgTGlhbmcgd3JvdGU6DQo+ID4gPiA+IERyb3Ag
-c29tZSB1bnVzZWQgcHJvcGVydGllcyBmb3IgY2xvY2tzLCByZXNldHMgYW5kIGludGVycnVwdHMg
-Zm9yDQo+ID4gPiA+IFN0YXJGaXZlIEpINzExMCBjYW1lcmEgc3Vic3lzdGVtLg0KPiA+ID4NCj4g
-PiA+IFdoYXQgZG8geW91IG1lYW4gInVudXNlZCI/DQo+ID4gPg0KPiA+ID4gRG8gdGhlc2UgY2xv
-Y2tzIGV0YyBleGlzdCBidXQgYXJlIG5vdCB1c2VkIGJ5IHRoZSBkcml2ZXI/DQo+ID4gPg0KPiA+
-ID4gT3IgZG8gdGhleSBub3QgZXhpc3QgYXQgYWxsPw0KPiA+ID4NCj4gPiA+IFRoZSB0d28gYXJl
-IHZlcnkgZGlmZmVyZW50IQ0KPiANCj4gPiBUaGVzZSBjbG9ja3MgZXRjIGV4aXN0IGJ1dCBhcmUg
-bm90IHVzZWQgYnkgdGhlIGRyaXZlci4NCj4gDQo+IFRoYXQncyBub3QgYW4gYWNjZXB0YWJsZSBy
-ZWFzb24gZm9yIHJlbW92aW5nIHRoZW0gZnJvbSB0aGUgYmluZGluZy4gSWYgdGhleQ0KPiBleGlz
-dCwgdGhleSBzaG91bGQgYmUgZG9jdW1lbnRlZCwgcmVnYXJkbGVzcyBvZiB3aGV0aGVyIHRoZSBk
-cml2ZXIgbWFrZXMgdXNlDQo+IG9mIHRoZW0uIE5BSy4NCg0KSWYgc28sIGhvdyB0byBhdm9pZCB0
-aGUgd2FybmluZyBvZiBkdGJzX2NoZWNrLg0KDQpUaGFua3MsDQpDaGFuZ2h1YW5nDQo=
+On Sat, Jan 20, 2024 at 6:45=E2=80=AFAM Namhyung Kim <namhyung@kernel.org> =
+wrote:
+>
+> On Thu, Jan 18, 2024 at 5:54=E2=80=AFPM Ze Gao <zegao2021@gmail.com> wrot=
+e:
+> >
+> > On Fri, Jan 19, 2024 at 7:53=E2=80=AFAM Namhyung Kim <namhyung@kernel.o=
+rg> wrote:
+> > >
+> > > On Wed, Jan 17, 2024 at 7:15=E2=80=AFPM Ze Gao <zegao2021@gmail.com> =
+wrote:
+> > > >
+> > > > On Thu, Jan 18, 2024 at 11:00=E2=80=AFAM Ze Gao <zegao2021@gmail.co=
+m> wrote:
+> > > > >
+> > > > > On Wed, Jan 17, 2024 at 9:35=E2=80=AFAM Namhyung Kim <namhyung@ke=
+rnel.org> wrote:
+> > > > > >
+> > > > > > Hello,
+> > > > > >
+> > > > > > On Sun, Jan 14, 2024 at 11:23=E2=80=AFPM Ze Gao <zegao2021@gmai=
+l.com> wrote:
+> > > > > > >
+> > > > > > > Hi,
+> > > > > > >
+> > > > > > > The problems of task state report in both libtraceevent
+> > > > > > > and perf sched has been reported in [1]. In short, they
+> > > > > > > parsed the wrong state due to relying on the outdated
+> > > > > > > hardcoded state string to interpret the raw bitmask
+> > > > > > > from the record, which left the messes to maintain the
+> > > > > > > backward compatibilities for both tools.
+> > > > > > >
+> > > > > > > [1] has not managed to make itself into the kernel, the
+> > > > > > > problems and the solutions are well studied though.
+> > > > > > >
+> > > > > > > Luckily, as suggested by Steven, perf/libtraceevent
+> > > > > > > records the print format, especially the __print_flags()
+> > > > > > > part of the in-kernel tracepoint sched_switch in its
+> > > > > > > metadata, and we have a chance to build the state str
+> > > > > > > on the fly by parsing it.
+> > > > > > >
+> > > > > > > Now that libtraceevent has landed this solution in [2],
+> > > > > > > we now apply the same idea to perf as well.
+> > > > > >
+> > > > > > Thanks for your work.  But perf links libtraceevent
+> > > > > > conditionally so you need to make sure if it works without
+> > > > > > that too.
+> > > > >
+> > > > > Yes, I've tested with NO_LIBTRACEEVENT=3D1, and it turns
+> > > > > out perf removes perf sched subcmd without libtraceevent,
+> > > >
+> > > > FWIW,  commit 378ef0f5d9d7f4 ("perf build: Use libtraceevent
+> > > > from the system") has proved this as well.
+> > >
+> > > Right, but I think we can enable perf sched without libtraceevent
+> > > for minimal features like record only.  But that doesn't belong to
+> > > this change set.
+> > >
+> > > >
+> > > > > which explains why the compiler does not complain no
+> > > > > evsel__intval() defined when !HAVE_LIBTRACEEVENT
+> > > > > given the fact so many references of evsel__intval() in
+> > > > > builtin-sched.c.
+> > > > > Here evsel__taskstate() uses the exact assumption as
+> > > > > evsel__intval(), so I put it next to it for clarity and it works
+> > > > > without a doubt.
+> > > > >
+> > > > > > I think all libtraceevent related stuff should be in the
+> > > > > > util/trace-event.c which is included only if the library is
+> > > > > > available.  Maybe util/trace-event-parse.c is a better
+> > > > > > place but then you need to tweak the python-ext-sources
+> > > > > > and Makefile.perf for the case it's not available.
+> > > > >
+> > > > > Thanks for pointing this out. I will do the hack if you insist
+> > > > > on this move :D. But I think the current version is clear
+> > > > > enough, otherwise we need to move all the parts guarded
+> > > > > by #ifdef HAVE_LIBTRACEEVENT out for complete decoupling.
+> > > > > What do you think of it?
+> > >
+> > > Oh, I realized that all the affected codes are under the #ifdef
+> > > properly then maybe it's ok for now.  But I prefer moving the
+> > > code if you're ok.  Maybe I can accept this code as is and you
+> >
+> > Sounds great!
+> >
+> > > can work on the refactoring later.  Does that work for you?
+> >
+> > Absolutely! Will send the following refactoring patches soon. :D
+>
+> Thanks, but your patches don't apply cleanly.  Could you please
+> rebase it onto the current perf-tools-next tree?
+
+Oops, that is kinda weird. I've tested and managed to cherry-picked all 4
+patches onto branch perf-tools-next in [1], with no conflicts being
+hit.  Maybe I used the wrong branch tip?
+
+FWIW:  the tip I rebase onto is
+
+d988c9f511af (perf/perf-tools-next) MAINTAINERS: Add Namhyung as
+tools/perf/ co-maintainer
+
+[1]:  https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.=
+git/
+
+Regards,
+        -- Ze
+
+> Thanks,
+> Namhyung
