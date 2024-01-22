@@ -1,98 +1,261 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 496DB14F6C;
-	Mon, 22 Jan 2024 07:42:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDEF916410
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 07:42:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.132
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705909327; cv=none; b=t5Sfz5HNorVcrktsf8AlMjo0QV76sae2q72AvDQY+2LWEPkH6XcOzAR4lvPiGHMxF5ciJUasLer3bsYa/Y1UfpKEj456seFhhaVlj6ZN/SkXcrZLR2w43oiv3BK/c/LLpS1QxaXnOs2xVSe6JjhyQ70mcoFhnbE14Ya3LCUYQW8=
+	t=1705909356; cv=none; b=LPG6xAIphQWLw53m9tvQ0v11iYz2nt55qaP0LIbhGi5qf5jlGLwSz6bE97yACiRSSIkaTTquiZ4ePnLizayMwSHe2V+vtuYjYhbP58Rv8hTO0WKapQd75U+YWcvSC+KuVueh2hPDQyhMMHDS70BkKirWWub/lNf6dTbtutjw3wA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705909327; c=relaxed/simple;
-	bh=6q+Ae298LK6Fwx9w1Hxqg+/TcqF4+MMHBmWb7Tw8+hU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uQ1aSF46tk2aWy4OvE+gENAnpX36Khxre6ANhFgF3WpMnv5uKJSZ47FGArOukW+tj67uEYW0EXe+8fLu6W5OyCbdkmDJOn2fEO+cFlBc53a0sRUOZ//MKboctanu6k7iHoyCWR5lCgKo4Orm+cjwVGy3y2/E2vKVotdSGqSzwcE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jOnqDMRd; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jOnqDMRd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B284C43394;
-	Mon, 22 Jan 2024 07:41:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705909326;
-	bh=6q+Ae298LK6Fwx9w1Hxqg+/TcqF4+MMHBmWb7Tw8+hU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jOnqDMRdvXuWTje7hxQN2dCLE7PzYUq8rAYWennGmg2eWAJlF8wYxF7WITOD93XyX
-	 kOi7HC3t/JBdyraClA4q5IQ6eCe0QP9DQEOOLu5rJzGGtUakerutvskNDSebyStAJZ
-	 z+mnBJqfh9Fcq+5rh+Kc2KPiYn9xLCRpmCpxOFhvwp4xLOdS0I9/a1r1ZusQ+JEtay
-	 eerJbS9dnoFfr2YnDqeIifjrZ8RFwgs3XLP/I8Wfw7PBHR0aHCQTC5FxayDUKgCqE/
-	 I+Nux9qFYloyZL8LPJSk6tchB/m6C22f9IUgs1mhO9obbBZ8/pniLuN0IIT85I3k0j
-	 4+4RMm18KCn0Q==
-Date: Mon, 22 Jan 2024 09:41:40 +0200
-From: Mike Rapoport <rppt@kernel.org>
-To: Shijie Huang <shijie@amperemail.onmicrosoft.com>
-Cc: Yury Norov <yury.norov@gmail.com>,
-	Huang Shijie <shijie@os.amperecomputing.com>,
-	gregkh@linuxfoundation.org, patches@amperecomputing.com,
-	rafael@kernel.org, paul.walmsley@sifive.com, palmer@dabbelt.com,
-	aou@eecs.berkeley.edu, kuba@kernel.org, vschneid@redhat.com,
-	mingo@kernel.org, akpm@linux-foundation.org, vbabka@suse.cz,
-	tglx@linutronix.de, jpoimboe@kernel.org, ndesaulniers@google.com,
-	mikelley@microsoft.com, mhiramat@kernel.org, arnd@arndb.de,
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, catalin.marinas@arm.com,
-	will@kernel.org, mark.rutland@arm.com, mpe@ellerman.id.au,
-	linuxppc-dev@lists.ozlabs.org, chenhuacai@kernel.org,
-	jiaxun.yang@flygoat.com, linux-mips@vger.kernel.org,
-	cl@os.amperecomputing.com
-Subject: Re: [PATCH] NUMA: Early use of cpu_to_node() returns 0 instead of
- the correct node id
-Message-ID: <Za4cNBQBLZujlAlP@kernel.org>
-References: <20240119033227.14113-1-shijie@os.amperecomputing.com>
- <Zan9sb0vtSvVvQeA@yury-ThinkPad>
- <1cd078fd-c345-4d85-a92f-04c806c20efa@amperemail.onmicrosoft.com>
- <Zao13I4Bb0tur0fZ@kernel.org>
- <b8786c38-d6c4-4fea-a918-ac6a45682dba@amperemail.onmicrosoft.com>
+	s=arc-20240116; t=1705909356; c=relaxed/simple;
+	bh=QQq6KTnP0WmvdI8XmZN4b2caZL5FR5s2VyyfXtsD6zQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=p5MXEaruYXp9gY4lwlA06hiJzsSpLXV65DMoX6kqT45MC2ddNUD5tGtxLcUHfB1NwbkMp/edOC9nnW4clfwclBoDLeuXsPtDCCkq6AusWfFF4h94gPphEyMnblCjP+coZ1ADhdSzwJ5w++gpC/6DpjdDwXQ9BVwFrJnz8BKAIwY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; arc=none smtp.client-ip=115.124.30.132
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045170;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0W.3muj._1705909349;
+Received: from 30.97.48.216(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0W.3muj._1705909349)
+          by smtp.aliyun-inc.com;
+          Mon, 22 Jan 2024 15:42:30 +0800
+Message-ID: <d99929c8-9bf2-4a99-8507-617eb3419b98@linux.alibaba.com>
+Date: Mon, 22 Jan 2024 15:42:28 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <b8786c38-d6c4-4fea-a918-ac6a45682dba@amperemail.onmicrosoft.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] erofs: make iov_iter describe target buffer when read
+ from fscache
+To: Jingbo Xu <jefflexu@linux.alibaba.com>, xiang@kernel.org,
+ chao@kernel.org, linux-erofs@lists.ozlabs.org
+Cc: huyue2@coolpad.com, linux-kernel@vger.kernel.org
+References: <20240122071253.119004-1-jefflexu@linux.alibaba.com>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <20240122071253.119004-1-jefflexu@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jan 19, 2024 at 04:50:53PM +0800, Shijie Huang wrote:
-> 
-> 在 2024/1/19 16:42, Mike Rapoport 写道:
-> > Is there a fundamental reason to have early_cpu_to_node() at all?
-> 
-> The early_cpu_to_node does not work on some ARCHs (which support the NUMA),
-> such as  SPARC, MIPS and S390.
+Hi Jingbo,
 
-My question was why we need early_cpu_to_node() at all and why can't we use
-cpu_to_node() early on arches that do have it.
- 
-> Thanks
+On 2024/1/22 15:12, Jingbo Xu wrote:
+> So far the fscache mode supports uncompressed data only, and the data
+> read from fscache is put directly into the target page cache.  As the
+> support for compressed data in fscache mode is going to be introduced,
+> refactor the interface of reading fscache so that the following
+> compressed part could make the raw data read from fscache be directed to
+> the target buffer it wants, decompress the raw data, and finally fill
+> the page cache with the decompressed data.
 > 
-> Huang Shijie
-> 
-> > It seems that all the mappings are known by the end of setup_arch() and the
-> > initialization of numa_node can be moved earlier.
-> > > > I would also initialize the numa_node with NUMA_NO_NODE at declaration,
-> > > > so that if someone calls cpu_to_node() before the variable is properly
-> > > > initialized at runtime, he'll get NO_NODE, which is obviously an error.
-> > > Even we set the numa_node with NUMA_NO_NODE, it does not always produce
-> > > error.
-> > > 
-> > > Please see the alloc_pages_node().
-> > > 
-> > > 
-> > > Thanks
-> > > 
-> > > Huang Shijie
-> > > 
+> As the first step, a new structure, i.e. erofs_fscache_io (cio), is
 
--- 
-Sincerely yours,
-Mike.
+I'd suggest just using io instead of cio here.
+
+.. i.e. erofs_fscache_io (io) ...
+
+> introduced to describe a generic read request from the fscache, while
+> the caller can specify the target buffer it wants in the iov_iter
+> structure (cio->iter).  Besides, the caller can also specify its
+
+.. structure (io->iter) ...
+
+> completion callback and private data through cio, which will be called
+> to make further handling, e.g. unlocking the page cache for uncompressed
+> data or decompressing the read raw data, when the read request from the
+> fscache completes.  Now erofs_fscache_read_io_async() serves as a
+> generic interface for reading raw data from fscache for both compressed
+> and uncompressed data.
+> 
+> The erofs_fscache_request structure is kept to describe a request to
+> fill the page cache in the specified range.
+> 
+> Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
+> ---
+>   fs/erofs/fscache.c | 219 ++++++++++++++++++++++++---------------------
+>   1 file changed, 118 insertions(+), 101 deletions(-)
+> 
+> diff --git a/fs/erofs/fscache.c b/fs/erofs/fscache.c
+> index bc12030393b2..10709f20bef5 100644
+> --- a/fs/erofs/fscache.c
+> +++ b/fs/erofs/fscache.c
+> @@ -13,8 +13,6 @@ static LIST_HEAD(erofs_domain_cookies_list);
+>   static struct vfsmount *erofs_pseudo_mnt;
+>   
+>   struct erofs_fscache_request {
+> -	struct erofs_fscache_request *primary;
+> -	struct netfs_cache_resources cache_resources;
+>   	struct address_space	*mapping;	/* The mapping being accessed */
+>   	loff_t			start;		/* Start position */
+>   	size_t			len;		/* Length of the request */
+> @@ -23,42 +21,13 @@ struct erofs_fscache_request {
+>   	refcount_t		ref;
+>   };
+>   
+> -static struct erofs_fscache_request *erofs_fscache_req_alloc(struct address_space *mapping,
+> -					     loff_t start, size_t len)
+> -{
+> -	struct erofs_fscache_request *req;
+> -
+> -	req = kzalloc(sizeof(struct erofs_fscache_request), GFP_KERNEL);
+> -	if (!req)
+> -		return ERR_PTR(-ENOMEM);
+> -
+> -	req->mapping = mapping;
+> -	req->start   = start;
+> -	req->len     = len;
+> -	refcount_set(&req->ref, 1);
+> -
+> -	return req;
+> -}
+> -
+> -static struct erofs_fscache_request *erofs_fscache_req_chain(struct erofs_fscache_request *primary,
+> -					     size_t len)
+> -{
+> -	struct erofs_fscache_request *req;
+> -
+> -	/* use primary request for the first submission */
+> -	if (!primary->submitted) {
+> -		refcount_inc(&primary->ref);
+> -		return primary;
+> -	}
+> -
+> -	req = erofs_fscache_req_alloc(primary->mapping,
+> -			primary->start + primary->submitted, len);
+> -	if (!IS_ERR(req)) {
+> -		req->primary = primary;
+> -		refcount_inc(&primary->ref);
+> -	}
+> -	return req;
+> -}
+> +struct erofs_fscache_io {
+> +	struct netfs_cache_resources cache_resources;
+
+	struct netfs_cache_resources cres;
+
+> +	struct iov_iter		iter;
+> +	netfs_io_terminated_t	end_io;
+> +	void			*private;
+> +	refcount_t		ref;
+> +};
+>   
+>   static void erofs_fscache_req_complete(struct erofs_fscache_request *req)
+>   {
+> @@ -83,82 +52,116 @@ static void erofs_fscache_req_complete(struct erofs_fscache_request *req)
+>   static void erofs_fscache_req_put(struct erofs_fscache_request *req)
+>   {
+>   	if (refcount_dec_and_test(&req->ref)) {
+> -		if (req->cache_resources.ops)
+> -			req->cache_resources.ops->end_operation(&req->cache_resources);
+> -		if (!req->primary)
+> -			erofs_fscache_req_complete(req);
+> -		else
+> -			erofs_fscache_req_put(req->primary);
+> +		erofs_fscache_req_complete(req);
+>   		kfree(req);
+>   	}
+>   }
+>   
+> -static void erofs_fscache_subreq_complete(void *priv,
+> +static struct erofs_fscache_request *erofs_fscache_req_alloc(struct address_space *mapping,
+> +						loff_t start, size_t len)
+> +{
+> +	struct erofs_fscache_request *req;
+> +
+> +	req = kzalloc(sizeof(*req), GFP_KERNEL);
+> +	if (req) {
+> +		req->mapping = mapping;
+> +		req->start = start;
+> +		req->len = len;
+> +		refcount_set(&req->ref, 1);
+> +	}
+> +	return req;
+
+The following part may be better? to save an indentation:
+
+	req = kzalloc(sizeof(*req), GFP_KERNEL);
+	if (!req)
+		return NULL;
+	req->mapping = mapping;
+	req->start = start;
+	req->len = len;
+	refcount_set(&req->ref, 1);
+	return req;
+
+> +}
+> +
+> +static bool erofs_fscache_io_put(struct erofs_fscache_io *cio)
+> +{
+> +	if (refcount_dec_and_test(&cio->ref)) {
+> +		if (cio->cache_resources.ops)
+> +			cio->cache_resources.ops->end_operation(&cio->cache_resources);
+> +		kfree(cio);
+> +		return true;
+> +	}
+> +	return false;
+
+
+	if (!refcount_dec_and_test(&io->ref))
+		return false;
+	if (io->cres.ops)
+		io->cres.ops->end_operation(&io->cres);
+	kfree(io);
+	return true;
+
+> +}
+> +
+> +static void erofs_fscache_req_io_put(struct erofs_fscache_io *cio)
+
+cio -> io
+
+> +{
+> +	struct erofs_fscache_request *req = cio->private;
+> +
+> +	if (erofs_fscache_io_put(cio))
+> +		erofs_fscache_req_put(req);
+> +}
+> +
+> +static void erofs_fscache_req_end_io(void *priv,
+>   		ssize_t transferred_or_error, bool was_async)
+>   {
+> -	struct erofs_fscache_request *req = priv;
+> +	struct erofs_fscache_io *cio = priv;
+> +	struct erofs_fscache_request *req = cio->private;
+> +
+> +	if (IS_ERR(transferred_or_error))
+> +		req->error = transferred_or_error;
+> +	erofs_fscache_req_io_put(cio);
+> +}
+> +
+> +static struct erofs_fscache_io *erofs_fscache_req_io_alloc(struct erofs_fscache_request *req)
+> +{
+> +	struct erofs_fscache_io *cio;
+>   
+> -	if (IS_ERR_VALUE(transferred_or_error)) {
+> -		if (req->primary)
+> -			req->primary->error = transferred_or_error;
+> -		else
+> -			req->error = transferred_or_error;
+> +	cio = kzalloc(sizeof(*cio), GFP_KERNEL);
+> +	if (cio) {
+> +		cio->end_io = erofs_fscache_req_end_io;
+> +		cio->private = req;
+> +		refcount_inc(&req->ref);
+> +		refcount_set(&cio->ref, 1);
+>   	}
+> -	erofs_fscache_req_put(req);
+> +	return cio;
+
+
+	io = kzalloc(sizeof(*io), GFP_KERNEL);
+	if (!io)
+		return NULL;
+	io->end_io = erofs_fscache_req_end_io;
+	io->private = req;
+	refcount_inc(&req->ref);
+	refcount_set(&io->ref, 1);
+	return io;
+
+Thanks,
+Gao Xiang
