@@ -1,44 +1,44 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8DFC64CDD;
-	Mon, 22 Jan 2024 23:55:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83D86627E1;
+	Mon, 22 Jan 2024 23:55:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.120
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705967753; cv=none; b=m4IJ5ZuzTTdnARw037wXXcvvhrTtYwaEKK0DSWzvqfpeKpbAF1WG+gT0UiXmr8EYMZFpghOVApLs1MrF7mI4UznMXW/+WXlsSCWLH4Cvkzfl/lS8g/5uafmTORSUhRP5fU8SoV9s1gPcpYWsNctvDqwNddaFX9iU3LPwh0nP07k=
+	t=1705967752; cv=none; b=U4nByRltK7PgcFO8sOgCQYXpEOH52gc4eMrNwBV9wQW4TBziP0elBQ9gP9M+YPczx5VUaTxDu3sdPI8f6KUWt/7nLP9SIFXxxbRLHFXyuJiROkCnN1Zm3312wsEk0J4R5cUDgAStpvPOYRkFhN2jyeVXJHLxW3BZa+DXdmawJAU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705967753; c=relaxed/simple;
-	bh=AJiWF4nW/7gtuzb4Y7VNveONtsWoft8ZVCCZl/SxtbU=;
+	s=arc-20240116; t=1705967752; c=relaxed/simple;
+	bh=fWVi1XC21uUloYoR2J96F1Y4x7BoeXg2UgLDji90fNc=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=hS5t9ijtMziVYiK2irlaUj7n60wKK6NCA8WqV9dYUZiAmQChbipuGNVyFZiY2x6kenX0f9t3d51coKCg1BsJKQ5K1nwgjrlvq0xSGhjsykb+8Oyzf4wbbDRULgrG+1IKaxxXk0+L7/+9C5kqL7vb6ToGvsuc/2RRPE1ZS+cZbDs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JomHLb/u; arc=none smtp.client-ip=198.175.65.11
+	 MIME-Version; b=q0KhAdaoQPIR/YhEhlhLXjqTftYYYWRweMKBxGcCpOEHuukOnCfB7gpXlvJ4W8bH105rxum3hDuZnWbI5lj2zfvaH/UTUIQmO5PsHFi7bpvvr65cE4gvt1Zp9pzXZGlMpbAJOFWq+41uT2pc1UkiLpao5JInNVY1AWvTs9Islds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WGcJLv6r; arc=none smtp.client-ip=192.55.52.120
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JomHLb/u"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WGcJLv6r"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1705967751; x=1737503751;
+  t=1705967746; x=1737503746;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=AJiWF4nW/7gtuzb4Y7VNveONtsWoft8ZVCCZl/SxtbU=;
-  b=JomHLb/uxWwUFaSOavSKQfqmoiFxz4Sm6cNilAxw6AOYDATNUVznTy57
-   cMnWUAmYrkxUaR1hpVLVFfHHkyUuMsDZMNJW/ch9g/v5LodFBo6wcf+3f
-   Pb2lSOIKrVa3TnwZ8dw8m5HhHZMLirXByB0IT1H1M5cuAA4Lg2S7oQAsQ
-   0eDEXHL4fYZGDb9UFFVnYvbCXV/kHKv1GwJJ0nBZr4HiWb1LEFKbfIBgM
-   wSCCIckjFUjdhA/4FtCjPY9BqAXJFZkl9mva4uwwD6jm+ubQ+VF2AMVb7
-   4zx0bE1vQavfgzAJ11rjxUFjUBFNo7ZOWuvxJ+aZzvY+mBb5nTaRmRByw
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10961"; a="8016462"
+  bh=fWVi1XC21uUloYoR2J96F1Y4x7BoeXg2UgLDji90fNc=;
+  b=WGcJLv6riyZfdZnRuHqVUZoX6G+ENLbe3dBDdj1cKqkYM3HQgQPkckas
+   7xsb0GW0CacIAPPXPl/RvUM/d2NXvpyHuQD7QeAQfq+ipr9oKfOjQbe24
+   IQgZfzExIYkdLy1Z2mo8n4XE9jANqSTaWpSTsckFiCKGfhnn3xKEgrIi4
+   BghEu+s9+5qgaSwqskyNW1njjQeo55ghUyCvB7dlqzjLCu3ptfbfKg3k+
+   y1dAp2L+EnBSPifG6r2WQs9oCEfjPP8phNbyI9+Sj47o3TDn3xreY7PPo
+   7DXiYrBKYuId5jYPxpEYbN12yZWwVfNuq03cw9jL7/dHFl230mUH8QbIb
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10961"; a="400217775"
 X-IronPort-AV: E=Sophos;i="6.05,212,1701158400"; 
-   d="scan'208";a="8016462"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 15:55:37 -0800
+   d="scan'208";a="400217775"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 15:55:43 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.05,212,1701158400"; 
-   d="scan'208";a="1468205"
+   d="scan'208";a="27817913"
 Received: from ls.sc.intel.com (HELO localhost) ([172.25.112.31])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 15:55:36 -0800
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 15:55:43 -0800
 From: isaku.yamahata@intel.com
 To: kvm@vger.kernel.org,
 	linux-kernel@vger.kernel.org
@@ -52,9 +52,9 @@ Cc: isaku.yamahata@intel.com,
 	chen.bo@intel.com,
 	hang.yuan@intel.com,
 	tina.zhang@intel.com
-Subject: [PATCH v18 061/121] KVM: TDX: MTRR: implement get_mt_mask() for TDX
-Date: Mon, 22 Jan 2024 15:53:37 -0800
-Message-Id: <83048a3bba898a4a81215f3c62489b03e307d180.1705965635.git.isaku.yamahata@intel.com>
+Subject: [PATCH v18 078/121] KVM: TDX: Add support for find pending IRQ in a protected local APIC
+Date: Mon, 22 Jan 2024 15:53:54 -0800
+Message-Id: <529ff4059b82472232aa842d81817afcd80b2a16.1705965635.git.isaku.yamahata@intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1705965634.git.isaku.yamahata@intel.com>
 References: <cover.1705965634.git.isaku.yamahata@intel.com>
@@ -66,111 +66,189 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Isaku Yamahata <isaku.yamahata@intel.com>
+From: Sean Christopherson <seanjc@google.com>
 
-Because TDX virtualize cpuid[0x1].EDX[MTRR: bit 12] to fixed 1, guest TD
-thinks MTRR is supported.  Although TDX supports only WB for private GPA,
-it's desirable to support MTRR for shared GPA.  As guest access to MTRR
-MSRs causes #VE and KVM/x86 tracks the values of MTRR MSRs, the remining
-part is to implement get_mt_mask method for TDX for shared GPA.
+Add flag and hook to KVM's local APIC management to support determining
+whether or not a TDX guest as a pending IRQ.  For TDX vCPUs, the virtual
+APIC page is owned by the TDX module and cannot be accessed by KVM.  As a
+result, registers that are virtualized by the CPU, e.g. PPR, cannot be
+read or written by KVM.  To deliver interrupts for TDX guests, KVM must
+send an IRQ to the CPU on the posted interrupt notification vector.  And
+to determine if TDX vCPU has a pending interrupt, KVM must check if there
+is an outstanding notification.
 
-Pass around shared bit from kvm fault handler to get_mt_mask method so that
-it can determine if the gfn is shared or private.  Implement get_mt_mask()
-following vmx case for shared GPA and return WB for private GPA.
-the existing vmx_get_mt_mask() can't be directly used as CPU state(CR0.CD)
-is protected.  GFN passed to kvm_mtrr_check_gfn_range_consistency() should
-include shared bit.
+Return "no interrupt" in kvm_apic_has_interrupt() if the guest APIC is
+protected to short-circuit the various other flows that try to pull an
+IRQ out of the vAPIC, the only valid operation is querying _if_ an IRQ is
+pending, KVM can't do anything based on _which_ IRQ is pending.
 
-Suggested-by: Kai Huang <kai.huang@intel.com>
+Intentionally omit sanity checks from other flows, e.g. PPR update, so as
+not to degrade non-TDX guests with unnecessary checks.  A well-behaved KVM
+and userspace will never reach those flows for TDX guests, but reaching
+them is not fatal if something does go awry.
+
+Note, this doesn't handle interrupts that have been delivered to the vCPU
+but not yet recognized by the core, i.e. interrupts that are sitting in
+vmcs.GUEST_INTR_STATUS.  Querying that state requires a SEAMCALL and will
+be supported in a future patch.
+
+Signed-off-by: Sean Christopherson <seanjc@google.com>
 Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
 ---
- arch/x86/kvm/vmx/main.c    | 10 +++++++++-
- arch/x86/kvm/vmx/tdx.c     | 23 +++++++++++++++++++++++
- arch/x86/kvm/vmx/x86_ops.h |  2 ++
- 3 files changed, 34 insertions(+), 1 deletion(-)
+ arch/x86/include/asm/kvm-x86-ops.h |  1 +
+ arch/x86/include/asm/kvm_host.h    |  1 +
+ arch/x86/kvm/irq.c                 |  3 +++
+ arch/x86/kvm/lapic.c               |  3 +++
+ arch/x86/kvm/lapic.h               |  2 ++
+ arch/x86/kvm/vmx/main.c            | 10 ++++++++++
+ arch/x86/kvm/vmx/tdx.c             |  6 ++++++
+ arch/x86/kvm/vmx/x86_ops.h         |  2 ++
+ 8 files changed, 28 insertions(+)
 
+diff --git a/arch/x86/include/asm/kvm-x86-ops.h b/arch/x86/include/asm/kvm-x86-ops.h
+index 38f3d7f54fcf..23197e9e2b7f 100644
+--- a/arch/x86/include/asm/kvm-x86-ops.h
++++ b/arch/x86/include/asm/kvm-x86-ops.h
+@@ -124,6 +124,7 @@ KVM_X86_OP_OPTIONAL(pi_start_assignment)
+ KVM_X86_OP_OPTIONAL(apicv_pre_state_restore)
+ KVM_X86_OP_OPTIONAL(apicv_post_state_restore)
+ KVM_X86_OP_OPTIONAL_RET0(dy_apicv_has_pending_interrupt)
++KVM_X86_OP_OPTIONAL(protected_apic_has_interrupt)
+ KVM_X86_OP_OPTIONAL(set_hv_timer)
+ KVM_X86_OP_OPTIONAL(cancel_hv_timer)
+ KVM_X86_OP(setup_mce)
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index a7782a6f995a..b1bf9e9b77e8 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -1817,6 +1817,7 @@ struct kvm_x86_ops {
+ 	void (*apicv_pre_state_restore)(struct kvm_vcpu *vcpu);
+ 	void (*apicv_post_state_restore)(struct kvm_vcpu *vcpu);
+ 	bool (*dy_apicv_has_pending_interrupt)(struct kvm_vcpu *vcpu);
++	bool (*protected_apic_has_interrupt)(struct kvm_vcpu *vcpu);
+ 
+ 	int (*set_hv_timer)(struct kvm_vcpu *vcpu, u64 guest_deadline_tsc,
+ 			    bool *expired);
+diff --git a/arch/x86/kvm/irq.c b/arch/x86/kvm/irq.c
+index ad9ca8a60144..f253f4c6bf04 100644
+--- a/arch/x86/kvm/irq.c
++++ b/arch/x86/kvm/irq.c
+@@ -100,6 +100,9 @@ int kvm_cpu_has_interrupt(struct kvm_vcpu *v)
+ 	if (kvm_cpu_has_extint(v))
+ 		return 1;
+ 
++	if (lapic_in_kernel(v) && v->arch.apic->guest_apic_protected)
++		return static_call(kvm_x86_protected_apic_has_interrupt)(v);
++
+ 	return kvm_apic_has_interrupt(v) != -1;	/* LAPIC */
+ }
+ EXPORT_SYMBOL_GPL(kvm_cpu_has_interrupt);
+diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+index 3242f3da2457..e8034f2f2dd1 100644
+--- a/arch/x86/kvm/lapic.c
++++ b/arch/x86/kvm/lapic.c
+@@ -2860,6 +2860,9 @@ int kvm_apic_has_interrupt(struct kvm_vcpu *vcpu)
+ 	if (!kvm_apic_present(vcpu))
+ 		return -1;
+ 
++	if (apic->guest_apic_protected)
++		return -1;
++
+ 	__apic_update_ppr(apic, &ppr);
+ 	return apic_has_interrupt_for_ppr(apic, ppr);
+ }
+diff --git a/arch/x86/kvm/lapic.h b/arch/x86/kvm/lapic.h
+index 0a0ea4b5dd8c..749b7b629c47 100644
+--- a/arch/x86/kvm/lapic.h
++++ b/arch/x86/kvm/lapic.h
+@@ -66,6 +66,8 @@ struct kvm_lapic {
+ 	bool sw_enabled;
+ 	bool irr_pending;
+ 	bool lvt0_in_nmi_mode;
++	/* Select registers in the vAPIC cannot be read/written. */
++	bool guest_apic_protected;
+ 	/* Number of bits set in ISR. */
+ 	s16 isr_count;
+ 	/* The highest vector set in ISR; if -1 - invalid, must scan ISR. */
 diff --git a/arch/x86/kvm/vmx/main.c b/arch/x86/kvm/vmx/main.c
-index 569f2f67094c..0784290d846f 100644
+index 99e16ba3cbde..f27dbccdf1e2 100644
 --- a/arch/x86/kvm/vmx/main.c
 +++ b/arch/x86/kvm/vmx/main.c
-@@ -232,6 +232,14 @@ static void vt_load_mmu_pgd(struct kvm_vcpu *vcpu, hpa_t root_hpa,
- 	vmx_load_mmu_pgd(vcpu, root_hpa, pgd_level);
+@@ -98,6 +98,8 @@ static __init int vt_hardware_setup(void)
+ 
+ 	if (enable_tdx)
+ 		vt_x86_ops.flush_remote_tlbs = vt_flush_remote_tlbs;
++	else
++		vt_x86_ops.protected_apic_has_interrupt = NULL;
+ 
+ 	return 0;
+ }
+@@ -234,6 +236,13 @@ static void vt_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
+ 	vmx_vcpu_load(vcpu, cpu);
  }
  
-+static u8 vt_get_mt_mask(struct kvm_vcpu *vcpu, gfn_t gfn, bool is_mmio)
++static bool vt_protected_apic_has_interrupt(struct kvm_vcpu *vcpu)
 +{
-+	if (is_td_vcpu(vcpu))
-+		return tdx_get_mt_mask(vcpu, gfn, is_mmio);
++	KVM_BUG_ON(!is_td_vcpu(vcpu), vcpu->kvm);
 +
-+	return vmx_get_mt_mask(vcpu, gfn, is_mmio);
++	return tdx_protected_apic_has_interrupt(vcpu);
 +}
 +
- static int vt_mem_enc_ioctl(struct kvm *kvm, void __user *argp)
+ static void vt_flush_tlb_all(struct kvm_vcpu *vcpu)
  {
- 	if (!is_td(kvm))
-@@ -351,7 +359,7 @@ struct kvm_x86_ops vt_x86_ops __initdata = {
+ 	if (is_td_vcpu(vcpu)) {
+@@ -425,6 +434,7 @@ struct kvm_x86_ops vt_x86_ops __initdata = {
+ 	.sync_pir_to_irr = vmx_sync_pir_to_irr,
+ 	.deliver_interrupt = vmx_deliver_interrupt,
+ 	.dy_apicv_has_pending_interrupt = pi_has_pending_interrupt,
++	.protected_apic_has_interrupt = vt_protected_apic_has_interrupt,
  
  	.set_tss_addr = vmx_set_tss_addr,
  	.set_identity_map_addr = vmx_set_identity_map_addr,
--	.get_mt_mask = vmx_get_mt_mask,
-+	.get_mt_mask = vt_get_mt_mask,
- 
- 	.get_exit_info = vmx_get_exit_info,
- 
 diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
-index 4002e7e7b191..4cbcedff4f16 100644
+index db01162de136..edc71f2863c3 100644
 --- a/arch/x86/kvm/vmx/tdx.c
 +++ b/arch/x86/kvm/vmx/tdx.c
-@@ -439,6 +439,29 @@ int tdx_vm_init(struct kvm *kvm)
- 	return 0;
+@@ -633,6 +633,7 @@ int tdx_vcpu_create(struct kvm_vcpu *vcpu)
+ 		return -EINVAL;
+ 
+ 	fpstate_set_confidential(&vcpu->arch.guest_fpu);
++	vcpu->arch.apic->guest_apic_protected = true;
+ 
+ 	vcpu->arch.efer = EFER_SCE | EFER_LME | EFER_LMA | EFER_NX;
+ 
+@@ -674,6 +675,11 @@ void tdx_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
+ 	local_irq_enable();
  }
  
-+u8 tdx_get_mt_mask(struct kvm_vcpu *vcpu, gfn_t gfn, bool is_mmio)
++bool tdx_protected_apic_has_interrupt(struct kvm_vcpu *vcpu)
 +{
-+	if (is_mmio)
-+		return MTRR_TYPE_UNCACHABLE << VMX_EPT_MT_EPTE_SHIFT;
-+
-+	if (!kvm_arch_has_noncoherent_dma(vcpu->kvm))
-+		return (MTRR_TYPE_WRBACK << VMX_EPT_MT_EPTE_SHIFT) | VMX_EPT_IPAT_BIT;
-+
-+	/*
-+	 * TDX enforces CR0.CD = 0 and KVM MTRR emulation enforces writeback.
-+	 * TODO: implement MTRR MSR emulation so that
-+	 * MTRRCap: SMRR=0: SMRR interface unsupported
-+	 *          WC=0: write combining unsupported
-+	 *          FIX=0: Fixed range registers unsupported
-+	 *          VCNT=0: number of variable range regitsers = 0
-+	 * MTRRDefType: E=1, FE=0, type=writeback only. Don't allow other value.
-+	 *              E=1: enable MTRR
-+	 *              FE=0: disable fixed range MTRRs
-+	 *              type: default memory type=writeback
-+	 */
-+	return MTRR_TYPE_WRBACK << VMX_EPT_MT_EPTE_SHIFT;
++	return pi_has_pending_interrupt(vcpu);
 +}
 +
- int tdx_vcpu_create(struct kvm_vcpu *vcpu)
+ void tdx_prepare_switch_to_guest(struct kvm_vcpu *vcpu)
  {
- 	struct kvm_tdx *kvm_tdx = to_kvm_tdx(vcpu->kvm);
+ 	struct vcpu_tdx *tdx = to_tdx(vcpu);
 diff --git a/arch/x86/kvm/vmx/x86_ops.h b/arch/x86/kvm/vmx/x86_ops.h
-index 441915e9293e..5a9aabf39c02 100644
+index 7753736de5dc..4229380ebb0b 100644
 --- a/arch/x86/kvm/vmx/x86_ops.h
 +++ b/arch/x86/kvm/vmx/x86_ops.h
-@@ -150,6 +150,7 @@ int tdx_vm_ioctl(struct kvm *kvm, void __user *argp);
- int tdx_vcpu_create(struct kvm_vcpu *vcpu);
- void tdx_vcpu_free(struct kvm_vcpu *vcpu);
- void tdx_vcpu_reset(struct kvm_vcpu *vcpu, bool init_event);
-+u8 tdx_get_mt_mask(struct kvm_vcpu *vcpu, gfn_t gfn, bool is_mmio);
+@@ -155,6 +155,7 @@ fastpath_t tdx_vcpu_run(struct kvm_vcpu *vcpu);
+ void tdx_prepare_switch_to_guest(struct kvm_vcpu *vcpu);
+ void tdx_vcpu_put(struct kvm_vcpu *vcpu);
+ void tdx_vcpu_load(struct kvm_vcpu *vcpu, int cpu);
++bool tdx_protected_apic_has_interrupt(struct kvm_vcpu *vcpu);
+ u8 tdx_get_mt_mask(struct kvm_vcpu *vcpu, gfn_t gfn, bool is_mmio);
  
  int tdx_vcpu_ioctl(struct kvm_vcpu *vcpu, void __user *argp);
- 
-@@ -176,6 +177,7 @@ static inline int tdx_vm_ioctl(struct kvm *kvm, void __user *argp) { return -EOP
- static inline int tdx_vcpu_create(struct kvm_vcpu *vcpu) { return -EOPNOTSUPP; }
- static inline void tdx_vcpu_free(struct kvm_vcpu *vcpu) {}
- static inline void tdx_vcpu_reset(struct kvm_vcpu *vcpu, bool init_event) {}
-+static inline u8 tdx_get_mt_mask(struct kvm_vcpu *vcpu, gfn_t gfn, bool is_mmio) { return 0; }
+@@ -187,6 +188,7 @@ static inline fastpath_t tdx_vcpu_run(struct kvm_vcpu *vcpu) { return EXIT_FASTP
+ static inline void tdx_prepare_switch_to_guest(struct kvm_vcpu *vcpu) {}
+ static inline void tdx_vcpu_put(struct kvm_vcpu *vcpu) {}
+ static inline void tdx_vcpu_load(struct kvm_vcpu *vcpu, int cpu) {}
++static inline bool tdx_protected_apic_has_interrupt(struct kvm_vcpu *vcpu) { return false; }
+ static inline u8 tdx_get_mt_mask(struct kvm_vcpu *vcpu, gfn_t gfn, bool is_mmio) { return 0; }
  
  static inline int tdx_vcpu_ioctl(struct kvm_vcpu *vcpu, void __user *argp) { return -EOPNOTSUPP; }
- 
 -- 
 2.25.1
 
