@@ -1,186 +1,151 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D67064B5B7;
-	Mon, 22 Jan 2024 15:07:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A4374B5D2;
+	Mon, 22 Jan 2024 15:08:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705936079; cv=none; b=DcDeW1l82LLNByJQ4mc9jnoqszv+JoWuBbKXvOP1XimC25jUzJ1rkj5/sQ8kUniHycpXKPOhoyXU61r+DHG+J3yZObZMGv49M3UwDxFoiKEfpXCc09yUgxuTO0wLByAlbEps8gvf9vpU/72VC7ApSO3Kn+AFkGcE3GI9UMnKV+k=
+	t=1705936085; cv=none; b=qKLlkOrV2zLkXD5irrhiqLiEKNDnSwXcaMo5273jijxCRPa3eRmmu5RJ/H6vsJM29Dheq4lqb+5I5HgFTgKjXtQpkP04/vdJst+H2p1rb9LY9F68bjCQBsd2UbJH01CFdI60uE0QTmzpkWOYcH+tCeswHWz0qbageP5gHJRKTOs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705936079; c=relaxed/simple;
-	bh=rG2lZ5Jlezilxef3z+18eTsHr4Nwxo2hriUqKm7kyTI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IzOJs8JUuTImH1hes3s0BjW8JSeECK5xgeV6W2a1yeU8CBLN+ju59fTrCNdOWlinkm4vsZq2XFOEdlN7J8hSZEq2UCZCym+vnkY8PErxo2gi9DTaSeDFrLvzXSBxCeox0Ae5ANfnDC8m5041XL2OoiU2z4B9+zeO//T+lYuYsEw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uJS/7mn+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1705936085; c=relaxed/simple;
+	bh=4fYcXhWiSJkRIg6Ip7urrvrUSXMdsY9G0tmUF8/+f4s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NNfKb719+3M+hKu6+L5EljWn8dU0KL357DlyS7TqpQFZRwGZf8IQ1CB8RRk6uwHI8XUYxF/zZkQXLuU4AtD5cQ48uI1b1r6HKOcFggi4beyeKVLBjXecSFoadx7tActgTrcODiQriJ9DW1b5S5ZsbJLNqMf1eDNxpx45FI0ZzEI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=Vt73Fi4M; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=Vt73Fi4M; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uJS/7mn+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3618DC433A6;
-	Mon, 22 Jan 2024 15:07:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705936079;
-	bh=rG2lZ5Jlezilxef3z+18eTsHr4Nwxo2hriUqKm7kyTI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=uJS/7mn+O3W+4+FRFpFYnDFWvFN1kAqSGxaUzniNibZpGInPB8SwkHNcH84G8PSHo
-	 Lwz1g7gFKrSg91jiw1Nk6OkKBqpd6m32RgSa5rZFEOEWw8QFGIWZW2PAAHrtKlucIX
-	 xZuN+HlOaB3+sYzvURZAhuenvMiKqMvPXx0ETj1Arhws4B0MAkbNx5d/C1Zai4iXbB
-	 Ga7YQHFFD7VuehmzJqgDCJr7BYkMy+GlQHwVmWq0p6Nukx8DDVwtZ06+bot05sW4Hi
-	 y/wgxcM+uOvgwXSSNPff5dNYIjQUJf8/zyVMQaZzRLh7zUOwprKAN2pRAnGcXJ8usH
-	 N8D8fpF8sEExQ==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: "Stanley.Yang" <Stanley.Yang@amd.com>,
-	Tao Zhou <tao.zhou1@amd.com>,
-	Hawking Zhang <Hawking.Zhang@amd.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Sasha Levin <sashal@kernel.org>,
-	christian.koenig@amd.com,
-	Xinhui.Pan@amd.com,
-	airlied@gmail.com,
-	daniel@ffwll.ch,
-	lijo.lazar@amd.com,
-	asad.kamal@amd.com,
-	le.ma@amd.com,
-	Felix.Kuehling@amd.com,
-	mukul.joshi@amd.com,
-	srinivasan.shanmugam@amd.com,
-	Philip.Yang@amd.com,
-	rajneesh.bhardwaj@amd.com,
-	amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 6.6 60/73] drm/amdgpu: Fix ecc irq enable/disable unpaired
-Date: Mon, 22 Jan 2024 10:02:14 -0500
-Message-ID: <20240122150432.992458-60-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240122150432.992458-1-sashal@kernel.org>
-References: <20240122150432.992458-1-sashal@kernel.org>
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="Vt73Fi4M";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="Vt73Fi4M"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 065781FC07;
+	Mon, 22 Jan 2024 15:08:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1705936080; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4fYcXhWiSJkRIg6Ip7urrvrUSXMdsY9G0tmUF8/+f4s=;
+	b=Vt73Fi4MXs9fhjCF+W13yZlgGJsMKcIyp7vNlFUQs8CZf06PhXzd4sYXvo6iQLN3kdss75
+	yxXbdsT6u9j7YX1kBBdoamwNEMzhqOu9EoH0Z8OQg6fr+YxHO29NYuosqo/k3E9wic4q4b
+	ARFTkK7bq0IcHQE0Ka91kbR3qrm+tfI=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1705936080; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4fYcXhWiSJkRIg6Ip7urrvrUSXMdsY9G0tmUF8/+f4s=;
+	b=Vt73Fi4MXs9fhjCF+W13yZlgGJsMKcIyp7vNlFUQs8CZf06PhXzd4sYXvo6iQLN3kdss75
+	yxXbdsT6u9j7YX1kBBdoamwNEMzhqOu9EoH0Z8OQg6fr+YxHO29NYuosqo/k3E9wic4q4b
+	ARFTkK7bq0IcHQE0Ka91kbR3qrm+tfI=
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id ACD86136A4;
+	Mon, 22 Jan 2024 15:07:58 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id s81AKM6ErmW9YgAAD6G6ig
+	(envelope-from <mkoutny@suse.com>); Mon, 22 Jan 2024 15:07:58 +0000
+Date: Mon, 22 Jan 2024 16:07:57 +0100
+From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
+To: Waiman Long <longman@redhat.com>
+Cc: Tejun Heo <tj@kernel.org>, Zefan Li <lizefan.x@bytedance.com>, 
+	Johannes Weiner <hannes@cmpxchg.org>, Frederic Weisbecker <frederic@kernel.org>, 
+	Jonathan Corbet <corbet@lwn.net>, "Paul E. McKenney" <paulmck@kernel.org>, 
+	Neeraj Upadhyay <quic_neeraju@quicinc.com>, Joel Fernandes <joel@joelfernandes.org>, 
+	Josh Triplett <josh@joshtriplett.org>, Boqun Feng <boqun.feng@gmail.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Lai Jiangshan <jiangshanlai@gmail.com>, Zqiang <qiang.zhang1211@gmail.com>, 
+	Davidlohr Bueso <dave@stgolabs.net>, Shuah Khan <shuah@kernel.org>, cgroups@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, rcu@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, Mrunal Patel <mpatel@redhat.com>, 
+	Ryan Phillips <rphillips@redhat.com>, Brent Rowsell <browsell@redhat.com>, 
+	Peter Hunt <pehunt@redhat.com>, Cestmir Kalina <ckalina@redhat.com>, 
+	Nicolas Saenz Julienne <nsaenz@kernel.org>, Alex Gladkov <agladkov@redhat.com>, 
+	Marcelo Tosatti <mtosatti@redhat.com>, Phil Auld <pauld@redhat.com>, 
+	Paul Gortmaker <paul.gortmaker@windriver.com>, Daniel Bristot de Oliveira <bristot@kernel.org>, 
+	Juri Lelli <juri.lelli@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Costa Shulyupin <cshulyup@redhat.com>
+Subject: Re: [RFC PATCH 0/8] cgroup/cpuset: Support RCU_NOCB on isolated
+ partitions
+Message-ID: <bql5g22ovp2dm33llmq5oxpmuuhysvdyppj7j6xvrm643xuniv@pkqrwvmqzneh>
+References: <20240117163511.88173-1-longman@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.6.13
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="btekknw55nvxl4ky"
+Content-Disposition: inline
+In-Reply-To: <20240117163511.88173-1-longman@redhat.com>
+Authentication-Results: smtp-out2.suse.de;
+	none
+X-Spamd-Result: default: False [-0.21 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 BAYES_HAM(-0.01)[51.13%];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 TAGGED_RCPT(0.00)[];
+	 MIME_GOOD(-0.20)[multipart/signed,text/plain];
+	 R_RATELIMIT(0.00)[to_ip_from(RL6j1h7wxugqfdyj8pnx7tibp9)];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	 RCPT_COUNT_TWELVE(0.00)[36];
+	 SIGNED_PGP(-2.00)[];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+,1:+,2:~];
+	 MID_RHS_NOT_FQDN(0.50)[];
+	 FREEMAIL_CC(0.00)[kernel.org,bytedance.com,cmpxchg.org,lwn.net,quicinc.com,joelfernandes.org,joshtriplett.org,gmail.com,goodmis.org,efficios.com,stgolabs.net,vger.kernel.org,redhat.com,windriver.com,infradead.org];
+	 RCVD_TLS_ALL(0.00)[];
+	 SUSPICIOUS_RECIPS(1.50)[]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spam-Score: -0.21
 
-From: "Stanley.Yang" <Stanley.Yang@amd.com>
 
-[ Upstream commit a32c6f7f5737cc7e31cd7ad5133f0d96fca12ea6 ]
+--btekknw55nvxl4ky
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-The ecc_irq is disabled while GPU mode2 reset suspending process,
-but not be enabled during GPU mode2 reset resume process.
+Hello Waiman.
 
-Changed from V1:
-	only do sdma/gfx ras_late_init in aldebaran_mode2_restore_ip
-	delete amdgpu_ras_late_resume function
+On Wed, Jan 17, 2024 at 11:35:03AM -0500, Waiman Long <longman@redhat.com> wrote:
+> This patch series is based on the RFC patch from Frederic [1]. Instead
+> of offering RCU_NOCB as a separate option, it is now lumped into a
+> root-only cpuset.cpus.isolation_full flag that will enable all the
+> additional CPU isolation capabilities available for isolated partitions
+> if set. RCU_NOCB is just the first one to this party. Additional dynamic
+> CPU isolation capabilities will be added in the future.
 
-Changed from V2:
-	check umc ras supported before put ecc_irq
+IIUC this is similar to what I suggested back in the day and you didn't
+consider it [1]. Do I read this right that you've changed your mind?
 
-Signed-off-by: Stanley.Yang <Stanley.Yang@amd.com>
-Reviewed-by: Tao Zhou <tao.zhou1@amd.com>
-Reviewed-by: Hawking Zhang <Hawking.Zhang@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/gpu/drm/amd/amdgpu/aldebaran.c | 26 +++++++++++++++++++++++++-
- drivers/gpu/drm/amd/amdgpu/gmc_v10_0.c |  4 ++++
- drivers/gpu/drm/amd/amdgpu/gmc_v11_0.c |  5 +++++
- drivers/gpu/drm/amd/amdgpu/gmc_v9_0.c  |  4 ++++
- 4 files changed, 38 insertions(+), 1 deletion(-)
+(It's fine if you did, I'm only asking to follow the heading of cpuset
+controller.)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/aldebaran.c b/drivers/gpu/drm/amd/amdgpu/aldebaran.c
-index 2b97b8a96fb4..fa6193535d48 100644
---- a/drivers/gpu/drm/amd/amdgpu/aldebaran.c
-+++ b/drivers/gpu/drm/amd/amdgpu/aldebaran.c
-@@ -333,6 +333,7 @@ aldebaran_mode2_restore_hwcontext(struct amdgpu_reset_control *reset_ctl,
- {
- 	struct list_head *reset_device_list = reset_context->reset_device_list;
- 	struct amdgpu_device *tmp_adev = NULL;
-+	struct amdgpu_ras *con;
- 	int r;
- 
- 	if (reset_device_list == NULL)
-@@ -358,7 +359,30 @@ aldebaran_mode2_restore_hwcontext(struct amdgpu_reset_control *reset_ctl,
- 		 */
- 		amdgpu_register_gpu_instance(tmp_adev);
- 
--		/* Resume RAS */
-+		/* Resume RAS, ecc_irq */
-+		con = amdgpu_ras_get_context(tmp_adev);
-+		if (!amdgpu_sriov_vf(tmp_adev) && con) {
-+			if (tmp_adev->sdma.ras &&
-+				tmp_adev->sdma.ras->ras_block.ras_late_init) {
-+				r = tmp_adev->sdma.ras->ras_block.ras_late_init(tmp_adev,
-+						&tmp_adev->sdma.ras->ras_block.ras_comm);
-+				if (r) {
-+					dev_err(tmp_adev->dev, "SDMA failed to execute ras_late_init! ret:%d\n", r);
-+					goto end;
-+				}
-+			}
-+
-+			if (tmp_adev->gfx.ras &&
-+				tmp_adev->gfx.ras->ras_block.ras_late_init) {
-+				r = tmp_adev->gfx.ras->ras_block.ras_late_init(tmp_adev,
-+						&tmp_adev->gfx.ras->ras_block.ras_comm);
-+				if (r) {
-+					dev_err(tmp_adev->dev, "GFX failed to execute ras_late_init! ret:%d\n", r);
-+					goto end;
-+				}
-+			}
-+		}
-+
- 		amdgpu_ras_resume(tmp_adev);
- 
- 		/* Update PSP FW topology after reset */
-diff --git a/drivers/gpu/drm/amd/amdgpu/gmc_v10_0.c b/drivers/gpu/drm/amd/amdgpu/gmc_v10_0.c
-index fa87a85e1017..62ecf4d89cb9 100644
---- a/drivers/gpu/drm/amd/amdgpu/gmc_v10_0.c
-+++ b/drivers/gpu/drm/amd/amdgpu/gmc_v10_0.c
-@@ -1141,6 +1141,10 @@ static int gmc_v10_0_hw_fini(void *handle)
- 
- 	amdgpu_irq_put(adev, &adev->gmc.vm_fault, 0);
- 
-+	if (adev->gmc.ecc_irq.funcs &&
-+		amdgpu_ras_is_supported(adev, AMDGPU_RAS_BLOCK__UMC))
-+		amdgpu_irq_put(adev, &adev->gmc.ecc_irq, 0);
-+
- 	return 0;
- }
- 
-diff --git a/drivers/gpu/drm/amd/amdgpu/gmc_v11_0.c b/drivers/gpu/drm/amd/amdgpu/gmc_v11_0.c
-index e3b76fd28d15..3d797a1adef3 100644
---- a/drivers/gpu/drm/amd/amdgpu/gmc_v11_0.c
-+++ b/drivers/gpu/drm/amd/amdgpu/gmc_v11_0.c
-@@ -974,6 +974,11 @@ static int gmc_v11_0_hw_fini(void *handle)
- 	}
- 
- 	amdgpu_irq_put(adev, &adev->gmc.vm_fault, 0);
-+
-+	if (adev->gmc.ecc_irq.funcs &&
-+		amdgpu_ras_is_supported(adev, AMDGPU_RAS_BLOCK__UMC))
-+		amdgpu_irq_put(adev, &adev->gmc.ecc_irq, 0);
-+
- 	gmc_v11_0_gart_disable(adev);
- 
- 	return 0;
-diff --git a/drivers/gpu/drm/amd/amdgpu/gmc_v9_0.c b/drivers/gpu/drm/amd/amdgpu/gmc_v9_0.c
-index 89550d3df68d..f9f43742e9ce 100644
---- a/drivers/gpu/drm/amd/amdgpu/gmc_v9_0.c
-+++ b/drivers/gpu/drm/amd/amdgpu/gmc_v9_0.c
-@@ -2413,6 +2413,10 @@ static int gmc_v9_0_hw_fini(void *handle)
- 
- 	amdgpu_irq_put(adev, &adev->gmc.vm_fault, 0);
- 
-+	if (adev->gmc.ecc_irq.funcs &&
-+		amdgpu_ras_is_supported(adev, AMDGPU_RAS_BLOCK__UMC))
-+		amdgpu_irq_put(adev, &adev->gmc.ecc_irq, 0);
-+
- 	return 0;
- }
- 
--- 
-2.43.0
+Thanks,
+Michal
 
+[1] https://lore.kernel.org/r/58c87587-417b-1498-185f-1db6bb612c82@redhat.com/
+
+--btekknw55nvxl4ky
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQQpEWyjXuwGT2dDBqAGvrMr/1gcjgUCZa6EywAKCRAGvrMr/1gc
+jnziAQDeS/BPCM9qEVgM7AdJJ1sdTzQsMQ5YiQ3EnDS8nw0THQD+IlhGeiHOP8eY
+Fif9SqmbUs3GzGds3uUPWNBUWQDsjws=
+=EAx6
+-----END PGP SIGNATURE-----
+
+--btekknw55nvxl4ky--
