@@ -1,115 +1,83 @@
-Received: from www262.sakura.ne.jp (www262.sakura.ne.jp [202.181.97.72])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 502393D38D
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 14:09:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.181.97.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62C3E3D0C9;
+	Mon, 22 Jan 2024 14:12:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705932577; cv=none; b=esqupLVcLcahZ7Q0DQz1A2FMvX8AeQdth2VbygwCO73/Gnc85nRNpiXZ4OjsBjSvOKXmuMsecTBK3ZfXsoqPJW6Eae828vTixygR5Ht+T9XcUVJNMAlnmUOLq34RmVHruJoshgXhe9OC0ztKG4LWSqWb5hYxflsI6ezZCdqD0JI=
+	t=1705932728; cv=none; b=X/9qzKUaXf+5rL5i5sixKv6DKGzTTKCtd39wDgs7GHM5krHvn3XT4F5NpP6CY3apUSdW9uWWne0A8VyBrLChBIs/0dBVKEQjkjE0SrrRc77IQ8yGOre7sCXLkMofKGiIWj3WTgfX1qUoNzzJSa7F8xmozmxXjh5KZ1EB6zO46rI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705932577; c=relaxed/simple;
-	bh=SAtsYJPDMPLNHQqhKq7UpT8bIcR6I+Eordc5pCOXcCI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nyqi7B4ZtgxFhgKzSpqhh3vZIAyS+9euBUstiXJsnoNEEpzcNyr7GmANTd9gtWGeE+BNHShV5QmzWEoQ2OljhCx3jISK4mx/YuVOznZeTHEeRA7wEVIAbxHd1MNyVvDhsJnbG+Q10TFxVS/8c3BdecTdY7m/qgJEEus9b49BZNg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp; spf=none smtp.mailfrom=I-love.SAKURA.ne.jp; arc=none smtp.client-ip=202.181.97.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=I-love.SAKURA.ne.jp
-Received: from fsav114.sakura.ne.jp (fsav114.sakura.ne.jp [27.133.134.241])
-	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 40ME8XUc057761;
-	Mon, 22 Jan 2024 23:08:33 +0900 (JST)
-	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav114.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav114.sakura.ne.jp);
- Mon, 22 Jan 2024 23:08:33 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav114.sakura.ne.jp)
-Received: from [192.168.1.6] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-	(authenticated bits=0)
-	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 40ME8XZ7057758
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
-	Mon, 22 Jan 2024 23:08:33 +0900 (JST)
-	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Message-ID: <7dc23b9d-5120-4966-b47b-fcabe270d498@I-love.SAKURA.ne.jp>
-Date: Mon, 22 Jan 2024 23:08:29 +0900
+	s=arc-20240116; t=1705932728; c=relaxed/simple;
+	bh=1FgSBCt8MGeNgIiZjDNRRNW3t32Gf8a5iOJcBW3pu2U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kKPKyxdqTnJlrC6dXbShLVJ3qM/251cbXwj0Ay/uEzDFX8zk5kqoslbb8Xb/5+Cfp1Ql5+uXe3M/RMjMqe5W/YKiLAsqD85teECN8dkeQ9f0ZtCMnYEas7F1HV7jMw0fvj0AwH8WCcaGNIZYQFotAg+U9mrLSaJ7+DYHdrFzVgI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=VAn/Wbtl; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=l4dpU6qq; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="VAn/Wbtl";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="l4dpU6qq"
+Date: Mon, 22 Jan 2024 15:12:03 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1705932725;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1FgSBCt8MGeNgIiZjDNRRNW3t32Gf8a5iOJcBW3pu2U=;
+	b=VAn/Wbtllja7Cb8dL8rDv+MCQW8iMWLsAvcH0o8TF4VBsOeajiEnekeUP6t9KId7suVGn/
+	cWFAcf8VB5zeiB5i3YR2CFvaohqUXeWtru9SHrp1pOMpZR5Z/fRwjpXfQB49LqknTQ30v5
+	tiGxP6Bft1ObRJVm6yWMcTomg5y133ozkotsY2F1oM2P3cjsY9yzYgBsQ3fVN56C0kiNuH
+	1glGi8ABd+RmdqO2Pw2uI/h0fjD4PfDjV+6GryMx4g4kmRheJMe+AtikpP8ZIyTx322axQ
+	kiqDqgom7WGhSgr6xVsJk17piADCnXaZ+g1rWX/io0sDQDmV/I7eRH9holtblA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1705932725;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1FgSBCt8MGeNgIiZjDNRRNW3t32Gf8a5iOJcBW3pu2U=;
+	b=l4dpU6qqZkC7kAGMhLlninKdAaGtv1RzLQoAyhcSE4PBWEKxYpERziD9VTsZUZiij95Sj3
+	bahdfQiZHM5lAhAg==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Masahiro Yamada <masahiroy@kernel.org>
+Cc: linux-kbuild@vger.kernel.org, Nicolas Schier <n.schier@avm.de>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Nicolas Schier <nicolas@fjasle.eu>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] kbuild: resolve symlinks for O= properly
+Message-ID: <20240122141203.CWe3n5rG@linutronix.de>
+References: <20231215160637.842748-1-masahiroy@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] tty: vt: check for atomic context in con_write()
-Content-Language: en-US
-To: Jiri Slaby <jirislaby@kernel.org>,
-        syzbot <syzbot+06fa1063cca8163ea541@syzkaller.appspotmail.com>,
-        syzkaller-bugs@googlegroups.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Starke, Daniel" <daniel.starke@siemens.com>,
-        Lee Jones <lee@kernel.org>, Fedor Pchelkin <pchelkin@ispras.ru>
-Cc: linux-kernel@vger.kernel.org, linux-serial <linux-serial@vger.kernel.org>
-References: <00000000000039f237060f354ef7@google.com>
- <83414cb6-df16-4b6d-92e3-d54d22ba26cc@I-love.SAKURA.ne.jp>
- <9cd9d3eb-418f-44cc-afcf-7283d51252d6@I-love.SAKURA.ne.jp>
- <82aa07d4-13ac-4b1d-80cd-0970c71752a5@kernel.org>
-From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-In-Reply-To: <82aa07d4-13ac-4b1d-80cd-0970c71752a5@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20231215160637.842748-1-masahiroy@kernel.org>
 
-On 2024/01/22 15:48, Jiri Slaby wrote:
-> On 20. 01. 24, 11:34, Tetsuo Handa wrote:
->> syzbot is reporting sleep in atomic context, for gsmld_write() is calling
->> con_write() with spinlock held and IRQs disabled.
-> 
-> gsm should never be bound to a console in the first place.
-> 
-> Noone has sent a patch to deny that yet.
-> 
-> Follow:
-> https://lore.kernel.org/all/49453ebd-b321-4f34-a1a5-d828d8881010@kernel.org/
-> 
-> And feel free to patch that ;).
-> 
-> thanks,
+On 2023-12-16 01:06:37 [+0900], Masahiro Yamada wrote:
+=E2=80=A6
+> Using the physical directory structure for the O=3D option seems more
+> reasonable.
+>=20
+> The comment says "expand a shell special character '~'", but it has
+> already been expanded to the home directory in the command line.
 
-OK. Here is a deny-listing based filter using device number of sysfs entry.
-(We don't want to compare with the function address of con_write().
-Thus, this patch is comparing with device major/minor numbers.)
+It might have been expanded, it might have not been expanded. Having a
+shell script:
+| #!/bin/sh
+|=20
+| exec make O=3D~/scratch/mk-check defconfig
 
-----------
-diff --git a/drivers/tty/n_gsm.c b/drivers/tty/n_gsm.c
-index 4036566febcb..6f9730dce5aa 100644
---- a/drivers/tty/n_gsm.c
-+++ b/drivers/tty/n_gsm.c
-@@ -3630,6 +3630,10 @@ static int gsmld_open(struct tty_struct *tty)
- 	if (tty->ops->write == NULL)
- 		return -EINVAL;
- 
-+	/* Can't be attached to virtual consoles. */
-+	if (tty->dev && MAJOR(tty->dev->devt) == 4 && MINOR(tty->dev->devt) < 64)
-+		return -EINVAL;
-+
- 	/* Attach our ldisc data */
- 	gsm = gsm_alloc_mux();
- 	if (gsm == NULL)
-----------
+with bin/sh =3D dash results in:
 
-Is it possible to use allow-listing based filtering?
-(Attaching on /dev/tty (major=5, minor=0) causes current ssh session
-to be closed. Unexpectedly loosing connection might be a problem for
-fuzz testing...)
+| make[1]: Entering directory '/home/bigeasy/linux/~/scratch/mk-check'
 
-----------
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <sys/ioctl.h>
-#include <linux/tty.h>
+while bin/sh =3D bash expands the ~ properly before for O=3D. Would it be
+too much to ask, to expand the ~?
 
-int main(int argc, char *argv[]) {
-        int ldisc = N_GSM0710;
-
-        return ioctl(open(argv[1], O_RDWR | O_NOCTTY | O_NDELAY), TIOCSETD, &ldisc) == 0;
-}
-----------
-
+Sebastian
