@@ -1,117 +1,108 @@
-Received: from zg8tmty3ljk5ljewns4xndka.icoremail.net (zg8tmty3ljk5ljewns4xndka.icoremail.net [167.99.105.149])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D8D13FB0F;
-	Mon, 22 Jan 2024 11:26:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=167.99.105.149
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29D203B1AC;
+	Mon, 22 Jan 2024 11:27:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705922804; cv=none; b=fNga8OoNwkuTr58zKl3AKbt114wHPjrKxDTvxu27nrdIESTsSa8Hw9OjTXf1mqWhVMr3k9EUW34ZA4DDUan5FPDwKnCNhXo1EQGXcka04dqVy+nEz3W914CagtkqgTTuc9W4ymgM3AeSNnc+lhV9gGw5rEJVd6P7pisEAZ8t1v0=
+	t=1705922834; cv=none; b=NnwI9+pSRd+3z9D13vdayAltWD2DUhJBEwMAC8X2gDHNwPZEPnqwsALtSOH2HORpNwlWXtLE6EG7pKz6C64mpwmJDo9kCaHvk7EBgebaB/UvxmPfCQni6gnnzhh2Pwr2OLKUdd9qyvrWdSfr/5bJ7g8IpjB6t1tz7uUKdCEqawU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705922804; c=relaxed/simple;
-	bh=4MTzk8hRpsL1+wfg2XAn8qvaYkdX9cgM4ufqwTPlx6U=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SpF/ucddlPVrf16O3OSdiI74hFRIY6QsapA6jtAhbUgHdY9YuGZjz9X3JgKvUA9msMPsJoUD2XfboOcqqjpw0IkYKdeAkF+X6+4x6mOIzwQlL8L9ZDM+09BHMFvzSfU79exRssQWHMtcdWPjUQmuksH1/XQelSdwJGryQGNKYU0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hust.edu.cn; spf=pass smtp.mailfrom=hust.edu.cn; arc=none smtp.client-ip=167.99.105.149
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hust.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hust.edu.cn
-Received: from hust.edu.cn (unknown [172.16.0.50])
-	by app1 (Coremail) with SMTP id HgEQrACXmim7UK5lq3KtAQ--.37301S2;
-	Mon, 22 Jan 2024 19:25:47 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.12.190.56])
-	by gateway (Coremail) with SMTP id _____wCHJbasUK5lBlwmAA--.60615S2;
-	Mon, 22 Jan 2024 19:25:47 +0800 (CST)
-From: Mingxuan Xiang <mx_xiang@hust.edu.cn>
-To: Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: Dongliang Mu <dzm91@hust.edu.cn>,
-	Mingxuan Xiang <mx_xiang@hust.edu.cn>,
-	linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] media: usb: hackrf: add null ptr check in hackrf_ctrl_msg
-Date: Mon, 22 Jan 2024 19:22:10 +0800
-Message-ID: <20240122112210.424698-1-mx_xiang@hust.edu.cn>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1705922834; c=relaxed/simple;
+	bh=R2Uy9J91czH4bYRlAIUq9XE55rq4rDwm81b227GSnVs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eXZm3RRLI08li+zvSDDG6/MDMPcqaU8Olj32bExUkKFlQ2AXJCmEPkzvHAzLdxYRPaHvhxVNW4RBmyd5uL/3J9oKK3c/phkHoFei82f7YPhsYEvP13lXnks96TtKCQRgs6W2SWFMZNQoYt/xfMejbXYb3H+AFCoFScSrt/6wIT4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HkKmEawu; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HkKmEawu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1705922833; x=1737458833;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=R2Uy9J91czH4bYRlAIUq9XE55rq4rDwm81b227GSnVs=;
+  b=HkKmEawudyjusBqT90RjLSgQjuD42j6T09Gn7QynH1/d+Owjmw8Z2a01
+   ZU88BVZmHYsJ32HNlt09gx43z5cAtyNoeu0imLM8ehJoAhfXAEvLinQHU
+   STVFYFUDAn4yhBzgc78iwvpGX3Gs6PKnE4EPD8C07juC8hB+p9I3fm6wt
+   PFn88sNC7x6ghlymyvQwIQQxH1iuRdjRYBrpJideNooyKx4654E1IuWtC
+   +GeXIUCEdQX7R4VuCWdZgKpw/9wF8tf0et9GNb5YU1yhWGNzX/XFOOVMv
+   6L9CN3OiOEHkl7swlDZ/Ksn+ylPX61/pFpdLTdgMC3I7NKMVIV24A2nG6
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10960"; a="8569607"
+X-IronPort-AV: E=Sophos;i="6.05,211,1701158400"; 
+   d="scan'208";a="8569607"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 03:27:11 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10960"; a="819661979"
+X-IronPort-AV: E=Sophos;i="6.05,211,1701158400"; 
+   d="scan'208";a="819661979"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga001.jf.intel.com with ESMTP; 22 Jan 2024 03:27:07 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+	id 0B3F724D; Mon, 22 Jan 2024 13:27:05 +0200 (EET)
+Date: Mon, 22 Jan 2024 13:27:05 +0200
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+To: Sanath S <Sanath.S@amd.com>
+Cc: mario.limonciello@amd.com, andreas.noever@gmail.com,
+	michael.jamet@intel.com, YehezkelShB@gmail.com,
+	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [Patch v3 0/4] Add support for downstream port reset(DPR)
+Message-ID: <20240122112705.GG2543524@black.fi.intel.com>
+References: <20240106165723.3377789-1-Sanath.S@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:HgEQrACXmim7UK5lq3KtAQ--.37301S2
-Authentication-Results: app1; spf=neutral smtp.mail=mx_xiang@hust.edu.
-	cn;
-X-Coremail-Antispam: 1UD129KBjvJXoWxAFyfCFWxXFW5Kr1kKF18uFg_yoW5Xw45pF
-	yFyrZFkryrXry29wn7Jr1UWFyrZan3AFy5Wryfu395urs8Jw4xXF1jqayqgr4qkrZ2yF90
-	yF9YqrW3tF4UZaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9Yb7Iv0xC_tr1lb4IE77IF4wAFc2x0x2IEx4CE42xK8VAvwI8I
-	cIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjx
-	v20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK
-	6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4
-	CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8C
-	rVC2j2WlYx0EF7xvrVAajcxG14v26r4UJVWxJr1lYx0E74AGY7Cv6cx26r4fZr1UJr1lYx
-	0Ec7CjxVAajcxG14v26F4j6r4UJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vI
-	r41l42xK82IYc2Ij64vIr41l42xK82IY6x8ErcxFaVAv8VW8uFyUJr1UMxC20s026xCaFV
-	Cjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWl
-	x4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r
-	1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_
-	JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCT
-	nIWIevJa73UjIFyTuYvjxUV1xRUUUUU
-X-CM-SenderInfo: jxsqimaruylmo6kx23oohg3hdfq/1tbiAQkEE2WtIjAvbQAAsH
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240106165723.3377789-1-Sanath.S@amd.com>
 
-If the user yanks out the cable before closing the file,
-dev->udev would be set to NULL therefore causing a null-ptr-deref
-in hackrf_ctrl_msg issued by hackrf_stop_streaming.
+On Sat, Jan 06, 2024 at 10:27:19PM +0530, Sanath S wrote:
+> Tunnels created by boot firmware results in incorrect PCI resource
+> allocation, which results in failure of extending daisy chain.
+> This series aims to resolve inconsistent tunnels or paths created
+> by boot firmware.
+> 
+> Before:
+>            +-03.1-[04-62]----00.0-[05-07]--+-02.0-[06]----00.0
+>            |                               \-04.0-[07]--
+> After:
+>            +-03.1-[04-62]----00.0-[05-62]--+-02.0-[06]----00.0
+>            |                               \-04.0-[07-62]-- 
+> 
+> This series also aligns with windows behaviour of performing a teardown
+> of tunnels and resetting the downstream ports using DPR during the init
+> sequence.
+> 
+> Changes since V3:
+>  - Remove discover_tunnel() api before resetting DPR.
+>  - Add lane and protocol adapters reset in tb_switch_reset()
+>  - Addition of tb_lc_reset_port() for TBT1, TBT2 and TBT3 routers.
+>  - Addition of tb_path_deactivate_hop() api to help suppport path
+>    reset of given hop index.
+>  - Addition on new patch to store and indicate host router reset 
+>    status of USB4 v2
+> 
+> Changes since V2:
+>  - Perform DPR only for USB4 routers.
+>  - Update kernel-doc and return value to -EOPNOTSUPP.
+>  - Limit delay range to 10-15ms.
+> 
+> Sanath S (4):
+>   thunderbolt: Introduce usb4_port_reset() and tb_lc_reset_port()
+>   thunderbolt: Extend tb_switch_reset() to support lane and protocol
+>     adapter reset
+>   thunderbolt: Store host router reset status in nhi_probe()
+>   thunderbolt: Teardown tunnels and reset downstream ports created by
+>     boot firmware
 
-This patch adds a check in hackrf_ctrl_msg before using
-dev->udev.
+All applied to thunderbolt.git/next, thanks! I did some tweaking to the
+code and the changelogs. Please check and make sure your test cases
+still pass.
 
-Found by modified syzkaller.
-
-BUG: KASAN: null-ptr-deref in hackrf_ctrl_msg+0x6d/0x180 drivers/media/usb/hackrf/hackrf.c:195
-Read of size 4 at addr 0000000000000000 by task syz-executor/579
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:88 [inline]
- dump_stack_lvl+0x5e/0x7c lib/dump_stack.c:106
- print_report.cold+0x49a/0x6bb mm/kasan/report.c:436
- kasan_report+0xa8/0x130 mm/kasan/report.c:495
- hackrf_ctrl_msg+0x6d/0x180 drivers/media/usb/hackrf/hackrf.c:195
- hackrf_stop_streaming+0x45/0x140 drivers/media/usb/hackrf/hackrf.c:869
- __vb2_queue_cancel+0x5c/0x550 drivers/media/common/videobuf2/videobuf2-core.c:1992
- vb2_core_streamoff+0x2f/0xb0 drivers/media/common/videobuf2/videobuf2-core.c:2149
- __vb2_cleanup_fileio+0x3e/0xa0 drivers/media/common/videobuf2/videobuf2-core.c:2710
- vb2_core_queue_release+0x1a/0x50 drivers/media/common/videobuf2/videobuf2-core.c:2430
- vb2_queue_release drivers/media/common/videobuf2/videobuf2-v4l2.c:947 [inline]
- _vb2_fop_release+0x110/0x140 drivers/media/common/videobuf2/videobuf2-v4l2.c:1132
- v4l2_release+0x1b9/0x1e0 drivers/media/v4l2-core/v4l2-dev.c:459
- __fput+0x12d/0x4b0 fs/file_table.c:320
- task_work_run+0xa8/0xf0 kernel/task_work.c:177
- resume_user_mode_work include/linux/resume_user_mode.h:49 [inline]
- exit_to_user_mode_loop kernel/entry/common.c:169 [inline]
- exit_to_user_mode_prepare+0x123/0x130 kernel/entry/common.c:201
- __syscall_exit_to_user_mode_work kernel/entry/common.c:283 [inline]
- syscall_exit_to_user_mode+0x22/0x50 kernel/entry/common.c:294
- do_syscall_64+0x48/0x90 arch/x86/entry/common.c:86
- entry_SYSCALL_64_after_hwframe+0x63/0xcd
-
-Signed-off-by: Mingxuan Xiang <mx_xiang@hust.edu.cn>
----
- drivers/media/usb/hackrf/hackrf.c | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/drivers/media/usb/hackrf/hackrf.c b/drivers/media/usb/hackrf/hackrf.c
-index 9c0ecd5f056c..9588b8aa6e98 100644
---- a/drivers/media/usb/hackrf/hackrf.c
-+++ b/drivers/media/usb/hackrf/hackrf.c
-@@ -186,6 +186,11 @@ static int hackrf_ctrl_msg(struct hackrf_dev *dev, u8 request, u16 value,
- 	unsigned int pipe;
- 	u8 requesttype;
- 
-+	if (!dev->udev) {
-+		pr_err("udev is null in %s\n", __func__);
-+		ret = -EINVAL;
-+		goto err;
-+	}
- 	switch (request) {
- 	case CMD_SET_TRANSCEIVER_MODE:
- 	case CMD_SET_FREQ:
--- 
-2.43.0
-
+These have been in our internal validation for a while and no issues
+have been reported so far.
