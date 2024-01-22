@@ -1,104 +1,124 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62F5E4A9A9
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 18:21:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A39864B5B5
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 18:22:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705947711; cv=none; b=Z7oOMFsKOiO/nGDvfwDngdf1oEjL0xXP4fFZdyH2pGM3vNHrbKekmErucCRZyjs+Q2/2AvITk/ZHgBdJnOg7qc0d4rV6/jJmDZkpCKcxY0ckE2nzaHhRRRPjoZ7Kxq6d3ny/f9UPt59grf4oHmMdkD6lDPpeum4RcD10M1fbOII=
+	t=1705947756; cv=none; b=ty7y+YZKDYqKtT1u9QA0YXSf0yRG2gPSRtSfUj/yfjd06aNW9QaTAbGWv3WRHfYjF3uzneEI1aoGn64A1iRqUXg9w7rU4obnyVTOb3GdP0DKCoiRRXmtA8M2b91yl0a6fAOdsfxMYLU7yP5IWdA8yVJWP0XY4/39pePNiJ80RWs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705947711; c=relaxed/simple;
-	bh=5CwBINpwIZ1I1d44NZjFZQKvYM/hTAqqoE/+9rbtQeM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MBQVXdnf/hJs6gf6AbwNyw9i0Tnp7lAD2hjdWm1o7NiOxr8fPLiWD/bgI6D9xodmKot+dWcuNpQ6cRTSzmRrOGq0+QJKzTBupUARNqPiVdPfDeiaN/BWOu2/N0cXbD054JVxP8VKX+ikfw4x8BlORaZJjfOywZafAT2WZ1Q8O6w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=V75w95Cg; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1705947756; c=relaxed/simple;
+	bh=xYsOp0Tk8CxfErW9ndj/ZZh4AQhtBNipUfa73tFsnSE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=k4bISt5HclR7EdIwlpEngbYEoVLVNm17YdN8pHJM3HFOCYrUPGLFbPPqTnoaQQrV0C2/1zFnZnSgQ1XeCgDsObOtx/wrG0DiT3QL2N5hUkUf1U0IjBHd+r2nv/yWxAn9Yzbb1dzoBLiU9hHFAK0UF4RN5ged6aWHLfIXCE0gSUM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=M9u2NoCl; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="V75w95Cg"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 0D31840E0196;
-	Mon, 22 Jan 2024 18:21:47 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id catqAuf140-i; Mon, 22 Jan 2024 18:21:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1705947704; bh=Ea4MnZg3naLyJOTRFGD9v/aFCpyGZVJ7QpiMOtY7j9k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=V75w95Cg41NPBBKBnK5VKZXFGQZPcONR8+KNJly1sd5XPFe9zprDKc8R9QFGM3lRD
-	 6J/ep1tjOYTGXp1ImX7DfllbnEFTFe6vUsLYke8iJiRdb55HQDVF6ZrP7979qXS3Mv
-	 FkMNAshvi02OH104ahkE8UT8J0+9vHw5t5VHC23px1nVNRiTkhiqUSmkV8z50n/aRu
-	 OdMwZvFplQMl1HuLCfvaT59S72GDqwNP9Yjn5ExujphNpCFfkSfldn0UzXv0A3hTDZ
-	 wRxqA4g5X3XGkkygZXyaTCp2jJGh0Bu/jVxE7nkUjjaHDOhh2l5Po/PeKXHHUZ3n8n
-	 hzhbmIsyyLmd/3yXo8tlM2QeaC7DmTqR4D2RrSEynJyslpf2UCPavHUaOt49PJeyRI
-	 uMEBYR4RqmbggMHUUeCdgdHfjB5Qe7IffipErXqQkAlMjFhOMX1hbVw+/ktMUp+0Ms
-	 9gcN1xwR69nppqgFPo8K+kkuEcCSknSyEChNX5U+xmHqGchnU2AJjbVtBkxVkc5TT7
-	 vdDIAZvdx9IDkqQq9GBl+2cFGL3D6WLKDDcTN8rp3zQHXfiqbEX8RmumYfkPNy7ju8
-	 WFTTPyuUfvtcC2JSJGsqglMAgJXS0NW74CqKmA/8EyrPZtOcSFtuoHQbIU2iEPCaEQ
-	 ATp17NNYNouF1NKkD1HAWr14=
-Received: from zn.tnic (pd953099d.dip0.t-ipconnect.de [217.83.9.157])
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="M9u2NoCl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1705947753;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FSO+yMs9xgoj4SVBxKHNNZsz8CFzHKkKh5JTeSlWjgQ=;
+	b=M9u2NoClZ9MYQvWyjsc34ninadYJZ/JuWNgT6PttbhyER7S7jzwAuIOP1PG1W1hvkK6Jkr
+	G6k+sD5bLZU90lj0PORUJq2JKyPj0cf0VVCE8y/cgj8z8ke2ZZ2w9XXsnrmJQfmjwzpzdQ
+	AhJ9nVZ+2QZUBUHP3sssbgFTI9ZJT/M=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-344-sTgy8nB2N2u3wr9g8-SUNQ-1; Mon,
+ 22 Jan 2024 13:22:30 -0500
+X-MC-Unique: sTgy8nB2N2u3wr9g8-SUNQ-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 58B6040E01B4;
-	Mon, 22 Jan 2024 18:21:33 +0000 (UTC)
-Date: Mon, 22 Jan 2024 19:21:21 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Reinette Chatre <reinette.chatre@intel.com>
-Cc: "Luck, Tony" <tony.luck@intel.com>,
-	"Yu, Fenghua" <fenghua.yu@intel.com>,
-	Peter Newman <peternewman@google.com>,
-	"x86@kernel.org" <x86@kernel.org>,
-	James Morse <james.morse@arm.com>,
-	Jamie Iles <quic_jiles@quicinc.com>,
-	Babu Moger <babu.moger@amd.com>,
-	"Shen, Xiaochen" <xiaochen.shen@intel.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"patches@lists.linux.dev" <patches@lists.linux.dev>
-Subject: Re: [PATCH v2] x86/resctrl: Implement new mba_MBps throttling
- heuristic
-Message-ID: <20240122182121.GBZa6yIYPtHQx44EU9@fat_crate.local>
-References: <20231201214737.104444-1-tony.luck@intel.com>
- <20240118214213.59596-1-tony.luck@intel.com>
- <45d2891e-989a-45c9-a527-8b14ff5f8748@intel.com>
- <SJ1PR11MB60837D4884419BDC2DCAA2D2FC752@SJ1PR11MB6083.namprd11.prod.outlook.com>
- <bfa5104f-b887-4cc4-a24c-0497b86d9dde@intel.com>
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 8F78F3C2A1C4;
+	Mon, 22 Jan 2024 18:22:29 +0000 (UTC)
+Received: from fedora.redhat.com (unknown [10.39.192.175])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 11CC03C2E;
+	Mon, 22 Jan 2024 18:22:26 +0000 (UTC)
+From: Jose Ignacio Tornos Martinez <jtornosm@redhat.com>
+To: masahiroy@kernel.org
+Cc: dcavalca@meta.com,
+	jtornosm@redhat.com,
+	linux-kbuild@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	nathan@kernel.org,
+	ndesaulniers@google.com,
+	nicolas@fjasle.eu,
+	stable@vger.kernel.org
+Subject: Re: [PATCH V5 1/2] rpm-pkg: simplify installkernel %post
+Date: Mon, 22 Jan 2024 19:22:24 +0100
+Message-ID: <20240122182225.17944-1-jtornosm@redhat.com>
+In-Reply-To: <CAK7LNAQCiBtQ3kQznPDKtkD83wpCzodPVDs8eFnfnx5=Y8E5Cw@mail.gmail.com>
+References: <CAK7LNAQCiBtQ3kQznPDKtkD83wpCzodPVDs8eFnfnx5=Y8E5Cw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <bfa5104f-b887-4cc4-a24c-0497b86d9dde@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
 
-On Mon, Jan 22, 2024 at 10:18:01AM -0800, Reinette Chatre wrote:
-> The fixes I have as pending are:
+> Those installed files should be removed by %ghost markers.
+> I already have a local patch to do this.
+> (see the attachment)
+I like the idea of your new patch, a lot of things can be fixed in that way.
+Ok, I will remove the extra code to remove (%preun) in the patch.
+Just a comment about your patch: for openSUSE /boot/initramfs-* files are
+called /boot/initrd-* and maybe someone would not require it (i.e. embedded
+systems). If it is created it is normally removed and it might not be
+necessary (although I like your idea to control it).
+
+> I just asked you to fix up the code as I suggested in v4.
+Now I understand why no code was added in %preun.
+Ok, your suggestion was very good, but let me try and explain better with
+commands what I would like to fix after next point. When I said 'update'
+wasn't clear, I think.
+If it doesn't fit with your idea or global usage, I will include your
+suggestion like it is.
+
+> For me (on Fedora 39 and openSUSE Tumbleweed), rpm fails due to file conflict.
 > 
-> [PATCH v2] x86/resctrl: Fix unused variable warning in cache_alloc_hsw_probe()
-> 	https://lore.kernel.org/lkml/ZULCd%2FTGJL9Dmncf@agluck-desk3/
+> vagrant@opensuse-tumbleweed20231218:~> sudo rpm -i
+> kernel-6.7.0_12924_g660a5f4a53e7-4.x86_64.rpm
+> file /lib/modules/6.7.0-12924-g660a5f4a53e7/vmlinuz from install of
+> kernel-6.7.0_12924_g660a5f4a53e7-4.x86_64 conflicts with file from
+> package kernel-6.7.0_12924_g660a5f4a53e7-3.x86_64
 > 
-> [PATCH v5 1/2] x86/resctrl: Remove hard-coded memory bandwidth limit
-> 	https://lore.kernel.org/lkml/c26a8ca79d399ed076cf8bf2e9fbc58048808289.1705359148.git.babu.moger@amd.com/
-> 
-> [PATCH v5 2/2] x86/resctrl: Read supported bandwidth sources using CPUID command
-> 	https://lore.kernel.org/lkml/669896fa512c7451319fa5ca2fdb6f7e015b5635.1705359148.git.babu.moger@amd.com/
-> 
-> [PATCH v3] x86/resctrl: Implement new mba_MBps throttling heuristic
-> 	https://lore.kernel.org/lkml/20240122180807.70518-1-tony.luck@intel.com/
+> So, this does not happen.
+I was refering to the cases when zypper is used to install a new kernel with
+the same release and different build number or when 'rpm -i --replacefiles' 
+is used (in this case it would be necessary to remove the old kernel with
+'rpm -e --justdb' too).
+In this cases we only need the possibility of copying the files from the new
+package and not only if they don't exist.
+I have thought about an easy way (no extra or problematic command) and I think
+I have it.
+In addition to your suggestion (if the file does not exit in /boot), I will
+just compare the file in /boot with the file in /lib/modules/%{KERNELRELEASE}
+and if it is not the same, we allow copying:
+%post
+if [ -x /usr/bin/kernel-install ]; then
+        /usr/bin/kernel-install add %{KERNELRELEASE} /lib/modules/%{KERNELRELEASE}/vmlinuz
+fi
+for file in vmlinuz System.map config; do
+        if [ ! -e "/boot/${file}-%{KERNELRELEASE}" ] || ! cmp --silent "/lib/modules/%{KERNELRELEASE}/${file}" "/boot/${file}-%{KERNELRELEASE}"; then
+                cp "/lib/modules/%{KERNELRELEASE}/${file}" "/boot/${file}-%{KERNELRELEASE}"
+        fi
+done
 
-Is that the order I should start queueing them in?
+Let me try with a new patch to know your opinion.
 
-If not, pls send me a note and I can start picking up stuff.
+Thanks
 
-Thx.
+Best regards
+José Ignacio
 
--- 
-Regards/Gruss,
-    Boris.
 
-https://people.kernel.org/tglx/notes-about-netiquette
+
