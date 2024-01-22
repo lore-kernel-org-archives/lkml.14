@@ -1,101 +1,111 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70C3756775
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 18:08:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5AE364AB6;
+	Mon, 22 Jan 2024 18:08:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705946921; cv=none; b=gPFKI4ZYJ9noTTSLTQBziMRn7mYwxW4sEiiYJK77h52Y06/eAjB4ieWbagEEneuBPUkEwXsLrAf4zwXRAK1CTOkA2oFWe+GFGWdnrbLwnCNaOFNMz4aUeWzaXSEUtt4ER9YeYsChWfVm7OC90Gr3xTfjGKg/HumxP8CvvqYO8Bw=
+	t=1705946919; cv=none; b=S71ndhMYueUkI2volJMD/lPSo1d3Ar1GGnCZwmPl4NF1+r6swIXLzfh6rKwnKOQ7qSQJXAaoVsrr4c1255QLNdlow1Y7gq9X96uJVyqc27kgt+DwnF92ENCSAoW9WYjvdhJ9Gj0ERpzl1Qt9hT2jX7EkKFlL3VBShnAR7KM0wA8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705946921; c=relaxed/simple;
-	bh=lOy0ZmteWVnevRjqTgakjKZrayLKgyaWmhHjW/PK3Qc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NUkPiUd+IpFniP9EALBqiM1W8B0fL15JBxJkLeP2+CV8QHRKhArRlnWGvHp3JmYB3Oxkyy3f3Hmoxdy9Vihe7kenPPmEKmCEQBNRPovTQTiYZCTxuM8lYuIP1J0znCg5hAu12hgHpQ2bS1Q2sGpwlLuK5u0vNzbxT6oytxsN1eY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rRyiY-000241-Lm; Mon, 22 Jan 2024 19:08:18 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rRyiX-001eQl-Sf; Mon, 22 Jan 2024 19:08:17 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rRyiX-005ZyV-2Y;
-	Mon, 22 Jan 2024 19:08:17 +0100
-From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Mark Brown <broonie@kernel.org>
-Cc: kernel@pengutronix.de,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Javier Martinez Canillas <javierm@redhat.com>,
-	Michal Simek <michal.simek@amd.com>,
-	Amit Kumar Mahapatra <amit.kumar-mahapatra@amd.com>,
-	dri-devel@lists.freedesktop.org,
-	linux-fbdev@vger.kernel.org,
-	linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	linux-spi@vger.kernel.org
-Subject: [PATCH v2 25/33] staging: fbtft: Follow renaming of SPI "master" to "controller"
-Date: Mon, 22 Jan 2024 19:07:20 +0100
-Message-ID:  <d486dbb16fafd93a00013a555658a44e975115fd.1705944943.git.u.kleine-koenig@pengutronix.de>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <cover.1705944943.git.u.kleine-koenig@pengutronix.de>
-References: <cover.1705944943.git.u.kleine-koenig@pengutronix.de>
+	s=arc-20240116; t=1705946919; c=relaxed/simple;
+	bh=RqNQOuyWbnDtXgDNyqmzqdEKmeTpRwZHZjqAYNFwCTI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=C0IpJcl4FbOavZOV5h0xyr8HlVXp+hhEqT2g/JQHh8BxpkApfAbfpS3XzXNcFcLT158DxQbbtqSv/n3zDpePkj8hcJwsI5sDkjBghPsf2xy/tApfmSj5PZUhmShGjDMQN37KVjw2OmNGHTmbF2ucilIxGFNsMDVMqM0Q4Ithw1Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K2foZk/I; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K2foZk/I"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38597C43390;
+	Mon, 22 Jan 2024 18:08:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705946919;
+	bh=RqNQOuyWbnDtXgDNyqmzqdEKmeTpRwZHZjqAYNFwCTI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=K2foZk/IRVX4SATB7c+HIWXryjXdffGbI/wmLfZfCyClsrzAjRmuuMe0woow2Anak
+	 LwiujKSy7b5cwYLIGw6aD9femnb8ML21Ef9dD6I12WPNYy0FRivYQsCPIGdqEeMrVe
+	 u8U0sD4eDya9xOIgC645svv6QodyjczpXeT0g0p2VbcyF4d0UwjVDwsgXSCm9GKCo5
+	 fUi5PYDJzc5sMK3+vmgaQEvP1oDOrIFVymCibFbkzUzbvlT1HOKhl2nf7st2pZYUuc
+	 jfz6vxjNeuUbh9JvH/mauTN0NJFxKTyTszEmoXy746CoLBUUWU1+r77uoMRg3IALMp
+	 m7wk28QleOijg==
+Date: Mon, 22 Jan 2024 18:08:33 +0000
+From: Conor Dooley <conor@kernel.org>
+To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+Cc: daniel.lezcano@linaro.org, tglx@linutronix.de, robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+	shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+	linux-imx@nxp.com, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	Peng Fan <peng.fan@nxp.com>
+Subject: Re: [PATCH 1/2] dt-bindings: timer: nxp,sysctr-timer: support i.MX95
+Message-ID: <20240122-bagel-query-7f04434b51ad@spud>
+References: <20240122092225.2083191-1-peng.fan@oss.nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1528; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=lOy0ZmteWVnevRjqTgakjKZrayLKgyaWmhHjW/PK3Qc=; b=owGbwMvMwMXY3/A7olbonx/jabUkhtR16x44W9/NuexwblKQkcS2eVqdtoxbE2pDa9aufl5So 2JbWHW/k9GYhYGRi0FWTJHFvnFNplWVXGTn2n+XYQaxMoFMYeDiFICJaJuy/zPf0hzD7Xv4XKXA nQ6hKVGCW43/JecF+faw5V2NSIoNXsY1YXm5nNmKKXYS9S8/vzK3nqp7b/PuUv2k5Fr/uGi+iYk nRQOq5/1Ju/K3+FpTk6CUztH44uiXBidcPY35T7bUy7OLrlX7kmPMuK3qWlVDzGuZvLeyUys+CV jbmHIyudxnZTBm6Mr6J8NRU3ApZIrZUb0DvtxGJ3tbfiipm7WV3O01e1/XPOGttuSslTFNkw9fW fdbyTzk8m2bdvVZKRlHXymr7pNt/zLdkuNl7BH1axK6mlZ7c+e8FmvuvPv2cnWky+cFBw+kyu/f kx8wb/oBxd/OjJdPGrkpsT18+rHxpmd+6jLx6yzJbwsB
-X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="ntlfkJs4R/S1G2La"
+Content-Disposition: inline
+In-Reply-To: <20240122092225.2083191-1-peng.fan@oss.nxp.com>
 
-In commit 8caab75fd2c2 ("spi: Generalize SPI "master" to "controller"")
-some functions and struct members were renamed. To not break all drivers
-compatibility macros were provided.
 
-To be able to remove these compatibility macros push the renaming into
-this driver.
+--ntlfkJs4R/S1G2La
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
----
- drivers/staging/fbtft/fbtft-core.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+On Mon, Jan 22, 2024 at 05:22:24PM +0800, Peng Fan (OSS) wrote:
+> From: Peng Fan <peng.fan@nxp.com>
+>=20
+> i.MX95 System counter module has similar design as i.MX93, so add
+> fallback compatible with nxp,sysctr-timer
 
-diff --git a/drivers/staging/fbtft/fbtft-core.c b/drivers/staging/fbtft/fbtft-core.c
-index 3626f429b002..68add4d598ae 100644
---- a/drivers/staging/fbtft/fbtft-core.c
-+++ b/drivers/staging/fbtft/fbtft-core.c
-@@ -794,7 +794,7 @@ int fbtft_register_framebuffer(struct fb_info *fb_info)
- 	if (par->txbuf.buf && par->txbuf.len >= 1024)
- 		sprintf(text1, ", %zu KiB buffer memory", par->txbuf.len >> 10);
- 	if (spi)
--		sprintf(text2, ", spi%d.%d at %d MHz", spi->master->bus_num,
-+		sprintf(text2, ", spi%d.%d at %d MHz", spi->controller->bus_num,
- 			spi_get_chipselect(spi, 0), spi->max_speed_hz / 1000000);
- 	dev_info(fb_info->dev,
- 		 "%s frame buffer, %dx%d, %d KiB video memory%s, fps=%lu%s\n",
-@@ -1215,7 +1215,7 @@ int fbtft_probe_common(struct fbtft_display *display,
- 
- 	/* 9-bit SPI setup */
- 	if (par->spi && display->buswidth == 9) {
--		if (par->spi->master->bits_per_word_mask & SPI_BPW_MASK(9)) {
-+		if (par->spi->controller->bits_per_word_mask & SPI_BPW_MASK(9)) {
- 			par->spi->bits_per_word = 9;
- 		} else {
- 			dev_warn(&par->spi->dev,
--- 
-2.43.0
+It would be good, in my opinion, to add some device specific compatibles
+and deprecate using "sysctr-timer" in isolation.
 
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
+
+Cheers,
+Conor.
+
+> ---
+>  .../devicetree/bindings/timer/nxp,sysctr-timer.yaml         | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/timer/nxp,sysctr-timer.yam=
+l b/Documentation/devicetree/bindings/timer/nxp,sysctr-timer.yaml
+> index 2b9653dafab8..4f0b660d5ce3 100644
+> --- a/Documentation/devicetree/bindings/timer/nxp,sysctr-timer.yaml
+> +++ b/Documentation/devicetree/bindings/timer/nxp,sysctr-timer.yaml
+> @@ -18,7 +18,11 @@ description: |
+> =20
+>  properties:
+>    compatible:
+> -    const: nxp,sysctr-timer
+> +    oneOf:
+> +      - const: nxp,sysctr-timer
+> +      - items:
+> +          - const: nxp,imx95-sysctr-timer
+> +          - const: nxp,sysctr-timer
+> =20
+>    reg:
+>      maxItems: 1
+> --=20
+> 2.37.1
+>=20
+
+--ntlfkJs4R/S1G2La
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZa6vIQAKCRB4tDGHoIJi
+0l2JAQDW9UVTiTQd1C7eD66iCiBow9nNP+D6eSOp0OgXVXNCRwEAoUBpEFy36J1v
+v2ns7UtZ82Sv1qbPYqGpKnpKDsGZswk=
+=jQc4
+-----END PGP SIGNATURE-----
+
+--ntlfkJs4R/S1G2La--
