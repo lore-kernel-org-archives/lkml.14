@@ -1,94 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay01.th.seeweb.it (relay01.th.seeweb.it [5.144.164.162])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D413F13BEA1;
-	Mon, 22 Jan 2024 15:15:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97B5355C07;
+	Mon, 22 Jan 2024 15:15:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.144.164.162
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705936550; cv=none; b=OlUB2E/rC5j9kr/FXDEiyMtOVOD3vZ8ySrYDZap7602k3it2qFH89LVEGxC74tZ2eMVU7hNPrKHYT7uK2/ufDm1NpX+kSnVzrRGkGhZI0VyBiwobtEq+UgI7d1Ln3+OZ0hgAiGZIxUBVOe4spt9LXPcQWQMGczL0BxEE1qvi/Lk=
+	t=1705936554; cv=none; b=bUj4WMzti1vGXNVX9AdOJcDclxZK/g9Xfo6/X6oiy12iO/KtjEKhHRX1iZh+Hpp7Fc1YFvltCgetmu/KhiO3xyR5350Y6GHiLkinh7fVUAKZBrQuqBNT/Lp68Q3kOaC65zVn3kqpYk4gjmMCdoi3c+aICvJ0kfhyW5OMZ1ShRso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705936550; c=relaxed/simple;
-	bh=i+hZ+wrE5tGj8QwYNTNOZBpaYzTHWtqGRT3k/OGH0YI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rTwI/A/wf5dZbwgycpfXdUStWNHoKkaXHea7jLjphgkQ1ZC8eqoGXUEgcGipmRZO0mogzjphOFTnVW2DifeudUoe5eS0+VBLXo63bh7N4cz05aNbfK3sAbRKp5bAB8JBcYIB9jWRvk6UHaBGs4HtJSzv6oYcHEdP/3azAaFXji0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bWbSrovi; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bWbSrovi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E685C433C7;
-	Mon, 22 Jan 2024 15:15:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705936550;
-	bh=i+hZ+wrE5tGj8QwYNTNOZBpaYzTHWtqGRT3k/OGH0YI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=bWbSroviTEfbkL3UqDZuId1/iGpNs+aKp/+5IWtrOw6eTPnYvfZNp+Btv7Lhlj2hy
-	 KJ+jZmYvGgPQUwz5P8nypFmJcvtg3DFZPzo+cAL1JApYj5UuxPIT3XrdoSU7Vbz4T9
-	 zoQyd0OiWw5LfoBFsPJxN+n2CeeXFTrpuYjckouBD8Pd0pD679CNodZMkoMrTepVGc
-	 aZY6VT4P6gkjV8HXKMXG6JKVIEJCYOk25eP+ZSVXQb39WKVY+RzhTu8UGbgU0z7J88
-	 VWRUdq9alC/5P/SMzwB6CI49O7nMzaEOu0lI/H31n94Rfml0sze6K0RrMNo5bSxQSS
-	 IFWyWfVZ8KUuQ==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Sasha Levin <sashal@kernel.org>,
-	maarten.lankhorst@linux.intel.com,
-	tzimmermann@suse.de,
-	airlied@gmail.com,
-	daniel@ffwll.ch,
-	dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.10 11/28] drm/framebuffer: Fix use of uninitialized variable
-Date: Mon, 22 Jan 2024 10:14:37 -0500
-Message-ID: <20240122151521.996443-11-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240122151521.996443-1-sashal@kernel.org>
-References: <20240122151521.996443-1-sashal@kernel.org>
+	s=arc-20240116; t=1705936554; c=relaxed/simple;
+	bh=JLs25aczWYuLmQs1zTJgP5QEDQhbdQ+gViZDEdCvxFQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=E+PpnbScrrIavXqRvbTx8s/9o7LsT7o9HmwCgcpqmfFXLgT9pwtoixH6DrmYfX6tmOsqBWdaxUXSjZuMbXZ1nM+8cJoZNqDAjjIrl6v/aF/2nvpO8oGnRTBIngHOlBPRwjE23RSs8SMZj93/JcNWcj+pESOG0xRH89McCy3+6qE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=somainline.org; spf=pass smtp.mailfrom=somainline.org; arc=none smtp.client-ip=5.144.164.162
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=somainline.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=somainline.org
+Received: from SoMainline.org (82-72-63-87.cable.dynamic.v4.ziggo.nl [82.72.63.87])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by m-r1.th.seeweb.it (Postfix) with ESMTPSA id C1AFE20046;
+	Mon, 22 Jan 2024 16:15:48 +0100 (CET)
+Date: Mon, 22 Jan 2024 16:15:47 +0100
+From: Marijn Suijten <marijn.suijten@somainline.org>
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: Bjorn Andersson <andersson@kernel.org>, 
+	Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+	Conor Dooley <conor+dt@kernel.org>, ~postmarketos/upstreaming@lists.sr.ht, 
+	Luca Weiss <luca@z3ntu.xyz>, Adam Skladowski <a39.skl@gmail.com>, 
+	Konrad Dybcio <konrad.dybcio@linaro.org>, Martin Botka <martin.botka@somainline.org>, 
+	Jami Kettunen <jami.kettunen@somainline.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: Re: [PATCH v2 6/6] arm64: dts: qcom: msm8956-loire: Add SD Card
+ Detect to SDC2 pin states
+Message-ID: <quqkqv4eer7tmubvsqkbuwammqaa5qqxojedsh42ryax3laah7@v7khc2cq4eti>
+References: <20240121-msm8976-dt-v2-0-7b186a02dc72@somainline.org>
+ <20240121-msm8976-dt-v2-6-7b186a02dc72@somainline.org>
+ <9d3623f8-697b-44ab-a9eb-9d2d305b0e5c@collabora.com>
+ <iatieesr52v5au4kkovw3gc34tn3snt454grq7le66oar6x7t4@4jfwxgxov36v>
+ <48946c81-dad0-4e2d-9569-5fbac1675bb6@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.10.208
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <48946c81-dad0-4e2d-9569-5fbac1675bb6@collabora.com>
 
-From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+On 2024-01-22 15:59:37, AngeloGioacchino Del Regno wrote:
+> Il 22/01/24 14:49, Marijn Suijten ha scritto:
+> > On 2024-01-22 12:48:27, AngeloGioacchino Del Regno wrote:
+> >> Il 21/01/24 23:33, Marijn Suijten ha scritto:
+> >>> In addition to the SDC2 pins, set the SD Card Detect pin in a sane state
+> >>> to be used as an interrupt when an SD Card is slotted in or removed.
+> >>>
+> >>> Signed-off-by: Marijn Suijten <marijn.suijten@somainline.org>
+> >>> ---
+> >>>    arch/arm64/boot/dts/qcom/msm8956-sony-xperia-loire.dtsi | 17 +++++++++++++++++
+> >>>    1 file changed, 17 insertions(+)
+> >>>
+> >>> diff --git a/arch/arm64/boot/dts/qcom/msm8956-sony-xperia-loire.dtsi b/arch/arm64/boot/dts/qcom/msm8956-sony-xperia-loire.dtsi
+> >>> index b0b83edd3627..75412e37334c 100644
+> >>> --- a/arch/arm64/boot/dts/qcom/msm8956-sony-xperia-loire.dtsi
+> >>> +++ b/arch/arm64/boot/dts/qcom/msm8956-sony-xperia-loire.dtsi
+> >>> @@ -264,10 +264,27 @@ &sdhc_1 {
+> >>>    	status = "okay";
+> >>>    };
+> >>>    
+> >>> +&sdc2_off_state {
+> >>> +	sd-cd-pins {
+> >>> +		pins = "gpio100";
+> >>> +		function = "gpio";
+> >>> +		drive-strength = <2>;
+> >>> +		bias-disable;
+> >>> +	};
+> >>
+> >> Are you sure that you really don't want card detect during system suspend?
+> > 
+> > Does it make a difference if the rest of pinctrl and the SDHCI controller are
+> > also turned off?
+> > 
+> >> You could simply add a sdc2-cd-pins out of sdc2_{on,off}_state and add use it for
+> >> both default and sleep.
+> > 
+> > This sounds close to what Konrad suggested by using a new block wit its own
+> > label rather than extending the existing state.
+> > 
+> >> pinctrl-0 = <&sdc2_on_state>, <&sdc2_card_det_n>;
+> >> pinctrl-1 = <&sdc2_off_state>;
+> > 
+> > You said both, but it's not in pinctrl-1 here?  (And might unselect bias-pull-up
+> > implicitly instead of explicitly selecting bias-disable via an off node?)
+> > 
+> 
+> I meant to add it to both, sorry.
+> 
+> In any case, take the typo'ed example as a simplification of your first version :-)
 
-[ Upstream commit f9af8f0c1dc567a5a6a6318ff324c45d80d4a60f ]
+Okay, I'll resend a version that creates a new pinctrl node and applies it to both cases.
 
-smatch reports:
+Unfortunately I can no longer test and confirm that it makes a difference
+to have the card-detect IRQ always biased, even while the SDHCI controller
+is "asleep" or off, so I'll trust your word for it.  If I remember correctly
+downstream turns it off as well?
 
-drivers/gpu/drm/drm_framebuffer.c:654 drm_mode_getfb2_ioctl() error: uninitialized symbol 'ret'.
-
-'ret' is possibly not set when there are no errors, causing the error
-above. I can't say if that ever happens in real-life, but in any case I
-think it is good to initialize 'ret' to 0.
-
-Reviewed-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Acked-by: Maxime Ripard <mripard@kernel.org>
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20231103-uninit-fixes-v2-2-c22b2444f5f5@ideasonboard.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/gpu/drm/drm_framebuffer.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/gpu/drm/drm_framebuffer.c b/drivers/gpu/drm/drm_framebuffer.c
-index 2f5b0c2bb0fe..e490ef42441f 100644
---- a/drivers/gpu/drm/drm_framebuffer.c
-+++ b/drivers/gpu/drm/drm_framebuffer.c
-@@ -570,7 +570,7 @@ int drm_mode_getfb2_ioctl(struct drm_device *dev,
- 	struct drm_mode_fb_cmd2 *r = data;
- 	struct drm_framebuffer *fb;
- 	unsigned int i;
--	int ret;
-+	int ret = 0;
- 
- 	if (!drm_core_check_feature(dev, DRIVER_MODESET))
- 		return -EINVAL;
--- 
-2.43.0
-
+- Marijn
