@@ -1,71 +1,30 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0074D5FEF7;
-	Mon, 22 Jan 2024 17:20:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+Received: from zg8tmty3ljk5ljewns4xndka.icoremail.net (zg8tmty3ljk5ljewns4xndka.icoremail.net [167.99.105.149])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EAA7660885
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 17:21:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=167.99.105.149
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705944060; cv=none; b=rH8aJp4lXfa48PVAPQVMtkiznr8vns/6gBa1811eHhBfmdHAFZqENlg43nDK1g9tibkSqNIM2B8yjtXtsGtC4mPnzr6pbJFp/PizwWsBqcpB2MWLGODVCF6UQA87BQXWYk3Eq+ob8e19gAQv8402EA05OPUxJA3NkIU5SBAz0Og=
+	t=1705944076; cv=none; b=r/ndtETasfRYMyRc5jEt/W1rTqENBabaY5z0bebWLBqAOs193Nlob/3jHC12e/BLluH3dG34hBNyjiUazMxBoeqFRlxWkhQYmSZDQjio2yWmO79FEKBAIYwL1gwL+XJUgBTYUjnGBq1nZnZAy503/qdPqK5t++tTx23S1pOZtOc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705944060; c=relaxed/simple;
-	bh=yOWHglLZ1B+fQRkP+rpuHciUQYdwgtTPy4iyogRW/R4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=WKfIMdpTjF/BtTcT2Vcf5wGFxntJ5lIp9ytENg4mv013UiTTg0fmhH7/0hL9AbV2ePaU8r3rqJrRLfCrdqoBZx/l1z18yQS7ogvkqGj/bwwF/OPQJcM0MVqSZrpdfBnCnAU49c7sX8mnGYpGFut3inekLvjRHrjBFCjoHCecASs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gO0XHnvU; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gO0XHnvU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1705944059; x=1737480059;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=yOWHglLZ1B+fQRkP+rpuHciUQYdwgtTPy4iyogRW/R4=;
-  b=gO0XHnvUmDrF+cHTHwXxiujteatXSFtsyrjHYM8eVeawXLSrRGbtYX0G
-   2I6f9btVJJ66n2PSX5Csgzclj5sCCOcpiuLCM9aA4j/ttNRU7mWtsPkl6
-   GXK/VOdUmMAcE3aPTQ+ANPn/hWG2W2w2hKCnaPDxsro8zQxa4IAjjbYJY
-   z1ZY0S4IZOjDKHz623Tch1FUtQIx06pKa2WtI35KvxEz6c5EjddAkHIht
-   mUIS2FiRmjS2Ez9WoBoNpN4ETBnaEFNmh3uGG8dM6mACUEkPHm1cGYD5a
-   MhLenebe+hzH62NKQ6D+e6U82kT+NNTRS19ODvOt7AD36Hy7OO87hF0VP
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10961"; a="1150239"
-X-IronPort-AV: E=Sophos;i="6.05,211,1701158400"; 
-   d="scan'208";a="1150239"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 09:20:51 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,211,1701158400"; 
-   d="scan'208";a="1262900"
-Received: from b4969161e530.jf.intel.com ([10.165.56.46])
-  by orviesa005.jf.intel.com with ESMTP; 22 Jan 2024 09:20:50 -0800
-From: Haitao Huang <haitao.huang@linux.intel.com>
-To: jarkko@kernel.org,
-	dave.hansen@linux.intel.com,
-	tj@kernel.org,
-	mkoutny@suse.com,
-	linux-kernel@vger.kernel.org,
-	linux-sgx@vger.kernel.org,
-	x86@kernel.org,
-	cgroups@vger.kernel.org,
-	tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de,
-	hpa@zytor.com,
-	sohil.mehta@intel.com
-Cc: zhiquan1.li@intel.com,
-	kristen@linux.intel.com,
-	seanjc@google.com,
-	zhanb@microsoft.com,
-	anakrish@microsoft.com,
-	mikko.ylinen@linux.intel.com,
-	yangjie@microsoft.com
-Subject: [PATCH v7 15/15] selftests/sgx: Add scripts for EPC cgroup testing
-Date: Mon, 22 Jan 2024 09:20:48 -0800
-Message-Id: <20240122172048.11953-16-haitao.huang@linux.intel.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240122172048.11953-1-haitao.huang@linux.intel.com>
-References: <20240122172048.11953-1-haitao.huang@linux.intel.com>
+	s=arc-20240116; t=1705944076; c=relaxed/simple;
+	bh=2V9Iq+B/eJMgiMP5UOIZEY6gJkg/us4u+IV6rDI2l0E=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=rhHkTF6xEMQX5fL1s4idfrqSxD7AwaYgo0MOm0wj0vk8aCqMFHp4fsNB0Q4JpJxW2MnMk7zRNy0S6tQlVubsTnvJ/Vf8V5l63gd2juGCt+FnuGJMWnqqhGsTv5+9DqpIe74aUQJ9PEe1TYKvDpw+x9n+2Pl72nTGNOtZQh+u+7g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn; spf=pass smtp.mailfrom=zju.edu.cn; arc=none smtp.client-ip=167.99.105.149
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zju.edu.cn
+Received: from luzhipeng.223.5.5.5 (unknown [39.174.92.167])
+	by mail-app4 (Coremail) with SMTP id cS_KCgDHBIUBpK5lxVh5AA--.20045S2;
+	Tue, 23 Jan 2024 01:21:05 +0800 (CST)
+From: Zhipeng Lu <alexious@zju.edu.cn>
+To: alexious@zju.edu.cn
+Cc: Parthiban Veerasooran <parthiban.veerasooran@microchip.com>,
+	Christian Gromm <christian.gromm@microchip.com>,
+	Dan Carpenter <error27@gmail.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] most: fix a memleak in audio_probe_channel
+Date: Tue, 23 Jan 2024 01:20:44 +0800
+Message-Id: <20240122172044.3840976-1-alexious@zju.edu.cn>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -73,331 +32,49 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:cS_KCgDHBIUBpK5lxVh5AA--.20045S2
+X-Coremail-Antispam: 1UD129KBjvdXoWruFyDuFy3uF43XF18CrWUtwb_yoWfuFX_Cw
+	4fZrnrXr109ry7Zw13K345CryFkr1j9ryxZw4ktFWaqFW7ua45G34jvrn5JFWUCF12kr92
+	y3y5XrZIy342kjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbskFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
+	6F4UJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7CjxVAaw2AFwI0_
+	JF0_Jw1lc2xSY4AK67AK6r4l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr
+	1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE
+	14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7
+	IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E
+	87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73Uj
+	IFyTuYvjfU1fHUDUUUU
+X-CM-SenderInfo: qrsrjiarszq6lmxovvfxof0/
 
-The scripts rely on cgroup-tools package from libcgroup [1].
+When get_channel fails, audio_probe_channel should free adpt like all
+its following error-handling paths after get_channel. Otherwise there
+could be a memleak.
 
-To run selftests for epc cgroup:
-
-sudo ./run_epc_cg_selftests.sh
-
-To watch misc cgroup 'current' changes during testing, run this in a
-separate terminal:
-
-./watch_misc_for_tests.sh current
-
-With different cgroups, the script starts one or multiple concurrent SGX
-selftests, each to run one unclobbered_vdso_oversubscribed test.  Each
-of such test tries to load an enclave of EPC size equal to the EPC
-capacity available on the platform. The script checks results against
-the expectation set for each cgroup and reports success or failure.
-
-The script creates 3 different cgroups at the beginning with following
-expectations:
-
-1) SMALL - intentionally small enough to fail the test loading an
-enclave of size equal to the capacity.
-2) LARGE - large enough to run up to 4 concurrent tests but fail some if
-more than 4 concurrent tests are run. The script starts 4 expecting at
-least one test to pass, and then starts 5 expecting at least one test
-to fail.
-3) LARGER - limit is the same as the capacity, large enough to run lots of
-concurrent tests. The script starts 8 of them and expects all pass.
-Then it reruns the same test with one process randomly killed and
-usage checked to be zero after all process exit.
-
-The script also includes a test with low mem_cg limit and LARGE sgx_epc
-limit to verify that the RAM used for per-cgroup reclamation is charged
-to a proper mem_cg.
-
-[1] https://github.com/libcgroup/libcgroup/blob/main/README
-
-Signed-off-by: Haitao Huang <haitao.huang@linux.intel.com>
+Fixes: 15600aea2754 ("staging: most: sound: create one sound card w/ multiple PCM devices per MOST device")
+Signed-off-by: Zhipeng Lu <alexious@zju.edu.cn>
 ---
-V7:
-- Added memcontrol test.
+ drivers/most/most_snd.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-V5:
-- Added script with automatic results checking, remove the interactive
-script.
-- The script can run independent from the series below.
----
- .../selftests/sgx/run_epc_cg_selftests.sh     | 246 ++++++++++++++++++
- .../selftests/sgx/watch_misc_for_tests.sh     |  13 +
- 2 files changed, 259 insertions(+)
- create mode 100755 tools/testing/selftests/sgx/run_epc_cg_selftests.sh
- create mode 100755 tools/testing/selftests/sgx/watch_misc_for_tests.sh
-
-diff --git a/tools/testing/selftests/sgx/run_epc_cg_selftests.sh b/tools/testing/selftests/sgx/run_epc_cg_selftests.sh
-new file mode 100755
-index 000000000000..e027bf39f005
---- /dev/null
-+++ b/tools/testing/selftests/sgx/run_epc_cg_selftests.sh
-@@ -0,0 +1,246 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+# Copyright(c) 2023 Intel Corporation.
-+
-+TEST_ROOT_CG=selftest
-+cgcreate -g misc:$TEST_ROOT_CG
-+if [ $? -ne 0 ]; then
-+    echo "# Please make sure cgroup-tools is installed, and misc cgroup is mounted."
-+    exit 1
-+fi
-+TEST_CG_SUB1=$TEST_ROOT_CG/test1
-+TEST_CG_SUB2=$TEST_ROOT_CG/test2
-+# We will only set limit in test1 and run tests in test3
-+TEST_CG_SUB3=$TEST_ROOT_CG/test1/test3
-+TEST_CG_SUB4=$TEST_ROOT_CG/test4
-+
-+cgcreate -g misc:$TEST_CG_SUB1
-+cgcreate -g misc:$TEST_CG_SUB2
-+cgcreate -g misc:$TEST_CG_SUB3
-+cgcreate -g misc:$TEST_CG_SUB4
-+
-+# Default to V2
-+CG_MISC_ROOT=/sys/fs/cgroup
-+CG_MEM_ROOT=/sys/fs/cgroup
-+CG_V1=0
-+if [ ! -d "/sys/fs/cgroup/misc" ]; then
-+    echo "# cgroup V2 is in use."
-+else
-+    echo "# cgroup V1 is in use."
-+    CG_MISC_ROOT=/sys/fs/cgroup/misc
-+    CG_MEM_ROOT=/sys/fs/cgroup/memory
-+    CG_V1=1
-+fi
-+
-+CAPACITY=$(grep "sgx_epc" "$CG_MISC_ROOT/misc.capacity" | awk '{print $2}')
-+# This is below number of VA pages needed for enclave of capacity size. So
-+# should fail oversubscribed cases
-+SMALL=$(( CAPACITY / 512 ))
-+
-+# At least load one enclave of capacity size successfully, maybe up to 4.
-+# But some may fail if we run more than 4 concurrent enclaves of capacity size.
-+LARGE=$(( SMALL * 4 ))
-+
-+# Load lots of enclaves
-+LARGER=$CAPACITY
-+echo "# Setting up limits."
-+echo "sgx_epc $SMALL" > $CG_MISC_ROOT/$TEST_CG_SUB1/misc.max
-+echo "sgx_epc $LARGE" >  $CG_MISC_ROOT/$TEST_CG_SUB2/misc.max
-+echo "sgx_epc $LARGER" > $CG_MISC_ROOT/$TEST_CG_SUB4/misc.max
-+
-+timestamp=$(date +%Y%m%d_%H%M%S)
-+
-+test_cmd="./test_sgx -t unclobbered_vdso_oversubscribed"
-+
-+wait_check_process_status() {
-+    local pid=$1
-+    local check_for_success=$2  # If 1, check for success;
-+                                # If 0, check for failure
-+    wait "$pid"
-+    local status=$?
-+
-+    if [[ $check_for_success -eq 1 && $status -eq 0 ]]; then
-+        echo "# Process $pid succeeded."
-+        return 0
-+    elif [[ $check_for_success -eq 0 && $status -ne 0 ]]; then
-+        echo "# Process $pid returned failure."
-+        return 0
-+    fi
-+    return 1
-+}
-+
-+wait_and_detect_for_any() {
-+    local pids=("$@")
-+    local check_for_success=$1  # If 1, check for success;
-+                                # If 0, check for failure
-+    local detected=1 # 0 for success detection
-+
-+    for pid in "${pids[@]:1}"; do
-+        if wait_check_process_status "$pid" "$check_for_success"; then
-+            detected=0
-+            # Wait for other processes to exit
-+        fi
-+    done
-+
-+    return $detected
-+}
-+
-+echo "# Start unclobbered_vdso_oversubscribed with SMALL limit, expecting failure..."
-+# Always use leaf node of misc cgroups so it works for both v1 and v2
-+# these may fail on OOM
-+cgexec -g misc:$TEST_CG_SUB3 $test_cmd >cgtest_small_$timestamp.log 2>&1
-+if [[ $? -eq 0 ]]; then
-+    echo "# Fail on SMALL limit, not expecting any test passes."
-+    cgdelete -r -g misc:$TEST_ROOT_CG
-+    exit 1
-+else
-+    echo "# Test failed as expected."
-+fi
-+
-+echo "# PASSED SMALL limit."
-+
-+echo "# Start 4 concurrent unclobbered_vdso_oversubscribed tests with LARGE limit,
-+        expecting at least one success...."
-+
-+pids=()
-+for i in {1..4}; do
-+    (
-+        cgexec -g misc:$TEST_CG_SUB2 $test_cmd >cgtest_large_positive_$timestamp.$i.log 2>&1
-+    ) &
-+    pids+=($!)
-+done
-+
-+
-+if wait_and_detect_for_any 1 "${pids[@]}"; then
-+    echo "# PASSED LARGE limit positive testing."
-+else
-+    echo "# Failed on LARGE limit positive testing, no test passes."
-+    cgdelete -r -g misc:$TEST_ROOT_CG
-+    exit 1
-+fi
-+
-+echo "# Start 5 concurrent unclobbered_vdso_oversubscribed tests with LARGE limit,
-+        expecting at least one failure...."
-+pids=()
-+for i in {1..5}; do
-+    (
-+        cgexec -g misc:$TEST_CG_SUB2 $test_cmd >cgtest_large_negative_$timestamp.$i.log 2>&1
-+    ) &
-+    pids+=($!)
-+done
-+
-+if wait_and_detect_for_any 0 "${pids[@]}"; then
-+    echo "# PASSED LARGE limit negative testing."
-+else
-+    echo "# Failed on LARGE limit negative testing, no test fails."
-+    cgdelete -r -g misc:$TEST_ROOT_CG
-+    exit 1
-+fi
-+
-+echo "# Start 8 concurrent unclobbered_vdso_oversubscribed tests with LARGER limit,
-+        expecting no failure...."
-+pids=()
-+for i in {1..8}; do
-+    (
-+        cgexec -g misc:$TEST_CG_SUB4 $test_cmd >cgtest_larger_$timestamp.$i.log 2>&1
-+    ) &
-+    pids+=($!)
-+done
-+
-+if wait_and_detect_for_any 0 "${pids[@]}"; then
-+    echo "# Failed on LARGER limit, at least one test fails."
-+    cgdelete -r -g misc:$TEST_ROOT_CG
-+    exit 1
-+else
-+    echo "# PASSED LARGER limit tests."
-+fi
-+
-+echo "# Start 8 concurrent unclobbered_vdso_oversubscribed tests with LARGER limit,
-+      randomly kill one, expecting no failure...."
-+pids=()
-+for i in {1..8}; do
-+    (
-+        cgexec -g misc:$TEST_CG_SUB4 $test_cmd >cgtest_larger_kill_$timestamp.$i.log 2>&1
-+    ) &
-+    pids+=($!)
-+done
-+
-+sleep $((RANDOM % 10 + 5))
-+
-+# Randomly select a PID to kill
-+RANDOM_INDEX=$((RANDOM % 8))
-+PID_TO_KILL=${pids[RANDOM_INDEX]}
-+
-+kill $PID_TO_KILL
-+echo "# Killed process with PID: $PID_TO_KILL"
-+
-+any_failure=0
-+for pid in "${pids[@]}"; do
-+    wait "$pid"
-+    status=$?
-+    if [ "$pid" != "$PID_TO_KILL" ]; then
-+        if [[ $status -ne 0 ]]; then
-+	    echo "# Process $pid returned failure."
-+            any_failure=1
-+        fi
-+    fi
-+done
-+
-+if [[ $any_failure -ne 0 ]]; then
-+    echo "# Failed on random killing, at least one test fails."
-+    cgdelete -r -g misc:$TEST_ROOT_CG
-+    exit 1
-+fi
-+echo "# PASSED LARGER limit test with a process randomly killed."
-+
-+cgcreate -g memory:$TEST_CG_SUB2
-+if [ $? -ne 0 ]; then
-+    echo "# Failed creating memory controller."
-+    cgdelete -r -g misc:$TEST_ROOT_CG
-+    exit 1
-+fi
-+MEM_LIMIT_TOO_SMALL=$((CAPACITY - 2 * LARGE))
-+
-+if [[ $CG_V1 -eq 0 ]]; then
-+    echo "$MEM_LIMIT_TOO_SMALL" > $CG_MEM_ROOT/$TEST_CG_SUB2/memory.max
-+else
-+    echo "$MEM_LIMIT_TOO_SMALL" > $CG_MEM_ROOT/$TEST_CG_SUB2/memory.limit_in_bytes
-+    echo "$MEM_LIMIT_TOO_SMALL" > $CG_MEM_ROOT/$TEST_CG_SUB2/memory.memsw.limit_in_bytes
-+fi
-+
-+echo "# Start 4 concurrent unclobbered_vdso_oversubscribed tests with LARGE EPC limit,
-+        and too small RAM limit, expecting all failures...."
-+pids=()
-+for i in {1..4}; do
-+    (
-+        cgexec -g memory:$TEST_CG_SUB2 -g misc:$TEST_CG_SUB2 $test_cmd \
-+               >cgtest_large_oom_$timestamp.$i.log 2>&1
-+    ) &
-+    pids+=($!)
-+done
-+
-+if wait_and_detect_for_any 1 "${pids[@]}"; then
-+    echo "# Failed on tests with memcontrol, some tests did not fail."
-+    cgdelete -r -g misc:$TEST_ROOT_CG
-+    if [[ $CG_V1 -ne 0 ]]; then
-+        cgdelete -r -g memory:$TEST_ROOT_CG
-+    fi
-+    exit 1
-+else
-+    echo "# PASSED LARGE limit tests with memcontrol."
-+fi
-+
-+sleep 2
-+
-+USAGE=$(grep '^sgx_epc' "$CG_MISC_ROOT/$TEST_ROOT_CG/misc.current" | awk '{print $2}')
-+if [ "$USAGE" -ne 0 ]; then
-+    echo "# Failed: Final usage is $USAGE, not 0."
-+else
-+    echo "# PASSED leakage check."
-+    echo "# PASSED ALL cgroup limit tests, cleanup cgroups..."
-+fi
-+cgdelete -r -g misc:$TEST_ROOT_CG
-+if [[ $CG_V1 -ne 0 ]]; then
-+     cgdelete -r -g memory:$TEST_ROOT_CG
-+fi
-+echo "# done."
-diff --git a/tools/testing/selftests/sgx/watch_misc_for_tests.sh b/tools/testing/selftests/sgx/watch_misc_for_tests.sh
-new file mode 100755
-index 000000000000..dbd38f346e7b
---- /dev/null
-+++ b/tools/testing/selftests/sgx/watch_misc_for_tests.sh
-@@ -0,0 +1,13 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+# Copyright(c) 2023 Intel Corporation.
-+
-+if [ -z "$1" ]
-+  then
-+    echo "No argument supplied, please provide 'max', 'current' or 'events'"
-+    exit 1
-+fi
-+
-+watch -n 1 "find /sys/fs/cgroup -wholename */test*/misc.$1 -exec sh -c \
-+    'echo \"\$1:\"; cat \"\$1\"' _ {} \;"
-+
+diff --git a/drivers/most/most_snd.c b/drivers/most/most_snd.c
+index 45d762804c5e..6cccc9c26796 100644
+--- a/drivers/most/most_snd.c
++++ b/drivers/most/most_snd.c
+@@ -564,7 +564,8 @@ static int audio_probe_channel(struct most_interface *iface, int channel_id,
+ 	if (get_channel(iface, channel_id)) {
+ 		pr_err("channel (%s:%d) is already linked\n",
+ 		       iface->description, channel_id);
+-		return -EEXIST;
++		ret = -EEXIST;
++		goto err_free_adpt;
+ 	}
+ 
+ 	if (cfg->direction == MOST_CH_TX) {
 -- 
-2.25.1
+2.34.1
 
