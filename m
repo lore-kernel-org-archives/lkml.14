@@ -1,58 +1,59 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D05926AD5
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 11:57:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 227BE3B193
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 11:57:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705924642; cv=none; b=DHw3KXoIV9W1NXRG+/QE/NJZKx0RVOnqaYf2IFcrca6b7N1KRN3KrTBclXvYp7cv2ggH28txEx04aUQfNyge6Lqa2f3XTrA1ofaVDaWVtDQZ6BlFbPX5iPxSV36rWxcCpODjC78FLa93cNs+UKZEhk2ex+SI0Z1lx1uo3tS44IM=
+	t=1705924645; cv=none; b=HFTYpJMVmEQGkx9xs8AHcPbfyo6Vcn9D5+W9L7YcudNihjbZDK5+YxzPhe/XP6ODNg8Zv2zuHDE9Jb9RVl2xPaywhxWFeBrIdujGYfSuyTdIBB7jBfJajI9hM8JnErqC+Vzm4IbgL3BfUdtBzQuy4a7KV8z/IlKaby805iAHMhE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705924642; c=relaxed/simple;
-	bh=tsbrmP1+O18HOPGSjrHTKuZbGshwEn40LJCinS7VhYI=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=DzFagk/fGI0fj8Yzjgj8X+3oGsYDUFa+iG6QjW6kpOXoH6jtJ8GefktAAPXcsxDCoy0KeND5y7ekoBlA5jILuaQq9rR6yZqLquUrNt92+9ajCjX21W6Ks0OkFPu2qKcpL1pD669TodNKJMjNw1FwKB0YNTG1uUqO/Quy0yyzm5s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=PSjPafiN; arc=none smtp.client-ip=209.85.218.47
+	s=arc-20240116; t=1705924645; c=relaxed/simple;
+	bh=PbWtnWRE8OdZobvCbQjeCjgGmP9VZZyrNRe7q9wSh4g=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=UYRbFLoVhox2xYowHXHc0g6yb+c7zj+wyI9DZxrNwNkfWcn/jgg56L+3NcnlJ0pRW9DNq5zrADSPPgamTeTkb9RUKrU8DwhOAINfOWNq3LuHn/QJuAX6XjOu1rXEWXrfedUEf4D2rvrbOpmb5JmtJBtQ1Ae3wk+7S4giSxrO7+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dPtrNM5n; arc=none smtp.client-ip=209.85.218.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PSjPafiN"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a29058bb2ceso277073966b.0
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 03:57:20 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dPtrNM5n"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a2d04888d3dso316700166b.2
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 03:57:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1705924639; x=1706529439; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=CmH8rXJqUXY/i/aOBMn68OVWCaEf5ZmAXSQpd6FELw8=;
-        b=PSjPafiN7jWLdXnrlyds98QXnpIZ8K8oxpSmDpYnS4tq31yKX72M61QplFMsk6TyS9
-         idUK2Y5mqAMqDU+//BfIQQxdodKa0bm4EfHFqhVPMzEYtQ2pajST4qHf5xESeJ4OfRWn
-         eGmn2uMwj60r53z/vys+H3uraB7+V6m6JQZM+cVD1b60/UF7Ef8tY92JV3yFY4o0+SIY
-         rDjMg4NBCBtkD0jpymrxfmRDulrgYlEtZ/6qYbNNkBGH1YTtyXHNaoe9Ub1L1DOTfeES
-         B9ORElYxZ8LPvx5hRfSatoEOYA7c2iLnig39kYwUBKz3B2KYvv8hQTjDe6utSsyjbLl3
-         eGdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705924639; x=1706529439;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=linaro.org; s=google; t=1705924642; x=1706529442; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=CmH8rXJqUXY/i/aOBMn68OVWCaEf5ZmAXSQpd6FELw8=;
-        b=jYzXTiMuMCzs7V1yQQaciOvyDH6/eMDtRQi+kfjspw5j5ta3ioEiXYw0fbzEOpDb+O
-         y//ymZtNKLC++xe206Gl0X0WCbT+IJ4V4W/T23qfzlRGqWiBrK0HPR0nJX6gNkr3OKsm
-         HoEuRzqyLwcOInv0M+s9NN5u7EY1E/U1Ot2Ot/9TXF9CWHE9eKUEGQ7crF3VESTyIYaj
-         mjS7kxDZ+PXJ252Q14cgC/UfoKPT6mknvMv7SdltdsMKP7U6tcXQKkosfeC6UHB2RKhY
-         cm+RFJ+n0QHPAbFzoJxmHXx4RoFVxTXhjSW/amu8EjiywGGw5dmtaSfxoCHRojosD1j4
-         mUYg==
-X-Gm-Message-State: AOJu0YyWYvUHEjRafGY0h80AExdOvtyGxxBW8GhUK1SK408vOCGUoczq
-	U/qpmfvNTU8nvZrwYfLfMd3ierK3hM8roY8plyK90SRg6G4q0bz1ejRSQjads7Q=
-X-Google-Smtp-Source: AGHT+IHKZPYkFC9314WpcTSOIuVlAzqptNC+bZeUMyszvkcPbzvVLtDAdNhgyFoHYu3/qtjtR7hIyw==
-X-Received: by 2002:a17:906:c448:b0:a2a:a4c4:5229 with SMTP id ck8-20020a170906c44800b00a2aa4c45229mr1231745ejb.90.1705924639386;
-        Mon, 22 Jan 2024 03:57:19 -0800 (PST)
+        bh=cxydUfSC9eRtB22KvfpOCkXdWNLtx7yPPDJ5CJF/vzw=;
+        b=dPtrNM5n4Qcwx28zh6ncbZtaFmYXpEVqzlvLeu9j8FQ5XNnmJnEqzx6ZgXVSeywkHM
+         8efj5QNZm88q7iqEdunVLOcAohrYhHeTzXKki7/cj8AcUOZ9RFZagy2TPJ2oM+6JDzBl
+         gOiJY4/k0qvMBFNjrwzUWq9uQs9H0FqhHaruVvd0A7mRdb/u1i6zK6yXUvFrjMtJQeD3
+         3w/TAxebeI9hpa+BB37l51Xy447THwZEr9/yLInWiVIqVJpdSnujMRs7B9JfDPNGCEEr
+         rLrYB2aLls5j4ZZIOGiRSWXWH6AIqlZNP3RXV2GPI5bkL90Xl/5Io/bkd8lOhxv7nGZR
+         eXTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705924642; x=1706529442;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=cxydUfSC9eRtB22KvfpOCkXdWNLtx7yPPDJ5CJF/vzw=;
+        b=GsCNj2KAdXpm2BZHbBJiNcOvyQAjXTFRfZB9HiF7GWRWnX7LFkrAJy72PaGsNetgiL
+         lINe19QR0Ogl0IU3YE49FGm8FndQG97JS5z3Rt7g5ktAkfPNieC/jw3cbuv5pHt8g5qx
+         FeKMhQVbN1F6yx0m2lbmYXws86ZpXW2Ll+Dob5gI6/nc1jRqv5LWlyub4nFmN2unPwZR
+         i5YcEfmS2rldwSkZ+pqzEBQNlvKfYwBqalhQaxWhaG70SGn8KNANxV/KMnXgMOOlS06+
+         EzXRCEa+jy/tvdV6JOk6CVB99bMLGEWwAWD1JbrA2zzW/VaGLRJZ2Q1SbqK8mV8T/ncQ
+         7UHw==
+X-Gm-Message-State: AOJu0YwJYYbUb6x+klHW6waI6EmgxfiOT+kR3i6b0Pxwgs9cuHxD3jg/
+	Ns76CtpoeeySaWITKE/3puKZhcri6nnxE9QSScmlbkP/lXsDiUgS8oq63kQqj7I=
+X-Google-Smtp-Source: AGHT+IGWRXRVK5jaCEJkqj+YrvZOyht2hZokBTPpzFHbe4kV5s5gsdAWF0hJ71ERxib2JafhkqMu0g==
+X-Received: by 2002:a17:906:ae8e:b0:a27:b8e0:ed89 with SMTP id md14-20020a170906ae8e00b00a27b8e0ed89mr1909497ejb.138.1705924642264;
+        Mon, 22 Jan 2024 03:57:22 -0800 (PST)
 Received: from [10.167.154.1] (178235179218.dynamic-4-waw-k-1-3-0.vectranet.pl. [178.235.179.218])
-        by smtp.gmail.com with ESMTPSA id k3-20020a170906a38300b00a298d735a1bsm13481349ejz.149.2024.01.22.03.57.17
+        by smtp.gmail.com with ESMTPSA id k3-20020a170906a38300b00a298d735a1bsm13481349ejz.149.2024.01.22.03.57.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jan 2024 03:57:19 -0800 (PST)
+        Mon, 22 Jan 2024 03:57:22 -0800 (PST)
 From: Konrad Dybcio <konrad.dybcio@linaro.org>
-Subject: [PATCH 0/2] Remove QDF2xxx pinctrl drivers
-Date: Mon, 22 Jan 2024 12:57:11 +0100
-Message-Id: <20240122-topic-qdf_cleanup_pinctrl-v1-0-0c619ea25091@linaro.org>
+Date: Mon, 22 Jan 2024 12:57:13 +0100
+Subject: [PATCH 2/2] arm64: defconfig: Remove QDF24XX pinctrl
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,9 +62,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIABdYrmUC/x2NUQqDMBAFryL73YBJW2x7lSKSbNa6ENY00VIQ7
- +7i5zyYNxtUKkwVXs0GhX5ceRYFe2kAJy8fMhyVwbXu1lrnzDJnRvON44CJvKx5yCy4lGSeD7I
- dxnDt7gHUD76SCcULTvoga0o65kIj/8/gu9/3A1a2VICAAAAA
+Message-Id: <20240122-topic-qdf_cleanup_pinctrl-v1-2-0c619ea25091@linaro.org>
+References: <20240122-topic-qdf_cleanup_pinctrl-v1-0-0c619ea25091@linaro.org>
+In-Reply-To: <20240122-topic-qdf_cleanup_pinctrl-v1-0-0c619ea25091@linaro.org>
 To: Bjorn Andersson <andersson@kernel.org>, 
  Linus Walleij <linus.walleij@linaro.org>, 
  Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
@@ -72,34 +73,34 @@ Cc: Marijn Suijten <marijn.suijten@somainline.org>,
  linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
  Konrad Dybcio <konrad.dybcio@linaro.org>
 X-Mailer: b4 0.12.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1705924637; l=720;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1705924637; l=634;
  i=konrad.dybcio@linaro.org; s=20230215; h=from:subject:message-id;
- bh=tsbrmP1+O18HOPGSjrHTKuZbGshwEn40LJCinS7VhYI=;
- b=k4G0Vxq2PK79h8IRxX6rBTWSZfrg962X7w9xIpHP0Cp3uP/+FXkolaSwdiPnr/h9nVCcfTeMc
- MSIUtuT9/MXCFFCBNqOyzFMHYR5NP5Eo61FxohYZInShnvKl/2VV2+N
+ bh=PbWtnWRE8OdZobvCbQjeCjgGmP9VZZyrNRe7q9wSh4g=;
+ b=yh6s7yqzGgsWuTz7YhKO+4IOkHzL8oa8CR/iRQiWeBUz9cTuDqdUiE+z0yQ0FDh0uOgtHLXtv
+ jz9RsffyZV0AiAwvmzPQeu2HcaSNGCYa2YbZkm1BZC6JmX3tpC782Jm
 X-Developer-Key: i=konrad.dybcio@linaro.org; a=ed25519;
  pk=iclgkYvtl2w05SSXO5EjjSYlhFKsJ+5OSZBjOkQuEms=
 
-The SoC line was never productized, remove the maintenance burden.
-
-Compile-tested only.
+The driver for is has been removed, clean up the config entry.
 
 Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
 ---
-Konrad Dybcio (2):
-      pinctrl: qcom: Remove QDF2xxx support
-      arm64: defconfig: Remove QDF24XX pinctrl
+ arch/arm64/configs/defconfig | 1 -
+ 1 file changed, 1 deletion(-)
 
- arch/arm64/configs/defconfig           |   1 -
- drivers/pinctrl/qcom/Kconfig.msm       |   7 --
- drivers/pinctrl/qcom/Makefile          |   1 -
- drivers/pinctrl/qcom/pinctrl-qdf2xxx.c | 164 ---------------------------------
- 4 files changed, 173 deletions(-)
----
-base-commit: 319fbd8fc6d339e0a1c7b067eed870c518a13a02
-change-id: 20240122-topic-qdf_cleanup_pinctrl-98e17cdb375b
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index e6cf3e5d63c3..55b8dab100bd 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -588,7 +588,6 @@ CONFIG_PINCTRL_MSM8996=y
+ CONFIG_PINCTRL_MSM8998=y
+ CONFIG_PINCTRL_QCM2290=y
+ CONFIG_PINCTRL_QCS404=y
+-CONFIG_PINCTRL_QDF2XXX=y
+ CONFIG_PINCTRL_QDU1000=y
+ CONFIG_PINCTRL_SA8775P=y
+ CONFIG_PINCTRL_SC7180=y
 
-Best regards,
 -- 
-Konrad Dybcio <konrad.dybcio@linaro.org>
+2.43.0
 
