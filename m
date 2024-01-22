@@ -1,41 +1,38 @@
-Received: from mx.skole.hr (mx1.hosting.skole.hr [161.53.165.185])
+Received: from mx.skole.hr (mx2.hosting.skole.hr [161.53.165.186])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12182664C8;
-	Mon, 22 Jan 2024 16:25:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=161.53.165.185
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7109866B32;
+	Mon, 22 Jan 2024 16:25:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=161.53.165.186
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705940745; cv=none; b=ef4SUQV6z9EYsvdKLTxODQXIKjfyPg30QCfCzjryLXfTVK70dtl8aFRCjcmj43eTSbl2s5csUNIPeeWvwL8+u+UEH3XJEcnriQn34t7x20D9PJgNJnXfVg5sSJ831fs6BDGIP15+Yhff3AK6B8MXXYse25QWZQcqGNYvFRy0ijM=
+	t=1705940750; cv=none; b=hASaNhi9NI1bRkk7n/+8PJVvM0Z0kb+WxfmLJRP2ZaQDDBYSYEO8AuU2oM46HNXDPbMD94Co4Ol4Q7qP9PDgOCRvJ3kCGraLi24SApFdniAzb3LR4gz/Wcr6+GhGd/y0cEk7ehW/RGZV15EOmnjiPaxldvi//7LjfVyjTNOB/zk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705940745; c=relaxed/simple;
-	bh=UhsjRKxsmoF+64XAsg3MFgkxSQPADU/UDysA1nq4m1E=;
+	s=arc-20240116; t=1705940750; c=relaxed/simple;
+	bh=3KIIMU33SRO6H67ttCBjEAKna/VsCPIYEYrPma543Qo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Ux0B6n2AslfVN93OVxDUfdLPeChiohfnh3yu0G2uBIaFDmShcH/OKWdv9txjXYeEJbLL7Md35T5EgNXI2ixGSE47h2bZ11h9I5nXr1o/mXkO3COejZapm47YPbE1ZWJopopkKk8erhCe9ZKdpDMO3QmByu7klWM9X6rp+XG3R5w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=skole.hr; spf=pass smtp.mailfrom=skole.hr; arc=none smtp.client-ip=161.53.165.185
+	 MIME-Version:Content-Type; b=Imv09RismJ5raIVARvxWbzMdG3Hl+P/JA1YtqgMCMXLGTLZVWxT6uegQtA4WPq0WxmpX7lIaGlgunfPW8Xaw0wWN/seYUKMsl+sQLz5Q5gjPiS4yxHW5iSP26ryDdh4ebFdyCTxXZBDt318QOQgmIJGhcs8FMbuMTsPKIo/NvHc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=skole.hr; spf=pass smtp.mailfrom=skole.hr; arc=none smtp.client-ip=161.53.165.186
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=skole.hr
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=skole.hr
-Received: from mx1.hosting.skole.hr (localhost.localdomain [127.0.0.1])
-	by mx.skole.hr (mx.skole.hr) with ESMTP id BBCA383EC6;
-	Mon, 22 Jan 2024 17:25:34 +0100 (CET)
+Received: from mx2.hosting.skole.hr (localhost.localdomain [127.0.0.1])
+	by mx.skole.hr (mx.skole.hr) with ESMTP id D9A9D851FA;
+	Mon, 22 Jan 2024 17:25:43 +0100 (CET)
 From: Duje =?utf-8?B?TWloYW5vdmnEhw==?= <duje.mihanovic@skole.hr>
-To: Daniel Thompson <daniel.thompson@linaro.org>
-Cc: Lee Jones <lee@kernel.org>, Jingoo Han <jingoohan1@gmail.com>,
- Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Helge Deller <deller@gmx.de>,
- Linus Walleij <linus.walleij@linaro.org>, Karel Balej <balejk@matfyz.cz>,
- ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-fbdev@vger.kernel.org
-Subject: Re: [PATCH v3 3/3] backlight: Add Kinetic KTD2801 backlight support
-Date: Mon, 22 Jan 2024 17:24:56 +0100
-Message-ID: <1783156.VLH7GnMWUR@radijator>
-In-Reply-To: <20240122102805.GB8596@aspen.lan>
+To: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+Cc: Markuss Broks <markuss.broks@gmail.com>,
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+ Rob Herring <robh+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ Karel Balej <balejk@matfyz.cz>, ~postmarketos/upstreaming@lists.sr.ht,
+ phone-devel@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/3] dt-bindings: input: imagis: Document touch keys
+Date: Mon, 22 Jan 2024 17:25:05 +0100
+Message-ID: <8366736.NyiUUSuA9g@radijator>
+In-Reply-To: <acd64ed2-c36b-45e5-a71e-98c98ff1cb74@linaro.org>
 References:
- <20240120-ktd2801-v3-0-fe2cbafffb21@skole.hr>
- <20240120-ktd2801-v3-3-fe2cbafffb21@skole.hr>
- <20240122102805.GB8596@aspen.lan>
+ <20240120-b4-imagis-keys-v2-0-d7fc16f2e106@skole.hr>
+ <20240120-b4-imagis-keys-v2-2-d7fc16f2e106@skole.hr>
+ <acd64ed2-c36b-45e5-a71e-98c98ff1cb74@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -98,35 +95,47 @@ Autocrypt: addr=duje.mihanovic@skole.hr;
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset="UTF-8"
 
-On Monday, January 22, 2024 11:28:05 AM CET Daniel Thompson wrote:
-> On Sat, Jan 20, 2024 at 10:26:45PM +0100, Duje Mihanovi=C4=87 wrote:
-> > diff --git a/drivers/video/backlight/ktd2801-backlight.c
-> > b/drivers/video/backlight/ktd2801-backlight.c new file mode 100644
-> > index 000000000000..7b9d1a93aa71
-> > --- /dev/null
-> > <snip>
-> > +/* These values have been extracted from Samsung's driver. */
-> > +#define KTD2801_EXPRESSWIRE_DETECT_DELAY_US	150
-> > +#define KTD2801_EXPRESSWIRE_DETECT_US		270
-> > +#define KTD2801_SHORT_BITSET_US			5
-> > +#define KTD2801_LONG_BITSET_US			(3 *=20
-KTD2801_SHORT_BITSET_US)
-> > +#define KTD2801_DATA_START_US			5
-> > +#define KTD2801_END_OF_DATA_LOW_US		10
-> > +#define KTD2801_END_OF_DATA_HIGH_US		350
-> > +#define KTD2801_PWR_DOWN_DELAY_US		2600
+On Monday, January 22, 2024 11:27:09 AM CET Krzysztof Kozlowski wrote:
+> On 20/01/2024 22:16, Duje Mihanovi=C4=87 wrote:
+> > diff --git
+> > a/Documentation/devicetree/bindings/input/touchscreen/imagis,ist3038c.y=
+aml
+> > b/Documentation/devicetree/bindings/input/touchscreen/imagis,ist3038c.y=
+aml
+> > index 2af71cbcc97d..960e5436642f 100644
+> > ---
+> > a/Documentation/devicetree/bindings/input/touchscreen/imagis,ist3038c.y=
+aml
+> > +++
+> > b/Documentation/devicetree/bindings/input/touchscreen/
+imagis,ist3038c.yaml>=20
+> > @@ -42,6 +42,17 @@ properties:
+> >    touchscreen-inverted-y: true
+> >    touchscreen-swapped-x-y: true
+> >=20
+> > +if:
+> Move allOf here and keep it under allOf.
 >=20
-> These are a little pointless now. They are all single use constants
-> and have little documentary value.
+> > +  properties:
+> > +    compatible:
+> > +      contains:
+> > +        const: imagis,ist3032c
+> > +then:
+> > +  properties:
 >=20
-> The lack of documentary value is because, for example,
-> KTD2801_EXPRESSWIRE_DETECT_DELAY_US, is assigned to a structure
-> field called detect_delay_us.
+> > +    linux,keycodes:
+> No, this property is not allowed by your binding. I doubt this was
+> really tested.
 >=20
-> Likewise I doubt that explicitly stating that long_bitset_us is 3x
-> bigger than short_bitset_us is important for future driver maintainance.
+> Anyway, even if it works, it's not what we expect. Where is the property
+> defined?
 
-Does this apply for ktd2692 as well?
+I was under the impression that it can be defined inside the if statement=20
+since "make dt_binding_check" ran without any errors. If that's wrong, I'm =
+not=20
+sure how else to make the property valid only for ist3032c (the two devices=
+=20
+using ist3038c, samsung-j5 and j5x seem to have tm2-touchkey instead).
 
 Regards,
 =2D-
