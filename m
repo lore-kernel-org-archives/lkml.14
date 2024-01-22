@@ -1,187 +1,108 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 552013E479;
-	Mon, 22 Jan 2024 16:02:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 896C93EA8F;
+	Mon, 22 Jan 2024 16:03:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705939354; cv=none; b=Rwzu8Dclo0PlUkoy6lIeD1MXAoFqViOPGQPt2vtlgYs2O7qJ1VeeKDKhtSQV2NiyF4oKTDPsZKZbVsPv7HpcDaGwtUONmREuN7SNZg3u9LCdhYVeY+KG/csBc3TnXmEeyaH3Fo6otiDTM88L8me+5eUQeT1xWJPozIVxBhkR5NE=
+	t=1705939418; cv=none; b=p8bvF2UgXZ7bS8cTig4j0d8St9ozBheIZ76mYzeZrxXZgdD01baHqt2/Jsb8L0Ce9tpKX5El+Rk6P33E9tTgVkWsFOd/vXlCtHt+IrFCKsPaYFwEyt5gytLdbb6A5/9SwSe4158m+gaODX/5hAsbbrlSKNrMbB5mNsmf0DT2c48=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705939354; c=relaxed/simple;
-	bh=DfvUc1kkTAgFV9KbBC0HUkcLxAbVIJv/dK2TEfAAtq8=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=huohQdLaAwTIeg4SefLPIdvnoGWvp3do1yJx7cTMDlZTyBgl7jbP9P6p+WOPRQpMIHLQ1XUAb/sO+pTBym6ra5RdOwUxezcDNjRbo5/JArobeXfSZ8PbQxc9HyaniDo1kBlpE0JCiqqwk9pkJ6+p3C4g4Wcz1kPAKLwZ6cCa7aM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TJZg429vPz6K6FL;
-	Tue, 23 Jan 2024 00:00:00 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 89AC3140B2F;
-	Tue, 23 Jan 2024 00:02:28 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Mon, 22 Jan
- 2024 16:02:27 +0000
-Date: Mon, 22 Jan 2024 16:02:27 +0000
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>
-CC: "Rafael J. Wysocki" <rafael@kernel.org>, <linux-pm@vger.kernel.org>,
-	<loongarch@lists.linux.dev>, <linux-acpi@vger.kernel.org>,
-	<linux-arch@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-riscv@lists.infradead.org>,
-	<kvmarm@lists.linux.dev>, <x86@kernel.org>,
-	<acpica-devel@lists.linuxfoundation.org>, <linux-csky@vger.kernel.org>,
-	<linux-doc@vger.kernel.org>, <linux-ia64@vger.kernel.org>,
-	<linux-parisc@vger.kernel.org>, Salil Mehta <salil.mehta@huawei.com>,
-	Jean-Philippe Brucker <jean-philippe@linaro.org>, <jianyong.wu@arm.com>,
-	<justin.he@arm.com>, James Morse <james.morse@arm.com>
-Subject: Re: [PATCH RFC v3 03/21] ACPI: processor: Register CPUs that are
- online, but not described in the DSDT
-Message-ID: <20240122160227.00002d83@Huawei.com>
-In-Reply-To: <ZaURtUvWQyjYfiiO@shell.armlinux.org.uk>
-References: <ZXmn46ptis59F0CO@shell.armlinux.org.uk>
-	<E1rDOg2-00Dvjk-RI@rmk-PC.armlinux.org.uk>
-	<CAJZ5v0ju1JHgpjuFLHZVs4NZiARG6iBZN_wza6c2e0kDhZjK0w@mail.gmail.com>
-	<ZaURtUvWQyjYfiiO@shell.armlinux.org.uk>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1705939418; c=relaxed/simple;
+	bh=QGXSD/SDVZivoaMa5ArrDzQaQVGkjfhExyjmEzM5iSw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=qLKpjeiFoZKilOuvdodKsaf2qNE8HF9fhBS1khBE5w14ZwnvXcZQAXhxqco1yUsZnnzLTbb0TtwvQnaAcCff52nMkrE+D1Vb1HD5YPemSWtvmly+yKJ7bh0vYrCOh1INz/0rersByvwFyKI/eV+iX07DRSrVKU/q6zOdiPUKZT0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=eamRYZ0M; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="eamRYZ0M"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40MDmuNs009117;
+	Mon, 22 Jan 2024 16:03:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=Yv75h0rlM5YC4o4po53BdQlfr7U8O8sgTrQ4h1Po+Es=; b=ea
+	mRYZ0MKgpcgI6QupiqOlapXMPYmY4KFLiXOPdzNM081H5pZKf0Pi6GxzDFEfJsfF
+	6AqQWCc1bp2E0aVbx+AgOHSVfLn3YYHpWiyke5KpB7KaT6kOltYsfMkx+BQkDe/p
+	zWLnvOYs4G6i9jhQ7iMkYdRjLaarHv3fREAGmWDgJ6OZmQF/q4ynB5yeurxylJRS
+	6SlXf6ab5XnYLL15ymTsi96U59QD+8nzr3JHpgcRW28iL20ZWhsbEa48RdTVZm02
+	IGcaiPykh7Et0DX5c2u9QEfOqe66eg/DL06c/cUjAV2pLzotX7g+x3qV+4XMWBTx
+	EvRYz30WXQkCr+UZ5NJQ==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vssjwrae9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 22 Jan 2024 16:03:20 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 40MG3JmS017379
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 22 Jan 2024 16:03:19 GMT
+Received: from [10.216.24.76] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Mon, 22 Jan
+ 2024 08:03:14 -0800
+Message-ID: <ac35936e-2fc0-4ca5-b746-25fa0e31afac@quicinc.com>
+Date: Mon, 22 Jan 2024 21:33:08 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-
-On Mon, 15 Jan 2024 11:06:29 +0000
-"Russell King (Oracle)" <linux@armlinux.org.uk> wrote:
-
-> On Mon, Dec 18, 2023 at 09:22:03PM +0100, Rafael J. Wysocki wrote:
-> > On Wed, Dec 13, 2023 at 1:49=E2=80=AFPM Russell King <rmk+kernel@armlin=
-ux.org.uk> wrote: =20
-> > >
-> > > From: James Morse <james.morse@arm.com>
-> > >
-> > > ACPI has two descriptions of CPUs, one in the MADT/APIC table, the ot=
-her
-> > > in the DSDT. Both are required. (ACPI 6.5's 8.4 "Declaring Processors"
-> > > says "Each processor in the system must be declared in the ACPI
-> > > namespace"). Having two descriptions allows firmware authors to get
-> > > this wrong.
-> > >
-> > > If CPUs are described in the MADT/APIC, they will be brought online
-> > > early during boot. Once the register_cpu() calls are moved to ACPI,
-> > > they will be based on the DSDT description of the CPUs. When CPUs are
-> > > missing from the DSDT description, they will end up online, but not
-> > > registered.
-> > >
-> > > Add a helper that runs after acpi_init() has completed to register
-> > > CPUs that are online, but weren't found in the DSDT. Any CPU that
-> > > is registered by this code triggers a firmware-bug warning and kernel
-> > > taint.
-> > >
-> > > Qemu TCG only describes the first CPU in the DSDT, unless cpu-hotplug
-> > > is configured. =20
-> >=20
-> > So why is this a kernel problem? =20
->=20
-> So what are you proposing should be the behaviour here? What this
-> statement seems to be saying is that QEMU as it exists today only
-> describes the first CPU in DSDT.
-
-This confuses me somewhat, because I'm far from sure which machines this
-is true for in QEMU.  I'm guessing it's a legacy thing with
-some old distro version of QEMU - so we'll have to paper over it anyway
-but for current QEMU I'm not sure it's true.
-
-Helpfully there are a bunch of ACPI table tests so I've been checking
-through all the multi CPU cases.
-
-CPU hotplug not enabled.
-pc/DSDT.dimmpxm  - 4x Processor entries.  -smp 4
-pc/DSDT.acpihmat - 2x Processor entries.  -smp 2
-q35/DSDT.acpihmat - 2x Processor entries. -smp 2
-virt/DSDT.acpihmatvirt - 4x ACPI0007 entries -smp 4
-q35/DSDT.acpihmat-noinitiator - 4 x Processor () entries -smp 4=20
-virt/DSDT.topology - 8x ACPI0007 entries
-
-I've also looked at the code and we have various types of
-CPU hotplug on x86 but they all build appropriate numbers of
-Processor() entries in DSDT.
-Arm likewise seems to build the right number of ACPI0007 entries
-(and doesn't yet have CPU HP support).
-
-If anyone can add a reference on why this is needed that would be very
-helpful.
-
->=20
-> As this patch series changes when arch_register_cpu() gets called (as
-> described in the paragraph above) we obviously need to preserve the
-> _existing_ behaviour to avoid causing regressions. So, if changing the
-> kernel causes user visible regressions (e.g. sysfs entries to
-> disappear) then it obviously _is_ a kernel problem that needs to be
-> solved.
->=20
-> We can't say "well fix QEMU then" without invoking the wrath of Linus.
-
-Overall I'm fine with the defensive nature of this patch as there
-'might' be firmware out there with this problem - I just can't establish
-that there is!  If anyone else recalls the history of this then give
-a shout.  I vaguely wondered if this was an ia64 thing but nope, QEMU
-never generated tables for ia64 before dropping support back in QEMU 2.11
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] arm64: dts: qcom: ipq5018-rdp432-c2: correct board name
+To: Ziyang Huang <hzyitc@outlook.com>, <agross@kernel.org>
+CC: <andersson@kernel.org>, <konrad.dybcio@linaro.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <TYZPR01MB55564BE24CE8718DBD4644A2C9762@TYZPR01MB5556.apcprd01.prod.exchangelabs.com>
+Content-Language: en-US
+From: Kathiravan Thirumoorthy <quic_kathirav@quicinc.com>
+In-Reply-To: <TYZPR01MB55564BE24CE8718DBD4644A2C9762@TYZPR01MB5556.apcprd01.prod.exchangelabs.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: AaEfHXUF4EUAUeiBAKduXP-CvRT9BGnR
+X-Proofpoint-ORIG-GUID: AaEfHXUF4EUAUeiBAKduXP-CvRT9BGnR
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-01-22_06,2024-01-22_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 impostorscore=0
+ lowpriorityscore=0 priorityscore=1501 adultscore=0 mlxlogscore=511
+ mlxscore=0 suspectscore=0 clxscore=1011 phishscore=0 spamscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2311290000 definitions=main-2401220110
 
 
->=20
-> > > Signed-off-by: James Morse <james.morse@arm.com>
-> > > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > > Reviewed-by: Gavin Shan <gshan@redhat.com>
-> > > Tested-by: Miguel Luis <miguel.luis@oracle.com>
-> > > Tested-by: Vishnu Pajjuri <vishnu@os.amperecomputing.com>
-> > > Tested-by: Jianyong Wu <jianyong.wu@arm.com>
-> > > Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
-> > > ---
-> > >  drivers/acpi/acpi_processor.c | 19 +++++++++++++++++++
-> > >  1 file changed, 19 insertions(+)
-> > >
-> > > diff --git a/drivers/acpi/acpi_processor.c b/drivers/acpi/acpi_proces=
-sor.c
-> > > index 6a542e0ce396..0511f2bc10bc 100644
-> > > --- a/drivers/acpi/acpi_processor.c
-> > > +++ b/drivers/acpi/acpi_processor.c
-> > > @@ -791,6 +791,25 @@ void __init acpi_processor_init(void)
-> > >         acpi_pcc_cpufreq_init();
-> > >  }
-> > >
-> > > +static int __init acpi_processor_register_missing_cpus(void)
-> > > +{
-> > > +       int cpu;
-> > > +
-> > > +       if (acpi_disabled)
-> > > +               return 0;
-> > > +
-> > > +       for_each_online_cpu(cpu) {
-> > > +               if (!get_cpu_device(cpu)) {
-> > > +                       pr_err_once(FW_BUG "CPU %u has no ACPI namesp=
-ace description!\n", cpu);
-> > > +                       add_taint(TAINT_FIRMWARE_WORKAROUND, LOCKDEP_=
-STILL_OK);
-> > > +                       arch_register_cpu(cpu); =20
-> >=20
-> > Which part of this code is related to ACPI? =20
->=20
-> That's a good question, and I suspect it would be more suited to being
-> placed in drivers/base/cpu.c except for the problem that the error
-> message refers to ACPI.
->=20
-> As long as we keep the acpi_disabled test, I guess that's fine.
-> cpu_dev_register_generic() there already tests acpi_disabled.
->=20
-Moving it seems fine to me.
 
-Jonathan
+On 1/21/2024 6:22 PM, Ziyang Huang wrote:
+> According to Qualcomm document:
+>    MP03.1 is RDP404
+>    RDP432 is MP03.5
+> 
+> Signed-off-by: Ziyang Huang <hzyitc@outlook.com>
+> ---
+>   arch/arm64/boot/dts/qcom/ipq5018-rdp432-c2.dts | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/ipq5018-rdp432-c2.dts b/arch/arm64/boot/dts/qcom/ipq5018-rdp432-c2.dts
+> index 074b78d7939c..f7e8b5af6b44 100644
+> --- a/arch/arm64/boot/dts/qcom/ipq5018-rdp432-c2.dts
+> +++ b/arch/arm64/boot/dts/qcom/ipq5018-rdp432-c2.dts
+> @@ -1,6 +1,6 @@
+>   // SPDX-License-Identifier: GPL-2.0+ OR BSD-3-Clause
+>   /*
+> - * IPQ5018 MP03.1-C2 board device tree source
+> + * IPQ5018 MP03.5-C2 board device tree source
 
+
+I suggest to use the RDP number itself here...
+
+
+>    *
+>    * Copyright (c) 2023 The Linux Foundation. All rights reserved.
+>    */
