@@ -1,88 +1,109 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E3376168B;
-	Mon, 22 Jan 2024 15:05:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 128216169C;
+	Mon, 22 Jan 2024 15:05:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705935910; cv=none; b=R61hGPOk/9d3I5hYlUwCg5VBZkhFfF0RviL9cZBenn0SPfwoBCVzDOrjRevt1vfRUDHDh9A6upcQX15L/LRX1WD4/rlZdGKIdHj6xHzLS2CYxRAAcVMhPICZAVAafoag+EHj7JbYVq+9KJVm9fid6MvOZSJOVg3C6CnSjyoVOrE=
+	t=1705935911; cv=none; b=egwIxe6hNDZdmtNwh+mjb7g/0fkFrub4/JrFu8GZZIWk+rVLF2QMIvnz5VYQbupD+HY7xiiXF2Na7LSA+fIE+g0HETzsM0OBZrhS5jC5rMUpCQzTIivc7QjYwtqfuD7RR/eoRq23tGiVf8axwgmGbIoYyy3oUO9kd0nCp6GoSIc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705935910; c=relaxed/simple;
-	bh=B4sPbgPwhh4ajjcdmVrXlnMDl7BpbIwe14BcLn2f5UY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IarkE0m0L0KyStNkdv1AMGio8yEwnweLbpPew712K6+rF6CsO9TKMcDRVCxoFrOq9xbcSbvaGdl6HEaJDmueRxA2oHzhI8WfLSDcry1e/wJkJABdgL8W9EW+S+dnG4GcCmnqt/uLSQwWu9KagafL0C0Ociqq9KOTx8vxUha3Zts=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=XT9gcDbW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1705935911; c=relaxed/simple;
+	bh=4WsiqzmZCalFFQa5mWmmulVG52SGUVu9YnuJ4R0nN1g=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Vicn9IO3WPBctqeHoic4am3jOvcxLPBPrUCe+NPsIDNUaFb/wtUSwvXuT5P7vqWe/5rBQFb6s94WFp8zkKTFV0Sj8AFdazJab2Z4tJZg1KCvKAcDikJlwJrgj+XB84LN6ZlnkfXfzRqccEDrrCX1lNXCMw1qV8wnnx21uBcYmko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ekgC1HhC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="XT9gcDbW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C63B0C4166D;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ekgC1HhC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61887C43394;
 	Mon, 22 Jan 2024 15:05:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1705935909;
-	bh=B4sPbgPwhh4ajjcdmVrXlnMDl7BpbIwe14BcLn2f5UY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XT9gcDbWSQvnWqzW2XsCxrKlUDpCS26wJ/I5zCtWFk1MMfzCuRj4QP5YeN0hPrtE4
-	 aaJoFeOEVI4rxcnjk/CdmmuBTChSKbqbO7UfrfMXR40WZgmnOqrscWhI8IXmdt9ZBr
-	 oIvgaOA+CuUOzUGREUcQA8iAQTH8OM1ClE1CtTuM=
-Date: Mon, 22 Jan 2024 07:05:09 -0800
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Carlos Llamas <cmllamas@google.com>
-Cc: Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
-	Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Christian Brauner <brauner@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Sherry Yang <sherryy@android.com>, linux-kernel@vger.kernel.org,
-	kernel-team@android.com, Alice Ryhl <aliceryhl@google.com>,
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705935910;
+	bh=4WsiqzmZCalFFQa5mWmmulVG52SGUVu9YnuJ4R0nN1g=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=ekgC1HhCyLDRcZmuEcLMHZL9GJxToK9Gj0I8BLEP+8sRpdF0BDX3JTs7mwigh/ed+
+	 BJrfzm/pK50mm5IpwYeuD4fo2xHaA6sp/UeVIUckrR0CylF8AyK7cRNcq27e+XaAR7
+	 Z6oaUaW86M+CQfTfeiHlwnVtWBjXCftmGf+1BUtrrhWfuT635LobhTN8jxiRODJgrK
+	 Fvjxr+D/bytohM8lOVw04CpkeILOO1xmtVLUR5G30sf29/DaTO84esJ8wLHWSw28Ca
+	 HeZn22vS+nDbA5vsYB33vlvrLGVrCDUjXzdbCeyuM9g43/W8uYwGWhWrFq3OOP8KYQ
+	 0DGlf+248DCoA==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Subject: Re: [PATCH v2 04/28] binder: fix async space check for 0-sized
- buffers
-Message-ID: <2024012202-raking-frenzied-7da8@gregkh>
-References: <20231201172212.1813387-1-cmllamas@google.com>
- <20231201172212.1813387-5-cmllamas@google.com>
- <Zal8uGqP2lLZz_oz@google.com>
- <2024011948-sulfate-tartly-7f97@gregkh>
- <ZaqtPrVhmfvDYzCU@google.com>
+Cc: Venkata Prasad Potturu <venkataprasad.potturu@amd.com>,
+	Mark Brown <broonie@kernel.org>,
+	Sasha Levin <sashal@kernel.org>,
+	lgirdwood@gmail.com,
+	perex@perex.cz,
+	tiwai@suse.com,
+	Vijendar.Mukunda@amd.com,
+	posteuca@mutex.one,
+	emil.velikov@collabora.com,
+	cristian.ciocaltea@collabora.com,
+	linux-sound@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.6 14/73] ASoC: amd: Add new dmi entries for acp5x platform
+Date: Mon, 22 Jan 2024 10:01:28 -0500
+Message-ID: <20240122150432.992458-14-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240122150432.992458-1-sashal@kernel.org>
+References: <20240122150432.992458-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZaqtPrVhmfvDYzCU@google.com>
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.6.13
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jan 19, 2024 at 05:11:26PM +0000, Carlos Llamas wrote:
-> On Fri, Jan 19, 2024 at 06:48:53AM +0100, Greg Kroah-Hartman wrote:
-> > On Thu, Jan 18, 2024 at 07:32:08PM +0000, Carlos Llamas wrote:
-> > > On Fri, Dec 01, 2023 at 05:21:33PM +0000, Carlos Llamas wrote:
-> > > > Move the padding of 0-sized buffers to an earlier stage to account for
-> > > > this round up during the alloc->free_async_space check.
-> > > > 
-> > > > Fixes: 74310e06be4d ("android: binder: Move buffer out of area shared with user space")
-> > > > Reviewed-by: Alice Ryhl <aliceryhl@google.com>
-> > > > Signed-off-by: Carlos Llamas <cmllamas@google.com>
-> > > > ---
-> > > 
-> > > Sorry, I forgot to Cc: stable@vger.kernel.org.
-> > 
-> > 
-> > <formletter>
-> > 
-> > This is not the correct way to submit patches for inclusion in the
-> > stable kernel tree.  Please read:
-> >     https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html
-> > for how to do this properly.
-> > 
-> > </formletter>
-> 
-> Oops, here is the complete info:
-> 
-> Commit ID: 3091c21d3e9322428691ce0b7a0cfa9c0b239eeb
-> Subject:   "binder: fix async space check for 0-sized buffers"
-> Reason:    Fixes an incorrect calculation of available space.
-> Versions:  v4.19+
+From: Venkata Prasad Potturu <venkataprasad.potturu@amd.com>
 
-Now queued up, thanks.
+[ Upstream commit c3ab23a10771bbe06300e5374efa809789c65455 ]
 
-greg k-h
+Add sys_vendor and product_name dmi entries for acp5x platform.
+
+Signed-off-by: Venkata Prasad Potturu <venkataprasad.potturu@amd.com>
+Link: https://lore.kernel.org/r/20231206110620.1695591-1-venkataprasad.potturu@amd.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ sound/soc/amd/acp-config.c | 15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
+
+diff --git a/sound/soc/amd/acp-config.c b/sound/soc/amd/acp-config.c
+index f27c27580009..955145448c23 100644
+--- a/sound/soc/amd/acp-config.c
++++ b/sound/soc/amd/acp-config.c
+@@ -3,7 +3,7 @@
+ // This file is provided under a dual BSD/GPLv2 license. When using or
+ // redistributing this file, you may do so under either license.
+ //
+-// Copyright(c) 2021 Advanced Micro Devices, Inc.
++// Copyright(c) 2021, 2023 Advanced Micro Devices, Inc.
+ //
+ // Authors: Ajit Kumar Pandey <AjitKumar.Pandey@amd.com>
+ //
+@@ -47,6 +47,19 @@ static const struct config_entry config_table[] = {
+ 			{}
+ 		},
+ 	},
++	{
++		.flags = FLAG_AMD_LEGACY,
++		.device = ACP_PCI_DEV_ID,
++		.dmi_table = (const struct dmi_system_id []) {
++			{
++				.matches = {
++					DMI_MATCH(DMI_SYS_VENDOR, "Valve"),
++					DMI_MATCH(DMI_PRODUCT_NAME, "Jupiter"),
++				},
++			},
++			{}
++		},
++	},
+ 	{
+ 		.flags = FLAG_AMD_SOF,
+ 		.device = ACP_PCI_DEV_ID,
+-- 
+2.43.0
+
