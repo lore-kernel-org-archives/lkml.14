@@ -1,167 +1,157 @@
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CE4F4C65
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 05:10:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECBB84C6F;
+	Mon, 22 Jan 2024 05:34:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705900233; cv=none; b=iZrFJQjD1zA+B4GQLQ/rw78IA5YQFjhBVI+IFGR2GUCbcMZDXGFd/xG90moYomwKrOTvKwFdwu/COvA5PM64t5IRq326d5ikXJBT0n5FnqkY5XGlbP1uuecAlEeXFD6ZU7ESwNSrsGauHkjA1AKMdd57TM1C3cwU2vG0sQmcmE8=
+	t=1705901663; cv=none; b=eylNRJuY4CwmcQ8A+ZW6qDXpQSkYuuYO8qQYY8/GEecusoIZBNZ4RlExXodaKkTuYD4p7vOFZaybBzszhQrn4la/xIuz+lC7vVPvRaY2/KWygDznkhj0jIcITMIZK16ZEfwdesdENsLQak/A7i9UGx89t3t3kb7TjSyKK/gOfy0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705900233; c=relaxed/simple;
-	bh=IVCfn+pI29tjNzjS3wp0wFp5/+Z2nUKsVuz8Y3dLxVY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=e05OQaVqSbuf2WQd2YbVbuzFvde57U91zokpKw8nX5As4fxgdVNrqsD3vRsZULMPrrhLbtRk9OiDefVKcmQKB8v1SOPIhwOThlo+kWskq6kIwKj0GEgLFhtshWL1gzzL22SjG5r3MqknElT/vnMXvUiMx8Z2HFJBkxa2QYZd1vs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=UJwTldj3; arc=none smtp.client-ip=209.85.167.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1705901663; c=relaxed/simple;
+	bh=Gr/lFVSC/sloO0j7uEV1oRzqzdwzIJnxJJunVKAuEhY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=s3GgUdfutjhGUnVGDIZFswmQwZuy3Rk2iUMIcQRS1/67YExfCMtbSCRdNTVz8H8+NR7z44MBD58n7E7AqeU91wvemVr+3a4Ca1nBSPjhSP/uaIHtwst5xpb3zf3eAnpeFXFnHgrMyysdpuyUW/CS3d2wYpT4zYUHmp0ZDVmx0fM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arinc9.com; spf=pass smtp.mailfrom=arinc9.com; dkim=pass (2048-bit key) header.d=arinc9.com header.i=@arinc9.com header.b=SxRkMb14; arc=none smtp.client-ip=217.70.183.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arinc9.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arinc9.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="UJwTldj3"
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-50e835800adso2828016e87.0
-        for <linux-kernel@vger.kernel.org>; Sun, 21 Jan 2024 21:10:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1705900228; x=1706505028; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=bX4dObL3c95165XLM7yzt7rEIgdTlOtpBnPF9EhNwGQ=;
-        b=UJwTldj3GGaIHFXa3t4g6hdXwYrLY4N6p7CPUdfNV7bP36LRbM/1cy+YBAilhuKSI8
-         f2WFDL9qJTuy8Cd7bTtjVi0l373Y/ZiUBgF+5Qd4Rw3OKSuCv0gO+Jzinr1j8KkV9/jR
-         UOATkhdTu21BjVClkPrhAJ7dVgJUeq3pCyHjE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705900228; x=1706505028;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=bX4dObL3c95165XLM7yzt7rEIgdTlOtpBnPF9EhNwGQ=;
-        b=rhmGxUs19bT3v07knpZSyv0NQRGCj1LQHdUoPLTOzf58/TISCuU2rZhKjPYDx8Z9O+
-         vhQCTBr9CuTCX7fRPdBqpr474zwzLvScPL0+SkSUVw1aruCcuAi52HPKjmXNGOx5ZBri
-         DH2Rc2yEkq6yBnX66s6UYwjnJakB+CYRBLjLlwyy1DCyM44KOvy/V7KcPPQyXZQrT6YY
-         lfqMaJmZuNZSNVuVqV0dHdrhGZv/0zXZKD74X94S0H7dxAsFlo8ihFnEUT+QpVAhDIPd
-         sEG0kABWgKgbGHAlVf8+Neb7dAHTJ4e0NFHUJEgKzhp4eK48DGLUdJGJZH8eVPFUHh+G
-         wFJw==
-X-Gm-Message-State: AOJu0Yx4QJNWYjKWqIYjlG2imnZKf35SuP2UO1MY0tcIKp32HshE6yua
-	Rw7k6thVo5fG7rPNQd1DQL8nRdQeJ6YJpKkRI9AmCOPdAxEAOEGbBaecLbrNywLokHzkM1DLt4r
-	CEQT2nw==
-X-Google-Smtp-Source: AGHT+IFSprsOZOnIXsajITcVNVsO14jnZgJQ0dHjTRAwbKCZ8KzT1yiPHqJVb0pgnWW3GzyC+DccjQ==
-X-Received: by 2002:a19:e008:0:b0:50e:8efd:e0c1 with SMTP id x8-20020a19e008000000b0050e8efde0c1mr741141lfg.175.1705900228406;
-        Sun, 21 Jan 2024 21:10:28 -0800 (PST)
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com. [209.85.221.46])
-        by smtp.gmail.com with ESMTPSA id k16-20020a056402049000b0055c2404fbe4sm1247379edv.69.2024.01.21.21.10.26
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 21 Jan 2024 21:10:26 -0800 (PST)
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3392ba29845so1284888f8f.2
-        for <linux-kernel@vger.kernel.org>; Sun, 21 Jan 2024 21:10:26 -0800 (PST)
-X-Received: by 2002:a7b:ce95:0:b0:40e:49ac:e4a6 with SMTP id
- q21-20020a7bce95000000b0040e49ace4a6mr1440118wmj.171.1705900225838; Sun, 21
- Jan 2024 21:10:25 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=arinc9.com header.i=@arinc9.com header.b="SxRkMb14"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 8F455FF803;
+	Mon, 22 Jan 2024 05:34:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arinc9.com; s=gm1;
+	t=1705901652;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=mB9WRD6UXawX/aZviJr/LqXnsIPoDNYg4d4Tt1YlqkY=;
+	b=SxRkMb14wn++UxcMrOZme+dR5/cym/kRXGFuenpi3Dm5PvNsbn0oWpyGmrfhQ1oSB/4jJ/
+	aW6GihGsMOxaVyJG1a6fqjBioKPbdo44oEJLd/AfKk8TSJyDBZGAvcT4AUG2VUAaeXrPQD
+	yy8spbFZCDFIT7tBwoDMMhIoGWEyrHBIgh+tdCMNgLOi3zF1dlmiQu92caulhpVg78iCKA
+	JC8tm/gvNbDQaP1KSHi7vuBGC+uOPp5pRrfzC4qzL6d2PhQT9XZp3Zhz0rft8MOCcTR4lr
+	lcIpxR4Peo9TIxt+YksTVGuMxr1sOR+vOMgHZkS1SBY8Y1gpQuyTWK4JakNIaQ==
+From: =?UTF-8?q?Ar=C4=B1n=C3=A7=20=C3=9CNAL?= <arinc.unal@arinc9.com>
+To: Andrew Lunn <andrew@lunn.ch>,
+	Florian Fainelli <f.fainelli@gmail.com>,
+	Vladimir Oltean <olteanv@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>
+Cc: =?UTF-8?q?Ar=C4=B1n=C3=A7=20=C3=9CNAL?= <arinc.unal@arinc9.com>,
+	Luiz Angelo Daros de Luca <luizluca@gmail.com>,
+	mithat.guner@xeront.com,
+	erkin.bozoglu@xeront.com,
+	=?UTF-8?q?Alvin=20=C5=A0ipraga?= <ALSI@bang-olufsen.dk>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH net-next] net: dsa: remove OF-based MDIO bus registration from DSA core
+Date: Mon, 22 Jan 2024 08:33:48 +0300
+Message-Id: <20240122053348.6589-1-arinc.unal@arinc9.com>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1705507931.git.jpoimboe@kernel.org> <ac84a832feba5418e1b58d1c7f3fe6cc7bc1de58.1705507931.git.jpoimboe@kernel.org>
- <6667b799702e1815bd4e4f7744eddbc0bd042bb7.camel@kernel.org>
- <20240117193915.urwueineol7p4hg7@treble> <CAHk-=wg_CoTOfkREgaQQA6oJ5nM9ZKYrTn=E1r-JnvmQcgWpSg@mail.gmail.com>
- <CALvZod6LgX-FQOGgNBmoRACMBK4GB+K=a+DYrtExcuGFH=J5zQ@mail.gmail.com>
- <ZahSlnqw9yRo3d1v@P9FQF9L96D.corp.robot.car> <CALvZod4V3QTULTW5QxgqCbDpNtVO6fXzta33HR7GN=L2LUU26g@mail.gmail.com>
-In-Reply-To: <CALvZod4V3QTULTW5QxgqCbDpNtVO6fXzta33HR7GN=L2LUU26g@mail.gmail.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Sun, 21 Jan 2024 21:10:09 -0800
-X-Gmail-Original-Message-ID: <CAHk-=whYOOdM7jWy5jdrAm8LxcgCMFyk2bt8fYYvZzM4U-zAQA@mail.gmail.com>
-Message-ID: <CAHk-=whYOOdM7jWy5jdrAm8LxcgCMFyk2bt8fYYvZzM4U-zAQA@mail.gmail.com>
-Subject: Re: [PATCH RFC 1/4] fs/locks: Fix file lock cache accounting, again
-To: Shakeel Butt <shakeelb@google.com>
-Cc: Roman Gushchin <roman.gushchin@linux.dev>, Josh Poimboeuf <jpoimboe@kernel.org>, 
-	Vlastimil Babka <vbabka@suse.cz>, Jeff Layton <jlayton@kernel.org>, 
-	Chuck Lever <chuck.lever@oracle.com>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Michal Hocko <mhocko@kernel.org>, linux-kernel@vger.kernel.org, 
-	Jens Axboe <axboe@kernel.dk>, Tejun Heo <tj@kernel.org>, Vasily Averin <vasily.averin@linux.dev>, 
-	Michal Koutny <mkoutny@suse.com>, Waiman Long <longman@redhat.com>, 
-	Muchun Song <muchun.song@linux.dev>, Jiri Kosina <jikos@kernel.org>, cgroups@vger.kernel.org, 
-	linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-GND-Sasl: arinc.unal@arinc9.com
 
-On Wed, 17 Jan 2024 at 14:56, Shakeel Butt <shakeelb@google.com> wrote:
-> >
-> > So I don't see how we can make it really cheap (say, less than 5% overhead)
-> > without caching pre-accounted objects.
->
-> Maybe this is what we want. Now we are down to just SLUB, maybe such
-> caching of pre-accounted objects can be in SLUB layer and we can
-> decide to keep this caching per-kmem-cache opt-in or always on.
+The code block under the "!ds->user_mii_bus && ds->ops->phy_read" check
+under dsa_switch_setup() populates ds->user_mii_bus. The use of
+ds->user_mii_bus is inappropriate when the MDIO bus of the switch is
+described on the device tree [1].
 
-So it turns out that we have another case of SLAB_ACCOUNT being quite
-a big expense, and it's actually the normal - but failed - open() or
-execve() case.
+For this reason, use this code block only for switches [with MDIO bus]
+probed on platform_data, and OF which the switch MDIO bus isn't described
+on the device tree. Therefore, remove OF-based MDIO bus registration as
+it's useless for these cases.
 
-See the thread at
+These subdrivers which control switches [with MDIO bus] probed on OF, will
+lose the ability to register the MDIO bus OF-based:
 
-    https://lore.kernel.org/all/CAHk-=whw936qzDLBQdUz-He5WK_0fRSWwKAjtbVsMGfX70Nf_Q@mail.gmail.com/
+drivers/net/dsa/b53/b53_common.c
+drivers/net/dsa/lan9303-core.c
+drivers/net/dsa/realtek/realtek-mdio.c
+drivers/net/dsa/vitesse-vsc73xx-core.c
 
-and to see the effect in profiles, you can use this EXTREMELY stupid
-test program:
+These subdrivers let the DSA core driver register the bus:
+- ds->ops->phy_read() and ds->ops->phy_write() are present.
+- ds->user_mii_bus is not populated.
 
-    #include <fcntl.h>
+The commit fe7324b93222 ("net: dsa: OF-ware slave_mii_bus") which brought
+OF-based MDIO bus registration on the DSA core driver is reasonably recent
+and, in this time frame, there have been no device trees in the Linux
+repository that started describing the MDIO bus, or dt-bindings defining
+the MDIO bus for the switches these subdrivers control. So I don't expect
+any devices to be affected.
 
-    int main(int argc, char **argv)
-    {
-        for (int i = 0; i < 10000000; i++)
-                open("nonexistent", O_RDONLY);
-    }
+The logic we encourage is that all subdrivers should register the switch
+MDIO bus on their own [2]. And, for subdrivers which control switches [with
+MDIO bus] probed on OF, this logic must be followed to support all cases
+properly:
 
-where the point of course is that the "nonexistent" pathname doesn't
-actually exist (so don't create a file called that for the test).
+No switch MDIO bus defined: Populate ds->user_mii_bus, register the MDIO
+bus, set the interrupts for PHYs if "interrupt-controller" is defined at
+the switch node. This case should only be covered for the switches which
+their dt-bindings documentation didn't document the MDIO bus from the
+start. This is to keep supporting the device trees that do not describe the
+MDIO bus on the device tree but the MDIO bus is being used nonetheless.
 
-What happens is that open() allocates a 'struct file *' early from the
-filp kmem_cache, which has SLAB_ACCOUNT set. So we'll do accounting
-for it, failt the pathname open, and free it again, which uncharges
-the accounting.
+Switch MDIO bus defined: Don't populate ds->user_mii_bus, register the MDIO
+bus, set the interrupts for PHYs if ["interrupt-controller" is defined at
+the switch node and "interrupts" is defined at the PHY nodes under the
+switch MDIO bus node].
 
-Now, in this case, I actually have a suggestion: could we please just
-make SLAB_ACCOUNT be something that we do *after* the allocation, kind
-of the same way the zeroing works?
+Switch MDIO bus defined but explicitly disabled: If the device tree says
+status = "disabled" for the MDIO bus, we shouldn't need an MDIO bus at all.
+Instead, just exit as early as possible and do not call any MDIO API.
 
-IOW, I'd love to get rid of slab_pre_alloc_hook() entirely, and make
-slab_post_alloc_hook() do all the "charge the memcg if required".
+After all subdrivers that control switches with MDIO buses are made to
+register the MDIO buses on their own, we will be able to get rid of
+dsa_switch_ops :: phy_read() and :: phy_write(), and the code block for
+registering the MDIO bus on the DSA core driver.
 
-Obviously that means that now a failure to charge the memcg would have
-to then de-allocate things, but that's an uncommon path and would be
-marked unlikely and not be in the hot path at all.
+Link: https://lore.kernel.org/netdev/20231213120656.x46fyad6ls7sqyzv@skbuf/ [1]
+Link: https://lore.kernel.org/netdev/20240103184459.dcbh57wdnlox6w7d@skbuf/ [2]
+Suggested-by: Luiz Angelo Daros de Luca <luizluca@gmail.com>
+Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
+---
+ net/dsa/dsa.c | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
 
-Now, the reason I would prefer that is that the *second* step would be to
+diff --git a/net/dsa/dsa.c b/net/dsa/dsa.c
+index ac7be864e80d..09d2f5d4b3dd 100644
+--- a/net/dsa/dsa.c
++++ b/net/dsa/dsa.c
+@@ -15,7 +15,6 @@
+ #include <linux/slab.h>
+ #include <linux/rtnetlink.h>
+ #include <linux/of.h>
+-#include <linux/of_mdio.h>
+ #include <linux/of_net.h>
+ #include <net/dsa_stubs.h>
+ #include <net/sch_generic.h>
+@@ -626,7 +625,6 @@ static void dsa_switch_teardown_tag_protocol(struct dsa_switch *ds)
+ 
+ static int dsa_switch_setup(struct dsa_switch *ds)
+ {
+-	struct device_node *dn;
+ 	int err;
+ 
+ 	if (ds->setup)
+@@ -666,10 +664,7 @@ static int dsa_switch_setup(struct dsa_switch *ds)
+ 
+ 		dsa_user_mii_bus_init(ds);
+ 
+-		dn = of_get_child_by_name(ds->dev->of_node, "mdio");
+-
+-		err = of_mdiobus_register(ds->user_mii_bus, dn);
+-		of_node_put(dn);
++		err = mdiobus_register(ds->user_mii_bus);
+ 		if (err < 0)
+ 			goto free_user_mii_bus;
+ 	}
+-- 
+2.40.1
 
- (a) expose a "kmem_cache_charge()" function that takes a
-*non*-accounted slab allocation, and turns it into an accounted one
-(and obviously this is why you want to do everything in the post-alloc
-hook: just try to share this code)
-
- (b) remote the SLAB_ACCOUNT from the filp_cachep, making all file
-allocations start out unaccounted.
-
- (c) when we have *actually* looked up the pathname and open the file
-successfully, at *that* point we'd do a
-
-        error = kmem_cache_charge(filp_cachep, file);
-
-    in do_dentry_open() to turn the unaccounted file pointer into an
-accounted one (and if that fails, we do the cleanup and free it, of
-course, exactly like we do when file_get_write_access() fails)
-
-which means that now the failure case doesn't unnecessarily charge the
-allocation that never ends up being finalized.
-
-NOTE! I think this would clean up mm/slub.c too, simply because it
-would get rid of that memcg_slab_pre_alloc_hook() entirely, and get
-rid of the need to carry the "struct obj_cgroup **objcgp" pointer
-along until the post-alloc hook: everything would be done post-alloc.
-
-The actual kmem_cache_free() code already deals with "this slab hasn't
-been accounted" because it obviously has to deal with allocations that
-were done without __GFP_ACCOUNT anyway. So there's no change needed on
-the freeing path, it already has to handle this all gracefully.
-
-I may be missing something, but it would seem to have very little
-downside, and fix a case that actually is visible right now.
-
-              Linus
