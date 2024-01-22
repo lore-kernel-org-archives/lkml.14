@@ -1,146 +1,211 @@
-Received: from mail-vk1-f170.google.com (mail-vk1-f170.google.com [209.85.221.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 895D33D960;
-	Mon, 22 Jan 2024 14:55:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8092A3CF45;
+	Mon, 22 Jan 2024 14:55:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705935306; cv=none; b=OyxuIzVl+9Xe4AVkgAYqrUCPysArO4Fbgq2zLzYlLaIYseRJX5vZPHx5HEMvlQ5BcFrlsqfax0Qor4O6tpKvC1D8Rxc8VPSZsHEpc2oZ3zB705LUg73i9Rko8sxyTlT3HjGe2WMkQXeJBL4PYUEtQhT1M1a6wYdQO0/HW7SQlpM=
+	t=1705935360; cv=none; b=QybjGWQ2bpGCjqu4g8gzBLO5K1dauPKoqMnPphbBQh1HzgZ2ld2KpLJ4zLrGikPM4Vn34KcwYj5XXz2dkOK18228VUvd8QJGsRuzcw5WQBX7Tz4XPj2ZGRt3sOsCvDg2pGfraO8OylkGhW2ruqktt7VsH6iVjl70L4FIwQHDWNQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705935306; c=relaxed/simple;
-	bh=Nzv63BCkoPcsqWEFiBswGPma2+8hRkcFkANtdVNFiro=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hGSehBz1IOZ3kCsiGh6ZAsam84fu7EtWZid538d9B3xUEdymeyhVEIlGOBet8I9jf4DqcvV6gtGvpe0dLFsJ93eUBv/sPoM2+lLXYx8MpjIg2VMvsFYDTnmZsdlsA6hatYO97VT/zcqS4dsr4kspJCcozj7HMkBAohhsylSYQfU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=irKTd4gk; arc=none smtp.client-ip=209.85.221.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1705935360; c=relaxed/simple;
+	bh=PAbio/agq2JeBhY0Nz4bvSnf/3VVn121onf6wpKJeuE=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=VvCOtLE/oFRwAId1IAq3bMgPAKB22frqqC2sgOOgMPqHknMAL9wqrgbm76eUAX9V11nSUTlShVO0isLQmkfHmi/Dnpa90UuWS+Im4ta1UkMIN9EhLyngIcAq3DzuzLKEEyAoKoxlYZ3hoHrlRBtuQdwA5X3k33FN9lQgSiIfoyA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Sr3GRr+F; arc=none smtp.client-ip=198.47.23.248
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="irKTd4gk"
-Received: by mail-vk1-f170.google.com with SMTP id 71dfb90a1353d-4b77c843fbeso763403e0c.2;
-        Mon, 22 Jan 2024 06:55:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705935304; x=1706540104; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LjET904TYP/WwjxV83kzot+nYVG1EoymjQ+8BNv7pUg=;
-        b=irKTd4gkA03NZZVeM+/uKOrtuTDuhfZGNTPv+4PXyozitZjwgDy3DQr0RZnUJCQp6s
-         Hejww2vV/09+jnJ3t0hF0zeuSH7T+k4L21M46HH1AUr18CU8aPVWthostlrvji+RAFML
-         iBwIyoGylSSZM3DjQ3pHTQZKyiDobfFpyORIOpXKqPHhYrSzwz53hpOBlecYrQWbJkDW
-         IRLBsD8F1ITGIs7EtlGMlvejp0IzSKweMdIYeIwFpJqgohcpoPB8n1vJweDSW+R7ZXQF
-         gqQsIzuJdRX0npzgXYRFM8qdwL69JYDTVDbJ8aEla1KoIeijsLKUieQeKU9jbIV2iWof
-         pzdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705935304; x=1706540104;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LjET904TYP/WwjxV83kzot+nYVG1EoymjQ+8BNv7pUg=;
-        b=sHV5P878w8KVDO9S0OgyjuJwuOS8lvmJmtWRe6CENZvEvqEpeLm/t63a2QvmrVNWSL
-         2s4i/7pkUbQSzZCQvenPnkgWOS9wddYoUPt8AKJ9lxciHi6mCCNSWlwDVcn3qCFLFHJp
-         BuTBbAeJtjaAMqz8eiK2U897rMUF9eVEYpWHA/cgQypVDNOSIHuawHSSObxfdW5hi1Ez
-         rK8VVyd621ELz76n/iwuH1GqpGkWQ8PZsNk/eRpB74Yt0e9up0JoQLC3MxShit/YW1jO
-         JHyr30TXIL+9Z/9jf5TNzOD77Hy9FI7OCP+IKZ4XQBLB+UX0Ip+1Y2y9wNmmaBa1Uc1D
-         yNSQ==
-X-Gm-Message-State: AOJu0YzB19NpXg+I64KPIsH/lCY+LJaFpS+ZvnrKGPJfNFJWMDUSQ1De
-	L7wx0LlxyYZzdSSKZfT5UEqZ6ip3HuQepNgtyNrnRvMk+s5mYRVvlKByagVh1DfVbmjzIRebKvZ
-	CDH5EfvidFXqkeE8AcCOo1cgn1QM=
-X-Google-Smtp-Source: AGHT+IExbbr5WjMkq6GXFtSkH5uHwA9GL8oL5jWqvfZ9dk2l185iqKslGfr7EIvhkIFxu3lsDyPY/N1lddLUY9GBAnk=
-X-Received: by 2002:ac5:c957:0:b0:4b6:b867:c83f with SMTP id
- s23-20020ac5c957000000b004b6b867c83fmr1344493vkm.22.1705935304361; Mon, 22
- Jan 2024 06:55:04 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Sr3GRr+F"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 40MEtjJq045424;
+	Mon, 22 Jan 2024 08:55:45 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1705935345;
+	bh=boGJjrJeLQa81r8lwI4Pesuw8g6i+d8lW/ce2StQqcI=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=Sr3GRr+FaQuVJfRnQp7qlDf/0mHs80XW8ngxabCgZEE4G0X1bzKFZzFZ1Ve8marH8
+	 oPeHQ76MoVEAlZNclSKh1KmkCoami8M3sHSn/1o6j0Pwx2mBNeuMWJ4/C+WV8a8sop
+	 vtToqxVpcL4L7MsrNP3kagwbmR9T0eakgcr4Uiuc=
+Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 40MEtjuw005343
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 22 Jan 2024 08:55:45 -0600
+Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 22
+ Jan 2024 08:55:44 -0600
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 22 Jan 2024 08:55:43 -0600
+Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 40MEthh2022003;
+	Mon, 22 Jan 2024 08:55:43 -0600
+From: Nishanth Menon <nm@ti.com>
+To: Tero Kristo <kristo@kernel.org>, Vignesh Raghavendra <vigneshr@ti.com>
+CC: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Rob Herring
+	<robh+dt@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        Nishanth Menon <nm@ti.com>, Esteban Blanc <eblanc@baylibre.com>,
+        Krzysztof
+ Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Pierre Gondois
+	<pierre.gondois@arm.com>,
+        Tony Lindgren <tony@atomide.com>
+Subject: [PATCH V2 07/16] arm64: dts: ti: k3-j7200: Add MIT license along with GPL-2.0
+Date: Mon, 22 Jan 2024 08:55:30 -0600
+Message-ID: <20240122145539.194512-8-nm@ti.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240122145539.194512-1-nm@ti.com>
+References: <20240122145539.194512-1-nm@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <c7209e19-89c4-446a-b364-83100e30cc00@exia.io>
-In-Reply-To: <c7209e19-89c4-446a-b364-83100e30cc00@exia.io>
-From: Pedro Falcato <pedro.falcato@gmail.com>
-Date: Mon, 22 Jan 2024 14:54:52 +0000
-Message-ID: <CAKbZUD2=W0Ng=rFVDn3UwSxtGQ5c13tRwkpqm54pPCJO0BraWA@mail.gmail.com>
-Subject: Re: Recent-ish changes in binfmt_elf made my program segfault
-To: Jan Bujak <j@exia.io>
-Cc: ebiederm@xmission.com, keescook@chromium.org, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, viro@zeniv.linux.org.uk, brauner@kernel.org, 
-	linux-fsdevel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-On Mon, Jan 22, 2024 at 12:16=E2=80=AFPM Jan Bujak <j@exia.io> wrote:
->
-> Hi.
->
-> I recently updated my kernel and one of my programs started segfaulting.
->
-> The issue seems to be related to how the kernel interprets PT_LOAD header=
-s;
-> consider the following program headers (from 'readelf' of my reproduction=
-):
->
-> Program Headers:
->    Type  Offset   VirtAddr  PhysAddr  FileSiz  MemSiz   Flg Align
->    LOAD  0x001000 0x10000   0x10000   0x000010 0x000010 R   0x1000
->    LOAD  0x002000 0x11000   0x11000   0x000010 0x000010 RW  0x1000
->    LOAD  0x002010 0x11010   0x11010   0x000000 0x000004 RW  0x1000
->    LOAD  0x003000 0x12000   0x12000   0x0000d2 0x0000d2 R E 0x1000
->    LOAD  0x004000 0x20000   0x20000   0x000004 0x000004 RW  0x1000
->
-> Old kernels load this ELF file in the following way ('/proc/self/maps'):
->
-> 00010000-00011000 r--p 00001000 00:02 131  ./bug-reproduction
-> 00011000-00012000 rw-p 00002000 00:02 131  ./bug-reproduction
-> 00012000-00013000 r-xp 00003000 00:02 131  ./bug-reproduction
-> 00020000-00021000 rw-p 00004000 00:02 131  ./bug-reproduction
->
-> And new kernels do it like this:
->
-> 00010000-00011000 r--p 00001000 00:02 131  ./bug-reproduction
-> 00011000-00012000 rw-p 00000000 00:00 0
-> 00012000-00013000 r-xp 00003000 00:02 131  ./bug-reproduction
-> 00020000-00021000 rw-p 00004000 00:02 131  ./bug-reproduction
->
-> That map between 0x11000 and 0x12000 is the program's '.data' and '.bss'
-> sections to which it tries to write to, and since the kernel doesn't map
-> them anymore it crashes.
->
-> I bisected the issue to the following commit:
->
-> commit 585a018627b4d7ed37387211f667916840b5c5ea
-> Author: Eric W. Biederman <ebiederm@xmission.com>
-> Date:   Thu Sep 28 20:24:29 2023 -0700
->
->      binfmt_elf: Support segments with 0 filesz and misaligned starts
->
-> I can confirm that with this commit the issue reproduces, and with it
-> reverted it doesn't.
->
-> I have prepared a minimal reproduction of the problem available here,
-> along with all of the scripts I used for bisecting:
->
-> https://github.com/koute/linux-elf-loading-bug
->
-> You can either compile it from source (requires Rust and LLD), or there's
-> a prebuilt binary in 'bin/bug-reproduction` which you can run. (It's tiny=
-,
-> so you can easily check with 'objdump -d' that it isn't malicious).
->
-> On old kernels this will run fine, and on new kernels it will segfault.
+Modify license to include dual licensing as GPL-2.0-only OR MIT
+license for SoC and TI evm device tree files. This allows for Linux
+kernel device tree to be used in other Operating System ecosystems
+such as Zephyr or FreeBSD.
 
-Hi!
+While at this, update the GPL-2.0 to be GPL-2.0-only to be in sync
+with latest SPDX conventions (GPL-2.0 is deprecated).
 
-Where did you get that linker script?
+While at this, update the TI copyright year to sync with current year
+to indicate license change (and add it at least for one file which was
+missing TI copyright).
 
-FWIW, I catched this possible issue in review, and this was already
-discussed (see my email and Eric's reply):
-https://lore.kernel.org/all/CAKbZUD3E2if8Sncy+M2YKncc_Zh08-86W6U5wR0ZMazShx=
-bHHA@mail.gmail.com/
+Cc: Esteban Blanc <eblanc@baylibre.com>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Pierre Gondois <pierre.gondois@arm.com>
+Cc: Tony Lindgren <tony@atomide.com>
 
-This was my original testcase
-(https://github.com/heatd/elf-bug-questionmark), which convinced the
-loader to map .data over a cleared .bss. Your bug seems similar, but
-does the inverse: maps .bss over .data.
+Acked-by: Esteban Blanc <eblanc@baylibre.com>
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Acked-by: Pierre Gondois <pierre.gondois@arm.com>
+Acked-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Nishanth Menon <nm@ti.com>
+---
+Changes Since v1:
+* Picked up acks - all acks recieved
 
---=20
-Pedro
+V1: https://lore.kernel.org/r/20240110140903.4090946-8-nm@ti.com
+
+ arch/arm64/boot/dts/ti/k3-j7200-common-proc-board.dts      | 4 ++--
+ arch/arm64/boot/dts/ti/k3-j7200-evm-quad-port-eth-exp.dtso | 4 ++--
+ arch/arm64/boot/dts/ti/k3-j7200-main.dtsi                  | 4 ++--
+ arch/arm64/boot/dts/ti/k3-j7200-mcu-wakeup.dtsi            | 4 ++--
+ arch/arm64/boot/dts/ti/k3-j7200-som-p0.dtsi                | 4 ++--
+ arch/arm64/boot/dts/ti/k3-j7200-thermal.dtsi               | 5 ++++-
+ arch/arm64/boot/dts/ti/k3-j7200.dtsi                       | 4 ++--
+ 7 files changed, 16 insertions(+), 13 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/ti/k3-j7200-common-proc-board.dts b/arch/arm64/boot/dts/ti/k3-j7200-common-proc-board.dts
+index cee2b4b0eb87..1c87271971f3 100644
+--- a/arch/arm64/boot/dts/ti/k3-j7200-common-proc-board.dts
++++ b/arch/arm64/boot/dts/ti/k3-j7200-common-proc-board.dts
+@@ -1,6 +1,6 @@
+-// SPDX-License-Identifier: GPL-2.0
++// SPDX-License-Identifier: GPL-2.0-only OR MIT
+ /*
+- * Copyright (C) 2020 Texas Instruments Incorporated - https://www.ti.com/
++ * Copyright (C) 2020-2024 Texas Instruments Incorporated - https://www.ti.com/
+  */
+ 
+ /dts-v1/;
+diff --git a/arch/arm64/boot/dts/ti/k3-j7200-evm-quad-port-eth-exp.dtso b/arch/arm64/boot/dts/ti/k3-j7200-evm-quad-port-eth-exp.dtso
+index 32d905235ed7..6432ca08ee8e 100644
+--- a/arch/arm64/boot/dts/ti/k3-j7200-evm-quad-port-eth-exp.dtso
++++ b/arch/arm64/boot/dts/ti/k3-j7200-evm-quad-port-eth-exp.dtso
+@@ -1,9 +1,9 @@
+-// SPDX-License-Identifier: GPL-2.0
++// SPDX-License-Identifier: GPL-2.0-only OR MIT
+ /**
+  * DT Overlay for CPSW5G in QSGMII mode using J7 Quad Port ETH EXP Add-On Ethernet Card with
+  * J7200 board.
+  *
+- * Copyright (C) 2023 Texas Instruments Incorporated - https://www.ti.com/
++ * Copyright (C) 2023-2024 Texas Instruments Incorporated - https://www.ti.com/
+  */
+ 
+ /dts-v1/;
+diff --git a/arch/arm64/boot/dts/ti/k3-j7200-main.dtsi b/arch/arm64/boot/dts/ti/k3-j7200-main.dtsi
+index da67bf8fe703..2d9eda7b3132 100644
+--- a/arch/arm64/boot/dts/ti/k3-j7200-main.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-j7200-main.dtsi
+@@ -1,8 +1,8 @@
+-// SPDX-License-Identifier: GPL-2.0
++// SPDX-License-Identifier: GPL-2.0-only OR MIT
+ /*
+  * Device Tree Source for J7200 SoC Family Main Domain peripherals
+  *
+- * Copyright (C) 2020-2021 Texas Instruments Incorporated - https://www.ti.com/
++ * Copyright (C) 2020-2024 Texas Instruments Incorporated - https://www.ti.com/
+  */
+ 
+ / {
+diff --git a/arch/arm64/boot/dts/ti/k3-j7200-mcu-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-j7200-mcu-wakeup.dtsi
+index 60b26374ae0c..7596ecc0f683 100644
+--- a/arch/arm64/boot/dts/ti/k3-j7200-mcu-wakeup.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-j7200-mcu-wakeup.dtsi
+@@ -1,8 +1,8 @@
+-// SPDX-License-Identifier: GPL-2.0
++// SPDX-License-Identifier: GPL-2.0-only OR MIT
+ /*
+  * Device Tree Source for J7200 SoC Family MCU/WAKEUP Domain peripherals
+  *
+- * Copyright (C) 2020-2021 Texas Instruments Incorporated - https://www.ti.com/
++ * Copyright (C) 2020-2024 Texas Instruments Incorporated - https://www.ti.com/
+  */
+ 
+ &cbass_mcu_wakeup {
+diff --git a/arch/arm64/boot/dts/ti/k3-j7200-som-p0.dtsi b/arch/arm64/boot/dts/ti/k3-j7200-som-p0.dtsi
+index ea47f10d393a..7a06797b5e80 100644
+--- a/arch/arm64/boot/dts/ti/k3-j7200-som-p0.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-j7200-som-p0.dtsi
+@@ -1,6 +1,6 @@
+-// SPDX-License-Identifier: GPL-2.0
++// SPDX-License-Identifier: GPL-2.0-only OR MIT
+ /*
+- * Copyright (C) 2020-2021 Texas Instruments Incorporated - https://www.ti.com/
++ * Copyright (C) 2020-2024 Texas Instruments Incorporated - https://www.ti.com/
+  */
+ 
+ /dts-v1/;
+diff --git a/arch/arm64/boot/dts/ti/k3-j7200-thermal.dtsi b/arch/arm64/boot/dts/ti/k3-j7200-thermal.dtsi
+index e7e3a643a6f0..2d22a95a6fdb 100644
+--- a/arch/arm64/boot/dts/ti/k3-j7200-thermal.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-j7200-thermal.dtsi
+@@ -1,4 +1,7 @@
+-// SPDX-License-Identifier: GPL-2.0
++// SPDX-License-Identifier: GPL-2.0-only OR MIT
++/*
++ * Copyright (C) 2023-2024 Texas Instruments Incorporated - https://www.ti.com/
++ */
+ 
+ #include <dt-bindings/thermal/thermal.h>
+ 
+diff --git a/arch/arm64/boot/dts/ti/k3-j7200.dtsi b/arch/arm64/boot/dts/ti/k3-j7200.dtsi
+index ef73e6d7e858..d411911fdf71 100644
+--- a/arch/arm64/boot/dts/ti/k3-j7200.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-j7200.dtsi
+@@ -1,8 +1,8 @@
+-// SPDX-License-Identifier: GPL-2.0
++// SPDX-License-Identifier: GPL-2.0-only OR MIT
+ /*
+  * Device Tree Source for J7200 SoC Family
+  *
+- * Copyright (C) 2020 Texas Instruments Incorporated - https://www.ti.com/
++ * Copyright (C) 2020-2024 Texas Instruments Incorporated - https://www.ti.com/
+  */
+ 
+ #include <dt-bindings/interrupt-controller/irq.h>
+-- 
+2.43.0
+
