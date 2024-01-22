@@ -1,42 +1,42 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1C766EB46;
-	Mon, 22 Jan 2024 23:56:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B205745F2;
+	Mon, 22 Jan 2024 23:56:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.120
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705967765; cv=none; b=hNboaVcoI3VNV2Smx2tWDVGhbp3DklKWGOFoHJl1BqZX4CqK0EKDLvRdF+jlM5nf57tY/kCHajF04V1/kGG2mff/E5srB+YFdwXK2/OHZ3MZcYqgf1HYtW/m6KOBi1Cy9RJ6gzM+siDMkccP1z0Gcv8sP/E0902/YLEibljFtS8=
+	t=1705967766; cv=none; b=c9vXsFYO8n3qGSFzGLdNlLZG/NclvshefwAdrp5pgi1xXl6tZ8vlUdm1m7Am5FyhSBx5M2TvTuhSDLJQFgiszqnFEnq0QeTD/43uttZmE7+DeuAAD+X1PxMcXk+e8T8czm5z01KrfNBmKxkS5omdPs/dilbUiaAz57y4Bmr2RV4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705967765; c=relaxed/simple;
-	bh=FtmAyJ78w8lI51GU8WdJgtXIPNM6x+oslh516ZSinGQ=;
+	s=arc-20240116; t=1705967766; c=relaxed/simple;
+	bh=dAsWrCRW+6naU7sRd9tkmyVlajZ/Ifufs1qXYRHczYI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=YjBM/cIKrG6VMk2kdhlFr7a4sJeld63pNskuG1bRXdGjG1xl6BL6GtToN2ZyAwnWbPLhRPtcQcXmM6VeZYdZV+EhOyQnc60SdxuVwRIthaRU4QEXplXms0v2J+cfTgdh+13H2mtRFMnkCud1rFqgS+2Dpwy72hg3SPlHfFABbxY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=izI8E3Tg; arc=none smtp.client-ip=192.55.52.120
+	 MIME-Version; b=a75q1tUXffteeFuuKK46mWSX/FStIldk0Njzxc/UY+Q3oUwiW/BT8w/hH71kZsSxbO3JqdEUt2kp6UyR/WTtI3iRJleyUlGdjVeqOfDpPY7drzAVnMK7sHOxqS1AhtC0xlrf68LlGVEDQg5sM+UU6S6vvlqt2Pb/22a30yEPVNc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WapUgLww; arc=none smtp.client-ip=192.55.52.120
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="izI8E3Tg"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WapUgLww"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1705967762; x=1737503762;
+  t=1705967764; x=1737503764;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=FtmAyJ78w8lI51GU8WdJgtXIPNM6x+oslh516ZSinGQ=;
-  b=izI8E3TgZnL1soZl1Q7XiF2zBe+qr1BLYwlKXdxO16qct8v6RdFHAwwu
-   /oKijUnoPFYzkUnCZUcZE4XZ4txenm4ZqTPZK/oGXGSAujQZPBxqXbKHg
-   RrmBhPZBaglrbWDOCeGxpvjV1bFCPkF5dXyyR4suh+4E5jC1ZCB8o6+vr
-   T93uWtPHruv61DgTNvUyihMnP1zA2IkzxytQSJVQU+75P2/9WEcJYl+MJ
-   irrHjRTVK/Jyq5f7OqxErQej66JNrnryapX34EKtdPB/vfA9Ogtlp9GUW
-   cmDp7xAb6BbqNHhgTRnN5x0iiNpoieY4eZcxjdy+5v1FBwUXTQ1jHwtLT
+  bh=dAsWrCRW+6naU7sRd9tkmyVlajZ/Ifufs1qXYRHczYI=;
+  b=WapUgLwwSf1V3vY/C5ypLdigkpHpvE3GEqexQNn8wsMR92VRTRm4Ckvq
+   pora2SIFjvK6cJFtZEpqasxQ5sNPb3TEBD4v9ldb9cfXweKvS+3JnvUp3
+   BdHzQbEHs8abU4vygwkEaeRLmwklY/LFJqFQSG1iTO2ejAYoRQstCfeLD
+   YbpBh4iv4yAXBuIy8TLfz4DT+X+HlmgUm7rnMflNzN5QA91nD7cpADPYZ
+   6ULDsYvxslagm3CzwymHQQqDQQdf0APXl/TMR98NPWFyQ6va7F1S5UuNo
+   jvrFcICniV2Aik5l+IZgwY851p1JdVMVb/nIt/9fMBKknLHwxFK0d4R7b
    w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10961"; a="400217871"
+X-IronPort-AV: E=McAfee;i="6600,9927,10961"; a="400217881"
 X-IronPort-AV: E=Sophos;i="6.05,212,1701158400"; 
-   d="scan'208";a="400217871"
+   d="scan'208";a="400217881"
 Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 15:55:52 -0800
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 15:55:53 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.05,212,1701158400"; 
-   d="scan'208";a="27817986"
+   d="scan'208";a="27817993"
 Received: from ls.sc.intel.com (HELO localhost) ([172.25.112.31])
   by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 15:55:52 -0800
 From: isaku.yamahata@intel.com
@@ -52,9 +52,9 @@ Cc: isaku.yamahata@intel.com,
 	chen.bo@intel.com,
 	hang.yuan@intel.com,
 	tina.zhang@intel.com
-Subject: [PATCH v18 100/121] KVM: TDX: Implement callbacks for MSR operations for TDX
-Date: Mon, 22 Jan 2024 15:54:16 -0800
-Message-Id: <01cc1936f68d98010c077a83d8d6ea001df82c57.1705965635.git.isaku.yamahata@intel.com>
+Subject: [PATCH v18 102/121] KVM: TDX: Handle MSR MTRRCap and MTRRDefType access
+Date: Mon, 22 Jan 2024 15:54:18 -0800
+Message-Id: <f60333abec4547676b77e882c983d5e3548b2927.1705965635.git.isaku.yamahata@intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1705965634.git.isaku.yamahata@intel.com>
 References: <cover.1705965634.git.isaku.yamahata@intel.com>
@@ -68,242 +68,165 @@ Content-Transfer-Encoding: 8bit
 
 From: Isaku Yamahata <isaku.yamahata@intel.com>
 
-Implements set_msr/get_msr/has_emulated_msr methods for TDX to handle
-hypercall from guest TD for paravirtualized rdmsr and wrmsr.  The TDX
-module virtualizes MSRs.  For some MSRs, it injects #VE to the guest TD
-upon RDMSR or WRMSR.  The exact list of such MSRs are defined in the spec.
+Handle MTRRCap RO MSR to return all features are unsupported and handle
+MTRRDefType MSR to accept only E=1,FE=0,type=writeback.
+enable MTRR, disable Fixed range MTRRs, default memory type=writeback
 
-Upon #VE, the guest TD may execute hypercalls,
-TDG.VP.VMCALL<INSTRUCTION.RDMSR> and TDG.VP.VMCALL<INSTRUCTION.WRMSR>,
-which are defined in GHCI (Guest-Host Communication Interface) so that the
-host VMM (e.g. KVM) can virtualize the MSRs.
-
-There are three classes of MSRs virtualization.
-- non-configurable: TDX module directly virtualizes it. VMM can't
-  configure. the value set by KVM_SET_MSR_INDEX_LIST is ignored.
-- configurable: TDX module directly virtualizes it. VMM can configure at
-  the VM creation time.  The value set by KVM_SET_MSR_INDEX_LIST is used.
-- #VE case
-  Guest TD would issue TDG.VP.VMCALL<INSTRUCTION.{WRMSR,RDMSR> and
-  VMM handles the MSR hypercall. The value set by KVM_SET_MSR_INDEX_LIST
-  is used.
+TDX virtualizes that cpuid to report MTRR to guest TD and TDX enforces
+guest CR0.CD=0. If guest tries to set CR0.CD=1, it results in #GP.  While
+updating MTRR requires to set CR0.CD=1 (and other cache flushing
+operations).  It means guest TD can't update MTRR.  Virtualize MTRR as
+all features disabled and default memory type as writeback.
 
 Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
-Reviewed-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- arch/x86/kvm/vmx/main.c    | 44 +++++++++++++++++++++---
- arch/x86/kvm/vmx/tdx.c     | 70 ++++++++++++++++++++++++++++++++++++++
- arch/x86/kvm/vmx/x86_ops.h |  6 ++++
- arch/x86/kvm/x86.c         |  1 -
- arch/x86/kvm/x86.h         |  2 ++
- 5 files changed, 118 insertions(+), 5 deletions(-)
+ arch/x86/kvm/vmx/tdx.c | 99 ++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 82 insertions(+), 17 deletions(-)
 
-diff --git a/arch/x86/kvm/vmx/main.c b/arch/x86/kvm/vmx/main.c
-index 1a20542f3a84..0373744ecf00 100644
---- a/arch/x86/kvm/vmx/main.c
-+++ b/arch/x86/kvm/vmx/main.c
-@@ -262,6 +262,42 @@ static void vt_handle_exit_irqoff(struct kvm_vcpu *vcpu)
- 	vmx_handle_exit_irqoff(vcpu);
- }
- 
-+static int vt_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
-+{
-+	if (unlikely(is_td_vcpu(vcpu)))
-+		return tdx_set_msr(vcpu, msr_info);
-+
-+	return vmx_set_msr(vcpu, msr_info);
-+}
-+
-+/*
-+ * The kvm parameter can be NULL (module initialization, or invocation before
-+ * VM creation). Be sure to check the kvm parameter before using it.
-+ */
-+static bool vt_has_emulated_msr(struct kvm *kvm, u32 index)
-+{
-+	if (kvm && is_td(kvm))
-+		return tdx_has_emulated_msr(index, true);
-+
-+	return vmx_has_emulated_msr(kvm, index);
-+}
-+
-+static int vt_get_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
-+{
-+	if (unlikely(is_td_vcpu(vcpu)))
-+		return tdx_get_msr(vcpu, msr_info);
-+
-+	return vmx_get_msr(vcpu, msr_info);
-+}
-+
-+static void vt_msr_filter_changed(struct kvm_vcpu *vcpu)
-+{
-+	if (is_td_vcpu(vcpu))
-+		return;
-+
-+	vmx_msr_filter_changed(vcpu);
-+}
-+
- static void vt_apicv_pre_state_restore(struct kvm_vcpu *vcpu)
- {
- 	struct pi_desc *pi = vcpu_to_pi_desc(vcpu);
-@@ -523,7 +559,7 @@ struct kvm_x86_ops vt_x86_ops __initdata = {
- 
- 	.hardware_enable = vt_hardware_enable,
- 	.hardware_disable = vt_hardware_disable,
--	.has_emulated_msr = vmx_has_emulated_msr,
-+	.has_emulated_msr = vt_has_emulated_msr,
- 
- 	.is_vm_type_supported = vt_is_vm_type_supported,
- 	.max_vcpus = vt_max_vcpus,
-@@ -545,8 +581,8 @@ struct kvm_x86_ops vt_x86_ops __initdata = {
- 
- 	.update_exception_bitmap = vmx_update_exception_bitmap,
- 	.get_msr_feature = vmx_get_msr_feature,
--	.get_msr = vmx_get_msr,
--	.set_msr = vmx_set_msr,
-+	.get_msr = vt_get_msr,
-+	.set_msr = vt_set_msr,
- 	.get_segment_base = vmx_get_segment_base,
- 	.get_segment = vmx_get_segment,
- 	.set_segment = vmx_set_segment,
-@@ -656,7 +692,7 @@ struct kvm_x86_ops vt_x86_ops __initdata = {
- 	.apic_init_signal_blocked = vmx_apic_init_signal_blocked,
- 	.migrate_timers = vmx_migrate_timers,
- 
--	.msr_filter_changed = vmx_msr_filter_changed,
-+	.msr_filter_changed = vt_msr_filter_changed,
- 	.complete_emulated_msr = kvm_complete_insn_gp,
- 
- 	.vcpu_deliver_sipi_vector = kvm_vcpu_deliver_sipi_vector,
 diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
-index bca1267b89bd..396dd540f2d5 100644
+index 66d575cfd884..a75275f6f161 100644
 --- a/arch/x86/kvm/vmx/tdx.c
 +++ b/arch/x86/kvm/vmx/tdx.c
-@@ -1923,6 +1923,76 @@ void tdx_get_exit_info(struct kvm_vcpu *vcpu, u32 *reason,
- 	*error_code = 0;
+@@ -656,18 +656,7 @@ u8 tdx_get_mt_mask(struct kvm_vcpu *vcpu, gfn_t gfn, bool is_mmio)
+ 	if (!kvm_arch_has_noncoherent_dma(vcpu->kvm))
+ 		return (MTRR_TYPE_WRBACK << VMX_EPT_MT_EPTE_SHIFT) | VMX_EPT_IPAT_BIT;
+ 
+-	/*
+-	 * TDX enforces CR0.CD = 0 and KVM MTRR emulation enforces writeback.
+-	 * TODO: implement MTRR MSR emulation so that
+-	 * MTRRCap: SMRR=0: SMRR interface unsupported
+-	 *          WC=0: write combining unsupported
+-	 *          FIX=0: Fixed range registers unsupported
+-	 *          VCNT=0: number of variable range regitsers = 0
+-	 * MTRRDefType: E=1, FE=0, type=writeback only. Don't allow other value.
+-	 *              E=1: enable MTRR
+-	 *              FE=0: disable fixed range MTRRs
+-	 *              type: default memory type=writeback
+-	 */
++	/* TDX enforces CR0.CD = 0 and KVM MTRR emulation enforces writeback. */
+ 	return MTRR_TYPE_WRBACK << VMX_EPT_MT_EPTE_SHIFT;
  }
  
-+static bool tdx_is_emulated_kvm_msr(u32 index, bool write)
-+{
-+	switch (index) {
-+	case MSR_KVM_POLL_CONTROL:
-+		return true;
-+	default:
-+		return false;
-+	}
-+}
-+
-+bool tdx_has_emulated_msr(u32 index, bool write)
-+{
-+	switch (index) {
-+	case MSR_IA32_UCODE_REV:
-+	case MSR_IA32_ARCH_CAPABILITIES:
-+	case MSR_IA32_POWER_CTL:
-+	case MSR_IA32_CR_PAT:
-+	case MSR_IA32_TSC_DEADLINE:
-+	case MSR_IA32_MISC_ENABLE:
-+	case MSR_PLATFORM_INFO:
-+	case MSR_MISC_FEATURES_ENABLES:
-+	case MSR_IA32_MCG_CAP:
-+	case MSR_IA32_MCG_STATUS:
-+	case MSR_IA32_MCG_CTL:
-+	case MSR_IA32_MCG_EXT_CTL:
-+	case MSR_IA32_MC0_CTL ... MSR_IA32_MCx_CTL(KVM_MAX_MCE_BANKS) - 1:
-+	case MSR_IA32_MC0_CTL2 ... MSR_IA32_MCx_CTL2(KVM_MAX_MCE_BANKS) - 1:
-+		/* MSR_IA32_MCx_{CTL, STATUS, ADDR, MISC, CTL2} */
-+		return true;
-+	case APIC_BASE_MSR ... APIC_BASE_MSR + 0xff:
-+		/*
-+		 * x2APIC registers that are virtualized by the CPU can't be
-+		 * emulated, KVM doesn't have access to the virtual APIC page.
-+		 */
-+		switch (index) {
-+		case X2APIC_MSR(APIC_TASKPRI):
-+		case X2APIC_MSR(APIC_PROCPRI):
-+		case X2APIC_MSR(APIC_EOI):
-+		case X2APIC_MSR(APIC_ISR) ... X2APIC_MSR(APIC_ISR + APIC_ISR_NR):
-+		case X2APIC_MSR(APIC_TMR) ... X2APIC_MSR(APIC_TMR + APIC_ISR_NR):
-+		case X2APIC_MSR(APIC_IRR) ... X2APIC_MSR(APIC_IRR + APIC_ISR_NR):
-+			return false;
-+		default:
-+			return true;
-+		}
-+	case MSR_IA32_APICBASE:
-+	case MSR_EFER:
-+		return !write;
-+	case 0x4b564d00 ... 0x4b564dff:
-+		/* KVM custom MSRs */
-+		return tdx_is_emulated_kvm_msr(index, write);
-+	default:
-+		return false;
-+	}
-+}
-+
-+int tdx_get_msr(struct kvm_vcpu *vcpu, struct msr_data *msr)
-+{
-+	if (tdx_has_emulated_msr(msr->index, false))
-+		return kvm_get_msr_common(vcpu, msr);
-+	return 1;
-+}
-+
-+int tdx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr)
-+{
-+	if (tdx_has_emulated_msr(msr->index, true))
-+		return kvm_set_msr_common(vcpu, msr);
-+	return 1;
-+}
-+
- static int tdx_get_capabilities(struct kvm_tdx_cmd *cmd)
+@@ -1978,7 +1967,9 @@ bool tdx_has_emulated_msr(u32 index, bool write)
+ 	case MSR_IA32_UCODE_REV:
+ 	case MSR_IA32_ARCH_CAPABILITIES:
+ 	case MSR_IA32_POWER_CTL:
++	case MSR_MTRRcap:
+ 	case MSR_IA32_CR_PAT:
++	case MSR_MTRRdefType:
+ 	case MSR_IA32_TSC_DEADLINE:
+ 	case MSR_IA32_MISC_ENABLE:
+ 	case MSR_PLATFORM_INFO:
+@@ -2020,16 +2011,47 @@ bool tdx_has_emulated_msr(u32 index, bool write)
+ 
+ int tdx_get_msr(struct kvm_vcpu *vcpu, struct msr_data *msr)
  {
- 	struct kvm_tdx_capabilities __user *user_caps;
-diff --git a/arch/x86/kvm/vmx/x86_ops.h b/arch/x86/kvm/vmx/x86_ops.h
-index 7877debdce8a..608db691b1b8 100644
---- a/arch/x86/kvm/vmx/x86_ops.h
-+++ b/arch/x86/kvm/vmx/x86_ops.h
-@@ -165,6 +165,9 @@ void tdx_deliver_interrupt(struct kvm_lapic *apic, int delivery_mode,
- void tdx_inject_nmi(struct kvm_vcpu *vcpu);
- void tdx_get_exit_info(struct kvm_vcpu *vcpu, u32 *reason,
- 		u64 *info1, u64 *info2, u32 *intr_info, u32 *error_code);
-+bool tdx_has_emulated_msr(u32 index, bool write);
-+int tdx_get_msr(struct kvm_vcpu *vcpu, struct msr_data *msr);
-+int tdx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr);
+-	if (tdx_has_emulated_msr(msr->index, false))
+-		return kvm_get_msr_common(vcpu, msr);
+-	return 1;
++	switch (msr->index) {
++	case MSR_MTRRcap:
++		/*
++		 * Override kvm_mtrr_get_msr() which hardcodes the value.
++		 * Report SMRR = 0, WC = 0, FIX = 0 VCNT = 0 to disable MTRR
++		 * effectively.
++		 */
++		msr->data = 0;
++		return 0;
++	default:
++		if (tdx_has_emulated_msr(msr->index, false))
++			return kvm_get_msr_common(vcpu, msr);
++		return 1;
++	}
+ }
  
- int tdx_vcpu_ioctl(struct kvm_vcpu *vcpu, void __user *argp);
+ int tdx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr)
+ {
+-	if (tdx_has_emulated_msr(msr->index, true))
++	switch (msr->index) {
++	case MSR_MTRRdefType:
++		/*
++		 * Allow writeback only for all memory.
++		 * Because it's reported that fixed range MTRR isn't supported
++		 * and VCNT=0, enforce MTRRDefType.FE = 0 and don't care
++		 * variable range MTRRs. Only default memory type matters.
++		 *
++		 * bit 11 E: MTRR enable/disable
++		 * bit 12 FE: Fixed-range MTRRs enable/disable
++		 * (E, FE) = (1, 1): enable MTRR and Fixed range MTRR
++		 * (E, FE) = (1, 0): enable MTRR, disable Fixed range MTRR
++		 * (E, FE) = (0, *): disable all MTRRs.  all physical memory
++		 *                   is UC
++		 */
++		if (msr->data != ((1 << 11) | MTRR_TYPE_WRBACK))
++			return 1;
+ 		return kvm_set_msr_common(vcpu, msr);
+-	return 1;
++	default:
++		if (tdx_has_emulated_msr(msr->index, true))
++			return kvm_set_msr_common(vcpu, msr);
++		return 1;
++	}
+ }
  
-@@ -207,6 +210,9 @@ static inline void tdx_deliver_interrupt(struct kvm_lapic *apic, int delivery_mo
- static inline void tdx_inject_nmi(struct kvm_vcpu *vcpu) {}
- static inline void tdx_get_exit_info(struct kvm_vcpu *vcpu, u32 *reason, u64 *info1,
- 				     u64 *info2, u32 *intr_info, u32 *error_code) {}
-+static inline bool tdx_has_emulated_msr(u32 index, bool write) { return false; }
-+static inline int tdx_get_msr(struct kvm_vcpu *vcpu, struct msr_data *msr) { return 1; }
-+static inline int tdx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr) { return 1; }
+ static int tdx_get_capabilities(struct kvm_tdx_cmd *cmd)
+@@ -2778,6 +2800,45 @@ static int tdx_td_vcpu_init(struct kvm_vcpu *vcpu, u64 vcpu_rcx)
+ 	return ret;
+ }
  
- static inline int tdx_vcpu_ioctl(struct kvm_vcpu *vcpu, void __user *argp) { return -EOPNOTSUPP; }
- 
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index ac934542b086..161e5f41497f 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -90,7 +90,6 @@
- #include "trace.h"
- 
- #define MAX_IO_MSRS 256
--#define KVM_MAX_MCE_BANKS 32
- 
- struct kvm_caps kvm_caps __read_mostly = {
- 	.supported_mce_cap = MCG_CTL_P | MCG_SER_P,
-diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
-index 4e40c23d66ed..c87b7a777b67 100644
---- a/arch/x86/kvm/x86.h
-+++ b/arch/x86/kvm/x86.h
-@@ -9,6 +9,8 @@
- #include "kvm_cache_regs.h"
- #include "kvm_emulate.h"
- 
-+#define KVM_MAX_MCE_BANKS 32
++static int tdx_vcpu_init_mtrr(struct kvm_vcpu *vcpu)
++{
++	struct msr_data msr;
++	int ret;
++	int i;
 +
- bool __kvm_is_vm_type_supported(unsigned long type);
++	/*
++	 * To avoid confusion with reporting VNCT = 0, explicitly disable
++	 * vaiale-range reisters.
++	 */
++	for (i = 0; i < KVM_NR_VAR_MTRR; i++) {
++		/* phymask */
++		msr = (struct msr_data) {
++			.host_initiated = true,
++			.index = 0x200 + 2 * i + 1,
++			.data = 0,	/* valid = 0 to disable. */
++		};
++		ret = kvm_set_msr_common(vcpu, &msr);
++		if (ret)
++			return -EINVAL;
++	}
++
++	/* Set MTRR to use writeback on reset. */
++	msr = (struct msr_data) {
++		.host_initiated = true,
++		.index = MSR_MTRRdefType,
++		/*
++		 * Set E(enable MTRR)=1, FE(enable fixed range MTRR)=0, default
++		 * type=writeback on reset to avoid UC.  Note E=0 means all
++		 * memory is UC.
++		 */
++		.data = (1 << 11) | MTRR_TYPE_WRBACK,
++	};
++	ret = kvm_set_msr_common(vcpu, &msr);
++	if (ret)
++		return -EINVAL;
++	return 0;
++}
++
+ int tdx_vcpu_ioctl(struct kvm_vcpu *vcpu, void __user *argp)
+ {
+ 	struct msr_data apic_base_msr;
+@@ -2815,6 +2876,10 @@ int tdx_vcpu_ioctl(struct kvm_vcpu *vcpu, void __user *argp)
+ 	if (kvm_set_apic_base(vcpu, &apic_base_msr))
+ 		return -EINVAL;
  
- struct kvm_caps {
++	ret = tdx_vcpu_init_mtrr(vcpu);
++	if (ret)
++		return ret;
++
+ 	ret = tdx_td_vcpu_init(vcpu, (u64)cmd.data);
+ 	if (ret)
+ 		return ret;
 -- 
 2.25.1
 
