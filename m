@@ -1,126 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A2354CB3B;
-	Mon, 22 Jan 2024 14:57:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF1B44CB4E;
+	Mon, 22 Jan 2024 14:57:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705935450; cv=none; b=Vp3pDkfDF1A3u4X7rL9OZIJoF27E7kmj7ngwb5dC6pib/5dDS9K5Arg1opbnWTo6qXtehtxfqNT7RKeIK1dBxkQ4P/9jFYmUK3FDXtguTx0isj7hd1Q9CsG2hnk28ZUSeHOXnE8D78R4AxmnQWV532lDs2lEcknCPn9yDZg5Hv8=
+	t=1705935457; cv=none; b=jDtq3kN1KW31JcMjqKJ4a9l8ZqllrnuQAMRRdGzGlkgw67Q7jfwrAkeVXRPsugTTNM6ag0C3FElq6GUL8xf3Sb8DoeDXTtU4wN8LA+O+6DQ2AURi9AdfBS59NINKTTYvjqXnWhr8mCC0YzGKlSgfU4hIGR1SQELmuMHv9M6IEfg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705935450; c=relaxed/simple;
-	bh=EnjL0ke689RMfd+PkpdMwleJrNruYu3f6vIsAHbu2XA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BMb6w6JiIfHd4B1QEV7nmrMYXmntnOUvm/8YM0VD9xDivZZt6CLW0Fb4ErNqxaMqEboer/otMIdImubdWIKZke9YbKkaL2erWhape4Bb4PO02UBj/jigXd9nuhERCpjzjWFbCnU0/hF9GkahGT3WjgF+qshHfjJzPJEoFkdNNag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tFpjpdxD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1705935457; c=relaxed/simple;
+	bh=OxFCdAXFTSASqxSgbwdHInjXQZEaWm2MUdInMwaX3bU=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=FQsEMWFJe55xscbk/mk8boKT04jhKOpVvfvuCuyFN87906oOeq65gr4r2/S52ZKWsIzUKj1M8jd7sSxQMbyAo4pghQtzHTBB/o4p8G4xtBGvgDjuNxC0fK+ZI3I6LYIf/6JGBMIQwQAXQvYOIPrPUsHPylR1qtK5Vd3Tkp8QeiA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=CdIMdjp2; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=nT9jg+l7; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tFpjpdxD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3613CC433F1;
-	Mon, 22 Jan 2024 14:57:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705935449;
-	bh=EnjL0ke689RMfd+PkpdMwleJrNruYu3f6vIsAHbu2XA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=tFpjpdxDcKtSM2GA2SVUy/XyfC6iKC4MBz+WAnGHPZz9+UGCSr+4AXzMUTm66FwJu
-	 ypJ+HrgoSBwSRNblZBpmhaMqGY41N6FtPN4myanSP3VpqSr9sKK+bqzf1PQIe1tjEI
-	 /HJTDuFV0xo0eZs2sArg/Ung+RKKM5yz0BMPpcJs6762LGfHrZ6HBLu+YqBiWClthz
-	 JVZbQjVjPv3OqYEdCs3zhV32w9pMAaTTf/caYz4Dn9exZftR0/qMnI5qSC81nI91HW
-	 9rCyEHUm/9VQbo3Q8vIyB3Onp9QVkLc0U2EqDrmRkqaPij2nc/CSWmdmmaT8Ia4LcP
-	 UheYNPrxX7APQ==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Dennis Chan <dennis.chan@amd.com>,
-	Daniel Wheeler <daniel.wheeler@amd.com>,
-	Robin Chen <robin.chen@amd.com>,
-	Rodrigo Siqueira <rodrigo.siqueira@amd.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Sasha Levin <sashal@kernel.org>,
-	harry.wentland@amd.com,
-	sunpeng.li@amd.com,
-	Rodrigo.Siqueira@amd.com,
-	christian.koenig@amd.com,
-	Xinhui.Pan@amd.com,
-	airlied@gmail.com,
-	daniel@ffwll.ch,
-	wenjing.liu@amd.com,
-	qingqing.zhuo@amd.com,
-	hersenxs.wu@amd.com,
-	ilya.bakoulin@amd.com,
-	Bhawanpreet.Lakha@amd.com,
-	chuntao.tso@amd.com,
-	amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 6.7 20/88] drm/amd/display: Fix Replay Desync Error IRQ handler
-Date: Mon, 22 Jan 2024 09:50:53 -0500
-Message-ID: <20240122145608.990137-20-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240122145608.990137-1-sashal@kernel.org>
-References: <20240122145608.990137-1-sashal@kernel.org>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="CdIMdjp2";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="nT9jg+l7"
+Date: Mon, 22 Jan 2024 14:57:32 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1705935453;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4DR3PbmSSFhDPtVAJMCA6aWJKnqAenCkYLK+/zUp6Dw=;
+	b=CdIMdjp22qqMK2koK/3+wvj8suelxfMB9XuUSiiUEdjw1AhabwfmmvU6gKnfNL34seridC
+	FF3mU5TP/a1pkQut8FSPu+UcyrteVL18X1szOmSudBZlLbhy3unnnwzogXMg7pnBppMRj8
+	UVgHWLePFz3XE6e+gftLFPsXNiNTjeIeyrLSrjzgYdFxv2jWenfL/AyyynpZY6jv3P+c+T
+	G+vCH4CZCPE2yRQmwPyUo42rdpPxYq2N7kuzwagK6zPZYXye/v5AsHLJrvysLirP2M/K5e
+	iSY/0PXaVw6amgZ4TXfMZp64v5Tem7tawMDCDcwFkIRe2By9g/jJBv83mesQfw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1705935453;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4DR3PbmSSFhDPtVAJMCA6aWJKnqAenCkYLK+/zUp6Dw=;
+	b=nT9jg+l7RefiknKMVzXwdveeCtKcZuBcHKpo82OrXmLRgz2wMiJiiL/LIePVYbxxUZk01v
+	Wf1tjIHyBHSPzoBg==
+From: "tip-bot2 for Juergen Gross" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject:
+ [tip: x86/urgent] x86/paravirt: Make BUG_func() usable by non-GPL modules
+Cc: Juergen Gross <jgross@suse.com>, "Borislav Petkov (AMD)" <bp@alien8.de>,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20240109082232.22657-1-jgross@suse.com>
+References: <20240109082232.22657-1-jgross@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.7.1
-Content-Transfer-Encoding: 8bit
+Message-ID: <170593545243.398.9370107089777687804.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-From: Dennis Chan <dennis.chan@amd.com>
+The following commit has been merged into the x86/urgent branch of tip:
 
-[ Upstream commit dd5c6362ddcd8bdb07704faff8648593885ecfa1 ]
+Commit-ID:     f7cfe7017b531e08c108ac6615b1ddedcc892428
+Gitweb:        https://git.kernel.org/tip/f7cfe7017b531e08c108ac6615b1ddedcc892428
+Author:        Juergen Gross <jgross@suse.com>
+AuthorDate:    Tue, 09 Jan 2024 09:22:32 +01:00
+Committer:     Borislav Petkov (AMD) <bp@alien8.de>
+CommitterDate: Mon, 22 Jan 2024 15:51:07 +01:00
 
-In previous case, Replay didn't identify the IRQ type, This commit fixes
-the issues for the interrupt.
+x86/paravirt: Make BUG_func() usable by non-GPL modules
 
-Tested-by: Daniel Wheeler <daniel.wheeler@amd.com>
-Reviewed-by: Robin Chen <robin.chen@amd.com>
-Acked-by: Rodrigo Siqueira <rodrigo.siqueira@amd.com>
-Signed-off-by: Dennis Chan <dennis.chan@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Several inlined functions subject to paravirt patching are referencing
+BUG_func() after the recent switch to the alternative patching
+mechanism.
+
+As those functions can legally be used by non-GPL modules, BUG_func()
+must be usable by those modules, too. So use EXPORT_SYMBOL() when
+exporting BUG_func().
+
+Fixes: 9824b00c2b58 ("x86/paravirt: Move some functions and defines to alternative.c")
+Signed-off-by: Juergen Gross <jgross@suse.com>
+Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
+Link: https://lore.kernel.org/r/20240109082232.22657-1-jgross@suse.com
 ---
- .../display/dc/link/protocols/link_dp_irq_handler.c  | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ arch/x86/kernel/alternative.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/link/protocols/link_dp_irq_handler.c b/drivers/gpu/drm/amd/display/dc/link/protocols/link_dp_irq_handler.c
-index 0c00e94e90b1..9eadc2c7f221 100644
---- a/drivers/gpu/drm/amd/display/dc/link/protocols/link_dp_irq_handler.c
-+++ b/drivers/gpu/drm/amd/display/dc/link/protocols/link_dp_irq_handler.c
-@@ -190,9 +190,6 @@ static void handle_hpd_irq_replay_sink(struct dc_link *link)
- 	/*AMD Replay version reuse DP_PSR_ERROR_STATUS for REPLAY_ERROR status.*/
- 	union psr_error_status replay_error_status;
+diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
+index cc130b5..1d85cb7 100644
+--- a/arch/x86/kernel/alternative.c
++++ b/arch/x86/kernel/alternative.c
+@@ -403,7 +403,7 @@ noinstr void BUG_func(void)
+ {
+ 	BUG();
+ }
+-EXPORT_SYMBOL_GPL(BUG_func);
++EXPORT_SYMBOL(BUG_func);
  
--	if (link->replay_settings.config.force_disable_desync_error_check)
--		return;
--
- 	if (!link->replay_settings.replay_feature_enabled)
- 		return;
- 
-@@ -210,9 +207,6 @@ static void handle_hpd_irq_replay_sink(struct dc_link *link)
- 		&replay_error_status.raw,
- 		sizeof(replay_error_status.raw));
- 
--	if (replay_configuration.bits.DESYNC_ERROR_STATUS)
--		link->replay_settings.config.received_desync_error_hpd = 1;
--
- 	link->replay_settings.config.replay_error_status.bits.LINK_CRC_ERROR =
- 		replay_error_status.bits.LINK_CRC_ERROR;
- 	link->replay_settings.config.replay_error_status.bits.DESYNC_ERROR =
-@@ -225,6 +219,12 @@ static void handle_hpd_irq_replay_sink(struct dc_link *link)
- 		link->replay_settings.config.replay_error_status.bits.STATE_TRANSITION_ERROR) {
- 		bool allow_active;
- 
-+		if (link->replay_settings.config.replay_error_status.bits.DESYNC_ERROR)
-+			link->replay_settings.config.received_desync_error_hpd = 1;
-+
-+		if (link->replay_settings.config.force_disable_desync_error_check)
-+			return;
-+
- 		/* Acknowledge and clear configuration bits */
- 		dm_helpers_dp_write_dpcd(
- 			link->ctx,
--- 
-2.43.0
-
+ #define CALL_RIP_REL_OPCODE	0xff
+ #define CALL_RIP_REL_MODRM	0x15
