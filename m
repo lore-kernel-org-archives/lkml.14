@@ -1,143 +1,230 @@
-Received: from mail-oa1-f45.google.com (mail-oa1-f45.google.com [209.85.160.45])
+Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0319450276;
-	Mon, 22 Jan 2024 16:22:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2045950279
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 16:23:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705940580; cv=none; b=RKJ25GmHlxp26Qcj8eYQoOLcraOG913KbiMJ65Uhxg3gJa0ZzzhhO3D7D70R7/RsIoAqgrGUZ1AAyBgesWls1jtXDM8s16FSTFPG5ZAwXBhybkw9bFNIUXspcHDQk8beXNg5KtKS4ddgc3mBYhPOdAU7AjbEailSS2bPIybYUfA=
+	t=1705940625; cv=none; b=L8u/CkixWUnA5t/0jW80N1FGem17HRJbzQk1P59Ozip0Hfq6jJfEHmpOLTY2PlAffXyJsae1OG5t86B3iMLkG3ZkVWV1Q+BlN0LU6czVC5iopgkE+XKpXndEn9wDznMENSfGX2LTDm+QWVJSUqPaHOJZghbV3kOkyeq3xUqwNLc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705940580; c=relaxed/simple;
-	bh=HxG7IkgYxV45Ifv398x/WvHC2ljk6bJKTaNgioOP7ig=;
+	s=arc-20240116; t=1705940625; c=relaxed/simple;
+	bh=c0H9liQF42kYYjnyU5bGVzPjbfrN47cBLV6R6UQye7c=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=U0eZjwvggNEPcviRHXrki2JNlUKdT3o1TqL/pbwPf2W+2UG50DQ6r2whLDqKXL4fwh+x+Gb2XXNKQnOZO2rt9CRzcH7TTKKholdt2JR1tqAwqbUNWZvdRDJR6bq5mhtn2e7eMd4NpGOVjTTYwocGETY185/nPkzPC4X1i2TrWj0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.160.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+	 To:Cc:Content-Type; b=lK8dPPdrBv17D/pWQwiofMzTWD6c77Ieoh6O8qb7j5znqu65tCfy0Vd5CIbv2RIkFoOohrkRUPRP6qxrKskVe9PRYh490eQOPEozThU5bSKfsYzdXhDvjPhBmo5Drz8tyUhtrPdYJ7i60FXSNYbZXclLJr5rpq/gF+nImlH8cgw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-20475bf35a2so107839fac.1;
-        Mon, 22 Jan 2024 08:22:58 -0800 (PST)
+Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-5ffcb478512so10134937b3.0
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 08:23:42 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705940578; x=1706545378;
+        d=1e100.net; s=20230601; t=1705940622; x=1706545422;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=NeqYwsAig8OM8+vknifuJYP2AzBgf+u+iQafy2tdxVA=;
-        b=MGjTXjg3/F/TOA5Hxx1OZ6rPP4oCtLd1vcwt2APgNMFG6p8H5ClitprX5iSieg0Kav
-         xcrXBSNA+WIJ1Mp5726BhH3Dm0OrGOjLjjSPFym21QuWtLJi1bGyDOms7W3usdIz5vm1
-         EpnxS51ipDgK8Cg8y9uj9ZKL2CYLEcPxYBmAYUXj2vjGIlHvjtf4zFW/qPT23Bbp/4wT
-         xa/aU3NUq00a1FtuJSqzt5/I5TBJS9nGpFs9lZ7hwDeqETvEnPxeGUA6qhkqvwmBaPE9
-         PjQOCCWrReponx/KByk3j+yCRUMlHY8Bsn+1AU4YvkFsdY93mkyyp8NWkGaH6diYqzZO
-         HPHw==
-X-Gm-Message-State: AOJu0YxBZk4v3xT2hLhPlIqyQveOwQSG2hB5aF1wVGteSmY4fxZWFwYo
-	iFZ5FwWDgxmzOFJ5IO3XJHX38MW/sbBWYz2flBK1t93NMgliG4jQlHix8HK5zb0NNm/hVtpY1I+
-	4/iiRA1XY7oQthc0/gM7nfk7WYzc=
-X-Google-Smtp-Source: AGHT+IFuHJXu5mAxkwobVQKGd/S4EJuqPyP21RbRV5V/lpmKFOP7N2htShcxq/NrWRpDaEz7nw7KbFO1kuk4zNCgfuM=
-X-Received: by 2002:a05:6870:7009:b0:213:7249:3fb0 with SMTP id
- u9-20020a056870700900b0021372493fb0mr6379169oae.5.1705940577897; Mon, 22 Jan
- 2024 08:22:57 -0800 (PST)
+        bh=INU9vArO42qrhmolv23n3E/VOPnDfYhkPQzxpEJtYN0=;
+        b=mkSZsoe5qbGO5k2qd/u6v5Dox4ssARlQhPQiD1++WCJ6g4/EjEf3QUxfpqA7kPJxTr
+         RBKMb23aizcS1YaBb3JTTiwnlo9l7pPet8iaW82Ed2hR623I1nnLhFJTP/z5hTwc2cHB
+         eABl4OxEmZR45fRJi3VPVQufYsb0zZIhboYnllxhwEM5jYC/1t0BlFJiRhUFno0NVrHx
+         c6Y16RG78hQ6BrnLiL9VzOfa4W1eHJUG2Q9/RGkRVnAO46LidLSGl8uqwl19/ovMaARM
+         GzrMfWS2KgocHxkHlYkUNZL1Ww82n3dSRw2RF8PjqdI/B6qARCoZwdT6/Y1RhsQJfj/T
+         KSaw==
+X-Gm-Message-State: AOJu0YzgVFcZCGOzPRiHSJEnhh6Z9Byulp7JFqy7dm9di4hVNTcVsEb7
+	HdtIEi1om+H1WtPvLPyqbQ+CZTNSinpxDqW6Oc1tmo0o0AiY8a9X7YldJIsrGJ4=
+X-Google-Smtp-Source: AGHT+IG9cH4MBsjUMDaVxNJCPrCkWNYaVWLckX1uTnrWXUWm2/FtwvGwJnyW/dM7mkupuB3OXQ4Vdg==
+X-Received: by 2002:a81:4ad6:0:b0:5ff:7e39:69a0 with SMTP id x205-20020a814ad6000000b005ff7e3969a0mr3757274ywa.31.1705940621721;
+        Mon, 22 Jan 2024 08:23:41 -0800 (PST)
+Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com. [209.85.128.171])
+        by smtp.gmail.com with ESMTPSA id s4-20020a0dd004000000b005fb0d1afc7csm9587092ywd.120.2024.01.22.08.23.40
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 22 Jan 2024 08:23:41 -0800 (PST)
+Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-5ffa694d8e5so21004847b3.0
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 08:23:40 -0800 (PST)
+X-Received: by 2002:a81:8347:0:b0:5ff:a344:a669 with SMTP id
+ t68-20020a818347000000b005ffa344a669mr2851668ywf.33.1705940620739; Mon, 22
+ Jan 2024 08:23:40 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <ZXmn46ptis59F0CO@shell.armlinux.org.uk> <E1rDOg2-00Dvjk-RI@rmk-PC.armlinux.org.uk>
- <CAJZ5v0ju1JHgpjuFLHZVs4NZiARG6iBZN_wza6c2e0kDhZjK0w@mail.gmail.com>
- <ZaURtUvWQyjYfiiO@shell.armlinux.org.uk> <20240122160227.00002d83@Huawei.com>
-In-Reply-To: <20240122160227.00002d83@Huawei.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Mon, 22 Jan 2024 17:22:46 +0100
-Message-ID: <CAJZ5v0hamuXJ_w-TSmVb=5jGide=Lb7sCjbzzNb_rFuPrvkgxQ@mail.gmail.com>
-Subject: Re: [PATCH RFC v3 03/21] ACPI: processor: Register CPUs that are
- online, but not described in the DSDT
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: "Russell King (Oracle)" <linux@armlinux.org.uk>, "Rafael J. Wysocki" <rafael@kernel.org>, linux-pm@vger.kernel.org, 
-	loongarch@lists.linux.dev, linux-acpi@vger.kernel.org, 
-	linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org, 
-	kvmarm@lists.linux.dev, x86@kernel.org, 
-	acpica-devel@lists.linuxfoundation.org, linux-csky@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-ia64@vger.kernel.org, 
-	linux-parisc@vger.kernel.org, Salil Mehta <salil.mehta@huawei.com>, 
-	Jean-Philippe Brucker <jean-philippe@linaro.org>, jianyong.wu@arm.com, justin.he@arm.com, 
-	James Morse <james.morse@arm.com>
+References: <20240117143548.595884070@goodmis.org> <20240117143810.531966508@goodmis.org>
+ <CAMuHMdXKiorg-jiuKoZpfZyDJ3Ynrfb8=X+c7x0Eewxn-YRdCA@mail.gmail.com> <20240122100630.6a400dd3@gandalf.local.home>
+In-Reply-To: <20240122100630.6a400dd3@gandalf.local.home>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 22 Jan 2024 17:23:29 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdXD0weO4oku8g2du6fj-EzxGaF+0i=zrPScSXwphFAZgg@mail.gmail.com>
+Message-ID: <CAMuHMdXD0weO4oku8g2du6fj-EzxGaF+0i=zrPScSXwphFAZgg@mail.gmail.com>
+Subject: Re: [for-linus][PATCH 1/3] eventfs: Have the inodes all for files and
+ directories all be the same
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Christian Brauner <brauner@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, 
+	Ajay Kaher <ajay.kaher@broadcom.com>, Linus Torvalds <torvalds@linux-foundation.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jan 22, 2024 at 5:02=E2=80=AFPM Jonathan Cameron
-<Jonathan.Cameron@huawei.com> wrote:
+Hi Steven,
+
+On Mon, Jan 22, 2024 at 4:05=E2=80=AFPM Steven Rostedt <rostedt@goodmis.org=
+> wrote:
+> On Mon, 22 Jan 2024 11:38:52 +0100
+> Geert Uytterhoeven <geert@linux-m68k.org> wrote:
 >
-> On Mon, 15 Jan 2024 11:06:29 +0000
-> "Russell King (Oracle)" <linux@armlinux.org.uk> wrote:
+> > Hi Stephen,
 >
-> > On Mon, Dec 18, 2023 at 09:22:03PM +0100, Rafael J. Wysocki wrote:
-> > > On Wed, Dec 13, 2023 at 1:49=E2=80=AFPM Russell King <rmk+kernel@arml=
-inux.org.uk> wrote:
-> > > >
-> > > > From: James Morse <james.morse@arm.com>
-> > > >
-> > > > ACPI has two descriptions of CPUs, one in the MADT/APIC table, the =
-other
-> > > > in the DSDT. Both are required. (ACPI 6.5's 8.4 "Declaring Processo=
-rs"
-> > > > says "Each processor in the system must be declared in the ACPI
-> > > > namespace"). Having two descriptions allows firmware authors to get
-> > > > this wrong.
-> > > >
-> > > > If CPUs are described in the MADT/APIC, they will be brought online
-> > > > early during boot. Once the register_cpu() calls are moved to ACPI,
-> > > > they will be based on the DSDT description of the CPUs. When CPUs a=
-re
-> > > > missing from the DSDT description, they will end up online, but not
-> > > > registered.
-> > > >
-> > > > Add a helper that runs after acpi_init() has completed to register
-> > > > CPUs that are online, but weren't found in the DSDT. Any CPU that
-> > > > is registered by this code triggers a firmware-bug warning and kern=
-el
-> > > > taint.
-> > > >
-> > > > Qemu TCG only describes the first CPU in the DSDT, unless cpu-hotpl=
-ug
-> > > > is configured.
+> I don't know who "Stephen" is, but I'll reply to this message.
+
+My apologies (too many different spellings in too many languages)...
+
+> > On Wed, Jan 17, 2024 at 3:37=E2=80=AFPM Steven Rostedt <rostedt@goodmis=
+.org> wrote:
+> > > From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 > > >
-> > > So why is this a kernel problem?
+> > > The dentries and inodes are created in the readdir for the sole purpo=
+se of
+> > > getting a consistent inode number. Linus stated that is unnecessary, =
+and
+> > > that all inodes can have the same inode number. For a virtual file sy=
+stem
+> > > they are pretty meaningless.
+> > >
+> > > Instead use a single unique inode number for all files and one for al=
+l
+> > > directories.
+> > >
+> > > Link: https://lore.kernel.org/all/20240116133753.2808d45e@gandalf.loc=
+al.home/
+>
+> Yeah, Linus wanted me to try this first and see if there's any regression=
+s.
+> Well, I guess you just answered that.
+>
+> The above link has me saying to Linus:
+>
+>   It was me being paranoid that using the same inode number would break u=
+ser
+>   space. If that is not a concern, then I'm happy to just make it either =
+the
+>   same, or maybe just hash the ei and name that it is associated with.
+>
+> > > Link: https://lore.kernel.org/linux-trace-kernel/20240116211353.41218=
+0363@goodmis.org
+> > >
+> > > Cc: Masami Hiramatsu <mhiramat@kernel.org>
+> > > Cc: Mark Rutland <mark.rutland@arm.com>
+> > > Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+> > > Cc: Christian Brauner <brauner@kernel.org>
+> > > Cc: Al  Viro <viro@ZenIV.linux.org.uk>
+> > > Cc: Ajay Kaher <ajay.kaher@broadcom.com>
+> > > Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+> > > Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 > >
-> > So what are you proposing should be the behaviour here? What this
-> > statement seems to be saying is that QEMU as it exists today only
-> > describes the first CPU in DSDT.
->
-> This confuses me somewhat, because I'm far from sure which machines this
-> is true for in QEMU.  I'm guessing it's a legacy thing with
-> some old distro version of QEMU - so we'll have to paper over it anyway
-> but for current QEMU I'm not sure it's true.
->
-> Helpfully there are a bunch of ACPI table tests so I've been checking
-> through all the multi CPU cases.
->
-> CPU hotplug not enabled.
-> pc/DSDT.dimmpxm  - 4x Processor entries.  -smp 4
-> pc/DSDT.acpihmat - 2x Processor entries.  -smp 2
-> q35/DSDT.acpihmat - 2x Processor entries. -smp 2
-> virt/DSDT.acpihmatvirt - 4x ACPI0007 entries -smp 4
-> q35/DSDT.acpihmat-noinitiator - 4 x Processor () entries -smp 4
-> virt/DSDT.topology - 8x ACPI0007 entries
->
-> I've also looked at the code and we have various types of
-> CPU hotplug on x86 but they all build appropriate numbers of
-> Processor() entries in DSDT.
-> Arm likewise seems to build the right number of ACPI0007 entries
-> (and doesn't yet have CPU HP support).
->
-> If anyone can add a reference on why this is needed that would be very
-> helpful.
+> > Thanks for your patch, which is now commit 53c41052ba312176 ("eventfs:
+> > Have the inodes all for files and directories all be the same") in
+> > v6.8-rc1, to which I have bisected the issue below.
 
-Yes, it would.
+> > This confuses "find".
+> > Running "find /sys/" now prints lots of error messages to stderr:
+> >
+> > find: File system loop detected;
+> > =E2=80=98/sys/kernel/debug/tracing/events/initcall/initcall_finish=E2=
+=80=99 is part of
+> > the same file system loop as
+> > =E2=80=98/sys/kernel/debug/tracing/events/initcall=E2=80=99.
+>
+> So at a minimum, the directories need to have unique inode numbers.
+>
+>
+> > find: File system loop detected;
+> > =E2=80=98/sys/kernel/debug/tracing/events/initcall/initcall_start=E2=80=
+=99 is part of
+> > the same file system loop as
+> > =E2=80=98/sys/kernel/debug/tracing/events/initcall=E2=80=99.
+> > find: File system loop detected;
+> > =E2=80=98/sys/kernel/debug/tracing/events/initcall/initcall_level=E2=80=
+=99 is part of
+> > the same file system loop as
+> > =E2=80=98/sys/kernel/debug/tracing/events/initcall=E2=80=99.
+> > [...]
+>
+> Does this fix it for you? It hashes the eventfs_inode data structure afte=
+r
+> adding some salt to it.
+>
+> Kees,
+>
+> I'm using the eventfs_inode pointer to create a unique value for the inod=
+e.
+> But it's being salted, hashed and then truncated. As it is very easy to
+> read inodes (although by default, only root has access to read these
+> inodes), the inode numbers themselves shouldn't be able to leak kernel
+> addresses via the results of these inode numbers, would it?
+>
+> -- Steve
 
-Personally, I would prefer to assume that it is not necessary until it
-turns out that (1) there is firmware with this issue actually in use
-and (2) updating the firmware in question to follow the specification
-is not practical.
+Gotya ;-)
 
-Otherwise, we'd make it easier to ship non-compliant firmware for no
-good reason.
+>
+> diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
+> index 6795fda2af19..d54897b84596 100644
+> --- a/fs/tracefs/event_inode.c
+> +++ b/fs/tracefs/event_inode.c
+
+> @@ -36,6 +37,31 @@ static DEFINE_MUTEX(eventfs_mutex);
+>  #define EVENTFS_FILE_INODE_INO         0x12c4e37
+>  #define EVENTFS_DIR_INODE_INO          0x134b2f5
+>
+> +/* Used for making inode numbers */
+> +static siphash_key_t inode_key;
+> +
+> +/* Copied from scripts/kconfig/symbol.c */
+> +static unsigned strhash(const char *s)
+> +{
+> +       /* fnv32 hash */
+> +       unsigned hash =3D 2166136261U;
+> +       for (; *s; s++)
+> +               hash =3D (hash ^ *s) * 0x01000193;
+> +       return hash;
+> +}
+> +
+> +/* Just try to make something consistent and unique */
+> +static int eventfs_dir_ino(struct event_inode *ei, const char *name)
+
+eventfs_inode
+
+> +{
+> +       unsigned long sip =3D (unsigned long)ei;
+> +
+> +       sip +=3D strhash(name) + EVENTFS_DIR_INODE_INO;
+> +       sip =3D siphash_1u32((int)sip, &inode_key);
+> +
+> +       /* keep it positive */
+> +       return sip & ((1U << 31) - 1);
+> +}
+> +
+>  /*
+>   * The eventfs_inode (ei) itself is protected by SRCU. It is released fr=
+om
+>   * its parent's list and will have is_freed set (under eventfs_mutex).
+
+Thanks, find is happy now the directories have different inode numbers.
+The files still have identical inodes numbers, I hope that doesn't cause
+any issues...
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
