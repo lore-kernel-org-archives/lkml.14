@@ -1,187 +1,392 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D68F036120;
-	Mon, 22 Jan 2024 08:30:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98B9C39AC4
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 08:31:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=134.134.136.65
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705912253; cv=fail; b=pmt81luxflaK/bxGz+GbC3hljTcalYHEAbfpC+ra7bem8AMMp++s6zDE6ikzrVGttMoq99aUn+WF/HAd2r7k6oP6Nie6t017AGhc0wVnr1dsvoztWJJiaDlbrkVI0k9p4DjWil2rMtrpEn8C9mEeQ+Wzu+hGvEiHdvuC3JIY0V0=
+	t=1705912292; cv=fail; b=rU1jhBzQZyo2PA+X4+MlMUxhJYV+dIYHhHG5sWklwRd5551pFsalTVkf6w+IQNUJupMVXGZFLtyvrMmTTHyBY8lTiZQMBO+lgIlnplLeF7Rl1h3K9aOCY6IrNAWwn4DkcfC/N3OnXBosNWWfaUBGUD562AunJKalt546F5coWZ0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705912253; c=relaxed/simple;
-	bh=pyM/WiJIcuA5IzKZWhbZzIN+OcJnfdo5TPtpJsZKJ6Q=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=T3p6uNqXwaDJfETxtjX2wbnsa6BxpJsHZfBky3NpMNwLdIGj3UTia99KEResi4IyViWKkHr9OHu0OOWyFeXk0bijrLiBmrrU6g0laqSmNHZZz4nq5cPon4y8Mh+ElqgCYlvITDtQK+gYeo6xVAa84UECCPWUJrxCFZnvu6jdYxU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=CAAU8ZOl; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=NkJM3Whj; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	s=arc-20240116; t=1705912292; c=relaxed/simple;
+	bh=dpO6A5vC+WLqa7Ocp3DNpfWYcY/b6OOM8KxVPSZ+MvU=;
+	h=Date:From:To:CC:Subject:Message-ID:Content-Type:
+	 Content-Disposition:MIME-Version; b=kdmfCwFtZ36cO4jMkedXBmjOZsR9E6lmwLtXTqd4Kt54E9xfAd90ziyiKGAYQ8jvhZwYuX8M1xmcTRHkMM/G4ZvRDqd54uQZbPLpxwQAXUQ1yGOPfduVEA8AmUQKbe93+r6aNagGiO6QSbz/oFm1zaXL6Sb8xvhQnQKRDuT5ak0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dyZMGVN+; arc=fail smtp.client-ip=134.134.136.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="CAAU8ZOl";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="NkJM3Whj"
-Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 40M7g1mY008112;
-	Mon, 22 Jan 2024 08:29:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
- subject : to : cc : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=corp-2023-11-20;
- bh=7p9q4Otjtl84UgQiGJyjQ1R9f/Z8EbiZYT4EZTUX0nI=;
- b=CAAU8ZOlctxNIg2pC11gkRgOn5tpf3e8x9WUJJ391+mKqYfSnbSlH1pvuavZ8U0U5QUR
- lgu8BXGivbL/2ODZF5ajgX+ySbpIczoaq/XDLl0wY8/DpRk+tRLjmcgVzwU0E+Xa0mO1
- 0IYffaRmSHUVsVz/+VM06DwRIWLonThtUS/xi0cQ9m1mUTnOjRztaj1g8E9FNs9vlQ+R
- Qw7T21DoiJpdBgb9QN9nIm3sQUkf7DGoCRZcXfranySoNChl1wkKmDW2ptpmYaFbN6pL
- 9dm9J4x5mlDXZi+tQ047ssS1s3kXaOAzWisyCFexoHOTr+tBAxPmOg9Ee0muIYXoeMJm IQ== 
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3vr7cxtukr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 22 Jan 2024 08:29:36 +0000
-Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 40M8Fg4d039337;
-	Mon, 22 Jan 2024 08:29:35 GMT
-Received: from nam02-bn1-obe.outbound.protection.outlook.com (mail-bn1nam02lp2040.outbound.protection.outlook.com [104.47.51.40])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3vs36yatm4-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 22 Jan 2024 08:29:35 +0000
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dyZMGVN+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1705912289; x=1737448289;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=dpO6A5vC+WLqa7Ocp3DNpfWYcY/b6OOM8KxVPSZ+MvU=;
+  b=dyZMGVN+fnZUyoys4DMTno5NTETHiQIulwspCcXA1y1CewN+sOczM8wR
+   BEVoLxiXkcwQ5nTmRUyxYjzlBLieyOZgCh+/KlTX7FzrEvSIMspT0Ls8K
+   F3Oc6cVeF7m+8oeSaeKbgttga1Z9bWlN+aDaykeB/fm9HGpChZgLhsGHJ
+   VJQLiea2nvVV9XdVPAyhtyNOTe5MkMBhAlf17OOU6j1xM16x9vWDbDod9
+   moGeLigJpHHblHQJEwoogQAapm8LkHvQQf4NjZ/U9hLItw6ZDmjdnmrsU
+   XE3FTXKKo46KlOStSMzHDHd011sPWMWbBZnHAYGzV55fgpTEpRhaIPt7v
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10960"; a="404899312"
+X-IronPort-AV: E=Sophos;i="6.05,211,1701158400"; 
+   d="scan'208";a="404899312"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 00:31:21 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10960"; a="908871084"
+X-IronPort-AV: E=Sophos;i="6.05,211,1701158400"; 
+   d="scan'208";a="908871084"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by orsmga004.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 22 Jan 2024 00:31:20 -0800
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Mon, 22 Jan 2024 00:31:19 -0800
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Mon, 22 Jan 2024 00:31:18 -0800
+Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
+ orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Mon, 22 Jan 2024 00:31:18 -0800
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.168)
+ by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Mon, 22 Jan 2024 00:31:18 -0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DYAF1BDde2P78aGvV1UIGDz8ZC5PfFNL8WEaJPV7RyGZkzMLXeji3KAiWmGXIphUPteKvk/3JFgQy2uMDkMKZjeL3rar9rwcXNZbFhH6fMZVlI+fH3TZXXoQXyA0PUkGDOnuKJ09vXZGT3qAAk0ZVNnytAgcuyTN3xyw3CVWLziRMvG1A5+N5DOO3uaif5Tcg54MDLyoE23VISb26BAuADSzr8BTeqpFJhqF3KMFN0Jvq59gC73PN0c5pNJLyGU+VU6rlC87K6N9mWjFJgyFWmbVkzJKZJ8o0kjIuh8HV14v7VAQ4aJ+8s1hRUTpXSlVMcMxB1cqAdmy6YCMj2cs5Q==
+ b=MXwc5qe0JOb2MGRRLTunpCOFzhNZKxtT3acRJ9g5oFGX+TD3opNWkWp8UaleTdt6ZDAbO5J7JaXGsROH+lEq+wbXmjdMEZe9dD5wUVki1qZVsZZyEqDq7xghmoDUk0J2/lcbKgjCbeGtEjVNW5XRC/hBirUAn+hfSiwqp/PFWQQzHB4BpLap7Lx/fWAVs7+wWjmR3MG5AhyudGvQkf9aC2zAm+klTca/5b6dyTeorjqFJ9YpBCUB8SagnbrjOwvqQKcrDn4FNDmhVB3/W2HQmJ8eTw2XyrcUdIKf5em9sEe9kripUcO/VtcfuY4rMcEX9T11trubqojpg0p2TmykCg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=7p9q4Otjtl84UgQiGJyjQ1R9f/Z8EbiZYT4EZTUX0nI=;
- b=mwAEIxltpowflhCIKVWaO/63HApHT4w3ItoIl+wdsx0ZzeLxZCKvpQmOL1fpURIpOP61AzzkJ+ljIfwfI6fCcp0paajVNF4+Q7lbgwljjUPoVDMHSMR3uBayCnudpL+fzRbkX2l1mTL8APj1LriSV0t+TVUdvVzh+OjEWoZ0dzqrVw2N0Wgjwjl0DpJP2yqnzCiLvlmL5Vi72SmCLrCbBSUZvZxphBj1GG2za9ogtWWe/geIwJdhwK9eD3YZjhKXIEICkOZTmuQG7g+wZqo/NvK7aPrK56UMDhZDAcxfF4oxqw3ncJ+00xwiZdE76bJj5vglrYCWXdJACJSEu9zF4w==
+ bh=ZNyeEUzuBIcpsuaitmkcHurfn1FqjMhfMztRbRKo/nU=;
+ b=JlCyaiQPp2w8yzNncOO0Hhg35vTDj8mE2gpOgdTMFyBsKr0CetQn7zI6zX0vRDCmW1I19AvPS/4wOEYqD+VPXXg4YKCyVRQCN3I46jJA2pEXDtdVe/I+qndgvsONH0NN3ULsKWTYi3mX/1hJN0hE/NMh2llhznVfXbu6p0DxW1tJgGpKIndXeVJrMsMLO/ATsh4zH8vCHbI6bgaQMsHyxXdMQrPnczEHoQB8iaNRgROTzxcTdXLVumplEDVzbyG+w+9aSIwqOPwR0Dm+DG7qTA4ELtDC4LZNgdeHKJxy9xHHs581DvC/E3Un0IdNx+NYVpqE8g6duN6KFL1u+aXYhA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7p9q4Otjtl84UgQiGJyjQ1R9f/Z8EbiZYT4EZTUX0nI=;
- b=NkJM3WhjFhgNndl9JXm2t9IUozHE7JuyOQdE8uwYcTzsTt60ysvRRqyow4KlFl+mPylYS2KYTT9XAVf932E7DalVSwuBnJwtxhqFmCWvfM9sqo8fJ3GxB0K9RwDkq00Xh8G3u3RqOk+czZEEBkvaxVTvAt6G3FRiQcRz5J5fuSg=
-Received: from DM6PR10MB4313.namprd10.prod.outlook.com (2603:10b6:5:212::20)
- by CH3PR10MB6692.namprd10.prod.outlook.com (2603:10b6:610:148::18) with
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from CH3PR11MB8414.namprd11.prod.outlook.com (2603:10b6:610:17e::19)
+ by SJ1PR11MB6084.namprd11.prod.outlook.com (2603:10b6:a03:489::13) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7202.32; Mon, 22 Jan
- 2024 08:29:33 +0000
-Received: from DM6PR10MB4313.namprd10.prod.outlook.com
- ([fe80::f11:7303:66e7:286c]) by DM6PR10MB4313.namprd10.prod.outlook.com
- ([fe80::f11:7303:66e7:286c%4]) with mapi id 15.20.7202.031; Mon, 22 Jan 2024
- 08:29:33 +0000
-Message-ID: <6c1c9cf1-9202-4cab-9ca7-404c2116b21a@oracle.com>
-Date: Mon, 22 Jan 2024 08:29:27 +0000
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 05/16] fs: Add RWF_ATOMIC and IOCB_ATOMIC flags for
- atomic write support
-Content-Language: en-US
-To: viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz
-Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nvme@lists.infradead.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, tytso@mit.edu, jbongio@google.com,
-        linux-scsi@vger.kernel.org, ming.lei@redhat.com, ojaswin@linux.ibm.com,
-        bvanassche@acm.org, Prasad Singamsetty <prasad.singamsetty@oracle.com>,
-        dchinner@redhat.com, djwong@kernel.org, axboe@kernel.dk,
-        kbusch@kernel.org, hch@lst.de, sagi@grimberg.me, jejb@linux.ibm.com,
-        martin.petersen@oracle.com
-References: <20231212110844.19698-1-john.g.garry@oracle.com>
- <20231212110844.19698-6-john.g.garry@oracle.com>
-From: John Garry <john.g.garry@oracle.com>
-Organization: Oracle Corporation
-In-Reply-To: <20231212110844.19698-6-john.g.garry@oracle.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: LO4P265CA0235.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:315::12) To DM6PR10MB4313.namprd10.prod.outlook.com
- (2603:10b6:5:212::20)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7202.31; Mon, 22 Jan
+ 2024 08:31:16 +0000
+Received: from CH3PR11MB8414.namprd11.prod.outlook.com
+ ([fe80::ed34:4cf2:df58:f708]) by CH3PR11MB8414.namprd11.prod.outlook.com
+ ([fe80::ed34:4cf2:df58:f708%4]) with mapi id 15.20.7202.034; Mon, 22 Jan 2024
+ 08:31:15 +0000
+Date: Mon, 22 Jan 2024 16:31:08 +0800
+From: kernel test robot <lkp@intel.com>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+CC: <oe-kbuild-all@lists.linux.dev>, <linux-kernel@vger.kernel.org>, "Mark
+ Brown" <broonie@kernel.org>
+Subject: sound/ac97/bus.c:192: warning: Function parameter or member 'drv'
+ not described in 'snd_ac97_codec_driver_register'
+Message-ID: <Za4nzDtwGVA+U1OL@rli9-mobl>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+X-ClientProxiedBy: SG2PR04CA0157.apcprd04.prod.outlook.com (2603:1096:4::19)
+ To CH3PR11MB8414.namprd11.prod.outlook.com (2603:10b6:610:17e::19)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR10MB4313:EE_|CH3PR10MB6692:EE_
-X-MS-Office365-Filtering-Correlation-Id: c70fe653-62de-4f92-69d8-08dc1b24428e
+X-MS-TrafficTypeDiagnostic: CH3PR11MB8414:EE_|SJ1PR11MB6084:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2b938a89-c673-4d52-9da0-08dc1b247f82
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	UHjBsGkwBy5EPISJCiwDsJqNY+2GfSbMaOQQB+o0nH2oyWAhG15I4EtlMsWEcmvwoqxJeRzpsxtzOekWqfhnkgZ7ZsyERDmVTgK2wUgMpmfL6KQueI3a8QYU/VCn8scHWhr6dMweL1sM7+C1/7ixdSzccEtjImTesDaGS+zBMmyAm6mK7N6eMwOo7+SPYn1kp4aD34AcIkKmSlOt/0yOiHc1oefLdxMdnGXE/FGvx0gj2fxkEmJbi+PglvQ+v8M8DDGrxhvUGFYFCliqZxoVJt/IaAafHT3LfsEzbigFLdgAXXmRSecGlPinNxz930jU/njXjE/9TrWgyVG78QeE51z4RXH78RcCEoIDd0PF4PE/Xa9z0JmpQ9o1vDPTzuDWJnRL2ctZRiOgwUCx+BUusk3jjD09zFQ5mipOBZ4sHpInkOJ3AQAxfVs2b7qd84tanM/vlulFLqtwTAyqtirx+9lNcQrOhTV4vjAI4Vygzz1cI0xP0kuyRpQ6YSRSc/c6CTHs3ytPQm8L139Myrink22xHWPKqGCAoIY7RxlXgqmX1Q9eol3FAaKPeFDZfKtW7YIwfBUad5k4ZwU6s2KMN3RtGhcvklAUYVrKFu0iq+pyAgoc/vPI1K4zVxEgYelv
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR10MB4313.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(39860400002)(136003)(376002)(396003)(346002)(230922051799003)(64100799003)(186009)(451199024)(1800799012)(36756003)(41300700001)(31696002)(86362001)(38100700002)(6512007)(478600001)(6666004)(36916002)(8676002)(8936002)(4326008)(6486002)(6506007)(66476007)(66946007)(966005)(7416002)(66556008)(26005)(2906002)(4744005)(316002)(107886003)(2616005)(53546011)(5660300002)(31686004)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: NRwGrmMA3dZvw7yBxjLcmvc+LvN6rRZvNRCD8C7NNXNvRr6ZfglTSPbCtbSuZqverr75Fuor35s8RoWtjTsK+KaIG3wp6c41uQ4NyY/CogjRt2APv+dOwGJtXMDvvovjfjKez48dh6BeGqbzhKjO2P2obbRTCpxrR+oJA4trriV0CC7MYcss7qfVq4grB0s6eGTw5ItV3wbaWiVBN4g/oLZLv3/23exTxusacqP/1X/1t8Plre6Yu2/nS8hDKY91VWpDUWg4KyZObuvhgNxmCopxivpDncjqldgYK5M1ydIib7vfrLtdwwGLMR4zBG376D0grRr6PuRVtBa0203rUU4fpPh4/Sbcz1+/Q7eHw8kbEGzWtDw2fEFuq9rm1yZFVpPrNKjxzMqMTqLg6x2rxyFTRaUHfukim8SSd0oKLWsImMwDIzzQDPyMrIFfkvv68ED76/jHiL9fz1GhJL/I9+dkqPp1wAWCRxppCkJk8l605l0tuYzl23cigULANWfQmx+zst6QZ9vUkrpgMl64rGk1XEsY8cIHlM6sDfEtkItFm4d3fPORCHNMNGUDVNr2Ro+Ed4Kka/qPbFVjTdhDCf0US3WIntcEgI8o07HFOisovuTkyc3vNouEOXAu72uHAHiVI16IiEP1gSmHpfuqlbYZaPfuwSfzVK+1xVKIRJHNYwS6n2DeL9CBFrE3Jv7/KckzkAzM59Mk1q3DsplfCQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR11MB8414.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7916004)(346002)(39860400002)(376002)(136003)(396003)(366004)(230173577357003)(230922051799003)(230273577357003)(1800799012)(451199024)(186009)(64100799003)(6506007)(9686003)(26005)(6666004)(6512007)(966005)(83380400001)(5660300002)(30864003)(6486002)(4326008)(2906002)(8936002)(33716001)(41300700001)(316002)(478600001)(6916009)(66946007)(66476007)(66556008)(8676002)(82960400001)(86362001)(38100700002)(67856001)(15866825006);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?utf-8?B?SHZwY2ZuWndYS0RSSENTcDdyUmxaTW9LOVBpSWNBbkxzQ0FpSi9NNUppU0lv?=
- =?utf-8?B?SktuNGdDTGdSQXphSzZMbjlsN3Irb3RJYzdOWWVjRmxqcDAzbFVJd3Iwdk5N?=
- =?utf-8?B?U0ROb0xMVnB1dXI0OWhKOUVKS1ptVGNYQWJwRnhuUlhJT3k0OG1xeEd1WXdp?=
- =?utf-8?B?U0ZDUzJRRTFUQkR5UjZ3a2lnTUtSTjVYTUplczVwYVdmUzY0SmJkenNzWEI1?=
- =?utf-8?B?aXJEZGJhR0UrZGZvdU5WR0VKRXRDUWt5b2Y5eGkvVDJDalNQWmlmUlNTcHpv?=
- =?utf-8?B?UHE2eXd0MUg1ZFpkREJJelQvSTVKWmJlMS9jVWFVVWc2bDdZZnRBYXQ2MEdS?=
- =?utf-8?B?dCtKY2R3TTJCUmtXS3lrT1E3a0FmZkFxYS9wZ25zZFVycjBMeTRZYkhqZ0Vn?=
- =?utf-8?B?UmJRdzVMZFdoMTBQTURyaVkxbWpCY1YzVUdjRmtQZjVpWmw3ZW5ISXNaWFFj?=
- =?utf-8?B?MEhrSEZtbmFzN0NIc0dFL09lN3pwdlNtbzMxMUFTeVhQU2ZERjZTaUE0encw?=
- =?utf-8?B?M05VMWlpR2RJdFlzTXRzUGdvTkRNempVZUNta2lsNGsvRHZaT0dkSEtvbzhC?=
- =?utf-8?B?a3FWYmIvaFNJZmh0aE1VZmRKVno3UmQzNy9EZTVpWjNzOTNpcW9CZFRLMlFn?=
- =?utf-8?B?N09DbFZMK2d3eFFSa2MzdTJVaDBocjBoVVEvdHhtTXMreU1TVnIzRnAwcWZn?=
- =?utf-8?B?RkFCU3dHd0xhWWpyWEs5UnJMQ1ZSMFVJNHdjSWN5NzFieGFuZlpoSDdJcStH?=
- =?utf-8?B?a3Q3dnBYMmcySXUrMmkxa29VRHFHR2VSK3VZZUtldjM4TDY0SDhyUE9nUXJO?=
- =?utf-8?B?Z041cXZtczBFUDhVNjhBQzNMMFF0dk1LK0ExcEE2OCtFMm1vZ1dpWk9UeXdr?=
- =?utf-8?B?MFlqZzArWFdaMit2b3FTalluNjRxTmd0dEt0MEZPRGpjODRXWjhhZ1o3UHFT?=
- =?utf-8?B?dzNMejlLK2Ztbjh6a0VsYVNFWlc2RS9EcWx5ZE9DVHNPOUtXVDc1MjQxK0N5?=
- =?utf-8?B?UC9sYzhoWlhLaDZUaTFoZGpxZndWWDhUMlBBRzI0MG84bTVKdVd0Ym5QOTZ0?=
- =?utf-8?B?dE04U3AvMDhTTGU4VCtZYU0vRitCVE9EZ3dEdTJtNnpwMExXUVpyR2JhajBH?=
- =?utf-8?B?UXg3UG5LcEFacUF6QmhDNnlvbjlxOWx3WWZOM0R4UmxwaUJ4YkhNWWRrbTlD?=
- =?utf-8?B?V1JnMmsrdy9tZjdoSkljRTA1NUM0MVM3MVJrUDBvY3MwdDRmUmVackkwTnNM?=
- =?utf-8?B?STE1MG1POGlITkxpQktUTkxDdElPUTV6UWEyeE5TZlE0ekpQNE41TnNPcmZY?=
- =?utf-8?B?STB2c3lUQTVMaVJkeXVxRFJqLzlpYUZFR3lya0xTdGcxMlhZNHdRRHAzbUNT?=
- =?utf-8?B?UWdmVjdUbnFmSWtudkJUNnd4blhJR0UwWE85MUJ5bThEQzZHWXU4dlVKSkpx?=
- =?utf-8?B?eUF4MmV3SVVIU015NlhKL1U5QUhwMWdvbWl2MHRBUWYyL0JOOHY1cVltT05L?=
- =?utf-8?B?cVRXVCtON1hQUlF4dEVJbFd0S0dOdWZWZzczRk1Vbzl3Y2hOM0NMUEdnOVoz?=
- =?utf-8?B?dWc3MlA1NnVkSDBwQXhubk9IV3ZKWUQwUFM3Z3ZBUTJQeWJHSS9kT0kwSld2?=
- =?utf-8?B?SXFFcld0RUxKMmthMFpZQTBwb29YcnhpQkV0bVRPVHlaMUFQWFI3ZzY0OTRP?=
- =?utf-8?B?YTg5ZS9GM0FveVBudnJjakR4bW1pb2doWUtDaDdKanFmejZhVmljZUJzN3dI?=
- =?utf-8?B?ay9IcDA0Q0NBWUpWbGVOVUprLzk1M2xxSXJkZHFnTnVJbG0rekNUMVV1dzhD?=
- =?utf-8?B?Y09vTE5GMDIvMFJNZlB3UUNkQytUQUVUdlF0dFBYRmlEcnEwS0ZObndrUHli?=
- =?utf-8?B?aHd1cXhUSWVhaVBZdVdhV1FBa3BUeWk3U1V2a1A3OTFCb0FyakNJclZ0Y0lo?=
- =?utf-8?B?VlNIcmgxNGE4aG1NdGRsN1I4R3VOWlN2L0ZpUm5lbUxnM0h4M0RZakc4UGo3?=
- =?utf-8?B?eWhTTzBwR1dQVWxqZVd5V0pRYmo2WHpET2NMMHpFTVJEOVhOK1lQT204L3NJ?=
- =?utf-8?B?dEViTE9TU3R6cVd6aDU3cmgvb1kya09iSTZMQ0xORlozQldyaFRRZ2lCVFlv?=
- =?utf-8?B?dTBFUzZ2MnZlRDZBblZGNXI4YnRLOWRjN3dqY3M4R3lJeU15ZGtBMCtJKzFT?=
- =?utf-8?B?clE9PQ==?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	A0gj8r23v04k126YlQke4gv5wlJ0cJBW89IB08PNfvwvr8ZH7jgnz6otWcpVFwakEjPOiYyh/tyEdrO6TozFSf4QnLHIUoIvvH0ZD5cdZWJoKJaHAkgKNfTkp5K9AFNNXkF+lLvREVccwnmEajCRG/L0cpQzOcf/NrQlYtqZjnNI81H5TkIgM1SuriaxlVbHsb1vx9JYTb6t2Vd0zOcL4ahgZuW6f1/xSeL+0MR8+tl6wb4Wr563EqK17Nkm0ETH4F2Q8F59Zn8MIgsF+//22kYMZi3uFAHPCGSdeFZNF6BUZpat94EZJfuqq+uyg8ebyklFGlEpA2NsHzYBvp+/RdV/eUtc/wrO3LaetrDwd+evb8z7lJIyXsoOMKVJawEM0Ox3uSaDNeKcRQlx75PnBpUHgGuiwFmDvw7HsAebGkyP7tNH1n4sagtIUKwX094xKLiFiLFBswS2Q7vN0zpecCcAhDvQkfocHHn1WWXFYQWgMXM4y82hdqA7l+J65fvSihSPlWNoHp+ITUEMPxsX5E8W0nk2U36HjV0HWZcA51roYonU4jmk2Ou1LsFADqKafFJdqecJUoByzOdJYWMpIQIkKZFbKz99YLIVFfU3o/U=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c70fe653-62de-4f92-69d8-08dc1b24428e
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR10MB4313.namprd10.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?EqPKAPpHptFGTl13JindKbSQ28pwvm2VFd/ox1ygcHEfa3YMY8wHbkQbjsiV?=
+ =?us-ascii?Q?rjP72WV3eJZ2WhvbqcfOnoWXIQMzMBKm0d79f4KL3Dm07C41I0suwappGocn?=
+ =?us-ascii?Q?Ye8qtHGIcIi11m8v4Ee9dkdlUzHVZtvZXutj8OouKAEkH62/58ArxGg0wbiY?=
+ =?us-ascii?Q?5l3IINOPzOb5zoXYJWV/DBBsSTxZ6NIEgGVzD4CGfBg2ldJ5idruytH191nj?=
+ =?us-ascii?Q?fuv/Um++EKuFu3wgWkeoyjYZ3HbKW1rkO7lPbfFbW8Mh6H6fzLekDRgk0ci2?=
+ =?us-ascii?Q?E9imcwlhivmvlHgAHfkeWnyzlyxyvUkmHNCpLPLdxmxreoDMHMzkbStNFjH3?=
+ =?us-ascii?Q?xsFO8ExR3R5L5DFV2fa0jtsQfo/DrKusdGkQ/Ue1TpzmVl1bqonK3uxxoB67?=
+ =?us-ascii?Q?U8XQnXEreDWEPZHsSqjVgcIb6hxAXE9xgR0M+4pgwzRpRmLU+b1l+OSwrbFb?=
+ =?us-ascii?Q?CCD6Yi1bG/gN3FMLNIm2qX3yUqOtPn54O/1+DQmcO4wJyzk3cP7CjpVCvy7g?=
+ =?us-ascii?Q?k37U/B1aZ3/EZkbRhmUQLIHOmyHJIkwYzQzg/nN3SkUmEFVi5Yzd0t5tqDHA?=
+ =?us-ascii?Q?rmWtCnU//q0HvyUHXlLiALcT4BVmEnIrohaokSoceAvPD0pDUnzWJxdcw3Rs?=
+ =?us-ascii?Q?AIkw+v0esZJLeNAiaw57hsRabgGbtFe4wE0RPnH9QFLhVY2mrpoQx+g5HzOs?=
+ =?us-ascii?Q?c+1wuVmNSONbN+vnP4Rm1hSmUMd9ufmFT0XZXSco3EWFzRXTYuw5AdOqSKzu?=
+ =?us-ascii?Q?3j1NoP3jj7ji54zJ9srBLWbCE1S6mD1cYihpc3Pth/5qR9IAhI7VS/g/S89j?=
+ =?us-ascii?Q?Z3jelx5VrkW+Tsf0Iee4l+5onhH4CmaURxKfwHHE8KWb0Av8mNfLeRz1REz8?=
+ =?us-ascii?Q?xofPy5wbl6kepRoOrCxF8TCyxEQzLkIPGG4sFvKh3gUBuRmI8dNPd64YGFtH?=
+ =?us-ascii?Q?3h2Cm/l5pZONL9qO8DxwgkR3IoWLLRIoHY3+SifiTBXagwr6HMKIbBZ4zF8r?=
+ =?us-ascii?Q?pE6OTiZ8UzBPLJ2iN5066SQ7dh9C/EHEbwb0da4fxT3rcwrEs+Y5YxAVAd7o?=
+ =?us-ascii?Q?xI9rjvYmS/DWpjmhurv9jcwzqrC8+rZtYIKFOP8A7/FmEoT/h1gZ/a08uRpO?=
+ =?us-ascii?Q?gwmBoehiUCVpGUBuhB0w0JZpdZJhqNrT2cTonBbWp3JfxGdd0nGCx+oMRAjz?=
+ =?us-ascii?Q?emq2Vt6OYGis/muLl1oCOWTjTrrZ97ZpECkPIJI7kwLaQYPSJmNSfcWZmhJK?=
+ =?us-ascii?Q?kKicueefpNJWVLOf05HOtHQw7IKuyNKsPhiLaTqY4+lvxBuf4qrK3LNpArj8?=
+ =?us-ascii?Q?Hx0RPNwsi9DIj7VIoCi2pYnvbwuGdNCYMFe6cyftLGne5DhSrbTaSDK4ZLD2?=
+ =?us-ascii?Q?6dh7FGI0a3G0XK6LhP0NdhgZMe6yAHdqYui0lCYutkxGJQd3um2x+njWqxft?=
+ =?us-ascii?Q?u2XZEFwC8p8w3x3KtUn+Um8XneglWHjzN14RsLYZF4ecYI7RD8iJ51wm0xUC?=
+ =?us-ascii?Q?oSAsskAc4peL3nIL6YnwHq9KI+C9qudViJyO+6Vqf+VlXfQNA9jNM1sNZ1jS?=
+ =?us-ascii?Q?vrR3Yp+Wswi5nS6iVqJAQwLDyyViBgin61cNO1QFUxuq+eJhjO0cPEDzDJah?=
+ =?us-ascii?Q?HQ=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2b938a89-c673-4d52-9da0-08dc1b247f82
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR11MB8414.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jan 2024 08:29:33.1321
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jan 2024 08:31:15.7431
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: /dEz0WwsTAJOFOdJ4kLLpNWFNvjxRlDYEcsTnvz+aj6lsBhfGhW2q+65FItUQgFxdU8Plh/DfQpx6K20qhuI6w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR10MB6692
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-21_04,2024-01-19_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 mlxlogscore=986
- malwarescore=0 mlxscore=0 phishscore=0 bulkscore=0 suspectscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2401220060
-X-Proofpoint-ORIG-GUID: HXuY2HiYWUCfvmkb27FDlT3rsYJ0yJ0P
-X-Proofpoint-GUID: HXuY2HiYWUCfvmkb27FDlT3rsYJ0yJ0P
+X-MS-Exchange-CrossTenant-UserPrincipalName: vTqRxhoJ2udrp8z4zJDBusCFKswNwDfx3aNEY6IXnAvnFTXQwFhDVBY9ugeH3Rf5YLUum85gBHFqTVFn6sm/qg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ1PR11MB6084
+X-OriginatorOrg: intel.com
 
-On 12/12/2023 11:08, John Garry wrote:
-> --- a/include/uapi/linux/fs.h
-> +++ b/include/uapi/linux/fs.h
-> @@ -301,9 +301,12 @@ typedef int __bitwise __kernel_rwf_t;
->   /* per-IO O_APPEND */
->   #define RWF_APPEND	((__force __kernel_rwf_t)0x00000010)
->   
-> +/* Atomic Write */
-> +#define RWF_ATOMIC	((__force __kernel_rwf_t)0x00000020)
-> +
+Hi Geert,
 
-vfs maintainers, due to 
-https://lore.kernel.org/linux-fsdevel/20240119191053.GT22081@brightrain.aerifal.cx/T/#t, 
-I now plan to change this value to 0x40.
+First bad commit (maybe != root cause):
 
-Thanks,
-John
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   ac865f00af293d081356bec56eea90815094a60e
+commit: ea00d95200d02ece71f5814d41b14f2eb16d598b ASoC: Use imply for SND_SOC_ALL_CODECS
+date:   3 years, 11 months ago
+:::::: branch date: 16 hours ago
+:::::: commit date: 3 years, 11 months ago
+config: x86_64-buildonly-randconfig-003-20231102 (https://download.01.org/0day-ci/archive/20240104/202401042239.2zkHgzki-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240104/202401042239.2zkHgzki-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/r/202401042239.2zkHgzki-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> sound/ac97/bus.c:192: warning: Function parameter or member 'drv' not described in 'snd_ac97_codec_driver_register'
+>> sound/ac97/bus.c:192: warning: Excess function parameter 'dev' description in 'snd_ac97_codec_driver_register'
+>> sound/ac97/bus.c:205: warning: Function parameter or member 'drv' not described in 'snd_ac97_codec_driver_unregister'
+>> sound/ac97/bus.c:205: warning: Excess function parameter 'dev' description in 'snd_ac97_codec_driver_unregister'
+>> sound/ac97/bus.c:351: warning: Function parameter or member 'codecs_pdata' not described in 'snd_ac97_controller_register'
+
+Kconfig warnings: (for reference only)
+   WARNING: unmet direct dependencies detected for REGMAP_SPI
+   Depends on [n]: SPI [=n]
+   Selected by [m]:
+   - SND_SOC_ADAU1781_SPI [=m] && SOUND [=y] && !UML && SND [=m] && SND_SOC [=m]
+   - SND_SOC_ADAU1977_SPI [=m] && SOUND [=y] && !UML && SND [=m] && SND_SOC [=m]
+
+
+vim +192 sound/ac97/bus.c
+
+74426fbff66eea Robert Jarzmik 2017-09-02  181  
+74426fbff66eea Robert Jarzmik 2017-09-02  182  /**
+74426fbff66eea Robert Jarzmik 2017-09-02  183   * snd_ac97_codec_driver_register - register an AC97 codec driver
+74426fbff66eea Robert Jarzmik 2017-09-02  184   * @dev: AC97 driver codec to register
+74426fbff66eea Robert Jarzmik 2017-09-02  185   *
+74426fbff66eea Robert Jarzmik 2017-09-02  186   * Register an AC97 codec driver to the ac97 bus driver, aka. the AC97 digital
+74426fbff66eea Robert Jarzmik 2017-09-02  187   * controller.
+74426fbff66eea Robert Jarzmik 2017-09-02  188   *
+74426fbff66eea Robert Jarzmik 2017-09-02  189   * Returns 0 on success or error code
+74426fbff66eea Robert Jarzmik 2017-09-02  190   */
+74426fbff66eea Robert Jarzmik 2017-09-02  191  int snd_ac97_codec_driver_register(struct ac97_codec_driver *drv)
+74426fbff66eea Robert Jarzmik 2017-09-02 @192  {
+74426fbff66eea Robert Jarzmik 2017-09-02  193  	drv->driver.bus = &ac97_bus_type;
+74426fbff66eea Robert Jarzmik 2017-09-02  194  	return driver_register(&drv->driver);
+74426fbff66eea Robert Jarzmik 2017-09-02  195  }
+74426fbff66eea Robert Jarzmik 2017-09-02  196  EXPORT_SYMBOL_GPL(snd_ac97_codec_driver_register);
+74426fbff66eea Robert Jarzmik 2017-09-02  197  
+74426fbff66eea Robert Jarzmik 2017-09-02  198  /**
+74426fbff66eea Robert Jarzmik 2017-09-02  199   * snd_ac97_codec_driver_unregister - unregister an AC97 codec driver
+74426fbff66eea Robert Jarzmik 2017-09-02  200   * @dev: AC97 codec driver to unregister
+74426fbff66eea Robert Jarzmik 2017-09-02  201   *
+74426fbff66eea Robert Jarzmik 2017-09-02  202   * Unregister a previously registered ac97 codec driver.
+74426fbff66eea Robert Jarzmik 2017-09-02  203   */
+74426fbff66eea Robert Jarzmik 2017-09-02  204  void snd_ac97_codec_driver_unregister(struct ac97_codec_driver *drv)
+74426fbff66eea Robert Jarzmik 2017-09-02 @205  {
+74426fbff66eea Robert Jarzmik 2017-09-02  206  	driver_unregister(&drv->driver);
+74426fbff66eea Robert Jarzmik 2017-09-02  207  }
+74426fbff66eea Robert Jarzmik 2017-09-02  208  EXPORT_SYMBOL_GPL(snd_ac97_codec_driver_unregister);
+74426fbff66eea Robert Jarzmik 2017-09-02  209  
+74426fbff66eea Robert Jarzmik 2017-09-02  210  /**
+74426fbff66eea Robert Jarzmik 2017-09-02  211   * snd_ac97_codec_get_platdata - get platform_data
+74426fbff66eea Robert Jarzmik 2017-09-02  212   * @adev: the ac97 codec device
+74426fbff66eea Robert Jarzmik 2017-09-02  213   *
+74426fbff66eea Robert Jarzmik 2017-09-02  214   * For legacy platforms, in order to have platform_data in codec drivers
+74426fbff66eea Robert Jarzmik 2017-09-02  215   * available, while ac97 device are auto-created upon probe, this retrieves the
+74426fbff66eea Robert Jarzmik 2017-09-02  216   * platdata which was setup on ac97 controller registration.
+74426fbff66eea Robert Jarzmik 2017-09-02  217   *
+74426fbff66eea Robert Jarzmik 2017-09-02  218   * Returns the platform data pointer
+74426fbff66eea Robert Jarzmik 2017-09-02  219   */
+74426fbff66eea Robert Jarzmik 2017-09-02  220  void *snd_ac97_codec_get_platdata(const struct ac97_codec_device *adev)
+74426fbff66eea Robert Jarzmik 2017-09-02  221  {
+74426fbff66eea Robert Jarzmik 2017-09-02  222  	struct ac97_controller *ac97_ctrl = adev->ac97_ctrl;
+74426fbff66eea Robert Jarzmik 2017-09-02  223  
+74426fbff66eea Robert Jarzmik 2017-09-02  224  	return ac97_ctrl->codecs_pdata[adev->num];
+74426fbff66eea Robert Jarzmik 2017-09-02  225  }
+74426fbff66eea Robert Jarzmik 2017-09-02  226  EXPORT_SYMBOL_GPL(snd_ac97_codec_get_platdata);
+74426fbff66eea Robert Jarzmik 2017-09-02  227  
+74426fbff66eea Robert Jarzmik 2017-09-02  228  static void ac97_ctrl_codecs_unregister(struct ac97_controller *ac97_ctrl)
+74426fbff66eea Robert Jarzmik 2017-09-02  229  {
+74426fbff66eea Robert Jarzmik 2017-09-02  230  	int i;
+74426fbff66eea Robert Jarzmik 2017-09-02  231  
+74426fbff66eea Robert Jarzmik 2017-09-02  232  	for (i = 0; i < AC97_BUS_MAX_CODECS; i++)
+74426fbff66eea Robert Jarzmik 2017-09-02  233  		if (ac97_ctrl->codecs[i]) {
+74426fbff66eea Robert Jarzmik 2017-09-02  234  			ac97_ctrl->codecs[i]->ac97_ctrl = &ac97_unbound_ctrl;
+74426fbff66eea Robert Jarzmik 2017-09-02  235  			device_unregister(&ac97_ctrl->codecs[i]->dev);
+74426fbff66eea Robert Jarzmik 2017-09-02  236  		}
+74426fbff66eea Robert Jarzmik 2017-09-02  237  }
+74426fbff66eea Robert Jarzmik 2017-09-02  238  
+74426fbff66eea Robert Jarzmik 2017-09-02  239  static ssize_t cold_reset_store(struct device *dev,
+74426fbff66eea Robert Jarzmik 2017-09-02  240  				struct device_attribute *attr, const char *buf,
+74426fbff66eea Robert Jarzmik 2017-09-02  241  				size_t len)
+74426fbff66eea Robert Jarzmik 2017-09-02  242  {
+74426fbff66eea Robert Jarzmik 2017-09-02  243  	struct ac97_controller *ac97_ctrl;
+74426fbff66eea Robert Jarzmik 2017-09-02  244  
+74426fbff66eea Robert Jarzmik 2017-09-02  245  	mutex_lock(&ac97_controllers_mutex);
+74426fbff66eea Robert Jarzmik 2017-09-02  246  	ac97_ctrl = to_ac97_controller(dev);
+74426fbff66eea Robert Jarzmik 2017-09-02  247  	ac97_ctrl->ops->reset(ac97_ctrl);
+74426fbff66eea Robert Jarzmik 2017-09-02  248  	mutex_unlock(&ac97_controllers_mutex);
+74426fbff66eea Robert Jarzmik 2017-09-02  249  	return len;
+74426fbff66eea Robert Jarzmik 2017-09-02  250  }
+74426fbff66eea Robert Jarzmik 2017-09-02  251  static DEVICE_ATTR_WO(cold_reset);
+74426fbff66eea Robert Jarzmik 2017-09-02  252  
+74426fbff66eea Robert Jarzmik 2017-09-02  253  static ssize_t warm_reset_store(struct device *dev,
+74426fbff66eea Robert Jarzmik 2017-09-02  254  				struct device_attribute *attr, const char *buf,
+74426fbff66eea Robert Jarzmik 2017-09-02  255  				size_t len)
+74426fbff66eea Robert Jarzmik 2017-09-02  256  {
+74426fbff66eea Robert Jarzmik 2017-09-02  257  	struct ac97_controller *ac97_ctrl;
+74426fbff66eea Robert Jarzmik 2017-09-02  258  
+74426fbff66eea Robert Jarzmik 2017-09-02  259  	if (!dev)
+74426fbff66eea Robert Jarzmik 2017-09-02  260  		return -ENODEV;
+74426fbff66eea Robert Jarzmik 2017-09-02  261  
+74426fbff66eea Robert Jarzmik 2017-09-02  262  	mutex_lock(&ac97_controllers_mutex);
+74426fbff66eea Robert Jarzmik 2017-09-02  263  	ac97_ctrl = to_ac97_controller(dev);
+74426fbff66eea Robert Jarzmik 2017-09-02  264  	ac97_ctrl->ops->warm_reset(ac97_ctrl);
+74426fbff66eea Robert Jarzmik 2017-09-02  265  	mutex_unlock(&ac97_controllers_mutex);
+74426fbff66eea Robert Jarzmik 2017-09-02  266  	return len;
+74426fbff66eea Robert Jarzmik 2017-09-02  267  }
+74426fbff66eea Robert Jarzmik 2017-09-02  268  static DEVICE_ATTR_WO(warm_reset);
+74426fbff66eea Robert Jarzmik 2017-09-02  269  
+74426fbff66eea Robert Jarzmik 2017-09-02  270  static struct attribute *ac97_controller_device_attrs[] = {
+74426fbff66eea Robert Jarzmik 2017-09-02  271  	&dev_attr_cold_reset.attr,
+74426fbff66eea Robert Jarzmik 2017-09-02  272  	&dev_attr_warm_reset.attr,
+74426fbff66eea Robert Jarzmik 2017-09-02  273  	NULL
+74426fbff66eea Robert Jarzmik 2017-09-02  274  };
+74426fbff66eea Robert Jarzmik 2017-09-02  275  
+74426fbff66eea Robert Jarzmik 2017-09-02  276  static struct attribute_group ac97_adapter_attr_group = {
+74426fbff66eea Robert Jarzmik 2017-09-02  277  	.name	= "ac97_operations",
+74426fbff66eea Robert Jarzmik 2017-09-02  278  	.attrs	= ac97_controller_device_attrs,
+74426fbff66eea Robert Jarzmik 2017-09-02  279  };
+74426fbff66eea Robert Jarzmik 2017-09-02  280  
+74426fbff66eea Robert Jarzmik 2017-09-02  281  static const struct attribute_group *ac97_adapter_groups[] = {
+74426fbff66eea Robert Jarzmik 2017-09-02  282  	&ac97_adapter_attr_group,
+74426fbff66eea Robert Jarzmik 2017-09-02  283  	NULL,
+74426fbff66eea Robert Jarzmik 2017-09-02  284  };
+74426fbff66eea Robert Jarzmik 2017-09-02  285  
+74426fbff66eea Robert Jarzmik 2017-09-02  286  static void ac97_del_adapter(struct ac97_controller *ac97_ctrl)
+74426fbff66eea Robert Jarzmik 2017-09-02  287  {
+74426fbff66eea Robert Jarzmik 2017-09-02  288  	mutex_lock(&ac97_controllers_mutex);
+74426fbff66eea Robert Jarzmik 2017-09-02  289  	ac97_ctrl_codecs_unregister(ac97_ctrl);
+74426fbff66eea Robert Jarzmik 2017-09-02  290  	list_del(&ac97_ctrl->controllers);
+74426fbff66eea Robert Jarzmik 2017-09-02  291  	mutex_unlock(&ac97_controllers_mutex);
+74426fbff66eea Robert Jarzmik 2017-09-02  292  
+74426fbff66eea Robert Jarzmik 2017-09-02  293  	device_unregister(&ac97_ctrl->adap);
+74426fbff66eea Robert Jarzmik 2017-09-02  294  }
+74426fbff66eea Robert Jarzmik 2017-09-02  295  
+74426fbff66eea Robert Jarzmik 2017-09-02  296  static void ac97_adapter_release(struct device *dev)
+74426fbff66eea Robert Jarzmik 2017-09-02  297  {
+74426fbff66eea Robert Jarzmik 2017-09-02  298  	struct ac97_controller *ac97_ctrl;
+74426fbff66eea Robert Jarzmik 2017-09-02  299  
+74426fbff66eea Robert Jarzmik 2017-09-02  300  	ac97_ctrl = to_ac97_controller(dev);
+74426fbff66eea Robert Jarzmik 2017-09-02  301  	idr_remove(&ac97_adapter_idr, ac97_ctrl->nr);
+74426fbff66eea Robert Jarzmik 2017-09-02  302  	dev_dbg(&ac97_ctrl->adap, "adapter unregistered by %s\n",
+74426fbff66eea Robert Jarzmik 2017-09-02  303  		dev_name(ac97_ctrl->parent));
+74426fbff66eea Robert Jarzmik 2017-09-02  304  }
+74426fbff66eea Robert Jarzmik 2017-09-02  305  
+74426fbff66eea Robert Jarzmik 2017-09-02  306  static const struct device_type ac97_adapter_type = {
+74426fbff66eea Robert Jarzmik 2017-09-02  307  	.groups		= ac97_adapter_groups,
+74426fbff66eea Robert Jarzmik 2017-09-02  308  	.release	= ac97_adapter_release,
+74426fbff66eea Robert Jarzmik 2017-09-02  309  };
+74426fbff66eea Robert Jarzmik 2017-09-02  310  
+74426fbff66eea Robert Jarzmik 2017-09-02  311  static int ac97_add_adapter(struct ac97_controller *ac97_ctrl)
+74426fbff66eea Robert Jarzmik 2017-09-02  312  {
+74426fbff66eea Robert Jarzmik 2017-09-02  313  	int ret;
+74426fbff66eea Robert Jarzmik 2017-09-02  314  
+74426fbff66eea Robert Jarzmik 2017-09-02  315  	mutex_lock(&ac97_controllers_mutex);
+74426fbff66eea Robert Jarzmik 2017-09-02  316  	ret = idr_alloc(&ac97_adapter_idr, ac97_ctrl, 0, 0, GFP_KERNEL);
+74426fbff66eea Robert Jarzmik 2017-09-02  317  	ac97_ctrl->nr = ret;
+74426fbff66eea Robert Jarzmik 2017-09-02  318  	if (ret >= 0) {
+74426fbff66eea Robert Jarzmik 2017-09-02  319  		dev_set_name(&ac97_ctrl->adap, "ac97-%d", ret);
+74426fbff66eea Robert Jarzmik 2017-09-02  320  		ac97_ctrl->adap.type = &ac97_adapter_type;
+74426fbff66eea Robert Jarzmik 2017-09-02  321  		ac97_ctrl->adap.parent = ac97_ctrl->parent;
+74426fbff66eea Robert Jarzmik 2017-09-02  322  		ret = device_register(&ac97_ctrl->adap);
+74426fbff66eea Robert Jarzmik 2017-09-02  323  		if (ret)
+74426fbff66eea Robert Jarzmik 2017-09-02  324  			put_device(&ac97_ctrl->adap);
+74426fbff66eea Robert Jarzmik 2017-09-02  325  	}
+74426fbff66eea Robert Jarzmik 2017-09-02  326  	if (!ret)
+74426fbff66eea Robert Jarzmik 2017-09-02  327  		list_add(&ac97_ctrl->controllers, &ac97_controllers);
+74426fbff66eea Robert Jarzmik 2017-09-02  328  	mutex_unlock(&ac97_controllers_mutex);
+74426fbff66eea Robert Jarzmik 2017-09-02  329  
+74426fbff66eea Robert Jarzmik 2017-09-02  330  	if (!ret)
+74426fbff66eea Robert Jarzmik 2017-09-02  331  		dev_dbg(&ac97_ctrl->adap, "adapter registered by %s\n",
+74426fbff66eea Robert Jarzmik 2017-09-02  332  			dev_name(ac97_ctrl->parent));
+74426fbff66eea Robert Jarzmik 2017-09-02  333  	return ret;
+74426fbff66eea Robert Jarzmik 2017-09-02  334  }
+74426fbff66eea Robert Jarzmik 2017-09-02  335  
+74426fbff66eea Robert Jarzmik 2017-09-02  336  /**
+74426fbff66eea Robert Jarzmik 2017-09-02  337   * snd_ac97_controller_register - register an ac97 controller
+74426fbff66eea Robert Jarzmik 2017-09-02  338   * @ops: the ac97 bus operations
+74426fbff66eea Robert Jarzmik 2017-09-02  339   * @dev: the device providing the ac97 DC function
+74426fbff66eea Robert Jarzmik 2017-09-02  340   * @slots_available: mask of the ac97 codecs that can be scanned and probed
+74426fbff66eea Robert Jarzmik 2017-09-02  341   *                   bit0 => codec 0, bit1 => codec 1 ... bit 3 => codec 3
+74426fbff66eea Robert Jarzmik 2017-09-02  342   *
+74426fbff66eea Robert Jarzmik 2017-09-02  343   * Register a digital controller which can control up to 4 ac97 codecs. This is
+74426fbff66eea Robert Jarzmik 2017-09-02  344   * the controller side of the AC97 AC-link, while the slave side are the codecs.
+74426fbff66eea Robert Jarzmik 2017-09-02  345   *
+74426fbff66eea Robert Jarzmik 2017-09-02  346   * Returns a valid controller upon success, negative pointer value upon error
+74426fbff66eea Robert Jarzmik 2017-09-02  347   */
+74426fbff66eea Robert Jarzmik 2017-09-02  348  struct ac97_controller *snd_ac97_controller_register(
+74426fbff66eea Robert Jarzmik 2017-09-02  349  	const struct ac97_controller_ops *ops, struct device *dev,
+74426fbff66eea Robert Jarzmik 2017-09-02  350  	unsigned short slots_available, void **codecs_pdata)
+74426fbff66eea Robert Jarzmik 2017-09-02 @351  {
+74426fbff66eea Robert Jarzmik 2017-09-02  352  	struct ac97_controller *ac97_ctrl;
+74426fbff66eea Robert Jarzmik 2017-09-02  353  	int ret, i;
+74426fbff66eea Robert Jarzmik 2017-09-02  354  
+74426fbff66eea Robert Jarzmik 2017-09-02  355  	ac97_ctrl = kzalloc(sizeof(*ac97_ctrl), GFP_KERNEL);
+74426fbff66eea Robert Jarzmik 2017-09-02  356  	if (!ac97_ctrl)
+74426fbff66eea Robert Jarzmik 2017-09-02  357  		return ERR_PTR(-ENOMEM);
+74426fbff66eea Robert Jarzmik 2017-09-02  358  
+74426fbff66eea Robert Jarzmik 2017-09-02  359  	for (i = 0; i < AC97_BUS_MAX_CODECS && codecs_pdata; i++)
+74426fbff66eea Robert Jarzmik 2017-09-02  360  		ac97_ctrl->codecs_pdata[i] = codecs_pdata[i];
+74426fbff66eea Robert Jarzmik 2017-09-02  361  
+74426fbff66eea Robert Jarzmik 2017-09-02  362  	ac97_ctrl->ops = ops;
+74426fbff66eea Robert Jarzmik 2017-09-02  363  	ac97_ctrl->slots_available = slots_available;
+74426fbff66eea Robert Jarzmik 2017-09-02  364  	ac97_ctrl->parent = dev;
+74426fbff66eea Robert Jarzmik 2017-09-02  365  	ret = ac97_add_adapter(ac97_ctrl);
+74426fbff66eea Robert Jarzmik 2017-09-02  366  
+74426fbff66eea Robert Jarzmik 2017-09-02  367  	if (ret)
+74426fbff66eea Robert Jarzmik 2017-09-02  368  		goto err;
+74426fbff66eea Robert Jarzmik 2017-09-02  369  	ac97_bus_reset(ac97_ctrl);
+74426fbff66eea Robert Jarzmik 2017-09-02  370  	ac97_bus_scan(ac97_ctrl);
+74426fbff66eea Robert Jarzmik 2017-09-02  371  
+74426fbff66eea Robert Jarzmik 2017-09-02  372  	return ac97_ctrl;
+74426fbff66eea Robert Jarzmik 2017-09-02  373  err:
+74426fbff66eea Robert Jarzmik 2017-09-02  374  	kfree(ac97_ctrl);
+74426fbff66eea Robert Jarzmik 2017-09-02  375  	return ERR_PTR(ret);
+74426fbff66eea Robert Jarzmik 2017-09-02  376  }
+74426fbff66eea Robert Jarzmik 2017-09-02  377  EXPORT_SYMBOL_GPL(snd_ac97_controller_register);
+74426fbff66eea Robert Jarzmik 2017-09-02  378  
+
+:::::: The code at line 192 was first introduced by commit
+:::::: 74426fbff66eea8e8d1f42c8238c268d1e63a832 ALSA: ac97: add an ac97 bus
+
+:::::: TO: Robert Jarzmik <robert.jarzmik@free.fr>
+:::::: CC: Mark Brown <broonie@kernel.org>
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
+
