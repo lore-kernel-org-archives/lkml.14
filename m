@@ -1,103 +1,124 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3105E3D981
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 15:43:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E7574879E;
+	Mon, 22 Jan 2024 15:44:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705938185; cv=none; b=ZN2awl9cf8Fct1Xf8yKZpVG1aurf2AZDltToygurJSB1LJ3jHiF0iCMnNlx8dAh+bGoQMhRmTcQl5wS5PYV0zmcKHttiJ/v9MFcB+eoJa3hhvseSl6NRE2Q/O5DJdd1k5QrguyVK9zaDGwmsJgXqA3iD4prpGwDRuUwKtqwE2VI=
+	t=1705938296; cv=none; b=C9xnUt//sBxpCBxI9dE5AGJKbKefuI0Ezx1eId4UIkosXYm7NyYOsyRVQDBAsr39GUqG2DLQCSKzSfLFcH5BpCVhf2Gzn242400ERNisMusLhRSGcPFaeDX4vHTZear2rNMtfBwKBlyh1erqlZImEbK1RxENbZ9aWuNzKVFHhIc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705938185; c=relaxed/simple;
-	bh=UEj4gAERIGEoPdtDn8jn8QnfibDGp7ffc61lkNbKZ9Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IEJNS+zJpCK0TytZg66zQTHbNv1gdOEW3mJM+OcOQb19yDEHB5eD53Ii07o8onYwv0C0CQ10HztUE8HL0+zVgireaAXUHfZeOfJ1j1uRW74YaM1U4DSpw5NrhEMD6qgEC0vnMLWwRLC5FbHvEeyaeZKuQU3IzKml5KIFOtU/xQc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aGDyP7Z0; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1705938296; c=relaxed/simple;
+	bh=XVEvO/xHApugNMmo0t/BHKJyiHUEpSxLpzJk8RCmns0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WoLEFpKVpALUO5+l0PLdK33BbxNomkHcIe9JkIGQf7etYJXhl+UoX0zzdgy4EvXhsF+lIC2qw7eN2rtCZR4lLcxq+sKXpvPuadHcv+se8jjwAFXAuCMzkfmNvTJTH2WMyIkNEKBlOkwOf29FdM2t48KkWqu/M5n99N4MlnSzXFo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GttxGDNW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aGDyP7Z0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1705938183;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UEj4gAERIGEoPdtDn8jn8QnfibDGp7ffc61lkNbKZ9Q=;
-	b=aGDyP7Z0uFAIXf4IzTk8DnrAkYD7bZflBLMgwmsP369mfVVqgojq2UABYn8pHCCz5OPV0h
-	77VDTkIQcazdcLu8PDtPNFviqtOSjIN3e2GFD+aJgt56bcoN+L+2tfuLRjozrdjNo7qxqx
-	6/qfCiW53rmk6O+FdmYLq4F58RpwUDo=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-392-t6nMjAPcMqGP7iNVD1tHag-1; Mon,
- 22 Jan 2024 10:42:58 -0500
-X-MC-Unique: t6nMjAPcMqGP7iNVD1tHag-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 2895B3C025B1;
-	Mon, 22 Jan 2024 15:42:58 +0000 (UTC)
-Received: from localhost (unknown [10.39.194.240])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 61FCFC259DD;
-	Mon, 22 Jan 2024 15:42:56 +0000 (UTC)
-Date: Mon, 22 Jan 2024 10:42:55 -0500
-From: Stefan Hajnoczi <stefanha@redhat.com>
-To: Yi Sun <yi.sun@unisoc.com>
-Cc: axboe@kernel.dk, mst@redhat.com, jasowang@redhat.com,
-	xuanzhuo@linux.alibaba.com, pbonzini@redhat.com,
-	virtualization@lists.linux.dev, linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org, zhiguo.niu@unisoc.com,
-	hongyu.jin@unisoc.com, sunyibuaa@gmail.com
-Subject: Re: [PATCH 2/2] virtio-blk: Ensure no requests in virtqueues before
- deleting vqs.
-Message-ID: <20240122154255.GA389442@fedora>
-References: <20240122110722.690223-1-yi.sun@unisoc.com>
- <20240122110722.690223-3-yi.sun@unisoc.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GttxGDNW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45B59C433C7;
+	Mon, 22 Jan 2024 15:44:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705938295;
+	bh=XVEvO/xHApugNMmo0t/BHKJyiHUEpSxLpzJk8RCmns0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=GttxGDNWqLmKUSnoZzl2ys1J9UCKV14Tw6AeRf55R1l5g3sGuJnS0O3JhUzipx2wp
+	 fVoLfMy4YKU1XI3tEQR2vsUAonkBAjgP1sXntLKi+TjxSX3MU/Um5F63As+2Mpj8CA
+	 mWnJ4S8UgnLLAs5pOPUTGmrwC6L1xXyg0+KzrqiND1VSgPVNf4mATKH7CWK56kvbqY
+	 nauLvJzoqsP5DKlOa1tigOH91OIINz4f+Q1Cuv776zS/1/g6vAuEoh7zZxtR4aqTXS
+	 f3zL9YGaXF+ap0CpmIDaYv+AbiD7wVlMz+7EBpvGUtVoYO4WcBqVcGh2zA4FP9b1Nk
+	 PXU6XOQ2l3L1A==
+Message-ID: <935d0ee9-adeb-43d1-a855-8f0287d0d4a2@kernel.org>
+Date: Mon, 22 Jan 2024 16:44:50 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="eXv2gE92Usb5fs07"
-Content-Disposition: inline
-In-Reply-To: <20240122110722.690223-3-yi.sun@unisoc.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 4/6] dt-bindings: pwm: sprd: Convert to YAML
+To: Wenhua Lin <Wenhua.Lin@unisoc.com>,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: Orson Zhai <orsonzhai@gmail.com>,
+ Baolin Wang <baolin.wang@linux.alibaba.com>,
+ Chunyan Zhang <zhang.lyra@gmail.com>, linux-pwm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, wenhua lin <wenhua.lin1994@gmail.com>,
+ Xiongpeng Wu <xiongpeng.wu@unisoc.com>, zhaochen su
+ <zhaochen.su29@gmail.com>, Zhaochen Su <Zhaochen.Su@unisoc.com>,
+ Xiaolong Wang <Xiaolong.Wang@unisoc.com>
+References: <20240122081754.17058-1-Wenhua.Lin@unisoc.com>
+ <20240122081754.17058-5-Wenhua.Lin@unisoc.com>
+Content-Language: en-US
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20240122081754.17058-5-Wenhua.Lin@unisoc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+On 22/01/2024 09:17, Wenhua Lin wrote:
+> Convert Spreadtrum PWM controller bindings to DT schema.
+> 
+> Signed-off-by: Wenhua Lin <Wenhua.Lin@unisoc.com>
 
---eXv2gE92Usb5fs07
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Please use scripts/get_maintainers.pl to get a list of necessary people
+and lists to CC. It might happen, that command when run on an older
+kernel, gives you outdated entries. Therefore please be sure you base
+your patches on recent Linux kernel.
 
-On Mon, Jan 22, 2024 at 07:07:22PM +0800, Yi Sun wrote:
-> Ensure no remaining requests in virtqueues before resetting vdev and
-> deleting virtqueues. Otherwise these requests will never be completed.
-> It may cause the system to become unresponsive. So it is better to place
-> blk_mq_quiesce_queue() in front of virtio_reset_device().
+Tools like b4 or scripts_getmaintainer.pl provide you proper list of
+people, so fix your workflow. Tools might also fail if you work on some
+ancient tree (don't, use mainline), work on fork of kernel (don't, use
+mainline) or you ignore some maintainers (really don't). Just use b4 and
+all the problems go away.
 
-QEMU's virtio-blk device implementation completes all requests during
-device reset. Most device implementations have to do the same to avoid
-leaving dangling requests in flight across device reset.
+You missed at least devicetree list (maybe more), so this won't be
+tested by automated tooling. Performing review on untested code might be
+a waste of time, thus I will skip this patch entirely till you follow
+the process allowing the patch to be tested.
 
-Which device implementation are you using and why is it safe for the
-device is simply drop requests across device reset?
+Please kindly resend and include all necessary To/Cc entries.
 
-Stefan
-
---eXv2gE92Usb5fs07
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAmWujP8ACgkQnKSrs4Gr
-c8j4JQf/dPyJyYzS3Bby2PGbjhtqMfkxWPLzThhLRlbyvKX27qbZx0RGZoWtmUBM
-vDn2i3qmIoXs6vvj6N/y67VNoMAellkdO4HFstAF2BW8AehglGRbQMW0Bxhp/4er
-xIPRGRNhs77ybcO0DJB6qnB99e3VWRpAnALJXNgzAYkQrghnMCkQKFK6UsPP+GXc
-XQ+Tlzm8RngA6L46s42zyJ9Do6ZEykuif5BLKpar7vzXz1mCKAgGlWG9HKmXFwta
-FBqmnl8fB1GAmRsKqnqj6hQHnSXvdtBfbM4813qfCNUaaWGwaoCAQYTw9PDDWL8J
-cmGCudXGHAQ4MNItXS65SUzHkpmlZg==
-=OduK
------END PGP SIGNATURE-----
-
---eXv2gE92Usb5fs07--
+Best regards,
+Krzysztof
 
