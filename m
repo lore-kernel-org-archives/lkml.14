@@ -1,41 +1,44 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FB2B3CF57;
-	Mon, 22 Jan 2024 13:28:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 794433D0A4;
+	Mon, 22 Jan 2024 13:28:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705930121; cv=none; b=AGGR+Ht7cYlfLO9x3BzCuBlsdQiP5ncEhgJ1Y22Ix3pY9If8qpuas7YtwuxAo18IZ9KMNbaVrzd7fE0EDhOKijF977h++l65LkQ85udttMAtxy7s9x4QeRakFe6xLR7dJyZ39HnGbQ7bA0Uj2aV3ZdLX2W/fykC2pv5Zi8gyyrE=
+	t=1705930122; cv=none; b=VyAIKQgMrqvMyUgTLfHd7LUgbhH/jiaG5PaS4Rg6lTT9DMpJ76dZhlSW01eg1e5Yctcf1vw0T4/YKNmgPxz+sgCvqmHLLQhpgyJ4bp/fk29UXJSR8S/rIdiZ2OexnHMvM8bb8gYY3aWs7HZ/YuarE7LL0GsMF/Wv/IQJ1AXFWUY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705930121; c=relaxed/simple;
-	bh=KD9CzXDI3FSpEchHjIpMd6dRa37p1zEkYPrCD6KgGOk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=rEStQrC7Z9rI1bVD4KcwBx/D3Ibru33gkzdWDs3L4UmVZByBsgjpTiS0Fpvm3Et4RXh0JHry/bODDcFm0ISxot0Wdp4hELpY+VnJ4VGVf/NBorohoSL1+Ibp2CEPUrQgB9OGRnU26kr+GxJBstUIflIxeSAHvZK+l6OfqkvpNbk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Raor0MWw; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=q8TzPILh; arc=none smtp.client-ip=193.142.43.55
+	s=arc-20240116; t=1705930122; c=relaxed/simple;
+	bh=wp8CIgOze8zh7UuHcI2z6RuWp2qimi//9CWSfp979X4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=oLhhKe9cUTYo8saZyt6Hodrr409y3KCIWc3EUkDItLO5jzJaAP4vXM4Y+W2Gyvf5C4YiddfLY93XJdTL12DAK4uIuCdYRLzC/JUOhaky3Hw3dlElDmVQXPnKPtS8fyMjb4iCUcX+cOO9QGKYjCTqibBLhoL4Ah9HYvT7uUM8bSg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=PIUvxB/S; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=C6DZJtBA; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Raor0MWw";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="q8TzPILh"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="PIUvxB/S";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="C6DZJtBA"
 From: Anna-Maria Behnsen <anna-maria@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1705930118;
+	s=2020; t=1705930119;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=uKZCnmT0rQ7xvCextkDvrtIUvMCCC3PPe7T7/Wyualk=;
-	b=Raor0MWwk1oF1SxQ7Ze8VNww2sdo/sPpop0PCrLNm2ls02Ioq0GJW6O+i/E1B+Zqwp0IIL
-	O5BJPhKiCyfmXIrWDnAYqCiVypvpei5kMDFuEP4EB5odb3IoiWv6o+h5kKGxjllOdwGs1j
-	4pyM764bjLDuC1+LaLcr0pQlsxxU3rS3WSUi9JYjQfeLXmOkafzXh1gL9WU1J6rtPiJkss
-	Mm+jcCtBP3vtS6UOOBQv0WHV+JMQRi0xCEiduOWw7nkyrxqlVYHkpr99iAKAGRVU7TlgHp
-	WplPkTMYrUz3dSt3wA/wQVWhLV4OsGJaob2LsvTUG8PjlSmHeQWmAK7bMrlLVw==
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GvZno+kHevh2g23gq9x/FGgfnjZz8motFDnpxT/9ixo=;
+	b=PIUvxB/SYWMC8waUFFQ7/UC2TVIVHS+BH/I6SQhE+1L70dC+9ZPyKzdZhFTB3x60g7BVCu
+	1PWjW9qZq7hOmAhcvV9z8N1CvviF0sjarzJAL5i1XiZ16cucMP0CkAqNc+qMg6my4wPxle
+	4ZixEKLw1ewCs7xsmJ1rKPrDZfpmW7+LAIRQPx2T5HLnD6CyzU2Z87A9uxWSLZCeF5BsYA
+	wjmSyhLW7f/o7RddiCzSwOv8OtWuW7xk78UHg4bqGXlxPsNkItbg2rzpPPaqPLCNxLwO3r
+	68iF+TRZHPBmfEVSiztgrvnirt+MG+MnyhmYTJDqMH3Qr9sTEqU4mDH3+2NFGA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1705930118;
+	s=2020e; t=1705930119;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=uKZCnmT0rQ7xvCextkDvrtIUvMCCC3PPe7T7/Wyualk=;
-	b=q8TzPILh4eJvE7QAeIHvk96RAVdnuUUBDtMZ11+lHqDQxwHvsd24EbagSL8sK2DZ8tPQUr
-	vczrSi1+FGylKKCg==
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GvZno+kHevh2g23gq9x/FGgfnjZz8motFDnpxT/9ixo=;
+	b=C6DZJtBAz6GjBt4Hm9vjPbPUg4cy/VfW0WLxpMGcR+y85IU70jGFMPJmYXYx07ZV2x5jOM
+	Q0oXOLBh739O2ZCQ==
 To: linux-doc@vger.kernel.org
 Cc: Jonathan Corbet <corbet@lwn.net>,
 	Thomas Gleixner <tglx@linutronix.de>,
@@ -64,9 +67,11 @@ Cc: Jonathan Corbet <corbet@lwn.net>,
 	Benjamin Tissoires <benjamin.tissoires@redhat.com>,
 	linux-kernel@vger.kernel.org,
 	Anna-Maria Behnsen <anna-maria@linutronix.de>
-Subject: [PATCH 0/2] kernel-doc: Remove deprecated kernel-doc option 'functions'
-Date: Mon, 22 Jan 2024 14:28:18 +0100
-Message-Id: <20240122132820.46633-1-anna-maria@linutronix.de>
+Subject: [PATCH 2/2] Documentation: Remove deprecated kernel-doc option 'functions'
+Date: Mon, 22 Jan 2024 14:28:20 +0100
+Message-Id: <20240122132820.46633-3-anna-maria@linutronix.de>
+In-Reply-To: <20240122132820.46633-1-anna-maria@linutronix.de>
+References: <20240122132820.46633-1-anna-maria@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,75 +80,52 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hi,
+As there are no more users of deprecated kernel-doc option 'functions', remove
+the related parts in documentation and scripts.
 
-the kernel-doc option 'functions' is marked deprecated and is simply an
-alias for 'identifiers' and the conversion didn't looked that bad. So the
-first patch replaces all existing users of 'functions' and the second
-removes all parts in documentation and also inside the scripts.
+Signed-off-by: Anna-Maria Behnsen <anna-maria@linutronix.de>
+---
+ Documentation/doc-guide/kernel-doc.rst | 3 ---
+ Documentation/sphinx/kerneldoc.py      | 5 -----
+ 2 files changed, 8 deletions(-)
 
-Thanks,
-
-	Anna-Maria
-
-
-
-Anna-Maria Behnsen (2):
-  Documentation: Replace deprecated 'functions' by 'identifiers'
-  Documentation: Remove deprecated kernel-doc option 'functions'
-
- Documentation/PCI/pci.rst                     |  4 +-
- Documentation/arch/x86/sgx.rst                | 16 ++---
- Documentation/core-api/boot-time-mm.rst       |  2 +-
- Documentation/core-api/debug-objects.rst      | 14 ++--
- Documentation/core-api/genalloc.rst           | 34 +++++-----
- Documentation/core-api/generic-radix-tree.rst |  2 +-
- .../core-api/gfp_mask-from-fs-io.rst          |  4 +-
- Documentation/core-api/idr.rst                |  4 +-
- Documentation/core-api/kernel-api.rst         | 12 ++--
- Documentation/core-api/mm-api.rst             |  6 +-
- Documentation/core-api/printk-basics.rst      |  4 +-
- Documentation/crypto/api-aead.rst             |  6 +-
- Documentation/crypto/api-akcipher.rst         |  6 +-
- Documentation/crypto/api-digest.rst           |  8 +--
- Documentation/crypto/api-kpp.rst              | 10 +--
- Documentation/crypto/api-rng.rst              |  4 +-
- Documentation/crypto/api-skcipher.rst         |  8 +--
- Documentation/dev-tools/kcsan.rst             |  6 +-
- Documentation/dev-tools/kfence.rst            | 10 +--
- Documentation/dev-tools/kselftest.rst         | 16 ++---
- Documentation/doc-guide/kernel-doc.rst        |  3 -
- Documentation/driver-api/80211/cfg80211.rst   | 16 ++---
- .../driver-api/80211/mac80211-advanced.rst    | 26 ++++----
- Documentation/driver-api/80211/mac80211.rst   | 12 ++--
- Documentation/driver-api/device_link.rst      |  2 +-
- .../firmware/fallback-mechanisms.rst          |  4 +-
- .../driver-api/firmware/other_interfaces.rst  | 10 +--
- .../driver-api/firmware/request_firmware.rst  | 14 ++--
- Documentation/driver-api/fpga/fpga-bridge.rst |  8 +--
- Documentation/driver-api/fpga/fpga-mgr.rst    | 18 +++---
- .../driver-api/fpga/fpga-programming.rst      |  8 +--
- Documentation/driver-api/fpga/fpga-region.rst | 22 +++----
- Documentation/driver-api/hte/hte.rst          |  4 +-
- Documentation/driver-api/i2c.rst              |  2 +-
- Documentation/driver-api/infiniband.rst       | 16 ++---
- Documentation/driver-api/mei/hdcp.rst         |  2 +-
- Documentation/driver-api/reset.rst            | 34 +++++-----
- Documentation/driver-api/spi.rst              |  2 +-
- Documentation/driver-api/usb/typec.rst        | 26 ++++----
- Documentation/driver-api/usb/typec_bus.rst    | 10 +--
- .../gpu/amdgpu/display/display-manager.rst    | 10 +--
- Documentation/gpu/drm-kms-helpers.rst         | 10 +--
- Documentation/gpu/i915.rst                    | 64 +++++++++----------
- Documentation/gpu/rfc/i915_scheduler.rst      |  2 +-
- Documentation/gpu/rfc/i915_small_bar.rst      |  4 +-
- Documentation/gpu/vga-switcheroo.rst          | 14 ++--
- Documentation/hid/hid-bpf.rst                 |  6 +-
- Documentation/mm/ksm.rst                      |  2 +-
- Documentation/security/tpm/tpm_vtpm_proxy.rst |  2 +-
- Documentation/sphinx/kerneldoc.py             |  5 --
- 50 files changed, 263 insertions(+), 271 deletions(-)
-
+diff --git a/Documentation/doc-guide/kernel-doc.rst b/Documentation/doc-guide/kernel-doc.rst
+index 6ad72ac6861b..74d6408abcd3 100644
+--- a/Documentation/doc-guide/kernel-doc.rst
++++ b/Documentation/doc-guide/kernel-doc.rst
+@@ -505,9 +505,6 @@ no-identifiers: *[ function/type ...]*
+     .. kernel-doc:: lib/bitmap.c
+        :no-identifiers: bitmap_parselist
+ 
+-functions: *[ function/type ...]*
+-  This is an alias of the 'identifiers' directive and deprecated.
+-
+ doc: *title*
+   Include documentation for the ``DOC:`` paragraph identified by *title* in
+   *source*. Spaces are allowed in *title*; do not quote the *title*. The *title*
+diff --git a/Documentation/sphinx/kerneldoc.py b/Documentation/sphinx/kerneldoc.py
+index 7acf09963daa..2d57c464c76a 100644
+--- a/Documentation/sphinx/kerneldoc.py
++++ b/Documentation/sphinx/kerneldoc.py
+@@ -53,7 +53,6 @@ class KernelDocDirective(Directive):
+         'internal': directives.unchanged,
+         'identifiers': directives.unchanged,
+         'no-identifiers': directives.unchanged,
+-        'functions': directives.unchanged,
+     }
+     has_content = False
+ 
+@@ -74,10 +73,6 @@ class KernelDocDirective(Directive):
+ 
+         tab_width = self.options.get('tab-width', self.state.document.settings.tab_width)
+ 
+-        # 'function' is an alias of 'identifiers'
+-        if 'functions' in self.options:
+-            self.options['identifiers'] = self.options.get('functions')
+-
+         # FIXME: make this nicer and more robust against errors
+         if 'export' in self.options:
+             cmd += ['-export']
 -- 
 2.39.2
 
