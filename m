@@ -1,57 +1,61 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F07A3D0AB
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 14:25:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB5623D550;
+	Mon, 22 Jan 2024 14:26:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705933539; cv=none; b=QCvbXTmtnLzhOJb+VrHlnMrF27OFp3WuRlEp7Y6xJqnJVJSjQO+ow0YUZDCPSfsjmvYJ9+4pozP4wlUVIJGxoZpEIaMx79r+mYz6DB6ux+SKfnSoiaPotZC9zgUIr8WzrVhzBET4dulvVJAV1/WHW740HtZq9OfiwKCU3vpr05U=
+	t=1705933564; cv=none; b=joOAZ8IW9nB+o62ZONNKy/AnSQhOflERtW0RiYzcxwnPSbAI9j5CPAIcc+xBCW9pxQbQGjdSBFcDreWE4xth/UIFQfEQi/1kkP+bVax5usQHO+AoN6h6ICnMIvSJ/LEWzef3sIS8kVDxnp9SJJTunxU8S+hdeJiyCJJPHFy6DLg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705933539; c=relaxed/simple;
-	bh=Rh5IVlp0YssIc4eNTuzg4mhQZO06svg3HovTv2W7ILM=;
+	s=arc-20240116; t=1705933564; c=relaxed/simple;
+	bh=pjnm2lVqgNCInFj28zDKIV7ML2AgLtVB+44YgPff9vM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SjVy0zoG0sGrP8bsmUH00Zzj7olTRuWPSTcL4wVB3RgpiUgx3WjYiS/0q8SJyMzqSoeRgACD4ZQIx974dvVRaZxjJ0V35pv5NXSXrC/Gx/IlTLwuVySn23695aRJ6OtSFu4Ly/WQUaqrE9g8o5mG+OPLKBaixBMt3DiYRZboo0Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SV86V6/s; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=YUyT/JMxaOszL0D5bp2zsUK+DDoX+QzxRJC+MNOnSDz04/ACLJCLQdyPAhZ607iJ/1u6F2twvXpw0V/V3o3kw33IfA3pKV/lryz5CnRURrDh9Fcza4uBtAnJ8ckjen148HDykE6zG5cdkH4qEsaP1xRrct4S97waok44hDHo8mU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=jr1UCVj1; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SV86V6/s"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1705933536;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1kM0OznqVTZzB3UnT1IpCXRocmMQjkR6vJeB4/d2+AU=;
-	b=SV86V6/s0RUelitLiD1dhbsWUaF0Ut+x+Nl+lxOzp8ukfvfkZxjjrZkgZcSDUV0zwcGsqC
-	uAzOz9p8t27nt9rwTwatEFYoAs0MwS9V4UkZ/ueqOcmg1bepl8hslKmfsfHtyy5LsCDNye
-	Of/QKds691qh/5xsqpC1gfowveJ8a34=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-392-a187XN_BOLKbZjXdHTW1Ag-1; Mon, 22 Jan 2024 09:25:32 -0500
-X-MC-Unique: a187XN_BOLKbZjXdHTW1Ag-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 2D3FC868A22;
-	Mon, 22 Jan 2024 14:25:32 +0000 (UTC)
-Received: from tpad.localdomain (unknown [10.96.133.2])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id E0C333C2E;
-	Mon, 22 Jan 2024 14:25:31 +0000 (UTC)
-Received: by tpad.localdomain (Postfix, from userid 1000)
-	id 387EE401CEC01; Mon, 22 Jan 2024 11:22:10 -0300 (-03)
-Date: Mon, 22 Jan 2024 11:22:10 -0300
-From: Marcelo Tosatti <mtosatti@redhat.com>
-To: Tejun Heo <tj@kernel.org>
-Cc: Frederic Weisbecker <frederic@kernel.org>,
-	Joe Mario <jmario@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mark power efficient workqueue as unbounded if nohz_full
- enabled
-Message-ID: <Za56EiAI9D5S8NuT@tpad>
-References: <ZaqbP0QmVPAQTbYA@tpad>
- <ZasMfA-v1YykDA1i@slm.duckdns.org>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="jr1UCVj1"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=ZgpoVOQM8qrxQhdVveMCPFTkIxUppA0Pw9b82iO99kI=; b=jr1UCVj1Q4Bptbe9SGYAU94oiy
+	+J3vFXfAUmclOcNEKiS/+8BISG6iv9l4K7FuRewcUy5Q4BfmJFtWoYCTxooiqKP6+NnNQNfyb2kTq
+	S5M9atD4TW+8KRdWxeJUAqi4r+hRuUjIeD9Qm5yNjNBe3hPRt48tN5yplKPrGtyTTUAM=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1rRvEz-005jLv-Qg; Mon, 22 Jan 2024 15:25:33 +0100
+Date: Mon, 22 Jan 2024 15:25:33 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: Jie Luo <quic_luoj@quicinc.com>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, agross@kernel.org,
+	andersson@kernel.org, konrad.dybcio@linaro.org, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org, corbet@lwn.net, catalin.marinas@arm.com,
+	will@kernel.org, p.zabel@pengutronix.de, linux@armlinux.org.uk,
+	shannon.nelson@amd.com, anthony.l.nguyen@intel.com,
+	jasowang@redhat.com, brett.creeley@amd.com, rrameshbabu@nvidia.com,
+	joshua.a.hay@intel.com, arnd@arndb.de, geert+renesas@glider.be,
+	neil.armstrong@linaro.org, dmitry.baryshkov@linaro.org,
+	nfraprado@collabora.com, m.szyprowski@samsung.com, u-kumar1@ti.com,
+	jacob.e.keller@intel.com, netdev@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, ryazanov.s.a@gmail.com,
+	ansuelsmth@gmail.com, quic_kkumarcs@quicinc.com,
+	quic_suruchia@quicinc.com, quic_soni@quicinc.com,
+	quic_pavir@quicinc.com, quic_souravp@quicinc.com,
+	quic_linchen@quicinc.com, quic_leiwei@quicinc.com
+Subject: Re: [PATCH net-next 02/20] dt-bindings: net: qcom,ppe: Add bindings
+ yaml file
+Message-ID: <6fbfc205-fffa-42bd-8019-368559db77ac@lunn.ch>
+References: <20240110114033.32575-1-quic_luoj@quicinc.com>
+ <20240110114033.32575-3-quic_luoj@quicinc.com>
+ <1d1116da-9af3-49e4-a180-cff721df5df5@linaro.org>
+ <749136bc-3db9-4b2d-a9ca-e5fb5985f639@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,65 +64,46 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZasMfA-v1YykDA1i@slm.duckdns.org>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
+In-Reply-To: <749136bc-3db9-4b2d-a9ca-e5fb5985f639@quicinc.com>
 
-On Fri, Jan 19, 2024 at 01:57:48PM -1000, Tejun Heo wrote:
-> On Fri, Jan 19, 2024 at 12:54:39PM -0300, Marcelo Tosatti wrote:
+> > > +++ b/Documentation/devicetree/bindings/net/qcom,ppe.yaml
+> > > @@ -0,0 +1,1330 @@
+> > > +# SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/net/qcom,ppe.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: Qualcomm Packet Process Engine Ethernet controller
 > > 
-> > A customer using nohz_full has experienced the following interruption:
-> > 
-> > oslat-1004510 [018] timer_cancel:         timer=0xffff90a7ca663cf8
-> > oslat-1004510 [018] timer_expire_entry:   timer=0xffff90a7ca663cf8 function=delayed_work_timer_fn now=4709188240 baseclk=4709188240
-> > oslat-1004510 [018] workqueue_queue_work: work struct=0xffff90a7ca663cd8 function=fb_flashcursor workqueue=events_power_efficient req_cpu=8192 cpu=18
-> > oslat-1004510 [018] workqueue_activate_work: work struct 0xffff90a7ca663cd8
-> > oslat-1004510 [018] sched_wakeup:         kworker/18:1:326 [120] CPU:018
-> > oslat-1004510 [018] timer_expire_exit:    timer=0xffff90a7ca663cf8
-> > oslat-1004510 [018] irq_work_entry:       vector=246
-> > oslat-1004510 [018] irq_work_exit:        vector=246
-> > oslat-1004510 [018] tick_stop:            success=0 dependency=SCHED
-> > oslat-1004510 [018] hrtimer_start:        hrtimer=0xffff90a70009cb00 function=tick_sched_timer/0x0 ...
-> > oslat-1004510 [018] softirq_exit:         vec=1 [action=TIMER]
-> > oslat-1004510 [018] softirq_entry:        vec=7 [action=SCHED]
-> > oslat-1004510 [018] softirq_exit:         vec=7 [action=SCHED]
-> > oslat-1004510 [018] tick_stop:            success=0 dependency=SCHED
-> > oslat-1004510 [018] sched_switch:         oslat:1004510 [120] R ==> kworker/18:1:326 [120]
-> > kworker/18:1-326 [018] workqueue_execute_start: work struct 0xffff90a7ca663cd8: function fb_flashcursor
-> > kworker/18:1-326 [018] workqueue_queue_work: work struct=0xffff9078f119eed0 function=drm_fb_helper_damage_work workqueue=events req_cpu=8192 cpu=18
-> > kworker/18:1-326 [018] workqueue_activate_work: work struct 0xffff9078f119eed0
-> > kworker/18:1-326 [018] timer_start:          timer=0xffff90a7ca663cf8 function=delayed_work_timer_fn ...
-> > 
-> > Set wq_power_efficient to true, in case nohz_full is enabled. 
-> > This makes the power efficient workqueue be unbounded, which allows
-> > workqueue items there to be moved to HK CPUs.
-> > 
-> > Signed-off-by: Marcelo Tosatti <mtosatti@redhat.com>
-> 
-> Applied to wq/for-6.9.
-> 
-> A side note: with the recent affinity improvements to unbound workqueues, I
-> wonder whether we'd be able to drop wq_power_efficient and just use
-> system_unbound_wq instead without noticeable perf difference.
-> 
-> Thanks.
-> 
-> -- 
-> tejun
+> > Where is the ref to ethernet controllers schema?
+> Sorry, the title above is not describing the device for this dtbindings
+> correctly.  It should say "Qualcomm Packet Process Engine". The
+> reference to the schema for PPE is mentioned above.
 
-Tejun,
+I think you are not correctly understanding the comment. within the
+PPE you have a collection of Ethernet interfaces. All the common
+properties for Ethernet ports are described in
 
-About the performance difference (of running locally VS running
-remotely), can you list a few performance sensitive work queues 
-(where per-CPU execution makes a significant difference).
+Documentation/devicetree/bindings/net/ethernet-controller.yaml
 
-Because i suppose it would be safe (from a performance regression
-perspective) to move all delayed works to housekeeping CPUs.
+so you are expected to reference this schema.
 
-And also, being more extreme, why not an option to mark all workqueues
-as unbounded (or perhaps userspace control of bounding, even for 
-workqueues marked as "per-CPU").
+> > > +description:
+> > > +  The PPE(packet process engine) is comprised of three componets, Ethernet
+> > > +  DMA, Switch core and Port wrapper, Ethernet DMA is used to transmit and
+> > > +  receive packets between Ethernet subsytem and host. The Switch core has
+> > > +  maximum 8 ports(maximum 6 front panel ports and two FIFO interfaces),
+> > > +  among which there are GMAC/XGMACs used as external interfaces and FIFO
+> > > +  interfaces connected the EDMA/EIP, The port wrapper provides connections
+> > > +  from the GMAC/XGMACS to SGMII/QSGMII/PSGMII/USXGMII/10G-BASER etc, there
+> > > +  are maximu 3 UNIPHY(PCS) instances supported by PPE.
 
-Thanks.
+I think a big part of the problem here is, you have a flat
+representation of the PPE. But device tree is very hierarchical. The
+hardware itself is also probably very hierarchical. Please spend some
+timer studying other DT descriptions of similar hardware. Then throw
+away this vendor crap DT binding and start again from scratch, with a
+hierarchical description of the hardware.
 
-
-
+	Andrew
