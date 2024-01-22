@@ -1,79 +1,94 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33A875F855;
-	Mon, 22 Jan 2024 15:30:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD1324654B
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 15:31:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705937444; cv=none; b=Bs5J7LLX2/7W5z6xVdpvYq5SYFWz3rZdR/HzLTbvj13nRc83lrPgAcY0ArZpBjFnPF3C8ravwo+vaVbjhqUPkBTgTIJQBlNi7rl6+QMpPKO1we8EjsoKlWe33CxqxAN8PB8A7tCOpBIylTud8Wfb0hGzphjjf7mHQDOJO8FbjD4=
+	t=1705937518; cv=none; b=ToZjZ7XhDTDR154MlZ+dPhr67UOdP0j0x19SJxF8jHIYfdNp720N6May/vebUaGH+uO1eJHSJr7gD7uBV15OCyp7niIFZw7RPlTsMpgxbJOk1sh4tN0tY5tNBU6KKpAp7Q9PDwSXwhmtvmmkPrlllap2iqEGZKdyP9S1czwHx8I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705937444; c=relaxed/simple;
-	bh=9bNnmiH+8UI1sMbYl/o0a2aQj7h/T4wML5jeK7jIfLQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sR/RLavcNTy1aAvzBQFJqH8vSdt69qgASqJyxKRn9PaxA9D/3McmGQJ9zot3STZsua3o5dLDavMeZI38LSjFd/12xBaqS6Vi+wq3OK1qfBklX3A6ykAbM5D7pncPfqvbP5FN3hHLRZX4H6ZOfNA6kDKvs4J50n+NG/AUFMkKOJk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S52r1pOF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1705937518; c=relaxed/simple;
+	bh=D8noVwkJbNFmPqK4QAu8yfNP4zdZTow0yqFrOd9rct8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tAzJ0Rn4GArRsGL8LC49/uVVFuli3D5+ZwMwfr35hEv3yeoUEMJW10dnKqUOAnuuXssS5+qIygeXkngBY3l1z6ZrmFsHD+IFbro4kcX0TlykZ61eRtaYArB0B6hMKSb6ZkM8LY8+pNBBeq4SMpEY0Lsxj4TBqZcfF/vszyPD4Ko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VkWjM9Lx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S52r1pOF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF5FEC433F1;
-	Mon, 22 Jan 2024 15:30:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VkWjM9Lx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44CF6C433B2
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 15:31:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705937443;
-	bh=9bNnmiH+8UI1sMbYl/o0a2aQj7h/T4wML5jeK7jIfLQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=S52r1pOFucH6amUFrPplJzUJA6WWuRXyKAGFvS3vhC/9FwYKOleIqdsBF4eyNfcFq
-	 0qGr2So+fGdTUMug81HDddK6ZtJvYO3xypBdB/7/gL4XFXSiakdzN+6E9C1Qi88OYR
-	 VLBpGvgY6P9HPDjtqbqtmj3nDT/Ftf1QIhJ94f6fRa3y1yhqvb4iFi2087NMwpBKGv
-	 vG/Pinz/+zkgXBRgu0Y9WxRYGTXPrGdu62k7HMTpWDBORZzJQ/WK/lokZeiH1IH7Jf
-	 y0MzwEYO1VikY+zMqnmaMc1GoqIqJbskbhzSeBtDTmnOkQ4eItDkD64A0LwTOIr+7H
-	 La+MUVN7brNjQ==
-Date: Mon, 22 Jan 2024 15:30:38 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Daniel Abrecht <linux-sound@nodmarc.danielabrecht.ch>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>, linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] ASoC: soc-core.c: Add "Unknown" and "Unknown Product"
- to dmi_blacklist
-Message-ID: <e90440a5-587b-48b2-a61f-0800aa8200d5@sirena.org.uk>
-References: <7d11d0711ad93f2208efb9ab13fe915b@abrecht.li>
+	s=k20201202; t=1705937518;
+	bh=D8noVwkJbNFmPqK4QAu8yfNP4zdZTow0yqFrOd9rct8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=VkWjM9LxRHTMDjO5n7LOZXU20gi+Rhaa+1IZe42qX0FSxU4DQswh6rjsXGtyB0ii/
+	 h1kTMa0jspsYdsmmCAE7ROk9sU9l72iVXmrWHDOOV34c14+UMoxWRFxfQR2dka4C4m
+	 e4xqZq7O4eT4rHVyi+jbLOcHY8bjKyK0xAbJ4JU09RHHhNMUUQZWRyapzfOYALhnK7
+	 pTZcbpRlrqNN0SLIFgCcRZ98Ddvo+RTlVFWkSed6QM6Iw3Jha3pCyhtUG+oZmqD7EO
+	 ulC8G4KpqxxQtdtwnXOuhBJzRAVSEnsjj4+dAvGvqtacDsNYxJCxMXI1JzVzUylcjZ
+	 DZQaU3RRTVDpw==
+Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-dc22597dbfeso3556397276.3
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 07:31:58 -0800 (PST)
+X-Gm-Message-State: AOJu0YzgHa1mlnfXOqJANXuqseJcmiXWQg1Cf4TPI+9bl/osdMxcZgZI
+	dJNPMXG+T7OuPBM+VCUXvbUA4MPS7RGz+tfZd8qLyfOSNT1VLKZrmkfhZ2RnRCt+rKFJLbPk0JR
+	tI34qf7NXwm9XHv8y2tZHSewGuJ4QIGkUqKtYsw==
+X-Google-Smtp-Source: AGHT+IGacHQ2jjBe3z+ou1J6C3EfhjG0Tf1WNr+KFO3I8aWqbXNgOFC5++PenZAwL8K7yrYNRAbtGSMgwN7ecVW7x+0=
+X-Received: by 2002:a25:8885:0:b0:dbd:ac60:bcd4 with SMTP id
+ d5-20020a258885000000b00dbdac60bcd4mr2355277ybl.75.1705937517525; Mon, 22 Jan
+ 2024 07:31:57 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="fW75YJszql3fWvoQ"
-Content-Disposition: inline
-In-Reply-To: <7d11d0711ad93f2208efb9ab13fe915b@abrecht.li>
-X-Cookie: Poverty begins at home.
+References: <20231119101445.4737-1-hkallweit1@gmail.com> <20231119101445.4737-12-hkallweit1@gmail.com>
+In-Reply-To: <20231119101445.4737-12-hkallweit1@gmail.com>
+From: Robert Foss <rfoss@kernel.org>
+Date: Mon, 22 Jan 2024 16:31:46 +0100
+X-Gmail-Original-Message-ID: <CAN6tsi4HmKF6tnnjD6qsi=+nj_1wWhGio+WYzUs972wMCWbSNQ@mail.gmail.com>
+Message-ID: <CAN6tsi4HmKF6tnnjD6qsi=+nj_1wWhGio+WYzUs972wMCWbSNQ@mail.gmail.com>
+Subject: Re: [PATCH v3 11/20] drivers/gpu/drm/bridge/synopsys/dw-hdmi.c:
+ remove I2C_CLASS_DDC support
+To: Heiner Kallweit <hkallweit1@gmail.com>
+Cc: Wolfram Sang <wsa@kernel.org>, Andrzej Hajda <andrzej.hajda@intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Jonas Karlman <jonas@kwiboo.se>, dri-devel@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+	linux-i2c@vger.kernel.org, Thomas Zimmermann <tzimmermann@suse.de>, 
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Sun, Nov 19, 2023 at 11:15=E2=80=AFAM Heiner Kallweit <hkallweit1@gmail.=
+com> wrote:
+>
+> After removal of the legacy EEPROM driver and I2C_CLASS_DDC support in
+> olpc_dcon there's no i2c client driver left supporting I2C_CLASS_DDC.
+> Class-based device auto-detection is a legacy mechanism and shouldn't
+> be used in new code. So we can remove this class completely now.
+>
+> Preferably this series should be applied via the i2c tree.
+>
+> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+>
+> ---
+>  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c |    1 -
+>  1 file changed, 1 deletion(-)
+>
+> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/=
+bridge/synopsys/dw-hdmi.c
+> index 52d91a0df..aca5bb086 100644
+> --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> @@ -515,7 +515,6 @@ static struct i2c_adapter *dw_hdmi_i2c_adapter(struct=
+ dw_hdmi *hdmi)
+>         init_completion(&i2c->cmp);
+>
+>         adap =3D &i2c->adap;
+> -       adap->class =3D I2C_CLASS_DDC;
+>         adap->owner =3D THIS_MODULE;
+>         adap->dev.parent =3D hdmi->dev;
+>         adap->algo =3D &dw_hdmi_algorithm;
+>
 
---fW75YJszql3fWvoQ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Wed, Jan 17, 2024 at 02:44:43PM +0100, Daniel Abrecht wrote:
-> In U-Boot, the default for DMI vendor / product if not set is "Unknown" and
-> "Unknown Product".
-> See https://source.denx.de/u-boot/u-boot/-/blob/v2023.10/lib/smbios.c?ref_type=tags#L272
-
-This is still corrupted according to git am unfortunately.  I can't
-immediately spot the issue.
-
---fW75YJszql3fWvoQ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmWuih4ACgkQJNaLcl1U
-h9DY9gf/ZxevJ0vqxtuKyX7zMqcY/z9pxHbGxT9P47qpYQ+dcc+1OgwcB1ARTZuL
-wyqDn2q03F+F04rgu+clhRVmtfBAEY0IobyVriEw+bY+ZUbJfQQPdoDQ/7fAsoEC
-GQKPleM1i9KhdQc0/mIS1VN7x5yHykY0z7uj6BaEZo5fHig8gTMHBwGHXoQoXE2q
-0TNTdsjgJZutzp2TqvjJg9phemdm5GzMVgP5vU8xvdynE/yfoczVTXenE0C0DYfH
-UNNYhSlZbKse/oiTAlC+1DqAMrhfLiS6cZjBQOfCMwOLMmOZv87RW44TSQ2wbOIl
-hOlaIZWxqG0Ssic1J70qYIX8T7aX1Q==
-=32Ep
------END PGP SIGNATURE-----
-
---fW75YJszql3fWvoQ--
+Acked-by: Robert Foss <rfoss@kernel.org>
