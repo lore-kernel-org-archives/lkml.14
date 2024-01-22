@@ -1,109 +1,113 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8882E47F58;
-	Mon, 22 Jan 2024 15:04:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 149AD47764;
+	Mon, 22 Jan 2024 15:04:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705935861; cv=none; b=qV5nyI6OGiMSa30AihQmApjYI5bLZFVYRlA4mEMf2iXD6jck+toE4G6Xvh7ZEWKo9f35isMetZbpje2ot0uSIdbPeTkSBzMre6kovfFOSAf1vY1Z/tmKnd2Wn5N4JFeiwZTZlJ0xxZHG/XV8SaSA866dRg/KvkjNbCpYiLwms6U=
+	t=1705935875; cv=none; b=O3emkjJgJqCJn5aquGqLn+34OEmHx0lbe74cITCKYXAd0zoohdN3Gekj3cMrRElrZBNMTSNQl5M2Yw43Uezf4TQnOxR7KxOqekCqC8Xh6Rsko08gjjI9r8UKg4F/tdCKKXY2s1yx81ztgTC3/aY4QvGQlJs9WHMOlX2+AsGfNsU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705935861; c=relaxed/simple;
-	bh=HJlEOLIuCq3sg9A8tPi7mwWYHioo2FNzf0m9QyRk4JA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sKBEDLsZAeNQsrfLta1tYQvPsIo+bBtY6l8r76UWui4wry+PXWV205nSHyTf6CFVX/3Bp028NB6ExIlGIcnFAIZ6w3Mll4nPGCITHLu7Q0RGu5NSjgYbpoShY4W3fBtVUtcHC2aGk/UFygqkEgXAhR3GZiDHFdvOg8AYiUCxfcA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=sL2CU03v; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1705935875; c=relaxed/simple;
+	bh=TUoRPDeyxb9QXB0MVg5ZmATCPGDnkl1LaY1FN21NJ6M=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nMQgAfzeVC3VP0f19FMA/Qm5P5WzHoU/acbO/xkBEJP1NPrJNJs+EZO2I7VfkZamGBFxU5whx9IOPRchi9PbllISSXfRt06XML5zNdV2eJMCSyPYzsw5v4BEr3LHEuxslqNUSn5wYA+wPsrFNoaSe3VSIwHJi++bdgWVFokdBr4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZM5kM0s4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="sL2CU03v"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2FAD6C433A6;
-	Mon, 22 Jan 2024 15:04:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1705935861;
-	bh=HJlEOLIuCq3sg9A8tPi7mwWYHioo2FNzf0m9QyRk4JA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sL2CU03vncHGeY/4nlUEjrgxefE//nw1bbgBD+5Jb24IZwrs8XhhJpbAgolZhpbUu
-	 mKG1hfVhauLMDqxg7fugLXzyI0jDdWPAcUbJRIv7KMbbff0v6EZon4eqFf5WNM26lb
-	 7oY1VPbv2QbRiU4nHAxlNt1NRcCvd4pDoTkzKxVA=
-Date: Mon, 22 Jan 2024 07:04:20 -0800
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Carlos Llamas <cmllamas@google.com>
-Cc: Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
-	Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Christian Brauner <brauner@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Sherry Yang <sherryy@android.com>, linux-kernel@vger.kernel.org,
-	kernel-team@android.com, stable@vger.kernel.org
-Subject: Re: [PATCH v2 05/28] binder: fix unused alloc->free_async_space
-Message-ID: <2024012203-expedited-job-1d79@gregkh>
-References: <20231201172212.1813387-1-cmllamas@google.com>
- <20231201172212.1813387-6-cmllamas@google.com>
- <Zal9HFZcC3rFjogI@google.com>
- <2024011955-quotation-zone-7f20@gregkh>
- <Zaqw9k4x7IUh6ys-@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZM5kM0s4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E9ECC43394;
+	Mon, 22 Jan 2024 15:04:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705935874;
+	bh=TUoRPDeyxb9QXB0MVg5ZmATCPGDnkl1LaY1FN21NJ6M=;
+	h=From:To:Cc:Subject:Date:From;
+	b=ZM5kM0s4MlHA/7v3cXSYTodLfgy0F7kaBf0cXP1jkKZxBmv1ueKLP3+/LuozAnStg
+	 aibLVy5UnvA74Q6EtlW/s6eNLckgL66KszNopBVOCTecvzjoxHHrxwmbjaTD87Tdg+
+	 jVRp1rkrK+0rM5ibhzI2k8Tw+nOwVwc4NU6vpRDIyI3/S7YAlb9FCNrIiHPEnBJPOD
+	 Baz4+bYlFQEtqACgihGUFfJfeaei2Qe+BseGNfaOu0JdD1C4uNrtw5UhtiBGvcnT5n
+	 3c6uUkoZ98bDaoK5b9KIEU4tUFP9HkzgBB0p3OOERUu2gkRrk+6WuOJc1OLS7WPOa1
+	 HXzg9JMY88wWg==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Chao Yu <chao@kernel.org>,
+	Jaegeuk Kim <jaegeuk@kernel.org>,
+	Sasha Levin <sashal@kernel.org>,
+	linux-f2fs-devel@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 6.6 01/73] f2fs: fix to check return value of f2fs_reserve_new_block()
+Date: Mon, 22 Jan 2024 10:01:15 -0500
+Message-ID: <20240122150432.992458-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Zaqw9k4x7IUh6ys-@google.com>
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.6.13
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jan 19, 2024 at 05:27:18PM +0000, Carlos Llamas wrote:
-> On Fri, Jan 19, 2024 at 06:49:00AM +0100, Greg Kroah-Hartman wrote:
-> > On Thu, Jan 18, 2024 at 07:33:48PM +0000, Carlos Llamas wrote:
-> > > On Fri, Dec 01, 2023 at 05:21:34PM +0000, Carlos Llamas wrote:
-> > > > Each transaction is associated with a 'struct binder_buffer' that stores
-> > > > the metadata about its buffer area. Since commit 74310e06be4d ("android:
-> > > > binder: Move buffer out of area shared with user space") this struct is
-> > > > no longer embedded within the buffer itself but is instead allocated on
-> > > > the heap to prevent userspace access to this driver-exclusive info.
-> > > > 
-> > > > Unfortunately, the space of this struct is still being accounted for in
-> > > > the total buffer size calculation, specifically for async transactions.
-> > > > This results in an additional 104 bytes added to every async buffer
-> > > > request, and this area is never used.
-> > > > 
-> > > > This wasted space can be substantial. If we consider the maximum mmap
-> > > > buffer space of SZ_4M, the driver will reserve half of it for async
-> > > > transactions, or 0x200000. This area should, in theory, accommodate up
-> > > > to 262,144 buffers of the minimum 8-byte size. However, after adding
-> > > > the extra 'sizeof(struct binder_buffer)', the total number of buffers
-> > > > drops to only 18,724, which is a sad 7.14% of the actual capacity.
-> > > > 
-> > > > This patch fixes the buffer size calculation to enable the utilization
-> > > > of the entire async buffer space. This is expected to reduce the number
-> > > > of -ENOSPC errors that are seen on the field.
-> > > > 
-> > > > Fixes: 74310e06be4d ("android: binder: Move buffer out of area shared with user space")
-> > > > Signed-off-by: Carlos Llamas <cmllamas@google.com>
-> > > > ---
-> > > 
-> > > Sorry, I forgot to Cc: stable@vger.kernel.org.
-> > 
-> > 
-> > <formletter>
-> > 
-> > This is not the correct way to submit patches for inclusion in the
-> > stable kernel tree.  Please read:
-> >     https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html
-> > for how to do this properly.
-> > 
-> > </formletter>
-> 
-> Oops, here is the complete info:
-> 
-> Commit ID: c6d05e0762ab276102246d24affd1e116a46aa0c
-> Subject:   "binder: fix unused alloc->free_async_space"
-> Reason:    Fixes an incorrect calculation of available space.
-> Versions:  v4.19+
-> 
-> Note this patch will also have trivial conflicts in v4.19 and v5.4
-> kernels as commit 261e7818f06e is missing there. Please let me know and
-> I can send the corresponding patches separately.
+From: Chao Yu <chao@kernel.org>
 
-It doesn't even apply to 6.7.y either, so we need backports for all
-affected trees, thanks.
+[ Upstream commit 956fa1ddc132e028f3b7d4cf17e6bfc8cb36c7fd ]
 
-greg k-h
+Let's check return value of f2fs_reserve_new_block() in do_recover_data()
+rather than letting it fails silently.
+
+Also refactoring check condition on return value of f2fs_reserve_new_block()
+as below:
+- trigger f2fs_bug_on() only for ENOSPC case;
+- use do-while statement to avoid redundant codes;
+
+Signed-off-by: Chao Yu <chao@kernel.org>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/f2fs/recovery.c | 23 +++++++++++++++++------
+ 1 file changed, 17 insertions(+), 6 deletions(-)
+
+diff --git a/fs/f2fs/recovery.c b/fs/f2fs/recovery.c
+index 7be60df277a5..f0de36ef73c2 100644
+--- a/fs/f2fs/recovery.c
++++ b/fs/f2fs/recovery.c
+@@ -712,7 +712,16 @@ static int do_recover_data(struct f2fs_sb_info *sbi, struct inode *inode,
+ 		 */
+ 		if (dest == NEW_ADDR) {
+ 			f2fs_truncate_data_blocks_range(&dn, 1);
+-			f2fs_reserve_new_block(&dn);
++			do {
++				err = f2fs_reserve_new_block(&dn);
++				if (err == -ENOSPC) {
++					f2fs_bug_on(sbi, 1);
++					break;
++				}
++			} while (err &&
++				IS_ENABLED(CONFIG_F2FS_FAULT_INJECTION));
++			if (err)
++				goto err;
+ 			continue;
+ 		}
+ 
+@@ -720,12 +729,14 @@ static int do_recover_data(struct f2fs_sb_info *sbi, struct inode *inode,
+ 		if (f2fs_is_valid_blkaddr(sbi, dest, META_POR)) {
+ 
+ 			if (src == NULL_ADDR) {
+-				err = f2fs_reserve_new_block(&dn);
+-				while (err &&
+-				       IS_ENABLED(CONFIG_F2FS_FAULT_INJECTION))
++				do {
+ 					err = f2fs_reserve_new_block(&dn);
+-				/* We should not get -ENOSPC */
+-				f2fs_bug_on(sbi, err);
++					if (err == -ENOSPC) {
++						f2fs_bug_on(sbi, 1);
++						break;
++					}
++				} while (err &&
++					IS_ENABLED(CONFIG_F2FS_FAULT_INJECTION));
+ 				if (err)
+ 					goto err;
+ 			}
+-- 
+2.43.0
+
