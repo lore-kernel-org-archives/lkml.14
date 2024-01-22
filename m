@@ -1,224 +1,89 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90CBB56470
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 18:08:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B15235FBB9
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 18:08:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705946898; cv=none; b=St+qCzVe7iLYyQ8suw3WfTMIXxd9H/GOOAiSpaXlzOHAnu0xVebK2KFDKknb/vsVHSBZFKm0k+gFsOH55R0IlA8IXwDc1+Sfu0UAL+XXh7UhTA+J7AZjIP4RyL9DiPMrBjWI7wQUOpY0zg6tJNx1QXSgLk1XT36TzY+QYBwjA7o=
+	t=1705946903; cv=none; b=F4noNcnWMvVBArgQZGzoc5fSTAPNH+flXWzkWSLihEqI9OfluONr4bBobYZwfPTAYcRXollKPBooaSHYQq75epknK5SF5nv+3l9VUHlah42SHPycLZ0HZqymqJc/qOUJScCzqiCaetYc1wjJ4xY3TntZbqf96ifa2Ff9kl1TvCc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705946898; c=relaxed/simple;
-	bh=VOl/tWnPHQoqS1cXUmh7wGTtB6as1Bks3zWGadAFdtU=;
+	s=arc-20240116; t=1705946903; c=relaxed/simple;
+	bh=j7ZdCt52bfgupTBsMJsdZqvductyF9ePTfbsKfhSWaw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=iLzuTh4eeVbUtW9fFkCKVVJPUbp7K/Smk48ZVH0O+NH+ZJaF2ID9KXXhUbXtHrhq7bmB+rDZua6ulf9jpfw5eNSqQhPSJLGcx7aI7JMpf5x/SiFumCqcNyLCdKbEcetpO0qj2TeJm7c14rnJiI4gdJfPmqr3ac0QtrKMucrQq+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WY8oGVYB; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WY8oGVYB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1705946897; x=1737482897;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=VOl/tWnPHQoqS1cXUmh7wGTtB6as1Bks3zWGadAFdtU=;
-  b=WY8oGVYBiSNoFG32ea1l8RFCkpwFJzb2EGy4jXXcaRuhZRDKVkJugGPW
-   1o/E9RPVBOkRBeF1qLgtoyTfIfKvB4FKyaLQ1PUUujShI+aYBGZtasCCN
-   ZA5+YJzNclZITDoP2r9msFYtw4AwrG07jrFiCt0F7XfBa5zfjlmDpXkcz
-   rV1xZqKAS25AnRVe00KceGlIqWT+3a7he3UYqcUVM9yMPjgQJKdzPOdDH
-   pQ+A2DgbSYM9xTxkYuniIdA37JnOZHNT2NXa+UwVur/CzO4giOjTk4VuH
-   5vKnNQ3uYPBKKR1S6eWl9RWBP0jvZvW2pWMNwOkRXAjS+fh184JmPDGZP
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10961"; a="14627538"
-X-IronPort-AV: E=Sophos;i="6.05,211,1701158400"; 
-   d="scan'208";a="14627538"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 10:08:15 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,211,1701158400"; 
-   d="scan'208";a="1375980"
-Received: from agluck-desk3.sc.intel.com ([172.25.222.74])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 10:08:14 -0800
-From: Tony Luck <tony.luck@intel.com>
-To: Fenghua Yu <fenghua.yu@intel.com>,
-	Reinette Chatre <reinette.chatre@intel.com>,
-	Peter Newman <peternewman@google.com>,
-	x86@kernel.org
-Cc: James Morse <james.morse@arm.com>,
-	Jamie Iles <quic_jiles@quicinc.com>,
-	Babu Moger <babu.moger@amd.com>,
-	Xiaochen Shen <xiaochen.shen@intel.com>,
+	 MIME-Version:Content-Type; b=PGp7dk6DbWYYvWKimZeeTtqLKRwYuzbchAVUI6XqhCOjriWUVzibz15dj1ekyNPHztswpX9G7gr/SQ5oNzZMZB2EUXKmEtil5d32gGYnEJh007bVS587e1ZUMNrxX8YRcsWXtnpZAWIA7I7e4HM+uakeYQhaM2mhYiRK3lZnYRI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rRyiT-0001le-S5; Mon, 22 Jan 2024 19:08:13 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rRyiT-001ePQ-FH; Mon, 22 Jan 2024 19:08:13 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rRyiT-005Zwz-1G;
+	Mon, 22 Jan 2024 19:08:13 +0100
+From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: Mark Brown <broonie@kernel.org>
+Cc: kernel@pengutronix.de,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	linux-input@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	patches@lists.linux.dev,
-	Tony Luck <tony.luck@intel.com>
-Subject: [PATCH v3] x86/resctrl: Implement new mba_MBps throttling heuristic
-Date: Mon, 22 Jan 2024 10:08:07 -0800
-Message-ID: <20240122180807.70518-1-tony.luck@intel.com>
+	linux-spi@vger.kernel.org
+Subject: [PATCH v2 04/33] Input: pxspad - follow renaming of SPI "master" to "controller"
+Date: Mon, 22 Jan 2024 19:06:59 +0100
+Message-ID:  <4ac573db17754d4e129e5e3ad7faba98f54e464e.1705944943.git.u.kleine-koenig@pengutronix.de>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240118214213.59596-1-tony.luck@intel.com>
-References: <20240118214213.59596-1-tony.luck@intel.com>
+In-Reply-To: <cover.1705944943.git.u.kleine-koenig@pengutronix.de>
+References: <cover.1705944943.git.u.kleine-koenig@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1135; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=j7ZdCt52bfgupTBsMJsdZqvductyF9ePTfbsKfhSWaw=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBlrq7HQKHmd8SNboMfBioS/1JHaq0PpguJzZP0n dSkJmhchFOJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZa6uxwAKCRCPgPtYfRL+ TktmCACmMb5YxlvAuRoGn28G50wh0HVTREKHav7qWM+YHIJgq/+khqbjYEIjg0SlYrp10GhnrKq QD2uf/GUJmENWm0UIrM3ir37pVsuWs8KI9wsXlyLN15zpEC1fSvV0QRYSU2Q2a5dPQD9hB5uKui jzNnPb4NUSrZa+JHMXvIpWEwNlvm16W3slCAWXs6M69Gbiqgmy92gC/W6OMe8MaOVI4Fc7lacA/ SqFDcrtQayzrq5sZ28M11GF+inlBbVlWt1otr19lYF6R8o7eZMEjUiYvqL/4gpG0iDuT+mzEKeo OV2BEpMVeeL1zMIXjpFJj8N9GRKMqJ8D17VBjdpU6H6t+M0u
+X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-The mba_MBps feedback loop increases throttling when a group is using
-more bandwidth than the target set by the user in the schemata file, and
-decreases throttling when below target.
+In commit 8caab75fd2c2 ("spi: Generalize SPI "master" to "controller"")
+some functions and struct members were renamed. To not break all drivers
+compatibility macros were provided.
 
-To avoid possibly stepping throttling up and down on every poll a
-flag "delta_comp" is set whenever throttling is changed to indicate
-that the actual change in bandwidth should be recorded on the next
-poll in "delta_bw". Throttling is only reduced if the current bandwidth
-plus delta_bw is below the user target.
+To be able to remove these compatibility macros push the renaming into
+this driver.
 
-This algorithm works well if the workload has steady bandwidth needs.
-But it can go badly wrong if the workload moves to a different phase
-just as the throttling level changed. E.g. if the workload becomes
-essentially idle right as throttling level is increased, the value
-calculated for delta_bw will be more or less the old bandwidth level.
-If the workload then resumes, Linux may never reduce throttling because
-current bandwidth plus delta_bw is above the target set by the user.
-
-Implement a simpler heuristic by assuming that in the worst case the
-currently measured bandwidth is being controlled by the current level of
-throttling. Compute how much it may increase if throttling is relaxed to
-the next higher level. If that is still below the user target, then it
-is ok to reduce the amount of throttling.
-
-Fixes: ba0f26d8529c ("x86/intel_rdt/mba_sc: Prepare for feedback loop")
-Reported-by: Xiaochen Shen <xiaochen.shen@intel.com>
-Signed-off-by: Tony Luck <tony.luck@intel.com>
-Tested-by: Xiaochen Shen <xiaochen.shen@intel.com>
-Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
+Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 ---
+ drivers/input/joystick/psxpad-spi.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-v2->v3 changes:
-
-Reinette noticed a reverse fir tree breakage in update_mba_bw()
-
- arch/x86/kernel/cpu/resctrl/internal.h |  4 ---
- arch/x86/kernel/cpu/resctrl/monitor.c  | 42 ++++++--------------------
- 2 files changed, 10 insertions(+), 36 deletions(-)
-
-diff --git a/arch/x86/kernel/cpu/resctrl/internal.h b/arch/x86/kernel/cpu/resctrl/internal.h
-index a4f1aa15f0a2..71bbd2245cc7 100644
---- a/arch/x86/kernel/cpu/resctrl/internal.h
-+++ b/arch/x86/kernel/cpu/resctrl/internal.h
-@@ -296,14 +296,10 @@ struct rftype {
-  * struct mbm_state - status for each MBM counter in each domain
-  * @prev_bw_bytes: Previous bytes value read for bandwidth calculation
-  * @prev_bw:	The most recent bandwidth in MBps
-- * @delta_bw:	Difference between the current and previous bandwidth
-- * @delta_comp:	Indicates whether to compute the delta_bw
-  */
- struct mbm_state {
- 	u64	prev_bw_bytes;
- 	u32	prev_bw;
--	u32	delta_bw;
--	bool	delta_comp;
- };
+diff --git a/drivers/input/joystick/psxpad-spi.c b/drivers/input/joystick/psxpad-spi.c
+index de734a927b4d..c47fc5f34bd0 100644
+--- a/drivers/input/joystick/psxpad-spi.c
++++ b/drivers/input/joystick/psxpad-spi.c
+@@ -342,8 +342,8 @@ static int psxpad_spi_probe(struct spi_device *spi)
+ 	spi->mode = SPI_MODE_3;
+ 	spi->bits_per_word = 8;
+ 	/* (PlayStation 1/2 joypad might be possible works 250kHz/500kHz) */
+-	spi->master->min_speed_hz = 125000;
+-	spi->master->max_speed_hz = 125000;
++	spi->controller->min_speed_hz = 125000;
++	spi->controller->max_speed_hz = 125000;
+ 	spi_setup(spi);
  
- /**
-diff --git a/arch/x86/kernel/cpu/resctrl/monitor.c b/arch/x86/kernel/cpu/resctrl/monitor.c
-index f136ac046851..6c2d4e97e5f1 100644
---- a/arch/x86/kernel/cpu/resctrl/monitor.c
-+++ b/arch/x86/kernel/cpu/resctrl/monitor.c
-@@ -440,9 +440,6 @@ static void mbm_bw_count(u32 rmid, struct rmid_read *rr)
- 
- 	cur_bw = bytes / SZ_1M;
- 
--	if (m->delta_comp)
--		m->delta_bw = abs(cur_bw - m->prev_bw);
--	m->delta_comp = false;
- 	m->prev_bw = cur_bw;
- }
- 
-@@ -520,11 +517,11 @@ static void update_mba_bw(struct rdtgroup *rgrp, struct rdt_domain *dom_mbm)
- {
- 	u32 closid, rmid, cur_msr_val, new_msr_val;
- 	struct mbm_state *pmbm_data, *cmbm_data;
--	u32 cur_bw, delta_bw, user_bw;
- 	struct rdt_resource *r_mba;
- 	struct rdt_domain *dom_mba;
- 	struct list_head *head;
- 	struct rdtgroup *entry;
-+	u32 cur_bw, user_bw;
- 
- 	if (!is_mbm_local_enabled())
- 		return;
-@@ -543,7 +540,6 @@ static void update_mba_bw(struct rdtgroup *rgrp, struct rdt_domain *dom_mbm)
- 
- 	cur_bw = pmbm_data->prev_bw;
- 	user_bw = dom_mba->mbps_val[closid];
--	delta_bw = pmbm_data->delta_bw;
- 
- 	/* MBA resource doesn't support CDP */
- 	cur_msr_val = resctrl_arch_get_config(r_mba, dom_mba, closid, CDP_NONE);
-@@ -555,49 +551,31 @@ static void update_mba_bw(struct rdtgroup *rgrp, struct rdt_domain *dom_mbm)
- 	list_for_each_entry(entry, head, mon.crdtgrp_list) {
- 		cmbm_data = &dom_mbm->mbm_local[entry->mon.rmid];
- 		cur_bw += cmbm_data->prev_bw;
--		delta_bw += cmbm_data->delta_bw;
- 	}
- 
- 	/*
- 	 * Scale up/down the bandwidth linearly for the ctrl group.  The
- 	 * bandwidth step is the bandwidth granularity specified by the
- 	 * hardware.
--	 *
--	 * The delta_bw is used when increasing the bandwidth so that we
--	 * dont alternately increase and decrease the control values
--	 * continuously.
--	 *
--	 * For ex: consider cur_bw = 90MBps, user_bw = 100MBps and if
--	 * bandwidth step is 20MBps(> user_bw - cur_bw), we would keep
--	 * switching between 90 and 110 continuously if we only check
--	 * cur_bw < user_bw.
-+	 * Always increase throttling if current bandwidth is above the
-+	 * target set by user.
-+	 * But avoid thrashing up and down on every poll by checking
-+	 * whether a decrease in throttling is likely to push the group
-+	 * back over target. E.g. if currently throttling to 30% of bandwidth
-+	 * on a system with 10% granularity steps, check whether moving to
-+	 * 40% would go past the limit by multiplying current bandwidth by
-+	 * "(30 + 10) / 30".
- 	 */
- 	if (cur_msr_val > r_mba->membw.min_bw && user_bw < cur_bw) {
- 		new_msr_val = cur_msr_val - r_mba->membw.bw_gran;
- 	} else if (cur_msr_val < MAX_MBA_BW &&
--		   (user_bw > (cur_bw + delta_bw))) {
-+		   (user_bw > (cur_bw * (cur_msr_val + r_mba->membw.min_bw) / cur_msr_val))) {
- 		new_msr_val = cur_msr_val + r_mba->membw.bw_gran;
- 	} else {
- 		return;
- 	}
- 
- 	resctrl_arch_update_one(r_mba, dom_mba, closid, CDP_NONE, new_msr_val);
--
--	/*
--	 * Delta values are updated dynamically package wise for each
--	 * rdtgrp every time the throttle MSR changes value.
--	 *
--	 * This is because (1)the increase in bandwidth is not perfectly
--	 * linear and only "approximately" linear even when the hardware
--	 * says it is linear.(2)Also since MBA is a core specific
--	 * mechanism, the delta values vary based on number of cores used
--	 * by the rdtgrp.
--	 */
--	pmbm_data->delta_comp = true;
--	list_for_each_entry(entry, head, mon.crdtgrp_list) {
--		cmbm_data = &dom_mbm->mbm_local[entry->mon.rmid];
--		cmbm_data->delta_comp = true;
--	}
- }
- 
- static void mbm_update(struct rdt_resource *r, struct rdt_domain *d, int rmid)
-
-base-commit: 6613476e225e090cc9aad49be7fa504e290dd33d
+ 	/* pad settings */
 -- 
 2.43.0
 
