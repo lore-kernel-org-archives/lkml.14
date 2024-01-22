@@ -1,123 +1,68 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4549F3E49E;
-	Mon, 22 Jan 2024 19:35:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A382F3E49E
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 19:36:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705952149; cv=none; b=BLpB2doXg0zghTG48Ee8loYAzs9/l1l5h9YeD3LPlVmTRurE/f84JGiAg7ss2DgTHXf+TBKvYdDzkDmIgONczhCSQy/q+4UZDPpcrWgdj9irlGb7YQVgca54cmSd4ALa9BHNnOXPVixlUtg7a/WFQltT+4ysGZACfBDoi0MrKXA=
+	t=1705952173; cv=none; b=al7xlBXu0vd5yQymMywvI2TS77OJl5n+n/k5zm/Zzj2ASQDWdLSXxq43feya5ACNJMFgWLeQ+Uq0EmFYDEmGB3CHdnprz63uG2q/Y/87eiR0g3oXiBNWdc2gEJpM6xSd7XifJ5rqRboHWHPmHNRomsW1Lf+gJDLi5VtxOJyutLw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705952149; c=relaxed/simple;
-	bh=haT/AD72cVJuSdHy1jeAPFd2n5sHagIc/kkcLqP5A0Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=oTNBP62EZGhSMmnqqPjYfRY7QKTweYEpy0GgYIwKEb8m9FlZWqrHRax2VCsvZRgnkrVuUF8/DmlsLWT/8jlWKP6sYCy3LHHmiQVBekGXNeX/pKf8Xco+lpz6eSKYxPQdVOtoXXTIGpoC8xJ4p7XJK82NDhPLs39TayXJDwIXUtc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=EOpCfM5K; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="EOpCfM5K"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40MJGSQE006734;
-	Mon, 22 Jan 2024 19:35:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=9isa3JFSy6VdY+glkUp9HPdVmPFw++kMzlZhCC5EJ3s=; b=EO
-	pCfM5KGyN8NG3l254NXIRUa8iiY4TWY33MNYu9T/cIvlUXj5IajqcJsqFhDW13p9
-	9O8fko5KcGTrPySVDLPDUiDhtED5kodh/kCEpmgMX99HRGenkMhlU1RAjoT+H9Kk
-	j6uM8rZYMZ7PLNLillM1v3edU0VY4AeI2SEGvQEqhxqM1cy7od7b7tzn41kTI0C6
-	9MQ/G8hjrSkuO9fNGns85bpUzbZh6uklaAMXZ2GFrvLnM30MCsK08ZGbsDNTof4u
-	RS9sOpuy7BUhm4bkSdG+JFiymuEDXv23i9Ezw4/x1ZtxC/qL8omLrfinT2Iw7Mbm
-	RkeevhF+s9BNCORJuFNw==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vstd98nxw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 22 Jan 2024 19:35:28 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 40MJZRAj027331
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 22 Jan 2024 19:35:27 GMT
-Received: from [10.226.49.146] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Mon, 22 Jan
- 2024 11:35:26 -0800
-Message-ID: <62e299a8-c82e-40e0-854b-6fee1275cb2d@quicinc.com>
-Date: Mon, 22 Jan 2024 12:35:02 -0700
+	s=arc-20240116; t=1705952173; c=relaxed/simple;
+	bh=hd4hERnKUHLp2M7ISNYou1fZosK6qgnVMXcDV3L4S5Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=kXoI6vHmASwRsdfFjtn9ymViCCv/oavtavncR/4CvX/qclyxc4thUS2SBXy6xaDK2D/vFeLEgku52MhxhaAq5/R5PyZ23/vezzbSKdWKfPoqfGCSyJw4oxKhTjyU+aWtZqdyiYo0Ii5O1ajjPWJTDOhAycvG1+0ZJcctE1lVnww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1DFBC433F1;
+	Mon, 22 Jan 2024 19:36:11 +0000 (UTC)
+Date: Mon, 22 Jan 2024 14:37:40 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Geert Uytterhoeven
+ <geert@linux-m68k.org>, Kees Cook <keescook@chromium.org>,
+ linux-kernel@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, Mark
+ Rutland <mark.rutland@arm.com>, Andrew Morton <akpm@linux-foundation.org>,
+ Christian Brauner <brauner@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>,
+ Ajay Kaher <ajay.kaher@broadcom.com>
+Subject: Re: [for-linus][PATCH 1/3] eventfs: Have the inodes all for files
+ and directories all be the same
+Message-ID: <20240122143740.6a889e36@gandalf.local.home>
+In-Reply-To: <bb90c70d-85fa-4228-a333-ab91eea945b2@efficios.com>
+References: <20240117143548.595884070@goodmis.org>
+	<20240117143810.531966508@goodmis.org>
+	<CAMuHMdXKiorg-jiuKoZpfZyDJ3Ynrfb8=X+c7x0Eewxn-YRdCA@mail.gmail.com>
+	<20240122100630.6a400dd3@gandalf.local.home>
+	<CAMuHMdXD0weO4oku8g2du6fj-EzxGaF+0i=zrPScSXwphFAZgg@mail.gmail.com>
+	<20240122114743.7e46b7cb@gandalf.local.home>
+	<CAHk-=wiq5mr+wSb6pmtt7QqBhQo_xr7ip=yMwQ5ryWVwCyMhfg@mail.gmail.com>
+	<CAHk-=wjGxVVKvxVf=NDnMhB3=eQ_NMiEY3onG1wRAjJepig=aw@mail.gmail.com>
+	<CAHk-=wiLqJYT2GGSBhKuJS-Uq1DVq3S32oP0SwqQiATuBivxcg@mail.gmail.com>
+	<bb90c70d-85fa-4228-a333-ab91eea945b2@efficios.com>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next 16/22] net: fill in MODULE_DESCRIPTION()s for
- Qualcom drivers
-To: Breno Leitao <leitao@debian.org>, <kuba@kernel.org>, <davem@davemloft.net>,
-        <abeni@redhat.com>, <edumazet@google.com>,
-        Timur Tabi
-	<timur@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-        Sean Tranchetti
-	<quic_stranche@quicinc.com>
-CC: <dsahern@kernel.org>, <weiwan@google.com>,
-        "open list:QUALCOMM EMAC
- GIGABIT ETHERNET DRIVER" <netdev@vger.kernel.org>,
-        open list
-	<linux-kernel@vger.kernel.org>
-References: <20240122184543.2501493-1-leitao@debian.org>
- <20240122184543.2501493-17-leitao@debian.org>
-Content-Language: en-US
-From: "Subash Abhinov Kasiviswanathan (KS)" <quic_subashab@quicinc.com>
-In-Reply-To: <20240122184543.2501493-17-leitao@debian.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: 8LLGFYo3DoZ0xGqE-a4xHbJ5br91V7ya
-X-Proofpoint-ORIG-GUID: 8LLGFYo3DoZ0xGqE-a4xHbJ5br91V7ya
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-22_09,2024-01-22_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- suspectscore=0 bulkscore=0 impostorscore=0 mlxlogscore=999 mlxscore=0
- spamscore=0 priorityscore=1501 phishscore=0 malwarescore=0 adultscore=0
- clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2311290000 definitions=main-2401220139
 
+On Mon, 22 Jan 2024 13:27:25 -0500
+Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
 
-On 1/22/2024 11:45 AM, Breno Leitao wrote:
-> W=1 builds now warn if module is built without a MODULE_DESCRIPTION().
-> Add descriptions to the Qualcom rmnet and emac drivers.
+> > IOW, this trivial patch seems to be much safer than worrying about
+> > some pointer exposure.  
 > 
-> Signed-off-by: Breno Leitao <leitao@debian.org>
-> ---
->   drivers/net/ethernet/qualcomm/emac/emac.c          | 1 +
->   drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c | 1 +
->   2 files changed, 2 insertions(+)
-> 
-> diff --git a/drivers/net/ethernet/qualcomm/emac/emac.c b/drivers/net/ethernet/qualcomm/emac/emac.c
-> index 3270df72541b..4c06f55878de 100644
-> --- a/drivers/net/ethernet/qualcomm/emac/emac.c
-> +++ b/drivers/net/ethernet/qualcomm/emac/emac.c
-> @@ -771,5 +771,6 @@ static struct platform_driver emac_platform_driver = {
->   
->   module_platform_driver(emac_platform_driver);
->   
-> +MODULE_DESCRIPTION("Qualcomm EMAC Gigabit Ethernet driver");
->   MODULE_LICENSE("GPL v2");
->   MODULE_ALIAS("platform:qcom-emac");
-> diff --git a/drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c b/drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c
-> index 5b69b9268c75..f3bea196a8f9 100644
-> --- a/drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c
-> +++ b/drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c
-> @@ -520,4 +520,5 @@ static void __exit rmnet_exit(void)
->   module_init(rmnet_init)
->   module_exit(rmnet_exit)
->   MODULE_ALIAS_RTNL_LINK("rmnet");
-> +MODULE_DESCRIPTION("Qualcomm RmNet MAP driver");
->   MODULE_LICENSE("GPL v2");
+> My only concern about the simple ino_counter static increment is what
+> happens in the unlikely scenario of a 32-bit overflow. This is why
+> I suggested using a bitmap to track inode allocation. It's compact, and
+> we don't care that much about the linear bitmap scan overhead because
+> it's far from being a fast path.
 
-For rmnet
+The original code use to get its inode via "get_next_ino()" I don't think
+there's any reason not to just go back and do that again.
 
-Reviewed-by: Subash Abhinov Kasiviswanathan <quic_subashab@quicinc.com>
+It can still overflow, but it's not anything new that couldn't have happen
+to debugfs and tracefs over the last decade.
+
+-- Steve
