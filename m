@@ -1,69 +1,93 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 353EE6DCF9
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 15:07:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 651E46DD1E;
+	Mon, 22 Jan 2024 15:07:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705936032; cv=none; b=OJlLpFtzj3kc0aV78qn15n2gCFZziYzMoY5kAMy2a1hbgsNxXPpDODRmGaXDJZ5RTiZNylLF41srG1+bgTma4mmEoEUfecrmMmRyXg2EAnnqnZNpAi1EqviGdueI8wlOej0nA7X3HU6hde4LMiDhKkPcSOrDI2mCWq3mSbVgJG8=
+	t=1705936034; cv=none; b=uQ5pS3Il+nRXvLO0ZYD71RX5Ta9JteAJvvjMMHLxnhWZqUOS/ZInR9QsH6i9FYciedDk51+/Mybc5U4KKOlZ5ADFNpS6W4w8c6q36r+DaUJvpfqkENVC4SikTgoJ21M9VSQcJKdwdOkDAnaSQ8kbyuRKvkC0A2+p9CUMJb1njNI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705936032; c=relaxed/simple;
-	bh=UcxkksHxcsaVz6RDRPnLcMAB+qrTU2YcefyY8O6v3UQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YUd7gEsYyLkq2w1i08OX7Tk4Z1ACQ/P1yCshLEYjgR1B8PUI8e4hoXuQLliwp/8KboshOvGesu1i8PD1DG/xF9kJw3RWqk2npeDbQ57kjHoshmKtOle3d8mcDz2R/YdvutB1JpQaJPXe5nwqU9H9zMfFB9OwC7e9yAqbQ9wJvXA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pVq4KqsS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1705936034; c=relaxed/simple;
+	bh=fOsTqgZAd0vrP6tVW5esPMiUQEc5a6uhT+FU1ciBxb4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=lKImFK3xqNh/qg8c5F1YM4rrxlGkTmgY8AXafhP9YFo7J7LhhuUoK/IhGH1sjqg/RtgBCF3EH3xBCgbcN16CaUVR1y2CFu9vCBLy6mo1TvGyJeZXtdGbabkSl1uxJvqBH/Jg/RLmqyO7OqgwJqb3OyjWh8hNtQvNaiStzFjqrwI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LLkVK3U+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pVq4KqsS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30555C43399;
-	Mon, 22 Jan 2024 15:07:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LLkVK3U+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0063C43390;
+	Mon, 22 Jan 2024 15:07:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705936032;
-	bh=UcxkksHxcsaVz6RDRPnLcMAB+qrTU2YcefyY8O6v3UQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pVq4KqsSzRcW77reefwLad5zgDLuUb4AQfdroqI+EsSUqYSt8bYkYIr4BKk9qBcnG
-	 Adp+qnrOpbrnAaVGmFM7UL36ZVne6N+Yf1kuRFIMWlZSJySbsNjqFleB9hDy5bH6c5
-	 ZLkTP35WhhDTXed3eqKKJISVlriZeCOXXa41XqRpSEAM3NSttRKiFjUlY8WRHxOaaO
-	 mdFXKUTN0RSSOCSzrAFd5kLSr+S57u8BfELg77sskAdUJFTmTXmMe98S1ItAzkn6Qh
-	 j1QyrUqKvCH4+THZtx+JdJhj8D0PtmGwVPbuP3frY5kdxK45BT8pgY2Qe/bSaVXT/O
-	 0WegAouDBqsGg==
-Date: Mon, 22 Jan 2024 15:07:08 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] soc: microchip: Fix POLARFIRE_SOC_SYS_CTRL input prompt
-Message-ID: <20240122-party-kosher-6c1592d49ffc@spud>
-References: <607c5ba8b95b1a11b6dc532223e9d7abcc2c20e4.1705935812.git.geert+renesas@glider.be>
+	s=k20201202; t=1705936034;
+	bh=fOsTqgZAd0vrP6tVW5esPMiUQEc5a6uhT+FU1ciBxb4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=LLkVK3U+ioDx57r4/AtB++X8dV+lc2D5ZtmuGdav4bcv0jD3pcL4yLL6nSZM4tC1l
+	 FrFI1nQRjU2xsXdxAcU/cLkmgZ7ULl2PgUby7GoK3aqr8w1z8DAn17dzXuxgtghu4d
+	 zJIJiqJh8oHNpb2kDNuSmq8SZEWyRrrHFOj8dZk8DWLlHaWKK5Ay+IVf6eZ+2PNqpU
+	 UBgfL+3wIaae3hXunobhk9NmZ2gGRey/tqdoXt8+5JdHgbyAp69xkcT9m+X8lQz1QO
+	 Sx1l3nEy4hZVwbfMTLoj9omn/lzkt3W9DULmRhhG0GQJSzKXJ3CsTcj2kB0o7D+bwS
+	 MqEH69J2qhWOA==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Kuan-Wei Chiu <visitorckw@gmail.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Sasha Levin <sashal@kernel.org>,
+	mturquette@baylibre.com,
+	krzysztof.kozlowski@linaro.org,
+	angelogioacchino.delregno@collabora.com,
+	heiko@sntech.de,
+	robh@kernel.org,
+	linux-clk@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.6 51/73] clk: hi3620: Fix memory leak in hi3620_mmc_clk_init()
+Date: Mon, 22 Jan 2024 10:02:05 -0500
+Message-ID: <20240122150432.992458-51-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240122150432.992458-1-sashal@kernel.org>
+References: <20240122150432.992458-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="kuN3y11A864o183R"
-Content-Disposition: inline
-In-Reply-To: <607c5ba8b95b1a11b6dc532223e9d7abcc2c20e4.1705935812.git.geert+renesas@glider.be>
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.6.13
+Content-Transfer-Encoding: 8bit
 
+From: Kuan-Wei Chiu <visitorckw@gmail.com>
 
---kuN3y11A864o183R
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+[ Upstream commit bfbea9e5667cfa9552c3d88f023386f017f6c308 ]
 
-On Mon, Jan 22, 2024 at 04:04:14PM +0100, Geert Uytterhoeven wrote:
-> The symbol's prompt should be a one-line description, instead of just
-> duplicating the symbol name.
+In cases where kcalloc() fails for the 'clk_data->clks' allocation, the
+code path does not handle the failure gracefully, potentially leading
+to a memory leak. This fix ensures proper cleanup by freeing the
+allocated memory for 'clk_data' before returning.
 
-Huh. Why it was ever like that I do not know...
+Signed-off-by: Kuan-Wei Chiu <visitorckw@gmail.com>
+Link: https://lore.kernel.org/r/20231210165040.3407545-1-visitorckw@gmail.com
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/clk/hisilicon/clk-hi3620.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---kuN3y11A864o183R
-Content-Type: application/pgp-signature; name="signature.asc"
+diff --git a/drivers/clk/hisilicon/clk-hi3620.c b/drivers/clk/hisilicon/clk-hi3620.c
+index 2d7186905abd..5d0226530fdb 100644
+--- a/drivers/clk/hisilicon/clk-hi3620.c
++++ b/drivers/clk/hisilicon/clk-hi3620.c
+@@ -466,8 +466,10 @@ static void __init hi3620_mmc_clk_init(struct device_node *node)
+ 		return;
+ 
+ 	clk_data->clks = kcalloc(num, sizeof(*clk_data->clks), GFP_KERNEL);
+-	if (!clk_data->clks)
++	if (!clk_data->clks) {
++		kfree(clk_data);
+ 		return;
++	}
+ 
+ 	for (i = 0; i < num; i++) {
+ 		struct hisi_mmc_clock *mmc_clk = &hi3620_mmc_clks[i];
+-- 
+2.43.0
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZa6EnAAKCRB4tDGHoIJi
-0mgCAQCUPR4IiGRpjs5TOekItdDyYZ6FZoid8Hk5P2v5MsmwjAD+L2y9azy5sG5R
-2cd89GWxsKDgC4ZjtrPDhY9LTH1ZAgw=
-=mw6L
------END PGP SIGNATURE-----
-
---kuN3y11A864o183R--
