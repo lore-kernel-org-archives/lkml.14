@@ -1,100 +1,206 @@
-Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com [209.85.217.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72D19364D5
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 09:03:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8413374C1
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 09:03:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705914204; cv=none; b=VbMEhhn4v1zohSD36albdikrNfbZlpv94y+OxhQ3/OUdl+Prx11E0lfpLZON+7Bg9lnuRy0R8HFcikYHNwh5Le+pSrWu4Jg6s3exvsg3x1i0mCFkl2Tg8ntd6jviB/cgNb2jih7qKQqlupk3HHSjHo7+kgOl3MiY3sNngQeyjYc=
+	t=1705914223; cv=none; b=qrExQUYjZiemr1vz5lAtc5zNRLe5IEK2cUbHssb0Iy9Aq37nq5Lx4I+uQKApA0iMnAK1h6x1t13IqN9egbJyYE0yylf9NhKnigj/MdxaVkvuCDUTlLcF5NNdYEUf7oaed8WPDw66hF5Bsr3IXJFN2vkQdmlKHPGIFJ73YEomBUQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705914204; c=relaxed/simple;
-	bh=+njKJ5zGoAf/8uWsGPVwc5bDkUZxyqOXYFLHFAW/f6c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=abh5h2es9e53+/Kdq74vyvksBaaUgCNx8j+D6sYzFlf/JW/kNan4CtVnRj8cWdhL0pflatXnHMZo9W3+z78eqUv80OtxgYrFLmED8lWK0QWTcrTUF1v1L81x/WlKLZ8f5l6xf0KUWbICfc7qAykEuO/qHDs4f6ToQpbk3IY7Hrg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=wSblBoNJ; arc=none smtp.client-ip=209.85.217.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="wSblBoNJ"
-Received: by mail-vs1-f51.google.com with SMTP id ada2fe7eead31-466f6d4b6d3so592651137.3
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 01:03:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1705914199; x=1706518999; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TUR27c1+iHU3ojrC4LDJ/zTx5jkFmb+9moT9azuGDlQ=;
-        b=wSblBoNJyUW83Q/Yh72CAloigRFzMjBMMeKhkZhDx1d89IRjoJkvYwtralFbjHMP9S
-         jPjBgAZVVSU5Vk9raNUNQ4YJpKDSHWVVBuvCN/GNqmt/owdpKdWNOaciwhLtSXRgx/fa
-         U4wKy12nS23bbtMw0clkkJPRLOdgQaiROW88wf4vV2n+A80H8ZAmyGVimq5L2urIm4lB
-         PwvnG4swZ39ILrqqfesdfGpg45vb2Off8zkVkeAie+PGFiS1V/iCt0V5k2kv+omvHsP2
-         KkcK0vGhXwvPUiLlIiCCECmjUEAwx0htMeu52J38Ib34S2mghP9snj+CYavaR23bYAGc
-         RCYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705914199; x=1706518999;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=TUR27c1+iHU3ojrC4LDJ/zTx5jkFmb+9moT9azuGDlQ=;
-        b=NWOup7T0mj08vRQ0gn5NK/Q09NeYs6WllQWMjkDxDTRzw1o0yMmwfAd/HbwB47uIdY
-         nNpbuF74C/sgBx5L0Qfg8vOaF+Fr5qHr9NefWa/r08dbRmQxirg2K+ey17OhkhT6tYeh
-         GsLyGHhzHz17sdYJQwL4508dfVCs77XX3A1/eDgWd828ChTb4Y7wDXqMXpZSZmi0eslm
-         6M499N/DrVyFxP24I0WBoJBE8VreOd2tgQoD4Kq+NkmyhLTST8VMoiuAuhNNepQfGi9r
-         2+fB+bHQh8SCJvwF21WhtliPxQ48W/JnQa3V012wMSy/IkRF5kadJeg3ImMnuqC3NjIK
-         cG2Q==
-X-Gm-Message-State: AOJu0YyoPnvllBEoKTPkvXRp882iQP1dHAPjnQgMUyxT+uH/vrFLhToy
-	zxUCI/3STq3+0QwGiuZj9PgVNF84bYqOnu8kzTk8mXtAx1wSOl2U9ag/xF+fU8dHTYeLeCVXcTp
-	i+29MRBJmY4kRvkk9okI7QCfWkLj1Eb89dQnmbDIf0Pv4twsg
-X-Google-Smtp-Source: AGHT+IF8eESa41mI3oLuxHCHoMGVzbxUohIHKsVJ3gDU5CR8DvIfOpEJ9idSlUMF5+qSgs2hZ8AeLuwh28Hnrkt8UMQ=
-X-Received: by 2002:a05:6102:2263:b0:468:1cc5:ed88 with SMTP id
- v3-20020a056102226300b004681cc5ed88mr550502vsd.23.1705914199051; Mon, 22 Jan
- 2024 01:03:19 -0800 (PST)
+	s=arc-20240116; t=1705914223; c=relaxed/simple;
+	bh=VRDRrETopJdUCjO9x2jOWQzKPtqJ2TWmehvdawXzMfI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ne7CApJPjb0DFHTOfRSF84bIuPNJVkv55btND49PywEvz/7rQmEaJR7QfOUjqjAttTs3M/UHkyY8eqCplbkz0+2+S052y1x0IkKvTE6/B5IyI+EwpQbPqQA0ti0uMp9hGKmygVTYT2PXcdJCaln0fQHbQst+GOjIdEqkHeQI9ns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <sha@pengutronix.de>)
+	id 1rRqDK-0000mb-Tn; Mon, 22 Jan 2024 10:03:30 +0100
+Received: from [2a0a:edc0:2:b01:1d::c0] (helo=ptx.whiteo.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <sha@pengutronix.de>)
+	id 1rRqDK-001YDU-9z; Mon, 22 Jan 2024 10:03:30 +0100
+Received: from sha by ptx.whiteo.stw.pengutronix.de with local (Exim 4.92)
+	(envelope-from <sha@pengutronix.de>)
+	id 1rRqDK-001AEF-72; Mon, 22 Jan 2024 10:03:30 +0100
+Date: Mon, 22 Jan 2024 10:03:30 +0100
+From: Sascha Hauer <s.hauer@pengutronix.de>
+To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+Cc: Jassi Brar <jassisinghbrar@gmail.com>, Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Dong Aisheng <aisheng.dong@nxp.com>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	NXP Linux Team <linux-imx@nxp.com>, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	Peng Fan <peng.fan@nxp.com>
+Subject: Re: [PATCH v2 2/3] mailbox: imx: get RR/TR registers num from
+ Parameter register
+Message-ID: <20240122090330.GR4700@pengutronix.de>
+References: <20240122-imx-mailbox-v2-0-7b3c80333b92@nxp.com>
+ <20240122-imx-mailbox-v2-2-7b3c80333b92@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240109140221.77725-1-warthog618@gmail.com>
-In-Reply-To: <20240109140221.77725-1-warthog618@gmail.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 22 Jan 2024 10:03:08 +0100
-Message-ID: <CAMRc=Mc+FseBCD8h9T8=rYUhOJ7QC4FOxH+ePULnyf_8mKJMrA@mail.gmail.com>
-Subject: Re: [PATCH 0/5] gpio: uapi: documentation improvements
-To: Kent Gibson <warthog618@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linus.walleij@linaro.org, andy@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240122-imx-mailbox-v2-2-7b3c80333b92@nxp.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL: http://www.pengutronix.de/
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: sha@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On Tue, Jan 9, 2024 at 3:02=E2=80=AFPM Kent Gibson <warthog618@gmail.com> w=
-rote:
->
-> This is a series of minor clarifications and formatting tidy ups for
-> the GPIO uAPI kernel doc.
->
-> The series is intended as a companion to my character device
-> uAPI documentation series, but makes sense on its own too.
->
-> The patches are self contained and trivial so not much to add here.
->
-> Cheers,
-> Kent.
->
-> Kent Gibson (5):
->   gpio: uapi: improve description of fd fields
->   gpio: uapi: clarify hte references
->   gpio: uapi: drop trailing period from one sentence descriptions
->   gpio: uapi: document possible values of gpioevent_data.id
->   gpio: uapi: clarify using v2 rather than v1
->
->  include/uapi/linux/gpio.h | 52 ++++++++++++++++++++-------------------
->  1 file changed, 27 insertions(+), 25 deletions(-)
->
-> --
-> 2.39.2
->
+Hi Peng,
 
-Series applied, thanks!
+On Mon, Jan 22, 2024 at 02:19:24PM +0800, Peng Fan (OSS) wrote:
+> From: Peng Fan <peng.fan@nxp.com>
+> 
+> i.MX8ULP, i.MX93 MU has a Parameter register encoded as below:
+> BIT: 15 --- 8 | 7 --- 0
+>       RR_NUM    TR_NUM
+> 
+> So to make driver easy to support more variants, get the RR/TR
+> registers number from Parameter register.
+> 
+> The patch only adds support the specific MU, such as ELE MU.
+> For generic MU, not add support for number larger than 4.
+> 
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> ---
+>  drivers/mailbox/imx-mailbox.c | 46 ++++++++++++++++++++++++++++++++-----------
+>  1 file changed, 35 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/mailbox/imx-mailbox.c b/drivers/mailbox/imx-mailbox.c
+> index 656171362fe9..f2a21baded29 100644
+> --- a/drivers/mailbox/imx-mailbox.c
+> +++ b/drivers/mailbox/imx-mailbox.c
+> @@ -29,7 +29,9 @@
+>  #define IMX_MU_S4_CHANS		2
+>  #define IMX_MU_CHAN_NAME_SIZE	20
+>  
+> -#define IMX_MU_NUM_RR		4
+> +#define IMX_MU_V2_PAR_OFF	0x4
+> +#define IMX_MU_V2_TR_MASK	GENMASK(7, 0)
+> +#define IMX_MU_V2_RR_MASK	GENMASK(15, 8)
+>  
+>  #define IMX_MU_SECO_TX_TOUT (msecs_to_jiffies(3000))
+>  #define IMX_MU_SECO_RX_TOUT (msecs_to_jiffies(3000))
+> @@ -93,10 +95,11 @@ struct imx_mu_priv {
+>  	struct clk		*clk;
+>  	int			irq[IMX_MU_CHANS];
+>  	bool			suspend;
+> -
+> -	u32 xcr[IMX_MU_xCR_MAX];
+> -
+>  	bool			side_b;
+> +
+> +	u32			xcr[IMX_MU_xCR_MAX];
+> +	u32			num_tr;
+> +	u32			num_rr;
+>  };
+>  
+>  enum imx_mu_type {
+> @@ -264,18 +267,17 @@ static int imx_mu_generic_rxdb(struct imx_mu_priv *priv,
+>  static int imx_mu_specific_tx(struct imx_mu_priv *priv, struct imx_mu_con_priv *cp, void *data)
+>  {
+>  	u32 *arg = data;
+> +	u32 num_tr = priv->num_tr;
+>  	int i, ret;
+>  	u32 xsr;
+> -	u32 size, max_size, num_tr;
+> +	u32 size, max_size;
+>  
+>  	if (priv->dcfg->type & IMX_MU_V2_S4) {
+>  		size = ((struct imx_s4_rpc_msg_max *)data)->hdr.size;
+>  		max_size = sizeof(struct imx_s4_rpc_msg_max);
+> -		num_tr = 8;
 
-Bart
+This change looks unexpected here. num_tr used to be 8 here and now
+becomes 4 at maximum. Was this a bug? If yes, this deserves a separate
+patch with an explanation what was wrong here.
+
+>  	} else {
+>  		size = ((struct imx_sc_rpc_msg_max *)data)->hdr.size;
+>  		max_size = sizeof(struct imx_sc_rpc_msg_max);
+> -		num_tr = 4;
+>  	}
+>  
+>  	switch (cp->type) {
+> @@ -324,6 +326,7 @@ static int imx_mu_specific_rx(struct imx_mu_priv *priv, struct imx_mu_con_priv *
+>  	int i, ret;
+>  	u32 xsr;
+>  	u32 size, max_size;
+> +	u32 num_rr = priv->num_rr;
+>  
+>  	data = (u32 *)priv->msg;
+>  
+> @@ -345,13 +348,13 @@ static int imx_mu_specific_rx(struct imx_mu_priv *priv, struct imx_mu_con_priv *
+>  
+>  	for (i = 1; i < size; i++) {
+>  		ret = readl_poll_timeout(priv->base + priv->dcfg->xSR[IMX_MU_RSR], xsr,
+> -					 xsr & IMX_MU_xSR_RFn(priv->dcfg->type, i % 4), 0,
+> +					 xsr & IMX_MU_xSR_RFn(priv->dcfg->type, i % num_rr), 0,
+>  					 5 * USEC_PER_SEC);
+>  		if (ret) {
+>  			dev_err(priv->dev, "timeout read idx %d\n", i);
+>  			return ret;
+>  		}
+> -		*data++ = imx_mu_read(priv, priv->dcfg->xRR + (i % 4) * 4);
+> +		*data++ = imx_mu_read(priv, priv->dcfg->xRR + (i % num_rr) * 4);
+>  	}
+>  
+>  	imx_mu_xcr_rmw(priv, IMX_MU_RCR, IMX_MU_xCR_RIEn(priv->dcfg->type, 0), 0);
+> @@ -737,11 +740,30 @@ static struct mbox_chan *imx_mu_seco_xlate(struct mbox_controller *mbox,
+>  	return imx_mu_xlate(mbox, sp);
+>  }
+>  
+> +static void imx_mu_get_tr_rr(struct imx_mu_priv *priv)
+> +{
+> +	u32 val;
+> +
+> +	if (priv->dcfg->type & IMX_MU_V2) {
+> +		val = imx_mu_read(priv, IMX_MU_V2_PAR_OFF);
+> +		priv->num_tr = FIELD_GET(IMX_MU_V2_TR_MASK, val);
+> +		priv->num_rr = FIELD_GET(IMX_MU_V2_RR_MASK, val);
+> +	} else {
+> +		priv->num_tr = 4;
+> +		priv->num_rr = 4;
+> +	}
+> +}
+> +
+>  static void imx_mu_init_generic(struct imx_mu_priv *priv)
+>  {
+>  	unsigned int i;
+>  	unsigned int val;
+>  
+> +	if (priv->num_rr > 4 || priv->num_tr > 4) {
+> +		WARN_ONCE(true, "%s not support TR/RR larger than 4\n", __func__);
+> +		return;
+> +	}
+
+imx_mu_init_generic() is not called for all device types, nevertheless
+this should be treated as an error for all device types, so this check
+should be done where the variables are initialized. Also, please return
+an error rather than just issue a warning.
+
+Sascha
+
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
