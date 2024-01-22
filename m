@@ -1,44 +1,44 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B00F564CCC;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8F4364CDE;
 	Mon, 22 Jan 2024 23:55:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.120
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705967752; cv=none; b=Rs9WFxW24dMEwNw4aufxAJNmVrITAJ3NM2gN22zy0UoOcEkTt9aAk2U312MUiXXL3eMfKXDvMRPuiyuWK9smRALL0J1Fd2A87rxddWPneOwHR5S4vq5uUc4wD2xhoRTMnN/CjLrKv2z1BwzAiGwBIU6+SQEN+vO32cpJW43/gn4=
+	t=1705967752; cv=none; b=QjJw5PFtj65c7xwLrb5Af+FaXCIZjz9M1VapA49XK2MZ6CVW72jCdMUhRW8HqdqyNPTadu9bfb1cjwH9F2F3rOL/mH3SGV11b/gPE2loBjvrCQ02w7UXTrD4yX3q7cxA3nsKtCZu5bWMqJSSOxNCoswZct7fAsAorkwhfrgSRT4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1705967752; c=relaxed/simple;
-	bh=mZ+MFyXcmzFyYUGrDI5n769PmLb8ZAFJWjPxQ6G7bJs=;
+	bh=l5OSF5BW6i68hDmdAYtfztFn1BeBC/ZkQJ3rYLau+Ig=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=dD0J/+1SdlF0g8E6D8Yw21MOLkrlbrbSe+59jofli/eFSjSWjTqppbTgtS+PPn1sXiigwZeka63HdxCCvAf5CLiF//egrG+nfW2pu2/E1cmyVIOMUUCCh6WBkFZNYV4S2VLYLVQNqs5UiIIpKD93xGHwv+EphkxlVX/Vf7Blos0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=M8Kid/46; arc=none smtp.client-ip=192.55.52.120
+	 MIME-Version; b=ajD72uId1ekwlVyi0o20NmtgBJ/PzkSstSBNb8OByVzbkul0+sSymC4hNFTCSkyBWoMgmGbo+/QrViA4vaUMSw4vcJ+xAAn59H4y8iPNP5iEQERCXdI8UjTkDM8LoQbEC1f5prffH26sQSaG975rF3nfGU6frq91Df4ioRlELWo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ai5cavth; arc=none smtp.client-ip=198.175.65.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="M8Kid/46"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ai5cavth"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1705967750; x=1737503750;
+  t=1705967751; x=1737503751;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=mZ+MFyXcmzFyYUGrDI5n769PmLb8ZAFJWjPxQ6G7bJs=;
-  b=M8Kid/46E80IwcSfDQ3+FqmuG90weSirYaIaChmlUJL5B7KEPmCg8znf
-   85Ki2bnzEYmg352j9fLqUZlTVmYc9S/Etc4Yn3R5OVOhgZnT+YuFxlNAI
-   KrnEWT23MOKsOlpmOrGiUZtsNUAl0+7Q5eZ4vjkLmS4s+RX6h+pqpk2Fp
-   TbKLxaHUSSbHrvjxqX70tn3Q8ZMRlI6NVcger+JCrXw4d65Ru9TwCbkeg
-   7DgrDGChPLHLrqHZjOFT/HfBzfRFMVWWOPpO25dLC4r8BSVAw7AhyZw+l
-   6HmADUPp0wmsbwqfZ0RQs7r4NcUcuXfxLevA1RX8Y134P6EUUsfc0l9tz
+  bh=l5OSF5BW6i68hDmdAYtfztFn1BeBC/ZkQJ3rYLau+Ig=;
+  b=ai5cavthuvdImaDsfK5AHY0ve/GltiqRUjnj5TarMXacIUJRaJFTlLWi
+   cmqFdfJm29Zi7VdEyOeNAJ53RBqR39cU3zJn/0w2xxyINdZMYvbujYUVk
+   5BLwYjH4XeQdQ6xd+TJ5dYx/H/Llvu+LyBYS1Wffj9v59qagoUwoHlWe4
+   jDg6DprlweyXKU+GGHhmRsftrGb9AVAHemxlXH2kWzhJkZVw1HJz0NAE1
+   RNMQVxciWvD4x6502JJBSwAvNWcgWYiGUwSHQXgLEa+zLHjJF4dxo2oEl
+   bbEy8U+wxQfiGX4ny2cHZe3svaaCrPSRvq7TF5b1y04XM+ZgQ1PXXyoDa
    g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10961"; a="400217793"
+X-IronPort-AV: E=McAfee;i="6600,9927,10961"; a="8016447"
 X-IronPort-AV: E=Sophos;i="6.05,212,1701158400"; 
-   d="scan'208";a="400217793"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 15:55:44 -0800
+   d="scan'208";a="8016447"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 15:55:36 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.05,212,1701158400"; 
-   d="scan'208";a="27817925"
+   d="scan'208";a="1468189"
 Received: from ls.sc.intel.com (HELO localhost) ([172.25.112.31])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 15:55:44 -0800
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 15:55:35 -0800
 From: isaku.yamahata@intel.com
 To: kvm@vger.kernel.org,
 	linux-kernel@vger.kernel.org
@@ -52,9 +52,9 @@ Cc: isaku.yamahata@intel.com,
 	chen.bo@intel.com,
 	hang.yuan@intel.com,
 	tina.zhang@intel.com
-Subject: [PATCH v18 082/121] KVM: TDX: Implements vcpu request_immediate_exit
-Date: Mon, 22 Jan 2024 15:53:58 -0800
-Message-Id: <e675c1a2755f0db31ff4e5affe5dde840c97077a.1705965635.git.isaku.yamahata@intel.com>
+Subject: [PATCH v18 059/121] KVM: TDX: Require TDP MMU and mmio caching for TDX
+Date: Mon, 22 Jan 2024 15:53:35 -0800
+Message-Id: <a7812f9e894b9937e9031743c545ed854f0b5f73.1705965635.git.isaku.yamahata@intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1705965634.git.isaku.yamahata@intel.com>
 References: <cover.1705965634.git.isaku.yamahata@intel.com>
@@ -68,45 +68,49 @@ Content-Transfer-Encoding: 8bit
 
 From: Isaku Yamahata <isaku.yamahata@intel.com>
 
-Now we are able to inject interrupts into TDX vcpu, it's ready to block TDX
-vcpu.  Wire up kvm x86 methods for blocking/unblocking vcpu for TDX.  To
-unblock on pending events, request immediate exit methods is also needed.
+As TDP MMU is becoming main stream than the legacy MMU, the legacy MMU
+support for TDX isn't implemented.  TDX requires KVM mmio caching.  Disable
+TDX support when TDP MMU or mmio caching aren't supported.
 
 Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
-Reviewed-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- arch/x86/kvm/vmx/main.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ arch/x86/kvm/mmu/mmu.c  |  1 +
+ arch/x86/kvm/vmx/main.c | 11 +++++++++++
+ 2 files changed, 12 insertions(+)
 
+diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+index f338b85d6d5b..7db152f46d82 100644
+--- a/arch/x86/kvm/mmu/mmu.c
++++ b/arch/x86/kvm/mmu/mmu.c
+@@ -104,6 +104,7 @@ module_param_named(flush_on_reuse, force_flush_and_sync_on_reuse, bool, 0644);
+  * If the hardware supports that we don't need to do shadow paging.
+  */
+ bool tdp_enabled = false;
++EXPORT_SYMBOL_GPL(tdp_enabled);
+ 
+ static bool __ro_after_init tdp_mmu_allowed;
+ 
 diff --git a/arch/x86/kvm/vmx/main.c b/arch/x86/kvm/vmx/main.c
-index 619c5da771ee..aef78aa393ad 100644
+index f55ac09edc60..e77c045dca84 100644
 --- a/arch/x86/kvm/vmx/main.c
 +++ b/arch/x86/kvm/vmx/main.c
-@@ -385,6 +385,16 @@ static void vt_enable_irq_window(struct kvm_vcpu *vcpu)
- 	vmx_enable_irq_window(vcpu);
- }
- 
-+static void vt_request_immediate_exit(struct kvm_vcpu *vcpu)
-+{
-+	if (is_td_vcpu(vcpu)) {
-+		__kvm_request_immediate_exit(vcpu);
-+		return;
+@@ -62,6 +62,17 @@ static __init int vt_hardware_setup(void)
+ 	if (enable_ept)
+ 		kvm_mmu_set_ept_masks(enable_ept_ad_bits,
+ 				      cpu_has_vmx_ept_execute_only());
++	/* TDX requires KVM TDP MMU. */
++	if (enable_tdx && !tdp_enabled) {
++		enable_tdx = false;
++		pr_warn_ratelimited("TDX requires TDP MMU.  Please enable TDP MMU for TDX.\n");
 +	}
 +
-+	vmx_request_immediate_exit(vcpu);
-+}
-+
- static u8 vt_get_mt_mask(struct kvm_vcpu *vcpu, gfn_t gfn, bool is_mmio)
- {
- 	if (is_td_vcpu(vcpu))
-@@ -531,7 +541,7 @@ struct kvm_x86_ops vt_x86_ops __initdata = {
- 	.check_intercept = vmx_check_intercept,
- 	.handle_exit_irqoff = vmx_handle_exit_irqoff,
++	/* TDX requires MMIO caching. */
++	if (enable_tdx && !enable_mmio_caching) {
++		enable_tdx = false;
++		pr_warn_ratelimited("TDX requires mmio caching.  Please enable mmio caching for TDX.\n");
++	}
  
--	.request_immediate_exit = vmx_request_immediate_exit,
-+	.request_immediate_exit = vt_request_immediate_exit,
- 
- 	.sched_in = vt_sched_in,
+ 	enable_tdx = enable_tdx && !tdx_hardware_setup(&vt_x86_ops);
  
 -- 
 2.25.1
