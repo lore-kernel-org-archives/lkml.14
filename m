@@ -1,110 +1,97 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 465E53E473
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 12:20:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 883A63CF43
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 12:20:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705926057; cv=none; b=awgbD+ozS0JYx8Pt4FZg7HTtOrSXUNRyTmzQcneMEFXEjd/fFnoe21GH2jeNt73rrtBpDG0Mh1BchdMRtjfEryZHJxe/Ra/sSNNlkkFFx6KrzukuNuo0e7Hokpf0tXFHE3WdhBsQ2iSQkBPC38AYlYYYmA+aRuiggEe8TzYQdS4=
+	t=1705926060; cv=none; b=kVVxQgkA2/KHa3WynY1y5jtmR3SEaK9kajzGoge6UjXCdH2cugAe8HrrQC0mLvDTIwbygklolGkUxBwT4hIcjGvPix/lBFIHXzeZiIslN7h2mseywCcezkQN+r0NFPjDnHY18LX4DWOFwpuokkcHp7eZgmdSgD7YUgQ4dANrA2o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705926057; c=relaxed/simple;
-	bh=xC7n5NC9SALvj1NmFHUYUAbKPwq4iRoDMR2D5nFzGzM=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=LvSIAm74S8pd6oabxWPuCVf+F2YkqXFLGZBwzURaViZoSm2RMTo+EcngWuQmdXqK+K/ooabon2KyLoAocO2JhFIt63SMpuk0h3cKqjgFyBy+jdV/1K6RuxdGSvnutSway4T4DOgLVZ7xu7ugPqYyu1bK+sDh7f6RcXkLIVsqxz0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eKWZG3ay; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1705926060; c=relaxed/simple;
+	bh=YZ1z2j1kI4ddtowX/6pc2qFb6DJElIuVdVyPI0aRULs=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=i7VbqzDYya1DGYumZN3ALICpJUGmlX8HKpefXuePfMSuCkovCueVdjC4Ti+1cKwVcbPhdDTaZD0RZR+twwZ6mu7dRziy1CHJ00i4jBPT83PZSF521mPca++qk47J/P0Fwg+62InybHQEGI8be0n5VVBbjK1AZz3NhrrJXuNOSjw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=IaObIRu2; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eKWZG3ay"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1705926055; x=1737462055;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=xC7n5NC9SALvj1NmFHUYUAbKPwq4iRoDMR2D5nFzGzM=;
-  b=eKWZG3ayFb38u/yGUNFcQU3QHSwDUrxj7X0C926s9xbRiJjRywKnAsKD
-   3rDsXN+SISgYSDS3VyGxGZYE3eIRHv0oiqi1QVurpOOh5pfJa2tRQLTlX
-   fj4lQ7/bWopHMx8sSSdanocXCxSFvi8HCcETXocXax1h+1T0rrEW3JOne
-   r18yDrVSRIKM04pf28idMpGKhpCJKCNuDUTo/xfpNS/Ekf1kysh9Su6mQ
-   jnxNKW3lhInOuWVLDDcWUebi96NgjmCn7yEaif2alJ0C4OhDZNw6Suf/f
-   xAsTHQShteZjbsQLvsfFeZTZGly+YK1loXeTIr/tsTCBbWKzcsCkPGYIc
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10960"; a="8582558"
-X-IronPort-AV: E=Sophos;i="6.05,211,1701158400"; 
-   d="scan'208";a="8582558"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 04:20:54 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,211,1701158400"; 
-   d="scan'208";a="27339380"
-Received: from lkp-server01.sh.intel.com (HELO 961aaaa5b03c) ([10.239.97.150])
-  by orviesa002.jf.intel.com with ESMTP; 22 Jan 2024 04:20:53 -0800
-Received: from kbuild by 961aaaa5b03c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rRtII-0006bO-20;
-	Mon, 22 Jan 2024 12:20:50 +0000
-Date: Mon, 22 Jan 2024 20:20:25 +0800
-From: kernel test robot <lkp@intel.com>
-To: Helge Deller <deller@gmx.de>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: arch/parisc/kernel/drivers.c:745:19-20: Unneeded semicolon
-Message-ID: <202401222059.Wli6OGT0-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IaObIRu2"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-33934567777so1136082f8f.1
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 04:20:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1705926057; x=1706530857; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kABQclCWxHgPnu9QJU5EL2/wY8bNoLCbrJHvsKEUK0g=;
+        b=IaObIRu2LGHDgBjnVeOjxwqm2b5YccPLyvTxj1G16DYPhRyhEMEkJN1wWToBIjpYy2
+         Glf64g2ijuCgXNjrA6VYzE8Eva9guW15yCdBR+t/o4R1VyFDF6GSuZ6dG+FFihuLxYz1
+         gnlAYQbMOu9sWzjyBSwLYBvjwrGUFzdr5l/LQEZXmu//7bp+uijA/bJZkIfAJuoqYEDW
+         fKprjcjkFJZRdoHY5TSJf296I6BB96HtTLwkdmktn4gIFUj2TztSEyc7g7DQiAqwoDx2
+         IwZzqauTGZidfT2w6oKjymJEBovlFPW7EhxXqultjXu6CO2GmgQya1KDWshqUfpPa/9M
+         kl5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705926057; x=1706530857;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=kABQclCWxHgPnu9QJU5EL2/wY8bNoLCbrJHvsKEUK0g=;
+        b=dIZqwI+yREj6WF+PQL5c6azRi7YUZQYCFMO83G9tUPvOfTbyXJB5JcmnH9TefY/1Q1
+         LWRhjppZFOA4W8BdhkXbiuTDS9efkO0GVIxJdS5w0zAf2fyrsjJRDhFZTQxh0fpPXXOg
+         lKg/Oppvm7EpGHWow+i4yPEexN4IKaT7eiILLOaZljzW9UBelQZSKF6fCq2IvB4dMJYL
+         9YKnBhstj1grS7dxb44iLy/K7Jfmaf/1k2s+YSyKvSmDIPs7RhzQJv0CpR3zfeziAP+O
+         9P9tKTiUU9aiBaYe8WfiDdB0E6unn41y7h0iUGv4NVhSvtDtyv2q3m619ioRj5EDC9PR
+         0LLg==
+X-Gm-Message-State: AOJu0YwqyTZ/j21zKWwtTyRXHI2WRYdFZpQ+UtqPRMrRR08n8fBd7F2Y
+	0xvCR/3uj9k2UaXeaN0OVMPTmalnQw6A1qh3/nF0EDiKRO3IsHmW9wyVeFjISJ8=
+X-Google-Smtp-Source: AGHT+IFhqjuIwtg+QmXyJ4f9r6mNt1zxG6VLayec6ocn6/EHmN5XOjRCUa+vR9FMXnsULV8fzYl/Dg==
+X-Received: by 2002:a05:600c:4d02:b0:40e:49bd:a2ba with SMTP id u2-20020a05600c4d0200b0040e49bda2bamr2368821wmp.86.1705926056443;
+        Mon, 22 Jan 2024 04:20:56 -0800 (PST)
+Received: from [127.0.1.1] ([178.197.215.66])
+        by smtp.gmail.com with ESMTPSA id a17-20020a5d5091000000b003392d3dcf6dsm4585801wrt.0.2024.01.22.04.20.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Jan 2024 04:20:55 -0800 (PST)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Tudor Ambarus <tudor.ambarus@linaro.org>
+Cc: peter.griffin@linaro.org, mturquette@baylibre.com, sboyd@kernel.org, 
+ alim.akhtar@samsung.com, s.nawrocki@samsung.com, tomasz.figa@gmail.com, 
+ cw00.choi@samsung.com, linux-arm-kernel@lists.infradead.org, 
+ linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, andre.draszik@linaro.org, 
+ semen.protsenko@linaro.org, willmcvicker@google.com, 
+ kernel-team@android.com
+In-Reply-To: <20240122114113.2582612-1-tudor.ambarus@linaro.org>
+References: <20240122114113.2582612-1-tudor.ambarus@linaro.org>
+Subject: Re: [PATCH v5] clk: samsung: gs101: add support for cmu_peric0
+Message-Id: <170592605426.49653.1635174301896899185.b4-ty@linaro.org>
+Date: Mon, 22 Jan 2024 13:20:54 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.12.4
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   6613476e225e090cc9aad49be7fa504e290dd33d
-commit: ac9fb7d2b71d8353603534a5e5cc92f54fd7e219 parisc: drivers: Fix kdoc warnings
-date:   7 months ago
-config: parisc-randconfig-r062-20240122 (https://download.01.org/0day-ci/archive/20240122/202401222059.Wli6OGT0-lkp@intel.com/config)
-compiler: hppa-linux-gcc (GCC) 13.2.0
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202401222059.Wli6OGT0-lkp@intel.com/
+On Mon, 22 Jan 2024 11:41:13 +0000, Tudor Ambarus wrote:
+> CMU_PERIC0 is the clock management unit used for the peric0 block which
+> is used for USI and I3C. Add support for all cmu_peric0 clocks but
+> CLK_GOUT_PERIC0_IP (not enough info in the datasheet).
+> 
+> Few clocks are marked as critical because when either of them is
+> disabled, the system hangs even if their clock parents are enabled.
+> 
+> [...]
 
-cocci warnings: (new ones prefixed by >>)
->> arch/parisc/kernel/drivers.c:745:19-20: Unneeded semicolon
+Applied, thanks!
 
-vim +745 arch/parisc/kernel/drivers.c
+[1/1] clk: samsung: gs101: add support for cmu_peric0
+      https://git.kernel.org/krzk/linux/c/4bd800aaf96f880d45b1a28b2f78549a0f5a3a1c
 
-   720	
-   721	/**
-   722	 * parse_tree_node - returns a device entry in the iotree
-   723	 * @parent: the parent node in the tree
-   724	 * @index: the current BC index
-   725	 * @modpath: the hardware_path struct to match a device against
-   726	 * @return: The corresponding device if found, NULL otherwise.
-   727	 *
-   728	 * Checks all the children of @parent for a matching @id.  If none
-   729	 * found, it returns NULL.
-   730	 */
-   731	static struct device *
-   732	parse_tree_node(struct device *parent, int index, struct hardware_path *modpath)
-   733	{
-   734		struct parse_tree_data d = {
-   735			.index          = index,
-   736			.modpath        = modpath,
-   737		};
-   738	
-   739		struct recurse_struct recurse_data = {
-   740			.obj	= &d,
-   741			.fn	= check_parent,
-   742		};
-   743	
-   744		if (device_for_each_child(parent, &recurse_data, descend_children))
- > 745			{ /* nothing */ };
-   746	
-   747		return d.dev;
-   748	}
-   749	
-
+Best regards,
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
