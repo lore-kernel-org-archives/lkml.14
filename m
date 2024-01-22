@@ -1,120 +1,114 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF040130E28
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 15:13:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBBA850A96;
+	Mon, 22 Jan 2024 15:13:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705936406; cv=none; b=lVIDD2hpJFEqZ38/fCXz9LgDGrucinYKFbireKd99tJE8cFxvWuuV2FJdpGzm2mfxODIoRcYqKN7K0BaMuoUR4pbyevTduF0OHzgbHukwANdaJWz9D4ul6M4ZrX6rgeebvC+17MB1kL9nhGuXOPLEzuUyZCzRxqtIpBb7pAmF08=
+	t=1705936408; cv=none; b=QszKZsDPnLWbAG+PIjV2+GGsJJA7VwKzGHcTBQTB9Rhs8yoriGuu1FFNjIygOEvlNNe1C3I35sORY12WXJyo4GM+BvMtvyG54lBRRr7aRqeQd+CN9yUuwmgGbV5BZGOIjgJQQZIJmdM+7zn4Ec1tAV2TLOkkiuanA395LMDitQ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705936406; c=relaxed/simple;
-	bh=56AXuFbyDotBIe0zRySCPe31hcHy1morlPgUrVeQcq8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CDRsHXBsPtVYO7bRSFZg14L52aQc/YwVkII8WrrRPdooOKnFU80fdQsrXVIx3NKCSuK407yAsxzgz2dmM8calqxLk9WAzIplnFbrMb31rMINchWlVrpgrb8hG9Ig08BkwsOrdT+vi8HOfL3mF5L6VEFzsICjrWhKCpiGhi5/obY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=m+pPdXxF; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1705936408; c=relaxed/simple;
+	bh=pcNuVs4hs4tO9XuJJi8Usm+s98V3K4PNGoABx/m+dVo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=HP+LYHdDwNlEU0VcU0cMgK/dnm9Giehbhui8VXxGX8u12pnnI8q0g4SXH0K1OxMYy6/kGygu30EFzJPwzqgn3TtpjuHM2QRIdMFIpBMdKHWadjz5qruM53cmgwomX1al/HwbpG0Eu5CgWAEVRGyjsqQOLyZKqHAAdT333j5Y6mA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gTPQJqRX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="m+pPdXxF"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-33921b8988fso2889005f8f.3
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 07:13:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1705936403; x=1706541203; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=tlxi8b8oDDKokQlPnmcikOTjVRP/PxK9QnUm6yUSqlc=;
-        b=m+pPdXxFwEUWzYHp79xR17vD6km0z/jVH97JPLEH9eRR9QPn9TfaxfCIvzIBdjIWzM
-         S8fwQlxKNMcOBvTeAELGjZ0lg6w2BqkjUwJI188NpriVVkVcNY7tfJSJ4Q9C0vIj9Bja
-         hjNbQ3G8JnxmfBtFURC8UZqkICOs9gu3ATnqKLEQU/ePu4nIGsYVDa2X+oMOszBFou65
-         p8ppKraCyeIaHuuNOSn6nDbkpjvv6c9iWSanXF+fdStA50/u2b7tWxzpxKCWh5LftEw7
-         XNoSi34QjwdTuqhMm5Vh/Xs9uNo7QHPf+PXDW1FqwYMZd1SveCeDZC0UyCdlwFpKIFnE
-         1UlA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705936403; x=1706541203;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=tlxi8b8oDDKokQlPnmcikOTjVRP/PxK9QnUm6yUSqlc=;
-        b=LQH5O2ijWQaEL+dKV33R//ixsBLrTUrH22fOx7RVzx/pqlUwc7HOmQrKCqg1b6iWvt
-         qostNEE03Eu0Ldxsdm2Sutlknwn3wQGes4KIhpXlvCyvfF3qNvwZ7S0sqG0ZLxSO2BR4
-         gawlOw4ifsadFphbKeXvo/B7+95d9b7S6SNxTZhE1Qv1kMk8AMUITepGltD3TX2fZstC
-         cDLHHdgrVO+/pYbldUzCSrO71/Z+jx1mBHJ1mcNcZtL0cBwMzBM3uszPJRlktCsPSSua
-         jLBMlX3S862GSHNB68pT6IBCV2Q4zInG2ii/xVmJ75kdf1q0lqSACqsVV76UxMVaGSCz
-         0Jjw==
-X-Gm-Message-State: AOJu0YyAf2Lm2GsKnTcF7Uh4vVFLuVMXZ0eahyO/0NYdwmp7bYoUpoNu
-	glr/VdcEpWj81017RSzYKY3idO9Z+8ZDzZBCZ6MjVRZGqeYLAhk8KeznM5zj/1E=
-X-Google-Smtp-Source: AGHT+IEM9J0zPraq2oeR7eo9w3rrNO8V+Yb011gp82GAmVJDBG8jXmExKleS8/vEVAFlRW83rHWPig==
-X-Received: by 2002:a5d:5886:0:b0:337:9b43:bb4e with SMTP id n6-20020a5d5886000000b003379b43bb4emr2846308wrf.74.1705936403055;
-        Mon, 22 Jan 2024 07:13:23 -0800 (PST)
-Received: from [192.168.100.48] ([37.228.218.3])
-        by smtp.gmail.com with ESMTPSA id b16-20020a5d5510000000b0033924c2fadfsm7216881wrv.17.2024.01.22.07.13.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 22 Jan 2024 07:13:22 -0800 (PST)
-Message-ID: <3f68ee9d-13fd-4818-b6b4-b3c26bf998ed@linaro.org>
-Date: Mon, 22 Jan 2024 15:13:26 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gTPQJqRX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41902C43390;
+	Mon, 22 Jan 2024 15:13:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705936408;
+	bh=pcNuVs4hs4tO9XuJJi8Usm+s98V3K4PNGoABx/m+dVo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=gTPQJqRXeZR9iA+McgvP5/Lz1BZj4s8rppGQttVq6FmxZn2AUGBhCt/a/xjvqxd8O
+	 gYC/YgpU104JC3XkSsnetHJv7iIyDqLhvBLiz4oH9WiTXJ0GyAFmn1xUklTg1zBTZ3
+	 zhqpGgo1q71F0bcHVRP7GOjwJjV3i8eKmn4Ce5DbskWIw572umdXdOgGBwmyg4juAr
+	 nQtiunCF1PbrPcfycT+BheCHdqLeIvobMNZIws3Jp8RWTDihj0dJ2DSdRG/mUC4FL1
+	 KApOv58iPE0+k/PgWwXtox3nSl2UAi60om1WVSjhZa2SkG7TodMYJUtKH1hkeHX2zZ
+	 cuaUS/g8+0how==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Alex Hung <alex.hung@amd.com>,
+	Harry Wentland <harry.wentland@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Sasha Levin <sashal@kernel.org>,
+	sunpeng.li@amd.com,
+	Rodrigo.Siqueira@amd.com,
+	christian.koenig@amd.com,
+	Xinhui.Pan@amd.com,
+	airlied@gmail.com,
+	daniel@ffwll.ch,
+	alvin.lee2@amd.com,
+	jun.lei@amd.com,
+	dillon.varone@amd.com,
+	qingqing.zhuo@amd.com,
+	aurabindo.pillai@amd.com,
+	amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.15 09/35] drm/amd/display: Fix writeback_info never got updated
+Date: Mon, 22 Jan 2024 10:12:06 -0500
+Message-ID: <20240122151302.995456-9-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240122151302.995456-1-sashal@kernel.org>
+References: <20240122151302.995456-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6/6] media: venus: core: Add SC8280XP resource struct
-Content-Language: en-US
-To: Konrad Dybcio <konrad.dybcio@linaro.org>,
- Stanimir Varbanov <stanimir.k.varbanov@gmail.com>,
- Vikash Garodia <quic_vgarodia@quicinc.com>, Andy Gross <agross@kernel.org>,
- Bjorn Andersson <andersson@kernel.org>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring
- <robh+dt@kernel.org>, Krzysztof Kozlowski
- <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: Marijn Suijten <marijn.suijten@somainline.org>,
- Konrad Dybcio <konradybcio@kernel.org>, linux-media@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20230731-topic-8280_venus-v1-0-8c8bbe1983a5@linaro.org>
- <20230731-topic-8280_venus-v1-6-8c8bbe1983a5@linaro.org>
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-In-Reply-To: <20230731-topic-8280_venus-v1-6-8c8bbe1983a5@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 5.15.147
+Content-Transfer-Encoding: 8bit
 
-On 04/08/2023 21:09, Konrad Dybcio wrote:
-> Add SC8280XP configuration data and related compatible.
-> 
-> Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
-> ---
->   drivers/media/platform/qcom/venus/core.c | 45 ++++++++++++++++++++++++++++++++
->   1 file changed, 45 insertions(+)
-> 
-> diff --git a/drivers/media/platform/qcom/venus/core.c b/drivers/media/platform/qcom/venus/core.c
-> index 5f285ae75e9d..32591b624a36 100644
-> --- a/drivers/media/platform/qcom/venus/core.c
-> +++ b/drivers/media/platform/qcom/venus/core.c
+From: Alex Hung <alex.hung@amd.com>
 
-Reviewing this series, I think my input here has not been helpful or 
-correct.
+[ Upstream commit 8a307777c36e15f38c9f23778babcd368144c7d8 ]
 
-1. Declaring encoders/decoders in dts or yaml is wrong, accepted.
+[WHY]
+wb_enabled field is set to false before it is used, and the following
+code will never be executed.
 
-2. We can make a platform choice to hard-code that here in the
-    platform declarations.
+[HOW]
+Setting wb_enable to false after all removal work is completed.
 
-3. Remove the requirement from yaml for sc8280xp to declare decoder
-    encoder
-
-3. Profit.
-
-Existing dtb all, literally all do the same thing first block decoder, 
-second block encoder.
-
-Rather than perform extensive surgery to venus to remediate the original 
-yaml sin - hard-code decoder/encoder into platform code and deprecate 
-the legacy over time.
-
-Yes that means fixing to block 0 as decoder and block 1 as encoder but 
-that is the defacto situation we have now, we may as well make it dejure.
-
+Reviewed-by: Harry Wentland <harry.wentland@amd.com>
+Signed-off-by: Alex Hung <alex.hung@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
-bod
+ drivers/gpu/drm/amd/display/dc/core/dc_stream.c | 13 ++++---------
+ 1 file changed, 4 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_stream.c b/drivers/gpu/drm/amd/display/dc/core/dc_stream.c
+index 5dd57cf170f5..b7b72fc2cb37 100644
+--- a/drivers/gpu/drm/amd/display/dc/core/dc_stream.c
++++ b/drivers/gpu/drm/amd/display/dc/core/dc_stream.c
+@@ -509,18 +509,13 @@ bool dc_stream_remove_writeback(struct dc *dc,
+ 		return false;
+ 	}
+ 
+-//	stream->writeback_info[dwb_pipe_inst].wb_enabled = false;
+-	for (i = 0; i < stream->num_wb_info; i++) {
+-		/*dynamic update*/
+-		if (stream->writeback_info[i].wb_enabled &&
+-			stream->writeback_info[i].dwb_pipe_inst == dwb_pipe_inst) {
+-			stream->writeback_info[i].wb_enabled = false;
+-		}
+-	}
+-
+ 	/* remove writeback info for disabled writeback pipes from stream */
+ 	for (i = 0, j = 0; i < stream->num_wb_info; i++) {
+ 		if (stream->writeback_info[i].wb_enabled) {
++
++			if (stream->writeback_info[i].dwb_pipe_inst == dwb_pipe_inst)
++				stream->writeback_info[i].wb_enabled = false;
++
+ 			if (i != j)
+ 				/* trim the array */
+ 				stream->writeback_info[j] = stream->writeback_info[i];
+-- 
+2.43.0
+
