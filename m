@@ -1,45 +1,44 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73A8C5F867;
-	Mon, 22 Jan 2024 23:55:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 237645FB80;
+	Mon, 22 Jan 2024 23:55:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705967730; cv=none; b=ZkT9J9VVzL8fwsLdreQHDQvQMWe3ElGter1TAvKpx652fiLQj1XBVyOCqaD4lrmMCUQpahpDz82htQCXCpGGki42Z0U9se1RFwQ5ayOBothhUoa5RXi88IaK/q1tYYqLd+XcCVfzRqQzfZJy8bMsXafJsDz3oUk4W+FHBHAy8pk=
+	t=1705967730; cv=none; b=FG0HU89jIggva14jOWFZrRCNqnI3M5nKNuoaTgh5XvXS+9novdTm+P4Dk3avyRYgQ2Ew9ycTXo2hbk+FXJagL3yERWsROg0Y807h5nRGqWENWJRI0dg5Ntiw4JxrFJtukYb3zN86qJH/UrM0lkFeXv166I/lJV0sdl7k73rnPr0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1705967730; c=relaxed/simple;
-	bh=/QQnC6NuR+jveGFHm7lY9Jr4kJQvgq3Qc9nLEe3cDso=;
+	bh=oQj7us7q3FR7iciI/KFvHntTbSJoyyyxGgw23IGrLK0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=n8fDxqWIdfg1dSywy1RlDEVTiIBR/RUK8hKfud76CSU9XpcbBBS9Ayaw9MJ8sOBBPs1r4BFT6Qba36eXntmJOVT5eB8Zrtc3VawpfSyRraeYyv7w4rz0xi0PHeepl4wwp1HVXJZ1zyggnmlcgJANaLkDwURRCPxb6rrddGgukEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WiKH8CEO; arc=none smtp.client-ip=198.175.65.15
+	 MIME-Version; b=o30SH0StbybvIxeTdV6V3YU+bZgIapB9kDNcRnrlLnNX4cvnAV239bTdgCoDhxaOks/M1xYhR6Y1bARMUC/PT48W7ozeACWFgcHElDXrqp7guxX9Z4au1KCPPcq7kR1F7U2Gi0crSMBzhw82LvvDtMyncdFENNo/o883Nzvrlq4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EJX9jA7p; arc=none smtp.client-ip=198.175.65.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WiKH8CEO"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EJX9jA7p"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1705967728; x=1737503728;
+  t=1705967729; x=1737503729;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=/QQnC6NuR+jveGFHm7lY9Jr4kJQvgq3Qc9nLEe3cDso=;
-  b=WiKH8CEOXmq8vugRqC38PV8Lpd0ppQ9qM3g04Rzs+QW24PegLFaInr2w
-   SqIqAwbb/tGFLj7gJAbMswZYfEA/TZwzhXTdsInvbs4/G8YUXlJ2tqi/A
-   NuJl6uJSQ9rTQCfxXGiCP1msp8G5IBjuLeA7R4In7ngHOTNjGT3zIm8lY
-   09/jsYSxAz2w1N93/PluqWyozxITj9Eb1XxNDX+s0OOsR3zV8cXk8AegA
-   1kvUUHZA/qRLLmaTo4SDbBqBMGqte0fkqTsDPgvnbxBXszkpJqeS8K8GB
-   +t+fzSlSzdOcuet9R3iZ8cV7OuQb74aV97dT2tlNdsW/O2b3LvxVRmwK4
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10961"; a="1243895"
+  bh=oQj7us7q3FR7iciI/KFvHntTbSJoyyyxGgw23IGrLK0=;
+  b=EJX9jA7pilfR2k75tkRwl5lijOgfB2S44bPsrzhJ/HlKgtFzNZdsyEqq
+   Xom13F9K7yNjWvArfNXNYsXD29tYMSwdWdnja5VFHILoPYYakQn7e1utN
+   CE5KCn2/kvk54sUsV4q5W0NX8FAKnyfOQ/RIU0qvjIHuzy2qc6FQ+mBg2
+   EC4vn4vjgfmJ3pRX8CrJTJLocb9S3hka8600c/EUA+SNUFWFI4PISPlmp
+   cnxsAZBGYIQhyjWrlVZsRf3kLdNbF9XBpegOe30iiGSxNkaeuwqw/c15+
+   N54agYYv//NxkwQs+mbsyiF+5y+bdsPG7IE0qJ+s/PokbTVhZ5TPo6p/h
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10961"; a="8016352"
 X-IronPort-AV: E=Sophos;i="6.05,212,1701158400"; 
-   d="scan'208";a="1243895"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 15:55:27 -0800
+   d="scan'208";a="8016352"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 15:55:29 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10961"; a="819888670"
 X-IronPort-AV: E=Sophos;i="6.05,212,1701158400"; 
-   d="scan'208";a="819888670"
+   d="scan'208";a="1468076"
 Received: from ls.sc.intel.com (HELO localhost) ([172.25.112.31])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 15:55:26 -0800
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 15:55:28 -0800
 From: isaku.yamahata@intel.com
 To: kvm@vger.kernel.org,
 	linux-kernel@vger.kernel.org
@@ -53,9 +52,9 @@ Cc: isaku.yamahata@intel.com,
 	chen.bo@intel.com,
 	hang.yuan@intel.com,
 	tina.zhang@intel.com
-Subject: [PATCH v18 038/121] KVM: x86/mmu: Add Suppress VE bit to shadow_mmio_mask/shadow_present_mask
-Date: Mon, 22 Jan 2024 15:53:14 -0800
-Message-Id: <97cc616b3563cd8277be91aaeb3e14bce23c3649.1705965635.git.isaku.yamahata@intel.com>
+Subject: [PATCH v18 040/121] KVM: x86/mmu: Disallow fast page fault on private GPA
+Date: Mon, 22 Jan 2024 15:53:16 -0800
+Message-Id: <91c797997b57056224571e22362321a23947172f.1705965635.git.isaku.yamahata@intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1705965634.git.isaku.yamahata@intel.com>
 References: <cover.1705965634.git.isaku.yamahata@intel.com>
@@ -69,58 +68,47 @@ Content-Transfer-Encoding: 8bit
 
 From: Isaku Yamahata <isaku.yamahata@intel.com>
 
-To make use of the same value of shadow_mmio_mask and shadow_present_mask
-for TDX and VMX, add Suppress-VE bit to shadow_mmio_mask and
-shadow_present_mask so that they can be common for both VMX and TDX.
-
-TDX will require shadow_mmio_mask and shadow_present_mask to include
-VMX_SUPPRESS_VE for shared GPA so that EPT violation is triggered for
-shared GPA.  For VMX, VMX_SUPPRESS_VE doesn't matter for MMIO because the
-spte value is required to cause EPT misconfig.  the additional bit doesn't
-affect VMX logic to add the bit to shadow_mmio_{value, mask}.
+TDX requires TDX SEAMCALL to operate Secure EPT instead of direct memory
+access and TDX SEAMCALL is heavy operation.  Fast page fault on private GPA
+doesn't make sense.  Disallow fast page fault on private GPA.
 
 Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
+Reviewed-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- arch/x86/include/asm/vmx.h | 1 +
- arch/x86/kvm/mmu/spte.c    | 6 ++++--
- 2 files changed, 5 insertions(+), 2 deletions(-)
+ arch/x86/kvm/mmu/mmu.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/include/asm/vmx.h b/arch/x86/include/asm/vmx.h
-index 0e73616b82f3..76ed39541a52 100644
---- a/arch/x86/include/asm/vmx.h
-+++ b/arch/x86/include/asm/vmx.h
-@@ -513,6 +513,7 @@ enum vmcs_field {
- #define VMX_EPT_IPAT_BIT    			(1ull << 6)
- #define VMX_EPT_ACCESS_BIT			(1ull << 8)
- #define VMX_EPT_DIRTY_BIT			(1ull << 9)
-+#define VMX_EPT_SUPPRESS_VE_BIT			(1ull << 63)
- #define VMX_EPT_RWX_MASK                        (VMX_EPT_READABLE_MASK |       \
- 						 VMX_EPT_WRITABLE_MASK |       \
- 						 VMX_EPT_EXECUTABLE_MASK)
-diff --git a/arch/x86/kvm/mmu/spte.c b/arch/x86/kvm/mmu/spte.c
-index 4a599130e9c9..02a466de2991 100644
---- a/arch/x86/kvm/mmu/spte.c
-+++ b/arch/x86/kvm/mmu/spte.c
-@@ -429,7 +429,9 @@ void kvm_mmu_set_ept_masks(bool has_ad_bits, bool has_exec_only)
- 	shadow_dirty_mask	= has_ad_bits ? VMX_EPT_DIRTY_BIT : 0ull;
- 	shadow_nx_mask		= 0ull;
- 	shadow_x_mask		= VMX_EPT_EXECUTABLE_MASK;
--	shadow_present_mask	= has_exec_only ? 0ull : VMX_EPT_READABLE_MASK;
-+	/* VMX_EPT_SUPPRESS_VE_BIT is needed for W or X violation. */
-+	shadow_present_mask	=
-+		(has_exec_only ? 0ull : VMX_EPT_READABLE_MASK) | VMX_EPT_SUPPRESS_VE_BIT;
- 	/*
- 	 * EPT overrides the host MTRRs, and so KVM must program the desired
- 	 * memtype directly into the SPTEs.  Note, this mask is just the mask
-@@ -446,7 +448,7 @@ void kvm_mmu_set_ept_masks(bool has_ad_bits, bool has_exec_only)
- 	 * of an EPT paging-structure entry is 110b (write/execute).
- 	 */
- 	kvm_mmu_set_mmio_spte_mask(VMX_EPT_MISCONFIG_WX_VALUE,
--				   VMX_EPT_RWX_MASK, 0);
-+				   VMX_EPT_RWX_MASK | VMX_EPT_SUPPRESS_VE_BIT, 0);
+diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+index b2924bd9b668..54d4c8f1ba68 100644
+--- a/arch/x86/kvm/mmu/mmu.c
++++ b/arch/x86/kvm/mmu/mmu.c
+@@ -3339,8 +3339,16 @@ static int kvm_handle_noslot_fault(struct kvm_vcpu *vcpu,
+ 	return RET_PF_CONTINUE;
  }
- EXPORT_SYMBOL_GPL(kvm_mmu_set_ept_masks);
  
+-static bool page_fault_can_be_fast(struct kvm_page_fault *fault)
++static bool page_fault_can_be_fast(struct kvm *kvm, struct kvm_page_fault *fault)
+ {
++	/*
++	 * TDX private mapping doesn't support fast page fault because the EPT
++	 * entry is read/written with TDX SEAMCALLs instead of direct memory
++	 * access.
++	 */
++	if (kvm_is_private_gpa(kvm, fault->addr))
++		return false;
++
+ 	/*
+ 	 * Page faults with reserved bits set, i.e. faults on MMIO SPTEs, only
+ 	 * reach the common page fault handler if the SPTE has an invalid MMIO
+@@ -3450,7 +3458,7 @@ static int fast_page_fault(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault)
+ 	u64 *sptep;
+ 	uint retry_count = 0;
+ 
+-	if (!page_fault_can_be_fast(fault))
++	if (!page_fault_can_be_fast(vcpu->kvm, fault))
+ 		return ret;
+ 
+ 	walk_shadow_page_lockless_begin(vcpu);
 -- 
 2.25.1
 
