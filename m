@@ -1,44 +1,44 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF33280023;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E596950243;
 	Mon, 22 Jan 2024 23:56:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.120
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705967775; cv=none; b=VHS1uyXTnHaGQKjUt7o+QlNkHe9B/F3luM98jnFscc1MzsvlLnY7WJVIelAAz3YfT5DsM0+8+yPJmjsvhHiD8voatBu68I9wEdxIQ2LrmZ36fV5UJoRLkJmnf4NzPxUhZ0P2+ssO4Olk769lOdQINHTEvb7lVYUSLWJoohmwINk=
+	t=1705967775; cv=none; b=llGGz4NfEvJMbEoL71EuN4N9KanW+pUhwqD/EaxAdiEHIglsiF/gCXYj+9qTnZN961OJSTBqHnmCYpHl849cMfe8uo+01BlGqEmIz48q65xTJ8iX6dnDl01uvpt08sUbWYXvzLAJuxCib+mXjnP48S0WPHYWsinRBpuioUB+tLU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1705967775; c=relaxed/simple;
-	bh=NDzqinCAvUqFr69GAWQ6ymS7GapfCevHMH8hVlFGFds=;
+	bh=CPzg9MzLi+bzjnrxuAOhesiBsliVVuVv8X2j8Iy9fAU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=bAl+hrgMVomSlTYoYEdmkpLGipkURBeZPas3IaMxyXlm1WEonPL6gOX/Jx49isgI1dOB0I2jodhw1eKofT7DblfEqndKJ5Ow6Z0Kt6HWJtsrI4hkWQ8JfVcF/G5t7q0khxMYOmF1XN18I8EENtl9zUeYfC+czNMHb+eaGuu9FlE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XRcOEWl6; arc=none smtp.client-ip=192.55.52.120
+	 MIME-Version; b=doSIUWwC82FMzM9i6UViDTZvJ/rhE43fUzE1rdM4gL8eX3lUz7SfxTgMwRY0AbA5qqAqc34xMl1W2wyVqhP7Zk0RdUaQwhi+8+taKyhh9gjrVioo2iievyJlrTqrWJtgTQ/TJDXIdkAyj8+Ii/8wsNRVsPRlCysk74jKymRDaEQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gnLoQTH+; arc=none smtp.client-ip=192.55.52.120
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XRcOEWl6"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gnLoQTH+"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1705967773; x=1737503773;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=NDzqinCAvUqFr69GAWQ6ymS7GapfCevHMH8hVlFGFds=;
-  b=XRcOEWl6WBIcSfm8+UGQUla+5D9d5hf6mDndAmhec/hZowIngaD5WaAQ
-   anB535sE+/sBgKQtscXcjMeGO5FY5g+O31KWgtc5j5pz31pWsjL9TvEhJ
-   6yBz8xPVsWNCw2MobKljXA5rwCAMmsH6KRCB5afr2vfe0lvS6ca05BhZa
-   qNPAdypt49tOvGkaOvvf8Igq+NtLF5hDM5us/4npo4CWbJ7ppBRGrt8Vz
-   cKVyfxE2dA6KUWYzQO7AOTlInSxbdw6erZFZ6A/HNQtUM1KY3TkRPYa9l
-   tjCK2qbWve66Y6B0KuFprCcORYnViqJNIn8TV9THd/oe3pv38Idr4dg+m
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10961"; a="400217937"
+  bh=CPzg9MzLi+bzjnrxuAOhesiBsliVVuVv8X2j8Iy9fAU=;
+  b=gnLoQTH+cA4wjH9HhJw3h1AfLf1ccDTIAXgVBM+ulNeocuSinaJvyq6/
+   TcPOUCiAP9c9i+FcqluzNxW5VFlDKQPlbvtONBX+VeaTUwSXCm+34zdbw
+   zX/3oPUD5dt6KmrFMuVQQUQnYNBMMWmKo6YkXjFYN4uiT6SfS0yGobxQw
+   kNjiEinWwqNt90Qkxb+orXxHZnpUDFa6IcdjJfIz+H2IJG3vd1yZOA2xQ
+   9uAmkXFlTZCiBi4ctaSx44u52C/GUfnJ+dXZWhBj7Esp99q4F6scTZK/D
+   oERkHG8NPyOjYFm+ebBYOVXuohf1y6bz4fRP2AuBrfTqxkNogLJoJPq5b
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10961"; a="400217945"
 X-IronPort-AV: E=Sophos;i="6.05,212,1701158400"; 
-   d="scan'208";a="400217937"
+   d="scan'208";a="400217945"
 Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 15:55:57 -0800
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 15:55:58 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.05,212,1701158400"; 
-   d="scan'208";a="27818028"
+   d="scan'208";a="27818035"
 Received: from ls.sc.intel.com (HELO localhost) ([172.25.112.31])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 15:55:57 -0800
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 15:55:58 -0800
 From: isaku.yamahata@intel.com
 To: kvm@vger.kernel.org,
 	linux-kernel@vger.kernel.org
@@ -52,9 +52,9 @@ Cc: isaku.yamahata@intel.com,
 	chen.bo@intel.com,
 	hang.yuan@intel.com,
 	tina.zhang@intel.com
-Subject: [PATCH v18 113/121] KVM: TDX: Add a method to ignore for TDX to ignore hypercall patch
-Date: Mon, 22 Jan 2024 15:54:29 -0800
-Message-Id: <3de4fd58d341de8419b39f5e6c0171b183e5b86e.1705965635.git.isaku.yamahata@intel.com>
+Subject: [PATCH v18 115/121] KVM: TDX: Inhibit APICv for TDX guest
+Date: Mon, 22 Jan 2024 15:54:31 -0800
+Message-Id: <201f04ffc055319c9958ba0e37dd2e9833084c05.1705965635.git.isaku.yamahata@intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1705965634.git.isaku.yamahata@intel.com>
 References: <cover.1705965634.git.isaku.yamahata@intel.com>
@@ -68,49 +68,73 @@ Content-Transfer-Encoding: 8bit
 
 From: Isaku Yamahata <isaku.yamahata@intel.com>
 
-Because guest TD memory is protected, VMM patching guest binary for
-hypercall instruction isn't possible.  Add a method to ignore hypercall
-patching with a warning.  Note: guest TD kernel needs to be modified to use
-TDG.VP.VMCALL for hypercall.
+TDX doesn't support APICV, inhibit APICv for TDX guest.  Follow how SEV
+does it.  Define a new inhibit reason for TDX, set it on TD
+initialization, and add the flag to kvm_x86_ops.required_apicv_inhibits.
 
 Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
 ---
- arch/x86/kvm/vmx/main.c | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
+ arch/x86/include/asm/kvm_host.h | 9 +++++++++
+ arch/x86/kvm/vmx/main.c         | 3 ++-
+ arch/x86/kvm/vmx/tdx.c          | 4 ++++
+ 3 files changed, 15 insertions(+), 1 deletion(-)
 
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index 59a1c55c48f0..54ac65b75f18 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -1314,6 +1314,15 @@ enum kvm_apicv_inhibit {
+ 	 * mapping between logical ID and vCPU.
+ 	 */
+ 	APICV_INHIBIT_REASON_LOGICAL_ID_ALIASED,
++
++	/*********************************************************/
++	/* INHIBITs that are relevant only to the Intel's APICv. */
++	/*********************************************************/
++
++	/*
++	 * APICv is disabled because TDX doesn't support it.
++	 */
++	APICV_INHIBIT_REASON_TDX,
+ };
+ 
+ struct kvm_arch {
 diff --git a/arch/x86/kvm/vmx/main.c b/arch/x86/kvm/vmx/main.c
-index 3a5cd705694e..905ff83e66c7 100644
+index 48d71c2cef1b..dd2859328593 100644
 --- a/arch/x86/kvm/vmx/main.c
 +++ b/arch/x86/kvm/vmx/main.c
-@@ -744,6 +744,19 @@ static u32 vt_get_interrupt_shadow(struct kvm_vcpu *vcpu)
- 	return vmx_get_interrupt_shadow(vcpu);
- }
+@@ -1005,7 +1005,8 @@ static int vt_vcpu_mem_enc_ioctl(struct kvm_vcpu *vcpu, void __user *argp)
+ 	 BIT(APICV_INHIBIT_REASON_BLOCKIRQ) |			\
+ 	 BIT(APICV_INHIBIT_REASON_PHYSICAL_ID_ALIASED) |	\
+ 	 BIT(APICV_INHIBIT_REASON_APIC_ID_MODIFIED) |		\
+-	 BIT(APICV_INHIBIT_REASON_APIC_BASE_MODIFIED))
++	 BIT(APICV_INHIBIT_REASON_APIC_BASE_MODIFIED) |		\
++	 BIT(APICV_INHIBIT_REASON_TDX))
  
-+static void vt_patch_hypercall(struct kvm_vcpu *vcpu,
-+				  unsigned char *hypercall)
-+{
-+	/*
-+	 * Because guest memory is protected, guest can't be patched. TD kernel
-+	 * is modified to use TDG.VP.VMCAL for hypercall.
-+	 */
-+	if (KVM_BUG_ON(is_td_vcpu(vcpu), vcpu->kvm))
-+		return;
+ struct kvm_x86_ops vt_x86_ops __initdata = {
+ 	.name = KBUILD_MODNAME,
+diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
+index a879a7fb0f03..be1cc08dd74a 100644
+--- a/arch/x86/kvm/vmx/tdx.c
++++ b/arch/x86/kvm/vmx/tdx.c
+@@ -2533,6 +2533,8 @@ static int __tdx_td_init(struct kvm *kvm, struct td_params *td_params,
+ 		goto teardown;
+ 	}
+ 
++	kvm_set_apicv_inhibit(kvm, APICV_INHIBIT_REASON_TDX);
 +
-+	vmx_patch_hypercall(vcpu, hypercall);
-+}
-+
- static void vt_inject_irq(struct kvm_vcpu *vcpu, bool reinjected)
- {
- 	if (is_td_vcpu(vcpu))
-@@ -1012,7 +1025,7 @@ struct kvm_x86_ops vt_x86_ops __initdata = {
- 	.update_emulated_instruction = vmx_update_emulated_instruction,
- 	.set_interrupt_shadow = vt_set_interrupt_shadow,
- 	.get_interrupt_shadow = vt_get_interrupt_shadow,
--	.patch_hypercall = vmx_patch_hypercall,
-+	.patch_hypercall = vt_patch_hypercall,
- 	.inject_irq = vt_inject_irq,
- 	.inject_nmi = vt_inject_nmi,
- 	.inject_exception = vt_inject_exception,
+ 	return 0;
+ 
+ 	/*
+@@ -2895,6 +2897,8 @@ static int tdx_td_vcpu_init(struct kvm_vcpu *vcpu, u64 vcpu_rcx)
+ 		return -EIO;
+ 	}
+ 
++	WARN_ON_ONCE(kvm_apicv_activated(vcpu->kvm));
++	vcpu->arch.apic->apicv_active = false;
+ 	vcpu->arch.mp_state = KVM_MP_STATE_RUNNABLE;
+ 	tdx->td_vcpu_created = true;
+ 	return 0;
 -- 
 2.25.1
 
