@@ -1,80 +1,133 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-m17207.xmail.ntesmail.com (mail-m17207.xmail.ntesmail.com [45.195.17.207])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E3D73D3A7;
-	Mon, 22 Jan 2024 20:49:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16BED3D3A7;
+	Mon, 22 Jan 2024 20:50:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.195.17.207
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705956588; cv=none; b=haTpsirdk6FQBbQDCFR6BFfOFVnhmeyxKpvs2vMw0648b3wckt9prYf7lWqujrl4hsjnlJ5abAOUALtrXC3nSZKmDXV5JFMB1vexz9UB+xwHP2ZFLjjWCtKCjU1pz2TYw8ODXSArw5T+meA4HEe9t8IHc+Hyi+yuVdfk6OXBBzA=
+	t=1705956653; cv=none; b=gya9l4RRfZ00NaEavug8WjTpzCSa8hYYebPide7mqTWrOSxictC7EpTnzr6PxykK0IuWwfTaz8+9J/+vf4i5QJFTISm/6aOsE2RYp2rIlp03Wjz1AvhyHBUQBBSbOUi1ePr3xTBGUod1meZH7230uTTC1Twv08u+BerhPjkDLx8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705956588; c=relaxed/simple;
-	bh=8uQMHUcXhtjhqayjyELeGsTQuyul/RDw0AHVO1zqFyc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gRXmGaXvTAzXQtXbd4IwIl6KykjM7NgF1PLC3VXB8SNpZmO1wv987+rHNF++GK1bqDDCPfLcjRAyxxK7ZsLTQj4ZAEi72LXq4OaPfT625jV3x3Fl+NQijjkBfqurOH5gq8tATcW5tUKj94xnd2qG/d0YbSuMyCETAuAcmUFegck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M1hVgyLq; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M1hVgyLq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 775E8C433B1;
-	Mon, 22 Jan 2024 20:49:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705956587;
-	bh=8uQMHUcXhtjhqayjyELeGsTQuyul/RDw0AHVO1zqFyc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=M1hVgyLqytB+uOHN87/G0Mx0O6oa8OSf0K4e4wc1VVYQIoqwi9xrsFE6x4PEEx/8Y
-	 lr0H/drkLUBoaLo9VKnXH1F5F8BA6la87ESLGGQN7aAFXtpdL8mX4PEmb3kqSX1SE3
-	 06YjGNizjI3n+wh2XLRin7lCLVaJqDFJ49BZpHfCqhUGf0DKgawRJYdNgMToHt7nk3
-	 qOFwgp2AqXaKkwgX20Gh6slmRbXDORYVstZToPkBncThvJa8obBig35ydVnzS5+eAR
-	 jUzFydz+GaIKg2nnmhyOwuNyW6w5xebf2y26X7zJLIohGGQ+4YP1CbYvzuxGbdR7RD
-	 fJlYIJKL8et8A==
-Date: Mon, 22 Jan 2024 20:49:38 +0000
-From: Simon Horman <horms@kernel.org>
-To: mhklinux@outlook.com
-Cc: haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, linux-kernel@vger.kernel.org,
-	linux-hyperv@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH net 1/1] hv_netvsc: Calculate correct ring size when
- PAGE_SIZE is not 4 Kbytes
-Message-ID: <20240122204938.GG126470@kernel.org>
-References: <20240122162028.348885-1-mhklinux@outlook.com>
+	s=arc-20240116; t=1705956653; c=relaxed/simple;
+	bh=iKziXW5nSbJLL99tAPoPAh//iFGA+h98wNVjisnajQ8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Dl9GIyy5hiovh0IHBjuJx2JB8BpCj/ahoLGtbq/2qrifQKQUKHHTFN2Fh5xw+AF/iNp3ohHPkepf5wgIjGn9RL6NDR66eoiLeemgxkgQ7Sv9h0ZntLSKV8HGshxsZU76Hlm0IJgp0dE75CDGCgE8QxSXGuAwDDMn2RIkF4mTUtk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=link.tyut.edu.cn; spf=pass smtp.mailfrom=link.tyut.edu.cn; arc=none smtp.client-ip=45.195.17.207
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=link.tyut.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=link.tyut.edu.cn
+Received: from [192.168.2.76] (unknown [113.251.4.85])
+	by mail-m121145.qiye.163.com (Hmail) with ESMTPA id 3AD9F80010E;
+	Tue, 23 Jan 2024 01:11:59 +0800 (CST)
+Message-ID: <b8823223-e735-4d5a-b90e-6e2f2a6cd104@link.tyut.edu.cn>
+Date: Tue, 23 Jan 2024 01:11:58 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240122162028.348885-1-mhklinux@outlook.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] Documentation: power: Use kcalloc() instead of
+ kzalloc()
+Content-Language: en-US
+To: Erick Archer <erick.archer@gmx.com>, Viresh Kumar <vireshk@kernel.org>,
+ Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <len.brown@intel.com>,
+ Pavel Machek <pavel@ucw.cz>, Alex Shi <alexs@kernel.org>,
+ Yanteng Si <siyanteng@loongson.cn>, Jonathan Corbet <corbet@lwn.net>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-hardening@vger.kernel.org
+References: <20240121104344.5001-1-erick.archer@gmx.com>
+From: Hu Haowen <2023002089@link.tyut.edu.cn>
+In-Reply-To: <20240121104344.5001-1-erick.archer@gmx.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkZS0pPVkhOTBkeTEoYGh5CSlUTARMWGhIXJBQOD1
+	lXWRgSC1lBWUpKSFVJTkpVT1VDTllXWRYaDxIVHRRZQVlPS0hVSkpLSEpDVUpLS1VLWQY+
+X-HM-Tid: 0a8d32285244b03akuuu3ad9f80010e
+X-HM-MType: 10
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6N0k6Eww*EDwZPg4yAU4JUS0R
+	Tg8KCzFVSlVKTEtOQk9ITklLSENLVTMWGhIXVUlLSUhLS0lLQ0I7FxIVEFUPAg4PVR4fDlUYFUVZ
+	V1kSC1lBWUpKSFVJTkpVT1VDTllXWQgBWUFPQkhINwY+
 
-On Mon, Jan 22, 2024 at 08:20:28AM -0800, mhkelley58@gmail.com wrote:
-> From: Michael Kelley <mhklinux@outlook.com>
-> 
-> Current code in netvsc_drv_init() incorrectly assumes that PAGE_SIZE
-> is 4 Kbytes, which is wrong on ARM64 with 16K or 64K page size. As a
-> result, the default VMBus ring buffer size on ARM64 with 64K page size
-> is 8 Mbytes instead of the expected 512 Kbytes. While this doesn't break
-> anything, a typical VM with 8 vCPUs and 8 netvsc channels wastes 120
-> Mbytes (8 channels * 2 ring buffers/channel * 7.5 Mbytes/ring buffer).
-> 
-> Unfortunately, the module parameter specifying the ring buffer size
-> is in units of 4 Kbyte pages. Ideally, it should be in units that
-> are independent of PAGE_SIZE, but backwards compatibility prevents
-> changing that now.
-> 
-> Fix this by having netvsc_drv_init() hardcode 4096 instead of using
-> PAGE_SIZE when calculating the ring buffer size in bytes. Also
-> use the VMBUS_RING_SIZE macro to ensure proper alignment when running
-> with page size larger than 4K.
-> 
-> Cc: <stable@vger.kernel.org> # 5.15.x
-> Signed-off-by: Michael Kelley <mhklinux@outlook.com>
 
-Hi Michael,
+在 2024/1/21 18:43, Erick Archer 写道:
+> As noted in the "Deprecated Interfaces, Language Features, Attributes,
+> and Conventions" documentation [1], size calculations (especially
+> multiplication) should not be performed in memory allocator (or similar)
+> function arguments due to the risk of them overflowing. This could lead
+> to values wrapping around and a smaller allocation being made than the
+> caller was expecting. Using those allocations could lead to linear
+> overflows of heap memory and other misbehaviors.
+>
+> So, in the example code use the purpose specific kcalloc() function
+> instead of the argument size * count in the kzalloc() function.
+>
+> At the same time, modify the translations accordingly.
+>
+> Link: https://www.kernel.org/doc/html/next/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments [1]
+> Link: https://github.com/KSPP/linux/issues/162
+> Signed-off-by: Erick Archer <erick.archer@gmx.com>
+> ---
+> Hi,
+>
+> This patch is a merger of two previous ones [1] [2].
+> As Hu Haowen and Jonathan Corbet suggested, the translation change
+> only makes sense if the original file is modified. So, with this
+> v2 version the original file and the translations are modified at
+> the same time.
+>
+> [1] https://lore.kernel.org/linux-hardening/20240120120527.3866-1-erick.archer@gmx.com/
+> [2] https://lore.kernel.org/linux-hardening/20240120122204.4287-1-erick.archer@gmx.com/
+>
+> Thanks,
+> Erick
+> ---
+>   Documentation/power/opp.rst                    | 2 +-
+>   Documentation/translations/zh_CN/power/opp.rst | 2 +-
+>   2 files changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/Documentation/power/opp.rst b/Documentation/power/opp.rst
+> index a7c03c470980..1b7f1d854f14 100644
+> --- a/Documentation/power/opp.rst
+> +++ b/Documentation/power/opp.rst
+> @@ -305,7 +305,7 @@ dev_pm_opp_get_opp_count
+>   	 {
+>   		/* Do things */
+>   		num_available = dev_pm_opp_get_opp_count(dev);
+> -		speeds = kzalloc(sizeof(u32) * num_available, GFP_KERNEL);
+> +		speeds = kcalloc(num_available, sizeof(u32), GFP_KERNEL);
+>   		/* populate the table in increasing order */
+>   		freq = 0;
+>   		while (!IS_ERR(opp = dev_pm_opp_find_freq_ceil(dev, &freq))) {
+> diff --git a/Documentation/translations/zh_CN/power/opp.rst b/Documentation/translations/zh_CN/power/opp.rst
+> index 8d6e3f6f6202..7470fa2d4c43 100644
+> --- a/Documentation/translations/zh_CN/power/opp.rst
+> +++ b/Documentation/translations/zh_CN/power/opp.rst
+> @@ -274,7 +274,7 @@ dev_pm_opp_get_opp_count
+>   	 {
+>   		/* 做一些事情 */
+>   		num_available = dev_pm_opp_get_opp_count(dev);
+> -		speeds = kzalloc(sizeof(u32) * num_available, GFP_KERNEL);
+> +		speeds = kcalloc(num_available, sizeof(u32), GFP_KERNEL);
 
-As a bug fix this probably warrants a fixes tag.
-Perhaps this is appropriate?
 
-Fixes: 450d7a4b7ace ("Staging: hv: ring parameter")
+For the zh_CN translation,
 
-...
+Reviewed-by: Hu Haowen <2023002089@link.tyut.edu.cn>
+
+
+Thanks,
+
+Hu Haowen
+
+
+>   		/* 按升序填充表 */
+>   		freq = 0;
+>   		while (!IS_ERR(opp = dev_pm_opp_find_freq_ceil(dev, &freq))) {
+> --
+> 2.25.1
+>
+>
+>
