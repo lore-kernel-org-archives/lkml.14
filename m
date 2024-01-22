@@ -1,92 +1,82 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC7C9FBFF
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 22:54:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A236312E69;
+	Mon, 22 Jan 2024 22:55:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705964092; cv=none; b=ASujX7nAbX/YPab+R4nsCD4jk7xFdde8pjzHCIvIVYmtV3lUsGeKilwf3iIAAUOB7kDhcKKAayGfdSBDKLPcrsNm8m5PgouT86aM+FpHtcQaioCbn0PKG4JX4wQy85AdZ7Ra5xxqflvkchy3Oz3i5FMaE0jpjRqR844W6fQDL7s=
+	t=1705964133; cv=none; b=D0LeIjjEg8u5h3fygbq9Wq+dZh6LL1lyeV+z1PJlaAh4p+EGA/RX95bCom5Qwsb+XjOaVUu+LQkErinZ/JQi/7ZTyJkYo+1AMzzw/v6Gw34POgvKyuvh74pfsnwl4vKo+N8TYHXMcTAGsJteW8ekuorNUw1Y5Nd7lxHMIxQ2GgQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705964092; c=relaxed/simple;
-	bh=Vv4GoVLQbcboDBK9JF2IcWRLvU3UCl3aQM4sIGzFBNE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ff5lDmbWKNm3TCP9vba2Cdhxh2CiykR4jFmFeTFXWxACpf8iDtFZAwNPIEc0hQatj1idkniF8EUQ2XC8syOgAJ6IXywWpobGlRXJ7Na2K4P3/CoL+VkbSLPYprtigPKS/zTXmZ2urrhX7pAdBKGEBYDKxm7zvjx3u551MNECQ7A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=HTC5bauZ; arc=none smtp.client-ip=209.85.208.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="HTC5bauZ"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-559edcee47eso3120480a12.0
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 14:54:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1705964089; x=1706568889; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=JOEb90GER7mzhUcx62Qpw2hCQjGXAjl9en9ZzJ8SQUY=;
-        b=HTC5bauZzFgfwmwUWbkTaKbGr5SLZegCsHkpQ/SvLm9jFvdsSO8N4n8gIK9Bt2stAQ
-         NDvcCSZKVE8H9Fl+CFtssBoVBaRmkUpFLYDW/E/ueJoON/yVlecfKjF6cTFUaOnIYhoS
-         rI23U9P/hYluSReuBMKbSCBUGCvbpXrxYg8Dw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705964089; x=1706568889;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=JOEb90GER7mzhUcx62Qpw2hCQjGXAjl9en9ZzJ8SQUY=;
-        b=GVa1aJtm6ZkUIjwv9ixXDp5fwknY66qQllBvN8rEKIntT7CAyHLkrY7SW3TbezkClU
-         9CSBtGpM/AjnnpS9T2bIejHCwlAqTZaU14KD+PiJJK78n1YMDEvbLCgswaNNzlZJrepo
-         uJ2MbAWnWHGgUAYV6gisEszZSWIEwJkhRewk/JOUDKnD5i5bMT9CXGwuoPkvCLceHlSJ
-         tG1Nbo1kWCT3sD6+J5B8R3lz0yidR3JOohz2fJiquZwE3tUBr2KDmiKjRpg2gCENOj4n
-         1RVfcG7UQ2TYyIEBxC86+MWp9RbkUtmh+tB370Th54TpgxO1jDq/XJBrK92pM1c0W9dU
-         7lpQ==
-X-Gm-Message-State: AOJu0YxmAqPR6kDivy3Ob11JUh90Y2DFS99MAsC1Z/sMVromJ3ZI/eP6
-	Oruwfd+XBSuj5/Fma/adpHUt499SZYwqf6lqblkBjiStaE2vmdozTVvy3ZCwt8haTEbBxGGXM3z
-	SU9lJaQ==
-X-Google-Smtp-Source: AGHT+IElkiBOQddir70ASLbwfEdE5HO6PNCchmLHgKPwAaygk5eD2b7nJ5/88sApHcc9n5dWBxLltg==
-X-Received: by 2002:a05:6402:b4d:b0:55a:9192:a56f with SMTP id bx13-20020a0564020b4d00b0055a9192a56fmr314674edb.26.1705964088867;
-        Mon, 22 Jan 2024 14:54:48 -0800 (PST)
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com. [209.85.128.54])
-        by smtp.gmail.com with ESMTPSA id ek7-20020a056402370700b005594ad2235bsm10427538edb.12.2024.01.22.14.54.48
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 22 Jan 2024 14:54:48 -0800 (PST)
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-40eb2f3935eso4344135e9.2
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 14:54:48 -0800 (PST)
-X-Received: by 2002:a7b:cb97:0:b0:40e:8bb2:6bcf with SMTP id
- m23-20020a7bcb97000000b0040e8bb26bcfmr2474196wmi.151.1705964087839; Mon, 22
- Jan 2024 14:54:47 -0800 (PST)
+	s=arc-20240116; t=1705964133; c=relaxed/simple;
+	bh=73P2VSJYjI/fLQ8ac8A9F5BDPZV8lueMjh4EPCOWcRo=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=FOaLuhumV2YK6Aui2KO1ClDGoKz2z0ZlgiaUk/UxDUFhU36l4GIgjJW6hsgWECUYXNNHXkVkq/L82yxjJzDZW88sJG2Epv1OHlSqKAjBNzhNHook+XwMn3gtGyMrHfXI+g1ZScSgDzVN+faFQbbmRnDnpyXSbio7Semcs9Z+6U4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF89CC433C7;
+	Mon, 22 Jan 2024 22:55:32 +0000 (UTC)
+Date: Mon, 22 Jan 2024 17:57:01 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Ricardo B. Marliere" <ricardo@marliere.net>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] tracing: add trace_seq_reset function
+Message-ID: <20240122175701.3e525404@gandalf.local.home>
+In-Reply-To: <ny2sl7ke3mktdimdcfikmwel57fuoudezq6k6yamwqqitt6jqz@vpxgz473xrva>
+References: <20240122182225.69061-2-ricardo@marliere.net>
+	<20240122171024.4a434c73@gandalf.local.home>
+	<ny2sl7ke3mktdimdcfikmwel57fuoudezq6k6yamwqqitt6jqz@vpxgz473xrva>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1705946889.git.dsterba@suse.com> <CAHk-=wgHDYsNm7CG3szZUotcNqE_w+ojcF+JG88gn5px7uNs0Q@mail.gmail.com>
-In-Reply-To: <CAHk-=wgHDYsNm7CG3szZUotcNqE_w+ojcF+JG88gn5px7uNs0Q@mail.gmail.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Mon, 22 Jan 2024 14:54:31 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wiroGW6OMrPXrFg8mxYJa+362XJTsD5HkHXUHffcMieAA@mail.gmail.com>
-Message-ID: <CAHk-=wiroGW6OMrPXrFg8mxYJa+362XJTsD5HkHXUHffcMieAA@mail.gmail.com>
-Subject: Re: [GIT PULL] Btrfs fixes for 6.8-rc2
-To: David Sterba <dsterba@suse.com>, Qu Wenruo <wqu@suse.com>
-Cc: linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, 22 Jan 2024 at 14:34, Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> Bah. These fixes are garbage. Now my machine doesn't even boot. I'm
-> bisecting
+On Mon, 22 Jan 2024 19:45:41 -0300
+"Ricardo B. Marliere" <ricardo@marliere.net> wrote:
 
-My bisection says
+> > Perhaps we need a:
+> > 
+> > 	if (WARN_ON_ONCE(!s->seq.size))
+> > 		seq_buf_init(&s->seq, s->buffer, TRACE_SEQ_BUFFER_SIZE);
+> > 	else
+> > 		seq_buf_clear(&s->seq);
+> > 
+> > 
+> > in the trace_seq_reset() to catch any place that doesn't have it
+> > initialized yet.  
+> 
+> But that would be temporary, right? Kind of a "trace_seq_init_or_reset".
+> If that's the case it would be best to simply work out all the places
+> instead. Would the current tests [1] cover everything or should
+> something else be made to make sure no place was missing from the patch?
 
-   1e7f6def8b2370ecefb54b3c8f390ff894b0c51b is the first bad commit
+No it would be permanent. And no, it is *not* a "trace_seq_init_or_reset".
+That WARN_ON_ONCE() means this should never happen, but if it does, the
+if () statement keeps it from crashing.
 
-but I'll still have to verify by testing the revert on top of my current tree.
+If we later make it dynamic, where there is no s->buffer, that would then
+change to:
 
-It did revert cleanly, but I also note that if the zstd case is wrong,
-I assume the other very similar commits (for zlib and lzo) are
-potentially also wrong.
+	if (WARN_ON_ONCE(!s->seq.size))
+		seq_buf_init(&s->seq, NULL, 0);
+	else
+		seq_buf_clear(&s->seq);
 
-Let me reboot to verify that at least my machine boots.
+Where the trace_seq is basically disabled from that point on.
 
-              Linus
+I would try to fix everything, but this will find those places you missed. ;-)
+
+The kernel is like this, because it's not like any other application. If an
+application crashes, you may get annoyed, and just restart it. If the
+kernel crashes, you can easily lose data and you have to reboot your
+machine. Thus, we treat things that could cause harm much more carefully.
+
+We do not want to crash the kernel just because we missed a location that
+did not initialize trace_seq. That's why this would be a permanent change.
+
+-- Steve
