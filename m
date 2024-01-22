@@ -1,124 +1,158 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A39864B5B5
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 18:22:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39ACF4BAA2;
+	Mon, 22 Jan 2024 18:22:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705947756; cv=none; b=ty7y+YZKDYqKtT1u9QA0YXSf0yRG2gPSRtSfUj/yfjd06aNW9QaTAbGWv3WRHfYjF3uzneEI1aoGn64A1iRqUXg9w7rU4obnyVTOb3GdP0DKCoiRRXmtA8M2b91yl0a6fAOdsfxMYLU7yP5IWdA8yVJWP0XY4/39pePNiJ80RWs=
+	t=1705947770; cv=none; b=jyLpvQs7Soy2obSt909wKiUwEr3LukCITKafxHaFvANWQMPHTWTLZqC+BlejT1VtHH0Uh+IHds8f7tEPjFEs1B4+Jgj73J6rHMBaC+wPk+gkcn1J0MXsTFliX/Tqyfa6B/QS7kggMRMGRZDHGbxiehtalg1j0Y5RSH5m944JHD4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705947756; c=relaxed/simple;
-	bh=xYsOp0Tk8CxfErW9ndj/ZZh4AQhtBNipUfa73tFsnSE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=k4bISt5HclR7EdIwlpEngbYEoVLVNm17YdN8pHJM3HFOCYrUPGLFbPPqTnoaQQrV0C2/1zFnZnSgQ1XeCgDsObOtx/wrG0DiT3QL2N5hUkUf1U0IjBHd+r2nv/yWxAn9Yzbb1dzoBLiU9hHFAK0UF4RN5ged6aWHLfIXCE0gSUM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=M9u2NoCl; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1705947770; c=relaxed/simple;
+	bh=8ff78h9bJtx1azZLBLk1EKJHIodHEpeL9E/XnvsmPko=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZTIcHtuWv8UKxB/LHCfNvlUkeOnINtSOP4RP0ZeH3pEwUMV5rTE2FX92faiiOulte9gLBdgSvHnMbUiI13RsRsIqkbgG4u1nDoMIDt0RPWs5KD4nSrvK7LwfRbCcvPu82/oE8bRA9+ErP7YAPxH8HXBI1Rx0NYi9Tfhfgyl28Ys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=devtgNN0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="M9u2NoCl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1705947753;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FSO+yMs9xgoj4SVBxKHNNZsz8CFzHKkKh5JTeSlWjgQ=;
-	b=M9u2NoClZ9MYQvWyjsc34ninadYJZ/JuWNgT6PttbhyER7S7jzwAuIOP1PG1W1hvkK6Jkr
-	G6k+sD5bLZU90lj0PORUJq2JKyPj0cf0VVCE8y/cgj8z8ke2ZZ2w9XXsnrmJQfmjwzpzdQ
-	AhJ9nVZ+2QZUBUHP3sssbgFTI9ZJT/M=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-344-sTgy8nB2N2u3wr9g8-SUNQ-1; Mon,
- 22 Jan 2024 13:22:30 -0500
-X-MC-Unique: sTgy8nB2N2u3wr9g8-SUNQ-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 8F78F3C2A1C4;
-	Mon, 22 Jan 2024 18:22:29 +0000 (UTC)
-Received: from fedora.redhat.com (unknown [10.39.192.175])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 11CC03C2E;
-	Mon, 22 Jan 2024 18:22:26 +0000 (UTC)
-From: Jose Ignacio Tornos Martinez <jtornosm@redhat.com>
-To: masahiroy@kernel.org
-Cc: dcavalca@meta.com,
-	jtornosm@redhat.com,
-	linux-kbuild@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	nathan@kernel.org,
-	ndesaulniers@google.com,
-	nicolas@fjasle.eu,
-	stable@vger.kernel.org
-Subject: Re: [PATCH V5 1/2] rpm-pkg: simplify installkernel %post
-Date: Mon, 22 Jan 2024 19:22:24 +0100
-Message-ID: <20240122182225.17944-1-jtornosm@redhat.com>
-In-Reply-To: <CAK7LNAQCiBtQ3kQznPDKtkD83wpCzodPVDs8eFnfnx5=Y8E5Cw@mail.gmail.com>
-References: <CAK7LNAQCiBtQ3kQznPDKtkD83wpCzodPVDs8eFnfnx5=Y8E5Cw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="devtgNN0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F03DDC433C7;
+	Mon, 22 Jan 2024 18:22:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705947770;
+	bh=8ff78h9bJtx1azZLBLk1EKJHIodHEpeL9E/XnvsmPko=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=devtgNN0jDYFRdzNk3Wt1y9JSHXhizTYMpfs8XvyYsJh9dfLHfoxM1Z7yJ73twTv9
+	 G+3t5cvDuGsFkGYFpiHtMRyHnQVVbGOuNgwNKpfCNxzhvhDFKeqdaZfWu3q7qBn5CL
+	 uQ8PBHSMsUQihpxJw2S5gzL0M0U2lbtgcFmpWUCwv7h72hA0cGwK1m6nnpiFD21dzI
+	 6xuVTQd7k0wzVzP/jkQuNHvwGfyWkebctqOKP6ySl2ynLVELSVXnm8p8OgpWpxNgEI
+	 eWYQoxLRCr0TioMTOcjOUE2hzjwXgUxn7k5J5NElOfpB2UfT1rvUgNbl/tCdcZPJxn
+	 rBNIKEoQG+/tQ==
+Message-ID: <f96b33ab-56d5-4a43-a1ff-2e68e2c55ac2@kernel.org>
+Date: Mon, 22 Jan 2024 19:22:42 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: Kernel panic in netif_rx_internal after v6 pings between netns
+Content-Language: en-GB, fr-BE
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Eric Dumazet <edumazet@google.com>, Netdev <netdev@vger.kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>
+References: <98724dcd-ddf3-4f78-a386-f966ffbc9528@kernel.org>
+ <CANn89iLAYXpRiGaGi+rvOZyxMfpUmW2cOg6hLhqE=+2JJS8rkw@mail.gmail.com>
+ <65c4f6a2-207f-45e0-9ec3-bad81a05b196@kernel.org>
+ <5340b60d-a09a-4865-a648-d1a45e9e6d5f@kernel.org>
+ <20240122092804.3535b652@kernel.org>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <20240122092804.3535b652@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
 
-> Those installed files should be removed by %ghost markers.
-> I already have a local patch to do this.
-> (see the attachment)
-I like the idea of your new patch, a lot of things can be fixed in that way.
-Ok, I will remove the extra code to remove (%preun) in the patch.
-Just a comment about your patch: for openSUSE /boot/initramfs-* files are
-called /boot/initrd-* and maybe someone would not require it (i.e. embedded
-systems). If it is created it is normally removed and it might not be
-necessary (although I like your idea to control it).
+Hi Jakub,
 
-> I just asked you to fix up the code as I suggested in v4.
-Now I understand why no code was added in %preun.
-Ok, your suggestion was very good, but let me try and explain better with
-commands what I would like to fix after next point. When I said 'update'
-wasn't clear, I think.
-If it doesn't fit with your idea or global usage, I will include your
-suggestion like it is.
+On 22/01/2024 18:28, Jakub Kicinski wrote:
 
-> For me (on Fedora 39 and openSUSE Tumbleweed), rpm fails due to file conflict.
+(...)
+
+> Somewhat related. What do you do currently to ignore crashes?
+
+I was wondering why you wanted to ignore crashes :) ... but then I saw
+the new "Test ignored" and "Crashes ignored" sections on the status
+page. Just to be sure: you don't want to report issues that have not
+been introduced by the new patches, right?
+
+We don't need to do that on MPTCP side:
+- either it is a new crash with patches that are in reviewed and that's
+not impacting others → we test each series individually, not a batch of
+series.
+- or there are issues with recent patches, not in netdev yet → we fix,
+or revert.
+- or there is an issue elsewhere, like the kernel panic we reported
+here: usually I try to quickly apply a workaround, e.g. applying a fix,
+or a revert. I don't think we ever had an issue really impacting us
+where we couldn't find a quick solution in one or two days. With the
+panic we reported here, ~15% of the tests had an issue, that's "OK" to
+have that for a few days/weeks
+
+With fewer tests and a smaller community, it is easier for us to just
+say on the ML and weekly meetings: "this is a known issue, please ignore
+for the moment". But if possible, I try to add a workaround/fix in our
+repo used by the CI and devs (not upstreamed).
+
+For NIPA CI, do you want to do like with the build and compare with a
+reference? Or multiple ones to take into account unstable tests? Or
+maintain a list of known issues (I think you started to do that,
+probably safer/easier for the moment)?
+
+> I was seeing a lot of:
+> https://netdev-2.bots.linux.dev/vmksft-net-mp/results/431181/vm-crash-thr0-2
 > 
-> vagrant@opensuse-tumbleweed20231218:~> sudo rpm -i
-> kernel-6.7.0_12924_g660a5f4a53e7-4.x86_64.rpm
-> file /lib/modules/6.7.0-12924-g660a5f4a53e7/vmlinuz from install of
-> kernel-6.7.0_12924_g660a5f4a53e7-4.x86_64 conflicts with file from
-> package kernel-6.7.0_12924_g660a5f4a53e7-3.x86_64
-> 
-> So, this does not happen.
-I was refering to the cases when zypper is used to install a new kernel with
-the same release and different build number or when 'rpm -i --replacefiles' 
-is used (in this case it would be necessary to remove the old kernel with
-'rpm -e --justdb' too).
-In this cases we only need the possibility of copying the files from the new
-package and not only if they don't exist.
-I have thought about an easy way (no extra or problematic command) and I think
-I have it.
-In addition to your suggestion (if the file does not exit in /boot), I will
-just compare the file in /boot with the file in /lib/modules/%{KERNELRELEASE}
-and if it is not the same, we allow copying:
-%post
-if [ -x /usr/bin/kernel-install ]; then
-        /usr/bin/kernel-install add %{KERNELRELEASE} /lib/modules/%{KERNELRELEASE}/vmlinuz
-fi
-for file in vmlinuz System.map config; do
-        if [ ! -e "/boot/${file}-%{KERNELRELEASE}" ] || ! cmp --silent "/lib/modules/%{KERNELRELEASE}/${file}" "/boot/${file}-%{KERNELRELEASE}"; then
-                cp "/lib/modules/%{KERNELRELEASE}/${file}" "/boot/${file}-%{KERNELRELEASE}"
-        fi
-done
+> So I hacked up this function to filter the crash from NIPA CI:
+> https://github.com/kuba-moo/nipa/blob/master/contest/remote/lib/vm.py#L50
+> It tries to get first 5 function names from the stack, to form 
+> a "fingerprint". But I seem to recall a discussion at LPC's testing
+> track that there are existing solutions for generating fingerprints.
+> Are you aware of any?
 
-Let me try with a new patch to know your opinion.
+No, sorry. But I guess they are using that with syzkaller, no?
 
-Thanks
+I have to admit that crashes (or warnings) are quite rare, so there was
+no need to have an automation there. But if it is easy to have a
+fingerprint, I will be interested as well, it can help for the tracking:
+to find occurrences of crashes/warnings that are very hard to reproduce.
 
-Best regards
-José Ignacio
+> (FWIW the crash from above seems to be gone on latest linux.git,
+> this night's CIs run are crash-free.)
 
+Good it was quickly fixed!
 
-
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
