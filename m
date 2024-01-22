@@ -1,44 +1,44 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C467F7E782;
-	Mon, 22 Jan 2024 23:56:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF27180022;
+	Mon, 22 Jan 2024 23:56:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.120
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705967773; cv=none; b=aKhjqHtxVMPVZwePH3TBOajgsJsKI6EdXqVJ6LZE9R9eI+56mcpH7rKTFk9Lz7JUhbAl4oYE5ZqFGOqULFrJc39R4e+TGC+iQWswI7hjptnSfL5vyw/KmAIoE+U5RguZF+OoREpqFCX/eu2MmpD3HUH9pEFnJwtgR6bUOmgc7ck=
+	t=1705967775; cv=none; b=qpNpRP3P7HH0jRYwOuxJ7IaH4zKkWUqg2TAjy4lXbvVdwlG6ZIVk1QluXoBoF9ZZfTOEs966lWZ2D4lKaRQwJhBO1kmd5AOfnQPHRREwD7BmON3QNEyYOPy9ftQUnj1idIvRi4Jv2kdfLg2QxEageEa1wfP+Ud+QfPHjlWOhu3U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705967773; c=relaxed/simple;
-	bh=b4HChfS3CX9Tl5Kt2Ghy8PbdVyNqBLVx0mpCgM8SJc0=;
+	s=arc-20240116; t=1705967775; c=relaxed/simple;
+	bh=Qf651cuEvP7fTIzGoEsdyFciHi5RVrBo2fUxvhs+SZk=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=nRU3O/oBX/hgNE6e6hoKUT0M8wv4lrVhQvIzmg5CkMy5DHKMTsgxZpYr9d1rbW/3HloFZ1gFbJtIQG05kMcB+Ti9Kpn8PmWxnT4tAjR8wMvJAuDOOURHWqSsYdSkunF7yAoyebfa/cxiP0Am+8G7OwsKtE2zQS/cfCYjkTF6HaQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZLpk6URk; arc=none smtp.client-ip=192.55.52.120
+	 MIME-Version; b=KvSiWQ27K4rPHNqojcVZBWh16qkBy3wZHy3/lz6q8DREp0wnc5wzVykJmemmE9RVlDE2iRWzWbQRzOMw8vydwWxWQUOG3ufv6k8Z2RnojKnDvWn3DaHsfXU9Jfyqq8lcIsQBbnUsoRRB+jJb4coWdm5mliW94oL1tJb3HahkI9s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Pvhh1hnq; arc=none smtp.client-ip=192.55.52.120
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZLpk6URk"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Pvhh1hnq"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1705967770; x=1737503770;
+  t=1705967773; x=1737503773;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=b4HChfS3CX9Tl5Kt2Ghy8PbdVyNqBLVx0mpCgM8SJc0=;
-  b=ZLpk6URk9lVRrpt9ubH0HngVuyMHnPCTwZ3TX8boQt7rABAX5efrtN2F
-   fEoEVKa+45tYRjzANhKnNz9wBSL8lqscZ7BDOgdTuSt0YUKfE8fYFlQbx
-   YawNBbifUy4ro8IkfpxiPb1kiubNWceOumdKmJ1nJtHf1UA/F095+ll9z
-   awnLbrPLBpEH9a0sGPFBhpBVyMBt0qXFMHNRG2IJg+Fh/NhiwanYVQaFD
-   e7KbGZy8JrCJn/d+CtFyeZ81DwqqHdTWis7gafFevF2eDbKEITTgUgnV4
-   XhUlkDf2XgxZOcEXHQkHe8twiQFTTN3WN5qcDsnbzkJE5BRZVJXgLLE5J
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10961"; a="400217921"
+  bh=Qf651cuEvP7fTIzGoEsdyFciHi5RVrBo2fUxvhs+SZk=;
+  b=Pvhh1hnqvUaw9CDbfKRYiyZwOzbwWc2oflx/y3YQNv0X67C86PSBKZQI
+   OpzKQGSfBl1kbCNQBSbGgBEjs8lF45hpG1wbFo4+hp10vDOL4UczaZyXx
+   0R1bRsvOnlx0AHVpeSIaFTQP9p1H90hO47p0etDwb8lMwRnPkRyTiPzf6
+   GL/72ZWFIwdPddLwCfEETVtIwm8iPtmqe/eWg7iLrpxAkYeEIsHCdQ967
+   2JmELda6MLW7C5RtjSTVQWmuoetJLoeTJmAldkbju9pVaEHC1MSBa681J
+   MoKtrZ4NHiRTxNJ/N7AY/21Ppyv2vNgyuPcbfl/hbV/jV6WXJqCBHPtmm
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10961"; a="400217933"
 X-IronPort-AV: E=Sophos;i="6.05,212,1701158400"; 
-   d="scan'208";a="400217921"
+   d="scan'208";a="400217933"
 Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 15:55:56 -0800
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 15:55:57 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.05,212,1701158400"; 
-   d="scan'208";a="27818014"
+   d="scan'208";a="27818024"
 Received: from ls.sc.intel.com (HELO localhost) ([172.25.112.31])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 15:55:56 -0800
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 15:55:57 -0800
 From: isaku.yamahata@intel.com
 To: kvm@vger.kernel.org,
 	linux-kernel@vger.kernel.org
@@ -52,9 +52,9 @@ Cc: isaku.yamahata@intel.com,
 	chen.bo@intel.com,
 	hang.yuan@intel.com,
 	tina.zhang@intel.com
-Subject: [PATCH v18 109/121] KVM: TDX: Add a method to ignore dirty logging
-Date: Mon, 22 Jan 2024 15:54:25 -0800
-Message-Id: <d843f2cb62a2ffa2631dce9afa47e53707424551.1705965635.git.isaku.yamahata@intel.com>
+Subject: [PATCH v18 112/121] KVM: TDX: Ignore setting up mce
+Date: Mon, 22 Jan 2024 15:54:28 -0800
+Message-Id: <1f515ee02374468b165ddd4740a50ba2a34e4947.1705965635.git.isaku.yamahata@intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1705965634.git.isaku.yamahata@intel.com>
 References: <cover.1705965634.git.isaku.yamahata@intel.com>
@@ -68,9 +68,8 @@ Content-Transfer-Encoding: 8bit
 
 From: Isaku Yamahata <isaku.yamahata@intel.com>
 
-Currently TDX KVM doesn't support tracking dirty pages (yet).  Implement a
-method to ignore it.  Because the flag for kvm memory slot to enable dirty
-logging isn't accepted for TDX, warn on the method is called for TDX.
+Because vmx_set_mce function is VMX specific and it cannot be used for TDX.
+Add vt stub to ignore setting up mce for TDX.
 
 Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
 ---
@@ -78,33 +77,33 @@ Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
  1 file changed, 9 insertions(+), 1 deletion(-)
 
 diff --git a/arch/x86/kvm/vmx/main.c b/arch/x86/kvm/vmx/main.c
-index 420c68330e61..c9f72c383eee 100644
+index adaf61bb754c..3a5cd705694e 100644
 --- a/arch/x86/kvm/vmx/main.c
 +++ b/arch/x86/kvm/vmx/main.c
-@@ -847,6 +847,14 @@ static u8 vt_get_mt_mask(struct kvm_vcpu *vcpu, gfn_t gfn, bool is_mmio)
- 	return vmx_get_mt_mask(vcpu, gfn, is_mmio);
+@@ -912,6 +912,14 @@ static void vt_cancel_hv_timer(struct kvm_vcpu *vcpu)
  }
+ #endif
  
-+static void vt_update_cpu_dirty_logging(struct kvm_vcpu *vcpu)
++static void vt_setup_mce(struct kvm_vcpu *vcpu)
 +{
-+	if (KVM_BUG_ON(is_td_vcpu(vcpu), vcpu->kvm))
++	if (is_td_vcpu(vcpu))
 +		return;
 +
-+	vmx_update_cpu_dirty_logging(vcpu);
++	vmx_setup_mce(vcpu);
 +}
 +
  static int vt_mem_enc_ioctl(struct kvm *kvm, void __user *argp)
  {
  	if (!is_td(kvm))
-@@ -990,7 +998,7 @@ struct kvm_x86_ops vt_x86_ops __initdata = {
- 	.sched_in = vt_sched_in,
+@@ -1067,7 +1075,7 @@ struct kvm_x86_ops vt_x86_ops __initdata = {
+ 	.cancel_hv_timer = vt_cancel_hv_timer,
+ #endif
  
- 	.cpu_dirty_log_size = PML_ENTITY_NUM,
--	.update_cpu_dirty_logging = vmx_update_cpu_dirty_logging,
-+	.update_cpu_dirty_logging = vt_update_cpu_dirty_logging,
+-	.setup_mce = vmx_setup_mce,
++	.setup_mce = vt_setup_mce,
  
- 	.nested_ops = &vmx_nested_ops,
- 
+ #ifdef CONFIG_KVM_SMM
+ 	.smi_allowed = vt_smi_allowed,
 -- 
 2.25.1
 
