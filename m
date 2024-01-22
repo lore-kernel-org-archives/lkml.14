@@ -1,42 +1,42 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 752EF3F8D3;
-	Mon, 22 Jan 2024 17:20:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D08EE3FE3C;
+	Mon, 22 Jan 2024 17:20:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705944051; cv=none; b=dcs2Ft6LWIXzvn1qlVobhjyJdWySQW9Kc/ZhYwgtuEPormaJIDDL7TOVKck2t19mkzPPKp7MaJLCQo8cPgwRpg0p9omp+dtWBjU9xYNZUjdUst95J7DIHc1Fi4Y/3hlILS3flXCmV4g+40p2x1CcErdTQkjZVqgag9MtYgKsmco=
+	t=1705944053; cv=none; b=eAUny6LWtAHz4uEecWOED3Met0TtOERLPOr4CUXSO5xR+Lo78nNDTdVRIxMXxWNdXxTMYcTcpeBHwzifs9RRhrB4Vb4gK4By8gJN+i1CjCZk5+aWixRdjwH4ggeGvV39n4vaKP4gtm7kSbU7Ict35bmYgTKWTApneQF0BQ50IeU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705944051; c=relaxed/simple;
-	bh=82OWhuoYS1GjdlkPieFq7gaYKjlu2VU9BJ2KlGOFoCQ=;
+	s=arc-20240116; t=1705944053; c=relaxed/simple;
+	bh=RGIroSgVGIrhpvmE/7mpo3HSWBMwlLP6KKFtOGYR/aQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=CAAPL/Fq2fVeCLVi4x55gtCFHDi0OQ8wNgOCV4qhPyjb3oE+KeOCFy/TD228w6Fqq9A4fB2czBpr6Yvgfcg+bKaEBIlSevMuBb2HFGATZ70eFTMYM2eSM1u0L1XVa5YT4yVOYLE1OUprAOZGqPj6pR3lRF8YHd+PsQ3/WAK6JRk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=P9JsFyFa; arc=none smtp.client-ip=198.175.65.15
+	 MIME-Version; b=jSmnolA/XLlFWqDslYSjlT1PMewOygGOTs9Iuz/tJzwoEUPb5FNAgDGU+wCMm4FlybnJ1TW2KTV8jaOIoVTqsngKhC+THHV0opLBpwQP6zoSnoSO+jCtde0YObMqcTJoG8xH8rVOpMZzVNtaPw+7jUwo+qj+6TL9lRqJDZ8QC6o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mdllTdB9; arc=none smtp.client-ip=198.175.65.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="P9JsFyFa"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mdllTdB9"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1705944050; x=1737480050;
+  t=1705944052; x=1737480052;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=82OWhuoYS1GjdlkPieFq7gaYKjlu2VU9BJ2KlGOFoCQ=;
-  b=P9JsFyFaSDZo2DaSlWd+hIHvv2Ru3lAhthhkJtNffMLxkrAJvB+XGxI6
-   iALGNXiT6Ep9T+NhbqM6ZwX5Y8022h9wrBZh2uOgu/aGTYaCwq4eYCQng
-   oFtIKjZA8iVJxA9RqxfEhye1iFmCU8aiY7/qEYdqVVBsGItSEPDcpmnxP
-   Au9GNXDek8AsKZ4atZM5SK4dyrM02pcVXGTjzX5JkX7hY+WmXmUvdtaPz
-   QRJYIZp7TPowbXszXGRKRd3QzNtgmWI8lTUc151XJPoT+R3lUKyG5DPva
-   Fosle9Fq2EVc9U5vMPF5W6YKstEvQgNikhgNqHuDIVk1cj9487wzWCnR1
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10961"; a="1150099"
+  bh=RGIroSgVGIrhpvmE/7mpo3HSWBMwlLP6KKFtOGYR/aQ=;
+  b=mdllTdB9I0zOXTO+Ae4eVUPLlSBkVyiiuf4yTZRV2v15bnSDdkJaljdS
+   F5gEfeBQU/OMuCLGhpxSdtImU8wF11Gm5SXiCNTLiECK8XVJqzbHQr5dC
+   J7UFisxkfKUAvmYw3a/3MhP54bCXn3ECeDMXoPgyTCTPgWSQTsuxjK4ES
+   Kfh9/wKv3IAh1dJhIahjbtaAQJXQHSfiPqBKeNvd9C4cNrRLTHE8HQYX1
+   TVSrm1s9gJc2PR1qWD0NksEpaeq4wjyukCwtLHFVUdxfbwJLlMC0vkD63
+   IwXAsrnqvwtpoq8yGkfcaMrL8xU13wU1PC3RnPUDmybkVjBe8F50Udwm5
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10961"; a="1150125"
 X-IronPort-AV: E=Sophos;i="6.05,211,1701158400"; 
-   d="scan'208";a="1150099"
+   d="scan'208";a="1150125"
 Received: from orviesa005.jf.intel.com ([10.64.159.145])
   by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 09:20:49 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.05,211,1701158400"; 
-   d="scan'208";a="1262857"
+   d="scan'208";a="1262863"
 Received: from b4969161e530.jf.intel.com ([10.165.56.46])
   by orviesa005.jf.intel.com with ESMTP; 22 Jan 2024 09:20:48 -0800
 From: Haitao Huang <haitao.huang@linux.intel.com>
@@ -60,9 +60,9 @@ Cc: zhiquan1.li@intel.com,
 	anakrish@microsoft.com,
 	mikko.ylinen@linux.intel.com,
 	yangjie@microsoft.com
-Subject: [PATCH v7 01/15] cgroup/misc: Add per resource callbacks for CSS events
-Date: Mon, 22 Jan 2024 09:20:34 -0800
-Message-Id: <20240122172048.11953-2-haitao.huang@linux.intel.com>
+Subject: [PATCH v7 03/15] cgroup/misc: Add SGX EPC resource type
+Date: Mon, 22 Jan 2024 09:20:36 -0800
+Message-Id: <20240122172048.11953-4-haitao.huang@linux.intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240122172048.11953-1-haitao.huang@linux.intel.com>
 References: <20240122172048.11953-1-haitao.huang@linux.intel.com>
@@ -76,171 +76,50 @@ Content-Transfer-Encoding: 8bit
 
 From: Kristen Carlson Accardi <kristen@linux.intel.com>
 
-The misc cgroup controller (subsystem) currently does not perform
-resource type specific action for Cgroups Subsystem State (CSS) events:
-the 'css_alloc' event when a cgroup is created and the 'css_free' event
-when a cgroup is destroyed.
-
-Define callbacks for those events and allow resource providers to
-register the callbacks per resource type as needed. This will be
-utilized later by the EPC misc cgroup support implemented in the SGX
-driver.
+Add SGX EPC memory, MISC_CG_RES_SGX_EPC, to be a valid resource type
+for the misc controller.
 
 Signed-off-by: Kristen Carlson Accardi <kristen@linux.intel.com>
 Co-developed-by: Haitao Huang <haitao.huang@linux.intel.com>
 Signed-off-by: Haitao Huang <haitao.huang@linux.intel.com>
 ---
-V7:
-- Make ops one per resource type and store them in array (Michal)
-- Rename the ops struct to misc_res_ops, and enforce the constraints of required callback
-functions (Jarkko)
-- Moved addition of priv field to patch 4 where it was used first. (Jarkko)
-
 V6:
-- Create ops struct for per resource callbacks (Jarkko)
-- Drop max_write callback (Dave, Michal)
-- Style fixes (Kai)
+- Split the original patch into this and the preceding one (Kai)
 ---
- include/linux/misc_cgroup.h | 11 +++++++
- kernel/cgroup/misc.c        | 60 +++++++++++++++++++++++++++++++++++--
- 2 files changed, 68 insertions(+), 3 deletions(-)
+ include/linux/misc_cgroup.h | 4 ++++
+ kernel/cgroup/misc.c        | 4 ++++
+ 2 files changed, 8 insertions(+)
 
 diff --git a/include/linux/misc_cgroup.h b/include/linux/misc_cgroup.h
-index e799b1f8d05b..0806d4436208 100644
+index 541a5611c597..2f6cc3a0ad23 100644
 --- a/include/linux/misc_cgroup.h
 +++ b/include/linux/misc_cgroup.h
-@@ -27,6 +27,16 @@ struct misc_cg;
- 
- #include <linux/cgroup.h>
- 
-+/**
-+ * struct misc_res_ops: per resource type callback ops.
-+ * @alloc: invoked for resource specific initialization when cgroup is allocated.
-+ * @free: invoked for resource specific cleanup when cgroup is deallocated.
-+ */
-+struct misc_res_ops {
-+	int (*alloc)(struct misc_cg *cg);
-+	void (*free)(struct misc_cg *cg);
-+};
-+
- /**
-  * struct misc_res: Per cgroup per misc type resource
-  * @max: Maximum limit on the resource.
-@@ -56,6 +66,7 @@ struct misc_cg {
- 
- u64 misc_cg_res_total_usage(enum misc_res_type type);
- int misc_cg_set_capacity(enum misc_res_type type, u64 capacity);
-+int misc_cg_set_ops(enum misc_res_type type, const struct misc_res_ops *ops);
- int misc_cg_try_charge(enum misc_res_type type, struct misc_cg *cg, u64 amount);
- void misc_cg_uncharge(enum misc_res_type type, struct misc_cg *cg, u64 amount);
- 
+@@ -17,6 +17,10 @@ enum misc_res_type {
+ 	MISC_CG_RES_SEV,
+ 	/* AMD SEV-ES ASIDs resource */
+ 	MISC_CG_RES_SEV_ES,
++#endif
++#ifdef CONFIG_CGROUP_SGX_EPC
++	/* SGX EPC memory resource */
++	MISC_CG_RES_SGX_EPC,
+ #endif
+ 	MISC_CG_RES_TYPES
+ };
 diff --git a/kernel/cgroup/misc.c b/kernel/cgroup/misc.c
-index 79a3717a5803..b8c32791334c 100644
+index 99d971ecc842..4c519423b071 100644
 --- a/kernel/cgroup/misc.c
 +++ b/kernel/cgroup/misc.c
-@@ -39,6 +39,9 @@ static struct misc_cg root_cg;
-  */
- static u64 misc_res_capacity[MISC_CG_RES_TYPES];
+@@ -24,6 +24,10 @@ static const char *const misc_res_name[] = {
+ 	/* AMD SEV-ES ASIDs resource */
+ 	"sev_es",
+ #endif
++#ifdef CONFIG_CGROUP_SGX_EPC
++	/* Intel SGX EPC memory bytes */
++	"sgx_epc",
++#endif
+ };
  
-+/* Resource type specific operations */
-+static const struct misc_res_ops *misc_res_ops[MISC_CG_RES_TYPES];
-+
- /**
-  * parent_misc() - Get the parent of the passed misc cgroup.
-  * @cgroup: cgroup whose parent needs to be fetched.
-@@ -105,6 +108,36 @@ int misc_cg_set_capacity(enum misc_res_type type, u64 capacity)
- }
- EXPORT_SYMBOL_GPL(misc_cg_set_capacity);
- 
-+/**
-+ * misc_cg_set_ops() - set resource specific operations.
-+ * @type: Type of the misc res.
-+ * @ops: Operations for the given type.
-+ *
-+ * Context: Any context.
-+ * Return:
-+ * * %0 - Successfully registered the operations.
-+ * * %-EINVAL - If @type is invalid, or the operations missing any required callbacks.
-+ */
-+int misc_cg_set_ops(enum misc_res_type type, const struct misc_res_ops *ops)
-+{
-+	if (!valid_type(type))
-+		return -EINVAL;
-+
-+	if (!ops->alloc) {
-+		pr_err("%s: alloc missing\n", __func__);
-+		return -EINVAL;
-+	}
-+
-+	if (!ops->free) {
-+		pr_err("%s: free missing\n", __func__);
-+		return -EINVAL;
-+	}
-+
-+	misc_res_ops[type] = ops;
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(misc_cg_set_ops);
-+
- /**
-  * misc_cg_cancel_charge() - Cancel the charge from the misc cgroup.
-  * @type: Misc res type in misc cg to cancel the charge from.
-@@ -383,23 +416,37 @@ static struct cftype misc_cg_files[] = {
- static struct cgroup_subsys_state *
- misc_cg_alloc(struct cgroup_subsys_state *parent_css)
- {
-+	struct misc_cg *parent_cg, *cg;
- 	enum misc_res_type i;
--	struct misc_cg *cg;
-+	int ret;
- 
- 	if (!parent_css) {
--		cg = &root_cg;
-+		parent_cg = cg = &root_cg;
- 	} else {
- 		cg = kzalloc(sizeof(*cg), GFP_KERNEL);
- 		if (!cg)
- 			return ERR_PTR(-ENOMEM);
-+		parent_cg = css_misc(parent_css);
- 	}
- 
- 	for (i = 0; i < MISC_CG_RES_TYPES; i++) {
- 		WRITE_ONCE(cg->res[i].max, MAX_NUM);
- 		atomic64_set(&cg->res[i].usage, 0);
-+		if (misc_res_ops[i]) {
-+			ret = misc_res_ops[i]->alloc(cg);
-+			if (ret)
-+				goto alloc_err;
-+		}
- 	}
- 
- 	return &cg->css;
-+
-+alloc_err:
-+	for (i = 0; i < MISC_CG_RES_TYPES; i++)
-+		if (misc_res_ops[i])
-+			misc_res_ops[i]->free(cg);
-+	kfree(cg);
-+	return ERR_PTR(ret);
- }
- 
- /**
-@@ -410,7 +457,14 @@ misc_cg_alloc(struct cgroup_subsys_state *parent_css)
-  */
- static void misc_cg_free(struct cgroup_subsys_state *css)
- {
--	kfree(css_misc(css));
-+	struct misc_cg *cg = css_misc(css);
-+	enum misc_res_type i;
-+
-+	for (i = 0; i < MISC_CG_RES_TYPES; i++)
-+		if (misc_res_ops[i])
-+			misc_res_ops[i]->free(cg);
-+
-+	kfree(cg);
- }
- 
- /* Cgroup controller callbacks */
+ /* Root misc cgroup */
 -- 
 2.25.1
 
