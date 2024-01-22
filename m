@@ -1,167 +1,76 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from eggs.gnu.org (eggs.gnu.org [209.51.188.92])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15DC0210E7
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 07:44:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 094FF210FB;
+	Mon, 22 Jan 2024 07:44:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.51.188.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705909488; cv=none; b=PODfgLRTkpYA5PEvzpbiSqCNaoKLB+4RW5ClnETWF+DNfSmjV49TDodtTKTNfGUUKBdHCVeyVzkLTKUySRpMp3ijLS1GBnYthH8ucNzO3LlrVplRU9rFCa0tELwq2Ldhl+8tRNCiZnMRjZp/DuhNLW3J4YViRCaiK041hWYMqBk=
+	t=1705909491; cv=none; b=q8EHtzY0KGY6dYj2tS9ZrZMsnltqJVsEJWc6n0TYZECO4mXBfigaG87eIVHW2+q6ltTr0U1esYlGLXqGl5sl058ZjO5Z1z69T5vM9PqAy/8ektu1c/DwRVDgosd+DIYPt0gTL+FapeiR5ITKp9XA/oPqhTSxCdUHAC83qTJ1Gcc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705909488; c=relaxed/simple;
-	bh=hmEQvRWi8eIAqM5TdiirQYEfxUrAqPd7+aexCnYV6h4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=tU3+BqYzNZYosIj1Abu8NNYvSY40HyXE8BcHWccSFFD7xfojVmlncHkmJ4FxTYzOAe0U/ceL1ek8iA0W0emu891EBbSDLqNgzJPrdexH4xEoMovYLPEXmvQVA9E3Mbc5U2dPSwYAtXZEBvUqWglWwcm/FNzChT07Ah53yEcdQHM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mCWMUAxG; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1705909491; c=relaxed/simple;
+	bh=czpiByVlENYrQx/+R4rULYlFTIy1imrFPgezbHyqTMA=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=a/GEgMU3lagwDIyQQ7A2N7L3xJ96/X6I/UDj8jPmjWjs2t8FKDAdCDnIOOjzszbYtcqnYxKZXJk94BVwoqfSqQNRnKGDOLplH/Cs72HWUlk1UZ+UgheHj9XCYMQ2BqAgIUGmwlt26I/VPnOX62L//u+MouQfFqMZIxpvgnTe1qA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gnu.org; spf=pass smtp.mailfrom=gnu.org; dkim=pass (2048-bit key) header.d=gnu.org header.i=@gnu.org header.b=ceA1FGY8; arc=none smtp.client-ip=209.51.188.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gnu.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gnu.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mCWMUAxG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1705909487; x=1737445487;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=hmEQvRWi8eIAqM5TdiirQYEfxUrAqPd7+aexCnYV6h4=;
-  b=mCWMUAxGR93uu/JvQyUTd+w0fCYoxvHREt2sOnYKwqvjH7scZSmEHAh4
-   8SZJJRXe517nW7GCRulYMhlbdxqZrkkRlIvjOzInuWloInSCZLJMdvWnl
-   ihyP8COY+9Sdm1dQFZLXyKBseIwgRNJGLVHkW6p++RdXFkkMGf78QnvG3
-   gO3d3XvlLvBRU3hP6laHy7IhQXX6DCvCZmER7AmJyaGXFl3jqhMYQDrBx
-   C0tCqE56CTPE7tfIMpu2Dzu/MmuOwPnSckdDe6E8JGKeQM0A+G+R53TE8
-   uYDyfXTcga7Az82nm3FgKBSviAW9xVfWSoWehUQb1UWFKClX5wWzpqOsD
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10960"; a="22611557"
-X-IronPort-AV: E=Sophos;i="6.05,211,1701158400"; 
-   d="scan'208";a="22611557"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jan 2024 23:44:45 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10960"; a="778504977"
-X-IronPort-AV: E=Sophos;i="6.05,211,1701158400"; 
-   d="scan'208";a="778504977"
-Received: from allen-box.sh.intel.com ([10.239.159.127])
-  by orsmga007.jf.intel.com with ESMTP; 21 Jan 2024 23:44:40 -0800
-From: Lu Baolu <baolu.lu@linux.intel.com>
-To: Jason Gunthorpe <jgg@ziepe.ca>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Jean-Philippe Brucker <jean-philippe@linaro.org>,
-	Nicolin Chen <nicolinc@nvidia.com>,
-	Yi Liu <yi.l.liu@intel.com>,
-	Jacob Pan <jacob.jun.pan@linux.intel.com>,
-	Joel Granados <j.granados@samsung.com>
-Cc: iommu@lists.linux.dev,
-	virtualization@lists.linux-foundation.org,
-	linux-kernel@vger.kernel.org,
-	Lu Baolu <baolu.lu@linux.intel.com>
-Subject: [PATCH v3 3/8] iommufd: Add fault and response message definitions
-Date: Mon, 22 Jan 2024 15:38:58 +0800
-Message-Id: <20240122073903.24406-4-baolu.lu@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240122073903.24406-1-baolu.lu@linux.intel.com>
-References: <20240122073903.24406-1-baolu.lu@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=gnu.org header.i=@gnu.org header.b="ceA1FGY8"
+Received: from fencepost.gnu.org ([2001:470:142:3::e])
+	by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.90_1)
+	(envelope-from <othacehe@gnu.org>)
+	id 1rRoz1-00035T-8T; Mon, 22 Jan 2024 02:44:39 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=gnu.org;
+	s=fencepost-gnu-org; h=MIME-Version:Date:References:In-Reply-To:Subject:To:
+	From; bh=czpiByVlENYrQx/+R4rULYlFTIy1imrFPgezbHyqTMA=; b=ceA1FGY8cV6jfh5O7pZ5
+	KWjC6/ANBX+XEVNLmElXqZvK6789RC4vvLkIawjYorcPviRBGwXXtkUeTppw0QkSAsK2646G34SUg
+	N3ueivq5XDXtpco12nRI+iVgOYOScoc+7YfojLNTD6Bx1B1Ow4+DIX1Mjauk/qvZpStlrWWvQet0I
+	GJzZuwHP/r1NXkr5kJw3vcLRnaLF6CKqwTG9jEuzd17gCdBor3GG21PIE0bmpTgtaPsuk7+uEDBco
+	RgbydZKIKlCyu7ek6PumypfMKHBoPQrjiexTBtWlj/8L34JC4Xrqyg9IF+my1LeXjQa4mYIb2CWLT
+	YNmVRYLBBTjQ9g==;
+From: Mathieu Othacehe <othacehe@gnu.org>
+To: Wadim Egorov <w.egorov@phytec.de>
+Cc: Rob Herring <robh+dt@kernel.org>,  Krzysztof Kozlowski
+ <krzysztof.kozlowski+dt@linaro.org>,  Conor Dooley <conor+dt@kernel.org>,
+  Shawn Guo <shawnguo@kernel.org>,  Sascha Hauer <s.hauer@pengutronix.de>,
+  Pengutronix Kernel Team <kernel@pengutronix.de>,  Fabio Estevam
+ <festevam@gmail.com>,  NXP Linux Team <linux-imx@nxp.com>,  Li Yang
+ <leoyang.li@nxp.com>,  Primoz Fiser <primoz.fiser@norik.com>,  Stefan
+ Wahren <wahrenst@gmx.net>,  Christoph Stoidner <c.stoidner@phytec.de>,
+  <devicetree@vger.kernel.org>,  <linux-kernel@vger.kernel.org>,
+  <linux-arm-kernel@lists.infradead.org>,  <upstream@list.phytec.de>
+Subject: Re: [PATCH v3 2/2] arm64: dts: imx93: Add phyBOARD-Segin-i.MX93
+ support
+In-Reply-To: <0348afb6-24df-4088-a3f5-6b5df8081c04@phytec.de> (Wadim Egorov's
+	message of "Mon, 22 Jan 2024 03:42:18 +0100")
+References: <20240119092835.21462-1-othacehe@gnu.org>
+	<20240119092835.21462-3-othacehe@gnu.org>
+	<0348afb6-24df-4088-a3f5-6b5df8081c04@phytec.de>
+Date: Mon, 22 Jan 2024 08:44:36 +0100
+Message-ID: <87v87lerrv.fsf@gnu.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-iommu_hwpt_pgfaults represent fault messages that the userspace can
-retrieve. Multiple iommu_hwpt_pgfaults might be put in an iopf group,
-with the IOMMU_PGFAULT_FLAGS_LAST_PAGE flag set only for the last
-iommu_hwpt_pgfault.
 
-An iommu_hwpt_page_response is a response message that the userspace
-should send to the kernel after finishing handling a group of fault
-messages. The @dev_id, @pasid, and @grpid fields in the message
-identify an outstanding iopf group for a device. The @addr field,
-which matches the fault address of the last fault in the group, will
-be used by the kernel for a sanity check.
+Hello,
 
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
----
- include/uapi/linux/iommufd.h | 67 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 67 insertions(+)
+>> + * Copyright (C) 2023 PHYTEC Messtechnik GmbH
+>> + * Christoph Stoidner <c.stoidner@phytec.de>
+>
+> you dropped me from the Authors list :(
 
-diff --git a/include/uapi/linux/iommufd.h b/include/uapi/linux/iommufd.h
-index 1dfeaa2e649e..d59e839ae49e 100644
---- a/include/uapi/linux/iommufd.h
-+++ b/include/uapi/linux/iommufd.h
-@@ -692,4 +692,71 @@ struct iommu_hwpt_invalidate {
- 	__u32 __reserved;
- };
- #define IOMMU_HWPT_INVALIDATE _IO(IOMMUFD_TYPE, IOMMUFD_CMD_HWPT_INVALIDATE)
-+
-+/**
-+ * enum iommu_hwpt_pgfault_flags - flags for struct iommu_hwpt_pgfault
-+ * @IOMMU_PGFAULT_FLAGS_PASID_VALID: The pasid field of the fault data is
-+ *                                   valid.
-+ * @IOMMU_PGFAULT_FLAGS_LAST_PAGE: It's the last fault of a fault group.
-+ */
-+enum iommu_hwpt_pgfault_flags {
-+	IOMMU_PGFAULT_FLAGS_PASID_VALID		= (1 << 0),
-+	IOMMU_PGFAULT_FLAGS_LAST_PAGE		= (1 << 1),
-+};
-+
-+/**
-+ * enum iommu_hwpt_pgfault_perm - perm bits for struct iommu_hwpt_pgfault
-+ * @IOMMU_PGFAULT_PERM_READ: request for read permission
-+ * @IOMMU_PGFAULT_PERM_WRITE: request for write permission
-+ * @IOMMU_PGFAULT_PERM_EXEC: request for execute permission
-+ * @IOMMU_PGFAULT_PERM_PRIV: request for privileged permission
-+ */
-+enum iommu_hwpt_pgfault_perm {
-+	IOMMU_PGFAULT_PERM_READ			= (1 << 0),
-+	IOMMU_PGFAULT_PERM_WRITE		= (1 << 1),
-+	IOMMU_PGFAULT_PERM_EXEC			= (1 << 2),
-+	IOMMU_PGFAULT_PERM_PRIV			= (1 << 3),
-+};
-+
-+/**
-+ * struct iommu_hwpt_pgfault - iommu page fault data
-+ * @size: sizeof(struct iommu_hwpt_pgfault)
-+ * @flags: Combination of enum iommu_hwpt_pgfault_flags
-+ * @dev_id: id of the originated device
-+ * @pasid: Process Address Space ID
-+ * @grpid: Page Request Group Index
-+ * @perm: Combination of enum iommu_hwpt_pgfault_perm
-+ * @addr: page address
-+ */
-+struct iommu_hwpt_pgfault {
-+	__u32 size;
-+	__u32 flags;
-+	__u32 dev_id;
-+	__u32 pasid;
-+	__u32 grpid;
-+	__u32 perm;
-+	__u64 addr;
-+};
-+
-+/**
-+ * struct iommu_hwpt_page_response - IOMMU page fault response
-+ * @size: sizeof(struct iommu_hwpt_page_response)
-+ * @flags: Must be set to 0
-+ * @dev_id: device ID of target device for the response
-+ * @pasid: Process Address Space ID
-+ * @grpid: Page Request Group Index
-+ * @code: response code. The supported codes include:
-+ *        0: Successful; 1: Response Failure; 2: Invalid Request.
-+ * @addr: The fault address. Must match the addr field of the
-+ *        last iommu_hwpt_pgfault of a reported iopf group.
-+ */
-+struct iommu_hwpt_page_response {
-+	__u32 size;
-+	__u32 flags;
-+	__u32 dev_id;
-+	__u32 pasid;
-+	__u32 grpid;
-+	__u32 code;
-+	__u64 addr;
-+};
- #endif
--- 
-2.34.1
+I must have used an old downstream device tree without your name in the
+Authors list, sorry about that.
 
+Took your remarks into account.
+
+Thanks,
+
+Mathieu
