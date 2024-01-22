@@ -1,28 +1,27 @@
 Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0FAC03A1A7;
-	Mon, 22 Jan 2024 10:16:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 640DC3A1A4;
+	Mon, 22 Jan 2024 10:16:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.175.24.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705918585; cv=none; b=gUYew6htka9yaACd/DhFtnFmutu+UqpTe64C4sq2Nz7zR/IOAalCZWqudPKgilJTk8imUqHsadG/51grJ0pDESMQoBPCG019infpFiauejajLq8JJRce+r1pRAxeMAG9QJV7LcCc8Kdof7iO/QjMUdIX5b+MPth2c810ll8hEfQ=
+	t=1705918585; cv=none; b=MGe6d956o/Oss3QfthDwmUguDX+w4dFkxIxlpHc2OPqbzYmm6frSNwMcHJ4gZ4qM7W+tkXxDuxR5IoZo8Wb5Jono7+J8XR5rDQQRcoRJ9+SvFfbhaN1YWpaBqV5JLEzWyN1nL3WiSffCV86LKQiVjnwYO+rqmsryCaRw2AILmSo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1705918585; c=relaxed/simple;
-	bh=2R3QyF3uRlQ5Mls3A4OUEiNQb5dQNkEWdO3XEgaWQTk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tUtk0PeaONTdktdxXFY6GeKgCK5IuRDk1aXzSxttgl2W8yDmtsXQGRlLlHBb+RuR3O8BbgiaLDgohHejEvWntjl2Z3uiD+wic1/Yl4qqVNH2/2QL6Y/+BTPNZ5ReoEm4MqxMcrkhgismZlqxQlxLGR7QZn5Jua5ENKBVQu+zRig=
+	bh=1Dwo0VFd2lDWrdTgmB3oDKY21taxrHZaV4UFr5vx1aU=;
+	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ThaDxoej2JzVvzlUGxP3/8AsySCafz95KBErRLhmSWX69h1yWZWjzt28Y9yqoXDQf+NlYxl93sL0yw74cFhhGnkAVlMkRELCr25ZcJ4S244aiEXnmbOHJAWLeLKMaSurqRx2k0e8LHzaKuggI1l1e1HiSpmi2s0OCp2Rdq+XEAc=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
 Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
-	id 1rRrLi-0000SW-00; Mon, 22 Jan 2024 11:16:14 +0100
+	id 1rRrLi-0000Sc-00; Mon, 22 Jan 2024 11:16:14 +0100
 Received: by alpha.franken.de (Postfix, from userid 1000)
-	id 72416C0135; Mon, 22 Jan 2024 11:13:41 +0100 (CET)
-Date: Mon, 22 Jan 2024 11:13:41 +0100
+	id D35F7C0661; Mon, 22 Jan 2024 11:15:04 +0100 (CET)
+Date: Mon, 22 Jan 2024 11:15:04 +0100
 From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: linux-mips@vger.kernel.org, open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] MIPS: Cobalt: Fix missing prototypes
-Message-ID: <Za4/1XrqPLipZWnx@alpha.franken.de>
-References: <20240117043101.371421-1-f.fainelli@gmail.com>
+To: linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] MIPS: fw arc: Fix missing prototypes
+Message-ID: <Za5AKJAk274LQA3h@alpha.franken.de>
+References: <20240119133634.96420-1-tsbogend@alpha.franken.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -31,18 +30,31 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240117043101.371421-1-f.fainelli@gmail.com>
+In-Reply-To: <20240119133634.96420-1-tsbogend@alpha.franken.de>
 
-On Tue, Jan 16, 2024 at 08:30:59PM -0800, Florian Fainelli wrote:
-> Fix missing prototypes warnings for cobalt_machine_halt() and
-> cobalt_machine_restart() by moving their prototypes to cobalt.h which is
-> included by setup.c.
+On Fri, Jan 19, 2024 at 02:36:34PM +0100, Thomas Bogendoerfer wrote:
+> Make ArcGetMemoryDescriptor() static since it's only needed internally.
 > 
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 > ---
->  arch/mips/cobalt/setup.c                   | 3 ---
->  arch/mips/include/asm/mach-cobalt/cobalt.h | 3 +++
->  2 files changed, 3 insertions(+), 3 deletions(-)
+>  arch/mips/fw/arc/memory.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/mips/fw/arc/memory.c b/arch/mips/fw/arc/memory.c
+> index 66188739f54d..fb78e6fd5de4 100644
+> --- a/arch/mips/fw/arc/memory.c
+> +++ b/arch/mips/fw/arc/memory.c
+> @@ -37,7 +37,7 @@ static unsigned int nr_prom_mem __initdata;
+>   */
+>  #define ARC_PAGE_SHIFT	12
+>  
+> -struct linux_mdesc * __init ArcGetMemoryDescriptor(struct linux_mdesc *Current)
+> +static struct linux_mdesc * __init ArcGetMemoryDescriptor(struct linux_mdesc *Current)
+>  {
+>  	return (struct linux_mdesc *) ARC_CALL1(get_mdesc, Current);
+>  }
+> -- 
+> 2.35.3
 
 applied to mips-fixes
 
