@@ -1,255 +1,175 @@
-Received: from aposti.net (aposti.net [89.234.176.197])
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08FD83A27B;
-	Mon, 22 Jan 2024 11:02:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.234.176.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A0153A27B;
+	Mon, 22 Jan 2024 11:02:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705921325; cv=none; b=EF2s1l/9oPSj43x5AMHtFrKw828VEpQjGG4DwfXNDGuesa3GnfUddSWMCH1W/h+ge9luF72RD1/5XxC7peU0iGTJjgRF5v1l6+MlN/YGVdQqylarSvxxTa2AkOfNW10ztQ6+HvVT6EyCOYVNjqbM/EcGdO+t9DoIpXw66TyaoeI=
+	t=1705921343; cv=none; b=jaVFNgQbGWXck2PIpES4CuQ5BteoAWeyI5TAkfH6guxeyWQKReNPwlK52OTuLyGLNYXr5bgHMV5AlLY5c4YXYTxCSo7t1hb8lidnWbF17quJLP5XjHDfxZSNIwY7iWmZYPfqUbDjQV6+om55H8sj6X/TC6Z0HfI3M9AYX/aXHAE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705921325; c=relaxed/simple;
-	bh=VhDdZP99VuXDG0YlPbtEE9DiHyXudxtC85wCWHCNp0I=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Ec1wXUqCWO/pYQKZSf9Q6PD1TC1PBYR8m/b8E3iBLxF4/bQvwgvqPSHeCtiET8OkldowUSdFU1/CXOioTQROyK/+C62/nJtOWZTzFGSUo1DZklN6shtSiJS5sfWOuqTxGZZRCAZ0e9j9LcXnTS/JW3OBTE9TTINTTPgb3ebnlSI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=crapouillou.net; spf=pass smtp.mailfrom=crapouillou.net; dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b=vAc8dA6p; arc=none smtp.client-ip=89.234.176.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=crapouillou.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crapouillou.net
+	s=arc-20240116; t=1705921343; c=relaxed/simple;
+	bh=8gUsGOjD9YP0iDHyZAGJHZMPpDKBiz7lZX9fJx+/4G0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pMGZKkO+Wi07XljWadnvsFqpXajyKUgywxFKu0BitbqAQ24cxCWEIMuSK+zWem8u7WKgJICx3loV5KI7HJj2qoTZQ6/YYVChdwU8+n2zXNAT9Xk3cCJTvNYSztU6kQgCZgirPk6ugq2EPdCdo2t2tz4/ZqebLRuFxpQ6bjog5Tg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T7Kuibwb; arc=none smtp.client-ip=209.85.167.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="vAc8dA6p"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-	s=mail; t=1705921309;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=733fDA1vC7zKwBluwpjfcq4TVRYfPXDC67NVY7T7aqQ=;
-	b=vAc8dA6pC47aVOf5mjHAD4DKA4dRwEc+4dmRDZXuXgcDAjk3lQmBQyWLIwZ5ERx4utx0Nw
-	GmrQH4cNNE5vM4boQ9Y3Sr2mh0SksOhCzqErNeuXRj+qkZFOizrQ8lJ3F9W8opk0sqCYPy
-	MM6p+RcEXW2zqbDh8/mClEB2B4V2X14=
-Message-ID: <442f69f31ece6d441f3dc41c3dfeb4dcf52c00b8.camel@crapouillou.net>
-Subject: Re: [Linaro-mm-sig] [PATCH v5 1/6] dma-buf: Add
- dma_buf_{begin,end}_access()
-From: Paul Cercueil <paul@crapouillou.net>
-To: Christian =?ISO-8859-1?Q?K=F6nig?= <ckoenig.leichtzumerken@gmail.com>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jonathan Corbet
- <corbet@lwn.net>, Sumit Semwal <sumit.semwal@linaro.org>,  Christian
- =?ISO-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, Nuno =?ISO-8859-1?Q?S=E1?=
- <noname.nuno@gmail.com>, Michael Hennerich <Michael.Hennerich@analog.com>, 
- linux-usb@vger.kernel.org, linux-doc@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
- dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org
-Date: Mon, 22 Jan 2024 12:01:47 +0100
-In-Reply-To: <8035f515-591f-4c87-bf0a-23d5705d9b1c@gmail.com>
-References: <20240119141402.44262-1-paul@crapouillou.net>
-	 <20240119141402.44262-2-paul@crapouillou.net>
-	 <8035f515-591f-4c87-bf0a-23d5705d9b1c@gmail.com>
-Autocrypt: addr=paul@crapouillou.net; prefer-encrypt=mutual;
- keydata=mQENBF0KhcEBCADkfmrzdTOp/gFOMQX0QwKE2WgeCJiHPWkpEuPH81/HB2dpjPZNW03ZMLQfECbbaEkdbN4YnPfXgcc1uBe5mwOAPV1MBlaZcEt4M67iYQwSNrP7maPS3IaQJ18ES8JJ5Uf5UzFZaUawgH+oipYGW+v31cX6L3k+dGsPRM0Pyo0sQt52fsopNPZ9iag0iY7dGNuKenaEqkYNjwEgTtNz8dt6s3hMpHIKZFL3OhAGi88wF/21isv0zkF4J0wlf9gYUTEEY3Eulx80PTVqGIcHZzfavlWIdzhe+rxHTDGVwseR2Y1WjgFGQ2F+vXetAB8NEeygXee+i9nY5qt9c07m8mzjABEBAAG0JFBhdWwgQ2VyY3VlaWwgPHBhdWxAY3JhcG91aWxsb3UubmV0PokBTgQTAQoAOBYhBNdHYd8OeCBwpMuVxnPua9InSr1BBQJdCoXBAhsDBQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAAAoJEHPua9InSr1BgvIH/0kLyrI3V0f33a6D3BJwc1grbygPVYGuC5l5eMnAI+rDmLR19E2yvibRpgUc87NmPEQPpbbtAZt8On/2WZoE5OIPdlId/AHNpdgAtGXo0ZX4LGeVPjxjdkbrKVHxbcdcnY+zzaFglpbVSvp76pxqgVg8PgxkAAeeJV+ET4t0823Gz2HzCL/6JZhvKAEtHVulOWoBh368SYdolp1TSfORWmHzvQiCCCA+j0cMkYVGzIQzEQhX7Urf9N/nhU5/SGLFEi9DcBfXoGzhyQyLXflhJtKm3XGB1K/pPulbKaPcKAl6rIDWPuFpHkSbmZ9r4KFlBwgAhlGy6nqP7O3u7q23hRW5AQ0EXQqFwQEIAMo+MgvYHsyjX3Ja4Oolg1Txzm8woj30ch2nACFCqaO0R/1kLj2VVeLrDyQUOlXx9PD6IQI4M8wy8m0sR4wV2p/g/paw7k65cjzYYLh+FdLNyO7IW
-	YXndJO+wDPi3aK/YKUYepqlP+QsmaHNYNdXEQDRKqNfJg8t0f5rfzp9ryxd1tCnbV+tG8VHQWiZXNqN7062DygSNXFUfQ0vZ3J2D4oAcIAEXTymRQ2+hr3Hf7I61KMHWeSkCvCG2decTYsHlw5Erix/jYWqVOtX0roOOLqWkqpQQJWtU+biWrAksmFmCp5fXIg1Nlg39v21xCXBGxJkxyTYuhdWyu1yDQ+LSIUAEQEAAYkBNgQYAQoAIBYhBNdHYd8OeCBwpMuVxnPua9InSr1BBQJdCoXBAhsMAAoJEHPua9InSr1B4wsH/Az767YCT0FSsMNt1jkkdLCBi7nY0GTW+PLP1a4zvVqFMo/vD6uz1ZflVTUAEvcTi3VHYZrlgjcxmcGu239oruqUS8Qy/xgZBp9KF0NTWQSl1iBfVbIU5VV1vHS6r77W5x0qXgfvAUWOH4gmN3MnF01SH2zMcLiaUGF+mcwl15rHbjnT3Nu2399aSE6cep86igfCAyFUOXjYEGlJy+c6UyT+DUylpjQg0nl8MlZ/7Whg2fAU9+FALIbQYQzGlT4c71SibR9T741jnegHhlmV4WXXUD6roFt54t0MSAFSVxzG8mLcSjR2cLUJ3NIPXixYUSEn3tQhfZj07xIIjWxAYZo=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T7Kuibwb"
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-50eabbc3dccso3570815e87.2;
+        Mon, 22 Jan 2024 03:02:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1705921338; x=1706526138; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :reply-to:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=XEM8HK9MzMAP7SMXuKJPDZgtk2XEhhSMXfxWrnbRBa0=;
+        b=T7KuibwbwocLAL6YfitQzuS+Zgpfo86G3GlFYE0T2YHlIooCJV5EqSboxJmGSIiKn0
+         yc8C5vupj8hWxv/MYAJpOhb0f2oMDxPxEep+3jhJoq18JgXUvWjkOdwcuEHUZ0s7w4FC
+         k6/kN2DW0OpvgG3GJnFbm0AdPupBNEnRCpDI8Gr7tsK02Db8352+ocp86DGrFNLgW6Zk
+         1NMu1UEJdBf7EIcbZdDsKNUn1E65CZdZNFxeNJx4ncOMWKcmmtMI5hfFvtcfctAHs9h5
+         RiMgew2W/jRm36Z76oBjr5P/JFGOlZCu3j4r0tP4eu6XD61RkaQGKilGETnHteD/5zkp
+         zwMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705921338; x=1706526138;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :reply-to:in-reply-to:references:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=XEM8HK9MzMAP7SMXuKJPDZgtk2XEhhSMXfxWrnbRBa0=;
+        b=Ny1crkLzIgskOJ25MfuM/6fEX2VDWtBfYjgqb0+jwR1OVRaAwGveWXNH74+ufkee8s
+         qg5CEmsrho5+zQsYcBYCG+3Ypw4nSOOcXBOjvSiPuiErit8aZTQrN00wI6ccPl5Itwe+
+         utD28Hj244uCdBuCeafS4ItYwjvdOsJ9Dsqti6ysMQW3AWuEhpJK3/kmuE5n4ontT/p0
+         Cr001taRh47690SLxei0ukgeHZsc+4/2e3JHp/y0E0QpK2cijUmOX/59cZbo7PQqXl0t
+         6Yn4C9eibe48w0HdgxIAiEr2w5cxHWinXfoo01K6LuTUl16y9Id5Dn5yYrLMb/GFVb0e
+         spJg==
+X-Gm-Message-State: AOJu0Yz5wzHkeAHH1VxNpSQ39pkcW3nbp3pVc53NliGw4dN+X5etEghG
+	tvxYPFk0v6BPnO0L+VQLFqMeIbdYg7DHYF+1KYXHuMd4zVISTHjJeB9qlZHrvguLKisJVaipSZB
+	exRTSLj1QODiGuFGyVqMLl1eVm/o=
+X-Google-Smtp-Source: AGHT+IEsxY3yWZhSDIWVwKDU2WuujYESZYUaZh9OU/xEwm6QHepspTMmLW9p70u+yDEvCP6XE3LVSD5JV4hcXnYZmGE=
+X-Received: by 2002:ac2:5e76:0:b0:50e:7b34:c18a with SMTP id
+ a22-20020ac25e76000000b0050e7b34c18amr620208lfr.111.1705921337901; Mon, 22
+ Jan 2024 03:02:17 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <1850031.1704921100@warthog.procyon.org.uk> <CA+icZUUc_0M_6JU3dZzVqrUUrWJceY1uD8dO2yFMCwtHtkaa_Q@mail.gmail.com>
+In-Reply-To: <CA+icZUUc_0M_6JU3dZzVqrUUrWJceY1uD8dO2yFMCwtHtkaa_Q@mail.gmail.com>
+Reply-To: sedat.dilek@gmail.com
+From: Sedat Dilek <sedat.dilek@gmail.com>
+Date: Mon, 22 Jan 2024 12:01:41 +0100
+Message-ID: <CA+icZUWYSxfFHf5A56h9b4uOYYaANNxo2Z+cpwP1Bs1pF8MXQQ@mail.gmail.com>
+Subject: Re: [PATCH] keys, dns: Fix size check of V1 server-list header
+To: sedat.dilek@gmail.com
+Cc: David Howells <dhowells@redhat.com>, ceph-devel@vger.kernel.org, davem@davemloft.net, 
+	eadavis@qq.com, edumazet@google.com, horms@kernel.org, jaltman@auristor.com, 
+	jarkko@kernel.org, jlayton@redhat.com, keyrings@vger.kernel.org, 
+	kuba@kernel.org, linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-nfs@vger.kernel.org, marc.dionne@auristor.com, markus.suvanto@gmail.com, 
+	netdev@vger.kernel.org, pabeni@redhat.com, pengfei.xu@intel.com, 
+	smfrench@gmail.com, stable@vger.kernel.org, torvalds@linux-foundation.org, 
+	wang840925@gmail.com, sashal@kernel.org, gregkh@linuxfoundation.org, 
+	pvorel@suse.cz
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Christian,
+On Mon, Jan 22, 2024 at 8:33=E2=80=AFAM Petr Vorel <pvorel@suse.cz> wrote:
+>
+> From: Sedat Dilek <sedat.dilek@gmail.com>
+>
+> On Wed, Jan 10, 2024 at 10:12=E2=80=AFPM David Howells <dhowells@redhat.c=
+om> wrote:
+> >
+> >
+> > Fix the size check added to dns_resolver_preparse() for the V1 server-l=
+ist
+> > header so that it doesn't give EINVAL if the size supplied is the same =
+as
+> > the size of the header struct (which should be valid).
+> >
+> > This can be tested with:
+> >
+> >         echo -n -e '\0\0\01\xff\0\0' | keyctl padd dns_resolver desc @p
+> >
+> > which will give "add_key: Invalid argument" without this fix.
+> >
+> > Fixes: 1997b3cb4217 ("keys, dns: Fix missing size check of V1 server-li=
+st header")
+>
+> [ CC stable@vger.kernel.org ]
+>
+> Your (follow-up) patch is now upstream.
+>
+> https://git.kernel.org/linus/acc657692aed438e9931438f8c923b2b107aebf9
+>
+> This misses CC: Stable Tag as suggested by Linus.
+>
+> Looks like linux-6.1.y and linux-6.6.y needs it, too.
+>
+> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?=
+h=3Dv6.6.11&id=3Dda89365158f6f656b28bcdbcbbe9eaf97c63c474
+> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?=
+h=3Dv6.1.72&id=3D079eefaecfd7bbb8fcc30eccb0dfdf50c91f1805
+>
+> BG,
+> -Sedat-
+>
+> Hi Greg, Sasa,
+>
+> could you please add this also to linux-6.1.y and linux-6.6.y?  (Easily
+> applicable to both, needed for both.) Or is there any reason why it's not
+> being added?
+>
 
-Le lundi 22 janvier 2024 =C3=A0 11:35 +0100, Christian K=C3=B6nig a =C3=A9c=
-rit=C2=A0:
-> Am 19.01.24 um 15:13 schrieb Paul Cercueil:
-> > These functions should be used by device drivers when they start
-> > and
-> > stop accessing the data of DMABUF. It allows DMABUF importers to
-> > cache
-> > the dma_buf_attachment while ensuring that the data they want to
-> > access
-> > is available for their device when the DMA transfers take place.
->=20
-> As Daniel already noted as well this is a complete no-go from the=20
-> DMA-buf design point of view.
+Great!
 
-What do you mean "as Daniel already noted"? It was him who suggested
-this.
+I forgot to CC Greg and Sasha directly.
 
->=20
-> Regards,
-> Christian.
+Thanks.
 
-Cheers,
--Paul
+BG,
+-Sedat-
 
->=20
-> >=20
-> > Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> >=20
+> Kind regards,
+> Petr
+>
+> > Reported-by: Pengfei Xu <pengfei.xu@intel.com>
+> > Link: https://lore.kernel.org/r/ZZ4fyY4r3rqgZL+4@xpf.sh.intel.com/
+> > Signed-off-by: David Howells <dhowells@redhat.com>
+> > cc: Edward Adam Davis <eadavis@qq.com>
+> > cc: Linus Torvalds <torvalds@linux-foundation.org>
+> > cc: Simon Horman <horms@kernel.org>
+> > Cc: Jarkko Sakkinen <jarkko@kernel.org>
+> > Cc: Jeffrey E Altman <jaltman@auristor.com>
+> > Cc: Wang Lei <wang840925@gmail.com>
+> > Cc: Jeff Layton <jlayton@redhat.com>
+> > Cc: Steve French <sfrench@us.ibm.com>
+> > Cc: Marc Dionne <marc.dionne@auristor.com>
+> > Cc: "David S. Miller" <davem@davemloft.net>
+> > Cc: Eric Dumazet <edumazet@google.com>
+> > Cc: Jakub Kicinski <kuba@kernel.org>
+> > Cc: Paolo Abeni <pabeni@redhat.com>
 > > ---
-> > v5: New patch
-> > ---
-> > =C2=A0 drivers/dma-buf/dma-buf.c | 66
-> > +++++++++++++++++++++++++++++++++++++++
-> > =C2=A0 include/linux/dma-buf.h=C2=A0=C2=A0 | 37 ++++++++++++++++++++++
-> > =C2=A0 2 files changed, 103 insertions(+)
-> >=20
-> > diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
-> > index 8fe5aa67b167..a8bab6c18fcd 100644
-> > --- a/drivers/dma-buf/dma-buf.c
-> > +++ b/drivers/dma-buf/dma-buf.c
-> > @@ -830,6 +830,8 @@ static struct sg_table * __map_dma_buf(struct
-> > dma_buf_attachment *attach,
-> > =C2=A0=C2=A0 *=C2=A0=C2=A0=C2=A0=C2=A0 - dma_buf_mmap()
-> > =C2=A0=C2=A0 *=C2=A0=C2=A0=C2=A0=C2=A0 - dma_buf_begin_cpu_access()
-> > =C2=A0=C2=A0 *=C2=A0=C2=A0=C2=A0=C2=A0 - dma_buf_end_cpu_access()
-> > + *=C2=A0=C2=A0=C2=A0=C2=A0 - dma_buf_begin_access()
-> > + *=C2=A0=C2=A0=C2=A0=C2=A0 - dma_buf_end_access()
-> > =C2=A0=C2=A0 *=C2=A0=C2=A0=C2=A0=C2=A0 - dma_buf_map_attachment_unlocke=
-d()
-> > =C2=A0=C2=A0 *=C2=A0=C2=A0=C2=A0=C2=A0 - dma_buf_unmap_attachment_unloc=
-ked()
-> > =C2=A0=C2=A0 *=C2=A0=C2=A0=C2=A0=C2=A0 - dma_buf_vmap_unlocked()
-> > @@ -1602,6 +1604,70 @@ void dma_buf_vunmap_unlocked(struct dma_buf
-> > *dmabuf, struct iosys_map *map)
-> > =C2=A0 }
-> > =C2=A0 EXPORT_SYMBOL_NS_GPL(dma_buf_vunmap_unlocked, DMA_BUF);
-> > =C2=A0=20
-> > +/**
-> > + * @dma_buf_begin_access - Call before any hardware access from/to
-> > the DMABUF
-> > + * @attach:	[in]	attachment used for hardware access
-> > + * @sg_table:	[in]	scatterlist used for the DMA transfer
-> > + * @direction:=C2=A0 [in]=C2=A0=C2=A0=C2=A0 direction of DMA transfer
-> > + */
-> > +int dma_buf_begin_access(struct dma_buf_attachment *attach,
-> > +			 struct sg_table *sgt, enum
-> > dma_data_direction dir)
-> > +{
-> > +	struct dma_buf *dmabuf;
-> > +	bool cookie;
-> > +	int ret;
-> > +
-> > +	if (WARN_ON(!attach))
-> > +		return -EINVAL;
-> > +
-> > +	dmabuf =3D attach->dmabuf;
-> > +
-> > +	if (!dmabuf->ops->begin_access)
-> > +		return 0;
-> > +
-> > +	cookie =3D dma_fence_begin_signalling();
-> > +	ret =3D dmabuf->ops->begin_access(attach, sgt, dir);
-> > +	dma_fence_end_signalling(cookie);
-> > +
-> > +	if (WARN_ON_ONCE(ret))
-> > +		return ret;
-> > +
-> > +	return 0;
-> > +}
-> > +EXPORT_SYMBOL_NS_GPL(dma_buf_begin_access, DMA_BUF);
-> > +
-> > +/**
-> > + * @dma_buf_end_access - Call after any hardware access from/to
-> > the DMABUF
-> > + * @attach:	[in]	attachment used for hardware access
-> > + * @sg_table:	[in]	scatterlist used for the DMA transfer
-> > + * @direction:=C2=A0 [in]=C2=A0=C2=A0=C2=A0 direction of DMA transfer
-> > + */
-> > +int dma_buf_end_access(struct dma_buf_attachment *attach,
-> > +		=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct sg_table *sgt, enum
-> > dma_data_direction dir)
-> > +{
-> > +	struct dma_buf *dmabuf;
-> > +	bool cookie;
-> > +	int ret;
-> > +
-> > +	if (WARN_ON(!attach))
-> > +		return -EINVAL;
-> > +
-> > +	dmabuf =3D attach->dmabuf;
-> > +
-> > +	if (!dmabuf->ops->end_access)
-> > +		return 0;
-> > +
-> > +	cookie =3D dma_fence_begin_signalling();
-> > +	ret =3D dmabuf->ops->end_access(attach, sgt, dir);
-> > +	dma_fence_end_signalling(cookie);
-> > +
-> > +	if (WARN_ON_ONCE(ret))
-> > +		return ret;
-> > +
-> > +	return 0;
-> > +}
-> > +EXPORT_SYMBOL_NS_GPL(dma_buf_end_access, DMA_BUF);
-> > +
-> > =C2=A0 #ifdef CONFIG_DEBUG_FS
-> > =C2=A0 static int dma_buf_debug_show(struct seq_file *s, void *unused)
-> > =C2=A0 {
-> > diff --git a/include/linux/dma-buf.h b/include/linux/dma-buf.h
-> > index 8ff4add71f88..8ba612c7cc16 100644
-> > --- a/include/linux/dma-buf.h
-> > +++ b/include/linux/dma-buf.h
-> > @@ -246,6 +246,38 @@ struct dma_buf_ops {
-> > =C2=A0=C2=A0	 */
-> > =C2=A0=C2=A0	int (*end_cpu_access)(struct dma_buf *, enum
-> > dma_data_direction);
-> > =C2=A0=20
-> > +	/**
-> > +	 * @begin_access:
-> > +	 *
-> > +	 * This is called from dma_buf_begin_access() when a
-> > device driver
-> > +	 * wants to access the data of the DMABUF. The exporter
-> > can use this
-> > +	 * to flush/sync the caches if needed.
-> > +	 *
-> > +	 * This callback is optional.
-> > +	 *
-> > +	 * Returns:
-> > +	 *
-> > +	 * 0 on success or a negative error code on failure.
-> > +	 */
-> > +	int (*begin_access)(struct dma_buf_attachment *, struct
-> > sg_table *,
-> > +			=C2=A0=C2=A0=C2=A0 enum dma_data_direction);
-> > +
-> > +	/**
-> > +	 * @end_access:
-> > +	 *
-> > +	 * This is called from dma_buf_end_access() when a device
-> > driver is
-> > +	 * done accessing the data of the DMABUF. The exporter can
-> > use this
-> > +	 * to flush/sync the caches if needed.
-> > +	 *
-> > +	 * This callback is optional.
-> > +	 *
-> > +	 * Returns:
-> > +	 *
-> > +	 * 0 on success or a negative error code on failure.
-> > +	 */
-> > +	int (*end_access)(struct dma_buf_attachment *, struct
-> > sg_table *,
-> > +			=C2=A0 enum dma_data_direction);
-> > +
-> > =C2=A0=C2=A0	/**
-> > =C2=A0=C2=A0	 * @mmap:
-> > =C2=A0=C2=A0	 *
-> > @@ -606,6 +638,11 @@ void dma_buf_detach(struct dma_buf *dmabuf,
-> > =C2=A0 int dma_buf_pin(struct dma_buf_attachment *attach);
-> > =C2=A0 void dma_buf_unpin(struct dma_buf_attachment *attach);
-> > =C2=A0=20
-> > +int dma_buf_begin_access(struct dma_buf_attachment *attach,
-> > +			 struct sg_table *sgt, enum
-> > dma_data_direction dir);
-> > +int dma_buf_end_access(struct dma_buf_attachment *attach,
-> > +		=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct sg_table *sgt, enum
-> > dma_data_direction dir);
-> > +
-> > =C2=A0 struct dma_buf *dma_buf_export(const struct dma_buf_export_info
-> > *exp_info);
-> > =C2=A0=20
-> > =C2=A0 int dma_buf_fd(struct dma_buf *dmabuf, int flags);
->=20
-
+> >  net/dns_resolver/dns_key.c |    2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/net/dns_resolver/dns_key.c b/net/dns_resolver/dns_key.c
+> > index f18ca02aa95a..c42ddd85ff1f 100644
+> > --- a/net/dns_resolver/dns_key.c
+> > +++ b/net/dns_resolver/dns_key.c
+> > @@ -104,7 +104,7 @@ dns_resolver_preparse(struct key_preparsed_payload =
+*prep)
+> >                 const struct dns_server_list_v1_header *v1;
+> >
+> >                 /* It may be a server list. */
+> > -               if (datalen <=3D sizeof(*v1))
+> > +               if (datalen < sizeof(*v1))
+> >                         return -EINVAL;
+> >
+> >                 v1 =3D (const struct dns_server_list_v1_header *)data;
+> >
+> >
+>
