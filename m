@@ -1,92 +1,120 @@
-Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF523610D;
-	Mon, 22 Jan 2024 05:35:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1C534C8E;
+	Mon, 22 Jan 2024 05:35:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705901714; cv=none; b=a26A/4Km21Ulls0F7OH3gLgt+C760/PD5rjPEGOfV4Od+zkZRTUiUH38Ab3WZ2TeWslD8/MA7qZKr1kMUxWbn3XDwALhcny5RbSBlTwODyDMJqGoSXVjepu49c1gnEBS6NO9QFXTHeiuqAhWo21PBfu3JElK/WoOVXb8frSY040=
+	t=1705901758; cv=none; b=eRtycW3ors8MZEXGTBQGLYZgDOLRpk2YtQgQHgFaC54X+KzXCv3/N2+ydMmnOWY1h77OI4tmAQ34R6M8dSFpOIlAAqDcIBHEbKDpIapanKx4xomf+7HvCeAyPLKSzYDND0FX5n0cmuxsgKUifd34ZCFOJ0R3Pw/wdMPbDLqj3Uw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705901714; c=relaxed/simple;
-	bh=hRF0aPYrIl+rj+n+zPviTduuqOvCrIt4LkBgLxiF1yc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=N40J8wq9I/tVCZ+iCYC4p7+Zt/mvOzfb/D+SwibvZ5qiLVyKDTZDBl24I8mm1QMofeuo/flO1BGe3y5MYs30l3jB7xGQQHJj65GGA5DLQYr88VN5vVJHk3MKVMzdedzX56O7+6ttAQnFx9tz3ic+5Bf6Abp61ylrCdSZlYLigKc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arinc9.com; spf=pass smtp.mailfrom=arinc9.com; dkim=pass (2048-bit key) header.d=arinc9.com header.i=@arinc9.com header.b=mCcnkNQX; arc=none smtp.client-ip=217.70.183.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arinc9.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arinc9.com
+	s=arc-20240116; t=1705901758; c=relaxed/simple;
+	bh=sqOYOjwzwIWmabwtLIfTKhD0ZRp7ECZfLXHIbLfNCCI=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=kP6/LwbU9FJ/qOczIEtrx64sGksu260GQuZTJ//bMMSBQwBsBWOElttYrKs1Gf2dzLG65kJ4q2P8er76I5MYP2q8HKGPK0bPsDmUn/IRAVSIRkCAHXhi74dFbKYNCWmYNctWO0mUP+/TSDC/l4cF07kSh53GBnwh6asABcgK9KM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NqIBtLIM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arinc9.com header.i=@arinc9.com header.b="mCcnkNQX"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id CA6ADE0003;
-	Mon, 22 Jan 2024 05:35:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arinc9.com; s=gm1;
-	t=1705901704;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=wVryOrXzPY580622zM/GGPFMmmCK42LZWFJnOO2aqMo=;
-	b=mCcnkNQXmoIhmIPt+q0Fw6YDW+BaCkMLbG5wq34zevtavUwCGKT03Q6t3mAkAVj/yZOvEt
-	EGHDIFqygMikyutqvGnQpLWStv4JJUDjjkH5rduAwCamUDsG/gP2Hd88lnMq5/o2ol8R93
-	x9/jS0ttDpY6AplTh51jI1DKX9PVMW/FJ9rM+mS3HvhT5tXzyCw3yDn1uyqjd0eXc8rtb7
-	MZg0qcMpZ3e8HxN66IbNSbQID1QcKBvXQotrZT+PZZlxXZrtUHknpUqeTCLTKpfSzz4NVC
-	q980fL/PjRqQMw0H84D7V+L0iZ4QUv9vLF26NuHml+6nlJNHwP4MPtPt18bZBg==
-From: =?UTF-8?q?Ar=C4=B1n=C3=A7=20=C3=9CNAL?= <arinc.unal@arinc9.com>
-To: Andrew Lunn <andrew@lunn.ch>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>
-Cc: =?UTF-8?q?Ar=C4=B1n=C3=A7=20=C3=9CNAL?= <arinc.unal@arinc9.com>,
-	mithat.guner@xeront.com,
-	erkin.bozoglu@xeront.com,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH net-next] net: dsa: mt7530: select MEDIATEK_GE_PHY for NET_DSA_MT7530_MDIO
-Date: Mon, 22 Jan 2024 08:34:51 +0300
-Message-Id: <20240122053451.8004-1-arinc.unal@arinc9.com>
-X-Mailer: git-send-email 2.40.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NqIBtLIM"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 44B4EC43390;
+	Mon, 22 Jan 2024 05:35:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705901758;
+	bh=sqOYOjwzwIWmabwtLIfTKhD0ZRp7ECZfLXHIbLfNCCI=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=NqIBtLIMSvVPdNPkNIfYmr4xaZc7FvAgeivMtkZVhsR68UIFhVPttfEfxqFi+kAxW
+	 OuL9KMZLLQeRZ+y3aHGtXBbyxGUV0EfgRX7WWPWhmRbMQ5lmOwyeeWCJDhxveHNby+
+	 ZryP9leWecF8NTYYicNE4yoB4JFyUrQLgrXNwclICwSV0xAb8NDjm8eZdgPped/U7K
+	 M/Apg/u9ZC/iVCIZH+7pPAFRuoOypnC+yNZlbR7QOTJstxtKVwLLZ28m2Ld6hmNW56
+	 wns09g8o9FwBvGlM799vW8HL33/uLneMbgQ4GT/GMl3qAB0vASWMA5wp8hQKrqiFN6
+	 XQhL2ESDzAxUA==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BB8EC47DDB;
+	Mon, 22 Jan 2024 05:35:58 +0000 (UTC)
+From: =?utf-8?b?QXLEsW7DpyDDnE5BTA==?= via B4 Relay
+ <devnull+arinc.unal.arinc9.com@kernel.org>
+Date: Mon, 22 Jan 2024 08:35:53 +0300
+Subject: [PATCH net-next v3 2/7] net: dsa: mt7530: use p5_interface_select
+ as data type for p5_intf_sel
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-GND-Sasl: arinc.unal@arinc9.com
+Message-Id:
+ <20240122-for-netnext-mt7530-improvements-1-v3-2-042401f2b279@arinc9.com>
+References:
+ <20240122-for-netnext-mt7530-improvements-1-v3-0-042401f2b279@arinc9.com>
+In-Reply-To:
+ <20240122-for-netnext-mt7530-improvements-1-v3-0-042401f2b279@arinc9.com>
+To: Daniel Golle <daniel@makrotopia.org>, 
+ Landen Chao <Landen.Chao@mediatek.com>, DENG Qingfang <dqfext@gmail.com>, 
+ Sean Wang <sean.wang@mediatek.com>, Andrew Lunn <andrew@lunn.ch>, 
+ Florian Fainelli <f.fainelli@gmail.com>, 
+ Vladimir Oltean <olteanv@gmail.com>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+ Russell King <linux@armlinux.org.uk>
+Cc: mithat.guner@xeront.com, erkin.bozoglu@xeront.com, 
+ Bartel Eerdekens <bartel.eerdekens@constell8.be>, netdev@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-mediatek@lists.infradead.org, 
+ =?utf-8?q?Ar=C4=B1n=C3=A7_=C3=9CNAL?= <arinc.unal@arinc9.com>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1705901755; l=1228;
+ i=arinc.unal@arinc9.com; s=arinc9-patatt; h=from:subject:message-id;
+ bh=eeyEB3sOOiz0wO/aOHC7vZ4jcupi1RnCW1Y9LU4gTrY=;
+ b=hIKr4GuusrNypD6MbPMVuvEcxmkhEzS94rRRvDe6qBWSz+KkNMZbiGjjLB0fqADMlTsK/7i5T
+ Le1XednZ9IIB52YpaxQcd9QPbMQQdAeDRXZ1NAxxSET9qU68nA4uWM4
+X-Developer-Key: i=arinc.unal@arinc9.com; a=ed25519;
+ pk=VmvgMWwm73yVIrlyJYvGtnXkQJy9CvbaeEqPQO9Z4kA=
+X-Endpoint-Received:
+ by B4 Relay for arinc.unal@arinc9.com/arinc9-patatt with auth_id=115
+X-Original-From: =?utf-8?b?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
+Reply-To: <arinc.unal@arinc9.com>
 
-Quoting from commit 4223f8651287 ("net: dsa: mt7530: make NET_DSA_MT7530
-select MEDIATEK_GE_PHY"):
+From: Arınç ÜNAL <arinc.unal@arinc9.com>
 
-Make MediaTek MT753x DSA driver enable MediaTek Gigabit PHYs driver to
-properly control MT7530 and MT7531 switch PHYs.
+Use the p5_interface_select enumeration as the data type for the
+p5_intf_sel field. This ensures p5_intf_sel can only take the values
+defined in the p5_interface_select enumeration.
 
-A noticeable change is that the behaviour of switchport interfaces going
-up-down-up-down is no longer there.
-
-Now, the switch can be used without the PHYs but, at the moment, every
-hardware design out there that I have seen uses them. For that, it would
-make the most sense to force the selection of MEDIATEK_GE_PHY for the MDIO
-interface which currently controls the MT7530 and MT7531 switches.
+Remove the explicit assignment of 0 to P5_DISABLED as the first enum item
+is automatically assigned 0.
 
 Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
+Acked-by: Daniel Golle <daniel@makrotopia.org>
+Reviewed-by: Vladimir Oltean <olteanv@gmail.com>
 ---
- drivers/net/dsa/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/dsa/mt7530.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/dsa/Kconfig b/drivers/net/dsa/Kconfig
-index f8c1d73b251d..3092b391031a 100644
---- a/drivers/net/dsa/Kconfig
-+++ b/drivers/net/dsa/Kconfig
-@@ -48,7 +48,7 @@ config NET_DSA_MT7530
- config NET_DSA_MT7530_MDIO
- 	tristate "MediaTek MT7530 MDIO interface driver"
- 	depends on NET_DSA_MT7530
--	imply MEDIATEK_GE_PHY
-+	select MEDIATEK_GE_PHY
- 	select PCS_MTK_LYNXI
- 	help
- 	  This enables support for the MediaTek MT7530 and MT7531 switch
+diff --git a/drivers/net/dsa/mt7530.h b/drivers/net/dsa/mt7530.h
+index ebfb3a7acfcd..9cbf18efa416 100644
+--- a/drivers/net/dsa/mt7530.h
++++ b/drivers/net/dsa/mt7530.h
+@@ -683,7 +683,7 @@ struct mt7530_port {
+ 
+ /* Port 5 interface select definitions */
+ enum p5_interface_select {
+-	P5_DISABLED = 0,
++	P5_DISABLED,
+ 	P5_INTF_SEL_PHY_P0,
+ 	P5_INTF_SEL_PHY_P4,
+ 	P5_INTF_SEL_GMAC5,
+@@ -776,7 +776,7 @@ struct mt7530_priv {
+ 	bool			mcm;
+ 	phy_interface_t		p6_interface;
+ 	phy_interface_t		p5_interface;
+-	unsigned int		p5_intf_sel;
++	enum p5_interface_select p5_intf_sel;
+ 	u8			mirror_rx;
+ 	u8			mirror_tx;
+ 	struct mt7530_port	ports[MT7530_NUM_PORTS];
+
 -- 
 2.40.1
 
