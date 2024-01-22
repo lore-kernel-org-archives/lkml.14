@@ -1,44 +1,44 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4059B5FBB2;
-	Mon, 22 Jan 2024 23:55:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB7674F1EF;
+	Mon, 22 Jan 2024 23:55:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705967733; cv=none; b=epmfJlboczhXqHrPJRs0QV96tdcittZRaExepRxbrv6Kb+4awIjmM+w/ZhX0aHDuJ7EzeADC+Qs5uO6QA3fvkTQtpJqZ+DFyH2ZQ7zwKFb1q0VLxMJlO3z6Q9xalhLPu4gu588HCvzGRxOlBVa1BhtpEnewafxJ/sFnc+FNJ9/w=
+	t=1705967734; cv=none; b=BNf9HGJsZ2GeTD7tDRoQH5NmyFSMc82WF4MQICD43hgJ3iZ6qew3x8TYlkvJjZkqxVCmyggvwCycexUUxWGTuRuLTsxxIkWno8Pr6VPG7iBwuWZLk+CVxDud5ybt840mARYURQRTD1YUOQf8cdJiC/0OJd3ByV51T7iJRcOHsTo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705967733; c=relaxed/simple;
-	bh=T0G+wyzg6peVVuQpzmfCAbdhJRY4oN9F1S3CdOfBOOk=;
+	s=arc-20240116; t=1705967734; c=relaxed/simple;
+	bh=WkpnJmQUuLJFyL2brOxfTQdsOI1DqG1Lui1rEGPKdd4=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=A6p35wlOV1qMKPGhJi5tZh5gMVwcg3rUsc5MT95/09dah2uu2I2okfg2QVVmaazIJ+fVs34pBXIdrYZwKRx9tLQBtMbj5eD+/uQ3xwWRmOeyz/JR+XdJ9etKzt1pFmgJeZXE1sjmRnVcSiN5ZcxU5wTG9j57dLvf4F5+3DNHUMs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=T8ybvg2N; arc=none smtp.client-ip=198.175.65.11
+	 MIME-Version; b=Z8HvBLEI04HNn2nguMXHrc8GQlT4ND7sxEq0tfcETo/Pbm2N0DXG031YXILPEJ1CtPdSnl9nEVqwN35KQUfifDDPGsb6g+G8NMLyN1xhQKsHoLCZzPR1yML35dVCbx0k7F7quWp3qs7IUxZ9pqhmfX26t36QJV2SQu89m7BTD+c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lopcWviP; arc=none smtp.client-ip=198.175.65.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="T8ybvg2N"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lopcWviP"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1705967733; x=1737503733;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=T0G+wyzg6peVVuQpzmfCAbdhJRY4oN9F1S3CdOfBOOk=;
-  b=T8ybvg2NkNyJGjsl0D5qz97qg+/JQz+RUfAQFBV9ivbqj+VmI8sfTzY0
-   GodCGr8bFyqJXborXxgpBF5MhJagS51Q9B+DeIvmNsrJw4+0rhL8+/M84
-   qh10SgfvgULO5XJszT9/6TSxrM7K+p57Juyyl3XybR9G1ImyTICwI+KhC
-   6kIWfP8dl0maZseLOfxh50Xd9nUGUN9/ruXqRR/0ux9Uo3k6CWuDdYiRs
-   t9WVbCCvIO2aQe0S/0wI9jpnUDPt1tWsHRIh6RmVfJ9+2EegP+FuaMsfo
-   0/fc2gU24N0pyKxjQ36X0iYYpdpY+jEDZ1WWv+ijviaee+mUngXkt0Xv1
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10961"; a="8016356"
+  bh=WkpnJmQUuLJFyL2brOxfTQdsOI1DqG1Lui1rEGPKdd4=;
+  b=lopcWviP7bq9LO10y7EfR87+WaafaefHPVWt+WrDyinFcRiLp3graRDP
+   FuwajjdtDy/6Mu8wcHvR/XHAcd209gOwkZfh/EbslZ76RejUxB0Z02cyR
+   mQHDbTLDU124i9kiTYTbCIRq4U6AyntmhJaWT/7MBcqB5B0N7JdnsWArr
+   XKYMGcJDfRrUsztlCXaFXl+Pf6Sj9TZBnK5QJjA4cIWqpTgScJ+3RFilY
+   p+l+m9uJyx4jU2ymFV1P8zWT3Y47oQoH9EaNDduZqUVlEVtpXBEVuKaor
+   DRsaZG9QAo/7JfL9sN8G1LlgBk6lAcSUhEbtnX6th3V46RILetINbnM3X
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10961"; a="8016366"
 X-IronPort-AV: E=Sophos;i="6.05,212,1701158400"; 
-   d="scan'208";a="8016356"
+   d="scan'208";a="8016366"
 Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 15:55:29 -0800
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 15:55:30 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.05,212,1701158400"; 
-   d="scan'208";a="1468081"
+   d="scan'208";a="1468090"
 Received: from ls.sc.intel.com (HELO localhost) ([172.25.112.31])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 15:55:28 -0800
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 15:55:29 -0800
 From: isaku.yamahata@intel.com
 To: kvm@vger.kernel.org,
 	linux-kernel@vger.kernel.org
@@ -51,11 +51,10 @@ Cc: isaku.yamahata@intel.com,
 	Kai Huang <kai.huang@intel.com>,
 	chen.bo@intel.com,
 	hang.yuan@intel.com,
-	tina.zhang@intel.com,
-	Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: [PATCH v18 041/121] KVM: x86/mmu: Allow per-VM override of the TDP max page level
-Date: Mon, 22 Jan 2024 15:53:17 -0800
-Message-Id: <d99863c474b8a3d9e413fbf940bf6891d2ce319e.1705965635.git.isaku.yamahata@intel.com>
+	tina.zhang@intel.com
+Subject: [PATCH v18 043/121] [MARKER] The start of TDX KVM patch series: KVM TDP MMU hooks
+Date: Mon, 22 Jan 2024 15:53:19 -0800
+Message-Id: <1a7fac99007b1b92231ff74d3c2b281a10c722fd.1705965635.git.isaku.yamahata@intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1705965634.git.isaku.yamahata@intel.com>
 References: <cover.1705965634.git.isaku.yamahata@intel.com>
@@ -67,60 +66,28 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: Isaku Yamahata <isaku.yamahata@intel.com>
 
-TDX requires special handling to support large private page.  For
-simplicity, only support 4K page for TD guest for now.  Add per-VM maximum
-page level support to support different maximum page sizes for TD guest and
-conventional VMX guest.
+This empty commit is to mark the start of patch series of KVM TDP MMU
+hooks.
 
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
-Acked-by: Kai Huang <kai.huang@intel.com>
 ---
- arch/x86/include/asm/kvm_host.h | 1 +
- arch/x86/kvm/mmu/mmu.c          | 2 ++
- arch/x86/kvm/mmu/mmu_internal.h | 2 +-
- 3 files changed, 4 insertions(+), 1 deletion(-)
+ Documentation/virt/kvm/intel-tdx-layer-status.rst | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 430d7bd7c37c..313519edd79e 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -1283,6 +1283,7 @@ struct kvm_arch {
- 	unsigned long n_requested_mmu_pages;
- 	unsigned long n_max_mmu_pages;
- 	unsigned int indirect_shadow_pages;
-+	int tdp_max_page_level;
- 	u8 mmu_valid_gen;
- 	struct hlist_head mmu_page_hash[KVM_NUM_MMU_PAGES];
- 	struct list_head active_mmu_pages;
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index 54d4c8f1ba68..e93bc16a5e9b 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -6307,6 +6307,8 @@ void kvm_mmu_init_vm(struct kvm *kvm)
+diff --git a/Documentation/virt/kvm/intel-tdx-layer-status.rst b/Documentation/virt/kvm/intel-tdx-layer-status.rst
+index e893a3d714c7..7903473abad1 100644
+--- a/Documentation/virt/kvm/intel-tdx-layer-status.rst
++++ b/Documentation/virt/kvm/intel-tdx-layer-status.rst
+@@ -26,5 +26,5 @@ Patch Layer status
+ * TD vcpu interrupts/exit/hypercall:    Not yet
  
- 	kvm->arch.split_desc_cache.kmem_cache = pte_list_desc_cache;
- 	kvm->arch.split_desc_cache.gfp_zero = __GFP_ZERO;
-+
-+	kvm->arch.tdp_max_page_level = KVM_MAX_HUGEPAGE_LEVEL;
- }
- 
- static void mmu_free_vm_memory_caches(struct kvm *kvm)
-diff --git a/arch/x86/kvm/mmu/mmu_internal.h b/arch/x86/kvm/mmu/mmu_internal.h
-index 0443bfcf5d9c..2b9377442927 100644
---- a/arch/x86/kvm/mmu/mmu_internal.h
-+++ b/arch/x86/kvm/mmu/mmu_internal.h
-@@ -296,7 +296,7 @@ static inline int kvm_mmu_do_page_fault(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
- 		.nx_huge_page_workaround_enabled =
- 			is_nx_huge_page_enabled(vcpu->kvm),
- 
--		.max_level = KVM_MAX_HUGEPAGE_LEVEL,
-+		.max_level = vcpu->kvm->arch.tdp_max_page_level,
- 		.req_level = PG_LEVEL_4K,
- 		.goal_level = PG_LEVEL_4K,
- 	};
+ * KVM MMU GPA shared bits:              Applied
+-* KVM TDP refactoring for TDX:          Applying
+-* KVM TDP MMU hooks:                    Not yet
++* KVM TDP refactoring for TDX:          Applied
++* KVM TDP MMU hooks:                    Applying
 -- 
 2.25.1
 
