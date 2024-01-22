@@ -1,153 +1,85 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22281482C4
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 15:05:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B0D4482C8;
+	Mon, 22 Jan 2024 15:05:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705935906; cv=none; b=VqrKa3tyOsZAZV4Y3idLpdSKm+HwYrwsSi/xN5eS3em6XyXDqDVHYLgCWYvj2fPJDmm9pjSAPniTOB+oow5uUAcsfQ4VG374k7jrXaTyo1sf4BFtyMLu4akvVr3DW4VhtCZHPPVOW225OuxomY9UsUgpJA/7hK2DqbA30NzugGE=
+	t=1705935908; cv=none; b=Fbx05r5qB22/f56+hBURhDG/j8bZBpoPmTUPjAMi0X3dN0UNMVDskQ+6JfCa5H0dli6XlZ5Li2m7lN1grLRKXZi01/pxLeTlPLSu0G2hH017pFxZ+j5R4eh4LRQ3stViWUJQSYNywuluxrld1efGr8BD33PwQdgt+nvNmgvrFAA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705935906; c=relaxed/simple;
-	bh=jQuHU3SaxaQhCS1YR1LSOojoTHXE2B9LKMjOeqc1Aac=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IeEt518OjYUtB+MeIwz51aJsk8gnUTUrgiGmQzDPGxO9Yw5IihEVsc3s5MPQS2F0+thg4EJARpcmpUIHutRTPwsmJ8j0oaBD8ZAGHC6hqsc+iFN8pAbEIApPkcZFTUsVBPSh0q/mvp5LUBHicimpdOCXrMlfpBWPms/pjBTbp0w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jkm+2wHU; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1705935908; c=relaxed/simple;
+	bh=78geT9fVOQTEOWX4gyPh1xA3/6G3VJHkoN6RKZ9rGu4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=pYDWOcCzL7aVOZqdeaGK4mYuonQ0fH3LOdO0HzVQv442n7JedfLmg+Y+QnOtVdBQNoM8KiNGbTQPo0NKSWjl/Djp9zCwftTt08RbiaWZsQ0cymCVc9hNDScMH/gHqQD6A8FZ3BGoXmnUvPYBnln4MciKoKZpsTNt5Kh/wc+GIKE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DXbwIliP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jkm+2wHU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1705935903; x=1737471903;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=jQuHU3SaxaQhCS1YR1LSOojoTHXE2B9LKMjOeqc1Aac=;
-  b=jkm+2wHUb6WqqiBJCyUR41M12Xs3t0rM/+GwYhJ0HP6y18ojXEjL9eF5
-   WtM7DS8HWk0DkJn6l2vT2InpnOngBftkb05TruiACu1VMSq6OJLQEk+z8
-   FC0x/rIl9CFASP0VyPI9w60QsmphcsiMTz1xsaS5c5WeGFazAZLN4jG2V
-   +I8Ws4sLkDI3FlCY77LRuHHlkoGx/Llv2hFULHrD+GvM6fd+gDilJsAMo
-   3vwzdIJLgFk4NGrcoWwHxxxD/f1EVQi/kuFO69zO9AyR3/iJts6Kqvq8W
-   44YmbLhilUYX7tzm4ncD6xHXt2BaCH630ilEveLkk99Ik1J5616YgqkzG
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10961"; a="22706708"
-X-IronPort-AV: E=Sophos;i="6.05,211,1701158400"; 
-   d="scan'208";a="22706708"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 07:05:02 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,211,1701158400"; 
-   d="scan'208";a="34062697"
-Received: from jmwebb-mobl1.amr.corp.intel.com (HELO [10.251.14.106]) ([10.251.14.106])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 07:04:55 -0800
-Message-ID: <4ab80af9-f296-4a45-8d50-35bdaf565631@linux.intel.com>
-Date: Mon, 22 Jan 2024 07:04:54 -0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DXbwIliP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E5B4C43390;
+	Mon, 22 Jan 2024 15:05:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705935907;
+	bh=78geT9fVOQTEOWX4gyPh1xA3/6G3VJHkoN6RKZ9rGu4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=DXbwIliPqn/P2ZpWtB+N7gFXpP7miUZH9xSrxg3YB5vtG/GNJ4z7QY/R3rb5mFVli
+	 7+l9LT6KksGIAxqNRNUjF0kyGRch4VikRpz0Vqg1iTaVfVNzojrq86g+qlLbEmjWJv
+	 sFPSuzGDNUqc8GjHTXriUrU8EMyQwB3jMseQy3R4CNOAUpZNm73DSCbjTrOy6cGxAA
+	 DBp/5kMl9/hj9YOZjjgH1KMz33IfCJVBjLOdjktXw45DOKEYUg6hfunMfKLIZHHEbx
+	 H+G77qsnXnre/nYjw0aHIB/fRirSi1k0visbWmheN/4tiEGunyeN+tfiOxRHCmwVi9
+	 LscWGxVokJIQg==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Jaegeuk Kim <jaegeuk@kernel.org>,
+	Daeho Jeong <daehojeong@google.com>,
+	Sasha Levin <sashal@kernel.org>,
+	chao@kernel.org,
+	linux-f2fs-devel@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 6.6 13/73] f2fs: fix write pointers on zoned device after roll forward
+Date: Mon, 22 Jan 2024 10:01:27 -0500
+Message-ID: <20240122150432.992458-13-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240122150432.992458-1-sashal@kernel.org>
+References: <20240122150432.992458-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v1 3/4] tsm: Allow for mapping RTMRs to TCG TPM PCRs
-Content-Language: en-US
-To: Samuel Ortiz <sameo@rivosinc.com>, Qinkun Bao <qinkun@google.com>
-Cc: Dan Williams <dan.j.williams@intel.com>, linux-coco@lists.linux.dev,
- linux-kernel@vger.kernel.org, jiewen.yao@intel.com, ken.lu@intel.com
-References: <20240114223532.290550-1-sameo@rivosinc.com>
- <20240114223532.290550-4-sameo@rivosinc.com>
- <1bbf8d3e-aa94-48c7-a1e4-76f9eefc4af7@linux.intel.com>
- <65a72c305291f_3b8e29484@dwillia2-xfh.jf.intel.com.notmuch>
- <5539c533-37b2-4b12-a5c5-056881cf8e3c@linux.intel.com>
- <Za1G9I+tYuIL9ser@vermeer> <90EDEF2B-DB43-413F-840E-3268977FDBD0@google.com>
- <Za4dcowdY84fGF1f@vermeer>
-From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <Za4dcowdY84fGF1f@vermeer>
-Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.6.13
 Content-Transfer-Encoding: 8bit
 
+From: Jaegeuk Kim <jaegeuk@kernel.org>
 
-On 1/21/24 11:46 PM, Samuel Ortiz wrote:
-> On Sun, Jan 21, 2024 at 06:09:19PM -0800, Qinkun Bao wrote:
->>
->>> On Jan 21, 2024, at 8:31 AM, Samuel Ortiz <sameo@rivosinc.com> wrote:
->>>
->>> On Tue, Jan 16, 2024 at 07:35:30PM -0800, Kuppuswamy Sathyanarayanan wrote:
->>>> On 1/16/24 5:24 PM, Dan Williams wrote:
->>>>> Kuppuswamy Sathyanarayanan wrote:
->>>>>> On 1/14/24 2:35 PM, Samuel Ortiz wrote:
->>>>>>> Many user space and internal kernel subsystems (e.g. the Linux IMA)
->>>>>>> expect a Root of Trust for Storage (RTS) that allows for extending
->>>>>>> and reading measurement registers that are compatible with the TCG TPM
->>>>>>> PCRs layout, e.g. a TPM. In order to allow those components to
->>>>>>> alternatively use a platform TSM as their RTS, a TVM could map the
->>>>>>> available RTMRs to one or more TCG TPM PCRs. Once configured, those PCR
->>>>>>> to RTMR mappings give the kernel TSM layer all the necessary information
->>>>>>> to be a RTS for e.g. the Linux IMA or any other components that expects
->>>>>>> a TCG compliant TPM PCRs layout.
->>>>>>>
->>>>>>> TPM PCR mappings are configured through configfs:
->>>>>>>
->>>>>>> // Create and configure 2 RTMRs
->>>>>>> mkdir /sys/kernel/config/tsm/rtmrs/rtmr0
->>>>>>> mkdir /sys/kernel/config/tsm/rtmrs/rtmr1
->>>>>>> echo 0 > /sys/kernel/config/tsm/rtmrs/rtmr0/index
->>>>>>> echo 1 > /sys/kernel/config/tsm/rtmrs/rtmr1/index
->>>>>>>
->>>>>>> // Map RTMR 0 to PCRs 4, 5, 6, 7 and 8
->>>>>>> echo 4-8 > /sys/kernel/config/tsm/rtmrs/rtmr0/tcg_map
->>>>>>>
->>>>>>> // Map RTMR 1 to PCRs 16, 17 and 18
->>>>>>> echo 16-18 > /sys/kernel/config/tsm/rtmrs/rtmr1/tcg_map
->>>>>> Any information on how this mapping will be used by TPM or IMA ?
->>>>>>
->>>>>> RTMR to PCR mapping is fixed by design, right? If yes, why allow
->>>>>> user to configure it. We can let vendor drivers to configure it, right?
->>>>> I assume the "vendor driver", that publishes the RTMR to the tsm-core,
->>>>> has no idea whether they will be used for PCR emulation, or not. The TPM
->>>>> proxy layer sitting on top of this would know the mapping of which RTMRs
->>>>> are recording a transcript of which PCR extend events.
->>>> My thinking is, since this mapping is ARCH-specific information
->>>> and fixed by design, it makes more sense to hide this detail in the
->>>> vendor driver than letting userspace configure it. If we allow users to
->>>> configure it, there is a chance for incorrect mapping.
->>> I think I agree with the fact that letting users configure that mapping
->>> may be error prone. But I'm not sure this is an architecture specific
->>> mapping, but rather a platform specific one. I'd expect the guest firmware
->>> to provide it through e.g. the MapPcrToMrIndex EFI CC protocol.
->>>
->>> So I agree I should remove the user interface for setting that mapping,
->>> and pass it from the provider capabilities instead. It is then up to the
->>> provider to choose how it'd build that information (hard coded, from
->>> EFI, etc).
->> The UEFI specification has defined the mapping relationship between the 
->> TDX RTMR and TPM PCRs (See https://uefi.org/specs/UEFI/2.10/38_Confidential_Computing.html#intel-trust-domain-extension). The current RTMR implementation in the boot loader 
->> is “hooked” in the implementation for the TPM. 
->>
->> When the bootloader needs to extend the PCR value, it calls 
->> `map_pcr_to_mr_index`  to retrieve the corresponding RTMR index and 
->> then extends the RTMR. Considering this behavior, I don’t think we should
->>  allow users to configure the mappings between the PCR and RTMR. (See https://github.com/rhboot/shim/pull/485/files <https://github.com/rhboot/shim/pull/485/files>).
-> Just to be clear: I agree with that and I am going to send a v2 with
-> that user interface removed.
-> However I believe that we still need the TSM framework to know about
-> these mappings and the question is where does the kernel get it from?
->
-> You're suggesting that for TDX these mappings are architecturally
-> defined, as described by the UEFI spec. For other architectures (CCA,
-> CoVE) they are not (yet), so I'm suggesting to leave each TSM provider
-> backend decide how the PCR to RTMR mapping should be built/fetched and
-> provide it to the TSM framework through the tsm_capabilities structure
-> that this patchset introduces. The TDX implementation could decide to
-> hardcode it to the UEFI specification.
+[ Upstream commit 9dad4d964291295ef48243d4e03972b85138bc9f ]
 
-Agree. Lets leave it to TSM vendor drivers to provide this
-mapping.
+1. do roll forward recovery
+2. update current segments pointers
+3. fix the entire zones' write pointers
+4. do checkpoint
 
+Reviewed-by: Daeho Jeong <daehojeong@google.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/f2fs/recovery.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-> Cheers,
-> Samuel.
-
+diff --git a/fs/f2fs/recovery.c b/fs/f2fs/recovery.c
+index f0de36ef73c2..c8ba9f1551b6 100644
+--- a/fs/f2fs/recovery.c
++++ b/fs/f2fs/recovery.c
+@@ -917,6 +917,8 @@ int f2fs_recover_fsync_data(struct f2fs_sb_info *sbi, bool check_only)
+ 	if (!err && fix_curseg_write_pointer && !f2fs_readonly(sbi->sb) &&
+ 			f2fs_sb_has_blkzoned(sbi)) {
+ 		err = f2fs_fix_curseg_write_pointer(sbi);
++		if (!err)
++			err = f2fs_check_write_pointer(sbi);
+ 		ret = err;
+ 	}
+ 
 -- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+2.43.0
 
