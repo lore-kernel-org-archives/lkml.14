@@ -1,106 +1,87 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 035515F863
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 18:06:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97A575F872;
+	Mon, 22 Jan 2024 18:06:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705946790; cv=none; b=ZaMM3basFFaW2OJ7Fz9iQOwd9fUygy0FbjJPQZee8nlxF0L1y1AV6QCuNKkvmjXzSAn7g5NJv+VSRMsQqJq5TFmQ4YNChJSg6YPqAol8VPtfmpnQLDqObW4ELCoZ6J6NOjhVyoC7RpGu/ipjou2feEN0NDflY7EnDYdIUHyiJ54=
+	t=1705946791; cv=none; b=OlIXUImKYfKmt/tzasu790Cozi80dulrUWfjAe1HjBPto0wXX3BjU6jxu/TPhwKwl5JDu8UliUuuzwVzXyy5jXrpfGVyfr6C5QQKdMezkuGUo9hsk/gXToDqPfUBD7Wz1/WLdfWtBUPEWa1qUbBChWveqVHidDqdEAIqxNfYTFY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705946790; c=relaxed/simple;
-	bh=cQLkUPBBLrRH/cRaXmUrTHiSWdeMuSt7rHG+1NHts0Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gCEh/Pb1h0bKLLkjY4RHYu157nKii54a5iVRKPCS+y2Gryt3QgyLWpEUMDoqBsnLqyUUafq0/BzxLNgdfM4NAe1UubjN9rTg7aMxdWzOoyX9YS3BWVlpHvfDjEaG3S0RNKqLxp1OdDfojnIWCwQbR+uBWrpMxMaGsuuZmXHYs0I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4012D1476;
-	Mon, 22 Jan 2024 10:07:13 -0800 (PST)
-Received: from [10.1.197.60] (eglon.cambridge.arm.com [10.1.197.60])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7C6963F5A1;
-	Mon, 22 Jan 2024 10:06:24 -0800 (PST)
-Message-ID: <c4351ab9-9524-595d-9765-f5f50371023e@arm.com>
-Date: Mon, 22 Jan 2024 18:06:23 +0000
+	s=arc-20240116; t=1705946791; c=relaxed/simple;
+	bh=kyRl1N9Q/dQhytK5rUW6BG9+l/1vrFhgo42ePkJfkkI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=llIRRvRuobhTEzcN4HjtDcHLkfXipXethk0YfKsuyeclqIT/ZpL/uEPg2DI1+uvbrh09zujPtGrXlGRhYagQcQPEMv5gwIIqf6DBOZgW9Z3VA4bDDXBs7PleZrL+P7i/pnCCek6cshqI2AyV7EJVpHTuANHR7efBQqc0q7BbhTU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kEW3ozoj; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kEW3ozoj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BFE0EC433C7;
+	Mon, 22 Jan 2024 18:06:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705946791;
+	bh=kyRl1N9Q/dQhytK5rUW6BG9+l/1vrFhgo42ePkJfkkI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kEW3ozojryUaFqJeewEJEvDyi2f/KWTnppNBa4N7s4zyU7sdQkK3ar00wfaNpRlhJ
+	 K3DiEMvUkVOswNvJWjEJRM+OczTCmLApyovnaWgJ+t6ZOh7tJqLIeQW3qOB19Btxxq
+	 rjuPe92x5BoG/KKtblBxXjFeJPzFd4j064Rze6cN1oM1KDjyBXPQIqQwW4MKFpfCvP
+	 w6OireLjH0tjGeb7eyfwhsVyUnlosSCpj+Y1+8xfhFUI7F9P5oY0n0qKAVT4D1XXEl
+	 zIenD0lJ4oyZyd3wn3RSsdT+0wwQbJrKDASIGVVcwO844i3fGlpVDMJo4yO0rmjhjN
+	 waIKUjbhX1iEg==
+Date: Mon, 22 Jan 2024 18:06:25 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Johan Hovold <johan@kernel.org>
+Cc: Johan Hovold <johan+linaro@kernel.org>,
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+	Banajit Goswami <bgoswami@quicinc.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+	alsa-devel@alsa-project.org, linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH v4 2/4] ASoC: qcom: sc8280xp: limit speaker volumes
+Message-ID: <8c6fc7e6-7694-4718-be47-d9fc3f893947@sirena.org.uk>
+References: <20240119112420.7446-1-johan+linaro@kernel.org>
+ <20240119112420.7446-3-johan+linaro@kernel.org>
+ <d54d3640-49bf-4a2f-903b-4beeb0ebd56c@sirena.org.uk>
+ <Za4cR90XoAaATq8X@hovoldconsulting.com>
+ <aca2b125-acf8-4791-a3eb-ea19826d3ee4@sirena.org.uk>
+ <Za6l6EP7OqXPU9mj@hovoldconsulting.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH v8 14/24] x86/resctrl: Allow resctrl_arch_rmid_read() to
- sleep
-Content-Language: en-GB
-To: babu.moger@amd.com, x86@kernel.org, linux-kernel@vger.kernel.org
-Cc: Fenghua Yu <fenghua.yu@intel.com>,
- Reinette Chatre <reinette.chatre@intel.com>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, H Peter Anvin <hpa@zytor.com>,
- shameerali.kolothum.thodi@huawei.com,
- D Scott Phillips OS <scott@os.amperecomputing.com>,
- carl@os.amperecomputing.com, lcherian@marvell.com,
- bobo.shaobowang@huawei.com, tan.shaopeng@fujitsu.com,
- baolin.wang@linux.alibaba.com, Jamie Iles <quic_jiles@quicinc.com>,
- Xin Hao <xhao@linux.alibaba.com>, peternewman@google.com,
- dfustini@baylibre.com, amitsinght@marvell.com
-References: <20231215174343.13872-1-james.morse@arm.com>
- <20231215174343.13872-15-james.morse@arm.com>
- <290d6066-236d-4681-8dc5-8a380c878aeb@amd.com>
-From: James Morse <james.morse@arm.com>
-In-Reply-To: <290d6066-236d-4681-8dc5-8a380c878aeb@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-
-Hi Babu,
-
-On 03/01/2024 19:43, Moger, Babu wrote:
-> On 12/15/23 11:43, James Morse wrote:
->> MPAM's cache occupancy counters can take a little while to settle once
->> the monitor has been configured. The maximum settling time is described
->> to the driver via a firmware table. The value could be large enough
->> that it makes sense to sleep. To avoid exposing this to resctrl, it
->> should be hidden behind MPAM's resctrl_arch_rmid_read().
->>
->> resctrl_arch_rmid_read() may be called via IPI meaning it is unable
->> to sleep. In this case resctrl_arch_rmid_read() should return an error
->> if it needs to sleep. This will only affect MPAM platforms where
->> the cache occupancy counter isn't available immediately, nohz_full is
->> in use, and there are no housekeeping CPUs in the necessary domain.
->>
->> There are three callers of resctrl_arch_rmid_read():
->> __mon_event_count() and __check_limbo() are both called from a
->> non-migrateable context. mon_event_read() invokes __mon_event_count()
->> using smp_call_on_cpu(), which adds work to the target CPUs workqueue.
->> rdtgroup_mutex() is held, meaning this cannot race with the resctrl
->> cpuhp callback. __check_limbo() is invoked via schedule_delayed_work_on()
->> also adds work to a per-cpu workqueue.
->>
->> The remaining call is add_rmid_to_limbo() which is called in response
->> to a user-space syscall that frees an RMID. This opportunistically
->> reads the LLC occupancy counter on the current domain to see if the
->> RMID is over the dirty threshold. This has to disable preemption to
->> avoid reading the wrong domain's value. Disabling pre-emption here
->> prevents resctrl_arch_rmid_read() from sleeping.
->>
->> add_rmid_to_limbo() walks each domain, but only reads the counter
->> on one domain. If the system has more than one domain, the RMID will
->> always be added to the limbo list. If the RMIDs usage was not over the
->> threshold, it will be removed from the list when __check_limbo() runs.
->> Make this the default behaviour. Free RMIDs are always added to the
->> limbo list for each domain.
->>
->> The user visible effect of this is that a clean RMID is not available
->> for re-allocation immediately after 'rmdir()' completes, this behaviour
->> was never portable as it never happened on a machine with multiple
->> domains.
->>
->> Removing this path allows resctrl_arch_rmid_read() to sleep if its called
->> with interrupts unmasked. Document this is the expected behaviour, and
->> add a might_sleep() annotation to catch changes that won't work on arm64.
-
-> Reviewed-by: Babu Moger <babu.moger@amd.com>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="PKIws8OF8mXQ1io0"
+Content-Disposition: inline
+In-Reply-To: <Za6l6EP7OqXPU9mj@hovoldconsulting.com>
+X-Cookie: Nice guys don't finish nice.
 
 
-Thanks!
+--PKIws8OF8mXQ1io0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-James
+On Mon, Jan 22, 2024 at 06:29:12PM +0100, Johan Hovold wrote:
+
+> Could you please try again, and tell me which patch fails to apply and
+> how it fails?
+
+It was the specific patch I replied to, just the standard "this patch
+doesn't apply" message.
+
+--PKIws8OF8mXQ1io0
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmWurqEACgkQJNaLcl1U
+h9DSHAf/T3WNfXxLvAbJenp11DA/SEjMQj9/GAixxPGAr04YGXfFCHS+BU6RwG18
+nfNEGntA5qkyWDqYJl7XiMiRn6VcG5yklGOgJAM0BltZFbCGw13HsTnFaMOj2to2
+Oo9RdzNeY1iuE57nu5yvvTt3VkMAXaEtFskwAhcG6xXDBac0TWbTOb5WWCeijGua
+ZtVT0iG1DF7SEhqdee8Lwr9Q+46VBcu0pChiLmycGGkb/jN1lpT4D6YF2gKUIunH
+7f3yuN7asZHZ4VpP8YEsPkCyR2hsQfXYgzjufQWkIvH+YBetfle5X/3GecV3FIeS
+mH89vrcQ7v4mkN1BgRpac5XjX9oaqQ==
+=Vhot
+-----END PGP SIGNATURE-----
+
+--PKIws8OF8mXQ1io0--
