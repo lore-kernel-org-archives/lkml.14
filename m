@@ -1,218 +1,107 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63D015C918;
-	Mon, 22 Jan 2024 17:05:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F98C3D99F;
+	Mon, 22 Jan 2024 17:07:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705943135; cv=none; b=tapLr0xcazgzPyhY8dO8azHyXdJeq0LerZYnf5dzEYmVIGc25yQD/yG74JTm3OGBbB45U61RLAv7lfSzs8pUDLSQApZFAAnyxxss44lBudsrDq97iyqPrPerGPk65MdJIMto6lngrcN+Sy+hdrHSwCqH1m3+aJnrBBPq8sryYhI=
+	t=1705943251; cv=none; b=Vbl8vNUryzhRAzZI8+kG9Oltg2/As6XVu5aBY6lg58yA/Q++cVDUB5Q1eAvz15X4s8FLmwOyx7v3C6unR0l/+h0Y1ZGn9cR66Boj5I8Y/nRlzz4DNd3O3x7t0oXWE6VywUX5X0ih4tSPfxzJu9QQ2l3w8IzCqpJOzt3M7LyrKB4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705943135; c=relaxed/simple;
-	bh=aUTMYzjs78uYTiEQAgGmOm7LBsj4lDRYJ/Ilq8T3RhQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=qxKYmURhEZLnEpg/ZkAXz/n+yEZUNmtbT1scjwEMFhuPSPjZ2m1ODp7llZHYJQYhiHN4n900bTs2lmNErtoa4K2D23GNTj8hgAzgoQKTWvNtowToVJMBj8jF5QHQRkQnIY8HoHsRplBlrl4PnEIqMIvFn+ZboOmpUiLAamWTnwI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rB29qSMA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1705943251; c=relaxed/simple;
+	bh=+JZz32rW4JTCFtXIffKZnVlpE+3nMpJ5etJGZvkKUt8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Xbj4sI4LXUMBKJkV6F+rrjLFIWTZe2Spjc9AoZpeXAgOhsQup+L/tVaRQvbx9e0JJS4ZqdRmFHLR2P90mKLH6IYbSyAbmEXA2bYsC65HqHSMICUB3bp71jGs/8yJpEWwixH5FPtGX0edRpgxAHyQV4U/nG5a4vxrX2VKc5odcPQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=vfju6/uT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rB29qSMA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10F92C43601;
-	Mon, 22 Jan 2024 17:05:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705943135;
-	bh=aUTMYzjs78uYTiEQAgGmOm7LBsj4lDRYJ/Ilq8T3RhQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=rB29qSMAhfPSXzKG1+4qWSzciEb+EdBeCnD9CUDsyTaFZmnR6srgzEqZXVe58s/CY
-	 eQw60vlZoD+EZt5SLzvsiZfkZ8svf6WH4CedqO448K2gJNwcxtYP0U01Ecqm3uC5nN
-	 eItWsVbDULugmrunkBcbqsiAegL3laJg6Z5395omqJ3j2Nk4HFWehA7es/d8m93dn5
-	 ztYIfgYYZ/DekH5rIgMHlMUXjvDASwiHy06I3HtY+QTpPHY33yC28mrJytg64uEdpE
-	 oyPhSEDTzqKExBUlBJvn1QvbmH354riPLnwdO5vbGRYGJOCowNq6x4Clq8g5PpJDQI
-	 1BmYN0KhW+CuQ==
-Received: by wens.tw (Postfix, from userid 1000)
-	id 20624600A4; Tue, 23 Jan 2024 01:05:30 +0800 (CST)
-From: Chen-Yu Tsai <wens@kernel.org>
-To: Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	Vinod Koul <vkoul@kernel.org>
-Cc: Chen-Yu Tsai <wens@csie.org>,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-sunxi@lists.linux.dev,
-	linux-sound@vger.kernel.org,
-	dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 6/7] arm64: dts: allwinner: h616: Add DMA controller and DMA channels
-Date: Tue, 23 Jan 2024 01:05:17 +0800
-Message-Id: <20240122170518.3090814-7-wens@kernel.org>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240122170518.3090814-1-wens@kernel.org>
-References: <20240122170518.3090814-1-wens@kernel.org>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="vfju6/uT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E083C433F1;
+	Mon, 22 Jan 2024 17:07:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1705943251;
+	bh=+JZz32rW4JTCFtXIffKZnVlpE+3nMpJ5etJGZvkKUt8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=vfju6/uTQDFy/inOO9Cv8BylCzmPH+WOUs2vKtKq+86zr9Iic/k0ivgFtFVKMEoBM
+	 z/wP15XKNngZzQbsiw/FTySNTZfYIYbriqSONjALL2bQb8cM7jRUX5vWnq1tqOl0Ha
+	 WSwmIc1v5GQXReigkzAOvcuAWPZ8G3J2UJ5usaUw=
+Date: Mon, 22 Jan 2024 09:07:28 -0800
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Stefan Wiehler <stefan.wiehler@nokia.com>, stable@vger.kernel.org,
+	patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+	torvalds@linux-foundation.org, akpm@linux-foundation.org,
+	linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+	lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+	conor@kernel.org, allen.lkml@gmail.com,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Subject: Re: [PATCH] mips/smp: Call rcu_cpu_starting() earlier
+Message-ID: <2024012219-retiring-superbowl-1570@gregkh>
+References: <2024011935-snowman-regain-b820@gregkh>
+ <20240119163811.3884999-1-stefan.wiehler@nokia.com>
+ <2024012047-prompter-driveway-c418@gregkh>
+ <b3ddf95a-7f4a-4f15-b701-c37cfe95a4cb@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b3ddf95a-7f4a-4f15-b701-c37cfe95a4cb@gmail.com>
 
-From: Chen-Yu Tsai <wens@csie.org>
+On Sun, Jan 21, 2024 at 08:52:55AM -0800, Florian Fainelli wrote:
+> 
+> 
+> On 1/19/2024 10:38 PM, Greg Kroah-Hartman wrote:
+> > On Fri, Jan 19, 2024 at 05:38:11PM +0100, Stefan Wiehler wrote:
+> > > rcu_cpu_starting() must be called before clockevents_register_device() to avoid
+> > > the following lockdep splat triggered by calling list_add() when
+> > > CONFIG_PROVE_RCU_LIST=y:
+> > > 
+> > >    WARNING: suspicious RCU usage
+> > >    ...
+> > >    -----------------------------
+> > >    kernel/locking/lockdep.c:3680 RCU-list traversed in non-reader section!!
+> > > 
+> > >    other info that might help us debug this:
+> > > 
+> > >    RCU used illegally from offline CPU!
+> > >    rcu_scheduler_active = 1, debug_locks = 1
+> > >    no locks held by swapper/1/0.
+> > >    ...
+> > >    Call Trace:
+> > >    [<ffffffff8012a434>] show_stack+0x64/0x158
+> > >    [<ffffffff80a93d98>] dump_stack_lvl+0x90/0xc4
+> > >    [<ffffffff801c9e9c>] __lock_acquire+0x1404/0x2940
+> > >    [<ffffffff801cbf3c>] lock_acquire+0x14c/0x448
+> > >    [<ffffffff80aa4260>] _raw_spin_lock_irqsave+0x50/0x88
+> > >    [<ffffffff8021e0c8>] clockevents_register_device+0x60/0x1e8
+> > >    [<ffffffff80130ff0>] r4k_clockevent_init+0x220/0x3a0
+> > >    [<ffffffff801339d0>] start_secondary+0x50/0x3b8
+> > > 
+> > > raw_smp_processor_id() is required in order to avoid calling into lockdep
+> > > before RCU has declared the CPU to be watched for readers.
+> > > 
+> > > See also commit 29368e093921 ("x86/smpboot:  Move rcu_cpu_starting() earlier"),
+> > > commit de5d9dae150c ("s390/smp: move rcu_cpu_starting() earlier") and commit
+> > > 99f070b62322 ("powerpc/smp: Call rcu_cpu_starting() earlier").
+> > > 
+> > > Signed-off-by: Stefan Wiehler <stefan.wiehler@nokia.com>
+> > > Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
+> > > Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> > > ---
+> > >   arch/mips/kernel/smp.c | 4 ++--
+> > >   1 file changed, 2 insertions(+), 2 deletions(-)
+> > 
+> > What is the git commit id of this change in Linus's tree?  What
+> > kernel(s) should this be applied to?
+> 
+> The upstream commit is 55702ec9603ebeffb15e6f7b113623fe1d8872f4 ("mips/smp:
+> Call rcutree_report_cpu_starting() earlier") and this change from Stefan
+> should be applied to both the 6.1 stable and 6.6 stable branches. Thanks!
 
-The DMA controllers found on the H616 and H618 are the same as the one
-found on the H6. The only difference is the DMA endpoint (DRQ) layout.
+Thanks, now queued up.
 
-Add a device node for it, and add DMA channels for existing peripherals.
-
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
----
- .../arm64/boot/dts/allwinner/sun50i-h616.dtsi | 39 +++++++++++++++++++
- 1 file changed, 39 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h616.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h616.dtsi
-index d549d277d972..a0268439f3be 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h616.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h616.dtsi
-@@ -133,6 +133,19 @@ ccu: clock@3001000 {
- 			#reset-cells = <1>;
- 		};
- 
-+		dma: dma-controller@3002000 {
-+			compatible = "allwinner,sun50i-h616-dma",
-+				     "allwinner,sun50i-h6-dma";
-+			reg = <0x03002000 0x1000>;
-+			interrupts = <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&ccu CLK_BUS_DMA>, <&ccu CLK_MBUS_DMA>;
-+			clock-names = "bus", "mbus";
-+			dma-channels = <16>;
-+			dma-requests = <49>;
-+			resets = <&ccu RST_BUS_DMA>;
-+			#dma-cells = <1>;
-+		};
-+
- 		sid: efuse@3006000 {
- 			compatible = "allwinner,sun50i-h616-sid", "allwinner,sun50i-a64-sid";
- 			reg = <0x03006000 0x1000>;
-@@ -339,6 +352,8 @@ uart0: serial@5000000 {
- 			reg-shift = <2>;
- 			reg-io-width = <4>;
- 			clocks = <&ccu CLK_BUS_UART0>;
-+			dmas = <&dma 14>, <&dma 14>;
-+			dma-names = "tx", "rx";
- 			resets = <&ccu RST_BUS_UART0>;
- 			status = "disabled";
- 		};
-@@ -350,6 +365,8 @@ uart1: serial@5000400 {
- 			reg-shift = <2>;
- 			reg-io-width = <4>;
- 			clocks = <&ccu CLK_BUS_UART1>;
-+			dmas = <&dma 15>, <&dma 15>;
-+			dma-names = "tx", "rx";
- 			resets = <&ccu RST_BUS_UART1>;
- 			status = "disabled";
- 		};
-@@ -361,6 +378,8 @@ uart2: serial@5000800 {
- 			reg-shift = <2>;
- 			reg-io-width = <4>;
- 			clocks = <&ccu CLK_BUS_UART2>;
-+			dmas = <&dma 16>, <&dma 16>;
-+			dma-names = "tx", "rx";
- 			resets = <&ccu RST_BUS_UART2>;
- 			status = "disabled";
- 		};
-@@ -372,6 +391,8 @@ uart3: serial@5000c00 {
- 			reg-shift = <2>;
- 			reg-io-width = <4>;
- 			clocks = <&ccu CLK_BUS_UART3>;
-+			dmas = <&dma 17>, <&dma 17>;
-+			dma-names = "tx", "rx";
- 			resets = <&ccu RST_BUS_UART3>;
- 			status = "disabled";
- 		};
-@@ -383,6 +404,8 @@ uart4: serial@5001000 {
- 			reg-shift = <2>;
- 			reg-io-width = <4>;
- 			clocks = <&ccu CLK_BUS_UART4>;
-+			dmas = <&dma 18>, <&dma 18>;
-+			dma-names = "tx", "rx";
- 			resets = <&ccu RST_BUS_UART4>;
- 			status = "disabled";
- 		};
-@@ -394,6 +417,8 @@ uart5: serial@5001400 {
- 			reg-shift = <2>;
- 			reg-io-width = <4>;
- 			clocks = <&ccu CLK_BUS_UART5>;
-+			dmas = <&dma 19>, <&dma 19>;
-+			dma-names = "tx", "rx";
- 			resets = <&ccu RST_BUS_UART5>;
- 			status = "disabled";
- 		};
-@@ -405,6 +430,8 @@ i2c0: i2c@5002000 {
- 			reg = <0x05002000 0x400>;
- 			interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&ccu CLK_BUS_I2C0>;
-+			dmas = <&dma 43>, <&dma 43>;
-+			dma-names = "rx", "tx";
- 			resets = <&ccu RST_BUS_I2C0>;
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&i2c0_pins>;
-@@ -420,6 +447,8 @@ i2c1: i2c@5002400 {
- 			reg = <0x05002400 0x400>;
- 			interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&ccu CLK_BUS_I2C1>;
-+			dmas = <&dma 44>, <&dma 44>;
-+			dma-names = "rx", "tx";
- 			resets = <&ccu RST_BUS_I2C1>;
- 			status = "disabled";
- 			#address-cells = <1>;
-@@ -433,6 +462,8 @@ i2c2: i2c@5002800 {
- 			reg = <0x05002800 0x400>;
- 			interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&ccu CLK_BUS_I2C2>;
-+			dmas = <&dma 45>, <&dma 45>;
-+			dma-names = "rx", "tx";
- 			resets = <&ccu RST_BUS_I2C2>;
- 			status = "disabled";
- 			#address-cells = <1>;
-@@ -446,6 +477,8 @@ i2c3: i2c@5002c00 {
- 			reg = <0x05002c00 0x400>;
- 			interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&ccu CLK_BUS_I2C3>;
-+			dmas = <&dma 46>, <&dma 46>;
-+			dma-names = "rx", "tx";
- 			resets = <&ccu RST_BUS_I2C3>;
- 			status = "disabled";
- 			#address-cells = <1>;
-@@ -459,6 +492,8 @@ i2c4: i2c@5003000 {
- 			reg = <0x05003000 0x400>;
- 			interrupts = <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&ccu CLK_BUS_I2C4>;
-+			dmas = <&dma 47>, <&dma 47>;
-+			dma-names = "rx", "tx";
- 			resets = <&ccu RST_BUS_I2C4>;
- 			status = "disabled";
- 			#address-cells = <1>;
-@@ -472,6 +507,8 @@ spi0: spi@5010000 {
- 			interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&ccu CLK_BUS_SPI0>, <&ccu CLK_SPI0>;
- 			clock-names = "ahb", "mod";
-+			dmas = <&dma 22>, <&dma 22>;
-+			dma-names = "rx", "tx";
- 			resets = <&ccu RST_BUS_SPI0>;
- 			status = "disabled";
- 			#address-cells = <1>;
-@@ -485,6 +522,8 @@ spi1: spi@5011000 {
- 			interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&ccu CLK_BUS_SPI1>, <&ccu CLK_SPI1>;
- 			clock-names = "ahb", "mod";
-+			dmas = <&dma 23>, <&dma 23>;
-+			dma-names = "rx", "tx";
- 			resets = <&ccu RST_BUS_SPI1>;
- 			status = "disabled";
- 			#address-cells = <1>;
--- 
-2.39.2
-
+greg k-h
