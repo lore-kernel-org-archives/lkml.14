@@ -1,92 +1,137 @@
-Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FAC94776B;
-	Mon, 22 Jan 2024 11:21:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBFFD4776D;
+	Mon, 22 Jan 2024 11:21:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705922513; cv=none; b=IRKNQFApo05PYVgESUaRElV+4UhSKGu2Jl1dl5+XqB2GJFR6DMQpq6Ep6/UKoajzkQjQOQijLNSdIgr7rrz30iNR+AkcaqMsp/9gna/Yh8XfWTZC9QFiiSXCWiVJUa8NXXTDGNCxjzpJEEXkiR7lQe0ej+5snNUvljJ2pp7+Oo4=
+	t=1705922519; cv=none; b=mhc6enMFx8sfDiHR74rAu/6giQkI+l5TjWi5gFSZLkvR2Q/PVkS3JHvUFgXADbxIKZE2GPNAivEOZxq6pWViAK8vO+rTIE67H8rIWnydW9jQIvHYcLApBwqIbBl2pjxvWSX//t6/E0X6dC/pObnGnVA3WudW4hOnu2q4elkgArM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705922513; c=relaxed/simple;
-	bh=Aoa2uD6JhnOWVhqPLVHgP+kBp2d3drpGdH+IsOITYSQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PDTtodwYEZ3okafor2qeDHQjGbxZw3MkR/l21P5RYYpb6AcQwOcvf8aDJ80vsMpUzctAcA7bR4HuwqC5vR9Fhlg+SexnycCdmxyTlJu6hE5a4BB1AYqnabCmm0fchZjYQUcpbqtdlPGxHzKdI2IUV1GWU9xSP3kvftIyfoE+q5M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WMrHQv8z; arc=none smtp.client-ip=209.85.128.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WMrHQv8z"
-Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-5fc2e997804so25452057b3.3;
-        Mon, 22 Jan 2024 03:21:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705922511; x=1706527311; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Aoa2uD6JhnOWVhqPLVHgP+kBp2d3drpGdH+IsOITYSQ=;
-        b=WMrHQv8zwFo3Dvox9r3jp13jSM8o1d0aRYSjxjukF9d863tT1x1PS6CZMYSDofoWKb
-         DNjFpGJfj4++YgUKCmGY+4dNykQKYRYMeIJqAhaDX4i/1YyP0WD3jr/uZzNhHEkrxGMi
-         A6VtFYkweLyuONStIr3feIWV/QOt5/Mm24tJBzvXKN1esXdgV9vTBLcJSF5yvOR4BRuE
-         wW74f/AlmrwcB9BRzZHtWGJgwLIgOs3V7xZmWZINqgYA+u8KQSUtueHU72AfZngOJdot
-         XJg3cqWhukQ86nuIQQTnpe82R1tzHDk78kDj9Z3L4W/ZMYacY62gWSTofz6PltzgBjjT
-         S81Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705922511; x=1706527311;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Aoa2uD6JhnOWVhqPLVHgP+kBp2d3drpGdH+IsOITYSQ=;
-        b=O4nHF3835SjN87MwowKDJCIz2VfSvxwlcMCMlb4bu6zGvIO7D0PA7vsrtW8W6A38hk
-         /rGtPFy1ps04IBOmVha0JKs4+yR0FELT4GKwQUTkbkTCTM2+k7t6R/niVTGeH3kUOSS1
-         9JOQBxmaw+Xufvuf2sQZdmdy98nbdiZp7F1DOO/MQQeW9DPtpOcoMWnWTsVRN/jS/sQv
-         Ts+8pGhWKa/Q+5LdbZU1b7wRY3c/7vCotN6M0deefIUu5Map5ZZUwwvOEMi1Mll3LAN0
-         xR0wQfzeESGJX+/2Z1JMklzWPqbjYDjgaZAtjfuEcPdq1uNpRggPiUbOvYx928CK3/uy
-         T9yQ==
-X-Gm-Message-State: AOJu0Ywohywwu7aVjDgs/JgXi9/GKApYtNpfjcKGvL4iv+rC+IJJ2mUD
-	wU7seCHIub89Z47pIswIEBHBhtceYwTx4wwcCF2MaQsIQSrK4ERtimdvjk2BO/DCjoUJkIUl62A
-	usPgICsqFM7qRhhX19oJKU4zFTA==
-X-Google-Smtp-Source: AGHT+IF3tNBm3AaqbWBH2APl+K+A1l2FMfhzy88eG1EvSwkSOyNPO716qqkCrAEbgCBTWnAKulQ6FYnzhC/hyyHotkE=
-X-Received: by 2002:a81:5384:0:b0:5ff:617e:6edf with SMTP id
- h126-20020a815384000000b005ff617e6edfmr2939801ywb.34.1705922511434; Mon, 22
- Jan 2024 03:21:51 -0800 (PST)
+	s=arc-20240116; t=1705922519; c=relaxed/simple;
+	bh=UTzjwmnY4ingBpMY9zU+ylePFagJF4IF4FCYtDTyNkg=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=uzkE3UPpfEZP0jC02OPJTBYsmdZ9eXCGasTi+zmOVM5H7gcSiT+bYYxw0w1rhV0xI9W9PvJAgPO5UfacfU5ratzk9d7PjGdMqtA/LFqrblkf3zYzujn0AqC29DbvnWqRKNNJh9ia949NTRZDrf6eV4JdxACVLo2Fa2SUYZ9mZWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.214])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4TJSPD1XFWz1FJd3;
+	Mon, 22 Jan 2024 19:17:36 +0800 (CST)
+Received: from kwepemd100002.china.huawei.com (unknown [7.221.188.184])
+	by mail.maildlp.com (Postfix) with ESMTPS id 9CF951A016C;
+	Mon, 22 Jan 2024 19:21:40 +0800 (CST)
+Received: from M910t.huawei.com (10.110.54.157) by
+ kwepemd100002.china.huawei.com (7.221.188.184) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.2.1258.28; Mon, 22 Jan 2024 19:21:11 +0800
+From: Changbin Du <changbin.du@huawei.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>
+CC: Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin
+	<alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Namhyung
+ Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, Adrian Hunter
+	<adrian.hunter@intel.com>, <linux-kernel@vger.kernel.org>,
+	<linux-perf-users@vger.kernel.org>, Andi Kleen <ak@linux.intel.com>, Thomas
+ Richter <tmricht@linux.ibm.com>, <changbin.du@gmail.com>, Changbin Du
+	<changbin.du@huawei.com>
+Subject: [PATCH v5 4/5] perf: script: add raw|disasm arguments to --insn-trace option
+Date: Mon, 22 Jan 2024 19:20:53 +0800
+Message-ID: <20240122112054.1576835-5-changbin.du@huawei.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240122112054.1576835-1-changbin.du@huawei.com>
+References: <20240122112054.1576835-1-changbin.du@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240122092338.25047-2-rsalvaterra@gmail.com> <0b6f3998-135f-4059-a8a8-e924281353f8@linux.intel.com>
-In-Reply-To: <0b6f3998-135f-4059-a8a8-e924281353f8@linux.intel.com>
-From: Rui Salvaterra <rsalvaterra@gmail.com>
-Date: Mon, 22 Jan 2024 11:21:40 +0000
-Message-ID: <CALjTZvZoH-+yZz5Z7237rhM5BxknFbG_Bt-dkperpgfLKfcAuQ@mail.gmail.com>
-Subject: Re: [PATCH] ALSA: hda: Increase default bdl_pos_adj for Apollo Lake
-To: =?UTF-8?B?QW1hZGV1c3ogU8WCYXdpxYRza2k=?= <amadeuszx.slawinski@linux.intel.com>
-Cc: tiwai@suse.com, linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemd100002.china.huawei.com (7.221.188.184)
 
-Hi, Amadeusz,
+Now '--insn-trace' accept a argument to specify the output format:
+  - raw: display raw instructions.
+  - disasm: display mnemonic instructions (if capstone is installed).
 
-On Mon, 22 Jan 2024 at 11:05, Amadeusz S=C5=82awi=C5=84ski
-<amadeuszx.slawinski@linux.intel.com> wrote:
->
+$ sudo perf script --insn-trace=raw
+              ls 1443864 [006] 2275506.209908875:      7f216b426100 _start+0x0 (/usr/lib/x86_64-linux-gnu/ld-2.31.so) insn: 48 89 e7
+              ls 1443864 [006] 2275506.209908875:      7f216b426103 _start+0x3 (/usr/lib/x86_64-linux-gnu/ld-2.31.so) insn: e8 e8 0c 00 00
+              ls 1443864 [006] 2275506.209908875:      7f216b426df0 _dl_start+0x0 (/usr/lib/x86_64-linux-gnu/ld-2.31.so) insn: f3 0f 1e fa
 
-[snipped]
+$ sudo perf script --insn-trace=disasm
+              ls 1443864 [006] 2275506.209908875:      7f216b426100 _start+0x0 (/usr/lib/x86_64-linux-gnu/ld-2.31.so)		movq %rsp, %rdi
+              ls 1443864 [006] 2275506.209908875:      7f216b426103 _start+0x3 (/usr/lib/x86_64-linux-gnu/ld-2.31.so)		callq _dl_start+0x0
+              ls 1443864 [006] 2275506.209908875:      7f216b426df0 _dl_start+0x0 (/usr/lib/x86_64-linux-gnu/ld-2.31.so)	illegal instruction
+              ls 1443864 [006] 2275506.209908875:      7f216b426df4 _dl_start+0x4 (/usr/lib/x86_64-linux-gnu/ld-2.31.so)	pushq %rbp
+              ls 1443864 [006] 2275506.209908875:      7f216b426df5 _dl_start+0x5 (/usr/lib/x86_64-linux-gnu/ld-2.31.so)	movq %rsp, %rbp
+              ls 1443864 [006] 2275506.209908875:      7f216b426df8 _dl_start+0x8 (/usr/lib/x86_64-linux-gnu/ld-2.31.so)	pushq %r15
 
-> And seems like I've missed some IDs, when doing PCI IDs conversion.
-> Anyway, can you use PCI_DEVICE_ID_INTEL_HDA_APL instead of 0x5a98 as it
-> is self describing (no need for comment)?
+Signed-off-by: Changbin Du <changbin.du@huawei.com>
 
-Oh, of course! I would have done it if I knew we had those constants define=
-d. :)
+---
+v2:
+  - update Documentation (Adrian Hunter)
+---
+ tools/perf/Documentation/perf-script.txt |  7 ++++---
+ tools/perf/builtin-script.c              | 17 +++++++++++++----
+ 2 files changed, 17 insertions(+), 7 deletions(-)
 
-> And if you want more patches in kernel - convert first 0x0f04 & 0x2284
-> to PCI_DEVICE_ID_INTEL_HDA_BYT & PCI_DEVICE_ID_INTEL_HDA_BSW and then do
-> the above change ;)
+diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
+index 578fa59f51a5..005e51df855e 100644
+--- a/tools/perf/Documentation/perf-script.txt
++++ b/tools/perf/Documentation/perf-script.txt
+@@ -442,9 +442,10 @@ include::itrace.txt[]
+ 	will be printed. Each entry has function name and file/line. Enabled by
+ 	default, disable with --no-inline.
+ 
+---insn-trace::
+-	Show instruction stream for intel_pt traces. Combine with --xed to
+-	show disassembly.
++--insn-trace[=<raw|disasm>]::
++	Show instruction stream in bytes (raw) or disassembled (disasm)
++	for intel_pt traces. The default is 'raw'. To use xed, combine
++	'raw' with --xed to show disassembly done by xed.
+ 
+ --xed::
+ 	Run xed disassembler on output. Requires installing the xed disassembler.
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index 4ac9670704ff..fd684293d4d9 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -3769,10 +3769,19 @@ static int perf_script__process_auxtrace_info(struct perf_session *session,
+ #endif
+ 
+ static int parse_insn_trace(const struct option *opt __maybe_unused,
+-			    const char *str __maybe_unused,
+-			    int unset __maybe_unused)
++			    const char *str, int unset __maybe_unused)
+ {
+-	parse_output_fields(NULL, "+insn,-event,-period", 0);
++	const char *fields = "+insn,-event,-period";
++
++	if (str) {
++		if (strcmp(str, "disasm") == 0)
++			fields = "+disasm,-event,-period";
++		else if (strlen(str) != 0 && strcmp(str, "raw") != 0) {
++			fprintf(stderr, "Only accept raw|disasm\n");
++			return -EINVAL;
++		}
++	}
++	parse_output_fields(NULL, fields, 0);
+ 	itrace_parse_synth_opts(opt, "i0ns", 0);
+ 	symbol_conf.nanosecs = true;
+ 	return 0;
+@@ -3918,7 +3927,7 @@ int cmd_script(int argc, const char **argv)
+ 		   "only consider these symbols"),
+ 	OPT_INTEGER(0, "addr-range", &symbol_conf.addr_range,
+ 		    "Use with -S to list traced records within address range"),
+-	OPT_CALLBACK_OPTARG(0, "insn-trace", &itrace_synth_opts, NULL, NULL,
++	OPT_CALLBACK_OPTARG(0, "insn-trace", &itrace_synth_opts, NULL, "raw|disasm",
+ 			"Decode instructions from itrace", parse_insn_trace),
+ 	OPT_CALLBACK_OPTARG(0, "xed", NULL, NULL, NULL,
+ 			"Run xed disassembler on output", parse_xed),
+-- 
+2.25.1
 
-Killing magic numbers is always a worthwhile goal. Expect a two-patch
-series soon, then. ;)
-
-Cheers,
-Rui
