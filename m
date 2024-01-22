@@ -1,115 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E7567C0A1;
-	Mon, 22 Jan 2024 15:08:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C6563E46E
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 15:09:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705936134; cv=none; b=lcHeLW+TNgbCVhm+54Rv1u9js0/CuxfjGbLwUhAbuz7PB8XqNP3uTNxf8b1WhKokYQ/JGn6bpowN+JFfzv7q/WgGZfQXdKcMguE1OgflnbFiVeEfA0/BxUes0LBLkRpb27q2g0RLEWl0QCSCGEKa3g3d3WcCRu4KqaR7G/e+voM=
+	t=1705936186; cv=none; b=hBhPrXQaf5l04XZLxkpZn/kKbw+XM/J4Zu5aHsO4OrAbJ6+eOeSd4r6scw5BQ1xEHlpDsXJ2mJtXuGniCo1YZyPi9XNMaLROB10oBCWiy9E4DMmRwHv1e2LSEcJYNMUE4f04o09synzV6YTEp6CWmbmEG8JEpC5XQh++3+AYfhU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705936134; c=relaxed/simple;
-	bh=+7yMAS4xP5XSO3RKSbVhBlgHnIRgyQSydZSIP0R+ByI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kNP/KaLHBxC2B9rKyvHZOALAqs2/4DSw1BkTIHDZt+V/W6vPMj8SKZi7KwdmQQwT4UI3tMTXlxPwozoq1j2PG3VnL8hP4R2Sbc3ryE4x80qRYXzCz0JzVmoCzLaPQQqsmpYa/jLsFb1qrwxSOIsgRdryeQDBVhvsV56BU/SS/m4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vNDuuhjT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1705936186; c=relaxed/simple;
+	bh=jRrHgiEv5YrpuZPjYjnGtdk6oRN9GqngHkVDqIa9fq4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hPW9r4JS//PpQLFEAK7ih0OZiY1COLKUa8+81YCmT65fRiG2jZb3mKoTOaDitAYyvIl9tA/4U4AlVYZQzbnZTJfv5RvnOWn/IQCayK/Kv3jrv0OAyogicywhbOiLApwTT+qUIrREVGCYR3eu+qrJsgoLi+GWhrCGsDbm1fIj9lo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=eKQrMPZE; arc=none smtp.client-ip=209.85.208.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vNDuuhjT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B10BC43394;
-	Mon, 22 Jan 2024 15:08:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705936133;
-	bh=+7yMAS4xP5XSO3RKSbVhBlgHnIRgyQSydZSIP0R+ByI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=vNDuuhjT0uQuLRCMJ0zdpQWXah6xNqBj2NcD8Ob8sA/V4UgPE1H42hT/nLauR2uRY
-	 SAL6N7tK/iXYpk1FDwoYA/WGHCp/OMi8P+3f7R5YlHg1HVGKp6rueTvWWe0IdSJDut
-	 zKOP024xiNRjY3kPs6WYQ8pkf/896cUzWhpgU379CzVF878wcQI4zW948JIOgnmIOq
-	 5MATaWdo3xUev+KPNnLwqg8ANzFKG9Y0QrY5Jup9yH/wEZSh1i90YtjYlHW+DE1AlB
-	 0hvWSCzhwpKyfr9vu2Ihr8VsbYe97orbGLRVhsT45+PVbKWCY8ks5y2aVTTqMksFut
-	 G4fqPnggYG0XA==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Namjae Jeon <linkinjeon@kernel.org>,
-	Steve French <stfrench@microsoft.com>,
-	Sasha Levin <sashal@kernel.org>,
-	sfrench@samba.org,
-	linux-cifs@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.6 73/73] ksmbd: send lease break notification on FILE_RENAME_INFORMATION
-Date: Mon, 22 Jan 2024 10:02:27 -0500
-Message-ID: <20240122150432.992458-73-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240122150432.992458-1-sashal@kernel.org>
-References: <20240122150432.992458-1-sashal@kernel.org>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="eKQrMPZE"
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2cd04078ebeso42062561fa.1
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 07:09:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1705936183; x=1706540983; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=j6qCq9mjgzXIcyyu8Xldo3rtV6iy8jAQllHcjOflIOk=;
+        b=eKQrMPZEGyYeZtG2vgzfUwhqS92QzC99jymhERUWJJ5uO5ohRoluqqQJOnVDyCzv8z
+         J4CsTHr1ONmE6UPX+Z67J2E79uZK26VSSnfEguFyQcDYH9UQmA3FnwLiiqFVAKFEI77z
+         ttK9GwubKIkz6jVYh6lIw8ZF/ASMdU8SxRAWo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705936183; x=1706540983;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=j6qCq9mjgzXIcyyu8Xldo3rtV6iy8jAQllHcjOflIOk=;
+        b=LDRjz2jYYRnvYafcvKPOacOLm4kc7Ev+Ix2D5b+m2XjO9AP14tvI9M0n/bnJ/575O0
+         61o9/EX8ct0Cuulw1RtGhl92U+pogOE78qlmOHsEL2KS7LVphGM6J6qcF54fNDchAQbm
+         3AL54lPvEyHlosbu7ojY2V/jh2YN7IAD3b5Ti1zvXsBBCqVxn6zoXZFkDrGdHAL8ePCf
+         oABn9m1quU07Jda0M6k/CRVW2n0N8txrX+ziSUxG/zsbAt7+7VBbW5+b9STpTz/dO8cn
+         F9720c5rXihhwmpgO73UHx8+LeUBMFeikN0PryCDh4lTIw+ozlIuOgOODHHJiRff+7mE
+         P5Vg==
+X-Gm-Message-State: AOJu0Yz3uNRaW+vN5qyzPRDiVn5CRRUdllF3L4T6A3GUGP7r5WNEHGsT
+	YuYEz8WZejlQTF/qefJ9jL7hn4QanROEnBN242iyy8bZyq2Wjdv9PuYSrZMIVoAEe3JbfbrPZE2
+	iFPynBc+O0HlvpGA6nnf8rT0wBultq8LtVqdV
+X-Google-Smtp-Source: AGHT+IH5Di7gCKwIzxDI07ur5JWxCa0Zy2fz4w+FDojoTf5Vohxn0BkqSkHrzamnSL2FdOcvdK/g7QH5prbur3jeycY=
+X-Received: by 2002:a2e:a408:0:b0:2ce:fd80:210b with SMTP id
+ p8-20020a2ea408000000b002cefd80210bmr890160ljn.3.1705936183235; Mon, 22 Jan
+ 2024 07:09:43 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.6.13
-Content-Transfer-Encoding: 8bit
+References: <20240119084328.3135503-1-lma@chromium.org> <20240119084328.3135503-3-lma@chromium.org>
+ <1e7b8590-7dc7-47a8-8105-6d01db627f85@kernel.org>
+In-Reply-To: <1e7b8590-7dc7-47a8-8105-6d01db627f85@kernel.org>
+From: =?UTF-8?Q?=C5=81ukasz_Majczak?= <lma@chromium.org>
+Date: Mon, 22 Jan 2024 16:09:32 +0100
+Message-ID: <CAE5UKNqF1h5SCrVEjGR_5jeDZGBkbSZGxZTJ39Wb2vONHLdk2Q@mail.gmail.com>
+Subject: Re: [PATCH v3 2/3] watchdog: Add ChromeOS EC-based watchdog driver
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Gwendal Grignou <gwendal@chromium.org>, Tzung-Bi Shih <tzungbi@kernel.org>, 
+	Radoslaw Biernacki <biernacki@google.com>, Wim Van Sebroeck <wim@linux-watchdog.org>, 
+	Lee Jones <lee@kernel.org>, Benson Leung <bleung@chromium.org>, 
+	Guenter Roeck <groeck@chromium.org>, linux-watchdog@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, chrome-platform@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Namjae Jeon <linkinjeon@kernel.org>
+On Mon, Jan 22, 2024 at 11:31=E2=80=AFAM Krzysztof Kozlowski <krzk@kernel.o=
+rg> wrote:
+> > +     wdd =3D devm_kzalloc(&pdev->dev, sizeof(struct watchdog_device), =
+GFP_KERNEL);
+>
+> sizeof(*)
+>
+ACK.
 
-[ Upstream commit 3fc74c65b367476874da5fe6f633398674b78e5a ]
+> > +MODULE_DEVICE_TABLE(platform, cros_ec_wdt_id);
+>
+> device_id is not placed here, please open existing drivers for
+> reference. Why this isn't referenced in driver structure?
+>
+ACK, I will take s3c2410_wdt.c as an example, thank you.
 
-Send lease break notification on FILE_RENAME_INFORMATION request.
-This patch fix smb2.lease.v2_epoch2 test failure.
-
-Signed-off-by: Namjae Jeon <linkinjeon@kernel.org>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- fs/smb/server/oplock.c  | 9 +++++++--
- fs/smb/server/smb2pdu.c | 1 +
- 2 files changed, 8 insertions(+), 2 deletions(-)
-
-diff --git a/fs/smb/server/oplock.c b/fs/smb/server/oplock.c
-index 9a19d8b06c8c..6bf2b675add9 100644
---- a/fs/smb/server/oplock.c
-+++ b/fs/smb/server/oplock.c
-@@ -546,6 +546,7 @@ static struct oplock_info *same_client_has_lease(struct ksmbd_inode *ci,
- 			     atomic_read(&ci->sop_count)) == 1) {
- 				if (lease->state != SMB2_LEASE_NONE_LE &&
- 				    lease->state == (lctx->req_state & lease->state)) {
-+					lease->epoch++;
- 					lease->state |= lctx->req_state;
- 					if (lctx->req_state &
- 						SMB2_LEASE_WRITE_CACHING_LE)
-@@ -556,13 +557,17 @@ static struct oplock_info *same_client_has_lease(struct ksmbd_inode *ci,
- 				    atomic_read(&ci->sop_count)) > 1) {
- 				if (lctx->req_state ==
- 				    (SMB2_LEASE_READ_CACHING_LE |
--				     SMB2_LEASE_HANDLE_CACHING_LE))
-+				     SMB2_LEASE_HANDLE_CACHING_LE)) {
-+					lease->epoch++;
- 					lease->state = lctx->req_state;
-+				}
- 			}
- 
- 			if (lctx->req_state && lease->state ==
--			    SMB2_LEASE_NONE_LE)
-+			    SMB2_LEASE_NONE_LE) {
-+				lease->epoch++;
- 				lease_none_upgrade(opinfo, lctx->req_state);
-+			}
- 		}
- 		read_lock(&ci->m_lock);
- 	}
-diff --git a/fs/smb/server/smb2pdu.c b/fs/smb/server/smb2pdu.c
-index ede6d8ec04d8..51f3597101c9 100644
---- a/fs/smb/server/smb2pdu.c
-+++ b/fs/smb/server/smb2pdu.c
-@@ -5569,6 +5569,7 @@ static int smb2_rename(struct ksmbd_work *work,
- 	if (!file_info->ReplaceIfExists)
- 		flags = RENAME_NOREPLACE;
- 
-+	smb_break_all_levII_oplock(work, fp, 0);
- 	rc = ksmbd_vfs_rename(work, &fp->filp->f_path, new_name, flags);
- out:
- 	kfree(new_name);
--- 
-2.43.0
-
+Best regards,
+Lukasz
