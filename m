@@ -1,130 +1,142 @@
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8288629FC
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 17:25:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1E6C62A1B
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 17:25:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705944337; cv=none; b=Rg64aoK8UadSM2M8g5c5e+q3oihNMLjEWH1NI0oIl7/9BgVgOJlXTqMy/KFjg3O/WFCjRXcZO2HkS9dE9j+0D16Xrn4MW8dUEU5TDuhxrQtBCZ2OphqRSyTF63jFqnCyPE/YCftsKDp9qzNozJ+n5fshDyeIdxWXJXZcnnUMSEg=
+	t=1705944340; cv=none; b=gJB5vATDPuzJqRNU2FfemxH0zl/5rNukYYL0+YbnswkCIQzV9BTFlnOe7xbDYpjXfSglV4BmUq0w3u+3LPOnt6wncvqg7Me79CseC5hGsF/mTJMzQGNCiorwV0d/u/F4V/75Vklewe+RoNVAu7/biL9ihPzo9pyxFPuzWUxL3P4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705944337; c=relaxed/simple;
-	bh=gCpxvZ3Cr8PY8P8B+/AhrkttFfZIceXbRbsl7hJtitE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=B8exwAihtEPiITXhl3dOlUhdAUhTh2wLK8k0XaWwI/7zmh7eOwvzNXdDVLmG/sjSXy1xP95qy1rKvWH4QCmyNoAcY7/OPpPfgL0uzzjgqclkBoKgIWRHf54OXPswBrRmm1EElBEelhDpGBCkEIAWaAt6gQuh0s1HY0MILz0FwSc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=V6fINjAq; arc=none smtp.client-ip=209.85.210.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1705944340; c=relaxed/simple;
+	bh=W4mJLP2iaxCUp7jWQvTVdyu+M70cTTTVM83ZPvkZy40=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=DX7qG71he/Di7IhXW9aTmUEnzTe3Gxfr8ZxDiPb4ihFloFHm8TIKhndsyiBbm8LK9x5YnT2+f2/RhEtMO+wZGuWfPYIyzwzBa91QhbpjQTkBVSPqChDkgVb77pPGZc5XQap6Jb1lY1GCZ0TI11kNbzH/SKTXjfSqRFs4W39VBPM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TuODnOtj; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="V6fINjAq"
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-6dbce74f917so1017358b3a.0
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TuODnOtj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1705944337;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Jvd6d1nUhV9LrU5f+xXncvSCqH2blthYX1l8ESnZEkg=;
+	b=TuODnOtjCTi+AEZli7hF78l0Y6RJcAD+KjqBiqhv3UQfK2YmFw4Oicmmy2I0DvPnEyHT5f
+	hnBVNG2Vg1m9HgCoEyqqphbJBc4DW8DfnhOuNu4wBGnNmleqAA1JD8/2c1p4Sj6ue7Hasi
+	ygEl8LXjQVJcDjZRIQ5+jpNzW5islrI=
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
+ [209.85.222.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-324-JxYtus6YN5CcpEvL9Y6N1Q-1; Mon, 22 Jan 2024 12:25:35 -0500
+X-MC-Unique: JxYtus6YN5CcpEvL9Y6N1Q-1
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-781d8e14fd8so532084285a.3
         for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 09:25:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1705944335; x=1706549135; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=FDs5RA9l/1YLjMhJ9/RhnqWe/iFg+T34uR8dnP0JYX4=;
-        b=V6fINjAqQDFSlLl/pgb9PtlLhcbrf3wsV3UwEdNDr/RO3tTg9obUPIU95P0pG+nipG
-         sTzBMMn7RBfoP0Xuu7p8gg16GxeUuxDesUJCxJw1dhfipaQtRDN0dSi0e5PP6rwd/X3l
-         zGFDI/3z2IzthzKSLVnUqF/p5OQPm63fE63ehdGBnuuhyNrkuKN70klKnaHVywTQ7h+x
-         SVRumG537VZJbisWOdkaTTCnTx7onD63GAk1qb27efeOMHxUE6m6Wl2TU+20Dd0earPa
-         W+e5PC6KISDcPeooGcFTXZtD2ueFew2Q/yuXqyYTF0nTBfuTn5cwiAULcew65bp2QEnT
-         GJlw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705944335; x=1706549135;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=FDs5RA9l/1YLjMhJ9/RhnqWe/iFg+T34uR8dnP0JYX4=;
-        b=PpxwwpbkAqBWX6lHv/Y+pG6yyi8a5248fto2EnPoVAD9UmQqHvaSZ4bdFcM5uUuGd3
-         LDsRKUsIV2mJ0h9BH/GqwMkIsO5i3p4GCHn4CO3hc2o2BLpgBelrtJLa3fSyacKo9Gc4
-         lf2lkKdObDm8tDP9t+iDELk+iUzgTqMiGa5L2+QehwT34jymqlK8MBm/kQFswQ0tNVYk
-         KNH3Vdnl3B1ntEkHDnX6aZC8OSGtaZ7XWDtddiApCoS6qsYkbgl5pjZ6vXUlUbck5g3p
-         o9Wk5hDPgsUmUau8tLQWsU3INKSDFX22iN7fbWv7w/UVsI5pik2RoEo/sKVcVT0od+hK
-         7X0Q==
-X-Gm-Message-State: AOJu0YxI53JRb6AVSU9X12sZA7bycEim6Jz2kqXDO0f/3ynToBaS5UDl
-	IWzMc2PwKmKtcEu3OMa/Rcd2mz/vjUF0YKCn4fbQYBPxgVm0Rs6XtDqwhDVRQQ==
-X-Google-Smtp-Source: AGHT+IGaWgbzrTPeDp6/8A8YcX7oqDjO3MT5GsSJh1yK79sQrbwCwjkt/1tC82IwjEynZJ3VA6iy8A==
-X-Received: by 2002:a05:6a20:11a6:b0:19a:63:70dd with SMTP id v38-20020a056a2011a600b0019a006370ddmr1362052pze.36.1705944335124;
-        Mon, 22 Jan 2024 09:25:35 -0800 (PST)
-Received: from thinkpad ([120.56.197.174])
-        by smtp.gmail.com with ESMTPSA id h3-20020a056a00218300b006dbd341379dsm3749903pfi.68.2024.01.22.09.25.30
+        d=1e100.net; s=20230601; t=1705944315; x=1706549115;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Jvd6d1nUhV9LrU5f+xXncvSCqH2blthYX1l8ESnZEkg=;
+        b=ktba5ZMfrL8EH8gQ2GwP7TJrDsARKGsBqfWqa4p3982NL4Ok2ABoZcfpOOul492KGS
+         fi68qu8YosJi5TjbrnMezre+hGxRbk8zT+91kv6ApHIdU9MQEowQC9eZfDLwn0Z+WuJb
+         nk8Ww3IZZBi62Smh1tO8x92ZiCP+FJuX6gRXjHKIyHUa+S+6Nresiwn8mGeVMefFqsM5
+         3o0hztwgx80EPT+SX8rqNhqdpOkY+oZF8Lyb7uSbKp1BJvN2aaH7rmtx8bOAXaq6DXlL
+         +vwp/nEvmysVWet9OUZWIsrfOygt09DExfkX9vGS7lb1czry6ieolGlgTCHnj4cVESUn
+         NqJw==
+X-Gm-Message-State: AOJu0YzDG+iUoFztxJgSZftqOSozcHeT4YbwtjOo5aLDKRc0a8oiSDWX
+	b4iA/4+7Ly2jOBOyHHCSitwmZpi3ssysOcb+O5OsBaagCmBRjM/MqNczSRpuKaz4A+r/7jK31JJ
+	bpA8mYh4UGJ7uCIx7NrjgmAo/mD1lTyuTC5cBhyJmJ/hcH3hh1WvlEW/UnVMb/A==
+X-Received: by 2002:a05:620a:8212:b0:783:375d:452c with SMTP id ow18-20020a05620a821200b00783375d452cmr5390428qkn.33.1705944314858;
+        Mon, 22 Jan 2024 09:25:14 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGoliCfOOS1LOszyII+v7aqIDivdgIeZaJ30/Z5vvVM98B2l3IKb8HadDNAIgovxwuK2kQKjA==
+X-Received: by 2002:a05:620a:8212:b0:783:375d:452c with SMTP id ow18-20020a05620a821200b00783375d452cmr5390410qkn.33.1705944314547;
+        Mon, 22 Jan 2024 09:25:14 -0800 (PST)
+Received: from fedora.redhat.com ([2600:1700:1ff0:d0e0::37])
+        by smtp.gmail.com with ESMTPSA id c7-20020a05620a200700b00781ae860c31sm2280992qka.70.2024.01.22.09.25.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jan 2024 09:25:34 -0800 (PST)
-Date: Mon, 22 Jan 2024 22:55:28 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Johan Hovold <johan@kernel.org>
-Cc: Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Mon, 22 Jan 2024 09:25:14 -0800 (PST)
+From: Andrew Halaney <ahalaney@redhat.com>
+To: Andy Gross <agross@kernel.org>,
 	Bjorn Andersson <andersson@kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Johan Hovold <johan+linaro@kernel.org>,
-	Marijn Suijten <marijn.suijten@somainline.org>,
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Manivannan Sadhasivam <mani@kernel.org>,
+	"James E.J. Bottomley" <jejb@linux.ibm.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	Hannes Reinecke <hare@suse.de>,
+	Janek Kotas <jank@cadence.com>,
+	Alim Akhtar <alim.akhtar@samsung.com>,
+	Avri Altman <avri.altman@wdc.com>,
+	Bart Van Assche <bvanassche@acm.org>,
+	Can Guo <quic_cang@quicinc.com>
+Cc: Andrew Halaney <ahalaney@redhat.com>,
+	Will Deacon <will@kernel.org>,
+	linux-arm-msm@vger.kernel.org,
+	linux-scsi@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Konrad Dybcio <konrad.dybcio@somainline.org>
-Subject: Re: [PATCH 1/3] arm64: dts: qcom: sc8280xp: Fix PCIe PHY
- power-domains
-Message-ID: <20240122172528.GE3176@thinkpad>
-References: <20231227-topic-8280_pcie_dts-v1-0-13d12b1698ff@linaro.org>
- <20231227-topic-8280_pcie_dts-v1-1-13d12b1698ff@linaro.org>
- <ZY6sh8nlEUyEfL0u@hovoldconsulting.com>
- <20231229170334.GA9098@thinkpad>
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH RFC v4 08/11] scsi: ufs: core: Perform read back after
+ disabling interrupts
+Date: Mon, 22 Jan 2024 11:24:04 -0600
+Message-ID: <20240122-ufs-reset-ensure-effect-before-delay-v4-8-90a54c832508@redhat.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240122-ufs-reset-ensure-effect-before-delay-v4-0-90a54c832508@redhat.com>
+References: <20240122-ufs-reset-ensure-effect-before-delay-v4-0-90a54c832508@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20231229170334.GA9098@thinkpad>
+Content-Type: text/plain; charset="utf-8"
+X-Mailer: b4 0.12.3
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Dec 29, 2023 at 10:33:34PM +0530, Manivannan Sadhasivam wrote:
-> On Fri, Dec 29, 2023 at 12:24:55PM +0100, Johan Hovold wrote:
-> > On Wed, Dec 27, 2023 at 11:28:26PM +0100, Konrad Dybcio wrote:
-> > > The PCIe GDSCs are only related to the RCs. The PCIe PHYs on the other
-> > > hand, are powered by VDD_MX and their specific VDDA_PHY/PLL regulators.
-> > 
-> > No, that does not seem to be entirely correct. I added the power-domains
-> > here precisely because they were needed to enable the PHYs.
-> > 
-> > This is something I stumbled over when trying to figure out how to
-> > add support for the second lane pair (i.e. four-lane mode), and I just
-> > went back and confirmed that this is still the case.
-> > 
-> > If you try to enable one of these PHYs without the corresponding GDSC
-> > being enabled, you end up with:
-> > 
-> > [   37.709324] ------------[ cut here ]------------
-> > [   37.718196] gcc_pcie_3b_aux_clk status stuck at 'off'
-> > [   37.718205] WARNING: CPU: 4 PID: 482 at drivers/clk/qcom/clk-branch.c:86 clk_branch_wait+0x144/0x15c
-> > 	
-> 
-> Technically this patch is correct. PHYs are backed by MX domain only and not
-> GDSCs. Only the controllers (PCIe, UFS, USB) are backed by GDSCs. The fact that
-> you are seeing issue with PCIe Aux clock suggests me that this clock may not be
-> applicable to the PHY but it needs to be enabled for working of the PHY somehow.
-> I'll try to find the details on how exactly it is needed.
-> 
-> But if I get the answer like, "This clock is also sourced to PHY directly", then
-> we may need to add dual power domain for PHY (both GDSC and MX).
-> 
+Currently, interrupts are cleared and disabled prior to registering the=0D
+interrupt. An mb() is used to complete the clear/disable writes before=0D
+the interrupt is registered.=0D
+=0D
+mb() ensure that the write completes, but completion doesn't mean that=0D
+it isn't stored in a buffer somewhere. The recommendation for=0D
+ensuring these bits have taken effect on the device is to perform a read=0D
+back to force it to make it all the way to the device. This is=0D
+documented in device-io.rst and a talk by Will Deacon on this can=0D
+be seen over here:=0D
+=0D
+    https://youtu.be/i6DayghhA8Q?si=3DMiyxB5cKJXSaoc01&t=3D1678=0D
+=0D
+Let's do that to ensure these bits hit the device. Because the mb()'s=0D
+purpose wasn't to add extra ordering (on top of the ordering guaranteed=0D
+by writel()/readl()), it can safely be removed.=0D
+=0D
+Fixes: 199ef13cac7d ("scsi: ufs: avoid spurious UFS host controller interru=
+pts")=0D
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>=0D
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>=0D
+Reviewed-by: Can Guo <quic_cang@quicinc.com>=0D
+Signed-off-by: Andrew Halaney <ahalaney@redhat.com>=0D
+---=0D
+ drivers/ufs/core/ufshcd.c | 2 +-=0D
+ 1 file changed, 1 insertion(+), 1 deletion(-)=0D
+=0D
+diff --git a/drivers/ufs/core/ufshcd.c b/drivers/ufs/core/ufshcd.c=0D
+index e2e6002fe46a..9b6355555897 100644=0D
+--- a/drivers/ufs/core/ufshcd.c=0D
++++ b/drivers/ufs/core/ufshcd.c=0D
+@@ -10564,7 +10564,7 @@ int ufshcd_init(struct ufs_hba *hba, void __iomem *=
+mmio_base, unsigned int irq)=0D
+ 	 * Make sure that UFS interrupts are disabled and any pending interrupt=0D
+ 	 * status is cleared before registering UFS interrupt handler.=0D
+ 	 */=0D
+-	mb();=0D
++	ufshcd_readl(hba, REG_INTERRUPT_ENABLE);=0D
+ =0D
+ 	/* IRQ registration */=0D
+ 	err =3D devm_request_irq(dev, irq, ufshcd_intr, IRQF_SHARED, UFSHCD, hba)=
+;=0D
+=0D
+-- =0D
+2.43.0=0D
+=0D
 
-So I answer I got from Qcom is that this clock is only applicable to the PCIe
-controller and not PHYs. On some platforms, there is a separate PCIE_PHY_AUX_CLK
-coming from GCC that is used during L1SS state. I think that caused confusion
-while adding PHY support for followup platforms and folks just used PCIE_AUX_CLK
-since they couldn't find the actual PCIE_PHY_AUX_CLK.
-
-I've prepared a series to fix this mess, but I want to know how you end up
-seeing the above "clk status stuck at off" issue. Is there an actual usecase for
-powering up PHY without controller or you just experimented with it?
-
-- Mani
-
--- 
-மணிவண்ணன் சதாசிவம்
