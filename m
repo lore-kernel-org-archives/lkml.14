@@ -1,224 +1,106 @@
-Received: from mail-oi1-f177.google.com (mail-oi1-f177.google.com [209.85.167.177])
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3243F3A1C4;
-	Mon, 22 Jan 2024 10:01:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8642839FD9;
+	Mon, 22 Jan 2024 10:02:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705917692; cv=none; b=Vwx1MaTsjDjovGElRtKSKULhhnR2DiOn+s6YlK4+VnTxkD+ZiD0pNsfsbji2iBTncIQiDfiSTGRfjiosJeXCpixTKgxk7Z0wFeRGIJ+s1BTZlBB2uyWC2GkwyjfSSrwtlu9B7D7leVjZFSo/HKC1S3tRQNvUdKn44CSUMEOzuX8=
+	t=1705917762; cv=none; b=R+DBXnLNdIUSOB46ipNoUF7QNSSuS7fLLYVPuVsvLCWwuREHWlwjXDqJgkp5lzTKeIxB9JL7H1+DIycUQUVxCs1m7eahFz8hlIjJZQKzbTYYh60MwVl0PWmhV/DfUone42WDFoXiglF0PqbFG1UHG+h6op3HGfPn0NqnCqejSc4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705917692; c=relaxed/simple;
-	bh=par0s2/VB3PZb6zfUVdv76/hqB2EQCB+kqfg2eI327g=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hcjs1uLSNmQPpIrAROW8+t5Mh7xsCHWg5MLa5anXnJWPedfo8Zm8DY+bEw+T0JYOj0jypduSHtAnx2h4/JO7J8wmZzGx9Hhd+yiXz2uJwsPy6yf1oi8E/D9rirVkMINctfXf4pN7DlFoVMCp9StMhW2NTObdRwdJRO2fZg7/5GI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NpRh68VT; arc=none smtp.client-ip=209.85.167.177
+	s=arc-20240116; t=1705917762; c=relaxed/simple;
+	bh=UH0mdAbH8q5JrDsA2LzVVD1Mcxs8cBxlGirxEvwPeAg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rgU4Wqrx80A12r3l9mggnUk9AwB/vaxmSOOc6dSZLDRSqw6sNFonoruI+NQM7TG8GdGAoscqP+66hGrNX76iKbpSJKsmpZ97+3aZiXbchVJ2dY7d+ZpF8PyDswC92iDM8mN3mrqkCDF78QLwyb6SS6xLAcHFNj0h3pNmvmNldqM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hFtMbXEl; arc=none smtp.client-ip=209.85.128.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NpRh68VT"
-Received: by mail-oi1-f177.google.com with SMTP id 5614622812f47-3bd6581bc66so2435140b6e.1;
-        Mon, 22 Jan 2024 02:01:30 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hFtMbXEl"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-40e913e3f03so38052965e9.3;
+        Mon, 22 Jan 2024 02:02:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705917689; x=1706522489; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=jmK0iTzIamZUy8Q6FsKiVw6nKFNkw/aS4IZNRbQfRFc=;
-        b=NpRh68VTBxu0OcuNWbLwIhtf4InM8t8+7UEvRpakwzxiYlEUTFZTjS8HflVjGysoqx
-         Dy04r/TgEFhi9YQNmyyV6Ko3E2oz4fElbhQKirAPVBAws5kQpEZFiJa/MXq1gMJwjP07
-         s8a5SkKvb7Kusvk7pNAoHboPpgk1qHDLr+8H6d7D7OScazleWs1ZKmrYn87wWAuiwtWI
-         xoHbKfCirxAXDHY7f5J8dRf07iO2y8OUIIKkruFzz8LIP62A9xfjD+ny0T90pgRsjocq
-         k5S8DFNvlpstGxa9C66yyLCfQZNp33Og4vENDBluBiI53hhpHt+zbTKe0KUX2oW5kiV0
-         29jw==
+        d=gmail.com; s=20230601; t=1705917759; x=1706522559; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=NIKwavFbvvA1J3UDsxgakKoE4Y+95NujtFu74c8W3GQ=;
+        b=hFtMbXEl+9f0CIhL/Qa6Pxd0+uq0054OAa/FW/xOfrk8idhnMN4DE/gE+YCDip/hvJ
+         wbdvisOT5BJnednVjdhw+H7drDQs99flaMT6mnn/BZY33zEeb38ZQoEdGkEUclaq97Mp
+         i++k5NekZMP0vcX2P3fqgHZFQKRDDBP20or5CTALUktOO1md5RfoBYJ14a70DKwF+URj
+         kh2uw4USRDayXlyYC2eWmRtvBp5h1Qd7TT+ypSfAZW4SOYXjPSFcnKE2I3ih2TjOXhHQ
+         CuRWrFrsCVtJ/Pn4BwGsyHMj7lDOCv8KMz1ykAFxsgKiSYkHlmnIRNS30RxyZDw7a60p
+         jH4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705917689; x=1706522489;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=jmK0iTzIamZUy8Q6FsKiVw6nKFNkw/aS4IZNRbQfRFc=;
-        b=TKr9An3cZfspRqMb7BRQtsInD9vnUz3dXWVVeLFN+BE6k5JZBimsSMk38RzT4HkHcB
-         iQ3aOybSIVcBCpPQW9dTvUBPUSzbRs1lSqdSM9h8T7RatCqtQcJBNkfMbRi37KtfcOLz
-         RH7cNvH4XjpYXn4khO6VHWwRRaBfEC+4+BqXABVq56+hKFy1uLYnvBwue2SaEHpxf1/E
-         g5oeCP/gvkSqKEI0xcxdeTgjYs1qwaHaky9r6SImDiMs2s4f0DzhTQAFJu9BO+gGogdq
-         YpUDrqGdpU7Ox/rJ/JuGQusK6+roWzXLXC/PP+tdzRcqF6VFLkFA6hN0wAdHYhSbRzQr
-         v+4g==
-X-Gm-Message-State: AOJu0Yybgn265SMER4Tnyb7xpnPdW72dO2pQlmyNKsTTPkzeZK5MWNAe
-	5q6R93B2g7bU1E229iT6f8aOcWkilaAlj/CwjKbDRCSDJe2U4CXmgcGkTr8xkahOr20KTUUL4+H
-	rPrqY70qEkBUeYH7nX/TeaM4Y7rY=
-X-Google-Smtp-Source: AGHT+IEnx+9HBMlMHgYt1FrpDghvFoADHVcnNxW17UhbjUjQT15Yksx2eGyggNy0P2RCYjudvuc+q96sw6VcjQ5MfUU=
-X-Received: by 2002:a05:6870:a90a:b0:205:c4d8:155a with SMTP id
- eq10-20020a056870a90a00b00205c4d8155amr4334867oab.62.1705917689514; Mon, 22
- Jan 2024 02:01:29 -0800 (PST)
+        d=1e100.net; s=20230601; t=1705917759; x=1706522559;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=NIKwavFbvvA1J3UDsxgakKoE4Y+95NujtFu74c8W3GQ=;
+        b=UT8hCjDLWyjw0IyitsfoeXf8rhhhMFv68gVpMO8GPN/Z57i2TI0KVf4Ooo1GKVlCfl
+         3OEOb41Ee1FOiydnq9g6bD3+ipVw0AYFAunwSxzkOnSItUQhcter+X2MA6ZaAWtxHK92
+         fnOpCPRTfJ2FEwz9VrXTTVTpxF4VKz13qHgnvZB2K8wC4pw6gs/TpheMM0vluNWXt6Ne
+         /hMFtzu+afCOkCxg13QjyK1+2oCmOsO6XbvyUjaZIFPms0Xb4EX9jaUbbGPum+Tsa7Gg
+         PnDjLVZGUyFWNyUuwpb5sOVGEA38OYETKYQLycMr3u+y7/HRcMCkP0wT211gdhETt68U
+         sYOA==
+X-Gm-Message-State: AOJu0YxZD/z4jMoBPawHQIBz/+3F0WcENnd/gwlUS3sKWK2KYQ2CmsHx
+	kYMOX6mP9VB2u2S4fvF5079Gazr5S6nqa0jW0kBtYkSXe7SBr1pr
+X-Google-Smtp-Source: AGHT+IGeyqBOITq8jREpyuTUcxtpiIv0d34MO0QtTVuRNkHPEAXvAHfiSpk4u7R8nGVDsWBOQ04NCg==
+X-Received: by 2002:a05:600c:3ca3:b0:40d:8fe1:2f7d with SMTP id bg35-20020a05600c3ca300b0040d8fe12f7dmr2228289wmb.4.1705917758360;
+        Mon, 22 Jan 2024 02:02:38 -0800 (PST)
+Received: from [172.25.98.130] ([5.2.194.157])
+        by smtp.gmail.com with ESMTPSA id j7-20020a05600c190700b0040e52cac976sm41891825wmq.29.2024.01.22.02.02.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 22 Jan 2024 02:02:37 -0800 (PST)
+Message-ID: <57ea42b3-106b-4361-8d07-4e1656bf6e58@gmail.com>
+Date: Mon, 22 Jan 2024 12:02:35 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240109073849.10791-1-Wenhua.Lin@unisoc.com> <20240109073849.10791-2-Wenhua.Lin@unisoc.com>
-In-Reply-To: <20240109073849.10791-2-Wenhua.Lin@unisoc.com>
-From: Chunyan Zhang <zhang.lyra@gmail.com>
-Date: Mon, 22 Jan 2024 18:00:52 +0800
-Message-ID: <CAAfSe-sVfZ8YNnxK4e1CphnxXOgEZaEfWZFV_CrSZA0nmBrZjA@mail.gmail.com>
-Subject: Re: [PATCH V4 1/2] gpio: eic-sprd: Clear interrupt after set the
- interrupt type
-To: Wenhua Lin <Wenhua.Lin@unisoc.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Andy Shevchenko <andy@kernel.org>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Orson Zhai <orsonzhai@gmail.com>, 
-	Baolin Wang <baolin.wang@linux.alibaba.com>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, wenhua lin <wenhua.lin1994@gmail.com>, 
-	Xiongpeng Wu <xiongpeng.wu@unisoc.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v12 2/2] iio: adc: ad7173: add AD7173 driver
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: linus.walleij@linaro.org, brgl@bgdev.pl, andy@kernel.org,
+ linux-gpio@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
+ Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Michael Walle <michael@walle.cc>,
+ Andy Shevchenko <andy.shevchenko@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
+ ChiaEn Wu <chiaen_wu@richtek.com>, Niklas Schnelle <schnelle@linux.ibm.com>,
+ =?UTF-8?Q?Leonard_G=C3=B6hrs?= <l.goehrs@pengutronix.de>,
+ Mike Looijmans <mike.looijmans@topic.nl>, Haibo Chen <haibo.chen@nxp.com>,
+ Hugo Villeneuve <hvilleneuve@dimonoff.com>,
+ David Lechner <dlechner@baylibre.com>,
+ Ceclan Dumitru <dumitru.ceclan@analog.com>, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240118125001.12809-1-mitrutzceclan@gmail.com>
+ <20240118125001.12809-2-mitrutzceclan@gmail.com>
+ <20240121155041.3fc1a85d@jic23-huawei>
+Content-Language: en-US
+From: Ceclan Dumitru <mitrutzceclan@gmail.com>
+In-Reply-To: <20240121155041.3fc1a85d@jic23-huawei>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, 9 Jan 2024 at 15:39, Wenhua Lin <Wenhua.Lin@unisoc.com> wrote:
->
-> The raw interrupt status of eic maybe set before the interrupt is enabled,
-> since the eic interrupt has a latch function, which would trigger the
-> interrupt event once enabled it from user side. To solve this problem,
-> interrupts generated before setting the interrupt trigger type are ignored.
->
-> Fixes: 25518e024e3a ("gpio: Add Spreadtrum EIC driver support")
-> Signed-off-by: Wenhua Lin <Wenhua.Lin@unisoc.com>
 
-Acked-by: Chunyan Zhang <zhang.lyra@gmail.com>
 
-> ---
->  drivers/gpio/gpio-eic-sprd.c | 32 ++++++++++++++++++++++++++++----
->  1 file changed, 28 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-eic-sprd.c b/drivers/gpio/gpio-eic-sprd.c
-> index be7f2fa5aa7b..806b88d8dfb7 100644
-> --- a/drivers/gpio/gpio-eic-sprd.c
-> +++ b/drivers/gpio/gpio-eic-sprd.c
-> @@ -330,20 +330,27 @@ static int sprd_eic_irq_set_type(struct irq_data *data, unsigned int flow_type)
->                 switch (flow_type) {
->                 case IRQ_TYPE_LEVEL_HIGH:
->                         sprd_eic_update(chip, offset, SPRD_EIC_DBNC_IEV, 1);
-> +                       sprd_eic_update(chip, offset, SPRD_EIC_DBNC_IC, 1);
->                         break;
->                 case IRQ_TYPE_LEVEL_LOW:
->                         sprd_eic_update(chip, offset, SPRD_EIC_DBNC_IEV, 0);
-> +                       sprd_eic_update(chip, offset, SPRD_EIC_DBNC_IC, 1);
->                         break;
->                 case IRQ_TYPE_EDGE_RISING:
->                 case IRQ_TYPE_EDGE_FALLING:
->                 case IRQ_TYPE_EDGE_BOTH:
->                         state = sprd_eic_get(chip, offset);
-> -                       if (state)
-> +                       if (state) {
->                                 sprd_eic_update(chip, offset,
->                                                 SPRD_EIC_DBNC_IEV, 0);
-> -                       else
-> +                               sprd_eic_update(chip, offset,
-> +                                               SPRD_EIC_DBNC_IC, 1);
-> +                       } else {
->                                 sprd_eic_update(chip, offset,
->                                                 SPRD_EIC_DBNC_IEV, 1);
-> +                               sprd_eic_update(chip, offset,
-> +                                               SPRD_EIC_DBNC_IC, 1);
-> +                       }
->                         break;
->                 default:
->                         return -ENOTSUPP;
-> @@ -355,20 +362,27 @@ static int sprd_eic_irq_set_type(struct irq_data *data, unsigned int flow_type)
->                 switch (flow_type) {
->                 case IRQ_TYPE_LEVEL_HIGH:
->                         sprd_eic_update(chip, offset, SPRD_EIC_LATCH_INTPOL, 0);
-> +                       sprd_eic_update(chip, offset, SPRD_EIC_LATCH_INTCLR, 1);
->                         break;
->                 case IRQ_TYPE_LEVEL_LOW:
->                         sprd_eic_update(chip, offset, SPRD_EIC_LATCH_INTPOL, 1);
-> +                       sprd_eic_update(chip, offset, SPRD_EIC_LATCH_INTCLR, 1);
->                         break;
->                 case IRQ_TYPE_EDGE_RISING:
->                 case IRQ_TYPE_EDGE_FALLING:
->                 case IRQ_TYPE_EDGE_BOTH:
->                         state = sprd_eic_get(chip, offset);
-> -                       if (state)
-> +                       if (state) {
->                                 sprd_eic_update(chip, offset,
->                                                 SPRD_EIC_LATCH_INTPOL, 0);
-> -                       else
-> +                               sprd_eic_update(chip, offset,
-> +                                               SPRD_EIC_LATCH_INTCLR, 1);
-> +                       } else {
->                                 sprd_eic_update(chip, offset,
->                                                 SPRD_EIC_LATCH_INTPOL, 1);
-> +                               sprd_eic_update(chip, offset,
-> +                                               SPRD_EIC_LATCH_INTCLR, 1);
-> +                       }
->                         break;
->                 default:
->                         return -ENOTSUPP;
-> @@ -382,29 +396,34 @@ static int sprd_eic_irq_set_type(struct irq_data *data, unsigned int flow_type)
->                         sprd_eic_update(chip, offset, SPRD_EIC_ASYNC_INTBOTH, 0);
->                         sprd_eic_update(chip, offset, SPRD_EIC_ASYNC_INTMODE, 0);
->                         sprd_eic_update(chip, offset, SPRD_EIC_ASYNC_INTPOL, 1);
-> +                       sprd_eic_update(chip, offset, SPRD_EIC_ASYNC_INTCLR, 1);
->                         irq_set_handler_locked(data, handle_edge_irq);
->                         break;
->                 case IRQ_TYPE_EDGE_FALLING:
->                         sprd_eic_update(chip, offset, SPRD_EIC_ASYNC_INTBOTH, 0);
->                         sprd_eic_update(chip, offset, SPRD_EIC_ASYNC_INTMODE, 0);
->                         sprd_eic_update(chip, offset, SPRD_EIC_ASYNC_INTPOL, 0);
-> +                       sprd_eic_update(chip, offset, SPRD_EIC_ASYNC_INTCLR, 1);
->                         irq_set_handler_locked(data, handle_edge_irq);
->                         break;
->                 case IRQ_TYPE_EDGE_BOTH:
->                         sprd_eic_update(chip, offset, SPRD_EIC_ASYNC_INTMODE, 0);
->                         sprd_eic_update(chip, offset, SPRD_EIC_ASYNC_INTBOTH, 1);
-> +                       sprd_eic_update(chip, offset, SPRD_EIC_ASYNC_INTCLR, 1);
->                         irq_set_handler_locked(data, handle_edge_irq);
->                         break;
->                 case IRQ_TYPE_LEVEL_HIGH:
->                         sprd_eic_update(chip, offset, SPRD_EIC_ASYNC_INTBOTH, 0);
->                         sprd_eic_update(chip, offset, SPRD_EIC_ASYNC_INTMODE, 1);
->                         sprd_eic_update(chip, offset, SPRD_EIC_ASYNC_INTPOL, 1);
-> +                       sprd_eic_update(chip, offset, SPRD_EIC_ASYNC_INTCLR, 1);
->                         irq_set_handler_locked(data, handle_level_irq);
->                         break;
->                 case IRQ_TYPE_LEVEL_LOW:
->                         sprd_eic_update(chip, offset, SPRD_EIC_ASYNC_INTBOTH, 0);
->                         sprd_eic_update(chip, offset, SPRD_EIC_ASYNC_INTMODE, 1);
->                         sprd_eic_update(chip, offset, SPRD_EIC_ASYNC_INTPOL, 0);
-> +                       sprd_eic_update(chip, offset, SPRD_EIC_ASYNC_INTCLR, 1);
->                         irq_set_handler_locked(data, handle_level_irq);
->                         break;
->                 default:
-> @@ -417,29 +436,34 @@ static int sprd_eic_irq_set_type(struct irq_data *data, unsigned int flow_type)
->                         sprd_eic_update(chip, offset, SPRD_EIC_SYNC_INTBOTH, 0);
->                         sprd_eic_update(chip, offset, SPRD_EIC_SYNC_INTMODE, 0);
->                         sprd_eic_update(chip, offset, SPRD_EIC_SYNC_INTPOL, 1);
-> +                       sprd_eic_update(chip, offset, SPRD_EIC_SYNC_INTCLR, 1);
->                         irq_set_handler_locked(data, handle_edge_irq);
->                         break;
->                 case IRQ_TYPE_EDGE_FALLING:
->                         sprd_eic_update(chip, offset, SPRD_EIC_SYNC_INTBOTH, 0);
->                         sprd_eic_update(chip, offset, SPRD_EIC_SYNC_INTMODE, 0);
->                         sprd_eic_update(chip, offset, SPRD_EIC_SYNC_INTPOL, 0);
-> +                       sprd_eic_update(chip, offset, SPRD_EIC_SYNC_INTCLR, 1);
->                         irq_set_handler_locked(data, handle_edge_irq);
->                         break;
->                 case IRQ_TYPE_EDGE_BOTH:
->                         sprd_eic_update(chip, offset, SPRD_EIC_SYNC_INTMODE, 0);
->                         sprd_eic_update(chip, offset, SPRD_EIC_SYNC_INTBOTH, 1);
-> +                       sprd_eic_update(chip, offset, SPRD_EIC_SYNC_INTCLR, 1);
->                         irq_set_handler_locked(data, handle_edge_irq);
->                         break;
->                 case IRQ_TYPE_LEVEL_HIGH:
->                         sprd_eic_update(chip, offset, SPRD_EIC_SYNC_INTBOTH, 0);
->                         sprd_eic_update(chip, offset, SPRD_EIC_SYNC_INTMODE, 1);
->                         sprd_eic_update(chip, offset, SPRD_EIC_SYNC_INTPOL, 1);
-> +                       sprd_eic_update(chip, offset, SPRD_EIC_SYNC_INTCLR, 1);
->                         irq_set_handler_locked(data, handle_level_irq);
->                         break;
->                 case IRQ_TYPE_LEVEL_LOW:
->                         sprd_eic_update(chip, offset, SPRD_EIC_SYNC_INTBOTH, 0);
->                         sprd_eic_update(chip, offset, SPRD_EIC_SYNC_INTMODE, 1);
->                         sprd_eic_update(chip, offset, SPRD_EIC_SYNC_INTPOL, 0);
-> +                       sprd_eic_update(chip, offset, SPRD_EIC_SYNC_INTCLR, 1);
->                         irq_set_handler_locked(data, handle_level_irq);
->                         break;
->                 default:
-> --
-> 2.17.1
->
+On 1/21/24 17:50, Jonathan Cameron wrote:
+>> +	ret = devm_ad_sd_setup_buffer_and_trigger(dev, indio_dev);
+> If the error interrupt is provided either first, or as the only interrupt
+> this is going to use the wrong one.
+> 
+> Probably need to have a variant of that which takes an explicit irq so that
+> figuring out which irq is relevant becomes a driver problem rather than the
+> library having a go based on spi->irq.
+
+Would it be acceptable to check if spi->irq interrupt number is equal to
+fwnode_irq_get_byname(dev_fwnode(dev), "rdy")?
+
+If not, a message could be passed that specifies either that "rdy" is
+needed or that it must be placed first.
+
+
+Another alternative would be adding irq to ad_sigma_delta_info so a
+driver could specify the desired interrupt to be used for conversions.
