@@ -1,438 +1,100 @@
-Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com [209.85.217.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1C583839A;
-	Mon, 22 Jan 2024 09:03:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72D19364D5
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 09:03:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705914203; cv=none; b=JksAcfoNXv4zzZPDlGfZLhxv1m63+EvvFi9Pn7kicRIcS7VLQDrPvbOTeTBLRLYtoG5ilEkW+4OlNeHvjx+Yl1Ni5B4j9UnH0nkoOwpR9sZgyqnrh3xbEjEdQAhNEhHRp2hpbhljcO40ba9Ks/cakD0eOdqS5TRqSdZXRcKfBxw=
+	t=1705914204; cv=none; b=VbMEhhn4v1zohSD36albdikrNfbZlpv94y+OxhQ3/OUdl+Prx11E0lfpLZON+7Bg9lnuRy0R8HFcikYHNwh5Le+pSrWu4Jg6s3exvsg3x1i0mCFkl2Tg8ntd6jviB/cgNb2jih7qKQqlupk3HHSjHo7+kgOl3MiY3sNngQeyjYc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705914203; c=relaxed/simple;
-	bh=lRHaot4egaeyfqirzeAl8zZS3FFjuGHngbb2Zm3PB3M=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ulb9HaL5silGINPT60NW7267+ueEgzTMw8gI5PwD715Po4YFMtDIg/o2C20C6RrwCW1sK5OA4YWwDQHyy8ML8lKHietYBEWuhdCXgbAw7vSYyocxLBOSnQihbcOwXn4VZQY9gGPBLVdWf27PckHdNu1dJ4wzhZYRKVngKOeUAnk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; arc=none smtp.client-ip=148.163.135.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-	by mx0a-00128a01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40M3jHfV006966;
-	Mon, 22 Jan 2024 04:03:03 -0500
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 3vrby6xcj5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 22 Jan 2024 04:03:03 -0500 (EST)
-Received: from ASHBMBX9.ad.analog.com (ASHBMBX9.ad.analog.com [10.64.17.10])
-	by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 40M931fr053156
-	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 22 Jan 2024 04:03:01 -0500
-Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by ASHBMBX9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.14; Mon, 22 Jan
- 2024 04:03:00 -0500
-Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server id 15.2.986.14 via Frontend
- Transport; Mon, 22 Jan 2024 04:03:00 -0500
-Received: from kim-VirtualBox.ad.analog.com (KPALLER2-L03.ad.analog.com [10.117.220.34])
-	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 40M92aX0012545;
-	Mon, 22 Jan 2024 04:02:49 -0500
-From: Kim Seer Paller <kimseer.paller@analog.com>
-To: <linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC: Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Rob Herring
-	<robh+dt@kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>, Crt
- Mori <cmo@melexis.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz
- Golaszewski <brgl@bgdev.pl>,
-        =?UTF-8?q?Nuno=20S=C3=A1?=
-	<noname.nuno@gmail.com>,
-        Kim Seer Paller <kimseer.paller@analog.com>
-Subject: [PATCH v7 2/2] iio: frequency: admfm2000: New driver
-Date: Mon, 22 Jan 2024 17:02:28 +0800
-Message-ID: <20240122090228.28363-2-kimseer.paller@analog.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240122090228.28363-1-kimseer.paller@analog.com>
-References: <20240122090228.28363-1-kimseer.paller@analog.com>
+	s=arc-20240116; t=1705914204; c=relaxed/simple;
+	bh=+njKJ5zGoAf/8uWsGPVwc5bDkUZxyqOXYFLHFAW/f6c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=abh5h2es9e53+/Kdq74vyvksBaaUgCNx8j+D6sYzFlf/JW/kNan4CtVnRj8cWdhL0pflatXnHMZo9W3+z78eqUv80OtxgYrFLmED8lWK0QWTcrTUF1v1L81x/WlKLZ8f5l6xf0KUWbICfc7qAykEuO/qHDs4f6ToQpbk3IY7Hrg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=wSblBoNJ; arc=none smtp.client-ip=209.85.217.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="wSblBoNJ"
+Received: by mail-vs1-f51.google.com with SMTP id ada2fe7eead31-466f6d4b6d3so592651137.3
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 01:03:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1705914199; x=1706518999; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TUR27c1+iHU3ojrC4LDJ/zTx5jkFmb+9moT9azuGDlQ=;
+        b=wSblBoNJyUW83Q/Yh72CAloigRFzMjBMMeKhkZhDx1d89IRjoJkvYwtralFbjHMP9S
+         jPjBgAZVVSU5Vk9raNUNQ4YJpKDSHWVVBuvCN/GNqmt/owdpKdWNOaciwhLtSXRgx/fa
+         U4wKy12nS23bbtMw0clkkJPRLOdgQaiROW88wf4vV2n+A80H8ZAmyGVimq5L2urIm4lB
+         PwvnG4swZ39ILrqqfesdfGpg45vb2Off8zkVkeAie+PGFiS1V/iCt0V5k2kv+omvHsP2
+         KkcK0vGhXwvPUiLlIiCCECmjUEAwx0htMeu52J38Ib34S2mghP9snj+CYavaR23bYAGc
+         RCYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705914199; x=1706518999;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TUR27c1+iHU3ojrC4LDJ/zTx5jkFmb+9moT9azuGDlQ=;
+        b=NWOup7T0mj08vRQ0gn5NK/Q09NeYs6WllQWMjkDxDTRzw1o0yMmwfAd/HbwB47uIdY
+         nNpbuF74C/sgBx5L0Qfg8vOaF+Fr5qHr9NefWa/r08dbRmQxirg2K+ey17OhkhT6tYeh
+         GsLyGHhzHz17sdYJQwL4508dfVCs77XX3A1/eDgWd828ChTb4Y7wDXqMXpZSZmi0eslm
+         6M499N/DrVyFxP24I0WBoJBE8VreOd2tgQoD4Kq+NkmyhLTST8VMoiuAuhNNepQfGi9r
+         2+fB+bHQh8SCJvwF21WhtliPxQ48W/JnQa3V012wMSy/IkRF5kadJeg3ImMnuqC3NjIK
+         cG2Q==
+X-Gm-Message-State: AOJu0YyoPnvllBEoKTPkvXRp882iQP1dHAPjnQgMUyxT+uH/vrFLhToy
+	zxUCI/3STq3+0QwGiuZj9PgVNF84bYqOnu8kzTk8mXtAx1wSOl2U9ag/xF+fU8dHTYeLeCVXcTp
+	i+29MRBJmY4kRvkk9okI7QCfWkLj1Eb89dQnmbDIf0Pv4twsg
+X-Google-Smtp-Source: AGHT+IF8eESa41mI3oLuxHCHoMGVzbxUohIHKsVJ3gDU5CR8DvIfOpEJ9idSlUMF5+qSgs2hZ8AeLuwh28Hnrkt8UMQ=
+X-Received: by 2002:a05:6102:2263:b0:468:1cc5:ed88 with SMTP id
+ v3-20020a056102226300b004681cc5ed88mr550502vsd.23.1705914199051; Mon, 22 Jan
+ 2024 01:03:19 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ADIRuleOP-NewSCL: Rule Triggered
-X-Proofpoint-GUID: iU9VCCCquZpSytfPzRehEVocIfLMi2Oc
-X-Proofpoint-ORIG-GUID: iU9VCCCquZpSytfPzRehEVocIfLMi2Oc
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-21_04,2024-01-22_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
- lowpriorityscore=0 impostorscore=0 priorityscore=1501 phishscore=0
- spamscore=0 adultscore=0 mlxscore=0 suspectscore=0 bulkscore=0
- mlxlogscore=999 malwarescore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2311290000 definitions=main-2401220065
+References: <20240109140221.77725-1-warthog618@gmail.com>
+In-Reply-To: <20240109140221.77725-1-warthog618@gmail.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Mon, 22 Jan 2024 10:03:08 +0100
+Message-ID: <CAMRc=Mc+FseBCD8h9T8=rYUhOJ7QC4FOxH+ePULnyf_8mKJMrA@mail.gmail.com>
+Subject: Re: [PATCH 0/5] gpio: uapi: documentation improvements
+To: Kent Gibson <warthog618@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linus.walleij@linaro.org, andy@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Dual microwave down converter module with input RF and LO frequency
-ranges from 0.5 to 32 GHz and an output IF frequency range from 0.1 to
-8 GHz. It consists of a LNA, mixer, IF filter, DSA, and IF amplifier
-for each down conversion path.
+On Tue, Jan 9, 2024 at 3:02=E2=80=AFPM Kent Gibson <warthog618@gmail.com> w=
+rote:
+>
+> This is a series of minor clarifications and formatting tidy ups for
+> the GPIO uAPI kernel doc.
+>
+> The series is intended as a companion to my character device
+> uAPI documentation series, but makes sense on its own too.
+>
+> The patches are self contained and trivial so not much to add here.
+>
+> Cheers,
+> Kent.
+>
+> Kent Gibson (5):
+>   gpio: uapi: improve description of fd fields
+>   gpio: uapi: clarify hte references
+>   gpio: uapi: drop trailing period from one sentence descriptions
+>   gpio: uapi: document possible values of gpioevent_data.id
+>   gpio: uapi: clarify using v2 rather than v1
+>
+>  include/uapi/linux/gpio.h | 52 ++++++++++++++++++++-------------------
+>  1 file changed, 27 insertions(+), 25 deletions(-)
+>
+> --
+> 2.39.2
+>
 
-Signed-off-by: Kim Seer Paller <kimseer.paller@analog.com>
----
-V6 -> V7: Removed unnecessary include. Used fwnode_property_present for
-	  checking mixer mode property. Reduced code duplicate in channel
-	  config function. Misc changes(extra spaces, year, etc.)
-V5 -> V6: Used devm_fwnode_gpiod_get_index for getting array of gpios.
-V4 -> V5: Added missing return -ENODEV in setup function. Reordered variable
-	  declarations in probe function.
-V1 -> V4: No changes.
+Series applied, thanks!
 
- MAINTAINERS                       |   1 +
- drivers/iio/frequency/Kconfig     |  10 ++
- drivers/iio/frequency/Makefile    |   1 +
- drivers/iio/frequency/admfm2000.c | 282 ++++++++++++++++++++++++++++++
- 4 files changed, 294 insertions(+)
- create mode 100644 drivers/iio/frequency/admfm2000.c
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 1f7cd2e848de..e2bd41485107 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1273,6 +1273,7 @@ L:	linux-iio@vger.kernel.org
- S:	Supported
- W:	https://ez.analog.com/linux-software-drivers
- F:	Documentation/devicetree/bindings/iio/frequency/adi,admfm2000.yaml
-+F:	drivers/iio/frequency/admfm2000.c
- 
- ANALOG DEVICES INC ADMV1013 DRIVER
- M:	Antoniu Miclaus <antoniu.miclaus@analog.com>
-diff --git a/drivers/iio/frequency/Kconfig b/drivers/iio/frequency/Kconfig
-index 9e85dfa58508..c455be7d4a1c 100644
---- a/drivers/iio/frequency/Kconfig
-+++ b/drivers/iio/frequency/Kconfig
-@@ -60,6 +60,16 @@ config ADF4377
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called adf4377.
- 
-+config ADMFM2000
-+	tristate "Analog Devices ADMFM2000 Dual Microwave Down Converter"
-+	depends on GPIOLIB
-+	help
-+	  Say yes here to build support for Analog Devices ADMFM2000 Dual
-+	  Microwave Down Converter.
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called admfm2000.
-+
- config ADMV1013
- 	tristate "Analog Devices ADMV1013 Microwave Upconverter"
- 	depends on SPI && COMMON_CLK
-diff --git a/drivers/iio/frequency/Makefile b/drivers/iio/frequency/Makefile
-index b616c29b4a08..70d0e0b70e80 100644
---- a/drivers/iio/frequency/Makefile
-+++ b/drivers/iio/frequency/Makefile
-@@ -8,6 +8,7 @@ obj-$(CONFIG_AD9523) += ad9523.o
- obj-$(CONFIG_ADF4350) += adf4350.o
- obj-$(CONFIG_ADF4371) += adf4371.o
- obj-$(CONFIG_ADF4377) += adf4377.o
-+obj-$(CONFIG_ADMFM2000) += admfm2000.o
- obj-$(CONFIG_ADMV1013) += admv1013.o
- obj-$(CONFIG_ADMV1014) += admv1014.o
- obj-$(CONFIG_ADMV4420) += admv4420.o
-diff --git a/drivers/iio/frequency/admfm2000.c b/drivers/iio/frequency/admfm2000.c
-new file mode 100644
-index 000000000000..c34d79e55a7c
---- /dev/null
-+++ b/drivers/iio/frequency/admfm2000.c
-@@ -0,0 +1,282 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * ADMFM2000 Dual Microwave Down Converter
-+ *
-+ * Copyright 2024 Analog Devices Inc.
-+ */
-+
-+#include <linux/device.h>
-+#include <linux/err.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/iio/iio.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/platform_device.h>
-+#include <linux/property.h>
-+
-+#define ADMFM2000_MIXER_MODE		0
-+#define ADMFM2000_DIRECT_IF_MODE	1
-+#define ADMFM2000_DSA_GPIOS		5
-+#define ADMFM2000_MODE_GPIOS		2
-+#define ADMFM2000_MAX_GAIN		0
-+#define ADMFM2000_MIN_GAIN		-31000
-+#define ADMFM2000_DEFAULT_GAIN		-0x20
-+
-+struct admfm2000_state {
-+	struct mutex			lock; /* protect sensor state */
-+	struct gpio_desc		*sw1_ch[2];
-+	struct gpio_desc		*sw2_ch[2];
-+	struct gpio_desc		*dsa1_gpios[5];
-+	struct gpio_desc		*dsa2_gpios[5];
-+	u32				gain[2];
-+};
-+
-+static int admfm2000_mode(struct iio_dev *indio_dev, u32 chan, u32 mode)
-+{
-+	struct admfm2000_state *st = iio_priv(indio_dev);
-+	int i;
-+
-+	switch (mode) {
-+	case ADMFM2000_MIXER_MODE:
-+		for (i = 0; i < ADMFM2000_MODE_GPIOS; i++) {
-+			gpiod_set_value_cansleep(st->sw1_ch[i], (chan == 0) ? 1 : 0);
-+			gpiod_set_value_cansleep(st->sw2_ch[i], (chan == 0) ? 0 : 1);
-+		}
-+		return 0;
-+	case ADMFM2000_DIRECT_IF_MODE:
-+		for (i = 0; i < ADMFM2000_MODE_GPIOS; i++) {
-+			gpiod_set_value_cansleep(st->sw1_ch[i], (chan == 0) ? 0 : 1);
-+			gpiod_set_value_cansleep(st->sw2_ch[i], (chan == 0) ? 1 : 0);
-+		}
-+		return 0;
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int admfm2000_attenuation(struct iio_dev *indio_dev, u32 chan, u32 value)
-+{
-+	struct admfm2000_state *st = iio_priv(indio_dev);
-+	int i;
-+
-+	switch (chan) {
-+	case 0:
-+		for (i = 0; i < ADMFM2000_DSA_GPIOS; i++)
-+			gpiod_set_value_cansleep(st->dsa1_gpios[i], value & (1 << i));
-+		return 0;
-+	case 1:
-+		for (i = 0; i < ADMFM2000_DSA_GPIOS; i++)
-+			gpiod_set_value_cansleep(st->dsa2_gpios[i], value & (1 << i));
-+		return 0;
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int admfm2000_read_raw(struct iio_dev *indio_dev,
-+			      struct iio_chan_spec const *chan, int *val,
-+			      int *val2, long mask)
-+{
-+	struct admfm2000_state *st = iio_priv(indio_dev);
-+	int gain;
-+
-+	switch (mask) {
-+	case IIO_CHAN_INFO_HARDWAREGAIN:
-+		mutex_lock(&st->lock);
-+		gain = ~(st->gain[chan->channel]) * -1000;
-+		*val = gain / 1000;
-+		*val2 = (gain % 1000) * 1000;
-+		mutex_unlock(&st->lock);
-+
-+		return IIO_VAL_INT_PLUS_MICRO_DB;
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int admfm2000_write_raw(struct iio_dev *indio_dev,
-+			       struct iio_chan_spec const *chan, int val,
-+			       int val2, long mask)
-+{
-+	struct admfm2000_state *st = iio_priv(indio_dev);
-+	int gain, ret;
-+
-+	if (val < 0)
-+		gain = (val * 1000) - (val2 / 1000);
-+	else
-+		gain = (val * 1000) + (val2 / 1000);
-+
-+	if (gain > ADMFM2000_MAX_GAIN || gain < ADMFM2000_MIN_GAIN)
-+		return -EINVAL;
-+
-+	switch (mask) {
-+	case IIO_CHAN_INFO_HARDWAREGAIN:
-+		mutex_lock(&st->lock);
-+		st->gain[chan->channel] = ~((abs(gain) / 1000) & 0x1F);
-+
-+		ret = admfm2000_attenuation(indio_dev, chan->channel,
-+					    st->gain[chan->channel]);
-+		mutex_unlock(&st->lock);
-+		return ret;
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int admfm2000_write_raw_get_fmt(struct iio_dev *indio_dev,
-+				       struct iio_chan_spec const *chan,
-+				       long mask)
-+{
-+	switch (mask) {
-+	case IIO_CHAN_INFO_HARDWAREGAIN:
-+		return IIO_VAL_INT_PLUS_MICRO_DB;
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static const struct iio_info admfm2000_info = {
-+	.read_raw = &admfm2000_read_raw,
-+	.write_raw = &admfm2000_write_raw,
-+	.write_raw_get_fmt = &admfm2000_write_raw_get_fmt,
-+};
-+
-+#define ADMFM2000_CHAN(_channel) {					\
-+	.type = IIO_VOLTAGE,						\
-+	.output = 1,							\
-+	.indexed = 1,							\
-+	.channel = _channel,						\
-+	.info_mask_separate = BIT(IIO_CHAN_INFO_HARDWAREGAIN),		\
-+}
-+
-+static const struct iio_chan_spec admfm2000_channels[] = {
-+	ADMFM2000_CHAN(0),
-+	ADMFM2000_CHAN(1),
-+};
-+
-+static int admfm2000_channel_config(struct admfm2000_state *st,
-+				    struct iio_dev *indio_dev)
-+{
-+	struct platform_device *pdev = to_platform_device(indio_dev->dev.parent);
-+	struct device *dev = &pdev->dev;
-+	struct fwnode_handle *child;
-+	struct gpio_desc **dsa;
-+	struct gpio_desc **sw;
-+	int ret, i;
-+	bool mode;
-+	u32 reg;
-+
-+	device_for_each_child_node(dev, child) {
-+		ret = fwnode_property_read_u32(child, "reg", &reg);
-+		if (ret) {
-+			fwnode_handle_put(child);
-+			return dev_err_probe(dev, ret,
-+					     "Failed to get reg property\n");
-+		}
-+
-+		if (reg >= indio_dev->num_channels) {
-+			fwnode_handle_put(child);
-+			return dev_err_probe(dev, -EINVAL, "reg bigger than: %d\n",
-+					     indio_dev->num_channels);
-+		}
-+
-+		if (fwnode_property_present(child, "adi,mixer-mode"))
-+			mode = ADMFM2000_MIXER_MODE;
-+		else
-+			mode = ADMFM2000_DIRECT_IF_MODE;
-+
-+		switch (reg) {
-+		case 0:
-+			sw = st->sw1_ch;
-+			dsa = st->dsa1_gpios;
-+			break;
-+		case 1:
-+			sw = st->sw2_ch;
-+			dsa = st->dsa2_gpios;
-+			break;
-+		default:
-+			fwnode_handle_put(child);
-+			return -EINVAL;
-+		}
-+
-+		for (i = 0; i < ADMFM2000_MODE_GPIOS; i++) {
-+			sw[i] = devm_fwnode_gpiod_get_index(dev, child, "switch",
-+							    i, GPIOD_OUT_LOW, NULL);
-+			if (IS_ERR(sw[i])) {
-+				fwnode_handle_put(child);
-+				return dev_err_probe(dev, PTR_ERR(sw[i]),
-+						     "Failed to get gpios\n");
-+			}
-+		}
-+
-+		for (i = 0; i < ADMFM2000_DSA_GPIOS; i++) {
-+			dsa[i] = devm_fwnode_gpiod_get_index(dev, child,
-+							     "attenuation", i,
-+							     GPIOD_OUT_LOW, NULL);
-+			if (IS_ERR(dsa[i])) {
-+				fwnode_handle_put(child);
-+				return dev_err_probe(dev, PTR_ERR(dsa[i]),
-+						     "Failed to get gpios\n");
-+			}
-+		}
-+
-+		ret = admfm2000_mode(indio_dev, reg, mode);
-+		if (ret) {
-+			fwnode_handle_put(child);
-+			return ret;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static int admfm2000_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct admfm2000_state *st;
-+	struct iio_dev *indio_dev;
-+	int ret;
-+
-+	indio_dev = devm_iio_device_alloc(dev, sizeof(*st));
-+	if (!indio_dev)
-+		return -ENOMEM;
-+
-+	st = iio_priv(indio_dev);
-+
-+	indio_dev->name = "admfm2000";
-+	indio_dev->num_channels = ARRAY_SIZE(admfm2000_channels);
-+	indio_dev->channels = admfm2000_channels;
-+	indio_dev->info = &admfm2000_info;
-+	indio_dev->modes = INDIO_DIRECT_MODE;
-+
-+	st->gain[0] = ADMFM2000_DEFAULT_GAIN;
-+	st->gain[1] = ADMFM2000_DEFAULT_GAIN;
-+
-+	mutex_init(&st->lock);
-+
-+	ret = admfm2000_channel_config(st, indio_dev);
-+	if (ret)
-+		return ret;
-+
-+	return devm_iio_device_register(dev, indio_dev);
-+}
-+
-+static const struct of_device_id admfm2000_of_match[] = {
-+	{ .compatible = "adi,admfm2000" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, admfm2000_of_match);
-+
-+static struct platform_driver admfm2000_driver = {
-+	.driver = {
-+		.name = "admfm2000",
-+		.of_match_table = admfm2000_of_match,
-+	},
-+	.probe = admfm2000_probe,
-+};
-+module_platform_driver(admfm2000_driver);
-+
-+MODULE_AUTHOR("Kim Seer Paller <kimseer.paller@analog.com>");
-+MODULE_DESCRIPTION("ADMFM2000 Dual Microwave Down Converter");
-+MODULE_LICENSE("GPL");
--- 
-2.34.1
-
+Bart
