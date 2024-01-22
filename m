@@ -1,42 +1,61 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5700D3F8E2;
-	Mon, 22 Jan 2024 11:04:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF91D3FB22;
+	Mon, 22 Jan 2024 11:04:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705921490; cv=none; b=QmCNVvoPK0gQ0T32UExHGgnrtg4w8QKDtphzeo/jlk37k5rXE1uRQIDN5X/FIK0VWe5PBi3IDCv3HYxhxm80NvUXenDS2tyiQ4WJ64C5jqAWthCjz9IkekKeXhjPHIqjRrp0jHv05Ti+ggS140l0PM8s75bV8GdlPw4GFNg2L/s=
+	t=1705921493; cv=none; b=iQxAnw4TeKVcGBQYdxr8AHNY/yMXGQS7pZ7/DwVV2Km/+G6eNRX/ejYb9naBdiQUR1IjetRNdp5feD5GV6K8EegrDSj6QAaAeif5XGdHTR2029meyr0VIuDDTRhrBLAYwu8WuyFN/x7wdkKSkz3yagzty13faCNpu+hNNQYmANc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705921490; c=relaxed/simple;
-	bh=+0JYp8fleAI4TMmDNOgjDGB1wBxRfMOMfgS9dM3MHeY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=U6zohg1wKc/eGBxnt9QoCb4bxEFVxvwE5b1K7MHP83CeW4fFskgT72562s3PglFEILNnpMMTVpjrBMkdrRzfXmUvACuez09RwWhgzK1dljQ94AhbM/1lhOdLtQAp7yxRRNf8CNswqi5zN5pV06ekX1nFx6nlJ4HwFq25InPdY1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=onhVpjAx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1705921493; c=relaxed/simple;
+	bh=3m1/vci+MfAYp79wBH/oi/rLtZ2m4Wx+8gZRTD02VwU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=go3fkzBGr0UDMX2MS1cMFHIwTGeoHAkTQkRkWA1mmNt3jeTJQ7N8234C8pX1PAqbvmYdVgohCrpDT/R5l/HVYBtMHtP5siJQOAmrc1O5SEsvRQ6vT7CDJJDLavWvujVWKYEglgKOBiouDpcmZNuo6neZ2eERjTwIinw0JZgV5qY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=BLOL7btb; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="onhVpjAx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16A2EC43609;
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="BLOL7btb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1705921490;
+	bh=3m1/vci+MfAYp79wBH/oi/rLtZ2m4Wx+8gZRTD02VwU=;
+	h=From:To:Cc:Subject:Date:From;
+	b=BLOL7btbWcb/npidSycVbvPsflgnOgK9uWB48Y6VSDYYZuxsD6uHl0R2DPQBFVDdf
+	 wFpzEAPNWNuM+UXqTI0G0wa44q+O0Vlqd9yWaesfZptiXt+K14XraK4lil0EgSVWx1
+	 TYn9Y+/esgW77UNAulq0LYWxlrpCsQPiD9AxRisEujW/C60KL85jk56iDSEkYfGjQ9
+	 fzRb6e8lG52sLj99V2FWf/gRKwg9LnUC938Vqc1FI2e+QZ7ZjWG0z5bge9VUgxO7+f
+	 ggQlEQ501mBDzhuKS6lmstDuWZ5Povlp4AWr4dQP7KXf/gi0/qE9LS8vykleoH0vNf
+	 ojzEm3cw3vt1Q==
+Received: from IcarusMOD.eternityproject.eu (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id F1FAB3781FDF;
 	Mon, 22 Jan 2024 11:04:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705921490;
-	bh=+0JYp8fleAI4TMmDNOgjDGB1wBxRfMOMfgS9dM3MHeY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=onhVpjAxihK17dsdcc9mvDAb+u/7v7l/O/gaQz0FdcSmFFXgkCWn0ER9L43uOKKRZ
-	 BKBlsCjKQFZfjDKwPJVJO/RNZizG3gAbJYfiQldu5vBZxHx8CKUVIiwxG9HlsBWrtn
-	 /XaRn5wC3QeRN1p1LaIoM5aX3CaIjgD2VPDx390J2CZR/Rw8CRvJjgRg11dZD/NaLr
-	 k/v8/pCOwzPorOxRpEKQ0UxF9G6fwyv8iCOTlgMgYs3wlPwxljBR46Drqo+j1tYTay
-	 5VNivMU4cD03x0S+lxZ+4kXVEShrq/cIUTs+nQVvpXNT4TgNCK9iCGUO1qUqPbRl5n
-	 iZglDHJ2uQrBA==
-From: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 To: gregkh@linuxfoundation.org
-Cc: linux-serial@vger.kernel.org,
+Cc: robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	heikki.krogerus@linux.intel.com,
+	matthias.bgg@gmail.com,
+	dmitry.baryshkov@linaro.org,
+	neil.armstrong@linaro.org,
+	andersson@kernel.org,
+	nathan@kernel.org,
+	luca.weiss@fairphone.com,
+	tianping.fang@mediatek.com,
+	linux-usb@vger.kernel.org,
+	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	"Jiri Slaby (SUSE)" <jirislaby@kernel.org>
-Subject: [PATCH v2 23/47] tty: vt: add con_putc() helper
-Date: Mon, 22 Jan 2024 12:03:37 +0100
-Message-ID: <20240122110401.7289-24-jirislaby@kernel.org>
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	kernel@collabora.com,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Subject: [PATCH v3 0/2] Add ITE IT5205 Passive MUX
+Date: Mon, 22 Jan 2024 12:04:44 +0100
+Message-ID: <20240122110446.140226-1-angelogioacchino.delregno@collabora.com>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240122110401.7289-1-jirislaby@kernel.org>
-References: <20240122110401.7289-1-jirislaby@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,74 +64,29 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-And let it call consw::con_putc() if it exists, otherwise
-consw::con_putcs(). This is similar to tty_put_char().
+This series adds a driver for the ITE IT5205/FN, found on various
+MediaTek board designs, including the MT8395Genio 1200 EVB and
+others following that.
 
-It supports dropping unneeded duplication of code like sticon_putc() is
-(see the next patch).
+Changes in v3:
+ - Fixed MODULE_DEVICE_TABLE for it5205_of_table
 
-Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
----
- drivers/tty/vt/vt.c | 18 +++++++++++++-----
- 1 file changed, 13 insertions(+), 5 deletions(-)
+Changes in v2:
+ - Reordered headers and removed unused ones
+ - Added a check for altmode in it5205_mux_set()
 
-diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
-index b6f1449421bc..6091ffcf93d8 100644
---- a/drivers/tty/vt/vt.c
-+++ b/drivers/tty/vt/vt.c
-@@ -300,6 +300,14 @@ static inline unsigned short *screenpos(const struct vc_data *vc, int offset,
- 	return p;
- }
- 
-+static void con_putc(struct vc_data *vc, u16 ca, unsigned int y, unsigned int x)
-+{
-+	if (vc->vc_sw->con_putc)
-+		vc->vc_sw->con_putc(vc, ca, y, x);
-+	else
-+		vc->vc_sw->con_putcs(vc, &ca, 1, y, x);
-+}
-+
- /* Called  from the keyboard irq path.. */
- static inline void scrolldelta(int lines)
- {
-@@ -762,7 +770,7 @@ void complement_pos(struct vc_data *vc, int offset)
- 	    old_offset < vc->vc_screenbuf_size) {
- 		scr_writew(old, screenpos(vc, old_offset, true));
- 		if (con_should_update(vc))
--			vc->vc_sw->con_putc(vc, old, oldy, oldx);
-+			con_putc(vc, old, oldy, oldx);
- 		notify_update(vc);
- 	}
- 
-@@ -779,7 +787,7 @@ void complement_pos(struct vc_data *vc, int offset)
- 		if (con_should_update(vc)) {
- 			oldx = (offset >> 1) % vc->vc_cols;
- 			oldy = (offset >> 1) / vc->vc_cols;
--			vc->vc_sw->con_putc(vc, new, oldy, oldx);
-+			con_putc(vc, new, oldy, oldx);
- 		}
- 		notify_update(vc);
- 	}
-@@ -833,7 +841,7 @@ static void add_softcursor(struct vc_data *vc)
- 		i ^= CUR_FG;
- 	scr_writew(i, (u16 *)vc->vc_pos);
- 	if (con_should_update(vc))
--		vc->vc_sw->con_putc(vc, i, vc->state.y, vc->state.x);
-+		con_putc(vc, i, vc->state.y, vc->state.x);
- }
- 
- static void hide_softcursor(struct vc_data *vc)
-@@ -841,8 +849,8 @@ static void hide_softcursor(struct vc_data *vc)
- 	if (softcursor_original != -1) {
- 		scr_writew(softcursor_original, (u16 *)vc->vc_pos);
- 		if (con_should_update(vc))
--			vc->vc_sw->con_putc(vc, softcursor_original,
--					vc->state.y, vc->state.x);
-+			con_putc(vc, softcursor_original, vc->state.y,
-+				 vc->state.x);
- 		softcursor_original = -1;
- 	}
- }
+AngeloGioacchino Del Regno (2):
+  dt-bindings: usb: Introduce ITE IT5205 Alt. Mode Passive MUX
+  usb: typec: mux: Add ITE IT5205 Alternate Mode Passive MUX driver
+
+ .../devicetree/bindings/usb/ite,it5205.yaml   |  72 +++++
+ drivers/usb/typec/mux/Kconfig                 |  10 +
+ drivers/usb/typec/mux/Makefile                |   1 +
+ drivers/usb/typec/mux/it5205.c                | 294 ++++++++++++++++++
+ 4 files changed, 377 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/usb/ite,it5205.yaml
+ create mode 100644 drivers/usb/typec/mux/it5205.c
+
 -- 
 2.43.0
 
