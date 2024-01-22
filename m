@@ -1,58 +1,58 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82F043AC2D
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 10:53:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0FB83A264
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 10:54:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705920819; cv=none; b=CyIdbPpy7kNZiEf+p7tvM8jumxtp529wirK72QOUuAAkJGjAoI+Jl+IJjtNlq2cv/Cmxix9/Ocnv9l5Zd60lwRGMTpXsK0OdDf/4ETUbHHhoJEeAzf4IabdMzCzjFDSeRdX3oxKW/pMLiC52FsrWWw/tE9NurwzGYu+VOBP2e6k=
+	t=1705920889; cv=none; b=ryqxby3RCFavjncM4YjR4q0IsHadUbkVGYyLVNdGRWEfzUDZCaO/2KVTmsqJvZ2c4fCZIwWF3do6pakcfD4eaNW90Nmj90xgMyKVCa6n6ZFN8HYpm8WOpC+77JRqRXCCGHxvvubCa434Qtqx2eAfnJFw7RsPIIKUMsS/lktZR4U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705920819; c=relaxed/simple;
-	bh=HvqtdsUNHvvysDTN07Znf26i8cKDghYMJxajcRlaWck=;
+	s=arc-20240116; t=1705920889; c=relaxed/simple;
+	bh=lTnarq8IAg1XM6GxuzQJXH9sGVYsO2Kix1KmRraYVVM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eRoMdzyzGI4UzfVp3Izee0XLkfHIiygI4BWLqQWmQS+u/230D4GAKRuHd7WwLyinsiJe5wsXJObHz/8hQ4H6OqL+Fh+3v4OGvtLlpxluypp2/fpMT09J9VIZWOclVC65gZcefHRZjcsrY2bR8zBHmKJxRM+8kmkNyLqrqycI+yE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=feMF+B0k; arc=none smtp.client-ip=209.85.218.41
+	 In-Reply-To:Content-Type; b=c84sCQjwaT+ui0sfjt9GL5cl2024BsqqqLlvJCI2I/lHDbnzitUdCvngpYnQZg+iDCB/0OqjlRj19EX67lXp6p9c+dxJqM0zk436HbiKrKQprBXzINfM/zAt1tT6jCIgtWkgkML/RuQWCZQSwJLhDKHBBIg4f/feEhnfGKmg+6g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=NMe3Ta0q; arc=none smtp.client-ip=209.85.218.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="feMF+B0k"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a293f2280c7so314189766b.1
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 02:53:37 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NMe3Ta0q"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a28a6cef709so291166266b.1
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 02:54:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1705920816; x=1706525616; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1705920885; x=1706525685; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=+PzbzDTvNuVALaQbY0SrUthp/gsyxFLfouvwcaglfa0=;
-        b=feMF+B0kR7RoHRvVJ8mp/PAkzWu0JRf8c5yqvNyQgRR0FTxdRhxdrQJJCa/+AdHERr
-         lYRFUzTPKxUWHUfqg824fAfScNiWpTL3xKTZ9mT7GeCiUq4pJxW3vNX28HkeL8N8R+ZN
-         imimCMeZM7KeFCorNAD4L72umVKRj63SUGLlodevoSq2t0kU9aHsO5jVT2W7uJlzPXEe
-         i5EHw6TQx+McZ5VOZjp4q5UmyoJuw4TcSEhfAuCjjOjqZGeIstCT76pU1Xw8HkAgai0P
-         L1kltpiMoyTCXXHBOtdrYQISn7Ajt7BijVvSSUSj9OBIlfiHJyGmf9D4bZwDL2tPh1S0
-         Ld6g==
+        bh=OLlrIj6M5dwt//auJ5YhalkWbvV9fgPK8UYw5u29EOM=;
+        b=NMe3Ta0qnOcACRHFFv1ON2x3m5W0Mb+DXhOL0Dc6Ku59X1xmGadMrQLivaDbBYiKYH
+         c4eYf7llvz/jrNdUZjos6GqkGRVpNa6+fkE31r5U/9PnSO4xld66Bgf9zUhc337zsDqN
+         V1sbevvvOAUI9NNV+priwwfj48gfermQXvvDAFr6YufBvc87rVWKW7AZZbmgPHUX6WcU
+         R2rZl2q7NwircYGvgDN7ohPTehtcyhxEXNLB6iDKN+iUtAxHQdVEVCk6hzlW0t+cA2Le
+         4EjLd8QNqiX3Ke4iBm/PtK4O5aY9ZX80hIDfNcZmmXH8pstHIhgqfCsXCsKisT3059Jh
+         sSsw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705920816; x=1706525616;
+        d=1e100.net; s=20230601; t=1705920885; x=1706525685;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+PzbzDTvNuVALaQbY0SrUthp/gsyxFLfouvwcaglfa0=;
-        b=F53T10bP1Jnokk5+5GF5vvda5D0oHwNup7VJVeUXifeolS0GEoAYw8Yg5luXNkyFY+
-         hLdjgQmxGh4dEj1pWABm7PgdHzotYAaaGcnrKTcI+8RPGrmWZMt8JTFCXo52FyB0ol0f
-         Kgf1Be9qLSEZKheI6wonJtVzwdTgicNaPaC5hRRUs5/IEXHIUSwEaceAwGrd7jG6ymyh
-         XdXng4HuP1IH93S9N3+xv0GeUSreZ3LGkMsctSG9o/0QGu/SfCv5xrB033TZjraIFQ/k
-         tIgjYU/s8fJqZcFJ2F4bFXKDYE+ciEzTgcKn064X2qFB1VVwmaa1aKs0GFAcw+9NW9Bv
-         cNbQ==
-X-Gm-Message-State: AOJu0YxqCmHx460a63QY1JhLo7vroJC8WsnaYGK6+UXPqUfWKvqTvBVp
-	jkbCXPVru1f/gJrD4FcJ/5CLkxwM0rDQwj/7+O8hYpoXBgYJ+Vvh8gLp3aUQDgg=
-X-Google-Smtp-Source: AGHT+IGVVH6NZaZvBaWo+ZsNgMlULvxvy3TRd9ITIzY70Q9BIggeGYLQaVF7dW/aNORMtZRoldadNA==
-X-Received: by 2002:a17:907:3a45:b0:a2c:cda6:e73a with SMTP id fc5-20020a1709073a4500b00a2ccda6e73amr1025140ejc.98.1705920815747;
-        Mon, 22 Jan 2024 02:53:35 -0800 (PST)
+        bh=OLlrIj6M5dwt//auJ5YhalkWbvV9fgPK8UYw5u29EOM=;
+        b=Ol61a9L9IblZ8xKRuvsdt5AVbQLE6EJZ6ppFbatk5xQH/hO0rThh2EJljNpB1xOEPw
+         XBhrHC20lKu3/YskhcMwfICRXKIdQSM8boYZvtm3phoXsWCGiGXto6m7XhgqIkTiuJ/i
+         wDnK0jwjvGFJ9Gx5KHE5HlQ7WpRp2LyGPTiTv7EKdsdZvtUzo+vmQj38e1CmO4JDqxM+
+         ly+lF75BL3236AWRg+dfDAXZUKgPihbg838dWZV6if7nDd7NZOC0ZWNfCInF02DrNAEk
+         rEUciar0W+U4OQ23rUVZmrRO23+B+RrrUeLZtnC5hKMMVs3GdqUlqy7BIY5WqFzMJnxp
+         GwoQ==
+X-Gm-Message-State: AOJu0YyEAti5GSvu2YYmxWFnM+0mLxPVHkOVpFGlJimoFni4WZ//wcq3
+	Y8NDpZDY1/6NF69VmOP0CNOwWnAkHgC0k/243trNgv+zADBFTKfs3a1zKHpcmV4=
+X-Google-Smtp-Source: AGHT+IEeBsyedCcVZMmrmZSF2t9z7xJutp8eKLTW8jvjhH6AzUBWIDCLo+LC1PZzVFNgQNtJS1vJyA==
+X-Received: by 2002:a17:907:8dcc:b0:a30:3ba:dae9 with SMTP id tg12-20020a1709078dcc00b00a3003badae9mr1434236ejc.77.1705920885135;
+        Mon, 22 Jan 2024 02:54:45 -0800 (PST)
 Received: from [192.168.231.132] (178235179218.dynamic-4-waw-k-1-3-0.vectranet.pl. [178.235.179.218])
-        by smtp.gmail.com with ESMTPSA id q5-20020a170906388500b00a28a297d47esm13243272ejd.73.2024.01.22.02.53.34
+        by smtp.gmail.com with ESMTPSA id q5-20020a170906388500b00a28a297d47esm13243272ejd.73.2024.01.22.02.54.44
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 22 Jan 2024 02:53:35 -0800 (PST)
-Message-ID: <e57f3274-46a8-4c42-af29-ff2009127886@linaro.org>
-Date: Mon, 22 Jan 2024 11:53:33 +0100
+        Mon, 22 Jan 2024 02:54:44 -0800 (PST)
+Message-ID: <bef1eaa5-a6e7-466c-b8a7-17537838deb3@linaro.org>
+Date: Mon, 22 Jan 2024 11:54:44 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,16 +60,11 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] ARM: dts: qcom: msm8926-htc-memul: Add rmtfs memory node
+Subject: Re: [PATCH] soc: qcom: smp2p: fix all kernel-doc warnings
 Content-Language: en-US
-To: Luca Weiss <luca@z3ntu.xyz>, ~postmarketos/upstreaming@lists.sr.ht,
- phone-devel@vger.kernel.org, Bjorn Andersson <andersson@kernel.org>,
- Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240121-memul-rmtfs-v1-1-e9da29b1f856@z3ntu.xyz>
+To: Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org
+Cc: Bjorn Andersson <andersson@kernel.org>, linux-arm-msm@vger.kernel.org
+References: <20240119032859.4082-1-rdunlap@infradead.org>
 From: Konrad Dybcio <konrad.dybcio@linaro.org>
 Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
  xsFNBF9ALYUBEADWAhxdTBWrwAgDQQzc1O/bJ5O7b6cXYxwbBd9xKP7MICh5YA0DcCjJSOum
@@ -106,19 +101,28 @@ Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
  bGqMHex48FVZhexNPYOd58EY9/7mL5u0sJmo+jTeb4JBgIbFPJCFyng4HwbniWgQJZ1WqaUC
  nas9J77uICis2WH7N8Bs9jy0wQYezNzqS+FxoNXmDQg2jetX8en4bO2Di7Pmx0jXA4TOb9TM
  izWDgYvmBE8=
-In-Reply-To: <20240121-memul-rmtfs-v1-1-e9da29b1f856@z3ntu.xyz>
+In-Reply-To: <20240119032859.4082-1-rdunlap@infradead.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 21.01.2024 11:21, Luca Weiss wrote:
-> Add the rmtfs-mem node which was part of one of the "unknown" memory
-> reservation. Split that one, make sure the reserved-memory in total
-> still covers the same space.
+On 19.01.2024 04:28, Randy Dunlap wrote:
+> Use the documented notation for nested struct members.
+> Add a Returns: comment for qcom_smp2p_intr().
 > 
-> Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
+> These changes prevent these kernel-doc warnings:
+> 
+> smp2p.c:78: warning: Excess struct member 'name' description in 'smp2p_smem_item'
+> smp2p.c:78: warning: Excess struct member 'value' description in 'smp2p_smem_item'
+> smp2p.c:280: warning: No description found for return value of 'qcom_smp2p_intr'
+> 
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Bjorn Andersson <andersson@kernel.org>
+> Cc: Konrad Dybcio <konrad.dybcio@linaro.org>
+> Cc: linux-arm-msm@vger.kernel.org
 > ---
 
-Could you please test dynamic rmtfs alloc, which should be possible
-on some (most?) boards after 9265bc6bce6919c771970e5a425a66551a1c78a0?
+Thanks!
+
+Acked-by: Konrad Dybcio <konrad.dybcio@linaro.org>
 
 Konrad
