@@ -1,154 +1,216 @@
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B12764CFC
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 18:08:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A0A755C1C;
+	Mon, 22 Jan 2024 18:10:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705946922; cv=none; b=Bdi4OYKtgeCi3/HCtiNnvT+ejuZxOTvQ/8mZBacVl22Sb3duL5nIMsLndboza+98SktjUZSh3v7uX3EFtrgf1h4BN/D2EH+//kiUJUMV3ZasWHspFzDiqeKAV8AA4FjO185jDWd1tF4TSIwpwSiBiyCYBGcxX9/q+qH/LcUdhL4=
+	t=1705947034; cv=none; b=QFp6lNN6HuhqCtn/q+j9R20nSHVnrUbuHFkfRqRFFTJ22JV25VJcu7pNZzTy9Z4RN+fEJYQKe+C2GLSEabWWtbMO/JNOzw12LRvN2XuWBNCBG6ebexVYFWoAWFOXmIkaykcDyh7qHj4ebIIbJOAKgiEVrDzY0P/GJsnFpBlE0vg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705946922; c=relaxed/simple;
-	bh=glO4E1CBWn+E1r18Fj5DimTfsEQJ3OpiF6I6I20ue/M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qDuVzD1XPiroBsAgDcMGTrwCnRHO1Iyk8jss9LhC0xMEH4EC8AQocazDGwcHwCB9XO/mn1HpLMOLoaFgYXRGxZiIXYuMhNhWVhBVBn3u+C1VEq0kD5yPu+LnSotrn7OyZ7RiMMwbEZ7Ib8ZF3cuqyXnkzEahqdJdnFe/ag2jCyI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bGSoKINB; arc=none smtp.client-ip=209.85.210.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1705947034; c=relaxed/simple;
+	bh=Xusyv3mBYFLW+DNBPX8VAqokOl7QRg+X35ewNVGZS6c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=P7R6vPs5gwo/UQK4KggRW/vWbssgIL/PH5gS1Os9XoCo/5fUx6yz0vYgtbWFZkOqiRVz9sBK7CLCCduHI1bKO+YEDuvLQnqxuwoRuZ5SIbxYYMm68pae8LaOyissY72c0uaD2FlsZjJMx1263o2zTvANBHaT2kOXnIzDupOVYns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=RdccNVhK; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bGSoKINB"
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-6dc1f02090fso195589b3a.0
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 10:08:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1705946920; x=1706551720; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=HNbdTgv8LALJmYPGcQM74cnTmy4haJi+ExYqF4VhU+o=;
-        b=bGSoKINBJZbmm4FeuAZrN2E/uj2/UWMwlhM+og66luboHQl+CWiaollyGBKHPJ1vHZ
-         HzHqKu6QcgwA/mZaXxmTXIncBpcmz1r6UipG1vQkOKeOl1GNkXyMm1Z3n6dR7DkQsB6C
-         Ym/z83T2k3Y02xV3hMDmq/nQQScGreDiNlC+mxRRpw1zdgfHdxHO6Nfwxbu+MoKQU6JJ
-         EdPLCUCd/oc39C43I5B0EIc3MhsXiwoRE1EoffzmHguG4ISbkNbHbJ52kwaBONcX9Wkf
-         d3/Ax+osTLw6C6e+RmR/QUoo8QCzDU1Mg2xcI1E3Tnje6iv5xG7AERrsb1cOo4U5ubxL
-         9ktg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705946920; x=1706551720;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HNbdTgv8LALJmYPGcQM74cnTmy4haJi+ExYqF4VhU+o=;
-        b=QLIOAM2jBoInaSzo8bGnPcZx2YRGqDCIAmxXVD8WDfrgycOJp4SaBaM3qcvnUmGmBy
-         gfT6raC2PXwHV5rRYD2xiKWQ4YI6DwBddeb7DoR/P7uX6dnk1GjbKPamN/w1ZM1EoZXz
-         LhUUiphUYhFp5MjygIEGw26SU7x7jCKNyvzAV6kEPfPWHJk2QMsxdAloWnC2Bq3KEGJ3
-         Q921JpC/T5xIfrZIerEHw1+YJ1/TIUav473CLrId5pvIByrDcYJ3SiMI/VudcfUULPY/
-         kecZbbWiJGFOirJ4WGhczUw2eB2aSGaT/xXh7Fd4TCY8s1JvZgelDWv6LahLI0NCders
-         oaag==
-X-Gm-Message-State: AOJu0YwPFWxFK/zk6VEqPSAgKBGWnNrnGR0XGtLlcGooK5uNMn6I2qRv
-	+gR7WCQ6Wuuhr39NpY7l12WidKJ8AK7/e+pU7Hnmp5oUuMp0qFhlpYB9oqOiWg==
-X-Google-Smtp-Source: AGHT+IGj+eRpJnGrLAJVCgoUSeqyFZJsTXXsbxwvvTWCl2VM75IJiFFpnDKw3znEa402JqO96TgRuw==
-X-Received: by 2002:a05:6a00:2d24:b0:6db:e166:2e8c with SMTP id fa36-20020a056a002d2400b006dbe1662e8cmr2231267pfb.23.1705946919601;
-        Mon, 22 Jan 2024 10:08:39 -0800 (PST)
-Received: from google.com (77.62.105.34.bc.googleusercontent.com. [34.105.62.77])
-        by smtp.gmail.com with ESMTPSA id g22-20020a056a0023d600b006da14f68ac1sm9884357pfc.198.2024.01.22.10.08.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jan 2024 10:08:39 -0800 (PST)
-Date: Mon, 22 Jan 2024 18:08:36 +0000
-From: Carlos Llamas <cmllamas@google.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
-	Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Christian Brauner <brauner@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Sherry Yang <sherryy@android.com>, linux-kernel@vger.kernel.org,
-	kernel-team@android.com, stable@vger.kernel.org
-Subject: Re: [PATCH v2 05/28] binder: fix unused alloc->free_async_space
-Message-ID: <Za6vJC1o83xSwab3@google.com>
-References: <20231201172212.1813387-1-cmllamas@google.com>
- <20231201172212.1813387-6-cmllamas@google.com>
- <Zal9HFZcC3rFjogI@google.com>
- <2024011955-quotation-zone-7f20@gregkh>
- <Zaqw9k4x7IUh6ys-@google.com>
- <2024012203-expedited-job-1d79@gregkh>
- <2024012214-ideology-curvature-febb@gregkh>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="RdccNVhK"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40MFoJnE006867;
+	Mon, 22 Jan 2024 18:10:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=egVvBAlS2e19BKe70ueRMcJh/S6ha3Y7vrwBm+Ktx0s=; b=Rd
+	ccNVhKjVZL8P+itVGfIATo6FLe/lnojmalcvpdrBx/BIED/AycRBLgGcm2TH3bVG
+	YfTWAiwXKiTEkI/aQJApXj8bGXDUtPEA7R1Fm+W1ICRcdMOK+9i+TxwhrGoR44vb
+	vajrRh0Y8Nk0eQVIPpy4ulVnyZaOLIWpfUsGkheKH8j2VR9WqGtzcqdBXROWrCNE
+	tKAAosjQNQUFZ25WitEMtyrneo7AjKvz0LVF2dmTYM4r6lRyHzMPSA5iEe7owBWj
+	ghPmkuf3nwBqNFVEl0Rhdz7p4d2kZu6PFxHc+hguP1zPShEMwNOZyFrwWOEanfVF
+	dUrvUTlFuFUDemMnS5+A==
+Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vst8w8h6n-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 22 Jan 2024 18:10:27 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 40MIARYi014026
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 22 Jan 2024 18:10:27 GMT
+Received: from [10.110.104.139] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Mon, 22 Jan
+ 2024 10:10:23 -0800
+Message-ID: <065601d3-92e7-46cc-a7aa-116cd02b3c36@quicinc.com>
+Date: Mon, 22 Jan 2024 10:10:22 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2024012214-ideology-curvature-febb@gregkh>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] dt-bindings: hwinfo: Add Qualcomm's board-id types
+Content-Language: en-US
+To: Amrit Anand <quic_amrianan@quicinc.com>,
+        Konrad Dybcio
+	<konrad.dybcio@linaro.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+        <agross@kernel.org>, <andersson@kernel.org>
+CC: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <kernel@quicinc.com>
+References: <1705749649-4708-1-git-send-email-quic_amrianan@quicinc.com>
+ <1705749649-4708-3-git-send-email-quic_amrianan@quicinc.com>
+ <54426665-90c5-4355-a174-f512004e11e5@linaro.org>
+ <391f8f48-d1f5-702d-20d4-ae8b8a7ace58@quicinc.com>
+From: Elliot Berman <quic_eberman@quicinc.com>
+In-Reply-To: <391f8f48-d1f5-702d-20d4-ae8b8a7ace58@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: qOUMnVfP2JRU_numX321G8M85lX_W9GY
+X-Proofpoint-ORIG-GUID: qOUMnVfP2JRU_numX321G8M85lX_W9GY
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-01-22_07,2024-01-22_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 bulkscore=0
+ impostorscore=0 phishscore=0 mlxlogscore=999 malwarescore=0
+ lowpriorityscore=0 priorityscore=1501 adultscore=0 suspectscore=0
+ spamscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2311290000 definitions=main-2401220127
 
-On Mon, Jan 22, 2024 at 07:05:29AM -0800, Greg Kroah-Hartman wrote:
-> On Mon, Jan 22, 2024 at 07:04:20AM -0800, Greg Kroah-Hartman wrote:
-> > On Fri, Jan 19, 2024 at 05:27:18PM +0000, Carlos Llamas wrote:
-> > > On Fri, Jan 19, 2024 at 06:49:00AM +0100, Greg Kroah-Hartman wrote:
-> > > > On Thu, Jan 18, 2024 at 07:33:48PM +0000, Carlos Llamas wrote:
-> > > > > On Fri, Dec 01, 2023 at 05:21:34PM +0000, Carlos Llamas wrote:
-> > > > > > Each transaction is associated with a 'struct binder_buffer' that stores
-> > > > > > the metadata about its buffer area. Since commit 74310e06be4d ("android:
-> > > > > > binder: Move buffer out of area shared with user space") this struct is
-> > > > > > no longer embedded within the buffer itself but is instead allocated on
-> > > > > > the heap to prevent userspace access to this driver-exclusive info.
-> > > > > > 
-> > > > > > Unfortunately, the space of this struct is still being accounted for in
-> > > > > > the total buffer size calculation, specifically for async transactions.
-> > > > > > This results in an additional 104 bytes added to every async buffer
-> > > > > > request, and this area is never used.
-> > > > > > 
-> > > > > > This wasted space can be substantial. If we consider the maximum mmap
-> > > > > > buffer space of SZ_4M, the driver will reserve half of it for async
-> > > > > > transactions, or 0x200000. This area should, in theory, accommodate up
-> > > > > > to 262,144 buffers of the minimum 8-byte size. However, after adding
-> > > > > > the extra 'sizeof(struct binder_buffer)', the total number of buffers
-> > > > > > drops to only 18,724, which is a sad 7.14% of the actual capacity.
-> > > > > > 
-> > > > > > This patch fixes the buffer size calculation to enable the utilization
-> > > > > > of the entire async buffer space. This is expected to reduce the number
-> > > > > > of -ENOSPC errors that are seen on the field.
-> > > > > > 
-> > > > > > Fixes: 74310e06be4d ("android: binder: Move buffer out of area shared with user space")
-> > > > > > Signed-off-by: Carlos Llamas <cmllamas@google.com>
-> > > > > > ---
-> > > > > 
-> > > > > Sorry, I forgot to Cc: stable@vger.kernel.org.
-> > > > 
-> > > > 
-> > > > <formletter>
-> > > > 
-> > > > This is not the correct way to submit patches for inclusion in the
-> > > > stable kernel tree.  Please read:
-> > > >     https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html
-> > > > for how to do this properly.
-> > > > 
-> > > > </formletter>
-> > > 
-> > > Oops, here is the complete info:
-> > > 
-> > > Commit ID: c6d05e0762ab276102246d24affd1e116a46aa0c
-> > > Subject:   "binder: fix unused alloc->free_async_space"
-> > > Reason:    Fixes an incorrect calculation of available space.
-> > > Versions:  v4.19+
-> > > 
-> > > Note this patch will also have trivial conflicts in v4.19 and v5.4
-> > > kernels as commit 261e7818f06e is missing there. Please let me know and
-> > > I can send the corresponding patches separately.
-> > 
-> > It doesn't even apply to 6.7.y either, so we need backports for all
-> > affected trees, thanks.
+
+
+On 1/22/2024 2:07 AM, Amrit Anand wrote:
 > 
-> Now I got it to apply, but we need backports for 5.4.y and 4.19.y,
-> thanks.
+> On 1/20/2024 7:02 PM, Konrad Dybcio wrote:
+>> On 20.01.2024 12:20, Amrit Anand wrote:
+>>> Qualcomm based DT uses two or three different identifiers. The SoC
+>>> based idenfier which signifies chipset and the revision for those
+>>> chipsets. The board based identifier is used to distinguish different
+>>> boards (e.g. IDP, MTP) along with the different types of same boards.
+>>> The PMIC attached to the board can also be used as a identifier for
+>>> device tree.
+>>>
+>>> Signed-off-by: Elliot Berman <quic_eberman@quicinc.com>
+>>> Signed-off-by: Amrit Anand <quic_amrianan@quicinc.com>
+>>> ---
+>>>   .../devicetree/bindings/hwinfo/qcom,board-id.yaml  | 86 ++++++++++++++++++++++
+>>>   include/dt-bindings/arm/qcom,ids.h                 | 68 +++++++++++++++--
+>>>   2 files changed, 146 insertions(+), 8 deletions(-)
+>>>   create mode 100644 Documentation/devicetree/bindings/hwinfo/qcom,board-id.yaml
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/hwinfo/qcom,board-id.yaml b/Documentation/devicetree/bindings/hwinfo/qcom,board-id.yaml
+>>> new file mode 100644
+>>> index 0000000..807f134
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/hwinfo/qcom,board-id.yaml
+>>> @@ -0,0 +1,86 @@
+>>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>>> +%YAML 1.2
+>>> +---
+>>> +$id: http://devicetree.org/schemas/hwinfo/qcom,board-id.yaml#
+>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>>> +
+>>> +title: QCOM Board Identifier for Devicetree Selection
+>>> +
+>>> +maintainers:
+>>> +  - Amrit Anand <quic_amrianan@quicinc.com>
+>>> +  - Elliot Berman <quic_eberman@quicinc.com>
+>>> +
+>>> +description: |
+>> The '|'s are unnecessary in both commits, IIRC they're used for
+>> preserving formatting which we don't really need for non-styled
+>> plaintext
+> Sure, will do.
+>>> +  Qualcomm uses two and sometimes three hardware identifiers to describe
+>>> +  its boards
+>>> +      - a SoC identifier is used to match chipsets (e.g. sm8550 vs sm8450)
+>>> +      - a board identifier is used to match board form factor (e.g. MTP, QRD,
+>>> +        ADP, CRD)
+>>> +      - a PMIC identifier is occasionally used when different PMICs are used
+>>> +        for a given board/SoC combination.
+>>> +  Each field and helper macros are defined at::
+>>> +      - include/dt-bindings/arm/qcom,ids.h
+>>> +
+>>> +  For example,
+>>> +    / {
+>>> +        #board-id-cells = <2>;
+>>> +        board-id = <456 0>, <457 0>, <10 0>;
+>>> +        board-id-types = "qcom,soc-id", "qcom,soc-id", "qcom,board-id";
+>>> +     }
+>>> +
+>>> +allOf:
+>>> +  - $ref: board-id.yaml#
+>>> +
+>>> +properties:
+>>> +  board-id:
+>>> +    minItems: 2
+>> I believe some older platforms match exclusively based on socid, so
+>> perhaps 1 would be okay as well.
+>>
+>> [...]
 > 
-> greg k-h
+> Ok, considering legacy targets we can make it 1.
+> 
+> But i think ideally it should always be recommended to have a board ID associated with a SoC ID, correct me if my understanding is wrong.
+> 
 
-Backports sent.
+There is no "legacy" support needed here: Qualcomm's bootloaders
+need to be updated to adhere to the new proposed spec. I suppose
+we need to consider whether we have targets that only need SoC to
+differentiate?
 
-linux-4.19.y:
-https://lore.kernel.org/all/20240122174250.2123854-2-cmllamas@google.com/
+>>> +examples:
+>>> +   - |
+>>> +     #include <dt-bindings/arm/qcom,ids.h>
+>>> +     / {
+>>> +         model = "Qualcomm Technologies, Inc. sc7280 IDP SKU1 platform";
+>>> +         compatible = "qcom,sc7280-idp", "google,senor", "qcom,sc7280";
+>>> +
+>>> +         #board-id-cells = <2>;
+>>> +         board-id = <QCOM_SOC_ID(SC7280) QCOM_SOC_REVISION(1)>,
+>>> +                    <QCOM_SOC_ID(SC7280) QCOM_SOC_REVISION(2)>,
+>>> +                    <QCOM_BOARD_ID(IDP, 1, 0) QCOM_BOARD_SUBTYPE(UFS, ANY, 1)>;
+>>> +         board-id-types = "qcom,soc-id",
+>>> +                          "qcom,soc-id",
+>>> +                          "qcom,board-id";
+>> So, would the matching here would be:
+>>
+>> loop over disctinct board-id-types
+>>     check if there's at least 1 match for all of them
+>>         use this dtb if that's the case
+>>
+>> stop booting / "best guess match"
+>>
+>> ?
+>>
+>> [...]
+> 
+> Yes, But the "if" checking would have preference in place.
+> The preference logic would look something like this,
+> 
+> First will check for SoC-ID, if we have an exact match for SoC-ID then will proceed for board-ID match. Otherwise the DT would be discarded.
+> Once (exact) board-ID found, will proceed for subtype , pmic and so on.
+> Exact match and best match logic is used. Parameters like SoC-ID, board-ID are required to be best matched. Other few fields follow best match logic and best of the DT can be picked.
+> 
+>>> +#define QCOM_BOARD_ID_MTP        0x8
+>>> +#define QCOM_BOARD_ID_DRAGONBOARD    0x10
+>>> +#define QCOM_BOARD_ID_QRD        0x11
+>>> +#define QCOM_BOARD_ID_HDK        0x1F
+>>> +#define QCOM_BOARD_ID_ATP        0x21
+>>> +#define QCOM_BOARD_ID_IDP        0x22
+>>> +#define QCOM_BOARD_ID_SBC        0x24
+>>> +#define QCOM_BOARD_ID_QXR        0x26
+>>> +#define QCOM_BOARD_ID_CRD        0x28
+>> Missing ADP/QCP/Ride (if they're separate)
+> 
+> Sure, will update. Would need to work with teams.
 
-linux-5.4.y:
-https://lore.kernel.org/all/20240122175751.2214176-2-cmllamas@google.com/
+There are probably more boards that we aren't aware of.
 
-Thanks,
-Carlos Llamas
+Amrit, please add board IDs for all the boards that are
+in kernel.org.
