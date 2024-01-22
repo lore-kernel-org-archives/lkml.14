@@ -1,90 +1,171 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8573C13E22F;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A88DE13E232;
 	Mon, 22 Jan 2024 15:15:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.152.168
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705936559; cv=none; b=e+0YT8ll1ur/0ZjouQDfq6/wFf88kn3MkERC3UlDoZ3HbzZ+D8LvrbMAx9kS4CjoI0s+l7C35w7NMOkOpJ63F2MGxqlHTcWVmpfxc59oM64Z4mBJoai7t/j8EIjeG8nHaSkLrGcAUvrn9n2FCU+m7cHcOYisKKqLKgjA/KxpQ3M=
+	t=1705936561; cv=none; b=T9zlfK43L0bzgIYmEN7oZEe/LNSDhxfWKBlKadBnVw3bcTxDk7Gu5gizpURH5hmUu+rhFV7FdDiPOWqIFYcL16lXW1xGkzUrqYq2K5GOW8jOftssGvztcmXAj3p3X8ROU/lKaEKM/SHQuUqyrA4qz/jW85Fh76Fx/XcKCPboeF8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705936559; c=relaxed/simple;
-	bh=msXDYHGXUUrvP5rOtftQbzOuFk8Y2ReFDcFCMxE/Si4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=C58wtYwWbi2MPwW11f65rEeCah4Wm++jRZMiIS3xvFR7PJlnEth/4AFXERjImZQVolhfMAgvNZf5Or+IR/ayhGwbKmmW9GLritH+l8asTNPjCbWNWFt8mgSUiRQZPz9KwW3zbontnzx9mJqUidpiUqpVg7BSSme8UqUuNZhcOGE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j5nFY1ZS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1705936561; c=relaxed/simple;
+	bh=6XmCCPpxHEphsaXntXsmPtrApERA3bz/DPbaZcP4MAg=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=QXAd9fObpFdKmYLObDXQdzT4HppaPw0qX9lYDlJaeH9AcVEjqaG8jXVu1aLq0AJXiVJnnnfyKykEQWrGAP7R/SdA/a+rXdRNRkDQd1g5CKpI9+xuNAvFeCzLkC7NoWR6YolLBWEFR9TGvDWUNxlVju2OSo075NWpSa95257Ga4M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=UwJJfg8i; arc=none smtp.client-ip=67.231.152.168
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j5nFY1ZS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07E0AC43390;
-	Mon, 22 Jan 2024 15:15:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705936558;
-	bh=msXDYHGXUUrvP5rOtftQbzOuFk8Y2ReFDcFCMxE/Si4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=j5nFY1ZS/LdRJbyKCge1AhgKGWkzVPC7wdh02WBT/2iSLt6kvfelUJ0hKdsBZoFOI
-	 SXc1vgYMpl+a3I2sT/WbKO0Pae1M1Q+YQjd50TU5slK7XkdID09sum2im0SXW9Kabp
-	 T9KAB/Gz2iDketxKg7G8Yed6yODVGf3pioiWXvS4Zyfj+5fpiT1EZtdEijGdmK3CIE
-	 U1zNMj5EKzFj2Y9lZ4CEn5nIwHzVDRgjtrqLm9Tt1u2cxE3vPG8VlC+rUT7uGQcwj1
-	 lryfmzbmZXuov/JS1Ncpd+BFVikWBW+MRLsVP0eYvOFbw0x5Si7iN9+VkVBt9kbGgQ
-	 iOJy1IMVsll9A==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-	=?UTF-8?q?P=C3=A9ter=20Ujfalusi?= <peter.ujfalusi@linux.intel.com>,
-	Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-	Mark Brown <broonie@kernel.org>,
-	Takashi Iwai <tiwai@suse.de>,
-	Sasha Levin <sashal@kernel.org>,
-	bhelgaas@google.com,
-	linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.10 15/28] PCI: add INTEL_HDA_ARL to pci_ids.h
-Date: Mon, 22 Jan 2024 10:14:41 -0500
-Message-ID: <20240122151521.996443-15-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240122151521.996443-1-sashal@kernel.org>
-References: <20240122151521.996443-1-sashal@kernel.org>
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="UwJJfg8i"
+Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
+	by mx0b-001ae601.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40M6xJUH012194;
+	Mon, 22 Jan 2024 09:15:48 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=
+	from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding:content-type; s=PODMain02222019; bh=l
+	7xlyXeBpEure9gmT5jL9MhhiOtAVI/rNE+1KjKKJzo=; b=UwJJfg8iujCJVWxFI
+	V1fpjx1UJuRLPnNZeuPjde52SdTGy2TCDRW8WgxHXR3GwC/zkxRbE6eOHjhyE8cn
+	Zvppv5gVAcRxU0EJKI9T9LzcJMmnO3we6IGA+r2brOO+dlnjHjUJ1h8cJVkE2HP3
+	V/+iohx+578VywY7Z0rRJndEC2S6pl0hZzFJwUm0gJXA4Q6w2Eg7NSoinI1l8VhL
+	2kQuS+mFjKR1kot3zEqc2Vco5yVl3W5G1WdsTusn42HWPVgxFkqFNQkwO2Q+8qEJ
+	H1yj8JwGGyKurYolc/QQ+AWQeIrIP7iURIba0DesuPlPg4yV++7HNkY5NQ7DV8Mp
+	0GXuw==
+Received: from ediex02.ad.cirrus.com ([84.19.233.68])
+	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 3vrbfptnar-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 22 Jan 2024 09:15:48 -0600 (CST)
+Received: from ediex01.ad.cirrus.com (198.61.84.80) by ediex02.ad.cirrus.com
+ (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Mon, 22 Jan
+ 2024 15:15:47 +0000
+Received: from ediswmail.ad.cirrus.com (198.61.86.93) by ediex01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server id 15.2.1118.40 via Frontend
+ Transport; Mon, 22 Jan 2024 15:15:47 +0000
+Received: from upx-tgl-008-ubuntu.ad.cirrus.com (upx-tgl-008-ubuntu.ad.cirrus.com [198.90.251.167])
+	by ediswmail.ad.cirrus.com (Postfix) with ESMTP id B485915B7;
+	Mon, 22 Jan 2024 15:15:46 +0000 (UTC)
+From: Maciej Strozek <mstrozek@opensource.cirrus.com>
+To: Mark Brown <broonie@kernel.org>
+CC: Cezary Rojewski <cezary.rojewski@intel.com>,
+        Liam Girdwood
+	<lgirdwood@gmail.com>,
+        Pierre-Louis Bossart
+	<pierre-louis.bossart@linux.intel.com>,
+        Peter Ujfalusi
+	<peter.ujfalusi@linux.intel.com>,
+        Bard Liao
+	<yung-chuan.liao@linux.intel.com>,
+        Ranjani Sridharan
+	<ranjani.sridharan@linux.intel.com>,
+        Kai Vehmanen
+	<kai.vehmanen@linux.intel.com>,
+        <alsa-devel@alsa-project.org>, <patches@opensource.cirrus.com>,
+        <linux-sound@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Maciej Strozek
+	<mstrozek@opensource.cirrus.com>
+Subject: [PATCH v2] ASoC: Intel: mtl-match: Add cs42l43_l0 cs35l56_l23 for MTL
+Date: Mon, 22 Jan 2024 15:15:45 +0000
+Message-ID: <20240122151545.69437-1-mstrozek@opensource.cirrus.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.10.208
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-ORIG-GUID: 2Q_tcVVKwx5TDVlSwL2jEHdwImfvkYfQ
+X-Proofpoint-GUID: 2Q_tcVVKwx5TDVlSwL2jEHdwImfvkYfQ
+X-Proofpoint-Spam-Reason: safe
 
-From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-
-[ Upstream commit 5ec42bf04d72fd6d0a6855810cc779e0ee31dfd7 ]
-
-The PCI ID insertion follows the increasing order in the table, but
-this hardware follows MTL (MeteorLake).
-
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Reviewed-by: Péter Ujfalusi <peter.ujfalusi@linux.intel.com>
-Reviewed-by: Kai Vehmanen <kai.vehmanen@linux.intel.com>
-Acked-by: Mark Brown <broonie@kernel.org>
-Link: https://lore.kernel.org/r/20231204212710.185976-2-pierre-louis.bossart@linux.intel.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Maciej Strozek <mstrozek@opensource.cirrus.com>
 ---
- include/linux/pci_ids.h | 1 +
- 1 file changed, 1 insertion(+)
+v1 -> v2: swapped AMP3 and AMP4 prefixes
 
-diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-index 1a41147b22e8..80744a7b5e33 100644
---- a/include/linux/pci_ids.h
-+++ b/include/linux/pci_ids.h
-@@ -3020,6 +3020,7 @@
- #define PCI_DEVICE_ID_INTEL_82443GX_0	0x71a0
- #define PCI_DEVICE_ID_INTEL_82443GX_2	0x71a2
- #define PCI_DEVICE_ID_INTEL_82372FB_1	0x7601
-+#define PCI_DEVICE_ID_INTEL_HDA_ARL	0x7728
- #define PCI_DEVICE_ID_INTEL_SCH_LPC	0x8119
- #define PCI_DEVICE_ID_INTEL_SCH_IDE	0x811a
- #define PCI_DEVICE_ID_INTEL_E6XX_CU	0x8183
--- 
-2.43.0
+ .../intel/common/soc-acpi-intel-mtl-match.c   | 57 +++++++++++++++++++
+ 1 file changed, 57 insertions(+)
+
+diff --git a/sound/soc/intel/common/soc-acpi-intel-mtl-match.c b/sound/soc/intel/common/soc-acpi-intel-mtl-match.c
+index feb12c6c85d1..23eaf47b3f24 100644
+--- a/sound/soc/intel/common/soc-acpi-intel-mtl-match.c
++++ b/sound/soc/intel/common/soc-acpi-intel-mtl-match.c
+@@ -377,6 +377,37 @@ static const struct snd_soc_acpi_adr_device cs35l56_2_adr[] = {
+ 	}
+ };
+
++static const struct snd_soc_acpi_adr_device cs35l56_2_r_adr[] = {
++	{
++		.adr = 0x00023201FA355601ull,
++		.num_endpoints = 1,
++		.endpoints = &spk_r_endpoint,
++		.name_prefix = "AMP3"
++	},
++	{
++		.adr = 0x00023301FA355601ull,
++		.num_endpoints = 1,
++		.endpoints = &spk_3_endpoint,
++		.name_prefix = "AMP4"
++	}
++
++};
++
++static const struct snd_soc_acpi_adr_device cs35l56_3_l_adr[] = {
++	{
++		.adr = 0x00033001fa355601ull,
++		.num_endpoints = 1,
++		.endpoints = &spk_l_endpoint,
++		.name_prefix = "AMP1"
++	},
++	{
++		.adr = 0x00033101fa355601ull,
++		.num_endpoints = 1,
++		.endpoints = &spk_2_endpoint,
++		.name_prefix = "AMP2"
++	}
++};
++
+ static const struct snd_soc_acpi_link_adr rt5682_link2_max98373_link0[] = {
+ 	/* Expected order: jack -> amp */
+ 	{
+@@ -554,6 +585,26 @@ static const struct snd_soc_acpi_link_adr mtl_cs42l43_cs35l56[] = {
+ 	{}
+ };
+
++static const struct snd_soc_acpi_link_adr cs42l43_link0_cs35l56_link2_link3[] = {
++	/* Expected order: jack -> amp */
++	{
++		.mask = BIT(0),
++		.num_adr = ARRAY_SIZE(cs42l43_0_adr),
++		.adr_d = cs42l43_0_adr,
++	},
++	{
++		.mask = BIT(2),
++		.num_adr = ARRAY_SIZE(cs35l56_2_r_adr),
++		.adr_d = cs35l56_2_r_adr,
++	},
++	{
++		.mask = BIT(3),
++		.num_adr = ARRAY_SIZE(cs35l56_3_l_adr),
++		.adr_d = cs35l56_3_l_adr,
++	},
++	{}
++};
++
+ /* this table is used when there is no I2S codec present */
+ struct snd_soc_acpi_mach snd_soc_acpi_intel_mtl_sdw_machines[] = {
+ 	/* mockup tests need to be first */
+@@ -599,6 +650,12 @@ struct snd_soc_acpi_mach snd_soc_acpi_intel_mtl_sdw_machines[] = {
+ 		.drv_name = "sof_sdw",
+ 		.sof_tplg_filename = "sof-mtl-rt1318-l12-rt714-l0.tplg"
+ 	},
++	{
++		.link_mask = BIT(0) | BIT(2) | BIT(3),
++		.links = cs42l43_link0_cs35l56_link2_link3,
++		.drv_name = "sof_sdw",
++		.sof_tplg_filename = "sof-mtl-cs42l43-l0-cs35l56-l23.tplg",
++	},
+ 	{
+ 		.link_mask = GENMASK(2, 0),
+ 		.links = mtl_cs42l43_cs35l56,
+--
+2.34.1
 
