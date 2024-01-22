@@ -1,78 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.systec-electronic.com (mail.systec-electronic.com [77.220.239.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 426EF40BE2;
-	Mon, 22 Jan 2024 19:24:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705951460; cv=none; b=o9kJzNSHXeuX+3s3qSxSGjGEvrkuVPmWdLw6E+Hpe7GpKSLfVqS7zGLKE4CoHM0oBsiObYsChOiXP5Cw/OAQiIH0bhsR3vx6FV2hnRU5nnSc8n5WWoRRTxMoE3opQ1Jt6WVGFHWd6VwRTPfuGDj/KcjMQjWG1/RDsnOix8VLRog=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705951460; c=relaxed/simple;
-	bh=q6+ae+e1u2lR2sj3tlYoFuAtnCRKAfk/zjH65/fqdzQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Rrj/tnDdtBWKyMg4oMWVHowH78UivuFuyqHfwUaYDEU9/3GaOs/kg4cOVwFgZxtre+rPfXwpRTEyLV2i8vRFY6uZuolfB8Pp/QEEhbMoGze1QOre+aReAWIqWXFSEDtqZGJ6KkJ0+IXwylZVTrn8tm/98folFzLl/iT100MBQBY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nlwLq4vt; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nlwLq4vt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB9B7C433C7;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96FB3405EC;
 	Mon, 22 Jan 2024 19:24:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705951460;
-	bh=q6+ae+e1u2lR2sj3tlYoFuAtnCRKAfk/zjH65/fqdzQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nlwLq4vtr47vvjoezI/elsZFCkLtHGUhglYP+KkGBdkj1z+5kqlZFhO5MJFL8i3O0
-	 5u5l3R7cmdv1qlGFjN9miagp+q/FoGfK9qqZL/AlA0KztWKojgJW8f7P2UQlw66Les
-	 8//g8zukcEys2nwPuK6q+qoL8k38EV4TVowELpRwdyZEWJr4ojk21Ff27BzmkfZYoo
-	 nfToxlYh3CHIO6MRxfmLc+07yZ/nru2V/x8hbprj6s2UyRR25erQGehC1wIiuQecLi
-	 KsO3SETa/3zo/oUXsKho2auDCwrFAj945ZWHWP7mSHUpjAPp86UGSzUk4Ei+ulebdC
-	 +RBJ2WZMPBJrw==
-Date: Mon, 22 Jan 2024 19:24:15 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Klaus Kudielka <klaus.kudielka@gmail.com>
-Cc: linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [GIT PULL] SPI updates for v6.8
-Message-ID: <27cf320e-7b28-44cd-9aa9-ec23008a9e82@sirena.org.uk>
-References: <20240107223817.EDB59C433C7@smtp.kernel.org>
- <d8724cd416494bb5cd5b0350266fce0cb7b3b210.camel@gmail.com>
- <a3b7790b-ce5b-407f-8089-a18c52aa7a1e@sirena.org.uk>
- <65a86432e076d98ca5dfbc24ba8a08bcbd48071c.camel@gmail.com>
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=77.220.239.22
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1705951461; cv=none; b=ZfjI4RGWfcSkVs2ByDGfRzJXmB5Opd3CgGdFFt/XHtoFludp9PPHi4weJmvPVGH7xN5W2BfxHCtuNm0XslPjR+asYScD8NKW0DSPr9i0gr6cgsBqThqmecNPxcZLjTnHsUwMHiOlBTTczTr1l28VRLbJIvqAOeR0kqmnuV2eybQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1705951461; c=relaxed/simple;
+	bh=Lgn/MXuIjRnOzJxKkgXVhM9eDsr6eamWFql+Ayt6Ysc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NEc/o7C8GcuSz7CJQsgOx/AMZTB3eQ3iMHZgAPIfi5GXq3EwYKeg7Gsdi/aciwUY1tkEVqx8tU8ZUAa0BnNnSuBQwEUS5UCbvWfjpqDYSTXuFwag4cAd2iC7S7gMiSrYrSmtNSQV55GxYU7J0F3VOISHMrDllKbQITT9eCNSEAU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=systec-electronic.com; spf=pass smtp.mailfrom=systec-electronic.com; dkim=pass (2048-bit key) header.d=systec-electronic.com header.i=@systec-electronic.com header.b=I1iZon7X; arc=none smtp.client-ip=77.220.239.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=systec-electronic.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=systec-electronic.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=systec-electronic.com header.i=@systec-electronic.com header.b="I1iZon7X"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.systec-electronic.com (Postfix) with ESMTP id 3FE499400107;
+	Mon, 22 Jan 2024 20:24:16 +0100 (CET)
+Received: from mail.systec-electronic.com ([127.0.0.1])
+ by localhost (mail.systec-electronic.com [127.0.0.1]) (amavis, port 10032)
+ with ESMTP id JEl9PL90j9wg; Mon, 22 Jan 2024 20:24:16 +0100 (CET)
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.systec-electronic.com (Postfix) with ESMTP id 14B9D9401683;
+	Mon, 22 Jan 2024 20:24:16 +0100 (CET)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.systec-electronic.com 14B9D9401683
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=systec-electronic.com; s=B34D3B04-5DC7-11EE-83E3-4D8CAB78E8CD;
+	t=1705951456; bh=BTpD3ri/kp+9GXI4Ho471yIWvsi+FB9vUd2lUCI+AaY=;
+	h=From:To:Date:Message-ID:MIME-Version;
+	b=I1iZon7XtJnxNly0mB0Sdl/Uxo2WYoxtccpmXwuagSSCc3A3lJX+9EaQqf6qnfE4s
+	 EvQKtfbAVs1Csngrsq/vvFc+5F7hNvZnZ5rQ36KaonBidyb10fe2JgnrVX1l7ZqyPZ
+	 J6KJm9lqVwBn+ufNjaQRImGi2Gsj7LxtQxctxYQmPRIuPbSDqxbq4pZso6BDM1elIK
+	 U3akAkwarAeT/h7i1KiIoSm/Ng1FkuTgvDgylva2hUSr5at02kI0QIg8pJ/XQFVKVx
+	 LV99kR7VHY9YkZ5RiJMnIXpvjOIsKYFY+pKt2Qe+hAD16f6jY+Ye9abEVU225nk0fg
+	 bmIyAEGq++csg==
+X-Virus-Scanned: amavis at systec-electronic.com
+Received: from mail.systec-electronic.com ([127.0.0.1])
+ by localhost (mail.systec-electronic.com [127.0.0.1]) (amavis, port 10026)
+ with ESMTP id OjDNvI_ozQCU; Mon, 22 Jan 2024 20:24:15 +0100 (CET)
+Received: from ws-565760.systec.local (unknown [212.185.67.148])
+	by mail.systec-electronic.com (Postfix) with ESMTPSA id B28039400107;
+	Mon, 22 Jan 2024 20:24:15 +0100 (CET)
+From: Andre Werner <andre.werner@systec-electronic.com>
+To: andrew@lunn.ch,
+	hkallweit1@gmail.com,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com
+Cc: linux@armlinux.org.uk,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Andre Werner <andre.werner@systec-electronic.com>
+Subject: [RFC net-next v5 0/2] Prevent nullptr exceptions in ISR
+Date: Mon, 22 Jan 2024 20:17:14 +0100
+Message-ID: <20240122192401.26836-1-andre.werner@systec-electronic.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="lEoP+jDxm8z+j2Zc"
-Content-Disposition: inline
-In-Reply-To: <65a86432e076d98ca5dfbc24ba8a08bcbd48071c.camel@gmail.com>
-X-Cookie: Nice guys don't finish nice.
+Content-Transfer-Encoding: quoted-printable
 
+In case phydev->irq is modified unconditionally to a valid IRQ, handling
+the IRQ may lead to a nullptr exception if no interrupt handler is
+registered to the phy driver. phy_interrupt calls a
+phy_device->handle_interrupt unconditionally. And interrupts are enabled
+in phy_connect_direct if phydev->irq is not equal to PHY_POLL or
+PHY_MAC_INTERRUPT, so it does not check for a phy driver providing an ISR=
+.
 
---lEoP+jDxm8z+j2Zc
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Adding an additonal check for a valid interrupt handler in phy_attach_dir=
+ect
+function, and falling back to polling mode if not, should prevent for
+such nullptr exceptions.
 
-On Mon, Jan 22, 2024 at 07:57:01PM +0100, Klaus Kudielka wrote:
+Moreover, the ADIN1100 phy driver is extended with an interrupt handler
+for changes in the link status.
 
-> I wouldn't have an explanation either. But said patch, applied on top of 6.8.0-rc1,
-> seems to be a possible cure. Everything nominal again, AFAICT.
+Andre Werner (2):
+  net: phy: phy_device: Prevent nullptr exceptions on ISR
+  net: phy: adin1100: Add interrupt support for link change
 
-Great, thanks for checking - the fix should in -rc2 all being well.
+ drivers/net/phy/adin1100.c   | 55 ++++++++++++++++++++++++++++++++++++
+ drivers/net/phy/phy_device.c | 13 +++++----
+ 2 files changed, 63 insertions(+), 5 deletions(-)
 
---lEoP+jDxm8z+j2Zc
-Content-Type: application/pgp-signature; name="signature.asc"
+--=20
+2.43.0
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmWuwN4ACgkQJNaLcl1U
-h9BgJAf+JDrq8bDEDzzlgw3BXrwemxAJFWrNnC4Zupys9mmYY1ocsszxR6VyiosP
-pEwqTolJU+pjlzH5W6ECTUT5JXkXv6U1u5Xg+5FwVucWBhSCKszS3N5PJW7xs0+/
-dqmHO3Q6zsE3vizAbLtpiO+J+M+7R0e/fS52ax8GP7bJwMyvkpzXoW+cq2qg/EUj
-dvcPceH9d+eku9DWaB4dmjLI0O1RtQreqJgseUDeFEFmgOD4dbpRJUSq/ZQ2Vmss
-nd8kLtuicsidZRpzsvYRrWaA+AhUo2npfhT78YeLL4JVT11TLL5n84GuhFthH5w5
-Pwx1N7D+w0kKdE/kJx0A2d5gWL+nlQ==
-=HXsc
------END PGP SIGNATURE-----
-
---lEoP+jDxm8z+j2Zc--
