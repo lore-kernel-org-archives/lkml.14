@@ -1,144 +1,141 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
+Received: from out-180.mta1.migadu.com (out-180.mta1.migadu.com [95.215.58.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D490156466;
-	Mon, 22 Jan 2024 16:32:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.88
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3743E6EB7E
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 16:32:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705941159; cv=none; b=oYF4dMTunNypb9xw0aqUaab0OAFvC/lV87i4OteXmcg86+jvwC7TEWf+xdaXRvmtwJ09830yrMAJ3ZxGHtU+ddHwPK7C2bmGMkaBDM1xm1zw3Psm7PYwsSaY1jcNkh4s44ZDFvshQahHQC/k/xBlGoPqQQB9PMyKjQc96hXnCMU=
+	t=1705941160; cv=none; b=RLr8sc3fq9Pm3zQqoxcM8mmVHguUKuVu3XMExDGJh9m6HLwuge1bapWDo74ci9/VFufqVqezsnsXo3/OoglZZmdfav2dQW2nLRNyrr721t5JKEvWKHFz1qyqnBEvTInSyB1r5w76yZ4oz5DPixTW0AUdmtu2GtKpnReUncKHEng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705941159; c=relaxed/simple;
-	bh=q+mUZdd5s8JkPZLmLiPG2KxVKoVyZ0JMYzMnTmOTZpg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uqlpjjk47vWFtZsiWFMtgHg+QrQfR6FKv/02lhkHw7pHbiTCEd8q6laU26lpCbKey7c9Fk+QmfhVUA6wR0Q5VfUbEiDiyBotfHFNaq8j0D6dEtiQCyTTgKP82Fygfm5AJsgd7emnSdt688vjx9je3wIR3Uq82gAaDy3R9SSQciI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=K3Eb+61L; arc=none smtp.client-ip=192.55.52.88
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1705941160; c=relaxed/simple;
+	bh=NUwOnB7z3Jkgn5qG2ac0cxgyuyamotCv2+iPCv6JTE4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=oTizMc62P81X3YZWJsw07D86UlaIleZfn1jrXz5/2dwaRGYDxTJ0tEdNmmLHE3/vj/b6nUQIBYgGez5quuTGStzNjBsNmx1R9hl3t59QUwthbQh38H1kuzssl6OGp+Wgp5Fnyod/IcrZHxmT/PWDRPJZVxtos9Y2vROjd89YRB4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=hRUoIKsM; arc=none smtp.client-ip=95.215.58.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K3Eb+61L"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1705941157; x=1737477157;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=q+mUZdd5s8JkPZLmLiPG2KxVKoVyZ0JMYzMnTmOTZpg=;
-  b=K3Eb+61LaZegyaW2uufEbcNjXf+CJUCN/5rUJupydkEC48/qOLVcVYTz
-   q0p6tcA4vChfRiK8T4rfCCs9in1CdHUNnZRna6QYljkA2V6EKGCvF1oro
-   p6oVMhaNTgMWHBEKeQTlvU2JamKuKk3Ny7hjKbKWhJEZCkH2CHt+Oz9YZ
-   +JP/Fpwd3e4cX3/bXBQwPnfJDD43w4zod6ygvbdju+BP6yZZAZD1QTPGO
-   yjTOVA2nz3TmCsH7XtpRZOLLfiSOAsPkUBB7T9k+otBGqPKiR3HyMj6l9
-   EE/ILmD9J3VMv3qEsSr53urcFl3P4yJDvxpqF+o/NYBia5nNR34qD9dmn
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10961"; a="432413277"
-X-IronPort-AV: E=Sophos;i="6.05,211,1701158400"; 
-   d="scan'208";a="432413277"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 08:32:24 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10961"; a="855989740"
-X-IronPort-AV: E=Sophos;i="6.05,211,1701158400"; 
-   d="scan'208";a="855989740"
-Received: from yongwool-mobl3.amr.corp.intel.com (HELO [10.209.52.151]) ([10.209.52.151])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 08:32:23 -0800
-Message-ID: <ff370e42-f48b-4c62-9b44-9d4031cd78b0@intel.com>
-Date: Mon, 22 Jan 2024 08:32:22 -0800
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="hRUoIKsM"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1705941157;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=npqubJ7Bj7Hp+PXoNaKT0QhmaM+1u+5VldbVzcNqcKI=;
+	b=hRUoIKsMG7O90bNfo9wUm9cKlyUIAfVjI4dIh3/xy6G+8thfA1pGQs/f/I5Oi++EeXrUn9
+	0XAc430aKgJPelbVcykvQoJGZFSURld61Ju7l2nauidb8/x/9f3JpOpcrLltpKuC7wjU7K
+	tmZ7Z3BqE4EdU1baTkmqgktMCMufG78=
+From: Sui Jingfeng <sui.jingfeng@linux.dev>
+To: David Airlie <airlied@gmail.com>
+Cc: Neil Armstrong <neil.armstrong@linaro.org>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	Sui Jingfeng <sui.jingfeng@linux.dev>
+Subject: [PATCH 3/5] drm/bridge: simple-bridge: Allow acquiring the next bridge with fwnode API
+Date: Tue, 23 Jan 2024 00:32:18 +0800
+Message-Id: <20240122163220.110788-4-sui.jingfeng@linux.dev>
+In-Reply-To: <20240122163220.110788-1-sui.jingfeng@linux.dev>
+References: <20240122163220.110788-1-sui.jingfeng@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 7/7] x86/vmware: Add TDX hypercall support
-Content-Language: en-US
-To: Alexey Makhalov <alexey.makhalov@broadcom.com>,
- linux-kernel@vger.kernel.org, virtualization@lists.linux.dev, bp@alien8.de,
- hpa@zytor.com, dave.hansen@linux.intel.com, mingo@redhat.com,
- tglx@linutronix.de
-Cc: x86@kernel.org, netdev@vger.kernel.org, richardcochran@gmail.com,
- linux-input@vger.kernel.org, dmitry.torokhov@gmail.com, zackr@vmware.com,
- linux-graphics-maintainer@vmware.com, pv-drivers@vmware.com,
- namit@vmware.com, timothym@vmware.com, akaher@vmware.com, jsipek@vmware.com,
- dri-devel@lists.freedesktop.org, daniel@ffwll.ch, airlied@gmail.com,
- tzimmermann@suse.de, mripard@kernel.org, maarten.lankhorst@linux.intel.com,
- horms@kernel.org, kirill.shutemov@linux.intel.com
-References: <20240109084052.58661-1-amakhalov@vmware.com>
- <20240109084052.58661-8-amakhalov@vmware.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <20240109084052.58661-8-amakhalov@vmware.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On 1/9/24 00:40, Alexey Makhalov wrote:
-> +#ifdef CONFIG_INTEL_TDX_GUEST
-> +unsigned long vmware_tdx_hypercall(unsigned long cmd,
-> +				   struct tdx_module_args *args)
-> +{
-> +	if (!hypervisor_is_type(X86_HYPER_VMWARE))
-> +		return ULONG_MAX;
-> +
-> +	if (cmd & ~VMWARE_CMD_MASK) {
-> +		pr_warn_once("Out of range command %lx\n", cmd);
-> +		return ULONG_MAX;
-> +	}
-> +
-> +	args->r10 = VMWARE_TDX_VENDOR_LEAF;
-> +	args->r11 = VMWARE_TDX_HCALL_FUNC;
-> +	args->r12 = VMWARE_HYPERVISOR_MAGIC;
-> +	args->r13 = cmd;
-> +	args->r15 = 0; /* CPL */
-> +
-> +	__tdx_hypercall(args);
-> +
-> +	return args->r12;
-> +}
-> +EXPORT_SYMBOL_GPL(vmware_tdx_hypercall);
-> +#endif
+Which make it possible to use this driver on non-DT based systems,
+meanwhile, made no functional changes for DT based systems.
 
-This is the kind of wrapper that I was hoping for.  Thanks.
+Signed-off-by: Sui Jingfeng <sui.jingfeng@linux.dev>
+---
+ drivers/gpu/drm/bridge/simple-bridge.c | 51 ++++++++++++++++++++++----
+ 1 file changed, 44 insertions(+), 7 deletions(-)
 
-Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
+diff --git a/drivers/gpu/drm/bridge/simple-bridge.c b/drivers/gpu/drm/bridge/simple-bridge.c
+index 595f672745b9..cfea5a67cc5b 100644
+--- a/drivers/gpu/drm/bridge/simple-bridge.c
++++ b/drivers/gpu/drm/bridge/simple-bridge.c
+@@ -184,6 +184,39 @@ static const void *simple_bridge_get_match_data(const struct device *dev)
+ 	return NULL;
+ }
+ 
++static int simple_bridge_get_next_bridge_by_fwnode(struct device *dev,
++						   struct drm_bridge **next_bridge)
++{
++	struct drm_bridge *bridge;
++	struct fwnode_handle *ep;
++	struct fwnode_handle *remote;
++
++	ep = fwnode_graph_get_endpoint_by_id(dev->fwnode, 1, 0, 0);
++	if (!ep) {
++		dev_err(dev, "The endpoint is unconnected\n");
++		return -EINVAL;
++	}
++
++	remote = fwnode_graph_get_remote_port_parent(ep);
++	fwnode_handle_put(ep);
++	if (!remote) {
++		dev_err(dev, "No valid remote node\n");
++		return -ENODEV;
++	}
++
++	bridge = drm_bridge_find_by_fwnode(remote);
++	fwnode_handle_put(remote);
++
++	if (!bridge) {
++		dev_warn(dev, "Next bridge not found, deferring probe\n");
++		return -EPROBE_DEFER;
++	}
++
++	*next_bridge = bridge;
++
++	return 0;
++}
++
+ static int simple_bridge_probe(struct platform_device *pdev)
+ {
+ 	struct simple_bridge *sbridge;
+@@ -199,14 +232,17 @@ static int simple_bridge_probe(struct platform_device *pdev)
+ 	else
+ 		sbridge->info = simple_bridge_get_match_data(&pdev->dev);
+ 
+-	/* Get the next bridge in the pipeline. */
+-	remote = of_graph_get_remote_node(pdev->dev.of_node, 1, -1);
+-	if (!remote)
+-		return -EINVAL;
+-
+-	sbridge->next_bridge = of_drm_find_bridge(remote);
+-	of_node_put(remote);
++	if (pdev->dev.of_node) {
++		/* Get the next bridge in the pipeline. */
++		remote = of_graph_get_remote_node(pdev->dev.of_node, 1, -1);
++		if (!remote)
++			return -EINVAL;
+ 
++		sbridge->next_bridge = of_drm_find_bridge(remote);
++		of_node_put(remote);
++	} else {
++		simple_bridge_get_next_bridge_by_fwnode(&pdev->dev, &sbridge->next_bridge);
++	}
+ 	if (!sbridge->next_bridge) {
+ 		dev_dbg(&pdev->dev, "Next bridge not found, deferring probe\n");
+ 		return -EPROBE_DEFER;
+@@ -231,6 +267,7 @@ static int simple_bridge_probe(struct platform_device *pdev)
+ 	/* Register the bridge. */
+ 	sbridge->bridge.funcs = &simple_bridge_bridge_funcs;
+ 	sbridge->bridge.of_node = pdev->dev.of_node;
++	sbridge->bridge.fwnode = pdev->dev.fwnode;
+ 	sbridge->bridge.timings = sbridge->info->timings;
+ 
+ 	drm_bridge_add(&sbridge->bridge);
+-- 
+2.25.1
 
