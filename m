@@ -1,94 +1,94 @@
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCFC7210E0;
-	Mon, 22 Jan 2024 08:17:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1B4F210E2
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 08:18:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705911448; cv=none; b=lZ5JgOKAcBu0B/WQT8z0CDI6VWr1fiXKu1SrPnrGzmE1tcKu85lnTwUo8lbw3q9dQS+7AGt0gxnFQpI0Us4BCi7moIeSDSj4V9+4cQ8V1KbGUOXgIs0ksnxcfIrlKx2asGGJ2JH68D6jQFw+b2N4HTaFRdU7h249YjoBcURnUFg=
+	t=1705911489; cv=none; b=V2kYq6IkWziHAIaQNdZZU2iMJQPXEdpIur/5cj/Osz5icwsqADRXOCWtJEzzcnbnZdZDJO2iYHbsanXP3qmVD8lLB1P2je4L2thTywU1A8E/daheeS7/poXwY0XAjUluCNyyyUoMv+lfqbK5N1UqXQYLHxd3bHAIeflY/9kZ2LA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705911448; c=relaxed/simple;
-	bh=aq/witDg2poUOUnqF60PQr7UvlvL7TKPJSmbDOt5ik8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SirgKTkwAddQwv8RI2VzPhcSDuuAZe5xyrZhd5CNE8EOqzBDxbophxeEpennJe/7sROWvc2xoftMHUbgHb2jo6a/D2oSSXe1MdEeAfmlGPcThTYmV+Pu4AUj9o23n/0YuVOZELwAHOeR3HtX1kLxvdV13G5+TUmKGKBXDdWKT9c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=JjuFux0T; arc=none smtp.client-ip=217.70.183.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1705911489; c=relaxed/simple;
+	bh=TuCnBVR88ntymG76CNyDH8bqX5RV/3GbHvDE2cVI+k0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=guA7P4H+FXFN+HMnt5dhprQSV2nWWALvdM2QUQWbMFSqnq7cPhbLAPw7JPucvvA7Dw6Kcj1S3O3ssCr0FjmqmCjCDZzyzgkzh9QaesN7ctnJ1A39hpKIFnjJkIG7cQyn1OYUgcU9LQZXrdA8zXLrsvtQp4vYYqZ1iXGJN50Qcl4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=gVeE8TLa; arc=none smtp.client-ip=209.85.167.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="JjuFux0T"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id DAF611BF20D;
-	Mon, 22 Jan 2024 08:17:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1705911443;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hftQ/3NQ3SEsGANsB0kuwB+4HmiO86h7hcHpWei/1cY=;
-	b=JjuFux0TPgsxBh3Wr7htl8dzLwncaA4+bhaVv9DjNXlLHYsfxKhXWRrYnOqdccPFWYSZU9
-	nNFBMmyBIWLVAGLqlnovcDgvQDTpJM4XF9OwsZ4VGK8s21Hkh0zFTCci0aDpFaglnJuBEC
-	HXedDV07MNMJl+T0ZqExJpNZsTl2JGDXDarLF/EfYaKCjrxbSyOZmUbgnvFcG7h6ZLXgyo
-	3h9D0EZf93N9d8qYXzBYH6pe6s43wiIWp6Ve+iaw0pIPsLYLUneUN1eJcAq8ZdEvk00N54
-	BXNp5k31h49FARUEokf7um+pXt69qcw8NRSIwxkTncL9F4XUeiq1dujnyR55rw==
-Date: Mon, 22 Jan 2024 09:17:22 +0100
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-To: Jingbao Qiu <qiujingbao.dlmu@gmail.com>
-Cc: robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org, chao.wei@sophgo.com, unicorn_wang@outlook.com,
-	paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
-	linux-rtc@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-	dlan@gentoo.org
-Subject: Re: [PATCH v7 2/3] rtc: sophgo: add rtc support for Sophgo CV1800 SoC
-Message-ID: <20240122081722868bdda5@mail.local>
-References: <20240122080631.2880-1-qiujingbao.dlmu@gmail.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gVeE8TLa"
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-50ff9bde634so545383e87.2
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 00:18:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1705911485; x=1706516285; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TuCnBVR88ntymG76CNyDH8bqX5RV/3GbHvDE2cVI+k0=;
+        b=gVeE8TLaUNQRDxyF2WTF1vJiy3iqct0QQj0FFL9nit8OHr3tOiSvr5PafROA8m9P8W
+         uxUIt65ddDIfefLPxFsix1DpSRt4SWRGlNy9o/ZeakcUEdYDAQFKuPD0RtbiNDaRVTDV
+         arsS2i2a+VdL98kuW2+9FRLC5Q1RoRE1HU5W8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705911485; x=1706516285;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TuCnBVR88ntymG76CNyDH8bqX5RV/3GbHvDE2cVI+k0=;
+        b=Gs/J263ooywXWsPCxTSe6D7f/chXEGT1D2EISF6761C6iGr8A+ppk3V4A8GgiezQMR
+         qlh7DwyMs6DqfqT59HOMC7F18mHHx+3hi2vJvw94KIq2gmVIPRL40RgawCscnDqJM8Ja
+         LbEX0w4t/ImsPyfy81SF++Gjr0RMlrR3ltFjW8aqM0tfa4GaA1bnS+WSfjRTYqkv1G0V
+         JKdjC/6UZ9dOUtuaQXbxAfqgTr08MRmdNnJcVtCjKIBERpj7rcMqfd4S+wx4Q8QPScU5
+         XWLGvI/HD0ZWcx9Z3077WJd749GviSK/bErygvpXxFP2HYBLd/44L/ffDrpUXsvqN3+p
+         fTHQ==
+X-Gm-Message-State: AOJu0YzYFuWJWmOnPOPTdzN7KZIYsV/H3yvl4Hc5/dFAZCDMqWDtmxoV
+	DzPYf/cM1/ovawPQHD6L/W8uqcoNCZ0BpPBqNhiBYsp8Wi1xlznRXQSojugwMzEGG3/iUsJdsc8
+	PxcGBIqjOM6nuF1kll9Y7TEhVC5jE7Q326YVD
+X-Google-Smtp-Source: AGHT+IHqFkBn13JB/hRuAs3sSSx+yTST7ZFxRuIjTeHxb63T26OccgYLsj9ML0Hpe1WxHZ/X75r0bu3mEBfMQsY40Y8=
+X-Received: by 2002:a05:6512:3d1c:b0:50e:3f2e:c726 with SMTP id
+ d28-20020a0565123d1c00b0050e3f2ec726mr1762337lfv.87.1705911485563; Mon, 22
+ Jan 2024 00:18:05 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240122080631.2880-1-qiujingbao.dlmu@gmail.com>
-X-GND-Sasl: alexandre.belloni@bootlin.com
+References: <20231213150435.4134390-1-wenst@chromium.org> <20231213150435.4134390-2-wenst@chromium.org>
+ <d16723a6-5602-4fa8-9cfc-589846b75f5b@gmail.com>
+In-Reply-To: <d16723a6-5602-4fa8-9cfc-589846b75f5b@gmail.com>
+From: Chen-Yu Tsai <wenst@chromium.org>
+Date: Mon, 22 Jan 2024 16:17:54 +0800
+Message-ID: <CAGXv+5FVOb_X02ovGgwZ=5YpipiCfO9SKD5hOrx9eweps9bB+Q@mail.gmail.com>
+Subject: Re: [PATCH v4 1/9] dt-bindings: arm: mediatek: Sort entries by SoC
+ then board compatibles
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	Eugen Hristev <eugen.hristev@collabora.com>, Conor Dooley <conor.dooley@microchip.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 22/01/2024 16:06:30+0800, Jingbao Qiu wrote:
-> Implement the RTC driver for CV1800, which able to provide time alarm
-> and calibrate functionality.
-> 
-> Signed-off-by: Jingbao Qiu <qiujingbao.dlmu@gmail.com>
-> ---
-> 
-> Depends on https://lore.kernel.org/all/IA1PR20MB4953C774D41EDF1EADB6EC18BB6D2@IA1PR20MB4953.namprd20.prod.outlook.com/
+On Mon, Jan 22, 2024 at 4:02=E2=80=AFPM Matthias Brugger <matthias.bgg@gmai=
+l.com> wrote:
+> On 13/12/2023 16:04, Chen-Yu Tsai wrote:
+> > Some of the new MediaTek board entries were inserted in a chronological
+> > order, or just randomly. This makes it harder to search for an entry.
+> >
+> > Sort the entries by first grouping by SoC, then sorting by board
+> > compatible strings. Also add a comment at the top asking people to do
+> > the same.
+> >
+> > Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
+> > Acked-by: Conor Dooley <conor.dooley@microchip.com>
+> > Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@coll=
+abora.com>
+>
+> Does not apply cleanly, would you mind to rebase the whole series onto v6=
+.8-rc1.
 
-What is the dependency?
+Sure. There's still a bit of discussion on patch 6. After that is resolved
+I'll send a v5 which will also address some review comments.
 
-
-Also, please fix the checkpatch.pl --strict warnings
-
-> +/**
-> + * cv1800_rtc_32k_coarse_val_calib() - Using an external
-> + * clock to coarse calibrate the crystal oscillator
-> + * @info: the device of calibrated
-> + *
-> + * @return 0 on success, or -1 on fail
-> + *
-> + * This RTC has an independent 32KHz oscillator. However,
-> + * the accuracy of this oscillator is easily affected by
-> + * external environmental interference,resulting in lower
-> + * accuracy than the internal oscillator.Therefore, a 25M
-> + * crystal oscillator is used as a reference source to
-> + * calibrate the RTC and improve its accuracy.Calibration
-> + * is completed through two steps, namely rough calibration
-> + * and fine calibration.
-> + */
-> +static int cv1800_rtc_32k_coarse_val_calib(struct cv1800_rtc_priv *info)
-
-This is still not working as well as you think it is. You should
-Implement the offset callbacks instead.
-
-
--- 
-Alexandre Belloni, co-owner and COO, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+ChenYu
