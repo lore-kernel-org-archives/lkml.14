@@ -1,187 +1,130 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C27C151C54;
-	Mon, 22 Jan 2024 18:34:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F3A652F82;
+	Mon, 22 Jan 2024 18:35:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705948457; cv=none; b=UY2tDBGqNlE0bYVSVgRVzZqDljMTU86k4W6dxkUj98eJkMUMlNtXE1Yas3QmxAFDnwp2VhMy26zAbXgqjL+1pusP8vbcZA00eJ2CDU8233HzydiBkH7x1u3XWhJy0BRKJe9ZLPcEdo85stNkKZJq8CnhT1XDkS2rXLRufDJE4mo=
+	t=1705948503; cv=none; b=lsqZ15AMHQ0YdxDkunKxCXelAJPH8aAgCG4YHno4DA71bCFNGw+tbgOT0XkYCPBzlCls7aDxHSBLvx9ItzqeuYO/uzXBaFXC85owZwk4LZWu8Lx/ABhk125TS9sBXbH/CXLEbwzT0aX/IGwHq9jk8xhaDAOl1x0NCciOjZxY+qM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705948457; c=relaxed/simple;
-	bh=oQacqnuO9mGmDHTgnL5CUIN0m7GKe62VcG6C7MQT824=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eCLSUMsLT7WsvUSq70r71BkGzwWJi9YFGBssP17lnTl95cc7udRm/T7Iv3z3iLRRbeJJiznXirUxvvwwWAo///t3QffhBLqMXOsaIBPQKJPHrv1grU/9FwayFzDcgycDzEIvwwkpe6WR0BMAnEvdJNe5eWcVemJgJ2KQ5YMBvws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=k8nkgU0F; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=k8nkgU0F; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1705948503; c=relaxed/simple;
+	bh=NaSm4PL9mjXmeJVxnRLI3oLtxgzdUSU3gKxUHBwsTbw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=a6Xf12BzFc5OlC+U+YtrRAVVg9DwnR5z2ssD5Bf+iXq1H3XsW+i4I7yUgLedKEzVyU6bFYIgmX3kSUCD6Cc4PCOYsTLV9eN6BA9KuT3PTqS7pqzYMCOFWs4eZ8cQ+mhO5F4evjZCHyI3DuoT+xGbil63dC9NrTb7qXfZLW8Qe94=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Gama1S3a; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="k8nkgU0F";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="k8nkgU0F"
-Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [10.150.64.98])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 03DBF21FC0;
-	Mon, 22 Jan 2024 18:34:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1705948454; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=FjNsB5EjumG15DrXXoM5w5G4N1GM3TAKsj6a0kiIkio=;
-	b=k8nkgU0FiBOd8U+340kNfl8mFHAY46grDguxZYxxfz4bhnm+cVRLWMYYI70Nfd+HFqrZm7
-	hUeVnQdmYOaW5z+VnM5Xy4tpp/C2xj+1ydFnN0+9aOW/sKMFmbsn6pxN3hHSuGchLQUVa8
-	aBzhs+znyEOrOsprZOmgfEzmAWGzEsM=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1705948454; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=FjNsB5EjumG15DrXXoM5w5G4N1GM3TAKsj6a0kiIkio=;
-	b=k8nkgU0FiBOd8U+340kNfl8mFHAY46grDguxZYxxfz4bhnm+cVRLWMYYI70Nfd+HFqrZm7
-	hUeVnQdmYOaW5z+VnM5Xy4tpp/C2xj+1ydFnN0+9aOW/sKMFmbsn6pxN3hHSuGchLQUVa8
-	aBzhs+znyEOrOsprZOmgfEzmAWGzEsM=
-Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id E94A11390F;
-	Mon, 22 Jan 2024 18:34:13 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap2.dmz-prg2.suse.org with ESMTPSA
-	id fcupOCW1rmVKbQAAn2gu4w
-	(envelope-from <dsterba@suse.com>); Mon, 22 Jan 2024 18:34:13 +0000
-From: David Sterba <dsterba@suse.com>
-To: torvalds@linux-foundation.org
-Cc: David Sterba <dsterba@suse.com>,
-	linux-btrfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [GIT PULL] Btrfs fixes for 6.8-rc2
-Date: Mon, 22 Jan 2024 19:33:44 +0100
-Message-ID: <cover.1705946889.git.dsterba@suse.com>
-X-Mailer: git-send-email 2.42.1
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Gama1S3a"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7018C433F1;
+	Mon, 22 Jan 2024 18:35:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1705948503;
+	bh=NaSm4PL9mjXmeJVxnRLI3oLtxgzdUSU3gKxUHBwsTbw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Gama1S3aFPrTk0Mx+DoGLjb84uPr48ithjLZxXboGqcI4I1gmImsnbaz3vpPgEM0N
+	 eFgqKFB+9rekP/NVJdWZGvY2ABUP/o+pQuOTDqLcRtceXYtBMqceGLNo2qKCuN8HcB
+	 VeMazrpIPgXqBqFkwXD/5fG1toH87LCOHOhSSQ5A=
+Date: Mon, 22 Jan 2024 10:35:01 -0800
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Carlos Llamas <cmllamas@google.com>
+Cc: Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
+	Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Christian Brauner <brauner@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Sherry Yang <sherryy@android.com>, linux-kernel@vger.kernel.org,
+	kernel-team@android.com, stable@vger.kernel.org
+Subject: Re: [PATCH v2 05/28] binder: fix unused alloc->free_async_space
+Message-ID: <2024012254-encore-pedometer-42e9@gregkh>
+References: <20231201172212.1813387-1-cmllamas@google.com>
+ <20231201172212.1813387-6-cmllamas@google.com>
+ <Zal9HFZcC3rFjogI@google.com>
+ <2024011955-quotation-zone-7f20@gregkh>
+ <Zaqw9k4x7IUh6ys-@google.com>
+ <2024012203-expedited-job-1d79@gregkh>
+ <2024012214-ideology-curvature-febb@gregkh>
+ <Za6vJC1o83xSwab3@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Authentication-Results: smtp-out1.suse.de;
-	none
-X-Spam-Level: ***
-X-Spam-Score: 3.46
-X-Spamd-Result: default: False [3.46 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 RCPT_COUNT_THREE(0.00)[4];
-	 R_MISSING_CHARSET(2.50)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 NEURAL_SPAM_SHORT(2.56)[0.853];
-	 BROKEN_CONTENT_TYPE(1.50)[];
-	 TO_DN_SOME(0.00)[];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	 MID_CONTAINS_FROM(1.00)[];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-3.00)[100.00%]
-X-Spam-Flag: NO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Za6vJC1o83xSwab3@google.com>
 
-Hi,
+On Mon, Jan 22, 2024 at 06:08:36PM +0000, Carlos Llamas wrote:
+> On Mon, Jan 22, 2024 at 07:05:29AM -0800, Greg Kroah-Hartman wrote:
+> > On Mon, Jan 22, 2024 at 07:04:20AM -0800, Greg Kroah-Hartman wrote:
+> > > On Fri, Jan 19, 2024 at 05:27:18PM +0000, Carlos Llamas wrote:
+> > > > On Fri, Jan 19, 2024 at 06:49:00AM +0100, Greg Kroah-Hartman wrote:
+> > > > > On Thu, Jan 18, 2024 at 07:33:48PM +0000, Carlos Llamas wrote:
+> > > > > > On Fri, Dec 01, 2023 at 05:21:34PM +0000, Carlos Llamas wrote:
+> > > > > > > Each transaction is associated with a 'struct binder_buffer' that stores
+> > > > > > > the metadata about its buffer area. Since commit 74310e06be4d ("android:
+> > > > > > > binder: Move buffer out of area shared with user space") this struct is
+> > > > > > > no longer embedded within the buffer itself but is instead allocated on
+> > > > > > > the heap to prevent userspace access to this driver-exclusive info.
+> > > > > > > 
+> > > > > > > Unfortunately, the space of this struct is still being accounted for in
+> > > > > > > the total buffer size calculation, specifically for async transactions.
+> > > > > > > This results in an additional 104 bytes added to every async buffer
+> > > > > > > request, and this area is never used.
+> > > > > > > 
+> > > > > > > This wasted space can be substantial. If we consider the maximum mmap
+> > > > > > > buffer space of SZ_4M, the driver will reserve half of it for async
+> > > > > > > transactions, or 0x200000. This area should, in theory, accommodate up
+> > > > > > > to 262,144 buffers of the minimum 8-byte size. However, after adding
+> > > > > > > the extra 'sizeof(struct binder_buffer)', the total number of buffers
+> > > > > > > drops to only 18,724, which is a sad 7.14% of the actual capacity.
+> > > > > > > 
+> > > > > > > This patch fixes the buffer size calculation to enable the utilization
+> > > > > > > of the entire async buffer space. This is expected to reduce the number
+> > > > > > > of -ENOSPC errors that are seen on the field.
+> > > > > > > 
+> > > > > > > Fixes: 74310e06be4d ("android: binder: Move buffer out of area shared with user space")
+> > > > > > > Signed-off-by: Carlos Llamas <cmllamas@google.com>
+> > > > > > > ---
+> > > > > > 
+> > > > > > Sorry, I forgot to Cc: stable@vger.kernel.org.
+> > > > > 
+> > > > > 
+> > > > > <formletter>
+> > > > > 
+> > > > > This is not the correct way to submit patches for inclusion in the
+> > > > > stable kernel tree.  Please read:
+> > > > >     https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html
+> > > > > for how to do this properly.
+> > > > > 
+> > > > > </formletter>
+> > > > 
+> > > > Oops, here is the complete info:
+> > > > 
+> > > > Commit ID: c6d05e0762ab276102246d24affd1e116a46aa0c
+> > > > Subject:   "binder: fix unused alloc->free_async_space"
+> > > > Reason:    Fixes an incorrect calculation of available space.
+> > > > Versions:  v4.19+
+> > > > 
+> > > > Note this patch will also have trivial conflicts in v4.19 and v5.4
+> > > > kernels as commit 261e7818f06e is missing there. Please let me know and
+> > > > I can send the corresponding patches separately.
+> > > 
+> > > It doesn't even apply to 6.7.y either, so we need backports for all
+> > > affected trees, thanks.
+> > 
+> > Now I got it to apply, but we need backports for 5.4.y and 4.19.y,
+> > thanks.
+> > 
+> > greg k-h
+> 
+> Backports sent.
+> 
+> linux-4.19.y:
+> https://lore.kernel.org/all/20240122174250.2123854-2-cmllamas@google.com/
+> 
+> linux-5.4.y:
+> https://lore.kernel.org/all/20240122175751.2214176-2-cmllamas@google.com/
 
-please pull the following fixes. Thanks.
+All now queued up, thanks!
 
-- zoned mode fixes:
-  - fix slowdown when writing large file sequentially by looking up
-    block groups with enough space faster
-  - locking fixes when activating a zone
-
-- new mount API fixes:
-  - preserve mount options for a ro/rw mount of the same subvolume
-
-- scrub fixes:
-  - fix use-after-free in case the chunk length is not aligned to 64K,
-    this does not happen normally but has been reported on images
-    converted from ext4
-  - similar alignment check was missing with raid-stripe-tree
-
-- subvolume deletion fixes:
-  - prevent calling ioctl on already deleted subvolume
-  - properly track flag tracking a deleted subvolume
-
-- in subpage mode, fix decompression of an inline extent (zlib, lzo, zstd)
-
-- fix crash when starting writeback on a folio, after integration with
-  recent MM changes this needs to be started conditionally
-
-- reject unknown flags in defrag ioctl
-
-- error handling, API fixes, minor warning fixes
-
-----------------------------------------------------------------
-The following changes since commit e94dfb7a2935cb91faca88bf7136177d1ce0dda8:
-
-  btrfs: pass btrfs_io_geometry into btrfs_max_io_len (2023-12-15 23:03:59 +0100)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git tags/for-6.8-rc1-tag
-
-for you to fetch changes up to 7f2d219e78e95a137a9c76fddac7ff8228260439:
-
-  btrfs: scrub: limit RST scrub to chunk boundary (2024-01-18 23:43:08 +0100)
-
-----------------------------------------------------------------
-Chung-Chiang Cheng (1):
-      btrfs: tree-checker: fix inline ref size in error messages
-
-David Sterba (1):
-      btrfs: don't warn if discard range is not aligned to sector
-
-Dmitry Antipov (1):
-      btrfs: fix kvcalloc() arguments order in btrfs_ioctl_send()
-
-Fedor Pchelkin (1):
-      btrfs: ref-verify: free ref cache before clearing mount opt
-
-Josef Bacik (2):
-      btrfs: use the original mount's mount options for the legacy reconfigure
-      btrfs: don't unconditionally call folio_start_writeback in subpage
-
-Naohiro Aota (4):
-      btrfs: zoned: factor out prepare_allocation_zoned()
-      btrfs: zoned: optimize hint byte for zoned allocator
-      btrfs: fix unbalanced unlock of mapping_tree_lock
-      btrfs: zoned: fix lock ordering in btrfs_zone_activate()
-
-Omar Sandoval (2):
-      btrfs: don't abort filesystem when attempting to snapshot deleted subvolume
-      btrfs: avoid copying BTRFS_ROOT_SUBVOL_DEAD flag to snapshot of subvolume being deleted
-
-Qu Wenruo (6):
-      btrfs: defrag: reject unknown flags of btrfs_ioctl_defrag_range_args
-      btrfs: zlib: fix and simplify the inline extent decompression
-      btrfs: lzo: fix and simplify the inline extent decompression
-      btrfs: zstd: fix and simplify the inline extent decompression
-      btrfs: scrub: avoid use-after-free when chunk length is not 64K aligned
-      btrfs: scrub: limit RST scrub to chunk boundary
-
- fs/btrfs/compression.c     | 23 ++++++++++-----
- fs/btrfs/compression.h     |  6 ++--
- fs/btrfs/extent-tree.c     | 53 ++++++++++++++++++++++++---------
- fs/btrfs/inode.c           | 22 ++++++++------
- fs/btrfs/ioctl.c           |  7 +++++
- fs/btrfs/lzo.c             | 34 ++++++---------------
- fs/btrfs/ref-verify.c      |  6 ++--
- fs/btrfs/scrub.c           | 36 ++++++++++++++++++-----
- fs/btrfs/send.c            |  4 +--
- fs/btrfs/subpage.c         |  3 +-
- fs/btrfs/super.c           |  8 +++++
- fs/btrfs/tree-checker.c    |  2 +-
- fs/btrfs/volumes.c         |  2 --
- fs/btrfs/zlib.c            | 73 ++++++++++++----------------------------------
- fs/btrfs/zoned.c           |  8 ++---
- fs/btrfs/zstd.c            | 73 +++++++++++++---------------------------------
- include/uapi/linux/btrfs.h |  3 ++
- 17 files changed, 178 insertions(+), 185 deletions(-)
+greg k-h
