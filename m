@@ -1,45 +1,45 @@
 Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9F183DBBF;
-	Mon, 22 Jan 2024 14:56:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 869983E473;
+	Mon, 22 Jan 2024 14:56:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705935368; cv=none; b=M0sC1jA7x7VSDH/wEPFXO9sJpAJXNcRQiLyrmXKgLK/5LKN5q91j4FHvQlT6CC6xQnO/quOS1HmmPx4pGqJ7E6FX5Lzr8DhpzFT+q1TuJABPqU/cQ4t+bQqJEGA5/kj+FLzy5aZ0xyqiQrAvdagkp8NUVoadAFkGZwSqY0uxgl4=
+	t=1705935369; cv=none; b=nYtj4d5boRvzUG4IgrKks0p76P1habZLKd09QgY07zP8k1nc6xRt0YliIQhH+6QfskVgELDnfa+19WXL14rSOwkp7fnLuSg4rF1IQ3r+MBJ0l5E1vyGwrjTnYv3u5Xm9OjDG5pTCX4dxs8cQnd9pQk/dXIzGJCH66HxVJfBy2HY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705935368; c=relaxed/simple;
-	bh=hEcNpcJ4FU6Xe8WVU7tlxIJKdvo1pqWum95E5rC4dxI=;
+	s=arc-20240116; t=1705935369; c=relaxed/simple;
+	bh=KPD6WfOf3Xh7Ge98KIxghgKiIIAfJdqRVbSu8jtqlgw=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UZ21Vf8aTRxoanb/xE6BqUt1fnC8gXCPNaOop4i7kKqT5GUfzAptHGR44/4DEP5WTLQON+4/HskKl2G79i5lWs3VlZgnqgeXWtvc4F1c4eP8f5gkjFipd6yrKo/eLU6ZKlYn6BLzwfS+p/uQXkc/vmry2zChzzka8zokNdtGKrg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=FpICclBf; arc=none smtp.client-ip=198.47.19.142
+	 MIME-Version:Content-Type; b=F8NBYz4sFCwsgHUxOK2MaxULm3G19LnfZS/RQfG+EDlf11F0QlP2uPvVpqhvt/4Y0IjaNWWjuz99DzMWYAc6x/OfTupgSkrdY50Z2qnjEYBMfP0jsMBHSiNQag56357aIL0Pe1EGS9FRB6qXUmB9BEUBT8d3OtT3SJ+4gOg58fQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=uSJ7nDSg; arc=none smtp.client-ip=198.47.19.142
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="FpICclBf"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="uSJ7nDSg"
 Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 40MEtiax068546;
+	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 40MEtikv068542;
 	Mon, 22 Jan 2024 08:55:44 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
 	s=ti-com-17Q1; t=1705935344;
-	bh=1fVzmXZQGiRGeVvP23sJv3ZpWXKdIPBpwDON/0DwU+8=;
+	bh=uF9RUhjBQ8j9zG5tcewGDQvWybXngRdDuL8J8XT3gV0=;
 	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=FpICclBfoFAwF9+17L4KOwpvDpcUALhmZRP0xcvdxO7TPLToYn4cjX+fNr1Ndu4n7
-	 YKRy2afbNIP5zyyRrIaQKK3X38VbZns8RZnfLX5bDIDbHd01LkhrtQ0LinqvXqtjTy
-	 74HQ415K9VHyC6eWEUkCPnwRKbZPo54v74gAHlZ4=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 40MEtiRq126209
+	b=uSJ7nDSgFqnYKBnuazCmbYSP5Iw3uC3fUI/7wYfn0Jkkbb+Lm3E6cuLk4dNs0Sm4f
+	 MtRYxYk1GbIdYfzTGWdUz8iecnUOos2NpHWXQSAp/7yn4vmULgjn0dL5wGqYRDKxTJ
+	 zQei4bjtW/PiW92TPBnKxsDaZ3+7mdu/yiiVkDzY=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 40MEtiZO126206
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
 	Mon, 22 Jan 2024 08:55:44 -0600
-Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 22
  Jan 2024 08:55:44 -0600
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
  Frontend Transport; Mon, 22 Jan 2024 08:55:44 -0600
 Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 40MEtipK014472;
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 40MEtihE014466;
 	Mon, 22 Jan 2024 08:55:44 -0600
 From: Nishanth Menon <nm@ti.com>
 To: Tero Kristo <kristo@kernel.org>, Vignesh Raghavendra <vigneshr@ti.com>
@@ -47,12 +47,10 @@ CC: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Rob Herring
 	<robh+dt@kernel.org>, <linux-kernel@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        Nishanth Menon <nm@ti.com>, Garrett Giordano <ggiordano@phytec.com>,
-        Wadim
- Egorov <w.egorov@phytec.de>
-Subject: [PATCH V2 14/16] arm64: dts: ti: phycore*: Add MIT license along with GPL-2.0
-Date: Mon, 22 Jan 2024 08:55:37 -0600
-Message-ID: <20240122145539.194512-15-nm@ti.com>
+        Nishanth Menon <nm@ti.com>
+Subject: [PATCH V2 12/16] arm64: dts: ti: k3-serdes: Add MIT license along with GPL-2.0
+Date: Mon, 22 Jan 2024 08:55:35 -0600
+Message-ID: <20240122145539.194512-13-nm@ti.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240122145539.194512-1-nm@ti.com>
 References: <20240122145539.194512-1-nm@ti.com>
@@ -67,98 +65,41 @@ Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
 Modify license to include dual licensing as GPL-2.0-only OR MIT
-license for device trees belonging to PHYTEC Messtechnik GmbH and
-PHYTEC America, LLC platforms. This allows for Linux kernel device
-tree to be used in other Operating System ecosystems such as Zephyr or
-FreeBSD.
+license for SoC and TI evm device tree files. This allows for Linux
+kernel device tree to be used in other Operating System ecosystems
+such as Zephyr or FreeBSD.
 
 While at this, update the GPL-2.0 to be GPL-2.0-only to be in sync
 with latest SPDX conventions (GPL-2.0 is deprecated).
 
-While at this, update the copyright year to sync with current year
+While at this, update the TI copyright year to sync with current year
 to indicate license change.
 
-Cc: Garrett Giordano <ggiordano@phytec.com>
-Cc: Wadim Egorov <w.egorov@phytec.de>
-
-Acked-by: Garrett Giordano <ggiordano@phytec.com>
-Acked-by: Wadim Egorov <w.egorov@phytec.de>
 Signed-off-by: Nishanth Menon <nm@ti.com>
 ---
 Changes Since v1:
-* On request from Phytec folks[1], switch over to GPL-2.0-only OR MIT
-* Picked up acks - all acks recieved
+* No Change
 
-V1: https://lore.kernel.org/r/20240110140903.4090946-16-nm@ti.com
+V1: https://lore.kernel.org/r/20240110140903.4090946-13-nm@ti.com
 
-[1] https://lore.kernel.org/all/fb8232b1-9708-4b57-b67c-92ec6ccf9fd0@phytec.de/
+ arch/arm64/boot/dts/ti/k3-serdes.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
- arch/arm64/boot/dts/ti/k3-am62-phycore-som.dtsi          | 4 ++--
- arch/arm64/boot/dts/ti/k3-am625-phyboard-lyra-rdk.dts    | 4 ++--
- arch/arm64/boot/dts/ti/k3-am64-phycore-som.dtsi          | 6 +++---
- arch/arm64/boot/dts/ti/k3-am642-phyboard-electra-rdk.dts | 6 +++---
- 4 files changed, 10 insertions(+), 10 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/ti/k3-am62-phycore-som.dtsi b/arch/arm64/boot/dts/ti/k3-am62-phycore-som.dtsi
-index aa43e7407eee..3372a256c90f 100644
---- a/arch/arm64/boot/dts/ti/k3-am62-phycore-som.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am62-phycore-som.dtsi
-@@ -1,6 +1,6 @@
--// SPDX-License-Identifier: GPL-2.0
-+// SPDX-License-Identifier: GPL-2.0-only OR MIT
+diff --git a/arch/arm64/boot/dts/ti/k3-serdes.h b/arch/arm64/boot/dts/ti/k3-serdes.h
+index 21b4886c47ba..a011ad893b44 100644
+--- a/arch/arm64/boot/dts/ti/k3-serdes.h
++++ b/arch/arm64/boot/dts/ti/k3-serdes.h
+@@ -1,8 +1,8 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
++/* SPDX-License-Identifier: GPL-2.0-only OR MIT */
  /*
-- * Copyright (C) 2022 - 2023 PHYTEC Messtechnik GmbH
-+ * Copyright (C) 2022-2024 PHYTEC Messtechnik GmbH
-  * Author: Wadim Egorov <w.egorov@phytec.de>
+  * This header provides constants for SERDES MUX for TI SoCs
   *
-  * Product homepage:
-diff --git a/arch/arm64/boot/dts/ti/k3-am625-phyboard-lyra-rdk.dts b/arch/arm64/boot/dts/ti/k3-am625-phyboard-lyra-rdk.dts
-index 4bc0134c987d..086bd9421687 100644
---- a/arch/arm64/boot/dts/ti/k3-am625-phyboard-lyra-rdk.dts
-+++ b/arch/arm64/boot/dts/ti/k3-am625-phyboard-lyra-rdk.dts
-@@ -1,6 +1,6 @@
--// SPDX-License-Identifier: GPL-2.0
-+// SPDX-License-Identifier: GPL-2.0-only OR MIT
- /*
-- * Copyright (C) 2022 - 2023 PHYTEC Messtechnik GmbH
-+ * Copyright (C) 2022-2024 PHYTEC Messtechnik GmbH
-  * Author: Wadim Egorov <w.egorov@phytec.de>
-  *
-  * Product homepage:
-diff --git a/arch/arm64/boot/dts/ti/k3-am64-phycore-som.dtsi b/arch/arm64/boot/dts/ti/k3-am64-phycore-som.dtsi
-index 1678e74cb750..0a4426229321 100644
---- a/arch/arm64/boot/dts/ti/k3-am64-phycore-som.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am64-phycore-som.dtsi
-@@ -1,9 +1,9 @@
--// SPDX-License-Identifier: GPL-2.0
-+// SPDX-License-Identifier: GPL-2.0-only OR MIT
- /*
-- * Copyright (C) 2021 PHYTEC America, LLC - https://www.phytec.com
-+ * Copyright (C) 2021-2024 PHYTEC America, LLC - https://www.phytec.com
-  * Author: Matt McKee <mmckee@phytec.com>
-  *
-- * Copyright (C) 2022 PHYTEC Messtechnik GmbH
-+ * Copyright (C) 2022-2024 PHYTEC Messtechnik GmbH
-  * Author: Wadim Egorov <w.egorov@phytec.de>
-  *
-  * Product homepage:
-diff --git a/arch/arm64/boot/dts/ti/k3-am642-phyboard-electra-rdk.dts b/arch/arm64/boot/dts/ti/k3-am642-phyboard-electra-rdk.dts
-index 53b64e55413f..6f7b8d368724 100644
---- a/arch/arm64/boot/dts/ti/k3-am642-phyboard-electra-rdk.dts
-+++ b/arch/arm64/boot/dts/ti/k3-am642-phyboard-electra-rdk.dts
-@@ -1,9 +1,9 @@
--// SPDX-License-Identifier: GPL-2.0
-+// SPDX-License-Identifier: GPL-2.0-only OR MIT
- /*
-- * Copyright (C) 2021 PHYTEC America, LLC - https://www.phytec.com
-+ * Copyright (C) 2021-2024 PHYTEC America, LLC - https://www.phytec.com
-  * Author: Matt McKee <mmckee@phytec.com>
-  *
-- * Copyright (C) 2022 PHYTEC Messtechnik GmbH
-+ * Copyright (C) 2022-2024 PHYTEC Messtechnik GmbH
-  * Author: Wadim Egorov <w.egorov@phytec.de>
-  *
-  * Product homepage:
+- * Copyright (C) 2023 Texas Instruments Incorporated - https://www.ti.com/
++ * Copyright (C) 2023-2024 Texas Instruments Incorporated - https://www.ti.com/
+  */
+ 
+ #ifndef DTS_ARM64_TI_K3_SERDES_H
 -- 
 2.43.0
 
