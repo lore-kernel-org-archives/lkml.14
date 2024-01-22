@@ -1,140 +1,71 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from herc.mirbsd.org (bonn.mirbsd.org [217.91.129.195])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3966415BA
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 01:17:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0DD3641;
+	Mon, 22 Jan 2024 01:18:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.91.129.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705886270; cv=none; b=dsEvNpO+3Yp8isWGTSvlw3C6pfAAqlwRsDagBoRPLezChhyIHX42w/c1aDgPU4tIm8ioIPCki4KLucOAWilPVzyKPDCW//2zH2Wrd7u/BBT+ulH0Oauz7yGvAzgroiX9Vy83zFIvPamkMDKrt7SBXZSqOYpma3ozHelstOoqNsk=
+	t=1705886332; cv=none; b=HpN8oKqV0cVAvH0OGlFAY6NznFkHQPP0UL/GICzDI5Bee0v2Ysxo7UbUsXhN+nI6q0dFTNsWTZ6M9tnAO2b4DavJRC/thOHoPWXjbucAokX748Px+MOC3VmS/2MFgBPdd9LZPHTs1+yzSJvtBbrzXKLvLi4x6QuUG+iSn1Bf0I4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705886270; c=relaxed/simple;
-	bh=X1JCYHjLFc1Vjf+bOAbx3bAjp/9aMNA6yUU9J/H6l4M=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=nmUKKoj0kPRa4xpcctVt2W1P9J5yNuAN5JpY0AQCZvh/Bz7v64W0WktHXC1mxjCmERMo5yhPoxO5uhPzKTAodX/7qQ9bYac7Y8kbtKRdU5VJPzkAASlRdkNtOX7gh8OecheGQGR5hHowuzSjZrn0jgC1T3+Jmwldafm4lZHflfw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.105])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4TJC3D2dhfzvTXb;
-	Mon, 22 Jan 2024 09:16:08 +0800 (CST)
-Received: from dggpemm100001.china.huawei.com (unknown [7.185.36.93])
-	by mail.maildlp.com (Postfix) with ESMTPS id 0B9781404FC;
-	Mon, 22 Jan 2024 09:17:38 +0800 (CST)
-Received: from localhost.localdomain (10.175.112.125) by
- dggpemm100001.china.huawei.com (7.185.36.93) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 22 Jan 2024 09:17:37 +0800
-From: Kefeng Wang <wangkefeng.wang@huawei.com>
-To: Andrew Morton <akpm@linux-foundation.org>, <linux-mm@kvack.org>,
-	<linux-kernel@vger.kernel.org>
-CC: <ryan.roberts@arm.com>, Matthew Wilcox <willy@infradead.org>, David
- Hildenbrand <david@redhat.com>, Michal Hocko <mhocko@suse.com>, Roman
- Gushchin <roman.gushchin@linux.dev>, Johannes Weiner <hannes@cmpxchg.org>,
-	Shakeel Butt <shakeelb@google.com>, Muchun Song <songmuchun@bytedance.com>,
-	Kefeng Wang <wangkefeng.wang@huawei.com>
-Subject: [PATCH v3] mm: memory: move mem_cgroup_charge() into alloc_anon_folio()
-Date: Mon, 22 Jan 2024 09:16:12 +0800
-Message-ID: <20240122011612.501029-1-wangkefeng.wang@huawei.com>
-X-Mailer: git-send-email 2.27.0
+	s=arc-20240116; t=1705886332; c=relaxed/simple;
+	bh=2poKMX0qg+XjXgrCcJfWxPUrTDfcbU4NiKXzW4D/UZY=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=eXPeFIPVaY16WfWsuWsKaPMjVXd3gYlwPXhN9+eKDhRwVTo+W3hXCJ8sYpNymhIkkWQftPh/S29rDG8wdcAKcGoKvED1HwIvTjP0xK7b+KAqSbmCzo71BjuVD6xQ/mRLqCIcvmDpwsZ1VHkiI/ly1twPnICOPVKnEzZ1C3AQexU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=none smtp.mailfrom=debian.org; arc=none smtp.client-ip=217.91.129.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=debian.org
+Received: from herc.mirbsd.org (tg@herc.mirbsd.org [192.168.0.82])
+	by herc.mirbsd.org (8.14.9/8.14.5) with ESMTP id 40M1Ha9Y027192
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+	Mon, 22 Jan 2024 01:17:44 GMT
+Date: Mon, 22 Jan 2024 01:17:36 +0000 (UTC)
+From: Thorsten Glaser <tg@debian.org>
+X-X-Sender: tg@herc.mirbsd.org
+To: Steven Rostedt <rostedt@goodmis.org>
+cc: "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>,
+        x86@kernel.org, torvalds@linuxfoundation.org,
+        linux-kernel@vger.kernel.org, linux-toolchains@vger.kernel.org,
+        jpoimboe@redhat.com, alexei.starovoitov@gmail.com, mhiramat@kernel.org
+Subject: Re: [PATCH 1/2] x86: Remove dynamic NOP selection
+In-Reply-To: <20240121195649.7355e1d5@rorschach.local.home>
+Message-ID: <Pine.BSM.4.64L.2401220106590.999@herc.mirbsd.org>
+References: <20210312113253.305040674@infradead.org> <20210312115749.065275711@infradead.org>
+ <Pine.BSM.4.64L.2401200654480.19429@herc.mirbsd.org>
+ <CE53F232-3D2D-4910-94B4-A4304F5990C7@zytor.com>
+ <Pine.BSM.4.64L.2401201652490.29203@herc.mirbsd.org>
+ <d23e1b70-7ac3-49cd-8d5f-1dedc0108603@zytor.com> <Pine.BSM.4.64L.2401212356390.999@herc.mirbsd.org>
+ <20B57BDC-9A3F-4B02-9BA9-41477088A6CE@zytor.com> <20240121195649.7355e1d5@rorschach.local.home>
+Content-Language: de-Zsym-DE-1901-u-em-text-rg-denw-tz-utc, en-Zsym-GB-u-cu-eur-em-text-fw-mon-hc-h23-ms-metric-mu-celsius-rg-denw-tz-utc-va-posix
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- dggpemm100001.china.huawei.com (7.185.36.93)
+Content-Type: TEXT/PLAIN; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-The GFP flags from vma_thp_gfp_mask() according to user configuration
-only used for large folio allocation but not for memory cgroup charge,
-and GFP_KERNEL is used for both order-0 and large order folio when memory
-cgroup charge at present. However, mem_cgroup_charge() uses the GFP
-flags in a fairly sophisticated way. In addition to checking
-gfpflags_allow_blocking(), it pays attention to __GFP_NORETRY and
-__GFP_RETRY_MAYFAIL to ensure that processes within this memcg do not
-exceed their quotas.
+Steven Rostedt dixit:
 
-So we'd better to move mem_cgroup_charge() into alloc_anon_folio(),
-1) it will make us to allocate as much as possible large order folio,
-because we could try the next order if mem_cgroup_charge() fails,
-although the memcg's memory usage is close to its limits.
-2) using same GFP flags for allocation and charge is to be consistent
-with PMD THP firstly, in addition, according to GFP flag returned from
-vma_thp_gfp_mask(), GFP_TRANSHUGE_LIGHT could make us skip direct reclaim,
-_GFP_NORETRY will make us skip mem_cgroup_oom() and won't trigger memory
-cgroup oom from large order(order <= COSTLY_ORDER) folio charging.
+>> >This was, incidentally, triggered by looking into a problem report that
+>> >something did *not* work on a Geode LX system.
+>
+>What problem happened?
 
-Reviewed-by: Ryan Roberts <ryan.roberts@arm.com>
-Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
----
-v3:
-- update changelog suggested by Michal Hocko
-- add RB from Ryan
-v2:
-- fix built when !CONFIG_TRANSPARENT_HUGEPAGE
-- update changelog suggested by Matthew Wilcox
+It turned out to be a compiler issue (GCC thinks i686 means PPro,
+not 686-class CPUs, and -fcf-protection causes long NOPs, which
+not all 686-class CPUs support, to be inserted). This turned out
+to break a large part of Debian stable on OLPCs and other systems,
+and the kernel=E2=80=99s changes in nopl handling were tabled as arguments.
 
- mm/memory.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+https://www.jookia.org/wiki/Nopl has a longer writeup on the nopl
+history.
 
-diff --git a/mm/memory.c b/mm/memory.c
-index 5e88d5379127..551f0b21bc42 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -4153,8 +4153,8 @@ static bool pte_range_none(pte_t *pte, int nr_pages)
- 
- static struct folio *alloc_anon_folio(struct vm_fault *vmf)
- {
--#ifdef CONFIG_TRANSPARENT_HUGEPAGE
- 	struct vm_area_struct *vma = vmf->vma;
-+#ifdef CONFIG_TRANSPARENT_HUGEPAGE
- 	unsigned long orders;
- 	struct folio *folio;
- 	unsigned long addr;
-@@ -4206,15 +4206,21 @@ static struct folio *alloc_anon_folio(struct vm_fault *vmf)
- 		addr = ALIGN_DOWN(vmf->address, PAGE_SIZE << order);
- 		folio = vma_alloc_folio(gfp, order, vma, addr, true);
- 		if (folio) {
-+			if (mem_cgroup_charge(folio, vma->vm_mm, gfp)) {
-+				folio_put(folio);
-+				goto next;
-+			}
-+			folio_throttle_swaprate(folio, gfp);
- 			clear_huge_page(&folio->page, vmf->address, 1 << order);
- 			return folio;
- 		}
-+next:
- 		order = next_order(&orders, order);
- 	}
- 
- fallback:
- #endif
--	return vma_alloc_zeroed_movable_folio(vmf->vma, vmf->address);
-+	return folio_prealloc(vma->vm_mm, vma, vmf->address, true);
- }
- 
- /*
-@@ -4281,10 +4287,6 @@ static vm_fault_t do_anonymous_page(struct vm_fault *vmf)
- 	nr_pages = folio_nr_pages(folio);
- 	addr = ALIGN_DOWN(vmf->address, nr_pages * PAGE_SIZE);
- 
--	if (mem_cgroup_charge(folio, vma->vm_mm, GFP_KERNEL))
--		goto oom_free_page;
--	folio_throttle_swaprate(folio, GFP_KERNEL);
--
- 	/*
- 	 * The memory barrier inside __folio_mark_uptodate makes sure that
- 	 * preceding stores to the page contents become visible before
-@@ -4338,8 +4340,6 @@ static vm_fault_t do_anonymous_page(struct vm_fault *vmf)
- release:
- 	folio_put(folio);
- 	goto unlock;
--oom_free_page:
--	folio_put(folio);
- oom:
- 	return VM_FAULT_OOM;
- }
--- 
-2.27.0
-
+bye,
+//mirabilos
+--=20
+<igli> exceptions: a truly awful implementation of quite a nice idea.
+<igli> just about the worst way you could do something like that, afaic.
+<igli> it's like anti-design.  <mirabilos> that too=E2=80=A6 may I quote yo=
+u on that?
+<igli> sure, tho i doubt anyone will listen ;)
