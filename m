@@ -1,44 +1,44 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D02CD4F886;
-	Mon, 22 Jan 2024 23:55:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.120
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF0E76BB4E;
+	Mon, 22 Jan 2024 23:56:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705967762; cv=none; b=uQDiyOWFFfui/9i5Z5bWENbtXlHOORRv4nC156O5uOECuul3dr9jsmGNt6EkJn6QoRkYhT1vlmzCSvNjC+KoxXDe37aHqUh/y4pxVOyy+MaeJCyY735SZEFIZ3/mea5hCa7iOvQr6EyC//JEVESRhXLBd48s+nxmQJ9W4lV7o8g=
+	t=1705967762; cv=none; b=iCzspMdLQY0uLm+z+eHI5Vdf7UTovOzgeOGnT6xwXQRfxZ6GsV9Ynt0/WMeRsavNY11xHLX5phN9ozbAeB9zu4vlxnkjmwv74aKOSmei4OehLv1iYssAYOqCprfVhOslw9nEjJO9cMzDJwfBkUbYKuePB1RIPh57/e8uHjwF4i0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1705967762; c=relaxed/simple;
-	bh=pTHFvzQVrtwEkd8p3XLSEpRR4/OrJdodvy8+xJwo3jw=;
+	bh=7SLajzZmwAbfDTz6N1TsSycfpiI5LKK4FrnC371dsU4=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=p7yMGhXMc+5fjMGroxrjapImeImJJFuFGx/aTl5H0E7BhKBy/bKDnNYH1jg7fYlElrINZifw4j5tJsQTK+MWu+f2tzOdioLnEjQGkuiJ2IDGqbLt0Umsncqa0LY6k8VAG9wEjU5bWpjKH3kUqGKE2z7W8rABi9qZLMTRv/3KyWs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DZTYWbOH; arc=none smtp.client-ip=192.55.52.120
+	 MIME-Version; b=llDdlHRKsXZG1a1iHaCqQicI4PPnQRI1ApzdDIbpskhZ55k49QSE+Ra8sBDttGukINq5S4lZ5tGgJ0pFXt2dagp/Y4hk37qeLsmWUEdCL7kaW9uCUZXWSoRKn8Yiwu2ZR7dBtox3xXbbZqAicTDgwWIqx3QSi/j03B1hSSXLyLY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VxhJyKSd; arc=none smtp.client-ip=198.175.65.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DZTYWbOH"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VxhJyKSd"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1705967758; x=1737503758;
+  t=1705967761; x=1737503761;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=pTHFvzQVrtwEkd8p3XLSEpRR4/OrJdodvy8+xJwo3jw=;
-  b=DZTYWbOHn8dXUBKpVmGD96DjfV1c+3h6R8/pefB4BhIH/nMkPPvVZZej
-   qyXxs65jQbqguaYCkzgQurgXdGCdH8BXEWdOT8ns0Ext0UDkNXRO8cY2n
-   gSzp9F41pnZkdgYwQZeo8tR4I3Yy+YgX963N1qOm7lxpgod6Y3PBOWGKd
-   tsxwVFq+SOMs2K2z9H0u9G/qlxwvOrMIGW68yLnhDfLJTwVwiTYE3G/Tt
-   jv4aK51PFbxfSvTfGu13AeqNe2/0N6GHsW57i9I1aqOaCE/iDIUeV78fB
-   c8h44G7F5QJRqk5Kq8h85Babb0bzJzI/FMB/EjOXdZX1VbOzGYVWgH0pc
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10961"; a="400217842"
+  bh=7SLajzZmwAbfDTz6N1TsSycfpiI5LKK4FrnC371dsU4=;
+  b=VxhJyKSd5uR7/ZaDAbOdSbITAmS2+Pld+2kYWZSZrpQhVeEcpdeHWhqs
+   DcqRgbZ9vhym85k5vrmWjv2zc961dJFxOTeN/wF9SktfBIfvvXWtpHmno
+   z5HpNNDrQeCeZj+0o5+ntFgFpzNIuREAPNp1fYS9O9zpUJkXefsCRSYrL
+   iI9xjJb7IoS+/FEMphb6xsMUOwCyGiQtMA2tu7cFXDgzj7X4bHHCDHtVh
+   FZFyJ3GosWswvfgjIs4EP7874HLuwxqmgf8HWLeznnf41HTnf3mVhbyoZ
+   u82zGv3uLXqn2+H8GVJQKmK3ijxRKjYe3Zg7Yt3jOB4qfb+rtKq839F1L
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10961"; a="8016524"
 X-IronPort-AV: E=Sophos;i="6.05,212,1701158400"; 
-   d="scan'208";a="400217842"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 15:55:50 -0800
+   d="scan'208";a="8016524"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 15:55:41 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.05,212,1701158400"; 
-   d="scan'208";a="27817962"
+   d="scan'208";a="1468251"
 Received: from ls.sc.intel.com (HELO localhost) ([172.25.112.31])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 15:55:49 -0800
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 15:55:39 -0800
 From: isaku.yamahata@intel.com
 To: kvm@vger.kernel.org,
 	linux-kernel@vger.kernel.org
@@ -52,11 +52,10 @@ Cc: isaku.yamahata@intel.com,
 	chen.bo@intel.com,
 	hang.yuan@intel.com,
 	tina.zhang@intel.com,
-	Xiaoyao Li <xiaoyao.li@intel.com>,
-	Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: [PATCH v18 093/121] KVM: TDX: Add a place holder for handler of TDX hypercalls (TDG.VP.VMCALL)
-Date: Mon, 22 Jan 2024 15:54:09 -0800
-Message-Id: <f85b9dc9c0ceab07bec989826f972dc708627af1.1705965635.git.isaku.yamahata@intel.com>
+	Chao Gao <chao.gao@intel.com>
+Subject: [PATCH v18 070/121] KVM: x86: Allow to update cached values in kvm_user_return_msrs w/o wrmsr
+Date: Mon, 22 Jan 2024 15:53:46 -0800
+Message-Id: <f4ab4e4ecb5884fc974f97f2962d88338402be33.1705965635.git.isaku.yamahata@intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1705965634.git.isaku.yamahata@intel.com>
 References: <cover.1705965634.git.isaku.yamahata@intel.com>
@@ -68,161 +67,90 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Isaku Yamahata <isaku.yamahata@intel.com>
+From: Chao Gao <chao.gao@intel.com>
 
-The TDX module specification defines TDG.VP.VMCALL API (TDVMCALL for short)
-for the guest TD to call hypercall to VMM.  When the guest TD issues
-TDG.VP.VMCALL, the guest TD exits to VMM with a new exit reason of
-TDVMCALL.  The arguments from the guest TD and returned values from the VMM
-are passed in the guest registers.  The guest RCX registers indicates which
-registers are used.  Define helper functions to access those registers as
-ABI.
+Several MSRs are constant and only used in userspace(ring 3).  But VMs may
+have different values.  KVM uses kvm_set_user_return_msr() to switch to
+guest's values and leverages user return notifier to restore them when the
+kernel is to return to userspace.  To eliminate unnecessary wrmsr, KVM also
+caches the value it wrote to an MSR last time.
 
-Define the TDVMCALL exit reason, which is carved out from the VMX exit
-reason namespace as the TDVMCALL exit from TDX guest to TDX-SEAM is really
-just a VM-Exit.  Add a place holder to handle TDVMCALL exit.
+TDX module unconditionally resets some of these MSRs to architectural INIT
+state on TD exit.  It makes the cached values in kvm_user_return_msrs are
+inconsistent with values in hardware.  This inconsistency needs to be
+fixed.  Otherwise, it may mislead kvm_on_user_return() to skip restoring
+some MSRs to the host's values.  kvm_set_user_return_msr() can help correct
+this case, but it is not optimal as it always does a wrmsr.  So, introduce
+a variation of kvm_set_user_return_msr() to update cached values and skip
+that wrmsr.
 
-Co-developed-by: Xiaoyao Li <xiaoyao.li@intel.com>
-Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Chao Gao <chao.gao@intel.com>
 Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
+Reviewed-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- arch/x86/include/uapi/asm/vmx.h |  4 ++-
- arch/x86/kvm/vmx/tdx.c          | 53 +++++++++++++++++++++++++++++++++
- arch/x86/kvm/vmx/tdx.h          | 13 ++++++++
- 3 files changed, 69 insertions(+), 1 deletion(-)
+ arch/x86/include/asm/kvm_host.h |  1 +
+ arch/x86/kvm/x86.c              | 25 ++++++++++++++++++++-----
+ 2 files changed, 21 insertions(+), 5 deletions(-)
 
-diff --git a/arch/x86/include/uapi/asm/vmx.h b/arch/x86/include/uapi/asm/vmx.h
-index b3a30ef3efdd..f0f4a4cf84a7 100644
---- a/arch/x86/include/uapi/asm/vmx.h
-+++ b/arch/x86/include/uapi/asm/vmx.h
-@@ -93,6 +93,7 @@
- #define EXIT_REASON_TPAUSE              68
- #define EXIT_REASON_BUS_LOCK            74
- #define EXIT_REASON_NOTIFY              75
-+#define EXIT_REASON_TDCALL              77
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index 1b0969430c7c..5cb25e1f83ce 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -2268,6 +2268,7 @@ int kvm_pv_send_ipi(struct kvm *kvm, unsigned long ipi_bitmap_low,
+ int kvm_add_user_return_msr(u32 msr);
+ int kvm_find_user_return_msr(u32 msr);
+ int kvm_set_user_return_msr(unsigned index, u64 val, u64 mask);
++void kvm_user_return_update_cache(unsigned int index, u64 val);
  
- #define VMX_EXIT_REASONS \
- 	{ EXIT_REASON_EXCEPTION_NMI,         "EXCEPTION_NMI" }, \
-@@ -156,7 +157,8 @@
- 	{ EXIT_REASON_UMWAIT,                "UMWAIT" }, \
- 	{ EXIT_REASON_TPAUSE,                "TPAUSE" }, \
- 	{ EXIT_REASON_BUS_LOCK,              "BUS_LOCK" }, \
--	{ EXIT_REASON_NOTIFY,                "NOTIFY" }
-+	{ EXIT_REASON_NOTIFY,                "NOTIFY" }, \
-+	{ EXIT_REASON_TDCALL,                "TDCALL" }
- 
- #define VMX_EXIT_REASON_FLAGS \
- 	{ VMX_EXIT_REASONS_FAILED_VMENTRY,	"FAILED_VMENTRY" }
-diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
-index 7176f732b0eb..23ee254d42c3 100644
---- a/arch/x86/kvm/vmx/tdx.c
-+++ b/arch/x86/kvm/vmx/tdx.c
-@@ -184,6 +184,41 @@ static __always_inline unsigned long tdexit_intr_info(struct kvm_vcpu *vcpu)
- 	return kvm_r9_read(vcpu);
- }
- 
-+#define BUILD_TDVMCALL_ACCESSORS(param, gpr)				\
-+static __always_inline							\
-+unsigned long tdvmcall_##param##_read(struct kvm_vcpu *vcpu)		\
-+{									\
-+	return kvm_##gpr##_read(vcpu);					\
-+}									\
-+static __always_inline void tdvmcall_##param##_write(struct kvm_vcpu *vcpu, \
-+						     unsigned long val)	\
-+{									\
-+	kvm_##gpr##_write(vcpu, val);					\
-+}
-+BUILD_TDVMCALL_ACCESSORS(a0, r12);
-+BUILD_TDVMCALL_ACCESSORS(a1, r13);
-+BUILD_TDVMCALL_ACCESSORS(a2, r14);
-+BUILD_TDVMCALL_ACCESSORS(a3, r15);
-+
-+static __always_inline unsigned long tdvmcall_exit_type(struct kvm_vcpu *vcpu)
-+{
-+	return kvm_r10_read(vcpu);
-+}
-+static __always_inline unsigned long tdvmcall_leaf(struct kvm_vcpu *vcpu)
-+{
-+	return kvm_r11_read(vcpu);
-+}
-+static __always_inline void tdvmcall_set_return_code(struct kvm_vcpu *vcpu,
-+						     long val)
-+{
-+	kvm_r10_write(vcpu, val);
-+}
-+static __always_inline void tdvmcall_set_return_val(struct kvm_vcpu *vcpu,
-+						    unsigned long val)
-+{
-+	kvm_r11_write(vcpu, val);
-+}
-+
- static inline bool is_td_vcpu_created(struct vcpu_tdx *tdx)
+ static inline bool kvm_is_supported_user_return_msr(u32 msr)
  {
- 	return tdx->td_vcpu_created;
-@@ -947,6 +982,11 @@ fastpath_t tdx_vcpu_run(struct kvm_vcpu *vcpu)
- 
- 	tdx_complete_interrupts(vcpu);
- 
-+	if (tdx->exit_reason.basic == EXIT_REASON_TDCALL)
-+		tdx->tdvmcall.rcx = vcpu->arch.regs[VCPU_REGS_RCX];
-+	else
-+		tdx->tdvmcall.rcx = 0;
-+
- 	return EXIT_FASTPATH_NONE;
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 2371a8df9be3..f14e3e888842 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -440,6 +440,15 @@ static void kvm_user_return_msr_cpu_online(void)
+ 	}
  }
  
-@@ -1018,6 +1058,17 @@ static int tdx_handle_triple_fault(struct kvm_vcpu *vcpu)
++static void kvm_user_return_register_notifier(struct kvm_user_return_msrs *msrs)
++{
++	if (!msrs->registered) {
++		msrs->urn.on_user_return = kvm_on_user_return;
++		user_return_notifier_register(&msrs->urn);
++		msrs->registered = true;
++	}
++}
++
+ int kvm_set_user_return_msr(unsigned slot, u64 value, u64 mask)
+ {
+ 	unsigned int cpu = smp_processor_id();
+@@ -454,15 +463,21 @@ int kvm_set_user_return_msr(unsigned slot, u64 value, u64 mask)
+ 		return 1;
+ 
+ 	msrs->values[slot].curr = value;
+-	if (!msrs->registered) {
+-		msrs->urn.on_user_return = kvm_on_user_return;
+-		user_return_notifier_register(&msrs->urn);
+-		msrs->registered = true;
+-	}
++	kvm_user_return_register_notifier(msrs);
  	return 0;
  }
+ EXPORT_SYMBOL_GPL(kvm_set_user_return_msr);
  
-+static int handle_tdvmcall(struct kvm_vcpu *vcpu)
++/* Update the cache, "curr", and register the notifier */
++void kvm_user_return_update_cache(unsigned int slot, u64 value)
 +{
-+	switch (tdvmcall_leaf(vcpu)) {
-+	default:
-+		break;
-+	}
++	struct kvm_user_return_msrs *msrs = this_cpu_ptr(user_return_msrs);
 +
-+	tdvmcall_set_return_code(vcpu, TDG_VP_VMCALL_INVALID_OPERAND);
-+	return 1;
++	msrs->values[slot].curr = value;
++	kvm_user_return_register_notifier(msrs);
 +}
++EXPORT_SYMBOL_GPL(kvm_user_return_update_cache);
 +
- void tdx_load_mmu_pgd(struct kvm_vcpu *vcpu, hpa_t root_hpa, int pgd_level)
+ static void drop_user_return_notifiers(void)
  {
- 	td_vmcs_write64(to_tdx(vcpu), SHARED_EPT_POINTER, root_hpa & PAGE_MASK);
-@@ -1487,6 +1538,8 @@ int tdx_handle_exit(struct kvm_vcpu *vcpu, fastpath_t fastpath)
- 		return tdx_handle_exception(vcpu);
- 	case EXIT_REASON_EXTERNAL_INTERRUPT:
- 		return tdx_handle_external_interrupt(vcpu);
-+	case EXIT_REASON_TDCALL:
-+		return handle_tdvmcall(vcpu);
- 	case EXIT_REASON_EPT_VIOLATION:
- 		return tdx_handle_ept_violation(vcpu);
- 	case EXIT_REASON_EPT_MISCONFIG:
-diff --git a/arch/x86/kvm/vmx/tdx.h b/arch/x86/kvm/vmx/tdx.h
-index ec3923e5619a..14926394f0a5 100644
---- a/arch/x86/kvm/vmx/tdx.h
-+++ b/arch/x86/kvm/vmx/tdx.h
-@@ -81,6 +81,19 @@ struct vcpu_tdx {
- 
- 	struct list_head cpu_list;
- 
-+	union {
-+		struct {
-+			union {
-+				struct {
-+					u16 gpr_mask;
-+					u16 xmm_mask;
-+				};
-+				u32 regs_mask;
-+			};
-+			u32 reserved;
-+		};
-+		u64 rcx;
-+	} tdvmcall;
- 	union tdx_exit_reason exit_reason;
- 
- 	bool initialized;
+ 	unsigned int cpu = smp_processor_id();
 -- 
 2.25.1
 
