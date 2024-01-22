@@ -1,291 +1,120 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB72C3A8CF;
-	Mon, 22 Jan 2024 10:03:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC72D39FE6
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 10:04:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705917802; cv=none; b=alsA/jSXUWIvFkfbkJssPlqQCfCWekUbMLAQrnkBWMLO0P7/GIiav3i8PZe3Q1i89QwP1mRmtS23sFvnNuLinwwpx03qzfAXNQBROHBNNNpTOnM8ucg5KZNMrlNd8EyCPKuDr8LxM0Ex/dIlKDZ9FtQvnXnDHiZHTRLbf5VJpNc=
+	t=1705917848; cv=none; b=Qdp7gHPax5hqK9BzpDIU6Ei8/WOlEshw7V/sPXEWCOz9tAaKs3IWmThUpXiBSEA95A6phoZU6poS+Z09wGJIkLXKe1lTgUn58+R4ve1G1c+kOQgzM+pd07hKvVL7po8YyIVRXoWVOi8uPbcCqcjD2kizSb3DL2o61mfpr0l7OVw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705917802; c=relaxed/simple;
-	bh=69o2erjt0bDqDZLKaNM25t1oSlGlB/P4WEPVOvyRNCE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=evaQcJ05QaQfR2ZJvTHjDbsySUe6Ou2Cy0mMyoDtomOsh+2DwHJFl9UBs3YbCsrqqbccWbx1nc4UPm/NGQ+5l5vGEGsltmkGCROG7cYTw6v7MwyCmEXsWtMq2MxSyFA+82Y1x5vzruUbmW6fPgTSSsISU/yRGj9D1FMuh4XP5tQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8AxjutlPa5lC4QDAA--.14130S3;
-	Mon, 22 Jan 2024 18:03:17 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.213])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxXs1hPa5l52oRAA--.11303S7;
-	Mon, 22 Jan 2024 18:03:15 +0800 (CST)
-From: Bibo Mao <maobibo@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	Tianrui Zhao <zhaotianrui@loongson.cn>,
-	Juergen Gross <jgross@suse.com>,
-	Paolo Bonzini <pbonzini@redhat.com>
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	virtualization@lists.linux.dev,
-	kvm@vger.kernel.org
-Subject: [PATCH v3 5/6] LoongArch: KVM: Add physical cpuid map support
-Date: Mon, 22 Jan 2024 18:03:12 +0800
-Message-Id: <20240122100313.1589372-6-maobibo@loongson.cn>
-X-Mailer: git-send-email 2.39.3
-In-Reply-To: <20240122100313.1589372-1-maobibo@loongson.cn>
-References: <20240122100313.1589372-1-maobibo@loongson.cn>
+	s=arc-20240116; t=1705917848; c=relaxed/simple;
+	bh=M8pszskSh+59GT3YDDj2kTESCkFAakxa2ZaO1j5Q8Pg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GfzMQ43of+BfpTcRuCsVwyAB0JGLPDVzuhxhecR7+1UPNaswzXg/FjoC2cS3RDjq9GfTi5Yp0QIb3Q2WJbOUGWox+w+2QehPuO1GcfMDWXTH3GacLZsQPm0iiHN/ETquG+tV4ff23SHe8dMwROkNnONmtYBknMHrdERAkfVMmDI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tweaklogic.com; spf=pass smtp.mailfrom=tweaklogic.com; dkim=pass (2048-bit key) header.d=tweaklogic.com header.i=@tweaklogic.com header.b=I3B1Yr6z; arc=none smtp.client-ip=209.85.215.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tweaklogic.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tweaklogic.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=tweaklogic.com header.i=@tweaklogic.com header.b="I3B1Yr6z"
+Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-5cf495b46caso1133782a12.1
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 02:04:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tweaklogic.com; s=google; t=1705917846; x=1706522646; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ni6n5pqeZznTel6GtkjfHQ44EXROGMS+h3Fg1e6uKRc=;
+        b=I3B1Yr6znb0vi9wz6wOHqDEKrWZP4rkZCZrZSss4+GiNn+XV4XipHkyIbOIA9Bn3zL
+         i8MfXuHCIfKW0DtoovkckjFYvFDsxEf4bOOhPwi6OtcRMSvBtiVp0RibjWkXecDK+Xjz
+         OxoeEDryvbw9LfBdgOfJpHG/KJbxfqB/yBUtDLDuGIdTzB1tHziZCB3/EItXa6db5eTW
+         5IwA1/HW0HV3Nf0OoZS2f7FRCwdmtuoh1L6/tfGM6tukbf1PueulY867b38NKdADcqR9
+         ojkTBqlnbXgSisnPc3blTR0AboVe4fSrISKq38IBosCLr17mRu/XQjun8zPBjXtnNjc1
+         gjkw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705917846; x=1706522646;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ni6n5pqeZznTel6GtkjfHQ44EXROGMS+h3Fg1e6uKRc=;
+        b=O3rSAVqQ0PgYBbeSMhtCZAPlwHEmToORtyDE9OOLY6yWVpVLX1aWhQuPRMUKbZ7oet
+         lS0CioM9PqjAEZ5VFRN01VUVBF+y0OsRWp2DtbnSmSNHCQGMv6P5MVeM+2SBtXGVUrhm
+         Q207ABVjKXENXq1IqxbdLGMvj5J2KwWmm+iBjjfLuYkHaLM4s0Kzu+7I2NCe5lJ4iWUr
+         pAKEXb8ZVbajz2FJlfy6+zNj+ERQSLsbwy9CFIUIBbfJ2zhr3hmhA75mkthsM7ClDoiw
+         BybKhHmSVV0WjLPJESSL/7jpyOn29svwWziBozKcxna5H4fVIA6DD+KdEwPpQyUZUxH6
+         P20Q==
+X-Gm-Message-State: AOJu0Yzf2GST1MJsdgABFPTirsBSyocoPRX0b9N5fT5YtcgNkZ1wyk/h
+	FftPo98EyPmaA39GqGV+wAQBRTpZ1y3CSIAPXnSogX+NWQ6hoBzvaMCbAYWSFRU=
+X-Google-Smtp-Source: AGHT+IFWhdobP+x4boZi7f4u5ncKwhvFSizCjj2v4j7C2QB2eYDiA0ptZEh6KxLq9DgxXVQGvcYSPQ==
+X-Received: by 2002:a05:6a20:9388:b0:199:b189:eb93 with SMTP id x8-20020a056a20938800b00199b189eb93mr1581609pzh.100.1705917846321;
+        Mon, 22 Jan 2024 02:04:06 -0800 (PST)
+Received: from [192.168.20.11] ([180.150.112.156])
+        by smtp.gmail.com with ESMTPSA id d11-20020a17090b004b00b0028cef021d45sm9304508pjt.17.2024.01.22.02.04.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 22 Jan 2024 02:04:05 -0800 (PST)
+Message-ID: <4031ee3e-9db5-4e36-8833-2f7fd6fad3ca@tweaklogic.com>
+Date: Mon, 22 Jan 2024 20:33:58 +1030
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8BxXs1hPa5l52oRAA--.11303S7
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxKryDJrWrGrW5tF13KF1Dtwc_yoWxtFy7pF
-	ZF9ws8XrWrGr17G348tw4kurZ09rWvgw1SvasFgay3Ar1qqr98ZrZYkFyUZF98Jw1rWF4I
-	qF13J3W5uF40yagCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUBIb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
-	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
-	tVWrXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7V
-	AKI48JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY
-	6r1j6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7
-	xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xII
-	jxv20xvE14v26ryj6F1UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw2
-	0EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x02
-	67AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0epB3UUUUU==
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 2/3] dt-bindings: iio: light: Avago APDS9306
+Content-Language: en-US
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Matti Vaittinen <mazziesaccount@gmail.com>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Marek Vasut <marex@denx.de>, Anshul Dalal <anshulusr@gmail.com>,
+ Javier Carrasco <javier.carrasco.cruz@gmail.com>,
+ Matt Ranostay <matt@ranostay.sg>,
+ Stefan Windfeldt-Prytz <stefan.windfeldt-prytz@axis.com>,
+ linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240121051735.32246-1-subhajit.ghosh@tweaklogic.com>
+ <20240121051735.32246-3-subhajit.ghosh@tweaklogic.com>
+ <20240121153655.5f734180@jic23-huawei>
+From: Subhajit Ghosh <subhajit.ghosh@tweaklogic.com>
+In-Reply-To: <20240121153655.5f734180@jic23-huawei>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Physical cpuid is used to irq routing for irqchips such as ipi/msi/
-extioi interrupt controller. And physical cpuid is stored at CSR
-register LOONGARCH_CSR_CPUID, it can not be changed once vcpu is
-created. Since different irqchips have different size definition
-about physical cpuid, KVM uses the smallest cpuid from extioi, and
-the max cpuid size is defines as 256.
+On 22/1/24 02:06, Jonathan Cameron wrote:
+> On Sun, 21 Jan 2024 15:47:33 +1030
+> Subhajit Ghosh <subhajit.ghosh@tweaklogic.com> wrote:
+> 
+>> Adding device tree support for APDS9306 Ambient Light Sensor.
+>> Updating datasheet hyperlinks.
+>> Adding interrupt definition macro and header file.
+> 
+> This is an unrelated change, so should probably be in a separate patch.
+Understood.
+> 
+>> Adding vdd-supply property.
+> 
+> This one is reasonable to have in same patch as the new device addition
+> as, whilst I assume it's valid for the existing devices, you are adding it
+> to incorporate something that device also has.
+> Could also be a separate precursor patch.
+> 
+>>
 
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
----
- arch/loongarch/include/asm/kvm_host.h | 26 ++++++++
- arch/loongarch/include/asm/kvm_vcpu.h |  1 +
- arch/loongarch/kvm/vcpu.c             | 93 ++++++++++++++++++++++++++-
- arch/loongarch/kvm/vm.c               | 11 ++++
- 4 files changed, 130 insertions(+), 1 deletion(-)
+>>   
+>>   description: |
+>> -  Datasheet: https://www.avagotech.com/docs/AV02-1077EN
+>> -  Datasheet: https://www.avagotech.com/docs/AV02-4191EN
+>> +  Datasheet: https://docs.broadcom.com/doc/AV02-1077EN
+>> +  Datasheet: https://docs.broadcom.com/doc/AV02-4191EN
+>> +  Datasheet: https://docs.broadcom.com/doc/AV02-4755EN
+> 
+> Old links seem to still work, so why the change?
+My bad. I will revert to keep things simple. No reason, just thought of updating.
 
-diff --git a/arch/loongarch/include/asm/kvm_host.h b/arch/loongarch/include/asm/kvm_host.h
-index 2d62f7b0d377..57399d7cf8b7 100644
---- a/arch/loongarch/include/asm/kvm_host.h
-+++ b/arch/loongarch/include/asm/kvm_host.h
-@@ -64,6 +64,30 @@ struct kvm_world_switch {
- 
- #define MAX_PGTABLE_LEVELS	4
- 
-+/*
-+ * Physical cpu id is used for interrupt routing, there are different
-+ * definitions about physical cpuid on different hardwares.
-+ *  For LOONGARCH_CSR_CPUID register, max cpuid size if 512
-+ *  For IPI HW, max dest CPUID size 1024
-+ *  For extioi interrupt controller, max dest CPUID size is 256
-+ *  For MSI interrupt controller, max supported CPUID size is 65536
-+ *
-+ * Currently max CPUID is defined as 256 for KVM hypervisor, in future
-+ * it will be expanded to 4096, including 16 packages at most. And every
-+ * package supports at most 256 vcpus
-+ */
-+#define KVM_MAX_PHYID		256
-+
-+struct kvm_phyid_info {
-+	struct kvm_vcpu	*vcpu;
-+	bool		enabled;
-+};
-+
-+struct kvm_phyid_map {
-+	int max_phyid;
-+	struct kvm_phyid_info phys_map[KVM_MAX_PHYID];
-+};
-+
- struct kvm_arch {
- 	/* Guest physical mm */
- 	kvm_pte_t *pgd;
-@@ -71,6 +95,8 @@ struct kvm_arch {
- 	unsigned long invalid_ptes[MAX_PGTABLE_LEVELS];
- 	unsigned int  pte_shifts[MAX_PGTABLE_LEVELS];
- 	unsigned int  root_level;
-+	struct mutex  phyid_map_lock;
-+	struct kvm_phyid_map  *phyid_map;
- 
- 	s64 time_offset;
- 	struct kvm_context __percpu *vmcs;
-diff --git a/arch/loongarch/include/asm/kvm_vcpu.h b/arch/loongarch/include/asm/kvm_vcpu.h
-index e71ceb88f29e..2402129ee955 100644
---- a/arch/loongarch/include/asm/kvm_vcpu.h
-+++ b/arch/loongarch/include/asm/kvm_vcpu.h
-@@ -81,6 +81,7 @@ void kvm_save_timer(struct kvm_vcpu *vcpu);
- void kvm_restore_timer(struct kvm_vcpu *vcpu);
- 
- int kvm_vcpu_ioctl_interrupt(struct kvm_vcpu *vcpu, struct kvm_interrupt *irq);
-+struct kvm_vcpu *kvm_get_vcpu_by_cpuid(struct kvm *kvm, int cpuid);
- 
- /*
-  * Loongarch KVM guest interrupt handling
-diff --git a/arch/loongarch/kvm/vcpu.c b/arch/loongarch/kvm/vcpu.c
-index 27701991886d..97ca9c7160e6 100644
---- a/arch/loongarch/kvm/vcpu.c
-+++ b/arch/loongarch/kvm/vcpu.c
-@@ -274,6 +274,95 @@ static int _kvm_getcsr(struct kvm_vcpu *vcpu, unsigned int id, u64 *val)
- 	return 0;
- }
- 
-+static inline int kvm_set_cpuid(struct kvm_vcpu *vcpu, u64 val)
-+{
-+	int cpuid;
-+	struct loongarch_csrs *csr = vcpu->arch.csr;
-+	struct kvm_phyid_map  *map;
-+
-+	if (val >= KVM_MAX_PHYID)
-+		return -EINVAL;
-+
-+	cpuid = kvm_read_sw_gcsr(csr, LOONGARCH_CSR_ESTAT);
-+	map = vcpu->kvm->arch.phyid_map;
-+	mutex_lock(&vcpu->kvm->arch.phyid_map_lock);
-+	if (map->phys_map[cpuid].enabled) {
-+		/*
-+		 * Cpuid is already set before
-+		 * Forbid changing different cpuid at runtime
-+		 */
-+		if (cpuid != val) {
-+			/*
-+			 * Cpuid 0 is initial value for vcpu, maybe invalid
-+			 * unset value for vcpu
-+			 */
-+			if (cpuid) {
-+				mutex_unlock(&vcpu->kvm->arch.phyid_map_lock);
-+				return -EINVAL;
-+			}
-+		} else {
-+			 /* Discard duplicated cpuid set */
-+			mutex_unlock(&vcpu->kvm->arch.phyid_map_lock);
-+			return 0;
-+		}
-+	}
-+
-+	if (map->phys_map[val].enabled) {
-+		/*
-+		 * New cpuid is already set with other vcpu
-+		 * Forbid sharing the same cpuid between different vcpus
-+		 */
-+		if (map->phys_map[val].vcpu != vcpu) {
-+			mutex_unlock(&vcpu->kvm->arch.phyid_map_lock);
-+			return -EINVAL;
-+		}
-+
-+		/* Discard duplicated cpuid set operation*/
-+		mutex_unlock(&vcpu->kvm->arch.phyid_map_lock);
-+		return 0;
-+	}
-+
-+	kvm_write_sw_gcsr(csr, LOONGARCH_CSR_CPUID, val);
-+	map->phys_map[val].enabled	= true;
-+	map->phys_map[val].vcpu		= vcpu;
-+	if (map->max_phyid < val)
-+		map->max_phyid = val;
-+	mutex_unlock(&vcpu->kvm->arch.phyid_map_lock);
-+	return 0;
-+}
-+
-+struct kvm_vcpu *kvm_get_vcpu_by_cpuid(struct kvm *kvm, int cpuid)
-+{
-+	struct kvm_phyid_map  *map;
-+
-+	if (cpuid >= KVM_MAX_PHYID)
-+		return NULL;
-+
-+	map = kvm->arch.phyid_map;
-+	if (map->phys_map[cpuid].enabled)
-+		return map->phys_map[cpuid].vcpu;
-+
-+	return NULL;
-+}
-+
-+static inline void kvm_drop_cpuid(struct kvm_vcpu *vcpu)
-+{
-+	int cpuid;
-+	struct loongarch_csrs *csr = vcpu->arch.csr;
-+	struct kvm_phyid_map  *map;
-+
-+	map = vcpu->kvm->arch.phyid_map;
-+	cpuid = kvm_read_sw_gcsr(csr, LOONGARCH_CSR_ESTAT);
-+	if (cpuid >= KVM_MAX_PHYID)
-+		return;
-+
-+	if (map->phys_map[cpuid].enabled) {
-+		map->phys_map[cpuid].vcpu = NULL;
-+		map->phys_map[cpuid].enabled = false;
-+		kvm_write_sw_gcsr(csr, LOONGARCH_CSR_CPUID, 0);
-+	}
-+}
-+
- static int _kvm_setcsr(struct kvm_vcpu *vcpu, unsigned int id, u64 val)
- {
- 	int ret = 0, gintc;
-@@ -291,7 +380,8 @@ static int _kvm_setcsr(struct kvm_vcpu *vcpu, unsigned int id, u64 val)
- 		kvm_set_sw_gcsr(csr, LOONGARCH_CSR_ESTAT, gintc);
- 
- 		return ret;
--	}
-+	} else if (id == LOONGARCH_CSR_CPUID)
-+		return kvm_set_cpuid(vcpu, val);
- 
- 	kvm_write_sw_gcsr(csr, id, val);
- 
-@@ -925,6 +1015,7 @@ void kvm_arch_vcpu_destroy(struct kvm_vcpu *vcpu)
- 	hrtimer_cancel(&vcpu->arch.swtimer);
- 	kvm_mmu_free_memory_cache(&vcpu->arch.mmu_page_cache);
- 	kfree(vcpu->arch.csr);
-+	kvm_drop_cpuid(vcpu);
- 
- 	/*
- 	 * If the vCPU is freed and reused as another vCPU, we don't want the
-diff --git a/arch/loongarch/kvm/vm.c b/arch/loongarch/kvm/vm.c
-index 0a37f6fa8f2d..6fd5916ebef3 100644
---- a/arch/loongarch/kvm/vm.c
-+++ b/arch/loongarch/kvm/vm.c
-@@ -30,6 +30,14 @@ int kvm_arch_init_vm(struct kvm *kvm, unsigned long type)
- 	if (!kvm->arch.pgd)
- 		return -ENOMEM;
- 
-+	kvm->arch.phyid_map = kvzalloc(sizeof(struct kvm_phyid_map),
-+				GFP_KERNEL_ACCOUNT);
-+	if (!kvm->arch.phyid_map) {
-+		free_page((unsigned long)kvm->arch.pgd);
-+		kvm->arch.pgd = NULL;
-+		return -ENOMEM;
-+	}
-+
- 	kvm_init_vmcs(kvm);
- 	kvm->arch.gpa_size = BIT(cpu_vabits - 1);
- 	kvm->arch.root_level = CONFIG_PGTABLE_LEVELS - 1;
-@@ -44,6 +52,7 @@ int kvm_arch_init_vm(struct kvm *kvm, unsigned long type)
- 	for (i = 0; i <= kvm->arch.root_level; i++)
- 		kvm->arch.pte_shifts[i] = PAGE_SHIFT + i * (PAGE_SHIFT - 3);
- 
-+	mutex_init(&kvm->arch.phyid_map_lock);
- 	return 0;
- }
- 
-@@ -51,7 +60,9 @@ void kvm_arch_destroy_vm(struct kvm *kvm)
- {
- 	kvm_destroy_vcpus(kvm);
- 	free_page((unsigned long)kvm->arch.pgd);
-+	kvfree(kvm->arch.phyid_map);
- 	kvm->arch.pgd = NULL;
-+	kvm->arch.phyid_map = NULL;
- }
- 
- int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
--- 
-2.39.3
+Thanks for the review.
+
+Regards,
+Subhajit Ghosh
 
