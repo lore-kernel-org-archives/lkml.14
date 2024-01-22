@@ -1,25 +1,25 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 06C6139FCF
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 09:59:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3085739FF9;
+	Mon, 22 Jan 2024 09:59:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705917597; cv=none; b=c6+0NhKf79mfUxDWz3cw7XTsBIRLuD2TOzxaPgbppxk7mAMrMdTGFWHia0phfwyzPEtzdiPyylLo3ah3EOQUaW8LHOMThW2qCvDQQAv2/sG7iLkbBO3EvFo3KZDBx4xsPLHw6scVSIO0gxM+2eIOK3vI1Q2sFX84i1OGS0Z7cpk=
+	t=1705917601; cv=none; b=NgIvv+NZ9ZfEIpKQbF+0baJDZTWK8kAPSVjE60l3LdLzJ9Dp9DhRS2cLM0M8hHSJGqmBY15piAP86xe8V0sQF+Nhn3T72sXsh405XvTZJx09+gFtz5vrohVc9EuCh+N41jL7Mc6UPbmlAZD5yRtSoi4W4Maam/pd1n/O8gyPCng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705917597; c=relaxed/simple;
-	bh=pTLOgbw6TGq7gigvVyILdDYjtSciLE6lb2RwHnJzWtA=;
+	s=arc-20240116; t=1705917601; c=relaxed/simple;
+	bh=uwfu2Su/sc/XbQSWeZAeuqMRHd9Dh7GQ1+M4uoI5ZG0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ExXZ2P/pPuvA1Z5jicz50kDcP/ShhFN+cll3UKxT2qT+LO55uccy10GfbWVNPc7mHpw4RHIlPyWhe87yhuGAZRhLMUH9UY8DXBxEE9G+zbTVta4VznIrYm+jzpcFvID4cZBl/xmQvpMi+opBwEQ67PGVkALFnmvL8maQUA7fXZs=
+	 In-Reply-To:Content-Type; b=Q/CCFqPeJsdgytBLGgI3ZZiGC0PRo4XqmtAqoh3Jgu99kCL8cS4NeMkB6CBDamFVhMBOYv7jvc+7KC9I3W2TiiNWx95Ub7K+lgG85VNhG7uP1CZZKzMSgh0N4ALzkFAYQgKCaFRcYa2Ce167QIj7wSPpdHvjd3D9rJ9SqYfvnUE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3DA8B2F4;
-	Mon, 22 Jan 2024 02:00:40 -0800 (PST)
-Received: from [10.12.38.192] (unknown [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 09A163F5A1;
-	Mon, 22 Jan 2024 01:59:52 -0800 (PST)
-Message-ID: <213f94df-cc36-4281-805d-9f56cbfef796@arm.com>
-Date: Mon, 22 Jan 2024 09:59:42 +0000
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 762DDDA7;
+	Mon, 22 Jan 2024 02:00:44 -0800 (PST)
+Received: from [10.1.33.151] (XHFQ2J9959.cambridge.arm.com [10.1.33.151])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 95F453F5A1;
+	Mon, 22 Jan 2024 01:59:57 -0800 (PST)
+Message-ID: <06d796a1-1ae2-4f97-8fd6-0e3529ae2799@arm.com>
+Date: Mon, 22 Jan 2024 09:59:56 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -27,168 +27,133 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/2] sched/fair: Check a task has a fitting cpu when
- updating misfit
-To: Qais Yousef <qyousef@layalina.io>, Ingo Molnar <mingo@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>,
- Vincent Guittot <vincent.guittot@linaro.org>
-Cc: linux-kernel@vger.kernel.org, Pierre Gondois <Pierre.Gondois@arm.com>
-References: <20240105222014.1025040-1-qyousef@layalina.io>
- <20240105222014.1025040-2-qyousef@layalina.io>
-Content-Language: en-US
-From: Dietmar Eggemann <dietmar.eggemann@arm.com>
-In-Reply-To: <20240105222014.1025040-2-qyousef@layalina.io>
+Subject: Re: [PATCH] selftests/mm: run_vmtests.sh: add missing tests
+To: Muhammad Usama Anjum <usama.anjum@collabora.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Shuah Khan <shuah@kernel.org>
+Cc: kernel@collabora.com, linux-mm@kvack.org,
+ linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240116090641.3411660-1-usama.anjum@collabora.com>
+ <ffdba8c4-f1a2-4141-a3d4-0c85dfea6fef@arm.com>
+ <e3b2c142-aaae-481d-8206-5e8f374fd37e@collabora.com>
+Content-Language: en-GB
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <e3b2c142-aaae-481d-8206-5e8f374fd37e@collabora.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 05/01/2024 23:20, Qais Yousef wrote:
-> From: Qais Yousef <qais.yousef@arm.com>
+On 22/01/2024 08:46, Muhammad Usama Anjum wrote:
+> On 1/19/24 9:09 PM, Ryan Roberts wrote:
+>> Hi Muhammad,
+>>
+>> Afraid this patch is causing a regression on our CI system when it turned up in
+>> linux-next today. Additionally, 2 of thetests you have added are failing because
+>> the scripts are not exported correctly...
+> Andrew has dropped this patch for now.
 > 
-> If a misfit task is affined to a subset of the possible cpus, we need to
-> verify that one of these cpus can fit it. Otherwise the load balancer
-> code will continuously trigger needlessly leading the balance_interval
-> to increase in return and eventually end up with a situation where real
-> imbalances take a long time to address because of this impossible
-> imbalance situation.
+>>
+>> On 16/01/2024 09:06, Muhammad Usama Anjum wrote:
+>>> Add missing tests to run_vmtests.sh. The mm kselftests are run through
+>>> run_vmtests.sh. If a test isn't present in this script, it'll not run
+>>> with run_tests or `make -C tools/testing/selftests/mm run_tests`.
+>>>
+>>> Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
+>>> ---
+>>>  tools/testing/selftests/mm/run_vmtests.sh | 3 +++
+>>>  1 file changed, 3 insertions(+)
+>>>
+>>> diff --git a/tools/testing/selftests/mm/run_vmtests.sh b/tools/testing/selftests/mm/run_vmtests.sh
+>>> index 246d53a5d7f2..a5e6ba8d3579 100755
+>>> --- a/tools/testing/selftests/mm/run_vmtests.sh
+>>> +++ b/tools/testing/selftests/mm/run_vmtests.sh
+>>> @@ -248,6 +248,9 @@ CATEGORY="hugetlb" run_test ./map_hugetlb
+>>>  CATEGORY="hugetlb" run_test ./hugepage-mremap
+>>>  CATEGORY="hugetlb" run_test ./hugepage-vmemmap
+>>>  CATEGORY="hugetlb" run_test ./hugetlb-madvise
+>>> +CATEGORY="hugetlb" run_test ./charge_reserved_hugetlb.sh
+>>> +CATEGORY="hugetlb" run_test ./hugetlb_reparenting_test.sh
+>>
+>> These 2 tests are failing because the test scripts are not exported. You will
+>> need to add them to the TEST_FILES variable in the Makefile.
+> This must be done. I'll investigate even after adding them if these scripts
+> are robust enough to pass.
+
+Great thanks!
+
 > 
-> This can happen in Android world where it's common for background tasks
-> to be restricted to little cores.
+>>
+>>> +CATEGORY="hugetlb" run_test ./hugetlb-read-hwpoison
+>>
+>> The addition of this test causes 2 later tests to fail with ENOMEM. I suspect
+>> its a side-effect of marking the hugetlbs as hwpoisoned? (just a guess based on
+>> the test name!). Once a page is marked poisoned, is there a way to un-poison it?
+>> If not, I suspect that's why it wasn't part of the standard test script in the
+>> first place.
+> hugetlb-read-hwpoison failed as probably the fix in the kernel for the test
+> hasn't been merged in the kernel. The other tests (uffd-stress) aren't
+> failing on my end and on CI [1][2]
+
+To be clear, hugetlb-read-hwpoison isn't failing for me, its just causing the
+subsequent tests uffd-stress tests to fail. Both of those subsequent tests are
+allocating hugetlbs so my guess is that since this test is marking some hugetlbs
+as poisoned, there are no longer enough for the subsequent tests.
+
 > 
-> Similarly if we can't fit the biggest core, triggering misfit is
-> pointless as it is the best we can ever get on this system.
+> [1] https://lava.collabora.dev/scheduler/job/12577207#L3677
+> [2] https://lava.collabora.dev/scheduler/job/12577229#L4027
 > 
-> To be able to detect that; we use asym_cap_list to iterate through
-> capacities in the system to see if the task is able to run at a higher
-> capacity level based on its p->cpus_ptr. To do so safely, we convert the
-> list to be RCU protected.
+> Maybe its configurations issue which is exposed now. Not sure. Maybe
+> hugetlb-read-hwpoison is changing some configuration and not restoring it.
+
+Well yes - its marking some hugetlb pages as HWPOISONED.
+
+> Maybe your system has less number of hugetlb pages.
+
+YEs probably; What is hugetlb-read-hwpoison's requirement for size and number of
+hugetlb pages? the run_vmtests.sh script allocates the required number of
+default-sized hugetlb pages before running any tests (I guess this value should
+be increased for hugetlb-read-hwpoison's requirements?).
+
+Additionally, our CI preallocates non-default sizes from the kernel command line
+at boot. Happy to increase these if you can tell me what the new requirement is:
+
+hugepagesz=1G hugepages=0:2,1:2 hugepagesz=32M hugepages=0:2,1:2
+default_hugepagesz=2M hugepages=0:64,1:64 hugepagesz=64K hugepages=0:2,1:2
+
+Thanks,
+Ryan
+
 > 
-> To be able to iterate through capacity levels, export asym_cap_list to
-> allow for fast traversal of all available capacity levels in the system.
+>>
+>> These are the tests that start failing:
+>>
+>> # # ------------------------------------
+>> # # running ./uffd-stress hugetlb 128 32
+>> # # ------------------------------------
+>> # # nr_pages: 64, nr_pages_per_cpu: 8
+>> # # ERROR: context init failed (errno=12, @uffd-stress.c:254)
+>> # # [FAIL]
+>> # not ok 18 uffd-stress hugetlb 128 32 # exit=1
+>> # # --------------------------------------------
+>> # # running ./uffd-stress hugetlb-private 128 32
+>> # # --------------------------------------------
+>> # # nr_pages: 64, nr_pages_per_cpu: 8
+>> # # bounces: 31, mode: rnd racing ver poll, ERROR: UFFDIO_COPY error: -12ERROR:
+>> UFFDIO_COPY error: -12 (errno=12, @uffd-common.c:614)
+>> # #  (errno=12, @uffd-common.c:614)
+>> # # [FAIL]
+>>
+>> Quickest way to repo is:
+>>
+>> $ sudo ./run_vmtests.sh -t "userfaultfd hugetlb"
+>>
+>> Thanks,
+>> Ryan
+>>
+>>
+>>>  
+>>>  nr_hugepages_tmp=$(cat /proc/sys/vm/nr_hugepages)
+>>>  # For this test, we need one and just one huge page
+>>
+>>
 > 
-> Test:
-> =====
-> 
-> Add
-> 
-> 	trace_printk("balance_interval = %lu\n", interval)
-> 
-> in get_sd_balance_interval().
-> 
-> run
-> 	if [ "$MASK" != "0" ]; then
-> 		adb shell "taskset -a $MASK cat /dev/zero > /dev/null"
-> 	fi
-> 	sleep 10
-> 	// parse ftrace buffer counting the occurrence of each valaue
-> 
-> Where MASK is either:
-> 
-> 	* 0: no busy task running
-
-... no busy task stands for no misfit scenario?
-
-> 	* 1: busy task is pinned to 1 cpu; handled today to not cause
-> 	  misfit
-> 	* f: busy task pinned to little cores, simulates busy background
-> 	  task, demonstrates the problem to be fixed
-> 
-
-[...]
-
-> +	/*
-> +	 * If the task affinity is not set to default, make sure it is not
-> +	 * restricted to a subset where no CPU can ever fit it. Triggering
-> +	 * misfit in this case is pointless as it has no where better to move
-> +	 * to. And it can lead to balance_interval to grow too high as we'll
-> +	 * continuously fail to move it anywhere.
-> +	 */
-> +	if (!cpumask_equal(p->cpus_ptr, cpu_possible_mask)) {
-
-Shouldn't this be cpu_active_mask ?
-
-include/linux/cpumask.h
-
- * cpu_possible_mask- has bit 'cpu' set iff cpu is populatable
- * cpu_present_mask - has bit 'cpu' set iff cpu is populated
- * cpu_online_mask  - has bit 'cpu' set iff cpu available to scheduler
- * cpu_active_mask  - has bit 'cpu' set iff cpu available to migration
-
-
-> +		unsigned long clamped_util = clamp(util, uclamp_min, uclamp_max);
-> +		bool has_fitting_cpu = false;
-> +		struct asym_cap_data *entry;
-> +
-> +		rcu_read_lock();
-> +		list_for_each_entry_rcu(entry, &asym_cap_list, link) {
-> +			if (entry->capacity > cpu_cap) {
-> +				cpumask_t *cpumask;
-> +
-> +				if (clamped_util > entry->capacity)
-> +					continue;
-> +
-> +				cpumask = cpu_capacity_span(entry);
-> +				if (!cpumask_intersects(p->cpus_ptr, cpumask))
-> +					continue;
-> +
-> +				has_fitting_cpu = true;
-> +				break;
-> +			}
-> +		}
-
-What happen when we hotplug out all CPUs of one CPU capacity value?
-IMHO, we don't call asym_cpu_capacity_scan() with !new_topology
-(partition_sched_domains_locked()).
-
-> +		rcu_read_unlock();
-> +
-> +		if (!has_fitting_cpu)
-> +			goto out;
->  	}
->  
->  	/*
-> @@ -5083,6 +5127,9 @@ static inline void update_misfit_status(struct task_struct *p, struct rq *rq)
->  	 * task_h_load() returns 0.
->  	 */
->  	rq->misfit_task_load = max_t(unsigned long, task_h_load(p), 1);
-> +	return;
-> +out:
-> +	rq->misfit_task_load = 0;
->  }
->  
->  #else /* CONFIG_SMP */
-> @@ -9583,9 +9630,7 @@ check_cpu_capacity(struct rq *rq, struct sched_domain *sd)
->   */
->  static inline int check_misfit_status(struct rq *rq, struct sched_domain *sd)
->  {
-> -	return rq->misfit_task_load &&
-> -		(arch_scale_cpu_capacity(rq->cpu) < rq->rd->max_cpu_capacity ||
-> -		 check_cpu_capacity(rq, sd));
-> +	return rq->misfit_task_load && check_cpu_capacity(rq, sd);
-
-You removed 'arch_scale_cpu_capacity(rq->cpu) <
-rq->rd->max_cpu_capacity' here. Why? I can see that with the standard
-setup (max CPU capacity equal 1024) which is what we probably use 100%
-of the time now. It might get useful again when Vincent will introduce
-his 'user space system pressure' implementation?
-
->  }
-
-[...]
-
-> @@ -1423,8 +1418,8 @@ static void asym_cpu_capacity_scan(void)
->  
->  	list_for_each_entry_safe(entry, next, &asym_cap_list, link) {
->  		if (cpumask_empty(cpu_capacity_span(entry))) {
-> -			list_del(&entry->link);
-> -			kfree(entry);
-> +			list_del_rcu(&entry->link);
-> +			call_rcu(&entry->rcu, free_asym_cap_entry);
-
-Looks like there could be brief moments in which one CPU capacity group
-of CPUs could be twice in asym_cap_list. I'm thinking about initial
-startup + max CPU frequency related adjustment of CPU capacity
-(init_cpu_capacity_callback()) for instance. Not sure if this is really
-an issue?
-
-[...]
 
