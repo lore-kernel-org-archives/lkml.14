@@ -1,94 +1,129 @@
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BBDE17BD1;
-	Mon, 22 Jan 2024 07:38:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7DF91B7E9
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 07:38:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705909121; cv=none; b=mrnDj/orcNUxuyXyEcY1m91zBs2Q93Z0nHXeQqo+J4FsGUTfTe8YgJLhMwynnrT5Uyx/C+JhOiRpOv7Q7ge1Yrc4/ZbLhSYAdt8qfdWy1m3Bp9Z5n+MfggCBKxLzxk5Gd2apwqCOBJ200WCUzSIM4nruFdr8byQCwVHtawfXZng=
+	t=1705909133; cv=none; b=diFwWy5vTbNOrVEKlw0D5RlDgpC3+PPzln8WivTnUTruMzYIamSs3ugzXJ1zhiF5/ImX4+SY7ad1D5FNpPFxnZpMK1sH2v/HOBL8myFKiN/1UHzQsHSXhbSGUM+srBFxdlEipQZItdd3Ra5i1gRZglhYR/kBQT4jC99V594PGhI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705909121; c=relaxed/simple;
-	bh=R+0EqFIiGaBBpGCVcH0I4eW51HMRsop2Clw0T8UHkPY=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=G0dyfKuvKCnr8dr6e/eaJFAbxPO9sNiFgwdSLykWVsbBalLpbtJ/WYDr92oIGk50VfdKqHnDQSWlULQUkYlXi2pLb06Px1mYmLUItYwXUbIhmriVG4omiu4wPHi4/tdULIbhCaPRwVoLGRkevluTieVXqhvELKaEqnNloVCcgSA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.214])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4TJMRY6CBkz1FJcT;
-	Mon, 22 Jan 2024 15:34:17 +0800 (CST)
-Received: from canpemm500010.china.huawei.com (unknown [7.192.105.118])
-	by mail.maildlp.com (Postfix) with ESMTPS id 24FAD1A0173;
-	Mon, 22 Jan 2024 15:38:22 +0800 (CST)
-Received: from huawei.com (10.175.127.227) by canpemm500010.china.huawei.com
- (7.192.105.118) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Mon, 22 Jan
- 2024 15:37:39 +0800
-From: Ye Bin <yebin10@huawei.com>
-To: <rostedt@goodmis.org>, <mhiramat@kernel.org>,
-	<mathieu.desnoyers@efficios.com>, <linux-trace-kernel@vger.kernel.org>
-CC: <linux-kernel@vger.kernel.org>, <yebin10@huawei.com>
-Subject: [PATCH v2 3/7] tracing/probes: support '%pd' type for print struct dentry's name
-Date: Mon, 22 Jan 2024 15:40:11 +0800
-Message-ID: <20240122074015.4042575-4-yebin10@huawei.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20240122074015.4042575-1-yebin10@huawei.com>
-References: <20240122074015.4042575-1-yebin10@huawei.com>
+	s=arc-20240116; t=1705909133; c=relaxed/simple;
+	bh=I0bxZ9OPqrT/uDMzN7yVqtIrwXlVywHoghPHYVi+0rQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HXWDZ8S0JHD0Yg6X7JrJJpqbzQDWPrS5r0vJDc3eiFMUoxBtBpbeIcA36o/Es2+K8RwKEX5Ydry9py4plvUZ6ig3rvmb6tU1trJ4CqnF116Cl6w0mkUA44KhrpMe/8ywrAvCulFSFBUZKoRzE7dPNxr96TEwf7DhqSPCd8oXYmY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=I9xDBETY; arc=none smtp.client-ip=209.85.128.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="I9xDBETY"
+Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-5ff88cbbcceso20240927b3.2
+        for <linux-kernel@vger.kernel.org>; Sun, 21 Jan 2024 23:38:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1705909131; x=1706513931; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=btEptr2pD3e12BZE7dkiwHzMFQh/dHJsUOjIgsxvBmo=;
+        b=I9xDBETYrGYSKN7adIm3FYpMvxquRGJxf8xozySOS+sJdL8x4SuV8Pe3ZXRmEyAAu7
+         2cxDsVTBJ21LkCycrjEdaA5+LkVpYpqjXkTvJN41uDvhWj1pJf9yLWH6/dl8RP1Y21XJ
+         zo4rdd/lnOan9S0qt7NahQ8M7YSggOEC04Z8+AZ5Kv0xTcLxlyoVmNa1d+P1qqNmDahY
+         D+BMkQUdtwSRejXlscnoO8CBuDmp7HAvj3eCl9jPzD8Hn3YmV2A+tG/92a7CxAXjMP+9
+         1Cy7Ly9YHy3LTMUkOgLDbMU4eBeYs47HslYbsxzhF3MbeK0zdCVaOMSxeQn+jwtaxWlt
+         eXXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705909131; x=1706513931;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=btEptr2pD3e12BZE7dkiwHzMFQh/dHJsUOjIgsxvBmo=;
+        b=vLShF7hjlEYzvM7Jx44EBEmdY+NQl3Ioxx43raeGY5qmGyrQAhJAx4Aja9udMXM1qk
+         dpC+kj8b/BWVzz+aUUM/EmyZn3uXhbOBftMTDgualn783LtZAMbIooxHSRf7qhoXWjDt
+         2pbSpbBz6HLrnJkZpB35ZRuKwgsfIx8KgqVjpC11XczKnHWSXdyaESocw/YkxKicpLBl
+         g3f/GRUQ1Ien/7HmpqUUvzhAbxhR5c8L5c/MxuiE3Ri0mNbl6b6mJHfNsqdaM0EYgyXf
+         Uqiv897wPbieZ5O1jDYodVLdcaFnd5wCSuTral6ORdi2SQVLFDqmTSxHtlLgF7WxD877
+         SOhQ==
+X-Gm-Message-State: AOJu0YwLLUZOAMLTeE1e2SvB7PmL+Zq/BJR/Xw2FDo3EAcBp3/V5XXbx
+	PUS9GdJFoAZjciTYPq/Qmyv+knKPWJugY/k4thtxZF7HuVCQdNeO+J9vskK6+zuBoXrzRcyeHiE
+	NJQuO3x2REjsvqRnG7EbiyPb6K9uZWtirJumI
+X-Google-Smtp-Source: AGHT+IGjEOIHrmfM7ezfh27Xzea24O4bRYWpgPSlKnEmn5Ffc3QES0sPWXdEsTBBAXnmQNHKy//6OSpslLEBp2dKAfc=
+X-Received: by 2002:a81:7202:0:b0:5ff:b07b:99f0 with SMTP id
+ n2-20020a817202000000b005ffb07b99f0mr1289150ywc.93.1705909130740; Sun, 21 Jan
+ 2024 23:38:50 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- canpemm500010.china.huawei.com (7.192.105.118)
+References: <20231226214610.109282-1-surenb@google.com> <170578498755.24348.16166096320323933297.git-patchwork-notify@kernel.org>
+ <Zaw31DVa9q3JZASo@shell.armlinux.org.uk>
+In-Reply-To: <Zaw31DVa9q3JZASo@shell.armlinux.org.uk>
+From: Suren Baghdasaryan <surenb@google.com>
+Date: Sun, 21 Jan 2024 23:38:38 -0800
+Message-ID: <CAJuCfpGV_CwQm+PuiqRz3L1x7QnpgE9LQb4PPChqFv0mzbYeBw@mail.gmail.com>
+Subject: Re: [PATCH 1/1] arch/mm/fault: fix major fault accounting when
+ retrying under per-VMA lock
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+Cc: patchwork-bot+linux-riscv@kernel.org, linux-riscv@lists.infradead.org, 
+	akpm@linux-foundation.org, willy@infradead.org, will@kernel.org, 
+	catalin.marinas@arm.com, palmer@dabbelt.com, mpe@ellerman.id.au, 
+	christophe.leroy@csgroup.eu, agordeev@linux.ibm.com, 
+	gerald.schaefer@linux.ibm.com, dave.hansen@linux.intel.com, luto@kernel.org, 
+	peterz@infradead.org, x86@kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Similar to '%pd' for printk, use '%pd' for print struct dentry's name.
+On Sat, Jan 20, 2024 at 1:15=E2=80=AFPM Russell King (Oracle)
+<linux@armlinux.org.uk> wrote:
+>
+> On Sat, Jan 20, 2024 at 09:09:47PM +0000, patchwork-bot+linux-riscv@kerne=
+l.org wrote:
+> > Hello:
+> >
+> > This patch was applied to riscv/linux.git (fixes)
+> > by Andrew Morton <akpm@linux-foundation.org>:
+> >
+> > On Tue, 26 Dec 2023 13:46:10 -0800 you wrote:
+> > > A test [1] in Android test suite started failing after [2] was merged=
+.
+> > > It turns out that after handling a major fault under per-VMA lock, th=
+e
+> > > process major fault counter does not register that fault as major.
+> > > Before [2] read faults would be done under mmap_lock, in which case
+> > > FAULT_FLAG_TRIED flag is set before retrying. That in turn causes
+> > > mm_account_fault() to account the fault as major once retry completes=
+.
+> > > With per-VMA locks we often retry because a fault can't be handled
+> > > without locking the whole mm using mmap_lock. Therefore such retries
+> > > do not set FAULT_FLAG_TRIED flag. This logic does not work after [2]
+> > > because we can now handle read major faults under per-VMA lock and
+> > > upon retry the fact there was a major fault gets lost. Fix this by
+> > > setting FAULT_FLAG_TRIED after retrying under per-VMA lock if
+> > > VM_FAULT_MAJOR was returned. Ideally we would use an additional
+> > > VM_FAULT bit to indicate the reason for the retry (could not handle
+> > > under per-VMA lock vs other reason) but this simpler solution seems
+> > > to work, so keeping it simple.
+> > >
+> > > [...]
+> >
+> > Here is the summary with links:
+> >   - [1/1] arch/mm/fault: fix major fault accounting when retrying under=
+ per-VMA lock
+> >     https://git.kernel.org/riscv/c/46e714c729c8
+> >
+> > You are awesome, thank you!
+>
+> Now that 32-bit ARM has support for the per-VMA lock, does that also
+> need to be patched?
 
-Signed-off-by: Ye Bin <yebin10@huawei.com>
----
- kernel/trace/trace_kprobe.c | 6 ++++++
- kernel/trace/trace_probe.h  | 1 +
- 2 files changed, 7 insertions(+)
+Yes, I think so. I missed the ARM32 change that added support for
+per-VMA locks. Will post a similar patch for it tomorrow.
+Thanks,
+Suren.
 
-diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-index c4c6e0e0068b..00b74530fbad 100644
---- a/kernel/trace/trace_kprobe.c
-+++ b/kernel/trace/trace_kprobe.c
-@@ -779,6 +779,7 @@ static int __trace_kprobe_create(int argc, const char *argv[])
- 	char buf[MAX_EVENT_NAME_LEN];
- 	char gbuf[MAX_EVENT_NAME_LEN];
- 	char abuf[MAX_BTF_ARGS_LEN];
-+	char dbuf[MAX_DENTRY_ARGS_LEN];
- 	struct traceprobe_parse_context ctx = { .flags = TPARG_FL_KERNEL };
- 
- 	switch (argv[0][0]) {
-@@ -930,6 +931,11 @@ static int __trace_kprobe_create(int argc, const char *argv[])
- 		argv = new_argv;
- 	}
- 
-+	ret = traceprobe_expand_dentry_args(argc, argv, dbuf,
-+					    MAX_DENTRY_ARGS_LEN);
-+	if (ret)
-+		goto out;
-+
- 	/* setup a probe */
- 	tk = alloc_trace_kprobe(group, event, addr, symbol, offset, maxactive,
- 				argc, is_return);
-diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
-index 553371a4e0b1..d9c053824975 100644
---- a/kernel/trace/trace_probe.h
-+++ b/kernel/trace/trace_probe.h
-@@ -34,6 +34,7 @@
- #define MAX_ARRAY_LEN		64
- #define MAX_ARG_NAME_LEN	32
- #define MAX_BTF_ARGS_LEN	128
-+#define MAX_DENTRY_ARGS_LEN	256
- #define MAX_STRING_SIZE		PATH_MAX
- #define MAX_ARG_BUF_LEN		(MAX_TRACE_ARGS * MAX_ARG_NAME_LEN)
- 
--- 
-2.31.1
-
+>
+> --
+> RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+> FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
