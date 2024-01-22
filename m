@@ -1,79 +1,113 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B241B14DB5D;
-	Mon, 22 Jan 2024 15:18:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFCC557303;
+	Mon, 22 Jan 2024 15:18:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705936687; cv=none; b=qY2+g5yX+8NF0R0IdBb3I5Ern+35h6I+aEaWtdLT23t8Ti1MB8L1e4NPokDLHOUHRH5Y/8Xo7o9Wu/ywzAOBYnzdtkDn+vdizkJ1PXIrHb2XS+zzD5oXJp/7PFZaIs1gk4BJEZvY377T3YV+xYQx7My1RpKDB+QVUEBeV4tRf7U=
+	t=1705936706; cv=none; b=Sqz0WpR9RaEEdfbyCptERzJphWEELC7hvvqtPJl/ZNFUNYfociHdD3mcjxr8yB1ybaV5wF6WlJsfaEZmMK0cj7VrC52e4ALvXZWCPBg6BvtgalPrH8fHgwmG3d/byqotddunOTWe+B13tEQPC70FN9zI3PeDejj1Xqz4LW1ljtM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705936687; c=relaxed/simple;
-	bh=UQJgDJ1jQGsA5dFTTO+ji4AWSQKmt22PQx0vxvlz2bA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fU2ejLPfI0tVEx918kYMmwCXOlb/3rBsOYIsQFf1DKz1oMprpf3aszk47gWw2Ni/uNMByg6m2x7mGLxz2W243kqjOgOQenuyGEhld5XrZLFcEX4MakTAwsNuhDCm+1V0JoIycKsc1ARIAeQ2BfKt5qO7c9A2ArARepteN4Gmh1Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eF9eAoxR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1705936706; c=relaxed/simple;
+	bh=as4ZD96i3aN9NMBMedkYzd3p78ya5sCcySgUgKIfv/M=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=M585KQu2NllepGW1AQOVn/XOvcQXynI9Moz72SaCX67ghntaKb4VUuj9WDmHW4qBGigwysaeKfhuxT/Z19rucrdF8DIoteykf9gzgcZbDbkli3OigSufJa/MTEHiss5zVt3z6DsdoiJARs1eA3QS0xR93suuDhJVKOt1nGWO04g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g5hXEryf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eF9eAoxR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 816C1C4166A;
-	Mon, 22 Jan 2024 15:18:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g5hXEryf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E1EAC433F1;
+	Mon, 22 Jan 2024 15:18:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705936687;
-	bh=UQJgDJ1jQGsA5dFTTO+ji4AWSQKmt22PQx0vxvlz2bA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=eF9eAoxRJf/brDqvElgArHmgdPeNAo8ieOCn2xi4ufFMxorFWtZ69VUCmexzh/sTP
-	 +BUe+qq0YinH8u65eRct5dmhzAWFFKqlNJaJq3gORFxSLqWHaK8bmTm7uGQKDIW2iI
-	 BieFkdBIEZ3SEyP0Q+8D/ZiNvX3lytbJYySqYooKSLLOUvw4G1RmIOTPeoEcZGNtiJ
-	 A97D5pgdGQt06pSe+FpwzwaOzXbKSAnn7bA+4Rf6cYXtmesshM9PUMKkTZOUiNwyI8
-	 ApQJ9IXiznE6UZvl7XLRgjAysbckvDqpYHK+EfVEDTPw5+WgadpXzK1+9wg+AQRyM9
-	 wZsFayL+0k0lw==
-Date: Mon, 22 Jan 2024 16:18:00 +0100
-From: Christian Brauner <brauner@kernel.org>
-To: David Howells <dhowells@redhat.com>
-Cc: Christian Brauner <christian@brauner.io>, 
-	Jeff Layton <jlayton@kernel.org>, Matthew Wilcox <willy@infradead.org>, netfs@lists.linux.dev, 
-	linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org, linux-nfs@vger.kernel.org, 
-	ceph-devel@vger.kernel.org, v9fs@lists.linux.dev, linux-erofs@lists.ozlabs.org, 
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 00/10] netfs, afs, cifs, cachefiles, erofs: Miscellaneous
- fixes
-Message-ID: <20240122-bezwingen-kanister-b56f5bc1bc84@brauner>
-References: <20240122123845.3822570-1-dhowells@redhat.com>
+	s=k20201202; t=1705936706;
+	bh=as4ZD96i3aN9NMBMedkYzd3p78ya5sCcySgUgKIfv/M=;
+	h=From:To:Cc:Subject:Date:From;
+	b=g5hXEryflvrDZR3cjcBlPLKBemyak//2xLrAs2+FyA8SiwR7HUA2880QiZZWfqRsf
+	 PmYyDzhyc4IsfHV4mQg4PfmWUikrBmbN50PVPRBHnZ04KkQS4RoMpPrNyqB4M5PNMG
+	 FXGcQfGwzSI1KaDdHklU3ME/3oNmeFj1RY/T5SHtD8LZbcsOYpeLdsSINwL/XVQpd/
+	 17KDe2rW+SkDNBXsZrnWLXV904/yuLfIrkO13Xk7k9Iltj2M0d7XP1O7HioxSHvXn6
+	 xpAzrv17KLy6js8ou4l41b3BnhtLbRjwn8NsnpKauMbLuJxtkuOdmlt0Qu4X1lOGDa
+	 PaVWh9YqraeUQ==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Chao Yu <chao@kernel.org>,
+	Jaegeuk Kim <jaegeuk@kernel.org>,
+	Sasha Levin <sashal@kernel.org>,
+	linux-f2fs-devel@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 4.19 01/23] f2fs: fix to check return value of f2fs_reserve_new_block()
+Date: Mon, 22 Jan 2024 10:17:41 -0500
+Message-ID: <20240122151823.997644-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240122123845.3822570-1-dhowells@redhat.com>
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 4.19.305
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jan 22, 2024 at 12:38:33PM +0000, David Howells wrote:
-> Hi Christian,
-> 
-> Here are some miscellaneous fixes for netfslib and a number of filesystems:
-> 
->  (1) Replace folio_index() with folio->index in netfs, afs and cifs.
-> 
->  (2) Fix an oops in fscache_put_cache().
-> 
->  (3) Fix error handling in netfs_perform_write().
-> 
->  (4) Fix an oops in cachefiles when not using erofs ondemand mode.
-> 
->  (5) In afs, hide silly-rename files from getdents() to avoid problems with
->      tar and suchlike.
-> 
->  (6) In afs, fix error handling in lookup with a bulk status fetch.
-> 
->  (7) In afs, afs_dynroot_d_revalidate() is redundant, so remove it.
-> 
->  (8) In afs, fix the RCU unlocking in afs_proc_addr_prefs_show().
-> 
-> The patches can also be found here:
-> 
-> 	https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/log/?h=netfs-fixes
+From: Chao Yu <chao@kernel.org>
 
-Thank you! I can pull this in right and will send a pr together with the
-other changes around Wednesday/Thursday for -rc2. So reviews before that
-would be nice.
+[ Upstream commit 956fa1ddc132e028f3b7d4cf17e6bfc8cb36c7fd ]
+
+Let's check return value of f2fs_reserve_new_block() in do_recover_data()
+rather than letting it fails silently.
+
+Also refactoring check condition on return value of f2fs_reserve_new_block()
+as below:
+- trigger f2fs_bug_on() only for ENOSPC case;
+- use do-while statement to avoid redundant codes;
+
+Signed-off-by: Chao Yu <chao@kernel.org>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/f2fs/recovery.c | 23 +++++++++++++++++------
+ 1 file changed, 17 insertions(+), 6 deletions(-)
+
+diff --git a/fs/f2fs/recovery.c b/fs/f2fs/recovery.c
+index ad0486beee2c..fffc7a9de04b 100644
+--- a/fs/f2fs/recovery.c
++++ b/fs/f2fs/recovery.c
+@@ -548,7 +548,16 @@ static int do_recover_data(struct f2fs_sb_info *sbi, struct inode *inode,
+ 		 */
+ 		if (dest == NEW_ADDR) {
+ 			f2fs_truncate_data_blocks_range(&dn, 1);
+-			f2fs_reserve_new_block(&dn);
++			do {
++				err = f2fs_reserve_new_block(&dn);
++				if (err == -ENOSPC) {
++					f2fs_bug_on(sbi, 1);
++					break;
++				}
++			} while (err &&
++				IS_ENABLED(CONFIG_F2FS_FAULT_INJECTION));
++			if (err)
++				goto err;
+ 			continue;
+ 		}
+ 
+@@ -556,12 +565,14 @@ static int do_recover_data(struct f2fs_sb_info *sbi, struct inode *inode,
+ 		if (f2fs_is_valid_blkaddr(sbi, dest, META_POR)) {
+ 
+ 			if (src == NULL_ADDR) {
+-				err = f2fs_reserve_new_block(&dn);
+-				while (err &&
+-				       IS_ENABLED(CONFIG_F2FS_FAULT_INJECTION))
++				do {
+ 					err = f2fs_reserve_new_block(&dn);
+-				/* We should not get -ENOSPC */
+-				f2fs_bug_on(sbi, err);
++					if (err == -ENOSPC) {
++						f2fs_bug_on(sbi, 1);
++						break;
++					}
++				} while (err &&
++					IS_ENABLED(CONFIG_F2FS_FAULT_INJECTION));
+ 				if (err)
+ 					goto err;
+ 			}
+-- 
+2.43.0
+
