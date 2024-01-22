@@ -1,203 +1,158 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AD335667;
-	Mon, 22 Jan 2024 05:57:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 867BF53A7;
+	Mon, 22 Jan 2024 05:57:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705903044; cv=none; b=ICoKJv956RwEi1o6RI3YDgwpJ1mq1KOFZsN2VyfsE+pUoQOsv/tLrpS0AcfL7pwttMD2Mv1On4FmgIkb+g5aZeek08Qj8w29nNsXR++XVQHi26Iqx5Yrl9hfi6QQeTCAuIH9XBE5GfTKr0Biee3x0wQqrWln0KlLoHUrIn/QHKU=
+	t=1705903046; cv=none; b=alfR6/MytvOOSOMMiSp2mWI/k708vL8omoO80icX7j+tbOBV3PS5BeIZdFcom5xkCY3Kx+HACJztkMtuftZkBDDUrtkPCPXtH26y9g0DmlzzVvdp0mMz0CrXGoqcKTagRgkn290yKgY6infMyVA9nocRmRpah3kkw7YVkl66e4c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705903044; c=relaxed/simple;
-	bh=tp4JlQSpqF7YVv6UlYVYHQprrGoJsNWCQt1u+rfyTqY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NGwVCoQcUD/L0kQaVtgSO4CkzxFOSGro3fBaEoYhTfd5OHqS+JqWu67CKjrNyMXunWZ87E/f2ccua3Ku5J9ey/wc/SG29OFiuVPgJAsA2mudiO5GsMV0hOQp6pCkaHDViXXl2Rq3KIEN1VaAqYCgg1l2BZGBTgK1NvOLZtAHmks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mPk/Z4kv; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1705903046; c=relaxed/simple;
+	bh=3/LLAsFUZz4SgBGQNxQiyLp2BznPG43zkEiReF8ojwo=;
+	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=iPPtVXdGsgIgjDpSF5WCED5a7vvvgqa3XBdvZH2yX03PfyyhVLs2EhgMqsjIRwYcg2PPuUVNI7XzxOJgp3FD8dRXJkuexCPaW0qpkfqObH3346/8AZMH7QJ1T9777jdHuQcViPWLNy22C/qibapwlw5WSnVeO6JQZXQz6+oPnqc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=kmU5pRZA; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mPk/Z4kv"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-40e87d07c07so36071765e9.1;
-        Sun, 21 Jan 2024 21:57:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705903041; x=1706507841; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7MTYZForVvLZ2hb0Ye49WxTmxEl3DOOa/vhUliBrzGQ=;
-        b=mPk/Z4kvxJ7zXvDg3erVc0CwFjbxrL55Gz4bnudcWf/FkzL1G5hQMmeFR+DKQKLqKP
-         hyCB8VNRR1ofSkSWWFQRLVLERFFQsFxTXccqf/5p9pz9vBhDxMPBOtmMMMvEV9WXQQyH
-         2PKYN3UYe6YswTH2hb60TFklAkaWYt3l9YhN8R/yG1xw2BLWhcfpfE6VLLHsmGAzz1Xx
-         0ruJLwEiW+/JcFpvqCSplRLdnC2/NcH5N0EyZi6q/GsSbDBld/lsK33TKGl5QzP2zGyR
-         XbckhMb/FiQIN1vEfzREqnd3km771zU8bqIrqFeM9t9aANTHRoCmHQGetqh8WcBoMa4u
-         zcWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705903041; x=1706507841;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7MTYZForVvLZ2hb0Ye49WxTmxEl3DOOa/vhUliBrzGQ=;
-        b=iiepJEm1pna7XyReFIk4OZb8hPVg9S+6Qf6KL9/gNGwaitkvYgiDI9Ro4ccJOzwJ1b
-         50c6p317CX2Nu0ct6xfZJrQZ5WDK/05fWwkR+SbV/w+eWQH4dbzwxKBiS2haYN90Zo9B
-         SIULASaG8IqGTFOHTbFheuYMjrUII0gXV1Yp8DNICRtiaE/pHMJkZmQCYyc9YD03pSs3
-         3I7oJaMF4n1V8LKGAYl3kgfjkvtZZFEG4tQqxlQ2q3SIYdIBigoGtJTm949iKF9TmQZW
-         jPzEqkOybPhygwCmJJlEIhfHnGzoBfYRX3tPt19sEUQDB/ZP7CCeBHq8yor7d9UH1AUn
-         SwTQ==
-X-Gm-Message-State: AOJu0Ywc95jhskftdXHtLiQ7AR8WU1NMkDMrUI/GW/JBRUgHcW0CA6A2
-	rIrxqhkTOBwyPQ1mgmYQrAhym9UOq25c8nfXzgQqPRujWWhlSH+N+ED5Bdxc5F8E2rLQupDSc8B
-	aMREFloACMcTvxWbleCNun4b1KvA=
-X-Google-Smtp-Source: AGHT+IFGYBIivqZ62ulzHX/smTjXQMJkimNwpt40QKZKF3Q0PXUrtMTpMu7iUstJl6HpzLg6Hcm7DHGwZH6T22Pbz5U=
-X-Received: by 2002:a05:600c:290c:b0:40e:6ea4:bf57 with SMTP id
- i12-20020a05600c290c00b0040e6ea4bf57mr2212703wmd.126.1705903040462; Sun, 21
- Jan 2024 21:57:20 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="kmU5pRZA"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40M3QhJk010489;
+	Mon, 22 Jan 2024 05:57:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:subject:date:message-id:mime-version:content-type
+	:content-transfer-encoding:to:cc; s=qcppdkim1; bh=gOkvKx6U8tNWu+
+	YMf9CAloDT8sJSVldWthGeWm6dOd0=; b=kmU5pRZAbKqVLPhNcBJTryOQhUDq7j
+	7UEWoGnvqeFMlyVL8P1DfZ3sqWBg5eCiNNYJviXbXpDjvhdbxxYCITtPOcyBU4hJ
+	dsc9BO44oa9/0Ko9BHITaYtUbFkI8tRbOhPeKdkPO6FkwZHMxb5TLcZlQj4ahh7m
+	qI2TA97ry8KaoNhjWDjgBIFRWSj812IjMnRdIe+nOU/zsQZDEYrusa/c+u1L4KDB
+	G99oeIRAYvUA8V1SEX0KY/HDp0U+vPFvrzmbDofSfvsgpf/Ds674/ZNVvVNnJMYe
+	93+SFMVa03IKjRjNAZ2lGq/MYv6lpGxTDgdHwpFB5HXVpmI78KfVV3Ng==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vr5gpk2ve-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 22 Jan 2024 05:57:10 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 40M5v9c1019141
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 22 Jan 2024 05:57:09 GMT
+Received: from hu-kathirav-blr.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Sun, 21 Jan 2024 21:57:03 -0800
+From: Kathiravan Thirumoorthy <quic_kathirav@quicinc.com>
+Subject: [PATCH v4 0/8] Add NSS clock controller support for Qualcomm
+ IPQ5332
+Date: Mon, 22 Jan 2024 11:26:56 +0530
+Message-ID: <20240122-ipq5332-nsscc-v4-0-19fa30019770@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240106222357.23835-1-alchark@gmail.com> <20240109192608.5981-1-alchark@gmail.com>
- <c517f26c-34bc-4b99-b744-8e2549cd28b5@linaro.org> <CABjd4YxYpsvf+ghHTn1z8TAZxQb-2dFOQaVSm8zHKSSWOokqww@mail.gmail.com>
- <e45f72c2-0b5b-44dd-ad39-e7e5bd17ae26@linaro.org>
-In-Reply-To: <e45f72c2-0b5b-44dd-ad39-e7e5bd17ae26@linaro.org>
-From: Alexey Charkov <alchark@gmail.com>
-Date: Mon, 22 Jan 2024 09:57:08 +0400
-Message-ID: <CABjd4YyL1ZwNOJrWPwZtc7=e4h18a9tQOnuKP6soy=iTHv-WEA@mail.gmail.com>
-Subject: Re: [PATCH v2] arm64: dts: rockchip: enable built-in thermal
- monitoring on rk3588
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Heiko Stuebner <heiko@sntech.de>, Sebastian Reichel <sebastian.reichel@collabora.com>, 
-	Cristian Ciocaltea <cristian.ciocaltea@collabora.com>, 
-	Christopher Obbard <chris.obbard@collabora.com>, =?UTF-8?B?VGFtw6FzIFN6xbFjcw==?= <szucst@iit.uni-miskolc.hu>, 
-	Shreeya Patel <shreeya.patel@collabora.com>, Kever Yang <kever.yang@rock-chips.com>, 
-	Jagan Teki <jagan@edgeble.ai>, Chris Morgan <macromorgan@hotmail.com>, devicetree@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAKgDrmUC/3XMywrCMBCF4VcpWRuZTC5YV76HuIhjamdhL4kGp
+ fTdTQsuFFyeA98/iRQihyT21SRiyJy478owm0pQ67trkHwpWyCgVqBB8jBarVF2KRFJHzzVQVk
+ Nxopihhgafq6946nsltO9j681n3F5/5WykiCdcuiRnG3AH8YHE3e0pf4mllY2H29AIf56U7yul
+ QIX6p0/228/z/MbaOfc8ewAAAA=
+To: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio
+	<konrad.dybcio@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        "Krzysztof
+ Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        Richard Cochran <richardcochran@gmail.com>,
+        "Catalin
+ Marinas" <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>
+CC: <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        "Kathiravan
+ Thirumoorthy" <quic_kathirav@quicinc.com>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.12.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1705903023; l=2637;
+ i=quic_kathirav@quicinc.com; s=20230906; h=from:subject:message-id;
+ bh=3/LLAsFUZz4SgBGQNxQiyLp2BznPG43zkEiReF8ojwo=;
+ b=9UD1behseRpd6SGd0URZ2kpuXJ7XO59XV7XM25z6U1SiTb1ppu2XvOuH3uzM5GTgh5VhqO8xC
+ 4KPJQWu9avoC8JcXOTbJWOLCcpt6XEIUNnb2mVPztNiHA2iDBOYgPJ/
+X-Developer-Key: i=quic_kathirav@quicinc.com; a=ed25519;
+ pk=xWsR7pL6ch+vdZ9MoFGEaP61JUaRf0XaZYWztbQsIiM=
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: FTCAKj21xfpZ3x_D6mIz7tf-fKu1hbCs
+X-Proofpoint-ORIG-GUID: FTCAKj21xfpZ3x_D6mIz7tf-fKu1hbCs
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-01-21_04,2024-01-19_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ bulkscore=0 suspectscore=0 adultscore=0 clxscore=1011 mlxscore=0
+ malwarescore=0 impostorscore=0 mlxlogscore=999 lowpriorityscore=0
+ spamscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2311290000 definitions=main-2401220040
 
-On Mon, Jan 22, 2024 at 4:04=E2=80=AFAM Daniel Lezcano
-<daniel.lezcano@linaro.org> wrote:
->
->
-> Hi Alexey,
->
->
-> On 21/01/2024 20:57, Alexey Charkov wrote:
-> > On Fri, Jan 19, 2024 at 8:21=E2=80=AFPM Daniel Lezcano
-> > <daniel.lezcano@linaro.org> wrote:
-> > Hello Daniel,
-> >
-> > Thanks a lot for your review and comments! Please see some reflections =
-below.
-> >
-> >> On 09/01/2024 20:19, Alexey Charkov wrote:
-> >>> Include thermal zones information in device tree for rk3588 variants
-> >>> and enable the built-in thermal sensing ADC on RADXA Rock 5B
-> >>>
-> >>> Signed-off-by: Alexey Charkov <alchark@gmail.com>
-> >>> ---
-> >>> Changes in v2:
-> >>>    - Dropped redundant comments
-> >>>    - Included all CPU cores in cooling maps
-> >>>    - Split cooling maps into more granular ones utilizing TSADC
-> >>>      channels 1-3 which measure temperature by separate CPU clusters
-> >>>      instead of channel 0 which measures the center of the SoC die
-> >>> ---
-> >>>    .../boot/dts/rockchip/rk3588-rock-5b.dts      |   4 +
-> >>>    arch/arm64/boot/dts/rockchip/rk3588s.dtsi     | 151 ++++++++++++++=
-++++
-> >>>    2 files changed, 155 insertions(+)
-> >>>
-> >>> diff --git a/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts b/arch/a=
-rm64/boot/dts/rockchip/rk3588-rock-5b.dts
-> >>> index a5a104131403..f9d540000de3 100644
-> >>> --- a/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
-> >>> +++ b/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
-> >>> @@ -772,3 +772,7 @@ &usb_host1_ehci {
-> >>>    &usb_host1_ohci {
-> >>>        status =3D "okay";
-> >>>    };
-> >>> +
-> >>> +&tsadc {
-> >>> +     status =3D "okay";
-> >>> +};
-> >>> diff --git a/arch/arm64/boot/dts/rockchip/rk3588s.dtsi b/arch/arm64/b=
-oot/dts/rockchip/rk3588s.dtsi
-> >>> index 8aa0499f9b03..8d54998d0ecc 100644
-> >>> --- a/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
-> >>> +++ b/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
-> >>> @@ -10,6 +10,7 @@
-> >>>    #include <dt-bindings/reset/rockchip,rk3588-cru.h>
-> >>>    #include <dt-bindings/phy/phy.h>
-> >>>    #include <dt-bindings/ata/ahci.h>
-> >>> +#include <dt-bindings/thermal/thermal.h>
-> >>>
-> >>>    / {
-> >>>        compatible =3D "rockchip,rk3588";
-> >>> @@ -2112,6 +2113,156 @@ tsadc: tsadc@fec00000 {
-> >>>                status =3D "disabled";
-> >>>        };
-> >>>
-> >>> +     thermal_zones: thermal-zones {
-> >>> +             /* sensor near the center of the whole chip */
-> >>> +             soc_thermal: soc-thermal {
-> >>> +                     polling-delay-passive =3D <20>;
-> >>
-> >> There is no mitigation set for this thermal zone. It is pointless to
-> >> specify a passive polling.
-> >
-> > Indeed, it makes sense to me. There seems to be a catch though in that
-> > the driver calls the generic thermal_of_zone_register during the
-> > initial probe, which expects both of those polling delays to be
-> > present in the device tree, otherwise it simply refuses to add the
-> > respective thermal zone, see drivers/thermal/thermal_of.c:502
->
-> Usually:
->
-> polling-delay-passive =3D <0>;
-> polling-delay =3D <0>;
->
-> cf:
->
-> git grep "polling-delay =3D <0>" arch/arm64/boot/dts
+Add bindings, driver and devicetree node for networking sub system clock
+controller on IPQ5332. Some of the nssnoc clocks present in GCC driver is
+enabled by default and its RCG is configured by bootloaders, so enable
+those clocks in driver probe.
 
-Indeed, thanks a lot for the pointer! Somehow it slipped my attention.
-Will test and amend accordingly.
+The NSS clock controller driver depends on the below patchset which adds
+support for multiple configurations for same frequency.
+https://lore.kernel.org/linux-arm-msm/20231220221724.3822-1-ansuelsmth@gmail.com/
 
-> >>> +                     polling-delay =3D <1000>;
-> >>
-> >> The driver is interrupt driven. No need to poll.
-> >
-> > Same here as above
-> >
-> >>> +                     sustainable-power =3D <2100>;
-> >>
-> >> There is no mitigation with this thermal zone. Specifying a sustainabl=
-e
-> >> power does not make sense.
-> >
-> > Thanks, will drop this in v3!
-> >
-> >>> +                     thermal-sensors =3D <&tsadc 0>;
-> >>> +
-> >>> +                     trips {
-> >>> +                             soc_crit: soc-crit {
-> >>> +                                     temperature =3D <115000>;
-> >>> +                                     hysteresis =3D <2000>;
-> >>
-> >> This trip point leads to a system shutdown / reboot. It is not necessa=
-ry
-> >> to specify a hysteresis.
-> >
-> > Similar to the above, the generic thermal_of code refuses to add the
-> > trip point if it has no hysteresis property defined (regardless of the
-> > trip type), see drivers/thermal/thermal_of.c:109
->
-> hysteresis =3D <0>;
+Signed-off-by: Kathiravan Thirumoorthy <quic_kathirav@quicinc.com>
+---
+Changes in v4:
+- Rebased on next-20240122
+- Fixed the missing space on the nsscc node
+- Link to v3: https://lore.kernel.org/linux-arm-msm/20231211-ipq5332-nsscc-v3-0-ad13bef9b137@quicinc.com/
 
-Makes sense, thank you! Will amend accordingly.
+Changes in v3:
+- Collected the tags
+- Dropped the dt-binding patch 3/9
+- Cleaned up the header file inclusion and updated the module
+  description in the driver
+- Used the decimal number instead of hex in the NSSCC node
+- Link to v2: https://lore.kernel.org/r/20231121-ipq5332-nsscc-v2-0-a7ff61beab72@quicinc.com
+
+Changes in v2:
+- Change logs are in respective patches
+- Link to v1: https://lore.kernel.org/r/20231030-ipq5332-nsscc-v1-0-6162a2c65f0a@quicinc.com
+
+---
+Kathiravan Thirumoorthy (8):
+      clk: qcom: ipq5332: add const qualifier to the clk_init_data structure
+      clk: qcom: ipq5332: enable few nssnoc clocks in driver probe
+      dt-bindings: clock: ipq5332: add definition for GPLL0_OUT_AUX clock
+      clk: qcom: ipq5332: add gpll0_out_aux clock
+      dt-bindings: clock: add Qualcomm IPQ5332 NSSCC clock and reset definitions
+      clk: qcom: add NSS clock Controller driver for Qualcomm IPQ5332
+      arm64: dts: qcom: ipq5332: add support for the NSSCC
+      arm64: defconfig: build NSS Clock Controller driver for Qualcomm IPQ5332
+
+ .../bindings/clock/qcom,ipq5332-nsscc.yaml         |   60 ++
+ arch/arm64/boot/dts/qcom/ipq5332.dtsi              |   28 +
+ arch/arm64/configs/defconfig                       |    1 +
+ drivers/clk/qcom/Kconfig                           |    7 +
+ drivers/clk/qcom/Makefile                          |    1 +
+ drivers/clk/qcom/gcc-ipq5332.c                     |  122 +--
+ drivers/clk/qcom/nsscc-ipq5332.c                   | 1031 ++++++++++++++++++++
+ include/dt-bindings/clock/qcom,ipq5332-gcc.h       |    1 +
+ include/dt-bindings/clock/qcom,ipq5332-nsscc.h     |   86 ++
+ 9 files changed, 1260 insertions(+), 77 deletions(-)
+---
+base-commit: 319fbd8fc6d339e0a1c7b067eed870c518a13a02
+change-id: 20231030-ipq5332-nsscc-aeac9e153045
 
 Best regards,
-Alexey
+-- 
+Kathiravan Thirumoorthy <quic_kathirav@quicinc.com>
+
