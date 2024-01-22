@@ -1,31 +1,48 @@
-Received: from mail-m12772.qiye.163.com (mail-m12772.qiye.163.com [115.236.127.72])
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75BB939863;
-	Mon, 22 Jan 2024 10:48:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.236.127.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09CBA3A8C3;
+	Mon, 22 Jan 2024 10:49:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705920525; cv=none; b=DxWsuncJZzZCy0+ygX5fw2tsnC7PH8AabmL77aLpQqbCSsq3BGQeZm6woLHogNvUu+A6Lz3hLwjrPIAHG++2huhEXVVdGB2KvIZek7plxhjltcyn+tTCjnr1XwzX98xHin/smuVt9PfDcwq5GnRvBPbi0AWtiXrSy8v+cYLBdzc=
+	t=1705920551; cv=none; b=o/KN4NI3Go7Pe8GdXfQjZE59oGcOU7UkU3fUgcSGeO15Io5i+q6QCom3QPZKfFhbTHEHMrf6N03Y3Jyaz7Bvo983PaAMFPy82UyWGi+SEScu8VGJcjuCLv9dsnhWbl8J9rR2pB76V0tF49qYoUp/xx5XRUFAQcYPeNkQdnTABpE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705920525; c=relaxed/simple;
-	bh=2D2Bz6kHSRQ55n//fD6i/rFr8iCWh5oGDoAjdduw0V8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Whe4I+WCpWtLFYmWEnVke/rUa74wvg7+IOZEHD2YqvFjI2EFuqLnVUjguvayzjRQabiXtvosQuDm2usoFgkskg2i1zl+GKlP/32LAMqFnkRiHM0zOU8nw0p4AGaIAQSiYGGToHN28V2hP5fxbCy0rmt90MX85o9MmeDqo74RYkM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=JcARR62G; arc=none smtp.client-ip=115.236.127.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+	s=arc-20240116; t=1705920551; c=relaxed/simple;
+	bh=G/7NfDFOlqtjKjUrpbty5x9de3dLn4eUQJxwgMCjSdA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=GZ4G5pdeoIlCPM4XjkATBhVSX/zAiFVvYgtwHOKnpj7Ly85/YKizJDNFGVmJVyAYZ1S34cx3WGwyTsI21Eqzpl3Zcyy910TnaiGDUa4hC5QAGhCNZHwN25qhCPHc3IqEvAcpzgD1TvO+5aZBKVMmsL64QxW/k6TaWggR/wJYDM8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=AeP7C9p8; arc=none smtp.client-ip=198.47.23.248
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="JcARR62G"
-DKIM-Signature: a=rsa-sha256;
-	b=JcARR62G5KtOTczFX/WYMFJwV/BvIRt2AmOWqsI1F5xn2azbR1xwfIQam//ayqB3aKfspGrMC9fY0tBB9FZzT3sHJBj+EPjveLpBsCzGMyHfQlzypNXyQiP9gFsfBZu93//q/pt3zAbRPddIoN9HshO+YNMClt/SwMbIfbfH+ZI=;
-	c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
-	bh=BomGdr3zph+RbyeW62SV+s3dc8I4NnnTpRyEiySaDz8=;
-	h=date:mime-version:subject:message-id:from;
-Received: from [172.16.12.141] (unknown [58.22.7.114])
-	by mail-m12758.qiye.163.com (Hmail) with ESMTPA id E3EF3AE04E2;
-	Mon, 22 Jan 2024 18:10:13 +0800 (CST)
-Message-ID: <a7e5304a-1cfd-4f38-8708-bfca30f0ef7f@rock-chips.com>
-Date: Mon, 22 Jan 2024 18:10:13 +0800
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="AeP7C9p8"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 40MAmoUX116000;
+	Mon, 22 Jan 2024 04:48:50 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1705920530;
+	bh=BJya4J7U2wsMIZQXgChP3PwMJktx8r9T37jW6na+29g=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=AeP7C9p820x3uyj/qwJyH4LKUX3cRh2wjwSINg5BwXaqc9Sl+Wj1OCR+aA6ZBdBX4
+	 HoVKTa95ZtCevUftW2jQa0oV78e80VNnAaJQTeY/kMYQu6Rh6fdt7SgG+/qmKGQruO
+	 QmZ3vfj+sq/DFYyy0OvEadQ43uYa6zUGiqN1Ak20=
+Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 40MAmnW8015586
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 22 Jan 2024 04:48:50 -0600
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 22
+ Jan 2024 04:48:49 -0600
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 22 Jan 2024 04:48:49 -0600
+Received: from [10.24.69.25] (danish-tpc.dhcp.ti.com [10.24.69.25])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 40MAmiYU061813;
+	Mon, 22 Jan 2024 04:48:44 -0600
+Message-ID: <ad5c31cc-7cb6-4791-86fe-b2ba30abf33e@ti.com>
+Date: Mon, 22 Jan 2024 16:18:43 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -33,52 +50,86 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/3] Add support for RK3588 HDMI/DP Combo PHY
-To: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
- Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
- Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
- Philipp Zabel <p.zabel@pengutronix.de>, Johan Jonker <jbx6244@gmail.com>,
- Sebastian Reichel <sebastian.reichel@collabora.com>,
- Sascha Hauer <s.hauer@pengutronix.de>, Algea Cao <algea.cao@rock-chips.com>
-Cc: linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- linux-kernel@vger.kernel.org, kernel@collabora.com
-References: <20240119193806.1030214-1-cristian.ciocaltea@collabora.com>
- <417281cd-23b1-4948-8c5a-b9820dff65aa@collabora.com>
+Subject: Re: [RFC PATCH v2 1/3] net: ti: icssg-prueth: Add helper functions to
+ configure FDB
 Content-Language: en-US
-From: Andy Yan <andy.yan@rock-chips.com>
-In-Reply-To: <417281cd-23b1-4948-8c5a-b9820dff65aa@collabora.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+To: Andrew Lunn <andrew@lunn.ch>
+CC: Rob Herring <robh@kernel.org>, Dan Carpenter <dan.carpenter@linaro.org>,
+        Jan Kiszka <jan.kiszka@siemens.com>,
+        Vladimir Oltean
+	<vladimir.oltean@nxp.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Arnd Bergmann <arnd@arndb.de>, Vignesh Raghavendra <vigneshr@ti.com>,
+        Roger
+ Quadros <rogerq@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+        Jakub Kicinski
+	<kuba@kernel.org>, Eric Dumazet <edumazet@google.com>,
+        "David S. Miller"
+	<davem@davemloft.net>,
+        <linux-arm-kernel@lists.infradead.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <srk@ti.com>, <r-gunasekaran@ti.com>
+References: <20240118071005.1514498-1-danishanwar@ti.com>
+ <20240118071005.1514498-2-danishanwar@ti.com>
+ <a9c18466-7d7d-4a63-8096-d832bd9e455f@lunn.ch>
+From: MD Danish Anwar <danishanwar@ti.com>
+In-Reply-To: <a9c18466-7d7d-4a63-8096-d832bd9e455f@lunn.ch>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZGUxIGlZDSEwdGU1LHkodSxlVEwETFh
-	oSFyQUDg9ZV1kYEgtZQVlOQ1VJSVVMVUpKT1lXWRYaDxIVHRRZQVlPS0hVSk1PSU5IVUpLS1VKQk
-	tLWQY+
-X-HM-Tid: 0a8d30a6318cb225kuuue3ef3ae04e2
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6KzY6FRw*HTwhEA83TjcdMxAS
-	TAFPCTNVSlVKTEtOQkpDSUpOS0pLVTMWGhIXVRoVHwJVAhoVOwkUGBBWGBMSCwhVGBQWRVlXWRIL
-	WUFZTkNVSUlVTFVKSk9ZV1kIAVlBSEpJSjcG
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-Hi Cristian:
 
-On 1/20/24 07:41, Cristian Ciocaltea wrote:
-> On 1/19/24 21:38, Cristian Ciocaltea wrote:
->> Add driver and bindings to support the Rockchip HDMI/eDP TX Combo PHY
->> found on RK3588 SoC.
->>
->> The PHY is based on a Samsung IP block and supports HDMI 2.1 TMDS, FRL
->> and eDP links.
->>
->> The HDMI link has been tested on Rock 5B and EVB1 boards.
+
+On 19/01/24 7:25 pm, Andrew Lunn wrote:
+>> +int icssg_fdb_add_del(struct prueth_emac *emac, const unsigned char *addr,
+>> +		      u8 vid, u8 fid_c2, bool add)
+>> +{
+>> +
+>> +	for (i = 0; i < ETH_ALEN; i++)
+>> +		mac_fid[i] = addr[i];
 > 
-> I missed to highlight there is no eDP support provided by the current
-> implementation.  Downstream kernel has a separate driver for that and at
-> the moment I don't have the hardware to wire this up.
-> 
-> Will include this statement in v2.
+> ether_addr_copy()
 
-The PHY is used for HDMI and eDP on rk3588, and should used be exclusively.
-so I think should s/DP/eDP/ in  all description.
+Sure.
+
+> 
+>> +
+>> +	/* 1-1 VID-FID mapping is already setup */
+>> +	mac_fid[ETH_ALEN] = fid;
+>> +	mac_fid[ETH_ALEN + 1] = 0;
+>> +
+>> +	fdb_slot = bitrev32(crc32_le(0, mac_fid, 8)) & PRUETH_SWITCH_FDB_MASK;
+>> +
+> 
+>> +	fid_c2 |= ICSSG_FDB_ENTRY_VALID;
+>> +	memcpy(&fdb_cmd.cmd_args[0], addr, 4);
+>> +	memcpy(&fdb_cmd.cmd_args[1], &addr[4], 2);
+>> +	fdb_cmd.cmd_args[1] |= ((fid << 16) | (fid_c2 << 24));
+>> +	fdb_cmd.cmd_args[2] = fdb_slot;
+> 
+>> +int icssg_fdb_lookup(struct prueth_emac *emac, const unsigned char *addr,
+>> +		     u8 vid)
+>> +{
+> 
+>> +	for (i = 0; i < ETH_ALEN; i++)
+>> +		mac_fid[i] = addr[i];
+>> +
+>> +	/* 1-1 VID-FID mapping is already setup */
+>> +	mac_fid[ETH_ALEN] = fid;
+>> +	mac_fid[ETH_ALEN + 1] = 0;
+> 
+>> +	memcpy(&fdb_cmd.cmd_args[0], addr, 4);
+>> +	memcpy(&fdb_cmd.cmd_args[1], &addr[4], 2);
+>> +	fdb_cmd.cmd_args[1] |= fid << 16;
+>> +	fdb_cmd.cmd_args[2] = fdb_slot;
+> 
+> Maybe add some helpers to reduce the amount of duplicated code?
+> 
+
+Some codes are duplicated in icssg_fdb_add_del() and icssg_fdb_lookup().
+I'll try to add helpers in next version to minimize this.
+
+>       Andrew
+
+-- 
+Thanks and Regards,
+Danish
