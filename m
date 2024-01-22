@@ -1,58 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4FCA4D122;
-	Mon, 22 Jan 2024 15:10:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD1384D128;
+	Mon, 22 Jan 2024 15:10:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705936218; cv=none; b=vEJXTJwqTgJ7y6SbF3eDbXmOFRSe4exlAeKDVKXP4KOLLRNVlhagllZ/jC7OHLjOa+we0QdNmeIdStpBpY85w8zBsvO136q5nB25RIztT8AZ+5s60tf6DXzJBfn8sbU11my+abiJaNqc7her6gLcg90drwd8KfMbb+Wc+s9DM3M=
+	t=1705936223; cv=none; b=CLU1eWI6yEtq47BjkVkrKHFavlnVUtdfGY+o+PJ1G5aEzG2Qn4EK+ki52mNVQfCqrKovaBzgWjyt2nFVikUC3QYBSZ3Axxu7jzNsobskAvdDnNNxk9lqMtcCPlVFLITbHcnm5dD6PZcHjtp2+keKkiduOozLQVxTgVfMd1xaUFc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705936218; c=relaxed/simple;
-	bh=migI/rxzHSyGRs01fHPRV5DyQH7q6mM3XZBWoWyQ7Mw=;
+	s=arc-20240116; t=1705936223; c=relaxed/simple;
+	bh=+wKW6dOd2BKZIFOfovk64QUcGxJAwrPnaf1NJrqV4zE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rIqhjEJd+pWfB5aRK3KI6kdgivTKaN0UdHj78SI5Cs5yYBYSCIVat0P9iM3tDs46jj8IhzjJTeGqBnCkJVgJa03EhETJlc1DSEbrLA3iWOu7TaiTWwqkV8WPnu5YUgwtdnjlEMjCfbYHSFp04jqfu5boXNXK7A8G/MTaDHZZ/J8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jxNr8LHy; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=JH5B9QaSusY1EG87I0NzWnWGEKLZvuPu6E546KOK2V5rAf9nVroBEuq9XVeG4/z4eTHw1buiiSVpMzEleAAxtwAZc7W6lJleUn9RraG9V4lLNlABtGSVeZcGreSVJPUvJIm7mpA97wx0IWAurrtqpY4AHn1wSrVK4tobqCx/ViI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NrIClBIM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jxNr8LHy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 529BFC43394;
-	Mon, 22 Jan 2024 15:10:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NrIClBIM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 883CDC433A6;
+	Mon, 22 Jan 2024 15:10:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705936217;
-	bh=migI/rxzHSyGRs01fHPRV5DyQH7q6mM3XZBWoWyQ7Mw=;
+	s=k20201202; t=1705936222;
+	bh=+wKW6dOd2BKZIFOfovk64QUcGxJAwrPnaf1NJrqV4zE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=jxNr8LHyN1Voi+1cOkQnEJQ2+rKwcTOs1IunhjJqP8pzl3p8g1viGivFy6YUc344d
-	 yEdaUtersXSCGHLvZGYzG4OqEHw9mxTR2tpY3QggJHGgQkT7S/Jh+mOgaExDm1Uv4q
-	 NQEtIQ3ZejQxiPdfM53uheqhB6XcZL/x1YeELSuZnuqWUvvkuRLYBxV6qcVmkW+kho
-	 sDW/nWfktFzK09VoiRYp+LYTOpl5HYpoJbq09oTmTlAmyqmS3eOe3Q9pglfZgcCtE5
-	 dIgLju0bwW9KZ6CBWVqsOyx5zqLL8M4cPG5l9lXGpqPRAzqxXYEcTzTbd6uNGz/t0I
-	 FQiRylSW5DHRg==
+	b=NrIClBIM2laoA9kpnX+tLt0M0ofKcvO/0etxaWJ6jIV/GE8n4L9LmiHQf6a/bDyky
+	 bDNiZ4cBC/LFtzh+N8/4G7ZE0pJSfi3xx0XZ9XYZPw/MmQ9n5YtjFUQGZfNllhO/kY
+	 F94id64ohN3axgXknWAqalWF4GajkhgRZn4QaPQky0OSFXWlK1qILtixR4fC4I+B1p
+	 +Zl54LSq+oioioB3HHiZJgPsNDkp06f2r+arQolJI/ZlnAMP0nrdg72j1MzWrl6EGF
+	 jOmAAll2Yee46C6oIQidsacwCeIlnBGeAPUX8NExP29wSA1Z+aSu5F6xnoC0vxZ40a
+	 wVC90JKhNHfmw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Meenakshikumar Somasundaram <meenakshikumar.somasundaram@amd.com>,
-	Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
-	Hamza Mahfooz <hamza.mahfooz@amd.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
+Cc: Jaegeuk Kim <jaegeuk@kernel.org>,
+	Daeho Jeong <daehojeong@google.com>,
 	Sasha Levin <sashal@kernel.org>,
-	harry.wentland@amd.com,
-	sunpeng.li@amd.com,
-	Rodrigo.Siqueira@amd.com,
-	christian.koenig@amd.com,
-	Xinhui.Pan@amd.com,
-	airlied@gmail.com,
-	daniel@ffwll.ch,
-	jun.lei@amd.com,
-	Qingqing.Zhuo@amd.com,
-	wenjing.liu@amd.com,
-	alvin.lee2@amd.com,
-	samson.tam@amd.com,
-	aric.cyr@amd.com,
-	dillon.varone@amd.com,
-	amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 6.1 10/53] drm/amd/display: Fix tiled display misalignment
-Date: Mon, 22 Jan 2024 10:08:11 -0500
-Message-ID: <20240122150949.994249-10-sashal@kernel.org>
+	chao@kernel.org,
+	linux-f2fs-devel@lists.sourceforge.net
+Subject: [PATCH AUTOSEL 6.1 12/53] f2fs: fix write pointers on zoned device after roll forward
+Date: Mon, 22 Jan 2024 10:08:13 -0500
+Message-ID: <20240122150949.994249-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240122150949.994249-1-sashal@kernel.org>
 References: <20240122150949.994249-1-sashal@kernel.org>
@@ -67,41 +51,35 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.1.74
 Content-Transfer-Encoding: 8bit
 
-From: Meenakshikumar Somasundaram <meenakshikumar.somasundaram@amd.com>
+From: Jaegeuk Kim <jaegeuk@kernel.org>
 
-[ Upstream commit c4b8394e76adba4f50a3c2696c75b214a291e24a ]
+[ Upstream commit 9dad4d964291295ef48243d4e03972b85138bc9f ]
 
-[Why]
-When otg workaround is applied during clock update, otgs of
-tiled display went out of sync.
+1. do roll forward recovery
+2. update current segments pointers
+3. fix the entire zones' write pointers
+4. do checkpoint
 
-[How]
-To call dc_trigger_sync() after clock update to sync otgs again.
-
-Reviewed-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
-Acked-by: Hamza Mahfooz <hamza.mahfooz@amd.com>
-Signed-off-by: Meenakshikumar Somasundaram <meenakshikumar.somasundaram@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Reviewed-by: Daeho Jeong <daehojeong@google.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/core/dc.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ fs/f2fs/recovery.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/core/dc.c b/drivers/gpu/drm/amd/display/dc/core/dc.c
-index 7a309547c2b3..f415733f1a97 100644
---- a/drivers/gpu/drm/amd/display/dc/core/dc.c
-+++ b/drivers/gpu/drm/amd/display/dc/core/dc.c
-@@ -1903,6 +1903,10 @@ static enum dc_status dc_commit_state_no_check(struct dc *dc, struct dc_state *c
- 		wait_for_no_pipes_pending(dc, context);
- 		/* pplib is notified if disp_num changed */
- 		dc->hwss.optimize_bandwidth(dc, context);
-+		/* Need to do otg sync again as otg could be out of sync due to otg
-+		 * workaround applied during clock update
-+		 */
-+		dc_trigger_sync(dc, context);
+diff --git a/fs/f2fs/recovery.c b/fs/f2fs/recovery.c
+index 4f4db465220f..53a6487f91e4 100644
+--- a/fs/f2fs/recovery.c
++++ b/fs/f2fs/recovery.c
+@@ -898,6 +898,8 @@ int f2fs_recover_fsync_data(struct f2fs_sb_info *sbi, bool check_only)
+ 	if (!err && fix_curseg_write_pointer && !f2fs_readonly(sbi->sb) &&
+ 			f2fs_sb_has_blkzoned(sbi)) {
+ 		err = f2fs_fix_curseg_write_pointer(sbi);
++		if (!err)
++			err = f2fs_check_write_pointer(sbi);
+ 		ret = err;
  	}
  
- 	if (dc->hwss.update_dsc_pg)
 -- 
 2.43.0
 
