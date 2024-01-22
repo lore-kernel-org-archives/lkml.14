@@ -1,98 +1,110 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC0A047F6E;
-	Mon, 22 Jan 2024 11:05:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.120
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 831F8481CF;
+	Mon, 22 Jan 2024 11:05:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705921533; cv=none; b=BDkNaMfwcFxWLXbtCJXZRwCP9yhDLMAoy6uZ+l3jWsoDayyHBmEosUZQzdRDBh8DHiYs1mJv7gfccf/N85F5obNIN+dtSI4Z3GEO8K2mHg2rzXbuGYWjaL+l520JM9HAvpJCkdBoIA3rAt+wo0qi6t6ygNmbttutK57qqe1l63k=
+	t=1705921534; cv=none; b=ic9vm4HjmKfXbwu9rwY2jMSviGHm2DECka2vay1oGJat9IHUk9gJbFiDlC+UAM0jG5kbe74x8d5gk+gdGuKDXUqtqp3YaGUrz0752Xb7+pVp+C6PNHDOP9vHK6/b+vmsI3EssZQv4R2xphJgGfKaCk4ukAdUQWqA1rgdXB08JTs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705921533; c=relaxed/simple;
-	bh=6ZklisPid4pGWh8xv7uYvwv1UbtizZrGDGHyMTYB4L8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=n1dpCEpGbNBQKuSjU++lTHyN46g7lz1FLd1cAZYheh1Nl/uzvd6eotO7udHHv/yyPoKeCxepTXSfb0FIdUlw1tFqH7lRe9DIP8MCpw+7cb46QCDuq/bEpXc4Lp9FPANoQxS+/BPipZYrjllKl37d5YHz7TeUOXipBd5tOR0s2LM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=C5FDCqDh; arc=none smtp.client-ip=192.55.52.120
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1705921534; c=relaxed/simple;
+	bh=TxyfiQSfnfbUMhKRrQ0H1rTP3kUo5bAgp6fUTnxFTJs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ZuCz/1U9by6sFWPtYVHG1WABpzELIAd1rAAnyM7EIxQpk0tq9/cG5Q3GuUUAB+kRUNWiYmyWf/Dk0PggtoEsyXGUnbY633YXrKx/jJWaJLuGm/75+ZJYIU5jnnWBqt/P3MM2Jf4e60PwbYC0qPyD2Ue4GJ9hwC1DD/HVwV952kM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ri2i+PdE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="C5FDCqDh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1705921531; x=1737457531;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=6ZklisPid4pGWh8xv7uYvwv1UbtizZrGDGHyMTYB4L8=;
-  b=C5FDCqDhTaUHG0ua9N6SYd3zWI3RMZDNhYAzOYoJfWI4Ig0KTjeMEpeO
-   BCO/HnqYF/rC7k0mcQxZVmphfpNbPzXRSJHLhaiO60anoMJOtieNN2Mdu
-   5xdlM7doAmIt55seccfetCZInUOSm5ISsR+P/98YojGiHQP4FLEpkctEx
-   a0KL9k5zjWvAJgxNvJM/V8CjBHKDtaA437qNKPoRtnvORKfNxddtJvB65
-   rk6BIF4K6sopliFd4MXAKZNz87LnpZPQD2RGXYaxdCMlH/f9Drf+wMsTy
-   6VO6IBwIevOftbcWyrNusHqjuLFSg0Qrp3RI0FZFdR9o6G/NSlGoyeaQH
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10960"; a="400046461"
-X-IronPort-AV: E=Sophos;i="6.05,211,1701158400"; 
-   d="scan'208";a="400046461"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 03:05:30 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,211,1701158400"; 
-   d="scan'208";a="1255951"
-Received: from aslawinx-mobl.ger.corp.intel.com (HELO [10.94.8.107]) ([10.94.8.107])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 03:05:29 -0800
-Message-ID: <0b6f3998-135f-4059-a8a8-e924281353f8@linux.intel.com>
-Date: Mon, 22 Jan 2024 12:05:11 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ri2i+PdE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C2D1C43399;
+	Mon, 22 Jan 2024 11:05:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705921534;
+	bh=TxyfiQSfnfbUMhKRrQ0H1rTP3kUo5bAgp6fUTnxFTJs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Ri2i+PdEyuTAa48yKloQAaUEBdltv3sUW5IvQCgMHA5/PGjfEtjbCLyTeA5D9LuI/
+	 yH1G9cZVHEfEI6SGU2iYZMrZxzEV9R0XdnaK9fjVRzCheDdi9FE06VhDFgjKaU8yZo
+	 aMPf9qZt/S4F0J0tomif/GBJhbR/UeVG0uOXR2F5LzH780+xVi4P8AJQidfdFNIUSA
+	 2bsuGom7MXXuunapSC1vOQhx0Wn4YBkDm8sIO73aWpIR01/4A+rB6hqNKrjO78Ojfx
+	 VI3gGDYa7ZRwCTEoFzkvT8imwotEo0ZgLUE9ICL5topY1Fb6Ff5+0FiDPmHbAxKt/8
+	 kWean2TzXr8cg==
+From: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
+To: gregkh@linuxfoundation.org
+Cc: linux-serial@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Helge Deller <deller@gmx.de>,
+	linux-fbdev@vger.kernel.org,
+	dri-devel@lists.freedesktop.org
+Subject: [PATCH v2 42/47] fbcon: remove fbcon_getxy()
+Date: Mon, 22 Jan 2024 12:03:56 +0100
+Message-ID: <20240122110401.7289-43-jirislaby@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240122110401.7289-1-jirislaby@kernel.org>
+References: <20240122110401.7289-1-jirislaby@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] ALSA: hda: Increase default bdl_pos_adj for Apollo Lake
-To: Rui Salvaterra <rsalvaterra@gmail.com>, tiwai@suse.com
-Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240122092338.25047-2-rsalvaterra@gmail.com>
-Content-Language: en-US
-From: =?UTF-8?Q?Amadeusz_S=C5=82awi=C5=84ski?=
- <amadeuszx.slawinski@linux.intel.com>
-In-Reply-To: <20240122092338.25047-2-rsalvaterra@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 1/22/2024 10:23 AM, Rui Salvaterra wrote:
-> Apollo Lake seems to also suffer from IRQ timing issues. After being up for ~4
-> minutes, a Pentium N4200 system ends up falling back to workqueue-based IRQ
-> handling:
-> 
-> [  208.019906] snd_hda_intel 0000:00:0e.0: IRQ timing workaround is activated
-> for card #0. Suggest a bigger bdl_pos_adj.
-> 
-> Unfortunately, the Baytrail and Braswell workaround value of 32 samples isn't
-> enough to fix the issue here. Default to 64 samples.
-> 
-> Signed-off-by: Rui Salvaterra <rsalvaterra@gmail.com>
-> ---
->   sound/pci/hda/hda_intel.c | 2 ++
->   1 file changed, 2 insertions(+)
-> 
-> diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
-> index 2276adc84478..9fb54813693c 100644
-> --- a/sound/pci/hda/hda_intel.c
-> +++ b/sound/pci/hda/hda_intel.c
-> @@ -1732,6 +1732,8 @@ static int default_bdl_pos_adj(struct azx *chip)
->   		case 0x0f04: /* Baytrail */
->   		case 0x2284: /* Braswell */
->   			return 32;
-> +		case 0x5a98: /* Apollo Lake */
-> +			return 64;
->   		}
->   	}
->   
+Again, fbcon_getxy() is the same as the default implementation since the
+softscroll removal in commit 50145474f6ef (fbcon: remove soft scrollback
+code). Drop that.
 
-And seems like I've missed some IDs, when doing PCI IDs conversion. 
-Anyway, can you use PCI_DEVICE_ID_INTEL_HDA_APL instead of 0x5a98 as it 
-is self describing (no need for comment)?
+Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
+Cc: Daniel Vetter <daniel@ffwll.ch>
+Cc: Helge Deller <deller@gmx.de>
+Cc: linux-fbdev@vger.kernel.org
+Cc: dri-devel@lists.freedesktop.org
+---
+ drivers/video/fbdev/core/fbcon.c | 25 -------------------------
+ 1 file changed, 25 deletions(-)
 
-And if you want more patches in kernel - convert first 0x0f04 & 0x2284 
-to PCI_DEVICE_ID_INTEL_HDA_BYT & PCI_DEVICE_ID_INTEL_HDA_BSW and then do 
-the above change ;)
+diff --git a/drivers/video/fbdev/core/fbcon.c b/drivers/video/fbdev/core/fbcon.c
+index 2166ea1a5430..9c2962900d13 100644
+--- a/drivers/video/fbdev/core/fbcon.c
++++ b/drivers/video/fbdev/core/fbcon.c
+@@ -2593,30 +2593,6 @@ static void fbcon_set_palette(struct vc_data *vc, const unsigned char *table)
+ 	fb_set_cmap(&palette_cmap, info);
+ }
+ 
+-static unsigned long fbcon_getxy(struct vc_data *vc, unsigned long pos,
+-				 int *px, int *py)
+-{
+-	unsigned long ret;
+-	int x, y;
+-
+-	if (pos >= vc->vc_origin && pos < vc->vc_scr_end) {
+-		unsigned long offset = (pos - vc->vc_origin) / 2;
+-
+-		x = offset % vc->vc_cols;
+-		y = offset / vc->vc_cols;
+-		ret = pos + (vc->vc_cols - x) * 2;
+-	} else {
+-		/* Should not happen */
+-		x = y = 0;
+-		ret = vc->vc_origin;
+-	}
+-	if (px)
+-		*px = x;
+-	if (py)
+-		*py = y;
+-	return ret;
+-}
+-
+ /* As we might be inside of softback, we may work with non-contiguous buffer,
+    that's why we have to use a separate routine. */
+ static void fbcon_invert_region(struct vc_data *vc, u16 * p, int cnt)
+@@ -3157,7 +3133,6 @@ static const struct consw fb_con = {
+ 	.con_font_default	= fbcon_set_def_font,
+ 	.con_set_palette 	= fbcon_set_palette,
+ 	.con_invert_region 	= fbcon_invert_region,
+-	.con_getxy 		= fbcon_getxy,
+ 	.con_resize             = fbcon_resize,
+ 	.con_debug_enter	= fbcon_debug_enter,
+ 	.con_debug_leave	= fbcon_debug_leave,
+-- 
+2.43.0
+
