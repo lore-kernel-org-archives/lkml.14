@@ -1,109 +1,104 @@
-Received: from mail-oo1-f49.google.com (mail-oo1-f49.google.com [209.85.161.49])
+Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9791E1EF07;
-	Mon, 22 Jan 2024 19:37:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AE6C3E48B;
+	Mon, 22 Jan 2024 19:38:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705952246; cv=none; b=Q+aLq2dng5m4yxEARRlbGPkhq+mPH5UNMM+H+6Ku4yD1jEZJvCZ+8YwpRmPo57yqKmn5E1WlEtX+dZLY9ahEZ2sohjRkzDphY/Z2DunMA0phQpgmjpE/GqeXW0q85zU5eWETIhoddj9NQkXMleAvmq/954qD82U2huxCW9tQAIY=
+	t=1705952320; cv=none; b=m6dfMKuntnaZkPzxjz6n4p36FtGQIev21wI4yeMkxOB3b1Cy2lxxnV1Zdet9xS3DFEZVWDlMKjZswMJMovvsfQWZQdyBZAd9aObXg6OrdHUcKXgd1uAUiEtPzWhKenXj48GxIs6PEKscsKtfRjhA2tLLL/zHLb2GzRcMiVQ2h2c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705952246; c=relaxed/simple;
-	bh=RoIkcs5ey0VmVT8DRVQBY+Ice/V2Jk6D5ruHVfHqb6I=;
+	s=arc-20240116; t=1705952320; c=relaxed/simple;
+	bh=jVDYzTKoeN5seaHXGwaDqhA2K29ijc6wqpC2n+h3Yrg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sUG9ZSZykP0Fa36paAJxEOp75We4mw+qZwJz3nyNgZysJfAf8oEZz0Vuwrl9dPDeZBlvQqEzwmwzD0LfsAfqx2ia/3QY3US6w5YGPTN+89Nv5ithFs4KRousWHHnNunwgAYXlVvhx1ov8QdENLoM6NP9rRL7ZyPX9LoCAOF9MDM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.161.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+	 To:Cc:Content-Type; b=lPy1IeQlfFHyGQol5PTn0sn9NaazooQfmW4nzSye1pMvB+s0Q9NEuky8djOW+Q+5XJ9nzdRr7cuPggiW1d2Af1jNQP+UhfAZnk7YIixbvTClp/YPGEyGv7PewOKZho/GiAkvdXycWQ13JU8WMobWOGosoWgjP/Uj50ofE1im7m8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IA9+x55Y; arc=none smtp.client-ip=209.85.128.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oo1-f49.google.com with SMTP id 006d021491bc7-5958d3f2d8aso225975eaf.1;
-        Mon, 22 Jan 2024 11:37:25 -0800 (PST)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IA9+x55Y"
+Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-5f254d1a6daso34867827b3.2;
+        Mon, 22 Jan 2024 11:38:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1705952318; x=1706557118; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=H3nGTriVYNiDa8Acgezp4UDQW22qmr1rfJZKcpn5sq4=;
+        b=IA9+x55YyzYkzKMWpTjsODG7/zaOL3I1X3DaTByZjOiiY2A3oP8HbZIJs42qKCbBfI
+         sBPF/9eJGqQFXfWO344wu9IQiSOCYx3Gt8r/Ur6+80tWZmcJpzsp9iaemUc1bvphL24/
+         hoHFLyt0l1sQZpetoCAg/0se6IgahjXrTTSm+LdDwkgjgIZqICHHd4GILkzlCYkgKvtY
+         DXGh3ocdBlG7ByzQvg2GMPqRIxeO7BPz8Iy91el7HNi8mSgu0qkgUKmvM3N9xNfByGOI
+         sbaQBNiacIEvr03jI6DZLVHw3JqElddzh6/PnzCDzrVrVgZtYKxpZEHSLuxrRjcYzPQY
+         u9nA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705952244; x=1706557044;
+        d=1e100.net; s=20230601; t=1705952318; x=1706557118;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=nesK9y4qWZhrNCSiCMAkJgfEGumzzvprEvfcz7ekwg4=;
-        b=pFkB8C6kfiJ+Dkx0yQHLZ6JdwXEsXOb/OJiJSOY2tknnvnaDXFZBqWi+Z4TEuWUCjQ
-         jHJAfW0C+qEdbCfY/2jiNTXKld0czbD7zpJ/sfvSXdYu76FjLkrT8OwY6oKpoLf1Xa5N
-         KaE75jNGvPiYozIJUSlxxBptOdAzT+hJcTOGuBwqXxokIsGNhKI9APVPyYsehwHZi6BK
-         AOclO3QYnGpXhz4q17Mp8WxdvbUPeHvDUuwhePjwnhPPN8BN2gM8iXY8uLEyxycC5GuP
-         toCL3CKrdeI0FPR1fManrajl3KPXG5F5T24e6dVkh5zxg0K+coe5T9IucSIvk3hHfh8G
-         pkJg==
-X-Gm-Message-State: AOJu0YzIo8JZU82fXKkWJyR0Iwjnu82GtZ7CN7CoWOv6M+h/1QQWiq+Q
-	0PFcAynTXlh57ZlsusOwJsLU6CrydzjW97+uKhfw34Nac7MYq1GLheCloTJpE3qLh46yzwv7kYK
-	QeHVK6y8bsoA/FtZkTySLUHMmf9A=
-X-Google-Smtp-Source: AGHT+IH0fdGswoQ6uEC4cc+D2uB7ejqea2Nnj7UmJc5iLidGGpOGUvopdRgTpzEh6BeeFThhHzHcXlUkMCieOABJ27k=
-X-Received: by 2002:a4a:d744:0:b0:598:e709:7620 with SMTP id
- h4-20020a4ad744000000b00598e7097620mr7318381oot.1.1705952244669; Mon, 22 Jan
- 2024 11:37:24 -0800 (PST)
+        bh=H3nGTriVYNiDa8Acgezp4UDQW22qmr1rfJZKcpn5sq4=;
+        b=UoKv4vkCdO71dLwm5/1uzZWsi3b0+OmptK/K83y73NVvn0weRqpCHBf1rsfBdQz8O6
+         YgFhpE70VMdibrQkLtzzf7NkcG2kgkJ/WuuFjWVcssxnB9gzTynpiqvRsxLuxiYQV4rA
+         Nit+8yaBkO1JsSf1vdDjGYPxRsDIJhDxyugdt7Ufx68oGUkgcxNK32HJDFaAf/WAUSVV
+         LGpwY6t/Ih7inwS/gLYtgJwXSWTdcfeIANpKuE6ChgTF2GeeB0OVBp0ubVaXqDflxZeg
+         zxpJSvT2LR9wY/BIC73CAOIf68FuI8smayJ7Q4+kMwnWaTVyTzl2mSEzQq9kNw83c8gO
+         viFQ==
+X-Gm-Message-State: AOJu0YzefVRPtAxSCUGUsRrqhqjooNaEBhSp1Z68J4Q1g85c5v5qpuzR
+	fLjjc6KFy5veXQzvHQbxdXvP9Je5P7+VE+JmAFuZdrBvBBgYNkDKIK0HgfsbsSVTQUi+rk41Vdg
+	zAZbnRVugdKZFUnNJnqxtjuSeHsA=
+X-Google-Smtp-Source: AGHT+IFI0WuJaFhUBM3jZxZieoXHqxPdjS0wMkWfijuPxy0V0M5AG/fSKfFvpqMlsz+etL5sn7LOE7Z3RJgOPLnt5Io=
+X-Received: by 2002:a81:5f8b:0:b0:5ff:7c76:888d with SMTP id
+ t133-20020a815f8b000000b005ff7c76888dmr3658032ywb.6.1705952318176; Mon, 22
+ Jan 2024 11:38:38 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240119113319.54158-1-mario.limonciello@amd.com> <CAAE01kHEperoassBmLwM3pWhJmWpjRS2fcE8VPkLAgvz7yAuQA@mail.gmail.com>
-In-Reply-To: <CAAE01kHEperoassBmLwM3pWhJmWpjRS2fcE8VPkLAgvz7yAuQA@mail.gmail.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Mon, 22 Jan 2024 20:37:13 +0100
-Message-ID: <CAJZ5v0jXvjaC5niHqSxQyc+QnEj=gf+vgKrjjhdFkTgQrPHb3Q@mail.gmail.com>
-Subject: Re: [PATCH] cpufreq/amd-pstate: Fix setting scaling max/min freq values
-To: Wyes Karny <wkarny@gmail.com>, Mario Limonciello <mario.limonciello@amd.com>
-Cc: ray.huang@amd.com, rafael@kernel.org, viresh.kumar@linaro.org, 
-	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	stable@vger.kernel.org
+References: <20240122184608.11863-1-dakr@redhat.com>
+In-Reply-To: <20240122184608.11863-1-dakr@redhat.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Mon, 22 Jan 2024 20:38:26 +0100
+Message-ID: <CANiq72kdX-LK=OurnR5ZGDXEf90DxshUX13up4c8kiz0jxHc+Q@mail.gmail.com>
+Subject: Re: [PATCH] rust: str: add to_ascii_{upper,lower}case() to CString
+To: Danilo Krummrich <dakr@redhat.com>
+Cc: ojeda@kernel.org, alex.gaynor@gmail.com, wedsonaf@gmail.com, 
+	boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com, 
+	benno.lossin@proton.me, a.hindborg@samsung.com, aliceryhl@google.com, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jan 22, 2024 at 3:57=E2=80=AFPM Wyes Karny <wkarny@gmail.com> wrote=
-:
+On Mon, Jan 22, 2024 at 7:46=E2=80=AFPM Danilo Krummrich <dakr@redhat.com> =
+wrote:
 >
-> On Sat, Jan 20, 2024 at 5:49=E2=80=AFAM Mario Limonciello
-> <mario.limonciello@amd.com> wrote:
-> >
-> > Scaling min/max freq values were being cached and lagging a setting
-> > each time.  Fix the ordering of the clamp call to ensure they work.
-> >
-> > Closes: https://bugzilla.kernel.org/show_bug.cgi?id=3D217931
-> > Cc: stable@vger.kernel.org
-> > Cc: wkarny@gmail.com
-> > Fixes: febab20caeba ("cpufreq/amd-pstate: Fix scaling_min_freq and scal=
-ing_max_freq update")
-> > Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
->
-> Reviewed-by: Wyes Karny <wkarny@gmail.com>
->
-> > ---
-> >  drivers/cpufreq/amd-pstate.c | 7 +++----
-> >  1 file changed, 3 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/drivers/cpufreq/amd-pstate.c b/drivers/cpufreq/amd-pstate.=
-c
-> > index 1f6186475715..1791d37fbc53 100644
-> > --- a/drivers/cpufreq/amd-pstate.c
-> > +++ b/drivers/cpufreq/amd-pstate.c
-> > @@ -1232,14 +1232,13 @@ static void amd_pstate_epp_update_limit(struct =
-cpufreq_policy *policy)
-> >         max_limit_perf =3D div_u64(policy->max * cpudata->highest_perf,=
- cpudata->max_freq);
-> >         min_limit_perf =3D div_u64(policy->min * cpudata->highest_perf,=
- cpudata->max_freq);
-> >
-> > +       WRITE_ONCE(cpudata->max_limit_perf, max_limit_perf);
-> > +       WRITE_ONCE(cpudata->min_limit_perf, min_limit_perf);
-> > +
-> >         max_perf =3D clamp_t(unsigned long, max_perf, cpudata->min_limi=
-t_perf,
-> >                         cpudata->max_limit_perf);
-> >         min_perf =3D clamp_t(unsigned long, min_perf, cpudata->min_limi=
-t_perf,
-> >                         cpudata->max_limit_perf);
-> > -
-> > -       WRITE_ONCE(cpudata->max_limit_perf, max_limit_perf);
-> > -       WRITE_ONCE(cpudata->min_limit_perf, min_limit_perf);
-> > -
-> >         value =3D READ_ONCE(cpudata->cppc_req_cached);
-> >
-> >         if (cpudata->policy =3D=3D CPUFREQ_POLICY_PERFORMANCE)
-> > --
+> Add functions to convert a CString to upper- / lowercase assuming all
+> characters are ASCII encoded.
 
-Applied as 6.8-rc material, thanks!
+Like Alice mentioned, please mention the use case, i.e. the "why?"
+(perhaps also linking the Zulip discussion if you like [1]).
+
+[1] https://rust-for-linux.zulipchat.com/#narrow/stream/288089-General/topi=
+c/String.20manipulation.20in.20kernel.20Rust
+
+> +    /// Converts the whole CString to lowercase.
+
+Please use Markdown and, if possible, an intra-doc link, i.e.
+
+    /// Converts the whole [`CString`] to lowercase.
+
+Also perhaps we should mimic the standard library docs?
+
+> +    pub fn to_ascii_lowercase(&mut self) {
+> +        self.buf.make_ascii_lowercase();
+> +    }
+
+Why did you choose the `to_ascii_*()` name for these? In the standard
+library, the in-place ones are `make_ascii_*()` (like the one you call
+in the implementation).
+
+Should the new-object-returned ones be added, by the way, if we are
+adding these?
+
+Cheers,
+Miguel
