@@ -1,44 +1,44 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D55060DE1;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FA2D60DFF;
 	Mon, 22 Jan 2024 23:55:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.120
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705967745; cv=none; b=j8FypF60Y2pqqsa5BOWtWVnSELcHYEXHFmuX+nSOXw7+wTUHDUFySaPd0UuvV7VJH0nDNLn7b0JxdxAgMODya1zF4YpQkTaXxujfj38HxuZFSKoBR6vOEVRe1IQ/eWbMVNRisBFVJTEMsITdgOGYQnu1YH+pB40Cq/JNnT0Pxp8=
+	t=1705967746; cv=none; b=jC5N+hjrCxW2wEEs1vot3SGJdkG+Be1T9mK0o5/LSyWZ36EjzGS/VwaRHvstvzJk8DprRin8FBml9GsPmAg+wNNWtT4I45c2XPdtTt6ACawoxS9W53zd4ZkmzX1fQPShyZb/lXLm7k8peF5yVE7iIhl7m6NwFKQkJ9iyR7lOjPU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705967745; c=relaxed/simple;
-	bh=4SCW6Dkj/Vj+qX6sWycKS9/fk9MJ8AKVtZUkBL10lrs=;
+	s=arc-20240116; t=1705967746; c=relaxed/simple;
+	bh=KsELaHqSLNMNbHeP9XgAGtJCYPW/1dOm4Lq2BnuTLEg=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=FnCys5LO2uEEeCH09QG4yEC1gQ17Ubj4ImQLfyZJh4YjsADUIopCQk56V3q3yAUB1Yocx6iqgrW7PXxwOPRpFpPSw4QdKkkYFVuj3n005ZGgwHL2mEzyqi/wyUWT+kg1bBe9if2WBUKpYSEG8zlBFPXnANSClrJ69lIzRGWMhkQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=L3FMyFXf; arc=none smtp.client-ip=198.175.65.11
+	 MIME-Version; b=d2cmgKKtpgYjluib2t0k/ggH4N5aqj45kn7xFUWEEN8k5wzv2hjShaVBIijE+fWEhqvS9YJM/6cMTQDzC/qKUSL27AwxVRkXacHZTNRP5A1wtjJJ6H4BAVW6BGwXsgReC8XswTBZfcxv2Jmg5GazGuoVdIyzMieZom3jYmysr3w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZNP2P0cj; arc=none smtp.client-ip=192.55.52.120
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="L3FMyFXf"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZNP2P0cj"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1705967744; x=1737503744;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=4SCW6Dkj/Vj+qX6sWycKS9/fk9MJ8AKVtZUkBL10lrs=;
-  b=L3FMyFXfPXlrxLIYRC0hLqC8qWne4m4Im7ichWfeA0OQxDGq+SU4UL89
-   S031kmXc3L/Wrb1H7g9HNd29nM0+7DtyGrwUTQWKaCPtYSATt+2TKYzmw
-   NWZWdxwbMLO/6DyMqNlb6RSFgBeruQEMTpBKSptpUrcpxVwS8haKtvK7A
-   qk9+eu17GZjtDeBZv2dRhM37sNdXSxaC8xxtgj4s0TwUoMYL9IeHq4rKB
-   AXYu5lmD6/v5kdGSoGdy2r/sqMp238XH2G5ow5ddkbXYPI20rjCsebclt
-   KERSjNxqNWizkfiD92VBIummSzzkFBu2f51dirNn3ZZEQn5bf8asylK0v
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10961"; a="8016409"
+  bh=KsELaHqSLNMNbHeP9XgAGtJCYPW/1dOm4Lq2BnuTLEg=;
+  b=ZNP2P0cjxJs9OYGyJ66FP5hWdE5akZXgs29obGblcBLaHXWnFz5MK8op
+   drX+fW+8NHYKCI70Ehkw4cDPNVGtu86+u3v6iHkcBxBgVKnxHzTNj2ymV
+   zNdaY1S1GwhnEmNkB+g/aG6HZ1p4k4plL1xE8BCbZdvFx+xnCmRjsfCET
+   aF2FVmDEiZsdYk4wccmXMfPEMQGXYRDQe8531l3smGABcpfM3IAGiTNsO
+   IaUvNGdNE3FhG4b53lP4ecaaob6GRYrM1nWyFbIUD9cXwRPmimr0XjtKP
+   izx+QqHT1wehYiesCO43actcGKoG3TR7lGUqyBnf+y8tFbeR24Xrx6tAv
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10961"; a="400217754"
 X-IronPort-AV: E=Sophos;i="6.05,212,1701158400"; 
-   d="scan'208";a="8016409"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 15:55:36 -0800
+   d="scan'208";a="400217754"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 15:55:41 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.05,212,1701158400"; 
-   d="scan'208";a="1468155"
+   d="scan'208";a="27817900"
 Received: from ls.sc.intel.com (HELO localhost) ([172.25.112.31])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 15:55:33 -0800
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 15:55:41 -0800
 From: isaku.yamahata@intel.com
 To: kvm@vger.kernel.org,
 	linux-kernel@vger.kernel.org
@@ -51,12 +51,10 @@ Cc: isaku.yamahata@intel.com,
 	Kai Huang <kai.huang@intel.com>,
 	chen.bo@intel.com,
 	hang.yuan@intel.com,
-	tina.zhang@intel.com,
-	Yan Zhao <yan.y.zhao@intel.com>,
-	Yuan Yao <yuan.yao@linux.intel.com>
-Subject: [PATCH v18 053/121] KVM: x86/mmu: TDX: Do not enable page track for TD guest
-Date: Mon, 22 Jan 2024 15:53:29 -0800
-Message-Id: <ba65644eb8327600c393bc3a3dc71c49e872d29f.1705965635.git.isaku.yamahata@intel.com>
+	tina.zhang@intel.com
+Subject: [PATCH v18 074/121] KVM: TDX: complete interrupts after tdexit
+Date: Mon, 22 Jan 2024 15:53:50 -0800
+Message-Id: <379b4d2e8995f0f8b5e6635010b4fd12f4c2571f.1705965635.git.isaku.yamahata@intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1705965634.git.isaku.yamahata@intel.com>
 References: <cover.1705965634.git.isaku.yamahata@intel.com>
@@ -68,33 +66,59 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Yan Zhao <yan.y.zhao@intel.com>
+From: Isaku Yamahata <isaku.yamahata@intel.com>
 
-TDX does not support write protection and hence page track.
-Though !tdp_enabled and kvm_shadow_root_allocated(kvm) are always false
-for TD guest, should also return false when external write tracking is
-enabled.
+This corresponds to VMX __vmx_complete_interrupts().  Because TDX
+virtualize vAPIC, KVM only needs to care NMI injection.
 
-Cc: Yuan Yao <yuan.yao@linux.intel.com>
-Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
+Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
+Reviewed-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- arch/x86/kvm/mmu/page_track.c | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/x86/kvm/vmx/tdx.c | 10 ++++++++++
+ arch/x86/kvm/vmx/tdx.h |  2 ++
+ 2 files changed, 12 insertions(+)
 
-diff --git a/arch/x86/kvm/mmu/page_track.c b/arch/x86/kvm/mmu/page_track.c
-index c87da11f3a04..ce698ab213c1 100644
---- a/arch/x86/kvm/mmu/page_track.c
-+++ b/arch/x86/kvm/mmu/page_track.c
-@@ -22,6 +22,9 @@
- 
- bool kvm_page_track_write_tracking_enabled(struct kvm *kvm)
- {
-+	if (kvm->arch.vm_type == KVM_X86_TDX_VM)
-+		return false;
-+
- 	return IS_ENABLED(CONFIG_KVM_EXTERNAL_WRITE_TRACKING) ||
- 	       !tdp_enabled || kvm_shadow_root_allocated(kvm);
+diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
+index 71c6fc10e8c4..3b2ba9f974be 100644
+--- a/arch/x86/kvm/vmx/tdx.c
++++ b/arch/x86/kvm/vmx/tdx.c
+@@ -585,6 +585,14 @@ void tdx_vcpu_reset(struct kvm_vcpu *vcpu, bool init_event)
+ 	 */
  }
+ 
++static void tdx_complete_interrupts(struct kvm_vcpu *vcpu)
++{
++	/* Avoid costly SEAMCALL if no nmi was injected */
++	if (vcpu->arch.nmi_injected)
++		vcpu->arch.nmi_injected = td_management_read8(to_tdx(vcpu),
++							      TD_VCPU_PEND_NMI);
++}
++
+ struct tdx_uret_msr {
+ 	u32 msr;
+ 	unsigned int slot;
+@@ -713,6 +721,8 @@ fastpath_t tdx_vcpu_run(struct kvm_vcpu *vcpu)
+ 	vcpu->arch.regs_avail &= ~VMX_REGS_LAZY_LOAD_SET;
+ 	trace_kvm_exit(vcpu, KVM_ISA_VMX);
+ 
++	tdx_complete_interrupts(vcpu);
++
+ 	return EXIT_FASTPATH_NONE;
+ }
+ 
+diff --git a/arch/x86/kvm/vmx/tdx.h b/arch/x86/kvm/vmx/tdx.h
+index 883eb05d207f..9082a2604ec6 100644
+--- a/arch/x86/kvm/vmx/tdx.h
++++ b/arch/x86/kvm/vmx/tdx.h
+@@ -201,6 +201,8 @@ TDX_BUILD_TDVPS_ACCESSORS(16, VMCS, vmcs);
+ TDX_BUILD_TDVPS_ACCESSORS(32, VMCS, vmcs);
+ TDX_BUILD_TDVPS_ACCESSORS(64, VMCS, vmcs);
+ 
++TDX_BUILD_TDVPS_ACCESSORS(8, MANAGEMENT, management);
++
+ static __always_inline u64 td_tdcs_exec_read64(struct kvm_tdx *kvm_tdx, u32 field)
+ {
+ 	struct tdx_module_args out;
 -- 
 2.25.1
 
