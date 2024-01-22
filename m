@@ -1,123 +1,121 @@
-Received: from azure-sdnproxy.icoremail.net (azure-sdnproxy.icoremail.net [20.231.56.155])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CAEDC4D592;
-	Mon, 22 Jan 2024 17:16:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=20.231.56.155
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4601E3EA84;
+	Mon, 22 Jan 2024 17:17:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705943807; cv=none; b=hqZK8GaYmK1udIBWBqQOv6thZ0anipOdxn6G7G918K0dca2tNgnImdvQ5PiJi09upqAK0kh/R7WTK8ZPyjPeqXBzLr6L3K9P+ZRJVQaEHfbG7GQ33Wheljx7SYYWfNB7TUxGthu+5HXX/zFhb6YITEkDfEpMklb4k8tZjc4e0yQ=
+	t=1705943844; cv=none; b=JkrRd4XIioTqEPgGnhB6oFbmBbwp5tk8UoXH/MK7LbANpaeM97uOlszTyxLGKRxHxExGBiWL2CtT9yeU4laOySrBAuaP0Td5Klh2HLKBPPIiGsHdoI6ihxFQ5VszCoYkYqcQr7qB5OYAGlM2jukAC5BxAWP54Bywl7fD3MtSS/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705943807; c=relaxed/simple;
-	bh=J+CE1fjgXdIrGGtCeeEtcrHP/hpRi/SonczTZdsbyEc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=VFn0r/Nn0ag0byiKd8NzxS61MxKbTvD/gq+eNPxq/8FlXb++jkFD0J34tr7zDXKsozTWXmvuMHhwhYJCfvF2v8mv6VuLV1a131h30fw/IInZP2GbEP17KZNG99hE4wT8a8N6dKcMhzjCBi4EuWTUySErXFUPbT5k5lG/Y+NoOBE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn; spf=pass smtp.mailfrom=zju.edu.cn; arc=none smtp.client-ip=20.231.56.155
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zju.edu.cn
-Received: from luzhipeng.223.5.5.5 (unknown [39.174.92.167])
-	by mail-app4 (Coremail) with SMTP id cS_KCgCHhYXsoq5lm0x5AA--.18549S2;
-	Tue, 23 Jan 2024 01:16:29 +0800 (CST)
-From: Zhipeng Lu <alexious@zju.edu.cn>
-To: alexious@zju.edu.cn
-Cc: Kashyap Desai <kashyap.desai@broadcom.com>,
-	Sumit Saxena <sumit.saxena@broadcom.com>,
-	Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
-	Chandrakanth patil <chandrakanth.patil@broadcom.com>,
-	"James E.J. Bottomley" <jejb@linux.ibm.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	megaraidlinux.pdl@broadcom.com,
-	linux-scsi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] [v2] scsi: megaraid_sas: Fix a memleak in megasas_init_fw
-Date: Tue, 23 Jan 2024 01:16:10 +0800
-Message-Id: <20240122171610.3840351-1-alexious@zju.edu.cn>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1705943844; c=relaxed/simple;
+	bh=KDFtMJDZ8kPGPxRG/wiPLBoAwqtONcETQZz1W104Fps=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MvsxOWd+8a34YJSNIDxh8QynLmrF4Sz7G+hNCJyN5MVhJRPvQmyZb/bOJ9/kvyuiNET+pp3dCzUDvQE63QpR45hRUXXLgTx8hlRRqPCzETOptue2FHueXcpowsSGY5m0kCKpZfVn3iFQ5J5U2iSWHUR3QjCMLirbkR7CiHXhB3c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DDD321FB;
+	Mon, 22 Jan 2024 09:18:07 -0800 (PST)
+Received: from pluto (unknown [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8C6143F5A1;
+	Mon, 22 Jan 2024 09:17:20 -0800 (PST)
+Date: Mon, 22 Jan 2024 17:17:18 +0000
+From: Cristian Marussi <cristian.marussi@arm.com>
+To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+Cc: sudeep.holla@arm.com, mturquette@baylibre.com, sboyd@kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Peng Fan <peng.fan@nxp.com>
+Subject: Re: [PATCH V4 2/2] clk: scmi: support state_ctrl_forbidden
+Message-ID: <Za6jHg6lD2_U3uO0@pluto>
+References: <20240121110901.1414856-1-peng.fan@oss.nxp.com>
+ <20240121110901.1414856-2-peng.fan@oss.nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cS_KCgCHhYXsoq5lm0x5AA--.18549S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7tFyfZr4Dur1xCFyUXrWxCrg_yoW5JF15pr
-	yruw13tr17AayxWrWqkw4F93yYyw48G3s8Kr18J34j93Wagr15XF4vgrW7GF97CFZ5JF9x
-	Zr4Yqr1fCF4UKaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9Y14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26r
-	xl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
-	6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr
-	0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E
-	8cxan2IY04v7MxkF7I0En4kS14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFV
-	Cjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWl
-	x4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r
-	1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_
-	JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCT
-	nIWIevJa73UjIFyTuYvjfUonmRUUUUU
-X-CM-SenderInfo: qrsrjiarszq6lmxovvfxof0/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240121110901.1414856-2-peng.fan@oss.nxp.com>
 
-In the error-handling paths after allocation of
-fusion->stream_detect_by_ld and fusion->stream_detect_by_ld[i],
-megasas_init_fw should free them or there would be memleaks.
+On Sun, Jan 21, 2024 at 07:09:01PM +0800, Peng Fan (OSS) wrote:
+> From: Peng Fan <peng.fan@nxp.com>
+> 
+> Some clocks may exported to linux, while those clocks are not allowed
+> to configure by Linux. For example:
+> 
+> SYS_CLK1-----
+>              \
+> 	     --MUX--->MMC1_CLK
+>              /
+> SYS_CLK2-----
+> 
+> MMC1 needs set parent, so SYS_CLK1 and SYS_CLK2 are exported to Linux,
+> then the clk propagation will touch SYS_CLK1 or SYS_CLK2.
+> So we need bypass the failure for SYS_CLK1 or SYS_CLK2 when enable
+> the clock of MMC1, adding scmi_no_state_ctrl_clk_ops to use software
+> enable counter, while not calling scmi api.
+> 
+> Co-developed-by: Cristian Marussi <cristian.marussi@arm.com>
+> Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> ---
 
-Fixes: 2e47e4e62e40 ("scsi: megaraid_sas: Fail init if heartbeat timer fails")
-Signed-off-by: Zhipeng Lu <alexious@zju.edu.cn>
----
-Changelog:
+Thanks, LGTM.
 
-v2: remove the unused variable j.
----
- drivers/scsi/megaraid/megaraid_sas_base.c | 17 ++++++++++-------
- 1 file changed, 10 insertions(+), 7 deletions(-)
+Reviewed-by: Cristian Marussi <cristian.marussi@arm.com>
+Tested-by: Cristian Marussi <cristian.marussi@arm.com>
 
-diff --git a/drivers/scsi/megaraid/megaraid_sas_base.c b/drivers/scsi/megaraid/megaraid_sas_base.c
-index 3d4f13da1ae8..a7d3c51fc17b 100644
---- a/drivers/scsi/megaraid/megaraid_sas_base.c
-+++ b/drivers/scsi/megaraid/megaraid_sas_base.c
-@@ -6016,7 +6016,7 @@ static int megasas_init_fw(struct megasas_instance *instance)
- 	void *base_addr_phys;
- 	struct megasas_ctrl_info *ctrl_info = NULL;
- 	unsigned long bar_list;
--	int i, j, loop;
-+	int i, loop;
- 	struct IOV_111 *iovPtr;
- 	struct fusion_context *fusion;
- 	bool intr_coalescing;
-@@ -6378,11 +6378,7 @@ static int megasas_init_fw(struct megasas_instance *instance)
- 			if (!fusion->stream_detect_by_ld[i]) {
- 				dev_err(&instance->pdev->dev,
- 					"unable to allocate stream detect by LD\n ");
--				for (j = 0; j < i; ++j)
--					kfree(fusion->stream_detect_by_ld[j]);
--				kfree(fusion->stream_detect_by_ld);
--				fusion->stream_detect_by_ld = NULL;
--				goto fail_get_ld_pd_list;
-+				goto fail_alloc_stream_detect;
- 			}
- 			fusion->stream_detect_by_ld[i]->mru_bit_map
- 				= MR_STREAM_BITMAP;
-@@ -6502,7 +6498,7 @@ static int megasas_init_fw(struct megasas_instance *instance)
- 			megasas_start_timer(instance);
- 		} else {
- 			instance->skip_heartbeat_timer_del = 1;
--			goto fail_get_ld_pd_list;
-+			goto fail_alloc_stream_detect;
- 		}
- 	}
- 
-@@ -6520,6 +6516,13 @@ static int megasas_init_fw(struct megasas_instance *instance)
- fail_start_watchdog:
- 	if (instance->requestorId && !instance->skip_heartbeat_timer_del)
- 		del_timer_sync(&instance->sriov_heartbeat_timer);
-+fail_alloc_stream_detect:
-+	if (instance->adapter_type >= VENTURA_SERIES) {
-+		for (i = 0; i < MAX_LOGICAL_DRIVES_EXT; ++i)
-+			kfree(fusion->stream_detect_by_ld[i]);
-+		kfree(fusion->stream_detect_by_ld);
-+		fusion->stream_detect_by_ld = NULL;
-+	}
- fail_get_ld_pd_list:
- 	instance->instancet->disable_intr(instance);
- 	megasas_destroy_irqs(instance);
--- 
-2.34.1
+Cheers,
+Cristian
 
+> 
+> V4:
+>  Add scmi_no_state_ctrl_clk_ops per Cristian
+>  Add Cristian's tag
+> 
+> V3:
+>  Add check in atomic enable
+> 
+> V2:
+>  New. Take Cristian's suggestion
+> 
+>  drivers/clk/clk-scmi.c | 15 +++++++++++++--
+>  1 file changed, 13 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/clk/clk-scmi.c b/drivers/clk/clk-scmi.c
+> index 8cbe24789c24..5747b6d651f0 100644
+> --- a/drivers/clk/clk-scmi.c
+> +++ b/drivers/clk/clk-scmi.c
+> @@ -194,6 +194,15 @@ static const struct clk_ops scmi_atomic_clk_ops = {
+>  	.determine_rate = scmi_clk_determine_rate,
+>  };
+>  
+> +static const struct clk_ops scmi_no_state_ctrl_clk_ops = {
+> +	.recalc_rate = scmi_clk_recalc_rate,
+> +	.round_rate = scmi_clk_round_rate,
+> +	.set_rate = scmi_clk_set_rate,
+> +	.set_parent = scmi_clk_set_parent,
+> +	.get_parent = scmi_clk_get_parent,
+> +	.determine_rate = scmi_clk_determine_rate,
+> +};
+> +
+>  static int scmi_clk_ops_init(struct device *dev, struct scmi_clk *sclk,
+>  			     const struct clk_ops *scmi_ops)
+>  {
+> @@ -290,8 +299,10 @@ static int scmi_clocks_probe(struct scmi_device *sdev)
+>  		 * specify (or support) an enable_latency associated with a
+>  		 * clock, we default to use atomic operations mode.
+>  		 */
+> -		if (is_atomic &&
+> -		    sclk->info->enable_latency <= atomic_threshold)
+> +		if (sclk->info->state_ctrl_forbidden)
+> +			scmi_ops = &scmi_no_state_ctrl_clk_ops;
+> +		else if (is_atomic &&
+> +			 sclk->info->enable_latency <= atomic_threshold)
+>  			scmi_ops = &scmi_atomic_clk_ops;
+>  		else
+>  			scmi_ops = &scmi_clk_ops;
+> -- 
+> 2.37.1
+> 
