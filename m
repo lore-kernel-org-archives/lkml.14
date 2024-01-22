@@ -1,446 +1,198 @@
-Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 108FE3839A
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 08:42:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45F7C374DE
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 08:42:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705912974; cv=none; b=bNnUFSJ5y78cDkJTjfn+kxm9hdQuKBAkHdiVQKwuws8mT2XrQzVYBVFQOqUUYtNN5mxvmGMBnBwo7apOVEKv4fY9CgW+Bo3TIksZ5OAz0IXZS9DtKDC+78Pz32yrVEkFaWVU14OGxMt9P7BaNl54DowF/AYmDyygoeQkto+Kq5Q=
+	t=1705912980; cv=none; b=eUx1/2v8SK7zmWeVf+t3pK9q0Z0HaSHFI/bcSA5cLquxHG6FEKNv7GETOyFTk4wU0qwQkbBjEmfxCMwbImI++qmehGRbwwZkNGs3ErYVoVtCLE8B970HZnMSlbIljkpn49EjXaipPALbOv2T2jZnuuz7NAXV5V/02K+SmXKfJpw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705912974; c=relaxed/simple;
-	bh=53AcOeGD0p7nbe5TjajfohEKjEBXxQ84zejXF9ZzjXQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bi3EXV10iwz5Kw7BxS5+9BQblZf3u0fUU7TgCS1ee+0chAmyOXToPbvu1fOlp6nWC4JZfoesfMTWBwNvVYQzCsyatUfKPL/sNob4jrjAjxqhiWf4btEPSYvLKJSiXTJX/W/QZq7RBc2chqngudtGlhxlyDae7IM5tw3ABCE3x5s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-5ff7a8b5e61so22679667b3.2
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 00:42:51 -0800 (PST)
+	s=arc-20240116; t=1705912980; c=relaxed/simple;
+	bh=n5Qbq1n5cLV+iONGulmYwMK+DXx9gzMF5gqMOJ03dWA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EurS0G1S4KiLo+JiBWqhvhmsPD9PeEIdOom6M7grMUnjSS3a045fLjC3VJZvW0TGAiJcPSDI6MGcE8DmB8vi1TlrLxPAtNClg9A8mf1Nv8niMHeOhVnXiVvOKrxuXX8Nc7RACzvKAtFRteRdMAgMoipaU4kI1wLzObyNsA/4LQM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=E0h3nTvF; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="E0h3nTvF"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-559cef15db5so7016458a12.0
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 00:42:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1705912977; x=1706517777; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=4cXJp2iHKCpHhIfNj6YucZ/54ivGE/1xCso8Q+jMjE4=;
+        b=E0h3nTvF8o+r6cD4nbDBFC6CIal1B5Rrg/32QeZVtdfMH02NnD3cPZlY2/0k+3qnir
+         +0BBi1KE5OgeVUk73I0MQlnfw+8R5jWwlJYJVCiRO26twMoRs3Cjttp6BpqcYkfNAppF
+         xiBKVrhyKwskXVF4KUxi7oCf/5vpWZ6IjkM3fH6sNqKBsfBPb0B7pKecwB3ga6zw4GRo
+         V4q6l06PDoJb+VfqUnqbQiONOpvRFIVyf2JNicNthXzArA56607jErXGcixnJgQGWe7n
+         oEPdx6o2T+pbktGaLwDdsnumeG+Ijy1X4oEAo1FASYnjWKEbVdq/FF2RHxDUyVofMzJ3
+         o5Zg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705912971; x=1706517771;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Wzva1Y3egJkJwaa7xDcetdIkG2yn3nRK1Yg5xorbkj4=;
-        b=ho9gRlmDwOjJia8E4skOcI6PyKeGe0zh76SsqmdkgAEV+y5FAfpdhCFRLnz3Q6/+ef
-         5ze+DR5MwKNP4kd4QFVAsAuacgwMsBzYekaCvgfsj2nm0Zi9yqB69N3rcDT+kPAUQez3
-         9eyfaXkn4Jwzw4lrhCneP4JYngXrdQnRi75rZ3JKubQjstWAWr4xbrQU/zBc5X1x0W/F
-         6eYMWijuEBtOwSH2Aq94yN+T4VboVeewX3+tG0kOiz950McYeYq3+0cX7Gd+21drnvww
-         HiorvNlEjL+kNmmawJhzWsMGLsxN9VL4HQ5f/+zUR+5jjMw6aBvPN7CIRixBSAY6mhRX
-         O/lA==
-X-Gm-Message-State: AOJu0YxP36uDYDKekxXOpCn+IoX3PsPpIJHtORUKrLDykoWsqvjbRbji
-	M5wdXovprCoNjpJIMHgTpEHxHyVDwLqI6tBezwIX0vebEs+p0zq3nYek+3+fNq0=
-X-Google-Smtp-Source: AGHT+IFmHSyd6g56UWErubGlZXiXo6Aeavvban2BS2cQUewD/KuVfqrbbpv9CA774VIT/4ThKXSk2g==
-X-Received: by 2002:a81:83ce:0:b0:5ff:9428:a8af with SMTP id t197-20020a8183ce000000b005ff9428a8afmr3436199ywf.66.1705912970635;
-        Mon, 22 Jan 2024 00:42:50 -0800 (PST)
-Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com. [209.85.128.181])
-        by smtp.gmail.com with ESMTPSA id s9-20020a819b09000000b005ff81bbfd66sm3370009ywg.136.2024.01.22.00.42.50
-        for <linux-kernel@vger.kernel.org>
+        d=1e100.net; s=20230601; t=1705912977; x=1706517777;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=4cXJp2iHKCpHhIfNj6YucZ/54ivGE/1xCso8Q+jMjE4=;
+        b=DptVEnQGNujBk+Z+oENsDGZSklNoSIlpkLkMBRMd8LODnGhMGZiy4fsrtlaJqtSwTz
+         96pI1tgsG5OwhiHfZU+Or1VIq0p+A7k0sGUNGPpeM4Gxsu2zzlfQRmlQI+7fxBhxQz0p
+         WRGKxD6YzXE+K9p12rV+p3ERu4yz0Iej6l6KtueA16KAMfcBjOAudRjjY0Dj1BShbsh/
+         nAcR994T091MWcizCrAAbFKce9RwbiEQN5oGrS9rawBp/Y47BLGnR02XGtrigzEJ6R17
+         Vf4PGeFv1VR3oG8+REmLca+A8n6/BgEu0vSUldM/UnWqJ9FUPvSqw9rXI1LOsHMLex7b
+         6sDg==
+X-Gm-Message-State: AOJu0YwgVMCBN6uIMKiN1NrO6fmI9mVGAg3XA3LnbVSoLnPKSTLS0NLF
+	Dt05iCIaNCa4dYzsWjUDv6VoadjOLdXCOtzav+jd5WVF/1WFNcu/b77PU97/yPA=
+X-Google-Smtp-Source: AGHT+IFR5267HIZXn2DvthXiQPsUwsNr4cWAi4nNyYo1mdHH6MF0D9YOjNzYSbTK5K77ig6AGocwAg==
+X-Received: by 2002:a17:906:31ce:b0:a2f:6a3d:e39c with SMTP id f14-20020a17090631ce00b00a2f6a3de39cmr5036521ejf.18.1705912977459;
+        Mon, 22 Jan 2024 00:42:57 -0800 (PST)
+Received: from [192.168.1.20] ([178.197.215.66])
+        by smtp.gmail.com with ESMTPSA id v15-20020a170906180f00b00a28cf49520asm13086332eje.203.2024.01.22.00.42.55
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 22 Jan 2024 00:42:50 -0800 (PST)
-Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-600094c5703so3039407b3.3
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 00:42:50 -0800 (PST)
-X-Received: by 2002:a81:c24c:0:b0:5ff:a51a:8db3 with SMTP id
- t12-20020a81c24c000000b005ffa51a8db3mr3037461ywg.26.1705912970152; Mon, 22
- Jan 2024 00:42:50 -0800 (PST)
+        Mon, 22 Jan 2024 00:42:57 -0800 (PST)
+Message-ID: <d81db1fa-371e-476b-8c48-893a22d11542@linaro.org>
+Date: Mon, 22 Jan 2024 09:42:54 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <Za4nzDtwGVA+U1OL@rli9-mobl>
-In-Reply-To: <Za4nzDtwGVA+U1OL@rli9-mobl>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 22 Jan 2024 09:42:38 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdWvX-sUaXc=WMOU_yCQWwkTkCb3i+swHKpHQAz1BKUOJg@mail.gmail.com>
-Message-ID: <CAMuHMdWvX-sUaXc=WMOU_yCQWwkTkCb3i+swHKpHQAz1BKUOJg@mail.gmail.com>
-Subject: Re: sound/ac97/bus.c:192: warning: Function parameter or member 'drv'
- not described in 'snd_ac97_codec_driver_register'
-To: kernel test robot <lkp@intel.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	Mark Brown <broonie@kernel.org>, Robert Jarzmik <robert.jarzmik@free.fr>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 03/10] dt-bindings: arm: Add support for CMB element
+ size
+Content-Language: en-US
+To: Tao Zhang <quic_taozha@quicinc.com>,
+ Mathieu Poirier <mathieu.poirier@linaro.org>,
+ Suzuki K Poulose <suzuki.poulose@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Konrad Dybcio <konradybcio@gmail.com>, Mike Leach <mike.leach@linaro.org>,
+ Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+Cc: Jinlong Mao <quic_jinlmao@quicinc.com>, Leo Yan <leo.yan@linaro.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, coresight@lists.linaro.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, Tingwei Zhang <quic_tingweiz@quicinc.com>,
+ Yuanfang Zhang <quic_yuanfang@quicinc.com>,
+ Trilok Soni <quic_tsoni@quicinc.com>, Song Chai <quic_songchai@quicinc.com>,
+ linux-arm-msm@vger.kernel.org, andersson@kernel.org
+References: <1705634583-17631-1-git-send-email-quic_taozha@quicinc.com>
+ <1705634583-17631-4-git-send-email-quic_taozha@quicinc.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <1705634583-17631-4-git-send-email-quic_taozha@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Kernel Test Robot,
+On 19/01/2024 04:22, Tao Zhang wrote:
+> Add property "qcom,cmb-elem-size" to support CMB(Continuous
+> Multi-Bit) element for TPDM. The associated aggregator will read
+> this size before it is enabled. CMB element size currently only
+> supports 32-bit and 64-bit.
+> 
+> Signed-off-by: Tao Zhang <quic_taozha@quicinc.com>
+> Signed-off-by: Mao Jinlong <quic_jinlmao@quicinc.com>
+> ---
+>  .../bindings/arm/qcom,coresight-tpdm.yaml     | 27 +++++++++++++++++++
+>  1 file changed, 27 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/qcom,coresight-tpdm.yaml b/Documentation/devicetree/bindings/arm/qcom,coresight-tpdm.yaml
+> index 61ddc3b5b247..507a5f887097 100644
+> --- a/Documentation/devicetree/bindings/arm/qcom,coresight-tpdm.yaml
+> +++ b/Documentation/devicetree/bindings/arm/qcom,coresight-tpdm.yaml
+> @@ -52,6 +52,15 @@ properties:
+>      $ref: /schemas/types.yaml#/definitions/uint8
+>      enum: [32, 64]
+>  
+> +  qcom,cmb-element-size:
+> +    description:
+> +      Specifies the CMB(Continuous Multi-Bit) element size supported by
+> +      the monitor. The associated aggregator will read this size before it
+> +      is enabled. CMB element size currently only supports 8-bit, 32-bit
+> +      and 64-bit.
+> +    $ref: /schemas/types.yaml#/definitions/uint8
+> +    enum: [8, 32, 64]
 
-On Mon, Jan 22, 2024 at 9:31=E2=80=AFAM kernel test robot <lkp@intel.com> w=
-rote:
-> First bad commit (maybe !=3D root cause):
->
-> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.gi=
-t master
-> head:   ac865f00af293d081356bec56eea90815094a60e
-> commit: ea00d95200d02ece71f5814d41b14f2eb16d598b ASoC: Use imply for SND_=
-SOC_ALL_CODECS
-> date:   3 years, 11 months ago
-> :::::: branch date: 16 hours ago
-> :::::: commit date: 3 years, 11 months ago
-> config: x86_64-buildonly-randconfig-003-20231102 (https://download.01.org=
-/0day-ci/archive/20240104/202401042239.2zkHgzki-lkp@intel.com/config)
-> compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-> reproduce (this is a W=3D1 build): (https://download.01.org/0day-ci/archi=
-ve/20240104/202401042239.2zkHgzki-lkp@intel.com/reproduce)
->
-> If you fix the issue in a separate patch/commit (i.e. not just a new vers=
-ion of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/r/202401042239.2zkHgzki-lkp@intel.com/
->
-> All warnings (new ones prefixed by >>):
->
-> >> sound/ac97/bus.c:192: warning: Function parameter or member 'drv' not =
-described in 'snd_ac97_codec_driver_register'
-> >> sound/ac97/bus.c:192: warning: Excess function parameter 'dev' descrip=
-tion in 'snd_ac97_codec_driver_register'
-> >> sound/ac97/bus.c:205: warning: Function parameter or member 'drv' not =
-described in 'snd_ac97_codec_driver_unregister'
-> >> sound/ac97/bus.c:205: warning: Excess function parameter 'dev' descrip=
-tion in 'snd_ac97_codec_driver_unregister'
-> >> sound/ac97/bus.c:351: warning: Function parameter or member 'codecs_pd=
-ata' not described in 'snd_ac97_controller_register'
+Is this in bits? If so, then qcom,cmb-element-bits or something similar.
+I don't quite get what is "an element" here, but I assume you do, so you
+will come with reasonable name.
 
-Definitely not introduced by my commit.
-Origin is commit 74426fbff66eea8e ("ALSA: ac97: add an ac97 bus") in v4.15.
+https://github.com/devicetree-org/dt-schema/blob/main/dtschema/schemas/property-units.yaml
 
+> +
+>    qcom,dsb-msrs-num:
+>      description:
+>        Specifies the number of DSB(Discrete Single Bit) MSR(mux select register)
+> @@ -110,4 +119,22 @@ examples:
+>        };
+>      };
+>  
+> +    tpdm@6c29000 {
 
->
-> Kconfig warnings: (for reference only)
->    WARNING: unmet direct dependencies detected for REGMAP_SPI
->    Depends on [n]: SPI [=3Dn]
->    Selected by [m]:
->    - SND_SOC_ADAU1781_SPI [=3Dm] && SOUND [=3Dy] && !UML && SND [=3Dm] &&=
- SND_SOC [=3Dm]
->    - SND_SOC_ADAU1977_SPI [=3Dm] && SOUND [=3Dy] && !UML && SND [=3Dm] &&=
- SND_SOC [=3Dm]
->
->
-> vim +192 sound/ac97/bus.c
->
-> 74426fbff66eea Robert Jarzmik 2017-09-02  181
-> 74426fbff66eea Robert Jarzmik 2017-09-02  182  /**
-> 74426fbff66eea Robert Jarzmik 2017-09-02  183   * snd_ac97_codec_driver_r=
-egister - register an AC97 codec driver
-> 74426fbff66eea Robert Jarzmik 2017-09-02  184   * @dev: AC97 driver codec=
- to register
-> 74426fbff66eea Robert Jarzmik 2017-09-02  185   *
-> 74426fbff66eea Robert Jarzmik 2017-09-02  186   * Register an AC97 codec =
-driver to the ac97 bus driver, aka. the AC97 digital
-> 74426fbff66eea Robert Jarzmik 2017-09-02  187   * controller.
-> 74426fbff66eea Robert Jarzmik 2017-09-02  188   *
-> 74426fbff66eea Robert Jarzmik 2017-09-02  189   * Returns 0 on success or=
- error code
-> 74426fbff66eea Robert Jarzmik 2017-09-02  190   */
-> 74426fbff66eea Robert Jarzmik 2017-09-02  191  int snd_ac97_codec_driver_=
-register(struct ac97_codec_driver *drv)
-> 74426fbff66eea Robert Jarzmik 2017-09-02 @192  {
-> 74426fbff66eea Robert Jarzmik 2017-09-02  193   drv->driver.bus =3D &ac97=
-_bus_type;
-> 74426fbff66eea Robert Jarzmik 2017-09-02  194   return driver_register(&d=
-rv->driver);
-> 74426fbff66eea Robert Jarzmik 2017-09-02  195  }
-> 74426fbff66eea Robert Jarzmik 2017-09-02  196  EXPORT_SYMBOL_GPL(snd_ac97=
-_codec_driver_register);
-> 74426fbff66eea Robert Jarzmik 2017-09-02  197
-> 74426fbff66eea Robert Jarzmik 2017-09-02  198  /**
-> 74426fbff66eea Robert Jarzmik 2017-09-02  199   * snd_ac97_codec_driver_u=
-nregister - unregister an AC97 codec driver
-> 74426fbff66eea Robert Jarzmik 2017-09-02  200   * @dev: AC97 codec driver=
- to unregister
-> 74426fbff66eea Robert Jarzmik 2017-09-02  201   *
-> 74426fbff66eea Robert Jarzmik 2017-09-02  202   * Unregister a previously=
- registered ac97 codec driver.
-> 74426fbff66eea Robert Jarzmik 2017-09-02  203   */
-> 74426fbff66eea Robert Jarzmik 2017-09-02  204  void snd_ac97_codec_driver=
-_unregister(struct ac97_codec_driver *drv)
-> 74426fbff66eea Robert Jarzmik 2017-09-02 @205  {
-> 74426fbff66eea Robert Jarzmik 2017-09-02  206   driver_unregister(&drv->d=
-river);
-> 74426fbff66eea Robert Jarzmik 2017-09-02  207  }
-> 74426fbff66eea Robert Jarzmik 2017-09-02  208  EXPORT_SYMBOL_GPL(snd_ac97=
-_codec_driver_unregister);
-> 74426fbff66eea Robert Jarzmik 2017-09-02  209
-> 74426fbff66eea Robert Jarzmik 2017-09-02  210  /**
-> 74426fbff66eea Robert Jarzmik 2017-09-02  211   * snd_ac97_codec_get_plat=
-data - get platform_data
-> 74426fbff66eea Robert Jarzmik 2017-09-02  212   * @adev: the ac97 codec d=
-evice
-> 74426fbff66eea Robert Jarzmik 2017-09-02  213   *
-> 74426fbff66eea Robert Jarzmik 2017-09-02  214   * For legacy platforms, i=
-n order to have platform_data in codec drivers
-> 74426fbff66eea Robert Jarzmik 2017-09-02  215   * available, while ac97 d=
-evice are auto-created upon probe, this retrieves the
-> 74426fbff66eea Robert Jarzmik 2017-09-02  216   * platdata which was setu=
-p on ac97 controller registration.
-> 74426fbff66eea Robert Jarzmik 2017-09-02  217   *
-> 74426fbff66eea Robert Jarzmik 2017-09-02  218   * Returns the platform da=
-ta pointer
-> 74426fbff66eea Robert Jarzmik 2017-09-02  219   */
-> 74426fbff66eea Robert Jarzmik 2017-09-02  220  void *snd_ac97_codec_get_p=
-latdata(const struct ac97_codec_device *adev)
-> 74426fbff66eea Robert Jarzmik 2017-09-02  221  {
-> 74426fbff66eea Robert Jarzmik 2017-09-02  222   struct ac97_controller *a=
-c97_ctrl =3D adev->ac97_ctrl;
-> 74426fbff66eea Robert Jarzmik 2017-09-02  223
-> 74426fbff66eea Robert Jarzmik 2017-09-02  224   return ac97_ctrl->codecs_=
-pdata[adev->num];
-> 74426fbff66eea Robert Jarzmik 2017-09-02  225  }
-> 74426fbff66eea Robert Jarzmik 2017-09-02  226  EXPORT_SYMBOL_GPL(snd_ac97=
-_codec_get_platdata);
-> 74426fbff66eea Robert Jarzmik 2017-09-02  227
-> 74426fbff66eea Robert Jarzmik 2017-09-02  228  static void ac97_ctrl_code=
-cs_unregister(struct ac97_controller *ac97_ctrl)
-> 74426fbff66eea Robert Jarzmik 2017-09-02  229  {
-> 74426fbff66eea Robert Jarzmik 2017-09-02  230   int i;
-> 74426fbff66eea Robert Jarzmik 2017-09-02  231
-> 74426fbff66eea Robert Jarzmik 2017-09-02  232   for (i =3D 0; i < AC97_BU=
-S_MAX_CODECS; i++)
-> 74426fbff66eea Robert Jarzmik 2017-09-02  233           if (ac97_ctrl->co=
-decs[i]) {
-> 74426fbff66eea Robert Jarzmik 2017-09-02  234                   ac97_ctrl=
-->codecs[i]->ac97_ctrl =3D &ac97_unbound_ctrl;
-> 74426fbff66eea Robert Jarzmik 2017-09-02  235                   device_un=
-register(&ac97_ctrl->codecs[i]->dev);
-> 74426fbff66eea Robert Jarzmik 2017-09-02  236           }
-> 74426fbff66eea Robert Jarzmik 2017-09-02  237  }
-> 74426fbff66eea Robert Jarzmik 2017-09-02  238
-> 74426fbff66eea Robert Jarzmik 2017-09-02  239  static ssize_t cold_reset_=
-store(struct device *dev,
-> 74426fbff66eea Robert Jarzmik 2017-09-02  240                           s=
-truct device_attribute *attr, const char *buf,
-> 74426fbff66eea Robert Jarzmik 2017-09-02  241                           s=
-ize_t len)
-> 74426fbff66eea Robert Jarzmik 2017-09-02  242  {
-> 74426fbff66eea Robert Jarzmik 2017-09-02  243   struct ac97_controller *a=
-c97_ctrl;
-> 74426fbff66eea Robert Jarzmik 2017-09-02  244
-> 74426fbff66eea Robert Jarzmik 2017-09-02  245   mutex_lock(&ac97_controll=
-ers_mutex);
-> 74426fbff66eea Robert Jarzmik 2017-09-02  246   ac97_ctrl =3D to_ac97_con=
-troller(dev);
-> 74426fbff66eea Robert Jarzmik 2017-09-02  247   ac97_ctrl->ops->reset(ac9=
-7_ctrl);
-> 74426fbff66eea Robert Jarzmik 2017-09-02  248   mutex_unlock(&ac97_contro=
-llers_mutex);
-> 74426fbff66eea Robert Jarzmik 2017-09-02  249   return len;
-> 74426fbff66eea Robert Jarzmik 2017-09-02  250  }
-> 74426fbff66eea Robert Jarzmik 2017-09-02  251  static DEVICE_ATTR_WO(cold=
-_reset);
-> 74426fbff66eea Robert Jarzmik 2017-09-02  252
-> 74426fbff66eea Robert Jarzmik 2017-09-02  253  static ssize_t warm_reset_=
-store(struct device *dev,
-> 74426fbff66eea Robert Jarzmik 2017-09-02  254                           s=
-truct device_attribute *attr, const char *buf,
-> 74426fbff66eea Robert Jarzmik 2017-09-02  255                           s=
-ize_t len)
-> 74426fbff66eea Robert Jarzmik 2017-09-02  256  {
-> 74426fbff66eea Robert Jarzmik 2017-09-02  257   struct ac97_controller *a=
-c97_ctrl;
-> 74426fbff66eea Robert Jarzmik 2017-09-02  258
-> 74426fbff66eea Robert Jarzmik 2017-09-02  259   if (!dev)
-> 74426fbff66eea Robert Jarzmik 2017-09-02  260           return -ENODEV;
-> 74426fbff66eea Robert Jarzmik 2017-09-02  261
-> 74426fbff66eea Robert Jarzmik 2017-09-02  262   mutex_lock(&ac97_controll=
-ers_mutex);
-> 74426fbff66eea Robert Jarzmik 2017-09-02  263   ac97_ctrl =3D to_ac97_con=
-troller(dev);
-> 74426fbff66eea Robert Jarzmik 2017-09-02  264   ac97_ctrl->ops->warm_rese=
-t(ac97_ctrl);
-> 74426fbff66eea Robert Jarzmik 2017-09-02  265   mutex_unlock(&ac97_contro=
-llers_mutex);
-> 74426fbff66eea Robert Jarzmik 2017-09-02  266   return len;
-> 74426fbff66eea Robert Jarzmik 2017-09-02  267  }
-> 74426fbff66eea Robert Jarzmik 2017-09-02  268  static DEVICE_ATTR_WO(warm=
-_reset);
-> 74426fbff66eea Robert Jarzmik 2017-09-02  269
-> 74426fbff66eea Robert Jarzmik 2017-09-02  270  static struct attribute *a=
-c97_controller_device_attrs[] =3D {
-> 74426fbff66eea Robert Jarzmik 2017-09-02  271   &dev_attr_cold_reset.attr=
-,
-> 74426fbff66eea Robert Jarzmik 2017-09-02  272   &dev_attr_warm_reset.attr=
-,
-> 74426fbff66eea Robert Jarzmik 2017-09-02  273   NULL
-> 74426fbff66eea Robert Jarzmik 2017-09-02  274  };
-> 74426fbff66eea Robert Jarzmik 2017-09-02  275
-> 74426fbff66eea Robert Jarzmik 2017-09-02  276  static struct attribute_gr=
-oup ac97_adapter_attr_group =3D {
-> 74426fbff66eea Robert Jarzmik 2017-09-02  277   .name   =3D "ac97_operati=
-ons",
-> 74426fbff66eea Robert Jarzmik 2017-09-02  278   .attrs  =3D ac97_controll=
-er_device_attrs,
-> 74426fbff66eea Robert Jarzmik 2017-09-02  279  };
-> 74426fbff66eea Robert Jarzmik 2017-09-02  280
-> 74426fbff66eea Robert Jarzmik 2017-09-02  281  static const struct attrib=
-ute_group *ac97_adapter_groups[] =3D {
-> 74426fbff66eea Robert Jarzmik 2017-09-02  282   &ac97_adapter_attr_group,
-> 74426fbff66eea Robert Jarzmik 2017-09-02  283   NULL,
-> 74426fbff66eea Robert Jarzmik 2017-09-02  284  };
-> 74426fbff66eea Robert Jarzmik 2017-09-02  285
-> 74426fbff66eea Robert Jarzmik 2017-09-02  286  static void ac97_del_adapt=
-er(struct ac97_controller *ac97_ctrl)
-> 74426fbff66eea Robert Jarzmik 2017-09-02  287  {
-> 74426fbff66eea Robert Jarzmik 2017-09-02  288   mutex_lock(&ac97_controll=
-ers_mutex);
-> 74426fbff66eea Robert Jarzmik 2017-09-02  289   ac97_ctrl_codecs_unregist=
-er(ac97_ctrl);
-> 74426fbff66eea Robert Jarzmik 2017-09-02  290   list_del(&ac97_ctrl->cont=
-rollers);
-> 74426fbff66eea Robert Jarzmik 2017-09-02  291   mutex_unlock(&ac97_contro=
-llers_mutex);
-> 74426fbff66eea Robert Jarzmik 2017-09-02  292
-> 74426fbff66eea Robert Jarzmik 2017-09-02  293   device_unregister(&ac97_c=
-trl->adap);
-> 74426fbff66eea Robert Jarzmik 2017-09-02  294  }
-> 74426fbff66eea Robert Jarzmik 2017-09-02  295
-> 74426fbff66eea Robert Jarzmik 2017-09-02  296  static void ac97_adapter_r=
-elease(struct device *dev)
-> 74426fbff66eea Robert Jarzmik 2017-09-02  297  {
-> 74426fbff66eea Robert Jarzmik 2017-09-02  298   struct ac97_controller *a=
-c97_ctrl;
-> 74426fbff66eea Robert Jarzmik 2017-09-02  299
-> 74426fbff66eea Robert Jarzmik 2017-09-02  300   ac97_ctrl =3D to_ac97_con=
-troller(dev);
-> 74426fbff66eea Robert Jarzmik 2017-09-02  301   idr_remove(&ac97_adapter_=
-idr, ac97_ctrl->nr);
-> 74426fbff66eea Robert Jarzmik 2017-09-02  302   dev_dbg(&ac97_ctrl->adap,=
- "adapter unregistered by %s\n",
-> 74426fbff66eea Robert Jarzmik 2017-09-02  303           dev_name(ac97_ctr=
-l->parent));
-> 74426fbff66eea Robert Jarzmik 2017-09-02  304  }
-> 74426fbff66eea Robert Jarzmik 2017-09-02  305
-> 74426fbff66eea Robert Jarzmik 2017-09-02  306  static const struct device=
-_type ac97_adapter_type =3D {
-> 74426fbff66eea Robert Jarzmik 2017-09-02  307   .groups         =3D ac97_=
-adapter_groups,
-> 74426fbff66eea Robert Jarzmik 2017-09-02  308   .release        =3D ac97_=
-adapter_release,
-> 74426fbff66eea Robert Jarzmik 2017-09-02  309  };
-> 74426fbff66eea Robert Jarzmik 2017-09-02  310
-> 74426fbff66eea Robert Jarzmik 2017-09-02  311  static int ac97_add_adapte=
-r(struct ac97_controller *ac97_ctrl)
-> 74426fbff66eea Robert Jarzmik 2017-09-02  312  {
-> 74426fbff66eea Robert Jarzmik 2017-09-02  313   int ret;
-> 74426fbff66eea Robert Jarzmik 2017-09-02  314
-> 74426fbff66eea Robert Jarzmik 2017-09-02  315   mutex_lock(&ac97_controll=
-ers_mutex);
-> 74426fbff66eea Robert Jarzmik 2017-09-02  316   ret =3D idr_alloc(&ac97_a=
-dapter_idr, ac97_ctrl, 0, 0, GFP_KERNEL);
-> 74426fbff66eea Robert Jarzmik 2017-09-02  317   ac97_ctrl->nr =3D ret;
-> 74426fbff66eea Robert Jarzmik 2017-09-02  318   if (ret >=3D 0) {
-> 74426fbff66eea Robert Jarzmik 2017-09-02  319           dev_set_name(&ac9=
-7_ctrl->adap, "ac97-%d", ret);
-> 74426fbff66eea Robert Jarzmik 2017-09-02  320           ac97_ctrl->adap.t=
-ype =3D &ac97_adapter_type;
-> 74426fbff66eea Robert Jarzmik 2017-09-02  321           ac97_ctrl->adap.p=
-arent =3D ac97_ctrl->parent;
-> 74426fbff66eea Robert Jarzmik 2017-09-02  322           ret =3D device_re=
-gister(&ac97_ctrl->adap);
-> 74426fbff66eea Robert Jarzmik 2017-09-02  323           if (ret)
-> 74426fbff66eea Robert Jarzmik 2017-09-02  324                   put_devic=
-e(&ac97_ctrl->adap);
-> 74426fbff66eea Robert Jarzmik 2017-09-02  325   }
-> 74426fbff66eea Robert Jarzmik 2017-09-02  326   if (!ret)
-> 74426fbff66eea Robert Jarzmik 2017-09-02  327           list_add(&ac97_ct=
-rl->controllers, &ac97_controllers);
-> 74426fbff66eea Robert Jarzmik 2017-09-02  328   mutex_unlock(&ac97_contro=
-llers_mutex);
-> 74426fbff66eea Robert Jarzmik 2017-09-02  329
-> 74426fbff66eea Robert Jarzmik 2017-09-02  330   if (!ret)
-> 74426fbff66eea Robert Jarzmik 2017-09-02  331           dev_dbg(&ac97_ctr=
-l->adap, "adapter registered by %s\n",
-> 74426fbff66eea Robert Jarzmik 2017-09-02  332                   dev_name(=
-ac97_ctrl->parent));
-> 74426fbff66eea Robert Jarzmik 2017-09-02  333   return ret;
-> 74426fbff66eea Robert Jarzmik 2017-09-02  334  }
-> 74426fbff66eea Robert Jarzmik 2017-09-02  335
-> 74426fbff66eea Robert Jarzmik 2017-09-02  336  /**
-> 74426fbff66eea Robert Jarzmik 2017-09-02  337   * snd_ac97_controller_reg=
-ister - register an ac97 controller
-> 74426fbff66eea Robert Jarzmik 2017-09-02  338   * @ops: the ac97 bus oper=
-ations
-> 74426fbff66eea Robert Jarzmik 2017-09-02  339   * @dev: the device provid=
-ing the ac97 DC function
-> 74426fbff66eea Robert Jarzmik 2017-09-02  340   * @slots_available: mask =
-of the ac97 codecs that can be scanned and probed
-> 74426fbff66eea Robert Jarzmik 2017-09-02  341   *                   bit0 =
-=3D> codec 0, bit1 =3D> codec 1 ... bit 3 =3D> codec 3
-> 74426fbff66eea Robert Jarzmik 2017-09-02  342   *
-> 74426fbff66eea Robert Jarzmik 2017-09-02  343   * Register a digital cont=
-roller which can control up to 4 ac97 codecs. This is
-> 74426fbff66eea Robert Jarzmik 2017-09-02  344   * the controller side of =
-the AC97 AC-link, while the slave side are the codecs.
-> 74426fbff66eea Robert Jarzmik 2017-09-02  345   *
-> 74426fbff66eea Robert Jarzmik 2017-09-02  346   * Returns a valid control=
-ler upon success, negative pointer value upon error
-> 74426fbff66eea Robert Jarzmik 2017-09-02  347   */
-> 74426fbff66eea Robert Jarzmik 2017-09-02  348  struct ac97_controller *sn=
-d_ac97_controller_register(
-> 74426fbff66eea Robert Jarzmik 2017-09-02  349   const struct ac97_control=
-ler_ops *ops, struct device *dev,
-> 74426fbff66eea Robert Jarzmik 2017-09-02  350   unsigned short slots_avai=
-lable, void **codecs_pdata)
-> 74426fbff66eea Robert Jarzmik 2017-09-02 @351  {
-> 74426fbff66eea Robert Jarzmik 2017-09-02  352   struct ac97_controller *a=
-c97_ctrl;
-> 74426fbff66eea Robert Jarzmik 2017-09-02  353   int ret, i;
-> 74426fbff66eea Robert Jarzmik 2017-09-02  354
-> 74426fbff66eea Robert Jarzmik 2017-09-02  355   ac97_ctrl =3D kzalloc(siz=
-eof(*ac97_ctrl), GFP_KERNEL);
-> 74426fbff66eea Robert Jarzmik 2017-09-02  356   if (!ac97_ctrl)
-> 74426fbff66eea Robert Jarzmik 2017-09-02  357           return ERR_PTR(-E=
-NOMEM);
-> 74426fbff66eea Robert Jarzmik 2017-09-02  358
-> 74426fbff66eea Robert Jarzmik 2017-09-02  359   for (i =3D 0; i < AC97_BU=
-S_MAX_CODECS && codecs_pdata; i++)
-> 74426fbff66eea Robert Jarzmik 2017-09-02  360           ac97_ctrl->codecs=
-_pdata[i] =3D codecs_pdata[i];
-> 74426fbff66eea Robert Jarzmik 2017-09-02  361
-> 74426fbff66eea Robert Jarzmik 2017-09-02  362   ac97_ctrl->ops =3D ops;
-> 74426fbff66eea Robert Jarzmik 2017-09-02  363   ac97_ctrl->slots_availabl=
-e =3D slots_available;
-> 74426fbff66eea Robert Jarzmik 2017-09-02  364   ac97_ctrl->parent =3D dev=
-;
-> 74426fbff66eea Robert Jarzmik 2017-09-02  365   ret =3D ac97_add_adapter(=
-ac97_ctrl);
-> 74426fbff66eea Robert Jarzmik 2017-09-02  366
-> 74426fbff66eea Robert Jarzmik 2017-09-02  367   if (ret)
-> 74426fbff66eea Robert Jarzmik 2017-09-02  368           goto err;
-> 74426fbff66eea Robert Jarzmik 2017-09-02  369   ac97_bus_reset(ac97_ctrl)=
-;
-> 74426fbff66eea Robert Jarzmik 2017-09-02  370   ac97_bus_scan(ac97_ctrl);
-> 74426fbff66eea Robert Jarzmik 2017-09-02  371
-> 74426fbff66eea Robert Jarzmik 2017-09-02  372   return ac97_ctrl;
-> 74426fbff66eea Robert Jarzmik 2017-09-02  373  err:
-> 74426fbff66eea Robert Jarzmik 2017-09-02  374   kfree(ac97_ctrl);
-> 74426fbff66eea Robert Jarzmik 2017-09-02  375   return ERR_PTR(ret);
-> 74426fbff66eea Robert Jarzmik 2017-09-02  376  }
-> 74426fbff66eea Robert Jarzmik 2017-09-02  377  EXPORT_SYMBOL_GPL(snd_ac97=
-_controller_register);
-> 74426fbff66eea Robert Jarzmik 2017-09-02  378
->
-> :::::: The code at line 192 was first introduced by commit
-> :::::: 74426fbff66eea8e8d1f42c8238c268d1e63a832 ALSA: ac97: add an ac97 b=
-us
->
-> :::::: TO: Robert Jarzmik <robert.jarzmik@free.fr>
-> :::::: CC: Mark Brown <broonie@kernel.org>
->
-> --
-> 0-DAY CI Kernel Test Service
-> https://github.com/intel/lkp-tests/wiki
+You should explain why you need new example, so reviewers will not have
+to go back to previous discussions to ask the same question over and
+over again.
 
-Gr{oetje,eeting}s,
+> +      compatible = "qcom,coresight-tpdm", "arm,primecell";
+> +      reg = <0x06c29000 0x1000>;
+> +
+> +      qcom,cmb-element-size = /bits/ 8 <64>;
+> +
+> +      clocks = <&aoss_qmp>;
+> +      clock-names = "apb_pclk";
+> +
+> +      out-ports {
+> +        port {
+> +          tpdm_ipcc_out_funnel_center: endpoint {
+> +            remote-endpoint =
+> +              <&funnel_center_in_tpdm_ipcc>;
 
-                        Geert
+Drop unneeded wrapping / line break.
 
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
+Best regards,
+Krzysztof
 
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
