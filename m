@@ -1,384 +1,149 @@
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2077.outbound.protection.outlook.com [40.107.102.77])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8686838FB7;
-	Mon, 22 Jan 2024 08:47:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.77
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705913225; cv=fail; b=WQ2HIQzbv8dsK5oj8RouOD3PIIfGSHh8BuIGXSUtfynr1dBozlSOMjH33Bb8QtTrSqLqm+LOppHad4bFc/MKen8R/V9Wdz/xof0UEeEsoKtE+x8ICh3uV4HnUQD4AIc6xSE9qVx0Ibt64oNDffZHwWfeNUtVdNTFy2hgKbqqgR8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705913225; c=relaxed/simple;
-	bh=MbRK6/zyypZDras7Ojni4hWbgIISVYMN8+1fiHTEfnc=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XBgj+NWrfgdhVRBHvC5B7sPO9ethgEWRnsthiNIqXWJjxuGDPWeqgRxz8VzVsgCrWgTBdacsZeGSeHaJyCbAzBxRQ5xmbRPhUYD4Ly81HvXZQ2MsUS54bSbLZNNgrfuVm9UkK2w2dAeAaaekyfHUL0W2Agg687IlxR0MfUWdmJM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=QM3ZNe09; arc=fail smtp.client-ip=40.107.102.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A8BF39AE7
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 08:47:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1705913243; cv=none; b=kYgw2Ys3o66JPn99SlUCQAPonFB05TJhJjHHFFHJkoDayDWKLKfyvyCgvhvQupX5eHQvcWYcDXh2bxlaOMg58gc4191RZB5Nz2lLbfn9sKDm//A7HKMvlr0ohqHKKXXhiaa+BrarnrvdsehEt5cpbZjqDD160Tj4oYduwOnSQow=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1705913243; c=relaxed/simple;
+	bh=PuHh3PbCyA0LlLQilbmkPYe3nWD0aK16atA4Eh810a8=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=GEYPigQoe4CZHraHB4H5PHnSrUDprmY8uGQMqu6TxnwiLj9dDvhIGq2su8FWn03Bn84G34I6EBTattBd3MNI/E/KwcgMrobAv2AIhdNesRbOrSCr2ApFkh0pjdMZKN6OWE3X2HRFbdYIsvbiNZKKKL+84CzEkemYFxQngCEuYBo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=H2JTazOf; arc=none smtp.client-ip=209.85.208.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="QM3ZNe09"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QbOtqSVIe67vuxG7Xlzjj8dP4uxtXojxgMKC5HYqRK5UIfF5B8BHy8HHRyoKHvUAtBkbf2tq11seQt4G+59zcNiE29zEUMBL4/zhkl2ePAM0Q5n6fKwGMbIfhBjZ3RmNCf8SEzyQuHrmpuqBVFu58HLshC8+qpqJlctreHQ/CJA6xsMySFoJMpNSi/HWC2t0Fq2UGXbIMj7mUbW1F7KNUTbGKXnIxBUFRmfGdR17FLK0oDLpdi27+eabOnqEgAnMHev9K5Z4vk8wDrw+X4BJlp2ppMN42pKrz1097MuOjudRDsDIr5LUVc5szlg2h5koq/ZyD2uPxxnt3M/t1VBAJw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=HlURVs4NqzvyjS99PltohAtgRthKnFTlg52pIs82LPo=;
- b=hTpE5fjZBbmEfyHHjgYkwF0kF6gvuEk7E0SaTjxZyUNGoAQ1OTmwJeUq4qK6pXQ/VQUNcNyOp1SxqRq1eDfm7UwjO+ptpG1aarwhSPLxmJjRxblESfxcReNYiAUZaD3F+QShZCrdgjhFi2QCDWyYMz5gIf4LmwG1r5yoxDee5GE5Nt+59i8uWpwx3spWAQShiUv5v8CLl+PljXHvq4IzzgkVTF03BAJvlQ68ZsGR7BtB29fg/T8MVFLe+5hGzOqDf9ts4FY4RfGx9v22bK9bYdtUDFrq53OkRQQoVt4H7b5xnLAvw0vDvdp8OhanPeh8zTfjko5sgFYmw88A13cALQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.161) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HlURVs4NqzvyjS99PltohAtgRthKnFTlg52pIs82LPo=;
- b=QM3ZNe09I0/QMJ97nuDqEAXKp/fMd6kX4q+SelETlcyeTkZ3vO+biwyS9lSZepUXFuqFN7/pthWsMcNqtPL7b65rxYWM28ouBLENzRmyrt5lBJmN66dD2WTiT+XgAfH4CmCWYklrJ900SOotUVrfjx0MrzTQx6hfc7hSqINfuI8/8dHWrZ/GojNsmN74kYlEk2r4R8hrdfJJU34VwxWLonbZ/WkUokTPpov4ZFklEKW33Z/zdcdXf1bG32f0zkijZmLEwc/sWf3LijMjEbRrGHwBi7R3mQ8YbB+IpKmCHASrl627wExWJ0gwNNFnazvV0ZS2jcJoPNOBfqUoKtiHBQ==
-Received: from BYAPR11CA0095.namprd11.prod.outlook.com (2603:10b6:a03:f4::36)
- by SA3PR12MB9179.namprd12.prod.outlook.com (2603:10b6:806:3a1::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7202.32; Mon, 22 Jan
- 2024 08:46:59 +0000
-Received: from MWH0EPF000989E9.namprd02.prod.outlook.com
- (2603:10b6:a03:f4:cafe::9b) by BYAPR11CA0095.outlook.office365.com
- (2603:10b6:a03:f4::36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7202.32 via Frontend
- Transport; Mon, 22 Jan 2024 08:46:59 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.161) by
- MWH0EPF000989E9.mail.protection.outlook.com (10.167.241.136) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7202.16 via Frontend Transport; Mon, 22 Jan 2024 08:46:59 +0000
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
- (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Mon, 22 Jan
- 2024 00:46:42 -0800
-Received: from dev-r-vrt-155.mtr.labs.mlnx (10.126.231.35) by
- rnnvmail201.nvidia.com (10.129.68.8) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.41; Mon, 22 Jan 2024 00:46:36 -0800
-From: Danielle Ratson <danieller@nvidia.com>
-To: <netdev@vger.kernel.org>
-CC: <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
-	<pabeni@redhat.com>, <corbet@lwn.net>, <linux@armlinux.org.uk>,
-	<sdf@google.com>, <kory.maincent@bootlin.com>,
-	<maxime.chevallier@bootlin.com>, <vladimir.oltean@nxp.com>,
-	<przemyslaw.kitszel@intel.com>, <ahmed.zaki@intel.com>,
-	<richardcochran@gmail.com>, <shayagr@amazon.com>, <paul.greenwalt@intel.com>,
-	<jiri@resnulli.us>, <linux-doc@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <mlxsw@nvidia.com>, <petrm@nvidia.com>,
-	<idosch@nvidia.com>, Danielle Ratson <danieller@nvidia.com>
-Subject: [RFC PATCH net-next 9/9] ethtool: Add ability to flash transceiver modules' firmware
-Date: Mon, 22 Jan 2024 10:45:30 +0200
-Message-ID: <20240122084530.32451-10-danieller@nvidia.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20240122084530.32451-1-danieller@nvidia.com>
-References: <20240122084530.32451-1-danieller@nvidia.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="H2JTazOf"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-55a5e7fa471so2398688a12.1
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 00:47:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1705913240; x=1706518040; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=x39o7uppt38NkcUrSwijK0oeJl+InnHX1d+Fyj766CM=;
+        b=H2JTazOf0BTot0LPtoHhf+jWd2VKTt6/xgg33AVFsIgNVvpZbZDQ7deLumq7lPIr4E
+         bh/UX+GHtgez9grFuPVS2dvzZyz5/7dZw+JWznltOjlDp0a0E+PNN8iLA1cJXULt1t5K
+         ZRZWkQodXE/dnEI9iJFHveSycizdqwSihMsrriB2Rc5zVmnbTbAcVaVY1SNn3LleoZiY
+         hVnNwf2ZJAywWmpjRaA8tXuEtY4ezfLABEhZzVVMh+qIw8cHMIY/0PUWSiJVVroz0dl/
+         Zoqcll4ZPEX+0G1PfugHqFIUBsNW2XAWFbAg9V8rD4iGBrJhR512Q3wXqPROV27WKCIQ
+         U24Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705913240; x=1706518040;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=x39o7uppt38NkcUrSwijK0oeJl+InnHX1d+Fyj766CM=;
+        b=X1Yf3mx6PbcjuSXlF2iPy5WU4PLSN7q8b7qNlseNGVsJitjUiFubxb79XBUxH0Jokd
+         dad9gqeroObbbYkzf+YP1D8MxfYl6rfQOaMGYN3AjUAqxBI72HOb7Mob0obD5ZU62fGk
+         ONVT+4vl6CygiByoJ02uUwrIek+WQ2wEyuNJr7uPvy937kjBKFn45pxzU+WT8suu+/xy
+         5nwP7EldhId4A7Ud7pGT/5b2Vwga/Ye0tid/6eeDYQNdiUDOXPwgiTpBhb12iH3qNEoV
+         hIodkxAfDbvY6kLF5X6fZRz6MJJJGwMLdjY1W/k6Zbnakhgzqqj4UAjLH9rIfXLkFA9r
+         vDPg==
+X-Gm-Message-State: AOJu0Yzi5VnVsOUuD6xC7JSn5ktlQ6Bbs+BnqogEEcH0AWyOj0v4eyio
+	xsF2wdwf4ZVyyXq4MuU8h+Xs9DirLGM1XpvMMQEQ/60t2y/xPeB6YZCNEkAHO90=
+X-Google-Smtp-Source: AGHT+IE6awfpcmrylrKwFE9aaBFI7uxMe9cZn7J8roUwX5TaaK9T99ZQlI7zvDPHuwy/K7NAkbCIQA==
+X-Received: by 2002:a17:907:a08b:b0:a27:d14b:215 with SMTP id hu11-20020a170907a08b00b00a27d14b0215mr2448384ejc.98.1705913240309;
+        Mon, 22 Jan 2024 00:47:20 -0800 (PST)
+Received: from [127.0.1.1] ([79.115.23.25])
+        by smtp.gmail.com with ESMTPSA id b21-20020a17090630d500b00a2c4c23cd12sm13075462ejb.217.2024.01.22.00.47.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Jan 2024 00:47:19 -0800 (PST)
+From: Abel Vesa <abel.vesa@linaro.org>
+Subject: [PATCH v4 0/5] PM: domains: Add control for switching back and
+ forth to HW control
+Date: Mon, 22 Jan 2024 10:47:00 +0200
+Message-Id: <20240122-gdsc-hwctrl-v4-0-9061e8a7aa07@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: rnnvmail201.nvidia.com (10.129.68.8) To
- rnnvmail201.nvidia.com (10.129.68.8)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MWH0EPF000989E9:EE_|SA3PR12MB9179:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7fb4c890-756a-4df2-ff37-08dc1b26b23d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	g5raV8CKTqI8AK9lMTCVnAb03/+u/QPGdsZ25O0dKlHf3+kirMXRO8/2ozT7KLSLrx6K8+8msTPDt9sLymsxcM8QVu6P9x6mO95KulS1HpP1uNjBpRl3/IWO8X2d2lKQatLeNbgokUbmE0qX3buY+yRNES2ffy6goRmAxANEZwTSTWSBoryTn8mLO+jap9pVUJe+4AlbK5JaAf/fJvTcTyhbpuUXWVmBvipe8BHuRBe3xRlwcOHS2CTD3gKKg2jHbVhcOL9V/9TCus35c5F8aXp+0U+NSANJ5IDXbZNvKy42UeSeJIfKy/osF2t3F5M/U2qRZGTfIccAhfKuMAT0W4W+pTzY7FyIS6nP45O81u4Qu49tng/xW0kVW7QeHZ2dae5LbKSonzbGr77BKDI41VmrQVDdAWgrIpgHay1uKunzMSkvzbW9AH1SvveBZ5VJ+dMeouDdj635cNauWKOkBNyXEkqRDHn3n5j5upoGccq0XPNe6YI/Nn8W2oYK3h70YF2M+U0FJX+Zql7lFja4CbBmglfNH7BEZ6mFEBxmgVex/w+0m1KUgCK/udcJMoNYKC4ca8QAOFssy1J30fkh57Kzwhy1jSNISezGSaTsM9MM41zW8bUxqYiNlRcLc1KKogBc1sITI2bpxVNw9YjGnm63v11IiIubSuS5M4RHxP73ziFEBHHvBgJP/qvl6bThF87l+KoebrsogUGn/6CGJYR3Q2FoOEhXD8y5MphFlonaDw0KyrH/Q17CStuUOMLF
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230031)(4636009)(396003)(39860400002)(136003)(346002)(376002)(230922051799003)(186009)(82310400011)(64100799003)(451199024)(1800799012)(40470700004)(36840700001)(46966006)(40460700003)(40480700001)(83380400001)(36756003)(86362001)(356005)(7636003)(82740400003)(36860700001)(5660300002)(8936002)(8676002)(4326008)(47076005)(2616005)(1076003)(336012)(107886003)(426003)(26005)(16526019)(70206006)(70586007)(6916009)(54906003)(316002)(41300700001)(6666004)(478600001)(7416002)(2906002);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jan 2024 08:46:59.1319
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7fb4c890-756a-4df2-ff37-08dc1b26b23d
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	MWH0EPF000989E9.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR12MB9179
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAIQrrmUC/x2NQQrCMBAAv1L27NKkFQ9+RTwkm22zoKnuFiuU/
+ t3E48AMs4OxChtcux2UP2KylArnUweUQ5kZJVWGwQ2j987jnIwwb7TqA/04Oc/h4igmqEUMxhg
+ 1FMqtedPy7Jvf5w1b0JyX8iTf//F2P44f/H1R7IEAAAA=
+To: "Rafael J. Wysocki" <rafael@kernel.org>, 
+ Kevin Hilman <khilman@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, 
+ Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Bjorn Andersson <andersson@kernel.org>, Andy Gross <agross@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>, 
+ Stanimir Varbanov <stanimir.k.varbanov@gmail.com>, 
+ Vikash Garodia <quic_vgarodia@quicinc.com>, 
+ Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>, 
+ Taniya Das <quic_tdas@quicinc.com>, Jagadeesh Kona <quic_jkona@quicinc.com>, 
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, 
+ linux-media@vger.kernel.org, Abel Vesa <abel.vesa@linaro.org>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2048; i=abel.vesa@linaro.org;
+ h=from:subject:message-id; bh=PuHh3PbCyA0LlLQilbmkPYe3nWD0aK16atA4Eh810a8=;
+ b=owEBbQKS/ZANAwAKARtfRMkAlRVWAcsmYgBlriuJ0l53IZcMLPr1+7bSqoYv5mqCND8EPAhwY
+ CkOnHbuRAmJAjMEAAEKAB0WIQRO8+4RTnqPKsqn0bgbX0TJAJUVVgUCZa4riQAKCRAbX0TJAJUV
+ VtiwEADGnPGPijJh6gpXLFpi8areOxQMLPDJOWpQGrgGInW5uSgmLfVzb9+3QtPPgncP85KXC/b
+ bFcWjMZpvHnTnjmYebbkRqj5dtwPEGwzCf3aVWC2HmpVa6p+YVsgY8z53nWTCq5sGjEUi3fP5oC
+ TKFtdiwM+23W+1q9NSBv3RQaxSoWamtMaXlhZRXvXIeWdVUuaOH8RFElM+706jwNeWWcSz0KDdB
+ 5gtxKGFv+32Ai0obNJaZ9RsvsabRwWMCM+8eYf1sapex2XLELEvd2vUe7nyWgvVDnjhj6Y9EthE
+ 9aenwCqeLntDMo/kkLEc1lPE99h1tkyKomiRY9DRLMHcCvRbBKl0+QjVx6W+MZMxbUmpDLbL4NY
+ CjlajTKHv3KLdwGbRJ3LwXZQSmUQIk+3WmT7+MWA0M6PRZNN4aDtrC2rEZl1+JsFn2HBVO9SJY2
+ Ln/HPhDvWtKUXkQ9sLnu/mm/uLEh4irA3JAz5xqGRoHXvGfhAkZ5UnXa67Qmt0kTLk2dnaC5aQ0
+ WiXw4ScoBhd7XWMCfG+NF/4DgfGBKUMtXamJXwI6HJAFleLC80h1Hnqbr9ofAA4J8ys8syPZXY8
+ 4N8XQDCYANBNV8GIu/kLrGGY7uBUCshnNHsgeLhYOrwAhLbAw2Ij2hYIrPOYKm2QNSVo+CgIpVg
+ ISsS3AmftmxuhmA==
+X-Developer-Key: i=abel.vesa@linaro.org; a=openpgp;
+ fpr=6AFF162D57F4223A8770EF5AF7BF214136F41FAE
 
-Add the ability to flash the modules' firmware by implementing the
-interface between the user space and the kernel.
-
-Example from a succeeding implementation:
-
- # ethtool --flash-module-firmware swp40 file test.bin
-
- Transceiver module firmware flashing started for device eth0
-
- Transceiver module firmware flashing in progress for device eth0
- Status message: Downloading firmware image
- Progress: 0%
-
- [...]
-
- Transceiver module firmware flashing in progress for device eth0
- Status message: Downloading firmware image
- Progress: 50%
-
- [...]
-
- Transceiver module firmware flashing in progress for device eth0
- Status message: Downloading firmware image
- Progress: 100%
-
- Transceiver module firmware flashing completed for device eth0
-
-Signed-off-by: Danielle Ratson <danieller@nvidia.com>
+Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
 ---
- net/ethtool/module.c  | 179 ++++++++++++++++++++++++++++++++++++++++++
- net/ethtool/netlink.c |   7 ++
- net/ethtool/netlink.h |   2 +
- 3 files changed, 188 insertions(+)
+Changes in v4:
+- Re-worded 1st patch commit message, as per Bjorn's suggestion, and added
+  Dmitry's R-b tag
+- Added Bjorn's and Dmitry's R-b tags to the 2nd patch
+- Re-worded 3rd patch commit message, to better explain the HW_CTRL_TRIGGER flag.
+- Added mode transition delay when setting mode for GDSC
+- Added status polling if GDSSC is enabled when transitioning from HW to SW
+- Re-worded 4th patch commit message to better explain why the
+  HW_CTRL_TRIGGER needs to be used instead
+- Drop changes to SC7180, SDM845 and SM8550 video CC drivers, as only
+  SC7280 and SM8250 have been tested so far. More platforms (with v6 venus)
+  will be added eventually.
+- Call genpd set_hwmode API only for v6 and dropped the vcodec_pmdomains_hwctrl.
+- Re-worded 5th patch commit message accordingly. 
+- Link to v3:
+  https://lore.kernel.org/r/20231101-gdsc-hwctrl-v3-0-0740ae6b2b04@linaro.org/
 
-diff --git a/net/ethtool/module.c b/net/ethtool/module.c
-index 09cf11564840..69cedb3ede6d 100644
---- a/net/ethtool/module.c
-+++ b/net/ethtool/module.c
-@@ -1,6 +1,8 @@
- // SPDX-License-Identifier: GPL-2.0-only
- 
- #include <linux/ethtool.h>
-+#include <linux/sfp.h>
-+#include <linux/firmware.h>
- 
- #include "netlink.h"
- #include "common.h"
-@@ -160,6 +162,183 @@ const struct ethnl_request_ops ethnl_module_request_ops = {
- 	.set_ntf_cmd		= ETHTOOL_MSG_MODULE_NTF,
- };
- 
-+/* MODULE_FW_FLASH_ACT */
-+
-+const struct nla_policy
-+ethnl_module_fw_flash_act_policy[ETHTOOL_A_MODULE_FW_FLASH_PASSWORD + 1] = {
-+	[ETHTOOL_A_MODULE_FW_FLASH_HEADER] =
-+		NLA_POLICY_NESTED(ethnl_header_policy),
-+	[ETHTOOL_A_MODULE_FW_FLASH_FILE_NAME] = { .type = NLA_NUL_STRING },
-+	[ETHTOOL_A_MODULE_FW_FLASH_PASSWORD] = { .type = NLA_U32 },
-+};
-+
-+struct module_sff8024_id_rpl {
-+	u8 id;
-+};
-+
-+#define MODULE_EEPROM_PAGE	0
-+#define MODULE_EEPROM_OFFSET	0
-+#define MODULE_EEPROM_LENGTH	1
-+#define MODULE_EEPROM_I2C_ADDR	0x50
-+
-+static int module_flash_fw_work_init(struct ethtool_module_fw_flash *module_fw,
-+				     struct net_device *dev,
-+				     struct netlink_ext_ack *extack)
-+{
-+	const struct ethtool_ops *ops = dev->ethtool_ops;
-+	struct ethtool_module_eeprom page_data = {};
-+	struct module_sff8024_id_rpl *rpl;
-+	int err;
-+
-+	/* Fetch the SFF-8024 Identifier Value. For all supported standards, it
-+	 * is located at I2C address 0x50, byte 0. See section 4.1 in SFF-8024,
-+	 * revision 4.9.
-+	 */
-+	page_data.page = MODULE_EEPROM_PAGE;
-+	page_data.offset = MODULE_EEPROM_OFFSET;
-+	page_data.length = MODULE_EEPROM_LENGTH;
-+	page_data.i2c_address = MODULE_EEPROM_I2C_ADDR;
-+	page_data.data = kmalloc(page_data.length, GFP_KERNEL);
-+	if (!page_data.data)
-+		return -ENOMEM;
-+
-+	err = ops->get_module_eeprom_by_page(dev, &page_data, extack);
-+	if (err < 0)
-+		goto out;
-+
-+	rpl = (struct module_sff8024_id_rpl *)page_data.data;
-+	switch (rpl->id) {
-+	case SFF8024_ID_QSFP_DD:
-+	case SFF8024_ID_OSFP:
-+	case SFF8024_ID_DSFP:
-+	case SFF8024_ID_QSFP_PLUS_CMIS:
-+	case SFF8024_ID_SFP_DD_CMIS:
-+	case SFF8024_ID_SFP_PLUS_CMIS:
-+		INIT_WORK(&module_fw->work, ethtool_cmis_fw_update);
-+		goto out;
-+	default:
-+		NL_SET_ERR_MSG(extack,
-+			       "Module type does not support firmware flashing");
-+		err = -EOPNOTSUPP;
-+		goto out;
-+	}
-+
-+out:
-+	kfree(page_data.data);
-+	return err;
-+}
-+
-+static int
-+module_flash_fw_schedule(struct net_device *dev,
-+			 struct ethtool_module_fw_flash_params *params,
-+			 struct netlink_ext_ack *extack)
-+{
-+	const struct ethtool_ops *ops = dev->ethtool_ops;
-+	struct ethtool_module_fw_flash *module_fw;
-+	int err;
-+
-+	if (!ops->set_module_eeprom_by_page ||
-+	    !ops->get_module_eeprom_by_page) {
-+		NL_SET_ERR_MSG(extack,
-+			       "Flashing module firmware is not supported by this device");
-+		return -EOPNOTSUPP;
-+	}
-+
-+	if (dev->module_fw_flash_in_progress) {
-+		NL_SET_ERR_MSG(extack, "Module firmware flashing already in progress");
-+		return -EBUSY;
-+	}
-+
-+	module_fw = kzalloc(sizeof(*module_fw), GFP_KERNEL);
-+	if (!module_fw)
-+		return -ENOMEM;
-+
-+	module_fw->params = *params;
-+	err = request_firmware(&module_fw->fw, module_fw->params.file_name,
-+			       &dev->dev);
-+	if (err) {
-+		NL_SET_ERR_MSG(extack,
-+			       "Failed to request module firmware image");
-+		goto err_request_firmware;
-+	}
-+
-+	err = module_flash_fw_work_init(module_fw, dev, extack);
-+	if (err < 0) {
-+		NL_SET_ERR_MSG(extack,
-+			       "Flashing module firmware is not supported by this device");
-+		goto err_work_init;
-+	}
-+
-+	dev->module_fw_flash_in_progress = true;
-+	netdev_hold(dev, &module_fw->dev_tracker, GFP_KERNEL);
-+	module_fw->dev = dev;
-+
-+	schedule_work(&module_fw->work);
-+
-+	return 0;
-+
-+err_work_init:
-+	release_firmware(module_fw->fw);
-+err_request_firmware:
-+	kfree(module_fw);
-+	return err;
-+}
-+
-+static int module_flash_fw(struct net_device *dev, struct nlattr **tb,
-+			   struct netlink_ext_ack *extack)
-+{
-+	struct ethtool_module_fw_flash_params params = {};
-+	struct nlattr *attr;
-+
-+	if (!tb[ETHTOOL_A_MODULE_FW_FLASH_FILE_NAME]) {
-+		NL_SET_ERR_MSG_ATTR(extack,
-+				    tb[ETHTOOL_A_MODULE_FW_FLASH_FILE_NAME],
-+				    "File name attribute is missing");
-+		return -EINVAL;
-+	}
-+
-+	params.file_name =
-+		nla_data(tb[ETHTOOL_A_MODULE_FW_FLASH_FILE_NAME]);
-+
-+	attr = tb[ETHTOOL_A_MODULE_FW_FLASH_PASSWORD];
-+	if (attr) {
-+		params.password = cpu_to_be32(nla_get_u32(attr));
-+		params.password_valid = true;
-+	}
-+
-+	return module_flash_fw_schedule(dev, &params, extack);
-+}
-+
-+int ethnl_act_module_fw_flash(struct sk_buff *skb, struct genl_info *info)
-+{
-+	struct ethnl_req_info req_info = {};
-+	struct nlattr **tb = info->attrs;
-+	struct net_device *dev;
-+	int ret;
-+
-+	ret = ethnl_parse_header_dev_get(&req_info,
-+					 tb[ETHTOOL_A_MODULE_FW_FLASH_HEADER],
-+					 genl_info_net(info), info->extack,
-+					 true);
-+	if (ret < 0)
-+		return ret;
-+	dev = req_info.dev;
-+
-+	rtnl_lock();
-+	ret = ethnl_ops_begin(dev);
-+	if (ret < 0)
-+		goto out_rtnl;
-+
-+	ret = module_flash_fw(dev, tb, info->extack);
-+
-+	ethnl_ops_complete(dev);
-+
-+out_rtnl:
-+	rtnl_unlock();
-+	ethnl_parse_header_dev_put(&req_info);
-+	return ret;
-+}
-+
- /* MODULE_FW_FLASH_NTF */
- 
- static void
-diff --git a/net/ethtool/netlink.c b/net/ethtool/netlink.c
-index fe3553f60bf3..85e27bdb1f73 100644
---- a/net/ethtool/netlink.c
-+++ b/net/ethtool/netlink.c
-@@ -1129,6 +1129,13 @@ static const struct genl_ops ethtool_genl_ops[] = {
- 		.policy = ethnl_mm_set_policy,
- 		.maxattr = ARRAY_SIZE(ethnl_mm_set_policy) - 1,
- 	},
-+	{
-+		.cmd	= ETHTOOL_MSG_MODULE_FW_FLASH_ACT,
-+		.flags	= GENL_UNS_ADMIN_PERM,
-+		.doit	= ethnl_act_module_fw_flash,
-+		.policy	= ethnl_module_fw_flash_act_policy,
-+		.maxattr = ARRAY_SIZE(ethnl_module_fw_flash_act_policy) - 1,
-+	},
- };
- 
- static const struct genl_multicast_group ethtool_nl_mcgrps[] = {
-diff --git a/net/ethtool/netlink.h b/net/ethtool/netlink.h
-index 9a333a8d04c1..46712c9531ae 100644
---- a/net/ethtool/netlink.h
-+++ b/net/ethtool/netlink.h
-@@ -441,6 +441,7 @@ extern const struct nla_policy ethnl_plca_set_cfg_policy[ETHTOOL_A_PLCA_MAX + 1]
- extern const struct nla_policy ethnl_plca_get_status_policy[ETHTOOL_A_PLCA_HEADER + 1];
- extern const struct nla_policy ethnl_mm_get_policy[ETHTOOL_A_MM_HEADER + 1];
- extern const struct nla_policy ethnl_mm_set_policy[ETHTOOL_A_MM_MAX + 1];
-+extern const struct nla_policy ethnl_module_fw_flash_act_policy[ETHTOOL_A_MODULE_FW_FLASH_PASSWORD + 1];
- 
- int ethnl_set_features(struct sk_buff *skb, struct genl_info *info);
- int ethnl_act_cable_test(struct sk_buff *skb, struct genl_info *info);
-@@ -448,6 +449,7 @@ int ethnl_act_cable_test_tdr(struct sk_buff *skb, struct genl_info *info);
- int ethnl_tunnel_info_doit(struct sk_buff *skb, struct genl_info *info);
- int ethnl_tunnel_info_start(struct netlink_callback *cb);
- int ethnl_tunnel_info_dumpit(struct sk_buff *skb, struct netlink_callback *cb);
-+int ethnl_act_module_fw_flash(struct sk_buff *skb, struct genl_info *info);
- 
- extern const char stats_std_names[__ETHTOOL_STATS_CNT][ETH_GSTRING_LEN];
- extern const char stats_eth_phy_names[__ETHTOOL_A_STATS_ETH_PHY_CNT][ETH_GSTRING_LEN];
+---
+Abel Vesa (1):
+      PM: domains: Add the domain HW-managed mode to the summary
+
+Jagadeesh Kona (3):
+      clk: qcom: gdsc: Add set and get hwmode callbacks to switch GDSC mode
+      clk: qcom: Use HW_CTRL_TRIGGER flag to switch video GDSC to HW mode
+      venus: pm_helpers: Use dev_pm_genpd_set_hwmode to switch GDSC mode
+
+Ulf Hansson (1):
+      PM: domains: Allow devices attached to genpd to be managed by HW
+
+ drivers/clk/qcom/gdsc.c                        | 54 +++++++++++++++++
+ drivers/clk/qcom/gdsc.h                        |  1 +
+ drivers/clk/qcom/videocc-sc7280.c              |  2 +-
+ drivers/clk/qcom/videocc-sm8250.c              |  4 +-
+ drivers/media/platform/qcom/venus/pm_helpers.c | 23 +++----
+ drivers/pmdomain/core.c                        | 83 +++++++++++++++++++++++++-
+ include/linux/pm_domain.h                      | 17 ++++++
+ 7 files changed, 169 insertions(+), 15 deletions(-)
+---
+base-commit: 319fbd8fc6d339e0a1c7b067eed870c518a13a02
+change-id: 20231101-gdsc-hwctrl-13f01ea60cbd
+
+Best regards,
 -- 
-2.40.1
+Abel Vesa <abel.vesa@linaro.org>
 
