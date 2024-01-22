@@ -1,143 +1,105 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95CF03FE4B;
-	Mon, 22 Jan 2024 15:20:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18502405DA
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 15:21:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705936837; cv=none; b=nRdQROowWwqZ8pXdomf3njPtxBApafIyHUKM0bNQ6Pfx376P4xhhRW6WuIkyYOcfUxbe8bJNaO5frwNrU1OZow2XAR+kZWyrlf9sMJNnZf/glbW+dZBDpmCTvIRoaYbHRcYDgA6Oj8MhVItxbLuy0jY6TXGQ4NnFS2hXFN9sax4=
+	t=1705936876; cv=none; b=f80uFBeqRAarSU4p6N8CYoGZUr63veWjVxYNKGnE3M7xK1hYk1BcgK5UyHwTsubWnDAlNoIaEyMw3F+3SE2yk28DqRlvNiKrd7/Q4sCCBLwXE0dQ9sC4D+4e6cArlvBM7rjetu/XlzE2se2kWshrwQUOO3RddFIColkbO2eAWjI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705936837; c=relaxed/simple;
-	bh=fVQWgn6dMqT65ij7t8YeQ++AxrnBH2Z/fCv+edloKhg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=vA2i6PxLHfZ650OaRs+YnVy0xmqnAtoD8BljTAux+GD9EDWNoijlgiJfIZzzVVSmS0o0Dct3VPZySmVNWfdvDurw6SLesenjbRNZnUJi+eHsZC+xcv2kI+rwoJTQAV9mN6+Y/9OBja2vsStFqOYkxEkholigkqQ5Bt4jmcYKcYY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=BfN0cFW6; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=BfN0cFW6; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1705936876; c=relaxed/simple;
+	bh=fUfuTS1ONtt1Sc+QMJaOn6OAPkhCtiu6J0M8A7SoJa8=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=Mo5wUsmz9dPEvk9uqOy3lwTxP5NYNA7ElDN4WzOYflbSgqwmuoVgh4gvjXVTkUYT8X4ej9U93oYAreninYiyH1LmxSYi0G5HNlbNrQ04Ot8ZDhjti/sVbD28dSUoIpv7W2Hf9A4bQaOps5+ud4kUONxGb49SyrxSJDx4djYVGYs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=D/yBbLD2; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="BfN0cFW6";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="BfN0cFW6"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id A497321FD4;
-	Mon, 22 Jan 2024 15:20:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1705936832; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uI8H29046lEwAQaOE9IkKlCQkju2vmSs/MhQpFiaPtI=;
-	b=BfN0cFW6Ucd4aMQdhtVQZBZPSYYOf8yTXNjWs9Yt1e3RVCU9MYF/u0BQLFDEqbZCCAsSM3
-	cp+GEseEUKQn/4pro5nCyDA8Z9Vll5zOtxQkatPnUGk6G7CtDPIPRQROyuC342ETucdNsS
-	wRJP1ACqRz+G2k0V5aAuku0KL2oDx1Y=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1705936832; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uI8H29046lEwAQaOE9IkKlCQkju2vmSs/MhQpFiaPtI=;
-	b=BfN0cFW6Ucd4aMQdhtVQZBZPSYYOf8yTXNjWs9Yt1e3RVCU9MYF/u0BQLFDEqbZCCAsSM3
-	cp+GEseEUKQn/4pro5nCyDA8Z9Vll5zOtxQkatPnUGk6G7CtDPIPRQROyuC342ETucdNsS
-	wRJP1ACqRz+G2k0V5aAuku0KL2oDx1Y=
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 8808D136A4;
-	Mon, 22 Jan 2024 15:20:32 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id mP41IMCHrmU1ZwAAD6G6ig
-	(envelope-from <mkoutny@suse.com>); Mon, 22 Jan 2024 15:20:32 +0000
-Date: Mon, 22 Jan 2024 16:20:31 +0100
-From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
-To: Shakeel Butt <shakeelb@google.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	Jens Axboe <axboe@kernel.dk>, Johannes Weiner <hannes@cmpxchg.org>, Tejun Heo <tj@kernel.org>, 
-	Jan Kara <jack@suse.cz>, Roman Gushchin <roman.gushchin@linux.dev>, 
-	Michal Hocko <mhocko@kernel.org>, Muchun Song <muchun.song@linux.dev>, cgroups@vger.kernel.org, 
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm: writeback: ratelimit stat flush from
- mem_cgroup_wb_stats
-Message-ID: <jazycqhefxn6oigmt6mitn2cfoonscbdwqxy5g7gs2j74w3ia5@qwcu3v7kmk4h>
-References: <20240118184235.618164-1-shakeelb@google.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="D/yBbLD2"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-40e76626170so37624705e9.2
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 07:21:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1705936873; x=1706541673; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
+         :to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=3NSmP683nHsYZ+QYwFDjWG0Am9VIQRDzOaWrn4+k4gg=;
+        b=D/yBbLD2Z9NmmMarOc0g3Zy4wqpJ7mmfYz+3x6zxlNkNMqU4w/Qf3lfBsQh0cbDSpD
+         jFCtpNcZFf4yke329Grdm36+MJ9R7xTJ54V8fjPInO4xmgCln5+DRvyw2h/SnpqGOl1H
+         PH5HeLlB5Ofl/8dTQSgbzIbko5kiF0B/Pd1m7tN+PMX2U9eVLrsbB+6dvZ6yqQZWxuCu
+         MF+QTu/jcKUojmGVsCTMh2vBRwQQexgg8obr8Ys4kni+ggRa1dG4/CzAaMewQf/DME29
+         6+zodjrYx5izdXrGgwbA66xkStFN3cmzisE/dSCcu/QPflXYaC57PH7Xx7L/c6UoEJm4
+         B5Ag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705936873; x=1706541673;
+        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
+         :to:from:date:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3NSmP683nHsYZ+QYwFDjWG0Am9VIQRDzOaWrn4+k4gg=;
+        b=dqB8dsZBoxkB4/J6egYm4jytyLoPVEp8UCR+nEuLxpU/keBXNGFevPj3w2Ln5X/UEK
+         tMxg9DLucTcNtK5dudOzdYM1BwUzrWGk5bpmEsOFCiFWLpEpceiY5g+wRh9Y2roooq9M
+         VHpo3Vh/Ck8vfvS4kxhB8An16nuyRS2JG273US/hOOsFuysmywxW+nSpVemKXmYl86EY
+         QaI4cPCKGxSLbnCIbPisjJcWAR/+9UUfsopHNQyO80ca7Wu3EPSCVpscg5vK/j4+bsmL
+         H7/w92V1PZwFMhJPJYwNiCbZnJyQjiZ8TVe2R4ZLrTRBJO4uFGqPDLIbymd2aflnU8tY
+         mSgQ==
+X-Gm-Message-State: AOJu0YxqeyjJFftlTdMp2HNVqRgBCpBlHymLyN0spxOzOfZO4HzWzXXO
+	Gf5i80ZllnklQ0kgnYvy1W6byJHDgKKtPIEZmgvW0uARjtzqw7zj+3GHJpE2jbM=
+X-Google-Smtp-Source: AGHT+IEW7U1TIKg1LwteChy4/AJ3H9LLFV7lw3z54lPa8/SxA8IUIP/Cz3kDcBRnGzAbhGpHLENTEQ==
+X-Received: by 2002:a05:600c:3847:b0:40e:553c:dace with SMTP id s7-20020a05600c384700b0040e553cdacemr2272796wmr.92.1705936873221;
+        Mon, 22 Jan 2024 07:21:13 -0800 (PST)
+Received: from localhost ([102.140.209.237])
+        by smtp.gmail.com with ESMTPSA id jb13-20020a05600c54ed00b0040e418494absm38542327wmb.46.2024.01.22.07.21.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Jan 2024 07:21:13 -0800 (PST)
+Date: Mon, 22 Jan 2024 18:21:00 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Jingoo Han <jingoohan1@gmail.com>
+Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org
+Subject: [PATCH v3 2/2] PCI: dwc: Cleanup in dw_pcie_ep_raise_msi_irq()
+Message-ID: <c5499db2-2c25-4765-b9e0-1fa26da1cc45@moroto.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="nypkyt5neisq55gd"
-Content-Disposition: inline
-In-Reply-To: <20240118184235.618164-1-shakeelb@google.com>
-X-Spam-Level: 
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.com header.s=susede1 header.b=BfN0cFW6
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-3.12 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 MIME_GOOD(-0.20)[multipart/signed,text/plain];
-	 NEURAL_HAM_SHORT(-0.20)[-1.000];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	 DKIM_TRACE(0.00)[suse.com:+];
-	 MX_GOOD(-0.01)[];
-	 RCPT_COUNT_TWELVE(0.00)[12];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:dkim];
-	 SIGNED_PGP(-2.00)[];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+,1:+,2:~];
-	 MID_RHS_NOT_FQDN(0.50)[];
-	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-0.01)[47.96%]
-X-Spam-Score: -3.12
-X-Rspamd-Queue-Id: A497321FD4
-X-Spam-Flag: NO
-
-
---nypkyt5neisq55gd
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <d0d5b689-9437-43cd-8c1f-daa72aeafb2e@moroto.mountain>
+X-Mailer: git-send-email haha only kidding
 
-Hello.
+I recently changed the code in dw_pcie_ep_raise_msix_irq() to use
+ALIGN_DOWN(). The code in dw_pcie_ep_raise_msi_irq() is similar so
+update it to match as well.  (No effect on runtime, just a cleanup).
 
-On Thu, Jan 18, 2024 at 06:42:35PM +0000, Shakeel Butt <shakeelb@google.com=
-> wrote:
-> One of our workloads (Postgres 14) has regressed when migrated from 5.10
-> to 6.1 upstream kernel. The regression can be reproduced by sysbench's
-> oltp_write_only benchmark.
-> It seems like the always on rstat flush in
-> mem_cgroup_wb_stats() is causing the regression.
+Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+---
+v2: Add this patch
+v3: Use ALIGN_DOWN() as a style improvement
 
-Is the affected benchmark running in a non-root cgroup?
+ drivers/pci/controller/dwc/pcie-designware-ep.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-I'm asking whether this would warrant a=20
-  Fixes: fd25a9e0e23b ("memcg: unify memcg stat flushing")=20
-that introduced the global flush (in v6.1) but it was removed later in=20
-  7d7ef0a4686a ("mm: memcg: restore subtree stats flushing")=20
-(so v6.8 could be possibly unaffected).
+diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+index 51679c6702cf..1c8d2e938851 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-ep.c
++++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+@@ -483,8 +483,8 @@ int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
+ 		msg_data = dw_pcie_ep_readw_dbi(ep, func_no, reg);
+ 	}
+ 	aligned_offset = msg_addr_lower & (epc->mem->window.page_size - 1);
+-	msg_addr = ((u64)msg_addr_upper) << 32 |
+-			(msg_addr_lower & ~aligned_offset);
++	msg_addr = ((u64)msg_addr_upper) << 32 | msg_addr_lower;
++	msg_addr = ALIGN_DOWN(msg_addr, epc->mem->window.page_size);
+ 	ret = dw_pcie_ep_map_addr(epc, func_no, 0, ep->msi_mem_phys, msg_addr,
+ 				  epc->mem->window.page_size);
+ 	if (ret)
+-- 
+2.43.0
 
-Thanks,
-Michal
-
---nypkyt5neisq55gd
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQQpEWyjXuwGT2dDBqAGvrMr/1gcjgUCZa6HuQAKCRAGvrMr/1gc
-jv0KAP49hs1sQx/Itdzma7JXdOKCH4l9eewELaaWxrVCyuoC0AEA3fgaAGcdTEMr
-hwYxaHAKsxG38pb+QxHQjbOhmP/afgI=
-=9ZXF
------END PGP SIGNATURE-----
-
---nypkyt5neisq55gd--
