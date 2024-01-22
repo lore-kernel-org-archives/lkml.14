@@ -1,119 +1,140 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44D4447F64
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 21:29:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71DD847F6B;
+	Mon, 22 Jan 2024 21:29:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705958958; cv=none; b=teZ+txve78jJka8ZnIiBSY3l4KBHBxgcJRsq+Uo+qx2Uw/t2wtxYTxHKYkl8Vr4EFTJfh5FW60jzfOJvtoHZfUgc4BpPP/zzpSVR4+1BbqoRbiGo1n1tdiw8hxrWgYprxF6Sna6xxFUUKpDO0hO14wq1b4GKvScUVbby1LIZ0sQ=
+	t=1705958973; cv=none; b=n3tjCk+vuN/6ojgtWog0NaOE2RQvYIVPLdevWLDzByxDO2q4xfnBGyFaLFqUT1c5E3/ISN611iDqoGp2Hclty7Oq7FTTjKyOlrivZZtrzJx1bGWUY6AohR48gvuqhOXj0ZT9JTeuydLPmeC4Mg5W1Ww58LmsTbwo5B3pfY2lqLk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705958958; c=relaxed/simple;
-	bh=q2ZzATdMD+D7lCgML0/NsVHxerbvCAXMrcJCKifmWVE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZTca82AqSr3YXxiMU+aZYIboD7eMYj3f51ZcH5vp02r1ZWxqMOEvkBIFPyRu3sIElgi1rDv80zTbW2AeVo9PbMrzuucvFJgVudJ5MXVID9kh7I+JRYUPYb4+sG7wbDfrTgwUBUWVDNnxULVUztffQN/fV1PixthfQUTNzFh5kek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rS1qv-0000Ho-PR; Mon, 22 Jan 2024 22:29:09 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rS1qt-001ga9-T1; Mon, 22 Jan 2024 22:29:07 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rS1qt-005hn7-2b;
-	Mon, 22 Jan 2024 22:29:07 +0100
-Date: Mon, 22 Jan 2024 22:29:07 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Vignesh Raghavendra <vigneshr@ti.com>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
-	Richard Weinberger <richard@nod.at>, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, 
-	Mark Brown <broonie@kernel.org>, linux-mtd@lists.infradead.org, kernel@pengutronix.de, 
-	Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>, Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v2 13/33] mtd: rawnand: fsl_elbc: Let .probe retry if
- local bus is missing
-Message-ID: <33kxj5ij25bzkyhuww5kane2sb2f3euyq3uoudlgegfks3xs4f@ru24kc6z55je>
-References: <cover.1705944943.git.u.kleine-koenig@pengutronix.de>
- <41a042207ef791c4c5bcb46f09f63c40c6aa321b.1705944943.git.u.kleine-koenig@pengutronix.de>
- <20240122191931.17807644@xps-13>
+	s=arc-20240116; t=1705958973; c=relaxed/simple;
+	bh=8coC5yzndgmW8NHa94Ly/wQqor0u5naA8znjh3t16Qo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=R7BhQwph9Q92J4LiNQ+6x4D3zzv6uuYP2BP+cMOKH45+0uWYs9BhUDkbq7PafuNssqdTf8pzUbb9HVBBlYlOi5bblPM5TaX7vwwVQKyYfB6EnnGQ0SE9RLtExB41l7vHPw8pXQh9gVLcFBuL/Upi9eH3xmFJDEgqHwsGZCjReaU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VI5dgmGJ; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VI5dgmGJ"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a29c4bbb2f4so344039866b.1;
+        Mon, 22 Jan 2024 13:29:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1705958969; x=1706563769; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=/Kvowyg4BDpjEfa2PvZ2l1xtf8WF0GFMnDWIWKtXeCc=;
+        b=VI5dgmGJb+mssdogLdX+/eGkdtuNv2VTAqKlinJHBWmiX1DW/JyZhm0+lYNMFOADPy
+         p+N9AmrUvzrQCkAMnpD6O05ArbeLvlvJqzlnB2MUiFyyo97muhfUYx7Xcznk35ooWuRb
+         YzkNlW/0xtH9y3+ZVqrLNeL5AJpQpC68hML0Qsu7Uw3ZO2YC5IKb13VgfoYKva5WmUVo
+         Gw1mHFtyzDFtIA43fN1Ci5Fc/UscAWXGnwlfJ598NAWVK/OUoX6Nw+t5M3s1dwbVMP5L
+         VoZEpztLLvqDdy8sDBW3DRYAeXZxC5fyv+XnqVjDj7BcL7QKAXJSdn/Nqd4o2mNDwnCp
+         DPsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705958969; x=1706563769;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/Kvowyg4BDpjEfa2PvZ2l1xtf8WF0GFMnDWIWKtXeCc=;
+        b=CbC/0CZvyZOA1n8lAhfPm5cvkUvybWhTcypqgQnxGtI/PukO7Z17IAiDO4ZkUeENv4
+         +W3DkMtrv+1IWt2Ru1TYsKj2fiFaD2R4N3oeYQL0o0pjl3gVWRvYybxcBFrX3yK+8GxR
+         whCH7Gt8d7LknoxezuSQOFvWSgt5rZMaky9lGq66aeDU4Xw3tVaPH/AUrPVJZYTWlU6H
+         UgS1mK6jVpnfdRVwbYyOMDg0aFwuqpE0fnNsErVbq2KISJxaed50h6bURhdqlTpSmsmx
+         eVe+rwnuxrO5piOxwnCXD3EYhUnoYz1/ZBcolkCCgrNyjpcRFJJ+9bhyqCoP44jrIJT5
+         CwXw==
+X-Gm-Message-State: AOJu0Yzsn7x9HIQ7+Qx1gISrs7vhWiyj4fAfdgk2gKVORG4z1XzNqvf+
+	HIxVmmxe8p4K/ZfmJC9XjJmTj7HB/AWAxsmwRH+M8Sjj3UOzJ0P+
+X-Google-Smtp-Source: AGHT+IHBMSq5x5P3AlAOWFFkV2o4LwiGphMkUJnjq28gYkopimtyx8ZGY6X0xQO22ZpqxQOxfxCebA==
+X-Received: by 2002:a17:906:3189:b0:a2e:8379:48cc with SMTP id 9-20020a170906318900b00a2e837948ccmr2292288ejy.105.1705958969270;
+        Mon, 22 Jan 2024 13:29:29 -0800 (PST)
+Received: from debian.fritz.box ([93.184.186.109])
+        by smtp.gmail.com with ESMTPSA id j25-20020a1709066dd900b00a26af4d96c6sm13823336ejt.4.2024.01.22.13.29.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Jan 2024 13:29:28 -0800 (PST)
+From: Dimitri Fedrau <dima.fedrau@gmail.com>
+To: 
+Cc: Dimitri Fedrau <dima.fedrau@gmail.com>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Stefan Eichenberger <eichest@gmail.com>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v5 net-next 00/13] net: phy: marvell-88q2xxx: add driver for the Marvell 88Q2220 PHY
+Date: Mon, 22 Jan 2024 22:28:33 +0100
+Message-Id: <20240122212848.3645785-1-dima.fedrau@gmail.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="wpw5yp3sgfojkufj"
-Content-Disposition: inline
-In-Reply-To: <20240122191931.17807644@xps-13>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8bit
 
+Changes in v2:
+	- used defines MDIO_CTRL1_LPOWER and MDIO_PMA_CTRL1_SPEED1000
+	  in mv88q222x_config_aneg_preinit
+	- use genphy_c45_loopback
+	- mv88q2xxx_read_status reads speed, master or slave state when
+	  autonegotiation is enabled
+	- added defines for magic values in mv88q222x_get_sqi
 
---wpw5yp3sgfojkufj
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Changes in v3:
+	- mv88q2xxx_read_status includes autonegotiation case
+	- add support for 100BT1 and 1000BT1 linkmode advertisement
+	- use mv88q2xxx_get_sqi and mv88q2xxx_get_sqi_max, remove
+	  mv88q222x_get_sqi and mv88q222x_get_sqi_max
+	- fix typo: rename mv88q2xxxx_get_sqi and mv88q2xxxx_get_sqi_max to
+	  mv88q2xxx_get_sqi and mv88q2xxx_get_sqi
+	- add define MDIO_MMD_PCS_MV_RX_STAT for magic value 0x8230, documented
+	  in latest datasheets for both PHYs
 
-Hi Miqu=E8l,
+Changes in V4:
+	- clean up init sequence
+	- separate patch for fixing typos in upstreamed code
 
-On Mon, Jan 22, 2024 at 07:19:44PM +0100, Miquel Raynal wrote:
-> u.kleine-koenig@pengutronix.de wrote on Mon, 22 Jan 2024 19:07:08 +0100:
->=20
-> > If during probe fsl_lbc_ctrl_dev is NULL that might just be because the
-> > fsl_lbc driver didn't bind yet. So return -EPROBE_DEFER in this case to
-> > make the driver core retry probing later.
->=20
-> Despite the probable usefulness of this change, I don't see any
-> relationship with the current series. So unless there is a good reason
-> I might take this one through the nand tree.
+Changes in V5:
+	- add missing statics for mv88q222x_revb0_init_seq0 and
+	  mv88q222x_revb0_init_seq1
+	- fix typo in commit message: autonegotiation
+	- fix ordering of Signed-off-by and Reviewed-by in commit messages
+	- add interrupt support for link detection
+	- add suspend / resume ops
+	- add support for internal temperature sensor
+	- add cable test support
+	- call .soft_reset in mv88q2xxx_config_aneg, this makes
+	  mv88q2xxx_config_aneg compatible for Marvell88Q222x devices and
+	  remove mv88q222x_config_aneg which is then just duplicated code
+	- cleanup mv88q2xxx_config_init and make it compatible with
+	  Marvell88Q222x devices
+	- move parts from mv88q222x_config_init to mv88q2xxx_config_init
+	  that are applicable for all Marvell88Q2xxx devices.
 
-This patch indeed doesn't belong into this series. It just happend to be
-in my tree and shuffled into the middle when I sorted the patches by
-subsystem. Note I already sent it separately at
+Dimitri Fedrau (13):
+  net: phy: Add BaseT1 auto-negotiation constants
+  net: phy: Support 100/1000BT1 linkmode advertisements
+  net: phy: c45: detect 100/1000BASE-T1 linkmode advertisements
+  net: phy: marvell-88q2xxx: fix typos
+  net: phy: marvell-88q2xxx: add driver for the Marvell 88Q2220 PHY
+  net: phy: marvell-88q2xxx: add interrupt support for link detection
+  net: phy: marvell-88q2xxx: add suspend / resume ops
+  net: phy: marvell-88q2xxx: add support for temperature sensor
+  net: phy: marvell-88q2xxx: add cable test support
+  net: phy: marvell-88q2xxx: make mv88q2xxx_config_aneg generic
+  net: phy: marvell-88q2xxx: switch to mv88q2xxx_config_aneg
+  net: phy: marvell-88q2xxx: cleanup mv88q2xxx_config_init
+  net: phy: marvell-88q2xxx: remove redundant code
 
-	https://lore.kernel.org/linux-mtd/20240115141245.3415035-2-u.kleine-koenig=
-@pengutronix.de
+ drivers/net/phy/marvell-88q2xxx.c | 634 ++++++++++++++++++++++++++++--
+ drivers/net/phy/phy-c45.c         |   3 +-
+ include/linux/marvell_phy.h       |   1 +
+ include/linux/mdio.h              |   8 +
+ include/uapi/linux/mdio.h         |   2 +
+ 5 files changed, 618 insertions(+), 30 deletions(-)
 
-> Also, what about a Fixes/Cc: stable tag here?
+-- 
+2.39.2
 
-The problem exists since
-
-	3ab8f2a2e701 ("P4080/eLBC: Make Freescale elbc interrupt common to elbc de=
-vices")
-
-which was included in v2.6.37-rc1. At that time there was no
-EPROBE_DEFER yet. I think I wouldn't add a Fixes: line for that, but
-feel free to add one if you think there should be one.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---wpw5yp3sgfojkufj
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmWu3iIACgkQj4D7WH0S
-/k46Fgf+LprTnc7f6tqg7kcdC7LeG2KTK7vIZ1pjmaQZRz1lnlpCnTrHGPFgCHuz
-CA50m2x1CNkDqx46qG60SaYDCk0/+/7HzBEhlfOt8DP+8U+qmF/aTkigmWrX6o1r
-uF8FpRxF+Wf5sr32sPV98njmq9Z3rZBHJ3f9vN44TN92xlRvwSSWT/TwqL6clpuw
-wV+dOL8KOmE+6jFkp5qsG9x5IRs6fvssMcLchkxuf2nHSAF5rh7NgY7TRFo7QZn6
-b96c8ttoIn08z8Yl7StEnB5qhFCF2SB3YR2QRMnpGLR0p1H/f6VYncn10/pEFbu2
-Nke5eCouKGSKTpSfwWDJ3LjplrnZNA==
-=QV09
------END PGP SIGNATURE-----
-
---wpw5yp3sgfojkufj--
