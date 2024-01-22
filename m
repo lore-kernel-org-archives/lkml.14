@@ -1,128 +1,121 @@
-Received: from mail-oo1-f50.google.com (mail-oo1-f50.google.com [209.85.161.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B22A3A8D5
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 10:23:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A07413D0D8;
+	Mon, 22 Jan 2024 10:24:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705919012; cv=none; b=JusWuSGI5UtbJ02PxzNnC8RCIWSada00ZU23hfM4clnMdrEJjHIfdXR2wcOm4NkSfYnhgDt04DdwqRCP8s0gRZHKw3r0u0Hs/RvPJe4TmVFJZ/C9u5ZKAD9YKlHls4gXMPrjM8O609TAslvdZDpKWPqSiO6VTjhOeL3OZHqyYbk=
+	t=1705919052; cv=none; b=hEPLmzpGWpCa39ZOykzMwpe43y+ZpFSbBGlsJqdZJpbuAAPwZig3jfaMXU5rIwRFb5x9gbxCT8Ap5Y4D/IrhWkViGlP7qYn47gg/CL3dKVFThBQIE/MeagNsp4bMtvt8kEHlYDa46qrDAYwYoyqxO9c+/cSyEb44m7mG/MhNVx8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705919012; c=relaxed/simple;
-	bh=3AmijIeD2kUt9jIKU4EfDUx5Yg/WBeq2ovXNrSvWzB4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Crgu5cRw9o0nllsc1ILbLCZhi5VAG8ahah2OCxdsuI1m9+Xtbl+6Iz0zMCPHF/cD8j6Wmcj3k1Yxfh/yzU+iSCAkd0JgFGWL0KYs3TI9sFg7QIMGlrQEypzfYmImrwkCOF6ppBTL0ioi0XuLhtNQ40eI4h/4FMtBmMOz/6Zqiko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=ODwehQH0; arc=none smtp.client-ip=209.85.161.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ODwehQH0"
-Received: by mail-oo1-f50.google.com with SMTP id 006d021491bc7-59923a4ee6cso1136420eaf.1
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 02:23:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1705919009; x=1706523809; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=losw5b7MbaVXvh621rKMQxyUdxFbdvo0MVniZWvwIA4=;
-        b=ODwehQH0qziVkdtlAig+Ay2OwYfPOhhyU+0EXkJKfFl8A15uNW3RxSRMwthm23AZGw
-         NT+lzhK6HyOtw2V5S46Kk4QGTrkJuhSrz/1akaz1PtMohly8ZEydRFqEkWUSv8uSX0pl
-         RB3D21Uax5NLLX8x6JTc5ccV8yidnQt7wdgdY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705919009; x=1706523809;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=losw5b7MbaVXvh621rKMQxyUdxFbdvo0MVniZWvwIA4=;
-        b=upLjx1p0ZW0AQJkYIMhp8gOMhsPTM3IzAO9xjI55k53PfGRAnd0iwaxGcxGgqtUvoc
-         f1aETbSvP8VAKRbY0VaFvQTEYyOKOS2HPIXiueiwpj6zimermxePVzcGl67bVSgCxbf9
-         hdyig+ZLx5ZBFOHCFSWwN12/YuO2dadyiGm94Pe6TcyJXP3loe/HlAEWL3gGtGTX1amH
-         4Xcq6T4syNbkSe+S7kOnKOaF9pqxz557kH0RUA5fIPoDPwb5en4iPfzAnbDPzhQLEcY4
-         FIGQ1UlOHTz4CPSj/2OE4ufRtFgiURVUBBg25M5RPElBUwyWNP5kvB6Yj4diFBXIu1tq
-         zWRg==
-X-Gm-Message-State: AOJu0YyNSbIYMWPubrz6y9zshT1tyAnsMYcNnvhcbvBEHlWhhuga2wYR
-	a8kbhzJ7uWyYbARWD/wbJWHrgejnNudWzAGLbNSAUsyWB7Wdilw60W8tM/UEkw==
-X-Google-Smtp-Source: AGHT+IGg6TNkGvfYg87GZ0KqIuGgeoQoRTtY1pWTA8Zibi1zh7cNKUTM822h5KXdwP2qCO/WDm37zQ==
-X-Received: by 2002:a05:6358:7e9d:b0:176:520c:c6a with SMTP id o29-20020a0563587e9d00b00176520c0c6amr1166286rwn.9.1705919009247;
-        Mon, 22 Jan 2024 02:23:29 -0800 (PST)
-Received: from wenstp920.tpe.corp.google.com ([2401:fa00:1:10:262c:66a:f637:81b7])
-        by smtp.gmail.com with ESMTPSA id s66-20020a635e45000000b005cf9472aaf8sm8117986pgb.25.2024.01.22.02.23.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jan 2024 02:23:28 -0800 (PST)
-From: Chen-Yu Tsai <wenst@chromium.org>
-To: Zhengchao Shao <shaozhengchao@huawei.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	David Ahern <dsahern@kernel.org>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>
-Cc: Chen-Yu Tsai <wenst@chromium.org>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH netdev] ipv6: Make sure tcp accept_queue's spinlocks are initialized
-Date: Mon, 22 Jan 2024 18:23:20 +0800
-Message-ID: <20240122102322.1131826-1-wenst@chromium.org>
-X-Mailer: git-send-email 2.43.0.429.g432eaa2c6b-goog
+	s=arc-20240116; t=1705919052; c=relaxed/simple;
+	bh=Rr2AQ7zd4vwMdcv471OHCjd5FyGE0fpWiiEpedaYODQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=A3JQ7OjI7iEJ0bxHUxrc5Mmf0vxXokueJHVrDQ2qIPbhpNZzhrbUmsaglsfIgbulCkifGVo1ox7qwpgS5Yal2mEIejyg0jQH0/unWpBJBq0VIsD7GWWA+3WYKu+DFdJACeuf8BoxF9ToNqMuSkj40xszE3X3Vipb4tJFWm2Muo4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1rRrTM-0008R4-F5; Mon, 22 Jan 2024 11:24:08 +0100
+Message-ID: <0253854a-e5f9-4316-bec3-61aaf3ebfd1a@leemhuis.info>
+Date: Mon, 22 Jan 2024 11:24:06 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [regression] ath11k broken in v6.7
+Content-Language: en-US, de-DE
+To: Kalle Valo <kvalo@kernel.org>
+Cc: ath11k@lists.infradead.org,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <874jfjiolh.fsf@kernel.org> <87frytg7b8.fsf@kernel.org>
+ <878r4lg3t8.fsf@kernel.org> <87jzo13jmf.fsf@kernel.org>
+ <94150b26-bdd9-49c2-82a1-26ff46c9d32a@leemhuis.info>
+ <87fryp3he0.fsf@kernel.org>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <87fryp3he0.fsf@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1705919050;08e9ea00;
+X-HE-SMSGID: 1rRrTM-0008R4-F5
 
-Commit 198bc90e0e73 ("tcp: make sure init the accept_queue's spinlocks
-once") moved the TCP accept_queue spinlock initialization from a common
-core function to two places for two cases: the common accept callback,
-and the socket create callback.
+On 22.01.24 09:24, Kalle Valo wrote:
+> "Linux regression tracking (Thorsten Leemhuis)"
+> <regressions@leemhuis.info> writes:
+>> On 22.01.24 08:36, Kalle Valo wrote:
+>>> Kalle Valo <kvalo@kernel.org> writes:
+>>>> Kalle Valo <kvalo@kernel.org> writes:
+>>>>> Kalle Valo <kvalo@kernel.org> writes:
+>>>>>>
+>>>>>> Proposed fix:
+>>>>>> https://patchwork.kernel.org/project/linux-wireless/patch/20240111170629.1257217-1-benjamin@sipsolutions.net/
+>>>>> The fix is now applied:
+>>>>> https://git.kernel.org/pub/scm/linux/kernel/git/wireless/wireless.git/commit/?id=556857aa1d0855aba02b1c63bc52b91ec63fc2cc
+>>>>> I'll try to use regzbot for the first time, let's see how it goes:
+>>>>> #regzbot introduced: 0a3d898ee9a8 ^
+>>>> Forgot to include the bug report:
+>>>>
+>>>> #regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=218364
+>>
+>> FWIW, that usage was slightly off and not how it's supposed to be done.
+>> But whatever, let's ignore that. I'm reworking things currently
+>> slightly, as you are not the first one that slightly got mislead -- and
+>> the newer commands will hopefully be mire intuitive.
+> 
+> Just to educate myself, how should I have done it? (But feel free to
+> skip the question if you are busy)
 
-For the second case, only AF_INET (IPv4) was considered. This results
-in a lockdep error when accepting an incoming IPv6 TCP connection.
+I think that's not worth it, as I hope to introduce the new commands in
+the near future (but you know how it is with the last 5 to 10
+percent...). But let me show you how it's then supposed to be done in
+this situation, that way you can give early feedback:
 
-    INFO: trying to register non-static key.
-    The code is fine but needs lockdep annotation, or maybe
-    you didn't initialize this object before use?
-    turning off the locking correctness validator.
-    Call trace:
-    ... <stack dump> ...
-    register_lock_class (kernel/locking/lockdep.c:977 kernel/locking/lockdep.c:1289)
-    __lock_acquire (kernel/locking/lockdep.c:5014)
-    lock_acquire (./arch/arm64/include/asm/percpu.h:40 kernel/locking/lockdep.c:467 kernel/locking/lockdep.c:5756 kernel/locking/lockdep.c:5719)
-    _raw_spin_lock (./include/linux/spinlock_api_smp.h:134 kernel/locking/spinlock.c:154)
-    inet_csk_complete_hashdance (net/ipv4/inet_connection_sock.c:1303 net/ipv4/inet_connection_sock.c:1355)
-    tcp_check_req (net/ipv4/tcp_minisocks.c:653)
-    tcp_v6_rcv (net/ipv6/tcp_ipv6.c:1837)
-    ip6_protocol_deliver_rcu (net/ipv6/ip6_input.c:438)
-    ip6_input_finish (./include/linux/rcupdate.h:779 net/ipv6/ip6_input.c:484)
-    ip6_input (./include/linux/netfilter.h:314 ./include/linux/netfilter.h:308 net/ipv6/ip6_input.c:492)
-    ip6_sublist_rcv_finish (net/ipv6/ip6_input.c:86 (discriminator 3))
-    ip6_sublist_rcv (net/ipv6/ip6_input.c:317)
-    ipv6_list_rcv (net/ipv6/ip6_input.c:326)
-    __netif_receive_skb_list_core (net/core/dev.c:5577 net/core/dev.c:5625)
-    netif_receive_skb_list_internal (net/core/dev.c:5679 net/core/dev.c:5768)
-    napi_complete_done (./include/linux/list.h:37 (discriminator 2) ./include/net/gro.h:440 (discriminator 2) ./include/net/gro.h:435 (discriminator 2) net/core/dev.c:6108 (discriminator 2))
-    ... <device callback> ...
+  #regzbot report: https://bugzilla.kernel.org/show_bug.cgi?id=218364
+  #regzbot introduced: 0a3d898ee9a8
 
-Fix this by adding the appropriate code to AF_INET6 (IPv6) socket create
-callback, mirroring what was added for AF_INET.
+That "#regzbot report" will be new and make it more obvious to users
+what regzbot should consider to be the report (e.g. what Link:/Closes:
+tags later in commits fixing the issue will link to). You used "#regzbot
+introduced: 0a3d898ee9a8 ^" and due to the "^" it assumed the start of
+this thread would be the report (side note: mixing that aspect into the
+"introduced" command was a stupid idea anyway.).
 
-Fixes: 198bc90e0e73 ("tcp: make sure init the accept_queue's spinlocks once")
-Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
----
- net/ipv6/af_inet6.c | 3 +++
- 1 file changed, 3 insertions(+)
+That "#regzbot link:" will vanish as well (at least from the docs, it
+will remain to be supported), as people use it wrong in various
+different ways: for duplicates, reports (like your did), patch
+submissions fixing the issue (then 'regzbot monitor' should have been
+used) among others. Which is totally understandable now that I look at
+it. That's why it will be replaced by "#regzbot related: <url>" to avoid
+any connection with the Link: tag used in commits; for duplicates
+"#regzbot dup:" will stay around.
 
-diff --git a/net/ipv6/af_inet6.c b/net/ipv6/af_inet6.c
-index 13a1833a4df5..959bfd9f6344 100644
---- a/net/ipv6/af_inet6.c
-+++ b/net/ipv6/af_inet6.c
-@@ -199,6 +199,9 @@ static int inet6_create(struct net *net, struct socket *sock, int protocol,
- 	if (INET_PROTOSW_REUSE & answer_flags)
- 		sk->sk_reuse = SK_CAN_REUSE;
- 
-+	if (INET_PROTOSW_ICSK & answer_flags)
-+		inet_init_csk_locks(sk);
-+
- 	inet = inet_sk(sk);
- 	inet_assign_bit(IS_ICSK, sk, INET_PROTOSW_ICSK & answer_flags);
- 
--- 
-2.43.0.429.g432eaa2c6b-goog
+>> Great, thx. Hope it reached mainline soon. Maybe once it's there you or
+>> I should tell Greg to pick this up quickly for stable given that it
+>> apparently "might affect quite a few people".
+> I'll try to remember that but the thing is that I don't really follow
+> stable releases.
 
+Let me do it, it's easy for me. And FWIW, I don't even follow the stable
+releases for that, I just drop Greg a mail when I notice the patch
+reached mainline through the weekly net merge. He'll take care of the rest.
+
+> I wish there would be a person who could follow stable
+> releases from wireless perspective and make sure everything is ok there.
+
+Maybe at some point regression tracking can help somewhat with that. But
+I still have to fix a few things to make people use it and scale it up.
+
+Side note: some people seem to have gotten the impression that I care a
+lot about *all* stable/longterm kernels. Let me use this opportunity to
+say that it's not really the case. I fully understand and respect that
+those series are a somewhat separate thing some developers don't want to
+be involved in (especially the older trees). But the thing is: the
+latest stable tree is what we tell users to use -- and something quite a
+few important distros ship as their regular kernel these days. That's
+why I take special care of regression that found there.
+
+Ciao, Thorsten
