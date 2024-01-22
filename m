@@ -1,108 +1,192 @@
-Received: from relay01.th.seeweb.it (relay01.th.seeweb.it [5.144.164.162])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97B5355C07;
-	Mon, 22 Jan 2024 15:15:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.144.164.162
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B36E13D4FF;
+	Mon, 22 Jan 2024 15:15:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705936554; cv=none; b=bUj4WMzti1vGXNVX9AdOJcDclxZK/g9Xfo6/X6oiy12iO/KtjEKhHRX1iZh+Hpp7Fc1YFvltCgetmu/KhiO3xyR5350Y6GHiLkinh7fVUAKZBrQuqBNT/Lp68Q3kOaC65zVn3kqpYk4gjmMCdoi3c+aICvJ0kfhyW5OMZ1ShRso=
+	t=1705936553; cv=none; b=d3/rfVvYx4ObM7aT9Rg5z2WsT1ikZOXB/g5mioY2i3ASCbpnQ7GW914MpqY+zebBAKRaW33wQv/6Z2dcx17F8S/XNXeeMB3zAi+2U6VLtivN2XOzWCCGUIFCgfEQPlmUff+Acn5sVg4WuIUB1sHyuNz5Kcffwwsh/qNxGi5k9/0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705936554; c=relaxed/simple;
-	bh=JLs25aczWYuLmQs1zTJgP5QEDQhbdQ+gViZDEdCvxFQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=E+PpnbScrrIavXqRvbTx8s/9o7LsT7o9HmwCgcpqmfFXLgT9pwtoixH6DrmYfX6tmOsqBWdaxUXSjZuMbXZ1nM+8cJoZNqDAjjIrl6v/aF/2nvpO8oGnRTBIngHOlBPRwjE23RSs8SMZj93/JcNWcj+pESOG0xRH89McCy3+6qE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=somainline.org; spf=pass smtp.mailfrom=somainline.org; arc=none smtp.client-ip=5.144.164.162
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=somainline.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=somainline.org
-Received: from SoMainline.org (82-72-63-87.cable.dynamic.v4.ziggo.nl [82.72.63.87])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by m-r1.th.seeweb.it (Postfix) with ESMTPSA id C1AFE20046;
-	Mon, 22 Jan 2024 16:15:48 +0100 (CET)
-Date: Mon, 22 Jan 2024 16:15:47 +0100
-From: Marijn Suijten <marijn.suijten@somainline.org>
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: Bjorn Andersson <andersson@kernel.org>, 
-	Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
-	Conor Dooley <conor+dt@kernel.org>, ~postmarketos/upstreaming@lists.sr.ht, 
-	Luca Weiss <luca@z3ntu.xyz>, Adam Skladowski <a39.skl@gmail.com>, 
-	Konrad Dybcio <konrad.dybcio@linaro.org>, Martin Botka <martin.botka@somainline.org>, 
-	Jami Kettunen <jami.kettunen@somainline.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: Re: [PATCH v2 6/6] arm64: dts: qcom: msm8956-loire: Add SD Card
- Detect to SDC2 pin states
-Message-ID: <quqkqv4eer7tmubvsqkbuwammqaa5qqxojedsh42ryax3laah7@v7khc2cq4eti>
-References: <20240121-msm8976-dt-v2-0-7b186a02dc72@somainline.org>
- <20240121-msm8976-dt-v2-6-7b186a02dc72@somainline.org>
- <9d3623f8-697b-44ab-a9eb-9d2d305b0e5c@collabora.com>
- <iatieesr52v5au4kkovw3gc34tn3snt454grq7le66oar6x7t4@4jfwxgxov36v>
- <48946c81-dad0-4e2d-9569-5fbac1675bb6@collabora.com>
+	s=arc-20240116; t=1705936553; c=relaxed/simple;
+	bh=Tmd0Rw9taJ7MvUyeQrTPdsDUhk5RUwqzn90stgcR4mc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=TotF6uvbka7Q0XrnEvtJj0JBOj/Ud5r4VYzbg3WSXaYPvzoqo6E0X/HDZmSV8LdklzEznNVI6tvrAgZEgrrno+F2YArSPY5UlBJXDh02vhrxx4S8z6AXlFy6H+GFyNhoMq+sRQmecND64ECSAVT3223kGd/bUoqfDCiYq0+UzoQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sKlUiI97; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sKlUiI97"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F26CC43394;
+	Mon, 22 Jan 2024 15:15:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705936552;
+	bh=Tmd0Rw9taJ7MvUyeQrTPdsDUhk5RUwqzn90stgcR4mc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=sKlUiI97Ow7zRoQDB1ay+gNNZllZF0VK9RBRVzUcLuJbAK8dfan0y8T8EGXeGq5cZ
+	 kXFVmbySWT8qW1EpguokElpOQ7Brh/94hhRNq9z5aG3CS8zO7l53MVwzA48xpIaRMu
+	 SVxFj/Ekr9LZMcNtmTlRSON4NRlsleNVZJQv/SshX4j1oCfaIr7RtHVvSCOFLkXlpY
+	 RGddPEyhBmoFAwm2fJ2qG4XVDBWn/xirpaSJyZc7GtWSa3ndwglPkg9sQriHTngwFd
+	 sstWHPZYHtt53ga2ql/HwLTZWewZ+aK506VFlZWuRhpsfdW1deH/a6cPPIhNLzTLwG
+	 rqJnCPhEZMpsQ==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+	"H . Nikolaus Schaller" <hns@goldelico.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Sebastian Reichel <sebastian.reichel@collabora.com>,
+	Tony Lindgren <tony@atomide.com>,
+	Sasha Levin <sashal@kernel.org>,
+	maarten.lankhorst@linux.intel.com,
+	tzimmermann@suse.de,
+	airlied@gmail.com,
+	daniel@ffwll.ch,
+	dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.10 12/28] drm/mipi-dsi: Fix detach call without attach
+Date: Mon, 22 Jan 2024 10:14:38 -0500
+Message-ID: <20240122151521.996443-12-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240122151521.996443-1-sashal@kernel.org>
+References: <20240122151521.996443-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <48946c81-dad0-4e2d-9569-5fbac1675bb6@collabora.com>
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 5.10.208
+Content-Transfer-Encoding: 8bit
 
-On 2024-01-22 15:59:37, AngeloGioacchino Del Regno wrote:
-> Il 22/01/24 14:49, Marijn Suijten ha scritto:
-> > On 2024-01-22 12:48:27, AngeloGioacchino Del Regno wrote:
-> >> Il 21/01/24 23:33, Marijn Suijten ha scritto:
-> >>> In addition to the SDC2 pins, set the SD Card Detect pin in a sane state
-> >>> to be used as an interrupt when an SD Card is slotted in or removed.
-> >>>
-> >>> Signed-off-by: Marijn Suijten <marijn.suijten@somainline.org>
-> >>> ---
-> >>>    arch/arm64/boot/dts/qcom/msm8956-sony-xperia-loire.dtsi | 17 +++++++++++++++++
-> >>>    1 file changed, 17 insertions(+)
-> >>>
-> >>> diff --git a/arch/arm64/boot/dts/qcom/msm8956-sony-xperia-loire.dtsi b/arch/arm64/boot/dts/qcom/msm8956-sony-xperia-loire.dtsi
-> >>> index b0b83edd3627..75412e37334c 100644
-> >>> --- a/arch/arm64/boot/dts/qcom/msm8956-sony-xperia-loire.dtsi
-> >>> +++ b/arch/arm64/boot/dts/qcom/msm8956-sony-xperia-loire.dtsi
-> >>> @@ -264,10 +264,27 @@ &sdhc_1 {
-> >>>    	status = "okay";
-> >>>    };
-> >>>    
-> >>> +&sdc2_off_state {
-> >>> +	sd-cd-pins {
-> >>> +		pins = "gpio100";
-> >>> +		function = "gpio";
-> >>> +		drive-strength = <2>;
-> >>> +		bias-disable;
-> >>> +	};
-> >>
-> >> Are you sure that you really don't want card detect during system suspend?
-> > 
-> > Does it make a difference if the rest of pinctrl and the SDHCI controller are
-> > also turned off?
-> > 
-> >> You could simply add a sdc2-cd-pins out of sdc2_{on,off}_state and add use it for
-> >> both default and sleep.
-> > 
-> > This sounds close to what Konrad suggested by using a new block wit its own
-> > label rather than extending the existing state.
-> > 
-> >> pinctrl-0 = <&sdc2_on_state>, <&sdc2_card_det_n>;
-> >> pinctrl-1 = <&sdc2_off_state>;
-> > 
-> > You said both, but it's not in pinctrl-1 here?  (And might unselect bias-pull-up
-> > implicitly instead of explicitly selecting bias-disable via an off node?)
-> > 
-> 
-> I meant to add it to both, sorry.
-> 
-> In any case, take the typo'ed example as a simplification of your first version :-)
+From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
 
-Okay, I'll resend a version that creates a new pinctrl node and applies it to both cases.
+[ Upstream commit 90d50b8d85834e73536fdccd5aa913b30494fef0 ]
 
-Unfortunately I can no longer test and confirm that it makes a difference
-to have the card-detect IRQ always biased, even while the SDHCI controller
-is "asleep" or off, so I'll trust your word for it.  If I remember correctly
-downstream turns it off as well?
+It's been reported that DSI host driver's detach can be called without
+the attach ever happening:
 
-- Marijn
+https://lore.kernel.org/all/20230412073954.20601-1-tony@atomide.com/
+
+After reading the code, I think this is what happens:
+
+We have a DSI host defined in the device tree and a DSI peripheral under
+that host (i.e. an i2c device using the DSI as data bus doesn't exhibit
+this behavior).
+
+The host driver calls mipi_dsi_host_register(), which causes (via a few
+functions) mipi_dsi_device_add() to be called for the DSI peripheral. So
+now we have a DSI device under the host, but attach hasn't been called.
+
+Normally the probing of the devices continues, and eventually the DSI
+peripheral's driver will call mipi_dsi_attach(), attaching the
+peripheral.
+
+However, if the host driver's probe encounters an error after calling
+mipi_dsi_host_register(), and before the peripheral has called
+mipi_dsi_attach(), the host driver will do cleanups and return an error
+from its probe function. The cleanups include calling
+mipi_dsi_host_unregister().
+
+mipi_dsi_host_unregister() will call two functions for all its DSI
+peripheral devices: mipi_dsi_detach() and mipi_dsi_device_unregister().
+The latter makes sense, as the device exists, but the former may be
+wrong as attach has not necessarily been done.
+
+To fix this, track the attached state of the peripheral, and only detach
+from mipi_dsi_host_unregister() if the peripheral was attached.
+
+Note that I have only tested this with a board with an i2c DSI
+peripheral, not with a "pure" DSI peripheral.
+
+However, slightly related, the unregister machinery still seems broken.
+E.g. if the DSI host driver is unbound, it'll detach and unregister the
+DSI peripherals. After that, when the DSI peripheral driver unbound
+it'll call detach either directly or using the devm variant, leading to
+a crash. And probably the driver will crash if it happens, for some
+reason, to try to send a message via the DSI bus.
+
+But that's another topic.
+
+Tested-by: H. Nikolaus Schaller <hns@goldelico.com>
+Acked-by: Maxime Ripard <mripard@kernel.org>
+Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Tested-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20230921-dsi-detach-fix-v1-1-d0de2d1621d9@ideasonboard.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/gpu/drm/drm_mipi_dsi.c | 17 +++++++++++++++--
+ include/drm/drm_mipi_dsi.h     |  2 ++
+ 2 files changed, 17 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/gpu/drm/drm_mipi_dsi.c b/drivers/gpu/drm/drm_mipi_dsi.c
+index 0c806e99e869..83918ac1f608 100644
+--- a/drivers/gpu/drm/drm_mipi_dsi.c
++++ b/drivers/gpu/drm/drm_mipi_dsi.c
+@@ -300,7 +300,8 @@ static int mipi_dsi_remove_device_fn(struct device *dev, void *priv)
+ {
+ 	struct mipi_dsi_device *dsi = to_mipi_dsi_device(dev);
+ 
+-	mipi_dsi_detach(dsi);
++	if (dsi->attached)
++		mipi_dsi_detach(dsi);
+ 	mipi_dsi_device_unregister(dsi);
+ 
+ 	return 0;
+@@ -323,11 +324,18 @@ EXPORT_SYMBOL(mipi_dsi_host_unregister);
+ int mipi_dsi_attach(struct mipi_dsi_device *dsi)
+ {
+ 	const struct mipi_dsi_host_ops *ops = dsi->host->ops;
++	int ret;
+ 
+ 	if (!ops || !ops->attach)
+ 		return -ENOSYS;
+ 
+-	return ops->attach(dsi->host, dsi);
++	ret = ops->attach(dsi->host, dsi);
++	if (ret)
++		return ret;
++
++	dsi->attached = true;
++
++	return 0;
+ }
+ EXPORT_SYMBOL(mipi_dsi_attach);
+ 
+@@ -339,9 +347,14 @@ int mipi_dsi_detach(struct mipi_dsi_device *dsi)
+ {
+ 	const struct mipi_dsi_host_ops *ops = dsi->host->ops;
+ 
++	if (WARN_ON(!dsi->attached))
++		return -EINVAL;
++
+ 	if (!ops || !ops->detach)
+ 		return -ENOSYS;
+ 
++	dsi->attached = false;
++
+ 	return ops->detach(dsi->host, dsi);
+ }
+ EXPORT_SYMBOL(mipi_dsi_detach);
+diff --git a/include/drm/drm_mipi_dsi.h b/include/drm/drm_mipi_dsi.h
+index 31ba85a4110a..3c0d1495c062 100644
+--- a/include/drm/drm_mipi_dsi.h
++++ b/include/drm/drm_mipi_dsi.h
+@@ -161,6 +161,7 @@ struct mipi_dsi_device_info {
+  * struct mipi_dsi_device - DSI peripheral device
+  * @host: DSI host for this peripheral
+  * @dev: driver model device node for this peripheral
++ * @attached: the DSI device has been successfully attached
+  * @name: DSI peripheral chip type
+  * @channel: virtual channel assigned to the peripheral
+  * @format: pixel format for video mode
+@@ -176,6 +177,7 @@ struct mipi_dsi_device_info {
+ struct mipi_dsi_device {
+ 	struct mipi_dsi_host *host;
+ 	struct device dev;
++	bool attached;
+ 
+ 	char name[DSI_DEV_NAME_SIZE];
+ 	unsigned int channel;
+-- 
+2.43.0
+
