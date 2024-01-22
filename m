@@ -1,261 +1,218 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A6F259168;
-	Mon, 22 Jan 2024 23:55:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0383E5B206
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 23:55:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705967712; cv=none; b=c1Xx9byd5QeW4PvU3CjePqXA1z5WtUqrAo6C2JgzqE0M+zOf2jUfv+ZNwc79SWihkH04qC/PIjh71o/JeBeowjQf55afF717QO4qpBeANylAHQOFOURm7LUQEVb2BWRO4AiQhmHN/PCauodg2mbnveFK7ZXJGTXgtUSBo8Aakns=
+	t=1705967715; cv=none; b=kW62f7uLXG7MeorK8pB7el9Waln5hmvLKwuov4tHgnk3TzRfo3gfGwYFT0n+URFvS4b/O0d5j5eitx0kZ4dxpUpRG04XDdpxlu/Skuhrpqh65n+tRwCPtL7r2XuhgBKSDau/wkEhiyWx/FfYNmXB58gs9HiJz9tVBmUqyXQ0Jzg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705967712; c=relaxed/simple;
-	bh=u8CBzHeXNtJ5wZuIzxt5cMq0Z6ffGX8b1vUuEX2TZTs=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=iwDbXIJONA2S08zwR4uoct+aP1DfgOGg+Nv+XEoY8B1BBl689j0tqHLpA3KBJrKBRAh9Fz2fl0nB4wTSNwyg9LbCGZAoFV/hqX4n9Vl8fp0vLVy7xanCh6fzoei8B/oYrLqfRJz7agRYpG2I+lIIwRDnBrg2gLHfcM3n/fpV/XI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ggX2WGHh; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1705967715; c=relaxed/simple;
+	bh=KAzyQ5ylbIcWiznTnx0Xl3VSYEGyHF95ErcUKU5EJPk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qaWnycG9zkvJUnxlutqt1XpQepSQnK/bV7UZ0tjEsk0o25ZBWMg+VN/GCtJaPW2jL8O61FG2frtGiNjSNCEmn/aojwTSlukhNARwxpBYKHtTph0T0EDIuZT9Mr7P7DDK/oe6/qgZRU7QhR8dYpq3eKh4x34Bqic33kXC2EE8bYI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=zH0MpLQn; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ggX2WGHh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1705967710; x=1737503710;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=u8CBzHeXNtJ5wZuIzxt5cMq0Z6ffGX8b1vUuEX2TZTs=;
-  b=ggX2WGHhRuP8OWh9pitDK+zmgKfZBhUZ1aM3X5kM66IUaz1VLZX1HhD2
-   GdaqZSDjIaLdWeRifgthpqs2oWBH+gFA/68nLxaASpcpsCAoQIDoKfyCn
-   yS8AymLhimr4mtqvyd1ntdesjLRDSZxzdLuclb4FIHDpkSbc5Mm1UkkS2
-   eprI4oII/b5Z3FCj8aXP8tMpQkA8anhe0E1mdMpMsovZUCFl5ru3EZ57i
-   5pOTfHH9D5d/6tfr7+zZkDSvgPqxKO5rbkjOPJfLKxCgh7OE7Nrshlysk
-   ueX2/+MeRyTTjH9jcq3Mlir8JKawZYUNsPbT0c80iUjKmrYxyiJbrPrzi
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10961"; a="1243797"
-X-IronPort-AV: E=Sophos;i="6.05,212,1701158400"; 
-   d="scan'208";a="1243797"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 15:55:09 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10961"; a="819888503"
-X-IronPort-AV: E=Sophos;i="6.05,212,1701158400"; 
-   d="scan'208";a="819888503"
-Received: from ls.sc.intel.com (HELO localhost) ([172.25.112.31])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 15:55:08 -0800
-From: isaku.yamahata@intel.com
-To: kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: isaku.yamahata@intel.com,
-	isaku.yamahata@gmail.com,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	erdemaktas@google.com,
-	Sean Christopherson <seanjc@google.com>,
-	Sagi Shahar <sagis@google.com>,
-	Kai Huang <kai.huang@intel.com>,
-	chen.bo@intel.com,
-	hang.yuan@intel.com,
-	tina.zhang@intel.com
-Subject: [PATCH v18 023/121] KVM: TDX: Make KVM_CAP_MAX_VCPUS backend specific
-Date: Mon, 22 Jan 2024 15:52:59 -0800
-Message-Id: <ed33ebe29b231e8e657cd610a983fa603b10f530.1705965634.git.isaku.yamahata@intel.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <cover.1705965634.git.isaku.yamahata@intel.com>
-References: <cover.1705965634.git.isaku.yamahata@intel.com>
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="zH0MpLQn"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1d6fbaaec91so30182055ad.3
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 15:55:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1705967713; x=1706572513; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=RGk235mHGOuLFyUX2ZxszOcar+oRQLJEt08BYqJiusU=;
+        b=zH0MpLQnWuk73iOnGC4chtYUxJa0qO5/WwuPz8h7L1ZipoHEBYvGsrLYoHkEAXOJQS
+         70rboSeJIaBWx5L418caG3bU/3yoJz5s5awiQxmOSH0aD4vocPHQMUCZlkcrEg0M9lbB
+         7na9sl+drtu8tpOb+Akza6iIz5ETJLNc9MrQHGU7Z8ir5pAeIYkQJ8aeh7yQBCWhBB2M
+         2xkzIpXzRDgNll0hZXlmOLwPned2k0efDsKMBIDGGyDThndmIP+DONXBiOHPF9Ak9GYP
+         TOo2Y3CoZSjRTaIfJtcXxgbk/Pc6UFZQvR32IobcDoqDW/s8VgN1eT30opbbUTo9/cis
+         xgGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705967713; x=1706572513;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RGk235mHGOuLFyUX2ZxszOcar+oRQLJEt08BYqJiusU=;
+        b=q1g3Vq/R7e9SWcDvKUy1mgYwx1kbhmaIH0bPaIartHKqMxstmAb0bdZcIJ4dVIFitu
+         NCH80WYWtiw+W+kUguIZNfCv6BrwGz9/vy+UZsMauZrNp9uGATuKNYqyTEbWBtGDSk+i
+         3f1s2Kb1Kp27JZKKlSCzhFZ/ok/1UXDbglH/sh1vomGeRoPTv1jBgsMhLe+wIG/+SJl8
+         6dtrGjz5Co5EvrKmssGhEQxOSWrYd8Fd5/9O08ZN4XYaV7VZRv7MjXPFB7go0d3DqOGH
+         3Aqm2KGqznqqma/Eu9DrPTvikCgYYPnw5LkL35G0vw3aJK1aIRbh6uNjhDCnXACtWqVt
+         Vulg==
+X-Gm-Message-State: AOJu0Yyi9zdgS08bUGyXGEdsDABY7ikZMw4lv2Dae16/Q/7GtFZ9oXVf
+	+6F2STIzsLL9JOVbcrj+3Fc07z8gtXUXbqV+tTFjSFTiZ/CiS3KNPvpXyksG95I=
+X-Google-Smtp-Source: AGHT+IGlfX9GLJ1dnOiKn3TDuB3TFlx7HAkf+GG7l4UHuUlr4oOT5ppL6HIemKoYEiunX/cBMMzKrg==
+X-Received: by 2002:a17:903:228c:b0:1d5:4df7:17d6 with SMTP id b12-20020a170903228c00b001d54df717d6mr5807722plh.95.1705967713277;
+        Mon, 22 Jan 2024 15:55:13 -0800 (PST)
+Received: from ghost ([12.44.203.122])
+        by smtp.gmail.com with ESMTPSA id y11-20020a170902e18b00b001d7283bc6c6sm5038148pla.61.2024.01.22.15.55.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Jan 2024 15:55:12 -0800 (PST)
+Date: Mon, 22 Jan 2024 15:55:10 -0800
+From: Charlie Jenkins <charlie@rivosinc.com>
+To: Palmer Dabbelt <palmer@dabbelt.com>
+Cc: David.Laight@aculab.com, linux@roeck-us.net,
+	Conor Dooley <conor@kernel.org>, samuel.holland@sifive.com,
+	xiao.w.wang@intel.com, Evan Green <evan@rivosinc.com>,
+	guoren@kernel.org, linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+	Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu,
+	Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v15 5/5] kunit: Add tests for csum_ipv6_magic and
+ ip_fast_csum
+Message-ID: <Za8AXnKCm4cPyVbp@ghost>
+References: <be959a4bb660466faba5ade7976485c8@AcuMS.aculab.com>
+ <mhng-b5f26a34-7632-4423-9f07-3224170bae9f@palmer-ri-x1c9>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <mhng-b5f26a34-7632-4423-9f07-3224170bae9f@palmer-ri-x1c9>
 
-From: Isaku Yamahata <isaku.yamahata@intel.com>
+On Mon, Jan 22, 2024 at 03:39:16PM -0800, Palmer Dabbelt wrote:
+> On Mon, 22 Jan 2024 13:41:48 PST (-0800), David.Laight@ACULAB.COM wrote:
+> > From: Guenter Roeck
+> > > Sent: 22 January 2024 17:16
+> > > 
+> > > On 1/22/24 08:52, David Laight wrote:
+> > > > From: Guenter Roeck
+> > > >> Sent: 22 January 2024 16:40
+> > > >>
+> > > >> Hi,
+> > > >>
+> > > >> On Mon, Jan 08, 2024 at 03:57:06PM -0800, Charlie Jenkins wrote:
+> > > >>> Supplement existing checksum tests with tests for csum_ipv6_magic and
+> > > >>> ip_fast_csum.
+> > > >>>
+> > > >>> Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+> > > >>> ---
+> > > >>
+> > > >> With this patch in the tree, the arm:mps2-an385 qemu emulation gets a bad hiccup.
+> > > >>
+> > > >> [    1.839556] Unhandled exception: IPSR = 00000006 LR = fffffff1
+> > > >> [    1.839804] CPU: 0 PID: 164 Comm: kunit_try_catch Tainted: G                 N 6.8.0-rc1 #1
+> > > >> [    1.839948] Hardware name: Generic DT based system
+> > > >> [    1.840062] PC is at __csum_ipv6_magic+0x8/0xb4
+> > > >> [    1.840408] LR is at test_csum_ipv6_magic+0x3d/0xa4
+> > > >> [    1.840493] pc : [<21212f34>]    lr : [<21117fd5>]    psr: 0100020b
+> > > >> [    1.840586] sp : 2180bebc  ip : 46c7f0d2  fp : 21275b38
+> > > >> [    1.840664] r10: 21276b60  r9 : 21275b28  r8 : 21465cfc
+> > > >> [    1.840751] r7 : 00003085  r6 : 21275b4e  r5 : 2138702c  r4 : 00000001
+> > > >> [    1.840847] r3 : 2c000000  r2 : 1ac7f0d2  r1 : 21275b39  r0 : 21275b29
+> > > >> [    1.840942] xPSR: 0100020b
+> > > >>
+> > > >> This translates to:
+> > > >>
+> > > >> PC is at __csum_ipv6_magic (arch/arm/lib/csumipv6.S:15)
+> > > >> LR is at test_csum_ipv6_magic (./arch/arm/include/asm/checksum.h:60
+> > > >> ./arch/arm/include/asm/checksum.h:163 lib/checksum_kunit.c:617)
+> > > >>
+> > > >> Obviously I can not say if this is a problem with qemu or a problem with
+> > > >> the Linux kernel. Given that, and the presumably low interest in
+> > > >> running mps2-an385 with Linux, I'll simply disable that test. Just take
+> > > >> it as a heads up that there _may_ be a problem with this on arm
+> > > >> nommu systems.
+> > > >
+> > > > Can you drop in a disassembly of __csum_ipv6_magic ?
+> > > > Actually I think it is:
+> > > 
+> > > It is, as per the PC pointer above. I don't know anything about arm assembler,
+> > > much less about its behavior with THUMB code.
+> > 
+> > Doesn't look like thumb to me (offset 8 is two 4-byte instructions) and
+> > the code I found looks like arm to me.
+> > (I haven't written any arm asm since before they invented thumb!)
+> > 
+> > > > ENTRY(__csum_ipv6_magic)
+> > > > 		str	lr, [sp, #-4]!
+> > > > 		adds	ip, r2, r3
+> > > > 		ldmia	r1, {r1 - r3, lr}
+> > > >
+> > > > So the fault is (probably) a misaligned ldmia ?
+> > > > Are they ever supported?
+> > > >
+> > > 
+> > > Good question. My primary guess is that this never worked. As I said,
+> > > this was just intended to be informational, (probably) no reason to bother.
+> > > 
+> > > Of course one might ask if it makes sense to even keep the arm nommu code
+> > > in the kernel, but that is of course a different question. I do wonder though
+> > > if anyone but me is running it.
+> > 
+> > If it is an alignment fault it isn't a 'nommu' bug.
+> > 
+> > And traditionally arm didn't support misaligned transfers (well not
+> > in anyway any other cpu did!).
+> > It might be that the kernel assumes that all ethernet packets are
+> > aligned, but the test suite isn't aligning the buffer.
+> > Which would make it a test suite bug.
+> 
+> From talking to Evan and Vineet, I think you're right and this is a test
+> suite bug: specifically the tests weren't respecting NET_IP_ALIGN.  That
+> didn't crop up for ip_fast_csum() as it just uses ldr which supports
+> misaligned accesses on the M3 (at least as far as I can tell).
+> 
+> So I think the right fix is something like
+> 
+>    diff --git a/lib/checksum_kunit.c b/lib/checksum_kunit.c
+>    index 225bb7701460..2dd282e27dd4 100644
+>    --- a/lib/checksum_kunit.c
+>    +++ b/lib/checksum_kunit.c
+>    @@ -5,6 +5,7 @@
+>     #include <kunit/test.h>
+>     #include <asm/checksum.h>
+>    +#include <asm/checksum.h>
+>     #include <net/ip6_checksum.h>
+>     #define MAX_LEN 512
+>    @@ -15,6 +16,7 @@
+>     #define IPv4_MAX_WORDS 15
+>     #define NUM_IPv6_TESTS 200
+>     #define NUM_IP_FAST_CSUM_TESTS 181
+>    +#define SUPPORTED_ALIGNMENT (1 << NET_IP_ALIGN)
+>     /* Values for a little endian CPU. Byte swap each half on big endian CPU. */
+>     static const u32 random_init_sum = 0x2847aab;
+>    @@ -486,7 +488,7 @@ static void test_csum_fixed_random_inputs(struct kunit *test)
+>     	__sum16 result, expec;
+>     	assert_setup_correct(test);
+>    -	for (align = 0; align < TEST_BUFLEN; ++align) {
+>    +	for (align = 0; align < TEST_BUFLEN; align += SUPPORTED_ALIGNMENT) {
+>     		memcpy(&tmp_buf[align], random_buf,
+>     		       min(MAX_LEN, TEST_BUFLEN - align));
+>     		for (len = 0; len < MAX_LEN && (align + len) < TEST_BUFLEN;
+>    @@ -513,7 +515,7 @@ static void test_csum_all_carry_inputs(struct kunit *test)
+>     	assert_setup_correct(test);
+>     	memset(tmp_buf, 0xff, TEST_BUFLEN);
+>    -	for (align = 0; align < TEST_BUFLEN; ++align) {
+>    +	for (align = 0; align < TEST_BUFLEN; align += SUPPORTED_ALIGNMENT) {
+>     		for (len = 0; len < MAX_LEN && (align + len) < TEST_BUFLEN;
+>     		     ++len) {
+>     			/*
+>    @@ -553,7 +555,7 @@ static void test_csum_no_carry_inputs(struct kunit *test)
+>     	assert_setup_correct(test);
+>     	memset(tmp_buf, 0x4, TEST_BUFLEN);
+>    -	for (align = 0; align < TEST_BUFLEN; ++align) {
+>    +	for (align = 0; align < TEST_BUFLEN; align += SUPPORTED_ALIGNMENT) {
+>     		for (len = 0; len < MAX_LEN && (align + len) < TEST_BUFLEN;
+>     		     ++len) {
+>     			/*
+> 
+> but I haven't even build tested it...
 
-TDX has its own limitation on the maximum number of vcpus that the guest
-can accommodate.  Allow x86 kvm backend to implement its own KVM_ENABLE_CAP
-handler and implement TDX backend for KVM_CAP_MAX_VCPUS.  user space VMM,
-e.g. qemu, can specify its value instead of KVM_MAX_VCPUS.
+This doesn't fix the test_csum_ipv6_magic test case that was causing the
+initial problem, but the same trick can be done in that test.
 
-Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
----
-v18:
-- use TDX instead of "x86, tdx" in subject
-- use min(max_vcpu, TDX_MAX_VCPU) instead of
-  min3(max_vcpu, KVM_MAX_VCPU, TDX_MAX_VCPU)
-- make "if (KVM_MAX_VCPU) and if (TDX_MAX_VCPU)" into one if statement
----
- arch/x86/include/asm/kvm-x86-ops.h |  2 ++
- arch/x86/include/asm/kvm_host.h    |  2 ++
- arch/x86/kvm/vmx/main.c            | 22 ++++++++++++++++++++++
- arch/x86/kvm/vmx/tdx.c             | 29 +++++++++++++++++++++++++++++
- arch/x86/kvm/vmx/x86_ops.h         |  5 +++++
- arch/x86/kvm/x86.c                 |  4 ++++
- 6 files changed, 64 insertions(+)
+- Charlie
 
-diff --git a/arch/x86/include/asm/kvm-x86-ops.h b/arch/x86/include/asm/kvm-x86-ops.h
-index 943b21b8b106..2f976c0f3116 100644
---- a/arch/x86/include/asm/kvm-x86-ops.h
-+++ b/arch/x86/include/asm/kvm-x86-ops.h
-@@ -21,6 +21,8 @@ KVM_X86_OP(hardware_unsetup)
- KVM_X86_OP(has_emulated_msr)
- KVM_X86_OP(vcpu_after_set_cpuid)
- KVM_X86_OP(is_vm_type_supported)
-+KVM_X86_OP_OPTIONAL(max_vcpus);
-+KVM_X86_OP_OPTIONAL(vm_enable_cap)
- KVM_X86_OP(vm_init)
- KVM_X86_OP_OPTIONAL(vm_destroy)
- KVM_X86_OP_OPTIONAL_RET0(vcpu_precreate)
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 26f4668b0273..db44a92e5659 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -1602,7 +1602,9 @@ struct kvm_x86_ops {
- 	void (*vcpu_after_set_cpuid)(struct kvm_vcpu *vcpu);
- 
- 	bool (*is_vm_type_supported)(unsigned long vm_type);
-+	int (*max_vcpus)(struct kvm *kvm);
- 	unsigned int vm_size;
-+	int (*vm_enable_cap)(struct kvm *kvm, struct kvm_enable_cap *cap);
- 	int (*vm_init)(struct kvm *kvm);
- 	void (*vm_destroy)(struct kvm *kvm);
- 
-diff --git a/arch/x86/kvm/vmx/main.c b/arch/x86/kvm/vmx/main.c
-index 50da807d7aea..4611f305a450 100644
---- a/arch/x86/kvm/vmx/main.c
-+++ b/arch/x86/kvm/vmx/main.c
-@@ -6,6 +6,7 @@
- #include "nested.h"
- #include "pmu.h"
- #include "tdx.h"
-+#include "tdx_arch.h"
- 
- static bool enable_tdx __ro_after_init;
- module_param_named(tdx, enable_tdx, bool, 0444);
-@@ -16,6 +17,17 @@ static bool vt_is_vm_type_supported(unsigned long type)
- 		(enable_tdx && tdx_is_vm_type_supported(type));
- }
- 
-+static int vt_max_vcpus(struct kvm *kvm)
-+{
-+	if (!kvm)
-+		return KVM_MAX_VCPUS;
-+
-+	if (is_td(kvm))
-+		return min(kvm->max_vcpus, TDX_MAX_VCPUS);
-+
-+	return kvm->max_vcpus;
-+}
-+
- static int vt_hardware_enable(void)
- {
- 	int ret;
-@@ -54,6 +66,14 @@ static void vt_hardware_unsetup(void)
- 	vmx_hardware_unsetup();
- }
- 
-+static int vt_vm_enable_cap(struct kvm *kvm, struct kvm_enable_cap *cap)
-+{
-+	if (is_td(kvm))
-+		return tdx_vm_enable_cap(kvm, cap);
-+
-+	return -EINVAL;
-+}
-+
- static int vt_vm_init(struct kvm *kvm)
- {
- 	if (is_td(kvm))
-@@ -91,7 +111,9 @@ struct kvm_x86_ops vt_x86_ops __initdata = {
- 	.has_emulated_msr = vmx_has_emulated_msr,
- 
- 	.is_vm_type_supported = vt_is_vm_type_supported,
-+	.max_vcpus = vt_max_vcpus,
- 	.vm_size = sizeof(struct kvm_vmx),
-+	.vm_enable_cap = vt_vm_enable_cap,
- 	.vm_init = vt_vm_init,
- 	.vm_destroy = vmx_vm_destroy,
- 
-diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
-index 8c463407f8a8..876ad7895b88 100644
---- a/arch/x86/kvm/vmx/tdx.c
-+++ b/arch/x86/kvm/vmx/tdx.c
-@@ -100,6 +100,35 @@ struct tdx_info {
- /* Info about the TDX module. */
- static struct tdx_info *tdx_info;
- 
-+int tdx_vm_enable_cap(struct kvm *kvm, struct kvm_enable_cap *cap)
-+{
-+	int r;
-+
-+	switch (cap->cap) {
-+	case KVM_CAP_MAX_VCPUS: {
-+		if (cap->flags || cap->args[0] == 0)
-+			return -EINVAL;
-+		if (cap->args[0] > KVM_MAX_VCPUS ||
-+		    cap->args[0] > TDX_MAX_VCPUS)
-+			return -E2BIG;
-+
-+		mutex_lock(&kvm->lock);
-+		if (kvm->created_vcpus)
-+			r = -EBUSY;
-+		else {
-+			kvm->max_vcpus = cap->args[0];
-+			r = 0;
-+		}
-+		mutex_unlock(&kvm->lock);
-+		break;
-+	}
-+	default:
-+		r = -EINVAL;
-+		break;
-+	}
-+	return r;
-+}
-+
- static int tdx_get_capabilities(struct kvm_tdx_cmd *cmd)
- {
- 	struct kvm_tdx_capabilities __user *user_caps;
-diff --git a/arch/x86/kvm/vmx/x86_ops.h b/arch/x86/kvm/vmx/x86_ops.h
-index 6e238142b1e8..3a3be66888da 100644
---- a/arch/x86/kvm/vmx/x86_ops.h
-+++ b/arch/x86/kvm/vmx/x86_ops.h
-@@ -139,12 +139,17 @@ int __init tdx_hardware_setup(struct kvm_x86_ops *x86_ops);
- void tdx_hardware_unsetup(void);
- bool tdx_is_vm_type_supported(unsigned long type);
- 
-+int tdx_vm_enable_cap(struct kvm *kvm, struct kvm_enable_cap *cap);
- int tdx_vm_ioctl(struct kvm *kvm, void __user *argp);
- #else
- static inline int tdx_hardware_setup(struct kvm_x86_ops *x86_ops) { return -EOPNOTSUPP; }
- static inline void tdx_hardware_unsetup(void) {}
- static inline bool tdx_is_vm_type_supported(unsigned long type) { return false; }
- 
-+static inline int tdx_vm_enable_cap(struct kvm *kvm, struct kvm_enable_cap *cap)
-+{
-+	return -EINVAL;
-+};
- static inline int tdx_vm_ioctl(struct kvm *kvm, void __user *argp) { return -EOPNOTSUPP; }
- #endif
- 
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index dd3a23d56621..a1389ddb1b33 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -4726,6 +4726,8 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
- 		break;
- 	case KVM_CAP_MAX_VCPUS:
- 		r = KVM_MAX_VCPUS;
-+		if (kvm_x86_ops.max_vcpus)
-+			r = static_call(kvm_x86_max_vcpus)(kvm);
- 		break;
- 	case KVM_CAP_MAX_VCPU_ID:
- 		r = KVM_MAX_VCPU_IDS;
-@@ -6683,6 +6685,8 @@ int kvm_vm_ioctl_enable_cap(struct kvm *kvm,
- 		break;
- 	default:
- 		r = -EINVAL;
-+		if (kvm_x86_ops.vm_enable_cap)
-+			r = static_call(kvm_x86_vm_enable_cap)(kvm, cap);
- 		break;
- 	}
- 	return r;
--- 
-2.25.1
-
+> 
+> > 
+> > 	David
+> > 
+> > -
+> > Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+> > Registration No: 1397386 (Wales)
