@@ -1,67 +1,76 @@
-Received: from herc.mirbsd.org (bonn.mirbsd.org [217.91.129.195])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92895195;
-	Mon, 22 Jan 2024 00:10:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.91.129.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2686360;
+	Mon, 22 Jan 2024 00:16:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705882251; cv=none; b=tm/1/Apb4oscfw/oCGhN3Es14hlYGOaoG8Zn2BzV6fPlZOkSe/H3u2sg7Ddcja3kQldoMSM3NgNbKjY6BOxkDy0fvJUIQpiUXoG6dUoCmJYp/sYMCQFphKNbckflhxvi/DTu18KM163CLQGwWBfxX52gNwBIL9iDmQaSKOxxH5U=
+	t=1705882601; cv=none; b=sB974ZVv8DWA2lmjG6/olf7kBvawOBKn/YogUa7fly02byJj6IOTFVWWK+5TGeRWxV0uZD1oiiooemIT0uxhUybrd3GqaNxRcP2GzQUrhdwx1ymDPr0oKqXV2nvocjcyWzmML07pXAPhLtGbJYN/DqQ+zix6Wg6WSoZDmxyJ0NA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705882251; c=relaxed/simple;
-	bh=i1LLD5pj5IdOf6XxKkB7dJJ9iRSC3xD/bjbvPMftkak=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=Ezfi24SF349IrvBT//f+VkoiduTpFJIeH9I7u4bxDIBl2XtcRWVJlXDTM9VLrZcd5K8rozlJcnSJH+MiomIOFzS2zdJfMtw0Kff23PlqCLOPG/QrAjComIyjP4KtxvzWqWK2DcqPSfCR6DTkWsYyKwq6nR44RM2FaE2SGnHH9oo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=none smtp.mailfrom=debian.org; arc=none smtp.client-ip=217.91.129.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=debian.org
-Received: from herc.mirbsd.org (tg@herc.mirbsd.org [192.168.0.82])
-	by herc.mirbsd.org (8.14.9/8.14.5) with ESMTP id 40LNwBdR015513
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-	Sun, 21 Jan 2024 23:58:25 GMT
-Date: Sun, 21 Jan 2024 23:58:11 +0000 (UTC)
-From: Thorsten Glaser <tg@debian.org>
-X-X-Sender: tg@herc.mirbsd.org
-To: "H. Peter Anvin" <hpa@zytor.com>
-cc: Peter Zijlstra <peterz@infradead.org>, x86@kernel.org, rostedt@goodmis.org,
+	s=arc-20240116; t=1705882601; c=relaxed/simple;
+	bh=TdIhc3Udceb38wI9THCR6IdLlWdrOaBwsuVbGu+VNjw=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=GQ0bYzfwiAxp+GpG1KsMxWEDQ2L6jZ2CMXwBB1a/yJQFA5MMwXqSCmfgYSBWhjQVddpMqDIj1ECOW0K8NtEn2bulPgDDjck3zLc0BQ7cxyEcQS45xu4fico+AziLEvFEfV9uEC2py/CTGEqaAKTNE+LG7tuOYthngFRgCqVT6b4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=F1Q01wyx; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="F1Q01wyx"
+Received: from [IPv6:::1] ([172.59.160.46])
+	(authenticated bits=0)
+	by mail.zytor.com (8.17.2/8.17.1) with ESMTPSA id 40M0G7Gt2251320
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Sun, 21 Jan 2024 16:16:10 -0800
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 40M0G7Gt2251320
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2024011201; t=1705882571;
+	bh=TdIhc3Udceb38wI9THCR6IdLlWdrOaBwsuVbGu+VNjw=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=F1Q01wyxJe1GAeuSbw/qbXOt4C/TGQ1daCC8OU8t0SktRft7MpHW3Hcq5XlfHIXeH
+	 xtAiNwMsFF8fzoLQOMKqyxNKNiFk0yUaO59m8qYlB29OuksaIRPuCneGhduDVQdO48
+	 BKhQYxifzpoJtwYQK3eHXKTKcjiIjgjDMSJOuGtDRY/KgjQeurXQEnYZxDjM6eYsRX
+	 W+MxPl5MfAuv0MEkctdwvI7dgHV7zUu8F9oNj9/2S8lpWZuTduq0Eth/VgCZovEVdR
+	 vO+r6SZheacAwxFHoeOqDZs2JNBjb78MqA0D/tYQ2+D6jma3aVmZj+gayzJUa5o4sQ
+	 5EQ/M6caxQe4g==
+Date: Sun, 21 Jan 2024 16:15:57 -0800
+From: "H. Peter Anvin" <hpa@zytor.com>
+To: Thorsten Glaser <tg@debian.org>
+CC: Peter Zijlstra <peterz@infradead.org>, x86@kernel.org, rostedt@goodmis.org,
         torvalds@linuxfoundation.org, linux-kernel@vger.kernel.org,
         linux-toolchains@vger.kernel.org, jpoimboe@redhat.com,
         alexei.starovoitov@gmail.com, mhiramat@kernel.org
 Subject: Re: [PATCH 1/2] x86: Remove dynamic NOP selection
-In-Reply-To: <d23e1b70-7ac3-49cd-8d5f-1dedc0108603@zytor.com>
-Message-ID: <Pine.BSM.4.64L.2401212356390.999@herc.mirbsd.org>
-References: <20210312113253.305040674@infradead.org> <20210312115749.065275711@infradead.org>
- <Pine.BSM.4.64L.2401200654480.19429@herc.mirbsd.org>
- <CE53F232-3D2D-4910-94B4-A4304F5990C7@zytor.com>
- <Pine.BSM.4.64L.2401201652490.29203@herc.mirbsd.org>
- <d23e1b70-7ac3-49cd-8d5f-1dedc0108603@zytor.com>
-Content-Language: de-Zsym-DE-1901-u-em-text-rg-denw-tz-utc, en-Zsym-GB-u-cu-eur-em-text-fw-mon-hc-h23-ms-metric-mu-celsius-rg-denw-tz-utc-va-posix
+User-Agent: K-9 Mail for Android
+In-Reply-To: <Pine.BSM.4.64L.2401212356390.999@herc.mirbsd.org>
+References: <20210312113253.305040674@infradead.org> <20210312115749.065275711@infradead.org> <Pine.BSM.4.64L.2401200654480.19429@herc.mirbsd.org> <CE53F232-3D2D-4910-94B4-A4304F5990C7@zytor.com> <Pine.BSM.4.64L.2401201652490.29203@herc.mirbsd.org> <d23e1b70-7ac3-49cd-8d5f-1dedc0108603@zytor.com> <Pine.BSM.4.64L.2401212356390.999@herc.mirbsd.org>
+Message-ID: <20B57BDC-9A3F-4B02-9BA9-41477088A6CE@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-H. Peter Anvin dixit:
+On January 21, 2024 3:58:11 PM PST, Thorsten Glaser <tg@debian=2Eorg> wrote=
+:
+>H=2E Peter Anvin dixit:
+>
+>> But yes, with all even remotely recent CPUs all actually handling nopl
+>> properly, this isn't relevant anymore=2E
+>
+>This was, incidentally, triggered by looking into a problem report that
+>something did *not* work on a Geode LX system=2E
+>
+>People don=E2=80=99t just run Linux on =E2=80=9Crecent CPUs=E2=80=9D (tho=
+ugh I at least got me
+>an Atom and a Core2Duo for it and run BSD on my Pentium-M and VIA C7
+>systems)=2E
+>
+>bye,
+>//mirabilos
 
-> But yes, with all even remotely recent CPUs all actually handling nopl
-> properly, this isn't relevant anymore.
-
-This was, incidentally, triggered by looking into a problem report that
-something did *not* work on a Geode LX system.
-
-People don=E2=80=99t just run Linux on =E2=80=9Crecent CPUs=E2=80=9D (thoug=
-h I at least got me
-an Atom and a Core2Duo for it and run BSD on my Pentium-M and VIA C7
-systems).
-
-bye,
-//mirabilos
---=20
-=E2=80=9ECool, /usr/share/doc/mksh/examples/uhr.gz ist ja ein Grund,
-mksh auf jedem System zu installieren.=E2=80=9C
-=09-- XTaran auf der OpenRheinRuhr, ganz begeistert
-(EN: =E2=80=9C[=E2=80=A6]uhr.gz is a reason to install mksh on every system=
-=2E=E2=80=9D)
+Yes, but it is a matter of where we optimize for performance as opposed to=
+ correctness=2E
