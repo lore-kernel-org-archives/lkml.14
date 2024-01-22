@@ -1,99 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7728447F7B;
-	Mon, 22 Jan 2024 11:05:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC0A047F6E;
+	Mon, 22 Jan 2024 11:05:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.120
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705921532; cv=none; b=qH9qET9udFGZXNGjfReWVBIRUTTGJ7rLXiMMz3sFV1qS4BopJ0PXMI5VaIIkQa/BE5S+uPd0s9qLeW+Vf8kttAzuaOVIwv2+H5hKlRjw1N1R/n9X0dWCJtCfGc2mLma380dfSBoI8PP2+m+xL408oF5jZV9eojhiSbCsZC0Ta+k=
+	t=1705921533; cv=none; b=BDkNaMfwcFxWLXbtCJXZRwCP9yhDLMAoy6uZ+l3jWsoDayyHBmEosUZQzdRDBh8DHiYs1mJv7gfccf/N85F5obNIN+dtSI4Z3GEO8K2mHg2rzXbuGYWjaL+l520JM9HAvpJCkdBoIA3rAt+wo0qi6t6ygNmbttutK57qqe1l63k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705921532; c=relaxed/simple;
-	bh=zD5yC++Deas+2dKKgpnZzRCfsxfjAnWJ+terllmOKSk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=o9yy7gjhn14JhdBrqett3NNWuTRkMn8K0BHbLiLZs1+qXBSaOoqnr+QDNoRk2ZFAq1glXV9ra3B+FdXjMcMZnDTgAym3cFNIRqS3Xmn7ut9uL8+lnGYeS7nm0ny4NshNgKK0JwblwQO1gv84G2gO+ZSVZ1y27ZiD/j89GuEYRsc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JFjOtUAx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1705921533; c=relaxed/simple;
+	bh=6ZklisPid4pGWh8xv7uYvwv1UbtizZrGDGHyMTYB4L8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=n1dpCEpGbNBQKuSjU++lTHyN46g7lz1FLd1cAZYheh1Nl/uzvd6eotO7udHHv/yyPoKeCxepTXSfb0FIdUlw1tFqH7lRe9DIP8MCpw+7cb46QCDuq/bEpXc4Lp9FPANoQxS+/BPipZYrjllKl37d5YHz7TeUOXipBd5tOR0s2LM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=C5FDCqDh; arc=none smtp.client-ip=192.55.52.120
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JFjOtUAx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E00A4C43390;
-	Mon, 22 Jan 2024 11:05:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705921532;
-	bh=zD5yC++Deas+2dKKgpnZzRCfsxfjAnWJ+terllmOKSk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=JFjOtUAxR1QkTNVJT/4qIzZ38cHJO1PPb6obE2SJrwvoM8I17+xK3G93dmNrzuAJB
-	 CDtCR0NEyuqgT5OquAmzN0gSoyAuv8k/ollCGPoioOlQ+UCFnK0UKFVfQoWBt4Pzir
-	 EfBbeNGnqiTDAynRnDEha572xnTi/8L9SPyzkxuwDrIw46tpccUXPTux29JhFfvBEz
-	 W5+d6GNoP56stDH6EG5Sg5CLvC5n3ORhCoP9boh8mILvphh2pFiRY+c4izgWZQYVbO
-	 ZE32ZXsgQdgjCSS08TWdYgPaIT8+bUTkfqxPa+sY/Ie5gr5zn46H4c3ujqJR7zMjvG
-	 AFn3M49lFoXyQ==
-From: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
-To: gregkh@linuxfoundation.org
-Cc: linux-serial@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Jiri Slaby (SUSE)" <jirislaby@kernel.org>
-Subject: [PATCH v2 41/47] tty: vt: make types of screenpos() more consistent
-Date: Mon, 22 Jan 2024 12:03:55 +0100
-Message-ID: <20240122110401.7289-42-jirislaby@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240122110401.7289-1-jirislaby@kernel.org>
-References: <20240122110401.7289-1-jirislaby@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="C5FDCqDh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1705921531; x=1737457531;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=6ZklisPid4pGWh8xv7uYvwv1UbtizZrGDGHyMTYB4L8=;
+  b=C5FDCqDhTaUHG0ua9N6SYd3zWI3RMZDNhYAzOYoJfWI4Ig0KTjeMEpeO
+   BCO/HnqYF/rC7k0mcQxZVmphfpNbPzXRSJHLhaiO60anoMJOtieNN2Mdu
+   5xdlM7doAmIt55seccfetCZInUOSm5ISsR+P/98YojGiHQP4FLEpkctEx
+   a0KL9k5zjWvAJgxNvJM/V8CjBHKDtaA437qNKPoRtnvORKfNxddtJvB65
+   rk6BIF4K6sopliFd4MXAKZNz87LnpZPQD2RGXYaxdCMlH/f9Drf+wMsTy
+   6VO6IBwIevOftbcWyrNusHqjuLFSg0Qrp3RI0FZFdR9o6G/NSlGoyeaQH
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10960"; a="400046461"
+X-IronPort-AV: E=Sophos;i="6.05,211,1701158400"; 
+   d="scan'208";a="400046461"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 03:05:30 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,211,1701158400"; 
+   d="scan'208";a="1255951"
+Received: from aslawinx-mobl.ger.corp.intel.com (HELO [10.94.8.107]) ([10.94.8.107])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 03:05:29 -0800
+Message-ID: <0b6f3998-135f-4059-a8a8-e924281353f8@linux.intel.com>
+Date: Mon, 22 Jan 2024 12:05:11 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] ALSA: hda: Increase default bdl_pos_adj for Apollo Lake
+To: Rui Salvaterra <rsalvaterra@gmail.com>, tiwai@suse.com
+Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240122092338.25047-2-rsalvaterra@gmail.com>
+Content-Language: en-US
+From: =?UTF-8?Q?Amadeusz_S=C5=82awi=C5=84ski?=
+ <amadeuszx.slawinski@linux.intel.com>
+In-Reply-To: <20240122092338.25047-2-rsalvaterra@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-* parameter offset: it is expected to be non-negative, so switch to
-  unsigned
-* return type: switch from ushort to explicit u16. This is expected on
-  most places. And fix the remaining two places too.
+On 1/22/2024 10:23 AM, Rui Salvaterra wrote:
+> Apollo Lake seems to also suffer from IRQ timing issues. After being up for ~4
+> minutes, a Pentium N4200 system ends up falling back to workqueue-based IRQ
+> handling:
+> 
+> [  208.019906] snd_hda_intel 0000:00:0e.0: IRQ timing workaround is activated
+> for card #0. Suggest a bigger bdl_pos_adj.
+> 
+> Unfortunately, the Baytrail and Braswell workaround value of 32 samples isn't
+> enough to fix the issue here. Default to 64 samples.
+> 
+> Signed-off-by: Rui Salvaterra <rsalvaterra@gmail.com>
+> ---
+>   sound/pci/hda/hda_intel.c | 2 ++
+>   1 file changed, 2 insertions(+)
+> 
+> diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
+> index 2276adc84478..9fb54813693c 100644
+> --- a/sound/pci/hda/hda_intel.c
+> +++ b/sound/pci/hda/hda_intel.c
+> @@ -1732,6 +1732,8 @@ static int default_bdl_pos_adj(struct azx *chip)
+>   		case 0x0f04: /* Baytrail */
+>   		case 0x2284: /* Braswell */
+>   			return 32;
+> +		case 0x5a98: /* Apollo Lake */
+> +			return 64;
+>   		}
+>   	}
+>   
 
-Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
----
- drivers/tty/vt/vt.c | 11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
+And seems like I've missed some IDs, when doing PCI IDs conversion. 
+Anyway, can you use PCI_DEVICE_ID_INTEL_HDA_APL instead of 0x5a98 as it 
+is self describing (no need for comment)?
 
-diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
-index 4e9d689143e0..f6fa76c0eb5b 100644
---- a/drivers/tty/vt/vt.c
-+++ b/drivers/tty/vt/vt.c
-@@ -286,12 +286,12 @@ static inline bool con_should_update(const struct vc_data *vc)
- 	return con_is_visible(vc) && !console_blanked;
- }
- 
--static inline unsigned short *screenpos(const struct vc_data *vc, int offset,
--		bool viewed)
-+static inline u16 *screenpos(const struct vc_data *vc, unsigned int offset,
-+			     bool viewed)
- {
- 	unsigned long origin = viewed ? vc->vc_visible_origin : vc->vc_origin;
- 
--	return (unsigned short *)(origin + offset);
-+	return (u16 *)(origin + offset);
- }
- 
- static void con_putc(struct vc_data *vc, u16 ca, unsigned int y, unsigned int x)
-@@ -705,7 +705,7 @@ static void update_attr(struct vc_data *vc)
- /* Note: inverting the screen twice should revert to the original state */
- void invert_screen(struct vc_data *vc, int offset, int count, bool viewed)
- {
--	unsigned short *p;
-+	u16 *p;
- 
- 	WARN_CONSOLE_UNLOCKED();
- 
-@@ -773,8 +773,7 @@ void complement_pos(struct vc_data *vc, int offset)
- 	if (offset != -1 && offset >= 0 &&
- 	    offset < vc->vc_screenbuf_size) {
- 		unsigned short new;
--		unsigned short *p;
--		p = screenpos(vc, offset, true);
-+		u16 *p = screenpos(vc, offset, true);
- 		old = scr_readw(p);
- 		new = old ^ vc->vc_complement_mask;
- 		scr_writew(new, p);
--- 
-2.43.0
-
+And if you want more patches in kernel - convert first 0x0f04 & 0x2284 
+to PCI_DEVICE_ID_INTEL_HDA_BYT & PCI_DEVICE_ID_INTEL_HDA_BSW and then do 
+the above change ;)
