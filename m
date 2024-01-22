@@ -1,44 +1,44 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4540E60248;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B0EF60245;
 	Mon, 22 Jan 2024 23:55:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705967739; cv=none; b=MaunsbNoYvr6736IRIET7GZlCN7I8wVqr6dhWxt51quv3CFZdsrHlLEVo7gmvSIaOR5rwWUvcf/DPOF2x0Cu8GYPoNxJTPkwFd1Wi0Ms+zH7SQyzdHZWnTaKZDBH79kptCUnkNa48zTzb4CYDoIK2gR5d2qwDuLGYe8aP2H3TFQ=
+	t=1705967739; cv=none; b=FXH5H7aL0+3Fi1uUmmwRMX7GvWhm/7hnjRTTyhWDzqhvHL3V5zG4DjBuK3BGvl51Sm1NZFisE9qOPaP/rKIDr4XiY+JvGy+hqs/XhAwxCPTSxP81YiDMxGNh7Nghs2Rze2QKo7Udy99yokTGzSPUxlpIt1TGy0fkBnpXbfTDeS4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1705967739; c=relaxed/simple;
-	bh=2tOEn0svI5eYjclbb69emalwJiMYsXQtzlVRRlauB0w=;
+	bh=X5swBicPzDN4XiMWrDGtYk3kyJaR/5pze4FxYE6NCww=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=rvxY4HKYYkwDaTk4//3W9g6370GDPuIhNR9pYYp8dPAIP7YpKZTehWJ+O3fH8IZJCT6XCqs9m+2hm59xj0BJ/QVRBJJND+kBs2JgqWcle42n8x9oIKp9FYWbyU0u3tn4B3tnU4PU44uH7E3sN9qgoMl1cT4tli+JQu1CwdecCqo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZWTFz0Pq; arc=none smtp.client-ip=198.175.65.11
+	 MIME-Version; b=Dnp7XDebUKxmudXW9VUXwEenvRFj6QEL7fFy+NpY2EUsEgIRegmNaX9kteAa9DutBDtDNvzfh0z7/FW+DhV8Y02FtxAvnFW4q35TOuCIMXGsiKrPcORkl50QnNtG2lkX4kKB5BnJoTsvqLowcVPoB9e6PMeqamS+Ve7YN1youmI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=C9k3cu3C; arc=none smtp.client-ip=198.175.65.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZWTFz0Pq"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="C9k3cu3C"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1705967738; x=1737503738;
+  t=1705967737; x=1737503737;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=2tOEn0svI5eYjclbb69emalwJiMYsXQtzlVRRlauB0w=;
-  b=ZWTFz0PqGf8ivsNHLKPa/4Q4gQH0bV5Evfkd9OC4n4PwOOZofv5UbSsQ
-   DvoJQSbitVG/o4TOrVMWxRiox4lA+Ob3RG5gzMuppPz2v9oDnixOWtcit
-   3N89redpAEJ0V0tCZQ3YyA6MhlHMuP+16jQUxa7o7PEYZgucc6F8+gEvI
-   YKDPJGxp50YRwCYBE3rv47oR+taizp7Q6u87kNDvZsHrFLRIlEhbLg8NM
-   mSr9/d8BHwKhYUcSOvuqsDjnvdugBP8ePi4sr8orH8J4lJ3yfJmXMDHz+
-   nBiSM3Hvu5nTpghb0Ao0r0RF8Mahp3gb6wjRNxEG19iRdIMoohXxZKRa3
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10961"; a="8016378"
+  bh=X5swBicPzDN4XiMWrDGtYk3kyJaR/5pze4FxYE6NCww=;
+  b=C9k3cu3Ct8Eswkun1YRdfFROcn2254W7bvkCaAdI45zQIoByQsrdajOU
+   PkFEiFCXSqvhtWd6sa3qZafaD88whqdLGHStI4Zp88SScGP3a3fTU9ZOu
+   Py5ka6enNzqnOq0NzRywXCPjSKv59vtVnNhRv6sy9b8C3SNJyRd7cBzKe
+   zjLO6zKf1R36PLcRR1ESI6nzy6BObo9oNgpnTSl52qgnAtUzNEEU+wcLw
+   i3LFcGef1eBdflgvBTJccCHrMWvJ2WKfERVrvyIBAmX95v55+JE7/2diq
+   udb+Hft++tMN6Z8916oOlUw8+gH92EIKMjVj/qrgNCraDlAC3YhKwyzDV
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10961"; a="8016386"
 X-IronPort-AV: E=Sophos;i="6.05,212,1701158400"; 
-   d="scan'208";a="8016378"
+   d="scan'208";a="8016386"
 Received: from fmviesa004.fm.intel.com ([10.60.135.144])
   by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 15:55:33 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.05,212,1701158400"; 
-   d="scan'208";a="1468105"
+   d="scan'208";a="1468115"
 Received: from ls.sc.intel.com (HELO localhost) ([172.25.112.31])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 15:55:30 -0800
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 15:55:31 -0800
 From: isaku.yamahata@intel.com
 To: kvm@vger.kernel.org,
 	linux-kernel@vger.kernel.org
@@ -51,10 +51,11 @@ Cc: isaku.yamahata@intel.com,
 	Kai Huang <kai.huang@intel.com>,
 	chen.bo@intel.com,
 	hang.yuan@intel.com,
-	tina.zhang@intel.com
-Subject: [PATCH v18 046/121] KVM: x86/mmu: Add a new is_private member for union kvm_mmu_page_role
-Date: Mon, 22 Jan 2024 15:53:22 -0800
-Message-Id: <33812f5282bc42e0e8e6eaaa2a6a63ce4d258bfc.1705965635.git.isaku.yamahata@intel.com>
+	tina.zhang@intel.com,
+	Sean Christopherson <sean.j.christopherson@intel.com>
+Subject: [PATCH v18 048/121] KVM: x86/tdp_mmu: Don't zap private pages for unsupported cases
+Date: Mon, 22 Jan 2024 15:53:24 -0800
+Message-Id: <0b308fb6dd52bafe7153086c7f54bfad03da74b1.1705965635.git.isaku.yamahata@intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1705965634.git.isaku.yamahata@intel.com>
 References: <cover.1705965634.git.isaku.yamahata@intel.com>
@@ -66,97 +67,249 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Isaku Yamahata <isaku.yamahata@intel.com>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-Because TDX support introduces private mapping, add a new member in union
-kvm_mmu_page_role with access functions to check the member.
+TDX supports only write-back(WB) memory type for private memory
+architecturally so that (virtualized) memory type change doesn't make sense
+for private memory.  Also currently, page migration isn't supported for TDX
+yet. (TDX architecturally supports page migration. it's KVM and kernel
+implementation issue.)
 
+Regarding memory type change (mtrr virtualization and lapic page mapping
+change), pages are zapped by kvm_zap_gfn_range().  On the next KVM page
+fault, the SPTE entry with a new memory type for the page is populated.
+Regarding page migration, pages are zapped by the mmu notifier. On the next
+KVM page fault, the new migrated page is populated.  Don't zap private
+pages on unmapping for those two cases.
+
+When deleting/moving a KVM memory slot, zap private pages. Typically
+tearing down VM.  Don't invalidate private page tables. i.e. zap only leaf
+SPTEs for KVM mmu that has a shared bit mask. The existing
+kvm_tdp_mmu_invalidate_all_roots() depends on role.invalid with read-lock
+of mmu_lock so that other vcpu can operate on KVM mmu concurrently.  It
+marks the root page table invalid and zaps SPTEs of the root page
+tables. The TDX module doesn't allow to unlink a protected root page table
+from the hardware and then allocate a new one for it. i.e. replacing a
+protected root page table.  Instead, zap only leaf SPTEs for KVM mmu with a
+shared bit mask set.
+
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
 ---
- arch/x86/include/asm/kvm_host.h | 27 +++++++++++++++++++++++++++
- arch/x86/kvm/mmu/mmu_internal.h |  5 +++++
- arch/x86/kvm/mmu/spte.h         |  6 ++++++
- 3 files changed, 38 insertions(+)
+ arch/x86/kvm/mmu/mmu.c     | 61 ++++++++++++++++++++++++++++++++++++--
+ arch/x86/kvm/mmu/tdp_mmu.c | 37 +++++++++++++++++++----
+ arch/x86/kvm/mmu/tdp_mmu.h |  5 ++--
+ 3 files changed, 92 insertions(+), 11 deletions(-)
 
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 313519edd79e..0cdbbc21136b 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -349,7 +349,12 @@ union kvm_mmu_page_role {
- 		unsigned ad_disabled:1;
- 		unsigned guest_mode:1;
- 		unsigned passthrough:1;
-+#ifdef CONFIG_KVM_MMU_PRIVATE
-+		unsigned is_private:1;
-+		unsigned :4;
-+#else
- 		unsigned :5;
-+#endif
+diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+index 32c619125be4..f4fbf42e05fb 100644
+--- a/arch/x86/kvm/mmu/mmu.c
++++ b/arch/x86/kvm/mmu/mmu.c
+@@ -6267,7 +6267,7 @@ static void kvm_mmu_zap_all_fast(struct kvm *kvm)
+ 	 * e.g. before kvm_zap_obsolete_pages() could drop mmu_lock and yield.
+ 	 */
+ 	if (tdp_mmu_enabled)
+-		kvm_tdp_mmu_invalidate_all_roots(kvm);
++		kvm_tdp_mmu_invalidate_all_roots(kvm, true);
  
- 		/*
- 		 * This is left at the top of the word so that
-@@ -361,6 +366,28 @@ union kvm_mmu_page_role {
- 	};
- };
- 
-+#ifdef CONFIG_KVM_MMU_PRIVATE
-+static inline bool kvm_mmu_page_role_is_private(union kvm_mmu_page_role role)
-+{
-+	return !!role.is_private;
-+}
-+
-+static inline void kvm_mmu_page_role_set_private(union kvm_mmu_page_role *role)
-+{
-+	role->is_private = 1;
-+}
-+#else
-+static inline bool kvm_mmu_page_role_is_private(union kvm_mmu_page_role role)
-+{
-+	return false;
-+}
-+
-+static inline void kvm_mmu_page_role_set_private(union kvm_mmu_page_role *role)
-+{
-+	WARN_ON_ONCE(1);
-+}
-+#endif
-+
- /*
-  * kvm_mmu_extended_role complements kvm_mmu_page_role, tracking properties
-  * relevant to the current MMU configuration.   When loading CR0, CR4, or EFER,
-diff --git a/arch/x86/kvm/mmu/mmu_internal.h b/arch/x86/kvm/mmu/mmu_internal.h
-index 2b9377442927..97af4e39ce6f 100644
---- a/arch/x86/kvm/mmu/mmu_internal.h
-+++ b/arch/x86/kvm/mmu/mmu_internal.h
-@@ -145,6 +145,11 @@ static inline int kvm_mmu_page_as_id(struct kvm_mmu_page *sp)
- 	return kvm_mmu_role_as_id(sp->role);
- }
- 
-+static inline bool is_private_sp(const struct kvm_mmu_page *sp)
-+{
-+	return kvm_mmu_page_role_is_private(sp->role);
-+}
-+
- static inline bool kvm_mmu_page_ad_need_write_protect(struct kvm_mmu_page *sp)
- {
  	/*
-diff --git a/arch/x86/kvm/mmu/spte.h b/arch/x86/kvm/mmu/spte.h
-index 1a163aee9ec6..88db32cba0fd 100644
---- a/arch/x86/kvm/mmu/spte.h
-+++ b/arch/x86/kvm/mmu/spte.h
-@@ -264,6 +264,12 @@ static inline struct kvm_mmu_page *root_to_sp(hpa_t root)
- 	return spte_to_child_sp(root);
+ 	 * Notify all vcpus to reload its shadow page table and flush TLB.
+@@ -6389,7 +6389,16 @@ void kvm_zap_gfn_range(struct kvm *kvm, gfn_t gfn_start, gfn_t gfn_end)
+ 	flush = kvm_rmap_zap_gfn_range(kvm, gfn_start, gfn_end);
+ 
+ 	if (tdp_mmu_enabled)
+-		flush = kvm_tdp_mmu_zap_leafs(kvm, gfn_start, gfn_end, flush);
++		/*
++		 * zap_private = false. Zap only shared pages.
++		 *
++		 * kvm_zap_gfn_range() is used when MTRR or PAT memory
++		 * type was changed.  Later on the next kvm page fault,
++		 * populate it with updated spte entry.
++		 * Because only WB is supported for private pages, don't
++		 * care of private pages.
++		 */
++		flush = kvm_tdp_mmu_zap_leafs(kvm, gfn_start, gfn_end, flush, false);
+ 
+ 	if (flush)
+ 		kvm_flush_remote_tlbs_range(kvm, gfn_start, gfn_end - gfn_start);
+@@ -6835,10 +6844,56 @@ void kvm_arch_flush_shadow_all(struct kvm *kvm)
+ 	kvm_mmu_zap_all(kvm);
  }
  
-+static inline bool is_private_sptep(u64 *sptep)
++static void kvm_mmu_zap_memslot(struct kvm *kvm, struct kvm_memory_slot *slot)
 +{
-+	WARN_ON_ONCE(!sptep);
-+	return is_private_sp(sptep_to_sp(sptep));
++	bool flush = false;
++
++	write_lock(&kvm->mmu_lock);
++
++	/*
++	 * Zapping non-leaf SPTEs, a.k.a. not-last SPTEs, isn't required, worst
++	 * case scenario we'll have unused shadow pages lying around until they
++	 * are recycled due to age or when the VM is destroyed.
++	 */
++	if (tdp_mmu_enabled) {
++		struct kvm_gfn_range range = {
++		      .slot = slot,
++		      .start = slot->base_gfn,
++		      .end = slot->base_gfn + slot->npages,
++		      .may_block = true,
++
++		      /*
++		       * This handles both private gfn and shared gfn.
++		       * All private page should be zapped on memslot deletion.
++		       */
++		      .only_private = true,
++		      .only_shared = true,
++		};
++
++		flush = kvm_tdp_mmu_unmap_gfn_range(kvm, &range, flush);
++	} else {
++		/* TDX supports only TDP-MMU case. */
++		WARN_ON_ONCE(1);
++		flush = true;
++	}
++	if (flush)
++		kvm_flush_remote_tlbs(kvm);
++
++	write_unlock(&kvm->mmu_lock);
 +}
 +
- static inline bool is_mmio_spte(struct kvm *kvm, u64 spte)
+ void kvm_arch_flush_shadow_memslot(struct kvm *kvm,
+ 				   struct kvm_memory_slot *slot)
  {
- 	return (spte & shadow_mmio_mask) == kvm->arch.shadow_mmio_value &&
+-	kvm_mmu_zap_all_fast(kvm);
++	if (kvm_gfn_shared_mask(kvm))
++		/*
++		 * Secure-EPT requires to release PTs from the leaf.  The
++		 * optimization to zap root PT first with child PT doesn't
++		 * work.
++		 */
++		kvm_mmu_zap_memslot(kvm, slot);
++	else
++		kvm_mmu_zap_all_fast(kvm);
+ }
+ 
+ void kvm_mmu_invalidate_mmio_sptes(struct kvm *kvm, u64 gen)
+diff --git a/arch/x86/kvm/mmu/tdp_mmu.c b/arch/x86/kvm/mmu/tdp_mmu.c
+index d47f0daf1b03..e7514a807134 100644
+--- a/arch/x86/kvm/mmu/tdp_mmu.c
++++ b/arch/x86/kvm/mmu/tdp_mmu.c
+@@ -37,7 +37,7 @@ void kvm_mmu_uninit_tdp_mmu(struct kvm *kvm)
+ 	 * for zapping and thus puts the TDP MMU's reference to each root, i.e.
+ 	 * ultimately frees all roots.
+ 	 */
+-	kvm_tdp_mmu_invalidate_all_roots(kvm);
++	kvm_tdp_mmu_invalidate_all_roots(kvm, false);
+ 	kvm_tdp_mmu_zap_invalidated_roots(kvm);
+ 
+ 	WARN_ON(atomic64_read(&kvm->arch.tdp_mmu_pages));
+@@ -771,7 +771,8 @@ bool kvm_tdp_mmu_zap_sp(struct kvm *kvm, struct kvm_mmu_page *sp)
+  * operation can cause a soft lockup.
+  */
+ static bool tdp_mmu_zap_leafs(struct kvm *kvm, struct kvm_mmu_page *root,
+-			      gfn_t start, gfn_t end, bool can_yield, bool flush)
++			      gfn_t start, gfn_t end, bool can_yield, bool flush,
++			      bool zap_private)
+ {
+ 	struct tdp_iter iter;
+ 
+@@ -779,6 +780,10 @@ static bool tdp_mmu_zap_leafs(struct kvm *kvm, struct kvm_mmu_page *root,
+ 
+ 	lockdep_assert_held_write(&kvm->mmu_lock);
+ 
++	WARN_ON_ONCE(zap_private && !is_private_sp(root));
++	if (!zap_private && is_private_sp(root))
++		return false;
++
+ 	rcu_read_lock();
+ 
+ 	for_each_tdp_pte_min_level(iter, root, PG_LEVEL_4K, start, end) {
+@@ -810,13 +815,15 @@ static bool tdp_mmu_zap_leafs(struct kvm *kvm, struct kvm_mmu_page *root,
+  * true if a TLB flush is needed before releasing the MMU lock, i.e. if one or
+  * more SPTEs were zapped since the MMU lock was last acquired.
+  */
+-bool kvm_tdp_mmu_zap_leafs(struct kvm *kvm, gfn_t start, gfn_t end, bool flush)
++bool kvm_tdp_mmu_zap_leafs(struct kvm *kvm, gfn_t start, gfn_t end, bool flush,
++			   bool zap_private)
+ {
+ 	struct kvm_mmu_page *root;
+ 
+ 	lockdep_assert_held_write(&kvm->mmu_lock);
+ 	for_each_tdp_mmu_root_yield_safe(kvm, root)
+-		flush = tdp_mmu_zap_leafs(kvm, root, start, end, true, flush);
++		flush = tdp_mmu_zap_leafs(kvm, root, start, end, true, flush,
++					  zap_private && is_private_sp(root));
+ 
+ 	return flush;
+ }
+@@ -891,7 +898,7 @@ void kvm_tdp_mmu_zap_invalidated_roots(struct kvm *kvm)
+  * Note, kvm_tdp_mmu_zap_invalidated_roots() is gifted the TDP MMU's reference.
+  * See kvm_tdp_mmu_get_vcpu_root_hpa().
+  */
+-void kvm_tdp_mmu_invalidate_all_roots(struct kvm *kvm)
++void kvm_tdp_mmu_invalidate_all_roots(struct kvm *kvm, bool skip_private)
+ {
+ 	struct kvm_mmu_page *root;
+ 
+@@ -916,6 +923,12 @@ void kvm_tdp_mmu_invalidate_all_roots(struct kvm *kvm)
+ 	 * or get/put references to roots.
+ 	 */
+ 	list_for_each_entry(root, &kvm->arch.tdp_mmu_roots, link) {
++		/*
++		 * Skip private root since private page table
++		 * is only torn down when VM is destroyed.
++		 */
++		if (skip_private && is_private_sp(root))
++			continue;
+ 		/*
+ 		 * Note, invalid roots can outlive a memslot update!  Invalid
+ 		 * roots must be *zapped* before the memslot update completes,
+@@ -1104,14 +1117,26 @@ int kvm_tdp_mmu_map(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault)
+ 	return ret;
+ }
+ 
++/* Used by mmu notifier via kvm_unmap_gfn_range() */
+ bool kvm_tdp_mmu_unmap_gfn_range(struct kvm *kvm, struct kvm_gfn_range *range,
+ 				 bool flush)
+ {
+ 	struct kvm_mmu_page *root;
++	bool zap_private = false;
++
++	if (kvm_gfn_shared_mask(kvm)) {
++		if (!range->only_private && !range->only_shared)
++			/* attributes change */
++			zap_private = !(range->arg.attributes &
++					KVM_MEMORY_ATTRIBUTE_PRIVATE);
++		else
++			zap_private = range->only_private;
++	}
+ 
+ 	__for_each_tdp_mmu_root_yield_safe(kvm, root, range->slot->as_id, false)
+ 		flush = tdp_mmu_zap_leafs(kvm, root, range->start, range->end,
+-					  range->may_block, flush);
++					  range->may_block, flush,
++					  zap_private && is_private_sp(root));
+ 
+ 	return flush;
+ }
+diff --git a/arch/x86/kvm/mmu/tdp_mmu.h b/arch/x86/kvm/mmu/tdp_mmu.h
+index 20d97aa46c49..b3cf58a50357 100644
+--- a/arch/x86/kvm/mmu/tdp_mmu.h
++++ b/arch/x86/kvm/mmu/tdp_mmu.h
+@@ -19,10 +19,11 @@ __must_check static inline bool kvm_tdp_mmu_get_root(struct kvm_mmu_page *root)
+ 
+ void kvm_tdp_mmu_put_root(struct kvm *kvm, struct kvm_mmu_page *root);
+ 
+-bool kvm_tdp_mmu_zap_leafs(struct kvm *kvm, gfn_t start, gfn_t end, bool flush);
++bool kvm_tdp_mmu_zap_leafs(struct kvm *kvm, gfn_t start, gfn_t end, bool flush,
++			   bool zap_private);
+ bool kvm_tdp_mmu_zap_sp(struct kvm *kvm, struct kvm_mmu_page *sp);
+ void kvm_tdp_mmu_zap_all(struct kvm *kvm);
+-void kvm_tdp_mmu_invalidate_all_roots(struct kvm *kvm);
++void kvm_tdp_mmu_invalidate_all_roots(struct kvm *kvm, bool skip_private);
+ void kvm_tdp_mmu_zap_invalidated_roots(struct kvm *kvm);
+ 
+ int kvm_tdp_mmu_map(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault);
 -- 
 2.25.1
 
