@@ -1,146 +1,199 @@
-Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D429D4643B;
-	Mon, 22 Jan 2024 11:31:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.149.199.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C69C482D9;
+	Mon, 22 Jan 2024 11:32:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705923113; cv=none; b=TaLlfO12iiAQtPUR9PfBJb7lspgbZFKz4lubn2nAYuBdS0dTbtLI5CuzZBDRGzZMOvWPbkG0nj0a2x6R7nZg9clNnwN5cURftPbTQHrukhgTjsU7fJiWrOkbXc85nWWVW6rVbKOU08Xk29MxCuzViBE4BdFZFRgjUkoTt8NAt6g=
+	t=1705923134; cv=none; b=nXHtPWF0DN3o/o5ppbwFH9H5ZptweqMovV0KuZe95rfyeahIxk7QyLta/pHAA+ZzaYedbFhluuB0kZLcJSJu2MfFdAcdnGuvR9I5U0riDAtmKTIxJQGDrnB5d1DdSAfsKdwBVm/jxESn+S2Xm1c2lszgQr+hHepNKpQnGVEr5VE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705923113; c=relaxed/simple;
-	bh=QJRXftv5htaGrRJpvd/RlmMy4vOMeaylsoskctG39LU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=gX3/GpBvvT80WmIoBcc29aZeTk3JV7KxNvM39od8a/hFHnBaRVLsKXUeVMc7ar4UcHZk/wcx3YLweMLUqiXQX+WqsDKNAQA6B970m3AGIB+ykIxkcpy0WzMkzN7uFu28WtqFO12T0dthjVowa91zWKoFE69mq8Bgxx18xPTl/ak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru; spf=pass smtp.mailfrom=ispras.ru; dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b=C1E3gLN+; arc=none smtp.client-ip=83.149.199.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ispras.ru
+	s=arc-20240116; t=1705923134; c=relaxed/simple;
+	bh=jIWbdhazF1DtsVh0QU7A3sMXExHW1xlwHLYRk2ok3JI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mddYbSCA4fm/xHDpdi49hSpZaR99jBFaNSCnLTrJUhISyk44DKWcqcLxKJ0lmtyJMyiQPHoFkDfkDWZd4swTotke4bY76F/F/c7vfCaSg+7ONwrhGyZNy5U9G+cIN24MEoQSED20nRQ6e9K+F5IXlrTLNfPY/p9ayzBK1d8IMME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y2wktsU/; arc=none smtp.client-ip=209.85.167.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b="C1E3gLN+"
-Received: from fpc.intra.ispras.ru (unknown [10.10.165.9])
-	by mail.ispras.ru (Postfix) with ESMTPSA id 8FEF940F1DE6;
-	Mon, 22 Jan 2024 11:31:47 +0000 (UTC)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru 8FEF940F1DE6
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ispras.ru;
-	s=default; t=1705923107;
-	bh=GIiZsYrmgQCjlr/AmrPL2dhePcSW3bDC4ZjkPnqyyw0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=C1E3gLN+RWBe7hsAeyUQlphmiR9c466+8dSVYEblMCzqS096G05/SIHIJ50sdsViT
-	 9oj+VIuEvcLmepxPBbJAtSP8QgJ5stFMZ6AMLZLuhusSDjh2DD1JwNZDjFsb4XW3yd
-	 DuVI9tm0XSPDosXsRJ384m3RSMUWcLM6VwdOzFts=
-From: Fedor Pchelkin <pchelkin@ispras.ru>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	stable@vger.kernel.org
-Cc: Fedor Pchelkin <pchelkin@ispras.ru>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	"Steven Rostedt (Google)" <rostedt@goodmis.org>,
-	linux-kernel@vger.kernel.org,
-	lvc-project@linuxtesting.org,
-	Pengfei Xu <pengfei.xu@intel.com>
-Subject: [PATCH 5.10/5.15 1/1] kprobes: Fix to handle forcibly unoptimized kprobes on freeing_list
-Date: Mon, 22 Jan 2024 14:30:31 +0300
-Message-Id: <20240122113031.301202-2-pchelkin@ispras.ru>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240122113031.301202-1-pchelkin@ispras.ru>
-References: <20240122113031.301202-1-pchelkin@ispras.ru>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y2wktsU/"
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-50ec948ad31so3218903e87.2;
+        Mon, 22 Jan 2024 03:32:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1705923130; x=1706527930; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :reply-to:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=DPbIVtQUATMQ9HXAYvqkNgY9ZzASBXmb6XQmjxVPQJI=;
+        b=Y2wktsU/SQyvf9cBbsO6aW9XDcAo/bjxm6+9SKSf15D2tULKCYhp2RQZ42MvtUSTt8
+         p/tEgv2f5b8xVJ/pmT4u9KKCIpMUWRd/RKgAxzRwMmTeTf9Rc+LWaL8EDpLjXGp+DXDV
+         mSYQfpbdn8kl2PIbvUzPH1SNzH17jbnNC9ACJcw04z65Hyo8Mgbf5xMmTnr6av2O3Gwj
+         8hafpuPUaoksQHJoUlTX9e0hKvMILOmGDnPt+CYlT46gQ86Gmkrqh/nhDsXX6nUEhSNg
+         gjg16c0Fx8XGC30BErSuvv0YdReUeFV+CKNCa5QHZvnqBXG087PxYZ2C6awTRunYB4vk
+         WytQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705923130; x=1706527930;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :reply-to:in-reply-to:references:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=DPbIVtQUATMQ9HXAYvqkNgY9ZzASBXmb6XQmjxVPQJI=;
+        b=Z4kKvnBvLdlac3DMWHL2WOFRbnKbs1nn+uFlKINxlRegzg96EMs1sfXEihtKLlm/mv
+         Fgyi6WzrQcBxolyx1YQFR6OotyBP7b0oz1tR1VqaRZK6/dwixsjkN73bUUC1KBvMDoPs
+         l9BexicdJXpsMoLEc4zsljxaaXN/UT7mvU2qVkFIxe3bIfLSqZTQRU+qegIFMyY93yFC
+         IAWL4GXpeNU76huZFM3dau1NTDiGXigBi6CBbxA2eGxLh61sj04PIn5eMe6TreMtFomD
+         0Y3E5HmvB5H+IJtbgP+IXmmK6+X7LBV8jB0w7cWfG/IMyRCNoN5eRhwuRuGLiiP8MQ8E
+         a2iQ==
+X-Gm-Message-State: AOJu0Yw+rGDvdTkTdWFINXPbsayARwzEzm7i2zgjgsRIRfb+7+RsurF9
+	7WF7R5pqziykDtlkCXcfkfLvo8keoOKP4Zuq9aItuvqEdAmPh0tdccFHdDiEDjci+BCrTEFPWYi
+	ASBVcJGxXJ4QxyX4owO28+7sjtUE=
+X-Google-Smtp-Source: AGHT+IE8q+aq6bFKrhgG9BSySHiV+tD954Tn/cVZYKhwVGHb0K+uUjH7ovE9Bu9iAyd12VXTVTX6Bsn87zFzzMIkblM=
+X-Received: by 2002:a05:6512:3d1e:b0:50e:80db:3c35 with SMTP id
+ d30-20020a0565123d1e00b0050e80db3c35mr1745864lfv.80.1705923130168; Mon, 22
+ Jan 2024 03:32:10 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1850031.1704921100@warthog.procyon.org.uk> <CA+icZUUc_0M_6JU3dZzVqrUUrWJceY1uD8dO2yFMCwtHtkaa_Q@mail.gmail.com>
+ <CA+icZUWYSxfFHf5A56h9b4uOYYaANNxo2Z+cpwP1Bs1pF8MXQQ@mail.gmail.com>
+In-Reply-To: <CA+icZUWYSxfFHf5A56h9b4uOYYaANNxo2Z+cpwP1Bs1pF8MXQQ@mail.gmail.com>
+Reply-To: sedat.dilek@gmail.com
+From: Sedat Dilek <sedat.dilek@gmail.com>
+Date: Mon, 22 Jan 2024 12:31:32 +0100
+Message-ID: <CA+icZUV5zbsm4=wceT7+nzCrCw7S8SkKonTevFBpNTgvzbHT8g@mail.gmail.com>
+Subject: Re: [PATCH] keys, dns: Fix size check of V1 server-list header
+To: sedat.dilek@gmail.com
+Cc: David Howells <dhowells@redhat.com>, ceph-devel@vger.kernel.org, davem@davemloft.net, 
+	eadavis@qq.com, edumazet@google.com, horms@kernel.org, jaltman@auristor.com, 
+	jarkko@kernel.org, jlayton@redhat.com, keyrings@vger.kernel.org, 
+	kuba@kernel.org, linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-nfs@vger.kernel.org, marc.dionne@auristor.com, markus.suvanto@gmail.com, 
+	netdev@vger.kernel.org, pabeni@redhat.com, pengfei.xu@intel.com, 
+	smfrench@gmail.com, stable@vger.kernel.org, torvalds@linux-foundation.org, 
+	wang840925@gmail.com, sashal@kernel.org, gregkh@linuxfoundation.org, 
+	pvorel@suse.cz
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+On Mon, Jan 22, 2024 at 12:01=E2=80=AFPM Sedat Dilek <sedat.dilek@gmail.com=
+> wrote:
+>
+> On Mon, Jan 22, 2024 at 8:33=E2=80=AFAM Petr Vorel <pvorel@suse.cz> wrote=
+:
+> >
+> > From: Sedat Dilek <sedat.dilek@gmail.com>
+> >
+> > On Wed, Jan 10, 2024 at 10:12=E2=80=AFPM David Howells <dhowells@redhat=
+.com> wrote:
+> > >
+> > >
+> > > Fix the size check added to dns_resolver_preparse() for the V1 server=
+-list
+> > > header so that it doesn't give EINVAL if the size supplied is the sam=
+e as
+> > > the size of the header struct (which should be valid).
+> > >
+> > > This can be tested with:
+> > >
+> > >         echo -n -e '\0\0\01\xff\0\0' | keyctl padd dns_resolver desc =
+@p
+> > >
+> > > which will give "add_key: Invalid argument" without this fix.
+> > >
+> > > Fixes: 1997b3cb4217 ("keys, dns: Fix missing size check of V1 server-=
+list header")
+> >
+> > [ CC stable@vger.kernel.org ]
+> >
+> > Your (follow-up) patch is now upstream.
+> >
+> > https://git.kernel.org/linus/acc657692aed438e9931438f8c923b2b107aebf9
+> >
+> > This misses CC: Stable Tag as suggested by Linus.
+> >
+> > Looks like linux-6.1.y and linux-6.6.y needs it, too.
+> >
+> > https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit=
+/?h=3Dv6.6.11&id=3Dda89365158f6f656b28bcdbcbbe9eaf97c63c474
+> > https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit=
+/?h=3Dv6.1.72&id=3D079eefaecfd7bbb8fcc30eccb0dfdf50c91f1805
+> >
+> > BG,
+> > -Sedat-
+> >
+> > Hi Greg, Sasa,
+> >
+> > could you please add this also to linux-6.1.y and linux-6.6.y?  (Easily
+> > applicable to both, needed for both.) Or is there any reason why it's n=
+ot
+> > being added?
+> >
+>
+> Great!
+>
+> I forgot to CC Greg and Sasha directly.
+>
+> Thanks.
+>
 
-commit 4fbd2f83fda0ca44a2ec6421ca3508b355b31858 upstream.
+Addendum:
 
-Since forcibly unoptimized kprobes will be put on the freeing_list directly
-in the unoptimize_kprobe(), do_unoptimize_kprobes() must continue to check
-the freeing_list even if unoptimizing_list is empty.
+Linus says:
+"
+Bah. Obvious fix is obvious.
 
-This bug can happen if a kprobe is put in an instruction which is in the
-middle of the jump-replaced instruction sequence of an optprobe, *and* the
-optprobe is recently unregistered and queued on unoptimizing_list.
-In this case, the optprobe will be unoptimized forcibly (means immediately)
-and put it into the freeing_list, expecting the optprobe will be handled in
-do_unoptimize_kprobe().
-But if there is no other optprobes on the unoptimizing_list, current code
-returns from the do_unoptimize_kprobe() soon and does not handle the
-optprobe which is on the freeing_list. Then the optprobe will hit the
-WARN_ON_ONCE() in the do_free_cleaned_kprobes(), because it is not handled
-in the latter loop of the do_unoptimize_kprobe().
+Mind sending it as a proper patch with sign-off etc, and we'll get
+this fixed and marked for stable.
+"
 
-To solve this issue, do not return from do_unoptimize_kprobes() immediately
-even if unoptimizing_list is empty.
+https://lore.kernel.org/all/CAHk-=3DwiyG8BKKZmU7CDHC8+rmvBndrqNSgLV6LtuqN8W=
+_gL3hA@mail.gmail.com/
 
-Moreover, this change affects another case. kill_optimized_kprobes() expects
-kprobe_optimizer() will just free the optprobe on freeing_list.
-So I changed it to just do list_move() to freeing_list if optprobes are on
-unoptimizing list. And the do_unoptimize_kprobe() will skip
-arch_disarm_kprobe() if the probe on freeing_list has gone flag.
+-Sedat-
 
-Link: https://lore.kernel.org/all/Y8URdIfVr3pq2X8w@xpf.sh.intel.com/
-Link: https://lore.kernel.org/all/167448024501.3253718.13037333683110512967.stgit@devnote3/
-
-Fixes: e4add247789e ("kprobes: Fix optimize_kprobe()/unoptimize_kprobe() cancellation logic")
-Reported-by: Pengfei Xu <pengfei.xu@intel.com>
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Cc: stable@vger.kernel.org
-Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-[fp: adjust comment conflict regarding commit 223a76b268c9 ("kprobes: Fix
- coding style issues")]
-Signed-off-by: Fedor Pchelkin <pchelkin@ispras.ru>
----
- kernel/kprobes.c | 23 ++++++++++-------------
- 1 file changed, 10 insertions(+), 13 deletions(-)
-
-diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-index 07d36cee2a80..5d713a7d7e87 100644
---- a/kernel/kprobes.c
-+++ b/kernel/kprobes.c
-@@ -549,17 +549,15 @@ static void do_unoptimize_kprobes(void)
- 	/* See comment in do_optimize_kprobes() */
- 	lockdep_assert_cpus_held();
- 
--	/* Unoptimization must be done anytime */
--	if (list_empty(&unoptimizing_list))
--		return;
-+	if (!list_empty(&unoptimizing_list))
-+		arch_unoptimize_kprobes(&unoptimizing_list, &freeing_list);
- 
--	arch_unoptimize_kprobes(&unoptimizing_list, &freeing_list);
--	/* Loop free_list for disarming */
-+	/* Loop on 'freeing_list' for disarming and removing from kprobe hash list */
- 	list_for_each_entry_safe(op, tmp, &freeing_list, list) {
- 		/* Switching from detour code to origin */
- 		op->kp.flags &= ~KPROBE_FLAG_OPTIMIZED;
--		/* Disarm probes if marked disabled */
--		if (kprobe_disabled(&op->kp))
-+		/* Disarm probes if marked disabled and not gone */
-+		if (kprobe_disabled(&op->kp) && !kprobe_gone(&op->kp))
- 			arch_disarm_kprobe(&op->kp);
- 		if (kprobe_unused(&op->kp)) {
- 			/*
-@@ -788,14 +786,13 @@ static void kill_optimized_kprobe(struct kprobe *p)
- 	op->kp.flags &= ~KPROBE_FLAG_OPTIMIZED;
- 
- 	if (kprobe_unused(p)) {
--		/* Enqueue if it is unused */
--		list_add(&op->list, &freeing_list);
- 		/*
--		 * Remove unused probes from the hash list. After waiting
--		 * for synchronization, this probe is reclaimed.
--		 * (reclaiming is done by do_free_cleaned_kprobes().)
-+		 * Unused kprobe is on unoptimizing or freeing list. We move it
-+		 * to freeing_list and let the kprobe_optimizer() remove it from
-+		 * the kprobe hash list and free it.
- 		 */
--		hlist_del_rcu(&op->kp.hlist);
-+		if (optprobe_queued_unopt(op))
-+			list_move(&op->list, &freeing_list);
- 	}
- 
- 	/* Don't touch the code, because it is already freed. */
--- 
-2.39.2
-
+> BG,
+> -Sedat-
+>
+> > Kind regards,
+> > Petr
+> >
+> > > Reported-by: Pengfei Xu <pengfei.xu@intel.com>
+> > > Link: https://lore.kernel.org/r/ZZ4fyY4r3rqgZL+4@xpf.sh.intel.com/
+> > > Signed-off-by: David Howells <dhowells@redhat.com>
+> > > cc: Edward Adam Davis <eadavis@qq.com>
+> > > cc: Linus Torvalds <torvalds@linux-foundation.org>
+> > > cc: Simon Horman <horms@kernel.org>
+> > > Cc: Jarkko Sakkinen <jarkko@kernel.org>
+> > > Cc: Jeffrey E Altman <jaltman@auristor.com>
+> > > Cc: Wang Lei <wang840925@gmail.com>
+> > > Cc: Jeff Layton <jlayton@redhat.com>
+> > > Cc: Steve French <sfrench@us.ibm.com>
+> > > Cc: Marc Dionne <marc.dionne@auristor.com>
+> > > Cc: "David S. Miller" <davem@davemloft.net>
+> > > Cc: Eric Dumazet <edumazet@google.com>
+> > > Cc: Jakub Kicinski <kuba@kernel.org>
+> > > Cc: Paolo Abeni <pabeni@redhat.com>
+> > > ---
+> > >  net/dns_resolver/dns_key.c |    2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > >
+> > > diff --git a/net/dns_resolver/dns_key.c b/net/dns_resolver/dns_key.c
+> > > index f18ca02aa95a..c42ddd85ff1f 100644
+> > > --- a/net/dns_resolver/dns_key.c
+> > > +++ b/net/dns_resolver/dns_key.c
+> > > @@ -104,7 +104,7 @@ dns_resolver_preparse(struct key_preparsed_payloa=
+d *prep)
+> > >                 const struct dns_server_list_v1_header *v1;
+> > >
+> > >                 /* It may be a server list. */
+> > > -               if (datalen <=3D sizeof(*v1))
+> > > +               if (datalen < sizeof(*v1))
+> > >                         return -EINVAL;
+> > >
+> > >                 v1 =3D (const struct dns_server_list_v1_header *)data=
+;
+> > >
+> > >
+> >
