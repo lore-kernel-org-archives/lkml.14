@@ -1,120 +1,179 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AD0152F6B
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 15:14:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4B04135A44;
+	Mon, 22 Jan 2024 15:14:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705936465; cv=none; b=bHrctu7HqzspruwXN/15Xb31JlDM9o0doq5GuqWmdjf5OKUTBOakNhe3F23tUw+1l2jlV2NZGXr+UjCcx2JK0i/7q+QeTuxRNqNWTXiqihLEqh7KE5V/RUxfzmkGjIW9XsPaMtK3o0hHVYYm/4uuUxOT2l54wbIQb4De4X5oZpA=
+	t=1705936467; cv=none; b=bRVUO/KdH5BZGglmdllJocZEGebvYGoMDdRIOnKs5AEgTDuFp52n6CNip2Ib9+zqmyN1gCE5RJIeZHMQRwbCpeSz1PmK6O8yLY4TPsXJ5d5+CF2GVzqwImE/8iuFrp9DLCb2GaNHdry4AHhTWBG34aEtfPu/1FVpQ7EzmDApFC8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705936465; c=relaxed/simple;
-	bh=DCZ1yeweHK2ZD0/uXdu9bE6/Jcq3FK7B2WmAhGZfcIk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DrtL9GlsK1atu4XvBqmm0IXvjomvl1OPeIJRMBAXOCbeZeRJai00vG0j2k5t+tNx4Zvso68YM3P6viD8RKAcUmVpFqdOPvLwgZxFUKwuxtwVVdK7gp17areO9vgueu/R9XdVUKNVJMaWHHSBUCnQ6S9xsbIixGQLpvfEcVjUKH8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DN2Lis9/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1705936467; c=relaxed/simple;
+	bh=od/93D7WrSq1zQRDKGWKdP9kgrvcXIRwEyUffPVVUpo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jUTcNR5fzS0BMWnL1+ketiEAjEoiyZY5snffuLt2Ny5HLjBaZ2FjfDrOYYskSfylDB4jQmt6m2NPDxQt/Bbny6FC2Vw+I0SL5PAnKK8TSFYlIjgpsIGL1enHGaYhiqMwBmDVvdeW9oiiNHfftQqd8utANXO+JyIlluQ2nbK12MU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kEHX17yb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DN2Lis9/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B55CAC4166B
-	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 15:14:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kEHX17yb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53D7FC433F1;
+	Mon, 22 Jan 2024 15:14:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705936464;
-	bh=DCZ1yeweHK2ZD0/uXdu9bE6/Jcq3FK7B2WmAhGZfcIk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=DN2Lis9/iFq5QR+6FC0X0SvlTktEklejUr/3e8HjykOk7Lsgc5bcKpMhYCkKC2iYD
-	 T9steyNhvyHKhP4TsWHn/tZVpG1aKTBC4aqYvUFH2qo3usH51KhwMJ3ITdVxk7WPh0
-	 AT5lC3YybaCAjFgZ/W38LDMrYgcYIasm707zfrq8ym/UHiBVgrOzI9ThYmMREjR9rV
-	 X3+PwJTc8vNyo3M14CCZxCQ3+W7LpOppSTBMVkgH4Zoinln+2WB8zQpUcBmdx8z1L9
-	 qUmh0p79qbxe2HemO3pdqBS9D4ie34AJKgcrPlT9JyyH8DMAuhKN0x6qUXlhx5g0FW
-	 pkC9is7+/O5YA==
-Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-dc22597dbfeso3533100276.3
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 07:14:24 -0800 (PST)
-X-Gm-Message-State: AOJu0YwUmVdxulAva5eI5Zqm6YBwDVLokmQB5+VjqntSWLgFyhzYmEHe
-	qecgHGkvBRzA4oj1w5NuSmlUo8f30jPCNOJCeXePcnmiIdSNdjb32cfprNwuxS7gcyv0nn5Ud53
-	mmNG8gwVTSg1m/ZAjQbP0vs3x1eVgWlQfpz4Wjw==
-X-Google-Smtp-Source: AGHT+IELeqUZHcuEi6czSy6GxZtZYY24kkEpIurvFbFmTxvGFQUNqb3M5tKbk3ha+xCzPOeAwzOOrlbwEjoG5Tvhq/U=
-X-Received: by 2002:a25:8049:0:b0:dbe:aab1:b0e3 with SMTP id
- a9-20020a258049000000b00dbeaab1b0e3mr2553106ybn.98.1705936463808; Mon, 22 Jan
- 2024 07:14:23 -0800 (PST)
+	s=k20201202; t=1705936467;
+	bh=od/93D7WrSq1zQRDKGWKdP9kgrvcXIRwEyUffPVVUpo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=kEHX17yb6KG0WbOcwiO/sRVGAqtj9S/CyAQ4f4tz1FkxZ9eSc9+nyM0e7LAT7EhFV
+	 5A1xlGvqGnU6gRwipEA+Yd3+30MK8C4DyUDW5hRNh5UKfXUAaAQ8hS8Tu3theA8RBb
+	 ZJuBdEiE9Eze/cXF+wQPjjo/YLGT0ZsXgz7jMkWdfWRHNpaOqfwtZnZCikodPeBgbU
+	 LuuOkTMqVZVhsCyoFg8Z+2X03njeVnZMrMEa6v2qJqKrkpo4/z5wu8eYVVfizDUqap
+	 G6EkVdA5mfTwTc/Zy/DW9HhTY/lKrrZjhXD8zLvYVwkSAR5pRTcxpYMTWVpPqeaTqe
+	 Cuq1dyfgBj6Pg==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: "Wang, Beyond" <Wang.Beyond@amd.com>,
+	Wang,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Sasha Levin <sashal@kernel.org>,
+	Xinhui.Pan@amd.com,
+	airlied@gmail.com,
+	daniel@ffwll.ch,
+	Felix.Kuehling@amd.com,
+	Philip.Yang@amd.com,
+	guchun.chen@amd.com,
+	Hongkun.Zhang@amd.com,
+	Lyndon.Li@amd.com,
+	marek.olsak@amd.com,
+	pierre-eric.pelloux-prayer@amd.com,
+	Jun.Ma2@amd.com,
+	maarten.lankhorst@linux.intel.com,
+	mukul.joshi@amd.com,
+	matthew.auld@intel.com,
+	srinivasan.shanmugam@amd.com,
+	rajneesh.bhardwaj@amd.com,
+	lijo.lazar@amd.com,
+	amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.15 26/35] drm/amdgpu: fix ftrace event amdgpu_bo_move always move on same heap
+Date: Mon, 22 Jan 2024 10:12:23 -0500
+Message-ID: <20240122151302.995456-26-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240122151302.995456-1-sashal@kernel.org>
+References: <20240122151302.995456-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231214123205.v2.1.I9d1afcaad76a3e2c0ca046dc4adbc2b632c22eda@changeid>
- <20231214123205.v2.2.I7b83c0f31aeedc6b1dc98c7c741d3e1f94f040f8@changeid>
-In-Reply-To: <20231214123205.v2.2.I7b83c0f31aeedc6b1dc98c7c741d3e1f94f040f8@changeid>
-From: Robert Foss <rfoss@kernel.org>
-Date: Mon, 22 Jan 2024 16:14:12 +0100
-X-Gmail-Original-Message-ID: <CAN6tsi4LtcSK0vc7oWn_H2Mk=pHj9kxTnk1aB5FZi2varHox=g@mail.gmail.com>
-Message-ID: <CAN6tsi4LtcSK0vc7oWn_H2Mk=pHj9kxTnk1aB5FZi2varHox=g@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] drm/bridge: ti-sn65dsi86: Never store more than
- msg->size bytes in AUX xfer
-To: Douglas Anderson <dianders@chromium.org>
-Cc: dri-devel@lists.freedesktop.org, Guenter Roeck <groeck@chromium.org>, 
-	Andrzej Hajda <andrzej.hajda@intel.com>, Daniel Vetter <daniel@ffwll.ch>, 
-	David Airlie <airlied@gmail.com>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
-	Jonas Karlman <jonas@kwiboo.se>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Sam Ravnborg <sam@ravnborg.org>, 
-	Stephen Boyd <swboyd@chromium.org>, Thomas Zimmermann <tzimmermann@suse.de>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 5.15.147
+Content-Transfer-Encoding: 8bit
 
-On Thu, Dec 14, 2023 at 9:32=E2=80=AFPM Douglas Anderson <dianders@chromium=
-.org> wrote:
->
-> For aux reads, the value `msg->size` indicates the size of the buffer
-> provided by `msg->buffer`. We should never in any circumstances write
-> more bytes to the buffer since it may overflow the buffer.
->
-> In the ti-sn65dsi86 driver there is one code path that reads the
-> transfer length from hardware. Even though it's never been seen to be
-> a problem, we should make extra sure that the hardware isn't
-> increasing the length since doing so would cause us to overrun the
-> buffer.
->
-> Fixes: 982f589bde7a ("drm/bridge: ti-sn65dsi86: Update reply on aux failu=
-res")
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
->
-> Changes in v2:
-> - Updated patch subject to match ps8640 patch.
->
->  drivers/gpu/drm/bridge/ti-sn65dsi86.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/brid=
-ge/ti-sn65dsi86.c
-> index 9095d1453710..62cc3893dca5 100644
-> --- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-> +++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-> @@ -527,6 +527,7 @@ static ssize_t ti_sn_aux_transfer(struct drm_dp_aux *=
-aux,
->         u32 request_val =3D AUX_CMD_REQ(msg->request);
->         u8 *buf =3D msg->buffer;
->         unsigned int len =3D msg->size;
-> +       unsigned int short_len;
->         unsigned int val;
->         int ret;
->         u8 addr_len[SN_AUX_LENGTH_REG + 1 - SN_AUX_ADDR_19_16_REG];
-> @@ -600,7 +601,8 @@ static ssize_t ti_sn_aux_transfer(struct drm_dp_aux *=
-aux,
->         }
->
->         if (val & AUX_IRQ_STATUS_AUX_SHORT) {
-> -               ret =3D regmap_read(pdata->regmap, SN_AUX_LENGTH_REG, &le=
-n);
-> +               ret =3D regmap_read(pdata->regmap, SN_AUX_LENGTH_REG, &sh=
-ort_len);
-> +               len =3D min(len, short_len);
->                 if (ret)
->                         goto exit;
->         } else if (val & AUX_IRQ_STATUS_NAT_I2C_FAIL) {
-> --
-> 2.43.0.472.g3155946c3a-goog
->
->
+From: "Wang, Beyond" <Wang.Beyond@amd.com>
 
-Reviewed-by: Robert Foss <rfoss@kernel.org>
+[ Upstream commit 94aeb4117343d072e3a35b9595bcbfc0058ee724 ]
+
+Issue: during evict or validate happened on amdgpu_bo, the 'from' and
+'to' is always same in ftrace event of amdgpu_bo_move
+
+where calling the 'trace_amdgpu_bo_move', the comment says move_notify
+is called before move happens, but actually it is called after move
+happens, here the new_mem is same as bo->resource
+
+Fix: move trace_amdgpu_bo_move from move_notify to amdgpu_bo_move
+
+Signed-off-by: Wang, Beyond <Wang.Beyond@amd.com>
+Reviewed-by: Christian König <christian.koenig@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/gpu/drm/amd/amdgpu/amdgpu_object.c | 13 +------------
+ drivers/gpu/drm/amd/amdgpu/amdgpu_object.h |  4 +---
+ drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c    |  5 +++--
+ 3 files changed, 5 insertions(+), 17 deletions(-)
+
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_object.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_object.c
+index 8a0b652da4f4..5d95594a1753 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_object.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_object.c
+@@ -1236,19 +1236,15 @@ int amdgpu_bo_get_metadata(struct amdgpu_bo *bo, void *buffer,
+  * amdgpu_bo_move_notify - notification about a memory move
+  * @bo: pointer to a buffer object
+  * @evict: if this move is evicting the buffer from the graphics address space
+- * @new_mem: new information of the bufer object
+  *
+  * Marks the corresponding &amdgpu_bo buffer object as invalid, also performs
+  * bookkeeping.
+  * TTM driver callback which is called when ttm moves a buffer.
+  */
+-void amdgpu_bo_move_notify(struct ttm_buffer_object *bo,
+-			   bool evict,
+-			   struct ttm_resource *new_mem)
++void amdgpu_bo_move_notify(struct ttm_buffer_object *bo, bool evict)
+ {
+ 	struct amdgpu_device *adev = amdgpu_ttm_adev(bo->bdev);
+ 	struct amdgpu_bo *abo;
+-	struct ttm_resource *old_mem = bo->resource;
+ 
+ 	if (!amdgpu_bo_is_amdgpu_bo(bo))
+ 		return;
+@@ -1265,13 +1261,6 @@ void amdgpu_bo_move_notify(struct ttm_buffer_object *bo,
+ 	/* remember the eviction */
+ 	if (evict)
+ 		atomic64_inc(&adev->num_evictions);
+-
+-	/* update statistics */
+-	if (!new_mem)
+-		return;
+-
+-	/* move_notify is called before move happens */
+-	trace_amdgpu_bo_move(abo, new_mem->mem_type, old_mem->mem_type);
+ }
+ 
+ void amdgpu_bo_get_memory(struct amdgpu_bo *bo, uint64_t *vram_mem,
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_object.h b/drivers/gpu/drm/amd/amdgpu/amdgpu_object.h
+index dc5b889828d9..0969669f1d4e 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_object.h
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_object.h
+@@ -313,9 +313,7 @@ int amdgpu_bo_set_metadata (struct amdgpu_bo *bo, void *metadata,
+ int amdgpu_bo_get_metadata(struct amdgpu_bo *bo, void *buffer,
+ 			   size_t buffer_size, uint32_t *metadata_size,
+ 			   uint64_t *flags);
+-void amdgpu_bo_move_notify(struct ttm_buffer_object *bo,
+-			   bool evict,
+-			   struct ttm_resource *new_mem);
++void amdgpu_bo_move_notify(struct ttm_buffer_object *bo, bool evict);
+ void amdgpu_bo_release_notify(struct ttm_buffer_object *bo);
+ vm_fault_t amdgpu_bo_fault_reserve_notify(struct ttm_buffer_object *bo);
+ void amdgpu_bo_fence(struct amdgpu_bo *bo, struct dma_fence *fence,
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c
+index 51c76d6322c9..b06fb1fa411b 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c
+@@ -554,10 +554,11 @@ static int amdgpu_bo_move(struct ttm_buffer_object *bo, bool evict,
+ 			return r;
+ 	}
+ 
++	trace_amdgpu_bo_move(abo, new_mem->mem_type, old_mem->mem_type);
+ out:
+ 	/* update statistics */
+ 	atomic64_add(bo->base.size, &adev->num_bytes_moved);
+-	amdgpu_bo_move_notify(bo, evict, new_mem);
++	amdgpu_bo_move_notify(bo, evict);
+ 	return 0;
+ }
+ 
+@@ -1480,7 +1481,7 @@ static int amdgpu_ttm_access_memory(struct ttm_buffer_object *bo,
+ static void
+ amdgpu_bo_delete_mem_notify(struct ttm_buffer_object *bo)
+ {
+-	amdgpu_bo_move_notify(bo, false, NULL);
++	amdgpu_bo_move_notify(bo, false);
+ }
+ 
+ static struct ttm_device_funcs amdgpu_bo_driver = {
+-- 
+2.43.0
+
