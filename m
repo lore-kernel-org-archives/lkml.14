@@ -1,153 +1,149 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCB19F500;
-	Mon, 22 Jan 2024 06:44:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C65AEFBE4
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 06:44:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705905867; cv=none; b=Zm8uQ0faxIjUeRp9P+TVPoR0+odT8vhYCi4QyhFrdVz5z/8HWdtzgbKwt8TTxQ8l3zOVOIX5BgDtZcR/3Ek+RvhwXYH7TVP1q51ADrO73hBQRd1ut3JVeH3YLw1oRMgAOhnN38q6DXUCZJNB7/jHyheqTlnkWTKO3n2NNGNqzzI=
+	t=1705905884; cv=none; b=P/nijY8IMGd6d46pytQ9RclY1MuduLjI/XN2+P8ohpScKMwAJZcp33Ck+tKGWn7yYXJjFxLr2g9Sj05tvHWXRzfQ1nbMZCOA9d9dvJDNMqgDGFQafKsXUxj0mqwx9T5uAjNwN8rQYW3ih45kHW0oeeHdvJEaBh54jr/p9GIQymM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705905867; c=relaxed/simple;
-	bh=ldrUB48xZDazzp/AyajgHeXxDyEX8P50st74ShQc4Ks=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=AS8kc08U0aaqjXL9oCVwpJI9X7vCUVx4tP4TLb4xY473t7X8+TJXatE2YUs6AwuExH++N2uXYYphZ033e+4FQA/wvqk4pGXvgPUVYolvYpdwwCqNnwz6wnXxajCwHATLCB0L0hr4Oa9wq5EUQCjly8gtXqyFRcURWndIJCVhw9w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gy3CLvRw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1705905884; c=relaxed/simple;
+	bh=rqfbJaTavukHqNcWA/aI44nUtPbzn4mQR4BhbHCOIpY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=SxHhm7MR4omD2ooXE98vbnCdk1T1CM+pKJ4MJjAH4rGfiiEgA9p7N4oBYKY+8JmX5R0ofd2YQlYgnyA55W/I9o3amsRepa+gRgu+2TokHLHXu4AFm/frPS+SMOn3tBifT8HmOUg0SwLI+pY8fBtedevhTK6pvPv1fe8vOpgDBrU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=c0ILfza+; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gy3CLvRw"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 55E1EC433F1;
-	Mon, 22 Jan 2024 06:44:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705905866;
-	bh=ldrUB48xZDazzp/AyajgHeXxDyEX8P50st74ShQc4Ks=;
-	h=From:Date:Subject:To:Cc:Reply-To:From;
-	b=Gy3CLvRwcu6Dbp557Flou6m4aXwteg8Q0YtxqvxEJ84338lRhwyi+hYRtS91Unz8n
-	 pluK8+0UJbPidwN818gA8ty4DYszd3HzspIcWTe4Z8OCsgbWvzvTIiCNlnz/nZ3mIE
-	 5FMo3lINSWUM2/K/eZmOuEV4fLGn7FdfiY1HnOFyBYd8vYPfaam/86iFcItCJ9L4kl
-	 cll8ALoLzoOBFXD3sFgr3aUQ1oMmGyqcV6d5rtsmMrIQ+yAbEh3Dx/360kGRrhz/8O
-	 3JRBHvEiZ2gS9VzRFL94S7cjhM90WtEP9r2yivYgq07ARtiteU/CpqPs4HR3DMhGFg
-	 28GR3+dzK6H7w==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3139BC47DAF;
-	Mon, 22 Jan 2024 06:44:26 +0000 (UTC)
-From: Hui Liu via B4 Relay <devnull+quic_huliu.quicinc.com@kernel.org>
-Date: Mon, 22 Jan 2024 14:43:24 +0800
-Subject: [PATCH v6] arm64: dts: qcom: qcm6490-idp: Add definition for three
- LEDs
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="c0ILfza+"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-337b8da1f49so2575559f8f.0
+        for <linux-kernel@vger.kernel.org>; Sun, 21 Jan 2024 22:44:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1705905881; x=1706510681; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
+         :to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=G5xHkIHav/DyHDr3s4AUIxAaw4nqa+rIE0HQuqV2AoY=;
+        b=c0ILfza+WdYtI2z+yA3gmfN33iNgMy51Tg8ldfYfyj/kk/R2IjPI6+Ne074n32CmZ/
+         bppJLA4bT6i0P6nXKrs09WiI/btW0F7ksYTAGNwKzGfPhO7UHB1JyzvW/NdlLgpCJJv7
+         TLIa0rTAktgTMgNOZfijw9uCifQPfro4PUe+5KjjWImIEOF57B7bfJ1gedcu5DfF9glH
+         JqeBTMp4wuJKWsVjPUf1q990Qm/umK0mDeSLzxXlLT70dR6QfUcyGyEWSbcqTffMgQ5K
+         qmf8brnEwi89yJH6W091G6+djGIpHCUeL0ufmumbFT8tOVAfsd61cwh7yOfwgUOrfZJn
+         lqLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705905881; x=1706510681;
+        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
+         :to:from:date:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=G5xHkIHav/DyHDr3s4AUIxAaw4nqa+rIE0HQuqV2AoY=;
+        b=N0DVDNO2MgC4UcW4JPX9JRfUKZy06q3inFGIW3E8E287oLMeID11zolVTB00i4tlOA
+         4t/GFvMHd4Rh+4yEEGeNTAAdAb2Npamf9EcgvI6BuZg6iN7gFvqHPcSx5329OMf4U92B
+         teMY+PiGPXJiQ7+Y7nZRKeOaUKkqUuaPDoPhlb53iQoT7CriKzpTdOk5SJrgI/Rjea5K
+         4N4/LiLsrcJJ+7VARFC6oHl3FN0vWWa1bdAADypny8kncBI0vrBT7ffY6k58EJZfE84j
+         lfq80jYL+9gIG0j+YgTWXkutmYK4GQYA3lpAJ13SJR/EbFpSGvmHrF+NrOAWj8vDfWdA
+         1vxw==
+X-Gm-Message-State: AOJu0YxxXra+8w4ypMkyQcOj+m9b3Ya0p2uLp4JKyKwDgFzMbaeg15Ht
+	EyFeSiylhdopbtLQjGBBkzEDHC4nyOBKPCHPycjMnMKKZKfFdxdIztXqEPvjA+U=
+X-Google-Smtp-Source: AGHT+IG67cw43mThfXEsC9o9+iXpXAmakGy90SkFFf1P6ebKwfwMmhLzILumIpwFFYr7EL1DHjc5bA==
+X-Received: by 2002:a05:6000:18a2:b0:339:3814:c7ce with SMTP id b2-20020a05600018a200b003393814c7cemr334880wri.178.1705905880957;
+        Sun, 21 Jan 2024 22:44:40 -0800 (PST)
+Received: from localhost ([102.140.209.237])
+        by smtp.gmail.com with ESMTPSA id p17-20020adfcc91000000b003377680c55bsm8302984wrj.16.2024.01.21.22.44.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 21 Jan 2024 22:44:40 -0800 (PST)
+Date: Mon, 22 Jan 2024 09:44:37 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: oe-kbuild@lists.linux.dev, Wenjie Qi <qwjhust@gmail.com>,
+	jaegeuk@kernel.org, chao@kernel.org,
+	linux-f2fs-devel@lists.sourceforge.net,
+	linux-kernel@vger.kernel.org
+Cc: lkp@intel.com, oe-kbuild-all@lists.linux.dev, hustqwj@hust.edu.cn,
+	Wenjie Qi <qwjhust@gmail.com>
+Subject: Re: [PATCH v2] f2fs: fix zoned block device information
+ initialization
+Message-ID: <397e7ad5-5c49-474a-b32e-ac1d24289862@moroto.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240122-lpg-v6-1-219737cf5beb@quicinc.com>
-X-B4-Tracking: v=1; b=H4sIAIwOrmUC/2WOzU7DMBAGX6XyuUZe/6XlxHsghJz1OrHUJq1dL
- FCUd8cJVCXi+Ek7szOxTClSZs+7iSUqMcdxqMPudwx7N3TEo6+bSSEVSDD8dOm4ds571egDgGP
- 18pIoxM/V8vpWd0jjmd/6RO7BAgh+xfH8fiKfeZEcuELnIbQtWuNerh8R44BP9WRR9jHfxvS1d
- hW1iLcJRVWBJulbgdYHEzaCJaLoO6UFgPyhdKVQC6GFtPZg2/+U+Uv9/jJrrLGhacIRCbfUPM/
- f4giaEkcBAAA=
-To: Andy Gross <agross@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh+dt@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Hui Liu <quic_huliu@quicinc.com>
-X-Mailer: b4 0.13-dev-83828
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1705905864; l=2220;
- i=quic_huliu@quicinc.com; s=20230823; h=from:subject:message-id;
- bh=n8xSHABdt74JEuBzHLY4lYbQGqDaAeo36uTk0NjptXM=;
- b=wTFFnqsHbmf742D/Tk8UBK4kYpSU/L6zoS1MROwEWFyqlYR6qVPBWNWUW7G4QbS2h5T1ra/Tg
- HsC3P6C/DzoCzhq/xfwBkNuCxRRPU2QMgMe+zELya+sidiZeDOvxW3S
-X-Developer-Key: i=quic_huliu@quicinc.com; a=ed25519;
- pk=1z+A50UnTuKe/FdQv2c0W3ajDsJOYddwIHo2iivhTTA=
-X-Endpoint-Received:
- by B4 Relay for quic_huliu@quicinc.com/20230823 with auth_id=80
-X-Original-From: Hui Liu <quic_huliu@quicinc.com>
-Reply-To: <quic_huliu@quicinc.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240116140513.1222-1-qwjhust@gmail.com>
 
-From: Hui Liu <quic_huliu@quicinc.com>
+Hi Wenjie,
 
-Add definition for three LEDs to make sure they can
-be enabled base on QCOM LPG LED driver.
+kernel test robot noticed the following build warnings:
 
-Signed-off-by: Hui Liu <quic_huliu@quicinc.com>
----
-Changes in v6:
-- Updated the seperate LEDs nodes to multi-led setting.
-- Link to v5: https://lore.kernel.org/r/20240115-lpg-v5-1-3c56f77f9cec@quicinc.com
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Changes in v5:
-- Rephrased commit text, replaced qcs6490-idp to qcm6490-idp.
-- Removed the unnecessary full.
-- Link to v4: https://lore.kernel.org/r/20240112-lpg-v4-1-c4004026686b@quicinc.com
+url:    https://github.com/intel-lab-lkp/linux/commits/Wenjie-Qi/f2fs-fix-zoned-block-device-information-initialization/20240116-220824
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/jaegeuk/f2fs.git dev-test
+patch link:    https://lore.kernel.org/r/20240116140513.1222-1-qwjhust%40gmail.com
+patch subject: [PATCH v2] f2fs: fix zoned block device information initialization
+config: x86_64-randconfig-161-20240119 (https://download.01.org/0day-ci/archive/20240120/202401201237.ovVyEKvs-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
 
-Changes in v4:
-- Removed "label" definition and added "function" definition.
-- Link to v3: https://lore.kernel.org/r/20231215-lpg-v3-1-4e2db0c6df5f@quicinc.com
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+| Closes: https://lore.kernel.org/r/202401201237.ovVyEKvs-lkp@intel.com/
 
-Changes in v3:
-- Rephrased commit text and updated the nodes to qcm6490-idp board file.
-- Link to v2: https://lore.kernel.org/all/20231110-qcom_leds-v2-1-3cad1fbbc65a@quicinc.com/
+New smatch warnings:
+fs/f2fs/super.c:2393 f2fs_remount() warn: missing error code 'err'
 
-Changes in v2:
-- Rephrased commit text and updated the nodes to board file.
-- Link to v1: https://lore.kernel.org/r/20231108-qcom_leds-v1-1-c3e1c8572cb0@quicinc.com
----
- arch/arm64/boot/dts/qcom/qcm6490-idp.dts | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+Old smatch warnings:
+fs/f2fs/super.c:4040 read_raw_super_block() warn: possible memory leak of 'super'
 
-diff --git a/arch/arm64/boot/dts/qcom/qcm6490-idp.dts b/arch/arm64/boot/dts/qcom/qcm6490-idp.dts
-index 37c91fdf3ab9..c9e7ddcbd259 100644
---- a/arch/arm64/boot/dts/qcom/qcm6490-idp.dts
-+++ b/arch/arm64/boot/dts/qcom/qcm6490-idp.dts
-@@ -5,6 +5,7 @@
- 
- /dts-v1/;
- 
-+#include <dt-bindings/leds/common.h>
- #include <dt-bindings/regulator/qcom,rpmh-regulator.h>
- #include "sc7280.dtsi"
- #include "pm7325.dtsi"
-@@ -414,6 +415,33 @@ vreg_bob_3p296: bob {
- 	};
- };
- 
-+&pm8350c_pwm {
-+	status = "okay";
-+
-+	multi-led {
-+		color = <LED_COLOR_ID_RGB>;
-+		function = LED_FUNCTION_STATUS;
-+
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		led@1 {
-+			reg = <1>;
-+			color = <LED_COLOR_ID_RED>;
-+		};
-+
-+		led@2 {
-+			reg = <2>;
-+			color = <LED_COLOR_ID_GREEN>;
-+		};
-+
-+		led@3 {
-+			reg = <3>;
-+			color = <LED_COLOR_ID_BLUE>;
-+		};
-+	};
-+};
-+
- &qupv3_id_0 {
- 	status = "okay";
- };
+vim +/err +2393 fs/f2fs/super.c
 
----
-base-commit: 17cb8a20bde66a520a2ca7aad1063e1ce7382240
-change-id: 20231215-lpg-4aadd374811a
+4b2414d04e9912 Chao Yu        2017-08-08  2371  
+df728b0f6954c3 Jaegeuk Kim    2016-03-23  2372  	/* recover superblocks we couldn't write due to previous RO mount */
+1751e8a6cb935e Linus Torvalds 2017-11-27  2373  	if (!(*flags & SB_RDONLY) && is_sbi_flag_set(sbi, SBI_NEED_SB_WRITE)) {
+df728b0f6954c3 Jaegeuk Kim    2016-03-23  2374  		err = f2fs_commit_super(sbi, false);
+dcbb4c10e6d969 Joe Perches    2019-06-18  2375  		f2fs_info(sbi, "Try to recover all the superblocks, ret: %d",
+dcbb4c10e6d969 Joe Perches    2019-06-18  2376  			  err);
+df728b0f6954c3 Jaegeuk Kim    2016-03-23  2377  		if (!err)
+df728b0f6954c3 Jaegeuk Kim    2016-03-23  2378  			clear_sbi_flag(sbi, SBI_NEED_SB_WRITE);
+df728b0f6954c3 Jaegeuk Kim    2016-03-23  2379  	}
+df728b0f6954c3 Jaegeuk Kim    2016-03-23  2380  
+458c15dfbce62c Chao Yu        2023-05-23  2381  	default_options(sbi, true);
+26666c8a4366de Chao Yu        2014-09-15  2382  
+696c018c7718f5 Namjae Jeon    2013-06-16  2383  	/* parse mount options */
+ed318a6cc0b620 Eric Biggers   2020-05-12  2384  	err = parse_options(sb, data, true);
+696c018c7718f5 Namjae Jeon    2013-06-16  2385  	if (err)
+696c018c7718f5 Namjae Jeon    2013-06-16  2386  		goto restore_opts;
+696c018c7718f5 Namjae Jeon    2013-06-16  2387  
+ed7a1efe8afd55 Wenjie Qi      2024-01-16  2388  #ifdef CONFIG_BLK_DEV_ZONED
+ed7a1efe8afd55 Wenjie Qi      2024-01-16  2389  	if (sbi->max_active_zones && sbi->max_active_zones < F2FS_OPTION(sbi).active_logs) {
+ed7a1efe8afd55 Wenjie Qi      2024-01-16  2390  		f2fs_err(sbi,
+ed7a1efe8afd55 Wenjie Qi      2024-01-16  2391  			"zoned: max active zones %u is too small, need at least %u active zones",
+ed7a1efe8afd55 Wenjie Qi      2024-01-16  2392  				 sbi->max_active_zones, F2FS_OPTION(sbi).active_logs);
+ed7a1efe8afd55 Wenjie Qi      2024-01-16 @2393  		goto restore_opts;
 
-Best regards,
+err = -EINVAL?
+
+ed7a1efe8afd55 Wenjie Qi      2024-01-16  2394  	}
+ed7a1efe8afd55 Wenjie Qi      2024-01-16  2395  #endif
+ed7a1efe8afd55 Wenjie Qi      2024-01-16  2396  
+b62e71be2110d8 Chao Yu        2023-04-23  2397  	/* flush outstanding errors before changing fs state */
+b62e71be2110d8 Chao Yu        2023-04-23  2398  	flush_work(&sbi->s_error_work);
+b62e71be2110d8 Chao Yu        2023-04-23  2399  
+696c018c7718f5 Namjae Jeon    2013-06-16  2400  	/*
+696c018c7718f5 Namjae Jeon    2013-06-16  2401  	 * Previous and new state of filesystem is RO,
+876dc59eb1f013 Gu Zheng       2014-04-11  2402  	 * so skip checking GC and FLUSH_MERGE conditions.
+696c018c7718f5 Namjae Jeon    2013-06-16  2403  	 */
+1751e8a6cb935e Linus Torvalds 2017-11-27  2404  	if (f2fs_readonly(sb) && (*flags & SB_RDONLY))
+696c018c7718f5 Namjae Jeon    2013-06-16  2405  		goto skip;
+696c018c7718f5 Namjae Jeon    2013-06-16  2406  
+d78dfefcde9d31 Chao Yu        2023-04-04  2407  	if (f2fs_dev_is_readonly(sbi) && !(*flags & SB_RDONLY)) {
+a7d9fe3c338870 Jaegeuk Kim    2021-05-21  2408  		err = -EROFS;
+a7d9fe3c338870 Jaegeuk Kim    2021-05-21  2409  		goto restore_opts;
+a7d9fe3c338870 Jaegeuk Kim    2021-05-21  2410  	}
+a7d9fe3c338870 Jaegeuk Kim    2021-05-21  2411  
+
 -- 
-Hui Liu <quic_huliu@quicinc.com>
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
