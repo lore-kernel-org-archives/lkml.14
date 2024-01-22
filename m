@@ -1,92 +1,119 @@
-Received: from mr85p00im-zteg06021901.me.com (mr85p00im-zteg06021901.me.com [17.58.23.194])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BF1C12BF27
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 00:57:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.58.23.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBFF66281D;
+	Tue, 23 Jan 2024 00:57:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705971431; cv=none; b=UdTEnCkfK9fTB8RpsyKwXh6ZcAsEmaYQQKmQQUJ7jMsHvKJuiBwaRyE7E3Xs1387roOx3n0Aptgvoi14+R+l6z6Uyd/QxcOPFeEsgSS5TdX8nrZnhkXD1yZwkioaQq+SeUwCg35621a4Q4z2/LNxSEIvkqBBdUTI6z7fR2ORRJM=
+	t=1705971443; cv=none; b=DFyO9ZdoYEf8jnf7tUaEPBQqRhRFy/cA0BE0JBzfhug6HM2EKPjsDD/7PBPwmzu/zusOZM6B2DFRjIZzb/S1KJAJqExdPZ8CZOLw0otPALZa0ySXYAcc4Wwcm27A48suQ5gzvKB9TaVKlgCTkmQLGrL5L2omc744HDe51Hszukk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705971431; c=relaxed/simple;
-	bh=QuFQTE9exHrJRr35+dJ3UyDgS7P65rSpnJVRQHYSrNQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rAGFAfjfftNElh3JtJYFgzk9W7mLXpMQjt3HJtyN7jM1GCGbPf65U3uHHQL4clfdursoip/ksGxLjxJ7R52pHVUHzurDUzu5ZbF0P2qIBThiZRGBmSeHRfpP+hhX+O/M4tKps5dPnEmfTLsu3kljYuLVPyn7h4JzRV1i3Isszfw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=danm.net; spf=pass smtp.mailfrom=danm.net; dkim=pass (2048-bit key) header.d=danm.net header.i=@danm.net header.b=OzH+f9lN; arc=none smtp.client-ip=17.58.23.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=danm.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=danm.net
+	s=arc-20240116; t=1705971443; c=relaxed/simple;
+	bh=wGuN975V07rpQPfbn8kxmTghtVRXyNhe6OvU9yJ+a88=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Zl4H77qFOyZ6TzNKxcrSz23DNx4tM16aS5OEW50mzI7TAco2+yYt4UYv2C4DSMurmM6JpDXQ/JQcnBcSCeLSJz+2kbz1+OmEw4emvKKQkH8SxAIE8fx3Xs8DAAazIBX9H2MPlV4ukkN2FqDnwis7+lwawRwVqAOqjhC00p+7llo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=z819cun3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=danm.net header.i=@danm.net header.b="OzH+f9lN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=danm.net; s=sig1;
-	t=1705971428; bh=i6qwIcb65hKUVeZw2T4gWRTYt29i3qmG0p6UeSGRy4Q=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=OzH+f9lNDTKyqDq+9UkocpvxWjiRST4Pn44zrNJZ4u7atAUlTTeX9W4UCrCgzZHu8
-	 fZtynv2toBLM5fBgmcyJi4ZrMOyUpJ9EbU3Aw/4bERZUipTpc7o0zPIk7vyYzNipXs
-	 R/sgifIZ6nnVjKBdxQkAIPrurSFXQfpw6ICGxENGL9UB9kgC89CJecN1IQxBpvf9OA
-	 eJUP28lrNuQe7HDPq8Lv/lJhGDoLLhWiIusqVUr0EL1B603X1BWXJzjG3Rznap+1E5
-	 8p8KuC5zFYvM9Eo1rRMukvHtj/+m1UhrOrytrTWr2SFV8rb3ATaRMZRKfVCrFC52xS
-	 O6TUR7tNx1jHQ==
-Received: from hitch.danm.net (mr38p00im-dlb-asmtp-mailmevip.me.com [17.57.152.18])
-	by mr85p00im-zteg06021901.me.com (Postfix) with ESMTPSA id 9522A740228;
-	Tue, 23 Jan 2024 00:57:07 +0000 (UTC)
-From: Dan Moulding <dan@danm.net>
-To: Song Liu <song@kernel.org>
-Cc: regressions@lists.linux.dev,
-	linux-raid@vger.kernel.org,
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="z819cun3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1BD55C433F1;
+	Tue, 23 Jan 2024 00:57:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1705971443;
+	bh=wGuN975V07rpQPfbn8kxmTghtVRXyNhe6OvU9yJ+a88=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=z819cun3WtHtacJYyZrJ/nz3QDFeVzvw3wbG/5Go9gTxD/n7qoDRtKYOKOH4mY08A
+	 JbRjgcq+HB3Sxk7wKSMa0iWUk0gL1xdX08Exh7wj6TBPVp5E3AJYIdY2mBySLoluPo
+	 uLqBlV8rGn0pd8kwStlrRMpQrs/DJNpg1bJl0cDw=
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: stable@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	patches@lists.linux.dev,
+	Mark Brown <broonie@kernel.org>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	Shuah Khan <shuah@kernel.org>,
+	linux-sound@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org,
-	Junxiao Bi <junxiao.bi@oracle.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Dan Moulding <dan@danm.net>
-Subject: [REGRESSION] 6.7.1: md: raid5 hang and unresponsive system; successfully bisected
-Date: Mon, 22 Jan 2024 17:56:58 -0700
-Message-ID: <20240123005700.9302-1-dan@danm.net>
+	Mirsad Todorovac <mirsad.todorovac@alu.unizg.hr>,
+	Takashi Iwai <tiwai@suse.de>,
+	Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 6.1 243/417] kselftest/alsa - mixer-test: Fix the print format specifier warning
+Date: Mon, 22 Jan 2024 15:56:51 -0800
+Message-ID: <20240122235800.296862359@linuxfoundation.org>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240122235751.480367507@linuxfoundation.org>
+References: <20240122235751.480367507@linuxfoundation.org>
+User-Agent: quilt/0.67
+X-stable: review
+X-Patchwork-Hint: ignore
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-GUID: roqiKP-niqHYz2b0Fa5A3TKVMmmoX9S6
-X-Proofpoint-ORIG-GUID: roqiKP-niqHYz2b0Fa5A3TKVMmmoX9S6
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-22_12,2024-01-22_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=4 mlxlogscore=137 mlxscore=4
- clxscore=1030 suspectscore=0 bulkscore=0 phishscore=0 spamscore=4
- malwarescore=0 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2308100000 definitions=main-2401230006
 
-After upgrading from 6.7.0 to 6.7.1 a couple of my systems with md
-RAID-5 arrays started experiencing hangs. It starts with some
-processes which write to the array getting stuck. The whole system
-eventually becomes unresponsive and unclean shutdown must be performed
-(poweroff and reboot don't work).
+6.1-stable review patch.  If anyone has any objections, please let me know.
 
-While trying to diagnose the issue, I noticed that the md0_raid5
-kernel thread consumes 100% CPU after the issue occurs. No relevant
-warnings or errors were found in dmesg.
+------------------
 
-On 6.7.1, I can reproduce the issue somewhat reliably by copying a
-large amount of data to the array. I am unable to reproduce the issue
-at all on 6.7.0. The bisection was a bit difficult since I don't have
-a 100% reliable method to reproduce the problem, but with some
-perseverence I eventually managed to whittle it down to commit
-0de40f76d567 ("Revert "md/raid5: Wait for MD_SB_CHANGE_PENDING in
-raid5d"). After reverting that commit (i.e. reapplying the reverted
-commit) on top of 6.7.1 I can no longer reproduce the problem at all.
+From: Mirsad Todorovac <mirsad.todorovac@alu.unizg.hr>
 
-Some details that might be relevant:
-- Both systems are running MD RAID-5 with a journal device.
-- mdadm in monitor mode is always running on both systems.
-- Both systems were previously running 6.7.0 and earlier just fine.
-- The older of the two systems has been running a raid5 array without
-  incident for many years (kernel going back to at least 5.1) -- this
-  is the first raid5 issue it has encountered.
+[ Upstream commit 3f47c1ebe5ca9c5883e596c7888dec4bec0176d8 ]
 
-Please let me know if there is any other helpful information that I
-might be able to provide.
+The GCC 13.2.0 compiler issued the following warning:
 
--- Dan
+mixer-test.c: In function ‘ctl_value_index_valid’:
+mixer-test.c:322:79: warning: format ‘%lld’ expects argument of type ‘long long int’, \
+			      but argument 5 has type ‘long int’ [-Wformat=]
+  322 |                         ksft_print_msg("%s.%d value %lld more than maximum %lld\n",
+      |                                                                            ~~~^
+      |                                                                               |
+      |                                                                               long long int
+      |                                                                            %ld
+  323 |                                        ctl->name, index, int64_val,
+  324 |                                        snd_ctl_elem_info_get_max(ctl->info));
+      |                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |                                        |
+      |                                        long int
 
-#regzbot introduced: 0de40f76d567133b871cd6ad46bb87afbce46983
+Fixing the format specifier as advised by the compiler suggestion removes the
+warning.
+
+Fixes: 3f48b137d88e7 ("kselftest: alsa: Factor out check that values meet constraints")
+Cc: Mark Brown <broonie@kernel.org>
+Cc: Jaroslav Kysela <perex@perex.cz>
+Cc: Takashi Iwai <tiwai@suse.com>
+Cc: Shuah Khan <shuah@kernel.org>
+Cc: linux-sound@vger.kernel.org
+Cc: linux-kselftest@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Mirsad Todorovac <mirsad.todorovac@alu.unizg.hr>
+Acked-by: Mark Brown <broonie@kernel.org>
+Link: https://lore.kernel.org/r/20240107173704.937824-3-mirsad.todorovac@alu.unizg.hr
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ tools/testing/selftests/alsa/mixer-test.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/testing/selftests/alsa/mixer-test.c b/tools/testing/selftests/alsa/mixer-test.c
+index d59910658c8c..9ad39db32d14 100644
+--- a/tools/testing/selftests/alsa/mixer-test.c
++++ b/tools/testing/selftests/alsa/mixer-test.c
+@@ -358,7 +358,7 @@ static bool ctl_value_index_valid(struct ctl_data *ctl,
+ 		}
+ 
+ 		if (int64_val > snd_ctl_elem_info_get_max64(ctl->info)) {
+-			ksft_print_msg("%s.%d value %lld more than maximum %lld\n",
++			ksft_print_msg("%s.%d value %lld more than maximum %ld\n",
+ 				       ctl->name, index, int64_val,
+ 				       snd_ctl_elem_info_get_max(ctl->info));
+ 			return false;
+-- 
+2.43.0
+
+
+
