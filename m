@@ -1,102 +1,111 @@
-Received: from mail-oi1-f179.google.com (mail-oi1-f179.google.com [209.85.167.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57233482FF;
-	Mon, 22 Jan 2024 17:47:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB20548CC1
+	for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 17:48:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705945660; cv=none; b=qRuQs9w7Y06QE8UUGDBW9ZrOG6QgnKF9CalZD+WmJ0teqfxFqwH1T1n4O9pdOTT9KpJoHoyI6bNdyRo8qfWKeKQPwQwmtziMjADzvw+p3ZCwAU8l8BIuFScGf38g/8nGG0Fqmk0zt/88BcrsQ9LOb8vgNMHgpmsQ9cLwR+vDDAs=
+	t=1705945717; cv=none; b=bnP9vv1h9qm07P7A2flle5VuKjiy+APSYFVhwlZ7lDiKPp87YcVv76aoSRWIMA5WYXC72jmKxsm0gvxJLX1tLHapfzy+Av65yBBlUeBR1XzOkuzu47MMkq7pm7ni7Qlrg4AluNGX0sY7f2vCXTL+2gfari/MDDZ9MUHZvLCW27E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705945660; c=relaxed/simple;
-	bh=5JMS+q62XZW23hNclILrAtW7tpPqJU12NjrpErZJU6M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=plmc362ArgO6wulMK04JtiUcUaTfr3dLYJqno8FsdFaMI1llpiMeBQpQYteGaQI28Dn7yZ8n5zrluf2oQatyBcapeHW+DaOZWAqGNaxiTRsSuNQWi3+rhZN3emNteI9AnarWimlXPDCMdHWNJWfUB37PlqbfZsM22MWE5iII1O0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i7VTDa6b; arc=none smtp.client-ip=209.85.167.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i7VTDa6b"
-Received: by mail-oi1-f179.google.com with SMTP id 5614622812f47-3bd6581bc62so2521619b6e.2;
-        Mon, 22 Jan 2024 09:47:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705945658; x=1706550458; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=LXuYDfCriPwb12rx/ZYT8NxGUq7r+dv6zy6nRCpOHlQ=;
-        b=i7VTDa6bmjvB7Z/3EVJ6Dzn0IVZPDVxs0m8OGAw0j24rGjYXOLH7lVaGo2aKApz4Ob
-         DMz2etAJz8LpXqQ9pb6m380N8vCGPuF1J9xRoPXIlEWs58B/KpC01zD32+aC/7+mvCJy
-         Ya9y1jFyPaQYVOjGi3rB2x8u+R0x7VnWg0jGxvaZAimcHj0WZSAZpJKm7xxNf+L2w4O9
-         4KNMHdmXgb+aN+bENgx3G5J8fqn7dmDqTCFc00fHpkbn0BOkBVs2s5ts//cl6GuwylD4
-         U3GZHHaNIh3Bga2DI+CpbS8hfkHqQ+Kt+4reSARYoCl5szYE2I8y6aTfN0QPJY1rlS5M
-         rOGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705945658; x=1706550458;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=LXuYDfCriPwb12rx/ZYT8NxGUq7r+dv6zy6nRCpOHlQ=;
-        b=JTmoRVEELI0Coe3vtJIbgSYiunaSxjDBR2jdCTd4jpBNEmywWzo8urfNvgqVDG6Dur
-         gBawOvDxzSdxw12lxD0l0BonAGzIQgnmzKGgVTYrDCrp96qJj9rCCsBrD1sGJL3W+xkE
-         rTaXBfUjTW0TyaOuB1pJ60pFTBtm/eMSUZPcenp7vPfcgc323hVovReBmafp1keQ6RAz
-         zSJxuoqfuc5j/OMKskFtRCwj30onHqW6qkpjpWyh9SkzNe8E0/u+b9REgFx8KgSX7dEZ
-         WmmfwUNLZzzmCc75ISMYxizPYZFiNyFOFoPyCJy2sM47BErkbYJSM64sHmAO7V7N0d4k
-         ocBg==
-X-Gm-Message-State: AOJu0YwyOvWR9HYxueXl8tdiNNN2g+QSfsziqMPJ5MWkC9ufpcbyC93F
-	neAutOvwF5NdxPJZokZa1sc9I+k8DZmmwMppRUmBEg/9solMsZn53I5UTPLzXOUMs1Eeti8owmd
-	JDv5csC2VD787k14jJP1vBk+JQ7k=
-X-Google-Smtp-Source: AGHT+IFBPlz+RgibcswccIxunRUauN9Us0ZVtsgo5fHnIR0Z4jyywDWN7TzgdTClehWzdrId7Z0Ij/5fS4mvUZpKvTs=
-X-Received: by 2002:aca:1809:0:b0:3bd:6f2f:6903 with SMTP id
- h9-20020aca1809000000b003bd6f2f6903mr3867589oih.111.1705945658414; Mon, 22
- Jan 2024 09:47:38 -0800 (PST)
+	s=arc-20240116; t=1705945717; c=relaxed/simple;
+	bh=3F3G5Ww1SUZQsUMoJIkzqcCLWxQapyaD7dFyElSipKM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=GtJi/W0hQfmbxUC09e2E+7hLIU4K5ZxY8zaSaY0xYwjZ5dJFiOpwr0kzfAB/OTlmZxzKlFTnagKSBnB0cVJ1Qm/kztjvNngGKcMfZFPv7TXXhUf0QEMl34QZ4tLWNUhYB3RwjHaJWeucIyjsD7HpKDApx/KhyTtZt3PgmYlmbqc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E05E7C433F1;
+	Mon, 22 Jan 2024 17:48:35 +0000 (UTC)
+Date: Mon, 22 Jan 2024 12:50:04 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Kees Cook
+ <keescook@chromium.org>, Linus Torvalds <torvalds@linux-foundation.org>,
+ linux-kernel@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>, Mark
+ Rutland <mark.rutland@arm.com>, Andrew Morton <akpm@linux-foundation.org>,
+ Christian Brauner <brauner@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>,
+ Ajay Kaher <ajay.kaher@broadcom.com>
+Subject: Re: [for-linus][PATCH 1/3] eventfs: Have the inodes all for files
+ and directories all be the same
+Message-ID: <20240122125004.7bbf0b70@gandalf.local.home>
+In-Reply-To: <ccc4234d-8a47-4c0f-808a-95e61c9c9171@efficios.com>
+References: <20240117143548.595884070@goodmis.org>
+	<20240117143810.531966508@goodmis.org>
+	<CAMuHMdXKiorg-jiuKoZpfZyDJ3Ynrfb8=X+c7x0Eewxn-YRdCA@mail.gmail.com>
+	<20240122100630.6a400dd3@gandalf.local.home>
+	<ccc4234d-8a47-4c0f-808a-95e61c9c9171@efficios.com>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231130070133.8059-1-kch@nvidia.com> <20231130070133.8059-2-kch@nvidia.com>
- <20231201012507.GA1209828@fedora> <f4c17344-33be-4832-9045-fb6b40a478b6@nvidia.com>
-In-Reply-To: <f4c17344-33be-4832-9045-fb6b40a478b6@nvidia.com>
-From: Stefan Hajnoczi <stefanha@gmail.com>
-Date: Mon, 22 Jan 2024 12:47:25 -0500
-Message-ID: <CAJSP0QX7H5F=rzz=STeWWYZbTxog0S-MARXgoHkR=u04qTD+_w@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/1] virtio-blk: process block layer timedout request
-To: Chaitanya Kulkarni <chaitanyak@nvidia.com>
-Cc: Stefan Hajnoczi <stefanha@redhat.com>, 
-	"virtualization@lists.linux.dev" <virtualization@lists.linux.dev>, 
-	"linux-block@vger.kernel.org" <linux-block@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mst@redhat.com" <mst@redhat.com>, "hch@lst.de" <hch@lst.de>, 
-	"jasowang@redhat.com" <jasowang@redhat.com>, "pbonzini@redhat.com" <pbonzini@redhat.com>, 
-	"xuanzhuo@linux.alibaba.com" <xuanzhuo@linux.alibaba.com>, "axboe@kernel.dk" <axboe@kernel.dk>, 
-	Ming Lei <ming.lei@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, 8 Jan 2024 at 22:33, Chaitanya Kulkarni <chaitanyak@nvidia.com> wrote:
-> On 11/30/23 17:25, Stefan Hajnoczi wrote:
-> > On Wed, Nov 29, 2023 at 11:01:33PM -0800, Chaitanya Kulkarni wrote:
-> >> diff --git a/include/uapi/linux/virtio_blk.h b/include/uapi/linux/virtio_blk.h
-> >> index 3744e4da1b2a..ed864195ab26 100644
-> >> --- a/include/uapi/linux/virtio_blk.h
-> >> +++ b/include/uapi/linux/virtio_blk.h
-> >> @@ -317,6 +317,7 @@ struct virtio_scsi_inhdr {
-> >>   #define VIRTIO_BLK_S_OK            0
-> >>   #define VIRTIO_BLK_S_IOERR 1
-> >>   #define VIRTIO_BLK_S_UNSUPP        2
-> >> +#define VIRTIO_BLK_S_TIMEOUT        3
-> > The structs and constants in this header file come from the VIRTIO
-> > specification. Anything changed in this file must first be accepted into
-> > the VIRTIO spec because this is the hardware interface definition.
-> >
-> > VIRTIO_BLK_S_TIMEOUT seems to be synthetic value that is purely used by
-> > software, not the device. Maybe there is no need to update the spec.
-> > Just avoid using in_hdr.status to signal timeouts and use a separate
-> > flag/field instead in a block layer or virtio_blk driver request struct.
->
-> It is a specific error hence I've added that on the similar lines,
-> do you have a specific field in mind that you would prefer ?
+On Mon, 22 Jan 2024 12:14:36 -0500
+Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
 
-I didn't have a specific flag or field in mind, but it's probably no
-longer necessary in v2 because the code needs to wait for the device
-to complete the request anyway.
+> 
+> Why use an improvised hashing function (re-purposed from
+> scripts/kconfig/symbol.c to a use-case which is exposed through a
 
-Stefan
+That hash is just salt to the real hash function, which is the
+siphash_1u32(). I added the name hash so that each file will get a little
+different salt to the hash.
+
+The siphash_1u32() is what the rest of the kernel uses for hashing kernel
+address space.
+
+> userspace ABI prone to kernel address leaks) rather than simply
+> reserving values by setting bits in a bitmap ?
+> 
+> How many inodes do we realistically expect to have there ?
+
+If I only do directories, it is actually significantly less.
+
+> 
+> On my 6.1.0 kernel:
+> 
+> find /sys/kernel/tracing | wc -l
+> 15598
+> 
+> (mainly due to TRACE_EVENT ABI files)
+> 
+> Hashing risks:
+> 
+> - Exposing kernel addresses if the hashing algorithm is broken,
+
+Well this was my biggest concern, but if I truncate at least a nibble, with
+the unique salt to the algorithm for each file, how easily does that expose
+kernel addresses.
+
+The ei itself, is created from kmalloc() so you would at best get a heap
+address. But with the missing nibble (if I mask it with ((1 << 28) - 1),
+and much more taken away for 64 bit systems), and the added unique salt, is
+it possible for this to expose anything that could be used in an attack?
+
+> - Collisions if users are unlucky (which could trigger those
+>    'find' errors).
+> 
+> Those 15598 inode values fit within a single page (bitmap of
+> 1922 bytes).
+> 
+> So I would recommend simply adding a bitmap per tracefs filesystem
+> instance to keep track of inode number allocation.
+
+And how do I recover this bit after the inode is freed, but then referenced
+again?
+
+> 
+> Creation/removal of files/directories in tracefs should not be
+> a fast-path anyway, so who cares about the speed of a find first
+> bit within a single page ?
+> 
+
+When an inode is no longer referenced, it is freed. When it is referenced
+again, I want it to be recreated with the same inode number it had
+previously. How would having a bitmask help with that? I need a way to map
+an ei structure with a unique number without adding another 4 bytes to the
+structure itself.
+
+-- Steve
