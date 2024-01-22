@@ -1,152 +1,80 @@
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+Received: from ahti.lucaweiss.eu (ahti.lucaweiss.eu [128.199.32.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E0553EA65;
-	Mon, 22 Jan 2024 17:10:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F5D44B5A5;
+	Mon, 22 Jan 2024 17:12:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=128.199.32.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705943415; cv=none; b=THRIgeDaF2JEFgSuRoWxxvKx6Isn2Gd0d6uF2gXdlxoxcNUByq3NNDQmVhNq1pfudNt+eYqCXf3XuY6xNzvLz3jdtbVo2qzN4eWMfFCUEisahvhgxpyWfMBpl+VwPdjClgMqUEprLYQXtm52dcNr1tSYWwrY4K/l4arGxf6Iiaw=
+	t=1705943526; cv=none; b=jEfGRw0BBWmRMbQOD9g/usGNnujADEQ1BLLQxT9AGU4vYxlLPPND3ycQ58XB3VwGPCF4FcmK5ui0WvgrXyQGNo0Q0/gC/36sk2/DDjE+a9SDkrs94ztCNv8i/BdpX733wW11otHwPPBq2VHnXcKxGbJEU4jLDVRReP2vgEray5A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705943415; c=relaxed/simple;
-	bh=hg6YVFiUag7Jpn+ogfj/fOty689o28bCOhcvA6bAVyM=;
-	h=From:To:Subject:Date:Message-Id:MIME-Version; b=LQ471mR9+Kuri/77n7RBRcNHRDCGx749ilcnpqwtw01YAL2vFjQugTADWjQGIb7GYEGc5BC7gJLn23uidGijauMzaUyQtcvVlKoZVo4xDIVCfpDPkfEXkzouJYmI1S6SmaGcSu21Tcf16QA/6VaCuRLUxdRa/pBknLHwyNuV+To=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NpF1WIcn; arc=none smtp.client-ip=209.85.210.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1705943526; c=relaxed/simple;
+	bh=a8vk6hZ3TOAkzn/ackfXsaq39NTBfLHYum8B7uhs3mA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=rqIP/m2r/yiZKEl6sXdzWSWXNF6aVFiQ+QtUC/bBHUI9WpthmghIP3Xnqa1u2ZbXp+ljg/73/I5S1WqflY3BGV7404+y4UCKsVmbF1iEQ0Oa7e2KHrpcIbumeEGaTdkpwjLS74csQgWy4yGDQ2kIl8hEoT9ypEEHrkD4PpAANCQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=z3ntu.xyz; spf=pass smtp.mailfrom=z3ntu.xyz; dkim=pass (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b=L+GO/3uS; arc=none smtp.client-ip=128.199.32.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=z3ntu.xyz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=z3ntu.xyz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NpF1WIcn"
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-6da9c834646so3365277b3a.3;
-        Mon, 22 Jan 2024 09:10:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705943414; x=1706548214; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:reply-to:message-id:date
-         :subject:to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=UJG831c9X6YdaovxlTqiwAZnTkqpj5rWBo3Fhk5z9C0=;
-        b=NpF1WIcnLkN+vK/4MlwYxA9DPZhfdqYP6kFzuE+t50GsLpWBBDojIBe5jxf1MA5G6B
-         RWzRLZIrVNebin45kqFWw7BZc2Vp7ZOvshup+l5gvFW4Djn6hmoizBB5vcfcp+8qAGpN
-         Og11sEFfIzx+Ac9voB2ZwM8dqWClrpZ9aRfMe68O7RJE37FD+HGF/rIwzFQqla5hzmfM
-         LlGDZJ1L6TKa+ycNCZbnzz4zC5CCm73cjUhrC2iS2tEeKzq8Pc3AEXEF45imJks3QNtK
-         3qbHooXI7oI4/N8j2TVOCqZJmb3iTwxdbqigUdvMPRr6jA2K84eRFO2wOorrGva2Wo04
-         LJEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705943414; x=1706548214;
-        h=content-transfer-encoding:mime-version:reply-to:message-id:date
-         :subject:to:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UJG831c9X6YdaovxlTqiwAZnTkqpj5rWBo3Fhk5z9C0=;
-        b=R4auaEYi1qC9bWbluEPATPoMoDALYkVw2qbAiUL7U3i/UcpBCrwabNm+3jQvw1r/T0
-         Cq4+y+aSoMh14uuq0ZJ7NvR91lunxr8G3UQTBX4n2sm/k8HUI/IgmG+jbIR5iwYJ1hLC
-         icfyvChUQ/Km4z10zRhrXh/FNjjixNaMPRD0z60MJwOSnTUVyUqs87ZeCxeu/gDzgnjt
-         YqBJUfiVhkXsXM+4oYh9wi412TA3qNpO9NPLvDUL4HANK+fw2X7HIYm5Kl59mYvLve09
-         KrMoDDJsXw2ndltIqVZctnBPpuTPlaniUm3kFrgPJkdYGPy0CrnC9GRj4/crW7gN41yJ
-         0esw==
-X-Gm-Message-State: AOJu0YwXCOFKekG07U/o3Riyu+luwklI0lZAULXsztUCpbedJGoxIsmJ
-	rgfovu67NX8m1gDIN3rLCOk1aEBquSRrudf8Sa1ib8qbVgW8QC4u
-X-Google-Smtp-Source: AGHT+IGMAkEmkRAFTXivmjaEGv5mnh0z4Lxw/gwh0uW8k6XsWOS2sg7jlgnsTVKbIPBT+Zl5rlPDjw==
-X-Received: by 2002:a05:6a20:8e19:b0:19b:118e:bd87 with SMTP id y25-20020a056a208e1900b0019b118ebd87mr6197660pzj.90.1705943413700;
-        Mon, 22 Jan 2024 09:10:13 -0800 (PST)
-Received: from localhost.localdomain (c-73-254-87-52.hsd1.wa.comcast.net. [73.254.87.52])
-        by smtp.gmail.com with ESMTPSA id lc14-20020a056a004f4e00b006db00cb78a8sm10209855pfb.179.2024.01.22.09.10.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jan 2024 09:10:13 -0800 (PST)
-From: mhkelley58@gmail.com
-X-Google-Original-From: mhklinux@outlook.com
-To: haiyangz@microsoft.com,
-	wei.liu@kernel.org,
-	decui@microsoft.com,
-	jejb@linux.ibm.com,
-	martin.petersen@oracle.com,
-	linux-kernel@vger.kernel.org,
-	linux-hyperv@vger.kernel.org,
-	linux-scsi@vger.kernel.org
-Subject: [PATCH 1/1] scsi: storvsc: Fix ring buffer size calculation
-Date: Mon, 22 Jan 2024 09:09:56 -0800
-Message-Id: <20240122170956.496436-1-mhklinux@outlook.com>
-X-Mailer: git-send-email 2.25.1
-Reply-To: mhklinux@outlook.com
+	dkim=pass (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="L+GO/3uS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=z3ntu.xyz; s=s1;
+	t=1705943514; bh=a8vk6hZ3TOAkzn/ackfXsaq39NTBfLHYum8B7uhs3mA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=L+GO/3uS3c16vczNT28Ht/QB0UoI9Lsp6ivS59/FsmIngripMJe9p6CjPKDogNDNF
+	 8feWcbEEenUneCg6blD6o9Nr3Ma7CqrGOrC8vzeOlPZtDMe+tpumKx2b4cUCQmlulP
+	 GmZqLEVSv2BXkDDHPf1I3pg021odHjAbWDjQp9R0=
+From: Luca Weiss <luca@z3ntu.xyz>
+To: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
+ Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ARM: dts: qcom: msm8926-htc-memul: Add rmtfs memory node
+Date: Mon, 22 Jan 2024 18:11:53 +0100
+Message-ID: <12366609.O9o76ZdvQC@z3ntu.xyz>
+In-Reply-To: <e57f3274-46a8-4c42-af29-ff2009127886@linaro.org>
+References:
+ <20240121-memul-rmtfs-v1-1-e9da29b1f856@z3ntu.xyz>
+ <e57f3274-46a8-4c42-af29-ff2009127886@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
 
-From: Michael Kelley <mhklinux@outlook.com>
+On Montag, 22. J=E4nner 2024 11:53:33 CET Konrad Dybcio wrote:
+> On 21.01.2024 11:21, Luca Weiss wrote:
+> > Add the rmtfs-mem node which was part of one of the "unknown" memory
+> > reservation. Split that one, make sure the reserved-memory in total
+> > still covers the same space.
+> >=20
+> > Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
+> > ---
+>=20
+> Could you please test dynamic rmtfs alloc, which should be possible
+> on some (most?) boards after 9265bc6bce6919c771970e5a425a66551a1c78a0?
 
-Current code uses the specified ring buffer size (either the default of
-128 Kbytes or a module parameter specified value) to encompass the one page
-ring buffer header plus the actual ring itself.  When the page size is
-4K, carving off one page for the header isn't significant.  But when the
-page size is 64K on ARM64, only half of the default 128 Kbytes is left
-for the actual ring.  While this doesn't break anything, the smaller
-ring size could be a performance bottleneck.
+To be honest, I'd like to not continue to experiment with reserved-memory o=
+n=20
+this board, I've already spent way too much time figuring out how to not ma=
+ke=20
+the phone crash under some circumstances, and now it seems relatively stabl=
+e.
+I might've even put my eMMC into some weird read-only mode where any write =
+to=20
+it just weirdly fails (also original software) by writing to random locatio=
+ns=20
+in the RAM (or well, what Linux thought was non-special RAM).
 
-Fix this by applying the VMBUS_RING_SIZE macro to the specified ring
-buffer size.  This macro adds a page for the header, and rounds up
-the size to a page boundary, using the page size for which the kernel
-is built.  Use this new size for subsequent ring buffer calculations.
-For example, on ARM64 with 64K page size and the default ring size,
-this results in the actual ring being 128 Kbytes, which is intended.
+Regards
+Luca
 
-Cc: <stable@vger.kernel.org> # 5.15.x
-Signed-off-by: Michael Kelley <mhklinux@outlook.com>
----
- drivers/scsi/storvsc_drv.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+>=20
+> Konrad
 
-diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
-index a95936b18f69..7ceb982040a5 100644
---- a/drivers/scsi/storvsc_drv.c
-+++ b/drivers/scsi/storvsc_drv.c
-@@ -330,6 +330,7 @@ enum storvsc_request_type {
-  */
- 
- static int storvsc_ringbuffer_size = (128 * 1024);
-+static int aligned_ringbuffer_size;
- static u32 max_outstanding_req_per_channel;
- static int storvsc_change_queue_depth(struct scsi_device *sdev, int queue_depth);
- 
-@@ -687,8 +688,8 @@ static void handle_sc_creation(struct vmbus_channel *new_sc)
- 	new_sc->next_request_id_callback = storvsc_next_request_id;
- 
- 	ret = vmbus_open(new_sc,
--			 storvsc_ringbuffer_size,
--			 storvsc_ringbuffer_size,
-+			 aligned_ringbuffer_size,
-+			 aligned_ringbuffer_size,
- 			 (void *)&props,
- 			 sizeof(struct vmstorage_channel_properties),
- 			 storvsc_on_channel_callback, new_sc);
-@@ -1973,7 +1974,7 @@ static int storvsc_probe(struct hv_device *device,
- 	dma_set_min_align_mask(&device->device, HV_HYP_PAGE_SIZE - 1);
- 
- 	stor_device->port_number = host->host_no;
--	ret = storvsc_connect_to_vsp(device, storvsc_ringbuffer_size, is_fc);
-+	ret = storvsc_connect_to_vsp(device, aligned_ringbuffer_size, is_fc);
- 	if (ret)
- 		goto err_out1;
- 
-@@ -2164,7 +2165,7 @@ static int storvsc_resume(struct hv_device *hv_dev)
- {
- 	int ret;
- 
--	ret = storvsc_connect_to_vsp(hv_dev, storvsc_ringbuffer_size,
-+	ret = storvsc_connect_to_vsp(hv_dev, aligned_ringbuffer_size,
- 				     hv_dev_is_fc(hv_dev));
- 	return ret;
- }
-@@ -2198,8 +2199,9 @@ static int __init storvsc_drv_init(void)
- 	 * the ring buffer indices) by the max request size (which is
- 	 * vmbus_channel_packet_multipage_buffer + struct vstor_packet + u64)
- 	 */
-+	aligned_ringbuffer_size = VMBUS_RING_SIZE(storvsc_ringbuffer_size);
- 	max_outstanding_req_per_channel =
--		((storvsc_ringbuffer_size - PAGE_SIZE) /
-+		((aligned_ringbuffer_size - PAGE_SIZE) /
- 		ALIGN(MAX_MULTIPAGE_BUFFER_PACKET +
- 		sizeof(struct vstor_packet) + sizeof(u64),
- 		sizeof(u64)));
--- 
-2.25.1
+
+
 
