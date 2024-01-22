@@ -1,76 +1,65 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50C841DFE5;
-	Mon, 22 Jan 2024 20:34:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9E8747A40;
+	Mon, 22 Jan 2024 20:35:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705955690; cv=none; b=LiAOQObKT3hik4wtzoiRzrpgZfrUDFed0YZeKRV3tFACdOgxChu34LQNsU9YQp/aJZSksPvNgnQqaHVHyQAPqgairWd005ZxrxYoXRY6h2MSBbgHToIi+6WN0QTgQMH/tD4X+WU/J/F0Lzv/6ClCzZvN0tREMuWS/Ftyz81SaAI=
+	t=1705955715; cv=none; b=okI0R6pWgDx1cjmmFHA6dvwsZb9WwEJuoSbMERYNeodiKMciXxI79fa7XoaFqcuxdKPDXUhl5aGbOetUYmv28TwUt2XXqW5R0FrTis6RvnyQzTBBHJvAfylBA3RLCKdGHlf8GoEZQ1VzdniXZE6t29Dfe7s7N0ExqX+5MXVXnc0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705955690; c=relaxed/simple;
-	bh=V5cmoTuULoWNYm46a6ywQDlkSQMsgm/OdPOrANJiJVo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RypjqbU3R+Bthdl0/mTHXBSTiIRCL42d7dX4gVnjthOyk28P4kbDqHLTW999/C4KhbF4r94pULBdsJKF4hsP4IeZ6aF7cfZIdY/eZuVtVyWjt2xFbmfZaDWipFE4raxDV7iQkvzk0GhV/Pq8iubz8AsK7IMUvnD6olUk2idBC0M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W9UdbUfW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1705955715; c=relaxed/simple;
+	bh=ibfFotzuiwAZb47N/hapoyQ/3VMQ31E1CrfYpEAAork=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=tVmtAPN7B3V9ww33qXm/koCDM3BwanLR/RmoM+C6uUdOkJ7bsUuGBA7CFFhcLhVYet5YQDvzYLkLvHnab5pD6l+ZRxoLIn7xUd+oxNyqbMGeEzbcf9bd5LMYnT1ea1Yks2s+R3ESHa0Onj0bE3MDEzZLF07wWuYIzxnZX/L9isY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oa1PL9oV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W9UdbUfW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0B4DC433A6;
-	Mon, 22 Jan 2024 20:34:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oa1PL9oV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFF5EC433F1;
+	Mon, 22 Jan 2024 20:35:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705955689;
-	bh=V5cmoTuULoWNYm46a6ywQDlkSQMsgm/OdPOrANJiJVo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=W9UdbUfWnmEKRK9+KT2odx42x8+09Geh810AJ5mYzAeJQPSAu+5dn6g0s4O+2re4X
-	 gvoQo/19dBlOZup43iTh2+xVBX5EdUuI/+gg93spmSCKMVwrhczXtCTP4vvY8pFDBB
-	 YEAakBnP6OU+VylHZBWeqMsZ7ZVZGb5AKTNqfoUoynkAr8AF/Mz+LOP6Y8ZSBGYKwC
-	 xxPmX+6MbIXNVjJQxyqNwP/xsSF7K8JnC0b1giihwELpDo+ATssoIxKWAaN+GuJMmW
-	 tWpnk0MebpvwobkMEwgXBhDYjgxbsOjse1QgQWcH/EYb41jfOnufXWeBwyrxQ6+EBl
-	 Vrs19j4LcVFSw==
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-55817a12ad8so3881494a12.2;
-        Mon, 22 Jan 2024 12:34:49 -0800 (PST)
-X-Gm-Message-State: AOJu0Yy0zDhGbIQyewuK1RsOj4KmcVY0TOEdQUUMuIvby0IB821raRxQ
-	XPszGmsBUGQ1HZ3nV4okkMRquXoVQOHrh3REXN2OaXOOvhu7cPfeZFC4YV3jFhlfwqO8WdEzWHP
-	zuvoSwjx8BuU1DYz6rxox4LIkcVw=
-X-Google-Smtp-Source: AGHT+IG85Eoeg9WBFX8KzgBjG4JF6JfnLT+fdMlItTYbC035wmY/ToxDKMxonv/slZ9MnxD+r1bilt0/EYdum+117zk=
-X-Received: by 2002:a17:906:2683:b0:a28:b71d:6801 with SMTP id
- t3-20020a170906268300b00a28b71d6801mr2651916ejc.149.1705955688198; Mon, 22
- Jan 2024 12:34:48 -0800 (PST)
+	s=k20201202; t=1705955715;
+	bh=ibfFotzuiwAZb47N/hapoyQ/3VMQ31E1CrfYpEAAork=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=oa1PL9oVcc6isCJv6ebZu/3r2vyaAFA5Jf3umRLCLYx86S6mJGKBYY3xEQl+6lp4A
+	 lFu1nNpceqglMiHgpxJwl3o4cfr5KIUSbG3S+QIFTbpGc+Q70VxmzwNcH60JX0Ce/R
+	 ZWfaltx8YQufnP6ki2eRoM0v8dDl9VQUrmshuMtzvHd/lA2I3wv1JBQw4pzAYWwW+5
+	 oxl+EYqQbw1nU0vZ0RKVfv4WXbQw9GPcIR6wZEzdif8xWWor/c66FOfzTsro5F4vQq
+	 Hvp0/Hp8xDmNZ8YzslFWgmk8mJ34HAjbXUcdRXX5fvKJVVzjgMdSXWSEbV/aLun5Ow
+	 YTMENW94oKWig==
+From: Namhyung Kim <namhyung@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Thomas Richter <tmricht@linux.ibm.com>,
+	acme@redhat.com,
+	acme@kernel.org
+Cc: hca@linux.ibm.com,
+	svens@linux.ibm.com,
+	gor@linux.ibm.com,
+	sumanthk@linux.ibm.com
+Subject: Re: [PING PATCH] perf test: raise limit to 20 percent for perf_stat_--bpf-counters_test
+Date: Mon, 22 Jan 2024 12:35:11 -0800
+Message-ID: <170595558508.377262.16864811982251292801.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.43.0.429.g432eaa2c6b-goog
+In-Reply-To: <20240108084009.3959211-1-tmricht@linux.ibm.com>
+References: <20240108084009.3959211-1-tmricht@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240122-topic-qdf_cleanup_net-v1-1-caf0d9c4408a@linaro.org>
-In-Reply-To: <20240122-topic-qdf_cleanup_net-v1-1-caf0d9c4408a@linaro.org>
-From: Timur Tabi <timur@kernel.org>
-Date: Mon, 22 Jan 2024 14:34:11 -0600
-X-Gmail-Original-Message-ID: <CAOZdJXXCmZi8Qx-y2D_NhJiafnGhvma2OY6F+KauqYcNAAQNCQ@mail.gmail.com>
-Message-ID: <CAOZdJXXCmZi8Qx-y2D_NhJiafnGhvma2OY6F+KauqYcNAAQNCQ@mail.gmail.com>
-Subject: Re: [PATCH] net: ethernet: qualcomm: Remove QDF24xx support
-To: Konrad Dybcio <konrad.dybcio@linaro.org>
-Cc: Timur Tabi <timur@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Marijn Suijten <marijn.suijten@somainline.org>, linux-kernel@vger.kernel.org, 
-	netdev@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jan 22, 2024 at 6:02=E2=80=AFAM Konrad Dybcio <konrad.dybcio@linaro=
-.org> wrote:
->
-> This SoC family was destined for server use, featuring Qualcomm's very
-> interesting Kryo cores (before "Kryo" became a marketing term for Arm
-> cores with small modifications). It did however not leave the labs of
-> Qualcomm and presumably some partners, nor was it ever productized.
->
-> Remove the related drivers, as they seem to be long obsolete.
->
-> Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+On Mon, 8 Jan 2024 09:40:09 +0100, Thomas Richter wrote:
+> This test case often fails on s390 (about 2 out of 10) because the
+> 10% percent limit on the difference between --bpf-counters event counting
+> and s390 hardware counting is more than 10% in all failure cases.
+> Raise the limit to 20% on s390 and the test case succeeds.
+> 
+> 
 
-Sad day indeed, but understandable.
+Applied to perf-tools-next, thanks!
 
-Acked-by: Timur Tabi <timur@kernel.org>
-
-If you're looking for other QDF stuff to remove, the QDF2400 hacks in
-the SBSA UART driver really should go.
+Thanks,
+Namhyung
