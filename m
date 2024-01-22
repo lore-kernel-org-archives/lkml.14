@@ -1,83 +1,179 @@
-Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24F1B524A4;
-	Mon, 22 Jan 2024 14:58:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61764524DD;
+	Mon, 22 Jan 2024 14:58:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705935505; cv=none; b=qLfB2PVTQYOtNxh+GLnC/SL+NgfS1dJcbo69aseHFikj30cfNk1rBP7OWVkc5Sx2AUSjw4EB180rzxwWim2HZZ83eZtmDdmg8nWYIPBgVY5dEvyD8p5yXN9NDwHAF/XgonctExOoc7O/6cSeMcF7ppdZK5cEvr5iiXQRXPra1gw=
+	t=1705935505; cv=none; b=Fo6GesMThKwEwCHJuAqTWztL3sS2lp0DnKghNya7cT2gBiJlsE7dY8TSK/1bctcyVByWUb7NHQsj1PtI4Wkp9MkLKMNwgsxDpnCrxttpSfcmsl0k/Aq83PJ8/l7Q0cQolcv6ffTCQqK++U27ZST3gVvJ4FrgGNXvtKR+4cY93zo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1705935505; c=relaxed/simple;
-	bh=zx5mRNzxyJlvHfbVnxkC/u6ZuwyKoUvIry+7Sb9Uyvw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GX/eQCKnD0Us3NOqTdc3MBa2kwrHulZOdDgQaSMM9PiSaD+u+ftGjKcvHIHtopz/xRC2i1jfrAp+i35MbY9mi9LwQvwaGJKDqAlidi+4My6qajHG+a6aekwgaev3qzm70+OD5pZi87MUEfskt0Ds9PohqpcTp7XmFJ1WtO6Rs/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E3MHB9th; arc=none smtp.client-ip=209.85.128.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	bh=e4S5oxyAI1Ym/DoprimOTsdp+Rj2lpWX0FiR3QL2cfk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=rwnksO86xRcEFyWUHzROQhEpRyi0witBXoWeC6wDc2XqmG1uegMEwz6yfff/RuLcnlSD7Rs5hS77sjMZg0gLgjT2uDynebwPkws7XuZceBjMuIpw2ZWGqO2eXwiq+wCQ1tzXl4PJx9kd0uHwkiI2B3bAmOzP6+5X2YkMaAjvugk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CBJ4Yfe1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E3MHB9th"
-Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-5ff7dc53ce0so21521607b3.1;
-        Mon, 22 Jan 2024 06:58:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705935503; x=1706540303; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zx5mRNzxyJlvHfbVnxkC/u6ZuwyKoUvIry+7Sb9Uyvw=;
-        b=E3MHB9thrdSLYunhZFLAFjPBze3DHo15XKKo5pK2Zqe3lQn90x2HYk1Cpmd0l/R65S
-         Cwy/CO7wqmSSaMlQ/5RiI696d3tX0BrLXLcMJEryPps36n8wPwn2f3ZkpXf/cR454VMi
-         LWhboYhwsOpPUMBHFDhmX5ECXFNDS29I5Gl1OHwqF21TiwUiPgNZa5uzTo/wsOh5vIt6
-         okXXuSpf4M7txjYR14tgNR/ZAb3a4rjKHRPHSgv7kg2HGmugrjRMD0TAr8Nr3eIGt7BL
-         RuhbmXUa9WTQt4XMdYbJUyeoFAQKoEZDJ9GYldZryUOCYZ/59m1iftsnZbp3F4cnPPm2
-         Zjtw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705935503; x=1706540303;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zx5mRNzxyJlvHfbVnxkC/u6ZuwyKoUvIry+7Sb9Uyvw=;
-        b=ErZtzjcShkkVzn5ciHJfl60x7ELkQOOs0oWF93I2fP4f91kl4J06YosEim8SmwdWGS
-         5WDHiuWgXk70cKr/YyaJr+RP31SvIpUBEyTiRwYLnR/wO+gJDgmzfgCVDis8iuuNoIEf
-         fkQxx4RCiEXzCKFQoECYdU21gWb/tuOvBR0kBBkg68sJAyijleepmKG7ZBGWPS+nH0KD
-         TFo7qSmaqy5iUSBQR3DkfI8rR//m/R3InREtPefUCNyXljdsEGukQJhFgOHe8i4rKozA
-         5TZxcx/OOg2I687gQvN/vfOo9slX1Grn8xLsz7Q62JqD1bWrrzVESTDKFYvPKpmHiCdu
-         GeoQ==
-X-Gm-Message-State: AOJu0YxT7U0XidvruUJQX8FKqy9/hoxP8btPn6AFlVmsXp98SqNyrepC
-	ebXQf4NrDlwzRpkcM3C2gOlhRllsOAelRVFtzVHlDiPfKbXdQwe+dOkh+Jmd0634xre4nOiH3yf
-	v8TZT/nkCO1nS2gQBoUnTV+V9UgE=
-X-Google-Smtp-Source: AGHT+IH4SpOaE3HwHRyQ6KFZQXsGaaFp8ZR7rCGfOdLhcTSQb+0HZE37tdRub1sxzupLDb2Yvbnn+Em9PV+2mDmvMP0=
-X-Received: by 2002:a81:bf51:0:b0:5ff:7f45:3933 with SMTP id
- s17-20020a81bf51000000b005ff7f453933mr1974710ywk.80.1705935502922; Mon, 22
- Jan 2024 06:58:22 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CBJ4Yfe1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1CFFC433A6;
+	Mon, 22 Jan 2024 14:58:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705935505;
+	bh=e4S5oxyAI1Ym/DoprimOTsdp+Rj2lpWX0FiR3QL2cfk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=CBJ4Yfe1PArpKlKO9QiS50bl9C5Ez+290oILJhCWoB87/Z9dhBOBusfSxg0JmxC43
+	 PiMpx7rmawk4mydrdELY6O8txFTXmOLbStlsyNq0PydpacCtkLEdRL8ogO24nrLQud
+	 BmOiDgM/VcWQXbP+CX3CCk6f2Oz8Cuwzv3cGb5vpuj7AGXUpZYNDu9hl/mZ7UNyoT7
+	 IM6snDVoOHdsfyQaTVvJ4gVyxzsk5yG7M2BuXs/cggITOBmKh4zfUXqLEFl9muzcFN
+	 6o1wOEofhDYA6AOsY1xaWtJrLEmcSfQf6Ng9yfBot7UGoe1BRr2H8GJFXzgTwUmvw4
+	 tFbj/XNZP9Qug==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+	Adam Ford <aford173@gmail.com>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Sasha Levin <sashal@kernel.org>,
+	dafna@fastmail.com,
+	heiko@sntech.de,
+	linux-media@vger.kernel.org,
+	linux-rockchip@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 6.7 37/88] media: rkisp1: Store IRQ lines
+Date: Mon, 22 Jan 2024 09:51:10 -0500
+Message-ID: <20240122145608.990137-37-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240122145608.990137-1-sashal@kernel.org>
+References: <20240122145608.990137-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240105012930.1426214-1-charmitro@posteo.net>
-In-Reply-To: <20240105012930.1426214-1-charmitro@posteo.net>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Mon, 22 Jan 2024 15:58:11 +0100
-Message-ID: <CANiq72kmQXt+wGfKD5ehrqA2V4vbzrtH9f1MJrhxSkR9nLJUHQ@mail.gmail.com>
-Subject: Re: [PATCH] rust: sync: `CondVar` rename "wait_list" to "wait_queue_head"
-To: Charalampos Mitrodimas <charmitro@posteo.net>
-Cc: ojeda@kernel.org, alex.gaynor@gmail.com, wedsonaf@gmail.com, 
-	boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com, 
-	benno.lossin@proton.me, aliceryhl@google.com, a.hindborg@samsung.com, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.7.1
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jan 5, 2024 at 2:29=E2=80=AFAM Charalampos Mitrodimas
-<charmitro@posteo.net> wrote:
->
-> Fields named "wait_list" usually are of type "struct list_head". To
-> avoid confusion and because it is of type
-> "Opaque<bindings::wait_queue_head>" we are renaming "wait_list" to
-> "wait_queue_head".
+From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
 
-Applied to `rust-next` -- thanks everyone!
+[ Upstream commit 0753874617de883c6d4da903142f334f76a75d70 ]
 
-Cheers,
-Miguel
+Store the IRQ lines used by the driver for easy access. These are needed
+in future patches which fix IRQ race issues.
+
+Link: https://lore.kernel.org/r/20231207-rkisp-irq-fix-v3-3-358a2c871a3c@ideasonboard.com
+
+Tested-by: Adam Ford <aford173@gmail.com>  #imx8mp-beacon
+Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ .../platform/rockchip/rkisp1/rkisp1-common.h    | 11 ++++++++++-
+ .../media/platform/rockchip/rkisp1/rkisp1-dev.c | 17 +++++++++++++----
+ 2 files changed, 23 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/media/platform/rockchip/rkisp1/rkisp1-common.h b/drivers/media/platform/rockchip/rkisp1/rkisp1-common.h
+index 1e7cea1bea5e..2d7f06281c39 100644
+--- a/drivers/media/platform/rockchip/rkisp1/rkisp1-common.h
++++ b/drivers/media/platform/rockchip/rkisp1/rkisp1-common.h
+@@ -61,6 +61,14 @@ struct dentry;
+ 						 RKISP1_CIF_ISP_EXP_END |	\
+ 						 RKISP1_CIF_ISP_HIST_MEASURE_RDY)
+ 
++/* IRQ lines */
++enum rkisp1_irq_line {
++	RKISP1_IRQ_ISP = 0,
++	RKISP1_IRQ_MI,
++	RKISP1_IRQ_MIPI,
++	RKISP1_NUM_IRQS,
++};
++
+ /* enum for the resizer pads */
+ enum rkisp1_rsz_pad {
+ 	RKISP1_RSZ_PAD_SINK,
+@@ -423,7 +431,6 @@ struct rkisp1_debug {
+  * struct rkisp1_device - ISP platform device
+  *
+  * @base_addr:	   base register address
+- * @irq:	   the irq number
+  * @dev:	   a pointer to the struct device
+  * @clk_size:	   number of clocks
+  * @clks:	   array of clocks
+@@ -441,6 +448,7 @@ struct rkisp1_debug {
+  * @stream_lock:   serializes {start/stop}_streaming callbacks between the capture devices.
+  * @debug:	   debug params to be exposed on debugfs
+  * @info:	   version-specific ISP information
++ * @irqs:          IRQ line numbers
+  */
+ struct rkisp1_device {
+ 	void __iomem *base_addr;
+@@ -461,6 +469,7 @@ struct rkisp1_device {
+ 	struct mutex stream_lock; /* serialize {start/stop}_streaming cb between capture devices */
+ 	struct rkisp1_debug debug;
+ 	const struct rkisp1_info *info;
++	int irqs[RKISP1_NUM_IRQS];
+ };
+ 
+ /*
+diff --git a/drivers/media/platform/rockchip/rkisp1/rkisp1-dev.c b/drivers/media/platform/rockchip/rkisp1/rkisp1-dev.c
+index 22b2ae0e89c4..c3fa40976140 100644
+--- a/drivers/media/platform/rockchip/rkisp1/rkisp1-dev.c
++++ b/drivers/media/platform/rockchip/rkisp1/rkisp1-dev.c
+@@ -114,6 +114,7 @@
+ struct rkisp1_isr_data {
+ 	const char *name;
+ 	irqreturn_t (*isr)(int irq, void *ctx);
++	u32 line_mask;
+ };
+ 
+ /* ----------------------------------------------------------------------------
+@@ -471,9 +472,9 @@ static const char * const px30_isp_clks[] = {
+ };
+ 
+ static const struct rkisp1_isr_data px30_isp_isrs[] = {
+-	{ "isp", rkisp1_isp_isr },
+-	{ "mi", rkisp1_capture_isr },
+-	{ "mipi", rkisp1_csi_isr },
++	{ "isp", rkisp1_isp_isr, BIT(RKISP1_IRQ_ISP) },
++	{ "mi", rkisp1_capture_isr, BIT(RKISP1_IRQ_MI) },
++	{ "mipi", rkisp1_csi_isr, BIT(RKISP1_IRQ_MIPI) },
+ };
+ 
+ static const struct rkisp1_info px30_isp_info = {
+@@ -492,7 +493,7 @@ static const char * const rk3399_isp_clks[] = {
+ };
+ 
+ static const struct rkisp1_isr_data rk3399_isp_isrs[] = {
+-	{ NULL, rkisp1_isr },
++	{ NULL, rkisp1_isr, BIT(RKISP1_IRQ_ISP) | BIT(RKISP1_IRQ_MI) | BIT(RKISP1_IRQ_MIPI) },
+ };
+ 
+ static const struct rkisp1_info rk3399_isp_info = {
+@@ -543,6 +544,9 @@ static int rkisp1_probe(struct platform_device *pdev)
+ 	if (IS_ERR(rkisp1->base_addr))
+ 		return PTR_ERR(rkisp1->base_addr);
+ 
++	for (unsigned int il = 0; il < ARRAY_SIZE(rkisp1->irqs); ++il)
++		rkisp1->irqs[il] = -1;
++
+ 	for (i = 0; i < info->isr_size; i++) {
+ 		irq = info->isrs[i].name
+ 		    ? platform_get_irq_byname(pdev, info->isrs[i].name)
+@@ -550,6 +554,11 @@ static int rkisp1_probe(struct platform_device *pdev)
+ 		if (irq < 0)
+ 			return irq;
+ 
++		for (unsigned int il = 0; il < ARRAY_SIZE(rkisp1->irqs); ++il) {
++			if (info->isrs[i].line_mask & BIT(il))
++				rkisp1->irqs[il] = irq;
++		}
++
+ 		ret = devm_request_irq(dev, irq, info->isrs[i].isr, 0,
+ 				       dev_driver_string(dev), dev);
+ 		if (ret) {
+-- 
+2.43.0
+
