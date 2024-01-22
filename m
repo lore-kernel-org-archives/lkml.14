@@ -1,103 +1,183 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A501CA7F;
-	Mon, 22 Jan 2024 05:48:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C65B2FC14;
+	Mon, 22 Jan 2024 05:48:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.134.136.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705902524; cv=none; b=Pwh42xzdwoGxRrTc4SabPZ/8ez0Bf9EJ7Aj1fhI6bvxS3KIOvHt1w0SZhU4++RcMhIrCDor0NrY+CBdRsGwSm8sxI6g9PNRsdkIoTI/tv9cReWbetAAYJYDLkmZwJ2iDv3dS0LOFxHqCfmTnsY1GFNZzuxQHWYpwAts0+e9kZ5U=
+	t=1705902528; cv=none; b=ei3tdFQtbZdkhl23FTHp0sq5lNBU86nmKBp+NnvNdgqF8ynvkjB4TWmkxjFQSWBlFcnWbomkxUGb51P0L+FzSoMyjOgy5oJwc1rytZwAxRTZG7MPVpzgsnlkERTIDWA/2EKH1cOuDXB7od+ufpTIe6pa52czbEYeVcY2D0YR53s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705902524; c=relaxed/simple;
-	bh=fvcqDANsNrlVg8LHXfdCILc7Q6Zm8CII+gZE4TRCJ1E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LVjc8J4kP3kmyorFCezFKLrOYXzOcr+3ai/+fGpCG0xaFtLDQjKV7A8MZTlxk76rf/v60oiXtbAAJAq6oqiYPMzdmSWAzxKU5awQfvZxgxtHgwPXZ6N/A7Ys04q5I7JC0a7dGtRk6ITN/PrMWUh5FHlqES8BmYfRC0gAYcVR7hI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=EkYZB46N; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1705902528; c=relaxed/simple;
+	bh=zVzhxvqRR0BI96qQJ4hq4Lg0Tgi2Dc/PHhg3c81/aoQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=p2PnDaq/43npbcdny79dh5DnDuFejWPLOjkZujnJsCG3Vn6Ru1NRvi8gL9TP9lc1HMkYXJp2OwlMf66DAlTLFlkcLwWNvm7g+lfrqkVd8lFo1cpQywsGdqM+PDU9mTLvbSKkVtSW1W0gZ6dKdqroqjSwA3Rt2+knJqfxcNwh6zU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=M/p6gTnQ; arc=none smtp.client-ip=134.134.136.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EkYZB46N"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-	bh=qTB9lkUu0aOVisiKuKEe2EDq/PJZ2wo5dJ7HSEFZVXM=; b=EkYZB46N02S1j23tS+kXa0o+qz
-	SOGen273Lr1irYsN5If2peuKaIKjSk7cDNkpmSKJ+38isemVUJ0/RMOZ5B1cbVi8G4YC+702/krmb
-	k2Q31MTvaLRkSWpdj4s4oWdx/adOATimCIFljjsQrGo+0lCK4v0v51EsnAfvnzSoDU7fhTc2kdJpf
-	fu+/WqZUtkhcYsm08rzmXNJmqYVvn4iiZgVFpOpWubVTPKoFqro90KJcp+hAJUAsCgorC+aanX5zj
-	U+EuxaNA8592b3Mxa3IPcLCT1+d0yvNNoOD5srt2UM2Bx3uqDA1QYY/0st99QQpH/woUekI/Ha5bg
-	MH9PQOyw==;
-Received: from [50.53.50.0] (helo=[192.168.254.15])
-	by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-	id 1rRnAk-00Adcx-1H;
-	Mon, 22 Jan 2024 05:48:38 +0000
-Message-ID: <c4cd5048-1838-4464-ba79-26cc595e380f@infradead.org>
-Date: Sun, 21 Jan 2024 21:48:36 -0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="M/p6gTnQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1705902525; x=1737438525;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=zVzhxvqRR0BI96qQJ4hq4Lg0Tgi2Dc/PHhg3c81/aoQ=;
+  b=M/p6gTnQMT+Zdu3ub7XsTOKq0qH4LjanyWsSNhhwCyWRMtUbxkhBqhpG
+   6MZpx3nSqcX1K2hG699DiHhfLVrT7NCcJZn35aRS5BIABtTbnlBPQIRoW
+   BBHejs1/dijzsSAe8nxOJExtIbnZhe+7LnCwudv7ugPKxSqkfUPs5CBU4
+   spBsU5HiKjL6SbzGnx6FIMl/kDazzDeqkzl6pU32Q2FiixXI8GvCi+rrf
+   6aIm0vQPYsY6UB7esMGa1kSm11MEA6f1ZjXqjV0Q3sVxBuRrQqTXSRaus
+   MU8Qdmw2k1/OmACpYIJcmAVOb1gm2F4UP0QPd0WCrQrk/WMYCjuXhgTtR
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10960"; a="467487074"
+X-IronPort-AV: E=Sophos;i="6.05,211,1701158400"; 
+   d="scan'208";a="467487074"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jan 2024 21:48:45 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10960"; a="1116763888"
+X-IronPort-AV: E=Sophos;i="6.05,211,1701158400"; 
+   d="scan'208";a="1116763888"
+Received: from allen-box.sh.intel.com ([10.239.159.127])
+  by fmsmga005.fm.intel.com with ESMTP; 21 Jan 2024 21:48:41 -0800
+From: Lu Baolu <baolu.lu@linux.intel.com>
+To: Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Jean-Philippe Brucker <jean-philippe@linaro.org>,
+	Nicolin Chen <nicolinc@nvidia.com>
+Cc: Yi Liu <yi.l.liu@intel.com>,
+	Jacob Pan <jacob.jun.pan@linux.intel.com>,
+	Longfang Liu <liulongfang@huawei.com>,
+	Yan Zhao <yan.y.zhao@intel.com>,
+	iommu@lists.linux.dev,
+	kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Lu Baolu <baolu.lu@linux.intel.com>,
+	Jason Gunthorpe <jgg@nvidia.com>
+Subject: [PATCH v10 03/16] iommu: Remove unrecoverable fault data
+Date: Mon, 22 Jan 2024 13:42:55 +0800
+Message-Id: <20240122054308.23901-4-baolu.lu@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240122054308.23901-1-baolu.lu@linux.intel.com>
+References: <20240122054308.23901-1-baolu.lu@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Linux Kernel Bug] UBSAN: array-index-out-of-bounds in
- rds_cmsg_recv
-Content-Language: en-US
-To: Zhu Yanjun <yanjun.zhu@linux.dev>, Chenyuan Yang <chenyuan0y@gmail.com>,
- santosh.shilimkar@oracle.com, netdev@vger.kernel.org,
- linux-rdma@vger.kernel.org, rds-devel@oss.oracle.com,
- linux-kernel@vger.kernel.org
-Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- pabeni@redhat.com, "syzkaller@googlegroups.com"
- <syzkaller@googlegroups.com>, Zijie Zhao <zzjas98@gmail.com>
-References: <CALGdzuoVdq-wtQ4Az9iottBqC5cv9ZhcE5q8N7LfYFvkRsOVcw@mail.gmail.com>
- <27319d3d-61dd-41e3-be6c-ccc08b9b3688@linux.dev>
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <27319d3d-61dd-41e3-be6c-ccc08b9b3688@linux.dev>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hi,
+The unrecoverable fault data is not used anywhere. Remove it to avoid
+dead code.
 
+Suggested-by: Kevin Tian <kevin.tian@intel.com>
+Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+Reviewed-by: Kevin Tian <kevin.tian@intel.com>
+Tested-by: Yan Zhao <yan.y.zhao@intel.com>
+Tested-by: Longfang Liu <liulongfang@huawei.com>
+---
+ include/linux/iommu.h | 72 ++-----------------------------------------
+ 1 file changed, 2 insertions(+), 70 deletions(-)
 
-On 1/21/24 00:34, Zhu Yanjun wrote:
-> 在 2024/1/19 22:29, Chenyuan Yang 写道:
->> Dear Linux Kernel Developers for Network RDS,
->>
->> We encountered "UBSAN: array-index-out-of-bounds in rds_cmsg_recv"
->> when testing the RDS with our generated specifications. The C
->> reproduce program and logs for this crash are attached.
->>
->> This crash happens when RDS receives messages by using
->> `rds_cmsg_recv`, which reads the `j+1` index of the array
->> `inc->i_rx_lat_trace`
->> (https://elixir.bootlin.com/linux/v6.7/source/net/rds/recv.c#L585).
->> The length of `inc->i_rx_lat_trace` array is 4 (defined by
->> `RDS_RX_MAX_TRACES`,
->> https://elixir.bootlin.com/linux/v6.7/source/net/rds/rds.h#L289) while
->> `j` is the value stored in another array `rs->rs_rx_trace`
->> (https://elixir.bootlin.com/linux/v6.7/source/net/rds/recv.c#L583),
->> which is sent from others and could be arbitrary value.
-> 
-> I recommend to use the latest rds to make tests. The rds in linux kernel upstream is too old. The rds in oracle linux is newer.
-
-Why is the upstream kernel lagging behind?  Is the RDS maintainer going
-to submit patches to update mainline?
-
-Thanks.
-
-> Zhu Yanjun
-> 
->>
->> This crash might be exploited to read the value out-of-bound from the
->> array by setting arbitrary values for the array `rs->rs_rx_trace`.
->>
->> If you have any questions or require more information, please feel
->> free to contact us.
->>
->> Best,
->> Chenyuan
-> 
-> 
-
+diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+index 472a8ce029b1..c960c4fae3bc 100644
+--- a/include/linux/iommu.h
++++ b/include/linux/iommu.h
+@@ -50,67 +50,7 @@ struct iommu_dma_cookie;
+ 
+ /* Generic fault types, can be expanded IRQ remapping fault */
+ enum iommu_fault_type {
+-	IOMMU_FAULT_DMA_UNRECOV = 1,	/* unrecoverable fault */
+-	IOMMU_FAULT_PAGE_REQ,		/* page request fault */
+-};
+-
+-enum iommu_fault_reason {
+-	IOMMU_FAULT_REASON_UNKNOWN = 0,
+-
+-	/* Could not access the PASID table (fetch caused external abort) */
+-	IOMMU_FAULT_REASON_PASID_FETCH,
+-
+-	/* PASID entry is invalid or has configuration errors */
+-	IOMMU_FAULT_REASON_BAD_PASID_ENTRY,
+-
+-	/*
+-	 * PASID is out of range (e.g. exceeds the maximum PASID
+-	 * supported by the IOMMU) or disabled.
+-	 */
+-	IOMMU_FAULT_REASON_PASID_INVALID,
+-
+-	/*
+-	 * An external abort occurred fetching (or updating) a translation
+-	 * table descriptor
+-	 */
+-	IOMMU_FAULT_REASON_WALK_EABT,
+-
+-	/*
+-	 * Could not access the page table entry (Bad address),
+-	 * actual translation fault
+-	 */
+-	IOMMU_FAULT_REASON_PTE_FETCH,
+-
+-	/* Protection flag check failed */
+-	IOMMU_FAULT_REASON_PERMISSION,
+-
+-	/* access flag check failed */
+-	IOMMU_FAULT_REASON_ACCESS,
+-
+-	/* Output address of a translation stage caused Address Size fault */
+-	IOMMU_FAULT_REASON_OOR_ADDRESS,
+-};
+-
+-/**
+- * struct iommu_fault_unrecoverable - Unrecoverable fault data
+- * @reason: reason of the fault, from &enum iommu_fault_reason
+- * @flags: parameters of this fault (IOMMU_FAULT_UNRECOV_* values)
+- * @pasid: Process Address Space ID
+- * @perm: requested permission access using by the incoming transaction
+- *        (IOMMU_FAULT_PERM_* values)
+- * @addr: offending page address
+- * @fetch_addr: address that caused a fetch abort, if any
+- */
+-struct iommu_fault_unrecoverable {
+-	__u32	reason;
+-#define IOMMU_FAULT_UNRECOV_PASID_VALID		(1 << 0)
+-#define IOMMU_FAULT_UNRECOV_ADDR_VALID		(1 << 1)
+-#define IOMMU_FAULT_UNRECOV_FETCH_ADDR_VALID	(1 << 2)
+-	__u32	flags;
+-	__u32	pasid;
+-	__u32	perm;
+-	__u64	addr;
+-	__u64	fetch_addr;
++	IOMMU_FAULT_PAGE_REQ = 1,	/* page request fault */
+ };
+ 
+ /**
+@@ -142,19 +82,11 @@ struct iommu_fault_page_request {
+ /**
+  * struct iommu_fault - Generic fault data
+  * @type: fault type from &enum iommu_fault_type
+- * @padding: reserved for future use (should be zero)
+- * @event: fault event, when @type is %IOMMU_FAULT_DMA_UNRECOV
+  * @prm: Page Request message, when @type is %IOMMU_FAULT_PAGE_REQ
+- * @padding2: sets the fault size to allow for future extensions
+  */
+ struct iommu_fault {
+ 	__u32	type;
+-	__u32	padding;
+-	union {
+-		struct iommu_fault_unrecoverable event;
+-		struct iommu_fault_page_request prm;
+-		__u8 padding2[56];
+-	};
++	struct iommu_fault_page_request prm;
+ };
+ 
+ /**
 -- 
-#Randy
+2.34.1
+
