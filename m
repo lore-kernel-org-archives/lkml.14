@@ -1,147 +1,97 @@
-Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B52AE63400;
-	Mon, 22 Jan 2024 17:26:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.174
+Received: from zg8tndyumtaxlji0oc4xnzya.icoremail.net (zg8tndyumtaxlji0oc4xnzya.icoremail.net [46.101.248.176])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C04963500;
+	Mon, 22 Jan 2024 17:26:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.101.248.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705944386; cv=none; b=QrPvFqWxwjUy6GqPKP7P3IwV1eZ2R3mI05ITVaXX2VUo1wb8PvXEjZkIJSZNAU1tJ3HmIiQoLaaYYI3VOtxWKlxr9QBA1qRrfpUT8LcEQBuQQPxvRxyoKVYtcudks+06+1NpDn+GH/Q2E3FO9ma7ZQI1h99XkBSUZR6qMiD24dY=
+	t=1705944408; cv=none; b=VYuTFnZASntdiHm70ll5ONiCAn4ScUbbhEujLGefvc5QztcTg4QPf1DmuauJ32JMRUm06VS7Y3VuVA9kJ+kTSsDcQU8egZppe1+t1s9s4ituqALzFR0o5h/9ZUAay0pMn5k6Qpw3LD5dqpfEuMKRcUsLENEeO2uDmyrs0gsqBc0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705944386; c=relaxed/simple;
-	bh=26A8tfsGChMmLH71cY/nGmPPy+2IwXxvuF1dkUp/XGA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IhdmtCZFeN3cLs92nMPopa5UWkKo92O2TZxFIgq9KNhw2BoAZwKhL+Elo+ccZsUbQLJhSpCNdlcI9UT1tARDUQS2UvP1iVk08CbgLgx5Q5S4VsLaxTQRzPJ4OspiuLaDlp3gT6t5UC9T833J3tFJUGnd+etfJyRCEoND2bN2WQg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ESggLioe; arc=none smtp.client-ip=209.85.219.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ESggLioe"
-Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-dc22597dbfeso3702707276.3;
-        Mon, 22 Jan 2024 09:26:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705944384; x=1706549184; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=TLhmakZVx7P/y+xJl0pVM/baovZzW+u/LUkkxQgBmHI=;
-        b=ESggLioeqskwcyaEN7/7f/sBd3AX0uo5969CCSQUuRUyi/lZ2MGNpBXSTewJD9BVnU
-         D1h9JkaaNEb1XqY3od4YT++g0d1x8OBMiy5wrgcT+jzy1mt8YsrykwAAUcTCMNA3jlc4
-         72+tEys4dfek1XG4JwmGvC1w9HZyl1V5seAOoy/QIFxQPqQcmrC/3wgmto6di5uZ9P++
-         qULAUlB3raNAs6THxMgGblOH30SB9kqVRDHGMRZv6jio5z5L378mN8waBgHustjZUCNT
-         vGxaSIdNQKIJQ+HjFih9rdOShgSGQ4V5/yFbZi3eaNNj5ysUt+Griru1P6SyQFPBXPVr
-         LzxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705944384; x=1706549184;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=TLhmakZVx7P/y+xJl0pVM/baovZzW+u/LUkkxQgBmHI=;
-        b=pAZF8b/bZXrXQP5/qzqDKcVqaxuprowM8U0IpsgQ8wwqeTmk/gJMMQ2kFMqpKhyRjV
-         sOOU7QCMgUdGUZT3aJ3QHC6UQn7O0jz4IH/+rFdEGdk1MLmf/V0azNbr/a1hcscQ7Imw
-         ukXs29xTTfVIzxTEoAQLGG5wYWTbqrBI46P+87d2HZ3Sx5z4s1hLzjeVMwtEkK8r9D0V
-         aoAbclTer2zyyRUPDoIEvsN6zful8jilPzPSID7SZcYEmCR60J3hefHsguniwAAeHrZG
-         BiNKG1WrBXdcJKHcpu0O4DRPZpDd82LsxGwj4fXmPItRWIbAp10CLAyaXFHpZju4qWV8
-         rjqg==
-X-Gm-Message-State: AOJu0YybQw/1UFrWmW6tUE6bVf2a78UmDs3rr/keuxpowCaEI3c+uxKm
-	eOhyesQHuwH1kcRB9bH6Q9WTuoMgLV4wO0e3uE9ATe+N2NsAvgVI2rjHwNSBl2YpW4jXzXJpJh6
-	29gnhKCa4h9E67Phu8nxwcZ3Ed3U=
-X-Google-Smtp-Source: AGHT+IGlkwiyiVqqnE5ObJjEoOKvtdd41NNwjfTkam4z85lvQtQ1t00ake2EBs3cpPEEWIqpmhcM2ZqpuRipoAA5iI0=
-X-Received: by 2002:a25:8211:0:b0:dc2:36b1:7586 with SMTP id
- q17-20020a258211000000b00dc236b17586mr2974030ybk.9.1705944383702; Mon, 22 Jan
- 2024 09:26:23 -0800 (PST)
+	s=arc-20240116; t=1705944408; c=relaxed/simple;
+	bh=rL/0SMt1W90GcdnJIhIcIHzZB/uqhXmkYCEKtnqY1l4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=KWBiPxKO+ydKw+lXCtHU9CLIiYCFeWm1I3gt3tPv2JIN9g2W5fguGlTTixJvGnrvmxo35alaOewQwNZxzpKY+0ZPXf4VTSvwZHx0eR2YCZ1yP5BnDWNvFXrafNZ1gMzfrnTEvwNtFRuiRbrLGbSl3SeXf6NFaCFEVAwRYnGKb3E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn; spf=pass smtp.mailfrom=zju.edu.cn; arc=none smtp.client-ip=46.101.248.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zju.edu.cn
+Received: from luzhipeng.223.5.5.5 (unknown [39.174.92.167])
+	by mail-app4 (Coremail) with SMTP id cS_KCgDHwX9Ipa5lmGV5AA--.39403S2;
+	Tue, 23 Jan 2024 01:26:33 +0800 (CST)
+From: Zhipeng Lu <alexious@zju.edu.cn>
+To: alexious@zju.edu.cn
+Cc: Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] media: go7007: fix a memleak in go7007_load_encoder
+Date: Tue, 23 Jan 2024 01:25:56 +0800
+Message-Id: <20240122172556.3842580-1-alexious@zju.edu.cn>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240108135421.684263-1-tmaimon77@gmail.com> <20240108135421.684263-7-tmaimon77@gmail.com>
- <171300da-3d49-4e1f-8969-9a454ecdd698@linaro.org> <CAP6Zq1hifi7CY=tYaDY_o82AXhbS5P9=MZBb-bqmvNCLZk3O2g@mail.gmail.com>
- <018fc173-edf3-4490-8f29-4059bd17268e@linaro.org>
-In-Reply-To: <018fc173-edf3-4490-8f29-4059bd17268e@linaro.org>
-From: Tomer Maimon <tmaimon77@gmail.com>
-Date: Mon, 22 Jan 2024 19:26:12 +0200
-Message-ID: <CAP6Zq1jQ9T4Q+WvwyAH4sKLK1+Mp0utcA_STgm=_Z3ywKoLoCw@mail.gmail.com>
-Subject: Re: [PATCH v22 6/8] dt-bindings: clock: npcm845: replace reg with
- syscon property
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, 
-	krzysztof.kozlowski+dt@linaro.org, tali.perry1@gmail.com, joel@jms.id.au, 
-	venture@google.com, yuenn@google.com, benjaminfair@google.com, 
-	openbmc@lists.ozlabs.org, linux-clk@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:cS_KCgDHwX9Ipa5lmGV5AA--.39403S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7CFykKrWDXw1rKrWDGry5XFb_yoW8Gry8pa
+	yUGFyUAry5Kr4Ygan7Ww1DKa90ka95Cay2k3s3Zw4fZr15tFWqg3y0vFyjgr12ka12gw1S
+	yF1DZr17CF45ZF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvm14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26r
+	xl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
+	6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr
+	0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkF7I0En4kS14v2
+	6r126r1DMxkIecxEwVAFwVW8MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r
+	4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF
+	67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2I
+	x0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2
+	z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnU
+	UI43ZEXa7VUUTq2tUUUUU==
+X-CM-SenderInfo: qrsrjiarszq6lmxovvfxof0/
 
-Hi Krzysztof,
+In go7007_load_encoder, bounce(i.e. go->boot_fw), is allocated without
+a deallocation thereafter. After the following call chain:
 
-Thanks for your comments.
+saa7134_go7007_init
+  |-> go7007_boot_encoder
+        |-> go7007_load_encoder
+  |-> kfree(go)
 
-On Tue, 16 Jan 2024 at 22:40, Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
->
-> On 16/01/2024 20:37, Tomer Maimon wrote:
-> > Hi Krzysztof,
-> >
-> > As explained in my [PATCH v22 4/8] dt-bindings: soc: nuvoton: add
-> > binding for clock and reset registers mail.
-> >
-> > In the NPCM8XX SoC, the reset and the clock register modules are
-> > scrambled in the same memory register region.
-> > The NPCM8XX Clock driver is still in the upstream process (for a long
-> > time) but the NPCM8XX reset driver is already upstreamed.
->
-> First of all, the drivers itself don't matter here, we talk about
-> bindings. I assume though they were going together, so that's why you
-> mentioned driver... but just to clarify: we talk here only about drivers.
->
-> If reset bindings were accepted, then why they aren't referenced?
->
-> If clock bindings were not accepted, then what is this patch and this
-> file about?
->
-> >
-> > On Wed, 10 Jan 2024 at 22:59, Krzysztof Kozlowski
-> > <krzysztof.kozlowski@linaro.org> wrote:
-> >>
-> >> On 08/01/2024 14:54, Tomer Maimon wrote:
-> >>> Replace reg with syscon property since the clock registers handle the
-> >>> reset registers as well.
-> >>>
-> >>> Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
-> >>> ---
-> >>>  .../bindings/clock/nuvoton,npcm845-clk.yaml   | 22 +++++++++----------
-> >>>  1 file changed, 10 insertions(+), 12 deletions(-)
-> >>>
-> >>> diff --git a/Documentation/devicetree/bindings/clock/nuvoton,npcm845-clk.yaml b/Documentation/devicetree/bindings/clock/nuvoton,npcm845-clk.yaml
-> >>> index 0b642bfce292..c6bf05c163b4 100644
-> >>> --- a/Documentation/devicetree/bindings/clock/nuvoton,npcm845-clk.yaml
-> >>> +++ b/Documentation/devicetree/bindings/clock/nuvoton,npcm845-clk.yaml
-> >>> @@ -18,8 +18,9 @@ properties:
-> >>>      enum:
-> >>>        - nuvoton,npcm845-clk
-> >>>
-> >>> -  reg:
-> >>> -    maxItems: 1
-> >>> +  nuvoton,sysclk:
-> >>> +    $ref: /schemas/types.yaml#/definitions/phandle
-> >>> +    description: phandle to access clock registers.
-> >>
-> >> NAK. Not explained, not justified, not reasonable, breaking ABI.
-> > Should I explain more in the commit message or/and the nuvoton,sysclk property?
->
-> Let's try to explain here first. I really do not understand why do you
-> change this binding. Your device did not change, so your binding should
-> not. Now, if you say "but I changed drivers", then it does not matter.
-> Bindings do not change because you did something in the drivers, in
-> general. At least they should not.
-The confusion here is because the clock binding was upstreamed but the
-clock driver has not upstreamed yet.
-The clock driver will use regmap and ioremap so reg property is not
-needed, should I remove it? or leave it?
->
-> Best regards,
-> Krzysztof
->
+go is freed and thus bounce is leaked.
 
-Best regards,
+Fixes: 95ef39403f89 ("[media] go7007: remember boot firmware")
+Signed-off-by: Zhipeng Lu <alexious@zju.edu.cn>
+---
+ drivers/media/usb/go7007/go7007-driver.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-Tomer
+diff --git a/drivers/media/usb/go7007/go7007-driver.c b/drivers/media/usb/go7007/go7007-driver.c
+index 0c24e2984304..65d6a63068dc 100644
+--- a/drivers/media/usb/go7007/go7007-driver.c
++++ b/drivers/media/usb/go7007/go7007-driver.c
+@@ -80,7 +80,7 @@ static int go7007_load_encoder(struct go7007 *go)
+ 	const struct firmware *fw_entry;
+ 	char fw_name[] = "go7007/go7007fw.bin";
+ 	void *bounce;
+-	int fw_len, rv = 0;
++	int fw_len;
+ 	u16 intr_val, intr_data;
+ 
+ 	if (go->boot_fw == NULL) {
+@@ -109,9 +109,10 @@ static int go7007_load_encoder(struct go7007 *go)
+ 	    go7007_read_interrupt(go, &intr_val, &intr_data) < 0 ||
+ 			(intr_val & ~0x1) != 0x5a5a) {
+ 		v4l2_err(go, "error transferring firmware\n");
+-		rv = -1;
++		kfree(bounce);
++		return -1;
+ 	}
+-	return rv;
++	return 0;
+ }
+ 
+ MODULE_FIRMWARE("go7007/go7007fw.bin");
+-- 
+2.34.1
+
