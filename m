@@ -1,58 +1,58 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 343B05A0E9
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 09:57:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E2D65A0E9
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 09:58:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706003840; cv=none; b=bl7dMDLymg8o2Fq9CUi+aM7icJrCtB5ZA6h6O6/HCr+Q4tGDDP0zjLw0LUotLEinpyyjtl6zcaueH3j7gY06+IuZQZno0cKUB0uGt7BX0wnaIj34Rm8Ct1xvi8+TqMr89Mzzd6hpPuY5dquiT4m/bdcc346H8IlvmROmKWxLlrQ=
+	t=1706003897; cv=none; b=iF0QOTPrB2PJOxoNWXdQMP4tIq5gxnrt/JE2pBjUqp3qm7zY17Cet06TtHoc+Zi2984g+g2MWYRxCV7ipupNPcHCcFyoPCWPd4gjKnATPXG2Nd7CaX5PRPbYuqv9lR2hCtkfmTVGHF8RgCpMVqG2Er36lx9XJ1Ab06FgIk72eWc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706003840; c=relaxed/simple;
-	bh=5e3AHPmxRzCBZ2/YKeHc9fgIZIpVeb9OeyngWpKu49A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=D6NofOQQ00NXQGVM5lgKKZeEMwGMS3qNurXqsbraYBUgB6R2jEDQkRCt0i2AJWbynmffRRmgcicuDeXEDWPp4nAKvHNWJOEFJ12y8I2+gReX1PlLaxSzmdK7zNafvPmegoh+gYVg2xwtYvyPvbFE1Ik5lvahyKkrsE48i72+FXo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gIIviI62; arc=none smtp.client-ip=209.85.128.41
+	s=arc-20240116; t=1706003897; c=relaxed/simple;
+	bh=eR5qPvlgI6H6IpiKuooomJL6dF463M/T3mQAC68b1tw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=oo7FeCxWxriefz/+axeiSg8QQ7slDNFjDzMewvd4Q0RBb2GPdKZS0xE7kL232JeenwDK3GmluSyQSultlHbiGCBo5Po8/SJGvLCaIiRtlnLXYCHYabDcWPbT/R4Q6Rij0yGe3j5ul8zojt9v2kWx3B/dElan1sdB39S4PeyMEIs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=irnNif80; arc=none smtp.client-ip=209.85.128.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gIIviI62"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-40ebfc5fb19so2251095e9.2
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 01:57:18 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="irnNif80"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-40eb95bd2c6so5884945e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 01:58:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706003837; x=1706608637; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
+        d=linaro.org; s=google; t=1706003894; x=1706608694; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=vaHd8LrOOmEomX/l7KKDLe+YmjgMBhv83n5CF+7e4Fc=;
-        b=gIIviI62LVoVj4UirmqpaeVQTwxZ5VGGaC04goCO72dTUvsv45Rte/gfbCkhH3SzuU
-         yxxGIB1QnnWk6rGG6LTKdlGzQ9EkUmezzAlZGNuGwNNXnwmNbuEFCpoWRwP+1L89snyC
-         lR5r0TaaQUE+DMy0EdzunuDZlwiDzPkw3/m90MKXIN1llvi1EyVNyr7B7uAUCASneiAh
-         7iMAIuQYQQVhxUKe5io81qbd4oD0FIsBKUe+Q5iKD7kE62QO4N9RzJnp6FQuio4YoMoR
-         /TVtEmGDoT8rfu+U8CE7WwqwrQuUQ4TXA6GYz2y8ikdsJa74DnWXsYwHSSMwTwX74QhE
-         vAaA==
+        bh=u22Qz3ajWOgWwClMOqK73JRgy3LS8g3FwLC8IJ6l77Q=;
+        b=irnNif80tD6efdHavY34lkl/fwDY7XLiSdi28RBIjgdaaelPqHysn9aiAYSP0Mpqlf
+         EPzh0GGRCPbIRA7mEhEuE3FQDHV3b0FdUH/m98cdBU6Uv6MInm/H+H1iLvZ2LjxVXbxY
+         OteEKMhHExckKbVDsrlNtWSLNaCEe501V7YXOG3z8ZI2alv+MKZN1bU7+GA+7XdRWo3F
+         LYGqltY5BhoeolJo4F37P25MzcoCJcebrDJ7pzT+CFjsziOJswKlfq1L5to+u1njj5Oe
+         b/xJfJHuUBuVGsXNm0sWYDRi6Z/URKkWelkH4K7rwTNyWf5fZrE3Gm1M0mVJBaHLrJKQ
+         BXZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706003837; x=1706608637;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1706003894; x=1706608694;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vaHd8LrOOmEomX/l7KKDLe+YmjgMBhv83n5CF+7e4Fc=;
-        b=tmsgIrSNeWiONBn5Sj20dctsg3zjBEcTFhMcQe/PGDwCKmcMfGFfhuyMyO/Jlq6dra
-         ah6/TEFWM3Vjmi+A8l5pxydtKDrw8UZTLY7gg/nUwU5nipY3jCjuMd1OUTVxSbqKYoPQ
-         1U/b7/387OP5Yg98cXCIbpxv/s1UsPLzhcufX7Zklm+nI2YdCLsBPF3ezGqCaILY5xqS
-         L4ba3eBuTvSHHOidL8KzvD1h9gG0GnEm/U6ykvMhYH2UtxSYi2a4f2DTEeLf1Q2/aPez
-         b9CbbOm85eeuE0i+s9mnR/irZRNFIWfauWWBj+25kwErRrbZDB5VC+Qj8yB7sxHpnu9i
-         etGw==
-X-Gm-Message-State: AOJu0YzgkVb6afcf9KrRBhde1mUPjEaAx8u7SsmAocAvcieujuqt4ysL
-	votz21rH1Fw83w0LZTrc+np+IVCfbndw7apsRh9mExIE1fgWx3HEqMAPAdz2HV0=
-X-Google-Smtp-Source: AGHT+IGZqmA3kwErgQlGHXolN3kzWIriiqo4nPzEEJThLvhcgKofE603AN4S9C8nWVyAnWs1OjG/Vw==
-X-Received: by 2002:a05:600c:450a:b0:40d:5502:5834 with SMTP id t10-20020a05600c450a00b0040d55025834mr226178wmo.14.1706003837440;
-        Tue, 23 Jan 2024 01:57:17 -0800 (PST)
+        bh=u22Qz3ajWOgWwClMOqK73JRgy3LS8g3FwLC8IJ6l77Q=;
+        b=cqBCNFImBRaqRm+By11Gc7gI+IUJyd+qOoAuxzfjbvN1Z37YZK5NNqPOaHRrbgqw6U
+         SudhROR55EE+NW2CEKziYZ9TEFAQdBjVYwxUFyGZRoaooXXFtwmouiWFFbJPTOjI+iPh
+         G5Qki0rr3g8Bs+cnMV8FbnXNFgs42vw7GiLUn64P7LLE4fnQVRM84JT/GfmTtFAQUqtN
+         KL9+4PQuxDLRC4Y91oA5RCWkEyGtr78/vrwbzsi+lHmHXiVCz4GbVb1B/lqiQ5732l64
+         AzB0QQwwpBv/EKXFWTuMW6/c/Cj3KAypjRGnURUrCBUw2sdznSU+2rQZqC30KawgmUEb
+         Jsdw==
+X-Gm-Message-State: AOJu0YxKwL0lPZR8gn8nLEYSJBZD2ReKR5pN+3lJxbUsLBUh/29xRvUb
+	sePMeQu8UwKOboCQfwjC09tZvHqinanzicXrspPbJDIyc56pf2CZ+D2VRcWTSqc=
+X-Google-Smtp-Source: AGHT+IHZbTo0A3ewz1TD4+4u8A1RIYvMGh2O8ALWu2EaO9a6nUyfk6IZVJx1Uy5V3VCq84n3gjapPQ==
+X-Received: by 2002:a05:600c:a46:b0:40e:a5ec:45e7 with SMTP id c6-20020a05600c0a4600b0040ea5ec45e7mr412778wmq.137.1706003894650;
+        Tue, 23 Jan 2024 01:58:14 -0800 (PST)
 Received: from [192.168.1.20] ([178.197.215.66])
-        by smtp.gmail.com with ESMTPSA id bg23-20020a05600c3c9700b0040d91fa270fsm42202520wmb.36.2024.01.23.01.57.16
+        by smtp.gmail.com with ESMTPSA id bg23-20020a05600c3c9700b0040d91fa270fsm42202520wmb.36.2024.01.23.01.58.12
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 23 Jan 2024 01:57:17 -0800 (PST)
-Message-ID: <da7bdb66-3463-4880-87b9-414c0bd31688@linaro.org>
-Date: Tue, 23 Jan 2024 10:57:15 +0100
+        Tue, 23 Jan 2024 01:58:14 -0800 (PST)
+Message-ID: <143b8da0-ee76-41a2-a26b-e7513e44e784@linaro.org>
+Date: Tue, 23 Jan 2024 10:58:12 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,20 +60,18 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] dt-bindings: gpio: add adg1414
+Subject: Re: [PATCH 1/8] ARM: dts: microchip: sam9x60_curiosity: Add
+ power-supply properties for sdmmc nodes
 Content-Language: en-US
-To: "Paller, Kim Seer" <KimSeer.Paller@analog.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>,
- "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
- "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20240121103505.26475-1-kimseer.paller@analog.com>
- <20240121103505.26475-2-kimseer.paller@analog.com>
- <2e34faa9-a0ca-49f6-a268-1c01c31b041c@linaro.org>
- <PH0PR03MB7141D8CD02D93AB420FA535DF9742@PH0PR03MB7141.namprd03.prod.outlook.com>
+To: Mihai.Sain@microchip.com, claudiu.beznea@tuxon.dev, robh+dt@kernel.org,
+ krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+ Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20240123083158.7339-1-mihai.sain@microchip.com>
+ <20240123083158.7339-2-mihai.sain@microchip.com>
+ <c289a167-031a-44cc-ab62-0fb0adcab2bb@linaro.org>
+ <PH8PR11MB68047F3DD9D23C6749D7F86082742@PH8PR11MB6804.namprd11.prod.outlook.com>
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
@@ -119,74 +117,20 @@ Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
  fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
  D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <PH0PR03MB7141D8CD02D93AB420FA535DF9742@PH0PR03MB7141.namprd03.prod.outlook.com>
+In-Reply-To: <PH8PR11MB68047F3DD9D23C6749D7F86082742@PH8PR11MB6804.namprd11.prod.outlook.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On 23/01/2024 10:55, Paller, Kim Seer wrote:
+On 23/01/2024 10:07, Mihai.Sain@microchip.com wrote:
 > Hi Krzysztof,
 > 
->> -----Original Message-----
->> From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
->> Sent: Monday, January 22, 2024 8:40 PM
->> To: Paller, Kim Seer <KimSeer.Paller@analog.com>; linux-gpio@vger.kernel.org;
->> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org
->> Cc: Linus Walleij <linus.walleij@linaro.org>; Bartosz Golaszewski
->> <brgl@bgdev.pl>; Rob Herring <robh+dt@kernel.org>; Krzysztof Kozlowski
->> <krzysztof.kozlowski+dt@linaro.org>; Conor Dooley <conor+dt@kernel.org>
->> Subject: Re: [PATCH 1/2] dt-bindings: gpio: add adg1414
->>
->> [External]
->>
->> On 21/01/2024 11:35, Kim Seer Paller wrote:
->>> The ADG1414 is a 9.5 Ω RON ±15 V/+12 V/±5 V iCMOS Serially-Controlled
->>> Octal SPST Switches
->>>
->>> Signed-off-by: Kim Seer Paller <kimseer.paller@analog.com>
->>> ---
->>>  .../bindings/gpio/gpio-adg1414.yaml           | 66 +++++++++++++++++++
->>>  MAINTAINERS                                   |  6 ++
->>>  2 files changed, 72 insertions(+)
->>>  create mode 100644
->>> Documentation/devicetree/bindings/gpio/gpio-adg1414.yaml
->>>
->>> diff --git a/Documentation/devicetree/bindings/gpio/gpio-adg1414.yaml
->>> b/Documentation/devicetree/bindings/gpio/gpio-adg1414.yaml
->>> new file mode 100644
->>> index 000000000..24a51e79f
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/gpio/gpio-adg1414.yaml
->>
->> Filename like compatible.
-> 
-> I would like to clarify, is it changing the filename from gpio-adg1414.yaml
-> to adg1414.yaml? 
+> I'm sorry for quoting (email is sent from Outlook).
+> The sdmmc controller from SAM9 MPUs doesn't support the IO voltage signaling/switching required by the UHS sd-card.
+> On the electrical schematics of the boards the controller and sd-card power pins are connected to 3V3 regulator.
+> On the SAMA5 MPUs there is support for IO voltage switching but since we have issues with the tuning procedure required but the UHS cards,
+> we want to keep vqmmc at 3V3 in order to use high-speed mode.
 
-No, because you miss vendor prefix. I doubt that it is your compatible...
-
-> 
->>> @@ -0,0 +1,66 @@
->>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) %YAML 1.2
->>> +---
->>> +$id:
->>> +https://urldefense.com/v3/__http://devicetree.org/schemas/gpio/gpio-a
->>> +dg1414.yaml*__;Iw!!A3Ni8CS0y2Y!_Q0zRB8J-
->> inWIIybgOjtThU0toJeUzqaT9Tveg
->>> +XTjvPWiCTh4IAJ5DkNepFdfhXXfxXLnB2wSR9_LgPnvVnFqw2bDuvBI8g$
->>> +$schema:
->>> +https://urldefense.com/v3/__http://devicetree.org/meta-schemas/core.y
->>> +aml*__;Iw!!A3Ni8CS0y2Y!_Q0zRB8J-
->> inWIIybgOjtThU0toJeUzqaT9TvegXTjvPWiC
->>> +Th4IAJ5DkNepFdfhXXfxXLnB2wSR9_LgPnvVnFqw2bEIZ1PG4$
->>> +
->>> +title: ADG1414 SPST Switch Driver
->>
->> "Driver" as Linux driver or some hardware driver?
-> 
-> Linux device driver. It seems I overlooked this one, it should be ADG1414 Octal SPST Switches
-
-Then please drop it and double check if your description also has it.
-The title and description should describe hardware.
+OK, it is fine for me.
 
 Best regards,
 Krzysztof
