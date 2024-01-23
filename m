@@ -1,94 +1,182 @@
-Received: from ahti.lucaweiss.eu (ahti.lucaweiss.eu [128.199.32.197])
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCCE519BDC;
-	Tue, 23 Jan 2024 21:04:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=128.199.32.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD0231A27A
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 21:04:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706043877; cv=none; b=dNRj/GDGZOiT9x6xWTuxATKa8M2Ks9L8Rx88ZmBVaHzI2n220qVZy/0s6kk1UkUY57x5L9wKqKuUnIKJ1K2+X1km7fhbWjYPfrYoh/iZQXKiKdB0HSvslbDD95fjRgiirexWuTZ2A8u6W4Kip1jxS8omWIw2ax3HGRcvMw68ClQ=
+	t=1706043895; cv=none; b=Sod9D7mFhvUYId+anks743y2whj5ctVvt0EDFp/XaUv3zQXojuH+XY2VVYoC2kBM1oa2EKED95JxWBbRkF8Gki6/pPU5uectwCw5/ZqGS01UenLRMbZvSN+tuanCD74yVVWyhhvuz+Nm8AQtuFdim4gxoaSwR1327dr8/mOHpso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706043877; c=relaxed/simple;
-	bh=fKNOuDoTzwcVzhQKQRV0risOvkUSvEE2mxGjG+qiGFM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=HLvVYL/AwqHiUCxp2CxS0xd0z3OFg1u0nEMpY1jzaMhqFHBIn8Yo1++dvR2uBw7ySxDrXGbkEWI+fZzLUVdFjRongXEH8xEL5YClrH3SjUQzEdScs7Y/2Z61YTNOUSVizneLNZ9JdPt7cH0vaqmdYmFNjB5R+QPFtDFK3qN7kxg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=z3ntu.xyz; spf=pass smtp.mailfrom=z3ntu.xyz; dkim=pass (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b=CtKF7IDS; arc=none smtp.client-ip=128.199.32.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=z3ntu.xyz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=z3ntu.xyz
+	s=arc-20240116; t=1706043895; c=relaxed/simple;
+	bh=3yre6/GfV9EsV09fKOVH0VSEsL+ZNHD1GahVnqq2AwE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZdL9rV/DPwrrDII8kQyDz3BW6sxU9AOXA9crTqSDTvgJcxki6oWs1QPgiUOFdvVwpbIfoDP+dWB6roqkUKE1M5G4yLs+npO1jITAe+T6Fm8SaUkv/LCFDdPCsYCQllDezlXBOidaW0a2hxsvZhQBkGzYHG2sAr52Ijj4qDg1ePw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=aVeU24on; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="CtKF7IDS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=z3ntu.xyz; s=s1;
-	t=1706043866; bh=fKNOuDoTzwcVzhQKQRV0risOvkUSvEE2mxGjG+qiGFM=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=CtKF7IDSkGMIKSDjrC1pkNtds5M2ywxHYrRxbtNMREIAyL4pUvLKsGB5vQDWoKh9h
-	 U8BS2PosNaOpKKPaenf9PzHQ5EnbVAIeOE5V8yPMnWQWt9DlDaYjV32aaSxorELBLV
-	 1YAr45GvXy8ID20tQgnYD+bebzFZhr1iPq4WywyM=
-From: Luca Weiss <luca@z3ntu.xyz>
-Date: Tue, 23 Jan 2024 22:03:55 +0100
-Subject: [PATCH 1/3] dt-bindings: clock: gcc-msm8953: add reset for MDSS
- subsystem
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aVeU24on"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a2e0be86878so1080001266b.1
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 13:04:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1706043892; x=1706648692; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mH6Q8mXoj5QFsHrSFXa0Fq0YxBOnIiyggYtErbKhYfQ=;
+        b=aVeU24onZvsdFYw4lTggVfuGXyiZ+TCZXXvh8FBb1jIohNLRD+1Z4+gt8VUaD35LtE
+         ChZc8IJrmu+CqZ87tZBf/DV8mcbuasXe0gXcby5RI+QfkyYQbASvL3FruOR/vvH/WSBk
+         SGntHE/VwpgRgJ2Oh580Pu0T0Ey9/KGTT1OH+nCfBDwaNPeu1+ax85EyBEG4SWQVbRi2
+         GjdcpjhQifPcpcGrHutWxC/hs3tTOGX1xBw6fDIkv2j6mYRK5HIfyA3fVdDOXw+FSTP4
+         O8oEzMVzev16QDatW8aW1EA5L9mHQa4lYWsS/A6Bv5CYFASRluVf6Co3/qdU4MyW09eJ
+         2NfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706043892; x=1706648692;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=mH6Q8mXoj5QFsHrSFXa0Fq0YxBOnIiyggYtErbKhYfQ=;
+        b=SYsyuo9+3LFgmF26h1oj3hFfqFt5gZqzkwsSAICYjgKXTawoZVbPBY78NPvr226lPG
+         FqaGErMut16lhNbokMLUrIX4QWqJDqq+RL7EVW4eacw7uDwW6TpoI2EWFRANSVK+zJH8
+         u8Ri+wTHd55McOgDd95x7/xw45M13Kufx24jnwOBC+1GEHNqdNRCt/LVWM8PXiziS+RG
+         IQaiJ1K2Ga+6pNTmp86oX/H8Gj4xeO8nQ/MpqYXN+n+3nKEU4Db/fDKkbMOh/K7ZVNDU
+         QZMsiemk+gE9Ae59u5UURuGKCKEX3QtxmOdX42DUn1rC5ZWnCPTLark7kpog5rAih/Qm
+         wv2Q==
+X-Gm-Message-State: AOJu0YwzDAvNFYU8nknmcVRpIkN4rL0j7GI53nA/RhJQ7JwP5rR/OdQg
+	GxW/ljy4ScIDozroiwQ2qdWwRITFZJwZo4oG4nqyyJ9sZYMi1rEb0QYjoOXAbxJ9N6CRaTvxMPP
+	juNx8vOaFUtnkPf42fBtNjmqv48aRh7x2oN1W
+X-Google-Smtp-Source: AGHT+IEO8kzTGXcdOGqKIS/vbQryVHEh7kUyOxjZhCV3nLSsBO7SzKGk+BAwskEyqe16MD7245agZ71nqKBKsUlPjR4=
+X-Received: by 2002:a17:906:2a02:b0:a30:428c:b1b8 with SMTP id
+ j2-20020a1709062a0200b00a30428cb1b8mr167644eje.42.1706043891672; Tue, 23 Jan
+ 2024 13:04:51 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240123-msm8953-mdss-reset-v1-1-bb8c6d3ce897@z3ntu.xyz>
-References: <20240123-msm8953-mdss-reset-v1-0-bb8c6d3ce897@z3ntu.xyz>
-In-Reply-To: <20240123-msm8953-mdss-reset-v1-0-bb8c6d3ce897@z3ntu.xyz>
-To: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
- Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konrad.dybcio@linaro.org>, 
- Michael Turquette <mturquette@baylibre.com>, 
- Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Luca Weiss <luca@z3ntu.xyz>, Vladimir Lypak <vladimir.lypak@gmail.com>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=736; i=luca@z3ntu.xyz;
- h=from:subject:message-id; bh=nowTyNlcYWdBQrzi/O5J4gsbaEoQ6NuvDACFQUsNsms=;
- b=owEBbQKS/ZANAwAIAXLYQ7idTddWAcsmYgBlsCnWW0r9jBCJrtoQbLrBv0ZaFIeW9WTt/l0Iq
- xYcLVturdyJAjMEAAEIAB0WIQQ5utIvCCzakboVj/py2EO4nU3XVgUCZbAp1gAKCRBy2EO4nU3X
- VoivEACI0QI2XZfoqVKppuc4WBE91IwWNshNwI/+dbesUmPY5DQjl1UerOfNMOzMYQ248FULlgI
- B2vih7/EmjR9dPfsjO0BLHcYSagtV2kzA6Cygwzod0iTc0zf3lXmwTRjMTeb7ZcgpR3DwbF1a3t
- F1LG6VzYVqeU+dXQDGTXjFS8Q7SaE/4VL1195xE62eidr2ruh74QVBqKMkYbCKjwd6SxpVAYdFy
- X7V24Ba/YxQK4MXGXUibclPuUoUSjisaKUOPxcWRKP0U5bWAm7vq1QCxd8LGM+aJSUHRhFBPJ9e
- /fpsXHlrSX4LBTUEZozSlHlK6kj/fkuCmjxay+7PDNOM6jPJrrmCystrdUMhmwkiARZKtEEmMgI
- KCrRbs6+rVA8W5MS5yPvOkIFrlRToebabO8/lCFRvKCgKhORGAg/KaqO+69bFurkrEP3eSYMZXy
- yC7zhRa/xy3tM4lYMoA1LqEjbi9Auu6VMVx5D2R2uTLkhtIIAmYj3Y20xYzEy3Et8MfsBJzL1ra
- 1uKWrYyEcc3f/qDvp4WMic/xf5SWPdnCxUE67YF2QcP9b+uqgYI1j3C9Kzixu0+r1SxEQntbPNo
- vdEcSBuVVEYtpAI5rSW7u/+oAxx8k7CFWPYybFseFMGfNvsqFS/5Z57PfRkIXoh4q9WQ+tBxyIn
- DDUXoCbBQ3lgPtw==
-X-Developer-Key: i=luca@z3ntu.xyz; a=openpgp;
- fpr=BD04DA24C971B8D587B2B8D7FAF69CF6CD2D02CD
+References: <20240120024007.2850671-1-yosryahmed@google.com>
+ <20240120024007.2850671-3-yosryahmed@google.com> <20240122201906.GA1567330@cmpxchg.org>
+ <CAJD7tkaATS48HVuBfbOmPM3EvRUoPFr66WhF64UC4FkyVH5exg@mail.gmail.com>
+ <20240123153851.GA1745986@cmpxchg.org> <CAJD7tkasHsRnT_75-TXsEe58V9_OW6m3g6CF7Kmsvz8CKRG_EA@mail.gmail.com>
+ <CAKEwX=OcyTXrLNYoBAJkWv0iUi5o6h1=bx1qaCH2CodWctc0Tw@mail.gmail.com>
+In-Reply-To: <CAKEwX=OcyTXrLNYoBAJkWv0iUi5o6h1=bx1qaCH2CodWctc0Tw@mail.gmail.com>
+From: Yosry Ahmed <yosryahmed@google.com>
+Date: Tue, 23 Jan 2024 13:04:15 -0800
+Message-ID: <CAJD7tkaizXg6CMzwwYnyGHD8oHjfyKBS-owjDsCvpNVgXc4PNA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] mm: zswap: remove unnecessary tree cleanups in zswap_swapoff()
+To: Nhat Pham <nphamcs@gmail.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Chris Li <chrisl@kernel.org>, Chengming Zhou <zhouchengming@bytedance.com>, 
+	Huang Ying <ying.huang@intel.com>, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Vladimir Lypak <vladimir.lypak@gmail.com>
+On Tue, Jan 23, 2024 at 12:30=E2=80=AFPM Nhat Pham <nphamcs@gmail.com> wrot=
+e:
+>
+> On Tue, Jan 23, 2024 at 7:55=E2=80=AFAM Yosry Ahmed <yosryahmed@google.co=
+m> wrote:
+> >
+> > On Tue, Jan 23, 2024 at 7:38=E2=80=AFAM Johannes Weiner <hannes@cmpxchg=
+.org> wrote:
+> > >
+> > > On Mon, Jan 22, 2024 at 12:39:16PM -0800, Yosry Ahmed wrote:
+> > > > On Mon, Jan 22, 2024 at 12:19=E2=80=AFPM Johannes Weiner <hannes@cm=
+pxchg.org> wrote:
+> > > > >
+> > > > > On Sat, Jan 20, 2024 at 02:40:07AM +0000, Yosry Ahmed wrote:
+> > > > > > During swapoff, try_to_unuse() makes sure that zswap_invalidate=
+() is
+> > > > > > called for all swap entries before zswap_swapoff() is called. T=
+his means
+> > > > > > that all zswap entries should already be removed from the tree.=
+ Simplify
+> > > > > > zswap_swapoff() by removing the tree cleanup loop, and leaving =
+an
+> > > > > > assertion in its place.
+> > > > > >
+> > > > > > Signed-off-by: Yosry Ahmed <yosryahmed@google.com>
+> > > > >
+> > > > > Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+> > > > >
+> > > > > That's a great simplification.
+> > > > >
+> > > > > Removing the tree->lock made me double take, but at this point th=
+e
+> > > > > swapfile and its cache should be fully dead and I don't see how a=
+ny of
+> > > > > the zswap operations that take tree->lock could race at this poin=
+t.
+> > > >
+> > > > It took me a while staring at the code to realize this loop is poin=
+tless.
+> > > >
+> > > > However, while I have your attention on the swapoff path, there's a
+> > > > slightly irrelevant problem that I think might be there, but I am n=
+ot
+> > > > sure.
+> > > >
+> > > > It looks to me like swapoff can race with writeback, and there may =
+be
+> > > > a chance of UAF for the zswap tree. For example, if zswap_swapoff()
+> > > > races with shrink_memcg_cb(), I feel like we may free the tree as i=
+t
+> > > > is being used. For example if zswap_swapoff()->kfree(tree) happen
+> > > > right before shrink_memcg_cb()->list_lru_isolate(l, item).
+> > > >
+> > > > Please tell me that I am being paranoid and that there is some
+> > > > protection against zswap writeback racing with swapoff. It feels li=
+ke
+> > > > we are very careful with zswap entries refcounting, but not with th=
+e
+> > > > zswap tree itself.
+> > >
+> > > Hm, I don't see how.
+> > >
+> > > Writeback operates on entries from the LRU. By the time
+> > > zswap_swapoff() is called, try_to_unuse() -> zswap_invalidate() shoul=
+d
+> > > will have emptied out the LRU and tree.
+> > >
+> > > Writeback could have gotten a refcount to the entry and dropped the
+> > > tree->lock. But then it does __read_swap_cache_async(), and while
+> > > holding the page lock checks the tree under lock once more; if that
+> > > finds the entry valid, it means try_to_unuse() hasn't started on this
+> > > page yet, and would be held up by the page lock/writeback state.
+> >
+> > Consider the following race:
+> >
+> > CPU 1                                 CPU 2
+> > # In shrink_memcg_cb()     # In swap_off
+> > list_lru_isolate()
+> >                                             zswap_invalidate()
+> >                                             ..
+> >                                             zswap_swapoff() -> kfree(tr=
+ee)
+> > spin_lock(&tree->lock);
+> >
+> > Isn't this a UAF or am I missing something here?
+>
+> I need to read this code closer. But this smells like a race to me as wel=
+l.
+>
+> Long term speaking, I think decoupling swap and zswap will fix this,
+> no? We won't need to kfree(tree) inside swapoff. IOW, if we have a
+> single zswap tree that is not tied down to any swapfile, then we can't
+> have this race. There might be other races introduced by the
+> decoupling that I might have not foreseen tho :)
 
-Add a new define for the GCC_MDSS_BCR found on MSM8953.
+Ideally yes, it should make the zswap <-> swapfile interaction more
+straightforward. Ideally in that world, writeback is handled in the
+swap core and is just moving an entry from one backend to another, so
+synchronization with things like swapoff should be easier. Also, I
+think in that world we don't need a zswap tree to begin with, there's
+a global tree(s) that maps a swap index directly to a swapfile swap
+entry or a zswap entry.
 
-Signed-off-by: Vladimir Lypak <vladimir.lypak@gmail.com>
-[luca: expand commit message]
-Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
----
- include/dt-bindings/clock/qcom,gcc-msm8953.h | 1 +
- 1 file changed, 1 insertion(+)
+>
+> Short term, no clue hmm. Let me think a bit more about this.
 
-diff --git a/include/dt-bindings/clock/qcom,gcc-msm8953.h b/include/dt-bindings/clock/qcom,gcc-msm8953.h
-index 783162da6148..28090f9d7f24 100644
---- a/include/dt-bindings/clock/qcom,gcc-msm8953.h
-+++ b/include/dt-bindings/clock/qcom,gcc-msm8953.h
-@@ -218,6 +218,7 @@
- #define GCC_USB3PHY_PHY_BCR			3
- #define GCC_USB3_PHY_BCR			4
- #define GCC_USB_30_BCR				5
-+#define GCC_MDSS_BCR				6
- 
- /* GDSCs */
- #define CPP_GDSC				0
-
--- 
-2.43.0
-
+See my response to Johannes, I think we may be able to fix this with
+refcounting + RCU.
