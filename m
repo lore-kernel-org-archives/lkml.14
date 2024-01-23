@@ -1,377 +1,126 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f180.google.com (mail-oi1-f180.google.com [209.85.167.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7918882D6B;
-	Tue, 23 Jan 2024 16:47:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8C8F85C7F
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 16:48:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706028444; cv=none; b=e+Qz1ZmpPRbO9opTOAhk5hmT3brDUjzaOmb6gbugbPPOe0Fjyr58eZkcCjExfN/ELNF9Bk6zeosKar0CY38sroqOlqRVSubLC/G/KtNkhZXYJ/V0md/GdWjGSyKD4oGSot0HFRZYqy6J6t4LWWqc4zZAodgti06cPDszJSw7ET8=
+	t=1706028508; cv=none; b=oVihGXr91ehcaZ26aN/1E5rGIZqL78kYtAB3v7WPJQYUzhY8dQ0ec/WozF45tnqDqoCZ5SryGKDwju2NR9pAHa3A72HOTFqLfMySmqOl1bSGlnv7/N95en1VZ+fJ4PGIShUoOMhK2hx5bbPGcBRZRzAcnq0u7vFxXibWyOomrGQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706028444; c=relaxed/simple;
-	bh=3LNhHfci3f3fHL8QZF2f9WWX+aZxoCrrzCZ6No3k10I=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=BHlX4DyeDcI0YZzndulW7D5/cbH7boz0cs+RdQ0MAbnilEetdHPJ4DsHJZ6tllBvejJUSunb7obqrB0G/vcMtk/FhLo5TsAqRvmrQxgLVpjY23N+a37Y5R0FdREJjqBWvM+5zW+Hqss6Yu3d+EXXJdDyHho+3VEm51NI6vQyY/U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=aZcvd1hX; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=UwkqvgMn; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1706028508; c=relaxed/simple;
+	bh=K+Id2pHFvW1zQtjRoC+3WBupoAqObAViI/JK0/PN30A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=N3YgbMMEMiiQy1KM+LhcqF92bBxby6SApg435+hzrcJcbaWziw+NdUMEoueGH3k7RJ+4zwHk3tGaQfbPAcaAvhIix7ZxMxJoh8I/ejClZXq1+GJXHYZ9P6kaA9NGIoCDM5hc2wrZ3euhAWZthOh1Iq+igMFLS/ns66fNBFS5pFk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=PA70v2ZZ; arc=none smtp.client-ip=209.85.167.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="aZcvd1hX";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="UwkqvgMn"
-From: Anna-Maria Behnsen <anna-maria@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1706028438;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=C/rFGi6KLFOmslk7r4TJ7Hb4p+h1puESpm2cPfdBJRs=;
-	b=aZcvd1hXwhFzktglpojoAQb5XGn4sr52kAr0yITbqWCVm1PQh6tjymxtET+Fmo6MzTFuV9
-	spL4IHHd5m8kRwkGu/Ywdn0uS8LPNtRle5sh2ChUCt08MJASKLYJx1+PfQtuUDXqoyTBVs
-	mX3SpWSQiqtIHDRAEBOgERL14UedN7HyAI3GKVPwNXjDSA9TWCErqSQdiPd1LG3k0x7YyY
-	1WPn8C1OrPWDoQUJyUkJUC06NRRbfuz0KdESgWVSOT8o9IPlO7K6i1SoY+MKWIUBq9E8mq
-	qVABTrZIOxf1Zt2H+k2G7+AKu/XdnuYiNyd9rZB314YbqGUOaSmArKVYwqJRdw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1706028438;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=C/rFGi6KLFOmslk7r4TJ7Hb4p+h1puESpm2cPfdBJRs=;
-	b=UwkqvgMnUEfksfbPBXe4jTkYP4krx6oXWr4h1yuDWuoQwe6dIrph6DXXIKPyQsIAavQnnN
-	XmR/hmdanu4J0CBA==
-To: linux-kernel@vger.kernel.org
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	John Stultz <jstultz@google.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Clemens Ladisch <clemens@ladisch.de>,
-	linux-doc@vger.kernel.org,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>
-Subject: [PATCH 8/8] timers: Add timer wheel documentation
-Date: Tue, 23 Jan 2024 17:47:02 +0100
-Message-Id: <20240123164702.55612-9-anna-maria@linutronix.de>
-In-Reply-To: <20240123164702.55612-1-anna-maria@linutronix.de>
-References: <20240123164702.55612-1-anna-maria@linutronix.de>
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="PA70v2ZZ"
+Received: by mail-oi1-f180.google.com with SMTP id 5614622812f47-3bdc2759468so655406b6e.1
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 08:48:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1706028504; x=1706633304; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=gbO1hM7Gq1MMQFtxk3PHCAqmC2ittFH3Mus5UZlycCs=;
+        b=PA70v2ZZHYuoAZqpmB7fz+85LCW0+TO6VG2b4x3NOu0ussKVZ4AXHelDYjuLQ2G1jC
+         1+VLfSTrXGHXIKxA/A+fzbkiRAk8ItEk7xbiJKsy0Ei+8mPYiRYRoKB17IJRNwUy9U9M
+         EB/1kzw4McDl34441AI1fwHHwVRpgwBTtyF+joV/UYlD9lNX06WQ50QSnLqXmRdxu9/I
+         kmpIjyOCbOmpdmzyg+KtLo2NQDbI7A8bAn+n4buF7qNXa/k8S1nDEADjIMVUhNHu7iyH
+         ejaJ8EVtQLPtZGMFbwVn9VPUtKaLtNMpTIc8Q8bHs0XFv48IQ18LTm4UwqXNNkgxYbNs
+         taIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706028504; x=1706633304;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gbO1hM7Gq1MMQFtxk3PHCAqmC2ittFH3Mus5UZlycCs=;
+        b=Or2zGkGjYRa/qKLO6jjBjUQLOqnjewcUS5Pkw9T+dxcaV4Mvoa6ZPFmcTk4jWqxd+Z
+         ICxCCQ3i3udrAKVHGFxrUfGbxXjmTwa6BlqG7hK9FqQMXSg9FSTquks/n20T9CLD90d7
+         RivRk9M17QUthTKKamUJzM+R+9m21pAOWYDYdgB/roK30zYuLolKo2NW1Zr5qY9eAfKi
+         e7uch2x4xUQW1fZtGtdL9yTU/R2mAnZBkkKyeRmyqzrEL5mXLT/GaY2ljYRJVQZy1XEK
+         CGnSb6E9uLUfmNe6ZOJbDbdrO+c3g+Q7WpeO0P1gZhVIn05sFORbwDOUoLzBL8XBe5+w
+         sDrQ==
+X-Gm-Message-State: AOJu0YyIroeCXJ6wF2JFotMxP+9V2aKsw0Mcg++dewhoSrfpP/O3ugQh
+	Jw8s6W6LEUO1ubQEnds7xcJuSj4NuQt14qSaFSgvV6h8UiCZEiO1oH6GnGSjgO4=
+X-Google-Smtp-Source: AGHT+IHUG7S/rv/R7wA+Z9UIIztYDf0v6Sh7d9fO6fdN0c9sFxPRFzPESC1XVa3Mb1iV3eCC4V2oUg==
+X-Received: by 2002:a05:6808:399a:b0:3bd:cbb2:4614 with SMTP id gq26-20020a056808399a00b003bdcbb24614mr185240oib.68.1706028504592;
+        Tue, 23 Jan 2024 08:48:24 -0800 (PST)
+Received: from localhost (2603-7000-0c01-2716-97cf-7b55-44af-acd6.res6.spectrum.com. [2603:7000:c01:2716:97cf:7b55:44af:acd6])
+        by smtp.gmail.com with ESMTPSA id bk21-20020a05620a1a1500b0078353f07523sm3256413qkb.1.2024.01.23.08.48.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Jan 2024 08:48:24 -0800 (PST)
+Date: Tue, 23 Jan 2024 11:48:19 -0500
+From: Johannes Weiner <hannes@cmpxchg.org>
+To: "T.J. Mercier" <tjmercier@google.com>
+Cc: Michal Hocko <mhocko@suse.com>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Shakeel Butt <shakeelb@google.com>,
+	Muchun Song <muchun.song@linux.dev>,
+	Andrew Morton <akpm@linux-foundation.org>, android-mm@google.com,
+	yuzhao@google.com, yangyifei03@kuaishou.com,
+	cgroups@vger.kernel.org, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Revert "mm:vmscan: fix inaccurate reclaim during
+ proactive reclaim"
+Message-ID: <20240123164819.GB1745986@cmpxchg.org>
+References: <20240121214413.833776-1-tjmercier@google.com>
+ <Za-H8NNW9bL-I4gj@tiehlicka>
+ <CABdmKX2K4MMe9rsKfWi9RxUS5G1RkLVzuUkPnovt5O2hqVmbWA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CABdmKX2K4MMe9rsKfWi9RxUS5G1RkLVzuUkPnovt5O2hqVmbWA@mail.gmail.com>
 
-There is a lot of documentation inside the timer code. But this
-documentation is not exported into the official kernel documentation.
+The revert isn't a straight-forward solution.
 
-Rework the comments to follow the rules of kernel-doc and rst. Create a new
-documentation file about the timer wheel concept and another file which
-contains information for the user of timer list timers.
+The patch you're reverting fixed conventional reclaim and broke
+MGLRU. Your revert fixes MGLRU and breaks conventional reclaim.
 
-Signed-off-by: Anna-Maria Behnsen <anna-maria@linutronix.de>
----
- Documentation/core-api/timers/index.rst       |   6 +
- .../core-api/timers/timer-list-timers.rst     |  13 ++
- Documentation/core-api/timers/timer-wheel.rst |  38 +++++
- include/linux/timer.h                         |  15 +-
- kernel/time/timer.c                           | 139 ++++++++++--------
- 5 files changed, 142 insertions(+), 69 deletions(-)
- create mode 100644 Documentation/core-api/timers/timer-list-timers.rst
- create mode 100644 Documentation/core-api/timers/timer-wheel.rst
+On Tue, Jan 23, 2024 at 05:58:05AM -0800, T.J. Mercier wrote:
+> They both are able to make progress. The main difference is that a
+> single iteration of try_to_free_mem_cgroup_pages with MGLRU ends soon
+> after it reclaims nr_to_reclaim, and before it touches all memcgs. So
+> a single iteration really will reclaim only about SWAP_CLUSTER_MAX-ish
+> pages with MGLRU. WIthout MGLRU the memcg walk is not aborted
+> immediately after nr_to_reclaim is reached, so a single call to
+> try_to_free_mem_cgroup_pages can actually reclaim thousands of pages
+> even when sc->nr_to_reclaim is 32. (I.E. MGLRU overreclaims less.)
+> https://lore.kernel.org/lkml/20221201223923.873696-1-yuzhao@google.com/
 
-diff --git a/Documentation/core-api/timers/index.rst b/Documentation/core-api/timers/index.rst
-index 2f99fc9d4f44..9f8f6afac859 100644
---- a/Documentation/core-api/timers/index.rst
-+++ b/Documentation/core-api/timers/index.rst
-@@ -20,7 +20,13 @@ Information for Users
-    :maxdepth: 1
- 
-    api
-+   timer-list-timers
- 
- 
- Information about concepts and internals
- ========================================
-+
-+.. toctree::
-+   :maxdepth: 1
-+
-+   timer-wheel
-diff --git a/Documentation/core-api/timers/timer-list-timers.rst b/Documentation/core-api/timers/timer-list-timers.rst
-new file mode 100644
-index 000000000000..ba2d3841098c
---- /dev/null
-+++ b/Documentation/core-api/timers/timer-list-timers.rst
-@@ -0,0 +1,13 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+===================================
-+Timer list timers - How to use them
-+===================================
-+
-+Timer flags
-+===========
-+
-+A timer list timer could have specified one of the following timer flags:
-+
-+.. kernel-doc:: include/linux/timer.h
-+   :doc: Flags of the timer list timers
-diff --git a/Documentation/core-api/timers/timer-wheel.rst b/Documentation/core-api/timers/timer-wheel.rst
-new file mode 100644
-index 000000000000..f0469445d2c6
---- /dev/null
-+++ b/Documentation/core-api/timers/timer-wheel.rst
-@@ -0,0 +1,38 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+===================================================================
-+Timer wheel and timer list timers - Implementation Details
-+===================================================================
-+
-+The timer wheel is the infrastructure to handle all timer list
-+timers. Originally it was a cascading wheel and was reworked as a
-+non-cascading timer wheel back in 2016 with commit 500462a9de65 ("timers:
-+Switch to a non-cascading wheel").
-+
-+Concept
-+=======
-+
-+.. kernel-doc:: kernel/time/timer.c
-+   :doc: Concept of the timer wheel
-+
-+
-+Locking of timer bases
-+======================
-+
-+.. kernel-doc:: kernel/time/timer.c
-+   :doc: Timer bases and hashed locking
-+
-+
-+NOHZ and timer bases
-+====================
-+
-+.. kernel-doc:: kernel/time/timer.c
-+   :doc: NOHZ and timer bases
-+
-+
-+How to use timer list timers
-+============================
-+
-+See also the users guide for how to use timer list timers. Details which are
-+important for the user are not listed here a second time to prevent duplicated
-+information (:doc:`timer-list-timers`).
-diff --git a/include/linux/timer.h b/include/linux/timer.h
-index f18a2f1eb79e..b1ae19df17e1 100644
---- a/include/linux/timer.h
-+++ b/include/linux/timer.h
-@@ -23,6 +23,8 @@
- #endif
- 
- /**
-+ * DOC: Flags of the timer list timers
-+ *
-  * @TIMER_DEFERRABLE: A deferrable timer will work normally when the
-  * system is busy, but will not cause a CPU to come out of idle just
-  * to service it; instead, the timer will be serviced when the CPU
-@@ -40,12 +42,13 @@
-  * placement heuristics (like, NOHZ) and will always expire on the CPU
-  * on which the timer was enqueued.
-  *
-- * Note: Because enqueuing of timers can migrate the timer from one
-- * CPU to another, pinned timers are not guaranteed to stay on the
-- * initialy selected CPU.  They move to the CPU on which the enqueue
-- * function is invoked via mod_timer() or add_timer().  If the timer
-- * should be placed on a particular CPU, then add_timer_on() has to be
-- * used.
-+ * .. note::
-+ *   Because enqueuing of timers can migrate the timer from one
-+ *   CPU to another, pinned timers are not guaranteed to stay on the
-+ *   initialy selected CPU.  They move to the CPU on which the enqueue
-+ *   function is invoked via mod_timer() or add_timer().  If the timer
-+ *   should be placed on a particular CPU, then add_timer_on() has to be
-+ *   used.
-  */
- #define TIMER_CPUMASK		0x0003FFFF
- #define TIMER_MIGRATING		0x00040000
-diff --git a/kernel/time/timer.c b/kernel/time/timer.c
-index d44dba1d4af0..c001d8934172 100644
---- a/kernel/time/timer.c
-+++ b/kernel/time/timer.c
-@@ -61,13 +61,15 @@ __visible u64 jiffies_64 __cacheline_aligned_in_smp = INITIAL_JIFFIES;
- 
- EXPORT_SYMBOL(jiffies_64);
- 
--/*
-- * The timer wheel has LVL_DEPTH array levels. Each level provides an array of
-- * LVL_SIZE buckets. Each level is driven by its own clock and therefor each
-- * level has a different granularity.
-+/**
-+ * DOC: Concept of the timer wheel
-+ *
-+ * The timer wheel has ``LVL_DEPTH`` array levels. Each level provides an array
-+ * of ``LVL_SIZE`` buckets. Each level is driven by its own clock and therefor
-+ * each level has a different granularity.
-  *
-- * The level granularity is:		LVL_CLK_DIV ^ lvl
-- * The level clock frequency is:	HZ / (LVL_CLK_DIV ^ level)
-+ * * The level granularity is: ``LVL_CLK_DIV ^ lvl``
-+ * * The level clock frequency is: ``HZ / (LVL_CLK_DIV ^ level)``
-  *
-  * The array level of a newly armed timer depends on the relative expiry
-  * time. The farther the expiry time is away the higher the array level and
-@@ -99,54 +101,54 @@ EXPORT_SYMBOL(jiffies_64);
-  * The currently chosen array constants values are a good compromise between
-  * array size and granularity.
-  *
-- * This results in the following granularity and range levels:
-- *
-- * HZ 1000 steps
-- * Level Offset  Granularity            Range
-- *  0      0         1 ms                0 ms -         63 ms
-- *  1     64         8 ms               64 ms -        511 ms
-- *  2    128        64 ms              512 ms -       4095 ms (512ms - ~4s)
-- *  3    192       512 ms             4096 ms -      32767 ms (~4s - ~32s)
-- *  4    256      4096 ms (~4s)      32768 ms -     262143 ms (~32s - ~4m)
-- *  5    320     32768 ms (~32s)    262144 ms -    2097151 ms (~4m - ~34m)
-- *  6    384    262144 ms (~4m)    2097152 ms -   16777215 ms (~34m - ~4h)
-- *  7    448   2097152 ms (~34m)  16777216 ms -  134217727 ms (~4h - ~1d)
-- *  8    512  16777216 ms (~4h)  134217728 ms - 1073741822 ms (~1d - ~12d)
-- *
-- * HZ  300
-- * Level Offset  Granularity            Range
-- *  0	   0         3 ms                0 ms -        210 ms
-- *  1	  64        26 ms              213 ms -       1703 ms (213ms - ~1s)
-- *  2	 128       213 ms             1706 ms -      13650 ms (~1s - ~13s)
-- *  3	 192      1706 ms (~1s)      13653 ms -     109223 ms (~13s - ~1m)
-- *  4	 256     13653 ms (~13s)    109226 ms -     873810 ms (~1m - ~14m)
-- *  5	 320    109226 ms (~1m)     873813 ms -    6990503 ms (~14m - ~1h)
-- *  6	 384    873813 ms (~14m)   6990506 ms -   55924050 ms (~1h - ~15h)
-- *  7	 448   6990506 ms (~1h)   55924053 ms -  447392423 ms (~15h - ~5d)
-- *  8    512  55924053 ms (~15h) 447392426 ms - 3579139406 ms (~5d - ~41d)
-- *
-- * HZ  250
-- * Level Offset  Granularity            Range
-- *  0	   0         4 ms                0 ms -        255 ms
-- *  1	  64        32 ms              256 ms -       2047 ms (256ms - ~2s)
-- *  2	 128       256 ms             2048 ms -      16383 ms (~2s - ~16s)
-- *  3	 192      2048 ms (~2s)      16384 ms -     131071 ms (~16s - ~2m)
-- *  4	 256     16384 ms (~16s)    131072 ms -    1048575 ms (~2m - ~17m)
-- *  5	 320    131072 ms (~2m)    1048576 ms -    8388607 ms (~17m - ~2h)
-- *  6	 384   1048576 ms (~17m)   8388608 ms -   67108863 ms (~2h - ~18h)
-- *  7	 448   8388608 ms (~2h)   67108864 ms -  536870911 ms (~18h - ~6d)
-- *  8    512  67108864 ms (~18h) 536870912 ms - 4294967288 ms (~6d - ~49d)
-- *
-- * HZ  100
-- * Level Offset  Granularity            Range
-- *  0	   0         10 ms               0 ms -        630 ms
-- *  1	  64         80 ms             640 ms -       5110 ms (640ms - ~5s)
-- *  2	 128        640 ms            5120 ms -      40950 ms (~5s - ~40s)
-- *  3	 192       5120 ms (~5s)     40960 ms -     327670 ms (~40s - ~5m)
-- *  4	 256      40960 ms (~40s)   327680 ms -    2621430 ms (~5m - ~43m)
-- *  5	 320     327680 ms (~5m)   2621440 ms -   20971510 ms (~43m - ~5h)
-- *  6	 384    2621440 ms (~43m) 20971520 ms -  167772150 ms (~5h - ~1d)
-- *  7	 448   20971520 ms (~5h) 167772160 ms - 1342177270 ms (~1d - ~15d)
-+ * This results in the following granularity and range levels::
-+ *
-+ *  HZ 1000 steps
-+ *  Level Offset  Granularity            Range
-+ *   0      0         1 ms                0 ms -         63 ms
-+ *   1     64         8 ms               64 ms -        511 ms
-+ *   2    128        64 ms              512 ms -       4095 ms (512ms - ~4s)
-+ *   3    192       512 ms             4096 ms -      32767 ms (~4s - ~32s)
-+ *   4    256      4096 ms (~4s)      32768 ms -     262143 ms (~32s - ~4m)
-+ *   5    320     32768 ms (~32s)    262144 ms -    2097151 ms (~4m - ~34m)
-+ *   6    384    262144 ms (~4m)    2097152 ms -   16777215 ms (~34m - ~4h)
-+ *   7    448   2097152 ms (~34m)  16777216 ms -  134217727 ms (~4h - ~1d)
-+ *   8    512  16777216 ms (~4h)  134217728 ms - 1073741822 ms (~1d - ~12d)
-+ *
-+ *  HZ  300
-+ *  Level Offset  Granularity            Range
-+ *   0     0         3 ms                0 ms -        210 ms
-+ *   1    64        26 ms              213 ms -       1703 ms (213ms - ~1s)
-+ *   2   128       213 ms             1706 ms -      13650 ms (~1s - ~13s)
-+ *   3   192      1706 ms (~1s)      13653 ms -     109223 ms (~13s - ~1m)
-+ *   4   256     13653 ms (~13s)    109226 ms -     873810 ms (~1m - ~14m)
-+ *   5   320    109226 ms (~1m)     873813 ms -    6990503 ms (~14m - ~1h)
-+ *   6   384    873813 ms (~14m)   6990506 ms -   55924050 ms (~1h - ~15h)
-+ *   7   448   6990506 ms (~1h)   55924053 ms -  447392423 ms (~15h - ~5d)
-+ *   8   512  55924053 ms (~15h) 447392426 ms - 3579139406 ms (~5d - ~41d)
-+ *
-+ *  HZ  250
-+ *  Level Offset  Granularity            Range
-+ *   0     0         4 ms                0 ms -        255 ms
-+ *   1    64        32 ms              256 ms -       2047 ms (256ms - ~2s)
-+ *   2   128       256 ms             2048 ms -      16383 ms (~2s - ~16s)
-+ *   3   192      2048 ms (~2s)      16384 ms -     131071 ms (~16s - ~2m)
-+ *   4   256     16384 ms (~16s)    131072 ms -    1048575 ms (~2m - ~17m)
-+ *   5   320    131072 ms (~2m)    1048576 ms -    8388607 ms (~17m - ~2h)
-+ *   6   384   1048576 ms (~17m)   8388608 ms -   67108863 ms (~2h - ~18h)
-+ *   7   448   8388608 ms (~2h)   67108864 ms -  536870911 ms (~18h - ~6d)
-+ *   8   512  67108864 ms (~18h) 536870912 ms - 4294967288 ms (~6d - ~49d)
-+ *
-+ *  HZ  100
-+ *  Level Offset  Granularity            Range
-+ *   0     0         10 ms               0 ms -        630 ms
-+ *   1    64         80 ms             640 ms -       5110 ms (640ms - ~5s)
-+ *   2   128        640 ms            5120 ms -      40950 ms (~5s - ~40s)
-+ *   3   192       5120 ms (~5s)     40960 ms -     327670 ms (~40s - ~5m)
-+ *   4   256      40960 ms (~40s)   327680 ms -    2621430 ms (~5m - ~43m)
-+ *   5   320     327680 ms (~5m)   2621440 ms -   20971510 ms (~43m - ~5h)
-+ *   6   384    2621440 ms (~43m) 20971520 ms -  167772150 ms (~5h - ~1d)
-+ *   7   448   20971520 ms (~5h) 167772160 ms - 1342177270 ms (~1d - ~15d)
-  */
- 
- /* Clock divisor for the next level */
-@@ -181,11 +183,20 @@ EXPORT_SYMBOL(jiffies_64);
- #define WHEEL_TIMEOUT_MAX	(WHEEL_TIMEOUT_CUTOFF - LVL_GRAN(LVL_DEPTH - 1))
- 
- /*
-- * The resulting wheel size. If NOHZ is configured we allocate two
-- * wheels so we have a separate storage for the deferrable timers.
-+ * The resulting wheel size.
-  */
- #define WHEEL_SIZE	(LVL_SIZE * LVL_DEPTH)
- 
-+/**
-+ * DOC: NOHZ and timer bases
-+ *
-+ * If NOHZ is configured two timer bases are allocated to have a separate
-+ * storage for deferrable timers:
-+ *
-+ * @BASE_STD: Contains are all non deferrable timers
-+ *
-+ * @BASE_DEF: Contains all deferrable timers (with ``TIMER_DEFERRABLE`` flag)
-+ */
- #ifdef CONFIG_NO_HZ_COMMON
- # define NR_BASES	2
- # define BASE_STD	0
-@@ -1013,16 +1024,18 @@ static inline void forward_timer_base(struct timer_base *base)
- 	__forward_timer_base(base, READ_ONCE(jiffies));
- }
- 
--/*
-- * We are using hashed locking: Holding per_cpu(timer_bases[x]).lock means
-- * that all timers which are tied to this base are locked, and the base itself
-- * is locked too.
-+/**
-+ * DOC: Timer bases and hashed locking
-+ *
-+ * For locking, hashed locking is used: Holding ``per_cpu(timer_bases[x]).lock``
-+ * means that all timers which are tied to this base are locked, and the base
-+ * itself is locked too.
-  *
-- * So __run_timers/migrate_timers can safely modify all timers which could
-+ * So __run_timers()/migrate_timer_list() can safely modify all timers which could
-  * be found in the base->vectors array.
-  *
-- * When a timer is migrating then the TIMER_MIGRATING flag is set and we need
-- * to wait until the migration is done.
-+ * When a timer is migrating then the ``TIMER_MIGRATING`` flag is set and it's
-+ * required to wait before grabbing the lock, until the migration is done.
-  */
- static struct timer_base *lock_timer_base(struct timer_list *timer,
- 					  unsigned long *flags)
--- 
-2.39.2
+Is that a feature or a bug?
 
+ * 1. Memcg LRU only applies to global reclaim, and the round-robin incrementing
+ *    of their max_seq counters ensures the eventual fairness to all eligible
+ *    memcgs. For memcg reclaim, it still relies on mem_cgroup_iter().
+
+If it bails out exactly after nr_to_reclaim, it'll overreclaim
+less. But with steady reclaim in a complex subtree, it will always hit
+the first cgroup returned by mem_cgroup_iter() and then bail. This
+seems like a fairness issue.
+
+We should figure out what the right method for balancing fairness with
+overreclaim is, regardless of reclaim implementation. Because having
+two different approaches and reverting dependent things back and forth
+doesn't make sense.
+
+Using an LRU to rotate through memcgs over multiple reclaim cycles
+seems like a good idea. Why is this specific to MGLRU? Shouldn't this
+be a generic piece of memcg infrastructure?
+
+Then there is the question of why there is an LRU for global reclaim,
+but not for subtree reclaim. Reclaiming a container with multiple
+subtrees would benefit from the fairness provided by a container-level
+LRU order just as much; having fairness for root but not for subtrees
+would produce different reclaim and pressure behavior, and can cause
+regressions when moving a service from bare-metal into a container.
+
+Figuring out these differences and converging on a method for cgroup
+fairness would be the better way of fixing this. Because of the
+regression risk to the default reclaim implementation, I'm inclined to
+NAK this revert.
