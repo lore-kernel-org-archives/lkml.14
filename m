@@ -1,46 +1,46 @@
-Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
+Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB1FC81AB8;
-	Tue, 23 Jan 2024 16:37:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B76480040;
+	Tue, 23 Jan 2024 16:37:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706027829; cv=none; b=dVmeCl6uBxdvLGMTUtbFq6ACCcDbpRnblR6N17QxRFkUnfqwOgtlec1jV3UPhdYtqwLxYLvXvnrJilabLLlzAwbRyUHda4OlEKWFx1Bp1KazswDKqbB7fBzZHN30UWD1ubEozhIf2R6LNoFFJsT+H2AuQ8ILOeUCzHPLBOSb4oI=
+	t=1706027830; cv=none; b=GYrUFBPrTibK6Wgp+0fqU0sleqStR9PML1X/jkiSoqG+iunyTmi4j8GtdF55s5wTTa/n3dxS1i3heceSsqn6OuGG6ybVH2yfIFNdp0SMa8ukMFkjkZTXpAFfGu0yjHd6Mhd7QCtWJFtictVhgfWD3ay57JNkGiZBH69KeKBchTE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706027829; c=relaxed/simple;
-	bh=sr2Vyb1EOHE0YZHeGvfTOHoxjt5lsn89GNkUPtiXd84=;
+	s=arc-20240116; t=1706027830; c=relaxed/simple;
+	bh=Y4r6QN/JrItjnEuYXVICeF7hVAsCe7GxvqIcOJz5MA0=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dIS8QKCH/tDY2k9w44jq0NsTLBxvbWEnmB1fDGqbi/ApC0fUIEXRCpLbFS4A52/3JldLllRbn6+6DGUS0iLY0T5QYJVzM2VSAB88daixncWAnLqyKi5fJMxzJHHmni+u40ydMS3JBrjzihtybmOkN7UDb7PDebjnUEHe9BRtMH0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=xuQuj3Gl; arc=none smtp.client-ip=198.47.23.248
+	 MIME-Version:Content-Type; b=IYFftkUckHAVXB2OgODC1vgf6HcYnSgQYCmsEo9Vdi6S680Xy2U5plYmH10Q7V+5dMNmyYI0aT0yNZodqFDpQdFSbk+dXDTClYGWUnmAwezPwu6PF9UpYrON5EA95TUspAhrzXkRLeivIPyPHTIzxaQmP6w0TSRA5oVn43NljlM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=WP53bTYp; arc=none smtp.client-ip=198.47.19.142
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="xuQuj3Gl"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 40NGavD4049963;
-	Tue, 23 Jan 2024 10:36:57 -0600
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="WP53bTYp"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 40NGaufv094120;
+	Tue, 23 Jan 2024 10:36:56 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1706027817;
-	bh=2SMklRBcdhC+e02hBGW+GTz+VKdDCFtjMgA9tyn8QQI=;
+	s=ti-com-17Q1; t=1706027816;
+	bh=K1WNi8+Cbrepl/ifkNTZDPIJo8q3+SEk0jaxrVvGu8M=;
 	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=xuQuj3GluL2HEf4VLZUTa9+5RxFLp6x6gUDfYzhz44sZLooO/cGZnICYqBjVo2gB4
-	 kDmyj02jLExMBNOeMPiFlbeyuIwbSQYSdNiB5p2/O0S/ocDjV6DsyKbY+ktR9tQ2ib
-	 T2d1BsXgRXVFgLM4dIUH1Hb89/I09NB+gbiGoGZI=
-Received: from DLEE110.ent.ti.com (dlee110.ent.ti.com [157.170.170.21])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 40NGavrC119705
+	b=WP53bTYpTvwZNl8tyFD/A1GAlt/IJvDTgNCEckVKQ2XK3xcjmB1XD0G3uuyu5000u
+	 9mMkb7HwJrhOJJ7cigBOsCuGsQaLEp7u42Ip/DVzZUtdhNvRQo++nHctpUR+vL9X7O
+	 GZDaVG7feolbIOAWsTGxgzfNcHPCh07Fy+CdLAKw=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 40NGau9M000562
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 23 Jan 2024 10:36:57 -0600
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+	Tue, 23 Jan 2024 10:36:56 -0600
+Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 23
- Jan 2024 10:36:57 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ Jan 2024 10:36:55 -0600
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 23 Jan 2024 10:36:57 -0600
+ Frontend Transport; Tue, 23 Jan 2024 10:36:55 -0600
 Received: from lelvsmtp6.itg.ti.com ([10.249.42.149])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 40NGarrv123403;
-	Tue, 23 Jan 2024 10:36:57 -0600
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 40NGarrr123403;
+	Tue, 23 Jan 2024 10:36:55 -0600
 From: Andrew Davis <afd@ti.com>
 To: Sebastian Reichel <sre@kernel.org>,
         Support Opensource
@@ -52,9 +52,9 @@ To: Sebastian Reichel <sre@kernel.org>,
 CC: <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         Andrew Davis
 	<afd@ti.com>
-Subject: [PATCH 09/21] power: supply: max8925: Use devm_power_supply_register() helper
-Date: Tue, 23 Jan 2024 10:36:41 -0600
-Message-ID: <20240123163653.384385-10-afd@ti.com>
+Subject: [PATCH 05/21] power: supply: lp8727: Use devm_power_supply_register() helper
+Date: Tue, 23 Jan 2024 10:36:37 -0600
+Message-ID: <20240123163653.384385-6-afd@ti.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240123163653.384385-1-afd@ti.com>
 References: <20240123163653.384385-1-afd@ti.com>
@@ -74,74 +74,76 @@ forgetting to unregister on error paths.
 
 Signed-off-by: Andrew Davis <afd@ti.com>
 ---
- drivers/power/supply/max8925_power.c | 36 ++++++++--------------------
- 1 file changed, 10 insertions(+), 26 deletions(-)
+ drivers/power/supply/lp8727_charger.c | 35 ++++++---------------------
+ 1 file changed, 7 insertions(+), 28 deletions(-)
 
-diff --git a/drivers/power/supply/max8925_power.c b/drivers/power/supply/max8925_power.c
-index 4a2d6894f94ee..29ce6c5bfe0e6 100644
---- a/drivers/power/supply/max8925_power.c
-+++ b/drivers/power/supply/max8925_power.c
-@@ -528,25 +528,19 @@ static int max8925_power_probe(struct platform_device *pdev)
- 	psy_cfg.supplied_to = pdata->supplied_to;
- 	psy_cfg.num_supplicants = pdata->num_supplicants;
+diff --git a/drivers/power/supply/lp8727_charger.c b/drivers/power/supply/lp8727_charger.c
+index 0875391f7ac6b..34548a4da90b2 100644
+--- a/drivers/power/supply/lp8727_charger.c
++++ b/drivers/power/supply/lp8727_charger.c
+@@ -453,39 +453,20 @@ static int lp8727_register_psy(struct lp8727_chg *pchg)
+ 	psy_cfg.supplied_to = battery_supplied_to;
+ 	psy_cfg.num_supplicants = ARRAY_SIZE(battery_supplied_to);
  
--	info->ac = power_supply_register(&pdev->dev, &ac_desc, &psy_cfg);
--	if (IS_ERR(info->ac)) {
--		ret = PTR_ERR(info->ac);
--		goto out;
--	}
-+	info->ac = devm_power_supply_register(&pdev->dev, &ac_desc, &psy_cfg);
-+	if (IS_ERR(info->ac))
-+		return PTR_ERR(info->ac);
- 	info->ac->dev.parent = &pdev->dev;
+-	psy->ac = power_supply_register(pchg->dev, &lp8727_ac_desc, &psy_cfg);
++	psy->ac = devm_power_supply_register(pchg->dev, &lp8727_ac_desc, &psy_cfg);
+ 	if (IS_ERR(psy->ac))
+-		goto err_psy_ac;
++		return -EPERM;
  
--	info->usb = power_supply_register(&pdev->dev, &usb_desc, &psy_cfg);
--	if (IS_ERR(info->usb)) {
--		ret = PTR_ERR(info->usb);
--		goto out_unregister_ac;
--	}
-+	info->usb = devm_power_supply_register(&pdev->dev, &usb_desc, &psy_cfg);
-+	if (IS_ERR(info->usb))
-+		return PTR_ERR(info->usb);
- 	info->usb->dev.parent = &pdev->dev;
+-	psy->usb = power_supply_register(pchg->dev, &lp8727_usb_desc,
+-					 &psy_cfg);
++	psy->usb = devm_power_supply_register(pchg->dev, &lp8727_usb_desc,
++					      &psy_cfg);
+ 	if (IS_ERR(psy->usb))
+-		goto err_psy_usb;
++		return -EPERM;
  
--	info->battery = power_supply_register(&pdev->dev, &battery_desc, NULL);
--	if (IS_ERR(info->battery)) {
--		ret = PTR_ERR(info->battery);
--		goto out_unregister_usb;
--	}
-+	info->battery = devm_power_supply_register(&pdev->dev, &battery_desc, NULL);
-+	if (IS_ERR(info->battery))
-+		return PTR_ERR(info->battery);
- 	info->battery->dev.parent = &pdev->dev;
+-	psy->batt = power_supply_register(pchg->dev, &lp8727_batt_desc, NULL);
++	psy->batt = devm_power_supply_register(pchg->dev, &lp8727_batt_desc, NULL);
+ 	if (IS_ERR(psy->batt))
+-		goto err_psy_batt;
++		return -EPERM;
  
- 	info->batt_detect = pdata->batt_detect;
-@@ -558,24 +552,14 @@ static int max8925_power_probe(struct platform_device *pdev)
- 
- 	max8925_init_charger(chip, info);
  	return 0;
--out_unregister_usb:
--	power_supply_unregister(info->usb);
--out_unregister_ac:
--	power_supply_unregister(info->ac);
--out:
--	return ret;
+-
+-err_psy_batt:
+-	power_supply_unregister(psy->usb);
+-err_psy_usb:
+-	power_supply_unregister(psy->ac);
+-err_psy_ac:
+-	return -EPERM;
+-}
+-
+-static void lp8727_unregister_psy(struct lp8727_chg *pchg)
+-{
+-	struct lp8727_psy *psy = pchg->psy;
+-
+-	if (!psy)
+-		return;
+-
+-	power_supply_unregister(psy->ac);
+-	power_supply_unregister(psy->usb);
+-	power_supply_unregister(psy->batt);
  }
  
- static void max8925_power_remove(struct platform_device *pdev)
- {
- 	struct max8925_power_info *info = platform_get_drvdata(pdev);
+ #ifdef CONFIG_OF
+@@ -583,7 +564,6 @@ static int lp8727_probe(struct i2c_client *cl)
+ 	ret = lp8727_setup_irq(pchg);
+ 	if (ret) {
+ 		dev_err(pchg->dev, "irq handler err: %d", ret);
+-		lp8727_unregister_psy(pchg);
+ 		return ret;
+ 	}
  
--	if (info) {
--		power_supply_unregister(info->ac);
--		power_supply_unregister(info->usb);
--		power_supply_unregister(info->battery);
-+	if (info)
- 		max8925_deinit_charger(info);
--	}
+@@ -595,7 +575,6 @@ static void lp8727_remove(struct i2c_client *cl)
+ 	struct lp8727_chg *pchg = i2c_get_clientdata(cl);
+ 
+ 	lp8727_release_irq(pchg);
+-	lp8727_unregister_psy(pchg);
  }
  
- static struct platform_driver max8925_power_driver = {
+ static const struct of_device_id lp8727_dt_ids[] __maybe_unused = {
 -- 
 2.39.2
 
