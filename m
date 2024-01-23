@@ -1,108 +1,109 @@
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AC6B8004C
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 17:54:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E4DB6166F
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 17:56:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706032463; cv=none; b=PfKI7YSm2WunxnttKgTJ8KZ/+LIo/wHRZi8LPycFt6OlRZ0UpGQm3eelgAovBQJLMqGRMpEvcJDUC/tBPUnn05vhXW/a0hFflbv2Z5c4o06fMqYmzzzxcQcgpLRem4XwFceMKSbOG+vZtcPYMy5FQnxXE2knUrY7E6dRT3afL7w=
+	t=1706032565; cv=none; b=pv0SEsyuQ2CsmhP5oQfIZ+qQ2nN8Dx8F4xBZfUC8IjMhida/vYYi2OAen84fewlge9XLUNpNHe4Z6d5lbwTRNHD9yO6SwpKRLEbC+QyM0ko8pS28wf+lefOPSQEsUj1nAC225aqZgbU+/0esLunH7g+8Pp66nS2V9uQJRZD0XNE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706032463; c=relaxed/simple;
-	bh=ymav3I7OIfk8X1HSTDNWXcyiXMBoEN1DizaaPQT1+Og=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FkK6KqJHsr15C3wobAu6ZscBFqGvGRb9qHid/6t/24Tb9Bdemt09RJdfJS3Tq+ZNDvz5FLYrBpOc8KClAXJ6RG7kwcL1jtKgAS/NsgwoCy5652i1miXXjx8RX/KSIY+DGN8Mw5NLgYPUsGMcULr8Ij5cyTcZ8LvY0tDNxlExeIs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=easyb.ch; spf=none smtp.mailfrom=easyb.ch; dkim=pass (2048-bit key) header.d=easyb-ch.20230601.gappssmtp.com header.i=@easyb-ch.20230601.gappssmtp.com header.b=awsL7LRn; arc=none smtp.client-ip=209.85.208.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=easyb.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=easyb.ch
+	s=arc-20240116; t=1706032565; c=relaxed/simple;
+	bh=lTw2d+jEr19zQERliBwvc7vpz5HMAj1TWQn6WLETomM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=e1Unk4HwNHQvWkN3wb/4PaSO2Biy4Co4++hdcrAD2ciF9uwPHByJ/7Xdg1/cvuB2OcGyZWllDz097HEN7oicVwLFFHRPizptDY9T2wabdocLqP1c9Ppae0MtRSq20CavSl+SQtxeDb1QTnTuhRWZ9Jxu2pImI6CanMWF3bYhhQo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=JU/tK5wa; arc=none smtp.client-ip=209.85.210.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=easyb-ch.20230601.gappssmtp.com header.i=@easyb-ch.20230601.gappssmtp.com header.b="awsL7LRn"
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2cddf459ba2so9814671fa.1
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 09:54:19 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="JU/tK5wa"
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-6dd7b2bc6bfso165386b3a.1
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 09:56:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=easyb-ch.20230601.gappssmtp.com; s=20230601; t=1706032458; x=1706637258; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=ymav3I7OIfk8X1HSTDNWXcyiXMBoEN1DizaaPQT1+Og=;
-        b=awsL7LRn7JEfeF1hk0qJTTdCauxlTXCXZZx3udaLATagpbJ9lUB+woVFHISSU97Rkj
-         /b3pnEAs8b0HZFXvFHDJN9hNLSJfgND8sP/ii3FS+ktAOdvasdJEHlD6BtrBpfv2PHhk
-         vDmtxceOJdSlSSUT51I3up/845QAAcWcl3B+ZDbmLzVsMpRqQSbZyvQE8u9okHzrBodT
-         h7GYLsGtuxTQPgw+I4EKy64sslZCV1bDWdTTnvAxjNHZtH5BmmKrOfXq9eQ3m2eMFE/o
-         Rb2j9ThuPGgft6f/qjO2mWCMW/YSiavirFECJ5dzILEs5/FC+gmh7M5PqVzbJnhhI+aX
-         IMmQ==
+        d=linuxfoundation.org; s=google; t=1706032563; x=1706637363; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=vW1EwQtQkDL16oAi0iCe/mJ0F+Pfw76tUi9aoHvOjRw=;
+        b=JU/tK5waHfMH8WO44+HFW1Vsar7DtylGPb1mVFd2Mmo0EGwGTUwWAKtC/83BvcSiCz
+         lfsLhOXpIM9m92iOd73LXlaKVEe531tqPyARu2x4r2XJ9inIK5FjIt/pYEm3GCaAJheA
+         WJJIklfn6wnTAGDa+Jq8VeRTTBV7BmkiI+xFs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706032458; x=1706637258;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ymav3I7OIfk8X1HSTDNWXcyiXMBoEN1DizaaPQT1+Og=;
-        b=tSJQ0Rq0gdIYJQWl0ZIE9Mz5uVkjRHfFf+0WL7ailJ7TRDozbTEu7KC9RsJyTk6edy
-         KT2if7zr6RwWTouCfzquydZ0whCnEN3XARya1eQfYnCsnCNnIE8q6o8lQ/0lQa4Tnm5z
-         oInm3XONTprm0oE6dQVsi1PVOy1vQLHZjbufoO6enk2bkGgLJt23ocrVdyqLZ4ChzyNo
-         tZuijWaVE+viphzTglHnoy5GOvBC/CVjTjuTLfs9NwNUYVlm43gpJh8FLdnTFHLGdtXq
-         ndYb14Ym96E4qqKkshCi/YpwQ0fCZ6gOZLhlPMysw0OVb8CAy0/WflByZaLzsSYZzTCB
-         gcrQ==
-X-Gm-Message-State: AOJu0Yy9OCASVAWzGzA5JdWb5dLdQn9gLNhDYYofVpR/hvNKTEH7DodR
-	4bJSMVsunMaRICi8r/FdCWHjrWLtcwS5HwOsWqle1S3Q3rRcqjnlo5Hbe4uoWOai7BdLyoZis/V
-	2t2eWPwuY/5ouEjzeRSm/NyDhUQ+g7t8/UvozZA==
-X-Google-Smtp-Source: AGHT+IH5dOs4rVeRzijl7xfb6jmnW4/fJGG1C3+Cm0MCoVfunHt5sFT98pbl+4uKUnCzDyMItW8DhqfNf16B6C/6jm0=
-X-Received: by 2002:a2e:a4d7:0:b0:2cf:d52:6ded with SMTP id
- p23-20020a2ea4d7000000b002cf0d526dedmr1804740ljm.3.1706032457838; Tue, 23 Jan
- 2024 09:54:17 -0800 (PST)
+        d=1e100.net; s=20230601; t=1706032563; x=1706637363;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=vW1EwQtQkDL16oAi0iCe/mJ0F+Pfw76tUi9aoHvOjRw=;
+        b=PEcVZv1dM4YJLXBI3Pjl201Q2jyLDghbAqL0oI+KDe2hOXjhxfLeFi2wthCWNMCZXd
+         MOP60Y4ldxk3a7lpblN34xah7UfpiCOhpsMIQn5VlYoF5GSsK+G8KQjuvnYSW8KQd2tP
+         /RnyCAvz4dRVVMP7ZzewHiQjXepYETlEI+9sJQ5xQxS8BZSlIjw987Lv/J4DtwNOy/gd
+         1pZjDEbo1DacnIjykV2cnzp8MwERZo8HJANZ+OVqZfNEWvMwK1YlnsL8sWVZHv1mVz41
+         QI0VXBTPVV22S8DORt6JspTJKfuFbp6tg8Elv/5S292LtdFyBsstnf69TIMH9bNc5xsd
+         qHkg==
+X-Gm-Message-State: AOJu0YwLYJOifl+S+786Kndb7mFpG82RQwG+1oPCoLlkmzp+4XNrg8XD
+	NGvNdq4vq5Dda3zQfxQxZnDqfepSOeWUdbkZ1WFiY1rQS3t8ePAqGMTvJ02q3jI=
+X-Google-Smtp-Source: AGHT+IGS2tOvuR7n33KSMNw4mOSzqzR31U9JGY3psgHs+GV4iEzWcOcjv2KXq+2/qM/y0ShIPbl1Dg==
+X-Received: by 2002:a05:6a20:671b:b0:19b:7fba:7d34 with SMTP id q27-20020a056a20671b00b0019b7fba7d34mr10178109pzh.6.1706032563332;
+        Tue, 23 Jan 2024 09:56:03 -0800 (PST)
+Received: from [128.240.2.100] (rbi200e.jcresorts.com. [206.170.126.10])
+        by smtp.gmail.com with ESMTPSA id ks11-20020a056a004b8b00b006d6b91c6eb6sm12207705pfb.13.2024.01.23.09.56.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 23 Jan 2024 09:56:02 -0800 (PST)
+Message-ID: <1f220805-d5b8-4f84-9edd-ff3a9659eb19@linuxfoundation.org>
+Date: Tue, 23 Jan 2024 10:55:58 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20220413083824.247136-1-gch981213@gmail.com> <20220413145843.46a3d9b5@xps13>
- <CAJsYDV+3J0ipbR+N-xE=DH-WXsjierdHe_pJtKf1Xbt7fdaiWw@mail.gmail.com>
-In-Reply-To: <CAJsYDV+3J0ipbR+N-xE=DH-WXsjierdHe_pJtKf1Xbt7fdaiWw@mail.gmail.com>
-From: Ezra Buehler <ezra@easyb.ch>
-Date: Tue, 23 Jan 2024 19:54:06 +0200
-Message-ID: <CAM1KZS=tvEi6fed=BoynpkjfzZqKGb-wv+CVbVmAPYz5tNaNkQ@mail.gmail.com>
-Subject: Re: [PATCH v2] mtd: spinand: add support for ESMT F50x1G41LB
-To: Chuanhong Guo <gch981213@gmail.com>
-Cc: Miquel Raynal <miquel.raynal@bootlin.com>, linux-mtd@lists.infradead.org, 
-	Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, 
-	Patrice Chotard <patrice.chotard@foss.st.com>, 
-	Boris Brezillon <boris.brezillon@collabora.com>, 
-	Christophe Kerello <christophe.kerello@foss.st.com>, Mark Brown <broonie@kernel.org>, 
-	Daniel Palmer <daniel@0x0f.com>, open list <linux-kernel@vger.kernel.org>, quic_sridsn@quicinc.com, 
-	quic_mdalam@quicinc.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/2] kselftest/seccomp: Report each expectation we
+ assert as a KTAP test
+To: Mark Brown <broonie@kernel.org>, Kees Cook <keescook@chromium.org>,
+ Andy Lutomirski <luto@amacapital.net>, Will Drewry <wad@chromium.org>,
+ Shuah Khan <shuah@kernel.org>
+Cc: linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Anders Roxell <anders.roxell@linaro.org>,
+ Shuah Khan <skhan@linuxfoundation.org>
+References: <20240122-b4-kselftest-seccomp-benchmark-ktap-v3-0-785bff4c04fd@kernel.org>
+ <20240122-b4-kselftest-seccomp-benchmark-ktap-v3-2-785bff4c04fd@kernel.org>
+Content-Language: en-US
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <20240122-b4-kselftest-seccomp-benchmark-ktap-v3-2-785bff4c04fd@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Chuanhong Guo,
+On 1/22/24 14:08, Mark Brown wrote:
+> The seccomp benchmark test makes a number of checks on the performance it
+> measures and logs them to the output but does so in a custom format which
+> none of the automated test runners understand meaning that the chances that
+> anyone is paying attention are slim. Let's additionally log each result in
+> KTAP format so that automated systems parsing the test output will see each
+> comparison as a test case. The original logs are left in place since they
+> provide the actual numbers for analysis.
+> 
+> As part of this rework the flow for the main program so that when we skip
+> tests we still log all the tests we skip, this is because the standard KTAP
+> headers and footers include counts of the number of expected and run tests.
+> 
+> Tested-by: Anders Roxell <anders.roxell@linaro.org>
+> Signed-off-by: Mark Brown <broonie@kernel.org>
+> ---
 
-On Wed, 13 Apr 2022 22:50:43 +0800 Chuanhong Guo <gch981213@gmail.com> wrote:
-> Their device ID aren't conflicting yet, so nothing will happen
-> at the moment.
+> -	return 0;
+> +	if (ret) {
+> +		ksft_print_msg("Saw unexpected benchmark result. Try running again with more samples?\n");
+> +	}
+> +
 
-Since commit aa08bf187f32 ("mtd: spinand: esmt: add support for
-F50D2G41KA") we have a conflict with the GigaDevice GD5F1GQ5UExxG
-(manufacturer ID 0xC8, device ID 0x51), preventing our board from
-booting.
+WARNING: braces {} are not necessary for single statement blocks
+> +	ksft_finished();
+>   }
+> 
 
-> There is a solution for future conflict: Recent SPI-NAND chips
-> contain a parameter page which has the exact chip vendor
-> and model. We can do one more detection with the parameter
-> page content.
-> Winbond W25N01KV is a 2k+96 SPI-NAND with 4-bit ECC.
-> It uses the exact same chip id as the current W25N01GV
-> (2k+64 1-bit ECC). We need to support detection using
-> parameter page for this crazy decision by Winbond anyway.
-> I'll try to code something for this with my free time.
->
-> My current idea is: We first do a detection based on chip id.
-> If that failed, try to read the parameter page. If we got a
-> valid one, match the chip vendor and model string.
+Mark,
 
-According to the datasheets, the ESMT chips actually have a 5 byte ID,
-the last 3 bytes being 0x7F (JEDEC Maker Code Continuation Code). Why
-can't we simply extend the ID in esmt.c (as you had it in your original
-patch) and increase SPINAND_MAX_ID_LEN to 5? Or, alternatively, only
-extend the ID to 4 bytes?
+Can you fix this warning. Tried fixing it --fix-inplace and no luck.
 
-If that is the way to go, I would be happy to provide the patches.
-
-Cheers,
-Ezra.
+thanks,
+-- Shuah
