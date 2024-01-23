@@ -1,75 +1,177 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B23125DF2E
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 12:12:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 164F85DF30
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 12:12:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706011961; cv=none; b=noHHqlC5+3GiKbWcgQJeWD38FMAEC6C7GclReUooKY5RvVFj6Oly3wrvyUM6kHuu5SpEKd40AO7x0Dyx4evaWOfo2wvx+yT5ITlu8nWOagGCFNhyIEHyEnYRbWQQ6qNcDoe0YgNFn73aLG32IlhM+Hu8Y/vtscxsbeiQVvFNKoI=
+	t=1706011964; cv=none; b=TqJ/euDQWThaoihwDZ8c8Vbp6tgyK6+1LyHzNUyj70p6W2TT1J12SS71DGqRDJZheEcuMUYpUyVRzzxYg1Pb2fN0eNNxa/ozTh5OG/aA/zx1TiE8+8fokuxaHR+XaT0CP/EfNhbNFQX7fqdETxvPz/ijVZg/SCBSAKoic6211sI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706011961; c=relaxed/simple;
-	bh=83IcMC1FsbBJjNOk5uCGsdfZh2KxQTkHW2rC9MV6fsU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=i7jFq7FDbVE/PIWExNgvMLReQ5NyvnF6QzAPGs6s2z07u7Eavw2BFUKS+DVbWbz4+9tUuk2GyHPnJ4m5EwMNmX3XZcvcOkDCVKKxxItZQ06YAJJVDWLvw0/2eSSmZf5HQxyGf5UzT2WGgnlyRhIKKbnp2eAPozYi/26QwY5kBxg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 846D01FB;
-	Tue, 23 Jan 2024 04:13:24 -0800 (PST)
-Received: from [10.1.197.60] (eglon.cambridge.arm.com [10.1.197.60])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8A11F3F762;
-	Tue, 23 Jan 2024 04:12:37 -0800 (PST)
-Message-ID: <b6ce3e79-aa4a-57e9-8b43-b5be45f75462@arm.com>
-Date: Tue, 23 Jan 2024 12:12:36 +0000
+	s=arc-20240116; t=1706011964; c=relaxed/simple;
+	bh=bf8N058MM2i5Zf5QpJiVM/3LphTudf9h6j37YkLGJZg=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=RQU5+zOppUetXGF+PmUmYjXT1hzk2Wzt4MQeV1SOecucqZr6lkF5KiyTYUSfcY0eonx2X0bBSXDaMbsHX87rYk7x3belaw3jMN8b7wGq+ulKPkGOF0G84fi5759sW0RG7kI1XfldknnWLYdfrSmoKRlW3V0DXVlk5wa0WWCAmIQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; arc=none smtp.client-ip=115.124.30.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046051;MF=yaoma@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0W.CnxF7_1706011949;
+Received: from localhost.localdomain(mailfrom:yaoma@linux.alibaba.com fp:SMTPD_---0W.CnxF7_1706011949)
+          by smtp.aliyun-inc.com;
+          Tue, 23 Jan 2024 20:12:32 +0800
+From: Bitao Hu <yaoma@linux.alibaba.com>
+To: dianders@chromium.org,
+	akpm@linux-foundation.org,
+	pmladek@suse.com,
+	tglx@linutronix.de,
+	maz@kernel.org,
+	liusong@linux.alibaba.com
+Cc: linux-kernel@vger.kernel.org,
+	Bitao Hu <yaoma@linux.alibaba.com>
+Subject: [PATCH 1/3] watchdog/softlockup: low-overhead detection of interrupt storm
+Date: Tue, 23 Jan 2024 20:12:21 +0800
+Message-Id: <20240123121223.22318-2-yaoma@linux.alibaba.com>
+X-Mailer: git-send-email 2.37.1 (Apple Git-137.1)
+In-Reply-To: <20240123121223.22318-1-yaoma@linux.alibaba.com>
+References: <20240123121223.22318-1-yaoma@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH v2] x86/resctrl: Implement new mba_MBps throttling
- heuristic
-Content-Language: en-GB
-To: "Luck, Tony" <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>,
- "Chatre, Reinette" <reinette.chatre@intel.com>
-Cc: "Yu, Fenghua" <fenghua.yu@intel.com>,
- Peter Newman <peternewman@google.com>, "x86@kernel.org" <x86@kernel.org>,
- Jamie Iles <quic_jiles@quicinc.com>, Babu Moger <babu.moger@amd.com>,
- "Shen, Xiaochen" <xiaochen.shen@intel.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "patches@lists.linux.dev" <patches@lists.linux.dev>
-References: <20231201214737.104444-1-tony.luck@intel.com>
- <20240118214213.59596-1-tony.luck@intel.com>
- <45d2891e-989a-45c9-a527-8b14ff5f8748@intel.com>
- <SJ1PR11MB60837D4884419BDC2DCAA2D2FC752@SJ1PR11MB6083.namprd11.prod.outlook.com>
- <bfa5104f-b887-4cc4-a24c-0497b86d9dde@intel.com>
- <20240122182121.GBZa6yIYPtHQx44EU9@fat_crate.local>
- <11fc82e0-961f-4c8d-844f-ad4b99067eb3@intel.com>
- <20240122184755.GCZa64W02KXyeaVXJg@fat_crate.local>
- <SJ1PR11MB6083A27C628E17FB8BBC4922FC752@SJ1PR11MB6083.namprd11.prod.outlook.com>
-From: James Morse <james.morse@arm.com>
-In-Reply-To: <SJ1PR11MB6083A27C628E17FB8BBC4922FC752@SJ1PR11MB6083.namprd11.prod.outlook.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Tony,
+The following softlockup is caused by interrupt storm, but it cannot be
+identified from the call tree. Because the call tree is just a snapshot
+and doesn't fully capture the behavior of the CPU during the soft lockup.
+  watchdog: BUG: soft lockup - CPU#28 stuck for 23s! [fio:83921]
+  ...
+  Call trace:
+    __do_softirq+0xa0/0x37c
+    __irq_exit_rcu+0x108/0x140
+    irq_exit+0x14/0x20
+    __handle_domain_irq+0x84/0xe0
+    gic_handle_irq+0x80/0x108
+    el0_irq_naked+0x50/0x58
 
-On 22/01/2024 20:58, Luck, Tony wrote:
->>> There is also one pending resctrl feature, the SNC work [1], that Tony
->>> plans to rebase on these fixes.
->>
->> Ack.
-> 
-> It looks like there is just one change in part 0004/0008 that doesn't apply automatically from git am.
-> Super easy to resolve.
-> 
-> I need to grab an SNC system to re-check that everything still works when re-based.
-> But right now, this looks like adding the SNC series will be easy (famous last words!).
+Therefore，I think it is necessary to report CPU utilization during the
+softlockup_thresh period (report once every sample_period, for a total
+of 5 reportings), like this:
+  watchdog: BUG: soft lockup - CPU#28 stuck for 23s! [fio:83921]
+  CPU#28 Utilization every 4s during lockup:
+    #1: 0.0% system, 0.0% softirq, 100.0% hardirq, 0.0% idle
+    #2: 0.0% system, 0.0% softirq, 100.0% hardirq, 0.0% idle
+    #3: 0.0% system, 0.0% softirq, 100.0% hardirq, 0.0% idle
+    #4: 0.0% system, 0.0% softirq, 100.0% hardirq, 0.0% idle
+    #5: 0.0% system, 0.0% softirq, 100.0% hardirq, 0.0% idle
+  ...
 
-Once you're ready - can you point me at something I can use as a stable branch to rebase onto?
+This would be helpful in determining whether an interrupt storm has
+occurred or in identifying the cause of the softlockup. The criteria for
+determination are as follows:
+  a. If the hardirq utilization is high, then interrupt storm should be
+  considered and the root cause cannot be determined from the call tree.
+  b. If the softirq utilization is high, then we could analyze the call
+  tree but it may cannot reflect the root cause.
+  c. If the system utilization is high, then we could analyze the root
+  cause from the call tree.
 
+Signed-off-by: Bitao Hu <yaoma@linux.alibaba.com>
+---
+ kernel/watchdog.c | 58 +++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 58 insertions(+)
 
-Thanks,
+diff --git a/kernel/watchdog.c b/kernel/watchdog.c
+index 81a8862295d6..9fad10e0a147 100644
+--- a/kernel/watchdog.c
++++ b/kernel/watchdog.c
+@@ -23,6 +23,8 @@
+ #include <linux/sched/debug.h>
+ #include <linux/sched/isolation.h>
+ #include <linux/stop_machine.h>
++#include <linux/kernel_stat.h>
++#include <linux/math64.h>
+ 
+ #include <asm/irq_regs.h>
+ #include <linux/kvm_para.h>
+@@ -441,6 +443,58 @@ static int is_softlockup(unsigned long touch_ts,
+ 	return 0;
+ }
+ 
++#ifdef CONFIG_IRQ_TIME_ACCOUNTING
++static DEFINE_PER_CPU(u64, cpustat_old[NR_STATS]);
++static DEFINE_PER_CPU(u64, cpustat_diff[5][NR_STATS]);
++static DEFINE_PER_CPU(int, cpustat_tail);
++
++static void update_cpustat(void)
++{
++	u64 *old = this_cpu_ptr(cpustat_old);
++	u64 (*diff)[NR_STATS] = this_cpu_ptr(cpustat_diff);
++	int tail = this_cpu_read(cpustat_tail), i;
++	struct kernel_cpustat kcpustat;
++	u64 *cpustat = kcpustat.cpustat;
++
++	kcpustat_cpu_fetch(&kcpustat, smp_processor_id());
++	for (i = 0; i < NR_STATS; i++) {
++		diff[tail][i] = cpustat[i] - old[i];
++		old[i] = cpustat[i];
++	}
++	this_cpu_write(cpustat_tail, (tail + 1) % 5);
++}
++
++static void print_cpustat(void)
++{
++	int i, j, k;
++	u64 a[5][NR_STATS], b[5][NR_STATS];
++	u64 (*diff)[NR_STATS] = this_cpu_ptr(cpustat_diff);
++	int tail = this_cpu_read(cpustat_tail);
++	u32 period_us = sample_period / 1000;
++
++	for (i = 0; i < 5; i++) {
++		for (j = 0; j < NR_STATS; j++) {
++			a[i][j] = 100 * (diff[i][j] / 1000);
++			b[i][j] = 10 * do_div(a[i][j], period_us);
++			do_div(b[i][j], period_us);
++		}
++	}
++	printk(KERN_CRIT "CPU#%d Utilization every %us during lockup:\n",
++		smp_processor_id(), period_us/1000000);
++	for (k = 0, i = tail; k < 5; k++, i = (i + 1) % 5) {
++		printk(KERN_CRIT "\t#%d: %llu.%llu%% system,\t%llu.%llu%% softirq,\t"
++			"%llu.%llu%% hardirq,\t%llu.%llu%% idle\n", k+1,
++			a[i][CPUTIME_SYSTEM], b[i][CPUTIME_SYSTEM],
++			a[i][CPUTIME_SOFTIRQ], b[i][CPUTIME_SOFTIRQ],
++			a[i][CPUTIME_IRQ], b[i][CPUTIME_IRQ],
++			a[i][CPUTIME_IDLE], b[i][CPUTIME_IDLE]);
++	}
++}
++#else
++static inline void update_cpustat(void) { }
++static inline void print_cpustat(void) { }
++#endif
++
+ /* watchdog detector functions */
+ static DEFINE_PER_CPU(struct completion, softlockup_completion);
+ static DEFINE_PER_CPU(struct cpu_stop_work, softlockup_stop_work);
+@@ -504,6 +558,9 @@ static enum hrtimer_restart watchdog_timer_fn(struct hrtimer *hrtimer)
+ 	 */
+ 	period_ts = READ_ONCE(*this_cpu_ptr(&watchdog_report_ts));
+ 
++	/* update cpu usage stat */
++	update_cpustat();
++
+ 	/* Reset the interval when touched by known problematic code. */
+ 	if (period_ts == SOFTLOCKUP_DELAY_REPORT) {
+ 		if (unlikely(__this_cpu_read(softlockup_touch_sync))) {
+@@ -539,6 +596,7 @@ static enum hrtimer_restart watchdog_timer_fn(struct hrtimer *hrtimer)
+ 		pr_emerg("BUG: soft lockup - CPU#%d stuck for %us! [%s:%d]\n",
+ 			smp_processor_id(), duration,
+ 			current->comm, task_pid_nr(current));
++		print_cpustat();
+ 		print_modules();
+ 		print_irqtrace_events(current);
+ 		if (regs)
+-- 
+2.37.1 (Apple Git-137.1)
 
-James
