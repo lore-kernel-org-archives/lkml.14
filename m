@@ -1,130 +1,305 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 864A45D727;
-	Tue, 23 Jan 2024 09:45:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C95AD5F842
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 09:45:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706003106; cv=none; b=incVdL6SyVOzaCgJDUCx5Mg6aJnqaC1XBMu+0EWE60U3LlBQxEjwnHNwMs7QBaMA2iBg8v45OXYDbbzjKBWuzA3S8KIU6QlrNujL144uDvwCdxM11K5GgerXAbqHPbisx3ge6FwcPgS2FrCddODTXC313DNLHEqu5n74H5yjwWE=
+	t=1706003108; cv=none; b=BO7Fnzgj19ddJ6M6rcSRfNiBqlfrTHkzSnvx3btjlINF2C/fxE8J9lXhy46C6bYx4RvRETHkLZVPtCWdIGWqb1ekS95QNh1UXP71XyipkyiKXZQE/TQ0t8xYv1wZCTvLSc68CKR11OMNa808EvRPEX696w5PgsoyOybAOlwBgGY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706003106; c=relaxed/simple;
-	bh=pymzY/3H3JwV2zvE9dnuZ+MtpGTlYgDuqgn9PZfrCkI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Fg4G4c9N5tK3OFPbC2lkG6qa3Uj+4xatdWe26gD65xek1Bo8BhkfeCZkrZwhz/k1rP4aEp/PKI/4PHTnOBgt9sDwACNfLbzv14+xSofARn9FROI7PkPzTNA0MVnuWIXsYwoutCY1S753kff10xTtyPnYa5rPa5z6EdakKzIlI5w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=hxwNynJb; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1706003108; c=relaxed/simple;
+	bh=5SBUvOssUDD+2gGAiGFtJKi4a09NTizmqH1j3HCBM0U=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=c9Vt72lw7WSkVZJIXoy3txHLHdPEa1cXzLYlPeKMusuwDwetK03tkEQGeFKeCsH+0pnewLrMMCwLbrIvU3FyyfwKK/nm34xmEd/AxSCTVLJZQt8suFgMfJVxAavE/BuobSy8j3RAfSlbj+NU5gY/zfBwtzyPda8AlRsvpYpLeD8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JC4WNEc7; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="hxwNynJb"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 7D7C040E01BB;
-	Tue, 23 Jan 2024 09:45:00 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id 50w5MlWy-wd7; Tue, 23 Jan 2024 09:44:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1706003097; bh=GkrBxaeL2aLlMplkTSKVP94a03nzHfhpk7LQpBp9/7k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hxwNynJbGDduwLhbt4g4J7ymAcJHM+Xol23ZxPF4xrH/6X9JLuOLJMWEeOYiFtDmk
-	 uxiINz75Rp2vkRqFEvxLv71BucXmNgjdRQ4nhGo2rH6oDuLQ2B1NPaS1YB0cg/3cO6
-	 eT39INMB7cu1Y5Q3OR1PkmYuGTH/TglaeJpx2PdatETiQzzFCbLjzQ9YSia5WQMzVL
-	 6UDWcS5RBHDSe6hGicTCTCK8qEujnJiTa9vkMbq4m+DLaIPk5F772MNYDI30z0h4GB
-	 LhiPvUvZS6+YO7IexEpzHOqgt1L/CaSlJ7b8pTqEJkQZW+bgkT6dJND/OLK38s12Ro
-	 wDuwq7do0I4/Pow2LuhJjMApbhdd8MaTNMOIVibAqkZvGgL11tgnd5krf/HpIWFWdU
-	 0kAt6721pkSLBL6WMNnPTNPTVuxaYghjQcevor1j6C2sCIY7L647yZCBhI/BvtF/lB
-	 h8kyUYGcHIPzpCVv67IulAwR3RI6FjNaznAgzBZUDL54RG/QdGofPc/joibedooUEk
-	 Y7DT1umvJkwwt4gIpX2QVwWxbY3NpmcCIJelzttQ1IFlfLkPbuVAK2XtFB47XzSOZ6
-	 LLC4ki2bI6pVe+I687BjIQGek2p15B6sR0cnvT/YpfQrawQfSIOW2Ix63Uug1kt11k
-	 wfVynrHAvlPN8MXOqht7prNo=
-Received: from zn.tnic (pd953099d.dip0.t-ipconnect.de [217.83.9.157])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 2949D40E01B4;
-	Tue, 23 Jan 2024 09:44:34 +0000 (UTC)
-Date: Tue, 23 Jan 2024 10:44:27 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
-Cc: herbert@gondor.apana.org.au, davem@davemloft.net,
-	linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-	tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
-	x86@kernel.org, hpa@zytor.com, seanjc@google.com,
-	kim.phillips@amd.com, kirill.shutemov@linux.intel.com,
-	jmattson@google.com, babu.moger@amd.com, kai.huang@intel.com,
-	acme@redhat.com, aik@amd.com, namhyung@kernel.org,
-	CobeChen@zhaoxin.com, TimGuo@zhaoxin.com, LeoLiu-oc@zhaoxin.com,
-	GeorgeXue@zhaoxin.com
-Subject: Re: [PATCH v2 2/3] x86/cpufeatures: Add CPU feature flags for
- Zhaoxin Hash Engine
-Message-ID: <20240123094427.GAZa-Ke5d2Kwyk2nSU@fat_crate.local>
-References: <20240123022852.2475-1-TonyWWang-oc@zhaoxin.com>
- <20240123022852.2475-3-TonyWWang-oc@zhaoxin.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JC4WNEc7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1706003105;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hPaQbXk8XLEaVElIGgvAHXLJscVCCVhCxcSL8y0kSzA=;
+	b=JC4WNEc7jZ+5j5/pCUglqcJX3cDZONmNY+U4B6LmFN+yLYJgYkSfFSN4g6GVDpjoFns9+7
+	wV7EUiFLAKru+3xUk74lLhPqg4BxJC/YJGO9c9WlfTxbXeBeo6IaqupE2VsatN0qs8SOU/
+	/aR2sUrw2R4c5t3+Ed7kb6VMz+h24/k=
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
+ [209.85.222.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-477-tRl7XzI6Mx2ijmihY1ct5w-1; Tue, 23 Jan 2024 04:45:03 -0500
+X-MC-Unique: tRl7XzI6Mx2ijmihY1ct5w-1
+Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-78356ddf3cfso127858185a.1
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 01:45:03 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706003103; x=1706607903;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hPaQbXk8XLEaVElIGgvAHXLJscVCCVhCxcSL8y0kSzA=;
+        b=nd52eL9R4c7j3zy4z0d0gEJKkCxHfI7EbZH7F85AtxE8EoX8O6W0o5+exTBJoheWWH
+         vfV4BbXCLArX9peeKW7bXAXVZWeH8aFSOje1juVzlHUYH1PqnEqomve3Q093oWtVYXE3
+         c4886wUKceU0UuQwDxgb8ezsZgAdViD+rVTahafW+OKUvfUq3rSZ7drinVo4adS+n/rA
+         1gnTMRM8bV6tLdSr9eeW6K7ehPhYFAjq537+bK6U5h5KVvv9iESxzc60mrG7j/LsFxhk
+         +WtAdwhbaJfIEDQ2bSb2Qm0vcira7+psn9TS0EYYIEX2CvWEGajCcCBztUAA39SdWVLJ
+         y3kQ==
+X-Gm-Message-State: AOJu0YzOiESQIF6DHx/26v4qGjTYgkmaU/NZflJ8VszcA1ibg4ihUUvn
+	am1iUmDBZ4RRoQKBdqJPbZICJ8sRbAbBLiBQT6UajQuQhSmSUvzD3TzGJBFzUuXBNeJ3V6zYHuO
+	VGoQq/TVfdAG6H4d5qRPIujYg1LnsO+xqqmrMLE24dr8RXseZGdDMm5FvtfPVAg==
+X-Received: by 2002:a05:6214:f26:b0:685:7cfd:34eb with SMTP id iw6-20020a0562140f2600b006857cfd34ebmr9324897qvb.4.1706003103114;
+        Tue, 23 Jan 2024 01:45:03 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFtcDj2ng1o0t8y8DdObSU32+uI7sQsarbF6v7QkK54odso969HOgDvhCFed+0S/Tvhd8Mu/g==
+X-Received: by 2002:a05:6214:f26:b0:685:7cfd:34eb with SMTP id iw6-20020a0562140f2600b006857cfd34ebmr9324885qvb.4.1706003102866;
+        Tue, 23 Jan 2024 01:45:02 -0800 (PST)
+Received: from pstanner-thinkpadt14sgen1.muc.redhat.com (nat-pool-muc-t.redhat.com. [149.14.88.26])
+        by smtp.gmail.com with ESMTPSA id nc5-20020a0562142dc500b00685e2ffcaf5sm2958704qvb.38.2024.01.23.01.45.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Jan 2024 01:45:02 -0800 (PST)
+From: Philipp Stanner <pstanner@redhat.com>
+To: Jonathan Corbet <corbet@lwn.net>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Philipp Stanner <pstanner@redhat.com>,
+	Sam Ravnborg <sam@ravnborg.org>,
+	dakr@redhat.com
+Cc: linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	linux-pci@vger.kernel.org
+Subject: [PATCH v2 08/10] PCI: give pci(m)_intx its own devres callback
+Date: Tue, 23 Jan 2024 10:43:05 +0100
+Message-ID: <20240123094317.15958-9-pstanner@redhat.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240123094317.15958-1-pstanner@redhat.com>
+References: <20240123094317.15958-1-pstanner@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240123022852.2475-3-TonyWWang-oc@zhaoxin.com>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jan 23, 2024 at 10:28:51AM +0800, Tony W Wang-oc wrote:
-> Zhaoxin CPUs have implemented the SHA(Secure Hash Algorithm) as its
-> instrucions.
-> Add two CPU feature flags indicated by CPUID.(EAX=C0000001,ECX=0):EDX
-> bit 25/26 which will be used by Zhaoxin SHA driver.
-> 
-> Signed-off-by: Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
-> ---
->  arch/x86/include/asm/cpufeatures.h       | 4 +++-
->  tools/arch/x86/include/asm/cpufeatures.h | 4 +++-
->  2 files changed, 6 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
-> index 29cb275a219d..28b0e62dbdf5 100644
-> --- a/arch/x86/include/asm/cpufeatures.h
-> +++ b/arch/x86/include/asm/cpufeatures.h
-> @@ -145,7 +145,7 @@
->  #define X86_FEATURE_RDRAND		( 4*32+30) /* RDRAND instruction */
->  #define X86_FEATURE_HYPERVISOR		( 4*32+31) /* Running on a hypervisor */
->  
-> -/* VIA/Cyrix/Centaur-defined CPU features, CPUID level 0xC0000001, word 5 */
-> +/* VIA/Cyrix/Centaur/Zhaoxin-defined CPU features, CPUID level 0xC0000001, word 5 */
+pci_intx() is one of the functions that have "hybrid mode" (i.e.,
+sometimes managed, sometimes not). Providing a separate pcim_intx()
+function with its own device resource and cleanup callback allows for
+removing further large parts of the legacy pci-devres implementation.
 
-Does that mean that all those companies agree on the contents of this
-CPUID leaf?
+As in the region-request-functions, pci_intx() has to call into its
+managed counterpart for backwards compatibility.
 
->  #define X86_FEATURE_XSTORE		( 5*32+ 2) /* "rng" RNG present (xstore) */
->  #define X86_FEATURE_XSTORE_EN		( 5*32+ 3) /* "rng_en" RNG enabled */
->  #define X86_FEATURE_XCRYPT		( 5*32+ 6) /* "ace" on-CPU crypto (xcrypt) */
-> @@ -156,6 +156,8 @@
->  #define X86_FEATURE_PHE_EN		( 5*32+11) /* PHE enabled */
->  #define X86_FEATURE_PMM			( 5*32+12) /* PadLock Montgomery Multiplier */
->  #define X86_FEATURE_PMM_EN		( 5*32+13) /* PMM enabled */
-> +#define X86_FEATURE_PHE2		( 5*32+25) /* "phe2" Zhaoxin Hash Engine */
-> +#define X86_FEATURE_PHE2_EN		( 5*32+26) /* "phe2_en" PHE2 enabled */
-						      ^^^^^^^^^
+As pci_intx() is an outdated function, pcim_intx() shall not be made
+visible to other drivers via a public API.
 
-From: Documentation/arch/x86/cpuinfo.rst
+Implement pcim_intx() with its own device resource.
+Make pci_intx() call pcim_intx() in the managed case.
+Remove the struct pci_devres from pci.h.
 
-"a: Feature flags can be derived from the contents of CPUID leaves.
-------------------------------------------------------------------
-These feature definitions are organized mirroring the layout of CPUID
-leaves and grouped in words with offsets as mapped in enum cpuid_leafs
-in cpufeatures.h (see arch/x86/include/asm/cpufeatures.h for details).
-If a feature is defined with a X86_FEATURE_<name> definition in
-cpufeatures.h, and if it is detected at run time, the flags will be
-displayed accordingly in /proc/cpuinfo. For example, the flag "avx2"
-comes from X86_FEATURE_AVX2 in cpufeatures.h."
+Signed-off-by: Philipp Stanner <pstanner@redhat.com>
+---
+ drivers/pci/devres.c | 76 ++++++++++++++++++++++++++++++++++----------
+ drivers/pci/pci.c    | 24 +++++++-------
+ drivers/pci/pci.h    | 21 +++---------
+ 3 files changed, 77 insertions(+), 44 deletions(-)
 
-Is your grep broken?
-
+diff --git a/drivers/pci/devres.c b/drivers/pci/devres.c
+index d396d672a6f4..4314d0863282 100644
+--- a/drivers/pci/devres.c
++++ b/drivers/pci/devres.c
+@@ -40,6 +40,11 @@ struct pcim_iomap_devres {
+ 	void __iomem *table[PCI_STD_NUM_BARS];
+ };
+ 
++/* Used to restore the old intx state on driver detach. */
++struct pcim_intx_devres {
++	int orig_intx;
++};
++
+ enum pcim_addr_devres_type {
+ 	/* Default initializer. */
+ 	PCIM_ADDR_DEVRES_TYPE_INVALID,
+@@ -401,31 +406,70 @@ int pcim_set_mwi(struct pci_dev *pdev)
+ }
+ EXPORT_SYMBOL(pcim_set_mwi);
+ 
++static void pcim_intx_restore(struct device *dev, void *data)
++{
++	struct pci_dev *pdev = to_pci_dev(dev);
++	struct pcim_intx_devres *res = data;
+ 
+-static void pcim_release(struct device *gendev, void *res)
++	pci_intx(pdev, res->orig_intx);
++}
++
++static struct pcim_intx_devres *get_or_create_intx_devres(struct device *dev)
+ {
+-	struct pci_dev *dev = to_pci_dev(gendev);
+-	struct pci_devres *this = res;
++	struct pcim_intx_devres *res;
+ 
+-	if (this->restore_intx)
+-		pci_intx(dev, this->orig_intx);
++	res = devres_find(dev, pcim_intx_restore, NULL, NULL);
++	if (res)
++		return res;
+ 
+-	if (!dev->pinned)
+-		pci_disable_device(dev);
++	res = devres_alloc(pcim_intx_restore, sizeof(*res), GFP_KERNEL);
++	if (res)
++		devres_add(dev, res);
++
++	return res;
+ }
+ 
+-/*
+- * TODO:
+- * Once the last four callers in pci.c are ported, this function here needs to
+- * be made static again.
++/**
++ * pcim_intx - managed pci_intx()
++ * @pdev: the PCI device to operate on
++ * @enable: boolean: whether to enable or disable PCI INTx
++ *
++ * Returns: 0 on success, -ENOMEM on error.
++ *
++ * Enables/disables PCI INTx for device @pdev.
++ * Restores the original state on driver detach.
+  */
+-struct pci_devres *find_pci_dr(struct pci_dev *pdev)
++int pcim_intx(struct pci_dev *pdev, int enable)
+ {
+-	if (pci_is_managed(pdev))
+-		return devres_find(&pdev->dev, pcim_release, NULL, NULL);
+-	return NULL;
++	u16 pci_command, new;
++	struct pcim_intx_devres *res;
++
++	res = get_or_create_intx_devres(&pdev->dev);
++	if (!res)
++		return -ENOMEM;
++
++	res->orig_intx = !enable;
++
++	pci_read_config_word(pdev, PCI_COMMAND, &pci_command);
++
++	if (enable)
++		new = pci_command & ~PCI_COMMAND_INTX_DISABLE;
++	else
++		new = pci_command | PCI_COMMAND_INTX_DISABLE;
++
++	if (new != pci_command)
++		pci_write_config_word(pdev, PCI_COMMAND, new);
++
++	return 0;
++}
++
++static void pcim_release(struct device *gendev, void *res)
++{
++	struct pci_dev *dev = to_pci_dev(gendev);
++
++	if (!dev->pinned)
++		pci_disable_device(dev);
+ }
+-EXPORT_SYMBOL(find_pci_dr);
+ 
+ static struct pci_devres *get_pci_dr(struct pci_dev *pdev)
+ {
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index ab8d66e05662..323d5b52f669 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -3877,7 +3877,7 @@ EXPORT_SYMBOL_GPL(pci_common_swizzle);
+ void pci_release_region(struct pci_dev *pdev, int bar)
+ {
+ 	/*
+-	 * This is done for backwards compatibility, because the old pci-devres
++	 * This is done for backwards compatibility, because the old PCI devres
+ 	 * API had a mode in which the function became managed if it had been
+ 	 * enabled with pcim_enable_device() instead of pci_enable_device().
+ 	 */
+@@ -4465,11 +4465,22 @@ void pci_disable_parity(struct pci_dev *dev)
+  * This is a "hybrid" function: Its normally unmanaged, but becomes managed
+  * when pcim_enable_device() has been called in advance.
+  * This hybrid feature is DEPRECATED!
++ * Use pcim_intx() if you need a managed version.
+  */
+ void pci_intx(struct pci_dev *pdev, int enable)
+ {
+ 	u16 pci_command, new;
+ 
++	/*
++	 * This is done for backwards compatibility, because the old PCI devres
++	 * API had a mode in which this function became managed if the dev had
++	 * been enabled with pcim_enable_device() instead of pci_enable_device().
++	 */
++	if (pci_is_managed(pdev)) {
++		WARN_ON_ONCE(pcim_intx(pdev, enable) != 0);
++		return;
++	}
++
+ 	pci_read_config_word(pdev, PCI_COMMAND, &pci_command);
+ 
+ 	if (enable)
+@@ -4477,17 +4488,8 @@ void pci_intx(struct pci_dev *pdev, int enable)
+ 	else
+ 		new = pci_command | PCI_COMMAND_INTX_DISABLE;
+ 
+-	if (new != pci_command) {
+-		struct pci_devres *dr;
+-
++	if (new != pci_command)
+ 		pci_write_config_word(pdev, PCI_COMMAND, new);
+-
+-		dr = find_pci_dr(pdev);
+-		if (dr && !dr->restore_intx) {
+-			dr->restore_intx = 1;
+-			dr->orig_intx = !enable;
+-		}
+-	}
+ }
+ EXPORT_SYMBOL_GPL(pci_intx);
+ 
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index 667bfdd61d5e..e6d4b81ff09e 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -796,24 +796,11 @@ static inline pci_power_t mid_pci_get_power_state(struct pci_dev *pdev)
+ #endif
+ 
+ /*
+- * TODO:
+- * The following two components wouldn't need to be here if they weren't used at
+- * four last places in pci.c
+- * Port or move these functions to devres.c and then remove the
+- * pci_devres-components from this header file here.
++ * This is a helper that shall only ever be called by pci_intx(). It helps
++ * cleaning up the PCI devres API in which pci_intx() became a managed function
++ * under certain conditions.
+  */
+-/*
+- * Managed PCI resources.  This manages device on/off, INTx/MSI/MSI-X
+- * on/off and BAR regions.  pci_dev itself records MSI/MSI-X status, so
+- * there's no need to track it separately.  pci_devres is initialized
+- * when a device is enabled using managed PCI device enable interface.
+- */
+-struct pci_devres {
+-	unsigned int orig_intx:1;
+-	unsigned int restore_intx:1;
+-};
+-
+-struct pci_devres *find_pci_dr(struct pci_dev *pdev);
++int pcim_intx(struct pci_dev *dev, int enable);
+ 
+ /*
+  * Config Address for PCI Configuration Mechanism #1
 -- 
-Regards/Gruss,
-    Boris.
+2.43.0
 
-https://people.kernel.org/tglx/notes-about-netiquette
