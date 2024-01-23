@@ -1,44 +1,44 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C11A781ADD;
-	Tue, 23 Jan 2024 16:47:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3494081AD7;
+	Tue, 23 Jan 2024 16:47:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706028440; cv=none; b=L9Vkkcl9x3AERU7feg4Rn+9fihm5Jav9TYok5gbZjWyR0SWC0yQroz+xhz0W0CwOVqyjV/CZ0NUQGKJAsAJ7u96TxkOzi0/I/NHCc727NZiv8AxlEroJWrf+KP9+OfwYc4ds3gBLKrFq3FI+KsGpJ++zTgdniLpRpnJV46/xxCA=
+	t=1706028441; cv=none; b=qQ7m7gGKBsJjXSdlCR3NnhwhIo8unH1eZ+nnIxmiN1fDwc6LAPlYKOSF0q+PtESdVFXFuLTwjhMjlobz/yE3/PhNRr/bQc8zzNP1ypS0bpIbVPLt5M+bW0Lj4YdON75t8epEXkkH6pdjhUPQQ52vkKepf56bc0WYkiIodvUO180=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706028440; c=relaxed/simple;
-	bh=d8rsDzMorDANdDMVQ3WQDhgi/FdSTHxklICIHXgHMvk=;
+	s=arc-20240116; t=1706028441; c=relaxed/simple;
+	bh=o5OrShZSySnx9z4Dc96d9/mMYCWz28Tvaz3npFr+rh4=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=h9F+ItRBiUVn0A0uMTBox/iZJ8sLeDFVBHi1a+0Td4r/6LjgdNJWO6cGFuRluo7ZtH7T01QFPN7ah16bH3AFZ/addpApPy5r61KMU/pOJv0cj6I5RgtXyQskIu7w/2eqNJvJbQhLORqLuvU8JLXM+Q2/jfx84u2w6YUp/5cZp2c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=IaV2OZp+; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=PZvGQp3T; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=FkwwzN8oBrTIKX95iITPdvFskZ/tNG4QNL0fX+oUBiJDo38OYZ6IiRk/+VTs/x53YIPmX82ZpU/fQw5b9VKwNHxWj7FpqipuXnlxlu4en+Ms/nvor1yaTsQ/C/7FYkOaYUJuL9MoCAu2l6QGCstRGZB+0OKEOoXqJavu8DbSYyg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ypNAgJ5o; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=C9fOdwLQ; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="IaV2OZp+";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="PZvGQp3T"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ypNAgJ5o";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="C9fOdwLQ"
 From: Anna-Maria Behnsen <anna-maria@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1706028437;
+	s=2020; t=1706028436;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=d0sxRv/SQf4nMms7k/oUwYmN6EK8PHV+d6aCUPuL/OY=;
-	b=IaV2OZp+82gkYOAV+dk4Zl5Pq/IpigdN4/qk/TGHR43GhajiQJlF66S9vy7HipdqedE1CD
-	tR7/fM7p7wmhnPlcXqXpLGRWP+Lg9kpKEwq5UgVXI12WlInhyf6Dn0dkNOhMlb3zUipLJB
-	GoYVByy4D6IOXkisiwyC4K9rdCtyWvSe/5sty5NPWBTsbmUF/SXbNZaD9HtvtCSm/G53Nv
-	uf8uigvwGdqrT6VKFQZF/gDUC3ToIBf3Qlv0RwdVOqV5tQpsyQSAtyUrGv33enxt4qaZU+
-	zb8qvCrqT9TutCQttTLqWeMLnzJe72Q0r5vH3MY2fCzd/a5DhEArfgEbG5Loow==
+	bh=JGyehJjSy1LmtgI6x+CLT4pSFNpa6twwbsgiLtZc8lY=;
+	b=ypNAgJ5o2E2HrqlcasGti3LkSQNxdrXdZpK9JPzmPiIh+nieeotJtuQlam2QQUyW2FwdgK
+	PTXD2VHGz/jsq5tyUvhb32brf7YVn8pAGjm3pFP23paDbqsC3zHyC5vEyb0dzfn20332oV
+	An79ByquwbNn8fY1tIgq0ek90xdP5NmQVAqIJQcsVym2dtf4NY+MxC7X9kJGGLJRdmctMI
+	RbW9wNm2ODt45AXRey4okBAxfJ4gm9i5puw5zidlTQdff1Cug1S/X3JyyWNH869ovgYHoC
+	MGC9rcRrGreFKf8vfLaEEj3A+0EMyIHt4RNU5oUUpIozb4moQPfpwYvCiUY0aA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1706028437;
+	s=2020e; t=1706028436;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=d0sxRv/SQf4nMms7k/oUwYmN6EK8PHV+d6aCUPuL/OY=;
-	b=PZvGQp3T7mdQiqZcppvQM3x23Dfd6TVpV11f6Zpt1zxEhdsU4qQziTKnKgr9T2LfrL1bHC
-	dosDHgv8nHgna1Dg==
+	bh=JGyehJjSy1LmtgI6x+CLT4pSFNpa6twwbsgiLtZc8lY=;
+	b=C9fOdwLQ6ND8D7qlZS9r8hvXNfAPDcBSNny1G4lDDZmmjGLKyyOosAMtTuLln5/CCnRo5r
+	hvBfT3Tyrd9KZoBg==
 To: linux-kernel@vger.kernel.org
 Cc: Thomas Gleixner <tglx@linutronix.de>,
 	Frederic Weisbecker <frederic@kernel.org>,
@@ -49,9 +49,9 @@ Cc: Thomas Gleixner <tglx@linutronix.de>,
 	Clemens Ladisch <clemens@ladisch.de>,
 	linux-doc@vger.kernel.org,
 	Anna-Maria Behnsen <anna-maria@linutronix.de>
-Subject: [PATCH 4/8] timers: Add struct member description for timer_base
-Date: Tue, 23 Jan 2024 17:46:58 +0100
-Message-Id: <20240123164702.55612-5-anna-maria@linutronix.de>
+Subject: [PATCH 2/8] hrtimers: Update formatting of documentation
+Date: Tue, 23 Jan 2024 17:46:56 +0100
+Message-Id: <20240123164702.55612-3-anna-maria@linutronix.de>
 In-Reply-To: <20240123164702.55612-1-anna-maria@linutronix.de>
 References: <20240123164702.55612-1-anna-maria@linutronix.de>
 Precedence: bulk
@@ -62,73 +62,83 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-timer_base struct lacks description of struct members. Important struct
-member information is sprinkled in comments or in code all over the place.
+Documentation of functions lacks the annotations which are used by
+kernel-doc and *.rst to make appearance in rendered documents more
+user-friendly.
 
-Collect information and write struct description to keep track of most
-important information in a single place.
+Use those annotations to improve user-friendliness. While at it prevent
+duplication of comments and use a reference instead.
 
 Signed-off-by: Anna-Maria Behnsen <anna-maria@linutronix.de>
 ---
- kernel/time/timer.c | 45 +++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 45 insertions(+)
+ include/linux/hrtimer.h | 14 +++-----------
+ kernel/time/hrtimer.c   | 18 ++++++++++--------
+ 2 files changed, 13 insertions(+), 19 deletions(-)
 
-diff --git a/kernel/time/timer.c b/kernel/time/timer.c
-index 352b161113cd..d44dba1d4af0 100644
---- a/kernel/time/timer.c
-+++ b/kernel/time/timer.c
-@@ -196,6 +196,51 @@ EXPORT_SYMBOL(jiffies_64);
- # define BASE_DEF	0
- #endif
+diff --git a/include/linux/hrtimer.h b/include/linux/hrtimer.h
+index 792a0ac75378..aa1e65ccb615 100644
+--- a/include/linux/hrtimer.h
++++ b/include/linux/hrtimer.h
+@@ -342,20 +342,12 @@ extern u64
+ hrtimer_forward(struct hrtimer *timer, ktime_t now, ktime_t interval);
  
-+/**
-+ * struct timer_base - Per CPU timer base (number of base depends on config)
-+ * @lock:		Lock protecting the timer_base
-+ * @running_timer:	When expiring timers, the lock is dropped. To make
-+ *			sure not to race agains deleting/modifying a
-+ *			currently running timer, the pointer is set to the
-+ *			timer, which expires at the moment. If no timer is
-+ *			running, the pointer is NULL.
-+ * @expiry_lock:	PREEMPT_RT only: Lock is taken in softirq around
-+ *			timer expiry callback execution and when trying to
-+ *			delete a running timer and it wasn't successful in
-+ *			the first glance. It prevents priority inversion
-+ *			when callback was preempted on a remote CPU and a
-+ *			caller tries to delete the running timer. It also
-+ *			prevents a life lock, when the task which tries to
-+ *			delete a timer preempted the softirq thread which
-+ *			is running the timer callback function.
-+ * @timer_waiters:	PREEMPT_RT only: Tells, if there is a waiter
-+ *			waiting for the end of the timer callback function
-+ *			execution.
-+ * @clk:		clock of the timer base; is updated before enqueue
-+ *			of a timer; during expiry, it is 1 offset ahead of
-+ *			jiffies to avoid endless requeuing to current
-+ *			jiffies
-+ * @next_expiry:	expiry value of the first timer; it is updated when
-+ *			finding the next timer and during enqueue; the
-+ *			value is not valid, when next_expiry_recalc is set
-+ * @cpu:		Number of CPU the timer base belongs to
-+ * @next_expiry_recalc: States, whether a recalculation of next_expiry is
-+ *			required. Value is set true, when a timer was
-+ *			deleted.
-+ * @is_idle:		Is set, when timer_base is idle. It is triggered by NOHZ
-+ *			code. This state is only used in standard
-+ *			base. Deferrable timers, which are enqueued remotely
-+ *			never wake up an idle CPU. So no matter of supporting it
-+ *			for this base.
-+ * @timers_pending:	Is set, when a timer is pending in the base. It is only
-+ *			reliable when next_expiry_recalc is not set.
-+ * @pending_map:	bitmap of the timer wheel; each bit reflects a
-+ *			bucket of the wheel. When a bit is set, at least a
-+ *			single timer is enqueued in the related bucket.
-+ * @vectors:		Array of lists; Each array member reflects a bucket
-+ *			of the timer wheel. The list contains all timers
-+ *			which are enqueued into a specific bucket.
-+ */
- struct timer_base {
- 	raw_spinlock_t		lock;
- 	struct timer_list	*running_timer;
+ /**
+- * hrtimer_forward_now - forward the timer expiry so it expires after now
++ * hrtimer_forward_now() - forward the timer expiry so it expires after now
+  * @timer:	hrtimer to forward
+  * @interval:	the interval to forward
+  *
+- * Forward the timer expiry so it will expire after the current time
+- * of the hrtimer clock base. Returns the number of overruns.
+- *
+- * Can be safely called from the callback function of @timer. If
+- * called from other contexts @timer must neither be enqueued nor
+- * running the callback and the caller needs to take care of
+- * serialization.
+- *
+- * Note: This only updates the timer expiry value and does not requeue
+- * the timer.
++ * It is a variant of hrtimer_forward(). The timer will expire after the current
++ * time of the hrtimer clock base. See hrtimer_forward() for details.
+  */
+ static inline u64 hrtimer_forward_now(struct hrtimer *timer,
+ 				      ktime_t interval)
+diff --git a/kernel/time/hrtimer.c b/kernel/time/hrtimer.c
+index 760793998cdd..4c8dd633ab4a 100644
+--- a/kernel/time/hrtimer.c
++++ b/kernel/time/hrtimer.c
+@@ -1021,21 +1021,23 @@ void unlock_hrtimer_base(const struct hrtimer *timer, unsigned long *flags)
+ }
+ 
+ /**
+- * hrtimer_forward - forward the timer expiry
++ * hrtimer_forward() - forward the timer expiry
+  * @timer:	hrtimer to forward
+  * @now:	forward past this time
+  * @interval:	the interval to forward
+  *
+  * Forward the timer expiry so it will expire in the future.
+- * Returns the number of overruns.
+  *
+- * Can be safely called from the callback function of @timer. If
+- * called from other contexts @timer must neither be enqueued nor
+- * running the callback and the caller needs to take care of
+- * serialization.
++ * .. note::
++ *  This only updates the timer expiry value and does not requeue the timer.
+  *
+- * Note: This only updates the timer expiry value and does not requeue
+- * the timer.
++ * There is also a variant of the function hrtimer_forward_now().
++ *
++ * Context: Can be safely called from the callback function of @timer. If called
++ *          from other contexts @timer must neither be enqueued nor running the
++ *          callback and the caller needs to take care of serialization.
++ *
++ * Return: The number of overruns are returned.
+  */
+ u64 hrtimer_forward(struct hrtimer *timer, ktime_t now, ktime_t interval)
+ {
 -- 
 2.39.2
 
