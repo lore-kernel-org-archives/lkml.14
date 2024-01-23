@@ -1,133 +1,119 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DD412B9CE;
-	Tue, 23 Jan 2024 23:25:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 687706FC2;
+	Tue, 23 Jan 2024 23:31:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706052317; cv=none; b=hKGUnv8TiOelttAR66eY3n0bWlZBZ6T+t2LM4le4AHdigNt7Uzgsj4u14OCSQ0zP+UKByq3BDnND6jyApzN66fhBMRrqSc4RIV+y/8tROQbmbqL+VenV807O2+oqRFnMRSkEcwb1QCktiKDalWkWTpyPCuT2yR2ZydvIinuJ2Ac=
+	t=1706052671; cv=none; b=Qwl7Snjbfn/sdQnJc/CCSqvwJiih2lESXj6OCNQYtHkVfiP12rk6tATlIIGheyBjicBgV8IVi9X1CmBBRTLQ+1cE7TdazmpFK/QTzRzjvBjRexGKufLQbE+sAPrfLCRjaWF0T7ZdCQi8Xn7kVwHdzqFFmsNSfZR/TL3QyvbEzWo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706052317; c=relaxed/simple;
-	bh=ZYod9weUPl1yPCka4SUZzp2i3MZt1MpdN0tH/3PVFz8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=u+UCzLNXkrUANOiOMv0DNaUOYISCzDfCqtYY9gUYzuZIJJ9RqdenQxby3VBpUQEKLEXfq/zt3gmYpnScxU9t9JzmrD9JWF+VCuu0qVqU3xSo+eQ0snjB5uEWln8Rped+OYiSGfpjyX1JRHm+w4c+va8Du1vRqQluH7HydSHa4Jk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=GrD29UDW; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1706052671; c=relaxed/simple;
+	bh=5IKCI89izY9q7OnAbvvB4vyI9VWaIqEYhVeW69cwKBo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HDLR+mXjSyJKzJmKZHPKQhr/c9kpKLhYSMc1Rwr0izufnJ1zQre8aj/4NgIVSuaRcIbrFYhxV0M6jt3nMMs1O1rpLjp6yPMRKiamDnMet9u2USF86a6dEg6AdUro7karHXi02Z2iahD8wizuAEbKD7CB/rhQs5+0LQlB68ko4x0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=msTHDUvy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="GrD29UDW"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Disposition:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Content-Disposition:
-	In-Reply-To:References; bh=3L0RW4HC32Lx5N8gtFQZihg57fFjleHQGb6GEyv904U=; b=Gr
-	D29UDWX/6aQD2sRb7aY/kxmfBVq8gBCbrbzylkaj3+maXmg+39XjQ//bc3h0pQe6NrE5FlbECD2h1
-	OFSQjWYIxZyLizyhMAttwp5ZPoa/PTVRkI3vqrWY6BNsDqw8u8oTCBTOTjFU9IPgjFHKVVgf1HL/O
-	LnjELfdoswWP1DI=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1rSQ8h-005t6u-Hh; Wed, 24 Jan 2024 00:25:07 +0100
-Date: Wed, 24 Jan 2024 00:25:07 +0100
-From: Andrew Lunn <andrew@lunn.ch>
-To: Ziyang Huang <hzyitc@outlook.com>
-Cc: mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com,
-	richardcochran@gmail.com, p.zabel@pengutronix.de,
-	matthias.bgg@gmail.com, angelogioacchino.delregno@collabora.com,
-	linux-kernel@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
-	linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH 2/8] phy: Introduce Qualcomm ethernet uniphy driver
-Message-ID: <8488a274-148d-42da-9fd3-d56ef1db6061@lunn.ch>
-References: <TYZPR01MB55563BD6A2B78402E4BB44D4C9762@TYZPR01MB5556.apcprd01.prod.exchangelabs.com>
- <TYZPR01MB55568ACB534944D7DEB00C7AC9762@TYZPR01MB5556.apcprd01.prod.exchangelabs.com>
- <TYZPR01MB555648886D03AB911224F6FAC9742@TYZPR01MB5556.apcprd01.prod.exchangelabs.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="msTHDUvy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B68F9C433C7;
+	Tue, 23 Jan 2024 23:31:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706052670;
+	bh=5IKCI89izY9q7OnAbvvB4vyI9VWaIqEYhVeW69cwKBo=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=msTHDUvykvzFCBJnKtqkfMnJkhCV4e1CWKyluOEIj1Qy17EJpTXSHTeb5+mROq8wc
+	 RQhoZ8shAfLx5k88DQXJX8bx/UFxML65CH+qDuFsfun+R0Tkz3P7qY1d2LtdEdF7cK
+	 +VfPtaqJG4NgOMJiwMlU+9wqG4FVcDhKNvh5WzwN6DWM+BH7uFAjWOWs+jxAaysQb6
+	 mtP+GPGpeeLUVX/oW0VjbXqKyXEWl0r+yZ9Fiq7ozko2SMkoqocAjhpq6zfnKDyqqY
+	 oFeXFGIDddZpbotoXXZxw/1sKXOG8gM5jeAjiedV5py8EDl4olJY48Vy/4O2c1b0OR
+	 FpL2Ka9boi3Rw==
+Message-ID: <a08be89b-6825-4559-a909-632f9571d387@kernel.org>
+Date: Wed, 24 Jan 2024 08:31:05 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <TYZPR01MB555648886D03AB911224F6FAC9742@TYZPR01MB5556.apcprd01.prod.exchangelabs.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/5] zonefs: pass GFP_KERNEL to blkdev_zone_mgmt() call
+Content-Language: en-US
+To: Dave Chinner <david@fromorbit.com>, Mikulas Patocka <mpatocka@redhat.com>
+Cc: Johannes Thumshirn <johannes.thumshirn@wdc.com>,
+ Naohiro Aota <naohiro.aota@wdc.com>, Mike Snitzer <snitzer@kernel.org>,
+ dm-devel@lists.linux.dev, Chris Mason <clm@fb.com>,
+ Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
+ Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
+ Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
+ Sagi Grimberg <sagi@grimberg.me>, Chaitanya Kulkarni <kch@nvidia.com>,
+ linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-btrfs@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
+ linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>
+References: <20240123-zonefs_nofs-v1-0-cc0b0308ef25@wdc.com>
+ <20240123-zonefs_nofs-v1-1-cc0b0308ef25@wdc.com>
+ <31e0f796-1c5-b7f8-2f4b-d937770e8d5@redhat.com>
+ <ZbBKC3U3/1yPvWDR@dread.disaster.area>
+From: Damien Le Moal <dlemoal@kernel.org>
+Organization: Western Digital Research
+In-Reply-To: <ZbBKC3U3/1yPvWDR@dread.disaster.area>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jan 23, 2024 at 11:58:26PM +0800, Ziyang Huang wrote:
-> 在 2024/1/21 20:42, Ziyang Huang 写道:
-> > +#define rmwl(addr, mask, val) \
-> > +	writel(((readl(addr) & ~(mask)) | ((val) & (mask))), addr)
-> > +
-> > +static int cmn_init(struct platform_device *pdev)
-> > +{
-> > +	struct resource *res;
-> > +	void __iomem *cmn_base;
-> > +	void __iomem *tcsr_base;
-> > +	u32 val;
-> > +
-> > +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "cmn");
-> > +	if (!res)
-> > +		return 0;
-> > +
-> > +	cmn_base = devm_ioremap_resource(&pdev->dev, res);
-> > +	if (IS_ERR_OR_NULL(cmn_base))
-> > +		return PTR_ERR(cmn_base);
-> > +
-> > +	/* For IPQ50xx, tcsr is necessary to enable cmn block */
-> > +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "tcsr");
-> > +	if (res) {
-> > +		tcsr_base = devm_ioremap_resource(&pdev->dev, res);
-> > +		if (IS_ERR_OR_NULL(tcsr_base))
-> > +			return PTR_ERR(tcsr_base);
-> > +
-> > +		rmwl((tcsr_base + TCSR_ETH_CMN), TCSR_ETH_CMN_ENABLE,
-> > +		     TCSR_ETH_CMN_ENABLE);
-> > +	}
-> > +
-> > +	rmwl((cmn_base + CMN_PLL_REFCLK_SRC),
-> > +	     CMN_PLL_REFCLK_SRC_FROM_MASK,
-> > +	     CMN_PLL_REFCLK_SRC_FROM_REG);
-> > +	rmwl((cmn_base + CMN_PLL_REFCLK),
-> > +	     (CMN_PLL_REFCLK_EXTERNAL | CMN_PLL_REFCLK_FREQ_MASK
-> > +	      | CMN_PLL_REFCLK_DIV_MASK),
-> > +	     (CMN_PLL_REFCLK_FREQ_48M | CMN_PLL_REFCLK_DIV(2)));
-> > +
-> > +	rmwl((cmn_base + CMN_PLL_CTRL), CMN_PLL_CTRL_RST_N, 0);
-> > +	msleep(1);
-> > +	rmwl((cmn_base + CMN_PLL_CTRL), CMN_PLL_CTRL_RST_N,
-> > +	     CMN_PLL_CTRL_RST_N);
-> > +	msleep(1);
-> > +
-> > +	return read_poll_timeout(readl, val,
-> > +				 (val & CMN_PLL_STATUS_LOCKED),
-> > +				 100, 200000, false,
-> > +				 (cmn_base + CMN_PLL_STATUS));
-> > +}
-> > +
+On 1/24/24 08:21, Dave Chinner wrote:
+> On Tue, Jan 23, 2024 at 09:39:02PM +0100, Mikulas Patocka wrote:
+>>
+>>
+>> On Tue, 23 Jan 2024, Johannes Thumshirn wrote:
+>>
+>>> Pass GFP_KERNEL instead of GFP_NOFS to the blkdev_zone_mgmt() call in
+>>> zonefs_zone_mgmt().
+>>>
+>>> As as zonefs_zone_mgmt() and zonefs_inode_zone_mgmt() are never called
+>>> from a place that can recurse back into the filesystem on memory reclaim,
+>>> it is save to call blkdev_zone_mgmt() with GFP_KERNEL.
+>>>
+>>> Signed-off-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+>>> ---
+>>>  fs/zonefs/super.c | 2 +-
+>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/fs/zonefs/super.c b/fs/zonefs/super.c
+>>> index 93971742613a..63fbac018c04 100644
+>>> --- a/fs/zonefs/super.c
+>>> +++ b/fs/zonefs/super.c
+>>> @@ -113,7 +113,7 @@ static int zonefs_zone_mgmt(struct super_block *sb,
+>>>  
+>>>  	trace_zonefs_zone_mgmt(sb, z, op);
+>>>  	ret = blkdev_zone_mgmt(sb->s_bdev, op, z->z_sector,
+>>> -			       z->z_size >> SECTOR_SHIFT, GFP_NOFS);
+>>> +			       z->z_size >> SECTOR_SHIFT, GFP_KERNEL);
+>>>  	if (ret) {
+>>>  		zonefs_err(sb,
+>>>  			   "Zone management operation %s at %llu failed %d\n",
+>>>
+>>> -- 
+>>> 2.43.0
+>>
+>> zonefs_inode_zone_mgmt calls 
+>> lockdep_assert_held(&ZONEFS_I(inode)->i_truncate_mutex); - so, this 
+>> function is called with the mutex held - could it happen that the 
+>> GFP_KERNEL allocation recurses into the filesystem and attempts to take 
+>> i_truncate_mutex as well?
+>>
+>> i.e. GFP_KERNEL -> iomap_do_writepage -> zonefs_write_map_blocks -> 
+>> zonefs_write_iomap_begin -> mutex_lock(&zi->i_truncate_mutex)
 > 
-> Hi Andrew,
+> zonefs doesn't have a ->writepage method, so writeback can't be
+> called from memory reclaim like this.
+
+And also, buffered writes are allowed only for conventional zone files, for
+which we never do zone management. For sequential zone files which may have
+there zone managed with blkdev_zone_mgmt(), only direct writes are allowed.
+
 > 
-> Sorry to bother you. But I can't make a decision here.
-> 
-> The CMN block (Seem like the Abbreviation of "component") controls the
-> entire network block. It need to be configured before uniphy, mdio, gmac,
-> etc.. In the past, Qualcomm put it in mdio driver. But UNIPHY need to been
-> initializated before mdio because some PHYs/switchs use the outclk provided
-> by UNIPHY as their main clocks.
-> 
-> So it seem like that it should be described in a separate node. But I
-> couldn't find a suitable driver directory for it. Can you please give me
-> some suggestions? Thanks.
+> -Dave.
 
-Maybe drivers/soc/qcom.
+-- 
+Damien Le Moal
+Western Digital Research
 
-Does it provide any resources to the uniphy, mdio, gmac, etc? Anything
-which can be used to link all the bits together?
-
-Looking at CMN_PLL_CTRL_RST_N, could it be considered as a reset
-driver? Each of the other drivers have a phandle to it, and use the
-reset API to take it out of reset when they probe? That should give
-you some ordering guarantees.
-
-    Andrew
