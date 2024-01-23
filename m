@@ -1,44 +1,44 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF9A15384;
-	Tue, 23 Jan 2024 05:40:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 405734432;
+	Tue, 23 Jan 2024 05:41:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705988460; cv=none; b=Eih+9fwBmYOUy4oWZ5voWBMSA7tyP3/kjzbsP1pjSLS0jAuhy8vbiEVBcnLsJYrSB9RfArUU5cptne8xfeKKvcH89+a5E4RrsFlHvUTWGdzZy6W3GsuRzUCU1FSEAgxiewUz3zUEHPMFlQU8rOrvCVYaLix6aTnotd13294Ss5c=
+	t=1705988462; cv=none; b=sWjU/OK6gRJ096pADm2JDTRnX4JP9kPn9iiRuvaCixe6lzyqcTkJ92XVMOiMBIcufp0BTtkp2uIS4l4umePLOgXwpGv6S2nl2uSwrSp40AhYI5ZrnFZW+y4M3lbiSNoDYvGWc4uLerBm9v7ycMsBT8uRk7+XXkV6is1T+4c5kI0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705988460; c=relaxed/simple;
-	bh=usqTaUXKEgQoY2T5x0AaG8q/SrqHWXmUVAmFQbDu13I=;
+	s=arc-20240116; t=1705988462; c=relaxed/simple;
+	bh=gdiyFjvMqWMG/af6i2COjazfjxZBQgaYcm1PP8azrvk=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=pdhuslRZecBFmgDDx0uqOCVSYUjdgYPXpqZL4Pg0IClCGhgMx4trSBPIRH/In1vTd2bK/tjc9HYJDSOrJbqYbIynncFgmlfodvrByqIVb6qYfTA+1/ptqdHkFtKJlLN2oFklpZqyTMuuP2hB+ucJg7JFNIGA5x9a2/I8CxmvDSY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MCjN2pT4; arc=none smtp.client-ip=198.175.65.10
+	 MIME-Version; b=ABGPyMgZ1wyz0rPGM+d7sU6mGrzXiqX3jWBxw44D+UtsJpFIuHeddD5mmnCLInLIReRA5lXgREJUajC+BMnvmLGCDU8vfX+KEo7XhoECGP4CvtWn/0AT5UQZmrsXLiVkNDjmXsJYSVWKY3x3BXpXeDvHqETc/iGQKKxbqAqJDQg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IWC6hzHt; arc=none smtp.client-ip=198.175.65.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MCjN2pT4"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IWC6hzHt"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1705988460; x=1737524460;
+  t=1705988462; x=1737524462;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=usqTaUXKEgQoY2T5x0AaG8q/SrqHWXmUVAmFQbDu13I=;
-  b=MCjN2pT4UbE7nSJEasC52lY7t5pWbnvgvcjAVQfxvtlowaZZiVQQucI/
-   jE+27rl2wVa5CDzQyfVOV94hNplZAmu7Lc0EfCUPP5u8z3c0x9/ZVg3VM
-   Kqxxc3hT8g+XAbty2ep086RyCtJng0XqVYwIKr7rIfld9sttRLZu3/aOT
-   YAznmGN9xHsp8+PmB/LdZ7Z6hH27riJydog0YvH0LHS01jVWkEkvXAG3L
-   tXz94WJ0m//AmjfzDDZEiyLchFoIRv+8ZD1E6GfTjF2DS17K8ZluuixGV
-   1TqO8syxK+UnQy+bKg+Lghj90CnEIAEyEn5ZQT576nTOPE/5qEwOom8nS
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10961"; a="14770134"
+  bh=gdiyFjvMqWMG/af6i2COjazfjxZBQgaYcm1PP8azrvk=;
+  b=IWC6hzHt+hGgDxM8mnhmOKjK757opWdvGQIPrJ3S1sCrDPlWBKRCNmyI
+   WkGNJg1nbwrHGt0hybHhtSNKtWLhEcm1GOdFE6qIUV5EwZNj3Q1o5BAt9
+   FWKtG/ludALKUDMf4YAMM+By83qOCitlD3yGyrrHi9ZzIdJprr8XHxyXa
+   npxwAFEokZiWIetHfUHRqzC54fEfMtHWKtt/xQ21kPIr/6WZX6hvgJ4WN
+   6CCgWYvGTQuC6+duNL7wvvSsWTgbdfhYjVn2jQa0TDFo+2NopWKIuscQ9
+   uX+ctZsI+4jgHf/75tq1fX5Zv4NGM8tVCJKtFll+SYteqZsQeKimV+oeW
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10961"; a="14770175"
 X-IronPort-AV: E=Sophos;i="6.05,213,1701158400"; 
-   d="scan'208";a="14770134"
+   d="scan'208";a="14770175"
 Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 21:40:46 -0800
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 21:40:51 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.05,213,1701158400"; 
-   d="scan'208";a="1471954"
+   d="scan'208";a="1472008"
 Received: from junxiaochang.bj.intel.com ([10.238.157.86])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 21:40:42 -0800
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 21:40:47 -0800
 From: Junxiao Chang <junxiao.chang@intel.com>
 To: bigeasy@linutronix.de,
 	tglx@linutronix.de,
@@ -49,12 +49,13 @@ Cc: john.ogness@linutronix.de,
 	lili.li@intel.com,
 	jianfeng.gao@intel.com,
 	linux-rt-users@vger.kernel.org
-Subject: [PATCH 0/2] nbcon locking issue with v6.6.10-rt18 kernel
-Date: Tue, 23 Jan 2024 13:40:31 +0800
-Message-Id: <20240123054033.183114-1-junxiao.chang@intel.com>
+Subject: [PATCH 2/2] printk: nbcon: check uart port is nbcon or not in nbcon_release
+Date: Tue, 23 Jan 2024 13:40:33 +0800
+Message-Id: <20240123054033.183114-3-junxiao.chang@intel.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <BN9PR11MB5370AED9C562F9DA75093557EC742@BN9PR11MB5370.namprd11.prod.outlook.com>
+In-Reply-To: <20240123054033.183114-1-junxiao.chang@intel.com>
 References: <BN9PR11MB5370AED9C562F9DA75093557EC742@BN9PR11MB5370.namprd11.prod.outlook.com>
+ <20240123054033.183114-1-junxiao.chang@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,17 +64,28 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-There are two serial port devices in one Intel ADL hardware, one is 8250 lpss, another is 8250 dw. Multiple uart devices are enumerated as ttyS0, ttyS4, ttyS5,... With 6.6.10 rt18 kernel, booting hangs in nbcon_release if console is enabled by appending "console=ttySx,115200n8" to kernel command line. According to nbcon author John's suggestion, lock flag is moved from console structure to uart_port. Another patch is to add uart_is_nbcon checking in nbcon_release. 
+Try to release nbcon only if current uart port is nbcon, as it does
+in nbcon_acquire.
 
-Junxiao Chang (2):
-  printk: nbcon: move locked_port flag to struct uart_port
-  printk: nbcon: check uart port is nbcon or not in nbcon_release
+Signed-off-by: Junxiao Chang <junxiao.chang@intel.com>
+---
+ kernel/printk/nbcon.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
- include/linux/console.h     |  2 --
- include/linux/serial_core.h |  1 +
- kernel/printk/nbcon.c       | 11 +++++++----
- 3 files changed, 8 insertions(+), 6 deletions(-)
-
+diff --git a/kernel/printk/nbcon.c b/kernel/printk/nbcon.c
+index b53d93585ee71..d8c6f30adde8b 100644
+--- a/kernel/printk/nbcon.c
++++ b/kernel/printk/nbcon.c
+@@ -1623,6 +1623,9 @@ void nbcon_release(struct uart_port *up)
+ 		.prio		= NBCON_PRIO_NORMAL,
+ 	};
+ 
++	if (!uart_is_nbcon(up))
++		return;
++
+ 	if (!up->nbcon_locked_port)
+ 		return;
+ 
 -- 
 2.34.1
 
