@@ -1,22 +1,22 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [217.72.192.74])
+Received: from mout.kundenserver.de (mout.kundenserver.de [217.72.192.75])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F8EC5FF16;
-	Tue, 23 Jan 2024 15:01:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD46760245;
+	Tue, 23 Jan 2024 15:01:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.75
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706022100; cv=none; b=Gi/XSYRJ6Oai7qaerdcPxQS4/EKnyARQzLFMCqpFFhMLi4hf6eDbdBPfW2IqoRYhSwJF/RT/89zat6gQ32UK/0y5gUsaZ/QQ488FWfkS38H17vpe/qDNtt/so//4Zm7/J4W1vTbb21mGQNOk2L8xkIF6lxeUb4qNpZ+tHbyVeKk=
+	t=1706022101; cv=none; b=uCMDAoEf9yenPE5n2/tAtL52NZ72fkXvDZHKJHZBsYH1fW29hRPttrZcnygOE06D8EQB15FKipkw9GW8aJyL0p0VnqBf6rLUf8K4tqKYR3Wl1v9Ec+ZV9L0XJUrpizQmFjqUATj/W+oqmj689D6SLtxfguAcCiZVjnxlEOjfj34=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706022100; c=relaxed/simple;
-	bh=Yce6LCNFDfufjjVUpemLuje6pflWFyy3AoidicX0E+4=;
+	s=arc-20240116; t=1706022101; c=relaxed/simple;
+	bh=LF/Zv34rP0TE5uHznHjOOjgOXrdxlJsgqn+hUNEhMoI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qJdv2tt0s8zMVypnggV0Gero2gdWaaA1tJ1NWRmHWbgdFXCw+odmHX3jfsjyUm20OIEpdmIn8D0CFdD/Mx+2TOZ8pRLzxLg+BLzt67pdPLa3mm9dtrk9n3YIyC0JG0u0Gb3ij7tDw0efMu3oKDeFBo9cJGMj1Iu8qPBt2Os5vMU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=valentinobst.de; spf=pass smtp.mailfrom=valentinobst.de; arc=none smtp.client-ip=217.72.192.74
+	 MIME-Version; b=SRxKshKnEsUOP07fnkcaf4ruzu14F0RU5PEuo+Y4QmZP5OTjUdXLMgB2Ip7NfP1F7X9DU9JDCoWifnbZoXVTNvtOJILXJodsiVcu8gLqyNRzzsj2i6NltI6ItS5+Ru80K6jeyKzXx0qlJcxQpKK81Xr27dqJsTmAesg//xX//2s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=valentinobst.de; spf=pass smtp.mailfrom=valentinobst.de; arc=none smtp.client-ip=217.72.192.75
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=valentinobst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=valentinobst.de
 Received: from localhost.localdomain ([95.223.130.98]) by
  mrelayeu.kundenserver.de (mreue107 [213.165.67.113]) with ESMTPSA (Nemesis)
- id 1MOiU5-1rk5bQ16kh-00QFYf; Tue, 23 Jan 2024 16:01:15 +0100
+ id 1MN4qp-1riRiR27oT-00J5cR; Tue, 23 Jan 2024 16:01:14 +0100
 From: Valentin Obst <kernel@valentinobst.de>
 To: Valentin Obst <fraunhofer@valentinobst.de>,
 	Miguel Ojeda <ojeda@kernel.org>,
@@ -26,9 +26,9 @@ Cc: rust-for-linux@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Trevor Gross <tmgross@umich.edu>,
 	Martin Rodriguez Reboredo <yakoyoku@gmail.com>
-Subject: [PATCH v2 05/12] rust: str: use `NUL` instead of 0 in doc comments
-Date: Tue, 23 Jan 2024 16:00:59 +0100
-Message-ID: <20240123150112.124084-6-kernel@valentinobst.de>
+Subject: [PATCH v2 03/12] rust: ioctl: end top-level module docs with full stop
+Date: Tue, 23 Jan 2024 16:00:57 +0100
+Message-ID: <20240123150112.124084-4-kernel@valentinobst.de>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240123150112.124084-1-kernel@valentinobst.de>
 References: <20240123150112.124084-1-kernel@valentinobst.de>
@@ -39,56 +39,48 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:7j0l2qt/TSnuqOa+GwuIUPP/dYlzl9VnPmzTtN8FvIpOyJQrZAt
- fUKSM+gBxFb7RA1W/WkXJRtapNg99rjwnXfxgMMhX+2dtcJ0UQvmMk8dbcp+q2L3en28pYf
- +vhxt+IbuZGsJ+k8gXb8w7x2swjGm10rHMU4JvmbtcO1LeD/xP/0XDcEraDijaVFLOMsDqi
- WMvfdWTBCdQU8BUSH1a5Q==
+X-Provags-ID: V03:K1:LS8V/WWp0eE5kmG//AQ+zgNdRy47Aut6zKjHjLeqmqCGTjC8pGr
+ suiRKm3UGQBBTU9SwUO80B+kkBoQo2RxOjHPRPO60Wb9RkOwZeIuCmwaOCEVXQ1U3HMthJh
+ NkLEG+4wUd9g1Y+Jq7IwOxx9yGZXYl0on+HSZD2lniaxZ2W0LmexF9+2ucDjIKwe3h7rWMr
+ joKZbs7exEFVR1g6XP/gQ==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:Yr+uxGb4l8k=;C+NMWIt5EaNZLPyAyx4zeSzwfLH
- fWU6XjGepXUvADbSHAkGWOMUT1LxkFgeMtm1FuMnW3vCA5jiNbnFyJ89wUJTqKHnIHascQ/x/
- Ks7FWqs7Ul8zyfSKx5wOXwL0BxgWgH36vE/PIsmWciuGB3VWKLu3qA9LHqCkbH3L3JReLxDn3
- C0reOZG0LwFFVsePCwwdcwpssBzProYYfweOz3cpPh5sqXno0u2NfE3AmXSxFTyaXLtwnc/73
- 094LMjN3SxfQwssIPrXoPaGvX8SspJCjLXCeFSBcmAcTGgTAsd2kU2BWg4oTBYvlehQQ1PhLJ
- VWjh/q0fs0ByyLJyH/8RDCb74GuwAeYdMFPxrC4nPXVfeoyfEoQcVLt6qPEcxqtKweNXP9QRG
- PerZdcYv3cj1eAeQ+znMxLhkxAGsMJVVn+7LZP9whD9VlaqujWmSAO6FLeK4N9XfQXsCNGONx
- mKOOhtqCP9bhMnzxsQQtnl29iI+/LBFAbBEjdRfxdaoUiJCuwL3/p1T6qQAjxgrvWGdnPzE7L
- xTEOlWPKGy0FI23dz/u3vEmH08uvJbBMZyu5joRrR7W0mwrBtQZIo1D6lS1ikvq1KHBuq4/cF
- YQX/GGOLnKfh7tQ+HzOf6m0i5VcW4bfswEPpiPBZ5rjXbJuJpWS6fn6I0aXj6aBiQoJshL8VE
- jbVxrSYTc9+gowf0NpMr68jBTK3pBP7a+ktAq8mDXRvkOu7cHzZ+sWjXpFVzGEOTHKAJXWQ7f
- JeVoqzfsJxKvrVY0GKhJqJewCpGOsUgjzlqp4SeRXiGZn4QA9r8VQN/eE4VVezKt+Lt7P6bet
- 4MuyRdmaAGsyuezzxo3FU8YgsMZizniMauJFrRZA90yBTK8PsZFSrs2e83x1r0Zn7UV+d4UUs
- UjKJIOVDL2wFyEiFkgpbUUMWa6h4v/vyPaXk=
+UI-OutboundReport: notjunk:1;M01:P0:IVt1gdfbCUw=;D7Cdf2hPORWC49VRD1JKimfhVyw
+ XdoPcv/c627eVnruDfSUv/Zkbi/3UM+OxLOe6AUXPx8zuBBcgR2cKx9fcGZhRM1BajAozi21i
+ c5c5lc7GYW237lwlosyeaBx5iz+tEM39wuR+gLBtUTiUHgOK56EDzUO+Hc5q9AaPWZ1OAMv6j
+ gdw5FDLDP5rmYhMvwS2uOgfeaVzF9whg006GGRJzDq1OnkVN2Fg7JF4rkTeXgHbAo+yh8BhoH
+ p40f0noPJf48EbwYnX3c25wA0U+Dp7f3JTErg1+ChbCh1bTa1TzHRPd2HRxZrx0yJ72gGBJy+
+ NTG6znYp3ehfBq60RXWp8IlDvGW63YZKkrWT2+YAoSIrdKczo2/PPgZZOIZQQhvQMvAZ7SVtO
+ Xfnochw1vd+6/bDw/eJuNK+1AT0aTPcYXmQ9RivGLcE0OdTqlrRmzkfI/8613thK+ssFvwWkr
+ MfozngybxNS8+wMEKkW5gWSALd3e96XYs+58dcraU/VNULJyVpzUA6EOvPzpV8SNF5GfBSzmv
+ kCu6pu5yyHvWppZ3MkA4C+qkbjYTjmiuoweeXN5N6n3nqmTMTT32uR5eKkatYrM9gTLyoFmC6
+ /x7rj4id2dRW2s9x8F4S1h7TJzKkx0IqmOJ0/h36hxEPjDkuXA9wl9kwbQh+aWODs7mPztT/X
+ TbwlHpGp46g4huZGXvCzMJUmnjbwC83TtZfBd+2IRjyHBtmMoA28qaPGIcMXL0ochSlNfdhSI
+ vsILYt/eOZwJ3eZv4wGknIN7PGTpRiPe8q715Xfap/5EbhPre0Cbj57YALgN4c9y9Cq8J1Qel
+ 2bDfpMwe4/9rQX+lvWj9k+Th8do/2Bf7++wFQyfGwD9q240YpfLoRiS5iqicR6zfEs5V5f2ls
+ x4chgwrcxUFR0gQ==
 
-Throughout the module, bytes with the value zero are referred to as
-`NUL` bytes. Adapt the only two outliers.
+Every other module ends its first line of documentation with a full
+stop. Adapt the only outlier.
 
 Signed-off-by: Valentin Obst <kernel@valentinobst.de>
 Reviewed-by: Trevor Gross <tmgross@umich.edu>
 Reviewed-by: Martin Rodriguez Reboredo <yakoyoku@gmail.com>
 ---
- rust/kernel/str.rs | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ rust/kernel/ioctl.rs | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/rust/kernel/str.rs b/rust/kernel/str.rs
-index 0a8569594fc3..843ffeec9b3e 100644
---- a/rust/kernel/str.rs
-+++ b/rust/kernel/str.rs
-@@ -149,13 +149,13 @@ pub const fn as_char_ptr(&self) -> *const core::ffi::c_char {
-         self.0.as_ptr() as _
-     }
+diff --git a/rust/kernel/ioctl.rs b/rust/kernel/ioctl.rs
+index 59050e5f5a5a..5987ad6d38a7 100644
+--- a/rust/kernel/ioctl.rs
++++ b/rust/kernel/ioctl.rs
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
  
--    /// Convert the string to a byte slice without the trailing 0 byte.
-+    /// Convert the string to a byte slice without the trailing `NUL` byte.
-     #[inline]
-     pub fn as_bytes(&self) -> &[u8] {
-         &self.0[..self.len()]
-     }
+-//! ioctl() number definitions
++//! ioctl() number definitions.
+ //!
+ //! C header: [`include/asm-generic/ioctl.h`](srctree/include/asm-generic/ioctl.h)
  
--    /// Convert the string to a byte slice containing the trailing 0 byte.
-+    /// Convert the string to a byte slice containing the trailing `NUL` byte.
-     #[inline]
-     pub const fn as_bytes_with_nul(&self) -> &[u8] {
-         &self.0
 -- 
 2.43.0
 
