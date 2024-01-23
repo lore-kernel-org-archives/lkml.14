@@ -1,102 +1,124 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24A19823D9;
-	Tue, 23 Jan 2024 16:47:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EA79823C4
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 16:47:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.134.136.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706028442; cv=none; b=H+jj4QmuPm/lyTHUlr1KCXTEw01gQgYO9+Mfc3nrB7IPI8J2JqtwqEZLTldgoklqqorFAqy35EQMqShlsuL4PslueYYk9KK1kwARRSoj/b73T/Ppc7GCDaib4BtWuL1m2uvHKQ5J0uqvjfbBQuhKuZbp9yxKBWAgWF6WJRSVXVs=
+	t=1706028442; cv=none; b=pdT3b2OZpr8Eji7IDgBjN3V1JtswQK/xxFxaE9zVR8ISepmoH0M+YvQpnr3pfLyhe+7dN1pwEEWv48TS0t7S3Wcz22FbXvlytNDoRLs5tBc+DaRmUv3mDyaU0m7qyfBQ9AduRjWI72LMo6hR8MWyCzRyeZKSEAjLTzz2Uudcnd8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1706028442; c=relaxed/simple;
-	bh=99UGYF5IBxp9JpIFxVvetsxGYd/JCchgwfyQMLrGxD0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=c4UzSwpEI7C3FqpbX+ROpyvtVxq63HIg10JPqxCNV6Q5mIc3YKI/oKfozmBvbh4iLB/9eCw/5EdZ513JkBkwy0f9R27j6HA0o0z9exGrXUU88KJtD6AGmmOJtpeNHfxJLeiRRLYYz5GQ3ITUZd1XX8f1zoYlLFPeEfMaJJLjQo8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ozepGXdm; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=IYABCsLS; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	bh=y2H4liOuLMXWRjrojYIkk1z0/acO1y/+NRSlJUxLT6o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SsXGl0gMs7EZhv/hqYEMT8F4fpA2Ye52IWY0Y/vyBTn2ri9kPnxPYcrx/4/P4eqgZHl3tfeTVyIYPPyl7qKtLTzYJ0kdJpI7sgsmzffwhBSkV4Ay4x6f+F3+0rwguqtMn7RP3HZq2T/t71Aun9XJpP7nNZ13NJTD3XmsmK/LGGk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Q/Wshek2; arc=none smtp.client-ip=134.134.136.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ozepGXdm";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="IYABCsLS"
-From: Anna-Maria Behnsen <anna-maria@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1706028437;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=khMougoG0mvpU1Mds2+gCdLAlfzbFK/BUtDBN3tuvqo=;
-	b=ozepGXdmD3hMx/BF8U/4Jdt4uD6N1cdvJPbTdgsyFVq6VqguU9Seefjg2HIF06aWWXCbT0
-	+USq95oKStk3bCFvnDyUGFcy2i72mTkyaGyscol9vZeEQAFjLVn3vvXCW7iIaQdFSpfPBD
-	BnP8nDKBWNBp4lg3T++s07+/VkhsCfDCM+oLCTO211JEDncImFRmKNf1qrRnFghxgSon/t
-	QdtNRsW+4/NvmM81NlNZlCHSj+RMqhMzu7JIO2rX0Hyr8AX7+e1Op+izfMiOgI4QcxjbHK
-	vWcM2JBEOOCPnGleR7XCvZX1gF114jgScsfKua8aL2qitArsNoSyJfdVsBL4Sw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1706028437;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=khMougoG0mvpU1Mds2+gCdLAlfzbFK/BUtDBN3tuvqo=;
-	b=IYABCsLSREXQ5FfgJQ4fye4JG2wKe+r0VkozoE+L4pxCtwZuezSYuejwBoBbCyhIxuyyGm
-	hzGgIBDrW6/4QfCA==
-To: linux-kernel@vger.kernel.org
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	John Stultz <jstultz@google.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Clemens Ladisch <clemens@ladisch.de>,
-	linux-doc@vger.kernel.org,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>
-Subject: [PATCH 5/8] jiffies: Transform comment about time_* functions into DOC block
-Date: Tue, 23 Jan 2024 17:46:59 +0100
-Message-Id: <20240123164702.55612-6-anna-maria@linutronix.de>
-In-Reply-To: <20240123164702.55612-1-anna-maria@linutronix.de>
-References: <20240123164702.55612-1-anna-maria@linutronix.de>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Q/Wshek2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706028440; x=1737564440;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=y2H4liOuLMXWRjrojYIkk1z0/acO1y/+NRSlJUxLT6o=;
+  b=Q/Wshek2Uy7YgKd8lgvyLgWffsA2Fh/4009RDioISYw1q4WU/g6wFlZh
+   grZe4rGgIZINommUif0BzwIyqwc+tFKPMiUxsp4atklT2+wwxWf9foYFT
+   OW5qoixhHFBOf7a1rnDXUoOaYCZotCHikOvm65jnTuzaFgWsmRRZ4DDKn
+   grTzWeBuQf0wPp1XSY9WfuZDeGNLF3BRPhkcWJP5frLaiR4M4V/7oT6gJ
+   2Ua9nFNIMZCLaaDdjH9ot1uxSFjBY3gsmlX5e216VghGtkxuWK0Oifcku
+   /MIkAAUe+/ygYCoNbvuycI//e8YXVLfmZwMsy2NfxcXbNz+Zd3yVQpjsr
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="391999549"
+X-IronPort-AV: E=Sophos;i="6.05,214,1701158400"; 
+   d="scan'208";a="391999549"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2024 08:47:09 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="959189334"
+X-IronPort-AV: E=Sophos;i="6.05,214,1701158400"; 
+   d="scan'208";a="959189334"
+Received: from gsrivast-mobl.amr.corp.intel.com (HELO [10.212.204.58]) ([10.212.204.58])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2024 08:47:09 -0800
+Message-ID: <c5c56248-4831-4a0c-91ee-c9041dd69a7e@intel.com>
+Date: Tue, 23 Jan 2024 08:47:08 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] x86/mm: Simplify redundant overlap calculation
+Content-Language: en-US
+To: Dave Hansen <dave.hansen@linux.intel.com>, linux-kernel@vger.kernel.org
+Cc: David Binderman <dcb314@hotmail.com>, Andy Lutomirski <luto@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ x86@kernel.org
+References: <20240123163623.1342917-1-dave.hansen@linux.intel.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <20240123163623.1342917-1-dave.hansen@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-This general note about time_* functions is also useful to be available in
-kernel documentation. Therefore transform it into a kernel-doc DOC block
-with proper formatting.
+On 1/23/24 08:36, Dave Hansen wrote:
+> There have been a couple of reports that the two sides of the
+> overlaps() calculation are redundant.  I spent way too much time
+> looking at this, but I became convinced that they are redundant
+> when a little test program of mine produced identical disassembly
+> for both versions of the check.
+> 
+> Remove the second condition.  It is exactly the same as the first.
+> 
+> Fixes: 91ee8f5c1f50 ("x86/mm/cpa: Allow range check for static protections")
+> Reported-by: David Binderman <dcb314@hotmail.com>
 
-Signed-off-by: Anna-Maria Behnsen <anna-maria@linutronix.de>
----
- include/linux/jiffies.h | 15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
+Gah, that one escaped a moment too soon:
 
-diff --git a/include/linux/jiffies.h b/include/linux/jiffies.h
-index e0ae2a43e0eb..d9f1435a5a13 100644
---- a/include/linux/jiffies.h
-+++ b/include/linux/jiffies.h
-@@ -102,12 +102,15 @@ static inline u64 get_jiffies_64(void)
- }
- #endif
- 
--/*
-- *	These inlines deal with timer wrapping correctly. You are
-- *	strongly encouraged to use them:
-- *	1. Because people otherwise forget
-- *	2. Because if the timer wrap changes in future you won't have to
-- *	   alter your driver code.
-+/**
-+ * DOC: General information about time_* inlines
-+ *
-+ * These inlines deal with timer wrapping correctly. You are strongly encouraged
-+ * to use them:
-+ *
-+ * #. Because people otherwise forget
-+ * #. Because if the timer wrap changes in future you won't have to alter your
-+ *    driver code.
-  */
- 
- /**
--- 
-2.39.2
+Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
 
+... obviously
