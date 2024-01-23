@@ -1,69 +1,71 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D61ED13B79C
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7F1E13B795
 	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 00:46:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705970764; cv=none; b=bfwqiSVnFv9sHSg8+Tp5dArjETVpRN5+LuKq1NrALfIhW8oledkKI7G1BQjWL++SOoTxy+wGg6R7J0et4/kczZO0qnHwCitWPI4A8bhSQ5kn/F+HON0XHPANVn5tDm5NwLhw613u47D0sFaqlaKpEOvtlcyGVWmjaNYvR3jihS4=
+	t=1705970764; cv=none; b=sQW3k3XxSXPkyQL4j3b68SNQA2cxgoA7WP4Yx7ygWDD+KvMTUQ85RNH+nRV/+AzMuRRNqXiLMSBLWhz3hy8slbUM8clBm2YV1FOh3JgDDR0VywBoSkrbbUp9geVyz3UQRl+IfLOPs4HraOJykwlSYjEtgHkYo3vv/IBz5QiZW30=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1705970764; c=relaxed/simple;
-	bh=2wCmjbrcMRqWZC1sS4cD9WCoJa0FFJk9am0EA3arqac=;
+	bh=rhiNkfwcsBY8pN0Aj3OX3M7epOQG7vcAhg9hdXLwAek=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=rVEw2X4kWVms0frjo3I3BIG+QXvjzZr2excYzSsL/p9n3VPCpgpFaQ9sh/dYXddFmseuLI/GV/AOfvq9do2kieURdTNvBBkqN2nJ/6ZAX0gzTmfYeCGu7/EAFfNT5rx9MNELCPaxnHXq5IqZSlnQGFGtDaCREKebv2Dx/s1YoIQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=KCUf8pvh; arc=none smtp.client-ip=209.85.210.178
+	 MIME-Version; b=f3TuJ66tW2b8kFepQCzMsTN738jHOcurAco8WLqWUd5k3KVbVrrK/LKW7Z7/dd6VulL8FUC2mD93Tor2K1IDgEcWRKUPBzq8Ap4krtQdcisCNTbhDtNHbea7TAIhi7VsTtJAR684QYQZlHpnrTYY6zqRAF3JKQyLyL26GtzmeCk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=j8KUJJgt; arc=none smtp.client-ip=209.85.210.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KCUf8pvh"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-6dbd146c76cso1191894b3a.0
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="j8KUJJgt"
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-6dc1f02090fso454403b3a.0
         for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 16:46:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google; t=1705970762; x=1706575562; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=SlB1so7iSYMMc+zMA5tTSobm4T+1cPSbyb1VsiUjWnA=;
-        b=KCUf8pvhW5lDoA62Dg0ho5AAF7eES6N0E3wggigmWcLD4gBwfdHbAYU1jnQ/blWyf2
-         gWy5xMKOy5dVNn41i1esbHP54VLr83dMOdMVv/vVGXE+dMib14/gz1MrdDASkEeqXoTP
-         +e/1a6mSkwYNbTEdDngbGpncZDCe941m2vQNQ=
+        bh=koLuWwEc6R93KvA47iKWZn4p87NyejoVGKhwRpq6uhs=;
+        b=j8KUJJgt1OC46MRP1rTSCjb3ikE3ot4TXw9Tukg8wx7H+83b6ohP4LHJ9UNddjKRl2
+         fSHxXLpJPJivZGL1FttjKFG88OY1GIfXdbJmN3+4oYrwPx/KuMNiKYcL0usJSbXDhAA/
+         pNz4tVDi9c8HBow8e9NE5hiv1GNBnowyNm78Y=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1705970762; x=1706575562;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=SlB1so7iSYMMc+zMA5tTSobm4T+1cPSbyb1VsiUjWnA=;
-        b=XovwYxR4XH9rpZSqWZMcWb1bk6715gRctthHpDjljYyg1WJS3tkUlPva88JrLE9i3k
-         U0yFK4/bK2nHLCLfQasJEsEjFaJS5dVp7Op5qpE21ySYXxOfw70UF9qYmpp0+coaLvdj
-         Kxw3OagbNJ0/Aq4fuTCrPtqv0W9UDkLbo+Tpz9GBK8QZKapozz9dFYxiNkel7T1ahUZn
-         1yEktWfD5Nt8exFStave8Vk0tGQlgcFKQDWFNMI1eXH+fnDOetHHZgxFMvjdsfM3HtfE
-         T6cGUrqWBxnbAVfxWhbmsq/udajySJ7Q0VTL1ZDrBHUJ8aKNrsxNKxI+SpT/9HxACWl3
-         Wk3w==
-X-Gm-Message-State: AOJu0YyOXKpD6UZImCE8trS4uEL+0+W9rYdy3asyILBhbQsVIwjhKJvd
-	bNrvm68oDHRLZ3iDkDZAi1b7pjElMkc5o3DxaAbKAs6sueREb3gNtJcWlGW6wQ==
-X-Google-Smtp-Source: AGHT+IGLP4BXrSpgwzgnQ7nt1vcN3XnbCRvJoUd/AxaYE/OKu5/w3uVCiBcdhGtFLCuc5GzcLIDIDA==
-X-Received: by 2002:a62:5342:0:b0:6da:dc40:8a20 with SMTP id h63-20020a625342000000b006dadc408a20mr2301791pfb.33.1705970762317;
-        Mon, 22 Jan 2024 16:46:02 -0800 (PST)
+        bh=koLuWwEc6R93KvA47iKWZn4p87NyejoVGKhwRpq6uhs=;
+        b=nH4Dzre987V+3928LlL46RUiQisZAI+gfZI7yd7STp0lKp0wDoMswklzAgqJw3wJjE
+         fCOX22reNw+mAypaLcm0bjeGMmmI9y36lCDIGWkkRsmrVGRVtkCIHh3849SBw0mbxBMk
+         vVAvFyX9VAtIs0cNkGRNy08tXBF2/HSZquGyhaPoyV5mBv2+XtGQ0GpusAQzVCJkK/hM
+         +BHP9CwQviVifDAgxQvLDPlkiPcrsJSKxnbmn8P+W7+rrW7hS5H77I8jGvB/mp++9FQU
+         sHfFEk+MR53hxX3XR2rN4xJK9f97ociJXY1Wfk3nPVH8mDlFFbXhsUUPzRBmm7fpeZfD
+         JJHA==
+X-Gm-Message-State: AOJu0Yy52FtyxS7Q88B0Zcaazx8sgzipDw+RqgdJjlysUeyVWvpv/JFw
+	YzP7rM3+gG0NSxEps8Xr9h9M4iJ5B6s37zlGsdX+P4mCUKfMdYV+sRUONzmrjA==
+X-Google-Smtp-Source: AGHT+IHnnbXv7LLoQQuo5IERPmQ1aDbHfWs5esMUO9nvMTULeZpbAQsvNcJD7PAXZFLGmSXlcp3hjA==
+X-Received: by 2002:a05:6a00:1385:b0:6d9:bf50:196e with SMTP id t5-20020a056a00138500b006d9bf50196emr7531070pfg.19.1705970761998;
+        Mon, 22 Jan 2024 16:46:01 -0800 (PST)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id ei5-20020a056a0080c500b006d9c1fb00c3sm10312922pfb.9.2024.01.22.16.45.55
+        by smtp.gmail.com with ESMTPSA id r5-20020aa78b85000000b006dbca81cc36sm5095359pfd.188.2024.01.22.16.45.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Mon, 22 Jan 2024 16:45:57 -0800 (PST)
 From: Kees Cook <keescook@chromium.org>
 To: linux-hardening@vger.kernel.org
 Cc: Kees Cook <keescook@chromium.org>,
-	Will Deacon <will@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	linux-arm-kernel@lists.infradead.org,
+	Santosh Shilimkar <santosh.shilimkar@oracle.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org,
+	linux-rdma@vger.kernel.org,
+	rds-devel@oss.oracle.com,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
 	Bill Wendling <morbo@google.com>,
 	Justin Stitt <justinstitt@google.com>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 11/82] arm64: atomics: lse: Silence intentional wrapping addition
-Date: Mon, 22 Jan 2024 16:26:46 -0800
-Message-Id: <20240123002814.1396804-11-keescook@chromium.org>
+Subject: [PATCH 29/82] rds: Refactor intentional wrap-around calculation
+Date: Mon, 22 Jan 2024 16:27:04 -0800
+Message-Id: <20240123002814.1396804-29-keescook@chromium.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240122235208.work.748-kees@kernel.org>
 References: <20240122235208.work.748-kees@kernel.org>
@@ -73,72 +75,89 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1927; i=keescook@chromium.org;
- h=from:subject; bh=2wCmjbrcMRqWZC1sS4cD9WCoJa0FFJk9am0EA3arqac=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlrwgFuIsRbthegybO8MY9YK3hU2NvgRq1O2YBO
- IjKE+N7ASyJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZa8IBQAKCRCJcvTf3G3A
- JmSfD/4g1+DgHXHG72Hbmbb46rOcoRFhxRGXi7T5E+bZnxGlykSxPf0G1ANroXNNRfIaH6+o5qK
- 35TXw+v7btBElrd4MhK4ZbF8bSpQvVhskXDNsG57NNiroN46LsPQA8rEzRHYhG5Eyc38fTe127A
- 3uUz42N+LY2siqQGD2Ge2b4r0+8aGX/TL8kV/lNpzt3w6jnX9r7Z8vBrneYHiRSnfednC+Av3Pf
- RyCs0/HKJZcTjfnDEx1k3P3Fd18p2TW908PSpyBk06V72hx9SUZgSJ9SGH464OCpkN0xwipXw9+
- Nw+92WpGwHyD3dXcrFGs3E6SKlw14ZCPEccJAR+5CUKhOue2w42127aNFW4RDhqyYMWStyDHkCc
- 8jLmwwWfs099pHTnMi6MvnMOljVyfXlkw8GdYMs2Lq/TXUAOMRpCTNnB4jgKK82LyeprXA1sOi2
- BVQVkAgQI0bQryBcaVLgoT3sRUmxuBKf/augjFVrSWSBXy2zdC0d0xxmMq4bCDtGucY1l/2xra7
- zAxQ6sOmpKKjLBiTo3y5+k90sf659nAJj8+4nIVWi+zKbtw/iOjer+EkTgQepBrzv/sgtu9EGTf
- KxBXUYWlM3yIUrnzexGV+3Ismg32ENElWW6xv1XZQUlvJr5IrgGwdbNbkzgTYRGZHPrDZjvzgWR m5rc8KKgBXxVe7A==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2769; i=keescook@chromium.org;
+ h=from:subject; bh=rhiNkfwcsBY8pN0Aj3OX3M7epOQG7vcAhg9hdXLwAek=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlrwgHOI22byaB9aq3JAA27hbl1bc2MNGKba4Qk
+ /4yGoiLhCWJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZa8IBwAKCRCJcvTf3G3A
+ JrEqD/9OlGCVGN2v0bgu7DOOkBDw0dRbBn44WXpE64TTI2iaigc2NjR7rlxLD88o/toMj5HP2e8
+ +KNhHHhwpn/78Xvy5Fu7OSRDC9Srz2FSdC3GIXCLEy3jHqWqKwpl8s89sAkiyFxj+oaSSd2hp1Z
+ yyDFk5tnp4WFMby/w16JX9RJaUhf0Pac+SlpfX6LIhCtEDu16Ym3Zfy8+niKDzyKzgFnik3iBMB
+ VlX0qsJgWtq/F5TyYJsdRkzQJiC6uqDjRDOmIrgGbtONP4N3x7eTO2RPGiq6W6sD6wqCCTfno+I
+ TOyJBsebkoEC/gOponWRkhVaYuIKk76Rd+mpLbYKMeJ9sXs4c3jKafZerrydOpptCgnp1tAjfY0
+ ubJ/wJ50cALOah3qX7E1BFVlS8g/8Cqst3G86qmJ+jErESB4X+ju8cl4kzQJrDdmKNVd/8RAdsb
+ wNPuvNZwa3p4pqL+xtVz52yuC0AAOm1Ac9cbprphOD3okeaOY4R3ObpX9GV0e/990fYjXWl4bXk
+ aTpyUseDCo88l0yQhgdSuHpJyQLFga2P8uROjArZRuSEBD9HUQ3LrxEC/e8Ns++bdkQ4Yu2PgDo
+ Dty8RA9kx6885engKkChV3U1u51xbiNowBg4oJDE5G4q+gYIHu+fcsm6+5uoTqYHDGNdkR/t2tx b/RZj59k1eBK/EQ==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
-Annotate atomic_add_return() and atomic_sub_return() to avoid signed
-overflow instrumentation. They are expected to wrap around.
+In an effort to separate intentional arithmetic wrap-around from
+unexpected wrap-around, we need to refactor places that depend on this
+kind of math. One of the most common code patterns of this is:
 
-Cc: Will Deacon <will@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Boqun Feng <boqun.feng@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org
+	VAR + value < VAR
+
+Notably, this is considered "undefined behavior" for signed and pointer
+types, which the kernel works around by using the -fno-strict-overflow
+option in the build[1] (which used to just be -fwrapv). Regardless, we
+want to get the kernel source to the position where we can meaningfully
+instrument arithmetic wrap-around conditions and catch them when they
+are unexpected, regardless of whether they are signed[2], unsigned[3],
+or pointer[4] types.
+
+Refactor open-coded unsigned wrap-around addition test to use
+check_add_overflow(), retaining the result for later usage (which removes
+the redundant open-coded addition). This paves the way to enabling the
+unsigned wrap-around sanitizer[2] in the future.
+
+Link: https://git.kernel.org/linus/68df3755e383e6fecf2354a67b08f92f18536594 [1]
+Link: https://github.com/KSPP/linux/issues/26 [2]
+Link: https://github.com/KSPP/linux/issues/27 [3]
+Link: https://github.com/KSPP/linux/issues/344 [4]
+Cc: Santosh Shilimkar <santosh.shilimkar@oracle.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: Paolo Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org
+Cc: linux-rdma@vger.kernel.org
+Cc: rds-devel@oss.oracle.com
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- arch/arm64/include/asm/atomic_lse.h | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ net/rds/info.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/include/asm/atomic_lse.h b/arch/arm64/include/asm/atomic_lse.h
-index 87f568a94e55..30572458d702 100644
---- a/arch/arm64/include/asm/atomic_lse.h
-+++ b/arch/arm64/include/asm/atomic_lse.h
-@@ -79,13 +79,13 @@ ATOMIC_FETCH_OP_SUB(        )
- #undef ATOMIC_FETCH_OP_SUB
+diff --git a/net/rds/info.c b/net/rds/info.c
+index b6b46a8214a0..87b35d07ce04 100644
+--- a/net/rds/info.c
++++ b/net/rds/info.c
+@@ -163,6 +163,7 @@ int rds_info_getsockopt(struct socket *sock, int optname, char __user *optval,
+ 	unsigned long nr_pages = 0;
+ 	unsigned long start;
+ 	rds_info_func func;
++	unsigned long sum;
+ 	struct page **pages = NULL;
+ 	int ret;
+ 	int len;
+@@ -175,7 +176,8 @@ int rds_info_getsockopt(struct socket *sock, int optname, char __user *optval,
  
- #define ATOMIC_OP_ADD_SUB_RETURN(name)					\
--static __always_inline int						\
-+static __always_inline __signed_wrap int				\
- __lse_atomic_add_return##name(int i, atomic_t *v)			\
- {									\
- 	return __lse_atomic_fetch_add##name(i, v) + i;			\
- }									\
- 									\
--static __always_inline int						\
-+static __always_inline __signed_wrap int				\
- __lse_atomic_sub_return##name(int i, atomic_t *v)			\
- {									\
- 	return __lse_atomic_fetch_sub(i, v) - i;			\
-@@ -186,13 +186,13 @@ ATOMIC64_FETCH_OP_SUB(        )
- #undef ATOMIC64_FETCH_OP_SUB
+ 	/* check for all kinds of wrapping and the like */
+ 	start = (unsigned long)optval;
+-	if (len < 0 || len > INT_MAX - PAGE_SIZE + 1 || start + len < start) {
++	if (len < 0 || len > INT_MAX - PAGE_SIZE + 1 ||
++	    check_add_overflow(start, len, &sum)) {
+ 		ret = -EINVAL;
+ 		goto out;
+ 	}
+@@ -184,7 +186,7 @@ int rds_info_getsockopt(struct socket *sock, int optname, char __user *optval,
+ 	if (len == 0)
+ 		goto call_func;
  
- #define ATOMIC64_OP_ADD_SUB_RETURN(name)				\
--static __always_inline long						\
-+static __always_inline __signed_wrap long				\
- __lse_atomic64_add_return##name(s64 i, atomic64_t *v)			\
- {									\
- 	return __lse_atomic64_fetch_add##name(i, v) + i;		\
- }									\
- 									\
--static __always_inline long						\
-+static __always_inline __signed_wrap long				\
- __lse_atomic64_sub_return##name(s64 i, atomic64_t *v)			\
- {									\
- 	return __lse_atomic64_fetch_sub##name(i, v) - i;		\
+-	nr_pages = (PAGE_ALIGN(start + len) - (start & PAGE_MASK))
++	nr_pages = (PAGE_ALIGN(sum) - (start & PAGE_MASK))
+ 			>> PAGE_SHIFT;
+ 
+ 	pages = kmalloc_array(nr_pages, sizeof(struct page *), GFP_KERNEL);
 -- 
 2.34.1
 
