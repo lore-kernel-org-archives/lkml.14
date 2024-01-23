@@ -1,82 +1,157 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54F9760DD3;
-	Tue, 23 Jan 2024 15:55:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 545DF60BA7
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 15:55:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706025342; cv=none; b=NL1vBYHN/jrh0SycgAyeRHrnUCV7bGTpQIXTagvxJDl/rpcTiOjdPd2H1eZ5/Rk0O7Ln9dDnqwuJxbkBaZo5O2L1WP/jU1qrnGmkOxj5Y+NHnhkXJNbDGWTfO6g7eeGBq/tEPamJHadztQsKMRdttvo9AmnXxt8uljGJrcODugA=
+	t=1706025348; cv=none; b=h4ayE4WxrzVoDm6ICh1APx0mOi2f5oTpXAuQC/0tanGk2kMYfAOxUqdtqaiZQYbJrtpgHNBlnMmuDtbOKlmpnT+OaBFlHFXITaO87XDrGUcyXkL/4jaqX33DpBbMGbza8v4G/QomD2eUfIWWpxhPVbgfG0usNKG09kuD+PfxUbs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706025342; c=relaxed/simple;
-	bh=NFLNtcapmW/YVQ3O4S5u5bbAiQc4MNdaz8if2KZaVwM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LgYNyc7MIk/au7IxqT0iJFJJQgZvEdOsrKVIN4iLIpWFWzYBEC8kN7LWSYcIV3aPpijmaE//k+Hux5KbUNKA9SE+sViZQB1uuRqlvNvxxRg4a0999S1+HWXufMEFHGdikKJD5Arf7QCS+pgQbPMGqDruQKmyi4C4nAzM4kvpy88=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sK2s7w+E; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706025348; c=relaxed/simple;
+	bh=szUZSkb5KkY1XXTL2ydXpMJbCb8a3hnlpzYn5FWYKKA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=kmxm+wo/ghL9heSk0d3XrO2KuMuHLLEhrsWSjPMANPDzanky4YS7MP+wyNS/eHudndLsufopYr1wCibqSsYTqJGYNPs+B4+nV9OUmq8RUe15QE3WvlQ4ZoxOFo797RpRQkt0zfT5+GOmTXDoFIbkBUTZSVl41Zd+lP/g/Y+yRto=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SOUCCHvn; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sK2s7w+E"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5A7DC433F1;
-	Tue, 23 Jan 2024 15:55:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706025341;
-	bh=NFLNtcapmW/YVQ3O4S5u5bbAiQc4MNdaz8if2KZaVwM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=sK2s7w+EVEFCJsL3VumftRDWeQGdrwQUfSDayXZdGOCCTlSCOS4md24HO6CeU/0xa
-	 kQWVD2LLuxkgm7wL68DMt5zyxeeC8qsn9Uv0P7jTztJqSQtGI1g0jyquSWkvW987hR
-	 jQE8negp8TP6ywxmMdwppo78rMpOQ2CF+Q2maIn6odhrQK+5klr4ICevPGYI+I0elB
-	 YjvGnk5CxvcMwejATzDn5aG+ii6BlwfhWw5AqnKjPArzBBs561dSLfzW/cjy8ida+S
-	 YOzSgX405HbIagbXVoislBDtM7xW0zfU2NPh4w2B1Lgm9IPuiw7dZm1PShRCYOKr4k
-	 H+NrlTwdT6ryA==
-From: Christian Brauner <brauner@kernel.org>
-To: wenyang.linux@foxmail.com
-Cc: Christian Brauner <brauner@kernel.org>,
-	Christoph Hellwig <hch@lst.de>,
-	Dylan Yudaken <dylany@fb.com>,
-	David Woodhouse <dwmw@amazon.co.uk>,
-	Matthew Wilcox <willy@infradead.org>,
-	Eric Biggers <ebiggers@google.com>,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Jens Axboe <axboe@kernel.dk>,
-	Alexander Viro <viro@zeniv.linux.org.uk>
-Subject: Re: [PATCH v3] eventfd: move 'eventfd-count' printing out of spinlock
-Date: Tue, 23 Jan 2024 16:55:15 +0100
-Message-ID: <20240123-rinnsal-entbunden-bfdb1dedb29d@brauner>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <tencent_B0B3D2BD9861FD009E03AB18A81783322709@qq.com>
-References: <tencent_B0B3D2BD9861FD009E03AB18A81783322709@qq.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SOUCCHvn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1706025345;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=sCueOm7+YIV1uypCrFlqek9GTnabxDJ4c738N9GAnY4=;
+	b=SOUCCHvnNApRSjGpa5hFybVpP72OZck3TbeRZlMRy0hV2tttr0D6g1JupZjqwPgozqRcEk
+	9KBjuO6lxFozUCmJ0wHiNI2ZFTGbPq5vqqxy+n2fMa6YDrarCXjGqAUCA2y0OD+ue5J3SA
+	EMOvTlxceVglfTPKHp97zebg5FqXI30=
+Received: from mail-io1-f72.google.com (mail-io1-f72.google.com
+ [209.85.166.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-86-7_aABfckN5myqxEldXUZsw-1; Tue, 23 Jan 2024 10:55:32 -0500
+X-MC-Unique: 7_aABfckN5myqxEldXUZsw-1
+Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-7bf7e0c973eso379256339f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 07:55:24 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706025323; x=1706630123;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=sCueOm7+YIV1uypCrFlqek9GTnabxDJ4c738N9GAnY4=;
+        b=KbFi0hCGzgFmF6aA82v7tKKXTQGnAcoGr4VpaMmzVCVxkaBpl7zp+vcEqWrrOMl79+
+         PUcb5tXWXSV3CBA/unO+OPbKvvTE+hDKFzzDuU94TzxsbV2gOYiBhE0UQOnAOPT5p1yw
+         LvMb/hzM2zwTrhMieqKgTVwERw+ugI5uLOMlgKESmjqi0NYCft6PAv3RT0miuBlrtq7R
+         qLDK1L0yyDQREkGBOtiMhGfhaZNdCflBAQUL1xHZ+1qFYrzOIQK/ek9qyZmzsgzWMojT
+         sG0k7OPoMBaKxDwG2fnU3BSGMpAlHrxFtruj4ezFtgZ8JVP88ZWS9L4EDrG7n1vdVZC7
+         6ABw==
+X-Gm-Message-State: AOJu0YyYo17hmIcrlFttnE5GNgD86pfKRDA51VE0fEXQR8U65EsGGVTx
+	1WzEXrL5MPFYas5Gfw8JX03XFziqjILzahVCl01DXGGrZ41nJJVPwI83546gKrWKUssAc46+6fd
+	FnpsqabYpbobiAzGRXBO6XC8vWAIZo1rhIfne08ibZ9DCC5fcWQVuJ98Xh0XWsA==
+X-Received: by 2002:a6b:6515:0:b0:7bf:705c:f9cd with SMTP id z21-20020a6b6515000000b007bf705cf9cdmr99561iob.38.1706025323695;
+        Tue, 23 Jan 2024 07:55:23 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IH38iCjX+AEd64T4UT/2KKdkE95022H/qcfVu2tE/vKCgVvGn5gfiViiWPx9v0cG2g2zKjB3g==
+X-Received: by 2002:a6b:6515:0:b0:7bf:705c:f9cd with SMTP id z21-20020a6b6515000000b007bf705cf9cdmr99549iob.38.1706025323389;
+        Tue, 23 Jan 2024 07:55:23 -0800 (PST)
+Received: from redhat.com ([38.15.36.11])
+        by smtp.gmail.com with ESMTPSA id x2-20020a029482000000b0046d17aff31bsm3738272jah.157.2024.01.23.07.55.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Jan 2024 07:55:22 -0800 (PST)
+Date: Tue, 23 Jan 2024 08:55:21 -0700
+From: Alex Williamson <alex.williamson@redhat.com>
+To: Lukas Wunner <lukas@wunner.de>
+Cc: linux-pci@vger.kernel.org, bhelgaas@google.com,
+ linux-kernel@vger.kernel.org, eric.auger@redhat.com,
+ mika.westerberg@linux.intel.com, rafael.j.wysocki@intel.com,
+ Sanath.S@amd.com
+Subject: Re: [PATCH v2 2/2] PCI: Fix runtime PM race with PME polling
+Message-ID: <20240123085521.07e2b978.alex.williamson@redhat.com>
+In-Reply-To: <20240123104519.GA21747@wunner.de>
+References: <20230803171233.3810944-1-alex.williamson@redhat.com>
+	<20230803171233.3810944-3-alex.williamson@redhat.com>
+	<20240118115049.3b5efef0.alex.williamson@redhat.com>
+	<20240122221730.GA16831@wunner.de>
+	<20240122155003.587225aa.alex.williamson@redhat.com>
+	<20240123104519.GA21747@wunner.de>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.38; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1129; i=brauner@kernel.org; h=from:subject:message-id; bh=NFLNtcapmW/YVQ3O4S5u5bbAiQc4MNdaz8if2KZaVwM=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaSuf1i6WPLBb9k7u5ZdzFuqVeK14sjVTzN3BO26ePXcw 9T+O/v/GHWUsjCIcTHIiimyOLSbhMst56nYbJSpATOHlQlkCAMXpwBMJKyekWGHD1eP+IF++bPe D73upeusfbVjTbPNVWfZxb9e7278epGXkeF4xuMLFz3vfLqwXXnZd+8cpsPJsTO+/9x0LdRdbxL rDEEWAA==
-X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, 15 Jan 2024 23:27:00 +0800, wenyang.linux@foxmail.com wrote:
-> When printing eventfd->count, interrupts will be disabled and a spinlock
-> will be obtained, competing with eventfd_write(). By moving the
-> "eventfd-count" print out of the spinlock and merging multiple
-> seq_printf() into one, it could improve a bit, just like timerfd_show().
+On Tue, 23 Jan 2024 11:45:19 +0100
+Lukas Wunner <lukas@wunner.de> wrote:
+
+> On Mon, Jan 22, 2024 at 03:50:03PM -0700, Alex Williamson wrote:
+> > On Mon, 22 Jan 2024 23:17:30 +0100 Lukas Wunner <lukas@wunner.de> wrote:  
+> > > On Thu, Jan 18, 2024 at 11:50:49AM -0700, Alex Williamson wrote:  
+> > > > To do that I used pm_runtime_get_if_active(), but in retrospect this
+> > > > requires the device to be in RPM_ACTIVE so we end up skipping anything
+> > > > suspended or transitioning.    
+> > > 
+> > > How about dropping the calls to pm_runtime_get_if_active() and
+> > > pm_runtime_put() and instead simply do:
+> > > 
+> > > 			if (pm_runtime_suspended(&pdev->dev) &&
+> > > 			    pdev->current_state != PCI_D3cold)
+> > > 				pci_pme_wakeup(pdev, NULL);  
+> > 
+> > Do we require that the polled device is in the RPM_SUSPENDED state?  
 > 
+> If the device is RPM_SUSPENDING, why immediately resume it for polling?
+> It's sufficient to poll it the next time around, i.e. 1 second later.
 > 
+> Likewise, if it's already RPM_RESUMING or RPM_ACTIVE anyway, no need
+> to poll PME.
 
-Applied to the vfs.misc branch of the vfs/vfs.git tree.
-Patches in the vfs.misc branch should appear in linux-next soon.
+I'm clearly not an expert on PME, but this is not obvious to me and
+before the commit that went in through this thread, PME wakeup was
+triggered regardless of the PM state.  I was trying to restore the
+behavior of not requiring a specific PM state other than deferring
+polling across transition states.
 
-Please report any outstanding bugs that were missed during review in a
-new review to the original patch series allowing us to drop it.
+> This leaves RPM_SUSPENDED as the only state in which it makes sense to
+> poll.
+>
+> > Also pm_runtime_suspended() can also only be trusted while holding the
+> > device power.lock, we need a usage count reference to maintain that
+> > state.  
+> 
+> Why?  Let's say there's a race and the device resumes immediately after
+> we call pm_runtime_suspended() here.  So we might call pci_pme_wakeup()
+> gratuitouly.  So what?  No biggie.
 
-It's encouraged to provide Acked-bys and Reviewed-bys even though the
-patch has now been applied. If possible patch trailers will be updated.
+The issue I'm trying to address is that config space of the device can
+become inaccessible while calling pci_pme_wakeup() on it, causing a
+system fault on some hardware.  So a gratuitous pci_pme_wakeup() can be
+detrimental.
 
-Note that commit hashes shown below are subject to change due to rebase,
-trailer updates or similar. If in doubt, please check the listed branch.
+We require the device config space to remain accessible, therefore the
+instantaneous test against D3cold and that the parent bridge is in D0
+is not sufficient.  I see traces where the parent bridge is in D0, but
+the PM state is RPM_SUSPENDING and the endpoint device transitions to
+D3cold while we're executing pci_pme_wakeup().
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
-branch: vfs.misc
+Therefore at a minimum, I think we need to enforce that the bridge is
+in RPM_ACTIVE and remains in that state across pci_pme_wakeup(), which
+means we need to hold a usage count reference, and that usage count
+reference must be acquired under power.lock in RPM_ACTIVE state to be
+effective.
 
-[1/1] eventfd: move 'eventfd-count' printing out of spinlock
-      https://git.kernel.org/vfs/vfs/c/294a229020f1
+> > +			if (bdev) {
+> > +				spin_lock_irq(&bdev->power.lock);  
+> 
+> Hm, I'd expect that lock to be internal to the PM core,
+> although there *are* a few stray users outside of it.
+
+Right, there are.  It's possible that if we only need to hold a
+reference on the bridge we can abstract this through
+pm_runtime_get_if_active(), the semantics worked better to essentially
+open code it in this iteration though.  Thanks,
+
+Alex
+
