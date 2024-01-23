@@ -1,87 +1,60 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98006604B4
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 14:13:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9680D605C9;
+	Tue, 23 Jan 2024 14:14:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=130.133.4.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706019233; cv=none; b=Rf4GGhgIsWcszoQC3aFiCcQW7WnThArwyoIBqP/WQwUHRylKNk0ci4o4KanByl4q1Dj96mt/UJKKM0zatETNN55X2Jq0oxJiM+J7tuJOLNeJrUL/e1k0on4Oi/jS0iBLd1RQSBlKBFlaM+kThchA9lmH72FI293jYHmDL7IRKbg=
+	t=1706019275; cv=none; b=UKerg12Ywsb3ZQAW/TyL/tJlfGFmR1G2K+Rw60keDc6lbyIEhORNxwiI9yMtYxkikP7yDAbrgGVby5vKI4GVpz2LfJRxO0x+YH7g9ycIOlXTN5i+Dms12o5mzNWTwZJMdrCfqYClZbOZyox0ieNWKOKQQDYIY0kDEJrJJgHUpzI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706019233; c=relaxed/simple;
-	bh=zd6Bmh48g7rsM+87XsXBkxNU+Zs2Yu+NMiweLujpj9I=;
+	s=arc-20240116; t=1706019275; c=relaxed/simple;
+	bh=aLNrXaxt98R5cd0HEJoYciC+5vGvHwIt2upVpsfT5Tg=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Zq2lsKfLzjTaHOxc/XJQP5T3rVkSbPIoK5Gm0ZdTcHezi6KZCVz3lmMUkzZUTz6L/ffe0o/8YAbG5i3Tlkf4Lm1QzeeFT/978szc2xjmuCQ038uAI3S469Rj1DzmM2lqxt1wRY+wIAdn/v1Q+Asse9d6aMgzF82TElb8VdyJbtY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VUV7wcHc; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VUV7wcHc"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-33922b66bd7so2985993f8f.2
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 06:13:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706019229; x=1706624029; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qJ0gjfKMOfp9CH0Fl1AfdBLtnAI1t5WhWrFWLERW/vA=;
-        b=VUV7wcHcc6udQnCmXkUlYNNaIXwzT45/R90OgLr6ZF9YVFWehNeLZksZ1rhDq8kso/
-         FtjfgzuXFdenYS9N9QONRHYyDNfqal2VXNCxhB2jM9o0kzTNFeXcnW3A/pOy9q3ZbFlY
-         ar7UHsOxXnVOh7eyWgvj6u6Rda4l4SPQ0lawXvvnPRiZdwYX8mEqWwWbkb+klYWcQE20
-         cg6Huqz2d9Pd5OsWOReudJDQQ05PFk1SzbRO243TBdyiqIlNJcrKNPgtuqYA+FXsOFTA
-         1637JUEZlON5rtdXKTdPX8QtuqkxIJFnP7legeuUooXNIiHY8BkaAkTs4r40N9m/HpW0
-         TCAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706019229; x=1706624029;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qJ0gjfKMOfp9CH0Fl1AfdBLtnAI1t5WhWrFWLERW/vA=;
-        b=IzK/Em8rSDK7IcMiQhjF/Z5Mt0dzIU8BxnQZjYcpDLqn0Z13NW/GElt1HdJTd7Rfmp
-         sdZghZXzvTxoq59fntc+/1jz6wj40F8jx+7Di6LiDvRkmHlXls+DZ4PV6DJkUXT/9Hm7
-         KINTXo9nn8dr7njiGU7jMoLqqkFPOgigA+gfdmX+TWnP/OMJeOAD2RKLfMGTXLTHswTR
-         zhNfBIYhcATdE7sX0Y7YtaRNe+CUIPAm8LTTSjqdK3vjOI3pmg6unBRXvaqo/MyHJjkY
-         WXnbBe3XKkJ2vfeQJaq7jAamB/YYWUcVTde/LsVkOuJ1qh9Nmw+W+kj/6IHdhzdGOiSy
-         rQCg==
-X-Gm-Message-State: AOJu0YzyxzqfuUltarSuvbfxCGa1bhd1r4elLUloBUGjF9TcpKtuittN
-	RCCRIWRnfalz2zcDNJf0NCqgpK1ig7Id9sY0wkYXsX5nscwf9OswdQHBleog4U8=
-X-Google-Smtp-Source: AGHT+IEmbmNSvVll9puJMHID5ADLiEU47RyJFA7juTXNLnNPBn9fghYRSUWnGYd4fyil/i4UIdqrsg==
-X-Received: by 2002:a5d:5086:0:b0:337:c5fb:c84f with SMTP id a6-20020a5d5086000000b00337c5fbc84fmr3473681wrt.33.1706019229029;
-        Tue, 23 Jan 2024 06:13:49 -0800 (PST)
-Received: from krzk-bin.. ([178.197.215.66])
-        by smtp.gmail.com with ESMTPSA id r8-20020adfe688000000b00337d97338b0sm12132298wrm.76.2024.01.23.06.13.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jan 2024 06:13:48 -0800 (PST)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-	Banajit Goswami <bgoswami@quicinc.com>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Frank Rowand <frowand.list@gmail.com>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	linux-arm-msm@vger.kernel.org,
-	alsa-devel@alsa-project.org,
-	linux-sound@vger.kernel.org,
-	devicetree@vger.kernel.org,
+	 MIME-Version; b=hmXU6sfb4LbGJW6NEVH+Y4khsCQtovcuVrjnoKsWvqFweD/00R8NYD2hhDLeixoT9pOqP0Rj4ChT4JO9+YUKYV5K5IfZrAsqKVFmmlna896jpO042/rZl/DWhm2buj3PYOywZzUY8rJ1KvlJhWwhrgZrQSC8p003+Sj387Moqn8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=physik.fu-berlin.de; spf=pass smtp.mailfrom=zedat.fu-berlin.de; arc=none smtp.client-ip=130.133.4.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=physik.fu-berlin.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zedat.fu-berlin.de
+Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
+          by outpost.zedat.fu-berlin.de (Exim 4.95)
+          with esmtps (TLS1.3)
+          tls TLS_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@zedat.fu-berlin.de>)
+          id 1rSHXV-0006I0-Hz; Tue, 23 Jan 2024 15:14:09 +0100
+Received: from p5dc556fd.dip0.t-ipconnect.de ([93.197.86.253] helo=z6.fritz.box)
+          by inpost2.zedat.fu-berlin.de (Exim 4.95)
+          with esmtpsa (TLS1.3)
+          tls TLS_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@physik.fu-berlin.de>)
+          id 1rSHXV-0046LF-9X; Tue, 23 Jan 2024 15:14:09 +0100
+Received: from glaubitz by z6.fritz.box with local (Exim 4.96)
+	(envelope-from <glaubitz@physik.fu-berlin.de>)
+	id 1rSHXU-00Fl8i-2t;
+	Tue, 23 Jan 2024 15:14:08 +0100
+From: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+To: linux@roeck-us.net
+Cc: amir73il@gmail.com,
+	arnd@arndb.de,
+	christian@brauner.io,
+	dhowells@redhat.com,
+	fweimer@redhat.com,
+	kzak@redhat.com,
+	linux-api@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Sean Anderson <sean.anderson@seco.com>
-Subject: [PATCH v4 6/6] ASoC: codecs: wsa884x: Allow sharing reset GPIO
-Date: Tue, 23 Jan 2024 15:13:11 +0100
-Message-Id: <20240123141311.220505-7-krzysztof.kozlowski@linaro.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240123141311.220505-1-krzysztof.kozlowski@linaro.org>
-References: <20240123141311.220505-1-krzysztof.kozlowski@linaro.org>
+	linux-man@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
+	mattlloydhouse@gmail.com,
+	mszeredi@redhat.com,
+	raven@themaw.net,
+	torvalds@linux-foundation.org,
+	viro@zeniv.linux.org.uk,
+	inux-sh@vger.kernel.org
+Subject: Re: [PATCH v4 5/6] add listmount(2) syscall
+Date: Tue, 23 Jan 2024 15:14:08 +0100
+Message-Id: <20240123141408.3756120-1-glaubitz@physik.fu-berlin.de>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <75b87a85-7d2c-4078-91e3-024ea36cfb42@roeck-us.net>
+References: <75b87a85-7d2c-4078-91e3-024ea36cfb42@roeck-us.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -89,125 +62,34 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Original-Sender: glaubitz@physik.fu-berlin.de
+X-ZEDAT-Hint: PO
 
-On some boards with multiple WSA8840/WSA8845 speakers, the reset
-(shutdown) GPIO is shared between two speakers.  Use the reset
-controller framework and its "reset-gpio" driver to handle this case.
-This allows bring-up and proper handling of all WSA884x speakers on
-X1E80100-CRD board.
+Hi Guenter,
 
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Sean Anderson <sean.anderson@seco.com>
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> with this patch in the tree, all sh4 builds fail with ICE.
+> 
+> during RTL pass: final
+> In file included from fs/namespace.c:11:
+> fs/namespace.c: In function '__se_sys_listmount':
+> include/linux/syscalls.h:258:9: internal compiler error: in change_address_1, at emit-rtl.c:2275
+> 
+> I tested with gcc 8.2, 11.3, 11.4, and 12.3. The compiler version
+> does not make a difference. Has anyone else seen the same problem ?
+> If so, any idea what to do about it ?
 
----
+I'm not seeing any problems building the SH kernel except some -Werror=missing-prototypes warnings.
 
-If previous patches are fine, then this commit is independent and could
-be taken via ASoC.
----
- sound/soc/codecs/wsa884x.c | 53 +++++++++++++++++++++++++++++++-------
- 1 file changed, 43 insertions(+), 10 deletions(-)
+I'm using gcc 11.1 from here [1].
 
-diff --git a/sound/soc/codecs/wsa884x.c b/sound/soc/codecs/wsa884x.c
-index f2653df84e4a..a9767ef0e39d 100644
---- a/sound/soc/codecs/wsa884x.c
-+++ b/sound/soc/codecs/wsa884x.c
-@@ -13,6 +13,7 @@
- #include <linux/pm_runtime.h>
- #include <linux/regmap.h>
- #include <linux/regulator/consumer.h>
-+#include <linux/reset.h>
- #include <linux/slab.h>
- #include <linux/soundwire/sdw.h>
- #include <linux/soundwire/sdw_registers.h>
-@@ -699,6 +700,7 @@ struct wsa884x_priv {
- 	struct sdw_stream_runtime *sruntime;
- 	struct sdw_port_config port_config[WSA884X_MAX_SWR_PORTS];
- 	struct gpio_desc *sd_n;
-+	struct reset_control *sd_reset;
- 	bool port_prepared[WSA884X_MAX_SWR_PORTS];
- 	bool port_enable[WSA884X_MAX_SWR_PORTS];
- 	unsigned int variant;
-@@ -1799,9 +1801,22 @@ static struct snd_soc_dai_driver wsa884x_dais[] = {
- 	},
- };
- 
--static void wsa884x_gpio_powerdown(void *data)
-+static void wsa884x_reset_powerdown(void *data)
- {
--	gpiod_direction_output(data, 1);
-+	struct wsa884x_priv *wsa884x = data;
-+
-+	if (wsa884x->sd_reset)
-+		reset_control_assert(wsa884x->sd_reset);
-+	else
-+		gpiod_direction_output(wsa884x->sd_n, 1);
-+}
-+
-+static void wsa884x_reset_deassert(struct wsa884x_priv *wsa884x)
-+{
-+	if (wsa884x->sd_reset)
-+		reset_control_deassert(wsa884x->sd_reset);
-+	else
-+		gpiod_direction_output(wsa884x->sd_n, 0);
- }
- 
- static void wsa884x_regulator_disable(void *data)
-@@ -1809,6 +1824,27 @@ static void wsa884x_regulator_disable(void *data)
- 	regulator_bulk_disable(WSA884X_SUPPLIES_NUM, data);
- }
- 
-+static int wsa884x_get_reset(struct device *dev, struct wsa884x_priv *wsa884x)
-+{
-+	wsa884x->sd_reset = devm_reset_control_get_optional_shared(dev, NULL);
-+	if (IS_ERR(wsa884x->sd_reset))
-+		return dev_err_probe(dev, PTR_ERR(wsa884x->sd_reset),
-+				     "Failed to get reset\n");
-+	else if (wsa884x->sd_reset)
-+		return 0;
-+	/*
-+	 * else: NULL, so use the backwards compatible way for powerdown-gpios,
-+	 * which does not handle sharing GPIO properly.
-+	 */
-+	wsa884x->sd_n = devm_gpiod_get_optional(dev, "powerdown",
-+						GPIOD_OUT_HIGH);
-+	if (IS_ERR(wsa884x->sd_n))
-+		return dev_err_probe(dev, PTR_ERR(wsa884x->sd_n),
-+				     "Shutdown Control GPIO not found\n");
-+
-+	return 0;
-+}
-+
- static int wsa884x_probe(struct sdw_slave *pdev,
- 			 const struct sdw_device_id *id)
- {
-@@ -1838,11 +1874,9 @@ static int wsa884x_probe(struct sdw_slave *pdev,
- 	if (ret)
- 		return ret;
- 
--	wsa884x->sd_n = devm_gpiod_get_optional(dev, "powerdown",
--						GPIOD_OUT_HIGH);
--	if (IS_ERR(wsa884x->sd_n))
--		return dev_err_probe(dev, PTR_ERR(wsa884x->sd_n),
--				     "Shutdown Control GPIO not found\n");
-+	ret = wsa884x_get_reset(dev, wsa884x);
-+	if (ret)
-+		return ret;
- 
- 	dev_set_drvdata(dev, wsa884x);
- 	wsa884x->slave = pdev;
-@@ -1858,9 +1892,8 @@ static int wsa884x_probe(struct sdw_slave *pdev,
- 	pdev->prop.sink_dpn_prop = wsa884x_sink_dpn_prop;
- 	pdev->prop.scp_int1_mask = SDW_SCP_INT1_BUS_CLASH | SDW_SCP_INT1_PARITY;
- 
--	/* Bring out of reset */
--	gpiod_direction_output(wsa884x->sd_n, 0);
--	ret = devm_add_action_or_reset(dev, wsa884x_gpio_powerdown, wsa884x->sd_n);
-+	wsa884x_reset_deassert(wsa884x);
-+	ret = devm_add_action_or_reset(dev, wsa884x_reset_powerdown, wsa884x);
- 	if (ret)
- 		return ret;
- 
--- 
-2.34.1
+Adrian
 
+PS: Please always CC linux-sh and the SH maintainers when reporting issues.
+
+> [1] https://mirrors.edge.kernel.org/pub/tools/crosstool/files/bin/x86_64/11.1.0/
+
+--
+ .''`.  John Paul Adrian Glaubitz
+: :' :  Debian Developer
+`. `'   Physicist
+  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
