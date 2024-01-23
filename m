@@ -1,415 +1,210 @@
-Received: from mickerik.phytec.de (mickerik.phytec.de [91.26.50.163])
+Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B63C24F8BB
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 06:11:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.26.50.163
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705990311; cv=none; b=ZRCzhXLenkU7sBFMqpzBPmLKhqs3ryE/87+1Ycs8oYS8qkkB47OdhE3EK0SFaxZ0FKOR+e3lSFs+IpEybDsWp3aLLHGGm5/s8R2HyXkGuvaiGnfmctbSR81MVWo+4xAdoi4Z8f5DVE58jiR8VFL/jD6gCZ6uw9LPSRb3al80T4I=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705990311; c=relaxed/simple;
-	bh=RHLiIGU9/fZVbtAlbM5NxE9HcZdCcWcIkjlDxCuUHbY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=RYtzdGm9qf5/BQUUe4HlapkHcFricTcSWS/eYnxr2OPdH/9+eZTNXedtoq1z4bNSsxGu2r98CJ0Iz9lOi2f9VHYP/YSx/de8RlOA1INROOpFteyRfV6I6BjkQwMubRpS4hsGxqAGjmr2HfncOKARadcO20Xxa+6H6Ofnz9OITRY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytec.de; spf=pass smtp.mailfrom=phytec.de; dkim=pass (1024-bit key) header.d=phytec.de header.i=@phytec.de header.b=KTRgWu+p; arc=none smtp.client-ip=91.26.50.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytec.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytec.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5E534F8B3;
+	Tue, 23 Jan 2024 06:16:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=210.61.82.184
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1705990572; cv=fail; b=jFMs+fMFyIyFe6wLxfZsvO6+X9gLpIy645nI5rYvC2rFv9VePN9ULLpfCJQOo4exUeWCZZYiiZ76KEoXMREi9EkZmdN51ehWh9yuBZA7gvD32JNJUMRHfpSLgIA9pmSF1TANfsF0peiP4W2a1KbB7dFRzi5+SuzFQI3rCYgLPFc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1705990572; c=relaxed/simple;
+	bh=sDB0u/GJzS3T7WwLtFDtirRx4n+HPrX0Q8O91XTjkRg=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=sFIeqf/7td5VUONWCOXJAM5dv60h0IYt86OjXZQPnLVy/mm7BtDAOCtg7UtgVWqFvyV7y7lNGLzY2WGBQOLRVkETScsEvprSXTra/m5xE5nK6W+ZYWvkQMOeo6Y4cwUwPWtp/Mn0j2fRhA6+nGTos51svfkM703nZl+GU1Yu4t0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=a0pvmHcw; dkim=pass (1024-bit key) header.d=mediateko365.onmicrosoft.com header.i=@mediateko365.onmicrosoft.com header.b=aItbUImR; arc=fail smtp.client-ip=210.61.82.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=phytec.de header.i=@phytec.de header.b="KTRgWu+p"
-DKIM-Signature: v=1; a=rsa-sha256; d=phytec.de; s=a4; c=relaxed/simple;
-	q=dns/txt; i=@phytec.de; t=1705990299; x=1708582299;
-	h=From:Sender:Reply-To:Subject:Date:Message-ID:To:CC:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=RHLiIGU9/fZVbtAlbM5NxE9HcZdCcWcIkjlDxCuUHbY=;
-	b=KTRgWu+pgF1kertTj0nGDdNmdS2P1TMjqd+rMjrfJcnUu+xmIqBV3QkR1gg6Llqh
-	jsgdr/sbULDW5iJ3yT9AxJGuEh1MRqGmBtPusTGoRNhBts4AVdLwloOUaiqgBka3
-	xIcYHvUCpMc9vg/+x5dm3rdqhEExKka6vc3iLMVnqxI=;
-X-AuditID: ac14000a-fbefe7000000290d-b5-65af589b3d81
-Received: from berlix.phytec.de (Unknown_Domain [172.25.0.12])
-	(using TLS with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(Client did not present a certificate)
-	by mickerik.phytec.de (PHYTEC Mail Gateway) with SMTP id 79.98.10509.B985FA56; Tue, 23 Jan 2024 07:11:39 +0100 (CET)
-Received: from [172.25.39.28] (172.25.0.11) by Berlix.phytec.de (172.25.0.12)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.6; Tue, 23 Jan
- 2024 07:11:34 +0100
-Message-ID: <537266fe-0bf7-4208-a9f3-ae27f462c6ed@phytec.de>
-Date: Tue, 23 Jan 2024 07:11:27 +0100
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="a0pvmHcw";
+	dkim=pass (1024-bit key) header.d=mediateko365.onmicrosoft.com header.i=@mediateko365.onmicrosoft.com header.b="aItbUImR"
+X-UUID: e38220c8b9b611eea2298b7352fd921d-20240123
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=MIME-Version:Content-Transfer-Encoding:Content-ID:Content-Type:In-Reply-To:References:Message-ID:Date:Subject:CC:To:From; bh=sDB0u/GJzS3T7WwLtFDtirRx4n+HPrX0Q8O91XTjkRg=;
+	b=a0pvmHcwB+HCotZnLQuR8MyXlF1t07n9gn8oZgNG00BUULLJqyTDIUQINxRmcydGYZepdxhbpHItHDFGdq4Q9bBZw3u4OY9ojuCj2LTDlOLtZbUVbjotqq2j7bu5NU9CPzB2soJVX6vwUccAEIP75S7UXBqu7paRL9Z6xZZEOcE=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.36,REQID:ce110975-141b-48ca-b864-6d74edd5c257,IP:0,U
+	RL:0,TC:0,Content:-5,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:-5
+X-CID-META: VersionHash:6e16cf4,CLOUDID:f9b0772f-1ab8-4133-9780-81938111c800,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
+	RL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,
+	SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: e38220c8b9b611eea2298b7352fd921d-20240123
+Received: from mtkmbs14n1.mediatek.inc [(172.21.101.75)] by mailgw02.mediatek.com
+	(envelope-from <jason-jh.lin@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 1926833074; Tue, 23 Jan 2024 14:16:04 +0800
+Received: from mtkmbs10n2.mediatek.inc (172.21.101.183) by
+ mtkmbs13n2.mediatek.inc (172.21.101.108) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.26; Tue, 23 Jan 2024 14:16:03 +0800
+Received: from HK2PR02CU002.outbound.protection.outlook.com (172.21.101.237)
+ by mtkmbs10n2.mediatek.inc (172.21.101.183) with Microsoft SMTP Server id
+ 15.2.1118.26 via Frontend Transport; Tue, 23 Jan 2024 14:16:03 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Jf8UD5tAAhycGFkKO/qZXl3eZhMSfLmhuaokkxEDDjVVLaPxLOMmxXVBYozov+1YqbHLSCi1NydpmIt/meYL3FkqsoxhYUjAi6qNZNlfTb0uC9dfkVjVy/vtdRhSnSoFdyQdiFrFvZsYuy5ftHF1IUpj+CVoen6LIjVaDvJAvoZL+K96GqnUw02SRcE7goa28WZbPb4xoa5krCpprGi3bO188hTDb4zYtdFRBnQZg3Bl+SNv6CiQ/I0W7Opm/2nygWUgCZ12x27P2m0xR/JHL4uEXSFpFdlntgHXsoq3vEbDnxbYzG70Ql5lqtF+4ORcDBPwJSKWgBcsYOFR7CUnjw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=sDB0u/GJzS3T7WwLtFDtirRx4n+HPrX0Q8O91XTjkRg=;
+ b=X/7uU+Co5IvPe9e37jQbfmV5TrtpsPXplbZUMMOaOsZ09cUBrasNoORzBYRQN8IrNgV6ZpSNo88wq0ywuKIoUwSui2R3TkZHuBrXdfuC6fGCdHPo9Y0uwyr3hU5Rm2IymoJItoetKlJNCOfBMsiDvzs4Kb6/CJRBT5IsjpC7tsixb6uTacJUPg0eD5/56q6ruUXTc6OztuUnPqX8eEdIF6TtCUBViN4ddPDBp6+GXWxkZ98z9no4/rRrx03eYaGetFBQVZP59krP8XPCHQf/vWFAY1oVleYE7txJiNgt8XR1LSy+0URrKSlFV0faXSk7SzSy0TgcBRfeg1SIf9pvHQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mediatek.com; dmarc=pass action=none header.from=mediatek.com;
+ dkim=pass header.d=mediatek.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mediateko365.onmicrosoft.com; s=selector2-mediateko365-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sDB0u/GJzS3T7WwLtFDtirRx4n+HPrX0Q8O91XTjkRg=;
+ b=aItbUImR7KwttlqBNhnGQvJpaeM9xgguui+r8+tlWuV+hVXH6Xi7qojgOZ3OMjJrkqz9kbBZ8cOlRxPu3Ppga9cgUT5qM1ng4TjsajJKVvyBnwPCovMPolIDuJfblwjOME6DhAsmUMpYjEHmc5NTUxI7numqszHuT2Qo4NmPotE=
+Received: from SEYPR03MB7682.apcprd03.prod.outlook.com (2603:1096:101:149::11)
+ by KL1PR03MB7669.apcprd03.prod.outlook.com (2603:1096:820:e2::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7202.32; Tue, 23 Jan
+ 2024 06:09:06 +0000
+Received: from SEYPR03MB7682.apcprd03.prod.outlook.com
+ ([fe80::d006:ec9c:ff42:ff60]) by SEYPR03MB7682.apcprd03.prod.outlook.com
+ ([fe80::d006:ec9c:ff42:ff60%5]) with mapi id 15.20.7202.031; Tue, 23 Jan 2024
+ 06:09:06 +0000
+From: =?utf-8?B?SmFzb24tSkggTGluICjmnpfnnb/npaUp?= <Jason-JH.Lin@mediatek.com>
+To: "maxime@cerno.tech" <maxime@cerno.tech>, "daniel.vetter@ffwll.ch"
+	<daniel.vetter@ffwll.ch>
+CC: "manasi.d.navare@intel.com" <manasi.d.navare@intel.com>,
+	"linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"michel@daenzer.net" <michel@daenzer.net>, "intel-gfx@lists.freedesktop.org"
+	<intel-gfx@lists.freedesktop.org>, "chunkuang.hu@kernel.org"
+	<chunkuang.hu@kernel.org>, "linux-arm-msm@vger.kernel.org"
+	<linux-arm-msm@vger.kernel.org>, "mikita.lipski@amd.com"
+	<mikita.lipski@amd.com>, "dmitry.baryshkov@linaro.org"
+	<dmitry.baryshkov@linaro.org>, "tzimmermann@suse.de" <tzimmermann@suse.de>,
+	"daniel.vetter@intel.com" <daniel.vetter@intel.com>,
+	"nicholas.kazlauskas@amd.com" <nicholas.kazlauskas@amd.com>,
+	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+	"quic_abhinavk@quicinc.com" <quic_abhinavk@quicinc.com>,
+	Project_Global_Chrome_Upstream_Group
+	<Project_Global_Chrome_Upstream_Group@mediatek.com>,
+	"lucas.demarchi@intel.com" <lucas.demarchi@intel.com>, "sean@poorly.run"
+	<sean@poorly.run>, "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
+	"dmitry.osipenko@collabora.com" <dmitry.osipenko@collabora.com>,
+	"fshao@chromium.org" <fshao@chromium.org>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "jani.nikula@intel.com"
+	<jani.nikula@intel.com>, "angelogioacchino.delregno@collabora.com"
+	<angelogioacchino.delregno@collabora.com>, "freedreno@lists.freedesktop.org"
+	<freedreno@lists.freedesktop.org>
+Subject: Re: [PATCH] drm/atomic-helpers: remove legacy_cursor_update hacks
+Thread-Topic: [PATCH] drm/atomic-helpers: remove legacy_cursor_update hacks
+Thread-Index: AQHaTaau1JBuNr0KqkifWFu/qedV2rDm6fyA
+Date: Tue, 23 Jan 2024 06:09:05 +0000
+Message-ID: <aac416742920953999a9ce230ac68139bf5b9790.camel@mediatek.com>
+References: <20230216111214.3489223-1-daniel.vetter@ffwll.ch>
+	 <20230307145613.xvhru3fpcudlpazt@houat>
+In-Reply-To: <20230307145613.xvhru3fpcudlpazt@houat>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=mediatek.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SEYPR03MB7682:EE_|KL1PR03MB7669:EE_
+x-ms-office365-filtering-correlation-id: 722b04c6-c86b-48d8-9f6c-08dc1bd9ce25
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: DD1Z3UaNKef19FydhDJmYEpgOiIzpTY+kF7MN6YwFEuTu9Rh5eKoTl7UaoVMaHBbfwy+HGFhwvhOzQBtouFi9MMItb/QveP2GnBZBSiUDsBzX6QYGSatHMKXQS19+y8faWTrtU8gLvseCMH/BqzKBQfBguH8PL2u+RDLW+AgSj9Die0xYHHOqpaZ7FZ5sE+ENKGeEIEkDQbm8iOmZ7SijRnPYjRBdJIphV4x87colbJp75SG7Cizl+NX09W9YoHILKrL+qltFZnTyvVZcjb/V0BYHbmGJ4RFsKaiocmx5z8W8KxRjYngUCZSc+36OdghaLUSWekrg1v0GrrVPiuWwFtx3Ib9uVRFHELPrfjmpTo8PRMT1dk6K2zcd/sXNDaGw6CXhq1euekD0vX3C6SnoydzsF/jDc5Nf9zPAlXpYLNvLYDz4c4fu2RtWdV3dQ30l66HXEIFBmzA+WJatdXklLXiB2GDTD31gzAZKUaky/75JCcGZpGYhTRUqZM7lStNPwJs6lwMmdh4Llj+OHoK7PCsqMxuyz/iwjEqAh5yJ5Fe+G1vVuHFwPQrVKznw2PE+0kTxuDWVZiwybNRc8JLhx8xjHBXMZKscb5ZcTOTrpLgY38OcNyQRpIyFk+tZYsX
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SEYPR03MB7682.apcprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(366004)(376002)(396003)(136003)(39860400002)(230922051799003)(64100799003)(1800799012)(451199024)(186009)(83380400001)(86362001)(71200400001)(2616005)(26005)(122000001)(8676002)(4326008)(8936002)(6512007)(2906002)(38100700002)(41300700001)(5660300002)(7416002)(478600001)(6486002)(66946007)(66446008)(66556008)(54906003)(110136005)(66476007)(316002)(6506007)(64756008)(76116006)(38070700009)(85182001)(36756003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?Z2tWWHhoUkJ5WjFkWGpvN2xhUGpqZFN5TC93YzBXT0IzSWVyak5rYlZNU1dB?=
+ =?utf-8?B?cHl4QVlWTU9ZSHpCbFhqOVNaR2FBSmNmeTl0U1RkOHMzTjlySGQyUVZZc1du?=
+ =?utf-8?B?ZWJrMUhKMXRCYmpFMXBIRlJ3YWdwTyswcUhnL1Ntd3Y3UmFXdC9tWTM1MXhZ?=
+ =?utf-8?B?UFhXYmhvbmp0cTljTzZFSUszK3pXZkhGcHh0RFJZMk9LYTdhYVFnMndQV3Br?=
+ =?utf-8?B?d1BUL0t5VGRMTDVwTjhJWWdGaDk0RWYzNWxsLzliNzBHSHY4WjJFaHNOdWV5?=
+ =?utf-8?B?bnd3WktuR1lNT1RnSHliNGhmQmxDa2xCaTh6bXdCTkUzdUpYZk9zTVVxTm9M?=
+ =?utf-8?B?ck1WcjVTRmUzT2YwaXVlakVJZkZVT0NKcHFicjdmK0RjdVVocEdXV2x1VUIz?=
+ =?utf-8?B?SzdtSFBEWUQybFViSmc1VU8zRnErdHRzWUREU0ViUXkzOTFRYlFTN0g4Sm5z?=
+ =?utf-8?B?TDdYZG9UYVphSDhQeGlmZjhOVlR3QU5zYVRBQzRkalhLMU5Dd2FPOFdxTEZl?=
+ =?utf-8?B?UTFzVFlFd2xCUUR1T0puZTVDNTdsNkVSYTNzSXhlalpNbXpFaXc0ejFyek1R?=
+ =?utf-8?B?enU1L2xESy8rWndEQUNlMEo2YzZYK3ZmYWdGSVVVd3RSdlJ2OFJNQkxBUHhr?=
+ =?utf-8?B?Zis4R1VyRlNlbVhGOStxRTZ0TFVkY3Y4VkF3QWRmRTk1V2hoQU53amtpU21j?=
+ =?utf-8?B?M0lSbWk2UFBHQ2ZQSU5YRzY0emh3U3hiNnM5dHBsaXVGVEtrZUg5Z09CeEJJ?=
+ =?utf-8?B?aUVjYTlWekd1bGVBK2hsMy9xTHIrckhwUkMyNEk1QW5DNFE5cGUxUVJra002?=
+ =?utf-8?B?MGsrWVh2bXcyZExrWTd5T2dQTWpLYjBJV2tyd0pRcUJnVkQwR0xoaGk4Q1gx?=
+ =?utf-8?B?SlQ5c0tuQmlIUEk0OHRLTjB4UmZDSXZicVBIUXRNemlMa0w4L3hsM1RWdklx?=
+ =?utf-8?B?b1RnTTQwVWdLVDdFV3BlNVNRTG96QTNXT1VUQ0pEWGpJTTBJSFkvRFdSNndq?=
+ =?utf-8?B?MDFMVDVUZlU0Y2p5TEhFTzVtZTczQkwwTTRzQXFLb0FKcytnMTRTK2pxcWU2?=
+ =?utf-8?B?UzdDaDhYbUNua0wydEJjUkZleFF0WnlwTlZuSXdxMHpocjk2YnExWmRoc0dn?=
+ =?utf-8?B?VFpreXRaeUFjeEd2aHkxT0dsZThEd3BHTHJwUHh6bkd1Q21qR1BmRW10M3M4?=
+ =?utf-8?B?dlFsSUo1Snp1enVoZUhQczVEQzdQOTQ5K0dRaXNvM2hVbVdaZWM0S1pGQ3RP?=
+ =?utf-8?B?Y05oZWxManFhemFDS0UyVENDaDZwMkh6MjNHMjM4ajFDcXdUaG4wRzdIT3lm?=
+ =?utf-8?B?czVld1RXNzVQc0l6TDFpdG90SHBxcDZGTk92bGtzOWZvOTJxVzU2ZVozYnhQ?=
+ =?utf-8?B?eHNtTVhCSXI2NkFTc1pJMktLQ1ROcHNKLzI3dHpQMVN3YmpkekJNa1VMd0wv?=
+ =?utf-8?B?SEdyTi8yYUEwRHdiRlVlenFlRXhUL3BKV1h5T0hsbFlqdDFVaVVpZ0hQWmVO?=
+ =?utf-8?B?Y3YzVlJRR3RFYmk5akZDekQzdkZwczZVRHQ2dlYreGRxa2VDeEpUU3BaQUdN?=
+ =?utf-8?B?RU9TVWZmWnpWU3VCdFZKZ3BFRXdoK1dkWHJzUUxJSnVCZHFQdG9lS2RNMnI4?=
+ =?utf-8?B?RXpib2JDOWRFMDlMa1R2N3gvMzRCcW5XamtLTEo3ZXBYUEVxV0p1SFg1eDNi?=
+ =?utf-8?B?K01ubTVxaG1VQ1pMYjRGUWF3V0x5MjF4ZnpWYnZNc1p0dllyZDNzNzJVTzlZ?=
+ =?utf-8?B?am94UVNNdmVIVys3UkRTZ1hZNmJEdWdXMGp6MHZlanNLaENIWkppbzFpV3ZD?=
+ =?utf-8?B?L0pFZGF3a3BGOFV6Q3J1d3FOdjhuT0syWlZNRkdPQnJzVE85dWV5VDNHY1ox?=
+ =?utf-8?B?Nm1QSTBpVTBjbmcyYUhEa1ZzQ0c2QXBqbDBJc2ZhZExHUmhnUEhHaVZXanhE?=
+ =?utf-8?B?enJwYUVSZ1h3V3NkUm9aRTNrMFNBS2g5d2lhTmsxUWNmRHlVTHp4VW5TajdP?=
+ =?utf-8?B?WmJJWUtlaDFvclI2emEwaS9hU3J1T3BuZHNqcyszSDZrek9vcFFkOWludWN1?=
+ =?utf-8?B?Q1hUS0VCZDNLOTI5TFFjNnc0TkVGYncrbkE5R3NINWtscUtGTk82MXYyT3B2?=
+ =?utf-8?B?YlV6eDBZVko1WXAvZzhLMDdiQi9yT1ltb2NFdTJEY2QxaG5HMnFjRjRFN05R?=
+ =?utf-8?B?aXc9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <A6927029EB2E954E880589887E9FB932@apcprd03.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 3/3] arm64: dts: imx93: Add phyBOARD-Segin-i.MX93
- support
-To: Mathieu Othacehe <othacehe@gnu.org>, Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
-	<conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer
-	<s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Li
- Yang <leoyang.li@nxp.com>, Primoz Fiser <primoz.fiser@norik.com>, Stefan
- Wahren <wahrenst@gmx.net>, Christoph Stoidner <c.stoidner@phytec.de>
-CC: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>
-References: <20240122095306.14084-1-othacehe@gnu.org>
- <20240122095306.14084-4-othacehe@gnu.org>
-Content-Language: en-US
-From: Wadim Egorov <w.egorov@phytec.de>
-In-Reply-To: <20240122095306.14084-4-othacehe@gnu.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: Florix.phytec.de (172.25.0.13) To Berlix.phytec.de
- (172.25.0.12)
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrGIsWRmVeSWpSXmKPExsWyRpKBR3d2xPpUg2lfNC3W7D3HZDH/yDlW
-	i4dX/S1WTd3JYtH34iGzxaHmA0wWmx5fY7Xo+rWS2eLyrjlsFufvbmG2ONH1kNWide8Rdou/
-	2zexWLzYIm5x/EQnswO/x85Zd9k9Fm/az+bRNs3MY9OqTjaPO9f2sHlsXlLv8f3rBlaPje92
-	MHn0/zXw+LxJLoArissmJTUnsyy1SN8ugSvjVXMvY8ED34oV636yNDC+t+1i5OCQEDCRWPay
-	sIuRi0NIYDGTxImd65khnLuMEkf2zWHvYuTk4BWwkZgyfSczSAOLgKrEnO9xEGFBiZMzn7CA
-	2KIC8hL3b80AKxcWCJLYcPwvG8gcEYFWFomPOzeAJZgFsiS2v5vMDGILCSRKtL5dxAwRF5e4
-	9WQ+E4jNJqAucWfDN1YQm1PATGL1hOlsEDUWEovfHISaIy+x/e0cqDnyEi8uLQc7QgLInnbu
-	NTOEHSpxZNNqpgmMwrOQ3DoLybpZSMbOQjJ2ASPLKkah3Mzk7NSizGy9gozKktRkvZTUTYyg
-	uBVh4NrB2DfH4xAjEwfjIUYJDmYlEd4bkutShXhTEiurUovy44tKc1KLDzFKc7AoifOu7ghO
-	FRJITyxJzU5NLUgtgskycXBKNTD6rJE7+/bVV5YXp8xPRj1UNLftD1jkU9rZGhZbaxPSF3nw
-	bWm1TfKUfu34Zb83Oz75ezW55pXeUpv9vMa9hscb9iZMfix19wfDXf+nRyInq8+8vXdpmPAd
-	3cvHu53kOz1/l+ewTVxoz5p1LHvlp4wA5XVXVDOc+10n7MqZcerV5/ldQhdeR3EosRRnJBpq
-	MRcVJwIAFzURl8kCAAA=
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SEYPR03MB7682.apcprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 722b04c6-c86b-48d8-9f6c-08dc1bd9ce25
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Jan 2024 06:09:05.9569
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a7687ede-7a6b-4ef6-bace-642f677fbe31
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Z3DCtS9pLTiLvpUwDDS9J09eTwRk+kDeSebgiwYKYBFmrHNsTsPlwr+guGG6rSnOhtbg6NJqIQ0/XyHIvMs5UVv+9tRyGi48oVnlG1kphC4=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: KL1PR03MB7669
 
-Hey Mathieu,
-
-Am 22.01.24 um 10:53 schrieb Mathieu Othacehe:
-> Add basic support for phyBOARD-Segin-i.MX93.
-> Main features are:
-> * eMMC
-> * Ethernet
-> * SD-Card
-> * UART
->
-> Signed-off-by: Mathieu Othacehe <othacehe@gnu.org>
-> ---
->   arch/arm64/boot/dts/freescale/Makefile        |   1 +
->   .../dts/freescale/imx93-phyboard-segin.dts    | 141 ++++++++++++++++++
->   .../boot/dts/freescale/imx93-phycore-som.dtsi | 127 ++++++++++++++++
->   3 files changed, 269 insertions(+)
->   create mode 100644 arch/arm64/boot/dts/freescale/imx93-phyboard-segin.dts
->   create mode 100644 arch/arm64/boot/dts/freescale/imx93-phycore-som.dtsi
->
-> diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
-> index 2e027675d7bb..65db918c821c 100644
-> --- a/arch/arm64/boot/dts/freescale/Makefile
-> +++ b/arch/arm64/boot/dts/freescale/Makefile
-> @@ -201,6 +201,7 @@ dtb-$(CONFIG_ARCH_MXC) += imx8qxp-colibri-iris-v2.dtb
->   dtb-$(CONFIG_ARCH_MXC) += imx8qxp-mek.dtb
->   dtb-$(CONFIG_ARCH_MXC) += imx8ulp-evk.dtb
->   dtb-$(CONFIG_ARCH_MXC) += imx93-11x11-evk.dtb
-> +dtb-$(CONFIG_ARCH_MXC) += imx93-phyboard-segin.dtb
->   dtb-$(CONFIG_ARCH_MXC) += imx93-tqma9352-mba93xxca.dtb
->   dtb-$(CONFIG_ARCH_MXC) += imx93-tqma9352-mba93xxla.dtb
->   
-> diff --git a/arch/arm64/boot/dts/freescale/imx93-phyboard-segin.dts b/arch/arm64/boot/dts/freescale/imx93-phyboard-segin.dts
-> new file mode 100644
-> index 000000000000..5433c33d1322
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/freescale/imx93-phyboard-segin.dts
-> @@ -0,0 +1,141 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +/*
-> + * Copyright (C) 2023 PHYTEC Messtechnik GmbH
-> + * Author: Wadim Egorov <w.egorov@phytec.de>, Christoph Stoidner <c.stoidner@phytec.de>
-> + * Copyright (C) 2024 Mathieu Othacehe <m.othacehe@gmail.com>
-> + *
-> + * Product homepage:
-> + * phyBOARD-Segin carrier board is reused for the i.MX93 design.
-> + * https://www.phytec.de/produkte/single-board-computer/phyboard-segin-imx6ul/
-> + */
-> +
-> +#include "imx93-phycore-som.dtsi"
-> +
-> +/{
-> +	model = "PHYTEC phyBOARD-Segin-i.MX93";
-> +	compatible = "phytec,imx93-phyboard-segin", "phytec,imx93-phycore-som",
-> +		     "fsl,imx93";
-> +
-> +	chosen {
-> +		stdout-path = &lpuart1;
-> +	};
-> +
-> +	reg_usdhc2_vmmc: regulator-usdhc2 {
-> +		compatible = "regulator-fixed";
-> +		enable-active-high;
-> +		gpio = <&gpio3 7 GPIO_ACTIVE_HIGH>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pinctrl_reg_usdhc2_vmmc>;
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +		regulator-name = "VCC_SD";
-> +	};
-> +};
-> +
-> +/* GPIOs */
-> +&gpio1 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_gpio1>;
-
-You are doing more than you describing in your changes log.
-Here you are forcing a gpio-only functionality for the X16 header. But 
-the pins we route down to the X16 expansion connector can be also used 
-differently.
-Typically we provide device tree overlays for different use cases on 
-this expansion connectors.
-
-Please drop the muxing.
-
-Same applies for the gpio names.
-
-> +	gpio-line-names = "X_GPIO1_3";
-> +};
-> +
-> +&gpio4 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_gpio4>;
-> +	gpio-line-names = "", "", "", "", "", "", "", "X_GPIO5_9";
-
-Same for gpio4.
-
-
-> +};
-> +
-> +/* Console */
-> +&lpuart1 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_uart1>;
-> +	status = "okay";
-> +};
-> +
-> +/* eMMC */
-> +&usdhc1 {
-> +	no-1-8-v;
-> +};
-> +
-> +/* SD-Card */
-> +&usdhc2 {
-> +	pinctrl-names = "default", "state_100mhz", "state_200mhz";
-> +	pinctrl-0 = <&pinctrl_usdhc2_default>, <&pinctrl_usdhc2_cd>;
-> +	pinctrl-1 = <&pinctrl_usdhc2_100mhz>, <&pinctrl_usdhc2_cd>;
-> +	pinctrl-2 = <&pinctrl_usdhc2_200mhz>, <&pinctrl_usdhc2_cd>;
-> +	bus-width = <4>;
-> +	cd-gpios = <&gpio3 0 GPIO_ACTIVE_LOW>;
-> +	no-mmc;
-> +	no-sdio;
-> +	vmmc-supply = <&reg_usdhc2_vmmc>;
-> +	status = "okay";
-> +};
-> +
-> +&iomuxc {
-> +	pinctrl_gpio1: gpio1grp {
-> +		fsl,pins = <
-> +			MX93_PAD_I2C1_SCL__GPIO1_IO00		0x10
-> +		>;
-> +	};
-> +
-> +	pinctrl_gpio4: gpio4grp {
-> +		fsl,pins = <
-> +			MX93_PAD_ENET1_TXC__GPIO4_IO07		0x10
-> +		>;
-> +	};
-> +
-> +	pinctrl_uart1: uart1grp {
-> +		fsl,pins = <
-> +			MX93_PAD_UART1_RXD__LPUART1_RX		0x31e
-> +			MX93_PAD_UART1_TXD__LPUART1_TX		0x30e
-> +		>;
-> +	};
-> +
-> +	pinctrl_reg_usdhc2_vmmc: regusdhc2vmmcgrp {
-> +		fsl,pins = <
-> +			MX93_PAD_SD2_RESET_B__GPIO3_IO07	0x31e
-> +		>;
-> +	};
-> +
-> +	pinctrl_usdhc2_cd: usdhc2cdgrp {
-> +		fsl,pins = <
-> +			MX93_PAD_SD2_CD_B__GPIO3_IO00		0x31e
-> +		>;
-> +	};
-> +
-> +	pinctrl_usdhc2_default: usdhc2grp {
-> +		fsl,pins = <
-> +			MX93_PAD_SD2_CLK__USDHC2_CLK		0x179e
-> +			MX93_PAD_SD2_CMD__USDHC2_CMD		0x139e
-> +			MX93_PAD_SD2_DATA0__USDHC2_DATA0	0x138e
-> +			MX93_PAD_SD2_DATA1__USDHC2_DATA1	0x138e
-> +			MX93_PAD_SD2_DATA2__USDHC2_DATA2	0x138e
-> +			MX93_PAD_SD2_DATA3__USDHC2_DATA3	0x139e
-> +			MX93_PAD_SD2_VSELECT__USDHC2_VSELECT	0x51e
-> +		>;
-> +	};
-> +
-> +	pinctrl_usdhc2_100mhz: usdhc2grp {
-> +		fsl,pins = <
-> +			MX93_PAD_SD2_CLK__USDHC2_CLK            0x179e
-> +			MX93_PAD_SD2_CMD__USDHC2_CMD            0x139e
-> +			MX93_PAD_SD2_DATA0__USDHC2_DATA0        0x138e
-> +			MX93_PAD_SD2_DATA1__USDHC2_DATA1        0x138e
-> +			MX93_PAD_SD2_DATA2__USDHC2_DATA2        0x139e
-> +			MX93_PAD_SD2_DATA3__USDHC2_DATA3        0x139e
-> +			MX93_PAD_SD2_VSELECT__USDHC2_VSELECT    0x51e
-> +		>;
-> +	};
-> +
-> +	pinctrl_usdhc2_200mhz: usdhc2grp {
-> +		fsl,pins = <
-> +			MX93_PAD_SD2_CLK__USDHC2_CLK            0x178e
-> +			MX93_PAD_SD2_CMD__USDHC2_CMD            0x139e
-> +			MX93_PAD_SD2_DATA0__USDHC2_DATA0        0x139e
-> +			MX93_PAD_SD2_DATA1__USDHC2_DATA1        0x139e
-> +			MX93_PAD_SD2_DATA2__USDHC2_DATA2        0x139e
-> +			MX93_PAD_SD2_DATA3__USDHC2_DATA3        0x139e
-> +			MX93_PAD_SD2_VSELECT__USDHC2_VSELECT    0x51e
-> +		>;
-> +	};
-> +};
-> diff --git a/arch/arm64/boot/dts/freescale/imx93-phycore-som.dtsi b/arch/arm64/boot/dts/freescale/imx93-phycore-som.dtsi
-> new file mode 100644
-> index 000000000000..439ea4176f8c
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/freescale/imx93-phycore-som.dtsi
-> @@ -0,0 +1,127 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +/*
-> + * Copyright (C) 2023 PHYTEC Messtechnik GmbH
-> + * Author: Wadim Egorov <w.egorov@phytec.de>, Christoph Stoidner <c.stoidner@phytec.de>
-> + * Copyright (C) 2024 Mathieu Othacehe <m.othacehe@gmail.com>
-> + *
-> + * Product homepage:
-> + * https://www.phytec.de/produkte/system-on-modules/phycore-imx-91-93/
-> + */
-> +/dts-v1/;
-
-Maybe this comment was lost, but I asked to move the dts-v1 tag into the 
-carrier board device tree.
-
-Regards,
-Wadim
-
-
-> +
-> +#include <dt-bindings/leds/common.h>
-> +
-> +#include "imx93.dtsi"
-> +
-> +/{
-> +	model = "PHYTEC phyCORE-i.MX93";
-> +	compatible = "phytec,imx93-phycore-som", "fsl,imx93";
-> +
-> +	reserved-memory {
-> +		ranges;
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +
-> +		linux,cma {
-> +			compatible = "shared-dma-pool";
-> +			reusable;
-> +			alloc-ranges = <0 0x80000000 0 0x40000000>;
-> +			size = <0 0x10000000>;
-> +			linux,cma-default;
-> +		};
-> +	};
-> +
-> +	leds {
-> +		compatible = "gpio-leds";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pinctrl_leds>;
-> +
-> +		led-0 {
-> +			color = <LED_COLOR_ID_GREEN>;
-> +			function = LED_FUNCTION_HEARTBEAT;
-> +			gpios = <&gpio1 1 GPIO_ACTIVE_HIGH>;
-> +			linux,default-trigger = "heartbeat";
-> +		};
-> +	};
-> +};
-> +
-> +/* Ethernet */
-> +&fec {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_fec>;
-> +	phy-mode = "rmii";
-> +	phy-handle = <&ethphy1>;
-> +	fsl,magic-packet;
-> +	assigned-clocks = <&clk IMX93_CLK_ENET_TIMER1>,
-> +			  <&clk IMX93_CLK_ENET_REF>,
-> +			  <&clk IMX93_CLK_ENET_REF_PHY>;
-> +	assigned-clock-parents = <&clk IMX93_CLK_SYS_PLL_PFD1_DIV2>,
-> +				 <&clk IMX93_CLK_SYS_PLL_PFD1_DIV2>,
-> +				 <&clk IMX93_CLK_SYS_PLL_PFD1_DIV2>;
-> +	assigned-clock-rates = <100000000>, <50000000>, <50000000>;
-> +	status = "okay";
-> +
-> +	mdio: mdio {
-> +		clock-frequency = <5000000>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		ethphy1: ethernet-phy@1 {
-> +			compatible = "ethernet-phy-ieee802.3-c22";
-> +			reg = <1>;
-> +		};
-> +	};
-> +};
-> +
-> +/* eMMC */
-> +&usdhc1 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_usdhc1>;
-> +	bus-width = <8>;
-> +	non-removable;
-> +	status = "okay";
-> +};
-> +
-> +/* Watchdog */
-> +&wdog3 {
-> +	status = "okay";
-> +};
-> +
-> +&iomuxc {
-> +	pinctrl_fec: fecgrp {
-> +		fsl,pins = <
-> +			MX93_PAD_ENET2_MDC__ENET1_MDC			0x50e
-> +			MX93_PAD_ENET2_MDIO__ENET1_MDIO			0x502
-> +			MX93_PAD_ENET2_RD0__ENET1_RGMII_RD0		0x57e
-> +			MX93_PAD_ENET2_RD1__ENET1_RGMII_RD1		0x57e
-> +			MX93_PAD_ENET2_RXC__ENET1_RX_ER			0x5fe
-> +			MX93_PAD_ENET2_RX_CTL__ENET1_RGMII_RX_CTL	0x57e
-> +			MX93_PAD_ENET2_TD0__ENET1_RGMII_TD0		0x50e
-> +			MX93_PAD_ENET2_TD1__ENET1_RGMII_TD1		0x50e
-> +			MX93_PAD_ENET2_TX_CTL__ENET1_RGMII_TX_CTL	0x50e
-> +			MX93_PAD_ENET2_TD2__ENET1_TX_CLK		0x4000050e
-> +		>;
-> +	};
-> +
-> +	pinctrl_leds: ledsgrp {
-> +		fsl,pins = <
-> +			MX93_PAD_I2C1_SDA__GPIO1_IO01		0x31e
-> +		>;
-> +	};
-> +
-> +	pinctrl_usdhc1: usdhc1grp {
-> +		fsl,pins = <
-> +			MX93_PAD_SD1_CLK__USDHC1_CLK		0x179e
-> +			MX93_PAD_SD1_CMD__USDHC1_CMD		0x1386
-> +			MX93_PAD_SD1_DATA0__USDHC1_DATA0	0x138e
-> +			MX93_PAD_SD1_DATA1__USDHC1_DATA1	0x1386
-> +			MX93_PAD_SD1_DATA2__USDHC1_DATA2	0x138e
-> +			MX93_PAD_SD1_DATA3__USDHC1_DATA3	0x1386
-> +			MX93_PAD_SD1_DATA4__USDHC1_DATA4	0x1386
-> +			MX93_PAD_SD1_DATA5__USDHC1_DATA5	0x1386
-> +			MX93_PAD_SD1_DATA6__USDHC1_DATA6	0x1386
-> +			MX93_PAD_SD1_DATA7__USDHC1_DATA7	0x1386
-> +			MX93_PAD_SD1_STROBE__USDHC1_STROBE	0x179e
-> +		>;
-> +	};
-> +};
+SGkgTWF4aW1lLCBEYW5pZWwsDQoNCldlIGVuY291bnRlcmVkIHNpbWlsYXIgaXNzdWUgd2l0aCBt
+ZWRpYXRlayBTb0NzLg0KDQpXZSBoYXZlIGZvdW5kIHRoYXQgaW4gZHJtX2F0b21pY19oZWxwZXJf
+Y29tbWl0X3JwbSgpLCB3aGVuIGRpc2FibGluZw0KdGhlIGN1cnNvciBwbGFuZSwgdGhlIG9sZF9z
+dGF0ZS0+bGVnYWN5X2N1cnNvcl91cGRhdGUgaW4NCmRybV9hdG9taWNfd2FpdF9mb3JfdmJsYW5r
+KCkgaXMgc2V0IHRvIHRydWUuDQpBcyB0aGUgcmVzdWx0LCB3ZSBhcmUgbm90IGFjdHVhbGx5IHdh
+aXRpbmcgZm9yIGEgdmxiYW5rIHRvIHdhaXQgZm9yIG91cg0KaGFyZHdhcmUgdG8gY2xvc2UgdGhl
+IGN1cnNvciBwbGFuZS4gU3Vic2VxdWVudGx5LCB0aGUgZXhlY3V0aW9uDQpwcm9jZWVkcyB0byBk
+cm1fYXRvbWljX2hlbHBlcl9jbGVhbnVwX3BsYW5lcygpIHRvICBmcmVlIHRoZSBjdXJzb3INCmJ1
+ZmZlci4gVGhpcyBjYW4gbGVhZCB0byB1c2UtYWZ0ZXItZnJlZSBpc3N1ZXMgd2l0aCBvdXIgaGFy
+ZHdhcmUuDQoNCkNvdWxkIHlvdSBwbGVhc2UgYXBwbHkgdGhpcyBwYXRjaCB0byBmaXggb3VyIHBy
+b2JsZW0/DQpPciBhcmUgdGhlcmUgYW55IGNvbnNpZGVyYXRpb25zIGZvciBub3QgYXBwbHlpbmcg
+dGhpcyBwYXRjaD8NCg0KUmVnYXJkcywNCkphc29uLUpILkxpbg0KDQpPbiBUdWUsIDIwMjMtMDMt
+MDcgYXQgMTU6NTYgKzAxMDAsIE1heGltZSBSaXBhcmQgd3JvdGU6DQo+IEhpLA0KPiANCj4gT24g
+VGh1LCBGZWIgMTYsIDIwMjMgYXQgMTI6MTI6MTNQTSArMDEwMCwgRGFuaWVsIFZldHRlciB3cm90
+ZToNCj4gPiBUaGUgc3R1ZmYgbmV2ZXIgcmVhbGx5IHdvcmtlZCwgYW5kIGxlYWRzIHRvIGxvdHMg
+b2YgZnVuIGJlY2F1c2UgaXQNCj4gPiBvdXQtb2Ytb3JkZXIgZnJlZXMgYXRvbWljIHN0YXRlcy4g
+V2hpY2ggdXBzZXRzIEtBU0FOLCBhbW9uZyBvdGhlcg0KPiA+IHRoaW5ncy4NCj4gPiANCj4gPiBG
+b3IgYXN5bmMgdXBkYXRlcyB3ZSBub3cgaGF2ZSBhIG1vcmUgc29saWQgc29sdXRpb24gd2l0aCB0
+aGUNCj4gPiAtPmF0b21pY19hc3luY19jaGVjayBhbmQgLT5hdG9taWNfYXN5bmNfY29tbWl0IGhv
+b2tzLiBTdXBwb3J0IGZvcg0KPiA+IHRoYXQNCj4gPiBmb3IgbXNtIGFuZCB2YzQgbGFuZGVkLiBu
+b3V2ZWF1IGFuZCBpOTE1IGhhdmUgdGhlaXIgb3duIGNvbW1pdA0KPiA+IHJvdXRpbmVzLCBkb2lu
+ZyBzb21ldGhpbmcgc2ltaWxhci4NCj4gPiANCj4gPiBGb3IgZXZlcnlvbmUgZWxzZSBpdCdzIHBy
+b2JhYmx5IGJldHRlciB0byByZW1vdmUgdGhlIHVzZS1hZnRlci1mcmVlDQo+ID4gYnVnLCBhbmQg
+ZW5jb3VyYWdlIGZvbGtzIHRvIHVzZSB0aGUgYXN5bmMgc3VwcG9ydCBpbnN0ZWFkLiBUaGUNCj4g
+PiBhZmZlY3RlZCBkcml2ZXJzIHdoaWNoIHJlZ2lzdGVyIGEgbGVnYWN5IGN1cnNvciBwbGFuZSBh
+bmQgZG9uJ3QNCj4gPiBlaXRoZXINCj4gPiB1c2UgdGhlIG5ldyBhc3luYyBzdHVmZiBvciB0aGVp
+ciBvd24gY29tbWl0IHJvdXRpbmUgYXJlOiBhbWRncHUsDQo+ID4gYXRtZWwsIG1lZGlhdGVrLCBx
+eGwsIHJvY2tjaGlwLCBzdGksIHN1bjRpLCB0ZWdyYSwgdmlydGlvLCBhbmQNCj4gPiB2bXdnZngu
+DQo+ID4gDQo+ID4gSW5zcGlyZWQgYnkgYW4gYW1kZ3B1IGJ1ZyByZXBvcnQuDQo+IA0KPiBUaGFu
+a3MgZm9yIHN1Ym1pdHRpbmcgdGhhdCBwYXRjaC4gSXQncyBiZWVuIGluIHRoZSBkb3duc3RyZWFt
+IFJQaQ0KPiB0cmVlDQo+IGZvciBhIHdoaWxlLCBzbyBJJ2QgcmVhbGx5IGxpa2UgaXQgdG8gYmUg
+bWVyZ2VkIGV2ZW50dWFsbHkgOikNCj4gDQo+IEFja2VkLWJ5OiBNYXhpbWUgUmlwYXJkIDxtYXhp
+bWVAY2Vybm8udGVjaD4NCj4gDQo+IE1heGltZQ0K
