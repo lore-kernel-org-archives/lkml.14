@@ -1,44 +1,44 @@
 Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15FE314DB74;
-	Tue, 23 Jan 2024 00:22:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D237114F538;
+	Tue, 23 Jan 2024 00:22:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.134.136.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705969362; cv=none; b=Zq1Gt3oID4JhKRge6oR2c0lBO8h1oPQLayh1BxQ74RLtJ0U5G35ecVKTklgqtnEjj7/EqXqP4GqGKkDQoUbqxmdZsO9zOmPBOJU0lMCcXWaC9bt2YznIRUI7sM/WuHwhslvxrHbmLFh6MmIgf1C+yIkYljmC9iE1ehVi5oyD4Kk=
+	t=1705969364; cv=none; b=L7VqMbZBR9nwbWOFaXv1N3tS1epo5z9ikCBYl82Rhwh6ghIP1hXkb7UdYY6kbgdvcK/0KIRG/s4SAb6I7Ar1bBDZL46sFAcYc5jvlTo07gjLoJY4eOW/nuyK+8wuXXc6QPtQDrizBWwEKWco4MxiVAmbCmnDrPqmGqbPpk0SLcI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705969362; c=relaxed/simple;
-	bh=Xx29hkn+VuZzl9NNsCbqSpiFZ4s0wixGphpqZM+kOB0=;
+	s=arc-20240116; t=1705969364; c=relaxed/simple;
+	bh=KX7PJQwd4bEJKGoSjmNKx7nJ7E6cYVc8W8UDuuUN2zY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=jgKbB/6YJ9Az5wZv0liU6GGPj/sq7Itwy5OgrMR1/UzATlUeEHiw1aorXtmuEQHcKMJH6yJWOPVyuw8nqM+n4/jIjpG9cA8mcVecy/nCMqiESI1IQQv8y3/U4kl2DIwGsEJU98F86OX+MQoH5IOyU1VD4XKJWGbxCZ76oSi8EFM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AZwbK56h; arc=none smtp.client-ip=134.134.136.65
+	 MIME-Version; b=CDwfIUsAoQ0F8gJ6BTEBOGCy2sCbtmnKSP9Pf4gC6dt+bpFpACd0TdpXNVq6WlrSQGZjF2DRJAXVxeQKnXAuQg1tqGrat52ru9CR2+G1/QFfh3nFQnCAavqNSq3qSvMxHyUndWPCuWHVcjpaLshbyIXu5NvdPfscCAutNWh6XUU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Yi1w5Rix; arc=none smtp.client-ip=134.134.136.65
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AZwbK56h"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Yi1w5Rix"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1705969361; x=1737505361;
+  t=1705969362; x=1737505362;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=Xx29hkn+VuZzl9NNsCbqSpiFZ4s0wixGphpqZM+kOB0=;
-  b=AZwbK56hVAtv8IIAo9ah8RZhFnLZpw1KDs8AqIiJKpE01vS1TEyoDkim
-   4bMTyNQLMky0ia3yS05pX+6suUjdADtz/mgk1gHFt+9ja2PTQOt0LLVBM
-   FzMxfiqEgluL2DDg5ZYrqvI/aAdi+3ylIL8774wEJPXK4+7Mw0Qgvscsh
-   V4VaqzgV47WcnLBU+wBxPG2qKKfkuRClAvyLwcNCntLGu8MC23pl2N9S7
-   MTTLrQ0nBR9hImEqO6ELxYZaqYsEx1i5MtqlbSSICj1Ucxis3HjPGiICR
-   d4QGFNJVNGgf9VzG+WaTEmAj39zRVbUFUS3F0ycvMocxh3NBQ8l4uPtMG
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10961"; a="405125666"
+  bh=KX7PJQwd4bEJKGoSjmNKx7nJ7E6cYVc8W8UDuuUN2zY=;
+  b=Yi1w5Rixo2RgUZVXHQAPoKv//Bh9FTgkQugbcwJZtAcdDwNjLltqB8gY
+   bmcklW7DYl6kl9A8ON9BAX1VlP07onsilZneZxQJ30i2VgJNcAu1FQqxX
+   8JIu5a6EHRlYxsEzsZrxqBSJgIUPHkcBLpUxUbx8GfTnqadEC0+7XvbnA
+   MYPTr2v7OjGZZBqKwDjXdAB+q4R0E5A1A7DrO59o6ERIJ2dJpfpGvIMIf
+   dSmrgdhXHYLb/jZZVAtE3zgbBS1znZ+//qCJkR+8zkSJREegzbiAswWF8
+   dTS7pxcRa9KjKGJYMeVul7eBetBNYYEA0HRUQJcAIXeiO9iQ8/bwnXQ8q
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10961"; a="405125681"
 X-IronPort-AV: E=Sophos;i="6.05,212,1701158400"; 
-   d="scan'208";a="405125666"
+   d="scan'208";a="405125681"
 Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 16:22:39 -0800
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 16:22:40 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.05,212,1701158400"; 
-   d="scan'208";a="27825643"
+   d="scan'208";a="27825653"
 Received: from ls.sc.intel.com (HELO localhost) ([172.25.112.31])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 16:22:38 -0800
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 16:22:39 -0800
 From: isaku.yamahata@intel.com
 To: kvm@vger.kernel.org,
 	linux-kernel@vger.kernel.org
@@ -53,9 +53,9 @@ Cc: isaku.yamahata@intel.com,
 	hang.yuan@intel.com,
 	tina.zhang@intel.com,
 	Xiaoyao Li <xiaoyao.li@intel.com>
-Subject: [PATCH v7 05/13] KVM: MMU: Introduce level info in PFERR code
-Date: Mon, 22 Jan 2024 16:22:20 -0800
-Message-Id: <3eadceecdf5e0ed2677dbcd9d0d58963f7fa038b.1705965958.git.isaku.yamahata@intel.com>
+Subject: [PATCH v7 08/13] KVM: x86/tdp_mmu: Split the large page when zap leaf
+Date: Mon, 22 Jan 2024 16:22:23 -0800
+Message-Id: <3391bf2cf96df8744e0abc023d8af9ec677ee4e8.1705965958.git.isaku.yamahata@intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1705965958.git.isaku.yamahata@intel.com>
 References: <cover.1705965958.git.isaku.yamahata@intel.com>
@@ -69,77 +69,179 @@ Content-Transfer-Encoding: 8bit
 
 From: Xiaoyao Li <xiaoyao.li@intel.com>
 
-For TDX, EPT violation can happen when TDG.MEM.PAGE.ACCEPT.
-And TDG.MEM.PAGE.ACCEPT contains the desired accept page level of TD guest.
-
-1. KVM can map it with 4KB page while TD guest wants to accept 2MB page.
-
-  TD guest will get TDX_PAGE_SIZE_MISMATCH and it should try to accept
-  4KB size.
-
-2. KVM can map it with 2MB page while TD guest wants to accept 4KB page.
-
-  KVM needs to honor it because
-  a) there is no way to tell guest KVM maps it as 2MB size. And
-  b) guest accepts it in 4KB size since guest knows some other 4KB page
-     in the same 2MB range will be used as shared page.
-
-For case 2, it need to pass desired page level to KVM MMU page fault
-handler. Use bit 29:31 of kvm PF error code for this purpose.
+When TDX enabled, a large page cannot be zapped if it contains mixed
+pages. In this case, it has to split the large page.
 
 Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
-Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
 ---
- arch/x86/include/asm/kvm_host.h | 5 +++++
- arch/x86/kvm/mmu/mmu.c          | 5 +++++
- 2 files changed, 10 insertions(+)
+v7:
+- remote unnecessary tlb shoot down in tdp_mmu_zap_leafs() to free unused
+  split_sp.
+---
+ arch/x86/kvm/Kconfig            |  1 +
+ arch/x86/kvm/mmu/mmu.c          |  6 ++--
+ arch/x86/kvm/mmu/mmu_internal.h |  9 +++++
+ arch/x86/kvm/mmu/tdp_mmu.c      | 60 ++++++++++++++++++++++++++++++---
+ 4 files changed, 69 insertions(+), 7 deletions(-)
 
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index b83a790b01c8..3a2237ed9dba 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -262,6 +262,8 @@ enum x86_intercept_stage;
- #define PFERR_FETCH_BIT 4
- #define PFERR_PK_BIT 5
- #define PFERR_SGX_BIT 15
-+#define PFERR_LEVEL_START_BIT 29
-+#define PFERR_LEVEL_END_BIT 31
- #define PFERR_GUEST_FINAL_BIT 32
- #define PFERR_GUEST_PAGE_BIT 33
- #define PFERR_GUEST_ENC_BIT 34
-@@ -274,6 +276,7 @@ enum x86_intercept_stage;
- #define PFERR_FETCH_MASK	BIT(PFERR_FETCH_BIT)
- #define PFERR_PK_MASK		BIT(PFERR_PK_BIT)
- #define PFERR_SGX_MASK		BIT(PFERR_SGX_BIT)
-+#define PFERR_LEVEL_MASK	GENMASK_ULL(PFERR_LEVEL_END_BIT, PFERR_LEVEL_START_BIT)
- #define PFERR_GUEST_FINAL_MASK	BIT_ULL(PFERR_GUEST_FINAL_BIT)
- #define PFERR_GUEST_PAGE_MASK	BIT_ULL(PFERR_GUEST_PAGE_BIT)
- #define PFERR_GUEST_ENC_MASK	BIT_ULL(PFERR_GUEST_ENC_BIT)
-@@ -283,6 +286,8 @@ enum x86_intercept_stage;
- 				 PFERR_WRITE_MASK |		\
- 				 PFERR_PRESENT_MASK)
- 
-+#define PFERR_LEVEL(err_code)	(((err_code) & PFERR_LEVEL_MASK) >> PFERR_LEVEL_START_BIT)
-+
- /* apic attention bits */
- #define KVM_APIC_CHECK_VAPIC	0
- /*
+diff --git a/arch/x86/kvm/Kconfig b/arch/x86/kvm/Kconfig
+index fa00abb9ab39..1aa37d494ae9 100644
+--- a/arch/x86/kvm/Kconfig
++++ b/arch/x86/kvm/Kconfig
+@@ -89,6 +89,7 @@ config KVM_INTEL
+ 	tristate "KVM for Intel (and compatible) processors support"
+ 	depends on KVM && IA32_FEAT_CTL
+ 	select KVM_SW_PROTECTED_VM if INTEL_TDX_HOST
++	select KVM_GENERIC_MEMORY_ATTRIBUTES if INTEL_TDX_HOST
+ 	select KVM_PRIVATE_MEM if INTEL_TDX_HOST
+ 	help
+ 	  Provides support for KVM on processors equipped with Intel's VT
 diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index 53eb9508cde2..971dbd9c95cc 100644
+index 971dbd9c95cc..a9e7a3d2d362 100644
 --- a/arch/x86/kvm/mmu/mmu.c
 +++ b/arch/x86/kvm/mmu/mmu.c
-@@ -4611,6 +4611,11 @@ bool __kvm_mmu_honors_guest_mtrrs(bool vm_has_noncoherent_dma)
+@@ -7461,8 +7461,8 @@ bool kvm_arch_pre_set_memory_attributes(struct kvm *kvm,
+ 	return kvm_unmap_gfn_range(kvm, range);
+ }
  
- int kvm_tdp_page_fault(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault)
+-static bool hugepage_test_mixed(struct kvm_memory_slot *slot, gfn_t gfn,
+-				int level)
++bool kvm_hugepage_test_mixed(struct kvm_memory_slot *slot, gfn_t gfn,
++			     int level)
  {
-+	u8 err_level = PFERR_LEVEL(fault->error_code);
+ 	return lpage_info_slot(gfn, slot, level)->disallow_lpage & KVM_LPAGE_MIXED_FLAG;
+ }
+@@ -7489,7 +7489,7 @@ static bool hugepage_has_attrs(struct kvm *kvm, struct kvm_memory_slot *slot,
+ 		return kvm_range_has_memory_attributes(kvm, start, end, attrs);
+ 
+ 	for (gfn = start; gfn < end; gfn += KVM_PAGES_PER_HPAGE(level - 1)) {
+-		if (hugepage_test_mixed(slot, gfn, level - 1) ||
++		if (kvm_hugepage_test_mixed(slot, gfn, level - 1) ||
+ 		    attrs != kvm_get_memory_attributes(kvm, gfn))
+ 			return false;
+ 	}
+diff --git a/arch/x86/kvm/mmu/mmu_internal.h b/arch/x86/kvm/mmu/mmu_internal.h
+index 9888ea0046ea..cc0a95e554b5 100644
+--- a/arch/x86/kvm/mmu/mmu_internal.h
++++ b/arch/x86/kvm/mmu/mmu_internal.h
+@@ -461,4 +461,13 @@ void *mmu_memory_cache_alloc(struct kvm_mmu_memory_cache *mc);
+ void track_possible_nx_huge_page(struct kvm *kvm, struct kvm_mmu_page *sp);
+ void untrack_possible_nx_huge_page(struct kvm *kvm, struct kvm_mmu_page *sp);
+ 
++#ifdef CONFIG_KVM_GENERIC_MEMORY_ATTRIBUTES
++bool kvm_hugepage_test_mixed(struct kvm_memory_slot *slot, gfn_t gfn, int level);
++#else
++static inline bool kvm_hugepage_test_mixed(struct kvm_memory_slot *slot, gfn_t gfn, int level)
++{
++	return false;
++}
++#endif
 +
-+	if (err_level)
-+		fault->max_level = min(fault->max_level, err_level);
+ #endif /* __KVM_X86_MMU_INTERNAL_H */
+diff --git a/arch/x86/kvm/mmu/tdp_mmu.c b/arch/x86/kvm/mmu/tdp_mmu.c
+index 7991934b3f37..98de2c093815 100644
+--- a/arch/x86/kvm/mmu/tdp_mmu.c
++++ b/arch/x86/kvm/mmu/tdp_mmu.c
+@@ -953,6 +953,14 @@ bool kvm_tdp_mmu_zap_sp(struct kvm *kvm, struct kvm_mmu_page *sp)
+ 	return true;
+ }
+ 
++
++static struct kvm_mmu_page *tdp_mmu_alloc_sp_for_split(struct kvm *kvm,
++						       struct tdp_iter *iter,
++						       bool shared);
++
++static int tdp_mmu_split_huge_page(struct kvm *kvm, struct tdp_iter *iter,
++				   struct kvm_mmu_page *sp, bool shared);
++
+ /*
+  * If can_yield is true, will release the MMU lock and reschedule if the
+  * scheduler needs the CPU or there is contention on the MMU lock. If this
+@@ -964,14 +972,16 @@ static bool tdp_mmu_zap_leafs(struct kvm *kvm, struct kvm_mmu_page *root,
+ 			      gfn_t start, gfn_t end, bool can_yield, bool flush,
+ 			      bool zap_private)
+ {
++	bool is_private = is_private_sp(root);
++	struct kvm_mmu_page *split_sp = NULL;
+ 	struct tdp_iter iter;
+ 
+ 	end = min(end, tdp_mmu_max_gfn_exclusive());
+ 
+ 	lockdep_assert_held_write(&kvm->mmu_lock);
+ 
+-	WARN_ON_ONCE(zap_private && !is_private_sp(root));
+-	if (!zap_private && is_private_sp(root))
++	WARN_ON_ONCE(zap_private && !is_private);
++	if (!zap_private && is_private)
+ 		return false;
+ 
+ 	/*
+@@ -995,12 +1005,56 @@ static bool tdp_mmu_zap_leafs(struct kvm *kvm, struct kvm_mmu_page *root,
+ 		    !is_last_spte(iter.old_spte, iter.level))
+ 			continue;
+ 
++		if (is_private && kvm_gfn_shared_mask(kvm) &&
++		    is_large_pte(iter.old_spte)) {
++			gfn_t gfn = iter.gfn & ~kvm_gfn_shared_mask(kvm);
++			gfn_t mask = KVM_PAGES_PER_HPAGE(iter.level) - 1;
++			struct kvm_memory_slot *slot;
++			struct kvm_mmu_page *sp;
++
++			slot = gfn_to_memslot(kvm, gfn);
++			if (kvm_hugepage_test_mixed(slot, gfn, iter.level) ||
++			    (gfn & mask) < start ||
++			    end < (gfn & mask) + KVM_PAGES_PER_HPAGE(iter.level)) {
++				WARN_ON_ONCE(!can_yield);
++				if (split_sp) {
++					sp = split_sp;
++					split_sp = NULL;
++					sp->role = tdp_iter_child_role(&iter);
++				} else {
++					WARN_ON(iter.yielded);
++					if (flush && can_yield) {
++						kvm_flush_remote_tlbs(kvm);
++						flush = false;
++					}
++					sp = tdp_mmu_alloc_sp_for_split(kvm, &iter, false);
++					if (iter.yielded) {
++						split_sp = sp;
++						continue;
++					}
++				}
++				KVM_BUG_ON(!sp, kvm);
++
++				tdp_mmu_init_sp(sp, iter.sptep, iter.gfn);
++				if (tdp_mmu_split_huge_page(kvm, &iter, sp, false)) {
++					/* force retry on this gfn. */
++					iter.yielded = true;
++					split_sp = sp;
++				} else
++					flush = true;
++				continue;
++			}
++		}
++
+ 		tdp_mmu_iter_set_spte(kvm, &iter, SHADOW_NONPRESENT_VALUE);
+ 		flush = true;
+ 	}
+ 
+ 	rcu_read_unlock();
+ 
++	if (split_sp)
++		tdp_mmu_free_sp(split_sp);
 +
  	/*
- 	 * If the guest's MTRRs may be used to compute the "real" memtype,
- 	 * restrict the mapping level to ensure KVM uses a consistent memtype
+ 	 * Because this flow zaps _only_ leaf SPTEs, the caller doesn't need
+ 	 * to provide RCU protection as no 'struct kvm_mmu_page' will be freed.
+@@ -1617,8 +1671,6 @@ static struct kvm_mmu_page *tdp_mmu_alloc_sp_for_split(struct kvm *kvm,
+ 	kvm_lockdep_assert_mmu_lock_held(kvm, shared);
+ 	KVM_BUG_ON(kvm_mmu_page_role_is_private(role) !=
+ 		   is_private_sptep(iter->sptep), kvm);
+-	/* TODO: Large page isn't supported for private SPTE yet. */
+-	KVM_BUG_ON(kvm_mmu_page_role_is_private(role), kvm);
+ 
+ 	/*
+ 	 * Since we are allocating while under the MMU lock we have to be
 -- 
 2.25.1
 
