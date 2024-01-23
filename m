@@ -1,164 +1,243 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B4535C915;
-	Tue, 23 Jan 2024 11:08:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from out0-205.mail.aliyun.com (out0-205.mail.aliyun.com [140.205.0.205])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F2595D725
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 11:09:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.205.0.205
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706008126; cv=none; b=mlaH8dhPKPPirkPUJvjAN8meHQ/ViZ5ejQ4ANCEB6MEvd8X+FloZYe4JqdyNXVb0iO7aG9kEr97UQidCytzfo4HrmaT4OU8s8BSNFzxODrPzGfMoUzrKFwflZjzxEZSN1+xwl4Fj6ZPLqAOpvI/asHVYTcBExwiGweSKL9aAHtI=
+	t=1706008159; cv=none; b=LueeFDrAAov4xv1HKCjFbXZLnNK+wi0ozlBtXuMPJsKaThQwjpZ1jE8on1bIwony2dLDyTGL9Zw17g1/B0g8OD34pcMWhdxFHBiN6qHKoQJmHC6yLj3a9jBWZoJsWweUuVWpJBm2yzon02kkThkNu8CPd1zT0s369uOpxsp51Bw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706008126; c=relaxed/simple;
-	bh=IEDrR/qz7Pwhp6nM55h9cFxHdv2zsdeuJaKINfhH6jo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=a7bsKclblzHV0zju/5Y3Z2Bq9LeCe2esfvH1bGCUB5s2ZY4m9oY1lsHDVgr5SbW3qkp2ScV6DkUhoffRShFeZ5mzlM6vlGLa55s/l+L/l2bjeY5fmACzdYjpIqZjEF0djjsk6nvvYAd7p9Ucylyhub2oWTC3bn+sdmcbgcYW37Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0AADC1FB;
-	Tue, 23 Jan 2024 03:09:26 -0800 (PST)
-Received: from [10.57.77.165] (unknown [10.57.77.165])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3DDC23F762;
-	Tue, 23 Jan 2024 03:08:35 -0800 (PST)
-Message-ID: <6703b648-10ab-4fea-b7f1-75421319465b@arm.com>
-Date: Tue, 23 Jan 2024 11:08:33 +0000
+	s=arc-20240116; t=1706008159; c=relaxed/simple;
+	bh=1sr2sdDMijyrY3fpb7f0Qr+PhaKz1rnNX0kYmghypxM=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ZErlpClVIFZoJwrSzZGtynpVcd3A3rgK7nQcl0M553K5Q16OmurFGCh5hhOo3yV4NydalPQgm6vK6LxCLl48Sm1teODBg67IVtWUSL/wj4OFYGfx6iCBEoFiTiAiAKbKBVgrxrA4kYbMDrBr8emkpbSAB/shycq5cU0orPoA7BM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com; spf=pass smtp.mailfrom=antgroup.com; arc=none smtp.client-ip=140.205.0.205
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antgroup.com
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018047211;MF=tiwei.btw@antgroup.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---.WDCKTjh_1706007835;
+Received: from ubuntu..(mailfrom:tiwei.btw@antgroup.com fp:SMTPD_---.WDCKTjh_1706007835)
+          by smtp.aliyun-inc.com;
+          Tue, 23 Jan 2024 19:03:55 +0800
+From: "Tiwei Bie" <tiwei.btw@antgroup.com>
+To: richard@nod.at,
+	anton.ivanov@cambridgegreys.com,
+	johannes@sipsolutions.net
+Cc:  <linux-um@lists.infradead.org>,
+   <linux-kernel@vger.kernel.org>,
+  "Tiwei Bie" <tiwei.btw@antgroup.com>
+Subject: [PATCH 1/5] um: Make local functions and variables static
+Date: Tue, 23 Jan 2024 19:03:43 +0800
+Message-Id: <20240123110347.1274217-2-tiwei.btw@antgroup.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240123110347.1274217-1-tiwei.btw@antgroup.com>
+References: <20240123110347.1274217-1-tiwei.btw@antgroup.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 01/11] arm/pgtable: define PFN_PTE_SHIFT on arm and
- arm64
-Content-Language: en-GB
-To: David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org
-Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
- Matthew Wilcox <willy@infradead.org>, Russell King <linux@armlinux.org.uk>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Dinh Nguyen <dinguyen@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>,
- Nicholas Piggin <npiggin@gmail.com>,
- Christophe Leroy <christophe.leroy@csgroup.eu>,
- "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
- "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Alexander Gordeev <agordeev@linux.ibm.com>,
- Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
- Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
- Christian Borntraeger <borntraeger@linux.ibm.com>,
- Sven Schnelle <svens@linux.ibm.com>, "David S. Miller"
- <davem@davemloft.net>, linux-arm-kernel@lists.infradead.org,
- linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
- linux-s390@vger.kernel.org, sparclinux@vger.kernel.org
-References: <20240122194200.381241-1-david@redhat.com>
- <20240122194200.381241-2-david@redhat.com>
- <fdaeb9a5-d890-499a-92c8-d171df43ad01@arm.com>
- <46080ac1-7789-499b-b7f3-0231d7bd6de7@redhat.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <46080ac1-7789-499b-b7f3-0231d7bd6de7@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On 23/01/2024 10:48, David Hildenbrand wrote:
-> On 23.01.24 11:34, Ryan Roberts wrote:
->> On 22/01/2024 19:41, David Hildenbrand wrote:
->>> We want to make use of pte_next_pfn() outside of set_ptes(). Let's
->>> simpliy define PFN_PTE_SHIFT, required by pte_next_pfn().
->>>
->>> Signed-off-by: David Hildenbrand <david@redhat.com>
->>> ---
->>>   arch/arm/include/asm/pgtable.h   | 2 ++
->>>   arch/arm64/include/asm/pgtable.h | 2 ++
->>>   2 files changed, 4 insertions(+)
->>>
->>> diff --git a/arch/arm/include/asm/pgtable.h b/arch/arm/include/asm/pgtable.h
->>> index d657b84b6bf70..be91e376df79e 100644
->>> --- a/arch/arm/include/asm/pgtable.h
->>> +++ b/arch/arm/include/asm/pgtable.h
->>> @@ -209,6 +209,8 @@ static inline void __sync_icache_dcache(pte_t pteval)
->>>   extern void __sync_icache_dcache(pte_t pteval);
->>>   #endif
->>>   +#define PFN_PTE_SHIFT        PAGE_SHIFT
->>> +
->>>   void set_ptes(struct mm_struct *mm, unsigned long addr,
->>>                 pte_t *ptep, pte_t pteval, unsigned int nr);
->>>   #define set_ptes set_ptes
->>> diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
->>> index 79ce70fbb751c..d4b3bd96e3304 100644
->>> --- a/arch/arm64/include/asm/pgtable.h
->>> +++ b/arch/arm64/include/asm/pgtable.h
->>> @@ -341,6 +341,8 @@ static inline void __sync_cache_and_tags(pte_t pte,
->>> unsigned int nr_pages)
->>>           mte_sync_tags(pte, nr_pages);
->>>   }
->>>   +#define PFN_PTE_SHIFT        PAGE_SHIFT
->>
->> I think this is buggy. And so is the arm64 implementation of set_ptes(). It
->> works fine for 48-bit output address, but for 52-bit OAs, the high bits are not
->> kept contigously, so if you happen to be setting a mapping for which the
->> physical memory block straddles bit 48, this won't work.
-> 
-> Right, as soon as the PTE bits are not contiguous, this stops working, just like
-> set_ptes() would, which I used as orientation.
-> 
->>
->> Today, only the 64K base page config can support 52 bits, and for this,
->> OA[51:48] are stored in PTE[15:12]. But 52 bits for 4K and 16K base pages is
->> coming (hopefully v6.9) and in this case OA[51:50] are stored in PTE[9:8].
->> Fortunately we already have helpers in arm64 to abstract this.
->>
->> So I think arm64 will want to define its own pte_next_pfn():
->>
->> #define pte_next_pfn pte_next_pfn
->> static inline pte_t pte_next_pfn(pte_t pte)
->> {
->>     return pfn_pte(pte_pfn(pte) + 1, pte_pgprot(pte));
->> }
->>
->> I'll do a separate patch to fix the already broken arm64 set_ptes()
->> implementation.
-> 
-> Make sense.
-> 
->>
->> I'm not sure if this type of problem might also apply to other arches?
-> 
-> I saw similar handling in the PPC implementation of set_ptes, but was not able
-> to convince me that it is actually required there.
-> 
-> pte_pfn on ppc does:
-> 
-> static inline unsigned long pte_pfn(pte_t pte)
-> {
->     return (pte_val(pte) & PTE_RPN_MASK) >> PTE_RPN_SHIFT;
-> }
-> 
-> But that means that the PFNs *are* contiguous.
+This will also fix the warnings like:
 
-all the ppc pfn_pte() implementations also only shift the pfn, so I think ppc is
-safe to just define PFN_PTE_SHIFT. Although 2 of the 3 implementations shift by
-PTE_RPN_SHIFT and the other shifts by PAGE_SIZE, so you might want to define
-PFN_PTE_SHIFT separately for all 3 configs?
+warning: no previous prototype for ‘fork_handler’ [-Wmissing-prototypes]
+  140 | void fork_handler(void)
+      |      ^~~~~~~~~~~~
 
-> If high bits are used for
-> something else, then we might produce a garbage PTE on overflow, but that
-> shouldn't really matter I concluded for folio_pte_batch() purposes, we'd not
-> detect "belongs to this folio batch" either way.
+Signed-off-by: Tiwei Bie <tiwei.btw@antgroup.com>
+---
+ arch/um/drivers/pcap_kern.c              | 4 ++--
+ arch/um/drivers/ubd_user.c               | 2 +-
+ arch/um/kernel/kmsg_dump.c               | 2 +-
+ arch/um/kernel/process.c                 | 8 ++++----
+ arch/um/kernel/time.c                    | 6 +++---
+ arch/um/os-Linux/drivers/ethertap_kern.c | 2 +-
+ arch/um/os-Linux/drivers/tuntap_kern.c   | 2 +-
+ arch/um/os-Linux/signal.c                | 4 ++--
+ arch/x86/um/os-Linux/registers.c         | 2 +-
+ 9 files changed, 16 insertions(+), 16 deletions(-)
 
-Exactly.
-
-> 
-> Maybe it's likely cleaner to also have a custom pte_next_pfn() on ppc, I just
-> hope that we don't lose any other arbitrary PTE bits by doing the pte_pgprot().
-
-I don't see the need for ppc to implement pte_next_pfn().
-
-pte_pgprot() is not a "proper" arch interface (its only required by the core-mm
-if the arch implements a certain Kconfig IIRC). For arm64, all bits that are not
-pfn are pgprot, so there are no bits lost.
-
-> 
-> 
-> I guess pte_pfn() implementations should tell us if anything special needs to
-> happen.
-> 
+diff --git a/arch/um/drivers/pcap_kern.c b/arch/um/drivers/pcap_kern.c
+index 25ee2c97ca21..d9bf95d7867b 100644
+--- a/arch/um/drivers/pcap_kern.c
++++ b/arch/um/drivers/pcap_kern.c
+@@ -15,7 +15,7 @@ struct pcap_init {
+ 	char *filter;
+ };
+ 
+-void pcap_init_kern(struct net_device *dev, void *data)
++static void pcap_init_kern(struct net_device *dev, void *data)
+ {
+ 	struct uml_net_private *pri;
+ 	struct pcap_data *ppri;
+@@ -50,7 +50,7 @@ static const struct net_kern_info pcap_kern_info = {
+ 	.write			= pcap_write,
+ };
+ 
+-int pcap_setup(char *str, char **mac_out, void *data)
++static int pcap_setup(char *str, char **mac_out, void *data)
+ {
+ 	struct pcap_init *init = data;
+ 	char *remain, *host_if = NULL, *options[2] = { NULL, NULL };
+diff --git a/arch/um/drivers/ubd_user.c b/arch/um/drivers/ubd_user.c
+index a1afe414ce48..b4f8b8e60564 100644
+--- a/arch/um/drivers/ubd_user.c
++++ b/arch/um/drivers/ubd_user.c
+@@ -23,7 +23,7 @@
+ #include <os.h>
+ #include <poll.h>
+ 
+-struct pollfd kernel_pollfd;
++static struct pollfd kernel_pollfd;
+ 
+ int start_io_thread(unsigned long sp, int *fd_out)
+ {
+diff --git a/arch/um/kernel/kmsg_dump.c b/arch/um/kernel/kmsg_dump.c
+index 427dd5a61a38..4382cf02a6d1 100644
+--- a/arch/um/kernel/kmsg_dump.c
++++ b/arch/um/kernel/kmsg_dump.c
+@@ -57,7 +57,7 @@ static struct kmsg_dumper kmsg_dumper = {
+ 	.dump = kmsg_dumper_stdout
+ };
+ 
+-int __init kmsg_dumper_stdout_init(void)
++static int __init kmsg_dumper_stdout_init(void)
+ {
+ 	return kmsg_dump_register(&kmsg_dumper);
+ }
+diff --git a/arch/um/kernel/process.c b/arch/um/kernel/process.c
+index ab95648e93e1..20f3813143d8 100644
+--- a/arch/um/kernel/process.c
++++ b/arch/um/kernel/process.c
+@@ -137,7 +137,7 @@ void new_thread_handler(void)
+ }
+ 
+ /* Called magically, see new_thread_handler above */
+-void fork_handler(void)
++static void fork_handler(void)
+ {
+ 	force_flush_all();
+ 
+@@ -268,14 +268,14 @@ int clear_user_proc(void __user *buf, int size)
+ static atomic_t using_sysemu = ATOMIC_INIT(0);
+ int sysemu_supported;
+ 
+-void set_using_sysemu(int value)
++static void set_using_sysemu(int value)
+ {
+ 	if (value > sysemu_supported)
+ 		return;
+ 	atomic_set(&using_sysemu, value);
+ }
+ 
+-int get_using_sysemu(void)
++static int get_using_sysemu(void)
+ {
+ 	return atomic_read(&using_sysemu);
+ }
+@@ -313,7 +313,7 @@ static const struct proc_ops sysemu_proc_ops = {
+ 	.proc_write	= sysemu_proc_write,
+ };
+ 
+-int __init make_proc_sysemu(void)
++static int __init make_proc_sysemu(void)
+ {
+ 	struct proc_dir_entry *ent;
+ 	if (!sysemu_supported)
+diff --git a/arch/um/kernel/time.c b/arch/um/kernel/time.c
+index 3e270da6b6f6..efa5b9c97992 100644
+--- a/arch/um/kernel/time.c
++++ b/arch/um/kernel/time.c
+@@ -319,7 +319,7 @@ void time_travel_add_event_rel(struct time_travel_event *e,
+ 	time_travel_add_event(e, time_travel_time + delay_ns);
+ }
+ 
+-void time_travel_periodic_timer(struct time_travel_event *e)
++static void time_travel_periodic_timer(struct time_travel_event *e)
+ {
+ 	time_travel_add_event(&time_travel_timer_event,
+ 			      time_travel_time + time_travel_timer_interval);
+@@ -812,7 +812,7 @@ unsigned long calibrate_delay_is_known(void)
+ 	return 0;
+ }
+ 
+-int setup_time_travel(char *str)
++static int setup_time_travel(char *str)
+ {
+ 	if (strcmp(str, "=inf-cpu") == 0) {
+ 		time_travel_mode = TT_MODE_INFCPU;
+@@ -862,7 +862,7 @@ __uml_help(setup_time_travel,
+ "devices using it, assuming the device has the right capabilities.\n"
+ "The optional ID is a 64-bit integer that's sent to the central scheduler.\n");
+ 
+-int setup_time_travel_start(char *str)
++static int setup_time_travel_start(char *str)
+ {
+ 	int err;
+ 
+diff --git a/arch/um/os-Linux/drivers/ethertap_kern.c b/arch/um/os-Linux/drivers/ethertap_kern.c
+index 3182e759d8de..5e5ee40680ce 100644
+--- a/arch/um/os-Linux/drivers/ethertap_kern.c
++++ b/arch/um/os-Linux/drivers/ethertap_kern.c
+@@ -63,7 +63,7 @@ const struct net_kern_info ethertap_kern_info = {
+ 	.write 			= etap_write,
+ };
+ 
+-int ethertap_setup(char *str, char **mac_out, void *data)
++static int ethertap_setup(char *str, char **mac_out, void *data)
+ {
+ 	struct ethertap_init *init = data;
+ 
+diff --git a/arch/um/os-Linux/drivers/tuntap_kern.c b/arch/um/os-Linux/drivers/tuntap_kern.c
+index adcb6717be6f..ff022d9cf0dd 100644
+--- a/arch/um/os-Linux/drivers/tuntap_kern.c
++++ b/arch/um/os-Linux/drivers/tuntap_kern.c
+@@ -53,7 +53,7 @@ const struct net_kern_info tuntap_kern_info = {
+ 	.write 			= tuntap_write,
+ };
+ 
+-int tuntap_setup(char *str, char **mac_out, void *data)
++static int tuntap_setup(char *str, char **mac_out, void *data)
+ {
+ 	struct tuntap_init *init = data;
+ 
+diff --git a/arch/um/os-Linux/signal.c b/arch/um/os-Linux/signal.c
+index 24a403a70a02..787cfb9a0308 100644
+--- a/arch/um/os-Linux/signal.c
++++ b/arch/um/os-Linux/signal.c
+@@ -72,7 +72,7 @@ static int signals_blocked;
+ static unsigned int signals_pending;
+ static unsigned int signals_active = 0;
+ 
+-void sig_handler(int sig, struct siginfo *si, mcontext_t *mc)
++static void sig_handler(int sig, struct siginfo *si, mcontext_t *mc)
+ {
+ 	int enabled = signals_enabled;
+ 
+@@ -108,7 +108,7 @@ static void timer_real_alarm_handler(mcontext_t *mc)
+ 	timer_handler(SIGALRM, NULL, &regs);
+ }
+ 
+-void timer_alarm_handler(int sig, struct siginfo *unused_si, mcontext_t *mc)
++static void timer_alarm_handler(int sig, struct siginfo *unused_si, mcontext_t *mc)
+ {
+ 	int enabled;
+ 
+diff --git a/arch/x86/um/os-Linux/registers.c b/arch/x86/um/os-Linux/registers.c
+index df8f4b4bf98b..f3638dd09cec 100644
+--- a/arch/x86/um/os-Linux/registers.c
++++ b/arch/x86/um/os-Linux/registers.c
+@@ -17,7 +17,7 @@
+ #include <linux/elf.h>
+ #include <registers.h>
+ 
+-int have_xstate_support;
++static int have_xstate_support;
+ 
+ int save_i387_registers(int pid, unsigned long *fp_regs)
+ {
+-- 
+2.34.1
 
