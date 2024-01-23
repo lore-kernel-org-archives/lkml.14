@@ -1,101 +1,86 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.17.10])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85E605FF19;
-	Tue, 23 Jan 2024 15:01:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00383604A6;
+	Tue, 23 Jan 2024 15:01:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706022101; cv=none; b=eg/dGrIu7UyIX1uDIeSrcNXr5mRAByKNv544xITWypEI5ghAeuY3Oh15lod6/XWObizTxi/HwobqeUuwvwolhxo3p/axMOIHS8ZgfzU7B0QHAYJTho+9VhjQda7nPX2ILub5ZWlLL9Iz+9beilcOW9RhHD3qPh9ORgYUOh0DRdQ=
+	t=1706022103; cv=none; b=R99d7P7/ithGWzJYBzgi5YRAS08/XJPjG5tHdpUakAOZRc2nu01CrIrLJJ0Ppo6xi2GEhsC7oZpO82LMZP3nl/DeABA1Kw1kU77DtsbgSPKWgpGo9NqYF8DGRT8G81tlGSbUvPMYQRk72+BBjFjKpNX8hTLFkkZN5bZyybgBwFg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706022101; c=relaxed/simple;
-	bh=fhb/oh2DjO5i4p0NG4q+kRApXIkNKfH08q5C3C9RYOs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QVZx+ooQaqhFxRH5B/ni0a5rc6aURYTMXO22LEHPxtqlAZk4yHyqt9qAjsMW/fNQKbhqkE47NiD5Qjg5Gstcp9mhWrJn75A++ui5cnJxVf5QI3o0XVSECTqqmR+Mnu+4O0+y0Vv6qrDhByt5MEoRCcgODAh/AJUB/BWRQG2pTWA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=valentinobst.de; spf=pass smtp.mailfrom=valentinobst.de; arc=none smtp.client-ip=212.227.17.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=valentinobst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=valentinobst.de
-Received: from localhost.localdomain ([95.223.130.98]) by
- mrelayeu.kundenserver.de (mreue107 [213.165.67.113]) with ESMTPSA (Nemesis)
- id 1MI4cT-1rLz8X3v5r-00F9jd; Tue, 23 Jan 2024 16:01:15 +0100
-From: Valentin Obst <kernel@valentinobst.de>
-To: Valentin Obst <fraunhofer@valentinobst.de>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Wedson Almeida Filho <wedsonaf@gmail.com>
-Cc: rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Trevor Gross <tmgross@umich.edu>,
-	Martin Rodriguez Reboredo <yakoyoku@gmail.com>
-Subject: [PATCH v2 04/12] rust: kernel: add srctree-relative doclinks
-Date: Tue, 23 Jan 2024 16:00:58 +0100
-Message-ID: <20240123150112.124084-5-kernel@valentinobst.de>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240123150112.124084-1-kernel@valentinobst.de>
-References: <20240123150112.124084-1-kernel@valentinobst.de>
+	s=arc-20240116; t=1706022103; c=relaxed/simple;
+	bh=ShMrW1ADV7iv+pVf3ziJG/80/SbMo2RZcy8p0RkUoJY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=G/IEDz2gDRSCHmxBK5XFWH1/zjXtlFjaJvCP5sBE7GVtDyByH2YMq/Ko7MB/tjOU013VaqIrCvP554ukGdgfSB2LvBZgzUY4CiNpuEjvT9MMfxY7SMCwbYfnGzbczzVKEysqNrUd4QT6b0sw9fQ08GS6g57gJG0DsR5Y1HibPkw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=OZ4uDMvo; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OZ4uDMvo"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=PepByJiWQ5z0YJAy3zsX5i+pG7M9t28NlsHRNrHyzFg=; b=OZ4uDMvo60iZ4l06WQT6UPpOyK
+	1Mzz1amI2B4lmc7SzQBo9/H5nZHwSc+ahhYWItLeLfbqvNQjOpLZ379CUtpyrKiJpaFB3y3qceoFn
+	2/09mBIgxlyPrDWwBI1N1vIcVhBAJ+ccP2Eft8qdX7sawkIRu0Y4eD33nl5AX1fWh4yZRXAHa0diJ
+	xtf9jKwnR9O51wT9yPKs25kKmm0Ym9Nc1WnmkYd5euK/RIRwr1nWxHB5018vQ5PnPMYfUbcXkcguy
+	WziupYXg/e8D0xyqPtbSRcqVXqNtY1gEyT+tocZwXdwgad56hM1QmUaMd0kzNvFae844ES7sQELU7
+	yz18rMEQ==;
+Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1rSIHS-00000003Un2-0lR2;
+	Tue, 23 Jan 2024 15:01:38 +0000
+Date: Tue, 23 Jan 2024 15:01:38 +0000
+From: Matthew Wilcox <willy@infradead.org>
+To: Ryan Roberts <ryan.roberts@arm.com>
+Cc: David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+	Russell King <linux@armlinux.org.uk>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Dinh Nguyen <dinguyen@kernel.org>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
+	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+	sparclinux@vger.kernel.org
+Subject: Re: [PATCH v1 01/11] arm/pgtable: define PFN_PTE_SHIFT on arm and
+ arm64
+Message-ID: <Za_U0kYHGFkJdSss@casper.infradead.org>
+References: <20240122194200.381241-1-david@redhat.com>
+ <20240122194200.381241-2-david@redhat.com>
+ <fdaeb9a5-d890-499a-92c8-d171df43ad01@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:JNxLmFOZ11mhsC9TPd49E2fYhC9noTIOCRe0QaefZ6t7OyfdHYO
- k6RpdFWbgiybeZUzEbt98mN+SQa3F8eAchgM3etm5HkWQpBMPGosbBU3EuQDx91Xp5BE7YY
- vcsOavOyksbhiM6QDxPRd68CCG47H39jtjOPOI9MkdZaQ1b9LeZlM+bplCvu0OQgEfJCy1e
- yGuIfusl5sXPTiL/42Lrg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:/peIACBikaQ=;YUH0Mo4Pgui0DLgpUsdRwjU+mFi
- GDpqTkT6icNR2B3R046uoI4cc3VO9Z1jNEgTYPzs0OtS7693C6kROn04grWKQYZmtMu9CrXDG
- wsYhsxoJ9wG4+fm+PeoKMeQfZs8sRj5XM7EOcawu3UUZAUYcw4hBEy6exew80vKIUUXa1RSas
- XxZJVyr9148jZD5Wqp1U9IodzAi190ZowAGkZ8vdEEvzGc0OUdqetPDOOGTXifbRbx/L2BuG2
- I0/R7CI1Ipoyk1GwmzOUrR09vEtMruoYHqlfJqMQn++GW41sVSSHX0WaDlhndcj07od0ieCDr
- PeTd+WuhCARItcuZpshU6i8bqyUgRCd4P3ef3n1w64B+CVtoCAccaJyQCvclAoseZkKw4jM8n
- mzHbat1AeczypXnUYYzoDR6/GH6TJpbewzSIII6VaMOPCxwwDVmrymJPiejSP8q1S+PU0P1g1
- cxhFPhw44g53XTDIw2S8x+oS7ZdRWvg158Jpwwwo8qOJfvD9iHZneBilR0hR4vzczc2Gkygpt
- mD4i3kWOFFMxmYpQDtTd8GITIzPXDuc7+HPDgs9UumQ6iN1ZERXGS95RFmaXDFK+rC4bE9KTD
- aj2eke+hnU8Vhm4h28CVi04h7q6Dc/muwLs50T843+wgWzzR96DiJxQzMw6aroPXPdCBSGOFY
- wtSZ/Se6HXqkanMP2X8wubBJ6zzMh0bpaJTf9es9zp2BMKV2U3yqzQyqjOSzXt/D8XBNNNP+G
- ixB9HQac7TcgKsGrjd8i1r/wi/8XA+lIyDJIV0k+jl532egVSH3FV1Fq6YAinP52cdL5BUIKh
- 0/jAvP9gLmNy1rr6GfntaeohE4ZGFI/84FMBwtaRtxKWFulDBqG3ydWsM0iEtY/AJFr7D0jUT
- CZ8UsqLmOyjUntG8RQvwbhc30YLOfKaVXdks=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fdaeb9a5-d890-499a-92c8-d171df43ad01@arm.com>
 
-Convert existing references to C header files to make use of
-Commit bc2e7d5c298a ("rust: support `srctree`-relative links").
+On Tue, Jan 23, 2024 at 10:34:21AM +0000, Ryan Roberts wrote:
+> > +#define PFN_PTE_SHIFT		PAGE_SHIFT
+> 
+> I think this is buggy. And so is the arm64 implementation of set_ptes(). It
+> works fine for 48-bit output address, but for 52-bit OAs, the high bits are not
+> kept contigously, so if you happen to be setting a mapping for which the
+> physical memory block straddles bit 48, this won't work.
 
-Signed-off-by: Valentin Obst <kernel@valentinobst.de>
-Reviewed-by: Trevor Gross <tmgross@umich.edu>
-Reviewed-by: Martin Rodriguez Reboredo <yakoyoku@gmail.com>
----
- rust/kernel/lib.rs          | 2 +-
- rust/kernel/sync/condvar.rs | 2 ++
- 2 files changed, 3 insertions(+), 1 deletion(-)
+I'd like to see the folio allocation that can straddle bit 48 ...
 
-diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
-index e6aff80b521f..0d365c71cae2 100644
---- a/rust/kernel/lib.rs
-+++ b/rust/kernel/lib.rs
-@@ -75,7 +75,7 @@ pub trait Module: Sized + Sync {
- 
- /// Equivalent to `THIS_MODULE` in the C API.
- ///
--/// C header: `include/linux/export.h`
-+/// C header: [`include/linux/export.h`](srctree/include/linux/export.h)
- pub struct ThisModule(*mut bindings::module);
- 
- // SAFETY: `THIS_MODULE` may be used from all threads within a module.
-diff --git a/rust/kernel/sync/condvar.rs b/rust/kernel/sync/condvar.rs
-index f65e19d5a37c..0bb76400efd9 100644
---- a/rust/kernel/sync/condvar.rs
-+++ b/rust/kernel/sync/condvar.rs
-@@ -77,6 +77,8 @@ pub struct CondVar {
- 
-     /// A condvar needs to be pinned because it contains a [`struct list_head`] that is
-     /// self-referential, so it cannot be safely moved once it is initialised.
-+    ///
-+    /// [`struct list_head`]: srctree/include/linux/types.h
-     #[pin]
-     _pin: PhantomPinned,
- }
--- 
-2.43.0
-
+agreed, it's not workable _in general_, but specifically for a memory
+allocation from a power-of-two allocator, you'd have to do a 49-bit
+allocation (half a petabyte) to care.
