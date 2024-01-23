@@ -1,230 +1,101 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B61884F886;
-	Tue, 23 Jan 2024 02:29:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705976993; cv=fail; b=aJkDQciix3wQOT3fjWRkEvh5eVcPeJfwwf8tISZdsjTb3XsgF7bqaDYWWC0ea8RFJtvFx02VrSdZP4AWqZUrmlLCyUND1LnWTTXzspjTXsyXjI2dBPJ4iFu3966VvEq0bBjZMlm9ZdKB/jcz/2t5kHf5UcUzlMSCQLevV6WEwcA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705976993; c=relaxed/simple;
-	bh=goqGNY48Qe2NVYHamgVuZW4lkrxT2RAomRAHpb4dw74=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=qxAXx1t/MpKa4NsbwG94xjMdJ35lmaRrpfXOquZo72l5Ym9CKP6syi01hgj7Q3fZoYgFl3CSWHJw950kBNIDEbPDk81G1t+uzhGWA5/yQClXzIhXptKcIiyWLUvShWjRhNIMzzOdhyFG7t5ZNVHrDy9XxmNC1sNpCyv09FujEEA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=Oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=VvBOuzsO; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=WUufoVJj; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=Oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63EED524B5
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 02:32:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1705977173; cv=none; b=ph7BQt4p8Ym1tFqUkHOF//dNy8My3EKD1Zjg7LNUTpwrzBT39iwxwAT1fCTyGPPDcty9/CyZIsh3dd6jCCpwgcz9kawDMezTyM7sQ0NhiCHqIN/yN4GweQ78a+CPGGWJOYkP304JtiUTlXZpkuOE6roZ62XtTVa+Yd2lrqwQago=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1705977173; c=relaxed/simple;
+	bh=PuoXL9IdPvfHwmMmwXtVQe0uMpiNrIBtvpFvqCKinUE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HI6nlsbsTMmhbSYHXwquhn2UoVAvkLbTOFMrkfqWxbrnZNfs6Vj2xeiDow92USiZBMvbwHRFVLDBEwmsyztC6Ba6Ts/iIxnR/F3hT3/gxmpvuvhKuN3xINWICDVgFtnfa+Y39+212/5NyNpT7EZ7EC1zio6k2YNNpO8YeUeUQMI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jXiSnJNl; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="VvBOuzsO";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="WUufoVJj"
-Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 40N2TD8q023096;
-	Tue, 23 Jan 2024 02:29:28 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : content-type : in-reply-to :
- mime-version; s=corp-2023-11-20;
- bh=rHuphJv+tcmEa8VGe1rk+6hnxTP28V9xY/R41o5DUII=;
- b=VvBOuzsOt8r4+ETFqz7TBC3zjv8cI1vtT30Bhnn+02AbPi31l8+SDQ/nsGPIiK2auhcZ
- A1WHP1aq+4uqYrNus21sWzgPy2GzMZ7XENN9es3kh2o3zxvEtQMEpnyrk6cQIzWlpDrR
- t8RGp/hXIgu3CUgsf/gfYyo/vHacct9K/VjkbSX/s5uhI1044u0MZqX3dknYY4/i7a3Q
- GDBZNoiErt1WHP5Cdyq5ZDWXllTuCKhcNgkaSG+Cd/JJAksk86VCPEbzjm4V6KGHB68w
- gwHJXPK05aEA+SNpRYpe6Mp29yAmCCZ9EJNNhFzrp1mxo835lMzmFM/Yi0/huPOaSlTx Pg== 
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3vr79nd7r9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 23 Jan 2024 02:29:27 +0000
-Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 40N1N3tw013275;
-	Tue, 23 Jan 2024 02:29:26 GMT
-Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2101.outbound.protection.outlook.com [104.47.55.101])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3vs3703vs1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 23 Jan 2024 02:29:26 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MZkiVHKhJNQJT5BvT1doDJEwHqMq6bv349f79LzLMCkkUR9uW9GAU/YoRRqJ0Y6Q30rmCvSMvCpt1fgZ/fnG3YKiG6nvDOFa0wQh+JV1C2x5Ip7qmXm3HEjChYAM4+J6RFGK+L4LK9mU9cpZJCm1POHPC8Pikp/rO1VidhUsIQF+MCjg2rhYAn1R1yi+mLpFxAPWoHmM1VfhS3Jm+43TqXTbFOgntXMkUC7E8y34/tjfE0MLc+yH2woYYImW9GBLUBc6fc55B2o3JJGJ8Cq63yr9O4ToaSgQYjZhIoPik8M8y3cGqtmqeIxh2fuT6wY/E9Dv1FN/mA0bmMoeWn/Eqw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=rHuphJv+tcmEa8VGe1rk+6hnxTP28V9xY/R41o5DUII=;
- b=SjZAkDL3uNfmSfjVVATcYcHZHNGZY4dpycgeo7Mb5hqTRCuWWeHlJqav+ZioG1VZHGdC+1MwFDrLfJqh24WR8v5eFqSaJ0BiCaNgrudNs2Q4t1aYyAxeDYPjTxIFnyXNYKljFzyD4gZYZUW+2BqFdNW2TmBpVGJSIi2+ENcQNzuP8YbcsUEM10J9lDvUTLTwGAkCeHPe51eO2OZ2RM+nnC0wMoQyze7GhbgvJnTAaqQCyTDxS6hAqZn3zhjYcYms4bRJMsC1CnZPokYYjixKPLI/y6RNHll9U1Xaev+LePveFx3eT/I9V1aXO9LVunGN5wATug0QuEk0cjppP9K4Xg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jXiSnJNl"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a3082d450adso141651566b.1
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 18:32:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rHuphJv+tcmEa8VGe1rk+6hnxTP28V9xY/R41o5DUII=;
- b=WUufoVJjAYHnEyn3kCU4cCe9AeNkNzyjuUE6603RidbDNVVv+OHh4HVNCtNclgduTAoSEq//++OP9LqVXeH0zflXrYRydYb+151iIerbwYuK3Ifi6prIw21vuMb4pjclyAGl1iPay7VohKFFa2mbdHpD15/TYM/MuvgEVNNUIQg=
-Received: from DS0PR10MB7933.namprd10.prod.outlook.com (2603:10b6:8:1b8::15)
- by CO1PR10MB4724.namprd10.prod.outlook.com (2603:10b6:303:96::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7202.34; Tue, 23 Jan
- 2024 02:29:23 +0000
-Received: from DS0PR10MB7933.namprd10.prod.outlook.com
- ([fe80::20c8:7efa:f9a8:7606]) by DS0PR10MB7933.namprd10.prod.outlook.com
- ([fe80::20c8:7efa:f9a8:7606%4]) with mapi id 15.20.7202.031; Tue, 23 Jan 2024
- 02:29:23 +0000
-Date: Mon, 22 Jan 2024 21:29:21 -0500
-From: "Liam R. Howlett" <Liam.Howlett@Oracle.com>
-To: Kees Cook <keescook@chromium.org>
-Cc: linux-hardening@vger.kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        Hugh Dickins <hughd@google.com>, linux-m68k@lists.linux-m68k.org,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Bill Wendling <morbo@google.com>,
-        Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 27/82] m68k: Refactor intentional wrap-around calculation
-Message-ID: <20240123022921.77eddqhiltrpphdv@revolver>
-References: <20240122235208.work.748-kees@kernel.org>
- <20240123002814.1396804-27-keescook@chromium.org>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240123002814.1396804-27-keescook@chromium.org>
-User-Agent: NeoMutt/20220429
-X-ClientProxiedBy: YT3PR01CA0084.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:84::8) To DS0PR10MB7933.namprd10.prod.outlook.com
- (2603:10b6:8:1b8::15)
+        d=gmail.com; s=20230601; t=1705977170; x=1706581970; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=bTu7e+R2osSeEN8Xk/RtMHC9XeUYH+SQtEvbC2VNoMo=;
+        b=jXiSnJNlWIDGRwj/fM3ivjZGnS2sOIK18VISXE9ozgPRqo97hJLGVPQoI9IxdxSA0n
+         DwNyYNYSkElUrfD76jjN7m5IiJjRS6r9WqM8NxG3qwpbQU1o/5I8LALxbnoI4XUej+eK
+         XQVfqmy+RG7k4vA8BtxRgEnEQjNhnHc/3Us7f9PwT36hP/Vo5L/U4w5GTIxGVNhLbQ6b
+         qdqQjQVC1NF1fetS7FcGyb6oV2nyWSrknXxgaZmkA0RIsRb3JGQ8pyk1cP1gB1xN259c
+         EjJPZyy29SrnZH83Mq+UsBIeczJIFe2p9gtOVQ+lYhMbU9ScY6b5PlzsCzL8y5s0jrKz
+         nTRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705977170; x=1706581970;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=bTu7e+R2osSeEN8Xk/RtMHC9XeUYH+SQtEvbC2VNoMo=;
+        b=hMhoKtp+koXD/chZImEqMsYySN21T3401/3V5P/j6hXl+YdBS/kd65UXUV53ps5NH/
+         PPnCNQagXwCO4YEA4mM0niubbarug4UxhR4U8P2at7NKC6nX4nJd+lyjuQ1yBW2EjDqA
+         FaA4gTzM1hLoyoFj6uO7fU+ZVArrjnal8FpT/IiWzNZg+wWTv0hKDCq0RLyYjWHamuEl
+         /QsreTChRhKu9sk5y02faF+4GDNm6cCi2Wx3jiYYiiQuWnLnUHd5tHC0Ld84cNDApqhE
+         PrBk+2t621J9n8ESMaKSATYvYSzAuJMINiq2hg2wZ5FvYEjfdWG4W15zsmFjt4JB3/0i
+         G53Q==
+X-Gm-Message-State: AOJu0YyZBYwaYuKkc4fSvNNW7+5CeBPqaCAX9CwdX8SdnmNI9FujJjwP
+	6WKnlYxsNVAFwlwqPsoBz9bKlzGF6zcot8E5x3yUPmIGDKPSTivxyB/oNaCN42cseyCk+xyVCM1
+	m7Qt86Ao1egIaBWpAhnDC4foZu8s0JClS
+X-Google-Smtp-Source: AGHT+IE7VdcQSqNrPhkD9owPZ1XUsP0f4OqLr/OJRdAs4mUyZIPiwMT97B31EG2v+CaXbSobt+7BPfP+Ubee7g1kU80=
+X-Received: by 2002:a17:906:c43:b0:a28:fd0e:6051 with SMTP id
+ t3-20020a1709060c4300b00a28fd0e6051mr2306716ejf.33.1705977170369; Mon, 22 Jan
+ 2024 18:32:50 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR10MB7933:EE_|CO1PR10MB4724:EE_
-X-MS-Office365-Filtering-Correlation-Id: a380067e-48ea-405a-188b-08dc1bbb1ce2
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	sMQrSdKjmIVLuQXURzZnLOCVeKv274+txjFjangEPUiiS6lb7dB1BCMr4w1+4+Neo/EPh/9Ml2AlkjsNBeKcFAR2rP+I+AADMADbgcI/3uW8gkJFgdj37g4exfxWQcWd11QUU4o/RrRGHSNvzq/w3RVAGNSf7dIwzLhP44GtWqmS0MMKYXgJslISVZBMVCWjJl3dKwPiV566NzCv8li1mGf2Udblix81wLKKgzc53deMH0VVm5PNlh1zFow4Nk0E4/WATlLQ20bfmOsdYVgzSD1KF6VJhN0g0Gs2agu7Otuwb/MMXH1QUVn0sbRCM5X6FCJ/n3sK1L/DcET61TOEb0qfONPcR5PhNAjYr7Afmp8K923uL42GJTB/9/NHdegXxCf7axE/XSALdFMsrttxEj4z2tI8BjUCRYZDyMKDsqH/ra0+/qlgNQJPjtaESZJEUZGVm4VaZq5pJxHHR6uzxnjtvGVFnIFX/y8rG4ybxTfXZ7eSiFHNkmo08cr9TsNBj7LUCiaG2ieSXPEz410JCQe+xaFo+MZ11/83qxVQefqKQJRrrvqeQNd4j8dLKXoTzgCWzHeKlYSyNdtL1Jy9aA==
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR10MB7933.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7916004)(376002)(366004)(346002)(396003)(39860400002)(136003)(230922051799003)(451199024)(1800799012)(64100799003)(186009)(1076003)(26005)(6506007)(6512007)(9686003)(83380400001)(5660300002)(478600001)(7416002)(2906002)(41300700001)(33716001)(66556008)(6486002)(54906003)(966005)(4326008)(66946007)(6916009)(316002)(8676002)(66476007)(8936002)(86362001)(38100700002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?rfrRRV6FfGhp3+DH6GfIl0nlMQdhO8poHj4yfbcXoVP7Gf4beX7LNP4IB1qw?=
- =?us-ascii?Q?YvLJB94he4trGkfgqbW27SAdlX6NxFv2/Y0KnS99WVWGOcUqV2+F5biXJDok?=
- =?us-ascii?Q?6euQEhcLaBi+Todw3rrF83OAaq9O27X2KADmQIhmowCgCFk0RAC2HgTEsPhH?=
- =?us-ascii?Q?+CIzL1zbiwNY4u+hLZ4Hb89PboZS8CFHzW9WMbkwRbPrnTWJpYI+i5twwEIe?=
- =?us-ascii?Q?ROl321lvNq8zoxH+k7Zo85NodiRRwgArAuJ23q6qcVCwR58LxYlme/WH0naB?=
- =?us-ascii?Q?cNz8v55nyDT865RuWd7oOu9tjUsIGslM9JaqGecKsjbo+qxt8t42rLhfabrO?=
- =?us-ascii?Q?MWii/DUMAyJ67HxfKmpQBPiW78NFsj4UscZQ83uqoJZTJQ0sAgIo5fdDCDeI?=
- =?us-ascii?Q?bMmQkIikC4kqY6sgb2zBhHgMteAHH/Y1IGe6wa0NbjcgJGhRFNlDl7OlNZkR?=
- =?us-ascii?Q?jYCga12jTpipB9zRZAhBwMkdLNGbM0hQEO0ocLXOqMVLG4/QDF/j2q2/gWF2?=
- =?us-ascii?Q?StErr3eZhNVJb5Kr8wyFj4CbhDQsmvEjCEhxend4mJkiLkV74TnPPfHHNXTC?=
- =?us-ascii?Q?TsjW4M8hccUBy+C/eGJuWQuyYMedU/GsLxyP5zYEDU+YtGpE/iEXEUJc1Ncr?=
- =?us-ascii?Q?DsyIKXMBpAp/L2A1vPR7axksWcY2Ce+qRwZUDFZCAQiKvc70wpAG7CkdEwRn?=
- =?us-ascii?Q?oVjyPqEPtnPIuSRhwrtd8hm3gW+6FhGJT+FoPR+vjapRUWrnLF7KwDPovbDg?=
- =?us-ascii?Q?wo2wbLe5GWTrFxdbVeYPOQP1lgSSpZneRgh00yZSMbAFca3RGtekYcH8/wI4?=
- =?us-ascii?Q?jq9K8jn8lPxqZo5DtDMJxHamOYlRRIgOOM+NGWkt4VkJbgbg/lteIms9AyjD?=
- =?us-ascii?Q?n6jNG32WRUYQ6pFAAsJiMlnlkUyGbauGYTlKxtKB1F6wgqkLhEUbwmnw+F6R?=
- =?us-ascii?Q?yr/bxJvuy2FO8jCRZfs3rxKpvNBthteW5cIFPa4clEfKLPpOGp/Hno9X4BEj?=
- =?us-ascii?Q?iZjMtQ55mT+NR9bG33+50bgxVCFD6aL0ojqmFpQBB9Xf2oixG+0ZKShBcNl9?=
- =?us-ascii?Q?TguFrzwUkfZu5pWQQq8V07sQqfeXbCtfCh6KihE9dVI9eQ7/UmAe0BCwupDj?=
- =?us-ascii?Q?9qXvafCUiqUwds6bFVsSDdKGBB0sJlQ7OkD2Cj9LNNuD+g/aubkHcqb0B5+A?=
- =?us-ascii?Q?jvfe9pcETii69l206UP+ISSVf6GOlbyaRVObsua/9sX+FGtZVcUEeVbXkqMf?=
- =?us-ascii?Q?22ZjgZj4vG5wFm8OUxPaU2CpRx70jWX+Am/DNPg87AWUsP0fhgHhhI2+tINf?=
- =?us-ascii?Q?SCQFXUlhaB8wJ1O1Lp7z8qivhFpTljGPWjHiGEBkiEQJTOP+27HaIuusL5kv?=
- =?us-ascii?Q?ZPFwTDE8ISxF42CzlBn6wgJGsHC0uGCFxAr7o7AAYfzcH9eUL7qC30KPVNnB?=
- =?us-ascii?Q?V0SbNJueRTu+P0Bd+zv427amNokj4/rXESgXIsVQSeyYbba8cUX2xKa6tFpq?=
- =?us-ascii?Q?YEnGVodJa0ILxt/NzhzuMf+YyTs1rcI6qFOGje5lHlrs9dVGg2p0I0TrEKBM?=
- =?us-ascii?Q?hQ54akU5wlQem1is9T+u142eirMRZggAFrmkfyWO?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	LU0p7E+7TAC0tDpXpI9cyv+0F4VPxdBzNyK6HzT2BamjobSp8NoWVffTME/S7/C3nTVmPa/YWW2KOrRaxUHVer+fBw8bD38hINsWFi3j3MoQS0SZlG08Ren8O8dDz6YdcMpIZ+cuizxR1YllhYLRK3qlHM952XEB+J6MhzGV2iePBlvE8cgASaehxgJgXEveauXykM5ey3FNtR9aoioWFDbxt1+H1nLeioYwTN0Bf+IWqSsvJuStrFsVLRI6fiuawwShXtv7yBuBS1SUklw3lYV2/2fxCFZXwLvRODI0WffJqOifAFBl61Y3NA3CSTKqN9db0fKoAwSLVU2ELAl8YvT6wgsSDbR9DDJqc91yt/8YtC5AwDVy+shKIQ3hkrIg9HGZph2BzH0Eop2/f/FSVMTfQTFY+K8pSVW5aM3BidJtBh2LB0QeG/5KRirVpD0VqCgpKK9UXdPbKQk7ADfuNpIgu4SjaIpjJSFb8NGxQXar6bqdtaDFHhatIg9/I9j0MG/X945GqvjI1ZS1mvknyQLasrEVtgeS8T8ol9wq3QH0TK1qBiV6nSOD1v430DAEpmlnVncdaKX9Y1T5g+Mr+vVH6fdstt7keoKs8VG5nGo=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a380067e-48ea-405a-188b-08dc1bbb1ce2
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR10MB7933.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jan 2024 02:29:23.8404
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: V4AKez4scciYZ7ghOVcX2VPNz3qkpWtJGSF44xpJMY42KnsAr/Oi7cnmiEV9NEXxBYFDlrfT8TwWgfS65ayv6w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1PR10MB4724
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-22_12,2024-01-22_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 bulkscore=0
- mlxlogscore=999 mlxscore=0 phishscore=0 adultscore=0 spamscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2401230016
-X-Proofpoint-GUID: hpPZy6-0mUj1mKyhjCQuSKItHibNI_Wp
-X-Proofpoint-ORIG-GUID: hpPZy6-0mUj1mKyhjCQuSKItHibNI_Wp
+References: <20240122180605.28daf23a@gandalf.local.home> <20240122181547.16b029d6@gandalf.local.home>
+ <20240122181901.05a3b9ab@gandalf.local.home> <CAHk-=whry+-JUDiiCkDkDn2TDg7SA5OvZpPbcQ_jkM_J5=ySdA@mail.gmail.com>
+ <27c3d1e9-5933-47a9-9c33-ff8ec13f40d3@amd.com> <20240122203552.529eeb20@gandalf.local.home>
+ <CAPM=9tyQ22nw4_u366EX=PnROYcWPD7ONRFpPEKxRvTZo0B4zQ@mail.gmail.com>
+In-Reply-To: <CAPM=9tyQ22nw4_u366EX=PnROYcWPD7ONRFpPEKxRvTZo0B4zQ@mail.gmail.com>
+From: Dave Airlie <airlied@gmail.com>
+Date: Tue, 23 Jan 2024 12:32:39 +1000
+Message-ID: <CAPM=9tyCN1ZhvCTjoKn-Yg5BhnrMae4E5Ci4_u7BZ2vv5gDnKw@mail.gmail.com>
+Subject: Re: [BUG] BUG: kernel NULL pointer dereference at ttm_device_init+0xb4
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: "Bhardwaj, Rajneesh" <rajneesh.bhardwaj@amd.com>, 
+	Linus Torvalds <torvalds@linux-foundation.org>, LKML <linux-kernel@vger.kernel.org>, 
+	Felix Kuehling <Felix.Kuehling@amd.com>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	dri-devel@lists.freedesktop.org, Fedor Pchelkin <pchelkin@ispras.ru>
+Content-Type: text/plain; charset="UTF-8"
 
-* Kees Cook <keescook@chromium.org> [240122 19:36]:
-> In an effort to separate intentional arithmetic wrap-around from
-> unexpected wrap-around, we need to refactor places that depend on this
-> kind of math. One of the most common code patterns of this is:
-> 
-> 	VAR + value < VAR
-> 
-> Notably, this is considered "undefined behavior" for signed and pointer
-> types, which the kernel works around by using the -fno-strict-overflow
-> option in the build[1] (which used to just be -fwrapv). Regardless, we
-> want to get the kernel source to the position where we can meaningfully
-> instrument arithmetic wrap-around conditions and catch them when they
-> are unexpected, regardless of whether they are signed[2], unsigned[3],
-> or pointer[4] types.
-> 
-> Refactor open-coded unsigned wrap-around addition test to use
-> check_add_overflow(), retaining the result for later usage (which removes
-> the redundant open-coded addition). This paves the way to enabling the
-> unsigned wrap-around sanitizer[2] in the future.
-> 
-> Link: https://git.kernel.org/linus/68df3755e383e6fecf2354a67b08f92f18536594 [1]
-> Link: https://github.com/KSPP/linux/issues/26 [2]
-> Link: https://github.com/KSPP/linux/issues/27 [3]
-> Link: https://github.com/KSPP/linux/issues/344 [4]
-> Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Liam Howlett <liam.howlett@oracle.com>
-> Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-> Cc: Hugh Dickins <hughd@google.com>
-> Cc: linux-m68k@lists.linux-m68k.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  arch/m68k/kernel/sys_m68k.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/m68k/kernel/sys_m68k.c b/arch/m68k/kernel/sys_m68k.c
-> index 1af5e6082467..b2b9248f2566 100644
-> --- a/arch/m68k/kernel/sys_m68k.c
-> +++ b/arch/m68k/kernel/sys_m68k.c
-> @@ -391,10 +391,11 @@ sys_cacheflush (unsigned long addr, int scope, int cache, unsigned long len)
->  
->  		mmap_read_lock(current->mm);
->  	} else {
-> +		unsigned long sum;
->  		struct vm_area_struct *vma;
->  
->  		/* Check for overflow.  */
+On Tue, 23 Jan 2024 at 12:21, Dave Airlie <airlied@gmail.com> wrote:
+>
+> On Tue, 23 Jan 2024 at 12:15, Steven Rostedt <rostedt@goodmis.org> wrote:
+> >
+> > On Mon, 22 Jan 2024 19:56:08 -0500
+> > "Bhardwaj, Rajneesh" <rajneesh.bhardwaj@amd.com> wrote:
+> >
+> > >
+> > > On 1/22/2024 7:43 PM, Linus Torvalds wrote:
+> > > > On Mon, 22 Jan 2024 at 15:17, Steven Rostedt<rostedt@goodmis.org>  wrote:
+> > > >> Perhaps this is the real fix?
+> > > > If you send a signed-off version, I'll apply it asap.
+> > >
+> > >
+> > > I think a fix might already be in flight. Please see Linux-Kernel
+> > > Archive: Re: [PATCH] drm/ttm: fix ttm pool initialization for
+> > > no-dma-device drivers (iu.edu)
+> > > <https://lkml.iu.edu/hypermail/linux/kernel/2401.1/06778.html>
+> >
+> > Please use lore links. They are much easier to follow and use.
+>
+> https://lore.kernel.org/dri-devel/20240123022015.1288588-1-airlied@gmail.com/T/#u
+>
+> should also fix it, Linus please apply it directly if Steven has a
+> chance to give it a run.
 
-With your nice self-documenting code, you can probably drop that
-comment.
+I see Linus applied the other one, that's fine too.
 
-With or without the change,
-
-Reviewed-by: Liam R. Howlett <Liam.Howlett@oracle.com>
-
-> -		if (addr + len < addr)
-> +		if (check_add_overflow(addr, len, &sum))
->  			goto out;
->  
->  		/*
-> @@ -403,7 +404,7 @@ sys_cacheflush (unsigned long addr, int scope, int cache, unsigned long len)
->  		 */
->  		mmap_read_lock(current->mm);
->  		vma = vma_lookup(current->mm, addr);
-> -		if (!vma || addr + len > vma->vm_end)
-> +		if (!vma || sum > vma->vm_end)
->  			goto out_unlock;
->  	}
->  
-> -- 
-> 2.34.1
-> 
+Dave.
