@@ -1,46 +1,46 @@
-Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
+Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20B587F7DE;
-	Tue, 23 Jan 2024 16:37:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A52D5823B2;
+	Tue, 23 Jan 2024 16:37:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706027830; cv=none; b=BtQlPEoCYObVPOGBvVwASc9+iVi6plE6d5Xtxjq/1HuiPgF1GtmBIuyprTw6TytfM2TFtZka6R88nP4vfTHeLnr2hsKRukWEqGmoC8X5DW01VBwTK0vGKsyb0GgkAmW+Hq6SnYm7+OvqB/TWuBUWOAPCa+N+8cPvSJvhr7hwUuY=
+	t=1706027830; cv=none; b=PPAwCANSFTfeB2DroRtjVf44T/Ge8UZiTKSUanOGhrnw9f1cK0XCL3As+e+J57dw9xAvyoVVWC/L8lqSO+IZf1r1Z+6FGZKszMIx1EVNHawQ5EaU66haoG3YKdOrq0fu10B6mPg0Kkg40WwTR9gV32trBf95H+O4gg12VD1zO2c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1706027830; c=relaxed/simple;
-	bh=6/dLm2MjBZeLAHh+W3gQoWesu1TbtOA/vZ3gQb2SLuI=;
+	bh=8IAZrImQB2nMZjos8DaIybYIWQnIDS13M5ug8CE0yhk=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=l2dsJ1N3XnChtvf+Q5uJmjIOUra8Y/2tnHzsdTBkAq++iJ6nW0YsDHpUPN+3+/IZn8EsbYwTLIKKfGBr7J7dkWK/HmKdiP3Lk7RWTkVopr5GrZ3jTfW+cveADbgYFV/1Svo2WqhNEGc3jKu9Hh4tHKpyrY1MYw/f7l07ItJ+BwQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=JCcERF7c; arc=none smtp.client-ip=198.47.19.142
+	 MIME-Version:Content-Type; b=gmqP/aTt/0dCZH7ez3y8RvB2t+LuU87aQVN66nfh4eLJxVdeNPr/0C/koJQU1m57XP+n2eK7IOdJq6UEpvaDOe/RStw3/Y3uLBIyqMetg0fcgrd1oEk8auB9qrlQZVOpBMe0SgIvp7fpX/0o+TeoIL/qP3n3LxqkDmExmNHLtqU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=YkrjIsIm; arc=none smtp.client-ip=198.47.19.141
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="JCcERF7c"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 40NGb0vx094143;
-	Tue, 23 Jan 2024 10:37:00 -0600
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="YkrjIsIm"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 40NGawUx077100;
+	Tue, 23 Jan 2024 10:36:58 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1706027820;
-	bh=zL7aZs11+xEUFcKlyHOFpkpjBIT3t+hkCmsvfTqmT94=;
+	s=ti-com-17Q1; t=1706027818;
+	bh=WrnR+uYJ9Ov/7JKIZBS7WynoDP/3tGY7vPWVbSdVeoE=;
 	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=JCcERF7cRlA4mIEjiFkSaIyqQ2Q3/NjrRSASUv1vdEJyXtE5lZiesEUkmQ6Ww5Wfz
-	 iOOGQZPvR6dYqICJeDgifUf9lLIJ/NWAWj0wjIzjmBOsB3GWOF2H/LuNZdYS9vjtES
-	 3Qo7Hv5a6hT1yTdqvbZpIPF/wEw0MUGxoXThrphI=
-Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 40NGb0Bo000610
+	b=YkrjIsIm/fqiNu5AhvMc0kqgb0WDZE0BvgZbilMcGs4GiRAOnkujIzFRFYbopvdgr
+	 mxFejUKx5P+pvyyGyCaNeddNKEdlGBDXCE8tU8JUG6jt3raveMYuqX6D3PozWJPT0J
+	 QWZXb4ID/C7FkhYibT8hdlsuc6iKQqz5IlVnJcMo=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 40NGawto119728
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 23 Jan 2024 10:37:00 -0600
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+	Tue, 23 Jan 2024 10:36:58 -0600
+Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 23
- Jan 2024 10:37:00 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ Jan 2024 10:36:58 -0600
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 23 Jan 2024 10:37:00 -0600
+ Frontend Transport; Tue, 23 Jan 2024 10:36:58 -0600
 Received: from lelvsmtp6.itg.ti.com ([10.249.42.149])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 40NGars6123403;
-	Tue, 23 Jan 2024 10:36:59 -0600
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 40NGars0123403;
+	Tue, 23 Jan 2024 10:36:57 -0600
 From: Andrew Davis <afd@ti.com>
 To: Sebastian Reichel <sre@kernel.org>,
         Support Opensource
@@ -52,9 +52,9 @@ To: Sebastian Reichel <sre@kernel.org>,
 CC: <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         Andrew Davis
 	<afd@ti.com>
-Subject: [PATCH 18/21] power: supply: rx51: Use devm_iio_channel_get() helper
-Date: Tue, 23 Jan 2024 10:36:50 -0600
-Message-ID: <20240123163653.384385-19-afd@ti.com>
+Subject: [PATCH 12/21] power: supply: tps65090: Use devm_power_supply_register() helper
+Date: Tue, 23 Jan 2024 10:36:44 -0600
+Message-ID: <20240123163653.384385-13-afd@ti.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240123163653.384385-1-afd@ti.com>
 References: <20240123163653.384385-1-afd@ti.com>
@@ -68,91 +68,89 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-Use the device lifecycle managed get function. This helps prevent
-mistakes like releasing out of order in cleanup functions and
-forgetting to release on error paths.
+Use the device lifecycle managed register function. This helps prevent
+mistakes like unregistering out of order in cleanup functions and
+forgetting to unregister on error paths.
 
 Signed-off-by: Andrew Davis <afd@ti.com>
 ---
- drivers/power/supply/rx51_battery.c | 45 +++++++----------------------
- 1 file changed, 11 insertions(+), 34 deletions(-)
+ drivers/power/supply/tps65090-charger.c | 18 ++++++------------
+ 1 file changed, 6 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/power/supply/rx51_battery.c b/drivers/power/supply/rx51_battery.c
-index e2bfc81f0fd97..d532c670661b6 100644
---- a/drivers/power/supply/rx51_battery.c
-+++ b/drivers/power/supply/rx51_battery.c
-@@ -192,7 +192,6 @@ static int rx51_battery_probe(struct platform_device *pdev)
- {
- 	struct power_supply_config psy_cfg = {};
- 	struct rx51_device_info *di;
--	int ret;
+diff --git a/drivers/power/supply/tps65090-charger.c b/drivers/power/supply/tps65090-charger.c
+index c59197d2aa87d..d41595764caa5 100644
+--- a/drivers/power/supply/tps65090-charger.c
++++ b/drivers/power/supply/tps65090-charger.c
+@@ -262,7 +262,7 @@ static int tps65090_charger_probe(struct platform_device *pdev)
+ 	psy_cfg.of_node			= pdev->dev.of_node;
+ 	psy_cfg.drv_data		= cdata;
  
- 	di = devm_kzalloc(&pdev->dev, sizeof(*di), GFP_KERNEL);
- 	if (!di)
-@@ -209,41 +208,23 @@ static int rx51_battery_probe(struct platform_device *pdev)
+-	cdata->ac = power_supply_register(&pdev->dev, &tps65090_charger_desc,
++	cdata->ac = devm_power_supply_register(&pdev->dev, &tps65090_charger_desc,
+ 			&psy_cfg);
+ 	if (IS_ERR(cdata->ac)) {
+ 		dev_err(&pdev->dev, "failed: power supply register\n");
+@@ -277,7 +277,7 @@ static int tps65090_charger_probe(struct platform_device *pdev)
+ 	ret = tps65090_config_charger(cdata);
+ 	if (ret < 0) {
+ 		dev_err(&pdev->dev, "charger config failed, err %d\n", ret);
+-		goto fail_unregister_supply;
++		return ret;
+ 	}
  
- 	psy_cfg.drv_data = di;
+ 	/* Check for charger presence */
+@@ -286,14 +286,14 @@ static int tps65090_charger_probe(struct platform_device *pdev)
+ 	if (ret < 0) {
+ 		dev_err(cdata->dev, "%s(): Error in reading reg 0x%x", __func__,
+ 			TPS65090_REG_CG_STATUS1);
+-		goto fail_unregister_supply;
++		return ret;
+ 	}
  
--	di->channel_temp = iio_channel_get(di->dev, "temp");
--	if (IS_ERR(di->channel_temp)) {
--		ret = PTR_ERR(di->channel_temp);
--		goto error;
--	}
-+	di->channel_temp = devm_iio_channel_get(di->dev, "temp");
-+	if (IS_ERR(di->channel_temp))
-+		return PTR_ERR(di->channel_temp);
- 
--	di->channel_bsi  = iio_channel_get(di->dev, "bsi");
--	if (IS_ERR(di->channel_bsi)) {
--		ret = PTR_ERR(di->channel_bsi);
--		goto error_channel_temp;
--	}
-+	di->channel_bsi  = devm_iio_channel_get(di->dev, "bsi");
-+	if (IS_ERR(di->channel_bsi))
-+		return PTR_ERR(di->channel_bsi);
- 
--	di->channel_vbat = iio_channel_get(di->dev, "vbat");
--	if (IS_ERR(di->channel_vbat)) {
--		ret = PTR_ERR(di->channel_vbat);
--		goto error_channel_bsi;
--	}
-+	di->channel_vbat = devm_iio_channel_get(di->dev, "vbat");
-+	if (IS_ERR(di->channel_vbat))
-+		return PTR_ERR(di->channel_vbat);
- 
- 	di->bat = power_supply_register(di->dev, &di->bat_desc, &psy_cfg);
--	if (IS_ERR(di->bat)) {
--		ret = PTR_ERR(di->bat);
--		goto error_channel_vbat;
--	}
-+	if (IS_ERR(di->bat))
-+		return PTR_ERR(di->bat);
+ 	if (status1 != 0) {
+ 		ret = tps65090_enable_charging(cdata);
+ 		if (ret < 0) {
+ 			dev_err(cdata->dev, "error enabling charger\n");
+-			goto fail_unregister_supply;
++			return ret;
+ 		}
+ 		cdata->ac_online = 1;
+ 		power_supply_changed(cdata->ac);
+@@ -306,7 +306,7 @@ static int tps65090_charger_probe(struct platform_device *pdev)
+ 			dev_err(cdata->dev,
+ 				"Unable to register irq %d err %d\n", irq,
+ 				ret);
+-			goto fail_unregister_supply;
++			return ret;
+ 		}
+ 	} else {
+ 		cdata->poll_task = kthread_run(tps65090_charger_poll_task,
+@@ -316,16 +316,11 @@ static int tps65090_charger_probe(struct platform_device *pdev)
+ 			ret = PTR_ERR(cdata->poll_task);
+ 			dev_err(cdata->dev,
+ 				"Unable to run kthread err %d\n", ret);
+-			goto fail_unregister_supply;
++			return ret;
+ 		}
+ 	}
  
  	return 0;
 -
--error_channel_vbat:
--	iio_channel_release(di->channel_vbat);
--error_channel_bsi:
--	iio_channel_release(di->channel_bsi);
--error_channel_temp:
--	iio_channel_release(di->channel_temp);
--error:
+-fail_unregister_supply:
+-	power_supply_unregister(cdata->ac);
 -
 -	return ret;
  }
  
- static void rx51_battery_remove(struct platform_device *pdev)
-@@ -251,10 +232,6 @@ static void rx51_battery_remove(struct platform_device *pdev)
- 	struct rx51_device_info *di = platform_get_drvdata(pdev);
+ static void tps65090_charger_remove(struct platform_device *pdev)
+@@ -334,7 +329,6 @@ static void tps65090_charger_remove(struct platform_device *pdev)
  
- 	power_supply_unregister(di->bat);
--
--	iio_channel_release(di->channel_vbat);
--	iio_channel_release(di->channel_bsi);
--	iio_channel_release(di->channel_temp);
+ 	if (cdata->irq == -ENXIO)
+ 		kthread_stop(cdata->poll_task);
+-	power_supply_unregister(cdata->ac);
  }
  
- #ifdef CONFIG_OF
+ static const struct of_device_id of_tps65090_charger_match[] = {
 -- 
 2.39.2
 
