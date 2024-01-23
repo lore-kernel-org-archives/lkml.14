@@ -1,111 +1,147 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89B4465BAF
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 15:35:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16990664B2
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 15:35:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706024121; cv=none; b=tDPFz5Zn6MSVpyYwaP9wxtC3mo/nF32OIEjQE1eWf6opdU78hb/OlPPj3FfUdeKWauhsYFLbzS2rV3RgJ1Ng5n6+LditENFRFiNqgqs2UixBV+9QYFKsEWgvAUSalLlYjQ6tcHFd8xjtIgMyEB89ovOPNA0DrVJ+RccYL2zmajI=
+	t=1706024125; cv=none; b=o4ggVhN2f1EIlraEXNNjfN9lJLplAnDJd3tkQgZ7Dpv+cxhrOk7oHRGXSvXQDY2YYEPgOllcvawb1heScG4MrxXQseLiUglNQ/cMk92Yvpqq/4VsxAYz8+8cpIbL23ADDpK4hcZHKIeWJ10kwmce7lJ9DAS14CQ2ZG/RD//t350=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706024121; c=relaxed/simple;
-	bh=3DXhCS9gCYUo/yeEr1UEdliq7S/NZwWpa7NRrM8XxIw=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=MuN798J3bXUwreNPsNOXud+3uKbuIlNqR5M3JlVeT4KRSkr55ACJO7Nk75LEN5qknadznh5spp6zgqoejwooceH4361QVbF3f3wVJe1VrWuuxbBQVBXX5vhFUDo80p/0DLR7t5iL93mCyybgI1TL+Q9v+xg4Ukil9fdBcmScn/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NcpuJDFC; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1706024125; c=relaxed/simple;
+	bh=OLw2uBmZ0gulJTla/5FtAZVpNcu9rLq53nHgy/OtrjU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NHobqYtQ5ezL47vMJ0vw/Or0CwSjnnSoR0vSv3EuSQ26RL9ygvZHEn1/Ya955WDdA3pHnin8uB4NS+BL6e2wdQXyJYrYRARcwQ8I+M8xZ18Y1ikrk5JGMh/t2F4VLtKk02SR6yMOEmUihOuXV+SSbW+53sHdqdmXfNaySnYeeZs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VpcD42TT; arc=none smtp.client-ip=209.85.222.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NcpuJDFC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1706024118;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to; bh=PF33nZUXk10Fdt+GZc2nbXSpzhr3D6HyvllQ/D4I808=;
-	b=NcpuJDFCbmAsR8F7Rfxlc+FEpwvpaug5m8ESEZeIEyvfIrVbiJpQOlEfVdU3NCJBy5f0S1
-	KVauaggHgX5Zsjs6W9JqMUUvolBdvcROZ8XgtrolBaEMp1jQBBGxYIAX3wJGD45LGRpyNT
-	5k1Bez9GX7l4AjASu1IRkUmBuH2NxK0=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-19-IXos11CQPua1Sy3rPPC_Kw-1; Tue, 23 Jan 2024 10:35:15 -0500
-X-MC-Unique: IXos11CQPua1Sy3rPPC_Kw-1
-Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 0B941869EC2;
-	Tue, 23 Jan 2024 15:35:15 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.197])
-	by smtp.corp.redhat.com (Postfix) with SMTP id C3D20492BFA;
-	Tue, 23 Jan 2024 15:35:13 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Tue, 23 Jan 2024 16:34:01 +0100 (CET)
-Date: Tue, 23 Jan 2024 16:34:00 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: "Eric W. Biederman" <ebiederm@xmission.com>,
-	Dylan Hatch <dylanbhatch@google.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] exit: wait_task_zombie: kill the no longer necessary
- spin_lock_irq(siglock)
-Message-ID: <20240123153359.GA21866@redhat.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VpcD42TT"
+Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-783b0813e48so13890685a.1
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 07:35:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1706024123; x=1706628923; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=q9Vvev13XdoubG1E45m0UtEzpNjkizsjSeJg3BeobWo=;
+        b=VpcD42TTqRPcHv63lUV+714mQ52nWOtFzy3rt392lRrMy6br+QEqi8FFKM083TLOPy
+         8ZRV3nJp22WO28XLsf7YKqNUjJBz780Q/he3fQzFY77/VJE15726fWlSZbp2FUYd5kj5
+         hyAK2J4e825avt8dovRrPw/yI9CLTr+Gvpekb9zB0I6p3kRZhlMhvqxQ6xcFCOKzaOfQ
+         W7Qk1R9UyGczIiwKjPQuQktGEYlBDpCW7TnfiRJ5s1pmdx4b3RLEEY77nKrsY27ZqIJ6
+         +EDdqV9JtwUpqkOggSeDipDC7Oh5ZaWkdw8jL71lWOaHq7SlrXQdRS30Yt4ULGlTtMXO
+         f+8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706024123; x=1706628923;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=q9Vvev13XdoubG1E45m0UtEzpNjkizsjSeJg3BeobWo=;
+        b=mx7sRvgg6H6lr4SL+sfoBylkPfnKHOtb3g0lppiGY/dUFuaqJWiWUYOJFs7+zybhBG
+         p4NnT91hTaye2roBUdS90ryzSjvZNGhDlOcqDVCVup4/M5HiHFrhLFoCKE1KWl2GvVaH
+         bYm7pjvy113SH99MADhMLsKpWyrcKDTO978f3mKJNc5ag61hCUk8Ci9KmJ1KmKNOyme3
+         wsO884hiVOaEfBh4aw1GXaAJFlXmVYhu8i3TTVDIg0wWFynv7a51iL/H6CzyB9dAsYan
+         sIXtpxKoLwbdd28m2wMVm4EaIH6rHh3c8t16dW/Eupdnc5/9Ky/bRsIsR1jnxu0ojsgy
+         V5Uw==
+X-Gm-Message-State: AOJu0Yz13CpqH1zMPfOdP6NXFTxjHKs33kxrWmXynpN+q78TWlNSij3l
+	PUrSw2llmLxKeiTTkIz4p7ftAjFhwNgyOcP8BLr3DxwYPh0Ta4VHInAGCux5mGOlz3fGBzzX4aI
+	mIGC7VF+iKe7Ue5S3lj1Z2TCDjZQR7f4dyLuoWg==
+X-Google-Smtp-Source: AGHT+IEB+xTRgnGQq3NUscc9VXjaB3bKZ81FpV0mqHGiZN/b/PrRx+eESMMg9+Eg09N7eFBMP+++KRR422lCgfl0Hww=
+X-Received: by 2002:a05:6214:2484:b0:686:9e8a:a695 with SMTP id
+ gi4-20020a056214248400b006869e8aa695mr1523692qvb.17.1706024122981; Tue, 23
+ Jan 2024 07:35:22 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240123153313.GA21832@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.10
+References: <20240122225710.1952066-1-peter.griffin@linaro.org>
+ <20240122225710.1952066-4-peter.griffin@linaro.org> <726bd8ef-2074-4ae7-89fe-36e2bc70d02e@roeck-us.net>
+In-Reply-To: <726bd8ef-2074-4ae7-89fe-36e2bc70d02e@roeck-us.net>
+From: Peter Griffin <peter.griffin@linaro.org>
+Date: Tue, 23 Jan 2024 15:35:11 +0000
+Message-ID: <CADrjBPr154R_F46E1SL+7Gyv_3ukO9foU+gYu6D-EYnVbU6eAA@mail.gmail.com>
+Subject: Re: [PATCH 3/9] watchdog: s3c2410_wdt: update to use new
+ exynos_pmu_*() apis
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: arnd@arndb.de, robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, 
+	wim@linux-watchdog.org, conor+dt@kernel.org, alim.akhtar@samsung.com, 
+	jaewon02.kim@samsung.com, chanho61.park@samsung.com, 
+	semen.protsenko@linaro.org, kernel-team@android.com, tudor.ambarus@linaro.org, 
+	andre.draszik@linaro.org, saravanak@google.com, willmcvicker@google.com, 
+	linux-fsd@tesla.com, linux-watchdog@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-After the recent changes nobody use siglock to read the values protected
-by stats_lock, we can kill spin_lock_irq(&current->sighand->siglock) and
-update the comment.
+Hi Guenter,
 
-With this patch only __exit_signal() and thread_group_start_cputime() take
-stats_lock under siglock.
+Thanks for the review feedback.
 
-Signed-off-by: Oleg Nesterov <oleg@redhat.com>
----
- kernel/exit.c | 10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
+On Tue, 23 Jan 2024 at 10:33, Guenter Roeck <linux@roeck-us.net> wrote:
+>
+> On 1/22/24 14:57, Peter Griffin wrote:
+> > Instead of obtaining the PMU regmap directly use the new exynos_pmu_*()
+> > APIs. The exynos_pmu_ APIs allow support of newer Exynos SoCs that have
+> > atomic set/clear bit hardware and platforms where the PMU registers can
+> > only be accessed via SMC call.
+> >
+>
+> Not really sure about using a direect API instead of regmap. I personally
+> think that regmap is more generic and like the idea of abstracting hardware
+> accesses this way. Since that is POV, I won't argue about it. However,
 
-diff --git a/kernel/exit.c b/kernel/exit.c
-index 3988a02efaef..dfb963d2f862 100644
---- a/kernel/exit.c
-+++ b/kernel/exit.c
-@@ -1127,17 +1127,14 @@ static int wait_task_zombie(struct wait_opts *wo, struct task_struct *p)
- 		 * and nobody can change them.
- 		 *
- 		 * psig->stats_lock also protects us from our sub-threads
--		 * which can reap other children at the same time. Until
--		 * we change k_getrusage()-like users to rely on this lock
--		 * we have to take ->siglock as well.
-+		 * which can reap other children at the same time.
- 		 *
- 		 * We use thread_group_cputime_adjusted() to get times for
- 		 * the thread group, which consolidates times for all threads
- 		 * in the group including the group leader.
- 		 */
- 		thread_group_cputime_adjusted(p, &tgutime, &tgstime);
--		spin_lock_irq(&current->sighand->siglock);
--		write_seqlock(&psig->stats_lock);
-+		write_seqlock_irq(&psig->stats_lock);
- 		psig->cutime += tgutime + sig->cutime;
- 		psig->cstime += tgstime + sig->cstime;
- 		psig->cgtime += task_gtime(p) + sig->gtime + sig->cgtime;
-@@ -1160,8 +1157,7 @@ static int wait_task_zombie(struct wait_opts *wo, struct task_struct *p)
- 			psig->cmaxrss = maxrss;
- 		task_io_accounting_add(&psig->ioac, &p->ioac);
- 		task_io_accounting_add(&psig->ioac, &sig->ioac);
--		write_sequnlock(&psig->stats_lock);
--		spin_unlock_irq(&current->sighand->siglock);
-+		write_sequnlock_irq(&psig->stats_lock);
- 	}
- 
- 	if (wo->wo_rusage)
--- 
-2.25.1.362.g51ebf55
+I did also look into the possibility of a SMC backend to regmap but that was
+already tried and nacked upstream previously.
 
+>
+> > As all platforms that have PMU registers use these new APIs, remove the
+> > syscon regmap lookup code, as it is now redundant.
+> >
+>
+> if syscon is now no longer needed, why keep selecting MFD_SYSCON below,
+> and why are linux/mfd/syscon.h and linux/regmap.h still included ?
+
+Good point, those headers and the select of MFD_SYSCON are now superfluous.
+Will fix it in v2.
+
+> Also, the driver did not previously only support ARCH_EXYNOS but also
+> ARCH_S3C64XX and ARCH_S5PV210. It is not entirely (actually, not at all)
+> clear to me if and how those platforms are now supported. EXYNOS_PMU
+> still seems to depend on ARCH_EXYNOS. How can the driver select
+> EXYNOS_PMU if ARCH_EXYNOS=n ?
+>
+> Also, ARCH_EXYNOS already selects EXYNOS_PMU, so a conditional
+> "select EXYNOS_PMU if ARCH_EXYNOS" would not make sense (or be required)
+> either.
+>
+> Please explain all the above.
+
+Fixing this for ARCH_S3C64XX and ARCH_S5PV210 looks to be a case of
+
++++ b/drivers/watchdog/Kconfig
+@@ -512,8 +512,6 @@ config S3C2410_WATCHDOG
+        tristate "S3C6410/S5Pv210/Exynos Watchdog"
+        depends on ARCH_S3C64XX || ARCH_S5PV210 || ARCH_EXYNOS || COMPILE_TEST
+        select WATCHDOG_CORE
+-       select MFD_SYSCON if ARCH_EXYNOS
+-       select EXYNOS_PMU
+
+and fixing the return type in the stubs that Arnd pointed out.
+
+static inline int exynos_pmu_write(unsigned int offset, unsigned int val)
+ {
+-       return ERR_PTR(-ENODEV);
++       return -ENODEV;
+ }
+
+That then compiles OK with s5pv210_defconfig and s3c6400_defconfig.
+
+Neither ARCH_S3C64XX or ARCH_S5PV210 have PMU registers or set the PMU
+register quirk flags so none of the code for setting PMU registers
+would get called at runtime on those platforms.
+I can make the changes described above in v2 which should fix the
+ARCH_S3C64XX and ARCH_S5PV210 compatibility.
+
+Thanks,
+
+Peter
