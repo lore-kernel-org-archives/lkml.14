@@ -1,205 +1,146 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65FC38005D;
-	Tue, 23 Jan 2024 18:00:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07CF281218
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 18:00:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706032819; cv=none; b=ndCEyi2fEw101xKgWIb8jXU6md2fzynAOYfXMrP4GRUecYmX2mBFAQW5MD//T6hmCgGcJl+5+sCeF2U+4aa4Dj0tCATLvkTv6Xoi3SXDzStd7Odze1hpAcYpW33mZC5bjwhqAbLqHoWk/VZ/0T+1ZTNSqKN+DIBESPc4gJ40NQk=
+	t=1706032823; cv=none; b=k+x0Sp7rYfsOmrm4SKQCrxyaheC2eEuApQJYODGh2+6UXWgod46Ucnnk1g2D/3iZ98j76FNRjESYwR3ps/1gGr7x8TK7A4ObPA9GfdTw0uU9CTyFrIbKu+OtotYfOnj0RtzyQleVo5/DOpTzUEwSOjYtfujDsQV72NgbOxIZxRs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706032819; c=relaxed/simple;
-	bh=x+4DKQ0VomY5Vn/A2UNegg9hB/vO0L2w7CrEM1I0bng=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fnjPrhT2WvC1x3GKUCaRgvQLMxPYpfm3reUCQcadUXJHxdkqZDCqBaBR9WUjjumZeUNi5XJW2Fui18bfWZYZ0CV+CwW9gCE95UKs5VGr5k4vRYMXhLrg24geaCIt/XGfj8mS/yAYixA4moG3NrJCX8Kx/uxvBsUDZFLV4n2LdxU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=kiV/UvtX; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=8T+6+jW/; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=N7RwBA6F; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=7+M8i/DF; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1706032823; c=relaxed/simple;
+	bh=MtJ/HqiEUxScIQTHutFj2dKX6h9i2hpJKWEAmQsLjIw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=J4pvI0Hjy41Gc1jhyqf2zeN2MNMEBQ2aZ/UmfkP5FrdGKe0exC//oEbopREusF7Ybq2/bf1ShTbAlRyZQArkbnYNCMMHMhv0tzawaVVPmnbiqhEJkYqvCUR28fV1RlxJHzlZKh+DywdQlf3YKhqbIVqVlhw3p81IzerrzdX/pIE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WSyyzlYs; arc=none smtp.client-ip=209.85.208.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="kiV/UvtX";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="8T+6+jW/";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="N7RwBA6F";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="7+M8i/DF"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id C6EDB1F79B;
-	Tue, 23 Jan 2024 18:00:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1706032809; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=INBI/Isa3O19dYdw2aRIskylv6DV2Svn3LWWNjvnDaE=;
-	b=kiV/UvtXntEAK8kIull+dRj6dexryLwH4imrKZ+MyXmAyrOhkr15RuzMGIaJXXintJjb7e
-	t9KDU1IHCFB5jye/TKO/8kQaPHhwXWfxfywZc3NhfSWn+VRILt5XJlRbWInjxSXoLXkB43
-	/rgsB7hoQzs13LHiHqqmiM/ALAOeoCo=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1706032809;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=INBI/Isa3O19dYdw2aRIskylv6DV2Svn3LWWNjvnDaE=;
-	b=8T+6+jW/0prvyKoDs1LZw2bQpHKrm7TScVec8e7i4wyErKLJ2+U4Tv2LtVIUC8jXdWG8Nx
-	rbKaqYqt20SaLBCg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1706032808; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=INBI/Isa3O19dYdw2aRIskylv6DV2Svn3LWWNjvnDaE=;
-	b=N7RwBA6FBOSZIY00nSEYwyStKOhMVag1aZC5AFlB8kbvvE8XfiBW3uD4f4R7SnVSomsJY/
-	56xfcM/wdX9uvklhm5q0n23/0ad6leOz7cnJjFODvnuFsgKIICL9jHBE2+2nMJ1WNxNfOq
-	XcM+BNrYfQbI7ywxPshpnzX8VsC3TUY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1706032808;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=INBI/Isa3O19dYdw2aRIskylv6DV2Svn3LWWNjvnDaE=;
-	b=7+M8i/DF36t2tADhHtScro2yUi1M09IQuMjQ8Igq2MsJYPa2feIo97ElujbXiNZGgkfFCz
-	TdZQc9TArcnaAlDg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B8601136A4;
-	Tue, 23 Jan 2024 18:00:08 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id lZ/zLKj+r2XcKAAAD6G6ig
-	(envelope-from <jack@suse.cz>); Tue, 23 Jan 2024 18:00:08 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 53DFFA0803; Tue, 23 Jan 2024 19:00:08 +0100 (CET)
-Date: Tue, 23 Jan 2024 19:00:08 +0100
-From: Jan Kara <jack@suse.cz>
-To: Kees Cook <keescook@chromium.org>
-Cc: linux-hardening@vger.kernel.org,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	linux-fsdevel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 09/82] select: Avoid wrap-around instrumentation in
- do_sys_poll()
-Message-ID: <20240123180008.sg77hnu5r7nqrgjy@quack3>
-References: <20240122235208.work.748-kees@kernel.org>
- <20240123002814.1396804-9-keescook@chromium.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WSyyzlYs"
+Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2cf15eea3c1so7672271fa.0
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 10:00:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1706032820; x=1706637620; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=TnoRqNG9BylPXm1qN1DFm/eBxnmuuTJ523N0hc6cFDs=;
+        b=WSyyzlYsQvy0asmn23QNx/AhxlktRfpIZ4/nyEWv9tmccquD7/I/t3vVyG4qzGeZ84
+         Vi4Vg5hT+E6fwgoNZaEBS/HTqI0HykXm7dHJkFdp5kqdAZmvBk28ECHqZZh6zHYomLew
+         l6QLYPLkWfNAvj233fq5BjNKDg9p3Bt8FW2uLytHAD3Fffw/3MD7wNqpTpB/JkenPWqs
+         th6hJkuNv2douaf0kSGZhIAOsHBH6O6wV15sO26P0K6u8tB+ygqj1DUV3/qiFJ3VZj3Y
+         EKlDrfJ/ntqsFoMwO/SW+xHeU3QEzSF5pGlB7gFZ7RUIUb6s73qQD4C2p+4BlSzj7Qk6
+         wMRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706032820; x=1706637620;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=TnoRqNG9BylPXm1qN1DFm/eBxnmuuTJ523N0hc6cFDs=;
+        b=uV/qJQy1vk8HGY52zl99ivRTMXiyupLxk/xoVsCAt5CkN6vCx8nlsftM1n5TT2XRpd
+         YZaKwtqfBvBp0uRFo1Fkiomkj7FxB3YimBW1aEeFjgKOYuh32qLLhGHH/JiS5TDuE5EH
+         RQMH90+NwvNSdILHO+fdBS0kYSHe2ewbnS8YNq7Z9p5kYiQzRT2IA2AtOHfZb97bwhkl
+         1u/DramZj3uwKeJCpBV4eXC01Sh1FeqTfHBToaVtlNnXX7emIlkl45ZmWWEUj7vkQsq7
+         LsB33zffLyieGv6EEpNJJQOBATmEF9Xii5NGWv6gx4TAySfx20DixGJZFmcyAMMwRp49
+         6ogQ==
+X-Gm-Message-State: AOJu0YwMXZnkA46BhucYr8ueCo53MAvXPGTSGjsvJvNTB2bx4CvuL+v7
+	JTysLBrDIZTqzTyfP8KjE01y15mWg7WdYUUsTrmbBDPZ80K4Zm8LBng0DO/g2dM=
+X-Google-Smtp-Source: AGHT+IFnEfC3oawTRwTitOxgaBUV+CKV0/WT2dwdHRRdkvC9cRcn6wvyopZjVpQbq/DqeMFnxofbKg==
+X-Received: by 2002:a05:651c:8e:b0:2cd:285f:7d39 with SMTP id 14-20020a05651c008e00b002cd285f7d39mr115795ljq.15.1706032820038;
+        Tue, 23 Jan 2024 10:00:20 -0800 (PST)
+Received: from [172.30.205.123] (UNUSED.212-182-62-129.lubman.net.pl. [212.182.62.129])
+        by smtp.gmail.com with ESMTPSA id f17-20020a05651c03d100b002cdfc29b46dsm1514699ljp.88.2024.01.23.10.00.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 23 Jan 2024 10:00:19 -0800 (PST)
+Message-ID: <0069beea-72d6-4a31-8f8b-282dbdd4bf94@linaro.org>
+Date: Tue, 23 Jan 2024 19:00:18 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240123002814.1396804-9-keescook@chromium.org>
-Authentication-Results: smtp-out2.suse.de;
-	none
-X-Spamd-Result: default: False [-2.60 / 50.00];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 RCPT_COUNT_SEVEN(0.00)[10];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 BAYES_HAM(-3.00)[100.00%];
-	 ARC_NA(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email,linux.org.uk:email,chromium.org:email,suse.com:email];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 MID_RHS_NOT_FQDN(0.50)[];
-	 RCVD_TLS_ALL(0.00)[]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Spam-Score: -2.60
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/2] Remove QDF2xxx pinctrl drivers
+Content-Language: en-US
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+ Jeffrey Hugo <quic_jhugo@quicinc.com>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+ Linus Walleij <linus.walleij@linaro.org>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Marijn Suijten <marijn.suijten@somainline.org>,
+ linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20240122-topic-qdf_cleanup_pinctrl-v1-0-0c619ea25091@linaro.org>
+ <8c9b157b-4698-70a3-57b7-c588998eeda7@quicinc.com>
+ <CAA8EJprDk=HnqWJ_F5zdUKMPFPpx1RD9KN-KQP9yopP6LMh_fw@mail.gmail.com>
+ <52479377-ff61-7537-e4aa-064ab4a77c03@quicinc.com>
+ <CAA8EJpr2g=b8+M9r20KJoK+VVTabgctvB9eLmwivmi5qgBddFQ@mail.gmail.com>
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+In-Reply-To: <CAA8EJpr2g=b8+M9r20KJoK+VVTabgctvB9eLmwivmi5qgBddFQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon 22-01-24 16:26:44, Kees Cook wrote:
-> The mix of int, unsigned int, and unsigned long used by struct
-> poll_list::len, todo, len, and j meant that the signed overflow
-> sanitizer got worried it needed to instrument several places where
-> arithmetic happens between these variables. Since all of the variables
-> are always positive and bounded by unsigned int, use a single type in
-> all places. Additionally expand the zero-test into an explicit range
-> check before updating "todo".
-> 
-> This keeps sanitizer instrumentation[1] out of a UACCESS path:
-> 
-> vmlinux.o: warning: objtool: do_sys_poll+0x285: call to __ubsan_handle_sub_overflow() with UACCESS enabled
-> 
-> Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-> Cc: Christian Brauner <brauner@kernel.org>
-> Cc: Jan Kara <jack@suse.cz>
-> Cc: linux-fsdevel@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-Looks good. Feel free to add:
 
-Reviewed-by: Jan Kara <jack@suse.cz>
-
-								Honza
-
-> ---
->  fs/select.c | 13 +++++++------
->  1 file changed, 7 insertions(+), 6 deletions(-)
+On 1/22/24 20:23, Dmitry Baryshkov wrote:
+> On Mon, 22 Jan 2024 at 20:44, Jeffrey Hugo <quic_jhugo@quicinc.com> wrote:
+>>
+>> On 1/22/2024 10:56 AM, Dmitry Baryshkov wrote:
+>>> On Mon, 22 Jan 2024 at 19:43, Jeffrey Hugo <quic_jhugo@quicinc.com> wrote:
+>>>>
+>>>> On 1/22/2024 4:57 AM, Konrad Dybcio wrote:
+>>>>> The SoC line was never productized, remove the maintenance burden.
+>>>>>
+>>>>> Compile-tested only.
+>>>>>
+>>>>> Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+>>>>> ---
+>>>>> Konrad Dybcio (2):
+>>>>>          pinctrl: qcom: Remove QDF2xxx support
+>>>>>          arm64: defconfig: Remove QDF24XX pinctrl
+>>>>>
+>>>>>     arch/arm64/configs/defconfig           |   1 -
+>>>>>     drivers/pinctrl/qcom/Kconfig.msm       |   7 --
+>>>>>     drivers/pinctrl/qcom/Makefile          |   1 -
+>>>>>     drivers/pinctrl/qcom/pinctrl-qdf2xxx.c | 164 ---------------------------------
+>>>>>     4 files changed, 173 deletions(-)
+>>>>> ---
+>>>>> base-commit: 319fbd8fc6d339e0a1c7b067eed870c518a13a02
+>>>>> change-id: 20240122-topic-qdf_cleanup_pinctrl-98e17cdb375b
+>>>>>
+>>>>> Best regards,
+>>>>
+>>>> NACK.
+>>>>
+>>>> This was productized, there are some out in the wild, and the platform
+>>>> is still in (limited) use.
+>>>>
+>>>> I'd like to see support hang around for a few more years yet.
+>>>
+>>> The problem is that... its support is pretty strange. I can see
+>>> pinctrl, ethernet and quirks for the platform in GIC-ITS and PL011
+>>> drivers. Is this enough to get the platform into the useful state? I
+>>> can imagine that "QCOM2430" ACPI handle was used for USB hosts on that
+>>> platform, but I don't remember when we last tested DWC3 with the ACPI.
+>>>
+>>> So, all this boils down to the question whether mainline (or something
+>>> close by, LTS for example) is actually used and tested on these
+>>> devices?
+>>
+>> Its an ACPI system, so you won't see all of the fun DTisms of a MSM chip.
+>>
+>> The platform was fully functional upstream, and had an Ubuntu
+>> certification.  I run Ubuntu on the two that I have in my office.  I
+>> haven't strictly checked out mainline in a while, but I could.  I still
+>> have access to the documentation.
+>>
+>> There is a small, but active set of users including myself.  From what
+>> I've seen, they've been happy with things.
 > 
-> diff --git a/fs/select.c b/fs/select.c
-> index 0ee55af1a55c..11a3b1312abe 100644
-> --- a/fs/select.c
-> +++ b/fs/select.c
-> @@ -839,7 +839,7 @@ SYSCALL_DEFINE1(old_select, struct sel_arg_struct __user *, arg)
->  
->  struct poll_list {
->  	struct poll_list *next;
-> -	int len;
-> +	unsigned int len;
->  	struct pollfd entries[];
->  };
->  
-> @@ -975,14 +975,15 @@ static int do_sys_poll(struct pollfd __user *ufds, unsigned int nfds,
->  		struct timespec64 *end_time)
->  {
->  	struct poll_wqueues table;
-> -	int err = -EFAULT, fdcount, len;
-> +	int err = -EFAULT, fdcount;
->  	/* Allocate small arguments on the stack to save memory and be
->  	   faster - use long to make sure the buffer is aligned properly
->  	   on 64 bit archs to avoid unaligned access */
->  	long stack_pps[POLL_STACK_ALLOC/sizeof(long)];
->  	struct poll_list *const head = (struct poll_list *)stack_pps;
->   	struct poll_list *walk = head;
-> - 	unsigned long todo = nfds;
-> +	unsigned int todo = nfds;
-> +	unsigned int len;
->  
->  	if (nfds > rlimit(RLIMIT_NOFILE))
->  		return -EINVAL;
-> @@ -998,9 +999,9 @@ static int do_sys_poll(struct pollfd __user *ufds, unsigned int nfds,
->  					sizeof(struct pollfd) * walk->len))
->  			goto out_fds;
->  
-> -		todo -= walk->len;
-> -		if (!todo)
-> +		if (walk->len >= todo)
->  			break;
-> +		todo -= walk->len;
->  
->  		len = min(todo, POLLFD_PER_PAGE);
->  		walk = walk->next = kmalloc(struct_size(walk, entries, len),
-> @@ -1020,7 +1021,7 @@ static int do_sys_poll(struct pollfd __user *ufds, unsigned int nfds,
->  
->  	for (walk = head; walk; walk = walk->next) {
->  		struct pollfd *fds = walk->entries;
-> -		int j;
-> +		unsigned int j;
->  
->  		for (j = walk->len; j; fds++, ufds++, j--)
->  			unsafe_put_user(fds->revents, &ufds->revents, Efault);
-> -- 
-> 2.34.1
-> 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+> Thanks for the information! It looks like it has a small but stable
+> user base. I think we should keep it, maybe ensuring that we are able
+> to test the kernel.
+
+Alright, please make sure it still boots etc. then!
+
+Konrad
