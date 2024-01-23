@@ -1,75 +1,65 @@
-Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B19415B113
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80BF015B2E7
 	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 00:29:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705969754; cv=none; b=mXn4MFDyZtDPldFtlui21P4Th/NSjIT/swBwvTELxkvMXju+Zy/HSx/uZJQFecjvtm1FFrCVBeZVB3cGGFfbzgr5bze3B/9rgvm9mPF2k+YkrwiYpDqWrrgjLC6Xc/0ddvC9XfLNQhV3AFp+Cl46jhCWHUFtDaBeST5R1IuGx7g=
+	t=1705969754; cv=none; b=gC3YxrvmAzisY1m1+BqPiVZ57Osqtp9vxgVfZlMSaNKI4t/BH19UPeAqwHoRRLHRJwLF0zp2Gxn/lBB65EPAtMav8CwYvA/n/n5OQD9g29fllz4WBbt315TL1qrb3Wni9rCu9fSSyxGgdQOvIoeyYFby8YP37H9OjtzhXi39pTU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1705969754; c=relaxed/simple;
-	bh=DQU4joanXRgd1mS+gxXcm4BfbB4iNwIjQJ9FPFqx45U=;
+	bh=Le2cw8/EMeZDvyWiTZfIKGAqobpbeo1xxbxe1eKIEog=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=NFUGVGxF8VDeV6Ykcyxx692z2g6AOu3NIrhm9YWRPWTSEc8k0AfglrRet8J18SstKBir6aqU4jCfYstC4g4Pbm4g/dzQIoWuZ1gTpg7aoMAsbqk0Y7gqYz8gB66EYHGwkxGLKundDjw4POk4ZDGSamuiTKW9kI16y/d/GZkd8Ck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=U+XngC5y; arc=none smtp.client-ip=209.85.215.179
+	 MIME-Version; b=OAW+1XK4vOvBPNetVFTFsNdZKD90+PfvnJddzXammGLLZ7K/RyvNZwaQhCxiobQgplOFeLOE80spbI5FHSzuICSAMyiQZeLZ6lmfvNejTDQpr6zELgXGXwOh3cvYF8IUZiZpCtEXN4Nux5BP2zzcUzv6swFvZHbclpGFd+WgQfA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=dei4nlrQ; arc=none smtp.client-ip=209.85.214.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="U+XngC5y"
-Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-5ce10b5ee01so2594736a12.1
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dei4nlrQ"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1d7431e702dso10690305ad.1
         for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 16:29:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1705969752; x=1706574552; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1705969753; x=1706574553; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=TvywcYW77f9W0/EEawC9chQVSlmM/wYw9WuZ4ujpaBk=;
-        b=U+XngC5yhwSHfcAeXyiKIAwlBnviRYdrjm9mQAGzkrE04I/qggNqJ7EXr6byRqOOHS
-         RmbMa0p+/7TquRmbrl5UNm3nscRJCeaXDVPqkkNj2ZepvzB7PK7Fmg8preYvpKu/jeVU
-         lB0rngG+suGF/wLnhpOTqz7mvo8OZO5rKUGSk=
+        bh=4kSZcErhkvLURXFhEcykitt7q+k1IsSKXy6VMnrbEx4=;
+        b=dei4nlrQVSmZaRc7i9w34s2JHXoCLSllCDEuYyKgw7v/ZalCE32trcheV5afy+MkG4
+         PJDijwomQl32hvpaX7i9vlIpJPROylLEcbAWBZlgsmhlVnMbt0Azr1BHJcpwp31KpjSR
+         Jl+FV2Cok0fJt1RRiwZNQxM+Jm6CWWrYE87H8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705969752; x=1706574552;
+        d=1e100.net; s=20230601; t=1705969753; x=1706574553;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=TvywcYW77f9W0/EEawC9chQVSlmM/wYw9WuZ4ujpaBk=;
-        b=KoSXHpg1YfKGo3ynCFEe71Z/SrVw9Mwow51tc1HZq3vJRSF912d+A6itZE2gU95zPI
-         ktslMceNFWB0tnwOO6rvoJtzelufq/yLdm60/AHbqgfRBDHMgYmAIlzM1n2sYJAM4RwL
-         FAAxv8JnZGypZtBhUeUKEQzrHk5e4X1m6HNSQn0oolCmIj70lhymOqgCuUoXi8gHMKeE
-         yjDE1lD3/eSHKSbXc4MWQ8i+3N9700x1aYjmrVFQ+Hs9NeMFf03wiJgnsfVZbX+4MADy
-         TadTKpGac8Kbdx+VbN+XfCuXb0cQjycetOhFMCvuK139aAlpJ5oXN4HMPMpKB+rg51AB
-         CtFw==
-X-Gm-Message-State: AOJu0YwHOoRXTCGC0r3Tzy6QWZLdWJDa9CeRAJ0xdEVT5fS5woGn2Ei9
-	tZGsMa9yStDYEqyE5tTDHnmq0gM4cjA/uI++lsARjWY2wEqErAOtyMlpeEE4cW9S3x0WpoCPh78
-	=
-X-Google-Smtp-Source: AGHT+IFj6nXDFRwAngJViBctccMejN1t3BelBA34ipms9cwPh9gV9+T4jqVADGchm5OGinfbn3pAmw==
-X-Received: by 2002:a17:90b:607:b0:290:5246:beb3 with SMTP id gb7-20020a17090b060700b002905246beb3mr7402551pjb.37.1705969752595;
+        bh=4kSZcErhkvLURXFhEcykitt7q+k1IsSKXy6VMnrbEx4=;
+        b=QTkk7IULCJYoHe12affgaQw0oPLQ+nNm+Isf9eXIyiGBLfuUKs+BGo3JJnr5JQLyx/
+         B7+b82c43QCs1iYKrqwJcM007nSNojTY8AQ2h/QJsHng90Q/ebkcaWZLHKl4LmrQJsWw
+         OTKawEpTHfTonLGDI++ak555TbC8la0oH8pDob9YgqtxURukuMm0AT2rUY4kS+gBlh4m
+         Pt7ZE3RNGq1f/JvGlDgAHqZnjQKN2AYYS6YZg222pJ9smsjrEllMqMkkIskmApGd6Ydq
+         dVm3XYjgeGJr53pw9RWU1OxGtyTZE4VYee+GkGQwPwgiWZHvtHQks4cxEWGKX7D6Avzf
+         8rZA==
+X-Gm-Message-State: AOJu0Ywh25ddgMNTG87ZpMIfFxLNXv7s3A+5J4ep4UrSl4+L9jouHFt9
+	6GrvwglX7og9WUtO1kw+VLTiR3zVa8T1df9k0LK+voJN5BNYZA2o/ZfgyBh1UQ==
+X-Google-Smtp-Source: AGHT+IG3RDfq5susdGGtZ5t8hNNXczrgazB2fai6AkFle9yipHha6eOEWBtXrxnRKsK0nSd5aI3KHw==
+X-Received: by 2002:a17:902:c946:b0:1d7:ad4:7d9 with SMTP id i6-20020a170902c94600b001d70ad407d9mr2794072pla.60.1705969752949;
         Mon, 22 Jan 2024 16:29:12 -0800 (PST)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id 4-20020a170902e9c400b001d706e373a9sm7559865plk.292.2024.01.22.16.28.54
+        by smtp.gmail.com with ESMTPSA id b4-20020a170902a9c400b001d74b1ef56fsm2652747plr.271.2024.01.22.16.28.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jan 2024 16:29:02 -0800 (PST)
+        Mon, 22 Jan 2024 16:29:08 -0800 (PST)
 From: Kees Cook <keescook@chromium.org>
 To: linux-hardening@vger.kernel.org
 Cc: Kees Cook <keescook@chromium.org>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Janosch Frank <frankja@linux.ibm.com>,
-	Claudio Imbrenda <imbrenda@linux.ibm.com>,
-	David Hildenbrand <david@redhat.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	kvm@vger.kernel.org,
-	linux-s390@vger.kernel.org,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-mm@kvack.org,
 	Bill Wendling <morbo@google.com>,
 	Justin Stitt <justinstitt@google.com>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 58/82] s390/mm: Refactor intentional wrap-around test
-Date: Mon, 22 Jan 2024 16:27:33 -0800
-Message-Id: <20240123002814.1396804-58-keescook@chromium.org>
+Subject: [PATCH 56/82] usercopy: Refactor intentional wrap-around test
+Date: Mon, 22 Jan 2024 16:27:31 -0800
+Message-Id: <20240123002814.1396804-56-keescook@chromium.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240122235208.work.748-kees@kernel.org>
 References: <20240122235208.work.748-kees@kernel.org>
@@ -79,19 +69,19 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2557; i=keescook@chromium.org;
- h=from:subject; bh=DQU4joanXRgd1mS+gxXcm4BfbB4iNwIjQJ9FPFqx45U=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlrwgKR1fdbTlXCSNHaLsraY4kCN0NXjk4wrN/9
- ptrTecUkUCJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZa8ICgAKCRCJcvTf3G3A
- Juo/D/0Rijh7xs7t+z0k5sUC01Phuw7CfMgDm7ealxIpjEnqcPeKLdz3mD2xMlnLAWp8AQgMX7x
- UsVZepQBCW+mbZNcyaU8P17kkR/DVc7kuurh6A9/qg0Doo0FWrmPWygvxpM4QDhE0BWg+HnMgku
- n6+MLAW3qZ38qFK2TNKcR1VOhVuLWxTkckPN8Nec/7/x4EA/IrvviqK5ppVmcCCP1kkU6yqRS9V
- GLUxRZfvGVuFMMnb0GKhKAWo7DZdHEZR5LzYBFF10XJes46hmqVlAymMFxiN7EIxv0ywKkw+/jo
- nLiBSpXgpdEeNMvEbekQ9g18cBvZowM9RckCdGzvVuhqEE8wlYliS3Cl6xZFQKeDcLXNaS5Iddd
- l6LypkhXu8RsRGFMSTTeST3NLd2MV50Ak5N7MwlYwztrZhji/SUmMGdL6wI/FRsTLYy80nbrjy8
- fyZyR3PPt/w66FT/FbS1YpSxHVHI4lBm2rBauWi2Lt61XzIBNU5xedEqaQEl1dEb4INlRI7CV64
- nbqMv8Q+wAg8JFTpkVL0iRqSD8sKKxtAw4q49K9wuS9FmVtOcyDAcXkG7QMZPbW6fnyVYVPSPbY
- tEhStv2vcp7DGK/BOSTiwcIMprY0XAIyqKXaQ77rYBqq5JxZIOFNPSPAu/upxkCHl+TQQK0n5j7 tszHYawERVCbBMA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1952; i=keescook@chromium.org;
+ h=from:subject; bh=Le2cw8/EMeZDvyWiTZfIKGAqobpbeo1xxbxe1eKIEog=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlrwgJFBcLI030OvWlIdf+JlEl9ZpGqp2xZrVGc
+ OF5/tb3LLKJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZa8ICQAKCRCJcvTf3G3A
+ JlAfD/4hK8oQxeilJy5M1BswN23KROlrOk+00GSMbycYwZKmxQcAxh0DnW23pgXbeUgj2xRlH7k
+ /F+1z4vu9eaAj8Y/Y9hBh2STz4jydgyEv7WtfzL7Jw1BNKRrtbBNLwAwKJ0huo8jHVSKWwPVexP
+ H0dsQTMPDxMkMaS77DgFrqDnf83+cga/jJS5LHAev1F3Rt7Vzx4KZTVfeW2Dto3dvVvaDA7Mr1W
+ zclIJH/mqpfAZHnTuBX0Lc9+8RKLG4qO+2/IUsGeLKMWwR1WVPmDTM2bkl/aMTUuS9zUOBkJ+kz
+ KOHdKKXC1Rs12cJXs6FaDHdaa14Rs0A4hpkuD5hOdyzaS307IhV5depO3u68Tj2Uik5iOAg0Sd+
+ mbpV425cNRUyFHClpds5aX3e702vMEC0hgaOLiRwlk5K3u6RQW1N7GluN4un20Sn6BhkHSH4U+N
+ YixLEE2YDQcd7gaZZwk6n5ylkZBndaXc6h2B9qpnebQVrz7cHnXCvjJ523k41Bmm1MZTcW9H7Np
+ ST8joAjzTwXfRq5dJvhigwFDMdUGFtxsZ2soh6RZ/+fTiuyYL+m8B2frhQ33eS/G9AbMn6WFBxK
+ EFYGaKAJmKlp3x8HgzZyfaTqO4BFToZOSpxteo584SQH5dsfYvS3kwiZW/3iIX05kIzLTWTZTqU IgI+hkYy5CRcMww==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
@@ -116,44 +106,30 @@ Link: https://git.kernel.org/linus/68df3755e383e6fecf2354a67b08f92f18536594 [1]
 Link: https://github.com/KSPP/linux/issues/26 [2]
 Link: https://github.com/KSPP/linux/issues/27 [3]
 Link: https://github.com/KSPP/linux/issues/344 [4]
-Cc: Christian Borntraeger <borntraeger@linux.ibm.com>
-Cc: Janosch Frank <frankja@linux.ibm.com>
-Cc: Claudio Imbrenda <imbrenda@linux.ibm.com>
-Cc: David Hildenbrand <david@redhat.com>
-Cc: Alexander Gordeev <agordeev@linux.ibm.com>
-Cc: Gerald Schaefer <gerald.schaefer@linux.ibm.com>
-Cc: Heiko Carstens <hca@linux.ibm.com>
-Cc: Vasily Gorbik <gor@linux.ibm.com>
-Cc: Sven Schnelle <svens@linux.ibm.com>
-Cc: kvm@vger.kernel.org
-Cc: linux-s390@vger.kernel.org
+Cc: Kees Cook <keescook@chromium.org>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-hardening@vger.kernel.org
+Cc: linux-mm@kvack.org
+Cc: Gustavo A. R. Silva <gustavoars@kernel.org>
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- arch/s390/mm/gmap.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ mm/usercopy.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/s390/mm/gmap.c b/arch/s390/mm/gmap.c
-index 6f96b5a71c63..977b61ab59f2 100644
---- a/arch/s390/mm/gmap.c
-+++ b/arch/s390/mm/gmap.c
-@@ -411,7 +411,7 @@ int gmap_unmap_segment(struct gmap *gmap, unsigned long to, unsigned long len)
- 	BUG_ON(gmap_is_shadow(gmap));
- 	if ((to | len) & (PMD_SIZE - 1))
- 		return -EINVAL;
--	if (len == 0 || to + len < to)
-+	if (len == 0 || add_would_overflow(to, len))
- 		return -EINVAL;
+diff --git a/mm/usercopy.c b/mm/usercopy.c
+index 83c164aba6e0..5141c4402903 100644
+--- a/mm/usercopy.c
++++ b/mm/usercopy.c
+@@ -151,7 +151,7 @@ static inline void check_bogus_address(const unsigned long ptr, unsigned long n,
+ 				       bool to_user)
+ {
+ 	/* Reject if object wraps past end of memory. */
+-	if (ptr + (n - 1) < ptr)
++	if (add_would_overflow(ptr, (n - 1)))
+ 		usercopy_abort("wrapped address", NULL, to_user, 0, ptr + n);
  
- 	flush = 0;
-@@ -443,7 +443,7 @@ int gmap_map_segment(struct gmap *gmap, unsigned long from,
- 	BUG_ON(gmap_is_shadow(gmap));
- 	if ((from | to | len) & (PMD_SIZE - 1))
- 		return -EINVAL;
--	if (len == 0 || from + len < from || to + len < to ||
-+	if (len == 0 || add_would_overflow(from, len) || add_would_overflow(to, len) ||
- 	    from + len - 1 > TASK_SIZE_MAX || to + len - 1 > gmap->asce_end)
- 		return -EINVAL;
- 
+ 	/* Reject if NULL or ZERO-allocation. */
 -- 
 2.34.1
 
