@@ -1,158 +1,158 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 642CA5FB87
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 09:45:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B3F55FDAD
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 09:45:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706003111; cv=none; b=bozpIfUG2h78qOLESJonJcqZxcbQ/KvvnKdjX31zNTol4+K7h25mvzefMOja7LenA3fQhq8iK7e31Db7BP28kGuX7a/dIz6JJRg2kJeCK9NvuSQ1QfwuQ8RNNqNS2JPx/9R+pSJm7U1qVq8nln3uaAQCwVn5BYw1mTkD5Gy7/bs=
+	t=1706003135; cv=none; b=DQ8O/QKO1JZZMGv6tz1guklb428lk0MHWoJIrj0Vi+CZ7ATr0BXmtlKV0c6PBTm+aWzsmS0H+dwtY4qNRpagfE9V9SlNwOOw/DyWUuMZJlHcOExVVHR5sGFQO7MWHs6a50YEkpQzVRzZpN1LAYnSASMJa8PlRDQs8CQCDHlWiu4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706003111; c=relaxed/simple;
-	bh=3Iz4WGGoq+pCd7AYX21h5ZoVleqGHZ1r8bx9B4kfr1Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PLVUYgDv8cKOoyIsA8Ef9hkErCa1PIvsVdO1hBwG7z6bUmlbEc/bk2EMEo4JEXGy0tAGig7I49hNP0sxhBzI/DxpwVaFhlhI/EMhp0mro7oQ8xslMH1aEuj8pHp9TF9dow5+/T0aMKFlmkWRAlOCbhVr0Es6RbA/XV7kQd4qgOU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=guwNTDq4; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1706003135; c=relaxed/simple;
+	bh=odkxBY8FHAysxrkRcY9fITRfwH8TqSDhGBgzysz/3Xk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=uwJxZb+0oxmlFWstu81f0WBlqSb+i9mf12ZlYUmieeqdf2KSljugdpWhCpT8i/cPvx7USNsoYlV8FdzMsGlNpiURDQsPpOz8SsGaCX2gr5WM8fVE4rcTVYousFRiuSP4VMDqZrgXPUzanfswaATGAX/9+lRt95QH/nrAqQCwU8Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SRf6BcNk; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="guwNTDq4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1706003109;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FWMdjy11RuBqd4YsQRKnY1KCsHHpGsFFOhcTWKEv36g=;
-	b=guwNTDq4erfqWQH6KO9vEwoHtmuAE9zx99KWbcXwXGbPWZjd03JiiTyi+f9/OmWz7SMNfN
-	AfmHRB7Wl+ZG+Fy663q4xkAquI2gMLyIMhiZ6WbTVe80ocxlxKmXfL8oa7SS3xL+qLpaWw
-	VlI5W85c+oLAldMYy9npLBjwuZYfv9g=
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
- [209.85.222.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-120-0_WjQzP_PyuqM4Vtd3gnTA-1; Tue, 23 Jan 2024 04:45:08 -0500
-X-MC-Unique: 0_WjQzP_PyuqM4Vtd3gnTA-1
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-78130939196so131066085a.1
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 01:45:08 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SRf6BcNk"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-337d05b8942so4711011f8f.3
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 01:45:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1706003132; x=1706607932; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=u4+mDft7U4+grrKWrx4KfPJ3Se1pTXr+hv+2847ZCNk=;
+        b=SRf6BcNkcwC27XOOfKeVTKU7GmBbr+AW7gUm8atwjSpa0Z7PnmxQ+rA5OVq84Zk6/S
+         DPKqxNMKeT11oxliTyzZbA7JF3wh5DIM8CawupE99/QW6sWVUtaOJRrtvfkn9BtcT5O/
+         9+1xTcvAJ4Hkvpd2U86buqnVaOSxgXTD1htJbsSl11fJoBQoISjL0C6wvmQ8ZXXS54aq
+         5JPhCCvEEaThL+GF24XV4zuWfmk2rUQkZNZX9pvcVeAOpcVX/DeRxm5FVjxr6b6oJyMm
+         KHD0HZfwppFaQq68EjqFEouIeObIBO3AGxrWbqkkfyDADwID+SIv785wBiJb5y8IA5XA
+         Az9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706003107; x=1706607907;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FWMdjy11RuBqd4YsQRKnY1KCsHHpGsFFOhcTWKEv36g=;
-        b=BzIsYUQIDXrqKf23wcHdMqpyvZ353hUXjv19YtXdPoq4nR4scP8kXUCNh1BECw2S7t
-         hIQ7pIUqir0ixvK39HZI6CkyAu8aVHFe5yxMWucoYaa+nENhlqaavc8pla6DNUoFcs8J
-         eYamB2ACdV/5LZuGBGTgU6jrC0n8AQIgocCI8qq003Q9efRTcuLt0uX1JZEYMI9bg+oF
-         j9FhZJ+7vVBlV3nXevPlpOiFGqX9tL43Ml1gyvv8nFeI1nYLFaSnlgx2BUrIaTecpJCV
-         uAdU7KX2S8Nq8MuqMzVqgAhbd6J20G6NqBtqLHKqvchqoxJvw3orA10LKTm6kcQxMior
-         5B5g==
-X-Gm-Message-State: AOJu0YxQCKQsp+B3XT6NmuxpTmnHRUdGvAfxyulywjrWPJJWB38yEpw6
-	kw66wY3ZL5ZnvTViD/Ib+KqX49THZbDEpNhsZlf99gEDkC1/Bh8rLKD4PY4urz005v6nB3JYb/y
-	4KG3Oa/AZ76VPRE2Ku9MvhFIBDlAtVexn0SSPQ7Tvq+QSeLnLZP6Up6Cz6cY6Tw==
-X-Received: by 2002:a05:6214:21c5:b0:686:9443:87b1 with SMTP id d5-20020a05621421c500b00686944387b1mr4377396qvh.2.1706003107747;
-        Tue, 23 Jan 2024 01:45:07 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFss4rceMk+iJ1mHCcS+hUWfR7kWRFY2O8zC9T9j0KLwTPnx3az+4pz7feAJyO8Yaas1sCjsw==
-X-Received: by 2002:a05:6214:21c5:b0:686:9443:87b1 with SMTP id d5-20020a05621421c500b00686944387b1mr4377391qvh.2.1706003107503;
-        Tue, 23 Jan 2024 01:45:07 -0800 (PST)
-Received: from pstanner-thinkpadt14sgen1.muc.redhat.com (nat-pool-muc-t.redhat.com. [149.14.88.26])
-        by smtp.gmail.com with ESMTPSA id nc5-20020a0562142dc500b00685e2ffcaf5sm2958704qvb.38.2024.01.23.01.45.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jan 2024 01:45:07 -0800 (PST)
-From: Philipp Stanner <pstanner@redhat.com>
-To: Jonathan Corbet <corbet@lwn.net>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Philipp Stanner <pstanner@redhat.com>,
-	Sam Ravnborg <sam@ravnborg.org>,
-	dakr@redhat.com
-Cc: linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	linux-pci@vger.kernel.org,
-	stable@kernel.vger.org
-Subject: [PATCH v2 10/10] drm/vboxvideo: fix mapping leaks
-Date: Tue, 23 Jan 2024 10:43:07 +0100
-Message-ID: <20240123094317.15958-11-pstanner@redhat.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240123094317.15958-1-pstanner@redhat.com>
-References: <20240123094317.15958-1-pstanner@redhat.com>
+        d=1e100.net; s=20230601; t=1706003132; x=1706607932;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=u4+mDft7U4+grrKWrx4KfPJ3Se1pTXr+hv+2847ZCNk=;
+        b=qjNV8YtY91oNrIeCLSbGdc6XzHFsMKHD8O0sIq5T+8+uPRCYYFCQ+NPqARfqVY5L1t
+         af/JFVKcVXgocsilVPpT3+UlQUjvK4IyJtn9SSV33lGXQOcz8k50TcWq+p6CGrvSJf+l
+         wpXREjJOqE6sQ/c3pcHS4r+Ab20n4qqEJ9oa16K6kVQQDTix3GW5I3hYx37hcolJSL0H
+         p/OZ324ewQ3U+dR98hHz33KXJ/PpxybaPDvBa8vD5BztoBaazXfTH764Bn4/o01wxChf
+         bc1QUmLHNuzG8rZFv5iHeWSk4KdtTG50SwW9XAjUsg4Zt2B77fZDkvUbW5BMJ36dGaag
+         cKdA==
+X-Gm-Message-State: AOJu0YwrnyLdAykhajXcV5tNjkEc1eFAv1IMgGT5PYrffmdgkTKYKrZs
+	BKidbBBevxcuXcGgg64IIsw9BHlzI8tJMtZX+qC+nQ7M+E5ntgebLqxCD76hL9A=
+X-Google-Smtp-Source: AGHT+IGeUk4uevU136+WqgA6qK2GCWU3c+cQQnNPm3FHUaU5vvheb5Io6OPMK7/kyI6zteDSYvzpug==
+X-Received: by 2002:a5d:4903:0:b0:337:bc26:5d43 with SMTP id x3-20020a5d4903000000b00337bc265d43mr3398320wrq.4.1706003132548;
+        Tue, 23 Jan 2024 01:45:32 -0800 (PST)
+Received: from [192.168.1.20] ([178.197.215.66])
+        by smtp.gmail.com with ESMTPSA id d12-20020adfe88c000000b00337be3b02aasm15889985wrm.100.2024.01.23.01.45.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 23 Jan 2024 01:45:32 -0800 (PST)
+Message-ID: <e19f2aa5-5040-4cab-8c67-557436883e40@linaro.org>
+Date: Tue, 23 Jan 2024 10:45:30 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] dt-bindings: memory-controllers: narrow regex for unit
+ address to hex numbers
+To: Jon Hunter <jonathanh@nvidia.com>, Rob Herring <robh+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Thierry Reding
+ <thierry.reding@gmail.com>, Dmitry Osipenko <digetx@gmail.com>,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-tegra@vger.kernel.org
+References: <20240123083517.21091-1-krzysztof.kozlowski@linaro.org>
+ <a00a3d5f-9d96-4886-9ebe-4e2962667ab3@nvidia.com>
+Content-Language: en-US
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <a00a3d5f-9d96-4886-9ebe-4e2962667ab3@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-When the PCI devres API was introduced to this driver, it was wrongly
-assumed that initializing the device with pcim_enable_device() instead
-of pci_enable_device() will make all PCI functions managed.
+On 23/01/2024 10:20, Jon Hunter wrote:
+> 
+> On 23/01/2024 08:35, Krzysztof Kozlowski wrote:
+>> Regular expression used to match the unit address part should not allow
+>> non-hex numbers.
+>>
+>> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+>> ---
+>>   .../bindings/memory-controllers/nvidia,tegra20-emc.yaml         | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra20-emc.yaml b/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra20-emc.yaml
+>> index f54e553e6c0e..71896cb10692 100644
+>> --- a/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra20-emc.yaml
+>> +++ b/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra20-emc.yaml
+>> @@ -145,7 +145,7 @@ patternProperties:
+>>     "^emc-table@[0-9]+$":
+>>       $ref: "#/$defs/emc-table"
+>>   
+>> -  "^emc-tables@[a-z0-9-]+$":
+>> +  "^emc-tables@[a-f0-9-]+$":
+>>       type: object
+>>       properties:
+>>         reg:
+> 
+> 
+> Thanks! We could add the fixes tag ...
+> 
+> Fixes: de3d7018372c dt-bindings: memory: tegra20: emc: Convert to schema
 
-This is wrong and was caused by the quite confusing devres API for PCI
-in which some, but not all, functions become managed that way.
+There is no bug here, really. At least no bug with impact, because dtc
+won't allow DTS with non-hex numbers.
 
-The function pci_iomap_range() is never managed.
-
-Replace pci_iomap_range() with the actually managed function
-pcim_iomap_range().
-
-Additionally, add a call to pcim_request_region() to ensure exclusive
-access to BAR 0.
-
-CC: <stable@kernel.vger.org> # v5.10+
-Fixes: 8558de401b5f ("drm/vboxvideo: use managed pci functions")
-Signed-off-by: Philipp Stanner <pstanner@redhat.com>
----
- drivers/gpu/drm/vboxvideo/vbox_main.c | 24 +++++++++++++-----------
- 1 file changed, 13 insertions(+), 11 deletions(-)
-
-diff --git a/drivers/gpu/drm/vboxvideo/vbox_main.c b/drivers/gpu/drm/vboxvideo/vbox_main.c
-index 42c2d8a99509..7f686a0190e6 100644
---- a/drivers/gpu/drm/vboxvideo/vbox_main.c
-+++ b/drivers/gpu/drm/vboxvideo/vbox_main.c
-@@ -42,12 +42,11 @@ static int vbox_accel_init(struct vbox_private *vbox)
- 	/* Take a command buffer for each screen from the end of usable VRAM. */
- 	vbox->available_vram_size -= vbox->num_crtcs * VBVA_MIN_BUFFER_SIZE;
- 
--	vbox->vbva_buffers = pci_iomap_range(pdev, 0,
--					     vbox->available_vram_size,
--					     vbox->num_crtcs *
--					     VBVA_MIN_BUFFER_SIZE);
--	if (!vbox->vbva_buffers)
--		return -ENOMEM;
-+	vbox->vbva_buffers = pcim_iomap_range(
-+			pdev, 0, vbox->available_vram_size,
-+			vbox->num_crtcs * VBVA_MIN_BUFFER_SIZE);
-+	if (IS_ERR(vbox->vbva_buffers))
-+		return PTR_ERR(vbox->vbva_buffers);
- 
- 	for (i = 0; i < vbox->num_crtcs; ++i) {
- 		vbva_setup_buffer_context(&vbox->vbva_info[i],
-@@ -115,12 +114,15 @@ int vbox_hw_init(struct vbox_private *vbox)
- 
- 	DRM_INFO("VRAM %08x\n", vbox->full_vram_size);
- 
-+	ret = pcim_request_region(pdev, 0, "vboxvideo");
-+	if (ret)
-+		return ret;
-+
- 	/* Map guest-heap at end of vram */
--	vbox->guest_heap =
--	    pci_iomap_range(pdev, 0, GUEST_HEAP_OFFSET(vbox),
--			    GUEST_HEAP_SIZE);
--	if (!vbox->guest_heap)
--		return -ENOMEM;
-+	vbox->guest_heap = pcim_iomap_range(pdev, 0,
-+			GUEST_HEAP_OFFSET(vbox), GUEST_HEAP_SIZE);
-+	if (IS_ERR(vbox->guest_heap))
-+		return PTR_ERR(vbox->guest_heap);
- 
- 	/* Create guest-heap mem-pool use 2^4 = 16 byte chunks */
- 	vbox->guest_pool = devm_gen_pool_create(vbox->ddev.dev, 4, -1,
--- 
-2.43.0
+Best regards,
+Krzysztof
 
