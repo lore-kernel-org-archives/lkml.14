@@ -1,62 +1,99 @@
-Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9FD57A73E;
-	Tue, 23 Jan 2024 02:06:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.99
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E1ED7A737
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 02:07:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705975597; cv=none; b=Y4Dkq7ncpkzIQqti6mzW2wKuhM9Zn4tsmFw8yJuWi0xg9HPAw/Vcyh+3vrg5LrHpTsVFP9Ai0McRUQa6cINOk7Mc8rcdktaeD4cOtiewbKBucFqb04L7tITHcijKfZvLXc1ji1D5ZFdgtXmlZ1jIzl4768xm6ciQV2tEvTu33bk=
+	t=1705975647; cv=none; b=TbNBSmn4PLPBD+2UBAdqu6QSc7bJlynq2qAFd+YvmvRn6Se9k58cpAPvn5fBiULkjMcwZ4Q4iUUmL478LYq0/Z65fobqZm1PVDSacHMVoJxM4lsYoAa4rXzhnlu5qUu/Iv9uBcopx5LPBcz5qoCwz1zgFUeuSDP1ZPHyp8gxVYM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705975597; c=relaxed/simple;
-	bh=OPMq39GkcKD7w9vnOus6OMUjCddgPvkIIND28U3QV5o=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=X7FMAa+kGg4MESLHp5bu7WCh6Drqc4kLCXpYmyZymjT1nimknzX5ST7QjlkV+WXFo2Qd3yA9voupcTguqZVVszakEFbMrQHpOcH9I6Xh5vtWCVpsIiOkr1oNo0gmMETfpsB8alfTwPHoKzl0cHdkABIpkPqKCOi7wFVzpY5sobw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; arc=none smtp.client-ip=115.124.30.99
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045168;MF=jiapeng.chong@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0W.Aw0iP_1705975584;
-Received: from localhost(mailfrom:jiapeng.chong@linux.alibaba.com fp:SMTPD_---0W.Aw0iP_1705975584)
-          by smtp.aliyun-inc.com;
-          Tue, 23 Jan 2024 10:06:30 +0800
-From: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
-To: dhowells@redhat.com
-Cc: linux-cachefs@redhat.com,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
-	Abaci Robot <abaci@linux.alibaba.com>
-Subject: [PATCH] netfs, fscache: Remove duplicate include
-Date: Tue, 23 Jan 2024 10:06:22 +0800
-Message-Id: <20240123020622.83648-1-jiapeng.chong@linux.alibaba.com>
-X-Mailer: git-send-email 2.20.1.7.g153144c
+	s=arc-20240116; t=1705975647; c=relaxed/simple;
+	bh=i8XZbJ81fBFIDUQE1pTnGiBnGeAvnlapZf4vuAhH/i0=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Sx1SsrDhaHjMwvlbKveASJvI4gdhBqABNhgpJDsC5BDxc4jUAPTekNIR+ZzLnwMyDn61pWPUf0Q8JZZJA9n99qG4DXuFXtGM8oyZK65/m8zAxLfGeJXfn0toHPXeOnhEADRTQYIuTA6oXQXEiz0xThzKarrKLdqVe9MAPkniCzA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.234])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4TJr5m3ddyz1gxwK;
+	Tue, 23 Jan 2024 10:05:32 +0800 (CST)
+Received: from canpemm500010.china.huawei.com (unknown [7.192.105.118])
+	by mail.maildlp.com (Postfix) with ESMTPS id 6D06A140416;
+	Tue, 23 Jan 2024 10:07:15 +0800 (CST)
+Received: from huawei.com (10.67.189.167) by canpemm500010.china.huawei.com
+ (7.192.105.118) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Tue, 23 Jan
+ 2024 10:06:00 +0800
+From: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
+To: <npiggin@gmail.com>, <aneesh.kumar@kernel.org>,
+	<naveen.n.rao@linux.ibm.com>, <christophe.leroy@csgroup.eu>,
+	<mpe@ellerman.id.au>, <christophe.leroy@c-s.fr>, <xiaojiangfeng@huawei.com>
+CC: <linuxppc-dev@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
+	<nixiaoming@huawei.com>, <wangbing6@huawei.com>, <douzhaolei@huawei.com>,
+	<wangfangpeng1@huawei.com>
+Subject: [PING PATCH] powerpc/kasan: Fix addr error caused by page alignment
+Date: Tue, 23 Jan 2024 09:45:59 +0800
+Message-ID: <1705974359-43790-1-git-send-email-xiaojiangfeng@huawei.com>
+X-Mailer: git-send-email 1.8.5.6
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ canpemm500010.china.huawei.com (7.192.105.118)
 
-./fs/netfs/fscache_io.c: linux/uio.h is included more than once.
+In kasan_init_region, when k_start is not page aligned,
+at the begin of for loop, k_cur = k_start & PAGE_MASK
+is less than k_start, and then va = block + k_cur - k_start
+is less than block, the addr va is invalid, because the
+memory address space from va to block is not alloced by
+memblock_alloc, which will not be reserved
+by memblock_reserve later, it will be used by other places.
 
-Reported-by: Abaci Robot <abaci@linux.alibaba.com>
-Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=8014
-Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+As a result, memory overwriting occurs.
+
+for example:
+int __init __weak kasan_init_region(void *start, size_t size)
+{
+[...]
+	/* if say block(dcd97000) k_start(feef7400) k_end(feeff3fe) */
+	block = memblock_alloc(k_end - k_start, PAGE_SIZE);
+	[...]
+	for (k_cur = k_start & PAGE_MASK; k_cur < k_end; k_cur += PAGE_SIZE) {
+		/* at the begin of for loop
+		 * block(dcd97000) va(dcd96c00) k_cur(feef7000) k_start(feef7400)
+		 * va(dcd96c00) is less than block(dcd97000), va is invalid
+		 */
+		void *va = block + k_cur - k_start;
+		[...]
+	}
+[...]
+}
+
+Therefore, page alignment is performed on k_start before
+memblock_alloc to ensure the validity of the VA address.
+
+Fixes: 663c0c9496a6 ("powerpc/kasan: Fix shadow area set up for modules.")
+
+Signed-off-by: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
 ---
- fs/netfs/fscache_io.c | 1 -
- 1 file changed, 1 deletion(-)
+ arch/powerpc/mm/kasan/init_32.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/netfs/fscache_io.c b/fs/netfs/fscache_io.c
-index ad572f7ee897..3810e790485c 100644
---- a/fs/netfs/fscache_io.c
-+++ b/fs/netfs/fscache_io.c
-@@ -6,7 +6,6 @@
-  */
- #define FSCACHE_DEBUG_LEVEL OPERATION
- #include <linux/fscache-cache.h>
--#include <linux/uio.h>
- #include <linux/bvec.h>
- #include <linux/slab.h>
- #include <linux/uio.h>
+diff --git a/arch/powerpc/mm/kasan/init_32.c b/arch/powerpc/mm/kasan/init_32.c
+index a70828a..aa9aa11 100644
+--- a/arch/powerpc/mm/kasan/init_32.c
++++ b/arch/powerpc/mm/kasan/init_32.c
+@@ -64,6 +64,7 @@ int __init __weak kasan_init_region(void *start, size_t size)
+ 	if (ret)
+ 		return ret;
+ 
++	k_start = k_start & PAGE_MASK;
+ 	block = memblock_alloc(k_end - k_start, PAGE_SIZE);
+ 	if (!block)
+ 		return -ENOMEM;
 -- 
-2.20.1.7.g153144c
+1.8.5.6
 
