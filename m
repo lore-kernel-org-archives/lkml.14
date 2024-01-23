@@ -1,174 +1,130 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD1105D8EB
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 09:45:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 864A45D727;
+	Tue, 23 Jan 2024 09:45:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706003105; cv=none; b=FRVa9ETRk86/khQsSmmkPL2ZD8+g9385k3UfSP9Nl1+CyrVM18nLEv/AjU4IlEY0Iu0EuHTkOtLpc/uBr9eStkLAIvIo3xd8Fw4wflTzHcN9rH04CmDv9gh+sionHbQprli6+juDxUEWCYWj7W+xfO7bngCEmyPQIVgI6AGXq0s=
+	t=1706003106; cv=none; b=incVdL6SyVOzaCgJDUCx5Mg6aJnqaC1XBMu+0EWE60U3LlBQxEjwnHNwMs7QBaMA2iBg8v45OXYDbbzjKBWuzA3S8KIU6QlrNujL144uDvwCdxM11K5GgerXAbqHPbisx3ge6FwcPgS2FrCddODTXC313DNLHEqu5n74H5yjwWE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706003105; c=relaxed/simple;
-	bh=02ujaudo3KSmsF5K5ztuR/Ql8u25boOsUld4kW2EV8k=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fiRV+fKDO2O8ZnPcIQOpQuRnakb8mcyggq79+7413nYT2r3NA3mIo3u6cu6NaBYSPFPiOGbUcqQhS9l9AzBDQFQxdVbOR4XQkbpn761bzJlvFmZVQzqio+jiuijUYOekrhBfjiEYla/2X68DdqAV5yYvPjpYz5l1OtVqRpWnAfs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UvnBSLBv; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1706003106; c=relaxed/simple;
+	bh=pymzY/3H3JwV2zvE9dnuZ+MtpGTlYgDuqgn9PZfrCkI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Fg4G4c9N5tK3OFPbC2lkG6qa3Uj+4xatdWe26gD65xek1Bo8BhkfeCZkrZwhz/k1rP4aEp/PKI/4PHTnOBgt9sDwACNfLbzv14+xSofARn9FROI7PkPzTNA0MVnuWIXsYwoutCY1S753kff10xTtyPnYa5rPa5z6EdakKzIlI5w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=hxwNynJb; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UvnBSLBv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1706003103;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cXd3AZjPKhslGVevCwKeJnsSWxdJPCffQSFxc+gLUxI=;
-	b=UvnBSLBv0X+1YozQjUoIDzYpwRHs043yZdi3CiTybDFWBfZlVRCQeGYb6/GDY5ZUdLhSsw
-	Bh9yezYPl/kId0UkgrFMJpyV9+wR58ZAHhjHneI0LRi1XbsQkOHBxDyZQwVixbBT1EDpdx
-	USp/9OYpYdjpuqv/FdAEvh7O7c2LpIU=
-Received: from mail-vs1-f72.google.com (mail-vs1-f72.google.com
- [209.85.217.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-610-INwfz9d9Mz2jq0z7ydNXEA-1; Tue, 23 Jan 2024 04:45:01 -0500
-X-MC-Unique: INwfz9d9Mz2jq0z7ydNXEA-1
-Received: by mail-vs1-f72.google.com with SMTP id ada2fe7eead31-46976c07c39so454085137.0
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 01:45:01 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706003101; x=1706607901;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cXd3AZjPKhslGVevCwKeJnsSWxdJPCffQSFxc+gLUxI=;
-        b=Oixpse5c38NS/gt9O9cDAWNinZTZRST5cAbIBsTNUOG6ZoDLLl9E9kcCD+dxoyvdOS
-         hlD3LrvGyr93IX9meqzUZ+NOFErc02GxjEUa0hyqpqw16StZtTkUUB/xJ6pCnB9Vl4kX
-         zfiWCbz/LQw5FRhx2tZ5LDvrv4gs+td6/gHDc6m8nJSzaGafZiwDYXKyDukX2FkdCLjH
-         IoL2tzOpwjKd6//ufUvl4ZbzuYCMu2IpMDEx8vYA0Jj8F08MLVh5ze9adVc7DL8t1BWM
-         0aDWk2CG2inZsrQOucRmm9VybDvmpZOhxkvbgBbCIH+Scjdf00urFUxxFJXkzUwyaP/B
-         X/ew==
-X-Gm-Message-State: AOJu0YzMiVE97LCsjmqvfea4ZpsjewkD6YxryE0AvA/4WRQBy/JR3ghf
-	havh69pMVZUxKVw6tWAahc/9fUpTO6uZJgiYxYoc/SRKKQnvQtML5ZVOwkNsI7sEAQR8uvzlqBa
-	dadyEPwU0ECt1LhlsKGp7bL0j+C3SbUxMPHZ5kmZjdsIogZA12g+vwhqJh7T7Zw==
-X-Received: by 2002:a05:6122:1684:b0:4bd:4151:936f with SMTP id 4-20020a056122168400b004bd4151936fmr409258vkl.1.1706003100845;
-        Tue, 23 Jan 2024 01:45:00 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGRoL1ahcR75vBLXWQC/4Tfk26KCchDZ9UlSe50TIl+tMW6CAPN/T2lwZOJ68o/lL+18tX5pQ==
-X-Received: by 2002:a05:6122:1684:b0:4bd:4151:936f with SMTP id 4-20020a056122168400b004bd4151936fmr409238vkl.1.1706003100567;
-        Tue, 23 Jan 2024 01:45:00 -0800 (PST)
-Received: from pstanner-thinkpadt14sgen1.muc.redhat.com (nat-pool-muc-t.redhat.com. [149.14.88.26])
-        by smtp.gmail.com with ESMTPSA id nc5-20020a0562142dc500b00685e2ffcaf5sm2958704qvb.38.2024.01.23.01.44.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jan 2024 01:45:00 -0800 (PST)
-From: Philipp Stanner <pstanner@redhat.com>
-To: Jonathan Corbet <corbet@lwn.net>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Philipp Stanner <pstanner@redhat.com>,
-	Sam Ravnborg <sam@ravnborg.org>,
-	dakr@redhat.com
-Cc: linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	linux-pci@vger.kernel.org
-Subject: [PATCH v2 07/10] PCI: give pcim_set_mwi() its own devres callback
-Date: Tue, 23 Jan 2024 10:43:04 +0100
-Message-ID: <20240123094317.15958-8-pstanner@redhat.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240123094317.15958-1-pstanner@redhat.com>
-References: <20240123094317.15958-1-pstanner@redhat.com>
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="hxwNynJb"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 7D7C040E01BB;
+	Tue, 23 Jan 2024 09:45:00 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id 50w5MlWy-wd7; Tue, 23 Jan 2024 09:44:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1706003097; bh=GkrBxaeL2aLlMplkTSKVP94a03nzHfhpk7LQpBp9/7k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hxwNynJbGDduwLhbt4g4J7ymAcJHM+Xol23ZxPF4xrH/6X9JLuOLJMWEeOYiFtDmk
+	 uxiINz75Rp2vkRqFEvxLv71BucXmNgjdRQ4nhGo2rH6oDuLQ2B1NPaS1YB0cg/3cO6
+	 eT39INMB7cu1Y5Q3OR1PkmYuGTH/TglaeJpx2PdatETiQzzFCbLjzQ9YSia5WQMzVL
+	 6UDWcS5RBHDSe6hGicTCTCK8qEujnJiTa9vkMbq4m+DLaIPk5F772MNYDI30z0h4GB
+	 LhiPvUvZS6+YO7IexEpzHOqgt1L/CaSlJ7b8pTqEJkQZW+bgkT6dJND/OLK38s12Ro
+	 wDuwq7do0I4/Pow2LuhJjMApbhdd8MaTNMOIVibAqkZvGgL11tgnd5krf/HpIWFWdU
+	 0kAt6721pkSLBL6WMNnPTNPTVuxaYghjQcevor1j6C2sCIY7L647yZCBhI/BvtF/lB
+	 h8kyUYGcHIPzpCVv67IulAwR3RI6FjNaznAgzBZUDL54RG/QdGofPc/joibedooUEk
+	 Y7DT1umvJkwwt4gIpX2QVwWxbY3NpmcCIJelzttQ1IFlfLkPbuVAK2XtFB47XzSOZ6
+	 LLC4ki2bI6pVe+I687BjIQGek2p15B6sR0cnvT/YpfQrawQfSIOW2Ix63Uug1kt11k
+	 wfVynrHAvlPN8MXOqht7prNo=
+Received: from zn.tnic (pd953099d.dip0.t-ipconnect.de [217.83.9.157])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 2949D40E01B4;
+	Tue, 23 Jan 2024 09:44:34 +0000 (UTC)
+Date: Tue, 23 Jan 2024 10:44:27 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
+Cc: herbert@gondor.apana.org.au, davem@davemloft.net,
+	linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+	tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
+	x86@kernel.org, hpa@zytor.com, seanjc@google.com,
+	kim.phillips@amd.com, kirill.shutemov@linux.intel.com,
+	jmattson@google.com, babu.moger@amd.com, kai.huang@intel.com,
+	acme@redhat.com, aik@amd.com, namhyung@kernel.org,
+	CobeChen@zhaoxin.com, TimGuo@zhaoxin.com, LeoLiu-oc@zhaoxin.com,
+	GeorgeXue@zhaoxin.com
+Subject: Re: [PATCH v2 2/3] x86/cpufeatures: Add CPU feature flags for
+ Zhaoxin Hash Engine
+Message-ID: <20240123094427.GAZa-Ke5d2Kwyk2nSU@fat_crate.local>
+References: <20240123022852.2475-1-TonyWWang-oc@zhaoxin.com>
+ <20240123022852.2475-3-TonyWWang-oc@zhaoxin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240123022852.2475-3-TonyWWang-oc@zhaoxin.com>
 
-Managing pci_set_mwi() with devres can easily be done with its own
-callback, without the necessity to store any state about it in a
-device-related struct.
+On Tue, Jan 23, 2024 at 10:28:51AM +0800, Tony W Wang-oc wrote:
+> Zhaoxin CPUs have implemented the SHA(Secure Hash Algorithm) as its
+> instrucions.
+> Add two CPU feature flags indicated by CPUID.(EAX=C0000001,ECX=0):EDX
+> bit 25/26 which will be used by Zhaoxin SHA driver.
+> 
+> Signed-off-by: Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
+> ---
+>  arch/x86/include/asm/cpufeatures.h       | 4 +++-
+>  tools/arch/x86/include/asm/cpufeatures.h | 4 +++-
+>  2 files changed, 6 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
+> index 29cb275a219d..28b0e62dbdf5 100644
+> --- a/arch/x86/include/asm/cpufeatures.h
+> +++ b/arch/x86/include/asm/cpufeatures.h
+> @@ -145,7 +145,7 @@
+>  #define X86_FEATURE_RDRAND		( 4*32+30) /* RDRAND instruction */
+>  #define X86_FEATURE_HYPERVISOR		( 4*32+31) /* Running on a hypervisor */
+>  
+> -/* VIA/Cyrix/Centaur-defined CPU features, CPUID level 0xC0000001, word 5 */
+> +/* VIA/Cyrix/Centaur/Zhaoxin-defined CPU features, CPUID level 0xC0000001, word 5 */
 
-Remove the MWI state from struct pci_devres.
-Give pcim_set_mwi() a separate devres-callback.
+Does that mean that all those companies agree on the contents of this
+CPUID leaf?
 
-Signed-off-by: Philipp Stanner <pstanner@redhat.com>
----
- drivers/pci/devres.c | 29 ++++++++++++++++++-----------
- drivers/pci/pci.h    |  1 -
- 2 files changed, 18 insertions(+), 12 deletions(-)
+>  #define X86_FEATURE_XSTORE		( 5*32+ 2) /* "rng" RNG present (xstore) */
+>  #define X86_FEATURE_XSTORE_EN		( 5*32+ 3) /* "rng_en" RNG enabled */
+>  #define X86_FEATURE_XCRYPT		( 5*32+ 6) /* "ace" on-CPU crypto (xcrypt) */
+> @@ -156,6 +156,8 @@
+>  #define X86_FEATURE_PHE_EN		( 5*32+11) /* PHE enabled */
+>  #define X86_FEATURE_PMM			( 5*32+12) /* PadLock Montgomery Multiplier */
+>  #define X86_FEATURE_PMM_EN		( 5*32+13) /* PMM enabled */
+> +#define X86_FEATURE_PHE2		( 5*32+25) /* "phe2" Zhaoxin Hash Engine */
+> +#define X86_FEATURE_PHE2_EN		( 5*32+26) /* "phe2_en" PHE2 enabled */
+						      ^^^^^^^^^
 
-diff --git a/drivers/pci/devres.c b/drivers/pci/devres.c
-index 03336a2f00d6..d396d672a6f4 100644
---- a/drivers/pci/devres.c
-+++ b/drivers/pci/devres.c
-@@ -370,24 +370,34 @@ void __iomem *devm_pci_remap_cfg_resource(struct device *dev,
- }
- EXPORT_SYMBOL(devm_pci_remap_cfg_resource);
- 
-+static void __pcim_clear_mwi(void *pdev_raw)
-+{
-+	struct pci_dev *pdev = pdev_raw;
-+
-+	pci_clear_mwi(pdev);
-+}
-+
- /**
-  * pcim_set_mwi - a device-managed pci_set_mwi()
-- * @dev: the PCI device for which MWI is enabled
-+ * @pdev: the PCI device for which MWI is enabled
-  *
-  * Managed pci_set_mwi().
-  *
-  * RETURNS: An appropriate -ERRNO error value on error, or zero for success.
-  */
--int pcim_set_mwi(struct pci_dev *dev)
-+int pcim_set_mwi(struct pci_dev *pdev)
- {
--	struct pci_devres *dr;
-+	int ret;
- 
--	dr = find_pci_dr(dev);
--	if (!dr)
--		return -ENOMEM;
-+	ret = devm_add_action(&pdev->dev, __pcim_clear_mwi, pdev);
-+	if (ret != 0)
-+		return ret;
-+
-+	ret = pci_set_mwi(pdev);
-+	if (ret != 0)
-+		devm_remove_action(&pdev->dev, __pcim_clear_mwi, pdev);
- 
--	dr->mwi = 1;
--	return pci_set_mwi(dev);
-+	return ret;
- }
- EXPORT_SYMBOL(pcim_set_mwi);
- 
-@@ -397,9 +407,6 @@ static void pcim_release(struct device *gendev, void *res)
- 	struct pci_dev *dev = to_pci_dev(gendev);
- 	struct pci_devres *this = res;
- 
--	if (this->mwi)
--		pci_clear_mwi(dev);
--
- 	if (this->restore_intx)
- 		pci_intx(dev, this->orig_intx);
- 
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 3d9908a69ebf..667bfdd61d5e 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -811,7 +811,6 @@ static inline pci_power_t mid_pci_get_power_state(struct pci_dev *pdev)
- struct pci_devres {
- 	unsigned int orig_intx:1;
- 	unsigned int restore_intx:1;
--	unsigned int mwi:1;
- };
- 
- struct pci_devres *find_pci_dr(struct pci_dev *pdev);
+From: Documentation/arch/x86/cpuinfo.rst
+
+"a: Feature flags can be derived from the contents of CPUID leaves.
+------------------------------------------------------------------
+These feature definitions are organized mirroring the layout of CPUID
+leaves and grouped in words with offsets as mapped in enum cpuid_leafs
+in cpufeatures.h (see arch/x86/include/asm/cpufeatures.h for details).
+If a feature is defined with a X86_FEATURE_<name> definition in
+cpufeatures.h, and if it is detected at run time, the flags will be
+displayed accordingly in /proc/cpuinfo. For example, the flag "avx2"
+comes from X86_FEATURE_AVX2 in cpufeatures.h."
+
+Is your grep broken?
+
 -- 
-2.43.0
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
