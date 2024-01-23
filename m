@@ -1,69 +1,85 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A70186AC2
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 18:56:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 074BB612EC;
+	Tue, 23 Jan 2024 18:57:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706036217; cv=none; b=AA9X9iYtPENFaDJbEL0r1X5ldJbx0TucqXrB8UvdZrYFil3NgVsVJCenmX92DKy7HZKV2BxEMxrzXZS9qCgpUUVQOBsGaQjfEpdNGL8aUPl9b5wnwY2dB0sKZ8PQJA09CdrjaOJvHXUYpKk2wTz35DSLdGYkd8kbYBv1LqqL8pA=
+	t=1706036248; cv=none; b=C4dAX5vnDq0oCQOoZWTbzAH2RGuY+AJQv8cBqkoTobYdk66evj5bdvDTsHmwIilq8im4vt83I8drYKLghlYActFEwJAg0ph2sEEgDml/eGClPxSmR0d7Z4GtlHudE/Bx8F0v+5dS6F+aeT38JA5+couXERsqRN/kqslMOOo7GDs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706036217; c=relaxed/simple;
-	bh=QLm5Vz8qFoYEruw2+K1bab8WvC1tLQXi6xVjT0Rm/5o=;
+	s=arc-20240116; t=1706036248; c=relaxed/simple;
+	bh=Ak/glq7j04rGYzsCmBK7FjkE6BR//6TwHFiUwcbnr2U=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=K84i0C+l9EXclzl42/gTORzHS6ofI1nmhDtEa31HfweSsPJGG3zeP1I0rUHpe+Leggf7YKbYd7uqbXYy2HClNdRNTIYytEmWB+V89bi9k3LlFYSjHJ/WcRN0e6abF6bL5G8QB+Nx2JXA2egIaE2/S5N6kQ8ueYoLdMuz7uqA6W0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GRKm9Ker; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=W18ASThc9bmbXyxs8cof258V/rWYqnCY444NRhQDgyVW3lZoPX8mcb/1vcjve0614GFTLim8WONJwIoiJS5TDQ9Oamey/CGau/lRRjgw2YWxn22KCVjqDOYxsoDmSOiKVxKufK8AHph75RDgBsZLk88sOJvfoGJDaHuC9xvKqws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=UGvXqjfT; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=nLM+5hH0; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=UGvXqjfT; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=nLM+5hH0; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GRKm9Ker"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1d72f71f222so16595125ad.1
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 10:56:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706036215; x=1706641015; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=VTYRquoHREccZxR1itO9s8RbRgXaZi6R4whUcjVcHgk=;
-        b=GRKm9KerLKiU4QSfDr+rjM/UPYeJ+RT6FbSn/z2oF0PJtML5i1NA/oJFAxzO9LVkfq
-         EDW8/viC7drrvMqsXVrGR2iKmgjdsNFJEAYqIMZsl//tPE4pvswToCT4NCPyzichof5/
-         R6TwZsDFArSH1H8d4N2QDCzqMnZ6pytrecA68rv61ELkyCDB2SXFG70eMUvtsZj+NwyF
-         udXiIDliUxafYU1AYQbj+Q/H6kEDEJuG6elxKDobgYje7JvM4teqv2kt2WK7OuN75TrH
-         X9IZAgfziP8/N/dWjAs4Danu5a/v1T9KBENg0tFB8+eO4/nLkOG20DbbKDxEtUw2U5ou
-         O8SQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706036215; x=1706641015;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VTYRquoHREccZxR1itO9s8RbRgXaZi6R4whUcjVcHgk=;
-        b=gk9kF/aSm9xpANubK5tjAzso6KlWoFnkIx246Ra7DVDls26/AFQe7ElxkF1vc8bnCT
-         Rwed8iELr+2zJlvvTtAA34I+Ly79UvbMY0MelxKprEWTykCYeyRrvBW2e0fzLvCR8FD1
-         3RZZmraGLH57vyaEqfUqfOsks6NSCj1/jOMaKJG1g9Q/MRB+YNuHF6tl+x/jlNu3EgFR
-         ByYs/WjorXTqRIQlJnmzNrHo+6Bvmo4uF8ZLGgnuo1nqYfzQZlSpicaB55a1acP+9r0G
-         gAw0tPZQWrp3a80YAgYZel7xjC67nzwD8zvC9zScXNWmi7ZIFtlsGAuHwAGkq8oj4jcF
-         kspw==
-X-Gm-Message-State: AOJu0YwMmSugmk81dWt+QmyVdA6ghHcGgOgAewO2XkUt8uhKo+vDPEPb
-	b5ngAdZD3SAdXeINHVa3PSMc7CXY9DNsKRNmFMvs6mjMuD+BO/M7
-X-Google-Smtp-Source: AGHT+IEMZj6K6HqsppprbY9criGaawvzXF5rp8HE28WO86V+oLIy+dJRj/61X2cyQM/T2T+v7vQiIg==
-X-Received: by 2002:a17:902:e543:b0:1d4:2a95:ec2a with SMTP id n3-20020a170902e54300b001d42a95ec2amr4497836plf.0.1706036215262;
-        Tue, 23 Jan 2024 10:56:55 -0800 (PST)
-Received: from localhost (dhcp-141-239-144-21.hawaiiantel.net. [141.239.144.21])
-        by smtp.gmail.com with ESMTPSA id s21-20020a17090330d500b001d6fbaaeb56sm7017528plc.145.2024.01.23.10.56.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jan 2024 10:56:54 -0800 (PST)
-Sender: Tejun Heo <htejun@gmail.com>
-Date: Tue, 23 Jan 2024 08:56:53 -1000
-From: Tejun Heo <tj@kernel.org>
-To: Marcelo Tosatti <mtosatti@redhat.com>
-Cc: Frederic Weisbecker <frederic@kernel.org>,
-	Joe Mario <jmario@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mark power efficient workqueue as unbounded if nohz_full
- enabled
-Message-ID: <ZbAL9WBNkKuaZjHj@slm.duckdns.org>
-References: <ZaqbP0QmVPAQTbYA@tpad>
- <ZasMfA-v1YykDA1i@slm.duckdns.org>
- <Za56EiAI9D5S8NuT@tpad>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="UGvXqjfT";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="nLM+5hH0";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="UGvXqjfT";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="nLM+5hH0"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 419481F79C;
+	Tue, 23 Jan 2024 18:57:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1706036245; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5qE/ObleNo0AJceF8Y88Xp5VWzLENyIMYmuPcvCBMHU=;
+	b=UGvXqjfTTcKoezcGSY73OCl2fm/7D8UIzttmvvyxMEUYZ/2iq+CCzTpwxP+FXNJYGilFha
+	crJYaHqFgQQ11/OIMF1j1MSOVUttj1dH93pDZNo8xvJZq3PCrz1A9lya2/L3hAiYRARoXZ
+	GsyA6q49c+uQ0mtk+M07cE94WMYkls8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1706036245;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5qE/ObleNo0AJceF8Y88Xp5VWzLENyIMYmuPcvCBMHU=;
+	b=nLM+5hH0flFJ5Cdqt7OuSM8RtqVDyhFC4lpSXcp4sS87qlaGLHwjpgHXnWuJMjbLlP9ZcS
+	j4he8Od5+pI32yDw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1706036245; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5qE/ObleNo0AJceF8Y88Xp5VWzLENyIMYmuPcvCBMHU=;
+	b=UGvXqjfTTcKoezcGSY73OCl2fm/7D8UIzttmvvyxMEUYZ/2iq+CCzTpwxP+FXNJYGilFha
+	crJYaHqFgQQ11/OIMF1j1MSOVUttj1dH93pDZNo8xvJZq3PCrz1A9lya2/L3hAiYRARoXZ
+	GsyA6q49c+uQ0mtk+M07cE94WMYkls8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1706036245;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5qE/ObleNo0AJceF8Y88Xp5VWzLENyIMYmuPcvCBMHU=;
+	b=nLM+5hH0flFJ5Cdqt7OuSM8RtqVDyhFC4lpSXcp4sS87qlaGLHwjpgHXnWuJMjbLlP9ZcS
+	j4he8Od5+pI32yDw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 36BE313786;
+	Tue, 23 Jan 2024 18:57:25 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id hn9UDRUMsGXYOAAAD6G6ig
+	(envelope-from <jack@suse.cz>); Tue, 23 Jan 2024 18:57:25 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id E4EEBA0803; Tue, 23 Jan 2024 19:57:24 +0100 (CET)
+Date: Tue, 23 Jan 2024 19:57:24 +0100
+From: Jan Kara <jack@suse.cz>
+To: syzbot <syzbot+e57bfc56c27a9285a838@syzkaller.appspotmail.com>
+Cc: axboe@kernel.dk, brauner@kernel.org, jack@suse.cz,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	paul@paul-moore.com, reiserfs-devel@vger.kernel.org,
+	roberto.sassu@huawei.com, syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [reiserfs?] kernel BUG in direntry_check_right
+Message-ID: <20240123185724.t6yvo4nwaoyiryom@quack3>
+References: <00000000000020a5790609bb5db8@google.com>
+ <000000000000e39a56060f84e6d9@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -72,36 +88,66 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Za56EiAI9D5S8NuT@tpad>
+In-Reply-To: <000000000000e39a56060f84e6d9@google.com>
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=UGvXqjfT;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=nLM+5hH0
+X-Spamd-Result: default: False [2.66 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 URI_HIDDEN_PATH(1.00)[https://syzkaller.appspot.com/x/.config?x=beb32a598fd79db9];
+	 TAGGED_RCPT(0.00)[e57bfc56c27a9285a838];
+	 MIME_GOOD(-0.10)[text/plain];
+	 BAYES_HAM(-0.03)[55.44%];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 DKIM_TRACE(0.00)[suse.cz:+];
+	 MX_GOOD(-0.01)[];
+	 RCPT_COUNT_SEVEN(0.00)[10];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim,suse.cz:email,suse.com:email];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 MID_RHS_NOT_FQDN(0.50)[];
+	 RCVD_TLS_ALL(0.00)[];
+	 SUSPICIOUS_RECIPS(1.50)[];
+	 SUBJECT_HAS_QUESTION(0.00)[]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Score: 2.66
+X-Rspamd-Queue-Id: 419481F79C
+X-Spam-Level: **
+X-Spam-Flag: NO
+X-Spamd-Bar: ++
 
-Hello, Marcelo.
+On Mon 22-01-24 00:49:04, syzbot wrote:
+> syzbot suspects this issue was fixed by commit:
+> 
+> commit 6f861765464f43a71462d52026fbddfc858239a5
+> Author: Jan Kara <jack@suse.cz>
+> Date:   Wed Nov 1 17:43:10 2023 +0000
+> 
+>     fs: Block writes to mounted block devices
+> 
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=14bedc9be80000
+> start commit:   305230142ae0 Merge tag 'pm-6.7-rc1-2' of git://git.kernel...
+> git tree:       upstream
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=beb32a598fd79db9
+> dashboard link: https://syzkaller.appspot.com/bug?extid=e57bfc56c27a9285a838
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16cb0588e80000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16ce91ef680000
+> 
+> If the result looks correct, please mark the issue as fixed by replying with:
+ 
+Makes sense.
 
-On Mon, Jan 22, 2024 at 11:22:10AM -0300, Marcelo Tosatti wrote:
-> About the performance difference (of running locally VS running
-> remotely), can you list a few performance sensitive work queues 
-> (where per-CPU execution makes a significant difference).
+#syz fix: fs: Block writes to mounted block devices
 
-Unfortunately, I have no idea. It goes way back and I'm not sure anyone
-actually tested the difference in a long time. We'd have to dig through
-history to gather some context, set up a benchmark which exercises the path
-heavily and see whether the difference is still there.
-
-> Because i suppose it would be safe (from a performance regression
-> perspective) to move all delayed works to housekeeping CPUs.
-
-Yeah, replacing power_efficient with unbound should be safe.
-
-> And also, being more extreme, why not an option to mark all workqueues
-> as unbounded (or perhaps userspace control of bounding, even for 
-> workqueues marked as "per-CPU").
-
-There are correctness issues with per-cpu workqueues - e.g. accessing local
-atomic counters, cpu states and what not. Also, many per-cpu users already
-know that the cpu is hot as they're queueing on the local CPU. I'm not
-against moving more users towards unbound workqueues but that'd have be done
-case by case unfortunately.
-
-Thanks.
-
+								Honza
 -- 
-tejun
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
