@@ -1,107 +1,139 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f177.google.com (mail-oi1-f177.google.com [209.85.167.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BD004E1D8
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 00:33:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B163856468
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 00:35:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705970005; cv=none; b=cTvLzDS47Ymk1d0unNw4Exv8OuJMSJCha3aS/rbkpFWjgvBMmZ/9dzOPii6whc9zajZqBSaMsUXAnwbWvyhIchXJkXFZE9o4ni/3taSM19MtIeap5FTgq1+ALp7C8rCj3rsxK+IUFr7crdAvzj9IPPFJILz9HzTERRyhUkx5Vsw=
+	t=1705970158; cv=none; b=LE8svYVeI8oZ4Ooj64crc585kyVgXAbEc+i4dud8g2GsYwYMRd4T0H+3UJdIAlfDGWLwbPKORZabe4klAbC0Ou+fw0mspXaOJWtVhV+2vCUqaGmUnzvxWXcWWyW2AnrSlVm9FgmBZVreUrAotob+2ESIZIZVlERT0+7lb+amAvg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705970005; c=relaxed/simple;
-	bh=8YEhmUBBqKXx9e+eKyA5GVKGvoNPGbbleY8pX1/XJeY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TAn3bq1b9SjKYw8wwAxanNUiryU0jiDP5pg1r1mMbpSc37gjFmxJb9iDXzWY+LC146TLGjUMI0RDllV2kaPkgjGyHQb3QvYxzniDRUakpDLsQYYprNRrSqfpr+/hH56VVbGfDSQ0bSle/v171Ojbm4fpBaM0jc2vvU0+jhVsgqs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21345C433F1;
-	Tue, 23 Jan 2024 00:33:24 +0000 (UTC)
-Date: Mon, 22 Jan 2024 19:34:53 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: "Bhardwaj, Rajneesh" <rajneesh.bhardwaj@amd.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, Linus Torvalds
- <torvalds@linux-foundation.org>, Felix Kuehling <Felix.Kuehling@amd.com>,
- Christian =?UTF-8?B?S8O2bmln?= <christian.koenig@amd.com>,
- dri-devel@lists.freedesktop.org
-Subject: Re: [BUG] BUG: kernel NULL pointer dereference at
- ttm_device_init+0xb4
-Message-ID: <20240122193453.6096d45f@gandalf.local.home>
-In-Reply-To: <918ddc13-1cf8-4199-b5be-5719a023de42@amd.com>
-References: <20240122180605.28daf23a@gandalf.local.home>
-	<918ddc13-1cf8-4199-b5be-5719a023de42@amd.com>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1705970158; c=relaxed/simple;
+	bh=KmdQOHR2wQwwvdbCWLH5gPumh1btink3RoAuAjMZ63I=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=TS7/LvrcPF5t1GiJ1Fnz7ll1UAx6dsriisbqHvGhZadHGwNpBGkS0QdWypFKcCWxf/Cg553tNGx/J6Di5+roz4azNkK9ZO3SyNQG9DrowTUD9ROY75uttCWTaRhh6+1kCEazzXHkQDfOC7JrcqgfzlNO1FBETr5StizyQwx6uoI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=G90jh2L+; arc=none smtp.client-ip=209.85.167.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="G90jh2L+"
+Received: by mail-oi1-f177.google.com with SMTP id 5614622812f47-3bd6581bc62so2721845b6e.2
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 16:35:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1705970156; x=1706574956; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WfrGPV0IGkD+5oY5bzUA1O2ZP/m+4NsFlK0DOdMmkOA=;
+        b=G90jh2L+n9IhjBKBpZf0pPfzVXtpSh1dWGVHPuGIZl04FHqrvqkSlesk/0TLOecojH
+         MKGt8WfdHofrlcrhJPaXLwrfxHKhlujiOVf3A2bMQJj6wxBFrSEw9k9gu3IFWPslJa0i
+         o+3Ya/WsJmeer1l2r52ZlX79PVUPTngoMjuzQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705970156; x=1706574956;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WfrGPV0IGkD+5oY5bzUA1O2ZP/m+4NsFlK0DOdMmkOA=;
+        b=kK+TSqRnEdt7jWgu7mQJrq0hIyjm9dDHvJqYC7KQiQLDPT8XEvEqDE3D8wNd6STBXz
+         LzD3IKk40tgsyE5tHxgdX8rjl8TsPDUrdKHUHMnVEDUH71RRpRcA7IByzWB3nk7P5q4A
+         exmHFr/KdhlI1z29n/RrWOmkFobGsD+WPEtohNaCkZj9F60i7iZWuZKRyMmFaESMAZ89
+         U2sSNpAult/gz/uTKHK3vGBUwp35N7xQwWIU3T6Vc0Cn0SZuuNlBbFsKwYH3QgPSeMZP
+         KyEJtPn6xPHGjaitTZ5WMzStmgjScZcwDu5nE1p3SnNC4fhE7cUtSNzo+QWS7u1oSkqC
+         flpg==
+X-Gm-Message-State: AOJu0Ywh+4kO6A5/ON6NXWA5nWPV6VQ0IN3J1oEKrXPy9L89LIZP2KqQ
+	WEGWlgm4K+bN+jnmka6B8CNzM2Io01zfbwMyOzbyuWne0Hu16whnEjGIpwcieg==
+X-Google-Smtp-Source: AGHT+IHZHo5Egp2kEgcDRX47HvbxGI43oLvJO2iYgsq7tj7lGeM9SaYtF2xT1UoPBae4y/00ds7/rQ==
+X-Received: by 2002:a05:6808:1211:b0:3bd:a8b3:f5f5 with SMTP id a17-20020a056808121100b003bda8b3f5f5mr7279920oil.75.1705970155779;
+        Mon, 22 Jan 2024 16:35:55 -0800 (PST)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id p24-20020a62ab18000000b006d9b31f670esm10499254pff.143.2024.01.22.16.35.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Jan 2024 16:35:55 -0800 (PST)
+From: Kees Cook <keescook@chromium.org>
+To: linux-hardening@vger.kernel.org
+Cc: Kees Cook <keescook@chromium.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 26/82] buildid: Refactor intentional wrap-around calculation
+Date: Mon, 22 Jan 2024 16:27:01 -0800
+Message-Id: <20240123002814.1396804-26-keescook@chromium.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240122235208.work.748-kees@kernel.org>
+References: <20240122235208.work.748-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2106; i=keescook@chromium.org;
+ h=from:subject; bh=KmdQOHR2wQwwvdbCWLH5gPumh1btink3RoAuAjMZ63I=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlrwgGUCr427Bvhdd+DlIEQSmFuOB0zAlGUaRHx
+ sXqW6qzQiiJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZa8IBgAKCRCJcvTf3G3A
+ JqMUEACIPH6rM6cY2SMBwnodw1rMMjn1JdKktj9Iu6aGJquJ2fqWV4hXH3eOfqqDWhhLtRIx10m
+ MBgFqDepBiW1bwcx3qy8doC7ieSHcOvFKOfj6KMywgUGVwFHQpkhWF/fz5lrUTSYFdaxZVCa+lr
+ e3yfwjXsiGYJcB8O2lAqBoC6T5Oig7vnfqNw+lVTcicTSmEapNfiAbtUZb55sB7NxPG7D6nUH1c
+ ZRLU4Ed2XedDT7eOfND6jgaGtqlz56GVi0q1U0XnAgqXTUSRm0+4M6NuQGAjxKba0EwMU9l5aJI
+ 8csxMMzpzLOtrQra/ANMvMry6yeTEIoX2ldbH8axmAnuD520xWjWuYemFLjrYagKmZvZqDe82yy
+ cLA7vG0VaL2NfXpAY7mfSztcg+9pzQkXvPF7pzzTMp/vt10UubjGIRs65XTH+eDOO0+hSJwJ8sG
+ /gM1k9uOf4WaHXlTYZMn73i0DMxquh80d7Y9FlpKCRlv9dJO3bPjk6P8rev6K/2fwda9vjRmFL0
+ 0nKVXJz/WtxTMgx0sDxb2a5++FGHN2HZSJUgTSvLynOCZmjqhh87r2gUM933h7Jd65s8MuV++rw
+ ZS3P74wcMAOQPOljxC0JL6wdM5IGMy1pCA5rTTJpa+IG0h/fhYHD+aQ7rCOa9E34+wvfmdTPWGL PMoqRQ3lq/unYNg==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On Mon, 22 Jan 2024 19:29:41 -0500
-"Bhardwaj, Rajneesh" <rajneesh.bhardwaj@amd.com> wrote:
+In an effort to separate intentional arithmetic wrap-around from
+unexpected wrap-around, we need to refactor places that depend on this
+kind of math. One of the most common code patterns of this is:
 
-> 
-> In one of my previous revisions of this patch when I was experimenting, 
-> I used something like below. Wonder if that could work in your case 
-> and/or in general.
-> 
-> 
-> diff --git a/drivers/gpu/drm/ttm/ttm_device.c 
-> b/drivers/gpu/drm/ttm/ttm_device.c
-> 
-> index 43e27ab77f95..4c3902b94be4 100644
-> 
-> --- a/drivers/gpu/drm/ttm/ttm_device.c
-> 
-> +++ b/drivers/gpu/drm/ttm/ttm_device.c
-> 
-> @@ -195,6 +195,7 @@ int ttm_device_init(struct ttm_device *bdev, struct 
-> ttm_device_funcs *funcs,
-> 
-> bool use_dma_alloc, bool use_dma32){
-> 
-> struct ttm_global *glob = &ttm_glob;
-> 
-> +bool node_has_cpu = false;
-> 
-> int ret;
-> 
-> if (WARN_ON(vma_manager == NULL))
-> 
-> @@ -213,7 +214,12 @@ int ttm_device_init(struct ttm_device *bdev, struct 
-> ttm_device_funcs *funcs,
-> 
-> bdev->funcs = funcs;
-> 
-> ttm_sys_man_init(bdev);
-> 
-> -ttm_pool_init(&bdev->pool, dev, NUMA_NO_NODE, use_dma_alloc, use_dma32);
-> 
-> +
-> 
-> +node_has_cpu = node_state(dev->numa_node, N_CPU);
+	VAR + value < VAR
 
-Considering that qxl_ttm_init() passes in dev = NULL, the above would blow
-up just the same.
+Notably, this is considered "undefined behavior" for signed and pointer
+types, which the kernel works around by using the -fno-strict-overflow
+option in the build[1] (which used to just be -fwrapv). Regardless, we
+want to get the kernel source to the position where we can meaningfully
+instrument arithmetic wrap-around conditions and catch them when they
+are unexpected, regardless of whether they are signed[2], unsigned[3],
+or pointer[4] types.
 
--- Steve
+Refactor open-coded pointer wrap-around addition test to use
+check_add_overflow(), retaining the result for later usage (which removes
+the redundant open-coded addition). This paves the way to enabling the
+unsigned wrap-around sanitizer[2] in the future.
 
+Link: https://git.kernel.org/linus/68df3755e383e6fecf2354a67b08f92f18536594 [1]
+Link: https://github.com/KSPP/linux/issues/26 [2]
+Link: https://github.com/KSPP/linux/issues/27 [3]
+Link: https://github.com/KSPP/linux/issues/344 [4]
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ lib/buildid.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-> 
-> +if (node_has_cpu)
-> 
-> +ttm_pool_init(&bdev->pool, dev, dev->numa_node, use_dma_alloc, use_dma32);
-> 
-> +else
-> 
-> +ttm_pool_init(&bdev->pool, dev, NUMA_NO_NODE, use_dma_alloc,
-> 
-> +use_dma32);
-> 
-> bdev->vma_manager = vma_manager;
-> 
-> spin_lock_init(&bdev->lru_lock);
-> 
-> 
-> >
-> > -- Steve
+diff --git a/lib/buildid.c b/lib/buildid.c
+index e3a7acdeef0e..d0a310cb9b57 100644
+--- a/lib/buildid.c
++++ b/lib/buildid.c
+@@ -54,12 +54,14 @@ static inline int parse_build_id(const void *page_addr,
+ 				 const void *note_start,
+ 				 Elf32_Word note_size)
+ {
++	const void *sum;
++
+ 	/* check for overflow */
+-	if (note_start < page_addr || note_start + note_size < note_start)
++	if (note_start < page_addr || check_add_overflow(note_start, note_size, &sum))
+ 		return -EINVAL;
+ 
+ 	/* only supports note that fits in the first page */
+-	if (note_start + note_size > page_addr + PAGE_SIZE)
++	if (sum > page_addr + PAGE_SIZE)
+ 		return -EINVAL;
+ 
+ 	return parse_build_id_buf(build_id, size, note_start, note_size);
+-- 
+2.34.1
+
