@@ -1,199 +1,231 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F03FF56755;
-	Tue, 23 Jan 2024 08:29:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67A92134C2
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 08:32:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705998586; cv=none; b=JZ6blOU97Rblg3LFiq9qHWtSutJIhTfCzArsgzdNgm6RfwVC20mXjNvKs+Tw0uNu8guUZjTQovk/7oIRV/oS4++cnweB15xWmqFFqeB0dkXE9havswMw9xEaePEWIbsEEwtwzz3/+Dv1yEfd4rbulAOiwHsV0WqPS9KxS/jWvjw=
+	t=1705998750; cv=none; b=CaBsZdAL/VJGCC6G1ABAZM3mYqvZ18dzBYUmx3uFB79Td7wUbBkLYkPUpUiUyp5jLrLj5orVMK6QTT0oDeAVMH2Nl4ytrH4cAhZy1xmy1cGXh0N8rFkH7x3v9Lux/rXM7igNAwfGFtO9g2eqVzTPmNbqput8xSKjMdmYcC4cawg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705998586; c=relaxed/simple;
-	bh=zP6goYK8fOIIlbvFyRrRiK6C1sBPUxkmjqGK+EwSpYU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=c760q49fx40rMI6lWKIcnkGnavzbiAU2Tmj6ksAH7jEU0FFyN2Otd58N28VLljXvowcDysimhaQ9JMy+IRgJ8PkemdifF8/UNrPvcDP9QIgOGPywyge5H/Nto2e4RYZK/6whScunrAEets8s/ZkUiC+rQCSH1p3ITKaDeWUDHHs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=J6gm/dVI; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1705998750; c=relaxed/simple;
+	bh=T6PbmXuTc2XnNqGgLEZCpmWnaOzMXXw64Ie7SzNqQfY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UAYGs8STSvN3GB4Vqm1WIHR3qeOvAypwR6ADZ3RwY7FbGFeEkOG9Ob0IzRsH8gqorRuaKHfuQX4uvOsTy5+yYUkv000q6g/XkxzLIo/isUS5+R7z2dBFFsnbf8C0EaRSIXNRwh2MtFae5kwS3rOkBU58Sn9a6qcbrJy3g3ZKcjA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pXHintKM; arc=none smtp.client-ip=209.85.210.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="J6gm/dVI"
-Received: from [192.168.88.20] (91-154-35-128.elisa-laajakaista.fi [91.154.35.128])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 4907D6E0;
-	Tue, 23 Jan 2024 09:28:27 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1705998508;
-	bh=zP6goYK8fOIIlbvFyRrRiK6C1sBPUxkmjqGK+EwSpYU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=J6gm/dVIXXJWQjy75//ntfl/KL0yhc9N71HvPODxSQ0Nf6s/RXs8nloyraTCa5gWW
-	 jYx2eOuDGBeZjsW5FTXxUElNPv71/TPw4j8TRjhcXbWf8RqfujvzMfR1sDepyyPx09
-	 k9bPNHE7Y61qVDZl4G3tKZXkGcADy6piFbqqMZ1k=
-Message-ID: <e452c6ae-e889-44a9-9fbf-99527f5c50b9@ideasonboard.com>
-Date: Tue, 23 Jan 2024 10:29:37 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pXHintKM"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-6dd80d3d419so89920b3a.3
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 00:32:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1705998749; x=1706603549; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=dab06sjdKIpTPjV6PQYmokEqjfInIDZyaKpkRpvx1vY=;
+        b=pXHintKMNX52l5Mem3cO59llh1wuUdmzF98277E1BXY9iyQKunuMP5o1R3YfZJ0dyc
+         L1W2Bshw+K3pfHJVL/sSclI92Mr3MP4l9E0rnMunFM6DaV96VOnunvmvEZmIF8fAmgP7
+         jaeMiXKvXx9hgjythWVff3GMV9mTQ8yHjW5Rzb3gAUTrCCiRSTz+jhextWkBDbdiqiWJ
+         CZIsu3g3kisEJ8hNzTU/KFxDJMq20DgsktW+7qKhUlRj+nK0TyRnmBocc+HQd6NbCgNb
+         v0AXE3F5/6PwS2IEl7rcW3jJ5q69S5VdrNYduH50rn1rMdQsvdPgWk1Wjt3UZuCZ5U4J
+         AVZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705998749; x=1706603549;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=dab06sjdKIpTPjV6PQYmokEqjfInIDZyaKpkRpvx1vY=;
+        b=FkROVcRDoQulLRcGFYdg757whOviT8puR3mD2eytEDHzQxoBCyNlBUOppcP1eWH5PM
+         GfmqgXfrRx8AjlxMm39nb+alpsYkuodhmxYAY4SqPE+y2x+KWkn8JVlbOkFFkwuhppYR
+         U3YD9C6fb+gQGtLULGb/TB9EEs6cYeQG2UhrYjPj0Yom/mS6KwmmYZd1NjjaR8ngLBg4
+         uD0lqbZpvKbNsAH5xi9bT35/ymMQLI17CR2vBNbGUXA5ePQHPbYNIq3SXFtNwHa1Wm0I
+         94RiXZQGS03HK2C3RSepT1Tqv9iyKt+2keLExuJhs7LsAUWpSx7eJ52bkvsXeT3p0f90
+         vnyQ==
+X-Gm-Message-State: AOJu0YykghNgMg4CxEICgefqviNXEz3LNCjLJN7hlt/GbDr0Nwd3n/NS
+	0sN3QtmRJP67dlKZSowsb5VHEqEd+guG1zkjO8HJqoXbSqO+VPbAXUuw0z4K9ETcl7JpGRPHEJh
+	/upFytlkE2iwSh57DgKQ/GS687s5dTjfdZ3g8HQ==
+X-Google-Smtp-Source: AGHT+IFwICqS9Iu4ri6CaqLtLQMcaPt6zdoeXaQomzQUmB3UoxZyfyJzL6rwc3PLLb1X4rwH41vFFItzHFC0PQlMuKE=
+X-Received: by 2002:a05:6a20:12d1:b0:19c:50e2:7a7 with SMTP id
+ v17-20020a056a2012d100b0019c50e207a7mr1675120pzg.5.1705998748748; Tue, 23 Jan
+ 2024 00:32:28 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 3/3] arm64: dts: ti: k3-am62x: Add overlay to use DSS
- in display sharing mode
-Content-Language: en-US
-To: Devarsh Thakkar <devarsht@ti.com>
-Cc: praneeth@ti.com, a-bhatia1@ti.com, j-luthra@ti.com, jyri.sarha@iki.fi,
- airlied@gmail.com, daniel@ffwll.ch, maarten.lankhorst@linux.intel.com,
- mripard@kernel.org, tzimmermann@suse.de, robh+dt@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
- dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- nm@ti.com, vigneshr@ti.com, kristo@kernel.org
-References: <20240116134142.2092483-1-devarsht@ti.com>
- <20240116134142.2092483-4-devarsht@ti.com>
-From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Autocrypt: addr=tomi.valkeinen@ideasonboard.com; keydata=
- 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
-In-Reply-To: <20240116134142.2092483-4-devarsht@ti.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20240105222014.1025040-1-qyousef@layalina.io> <20240105222014.1025040-2-qyousef@layalina.io>
+ <213f94df-cc36-4281-805d-9f56cbfef796@arm.com>
+In-Reply-To: <213f94df-cc36-4281-805d-9f56cbfef796@arm.com>
+From: Vincent Guittot <vincent.guittot@linaro.org>
+Date: Tue, 23 Jan 2024 09:32:17 +0100
+Message-ID: <CAKfTPtCfYcD_zPr7PqgL5hRYny=n3KW8hr6GY8q7zkoyRN7gQg@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] sched/fair: Check a task has a fitting cpu when
+ updating misfit
+To: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc: Qais Yousef <qyousef@layalina.io>, Ingo Molnar <mingo@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org, 
+	Pierre Gondois <Pierre.Gondois@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi,
+On Mon, 22 Jan 2024 at 10:59, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
+>
+> On 05/01/2024 23:20, Qais Yousef wrote:
+> > From: Qais Yousef <qais.yousef@arm.com>
+> >
+> > If a misfit task is affined to a subset of the possible cpus, we need to
+> > verify that one of these cpus can fit it. Otherwise the load balancer
+> > code will continuously trigger needlessly leading the balance_interval
+> > to increase in return and eventually end up with a situation where real
+> > imbalances take a long time to address because of this impossible
+> > imbalance situation.
+> >
+> > This can happen in Android world where it's common for background tasks
+> > to be restricted to little cores.
+> >
+> > Similarly if we can't fit the biggest core, triggering misfit is
+> > pointless as it is the best we can ever get on this system.
+> >
+> > To be able to detect that; we use asym_cap_list to iterate through
+> > capacities in the system to see if the task is able to run at a higher
+> > capacity level based on its p->cpus_ptr. To do so safely, we convert the
+> > list to be RCU protected.
+> >
+> > To be able to iterate through capacity levels, export asym_cap_list to
+> > allow for fast traversal of all available capacity levels in the system.
+> >
+> > Test:
+> > =====
+> >
+> > Add
+> >
+> >       trace_printk("balance_interval = %lu\n", interval)
+> >
+> > in get_sd_balance_interval().
+> >
+> > run
+> >       if [ "$MASK" != "0" ]; then
+> >               adb shell "taskset -a $MASK cat /dev/zero > /dev/null"
+> >       fi
+> >       sleep 10
+> >       // parse ftrace buffer counting the occurrence of each valaue
+> >
+> > Where MASK is either:
+> >
+> >       * 0: no busy task running
+>
+> ... no busy task stands for no misfit scenario?
+>
+> >       * 1: busy task is pinned to 1 cpu; handled today to not cause
+> >         misfit
+> >       * f: busy task pinned to little cores, simulates busy background
+> >         task, demonstrates the problem to be fixed
+> >
+>
+> [...]
+>
+> > +     /*
+> > +      * If the task affinity is not set to default, make sure it is not
+> > +      * restricted to a subset where no CPU can ever fit it. Triggering
+> > +      * misfit in this case is pointless as it has no where better to move
+> > +      * to. And it can lead to balance_interval to grow too high as we'll
+> > +      * continuously fail to move it anywhere.
+> > +      */
+> > +     if (!cpumask_equal(p->cpus_ptr, cpu_possible_mask)) {
+>
+> Shouldn't this be cpu_active_mask ?
+>
+> include/linux/cpumask.h
+>
+>  * cpu_possible_mask- has bit 'cpu' set iff cpu is populatable
+>  * cpu_present_mask - has bit 'cpu' set iff cpu is populated
+>  * cpu_online_mask  - has bit 'cpu' set iff cpu available to scheduler
+>  * cpu_active_mask  - has bit 'cpu' set iff cpu available to migration
+>
+>
+> > +             unsigned long clamped_util = clamp(util, uclamp_min, uclamp_max);
+> > +             bool has_fitting_cpu = false;
+> > +             struct asym_cap_data *entry;
+> > +
+> > +             rcu_read_lock();
+> > +             list_for_each_entry_rcu(entry, &asym_cap_list, link) {
+> > +                     if (entry->capacity > cpu_cap) {
+> > +                             cpumask_t *cpumask;
+> > +
+> > +                             if (clamped_util > entry->capacity)
+> > +                                     continue;
+> > +
+> > +                             cpumask = cpu_capacity_span(entry);
+> > +                             if (!cpumask_intersects(p->cpus_ptr, cpumask))
+> > +                                     continue;
+> > +
+> > +                             has_fitting_cpu = true;
+> > +                             break;
+> > +                     }
+> > +             }
+>
+> What happen when we hotplug out all CPUs of one CPU capacity value?
+> IMHO, we don't call asym_cpu_capacity_scan() with !new_topology
+> (partition_sched_domains_locked()).
+>
+> > +             rcu_read_unlock();
+> > +
+> > +             if (!has_fitting_cpu)
+> > +                     goto out;
+> >       }
+> >
+> >       /*
+> > @@ -5083,6 +5127,9 @@ static inline void update_misfit_status(struct task_struct *p, struct rq *rq)
+> >        * task_h_load() returns 0.
+> >        */
+> >       rq->misfit_task_load = max_t(unsigned long, task_h_load(p), 1);
+> > +     return;
+> > +out:
+> > +     rq->misfit_task_load = 0;
+> >  }
+> >
+> >  #else /* CONFIG_SMP */
+> > @@ -9583,9 +9630,7 @@ check_cpu_capacity(struct rq *rq, struct sched_domain *sd)
+> >   */
+> >  static inline int check_misfit_status(struct rq *rq, struct sched_domain *sd)
+> >  {
+> > -     return rq->misfit_task_load &&
+> > -             (arch_scale_cpu_capacity(rq->cpu) < rq->rd->max_cpu_capacity ||
+> > -              check_cpu_capacity(rq, sd));
+> > +     return rq->misfit_task_load && check_cpu_capacity(rq, sd);
+>
+> You removed 'arch_scale_cpu_capacity(rq->cpu) <
+> rq->rd->max_cpu_capacity' here. Why? I can see that with the standard
+> setup (max CPU capacity equal 1024) which is what we probably use 100%
+> of the time now. It might get useful again when Vincent will introduce
+> his 'user space system pressure' implementation?
 
-On 16/01/2024 15:41, Devarsh Thakkar wrote:
-> This overlay needs to be used with display sharing supported device
-> manager firmware only.
-> 
-> Remote core running this firmware has write access to "common" register
-> space, VIDL pipeline, OVR1 overlay and VP1 videoport.
-> 
-> The processing core running Linux is provided write access to VID
-> pipeline and "common1" register space.
-> 
-> The VP1 video port is shared between Linux and remote core with remote
-> core configuring the overlay manager to set Zorder 1 for VID pipeline
-> and Zorder 2 for VIDL pipeline.
-> 
-> Add reserved memory region for framebuffer region used by remote core in
-> dss shared mode overlay file so that Linux does not re-use the same
-> while allocating memory.
+That's interesting because I'm doing the opposite in the user space
+system pressure that I'm preparing:
+I keep something similar to (arch_scale_cpu_capacity(rq->cpu) <
+rq->rd->max_cpu_capacity but I remove check_cpu_capacity(rq, sd) which
+seems to be useless because it's already used earlier in
+nohz_balancer_kick()
 
-I don't understand this one. Why is RAM used by RTOS accessible by Linux 
-in the first place?
-
-  Tomi
-
-> Also add a label for reserved memory region in base device-tree file so
-> that it can be referred back in overlay file.
-> 
-> Signed-off-by: Devarsh Thakkar <devarsht@ti.com>
-> ---
->   arch/arm64/boot/dts/ti/Makefile               |  1 +
->   .../arm64/boot/dts/ti/k3-am62x-sk-common.dtsi |  2 +-
->   .../dts/ti/k3-am62x-sk-dss-shared-mode.dtso   | 33 +++++++++++++++++++
->   3 files changed, 35 insertions(+), 1 deletion(-)
->   create mode 100644 arch/arm64/boot/dts/ti/k3-am62x-sk-dss-shared-mode.dtso
-> 
-> diff --git a/arch/arm64/boot/dts/ti/Makefile b/arch/arm64/boot/dts/ti/Makefile
-> index 52c1dc910308..ff832741b367 100644
-> --- a/arch/arm64/boot/dts/ti/Makefile
-> +++ b/arch/arm64/boot/dts/ti/Makefile
-> @@ -35,6 +35,7 @@ dtb-$(CONFIG_ARCH_K3) += k3-am62x-sk-csi2-ov5640.dtbo
->   dtb-$(CONFIG_ARCH_K3) += k3-am62x-sk-csi2-tevi-ov5640.dtbo
->   dtb-$(CONFIG_ARCH_K3) += k3-am62x-sk-csi2-imx219.dtbo
->   dtb-$(CONFIG_ARCH_K3) += k3-am62x-sk-hdmi-audio.dtbo
-> +dtb-$(CONFIG_ARCH_K3) += k3-am62x-sk-dss-shared-mode.dtbo
->   
->   # Boards with AM64x SoC
->   dtb-$(CONFIG_ARCH_K3) += k3-am642-evm.dtb
-> diff --git a/arch/arm64/boot/dts/ti/k3-am62x-sk-common.dtsi b/arch/arm64/boot/dts/ti/k3-am62x-sk-common.dtsi
-> index 33768c02d8eb..8b55ca10102f 100644
-> --- a/arch/arm64/boot/dts/ti/k3-am62x-sk-common.dtsi
-> +++ b/arch/arm64/boot/dts/ti/k3-am62x-sk-common.dtsi
-> @@ -34,7 +34,7 @@ memory@80000000 {
->   		reg = <0x00000000 0x80000000 0x00000000 0x80000000>;
->   	};
->   
-> -	reserved-memory {
-> +	reserved_memory: reserved-memory {
->   		#address-cells = <2>;
->   		#size-cells = <2>;
->   		ranges;
-> diff --git a/arch/arm64/boot/dts/ti/k3-am62x-sk-dss-shared-mode.dtso b/arch/arm64/boot/dts/ti/k3-am62x-sk-dss-shared-mode.dtso
-> new file mode 100644
-> index 000000000000..02153748a5c2
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/ti/k3-am62x-sk-dss-shared-mode.dtso
-> @@ -0,0 +1,33 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/**
-> + * DT overlay to enable display sharing mode for AM62P DSS0
-> + * This is compatible with custom AM62 Device Manager firmware
-> + *
-> + * Copyright (C) 2023 Texas Instruments Incorporated - http://www.ti.com/
-> + */
-> +
-> +/dts-v1/;
-> +/plugin/;
-> +
-> +#include <dt-bindings/interrupt-controller/irq.h>
-> +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +&dss0 {
-> +	ti,dss-shared-mode;
-> +	ti,dss-shared-mode-vp = "vp1";
-> +	ti,dss-shared-mode-vp-owned = <0>;
-> +	ti,dss-shared-mode-common = "common1";
-> +	ti,dss-shared-mode-planes = "vid";
-> +	ti,dss-shared-mode-plane-zorder = <0>;
-> +	interrupts = <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>;
-> +};
-> +
-> +&reserved_memory {
-> +	#address-cells = <2>;
-> +	#size-cells = <2>;
-> +	rtos_framebuffer_memory_region: rtos-framebuffer-memory@94800000 {
-> +		compatible = "shared-dma-pool";
-> +		reg = <0x00 0x94800000 0x00 0x08000000>;
-> +		no-map;
-> +	};
-> +};
-
+>
+> >  }
+>
+> [...]
+>
+> > @@ -1423,8 +1418,8 @@ static void asym_cpu_capacity_scan(void)
+> >
+> >       list_for_each_entry_safe(entry, next, &asym_cap_list, link) {
+> >               if (cpumask_empty(cpu_capacity_span(entry))) {
+> > -                     list_del(&entry->link);
+> > -                     kfree(entry);
+> > +                     list_del_rcu(&entry->link);
+> > +                     call_rcu(&entry->rcu, free_asym_cap_entry);
+>
+> Looks like there could be brief moments in which one CPU capacity group
+> of CPUs could be twice in asym_cap_list. I'm thinking about initial
+> startup + max CPU frequency related adjustment of CPU capacity
+> (init_cpu_capacity_callback()) for instance. Not sure if this is really
+> an issue?
+>
+> [...]
+>
