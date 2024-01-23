@@ -1,96 +1,111 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D01558004C;
-	Tue, 23 Jan 2024 17:54:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D9FA664C4;
+	Tue, 23 Jan 2024 17:54:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706032444; cv=none; b=ZdVOQX0nLeHwgZrMd7BkTYwGQiTIroFozS+DtIiIx0XDjyerq7Kh8uUKLTMJrjc/DJpzLg+Bcpq+0BzAjkOm7oFWotVy9kdYBcs7/GUcZ7/J8wgp39YUPukZPHQX+7SzGzBarULijjDveXQTiRE1ExqYygrnIb91nmQKFi3v5Ns=
+	t=1706032463; cv=none; b=OPVPTHt3yGJ6I27o4bLwq2AHppUtvRGv5SM350gqClFGgul89EBhT1DpbQ2QbrQxF6RvfRRiAD09c5bK+VEElHVMp2r2eWm6YFfXqtkrQwr5kVWHue9dUUlPNXeE1bM8cX64u6zt90UDXFCZbOpkTfVWgMUjtyXOd5heOb+tXTQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706032444; c=relaxed/simple;
-	bh=/Lf65r0jEFfaCyx/YVAM+/B+UJeshYc86BaIyXbVHIM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TtH+MO3EX4rPPhNaDHjAN6KePAnSQ8+BVQr7IsQ/YzDC78i97iGYCg1RWJTYtDRjSnnD/HP8x2bfu1YjG/s0dWsrl0rZs52KjmrPYr9VM+wNSmm3JR3mshJtb3RG54yTJWn2CfkrtmeKYWt/U5ZEi3eUbA4zbcQunsrBFVugtoY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W1RxQXQP; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W1RxQXQP"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-40eacb6067dso28879555e9.1;
-        Tue, 23 Jan 2024 09:54:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706032441; x=1706637241; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=T9axCURSdPj5O6k/8fwokenEz2T/EczgGrNIrYgrSFE=;
-        b=W1RxQXQPxmgC4hjde1Xra6NULCtL8wQd2yIwEfjwHTwRCf3E53PObHwNcWEOc6Jo5g
-         2wAOZu6VEh4QwXFFo4EexEcJezUBIUzLrHdZam78peBnD/K5aPT/PtqB1d6TffFpnVHy
-         B6FwUsydRWP9LBo/gk/9I8W+P7kPrXQNgwHrI7J+xAu+p5nhHVoRakBT6/01Zvc/nkiJ
-         8ufAjOreZuIsGvc6KvhII6NgAKAV8zelkG3OpPStipRoIXpNZyEuSfgBj+aHnaZRtRen
-         l/qs5cRKNryR7lrxhy5BSPHzjU7IM9nWXp7UXqoWC2Xw3LArVQSqjaC3NiUc03k1d0p2
-         cw9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706032441; x=1706637241;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=T9axCURSdPj5O6k/8fwokenEz2T/EczgGrNIrYgrSFE=;
-        b=i3fd0V+uJBBIpFUUOlLbjeo4Qd4EY0dobjE2+8hDPzKf2pLTWcwMDz00ADsVUC6ALZ
-         IhLzkJU1uitd82reQlo8biGUS2eVc2M2Vd+QxgBbNbPXqN9cFxJJ7kWB//rE2q4V3hsc
-         VSZBKkuqUezB/fA3COZSbZE8fjDs1ppzbs3SS1RT+vqaqHpkz0vEKMAA/sOf0FDgH4E7
-         Hqiu9mcLm7Ofjd15sIIGeDZG65ne+Kd9g/zT4s6k0OuiU2BzGqpgClS6nTI57D0maqA1
-         HoOZmwSShyK0XvJV7zJ4ieVnzqECW117DJtH54yjlFMzxa2wZ6gETaJvOIkv096xCUvQ
-         HFMw==
-X-Gm-Message-State: AOJu0YwNPMD/ldS5Y+FYW5X8hwjPR2jZb7yPmcYJV/agSPuA+R8PSTNe
-	fYBEoY3NBe6rpd02wamIywpaRAjB5kmqLu+uhJeePlFfD/vsmq35bc2biGvNhWM=
-X-Google-Smtp-Source: AGHT+IHfolV3zQWbsCi6txDpI6lqMV3lpStI7mStzT3HOm8ywicmpEIYK00D6kIX3ljjceGHtRFaog==
-X-Received: by 2002:a05:600c:4657:b0:40e:5afe:a42e with SMTP id n23-20020a05600c465700b0040e5afea42emr409342wmo.247.1706032441017;
-        Tue, 23 Jan 2024 09:54:01 -0800 (PST)
-Received: from jernej-laptop.localnet (86-58-14-70.dynamic.telemach.net. [86.58.14.70])
-        by smtp.gmail.com with ESMTPSA id f18-20020a05600c155200b0040d87100733sm43414126wmg.39.2024.01.23.09.53.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jan 2024 09:54:00 -0800 (PST)
-From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
-To: Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Samuel Holland <samuel@sholland.org>,
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
- Vinod Koul <vkoul@kernel.org>, Chen-Yu Tsai <wens@kernel.org>
-Cc: Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
- linux-sound@vger.kernel.org, dmaengine@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 7/7] arm64: dts: allwinner: h616: Add SPDIF device node
-Date: Tue, 23 Jan 2024 18:53:59 +0100
-Message-ID: <3786260.kQq0lBPeGt@jernej-laptop>
-In-Reply-To: <20240122170518.3090814-8-wens@kernel.org>
-References:
- <20240122170518.3090814-1-wens@kernel.org>
- <20240122170518.3090814-8-wens@kernel.org>
+	s=arc-20240116; t=1706032463; c=relaxed/simple;
+	bh=EmbDpOX7soO/jTlAEEcGlSi8sSSt71tWrUUfP+zx2vY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MpEn8/YQJK6edYnNTtN5yIi15ThvFbkQnGlMLQH4zwB3GrLCNsf8d4/8iNh4pnvxAwZIXXykmhXCBy+i4qTriLEj6Tl2bQkgSZgID5hC6NhC3y5qsQB+NFOfs7mP6CvUTYI/J6PBy8WW6ZtPy827naBavUO4p9gjpai6MVdaV+k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 312061FB;
+	Tue, 23 Jan 2024 09:55:06 -0800 (PST)
+Received: from e133380.arm.com (e133380.arm.com [10.1.197.58])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CD4B73F762;
+	Tue, 23 Jan 2024 09:54:19 -0800 (PST)
+Date: Tue, 23 Jan 2024 17:54:17 +0000
+From: Dave Martin <Dave.Martin@arm.com>
+To: Mark Brown <broonie@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+	linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Edmund Grimley-Evans <edmund.grimley-evans@arm.com>
+Subject: Re: [PATCH 1/4] arm64/sve: Remove bitrotted comment about syscall
+ behaviour
+Message-ID: <Za/9SawqwXmlG/9B@e133380.arm.com>
+References: <20240122-arm64-sve-sme-doc-v1-0-3d492e45265b@kernel.org>
+ <20240122-arm64-sve-sme-doc-v1-1-3d492e45265b@kernel.org>
+ <Za/e15zUOEaa1b7d@e133380.arm.com>
+ <991d84b4-e184-4fd6-900f-601f8c31d518@sirena.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <991d84b4-e184-4fd6-900f-601f8c31d518@sirena.org.uk>
 
-Dne ponedeljek, 22. januar 2024 ob 18:05:18 CET je Chen-Yu Tsai napisal(a):
-> From: Chen-Yu Tsai <wens@csie.org>
+On Tue, Jan 23, 2024 at 05:31:58PM +0000, Mark Brown wrote:
+> On Tue, Jan 23, 2024 at 03:44:23PM +0000, Dave Martin wrote:
+> > On Mon, Jan 22, 2024 at 08:41:51PM +0000, Mark Brown wrote:
+> > > When we documented that we always clear state not shared with FPSIMD we
 > 
-> The H616 SoC has an SPDIF transmitter hardware block, which has the same
-> layout as the one in the H6, minus the receiver side.
+> > Where / when?
 > 
-> Add a device node for it, and a default pinmux.
+> In the document that is being modified when it was written.
+
+Ah, right, I see this:
+
+d09ee410a3c3 ("arm64/sve: Document our actual ABI for clearing registers on syscall")
+
+where the zeroing is made explicit.
+
 > 
-> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+> > > -* In practice the affected registers/bits will be preserved or will be replaced
+> > > -  with zeros on return from a syscall, but userspace should not make
+> > > -  assumptions about this.  The kernel behaviour may vary on a case-by-case
+> > > -  basis.
+> 
+> > This was originally an intentionally conservative statement, to allow
+> > the kernel the flexibility to relax the register zeroing behaviour in
+> > the future.  It would have permitted not always disabling a task's SVE
+> > across a syscall, for example.  There were some concerns about security
+> > and testability that meant that we didn't use this flexibility to begin
+> > with.
+> 
+> > If we are making an irrevocable commitment not to use this flexibility
+> > ever, then this comment can go, but if we're not totally sure then I
+> > think it would be harmless to keep it (?)
+> 
+> I think everyone except for Catalin had felt that the original
+> discussion had concluded that there was a commitment to always clear the
+> non-shared bits and was disappointed to learn that the documentation
+> said otherwise.  When I tried to take advantage of this as part of
+> optimising the system call overhead for SVE there were eventually
+> complaints.
+> 
+> > (Feel free to point me to the relevant past discussion that I may have
+> > missed.)
+> 
+> See the discussion on my syscall optimisation series:
+> 
+>     https://lore.kernel.org/all/20220620124158.482039-8-broonie@kernel.org/
 
-Acked-by: Jernej Skrabec <jernej.skrabec@gmail.com>
 
-Best regards,
-Jernej
+I think my excuse would be that this was consciously left unresolved
+when SVE originally went upstream: the kernel played safe by always
+zeroing the bits, while userspace was told not to rely on this always
+happening in future.
+
+If the decision has effectively now been made to close the door
+permanently those optimisations, then I guess it makes sense to clean
+up the documentation to be as consistent as possible.
 
 
+I still feel that it is iffy practice for userspace to rely on the
+extra bits being zeroed -- I think the architecture hides this
+guarantee anyway whenever you go through a function call confirming to
+the regular procedure call standard (including the syscall wrappers).
+But there may not be a lot of point trying to put people off if we
+can't force them not to rely on it.
+
+Cheers
+---Dave
