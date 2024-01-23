@@ -1,76 +1,115 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D06F351C33;
-	Tue, 23 Jan 2024 08:36:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36A5257327;
+	Tue, 23 Jan 2024 08:37:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705999012; cv=none; b=ZXUZCvSTrkrSW/kwZyqfmGnmcPAB+KKnFzNp8e2+d7nLikEfSLjj0via23ncyVy4Nf/wVfWxPdPb6VKM/Fhug7njEgM8RxFZNJe0+ts6lrcg/aMjivkuZx1BFcB9y8S9l0tzVwG3arjmCVlSI1P6AEN14+GE9kIU7PbMdV37pKo=
+	t=1705999046; cv=none; b=tT75GUB37yuOPmp3cPGWg1IYLWYz1uTmm+Rq0OQjEXPWqOUs46XYeNDsn3JhUNmyyb2xIPjVT153E64teTYXTH0viArXqkwMrfK88Y6ftiY+nyF1LULQmbRZAYn1VwvKPlG2o7v6EsuronHerJzyppX3JKMXqGiNX1CxDs1bZnU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705999012; c=relaxed/simple;
-	bh=c/DzI/EJtwNTt/biOBCBJkuhhi5FFYaQGErDt8KLdHg=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:Content-Type; b=nVSFzI6QNN0c8qLCt77EQMPIkg0QdgMfZkVdPQxmyqViHXW5AnRR5ZDUjU1vq+LzbG3yXtHoPnWLSEzVMEQ51KPsMXA0JqegwpbH+FaGaxeCBoqAP3Br0Z5PLNsgOpByDX5EN6+aJyme37OkE4TyTjuLNTd1v56EZnuz2c9ov7k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=rwarsow@gmx.de header.b=uIoMOH3a; arc=none smtp.client-ip=212.227.17.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1705999046; c=relaxed/simple;
+	bh=i3fm9I0AtALKEDU1lFQLDOyc8qHvrAP7w0tD+wvw694=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=lSUb+JAfWcWKStRypJFoCUQk161iWlI/JGtGnfMohiWJs76vAMaUcHgvuHJmbx6q3hntu/qB1o8vv+5EeDoGupVVaIHsWu/j3iZXy59rR8b2l94US5GPHgqb6cdoB6zLNtvJ6RpLKKU0utulfuIwKFsGGAAJXqCKXl8ZfVxHCrc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XnU4Jqo7; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=rwarsow@gmx.de header.b="uIoMOH3a"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
-	t=1705999007; x=1706603807; i=rwarsow@gmx.de;
-	bh=c/DzI/EJtwNTt/biOBCBJkuhhi5FFYaQGErDt8KLdHg=;
-	h=X-UI-Sender-Class:Date:From:Subject:To:Cc;
-	b=uIoMOH3a1lw75o7/YyqrkoSYkrwdZmW5EdF5Atver+r5C5jrBP5jcJ6zCfcLeRoK
-	 qTnxRChbomXEvC2O374mUI3JHfxGMKCEsHPvrKHfowvzFLNRANR885dzpcrB8uhY1
-	 5FMOE4f+O6H5HN2ZlUfPezuhlTS/eEmi7NZZJ3PZQaSLJ9jH0QmzzJVJEJxg15jWN
-	 /61VFHKuPw+O0+Iw0gatdEtDhBs7xfCrMu55kUfROWoiLYTmOx9V69eMp+ZkiEVZ3
-	 xNd8Cv82WI6lLVb8aeLGMySLa1Y8y6EChVUBaJAnkQeWtwTvsDoHhHO0RCYx9cRF+
-	 avrmQ7mkZTrH7NbEug==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.100.20] ([46.142.33.246]) by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1N8XU1-1r5wQo0lHN-014PU6; Tue, 23
- Jan 2024 09:36:47 +0100
-Message-ID: <82336412-3c43-469e-89c9-86a1014e77a7@gmx.de>
-Date: Tue, 23 Jan 2024 09:36:46 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XnU4Jqo7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1705999044; x=1737535044;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=i3fm9I0AtALKEDU1lFQLDOyc8qHvrAP7w0tD+wvw694=;
+  b=XnU4Jqo7GuQZuCNyljLjK63RufcYaMzICzcl4HutzhaT7PJ+zhxhbUco
+   GwMfyKz9vzRTxaP4umXoujikvDN3RgmCnPf0S++dk0w47926TWlsq5PbY
+   hR6eLcGbnleQPY75gpB3stA6MFbFTkZ2SrJLY0c0k2PqywqjzeAx4F499
+   ZLLDK5VRvPuD+lfmnSubeZFxEMSxOYGsU01VY6tgTJtXHjNtzTahmEETB
+   3UkZwQ3QVxHbhKIBFhJ6eptJPHQrNv0uHf0ym+nROltRv04xdVMCO3VVf
+   QO4KeO8roOBovtXd3ZwwnahOL2M/vDJ1R3wD/HuoDdrGNPUAJkXc8NqIs
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10961"; a="1339952"
+X-IronPort-AV: E=Sophos;i="6.05,213,1701158400"; 
+   d="scan'208";a="1339952"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2024 00:37:22 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,213,1701158400"; 
+   d="scan'208";a="20261546"
+Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2024 00:37:16 -0800
+From: "Huang, Ying" <ying.huang@intel.com>
+To: Gregory Price <gregory.price@memverge.com>
+Cc: Gregory Price <gourry.memverge@gmail.com>,  <linux-mm@kvack.org>,
+  <linux-kernel@vger.kernel.org>,  <linux-doc@vger.kernel.org>,
+  <linux-fsdevel@vger.kernel.org>,  <linux-api@vger.kernel.org>,
+  <corbet@lwn.net>,  <akpm@linux-foundation.org>,  <honggyu.kim@sk.com>,
+  <rakie.kim@sk.com>,  <hyeongtak.ji@sk.com>,  <mhocko@kernel.org>,
+  <vtavarespetr@micron.com>,  <jgroves@micron.com>,
+  <ravis.opensrc@micron.com>,  <sthanneeru@micron.com>,
+  <emirakhur@micron.com>,  <Hasan.Maruf@amd.com>,
+  <seungjun.ha@samsung.com>,  <hannes@cmpxchg.org>,
+  <dan.j.williams@intel.com>,  Srinivasulu Thanneeru
+ <sthanneeru.opensrc@micron.com>
+Subject: Re: [PATCH v2 3/3] mm/mempolicy: introduce MPOL_WEIGHTED_INTERLEAVE
+ for weighted interleaving
+In-Reply-To: <Za9LnN59SBWwdFdW@memverge.com> (Gregory Price's message of "Tue,
+	23 Jan 2024 00:16:12 -0500")
+References: <20240119175730.15484-1-gregory.price@memverge.com>
+	<20240119175730.15484-4-gregory.price@memverge.com>
+	<87jzo0vjkk.fsf@yhuang6-desk2.ccr.corp.intel.com>
+	<Za9GiqsZtcfKXc5m@memverge.com> <Za9LnN59SBWwdFdW@memverge.com>
+Date: Tue, 23 Jan 2024 16:35:19 +0800
+Message-ID: <87a5owv454.fsf@yhuang6-desk2.ccr.corp.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Ronald Warsow <rwarsow@gmx.de>
-Subject: Re: [PATCH 6.7 000/641] 6.7.2-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Content-Language: de-DE, en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:jPNyUrqyywUiH7zi0WZeS+Fp2P4SSfX8Vc12JCm0fM7vMwQwzJR
- R4Fadc9MWFkKOEQG7A9fiap9Kch4zPF+kbXU1k4OYLvAfOe4zw4vDFRngCpK/4g6gvxfbPq
- 9hnrRLyW0UTXEB2MZniatBubC4Mvi1WlPiFI0yTbJaIFSc8tQQJ43W1TPJSjyBWnEth15QJ
- SaSDFfdmpP7vtPEIr8OAA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:L4QHpBP5Lyo=;oCbYo+FZtrRHG3KObX//WgzzriY
- tl6pO4hK6qItwLkZSCcyeP1QUbkR/m3bHroWmF7cZGRYBh/pZuoHGU5W6rr8iY5PcS7Ezd8yy
- ngOvJ67AwF2XrywlXsbyCZ61qDogxO7qimmdFEjgrxrool9kQTWddLTo7jowgVp0IjHQYHtB5
- CcazYArotovLjCQTF0bjjPG7CL9Nl3J5kg5I2fAiji2q7KN1IcTk2E28DkblRO8CFlvjClc3H
- VEq6+zUUbm+Ki5482T8xGPnLN47gMuE3ONh/I+eTXEw3X6VZGsMfd678YApiA8e+L36t46IH1
- HKmMixsJD0bQ8hutELW5yDQyjboXqIM9rmzChJxAw9ZjFyelw5eB2Eg0OS9fS5WdUl2U0bdyS
- 97sfkB/MmeDmbdvwKB3dP4YSCKC3GKvT/yoggub8NidpJN7WtUp8Cm0kYl7yJnDpKnKU61Smm
- REQHfO6vDaUenFw+29hbs+kl2Mvjh5xFfW8EhbNwDTi7h1IaH2KcD5vLkfGzG2K7VI/glONF2
- S/FVHx3JqAwSOOtcfL78rQXzB7lOoOy5Y9jRMExjpQtm8G0ISLOjpH+rJvuYYAarFXCMg70pF
- Z1C+hMKZlI/WUXOcP6TxLeV1Ov6BU8PUkjIp0F4zYMDlC7OKeoW3TaoA2tqfISUlW6TAm2L1E
- FKM7j4+REM780/xBiBWPVJ2KyOR0eLIvlmCK1k182CknMSoGygo3xLPHVTU4U63GcmaieABbo
- P39Iq1ZM2M7b4cThNu6DqhsT0OBluvW+DR4wxKlQkCgeF/qxm0VfaqkP0odBa3BavMW9MRZpg
- m7hzn1/9FiYVIzDNzmbIO3nxzQilon5XO7egdkdRJ64eEKW0GW10u+D/5uWX+vL5iktXMdIj5
- phRL15sIUHZ5auICz8+DxDaHy0WskjSIIc2CsjalzoMdzXR6nNhITqhM9xGzWV9FXiYCUHBur
- CSCdgQ==
+Content-Type: text/plain; charset=ascii
 
-Hi Greg
+Gregory Price <gregory.price@memverge.com> writes:
 
-no regressions here on x86_64 (Intel Rocket Lake: i5-11400)
+> On Mon, Jan 22, 2024 at 11:54:34PM -0500, Gregory Price wrote:
+>> > 
+>> > Can the above code be simplified as something like below?
+>> > 
+>> >         resume_node = prev_node;
+> ---         resume_weight = 0;
+> +++         resume_weight = weights[node];
+>> >         for (...) {
+>> >                 ...
+>> >         }
+>> > 
+>> 
+>> I'll take another look at it, but this logic is annoying because of the
+>> corner case:  me->il_prev can be NUMA_NO_NODE or an actual numa node.
+>> 
+>
+> After a quick look, as long as no one objects to (me->il_prev) remaining
+> NUMA_NO_NODE
 
-Thanks
+MAX_NUMNODES-1 ?
 
-Tested-by: Ronald Warsow <rwarsow@gmx.de>
+> while having a weight assigned to pol->wil.cur_weight,
 
+I think that it is OK.
+
+And, IIUC, pol->wil.cur_weight can be 0, as in
+weighted_interleave_nodes(), if it's 0, it will be assigned to default
+weight for the node.
+
+> then
+> this looks like it can be simplified as above.
+>
+> I don't think it's harmful, but i'll have to take a quick look at what
+> happens on rebind to make sure we don't have a stale weight.
+
+Make sense.
+
+--
+Best Regards,
+Huang, Ying
