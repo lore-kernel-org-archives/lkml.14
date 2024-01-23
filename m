@@ -1,90 +1,79 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A20727F7DC;
-	Tue, 23 Jan 2024 17:45:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93C7A80036;
+	Tue, 23 Jan 2024 17:46:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706031955; cv=none; b=hrOEZmtTXpjCtox32watrILfc0ioFjPbSBzpQfYVIuotJW9XYZ20Yl6dAIaKgfiMdvML2TI4IDKszb/Qx7N3Hgn/z3m4KZcZfJo/Pye2wTDH7cXLB8IwZ+Tt7O8is6SJRKc0qrAjEEnCPSfdRLbVxiMo5glVxvjLN+ijp7qROYw=
+	t=1706031991; cv=none; b=OKdYVlCEjBmVEh/z/rel16DO5v1bWwAcraETZ3MMHfDP7H4YAxS+PACmNdGAWb622U0wGvG9NfUgRALhwl67pDN1dT/xJbVMDhS46gWgn0nnFRNxz64VOrFpx1XX/CWADoxGyomvrF+vdMwm8Mjby4z61IS2PRe6531o1urpUyo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706031955; c=relaxed/simple;
-	bh=ZXc8X08+C4aO2O5jlqzBh0CEREPFaIm/XJ9W8jBxH/M=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KYbXGodI97Goe9xMBgiYLbid8PwujS/b5BhpQebUJzexjPoBVWsa9cmlkJ6am+sKlPkKyDV182Ba2+pH2NoBqkKz38I0VGD6d/8mks94ORG21JgXySJJf6NXYQ0zp7v8mWbmea6H3Aa1hNZksHDrxTTs4FHgVN41TFWGVGNWMxQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ig8dRydk; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1706031991; c=relaxed/simple;
+	bh=NkHE5jAGeam0OhUX55X+rbk7tkRtqWrCjQ1f8FdelE8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VxPyIRA/JMmGA7zZgCwjwNltP8cUvZ95dXdKEQ7+t+yIDTfBY82Ngvt7QIXAu5KM9PoS/E7MkOWwgzKl0yv7QhQIHJRhvd+6ajDhdS+ou3zRAVpD9HPJu3QSV/T1BoslJ8RNqzItjG1DclyT8yUXqZccbi8K/4UU13IlRmNt0ZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O64Q2j7k; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ig8dRydk"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-40ea5653f6bso43043315e9.3;
-        Tue, 23 Jan 2024 09:45:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706031952; x=1706636752; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=e/6uOVc6gr+0+h5k4oBTqEhdhyiqp0MSyJeHam6ErFM=;
-        b=ig8dRydkYO+Ih/OP7T1RTVfYIv4vjovc7OCVC35Ja9KiBreL+qZ11OGoMoLHC9fBDn
-         gdRxn1z5MLVOuoWsCY5q66/aTzW+zufh/frq9gGwL7HkhIa6tdnhUOuprQn1l6Karv8V
-         0+7gGSxGU+oQE+YHlxts4KqmRCHZHyPft9II0xgQCdV8QsBrjO5VtjFDcmhuz6Qkp3ZG
-         2nYZdUr2966wg0m7ZQ9UwWgqDEFA8ixOH+Uew/YrUlf/9/C5J7oyftjdeeLk9KvnOe8Y
-         PcJi12DEmo1K8IdroE/tIZPCTFJ5zU0z3njEZCfqtvhBfKrcXFP1tL8ykcoLnvlcz8bQ
-         ModA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706031952; x=1706636752;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=e/6uOVc6gr+0+h5k4oBTqEhdhyiqp0MSyJeHam6ErFM=;
-        b=xBEW2koPAgM3pn4CwHot0QA8WMJlMIBogv+8TDEjnQ+s9d8DeXWK0pQDOXPAxZPEKX
-         vQbj+IbsSxWhxbfGYf60x+Uwhy/I5cP+byQGG1o8MahdRdokIK2E2HTM1FJXsj8/BvYq
-         wkA1PHEhf3nNfRd4mjiur8sdgDPYJ/ryWzU2Z9U1mHLemYRO2LC2oyjk+KF0QjVBSIic
-         hkd55aXxS5EGb6uZoenYCRbOCjvUJw2yWJyycRnuQWqdRtxjx8a9DNnLfuQl3moHVsYX
-         20Vriza6qVKtHMIXedNqfV9HU8v0/PvEwGmfo8J9y+f4iYQlCSCx8mVgYv3fBVOcC9jy
-         yJ8Q==
-X-Gm-Message-State: AOJu0YzwJXV6966JR+08VvQ4RbJqOPLKZd97y0GgNQFERJuXUgDVn9Uh
-	kbg9igsI/pThp/ii0ZH7Lkgzc1IS5SbLiyhPt3XTjuhEBxQh6Mg2RkGe5IVF
-X-Google-Smtp-Source: AGHT+IFuZXYplWtmBlDewf9kxG9wih9uIsbolfMZHUhnH9YUI7jgKgcARlDQEFRaRcWgximZQPznuw==
-X-Received: by 2002:a05:600c:54e3:b0:40d:877d:ca9 with SMTP id jb3-20020a05600c54e300b0040d877d0ca9mr365916wmb.104.1706031951673;
-        Tue, 23 Jan 2024 09:45:51 -0800 (PST)
-Received: from jernej-laptop.localnet (86-58-14-70.dynamic.telemach.net. [86.58.14.70])
-        by smtp.gmail.com with ESMTPSA id w15-20020adfec4f000000b00338a3325331sm11936004wrn.69.2024.01.23.09.45.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jan 2024 09:45:51 -0800 (PST)
-From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
-To: Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
- Samuel Holland <samuel@sholland.org>, Maxime Ripard <mripard@kernel.org>,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject:
- Re: [PATCH] dt-bindings: sram: narrow regex for unit address to hex numbers
-Date: Tue, 23 Jan 2024 18:45:49 +0100
-Message-ID: <13436805.uLZWGnKmhe@jernej-laptop>
-In-Reply-To: <20240123083450.20996-1-krzysztof.kozlowski@linaro.org>
-References: <20240123083450.20996-1-krzysztof.kozlowski@linaro.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O64Q2j7k"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E11DC433C7;
+	Tue, 23 Jan 2024 17:46:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706031991;
+	bh=NkHE5jAGeam0OhUX55X+rbk7tkRtqWrCjQ1f8FdelE8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=O64Q2j7kI6EdmKZ7mFXyWaeNIyGfxeOZHcYsgupC8JpBdUjQ4uxSzkGM7iy2OlXAI
+	 tFClav5O4lFK1QzAHICJ3RCsYSqD3vtwnLiplM30pqZG9HwAj5K7nSJXu/3b5hqOQ0
+	 O6AMpTl9P6mQr5X7RBSN+aKEThtUtQHIq1u2u8XPrRbGpahBnKi29VSmCYV273ZcwD
+	 BASyCD/EeAPIgp29JskMQW9/3YS/LWGUt1C2W82IDPNVkX3DhrpJ+kn2Na36hCstIQ
+	 xO4igiLh62T87z4Xw6Z8rRAexLfoL02cWha+ZRkjV+IXP4fzvuwLx2q+4BDCYS3vde
+	 mTOUkFOeNenWw==
+Date: Tue, 23 Jan 2024 17:46:25 +0000
+From: Simon Horman <horms@kernel.org>
+To: Markus Elfring <Markus.Elfring@web.de>
+Cc: netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+	netdev@vger.kernel.org, kernel-janitors@vger.kernel.org,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Florian Westphal <fw@strlen.de>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Jozsef Kadlecsik <kadlec@netfilter.org>,
+	Pablo Neira Ayuso <pablo@netfilter.org>,
+	Paolo Abeni <pabeni@redhat.com>, Phil Sutter <phil@nwl.cc>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Kunwu Chan <chentao@kylinos.cn>
+Subject: Re: [PATCH] netfilter: nf_tables: Add a null pointer check in two
+ functions
+Message-ID: <20240123174625.GO254773@kernel.org>
+References: <c49c716a-e070-4ad5-9a90-896537bcd1b5@web.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <c49c716a-e070-4ad5-9a90-896537bcd1b5@web.de>
 
-Dne torek, 23. januar 2024 ob 09:34:50 CET je Krzysztof Kozlowski napisal(a):
-> Regular expression used to match the unit address part should not allow
-> non-hex numbers.
+On Tue, Jan 23, 2024 at 02:45:12PM +0100, Markus Elfring wrote:
+> From: Markus Elfring <elfring@users.sourceforge.net>
+> Date: Tue, 23 Jan 2024 14:28:31 +0100
 > 
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> The result from a call of the function “kasprintf” was passed to
+> a subsequent function call without checking for a null pointer before
+> (according to a memory allocation failure).
+> This issue was detected by using the Coccinelle software.
+> 
+> Thus add a null pointer check and a jump target in affected functions.
+> 
+> Fixes: 8877393029e76 ("netfilter: nf_tables: Open-code audit log call in nf_tables_getrule()")
+> Fixes: 0854db2aaef3f ("netfilter: nf_tables: use net_generic infra for transaction data")
+> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
 
-Acked-by: Jernej Skrabec <jernej.skrabec@gmail.com>
+For the record:
 
-Best regards,
-Jernej
+Markus has posed patches of this nature many times over the past weeks
+and months. They are not fixing bugs - there is no user visible problem.
+And moreover they move the code away from the preferred style -
+avoiding unnecessary checks around code that can handle NULL values.
 
-
-
+Markus, please stop posting patches of this nature.
