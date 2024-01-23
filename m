@@ -1,132 +1,163 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEC9755E76
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 08:13:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D9A255E76;
+	Tue, 23 Jan 2024 08:14:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705997596; cv=none; b=UkbM0F8e+Oo6ZmzLBYRLTkWvvdekpO2DZ/EVGjPgrODuTB0g0512kF72eg/1PFsu41M54ZIOxYmncwE+vXQ7jXEEUyh6dpTwvpAmcxgzqpJnXAKtzJ3uRGmrARYHskcFQwc5/+GqGVhKxbVOEgBf7uMxj1bpSR1whhcVR4Cryh8=
+	t=1705997650; cv=none; b=DFyiscWFrJHFWlpqW55oglYH1qMGqy2KrgF5Xnj9vUv4VWQ0br8DlPVP5ckRDXO28JeSO3irvGwGPfgh12Opsb4Te+5ZdduwbX8dj9A2TK0dk2lMZ36B+amzriiea95xoW8vtN5Ek+E3tkdLb+HHtj708fKoykwhbLct6cxUzGQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705997596; c=relaxed/simple;
-	bh=/sM8VvHIXE+nip92qpOPQD1wgYBeZzA3gwJx9pdbtjc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HcH7A3AQL66mThhaDS/44RWtcREdISjCw3SNVA4LuFrbybRVtCMCEtpJmK28u4EoqbMvPPg1Z3x/1aUurbaIDrht6l80bj6WNBp05UVjf/NfLFP5g0SXjISCzPCpXhsiUXirTYlVBJb3xJS3v93xp6kEMZKYhPcY8LE0ypfvpzQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CRsXZRir; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1705997650; c=relaxed/simple;
+	bh=nzuOFA+tLJ46VDzCzSWAXp7X7RWGYzJ+SUPa4Tl1kYY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ivTMmhc1+bniBpQ1U/xDED2kFL/JZJELe0sAhALsTMUUBKmUO4w403NCi1FKY2ll1Y8fPtRta4v6Z9OqU31gJxStE65yD/SS8z5O1CL4fn9F0ay6Vnb+aRPOReCfUuVSi3wvc72/bPlWlIE8vLUj0x+F8oR+M1tQ1ccSf82Yiig=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CRsXZRir"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1d76671e5a4so7989525ad.0
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 00:13:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705997594; x=1706602394; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=KcINxNqK9poEeYbYdpTS1L5ZKLd+2H3epIO3RsMgjVY=;
-        b=CRsXZRir2JdbVood6H4uIFIExAjaPdjqMbYXWfUqU4eJL8moMI26wpcW/ppRY6zEEt
-         AYQw06hThspBQrA4/ujNNf6fPEs0jIMEpBCoWImINTvlfKVbTzZ1JSFIGZBRKGBjW9xD
-         TBdTePhkSSbfZwxulAJFCEEjbE8uNnd78d1KtmYOr+451xPlY4+Cr2hO9N1eU3S1p+oK
-         4wl8Ai0yz4vp1+EN8ea/csiwTP+2owXw3D2xN3MPPjLEEzizw8oodFi7/922xPOGtSfz
-         qRZ8DNbYf6qIh2YtlK5l/I0nTxEaHBnSn+hA86DmplFhqpyLGRM3e2b5+3GpNluWY8rN
-         RnkQ==
+Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-5ffcb478512so15288837b3.0;
+        Tue, 23 Jan 2024 00:14:08 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705997594; x=1706602394;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=KcINxNqK9poEeYbYdpTS1L5ZKLd+2H3epIO3RsMgjVY=;
-        b=U4Nioe1XhocWnEf7wHkB9hk9slsRlvUirz6Ydj42OslcZ/MJMESQs6qruEUOOVFAnb
-         QUu9HCxPjK/RNK75Nv4pnNC2NvZaVSlHf8D84RkV5v+nri25De4jatvgIf9o1RdLhYyM
-         emO7soHhsLHQl7WQp+tBHbDg4PaIQ59uvaTG2kAnMe19xngNR/mEZqquEKf/RAqZ+hs6
-         0oPvc17jvkeiRU1/wUcIbGhO0G6ryUKkIa0U0qmtRBtTxe+VaW506Z0fhRpGfwq5bK81
-         WjQvY14HPHllnQMn/muYv/d+jfki6fg4UshiKbmWe8eeQKEkv6C+eXN/fAw0zA5a+fsY
-         KLMA==
-X-Gm-Message-State: AOJu0Yzhkz+a7K8yPgwOC/7p3zjUL9aHcryK5W1LwGgcRGMWe8rx0nkJ
-	FKZlBES/3+VTsDGt2NAq9T4FeF9Tfc+x8wZLysSPn2OhG5HrKyC2
-X-Google-Smtp-Source: AGHT+IErVu63V4k0+Aq4pa/jHhmVEQBrs+2RsnmDS9vb3LEMXIfyc+CDCcw5kcox8aQnrm0Z/3H8aA==
-X-Received: by 2002:a17:903:25d5:b0:1d7:808:dcfb with SMTP id jc21-20020a17090325d500b001d70808dcfbmr5123860plb.91.1705997594253;
-        Tue, 23 Jan 2024 00:13:14 -0800 (PST)
-Received: from localhost.localdomain ([2001:250:4000:8246:d59a:da76:65b9:ef0])
-        by smtp.gmail.com with ESMTPSA id u9-20020a17090341c900b001d70c6d40f3sm7798578ple.237.2024.01.23.00.13.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jan 2024 00:13:13 -0800 (PST)
-From: Wenjie Qi <qwjhust@gmail.com>
-To: jaegeuk@kernel.org,
-	chao@kernel.org,
-	linux-f2fs-devel@lists.sourceforge.net,
-	linux-kernel@vger.kernel.org
-Cc: hustqwj@hust.edu.cn,
-	Wenjie Qi <qwjhust@gmail.com>
-Subject: [PATCH v3] f2fs: fix zoned block device information initialization
-Date: Tue, 23 Jan 2024 16:12:58 +0800
-Message-ID: <20240123081258.700-1-qwjhust@gmail.com>
-X-Mailer: git-send-email 2.43.0.windows.1
+        d=1e100.net; s=20230601; t=1705997647; x=1706602447;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lfMZ1E3cUmfIUyRbJhcNUyxEYBNYe0N54hD1T9iqNv0=;
+        b=CNVFEROJeOK1WxiYA+Af091RvGO7Plhk0Hcp7oZZLxlFjHqT292JTG4lYJcvhBUnLR
+         FxBSzQl8ELS2/POFNxoCjMcVKHndbUHizjyTSA2gEozlcwtQNxck9G2ZkVmp2bJ/bAQi
+         ZeQx9QL0VsvgQs3v7lLFgJMfU6wRLlZWO0I0iQawGbmIpAtXG/XqRu1Sll8qttTofMWw
+         fJB+rHEIUzdjJBAWVc8JeFTs1TbsqQ6lTIH42LfHsNK8CIyurkA9WtL7jnIHgPi3Kyrj
+         2Dm4g+htoIpUJ0Ciy2M9CAUSFVkEvcoS2+d+AW08/kSFV69IZebXi5w+NRxaKxWQ8MI2
+         anVA==
+X-Gm-Message-State: AOJu0YyiqxogbiAdAk3IBRvI5kkLAdwm4rwPT6n8pi0G3ov2n4J/TZ4P
+	iruA0+BNNoFDGH7CVxfaM9Whwul+zjyVpX1Hh/jbhZ1iN1IZAHhDZG4yyEv74N0=
+X-Google-Smtp-Source: AGHT+IGhLlXR7Pl7zlTS3Hz8Ao2MHFwPweaqQjs4H0Iez/XiocJAdKEBBQr0okBmKB16dopSG+RWmQ==
+X-Received: by 2002:a81:484e:0:b0:5ff:7c9d:61f7 with SMTP id v75-20020a81484e000000b005ff7c9d61f7mr4975435ywa.38.1705997647109;
+        Tue, 23 Jan 2024 00:14:07 -0800 (PST)
+Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com. [209.85.128.178])
+        by smtp.gmail.com with ESMTPSA id q8-20020a815c08000000b005f75cf6281fsm10109462ywb.5.2024.01.23.00.14.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 23 Jan 2024 00:14:06 -0800 (PST)
+Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-5ffcb478512so15288737b3.0;
+        Tue, 23 Jan 2024 00:14:06 -0800 (PST)
+X-Received: by 2002:a81:6dd7:0:b0:5ff:9175:b102 with SMTP id
+ i206-20020a816dd7000000b005ff9175b102mr4257992ywc.25.1705997646645; Tue, 23
+ Jan 2024 00:14:06 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240122235208.work.748-kees@kernel.org> <20240123002814.1396804-27-keescook@chromium.org>
+In-Reply-To: <20240123002814.1396804-27-keescook@chromium.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 23 Jan 2024 09:13:55 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdWa9tXQRHkkX-W+5n8kuCvEFZdsfStPtYGA0MZpTGX79Q@mail.gmail.com>
+Message-ID: <CAMuHMdWa9tXQRHkkX-W+5n8kuCvEFZdsfStPtYGA0MZpTGX79Q@mail.gmail.com>
+Subject: Re: [PATCH 27/82] m68k: Refactor intentional wrap-around calculation
+To: Kees Cook <keescook@chromium.org>
+Cc: linux-hardening@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, 
+	Arnd Bergmann <arnd@arndb.de>, Liam Howlett <liam.howlett@oracle.com>, 
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Hugh Dickins <hughd@google.com>, linux-m68k@lists.linux-m68k.org, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-If the max active zones of zoned devices are less than
-the active logs of F2FS, the device may error due to
-insufficient zone resources when multiple active logs are
-being written at the same time. If this value is 0, there is no limit.
+Hi Kees,
 
-Signed-off-by: Wenjie Qi <qwjhust@gmail.com>
----
- fs/f2fs/f2fs.h  |  1 +
- fs/f2fs/super.c | 18 ++++++++++++++++++
- 2 files changed, 19 insertions(+)
+On Tue, Jan 23, 2024 at 1:35=E2=80=AFAM Kees Cook <keescook@chromium.org> w=
+rote:
+> In an effort to separate intentional arithmetic wrap-around from
+> unexpected wrap-around, we need to refactor places that depend on this
+> kind of math. One of the most common code patterns of this is:
+>
+>         VAR + value < VAR
+>
+> Notably, this is considered "undefined behavior" for signed and pointer
+> types, which the kernel works around by using the -fno-strict-overflow
+> option in the build[1] (which used to just be -fwrapv). Regardless, we
+> want to get the kernel source to the position where we can meaningfully
+> instrument arithmetic wrap-around conditions and catch them when they
+> are unexpected, regardless of whether they are signed[2], unsigned[3],
+> or pointer[4] types.
+>
+> Refactor open-coded unsigned wrap-around addition test to use
+> check_add_overflow(), retaining the result for later usage (which removes
+> the redundant open-coded addition). This paves the way to enabling the
+> unsigned wrap-around sanitizer[2] in the future.
+>
+> Link: https://git.kernel.org/linus/68df3755e383e6fecf2354a67b08f92f185365=
+94 [1]
+> Link: https://github.com/KSPP/linux/issues/26 [2]
+> Link: https://github.com/KSPP/linux/issues/27 [3]
+> Link: https://github.com/KSPP/linux/issues/344 [4]
+> Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Liam Howlett <liam.howlett@oracle.com>
+> Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+> Cc: Hugh Dickins <hughd@google.com>
+> Cc: linux-m68k@lists.linux-m68k.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index 65294e3b0bef..669f84f6b0e5 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -1551,6 +1551,7 @@ struct f2fs_sb_info {
- 
- #ifdef CONFIG_BLK_DEV_ZONED
- 	unsigned int blocks_per_blkz;		/* F2FS blocks per zone */
-+	unsigned int max_active_zones;		/* max zone resources of the zoned device */
- #endif
- 
- 	/* for node-related operations */
-diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-index 206d03c82d96..aef41b54098c 100644
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -2385,6 +2385,16 @@ static int f2fs_remount(struct super_block *sb, int *flags, char *data)
- 	if (err)
- 		goto restore_opts;
- 
-+#ifdef CONFIG_BLK_DEV_ZONED
-+	if (sbi->max_active_zones && sbi->max_active_zones < F2FS_OPTION(sbi).active_logs) {
-+		f2fs_err(sbi,
-+			"zoned: max active zones %u is too small, need at least %u active zones",
-+				 sbi->max_active_zones, F2FS_OPTION(sbi).active_logs);
-+		err = -EINVAL;
-+		goto restore_opts;
-+	}
-+#endif
-+
- 	/* flush outstanding errors before changing fs state */
- 	flush_work(&sbi->s_error_work);
- 
-@@ -3932,6 +3942,14 @@ static int init_blkz_info(struct f2fs_sb_info *sbi, int devi)
- 	if (!f2fs_sb_has_blkzoned(sbi))
- 		return 0;
- 
-+	sbi->max_active_zones = bdev_max_active_zones(bdev);
-+	if (sbi->max_active_zones && sbi->max_active_zones < F2FS_OPTION(sbi).active_logs) {
-+		f2fs_err(sbi,
-+			"zoned: max active zones %u is too small, need at least %u active zones",
-+				 sbi->max_active_zones, F2FS_OPTION(sbi).active_logs);
-+		return -EINVAL;
-+	}
-+
- 	zone_sectors = bdev_zone_sectors(bdev);
- 	if (!is_power_of_2(zone_sectors)) {
- 		f2fs_err(sbi, "F2FS does not support non power of 2 zone sizes\n");
--- 
-2.34.1
+Thanks for your patch!
 
+> --- a/arch/m68k/kernel/sys_m68k.c
+> +++ b/arch/m68k/kernel/sys_m68k.c
+> @@ -391,10 +391,11 @@ sys_cacheflush (unsigned long addr, int scope, int =
+cache, unsigned long len)
+>
+>                 mmap_read_lock(current->mm);
+>         } else {
+> +               unsigned long sum;
+
+"sum" sounds like this is a dummy variable, to please the third
+parameter of check_add_overflow()...
+
+>                 struct vm_area_struct *vma;
+>
+>                 /* Check for overflow.  */
+
+I agree with Liam: please drop the comment.
+
+> -               if (addr + len < addr)
+> +               if (check_add_overflow(addr, len, &sum))
+>                         goto out;
+>
+>                 /*
+> @@ -403,7 +404,7 @@ sys_cacheflush (unsigned long addr, int scope, int ca=
+che, unsigned long len)
+>                  */
+>                 mmap_read_lock(current->mm);
+>                 vma =3D vma_lookup(current->mm, addr);
+> -               if (!vma || addr + len > vma->vm_end)
+> +               if (!vma || sum > vma->vm_end)
+
+... Oh, it is actually used. What about renaming it to "end" instead?
+
+>                         goto out_unlock;
+>         }
+
+With the above fixed:
+
+Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Acked-by: Geert Uytterhoeven <geert@linux-m68k.org>
+
+If you want me to take this through the m68k tree (for v6.9), please
+let me know.
+Thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
