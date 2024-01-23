@@ -1,23 +1,23 @@
-Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
+Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 164F85DF30
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 12:12:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE5F55EE86
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 12:12:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.119
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706011964; cv=none; b=TqJ/euDQWThaoihwDZ8c8Vbp6tgyK6+1LyHzNUyj70p6W2TT1J12SS71DGqRDJZheEcuMUYpUyVRzzxYg1Pb2fN0eNNxa/ozTh5OG/aA/zx1TiE8+8fokuxaHR+XaT0CP/EfNhbNFQX7fqdETxvPz/ijVZg/SCBSAKoic6211sI=
+	t=1706011967; cv=none; b=dqEACPZ9TV9NgPE2rc9pSdZG87AmrDBZv8YN4yYKYl/iqdm1OT6j5k/TTw5gAnIQrOevRGLorO8UpcDG1C5GAZUDF2qe3zfWSHpnhJM5XPIJl+IwPu9RYdqm7J/6qHvSD8slUJ5rdSuW+0hOZWxXCieq+hqdk1UdfKU0YsziQTU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706011964; c=relaxed/simple;
-	bh=bf8N058MM2i5Zf5QpJiVM/3LphTudf9h6j37YkLGJZg=;
+	s=arc-20240116; t=1706011967; c=relaxed/simple;
+	bh=APkNASydfGXYMRnXuI9Rfle0j1POhkAXYjwSdofzsBc=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RQU5+zOppUetXGF+PmUmYjXT1hzk2Wzt4MQeV1SOecucqZr6lkF5KiyTYUSfcY0eonx2X0bBSXDaMbsHX87rYk7x3belaw3jMN8b7wGq+ulKPkGOF0G84fi5759sW0RG7kI1XfldknnWLYdfrSmoKRlW3V0DXVlk5wa0WWCAmIQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; arc=none smtp.client-ip=115.124.30.131
+	 MIME-Version; b=RVEZ4/83yxiglC9DPS/rEJV54Dk9d5+MzDIi6Yos0jmv1u1WyaRzsQVqfYlzk6vGiENnCtCLHhh2JOcr6JycepIjr/9z3Zb0x7yWjElnnXR2XH5qWKZ1b7eSJlDFL8lyQYVtY35w1JOCe5TGN2Zl52N/AEwO9E1sFjM7i4lEvcg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; arc=none smtp.client-ip=115.124.30.119
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046051;MF=yaoma@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0W.CnxF7_1706011949;
-Received: from localhost.localdomain(mailfrom:yaoma@linux.alibaba.com fp:SMTPD_---0W.CnxF7_1706011949)
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R381e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046051;MF=yaoma@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0W.CnxHG_1706011955;
+Received: from localhost.localdomain(mailfrom:yaoma@linux.alibaba.com fp:SMTPD_---0W.CnxHG_1706011955)
           by smtp.aliyun-inc.com;
-          Tue, 23 Jan 2024 20:12:32 +0800
+          Tue, 23 Jan 2024 20:12:36 +0800
 From: Bitao Hu <yaoma@linux.alibaba.com>
 To: dianders@chromium.org,
 	akpm@linux-foundation.org,
@@ -27,9 +27,9 @@ To: dianders@chromium.org,
 	liusong@linux.alibaba.com
 Cc: linux-kernel@vger.kernel.org,
 	Bitao Hu <yaoma@linux.alibaba.com>
-Subject: [PATCH 1/3] watchdog/softlockup: low-overhead detection of interrupt storm
-Date: Tue, 23 Jan 2024 20:12:21 +0800
-Message-Id: <20240123121223.22318-2-yaoma@linux.alibaba.com>
+Subject: [PATCH 3/3] watchdog/softlockup: add parameter to control the reporting of time-consuming hardirq
+Date: Tue, 23 Jan 2024 20:12:23 +0800
+Message-Id: <20240123121223.22318-4-yaoma@linux.alibaba.com>
 X-Mailer: git-send-email 2.37.1 (Apple Git-137.1)
 In-Reply-To: <20240123121223.22318-1-yaoma@linux.alibaba.com>
 References: <20240123121223.22318-1-yaoma@linux.alibaba.com>
@@ -39,139 +39,122 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-The following softlockup is caused by interrupt storm, but it cannot be
-identified from the call tree. Because the call tree is just a snapshot
-and doesn't fully capture the behavior of the CPU during the soft lockup.
-  watchdog: BUG: soft lockup - CPU#28 stuck for 23s! [fio:83921]
-  ...
-  Call trace:
-    __do_softirq+0xa0/0x37c
-    __irq_exit_rcu+0x108/0x140
-    irq_exit+0x14/0x20
-    __handle_domain_irq+0x84/0xe0
-    gic_handle_irq+0x80/0x108
-    el0_irq_naked+0x50/0x58
-
-Therefore，I think it is necessary to report CPU utilization during the
-softlockup_thresh period (report once every sample_period, for a total
-of 5 reportings), like this:
-  watchdog: BUG: soft lockup - CPU#28 stuck for 23s! [fio:83921]
-  CPU#28 Utilization every 4s during lockup:
-    #1: 0.0% system, 0.0% softirq, 100.0% hardirq, 0.0% idle
-    #2: 0.0% system, 0.0% softirq, 100.0% hardirq, 0.0% idle
-    #3: 0.0% system, 0.0% softirq, 100.0% hardirq, 0.0% idle
-    #4: 0.0% system, 0.0% softirq, 100.0% hardirq, 0.0% idle
-    #5: 0.0% system, 0.0% softirq, 100.0% hardirq, 0.0% idle
-  ...
-
-This would be helpful in determining whether an interrupt storm has
-occurred or in identifying the cause of the softlockup. The criteria for
-determination are as follows:
-  a. If the hardirq utilization is high, then interrupt storm should be
-  considered and the root cause cannot be determined from the call tree.
-  b. If the softirq utilization is high, then we could analyze the call
-  tree but it may cannot reflect the root cause.
-  c. If the system utilization is high, then we could analyze the root
-  cause from the call tree.
+To obtain a more accurate cause of softlockup, we use tracepoints to
+measure the time of each hardirq, which may have some impact on
+performance. A parameter could be added to allow users to enable
+this feature on demand.
 
 Signed-off-by: Bitao Hu <yaoma@linux.alibaba.com>
 ---
- kernel/watchdog.c | 58 +++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 58 insertions(+)
+ kernel/watchdog.c | 51 ++++++++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 48 insertions(+), 3 deletions(-)
 
 diff --git a/kernel/watchdog.c b/kernel/watchdog.c
-index 81a8862295d6..9fad10e0a147 100644
+index f347c5d8c5c1..314dfd301d8c 100644
 --- a/kernel/watchdog.c
 +++ b/kernel/watchdog.c
-@@ -23,6 +23,8 @@
- #include <linux/sched/debug.h>
- #include <linux/sched/isolation.h>
- #include <linux/stop_machine.h>
-+#include <linux/kernel_stat.h>
-+#include <linux/math64.h>
+@@ -303,6 +303,9 @@ unsigned int __read_mostly softlockup_panic =
+ static bool softlockup_initialized __read_mostly;
+ static u64 __read_mostly sample_period;
  
- #include <asm/irq_regs.h>
- #include <linux/kvm_para.h>
-@@ -441,6 +443,58 @@ static int is_softlockup(unsigned long touch_ts,
- 	return 0;
++static int __read_mostly softlockup_irqtrace;
++static bool softlockup_irqtrace_initialized __read_mostly;
++
+ /* Timestamp taken after the last successful reschedule. */
+ static DEFINE_PER_CPU(unsigned long, watchdog_touch_ts);
+ /* Timestamp of the last softlockup report. */
+@@ -318,6 +321,13 @@ static int __init softlockup_panic_setup(char *str)
+ }
+ __setup("softlockup_panic=", softlockup_panic_setup);
+ 
++static int __init softlockup_irqtrace_setup(char *str)
++{
++	get_option(&str, &softlockup_irqtrace);
++	return 1;
++}
++__setup("softlockup_irqtrace=", softlockup_irqtrace_setup);
++
+ static int __init nowatchdog_setup(char *str)
+ {
+ 	watchdog_user_enabled = 0;
+@@ -635,7 +645,7 @@ static void print_hardirq_time(void)
+ 	u64 start_time, now, a;
+ 	u32 period_us, i, b;
+ 
+-	if (test_bit(SOFTLOCKUP_HARDIRQ, this_cpu_ptr(&softlockup_flags))) {
++	if (softlockup_irqtrace && test_bit(SOFTLOCKUP_HARDIRQ, this_cpu_ptr(&softlockup_flags))) {
+ 		start_time = __this_cpu_read(hardirq_start_time);
+ 		now = local_clock();
+ 		period_us = (now - start_time)/1000;
+@@ -856,7 +866,10 @@ static void softlockup_stop_all(void)
+ 	if (!softlockup_initialized)
+ 		return;
+ 
+-	unhook_hardirq_events();
++	if (softlockup_irqtrace_initialized) {
++		unhook_hardirq_events();
++		softlockup_irqtrace_initialized = false;
++	}
+ 
+ 	for_each_cpu(cpu, &watchdog_allowed_mask)
+ 		smp_call_on_cpu(cpu, softlockup_stop_fn, NULL, false);
+@@ -874,7 +887,10 @@ static void softlockup_start_all(void)
+ {
+ 	int cpu;
+ 
+-	hook_hardirq_events();
++	if (softlockup_irqtrace && !softlockup_irqtrace_initialized) {
++		hook_hardirq_events();
++		softlockup_irqtrace_initialized = true;
++	}
+ 
+ 	cpumask_copy(&watchdog_allowed_mask, &watchdog_cpumask);
+ 	for_each_cpu(cpu, &watchdog_allowed_mask)
+@@ -1090,6 +1106,26 @@ int proc_watchdog_thresh(struct ctl_table *table, int write,
+ 	return err;
  }
  
-+#ifdef CONFIG_IRQ_TIME_ACCOUNTING
-+static DEFINE_PER_CPU(u64, cpustat_old[NR_STATS]);
-+static DEFINE_PER_CPU(u64, cpustat_diff[5][NR_STATS]);
-+static DEFINE_PER_CPU(int, cpustat_tail);
-+
-+static void update_cpustat(void)
++/*
++ * /proc/sys/kernel/softlockup_irqtrace
++ */
++int proc_softlockup_irqtrace(struct ctl_table *table, int write,
++			 void *buffer, size_t *lenp, loff_t *ppos)
 +{
-+	u64 *old = this_cpu_ptr(cpustat_old);
-+	u64 (*diff)[NR_STATS] = this_cpu_ptr(cpustat_diff);
-+	int tail = this_cpu_read(cpustat_tail), i;
-+	struct kernel_cpustat kcpustat;
-+	u64 *cpustat = kcpustat.cpustat;
++	int err, old;
 +
-+	kcpustat_cpu_fetch(&kcpustat, smp_processor_id());
-+	for (i = 0; i < NR_STATS; i++) {
-+		diff[tail][i] = cpustat[i] - old[i];
-+		old[i] = cpustat[i];
-+	}
-+	this_cpu_write(cpustat_tail, (tail + 1) % 5);
++	mutex_lock(&watchdog_mutex);
++
++	old = READ_ONCE(softlockup_irqtrace);
++	err = proc_dointvec_minmax(table, write, buffer, lenp, ppos);
++
++	if (!err && write && old != READ_ONCE(softlockup_irqtrace))
++		proc_watchdog_update();
++
++	mutex_unlock(&watchdog_mutex);
++	return err;
 +}
 +
-+static void print_cpustat(void)
-+{
-+	int i, j, k;
-+	u64 a[5][NR_STATS], b[5][NR_STATS];
-+	u64 (*diff)[NR_STATS] = this_cpu_ptr(cpustat_diff);
-+	int tail = this_cpu_read(cpustat_tail);
-+	u32 period_us = sample_period / 1000;
-+
-+	for (i = 0; i < 5; i++) {
-+		for (j = 0; j < NR_STATS; j++) {
-+			a[i][j] = 100 * (diff[i][j] / 1000);
-+			b[i][j] = 10 * do_div(a[i][j], period_us);
-+			do_div(b[i][j], period_us);
-+		}
-+	}
-+	printk(KERN_CRIT "CPU#%d Utilization every %us during lockup:\n",
-+		smp_processor_id(), period_us/1000000);
-+	for (k = 0, i = tail; k < 5; k++, i = (i + 1) % 5) {
-+		printk(KERN_CRIT "\t#%d: %llu.%llu%% system,\t%llu.%llu%% softirq,\t"
-+			"%llu.%llu%% hardirq,\t%llu.%llu%% idle\n", k+1,
-+			a[i][CPUTIME_SYSTEM], b[i][CPUTIME_SYSTEM],
-+			a[i][CPUTIME_SOFTIRQ], b[i][CPUTIME_SOFTIRQ],
-+			a[i][CPUTIME_IRQ], b[i][CPUTIME_IRQ],
-+			a[i][CPUTIME_IDLE], b[i][CPUTIME_IDLE]);
-+	}
-+}
-+#else
-+static inline void update_cpustat(void) { }
-+static inline void print_cpustat(void) { }
-+#endif
-+
- /* watchdog detector functions */
- static DEFINE_PER_CPU(struct completion, softlockup_completion);
- static DEFINE_PER_CPU(struct cpu_stop_work, softlockup_stop_work);
-@@ -504,6 +558,9 @@ static enum hrtimer_restart watchdog_timer_fn(struct hrtimer *hrtimer)
- 	 */
- 	period_ts = READ_ONCE(*this_cpu_ptr(&watchdog_report_ts));
- 
-+	/* update cpu usage stat */
-+	update_cpustat();
-+
- 	/* Reset the interval when touched by known problematic code. */
- 	if (period_ts == SOFTLOCKUP_DELAY_REPORT) {
- 		if (unlikely(__this_cpu_read(softlockup_touch_sync))) {
-@@ -539,6 +596,7 @@ static enum hrtimer_restart watchdog_timer_fn(struct hrtimer *hrtimer)
- 		pr_emerg("BUG: soft lockup - CPU#%d stuck for %us! [%s:%d]\n",
- 			smp_processor_id(), duration,
- 			current->comm, task_pid_nr(current));
-+		print_cpustat();
- 		print_modules();
- 		print_irqtrace_events(current);
- 		if (regs)
+ /*
+  * The cpumask is the mask of possible cpus that the watchdog can run
+  * on, not the mask of cpus it is actually running on.  This allows the
+@@ -1158,6 +1194,15 @@ static struct ctl_table watchdog_sysctls[] = {
+ 		.extra1		= SYSCTL_ZERO,
+ 		.extra2		= SYSCTL_ONE,
+ 	},
++	{
++		.procname	= "softlockup_irqtrace",
++		.data		= &softlockup_irqtrace,
++		.maxlen		= sizeof(int),
++		.mode		= 0644,
++		.proc_handler	= proc_softlockup_irqtrace,
++		.extra1		= SYSCTL_ZERO,
++		.extra2		= SYSCTL_ONE,
++	},
+ #ifdef CONFIG_SMP
+ 	{
+ 		.procname	= "softlockup_all_cpu_backtrace",
 -- 
 2.37.1 (Apple Git-137.1)
 
