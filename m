@@ -1,137 +1,107 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD8175A0E7;
-	Tue, 23 Jan 2024 09:58:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D1795BAFA;
+	Tue, 23 Jan 2024 09:58:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706003910; cv=none; b=Dikb9ASX8Ksg39S1gWrYLAgHNHLs2483aFet9N1fqPxA517w2OT77Qoj+aQzsdyVK+zcmoA7MyVhs7TPmr4JKRgFfr647TeMuFpwxeZHb4XYHlLvGwGUJEIMRWa1cYfyjNNzztDofjTh6K/v7yYXuiK90r+TXVpfAwvjCG7XosY=
+	t=1706003922; cv=none; b=VJGYIuJ3USHACscLymRcNj6juwHjyaV7B/Nk5zyC1bMUbKe3ShfukZpEaouFjqm7URqe8hFdKYPV2RauxWWMy3Pldk1qxMyIQu8gzY7u0mLLKcwwlwKnRqFH8QGjg8E9wkroVwTHM1xUDyxDLZmQTJSHwyWd5Zqf3JlWKnr7rtw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706003910; c=relaxed/simple;
-	bh=B/XdHveTk/vCgwuSUasgaL3WoKuViUrGU6zatSifKeg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=qDf40SeUmZUeAVXqAL6X5t2zXJuoBG/0qy48NQUoUMCK2PzmC3tezljtSZ5hLLKYDsGWj055JZa3Xtz9aVumamDdqttIlomOckDow6C2MViX51Ha4Zb7Qy+34he/u3AhveSm6Ynxkv5IvIfmDzIaRx+iit1PKHUtlNwCqjeMUCM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=lWdQQ02p; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="lWdQQ02p"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40N6NTqu019016;
-	Tue, 23 Jan 2024 09:58:25 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=ML50tmsauSLPSsxul+Bt7KDrvonH8WWyY0pjbre6+vE=; b=lW
-	dQQ02pnQh1KUWrnlv/r0FUna/v/1rdnVEmKQuTU0GuOezewIE+i8SrYcwBV6HSWH
-	Gr+GkhuF0QdJ8XTOD5UJ+kY1FJNNxMsqlJDaxf4yy+4tDxQcM2ElT8v8sPDBHWD8
-	bknATzXIX8C3do7D+0b/hQP+LIbFWCuMHV7xMWiBMZY+K+IYPMxCFiHbwu2zsfdH
-	1td2Itsu/p85LHsEb2yVr9qVSAOakR47XpBCH+5Pi1MbvNacqRkz6Hn+M0xhm9Ea
-	QTy91t+Ns84tkHMoIxUWCif8yBcyOvabYkbkmyWXmq1F9hDb/3E2sZ9xTh2Vh95J
-	qbi3lodjGvE7n5pz0few==
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vspw8u07j-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 23 Jan 2024 09:58:24 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 40N9wN6E030712
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 23 Jan 2024 09:58:23 GMT
-Received: from [10.214.66.81] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Tue, 23 Jan
- 2024 01:58:15 -0800
-Message-ID: <1359cab8-9459-826d-4f7b-b5ffef44bebc@quicinc.com>
-Date: Tue, 23 Jan 2024 15:28:11 +0530
+	s=arc-20240116; t=1706003922; c=relaxed/simple;
+	bh=nxl7RImlPHt2woc7MH+W+qg3tN0qm3GwTQesAwY6riA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=L/hSOVu7bV0xZosvP5mWLL+ia9aCd4gNepTPhjAYKT5L65q/jt6HQVr6zUCF1Du8FEP8R/PTbhcOeaJfCFuyFEq0SS6MfimKtfHusVD1EUSseJ4/yhEUVIhbzKBmrW/beQscVgv6XQDejUXJTbwrwQSNY070+sp3QLMjQjXcNrc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7820A1FB;
+	Tue, 23 Jan 2024 01:59:25 -0800 (PST)
+Received: from FVFF77S0Q05N (unknown [10.57.48.47])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E7C533F5A1;
+	Tue, 23 Jan 2024 01:58:37 -0800 (PST)
+Date: Tue, 23 Jan 2024 09:58:35 +0000
+From: Mark Rutland <mark.rutland@arm.com>
+To: Kees Cook <keescook@chromium.org>
+Cc: linux-hardening@vger.kernel.org,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Kalesh Singh <kaleshsingh@google.com>,
+	Fuad Tabba <tabba@google.com>, Mark Brown <broonie@kernel.org>,
+	"Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>,
+	Marc Zyngier <maz@kernel.org>, linux-arm-kernel@lists.infradead.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 40/82] arm64: stacktrace: Refactor intentional
+ wrap-around test
+Message-ID: <Za-NyyOP1IlQbFZg@FVFF77S0Q05N>
+References: <20240122235208.work.748-kees@kernel.org>
+ <20240123002814.1396804-40-keescook@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH v7 4/4] arm64: dts: qcom: sm8650: add missing
- qlink_logging reserved memory for mpss
-Content-Language: en-US
-To: Neil Armstrong <neil.armstrong@linaro.org>,
-        Andy Gross
-	<agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konrad.dybcio@linaro.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Rob
- Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Manivannan Sadhasivam <mani@kernel.org>
-CC: <linux-arm-msm@vger.kernel.org>, <linux-remoteproc@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20240123-topic-sm8650-upstream-remoteproc-v7-0-61283f50162f@linaro.org>
- <20240123-topic-sm8650-upstream-remoteproc-v7-4-61283f50162f@linaro.org>
-From: Mukesh Ojha <quic_mojha@quicinc.com>
-In-Reply-To: <20240123-topic-sm8650-upstream-remoteproc-v7-4-61283f50162f@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: pIld4pwsZ4YtLYk6XpX3LP3sF9Fkkeyo
-X-Proofpoint-ORIG-GUID: pIld4pwsZ4YtLYk6XpX3LP3sF9Fkkeyo
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-23_04,2024-01-23_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 malwarescore=0
- adultscore=0 mlxscore=0 spamscore=0 lowpriorityscore=0 bulkscore=0
- clxscore=1015 suspectscore=0 impostorscore=0 mlxlogscore=902
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2311290000 definitions=main-2401230071
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240123002814.1396804-40-keescook@chromium.org>
 
-
-
-On 1/23/2024 2:21 PM, Neil Armstrong wrote:
-> The qlink_logging memory region is also used by the modem firmware,
-> add it to the reserved memories and add it to the MPSS memory regions.
+On Mon, Jan 22, 2024 at 04:27:15PM -0800, Kees Cook wrote:
+> In an effort to separate intentional arithmetic wrap-around from
+> unexpected wrap-around, we need to refactor places that depend on this
+> kind of math. One of the most common code patterns of this is:
 > 
-> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
-
-LGTM,
-
-Reviewed-by: Mukesh Ojha <quic_mojha@quicinc.com>
-
--Mukesh
-
+> 	VAR + value < VAR
+> 
+> Notably, this is considered "undefined behavior" for signed and pointer
+> types, which the kernel works around by using the -fno-strict-overflow
+> option in the build[1] (which used to just be -fwrapv). Regardless, we
+> want to get the kernel source to the position where we can meaningfully
+> instrument arithmetic wrap-around conditions and catch them when they
+> are unexpected, regardless of whether they are signed[2], unsigned[3],
+> or pointer[4] types.
+> 
+> Refactor open-coded wrap-around addition test to use add_would_overflow().
+> This paves the way to enabling the wrap-around sanitizers in the future.
+> 
+> Link: https://git.kernel.org/linus/68df3755e383e6fecf2354a67b08f92f18536594 [1]
+> Link: https://github.com/KSPP/linux/issues/26 [2]
+> Link: https://github.com/KSPP/linux/issues/27 [3]
+> Link: https://github.com/KSPP/linux/issues/344 [4]
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Kalesh Singh <kaleshsingh@google.com>
+> Cc: Fuad Tabba <tabba@google.com>
+> Cc: Mark Brown <broonie@kernel.org>
+> Cc: "Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>
+> Cc: Marc Zyngier <maz@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 > ---
->   arch/arm64/boot/dts/qcom/sm8650.dtsi | 8 +++++++-
->   1 file changed, 7 insertions(+), 1 deletion(-)
+>  arch/arm64/include/asm/stacktrace/common.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/arch/arm64/boot/dts/qcom/sm8650.dtsi b/arch/arm64/boot/dts/qcom/sm8650.dtsi
-> index 2df77123a8c7..7a1cbc823306 100644
-> --- a/arch/arm64/boot/dts/qcom/sm8650.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sm8650.dtsi
-> @@ -525,6 +525,11 @@ qdss_mem: qdss@82800000 {
->   			no-map;
->   		};
->   
-> +		qlink_logging_mem: qlink-logging@84800000 {
-> +			reg = <0 0x84800000 0 0x200000>;
-> +			no-map;
-> +		};
-> +
->   		mpss_dsm_mem: mpss-dsm@86b00000 {
->   			reg = <0 0x86b00000 0 0x4900000>;
->   			no-map;
-> @@ -2627,7 +2632,8 @@ remoteproc_mpss: remoteproc@4080000 {
->   					     "mss";
->   
->   			memory-region = <&mpss_mem>, <&q6_mpss_dtb_mem>,
-> -					<&mpss_dsm_mem>, <&mpss_dsm_mem_2>;
-> +					<&mpss_dsm_mem>, <&mpss_dsm_mem_2>,
-> +					<&qlink_logging_mem>;
->   
->   			qcom,qmp = <&aoss_qmp>;
->   
+> diff --git a/arch/arm64/include/asm/stacktrace/common.h b/arch/arm64/include/asm/stacktrace/common.h
+> index f63dc654e545..6e0cb84961f8 100644
+> --- a/arch/arm64/include/asm/stacktrace/common.h
+> +++ b/arch/arm64/include/asm/stacktrace/common.h
+> @@ -49,7 +49,7 @@ static inline bool stackinfo_on_stack(const struct stack_info *info,
+>  	if (!info->low)
+>  		return false;
+>  
+> -	if (sp < info->low || sp + size < sp || sp + size > info->high)
+> +	if (sp < info->low || add_would_overflow(sp, size) || sp + size > info->high)
+>  		return false;
+
+This looks fine to me, so FWIW:
+
+Acked-by: Mark Rutland <mark.rutland@arm.com>
+
+Mark.
+
+>  
+>  	return true;
+> -- 
+> 2.34.1
 > 
