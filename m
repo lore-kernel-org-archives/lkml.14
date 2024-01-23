@@ -1,126 +1,106 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44B445FDBE
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 17:43:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53D5880039;
+	Tue, 23 Jan 2024 17:43:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706031781; cv=none; b=PbjR87hTB8/CdZD+YbPUFHU+7UXAbxGvKM35zBL3S1InKmDg1cih0XmRYIARH6DVRjXMgERrBk5zp4ayXKB/DAeQuoKaM32bXhWNpDEPhOhLy/5jZqkHOgA3Ojp3bz+PAThvD7Rxgg65ZBOp9OSgmzMzGXY9oMu5K/JpKSRJ9BY=
+	t=1706031802; cv=none; b=J6P+wqe58D3oXEyFRsWGFw14WBFENIU3I6MuBlTzlNVfvynBKOVi+xBtuqmcK28Lv2a/OYNCbXo3cybHtG2tTrcWr66fkStGNYw95UV67lkXATZRuP3l3rAGAWv1o9v5tMxEr9d9bOl/7DQvblGsJmITM4gHXl99cN1/YzKPrG0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706031781; c=relaxed/simple;
-	bh=n3jKIAZHq3vd21IsvzrvUoALWXXBX28mPv7aETmBltQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TVVbI+7NL7YXeNfWZVE/7F8STNtaNVFb0lFoO46KjtKhQOtzebvFjqbXf+TUVTuoZD/nF5KT/uo0XKaTbMCS/zWa3y2R5kkrQxj4R2PH9/8WM4iyweVsWUy2+CY0W56Q93ZTYvQaWDntEBp2cvy2wN6AcXrNY6IphYldHnKy6i8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=g+00Oxld; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1706031802; c=relaxed/simple;
+	bh=kTxBbsO7xNZINKwTMim0Kh90fmp9yZ6WuJ5NL2lrpH8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=M6YExxNlfvUYD9B8dpFRf31pI3rHA9EE7XlZYB3hrOLF3YfuivrTb4sI/5zLt0nAX/zg7ojWHOykTLwruA/cK7Lw7L7Dp8ehLqG/LjzrGhoiPyqXnKa0cnkIWUfUP+mmsMEsmZBLDsy5y8se4BGo2i4GdVZ4M3xXAecj8eSK3oU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j3tVwSos; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="g+00Oxld"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1d72043fa06so395ad.1
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 09:43:00 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j3tVwSos"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-33929364bdaso2908665f8f.2;
+        Tue, 23 Jan 2024 09:43:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1706031779; x=1706636579; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1706031799; x=1706636599; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=+lsOV8IeC537w+9Ec2CkST/B5Vp6PgwtVbjoxdE5XqY=;
-        b=g+00OxldrvhzCkDaVfoxzsjN8rLHhK31Xx2OsxOH/X0cKxRNOYGaEZLstGwvKkc5Lt
-         hX6ti6vlSufChqA5jbvT71YOYT6gmhCCYQJMlCAHw4I/9MJbpI47GmrKXbMF2XnrBzrR
-         OUUxc4JIAQiaNzkxDBj5mh91/hTpNjvmuGydoqkgitI7ZPcOgXqs8sahYlkHLfKQIyjl
-         Gw3TLP4MAQHvxw8dHMJeSDbybyvUZUhkc+Cz/weGX4DJdkkK/O9sFDM+SU66tPnZmjcR
-         gfKBM3iMvJrTjWQIz4NRyyLX7LYgkm6Lng1ZNhBxTzgV6TztXBsxfLnkYDN5hxWMJIV4
-         70VQ==
+        bh=kTxBbsO7xNZINKwTMim0Kh90fmp9yZ6WuJ5NL2lrpH8=;
+        b=j3tVwSosK94AznslSO4C3TOR88Ib1hAZmYTSDjkrBPop8xnaocZdmd3CUxqRTxe4S0
+         IJz4E6uDPKZi+tqy7y2QLpLClUSlNusUSa8jt5U6teno87b/o1kji42yuyRfBVOjQ4WS
+         SzFTYHOwNi+LevOV3z0lcz7owCtmazmWvpuxgko0PHjVTUoreoD8XOghgoxeC+94bYfd
+         6eCP+KykyZRk7uJA5OuuPGWgTfwbVKpk94n9OBAoy8zjE/eIQQRcmffvBDXlQel64Whg
+         FF/auU3tZ0AR+lLNdus9YuJxPIYqD4vPxwwif0p+B4CTt+Xo5xW9kJ7MIAAYGZzlYTks
+         JiEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706031779; x=1706636579;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1706031799; x=1706636599;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=+lsOV8IeC537w+9Ec2CkST/B5Vp6PgwtVbjoxdE5XqY=;
-        b=vGRGFn7cE27k2lfmRGXzTyNMc2ParBNYD/SraQIX8ZSmy4I+3iPECTcdNZKVUJ98gA
-         qreYLcuqIIiUvP5CRpM2T0eMXomutoeCMsiwBUE0dBOeXptfbwHVZJBKyKnM3h6SAbek
-         WZza4XIqIzR0mgVTavQNSi+s8sqBONYWa6meATQ3Sq97wIUWvmeW3jBonWlW2Az9IEly
-         EQ06QIFNziT9pm8j/za7fqgmHqqJmLcK4roKy6PDTdQZGmrLcH6hI3jZIAlaL1JNnMNJ
-         CSHupwRk2EruhkBgGlNYq81ysx0w1hrD2nDXuy8EvytzJsOhSmIISTYNijCeqW8H40Pi
-         WYIw==
-X-Gm-Message-State: AOJu0Yzi0qiu1CoMPbMy8eautzDs81BI8Xocf1WfCCeLl3rLuqRTe4j0
-	bHCyHaPbv2S1StF7A/9Wa5ukPM9xyQc9IUsegMtTGqAryErykRYkmSm2iNTu1XdpG/zCEFjBv3c
-	gqaMOxPGJ5Kho0pe75Bpnx4BEnw6xhPe0juIKZmO0LCH+oIaxsw/0
-X-Google-Smtp-Source: AGHT+IF1UbkrcinQVrOa9/H7VTo5/9FAKWEP3LSPlRx0C1zaxx4BKyW1DsJvy16rHG9mGfBfPDYgrH4qkhdMwpfTXU4=
-X-Received: by 2002:a17:903:124f:b0:1d7:5e3:2c9a with SMTP id
- u15-20020a170903124f00b001d705e32c9amr30274plh.22.1706031779264; Tue, 23 Jan
- 2024 09:42:59 -0800 (PST)
+        bh=kTxBbsO7xNZINKwTMim0Kh90fmp9yZ6WuJ5NL2lrpH8=;
+        b=cw14qRMlhKl8qOkFWveo8S2wi6/XcSuGsdDbQzO7bcYAPFMNjvUKvZT72oyPGXRAz6
+         xQ2lAIFi4rY8ww3Khv+3k6m+uOBYJYfamMHHXvsY+QsV3Coo/pR7xaBjXo/xszm9iSqF
+         /qYrosQ0AoZ1gcUwxrIHZeWMorOjbxfZ4hdqq0qE9BnUGIYMEpX+WckZzAMwUnA2qEZb
+         w2WlckHlsEO2nCRs61gGhchLUHv+8B7+Hob9TUPtUM1w1EfhSOgNw9RtwJBjISIT7d2d
+         xnmPZxbGDElxNGNgdLKIGYNHfNNp2LGltiF+Nq6NO6zRjagjGmVBhITQYxYuoTRa41K8
+         WNog==
+X-Gm-Message-State: AOJu0YxIjayJA8oydTJQlOg2aPEZ5VbPGdqJcbuXlKqDKoY3ZiZmSpT6
+	+CYPyJFQTCEsfqPO5ECs8dYUwpozqabJw6zP4ktDKA5EuZz6PLY5u0qfE1cF
+X-Google-Smtp-Source: AGHT+IEgZPKPFdnWg5569ss0DlAqGEitJtHlNF1gG2/gBSvhOkjYp8Mr7g+2XGWViwxLPVQ1X8/9wA==
+X-Received: by 2002:a5d:4f8e:0:b0:337:bb0f:3702 with SMTP id d14-20020a5d4f8e000000b00337bb0f3702mr4120418wru.35.1706031799047;
+        Tue, 23 Jan 2024 09:43:19 -0800 (PST)
+Received: from jernej-laptop.localnet (86-58-14-70.dynamic.telemach.net. [86.58.14.70])
+        by smtp.gmail.com with ESMTPSA id y6-20020a5d6146000000b003392f625adcsm7148732wrt.36.2024.01.23.09.43.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Jan 2024 09:43:18 -0800 (PST)
+From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
+To: linux-kernel@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>
+Cc: Randy Dunlap <rdunlap@infradead.org>,
+ Emilio =?ISO-8859-1?Q?L=F3pez?= <emilio@elopez.com.ar>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>,
+ linux-clk@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
+ Samuel Holland <samuel@sholland.org>, linux-arm-kernel@lists.infradead.org,
+ linux-sunxi@lists.linux.dev
+Subject: Re: [PATCH] clk: sunxi: usb: fix kernel-doc warnings
+Date: Tue, 23 Jan 2024 18:43:17 +0100
+Message-ID: <2312051.ElGaqSPkdT@jernej-laptop>
+In-Reply-To: <20240121051858.17647-1-rdunlap@infradead.org>
+References: <20240121051858.17647-1-rdunlap@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240122095955.2647989-1-tmricht@linux.ibm.com>
-In-Reply-To: <20240122095955.2647989-1-tmricht@linux.ibm.com>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 23 Jan 2024 09:42:48 -0800
-Message-ID: <CAP-5=fVmJry0gGNV+n4tp6LPgK6=w2EDf7dRA+nBQx3mMJRc-w@mail.gmail.com>
-Subject: Re: [PATCH v2] perf test: Fix test case perf script tests on s390
-To: Thomas Richter <tmricht@linux.ibm.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	acme@kernel.org, namhyung@kernel.org, svens@linux.ibm.com, gor@linux.ibm.com, 
-	sumanthk@linux.ibm.com, hca@linux.ibm.com
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
 
-On Mon, Jan 22, 2024 at 2:00=E2=80=AFAM Thomas Richter <tmricht@linux.ibm.c=
-om> wrote:
->
-> In linux next repo, test case 'perf script tests' fails on s390.
-> The root case is a command line invocation of perf record with
-> call-graph information. On s390 only dwarf formatted call-graphs
-> are supported and only on software events.
->
-> Change the command line parameters fors s390.
->
-> Output before:
->  # perf test 89
->  89: perf script tests              : FAILED!
->  #
->
-> Output after:
->  # perf test 89
->  89: perf script tests              : Ok
->  #
->
-> Fixes: 0dd5041c9a0e ("perf addr_location: Add init/exit/copy functions")
-> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-> Cc: Ian Rogers <irogers@google.com>
+Dne nedelja, 21. januar 2024 ob 06:18:57 CET je Randy Dunlap napisal(a):
+> Move the function description comment to immediately above the
+> function implementation, the add function parameter descriptions to
+> prevent kernel-doc warnings:
+>=20
+> clk-usb.c:80: warning: expecting prototype for sunxi_usb_clk_setup(). Pro=
+totype was for SUNXI_USB_MAX_SIZE() instead
+> clk-usb.c:91: warning: Function parameter or struct member 'node' not des=
+cribed in 'sunxi_usb_clk_setup'
+> clk-usb.c:91: warning: Function parameter or struct member 'data' not des=
+cribed in 'sunxi_usb_clk_setup'
+> clk-usb.c:91: warning: Function parameter or struct member 'lock' not des=
+cribed in 'sunxi_usb_clk_setup'
+>=20
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Emilio L=F3pez <emilio@elopez.com.ar>
+> Cc: Michael Turquette <mturquette@baylibre.com>
+> Cc: Stephen Boyd <sboyd@kernel.org>
+> Cc: linux-clk@vger.kernel.org
+> Cc: Chen-Yu Tsai <wens@csie.org>
+> Cc: Jernej Skrabec <jernej.skrabec@gmail.com>
+> Cc: Samuel Holland <samuel@sholland.org>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-sunxi@lists.linux.dev
 
-Thanks Thomas!
-Reviewed-by: Ian Rogers <irogers@google.com>
+Acked-by: Jernej Skrabec <jernej.skrabec@gmail.com>
 
-> ---
->  tools/perf/tests/shell/script.sh | 9 ++++++++-
->  1 file changed, 8 insertions(+), 1 deletion(-)
->
-> diff --git a/tools/perf/tests/shell/script.sh b/tools/perf/tests/shell/sc=
-ript.sh
-> index 5ae7bd0031a8..2973adab445d 100755
-> --- a/tools/perf/tests/shell/script.sh
-> +++ b/tools/perf/tests/shell/script.sh
-> @@ -54,7 +54,14 @@ def sample_table(*args):
->  def call_path_table(*args):
->      print(f'call_path_table({args}')
->  _end_of_file_
-> -       perf record -g -o "${perfdatafile}" true
-> +       case $(uname -m)
-> +       in s390x)
-> +               cmd_flags=3D"--call-graph dwarf -e cpu-clock";;
-> +       *)
-> +               cmd_flags=3D"-g";;
-> +       esac
-> +
-> +       perf record $cmd_flags -o "${perfdatafile}" true
->         perf script -i "${perfdatafile}" -s "${db_test}"
->         echo "DB test [Success]"
->  }
-> --
-> 2.43.0
->
->
+Best regards,
+Jernej
+
+
