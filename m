@@ -1,121 +1,103 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BA5251C54
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 09:01:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C749358116;
+	Tue, 23 Jan 2024 09:04:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706000468; cv=none; b=piUx6MBXQzcVwH9N1NcWaNx1hmS/E+Drjx6QOMkuhNHcHU2pMIXZleCtg/z/mmH/94URmfKEpesfeHP6icbfn4gi7POvN+u0Da5uUsJRF/wSeVLBjNo5BWSm1tDXkULF8yJsE/gJMUo9IDuS8ZZnyE7FecI8hzfat8+LwhgOW3Y=
+	t=1706000644; cv=none; b=Tic86pgEViSNjsVb2TySVGOWzY7kNn4ELbs+5nU6ZnjW/QN9s2Wx/dJG7Uo2W0WVTAHYBJf0joVD+Ja5O1fpQgRt9OdRzHl30QoApSWbWqtEOfvX+/mNG1SAKtWTht6Y6HL8G9QD0DccP4zSg3uhm5dOWJ+nUNhqdDV0Inf+ZV0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706000468; c=relaxed/simple;
-	bh=2iIMuxSXVIfbhEDxIspm7QifUedTVVjC5VjdGTdogdA=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=arQH1e9hs5jFaGIvGAPclgIYgulLg6v7uIOmrG2C4pa6TCUsOxDkUYxp1CsEU4bvkEV4BAJFwfXNJK9fEec4C5RdQ/JeUYFznLL4sQ7Y37+bWGtaHhib89OokEfxnhmH7DzJR+tqZHb4YXK+0jTxgoxZ+HmrzDbnJaPtZvuSs6I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KuWx9f2Z; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KuWx9f2Z"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706000465; x=1737536465;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=2iIMuxSXVIfbhEDxIspm7QifUedTVVjC5VjdGTdogdA=;
-  b=KuWx9f2ZKVes/QlPrb7mff5JakMCsP9FCZUNuUUVU5yVUlWSgnKa5Jxe
-   p7DpuS785uwkkWUR4kSAhomwlcXzmC5uePNBkJvf7xb3R1NG8b2v4wMEW
-   KtZAYCei3ekixLIUtl4eC6rkS0b8yLJ5ut8VitnYbFAnwx/BAtGtG3T6D
-   nLOE+kcH+7ITsPfOqyo7kt5GY9ZH/Rn9FIVP4XZv2E2uzMULhXww1quN+
-   8gnPK/iIffT7yGCkT58HpZOkahad4UiY6ngjjNDu6JWbIzRJf2PyCqCK0
-   mjd/ksgJ4U5qaefxRwziqQnfOFrGU3JHmhhF7c1SDJ5QnYVSdIP+1AzAa
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10961"; a="8572860"
-X-IronPort-AV: E=Sophos;i="6.05,214,1701158400"; 
-   d="scan'208";a="8572860"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2024 01:01:04 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,214,1701158400"; 
-   d="scan'208";a="1589512"
-Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2024 01:01:01 -0800
-From: "Huang, Ying" <ying.huang@intel.com>
-To: Yosry Ahmed <yosryahmed@google.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,  Johannes Weiner
- <hannes@cmpxchg.org>,  Nhat Pham <nphamcs@gmail.com>,  Chris Li
- <chrisl@kernel.org>,  Chengming Zhou <zhouchengming@bytedance.com>,
-  linux-mm@kvack.org,  linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] mm: swap: update inuse_pages after all cleanups are
- done
-In-Reply-To: <20240120024007.2850671-2-yosryahmed@google.com> (Yosry Ahmed's
-	message of "Sat, 20 Jan 2024 02:40:06 +0000")
-References: <20240120024007.2850671-1-yosryahmed@google.com>
-	<20240120024007.2850671-2-yosryahmed@google.com>
-Date: Tue, 23 Jan 2024 16:59:03 +0800
-Message-ID: <87wms0toh4.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	s=arc-20240116; t=1706000644; c=relaxed/simple;
+	bh=sPZPZpNxCGkjFUXcoESBmSmINqAhV9ErBwBK6gLZhc8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RXt0eb015Omhl8nhgNHoV1p27zr04yHd0GWlAiN8R6Z9qQ3aboz8I+SF0JNPSHBJV2wZ9vBxLdin9gscR8Q9qyPnCAT6oCQ6/aQDsF04yr1wqwYj3dxiXFpf+mY1i0HAWFKda++P7LiwU80RU2GhEP1ZEvAr+eeoQfxzyEP9Ez0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8BxuvD5gK9lOxYEAA--.16509S3;
+	Tue, 23 Jan 2024 17:03:53 +0800 (CST)
+Received: from linux.localdomain (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxLs_4gK9lWhMUAA--.24458S2;
+	Tue, 23 Jan 2024 17:03:52 +0800 (CST)
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>
+Cc: Eduard Zingerman <eddyz87@gmail.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Hou Tao <houtao@huaweicloud.com>,
+	Song Liu <song@kernel.org>,
+	bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH bpf-next v7 0/2] Skip callback tests if jit is disabled in test_verifier
+Date: Tue, 23 Jan 2024 17:03:49 +0800
+Message-ID: <20240123090351.2207-1-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8BxLs_4gK9lWhMUAA--.24458S2
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7ZFykWF4rtrWkuF1xCF1fXwc_yoW8Jw1kpa
+	93GwnIgr1rJF1IqF13ArsFqFWSqr4kW3y5Jw17Xr95Ja15AFyxArWfKF10qas8KrWrXr4a
+	y3WIvFyF9F10q3cCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUU9Gb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj64x0Y40En7xvr7AKxVWUJVW8JwAv7VC0I7IY
+	x2IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4
+	x0Y48IcxkI7VAKI48JMxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s02
+	6xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_Jr
+	I_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v2
+	6r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj4
+	0_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8
+	JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0n2-5UUUUU==
 
-Yosry Ahmed <yosryahmed@google.com> writes:
+Thanks very much for the feedbacks from Eduard, John, Jiri, Daniel,
+Hou Tao, Song Liu and Andrii.
 
-> In swap_range_free(), we update inuse_pages then do some cleanups (arch
-> invalidation, zswap invalidation, swap cache cleanups, etc). During
-> swapoff, try_to_unuse() uses inuse_pages to make sure all swap entries
-> are freed. Make sure we only update inuse_pages after we are done with
-> the cleanups.
->
-> In practice, this shouldn't matter, because swap_range_free() is called
-> with the swap info lock held, and the swapoff code will spin for that
-> lock after try_to_unuse() anyway.
->
-> The goal is to make it obvious and more future proof that once
-> try_to_unuse() returns, all cleanups are done.
+v7:
+  -- Add an explicit flag F_NEEDS_JIT_ENABLED for checking,
+     thanks Andrii. 
 
-Defines "all cleanups".  Apparently, some other operations are still
-to be done after try_to_unuse() in swap_off().
+v6:
+  -- Copy insn_is_pseudo_func() into testing_helpers,
+     thanks Andrii.
 
-> This also facilitates a
-> following zswap cleanup patch which uses this fact to simplify
-> zswap_swapoff().
->
-> Signed-off-by: Yosry Ahmed <yosryahmed@google.com>
-> ---
->  mm/swapfile.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/mm/swapfile.c b/mm/swapfile.c
-> index 556ff7347d5f0..2fedb148b9404 100644
-> --- a/mm/swapfile.c
-> +++ b/mm/swapfile.c
-> @@ -737,8 +737,6 @@ static void swap_range_free(struct swap_info_struct *si, unsigned long offset,
->  		if (was_full && (si->flags & SWP_WRITEOK))
->  			add_to_avail_list(si);
->  	}
-> -	atomic_long_add(nr_entries, &nr_swap_pages);
-> -	WRITE_ONCE(si->inuse_pages, si->inuse_pages - nr_entries);
->  	if (si->flags & SWP_BLKDEV)
->  		swap_slot_free_notify =
->  			si->bdev->bd_disk->fops->swap_slot_free_notify;
-> @@ -752,6 +750,8 @@ static void swap_range_free(struct swap_info_struct *si, unsigned long offset,
->  		offset++;
->  	}
->  	clear_shadow_from_swap_cache(si->type, begin, end);
-> +	atomic_long_add(nr_entries, &nr_swap_pages);
-> +	WRITE_ONCE(si->inuse_pages, si->inuse_pages - nr_entries);
+v5:
+  -- Reuse is_ldimm64_insn() and insn_is_pseudo_func(),
+     thanks Song Liu.
 
-This isn't enough.  You need to use smp_wmb() here and smp_rmb() in
-somewhere reading si->inuse_pages.
+v4:
+  -- Move the not-allowed-checking into "if (expected_ret ...)"
+     block, thanks Hou Tao.
+  -- Do some small changes to avoid checkpatch warning
+     about "line length exceeds 100 columns".
 
->  }
->  
->  static void set_cluster_next(struct swap_info_struct *si, unsigned long next)
+v3:
+  -- Rebase on the latest bpf-next tree.
+  -- Address the review comments by Hou Tao,
+     remove the second argument "0" of open(),
+     check only once whether jit is disabled,
+     check fd_prog, saved_errno and jit_disabled to skip.
 
---
-Best Regards,
-Huang, Ying
+Tiezhu Yang (2):
+  selftests/bpf: Move is_jit_enabled() into testing_helpers
+  selftests/bpf: Skip callback tests if jit is disabled in test_verifier
+
+ tools/testing/selftests/bpf/test_progs.c       | 18 ------------------
+ tools/testing/selftests/bpf/test_verifier.c    | 11 +++++++++++
+ tools/testing/selftests/bpf/testing_helpers.c  | 18 ++++++++++++++++++
+ tools/testing/selftests/bpf/testing_helpers.h  |  1 +
+ .../selftests/bpf/verifier/bpf_loop_inline.c   |  6 ++++++
+ 5 files changed, 36 insertions(+), 18 deletions(-)
+
+-- 
+2.42.0
+
