@@ -1,178 +1,119 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2068.outbound.protection.outlook.com [40.107.243.68])
+Received: from esa2.hgst.iphmx.com (esa2.hgst.iphmx.com [68.232.143.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C9D65A0EB
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 09:43:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.68
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706002995; cv=fail; b=WqgD3krTHkK8sW0qVnOaQxaZ6tIP3RbfGqqzo/M+cLCYu5kdBdr6YSrFnNf1GR9H3VFYuK4zC7QrOzqCfMLEZ0hKpTPsauWQ7+tDL+Ji63XPDfTWQWXpHihXx1MWUazRUp8LX6AFBRL9i+8HjLWXX7Rl0O5Xb/+vQy+hD5iYpAk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706002995; c=relaxed/simple;
-	bh=uBcn+eC68aUt1L/a1QzFskGusJ846BCtKNLKb4K5Zs0=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=KzJw9qg//NH0LkiKhaaCizWzB18p1ZkH3ZK1ybMvox5N0VfzQJiS1HEn7B1Ca/+82FOa5rQH/yNFTTNFkrPC1eG9cIGpy+fi1pMjARIPNjnojyJ92Wc/v5wAVlMOheC5AqEAks1IoDqW7arHwfF36P3YI0tB/8H0BoOn6wV2510=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=4nOkLjla; arc=fail smtp.client-ip=40.107.243.68
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C2265BAE1;
+	Tue, 23 Jan 2024 09:44:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.143.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706003042; cv=none; b=Msw3mbrXs7AjekOoFGLapTlF+1iTIohmZgncqgJy62Uc9EUdjSlWfiGony0QPJQjnn0GodvaUlS5IS4Oi0Mk8DUmTPK5LNmY9NoSigwLJiDKCZtixxFvBpRARgnOO1+a2vHEwRhTWhY4KHEdL1VNjfgU7BcP+BGbvYrIGWbgiHI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706003042; c=relaxed/simple;
+	bh=/4h6qYS/eHpSlVim37uPdGcbFkvmnDTQ5JZLyrLcZnE=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Bq7p31t/eidxr6Q622mS7e2KSbLszGFUwhvZVnh8kXw2SQseV6MjUgpkaS9+lmoGAmo9+eR5FPS8KRU5oHYuj8A8Acef/Qx0KEspKglQYCKq1dlw7D9i544HJUGYLW9CybdSJS7ufC9oz7OeDsUEP1YvaBYHwhpKBW2ac52CB0A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com; spf=pass smtp.mailfrom=wdc.com; dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b=klyV34Le; arc=none smtp.client-ip=68.232.143.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wdc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wdc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="4nOkLjla"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=acCty1VJ8MuwcE/OeCeFTcrccOIVEvb1FY18vNPeoNs1k2TYSVV5yTtJdqDLgJvkE60a8G6XTrEVvJX9TYg77AAVnWKKlx8mkInDGXnIihRoYwI0IxH8jEkSAyUlCPz58gOrT1mB1nRa69rw40tZzbqSKfCkU/WTk/oNUc1cI+rI6pB47Jt2RC9V2Reu2vxWOMUvS+8nJfVI1Cn8JkSvql84bYwaoS/XEBed84Z9gXsKAvyqCZ5c/fvuu7KsYiJFb+ECGUfs7UF1ExMey4clI3RpvA1+ncWR1ilkyKkZvg4/FOHxYoZgOmzcwAjNf6GqNoFJGDNiF/swJvH+iMi4ew==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=KhuNzd5UxWWigOnGotDK+pCCEkdG0ZCJ4XRgaeK1KYI=;
- b=XO4dZAKyutgZazgTTD+5pjMHdBVyT0sVv7VQurdVCiMpHlfHFpPOhO5VuRUTU2IEzPHyd2rNcM4uLjFxvX/ZMslSq/9A1n9mosDPjvw2oFtBdUvyKzMAcJUmPGofjc/+Uehcs2p5vRrNRl8Rgf1VDyMpU+S+hY8djpmpzdswdku4fRl9pD7AYQxv2iYgXW6kCKcaX3DHoRc2uHm1nOZam7zjrrk3RGQ3ZtNVgzMK7A6JgC+DRt6XdK+bJsRET6/r+ZSdapZHEMLCEH1l8CJoYEq8oNYwtGBzrk7AfMWNAGaxDoEw2kDqG6HmYQdcQl0xnVjz7kZJSba05Hgf+c36YA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KhuNzd5UxWWigOnGotDK+pCCEkdG0ZCJ4XRgaeK1KYI=;
- b=4nOkLjlaVgNmJrTuJiy9MB9efxmzq+tH1/r9cCnLUQ62DGNxFxXpekBe+VbGSSQA0eloLLcuNRT5ykmKQC09PCG/w0VQmBr2mCoQ0Wit7VLJ9qxP3Cev50mP0usN1fTWB5sFiui9cs8BLRBjqMvSxRLdpZfDQ2O87x3U30sOKDo=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH7PR12MB5685.namprd12.prod.outlook.com (2603:10b6:510:13c::22)
- by MN2PR12MB4359.namprd12.prod.outlook.com (2603:10b6:208:265::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7202.34; Tue, 23 Jan
- 2024 09:43:10 +0000
-Received: from PH7PR12MB5685.namprd12.prod.outlook.com
- ([fe80::e1fb:4123:48b1:653]) by PH7PR12MB5685.namprd12.prod.outlook.com
- ([fe80::e1fb:4123:48b1:653%4]) with mapi id 15.20.7202.031; Tue, 23 Jan 2024
- 09:43:09 +0000
-Message-ID: <c45df2c7-695b-42be-b893-a4f520d9e723@amd.com>
-Date: Tue, 23 Jan 2024 10:43:04 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [BUG] BUG: kernel NULL pointer dereference at
- ttm_device_init+0xb4
-Content-Language: en-US
-To: Steven Rostedt <rostedt@goodmis.org>, Dave Airlie <airlied@gmail.com>
-Cc: "Bhardwaj, Rajneesh" <rajneesh.bhardwaj@amd.com>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- LKML <linux-kernel@vger.kernel.org>, Felix Kuehling
- <Felix.Kuehling@amd.com>, dri-devel@lists.freedesktop.org,
- Fedor Pchelkin <pchelkin@ispras.ru>
-References: <20240122180605.28daf23a@gandalf.local.home>
- <20240122181547.16b029d6@gandalf.local.home>
- <20240122181901.05a3b9ab@gandalf.local.home>
- <CAHk-=whry+-JUDiiCkDkDn2TDg7SA5OvZpPbcQ_jkM_J5=ySdA@mail.gmail.com>
- <27c3d1e9-5933-47a9-9c33-ff8ec13f40d3@amd.com>
- <20240122203552.529eeb20@gandalf.local.home>
- <CAPM=9tyQ22nw4_u366EX=PnROYcWPD7ONRFpPEKxRvTZo0B4zQ@mail.gmail.com>
- <CAPM=9tyCN1ZhvCTjoKn-Yg5BhnrMae4E5Ci4_u7BZ2vv5gDnKw@mail.gmail.com>
- <20240122215200.1ec02a4a@gandalf.local.home>
-From: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-In-Reply-To: <20240122215200.1ec02a4a@gandalf.local.home>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: FR0P281CA0070.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:49::20) To PH7PR12MB5685.namprd12.prod.outlook.com
- (2603:10b6:510:13c::22)
+	dkim=pass (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="klyV34Le"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1706003040; x=1737539040;
+  h=from:subject:date:message-id:mime-version:
+   content-transfer-encoding:to:cc;
+  bh=/4h6qYS/eHpSlVim37uPdGcbFkvmnDTQ5JZLyrLcZnE=;
+  b=klyV34LehoM/bKGpsEoje1bsQvWnEdkBJm3CmcnxHI+HRti6ZJ/+u1HC
+   76xo81pd3t54FEBqSixPxSZsd4+ixpHRWPY1QeoerQ+TXk7dQRRE/0z/d
+   BdUk5ztm8cSHoDG+j0zrVHFVdqfFia+Q+iwBTDBwaxeoUwfTOwIKxyO/a
+   SnMwMXm4Q6mzQswYf2Mqjkh4M9p2UkvbwRXftOAS8HcD2XkB+qnyRJUQt
+   Toij5t7e3KHfBaDAXNfVRr4TQB2+egWSu5qhj2igJI0n4whAoJLGNukGL
+   9DcqMmmKYCT7f9nMS4XgxBNS3nXU0TXjgLG4HBK1YO7xiGWqIw6uz84Xp
+   A==;
+X-CSE-ConnectionGUID: fbbQ3aUnSa+jfjkiYUqLHg==
+X-CSE-MsgGUID: 9vYZCiNdSh+ZfSVKjIc7BA==
+X-IronPort-AV: E=Sophos;i="6.05,214,1701100800"; 
+   d="scan'208";a="7514644"
+Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
+  by ob1.hgst.iphmx.com with ESMTP; 23 Jan 2024 17:43:50 +0800
+IronPort-SDR: TwR3OQ6czbuBwupgP2Pw5/UU9AIJprA4iK31Yg5UGdeifAB7nVUszKOeanYCR1XWjuTUkYP9y8
+ XGwGimQPDegQ==
+Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 23 Jan 2024 00:53:53 -0800
+IronPort-SDR: zUnRHHmVsKHmYWHqPESmgsAEmU5gU8xkWm6MN/q4pTyWM+A4c3LciGXWMEKUbx1GLBqQ7hfn4G
+ QMsyEBuf/JKg==
+WDCIronportException: Internal
+Received: from unknown (HELO redsun91.ssa.fujisawa.hgst.com) ([10.149.66.6])
+  by uls-op-cesaip02.wdc.com with ESMTP; 23 Jan 2024 01:43:47 -0800
+From: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+Subject: [PATCH 0/5] block: remove gfp_mask for blkdev_zone_mgmt()
+Date: Tue, 23 Jan 2024 01:43:41 -0800
+Message-Id: <20240123-zonefs_nofs-v1-0-cc0b0308ef25@wdc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB5685:EE_|MN2PR12MB4359:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5448cc9f-7b29-42a8-3b55-08dc1bf7b5a1
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	UpuK/1gjjt2oqNP6WQ/pFwuwcdFhxktf6jziONAAdUN2TTiJQGuNpRkMpCwrF6vP8tzdVmNoOVyGZ8ZXhmXOjHy10ZyslPlYtfP5Vmxnqt2eEeLiDVNxg4LURz6C5DaBD5tfbRpvuaROCY8dIOEJeFS9CrfWGtLH2hL47XGEMg1i8WRjNkYJYkQknQsYPKOC4Hu+d64j31A/V0+xZu8RoXRZXNC94ohBmEe3L9FR4pVJPIBVha3JR/wHlDXCVgvx2oM2VyOe+qYumi773v88Oe6/8ORJLe1RU6PcVr86vFQKWQaCJ26VpDTsZf30oa2YxbkxxyRBfQWGeRJeplRRj9NPJA+xs5CZjVlhVK/FerpFjostcNCevbVUhZKsiTHm0/GjGxcZewpbPElvflC6VhUcwbKZtKmpTH3oHBrp7OGGtO75/XYvRDeOcl1V4Dx9x9UNC9SZicVZHqQcAxiMGPgIH07nzOpAQdJU6Aeh/mDUJvr8UqDlOoWnAswrwret+rL988Ft2kIMnlBAgxvCHOyQqnNsqbeU+5VR3ZJ04yMxt8ZDlgEBTqiKHjcHwQ4Er9T7d2F7A1vrRmkEIQDK3fmO1jjlX5zyGxwDXEFZZqHLsfWvrCqoH+lh7UaEoyLj5i7hmO5B6L5ri/+rcYWmtg==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5685.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(346002)(396003)(366004)(376002)(39860400002)(230922051799003)(186009)(1800799012)(64100799003)(451199024)(8936002)(4326008)(8676002)(5660300002)(478600001)(86362001)(110136005)(54906003)(316002)(6486002)(66476007)(66556008)(31696002)(66946007)(2616005)(966005)(26005)(6506007)(2906002)(6666004)(36756003)(6512007)(53546011)(41300700001)(31686004)(38100700002)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?N2VKa3hRTmp4QTRRc2ZlNFpmWkNDUXErcXBISHBDSDlDVkROdzhpdHFoQWN2?=
- =?utf-8?B?OFBwckE3ZlY0a1FteFh4TjB5NXZLQW43OS8vYTFEMlZTNVVuRVU4UmpkaWtk?=
- =?utf-8?B?Mk13THRQNDN6YmxOd29IZDNiNGs3YWpER08rM0F3RC84cHdOY2loMzM4UVl4?=
- =?utf-8?B?eWR5NE1BdjZ6YVpKTGVoY1E1T0RheWtyRnZRQzlvV1FsWUhINmhiN2NFbnVR?=
- =?utf-8?B?djEwQ00relMvOFRuVkJwOXhsYllHVktCaDRoUHQvSVhhazBvcXdPZENSQ1FE?=
- =?utf-8?B?N1lCbFN6ci9rZHAva2xUM3BxQnd2RVNwTUVIR1pLU2lrMHNBbkxiOUp5d3pR?=
- =?utf-8?B?RFlKek0wZmxHS0dUUnQ4YjNJdlJzTUV2dmc2Q0FTUGNudE51dUtoTDFUNFU2?=
- =?utf-8?B?Uy9neDVhUkcvNXlGZTU5VjUzVk5jQW93TDlpMnZLcVBoU25nekJLcEkxS0l3?=
- =?utf-8?B?U01maTQrK0hYeWNpK3ZvNGFDbEJOOVNBaWthNzBYSEg4U2NXZ3pVSkxoVmh5?=
- =?utf-8?B?YjRYcktaL2ZITUt2TzRvWW5naEd6UGFxeDRBYU1rY0RheUU0dkdnMlR1WFF3?=
- =?utf-8?B?WGRobUZjR3FoTGtyRU8vU3hjMVhDYks3REE2UG9ML2tMYU84M1FYcFhDUUtZ?=
- =?utf-8?B?VW5sV0FJWjZBTkJkbncvOEQ5SjJ2ME92STJjL0VMSnFnZ0wzLzJsb1NiQnli?=
- =?utf-8?B?WTNWQjBLaWdmS3o2VXUxMmRHcUtWcHpCZzFvalRNVkZ6cWJ3N29SbnVrK3lH?=
- =?utf-8?B?OXBjMmg3NWdDMnNmTW1TRTE5bWFpTGFSd09VamdPc2o5dndDcDlDM0dxZXVJ?=
- =?utf-8?B?MEZJKzJFbEtkMTJ6OUY0SnlVb2FqMVQxbVV5aW9lTE1WMXIvMnRaTGFaTnM1?=
- =?utf-8?B?RVMrKzI3dDF0dGhURVV3ckRkMk9oeUM2Q2Z3cnBLeFJwRFJKb2RwSkJzeTNJ?=
- =?utf-8?B?K0ZYdEgzWUlkVXpIOUhKaWhFb1NMcDRVa3BpcC9UcXlmcGdNY2lWREkyZi9q?=
- =?utf-8?B?YU81Q1dOT296TldUbUFpcG9EQXFPNlhpMzVScGlWYlE2bko0aWlQY0NiWHdZ?=
- =?utf-8?B?M0pqS3VpQ2ZJQUZSL1plNU5iSHR1TVNkQVNmL3hWSjQ4ZktxK2FZWEVBOWVD?=
- =?utf-8?B?UlFXcTh3SUlIWVppbytja0xxa3Aza3ZIYnhsc3YxNEEyeWoyWUxCN05vOC91?=
- =?utf-8?B?M0xyQ2UyR2VUTnlsNjJvWXVIeE4xSitweFpLQkRBR0lrTWVETDZZaXVWRldI?=
- =?utf-8?B?UjRRb2k4N0VrYkUyMW9MMEp1YnpHTlVrTFhvNTllZGkwb3RjN3dSNXVYekNa?=
- =?utf-8?B?THZhbngrMURSSEVldjlNUkN4RFdSTmJoZFFGaDZoOEswaUhNVE5yWDZWd3Vs?=
- =?utf-8?B?K0J6QnhZdHYyaWpMWGRsS2NoRFdvMEk3aHB6b1d6alVadUozZlN5VERiejJu?=
- =?utf-8?B?ai9yellMOTZidUtYMTFLejVaRkU2WmpDVjBEM0ErRWVXaitiM1FXdXo0bG1D?=
- =?utf-8?B?UG9pVko2eE9VOXozS1hnMlo4akMwZHdQZVljSTFza25mdEw4cXZaTG1hZmJa?=
- =?utf-8?B?cmVtWmJkaGhCRGEyTmk0MU4xQlQ5NGhCRVNJZ08rd09RcTcxNlplWHVtSXdW?=
- =?utf-8?B?ZkF0c1U3SUpoOHJQV3Q2NnhEY3lWN0xhbXBoU2xOdE5rbm1HenBBNm5ybnZm?=
- =?utf-8?B?ODFYUi96eXczVDF3L0ozSkExTm05V1BCOGtVcnZsditFSXVZL3ljbGFZa0cw?=
- =?utf-8?B?M21OMG9pRE1pd3RRQTk1cTBzdmhRWjdSN0VVcEg3RG5abVFnd1ZFU0tSWGw2?=
- =?utf-8?B?dXdOM0toOGVXOU80QXlON1VScWhISFBNSEZNVnJhWXA0aDJ4MVd0SllwTkNl?=
- =?utf-8?B?TXVPQUVHL29zTGFEa0JXT1B5MW0ycjJqVnJoSVFBTHk2ZzF5SFpPTWdiWEEy?=
- =?utf-8?B?ZTdqNkhLUnV0U09OSkpCRzlLSkFwSklZeFh4eUdXUGhHYzlzVzhia1JMdUFY?=
- =?utf-8?B?VFBJc1EzdGthY2tvR0ZaZ2xqckxZRXI5WkZPQ1l3dC9adlVnNFF2V0Vlejk2?=
- =?utf-8?B?MDJkd0tLRGRvc2tNaXdBLzlTYVpkQnVXK211S2UvdjlYVUFDQ0FPVFpjbzls?=
- =?utf-8?Q?6A+OifDqbI4yMjrzqzAwU668z?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5448cc9f-7b29-42a8-3b55-08dc1bf7b5a1
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5685.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jan 2024 09:43:09.8769
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: fxW0o+6S5J1vmgDS54IFIzZsPjcA6V+WflT1UjJhRPfGA8YedmxRiAQ2GPildjZ5
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4359
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAE2Kr2UC/x3MMQqAMAxA0atIZgtpKA5eRUTUppqllQZELL27x
+ fEN/xdQzsIKY1cg8y0qKTbYvoP9XOPBRnwzEJJDa9G8KXLQJaagxnvLRBsxugFacWUO8vy3aa7
+ 1AzrU4INdAAAA
+To: Damien Le Moal <dlemoal@kernel.org>, 
+ Naohiro Aota <naohiro.aota@wdc.com>, Mike Snitzer <snitzer@kernel.org>, 
+ dm-devel@lists.linux.dev, Chris Mason <clm@fb.com>, 
+ Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>, 
+ Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>, 
+ Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>, 
+ Sagi Grimberg <sagi@grimberg.me>, Chaitanya Kulkarni <kch@nvidia.com>
+Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-btrfs@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net, 
+ linux-block@vger.kernel.org, linux-nvme@lists.infradead.org, 
+ Johannes Thumshirn <johannes.thumshirn@wdc.com>, 
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>
+X-Mailer: b4 0.12.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1706003027; l=1540;
+ i=johannes.thumshirn@wdc.com; s=20230613; h=from:subject:message-id;
+ bh=/4h6qYS/eHpSlVim37uPdGcbFkvmnDTQ5JZLyrLcZnE=;
+ b=XWApU1yRY0zet3szE9Y5YwxO0lp/MB+nH+oGhmBdyhChEBIQpYa6r7zw4rgXKerbrVnIXc2mT
+ UtgASe05xPWAqN+bStf/4/hcrd6JLPpuUKW556WA7lZY9ZeLtErtKq6
+X-Developer-Key: i=johannes.thumshirn@wdc.com; a=ed25519;
+ pk=TGmHKs78FdPi+QhrViEvjKIGwReUGCfa+3LEnGoR2KM=
 
-Am 23.01.24 um 03:52 schrieb Steven Rostedt:
-> On Tue, 23 Jan 2024 12:32:39 +1000
-> Dave Airlie <airlied@gmail.com> wrote:
->
->> On Tue, 23 Jan 2024 at 12:21, Dave Airlie <airlied@gmail.com> wrote:
->>> On Tue, 23 Jan 2024 at 12:15, Steven Rostedt <rostedt@goodmis.org> wrote:
->>>> On Mon, 22 Jan 2024 19:56:08 -0500
->>>> "Bhardwaj, Rajneesh" <rajneesh.bhardwaj@amd.com> wrote:
->>>>   
->>>>> On 1/22/2024 7:43 PM, Linus Torvalds wrote:
->>>>>> On Mon, 22 Jan 2024 at 15:17, Steven Rostedt<rostedt@goodmis.org>  wrote:
->>>>>>> Perhaps this is the real fix?
->>>>>> If you send a signed-off version, I'll apply it asap.
->>>>>
->>>>> I think a fix might already be in flight. Please see Linux-Kernel
->>>>> Archive: Re: [PATCH] drm/ttm: fix ttm pool initialization for
->>>>> no-dma-device drivers (iu.edu)
->>>>> <https://lkml.iu.edu/hypermail/linux/kernel/2401.1/06778.html>
->>>> Please use lore links. They are much easier to follow and use.
->>> https://lore.kernel.org/dri-devel/20240123022015.1288588-1-airlied@gmail.com/T/#u
->>>
->>> should also fix it, Linus please apply it directly if Steven has a
->>> chance to give it a run.
->> I see Linus applied the other one, that's fine too.
->>
-> They don't look mutually exclusive. I can test the other one as well.
+Fueled by the LSFMM discussion on removing GFP_NOFS initiated by Willy,
+I've looked into the sole GFP_NOFS allocation in zonefs. As it turned out,
+it is only done for zone management commands and can be removed.
 
-While applying the fix a week ago I was under the impression that QXL 
-doesn't use a device structure because it doesn't have one and so can't 
-give anything meaningful for this parameter.
+After digging into more callers of blkdev_zone_mgmt() I came to the
+conclusion that the gfp_mask parameter can be removed alltogether.
 
-If QXL does have a device structure and can provide it I would rather 
-like to go down this route and make the device and with it the numa node 
-mandatory for drivers to specify.
+So this series switches all callers of blkdev_zone_mgmt() to either use
+GFP_KERNEL where possible or grab a memalloc_no{fs,io} context.
 
-Regards,
-Christian.
+The final patch in this series is getting rid of the gfp_mask parameter.
 
->
-> -- Steve
+Link: https://lore.kernel.org/all/ZZcgXI46AinlcBDP@casper.infradead.org/
+
+---
+Johannes Thumshirn (5):
+      zonefs: pass GFP_KERNEL to blkdev_zone_mgmt() call
+      dm: dm-zoned: pass GFP_KERNEL to blkdev_zone_mgmt
+      btrfs: zoned: call blkdev_zone_mgmt in nofs scope
+      f2fs: guard blkdev_zone_mgmt with nofs scope
+      block: remove gfp_flags from blkdev_zone_mgmt
+
+ block/blk-zoned.c              | 19 ++++++++-----------
+ drivers/md/dm-zoned-metadata.c |  2 +-
+ drivers/nvme/target/zns.c      |  5 ++---
+ fs/btrfs/zoned.c               | 35 +++++++++++++++++++++++++----------
+ fs/f2fs/segment.c              | 15 ++++++++++++---
+ fs/zonefs/super.c              |  2 +-
+ include/linux/blkdev.h         |  2 +-
+ 7 files changed, 50 insertions(+), 30 deletions(-)
+---
+base-commit: 7ed2632ec7d72e926b9e8bcc9ad1bb0cd37274bf
+change-id: 20240110-zonefs_nofs-dd1e22b2e046
+
+Best regards,
+-- 
+Johannes Thumshirn <johannes.thumshirn@wdc.com>
 
