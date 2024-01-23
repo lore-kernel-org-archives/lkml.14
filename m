@@ -1,56 +1,56 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8C245F867
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 12:59:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 306805FEFA
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 12:59:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706014781; cv=none; b=fva4rIGrd+FPfywS/spqMgSmkqkBoFBHsXa71hT+i1fq1cOiJq5n/BYEAxedJqLNC2Ua7B3iVKcTTHxhZMz1rz0HrkDoqLpvg+eeUFAXIFjODg4wn7tqUWI2ohLmLRGPqsIh+Essydr+J63BnnJtnsfKSWCCPtcvGW3fu0GJszc=
+	t=1706014782; cv=none; b=hQEJEx9ADKfcC4hgEJ3p3tdqwFoL8BHVNGMmR/XN9SuGijUZSO3iYzL0YlH8ZD6rT7MfT/gntRaD8Vp2A10F4ikqti8615FOqCoiHEba/Z26s0UaItwvH20ompuAQF+jD5sV6sntKVqoCEhYAkHLRVIkCA+vI08KQkkmcmYRDvs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706014781; c=relaxed/simple;
-	bh=dRyt6tWlbiKqoIJh66DiSSuXinFPKcVAZdUgI40W4Tc=;
+	s=arc-20240116; t=1706014782; c=relaxed/simple;
+	bh=maodbjEw57TfdCtC7UkPQKmKKIQeLpeD2PctYOEaXpM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=cVfxx3XmEd5vnf9SjxC8YRS6/ek4YV5Z7jd7SEQcIfRr1qioSYjKewP/cRaXAlY5TIBxy1yF9NxJOQFVVViFlmNlyPr4CKJSoOY6CahDustb2x7qjmNb9qdKnV50aSwgD6GfEGsVGJ3hFLVIrEwXuphKkcz7hIzLy9Mz5SL/7OI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=myfLVAq1; arc=none smtp.client-ip=209.85.128.52
+	 MIME-Version; b=nR+XN8kZOUtrjChtZ3Xlx6Ygu8eiImGvZbHQXkLhedWqjS+UQRcuOAlqaTWudrMdw+/qglCMF+tM62zNMg15gjkm4AcSdsEWL5Bk1ZdnDJIK0OOIwojwNsZOtYvPri3omXDxF4gHguKhmm5ORoLWyYxwfiY5zU1q7m7wGLN8B4A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=drS1tNZV; arc=none smtp.client-ip=209.85.221.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="myfLVAq1"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-40e7065b692so46617735e9.3
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 04:59:38 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="drS1tNZV"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-339237092dcso3044062f8f.3
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 04:59:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1706014777; x=1706619577; darn=vger.kernel.org;
+        d=tuxon.dev; s=google; t=1706014779; x=1706619579; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=8pkNsgorlOGjO2MgWb/dT6E51SlKpQ9V2ft0OBIasSE=;
-        b=myfLVAq1GSzrsIPignzEqKZyx4XfxUBYnJg+wgXt9As14Qg19xDU4hdgR4KmKcaCK4
-         lNvIzXFakDO0S+kYB+f8lGMT+XBgMO0ehgbygVQkMW/PXoxbRmj8HRFtohyDZWJRCfiS
-         9pkZClJvLLQG7Y6rbwimFZI9scQjX2AipL73F5h6qs6UO/WmV8GrwCuiw/KE0momw09o
-         7sGcoXAjAl61c54MI60wrB2RnaJiKp6VisA4e5co9VibeX9VdZ4QnjJEwWbN5WhWwKRi
-         NBuGoXbiTAteEr0OZS8BnXr4T80HoiSkLurJuAU+KKq6x81M2WU22Vqjw8x84RN8+0fK
-         cjLQ==
+        bh=A+pLMq6Khs7mZ9vOVBT9kJiU7zBTpG072yfzErDcfPw=;
+        b=drS1tNZVIuCCH4tV9zJzSo58YS2sEo4n+Vu81sJB38JjonhBBFcT1zbmWXOuoXP/wb
+         bPiWNIuVssAVaEWkLPkcWUcAM/gXzvJxtlhxCzgQha+B7mwUTetfZezzqhH77C68oGHP
+         OTZguPt566OH6cHI7cB1TEYmOo5MFcrpxN9EZeR9OwebUG+bdWwlLC8JCfErXN5Y0cck
+         ZmaIsFt/ewMoZkXp1LkM0bPwGTf/qBTXX7c+RKkakUkvZdgXrRb6p3d7bWkQxxvgu/Ke
+         GZN8DfPM+TJ78OTEeV6UjiFQPRCZcEizhtYyYOPXAXw2MHa/q39NdsC4uOxvWElF2r26
+         4VSg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706014777; x=1706619577;
+        d=1e100.net; s=20230601; t=1706014779; x=1706619579;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=8pkNsgorlOGjO2MgWb/dT6E51SlKpQ9V2ft0OBIasSE=;
-        b=W8msXe4EaK+VxvJv8NalMHUT3iZL8vegJeGBolXcdUeE9ltu+pw+Vx1vdY4GbotObe
-         Kn/T6UR9pEWuKHg1jg6kyO+9hKT0RtsryEY1BZLc7GWcfI5NoZeZ3+OwldfBWrlKA4SD
-         ZLnf6JrLSe1093lM4jMgJv3rZDa9Skdm7YPHGTI1ePbSW+EyfMniONVhEAV1JnMVsRWS
-         E2pM2pSTIX2RPM0Qs05+4qnLIoBWdmqotNs0/SAj/cRph0V3AzbiMfMAr7eQsrPxsJWN
-         bRLIqOYuq5Smg0mj3QJvAkiDTrv1eNG4qV0yiCg3zw2r4wX4mttKNdQzmV4uLccemxgB
-         MfPw==
-X-Gm-Message-State: AOJu0Yz+HFG42JTXw0D8E5T5MPgybxNu8/rdoNfe8G9NIEhzQKt8xiyq
-	1f39jqT4Vl8U7SiyFu7hhEvVNgxuiioBG21y/zZyD4m5hwb1nK9kU78R6AdksgM=
-X-Google-Smtp-Source: AGHT+IFH7tBcsGS3WsUDe+n7CUyuFtsX+cq7kxc9uy/KMcmXwHHJNM9zSRkzhzDJxNKStViTBqQnSg==
-X-Received: by 2002:a05:600c:1e84:b0:40e:4395:bc4a with SMTP id be4-20020a05600c1e8400b0040e4395bc4amr111242wmb.67.1706014777163;
-        Tue, 23 Jan 2024 04:59:37 -0800 (PST)
+        bh=A+pLMq6Khs7mZ9vOVBT9kJiU7zBTpG072yfzErDcfPw=;
+        b=eHNdf7AofLLRP60gcLPNZKiy2/K+Gx8dOqUtFy8sehdOJDnMGnok9BZ7KcgD72WPqm
+         4/fOMsvyqDGXa1HcWYlAuPN+HnLS8UBndz6QLdksNXSqAlsXN1Laktd0YQL1KS60g/Wh
+         biOGWiXpauOGB0UUjCq4601e9qQDA+BuxBZTUoKqsDK+NHyCXZYN5kjoMhgQ2lnkvg2j
+         FRoZlT3XQ1DtmTc7XIyx58lVDOhHdwyPytkidcsjMs1OJJl4fqRXNHqlAIAD3CrUjFse
+         73Eo2UrCkzEQumCZywb3F6gxabOe5Inkbvr6qyDSGLC8MfYHKIEPpxMp8Rp3NApWJeCr
+         rWug==
+X-Gm-Message-State: AOJu0Yxr0roEBbhrJqUXwpbq44k10hgSxUnbsolCY6U8Fcue22KC2F1J
+	knApky8wA/BlM7lWsnJyw4j0Pfwupl2q+s0WrzUDUIDgM9FhT6CkfQ4S4mo70w8=
+X-Google-Smtp-Source: AGHT+IElcyDJaakwQLs2lAr/rjSThcC/QYwKjl93ZAqd3m1IKmGJcHbJzlyKdBOTnbGFUBA0QeFuRg==
+X-Received: by 2002:a05:600c:808e:b0:40e:62aa:88dc with SMTP id ew14-20020a05600c808e00b0040e62aa88dcmr111549wmb.127.1706014779609;
+        Tue, 23 Jan 2024 04:59:39 -0800 (PST)
 Received: from claudiu-X670E-Pro-RS.. ([82.78.167.135])
-        by smtp.gmail.com with ESMTPSA id s4-20020a05600c45c400b0040e6ff60057sm33655711wmo.48.2024.01.23.04.59.35
+        by smtp.gmail.com with ESMTPSA id s4-20020a05600c45c400b0040e6ff60057sm33655711wmo.48.2024.01.23.04.59.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jan 2024 04:59:36 -0800 (PST)
+        Tue, 23 Jan 2024 04:59:39 -0800 (PST)
 From: Claudiu <claudiu.beznea@tuxon.dev>
 X-Google-Original-From: Claudiu <claudiu.beznea.uj@bp.renesas.com>
 To: s.shtylyov@omp.ru,
@@ -66,9 +66,9 @@ Cc: netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	claudiu.beznea@tuxon.dev,
 	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Subject: [PATCH net-next v4 04/15] net: ravb: Switch to SYSTEM_SLEEP_PM_OPS()/RUNTIME_PM_OPS() and pm_ptr()
-Date: Tue, 23 Jan 2024 14:58:18 +0200
-Message-Id: <20240123125829.3970325-5-claudiu.beznea.uj@bp.renesas.com>
+Subject: [PATCH net-next v4 06/15] net: ravb: Assert/de-assert reset on suspend/resume
+Date: Tue, 23 Jan 2024 14:58:20 +0200
+Message-Id: <20240123125829.3970325-7-claudiu.beznea.uj@bp.renesas.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240123125829.3970325-1-claudiu.beznea.uj@bp.renesas.com>
 References: <20240123125829.3970325-1-claudiu.beznea.uj@bp.renesas.com>
@@ -82,14 +82,16 @@ Content-Transfer-Encoding: 8bit
 
 From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
-SET_SYSTEM_SLEEP_PM_OPS() and SET_RUNTIME_PM_OPS() are deprecated now
-and require __maybe_unused protection against unused function warnings.
-The usage of pm_ptr() and SYSTEM_SLEEP_PM_OPS()/RUNTIME_PM_OPS() allows
-the compiler to see the functions, thus suppressing the warning. Thus
-drop the __maybe_unused markings.
+RZ/G3S can go to deep sleep states where power to most of the SoC parts is
+off. When resuming from such a state, the Ethernet controller needs to be
+reinitialized. De-asserting the reset signal for it should also be done.
+Thus, add reset assert/de-assert on suspend/resume functions.
+
+On the resume function, the de-assert was not reverted in case of failures
+to give the user a chance to restore the interface (e.g., bringing down/up
+the interface) in case suspend/resume failed.
 
 Reviewed-by: Sergey Shtylyov <s.shtylyov@omp.ru>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 ---
 
@@ -97,66 +99,55 @@ Changes in v4:
 - none
 
 Changes in v3:
-- none
-
-Changes in v2:
 - collected tags
 
+Changes in v2:
+- fixed typos in patch description and subject
+- on ravb_suspend() assert the reset signal in case interface is down;
+  due to this the Sergey's Rb tag was left aside in this version
 
- drivers/net/ethernet/renesas/ravb_main.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/net/ethernet/renesas/ravb_main.c | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/net/ethernet/renesas/ravb_main.c b/drivers/net/ethernet/renesas/ravb_main.c
-index 65b084778b93..d054d1405cec 100644
+index 0a27d2741e8d..9fc0e39e33c2 100644
 --- a/drivers/net/ethernet/renesas/ravb_main.c
 +++ b/drivers/net/ethernet/renesas/ravb_main.c
-@@ -2971,7 +2971,7 @@ static int ravb_wol_restore(struct net_device *ndev)
- 	return disable_irq_wake(priv->emac_irq);
+@@ -2978,7 +2978,7 @@ static int ravb_suspend(struct device *dev)
+ 	int ret;
+ 
+ 	if (!netif_running(ndev))
+-		return 0;
++		goto reset_assert;
+ 
+ 	netif_device_detach(ndev);
+ 
+@@ -2990,7 +2990,11 @@ static int ravb_suspend(struct device *dev)
+ 	if (priv->info->ccc_gac)
+ 		ravb_ptp_stop(ndev);
+ 
+-	return ret;
++	if (priv->wol_enabled)
++		return ret;
++
++reset_assert:
++	return reset_control_assert(priv->rstc);
  }
  
--static int __maybe_unused ravb_suspend(struct device *dev)
-+static int ravb_suspend(struct device *dev)
- {
+ static int ravb_resume(struct device *dev)
+@@ -2998,7 +3002,11 @@ static int ravb_resume(struct device *dev)
  	struct net_device *ndev = dev_get_drvdata(dev);
  	struct ravb_private *priv = netdev_priv(ndev);
-@@ -2993,7 +2993,7 @@ static int __maybe_unused ravb_suspend(struct device *dev)
- 	return ret;
- }
+ 	const struct ravb_hw_info *info = priv->info;
+-	int ret = 0;
++	int ret;
++
++	ret = reset_control_deassert(priv->rstc);
++	if (ret)
++		return ret;
  
--static int __maybe_unused ravb_resume(struct device *dev)
-+static int ravb_resume(struct device *dev)
- {
- 	struct net_device *ndev = dev_get_drvdata(dev);
- 	struct ravb_private *priv = netdev_priv(ndev);
-@@ -3052,7 +3052,7 @@ static int __maybe_unused ravb_resume(struct device *dev)
- 	return ret;
- }
- 
--static int __maybe_unused ravb_runtime_nop(struct device *dev)
-+static int ravb_runtime_nop(struct device *dev)
- {
- 	/* Runtime PM callback shared between ->runtime_suspend()
- 	 * and ->runtime_resume(). Simply returns success.
-@@ -3065,8 +3065,8 @@ static int __maybe_unused ravb_runtime_nop(struct device *dev)
- }
- 
- static const struct dev_pm_ops ravb_dev_pm_ops = {
--	SET_SYSTEM_SLEEP_PM_OPS(ravb_suspend, ravb_resume)
--	SET_RUNTIME_PM_OPS(ravb_runtime_nop, ravb_runtime_nop, NULL)
-+	SYSTEM_SLEEP_PM_OPS(ravb_suspend, ravb_resume)
-+	RUNTIME_PM_OPS(ravb_runtime_nop, ravb_runtime_nop, NULL)
- };
- 
- static struct platform_driver ravb_driver = {
-@@ -3074,7 +3074,7 @@ static struct platform_driver ravb_driver = {
- 	.remove_new	= ravb_remove,
- 	.driver = {
- 		.name	= "ravb",
--		.pm	= &ravb_dev_pm_ops,
-+		.pm	= pm_ptr(&ravb_dev_pm_ops),
- 		.of_match_table = ravb_match_table,
- 	},
- };
+ 	/* If WoL is enabled set reset mode to rearm the WoL logic */
+ 	if (priv->wol_enabled) {
 -- 
 2.39.2
 
