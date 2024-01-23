@@ -1,135 +1,123 @@
-Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9708E5FEED
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 13:10:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6569D60263
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 13:10:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706015422; cv=none; b=MUyJ/N9JdZ8tYR0NpmIdx/M2wksxED+cqVZWpvvm3ocvqPys0jfzJhXqWtnjeASvzVNi/7ZaKimwS/PALmu+bLwGpvDms68MxiMhoiXukCK2AkAZxleWVvjDXlR2e9qIn1oRZGgm4zNgDVPgrcXuElb2fs3RdvuBEnu8A0g8mOs=
+	t=1706015424; cv=none; b=KaXtT8tXcJsGCW3U9TavmnRgiKUNOdx1LpjsHn51AANzVcG6HXxMep9XexNH2LRK8MOJibjuhcOMgwMzR85aV7JQwYQsAORvjUyyi7SQijSbC3sE5XUxWahif2mpxYeGmbM9e0VBYqmxvnebZwyH9YQBjxe1whhZ6KW94BqWZdE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706015422; c=relaxed/simple;
-	bh=S8Dj3R8prRqV+AGEE3+JoAYYKm0kKP9XmwiZ7qnLb7Q=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HF1SLnV8yT2LX2u05+ssFiTWyX49QuGGkqF7tFP7LucuXmHZ1oAdINhL1PyfrokkT033/VZOg2sK+ciGakZvvWhxw/nP6y6wRQg06hM4cAMSVhU7TzIj+6Z9h3DWi2+tkhqwVTG5HIxSaazyLFXMgOd8xaC7XHUwH0pK4tZ4QHM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MR33zzv1; arc=none smtp.client-ip=209.85.128.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1706015424; c=relaxed/simple;
+	bh=Ya8HI1qzh/dO/xW+mB/76zGK/TYfwJ2VdxGLTPzQff8=;
+	h=Message-ID:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type:Date; b=b1tQKPvXZ39ESuJnz16R9ircdZjILL+M6ufIIpiD0mVaMfJeDnVFXSGxbCEBeogG48w34o5KwMNj5LVNTfprYK9qgf3sa396UFHXW2sQW0YKpzsNB6743T6eAJecSCHlzIEBen5AXQk2dDrJChfea2nNGZQksfexFpSUHEGy57c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=fyIxKfjN; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=F5C3Iop1; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MR33zzv1"
-Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-5ff821b9acfso38555907b3.1
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 05:10:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706015418; x=1706620218; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ClWdOeIIsl1FRVjuiLa2Y1YzPPvokp0yG8BguuXnqc0=;
-        b=MR33zzv1dMLfOlp2DyTnpO8VSm44CSkBBMt8RazjoKHX03SNdOib5O3TQz2ZIR1PwV
-         kbJSOOHl8q1MZQ4mwxHksEl+4RHE9M6TfgqCihvK6zEiYUQImxxnFuJnJx4HWKBITgLn
-         XJDPWzi7z44a4mYx2dcF8+V/0uyrUoaVLNizJhys8b9ajq7V3PIqM7UM4x/OM5iPyP06
-         uF4PB/Rnl5qO1UI0jxAVoMNW5+59UQTVc4gcaOpZrZneDWzgZohKSH8laWUlUNXl7Bmu
-         eF+DfZQ0JDYyNUfR/z4TP5it9t4BQ/3q55ejAwNCPhVQIU5zZdHUigE7wT5nBxGp/hAk
-         KEqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706015418; x=1706620218;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ClWdOeIIsl1FRVjuiLa2Y1YzPPvokp0yG8BguuXnqc0=;
-        b=oYLPF2ugiFa4Zmt2dw9WnjbJ9sCEiU7jWik/VD3HaRfKOvnBPynkOryLSidoshlCSU
-         KjpnC3LPLzhrlhA/SMdqB4wlWcVmJKy2AeC5tVAEDRC/UL8uxRU60u9hPkJQVRW430tx
-         ony3BnoZSZlKWgfWsD9uCnpzKwAYI6Ug23jM92EUMm0joLo4EURa7B7xAvVo11uBaGBc
-         pyso6xNBSbv5xLbn2sQyHiDbY36CMsEmSQH56ESQiviyUIY1eo2QhsfHFYbyioPNLGP8
-         07F4aLJSmwB1CEOjGB+AGn/plNzVPq6yoRUT2jpbW7p7MojuNnQNah1AozAOCGplMUOy
-         G71w==
-X-Gm-Message-State: AOJu0YxJn+mFN9qkMicxncGquNBx1R2M7nKGUHIjLbqs/MrubfALRpzk
-	wZzGLOClMTgrgs0ubj+39ElWg+faeVxvQ78Skq1G52yi+75PZHiCSkHaUEb3T73feTqfzmikl9f
-	tv4LUqOR5its0wjSFa/b0nuF83UkI/Z362NymgQ==
-X-Google-Smtp-Source: AGHT+IEB3Cxo0INGCf0y2wXya0QKY/fgxTBzH8Ng/kwVYdAssiWSk0LizxhqKtTwMuP+AZRocKYHManbRbjqV6LExu8=
-X-Received: by 2002:a81:8306:0:b0:5ff:4281:a6a with SMTP id
- t6-20020a818306000000b005ff42810a6amr4578656ywf.8.1706015418575; Tue, 23 Jan
- 2024 05:10:18 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="fyIxKfjN";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="F5C3Iop1"
+Message-ID: <20240117124903.056546175@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1706015421;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 references:references; bh=tu6Txn30UVC3+dGEQgQMvX6BOPv731R38E3MTjuWaBY=;
+	b=fyIxKfjNqglhFrmGoknWfSRPU7iMXAfDU9Te8PV5ZUxnEeNMHp2QnxLMqUcFdObedOfu0U
+	TOcWuWNtTIFSsEd3/g5aYe+womevcg1mAo9VCly2/TXZv8bCnTjraff4z9nVnI+BRj9r3S
+	yorWPP+KiMRILOh4/bmomroZEg/fz/WMcyAr+Ap2NTuQfPxtc4Rg5hh+eWw+fHVEUVusIA
+	39D14C7EDw/mFWfMkeg+mGFrRJGr/ArjbII9atYJTTF65vGPj5y6zqtgA6JcaGLJOcwGcK
+	ksQGaLSyPWKE3qP97EA0FbxFFxsKHm8WtcN5lryy/m7ozAFiAdnJlcnpV5eGrg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1706015421;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 references:references; bh=tu6Txn30UVC3+dGEQgQMvX6BOPv731R38E3MTjuWaBY=;
+	b=F5C3Iop1/oQp6DCorH5nmWI+66zNEo0oyrTAggsj111iEOGbQrUENeeLr/REvKQg4lS/Bj
+	HrVOcONlSTvU2bCw==
+From: Thomas Gleixner <tglx@linutronix.de>
+To: LKML <linux-kernel@vger.kernel.org>
+Cc: x86@kernel.org,
+ Tom Lendacky <thomas.lendacky@amd.com>,
+ Andrew Cooper <andrew.cooper3@citrix.com>,
+ Arjan van de Ven <arjan@linux.intel.com>,
+ Huang Rui <ray.huang@amd.com>,
+ Juergen Gross <jgross@suse.com>,
+ Dimitri Sivanich <dimitri.sivanich@hpe.com>,
+ Sohil Mehta <sohil.mehta@intel.com>,
+ K Prateek Nayak <kprateek.nayak@amd.com>,
+ Kan Liang <kan.liang@linux.intel.com>,
+ Zhang Rui <rui.zhang@intel.com>,
+ "Paul E. McKenney" <paulmck@kernel.org>,
+ Feng Tang <feng.tang@intel.com>,
+ Andy Shevchenko <andy@infradead.org>,
+ Michael Kelley <mhklinux@outlook.com>,
+ "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+ Andy Shevchenko <andy.shevchenko@gmail.com>,
+ Wei Liu <wei.liu@kernel.org>
+Subject: [patch V2 11/22] x86/dtb: Rename x86_dtb_init()
+References: <20240117124704.044462658@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1705944943.git.u.kleine-koenig@pengutronix.de> <13ba99e2578d4448fd85f516fbe328f5d05eda05.1705944943.git.u.kleine-koenig@pengutronix.de>
-In-Reply-To: <13ba99e2578d4448fd85f516fbe328f5d05eda05.1705944943.git.u.kleine-koenig@pengutronix.de>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Tue, 23 Jan 2024 14:09:42 +0100
-Message-ID: <CAPDyKFr8=4=qWM0AR7ZZ-MyGUH+kLZZRWhVE4vu94cZqB5jxnQ@mail.gmail.com>
-Subject: Re: [PATCH v2 11/33] mmc: mmc_spi: Follow renaming of SPI "master" to "controller"
-To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: Mark Brown <broonie@kernel.org>, kernel@pengutronix.de, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Yang Yingliang <yangyingliang@huawei.com>, 
-	linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-spi@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 23 Jan 2024 14:10:20 +0100 (CET)
 
-On Mon, 22 Jan 2024 at 19:08, Uwe Kleine-K=C3=B6nig
-<u.kleine-koenig@pengutronix.de> wrote:
->
-> In commit 8caab75fd2c2 ("spi: Generalize SPI "master" to "controller"")
-> some functions and struct members were renamed. To not break all drivers
-> compatibility macros were provided.
->
-> To be able to remove these compatibility macros push the renaming into
-> this driver.
->
-> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
+From: Thomas Gleixner <tglx@linutronix.de>
 
-It looks like we need a decision if this should go via Mark's tree,
-the series altogether - or if each subsystem maintainer should apply
-each patch separately and postpone the final cleanups.
+x86_dtb_init() is a misnomer and it really should be used as a SMP
+configuration parser which is selected by the platform via
+x86_init::mpparse:parse_smp_config().
 
-While waiting for a conclusion, here's my ack.
+Rename it to x86_dtb_parse_smp_config() in preparation for that.
 
-Acked-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 
-Kind regards
-Uffe
+---
+ arch/x86/include/asm/prom.h  |    4 ++--
+ arch/x86/kernel/devicetree.c |    2 +-
+ arch/x86/kernel/setup.c      |    2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
+---
+--- a/arch/x86/include/asm/prom.h
++++ b/arch/x86/include/asm/prom.h
+@@ -23,11 +23,11 @@ extern int of_ioapic;
+ extern u64 initial_dtb;
+ extern void add_dtb(u64 data);
+ void x86_of_pci_init(void);
+-void x86_dtb_init(void);
++void x86_dtb_parse_smp_config(void);
+ #else
+ static inline void add_dtb(u64 data) { }
+ static inline void x86_of_pci_init(void) { }
+-static inline void x86_dtb_init(void) { }
++static inline void x86_dtb_parse_smp_config(void) { }
+ #define of_ioapic 0
+ #endif
+ 
+--- a/arch/x86/kernel/devicetree.c
++++ b/arch/x86/kernel/devicetree.c
+@@ -302,7 +302,7 @@ void __init x86_flattree_get_config(void
+ }
+ #endif
+ 
+-void __init x86_dtb_init(void)
++void __init x86_dtb_parse_smp_config(void)
+ {
+ 	if (!of_have_populated_dt())
+ 		return;
+--- a/arch/x86/kernel/setup.c
++++ b/arch/x86/kernel/setup.c
+@@ -1131,7 +1131,7 @@ void __init setup_arch(char **cmdline_p)
+ 	 * Read APIC and some other early information from ACPI tables.
+ 	 */
+ 	acpi_boot_init();
+-	x86_dtb_init();
++	x86_dtb_parse_smp_config();
+ 
+ 	/*
+ 	 * get boot-time SMP configuration:
 
-> ---
->  drivers/mmc/host/mmc_spi.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/mmc/host/mmc_spi.c b/drivers/mmc/host/mmc_spi.c
-> index b8dda8160c4e..bf35761f783a 100644
-> --- a/drivers/mmc/host/mmc_spi.c
-> +++ b/drivers/mmc/host/mmc_spi.c
-> @@ -935,7 +935,7 @@ static void mmc_spi_request(struct mmc_host *mmc, str=
-uct mmc_request *mrq)
->  #endif
->
->         /* request exclusive bus access */
-> -       spi_bus_lock(host->spi->master);
-> +       spi_bus_lock(host->spi->controller);
->
->  crc_recover:
->         /* issue command; then optionally data and stop */
-> @@ -967,7 +967,7 @@ static void mmc_spi_request(struct mmc_host *mmc, str=
-uct mmc_request *mrq)
->         }
->
->         /* release the bus */
-> -       spi_bus_unlock(host->spi->master);
-> +       spi_bus_unlock(host->spi->controller);
->
->         mmc_request_done(host->mmc, mrq);
->  }
-> @@ -1157,7 +1157,7 @@ static int mmc_spi_probe(struct spi_device *spi)
->         /* We rely on full duplex transfers, mostly to reduce
->          * per-transfer overheads (by making fewer transfers).
->          */
-> -       if (spi->master->flags & SPI_CONTROLLER_HALF_DUPLEX)
-> +       if (spi->controller->flags & SPI_CONTROLLER_HALF_DUPLEX)
->                 return -EINVAL;
->
->         /* MMC and SD specs only seem to care that sampling is on the
-> --
-> 2.43.0
->
