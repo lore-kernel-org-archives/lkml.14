@@ -1,474 +1,136 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
+Received: from out2-smtp.messagingengine.com (out2-smtp.messagingengine.com [66.111.4.26])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3028685C50;
-	Tue, 23 Jan 2024 18:51:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.120
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4401A481DC
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 18:51:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.111.4.26
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706035876; cv=none; b=nl+UUhM0WzuS6mCZj9cdQBs3wNOihdUxCviw9lyeRIAu2gTaxOKLKQ4WuNlNDx8p8sKBDH1X3yqJAmGlYGSPa/v5AejsHEHqeM/H1+uRS2U03f5TRcO/ZceN7r/qKTAcY9lHFP9XeDHZCrjNIeVY7iF9/hm3q1KEnr55jDm1Wuk=
+	t=1706035910; cv=none; b=Q7JP9tzqyfhwAjdpoWbOyKI5s/Stv2oZ56629PBNInGdFSzAAccnNY0FoIw/kIDAobP8FySEEBqnuqMEPwXbY0ouHqHVu6Y5+FBtvWPm3gAJx3+VLsZ/pS7Yb5epfkQ70PJJbl0Ys0l/0WI3g2J9+FP7ydbo0jTed8Kb9PCb0cA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706035876; c=relaxed/simple;
-	bh=SJQlsbXUNb8AAy5zbcbaFRhiFxEkXOtw429KEg71IOc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Q9NFkm4sy8bKKSnIvaFSEl3PCecVsK4izCABtwE9Z7bZt1poCgXfAaNMYJ8H9Slsq6eY2OOCDeolZth6uoFtWZiXxfgKA2O8X+M4qlvZYse7NueAYG/Lpcbqoh6Dvi3wpdqZAjEf2ljUQLQ9VC8Rbabk5rSJHCdIkfp4KjjYP4k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hcRjeB7z; arc=none smtp.client-ip=192.55.52.120
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1706035910; c=relaxed/simple;
+	bh=0j+P7FwDXOaWAcO0QMs/fHV3AZl5bRkW41gWFJG8Ov4=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
+	 Subject:Content-Type; b=DUhAj/luQThKNv8o/a2To6tPgtQDgIGDzkx8wViafb6teEvSSRLZklOBJDyXo8aIoNVp4uWaDim4WFq9BCBPaKH8HjyzTJNIlSbWSo4zajiOuSZ7SLyOGQpawT3gni6dEUk40Gm5jSvM6DHBCTj6qVTWwXAije55WYpVPN2Le/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jannau.net; spf=pass smtp.mailfrom=jannau.net; dkim=pass (2048-bit key) header.d=jannau.net header.i=@jannau.net header.b=YkxcjYqP; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=E5nQUiK0; arc=none smtp.client-ip=66.111.4.26
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jannau.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jannau.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hcRjeB7z"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706035874; x=1737571874;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=SJQlsbXUNb8AAy5zbcbaFRhiFxEkXOtw429KEg71IOc=;
-  b=hcRjeB7zQJL0TPjsj6Ft6WGJbBd/ZcAngwhr1iET7Vz3eCHQPv02VGKm
-   Z9590sAxKPKRSDGCqcXzPaKq2sb/poGMLw5p2WavVcci+UiUb2ubU9xAZ
-   rtQq8sD9rBjR+neTCR/7xJur3t/95ifQI6mXFiJf+LJRi7YXpJ9ezbEhG
-   aEdCfGAbqADgzdxIblP2WIFLwpNtYoolvc+3dKWHmx7gmo/KLF9vbyQoA
-   v8TbH4DFffd9wUYoDr43CVzMS2lwOobWjcG0PPRYyrKDlqHMab0ax6PBK
-   UksncVkHf6RdwdlucgCS/03Wmufi1GEe+2sTj9U0YyvhscfPEq3O0g1Xo
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="400487478"
-X-IronPort-AV: E=Sophos;i="6.05,215,1701158400"; 
-   d="scan'208";a="400487478"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2024 10:51:12 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,215,1701158400"; 
-   d="scan'208";a="1764044"
-Received: from kanliang-dev.jf.intel.com ([10.165.154.102])
-  by fmviesa004.fm.intel.com with ESMTP; 23 Jan 2024 10:51:13 -0800
-From: kan.liang@linux.intel.com
-To: acme@kernel.org,
-	namhyung@kernel.org,
-	irogers@google.com,
-	peterz@infradead.org,
-	mingo@redhat.com,
-	jolsa@kernel.org,
-	adrian.hunter@intel.com,
-	john.g.garry@oracle.com,
-	will@kernel.org,
-	james.clark@arm.com,
-	mike.leach@linaro.org,
-	leo.yan@linaro.org,
-	yuhaixin.yhx@linux.alibaba.com,
-	renyu.zj@linux.alibaba.com,
-	tmricht@linux.ibm.com,
-	ravi.bangoria@amd.com,
-	atrajeev@linux.vnet.ibm.com,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH V4 3/7] perf mem: Clean up perf_mem_events__name()
-Date: Tue, 23 Jan 2024 10:50:32 -0800
-Message-Id: <20240123185036.3461837-4-kan.liang@linux.intel.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20240123185036.3461837-1-kan.liang@linux.intel.com>
-References: <20240123185036.3461837-1-kan.liang@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=jannau.net header.i=@jannau.net header.b="YkxcjYqP";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="E5nQUiK0"
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+	by mailout.nyi.internal (Postfix) with ESMTP id 5EBD85C00EA;
+	Tue, 23 Jan 2024 13:51:46 -0500 (EST)
+Received: from imap53 ([10.202.2.103])
+  by compute1.internal (MEProxy); Tue, 23 Jan 2024 13:51:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jannau.net; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm2; t=1706035906; x=1706122306; bh=eIhN86Lh1o
+	FbG7iEsTBql1sUGIAIhzr7pTidTH0KO94=; b=YkxcjYqP7zv1Q1UJo+u25buzs3
+	65dwS+kWssYQqDc9bo6V2J5edttkZkg7zohFJum2+8X8XzCEUgEu2LTTx80Or0dF
+	rf+HILcVuGSNM2zOg/IZ/Qlf/Gzm828mYhwpTIZFPFhzJZxVfCh+3UZuWjEAw6ol
+	d6SD1iHSTwKhMW+BF03rLMDryBsoxvsfWF8lfTkaOGBiMmBLl58pNXzyPTnrJ6YD
+	uaOMU9sO9Ler/D9bFhPNDVPtKYVZdb26XYQd+xA0IhN7ZizGcl5r+nlutGddTVab
+	9gtCQl4HbXJ2GmQQNjxiDGY9ezHWbGefvKiDnB9rRmqcNYuhiKJr2gQhbqJA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm3; t=1706035906; x=1706122306; bh=eIhN86Lh1oFbG7iEsTBql1sUGIAI
+	hzr7pTidTH0KO94=; b=E5nQUiK0Emr6DnF9HINgIoD1V5bl1r+KqEiOLEvgfE59
+	HjeEoA6KOy+E4aex9YAhf5PWev0oxqn+k9i/tOgVL+hA6dl9THjVyvDrizITGlBg
+	78498S9KYalIBc/5ohOkj9oyx3wZtojEisiRUybtxk2UGRwiHZKiKP+gAREK14ia
+	4GOiGBSsmgOXuOjwrq1O5+3B2xlZYNzJ1pJSZlHF2ft2VbBsp7BAUd7ZUmGYIEnu
+	6rzE9dlUr9zdbijeBRiSmHOQ4U/9Ai+7eSFanR+pSBmakubdN3/z1gB4TASMYJDT
+	w/zMeawbujQMg6slo9HQT0kpe0COnNzcb1de1Qlurg==
+X-ME-Sender: <xms:wAqwZX_j8Llq0DrEzoo9SiA9WqQIVH6oXplVNbLzgdBYzwnCDjK_8g>
+    <xme:wAqwZTsT_7o1tFNkll9XlpmmrXSyGLirEOks3QV4s_GeA6ZE_FdGv1zlgMbm5rLer
+    YSc__8hLNhUGXIPckI>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrvdekkedgudduhecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdfl
+    rghnnhgvucfirhhunhgruhdfuceojhesjhgrnhhnrghurdhnvghtqeenucggtffrrghtth
+    gvrhhnpeejfeekgffhieevhfejgfetkeevvdehteejfedtiedukeefuedvkeehffefvdfh
+    ueenucffohhmrghinhepfhhrvggvuggvshhkthhophdrohhrghenucevlhhushhtvghruf
+    hiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehjsehjrghnnhgruhdrnhgvth
+X-ME-Proxy: <xmx:wAqwZVCKpqVkqZkjKkOU6nzeJgIr-wYQv7MUFfGU2zkO0YuL1-XSIA>
+    <xmx:wAqwZTcw0E7Dwd0cxZyKHg8Fz9P42Vv3EZWhoYUNOsb8hZaf8ko7eg>
+    <xmx:wAqwZcO17foPKjKFckFIU48eX6oKTTYE8UXCMCy5eshrjp7Vxofq2A>
+    <xmx:wgqwZTfiD0IzojjKojg1p6O-Wu1S5mK7s7jMNMzO3FsDtXwCUlvp_w>
+Feedback-ID: i47b949f6:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id BE4A0364006B; Tue, 23 Jan 2024 13:51:44 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-119-ga8b98d1bd8-fm-20240108.001-ga8b98d1b
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Message-Id: <489e3e5d-25e7-4e84-9e62-b6e52bf7455c@app.fastmail.com>
+In-Reply-To: <3da403ff-365d-4cea-86f0-4009d1da6baa@app.fastmail.com>
+References: <20240117104448.6852-1-arnd@kernel.org>
+ <efebd848-c952-41f8-9422-fe2235d92259@app.fastmail.com>
+ <3da403ff-365d-4cea-86f0-4009d1da6baa@app.fastmail.com>
+Date: Tue, 23 Jan 2024 19:51:23 +0100
+From: "Janne Grunau" <j@jannau.net>
+To: "Arnd Bergmann" <arnd@arndb.de>, "Arnd Bergmann" <arnd@kernel.org>,
+ "Alyssa Rosenzweig" <alyssa@rosenzweig.io>,
+ =?UTF-8?Q?Martin_Povi=C5=A1er?= <povik+lin@cutebit.org>
+Cc: asahi@lists.linux.dev, "Hector Martin" <marcan@marcan.st>,
+ "Sven Peter" <sven@svenpeter.dev>, "Asahi Lina" <lina@asahilina.net>,
+ dri-devel@lists.freedesktop.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] drm: apple: mark local functions static
+Content-Type: text/plain
 
-From: Kan Liang <kan.liang@linux.intel.com>
+Hej Arnd,
 
-Introduce a generic perf_mem_events__name(). Remove the ARCH-specific
-one.
+On Tue, Jan 23, 2024, at 08:34, Arnd Bergmann wrote:
+> On Mon, Jan 22, 2024, at 21:50, Janne Grunau wrote:
+>> On Wed, Jan 17, 2024, at 11:44, Arnd Bergmann wrote:
+>>> 
+>>> -int parse_sample_rate_bit(struct dcp_parse_ctx *handle, unsigned int 
+>>> *ratebit)
+>>> +static int parse_sample_rate_bit(struct dcp_parse_ctx *handle, 
+>>> unsigned int *ratebit)
+>>>  {
+>>>  	s64 rate;
+>>>  	int ret = parse_int(handle, &rate);
+>>> @@ -715,7 +715,7 @@ int parse_sample_rate_bit(struct dcp_parse_ctx 
+>>> *handle, unsigned int *ratebit)
+>>>  	return 0;
+>>>  }
+>>> 
+>>> -int parse_sample_fmtbit(struct dcp_parse_ctx *handle, u64 *fmtbit)
+>>> +static int parse_sample_fmtbit(struct dcp_parse_ctx *handle, u64 *fmtbit)
+>>>  {
+>>>  	s64 sample_size;
+>>>  	int ret = parse_int(handle, &sample_size);
+>>
+>> thanks, patch included in my dev branch and will be in the next pull 
+>> request I'll send to Hector.
+>>
+>> I suppose the recipients are generated by an automated 
+>> get_maintainers.pl invocation. Is that desired for out of tree drivers?
+>
+> I was wondering about that as well, as I don't usually send
+> patches for code that isn't at least in linux-next yet.
+>
+> I ended up using what is in the MAINTAINERS file for this driver
+> in the branch as that is is all I have at this point:
+>
+> APPLE DRM DISPLAY DRIVER
+> M:      Alyssa Rosenzweig <alyssa@rosenzweig.io>
+> L:      dri-devel@lists.freedesktop.org
+> S:      Maintained
+> T:      git git://anongit.freedesktop.org/drm/drm-misc
+> F:      drivers/gpu/drm/apple/
+>
+> I left out the drivers/gpu/ maintainer addresses though.
 
-The mem_load events may have a different format. Add ldlat and aux_event
-in the struct perf_mem_event to indicate the format and the extra aux
-event.
+oops, answered to the wrong patch. The strscpy one has the drivers/gpu/ maintainers and the question. I replied here first assuming it has the same recipient list. I'd consider the recipients for this mail reasonable.
 
-Add perf_mem_events_intel_aux[] to support the extra mem_load_aux event.
-
-Rename perf_mem_events__name to perf_pmu__mem_events_name.
-
-Reviewed-by: Ian Rogers <irogers@google.com>
-Tested-by: Ravi Bangoria <ravi.bangoria@amd.com>
-Tested-by: Leo Yan <leo.yan@linaro.org>
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
----
- tools/perf/arch/arm64/util/mem-events.c   | 26 ++-------
- tools/perf/arch/powerpc/util/Build        |  1 +
- tools/perf/arch/powerpc/util/mem-events.c | 16 +++---
- tools/perf/arch/powerpc/util/mem-events.h |  7 +++
- tools/perf/arch/powerpc/util/pmu.c        | 12 ++++
- tools/perf/arch/x86/util/mem-events.c     | 70 +++++------------------
- tools/perf/arch/x86/util/mem-events.h     |  1 +
- tools/perf/arch/x86/util/pmu.c            |  8 ++-
- tools/perf/util/mem-events.c              | 60 +++++++++++++------
- tools/perf/util/mem-events.h              |  3 +-
- 10 files changed, 97 insertions(+), 107 deletions(-)
- create mode 100644 tools/perf/arch/powerpc/util/mem-events.h
- create mode 100644 tools/perf/arch/powerpc/util/pmu.c
-
-diff --git a/tools/perf/arch/arm64/util/mem-events.c b/tools/perf/arch/arm64/util/mem-events.c
-index d3e69a520c2b..96460c46640a 100644
---- a/tools/perf/arch/arm64/util/mem-events.c
-+++ b/tools/perf/arch/arm64/util/mem-events.c
-@@ -3,28 +3,10 @@
- #include "util/mem-events.h"
- #include "mem-events.h"
- 
--#define E(t, n, s) { .tag = t, .name = n, .sysfs_name = s }
-+#define E(t, n, s, l, a) { .tag = t, .name = n, .sysfs_name = s, .ldlat = l, .aux_event = a }
- 
- struct perf_mem_event perf_mem_events_arm[PERF_MEM_EVENTS__MAX] = {
--	E("spe-load",	"arm_spe_0/ts_enable=1,pa_enable=1,load_filter=1,store_filter=0,min_latency=%u/",	"arm_spe_0"),
--	E("spe-store",	"arm_spe_0/ts_enable=1,pa_enable=1,load_filter=0,store_filter=1/",			"arm_spe_0"),
--	E("spe-ldst",	"arm_spe_0/ts_enable=1,pa_enable=1,load_filter=1,store_filter=1,min_latency=%u/",	"arm_spe_0"),
-+	E("spe-load",	"%s/ts_enable=1,pa_enable=1,load_filter=1,store_filter=0,min_latency=%u/",	"arm_spe_0",	true,	0),
-+	E("spe-store",	"%s/ts_enable=1,pa_enable=1,load_filter=0,store_filter=1/",			"arm_spe_0",	false,	0),
-+	E("spe-ldst",	"%s/ts_enable=1,pa_enable=1,load_filter=1,store_filter=1,min_latency=%u/",	"arm_spe_0",	true,	0),
- };
--
--static char mem_ev_name[100];
--
--const char *perf_mem_events__name(int i, const char *pmu_name __maybe_unused)
--{
--	struct perf_mem_event *e = &perf_mem_events_arm[i];
--
--	if (i >= PERF_MEM_EVENTS__MAX)
--		return NULL;
--
--	if (i == PERF_MEM_EVENTS__LOAD || i == PERF_MEM_EVENTS__LOAD_STORE)
--		scnprintf(mem_ev_name, sizeof(mem_ev_name),
--			  e->name, perf_mem_events__loads_ldlat);
--	else /* PERF_MEM_EVENTS__STORE */
--		scnprintf(mem_ev_name, sizeof(mem_ev_name), e->name);
--
--	return mem_ev_name;
--}
-diff --git a/tools/perf/arch/powerpc/util/Build b/tools/perf/arch/powerpc/util/Build
-index 9889245c555c..1d323f3a3322 100644
---- a/tools/perf/arch/powerpc/util/Build
-+++ b/tools/perf/arch/powerpc/util/Build
-@@ -2,6 +2,7 @@ perf-y += header.o
- perf-$(CONFIG_LIBTRACEEVENT) += kvm-stat.o
- perf-y += perf_regs.o
- perf-y += mem-events.o
-+perf-y += pmu.o
- perf-y += sym-handling.o
- perf-y += evsel.o
- perf-y += event.o
-diff --git a/tools/perf/arch/powerpc/util/mem-events.c b/tools/perf/arch/powerpc/util/mem-events.c
-index 78b986e5268d..9140cdb1bbfb 100644
---- a/tools/perf/arch/powerpc/util/mem-events.c
-+++ b/tools/perf/arch/powerpc/util/mem-events.c
-@@ -1,12 +1,12 @@
- // SPDX-License-Identifier: GPL-2.0
--#include "map_symbol.h"
-+#include "util/map_symbol.h"
-+#include "util/mem-events.h"
- #include "mem-events.h"
- 
--/* PowerPC does not support 'ldlat' parameter. */
--const char *perf_mem_events__name(int i, const char *pmu_name __maybe_unused)
--{
--	if (i == PERF_MEM_EVENTS__LOAD)
--		return "cpu/mem-loads/";
-+#define E(t, n, s, l, a) { .tag = t, .name = n, .sysfs_name = s, .ldlat = l, .aux_event = a }
- 
--	return "cpu/mem-stores/";
--}
-+struct perf_mem_event perf_mem_events_power[PERF_MEM_EVENTS__MAX] = {
-+	E("ldlat-loads",	"%s/mem-loads/",	"cpu/events/mem-loads",		false,	0),
-+	E("ldlat-stores",	"%s/mem-stores/",	"cpu/events/mem-stores",	false,	0),
-+	E(NULL,			NULL,			NULL,				false,	0),
-+};
-diff --git a/tools/perf/arch/powerpc/util/mem-events.h b/tools/perf/arch/powerpc/util/mem-events.h
-new file mode 100644
-index 000000000000..6acc3d1b6873
---- /dev/null
-+++ b/tools/perf/arch/powerpc/util/mem-events.h
-@@ -0,0 +1,7 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _POWER_MEM_EVENTS_H
-+#define _POWER_MEM_EVENTS_H
-+
-+extern struct perf_mem_event perf_mem_events_power[PERF_MEM_EVENTS__MAX];
-+
-+#endif /* _POWER_MEM_EVENTS_H */
-diff --git a/tools/perf/arch/powerpc/util/pmu.c b/tools/perf/arch/powerpc/util/pmu.c
-new file mode 100644
-index 000000000000..554675deef7b
---- /dev/null
-+++ b/tools/perf/arch/powerpc/util/pmu.c
-@@ -0,0 +1,12 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#include <string.h>
-+
-+#include "../../../util/pmu.h"
-+#include "mem-events.h"
-+
-+void perf_pmu__arch_init(struct perf_pmu *pmu)
-+{
-+	if (pmu->is_core)
-+		pmu->mem_events = perf_mem_events_power;
-+}
-diff --git a/tools/perf/arch/x86/util/mem-events.c b/tools/perf/arch/x86/util/mem-events.c
-index 5fb41d50118d..f0e66a0151a0 100644
---- a/tools/perf/arch/x86/util/mem-events.c
-+++ b/tools/perf/arch/x86/util/mem-events.c
-@@ -7,25 +7,26 @@
- #include "linux/string.h"
- #include "env.h"
- 
--static char mem_loads_name[100];
--static bool mem_loads_name__init;
--static char mem_stores_name[100];
--
- #define MEM_LOADS_AUX		0x8203
--#define MEM_LOADS_AUX_NAME     "{%s/mem-loads-aux/,%s/mem-loads,ldlat=%u/}:P"
- 
--#define E(t, n, s) { .tag = t, .name = n, .sysfs_name = s }
-+#define E(t, n, s, l, a) { .tag = t, .name = n, .sysfs_name = s, .ldlat = l, .aux_event = a }
- 
- struct perf_mem_event perf_mem_events_intel[PERF_MEM_EVENTS__MAX] = {
--	E("ldlat-loads",	"%s/mem-loads,ldlat=%u/P",	"%s/events/mem-loads"),
--	E("ldlat-stores",	"%s/mem-stores/P",		"%s/events/mem-stores"),
--	E(NULL,			NULL,				NULL),
-+	E("ldlat-loads",	"%s/mem-loads,ldlat=%u/P",	"%s/events/mem-loads",	true,	0),
-+	E("ldlat-stores",	"%s/mem-stores/P",		"%s/events/mem-stores",	false,	0),
-+	E(NULL,			NULL,				NULL,			false,	0),
-+};
-+
-+struct perf_mem_event perf_mem_events_intel_aux[PERF_MEM_EVENTS__MAX] = {
-+	E("ldlat-loads",	"{%s/mem-loads-aux/,%s/mem-loads,ldlat=%u/}:P",	"%s/events/mem-loads",	true,	MEM_LOADS_AUX),
-+	E("ldlat-stores",	"%s/mem-stores/P",		"%s/events/mem-stores",	false,	0),
-+	E(NULL,			NULL,				NULL,			false,	0),
- };
- 
- struct perf_mem_event perf_mem_events_amd[PERF_MEM_EVENTS__MAX] = {
--	E(NULL,		NULL,		NULL),
--	E(NULL,		NULL,		NULL),
--	E("mem-ldst",	"ibs_op//",	"ibs_op"),
-+	E(NULL,		NULL,		NULL,		false,	0),
-+	E(NULL,		NULL,		NULL,		false,	0),
-+	E("mem-ldst",	"%s//",		"ibs_op",	false,	0),
- };
- 
- bool is_mem_loads_aux_event(struct evsel *leader)
-@@ -40,48 +41,3 @@ bool is_mem_loads_aux_event(struct evsel *leader)
- 
- 	return leader->core.attr.config == MEM_LOADS_AUX;
- }
--
--const char *perf_mem_events__name(int i, const char *pmu_name)
--{
--	struct perf_mem_event *e;
--
--	if (x86__is_amd_cpu())
--		e = &perf_mem_events_amd[i];
--	else
--		e = &perf_mem_events_intel[i];
--
--	if (!e)
--		return NULL;
--
--	if (i == PERF_MEM_EVENTS__LOAD) {
--		if (mem_loads_name__init && !pmu_name)
--			return mem_loads_name;
--
--		if (!pmu_name) {
--			mem_loads_name__init = true;
--			pmu_name = "cpu";
--		}
--
--		if (perf_pmus__have_event(pmu_name, "mem-loads-aux")) {
--			scnprintf(mem_loads_name, sizeof(mem_loads_name),
--				  MEM_LOADS_AUX_NAME, pmu_name, pmu_name,
--				  perf_mem_events__loads_ldlat);
--		} else {
--			scnprintf(mem_loads_name, sizeof(mem_loads_name),
--				  e->name, pmu_name,
--				  perf_mem_events__loads_ldlat);
--		}
--		return mem_loads_name;
--	}
--
--	if (i == PERF_MEM_EVENTS__STORE) {
--		if (!pmu_name)
--			pmu_name = "cpu";
--
--		scnprintf(mem_stores_name, sizeof(mem_stores_name),
--			  e->name, pmu_name);
--		return mem_stores_name;
--	}
--
--	return e->name;
--}
-diff --git a/tools/perf/arch/x86/util/mem-events.h b/tools/perf/arch/x86/util/mem-events.h
-index 3959e427f482..f55c8d3b7d59 100644
---- a/tools/perf/arch/x86/util/mem-events.h
-+++ b/tools/perf/arch/x86/util/mem-events.h
-@@ -3,6 +3,7 @@
- #define _X86_MEM_EVENTS_H
- 
- extern struct perf_mem_event perf_mem_events_intel[PERF_MEM_EVENTS__MAX];
-+extern struct perf_mem_event perf_mem_events_intel_aux[PERF_MEM_EVENTS__MAX];
- 
- extern struct perf_mem_event perf_mem_events_amd[PERF_MEM_EVENTS__MAX];
- 
-diff --git a/tools/perf/arch/x86/util/pmu.c b/tools/perf/arch/x86/util/pmu.c
-index cd22e80e5657..0f49ff13cfe2 100644
---- a/tools/perf/arch/x86/util/pmu.c
-+++ b/tools/perf/arch/x86/util/pmu.c
-@@ -35,8 +35,12 @@ void perf_pmu__arch_init(struct perf_pmu *pmu __maybe_unused)
- 	if (x86__is_amd_cpu()) {
- 		if (!strcmp(pmu->name, "ibs_op"))
- 			pmu->mem_events = perf_mem_events_amd;
--	} else if (pmu->is_core)
--		pmu->mem_events = perf_mem_events_intel;
-+	} else if (pmu->is_core) {
-+		if (perf_pmu__have_event(pmu, "mem-loads-aux"))
-+			pmu->mem_events = perf_mem_events_intel_aux;
-+		else
-+			pmu->mem_events = perf_mem_events_intel;
-+	}
- }
- 
- int perf_pmus__num_mem_pmus(void)
-diff --git a/tools/perf/util/mem-events.c b/tools/perf/util/mem-events.c
-index 27a33dc44964..51e53e33df03 100644
---- a/tools/perf/util/mem-events.c
-+++ b/tools/perf/util/mem-events.c
-@@ -17,17 +17,17 @@
- 
- unsigned int perf_mem_events__loads_ldlat = 30;
- 
--#define E(t, n, s) { .tag = t, .name = n, .sysfs_name = s }
-+#define E(t, n, s, l, a) { .tag = t, .name = n, .sysfs_name = s, .ldlat = l, .aux_event = a }
- 
- struct perf_mem_event perf_mem_events[PERF_MEM_EVENTS__MAX] = {
--	E("ldlat-loads",	"cpu/mem-loads,ldlat=%u/P",	"cpu/events/mem-loads"),
--	E("ldlat-stores",	"cpu/mem-stores/P",		"cpu/events/mem-stores"),
--	E(NULL,			NULL,				NULL),
-+	E("ldlat-loads",	"%s/mem-loads,ldlat=%u/P",	"cpu/events/mem-loads",		true,	0),
-+	E("ldlat-stores",	"%s/mem-stores/P",		"cpu/events/mem-stores",	false,	0),
-+	E(NULL,			NULL,				NULL,				false,	0),
- };
- #undef E
- 
- static char mem_loads_name[100];
--static bool mem_loads_name__init;
-+static char mem_stores_name[100];
- 
- struct perf_mem_event *perf_pmu__mem_events_ptr(struct perf_pmu *pmu, int i)
- {
-@@ -62,23 +62,49 @@ struct perf_pmu *perf_mem_events_find_pmu(void)
- 	return perf_pmus__scan_mem(NULL);
- }
- 
--const char * __weak perf_mem_events__name(int i, const char *pmu_name  __maybe_unused)
-+static const char *perf_pmu__mem_events_name(int i, struct perf_pmu *pmu)
- {
--	struct perf_mem_event *e = &perf_mem_events[i];
-+	struct perf_mem_event *e;
- 
-+	if (i >= PERF_MEM_EVENTS__MAX || !pmu)
-+		return NULL;
-+
-+	e = &pmu->mem_events[i];
- 	if (!e)
- 		return NULL;
- 
--	if (i == PERF_MEM_EVENTS__LOAD) {
--		if (!mem_loads_name__init) {
--			mem_loads_name__init = true;
--			scnprintf(mem_loads_name, sizeof(mem_loads_name),
--				  e->name, perf_mem_events__loads_ldlat);
-+	if (i == PERF_MEM_EVENTS__LOAD || i == PERF_MEM_EVENTS__LOAD_STORE) {
-+		if (e->ldlat) {
-+			if (!e->aux_event) {
-+				/* ARM and Most of Intel */
-+				scnprintf(mem_loads_name, sizeof(mem_loads_name),
-+					  e->name, pmu->name,
-+					  perf_mem_events__loads_ldlat);
-+			} else {
-+				/* Intel with mem-loads-aux event */
-+				scnprintf(mem_loads_name, sizeof(mem_loads_name),
-+					  e->name, pmu->name, pmu->name,
-+					  perf_mem_events__loads_ldlat);
-+			}
-+		} else {
-+			if (!e->aux_event) {
-+				/* AMD and POWER */
-+				scnprintf(mem_loads_name, sizeof(mem_loads_name),
-+					  e->name, pmu->name);
-+			} else
-+				return NULL;
- 		}
-+
- 		return mem_loads_name;
- 	}
- 
--	return e->name;
-+	if (i == PERF_MEM_EVENTS__STORE) {
-+		scnprintf(mem_stores_name, sizeof(mem_stores_name),
-+			  e->name, pmu->name);
-+		return mem_stores_name;
-+	}
-+
-+	return NULL;
- }
- 
- __weak bool is_mem_loads_aux_event(struct evsel *leader __maybe_unused)
-@@ -175,7 +201,7 @@ void perf_pmu__mem_events_list(struct perf_pmu *pmu)
- 			e->tag ? 13 : 0,
- 			e->tag ? : "",
- 			e->tag && verbose > 0 ? 25 : 0,
--			e->tag && verbose > 0 ? perf_mem_events__name(j, NULL) : "",
-+			e->tag && verbose > 0 ? perf_pmu__mem_events_name(j, pmu) : "",
- 			e->supported ? ": available\n" : "");
- 	}
- }
-@@ -198,15 +224,15 @@ int perf_mem_events__record_args(const char **rec_argv, int *argv_nr,
- 
- 			if (!e->supported) {
- 				pr_err("failed: event '%s' not supported\n",
--					perf_mem_events__name(j, pmu->name));
-+					perf_pmu__mem_events_name(j, pmu));
- 				return -1;
- 			}
- 
- 			if (perf_pmus__num_mem_pmus() == 1) {
- 				rec_argv[i++] = "-e";
--				rec_argv[i++] = perf_mem_events__name(j, NULL);
-+				rec_argv[i++] = perf_pmu__mem_events_name(j, pmu);
- 			} else {
--				const char *s = perf_mem_events__name(j, pmu->name);
-+				const char *s = perf_pmu__mem_events_name(j, pmu);
- 
- 				if (!perf_mem_event__supported(mnt, pmu, e))
- 					continue;
-diff --git a/tools/perf/util/mem-events.h b/tools/perf/util/mem-events.h
-index 0ad301a2e424..79d342768d12 100644
---- a/tools/perf/util/mem-events.h
-+++ b/tools/perf/util/mem-events.h
-@@ -14,6 +14,8 @@
- struct perf_mem_event {
- 	bool		record;
- 	bool		supported;
-+	bool		ldlat;
-+	u32		aux_event;
- 	const char	*tag;
- 	const char	*name;
- 	const char	*sysfs_name;
-@@ -39,7 +41,6 @@ extern struct perf_mem_event perf_mem_events[PERF_MEM_EVENTS__MAX];
- int perf_pmu__mem_events_parse(struct perf_pmu *pmu, const char *str);
- int perf_pmu__mem_events_init(struct perf_pmu *pmu);
- 
--const char *perf_mem_events__name(int i, const char *pmu_name);
- struct perf_mem_event *perf_pmu__mem_events_ptr(struct perf_pmu *pmu, int i);
- struct perf_pmu *perf_mem_events_find_pmu(void);
- bool is_mem_loads_aux_event(struct evsel *leader);
--- 
-2.35.1
-
+Janne
