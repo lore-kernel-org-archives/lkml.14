@@ -1,141 +1,172 @@
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2F7C5FDBE
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 15:11:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58F595F858
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 15:13:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706022673; cv=none; b=G7PULSSTqcB+wLD0Vp00pPc8WmT/w2gJvGGa63OvlAGjcvbQJS3cGxZMdLjAL7jvQyipqj/7fCKbOaCNHhCwNGjX+30FcUiFEBZecKEDLpqY/xQkCXJqxzdsHjgkKJU2g3/Rg2LgimRuuj3gUlrknHMEb018VXryhcfmQqx6y08=
+	t=1706022786; cv=none; b=bZLqfcqi5TVnGVZveU+lmc54JuwFGdLhrloyjVAGr2nk/oDeX/V7RXXvNnEC1HfIyoUl0H+YJoi+W2dO5z+UygiQ9yc8Upo8RDCO7DsxlPqkQndfetdLbVDsLDly3taJdkFcQez1BuwDHUQVvTz+MN+qBgehEYjHMo3tAMUqweg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706022673; c=relaxed/simple;
-	bh=PPm9boZjwBn6Xzyt0g83ZrbCoWDaQwNE36cwpign/kQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WrNwdzzN9DoBgjyAMPEW3zGjnxA2gguQIRP5oLZUNvrBxdIe84wMChYCZKuZoKFnsmpFjWha6I+aXd+/e9YSjjxY3mcyuOlB3t932ljhkF4c0gdD+taIzyi+FvnE8D6bZIMykVpYYSqm7mXGxCt+fujCpP6VU15BvqsfPnth+2k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VXINKWz/; arc=none smtp.client-ip=209.85.210.179
+	s=arc-20240116; t=1706022786; c=relaxed/simple;
+	bh=6tx6GUIj8nDlMvxi21kmbAgfHDM80qvccPclPzxZPWg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mEK9OrEJjida27XyFMcbn5i2EmxK7byDL06TjJx0eIs6RELgjiYEfFzFuh0bgdSg/GvmOkdjMnN8EU9Bevx+HpgOG20lL+6fX6c5SV9r7WNHAiZOgSEOFuTEJ0e5rABhG2sc7hITjRx7qPFpBGvaEnft2t+2m1fI70tY5w1C5xY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=c65gSC6b; arc=none smtp.client-ip=209.85.128.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VXINKWz/"
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-6dd7b525cd6so478215b3a.2
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 07:11:10 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="c65gSC6b"
+Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-5edfcba97e3so45051567b3.2
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 07:13:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706022670; x=1706627470; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=4TDMZtp4Rk/MyqeG91tpztAQaCoeOy1ImodF5oM5/C8=;
-        b=VXINKWz/RqJyQsbef7Qhp0b/TaaiZaU9h32F8bwFGfE2hx378WqsEsgdYNZg5X3LJO
-         n9ttFF0Bf9X9lBSRyO29FUcTtL9X6l9XA1MR2KMnPFta9wCESIMkOGyX9HlovJNP8S2I
-         fKaRsVbWuF/e5WPKhJL6pyM9XhrmwzRM8n2iWBhEbuX7oDubPOSpqPtvmMDODcYqtn4H
-         KfkK8imYEsvwpj7qAR97meraLk2jPWpzaGE6QUI5pBE9eaObSCU+7UCNkV46+e+EaF87
-         xXKGVYnyPn1m1mzu1GP7j3KRDuESiwm+RabSJ8Iv74d8hc/p+Bz+axJF00AqRKRQS8HE
-         HE2w==
+        d=linaro.org; s=google; t=1706022784; x=1706627584; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=tBvO8IK4oJfr/fyXW7CtKCvOhpCr33xrej++q9qJr0A=;
+        b=c65gSC6bHG+9uPnUrKRcGbmOc3872dzB16aiIUacSu799oV8JG+jhmOYPJ74qrnlUw
+         JzXAIKdwlYalS9fbcq6zygFmliW2+8bH8URijLxWosxgfIXUJLPmNbJSO6hhGOVy67Wk
+         ATdNrVJ4rqcSSHHNHMfpJHh6RKvKcJDGOtO5KVY7uSqkfLXCFigV/EA77fqtfPBMRBJD
+         GTzVahJ6TW1Y9lSFqmq/RA2Xc7Bd+yg8IFBlgh8YG/+TOfjQ7jgq4Z4+N7y/+omj+RHG
+         b1Z2RVULCFIfxPjDE4967sqVFGIEybXobIa8YOsH9v+Glhf3JYADywXSTwSCBGUYXGQv
+         VLSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706022670; x=1706627470;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4TDMZtp4Rk/MyqeG91tpztAQaCoeOy1ImodF5oM5/C8=;
-        b=rqeeFz784DOjlEoqRpJnwnXFKs/dBepJ1xMhfXp1FVIEMwmdGzZjn+U4kcYU2+E0Pw
-         buKSGJnJE2xHQtGm22StokWS6ZMDbgm+05J7tzJ+Qdr/va9C+TwtjWqXUq4tHAbUaGxE
-         HC3b7luGHTKwW4I/SZs/ZeFpaGMjJZilrBapYBZ7WhMR/+zuYU9ECks/K/PHQMAMaxCr
-         un4vKDnHSXMt+GBhmp8TLRvXL9l2Ct53abENMatmtuhwuVzebsda3lXQD2fdHYvjmZbh
-         FEDcHPBcl+sarApeg6zABUiuCPUoOKfkUw38CZcAPB8NB8Iu+zROgZyYGMhv0qkg+sDk
-         ii7g==
-X-Gm-Message-State: AOJu0YwSN4Ya1DXEiwLItGN0a7nOL86brWjVzGJ8xQAek+eBgGKW0cNA
-	qRcZsWwg4QngvkXMRGBmZY8CaF1eJ0Igq8SJ+UY16DauejIlHNGBX9FrCupM9g==
-X-Google-Smtp-Source: AGHT+IEOKhrSQ2AAiD6B4preFnkzitZWz56/vBVAw7INI+RAQyhQg8QHxAEyl6Hrgx0FmHXbiPe34Q==
-X-Received: by 2002:a62:5e06:0:b0:6d9:eb24:4c5f with SMTP id s6-20020a625e06000000b006d9eb244c5fmr2890544pfb.37.1706022670014;
-        Tue, 23 Jan 2024 07:11:10 -0800 (PST)
-Received: from thinkpad ([117.217.189.109])
-        by smtp.gmail.com with ESMTPSA id y22-20020a62b516000000b006dbd2405882sm6021527pfe.148.2024.01.23.07.11.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jan 2024 07:11:09 -0800 (PST)
-Date: Tue, 23 Jan 2024 20:41:02 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Eric Chanudet <echanude@redhat.com>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	"James E.J. Bottomley" <jejb@linux.ibm.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	linux-arm-msm@vger.kernel.org, linux-scsi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] scsi: ufs: qcom: avoid re-init quirk when gears match
-Message-ID: <20240123151102.GE19029@thinkpad>
-References: <20240119185537.3091366-11-echanude@redhat.com>
+        d=1e100.net; s=20230601; t=1706022784; x=1706627584;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=tBvO8IK4oJfr/fyXW7CtKCvOhpCr33xrej++q9qJr0A=;
+        b=JDkdd81VMrKIz6xTO9zcrf+P2m23fGcqUSzecYXeyUzI7a+J2VF7xeKaTK4c663Ex5
+         lzdh9RPHis1HoYs/brbgLEFgqP0pl9FjudtesDhBpD7Xs8ISciTbZV1Ksik6E+elo5TJ
+         qpK689/NSrd3xvmXajTSIcdl8f1RqbLYu5WCXqJpHR1otuoDdjadwJwCUgeMLYcrtpt0
+         aka5yisN4CUoQlm34Bcuh5JdeIpMmnEMYjNHQmGQ4Y2SKgbWqQWiZ6w259B6C7Kr4ADC
+         qO5rhNRnATYdHCEDp78Rhfl5B1Gigg7FtIm9dOysQ+u5oV4lCZcDTRPl486+Db1Q+J8Y
+         3LGg==
+X-Gm-Message-State: AOJu0YzGdKcjL5gwZZ/AhCHSwO3zsUXuCgsbjOMHDW9PCdeJALOz9St8
+	o4mVIfky8dtvnAOYMgayo9F9zIs0YKHnr2ZpDX0Iz6awP+gRVcckaupHl8dtfpD6buHp7TinnOs
+	uWtVqLf3Yh/VS4V81THeS44uz/8CkbEkzAi2LdA==
+X-Google-Smtp-Source: AGHT+IErCELn6TxJa7wNsGtNjkmE3tZd5G1HCba+hmniY9ftSq65RDRxr6aS4cBge5u/RPP9/HtEHOlyAlzQ++QTT6A=
+X-Received: by 2002:a81:7bc3:0:b0:5ff:7f44:5d94 with SMTP id
+ w186-20020a817bc3000000b005ff7f445d94mr4970224ywc.80.1706022784316; Tue, 23
+ Jan 2024 07:13:04 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240119185537.3091366-11-echanude@redhat.com>
+References: <20240116094935.9988-1-quic_riteshk@quicinc.com>
+ <20240116094935.9988-3-quic_riteshk@quicinc.com> <20a8efd1-e243-434e-8f75-aa786ac8014f@linaro.org>
+ <CAA8EJpqQVuS+yqXQ2y5sNQrRVg7tcQAJ3ywsEjg+O=7TkUZWLQ@mail.gmail.com> <99a9a562-9f6f-411c-be1c-0a28fc2524dd@quicinc.com>
+In-Reply-To: <99a9a562-9f6f-411c-be1c-0a28fc2524dd@quicinc.com>
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Tue, 23 Jan 2024 17:12:53 +0200
+Message-ID: <CAA8EJppj+cDnw7p4yANvF0FmEhX3+L5xUq8w3TeevAGhcpo1Yg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] arm64: dts: qcom: qcm6490-idp: add display and panel
+To: Ritesh Kumar <quic_riteshk@quicinc.com>
+Cc: Konrad Dybcio <konrad.dybcio@linaro.org>, andersson@kernel.org, robh+dt@kernel.org, 
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
+	catalin.marinas@arm.com, will@kernel.org, quic_bjorande@quicinc.com, 
+	geert+renesas@glider.be, arnd@arndb.de, neil.armstrong@linaro.org, 
+	nfraprado@collabora.com, m.szyprowski@samsung.com, 
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	quic_abhinavk@quicinc.com, quic_rajeevny@quicinc.com, 
+	quic_vproddut@quicinc.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Jan 19, 2024 at 01:55:47PM -0500, Eric Chanudet wrote:
-> On sa8775p-ride, probing the hba will go through the
-> UFSHCD_QUIRK_REINIT_AFTER_MAX_GEAR_SWITCH path although the power info
-> are same during the second init.
-> 
-> If the host is at least v4, ufs_qcom_get_hs_gear() picked the highest
-> supported gear when setting the host_params. After the negotiation, if
-> the host and device are on the same gear, it is the highest gear
-> supported between the two. Skip the re-init to save some time.
-> 
-> Signed-off-by: Eric Chanudet <echanude@redhat.com>
-> ---
-> 
-> "trace_event=ufs:ufshcd_init" reports the time spent where the re-init
-> quirk is performed. On sa8775p-ride:
-> Baseline:
->   0.355879: ufshcd_init: 1d84000.ufs: took 103377 usecs, dev_state: UFS_ACTIVE_PWR_MODE, link_state: UIC_LINK_ACTIVE_STATE, err 0
-> With this patch:
->   0.297676: ufshcd_init: 1d84000.ufs: took 43553 usecs, dev_state: UFS_ACTIVE_PWR_MODE, link_state: UIC_LINK_ACTIVE_STATE, err 0
-> 
->  drivers/ufs/host/ufs-qcom.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/ufs/host/ufs-qcom.c b/drivers/ufs/host/ufs-qcom.c
-> index 39eef470f8fa..f9f161340e78 100644
-> --- a/drivers/ufs/host/ufs-qcom.c
-> +++ b/drivers/ufs/host/ufs-qcom.c
-> @@ -738,8 +738,12 @@ static int ufs_qcom_pwr_change_notify(struct ufs_hba *hba,
->  		 * the second init can program the optimal PHY settings. This allows one to start
->  		 * the first init with either the minimum or the maximum support gear.
->  		 */
-> -		if (hba->ufshcd_state == UFSHCD_STATE_RESET)
-> +		if (hba->ufshcd_state == UFSHCD_STATE_RESET) {
-> +			if (host->hw_ver.major >= 0x4 &&
+On Tue, 23 Jan 2024 at 15:43, Ritesh Kumar <quic_riteshk@quicinc.com> wrote:
+>
+>
+> On 1/16/2024 6:27 PM, Dmitry Baryshkov wrote:
+>
+> > On Tue, 16 Jan 2024 at 14:06, Konrad Dybcio <konrad.dybcio@linaro.org> wrote:
+> >>
+> >>
+> >> On 1/16/24 10:49, Ritesh Kumar wrote:
+> >>> Enable Display Subsystem with Novatek NT36672E Panel
+> >>> on qcm6490 idp platform.
+> >>>
+> >>> Signed-off-by: Ritesh Kumar <quic_riteshk@quicinc.com>
+> >>> ---
+> >>>    arch/arm64/boot/dts/qcom/qcm6490-idp.dts | 100 +++++++++++++++++++++++
+> >>>    1 file changed, 100 insertions(+)
+> >>>
+> >>> diff --git a/arch/arm64/boot/dts/qcom/qcm6490-idp.dts b/arch/arm64/boot/dts/qcom/qcm6490-idp.dts
+> >>> index 2a6e4907c5ee..efa5252130a1 100644
+> >>> --- a/arch/arm64/boot/dts/qcom/qcm6490-idp.dts
+> >>> +++ b/arch/arm64/boot/dts/qcom/qcm6490-idp.dts
+> >>> @@ -9,6 +9,7 @@
+> >>>    #define PM7250B_SID 8
+> >>>    #define PM7250B_SID1 9
+> >>>
+> >>> +#include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
+> >>>    #include <dt-bindings/regulator/qcom,rpmh-regulator.h>
+> >>>    #include "sc7280.dtsi"
+> >>>    #include "pm7250b.dtsi"
+> >>> @@ -38,6 +39,25 @@
+> >>>                stdout-path = "serial0:115200n8";
+> >>>        };
+> >>>
+> >>> +     lcd_disp_bias: lcd-disp-bias-regulator {
+> >>> +             compatible = "regulator-fixed";
+> >>> +             regulator-name = "lcd_disp_bias";
+> >>> +             regulator-min-microvolt = <5500000>;
+> >>> +             regulator-max-microvolt = <5500000>;
+> >>> +             gpio = <&pm7250b_gpios 2 GPIO_ACTIVE_HIGH>;
+> >>> +             enable-active-high;
+> >>> +             pinctrl-names = "default";
+> >>> +             pinctrl-0 = <&lcd_disp_bias_en>;
+> >> property-n
+> >> property-names
+> >>
+> >> all throughout the patch
+>
+> Thanks, I will update in the new version.
+>
+> >>> +&gpu {
+> >>> +     status = "disabled";
+> >>> +};
+> >> Hm.. generally we disable the GPU in the SoC DT, but that doesn't
+> >> seem to have happened here..
+> >>
+> >> Thinking about it more, is disabling it here necessary? Does it
+> >> not fail gracefully?
+> > Missed this.
+> >
+> > I'd say, I don't see a reason to disable it at all. The GPU should be
+> > working on sc7280 / qcm4290.
+>
+> With GPU device node enabled, adreno_bind failure is seen as the
+> "speed_bin" was not populated on QCM6490 target which leads to display
+> bind failure.
 
-You can get rid of this check as I said in the reply.
+Excuse me please. The GPU node for sc7280 already has speed_bin, which
+points to qfprom + 0x1e9, bits 5 to 9.
 
-> +			    host_params->hs_tx_gear == dev_req_params->gear_tx)
+Do you mean that qcm6490 uses different speed bin location? Or
+different values for the speed bins?
 
-How about?
+> Spoke with GPU team and on QCM6490 board, only CPU rendering is
+> supported for now and there is no plan to enable GPU rendering in near
+> future.
 
-			/*
-			 * Skip REINIT if the negotiated gear matches with the
-			 * initial phy_gear. Otherwise, update the phy_gear to
-			 * program the optimal gear setting during REINIT.
-			 */
-			if (host->phy_gear == dev_req_params->gear_tx)
-				hba->quirks &= ~UFSHCD_QUIRK_REINIT_AFTER_MAX_GEAR_SWITCH;
-			else
-				host->phy_gear = dev_req_params->gear_tx;
+This sounds like having the feature disabled for no particular reason.
+Both the kernel and Mesa have supported the Adreno 635 for quite a
+while.
 
-- Mani
+> In this regard, what do you suggest
+>
+> 1) Disable GPU in QCM6490 DT (as per the current patch)
+> 2) Disable GPU in the SoC DT, but enable it in other platform DTs. (This
+> will prompt change in all the dt's and we don't have all the devices to
+> test)
 
-> +				hba->quirks &= ~UFSHCD_QUIRK_REINIT_AFTER_MAX_GEAR_SWITCH;
->  			host->phy_gear = dev_req_params->gear_tx;
-> +		}
->  
->  		/* enable the device ref clock before changing to HS mode */
->  		if (!ufshcd_is_hs_mode(&hba->pwr_info) &&
-> -- 
-> 2.43.0
-> 
+The second option definitely follows what is present on other platforms.
+
+> Please let me know your views on it.
+
+Please enable the GPU instead.
 
 -- 
-மணிவண்ணன் சதாசிவம்
+With best wishes
+Dmitry
