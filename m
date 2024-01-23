@@ -1,35 +1,35 @@
 Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63E4F7F7E1;
-	Tue, 23 Jan 2024 16:49:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 086567F7C5;
+	Tue, 23 Jan 2024 16:49:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706028567; cv=none; b=NwBwY2044Y7KTuYLykwqXAVassHl2vYVmMAt5Ho7OEdlOEFazxalISg9bS5UxrAFn0B6IIvZ+JsOYAevrEaSrTm7lk2bONoKaWc6b8QmSatloXgnCHyUoBMQ7Wojdu+kTywDOoY9nrzzYrbvwpNgNdURyfSqOCBw86FRvoz+6HQ=
+	t=1706028566; cv=none; b=i0lQGe4NkBTLGJ7Zwdy0PjeIfISMRWD37kjqBzbI6OeycM8bp6+9IAMGVfKxgAq3oVLbp1zQ5NgqmDTXqtGVLCGAuBmnfMeN3v3qA4Uu8wtJ81KXOpazIVkAPIpEwsJK8G/C0QjaeiBbbrk/K5IvjXjvGPgcX6Sa9LH43X3xZfI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706028567; c=relaxed/simple;
-	bh=mEZC7kT2R9fCqqQ9EgzFtJMSFRH6pwjhOn2Ji3O5N20=;
+	s=arc-20240116; t=1706028566; c=relaxed/simple;
+	bh=9x+SUA6aDX17iFmauWMAbr2U7/ajMiTI+H8leyTdVaM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=OspX+vYgIFuhN/QLXrfhrlV5OSqZCeHI7AhyoYdz5Ka2ZBYt+Csg7TkhLDcYNbVWjztcKmbY1T86ORST9eJgf0kv8sUbrnC9H1hEmsB/pTBjwq99ij89qJFKLsjDKWOPmRTVN7dqNHj09C7v8fXWRJ5ePih1rTU1y9U9nv2wOGQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=e9n+FU6P; arc=none smtp.client-ip=217.70.183.200
+	 MIME-Version; b=bY9JKdQmk0HEGQ0R8j3LxFx/HvxBW5kc9q9678aWMVWUvsSoC2q93NOacRtdetX9VjPMADQ3gScsv5Kec3h0HR6WjUaUU5HjaETT8kcGZKuZnR8xuee6G/bNTWjedYE46OfD6MqhrdM7/QbD+wUL2d2LG+ykucfeqOYghABlDyY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Fj570m9U; arc=none smtp.client-ip=217.70.183.200
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="e9n+FU6P"
-Received: by mail.gandi.net (Postfix) with ESMTPA id 128682000C;
-	Tue, 23 Jan 2024 16:49:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Fj570m9U"
+Received: by mail.gandi.net (Postfix) with ESMTPA id 9F67A20009;
+	Tue, 23 Jan 2024 16:49:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1706028563;
+	t=1706028561;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=vCQtB4SpnqizAlzFUh51qtPgFmKDbNpYFEGxDfhm32o=;
-	b=e9n+FU6PinozBxCYwRQSv76y0hMgSOq5ywqSfh2vOPgjhA5MIrAjCFHsrZ4HQNLRywJZ1u
-	gRsymwr1C/L5DMKsY/hL4ODSUegWVsNYGTq9mksSwc5S5G4xTqBVo02WYxO5nC71RS2zun
-	Yp3mtLSnUglIwGDZJ16a67GDxR1UssSAWvZJ6DMSKRk6aicLJEwBF+T3CB3u0tVFDznAV6
-	Hz6PwCPSeY9bCnrs/FYCt5C00j/sZTYLP0o1c5Rxn42OY938dDTbOaoap4cr+djszkEnVU
-	JZfbE+pjblYlY3q2nfIKojJtcMNfAu7+8jeDVvl7/lHhHst3vZ66fyapmVrJDA==
+	bh=N1y9cbWeec84d6oH3nu289kX4NnpP8zb5uahRh4jZno=;
+	b=Fj570m9UOMZ2j7Mco85Svj3EyJHQnWTeLlb41OaowQN2NIPPTLK+pMnxxvZCf6Z22FgiBH
+	qaBz5h/jZVPiynvDtdqCaH3f3lGSX4Q8yXDWFBgfAYOR0i7Ki3C6AkXvpJMCMmzBkUxYUi
+	PZjV241RUzUXI5b9Iw1vz2nMWWbne5QS03ynJ95nvrFEXB8/jlIWMRp9oSG3f2AJhQoRJK
+	jMN81Ix2ukA3EvM0w8B3bAZu8ah9tYIOVz0v+jZKfXXfG2YqCZJ2hFXHzKJyK3GWKUW41/
+	yEmKNduAh5uL6rNWsrr+hikIyN+sqlxqu5/VraqXxx7Ps0cCvsdUAGR5jvaRtA==
 From: Herve Codina <herve.codina@bootlin.com>
 To: "David S. Miller" <davem@davemloft.net>,
 	Eric Dumazet <edumazet@google.com>,
@@ -43,9 +43,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Mark Brown <broonie@kernel.org>,
 	Christophe Leroy <christophe.leroy@csgroup.eu>,
 	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: [PATCH 4/4] net: wan: fsl_qmc_hdlc: Add framer support
-Date: Tue, 23 Jan 2024 17:49:09 +0100
-Message-ID: <20240123164912.249540-5-herve.codina@bootlin.com>
+Subject: [PATCH 1/4] net: wan: Add support for QMC HDLC
+Date: Tue, 23 Jan 2024 17:49:06 +0100
+Message-ID: <20240123164912.249540-2-herve.codina@bootlin.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240123164912.249540-1-herve.codina@bootlin.com>
 References: <20240123164912.249540-1-herve.codina@bootlin.com>
@@ -58,366 +58,482 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-GND-Sasl: herve.codina@bootlin.com
 
-Add framer support in the fsl_qmc_hdlc driver in order to be able to
-signal carrier changes to the network stack based on the framer status
-Also use this framer to provide information related to the E1/T1 line
-interface on IF_GET_IFACE and configure the line interface according to
-IF_IFACE_{E1,T1} information.
+The QMC HDLC driver provides support for HDLC using the QMC (QUICC
+Multichannel Controller) to transfer the HDLC data.
 
 Signed-off-by: Herve Codina <herve.codina@bootlin.com>
 Reviewed-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+Acked-by: Jakub Kicinski <kuba@kernel.org>
 ---
- drivers/net/wan/fsl_qmc_hdlc.c | 239 ++++++++++++++++++++++++++++++++-
- 1 file changed, 235 insertions(+), 4 deletions(-)
+ drivers/net/wan/Kconfig        |  12 +
+ drivers/net/wan/Makefile       |   1 +
+ drivers/net/wan/fsl_qmc_hdlc.c | 422 +++++++++++++++++++++++++++++++++
+ 3 files changed, 435 insertions(+)
+ create mode 100644 drivers/net/wan/fsl_qmc_hdlc.c
 
+diff --git a/drivers/net/wan/Kconfig b/drivers/net/wan/Kconfig
+index 7dda87756d3f..31ab2136cdf1 100644
+--- a/drivers/net/wan/Kconfig
++++ b/drivers/net/wan/Kconfig
+@@ -197,6 +197,18 @@ config FARSYNC
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called farsync.
+ 
++config FSL_QMC_HDLC
++	tristate "Freescale QMC HDLC support"
++	depends on HDLC
++	depends on CPM_QMC
++	help
++	  HDLC support using the Freescale QUICC Multichannel Controller (QMC).
++
++	  To compile this driver as a module, choose M here: the
++	  module will be called fsl_qmc_hdlc.
++
++	  If unsure, say N.
++
+ config FSL_UCC_HDLC
+ 	tristate "Freescale QUICC Engine HDLC support"
+ 	depends on HDLC
+diff --git a/drivers/net/wan/Makefile b/drivers/net/wan/Makefile
+index 8119b49d1da9..00e9b7ee1e01 100644
+--- a/drivers/net/wan/Makefile
++++ b/drivers/net/wan/Makefile
+@@ -25,6 +25,7 @@ obj-$(CONFIG_WANXL)		+= wanxl.o
+ obj-$(CONFIG_PCI200SYN)		+= pci200syn.o
+ obj-$(CONFIG_PC300TOO)		+= pc300too.o
+ obj-$(CONFIG_IXP4XX_HSS)	+= ixp4xx_hss.o
++obj-$(CONFIG_FSL_QMC_HDLC)	+= fsl_qmc_hdlc.o
+ obj-$(CONFIG_FSL_UCC_HDLC)	+= fsl_ucc_hdlc.o
+ obj-$(CONFIG_SLIC_DS26522)	+= slic_ds26522.o
+ 
 diff --git a/drivers/net/wan/fsl_qmc_hdlc.c b/drivers/net/wan/fsl_qmc_hdlc.c
-index 82019cd96365..9bfb506a90cd 100644
---- a/drivers/net/wan/fsl_qmc_hdlc.c
+new file mode 100644
+index 000000000000..31b637ec8390
+--- /dev/null
 +++ b/drivers/net/wan/fsl_qmc_hdlc.c
-@@ -8,6 +8,7 @@
-  */
- 
- #include <linux/dma-mapping.h>
-+#include <linux/framer/framer.h>
- #include <linux/hdlc.h>
- #include <linux/module.h>
- #include <linux/of.h>
-@@ -27,6 +28,9 @@ struct qmc_hdlc {
- 	struct device *dev;
- 	struct qmc_chan *qmc_chan;
- 	struct net_device *netdev;
-+	struct framer *framer;
-+	spinlock_t carrier_lock; /* Protect carrier detection */
-+	struct notifier_block nb;
- 	bool is_crc32;
- 	spinlock_t tx_lock; /* Protect tx descriptors */
- 	struct qmc_hdlc_desc tx_descs[8];
-@@ -40,6 +44,195 @@ static inline struct qmc_hdlc *netdev_to_qmc_hdlc(struct net_device *netdev)
- 	return dev_to_hdlc(netdev)->priv;
- }
- 
-+static int qmc_hdlc_framer_set_carrier(struct qmc_hdlc *qmc_hdlc)
+@@ -0,0 +1,422 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ * Freescale QMC HDLC Device Driver
++ *
++ * Copyright 2023 CS GROUP France
++ *
++ * Author: Herve Codina <herve.codina@bootlin.com>
++ */
++
++#include <linux/dma-mapping.h>
++#include <linux/hdlc.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_platform.h>
++#include <linux/platform_device.h>
++#include <linux/slab.h>
++#include <soc/fsl/qe/qmc.h>
++
++struct qmc_hdlc_desc {
++	struct net_device *netdev;
++	struct sk_buff *skb; /* NULL if the descriptor is not in use */
++	dma_addr_t dma_addr;
++	size_t dma_size;
++};
++
++struct qmc_hdlc {
++	struct device *dev;
++	struct qmc_chan *qmc_chan;
++	struct net_device *netdev;
++	bool is_crc32;
++	spinlock_t tx_lock; /* Protect tx descriptors */
++	struct qmc_hdlc_desc tx_descs[8];
++	unsigned int tx_out;
++	struct qmc_hdlc_desc rx_descs[4];
++};
++
++static inline struct qmc_hdlc *netdev_to_qmc_hdlc(struct net_device *netdev)
 +{
-+	struct framer_status framer_status;
++	return dev_to_hdlc(netdev)->priv;
++}
++
++static int qmc_hdlc_recv_queue(struct qmc_hdlc *qmc_hdlc, struct qmc_hdlc_desc *desc, size_t size);
++
++#define QMC_HDLC_RX_ERROR_FLAGS (QMC_RX_FLAG_HDLC_OVF | \
++				 QMC_RX_FLAG_HDLC_UNA | \
++				 QMC_RX_FLAG_HDLC_ABORT | \
++				 QMC_RX_FLAG_HDLC_CRC)
++
++static void qmc_hcld_recv_complete(void *context, size_t length, unsigned int flags)
++{
++	struct qmc_hdlc_desc *desc = context;
++	struct net_device *netdev = desc->netdev;
++	struct qmc_hdlc *qmc_hdlc = netdev_to_qmc_hdlc(desc->netdev);
++	int ret;
++
++	dma_unmap_single(qmc_hdlc->dev, desc->dma_addr, desc->dma_size, DMA_FROM_DEVICE);
++
++	if (flags & QMC_HDLC_RX_ERROR_FLAGS) {
++		netdev->stats.rx_errors++;
++		if (flags & QMC_RX_FLAG_HDLC_OVF) /* Data overflow */
++			netdev->stats.rx_over_errors++;
++		if (flags & QMC_RX_FLAG_HDLC_UNA) /* bits received not multiple of 8 */
++			netdev->stats.rx_frame_errors++;
++		if (flags & QMC_RX_FLAG_HDLC_ABORT) /* Received an abort sequence */
++			netdev->stats.rx_frame_errors++;
++		if (flags & QMC_RX_FLAG_HDLC_CRC) /* CRC error */
++			netdev->stats.rx_crc_errors++;
++		kfree_skb(desc->skb);
++	} else {
++		netdev->stats.rx_packets++;
++		netdev->stats.rx_bytes += length;
++
++		skb_put(desc->skb, length);
++		desc->skb->protocol = hdlc_type_trans(desc->skb, netdev);
++		netif_rx(desc->skb);
++	}
++
++	/* Re-queue a transfer using the same descriptor */
++	ret = qmc_hdlc_recv_queue(qmc_hdlc, desc, desc->dma_size);
++	if (ret) {
++		dev_err(qmc_hdlc->dev, "queue recv desc failed (%d)\n", ret);
++		netdev->stats.rx_errors++;
++	}
++}
++
++static int qmc_hdlc_recv_queue(struct qmc_hdlc *qmc_hdlc, struct qmc_hdlc_desc *desc, size_t size)
++{
++	int ret;
++
++	desc->skb = dev_alloc_skb(size);
++	if (!desc->skb)
++		return -ENOMEM;
++
++	desc->dma_size = size;
++	desc->dma_addr = dma_map_single(qmc_hdlc->dev, desc->skb->data,
++					desc->dma_size, DMA_FROM_DEVICE);
++	ret = dma_mapping_error(qmc_hdlc->dev, desc->dma_addr);
++	if (ret)
++		goto free_skb;
++
++	ret = qmc_chan_read_submit(qmc_hdlc->qmc_chan, desc->dma_addr, desc->dma_size,
++				   qmc_hcld_recv_complete, desc);
++	if (ret)
++		goto dma_unmap;
++
++	return 0;
++
++dma_unmap:
++	dma_unmap_single(qmc_hdlc->dev, desc->dma_addr, desc->dma_size, DMA_FROM_DEVICE);
++free_skb:
++	kfree_skb(desc->skb);
++	desc->skb = NULL;
++	return ret;
++}
++
++static void qmc_hdlc_xmit_complete(void *context)
++{
++	struct qmc_hdlc_desc *desc = context;
++	struct net_device *netdev = desc->netdev;
++	struct qmc_hdlc *qmc_hdlc = netdev_to_qmc_hdlc(netdev);
++	struct sk_buff *skb;
++	unsigned long flags;
++
++	spin_lock_irqsave(&qmc_hdlc->tx_lock, flags);
++	dma_unmap_single(qmc_hdlc->dev, desc->dma_addr, desc->dma_size, DMA_TO_DEVICE);
++	skb = desc->skb;
++	desc->skb = NULL; /* Release the descriptor */
++	if (netif_queue_stopped(netdev))
++		netif_wake_queue(netdev);
++	spin_unlock_irqrestore(&qmc_hdlc->tx_lock, flags);
++
++	netdev->stats.tx_packets++;
++	netdev->stats.tx_bytes += skb->len;
++
++	dev_consume_skb_any(skb);
++}
++
++static int qmc_hdlc_xmit_queue(struct qmc_hdlc *qmc_hdlc, struct qmc_hdlc_desc *desc)
++{
++	int ret;
++
++	desc->dma_addr = dma_map_single(qmc_hdlc->dev, desc->skb->data,
++					desc->dma_size, DMA_TO_DEVICE);
++	ret = dma_mapping_error(qmc_hdlc->dev, desc->dma_addr);
++	if (ret) {
++		dev_err(qmc_hdlc->dev, "failed to map skb\n");
++		return ret;
++	}
++
++	ret = qmc_chan_write_submit(qmc_hdlc->qmc_chan, desc->dma_addr, desc->dma_size,
++				    qmc_hdlc_xmit_complete, desc);
++	if (ret) {
++		dev_err(qmc_hdlc->dev, "qmc chan write returns %d\n", ret);
++		dma_unmap_single(qmc_hdlc->dev, desc->dma_addr, desc->dma_size, DMA_TO_DEVICE);
++		return ret;
++	}
++
++	return 0;
++}
++
++static netdev_tx_t qmc_hdlc_xmit(struct sk_buff *skb, struct net_device *netdev)
++{
++	struct qmc_hdlc *qmc_hdlc = netdev_to_qmc_hdlc(netdev);
++	struct qmc_hdlc_desc *desc;
 +	unsigned long flags;
 +	int ret;
 +
-+	if (!qmc_hdlc->framer)
-+		return 0;
++	spin_lock_irqsave(&qmc_hdlc->tx_lock, flags);
++	desc = &qmc_hdlc->tx_descs[qmc_hdlc->tx_out];
++	if (desc->skb) {
++		/* Should never happen.
++		 * Previous xmit should have already stopped the queue.
++		 */
++		netif_stop_queue(netdev);
++		spin_unlock_irqrestore(&qmc_hdlc->tx_lock, flags);
++		return NETDEV_TX_BUSY;
++	}
++	spin_unlock_irqrestore(&qmc_hdlc->tx_lock, flags);
 +
-+	spin_lock_irqsave(&qmc_hdlc->carrier_lock, flags);
-+
-+	ret = framer_get_status(qmc_hdlc->framer, &framer_status);
++	desc->netdev = netdev;
++	desc->dma_size = skb->len;
++	desc->skb = skb;
++	ret = qmc_hdlc_xmit_queue(qmc_hdlc, desc);
 +	if (ret) {
-+		dev_err(qmc_hdlc->dev, "get framer status failed (%d)\n", ret);
-+		goto end;
++		desc->skb = NULL; /* Release the descriptor */
++		if (ret == -EBUSY) {
++			netif_stop_queue(netdev);
++			return NETDEV_TX_BUSY;
++		}
++		dev_kfree_skb(skb);
++		netdev->stats.tx_dropped++;
++		return NETDEV_TX_OK;
 +	}
-+	if (framer_status.link_is_on)
-+		netif_carrier_on(qmc_hdlc->netdev);
-+	else
-+		netif_carrier_off(qmc_hdlc->netdev);
 +
-+end:
-+	spin_unlock_irqrestore(&qmc_hdlc->carrier_lock, flags);
-+	return ret;
++	qmc_hdlc->tx_out = (qmc_hdlc->tx_out + 1) % ARRAY_SIZE(qmc_hdlc->tx_descs);
++
++	spin_lock_irqsave(&qmc_hdlc->tx_lock, flags);
++	if (qmc_hdlc->tx_descs[qmc_hdlc->tx_out].skb)
++		netif_stop_queue(netdev);
++	spin_unlock_irqrestore(&qmc_hdlc->tx_lock, flags);
++
++	return NETDEV_TX_OK;
 +}
 +
-+static int qmc_hdlc_framer_notifier(struct notifier_block *nb, unsigned long action,
-+				    void *data)
++static int qmc_hdlc_open(struct net_device *netdev)
 +{
-+	struct qmc_hdlc *qmc_hdlc = container_of(nb, struct qmc_hdlc, nb);
++	struct qmc_hdlc *qmc_hdlc = netdev_to_qmc_hdlc(netdev);
++	struct qmc_chan_param chan_param;
++	struct qmc_hdlc_desc *desc;
 +	int ret;
++	int i;
 +
-+	if (action != FRAMER_EVENT_STATUS)
-+		return NOTIFY_DONE;
-+
-+	ret = qmc_hdlc_framer_set_carrier(qmc_hdlc);
-+	return ret ? NOTIFY_DONE : NOTIFY_OK;
-+}
-+
-+static int qmc_hdlc_framer_start(struct qmc_hdlc *qmc_hdlc)
-+{
-+	struct framer_status framer_status;
-+	int ret;
-+
-+	if (!qmc_hdlc->framer)
-+		return 0;
-+
-+	ret = framer_power_on(qmc_hdlc->framer);
-+	if (ret) {
-+		dev_err(qmc_hdlc->dev, "framer power-on failed (%d)\n", ret);
-+		return ret;
-+	}
-+
-+	/* Be sure that get_status is supported */
-+	ret = framer_get_status(qmc_hdlc->framer, &framer_status);
-+	if (ret) {
-+		dev_err(qmc_hdlc->dev, "get framer status failed (%d)\n", ret);
-+		goto framer_power_off;
-+	}
-+
-+	qmc_hdlc->nb.notifier_call = qmc_hdlc_framer_notifier;
-+	ret = framer_notifier_register(qmc_hdlc->framer, &qmc_hdlc->nb);
-+	if (ret) {
-+		dev_err(qmc_hdlc->dev, "framer notifier register failed (%d)\n", ret);
-+		goto framer_power_off;
-+	}
-+
-+	return 0;
-+
-+framer_power_off:
-+	framer_power_off(qmc_hdlc->framer);
-+	return ret;
-+}
-+
-+static void qmc_hdlc_framer_stop(struct qmc_hdlc *qmc_hdlc)
-+{
-+	if (!qmc_hdlc->framer)
-+		return;
-+
-+	framer_notifier_unregister(qmc_hdlc->framer, &qmc_hdlc->nb);
-+	framer_power_off(qmc_hdlc->framer);
-+}
-+
-+static int qmc_hdlc_framer_set_iface(struct qmc_hdlc *qmc_hdlc, int if_iface,
-+				     const te1_settings *te1)
-+{
-+	struct framer_config config;
-+	int ret;
-+
-+	if (!qmc_hdlc->framer)
-+		return 0;
-+
-+	ret = framer_get_config(qmc_hdlc->framer, &config);
-+	if (ret)
-+		return ret;
-+
-+	switch (if_iface) {
-+	case IF_IFACE_E1:
-+		config.iface = FRAMER_IFACE_E1;
-+		break;
-+	case IF_IFACE_T1:
-+		config.iface = FRAMER_IFACE_T1;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	switch (te1->clock_type) {
-+	case CLOCK_DEFAULT:
-+		/* Keep current value */
-+		break;
-+	case CLOCK_EXT:
-+		config.clock_type = FRAMER_CLOCK_EXT;
-+		break;
-+	case CLOCK_INT:
-+		config.clock_type = FRAMER_CLOCK_INT;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+	config.line_clock_rate = te1->clock_rate;
-+
-+	return framer_set_config(qmc_hdlc->framer, &config);
-+}
-+
-+static int qmc_hdlc_framer_get_iface(struct qmc_hdlc *qmc_hdlc, int *if_iface, te1_settings *te1)
-+{
-+	struct framer_config config;
-+	int ret;
-+
-+	if (!qmc_hdlc->framer) {
-+		*if_iface = IF_IFACE_E1;
-+		return 0;
-+	}
-+
-+	ret = framer_get_config(qmc_hdlc->framer, &config);
-+	if (ret)
-+		return ret;
-+
-+	switch (config.iface) {
-+	case FRAMER_IFACE_E1:
-+		*if_iface = IF_IFACE_E1;
-+		break;
-+	case FRAMER_IFACE_T1:
-+		*if_iface = IF_IFACE_T1;
-+		break;
-+	}
-+
-+	if (!te1)
-+		return 0; /* Only iface type requested */
-+
-+	switch (config.clock_type) {
-+	case FRAMER_CLOCK_EXT:
-+		te1->clock_type = CLOCK_EXT;
-+		break;
-+	case FRAMER_CLOCK_INT:
-+		te1->clock_type = CLOCK_INT;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+	te1->clock_rate = config.line_clock_rate;
-+	return 0;
-+}
-+
-+static int qmc_hdlc_framer_init(struct qmc_hdlc *qmc_hdlc)
-+{
-+	int ret;
-+
-+	if (!qmc_hdlc->framer)
-+		return 0;
-+
-+	ret = framer_init(qmc_hdlc->framer);
-+	if (ret) {
-+		dev_err(qmc_hdlc->dev, "framer init failed (%d)\n", ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static void qmc_hdlc_framer_exit(struct qmc_hdlc *qmc_hdlc)
-+{
-+	if (!qmc_hdlc->framer)
-+		return;
-+
-+	framer_exit(qmc_hdlc->framer);
-+}
-+
- static int qmc_hdlc_recv_queue(struct qmc_hdlc *qmc_hdlc, struct qmc_hdlc_desc *desc, size_t size);
- 
- #define QMC_HDLC_RX_ERROR_FLAGS (QMC_RX_FLAG_HDLC_OVF | \
-@@ -313,6 +506,12 @@ static int qmc_hdlc_set_iface(struct qmc_hdlc *qmc_hdlc, int if_iface, const te1
- 
- 	qmc_hdlc->slot_map = te1->slot_map;
- 
-+	ret = qmc_hdlc_framer_set_iface(qmc_hdlc, if_iface, te1);
-+	if (ret) {
-+		dev_err(qmc_hdlc->dev, "framer set iface failed %d\n", ret);
-+		return ret;
-+	}
-+
- 	return 0;
- }
- 
-@@ -320,11 +519,16 @@ static int qmc_hdlc_ioctl(struct net_device *netdev, struct if_settings *ifs)
- {
- 	struct qmc_hdlc *qmc_hdlc = netdev_to_qmc_hdlc(netdev);
- 	te1_settings te1;
-+	int ret;
- 
- 	switch (ifs->type) {
- 	case IF_GET_IFACE:
--		ifs->type = IF_IFACE_E1;
- 		if (ifs->size < sizeof(te1)) {
-+			/* Retrieve type only */
-+			ret = qmc_hdlc_framer_get_iface(qmc_hdlc, &ifs->type, NULL);
-+			if (ret)
-+				return ret;
-+
- 			if (!ifs->size)
- 				return 0; /* only type requested */
- 
-@@ -334,6 +538,11 @@ static int qmc_hdlc_ioctl(struct net_device *netdev, struct if_settings *ifs)
- 
- 		memset(&te1, 0, sizeof(te1));
- 
-+		/* Retrieve info from framer */
-+		ret = qmc_hdlc_framer_get_iface(qmc_hdlc, &ifs->type, &te1);
-+		if (ret)
-+			return ret;
-+
- 		/* Update slot_map */
- 		te1.slot_map = qmc_hdlc->slot_map;
- 
-@@ -367,10 +576,17 @@ static int qmc_hdlc_open(struct net_device *netdev)
- 	int ret;
- 	int i;
- 
--	ret = hdlc_open(netdev);
-+	ret = qmc_hdlc_framer_start(qmc_hdlc);
- 	if (ret)
- 		return ret;
- 
 +	ret = hdlc_open(netdev);
 +	if (ret)
-+		goto framer_stop;
-+
-+	/* Update carrier */
-+	qmc_hdlc_framer_set_carrier(qmc_hdlc);
-+
- 	chan_param.mode = QMC_HDLC;
- 	/* HDLC_MAX_MRU + 4 for the CRC
- 	 * HDLC_MAX_MRU + 4 + 8 for the CRC and some extraspace needed by the QMC
-@@ -420,6 +636,8 @@ static int qmc_hdlc_open(struct net_device *netdev)
- 	}
- hdlc_close:
- 	hdlc_close(netdev);
-+framer_stop:
-+	qmc_hdlc_framer_stop(qmc_hdlc);
- 	return ret;
- }
- 
-@@ -455,6 +673,7 @@ static int qmc_hdlc_close(struct net_device *netdev)
- 	}
- 
- 	hdlc_close(netdev);
-+	qmc_hdlc_framer_stop(qmc_hdlc);
- 	return 0;
- }
- 
-@@ -503,6 +722,7 @@ static int qmc_hdlc_probe(struct platform_device *pdev)
- 
- 	qmc_hdlc->dev = &pdev->dev;
- 	spin_lock_init(&qmc_hdlc->tx_lock);
-+	spin_lock_init(&qmc_hdlc->carrier_lock);
- 
- 	qmc_hdlc->qmc_chan = devm_qmc_chan_get_bychild(qmc_hdlc->dev, np);
- 	if (IS_ERR(qmc_hdlc->qmc_chan)) {
-@@ -531,10 +751,19 @@ static int qmc_hdlc_probe(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
- 
-+	qmc_hdlc->framer = devm_framer_optional_get(qmc_hdlc->dev, "fsl,framer");
-+	if (IS_ERR(qmc_hdlc->framer))
-+		return PTR_ERR(qmc_hdlc->framer);
-+
-+	ret = qmc_hdlc_framer_init(qmc_hdlc);
-+	if (ret)
 +		return ret;
 +
- 	qmc_hdlc->netdev = alloc_hdlcdev(qmc_hdlc);
- 	if (!qmc_hdlc->netdev) {
- 		dev_err(qmc_hdlc->dev, "failed to alloc hdlc dev\n");
--		return -ENOMEM;
-+		ret = -ENOMEM;
-+		goto framer_exit;
- 	}
- 
- 	hdlc = dev_to_hdlc(qmc_hdlc->netdev);
-@@ -550,11 +779,12 @@ static int qmc_hdlc_probe(struct platform_device *pdev)
- 	}
- 
- 	platform_set_drvdata(pdev, qmc_hdlc);
--
- 	return 0;
- 
- free_netdev:
- 	free_netdev(qmc_hdlc->netdev);
-+framer_exit:
-+	qmc_hdlc_framer_exit(qmc_hdlc);
- 	return ret;
- }
- 
-@@ -564,6 +794,7 @@ static int qmc_hdlc_remove(struct platform_device *pdev)
- 
- 	unregister_hdlc_device(qmc_hdlc->netdev);
- 	free_netdev(qmc_hdlc->netdev);
-+	qmc_hdlc_framer_exit(qmc_hdlc);
- 
- 	return 0;
- }
++	chan_param.mode = QMC_HDLC;
++	/* HDLC_MAX_MRU + 4 for the CRC
++	 * HDLC_MAX_MRU + 4 + 8 for the CRC and some extraspace needed by the QMC
++	 */
++	chan_param.hdlc.max_rx_buf_size = HDLC_MAX_MRU + 4 + 8;
++	chan_param.hdlc.max_rx_frame_size = HDLC_MAX_MRU + 4;
++	chan_param.hdlc.is_crc32 = qmc_hdlc->is_crc32;
++	ret = qmc_chan_set_param(qmc_hdlc->qmc_chan, &chan_param);
++	if (ret) {
++		dev_err(qmc_hdlc->dev, "failed to set param (%d)\n", ret);
++		goto hdlc_close;
++	}
++
++	/* Queue as many recv descriptors as possible */
++	for (i = 0; i < ARRAY_SIZE(qmc_hdlc->rx_descs); i++) {
++		desc = &qmc_hdlc->rx_descs[i];
++
++		desc->netdev = netdev;
++		ret = qmc_hdlc_recv_queue(qmc_hdlc, desc, chan_param.hdlc.max_rx_buf_size);
++		if (ret) {
++			if (ret == -EBUSY && i != 0)
++				break; /* We use all the QMC chan capability */
++			goto free_desc;
++		}
++	}
++
++	ret = qmc_chan_start(qmc_hdlc->qmc_chan, QMC_CHAN_ALL);
++	if (ret) {
++		dev_err(qmc_hdlc->dev, "qmc chan start failed (%d)\n", ret);
++		goto free_desc;
++	}
++
++	netif_start_queue(netdev);
++
++	return 0;
++
++free_desc:
++	qmc_chan_reset(qmc_hdlc->qmc_chan, QMC_CHAN_ALL);
++	for (i = 0; i < ARRAY_SIZE(qmc_hdlc->rx_descs); i++) {
++		desc = &qmc_hdlc->rx_descs[i];
++		if (!desc->skb)
++			continue;
++		dma_unmap_single(qmc_hdlc->dev, desc->dma_addr, desc->dma_size,
++				 DMA_FROM_DEVICE);
++		kfree_skb(desc->skb);
++		desc->skb = NULL;
++	}
++hdlc_close:
++	hdlc_close(netdev);
++	return ret;
++}
++
++static int qmc_hdlc_close(struct net_device *netdev)
++{
++	struct qmc_hdlc *qmc_hdlc = netdev_to_qmc_hdlc(netdev);
++	struct qmc_hdlc_desc *desc;
++	int i;
++
++	qmc_chan_stop(qmc_hdlc->qmc_chan, QMC_CHAN_ALL);
++	qmc_chan_reset(qmc_hdlc->qmc_chan, QMC_CHAN_ALL);
++
++	netif_stop_queue(netdev);
++
++	for (i = 0; i < ARRAY_SIZE(qmc_hdlc->tx_descs); i++) {
++		desc = &qmc_hdlc->tx_descs[i];
++		if (!desc->skb)
++			continue;
++		dma_unmap_single(qmc_hdlc->dev, desc->dma_addr, desc->dma_size,
++				 DMA_TO_DEVICE);
++		kfree_skb(desc->skb);
++		desc->skb = NULL;
++	}
++
++	for (i = 0; i < ARRAY_SIZE(qmc_hdlc->rx_descs); i++) {
++		desc = &qmc_hdlc->rx_descs[i];
++		if (!desc->skb)
++			continue;
++		dma_unmap_single(qmc_hdlc->dev, desc->dma_addr, desc->dma_size,
++				 DMA_FROM_DEVICE);
++		kfree_skb(desc->skb);
++		desc->skb = NULL;
++	}
++
++	hdlc_close(netdev);
++	return 0;
++}
++
++static int qmc_hdlc_attach(struct net_device *netdev, unsigned short encoding,
++			   unsigned short parity)
++{
++	struct qmc_hdlc *qmc_hdlc = netdev_to_qmc_hdlc(netdev);
++
++	if (encoding != ENCODING_NRZ)
++		return -EINVAL;
++
++	switch (parity) {
++	case PARITY_CRC16_PR1_CCITT:
++		qmc_hdlc->is_crc32 = false;
++		break;
++	case PARITY_CRC32_PR1_CCITT:
++		qmc_hdlc->is_crc32 = true;
++		break;
++	default:
++		dev_err(qmc_hdlc->dev, "unsupported parity %u\n", parity);
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
++static const struct net_device_ops qmc_hdlc_netdev_ops = {
++	.ndo_open       = qmc_hdlc_open,
++	.ndo_stop       = qmc_hdlc_close,
++	.ndo_start_xmit = hdlc_start_xmit,
++	.ndo_siocwandev	= hdlc_ioctl,
++};
++
++static int qmc_hdlc_probe(struct platform_device *pdev)
++{
++	struct device_node *np = pdev->dev.of_node;
++	struct qmc_hdlc *qmc_hdlc;
++	struct qmc_chan_info info;
++	hdlc_device *hdlc;
++	int ret;
++
++	qmc_hdlc = devm_kzalloc(&pdev->dev, sizeof(*qmc_hdlc), GFP_KERNEL);
++	if (!qmc_hdlc)
++		return -ENOMEM;
++
++	qmc_hdlc->dev = &pdev->dev;
++	spin_lock_init(&qmc_hdlc->tx_lock);
++
++	qmc_hdlc->qmc_chan = devm_qmc_chan_get_bychild(qmc_hdlc->dev, np);
++	if (IS_ERR(qmc_hdlc->qmc_chan)) {
++		ret = PTR_ERR(qmc_hdlc->qmc_chan);
++		return dev_err_probe(qmc_hdlc->dev, ret, "get QMC channel failed\n");
++	}
++
++	ret = qmc_chan_get_info(qmc_hdlc->qmc_chan, &info);
++	if (ret) {
++		dev_err(qmc_hdlc->dev, "get QMC channel info failed %d\n", ret);
++		return ret;
++	}
++
++	if (info.mode != QMC_HDLC) {
++		dev_err(qmc_hdlc->dev, "QMC chan mode %d is not QMC_HDLC\n",
++			info.mode);
++		return -EINVAL;
++	}
++
++	qmc_hdlc->netdev = alloc_hdlcdev(qmc_hdlc);
++	if (!qmc_hdlc->netdev) {
++		dev_err(qmc_hdlc->dev, "failed to alloc hdlc dev\n");
++		return -ENOMEM;
++	}
++
++	hdlc = dev_to_hdlc(qmc_hdlc->netdev);
++	hdlc->attach = qmc_hdlc_attach;
++	hdlc->xmit = qmc_hdlc_xmit;
++	SET_NETDEV_DEV(qmc_hdlc->netdev, qmc_hdlc->dev);
++	qmc_hdlc->netdev->tx_queue_len = ARRAY_SIZE(qmc_hdlc->tx_descs);
++	qmc_hdlc->netdev->netdev_ops = &qmc_hdlc_netdev_ops;
++	ret = register_hdlc_device(qmc_hdlc->netdev);
++	if (ret) {
++		dev_err(qmc_hdlc->dev, "failed to register hdlc device (%d)\n", ret);
++		goto free_netdev;
++	}
++
++	platform_set_drvdata(pdev, qmc_hdlc);
++
++	return 0;
++
++free_netdev:
++	free_netdev(qmc_hdlc->netdev);
++	return ret;
++}
++
++static int qmc_hdlc_remove(struct platform_device *pdev)
++{
++	struct qmc_hdlc *qmc_hdlc = platform_get_drvdata(pdev);
++
++	unregister_hdlc_device(qmc_hdlc->netdev);
++	free_netdev(qmc_hdlc->netdev);
++
++	return 0;
++}
++
++static const struct of_device_id qmc_hdlc_id_table[] = {
++	{ .compatible = "fsl,qmc-hdlc" },
++	{} /* sentinel */
++};
++MODULE_DEVICE_TABLE(of, qmc_hdlc_driver);
++
++static struct platform_driver qmc_hdlc_driver = {
++	.driver = {
++		.name = "fsl-qmc-hdlc",
++		.of_match_table = qmc_hdlc_id_table,
++	},
++	.probe = qmc_hdlc_probe,
++	.remove = qmc_hdlc_remove,
++};
++module_platform_driver(qmc_hdlc_driver);
++
++MODULE_AUTHOR("Herve Codina <herve.codina@bootlin.com>");
++MODULE_DESCRIPTION("QMC HDLC driver");
++MODULE_LICENSE("GPL");
 -- 
 2.43.0
 
