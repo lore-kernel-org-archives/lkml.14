@@ -1,132 +1,108 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D960881AAA
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 18:41:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBD5E81AAA;
+	Tue, 23 Jan 2024 18:42:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706035298; cv=none; b=PV5Dzh3hORkX4i4sZoGbdJpNTDhjHuS2K2dgoTdWFDuCxdUDSJDNP7EOaT1LQ9GBr08q0w2L8L4ipTrHMLdE9vjrT/r71egi0lsnZo8kuqgiQxiDRlz8DbX3cMnoZB/o2dRFiQKwS3/SJDdA5sd/DX20HOCQ7jScfwu6yptH5uE=
+	t=1706035328; cv=none; b=Kg0X1Lgms7A/Qfv9pMR3RPZ4aLBhvkzdXW0kLVqZaHcb4WLmLKefDNWR/l3ZYQt24uzkmN3sylOzzrjuAf/H9uXPYugAZH7MFziE4foOwJRnApYHyA1yHfjVN6HbcOLdAFoTkchFDbPvGyGs/AvQgrRu94IZ9mJG3w3zgeRtRmk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706035298; c=relaxed/simple;
-	bh=ckAqz4et9lSFLsJorrvqjyjEG3gH8tYqrFit4l7uedI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YEGT9glK+cud8cOrC3gCKjZ2jkUDAi5QmjtX7E1wYPpEik5F1vIHD33lB5NPB6TlvNQrE7/x84AdK4mh3xD2xtEc84UFSRONg2Agi/I9KrYGgXcnTioSGjDs3msl55HK8WIJfenUN8JqXfVpPgPVWcczWQ+VAbE8hF6pFDDq+Dg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=A6X/Mbqi; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1706035328; c=relaxed/simple;
+	bh=KuOlsJlAeHgM/ZAB95KCioMPSwl13wrRH6nU16aaT5o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nfuFzRaQNNix5IsU8CZxIsCyii7bBLInxmMgSCcnJykiSyQQe9PM4xWir7ff44s8fRaGjabGxot4sYDI7kVBCLzwYXO5+mqOPf2hUgZC6Dk3OI1hLreGk4moV3luOIG3UFx6KsKwJ3VAG1HtNFZwP/yoQuLz5xlJn1SD/kLw+rY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E3CgYeNt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A6X/Mbqi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1706035295;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Vg/uqbZoTrsSlKS8IoprBAUYcnSyOGvCkbfDVP4S0ko=;
-	b=A6X/Mbqikz5E7z9mUVVTb8GEUX5cx+onwDOGlO/WkFAsFqH6tbcit4NrxMxy8WpisAATyU
-	3D5E0dySbu/BhQVGy5qTNoMW0Drd9V67o7NC9c9Xxx4lHFOfjuCoBfXIUwhqJSS677OMPB
-	LELxLGWIg6EzRJSnrHnyARaCKU/FWbY=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-486-ahbNQ00PNnC_0d1BRj5JWA-1; Tue, 23 Jan 2024 13:41:33 -0500
-X-MC-Unique: ahbNQ00PNnC_0d1BRj5JWA-1
-Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-a2888d63b80so180776066b.0
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 10:41:33 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706035292; x=1706640092;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Vg/uqbZoTrsSlKS8IoprBAUYcnSyOGvCkbfDVP4S0ko=;
-        b=YAXK2qgY/qMzPP9Wxwgb1Dc0z5jAPBL/ZsT5OwCUcHPjqOz8CVrO4dYABsP7afZckV
-         ImP9jrm8yQ24yaZdtCM/U4V3A/OK8Brei5fbYR6Z0oDJ8/urbGD6QcepOwYICC0JpUve
-         bUwkZFOXg5XKmJMjzGV9hak2ZIwVfJe5pjn8C1hQ/ERacDf3qtwuFqA00gJHiln+MmOA
-         k9DYiVoEavp4CMoyriD+ih7rFGQikp2XIIV8rvjavhAhOryK1fYAL91pYQWBJmav3+AR
-         rXcFwVc872TkxKUQstlzhSY+N3tLZ8bt1y6ksPQDlfADQqNatqd7JVcOJyV+uXX5jput
-         ZNcA==
-X-Gm-Message-State: AOJu0YyA5uUzLrx+W14WSCvshsJyoqDTMK9aBeBdIuqsQhub3sBbV5bt
-	8XkQ00/G63plBz8pj6zQbGGR0xIUAL8rxun7eVSAL4SQhshuQ7XgqSqFKv6Ca9QTdH3VEAQdyzT
-	scStobYoEuahR+N9aTVehrOiyCmh6TvfTN5lZrxOt8zVLT5vh5QQyz54DP7ZBa3x/QNFZCg==
-X-Received: by 2002:a17:906:e212:b0:a2f:cd67:32f8 with SMTP id gf18-20020a170906e21200b00a2fcd6732f8mr182663ejb.84.1706035292292;
-        Tue, 23 Jan 2024 10:41:32 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHFTZM38PkaEhlGSaQgFhiQmH/t/JCGY5C0+hgF4qoiSsNuehPxqLGBffq9i6qI+AxDQ3zL7A==
-X-Received: by 2002:a17:906:e212:b0:a2f:cd67:32f8 with SMTP id gf18-20020a170906e21200b00a2fcd6732f8mr182657ejb.84.1706035291946;
-        Tue, 23 Jan 2024 10:41:31 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id j25-20020a1709066dd900b00a26af4d96c6sm14712314ejt.4.2024.01.23.10.41.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 23 Jan 2024 10:41:31 -0800 (PST)
-Message-ID: <1776d48f-6bc8-4636-af7e-ee54800845b2@redhat.com>
-Date: Tue, 23 Jan 2024 19:41:30 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E3CgYeNt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72502C433F1;
+	Tue, 23 Jan 2024 18:42:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706035328;
+	bh=KuOlsJlAeHgM/ZAB95KCioMPSwl13wrRH6nU16aaT5o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=E3CgYeNt1ol1Cm2hp5xZ8LQhi5spVR9ci1E4sX9qcE09r+8YEFdrgKTub37hZEho0
+	 4mgJy89CIfXvyopnJzosk8xZRE/Ddv1I7ZiFStnAowSKZUDAgfslhIS0zbnKSZWfBU
+	 0BdhiYsjqjiWV4/u+MhyXAZX6YrH28qLa8gLm6o2MVK67KcImfdottO+YSMYz3P7tD
+	 0UtXqfiXfS9Fd7uiOcR5BHwLfUM1k1nqBC8iKVLrB2/aEUTIqojJCxubmfopFeIorC
+	 vbDJLK8+Vq/mJJlZnJaQigV6l3gvHZNVY2E/D2Je665mwwRf8kWGE5J+JyLk4+kIms
+	 sMy30evQFvn0g==
+Date: Tue, 23 Jan 2024 18:42:03 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Dave Martin <Dave.Martin@arm.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+	linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Edmund Grimley-Evans <edmund.grimley-evans@arm.com>
+Subject: Re: [PATCH 3/4] arm64/fp: Clarify effect of setting an unsupported
+ system VL
+Message-ID: <46571fac-28bf-4c6e-a5a4-38b1182b93a0@sirena.org.uk>
+References: <20240122-arm64-sve-sme-doc-v1-0-3d492e45265b@kernel.org>
+ <20240122-arm64-sve-sme-doc-v1-3-3d492e45265b@kernel.org>
+ <Za/gB3oCNAyiPPnu@e133380.arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] ahci: asm1166: correct count of reported ports
-To: linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: dlemoal@kernel.org
-References: <20240123183002.15499-1-conikost@gentoo.org>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20240123183002.15499-1-conikost@gentoo.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-
-Hi,
-
-On 1/23/24 19:30, Conrad Kostecki wrote:
-> The ASM1166 SATA host controller always reports wrongly,
-> that it has 32 ports. But in reality, it only has six ports.
-> 
-> This seems to be a hardware issue, as all tested ASM1166
-> SATA host controllers reports such high count of ports.
-> 
-> Example output: ahci 0000:09:00.0: AHCI 0001.0301
-> 32 slots 32 ports 6 Gbps 0xffffff3f impl SATA mode.
-> 
-> By adjusting the port_map, the count is limited to six ports.
-> 
-> New output: ahci 0000:09:00.0: AHCI 0001.0301
-> 32 slots 32 ports 6 Gbps 0x3f impl SATA mode.
-> 
-> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=211873
-> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=218346
-> Signed-off-by: Conrad Kostecki <conikost@gentoo.org>
-
-Thanks, patch looks good to me:
-
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-
-Regards,
-
-Hans
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="Wi8C1+Ocdx9GTbVa"
+Content-Disposition: inline
+In-Reply-To: <Za/gB3oCNAyiPPnu@e133380.arm.com>
+X-Cookie: Stay together, drag each other down.
 
 
+--Wi8C1+Ocdx9GTbVa
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, Jan 23, 2024 at 03:49:27PM +0000, Dave Martin wrote:
+> On Mon, Jan 22, 2024 at 08:41:53PM +0000, Mark Brown wrote:
 
+> >  /proc/sys/abi/sme_default_vector_length
+> > =20
+> >      Writing the text representation of an integer to this file sets th=
+e system
+> > -    default vector length to the specified value, unless the value is =
+greater
+> > -    than the maximum vector length supported by the system in which ca=
+se the
+> > -    default vector length is set to that maximum.
+> > +    default vector length to the specified value rounded to a supporte=
+d value
+> > +    using the same rules as for setting vector length via prctl().
 
-> ---
->  drivers/ata/ahci.c | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/drivers/ata/ahci.c b/drivers/ata/ahci.c
-> index 3a5f3255f51b..762c5d8b7c1a 100644
-> --- a/drivers/ata/ahci.c
-> +++ b/drivers/ata/ahci.c
-> @@ -663,6 +663,11 @@ MODULE_PARM_DESC(mobile_lpm_policy, "Default LPM policy for mobile chipsets");
->  static void ahci_pci_save_initial_config(struct pci_dev *pdev,
->  					 struct ahci_host_priv *hpriv)
->  {
-> +	if (pdev->vendor == PCI_VENDOR_ID_ASMEDIA && pdev->device == 0x1166) {
-> +		dev_info(&pdev->dev, "ASM1166 has only six ports\n");
-> +		hpriv->saved_port_map = 0x3f;
-> +	}
-> +
->  	if (pdev->vendor == PCI_VENDOR_ID_JMICRON && pdev->device == 0x2361) {
->  		dev_info(&pdev->dev, "JMB361 has only one port\n");
->  		hpriv->saved_port_map = 1;
+> Do parallel changes need to be made in sve.rst?
 
+They are, in this very patch?
+
+> (There seems to be so much duplication and copy-paste between these
+> files that I wonder whether it would make sense to merge them...  but
+> that's probably a separate discussion.)
+
+Indeed, thanks for volunteering.  Note that there are differences
+resulting from specification differences.
+
+> Nit: is it better to name the prctl here than just to say prctl()?
+> That would be easier for the reader to cross-reference.
+
+I guess, though it doesn't seem entirely idiomatic.
+
+--Wi8C1+Ocdx9GTbVa
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmWwCHoACgkQJNaLcl1U
+h9D0Ywf+IsH2g0If00Q6Xk+sM/N4fUnp2hK2AfnBw8nxWQ5Odt/OYSj8MHbBtvSO
+1yDO0dHZ9PvXpJNJG3mrrsxZhVg2SEHvoQ6O28G1GGQPciM4/3Qm02F5KNeu0ak9
+iJxeljkaWSxQOLKnbnxF2z36xZ/DmdY0mLF2ns8lTijWS14OFy/rsjVY4rVnK742
+CDEmB+OyW6oiMrpwOVURKa1gD9pUiHa56ju7qN0E3mNydfNv9SeXljc3Kqsr+Qic
+Yt5CFfrUqvBlq50CfErsPZcCjH4GgDDzFTCRmkclu5E14fohiftWeENBEx6yhXYm
+9Bu11n7PyA5yEQSgS5GB7V8qQ60eiw==
+=apO6
+-----END PGP SIGNATURE-----
+
+--Wi8C1+Ocdx9GTbVa--
