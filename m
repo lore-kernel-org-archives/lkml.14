@@ -1,23 +1,22 @@
-Received: from out0-218.mail.aliyun.com (out0-218.mail.aliyun.com [140.205.0.218])
+Received: from out0-203.mail.aliyun.com (out0-203.mail.aliyun.com [140.205.0.203])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A5E15D72E
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 11:09:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.205.0.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CDAD5D91E
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 11:09:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.205.0.203
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706008159; cv=none; b=nwZP9SQmAK68DOdwNdBwjHcjG1R0eYSQ5YoWksnXuOwLrlS2U/IoMI1KXqMVSiSyihHtN9WotE40YylFfCbovqZE0Hkzy4zAj2rOczhPIypU4gs2PpLdI8x4VBSlzbrZ2AJQ9ZJT2Ku17gBYyWvUD2uG6bhjKsp3JainEA4b5JE=
+	t=1706008163; cv=none; b=HlaaWpnCHEhnI9YpdgXeXTF1w9NwvSxWGhlkrcjh3UfdLsoV36O0G4vnhDflD/mzXu3khB0SmT+Or2bmEs2FEHKj/OIlc58BrbXxviSYqYAQsVpYT0EOhexid77p2Z3PfN14YEfW7CJGADnqIGqDqisiHSroUig4U49hKGWtS+M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706008159; c=relaxed/simple;
-	bh=e5W/30uahPxnnobqPEw5qPDCHBhsj0fyCzs0F+PD/V8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=kZFw8QVM0hXZifY1uSSPdpg1i6HbieVrHKSLlvg+ZaGt8hXjB84uVR/R0jpI1k1J2S+WWOGFrDhbuakp7KeR/plTO5vGtiiYiDRsZICUfe3bLVRzDquE8t/WEyg/bjuU8BlxRJQZIPWDL6FnB4k2Kpgi6AD0rM9ThNCLPa0xRic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com; spf=pass smtp.mailfrom=antgroup.com; arc=none smtp.client-ip=140.205.0.218
+	s=arc-20240116; t=1706008163; c=relaxed/simple;
+	bh=Z5e940A58gW1sYAm3DdoIAB32t7YxtpAzeJ2S0iFi+I=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=l/JG0N4Aa9/vAM1XZ3MU0fem22hj3IASjgSSpBVX+yWbnlyE5mN67Mpx+n+wMDVllrXOMeYrgLRvW+ptCI+6Y/1uozFTH+5Eu3pxzB3nhAnywISv9ARBqRUsmYnwanhwbms+ZTHRfxHyhoKZi68rsM9GA0Bo9T8JjD5qEkzG94M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com; spf=pass smtp.mailfrom=antgroup.com; arc=none smtp.client-ip=140.205.0.203
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antgroup.com
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018047199;MF=tiwei.btw@antgroup.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---.WDCKTk8_1706007836;
-Received: from ubuntu..(mailfrom:tiwei.btw@antgroup.com fp:SMTPD_---.WDCKTk8_1706007836)
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018047209;MF=tiwei.btw@antgroup.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---.WDCKThV_1706007828;
+Received: from ubuntu..(mailfrom:tiwei.btw@antgroup.com fp:SMTPD_---.WDCKThV_1706007828)
           by smtp.aliyun-inc.com;
-          Tue, 23 Jan 2024 19:03:57 +0800
+          Tue, 23 Jan 2024 19:03:55 +0800
 From: "Tiwei Bie" <tiwei.btw@antgroup.com>
 To: richard@nod.at,
 	anton.ivanov@cambridgegreys.com,
@@ -25,49 +24,49 @@ To: richard@nod.at,
 Cc:  <linux-um@lists.infradead.org>,
    <linux-kernel@vger.kernel.org>,
   "Tiwei Bie" <tiwei.btw@antgroup.com>
-Subject: [PATCH 4/5] um: Fix the return type of __switch_to
-Date: Tue, 23 Jan 2024 19:03:46 +0800
-Message-Id: <20240123110347.1274217-5-tiwei.btw@antgroup.com>
+Subject: [PATCH 0/5] um: Minor fixes and cleanups
+Date: Tue, 23 Jan 2024 19:03:42 +0800
+Message-Id: <20240123110347.1274217-1-tiwei.btw@antgroup.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240123110347.1274217-1-tiwei.btw@antgroup.com>
-References: <20240123110347.1274217-1-tiwei.btw@antgroup.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Make it match the declaration in asm-generic/switch_to.h. And
-also include the header to allow the compiler to check it.
+A series of minor fixes and cleanups for UML.
 
-Signed-off-by: Tiwei Bie <tiwei.btw@antgroup.com>
----
- arch/um/kernel/process.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Tiwei Bie (5):
+  um: Make local functions and variables static
+  um: Fix the declaration of vfree
+  um: Remove unused functions
+  um: Fix the return type of __switch_to
+  um: Add missing headers
 
-diff --git a/arch/um/kernel/process.c b/arch/um/kernel/process.c
-index 292c8014aaa6..a7607ef1b02f 100644
---- a/arch/um/kernel/process.c
-+++ b/arch/um/kernel/process.c
-@@ -26,6 +26,7 @@
- #include <linux/resume_user_mode.h>
- #include <asm/current.h>
- #include <asm/mmu_context.h>
-+#include <asm/switch_to.h>
- #include <linux/uaccess.h>
- #include <as-layout.h>
- #include <kern_util.h>
-@@ -73,7 +74,7 @@ static inline void set_current(struct task_struct *task)
- 
- extern void arch_switch_to(struct task_struct *to);
- 
--void *__switch_to(struct task_struct *from, struct task_struct *to)
-+struct task_struct *__switch_to(struct task_struct *from, struct task_struct *to)
- {
- 	to->thread.prev_sched = from;
- 	set_current(to);
+ arch/um/drivers/pcap_kern.c              |  4 +--
+ arch/um/drivers/ubd_user.c               |  2 +-
+ arch/um/include/shared/um_malloc.h       |  2 +-
+ arch/um/kernel/kmsg_dump.c               |  2 +-
+ arch/um/kernel/mem.c                     |  2 ++
+ arch/um/kernel/process.c                 | 34 ++++++------------------
+ arch/um/kernel/reboot.c                  |  1 +
+ arch/um/kernel/skas/mmu.c                |  1 +
+ arch/um/kernel/skas/process.c            |  1 +
+ arch/um/kernel/time.c                    |  6 ++---
+ arch/um/kernel/tlb.c                     |  7 +----
+ arch/um/os-Linux/drivers/ethertap_kern.c |  2 +-
+ arch/um/os-Linux/drivers/tuntap_kern.c   |  2 +-
+ arch/um/os-Linux/signal.c                |  4 +--
+ arch/x86/um/bugs_32.c                    |  1 +
+ arch/x86/um/bugs_64.c                    |  1 +
+ arch/x86/um/fault.c                      |  1 +
+ arch/x86/um/os-Linux/mcontext.c          |  1 +
+ arch/x86/um/os-Linux/registers.c         |  2 +-
+ 19 files changed, 31 insertions(+), 45 deletions(-)
+
 -- 
 2.34.1
 
