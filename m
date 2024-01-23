@@ -1,53 +1,53 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C56C657C8
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 15:35:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89B4465BAF
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 15:35:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706024119; cv=none; b=a0XLO9FxGuY6jJDIWOtN8ZEed1yI/B4/pfUWNwLaKPfb0OlDzYCHcOTXlwCfHlS/pIUpwVkI1raTR4tAh6g0xz+4+N4k52QM8WAUrNkR0Hcmu4k6nDrTKLO4+FCzqKXYEOEN8KnlqtoE+j6idj/cZVItoVq5MBbS/6ynOIm6TTk=
+	t=1706024121; cv=none; b=tDPFz5Zn6MSVpyYwaP9wxtC3mo/nF32OIEjQE1eWf6opdU78hb/OlPPj3FfUdeKWauhsYFLbzS2rV3RgJ1Ng5n6+LditENFRFiNqgqs2UixBV+9QYFKsEWgvAUSalLlYjQ6tcHFd8xjtIgMyEB89ovOPNA0DrVJ+RccYL2zmajI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706024119; c=relaxed/simple;
-	bh=c9BEPFAZqOS2AQyRU1oFe2mQJ0crzzdirNWDHZqIiqg=;
+	s=arc-20240116; t=1706024121; c=relaxed/simple;
+	bh=3DXhCS9gCYUo/yeEr1UEdliq7S/NZwWpa7NRrM8XxIw=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=c5fa3i1gzktNT0qFiXeIVWMU3ZQGq1HSiZZscJS4h/7GbnIORpcQKHw7pbsYB/kmPYKQKMYG3EU44j+A75OVf0FXPMGmqr13i93EHRu3h7tEUOjWnhKiPw5L/ZWmD3J7QN1isd2plyBsybbJR1e7+z0zQ35PReTDEi3UlrwYzwk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eqIHx5e/; arc=none smtp.client-ip=170.10.129.124
+	 Content-Disposition:In-Reply-To; b=MuN798J3bXUwreNPsNOXud+3uKbuIlNqR5M3JlVeT4KRSkr55ACJO7Nk75LEN5qknadznh5spp6zgqoejwooceH4361QVbF3f3wVJe1VrWuuxbBQVBXX5vhFUDo80p/0DLR7t5iL93mCyybgI1TL+Q9v+xg4Ukil9fdBcmScn/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NcpuJDFC; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eqIHx5e/"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NcpuJDFC"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1706024116;
+	s=mimecast20190719; t=1706024118;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to; bh=zQhQsMWn8/u+MgzIhKjJc4Zf9WV6/GJZobpLAxElXGE=;
-	b=eqIHx5e/MruKNzHNfw2DwDPD7lJM1cWjx+D7DTUHBkbf+/e4RpNZuqNnZzOWzDOH8g4VaM
-	tJj1c7+oW5KAHpduSrjwFrDzMHI8LOmzvU2ZSPeq71QDwtuKn4vSvtfR+9839GS38kKQAL
-	UOrCwFrRlGKtePv6OWghTtzc+8WCngo=
+	 in-reply-to:in-reply-to; bh=PF33nZUXk10Fdt+GZc2nbXSpzhr3D6HyvllQ/D4I808=;
+	b=NcpuJDFCbmAsR8F7Rfxlc+FEpwvpaug5m8ESEZeIEyvfIrVbiJpQOlEfVdU3NCJBy5f0S1
+	KVauaggHgX5Zsjs6W9JqMUUvolBdvcROZ8XgtrolBaEMp1jQBBGxYIAX3wJGD45LGRpyNT
+	5k1Bez9GX7l4AjASu1IRkUmBuH2NxK0=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-299-DVWFydYbPvavkDDHE0upJw-1; Tue, 23 Jan 2024 10:35:13 -0500
-X-MC-Unique: DVWFydYbPvavkDDHE0upJw-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
+ us-mta-19-IXos11CQPua1Sy3rPPC_Kw-1; Tue, 23 Jan 2024 10:35:15 -0500
+X-MC-Unique: IXos11CQPua1Sy3rPPC_Kw-1
+Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 782F310B02B1;
-	Tue, 23 Jan 2024 15:35:12 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 0B941869EC2;
+	Tue, 23 Jan 2024 15:35:15 +0000 (UTC)
 Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.197])
-	by smtp.corp.redhat.com (Postfix) with SMTP id 3D69B200E1BF;
-	Tue, 23 Jan 2024 15:35:11 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with SMTP id C3D20492BFA;
+	Tue, 23 Jan 2024 15:35:13 +0000 (UTC)
 Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Tue, 23 Jan 2024 16:33:59 +0100 (CET)
-Date: Tue, 23 Jan 2024 16:33:57 +0100
+	oleg@redhat.com; Tue, 23 Jan 2024 16:34:01 +0100 (CET)
+Date: Tue, 23 Jan 2024 16:34:00 +0100
 From: Oleg Nesterov <oleg@redhat.com>
 To: Andrew Morton <akpm@linux-foundation.org>
 Cc: "Eric W. Biederman" <ebiederm@xmission.com>,
 	Dylan Hatch <dylanbhatch@google.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/3] fs/proc: do_task_stat: use sig->stats_lock to gather the
- threads/children stats
-Message-ID: <20240123153357.GA21857@redhat.com>
+Subject: [PATCH 3/3] exit: wait_task_zombie: kill the no longer necessary
+ spin_lock_irq(siglock)
+Message-ID: <20240123153359.GA21866@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -58,119 +58,54 @@ Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 In-Reply-To: <20240123153313.GA21832@redhat.com>
 User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.4
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.10
 
-lock_task_sighand() can trigger a hard lockup. If NR_CPUS threads call
-do_task_stat() at the same time and the process has NR_THREADS, it will
-spin with irqs disabled O(NR_CPUS * NR_THREADS) time.
+After the recent changes nobody use siglock to read the values protected
+by stats_lock, we can kill spin_lock_irq(&current->sighand->siglock) and
+update the comment.
 
-Change do_task_stat() to use sig->stats_lock to gather the statistics
-outside of ->siglock protected section, in the likely case this code
-will run lockless.
+With this patch only __exit_signal() and thread_group_start_cputime() take
+stats_lock under siglock.
 
 Signed-off-by: Oleg Nesterov <oleg@redhat.com>
 ---
- fs/proc/array.c | 58 +++++++++++++++++++++++++++----------------------
- 1 file changed, 32 insertions(+), 26 deletions(-)
+ kernel/exit.c | 10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
 
-diff --git a/fs/proc/array.c b/fs/proc/array.c
-index 45ba91863808..34a47fb0c57f 100644
---- a/fs/proc/array.c
-+++ b/fs/proc/array.c
-@@ -477,13 +477,13 @@ static int do_task_stat(struct seq_file *m, struct pid_namespace *ns,
- 	int permitted;
- 	struct mm_struct *mm;
- 	unsigned long long start_time;
--	unsigned long cmin_flt = 0, cmaj_flt = 0;
--	unsigned long  min_flt = 0,  maj_flt = 0;
--	u64 cutime, cstime, utime, stime;
--	u64 cgtime, gtime;
-+	unsigned long cmin_flt, cmaj_flt, min_flt, maj_flt;
-+	u64 cutime, cstime, cgtime, utime, stime, gtime;
- 	unsigned long rsslim = 0;
- 	unsigned long flags;
- 	int exit_code = task->exit_code;
-+	struct signal_struct *sig = task->signal;
-+	unsigned int seq = 1;
+diff --git a/kernel/exit.c b/kernel/exit.c
+index 3988a02efaef..dfb963d2f862 100644
+--- a/kernel/exit.c
++++ b/kernel/exit.c
+@@ -1127,17 +1127,14 @@ static int wait_task_zombie(struct wait_opts *wo, struct task_struct *p)
+ 		 * and nobody can change them.
+ 		 *
+ 		 * psig->stats_lock also protects us from our sub-threads
+-		 * which can reap other children at the same time. Until
+-		 * we change k_getrusage()-like users to rely on this lock
+-		 * we have to take ->siglock as well.
++		 * which can reap other children at the same time.
+ 		 *
+ 		 * We use thread_group_cputime_adjusted() to get times for
+ 		 * the thread group, which consolidates times for all threads
+ 		 * in the group including the group leader.
+ 		 */
+ 		thread_group_cputime_adjusted(p, &tgutime, &tgstime);
+-		spin_lock_irq(&current->sighand->siglock);
+-		write_seqlock(&psig->stats_lock);
++		write_seqlock_irq(&psig->stats_lock);
+ 		psig->cutime += tgutime + sig->cutime;
+ 		psig->cstime += tgstime + sig->cstime;
+ 		psig->cgtime += task_gtime(p) + sig->gtime + sig->cgtime;
+@@ -1160,8 +1157,7 @@ static int wait_task_zombie(struct wait_opts *wo, struct task_struct *p)
+ 			psig->cmaxrss = maxrss;
+ 		task_io_accounting_add(&psig->ioac, &p->ioac);
+ 		task_io_accounting_add(&psig->ioac, &sig->ioac);
+-		write_sequnlock(&psig->stats_lock);
+-		spin_unlock_irq(&current->sighand->siglock);
++		write_sequnlock_irq(&psig->stats_lock);
+ 	}
  
- 	state = *get_task_state(task);
- 	vsize = eip = esp = 0;
-@@ -511,12 +511,8 @@ static int do_task_stat(struct seq_file *m, struct pid_namespace *ns,
- 
- 	sigemptyset(&sigign);
- 	sigemptyset(&sigcatch);
--	cutime = cstime = 0;
--	cgtime = gtime = 0;
- 
- 	if (lock_task_sighand(task, &flags)) {
--		struct signal_struct *sig = task->signal;
--
- 		if (sig->tty) {
- 			struct pid *pgrp = tty_get_pgrp(sig->tty);
- 			tty_pgrp = pid_nr_ns(pgrp, ns);
-@@ -527,27 +523,9 @@ static int do_task_stat(struct seq_file *m, struct pid_namespace *ns,
- 		num_threads = get_nr_threads(task);
- 		collect_sigign_sigcatch(task, &sigign, &sigcatch);
- 
--		cmin_flt = sig->cmin_flt;
--		cmaj_flt = sig->cmaj_flt;
--		cutime = sig->cutime;
--		cstime = sig->cstime;
--		cgtime = sig->cgtime;
- 		rsslim = READ_ONCE(sig->rlim[RLIMIT_RSS].rlim_cur);
- 
--		/* add up live thread stats at the group level */
- 		if (whole) {
--			struct task_struct *t;
--
--			__for_each_thread(sig, t) {
--				min_flt += t->min_flt;
--				maj_flt += t->maj_flt;
--				gtime += task_gtime(t);
--			}
--
--			min_flt += sig->min_flt;
--			maj_flt += sig->maj_flt;
--			gtime += sig->gtime;
--
- 			if (sig->flags & (SIGNAL_GROUP_EXIT | SIGNAL_STOP_STOPPED))
- 				exit_code = sig->group_exit_code;
- 		}
-@@ -562,6 +540,34 @@ static int do_task_stat(struct seq_file *m, struct pid_namespace *ns,
- 	if (permitted && (!whole || num_threads < 2))
- 		wchan = !task_is_running(task);
- 
-+	do {
-+		seq++; /* 2 on the 1st/lockless path, otherwise odd */
-+		flags = read_seqbegin_or_lock_irqsave(&sig->stats_lock, &seq);
-+
-+		cmin_flt = sig->cmin_flt;
-+		cmaj_flt = sig->cmaj_flt;
-+		cutime = sig->cutime;
-+		cstime = sig->cstime;
-+		cgtime = sig->cgtime;
-+
-+		if (whole) {
-+			struct task_struct *t;
-+
-+			min_flt = sig->min_flt;
-+			maj_flt = sig->maj_flt;
-+			gtime = sig->gtime;
-+
-+			rcu_read_lock();
-+			__for_each_thread(sig, t) {
-+				min_flt += t->min_flt;
-+				maj_flt += t->maj_flt;
-+				gtime += task_gtime(t);
-+			}
-+			rcu_read_unlock();
-+		}
-+	} while (need_seqretry(&sig->stats_lock, seq));
-+	done_seqretry_irqrestore(&sig->stats_lock, seq, flags);
-+
- 	if (whole) {
- 		thread_group_cputime_adjusted(task, &utime, &stime);
- 	} else {
+ 	if (wo->wo_rusage)
 -- 
 2.25.1.362.g51ebf55
 
