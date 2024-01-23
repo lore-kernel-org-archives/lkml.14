@@ -1,70 +1,65 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B510D5BAEA
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 00:35:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E80E5EE88
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 00:36:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705970161; cv=none; b=nNgLUOZaMahJChCccVhvUmKn705gJxDR6Dv2poyGjqdzopK55RXqYu+a+98pfOot6nqaQSeQI9eydt0O8bLMXEB8f/zzizr4Vc9BLNb6ivvwtbGXAIWlDhPlMST340/1/QflJJ3nfmwWAgTljhKUJt3JKVkpzTkhRZf+zJWwm74=
+	t=1705970163; cv=none; b=Hl4pqPjlJrHlX5sue/Du31stjrO/EXA41G+NsuLrd+vYV4A/JDgujy4gIteoJ1oNVR2NLSPHnoohz8IcxexS2DcqjjDtIjg1on8iADypEm2cEG6lUksDZViWbmkiRhUqljOEmfnIrWAnHipFOor0e0duAaany9mIehsGxeUZG+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705970161; c=relaxed/simple;
-	bh=JaJ2RzkYot/4sV3jiZLTi+/y/zDvkmsfkl8XZ+sAZv8=;
+	s=arc-20240116; t=1705970163; c=relaxed/simple;
+	bh=nGybLOIsuTz/Gb9B1iN3NLpbKPO1DsQM9K1PTfrNPdM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=GFb1jhfOtv6s7oZ58fykE5Hp8zj4RiaJIkR4P1Xr8wwQeMvME/RknutvDI8YsCRgtRaUthxmWCthXgVh6RLTfHhcC5A+mirYafNFrhhY4/E2GYTjPk56wdBTff9MDlotC+vmzYwygHUgWJpYFa2tBiJTDUZ/hsPdiiA1F1ZywSM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=UvKOomai; arc=none smtp.client-ip=209.85.214.174
+	 MIME-Version; b=iqv4akYektQqpEF5mv5ivSdCvwq9FDwrmohCPnsZZYtgLMBaStFxORnuyyWqJVqZ6PML0UI5pM9HjS+kvUtxea9otYwecgsijWefyqhHICulnXTV1M3ChseQC4Thq+wpAV9PjHFY0Kzix2BdjxJKTG7LNi999IEwvTcWZkszgKw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=XUanmnYs; arc=none smtp.client-ip=209.85.210.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UvKOomai"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1d71e184695so13585375ad.3
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 16:35:59 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XUanmnYs"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-6daa89a6452so2375709b3a.2
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 16:36:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1705970159; x=1706574959; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1705970161; x=1706574961; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=iIWUdIrQWRkhOO5TDXuKcaUsLitTbGyLlklsAfWCzWo=;
-        b=UvKOomaiN2VhtkDv5+8QNC+MtjXQx/iwGzTtFLEcj5s1VSKPBHwN2l2gwIDJh4mjBL
-         zFvy+2Ct3bGei9Mw5MsNWsE/Djk5CfXLRWpyVexzj5Wml53eHNq93AIxm5GsGJ/wZx+w
-         dVai29oFleneBo8Y+z3PkQ2GT9BFfJa0FDSaM=
+        bh=dDa9oNn6F2ovUjbcqpVWupPtvSG3Yc95imKuqvbvgJs=;
+        b=XUanmnYsPUxr2gTvzGVYaMzZL9E9AcU3GUA52Gz9cz66xR/dpNoDbA4kCJpY5GEAzb
+         WU6dTn0ZwSxqqCNHu3v4br4nJPLpNwvukbM8xY3FM08wejMl/RHBgp1CmId2JPM0hivM
+         5eA84oUg2lG083FsEyz7ga8BhzqiSjFEi1L1k=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705970159; x=1706574959;
+        d=1e100.net; s=20230601; t=1705970161; x=1706574961;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=iIWUdIrQWRkhOO5TDXuKcaUsLitTbGyLlklsAfWCzWo=;
-        b=O4DUCeRZjXlHVOaVUDudmSMNhbHyaWl/3uERsbWa2/iZ7i/9SsXqsIA/E1Ur6lNWOv
-         pzBXTtXWcQ6bRmWqY2XtgsfJYjNAsNP9+iKpI4LovyDFPAuAHiQbhY+aP4CerRzbwbmE
-         O7PpSyYVobUAex5gvpp2A8Dk3v0HV6w1OWtYWFq7D9VKH6F5AMB1UB7BXARpzEyToyE0
-         8V2v8e1wXpZARy0cohK/S3DaFy66dLeIDMMjwWvGFdL91pSyWFJ3jhsIyS21h1/25pdB
-         BMF0F6ovLF7BvV+3lDOoytMVE1HG1wd+/r5HxpQicVcsheN4tmjWYADHld+vocu0emg0
-         d9EQ==
-X-Gm-Message-State: AOJu0YxFJC13KN8K1/63f9JTl3+HkSQo/lgTJj3QjXKPCp/YC1OI++EA
-	QKVUOGAKXJyB8Ot8E9FvFpEv8CF7enYE7NPrQ6T4h+sbkrbsocDSLVYyma2+1Q==
-X-Google-Smtp-Source: AGHT+IGbD3nHFvLOHAqRpTgdheaQGatmkkSF5LsUW843Igdg/5hvIeA3Y0uoIVSr4tGmabJc+mdbbg==
-X-Received: by 2002:a17:902:e5c8:b0:1d7:3563:88ef with SMTP id u8-20020a170902e5c800b001d7356388efmr2199690plf.99.1705970159024;
-        Mon, 22 Jan 2024 16:35:59 -0800 (PST)
+        bh=dDa9oNn6F2ovUjbcqpVWupPtvSG3Yc95imKuqvbvgJs=;
+        b=HijBJnPPCK18I4Zbw2EnmRxmDu8/5lA0x9RZEcwEM4SGstaBIP5LaR3I4BRix78WCr
+         p5IWwJqhm2Gs7IZfU6Bb2gS6SuIdvPe/0gq0Ue36F2aqSeXqqVyBXgH2dkaf6F6DnLTa
+         9gluOMl/1XH407Vnor76pAovsB6AX9rkVwkCOqiT09dhCDlqffJOB7+kQQqS6sXklPdt
+         54kikDbFuJASdITqYOgABQiD0BSKUQMuyeOtVNTnV5e03KJtZ3PXpOlncw5TNuIkMU7a
+         6p5u8Ae6U+pkH7BmaKQZrVv3hXGVku+XRKSWGs5Zkr4j1vd5lHWeVJgFigPzUw5EFgP2
+         6UWQ==
+X-Gm-Message-State: AOJu0YxTyREnqX6Q3VEpTog7A3myLEa/7wU9yNVAO6T/kIJAODyjJBdI
+	SoUhm+Hp6p3BrPlKoNPpp0dAfJRmWFOU0A/kugoQ/DakIawlmZuLQ8Md1+QaUg==
+X-Google-Smtp-Source: AGHT+IGFisF1295Ij2x4vO/0+LvR+AVsOSL///qInuAxURZWY7CGHJ9Maj35pV/npREH2JNW8qXFIw==
+X-Received: by 2002:a05:6a20:c420:b0:19b:1e87:5a6c with SMTP id en32-20020a056a20c42000b0019b1e875a6cmr2159488pzb.79.1705970161063;
+        Mon, 22 Jan 2024 16:36:01 -0800 (PST)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id e2-20020a170902744200b001d5f5887ae8sm7708987plt.10.2024.01.22.16.35.55
+        by smtp.gmail.com with ESMTPSA id w20-20020a170902d11400b001d717e64f0esm6400820plw.87.2024.01.22.16.35.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jan 2024 16:35:55 -0800 (PST)
+        Mon, 22 Jan 2024 16:35:59 -0800 (PST)
 From: Kees Cook <keescook@chromium.org>
 To: linux-hardening@vger.kernel.org
 Cc: Kees Cook <keescook@chromium.org>,
-	Sathya Prakash <sathya.prakash@broadcom.com>,
-	Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
-	Suganath Prabu Subramani <suganath-prabu.subramani@broadcom.com>,
-	"James E.J. Bottomley" <jejb@linux.ibm.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	MPT-FusionLinux.pdl@broadcom.com,
-	linux-scsi@vger.kernel.org,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	linux-pci@vger.kernel.org,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
 	Bill Wendling <morbo@google.com>,
 	Justin Stitt <justinstitt@google.com>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 61/82] scsi: mpt3sas: Refactor intentional wrap-around test
-Date: Mon, 22 Jan 2024 16:27:36 -0800
-Message-Id: <20240123002814.1396804-61-keescook@chromium.org>
+Subject: [PATCH 68/82] PCI: Refactor intentional wrap-around test
+Date: Mon, 22 Jan 2024 16:27:43 -0800
+Message-Id: <20240123002814.1396804-68-keescook@chromium.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240122235208.work.748-kees@kernel.org>
 References: <20240122235208.work.748-kees@kernel.org>
@@ -74,19 +69,19 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2218; i=keescook@chromium.org;
- h=from:subject; bh=JaJ2RzkYot/4sV3jiZLTi+/y/zDvkmsfkl8XZ+sAZv8=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlrwgKR/y0c/t8XBxk6HBTKTo2onZffQ1Swuzxk
- YruIIw+tTCJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZa8ICgAKCRCJcvTf3G3A
- JsGHD/wO+1S4S3MYfwC+Xgo0UsnlP4RNEo76XTqku6Gtqo7+RgF/OJErJi+PSvELd675QOu9xdC
- EMr1YFfvIBEMrbHHvwJWkaErziO0Y3hRKhrFQr02QIrOnXeDwnIPzHDCv18K0d3Q+q041p/sRyj
- YB7tjSXSsTcFhvkEQ9dY+VylEL1PLD4Ozx1qB10yg6+pNkm/uCWrmiLvfSgSXIluY++aIRb26NL
- VaSRkVOonQ4P4lvoMg00EP5cCn0zHYNyG1e6Ea4+cIaFLUKcV46uB4xzGTwfw+vtbMdtn3jZaly
- hU/RxpkvU2oW1VIYwSeakNHq76noGBszsSTs6meNnd62v/yEdmDyqyTfqFKcm5jwd4LupJnffRl
- PaKJclzIEUwHDQGYtmTMzzYksMJ7+emnQ4pgS08Dr4frBXv3Kw20xwphAev7CU3j6ei4ghTajDd
- xxiU8Oq8sW9mW5SwmfrVaIgLmJe+Uwy7bC1EHgFeqFpqK/AbTNh+FplhncR9+E+Gonpq3iKfGC8
- 46fX7SBvoMASJQFlZP+ErSYOfIkvdt5fDwy3899f5cTVxe+NtVeUWwbBhp0I/BMoiXbh/N4Wz/m
- 1JLczsOR6Y1t0bzwiFfJd2zNYEyI8gvNaAak6MrluQfkHLAx0zAGsyXDQta1R52iYGD2+9KjtmB cB9P/HPcsvjdiPA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1740; i=keescook@chromium.org;
+ h=from:subject; bh=nGybLOIsuTz/Gb9B1iN3NLpbKPO1DsQM9K1PTfrNPdM=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlrwgLXzUyFv8ROCBAkarbyBq08JOy1Jiw/R0yL
+ UURfO04CTOJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZa8ICwAKCRCJcvTf3G3A
+ JuF8EACyGcPp93JqF5tp2S7pbgmh+m2YVe5oYzmcs4GyaCIJEg5zXT/fdkd6tu2LWmWPsIg40Fr
+ SbKeYY5YJaOP/yC8bfFrSsUOCoCQFIOLM4SkZgOC3hAJtNPv+NG31XNwAmBQ3ogTFje0YjRk7qX
+ OYSeEqoBDlAMmU4ce5qwEHM06VtNVtQCVNp5oulK1zW8BMSBgHMTXzBijtO/DtiBVki8i41z0wI
+ 5ErrZ+PQQvnc9zRdALPpt5gb/S8dIR7TKzb2KvbM6frT9lAgHflHE9pO5u1EhFtAejTqdWrGrN6
+ pz7/2Fv4SETQBDdstfnc15QJJZCgPscQjsL9qw7dy5mLg+E40l1MBYJXivSBEyHPeiVE6vgl8xb
+ 9P5WqEdq1qfxNLckOqUq9TrZNeGxgxaio+1lM+9xtkKqRSW145a7mRn0Drc9DMHh0KKsUX5TNLk
+ xCrBbdKnNhC+Jeqa6I6f6WQW9MgVjNkA17fQdWf/jxsjsf+JGxlVE1livqEEMJbpn66rbvl8iW4
+ ypcRIykksrriHbd1C2Aq0g4i9QdSGL/ol0MeuQ2Q92JZUf05lKqbOyhUGChwz26XkLS4M9lRwh5
+ usd0VpO9+Y4iU3JXhrCoN2j8ab6+8PU3rZesVh+i68xSHd06pfjnsC0JJQjMi9vWmUHq7sCOINd cznG4a3YV1rp9VQ==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
@@ -111,31 +106,26 @@ Link: https://git.kernel.org/linus/68df3755e383e6fecf2354a67b08f92f18536594 [1]
 Link: https://github.com/KSPP/linux/issues/26 [2]
 Link: https://github.com/KSPP/linux/issues/27 [3]
 Link: https://github.com/KSPP/linux/issues/344 [4]
-Cc: Sathya Prakash <sathya.prakash@broadcom.com>
-Cc: Sreekanth Reddy <sreekanth.reddy@broadcom.com>
-Cc: Suganath Prabu Subramani <suganath-prabu.subramani@broadcom.com>
-Cc: "James E.J. Bottomley" <jejb@linux.ibm.com>
-Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc: MPT-FusionLinux.pdl@broadcom.com
-Cc: linux-scsi@vger.kernel.org
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-pci@vger.kernel.org
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/scsi/mpt3sas/mpt3sas_ctl.c | 2 +-
+ drivers/pci/pci.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/mpt3sas/mpt3sas_ctl.c b/drivers/scsi/mpt3sas/mpt3sas_ctl.c
-index 147cb7088d55..b36a9188720f 100644
---- a/drivers/scsi/mpt3sas/mpt3sas_ctl.c
-+++ b/drivers/scsi/mpt3sas/mpt3sas_ctl.c
-@@ -2382,7 +2382,7 @@ _ctl_diag_read_buffer(struct MPT3SAS_ADAPTER *ioc, void __user *arg)
- 			    karg.bytes_to_read));
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index d8f11a078924..ebf6d9064a59 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -4251,7 +4251,7 @@ int pci_register_io_range(struct fwnode_handle *fwnode, phys_addr_t addr,
+ #ifdef PCI_IOBASE
+ 	struct logic_pio_hwaddr *range;
  
- 	/* Truncate data on requests that are too large */
--	if ((diag_data + karg.bytes_to_read < diag_data) ||
-+	if ((add_would_overflow(diag_data, karg.bytes_to_read)) ||
- 	    (diag_data + karg.bytes_to_read > request_data + request_size))
- 		copy_size = request_size - karg.starting_offset;
- 	else
+-	if (!size || addr + size < addr)
++	if (!size || add_would_overflow(addr, size))
+ 		return -EINVAL;
+ 
+ 	range = kzalloc(sizeof(*range), GFP_ATOMIC);
 -- 
 2.34.1
 
