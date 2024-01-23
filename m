@@ -1,151 +1,102 @@
-Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E0D851010
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 06:39:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B5BF50261
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 06:43:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705991980; cv=none; b=Zxj8K6x5JoqgptYwnuraEALhT1dZwYPorXqMbUsjPU7xmPlDGzb87PhtGxCYJX1XcMqtv4yNTHBEEmUrfJm+ze36LWj7cMgWxEniS/gQEwzcBKb1MJyEJMKvD2lwxGo5yokI63lEwprHTTqLOB90h7rZgCpfdxpcoSYv/Xi/NTo=
+	t=1705992191; cv=none; b=jW4sURMYHpjBJQUs9nb4ZeJbeCAROWsCemIeNdTsuCIvpfT2Amup4c0h+01GQW0SCz/r+xHv6OZ1oIMgSwrEIFvFtEQ3XUdKAEVnh5iBJUEqmuceSM6gVtAT5a+tFw8l2wC9YhwwFjsAzW+1YtA9HKEzpebLWV61soqUxhdYtsM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705991980; c=relaxed/simple;
-	bh=97fUsI3syBIh9/BxtfH9kv6054fMXX9A+KQKCKVBfXI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=AISrIYDdxx9FrJH9NOOtynHe0V/+i47gRUgm1IGNhkjtSAHZ6czBw3ZCP2eXgPPpRwxFqTScpkUkjTJA0JMMjhmKb3AjvgnAYkcIsOThsHItQw9CYbvLkAtIB8Jr/XyTZe5LS0Vi2H0s1NCXgyQO6IC6n7wDOE3hRixJSYPIe5w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=lWqVz/x8; arc=none smtp.client-ip=209.85.215.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1705992191; c=relaxed/simple;
+	bh=Q0R2FUM/vqe/upMMhRgpiOo7u30kkYDKFKTZ4CE94Rg=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=kht63L4XVOdbqnLBv4ag4wWAmuBA5/Qb8Zu0ElaXRY1m+NJ0ClEOqpO22uc8TQZp4JD2yiYheGq6QIicTsJFs6fuR0fY5kopXouwsvatT1RUx+05LvLkjKWZVk5zldm7sBxxLGE6zqcoVTWSmm1EV5gH7Ij8ZHxZrcTi939R0WA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--surenb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LUY9Yx2c; arc=none smtp.client-ip=209.85.128.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--surenb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lWqVz/x8"
-Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-5ce74ea4bf2so2519822a12.0
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 22:39:39 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LUY9Yx2c"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-600273598c1so17285677b3.3
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 22:43:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1705991978; x=1706596778; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Iwio5HJQpvc8muMFO1anj17hxV7JwhZHGw2QVILfq9g=;
-        b=lWqVz/x8tATAlQVo2yotw/ouuLHyeh1mRMSy2Lt/0VERuXzRE/t9d8RjnV60awJWg9
-         nFukiYrq9i8T+9T1EtQQwEuLZus5AG9bh5W0C2IC7K7is9tSs9DZmNUtmTVjO0G9vN1N
-         CyabPGvxsNFedVeRJcY/UOcDD2iGBSI+Smrvlsng9/+j9JnnZaQWct6Ilki4SeLj4vyT
-         3bMi6k9IZ1hGNdJAFsVsWi+gcl2M/nE0CwXUqyEW9IIUvml121OkJAGtjzMQLd8ELlAf
-         +D7Q2plp75LedHHOI/+sSKNJ6tUbDA3qERJk2/4If3YTkke68oQuTTO+cXctBo0YbxUu
-         fVMg==
+        d=google.com; s=20230601; t=1705992189; x=1706596989; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=2FZwZ+rXghzrwMAzRL81BGjWf4dIgKukf4yDKbJi/Es=;
+        b=LUY9Yx2cU7QNPGdyE6OduYogspnbpDHjpIAybc/LO/XQSkEoiJ1GXc/0j9JvMNEhrO
+         4c1FUl+ODp0RQ3fn4fqRERPQM4cmiANEtIT5YQ0o5xtkGdJfyUAtbPDAuPh9B8uZrEYk
+         DdrCFAkRr8E3S9ntipLYAFOrzEYvwUHMofdRNzzE7bWiZEz6I4yEvoc3eyDCLHybOE+p
+         rRonjN2rmC3+YWCxZEZHnvfGUokluPNUxUnQF7Sp1cbdEFMmUODajpQ88AIGy45v11IV
+         BTE58cbDg5Rm+fFADuJpGP8Hz9b+uf4u3tONUFhg//o1Wy7x88eRwELQwBt0iiqGSx2g
+         XH2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705991978; x=1706596778;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Iwio5HJQpvc8muMFO1anj17hxV7JwhZHGw2QVILfq9g=;
-        b=RrpiI726EOPFmdbQEzTrwGfhG8R5WoVHWAd3T26/hghQgaKhB+OG3hpfePB6hy856r
-         ddBxMu06rqA6VnSm3ftb3PP0CTrsTPPIojjPlGVRD84aDKqOGyI40NJaI5Rkwan0Ry3n
-         E1nbekszb3aiBagt5nVwEGx4KZ3H9SsypuqOZ9yh+IuRM4BLIImnNVXqHYK4YCBaw/kV
-         DB4SPA4xkpO8fc/LzjzLdiWKJZYb9X9GuzR6ONv6JplZbzo5r5pahTi00oa4jd1q/dwM
-         1962cragcxSp/m2HDSef6tWdOiOLLuuwWqWc3LVp3nxl3GABWnGM0ybj4qIUpRuP2Gzf
-         qYUg==
-X-Gm-Message-State: AOJu0YwmiySO1ku9vSjkRUnIJz57EPc4DzhjEwTGDts6G3gSK2LPSF0V
-	1CSjfiPMkpUXIAfKxVrAfctXp3Xls9Bf95ffvwXisM2p5oCRc0w6lLIhz78L2Pc=
-X-Google-Smtp-Source: AGHT+IGRkUJZ64S+e5w8iA3Eig0m/KmoRJTuAHlDEoT2Bp9ReodFgcUTV4umNazpcnzIrz0lfhKWtA==
-X-Received: by 2002:a05:6a20:9f9b:b0:199:4910:fe5b with SMTP id mm27-20020a056a209f9b00b001994910fe5bmr6333136pzb.54.1705991978692;
-        Mon, 22 Jan 2024 22:39:38 -0800 (PST)
-Received: from localhost ([122.172.81.83])
-        by smtp.gmail.com with ESMTPSA id ls30-20020a056a00741e00b006dbe42b8f75sm2530831pfb.220.2024.01.22.22.39.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jan 2024 22:39:38 -0800 (PST)
-From: Viresh Kumar <viresh.kumar@linaro.org>
-To: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Nishanth Menon <nm@ti.com>,
-	Stephen Boyd <sboyd@kernel.org>
-Cc: linux-pm@vger.kernel.org,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] cpufreq: Move dev_pm_opp_{init|free}_cpufreq_table() to pm_opp.h
-Date: Tue, 23 Jan 2024 12:09:34 +0530
-Message-Id: <ace4b31b297dfd7b8c969ff5046c8128c3e025be.1705991941.git.viresh.kumar@linaro.org>
-X-Mailer: git-send-email 2.31.1.272.g89b43f80a514
+        d=1e100.net; s=20230601; t=1705992189; x=1706596989;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=2FZwZ+rXghzrwMAzRL81BGjWf4dIgKukf4yDKbJi/Es=;
+        b=SJYqIrkPTj91/80oPz2RC7NDJkOawO9IMbst8biCrnrM1JG25HRV3AQBAT2aA7BES+
+         BVjW1PgdWxf1+vgPLxBbUqlW3PaToWAKuAuShRTu413Bk7RQf0wlXe3WBWiytkX1bmB0
+         vgEoqbWgc3M2rO+hLI34+g07XGXvdQaOgNwaDP0qCc/rwSuVveU+XUDYFpbcK+jzMAV7
+         g6wNoq79TllRSdnZ/e9vY+YQ2HOymaxpBwBm+5nY9iQ36iobgeDpGhU7mBOzUYWhVvEn
+         CkxHPRHggf9CmU1wgksohTbq2jpOhcLgqvBoeUQSXH9wnzDbfJZpzS93ZLqY5tj0Ax2W
+         5b9Q==
+X-Gm-Message-State: AOJu0YwZGgkb2EiP6bhdZlGYXJX++q2LBPRGMDOImNvFYGXge1RPXz7z
+	1omeiWmt/5Q8mXreduDeQ3OpTU68JizbwP0/+YuTgrB6It4eKkrO+hMWGbNoSNudbbZ+e66h+EV
+	Akw==
+X-Google-Smtp-Source: AGHT+IEO6A9zRBfOAVXliXkQQKxCV0qhRt+egkKWA991dYf7yzqjSRjLplw2MTnE92/ZhwSFnAUoRNjPv64=
+X-Received: from surenb-desktop.mtv.corp.google.com ([2620:15c:211:201:6bca:2511:6f80:6efe])
+ (user=surenb job=sendgmr) by 2002:a0d:d68f:0:b0:5f9:990d:78c0 with SMTP id
+ y137-20020a0dd68f000000b005f9990d78c0mr2517316ywd.4.1705992189291; Mon, 22
+ Jan 2024 22:43:09 -0800 (PST)
+Date: Mon, 22 Jan 2024 22:43:05 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.43.0.429.g432eaa2c6b-goog
+Message-ID: <20240123064305.2829244-1-surenb@google.com>
+Subject: [PATCH 1/1] arch/arm/mm: fix major fault accounting when retrying
+ under per-VMA lock
+From: Suren Baghdasaryan <surenb@google.com>
+To: akpm@linux-foundation.org
+Cc: willy@infradead.org, will@kernel.org, catalin.marinas@arm.com, 
+	palmer@dabbelt.com, mpe@ellerman.id.au, christophe.leroy@csgroup.eu, 
+	agordeev@linux.ibm.com, gerald.schaefer@linux.ibm.com, 
+	dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org, 
+	surenb@google.com, x86@kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, 
+	linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Russell King <rmk+kernel@armlinux.org.uk>
+Content-Type: text/plain; charset="UTF-8"
 
-Move the declaration of functions defined in the OPP core to pm_opp.h.
-These were added to cpufreq.h as it was the only user of the APIs, but
-that was a mistake perhaps. Fix it.
+The change [1] missed ARM architecture when fixing major fault accounting
+for page fault retry under per-VMA lock. Add missing code to fix ARM
+architecture fault accounting.
 
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+[1] 46e714c729c8 ("arch/mm/fault: fix major fault accounting when retrying under per-VMA lock")
+
+Fixes: 12214eba1992 ("mm: handle read faults under the VMA lock")
+
+Reported-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Suren Baghdasaryan <surenb@google.com>
 ---
-Will take it via the OPP tree.
+ arch/arm/mm/fault.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
- include/linux/cpufreq.h | 20 --------------------
- include/linux/pm_opp.h  | 16 ++++++++++++++++
- 2 files changed, 16 insertions(+), 20 deletions(-)
-
-diff --git a/include/linux/cpufreq.h b/include/linux/cpufreq.h
-index afda5f24d3dd..8ff3e79727d8 100644
---- a/include/linux/cpufreq.h
-+++ b/include/linux/cpufreq.h
-@@ -694,26 +694,6 @@ struct cpufreq_frequency_table {
- 				    * order */
- };
+diff --git a/arch/arm/mm/fault.c b/arch/arm/mm/fault.c
+index e96fb40b9cc3..07565b593ed6 100644
+--- a/arch/arm/mm/fault.c
++++ b/arch/arm/mm/fault.c
+@@ -298,6 +298,8 @@ do_page_fault(unsigned long addr, unsigned int fsr, struct pt_regs *regs)
+ 		goto done;
+ 	}
+ 	count_vm_vma_lock_event(VMA_LOCK_RETRY);
++	if (fault & VM_FAULT_MAJOR)
++		flags |= FAULT_FLAG_TRIED;
  
--#if defined(CONFIG_CPU_FREQ) && defined(CONFIG_PM_OPP)
--int dev_pm_opp_init_cpufreq_table(struct device *dev,
--				  struct cpufreq_frequency_table **table);
--void dev_pm_opp_free_cpufreq_table(struct device *dev,
--				   struct cpufreq_frequency_table **table);
--#else
--static inline int dev_pm_opp_init_cpufreq_table(struct device *dev,
--						struct cpufreq_frequency_table
--						**table)
--{
--	return -EINVAL;
--}
--
--static inline void dev_pm_opp_free_cpufreq_table(struct device *dev,
--						 struct cpufreq_frequency_table
--						 **table)
--{
--}
--#endif
--
- /*
-  * cpufreq_for_each_entry -	iterate over a cpufreq_frequency_table
-  * @pos:	the cpufreq_frequency_table * to use as a loop cursor.
-diff --git a/include/linux/pm_opp.h b/include/linux/pm_opp.h
-index 76dcb7f37bcd..f1ac8bde09cb 100644
---- a/include/linux/pm_opp.h
-+++ b/include/linux/pm_opp.h
-@@ -16,6 +16,7 @@
- #include <linux/notifier.h>
- 
- struct clk;
-+struct cpufreq_frequency_table;
- struct regulator;
- struct dev_pm_opp;
- struct device;
-@@ -444,6 +445,21 @@ static inline int dev_pm_opp_sync_regulators(struct device *dev)
- 
- #endif		/* CONFIG_PM_OPP */
- 
-+#if defined(CONFIG_CPU_FREQ) && defined(CONFIG_PM_OPP)
-+int dev_pm_opp_init_cpufreq_table(struct device *dev, struct cpufreq_frequency_table **table);
-+void dev_pm_opp_free_cpufreq_table(struct device *dev, struct cpufreq_frequency_table **table);
-+#else
-+static inline int dev_pm_opp_init_cpufreq_table(struct device *dev, struct cpufreq_frequency_table **table)
-+{
-+	return -EINVAL;
-+}
-+
-+static inline void dev_pm_opp_free_cpufreq_table(struct device *dev, struct cpufreq_frequency_table **table)
-+{
-+}
-+#endif
-+
-+
- #if defined(CONFIG_PM_OPP) && defined(CONFIG_OF)
- int dev_pm_opp_of_add_table(struct device *dev);
- int dev_pm_opp_of_add_table_indexed(struct device *dev, int index);
+ 	/* Quick path to respond to signals */
+ 	if (fault_signal_pending(fault, regs)) {
 -- 
-2.31.1.272.g89b43f80a514
+2.43.0.429.g432eaa2c6b-goog
 
