@@ -1,111 +1,121 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E63B5A0F9;
-	Tue, 23 Jan 2024 10:28:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC8E75A784;
+	Tue, 23 Jan 2024 10:29:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706005720; cv=none; b=Ei/mf06uFMMUeip003V1Hyq3evjrk6TWQTpbbeOCkmUlqRUUtbfPEQfOX1mRLJSmfXrrju+vOQgPfh6pmXfmPwznhh8Y5PloyCn75+2Ixx0JrMJLau0t3Rfi+9mAiPBEn5npyVYyktKvvN/eMPZvhK+oBNbN52bl4JVm9LbCR2Y=
+	t=1706005774; cv=none; b=DZm3euRVCNutT4SsZDJckjW7rhEd9Px/cqMUWydtEr6ieO+uj29rKgN/iNr0Az3oA9uDf5eCrpnZiOOguazKl2v/3BneMl0xdbQQjXGPrUUjzgfUXwGDoqPSdI7si0DmP17SmlTGapcj9Xl5N+JwJK7XpNbFy8jUxLMS1yZTUZc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706005720; c=relaxed/simple;
-	bh=bxXPELcFHBY4/flGsm0AoN4/P4JvVKb2C8NSQ8JGZLk=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=uEbaZoh44Rp5DcB/D5sTRK1UC+zZaxj7YmN67aN9rPi9vbz9ztRU8NXDdRR4AVOm8fSi+NYG4b0fWfjr3GF9AgSjBIn+XfGQLisdoRSOLq/RGkNB7oLN0XcLypb/kx+u59gjNsMvAsEMouW3CdgvVxiraLhStKDog7BYrtm/zGs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=JcZdCYmL; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="JcZdCYmL"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40N8V05c001087;
-	Tue, 23 Jan 2024 10:28:35 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:cc:subject:date:message-id:mime-version
-	:content-transfer-encoding:content-type; s=qcppdkim1; bh=6ImjNiS
-	I1CFUB7fpLoA7Gqc4wRl1CPubkUKBD/qGQAo=; b=JcZdCYmLimosUKW+I1RxtPr
-	rWtFgGhYNup1Mk8zRjZqk3srAE+KLLidpvY7De7WsxEzafftK5Oh2Hv73Wt9qg/7
-	2SV5PWgHG2CsHPE21vlxVq5XTThrwzHLfmHQE2Aa70a2PFgnMfl8THq/qhnK14Yr
-	+T0oFMqyFuaoQLziV++CQ6y4cRQok04rgAtIPpE6hYdeShMbxbFCAnGQSDFTJn6p
-	/SdmdJNK9t0u0yLoowwVxcWlVGnNBf1TwOMKOwoTJTRstcH8m5Efzq2K8A9N8cp9
-	vN4zjHl4GYIYcLqqnv/Ur9V7yB3qABYP5HsGgCiaAdeaQC+QIodN3dC0WxAyTSw=
-	=
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vssw9jchg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 23 Jan 2024 10:28:35 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 40NASYa5014633
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 23 Jan 2024 10:28:34 GMT
-Received: from hu-uchheda-hyd.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Tue, 23 Jan 2024 02:28:31 -0800
-From: Umang Chheda <quic_uchheda@quicinc.com>
-To: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konrad.dybcio@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "Krzysztof
- Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>
-CC: <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Umang Chheda <quic_uchheda@quicinc.com>,
-        Kamal Wadhwa <quic_kamalw@quicinc.com>
-Subject: [PATCH RESEND] arm64: dts: qcom: qcm6490-idp: Add support for PM7250B PMIC
-Date: Tue, 23 Jan 2024 15:58:17 +0530
-Message-ID: <20240123102817.2414155-1-quic_uchheda@quicinc.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1706005774; c=relaxed/simple;
+	bh=1z304UMB9iwNDgxznbQ/na098G6JM2egcJawzjYAgFU=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ERhRc5Hb++LNIU/64VugtridSW1xiRX3h9nyNNc6zgvhBTxQcFtjDFfWUUyLKrhgvmffmBvrDCbEqqXaTBZ0IoCcvHLf/udcme9zLhCKyWR1LC+rJBeHHOkr5XFPIFAMiHB6y176sZmfIGUBCxeGqxhvyjTFHKndB9SoTAbSjNc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TK3Ct523Lz6K91D;
+	Tue, 23 Jan 2024 18:26:34 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id B7F05140A90;
+	Tue, 23 Jan 2024 18:29:29 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Tue, 23 Jan
+ 2024 10:29:29 +0000
+Date: Tue, 23 Jan 2024 10:29:28 +0000
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+CC: <linux-pm@vger.kernel.org>, <loongarch@lists.linux.dev>,
+	<linux-acpi@vger.kernel.org>, <linux-arch@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-riscv@lists.infradead.org>, <kvmarm@lists.linux.dev>,
+	<x86@kernel.org>, <acpica-devel@lists.linuxfoundation.org>,
+	<linux-csky@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+	<linux-ia64@vger.kernel.org>, <linux-parisc@vger.kernel.org>, Salil Mehta
+	<salil.mehta@huawei.com>, Jean-Philippe Brucker <jean-philippe@linaro.org>,
+	<jianyong.wu@arm.com>, <justin.he@arm.com>, James Morse <james.morse@arm.com>
+Subject: Re: [PATCH RFC v3 18/21] ACPI: processor: Only call
+ arch_unregister_cpu() if HOTPLUG_CPU is selected
+Message-ID: <20240123102928.0000270c@Huawei.com>
+In-Reply-To: <ZYBB32fMWB6of7Jb@shell.armlinux.org.uk>
+References: <ZXmn46ptis59F0CO@shell.armlinux.org.uk>
+	<E1rDOhH-00DvlO-UP@rmk-PC.armlinux.org.uk>
+	<20231215165009.000035f2@Huawei.com>
+	<ZYBB32fMWB6of7Jb@shell.armlinux.org.uk>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: wNbCJZuV5-n6GUVYhtBe0OOmTK9_w22m
-X-Proofpoint-ORIG-GUID: wNbCJZuV5-n6GUVYhtBe0OOmTK9_w22m
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-23_05,2024-01-23_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501 mlxscore=0
- phishscore=0 lowpriorityscore=0 bulkscore=0 adultscore=0 spamscore=0
- malwarescore=0 clxscore=1011 impostorscore=0 suspectscore=0
- mlxlogscore=767 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2311290000 definitions=main-2401230076
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-qcm6490-idp platform supports PM7250B PMIC as well.
-Add support for the same.
+On Mon, 18 Dec 2023 12:58:07 +0000
+"Russell King (Oracle)" <linux@armlinux.org.uk> wrote:
 
-Signed-off-by: Umang Chheda <quic_uchheda@quicinc.com>
----
- arch/arm64/boot/dts/qcom/qcm6490-idp.dts | 5 +++++
- 1 file changed, 5 insertions(+)
+> On Fri, Dec 15, 2023 at 04:50:09PM +0000, Jonathan Cameron wrote:
+> > On Wed, 13 Dec 2023 12:50:43 +0000
+> > Russell King (Oracle) <rmk+kernel@armlinux.org.uk> wrote:
+> >   
+> > > From: James Morse <james.morse@arm.com>
+> > > 
+> > > The kbuild robot points out that configurations without HOTPLUG_CPU
+> > > selected can try to build acpi_processor_post_eject() without success
+> > > as arch_unregister_cpu() is not defined.
+> > > 
+> > > Check this explicitly. This will be merged into:
+> > > | ACPI: Add post_eject to struct acpi_scan_handler for cpu hotplug
+> > > for any subsequent posting.
+> > > 
+> > > Reported-by: kbuild test robot <lkp@intel.com>
+> > > Signed-off-by: James Morse <james.morse@arm.com>
+> > > Tested-by: Miguel Luis <miguel.luis@oracle.com>
+> > > Tested-by: Vishnu Pajjuri <vishnu@os.amperecomputing.com>
+> > > Tested-by: Jianyong Wu <jianyong.wu@arm.com>
+> > > ---
+> > > This should probably be squashed into an earlier patch.  
+> > 
+> > Agreed. If not
+> > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>  
+> 
+> I'm not convinced that "ACPI: Add post_eject to struct acpi_scan_handler
+> for cpu hotplug" is the correct commit to squash this into.
+> 
+> As far as acpi_processor.c is concerned, This commit merely renames
+> acpi_processor_remove() to be acpi_processor_post_eject(). The function
+> references arch_unregister_cpu() before and after this change, and its
+> build is dependent on CONFIG_ACPI_HOTPLUG_PRESENT_CPU being defined.
+> 
+> Commit "ACPI: convert acpi_processor_post_eject() to use IS_ENABLED()"
+> removed the ifdef CONFIG_ACPI_HOTPLUG_PRESENT_CPU surrounding
+> acpi_processor_post_eject, and that symbol depends on
+> CONFIG_HOTPLUG_CPU, so I think this commit is also fine.
+> 
+> Commit "ACPI: Check _STA present bit before making CPUs not present"
+> rewrites the function - the original body gets called
+> acpi_processor_make_not_present() and a new acpi_processor_post_eject()
+> is created. At this point, it doesn't reference arch_unregister_cpu().
+> 
+> Commit "ACPI: add support to register CPUs based on the _STA enabled
+> bit" adds a reference to arch_unregister_cpu() in this new
+> acpi_processor_post_eject() - so I think this is the correct commit
+> this change should be merged into.
 
-diff --git a/arch/arm64/boot/dts/qcom/qcm6490-idp.dts b/arch/arm64/boot/dts/qcom/qcm6490-idp.dts
-index 03e97e27d16d..2a6e4907c5ee 100644
---- a/arch/arm64/boot/dts/qcom/qcm6490-idp.dts
-+++ b/arch/arm64/boot/dts/qcom/qcm6490-idp.dts
-@@ -5,8 +5,13 @@
- 
- /dts-v1/;
- 
-+/* PM7250B is configured to use SID8/9 */
-+#define PM7250B_SID 8
-+#define PM7250B_SID1 9
-+
- #include <dt-bindings/regulator/qcom,rpmh-regulator.h>
- #include "sc7280.dtsi"
-+#include "pm7250b.dtsi"
- #include "pm7325.dtsi"
- #include "pm8350c.dtsi"
- #include "pmk8350.dtsi"
--- 
-2.25.1
+That or where that change ends up given your earlier suggestion to
+move that change as well.  I find it hard to care as long as
+the bisection issue is squashed by the change.  If we make the code
+drop out before the build issue is introduced that's fine because
+we are arguing we shouldn't be running it anyway so such protection
+is fine if not necessary for build fix purposes.
+
+J
+
+> 
 
