@@ -1,81 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f47.google.com (mail-ot1-f47.google.com [209.85.210.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9638E7E9
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 02:50:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D9FF7E9
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 02:51:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705978232; cv=none; b=szzmOMYypUBO0Sw9vYk8HB1aiGtyQZScLe0uR8UKghsTWqqirtv9uOmK2ITSM0htv9GOKSfdb01x4FT67TWavuRz4/Pp5P3iy0iqLFJH5DbaXokd9aeH++slBa3PALwk6k1eCG4nNaXjEPpV62xjbRa8JOIUPR/A2N5LSFqqaTI=
+	t=1705978287; cv=none; b=r22sgBKrywnH747Zt5pKdF7G7f2W180gvLpC2oQjypYxzECOBosblBvk9OYn1CRIVqWNERiOL3xkzCbrlpeBzHghx8oYNQa1UBi9Cj0la/dnWUDnDNe1+oK80OWl0bdLkq23l3IDplavREmdIgkOuxNnc4M3ywdFV73PRdGieVw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705978232; c=relaxed/simple;
-	bh=8tsc+qA17rexfPtUShMNwu4xuggqtnUz4ZR/y0dZN4Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=AyfbbV+mdclJLi4izsbQ2iY0gF/X6LsgNvof74kG3soEKuT7ipmmFXV0CEp+snhsNFeJjGJijS9lnKT6qCky1ash9pttD0JfWKyUovhaojFxAQd0k/KZZtHcjKmJzoe8nWVla7Oz0YqGok2UTGdoxjNo8PFDfKL4cj9PU4Mh2gg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D56BC433C7;
-	Tue, 23 Jan 2024 02:50:30 +0000 (UTC)
-Date: Mon, 22 Jan 2024 21:52:00 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Dave Airlie <airlied@gmail.com>
-Cc: "Bhardwaj, Rajneesh" <rajneesh.bhardwaj@amd.com>, Linus Torvalds
- <torvalds@linux-foundation.org>, LKML <linux-kernel@vger.kernel.org>, Felix
- Kuehling <Felix.Kuehling@amd.com>, Christian =?UTF-8?B?S8O2bmln?=
- <christian.koenig@amd.com>, dri-devel@lists.freedesktop.org, Fedor Pchelkin
- <pchelkin@ispras.ru>
-Subject: Re: [BUG] BUG: kernel NULL pointer dereference at
- ttm_device_init+0xb4
-Message-ID: <20240122215200.1ec02a4a@gandalf.local.home>
-In-Reply-To: <CAPM=9tyCN1ZhvCTjoKn-Yg5BhnrMae4E5Ci4_u7BZ2vv5gDnKw@mail.gmail.com>
-References: <20240122180605.28daf23a@gandalf.local.home>
-	<20240122181547.16b029d6@gandalf.local.home>
-	<20240122181901.05a3b9ab@gandalf.local.home>
-	<CAHk-=whry+-JUDiiCkDkDn2TDg7SA5OvZpPbcQ_jkM_J5=ySdA@mail.gmail.com>
-	<27c3d1e9-5933-47a9-9c33-ff8ec13f40d3@amd.com>
-	<20240122203552.529eeb20@gandalf.local.home>
-	<CAPM=9tyQ22nw4_u366EX=PnROYcWPD7ONRFpPEKxRvTZo0B4zQ@mail.gmail.com>
-	<CAPM=9tyCN1ZhvCTjoKn-Yg5BhnrMae4E5Ci4_u7BZ2vv5gDnKw@mail.gmail.com>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1705978287; c=relaxed/simple;
+	bh=G4ko+WDn+9wTyH8zjBMD//CeTPPYFIno0epIH5KK/gk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XEbnAZ4RcRsy/BAsOIhShw//3Hl3Hnyc7g6ZFHZGxjjBLE/3zi6tKgCHpTl90l1tGyfzU97/jdpKbqDJrJ2HMZiBQ2O2pFD1qamXoiMasd6LJeuLVZiQYySyA5xPcJeS6h3XGg3FBpMw4YjdidSXxxBMS2wWmheVKAlsVBx6fwg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=I7RqW4u6; arc=none smtp.client-ip=209.85.210.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="I7RqW4u6"
+Received: by mail-ot1-f47.google.com with SMTP id 46e09a7af769-6e0df9aa43dso3016920a34.0
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 18:51:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1705978284; x=1706583084; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=F0ibQ4RvPFjMpe1eoTckSq1lEolGNvZR2rp4j16CDEY=;
+        b=I7RqW4u6RnN/viQ631rvlC0O8291z8DKQfpBoJXrJiI+Y1CdtrO46SS5qiM1Y9nzdU
+         cZOLEbjFr+mNwGxVOZpS+gX0eiZPq+IgkFr1ZnpS9n44FAfrC2YTR/ya5wXeW+TsUKFa
+         Y4TWTNfraDvbdpepP+2OJJb38aGhGIY2X1B3Em4niE289BGfZ2sf5YkZM7zRP94hiFkf
+         qH1OuYwOrIJFJadGCC7YWmwpRHNNYRVF/j4SnaXOIxsVgXalW5AwV6hh4ICpziUdW23c
+         HMfJvUsAcLlxMaZobdefTfWBNHW2hHhqsvLa9OC8DniP9+XrHpBqGgY0Ex+kC5EPTHOC
+         NKBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705978284; x=1706583084;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=F0ibQ4RvPFjMpe1eoTckSq1lEolGNvZR2rp4j16CDEY=;
+        b=teZ7N0eNhkP0AdrUnuKrKEKxwFCsHkhXpVqfodQraxKY50e8STaBX7WH7wf2HWjoH/
+         /U8JIV+ZGubzglwQoYMYHBQR3Fb/vL7BtjxGUyOJ6pJEnxgMj5MKix6XohxZPoemy1tC
+         pR8uYuXJ+VnKFUfrUftwaEOCirdRQTz7lL3lsbb3Kw0w4wwG04e30GeS+t4Qf61u5Z9N
+         7yf0AEhabilf4iSv+OJ6kdq19/4hL157LVNilfKBkm+qzsCfKfPM3S99AG3CGz0G5ct0
+         GkIR98hJznCLFNgvYEgCggm3RijJjhGLyynoqR084IofGX6tsabPxNgSCrtmyBHZfrJW
+         ivtw==
+X-Gm-Message-State: AOJu0YwePYrDSvEv8YQJ0ZX64WWtt2N2lWanwU2ovHj71hHbnfmxsuWk
+	oCxLaqmYw2+xDdCIzX8oOgMQIjuUI2rwCKK0aiOU+1ah0Lt03SjSZnsc+XfCKkg=
+X-Google-Smtp-Source: AGHT+IGE52Gz24GUs56VfplhYi/ooi487/aHOzJj6ZZ2QKzP2AYiHSVxocx0WD9sJCXfLB8D3QeAbg==
+X-Received: by 2002:a05:6358:d3a7:b0:176:53d4:d1a4 with SMTP id mp39-20020a056358d3a700b0017653d4d1a4mr2646584rwb.3.1705978284347;
+        Mon, 22 Jan 2024 18:51:24 -0800 (PST)
+Received: from [10.254.227.61] ([139.177.225.243])
+        by smtp.gmail.com with ESMTPSA id ph16-20020a17090b3bd000b0028e87ce1de0sm10308939pjb.51.2024.01.22.18.51.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 22 Jan 2024 18:51:23 -0800 (PST)
+Message-ID: <36964450-f45a-4f35-a187-dc493246ef59@bytedance.com>
+Date: Tue, 23 Jan 2024 10:51:17 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] mm/slub: directly load freelist from cpu partial slab
+ in the likely case
+Content-Language: en-US
+To: Vlastimil Babka <vbabka@suse.cz>,
+ "Christoph Lameter (Ampere)" <cl@linux.com>
+Cc: Hyeonggon Yoo <42.hyeyoo@gmail.com>, Joonsoo Kim
+ <iamjoonsoo.kim@lge.com>, Pekka Enberg <penberg@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Roman Gushchin <roman.gushchin@linux.dev>,
+ David Rientjes <rientjes@google.com>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org
+References: <20240117-slab-misc-v1-0-fd1c49ccbe70@bytedance.com>
+ <20240117-slab-misc-v1-1-fd1c49ccbe70@bytedance.com>
+ <76641777-1918-2b29-b6aa-bda9b5467aa3@gentwo.org>
+ <412b8618-0941-4d9d-85df-ee480695e7f7@bytedance.com>
+ <a2132c63-99a5-7fa2-9f2a-cccf6b40fe9e@linux.com>
+ <e81d914b-8718-4dbb-a2d8-d5298fe66d1a@bytedance.com>
+ <ac0ce290-58a7-42b2-a7e4-72e241717c63@suse.cz>
+From: Chengming Zhou <zhouchengming@bytedance.com>
+In-Reply-To: <ac0ce290-58a7-42b2-a7e4-72e241717c63@suse.cz>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On Tue, 23 Jan 2024 12:32:39 +1000
-Dave Airlie <airlied@gmail.com> wrote:
-
-> On Tue, 23 Jan 2024 at 12:21, Dave Airlie <airlied@gmail.com> wrote:
-> >
-> > On Tue, 23 Jan 2024 at 12:15, Steven Rostedt <rostedt@goodmis.org> wrote:  
-> > >
-> > > On Mon, 22 Jan 2024 19:56:08 -0500
-> > > "Bhardwaj, Rajneesh" <rajneesh.bhardwaj@amd.com> wrote:
-> > >  
-> > > >
-> > > > On 1/22/2024 7:43 PM, Linus Torvalds wrote:  
-> > > > > On Mon, 22 Jan 2024 at 15:17, Steven Rostedt<rostedt@goodmis.org>  wrote:  
-> > > > >> Perhaps this is the real fix?  
-> > > > > If you send a signed-off version, I'll apply it asap.  
-> > > >
-> > > >
-> > > > I think a fix might already be in flight. Please see Linux-Kernel
-> > > > Archive: Re: [PATCH] drm/ttm: fix ttm pool initialization for
-> > > > no-dma-device drivers (iu.edu)
-> > > > <https://lkml.iu.edu/hypermail/linux/kernel/2401.1/06778.html>  
-> > >
-> > > Please use lore links. They are much easier to follow and use.  
-> >
-> > https://lore.kernel.org/dri-devel/20240123022015.1288588-1-airlied@gmail.com/T/#u
-> >
-> > should also fix it, Linus please apply it directly if Steven has a
-> > chance to give it a run.  
+On 2024/1/23 01:13, Vlastimil Babka wrote:
+> On 1/19/24 04:53, Chengming Zhou wrote:
+>> On 2024/1/19 06:14, Christoph Lameter (Ampere) wrote:
+>>> On Thu, 18 Jan 2024, Chengming Zhou wrote:
+>>>
+>>>> So get_freelist() has two cases to handle: cpu slab and cpu partial list slab.
+>>>> The latter is NOT frozen, so need to remove "VM_BUG_ON(!new.frozen)" from it.
+>>>
+>>> Right so keep the check if it is the former?
+>>>
+>>
+>> Ok, I get it. Maybe like this:
 > 
-> I see Linus applied the other one, that's fine too.
+> I think that's just too ugly for a VM_BUG_ON(). I'd just remove the check
+> and be done with that.
+
+Ok with me.
+
+> 
+> I have a somewhat different point. You reused get_freelist() but in fact
+> it's more like freeze_slab(), but that one uses slab_update_freelist() and
+> we are under the local_lock so we want the cheaper __slab_update_freelist(),
+> which get_freelist() has and I guess that's why you reused that one.
+
+Right, we already have the lock_lock, so reuse get_freelist().
+
+> 
+> However get_freelist() also assumes it can return NULL if the freelist is
+> empty. If that's possible to happen on the percpu partial list, we should
+> not "goto load_freelist;" but rather create a new label above that, above
+> the "if (!freelist) {" block that handles the case.
+> 
+> If that's not possible to happen (needs careful audit) and we have guarantee
+
+Yes, it's not possible for now.
+
+> that slabs on percpu partial list must have non-empty freelist, then we
+> probably instead want a new __freeze_slab() variant that is like
+> freeze_slab(), but uses __slab_update_freelist() and probably also has
+> VM_BUG_ON(!freelist) before returning it?
 > 
 
-They don't look mutually exclusive. I can test the other one as well.
+Instead of introducing another new function, how about still reusing get_freelist()
+and VM_BUG_ON(!freelist) after calling it? I feel this is simpler.
 
--- Steve
+Thanks!
