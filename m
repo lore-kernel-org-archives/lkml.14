@@ -1,271 +1,122 @@
-Received: from mail-40133.protonmail.ch (mail-40133.protonmail.ch [185.70.40.133])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C29B5024B;
-	Tue, 23 Jan 2024 01:47:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.40.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B37175F863
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 01:47:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705974449; cv=none; b=s76hSHyO6kfCQN4nes3gMkx7HMm3W8aegW5vyg4N/flR2VsVG+uqIcFnvxRx0PhTPM4VzYW7dcREN9UsexbvUv9HthzR9Or+OtQFWghyttDnjwc2Nj/nZ9gJ7LGUH4/rBlBjn3YkU8TkGgzDNnm83IZkyFoaPLXShSsqot1BWO0=
+	t=1705974468; cv=none; b=Or2me/ZUP35nuJsCc32aI9e0rJrqIOs5m+Trt+3syNXXY8JXvnEkYm3FmDWMuf/gIeUWQCy7u1p1xD5aodIMqrDyZLkfhIP1zf1Ba5R3mBD542iKW3iUCYDRW3d70V7iXqke1zY176po2SKjgnOiw+nzIX2rqnwpyZY3CrCh0bw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705974449; c=relaxed/simple;
-	bh=YJfPUc9JPqplbqb8Uk3tshtQpjNjIQojMn1nswK+Auo=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=c9DfYDCNIfi/gaZ2psVYNcLCCZ6DpM9zIJp3L+yWsnWlyI0rJrGAHC+ybp/tOz9LFoA7wsP293UVeF0jToBvA1aELdxcbtr/Sh+oVYUPN5XjYWqyQpfQ1p4LTh7IWXaeVfqvfLToZ7oplM2/IPatC44LRjsxN0pIul3dJYMHJ1M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me; spf=pass smtp.mailfrom=pm.me; dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b=qucMjGIL; arc=none smtp.client-ip=185.70.40.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pm.me
+	s=arc-20240116; t=1705974468; c=relaxed/simple;
+	bh=jlfZpZtrTAEtwPjAPXh5F5XUyJRNCxItTgf/zQ4aTMs=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=YMV1wX2kl5S3VQQ02v/FIbRtpN7/VM9AAyL/Kvwrye5FE1ef4EPjSPUyPaOx5+pbSfOrwtxlzt6lGs4zjmugtCO3Qx5vMoyyaMQGrIVrgDpV4AxuRf2CzkF52iif8AvdsM7Lwkpv6zm6v3UkLjXFDJ/H9q7i/Xh/Ql+CFb89UiU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=KgjGpngi; arc=none smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b="qucMjGIL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me;
-	s=protonmail3; t=1705974439; x=1706233639;
-	bh=4YREAB+lLFhLYt23yOuuQE8IjzcG54BZ+WRgblN4Okw=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=qucMjGILNV9xcag759X1TuTYlyL0txyxsfKThwXcZbwH7piqvdGUkheC7w6oM1ne1
-	 cy9kEbGzLwMMKqQTrXDFvV22FAr4bI7QK6ntMZJuP7ORlhJDak+fRg6cfr90FQ4jNI
-	 S63nvaYljxfj+Ohg4Xw9URE0+p/sJdX1bcdaVP3KTjV0lxCdDBj+03g21N42sUMhj2
-	 ATg+V4N1Pfl58CD7kt51GLnK/tg526xMjnQanL/loJ2Vqge7nrqwhZx9L4aN5iGsDR
-	 424DxiwHM7Yj8SJAp/Z56wmUqxnauuipqmRstjuOOKWRXEKOJqdEqdUPltuer/QV6E
-	 NlrBgyN1KmpSA==
-Date: Tue, 23 Jan 2024 01:47:01 +0000
-To: devicetree@vger.kernel.org, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org
-From: Michael Pratt <mcpratt@pm.me>
-Cc: Michael Pratt <mcpratt@pm.me>, saravanak@google.com, abel.vesa@linaro.org, alexander.stein@ew.tq-group.com, andriy.shevchenko@linux.intel.com, bigunclemax@gmail.com, brgl@bgdev.pl, colin.foster@in-advantage.com, djrscally@gmail.com, dmitry.baryshkov@linaro.org, festevam@gmail.com, fido_max@inbox.ru, frowand.list@gmail.com, geert@linux-m68k.org, heikki.krogerus@linux.intel.com, kernel@pengutronix.de, linus.walleij@linaro.org, linux@roeck-us.net, luca.weiss@fairphone.com, magnus.damm@gmail.com, martin.kepplinger@puri.sm, miquel.raynal@bootlin.com, rafal@milecki.pl, ansuelsmth@gmail.com, richard@nod.at, sakari.ailus@linux.intel.com, sudeep.holla@arm.com, tglx@linutronix.de, tony@atomide.com, vigneshr@ti.com, dianders@chromium.org, jpb@kernel.org, rafael@kernel.org
-Subject: [PATCH v1 3/4] driver core: fw_devlink: Add function device_links_fixup_suppliers()
-Message-ID: <20240123014517.5787-4-mcpratt@pm.me>
-In-Reply-To: <20240123014517.5787-1-mcpratt@pm.me>
-References: <20240123014517.5787-1-mcpratt@pm.me>
-Feedback-ID: 27397442:user:proton
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="KgjGpngi"
+Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 40N19N1f019181;
+	Tue, 23 Jan 2024 01:47:33 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2023-11-20;
+ bh=TC/QpDTCm4nZZLQsXNsmNLF8U0JnbhWRqpM4J6CpmGw=;
+ b=KgjGpngiLSD+eBHVRU5Ibbz++qjKmB2hMZcB+zdujrkg1eT12ZRGgI6j7dFI9AnReKhI
+ UE9EtckNMvk7+Yn/QZHo3KMWiZA+v4gGLwVdQWgJI8FdLtzij+3vX6MNqE90ON07KXl/
+ M4pn84Cnt+GsXJPuWlOf+xDLAtBTi3PVnM/I9UfPWIJB/mEe2/qU0Yf7ATBlF6P2O15O
+ +E3HcsZ8kHrbvMJoPRrBk4ce3slCE4keLmyfDUQcfTbLTWoORhh9quxeMWjd8gCpU5T8
+ IS94zEVs4CxngyR3xWhgvX729ibyKXbhP9o3xtA3uKCpOZcPs7hYRF75l51VQh1AJYFp 9Q== 
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3vr79nd5v7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 23 Jan 2024 01:47:33 +0000
+Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 40N1LdcN016231;
+	Tue, 23 Jan 2024 01:47:31 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3vs32q30cs-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=NO);
+	Tue, 23 Jan 2024 01:47:31 +0000
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 40N1lVdH038421;
+	Tue, 23 Jan 2024 01:47:31 GMT
+Received: from pp-thinkcentre-m82.us.oracle.com (dhcp-10-132-95-245.usdhcp.oraclecorp.com [10.132.95.245])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3vs32q30br-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=NO);
+	Tue, 23 Jan 2024 01:47:31 +0000
+From: Prakash Sangappa <prakash.sangappa@oracle.com>
+To: linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Cc: muchun.song@linux.dev, mike.kravetz@oracle.com, akpm@linux-foundation.org
+Subject: [PATCH v2] Hugetlb pages should not be reserved by shmat() if SHM_NORESERVE
+Date: Mon, 22 Jan 2024 17:57:36 -0800
+Message-Id: <1705975056-29419-1-git-send-email-prakash.sangappa@oracle.com>
+X-Mailer: git-send-email 2.7.4
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-01-22_12,2024-01-22_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 mlxlogscore=999
+ spamscore=0 mlxscore=0 adultscore=0 bulkscore=0 phishscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2401230010
+X-Proofpoint-GUID: h2mzfpDa_XWWvZ62hbT7WCk9IJnARNor
+X-Proofpoint-ORIG-GUID: h2mzfpDa_XWWvZ62hbT7WCk9IJnARNor
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
 
-If the supplier fwnode of a link is a child firmware node
-of a real device, the probe of the consumer device can be indefinitely
-deferred in some cases like when the consumer is registered as a device
-and attempts probe first.
+For shared memory of type SHM_HUGETLB, hugetlb pages are reserved in
+shmget() call. If SHM_NORESERVE flags is specified then the hugetlb
+pages are not reserved. However when the shared memory is attached
+with the shmat() call the hugetlb pages are getting reserved incorrectly
+for SHM_HUGETLB shared memory created with SHM_NORESERVE.
 
-Add a function to fixup or recreate both fwnode and device links
-to a consumer device before probing gets deferred.
+Ensure that the hugetlb pages are not reserved for SHM_HUGETLB shared
+memory in the shmat() call.
 
-As noted in the previous commit,
-descendant fwnodes of the real supplier device only become flagged
-with PARENT_IS_DEV when the real supplier device probes,
-which is necessary in some cases for knowing how many ancestors up
-in the tree the fwnode representing the real device is.
-
-In the case where the consumer device has a probe attempt
-before the supplier device while the correct supplier fwnode
-is multiple ancestors up from the fwnode being linked,
-the unknowns present before the supplier device probes
-causes incorrect fwnode links that either become incorrect device links
-or in some cases, fwnode links are unable to become device links at all,
-which leads to the need to redo the link between the devices
-after a probe defer of the consumer, therefore,
-when the original supplier fwnode is flagged PARENT_IS_DEV
-after supplier device probing,
-and the consumer is about to be deferred again from a missing supplier,
-flag the original supplier fwnode as NOT_DEVICE also
-and recreate the relevant fwnode/device links to the consumer device.
-
-In the case where the supplier probes first
-but a descendant fwnode is the one linked to the consumer,
-the link recreation happens on the first probe attempt of the consumer.
-
-Because of the fwnode flags, the links will be handled differently
-when deleted and recreated compared to before the consumer probe attempt
-by linking the consumer with a ancestor of the original supplier fwnode,
-which at this point represents a device that already probed successfully.
-In the future, a way to develop "deferred device links" may be possible,
-but that is likely much more complex.
-
-The existing function device_links_check_suppliers() is not suitable
-for these fixup changes because of the case where a different supplier
-may also cause a deferred probe for a completely different reason.
-Handle this in a new function device_links_fixup_suppliers()
-which will be called before device_links_check_suppliers()
-which is where it is decided whether or not the consumer must be deferred.
-Checks in the new function exactly match checks in the function
-device_links_check_suppliers() for consistency.
-
-This new function is now the last opportunity to interact with
-device links before probe is deferred, which stops device links from
-being processed until re-probe or the next time device_add() is called.
-This makes it an ideal location to finally assume that the supplier
-must have probed at that point in time, unless there is an issue.
-This should be called at every probe, because it is important to
-handle as many device link changes as possible before probe deferral,
-since deferred_probe_initcall() will only be called *once*
-at late_initcall, and another probe defer at that point or later
-can cause the consumer to be deferred indefinitely,
-and the fact that in some cases, a probe deferral can be
-avoided entirely if the real supplier device probes first.
-
-Also, make sure that the device links are not handled earlier
-than the fixup function for these cases.
-Otherwise, before deferred probes are started again,
-the link will be converted to sync-state only.
-
-Signed-off-by: Michael Pratt <mcpratt@pm.me>
+Signed-off-by: Prakash Sangappa <prakash.sangappa@oracle.com>
 ---
- drivers/base/base.h |  1 +
- drivers/base/core.c | 91 +++++++++++++++++++++++++++++++++++++++++++++
- drivers/base/dd.c   |  2 +
- 3 files changed, 94 insertions(+)
+v2: Modifed fix to call hugetlb_reserve_pages() with VM_NORESERVE instead
+    as per vma lock is allocated in hugetlb_reserve_pages().
+    
+ fs/hugetlbfs/inode.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/base/base.h b/drivers/base/base.h
-index eb4c0ace9242..96593650a861 100644
---- a/drivers/base/base.h
-+++ b/drivers/base/base.h
-@@ -229,6 +229,7 @@ bool device_links_busy(struct device *dev);
- void device_links_unbind_consumers(struct device *dev);
- void fw_devlink_drivers_done(void);
- void fw_devlink_probing_done(void);
-+void device_links_fixup_suppliers(struct device *dev);
-=20
- /* device pm support */
- void device_pm_move_to_tail(struct device *dev);
-diff --git a/drivers/base/core.c b/drivers/base/core.c
-index 7f2652cf5edc..96edcd842b42 100644
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -1773,6 +1773,9 @@ static void fw_devlink_relax_link(struct device_link =
-*link)
- =09if (device_link_flag_is_sync_state_only(link->flags))
- =09=09return;
-=20
-+=09if (link->supplier->fwnode && (link->supplier->fwnode->flags & FWNODE_F=
-LAG_PARENT_IS_DEV))
-+=09=09return;
+diff --git a/fs/hugetlbfs/inode.c b/fs/hugetlbfs/inode.c
+index f757d4f..40b12b0 100644
+--- a/fs/hugetlbfs/inode.c
++++ b/fs/hugetlbfs/inode.c
+@@ -100,6 +100,7 @@ static int hugetlbfs_file_mmap(struct file *file, struct vm_area_struct *vma)
+ 	loff_t len, vma_len;
+ 	int ret;
+ 	struct hstate *h = hstate_file(file);
++	vm_flags_t vm_flags;
+ 
+ 	/*
+ 	 * vma address alignment (but not the pgoff alignment) has
+@@ -141,10 +142,20 @@ static int hugetlbfs_file_mmap(struct file *file, struct vm_area_struct *vma)
+ 	file_accessed(file);
+ 
+ 	ret = -ENOMEM;
 +
- =09pm_runtime_drop_link(link);
- =09link->flags =3D DL_FLAG_MANAGED | FW_DEVLINK_FLAGS_PERMISSIVE;
- =09dev_dbg(link->consumer, "Relaxing link with %s\n",
-@@ -2286,6 +2289,94 @@ static void fw_devlink_link_device(struct device *de=
-v)
- =09mutex_unlock(&fwnode_link_lock);
- }
-=20
-+/**
-+ * device_links_fixup_suppliers - Fix bad device links to suppliers of @de=
-v.
-+ * @dev: Consumer device.
-+ *
-+ * This should be called after the suppliers of @dev have a chance to form
-+ * device links and @dev is probing so that, even if the consumer device
-+ * has had it's fwtree parsed and it's attempt to probe started first,
-+ * the suppliers are guaranteed to have an attempt at probing
-+ * thanks to the dependency defined through the existing device links.
-+ *
-+ * In driver core, the suppliers have had an opportunity to probe at this =
-point.
-+ * Therefore, this is an ideal position to handle corner cases where,
-+ * for whatever reason, the supplier is not optional, but the link to
-+ * a supplier is bad and causing the probing of the consumer to defer.
-+ * This is the last opportunity to handle a bad device link before
-+ * that link will cause a probe defer of the consumer.
-+ *
-+ * If a fwnode link has not been translated to a device link at this point=
-,
-+ * or if a device link has not successfully resulted in the supplier probi=
-ng,
-+ * we know it is not possible for that node to represent a real device tha=
-t
-+ * provides functionality to the consumer, but an ancestor of that node mi=
-ght be.
-+ */
-+void device_links_fixup_suppliers(struct device *dev)
-+{
-+=09struct fwnode_link *fwlink, *fwtmp;
-+=09struct device_link *link, *tmp;
++	vm_flags = vma->vm_flags;
++	/*
++	 * for SHM_HUGETLB, the pages are reserved in the shmget() call so skip
++	 * reserving here. Note: only for SHM hugetlbfs file, the inode
++	 * flag S_PRIVATE is set.
++	 */
++	if (inode->i_flags & S_PRIVATE)
++		vm_flags |= VM_NORESERVE;
 +
-+=09mutex_lock(&fwnode_link_lock);
-+=09device_links_write_lock();
-+
-+=09if (!dev->fwnode)
-+=09=09goto no_fwnode;
-+
-+=09/* Keep flag checks in sync with fwnode_links_check_suppliers() */
-+=09list_for_each_entry_safe(fwlink, fwtmp, &dev->fwnode->suppliers, c_hook=
-) {
-+=09=09if (fwlink->flags & FWLINK_FLAG_CYCLE)
-+=09=09=09continue;
-+
-+=09=09/* The supplier may be a child fwnode of a device, if so, relink */
-+=09=09if (fwlink->supplier->flags & FWNODE_FLAG_PARENT_IS_DEV) {
-+=09=09=09dev_dbg(dev,
-+=09=09=09=09"Linking to ancestor of fwnode %pfwf\n",
-+=09=09=09=09fwlink->supplier);
-+=09=09=09fwlink->supplier->flags |=3D FWNODE_FLAG_NOT_DEVICE;
-+=09=09=09dev->fwnode->flags &=3D ~FWNODE_FLAG_LINKS_ADDED;
-+=09=09=09__fwnode_link_del(fwlink);
-+=09=09=09mutex_unlock(&fwnode_link_lock);
-+=09=09=09device_links_write_unlock();
-+=09=09=09fw_devlink_link_device(dev);
-+=09=09=09mutex_lock(&fwnode_link_lock);
-+=09=09=09device_links_write_lock();
-+=09=09=09continue;
-+=09=09}
-+=09}
-+
-+no_fwnode:
-+=09/* Keep flag checks in sync with device_links_check_suppliers() */
-+=09list_for_each_entry_safe(link, tmp, &dev->links.suppliers, c_node) {
-+=09=09if (!(link->flags & DL_FLAG_MANAGED))
-+=09=09=09continue;
-+
-+=09=09if (link->status !=3D DL_STATE_AVAILABLE &&
-+=09=09    !(link->flags & DL_FLAG_SYNC_STATE_ONLY)) {
-+
-+=09=09=09if (!dev->fwnode || !link->supplier->fwnode)
-+=09=09=09=09continue;
-+
-+=09=09=09/* The supplier may be a child fwnode of a device, if so, relink =
-*/
-+=09=09=09if (link->supplier->fwnode->flags & FWNODE_FLAG_PARENT_IS_DEV) {
-+=09=09=09=09dev_dbg(dev,
-+=09=09=09=09=09"Linking to ancestor of %s\n",
-+=09=09=09=09=09dev_name(link->supplier));
-+=09=09=09=09link->supplier->fwnode->flags |=3D FWNODE_FLAG_NOT_DEVICE;
-+=09=09=09=09dev->fwnode->flags &=3D ~FWNODE_FLAG_LINKS_ADDED;
-+=09=09=09=09__device_link_del(&link->kref);
-+=09=09=09=09mutex_unlock(&fwnode_link_lock);
-+=09=09=09=09device_links_write_unlock();
-+=09=09=09=09fw_devlink_link_device(dev);
-+=09=09=09=09mutex_lock(&fwnode_link_lock);
-+=09=09=09=09device_links_write_lock();
-+=09=09=09=09continue;
-+=09=09=09}
-+=09=09}
-+=09}
-+=09mutex_unlock(&fwnode_link_lock);
-+=09device_links_write_unlock();
-+}
-+
- /* Device links support end. */
-=20
- int (*platform_notify)(struct device *dev) =3D NULL;
-diff --git a/drivers/base/dd.c b/drivers/base/dd.c
-index 85152537dbf1..24b8a506bc51 100644
---- a/drivers/base/dd.c
-+++ b/drivers/base/dd.c
-@@ -606,6 +606,8 @@ static int really_probe(struct device *dev, struct devi=
-ce_driver *drv)
- =09=09=09   !drv->suppress_bind_attrs;
- =09int ret, link_ret;
-=20
-+=09device_links_fixup_suppliers(dev);
-+
- =09if (defer_all_probes) {
- =09=09/*
- =09=09 * Value of defer_all_probes can be set only by
---=20
-2.30.2
-
+ 	if (!hugetlb_reserve_pages(inode,
+ 				vma->vm_pgoff >> huge_page_order(h),
+ 				len >> huge_page_shift(h), vma,
+-				vma->vm_flags))
++				vm_flags))
+ 		goto out;
+ 
+ 	ret = 0;
+-- 
+2.7.4
 
