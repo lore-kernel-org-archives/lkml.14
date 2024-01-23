@@ -1,160 +1,145 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CB735FDC6
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 12:56:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F1885F543
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 12:59:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706014613; cv=none; b=FmyeUss7oGuPMRDbPrGqnf+5p5vfwg8JI0HwBvICG/gYW+Wxc8cSK+dNUY5PwuH/V8jmx8qoijZm5nZ49MVzy7nInh9rQHF+H8sHZv/nkRVTp8HINvLe/tQEfBlaILBARO0idEixOnpwOBYKqFhhFsYbD6z1DAqz7ln1q9L+CTk=
+	t=1706014776; cv=none; b=burfFEIgXzt8ELIATkAqSigrZhrpVe23RonUZltbLOestY+YU0FeIMroYlcPSKbSBvm7HQpXtJKFr53Ilat0SUKtXl+pfFdNLE9MzZgAsn+oho/byQaILY0khiIppHQKxSx8iXOMJJ2GhrBfQKKPKSKQlzACbqvd+DN5IloWtrk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706014613; c=relaxed/simple;
-	bh=uGaGoVqwixAox4DIu8EqI+hzB6nU8p+rAL7pp/jvsQ0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=t+zglJfL5ITSKgmO9rcU2UNoPgTvFFeyGXjCVcYUQJK+j7G9IeeggWwB/Zov40cRGJf3Q7BJCyGO12/jO+f1VbfbNHu0x4mE3LR+UN/aCCsZJRWNIoPGnVIi3Es356laWO3juzYlO0pajFQaEQmc0xLCTo4ktemPr308d8HPMUw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SA2QzBf3; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1706014776; c=relaxed/simple;
+	bh=3iydeaPekcZvfbPjBaC8P9XUqRfDRobrZRsArje/jRg=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=JeokMza/e8bUtaQ+w8vzPQT0ERK+CBC5Jbavz6Jjzntr7rKqszX/vJ2c9Uzq5r6nM0kxvMjbg8BGpS5DNyB9R8RrZS5Fy0MZTTdyDqhfOnIymIIYMrSYSjOG8wA/SISzMhhFahXIpR/wc4OdHXr0ZC4Y6sLz4rTqP+jSl/lQMDg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=fAnmwnkk; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SA2QzBf3"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3367a304091so4636691f8f.3
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 04:56:51 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="fAnmwnkk"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-40e87d07c07so54199025e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 04:59:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706014610; x=1706619410; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=/LXtsp1mimgAEc3f/RyZbd67GKahYFAcU0Yghrpz8j0=;
-        b=SA2QzBf3jiXXdK0bTdE0HhIl7U7Eh5LZoxIRksdKb+AW+echAWq9sh6I8CsYyqCFMr
-         vHjhlfUFPf6UQalWWLnXBvR5AsAWx2iULVPc/g51Rd2EgmBdHcdP3XrHrriOP7j3izQC
-         mOcCHCQZaNMdqJn2S0VSAqxcHPCUslxvuCrTgyolv/ts+Xhu3TjZhkdrv0XXdKMtDqvI
-         NIoASnF3ztDImm2DrtN8uyeFFtJNKLqoNeqY5I+qV/TE8RsuNddiGa1wcmXUpT8HKyjm
-         06x5TNYWtdwaSmQsbcf08xXA0+bTgZkbCp516rAAg9RToaj85qxq7Yb8zZUn8gaLbQGu
-         W7FQ==
+        d=tuxon.dev; s=google; t=1706014773; x=1706619573; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AGSrAGs5vLhtdiutZlV1QBydinRii8oVG9Wb9alDR6M=;
+        b=fAnmwnkk0gGC5S3ZhF7RakJgZESQzFM+MiwXol6mxarNWGtGkzEJnS0MqQ2T7x4ddR
+         FOFiNQL1ILlxNvh/5Xm5s4WOTFpOE7wjgnHVTTIiVLk/ril038q52povPMUqJiw/g8An
+         zFwh1zqGJS89v5+9fdwLI+Fpxk1LGeB3bzWftVFBbHPSfxsAn+CYXefQ4bJuud4AAVcs
+         2kSQreGu09jPcExur/U4zWvZyrlosgFjRyl59q8OrDtsF7pLbQ3VCX396taLQgXeHzaL
+         nONiAzHmJuqx7RkATgb9Fe3LUFAjZxl7/styHll7vMskFBy/MBegmExrAeUGRkMOyLz0
+         eg3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706014610; x=1706619410;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/LXtsp1mimgAEc3f/RyZbd67GKahYFAcU0Yghrpz8j0=;
-        b=sow0ZYi3847h7tWEpn39n4LCpwfcgahxXxACXG+lP5Of71cfCX/gGYT1sQBR16Yp6o
-         OFIkzGLp7WS6FNidTR1at0VxKZll8n6Ms4ZvGDbJeVPieYCFjOUOUB/bJOrvaWqBXKk/
-         kazHOXQn0f6FyJjJlV15YRFE+PN3nHN5PT/pX49Vj9uvpuZZ0IeIH9qahryEE2CGJ1cp
-         FU4/IO0j1qG4p8mjuUii4VU7z8yZsyTB4/P73nUth6KXfR855VwP9uqs31RjPaQUtosR
-         czWHi6EtpDxiJ/FyznkjAVGC4PEZWFNUGooTYrNLPdW6Y6Z99m1JPRaIMaPpjJLPIm1M
-         deQA==
-X-Gm-Message-State: AOJu0YxzHAnn+GvBVCY/AR+U6ixHJuigtPXIbI+xeViwEi20ABchpOho
-	3qTYQGc1PaqYPBzZuF+VwRlkhXLqmBeffbdr7Sntsahze9xYMqIB6HR3ZKUJ5w8=
-X-Google-Smtp-Source: AGHT+IH0EqcxNO1Y1YHE7d4z2t2NPfR9LfIJ2GiwoVXVGaPdFyx7G3cLXUI88jWorgaeI1b1XNwOqw==
-X-Received: by 2002:a5d:44c6:0:b0:337:c7be:cba5 with SMTP id z6-20020a5d44c6000000b00337c7becba5mr2248728wrr.0.1706014610498;
-        Tue, 23 Jan 2024 04:56:50 -0800 (PST)
-Received: from [192.168.1.20] ([178.197.215.66])
-        by smtp.gmail.com with ESMTPSA id k2-20020a5d6282000000b0033838c2c169sm11518355wru.108.2024.01.23.04.56.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 23 Jan 2024 04:56:50 -0800 (PST)
-Message-ID: <12296a4b-213b-4703-808c-be0667914b0f@linaro.org>
-Date: Tue, 23 Jan 2024 13:56:48 +0100
+        d=1e100.net; s=20230601; t=1706014773; x=1706619573;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=AGSrAGs5vLhtdiutZlV1QBydinRii8oVG9Wb9alDR6M=;
+        b=LoOKA/xIArEU9jxyICu4pHcyT2GV29csfUWhWjQV/Gqp5U5zNP6LScVpGvHsTODj97
+         lMnBAuYVt6STKVPvrv9xNNPYYaXLCKIKETYwMT5vypMm1PofZU6KEnmNV5Nnk95Dzt2K
+         Xb58Xt1BFgQ4PG3ovp8dMUDcU7vAdFbnHE5V3TfrHpcKzyUMYOe+bd5cX9e/eywih/BV
+         ZzlkKowPF8/nTTRxZ5t9aakXS+GIt4Y1fbFIp38Mharvt6UAg4NHvb3UukZ7WDaIhT8Y
+         6FXQMXUbmC8EgOo0sgLm+Wl3kN18Soooihkse41vdjBh3CTborEXu22jfMugKqpHPVrT
+         kHpw==
+X-Gm-Message-State: AOJu0YxjJTHOYCVyqT5zq5dxVx9zdaP+0vdfhFxrHWU7iPs+unU05JpR
+	5hxoCfyga4/KqBeEBLQNgP8HjxU1eCxq/e1Jtn8XMS3+Mj8ql5r7pQpVt0hMWZw=
+X-Google-Smtp-Source: AGHT+IFXdkk+wHlkX8z4yT7dB+QndSv+eLQbMDWU8L3wYK4WVE/xD6OBwKujfE5sMBHlLW5MHECvyA==
+X-Received: by 2002:a05:600c:5027:b0:40e:4870:d2a4 with SMTP id n39-20020a05600c502700b0040e4870d2a4mr130345wmr.59.1706014773264;
+        Tue, 23 Jan 2024 04:59:33 -0800 (PST)
+Received: from claudiu-X670E-Pro-RS.. ([82.78.167.135])
+        by smtp.gmail.com with ESMTPSA id s4-20020a05600c45c400b0040e6ff60057sm33655711wmo.48.2024.01.23.04.59.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Jan 2024 04:59:32 -0800 (PST)
+From: Claudiu <claudiu.beznea@tuxon.dev>
+X-Google-Original-From: Claudiu <claudiu.beznea.uj@bp.renesas.com>
+To: s.shtylyov@omp.ru,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	richardcochran@gmail.com,
+	p.zabel@pengutronix.de,
+	geert+renesas@glider.be
+Cc: netdev@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	claudiu.beznea@tuxon.dev,
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Subject: [PATCH net-next v4 01/15] net: ravb: Let IP-specific receive function to interrogate descriptors
+Date: Tue, 23 Jan 2024 14:58:15 +0200
+Message-Id: <20240123125829.3970325-2-claudiu.beznea.uj@bp.renesas.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240123125829.3970325-1-claudiu.beznea.uj@bp.renesas.com>
+References: <20240123125829.3970325-1-claudiu.beznea.uj@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 7/7] arm64: dts: exynos: Add SPI nodes for Exynos850
-Content-Language: en-US
-To: Sam Protsenko <semen.protsenko@linaro.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Andi Shyti <andi.shyti@kernel.org>, Mark Brown <broonie@kernel.org>,
- Rob Herring <robh+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: Alim Akhtar <alim.akhtar@samsung.com>,
- Sylwester Nawrocki <s.nawrocki@samsung.com>,
- Tomasz Figa <tomasz.figa@gmail.com>, Chanwoo Choi <cw00.choi@samsung.com>,
- linux-spi@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
-References: <20240120012948.8836-1-semen.protsenko@linaro.org>
- <20240120012948.8836-8-semen.protsenko@linaro.org>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20240120012948.8836-8-semen.protsenko@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 20/01/2024 02:29, Sam Protsenko wrote:
-> Some USI blocks can be configured as SPI controllers. Add corresponding
-> SPI nodes to Exynos850 SoC device tree.
-> 
-> Signed-off-by: Sam Protsenko <semen.protsenko@linaro.org>
-> ---
->  arch/arm64/boot/dts/exynos/exynos850.dtsi | 54 +++++++++++++++++++++++
->  1 file changed, 54 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/exynos/exynos850.dtsi b/arch/arm64/boot/dts/exynos/exynos850.dtsi
-> index cd0a452cd6b4..e35973a254e6 100644
-> --- a/arch/arm64/boot/dts/exynos/exynos850.dtsi
-> +++ b/arch/arm64/boot/dts/exynos/exynos850.dtsi
-> @@ -738,6 +738,24 @@ usi_spi_0: usi@139400c0 {
->  				 <&cmu_peri CLK_GOUT_SPI0_IPCLK>;
->  			clock-names = "pclk", "ipclk";
->  			status = "disabled";
-> +
-> +			spi_0: spi@13940000 {
-> +				compatible = "samsung,exynos850-spi";
-> +				reg = <0x13940000 0x30>;
-> +				interrupts = <GIC_SPI 221 IRQ_TYPE_LEVEL_HIGH>;
-> +				pinctrl-names = "default";
-> +				pinctrl-0 = <&spi0_pins>;
+From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
-pinctrl-0
-pinctrl-names
+ravb_poll() initial code used to interrogate the first descriptor of the
+RX queue in case gPTP is false to determine if ravb_rx() should be called.
+This is done for non-gPTP IPs. For gPTP IPs the driver PTP-specific
+information was used to determine if receive function should be called. As
+every IP has its own receive function that interrogates the RX descriptors
+list in the same way the ravb_poll() was doing there is no need to double
+check this in ravb_poll(). Removing the code from ravb_poll() leads to a
+cleaner code.
 
-Same in other places.
+Reviewed-by: Sergey Shtylyov <s.shtylyov@omp.ru>
+Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+---
+
+Changes in v4:
+ - none
+ 
+Changes in v3:
+- collected Sergey's tag
+
+Changes in v2:
+- addressed review comments and keep stale code out of this patch
 
 
+ drivers/net/ethernet/renesas/ravb_main.c | 13 ++-----------
+ 1 file changed, 2 insertions(+), 11 deletions(-)
 
-Best regards,
-Krzysztof
+diff --git a/drivers/net/ethernet/renesas/ravb_main.c b/drivers/net/ethernet/renesas/ravb_main.c
+index 8649b3e90edb..921f645a7218 100644
+--- a/drivers/net/ethernet/renesas/ravb_main.c
++++ b/drivers/net/ethernet/renesas/ravb_main.c
+@@ -1288,25 +1288,16 @@ static int ravb_poll(struct napi_struct *napi, int budget)
+ 	struct net_device *ndev = napi->dev;
+ 	struct ravb_private *priv = netdev_priv(ndev);
+ 	const struct ravb_hw_info *info = priv->info;
+-	bool gptp = info->gptp || info->ccc_gac;
+-	struct ravb_rx_desc *desc;
+ 	unsigned long flags;
+ 	int q = napi - priv->napi;
+ 	int mask = BIT(q);
+ 	int quota = budget;
+-	unsigned int entry;
+ 
+-	if (!gptp) {
+-		entry = priv->cur_rx[q] % priv->num_rx_ring[q];
+-		desc = &priv->gbeth_rx_ring[entry];
+-	}
+ 	/* Processing RX Descriptor Ring */
+ 	/* Clear RX interrupt */
+ 	ravb_write(ndev, ~(mask | RIS0_RESERVED), RIS0);
+-	if (gptp || desc->die_dt != DT_FEMPTY) {
+-		if (ravb_rx(ndev, &quota, q))
+-			goto out;
+-	}
++	if (ravb_rx(ndev, &quota, q))
++		goto out;
+ 
+ 	/* Processing TX Descriptor Ring */
+ 	spin_lock_irqsave(&priv->lock, flags);
+-- 
+2.39.2
 
