@@ -1,184 +1,175 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD261811E7
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 18:02:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 752FF81AA2;
+	Tue, 23 Jan 2024 18:03:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706032956; cv=none; b=X2lvWgo7v0B+RjOyrZVbV7qwhYjEnAULjnCffUXbwmKHxhcv2aVNZzCUkfZ4hebKzsTSswcCvKGjRMoDa2wFMIp+Ma4zXAhVkNiOczT/i2ZYzA8jwge7xdkxYnNcH5xyjIIeB+SxrJdmrRZKWo3VyAnqihGRHakS1IwSIIX+N/0=
+	t=1706032984; cv=none; b=RqQMrzg02owh1siYdiJ22cRQXJ/gmsU5x6M6CWGr2AAImOnK71SCVaS5YMzUWyZyKFrU48WPXb8axtgrSUX+GF9W2ypEUYxDwK7cJ3Pt4o19Ujt0huIDGQL7XlQx6RHK7hTnx17DWwoKGhXbVAwdUFobviDWnvC8bIplcv8O2iY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706032956; c=relaxed/simple;
-	bh=S6w7WPbKr7/eAyccuQc7VfqEKc2BNyjZzIwtGeg1HDc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=euevHu6mg/M6l3cCmDfpxXiz4j7k+m6PGqPJHga4Mngy8h+ozNo8BcSn4AWqFhk/R/n31gs9XoRs8OBnK0DFW9C6chA+jI1wGzV8Os8jRoVnOsBrn+2cys41/5sPoieb8gdWPvSWKcP16kXPzL809z0ZtZJpKpUBxteltxz2UyE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cI+kAZHF; arc=none smtp.client-ip=209.85.218.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1706032984; c=relaxed/simple;
+	bh=Kls/oFcAw6BTebsNXmW38DpmnKz89g4d7yo2gqb7VpU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kaEFaF0XDFIq197AkVB53qku0Y7RtMCTlAwvyS5i9VRBKiKt8dVI6HJt7a0WBBfudF7ltBX6z6HPMDJLkWCv7POFk63upc8N1NcD41Wei5ulPtziSAweFDP03y5Ye27mdGhy8cZwql3Ag8JuSF+F9enKJlrHJ6sM/DkYI4NCzaQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=mcUJfRKa; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=B5vWeU8y; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=mcUJfRKa; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=B5vWeU8y; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cI+kAZHF"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a271a28aeb4so495068566b.2
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 10:02:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706032951; x=1706637751; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zzP0eSKOjbnQ2ru8HTdKomejWSOPl2M8Q/mGuB9QTvM=;
-        b=cI+kAZHFKjDEkw3EzShZx7FfpiOshwkVmrtRdntVKYT0394g7Pz6edE+PJPrWhfZhV
-         /p1r55Pptd/KqXWd/OPu5lyJy0qt8/JYirUBJjEdhexplPF5ctSqlROQ7W6eCzpve5TX
-         mYzawEXyxYc9eeoZV8yf8OqmD1ojDPFZLVKTdIyhwLVDbnyGZ+fg94TLdUSjh4biqAGM
-         DCgGYbH7+NFkj2RhH2RuYu2b4OeVHGrwoqsQc5vDPCyRZJEa/qV2qhrdB+fB/obSCBTP
-         Y9u/ZnUKmJMn/UEoQAWdthFTy8xysXEfncxTIlNKa70EsK+CchhbnnPpULJPgkJvMati
-         ilOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706032951; x=1706637751;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zzP0eSKOjbnQ2ru8HTdKomejWSOPl2M8Q/mGuB9QTvM=;
-        b=YOndm6Mtdzox2kroCaoRt86jAKZLT5yhvGuCkyD6uJ3/ioKEotfwetbT3Ju96O6zCH
-         I/JeawHoLUCcLwglJYgBNtLuvPy3nlFDQtcq68Dud9Wx8OYmgHz8UbZiOlGRJBAdNd93
-         ERf2ZKDcDVRuvynMYq84g3ypdYJCuxLekWieM2pYQ0/+5e79r58P+TzGWVv+o91pRi1J
-         eBOap5Hbhp2Yy5UVkTDAs0C7f+YZqDvwg1OHz/fg2VZqxDc8AH4kqM0El83KUPi++iTq
-         7gN0xU7znLdVJ1ygrIGIrseRKsguUoqUABgO2PX2RsoX96a5a6pqGQpdCscdWhGhwvPx
-         Epbw==
-X-Gm-Message-State: AOJu0YwF8W/uSffCCJSp70Jpf8+OfBvCRMDjZX8oEfFLIwl6WE1AS2Gl
-	EwjC8UrtpNHZ61OrqWcHdyav5s2rkNHg/fTdPLbHEkO/UA1tLYJCTnBfYPmgtI2hJud9zdGwMD6
-	/Jp/fmpXRCQ56U80jWOiF/ZO7qUY=
-X-Google-Smtp-Source: AGHT+IFXNCzW7fj97YFexXyytl2W4XGvmpFASWQFHqqEseZhsAxlmfxjf3sCf6iXVl3hCAHBMPiR2WNUO1TEyg3u1mg=
-X-Received: by 2002:a17:906:4094:b0:a30:dca4:ee7e with SMTP id
- u20-20020a170906409400b00a30dca4ee7emr135796ejj.93.1706032950735; Tue, 23 Jan
- 2024 10:02:30 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="mcUJfRKa";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="B5vWeU8y";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="mcUJfRKa";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="B5vWeU8y"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id A7B2F1F79B;
+	Tue, 23 Jan 2024 18:02:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1706032979; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EVEHulAgauPl/Vgac2NWW0rpe7yrK6/nS0F3Zcf7p9Y=;
+	b=mcUJfRKagSyNddQ+w389b7gCjjIO1hvq1z267sF+LX88IUIY39TFD6eU8jfJkYT/85D7rK
+	NRkFN7Pz1vRZ1Xr2tnDvs6d4HCeo320o/oYyy00D4XeJErTT+jtt1Xx+hR7llNmqgO3RkQ
+	+KvFdPNZDio6YGkU3SsahnPKo/9jSO4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1706032979;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EVEHulAgauPl/Vgac2NWW0rpe7yrK6/nS0F3Zcf7p9Y=;
+	b=B5vWeU8yXvx9o2XriiKyA9U9MXa3cAjT6yKTnnwzdCUW6II63xmSgl38EfPZ8cInudVp34
+	hltjb3TDHB3A6cCw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1706032979; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EVEHulAgauPl/Vgac2NWW0rpe7yrK6/nS0F3Zcf7p9Y=;
+	b=mcUJfRKagSyNddQ+w389b7gCjjIO1hvq1z267sF+LX88IUIY39TFD6eU8jfJkYT/85D7rK
+	NRkFN7Pz1vRZ1Xr2tnDvs6d4HCeo320o/oYyy00D4XeJErTT+jtt1Xx+hR7llNmqgO3RkQ
+	+KvFdPNZDio6YGkU3SsahnPKo/9jSO4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1706032979;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EVEHulAgauPl/Vgac2NWW0rpe7yrK6/nS0F3Zcf7p9Y=;
+	b=B5vWeU8yXvx9o2XriiKyA9U9MXa3cAjT6yKTnnwzdCUW6II63xmSgl38EfPZ8cInudVp34
+	hltjb3TDHB3A6cCw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 991A0136A4;
+	Tue, 23 Jan 2024 18:02:59 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 0TtcJVP/r2WjKQAAD6G6ig
+	(envelope-from <jack@suse.cz>); Tue, 23 Jan 2024 18:02:59 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 1E031A0803; Tue, 23 Jan 2024 19:02:55 +0100 (CET)
+Date: Tue, 23 Jan 2024 19:02:55 +0100
+From: Jan Kara <jack@suse.cz>
+To: Kees Cook <keescook@chromium.org>
+Cc: linux-hardening@vger.kernel.org,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	linux-fsdevel@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 53/82] fs: Refactor intentional wrap-around test
+Message-ID: <20240123180255.l75abb7mo4tlupuv@quack3>
+References: <20240122235208.work.748-kees@kernel.org>
+ <20240123002814.1396804-53-keescook@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240119181235.255060-1-andrealmeid@igalia.com>
- <20240119181235.255060-3-andrealmeid@igalia.com> <Zaq-r7UZpEy7_Rrn@intel.com> <ca1faaec-461b-401c-a86a-e0929d282b51@amd.com>
-In-Reply-To: <ca1faaec-461b-401c-a86a-e0929d282b51@amd.com>
-From: Xaver Hugl <xaver.hugl@gmail.com>
-Date: Tue, 23 Jan 2024 19:02:19 +0100
-Message-ID: <CAFZQkGyf5MxKeGgz09kgyYTp+g-Jk2uaiQkmzSX7BDGHpcz0CQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] drm/amdgpu: Implement check_async_props for planes
-To: Harry Wentland <harry.wentland@amd.com>
-Cc: =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>, 
-	=?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>, daniel@ffwll.ch, 
-	=?UTF-8?B?TWFyZWsgT2zFocOhaw==?= <maraeo@gmail.com>, 
-	=?UTF-8?Q?Michel_D=C3=A4nzer?= <michel.daenzer@mailbox.org>, 
-	linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org, 
-	Pekka Paalanen <ppaalanen@gmail.com>, dri-devel@lists.freedesktop.org, 
-	kernel-dev@igalia.com, alexander.deucher@amd.com, 
-	Dave Airlie <airlied@gmail.com>, christian.koenig@amd.com, 
-	Joshua Ashton <joshua@froggi.es>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240123002814.1396804-53-keescook@chromium.org>
+Authentication-Results: smtp-out2.suse.de;
+	none
+X-Spamd-Result: default: False [-2.60 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 RCPT_COUNT_SEVEN(0.00)[10];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email,suse.com:email,chromium.org:email,linux.org.uk:email];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 MID_RHS_NOT_FQDN(0.50)[];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-3.00)[100.00%]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spam-Score: -2.60
 
-Am Mo., 22. Jan. 2024 um 16:50 Uhr schrieb Harry Wentland
-<harry.wentland@amd.com>:
->
->
->
-> On 2024-01-19 13:25, Ville Syrj=C3=A4l=C3=A4 wrote:
-> > On Fri, Jan 19, 2024 at 03:12:35PM -0300, Andr=C3=A9 Almeida wrote:
-> >> AMD GPUs can do async flips with changes on more properties than just
-> >> the FB ID, so implement a custom check_async_props for AMD planes.
-> >>
-> >> Allow amdgpu to do async flips with IN_FENCE_ID and FB_DAMAGE_CLIPS
-> >> properties. For userspace to check if a driver support this two
-> >> properties, the strategy for now is to use TEST_ONLY commits.
-> >>
-> >> Signed-off-by: Andr=C3=A9 Almeida <andrealmeid@igalia.com>
-> >> ---
-> >> v2: Drop overlay plane option for now
-> >>
-> >>   .../amd/display/amdgpu_dm/amdgpu_dm_plane.c   | 29 +++++++++++++++++=
-++
-> >>   1 file changed, 29 insertions(+)
-> >>
-> >> diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_plane.c b=
-/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_plane.c
-> >> index 116121e647ca..7afe8c1b62d4 100644
-> >> --- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_plane.c
-> >> +++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_plane.c
-> >> @@ -25,6 +25,7 @@
-> >>    */
-> >>
-> >>   #include <drm/drm_atomic_helper.h>
-> >> +#include <drm/drm_atomic_uapi.h>
-> >>   #include <drm/drm_blend.h>
-> >>   #include <drm/drm_gem_atomic_helper.h>
-> >>   #include <drm/drm_plane_helper.h>
-> >> @@ -1430,6 +1431,33 @@ static void amdgpu_dm_plane_drm_plane_destroy_s=
-tate(struct drm_plane *plane,
-> >>      drm_atomic_helper_plane_destroy_state(plane, state);
-> >>   }
-> >>
-> >> +static int amdgpu_dm_plane_check_async_props(struct drm_property *pro=
-p,
-> >> +                                      struct drm_plane *plane,
-> >> +                                      struct drm_plane_state *plane_s=
-tate,
-> >> +                                      struct drm_mode_object *obj,
-> >> +                                      u64 prop_value, u64 old_val)
-> >> +{
-> >> +    struct drm_mode_config *config =3D &plane->dev->mode_config;
-> >> +    int ret;
-> >> +
-> >> +    if (prop !=3D config->prop_fb_id &&
-> >> +        prop !=3D config->prop_in_fence_fd &&
-> >
-> > IN_FENCE should just be allowed always.
-> >
-> >> +        prop !=3D config->prop_fb_damage_clips) {
-> >
-> > This seems a bit dubious to me. How is amdgpu using the damage
-> > information during async flips?
->
-> Yeah, I'm also not sure this is right. Has anyone tested this
-> with a PSR SU panel?
->
-> Harry
+On Mon 22-01-24 16:27:28, Kees Cook wrote:
+> In an effort to separate intentional arithmetic wrap-around from
+> unexpected wrap-around, we need to refactor places that depend on this
+> kind of math. One of the most common code patterns of this is:
+> 
+> 	VAR + value < VAR
+> 
+> Notably, this is considered "undefined behavior" for signed and pointer
+> types, which the kernel works around by using the -fno-strict-overflow
+> option in the build[1] (which used to just be -fwrapv). Regardless, we
+> want to get the kernel source to the position where we can meaningfully
+> instrument arithmetic wrap-around conditions and catch them when they
+> are unexpected, regardless of whether they are signed[2], unsigned[3],
+> or pointer[4] types.
+> 
+> Refactor open-coded wrap-around addition test to use add_would_overflow().
+> This paves the way to enabling the wrap-around sanitizers in the future.
+> 
+> Link: https://git.kernel.org/linus/68df3755e383e6fecf2354a67b08f92f18536594 [1]
+> Link: https://github.com/KSPP/linux/issues/26 [2]
+> Link: https://github.com/KSPP/linux/issues/27 [3]
+> Link: https://github.com/KSPP/linux/issues/344 [4]
+> Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+> Cc: Christian Brauner <brauner@kernel.org>
+> Cc: Jan Kara <jack@suse.cz>
+> Cc: linux-fsdevel@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-I attempted to, but according to
-/sys/kernel/debug/dri/1/eDP-1/psr_state, PSR never kicks in on my
-laptop at all. The only reason I wanted this property though is to
-reduce the number of special cases for async pageflips compositors
-have to implement; as it's not necessary for any functionality I think
-it's also fine to leave it out.
+Looks good atlhough I'd prefer wrapping the line to not overflow 80 chars.
+Anyway feel free to add:
 
-> >> +            ret =3D drm_atomic_plane_get_property(plane, plane_state,
-> >> +                                                prop, &old_val);
-> >> +            return drm_atomic_check_prop_changes(ret, old_val, prop_v=
-alue, prop);
-> >> +    }
-> >> +
-> >> +    if (plane_state->plane->type !=3D DRM_PLANE_TYPE_PRIMARY) {
-> >> +            drm_dbg_atomic(prop->dev,
-> >> +                           "[OBJECT:%d] Only primary planes can be ch=
-anged during async flip\n",
-> >> +                           obj->id);
-> >> +            return -EINVAL;
-> >> +    }
-> >> +
-> >> +    return 0;
-> >> +}
-> >> +
-> >>   static const struct drm_plane_funcs dm_plane_funcs =3D {
-> >>      .update_plane   =3D drm_atomic_helper_update_plane,
-> >>      .disable_plane  =3D drm_atomic_helper_disable_plane,
-> >> @@ -1438,6 +1466,7 @@ static const struct drm_plane_funcs dm_plane_fun=
-cs =3D {
-> >>      .atomic_duplicate_state =3D amdgpu_dm_plane_drm_plane_duplicate_s=
-tate,
-> >>      .atomic_destroy_state =3D amdgpu_dm_plane_drm_plane_destroy_state=
-,
-> >>      .format_mod_supported =3D amdgpu_dm_plane_format_mod_supported,
-> >> +    .check_async_props =3D amdgpu_dm_plane_check_async_props,
-> >>   };
-> >>
-> >>   int amdgpu_dm_plane_init(struct amdgpu_display_manager *dm,
-> >> --
-> >> 2.43.0
-> >
+Reviewed-by: Jan Kara <jack@suse.cz>
+
+								Honza
+
+> ---
+>  fs/remap_range.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/fs/remap_range.c b/fs/remap_range.c
+> index f8c1120b8311..15e91bf2c5e3 100644
+> --- a/fs/remap_range.c
+> +++ b/fs/remap_range.c
+> @@ -45,7 +45,7 @@ static int generic_remap_checks(struct file *file_in, loff_t pos_in,
+>  		return -EINVAL;
+>  
+>  	/* Ensure offsets don't wrap. */
+> -	if (pos_in + count < pos_in || pos_out + count < pos_out)
+> +	if (add_would_overflow(pos_in, count) || add_would_overflow(pos_out, count))
+>  		return -EINVAL;
+>  
+>  	size_in = i_size_read(inode_in);
+> -- 
+> 2.34.1
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
