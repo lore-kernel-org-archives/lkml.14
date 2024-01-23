@@ -1,136 +1,124 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+Received: from mail-oa1-f42.google.com (mail-oa1-f42.google.com [209.85.160.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B744374F5
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 06:04:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1F794E1D1;
+	Tue, 23 Jan 2024 06:06:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705989874; cv=none; b=ZdNj3RgVoFk4VA4Dz8jbkn8odxJRP/PQxXZ85pyyntPkt/xwH8ozacQxyayIb5tBFyqEPi/7RlkdRsV8SgJul/MIdRIysWZYR174Y0IrMByLyjsP1TqlYIALlE/f+mv/o/RjXAix05CV3zQY5JZtZKoyPUF33HaLkY5+7uyjZeY=
+	t=1705989986; cv=none; b=os/c2JKZRuwPlhWTvN0dNUJ9PUh4RupSvHpSFrNsJtd6Oz8gi+h8I91QNoR7nnrvubZQexSm+xjbABzAMMIa9j7Nb00X1t+9AD4N93xc1uILRl+i8OJZPdgHwQTHnWb5qdwhxCmhbAPSkcjAVZeOi26t6918iULRCqCEJypcsmQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705989874; c=relaxed/simple;
-	bh=7EqcWsyZ+h3svlefe6+y3WK7H6gzDUkqDW4wwAzshSo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Zu/SFkxR+eX+puqeBJabyVMlFCszsGaCEApoTWzZov37D9Vtyy5SmHqTVYauEZAQEDAUdsb5/SCmgiul9HkU1FogtncJHas2CkBuY/DqGLk2LnBIXSk867zr3wiTHuBlpNL2PGNGk5Irf7V0mzHZUIT3/bAuzWBewdmH8djg1k4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=NPCwJpTb; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1705989986; c=relaxed/simple;
+	bh=T6sQjSVZoDPqa9QnD1KIBSNd8H86TmcVZKXVVSAGVs4=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=ogAX21q/xplCxBAeAF9CC870rTz9e0XSjAVybt1reM87MFD3UT4vA6JN3ET/02nw1Pnq5RMY941wmwRXBBdCUAu0zNopQrBnl74Kj2eN8ArIpvcwnVlpUN0/8i+1m21nvffWObGULAJfS7zJ/Qnw89wXSPl4T7/9liHMvOJstjw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jbuM46BZ; arc=none smtp.client-ip=209.85.160.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NPCwJpTb"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3392b045e0aso2317635f8f.2
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 22:04:32 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jbuM46BZ"
+Received: by mail-oa1-f42.google.com with SMTP id 586e51a60fabf-206689895bfso2017844fac.1;
+        Mon, 22 Jan 2024 22:06:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1705989870; x=1706594670; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=DuEzjVSg/RQQwKlc0Uyux+cdBaiyYeWCUP9YcLhjwnA=;
-        b=NPCwJpTbkwhLGQweZarLl67lFcmIBSazVk9Ka/+ALIertJbg84nPCf5zmFJwvfhZm9
-         Q5tJgB6yZPPcMYQI3Zj+ekTDsnxneGEFG8ZVbrVsc8d0iubDk4ffBFMc9I6xq0ULT68q
-         XXzKYcngIrXsEzh0lre4JXiyJYRcURZQSxXa1/aIlQDX8zGtTinDh+nXB2g0pwr+/jZU
-         dM8aJUPVSONwWLS7FWGaips3/OYFDVuXOQJcgawN3c224lAXNfn+1A3elg5PLqNXfbB4
-         CXMSDe0ss9TXUb2PPdLL3+UoLXCykFGbnC6ksNNhdIAlhY/+9o+BJ989zY7TV8CBtw9w
-         /NZQ==
+        d=gmail.com; s=20230601; t=1705989983; x=1706594783; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :references:cc:to:from:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=FyasXNOru482cNRTIapaiSgeT6NkIVhvCSkzZTrAFxM=;
+        b=jbuM46BZ7qiRDI1Cd5I0Mou4/F0xtY1R2cYwSWuFb3jZP2H6tS4Q5t3/CJHL5qyoSv
+         Uf59M9l+nGGi1Xty8FzIqR3tHl/szUIqEVwprL+kkANufKLuGv7WTdEeqA03LhSrnYi1
+         70M1Og+4/S+ltijpkUAEwjSG1WYaQxoRk8D+411RuDF2HbkpwpmU7KMgdwnf/ylBxocV
+         chCE8GuPKuv2eSVhX0juI2/EXY/jBCxLMxL4fqOwgp9ZequZ7amwK3kBDZBrNVTH9clJ
+         GfVfRlPEek5QB07kbp8Olg8cQKOgGNt2CmBKPE5W76/xSmWfpCvO+l5XyziSM9wQvCvS
+         tPqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705989870; x=1706594670;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DuEzjVSg/RQQwKlc0Uyux+cdBaiyYeWCUP9YcLhjwnA=;
-        b=b/dvrBMUNdTfpksfIEaU+dQsJW9AtLwVhFUvG2cMVhZPjlq0K8VsMPhJ8N4LRnv7ga
-         mAB753R9zW0IL6BNp5U94dDdLTnU4N/kCYZ8m4rrje1+wFg0E0fDbNZnlyD7bIrgJ/ba
-         1wzWd25r49hSUZ7CP4K04Ikht5oueJHmYNowrF+CkNokA5p9lIp/d7gIc7rs22Q4iUhh
-         cVOPy4ZB7BmifrlIXJAqImntl5G9DOgGuFmCp7fs0BP5E/H1Nj2MVQ4jCrJ/X/rM0+UU
-         0wrp1gad0srEKBEmb09Qov4zPcPiC48hPrXb4e6eZUw0vZzOPidlOiYMlcBV7i0o93gk
-         9NKg==
-X-Gm-Message-State: AOJu0YzafF38ud/k9HZvYZw/4LkiTbQbzwqGdQA3pN+fJt1UA9FuZsR3
-	m9k08N6521UxOFe6qmzo9qe1BzJRASMgRu4OpJUmy/uebv+SNuGbSeNSuON8YiA=
-X-Google-Smtp-Source: AGHT+IFLHaZr+mF2sYyUABvXyhzrT4n/xOssMtnFknUGdtEhhS0RhZUa1R3tZrI36x7WhV9qUfSCLg==
-X-Received: by 2002:a5d:4208:0:b0:337:4219:3e8d with SMTP id n8-20020a5d4208000000b0033742193e8dmr3424121wrq.15.1705989870613;
-        Mon, 22 Jan 2024 22:04:30 -0800 (PST)
-Received: from localhost ([102.140.209.237])
-        by smtp.gmail.com with ESMTPSA id bl1-20020adfe241000000b0033935779a23sm4856417wrb.89.2024.01.22.22.04.29
+        d=1e100.net; s=20230601; t=1705989983; x=1706594783;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :references:cc:to:from:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=FyasXNOru482cNRTIapaiSgeT6NkIVhvCSkzZTrAFxM=;
+        b=Nsu/An/jkA7Tb4pB6YpflxFyHXFZ++tjtL5MXh782idqhlh27h5KL4CaFe2baO30VN
+         9ahCgx4IwchaxOk7VskhPZhyp2bGFwfayXLIeBqfB6iy++Oo3Q8YPsKfhhdHV96xtr2l
+         5V07vNKHIIswdjnjVoNBjxc8CKL+7WBIO7FlIK0gG6CmHpyypq6iP5/n1av+fjbksJFA
+         dLKixU79NfsBULkDkOKSXOhMfHeuwwjDLjupDiOVzjvCMmg0heEzls9/HmpGRPVMob0U
+         Rk64jfDCbYpBmbiATkAZ1ceNEL0UeXmBubhBtr1Oo9jIW3+QSg3qPJ1VYxFVvX8lGQDO
+         A7iw==
+X-Gm-Message-State: AOJu0YxRhwDz69G6LLRXjkJke5Sk65ARLk67+09sKKIYd6lfngs5dovU
+	GrIWwXQ9sS/KpGml6CVDLFPVztaPqzScO4bceq14hlJwcgiOvE+5CKtQo3f7AsQ=
+X-Google-Smtp-Source: AGHT+IE4D1JuAkCSQ7Fb326LiGuRPqMBr/ykQ7H891Gii8X/IMt/rqHAe3qD7m1pSz+B2DzUP5bcVw==
+X-Received: by 2002:a05:6870:4154:b0:210:e532:af4a with SMTP id r20-20020a056870415400b00210e532af4amr943465oad.119.1705989983048;
+        Mon, 22 Jan 2024 22:06:23 -0800 (PST)
+Received: from ddawson.local ([2602:ae:1f29:8500:aaa1:59ff:fe2b:a859])
+        by smtp.gmail.com with ESMTPSA id j8-20020a63e748000000b005c6e8fa9f24sm9115992pgk.49.2024.01.22.22.06.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jan 2024 22:04:30 -0800 (PST)
-Date: Tue, 23 Jan 2024 09:04:26 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Zhipeng Lu <alexious@zju.edu.cn>
-Cc: Parthiban Veerasooran <parthiban.veerasooran@microchip.com>,
-	Christian Gromm <christian.gromm@microchip.com>,
-	Dan Carpenter <error27@gmail.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] most: fix a memleak in audio_probe_channel
-Message-ID: <4e065b3a-240e-4cd9-acd8-53e5a56abed0@moroto.mountain>
-References: <20240122172044.3840976-1-alexious@zju.edu.cn>
+        Mon, 22 Jan 2024 22:06:22 -0800 (PST)
+Received: from [127.0.0.1] (unknown [127.0.0.1])
+	by ddawson.local (Postfix) with ESMTP id 5A7E1301E2DA;
+	Mon, 22 Jan 2024 21:56:33 -0800 (PST)
+Message-ID: <358aaf68-0618-41e6-9adf-04e211eb690e@gmail.com>
+Date: Mon, 22 Jan 2024 21:56:28 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240122172044.3840976-1-alexious@zju.edu.cn>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [inline_data] ext4: Stale flags before sync when convert to
+ non-inline
+From: Daniel Dawson <danielcdawson@gmail.com>
+To: Theodore Ts'o <tytso@mit.edu>, Andreas Dilger <adilger.kernel@dilger.ca>
+Cc: linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <5189fe60-c3e3-4bc6-89d4-1033cf4337c3@gmail.com>
+Content-Language: en-US
+Autocrypt: addr=danielcdawson@gmail.com; keydata=
+ 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
+ bi1gCpm8
+In-Reply-To: <5189fe60-c3e3-4bc6-89d4-1033cf4337c3@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jan 23, 2024 at 01:20:44AM +0800, Zhipeng Lu wrote:
-> When get_channel fails, audio_probe_channel should free adpt like all
-> its following error-handling paths after get_channel. Otherwise there
-> could be a memleak.
-> 
-> Fixes: 15600aea2754 ("staging: most: sound: create one sound card w/ multiple PCM devices per MOST device")
-> Signed-off-by: Zhipeng Lu <alexious@zju.edu.cn>
-> ---
->  drivers/most/most_snd.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/most/most_snd.c b/drivers/most/most_snd.c
-> index 45d762804c5e..6cccc9c26796 100644
-> --- a/drivers/most/most_snd.c
-> +++ b/drivers/most/most_snd.c
-> @@ -564,7 +564,8 @@ static int audio_probe_channel(struct most_interface *iface, int channel_id,
->  	if (get_channel(iface, channel_id)) {
->  		pr_err("channel (%s:%d) is already linked\n",
->  		       iface->description, channel_id);
-> -		return -EEXIST;
-> +		ret = -EEXIST;
-> +		goto err_free_adpt;
+On 11/28/23 10:15 PM, Daniel Dawson wrote:
+> When a file is converted from inline to non-inline, it has stale flags 
+> until sync.
 
-No, this doesn't work.  Someone should add a comment here explaining
-why.
+> Why is this a problem? Because some code will fail under such a 
+> condition, for example, lseek(..., SEEK_HOLE) will result in ENOENT.
 
-This function is a bit complicated because we sometimes allocate "adpt"
-and sometimes we don't.  Why can we not make it consistently one way or
-the other?  This is not my code and I don't know.  But presumably there
-is a good reason.  I looked up the previous discussion of this and found
-this thread.
 
-https://lore.kernel.org/all/78cc59b31042f865e947a2c09a5d10cc60ddc01c.camel@microchip.com/
+Just tested. Still happening on 6.8-rc1.
 
-Anyway, in the end, we're trying to clean up and on the other error
-paths we're allowed to free "adpt" even though we didn't allocate it.
-
-However once it's got a channel linked then we cannot.  At that stage
-"adpt" is already added to the &iface->p->channel_list list.  The
-release_adapter() adapter function will free it without removing it from
-the list so it leads to a use after free.
-
-However, memory on this path is not leaked as your commit message says.
-"adpt" is still on the lists.  The stuff is in a messed up state so the
-user will need to tear it all down manually and recreate the
-configuration.  Quoting the email I linked to, "This
-involves the call to mdev_link_destroy_link_store() that cleans up
-everything."
-
-So we can't apply your patch because it leads to a use after free.  But
-we could apply a patch which adds a comment like:
-
-	/*
-	 * This error path doesn't leak.  If the channel is already set
-	 * up then something has gone badly wrong.  The user will have
-	 * to tear everything down and reconfigure from scratch.  The
-	 * memory will be released via mdev_link_destroy_link_store().
-	 *
-	 */
-
-regards,
-dan carpenter
+-- 
+PGP fingerprint: 5BBD5080FEB0EF7F142F8173D572B791F7B4422A
 
