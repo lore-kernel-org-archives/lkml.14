@@ -1,46 +1,46 @@
 Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FBBB80046;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEA9F811E9;
 	Tue, 23 Jan 2024 16:37:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706027829; cv=none; b=P6eKtePJbOun7wXPcd16AETVBr9Otl42VQMD+H3FXlVyoYryFHTCAmOFgASxri5zBSTKiz5fH6psdXNCko3E/MIWXM9UipsGK5Wy6N51sEKE/a5j4Ox54CQbhq1YnmKRge7XrR/ysaJUsvo3GH5OefzI/zGi/NP8TcnYheGIN24=
+	t=1706027828; cv=none; b=T/JzsTvBwjz23ci0jcbboShzZq9OK97eLtc8dLoe/qVkJILe17NrVMoJrlHoidjWi0GPbmaP+F+owbO3A0NRL1Fzi2+Q3FUvFO3tBn1ImlvlRMkIrrYHyTuhAptxIdUYXAeSPIyc3aaS9/P5ZbC95U3/hRppk2IXvtVKH2yXLDw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706027829; c=relaxed/simple;
-	bh=AOscs8QIG573GTnqalFMMwHtcQ8ONmRuwieK8uqlR40=;
+	s=arc-20240116; t=1706027828; c=relaxed/simple;
+	bh=Mt9VGXSLpx6lU+a/atqtbnv9Q7Fuz7Ts4+Nnj4wDzCc=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ryqcfJRfO5cYPeOLlz/ywwwWi/HdvmSoGxVTM+mRVyTwvSuKJNvmtAtLZJxot1vYfvp8tMPj7HLm7BhWH3wXFR0QLwWPuKWoGCpX2+PDot84eCqcfX+XyyuEXJdOogkSGG1kF0Ml7N9AIgmIH5Bc9e4VHGwYF8gY4qp4ocOqwKs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=En/XbSYb; arc=none smtp.client-ip=198.47.19.142
+	 MIME-Version:Content-Type; b=iae2eCHDf+J0ANMo/TXJb2SGf9AXh0G++/xItbrbPnqxFsfNmKApK8+lTb/Bz0rYAIuK06E6xdOzAii5QQbJLYU+ghAKB+ElQU4TUe6E25ELoEk9fPNpa+uYkEQGzswF7B6FLgrmYbJ+NIIDpWlFo3msiBjXwrm9X+dH7s57z4I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=glIL0hdb; arc=none smtp.client-ip=198.47.19.142
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="En/XbSYb"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 40NGax8N094134;
-	Tue, 23 Jan 2024 10:36:59 -0600
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="glIL0hdb"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 40NGb1HT094151;
+	Tue, 23 Jan 2024 10:37:01 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1706027819;
-	bh=NynlMJZVVWmFK6HEqJQ06332dhB5iMXyjOa26cOux3g=;
+	s=ti-com-17Q1; t=1706027821;
+	bh=E33CzJiobEDNF9PypNy3HQMQ/t8tZZOrwMdlqCyg1Ws=;
 	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=En/XbSYbkpAcJ6Xir3CNLJiY1RSv1Tblem41AtTRy3eVfDAYyubRm40jysHFe5o5e
-	 yR7dxzI1qPLHTXBJQ5jwyiTPbYEe/0eYi8DXg4GB4tIi4PfEnV8nFwypqppuesg6CP
-	 6i/sCNkGkSQt4pv5UKakL8dTC5VASwYwq1MsjC+g=
-Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 40NGaxU5119736
+	b=glIL0hdb2lSd4PuTlHy5p117GvpPZ7tYFFyGGzjXFeLmpZ+tV4gFIYb3UUTM5zHmK
+	 6mPyx1HreOTYf853E9hcrgLKapJGRFub3y4z+jkbejNwntXsyKK4qTNf204BwsZJSL
+	 cwy8ou+9+48Ra0DWXGAk0XClmhlOwlH8hyBWNXd8=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 40NGb1X6004284
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 23 Jan 2024 10:36:59 -0600
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+	Tue, 23 Jan 2024 10:37:01 -0600
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 23
- Jan 2024 10:36:59 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ Jan 2024 10:37:00 -0600
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 23 Jan 2024 10:36:59 -0600
+ Frontend Transport; Tue, 23 Jan 2024 10:37:00 -0600
 Received: from lelvsmtp6.itg.ti.com ([10.249.42.149])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 40NGars3123403;
-	Tue, 23 Jan 2024 10:36:58 -0600
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 40NGars8123403;
+	Tue, 23 Jan 2024 10:37:00 -0600
 From: Andrew Davis <afd@ti.com>
 To: Sebastian Reichel <sre@kernel.org>,
         Support Opensource
@@ -52,9 +52,9 @@ To: Sebastian Reichel <sre@kernel.org>,
 CC: <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         Andrew Davis
 	<afd@ti.com>
-Subject: [PATCH 15/21] power: supply: wm8350: Use devm_power_supply_register() helper
-Date: Tue, 23 Jan 2024 10:36:47 -0600
-Message-ID: <20240123163653.384385-16-afd@ti.com>
+Subject: [PATCH 20/21] power: supply: twl4030_madc: Use devm_iio_channel_get() helper
+Date: Tue, 23 Jan 2024 10:36:52 -0600
+Message-ID: <20240123163653.384385-21-afd@ti.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240123163653.384385-1-afd@ti.com>
 References: <20240123163653.384385-1-afd@ti.com>
@@ -68,73 +68,94 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-Use the device lifecycle managed register function. This helps prevent
-mistakes like unregistering out of order in cleanup functions and
-forgetting to unregister on error paths.
+Use the device lifecycle managed get function. This helps prevent
+mistakes like releasing out of order in cleanup functions and
+forgetting to release on error paths.
 
 Signed-off-by: Andrew Davis <afd@ti.com>
 ---
- drivers/power/supply/wm8350_power.c | 29 +++++++----------------------
- 1 file changed, 7 insertions(+), 22 deletions(-)
+ drivers/power/supply/twl4030_madc_battery.c | 44 ++++++---------------
+ 1 file changed, 11 insertions(+), 33 deletions(-)
 
-diff --git a/drivers/power/supply/wm8350_power.c b/drivers/power/supply/wm8350_power.c
-index f23b4f5343bc1..9b0010b28cafc 100644
---- a/drivers/power/supply/wm8350_power.c
-+++ b/drivers/power/supply/wm8350_power.c
-@@ -540,22 +540,17 @@ static int wm8350_power_probe(struct platform_device *pdev)
- 	struct wm8350_charger_policy *policy = power->policy;
- 	int ret;
+diff --git a/drivers/power/supply/twl4030_madc_battery.c b/drivers/power/supply/twl4030_madc_battery.c
+index 33106476bea2c..cd9e94134ab21 100644
+--- a/drivers/power/supply/twl4030_madc_battery.c
++++ b/drivers/power/supply/twl4030_madc_battery.c
+@@ -188,30 +188,23 @@ static int twl4030_madc_battery_probe(struct platform_device *pdev)
+ 	struct twl4030_madc_battery *twl4030_madc_bat;
+ 	struct twl4030_madc_bat_platform_data *pdata = pdev->dev.platform_data;
+ 	struct power_supply_config psy_cfg = {};
+-	int ret = 0;
  
--	power->ac = power_supply_register(&pdev->dev, &wm8350_ac_desc, NULL);
-+	power->ac = devm_power_supply_register(&pdev->dev, &wm8350_ac_desc, NULL);
- 	if (IS_ERR(power->ac))
- 		return PTR_ERR(power->ac);
+ 	twl4030_madc_bat = devm_kzalloc(&pdev->dev, sizeof(*twl4030_madc_bat),
+ 				GFP_KERNEL);
+ 	if (!twl4030_madc_bat)
+ 		return -ENOMEM;
  
--	power->battery = power_supply_register(&pdev->dev, &wm8350_battery_desc,
--					       NULL);
--	if (IS_ERR(power->battery)) {
--		ret = PTR_ERR(power->battery);
--		goto battery_failed;
+-	twl4030_madc_bat->channel_temp = iio_channel_get(&pdev->dev, "temp");
+-	if (IS_ERR(twl4030_madc_bat->channel_temp)) {
+-		ret = PTR_ERR(twl4030_madc_bat->channel_temp);
+-		goto err;
 -	}
-+	power->battery = devm_power_supply_register(&pdev->dev, &wm8350_battery_desc, NULL);
-+	if (IS_ERR(power->battery))
-+		return PTR_ERR(power->battery);
++	twl4030_madc_bat->channel_temp = devm_iio_channel_get(&pdev->dev, "temp");
++	if (IS_ERR(twl4030_madc_bat->channel_temp))
++		return PTR_ERR(twl4030_madc_bat->channel_temp);
  
--	power->usb = power_supply_register(&pdev->dev, &wm8350_usb_desc, NULL);
--	if (IS_ERR(power->usb)) {
--		ret = PTR_ERR(power->usb);
--		goto usb_failed;
+-	twl4030_madc_bat->channel_ichg = iio_channel_get(&pdev->dev, "ichg");
+-	if (IS_ERR(twl4030_madc_bat->channel_ichg)) {
+-		ret = PTR_ERR(twl4030_madc_bat->channel_ichg);
+-		goto err_temp;
 -	}
-+	power->usb = devm_power_supply_register(&pdev->dev, &wm8350_usb_desc, NULL);
-+	if (IS_ERR(power->usb))
-+		return PTR_ERR(power->usb);
++	twl4030_madc_bat->channel_ichg = devm_iio_channel_get(&pdev->dev, "ichg");
++	if (IS_ERR(twl4030_madc_bat->channel_ichg))
++		return PTR_ERR(twl4030_madc_bat->channel_ichg);
  
- 	ret = device_create_file(&pdev->dev, &dev_attr_charger_state);
- 	if (ret < 0)
-@@ -569,13 +564,6 @@ static int wm8350_power_probe(struct platform_device *pdev)
- 		wm8350_reg_lock(wm8350);
- 	}
+-	twl4030_madc_bat->channel_vbat = iio_channel_get(&pdev->dev, "vbat");
+-	if (IS_ERR(twl4030_madc_bat->channel_vbat)) {
+-		ret = PTR_ERR(twl4030_madc_bat->channel_vbat);
+-		goto err_ichg;
+-	}
++	twl4030_madc_bat->channel_vbat = devm_iio_channel_get(&pdev->dev, "vbat");
++	if (IS_ERR(twl4030_madc_bat->channel_vbat))
++		return PTR_ERR(twl4030_madc_bat->channel_vbat);
  
+ 	/* sort charging and discharging calibration data */
+ 	sort(pdata->charging, pdata->charging_size,
+@@ -227,21 +220,10 @@ static int twl4030_madc_battery_probe(struct platform_device *pdev)
+ 	twl4030_madc_bat->psy = power_supply_register(&pdev->dev,
+ 						      &twl4030_madc_bat_desc,
+ 						      &psy_cfg);
+-	if (IS_ERR(twl4030_madc_bat->psy)) {
+-		ret = PTR_ERR(twl4030_madc_bat->psy);
+-		goto err_vbat;
+-	}
++	if (IS_ERR(twl4030_madc_bat->psy))
++		return PTR_ERR(twl4030_madc_bat->psy);
+ 
+ 	return 0;
+-
+-err_vbat:
+-	iio_channel_release(twl4030_madc_bat->channel_vbat);
+-err_ichg:
+-	iio_channel_release(twl4030_madc_bat->channel_ichg);
+-err_temp:
+-	iio_channel_release(twl4030_madc_bat->channel_temp);
+-err:
 -	return ret;
--
--usb_failed:
--	power_supply_unregister(power->battery);
--battery_failed:
--	power_supply_unregister(power->ac);
--
- 	return ret;
  }
  
-@@ -586,9 +574,6 @@ static void wm8350_power_remove(struct platform_device *pdev)
+ static void twl4030_madc_battery_remove(struct platform_device *pdev)
+@@ -249,10 +231,6 @@ static void twl4030_madc_battery_remove(struct platform_device *pdev)
+ 	struct twl4030_madc_battery *bat = platform_get_drvdata(pdev);
  
- 	free_charger_irq(wm8350);
- 	device_remove_file(&pdev->dev, &dev_attr_charger_state);
--	power_supply_unregister(power->battery);
--	power_supply_unregister(power->ac);
--	power_supply_unregister(power->usb);
+ 	power_supply_unregister(bat->psy);
+-
+-	iio_channel_release(bat->channel_vbat);
+-	iio_channel_release(bat->channel_ichg);
+-	iio_channel_release(bat->channel_temp);
  }
  
- static struct platform_driver wm8350_power_driver = {
+ static struct platform_driver twl4030_madc_battery_driver = {
 -- 
 2.39.2
 
