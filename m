@@ -1,107 +1,178 @@
-Received: from wout5-smtp.messagingengine.com (wout5-smtp.messagingengine.com [64.147.123.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B738B524C1;
-	Tue, 23 Jan 2024 07:42:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBD7F55E5F
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 07:42:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705995738; cv=none; b=utRpUWO72Vo0LSog4nRPs6L4VNLRAS3YtjgXTeVUbRkGPawKvd7wlhyFZka6uC5mNynR7II5A14l2KVDAo/C9/nTpvn71qDXGA0BFiProDsVPBAcA6vJ74Hhwd88CxnjkvAeZagH1/DH+EQ4/JpLs9iTmDv+7E/hCy/FK+YCgqg=
+	t=1705995750; cv=none; b=jlkW95wTQo3rgTfSOep0Ji+4eenpIyRe4pazLULUNbcHosjT+wnqrtDUasRL0xqTSE2OnzG6Z6/J/PaOsdg9HCfQw5RvbWXeVyHlaErA+/31J4V6DApMaKTRL2DUUfSD1OvbAaYsxrCEQVA7q+WskZzLeZ6VVO5bI3b9pN19bTc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705995738; c=relaxed/simple;
-	bh=N3TW6zn4ZfdYvjpm3OAQvfUfaRC4b/dOkQACq0ilcGg=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=m+cHmIWggsCrVPJPI5fMj4O/ejmCxvcgi4PmVJBdVOV221ARDwZSaqh179OHu91oA6qu+eh5L4tJK+TVz5SPPCWbA5nEnBlD7PDMYfjwJmO6HFr7DXq8IoijikDZPVTDiwjKUYxz6JuyvZjDreQJenmbYQ9HRYOEABpk5tQ6daE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=ETPCV5Db; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=X43E6IJx; arc=none smtp.client-ip=64.147.123.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1705995750; c=relaxed/simple;
+	bh=JWKLpEnUqbZPxWxBgUXtsoZIxn9SZGbGJYV7gU8Siew=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=RQM5qNGYWFKdbeWZTdT8XKwqGK7Co13DjUiiKFycwkOLfP919VCq8KnNKttDtgMBSTS8ycSu6bjncEbdnXBRtzpngKeGWCorXjl5xC2TP2MMKn3s6l6D3AFlBo2NOWYwFEvhdY82bnlNB9RTWa9vebG7MWNz+hJR+nrhPQfm3Hw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=fkCZcliv; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="ETPCV5Db";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="X43E6IJx"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailout.west.internal (Postfix) with ESMTP id 22A333200A11;
-	Tue, 23 Jan 2024 02:42:14 -0500 (EST)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Tue, 23 Jan 2024 02:42:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm2; t=1705995733; x=1706082133; bh=RoP6Oowyfa
-	kcL2hCR2YmRvMj2I53sJwl/XC2owMPac4=; b=ETPCV5Dbvaeiax1xIxSYocns3z
-	Sv5dnbBStOh30fCXi9YTp6OhRR/8oQbH53ssci+0ajDOv9MpXl7Urx4TQ5z5WTP+
-	7RfUhlBwgppuA6oMMYsbS8OCesggLNal0grGiVkyWrejPwemaQLZFklXHjSIdnnm
-	UAEj/X48dLFJaTy+uS09RGys0Q9IqmZZaqR63qgrvmhwW5W2VWpTPilguU9+agfT
-	lbGPoC7uOmS3Bjq4B29QBNpOTnaewG4mVb90MwOUWUh5En9OUdAWT+6gL3ya8AjY
-	8BhQHivSTigUMPk6ER+BOi1klO7JuhCPUngfGx/KD1dr5H4z0MJ9dsLC9AOw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm3; t=1705995733; x=1706082133; bh=RoP6OowyfakcL2hCR2YmRvMj2I53
-	sJwl/XC2owMPac4=; b=X43E6IJxmuP7RoKL7P4ADximZCFFUKgVGHB9Ke1wYWfO
-	v3rQcfUwcttBJP34M2pfj73EBOoSmq59lV7uW954tHxanXsAL3pqLMIEi68QrBr8
-	sX5No5GAnnEjhDAtOAWk6XOZClCeZBr5lKmh8V9GqGNjjmWMiwNoUoO8IJW5oG7o
-	C5fKXfaWFyh7k9R1MgTTp8ujfDmCvmEo2pTas4cudaWngXa2skpel6rIinLQd3o+
-	Np7y6IgBN/x+nBKImgbHJ9oN5xqpE2Lu3DMxsxgmKDrffXlpG7oXTCIZPuAIf4gx
-	S6z6TPX/IUTTIjrAahvJ5fqGDncICiGgpuiQDHr/+Q==
-X-ME-Sender: <xms:1G2vZcRGCSzpE1Y4IqXgsIa5YItPYcO9LnUYmTq6AU1xbdyeUY_FDQ>
-    <xme:1G2vZZxVLZJ_nYm4er2bEp7JwJBMya50VXPKoTalMakwVK_DDimYHO_yV5MRs6fK-
-    njZkltXrh7tBEUIHBk>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrvdekjedguddtkecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdet
-    rhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrg
-    htthgvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedt
-    keetffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
-    grrhhnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:1G2vZZ3zZyNWaat5GwzQwwZaPQ6Gm0FF6GDhTGAw0YWcNgXSsxss7g>
-    <xmx:1G2vZQA0wXdtGG9httF2Uhdk6ulIyiVs6UTP7phZB-Kcx9B7KITgsw>
-    <xmx:1G2vZVjoPr4Kw7Cq-p5Q_S-SXt1MKCo55A8G7WDe-yDyNXc6gOJVYw>
-    <xmx:1W2vZeZgAhE6DwDrqYPlFJEBH85HlU1kpBIPF16VUyJLGlZFFKz4Ag>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id A1E39B6008F; Tue, 23 Jan 2024 02:42:12 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-119-ga8b98d1bd8-fm-20240108.001-ga8b98d1b
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="fkCZcliv"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1d76943baafso6715355ad.2
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 23:42:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1705995747; x=1706600547; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:references:cc:to:from
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=BK2huOGh+t33JPuoLKMJUqKIMCs44dBRDK1GJoZeQVw=;
+        b=fkCZclivyEH5xMZDSd+9Qg02T8bqubD8E9GJXOZt1nh8CFcOxVQKubwjjfaa17X54X
+         UgS4FImmiYBKc3SF+j/67uLczz2/R2SJGa9X2+oWJvwzNRhEFZwzZXLVGJc5d3nXosxT
+         iItA//pPkV9sVdOu24pfSrxXsZ79+tJasIjiuVX3Q01zKDkGHyQ8JYuSKpLIpZg+YLQj
+         JEjlNtPUJR/KetxGFn0cTnsUzztmwml0bEi2VIOLFxBf2dRryIZmRDmiVVehYDWEjAkn
+         ENOiVpRJ/wxXJoIroq5UFMFBWWq5ZvP4ZxLuSgNVmzhmL5jSSRV0ascKmUq90BjBJEyi
+         SQfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705995747; x=1706600547;
+        h=content-transfer-encoding:in-reply-to:references:cc:to:from
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=BK2huOGh+t33JPuoLKMJUqKIMCs44dBRDK1GJoZeQVw=;
+        b=sWItOtzRf9euNALs5pdroSozq6nt9dH3JYgSUVNM8RkZyqqETW24Mg3jaUyK0YJ6K7
+         6dADKhghY0cNRayMLqB0uMyFURrKrEy0AbKPBx+sQH+lsWzOaoWv5cFQ789rLBjaprUd
+         +3CgDDDckNErTtclLwLedXrxapd5jQVj9pViaKGTBjrT6Qb8zShScg8QYraw7/oR8tgA
+         wdnoBFmv0bTQ5lpM4Sq4EaLKSmTcja1izTkk2FIzds9/3kZoFboPJnjtgUmxTxZQ4BNI
+         m5Nbqb9Ao7xUIYLfu15SUEpMyvjtfRiFEPbgxTl9E/0RQU+bqdV4UA6yw+a71eCJhBri
+         f6YA==
+X-Gm-Message-State: AOJu0YzGDtqm8Mk3Ufd2gU7+LakCo746RjUhFUtnmNxSTeTHcqUujqEK
+	O+iGXeOivZioOLiZs409FKeAdDv7vHZsExP7wZYeYwCklIaK2/Xtt1EJUjTFOM4=
+X-Google-Smtp-Source: AGHT+IHxb4Zz1UaqZF9UTqtvSFYoUuEyJgTb83dg9wT/SQjaDQYa4BnE+Ec98fgQ1hXH8yfou4pE4w==
+X-Received: by 2002:a17:903:22c9:b0:1d6:f139:cc20 with SMTP id y9-20020a17090322c900b001d6f139cc20mr3893200plg.32.1705995747019;
+        Mon, 22 Jan 2024 23:42:27 -0800 (PST)
+Received: from [10.254.236.83] ([139.177.225.255])
+        by smtp.gmail.com with ESMTPSA id h16-20020a170902ac9000b001d76ac29241sm883624plr.59.2024.01.22.23.42.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 22 Jan 2024 23:42:26 -0800 (PST)
+Message-ID: <78e8ea43-9d22-46ab-82c2-c6883d545772@bytedance.com>
+Date: Tue, 23 Jan 2024 15:42:20 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <da24d929-408c-4ce9-9f84-4b2e73e3f107@app.fastmail.com>
-In-Reply-To: <20240122225710.1952066-10-peter.griffin@linaro.org>
-References: <20240122225710.1952066-1-peter.griffin@linaro.org>
- <20240122225710.1952066-10-peter.griffin@linaro.org>
-Date: Tue, 23 Jan 2024 08:41:52 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Peter Griffin" <peter.griffin@linaro.org>,
- "Rob Herring" <robh+dt@kernel.org>, krzysztof.kozlowski+dt@linaro.org,
- "Guenter Roeck" <linux@roeck-us.net>,
- "Wim Van Sebroeck" <wim@linux-watchdog.org>,
- "Conor Dooley" <conor+dt@kernel.org>,
- "Alim Akhtar" <alim.akhtar@samsung.com>, jaewon02.kim@samsung.com,
- chanho61.park@samsung.com, "Sam Protsenko" <semen.protsenko@linaro.org>
-Cc: kernel-team@android.com, "Tudor Ambarus" <tudor.ambarus@linaro.org>,
- =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>,
- saravanak@google.com, "William McVicker" <willmcvicker@google.com>,
- linux-fsd@tesla.com, linux-watchdog@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
-Subject: Re: [PATCH 9/9] ARM: dts: exynos5250: remove deprecated samsung,syscon-phandle
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] mm/slub: directly load freelist from cpu partial slab
+ in the likely case
+Content-Language: en-US
+From: Chengming Zhou <zhouchengming@bytedance.com>
+To: Vlastimil Babka <vbabka@suse.cz>,
+ "Christoph Lameter (Ampere)" <cl@linux.com>
+Cc: Hyeonggon Yoo <42.hyeyoo@gmail.com>, Joonsoo Kim
+ <iamjoonsoo.kim@lge.com>, Pekka Enberg <penberg@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Roman Gushchin <roman.gushchin@linux.dev>,
+ David Rientjes <rientjes@google.com>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org
+References: <20240117-slab-misc-v1-0-fd1c49ccbe70@bytedance.com>
+ <20240117-slab-misc-v1-1-fd1c49ccbe70@bytedance.com>
+ <76641777-1918-2b29-b6aa-bda9b5467aa3@gentwo.org>
+ <412b8618-0941-4d9d-85df-ee480695e7f7@bytedance.com>
+ <a2132c63-99a5-7fa2-9f2a-cccf6b40fe9e@linux.com>
+ <e81d914b-8718-4dbb-a2d8-d5298fe66d1a@bytedance.com>
+ <ac0ce290-58a7-42b2-a7e4-72e241717c63@suse.cz>
+ <36964450-f45a-4f35-a187-dc493246ef59@bytedance.com>
+In-Reply-To: <36964450-f45a-4f35-a187-dc493246ef59@bytedance.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jan 22, 2024, at 23:57, Peter Griffin wrote:
-> samsung,syscon-phandle is no longer used by the Samsung watchdog driver
-> to access PMU registers.
->
-> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+On 2024/1/23 10:51, Chengming Zhou wrote:
+> On 2024/1/23 01:13, Vlastimil Babka wrote:
+>> On 1/19/24 04:53, Chengming Zhou wrote:
+>>> On 2024/1/19 06:14, Christoph Lameter (Ampere) wrote:
+>>>> On Thu, 18 Jan 2024, Chengming Zhou wrote:
+>>>>
+>>>>> So get_freelist() has two cases to handle: cpu slab and cpu partial list slab.
+>>>>> The latter is NOT frozen, so need to remove "VM_BUG_ON(!new.frozen)" from it.
+>>>>
+>>>> Right so keep the check if it is the former?
+>>>>
+>>>
+>>> Ok, I get it. Maybe like this:
+>>
+>> I think that's just too ugly for a VM_BUG_ON(). I'd just remove the check
+>> and be done with that.
+> 
+> Ok with me.
+> 
+>>
+>> I have a somewhat different point. You reused get_freelist() but in fact
+>> it's more like freeze_slab(), but that one uses slab_update_freelist() and
+>> we are under the local_lock so we want the cheaper __slab_update_freelist(),
+>> which get_freelist() has and I guess that's why you reused that one.
+> 
+> Right, we already have the lock_lock, so reuse get_freelist().
+> 
+>>
+>> However get_freelist() also assumes it can return NULL if the freelist is
+>> empty. If that's possible to happen on the percpu partial list, we should
+>> not "goto load_freelist;" but rather create a new label above that, above
+>> the "if (!freelist) {" block that handles the case.
+>>
+>> If that's not possible to happen (needs careful audit) and we have guarantee
+> 
+> Yes, it's not possible for now.
+> 
+>> that slabs on percpu partial list must have non-empty freelist, then we
+>> probably instead want a new __freeze_slab() variant that is like
+>> freeze_slab(), but uses __slab_update_freelist() and probably also has
+>> VM_BUG_ON(!freelist) before returning it?
+>>
+> 
+> Instead of introducing another new function, how about still reusing get_freelist()
+> and VM_BUG_ON(!freelist) after calling it? I feel this is simpler.
+> 
+> Thanks!
 
-Can you mention the driver commit that led to the property no
-longer being required? Since this change would break compatibility
-with older kernels, I would want to make sure that at least a
-couple of years have passed since then to give users an upgrade
-path.
+Does this look fine?
 
-      Arnd
+diff --git a/mm/slub.c b/mm/slub.c
+index 2ef88bbf56a3..fda402b2d649 100644
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -3326,7 +3326,6 @@ static inline void *get_freelist(struct kmem_cache *s, struct slab *slab)
+                counters = slab->counters;
+
+                new.counters = counters;
+-               VM_BUG_ON(!new.frozen);
+
+                new.inuse = slab->objects;
+                new.frozen = freelist != NULL;
+@@ -3498,18 +3497,20 @@ static void *___slab_alloc(struct kmem_cache *s, gfp_t gfpflags, int node,
+
+                slab = slub_percpu_partial(c);
+                slub_set_percpu_partial(c, slab);
+-               local_unlock_irqrestore(&s->cpu_slab->lock, flags);
+-               stat(s, CPU_PARTIAL_ALLOC);
+
+-               if (unlikely(!node_match(slab, node) ||
+-                            !pfmemalloc_match(slab, gfpflags))) {
+-                       slab->next = NULL;
+-                       __put_partials(s, slab);
+-                       continue;
++               if (likely(node_match(slab, node) &&
++                          pfmemalloc_match(slab, gfpflags))) {
++                       c->slab = slab;
++                       freelist = get_freelist(s, slab);
++                       VM_BUG_ON(!freelist);
++                       stat(s, CPU_PARTIAL_ALLOC);
++                       goto load_freelist;
+                }
+
+-               freelist = freeze_slab(s, slab);
+-               goto retry_load_slab;
++               local_unlock_irqrestore(&s->cpu_slab->lock, flags);
++
++               slab->next = NULL;
++               __put_partials(s, slab);
+        }
+ #endif
+
