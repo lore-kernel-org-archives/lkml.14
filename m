@@ -1,40 +1,41 @@
-Received: from aposti.net (aposti.net [89.234.176.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C29459B64;
-	Tue, 23 Jan 2024 10:43:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.234.176.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50C045C8E4;
+	Tue, 23 Jan 2024 10:43:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706006595; cv=none; b=CaK3Y9lseJfDWVNjO/wIzlfBHowPy8L+ihH1oeWrCQc+rI7gYjecQMb9sn5dMMUBUx6AE8AkNzheI+lwdsSltMw+0E091cQBs+GKUC6FMjtjWys3s5S34XvjBSygvQOJ92YZC1hy2I3ZwFFx84rbWNiPH2Uq1yRNMsDtciaNxjs=
+	t=1706006623; cv=none; b=dyLm8iyM/D31isPdegCWWeuOZ6A+FoSxQI6S+bHFF4DjJXzvFBPRBvxEnGUTQCCBnkW55Clf/zMm8s1Q1FA5d9IepSwM99KpaqkHp8FbSMGLE7JO1fXdtXaWN5t3plJ5axpTtHKCWx5wen2zbWkhQ+OsGMFBe9fj3HpCyeDrByE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706006595; c=relaxed/simple;
-	bh=jYQ6Xv2AW3WuEU9RW+PvztluEcow2glWwD06WlcJ0aU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EDnzSG6k4TfkGOKKerrTBEM3v8fYaoUzMkk4rv8Wt1GLYy0yH+qwUkt4YNtnZ+rl2qKLKSgOEtrl7noRiYXFT4ubCClA/F1A+FImRPECE5x1w0Rq+4ji5N+8u97kwmBzWpGNSxrNC74nJF9V0VA4EUPV7LZymlBfWXxLk4LavZg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=crapouillou.net; spf=pass smtp.mailfrom=crapouillou.net; dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b=k+Dhaxbr; arc=none smtp.client-ip=89.234.176.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=crapouillou.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crapouillou.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="k+Dhaxbr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-	s=mail; t=1706006591;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=q53mcc9cShf3bZyxlCnOlEd1xHk0CToCbzGmhqgBkTs=;
-	b=k+Dhaxbrow+HPm91RqOGceg7kIrlMFfxc5gyN247fQ4SSo2bZ3HdW13bxv1DqAXWXOF6pu
-	AJxODZpFDOnIVA6dG8WsztojPxfIXqb8UZLnoUTvEVEwRwNOOI+o7P7VMyybAm/ce3l3OI
-	25VAHK7iXB6gK80K721a5ZNAEmPges0=
-From: Paul Cercueil <paul@crapouillou.net>
-To: Jonathan Cameron <jic23@kernel.org>,
-	Javier Carrasco <javier.carrasco.cruz@gmail.com>,
-	Lars-Peter Clausen <lars@metafoo.de>
-Cc: Nuno Sa <nuno.sa@analog.com>,
-	linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH] Revert "iio: add modifiers for A and B ultraviolet light"
-Date: Tue, 23 Jan 2024 11:43:05 +0100
-Message-ID: <20240123104305.10881-1-paul@crapouillou.net>
+	s=arc-20240116; t=1706006623; c=relaxed/simple;
+	bh=vzNLwrmmYhN7STFc+TXskif/GgqEExZ6ensAP1JUYjQ=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ISNXDRCgHf4uL/CgSigLvP/qM+s4j5bb+36Efv2V7lLP9/iw95GapWAJiXOupAaY83OQODAJ6ceoWG9VYH4iJIAehYUL6D4QplXePuGOmNp9nMVZWi+Zh+buH6HyYIxB7lHfVFk+fgO7AahZppsEQIrhp2hTw3i7VfLpFTISQxQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.17])
+	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4TK3YR5zBhz1Q89Q;
+	Tue, 23 Jan 2024 18:41:47 +0800 (CST)
+Received: from dggpemm500005.china.huawei.com (unknown [7.185.36.74])
+	by mail.maildlp.com (Postfix) with ESMTPS id 92A341A0172;
+	Tue, 23 Jan 2024 18:43:31 +0800 (CST)
+Received: from localhost.localdomain (10.69.192.56) by
+ dggpemm500005.china.huawei.com (7.185.36.74) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 23 Jan 2024 18:43:31 +0800
+From: Yunsheng Lin <linyunsheng@huawei.com>
+To: <davem@davemloft.net>, <kuba@kernel.org>, <pabeni@redhat.com>
+CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Yunsheng Lin
+	<linyunsheng@huawei.com>, Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Alexei
+ Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, Jesper
+ Dangaard Brouer <hawk@kernel.org>, John Fastabend <john.fastabend@gmail.com>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-mediatek@lists.infradead.org>,
+	<bpf@vger.kernel.org>
+Subject: [PATCH net-next v3 0/5] remove page frag implementation in vhost_net
+Date: Tue, 23 Jan 2024 18:42:45 +0800
+Message-ID: <20240123104250.9103-1-linyunsheng@huawei.com>
+X-Mailer: git-send-email 2.33.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,87 +43,107 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam: Yes
+Content-Type: text/plain
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ dggpemm500005.china.huawei.com (7.185.36.74)
 
-This reverts
-b89710bd215e ("iio: add modifiers for A and B ultraviolet light")
+Currently there are three implementations for page frag:
 
-Enum iio_modifer is *ABI*, you can't just decide to change all the
-values from one version to another, otherwise you break userspace.
-The new entries should have been added to the end of the enum.
+1. mm/page_alloc.c: net stack seems to be using it in the
+   rx part with 'struct page_frag_cache' and the main API
+   being page_frag_alloc_align().
+2. net/core/sock.c: net stack seems to be using it in the
+   tx part with 'struct page_frag' and the main API being
+   skb_page_frag_refill().
+3. drivers/vhost/net.c: vhost seems to be using it to build
+   xdp frame, and it's implementation seems to be a mix of
+   the above two.
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
----
- Documentation/ABI/testing/sysfs-bus-iio | 7 ++-----
- drivers/iio/industrialio-core.c         | 2 --
- include/uapi/linux/iio/types.h          | 2 --
- tools/iio/iio_event_monitor.c           | 2 --
- 4 files changed, 2 insertions(+), 11 deletions(-)
+This patchset tries to unfiy the page frag implementation a
+little bit by unifying gfp bit for order 3 page allocation
+and replacing page frag implementation in vhost.c with the
+one in page_alloc.c.
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
-index 2e6d5ebfd3c7..7937bb4a4a68 100644
---- a/Documentation/ABI/testing/sysfs-bus-iio
-+++ b/Documentation/ABI/testing/sysfs-bus-iio
-@@ -1587,8 +1587,6 @@ What:		/sys/.../iio:deviceX/in_intensityY_raw
- What:		/sys/.../iio:deviceX/in_intensityY_ir_raw
- What:		/sys/.../iio:deviceX/in_intensityY_both_raw
- What:		/sys/.../iio:deviceX/in_intensityY_uv_raw
--What:		/sys/.../iio:deviceX/in_intensityY_uva_raw
--What:		/sys/.../iio:deviceX/in_intensityY_uvb_raw
- What:		/sys/.../iio:deviceX/in_intensityY_duv_raw
- KernelVersion:	3.4
- Contact:	linux-iio@vger.kernel.org
-@@ -1597,9 +1595,8 @@ Description:
- 		that measurements contain visible and infrared light
- 		components or just infrared light, respectively. Modifier
- 		uv indicates that measurements contain ultraviolet light
--		components. Modifiers uva, uvb and duv indicate that
--		measurements contain A, B or deep (C) ultraviolet light
--		components respectively.
-+		components. Modifier duv indicates that measurements
-+		contain deep ultraviolet light components.
- 
- What:		/sys/.../iio:deviceX/in_uvindex_input
- KernelVersion:	4.6
-diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
-index 9a85752124dd..bce09d325142 100644
---- a/drivers/iio/industrialio-core.c
-+++ b/drivers/iio/industrialio-core.c
-@@ -117,8 +117,6 @@ static const char * const iio_modifier_names[] = {
- 	[IIO_MOD_LIGHT_GREEN] = "green",
- 	[IIO_MOD_LIGHT_BLUE] = "blue",
- 	[IIO_MOD_LIGHT_UV] = "uv",
--	[IIO_MOD_LIGHT_UVA] = "uva",
--	[IIO_MOD_LIGHT_UVB] = "uvb",
- 	[IIO_MOD_LIGHT_DUV] = "duv",
- 	[IIO_MOD_QUATERNION] = "quaternion",
- 	[IIO_MOD_TEMP_AMBIENT] = "ambient",
-diff --git a/include/uapi/linux/iio/types.h b/include/uapi/linux/iio/types.h
-index 5060963707b1..9c2ffdcd6623 100644
---- a/include/uapi/linux/iio/types.h
-+++ b/include/uapi/linux/iio/types.h
-@@ -91,8 +91,6 @@ enum iio_modifier {
- 	IIO_MOD_CO2,
- 	IIO_MOD_VOC,
- 	IIO_MOD_LIGHT_UV,
--	IIO_MOD_LIGHT_UVA,
--	IIO_MOD_LIGHT_UVB,
- 	IIO_MOD_LIGHT_DUV,
- 	IIO_MOD_PM1,
- 	IIO_MOD_PM2P5,
-diff --git a/tools/iio/iio_event_monitor.c b/tools/iio/iio_event_monitor.c
-index 8073c9e4fe46..2eaaa7123b04 100644
---- a/tools/iio/iio_event_monitor.c
-+++ b/tools/iio/iio_event_monitor.c
-@@ -105,8 +105,6 @@ static const char * const iio_modifier_names[] = {
- 	[IIO_MOD_LIGHT_GREEN] = "green",
- 	[IIO_MOD_LIGHT_BLUE] = "blue",
- 	[IIO_MOD_LIGHT_UV] = "uv",
--	[IIO_MOD_LIGHT_UVA] = "uva",
--	[IIO_MOD_LIGHT_UVB] = "uvb",
- 	[IIO_MOD_LIGHT_DUV] = "duv",
- 	[IIO_MOD_QUATERNION] = "quaternion",
- 	[IIO_MOD_TEMP_AMBIENT] = "ambient",
+After this patchset, we are not only able to unify the page
+frag implementation a little, but also able to have about
+0.5% performance boost testing by using the vhost_net_test
+introduced in the last patch.
+
+Before this patchset:
+Performance counter stats for './vhost_net_test' (10 runs):
+
+     305325.78 msec task-clock                       #    1.738 CPUs utilized               ( +-  0.12% )
+       1048668      context-switches                 #    3.435 K/sec                       ( +-  0.00% )
+            11      cpu-migrations                   #    0.036 /sec                        ( +- 17.64% )
+            33      page-faults                      #    0.108 /sec                        ( +-  0.49% )
+  244651819491      cycles                           #    0.801 GHz                         ( +-  0.43% )  (64)
+   64714638024      stalled-cycles-frontend          #   26.45% frontend cycles idle        ( +-  2.19% )  (67)
+   30774313491      stalled-cycles-backend           #   12.58% backend cycles idle         ( +-  7.68% )  (70)
+  201749748680      instructions                     #    0.82  insn per cycle
+                                              #    0.32  stalled cycles per insn     ( +-  0.41% )  (66.76%)
+   65494787909      branches                         #  214.508 M/sec                       ( +-  0.35% )  (64)
+    4284111313      branch-misses                    #    6.54% of all branches             ( +-  0.45% )  (66)
+
+       175.699 +- 0.189 seconds time elapsed  ( +-  0.11% )
+
+
+After this patchset:
+Performance counter stats for './vhost_net_test' (10 runs):
+
+     303974.38 msec task-clock                       #    1.739 CPUs utilized               ( +-  0.14% )
+       1048807      context-switches                 #    3.450 K/sec                       ( +-  0.00% )
+            14      cpu-migrations                   #    0.046 /sec                        ( +- 12.86% )
+            33      page-faults                      #    0.109 /sec                        ( +-  0.46% )
+  251289376347      cycles                           #    0.827 GHz                         ( +-  0.32% )  (60)
+   67885175415      stalled-cycles-frontend          #   27.01% frontend cycles idle        ( +-  0.48% )  (63)
+   27809282600      stalled-cycles-backend           #   11.07% backend cycles idle         ( +-  0.36% )  (71)
+  195543234672      instructions                     #    0.78  insn per cycle
+                                              #    0.35  stalled cycles per insn     ( +-  0.29% )  (69.04%)
+   62423183552      branches                         #  205.357 M/sec                       ( +-  0.48% )  (67)
+    4135666632      branch-misses                    #    6.63% of all branches             ( +-  0.63% )  (67)
+
+       174.764 +- 0.214 seconds time elapsed  ( +-  0.12% )
+
+Changelog:
+V3:
+1. Add __page_frag_alloc_align() which is passed with the align mask
+   the original function expected as suggested by Alexander.
+2. Drop patch 3 in v2 suggested by Alexander.
+3. Reorder patch 4 & 5 in v2 suggested by Alexander.
+
+Note that placing this gfp flags handing for order 3 page in an inline
+function is not considered, as we may be able to unify the page_frag
+and page_frag_cache handling.
+
+V2: Change 'xor'd' to 'masked off', add vhost tx testing for
+    vhost_net_test.
+
+V1: Fix some typo, drop RFC tag and rebase on latest net-next.
+
+
+Yunsheng Lin (5):
+  mm/page_alloc: modify page_frag_alloc_align() to accept align as an
+    argument
+  page_frag: unify gfp bits for order 3 page allocation
+  net: introduce page_frag_cache_drain()
+  vhost/net: remove vhost_net_page_frag_refill()
+  tools: virtio: introduce vhost_net_test
+
+ drivers/net/ethernet/google/gve/gve_main.c |  11 +-
+ drivers/net/ethernet/mediatek/mtk_wed_wo.c |  17 +-
+ drivers/nvme/host/tcp.c                    |   7 +-
+ drivers/nvme/target/tcp.c                  |   4 +-
+ drivers/vhost/net.c                        |  91 +---
+ include/linux/gfp.h                        |  16 +-
+ mm/page_alloc.c                            |  22 +-
+ net/core/skbuff.c                          |   6 +-
+ net/core/sock.c                            |   2 +-
+ tools/virtio/.gitignore                    |   1 +
+ tools/virtio/Makefile                      |   8 +-
+ tools/virtio/vhost_net_test.c              | 576 +++++++++++++++++++++
+ 12 files changed, 647 insertions(+), 114 deletions(-)
+ create mode 100644 tools/virtio/vhost_net_test.c
+
 -- 
-2.43.0
+2.33.0
 
