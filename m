@@ -1,68 +1,67 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A69115FB34
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 00:36:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6B7315FB2D
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 00:36:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705970179; cv=none; b=Lmo8i4B3MNo+82QTcDwpdlQA27vEQUuClSNgATSI/eVeJlvEiREUFgWHYnO+Ov30HzuOkGVpMTWW3qrgSg66ckw1r2Mui8HzCUItmF2LwFme8rcJPX37UX2uTS/yLsQWo+2e9d0nGk2Ue61iCaOHnIvOlDxRZSHSi2uGrpIv9oI=
+	t=1705970179; cv=none; b=KNn1KWLQFvjLWNr7OEMuZGkum5kVQGEwyvfC3q2NUjqI5tI1cOplGnMW+vvLC79oaqvAVheP3ROpXHLNVLysGh4i06aPbwBfyUv7QLwRCiy53xV85EVpFcrAh3Y1n4QAjdyJxZwLO6ECuWBWxj4G0yCQKHt6fEt9HG8gNxZqaDY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1705970179; c=relaxed/simple;
-	bh=38q5dA08W/MDhiiAfLHBMjgxLmUPPANEZSbZB460/eg=;
+	bh=u012BkgUEdp0Yfa+JP9ayO0CuZmd0xQIxgTb0lW/0m0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=pt2SXoFImS1X8TpDuYKx0O5NRVZw23GNLCU6DOLX/3+nsloyzz+TLBeN+PbPlk+lohYpvJxQw3BoZULbLdTW1nOH4gmIrsc+JrWfkNJNfX8OJ97z41KZQP4CFlsFN7qh8pOnjink/Zs5y4X9CCJIYhChDeS8tsp8RZ1lhfknrgM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=iTHcGwC+; arc=none smtp.client-ip=209.85.214.182
+	 MIME-Version; b=ifj68nXXjWlHFxPXjCuoIbtNLPoN4nzZweE3cHq9Z2CePJfmzqftxBf6tZXV2d7Fr4S8vht5ZJqwPWpur9iOwTHDqHcqh3Vy74DCOBrngedicnOQtgquY67B0Im+JRb3bGNeJcOsqLlV6RcmPE1OXwuMv6fF3Cq28rZjJCOGHVg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=LArPicDy; arc=none smtp.client-ip=209.85.210.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iTHcGwC+"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1d71cb97937so21191365ad.3
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 16:36:18 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LArPicDy"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-6dbd65d3db6so1285455b3a.3
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 16:36:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google; t=1705970177; x=1706574977; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=0NeuRUk433ZNKdRiqKX8mhaA8jznwDCQBGOUrYcR3Zw=;
-        b=iTHcGwC+TxdH8wNfXLwBDKEVQDF89Cssi7u45AB0zh+smdib7LGaXLygjz0Z8mTWG/
-         xRou3eED4hvdmVeqOqGy1nyGA4SBGp2UfP0bpElZBo3tQSpUS+r8V8Udkjmh40t2MBQg
-         DRCb4cf28W5gBhnGrM0j6SDfw6XZlDl1w5QKg=
+        bh=MJHm0DC5rLzBB/eoWG0LMkWC0jMm/6XONFH952XC3EE=;
+        b=LArPicDyQhwwdWiK/B97sN/mCpmSi+kj7GgoQmLbwy+tvV3gCVURsxmdVU/80RnjRb
+         qoXG17CDmFrIPIbD7Czh6RhlN2ZUrNCfwwG9nA6detde4UND/PLOwvD46sw8ruw82XY8
+         bUybefWqTKq52Yz2tScwSKBf5C6FHFh14C5kY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1705970177; x=1706574977;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=0NeuRUk433ZNKdRiqKX8mhaA8jznwDCQBGOUrYcR3Zw=;
-        b=Ywcw7JkvxGwrp9qFGmXZXvX7YLVCa44GhL+Zw5O8u7az7FL/bSBfujkDsh1fwGujXj
-         NoWjW6XPk24MWBFcXT91oWa8GX7Zs4pzCYsuK5xog8fK0y8hRlkSH9+xslnah/suoJGz
-         kqDXBc288C0DaK/gOpvrBLOXFGdkFN/eZ3sFF2Wg53N1BcQs+aAOMcKVwWWWy9fzuKo9
-         v6k4CFAhQ28epUNaeIfrb2GgL45X5tJ3a944IRe3lmni3L7pXSlrs4jzpgyXD/fPFCfl
-         qvVE4zyRgKP0sev5vYm9WCa28mU9sk9Quqf1VpZ9LTf5bUClPA1Eaf4qAsKU7OuWqPu5
-         YT7A==
-X-Gm-Message-State: AOJu0Yyym0hxjmX30i1FWHRJgVpmr7/lMlQ7qtVMfdcjs+Xd8w3eBq7n
-	yc382I1URIw6P7lCOItWeEqO7gq4qqmb1yu9acGXpUFSPj5AuhUvGkS180eAvQ==
-X-Google-Smtp-Source: AGHT+IGzeIhLGStyUXkk+prqRHH7Hh0fJDcXpjpuBSpJSnr3lUskSGrUG6ndGqpvhP7k6BsWTy450Q==
-X-Received: by 2002:a17:902:e882:b0:1d7:600c:cc33 with SMTP id w2-20020a170902e88200b001d7600ccc33mr1403863plg.3.1705970177668;
+        bh=MJHm0DC5rLzBB/eoWG0LMkWC0jMm/6XONFH952XC3EE=;
+        b=IPmAOisSKl4OvdXGfEKYbBGtxC1l4RDSvCDG0y3ftywEQhTHddCwPnGpXPbPoWciw2
+         oLukwfHHqTGO7VbeA1XYiqdlGYhy6y3XTyxK29ft62dTATq7gR/+Ae0if2pGacgs6AhU
+         kMXykvqY/HhdyDvuodKMfKEL3Jqkg12efoT0DwtE694qsrmKI16UhRNVH5hWtXJLLwq5
+         jouA5s6Ui8HgacFzco9K9RO4VmXKS7ncNt/+Lo3KM6fzteT4Anhmw7NBGqfLLG8fDbZ6
+         OxxFroCQ5bi1vovAzMvlrjsLqWDehnD9nPhk2+4N1EWj/eH3tm+7dT8dlpWxxUrEGuNL
+         WSDw==
+X-Gm-Message-State: AOJu0YyNRiVYZ+qZ1+XbpKgvXcZRojTSGY2Qv643O7XIUBIz71CWVI4Z
+	G2qSHRHDkCEnsj+ewYNPi+cGOpxmAe0rKfhQf1qW6+CyfvE5jaUF7E3Tg0TzdQ==
+X-Google-Smtp-Source: AGHT+IF2jDWV0WLFADq1O4kywaaalWkhYddlxpOSZoqASjCeALQZwDVPUM/x899kva9FC18kpSJEpw==
+X-Received: by 2002:a05:6a00:1942:b0:6db:cd50:a579 with SMTP id s2-20020a056a00194200b006dbcd50a579mr2606158pfk.5.1705970177108;
         Mon, 22 Jan 2024 16:36:17 -0800 (PST)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id ky11-20020a170902f98b00b001d76ced199esm143464plb.31.2024.01.22.16.36.09
+        by smtp.gmail.com with ESMTPSA id c32-20020a631c20000000b005c259cef481sm8967545pgc.59.2024.01.22.16.36.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jan 2024 16:36:10 -0800 (PST)
+        Mon, 22 Jan 2024 16:36:09 -0800 (PST)
 From: Kees Cook <keescook@chromium.org>
 To: linux-hardening@vger.kernel.org
 Cc: Kees Cook <keescook@chromium.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Christoph Hellwig <hch@infradead.org>,
-	Lorenzo Stoakes <lstoakes@gmail.com>,
-	linux-mm@kvack.org,
+	Alasdair Kergon <agk@redhat.com>,
+	Mike Snitzer <snitzer@kernel.org>,
+	Mikulas Patocka <mpatocka@redhat.com>,
+	dm-devel@lists.linux.dev,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
 	Bill Wendling <morbo@google.com>,
 	Justin Stitt <justinstitt@google.com>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 33/82] mm/vmalloc: Refactor intentional wrap-around calculation
-Date: Mon, 22 Jan 2024 16:27:08 -0800
-Message-Id: <20240123002814.1396804-33-keescook@chromium.org>
+Subject: [PATCH 47/82] dm verity: Refactor intentional wrap-around test
+Date: Mon, 22 Jan 2024 16:27:22 -0800
+Message-Id: <20240123002814.1396804-47-keescook@chromium.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240122235208.work.748-kees@kernel.org>
 References: <20240122235208.work.748-kees@kernel.org>
@@ -72,19 +71,19 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2352; i=keescook@chromium.org;
- h=from:subject; bh=38q5dA08W/MDhiiAfLHBMjgxLmUPPANEZSbZB460/eg=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlrwgHVlKrqE6Nde4ZbwV5OP6txkBJRZom0feq8
- p5yVXsvnAKJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZa8IBwAKCRCJcvTf3G3A
- JmDjD/45jgwtrPqGoB+jlF1mDgiUg9Ze61xsHyqXZi5GyOp0rRLZfu6w2qW/aeqxQOzjPHho3hN
- L2/snj7oP3CEPVZ0AsZx5pNEw4AdCtJLMAqBMw8/yxliXAWWX8mdo3JSCpQSuGT0wNY3HEJ6m3l
- 767XUkSfXo0VMs7+zd9DD+QTPMbV8GiSHrIfuaQMWoFDTr2PGGuOkEJfKLkVm8xcx68Q3gXonHh
- HOulIEvVuQ1wZ/971AY053i6TtPwkVQwttgTrT2I7qKM1rpF4801pZ6otFPevs/V20afhyDicxd
- MYf8bStbkOH8rXCaMRPbidxMQjMXvYBiFsbP+mWpuT0JkM6pBI2LDqDlh8wSwQZgl8lebVhoHsE
- XK0CCEBLvbN+lIUob2oN9JnImaQHOqI3vVnVdhxbYb1UfWeyb+9l7M52MDTY2cu+v7FIrIQxQaT
- Fp3QVNpjmkPKha2+jQyIAdAzfh6eFs21bZ92fq1gfnflXD1g5DYntbs9alZUEupfryc0jVwHArb
- 5cG743scfNC8Ph2+PXR6mQ/CI27ccqmUA2og/teJ1KqdKi31qS5E4P+XgGkowzLSabVuBBnq6t5
- T8sabUmzoJL8AOtQMe0b06WPwGDOieCgh/OR6kZEHeys+Dj/7McgMk4ZPYPsu1HFh7LgL0n/nRL JTk2zIhWKJNoPYA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3422; i=keescook@chromium.org;
+ h=from:subject; bh=u012BkgUEdp0Yfa+JP9ayO0CuZmd0xQIxgTb0lW/0m0=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlrwgIOH/C9Swkckzh3c++V1FoaT4oWWLnIKzVK
+ 4ltn8zkF5aJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZa8ICAAKCRCJcvTf3G3A
+ JmvnD/0b+Rlt+XJZK9q9byfYiA6awzBQkEEBdvuff5J9TBXpg3VgQqKvmwtxq0KAQ9l//zFEftq
+ hIPzxFKu1d1NMiA9nNDx+HJTCSyH1/m6o1ipRM1kFQXmsc8kAnaTredMX/k7i+O/yDU5zs8Yrwm
+ N7WW1ES8SIb5ANGi0jjOb0JGh9skCpUIOrxFbdYxWZIXFcGqFCzk57dT+ht74zNglySj8BttvgK
+ XmZOnsrrgWyLqk7ssmfOEI92EsPIW21myf06U7/lm4hWRpna+zKlcZKj75+u+0rlIzY28aKGYKW
+ YWJbXs/QCIFQFggWFD9fYNWKihQV1A3L/SSiMr7A1rQkQN3CevDh915CdIBiZT1/qjWkPVZGNca
+ aFG8RuC9Z1b5/yyqFbSyqCHoheLU787NI9N+GEWF7LAdDjrRgus7+LULlmWpthe4XQY6o8tM2yQ
+ HnoYeb2w162/qgvyXNQtgW/EEfb5nFybzcjE86jAPwk7aIghD2qVVkrYEzfJTxxIXTAT5qZ8e64
+ /iVq6X5Ha8bMhMmO7r0gtwUMnTUbhz0zf19cYNJhkS/DY9vZphO38oEdVHuNLb/3vr7uLXNPJPj
+ GF3+/usmLgU4WSakssSLDGLybbl0j6oIUPgLtkWAuGxWgp6aTN6i1i6GIOnaySjbgvmOtm4wisg TnZZ4zy5rEgGyMA==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
@@ -102,51 +101,63 @@ instrument arithmetic wrap-around conditions and catch them when they
 are unexpected, regardless of whether they are signed[2], unsigned[3],
 or pointer[4] types.
 
-Refactor open-coded unsigned wrap-around addition test to use
-check_add_overflow(), retaining the result for later usage (which removes
-the redundant open-coded addition). This paves the way to enabling the
-unsigned wrap-around sanitizer[2] in the future.
+Refactor open-coded wrap-around addition test to use add_would_overflow().
+This paves the way to enabling the wrap-around sanitizers in the future.
 
 Link: https://git.kernel.org/linus/68df3755e383e6fecf2354a67b08f92f18536594 [1]
 Link: https://github.com/KSPP/linux/issues/26 [2]
 Link: https://github.com/KSPP/linux/issues/27 [3]
 Link: https://github.com/KSPP/linux/issues/344 [4]
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Uladzislau Rezki <urezki@gmail.com>
-Cc: Christoph Hellwig <hch@infradead.org>
-Cc: Lorenzo Stoakes <lstoakes@gmail.com>
-Cc: linux-mm@kvack.org
+Cc: Alasdair Kergon <agk@redhat.com>
+Cc: Mike Snitzer <snitzer@kernel.org>
+Cc: Mikulas Patocka <mpatocka@redhat.com>
+Cc: dm-devel@lists.linux.dev
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- mm/vmalloc.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/md/dm-switch.c        | 2 +-
+ drivers/md/dm-verity-target.c | 2 +-
+ drivers/md/dm-writecache.c    | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-index d12a17fc0c17..7932ac99e9d3 100644
---- a/mm/vmalloc.c
-+++ b/mm/vmalloc.c
-@@ -1223,6 +1223,7 @@ is_within_this_va(struct vmap_area *va, unsigned long size,
- 	unsigned long align, unsigned long vstart)
- {
- 	unsigned long nva_start_addr;
-+	unsigned long sum;
- 
- 	if (va->va_start > vstart)
- 		nva_start_addr = ALIGN(va->va_start, align);
-@@ -1230,11 +1231,11 @@ is_within_this_va(struct vmap_area *va, unsigned long size,
- 		nva_start_addr = ALIGN(vstart, align);
- 
- 	/* Can be overflowed due to big size or alignment. */
--	if (nva_start_addr + size < nva_start_addr ||
-+	if (check_add_overflow(nva_start_addr, size, &sum) ||
- 			nva_start_addr < vstart)
- 		return false;
- 
--	return (nva_start_addr + size <= va->va_end);
-+	return (sum <= va->va_end);
- }
- 
- /*
+diff --git a/drivers/md/dm-switch.c b/drivers/md/dm-switch.c
+index dfd9fb52a6f3..9053d7e65603 100644
+--- a/drivers/md/dm-switch.c
++++ b/drivers/md/dm-switch.c
+@@ -410,7 +410,7 @@ static int process_set_region_mappings(struct switch_ctx *sctx,
+ 				       cycle_length - 1, region_index);
+ 				return -EINVAL;
+ 			}
+-			if (unlikely(region_index + num_write < region_index) ||
++			if (unlikely(add_would_overflow(region_index, num_write)) ||
+ 			    unlikely(region_index + num_write >= sctx->nr_regions)) {
+ 				DMWARN("invalid set_region_mappings region number: %lu + %lu >= %lu",
+ 				       region_index, num_write, sctx->nr_regions);
+diff --git a/drivers/md/dm-verity-target.c b/drivers/md/dm-verity-target.c
+index 14e58ae70521..f2676c8c83c0 100644
+--- a/drivers/md/dm-verity-target.c
++++ b/drivers/md/dm-verity-target.c
+@@ -1392,7 +1392,7 @@ static int verity_ctr(struct dm_target *ti, unsigned int argc, char **argv)
+ 		v->hash_level_block[i] = hash_position;
+ 		s = (v->data_blocks + ((sector_t)1 << ((i + 1) * v->hash_per_block_bits)) - 1)
+ 					>> ((i + 1) * v->hash_per_block_bits);
+-		if (hash_position + s < hash_position) {
++		if (add_would_overflow(hash_position, s)) {
+ 			ti->error = "Hash device offset overflow";
+ 			r = -E2BIG;
+ 			goto bad;
+diff --git a/drivers/md/dm-writecache.c b/drivers/md/dm-writecache.c
+index 074cb785eafc..45e54edd24aa 100644
+--- a/drivers/md/dm-writecache.c
++++ b/drivers/md/dm-writecache.c
+@@ -2631,7 +2631,7 @@ static int writecache_ctr(struct dm_target *ti, unsigned int argc, char **argv)
+ 	offset = (offset + wc->block_size - 1) & ~(size_t)(wc->block_size - 1);
+ 	data_size = wc->n_blocks * (size_t)wc->block_size;
+ 	if (!offset || (data_size / wc->block_size != wc->n_blocks) ||
+-	    (offset + data_size < offset))
++	    (add_would_overflow(offset, data_size)))
+ 		goto overflow;
+ 	if (offset + data_size > wc->memory_map_size) {
+ 		ti->error = "Memory area is too small";
 -- 
 2.34.1
 
