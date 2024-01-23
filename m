@@ -1,56 +1,56 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C65D3629EB
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 15:34:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8423633FD
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 15:34:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706024087; cv=none; b=pmbdZ54YDqeAFLx36Hu4q4V9xsNYHlJtYKN7uSIb/+LILq2K0CUEuZh2tiGf3kvKTQ+OEK22nbOeTNYFC3gNx7f6ShWLDpqHyaC0u/8/rNA/mhXrPw3nBciP3yw3c8BM9vOW8XmlM3XDwpyoXhA3b0NHn2LJh2fULi8cpPxQlAA=
+	t=1706024088; cv=none; b=EkigIvqXsDO4xkZdav2M0xlEL96iBq7wguH8F2Ps5hgVNmhtwdASL6wr4Eo5Z00rWNB55dqlLcP2lqVZnFZroPdAHEiICKbKN/suxFWXhgLRjUIxMWkDpeRMQKocx+56PTtZNe95pcOxjURKUqLUyA/xqy7gisSIL5XvIVhesMM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706024087; c=relaxed/simple;
-	bh=+FEK7zXvkUNPYoloHVBKujmewWPaUNrgkfydcuviAQc=;
+	s=arc-20240116; t=1706024088; c=relaxed/simple;
+	bh=pWwRAykQpRRalzIT0R72wBc6eY+RszfUb0T3iGAzvIs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=e7x58AC/1Gkpwyb+2VE0AZD3REbAmHMkn5Ay+6UGOT5zF0croWT6Zoe6do0+GW8yaio6YbfWVyI3kj2Rm/lIChKvSW3DtHrWcVc6NbKngTwlgLb/wZdClbSI5WZP1aKvbpanJgEenvvW0aWvQgBpmzef0JyvYs4tc+bFCuMyH08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=k9HzX+fx; arc=none smtp.client-ip=209.85.128.46
+	 MIME-Version; b=aHaWt8cqIOtVQIoLH1h2tkLfQTnxyf1lbMQcuFCnPGoyWqnbwxIavAs2hTunOqotMV6d2cwFhp57miFpij9Nmv0XZTGepHZqF2ao6/HFi31zRPK97NL6d/DGik6WxANo1uHag396U51B48yE/K0fux0nu9fwqslKvQH5ZiKHRwo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=f6JKfEtJ; arc=none smtp.client-ip=209.85.128.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="k9HzX+fx"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-40e60e135a7so43991275e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 07:34:43 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="f6JKfEtJ"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-40ec34160baso1840065e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 07:34:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706024082; x=1706628882; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1706024085; x=1706628885; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=2H+4vxpbUIDd45rCzEN2Z22Mxunqggm4pG1DkoeAKqY=;
-        b=k9HzX+fxGHGhBRM9HiG54NpzC/9HNYzRkNHrf6ZjAql/yvsfySr+xVSx3aCiLlgjI6
-         u1dVoIxstQCKfMqWKLqehMp9f+myUe5OXqS92n1D77Gd0prCXiu32uBSWxLw+/XGGgj3
-         ADk3gPSFOdL8XCK9+GVhqZrHVHEHbQvCPgBQ26coqOv71awO50TrdYLu24Vx7LMwbPOM
-         Du4m/a0xywWE36l3pCXeKYRrQAsQCgkwjqwmvKQfWL4foXcXm2GolIxVN+N5RkKkqwiY
-         i2twN279l6iyqRlgJXJ/WO5lp9hkB54nLLzH63OXUUfuE3ervksl9Le6ZMf9c2VG48Pu
-         dqwg==
+        bh=6MwC7JrWaaByRi9Bmg46WpEIcb48Uk9F6chaPlqeYW4=;
+        b=f6JKfEtJ8xx+VaZdy/LOdmv+GXvBeZKgdL1ezd+2hDuTYcBBrwdNsqUbHrnFznCjPn
+         v83fWcbsO0rxP9AiPS93YaU14SpaE9lPQxL/dDtp8RWkOIRdpovz8Mme5DeLO7AQTG2I
+         NJRG2Tk4Pm5bmqd/R62dcDIG0N6GKDJtL5F432PIPtR5f22KHNOc2hjqfLHlWoZWl585
+         t8hxqW6cNswuMoQaCCRRYDPN1X6+Nf8wN1EeR7EZdfw5aquT8meMdgyH0cL+8nxT7zNT
+         6VgFsI6BJJDFwPPE3KPpfP+G0tsJ8nAPjEE3Qgr1tKmmjDbgUa3PDWpWs0Poe77iNJzA
+         10BA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706024082; x=1706628882;
+        d=1e100.net; s=20230601; t=1706024085; x=1706628885;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=2H+4vxpbUIDd45rCzEN2Z22Mxunqggm4pG1DkoeAKqY=;
-        b=e4IUjosjCgkSAfdiufSV2EC+FNrmEDLDpxlbSyrL36IPnSpKqcIiR8tonV48kbktR3
-         rVZQheCXOtZBOFM+AwQy9WY7kPL6LeIcVbYG5fpv5UHbSRPkASPHMYdP1Ye8R5f30ro8
-         jxGwjeRpWz19u+HkpWKnZdWTHRqoCObsUc90e4eDCPVZHI5JnxrM0ZCoaIt5fidfjA61
-         Cvkw/mSwbKnj5K9y4Kv/aqbOnUxKJU9WyzIVdjYHv3kbgIsIEePCIi48AfNNjSUShc6g
-         kjAXeyvGHj34kUrIG9Tx9kCXnLLRhob8L9za7Q87a9WpNYTSuqvSI2YEvuSatdBWZ8tb
-         tTOA==
-X-Gm-Message-State: AOJu0YwrJDPUIssV7GNFNU18dbYbkBWR3dacPH2Tf3Q0xYCPvXRWm6rH
-	hp9sNLg9xsqlgPnB2q4L17q4stqsKLnrff+jxNnzbM+ww/6JvfZggmSe0/JfgLI=
-X-Google-Smtp-Source: AGHT+IEdhulGHnMoRApGote5ScptZ0DoCltZHEA7gddglwiHhXxlIDhI6CN7Ov1Zuk+CJc7AAijQ6g==
-X-Received: by 2002:a05:600c:4448:b0:40e:937f:16dc with SMTP id v8-20020a05600c444800b0040e937f16dcmr707423wmn.17.1706024082130;
-        Tue, 23 Jan 2024 07:34:42 -0800 (PST)
+        bh=6MwC7JrWaaByRi9Bmg46WpEIcb48Uk9F6chaPlqeYW4=;
+        b=i5rR8dtkegIjP8vCT2eemEVBSnQtv5u3DU3AmF3Ne6ST3b94TCJ7VAWLeismHrrSt/
+         G8f/8UyDD7XMwF9CE4yjuJXA/L/83drpqxlaWaHDvNhgQzLStCXdSA3hUaTzmYHmrE26
+         AWw2+1FL7uFyBM1S1ySsdnfbjIMi8L33KuyOsmVGmvACzp98RcfpjOfPxTls6l5399dT
+         HP3sd1wbfqGEd9uxhGe5SXjjjWLBz/roPm3HHe1CdVAGWPIj9k/9PIMgluryMHb1ZLTH
+         n+8atUtps9ZKmEuybqn3u6j7ak5+e6eERKEEI0KVbaLwgbWmX0OUOxA0t4VcyIggaV89
+         81TA==
+X-Gm-Message-State: AOJu0Yw7ubTK2GTmUQkmlpVFUUKQ83BAYw1DsRyMGL8KXhGZV1hPdXfG
+	k7UYjlw+Z2cA3/RKZiL1HvoJRMcWKthdmHx0W+QtOA49TLrwtqYXBm0d8lCWFUk=
+X-Google-Smtp-Source: AGHT+IH5mkP1CJQ0rWDrIEEhD7IVzjwMWQ7d2wNt7PJY7Y6iegwnmTYm0CFXzpgTor0e3wG3s2U6YA==
+X-Received: by 2002:a05:600c:35ca:b0:40e:6163:55f2 with SMTP id r10-20020a05600c35ca00b0040e616355f2mr643207wmq.84.1706024085095;
+        Tue, 23 Jan 2024 07:34:45 -0800 (PST)
 Received: from ta2.c.googlers.com.com (88.140.78.34.bc.googleusercontent.com. [34.78.140.88])
-        by smtp.gmail.com with ESMTPSA id p21-20020a05600c359500b0040e3488f16dsm42457536wmq.12.2024.01.23.07.34.41
+        by smtp.gmail.com with ESMTPSA id p21-20020a05600c359500b0040e3488f16dsm42457536wmq.12.2024.01.23.07.34.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jan 2024 07:34:41 -0800 (PST)
+        Tue, 23 Jan 2024 07:34:44 -0800 (PST)
 From: Tudor Ambarus <tudor.ambarus@linaro.org>
 To: broonie@kernel.org,
 	andi.shyti@kernel.org,
@@ -71,9 +71,9 @@ Cc: robh+dt@kernel.org,
 	kernel-team@android.com,
 	willmcvicker@google.com,
 	Tudor Ambarus <tudor.ambarus@linaro.org>
-Subject: [PATCH 18/21] asm-generic/io.h: add iowrite{8,16}_32 accessors
-Date: Tue, 23 Jan 2024 15:34:17 +0000
-Message-ID: <20240123153421.715951-19-tudor.ambarus@linaro.org>
+Subject: [PATCH 20/21] spi: s3c64xx: make the SPI alias optional for newer SoCs
+Date: Tue, 23 Jan 2024 15:34:19 +0000
+Message-ID: <20240123153421.715951-21-tudor.ambarus@linaro.org>
 X-Mailer: git-send-email 2.43.0.429.g432eaa2c6b-goog
 In-Reply-To: <20240123153421.715951-1-tudor.ambarus@linaro.org>
 References: <20240123153421.715951-1-tudor.ambarus@linaro.org>
@@ -85,100 +85,70 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This will allow devices that require 32 bits register accesses to write
-data in chunks of 8 or 16 bits.
-
-One SoC that requires 32 bit register accesses is the google gs101. A
-typical use case is SPI, where the clients can request transfers in words
-of 8 bits.
+The alias was used to initialize the port_id, which unfortunately is
+used for older SoCs to determine the FIFO size from
+``s3c64xx_spi_port_config.fifo_lvl_mask``. This is wrong all the way as
+we shouldn't make a driver dependable of an alias, or the order of
+probe. If multiple FIFO sizes are supported across the SPI IPs, one
+shall instead introduce a fifosize device tree property. Make the SPI
+alias optional for the newer SoCs and mark the ``port_id`` and
+``fifo_lvl_mask`` as deprecated.
 
 Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
 ---
- include/asm-generic/io.h | 50 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 50 insertions(+)
+ drivers/spi/spi-s3c64xx.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/include/asm-generic/io.h b/include/asm-generic/io.h
-index bac63e874c7b..1e224d1ccc98 100644
---- a/include/asm-generic/io.h
-+++ b/include/asm-generic/io.h
-@@ -476,6 +476,21 @@ static inline void writesb(volatile void __iomem *addr, const void *buffer,
- }
- #endif
+diff --git a/drivers/spi/spi-s3c64xx.c b/drivers/spi/spi-s3c64xx.c
+index c4ddd2859ba4..9cd64fd3058a 100644
+--- a/drivers/spi/spi-s3c64xx.c
++++ b/drivers/spi/spi-s3c64xx.c
+@@ -128,7 +128,8 @@ struct s3c64xx_spi_dma_data {
  
-+#ifndef writesb_l
-+#define writesb_l writesb_l
-+static inline void writesb_l(volatile void __iomem *addr, const void *buffer,
-+			     unsigned int count)
-+{
-+	if (count) {
-+		const u8 *buf = buffer;
-+
-+		do {
-+			__raw_writel(*buf++, addr);
-+		} while (--count);
-+	}
-+}
-+#endif
-+
- #ifndef writesw
- #define writesw writesw
- static inline void writesw(volatile void __iomem *addr, const void *buffer,
-@@ -491,6 +506,21 @@ static inline void writesw(volatile void __iomem *addr, const void *buffer,
- }
- #endif
+ /**
+  * struct s3c64xx_spi_port_config - SPI Controller hardware info
+- * @fifo_lvl_mask: Bit-mask for {TX|RX}_FIFO_LVL bits in SPI_STATUS register.
++ * @fifo_lvl_mask: [DEPRECATED] Bit-mask for {TX|RX}_FIFO_LVL bits in
++ *                 SPI_STATUS register.
+  * @rx_lvl_offset: Bit offset of RX_FIFO_LVL bits in SPI_STATUS regiter.
+  * @tx_st_done: Bit offset of TX_DONE bit in SPI_STATUS regiter.
+  * @clk_div: Internal clock divider
+@@ -177,7 +178,7 @@ struct s3c64xx_spi_port_config {
+  * @rx_dma: Local receive DMA data (e.g. chan and direction)
+  * @tx_dma: Local transmit DMA data (e.g. chan and direction)
+  * @port_conf: Local SPI port configuartion data
+- * @port_id: Port identification number
++ * @port_id: [DEPRECATED] Port identification number
+  * @fifosize: size of the FIFO for this port
+  */
+ struct s3c64xx_spi_driver_data {
+@@ -1152,7 +1153,7 @@ static int s3c64xx_spi_probe(struct platform_device *pdev)
+ 	sdd->pdev = pdev;
+ 	if (pdev->dev.of_node) {
+ 		ret = of_alias_get_id(pdev->dev.of_node, "spi");
+-		if (ret < 0)
++		if (ret < 0 && !sdd->port_conf->fifosize)
+ 			return dev_err_probe(&pdev->dev, ret,
+ 					     "Failed to get alias id\n");
+ 		sdd->port_id = ret;
+@@ -1171,7 +1172,7 @@ static int s3c64xx_spi_probe(struct platform_device *pdev)
+ 	sdd->rx_dma.direction = DMA_DEV_TO_MEM;
  
-+#ifndef writesw_l
-+#define writesw_l writesw_l
-+static inline void writesw_l(volatile void __iomem *addr, const void *buffer,
-+			     unsigned int count)
-+{
-+	if (count) {
-+		const u16 *buf = buffer;
-+
-+		do {
-+			__raw_writel(*buf++, addr);
-+		} while (--count);
-+	}
-+}
-+#endif
-+
- #ifndef writesl
- #define writesl writesl
- static inline void writesl(volatile void __iomem *addr, const void *buffer,
-@@ -956,6 +986,16 @@ static inline void iowrite8_rep(volatile void __iomem *addr,
- }
- #endif
+ 	host->dev.of_node = pdev->dev.of_node;
+-	host->bus_num = sdd->port_id;
++	host->bus_num = -1;
+ 	host->setup = s3c64xx_spi_setup;
+ 	host->cleanup = s3c64xx_spi_cleanup;
+ 	host->prepare_transfer_hardware = s3c64xx_spi_prepare_transfer;
+@@ -1252,7 +1253,7 @@ static int s3c64xx_spi_probe(struct platform_device *pdev)
+ 	}
  
-+#ifndef iowrite8_32_rep
-+#define iowrite8_32_rep iowrite8_32_rep
-+static inline void iowrite8_32_rep(volatile void __iomem *addr,
-+				   const void *buffer,
-+				   unsigned int count)
-+{
-+	writesb_l(addr, buffer, count);
-+}
-+#endif
-+
- #ifndef iowrite16_rep
- #define iowrite16_rep iowrite16_rep
- static inline void iowrite16_rep(volatile void __iomem *addr,
-@@ -966,6 +1006,16 @@ static inline void iowrite16_rep(volatile void __iomem *addr,
- }
- #endif
+ 	dev_dbg(&pdev->dev, "Samsung SoC SPI Driver loaded for Bus SPI-%d with %d Targets attached\n",
+-					sdd->port_id, host->num_chipselect);
++		host->bus_num, host->num_chipselect);
+ 	dev_dbg(&pdev->dev, "\tIOmem=[%pR]\tFIFO %dbytes\n",
+ 					mem_res, sdd->fifosize);
  
-+#ifndef iowrite16_32_rep
-+#define iowrite16_32_rep iowrite16_32_rep
-+static inline void iowrite16_32_rep(volatile void __iomem *addr,
-+				    const void *buffer,
-+				    unsigned int count)
-+{
-+	writesw_l(addr, buffer, count);
-+}
-+#endif
-+
- #ifndef iowrite32_rep
- #define iowrite32_rep iowrite32_rep
- static inline void iowrite32_rep(volatile void __iomem *addr,
 -- 
 2.43.0.429.g432eaa2c6b-goog
 
