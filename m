@@ -1,102 +1,84 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B5BF50261
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 06:43:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E17D51C5F;
+	Tue, 23 Jan 2024 06:43:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705992191; cv=none; b=jW4sURMYHpjBJQUs9nb4ZeJbeCAROWsCemIeNdTsuCIvpfT2Amup4c0h+01GQW0SCz/r+xHv6OZ1oIMgSwrEIFvFtEQ3XUdKAEVnh5iBJUEqmuceSM6gVtAT5a+tFw8l2wC9YhwwFjsAzW+1YtA9HKEzpebLWV61soqUxhdYtsM=
+	t=1705992199; cv=none; b=pqzjB9LS1M26MXkM9je1mcaxCo1TunYK2VlItsO7veblwpnUon5t8aYhEISXzX8ehCbMzzHSdtXlK6g09oFNQzkMQlERGuqenlaeQv/8jlyl4YJsSLu+pBX8/VmEG6+YhKGPJpVF6Y/mgZ0YuzHfHe6heY+DgEBf0H5Hcbkrud8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705992191; c=relaxed/simple;
-	bh=Q0R2FUM/vqe/upMMhRgpiOo7u30kkYDKFKTZ4CE94Rg=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=kht63L4XVOdbqnLBv4ag4wWAmuBA5/Qb8Zu0ElaXRY1m+NJ0ClEOqpO22uc8TQZp4JD2yiYheGq6QIicTsJFs6fuR0fY5kopXouwsvatT1RUx+05LvLkjKWZVk5zldm7sBxxLGE6zqcoVTWSmm1EV5gH7Ij8ZHxZrcTi939R0WA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--surenb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LUY9Yx2c; arc=none smtp.client-ip=209.85.128.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--surenb.bounces.google.com
+	s=arc-20240116; t=1705992199; c=relaxed/simple;
+	bh=HbkqSj51Sa9IVM8rrG6Dn3HDORo0yZkDPCYmR5xjh70=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=q+OeYK7jg4lfcG9dY7VWpDYxOyJeaRza4EdfHvu4lWoVTokWm+dKL2A87/vZykQmPu4ulVwxcvhNafkySp/EphW3Xqhg04FFIcN/1cG418uWJ9R1MKOm60YW+RtpJWr2T4XAyfX+d5sd7UYPGZe7YVIxurOYyXTCHBf5nS880hg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XlcoJ8v0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LUY9Yx2c"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-600273598c1so17285677b3.3
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 22:43:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1705992189; x=1706596989; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=2FZwZ+rXghzrwMAzRL81BGjWf4dIgKukf4yDKbJi/Es=;
-        b=LUY9Yx2cU7QNPGdyE6OduYogspnbpDHjpIAybc/LO/XQSkEoiJ1GXc/0j9JvMNEhrO
-         4c1FUl+ODp0RQ3fn4fqRERPQM4cmiANEtIT5YQ0o5xtkGdJfyUAtbPDAuPh9B8uZrEYk
-         DdrCFAkRr8E3S9ntipLYAFOrzEYvwUHMofdRNzzE7bWiZEz6I4yEvoc3eyDCLHybOE+p
-         rRonjN2rmC3+YWCxZEZHnvfGUokluPNUxUnQF7Sp1cbdEFMmUODajpQ88AIGy45v11IV
-         BTE58cbDg5Rm+fFADuJpGP8Hz9b+uf4u3tONUFhg//o1Wy7x88eRwELQwBt0iiqGSx2g
-         XH2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705992189; x=1706596989;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=2FZwZ+rXghzrwMAzRL81BGjWf4dIgKukf4yDKbJi/Es=;
-        b=SJYqIrkPTj91/80oPz2RC7NDJkOawO9IMbst8biCrnrM1JG25HRV3AQBAT2aA7BES+
-         BVjW1PgdWxf1+vgPLxBbUqlW3PaToWAKuAuShRTu413Bk7RQf0wlXe3WBWiytkX1bmB0
-         vgEoqbWgc3M2rO+hLI34+g07XGXvdQaOgNwaDP0qCc/rwSuVveU+XUDYFpbcK+jzMAV7
-         g6wNoq79TllRSdnZ/e9vY+YQ2HOymaxpBwBm+5nY9iQ36iobgeDpGhU7mBOzUYWhVvEn
-         CkxHPRHggf9CmU1wgksohTbq2jpOhcLgqvBoeUQSXH9wnzDbfJZpzS93ZLqY5tj0Ax2W
-         5b9Q==
-X-Gm-Message-State: AOJu0YwZGgkb2EiP6bhdZlGYXJX++q2LBPRGMDOImNvFYGXge1RPXz7z
-	1omeiWmt/5Q8mXreduDeQ3OpTU68JizbwP0/+YuTgrB6It4eKkrO+hMWGbNoSNudbbZ+e66h+EV
-	Akw==
-X-Google-Smtp-Source: AGHT+IEO6A9zRBfOAVXliXkQQKxCV0qhRt+egkKWA991dYf7yzqjSRjLplw2MTnE92/ZhwSFnAUoRNjPv64=
-X-Received: from surenb-desktop.mtv.corp.google.com ([2620:15c:211:201:6bca:2511:6f80:6efe])
- (user=surenb job=sendgmr) by 2002:a0d:d68f:0:b0:5f9:990d:78c0 with SMTP id
- y137-20020a0dd68f000000b005f9990d78c0mr2517316ywd.4.1705992189291; Mon, 22
- Jan 2024 22:43:09 -0800 (PST)
-Date: Mon, 22 Jan 2024 22:43:05 -0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XlcoJ8v0"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id B2F9DC433F1;
+	Tue, 23 Jan 2024 06:43:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705992198;
+	bh=HbkqSj51Sa9IVM8rrG6Dn3HDORo0yZkDPCYmR5xjh70=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=XlcoJ8v0nu8rC+uHVB5h0kPyNxuobFe8VQ5uLmBbp3Vk675yMEVCAq2fZnz567Joa
+	 oX57JdBbRJTuuOH73LI7nkm2OO7OGBH0JAhGrh6ITurrnpy2koeCODl8MPY4sCEQAe
+	 8R5RxA9118ngGfe7IzXCKNwN6TLAv8cWBJEBS8EzOqQtRCqIbw4cODWU92IIkabYQi
+	 eaQUAbxdOVN46JgncZMBN4Ei0P7cn05hj8l36mvl2F8ARlkgTjvA6Ab6yu4AYlW5Bo
+	 G25Udk+lF+7kDovEZ63ttvOCH3Xe8Md4Y38/x8CsFnv4tSCYenf2zi72xRNTYa/1+D
+	 kIl3deicFaadA==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D69EC47258;
+	Tue, 23 Jan 2024 06:43:18 +0000 (UTC)
+From: Fenglin Wu via B4 Relay <devnull+quic_fenglinw.quicinc.com@kernel.org>
+Subject: [PATCH 0/2] Add PM8010 regulators for sm8650 boards.
+Date: Tue, 23 Jan 2024 14:42:22 +0800
+Message-Id: <20240123-sm8650_pm8010_support-v1-0-dec2224d5740@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.43.0.429.g432eaa2c6b-goog
-Message-ID: <20240123064305.2829244-1-surenb@google.com>
-Subject: [PATCH 1/1] arch/arm/mm: fix major fault accounting when retrying
- under per-VMA lock
-From: Suren Baghdasaryan <surenb@google.com>
-To: akpm@linux-foundation.org
-Cc: willy@infradead.org, will@kernel.org, catalin.marinas@arm.com, 
-	palmer@dabbelt.com, mpe@ellerman.id.au, christophe.leroy@csgroup.eu, 
-	agordeev@linux.ibm.com, gerald.schaefer@linux.ibm.com, 
-	dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org, 
-	surenb@google.com, x86@kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, 
-	linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Russell King <rmk+kernel@armlinux.org.uk>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAM5fr2UC/x3MQQqEMAxA0atI1hbSOhnFq4iItNHJQi2NiiDe3
+ TLLt/j/BuUkrNAWNyQ+RWVbM2xZgP+N68xGQjY4dB+0rjK6NF/CIS4NWhz0iHFLu6kJPdJIPlC
+ A3MbEk1z/b9c/zwuY8LXjZwAAAA==
+To: kernel@quicinc.com, Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, quic_collinsd@quicinc.com, 
+ Fenglin Wu <quic_fenglinw@quicinc.com>
+X-Mailer: b4 0.13-dev-83828
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1705992197; l=642;
+ i=quic_fenglinw@quicinc.com; s=20230725; h=from:subject:message-id;
+ bh=HbkqSj51Sa9IVM8rrG6Dn3HDORo0yZkDPCYmR5xjh70=;
+ b=FAllM/If3g3hJGSiylVVhhgt1gWcFDF1jpAg5NjShOSW0/QP04BOrFTOagJ+zTaTG+0FVqUoQ
+ SGV7RWOr5kiATAwgy7btqMSYHKQNWmRwIBBfG4kSu094FjMvKvIgGvL
+X-Developer-Key: i=quic_fenglinw@quicinc.com; a=ed25519;
+ pk=hleIDz3Unk1zeiwwOnZUjoQVMMelRancDFXg927lNjI=
+X-Endpoint-Received:
+ by B4 Relay for quic_fenglinw@quicinc.com/20230725 with auth_id=68
+X-Original-From: Fenglin Wu <quic_fenglinw@quicinc.com>
+Reply-To: <quic_fenglinw@quicinc.com>
 
-The change [1] missed ARM architecture when fixing major fault accounting
-for page fault retry under per-VMA lock. Add missing code to fix ARM
-architecture fault accounting.
+Add PM8010 RPMh regulators for sm8650-mtp and sm8650-qrd boards.
 
-[1] 46e714c729c8 ("arch/mm/fault: fix major fault accounting when retrying under per-VMA lock")
-
-Fixes: 12214eba1992 ("mm: handle read faults under the VMA lock")
-
-Reported-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
-Signed-off-by: Suren Baghdasaryan <surenb@google.com>
+Signed-off-by: Fenglin Wu <quic_fenglinw@quicinc.com>
 ---
- arch/arm/mm/fault.c | 2 ++
- 1 file changed, 2 insertions(+)
+Fenglin Wu (2):
+      arm64: dts: qcom: sm8650-mtp: add PM8010 regulators
+      arm64: dts: qcom: sm8650-qrd: add PM8010 regulators
 
-diff --git a/arch/arm/mm/fault.c b/arch/arm/mm/fault.c
-index e96fb40b9cc3..07565b593ed6 100644
---- a/arch/arm/mm/fault.c
-+++ b/arch/arm/mm/fault.c
-@@ -298,6 +298,8 @@ do_page_fault(unsigned long addr, unsigned int fsr, struct pt_regs *regs)
- 		goto done;
- 	}
- 	count_vm_vma_lock_event(VMA_LOCK_RETRY);
-+	if (fault & VM_FAULT_MAJOR)
-+		flags |= FAULT_FLAG_TRIED;
- 
- 	/* Quick path to respond to signals */
- 	if (fault_signal_pending(fault, regs)) {
+ arch/arm64/boot/dts/qcom/sm8650-mtp.dts | 118 ++++++++++++++++++++++++++++++++
+ arch/arm64/boot/dts/qcom/sm8650-qrd.dts | 118 ++++++++++++++++++++++++++++++++
+ 2 files changed, 236 insertions(+)
+---
+base-commit: 6613476e225e090cc9aad49be7fa504e290dd33d
+change-id: 20240123-sm8650_pm8010_support-750c05a5cd5d
+
+Best regards,
 -- 
-2.43.0.429.g432eaa2c6b-goog
+Fenglin Wu <quic_fenglinw@quicinc.com>
 
