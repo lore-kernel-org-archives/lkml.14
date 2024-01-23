@@ -1,867 +1,388 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2088.outbound.protection.outlook.com [40.107.93.88])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93C477F7DC;
-	Tue, 23 Jan 2024 17:46:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706031991; cv=none; b=DVxsGeuaZLDSeJrq3xl1uOq/V8TBryQnXHqbliWF4ecsrxaYNUqwAmgV5bjiAYEsbGRQIVQABHRvXLjaETxpYCyLVIJB/vat8ONk8ciP8R/K3FhhiC5FrWX5ZegO4ArmBEH5Vl69U0cqZjw4fHtvIfc/vPSSZfqRyIf/UaoY7bs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706031991; c=relaxed/simple;
-	bh=V9JikhLSmlUW4Ou0M3e/Uw6kU9W5S6nSdIrEuxN7mq0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ZaeHM4wc/LXITnlx4P1I98wq2wFMwJPLEAL/M9fms5cz5A8FEYEznXsEtZhuyA4UlFND0ir9xonY6de/q3pNZZpVMpeR6tI4JDiNMo7TiSV9njSdRtdpmJQvYR942pyRpAispR1WsdTRpkJjNGyOzFBfDWn3uPv9t9iglXJw/p4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=dg9KvyOi; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D9A081AA5
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 17:46:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.88
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706031996; cv=fail; b=V5Cjvwveu7VackSL5qfSeMdPgxUFXfS2W/6Dj5TqbiHIzOgrkyFnuDT8gg/+lwAGKnwbrbc5hNIQWNaCU76ei/Pgsnh26FSgtiUjN2fSSnrFJ1+WPXLYfXq9K+cmJnSmtNagE8ijwFTF7rVTWOOhcw2WgBznTpOBchA4ngTsG0c=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706031996; c=relaxed/simple;
+	bh=BtqKauj4I6nuzJ8hG3s8jD/7ho/sO70LXqYGBtbJYQo=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=aIYv9xE08y8WBKAQKvh8T41JAkgl3/MZiSOni+LixGU0sHIPB/LVqSe2FhU4NmDzaQXI2otDXMutXr4WsJMSSmr3LBLfgoOQ7uWHR9olJ+9w48VrbEGmf5QYb2I1EPxuxLV0k74fgTg1tt7ufRO2ZLF6wLZCIxeQdwIPqCiWclo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=x0iI/UIf; arc=fail smtp.client-ip=40.107.93.88
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="dg9KvyOi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3101DC43390;
-	Tue, 23 Jan 2024 17:46:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1706031991;
-	bh=V9JikhLSmlUW4Ou0M3e/Uw6kU9W5S6nSdIrEuxN7mq0=;
-	h=From:To:Cc:Subject:Date:From;
-	b=dg9KvyOiGPgCl6HBTjdTxvP89o/EKosXZRtyAFu/58uNeRWE5BbKMu13VbKSMtC2e
-	 EZs4tWwyl77K5SfNGGQlcK8esjGzGkuAGUPsFRMJZHosG992a0auuCXVNobg7YcMne
-	 /R0+f5z6XBDKFYvmZBkxhis3KeCNC362NfkVA+zY=
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: stable@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	torvalds@linux-foundation.org,
-	akpm@linux-foundation.org,
-	linux@roeck-us.net,
-	shuah@kernel.org,
-	patches@kernelci.org,
-	lkft-triage@lists.linaro.org,
-	pavel@denx.de,
-	jonathanh@nvidia.com,
-	f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com,
-	srw@sladewatkins.net,
-	rwarsow@gmx.de,
-	conor@kernel.org,
-	allen.lkml@gmail.com
-Subject: [PATCH 5.4 000/193] 5.4.268-rc2 review
-Date: Tue, 23 Jan 2024 09:46:22 -0800
-Message-ID: <20240123174434.819712739@linuxfoundation.org>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="x0iI/UIf"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VOVJ311Nh25FyIO8GLfA9fvGRpATfa8/41wD/vAkYN4/11g4yR+BnriWZzReKhZCPSNniH9YM6HoOlePH1f2idhyuEr1J3el5+8Iv5B8T9Q1KlwFH6M6J4gHuLj0SzKCyLFMkV2Zuj2+UR10vDrKb3dW7WjNv19jMEuM6h0467gjh1FDpd1DPnQ4E2i3jDYKAIJllBLg7tkQBijI3K5o/kfy/SI9x6QEJktEh5vmhnu+XiBtnLi65StTUiN8ytV/qzmM14u2/G5wTBtIhK36/ZKQv9xL9hzUjTqDpJPd8v0eeA8bkiSkAfeuoBDk/PKUGWF6DwDTJ/GRrE1E5l9Jjg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=dXuqQRkDWlEwYqFZu90FrsmHQzK13NSEW5+ddDGj5H4=;
+ b=AOPzp3g5RES/H7LPQtSZUzWFwNURyljff85OU9bckw1HMRTWdzjH8gpLjRUQR/nMBGS9/vgKKeK7HWx8JC/miH8Dws9lRNGXVWP3xVQtQcsd53wMz1/47yAFHz+bO9FlXqGGdL8uBJOInZExmE//vdAeWolz8XGefgnvxIAihNM9wIyEtDMZi/QNFAhRO0bqRcUnFSAuJWZxgJBdE9USBRFk8WaseVfhy6+PpBtd2bnngrfx1aRkx+UXufJGnQBl9m3hDvaHxf0YaueDgfZoCKPZhQBPTr3ddBL1Sw89bnr6qhwbTmuukzVMgfnc3d0hlqYnf9gg/Dkr/hCtT8/jwg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dXuqQRkDWlEwYqFZu90FrsmHQzK13NSEW5+ddDGj5H4=;
+ b=x0iI/UIfqYz6tWB8RdAAxMD2hNsp27XpxA+aYUpfcV1d3gnakgMMwR/EqziABR6G9llY6in9WrkYOU8BPVC75xka8mxVqBdZTyHO+ukQKQlxbbx12zRpko+Z3ez6hYAGdthuJhQjE+hEivnQNfZOGesKV0sQHrNZpfbIwxGoYys=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
+ by BY5PR12MB5014.namprd12.prod.outlook.com (2603:10b6:a03:1c4::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7202.34; Tue, 23 Jan
+ 2024 17:46:31 +0000
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::ce8d:7121:cb06:91ba]) by MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::ce8d:7121:cb06:91ba%4]) with mapi id 15.20.7202.034; Tue, 23 Jan 2024
+ 17:46:30 +0000
+Message-ID: <ed29dcb8-bd2e-4de9-8310-81d8eead6be3@amd.com>
+Date: Tue, 23 Jan 2024 11:46:27 -0600
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC] Revert "drm/sched: Split free_job into own work item"
+Content-Language: en-US
+To: Luben Tuikov <ltuikov89@gmail.com>,
+ Matthew Brost <matthew.brost@intel.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ "open list:DRM GPU SCHEDULER" <dri-devel@lists.freedesktop.org>,
+ open list <linux-kernel@vger.kernel.org>
+References: <20240123021155.2775-1-mario.limonciello@amd.com>
+From: Mario Limonciello <mario.limonciello@amd.com>
+In-Reply-To: <20240123021155.2775-1-mario.limonciello@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SN7PR18CA0008.namprd18.prod.outlook.com
+ (2603:10b6:806:f3::32) To MN0PR12MB6101.namprd12.prod.outlook.com
+ (2603:10b6:208:3cb::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: quilt/0.67
-X-stable: review
-X-Patchwork-Hint: ignore
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.268-rc2.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-5.4.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 5.4.268-rc2
-X-KernelTest-Deadline: 2024-01-25T17:44+00:00
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-
-This is the start of the stable review cycle for the 5.4.268 release.
-There are 193 patches in this series, all will be posted as a response
-to this one.  If anyone has any issues with these being applied, please
-let me know.
-
-Responses should be made by Thu, 25 Jan 2024 17:44:10 +0000.
-Anything received after that time might be too late.
-
-The whole patch series can be found in one patch at:
-	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.268-rc2.gz
-or in the git tree and branch at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
-and the diffstat can be found below.
-
-thanks,
-
-greg k-h
-
--------------
-Pseudo-Shortlog of commits:
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Linux 5.4.268-rc2
-
-Tiezhu Yang <yangtiezhu@loongson.cn>
-    perf top: Skip side-band event setup if HAVE_LIBBPF_SUPPORT is not set
-
-Marek Szyprowski <m.szyprowski@samsung.com>
-    i2c: s3c24xx: fix transferring more than one message in polling mode
-
-Marek Szyprowski <m.szyprowski@samsung.com>
-    i2c: s3c24xx: fix read transfers in polling mode
-
-Amit Cohen <amcohen@nvidia.com>
-    mlxsw: spectrum_acl_erp: Fix error flow of pool allocation failure
-
-Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-    kdb: Fix a potential buffer overflow in kdb_local()
-
-Daniel Thompson <daniel.thompson@linaro.org>
-    kdb: Censor attempts to set PROMPT without ENABLE_MEM_READ
-
-Fedor Pchelkin <pchelkin@ispras.ru>
-    ipvs: avoid stat macros calls from preemptible context
-
-Pablo Neira Ayuso <pablo@netfilter.org>
-    netfilter: nf_tables: skip dead set elements in netlink dump
-
-Kunwu Chan <chentao@kylinos.cn>
-    net: dsa: vsc73xx: Add null pointer check to vsc73xx_gpio_probe
-
-Nikita Yushchenko <nikita.yoush@cogentembedded.com>
-    net: ravb: Fix dma_addr_t truncation in error case
-
-Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-    net: phy: micrel: populate .soft_reset for KSZ9131
-
-Lin Ma <linma@zju.edu.cn>
-    net: qualcomm: rmnet: fix global oob in rmnet_policy
-
-Niklas Schnelle <schnelle@linux.ibm.com>
-    s390/pci: fix max size calculation in zpci_memcpy_toio()
-
-Siddharth Vadapalli <s-vadapalli@ti.com>
-    PCI: keystone: Fix race condition when initializing PHYs
-
-Maurizio Lombardi <mlombard@redhat.com>
-    nvmet-tcp: Fix the H2C expected PDU len calculation
-
-Christoph Niedermaier <cniedermaier@dh-electronics.com>
-    serial: imx: Correct clock error message in function probe()
-
-Fedor Pchelkin <pchelkin@ispras.ru>
-    apparmor: avoid crash when parsed profile name is empty
-
-Ian Rogers <irogers@google.com>
-    perf env: Avoid recursively taking env->bpf_progs.lock
-
-Arnaldo Carvalho de Melo <acme@redhat.com>
-    perf bpf: Decouple creating the evlist from adding the SB event
-
-Arnaldo Carvalho de Melo <acme@redhat.com>
-    perf top: Move sb_evlist to 'struct perf_top'
-
-Arnaldo Carvalho de Melo <acme@redhat.com>
-    perf record: Move sb_evlist to 'struct record'
-
-Jiri Olsa <jolsa@kernel.org>
-    perf env: Add perf_env__numa_node()
-
-Maurizio Lombardi <mlombard@redhat.com>
-    nvmet-tcp: fix a crash in nvmet_req_complete()
-
-Maurizio Lombardi <mlombard@redhat.com>
-    nvmet-tcp: Fix a kernel panic when host sends an invalid H2C PDU length
-
-Namhyung Kim <namhyung@kernel.org>
-    perf genelf: Set ELF program header addresses properly
-
-Sakari Ailus <sakari.ailus@linux.intel.com>
-    software node: Let args be NULL in software_node_get_reference_args
-
-Sakari Ailus <sakari.ailus@linux.intel.com>
-    acpi: property: Let args be NULL in __acpi_node_get_property_reference
-
-Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-    serial: 8250: omap: Don't skip resource freeing if pm_runtime_resume_and_get() failed
-
-Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-    MIPS: Alchemy: Fix an out-of-bound access in db1550_dev_setup()
-
-Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-    MIPS: Alchemy: Fix an out-of-bound access in db1200_dev_setup()
-
-Serge Semin <fancer.lancer@gmail.com>
-    mips: Fix incorrect max_low_pfn adjustment
-
-Jason Gerecke <jason.gerecke@wacom.com>
-    HID: wacom: Correct behavior when processing some confidence == false touches
-
-Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-    x86/kvm: Do not try to disable kvmclock if it was not enabled
-
-David Lin <yu-hao.lin@nxp.com>
-    wifi: mwifiex: configure BSSID consistently when starting AP
-
-Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-    wifi: rtlwifi: Convert LNKCTL change to PCIe cap RMW accessors
-
-Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-    wifi: rtlwifi: Remove bogus and dangerous ASPM disable/enable code
-
-Stefan Berger <stefanb@linux.ibm.com>
-    rootfs: Fix support for rootfstype= when root= is given
-
-Nam Cao <namcao@linutronix.de>
-    fbdev: flush deferred work in fb_deferred_io_fsync()
-
-Takashi Iwai <tiwai@suse.de>
-    ALSA: oxygen: Fix right channel of capture volume mixer
-
-Gui-Dong Han <2045gemini@gmail.com>
-    usb: mon: Fix atomicity violation in mon_bin_vma_fault
-
-RD Babiera <rdbabiera@google.com>
-    usb: typec: class: fix typec_altmode_put_partner to put plugs
-
-Heikki Krogerus <heikki.krogerus@linux.intel.com>
-    Revert "usb: typec: class: fix typec_altmode_put_partner to put plugs"
-
-Xu Yang <xu.yang_2@nxp.com>
-    usb: chipidea: wait controller resume finished for wakeup irq
-
-Thinh Nguyen <Thinh.Nguyen@synopsys.com>
-    Revert "usb: dwc3: don't reset device side if dwc3 was configured as host-only"
-
-Thinh Nguyen <Thinh.Nguyen@synopsys.com>
-    Revert "usb: dwc3: Soft reset phy on probe for host"
-
-Uttkarsh Aggarwal <quic_uaggarwa@quicinc.com>
-    usb: dwc: ep0: Update request status in dwc3_ep0_stall_restart
-
-Xu Yang <xu.yang_2@nxp.com>
-    usb: phy: mxs: remove CONFIG_USB_OTG condition for mxs_phy_is_otg_host()
-
-Heiko Carstens <hca@linux.ibm.com>
-    tick-sched: Fix idle and iowait sleeptime accounting vs CPU hotplug
-
-Carlos Llamas <cmllamas@google.com>
-    binder: fix unused alloc->free_async_space
-
-Carlos Llamas <cmllamas@google.com>
-    binder: fix race between mmput() and do_exit()
-
-Jan Beulich <jbeulich@suse.com>
-    xen-netback: don't produce zero-size SKB frags
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Revert "ASoC: atmel: Remove system clock tree configuration for at91sam9g20ek"
-
-Hans de Goede <hdegoede@redhat.com>
-    Input: atkbd - use ab83 as id when skipping the getid command
-
-Carlos Llamas <cmllamas@google.com>
-    binder: fix use-after-free in shinker's callback
-
-Carlos Llamas <cmllamas@google.com>
-    binder: fix async space check for 0-sized buffers
-
-Geert Uytterhoeven <geert+renesas@glider.be>
-    of: unittest: Fix of_count_phandle_with_args() expected value message
-
-Christian A. Ehrhardt <lk@c--e.de>
-    of: Fix double free in of_parse_phandle_with_args_map
-
-Peter Robinson <pbrobinson@gmail.com>
-    mmc: sdhci_omap: Fix TI SoC dependencies
-
-Su Hui <suhui@nfschina.com>
-    clk: si5341: fix an error code problem in si5341_output_clk_set_rate
-
-Stefan Wahren <wahrenst@gmx.net>
-    watchdog: bcm2835_wdt: Fix WDIOC_SETTIMEOUT handling
-
-Jerry Hoemann <jerry.hoemann@hpe.com>
-    watchdog/hpwdt: Only claim UNKNOWN NMI if from iLO
-
-Curtis Klein <curtis.klein@hpe.com>
-    watchdog: set cdev owner before adding
-
-Jay Buddhabhatti <jay.buddhabhatti@amd.com>
-    drivers: clk: zynqmp: calculate closest mux rate
-
-Zhipeng Lu <alexious@zju.edu.cn>
-    gpu/drm/radeon: fix two memleaks in radeon_vm_init
-
-Zhipeng Lu <alexious@zju.edu.cn>
-    drivers/amd/pm: fix a use-after-free in kv_parse_power_table
-
-Zhipeng Lu <alexious@zju.edu.cn>
-    drm/amd/pm: fix a double-free in si_dpm_init
-
-Alex Deucher <alexander.deucher@amd.com>
-    drm/amdgpu/debugfs: fix error code when smc register accessors are NULL
-
-Dan Carpenter <dan.carpenter@linaro.org>
-    media: dvbdev: drop refcount on error path in dvb_device_open()
-
-Zhipeng Lu <alexious@zju.edu.cn>
-    media: cx231xx: fix a memleak in cx231xx_init_isoc
-
-Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-    drm/bridge: tc358767: Fix return value on error case
-
-Zhipeng Lu <alexious@zju.edu.cn>
-    drm/radeon/trinity_dpm: fix a memleak in trinity_parse_power_table
-
-Zhipeng Lu <alexious@zju.edu.cn>
-    drm/radeon/dpm: fix a memleak in sumo_parse_power_table
-
-Yang Yingliang <yangyingliang@huawei.com>
-    drm/radeon: check the alloc_workqueue return value in radeon_crtc_init()
-
-Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-    drm/drv: propagate errors from drm_modeset_register_all()
-
-Konrad Dybcio <konrad.dybcio@linaro.org>
-    drm/msm/dsi: Use pm_runtime_resume_and_get to prevent refcnt leaks
-
-Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-    drm/msm/mdp4: flush vblank event on disable
-
-Linus Walleij <linus.walleij@linaro.org>
-    ASoC: cs35l34: Fix GPIO name and drop legacy include
-
-Linus Walleij <linus.walleij@linaro.org>
-    ASoC: cs35l33: Fix GPIO name and drop legacy include
-
-Nikita Zhandarovich <n.zhandarovich@fintech.ru>
-    drm/radeon: check return value of radeon_ring_lock()
-
-Nikita Zhandarovich <n.zhandarovich@fintech.ru>
-    drm/radeon/r100: Fix integer overflow issues in r100_cs_track_check()
-
-Nikita Zhandarovich <n.zhandarovich@fintech.ru>
-    drm/radeon/r600_cs: Fix possible int overflows in r600_cs_check_reg()
-
-Chao Yu <chao@kernel.org>
-    f2fs: fix to avoid dirent corruption
-
-Dario Binacchi <dario.binacchi@amarulasolutions.com>
-    drm/bridge: Fix typo in post_disable() description
-
-Ricardo B. Marliere <ricardo@marliere.net>
-    media: pvrusb2: fix use after free on context disconnection
-
-Leon Romanovsky <leonro@nvidia.com>
-    RDMA/usnic: Silence uninitialized symbol smatch warnings
-
-Arnd Bergmann <arnd@arndb.de>
-    ARM: davinci: always select CONFIG_CPU_ARM926T
-
-Eric Dumazet <edumazet@google.com>
-    ip6_tunnel: fix NEXTHDR_FRAGMENT handling in ip6_tnl_parse_tlv_enc_lim()
-
-Francesco Dolcini <francesco.dolcini@toradex.com>
-    Bluetooth: btmtkuart: fix recv_buf() return value
-
-Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
-    Bluetooth: Fix bogus check for re-auth no supported with non-ssp
-
-Florian Westphal <fw@strlen.de>
-    netfilter: nf_tables: mark newset as dead on transaction abort
-
-Su Hui <suhui@nfschina.com>
-    wifi: rtlwifi: rtl8192se: using calculate_bit_shift()
-
-Su Hui <suhui@nfschina.com>
-    wifi: rtlwifi: rtl8192ee: using calculate_bit_shift()
-
-Su Hui <suhui@nfschina.com>
-    wifi: rtlwifi: rtl8192de: using calculate_bit_shift()
-
-Colin Ian King <colin.king@canonical.com>
-    rtlwifi: rtl8192de: make arrays static const, makes object smaller
-
-Su Hui <suhui@nfschina.com>
-    wifi: rtlwifi: rtl8192ce: using calculate_bit_shift()
-
-Su Hui <suhui@nfschina.com>
-    wifi: rtlwifi: rtl8192cu: using calculate_bit_shift()
-
-Su Hui <suhui@nfschina.com>
-    wifi: rtlwifi: rtl8192c: using calculate_bit_shift()
-
-Su Hui <suhui@nfschina.com>
-    wifi: rtlwifi: rtl8188ee: phy: using calculate_bit_shift()
-
-Su Hui <suhui@nfschina.com>
-    wifi: rtlwifi: add calculate_bit_shift()
-
-Joakim Zhang <joakim.zhang@cixtech.com>
-    dma-mapping: clear dev->dma_mem to NULL after freeing it
-
-Arseniy Krasnov <avkrasnov@salutedevices.com>
-    virtio/vsock: fix logic which reduces credit update messages
-
-Hangbin Liu <liuhangbin@gmail.com>
-    selftests/net: fix grep checking for fib_nexthop_multiprefix
-
-Yihang Li <liyihang9@huawei.com>
-    scsi: hisi_sas: Replace with standard error code return value
-
-Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-    arm64: dts: qcom: sdm845-db845c: correct LED panic indicator
-
-Artem Chernyshev <artem.chernyshev@red-soft.ru>
-    scsi: fnic: Return error if vmalloc() failed
-
-Su Hui <suhui@nfschina.com>
-    wifi: rtlwifi: rtl8821ae: phy: fix an undefined bitwise shift behavior
-
-Joe Perches <joe@perches.com>
-    rtlwifi: Use ffs in <foo>_phy_calculate_bit_shift
-
-Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-    firmware: ti_sci: Fix an off-by-one in ti_sci_debugfs_create()
-
-Peter Delevoryas <peter@pjd.dev>
-    net/ncsi: Fix netlink major/minor version numbers
-
-Bhaskar Chowdhury <unixbhaskar@gmail.com>
-    ncsi: internal.h: Fix a spello
-
-Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-    ARM: dts: qcom: apq8064: correct XOADC register address
-
-Arnd Bergmann <arnd@arndb.de>
-    wifi: libertas: stop selecting wext
-
-Florian Lehner <dev@der-flo.net>
-    bpf, lpm: Fix check prefixlen before walking trie
-
-Chih-Kang Chang <gary.chang@realtek.com>
-    wifi: rtw88: fix RX filter in FIF_ALLMULTI flag
-
-Trond Myklebust <trond.myklebust@hammerspace.com>
-    NFSv4.1/pnfs: Ensure we handle the error NFS4ERR_RETURNCONFLICT
-
-Benjamin Coddington <bcodding@redhat.com>
-    blocklayoutdriver: Fix reference leak of pnfs_device_node
-
-Chengming Zhou <zhouchengming@bytedance.com>
-    crypto: scomp - fix req->dst buffer overflow
-
-Ovidiu Panait <ovidiu.panait@windriver.com>
-    crypto: sahara - do not resize req->src when doing hash operations
-
-Ovidiu Panait <ovidiu.panait@windriver.com>
-    crypto: sahara - fix processing hash requests with req->nbytes < sg->length
-
-Ovidiu Panait <ovidiu.panait@windriver.com>
-    crypto: sahara - improve error handling in sahara_sha_process()
-
-Ovidiu Panait <ovidiu.panait@windriver.com>
-    crypto: sahara - fix wait_for_completion_timeout() error handling
-
-Ovidiu Panait <ovidiu.panait@windriver.com>
-    crypto: sahara - fix ahash reqsize
-
-wangyangxin <wangyangxin1@huawei.com>
-    crypto: virtio - Wait for tasklet to complete on device remove
-
-Osama Muhammad <osmtendev@gmail.com>
-    gfs2: Fix kernel NULL pointer dereference in gfs2_rgrp_dump
-
-Sergey Shtylyov <s.shtylyov@omp.ru>
-    pstore: ram_core: fix possible overflow in persistent_ram_init_ecc()
-
-Ovidiu Panait <ovidiu.panait@windriver.com>
-    crypto: sahara - fix error handling in sahara_hw_descriptor_create()
-
-Ovidiu Panait <ovidiu.panait@windriver.com>
-    crypto: sahara - fix processing requests with cryptlen < sg->length
-
-Ovidiu Panait <ovidiu.panait@windriver.com>
-    crypto: sahara - fix ahash selftest failure
-
-Ovidiu Panait <ovidiu.panait@windriver.com>
-    crypto: sahara - remove FLAGS_NEW_KEY logic
-
-Herbert Xu <herbert@gondor.apana.org.au>
-    crypto: af_alg - Disallow multiple in-flight AIO requests
-
-Dinghao Liu <dinghao.liu@zju.edu.cn>
-    crypto: ccp - fix memleak in ccp_init_dm_workarea
-
-zhenwei pi <pizhenwei@bytedance.com>
-    virtio_crypto: Introduce VIRTIO_CRYPTO_NOSPC
-
-Ram Muthiah <rammuthiah@google.com>
-    crypto: virtio - don't use 'default m'
-
-Gonglei (Arei) <arei.gonglei@huawei.com>
-    crypto: virtio - Handle dataq logic with tasklet
-
-Mickaël Salaün <mic@digikod.net>
-    selinux: Fix error priority for bind with AF_UNSPEC on PF_INET6 socket
-
-ZhaoLong Wang <wangzhaolong1@huawei.com>
-    mtd: Fix gluebi NULL pointer dereference caused by ftl notifier
-
-Wolfram Sang <wsa+renesas@sang-engineering.com>
-    spi: sh-msiof: Enforce fixed DTDL for R-Car H3
-
-Gavrilov Ilia <Ilia.Gavrilov@infotecs.ru>
-    calipso: fix memory leak in netlbl_calipso_add_pass()
-
-Zheng Yejian <zhengyejian1@huawei.com>
-    netlabel: remove unused parameter in netlbl_netlink_auditinfo()
-
-Andrew Lunn <andrew@lunn.ch>
-    net: netlabel: Fix kerneldoc warnings
-
-Nikita Kiryushin <kiryushin@ancud.ru>
-    ACPI: LPIT: Avoid u32 multiplication overflow
-
-Nikita Kiryushin <kiryushin@ancud.ru>
-    ACPI: video: check for error while searching for backlight device parent
-
-Ronald Monthero <debug.penguin32@gmail.com>
-    mtd: rawnand: Increment IFC_TIMEOUT_MSECS for nand controller response
-
-Kunwu Chan <chentao@kylinos.cn>
-    powerpc/imc-pmu: Add a null pointer check in update_events_in_group()
-
-Kunwu Chan <chentao@kylinos.cn>
-    powerpc/powernv: Add a null pointer check in opal_powercap_init()
-
-Kunwu Chan <chentao@kylinos.cn>
-    powerpc/powernv: Add a null pointer check in opal_event_init()
-
-Kunwu Chan <chentao@kylinos.cn>
-    powerpc/powernv: Add a null pointer check to scom_debug_init_one()
-
-Michael Ellerman <mpe@ellerman.id.au>
-    selftests/powerpc: Fix error handling in FPU/VMX preemption tests
-
-Nathan Lynch <nathanl@linux.ibm.com>
-    powerpc/pseries/memhp: Fix access beyond end of drmem array
-
-Laurent Dufour <ldufour@linux.ibm.com>
-    powerpc/pseries/memhotplug: Quieten some DLPAR operations
-
-Randy Dunlap <rdunlap@infradead.org>
-    powerpc/44x: select I2C for CURRITUCK
-
-Masahiro Yamada <masahiroy@kernel.org>
-    powerpc: add crtsavres.o to always-y instead of extra-y
-
-Arnd Bergmann <arnd@arndb.de>
-    EDAC/thunderx: Fix possible out-of-bounds string access
-
-Colin Ian King <colin.i.king@gmail.com>
-    x86/lib: Fix overflow when counting digits
-
-James Clark <james.clark@arm.com>
-    coresight: etm4x: Fix width of CCITMIN field
-
-Cameron Williams <cang1@live.co.uk>
-    parport: parport_serial: Add Brainboxes device IDs and geometry
-
-Cameron Williams <cang1@live.co.uk>
-    parport: parport_serial: Add Brainboxes BAR details
-
-Guanghui Feng <guanghuifeng@linux.alibaba.com>
-    uio: Fix use-after-free in uio_open
-
-Carlos Llamas <cmllamas@google.com>
-    binder: fix comment on binder_alloc_new_buf() return value
-
-Carlos Llamas <cmllamas@google.com>
-    binder: fix trivial typo of binder_free_buf_locked()
-
-Carlos Llamas <cmllamas@google.com>
-    binder: use EPOLLERR from eventpoll.h
-
-Hans de Goede <hdegoede@redhat.com>
-    ACPI: resource: Add another DMI match for the TongFang GMxXGxx
-
-Jani Nikula <jani.nikula@intel.com>
-    drm/crtc: fix uninitialized variable use
-
-Stefan Wahren <wahrenst@gmx.net>
-    ARM: sun9i: smp: fix return code check of of_property_match_string
-
-Matthew Wilcox (Oracle) <willy@infradead.org>
-    ida: Fix crash in ida_free when the bitmap is empty
-
-Luca Weiss <luca@z3ntu.xyz>
-    Input: xpad - add Razer Wolverine V2 support
-
-Vineet Gupta <vgupta@kernel.org>
-    ARC: fix spare error
-
-Vineeth Vijayan <vneethv@linux.ibm.com>
-    s390/scm: fix virtual vs physical address confusion
-
-Esther Shimanovich <eshimanovich@chromium.org>
-    Input: i8042 - add nomux quirk for Acer P459-G2-M
-
-Hans de Goede <hdegoede@redhat.com>
-    Input: atkbd - skip ATKBD_CMD_GETID in translated mode
-
-Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-    reset: hisilicon: hi6220: fix Wvoid-pointer-to-enum-cast warning
-
-Steven Rostedt (Google) <rostedt@goodmis.org>
-    ring-buffer: Do not record in NMI if the arch does not support cmpxchg in NMI
-
-Steven Rostedt (Google) <rostedt@goodmis.org>
-    tracing: Add size check when printing trace_marker output
-
-Steven Rostedt (Google) <rostedt@goodmis.org>
-    tracing: Have large events show up as '[LINE TOO BIG]' instead of nothing
-
-Judy Hsiao <judyhsiao@chromium.org>
-    neighbour: Don't let neigh_forced_gc() disable preemption for long
-
-Ziqi Zhao <astrajoan@yahoo.com>
-    drm/crtc: Fix uninit-value bug in drm_mode_setcrtc
-
-Zhang Yi <yi.zhang@huawei.com>
-    jbd2: correct the printing of write_flags in jbd2_write_superblock()
-
-Weihao Li <cn.liweihao@gmail.com>
-    clk: rockchip: rk3128: Fix HCLK_OTG gate register
-
-Inki Dae <inki.dae@samsung.com>
-    drm/exynos: fix a wrong error checking
-
-Xiang Yang <xiangyang3@huawei.com>
-    drm/exynos: fix a potential error pointer dereference
-
-Keith Busch <kbusch@kernel.org>
-    nvme: introduce helper function to get ctrl state
-
-David Rau <David.Rau.opensource@dm.renesas.com>
-    ASoC: da7219: Support low DC impedance headset
-
-Thinh Tran <thinhtr@linux.vnet.ibm.com>
-    net/tg3: fix race condition in tg3_reset_task()
-
-Dave Airlie <airlied@redhat.com>
-    nouveau/tu102: flush all pdbs on vmm flush
-
-Shuming Fan <shumingf@realtek.com>
-    ASoC: rt5650: add mutex to avoid the jack detection failure
-
-Maciej Strozek <mstrozek@opensource.cirrus.com>
-    ASoC: cs43130: Fix incorrect frame delay configuration
-
-Maciej Strozek <mstrozek@opensource.cirrus.com>
-    ASoC: cs43130: Fix the position of const qualifier
-
-Kamil Duljas <kamil.duljas@gmail.com>
-    ASoC: Intel: Skylake: mem leak in skl register function
-
-David Lin <CTLIN0@nuvoton.com>
-    ASoC: nau8822: Fix incorrect type in assignment and cast to restricted __be16
-
-Kamil Duljas <kamil.duljas@gmail.com>
-    ASoC: Intel: Skylake: Fix mem leak in few functions
-
-Vasiliy Kovalev <kovalev@altlinux.org>
-    ALSA: hda - Fix speaker and headset mic pin config for CHUWI CoreBook XPro
-
-Charles Keepax <ckeepax@opensource.cirrus.com>
-    pinctrl: lochnagar: Don't build on MIPS
-
-Eric Biggers <ebiggers@google.com>
-    f2fs: explicitly null-terminate the xattr list
-
-
--------------
-
-Diffstat:
-
- Makefile                                           |   4 +-
- arch/arc/kernel/signal.c                           |   6 +-
- arch/arm/boot/dts/qcom-apq8064.dtsi                |   2 +-
- arch/arm/mach-davinci/Kconfig                      |   1 +
- arch/arm/mach-sunxi/mc_smp.c                       |   4 +-
- arch/arm64/boot/dts/qcom/sdm845-db845c.dts         |   2 +-
- arch/mips/alchemy/devboards/db1200.c               |   2 +-
- arch/mips/alchemy/devboards/db1550.c               |   2 +-
- arch/mips/kernel/setup.c                           |   4 +-
- arch/powerpc/lib/Makefile                          |   2 +-
- arch/powerpc/perf/imc-pmu.c                        |   6 +
- arch/powerpc/platforms/44x/Kconfig                 |   1 +
- arch/powerpc/platforms/powernv/opal-irqchip.c      |   2 +
- arch/powerpc/platforms/powernv/opal-powercap.c     |   6 +
- arch/powerpc/platforms/powernv/opal-xscom.c        |   5 +
- arch/powerpc/platforms/pseries/hotplug-memory.c    |  21 ++--
- arch/s390/include/asm/pci_io.h                     |  32 +++---
- arch/s390/pci/pci_mmio.c                           |  12 +-
- arch/x86/kernel/kvmclock.c                         |  12 +-
- arch/x86/lib/misc.c                                |   2 +-
- crypto/af_alg.c                                    |  14 ++-
- crypto/scompress.c                                 |   6 +
- drivers/acpi/acpi_lpit.c                           |   2 +-
- drivers/acpi/acpi_video.c                          |  12 +-
- drivers/acpi/property.c                            |   4 +
- drivers/acpi/resource.c                            |   7 ++
- drivers/android/binder.c                           |   2 +-
- drivers/android/binder_alloc.c                     |  29 ++---
- drivers/base/swnode.c                              |   3 +
- drivers/bluetooth/btmtkuart.c                      |  11 +-
- drivers/clk/clk-si5341.c                           |   4 +-
- drivers/clk/rockchip/clk-rk3128.c                  |   2 +-
- drivers/clk/zynqmp/clk-mux-zynqmp.c                |   2 +-
- drivers/crypto/ccp/ccp-ops.c                       |   5 +-
- drivers/crypto/sahara.c                            | 127 ++++++++-------------
- drivers/crypto/virtio/Kconfig                      |   1 -
- drivers/crypto/virtio/virtio_crypto_common.h       |   2 +
- drivers/crypto/virtio/virtio_crypto_core.c         |  26 +++--
- drivers/edac/thunderx_edac.c                       |  10 +-
- drivers/firmware/ti_sci.c                          |  10 +-
- drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c        |   4 +-
- drivers/gpu/drm/amd/amdgpu/kv_dpm.c                |   4 +-
- drivers/gpu/drm/amd/amdgpu/si_dpm.c                |   5 +-
- drivers/gpu/drm/bridge/tc358767.c                  |   2 +-
- drivers/gpu/drm/drm_crtc.c                         |   8 +-
- drivers/gpu/drm/drm_drv.c                          |  10 +-
- drivers/gpu/drm/exynos/exynos_drm_dma.c            |   8 +-
- drivers/gpu/drm/exynos/exynos_hdmi.c               |   2 +
- drivers/gpu/drm/msm/disp/mdp4/mdp4_crtc.c          |   9 ++
- drivers/gpu/drm/msm/dsi/phy/dsi_phy.c              |   4 +-
- drivers/gpu/drm/nouveau/nvkm/subdev/mmu/vmmtu102.c |   2 +-
- drivers/gpu/drm/radeon/r100.c                      |   4 +-
- drivers/gpu/drm/radeon/r600_cs.c                   |   4 +-
- drivers/gpu/drm/radeon/radeon_display.c            |   7 +-
- drivers/gpu/drm/radeon/radeon_vm.c                 |   8 +-
- drivers/gpu/drm/radeon/si.c                        |   4 +
- drivers/gpu/drm/radeon/sumo_dpm.c                  |   4 +-
- drivers/gpu/drm/radeon/trinity_dpm.c               |   4 +-
- drivers/hid/wacom_wac.c                            |  32 +-----
- drivers/hwtracing/coresight/coresight-etm4x.h      |   2 +-
- drivers/i2c/busses/i2c-s3c2410.c                   |  40 ++++---
- drivers/infiniband/hw/mthca/mthca_cmd.c            |   4 +-
- drivers/infiniband/hw/mthca/mthca_main.c           |   2 +-
- drivers/input/joystick/xpad.c                      |   1 +
- drivers/input/keyboard/atkbd.c                     |  50 +++++++-
- drivers/input/serio/i8042-x86ia64io.h              |   8 ++
- drivers/media/dvb-core/dvbdev.c                    |   2 +
- drivers/media/usb/cx231xx/cx231xx-core.c           |   2 +
- drivers/media/usb/pvrusb2/pvrusb2-context.c        |   3 +-
- drivers/mmc/host/Kconfig                           |   5 +-
- drivers/mtd/mtd_blkdevs.c                          |   4 +-
- drivers/mtd/nand/raw/fsl_ifc_nand.c                |   2 +-
- drivers/net/dsa/vitesse-vsc73xx-core.c             |   2 +
- drivers/net/ethernet/broadcom/tg3.c                |  11 +-
- .../net/ethernet/mellanox/mlxsw/spectrum_acl_erp.c |   8 +-
- drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c |   2 +-
- drivers/net/ethernet/renesas/ravb_main.c           |   2 +-
- drivers/net/phy/micrel.c                           |   1 +
- drivers/net/wireless/marvell/libertas/Kconfig      |   2 -
- drivers/net/wireless/marvell/mwifiex/cfg80211.c    |   2 +
- drivers/net/wireless/marvell/mwifiex/fw.h          |   1 +
- drivers/net/wireless/marvell/mwifiex/ioctl.h       |   1 +
- drivers/net/wireless/marvell/mwifiex/uap_cmd.c     |   8 ++
- drivers/net/wireless/realtek/rtlwifi/pci.c         |  79 +++----------
- drivers/net/wireless/realtek/rtlwifi/pci.h         |   5 -
- .../net/wireless/realtek/rtlwifi/rtl8188ee/phy.c   |  20 +---
- .../wireless/realtek/rtlwifi/rtl8192c/phy_common.c |  16 +--
- .../wireless/realtek/rtlwifi/rtl8192c/phy_common.h |   1 -
- .../net/wireless/realtek/rtlwifi/rtl8192ce/phy.c   |   6 +-
- .../net/wireless/realtek/rtlwifi/rtl8192ce/phy.h   |   1 -
- .../net/wireless/realtek/rtlwifi/rtl8192cu/phy.c   |   6 +-
- .../net/wireless/realtek/rtlwifi/rtl8192de/phy.c   |  66 ++++-------
- .../net/wireless/realtek/rtlwifi/rtl8192ee/phy.c   |  20 +---
- .../net/wireless/realtek/rtlwifi/rtl8192se/phy.c   |  20 +---
- .../realtek/rtlwifi/rtl8723com/phy_common.c        |   8 +-
- .../net/wireless/realtek/rtlwifi/rtl8821ae/phy.c   |  19 ++-
- drivers/net/wireless/realtek/rtlwifi/wifi.h        |   7 ++
- drivers/net/wireless/realtek/rtw88/mac80211.c      |   4 +-
- drivers/net/xen-netback/netback.c                  |  44 ++++++-
- drivers/nvme/host/nvme.h                           |   5 +
- drivers/nvme/target/tcp.c                          |  20 +++-
- drivers/of/base.c                                  |   1 +
- drivers/of/unittest-data/tests-phandle.dtsi        |  10 +-
- drivers/of/unittest.c                              |  74 +++++++-----
- drivers/parport/parport_serial.c                   |  64 +++++++++++
- drivers/pci/controller/dwc/pci-keystone.c          |   9 ++
- drivers/pinctrl/cirrus/Kconfig                     |   3 +-
- drivers/reset/hisilicon/hi6220_reset.c             |   2 +-
- drivers/s390/block/scm_blk.c                       |   7 +-
- drivers/scsi/fnic/fnic_debugfs.c                   |   3 +-
- drivers/scsi/hisi_sas/hisi_sas_main.c              |   4 +-
- drivers/scsi/hisi_sas/hisi_sas_v3_hw.c             |   2 +-
- drivers/spi/spi-sh-msiof.c                         |  17 +++
- drivers/tty/serial/8250/8250_omap.c                |   2 +-
- drivers/tty/serial/imx.c                           |   2 +-
- drivers/uio/uio.c                                  |   7 +-
- drivers/usb/chipidea/core.c                        |   7 ++
- drivers/usb/dwc3/core.c                            |  39 +------
- drivers/usb/dwc3/ep0.c                             |   5 +-
- drivers/usb/mon/mon_bin.c                          |   7 +-
- drivers/usb/phy/phy-mxs-usb.c                      |   3 +-
- drivers/usb/typec/class.c                          |   4 +-
- drivers/video/fbdev/core/fb_defio.c                |   6 +-
- drivers/watchdog/bcm2835_wdt.c                     |   3 +-
- drivers/watchdog/hpwdt.c                           |   2 +-
- drivers/watchdog/watchdog_dev.c                    |   3 +-
- fs/f2fs/namei.c                                    |   2 +-
- fs/f2fs/xattr.c                                    |   6 +
- fs/gfs2/rgrp.c                                     |   2 +-
- fs/jbd2/journal.c                                  |   4 +-
- fs/nfs/blocklayout/blocklayout.c                   |   2 +
- fs/nfs/nfs4proc.c                                  |   3 +
- fs/pstore/ram_core.c                               |   2 +-
- include/crypto/if_alg.h                            |   3 +
- include/drm/drm_bridge.h                           |   2 +-
- include/net/bluetooth/hci_core.h                   |   1 -
- include/uapi/linux/virtio_crypto.h                 |   1 +
- init/do_mounts.c                                   |   9 +-
- kernel/bpf/lpm_trie.c                              |   3 +
- kernel/debug/kdb/kdb_main.c                        |  14 ++-
- kernel/dma/coherent.c                              |   4 +-
- kernel/time/tick-sched.c                           |   5 +
- kernel/trace/ring_buffer.c                         |   6 +
- kernel/trace/trace.c                               |   6 +-
- kernel/trace/trace_output.c                        |   6 +-
- lib/idr.c                                          |   2 +-
- lib/test_ida.c                                     |  40 +++++++
- net/bluetooth/hci_conn.c                           |   8 +-
- net/bluetooth/hci_event.c                          |  11 +-
- net/core/neighbour.c                               |   9 +-
- net/ipv6/ip6_tunnel.c                              |  26 ++---
- net/ncsi/internal.h                                |   9 +-
- net/ncsi/ncsi-netlink.c                            |   4 +-
- net/ncsi/ncsi-pkt.h                                |   7 +-
- net/ncsi/ncsi-rsp.c                                |  26 ++++-
- net/netfilter/ipvs/ip_vs_xmit.c                    |   4 +-
- net/netfilter/nf_tables_api.c                      |   3 +-
- net/netlabel/netlabel_calipso.c                    |  52 +++++----
- net/netlabel/netlabel_cipso_v4.c                   |   4 +-
- net/netlabel/netlabel_mgmt.c                       |   8 +-
- net/netlabel/netlabel_unlabeled.c                  |  10 +-
- net/netlabel/netlabel_user.h                       |   4 +-
- net/vmw_vsock/virtio_transport_common.c            |  13 ++-
- security/apparmor/policy_unpack.c                  |   4 +
- security/selinux/hooks.c                           |   7 ++
- sound/pci/hda/patch_realtek.c                      |  10 ++
- sound/pci/oxygen/oxygen_mixer.c                    |   2 +-
- sound/soc/atmel/sam9g20_wm8731.c                   |  61 ++++++++++
- sound/soc/codecs/cs35l33.c                         |   4 +-
- sound/soc/codecs/cs35l34.c                         |   4 +-
- sound/soc/codecs/cs43130.c                         |   6 +-
- sound/soc/codecs/da7219-aad.c                      |   2 +-
- sound/soc/codecs/nau8822.c                         |   9 +-
- sound/soc/codecs/rt5645.c                          |  10 +-
- sound/soc/intel/skylake/skl-pcm.c                  |   9 +-
- sound/soc/intel/skylake/skl-sst-ipc.c              |   4 +-
- tools/perf/builtin-record.c                        |  23 +++-
- tools/perf/builtin-top.c                           |  22 +++-
- tools/perf/util/bpf-event.c                        |  11 +-
- tools/perf/util/bpf-event.h                        |  19 ++-
- tools/perf/util/env.c                              |  90 ++++++++++++---
- tools/perf/util/env.h                              |  10 ++
- tools/perf/util/evlist.c                           |  21 +---
- tools/perf/util/evlist.h                           |   2 +-
- tools/perf/util/genelf.c                           |   6 +-
- tools/perf/util/header.c                           |   8 +-
- tools/perf/util/top.h                              |   2 +-
- .../drivers/net/mlxsw/spectrum-2/tc_flower.sh      |  52 ++++++++-
- .../selftests/net/fib_nexthop_multiprefix.sh       |   4 +-
- tools/testing/selftests/powerpc/math/fpu_preempt.c |   9 +-
- tools/testing/selftests/powerpc/math/vmx_preempt.c |  10 +-
- 191 files changed, 1277 insertions(+), 795 deletions(-)
-
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|BY5PR12MB5014:EE_
+X-MS-Office365-Filtering-Correlation-Id: 00ebba99-8a93-4772-d868-08dc1c3b3b63
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	ZzqAec4Gbjpbe5RsSywFzarz2lvsy617ZWLM4yLaRVEGNAZgeIa2qM4gewj757R4txzEPsS4ckb9B949eosV6GIcbYvlWawlxs0HEESX/wvBa8GQMswFAAZgyp0hWuapuXzpVmL0d1YaGmmNSCqjpBiYmeB5wrqRf/OUS2YNWzMW3/ToYICafBXJ8MZPbzuox7vMsSWsMjrKHViPY9KJpaZw3DSDyVPRpUmhg5FFH/DZL0uklViH5MJLXztF2l+g9MhWSHM7UvOUGoHCDJmtz49RfdC+9jbxyyJ5/iiNUYSwxuY+vI81mZntsbYNI1Af89X+r75LuUwbl2N6s3wQ5KjOvEfRaQ25BAg9oOpbHloTNLNMor0/rz156cHynZyZBMN/Q5elxV2m/4v/dj0hrx4OGaMIZ7h3f9mVrchuMcfJ3vmtuzH07vmxXeNa0vxm31VbNElslBm8T/Z9ButBLNY9RMBxv1qPlX7DBe+nMEP7MU7ckJt8Lw8gZwkxe5qOnpAmkgNUXQr8SlxrmOUWGKpVMCeUYkRSURl7TQbM9Sv/vcVjiSFJMXUcOArxeDwKNYWwIOP1xscCneixVax3DU914qy7ndoF6rGfpUN15B1PTEJ9ie1pyKTseYO+x+V+DpkCt5R97jd1jwgAMCgztA==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(136003)(396003)(376002)(346002)(39860400002)(230922051799003)(186009)(451199024)(1800799012)(64100799003)(31696002)(83380400001)(478600001)(966005)(8936002)(44832011)(6666004)(6506007)(4326008)(66946007)(54906003)(8676002)(316002)(6486002)(110136005)(66476007)(86362001)(2616005)(5660300002)(26005)(66556008)(2906002)(6512007)(53546011)(36756003)(41300700001)(31686004)(38100700002)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?Q3JZSGhaVU54V2Q3N3NodUFtTnlHdk40ZGFKd3cwZXl5N0xzTkwzK05ZZStJ?=
+ =?utf-8?B?bXpYaEdFUnhBdllQSlhoNjVnNnl4MElwdFlLZk5PR093WXhGZUxWME1GTC9E?=
+ =?utf-8?B?VmpFOFYyaVREWm80a2dkN0hLODZmOWc1QlBmQ2svNE1TVUkwK0oxUnJ4ZGl3?=
+ =?utf-8?B?YmtWWWVqY01BNnlCa3h6dEp6OHVMNlgyS0NqYktiMWhKV2YyeXJEV2tlQldJ?=
+ =?utf-8?B?NGF5UVlhNE5UcXhjTVgxcjdUVFF4N3NOTjIvREw3ZDFya0Y5UU9iUnlGM3Jw?=
+ =?utf-8?B?bC8yMWRBTVVWY211K2JrRVdJL0JadlZqd0dkRDFBNkxsY3FxZlVYVmtPTHBO?=
+ =?utf-8?B?S3ZTWEloN3RaajROOXZmTW9FMDBXaXVOaEc2d21FZ0hxMmNzZDU3am55Wm1n?=
+ =?utf-8?B?ZDd2UElXV21pL3VyZFZBU3ozNTRRaGx6VG5qdGtKODJmZGRZK3hPODZhSnAx?=
+ =?utf-8?B?Q25scWZxejdJeG8zQnpyRDd0M3kvVU15VHRhOW4vVzRvN3ptamVOeVVmUnBP?=
+ =?utf-8?B?b0ZUbnpQbHJnU0dEWkxmMTFHTVplRnBWcXhzSXVHV1hWQUprRmtnWWw3ZXQ2?=
+ =?utf-8?B?UlhuUmx0WjJldVc0K1JKNDJ0YjlnY3MyV3FBQzR5NHNRRGlIcXNvSW0vc28z?=
+ =?utf-8?B?R2krSkV0NVVsSEFjVUU0Q0pFdzhZaVA2NVN4TjdJaktkSElaSllzajAvNVgv?=
+ =?utf-8?B?WmFndEFmQlA1WFVMRTZCUUpKWmpGMm1tSFQ4SytLbzVrcXc1MGUzWjdSOGVG?=
+ =?utf-8?B?Zm1OOXQ2ZHJOcGVyUHdleWNQVHNMNnpRYWNma3hUcHZ1bjFOdmc3SjF3UkY0?=
+ =?utf-8?B?aFdlRWlMM0wrYmN3QnpWSjZGd3JGdG9YRlM5em0ydzZXVFIrOWNOcUo4NzJX?=
+ =?utf-8?B?em9VSHZ1USs3cXA2WVcrQlZuM3pNNnlzNW1pektiMGV5NUw3R2MzMTdKbHhF?=
+ =?utf-8?B?Wk9iOWFxelBETkhsYmF0MzlaNFU1WDJVWXg1MDhmNm0rM21wZmxUcTg3ekxW?=
+ =?utf-8?B?c0dmTGVtRFRrVWtCN24vRjI0bCt6Z3NnSHMvSWRpNUFnUjU3QjZibUFOdjJT?=
+ =?utf-8?B?Mlh6d1hoUm5QQ3JSOUNzaGQweVhpSGMwNzdQMjFyZ1BsMHNDQWdSK0tPN1hO?=
+ =?utf-8?B?dFhxTlJ1V0FIRXBoQk1PcFY5dmdReE5OZXdJbzdEWUdBYURpYVJhTWRaZkRr?=
+ =?utf-8?B?OXdjNGpLOTU4bWcxNDEraGo0QmhFVExnQ3NhcXc1YTVnSzZIWm9pcWlqa29j?=
+ =?utf-8?B?YklXL0RnRlhyV2ZvYzh1MTFaV1RsTUFkN05FeFl4aEdYYlM4enpsU3B1S3lt?=
+ =?utf-8?B?eXRHaWUyak9walF4azhLMlNqcHhZOStqNjlnUHVkNm02ZHhDdDZPU1dxT3lw?=
+ =?utf-8?B?c2hrdUwxMXc5KzFnSnBrMDZzYk9mN1FjVWpzYU1WL1BkektNY2tEcEZSaG5n?=
+ =?utf-8?B?em05bnUrNVJWRm1XNlpDeWZXYVgrNkRQK0dhZkgvWjlVTU5KeTFOS3crSUNZ?=
+ =?utf-8?B?MFN0U2xFZEc2NGUzM1pXNk9HWGNEd09SVlY5SkdDVm1ja2R5anJmSVFMbHRW?=
+ =?utf-8?B?a29wRTIwZHpGUXZzWFdMSUluSlVzQXlIU1ZNR1RkYU5kc0xSN0E3NXpuMTBx?=
+ =?utf-8?B?OUxmU1ZMK3Bxa3dXY1V6MmxyckpDdWJWOXhWV0xxbzh5cjEyb0EvL3FXYXdK?=
+ =?utf-8?B?d2cyRWpuSjkvYTZkOUlqbGlBRTluU0RCK3JlZGpHZnZ6Nk5mNVNhY0Rvbk1V?=
+ =?utf-8?B?SmdBL29tT3VYTk0zNEFmaG85NldIUnFTRFlKekVHV2tJNmR4L1FhNjZWb1cw?=
+ =?utf-8?B?ZlZQMVRzTjdPclhBUjMySFo5cERKT1BPMEU5Q0V3ZnVodHlIc0thM2wxRytw?=
+ =?utf-8?B?aEk5NjlTRHZZZnMxZmdEeW1oSFFncFB5ZjA3eHdoaUg3bUlPQWh0NmRwbExv?=
+ =?utf-8?B?cWY5VVJmRy91TiswVWc1S0pPaXhlUGl1SVIrSERLb0gxc2lpQno0M1lCZG9Q?=
+ =?utf-8?B?OFlVZjN0MWlkdEN1VjhoVC9nRVBmbGNzUDBYanB3bExKdVF2NXFHKzhNVjFy?=
+ =?utf-8?B?NzZ6UVRSeWlZRlNIS1R2cVlJd0dLdmo4ZUJ5TGhha2VDaTRqdHY1ZHJhM2ZL?=
+ =?utf-8?Q?QWQs6tzvFFjdhK/7Jl6dBlQwx?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 00ebba99-8a93-4772-d868-08dc1c3b3b63
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jan 2024 17:46:30.8881
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: JgI3jzuyfcAP5GSqpR5g9lWc5TMqB5UqB2jpcFAjfrSFUJZKRl8Cb2vZhGk3a+dAoFuefwvGvMQEF3sdRRhIZQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB5014
+
+On 1/22/2024 20:11, Mario Limonciello wrote:
+> commit f7fe64ad0f22 ("drm/sched: Split free_job into own work item")
+> causes graphics hangs at GDM or right after logging in on a
+> Framework 13 AMD laptop (containing a Phoenix APU).
+> 
+> This reverts commit f7fe64ad0f22ff034f8ebcfbd7299ee9cc9b57d7.
+> 
+> Fixes: f7fe64ad0f22 ("drm/sched: Split free_job into own work item")
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> ---
+> This is a regression introduced in 6.8-rc1, bisected from 6.7.
+> This revert done on top of 6.8-rc1 fixes the issue.
+> 
+> I'm happy to gather any data to use to properly debug if that is
+> preferable to a revert.
+
+BTW - nothing in kernel log when this happens.
+I did catch an ftrace with all the GPU scheduler trace events though:
+
+https://gist.github.com/superm1/1d3fc752a414f324fbde526052573acd
+
+> ---
+>   drivers/gpu/drm/scheduler/sched_main.c | 133 +++++++++----------------
+>   include/drm/gpu_scheduler.h            |   4 +-
+>   2 files changed, 48 insertions(+), 89 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/scheduler/sched_main.c b/drivers/gpu/drm/scheduler/sched_main.c
+> index 550492a7a031..91c96ab53fb5 100644
+> --- a/drivers/gpu/drm/scheduler/sched_main.c
+> +++ b/drivers/gpu/drm/scheduler/sched_main.c
+> @@ -369,32 +369,6 @@ static void drm_sched_run_job_queue(struct drm_gpu_scheduler *sched)
+>   		queue_work(sched->submit_wq, &sched->work_run_job);
+>   }
+>   
+> -/**
+> - * __drm_sched_run_free_queue - enqueue free-job work
+> - * @sched: scheduler instance
+> - */
+> -static void __drm_sched_run_free_queue(struct drm_gpu_scheduler *sched)
+> -{
+> -	if (!READ_ONCE(sched->pause_submit))
+> -		queue_work(sched->submit_wq, &sched->work_free_job);
+> -}
+> -
+> -/**
+> - * drm_sched_run_free_queue - enqueue free-job work if ready
+> - * @sched: scheduler instance
+> - */
+> -static void drm_sched_run_free_queue(struct drm_gpu_scheduler *sched)
+> -{
+> -	struct drm_sched_job *job;
+> -
+> -	spin_lock(&sched->job_list_lock);
+> -	job = list_first_entry_or_null(&sched->pending_list,
+> -				       struct drm_sched_job, list);
+> -	if (job && dma_fence_is_signaled(&job->s_fence->finished))
+> -		__drm_sched_run_free_queue(sched);
+> -	spin_unlock(&sched->job_list_lock);
+> -}
+> -
+>   /**
+>    * drm_sched_job_done - complete a job
+>    * @s_job: pointer to the job which is done
+> @@ -414,7 +388,7 @@ static void drm_sched_job_done(struct drm_sched_job *s_job, int result)
+>   	dma_fence_get(&s_fence->finished);
+>   	drm_sched_fence_finished(s_fence, result);
+>   	dma_fence_put(&s_fence->finished);
+> -	__drm_sched_run_free_queue(sched);
+> +	drm_sched_run_job_queue(sched);
+>   }
+>   
+>   /**
+> @@ -1092,10 +1066,8 @@ drm_sched_get_finished_job(struct drm_gpu_scheduler *sched)
+>   						typeof(*next), list);
+>   
+>   		if (next) {
+> -			if (test_bit(DMA_FENCE_FLAG_TIMESTAMP_BIT,
+> -				     &next->s_fence->scheduled.flags))
+> -				next->s_fence->scheduled.timestamp =
+> -					dma_fence_timestamp(&job->s_fence->finished);
+> +			next->s_fence->scheduled.timestamp =
+> +				dma_fence_timestamp(&job->s_fence->finished);
+>   			/* start TO timer for next job */
+>   			drm_sched_start_timeout(sched);
+>   		}
+> @@ -1145,29 +1117,7 @@ drm_sched_pick_best(struct drm_gpu_scheduler **sched_list,
+>   EXPORT_SYMBOL(drm_sched_pick_best);
+>   
+>   /**
+> - * drm_sched_free_job_work - worker to call free_job
+> - *
+> - * @w: free job work
+> - */
+> -static void drm_sched_free_job_work(struct work_struct *w)
+> -{
+> -	struct drm_gpu_scheduler *sched =
+> -		container_of(w, struct drm_gpu_scheduler, work_free_job);
+> -	struct drm_sched_job *job;
+> -
+> -	if (READ_ONCE(sched->pause_submit))
+> -		return;
+> -
+> -	job = drm_sched_get_finished_job(sched);
+> -	if (job)
+> -		sched->ops->free_job(job);
+> -
+> -	drm_sched_run_free_queue(sched);
+> -	drm_sched_run_job_queue(sched);
+> -}
+> -
+> -/**
+> - * drm_sched_run_job_work - worker to call run_job
+> + * drm_sched_run_job_work - main scheduler thread
+>    *
+>    * @w: run job work
+>    */
+> @@ -1176,50 +1126,64 @@ static void drm_sched_run_job_work(struct work_struct *w)
+>   	struct drm_gpu_scheduler *sched =
+>   		container_of(w, struct drm_gpu_scheduler, work_run_job);
+>   	struct drm_sched_entity *entity;
+> -	struct dma_fence *fence;
+> -	struct drm_sched_fence *s_fence;
+> -	struct drm_sched_job *sched_job;
+> +	struct drm_sched_job *cleanup_job;
+>   	int r;
+>   
+>   	if (READ_ONCE(sched->pause_submit))
+>   		return;
+>   
+> +	cleanup_job = drm_sched_get_finished_job(sched);
+>   	entity = drm_sched_select_entity(sched);
+> -	if (!entity)
+> -		return;
+>   
+> -	sched_job = drm_sched_entity_pop_job(entity);
+> -	if (!sched_job) {
+> -		complete_all(&entity->entity_idle);
+> +	if (!entity && !cleanup_job)
+>   		return;	/* No more work */
+> -	}
+>   
+> -	s_fence = sched_job->s_fence;
+> +	if (cleanup_job)
+> +		sched->ops->free_job(cleanup_job);
+>   
+> -	atomic_add(sched_job->credits, &sched->credit_count);
+> -	drm_sched_job_begin(sched_job);
+> +	if (entity) {
+> +		struct dma_fence *fence;
+> +		struct drm_sched_fence *s_fence;
+> +		struct drm_sched_job *sched_job;
+> +
+> +		sched_job = drm_sched_entity_pop_job(entity);
+> +		if (!sched_job) {
+> +			complete_all(&entity->entity_idle);
+> +			if (!cleanup_job)
+> +				return;	/* No more work */
+> +			goto again;
+> +		}
+>   
+> -	trace_drm_run_job(sched_job, entity);
+> -	fence = sched->ops->run_job(sched_job);
+> -	complete_all(&entity->entity_idle);
+> -	drm_sched_fence_scheduled(s_fence, fence);
+> +		s_fence = sched_job->s_fence;
+>   
+> -	if (!IS_ERR_OR_NULL(fence)) {
+> -		/* Drop for original kref_init of the fence */
+> -		dma_fence_put(fence);
+> +		atomic_inc(&sched->credit_count);
+> +		drm_sched_job_begin(sched_job);
+>   
+> -		r = dma_fence_add_callback(fence, &sched_job->cb,
+> -					   drm_sched_job_done_cb);
+> -		if (r == -ENOENT)
+> -			drm_sched_job_done(sched_job, fence->error);
+> -		else if (r)
+> -			DRM_DEV_ERROR(sched->dev, "fence add callback failed (%d)\n", r);
+> -	} else {
+> -		drm_sched_job_done(sched_job, IS_ERR(fence) ?
+> -				   PTR_ERR(fence) : 0);
+> +		trace_drm_run_job(sched_job, entity);
+> +		fence = sched->ops->run_job(sched_job);
+> +		complete_all(&entity->entity_idle);
+> +		drm_sched_fence_scheduled(s_fence, fence);
+> +
+> +		if (!IS_ERR_OR_NULL(fence)) {
+> +			/* Drop for original kref_init of the fence */
+> +			dma_fence_put(fence);
+> +
+> +			r = dma_fence_add_callback(fence, &sched_job->cb,
+> +						   drm_sched_job_done_cb);
+> +			if (r == -ENOENT)
+> +				drm_sched_job_done(sched_job, fence->error);
+> +			else if (r)
+> +				DRM_DEV_ERROR(sched->dev, "fence add callback failed (%d)\n",
+> +					  r);
+> +		} else {
+> +			drm_sched_job_done(sched_job, IS_ERR(fence) ?
+> +					   PTR_ERR(fence) : 0);
+> +		}
+> +
+> +		wake_up(&sched->job_scheduled);
+>   	}
+>   
+> -	wake_up(&sched->job_scheduled);
+> +again:
+>   	drm_sched_run_job_queue(sched);
+>   }
+>   
+> @@ -1304,7 +1268,6 @@ int drm_sched_init(struct drm_gpu_scheduler *sched,
+>   	atomic_set(&sched->credit_count, 0);
+>   	INIT_DELAYED_WORK(&sched->work_tdr, drm_sched_job_timedout);
+>   	INIT_WORK(&sched->work_run_job, drm_sched_run_job_work);
+> -	INIT_WORK(&sched->work_free_job, drm_sched_free_job_work);
+>   	atomic_set(&sched->_score, 0);
+>   	atomic64_set(&sched->job_id_count, 0);
+>   	sched->pause_submit = false;
+> @@ -1432,7 +1395,6 @@ void drm_sched_wqueue_stop(struct drm_gpu_scheduler *sched)
+>   {
+>   	WRITE_ONCE(sched->pause_submit, true);
+>   	cancel_work_sync(&sched->work_run_job);
+> -	cancel_work_sync(&sched->work_free_job);
+>   }
+>   EXPORT_SYMBOL(drm_sched_wqueue_stop);
+>   
+> @@ -1445,6 +1407,5 @@ void drm_sched_wqueue_start(struct drm_gpu_scheduler *sched)
+>   {
+>   	WRITE_ONCE(sched->pause_submit, false);
+>   	queue_work(sched->submit_wq, &sched->work_run_job);
+> -	queue_work(sched->submit_wq, &sched->work_free_job);
+>   }
+>   EXPORT_SYMBOL(drm_sched_wqueue_start);
+> diff --git a/include/drm/gpu_scheduler.h b/include/drm/gpu_scheduler.h
+> index 5acc64954a88..72f64bd0a6eb 100644
+> --- a/include/drm/gpu_scheduler.h
+> +++ b/include/drm/gpu_scheduler.h
+> @@ -495,10 +495,9 @@ struct drm_sched_backend_ops {
+>    *                 waits on this wait queue until all the scheduled jobs are
+>    *                 finished.
+>    * @job_id_count: used to assign unique id to the each job.
+> - * @submit_wq: workqueue used to queue @work_run_job and @work_free_job
+> + * @submit_wq: workqueue used to queue @work_run_job
+>    * @timeout_wq: workqueue used to queue @work_tdr
+>    * @work_run_job: work which calls run_job op of each scheduler.
+> - * @work_free_job: work which calls free_job op of each scheduler.
+>    * @work_tdr: schedules a delayed call to @drm_sched_job_timedout after the
+>    *            timeout interval is over.
+>    * @pending_list: the list of jobs which are currently in the job queue.
+> @@ -528,7 +527,6 @@ struct drm_gpu_scheduler {
+>   	struct workqueue_struct		*submit_wq;
+>   	struct workqueue_struct		*timeout_wq;
+>   	struct work_struct		work_run_job;
+> -	struct work_struct		work_free_job;
+>   	struct delayed_work		work_tdr;
+>   	struct list_head		pending_list;
+>   	spinlock_t			job_list_lock;
 
