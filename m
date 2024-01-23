@@ -1,65 +1,70 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A57F6167A
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 00:45:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BE187F7C8
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 00:45:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705970759; cv=none; b=f67fzJu0QQs6WuuzGDa37HUOVKdpVBRRPEQRswUQxKP4WGJxz2ESq745o/elzj2K0QNxyhp6BpeQhUEOfCpDdKbWloUlg16iJJX7/dqqyJlZ6QJAAtltbMhdb4Ec7cVavrdD8/h8VeqFp9rh2S6cx8gt++X8WwjVIRh8GscW6kA=
+	t=1705970761; cv=none; b=la9+RPEpxTY3psaQbIMQKTHiA84k6wF5E/qXgiOpYQbmFp9sNswKhUMdFfmPjdGiPKCbpZSLQy950vVBi29YxQChZ/9affwUN1xy5MfhCHTZF26Tlf2ZAh0AZWxDrEiAxQq6okenKSWK3xhZesSg6NS0zGgpaQVFtMlJk7CScoA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705970759; c=relaxed/simple;
-	bh=7SK+CeaptbBP/v+CP2JEux9OatqqjJKzGmyq2Voqx04=;
+	s=arc-20240116; t=1705970761; c=relaxed/simple;
+	bh=otrmpo4br5ciuWiM78a/Ceyb2KdAR01tXk9aBpC8wMw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=RoxGkoKvrkbjTU0M/kq9K+c0awSphaK5DJc7+9d0M3SwdyMaQV2tEQ5wvf4b98W7XaRaXvJ4E8LZaKs1UbiI4C+UvB8htC8CEuOXw3u8bPAEqbI9338q5EyAF6zL2aYC48/3zv1BS9d1j23KrDv/kwudItoDeiHSfroopryw/hc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=NdcyDFzU; arc=none smtp.client-ip=209.85.214.175
+	 MIME-Version; b=Ue6Ael8mh12OQgVnNWVQSBR07G3A2rnrpVhPZ9Dhb1/2z2QQXwA/hn3VTbh4RMNy5hUENFfKVpqriyO8Pd285UEe1UwqWpWVc/exRg3FKejfa5mCKKB07uXy/75dE/HG38/vCVdaneC8y6u+HSR+szn2itXwP1OWskO+USCQ/vg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=eisSFIOg; arc=none smtp.client-ip=209.85.210.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NdcyDFzU"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1d7393de183so8820275ad.3
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 16:45:57 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="eisSFIOg"
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-6da9c834646so3761176b3a.3
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 16:45:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1705970757; x=1706575557; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1705970759; x=1706575559; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=iBzwhtxHV7+0pkueVEdOMj16Ew6MX43q2RtCRgBYnfE=;
-        b=NdcyDFzUhvzwX4yoUH4hoUPRRbxPVswsvgSrjYNQ54x5uzW9pV54KelUvXlN97GcLf
-         LKSb1v1TQQEQ1HC134EB+87lJrhokCugQ1IC/LJwPjt0ndO4rBR7kCnNeaKMXfItHDYK
-         HyNNFIBlgVVW+LRphKpcKBrr6QAdLpoZz+XIs=
+        bh=S7qeKC064ZzlHJa5msLrHHdCXg1stkKcC4+dJKmdneQ=;
+        b=eisSFIOg4fJ3vz+bS/iu3KnkrgcvtlmfD/uWTb7T5vEdGsjqRSMe86hoDv4U/tNV+Y
+         4Vj4tG2KD3+v7KuRhIlPs7aYoprJNO0SANxUOoVQPNyca6DmEvSB9eGQvrL3ij81cGQa
+         r3jFVmpg6E4I3ga+Km1hyGgbM2j2k2pJdlKr8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705970757; x=1706575557;
+        d=1e100.net; s=20230601; t=1705970759; x=1706575559;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=iBzwhtxHV7+0pkueVEdOMj16Ew6MX43q2RtCRgBYnfE=;
-        b=IUM3Lu51opXi6gMryu0w18wXqQR0Gy40nzh51TNi2uLxLU8Fu7MM62gxUWMobgQvAi
-         84LDbXv/A45PSP1V2bLc3+SiVQakPFL8oJyweVUwLJQret6lddtHcnmpwQo+HDaPDFOu
-         UXdRE1A1VhL7NJd6x55ICGkafBi3Yp84QE2JC9nvgxyjAANt6zEkImk9C8HWU9gpVuPr
-         Ir+8z13pERoiKDmVelET+Tc3ANZa8zqwtGwivthyn+A9OHCn6fnLA3MChFM957nhJglG
-         LTynprqiiS/pk9S+uy0sYDv5zu/g8v7hU7fKCuFBBwmhJ67Vc+6CLlSkYsBaUUFXZDtE
-         fWew==
-X-Gm-Message-State: AOJu0YwUeaM+iBys9wa28nWs3EgNrBoJpZSFvV4+aRSPtviU6AO+2JJa
-	gjveh2iecBx89+7eOfK98M9qmgPcPmd08pMW7WEo2JwCoOhioDIBgMTTgPcsLw==
-X-Google-Smtp-Source: AGHT+IF8yhCmkJNt7Ij2XpjUMJOmTKGRgOFOqqmGAHzjTF1WQ4RIpNJnjNIqKXh4JiYJsFhdhzQmyQ==
-X-Received: by 2002:a17:903:249:b0:1d7:4f6:931b with SMTP id j9-20020a170903024900b001d704f6931bmr2578303plh.18.1705970757393;
-        Mon, 22 Jan 2024 16:45:57 -0800 (PST)
+        bh=S7qeKC064ZzlHJa5msLrHHdCXg1stkKcC4+dJKmdneQ=;
+        b=b6vGJQHej9AO8uaR0i5vWzS7ngbdOKlwhXGnPGp3BNBhMWWxsBpg+n/R91mwWciJpF
+         SODTJbmBrRiymQbd3LZOqJn/12DRVFnVFd1rlgGolC4LeEKnx4UHJheM2xrV8UyZ3r1Q
+         adiTScq3ki5sAODIcc2dIEr+jj3eQSq9XYj9r74WJVJRK7DoqMgpvdIYBklvTXXh12Hk
+         QjBMCqeLL9ZukC5EXsPnI9mqdYr8s541xb3qcgn/dP+UW1nm4ETfKJNxlpGdKuBXikIo
+         646l1jC3VNor8/LlzLrBntyj6uMW3EVx/IguNJqq+Demhp5fOHKS23Xge7ohOszTzS0+
+         fBHA==
+X-Gm-Message-State: AOJu0Yw9ktbjWF1paXcYkqLDX50iDjkm0ZRfWICQG2kn8jQzeOOf4tnc
+	TpCAwuRINfAHztIG9ol2EpTxWXs2ZCU9RIiZJxlmKSjzR6RVOYRa205xrz094w==
+X-Google-Smtp-Source: AGHT+IEfPSCAfbNkrsnvfNR/6lrRJTvzZ8aFbU2AhLJiZvXczWMg97ditkNX3fZkM39QiMucgiQfyA==
+X-Received: by 2002:a05:6a21:32a2:b0:19c:30a5:5c54 with SMTP id yt34-20020a056a2132a200b0019c30a55c54mr4120604pzb.28.1705970758815;
+        Mon, 22 Jan 2024 16:45:58 -0800 (PST)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id e6-20020a170902784600b001d66b134f53sm8013882pln.233.2024.01.22.16.45.54
+        by smtp.gmail.com with ESMTPSA id dj11-20020a17090ad2cb00b0029051dad730sm7733772pjb.26.2024.01.22.16.45.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jan 2024 16:45:55 -0800 (PST)
+        Mon, 22 Jan 2024 16:45:57 -0800 (PST)
 From: Kees Cook <keescook@chromium.org>
 To: linux-hardening@vger.kernel.org
 Cc: Kees Cook <keescook@chromium.org>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	kvm@vger.kernel.org,
+	Christian Brauner <brauner@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"Eric W. Biederman" <ebiederm@xmission.com>,
+	Dave Chinner <dchinner@redhat.com>,
+	Alexey Gladkov <legion@kernel.org>,
+	Jeff Layton <jlayton@kernel.org>,
+	Waiman Long <longman@redhat.com>,
 	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
 	Bill Wendling <morbo@google.com>,
 	Justin Stitt <justinstitt@google.com>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 23/82] KVM: Refactor intentional wrap-around calculation
-Date: Mon, 22 Jan 2024 16:26:58 -0800
-Message-Id: <20240123002814.1396804-23-keescook@chromium.org>
+Subject: [PATCH 82/82] mqueue: Refactor intentional wrap-around test
+Date: Mon, 22 Jan 2024 16:27:57 -0800
+Message-Id: <20240123002814.1396804-82-keescook@chromium.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240122235208.work.748-kees@kernel.org>
 References: <20240122235208.work.748-kees@kernel.org>
@@ -69,19 +74,19 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2091; i=keescook@chromium.org;
- h=from:subject; bh=7SK+CeaptbBP/v+CP2JEux9OatqqjJKzGmyq2Voqx04=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlrwgGMUghWI+PGsPguK5zp1jJTO9Udx8kDt3JM
- m98iBkuTfCJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZa8IBgAKCRCJcvTf3G3A
- JsIxEACt5a2RN2oZ+4JYd2ymbmpv5B6nOsrUIqOPauBUQY+OHeVN8nMnsBdASH58oAT8jCD9WVQ
- 7HAb+2ANB08IYc8/R0h6xkBqa2lCZk/3c5dpFUtpIlCTzY+hAfPnj3l7atArhXefRspVNbsJft8
- hYD5qHs7sMR4xnQPCwbKLBjLn46735BXMxnSYAn9JYVGEL740vCDkxpqmQgFiSX23MaRZDi2p8U
- v1qhycBB3BSMK6Lo8r85YYSK2XJ9x47dytKFlfuqi371X3bi2J4T1Zmf1zmU0ALDy4G3/NJIlX2
- JhbQiOfH98N9+MtqcBMq3RWtHRqVRJsqM4nPVlbzO4D0Z5EKX7HzxzAg+wZOWXOJqZBUflBMu00
- jbo8OBTZLfp9yRmymYTGlNNuanwYU4YZpdO9MQx9rvC1YQM+HdtO9YWpu+++sAgjyvdln94rlUO
- sMJ9ZmFXRxInaysdaafEyQBh06ugVvFdamYsCf6FILZP9XmKMUKSGcyiRVCG0f2brI9Fuyw3SRn
- cbpJzb9ATyxDFZyuhMI/7g3fuPMKee7yNNoMul1dOGNFcLCtwSAgsgOVJEGFdCgdgXj7MmvUulL
- ZBQpjnBa8JFB3UeWkmEc5ex6AaaLMKyDaTl9rbXMZXXt2w178+78kcYV5TBWH9Pt2AyakcqiqaQ C0S0f0g8Orqog+w==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2072; i=keescook@chromium.org;
+ h=from:subject; bh=otrmpo4br5ciuWiM78a/Ceyb2KdAR01tXk9aBpC8wMw=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlrwgMplzxY/SLj9+bxbGPriiBi7drTq3OXWSJm
+ svPwIQ44g2JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZa8IDAAKCRCJcvTf3G3A
+ JkmCEACY37o5F1LgKmBQ/X+GY7t3DI3LwjJCZxndVTmZbmKfVSOia2DA4d7XI1UV1bLDavheiOD
+ ZspAXfK1XmENeXellFyMfyPquNHRcsarUQ1eWVcWnrDOE0opNQOc0QFe+6R8uveX/n9ivxN6Wa1
+ hOaIRaYdtaG0pl0/p61larNEe0AnWHy+RtEMHuE39N9gWCpwcPqHoA5mCo1dxrD2K2uh/qlF7ES
+ OzWJchorCRsC5GNs9Ui0GFKsf6zpgZU/FyCbyLayRLUF4nfFP2LiO3h9b6WRp0vltQF54wKsTNu
+ KqLuPuvIO0elWbihDwdLbI8EutfMxrfBmbbk7MzP7yL8iwl37lrpoXTKwF75rDVE1n9y0I33Z3e
+ kbO+/3Rj0fjARWduA04Taqd3iu+/l1YaEl+sm0k+KsXXpau+AtqNR9KyrfyBDpM8DRtqXNx8mvs
+ P4VT9g7ZVTJqargqoTFlGh5dcyq+u0cZGRvguOrlRuIGifiAE6HPv46NzI8V4HCRdFKqGQ/5XR3
+ guih4Ak2DS4ygw8ba5mwnBdRsQiwDjfWRY9xwAc10W8T4ZikUx8/kDV0HnL2+ZQNa1zKFuQvnaK
+ AnAki/aXhT0xQPUk4ZlJRdVZJ1v3xn7aOA4UscmWvvlFVA4Yj7/ScJZKtoGdQI2rcgZYM6BAU97 FairA3wiIkm3Fdw==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
@@ -91,54 +96,46 @@ kind of math. One of the most common code patterns of this is:
 
 	VAR + value < VAR
 
-Notable, this is considered "undefined behavior" for signed and pointer
+Notably, this is considered "undefined behavior" for signed and pointer
 types, which the kernel works around by using the -fno-strict-overflow
 option in the build[1] (which used to just be -fwrapv). Regardless, we
 want to get the kernel source to the position where we can meaningfully
 instrument arithmetic wrap-around conditions and catch them when they
-are unexpected, regardless of whether they are signed, unsigned, or
-pointer types.
+are unexpected, regardless of whether they are signed[2], unsigned[3],
+or pointer[4] types.
 
-Refactor open-coded unsigned wrap-around addition test to use
-check_add_overflow(), retaining the result for later usage (which removes
-the redundant open-coded addition). This paves the way to enabling the
-unsigned wrap-around sanitizer[2] in the future.
+Refactor open-coded wrap-around addition test to use add_would_overflow().
+This paves the way to enabling the wrap-around sanitizers in the future.
 
 Link: https://git.kernel.org/linus/68df3755e383e6fecf2354a67b08f92f18536594 [1]
-Link: https://github.com/KSPP/linux/issues/27 [2]
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: kvm@vger.kernel.org
+Link: https://github.com/KSPP/linux/issues/26 [2]
+Link: https://github.com/KSPP/linux/issues/27 [3]
+Link: https://github.com/KSPP/linux/issues/344 [4]
+Cc: Christian Brauner <brauner@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Dave Chinner <dchinner@redhat.com>
+Cc: Alexey Gladkov <legion@kernel.org>
+Cc: Jeff Layton <jlayton@kernel.org>
+Cc: Waiman Long <longman@redhat.com>
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- virt/kvm/coalesced_mmio.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ ipc/mqueue.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/virt/kvm/coalesced_mmio.c b/virt/kvm/coalesced_mmio.c
-index 1b90acb6e3fe..0a3b706fbf4c 100644
---- a/virt/kvm/coalesced_mmio.c
-+++ b/virt/kvm/coalesced_mmio.c
-@@ -25,17 +25,19 @@ static inline struct kvm_coalesced_mmio_dev *to_mmio(struct kvm_io_device *dev)
- static int coalesced_mmio_in_range(struct kvm_coalesced_mmio_dev *dev,
- 				   gpa_t addr, int len)
- {
-+	gpa_t sum;
-+
- 	/* is it in a batchable area ?
- 	 * (addr,len) is fully included in
- 	 * (zone->addr, zone->size)
- 	 */
- 	if (len < 0)
- 		return 0;
--	if (addr + len < addr)
-+	if (check_add_overflow(addr, len, &sum))
- 		return 0;
- 	if (addr < dev->zone.addr)
- 		return 0;
--	if (addr + len > dev->zone.addr + dev->zone.size)
-+	if (sum > dev->zone.addr + dev->zone.size)
- 		return 0;
- 	return 1;
- }
+diff --git a/ipc/mqueue.c b/ipc/mqueue.c
+index 5eea4dc0509e..7ef9d325183a 100644
+--- a/ipc/mqueue.c
++++ b/ipc/mqueue.c
+@@ -366,7 +366,7 @@ static struct inode *mqueue_get_inode(struct super_block *sb,
+ 			min_t(unsigned int, info->attr.mq_maxmsg, MQ_PRIO_MAX) *
+ 			sizeof(struct posix_msg_tree_node);
+ 		mq_bytes = info->attr.mq_maxmsg * info->attr.mq_msgsize;
+-		if (mq_bytes + mq_treesize < mq_bytes)
++		if (add_would_overflow(mq_bytes, mq_treesize))
+ 			goto out_inode;
+ 		mq_bytes += mq_treesize;
+ 		info->ucounts = get_ucounts(current_ucounts());
 -- 
 2.34.1
 
