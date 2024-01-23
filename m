@@ -1,115 +1,164 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24CC75A114
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 11:43:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F2254BAA8;
+	Tue, 23 Jan 2024 11:44:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706010186; cv=none; b=bbja6MCW6u8tZsKCZJ7q12riOelQvNSgx+ebtYN7Mx7xK5mYxD3+gAUkfQXyTne/ZF3eO/hp8jW0DEyg+5qAKynCKUpvTeu5FaONxNEB/QuduEvoe7/NkZrMDdvUBh48Sa1moSDRLCZB378yyp7JQQOHJqnb7q51LiqFU9AUUe4=
+	t=1706010283; cv=none; b=eGxUivHrcl6xoL70LhTMo+lpH5GljB2j9dIIeQpqC+WdGSNmhEQvn55t4VLWJjoVVmC+ItlQr93/jwRX8ztpLCJa3U1iXmOH6NvGCpL2qD38G+lbAQX4/cjTm7izVdCiCoKeH8knkz5KqVXK/14b2fuW5rrCArHhKpn4t4wtd14=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706010186; c=relaxed/simple;
-	bh=yD5zgikaBnzqRFckUp4Iw29O6Q9Cu/bTBJbJ1D6g47o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YJL3vs7vT1XIlPkUi1Sa7Kh8scBC+lDbEYhjL10ZRjEdcYXSiFIOXpAy4q8G3qeqk2J/1oVo+Em3MoxUCOIdm2Z/qGapGDq4FyiwabTNsjOsnvZqFSS4kuU6snaCOcSIFm+qQ68k8/6Griinjoaowk0oHPrnZIEulF1SA/Tq4do=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=V1h+dgnf; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="V1h+dgnf"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a2cea0563cbso617862266b.3
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 03:43:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706010183; x=1706614983; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=rCBz3mYv0AakBZqsbV887sBgjYgjKky8SqdijPrpvLA=;
-        b=V1h+dgnfOmdGp+fkvd/vqG/nSF2tHTDNQjcgkv+N4qbtZ55BenntJPRZxPifaAvYMx
-         D/4XwKXBS/okr2bG5D2R5r9HG1eEK3XbLEz8N7SQH3HPbvvlpGTZ2a0HHp1M14+q5eFG
-         kZmvq3J2eRWJJqVcNYHEA0W+HJp2EoDZZP3bGM3byOYK2av8hloVDIo8fa0W/RbAvpY/
-         0yEOd2ZuVr+FuWXw8VmZ4dzR47mDoXYFqV4NgR5LDBymZpLEfMbVt6LDvMSdAiOEPT/v
-         c7jQvWjtOPfAw2CIAXl/kRWM36ug8dLX2FW8CgUq2dwQqbyYtJ3QiQ7vfxTijIPGEC02
-         3ByA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706010183; x=1706614983;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rCBz3mYv0AakBZqsbV887sBgjYgjKky8SqdijPrpvLA=;
-        b=LWDl0FJDHoHyLTd9hFqeSV3Zjsw9QpXCXvymWpKMYltEJCkac8luB7VdZ8Cp+T4PpG
-         43ReEBMrSM3f7qyYR7rfwjmz+2fWaQh5qxglRZ5BsESnVemOxmjyjpAwFCQUsIivsFAd
-         wgussMdVv60wzqNDVmmEORvU8ghrXEac2p+65koGHjxe1prUxwkY4byjWivezPC1ld1f
-         IFQerZfwOfc8iwyp2BCl98ftkXFSr5H8ytaiBTDXUFIE0uU+joA9PMEYOmxyx+bcmBzS
-         fhAdLU7UM5xgi/UXcr7LgE9AnjELfDdN5bAZAMydk9+iv9hWUGuJgUkUBjnj1dVE9nEb
-         xjhQ==
-X-Gm-Message-State: AOJu0YyDRRlsTZOJXQWN0PbRGLUTA35FQSKuBb4IM3avu3anRsSwTpFK
-	g8b0/vl/o3+GmWYqCA58rteN5sYNgBR0PUePmLhYVptrvbxgiOTk+5KqrUKjIcw=
-X-Google-Smtp-Source: AGHT+IFyov8dO82PiLmNVMmgfIb+vNpzx5fstoBpC7KEjzuH7yt3y/nlkS6ebQk5bLYliqGYMX2O7w==
-X-Received: by 2002:a17:907:c001:b0:a2f:bf0e:ed99 with SMTP id ss1-20020a170907c00100b00a2fbf0eed99mr3629890ejc.86.1706010183301;
-        Tue, 23 Jan 2024 03:43:03 -0800 (PST)
-Received: from linaro.org ([79.115.23.25])
-        by smtp.gmail.com with ESMTPSA id tl12-20020a170907c30c00b00a30abba5089sm730935ejc.206.2024.01.23.03.43.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jan 2024 03:43:02 -0800 (PST)
-Date: Tue, 23 Jan 2024 13:43:01 +0200
-From: Abel Vesa <abel.vesa@linaro.org>
-To: Bryan O'Donoghue <pure.logic@nexus-software.ie>
-Cc: Andy Gross <agross@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-	Rajendra Nayak <quic_rjendra@quicinc.com>
-Subject: Re: [PATCH v2 08/10] clk: qcom: Add GPU clock driver for x1e80100
-Message-ID: <Za+mRZD0v6zNZ27r@linaro.org>
-References: <20231214-x1e80100-clock-controllers-v2-0-2b0739bebd27@linaro.org>
- <20231214-x1e80100-clock-controllers-v2-8-2b0739bebd27@linaro.org>
- <fc6f8e78-f704-4104-b3c5-bd10627c33b4@nexus-software.ie>
+	s=arc-20240116; t=1706010283; c=relaxed/simple;
+	bh=8nYknSBS1Wv/nSK3xGKiq6V0ScnnT0Ye8I6JmLcPfqg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=q2GTGN2KuN+XRRVIJuLHJSUbrBiTgUBip1gCqL/KRGmj7bIB76DYKnOJGjLFSsjaNnNhzKP6TnlSg/rOoFOF/ccDlgMVB7YsvCD/Qs/0v+fXcIDHRYJDeVjOp52qgBS47nCaTz625R/JD4hlZWUPetT+Lw/vGWkpOePjCIy2IBo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 60D9A1FB;
+	Tue, 23 Jan 2024 03:45:26 -0800 (PST)
+Received: from [10.57.77.165] (unknown [10.57.77.165])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 47CA23F762;
+	Tue, 23 Jan 2024 03:44:37 -0800 (PST)
+Message-ID: <7f39e2db-0fa1-4391-956f-d2586fa234bd@arm.com>
+Date: Tue, 23 Jan 2024 11:44:35 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fc6f8e78-f704-4104-b3c5-bd10627c33b4@nexus-software.ie>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 01/11] arm/pgtable: define PFN_PTE_SHIFT on arm and
+ arm64
+Content-Language: en-GB
+To: David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org
+Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+ Matthew Wilcox <willy@infradead.org>, Russell King <linux@armlinux.org.uk>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Dinh Nguyen <dinguyen@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>,
+ Nicholas Piggin <npiggin@gmail.com>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>,
+ "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
+ "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Alexander Gordeev <agordeev@linux.ibm.com>,
+ Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+ Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
+ Christian Borntraeger <borntraeger@linux.ibm.com>,
+ Sven Schnelle <svens@linux.ibm.com>, "David S. Miller"
+ <davem@davemloft.net>, linux-arm-kernel@lists.infradead.org,
+ linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+ linux-s390@vger.kernel.org, sparclinux@vger.kernel.org
+References: <20240122194200.381241-1-david@redhat.com>
+ <20240122194200.381241-2-david@redhat.com>
+ <fdaeb9a5-d890-499a-92c8-d171df43ad01@arm.com>
+ <46080ac1-7789-499b-b7f3-0231d7bd6de7@redhat.com>
+ <02d42161-a867-424d-bef8-efd67d592cbc@redhat.com>
+ <75e99c49-734a-47f4-b7a5-7e346bd2487b@arm.com>
+ <08607590-3115-46e6-8f1f-bcc60c33cc20@redhat.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <08607590-3115-46e6-8f1f-bcc60c33cc20@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 23-12-15 12:40:45, Bryan O'Donoghue wrote:
-> On 14/12/2023 16:49, Abel Vesa wrote:
-> > From: Rajendra Nayak <quic_rjendra@quicinc.com>
-> > 
-> > Add Graphics Clock Controller (GPUCC) support for X1E80100 platform.
-> > 
-> > Signed-off-by: Rajendra Nayak <quic_rjendra@quicinc.com>
-> > Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
+On 23/01/2024 11:33, David Hildenbrand wrote:
+> On 23.01.24 12:17, Ryan Roberts wrote:
+>> On 23/01/2024 11:02, David Hildenbrand wrote:
+>>> On 23.01.24 11:48, David Hildenbrand wrote:
+>>>> On 23.01.24 11:34, Ryan Roberts wrote:
+>>>>> On 22/01/2024 19:41, David Hildenbrand wrote:
+>>>>>> We want to make use of pte_next_pfn() outside of set_ptes(). Let's
+>>>>>> simpliy define PFN_PTE_SHIFT, required by pte_next_pfn().
+>>>>>>
+>>>>>> Signed-off-by: David Hildenbrand <david@redhat.com>
+>>>>>> ---
+>>>>>>     arch/arm/include/asm/pgtable.h   | 2 ++
+>>>>>>     arch/arm64/include/asm/pgtable.h | 2 ++
+>>>>>>     2 files changed, 4 insertions(+)
+>>>>>>
+>>>>>> diff --git a/arch/arm/include/asm/pgtable.h b/arch/arm/include/asm/pgtable.h
+>>>>>> index d657b84b6bf70..be91e376df79e 100644
+>>>>>> --- a/arch/arm/include/asm/pgtable.h
+>>>>>> +++ b/arch/arm/include/asm/pgtable.h
+>>>>>> @@ -209,6 +209,8 @@ static inline void __sync_icache_dcache(pte_t pteval)
+>>>>>>     extern void __sync_icache_dcache(pte_t pteval);
+>>>>>>     #endif
+>>>>>>     +#define PFN_PTE_SHIFT        PAGE_SHIFT
+>>>>>> +
+>>>>>>     void set_ptes(struct mm_struct *mm, unsigned long addr,
+>>>>>>                   pte_t *ptep, pte_t pteval, unsigned int nr);
+>>>>>>     #define set_ptes set_ptes
+>>>>>> diff --git a/arch/arm64/include/asm/pgtable.h
+>>>>>> b/arch/arm64/include/asm/pgtable.h
+>>>>>> index 79ce70fbb751c..d4b3bd96e3304 100644
+>>>>>> --- a/arch/arm64/include/asm/pgtable.h
+>>>>>> +++ b/arch/arm64/include/asm/pgtable.h
+>>>>>> @@ -341,6 +341,8 @@ static inline void __sync_cache_and_tags(pte_t pte,
+>>>>>> unsigned int nr_pages)
+>>>>>>             mte_sync_tags(pte, nr_pages);
+>>>>>>     }
+>>>>>>     +#define PFN_PTE_SHIFT        PAGE_SHIFT
+>>>>>
+>>>>> I think this is buggy. And so is the arm64 implementation of set_ptes(). It
+>>>>> works fine for 48-bit output address, but for 52-bit OAs, the high bits are
+>>>>> not
+>>>>> kept contigously, so if you happen to be setting a mapping for which the
+>>>>> physical memory block straddles bit 48, this won't work.
+>>>>
+>>>> Right, as soon as the PTE bits are not contiguous, this stops working,
+>>>> just like set_ptes() would, which I used as orientation.
+>>>>
+>>>>>
+>>>>> Today, only the 64K base page config can support 52 bits, and for this,
+>>>>> OA[51:48] are stored in PTE[15:12]. But 52 bits for 4K and 16K base pages is
+>>>>> coming (hopefully v6.9) and in this case OA[51:50] are stored in PTE[9:8].
+>>>>> Fortunately we already have helpers in arm64 to abstract this.
+>>>>>
+>>>>> So I think arm64 will want to define its own pte_next_pfn():
+>>>>>
+>>>>> #define pte_next_pfn pte_next_pfn
+>>>>> static inline pte_t pte_next_pfn(pte_t pte)
+>>>>> {
+>>>>>      return pfn_pte(pte_pfn(pte) + 1, pte_pgprot(pte));
+>>>>> }
+>>>>>
+>>>
+>>> Digging into the details, on arm64 we have:
+>>>
+>>> #define pte_pfn(pte)           (__pte_to_phys(pte) >> PAGE_SHIFT)
+>>>
+>>> and
+>>>
+>>> #define __pte_to_phys(pte)     (pte_val(pte) & PTE_ADDR_MASK)
+>>>
+>>> But that implies, that upstream the PFN is always contiguous, no?
+>>>
+>>
+>>
+>> But __pte_to_phys() and __phys_to_pte_val() depend on a Kconfig. If PA bits is
+>> 52, the bits are not all contiguous:
+>>
+>> #ifdef CONFIG_ARM64_PA_BITS_52
+>> static inline phys_addr_t __pte_to_phys(pte_t pte)
+>> {
+>>     return (pte_val(pte) & PTE_ADDR_LOW) |
+>>         ((pte_val(pte) & PTE_ADDR_HIGH) << PTE_ADDR_HIGH_SHIFT);
+>> }
+>> static inline pteval_t __phys_to_pte_val(phys_addr_t phys)
+>> {
+>>     return (phys | (phys >> PTE_ADDR_HIGH_SHIFT)) & PTE_ADDR_MASK;
+>> }
+>> #else
+>> #define __pte_to_phys(pte)    (pte_val(pte) & PTE_ADDR_MASK)
+>> #define __phys_to_pte_val(phys)    (phys)
+>> #endif
+>>
 > 
-> > +static struct platform_driver gpu_cc_x1e80100_driver = {
-> > +	.probe = gpu_cc_x1e80100_probe,
-> > +	.driver = {
-> > +		.name = "gpu_cc-x1e80100",
+> Ah, how could I've missed that. Agreed, set_ptes() and this patch are broken.
 > 
-> I think these underscores are very unnecessary and subtractive of meaning.
-> 
-> .name = "gpucc-x1e80100"
-> 
-> > +		.of_match_table = gpu_cc_x1e80100_match_table,
-> > +	},
-> > +};
-> > +module_platform_driver(gpu_cc_x1e80100_driver);
-> > +
-> > +MODULE_DESCRIPTION("QTI GPU_CC x1e80100 Driver");
-> 
-> "QTI GPU Clock Controller Driver"
+> Do you want to send a patch to implement pte_next_pfn() on arm64, and then use
+> pte_next_pfn() in set_ptes()? Then I can drop this patch here completely from
+> this series.
 
-Again, please look at other platforms (SM8650, SM8550, etc).
+Yes good idea. I probably won't get around to it until tomorrow.
 
-> 
-> ---
-> bod
