@@ -1,110 +1,102 @@
-Received: from mail-ot1-f41.google.com (mail-ot1-f41.google.com [209.85.210.41])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 698484879F;
-	Tue, 23 Jan 2024 01:24:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD22121340
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 01:26:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705973078; cv=none; b=sLc0ESrB3hmGErfdIFVVEbZIRnuRgdnQCQz96jsJN3oS4hDc8OiQWDmvW9OAXRcX86ouTfiMwcS/1KeguQQTnJGzes9Gyl6SKn/7v2Fkma0jWaHTdbGKADFE3VUGF8ttWfCpIS3W+oOwPw3hynBZ7MCGlEzX7l8+ToVcDtnvph0=
+	t=1705973179; cv=none; b=UqYqOXsakLPS3fdGO43Z1MZ5PXDRtrEf0NmAVYZZ+BngbAyZ+QRrbRTnEY3dWP9dn5tmZw0yF656WKQo/uDtu1TPq3km0KJ3uUBaX1H++ejzZV77eGaHhb46ANZ5zBHsxLYvTNZDZBaSRZqt3p4cyFn63Jq/fJr/bJRxkUB8bB4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705973078; c=relaxed/simple;
-	bh=4X+e/5eRr0/1QKFCJvN2/ZWmTmsoQ4uSniacJzukbrk=;
+	s=arc-20240116; t=1705973179; c=relaxed/simple;
+	bh=wO0luKUt6JJ8AteGlx010Dz9fgA4X/MUoSN9b3z/WkI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gGiPE7Fc9f4j3qjS4Qm6WJGkL/Bud4f1R4cdzsw5nN4QM4cC+TjjVwTqxSLO8gxB6ADLvfEV521QtKX6OtpGeTY0OIvuZMTeY69OS0Miw1IzaWAUm9Lx9EAeIlWnohw8Y+FJf8kPbwnhpGaOVXE1bqRNt6Df4k3p8bKPk+cvpPU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ODO6Ek93; arc=none smtp.client-ip=209.85.210.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=t7y8vX1r4a+nTQIYsjfXHVXrQ13mLuAIZJKqWJHDskIlO++lCug0X1Yq5r8+y/Bg8ehCwAhupq6XCEuLToR242aLjVd3ONzYheW4hzrGKIbstPX5oaPG9XDwFvtG6LlrX5Z2X5NH1DlQKMeGUt1EF/9wLChEhqpsvQOyy0/+kiM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=YQcJEBiL; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ODO6Ek93"
-Received: by mail-ot1-f41.google.com with SMTP id 46e09a7af769-6e0eb1cf1f5so843519a34.3;
-        Mon, 22 Jan 2024 17:24:37 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="YQcJEBiL"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-40e86a9fc4bso48779655e9.2
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 17:26:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705973076; x=1706577876; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=L2t04bRrjEPqvRZY9vsZb+gHmac8X05fevidcqS/qug=;
-        b=ODO6Ek93/eKBHfdR0+8nBKP65Xenlijagga0RSdYPcHM9TdWOcMIk7cq3kQ0cFnI0x
-         UpvdpGF0CUEr8DMmoUnGdIbWyD+fftWG8kV3HvztzCfVSOj6HdQkNQjkFEGXqWGNvwS/
-         OPjeH+ok79D62Vl+LZTG0fL+uDhw541y4eBp1XANuSSHyA3oFqYbRBMMMXsudia4lpd7
-         UKmC+ofKv721aDEv0oTICzpPJ58/56i+ugaqfAD2oyE+/ve/WRj7e27GU7HxUik0rogA
-         csbpG8C7tmBu47hv/2tks7sp0Qlb0Bty8JzAgizFFLTplDDrjFkWk3bp2c4SG8LyccN3
-         ptBw==
+        d=linux-foundation.org; s=google; t=1705973175; x=1706577975; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=br9E5KI+nUh9y1ENUcsXEpHmHOk92uTJMp6hh/0UfzM=;
+        b=YQcJEBiLB0ZbsyFZe8/2Qomtgtxpf2IU4vGdzapqL5Y8/5bjpsaPT+yKGlxr1swRqa
+         MjV3s6QYmENiI+kXlaB47irMQxWuo9lrxBlufBimwPd3i6Q9sUsSUM2mR5o3nK86zeT+
+         bkzgLdAm69OFLaMZ4r6OviFUZjvycJYPWnFhI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705973076; x=1706577876;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=L2t04bRrjEPqvRZY9vsZb+gHmac8X05fevidcqS/qug=;
-        b=isRWMmoOCY9HGG+j7ZcTDNWoqxDe+sdgghFULy3C6eo2HsDcn3mYz1KoLcbVEh1RR6
-         k/gPGbVBJdGuog4DqHyGHrWRDtrSRmFyJFIoubxWonuoC46KIPFmuEn8qV2sAGwMNWy0
-         2/4Zj467WqG7MOah8nRbpNeP77oYjxaI9uZPqC2fEqUak4+NJkNpL5ENq3wsYklx5TGS
-         a8PL6n5f+y/93BJo+qQtZ4xIiNz4B4iyZulGbVLMelRDJnycZRqScWkxQiuoCadt8/bP
-         QVw5ywGnIqvSNAu5gJuEaqvN6XBrGnTDbxyNm7/s+kh01xYjizenKwV+a2gaSaOuF5cd
-         sUbQ==
-X-Gm-Message-State: AOJu0YxOUm9/oU9ffiQdBPiWkYTmXGn/diHECkEDFm1XuAKmRwHtoqTi
-	is2FFfdO9D4vjMdlo8T/c4vcTjwarDD8XG5eoi/71GbO2xuh+KqDk5sAzLhWOzl3M6/Pa2YPoh0
-	9e6Eybk2YvvfyVz0hGUco201TDZI=
-X-Google-Smtp-Source: AGHT+IHyY3YAlXk1zADzHlDpVnX/XjnGBBzGqQKcyHspAZ/1NjdilCVSUG/kGR3Z1882PQbbKMdzT6m2GOHS5+Vb+Lk=
-X-Received: by 2002:a05:6870:d1d5:b0:214:8a13:2025 with SMTP id
- b21-20020a056870d1d500b002148a132025mr29115oac.96.1705973075749; Mon, 22 Jan
- 2024 17:24:35 -0800 (PST)
+        d=1e100.net; s=20230601; t=1705973175; x=1706577975;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=br9E5KI+nUh9y1ENUcsXEpHmHOk92uTJMp6hh/0UfzM=;
+        b=kRe/OjMp/M1Q+xgsuvvuXTI0a4TDlPPB180R7MBhwJKn3zhstP7rCYG2s1UJoRiVdn
+         rxx6lX6fwGZ7DmYO8j7GviOTwtKWiKSpQczbPydqA9zgF57esNzwb3h2XiehEna+xgDc
+         1ZXTxE0wZ/bksqL6u3wznwq7ZQEuAa43h93f0xaODi9D2lRAcFf91fIEQ5I9jrQwAuQm
+         Y0/W/paB443AKzdx/WtMUjZ8bndcfIT2p1kjbZVPDHDTPpHc4IVeiE59m/YhGDVu2LMF
+         UGfIkZRsYXPgjQesHCmNAPqQkqGvoGzf670DnVQJEHSeP6dtPe/xaDTT4RjCD/grGPDV
+         brtg==
+X-Gm-Message-State: AOJu0Yxqy5ljqSCHF8fi8OzxDUck/n8P6ygRr3Rzl3FUkMk4cQ9pBnlY
+	6jDbcOzal2dt5WR0IKJF/AkPSUjN5mOkuygDvrv4jJKhQUkJ0C8/ntbjqMrB2yIpSdKWtTd/cHi
+	fglom1g==
+X-Google-Smtp-Source: AGHT+IHLgqHA4qvrJHSmMK+DXdDBPZT/voQPn+1bGpHGON4m4EzcCTiQG7yf3noY4/Y+GEW/nBoBZA==
+X-Received: by 2002:a7b:c8c2:0:b0:40e:5659:fb0c with SMTP id f2-20020a7bc8c2000000b0040e5659fb0cmr61066wml.165.1705973175095;
+        Mon, 22 Jan 2024 17:26:15 -0800 (PST)
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com. [209.85.208.45])
+        by smtp.gmail.com with ESMTPSA id fi15-20020a056402550f00b0055c73b56bb2sm385730edb.29.2024.01.22.17.26.14
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 22 Jan 2024 17:26:14 -0800 (PST)
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-55a685e6299so3815845a12.2
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 17:26:14 -0800 (PST)
+X-Received: by 2002:aa7:c887:0:b0:55c:6df8:e18b with SMTP id
+ p7-20020aa7c887000000b0055c6df8e18bmr400918eds.12.1705973174033; Mon, 22 Jan
+ 2024 17:26:14 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240122080631.2880-1-qiujingbao.dlmu@gmail.com>
- <20240122080631.2880-2-qiujingbao.dlmu@gmail.com> <CAJM55Z_DFox9c_eDeHtx9H+9e4A6pjkCkt7po94j_mu-tQWywg@mail.gmail.com>
-In-Reply-To: <CAJM55Z_DFox9c_eDeHtx9H+9e4A6pjkCkt7po94j_mu-tQWywg@mail.gmail.com>
-From: Jingbao Qiu <qiujingbao.dlmu@gmail.com>
-Date: Tue, 23 Jan 2024 09:24:24 +0800
-Message-ID: <CAJRtX8SiVazctKcmbrM3qhooQ9J_yuSAuUAh-nSW+sk8NWKv2g@mail.gmail.com>
-Subject: Re: [PATCH v7 3/3] riscv: dts: sophgo: add rtc dt node for CV1800
-To: Emil Renner Berthing <emil.renner.berthing@canonical.com>
-Cc: alexandre.belloni@bootlin.com, robh+dt@kernel.org, 
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, chao.wei@sophgo.com, 
-	unicorn_wang@outlook.com, paul.walmsley@sifive.com, palmer@dabbelt.com, 
-	aou@eecs.berkeley.edu, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	dlan@gentoo.org
+References: <20240122180605.28daf23a@gandalf.local.home> <20240122181547.16b029d6@gandalf.local.home>
+ <20240122181901.05a3b9ab@gandalf.local.home> <CAHk-=whry+-JUDiiCkDkDn2TDg7SA5OvZpPbcQ_jkM_J5=ySdA@mail.gmail.com>
+ <27c3d1e9-5933-47a9-9c33-ff8ec13f40d3@amd.com>
+In-Reply-To: <27c3d1e9-5933-47a9-9c33-ff8ec13f40d3@amd.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Mon, 22 Jan 2024 17:25:57 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wi9XK=TQ7tk6+2ymx8Upm6r36vY6wF9REpt1sho2ySteg@mail.gmail.com>
+Message-ID: <CAHk-=wi9XK=TQ7tk6+2ymx8Upm6r36vY6wF9REpt1sho2ySteg@mail.gmail.com>
+Subject: Re: [BUG] BUG: kernel NULL pointer dereference at ttm_device_init+0xb4
+To: "Bhardwaj, Rajneesh" <rajneesh.bhardwaj@amd.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, LKML <linux-kernel@vger.kernel.org>, 
+	Felix Kuehling <Felix.Kuehling@amd.com>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	dri-devel@lists.freedesktop.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jan 22, 2024 at 9:25=E2=80=AFPM Emil Renner Berthing
-<emil.renner.berthing@canonical.com> wrote:
+On Mon, 22 Jan 2024 at 16:56, Bhardwaj, Rajneesh
+<rajneesh.bhardwaj@amd.com> wrote:
 >
-> Jingbao Qiu wrote:
-> > Add the rtc device tree node to cv1800 SoC.
-> >
-> > Signed-off-by: Jingbao Qiu <qiujingbao.dlmu@gmail.com>
-> > ---
-> >  arch/riscv/boot/dts/sophgo/cv1800b.dtsi | 7 +++++++
-> >  1 file changed, 7 insertions(+)
-> >
-> > diff --git a/arch/riscv/boot/dts/sophgo/cv1800b.dtsi b/arch/riscv/boot/=
-dts/sophgo/cv1800b.dtsi
-> > index df40e87ee063..0cd7eb9a3048 100644
-> > --- a/arch/riscv/boot/dts/sophgo/cv1800b.dtsi
-> > +++ b/arch/riscv/boot/dts/sophgo/cv1800b.dtsi
-> > @@ -119,5 +119,12 @@ clint: timer@74000000 {
-> >                       reg =3D <0x74000000 0x10000>;
-> >                       interrupts-extended =3D <&cpu0_intc 3>, <&cpu0_in=
-tc 7>;
-> >               };
-> > +
-> > +             rtc: rtc@5025000 {
-> > +                     compatible =3D "sophgo,cv1800-rtc";
-> > +                     reg =3D <0x5025000 0x2000>;
-> > +                     interrupts =3D <17 IRQ_TYPE_LEVEL_HIGH>;
-> > +                     clocks =3D <&osc>;
-> > +             };
->
-> Before this patch it looks like the nodes are sorted by their address,
-> but this would break it.
+> I think a fix might already be in flight. Please see  Linux-Kernel Archive: Re: [PATCH] drm/ttm: fix ttm pool initialization for no-dma-device drivers (iu.edu)
 
-Thanks, I will fix it.
+Please use lore.kernel.org that doesn't corrupt whitespace in patches
+or lose header information:
 
-Best regards,
-Jingbao Qiu
+  https://lore.kernel.org/lkml/20240113213347.9562-1-pchelkin@ispras.ru/
+
+although that seems to be a strange definition of "in flight". It was
+sent out 8 days ago, and apparently nobody thought to include it in
+the drm fixes pile that came in last Friday.
+
+So it made it into rc1, even though it was reported a week before.
+
+It also looks like some mailing list there is mangling emails - if you
+use 'all' instead of 'lkml', lore reports multiple emails with the
+same message-id, and it all looks messier as a result.
+
+I assume it's dri-devel@lists.freedesktop.org that messes up, mainly
+because I don't tend to see this behaviour when only the usual
+kernel.org mailing lists are involved.
+
+              Linus
