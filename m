@@ -1,112 +1,91 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83FC060B8B;
-	Tue, 23 Jan 2024 15:45:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E5625FF1F;
+	Tue, 23 Jan 2024 15:45:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706024733; cv=none; b=VDDLG2+UaNvUoCuvwZN0qeovtZcIQagB6EI2Pb2UOxjpm4NiA/jhggpFOAWsalPEyYvCvvUWT+mAr/aKiq20WKQOb9+CrGZjGQjLCt1h9s/Kx1HWqqg7G4feETTVcIk6wj3PH96JhhOOZ7bfRpA2APESlGjZ6J2bnvtGA8pMKSk=
+	t=1706024755; cv=none; b=opLiT7YOXBmYT1cKQmW0NFXQeUZztv4M/Bi/MH8KXZIaTshk3pZMq1+kyUfSu6k6mUwTT10VCQKnJuvJlIDWiwQ6RmBGOAhTB9xxHFF8yvX48PG0LOb7TH/Tn2ZJaphQHs2PmOGMMpOOYreJI1rS05ON8WkfvuqA0fPphSbP0u0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706024733; c=relaxed/simple;
-	bh=hdBYdUxOFq+kbS0ASigOqpNwC+DLJhVJWkE9MFnLlNM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gfBDtEsYyPOGrly7wPLeMXP9qOBAHeQoGyj2uHl+FJmHvQl1IMmeoKpFnmNwVA8cvcg7WAeTW6jkUp9oKa5IfwcfZNufD+yjmizinWZfaCMFz+KqC3FsxqkjRzyI6o+QSKQ/Vj7m/utrO7AWv3XO+xwq4pWJN/vy9LnWbVhVIU0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CZeSQHkG; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1706024755; c=relaxed/simple;
+	bh=VTHbfDzFrOVA7xk3KnPk4ZGZEh8IaYb1F6l3jc3cu8U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bDH4oaYm4UrNpdDQveMk8bN/bgHCG1ibdyqNav0AfRb47Jv4jXCYYvvVFVg6cV8vlc7jprYUB5OXw5ACujXhiTmK7B8nxcpoF7pTrbIQIfK25c67kceSUEMheHIFR/xU5RRM7SE95/mv96ZNSTqxvKAHCyG8J0BpM4pDqq4neFg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VGb543E/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CZeSQHkG"
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a2f79e79f0cso432919166b.2;
-        Tue, 23 Jan 2024 07:45:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706024730; x=1706629530; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jtlKdxisJ1H4nXUQnaiF3tGiczuUPAFtsLVHqqe+6VI=;
-        b=CZeSQHkGMHeHcWoEL36DbEv7o+4X+RJNWCIdD8+W1P+K4k+jfUQ1YVoX4T0x2i+1jI
-         SEcl88ixaxRdtNvzOSkg3fZ91d2hf0jv2x+hGfB2GWS1j8hiH+SmA8WwHOXyJdHBiVHl
-         RcX/LnoWaCSCvKE7uGtvKVkU3aD47GIy3p2tP+T0VIcGHoyNGe26kBJ9Syh6vStbbIEk
-         WW7K9tgSgUtbJ7Wx+HrNLTvQbsVk+d0aFSq9KuwTo46llJ4sp+YSxbaATOiLbW7qf6yG
-         Gk05kK7UaJrRtT//vaX3TvKpw32CN5FE5Vvv/69QtQkJP/Bho6UhQFd7cqO0HbCClN4H
-         c3/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706024730; x=1706629530;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jtlKdxisJ1H4nXUQnaiF3tGiczuUPAFtsLVHqqe+6VI=;
-        b=oU5DaUKU+rlzlr187XEJspN+VszFNMXpQjaESqYxqgw3O3Z5RYHlkWtJppgDP4i4XT
-         Zp59qzvVxXL6LQ5hfFQ8qOFwewq0xpyo1i7YZNyuKJdOmDVgsg+8F2swKrIraI7cK3gX
-         aay0s2KwEyVDLOBINmBl9IXTyCSZ5WGjA+9mMLPKJUKe7XBdCUc/lwC8wwxdw1Sk1wI6
-         4oku/6cEe3QN6H260UJaiH1uKsC8wKpKjImKPs0C6iLBYynhjo8u+yTeZbe64jgihIsY
-         1e60syNhxjFuVUQrrqEqNt+japK2hiIxVaBxXtl//rUOKTAUa2vNhfoAGc26XKX0tzas
-         4trQ==
-X-Gm-Message-State: AOJu0YyBq+Ov4xx9VJ+Mb8p5i0yxD86TRD7HVIjYm01Kw8Us0fJK1xL8
-	py0pmZw+dghZ7bxIDoR5BvBzjhaIe+n9El9yeDk88Whx4zxCHvcuw4tCdSovjsmyBC8/99lOo7V
-	7ZjedD0Jd/+IxHCs8wZO1uSuBYXk=
-X-Google-Smtp-Source: AGHT+IGeoKDAXQT1QtGkmzsvDd9O3U+IXSXTY2VIJASOG7mhjJxF1tXdrpBbCuSnLMpczZO5eE6k5hkSEaDy2eB9Yno=
-X-Received: by 2002:a17:906:da81:b0:a30:f04e:4bdd with SMTP id
- xh1-20020a170906da8100b00a30f04e4bddmr45448ejb.68.1706024729528; Tue, 23 Jan
- 2024 07:45:29 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VGb543E/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22544C433C7;
+	Tue, 23 Jan 2024 15:45:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706024754;
+	bh=VTHbfDzFrOVA7xk3KnPk4ZGZEh8IaYb1F6l3jc3cu8U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VGb543E/+P6Kxuqmrk/XxB1IjbFgKxaWXDEeLYwEkuz0IJ2H+EA7Qt+BLc82tfDY4
+	 8ArXfiV7thf0VLOQvnyadDBXMnEpdNMH/WaM16d6sZjPx3hZ8KRJYBdSX5+Vr8ZQjX
+	 mrkVD8/Rr4Yqo4YPyvUobAJ3GuRHLBBAkNMTgE+jsAi8HOon5kIOKBNK2a5j9GNjxH
+	 OfQBYLRq5E3LQIH1k2BxJt/+gmDA6iMgpMZIhBQth/KdSPiAMTDYfjKjxCf8657fCN
+	 urWzPeZHUHJd7sFEwN0KSc6XOpeZ9j03v/qI42n816qzZxaVC8mKo93wbW0SZd6w9W
+	 CsDtf/etp2ZYw==
+Date: Tue, 23 Jan 2024 16:45:49 +0100
+From: Christian Brauner <brauner@kernel.org>
+To: Seth Forshee <sforshee@kernel.org>
+Cc: Alexander Mikhalitsyn <aleksandr.mikhalitsyn@canonical.com>, 
+	mszeredi@redhat.com, stgraber@stgraber.org, linux-fsdevel@vger.kernel.org, 
+	Miklos Szeredi <miklos@szeredi.hu>, Amir Goldstein <amir73il@gmail.com>, 
+	Bernd Schubert <bschubert@ddn.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 0/9] fuse: basic support for idmapped mounts
+Message-ID: <20240123-patentfrei-hausbank-97f018e5c8a4@brauner>
+References: <20240108120824.122178-1-aleksandr.mikhalitsyn@canonical.com>
+ <20240121-pfeffer-erkranken-f32c63956aac@brauner>
+ <Za7aaIuQDH92jel+@do-x1extreme>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240123133828.141222-1-warthog618@gmail.com>
-In-Reply-To: <20240123133828.141222-1-warthog618@gmail.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Tue, 23 Jan 2024 17:44:52 +0200
-Message-ID: <CAHp75Vd1dipGkCgQBENN3rLeUO+eQfOz9uKzz86eK755smqGag@mail.gmail.com>
-Subject: Re: [PATCH] Documentation: gpio: describe uAPI behaviour when
- hardware doesn't support requested config
-To: Kent Gibson <warthog618@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-doc@vger.kernel.org, brgl@bgdev.pl, linus.walleij@linaro.org, 
-	andy@kernel.org, corbet@lwn.net
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <Za7aaIuQDH92jel+@do-x1extreme>
 
-On Tue, Jan 23, 2024 at 3:39=E2=80=AFPM Kent Gibson <warthog618@gmail.com> =
-wrote:
->
-> The existing uAPI documentation does not adequately describe how the kern=
-el
-> handles the case where the underlying hardware or driver does not support
-> the requested configuration.
->
-> Add a Configuration Support section describing that behaviour to both the
-> v1 and v2 documentation, and better document the errors returned where th=
-e
-> requested configuration cannot be supported.
+On Mon, Jan 22, 2024 at 03:13:12PM -0600, Seth Forshee wrote:
+> On Sun, Jan 21, 2024 at 06:50:57PM +0100, Christian Brauner wrote:
+> > > - We have a small offlist discussion with Christian about adding fs_type->allow_idmap
+> > > hook. Christian pointed out that it would be nice to have a superblock flag instead like
+> > > SB_I_NOIDMAP and we can set this flag during mount time if we see that the filesystem does not
+> > > support idmappings. But, unfortunately, I didn't succeed here because the kernel will
+> > > know if the filesystem supports idmapping or not after FUSE_INIT request, but FUSE_INIT request
+> > > is being sent at the end of the mounting process, so the mount and superblock will exist and
+> > > visible by the userspace in that time. It seems like setting SB_I_NOIDMAP flag, in this
+> > > case, is too late as a user may do the trick by creating an idmapped mount while it wasn't
+> > > restricted by SB_I_NOIDMAP. Alternatively, we can introduce a "positive" version SB_I_ALLOWIDMAP
+> > 
+> > I see.
+> > 
+> > > and a "weak" version of FS_ALLOW_IDMAP like FS_MAY_ALLOW_IDMAP. So if FS_MAY_ALLOW_IDMAP is set,
+> > > then SB_I_ALLOWIDMAP has to be set on the superblock to allow the creation of an idmapped mount.
+> > > But that's a matter of our discussion.
+> > 
+> > I dislike making adding a struct super_block method. Because it means that we
+> > call into the filesystem from generic mount code and specifically with the
+> > namespace semaphore held. If there's ever any network filesystem that e.g.,
+> > calls to a hung server it will lockup the whole system. So I'm opposed to
+> > calling into the filesystem here at all. It's also ugly because this is really
+> > a vfs level change. The only involvement should be whether the filesystem type
+> > can actually support this ideally.
+> > 
+> > I think we should handle this within FUSE. So we allow the creation of idmapped
+> > mounts just based on FS_ALLOW_IDMAP. And if the server doesn't support the
+> > FUSE_OWNER_UID_GID_EXT then we simply refuse all creation requests originating
+> > from an idmapped mount. Either we return EOPNOSUPP or we return EOVERFLOW to
+> > indicate that we can't represent the owner correctly because the server is
+> > missing the required extension.
+> 
+> Could fuse just set SB_I_NOIDMAP initially then clear it if the init
+> reply indicates idmap support? This is like the "weak" FS_ALLOW_IDMAP
+> option without requiring another file_system_type flag.
 
-...
-
-> +Bias             best effort
-
-So, best effort means that in some cases it won't fail. It reminds me
-of the baud rate setting in serial (TermIOS). The question here is how
-does user space know that it fell in one of such cases? (In termios
-the IOCTL updates the respective fields and then user space can get
-settings to see what has actually been applied.)
-
-Floating line is not good in some cases and user space really wants to
-know that and treat it as an error (if needed). Hence the above Q. I
-believe this needs to be explained in the documentation.
-
-...
-
-> +Bias             best effort
-
-Ditto.
-
-...
-
-Personally I would still do two patches per ABI version, but it's up
-to Bart what he wants to see at the end.
-
---
-With Best Regards,
-Andy Shevchenko
+Would probably works too, yes. I'm just trying to avoid any additional
+flag usage. Ideally we'd just do it in FUSE but this way is possibly
+also effective. Although it kinda leaks internal FUSE details as in
+"SB_I_NOIDMAP" really means "SB_I_INITIALIZED" which I kind of dislike.
