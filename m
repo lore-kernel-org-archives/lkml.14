@@ -1,70 +1,70 @@
 Received: from out2-smtp.messagingengine.com (out2-smtp.messagingengine.com [66.111.4.26])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 267C8139F
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 03:47:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8420B17E8
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 03:47:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.111.4.26
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705981630; cv=none; b=kHU7FOdpUryO7pWlt6cMZx8DxP9OYsoLAuaeeIAIIowk9EwaahstG631cVDkpEuy79Qpc0tIRcplf7ES1sBzrw04M8zcX+OMz2PwJEczbMFdN2H4l8AlRx0oU+uoxR2D+yf5ljJ97pJ4Bm2BGJCIDbaHn4bxmO+zKggi+iVSTQQ=
+	t=1705981632; cv=none; b=artyljp53kFDxTJEPyQsES4jfQfGv+DS2dPIoQ8h/EiuEIs5jYMq4KRMZvr9CC04me35qb0CBAwQ/FMklDdNBozlShUergkjeGzmKDBlcdpKqd2WqB+NmhM2KBthxbADwFScZwvWe9M4x+4SNk9loeZm1IQYQ1SldA3zfGJ1NBQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705981630; c=relaxed/simple;
-	bh=8WeKfAJJdh73qrTR41NhYhBGB+4RtvowBQtQCm9rX+Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=rXeYqA4qKTvEuuUHPYEoc0TNCRS5Q8kygvCvZ/H1WzchFhILeVhOWeurSxb9dqYnGkX/5YCnXQIgGsrxzC+bPsvP42coD7u73H2pjOhKRTpCenJprgtNtIynbI+bhcQnqai/2sfYG0x+fhwgCmCMpLjOST93u4fwdO48twxqCS8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sent.com; spf=pass smtp.mailfrom=sent.com; dkim=pass (2048-bit key) header.d=sent.com header.i=@sent.com header.b=MKAFpRQz; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=E+uH+U3j; arc=none smtp.client-ip=66.111.4.26
+	s=arc-20240116; t=1705981632; c=relaxed/simple;
+	bh=ebuXU93NWE5l7bMJomxhtlmk69J+qiMDRuYxlKKxW4k=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Y4oP2tM/tV9WW4BiZ2vzaGsyEyLMV6QQWOxkjYECbkbvmGIJ/Riw/g1ftsjfI73tNbMSK97tMKQgvLmIksh86H8dXuZD7sBER1hSxAX2UiotbEuegEsCGjfTFCr2oU+8D8naPUfWe+SxP0kCvDn0JE/zh5Tit900SZFnQV8F8RY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sent.com; spf=pass smtp.mailfrom=sent.com; dkim=pass (2048-bit key) header.d=sent.com header.i=@sent.com header.b=TGPjcuaB; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=tqVvXjVA; arc=none smtp.client-ip=66.111.4.26
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sent.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sent.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sent.com header.i=@sent.com header.b="MKAFpRQz";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="E+uH+U3j"
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
-	by mailout.nyi.internal (Postfix) with ESMTP id 116055C00C3;
-	Mon, 22 Jan 2024 22:47:07 -0500 (EST)
+	dkim=pass (2048-bit key) header.d=sent.com header.i=@sent.com header.b="TGPjcuaB";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="tqVvXjVA"
+Received: from compute7.internal (compute7.nyi.internal [10.202.2.48])
+	by mailout.nyi.internal (Postfix) with ESMTP id 940C55C0330;
+	Mon, 22 Jan 2024 22:47:09 -0500 (EST)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute2.internal (MEProxy); Mon, 22 Jan 2024 22:47:07 -0500
+  by compute7.internal (MEProxy); Mon, 22 Jan 2024 22:47:09 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sent.com; h=cc
 	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:message-id:mime-version:reply-to
-	:reply-to:subject:subject:to:to; s=fm3; t=1705981627; x=
-	1706068027; bh=XqJNwykVxovHJhKF3uvN/x6G6k4XWN03Y1NwhgTnc4I=; b=M
-	KAFpRQzDH2UtE/NXJgtDZvOq+6OOT/ip1efW9lW3D8PtmbiKtSapMvWGtqHWicA/
-	9GxTB0lv5fv3E+jExTa5ntWgwT/fXHcixb/KaePeKSYcb6/FeF8tuulzvXs38IuS
-	jmenaMKkLqKUPIaK4qqkkFHYuYIEl0bJvpQq/4cWAru/cGNu9lnpvNigw261MR6P
-	mc8dnJry36aE5RttCW4z53tC8s58b9Aw1WWYSBBijfiut75WTO+n8Y/r7ms/+WHb
-	RfG+xGdRf9/KVZLE5CYJ+jBiU3JmB/jO4Cl19kCFi3izaN2w1Lp4DnkDN28joU9g
-	3XBkDXEdRf4K5Osv7UWsg==
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to; s=fm3; t=
+	1705981629; x=1706068029; bh=OGWh8nwjD+/F70nRvDY2KROL0h10J6GLLU2
+	GjbyVFgk=; b=TGPjcuaByLyZV1Rdhrq/FKYymI5xvg9LZGK/2tn2BbtF7NofOLA
+	ixPOWHNiSULzRbh5ytOTGxCQqMqYZy+oJjmMfUlH6t4UwhxJ8Drhtx+Av0tmz+pv
+	0YOwL9pSXtgkBZpqGX65exujNB+tyOYY7QyXPvopEPNbBCF7omPF/hu6p5ewahmv
+	tdJkl1c/RjOztczeoywOxv0BJgZeKCfzm8/S7wOAodpTfNJAd6xzPHqQgG4vcDDl
+	9kAk0FNhx6Z33gYsI20JBF68okJAnKCsDndtlqT1khjqCcAlMnrCI5ZSetMP5I8i
+	C04PoKW6qj1AdlyDZN2qiAKe2Rv7YINE1tw==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:message-id:mime-version:reply-to:reply-to
-	:subject:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender
-	:x-me-sender:x-sasl-enc; s=fm3; t=1705981627; x=1706068027; bh=X
-	qJNwykVxovHJhKF3uvN/x6G6k4XWN03Y1NwhgTnc4I=; b=E+uH+U3jWeuWPyEv1
-	60xIHct/3a9f/lZiO2HFhQ7H/fP3eG8ZIgx64sAC56nYA4utyYU2sV79M5r8Iht/
-	qpN7aW025pPFursnnIC7oYTrooox5h+9+w+2zkzaPZglmvVCPEn3zvh4k2P8bY5x
-	wYmtqbeThBSlLwirYmQJMKiPKXk4INv5NuhZxOzzdly/WmZVK0PuKOpLF8SciWnW
-	GKZgFGpqzk9CPibIxMK8u0y8Evh+zsQ0HqCTvtVNV1EFpO3NR/avV8awzyKO951G
-	igb81iUdp0sla6vRWIR9pv3CkYzdOILbjPrI+yjyiKCF0gMM2bRsnnW9TaG7MQAL
-	T2RHw==
-X-ME-Sender: <xms:ujavZSXrHLih1l_xVwD2rMnmX37Hxj9bUm-HrGrvv9eH27s4bYWs2w>
-    <xme:ujavZel4pYPhYcXlwbjeYTLF3E4ok69ZOOZskhSc7KG3apAXsxKdRK3s1Nm5PqZnU
-    lBsUuWo1S1-prNLtg>
-X-ME-Received: <xmr:ujavZWYpQjTwPqafJJClSupQNma1-5blfFp3dgHVKGWky27HBX9dKyeQwK3SKosSixP4fxCCf84CSoQkbK5ypWDmSRpD_taS2P-2WOcuZ--5TdcTNTAoEru8>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrvdekjedgieduucetufdoteggodetrfdotf
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
+	1705981629; x=1706068029; bh=OGWh8nwjD+/F70nRvDY2KROL0h10J6GLLU2
+	GjbyVFgk=; b=tqVvXjVAhViwWsuQ0tXVg3IvxjqMdLLDDo5Oxbel+wxtcu7m7Tw
+	71MNXYVST7GLueUgO5y8nYsOv5AdILI7aNevErF9mp5D/arDq7PwON567x10SuKp
+	a2Z7zMiQJQ6Xl5hoS0b94lZCwVVJN7etujpA0qgvmWxmN9UpofxfR7j+ZQduik4G
+	EzcK++YZXFgp5xuHnyOPXhyjw++gDJ0Lfk4G99+cjeIyRlLEA7wcmLrwFGb83T0k
+	5GaaJGBYAuKxv6eUuODMymZauhCfHQY3PjBSNEpXeL1wfnNuc9FCo5/REAefzSR3
+	jTTo1Ir3ifb8VRN4Tt3dRGgK3RotXqq+7Qg==
+X-ME-Sender: <xms:vDavZZdpvHY146mCyHasuxaRmyZ1xu_ndEFkAZmMi_6yGgwVJxWYEg>
+    <xme:vDavZXO7QGYnWyE5qalvNnJO7Em0EJEZ_IGgD08dnYPUZFMeU03E0gSwYBHm-rGWL
+    zJmx_0gykgIHKduTA>
+X-ME-Received: <xmr:vDavZSh6XTFs9sIyaa4Bm9QdVRAPCVGt85ocfNIQyiVS_OmpJVVAxCPmVIDfa_R_YmJKQCA_qg5DONQvMO1j1kqGoBiWJU4-bs5aU6yW1hUwAEjcyL_WXqK->
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrvdekjedgiedtucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhephffvvefufffkofhrgggtgfesthekredtredtjeenucfhrhhomhepkghiucgj
-    rghnuceoiihirdihrghnsehsvghnthdrtghomheqnecuggftrfgrthhtvghrnhepkefhle
-    duhffhjedttdetudejtdeuieevueetuddtuedthffffffgueffhfegjeffnecuffhomhgr
-    ihhnpehkvghrnhgvlhdrohhrghdpfhholhhiohhsrdhmmhdptghomhhprggtthhiohhnrd
-    hmmhdpshhplhhithdrmhhmnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehm
-    rghilhhfrhhomhepiihirdihrghnsehsvghnthdrtghomh
-X-ME-Proxy: <xmx:ujavZZWwSJTrRqtQf9Ky_Xmyptp_6EWxGf2E2p-NsBEnfYo7wZl3Cg>
-    <xmx:ujavZcnROK0EiVCP07y4ai97wTe2MdaCdgYfSWlZKV0QVNfGu7PdwA>
-    <xmx:ujavZeeE3gE3OL3Sql6a46zK-cWcgBJE1v9Woxl-fOtM2XogfdlnJw>
-    <xmx:uzavZbdtHhIpewVJ7Lv8V_ISsh4kn_XwkrnWC0oGhGVutzKoHdnhGw>
+    cujfgurhephffvvefufffkofgjfhhrgggtgfesthekredtredtjeenucfhrhhomhepkghi
+    ucgjrghnuceoiihirdihrghnsehsvghnthdrtghomheqnecuggftrfgrthhtvghrnhepje
+    ekteekffelleekudfftdefvddtjeejuedtuedtteegjefgvedtfedujeekieevnecuvehl
+    uhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepiihirdihrghnse
+    hsvghnthdrtghomh
+X-ME-Proxy: <xmx:vTavZS9fUJJiVK99r_ZU3KQ_uvHhZC-RkUlNcY6QZ1_EQTbF-EP0FA>
+    <xmx:vTavZVuFVD-UGN2jz6OD7NxepQXqXjPRzdBUVKYznamJZpnZmSd5-w>
+    <xmx:vTavZREml0HT_46Kg2DZGMyvxwxVD9Y9gOtwFSzZ9e1fNXOctyFR2g>
+    <xmx:vTavZQnaFu56azxxgz2jb0Joy00OLsV2wy7bOK1ARM8TnugPKLfGgQ>
 Feedback-ID: iccd040f4:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 22 Jan 2024 22:47:05 -0500 (EST)
+ 22 Jan 2024 22:47:08 -0500 (EST)
 From: Zi Yan <zi.yan@sent.com>
 To: linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org
@@ -86,10 +86,12 @@ Cc: Zi Yan <ziy@nvidia.com>,
 	Mcgrof Chamberlain <mcgrof@kernel.org>,
 	Adam Manzanares <a.manzanares@samsung.com>,
 	"Vishal Moola (Oracle)" <vishal.moola@gmail.com>
-Subject: [PATCH v2 0/3] Enable >0 order folio memory compaction
-Date: Mon, 22 Jan 2024 22:46:32 -0500
-Message-ID: <20240123034636.1095672-1-zi.yan@sent.com>
+Subject: [PATCH v2 2/3] mm/compaction: add support for >0 order folio memory compaction.
+Date: Mon, 22 Jan 2024 22:46:34 -0500
+Message-ID: <20240123034636.1095672-3-zi.yan@sent.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240123034636.1095672-1-zi.yan@sent.com>
+References: <20240123034636.1095672-1-zi.yan@sent.com>
 Reply-To: Zi Yan <ziy@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -102,257 +104,391 @@ Content-Transfer-Encoding: 8bit
 
 From: Zi Yan <ziy@nvidia.com>
 
-Hi all,
+Before last commit, memory compaction only migrates order-0 folios and
+skips >0 order folios. Last commit splits all >0 order folios during
+compaction. This commit migrates >0 order folios during compaction by
+keeping isolated free pages at their original size without splitting them
+into order-0 pages and using them directly during migration process.
 
-This patchset enables >0 order folio memory compaction, which is one of
-the prerequisitions for large folio support[1]. It is on top of
-mm-everything-2024-01-18-22-21.
+What is different from the prior implementation:
+1. All isolated free pages are kept in a NR_PAGE_ORDERS array of page
+   lists, where each page list stores free pages in the same order.
+2. All free pages are not post_alloc_hook() processed nor buddy pages,
+   although their orders are stored in first page's private like buddy
+   pages.
+3. During migration, in new page allocation time (i.e., in
+   compaction_alloc()), free pages are then processed by post_alloc_hook().
+   When migration fails and a new page is returned (i.e., in
+   compaction_free()), free pages are restored by reversing the
+   post_alloc_hook() operations using newly added
+   free_pages_prepare_fpi_none().
 
-I am aware of that split free pages is necessary for folio
-migration in compaction, since if >0 order free pages are never split
-and no order-0 free page is scanned, compaction will end prematurely due
-to migration returns -ENOMEM. Free page split becomes a must instead of
-an optimization.
+Step 3 is done for a latter optimization that splitting and/or merging free
+pages during compaction becomes easier.
 
-Some applications from vm-scalability show different performance trends
-on default LRU and CONFIG_LRU_GEN from patch 1 (split folio during compaction),
-to patch 2 (folio migration during compaction), to patch 3 (folio
-migration during compaction with free page split). I am looking into it.
+Note: without splitting free pages, compaction can end prematurely due to
+migration will return -ENOMEM even if there is free pages. This happens
+when no order-0 free page exist and compaction_alloc() return NULL.
 
-lkp ncompare results (with >5% delta) for default LRU and CONFIG_LRU_GEN are
-shown at the bottom (on a 8-CPU (Intel Xeon E5-2650 v4 @ 2.20GHz) 16G VM).
-
-
-Changelog
-===
-
-From V1 [2]:
-1. Used folio_test_large() instead of folio_order() > 0. (per Matthew
-Wilcox)
-
-2. Fixed code rebase error. (per Baolin Wang)
-
-3. Used list_split_init() instead of list_split(). (per Ryan Boberts)
-
-4. Added free_pages_prepare_fpi_none() to avoid duplicate free page code
-in compaction_free().
-
-5. Dropped source page order sorting patch.
-
-From RFC [1]:
-1. Enabled >0 order folio compaction in the first patch by splitting all
-to-be-migrated folios. (per Huang, Ying)
-
-2. Stopped isolating compound pages with order greater than cc->order
-to avoid wasting effort, since cc->order gives a hint that no free pages
-with order greater than it exist, thus migrating the compound pages will fail.
-(per Baolin Wang)
-
-3. Retained the folio check within lru lock. (per Baolin Wang)
-
-4. Made isolate_freepages_block() generate order-sorted multi lists.
-(per Johannes Weiner)
-
-Overview
-===
-
-To support >0 order folio compaction, the patchset changes how free pages used
-for migration are kept during compaction. Free pages used to be split into
-order-0 pages that are post allocation processed (i.e., PageBuddy flag cleared,
-page order stored in page->private is zeroed, and page reference is set to 1).
-Now all free pages are kept in a MAX_ORDER+1 array of page lists based
-on their order without post allocation process. When migrate_pages() asks for
-a new page, one of the free pages, based on the requested page order, is
-then processed and given out.
-
-
-Feel free to give comments and ask questions.
-
-Thanks.
-
-[1] https://lore.kernel.org/linux-mm/20230912162815.440749-1-zi.yan@sent.com/
-[2] https://lore.kernel.org/linux-mm/20231113170157.280181-1-zi.yan@sent.com/
-
-vm-scalability results on CONFIG_LRU_GEN
-===
-
-=========================================================================================
-compiler/kconfig/rootfs/runtime/tbox_group/test/testcase:
-  gcc-13/defconfig/debian/300s/qemu-vm/small-allocs/vm-scalability
-
-commit: 
-  6.7.0-rc4+
-  6.7.0-rc4-split-folio-in-compaction+
-  6.7.0-rc4-folio-migration-in-compaction+
-  6.7.0-rc4-folio-migration-free-page-split+
-
-      6.7.0-rc4+ 6.7.0-rc4-split-folio-in-co 6.7.0-rc4-folio-migration-i 6.7.0-rc4-folio-migration-f 
----------------- --------------------------- --------------------------- --------------------------- 
-         %stddev     %change         %stddev     %change         %stddev     %change         %stddev
-             \          |                \          |                \          |                \  
-   2024326           +35.5%    2743772 ± 41%    +364.0%    9392198 ± 35%     +31.0%    2651634        vm-scalability.throughput
-
-=========================================================================================
-compiler/kconfig/rootfs/runtime/tbox_group/test/testcase:
-  gcc-13/defconfig/debian/300s/qemu-vm/small-allocs-mt/vm-scalability
-
-commit: 
-  6.7.0-rc4+
-  6.7.0-rc4-split-folio-in-compaction+
-  6.7.0-rc4-folio-migration-in-compaction+
-  6.7.0-rc4-folio-migration-free-page-split+
-
-      6.7.0-rc4+ 6.7.0-rc4-split-folio-in-co 6.7.0-rc4-folio-migration-i 6.7.0-rc4-folio-migration-f 
----------------- --------------------------- --------------------------- --------------------------- 
-         %stddev     %change         %stddev     %change         %stddev     %change         %stddev
-             \          |                \          |                \          |                \  
-   1450189            +0.9%    1463418           +30.4%    1891610 ± 22%      +0.3%    1454100        vm-scalability.throughput
-
-=========================================================================================
-compiler/kconfig/rootfs/runtime/tbox_group/test/testcase:
-  gcc-13/defconfig/debian/300s/qemu-vm/mmap-xread-seq-mt/vm-scalability
-
-commit: 
-  6.7.0-rc4+
-  6.7.0-rc4-split-folio-in-compaction+
-  6.7.0-rc4-folio-migration-in-compaction+
-  6.7.0-rc4-folio-migration-free-page-split+
-
-      6.7.0-rc4+ 6.7.0-rc4-split-folio-in-co 6.7.0-rc4-folio-migration-i 6.7.0-rc4-folio-migration-f 
----------------- --------------------------- --------------------------- --------------------------- 
-         %stddev     %change         %stddev     %change         %stddev     %change         %stddev
-             \          |                \          |                \          |                \  
-  14428848 ± 27%     -51.7%    6963308 ± 73%     +13.5%   16372621           +11.2%   16046511        vm-scalability.throughput
-
-=========================================================================================
-compiler/kconfig/rootfs/runtime/tbox_group/test/testcase:
-  gcc-13/defconfig/debian/300s/qemu-vm/mmap-pread-seq/vm-scalability
-
-commit: 
-  6.7.0-rc4+
-  6.7.0-rc4-split-folio-in-compaction+
-  6.7.0-rc4-folio-migration-in-compaction+
-  6.7.0-rc4-folio-migration-free-page-split+
-
-      6.7.0-rc4+ 6.7.0-rc4-split-folio-in-co 6.7.0-rc4-folio-migration-i 6.7.0-rc4-folio-migration-f 
----------------- --------------------------- --------------------------- --------------------------- 
-         %stddev     %change         %stddev     %change         %stddev     %change         %stddev
-             \          |                \          |                \          |                \  
-  13569502 ± 24%     -45.9%    7340064 ± 59%     +12.3%   15240531           +10.4%   14983705        vm-scalability.throughput
-
-=========================================================================================
-compiler/kconfig/rootfs/runtime/tbox_group/test/testcase:
-  gcc-13/defconfig/debian/300s/qemu-vm/mmap-pread-seq-mt/vm-scalability
-
-commit: 
-  6.7.0-rc4+
-  6.7.0-rc4-split-folio-in-compaction+
-  6.7.0-rc4-folio-migration-in-compaction+
-  6.7.0-rc4-folio-migration-free-page-split+
-
-      6.7.0-rc4+ 6.7.0-rc4-split-folio-in-co 6.7.0-rc4-folio-migration-i 6.7.0-rc4-folio-migration-f 
----------------- --------------------------- --------------------------- --------------------------- 
-         %stddev     %change         %stddev     %change         %stddev     %change         %stddev
-             \          |                \          |                \          |                \  
-  13305823 ± 24%     -45.1%    7299664 ± 56%     +12.5%   14974725           +10.4%   14695963        vm-scalability.throughput
-
-=========================================================================================
-compiler/kconfig/rootfs/runtime/tbox_group/test/testcase:
-  gcc-13/defconfig/debian/300s/qemu-vm/lru-file-readtwice/vm-scalability
-
-commit: 
-  6.7.0-rc4+
-  6.7.0-rc4-split-folio-in-compaction+
-  6.7.0-rc4-folio-migration-in-compaction+
-  6.7.0-rc4-folio-migration-free-page-split+
-
-      6.7.0-rc4+ 6.7.0-rc4-split-folio-in-co 6.7.0-rc4-folio-migration-i 6.7.0-rc4-folio-migration-f 
----------------- --------------------------- --------------------------- --------------------------- 
-         %stddev     %change         %stddev     %change         %stddev     %change         %stddev
-             \          |                \          |                \          |                \  
-  13244376 ± 28%     +54.2%   20425838 ± 23%      -4.4%   12660113 ±  3%      -9.0%   12045809 ±  3%  vm-scalability.throughput
-
-=========================================================================================
-compiler/kconfig/rootfs/runtime/tbox_group/test/testcase:
-  gcc-13/defconfig/debian/300s/qemu-vm/lru-file-mmap-read/vm-scalability
-
-commit: 
-  6.7.0-rc4+
-  6.7.0-rc4-split-folio-in-compaction+
-  6.7.0-rc4-folio-migration-in-compaction+
-  6.7.0-rc4-folio-migration-free-page-split+
-
-      6.7.0-rc4+ 6.7.0-rc4-split-folio-in-co 6.7.0-rc4-folio-migration-i 6.7.0-rc4-folio-migration-f 
----------------- --------------------------- --------------------------- --------------------------- 
-         %stddev     %change         %stddev     %change         %stddev     %change         %stddev
-             \          |                \          |                \          |                \  
-   7021425 ± 11%     -20.9%    5556751 ± 19%     +14.8%    8057811 ±  3%      +9.4%    7678613 ±  4%  vm-scalability.throughput
-
-=========================================================================================
-compiler/kconfig/rootfs/runtime/size/tbox_group/test/testcase:
-  gcc-13/defconfig/debian/300s/256G/qemu-vm/msync/vm-scalability
-
-commit: 
-  6.7.0-rc4+
-  6.7.0-rc4-split-folio-in-compaction+
-  6.7.0-rc4-folio-migration-in-compaction+
-  6.7.0-rc4-folio-migration-free-page-split+
-
-      6.7.0-rc4+ 6.7.0-rc4-split-folio-in-co 6.7.0-rc4-folio-migration-i 6.7.0-rc4-folio-migration-f 
----------------- --------------------------- --------------------------- --------------------------- 
-         %stddev     %change         %stddev     %change         %stddev     %change         %stddev
-             \          |                \          |                \          |                \  
-   1208994 ±137%    +263.5%    4394683 ± 49%     -49.4%     611204 ±  6%     -48.1%     627937 ± 13%  vm-scalability.throughput
-
-
-
-vm-scalability results on default LRU (with -no-mglru suffix)
-===
-
-=========================================================================================
-compiler/kconfig/rootfs/runtime/tbox_group/test/testcase:
-  gcc-13/defconfig/debian/300s/qemu-vm/lru-file-readtwice/vm-scalability
-
-commit: 
-  6.7.0-rc4-no-mglru+
-  6.7.0-rc4-split-folio-in-compaction-no-mglru+
-  6.7.0-rc4-folio-migration-in-compaction-no-mglru+
-  6.7.0-rc4-folio-migration-free-page-split-no-mglru+
-
-6.7.0-rc4-no-mgl 6.7.0-rc4-split-folio-in-co 6.7.0-rc4-folio-migration-i 6.7.0-rc4-folio-migration-f 
----------------- --------------------------- --------------------------- --------------------------- 
-         %stddev     %change         %stddev     %change         %stddev     %change         %stddev
-             \          |                \          |                \          |                \  
-   8412072 ±  3%     +32.1%   11114537 ± 41%      +3.5%    8703491 ±  3%      +1.5%    8536343 ±  3%  vm-scalability.throughput
-
-=========================================================================================
-compiler/kconfig/rootfs/runtime/tbox_group/test/testcase:
-  gcc-13/defconfig/debian/300s/qemu-vm/lru-file-mmap-read/vm-scalability
-
-commit: 
-  6.7.0-rc4-no-mglru+
-  6.7.0-rc4-split-folio-in-compaction-no-mglru+
-  6.7.0-rc4-folio-migration-in-compaction-no-mglru+
-  6.7.0-rc4-folio-migration-free-page-split-no-mglru+
-
-6.7.0-rc4-no-mgl 6.7.0-rc4-split-folio-in-co 6.7.0-rc4-folio-migration-i 6.7.0-rc4-folio-migration-f 
----------------- --------------------------- --------------------------- --------------------------- 
-         %stddev     %change         %stddev     %change         %stddev     %change         %stddev
-             \          |                \          |                \          |                \  
-   7095358           +10.8%    7863635 ± 16%      +5.5%    7484110            +1.5%    7200666 ±  4%  vm-scalability.throughput
-
-
-Zi Yan (3):
-  mm/compaction: enable compacting >0 order folios.
-  mm/compaction: add support for >0 order folio memory compaction.
-  mm/compaction: optimize >0 order folio compaction with free page
-    split.
-
- mm/compaction.c | 218 ++++++++++++++++++++++++++++++++++--------------
- mm/internal.h   |   9 +-
+Signed-off-by: Zi Yan <ziy@nvidia.com>
+---
+ mm/compaction.c | 148 +++++++++++++++++++++++++++++-------------------
+ mm/internal.h   |   9 ++-
  mm/page_alloc.c |   6 ++
- 3 files changed, 169 insertions(+), 64 deletions(-)
+ 3 files changed, 103 insertions(+), 60 deletions(-)
 
+diff --git a/mm/compaction.c b/mm/compaction.c
+index 61389540e1f1..11f9898e39da 100644
+--- a/mm/compaction.c
++++ b/mm/compaction.c
+@@ -66,45 +66,67 @@ static inline void count_compact_events(enum vm_event_item item, long delta)
+ #define COMPACTION_HPAGE_ORDER	(PMD_SHIFT - PAGE_SHIFT)
+ #endif
+ 
+-static unsigned long release_freepages(struct list_head *freelist)
++static void init_page_list(struct page_list *p)
+ {
+-	struct page *page, *next;
+-	unsigned long high_pfn = 0;
+-
+-	list_for_each_entry_safe(page, next, freelist, lru) {
+-		unsigned long pfn = page_to_pfn(page);
+-		list_del(&page->lru);
+-		__free_page(page);
+-		if (pfn > high_pfn)
+-			high_pfn = pfn;
+-	}
+-
+-	return high_pfn;
++	INIT_LIST_HEAD(&p->pages);
++	p->nr_pages = 0;
+ }
+ 
+-static void split_map_pages(struct list_head *list)
++static void split_map_pages(struct page_list *freepages)
+ {
+-	unsigned int i, order, nr_pages;
++	unsigned int i, order, total_nr_pages;
+ 	struct page *page, *next;
+ 	LIST_HEAD(tmp_list);
+ 
+-	list_for_each_entry_safe(page, next, list, lru) {
+-		list_del(&page->lru);
++	for (order = 0; order < NR_PAGE_ORDERS; order++) {
++		total_nr_pages = freepages[order].nr_pages * (1 << order);
++		freepages[order].nr_pages = 0;
++
++		list_for_each_entry_safe(page, next, &freepages[order].pages, lru) {
++			unsigned int nr_pages;
++
++			list_del(&page->lru);
+ 
+-		order = page_private(page);
+-		nr_pages = 1 << order;
++			nr_pages = 1 << order;
+ 
+-		post_alloc_hook(page, order, __GFP_MOVABLE);
+-		if (order)
+-			split_page(page, order);
++			post_alloc_hook(page, order, __GFP_MOVABLE);
++			if (order)
++				split_page(page, order);
+ 
+-		for (i = 0; i < nr_pages; i++) {
+-			list_add(&page->lru, &tmp_list);
+-			page++;
++			for (i = 0; i < nr_pages; i++) {
++				list_add(&page->lru, &tmp_list);
++				page++;
++			}
+ 		}
++		freepages[0].nr_pages += total_nr_pages;
++		list_splice_init(&tmp_list, &freepages[0].pages);
+ 	}
++}
+ 
+-	list_splice(&tmp_list, list);
++static unsigned long release_free_list(struct page_list *freepages)
++{
++	int order;
++	unsigned long high_pfn = 0;
++
++	for (order = 0; order < NR_PAGE_ORDERS; order++) {
++		struct page *page, *next;
++
++		list_for_each_entry_safe(page, next, &freepages[order].pages, lru) {
++			unsigned long pfn = page_to_pfn(page);
++
++			list_del(&page->lru);
++			/*
++			 * Convert free pages into post allocation pages, so
++			 * that we can free them via __free_page.
++			 */
++			post_alloc_hook(page, order, __GFP_MOVABLE);
++			__free_pages(page, order);
++			if (pfn > high_pfn)
++				high_pfn = pfn;
++		}
++		freepages[order].nr_pages = 0;
++	}
++	return high_pfn;
+ }
+ 
+ #ifdef CONFIG_COMPACTION
+@@ -583,7 +605,7 @@ static bool compact_unlock_should_abort(spinlock_t *lock,
+ static unsigned long isolate_freepages_block(struct compact_control *cc,
+ 				unsigned long *start_pfn,
+ 				unsigned long end_pfn,
+-				struct list_head *freelist,
++				struct page_list *freelist,
+ 				unsigned int stride,
+ 				bool strict)
+ {
+@@ -657,7 +679,8 @@ static unsigned long isolate_freepages_block(struct compact_control *cc,
+ 		nr_scanned += isolated - 1;
+ 		total_isolated += isolated;
+ 		cc->nr_freepages += isolated;
+-		list_add_tail(&page->lru, freelist);
++		list_add_tail(&page->lru, &freelist[order].pages);
++		freelist[order].nr_pages++;
+ 
+ 		if (!strict && cc->nr_migratepages <= cc->nr_freepages) {
+ 			blockpfn += isolated;
+@@ -722,7 +745,11 @@ isolate_freepages_range(struct compact_control *cc,
+ 			unsigned long start_pfn, unsigned long end_pfn)
+ {
+ 	unsigned long isolated, pfn, block_start_pfn, block_end_pfn;
+-	LIST_HEAD(freelist);
++	int order;
++	struct page_list tmp_freepages[NR_PAGE_ORDERS];
++
++	for (order = 0; order < NR_PAGE_ORDERS; order++)
++		init_page_list(&tmp_freepages[order]);
+ 
+ 	pfn = start_pfn;
+ 	block_start_pfn = pageblock_start_pfn(pfn);
+@@ -753,7 +780,7 @@ isolate_freepages_range(struct compact_control *cc,
+ 			break;
+ 
+ 		isolated = isolate_freepages_block(cc, &isolate_start_pfn,
+-					block_end_pfn, &freelist, 0, true);
++					block_end_pfn, tmp_freepages, 0, true);
+ 
+ 		/*
+ 		 * In strict mode, isolate_freepages_block() returns 0 if
+@@ -770,15 +797,15 @@ isolate_freepages_range(struct compact_control *cc,
+ 		 */
+ 	}
+ 
+-	/* __isolate_free_page() does not map the pages */
+-	split_map_pages(&freelist);
+-
+ 	if (pfn < end_pfn) {
+ 		/* Loop terminated early, cleanup. */
+-		release_freepages(&freelist);
++		release_free_list(tmp_freepages);
+ 		return 0;
+ 	}
+ 
++	/* __isolate_free_page() does not map the pages */
++	split_map_pages(tmp_freepages);
++
+ 	/* We don't use freelists for anything. */
+ 	return pfn;
+ }
+@@ -1462,7 +1489,7 @@ fast_isolate_around(struct compact_control *cc, unsigned long pfn)
+ 	if (!page)
+ 		return;
+ 
+-	isolate_freepages_block(cc, &start_pfn, end_pfn, &cc->freepages, 1, false);
++	isolate_freepages_block(cc, &start_pfn, end_pfn, cc->freepages, 1, false);
+ 
+ 	/* Skip this pageblock in the future as it's full or nearly full */
+ 	if (start_pfn == end_pfn && !cc->no_set_skip_hint)
+@@ -1591,7 +1618,7 @@ static void fast_isolate_freepages(struct compact_control *cc)
+ 				nr_scanned += nr_isolated - 1;
+ 				total_isolated += nr_isolated;
+ 				cc->nr_freepages += nr_isolated;
+-				list_add_tail(&page->lru, &cc->freepages);
++				list_add_tail(&page->lru, &cc->freepages[order].pages);
+ 				count_compact_events(COMPACTISOLATED, nr_isolated);
+ 			} else {
+ 				/* If isolation fails, abort the search */
+@@ -1668,13 +1695,12 @@ static void isolate_freepages(struct compact_control *cc)
+ 	unsigned long isolate_start_pfn; /* exact pfn we start at */
+ 	unsigned long block_end_pfn;	/* end of current pageblock */
+ 	unsigned long low_pfn;	     /* lowest pfn scanner is able to scan */
+-	struct list_head *freelist = &cc->freepages;
+ 	unsigned int stride;
+ 
+ 	/* Try a small search of the free lists for a candidate */
+ 	fast_isolate_freepages(cc);
+ 	if (cc->nr_freepages)
+-		goto splitmap;
++		return;
+ 
+ 	/*
+ 	 * Initialise the free scanner. The starting point is where we last
+@@ -1734,7 +1760,7 @@ static void isolate_freepages(struct compact_control *cc)
+ 
+ 		/* Found a block suitable for isolating free pages from. */
+ 		nr_isolated = isolate_freepages_block(cc, &isolate_start_pfn,
+-					block_end_pfn, freelist, stride, false);
++					block_end_pfn, cc->freepages, stride, false);
+ 
+ 		/* Update the skip hint if the full pageblock was scanned */
+ 		if (isolate_start_pfn == block_end_pfn)
+@@ -1775,10 +1801,6 @@ static void isolate_freepages(struct compact_control *cc)
+ 	 * and the loop terminated due to isolate_start_pfn < low_pfn
+ 	 */
+ 	cc->free_pfn = isolate_start_pfn;
+-
+-splitmap:
+-	/* __isolate_free_page() does not map the pages */
+-	split_map_pages(freelist);
+ }
+ 
+ /*
+@@ -1789,23 +1811,22 @@ static struct folio *compaction_alloc(struct folio *src, unsigned long data)
+ {
+ 	struct compact_control *cc = (struct compact_control *)data;
+ 	struct folio *dst;
++	int order = folio_order(src);
+ 
+-	/* this makes migrate_pages() split the source page and retry */
+-	if (folio_test_large(src) > 0)
+-		return NULL;
+-
+-	if (list_empty(&cc->freepages)) {
++	if (!cc->freepages[order].nr_pages) {
+ 		isolate_freepages(cc);
+-
+-		if (list_empty(&cc->freepages))
++		if (!cc->freepages[order].nr_pages)
+ 			return NULL;
+ 	}
+ 
+-	dst = list_entry(cc->freepages.next, struct folio, lru);
++	dst = list_first_entry(&cc->freepages[order].pages, struct folio, lru);
++	cc->freepages[order].nr_pages--;
+ 	list_del(&dst->lru);
+-	cc->nr_freepages--;
+-
+-	return dst;
++	post_alloc_hook(&dst->page, order, __GFP_MOVABLE);
++	if (order)
++		prep_compound_page(&dst->page, order);
++	cc->nr_freepages -= 1 << order;
++	return page_rmappable_folio(&dst->page);
+ }
+ 
+ /*
+@@ -1816,9 +1837,17 @@ static struct folio *compaction_alloc(struct folio *src, unsigned long data)
+ static void compaction_free(struct folio *dst, unsigned long data)
+ {
+ 	struct compact_control *cc = (struct compact_control *)data;
++	int order = folio_order(dst);
++	struct page *page = &dst->page;
++
++	folio_set_count(dst, 0);
++	free_pages_prepare_fpi_none(page, order);
+ 
+-	list_add(&dst->lru, &cc->freepages);
+-	cc->nr_freepages++;
++	INIT_LIST_HEAD(&dst->lru);
++
++	list_add(&dst->lru, &cc->freepages[order].pages);
++	cc->freepages[order].nr_pages++;
++	cc->nr_freepages += 1 << order;
+ }
+ 
+ /* possible outcome of isolate_migratepages */
+@@ -2442,6 +2471,7 @@ compact_zone(struct compact_control *cc, struct capture_control *capc)
+ 	const bool sync = cc->mode != MIGRATE_ASYNC;
+ 	bool update_cached;
+ 	unsigned int nr_succeeded = 0;
++	int order;
+ 
+ 	/*
+ 	 * These counters track activities during zone compaction.  Initialize
+@@ -2451,7 +2481,8 @@ compact_zone(struct compact_control *cc, struct capture_control *capc)
+ 	cc->total_free_scanned = 0;
+ 	cc->nr_migratepages = 0;
+ 	cc->nr_freepages = 0;
+-	INIT_LIST_HEAD(&cc->freepages);
++	for (order = 0; order < NR_PAGE_ORDERS; order++)
++		init_page_list(&cc->freepages[order]);
+ 	INIT_LIST_HEAD(&cc->migratepages);
+ 
+ 	cc->migratetype = gfp_migratetype(cc->gfp_mask);
+@@ -2637,7 +2668,7 @@ compact_zone(struct compact_control *cc, struct capture_control *capc)
+ 	 * so we don't leave any returned pages behind in the next attempt.
+ 	 */
+ 	if (cc->nr_freepages > 0) {
+-		unsigned long free_pfn = release_freepages(&cc->freepages);
++		unsigned long free_pfn = release_free_list(cc->freepages);
+ 
+ 		cc->nr_freepages = 0;
+ 		VM_BUG_ON(free_pfn == 0);
+@@ -2656,7 +2687,6 @@ compact_zone(struct compact_control *cc, struct capture_control *capc)
+ 
+ 	trace_mm_compaction_end(cc, start_pfn, end_pfn, sync, ret);
+ 
+-	VM_BUG_ON(!list_empty(&cc->freepages));
+ 	VM_BUG_ON(!list_empty(&cc->migratepages));
+ 
+ 	return ret;
+diff --git a/mm/internal.h b/mm/internal.h
+index f309a010d50f..886040a907d3 100644
+--- a/mm/internal.h
++++ b/mm/internal.h
+@@ -447,6 +447,8 @@ extern void prep_compound_page(struct page *page, unsigned int order);
+ 
+ extern void post_alloc_hook(struct page *page, unsigned int order,
+ 					gfp_t gfp_flags);
++extern bool free_pages_prepare_fpi_none(struct page *page, unsigned int order);
++
+ extern int user_min_free_kbytes;
+ 
+ extern void free_unref_page(struct page *page, unsigned int order);
+@@ -473,6 +475,11 @@ int split_free_page(struct page *free_page,
+ /*
+  * in mm/compaction.c
+  */
++
++struct page_list {
++	struct list_head	pages;
++	unsigned long		nr_pages;
++};
+ /*
+  * compact_control is used to track pages being migrated and the free pages
+  * they are being migrated to during memory compaction. The free_pfn starts
+@@ -481,7 +488,7 @@ int split_free_page(struct page *free_page,
+  * completes when free_pfn <= migrate_pfn
+  */
+ struct compact_control {
+-	struct list_head freepages;	/* List of free pages to migrate to */
++	struct page_list freepages[NR_PAGE_ORDERS];	/* List of free pages to migrate to */
+ 	struct list_head migratepages;	/* List of pages being migrated */
+ 	unsigned int nr_freepages;	/* Number of isolated free pages */
+ 	unsigned int nr_migratepages;	/* Number of pages to migrate */
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 5be4cd8f6b5a..c7c135e6d5ee 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -1179,6 +1179,12 @@ static __always_inline bool free_pages_prepare(struct page *page,
+ 	return true;
+ }
+ 
++__always_inline bool free_pages_prepare_fpi_none(struct page *page,
++			unsigned int order)
++{
++	return free_pages_prepare(page, order, FPI_NONE);
++}
++
+ /*
+  * Frees a number of pages from the PCP lists
+  * Assumes all pages on list are in same zone.
 -- 
 2.43.0
 
