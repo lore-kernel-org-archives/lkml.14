@@ -1,191 +1,157 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBAE3664D6;
-	Tue, 23 Jan 2024 18:38:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF2D75CAF
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 18:41:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706035081; cv=none; b=KiQeC4PaTKPTmOFK+lvWXIvlS9rR4WmePCkCSBfAfHh93+QwRrrkXwV12UZRYA9cCE2DhlffcwabhGxijVZrhZpisMhTP1tIh2Av0qGPzgxqJ8xw5x+N/42y0TvDedNzZldZK8GGM9CVaNcIDgaPAjvxtmlwIk7dqFkDWQR/vZA=
+	t=1706035297; cv=none; b=r3KmedBXU2Cxp/PIbcaj/5JioHITl1LHbCzJt+dRwpadkquybqxYYCjTRutfWqGPU/KfGS/SzZL/IX5XR2FmJ3U2WjVOGiLIWOKvXLXltO9axVlkOHJfLTEf637b8sOoH8C55dUk/kAdO9Okr1UzjZj88PnauySrS1nM2PhBczA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706035081; c=relaxed/simple;
-	bh=ms7HuGoB0WMtLxCgb4lhxa49rU0d6Hu6IGv4vgOcDCM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bH+hL6PEA2T+P7nMxGhOzunZTE37msn5q/QNXbI14M065e+Bmbin/SXOnK5dP6duevPqGiHGqvcKXVLmobJhhPzZy8J9cXbIRDSUsNBmkOv20BaVuzzvsV802hhoCW1EncTmhW63Jp9Y84q4bjXtr26ekkiO3er97xmMOBDgBIQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IGkHDMw8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706035297; c=relaxed/simple;
+	bh=5Z8UwiAp5u+3S5PaC31HB/zFb6BCfvOQCRiQrc3xwks=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FFW/rvtD159NmgHN1QohdqK211u14NreGsEL1HgXaV6jHm/2akzKNIDZXy1CnjX3ED+z9/HXwr2vRvEY9I6zY7vY2wbOmGSURdL5fZafYcLEFyqtFsXbhqYtJ3awclZIqky9/LKPf2oJCtRMuo6s1mHBOzt3o/v4+ZRcWPRlRj4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hjoGIbtT; arc=none smtp.client-ip=209.85.167.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IGkHDMw8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD26BC433F1;
-	Tue, 23 Jan 2024 18:37:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706035081;
-	bh=ms7HuGoB0WMtLxCgb4lhxa49rU0d6Hu6IGv4vgOcDCM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=IGkHDMw8EVoDlJnJazDQpNl57NWN6ArILT6SrQxb9Nsz4UHUgKCZimb0/ZeKwyQf2
-	 mzcp4XgCWLoLADMN41MVYry4TTRDyuU4G6ZF0JjBfec1cF/bVy0eA9Z+qbJOzu27AE
-	 ltPvAQLvsuJToY2yMHaZoWzwhf5Hr4Q13noLtqRmosSBQ1WJUoSyJ0uWhRcnCbyy4Y
-	 g3hEPuFgZuLg0aJ5B/1LJn0KNpxdbQAljfwrcbk2Q2gSsjEOf4pO+xdVuyJ+zQEB9+
-	 vVq8dXzW7lzRVi6qG/6N3IVPjYYxUrMvMYTNe6UM6kcqzbeBAuI2EvN2A4Nj+IutXB
-	 R+z2QO2hI/lqw==
-Date: Tue, 23 Jan 2024 18:37:55 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Philippe Schenker <dev@pschenker.ch>
-Cc: netdev@vger.kernel.org, Paolo Abeni <pabeni@redhat.com>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Woojung Huh <woojung.huh@microchip.com>,
-	Vladimir Oltean <olteanv@gmail.com>, linux-kernel@vger.kernel.org,
-	UNGLinuxDriver@microchip.com, Marek Vasut <marex@denx.de>,
-	Florian Fainelli <f.fainelli@gmail.com>, devicetree@vger.kernel.org,
-	Eric Dumazet <edumazet@google.com>,
-	"David S . Miller" <davem@davemloft.net>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Jakub Kicinski <kuba@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-	Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH net-next v1 1/2] dt-bindings: net: dsa: Add KSZ8567
- switch support
-Message-ID: <20240123-carpool-avatar-c1e51ab3cc32@spud>
-References: <20240123135014.614858-1-dev@pschenker.ch>
- <20240123-ripening-tabby-b97785375990@spud>
- <b2e232de11cee47a5932fccc2d151a9c7c276784.camel@pschenker.ch>
- <20240123-atlas-dart-7e955e7e24e5@spud>
- <979b1e77b5bb62463d52e7b9d3f9ca1415f4006a.camel@pschenker.ch>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hjoGIbtT"
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-50ea9e189ebso5148333e87.3
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 10:41:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1706035294; x=1706640094; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=AaVxPRhE878jN2DUtSbnFzkKwVO+PgXSHCcaR8B9SpU=;
+        b=hjoGIbtTOJmHxl27IKEN+ePrXYEAsoL+dEmIQ3n27iEOi3iClm+oD9vBiibRSS2YN4
+         JwpRj3KwgQDaItKApIgDWyAYBdlLcBW7d+JW4+HYTffmeZQiZ5dMKu97nHK6+xnEqBlH
+         b4OJRapomm/e2CMDcAHrfmlzS+Iba/fdmg697ZdtIvJB7bnmwFpAKMPEP/zcxWhllXAt
+         85GmlpTgBX1+s0567MYE2S7E05ldzulhJ5m58LbGSRd/+l2LmWUEi2SBufudeoeBMvzI
+         uPMyCozQjiAiuLhxB0KK5AHr0t34OW8Qw1hLJG9EB6kxRPOZJlj3zgL3hY+UPzJY3K0Y
+         zPOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706035294; x=1706640094;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=AaVxPRhE878jN2DUtSbnFzkKwVO+PgXSHCcaR8B9SpU=;
+        b=FyC/0Yb6ZmK2zDJaZL6LuxmzfQJsGfHvht5wBUIfzVmcvW/K8EXrj/racteQlpXieR
+         pYgGnzjl7uY+U8OQIIeS05cryHiWoPZDeDOVLJw9CqEZIBToprbVXFmm5EnFQTxbtePI
+         qlg1DRr1XqS6be+M/cFhH9U52iSjR7scV4ScM7Z1YSQIgEhQ2Q90giEIr0y9minlt0pj
+         I+nzu4E/D5S7HQF1tz7JI9tNnealq0SCKyXYbBrIpThTsufsOVJ352orjbBABOIfJhuf
+         5EN7YKmyrad0pArzCyiei5h+UJ/VuqLHObxN02Kyjj0rwAb9NX9lvdfBFBUhD9StcYgL
+         U+Nw==
+X-Gm-Message-State: AOJu0Yxx+gBXh4/EVd6RfkCFlins1s1F+f9vC8KHV/J5oXG3KZTWC531
+	u5eunDlsLuOscwbOkqmDwqlw/CB7mLfrXwUWeSXD68kFPCudkFstLXO7/KyaV6Q=
+X-Google-Smtp-Source: AGHT+IEeNhdjfGuNIfFu6QbvEdd52qRS+kK74/wdD+medJbFXjkwOG5DE5nv7ekWn7JcO3XLfBr6hA==
+X-Received: by 2002:a05:6512:3da4:b0:510:c7d:8cdf with SMTP id k36-20020a0565123da400b005100c7d8cdfmr483021lfv.101.1706035293715;
+        Tue, 23 Jan 2024 10:41:33 -0800 (PST)
+Received: from [172.30.205.123] (UNUSED.212-182-62-129.lubman.net.pl. [212.182.62.129])
+        by smtp.gmail.com with ESMTPSA id ep26-20020a056512485a00b00510091c44a6sm40347lfb.165.2024.01.23.10.41.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 23 Jan 2024 10:41:33 -0800 (PST)
+Message-ID: <b8d6ff55-cf1c-4f37-b2ac-a27a1fa4559d@linaro.org>
+Date: Tue, 23 Jan 2024 19:41:31 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="S5tG8E3ZGHoQ0xVt"
-Content-Disposition: inline
-In-Reply-To: <979b1e77b5bb62463d52e7b9d3f9ca1415f4006a.camel@pschenker.ch>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] arm64: dts: qcom: sc8280xp: Fix PCIe PHY
+ power-domains
+Content-Language: en-US
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Johan Hovold <johan@kernel.org>
+Cc: Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Johan Hovold <johan+linaro@kernel.org>,
+ Marijn Suijten <marijn.suijten@somainline.org>,
+ linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ Konrad Dybcio <konrad.dybcio@somainline.org>
+References: <20231227-topic-8280_pcie_dts-v1-0-13d12b1698ff@linaro.org>
+ <20231227-topic-8280_pcie_dts-v1-1-13d12b1698ff@linaro.org>
+ <ZY6sh8nlEUyEfL0u@hovoldconsulting.com> <20231229170334.GA9098@thinkpad>
+ <20240122172528.GE3176@thinkpad> <Za6ns-xhN3N-cmIr@hovoldconsulting.com>
+ <20240123170614.GH19029@thinkpad>
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+In-Reply-To: <20240123170614.GH19029@thinkpad>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
 
---S5tG8E3ZGHoQ0xVt
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jan 23, 2024 at 06:30:16PM +0100, Philippe Schenker wrote:
->=20
->=20
-> On Tue, 2024-01-23 at 17:23 +0000, Conor Dooley wrote:
-> > On Tue, Jan 23, 2024 at 05:17:53PM +0100, Philippe Schenker wrote:
-> > >=20
-> > >=20
-> > > On Tue, 2024-01-23 at 16:06 +0000, Conor Dooley wrote:
-> > > > On Tue, Jan 23, 2024 at 02:50:13PM +0100, Philippe Schenker
-> > > > wrote:
-> > > > > From: Philippe Schenker <philippe.schenker@impulsing.ch>
-> > > > >=20
-> > > > > This commit adds the dt-binding for KSZ8567, a robust 7-port
-> > > > > Ethernet switch. The KSZ8567 features two RGMII/MII/RMII
-> > > > > interfaces,
-> > > > > each capable of gigabit speeds, complemented by five 10/100
-> > > > > Mbps
-> > > > > MAC/PHYs.
-> > > > >=20
-> > > > > Signed-off-by: Philippe Schenker
-> > > > > <philippe.schenker@impulsing.ch>
-> > > >=20
-> > > > This device has all the same constraints as the other ones in
-> > > > this
-> > > > binding, why is it not compatible with any of them? If it isn't,
-> > > > the
-> > > > compatible should mention why it is not.
-> > >=20
-> > > Hi Conor, Thanks for your message!
-> > >=20
-> > > I need the compatible to make sure the correct ID of the switch is
-> > > being set in the driver as well as its features.
-> >=20
-> > Are the features of this switch such that a driver for another ksz
-> > switch would not work (even in a limited capacity) with the 8567?
-> > Things like the register map changing or some feature being removed
-> > are
-> > examples of why it may not work.
->=20
-> Yes the ksz dsa driver is made so that it checks the ID of the attached
-> chip and refuses to work if it doesn't match. [1]
+On 1/23/24 18:06, Manivannan Sadhasivam wrote:
+> On Mon, Jan 22, 2024 at 06:36:51PM +0100, Johan Hovold wrote:
+>> On Mon, Jan 22, 2024 at 10:55:28PM +0530, Manivannan Sadhasivam wrote:
+>>> On Fri, Dec 29, 2023 at 10:33:34PM +0530, Manivannan Sadhasivam wrote:
+>>>> On Fri, Dec 29, 2023 at 12:24:55PM +0100, Johan Hovold wrote:
+>>>>> On Wed, Dec 27, 2023 at 11:28:26PM +0100, Konrad Dybcio wrote:
+>>>>>> The PCIe GDSCs are only related to the RCs. The PCIe PHYs on the other
+>>>>>> hand, are powered by VDD_MX and their specific VDDA_PHY/PLL regulators.
+>>>>>
+>>>>> No, that does not seem to be entirely correct. I added the power-domains
+>>>>> here precisely because they were needed to enable the PHYs.
+>>>>>
+>>>>> This is something I stumbled over when trying to figure out how to
+>>>>> add support for the second lane pair (i.e. four-lane mode), and I just
+>>>>> went back and confirmed that this is still the case.
+>>>>>
+>>>>> If you try to enable one of these PHYs without the corresponding GDSC
+>>>>> being enabled, you end up with:
+>>>>>
+>>>>> [   37.709324] ------------[ cut here ]------------
+>>>>> [   37.718196] gcc_pcie_3b_aux_clk status stuck at 'off'
+>>>>> [   37.718205] WARNING: CPU: 4 PID: 482 at drivers/clk/qcom/clk-branch.c:86 clk_branch_wait+0x144/0x15c
+>>>>> 	
+>>>>
+>>>> Technically this patch is correct. PHYs are backed by MX domain only and not
+>>>> GDSCs. Only the controllers (PCIe, UFS, USB) are backed by GDSCs. The fact that
+>>>> you are seeing issue with PCIe Aux clock suggests me that this clock may not be
+>>>> applicable to the PHY but it needs to be enabled for working of the PHY somehow.
+>>>> I'll try to find the details on how exactly it is needed.
+>>>>
+>>>> But if I get the answer like, "This clock is also sourced to PHY directly", then
+>>>> we may need to add dual power domain for PHY (both GDSC and MX).
+>>>>
+>>>
+>>> So I answer I got from Qcom is that this clock is only applicable to the PCIe
+>>> controller and not PHYs. On some platforms, there is a separate PCIE_PHY_AUX_CLK
+>>> coming from GCC that is used during L1SS state. I think that caused confusion
+>>> while adding PHY support for followup platforms and folks just used PCIE_AUX_CLK
+>>> since they couldn't find the actual PCIE_PHY_AUX_CLK.
+>>
+>> Thanks for sorting that out.
+>>
+>>> I've prepared a series to fix this mess, but I want to know how you end up
+>>> seeing the above "clk status stuck at off" issue. Is there an actual usecase for
+>>> powering up PHY without controller or you just experimented with it?
+>>
+>> As I mentioned, I ran into this when experimenting with how to enable
+>> the "companion" PHY for four-lane support. There shouldn't be any use
+>> case for it (apart from using it to determine that the current
+>> description of the PHY resources is incomplete or incorrect).
+>>
+> 
+> Ok. I tested by enabling the PHY clocks during qmp_pcie_clk_init() without
+> PCIE_GDSC. It worked for one instance of the PHY which doesn't have
+> PCIE_PHY_AUX_CLK, but for the PHY instance with this clock, I saw the same "clk
+> stuck" issue. Then checking the internal documentation revealed that this clock
+> needs PCIE_GDSC to become functional >.<
+> 
+> So to conclude, PCIE_AUX_CLK belongs to the controller and it needs GDSC. And
+> PCIE_PHY_AUX_CLK belongs to the PHY and it also needs GDSC.
+> 
+> I will just submit a series to remove the PCIE_AUX_CLK from PHY nodes. Then
+> in another series, I'll remove the GDSC for PHY instances that do not require
+> PCIE_PHY_AUX_CLK.
+> 
+> Hope this makes sense.
 
-That sounds counter productive to be honest. Why does the driver not
-trust that the dt is correct? I saw this recently in some IIO drivers,
-but it was shot down for this sort of reason.
+Thanks, Mani
 
-> It is a very similar chip and uses the same regmap as KSZ9567 but with
-> lower phy-speeds on its 5 switch ports. The two upstream CPU ports are
-> gigabit capable. All this information is set-up in the second patch of
-> this series. [2]
-
-That, to me, means the lack of a fallback is justified. If it were the
-other way around, then a fallback sounds like it would be suitable.
-
->=20
-> I will include a description to the second series. Thanks for your
-> feedback.
-
-Okay, thanks. You can add
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
-when you do.
-
-And despite the email, I have nothing to do with these switches, I am
-just a sucker that signed up to review dt-bindings...
-
-Thanks,
-Conor.
-
->=20
-> Philippe
->=20
->=20
-> [1]
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/d=
-rivers/net/dsa/microchip/ksz_common.c?h=3Dv6.8-rc1#n3181
-> [2]
-> https://patchwork.kernel.org/project/netdevbpf/patch/20240123135014.61485=
-8-2-dev@pschenker.ch/
->=20
-> >=20
-> > > You mean I shall mention the reason in the commit-message, or
-> > > where?
-> >=20
-> > Yes.
-> >=20
-> > Thanks,
-> > Conor
-> >=20
-> > > > > =A0Documentation/devicetree/bindings/net/dsa/microchip,ksz.yaml |
-> > > > > 1 +
-> > > > > =A01 file changed, 1 insertion(+)
-> > > > >=20
-> > > > > diff --git
-> > > > > a/Documentation/devicetree/bindings/net/dsa/microchip,ksz.yaml
-> > > > > b/Documentation/devicetree/bindings/net/dsa/microchip,ksz.yaml
-> > > > > index c963dc09e8e1..52acc15ebcbf 100644
-> > > > > ---
-> > > > > a/Documentation/devicetree/bindings/net/dsa/microchip,ksz.yaml
-> > > > > +++
-> > > > > b/Documentation/devicetree/bindings/net/dsa/microchip,ksz.yaml
-> > > > > @@ -31,6 +31,7 @@ properties:
-> > > > > =A0=A0=A0=A0=A0=A0 - microchip,ksz9893
-> > > > > =A0=A0=A0=A0=A0=A0 - microchip,ksz9563
-> > > > > =A0=A0=A0=A0=A0=A0 - microchip,ksz8563
-> > > > > +=A0=A0=A0=A0=A0 - microchip,ksz8567
-> > > > > =A0
-> > > > > =A0=A0 reset-gpios:
-> > > > > =A0=A0=A0=A0 description:
-> > > > > --=20
-> > > > > 2.34.1
-> > > > >=20
-
---S5tG8E3ZGHoQ0xVt
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZbAHgwAKCRB4tDGHoIJi
-0kvHAQCBF6xD/BKHadO7iZFN9iMOo2RaLe3K9v7g7p0g+HgK8wEAlb9ipxRogUDd
-63FgSdIHfEYOSZlEpaFfRO6sFvdPHQk=
-=5ynU
------END PGP SIGNATURE-----
-
---S5tG8E3ZGHoQ0xVt--
+Konrad
