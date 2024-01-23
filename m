@@ -1,46 +1,46 @@
 Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93E7185C49;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1789C85C7E;
 	Tue, 23 Jan 2024 18:46:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706035617; cv=none; b=CNOvrIeu8p9fv4DFSTN7kAoNrK53k5F0HLZac/9Taw4hMXNtIikPIch28TCfnxbrNu3NAuibKvb6Q9i+J/s1DUGYj66vv8VlDsE5jLAzZtvtPuZ1YgJto65t3dQq/PcTxvA5JX5UjGuvsLb412DIblrtd4HYnjZyBsVdqFb+Xvg=
+	t=1706035617; cv=none; b=tFKef/urrisay+gGHJxZ4WzJ2PvFda0AU3Hssew9MvPAluTQqNy5lEIeYD4YPQ89olTfiAHhsNbwxAnfscvTYm7FFTApcxSy666QmtZnFH40hkoIrsyOpRFlqljj1QRl4YVkKPdCBPvgCilEyNoax7W08FqZkutosu9rB/5y5d0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1706035617; c=relaxed/simple;
-	bh=9Er/9ZzriBnUYFV8MYQi+FyCt/oxHJRm34fkJBeBlTo=;
+	bh=lmRit2wwP0VKPeCChGmI/nU/kHnVMLUnIEtXfr5zJzY=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JbDXRiH9G5VKV4G1CAvoxQAYWHpXea7IGyHzU5lxp/3ZIaQvDNp/L/kz9pgK1oFFEtKKmFqA0XFO0z4xfW0Lgpvz2FF3xhZfQLIkIfpN6KnY1DiYLNacNTnOk8fdJVBm18UvvtSHNfm4wiF03dpUoBuU8vZ7/qtxMCaz0KvAEDU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=revUkMym; arc=none smtp.client-ip=198.47.19.141
+	 MIME-Version:Content-Type; b=rL03OeoMQAr2+c83lEl/YdRmi2v4zd/CcXcQ91SJSBfZT09tx1rftZfioQvbxY6wCEpotSObs538uunauHvOob3kRZgVqPLQAkIBhLsu9E7bIW2tiozpToD2eHOn0C+Y5piNBvJgihXpEaie+W0SbbC4wAVmRaEuRk4M+Ir7M1c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=RFfW3jho; arc=none smtp.client-ip=198.47.19.141
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="revUkMym"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 40NIkaqo111731;
-	Tue, 23 Jan 2024 12:46:36 -0600
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="RFfW3jho"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 40NIkdl1111746;
+	Tue, 23 Jan 2024 12:46:39 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1706035596;
-	bh=jD1FKqDzVix2VafCVSn9UVihhquiSbNa047p/EY4x68=;
+	s=ti-com-17Q1; t=1706035599;
+	bh=+LsaequArBDt9r+xd6rw4/1iVgdQx4r0fsBkKYAhTUA=;
 	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=revUkMymYkfh9Qb9IG0NdGm+Qeq1kGH/R+wx7Icb7UEBHMQPpylFLGSETQ24zQHvZ
-	 78RfagJhyRAsxYkxHoUDKJ9yVD8HvZmx0iMz4PLl2D1hAOqmzhGnR17J9EJ4ibF0uf
-	 5MEKGW1BsWVi0gu/WMFC6ZkzXm2nw3enYOYWwcvo=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 40NIkaOa125892
+	b=RFfW3jhoyar67nIU0PAaCWGcBz2wypQDH4G54Aesmr9IAf4IXQ6eNgJLVHSkTtXyp
+	 LAEco3r4B8jijvqbwE9VgMBAdli2aLBS83axjmoYSQYoFdhOe3v769AK8pfli9atuX
+	 chkih1L0Tmggt2IxsWnN3t6Io6uMJ/aY81D9XGlo=
+Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 40NIkd6F009881
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 23 Jan 2024 12:46:36 -0600
-Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+	Tue, 23 Jan 2024 12:46:39 -0600
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 23
- Jan 2024 12:46:36 -0600
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ Jan 2024 12:46:39 -0600
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 23 Jan 2024 12:46:36 -0600
+ Frontend Transport; Tue, 23 Jan 2024 12:46:39 -0600
 Received: from lelvsmtp5.itg.ti.com ([10.249.42.149])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 40NIkX1t063265;
-	Tue, 23 Jan 2024 12:46:35 -0600
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 40NIkX20063265;
+	Tue, 23 Jan 2024 12:46:38 -0600
 From: Andrew Davis <afd@ti.com>
 To: Bjorn Andersson <andersson@kernel.org>,
         Mathieu Poirier
@@ -58,9 +58,9 @@ To: Bjorn Andersson <andersson@kernel.org>,
 CC: <linux-remoteproc@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
         Andrew Davis <afd@ti.com>
-Subject: [PATCH 4/9] remoteproc: qcom_q6v5_mss: Use devm_rproc_alloc() helper
-Date: Tue, 23 Jan 2024 12:46:27 -0600
-Message-ID: <20240123184632.725054-4-afd@ti.com>
+Subject: [PATCH 9/9] remoteproc: stm32: Use devm_rproc_alloc() helper
+Date: Tue, 23 Jan 2024 12:46:32 -0600
+Message-ID: <20240123184632.725054-9-afd@ti.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240123184632.725054-1-afd@ti.com>
 References: <20240123184632.725054-1-afd@ti.com>
@@ -80,123 +80,38 @@ free on error paths.
 
 Signed-off-by: Andrew Davis <afd@ti.com>
 ---
- drivers/remoteproc/qcom_q6v5_mss.c | 28 ++++++++++++----------------
- 1 file changed, 12 insertions(+), 16 deletions(-)
+ drivers/remoteproc/stm32_rproc.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/remoteproc/qcom_q6v5_mss.c b/drivers/remoteproc/qcom_q6v5_mss.c
-index 394b2c1cb5e21..1779fc890e102 100644
---- a/drivers/remoteproc/qcom_q6v5_mss.c
-+++ b/drivers/remoteproc/qcom_q6v5_mss.c
-@@ -1990,8 +1990,8 @@ static int q6v5_probe(struct platform_device *pdev)
+diff --git a/drivers/remoteproc/stm32_rproc.c b/drivers/remoteproc/stm32_rproc.c
+index 4f469f0bcf8b2..fed0866de1819 100644
+--- a/drivers/remoteproc/stm32_rproc.c
++++ b/drivers/remoteproc/stm32_rproc.c
+@@ -843,7 +843,7 @@ static int stm32_rproc_probe(struct platform_device *pdev)
+ 	if (ret)
  		return ret;
- 	}
  
--	rproc = rproc_alloc(&pdev->dev, pdev->name, &q6v5_ops,
--			    mba_image, sizeof(*qproc));
-+	rproc = devm_rproc_alloc(&pdev->dev, pdev->name, &q6v5_ops,
-+				 mba_image, sizeof(*qproc));
- 	if (!rproc) {
- 		dev_err(&pdev->dev, "failed to allocate rproc\n");
+-	rproc = rproc_alloc(dev, np->name, &st_rproc_ops, NULL, sizeof(*ddata));
++	rproc = devm_rproc_alloc(dev, np->name, &st_rproc_ops, NULL, sizeof(*ddata));
+ 	if (!rproc)
  		return -ENOMEM;
-@@ -2008,7 +2008,7 @@ static int q6v5_probe(struct platform_device *pdev)
- 					    1, &qproc->hexagon_mdt_image);
- 	if (ret < 0 && ret != -EINVAL) {
- 		dev_err(&pdev->dev, "unable to read mpss firmware-name\n");
--		goto free_rproc;
-+		return ret;
+ 
+@@ -897,7 +897,6 @@ static int stm32_rproc_probe(struct platform_device *pdev)
+ 		dev_pm_clear_wake_irq(dev);
+ 		device_init_wakeup(dev, false);
  	}
- 
- 	platform_set_drvdata(pdev, qproc);
-@@ -2019,17 +2019,17 @@ static int q6v5_probe(struct platform_device *pdev)
- 	qproc->has_spare_reg = desc->has_spare_reg;
- 	ret = q6v5_init_mem(qproc, pdev);
- 	if (ret)
--		goto free_rproc;
-+		return ret;
- 
- 	ret = q6v5_alloc_memory_region(qproc);
- 	if (ret)
--		goto free_rproc;
-+		return ret;
- 
- 	ret = q6v5_init_clocks(&pdev->dev, qproc->proxy_clks,
- 			       desc->proxy_clk_names);
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "Failed to get proxy clocks.\n");
--		goto free_rproc;
-+		return ret;
- 	}
- 	qproc->proxy_clk_count = ret;
- 
-@@ -2037,7 +2037,7 @@ static int q6v5_probe(struct platform_device *pdev)
- 			       desc->reset_clk_names);
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "Failed to get reset clocks.\n");
--		goto free_rproc;
-+		return ret;
- 	}
- 	qproc->reset_clk_count = ret;
- 
-@@ -2045,7 +2045,7 @@ static int q6v5_probe(struct platform_device *pdev)
- 			       desc->active_clk_names);
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "Failed to get active clocks.\n");
--		goto free_rproc;
-+		return ret;
- 	}
- 	qproc->active_clk_count = ret;
- 
-@@ -2053,7 +2053,7 @@ static int q6v5_probe(struct platform_device *pdev)
- 				  desc->proxy_supply);
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "Failed to get proxy regulators.\n");
--		goto free_rproc;
-+		return ret;
- 	}
- 	qproc->proxy_reg_count = ret;
- 
-@@ -2061,7 +2061,7 @@ static int q6v5_probe(struct platform_device *pdev)
- 				  desc->active_supply);
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "Failed to get active regulators.\n");
--		goto free_rproc;
-+		return ret;
- 	}
- 	qproc->active_reg_count = ret;
- 
-@@ -2074,12 +2074,12 @@ static int q6v5_probe(struct platform_device *pdev)
- 					  desc->fallback_proxy_supply);
- 		if (ret < 0) {
- 			dev_err(&pdev->dev, "Failed to get fallback proxy regulators.\n");
--			goto free_rproc;
-+			return ret;
- 		}
- 		qproc->fallback_proxy_reg_count = ret;
- 	} else if (ret < 0) {
- 		dev_err(&pdev->dev, "Failed to init power domains\n");
--		goto free_rproc;
-+		return ret;
- 	} else {
- 		qproc->proxy_pd_count = ret;
- 	}
-@@ -2127,8 +2127,6 @@ static int q6v5_probe(struct platform_device *pdev)
- 	qcom_remove_glink_subdev(rproc, &qproc->glink_subdev);
- detach_proxy_pds:
- 	q6v5_pds_detach(qproc, qproc->proxy_pds, qproc->proxy_pd_count);
--free_rproc:
 -	rproc_free(rproc);
- 
  	return ret;
  }
-@@ -2149,8 +2147,6 @@ static void q6v5_remove(struct platform_device *pdev)
- 	qcom_remove_glink_subdev(rproc, &qproc->glink_subdev);
  
- 	q6v5_pds_detach(qproc, qproc->proxy_pds, qproc->proxy_pd_count);
--
+@@ -918,7 +917,6 @@ static void stm32_rproc_remove(struct platform_device *pdev)
+ 		dev_pm_clear_wake_irq(dev);
+ 		device_init_wakeup(dev, false);
+ 	}
 -	rproc_free(rproc);
  }
  
- static const struct rproc_hexagon_res sc7180_mss = {
+ static int stm32_rproc_suspend(struct device *dev)
 -- 
 2.39.2
 
