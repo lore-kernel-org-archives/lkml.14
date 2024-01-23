@@ -1,141 +1,116 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A56B15D5BE
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 00:29:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8CE44EB4A;
+	Tue, 23 Jan 2024 00:29:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705969762; cv=none; b=PF7S9n5XbOWX3Fw8rRNWm7YQMKJ+Jsu5wvSo5/S7ebwMBGPj6lWWdc76Ptqb+J+t22dwVWO2vtJwe1og/Jel+etnbXfoq/f9iUQ/nIP8uxQKw+JPTQyUF8wmxeBM7Hu7Gpvh/Gds6/6/qPMQN+aFLH0u13muQwzalvo4gzCJ7tg=
+	t=1705969782; cv=none; b=r1XQrhWuHi3+sS2+dHQONmFEeqkz6D2TrDD8IsqHZN4dZ+s9PZyPT7Lj+pDIDHZ8A76nsHRnNvk5MlnINmnKjnx1FBgUthBha0FH4OzqRjWZ7qTcAdtTKHmhmsqTqNSXeLmYIZ1yqMIh3rcEeOw77EWs0I6AcVIAHn+mV1Q7upg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705969762; c=relaxed/simple;
-	bh=8qeORySSyeeOFCvn5wyOgST7nKcIWdoDreQsWgVCbpw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=diY0yL6fUT0+MUnz16QYoh8x3AS0CQa0/XNf9FrHRha8BjRY/V+kcDjx4JQVg00ii+s1SDHafwS6cph19/evhnIFWq9CyvVDiLJopkv1uf9/r5FpH7eDyhltlY9lUbjSaxli2uzWmY6kUxpZ13PdOivdLOs3Pmj3uf2oKlVfuIM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=lsGrQNAQ; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1705969782; c=relaxed/simple;
+	bh=y/0JTxWJL4qXHs9f+iHagTYbOJ0iNKWs2IBmc5nPNoE=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HgAqX2KTsz6WWMfawuSKHTDyMYHIErdLtMfXtOLnQyBcKRx50Kn4y6z1h7pcnCWRKEdbXPQlAgBfToeI4wmqEyvnv/TGZduIGe776Xp2gqm4t7T88vPtCL87g0Zbp/UyF25cugBMgVgtUfTkLMkjL4PDbjgxc6bCOdXKBINm+oA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=opJxkq48; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lsGrQNAQ"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-6dd6c3c8a0eso25751b3a.3
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 16:29:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1705969760; x=1706574560; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jj6O26KYu1fAV2IWaDbvOkUC3P2XNQ8BTcng3nNITcI=;
-        b=lsGrQNAQmADn5qRVD1lLMgRKwIgeB61jxoLB6TiTzQtwHE25WItR6I6facgZOKK30G
-         /NYBIPmCVRn1sIANNImk8Fwrr4LYMCPttFukLDEzYS8XbwIvLPhLc5QDMTQzvO6wBJRc
-         Cry0adtAJTSI1Li4ECWo3sE++EfAKZrTaOiHQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705969760; x=1706574560;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jj6O26KYu1fAV2IWaDbvOkUC3P2XNQ8BTcng3nNITcI=;
-        b=MHkV111Wr4Sqyr0Nh75dFWVmlOr5IBLPMmF09g26WJiTajtTeDxDH34AzQeJNALDdy
-         inPI1TMFnkBS9l+c+Aqd+TlMfRzUiA63WPjpBUChub7dv5A2w8SOcvyskq935bbTs3Ls
-         zF2KB7eYQ/HTjBnmdI8MiWP8kg39mrX0DwsO/YAUtdLVD84BXQJihHtSuZNuZ7jrwFs2
-         kHEqly+Gamct9pMIH3hQjW/WdK06fmcISmc0Z27Y8Fd+hwQ/qEp02Ft2HWGrTLANxHPo
-         mrh55w5ZGcAmwR55IjBN8olmSYZAKhtjmqIkkxRIdrjTQWOq/hULJUNioVYoBtCO5dsT
-         d6Iw==
-X-Gm-Message-State: AOJu0YzIaVfAMqb8qwcsj65VeNsPKmHjBG6F15Yx0XdYSyld4Q++tR5/
-	BurXsK6+jxmJ9+u2oz6W5AAkVtN+32nZU26xNPt/9Yt4ph1h2PvE6Sa4PMyWrWD5XxdBMuOpAZM
-	=
-X-Google-Smtp-Source: AGHT+IHAQChb7g8SI6STief9SKN0djwi9CiRmcDxVV80wtZwD8CFDo3iPR3Q1VR95dnOuAqo1f2PZg==
-X-Received: by 2002:a05:6a00:85:b0:6db:cfd7:956d with SMTP id c5-20020a056a00008500b006dbcfd7956dmr1855388pfj.31.1705969760561;
-        Mon, 22 Jan 2024 16:29:20 -0800 (PST)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id fa20-20020a056a002d1400b006dbdfb7624bsm2598975pfb.170.2024.01.22.16.29.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jan 2024 16:29:15 -0800 (PST)
-From: Kees Cook <keescook@chromium.org>
-To: linux-hardening@vger.kernel.org
-Cc: Kees Cook <keescook@chromium.org>,
-	Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
-	ntfs3@lists.linux.dev,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 66/82] fs/ntfs3: Refactor intentional wrap-around test
-Date: Mon, 22 Jan 2024 16:27:41 -0800
-Message-Id: <20240123002814.1396804-66-keescook@chromium.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240122235208.work.748-kees@kernel.org>
-References: <20240122235208.work.748-kees@kernel.org>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="opJxkq48"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40MMrfmi020913;
+	Tue, 23 Jan 2024 00:29:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	date:from:to:cc:subject:message-id:references:mime-version
+	:content-type:in-reply-to; s=qcppdkim1; bh=NyMAEdlEAWa7yJwAP7Klz
+	mcCKaFtnf5sr6TORSj8Tkg=; b=opJxkq48x2uNUWDHy7giEfGHBZtYJpmPq1ECF
+	Zn/TuRSaxa3sVMc8j/CXFCBgIuWuE9FqM3wIQXpWAh4SLYymfpik7n7C7i9c9H64
+	Sea/dc9qXi0T/tmfRma7jodXrMWr+eyrKc8/2w4Lcl/RCVBU5slFZbQcwiqq1th/
+	DRwx2jApgEM/dvOOmr4q+vFmqCmkGMj99tuJ3lbTKKi1bTvOmRbhtACEFxLBeKM0
+	xwLR+jGojqbcAG3ovf5ff2t6yFx5eeKaNZFZeb2eRCp5ppQzKWrvWPBZ/IT8Gn8i
+	qnpnflCLKWz7YxxRqJTJF/l1DFhWWjhJoq4W+9FqWrEvHZLBg==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vspw8sxeg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 23 Jan 2024 00:29:34 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 40N0TXxm022679
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 23 Jan 2024 00:29:33 GMT
+Received: from hu-bjorande-lv.qualcomm.com (10.49.16.6) by
+ nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Mon, 22 Jan 2024 16:29:33 -0800
+Date: Mon, 22 Jan 2024 16:29:32 -0800
+From: Bjorn Andersson <quic_bjorande@quicinc.com>
+To: Konrad Dybcio <konrad.dybcio@linaro.org>
+CC: Bjorn Andersson <andersson@kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+        Stephen
+ Hemminger <stephen@networkplumber.org>
+Subject: Re: [PATCH v3] soc: qcom: aoss: Add debugfs interface for sending
+ messages
+Message-ID: <20240123002932.GC2936378@hu-bjorande-lv.qualcomm.com>
+References: <20240117-qcom-aoss-debugfs-v2-v3-1-1aa779124822@quicinc.com>
+ <2b43e7f9-9394-4ed2-b6d7-46fdc1e515c5@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2025; i=keescook@chromium.org;
- h=from:subject; bh=8qeORySSyeeOFCvn5wyOgST7nKcIWdoDreQsWgVCbpw=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlrwgLYI6HJPlV99UDk+QdjoC7axWmLKoVJvfrA
- yjhVrtzy/eJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZa8ICwAKCRCJcvTf3G3A
- JlSvEACT09RyU2KoE3Zx24RyCPuIOZDDteFSvGfF2qQqodQJh5m+7FyYk21boUYR5X6kbtJH31j
- qGxql0FY+H1zojgKB0eVDOYVZegBlrJh5hYoIyl6xHKAHTjxblXQ4pwBtfFuF2LgLLHM1AVNuw5
- bDF2vNEPSeLk0QsAh+h563cxPosIEeFPEZ2j29FlkDvzvehudmsvOH/DE7ZewkH+gwkEKB8J/da
- nCKiXsFoJCcPtn+MAef4L5CCLTTYsb/TAIgEyyacfc5PGITpPXTEfPzgfsoMYykbtGzFGxI7iRp
- Kwczfqg81OIypvkDfnSXc7S3aRu/0piZoZAuDKJrvh41IGWk4+cQlraNxBwIr+5wid3dVct7vRa
- A6RnI7gi0TC+ccHq0ByecHe4oOiSKhI/L9fu2F4P/FnhOQ1b7q7Z3hZpsR9DFUEadjtBEX4XUrt
- nrRLvENYt6roKvpFwo6NURFWfw2AX9EdLQw+pjv+HdA4Xejxobwh23hRVmfLTMetGyxhT2QjAbc
- h9kXTwFpEkrvzmcxDROc89dIt9KB5uMIaz4esBi6HhXFmlwWxCIY7VfqPnNApp6FbzT863SJsK8
- iWlg8vi2F3zQOzatwoqImnx5OhCud313Yi/+J4TPb41HJMWPYa5nhGq9GcIaGk0kViuK4kMpls0 thVhlNnm5s2FwrQ==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <2b43e7f9-9394-4ed2-b6d7-46fdc1e515c5@linaro.org>
+X-ClientProxiedBy: nalasex01a.na.qualcomm.com (10.47.209.196) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: QcIdnaTHvQKjPjCAXGw5IOhgyImcDwuw
+X-Proofpoint-ORIG-GUID: QcIdnaTHvQKjPjCAXGw5IOhgyImcDwuw
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-01-22_12,2024-01-22_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 malwarescore=0
+ adultscore=0 mlxscore=0 spamscore=0 lowpriorityscore=0 bulkscore=0
+ clxscore=1015 suspectscore=0 impostorscore=0 mlxlogscore=999
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2311290000 definitions=main-2401230002
 
-In an effort to separate intentional arithmetic wrap-around from
-unexpected wrap-around, we need to refactor places that depend on this
-kind of math. One of the most common code patterns of this is:
+On Mon, Jan 22, 2024 at 11:44:30AM +0100, Konrad Dybcio wrote:
+> On 18.01.2024 03:31, Bjorn Andersson wrote:
+> > In addition to the normal runtime commands, the Always On Processor
+> > (AOP) provides a number of debug commands which can be used during
+> > system debugging for things such as preventing power collapse or placing
+> > floor votes for certain resources. Some of these are documented in the
+> > Robotics RB5 "Debug AOP ADB" linked below.
+> > 
+> > Provide a debugfs interface for the developer/tester to send some of
+> > these commands to the AOP, which allow the user to override the DDR
+> > frequency, preventing power collapse of cx and ddr, and prevent AOSS
+> > from going to sleep.
+> > 
+> > Link: https://docs.qualcomm.com/bundle/publicresource/topics/80-88500-3/85_Debugging_AOP_ADB.html
+> > Signed-off-by: Bjorn Andersson <quic_bjorande@quicinc.com>
+> > ---
+> 
+> [...]
+> 
+> >  
+> > +struct qmp_debugfs_entry {
+> > +	const char *name;
+> > +	const char *fmt;
+> > +	bool is_bool;
+> 
+> This can also be const
+> 
+> > +	const char *true_val;
+> > +	const char *false_val;
+> 
+> All of these strings can be const ptrs to const data
+> 
 
-	VAR + value < VAR
+These are all const data now, but what would the reason for enforcing it
+in the struct definition be?
 
-Notably, this is considered "undefined behavior" for signed and pointer
-types, which the kernel works around by using the -fno-strict-overflow
-option in the build[1] (which used to just be -fwrapv). Regardless, we
-want to get the kernel source to the position where we can meaningfully
-instrument arithmetic wrap-around conditions and catch them when they
-are unexpected, regardless of whether they are signed[2], unsigned[3],
-or pointer[4] types.
-
-Refactor open-coded wrap-around addition test to use add_would_overflow().
-This paves the way to enabling the wrap-around sanitizers in the future.
-
-Link: https://git.kernel.org/linus/68df3755e383e6fecf2354a67b08f92f18536594 [1]
-Link: https://github.com/KSPP/linux/issues/26 [2]
-Link: https://github.com/KSPP/linux/issues/27 [3]
-Link: https://github.com/KSPP/linux/issues/344 [4]
-Cc: Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
-Cc: ntfs3@lists.linux.dev
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- fs/ntfs3/record.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/fs/ntfs3/record.c b/fs/ntfs3/record.c
-index 53629b1f65e9..8cd738c1dbe6 100644
---- a/fs/ntfs3/record.c
-+++ b/fs/ntfs3/record.c
-@@ -235,7 +235,7 @@ struct ATTRIB *mi_enum_attr(struct mft_inode *mi, struct ATTRIB *attr)
- 		}
- 
- 		/* Overflow check. */
--		if (off + asize < off)
-+		if (add_would_overflow(off, asize))
- 			return NULL;
- 
- 		prev_type = le32_to_cpu(attr->type);
-@@ -266,7 +266,7 @@ struct ATTRIB *mi_enum_attr(struct mft_inode *mi, struct ATTRIB *attr)
- 		return NULL;
- 
- 	/* Check overflow and boundary. */
--	if (off + asize < off || off + asize > used)
-+	if (add_would_overflow(off, asize) || off + asize > used)
- 		return NULL;
- 
- 	/* Check size of attribute. */
--- 
-2.34.1
-
+Regards,
+Bjorn
