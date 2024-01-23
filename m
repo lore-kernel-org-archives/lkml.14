@@ -1,67 +1,63 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6CCD5C90B
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 11:15:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E425C5D727;
+	Tue, 23 Jan 2024 11:15:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706008508; cv=none; b=e7+nAqXlVslD3nXrqFecH49LhAyZitqSvZwIYhyX+RzxzeqL0me1HnGDKsroFpvOzTDqM+qBRHs5AMqACV3yw4SuvX6/B4FekCwc5hfHySd8Zu218yAKpdoJf/DBLPkANxgffaTpf3Sx09V+5BvPaiP3RAa18p9pdT+YdsoZ/WE=
+	t=1706008538; cv=none; b=hx4N/C9QV5KvqGGDhBg2wLa0/rulU0Ls8FUy0XKyGnvrp0XnKTVZuRpunY0iYPplbV8WIcIJuA2sZhr6lKHB5CUHpszwLYNUzUCCvQjEdlS7927y6VdT/pPJbhLI0CbEIobJqsnNb/lSxSEY5WmApxIztIYrAm7D2+4T9WGlhK0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706008508; c=relaxed/simple;
-	bh=WFZGJmdSQMFKC+BowbbWmamOzaAd21in/OqCQbgCD1s=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pJ8an7xBHEoqj47U2S9cb1XRovhy0tAlFLA29icxoPikkpF2JOova3YKiVkndWa1bBacZGpN+SUnaIjsVpR9Fg1l71SkCLzlaVqt9KNKjC9U5dBlDSHot9xVtMOgiaY1agmbf1mI5Hqfjka9xK7twQCBf/njmX8C+axPa6y1EB4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=smile.fr; spf=pass smtp.mailfrom=smile.fr; dkim=pass (2048-bit key) header.d=smile-fr.20230601.gappssmtp.com header.i=@smile-fr.20230601.gappssmtp.com header.b=WoZgZuNK; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=smile.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=smile.fr
+	s=arc-20240116; t=1706008538; c=relaxed/simple;
+	bh=6ooEC571bZ/oHIxdPh13j6rOggMRmIyjupuL6e9vmaQ=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=qBP56DZVeET+GCJ5kAdWYE7xmBdmN7Yj5btqKfu67B5VaYhv2mwU7sOZUXW4lXj0Xrv4kc1WG8EZoZyMmihdtughZ/mSkjTaLPx5umY/aYBdRM+8vUgJ/SW4Dd7WXug11J4VoelTjgKMI1g90iAUQEdnerg+f0UJ6d18Bbvas04=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=nHB5bkP+; arc=none smtp.client-ip=198.47.19.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=smile-fr.20230601.gappssmtp.com header.i=@smile-fr.20230601.gappssmtp.com header.b="WoZgZuNK"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-40e7e2e04f0so46213135e9.1
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 03:15:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=smile-fr.20230601.gappssmtp.com; s=20230601; t=1706008503; x=1706613303; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=7oVnqcTICZX3fLTf+T67B/JrEVZpFEzkZPYwJisg83A=;
-        b=WoZgZuNKB8AQFkDLJAqBEcAld7WitNVZAsJsl7eaN+rAgRP960xBBP4Bn8bfoWtMK2
-         yKA0TompxQrL4pv7CEAWgmJX8BjNPBtrfprz7l51cIk6n0cx71ZWM5AZDJf8hd0bEE91
-         1Opd00+QEI5WM3ilg/tDwDm5MLdfYz33adR8C4FWMXcSCvR0fbzKtPBVpl0dWnCjSTwk
-         I3oI659x71fj+WHePP8TwV341JenFk2OQfJdf139uJnupimPaRZZLxTMCXjhZhvsaVOt
-         yHxgrWRt1+AnRYLU9R4XWBJ6KW3Y2aML+057ZHuLbh5lzjIfiC/SIQ0pQhpGI1Vnmfeb
-         TQ8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706008503; x=1706613303;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=7oVnqcTICZX3fLTf+T67B/JrEVZpFEzkZPYwJisg83A=;
-        b=Tg0Db7pbowup1rwPQRl+2kqeR/ijs1NAj8ch3VRorpqqHkRphR2ul3QCLThvwrsu6F
-         dqa6Etdr4OpL8sjUxokucRpn1vLJwtNePYPyv50h1se1VVlzIYCFTFRY7L2BrrSimbg3
-         ytBlE/jMFMHysQcAc8OIIwK0gYpkxiQFv4RegeQCInOBx9c41e3oQaVhQI3WU4/52k8P
-         HFTwU5iTYUkxvPLlP0uS91QuUEKSmsn7GJwDuk04X31t/FZpDQs35L3GP4OvYNCW1Kag
-         JM78rveYRL/6l+E/1pUGGI0dU3LValmhT+4x8jCfudzMu8k94IN/aLzkhO6HoowbcoQ2
-         PWBQ==
-X-Gm-Message-State: AOJu0YwbA162n6/Qid+/Uj10eilmHVz/Nia23c/IgEGH9f1YIs6j57Dn
-	oudXPPwlfj37f7sBTy2fR0O6Yi+G/LS+UeBRKz+QGhe6UOIpwcsDhBu4YnwwNfEhB0INjHtW4ii
-	9
-X-Google-Smtp-Source: AGHT+IEsMF4IKcef68K89OWsOempUDLG9nhBgJ6m3fMDfcbJGEDDc5ILFO3fyiXC/f9U0QjIqcy23Q==
-X-Received: by 2002:a05:600c:470d:b0:40e:a5b8:a27a with SMTP id v13-20020a05600c470d00b0040ea5b8a27amr430945wmo.106.1706008503003;
-        Tue, 23 Jan 2024 03:15:03 -0800 (PST)
-Received: from P-NTS-Evian.home (2a01cb05945b7e009bdc688723a24f31.ipv6.abo.wanadoo.fr. [2a01:cb05:945b:7e00:9bdc:6887:23a2:4f31])
-        by smtp.gmail.com with ESMTPSA id jg1-20020a05600ca00100b0040d4e1393dcsm45497866wmb.20.2024.01.23.03.15.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jan 2024 03:15:02 -0800 (PST)
-From: Romain Naour <romain.naour@smile.fr>
-To: linux-kernel@vger.kernel.org,
-	linux-omap@vger.kernel.org
-Cc: tony@atomide.com,
-	lgirdwood@gmail.com,
-	broonie@kernel.org,
-	Romain Naour <romain.naour@skf.com>,
-	Yoann Congal <yoann.congal@smile.fr>
-Subject: [PATCH v2] regulator: ti-abb: don't use devm_platform_ioremap_resource_byname for shared interrupt register
-Date: Tue, 23 Jan 2024 12:14:56 +0100
-Message-ID: <20240123111456.739381-1-romain.naour@smile.fr>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="nHB5bkP+"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 40NBEXXr117896;
+	Tue, 23 Jan 2024 05:14:33 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1706008473;
+	bh=4Nc6+RtE5VXdMidjdz71LZrSVsobsrRuKc8k9UmvFQ8=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=nHB5bkP+z34s/OgtznwKjDjTejTK8XR7Gge3JWFtwpFbnqPkcdfkiZQ9VRMa/8Y+Z
+	 sbbQy4MDoRyCA1qX7bPz8AddQokpCmx9ksEyuJG8FDOaYT+6QX+4y4I/JA4hU0ThqW
+	 ejGbCG5196jFwLo2nAcQrGz/8yrrTdXgJUDMg70U=
+Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 40NBEXcu054995
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 23 Jan 2024 05:14:33 -0600
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 23
+ Jan 2024 05:14:33 -0600
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Tue, 23 Jan 2024 05:14:33 -0600
+Received: from LT5CG31242FY.dhcp.ti.com (lt5cg31242fy.dhcp.ti.com [10.85.14.124])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 40NBEHxR083823;
+	Tue, 23 Jan 2024 05:14:26 -0600
+From: Shenghao Ding <shenghao-ding@ti.com>
+To: <broonie@kernel.org>, <conor+dt@kernel.org>,
+        <krzysztof.kozlowski@linaro.org>
+CC: <robh+dt@kernel.org>, <andriy.shevchenko@linux.intel.com>,
+        <kevin-lu@ti.com>, <baojun.xu@ti.com>, <devicetree@vger.kernel.org>,
+        <lgirdwood@gmail.com>, <perex@perex.cz>,
+        <pierre-louis.bossart@linux.intel.com>, <13916275206@139.com>,
+        <linux-sound@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <liam.r.girdwood@intel.com>, <soyer@irl.hu>, <jkhuang3@ti.com>,
+        <tiwai@suse.de>, <pdjuandi@ti.com>, <j-mcpherson@ti.com>,
+        <navada@ti.com>, Shenghao Ding <shenghao-ding@ti.com>
+Subject: [PATCH v1 2/4] ASoc: pcm6240: Create header file for pcm6240 codec driver code
+Date: Tue, 23 Jan 2024 19:14:08 +0800
+Message-ID: <20240123111411.850-2-shenghao-ding@ti.com>
+X-Mailer: git-send-email 2.33.0.windows.2
+In-Reply-To: <20240123111411.850-1-shenghao-ding@ti.com>
+References: <20240123111411.850-1-shenghao-ding@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,99 +65,264 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-From: Romain Naour <romain.naour@skf.com>
+PCM6240 driver implements a flexible and configurable setting for register
+and filter coefficients, to one, two or even multiple PCM6240 Family Audio
+chips.
 
-We can't use devm_platform_ioremap_resource_byname() to remap the
-interrupt register that can be shared between
-regulator-abb-{ivahd,dspeve,gpu} drivers instances.
+Signed-off-by: Shenghao Ding <shenghao-ding@ti.com>
 
-The combined helper introduce a call to devm_request_mem_region() that
-creates a new busy resource region on PRM_IRQSTATUS_MPU register
-(0x4ae06010). The first devm_request_mem_region() call succeeds for
-regulator-abb-ivahd but fails for the two other regulator-abb-dspeve
-and regulator-abb-gpu.
-
-  # cat /proc/iomem | grep -i 4ae06
-  4ae06010-4ae06013 : 4ae07e34.regulator-abb-ivahd int-address
-  4ae06014-4ae06017 : 4ae07ddc.regulator-abb-mpu int-address
-
-regulator-abb-dspeve and regulator-abb-gpu are missing due to
-devm_request_mem_region() failure (EBUSY):
-
-  [    1.326660] ti_abb 4ae07e30.regulator-abb-dspeve: can't request region for resource [mem 0x4ae06010-0x4ae06013]
-  [    1.326660] ti_abb: probe of 4ae07e30.regulator-abb-dspeve failed with error -16
-  [    1.327239] ti_abb 4ae07de4.regulator-abb-gpu: can't request region for resource [mem 0x4ae06010-0x4ae06013]
-  [    1.327270] ti_abb: probe of 4ae07de4.regulator-abb-gpu failed with error -16
-
-From arm/boot/dts/dra7.dtsi:
-
-The abb_mpu is the only instance using its own interrupt register:
-  (0x4ae06014) PRM_IRQSTATUS_MPU_2, ABB_MPU_DONE_ST (bit 7)
-
-The other tree instances (abb_ivahd, abb_dspeve, abb_gpu) share
-PRM_IRQSTATUS_MPU register (0x4ae06010) but use different bits
-ABB_IVA_DONE_ST (bit 30), ABB_DSPEVE_DONE_ST( bit 29) and
-ABB_GPU_DONE_ST (but 28).
-
-The commit b36c6b1887ff ("regulator: ti-abb: Make use of the helper
-function devm_ioremap related") overlooked the following comment
-implicitly explaining why devm_ioremap() is used in this case:
-
-  /*
-   * We may have shared interrupt register offsets which are
-   * write-1-to-clear between domains ensuring exclusivity.
-   */
-
-Fixes and partially reverts commit b36c6b1887ff ("regulator: ti-abb:
-Make use of the helper function devm_ioremap related").
-
-Improve the existing comment to avoid further conversion to
-devm_platform_ioremap_resource_byname().
-
-Fixes: b36c6b1887ff ("regulator: ti-abb: Make use of the helper function devm_ioremap related")
-Signed-off-by: Romain Naour <romain.naour@skf.com>
-Reviewed-by: Yoann Congal <yoann.congal@smile.fr>
 ---
-v2: improve commit log and update comment preventing further conversion
-to devm_platform_ioremap_resource_byname().
+Change in v1:
+ - Create header file for pcm6240 codec driver code
 ---
- drivers/regulator/ti-abb-regulator.c | 22 +++++++++++++++++++---
- 1 file changed, 19 insertions(+), 3 deletions(-)
+ sound/soc/codecs/pcm6240.h | 235 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 235 insertions(+)
+ create mode 100644 sound/soc/codecs/pcm6240.h
 
-diff --git a/drivers/regulator/ti-abb-regulator.c b/drivers/regulator/ti-abb-regulator.c
-index f48214e2c3b4..04133510e5af 100644
---- a/drivers/regulator/ti-abb-regulator.c
-+++ b/drivers/regulator/ti-abb-regulator.c
-@@ -726,9 +726,25 @@ static int ti_abb_probe(struct platform_device *pdev)
- 			return PTR_ERR(abb->setup_reg);
- 	}
- 
--	abb->int_base = devm_platform_ioremap_resource_byname(pdev, "int-address");
--	if (IS_ERR(abb->int_base))
--		return PTR_ERR(abb->int_base);
-+	pname = "int-address";
-+	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, pname);
-+	if (!res) {
-+		dev_err(dev, "Missing '%s' IO resource\n", pname);
-+		return -ENODEV;
-+	}
-+	/*
-+	 * The MPU interrupt status register (PRM_IRQSTATUS_MPU) is
-+	 * shared between regulator-abb-{ivahd,dspeve,gpu} driver
-+	 * instances. Therefore use devm_ioremap() rather than
-+	 * devm_platform_ioremap_resource_byname() to avoid busy
-+	 * resource region conflicts.
-+	 */
-+	abb->int_base = devm_ioremap(dev, res->start,
-+					     resource_size(res));
-+	if (!abb->int_base) {
-+		dev_err(dev, "Unable to map '%s'\n", pname);
-+		return -ENOMEM;
-+	}
- 
- 	/* Map Optional resources */
- 	pname = "efuse-address";
+diff --git a/sound/soc/codecs/pcm6240.h b/sound/soc/codecs/pcm6240.h
+new file mode 100644
+index 000000000000..2d077bd7fc41
+--- /dev/null
++++ b/sound/soc/codecs/pcm6240.h
+@@ -0,0 +1,235 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++//
++// ALSA SoC Texas Instruments PCM6240 Family Audio ADC/DAC/Router
++//
++// Copyright (C) 2022 - 2024 Texas Instruments Incorporated
++// https://www.ti.com
++//
++// The PCM6240 driver implements a flexible and configurable
++// algo coefficient setting for one, two, or even multiple
++// PCM6240 Family Audio chips.
++//
++// Author: Shenghao Ding <shenghao-ding@ti.com>
++//
++
++#ifndef __PCM6240_H__
++#define __PCM6240_H__
++
++enum pcm_device {
++	ADC3120,
++	ADC5120,
++	ADC6120,
++	DIX4192,
++	PCM1690,
++	PCM3120,
++	PCM3140,
++	PCM5120,
++	PCM5140,
++	PCM6120,
++	PCM6140,
++	PCM6240,
++	PCM6260,
++	PCM9211,
++	PCMD3140,
++	PCMD3180,
++	PCMD512X,
++	TAA5212,
++	TAA5412,
++	TAD5212,
++	TAD5412,
++	MAX_DEVICE,
++};
++
++#define PCMDEVICE_MAX_DEVICES			4
++#define PCMDEVICE_DEVICE_SUM			8
++#define PCMDEVICE_CONFIG_SUM			64
++#define PCMDEVICE_REGBIN_FILENAME_LEN		64
++
++#define PCMDEVICE_RATES	(SNDRV_PCM_RATE_44100 | \
++	SNDRV_PCM_RATE_48000)
++#define PCMDEVICE_MAX_CHANNELS			8
++#define PCMDEVICE_FORMATS	(SNDRV_PCM_FMTBIT_S16_LE | \
++	SNDRV_PCM_FMTBIT_S20_3LE | \
++	SNDRV_PCM_FMTBIT_S24_3LE | \
++	SNDRV_PCM_FMTBIT_S24_LE | \
++	SNDRV_PCM_FMTBIT_S32_LE)
++
++/* PAGE Control Register (available in page0 of each book) */
++#define PCMDEVICE_PAGE_SELECT			0x00
++#define PCMDEVICE_REG(page, reg)		((page * 128) + reg)
++#define PCMDEVICE_REG_SWRESET			PCMDEVICE_REG(0X0, 0x01)
++#define PCMDEVICE_REG_SWRESET_RESET		BIT(0)
++
++#define ADC5120_REG_CH1_ANALOG_GAIN		PCMDEVICE_REG(0X0, 0x3d)
++#define ADC5120_REG_CH1_DIGITAL_GAIN		PCMDEVICE_REG(0X0, 0x3e)
++#define ADC5120_REG_CH2_ANALOG_GAIN		PCMDEVICE_REG(0X0, 0x42)
++#define ADC5120_REG_CH2_DIGITAL_GAIN		PCMDEVICE_REG(0X0, 0x43)
++
++#define PCM1690_REG_MODE_CTRL			PCMDEVICE_REG(0X0, 0x46)
++#define PCM1690_REG_MODE_CTRL_DAMS_MSK		BIT(7)
++#define PCM1690_REG_MODE_CTRL_DAMS_FINE_STEP	0x0
++#define PCM1690_REG_MODE_CTRL_DAMS_WIDE_RANGE	0x80
++
++#define PCM1690_REG_CH1_DIGITAL_GAIN		PCMDEVICE_REG(0X0, 0x48)
++#define PCM1690_REG_CH2_DIGITAL_GAIN		PCMDEVICE_REG(0X0, 0x49)
++#define PCM1690_REG_CH3_DIGITAL_GAIN		PCMDEVICE_REG(0X0, 0x4a)
++#define PCM1690_REG_CH4_DIGITAL_GAIN		PCMDEVICE_REG(0X0, 0x4b)
++#define PCM1690_REG_CH5_DIGITAL_GAIN		PCMDEVICE_REG(0X0, 0x4c)
++#define PCM1690_REG_CH6_DIGITAL_GAIN		PCMDEVICE_REG(0X0, 0x4d)
++#define PCM1690_REG_CH7_DIGITAL_GAIN		PCMDEVICE_REG(0X0, 0x4e)
++#define PCM1690_REG_CH8_DIGITAL_GAIN		PCMDEVICE_REG(0X0, 0x4f)
++
++#define PCM6240_REG_CH1_ANALOG_GAIN		PCMDEVICE_REG(0X0, 0x3d)
++#define PCM6240_REG_CH1_DIGITAL_GAIN		PCMDEVICE_REG(0X0, 0x3e)
++#define PCM6240_REG_CH2_ANALOG_GAIN		PCMDEVICE_REG(0X0, 0x42)
++#define PCM6240_REG_CH2_DIGITAL_GAIN		PCMDEVICE_REG(0X0, 0x43)
++#define PCM6240_REG_CH3_ANALOG_GAIN		PCMDEVICE_REG(0X0, 0x47)
++#define PCM6240_REG_CH3_DIGITAL_GAIN		PCMDEVICE_REG(0X0, 0x48)
++#define PCM6240_REG_CH4_ANALOG_GAIN		PCMDEVICE_REG(0X0, 0x4c)
++#define PCM6240_REG_CH4_DIGITAL_GAIN		PCMDEVICE_REG(0X0, 0x4d)
++
++#define PCM6260_REG_CH1_ANALOG_GAIN		PCMDEVICE_REG(0X0, 0x3d)
++#define PCM6260_REG_CH1_DIGITAL_GAIN		PCMDEVICE_REG(0X0, 0x3e)
++#define PCM6260_REG_CH2_ANALOG_GAIN		PCMDEVICE_REG(0X0, 0x42)
++#define PCM6260_REG_CH2_DIGITAL_GAIN		PCMDEVICE_REG(0X0, 0x43)
++#define PCM6260_REG_CH3_ANALOG_GAIN		PCMDEVICE_REG(0X0, 0x47)
++#define PCM6260_REG_CH3_DIGITAL_GAIN		PCMDEVICE_REG(0X0, 0x48)
++#define PCM6260_REG_CH4_ANALOG_GAIN		PCMDEVICE_REG(0X0, 0x4c)
++#define PCM6260_REG_CH4_DIGITAL_GAIN		PCMDEVICE_REG(0X0, 0x4d)
++#define PCM6260_REG_CH5_ANALOG_GAIN		PCMDEVICE_REG(0X0, 0x51)
++#define PCM6260_REG_CH5_DIGITAL_GAIN		PCMDEVICE_REG(0X0, 0x52)
++#define PCM6260_REG_CH6_ANALOG_GAIN		PCMDEVICE_REG(0X0, 0x56)
++#define PCM6260_REG_CH6_DIGITAL_GAIN		PCMDEVICE_REG(0X0, 0x57)
++
++#define PCM9211_REG_SW_CTRL			PCMDEVICE_REG(0X0, 0x40)
++#define PCM9211_REG_SW_CTRL_MRST_MSK		BIT(7)
++#define PCM9211_REG_SW_CTRL_MRST		0x0
++
++#define PCM9211_REG_CH1_DIGITAL_GAIN		PCMDEVICE_REG(0X0, 0x46)
++#define PCM9211_REG_CH2_DIGITAL_GAIN		PCMDEVICE_REG(0X0, 0x47)
++
++#define PCMD3140_REG_CH1_DIGITAL_GAIN		PCMDEVICE_REG(0X0, 0x3E)
++#define PCMD3140_REG_CH2_DIGITAL_GAIN		PCMDEVICE_REG(0X0, 0x43)
++#define PCMD3140_REG_CH3_DIGITAL_GAIN		PCMDEVICE_REG(0X0, 0x48)
++#define PCMD3140_REG_CH4_DIGITAL_GAIN		PCMDEVICE_REG(0X0, 0x4D)
++
++#define PCMD3180_REG_CH1_DIGITAL_GAIN		PCMDEVICE_REG(0X0, 0x3E)
++#define PCMD3180_REG_CH2_DIGITAL_GAIN		PCMDEVICE_REG(0X0, 0x43)
++#define PCMD3180_REG_CH3_DIGITAL_GAIN		PCMDEVICE_REG(0X0, 0x48)
++#define PCMD3180_REG_CH4_DIGITAL_GAIN		PCMDEVICE_REG(0X0, 0x4D)
++#define PCMD3180_REG_CH5_DIGITAL_GAIN		PCMDEVICE_REG(0X0, 0x52)
++#define PCMD3180_REG_CH6_DIGITAL_GAIN		PCMDEVICE_REG(0X0, 0x57)
++#define PCMD3180_REG_CH7_DIGITAL_GAIN		PCMDEVICE_REG(0X0, 0x5C)
++#define PCMD3180_REG_CH8_DIGITAL_GAIN		PCMDEVICE_REG(0X0, 0x61)
++
++#define TAA5412_REG_CH1_DIGITAL_VOLUME		PCMDEVICE_REG(0X0, 0x52)
++#define TAA5412_REG_CH2_DIGITAL_VOLUME		PCMDEVICE_REG(0X0, 0x57)
++#define TAA5412_REG_CH3_DIGITAL_VOLUME		PCMDEVICE_REG(0X0, 0x5B)
++#define TAA5412_REG_CH4_DIGITAL_VOLUME		PCMDEVICE_REG(0X0, 0x5F)
++
++#define TAA5412_REG_CH1_FINE_GAIN		PCMDEVICE_REG(0X0, 0x53)
++#define TAA5412_REG_CH2_FINE_GAIN		PCMDEVICE_REG(0X0, 0x58)
++#define TAA5412_REG_CH3_FINE_GAIN		PCMDEVICE_REG(0X0, 0x5C)
++#define TAA5412_REG_CH4_FINE_GAIN		PCMDEVICE_REG(0X0, 0x60)
++
++#define PCMDEVICE_CMD_SING_W		0x1
++#define PCMDEVICE_CMD_BURST		0x2
++#define PCMDEVICE_CMD_DELAY		0x3
++#define PCMDEVICE_CMD_FIELD_W		0x4
++
++enum pcmdevice_bin_blk_type {
++	PCMDEVICE_BIN_BLK_COEFF = 1,
++	PCMDEVICE_BIN_BLK_POST_POWER_UP,
++	PCMDEVICE_BIN_BLK_PRE_SHUTDOWN,
++	PCMDEVICE_BIN_BLK_PRE_POWER_UP,
++	PCMDEVICE_BIN_BLK_POST_SHUTDOWN
++};
++
++enum pcmdevice_fw_state {
++	PCMDEVICE_FW_LOAD_OK = 0,
++	PCMDEVICE_FW_LOAD_FAILED
++};
++
++struct pcmdevice_regbin_hdr {
++	unsigned int img_sz;
++	unsigned int checksum;
++	unsigned int binary_version_num;
++	unsigned int drv_fw_version;
++	unsigned int timestamp;
++	unsigned char plat_type;
++	unsigned char dev_family;
++	unsigned char reserve;
++	unsigned char ndev;
++	unsigned char devs[PCMDEVICE_MAX_DEVICES];
++	unsigned int nconfig;
++	unsigned int config_size[PCMDEVICE_CONFIG_SUM];
++};
++
++struct pcmdevice_block_data {
++	unsigned char dev_idx;
++	unsigned char block_type;
++	unsigned short yram_checksum;
++	unsigned int block_size;
++	unsigned int n_subblks;
++	unsigned char *regdata;
++};
++
++struct pcmdevice_config_info {
++	char cfg_name[64];
++	unsigned int nblocks;
++	unsigned int real_nblocks;
++	unsigned char active_dev;
++	struct pcmdevice_block_data **blk_data;
++};
++
++struct pcmdevice_regbin {
++	struct pcmdevice_regbin_hdr fw_hdr;
++	int ncfgs;
++	struct pcmdevice_config_info **cfg_info;
++};
++
++struct pcm_control {
++	struct snd_kcontrol_new *pcmdevice_profile_controls;
++	int nr_controls;
++};
++
++struct pcmdevice_irqinfo {
++	int gpio;
++	int nmb;
++};
++
++struct pcmdevice_priv {
++	struct snd_soc_component *component;
++	struct i2c_client *client;
++	struct device *dev;
++	struct mutex codec_lock;
++	struct gpio_desc *hw_rst;
++	struct regmap *regmap;
++	struct pcmdevice_regbin regbin;
++	struct pcm_control pcm_ctrl;
++	struct pcmdevice_irqinfo irq_info;
++	unsigned int addr[PCMDEVICE_MAX_DEVICES];
++	unsigned int chip_id;
++	unsigned int sysclk;
++	int cur_conf;
++	int fw_state;
++	int ndev;
++	unsigned char regbin_name[PCMDEVICE_REGBIN_FILENAME_LEN];
++	unsigned char dev_name[I2C_NAME_SIZE];
++	void (*sw_rst)(struct pcmdevice_priv *pcm_dev);
++};
++
++/* mixer control */
++struct pcmdevice_mixer_control {
++	int max;
++	int reg;
++	unsigned int dev_no;
++	unsigned int shift;
++	unsigned int invert;
++};
++struct pcmdev_ctrl_info {
++	const unsigned int *gain;
++	struct pcmdevice_mixer_control *pcmdev_ctrl;
++	unsigned int ctrl_array_size;
++};
++#endif /* __PCM6240_H__ */
 -- 
-2.43.0
+2.34.1
 
