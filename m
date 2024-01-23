@@ -1,94 +1,84 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
+Received: from out-177.mta1.migadu.com (out-177.mta1.migadu.com [95.215.58.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC34B5DF1D;
-	Tue, 23 Jan 2024 12:29:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.88
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E371210E0
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 12:31:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706012942; cv=none; b=V9KnUrldA0le+P+xWBgwvxoodSBePKu38bD9S3/gD8MYY24BFVWVLrfN5fUpBSnkGXdrjui7y1J/Cl+3YOxOfPE4mka+U71UzOMAV3azXJTWDGz8S//+2i6kfAXnN1Bdx2pzZNCl/4bWBEkLrXbHb0ABcAPb4dd8FToLWpr6xQ8=
+	t=1706013088; cv=none; b=D7v/9FaqARqUdeNsSbSYagWsYw2yu2xgcRavHCPGM0Zz93xmWze2t/ig8BM7IKomrCYTcK7OEyMEi8jyut4uOLJe5PZJm4CRBwAEYO57TGMjKjbspqWLawMPyBwIIDOGBVqpElvwpOefoshUyxHg/VB5NgQEVWGlPwyIe5xo8W0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706012942; c=relaxed/simple;
-	bh=fa13xu/t9vD3MafwP+nS2cWhEeHXrK5C1PsxHCLZJHI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=b5xx34fPumssO3KOC1fQhlusAiYTB2Qopw5J0P53qs8IIdPWy/Q6VkU71BxAfVC/cNBMgbuv5H24YcqDyfye8l92yE/Rw6cvB87ZAp5mU6RMKkdGsqKPrEmhzMdOFDQAojezhgysdGyb1uRFdY9bXtUlPo6zYN1SegDOKl9pTEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZjxEFgFE; arc=none smtp.client-ip=192.55.52.88
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1706013088; c=relaxed/simple;
+	bh=v6QaS+zlcJW8ZzHrHC34+KSqeG2oSrUlpQocEZfmqZg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=s5HByIrlRoAYw+p/MmOWL1jvR6rttbVneosBwAU6xvOqeZe4Qeqz9hNTMBcD5g7HP7zJShl/YDuh4KN7KNrf2jZnTdBeM3wZAUiHgC2t1iNXCuQyH1wWYprioQET/okPaZv+1Y3jRDZnV9dltxm362HHYFnzjzg22bSJXP4Da4k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=C8Khf+z7; arc=none smtp.client-ip=95.215.58.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZjxEFgFE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706012941; x=1737548941;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=fa13xu/t9vD3MafwP+nS2cWhEeHXrK5C1PsxHCLZJHI=;
-  b=ZjxEFgFEeQmd42aOsCYA7TW1xjHjMp6aPFTz71Nt0KvDksV5LikOERed
-   0UDB06G/sF7H7XSwsIeWWiiFkzYFoQuHW+AdyOad/du9+H90h9+Zfcw/i
-   wl0+InBEzbj8F4NdWqla3Rp54gZA+1+hr7A3CJNVof1wU9MXs2ZEqLaTP
-   3Ff47BmEChijV0k5xcCTH9+flaLOHNH6XejdVVkyOjLQuvQrT+3ffOmOn
-   b/DLk3lCTLzHrCI9LI+HTj5mscTsfLRFLdTbZaJPuE4p4vUvC7a5ohRs3
-   RJNUcLNWDKcpTSc2cl2ZpZ5AM2h0fsu1Dg/HunFclSuzh2TI8eyKpN5D5
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10961"; a="432662304"
-X-IronPort-AV: E=Sophos;i="6.05,214,1701158400"; 
-   d="scan'208";a="432662304"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2024 04:28:59 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10961"; a="786050302"
-X-IronPort-AV: E=Sophos;i="6.05,214,1701158400"; 
-   d="scan'208";a="786050302"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga002.jf.intel.com with ESMTP; 23 Jan 2024 04:28:57 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-	id BCDE4483; Tue, 23 Jan 2024 13:34:19 +0200 (EET)
-Date: Tue, 23 Jan 2024 13:34:19 +0200
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc: Andreas Noever <andreas.noever@gmail.com>,
-	Michael Jamet <michael.jamet@intel.com>,
-	Yehezkel Bernat <YehezkelShB@gmail.com>,
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-	linux-usb@vger.kernel.org
-Subject: Re: [PATCH] thunderbolt: Remove usage of the deprecated
- ida_simple_xx() API
-Message-ID: <20240123113419.GN2543524@black.fi.intel.com>
-References: <7fce4c8c4345d283dbfadd3cea60fdc49f9ca087.1705007397.git.christophe.jaillet@wanadoo.fr>
- <20240122112922.GH2543524@black.fi.intel.com>
- <d11852b1-6d9c-4ced-83cb-96e753edd45d@wanadoo.fr>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="C8Khf+z7"
+Message-ID: <23d0f0c0-d171-4b40-8135-da672714591c@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1706013084;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wuSyEILrrJ4bPevKaikzWZq3Ix33Pu26FtdW4gUZRTI=;
+	b=C8Khf+z7/6p4HSuqGvmLnnPR2qTEKsXEabm9YfZRH/sfc0qioP4UWX4gSxawC4bq24vnAz
+	nW91ZXDed9kKTGiaiBwCk7c75ATzQzejQm8e7JqzRrIF+fVXqojNmCw/w0wAjUVCLjrHg/
+	F9N10L9Df7ed+BTruESuan175jbWwzk=
+Date: Tue, 23 Jan 2024 20:31:19 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <d11852b1-6d9c-4ced-83cb-96e753edd45d@wanadoo.fr>
+Subject: Re: [PATCH 2/5] drm/bridge: simple-bridge: Extend match support for
+ non-DT based systems
+Content-Language: en-US
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: David Airlie <airlied@gmail.com>,
+ Neil Armstrong <neil.armstrong@linaro.org>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ Daniel Vetter <daniel@ffwll.ch>, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org
+References: <20240122163220.110788-1-sui.jingfeng@linux.dev>
+ <20240122163220.110788-3-sui.jingfeng@linux.dev>
+ <20240123012139.GD22880@pendragon.ideasonboard.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Sui Jingfeng <sui.jingfeng@linux.dev>
+In-Reply-To: <20240123012139.GD22880@pendragon.ideasonboard.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-On Mon, Jan 22, 2024 at 06:57:42PM +0100, Christophe JAILLET wrote:
-> Le 22/01/2024 à 12:29, Mika Westerberg a écrit :
-> > On Thu, Jan 11, 2024 at 10:10:21PM +0100, Christophe JAILLET wrote:
-> > > ida_alloc() and ida_free() should be preferred to the deprecated
-> > > ida_simple_get() and ida_simple_remove().
-> > > 
-> > > Note that the upper limit of ida_simple_get() is exclusive, but the one of
-> > > ida_alloc_range()/ida_alloc_max() is inclusive. So a -1 has been added
-> > > when needed.
-> > 
-> > Looks tood to me but wanted to check if you tested this on a real
-> > hardware or you just build tested?
-> > 
-> > 
-> 
-> Hi,
-> 
-> It was compile tested only.
-> 
-> Transformation has been done with the help of the cocci script below.
+Hi,
 
-Okay that's what I thought too. I ran some testing on a real hardware
-and did not see any issues.
 
-Applied to thunderbolt.git/next, thanks!
+On 2024/1/23 09:21, Laurent Pinchart wrote:
+>>   static int simple_bridge_probe(struct platform_device *pdev)
+>>   {
+>>   	struct simple_bridge *sbridge;
+>> @@ -176,7 +194,10 @@ static int simple_bridge_probe(struct platform_device *pdev)
+>>   		return -ENOMEM;
+>>   	platform_set_drvdata(pdev, sbridge);
+>>   
+>> -	sbridge->info = of_device_get_match_data(&pdev->dev);
+>> +	if (pdev->dev.of_node)
+>> +		sbridge->info = of_device_get_match_data(&pdev->dev);
+>> +	else
+>> +		sbridge->info = simple_bridge_get_match_data(&pdev->dev);
+>>   
+>>   	/* Get the next bridge in the pipeline. */
+>>   	remote = of_graph_get_remote_node(pdev->dev.of_node, 1, -1);
+>> @@ -309,3 +330,4 @@ module_platform_driver(simple_bridge_driver);
+>>   MODULE_AUTHOR("Maxime Ripard<maxime.ripard@free-electrons.com>");
+>>   MODULE_DESCRIPTION("Simple DRM bridge driver");
+>>   MODULE_LICENSE("GPL");
+>> +MODULE_ALIAS("platform:simple-bridge");
+> This is an unrelated change.
+
+
+Otherwise, this driver will not be probed when compiled as module on non-DT environment.
+
