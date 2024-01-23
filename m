@@ -1,37 +1,40 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AA5F61675
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 13:10:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D8F46168B
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 13:10:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706015453; cv=none; b=tM8IffPHeEyPd+LxE6ol1EQObJEZOW2WxBr+ldf6h3NLC9olMRpXBTJZFbtay5spgCwFlV0yYAGeqMQ8sip/TDhw1UfAF6OiztiTtQkrS6ZFsZ9P5UiDqH5G6EnbqR38Jii60IFQLuc5xdJ9QvZMvfFaizXNesZ+NS/QDsXLhqI=
+	t=1706015456; cv=none; b=lg89C2zvLK69n31ioTNJ7InojezWT5GpInNiBjYxdf1q9vcyHxp7LCt1BBy4c27YfA/wJ+rat4I4ZPb4R1M+agqXZTZZzzn5ibr5ieog6zRRNobrpFG8SmINrsYoMdo8ec6hWsD0PFRjiHdV4Nv7i49Ikz/7lczLCGm8Fn6w/MU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706015453; c=relaxed/simple;
-	bh=JHkSD1CkdRbfj+1k3modyeIMoSQ2jw1eW9tZvG/jkFY=;
-	h=Message-ID:From:To:Cc:Subject:Date; b=XRm0a1z47zdwf55HY/P1HDUHVOdq3Jm13WT+0foy/LaEEpzCaqnkH10aqHz5IE1l4KlAvY76QDXORlj7dMDEoNTtv1Nf6rX8TwtzT5oaZb+mK4ipE1aYOPB/eq4cY4W2tE2feKPNr2OssdDpIY4hF7AJyhTCu7i+aRBqZ6Ll+Eo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qbkftHaL; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=B1KlwejD; arc=none smtp.client-ip=193.142.43.55
+	s=arc-20240116; t=1706015456; c=relaxed/simple;
+	bh=A6DRTtYolM0nxyqcZ/KT0BAawXUk3qAODO455OFbZPI=;
+	h=Message-ID:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type:Date; b=tQk4S/Z9MC6FPqQfK/Ce2laGrnVaHtEX6pgjC/9lQtlF5ooeZGrEZ03jmwEdU946MrsttW5+9M5YXYhp+unNCD/e2Sm/KqiVmpf4aS/p4l/BB601N9DyeNwTeDhG++yZPP/VxJ0r1bm33vLMcUHqG3IfTu/2uhbxQ1ZWpd+FgiE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ySL+U1nZ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=m/kXnXlc; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qbkftHaL";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="B1KlwejD"
-Message-ID: <20240118123127.055361964@linutronix.de>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ySL+U1nZ";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="m/kXnXlc"
+Message-ID: <20240118123648.663415387@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1706015450;
+	s=2020; t=1706015453;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc; bh=uEr1HqJVrTZ9Ntw6uWkIwomiVTX/iLSyIll72RSXZMo=;
-	b=qbkftHaLpmphSmQUYllkMnBxhIIKDwsEWQjJ1fviLG8Foyu1O+5ts4h3hvmLUhsnMFY0TD
-	cn5SvyPkgBR+5+M5KREGn4KP2VXWk9MY0BcRRkOCyqe+npPXJaFRTvz7ygzR63eEHSvCCp
-	DCtGRsWGKhZC1FW0AS0DtHWcI4c8V6008S9rZYQdbkq9gL4lwOrJyXHblOfed3t/P1ghMi
-	5rifO2Xf2ZmxoK68HIXaNtmsz7gg87IHPjGC9Q7WIFdLfSWi5AKjdaAl9QwG0DJUsv44z4
-	LVNdJiLf9x/j0w9EXKWU53M+q66X1OzColT2UDJ64k6AIN0W9omJPOV8UvOGOA==
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 references:references; bh=VhgEhXRzZ2arG5ALV1ivGA8kAeYK0sQE/cl9vrjuqJo=;
+	b=ySL+U1nZ3n4UeNsfDzhEtMIaoDIdADkBisarGWQxnluqfB/jLJN2TpOFAILJ6MtI+1EmBA
+	MVqtFmJLLiedbo2Nhtku+tNEqMHO0x9siZm+eYM2Lggp+Ssg+wbmMaBwhMVCItoqKDAGVA
+	sLVNezQxFy44k2hQ9Xq34P5DY1TNDRhnodotUT5wIKSdwOQfM405FRBO3GA9DcXOdvulxx
+	wZS5O5oHjXjDhJYoIw4giYGkN/tIXmAMBobhlmGWZB6ViOdYdF0zUkylYKIWMRdG9dZLT3
+	bZ0tbvWYCFSUajuL4wEI3KnNLI4ylw3+VsYAhwEp9S9Dh8Tq7v6tZW7MM8J7Kw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1706015450;
+	s=2020e; t=1706015453;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc; bh=uEr1HqJVrTZ9Ntw6uWkIwomiVTX/iLSyIll72RSXZMo=;
-	b=B1KlwejD0vYYC1leKcC//fDoVRGsAvG/M5gdlRSMG6caJo6xb5FbT12Jx2N0OqAfKnMIrF
-	4Yimr+keIgImLgDw==
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 references:references; bh=VhgEhXRzZ2arG5ALV1ivGA8kAeYK0sQE/cl9vrjuqJo=;
+	b=m/kXnXlctEnP1vZKB/ro8rRsdv6Y8oB8PWZXg7KgBzNDeGIYgTiVEasVZ0cbvkL0zZe26Z
+	a5tHqp5cOGz2yADw==
 From: Thomas Gleixner <tglx@linutronix.de>
 To: LKML <linux-kernel@vger.kernel.org>
 Cc: x86@kernel.org,
@@ -50,173 +53,202 @@ Cc: x86@kernel.org,
  Andy Shevchenko <andy@infradead.org>,
  Michael Kelley <mhklinux@outlook.com>,
  "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Subject: [patch v2 00/30] x86/apic: Rework APIC registration
-Date: Tue, 23 Jan 2024 14:10:49 +0100 (CET)
+Subject: [patch v2 02/30] x86/cpu/topology: Provide separate APIC registration
+ functions
+References: <20240118123127.055361964@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 23 Jan 2024 14:10:52 +0100 (CET)
 
-This is a breakout from:
+From: Thomas Gleixner <tglx@linutronix.de>
 
-  https://lore.kernel.org/all/20230807130108.853357011@linutronix.de
+generic_processor_info() aside of being a complete misnomer is used for
+both early boot registration and ACPI CPU hotplug.
 
-addressing the issues of the current topology code:
+While it's arguable that this can share some code, it results in code which
+is hard to understand and kept around post init for no real reason.
 
-  - Wrong core count on hybrid systems
+Also the call sites do lots of manual fiddling in topology related
+variables instead of having proper interfaces for the purpose which handle
+the topology internals correctly.
 
-  - Heuristics based size information for packages and dies which
-    are failing to work correctly with certain command line parameters.
+Provide topology_register_apic(), topology_hotplug_apic() and
+topology_hotunplug_apic() which have the extra magic of the call sites
+incorporated and for now are wrappers around generic_processor_info().
 
-  - Full evaluation fail for a theoretical hybrid system which boots
-    from an E-core
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 
-  - The complete insanity of manipulating global data from firmware parsers
-    or the XEN/PV fake SMP enumeration. The latter is really a piece of art.
-
-This series addresses this by
-
-  - Consolidating all topology relevant functionality into one place
-
-  - Providing separate interfaces for boot time and ACPI hotplug operations
-
-  - A sane ordering of command line options and restrictions
-
-  - A sensible way to handle the BSP problem in kdump kernels instead of
-    the unreliable command line option.
-
-  - Confinement of topology relevant variables by replacing the XEN/PV SMP
-    enumeration fake with something halfways sensible.
-
-  - Evaluation of sizes by analysing the topology via the CPUID provided
-    APIC ID segmentation and the actual APIC IDs which are registered at
-    boot time.
-
-  - Removal of heuristics and broken size calculations
-
-The idea behind this is the following:
-
-The APIC IDs describe the system topology in multiple domain levels. The
-CPUID topology parser provides the information which part of the APIC ID is
-associated to the individual levels (Intel terminology):
-
-   [ROOT][PACKAGE][DIEGRP][DIE][TILE][MODULE][CORE][THREAD]
-
-The root space contains the package (socket) IDs. Not enumerated levels
-consume 0 bits space, but conceptually they are always represented. If
-e.g. only CORE and THREAD levels are enumerated then the DIEGRP, DIE,
-MODULE and TILE have the same physical ID as the PACKAGE.
-
-If SMT is not supported, then the THREAD domain is still used. It then
-has the same physical ID as the CORE domain and is the only child of
-the core domain.
-
-This allows an unified view on the system independent of the enumerated
-domain levels without requiring any conditionals in the code.
-
-AMD does only expose 4 domain levels with obviously different terminology,
-but that can be easily mapped into the Intel variant with a trivial lookup
-table added to the CPUID parser.
-
-The resulting topology information of an ADL hybrid system with 8 P-Cores
-and 8 E-Cores looks like this:
-
- CPU topo: Max. logical packages:   1
- CPU topo: Max. logical dies:       1
- CPU topo: Max. dies per package:   1
- CPU topo: Max. threads per core:   2
- CPU topo: Num. cores per package:    16
- CPU topo: Num. threads per package:  24
- CPU topo: Allowing 24 present CPUs plus 0 hotplug CPUs
- CPU topo: Thread    :    24
- CPU topo: Core      :    16
- CPU topo: Module    :     1
- CPU topo: Tile      :     1
- CPU topo: Die       :     1
- CPU topo: Package   :     1
-
-This is happening on the boot CPU before any of the APs is started and
-provides correct size information right from the start.
-
-Even the XEN/PV trainwreck makes use of this now. On Dom0 it utilizes the
-MADT and on DomU it provides fake APIC IDs, which combined with the
-provided CPUID information make it at least look halfways realistic instead
-of claiming to have one CPU per package as the current upstream code does.
-
-This is solely addressing the core topology issues, but there is a plan for
-further consolidation of other topology related information into one single
-source of information instead of having a gazillion of localized special
-parsers and representations all over the place. There are quite some other
-things which can be simplified on top of this, like updating the various
-cpumasks during CPU bringup, but that's all left for later.
-
-Changes vs. V1:
-
-	- Breakout of the actual topology management changes
-
-	- Adopt DIEGRP
-
-	- Different approach to identify the BSP on enumeration (Rui)
-
-The current series applies on top of 
-
-   git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel.git topo-cleanup-v2
-
-and is available from git here:
-
-   git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel.git topo-full-v2
-
-Thanks,
-
-	tglx
 ---
- Documentation/admin-guide/kdump/kdump.rst                      |    7 
- Documentation/admin-guide/kernel-parameters.txt                |    9 
- Documentation/arch/x86/topology.rst                            |   24 
- arch/x86/events/intel/cstate.c                                 |    2 
- arch/x86/events/intel/uncore.c                                 |    2 
- arch/x86/events/intel/uncore_nhmex.c                           |    4 
- arch/x86/events/intel/uncore_snb.c                             |    8 
- arch/x86/events/intel/uncore_snbep.c                           |   18 
- arch/x86/events/rapl.c                                         |    2 
- arch/x86/include/asm/apic.h                                    |   10 
- arch/x86/include/asm/cpu.h                                     |   10 
- arch/x86/include/asm/mpspec.h                                  |    2 
- arch/x86/include/asm/perf_event_p4.h                           |    4 
- arch/x86/include/asm/processor.h                               |    2 
- arch/x86/include/asm/smp.h                                     |    6 
- arch/x86/include/asm/topology.h                                |   53 -
- arch/x86/kernel/acpi/boot.c                                    |   59 -
- arch/x86/kernel/apic/apic.c                                    |  186 ---
- arch/x86/kernel/cpu/Makefile                                   |   12 
- arch/x86/kernel/cpu/cacheinfo.c                                |    2 
- arch/x86/kernel/cpu/common.c                                   |   33 
- arch/x86/kernel/cpu/debugfs.c                                  |    7 
- arch/x86/kernel/cpu/mce/inject.c                               |    3 
- arch/x86/kernel/cpu/microcode/intel.c                          |    2 
- arch/x86/kernel/cpu/topology.c                                 |  484 ++++++++++
- arch/x86/kernel/cpu/topology.h                                 |   11 
- arch/x86/kernel/cpu/topology_common.c                          |   45 
- arch/x86/kernel/devicetree.c                                   |    2 
- arch/x86/kernel/jailhouse.c                                    |    2 
- arch/x86/kernel/mpparse.c                                      |   17 
- arch/x86/kernel/process.c                                      |    2 
- arch/x86/kernel/setup.c                                        |    9 
- arch/x86/kernel/smpboot.c                                      |  219 ----
- arch/x86/xen/apic.c                                            |   14 
- arch/x86/xen/enlighten_pv.c                                    |    3 
- arch/x86/xen/smp.c                                             |    2 
- arch/x86/xen/smp.h                                             |    2 
- arch/x86/xen/smp_pv.c                                          |   58 -
- drivers/gpu/drm/amd/pm/swsmu/smu11/vangogh_ppt.c               |    2 
- drivers/hwmon/coretemp.c                                       |    2 
- drivers/hwmon/fam15h_power.c                                   |    2 
- drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c |    2 
- drivers/powercap/intel_rapl_common.c                           |    2 
- drivers/thermal/intel/intel_hfi.c                              |    2 
- drivers/thermal/intel/intel_powerclamp.c                       |    2 
- drivers/thermal/intel/x86_pkg_temp_thermal.c                   |    2 
- 46 files changed, 698 insertions(+), 655 deletions(-)
-
+ arch/x86/include/asm/apic.h    |    3 +
+ arch/x86/kernel/cpu/topology.c |  113 ++++++++++++++++++++++++++++++++++-------
+ 2 files changed, 98 insertions(+), 18 deletions(-)
+---
+--- a/arch/x86/include/asm/apic.h
++++ b/arch/x86/include/asm/apic.h
+@@ -171,7 +171,10 @@ extern bool apic_needs_pit(void);
+ 
+ extern void apic_send_IPI_allbutself(unsigned int vector);
+ 
++extern void topology_register_apic(u32 apic_id, u32 acpi_id, bool present);
+ extern void topology_register_boot_apic(u32 apic_id);
++extern int topology_hotplug_apic(u32 apic_id, u32 acpi_id);
++extern void topology_hotunplug_apic(unsigned int cpu);
+ 
+ #else /* !CONFIG_X86_LOCAL_APIC */
+ static inline void lapic_shutdown(void) { }
+--- a/arch/x86/kernel/cpu/topology.c
++++ b/arch/x86/kernel/cpu/topology.c
+@@ -84,32 +84,38 @@ early_initcall(smp_init_primary_thread_m
+ static inline void cpu_mark_primary_thread(unsigned int cpu, unsigned int apicid) { }
+ #endif
+ 
+-/*
+- * Should use this API to allocate logical CPU IDs to keep nr_logical_cpuids
+- * and cpuid_to_apicid[] synchronized.
+- */
+-static int allocate_logical_cpuid(int apicid)
++static int topo_lookup_cpuid(u32 apic_id)
+ {
+ 	int i;
+ 
+-	/*
+-	 * cpuid <-> apicid mapping is persistent, so when a cpu is up,
+-	 * check if the kernel has allocated a cpuid for it.
+-	 */
++	/* CPU# to APICID mapping is persistent once it is established */
+ 	for (i = 0; i < nr_logical_cpuids; i++) {
+-		if (cpuid_to_apicid[i] == apicid)
++		if (cpuid_to_apicid[i] == apic_id)
+ 			return i;
+ 	}
++	return -ENODEV;
++}
++
++/*
++ * Should use this API to allocate logical CPU IDs to keep nr_logical_cpuids
++ * and cpuid_to_apicid[] synchronized.
++ */
++static int allocate_logical_cpuid(u32 apic_id)
++{
++	int cpu = topo_lookup_cpuid(apic_id);
++
++	if (cpu >= 0)
++		return cpu;
+ 
+ 	/* Allocate a new cpuid. */
+ 	if (nr_logical_cpuids >= nr_cpu_ids) {
+ 		WARN_ONCE(1, "APIC: NR_CPUS/possible_cpus limit of %u reached. "
+ 			     "Processor %d/0x%x and the rest are ignored.\n",
+-			     nr_cpu_ids, nr_logical_cpuids, apicid);
++			     nr_cpu_ids, nr_logical_cpuids, apic_id);
+ 		return -EINVAL;
+ 	}
+ 
+-	cpuid_to_apicid[nr_logical_cpuids] = apicid;
++	cpuid_to_apicid[nr_logical_cpuids] = apic_id;
+ 	return nr_logical_cpuids++;
+ }
+ 
+@@ -127,12 +133,6 @@ static void cpu_update_apic(int cpu, u32
+ 		cpu_mark_primary_thread(cpu, apicid);
+ }
+ 
+-void __init topology_register_boot_apic(u32 apic_id)
+-{
+-	cpuid_to_apicid[0] = apic_id;
+-	cpu_update_apic(0, apic_id);
+-}
+-
+ int generic_processor_info(int apicid)
+ {
+ 	int cpu, max = nr_cpu_ids;
+@@ -174,6 +174,83 @@ int generic_processor_info(int apicid)
+ 	return cpu;
+ }
+ 
++/**
++ * topology_register_apic - Register an APIC in early topology maps
++ * @apic_id:	The APIC ID to set up
++ * @acpi_id:	The ACPI ID associated to the APIC
++ * @present:	True if the corresponding CPU is present
++ */
++void __init topology_register_apic(u32 apic_id, u32 acpi_id, bool present)
++{
++	int cpu;
++
++	if (apic_id >= MAX_LOCAL_APIC) {
++		pr_err_once("APIC ID %x exceeds kernel limit of: %x\n", apic_id, MAX_LOCAL_APIC - 1);
++		return;
++	}
++
++	if (!present) {
++		disabled_cpus++;
++		return;
++	}
++
++	cpu = generic_processor_info(apic_id);
++	if (cpu >= 0)
++		early_per_cpu(x86_cpu_to_acpiid, cpu) = acpi_id;
++}
++
++/**
++ * topology_register_boot_apic - Register the boot CPU APIC
++ * @apic_id:	The APIC ID to set up
++ *
++ * Separate so CPU #0 can be assigned
++ */
++void __init topology_register_boot_apic(u32 apic_id)
++{
++	cpuid_to_apicid[0] = apic_id;
++	cpu_update_apic(0, apic_id);
++}
++
++#ifdef CONFIG_ACPI_HOTPLUG_CPU
++/**
++ * topology_hotplug_apic - Handle a physical hotplugged APIC after boot
++ * @apic_id:	The APIC ID to set up
++ * @acpi_id:	The ACPI ID associated to the APIC
++ */
++int topology_hotplug_apic(u32 apic_id, u32 acpi_id)
++{
++	int cpu;
++
++	if (apic_id >= MAX_LOCAL_APIC)
++		return -EINVAL;
++
++	cpu = topo_lookup_cpuid(apic_id);
++	if (cpu < 0) {
++		cpu = generic_processor_info(apic_id);
++		if (cpu >= 0)
++			per_cpu(x86_cpu_to_acpiid, cpu) = acpi_id;
++	}
++	return cpu;
++}
++
++/**
++ * topology_hotunplug_apic - Remove a physical hotplugged APIC after boot
++ * @cpu:	The CPU number for which the APIC ID is removed
++ */
++void topology_hotunplug_apic(unsigned int cpu)
++{
++	u32 apic_id = cpuid_to_apicid[cpu];
++
++	if (apic_id == BAD_APICID)
++		return;
++
++	per_cpu(x86_cpu_to_apicid, cpu) = BAD_APICID;
++	clear_bit(apic_id, phys_cpu_present_map);
++	set_cpu_present(cpu, false);
++	num_processors--;
++}
++#endif
++
+ static int __init apic_set_disabled_cpu_apicid(char *arg)
+ {
+ 	if (!arg || !get_option(&arg, &disabled_cpu_apicid))
 
