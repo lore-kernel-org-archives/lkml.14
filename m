@@ -1,25 +1,58 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 285AC8120A
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 18:07:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5888D7FBB5
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 18:08:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706033255; cv=none; b=YUKi02bLGqBq8gDIP+346+X/oL9C+eQNmjt8W/1a5ExybPgeNGAdAlmT+H35dOWZ9mFH+QPNoSyE2/SjFKogyvNOMkQ1vteV39sKwN3yvL4GsoSb2sVR00k0lNDYROFyYeH5gmfPFoTKuyojSldVCaKCqEQojuYj9diTjSXMPLI=
+	t=1706033312; cv=none; b=Qtba6UyBGop2hIf6qTsj8Kz7EuIvC8A91W+1eFtudkDYmKiPj8sZbUp+cqB+SBVIBzQ6d9QYhdeOPJryHqSvizQNL0G3jo9n2wrP+ZBvVRHY4Ge8ufVvGNNHm8iZxLkT8WMBrYpz4DAE8zkgqf2M3gte21bwfz5uCSJDh6u4NEU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706033255; c=relaxed/simple;
-	bh=aw0/A6c0bkVUDry0Q1qtqnAwY8QhF/w9QoJfqmSwWf0=;
+	s=arc-20240116; t=1706033312; c=relaxed/simple;
+	bh=V05iKo+n6/NfP57WVS8I3bsIytgL0QoVsgZ/TQUCSU8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Kr+XVXlBpZ93KSOPQ58+uknRHjpQCUfaJDTe90dJeZ0p/WD0MSR4gR2uUISFks+rNSGORvd1AuMDUpwjiqFpTXXSv+v9VaL4zQQNh6sLJIzC0MTXfWl9H851/hFF0WZmrOyrivOObMdlFnefraJQhtq72LFeZa5vytH1LhiOmdg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8AA431FB;
-	Tue, 23 Jan 2024 10:08:17 -0800 (PST)
-Received: from [172.27.248.88] (unknown [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F19D53F7F4;
-	Tue, 23 Jan 2024 10:07:30 -0800 (PST)
-Message-ID: <ece7ce3f-17f3-42a5-90d7-d0410235059d@arm.com>
-Date: Tue, 23 Jan 2024 18:07:29 +0000
+	 In-Reply-To:Content-Type; b=fDLV9t2yeR+7+v4bDVOalGf+aKBBfsd2OdBzaDP+UvhD78t35+UGXxu3OZ+BPOu1obpDIpOLNgIF4+uoSW9bsXu30N8svP8Xl7PqEgO1iiiYawjLjAdUkmYORvOqxSbJSY8042HCyf7mrymPltHE9dbx/RoWAZUeCxF4lOWmG6Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=krtGWImy; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="krtGWImy"
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-50e78f1f41fso4779980e87.2
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 10:08:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1706033309; x=1706638109; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=VacN+hMZzICvOwFTo+1W7zaMNQJAc7ZHS+usoqRya+M=;
+        b=krtGWImy3wPR+yZTPM7wzvlUZgE8qQ0eqrVp5cn6iE4Lpb7/K0vEFfPFds5c6V0AdX
+         sigVsl0dOqUFrFV7rHj9muyDjxFg5muLgq+UOsrXFsW3Cds+ew9SvrzpKZvbung8KASC
+         IWpZ6m24nAOhV+yhAQjRwXHMmIYROawhYVUYqkk/08PnvP01VXNGLp/RpMcqNTxLJh+L
+         XNuOctpz8WFVP+S7mGj3O665Q12ZiBLRINAXSpNzdVAi8xv/c/c2R9q0yF2fhuzRul8T
+         gqyxZ2wYyBcdy6NmWqKRPO+qU9ANZ0z9AGE5alazD/ViUnRv+BQOGnB46p/1pHX/2AFh
+         yWGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706033309; x=1706638109;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=VacN+hMZzICvOwFTo+1W7zaMNQJAc7ZHS+usoqRya+M=;
+        b=cD7NQAXqK8Yz5kY+HXKtrKmbxJX4KGbkw4aiC8OlLarPS787hPyx0MzPv5/g4G63YZ
+         3Kywm3/VveLLyI+yeMXB5DfdWh8SFxJE6T/XPIAYkLZySF5htKOXCtBKwwEdk0JpikWB
+         dMu40g1J0Y1DVnabOBiLhv3RBL+24GFFLyS+bQ1e97uatHaCoQI8qv2pEIwWp0vgj/Vx
+         vkBYgaqR46k9+N9DCAI92KjS72B2i2nlxGQMSf4LxSwwgsaFBPqojvG82l+ij7Z3C7WG
+         MG430+aX5Zd5uBSmfMVPUgyhbTCHe5Z3OZQMjUwMmWvn+5/JI5TlxipwTt39+Q2Rsp5M
+         Y2kw==
+X-Gm-Message-State: AOJu0YwG5TVNfA+nBIF5Ye3M0jpp/IOuGkBb25c0z1utg13nvmkk6a4B
+	J0E7twqpfFvOnH/8bisilNXKz2PeHVK0JPI+B6ejitdRIfWamd4d0kwBfznRfps=
+X-Google-Smtp-Source: AGHT+IHeAnZyr1gr62qrxVLoqa6iDyfnOqrEEg0041Peb3w0NL5O66Teiup2mHYqHEt4atQeGd8gHg==
+X-Received: by 2002:a05:6512:4c3:b0:50e:74c6:895f with SMTP id w3-20020a05651204c300b0050e74c6895fmr2408227lfq.115.1706033309431;
+        Tue, 23 Jan 2024 10:08:29 -0800 (PST)
+Received: from [172.30.205.123] (UNUSED.212-182-62-129.lubman.net.pl. [212.182.62.129])
+        by smtp.gmail.com with ESMTPSA id d17-20020a05651233d100b0050e8e88b529sm2344518lfg.237.2024.01.23.10.08.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 23 Jan 2024 10:08:29 -0800 (PST)
+Message-ID: <bd404b99-346c-4d51-bda9-f1148421540c@linaro.org>
+Date: Tue, 23 Jan 2024 19:08:28 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -27,144 +60,33 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/2] sched/fair: Check a task has a fitting cpu when
- updating misfit
+Subject: Re: [PATCH v4 03/11] arm64: dts: qcom: x1e80100: Add QMP AOSS node
 Content-Language: en-US
-To: Qais Yousef <qyousef@layalina.io>
-Cc: Ingo Molnar <mingo@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Vincent Guittot <vincent.guittot@linaro.org>, linux-kernel@vger.kernel.org,
- Pierre Gondois <Pierre.Gondois@arm.com>
-References: <20240105222014.1025040-1-qyousef@layalina.io>
- <20240105222014.1025040-2-qyousef@layalina.io>
- <213f94df-cc36-4281-805d-9f56cbfef796@arm.com>
- <20240122180212.67csjrnsbs7vq57i@airbuntu>
-From: Dietmar Eggemann <dietmar.eggemann@arm.com>
-In-Reply-To: <20240122180212.67csjrnsbs7vq57i@airbuntu>
-Content-Type: text/plain; charset=UTF-8
+To: Abel Vesa <abel.vesa@linaro.org>, Andy Gross <agross@kernel.org>,
+ Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Sibi Sankar <quic_sibis@quicinc.com>,
+ Rajendra Nayak <quic_rjendra@quicinc.com>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240123-x1e80100-dts-missing-nodes-v4-0-072dc2f5c153@linaro.org>
+ <20240123-x1e80100-dts-missing-nodes-v4-3-072dc2f5c153@linaro.org>
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+In-Reply-To: <20240123-x1e80100-dts-missing-nodes-v4-3-072dc2f5c153@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 22/01/2024 19:02, Qais Yousef wrote:
-> On 01/22/24 09:59, Dietmar Eggemann wrote:
->> On 05/01/2024 23:20, Qais Yousef wrote:
->>> From: Qais Yousef <qais.yousef@arm.com>
 
-[...]
 
->>> +	/*
->>> +	 * If the task affinity is not set to default, make sure it is not
->>> +	 * restricted to a subset where no CPU can ever fit it. Triggering
->>> +	 * misfit in this case is pointless as it has no where better to move
->>> +	 * to. And it can lead to balance_interval to grow too high as we'll
->>> +	 * continuously fail to move it anywhere.
->>> +	 */
->>> +	if (!cpumask_equal(p->cpus_ptr, cpu_possible_mask)) {
->>
->> Shouldn't this be cpu_active_mask ?
+On 1/23/24 12:01, Abel Vesa wrote:
+> From: Sibi Sankar <quic_sibis@quicinc.com>
 > 
-> Hmm. So the intention was to check if the affinity was changed from default.
+> Add a node for the QMP AOSS.
 > 
-> If we hotplug all but little we could end up with the same problem, yes you're
-> right.
-> 
-> But if the affinity is set to only to littles and cpu_active_mask is only for
-> littles too, then we'll also end up with the same problem as they both are
-> equal.
+> Signed-off-by: Sibi Sankar <quic_sibis@quicinc.com>
+> Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
+> ---
 
-Yes, that's true.
+Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
 
-> Better to drop this check then? With the sorted list the common case should be
-> quick to return as they'll have 1024 as a possible CPU.
-
-Or you keep 'cpu_possible_mask' and rely on the fact that the
-asym_cap_list entries are removed if those CPUs are hotplugged out. In
-this case the !has_fitting_cpu path should prevent useless Misfit load
-balancing approaches.
-
-[...]
-
->> What happen when we hotplug out all CPUs of one CPU capacity value?
->> IMHO, we don't call asym_cpu_capacity_scan() with !new_topology
->> (partition_sched_domains_locked()).
-> 
-> Right. I missed that. We can add another intersection check against
-> cpu_active_mask.
-> 
-> I am assuming the skipping was done by design, not a bug that needs fixing?
-> I see for suspend (cpuhp_tasks_frozen) the domains are rebuilt, but not for
-> hotplug.
-
-IMHO, it's by design. We setup asym_cap_list only when new_topology is
-set (update_topology_flags_workfn() from init_cpu_capacity_callback() or
-topology_init_cpu_capacity_cppc()). I.e. when the (max) CPU capacity can
-change.
-In all the other !new_topology cases we check `has_asym |= sd->flags &
-SD_ASYM_CPUCAPACITY` and set sched_asym_cpucapacity accordingly in
-build_sched_domains(). Before we always reset sched_asym_cpucapacity in
-detach_destroy_domains().
-But now we would have to keep asym_cap_list in sync with the active CPUs
-I guess.
-
-[...]
-
->>>  #else /* CONFIG_SMP */
->>> @@ -9583,9 +9630,7 @@ check_cpu_capacity(struct rq *rq, struct sched_domain *sd)
->>>   */
->>>  static inline int check_misfit_status(struct rq *rq, struct sched_domain *sd)
->>>  {
->>> -	return rq->misfit_task_load &&
->>> -		(arch_scale_cpu_capacity(rq->cpu) < rq->rd->max_cpu_capacity ||
->>> -		 check_cpu_capacity(rq, sd));
->>> +	return rq->misfit_task_load && check_cpu_capacity(rq, sd);
->>
->> You removed 'arch_scale_cpu_capacity(rq->cpu) <
->> rq->rd->max_cpu_capacity' here. Why? I can see that with the standard
-> 
-> Based on Pierre review since we no longer trigger misfit for big cores.
-> I thought Pierre's remark was correct so did the change in v3
-
-Ah, this is the replacement:
-
-- if (task_fits_cpu(p, cpu_of(rq))) {  <- still MF for util > 0.8 * 1024
--     rq->misfit_task_load = 0;
--     return;
-+ cpu_cap = arch_scale_cpu_capacity(cpu);
-+
-+ /* If we can't fit the biggest CPU, that's the best we can ever get */
-+   if (cpu_cap == SCHED_CAPACITY_SCALE)
-+       goto out;
-
-> 
-> 	https://lore.kernel.org/lkml/bae88015-4205-4449-991f-8104436ab3ba@arm.com/
-> 
->> setup (max CPU capacity equal 1024) which is what we probably use 100%
->> of the time now. It might get useful again when Vincent will introduce
->> his 'user space system pressure' implementation?
-> 
-> I don't mind putting it back if you think it'd be required again in the near
-> future. I still didn't get a chance to look at Vincent patches properly, but if
-> there's a clash let's reduce the work.
-
-Vincent did already comment on this in this thread.
-
-[...]
-
->>> @@ -1423,8 +1418,8 @@ static void asym_cpu_capacity_scan(void)
->>>  
->>>  	list_for_each_entry_safe(entry, next, &asym_cap_list, link) {
->>>  		if (cpumask_empty(cpu_capacity_span(entry))) {
->>> -			list_del(&entry->link);
->>> -			kfree(entry);
->>> +			list_del_rcu(&entry->link);
->>> +			call_rcu(&entry->rcu, free_asym_cap_entry);
->>
->> Looks like there could be brief moments in which one CPU capacity group
->> of CPUs could be twice in asym_cap_list. I'm thinking about initial
->> startup + max CPU frequency related adjustment of CPU capacity
->> (init_cpu_capacity_callback()) for instance. Not sure if this is really
->> an issue?
-> 
-> I don't think so. As long as the reader sees a consistent value and no crashes
-> ensued, a momentarily wrong decision in transient or extra work is fine IMO.
-> I don't foresee a big impact.
-
-OK.
+Konrad
