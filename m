@@ -1,103 +1,110 @@
-Received: from smtp-42ac.mail.infomaniak.ch (smtp-42ac.mail.infomaniak.ch [84.16.66.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A02875FDB9
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 15:33:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.16.66.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5015B5FEED
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 15:34:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706023987; cv=none; b=LSurszR221/bCgYHvgpaNsA6xQFAFep/e3BKJSj6oNU+b1XPIpWjwNF9yQjwSK2ZiZAjZ8nP9/SDpzNqoa9jYkrE4N/IkGz/Hb4po0w/3Pg6PkXbzhjEnzqjp7gDnilQmjWHvd3pFK9oLR3K1msxmMuq4syY6u8HL4AgeR4Qz04=
+	t=1706024069; cv=none; b=S+s6ZCGYFun46Hc0nqK8YtJaQpOesfYBxPDtxwxVfzP8VTmVyL+Uv2Y9wv82S3Bv6qgem65/2Kx3qcaDVGfhPPX1h+8lNYpk9OwWqFlt5J4yjQFpew27/LR9t0lS4cO80Ut5fflU2Q9Kpt1kEMLvgK9XijlpaAva+rfo7x2Fayk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706023987; c=relaxed/simple;
-	bh=zgqI9UR8YogjZoN9u8vWb4dHmJvB8ik8X67zHyKWp0E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HbXCgTJc3KkqCdbaeIQfNv6CHHnwMZy8uW2tF93JpMg3CSf3Zv8y0XNVrqVt65zaJ7J2Oxv0D/Aw3q0ZvhLlQxogg4oJJMiZTgCifMD608ftxt8ThK+NL4XJzfHWIqNLVkfkoeAwmLhKoq/0OufqUPWJ6YvYMRWG6li6jMjh12g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=XXbo1DEE; arc=none smtp.client-ip=84.16.66.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
+	s=arc-20240116; t=1706024069; c=relaxed/simple;
+	bh=uoqIziOYe4QOe66kMTI7DN3VeKJax6+qP/nGQ6cKH+s=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=cm6HqcxtR7ds198qtVshiDYLB7usYknIZ7GHCjdMVJTIOrXsYKVAfSCTtVCsl9aNdjkJSiKO9fHAA6xEp034xMeF25uzq7XBUr2S6Np4MyqOw7WQdKfyr+eb3vQcTWJQnEixTyNRgksPlyTCJk4d38nAp5qXNxAnVxRDZf8sl8Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=L1RlvM5o; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="XXbo1DEE"
-Received: from smtp-3-0000.mail.infomaniak.ch (unknown [10.4.36.107])
-	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4TKB1N6n0DzMq5jw;
-	Tue, 23 Jan 2024 16:32:56 +0100 (CET)
-Received: from unknown by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4TKB1M6BnkzrB;
-	Tue, 23 Jan 2024 16:32:55 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=digikod.net;
-	s=20191114; t=1706023976;
-	bh=zgqI9UR8YogjZoN9u8vWb4dHmJvB8ik8X67zHyKWp0E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XXbo1DEEM3NL5OR6r67arzFI93BlDNA3jzA0bdkXrlPcz9PWoynqbZ9DRchI+s6Hg
-	 sumZzKWpg5rsuUXtHAg+MW1vTX8Wek22Z+dFFd/K6v6792zx7BcdklDSFmE1Z7xIYb
-	 udJuqxRWB40sTpRe3IUczKgQk87Ey5o7YLkGSRLM=
-Date: Tue, 23 Jan 2024 16:32:52 +0100
-From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
-To: Huyadi <hu.yadi@h3c.com>
-Cc: "jmorris@namei.org" <jmorris@namei.org>, 
-	"serge@hallyn.com" <serge@hallyn.com>, "shuah@kernel.org" <shuah@kernel.org>, 
-	"mathieu.desnoyers@efficios.com" <mathieu.desnoyers@efficios.com>, "amir73il@gmail.com" <amir73il@gmail.com>, 
-	"brauner@kernel.org" <brauner@kernel.org>, "avagin@google.com" <avagin@google.com>, 
-	"linux-api@vger.kernel.org" <linux-api@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"linux-security-module@vger.kernel.org" <linux-security-module@vger.kernel.org>, 
-	"linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>, "514118380@qq.com" <514118380@qq.com>, 
-	"konstantin.meskhidze@huawei.com" <konstantin.meskhidze@huawei.com>
-Subject: Re: =?utf-8?B?5Zue5aSN?= =?utf-8?Q?=3A?= [PATCH v4]
- selftests/landlock:Fix two build issues
-Message-ID: <20240123.deeT9hegh4vo@digikod.net>
-References: <20240115102409.19799-1-hu.yadi@h3c.com>
- <20240119.Ugaehae2ze5b@digikod.net>
- <adec399e50c74b30b59480d92c431241@h3c.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="L1RlvM5o"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-40ec2594544so4093445e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 07:34:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1706024066; x=1706628866; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VjipWcrbNy/QID8T6cAOMZwyasQD1NXUWSbF3OJYF5I=;
+        b=L1RlvM5oE0Oj1RrDBTSBpU+1U3MdF8SqeYR1ZU9HUn77CTtbXhHOj3Af41WBYv5nWT
+         aMKEDw2ZDUCFSmGY1IPx4IqF3S67VYbQkEbGA2Kt4m4bGZVLvj2UYGfWlANbNe1fitwO
+         pPiE/TvXjug1hdgITiQ/DD6LhV2WF4E7I++nkoyyreqrlA4iFUhhEtRNURDzOPii1oB0
+         Sxsq91N71uF8qkhcUsKzKkF3f3FXny+RTuFD7Jvr37ZtLba1PmTv80AthUxnbfAkOJKI
+         BTP4ZjwqVu2bGM9kNYj7GnhP9XP4b3oX36SZ4oqtlG9vCOsO4g/3z6s1Pk3nNKtj9DNW
+         QCJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706024066; x=1706628866;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=VjipWcrbNy/QID8T6cAOMZwyasQD1NXUWSbF3OJYF5I=;
+        b=unBTeY4T+V1RGCXjr2pueCyu/0jBNxO00UJIq5sX+Tkt+oQTVe5SqJok7JtQvrowfB
+         LUldKn40MpssOwZXFbSxIM64KZS4SAps+uryFTdmerdzd2UAtZ5x/XZl1crmFxmhDAIL
+         IhyaGpHD8Ng0JGbRUo2rYWdl393f2exGt2Kiji4hUvK0fcWMRhsphbZwlYmSXPf4vBnj
+         Diy0BsoMd3J+J23c1b+Kenb/c/kBIzCo5flfOmz5Mhcsa0NwXI/VVudzTcvGjU1nJKkg
+         2qqxWXbc9pqnt9CMfzTspPYeKfJyx9V7Jihwi2L1ctamTsJZ9cidgoYmfm4+UrVY/zqq
+         NNyw==
+X-Gm-Message-State: AOJu0YwvIHgn+RF9ZDXptjLNs3I7d2Kyd+FAsx6t8wCpSTYmxOFaCFY1
+	fhxSQNpLdE76ZB8DiHuGg7HGnnnXIcJn7ntpGAOwEaNYqF/4TVreCscNIrpf6r8=
+X-Google-Smtp-Source: AGHT+IHosPR7aXkGESXR19H32liyG2yCDhVCsytyJRVKkzbH8iGrmrZbLr9K8ewIBbwBtT6UmR9VcQ==
+X-Received: by 2002:a05:600c:9a2:b0:40e:4694:38a6 with SMTP id w34-20020a05600c09a200b0040e469438a6mr248582wmp.157.1706024066574;
+        Tue, 23 Jan 2024 07:34:26 -0800 (PST)
+Received: from ta2.c.googlers.com.com (88.140.78.34.bc.googleusercontent.com. [34.78.140.88])
+        by smtp.gmail.com with ESMTPSA id p21-20020a05600c359500b0040e3488f16dsm42457536wmq.12.2024.01.23.07.34.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Jan 2024 07:34:26 -0800 (PST)
+From: Tudor Ambarus <tudor.ambarus@linaro.org>
+To: broonie@kernel.org,
+	andi.shyti@kernel.org,
+	arnd@arndb.de
+Cc: robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	alim.akhtar@samsung.com,
+	linux-spi@vger.kernel.org,
+	linux-samsung-soc@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-arch@vger.kernel.org,
+	andre.draszik@linaro.org,
+	peter.griffin@linaro.org,
+	semen.protsenko@linaro.org,
+	kernel-team@android.com,
+	willmcvicker@google.com,
+	Tudor Ambarus <tudor.ambarus@linaro.org>
+Subject: [PATCH 01/21] spi: dt-bindings: samsung: add google,gs101-spi compatible
+Date: Tue, 23 Jan 2024 15:34:00 +0000
+Message-ID: <20240123153421.715951-2-tudor.ambarus@linaro.org>
+X-Mailer: git-send-email 2.43.0.429.g432eaa2c6b-goog
+In-Reply-To: <20240123153421.715951-1-tudor.ambarus@linaro.org>
+References: <20240123153421.715951-1-tudor.ambarus@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <adec399e50c74b30b59480d92c431241@h3c.com>
-X-Infomaniak-Routing: alpha
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jan 23, 2024 at 12:04:17PM +0000, Huyadi wrote:
-> 
-> >> Changes v3 -> v2:
-> >>  - add helper of gettid instead of __NR_gettid
-> >>  - add gcc/glibc version info in comments Changes v1 -> v2:
-> >>  - fix whitespace error
-> >>  - replace SYS_gettid with _NR_gettid
-> >> 
-> >>  tools/testing/selftests/landlock/fs_test.c  | 5 ++++-  
-> >> tools/testing/selftests/landlock/net_test.c | 7 ++++++-
-> >>  2 files changed, 10 insertions(+), 2 deletions(-)
-> >> 
-> >> diff --git a/tools/testing/selftests/landlock/fs_test.c 
-> >> b/tools/testing/selftests/landlock/fs_test.c
-> >> index 18e1f86a6234..a992cf7c0ad1 100644
-> >> --- a/tools/testing/selftests/landlock/fs_test.c
-> >> +++ b/tools/testing/selftests/landlock/fs_test.c
-> >> @@ -4572,7 +4572,10 @@ FIXTURE_VARIANT(layout3_fs)
-> >>  /* clang-format off */
-> >>  FIXTURE_VARIANT_ADD(layout3_fs, tmpfs) {
-> >>  	/* clang-format on */
-> >> -	.mnt = mnt_tmp,
-> >> +	.mnt = {
-> >> +		.type = "tmpfs",
-> >> +		.data = "size=4m,mode=700",
-> >> +	},
-> >
-> >I requested some changes here.
-> >
-> 
-> Could you give me some inspiration how to fix it? 
-> it looks fine to me to assign value as above, which consistent with other pseudo FS tests.
-> Thanks in advance.
+Add "google,gs101-spi" dedicated compatible for representing SPI of
+Google GS101 SoC.
 
-Just add and use this for the two tmpfs data:
-#define MNT_TMP_DATA "size=4m,mode=700"
+Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
+---
+ Documentation/devicetree/bindings/spi/samsung,spi.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-You can also make the mnt_tmp variable static const.
+diff --git a/Documentation/devicetree/bindings/spi/samsung,spi.yaml b/Documentation/devicetree/bindings/spi/samsung,spi.yaml
+index 79da99ca0e53..386ea8b23993 100644
+--- a/Documentation/devicetree/bindings/spi/samsung,spi.yaml
++++ b/Documentation/devicetree/bindings/spi/samsung,spi.yaml
+@@ -17,6 +17,7 @@ properties:
+   compatible:
+     oneOf:
+       - enum:
++          - google,gs101-spi
+           - samsung,s3c2443-spi # for S3C2443, S3C2416 and S3C2450
+           - samsung,s3c6410-spi
+           - samsung,s5pv210-spi # for S5PV210 and S5PC110
+-- 
+2.43.0.429.g432eaa2c6b-goog
 
-
-> 
-> >>  	.file_path = file1_s1d1,
-> >>  };
-> >> 
->   
