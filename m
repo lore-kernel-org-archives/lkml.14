@@ -1,95 +1,128 @@
-Received: from out30-112.freemail.mail.aliyun.com (out30-112.freemail.mail.aliyun.com [115.124.30.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from aposti.net (aposti.net [89.234.176.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 444C35C619;
-	Tue, 23 Jan 2024 10:40:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.112
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C29459B64;
+	Tue, 23 Jan 2024 10:43:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.234.176.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706006454; cv=none; b=IYp+m96QVaiQKW1NU4ErEet1UnYCw18wyVJhhchBD1JRCO9IADZDjt6ACvoExYJscLtZY24o72jpuk1r0ktMbQtQCj1Sq8+aRGzQtzHsozUDlNwkUCoP02nFKKa2+/5p2/40p9tgPtF6FBqtII+6eHI/ubgs92u1VzhqPjZ/TiE=
+	t=1706006595; cv=none; b=CaK3Y9lseJfDWVNjO/wIzlfBHowPy8L+ihH1oeWrCQc+rI7gYjecQMb9sn5dMMUBUx6AE8AkNzheI+lwdsSltMw+0E091cQBs+GKUC6FMjtjWys3s5S34XvjBSygvQOJ92YZC1hy2I3ZwFFx84rbWNiPH2Uq1yRNMsDtciaNxjs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706006454; c=relaxed/simple;
-	bh=x/7+wwKxczN3ej1c6k89cW/RUSox0yusws0gWmDca6o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pRqXfimOFngLIKPl1iIAWPQGG1EVYCZ87hY1DYSSw4zQXQpe+AcupVXGuCqihnPwUHJ9LrJacxBR/2VDJbabuBecqEK/DWIkW32zJX2rw10AMN3UTF4Zn+NAx9mSHNCv3sBRDlbzYo5hu/HTbh8AMR1KChRmzIxFr5ec6Clnduk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; arc=none smtp.client-ip=115.124.30.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0W.CZc3u_1706006441;
-Received: from 30.221.145.142(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0W.CZc3u_1706006441)
-          by smtp.aliyun-inc.com;
-          Tue, 23 Jan 2024 18:40:42 +0800
-Message-ID: <3d1d06de-cb59-40d7-b0df-110e7dc904d6@linux.alibaba.com>
-Date: Tue, 23 Jan 2024 18:40:40 +0800
+	s=arc-20240116; t=1706006595; c=relaxed/simple;
+	bh=jYQ6Xv2AW3WuEU9RW+PvztluEcow2glWwD06WlcJ0aU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EDnzSG6k4TfkGOKKerrTBEM3v8fYaoUzMkk4rv8Wt1GLYy0yH+qwUkt4YNtnZ+rl2qKLKSgOEtrl7noRiYXFT4ubCClA/F1A+FImRPECE5x1w0Rq+4ji5N+8u97kwmBzWpGNSxrNC74nJF9V0VA4EUPV7LZymlBfWXxLk4LavZg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=crapouillou.net; spf=pass smtp.mailfrom=crapouillou.net; dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b=k+Dhaxbr; arc=none smtp.client-ip=89.234.176.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=crapouillou.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crapouillou.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="k+Dhaxbr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+	s=mail; t=1706006591;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=q53mcc9cShf3bZyxlCnOlEd1xHk0CToCbzGmhqgBkTs=;
+	b=k+Dhaxbrow+HPm91RqOGceg7kIrlMFfxc5gyN247fQ4SSo2bZ3HdW13bxv1DqAXWXOF6pu
+	AJxODZpFDOnIVA6dG8WsztojPxfIXqb8UZLnoUTvEVEwRwNOOI+o7P7VMyybAm/ce3l3OI
+	25VAHK7iXB6gK80K721a5ZNAEmPges0=
+From: Paul Cercueil <paul@crapouillou.net>
+To: Jonathan Cameron <jic23@kernel.org>,
+	Javier Carrasco <javier.carrasco.cruz@gmail.com>,
+	Lars-Peter Clausen <lars@metafoo.de>
+Cc: Nuno Sa <nuno.sa@analog.com>,
+	linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH] Revert "iio: add modifiers for A and B ultraviolet light"
+Date: Tue, 23 Jan 2024 11:43:05 +0100
+Message-ID: <20240123104305.10881-1-paul@crapouillou.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC] fuse: disable support for file handle when
- FUSE_EXPORT_SUPPORT not configured
-Content-Language: en-US
-To: Amir Goldstein <amir73il@gmail.com>
-Cc: miklos@szeredi.hu, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240123093701.94166-1-jefflexu@linux.alibaba.com>
- <CAOQ4uxgna=Eimk4KHUByk5ZRu7NKHTPJQukgV9GE_DNN_3_ztA@mail.gmail.com>
-From: Jingbo Xu <jefflexu@linux.alibaba.com>
-In-Reply-To: <CAOQ4uxgna=Eimk4KHUByk5ZRu7NKHTPJQukgV9GE_DNN_3_ztA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Spam: Yes
 
+This reverts
+b89710bd215e ("iio: add modifiers for A and B ultraviolet light")
 
+Enum iio_modifer is *ABI*, you can't just decide to change all the
+values from one version to another, otherwise you break userspace.
+The new entries should have been added to the end of the enum.
 
-On 1/23/24 6:17 PM, Amir Goldstein wrote:
-> If you somehow find a way to mitigate the regression for NFS export of
-> old fuse servers (maybe an opt-in Kconfig?), your patch is also going to
-> regress AT_HANDLE_FID functionality, which can be used by fanotify to
-> monitor fuse.
-> 
-> AT_HANDLE_FID flag to name_to_handle_at(2) means that
-> open_by_handle_at(2) is not supposed to be called on that fh.
-> 
-> The correct way to deal with that would be something like this:
-> 
-> +static const struct export_operations fuse_fid_operations = {
-> +       .encode_fh      = fuse_encode_fh,
-> +};
-> +
->  static const struct export_operations fuse_export_operations = {
->         .fh_to_dentry   = fuse_fh_to_dentry,
->         .fh_to_parent   = fuse_fh_to_parent,
-> @@ -1529,12 +1533,16 @@ static void fuse_fill_attr_from_inode(struct
-> fuse_attr *attr,
-> 
->  static void fuse_sb_defaults(struct super_block *sb)
->  {
-> +       struct fuse_mount *fm = get_fuse_mount_super(sb);
-> +
->         sb->s_magic = FUSE_SUPER_MAGIC;
->         sb->s_op = &fuse_super_operations;
->         sb->s_xattr = fuse_xattr_handlers;
->         sb->s_maxbytes = MAX_LFS_FILESIZE;
->         sb->s_time_gran = 1;
-> -       sb->s_export_op = &fuse_export_operations;
-> +       if (fm->fc->export_support)
-> +               sb->s_export_op = &fuse_export_operations;
-> +       else
-> +               sb->s_export_op = &fuse_fid_operations;
->         sb->s_iflags |= SB_I_IMA_UNVERIFIABLE_SIGNATURE;
->         if (sb->s_user_ns != &init_user_ns)
->                 sb->s_iflags |= SB_I_UNTRUSTED_MOUNTER;
-> 
-> ---
-> 
-> This would make name_to_handle_at() without AT_HANDLE_FID fail
-> and name_to_handle_at() with AT_HANDLE_FID to succeed as it should.
-> 
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+---
+ Documentation/ABI/testing/sysfs-bus-iio | 7 ++-----
+ drivers/iio/industrialio-core.c         | 2 --
+ include/uapi/linux/iio/types.h          | 2 --
+ tools/iio/iio_event_monitor.c           | 2 --
+ 4 files changed, 2 insertions(+), 11 deletions(-)
 
-Oh I didn't notice this.  Many thanks!
-
-
+diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
+index 2e6d5ebfd3c7..7937bb4a4a68 100644
+--- a/Documentation/ABI/testing/sysfs-bus-iio
++++ b/Documentation/ABI/testing/sysfs-bus-iio
+@@ -1587,8 +1587,6 @@ What:		/sys/.../iio:deviceX/in_intensityY_raw
+ What:		/sys/.../iio:deviceX/in_intensityY_ir_raw
+ What:		/sys/.../iio:deviceX/in_intensityY_both_raw
+ What:		/sys/.../iio:deviceX/in_intensityY_uv_raw
+-What:		/sys/.../iio:deviceX/in_intensityY_uva_raw
+-What:		/sys/.../iio:deviceX/in_intensityY_uvb_raw
+ What:		/sys/.../iio:deviceX/in_intensityY_duv_raw
+ KernelVersion:	3.4
+ Contact:	linux-iio@vger.kernel.org
+@@ -1597,9 +1595,8 @@ Description:
+ 		that measurements contain visible and infrared light
+ 		components or just infrared light, respectively. Modifier
+ 		uv indicates that measurements contain ultraviolet light
+-		components. Modifiers uva, uvb and duv indicate that
+-		measurements contain A, B or deep (C) ultraviolet light
+-		components respectively.
++		components. Modifier duv indicates that measurements
++		contain deep ultraviolet light components.
+ 
+ What:		/sys/.../iio:deviceX/in_uvindex_input
+ KernelVersion:	4.6
+diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
+index 9a85752124dd..bce09d325142 100644
+--- a/drivers/iio/industrialio-core.c
++++ b/drivers/iio/industrialio-core.c
+@@ -117,8 +117,6 @@ static const char * const iio_modifier_names[] = {
+ 	[IIO_MOD_LIGHT_GREEN] = "green",
+ 	[IIO_MOD_LIGHT_BLUE] = "blue",
+ 	[IIO_MOD_LIGHT_UV] = "uv",
+-	[IIO_MOD_LIGHT_UVA] = "uva",
+-	[IIO_MOD_LIGHT_UVB] = "uvb",
+ 	[IIO_MOD_LIGHT_DUV] = "duv",
+ 	[IIO_MOD_QUATERNION] = "quaternion",
+ 	[IIO_MOD_TEMP_AMBIENT] = "ambient",
+diff --git a/include/uapi/linux/iio/types.h b/include/uapi/linux/iio/types.h
+index 5060963707b1..9c2ffdcd6623 100644
+--- a/include/uapi/linux/iio/types.h
++++ b/include/uapi/linux/iio/types.h
+@@ -91,8 +91,6 @@ enum iio_modifier {
+ 	IIO_MOD_CO2,
+ 	IIO_MOD_VOC,
+ 	IIO_MOD_LIGHT_UV,
+-	IIO_MOD_LIGHT_UVA,
+-	IIO_MOD_LIGHT_UVB,
+ 	IIO_MOD_LIGHT_DUV,
+ 	IIO_MOD_PM1,
+ 	IIO_MOD_PM2P5,
+diff --git a/tools/iio/iio_event_monitor.c b/tools/iio/iio_event_monitor.c
+index 8073c9e4fe46..2eaaa7123b04 100644
+--- a/tools/iio/iio_event_monitor.c
++++ b/tools/iio/iio_event_monitor.c
+@@ -105,8 +105,6 @@ static const char * const iio_modifier_names[] = {
+ 	[IIO_MOD_LIGHT_GREEN] = "green",
+ 	[IIO_MOD_LIGHT_BLUE] = "blue",
+ 	[IIO_MOD_LIGHT_UV] = "uv",
+-	[IIO_MOD_LIGHT_UVA] = "uva",
+-	[IIO_MOD_LIGHT_UVB] = "uvb",
+ 	[IIO_MOD_LIGHT_DUV] = "duv",
+ 	[IIO_MOD_QUATERNION] = "quaternion",
+ 	[IIO_MOD_TEMP_AMBIENT] = "ambient",
 -- 
-Thanks,
-Jingbo
+2.43.0
+
