@@ -1,106 +1,93 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C81763C29
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 00:04:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.120
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A04E1E56B
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 00:06:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705968282; cv=none; b=F2VzsPbuMrIiBDccz1Dl3evojOEO1ZZgijuQv7y3cm0Ge9DcgnZj0++P1J7K2uBbNJmk/xmGrtsAy/PJmKvyyGUxReoIEajGwp1F4Cpa2lXFsKIYdPIkUXw/tjVbBvUxslIoHnBXBAG4ALidzuTEqTPrvqxzHJPQO4rWthDZ0z8=
+	t=1705968374; cv=none; b=ft+NDpGIRlRaf+mg6n2w6cnNlk9nNj06mA5WFPeEMEGw7FTcZ8i9cz7T+Vp9Pnsef+ei9eghK9mcPSsS/JwUclGMdfi784BdAo6icam+9uyz6punCZ4XdJDTqIL9sEjmi58pD7iXnXZ70k0VwjkayC5Y7SB5TOWz8HbGTsQK2SE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705968282; c=relaxed/simple;
-	bh=nfelir3AWSRDoyUGNYzJu1AG7aLWBoB1odWGtHONiUI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=THKx4sgZnQf7tIYBM8c08F3tPJtqWBfqcHoWcIhZS6q4A7ObjY4yTphaPkSuXPLbWdWfCV6IObFOSeRVd7GXt7YiFdcc/TSsDS0oT7G5oCHm8YC/F0ExUcKeqgUwtKeQ5eiFUqhO7dxehoan6pchm7X/GtT712rz10KY/bJFW+I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=h/mwh8Eq; arc=none smtp.client-ip=192.55.52.120
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1705968374; c=relaxed/simple;
+	bh=WyYDJ5I8crHfIjGKOEWsj+g+4ZRWKdyhFy1bp2Mbx4w=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=Mks/W/OqQmlHI1vXa5mgLLq2sgUG7Tx5lg2zrlNGA1szHwDp2hZ6GLDs4V+RdTCfBbY4JrytXZJvSuD6PyWPBjLogEXe/hvX2opSaaXp7pFmiiTKCVPJR68g1EKm4kB2VdZWtQ0/a2XIj4Dumjb+Fmt5YLyVOZnBrJ1rhRODib8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=U3iOaORx; arc=none smtp.client-ip=209.85.128.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="h/mwh8Eq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1705968280; x=1737504280;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=nfelir3AWSRDoyUGNYzJu1AG7aLWBoB1odWGtHONiUI=;
-  b=h/mwh8Equh3NGPheSBcFkItHQ/HHghU9u59omF4DnaFBgbXWgg/0xf0t
-   hJoWIJByHCKkAir85vSYO6wYEITML7t3sLQ/r7BiqmfSR3c6BAz9//I0q
-   BjBXNKbdwvBg1uACc43GRTORKb9NYXZUcxKNud/F1v2QyeaUHUBI35EzS
-   WWCVY0/Z1bTxwA0PuDVEdX2V37K2ti6zs0aPdt3uOcR7ZxwYZkG4XwDgX
-   YCBMPMTSGrzkYPEMdrKiXuaCA2XVi1V07CvhR4aE8REDZbT1bwrrRG4wI
-   OrFx2gkHINx4TSoTngstvZI2lhtIZ+T3/TbeYgNtpdKvISz2aV6JdDfBa
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10961"; a="400221489"
-X-IronPort-AV: E=Sophos;i="6.05,212,1701158400"; 
-   d="scan'208";a="400221489"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 16:04:39 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,212,1701158400"; 
-   d="scan'208";a="1470872"
-Received: from thalethi-mobl2.amr.corp.intel.com (HELO desk) ([10.209.98.31])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 16:04:39 -0800
-Date: Mon, 22 Jan 2024 16:04:31 -0800
-From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-To: Breno Leitao <leitao@debian.org>
-Cc: mingo@kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-	Borislav Petkov <bp@alien8.de>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] x86/bugs: spectre_v2_user default mode depends on
- main default
-Message-ID: <20240123000431.rqs5g6gjpq5uckcs@desk>
-References: <20240118173213.2008115-1-leitao@debian.org>
- <20240118173213.2008115-4-leitao@debian.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="U3iOaORx"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-5ff7cf2fd21so39194287b3.1
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 16:06:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1705968371; x=1706573171; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=AXffGr7LphP1tXOOtskGblZIv2JUqybLVLOLn41CS90=;
+        b=U3iOaORxg3/OGMRqn8GRR6dNEf3KGq2XfoeM6hI+Dgt/4QnMHrHLluh/u0uzDreaBN
+         5WD8c3+ZrM/Q4a26qoSAB/je2+pY60/gsP/zV5tFNfBtUVJ8VKyRHfIX7KfjcWhylhSu
+         o5ztNWGqEeLBaSTRFbIGs26KYoXrMCaFVrelNetWfl3AaT/BIyb+yK3rdU8luQgTa3f2
+         KR9S7EL+idb7tlrUeq9L8ZicCAzrqMm71qtlRd12hWfsglyM2c2tHrutLTqIIjhs/vNf
+         I46E9ajucTzPf9OJLcC/bSlqQRIi/0WvQJE34diYel/vp12uMEfOahooKXpUY6Ot+bGa
+         0uxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705968371; x=1706573171;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=AXffGr7LphP1tXOOtskGblZIv2JUqybLVLOLn41CS90=;
+        b=ZEW37cGxe4e8HqSSbv2wm4STY1xFyswOl5GUfwaIrQIEKgfBXGFZWlBBJrZ7EIDU/o
+         M1KjzU7nJTbD5mBafGagFTwyXwrn6zoBLwu352qRop7pUbpKD4i2sKdXSEJ/h8g12VZZ
+         W+FKrseFkIFn06sPi1mKeTOwVaWTOPvGRzhk7GRKPsusaIy2A0dGCc2FVdYJXUFrt+35
+         2QjHLEofqr8d8jk840jz1rB+/F15yxWc/R8npC22lUgp0w0UWWSgNjGP2yGkQOKrMLyO
+         cxUwXb88LWhAAZIi1SrSnK/5TfewDj+IGIB7FMsMoLRZsnTOl49e6V1I6CsaSL5vWTj8
+         062g==
+X-Gm-Message-State: AOJu0YwVHB1sy1wuL3Hks90bxolUk9ReNXXGdyBRRidKDuUD8vzTebML
+	/U6shwT753+PJcWaCOkK96kjM8pIlujUlJulG0g0pur7fksdsyC/fUgmCdkfR4o/OR6XvX+nh4R
+	CS2hU2A==
+X-Google-Smtp-Source: AGHT+IGNt2kudlGiyydNX1G2X00S7qrLNufjPUdMK4crkJDKauSfJgzekImNEet6MZllxK70aQ7vXudeB552
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:6aba:f97a:4dc7:7e92])
+ (user=irogers job=sendgmr) by 2002:a81:9805:0:b0:5fc:7f94:da64 with SMTP id
+ p5-20020a819805000000b005fc7f94da64mr2150138ywg.5.1705968371736; Mon, 22 Jan
+ 2024 16:06:11 -0800 (PST)
+Date: Mon, 22 Jan 2024 16:05:59 -0800
+Message-Id: <20240123000604.1211486-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240118173213.2008115-4-leitao@debian.org>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.43.0.429.g432eaa2c6b-goog
+Subject: [PATCH v1 0/5] Fixes for 6.8 PR1
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Ravi Bangoria <ravi.bangoria@amd.com>, Ross Zwisler <zwisler@chromium.org>, 
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>, Shirisha G <shirisha@linux.ibm.com>, 
+	Kajol Jain <kjain@linux.ibm.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Jan 18, 2024 at 09:32:13AM -0800, Breno Leitao wrote:
->  static enum spectre_v2_user_cmd __init
->  spectre_v2_parse_user_cmdline(void)
->  {
-> +	int ret, i, mode;
+Discovered some testing issues around perf list, perf script and perf
+daemon based on Linux 6.8-rc1. Some of the issues were discovered in
+the context of an Alderlake system.
 
-mode is being returned, it is better to match its type with function's
-return type "enum spectre_v2_user_cmd".
+Ian Rogers (5):
+  perf list: Switch error message to pr_err
+  perf list: Add output file option
+  perf test: Workaround debug output in list test
+  perf test: Fix script test for python being disabled
+  perf test: Make daemon signal test less racy
 
->  	char arg[20];
-> -	int ret, i;
-> +
-> +	mode = IS_ENABLED(CONFIG_MITIGATION_SPECTRE_V2) ?
-> +		SPECTRE_V2_USER_CMD_AUTO : SPECTRE_V2_USER_CMD_NONE;
->  
->  	switch (spectre_v2_cmd) {
->  	case SPECTRE_V2_CMD_NONE:
-> @@ -1236,7 +1239,7 @@ spectre_v2_parse_user_cmdline(void)
->  	ret = cmdline_find_option(boot_command_line, "spectre_v2_user",
->  				  arg, sizeof(arg));
->  	if (ret < 0)
-> -		return SPECTRE_V2_USER_CMD_AUTO;
-> +		return mode;
->  
->  	for (i = 0; i < ARRAY_SIZE(v2_user_options); i++) {
->  		if (match_option(arg, ret, v2_user_options[i].option)) {
-> @@ -1246,8 +1249,8 @@ spectre_v2_parse_user_cmdline(void)
->  		}
->  	}
->  
-> -	pr_err("Unknown user space protection option (%s). Switching to AUTO select\n", arg);
-> -	return SPECTRE_V2_USER_CMD_AUTO;
-> +	pr_err("Unknown user space protection option (%s). Switching to default\n", arg);
-> +	return mode;
->  }
->  
->  static inline bool spectre_v2_in_ibrs_mode(enum spectre_v2_mitigation mode)
-> -- 
-> 2.34.1
-> 
+ tools/perf/Documentation/perf-list.txt |   4 +
+ tools/perf/builtin-list.c              | 211 +++++++++++++++----------
+ tools/perf/tests/shell/daemon.sh       |  34 ++--
+ tools/perf/tests/shell/list.sh         |  21 ++-
+ tools/perf/tests/shell/script.sh       |   3 +-
+ tools/perf/util/print-events.c         |   2 +-
+ 6 files changed, 177 insertions(+), 98 deletions(-)
+
+-- 
+2.43.0.429.g432eaa2c6b-goog
+
