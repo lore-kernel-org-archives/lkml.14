@@ -1,225 +1,85 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE5D556773;
-	Tue, 23 Jan 2024 00:41:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17B2312E56
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 00:44:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705970521; cv=none; b=fqEhHxaGtwnCOc9sPBWJw9TAEeV0xpjPgxJc1Inmiyu/yzHFdlydKiVPW8kQ1K724Q/ZO3ERDmD9IzmC0dS+UdZYFNr2nQgpa8EIiVfPzi7zXphjBv3olp1t7k0g7xLgpvOT2ktrKNnw2hy4nbqjIPQ9PUfoX+Ug7xIONaCLjA8=
+	t=1705970647; cv=none; b=nHd53W1mGQdU9f7cMqo6Wl9D21QtnYijFiKZyvFrr0eBvE8V7tT+Qm/r1BOF/ktE2rWGgfTpKcbb3e236UTItk2hfoftK5sSfC0/j5+079jUzIsx53GMZe8PKNwr5cNvE1bVjf8Rot5m0n9nElqHcr1RpwlHuIngxtE2lyyatks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705970521; c=relaxed/simple;
-	bh=rc4w+Jmtk94BaD231D3UglD25ABatG+9xDx3zJlmGRA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=AYyJx6ylJD1MT5Bgkg4m9hmUz1DGjX7phEu2Rft1WuUCNDmqSf57CAJoo+VosLzsy1W8IZECyYMzWQhDHXTGX1D7/7/gRCbDzCFRpmoXWmrglGkH65bbkV5qKIUiWvmAJzTeH12ulJ+fT3gYdU3mcAtNur4Uc17KFA0EW5j9LbY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DC1BD1FB;
-	Mon, 22 Jan 2024 16:42:43 -0800 (PST)
-Received: from minigeek.lan (unknown [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 068AD3F73F;
-	Mon, 22 Jan 2024 16:41:54 -0800 (PST)
-Date: Tue, 23 Jan 2024 00:41:05 +0000
-From: Andre Przywara <andre.przywara@arm.com>
-To: Chen-Yu Tsai <wens@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
- <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
- Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland
- <samuel@sholland.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown
- <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai
- <tiwai@suse.com>, Vinod Koul <vkoul@kernel.org>, Chen-Yu Tsai
- <wens@csie.org>, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
- linux-sound@vger.kernel.org, dmaengine@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 6/7] arm64: dts: allwinner: h616: Add DMA controller and
- DMA channels
-Message-ID: <20240123004105.66fee7bd@minigeek.lan>
-In-Reply-To: <20240122170518.3090814-7-wens@kernel.org>
-References: <20240122170518.3090814-1-wens@kernel.org>
-	<20240122170518.3090814-7-wens@kernel.org>
-Organization: Arm Ltd.
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.31; x86_64-slackware-linux-gnu)
+	s=arc-20240116; t=1705970647; c=relaxed/simple;
+	bh=lqWnCn2DPBbY8g6aOwefG3Qz92nPQlx6pHEovITWs54=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JZ0ZsjdXdsyAqFf3ZsIfwoITCRs6EEFnwQyj48MeeLsPAZ3sZl5Ao3lydEBHNUV2ktbMMmrVR8FkePGXtURUEE8J9fnIJTcYdP9COYgQyGgeDhclNn0m+iPStkNt5Jo7U8i7+k97g+YwLfBQs7mjCD5ZAHhsDkClnGz4DsLKBso=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=RAu/2CMW; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="RAu/2CMW"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a2e0be86878so883800566b.1
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 16:44:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1705970644; x=1706575444; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=8T7UgnjmQjulu6W4nl2ydx9Xz+2kAMCTenXm0NDaQtI=;
+        b=RAu/2CMWEKlC6iaP1G+6YFe2WUUzz/IvxZeIfqBo9GqHo+hM+xa+/xHldldQheqN2a
+         BiDM7jq7EORtyKJyUAJPBd5racEidzz5/u6wWTmOD6FzlT0izx0bnDObZI6vSvfcswav
+         2rg7sQFl8tsXmtd2MN/ha6ysrRogWM0rbffFA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705970644; x=1706575444;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=8T7UgnjmQjulu6W4nl2ydx9Xz+2kAMCTenXm0NDaQtI=;
+        b=jqeFcODTptaRehAMGuwEe+6tBx7RelbS+NEoma7GlhjpOoyfgJICtW2Jv6rRYuAu6N
+         tykKORr7XE6qVATHCQgto+fBYqKhn+9ozaJ8QV7WNUL7MHc1KxnKD5bCqKQHrUluOJyo
+         oDeEb2vOct0H2okSeZHXWi4psx9Gm8yUyU5X0BP2NRFbehSbLgfLYxJEW8+u36JrhXfq
+         Gj0Gz9XN/KyXwktgITLu1ZDPbl1zBSWp2WVy77iggD6GQ+4jUzCHAdY2yNk4ENgz6JIv
+         GwNvAqaRJkKeDQe0bwmHieB8eSWJN0dl7637LbhvZOKsYvR6NNi4uEzziGvEasplGcD3
+         XB2Q==
+X-Gm-Message-State: AOJu0Yzubnrm5Gofuh2yxVcXX/+nU8IseQQFZjHHPemmnb3ykK8o/n/e
+	+GZjh0jZuT5B2E3KInW2sZVug4/JJkLjHe7lH1hordVrBpu8dBhRIFO/ODHrqBamJFzoxWXjan0
+	R1eNPuw==
+X-Google-Smtp-Source: AGHT+IE5YH6DYWaEOgMX9KKZBz4xKqJttCX8zwOTfqoLygW7mhXhIsS0BSHIYdi1Fn2eN65g2jrrtw==
+X-Received: by 2002:a17:906:d146:b0:a2e:b015:edea with SMTP id br6-20020a170906d14600b00a2eb015edeamr4558182ejb.53.1705970644250;
+        Mon, 22 Jan 2024 16:44:04 -0800 (PST)
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com. [209.85.208.41])
+        by smtp.gmail.com with ESMTPSA id vx4-20020a170907a78400b00a2d62a515e8sm11038008ejc.212.2024.01.22.16.44.03
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 22 Jan 2024 16:44:03 -0800 (PST)
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-559cef15db5so8487609a12.0
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 16:44:03 -0800 (PST)
+X-Received: by 2002:a05:6402:1a30:b0:55c:5154:7229 with SMTP id
+ be16-20020a0564021a3000b0055c51547229mr743911edb.2.1705970643512; Mon, 22 Jan
+ 2024 16:44:03 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20240122180605.28daf23a@gandalf.local.home> <20240122181547.16b029d6@gandalf.local.home>
+ <20240122181901.05a3b9ab@gandalf.local.home>
+In-Reply-To: <20240122181901.05a3b9ab@gandalf.local.home>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Mon, 22 Jan 2024 16:43:46 -0800
+X-Gmail-Original-Message-ID: <CAHk-=whry+-JUDiiCkDkDn2TDg7SA5OvZpPbcQ_jkM_J5=ySdA@mail.gmail.com>
+Message-ID: <CAHk-=whry+-JUDiiCkDkDn2TDg7SA5OvZpPbcQ_jkM_J5=ySdA@mail.gmail.com>
+Subject: Re: [BUG] BUG: kernel NULL pointer dereference at ttm_device_init+0xb4
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, 
+	Rajneesh Bhardwaj <rajneesh.bhardwaj@amd.com>, Felix Kuehling <Felix.Kuehling@amd.com>, 
+	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, 23 Jan 2024 01:05:17 +0800
-Chen-Yu Tsai <wens@kernel.org> wrote:
+On Mon, 22 Jan 2024 at 15:17, Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+> Perhaps this is the real fix?
 
-> From: Chen-Yu Tsai <wens@csie.org>
-> 
-> The DMA controllers found on the H616 and H618 are the same as the one
-> found on the H6. The only difference is the DMA endpoint (DRQ) layout.
-> 
-> Add a device node for it, and add DMA channels for existing peripherals.
-> 
-> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-> ---
->  .../arm64/boot/dts/allwinner/sun50i-h616.dtsi | 39 +++++++++++++++++++
->  1 file changed, 39 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h616.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h616.dtsi
-> index d549d277d972..a0268439f3be 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-h616.dtsi
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h616.dtsi
-> @@ -133,6 +133,19 @@ ccu: clock@3001000 {
->  			#reset-cells = <1>;
->  		};
->  
-> +		dma: dma-controller@3002000 {
-> +			compatible = "allwinner,sun50i-h616-dma",
-> +				     "allwinner,sun50i-h6-dma";
+If you send a signed-off version, I'll apply it asap.
 
-This should include the A100, to cover 34 bits of address space, see
-the binding patch comment.
-
-> +			reg = <0x03002000 0x1000>;
-> +			interrupts = <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&ccu CLK_BUS_DMA>, <&ccu CLK_MBUS_DMA>;
-> +			clock-names = "bus", "mbus";
-> +			dma-channels = <16>;
-> +			dma-requests = <49>;
-> +			resets = <&ccu RST_BUS_DMA>;
-> +			#dma-cells = <1>;
-
-I compared those bits against the manual and the clock driver: they are
-correct.
-
-> +		};
-> +
->  		sid: efuse@3006000 {
->  			compatible = "allwinner,sun50i-h616-sid", "allwinner,sun50i-a64-sid";
->  			reg = <0x03006000 0x1000>;
-> @@ -339,6 +352,8 @@ uart0: serial@5000000 {
->  			reg-shift = <2>;
->  			reg-io-width = <4>;
->  			clocks = <&ccu CLK_BUS_UART0>;
-> +			dmas = <&dma 14>, <&dma 14>;
-> +			dma-names = "tx", "rx";
->  			resets = <&ccu RST_BUS_UART0>;
->  			status = "disabled";
->  		};
-> @@ -350,6 +365,8 @@ uart1: serial@5000400 {
->  			reg-shift = <2>;
->  			reg-io-width = <4>;
->  			clocks = <&ccu CLK_BUS_UART1>;
-> +			dmas = <&dma 15>, <&dma 15>;
-> +			dma-names = "tx", "rx";
->  			resets = <&ccu RST_BUS_UART1>;
->  			status = "disabled";
->  		};
-> @@ -361,6 +378,8 @@ uart2: serial@5000800 {
->  			reg-shift = <2>;
->  			reg-io-width = <4>;
->  			clocks = <&ccu CLK_BUS_UART2>;
-> +			dmas = <&dma 16>, <&dma 16>;
-> +			dma-names = "tx", "rx";
->  			resets = <&ccu RST_BUS_UART2>;
->  			status = "disabled";
->  		};
-> @@ -372,6 +391,8 @@ uart3: serial@5000c00 {
->  			reg-shift = <2>;
->  			reg-io-width = <4>;
->  			clocks = <&ccu CLK_BUS_UART3>;
-> +			dmas = <&dma 17>, <&dma 17>;
-> +			dma-names = "tx", "rx";
->  			resets = <&ccu RST_BUS_UART3>;
->  			status = "disabled";
->  		};
-> @@ -383,6 +404,8 @@ uart4: serial@5001000 {
->  			reg-shift = <2>;
->  			reg-io-width = <4>;
->  			clocks = <&ccu CLK_BUS_UART4>;
-> +			dmas = <&dma 18>, <&dma 18>;
-> +			dma-names = "tx", "rx";
->  			resets = <&ccu RST_BUS_UART4>;
->  			status = "disabled";
->  		};
-> @@ -394,6 +417,8 @@ uart5: serial@5001400 {
->  			reg-shift = <2>;
->  			reg-io-width = <4>;
->  			clocks = <&ccu CLK_BUS_UART5>;
-> +			dmas = <&dma 19>, <&dma 19>;
-> +			dma-names = "tx", "rx";
->  			resets = <&ccu RST_BUS_UART5>;
->  			status = "disabled";
->  		};
-> @@ -405,6 +430,8 @@ i2c0: i2c@5002000 {
->  			reg = <0x05002000 0x400>;
->  			interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
->  			clocks = <&ccu CLK_BUS_I2C0>;
-> +			dmas = <&dma 43>, <&dma 43>;
-> +			dma-names = "rx", "tx";
->  			resets = <&ccu RST_BUS_I2C0>;
->  			pinctrl-names = "default";
->  			pinctrl-0 = <&i2c0_pins>;
-> @@ -420,6 +447,8 @@ i2c1: i2c@5002400 {
->  			reg = <0x05002400 0x400>;
->  			interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
->  			clocks = <&ccu CLK_BUS_I2C1>;
-> +			dmas = <&dma 44>, <&dma 44>;
-> +			dma-names = "rx", "tx";
->  			resets = <&ccu RST_BUS_I2C1>;
->  			status = "disabled";
->  			#address-cells = <1>;
-> @@ -433,6 +462,8 @@ i2c2: i2c@5002800 {
->  			reg = <0x05002800 0x400>;
->  			interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
->  			clocks = <&ccu CLK_BUS_I2C2>;
-> +			dmas = <&dma 45>, <&dma 45>;
-> +			dma-names = "rx", "tx";
->  			resets = <&ccu RST_BUS_I2C2>;
->  			status = "disabled";
->  			#address-cells = <1>;
-> @@ -446,6 +477,8 @@ i2c3: i2c@5002c00 {
->  			reg = <0x05002c00 0x400>;
->  			interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
->  			clocks = <&ccu CLK_BUS_I2C3>;
-> +			dmas = <&dma 46>, <&dma 46>;
-> +			dma-names = "rx", "tx";
->  			resets = <&ccu RST_BUS_I2C3>;
->  			status = "disabled";
->  			#address-cells = <1>;
-> @@ -459,6 +492,8 @@ i2c4: i2c@5003000 {
->  			reg = <0x05003000 0x400>;
->  			interrupts = <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
->  			clocks = <&ccu CLK_BUS_I2C4>;
-> +			dmas = <&dma 47>, <&dma 47>;
-> +			dma-names = "rx", "tx";
->  			resets = <&ccu RST_BUS_I2C4>;
->  			status = "disabled";
->  			#address-cells = <1>;
-
-The manual mentions "S_TWI0" using port48, so should we add dma
-properties to the r_i2c node as well?
-
-I compared all the other port numbers against the manual, they match.
-
-Cheers,
-Andre
-
-i
-> @@ -472,6 +507,8 @@ spi0: spi@5010000 {
->  			interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
->  			clocks = <&ccu CLK_BUS_SPI0>, <&ccu CLK_SPI0>;
->  			clock-names = "ahb", "mod";
-> +			dmas = <&dma 22>, <&dma 22>;
-> +			dma-names = "rx", "tx";
->  			resets = <&ccu RST_BUS_SPI0>;
->  			status = "disabled";
->  			#address-cells = <1>;
-> @@ -485,6 +522,8 @@ spi1: spi@5011000 {
->  			interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
->  			clocks = <&ccu CLK_BUS_SPI1>, <&ccu CLK_SPI1>;
->  			clock-names = "ahb", "mod";
-> +			dmas = <&dma 23>, <&dma 23>;
-> +			dma-names = "rx", "tx";
->  			resets = <&ccu RST_BUS_SPI1>;
->  			status = "disabled";
->  			#address-cells = <1>;
-
+Thanks,
+                 Linus
