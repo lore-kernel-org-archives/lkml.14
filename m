@@ -1,131 +1,106 @@
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2A5C5A0E1
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 09:36:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 671A956478;
+	Tue, 23 Jan 2024 09:37:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.111
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706002574; cv=none; b=FgpXUO2VtuAW3yx3d60Ej5cUygNnYyyf94YzcXxDwa2eM8oxDdd0sDlWAUJ3NZ01Q9cfWIDzcpeoJ36uoF3SV8W1TyVt6WMBjgA1idSse0a1UepHz7gAAJm4xeHcIr62BvhG3FmmneIw9nkfoJGktpZNSX43PhU8+/cUM8R/bVo=
+	t=1706002634; cv=none; b=nUA6aym/nynI3DBN0VLgtuuSqc0pFo7NnpITYUPBM57hTs3nsk8Z8IC6fSVzIK5rKt0DBGBk876zEjKX9S7p9u4qf+RT8JJ6+iU//f64zZRPQCKauLvahHiVSe8o/2co3OvoeN82d3NcFNORbAc97odYa29B40Ogh6c7NIJfPNE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706002574; c=relaxed/simple;
-	bh=1zxKXfgVeWSW6tJREAxyZEBJCUWmCztiZUXsJ1mJTlU=;
-	h=CC:Subject:To:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=WI66Hf8XP+2LQaD/fsGAedH54TfvjCmO9uS3AAxf0wqIjD4u/48iI7jb7/ujtCWJIy7SMsqooT5ZLAJ9v879QHVK83klSFozRDoQytAVVnpUgPr1KcYnE8dP9vG+mqOQNn7rRHEYQiV+TQSSnWIC4m7WNCd2+sDIPFT8NgZ0meE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.48])
-	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4TK24h2NN4zNlQS;
-	Tue, 23 Jan 2024 17:35:16 +0800 (CST)
-Received: from canpemm500009.china.huawei.com (unknown [7.192.105.203])
-	by mail.maildlp.com (Postfix) with ESMTPS id 1A8C018007B;
-	Tue, 23 Jan 2024 17:36:08 +0800 (CST)
-Received: from [10.67.121.177] (10.67.121.177) by
- canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 23 Jan 2024 17:35:34 +0800
-CC: <yangyicong@hisilicon.com>, Marc Zyngier <maz@kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<daniel.lezcano@linaro.org>, <tglx@linutronix.de>,
-	<jonathan.cameron@huawei.com>, <prime.zeng@huawei.com>,
-	<wanghuiqiang@huawei.com>, <wangwudi@hisilicon.com>, <guohanjun@huawei.com>,
-	<linuxarm@huawei.com>
-Subject: Re: [RFC PATCH 0/3] Add HiSilicon system timer driver
-To: Mark Rutland <mark.rutland@arm.com>
-References: <20231010123033.23258-1-yangyicong@huawei.com>
- <874jiymo2l.wl-maz@kernel.org>
- <a170493f-cd9f-a0d9-432a-2ae07d18d429@huawei.com>
- <ZSZ7OiySl1wcG3CD@FVFF77S0Q05N.cambridge.arm.com>
- <a6597f6f-2a6f-7c04-b3b8-1fd2b7b394e1@huawei.com>
-From: Yicong Yang <yangyicong@huawei.com>
-Message-ID: <c87f7e91-64ec-0197-f69d-34ab24debf5d@huawei.com>
-Date: Tue, 23 Jan 2024 17:35:33 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.5.1
+	s=arc-20240116; t=1706002634; c=relaxed/simple;
+	bh=9L2HdofWJcLlzgURvijzTLaL93o4p+E1h/gJ1Az/+I8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=UKvNi9dJRw8kuf72aujyN9PRAfgpjXvJd9cAlss9vwTmEfTsqtlc9CPq+q/sZ1X7MQBhAmQKBQzfJJZ4ocF2ovQiXGnjZWqjrGR7ZORagxcu8nXBDC8ApVlP4pgxNGxegTNE7RcAAVVQhtZWfAsJK8LhKHJuUxZicbwtseZPXVM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; arc=none smtp.client-ip=115.124.30.111
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045170;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0W.CRkwM_1706002621;
+Received: from localhost(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0W.CRkwM_1706002621)
+          by smtp.aliyun-inc.com;
+          Tue, 23 Jan 2024 17:37:02 +0800
+From: Jingbo Xu <jefflexu@linux.alibaba.com>
+To: miklos@szeredi.hu,
+	linux-fsdevel@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Subject: [RFC] fuse: disable support for file handle when FUSE_EXPORT_SUPPORT not configured
+Date: Tue, 23 Jan 2024 17:37:01 +0800
+Message-Id: <20240123093701.94166-1-jefflexu@linux.alibaba.com>
+X-Mailer: git-send-email 2.19.1.6.gb485710b
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <a6597f6f-2a6f-7c04-b3b8-1fd2b7b394e1@huawei.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- canpemm500009.china.huawei.com (7.192.105.203)
+Content-Transfer-Encoding: 8bit
 
-Hi Mark,
+I think this is more of an issue reporter.
 
-On 2023/10/11 21:10, Yicong Yang wrote:
-> Hi Mark,
-> 
-> On 2023/10/11 18:38, Mark Rutland wrote:
->> On Wed, Oct 11, 2023 at 10:10:11AM +0800, Yicong Yang wrote:
->>> On 2023/10/11 0:36, Marc Zyngier wrote:
->>>> On Tue, 10 Oct 2023 13:30:30 +0100,
->>>> Yicong Yang <yangyicong@huawei.com> wrote:
->>>>>
->>>>> From: Yicong Yang <yangyicong@hisilicon.com>
->>>>>
->>>>> HiSilicon system timer is a memory mapped platform timer compatible with
->>>>> the arm's generic timer specification. The timer supports both SPI and
->>>>> LPI interrupt and can be enumerated through ACPI DSDT table. Since the
->>>>> timer is fully compatible with the spec, it can reuse most codes of the
->>>>> arm_arch_timer driver. However since the arm_arch_timer driver only
->>>>> supports GTDT and SPI interrupt, this series support the HiSilicon system
->>>>> timer by:
->>>>>
->>>>> - refactor some of the arm_arch_timer codes and export the function to
->>>>>   register a arch memory timer by other drivers
->>>>> - retrieve the IO memory and interrupt resource through DSDT in a separate
->>>>>   driver, then setup and register the clockevent device reuse the arm_arch_timer
->>>>>   function
->>>>>
->>>>> Using LPI for the timer is mentioned in BSA Spec section 3.8.1 (DEN0094C 1.0C).
->>>>
->>>> This strikes me as pretty odd. LPIs are, by definition, *edge*
->>>> triggered. The timer interrupt must be *level* triggered. So there
->>>> must be some bridge in the middle that is going to regenerate edges on
->>>> EOI, and that cannot be architectural.
->>>>
->>>> What am I missing?
->>>
->>> In our case, if the timer is working on LPI mode, it's not directly connected
->>> to the GIC. It'll be wired to hisi-mbigen irqchip which will send LPIs to the
->>> GIC.
->>
->> In that case, the timerr itself isn't using an LPI: it's wired to a secondary
->> interrupt controller, and the secondary interrupt controller is using an LPI.
->>
->> The BSA doesn't describe that as a permitted configuration.
->>
->> I think there are two problems here:
->>
->> (1) The BSA spec is wrong, and shouldn't say "or LPI" here as it simply doesn't
->>     make sense.
->>
->>     I think this should be fixed by removing the "or LPI" wording form the BSA
->>     spec for this interrupt.
->>
->> (2) This platform is not compatible with the BSA, and is not compatible with
->>     the existing ACPI bindings in the GTDT.
->>
->> Do you actually need this wakeup timer?
->>
-> 
-> Thanks for the quick feedback!
-> 
-> So the LPI timer mentioned in the BSA spec is probably a mistake and our LPI
-> mode is not compatible to the BSA spec. Then I need to discuss with my team
-> and re-evaluate the solution for the LPI mode of the timer.
-> 
+I'm not sure if it's a known issue, but we found that following a
+successful name_to_handle_at(2), open_by_handle_at(2) fails (-ESTALE,
+Stale file handle) with the given file handle when the fuse daemon is in
+"cache= none" mode.
 
-Since our system timer interrupt supports both SPI and non-SPI mode. For some cases
-we want to leave SPI interrupt for secure system and the timer for non-secure
-system (linux) will be wired to the hisi-mbigen. Just want to confirm if the
-solution to support the non-SPI mode in this patchset is acceptable for our use case,
-though it's not permitted by BSA spec?
+It can be reproduced by the examples from the man page of
+name_to_handle_at(2) and open_by_handle_at(2) [1], along with the
+virtiofsd daemon (C implementation) in "cache= none" mode.
 
-Thanks,
-Yicong
+```
+./t_name_to_handle_at t_open_by_handle_at.c > /tmp/fh
+./t_open_by_handle_at < /tmp/fh
+t_open_by_handle_at: open_by_handle_at: Stale file handle
+```
+
+After investigation into this issue, I found the root cause is that,
+when virtiofsd is in "cache= none" mode, the entry_valid_timeout is
+configured as 0.  Thus the dput() called when name_to_handle_at(2)
+finishes will trigger iput -> evict(), in which FUSE_FORGET will be sent
+to the daemon.  The following open_by_handle_at(2) will trigger a new
+FUSE_LOOKUP request when no cached inode is found with the given file
+handle.  And then the fuse daemon fails the FUSE_LOOKUP request with
+-ENOENT as the cached metadata of the requested inode has already been
+cleaned up among the previous FUSE_FORGET.
+
+This indeed confuses the application, as open_by_handle_at(2) fails in
+the condition of the previous name_to_handle_at(2) succeeds, given the
+requested file is not deleted and ready there.  It is acceptable for the
+application folks to fail name_to_handle_at(2) early in this case, in
+which they will fallback to open(2) to access files.
+
+
+As for this RFC patch, the idea is that if the fuse daemon is configured
+with "cache=none" mode, FUSE_EXPORT_SUPPORT should also be explicitly
+disabled and the following name_to_handle_at(2) will all fail as a
+workaround of this issue.
+
+[1] https://man7.org/linux/man-pages/man2/open_by_handle_at.2.html
+
+Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
+---
+ fs/fuse/inode.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/fs/fuse/inode.c b/fs/fuse/inode.c
+index 2a6d44f91729..9fed63be60fe 100644
+--- a/fs/fuse/inode.c
++++ b/fs/fuse/inode.c
+@@ -1025,6 +1025,7 @@ static struct dentry *fuse_get_dentry(struct super_block *sb,
+ static int fuse_encode_fh(struct inode *inode, u32 *fh, int *max_len,
+ 			   struct inode *parent)
+ {
++	struct fuse_conn *fc = get_fuse_conn(inode);
+ 	int len = parent ? 6 : 3;
+ 	u64 nodeid;
+ 	u32 generation;
+@@ -1034,6 +1035,9 @@ static int fuse_encode_fh(struct inode *inode, u32 *fh, int *max_len,
+ 		return  FILEID_INVALID;
+ 	}
+ 
++	if (!fc->export_support)
++		return -EOPNOTSUPP;
++
+ 	nodeid = get_fuse_inode(inode)->nodeid;
+ 	generation = inode->i_generation;
+ 
+-- 
+2.19.1.6.gb485710b
 
