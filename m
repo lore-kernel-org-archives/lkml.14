@@ -1,87 +1,140 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B65655C8FB;
-	Tue, 23 Jan 2024 10:37:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72FFA5C5FE;
+	Tue, 23 Jan 2024 10:38:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706006229; cv=none; b=EKEZzE4c75nEn3U60Bp/jxoqmKb9FF0y/qdCYNAMyGaAwbHdmC16zuXbLH6VC0XmWA0g/UutYlHHKBdoUizurTDsZibfFGTTBrPmWyrZl7at7M3cDp5+BB9umktu0YCo5PFOodl/53Ed0sy3Sm/I482k6NMvyfXGVkG6xMOlAPk=
+	t=1706006332; cv=none; b=eGDnRNrh0mqo7ZyDDb1+u3O+SrfnkiCDHofRnhVH8omge8oivSaWJl7263OsgPsXjDemTHhya9AvPp4t4oKBvqa72pGGUAzg/FIilSAjI2FP+yMiTgaS/K33on9jq/pG6Hf9c2HzDjHtTnL/NTNDOoIiKZuN70TTo9pp7KDDrRg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706006229; c=relaxed/simple;
-	bh=ISBqSBU1eibSK1yROlAd67P1p3xOWCAZQTrxGAsc76M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gb9Ii5tzVOLvE5B6bs+GoSdzPqU8hHrhlvCirRauSSy7tNKzX9f/KSnoD+o+80ys23CHinsM6h5Bv7katuzBeqDs23tr9HUovJ4PveKZ7z7bkz/3teFqukoTBChHcEpMahS6wnIjc2dPiFSD+quQLshF0Yy1UhvukhH97d8L6Cs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=JdFwYTNY; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1706006332; c=relaxed/simple;
+	bh=fwg7iBzcpslli0ryw+wtduKrPGzNpgD5nM2Zx1ePlms=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aNU6BMSeVvg4Qy4oogNqQu6HK0wS5SoOosglScypZ0gWTMOWQHFUH1Zi/Y/genXc8LT4xSlc6yQsvJcpVGE+ZzVkkfDm4Et9vFRatFlpjEKrtEFlz+T8at64nSFmaW9zkuKpYEmvXvRSjLwvtNlVzw9ixQvQRngv65bkweq+xAU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=ZuLuyXeb; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="JdFwYTNY"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 075CA40E01B4;
-	Tue, 23 Jan 2024 10:37:04 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id m_71YppLYEYe; Tue, 23 Jan 2024 10:37:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1706006221; bh=tE/UEHD9KI7AAS+HbKBmjA2d1BJnju/TAX6dJiWwRsY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JdFwYTNY5byPwgxwpSXquxkSQTnC4ZQiDXI3CNWF83P8psvQshzU6vZJXWlwtMtnM
-	 M5+HokrAiyHCafRJ3RGjEYEy+qP+/HdmqMkv2K7GmsN6GEviPYygF2rc9v7icbs+2v
-	 xFHS1sCGSPIkA+rjXhuiwtCmht7aX31Jp9Va73BAIxCMua6Dd0gRiNR7MiTJQ6eV5t
-	 8cSCA2RCiMx2a/i5pDrfnLaiyiCOP0N6DwZoio/iGRWWu+0gO1jnDOr4DfQ+vTkOtJ
-	 aaQmXVeZG8HdQfe9YI/MnVhA2tuI/Ny4ikvBqNSwu7lgsNa7g6ZOwycnUNtWTeQaWV
-	 rdrr4uXgLLnKB5yfKE0yZaGxH1GDIXmIzEmUyLEf2uLXUKh6EO2Qg/q+F6ucm/jJjd
-	 YfZyjcRQ+IXhQyTg9j33Y44vBu5sOyPEzvfJg7j4f+viUF//N5U7rbwq1DoC3w0Cp1
-	 uEcY6ZvedRqjZaff0J5OlzBa9Kp2mdcvygOzx1nrIV2XNDsqVJVQA9teMBaSSN+6vw
-	 anO0crzovgkEvuTr4rwLZHLrQLFNtQPi9t1lDFXVLZzhDJOpfJ2mGnglShYgFIMQ2W
-	 KV97r85jzooDZy+rq7zrYl+xULWwsVJ4BkUK9mKprDOqfccrUyseu9vwVB0Z/EDCpC
-	 nDgF3rlVDf+g/6RTKzqY8h58=
-Received: from zn.tnic (pd953099d.dip0.t-ipconnect.de [217.83.9.157])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="ZuLuyXeb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1706006323;
+	bh=fwg7iBzcpslli0ryw+wtduKrPGzNpgD5nM2Zx1ePlms=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ZuLuyXebqQIG3hIBTdPltslzYWi3LxwHi0JJG2YvYJ6+6y5UJctBEG01QbcZTCcbN
+	 c543IXvAmNSM9qIAPV0m+Neeqw6MNEVnDrv2FOtWaExL0sPflG6UmOghjGowu4EHOc
+	 vFeSrVENN8IcvU9mz5airnhfaMnf2jmSuzmHFtD2FRzAExoAcIQq/NebZ2gyys5U+T
+	 3OgF3UF+BEByuo9EAGYYjyPWlqSsCx1eYLYIlqk7NSI9WMtwMUjps5J6UxuEFF3OdI
+	 diUJ4azfCCzcG7zodhGSX7SbyPk1vdb+WnU0kUMUWeuO3LKSVBAWaEwGMN4ZBoG7Ph
+	 a59aoE63yQdTg==
+Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 385BD40E01A9;
-	Tue, 23 Jan 2024 10:36:31 +0000 (UTC)
-Date: Tue, 23 Jan 2024 11:36:23 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Babu Moger <babu.moger@amd.com>
-Cc: corbet@lwn.net, fenghua.yu@intel.com, reinette.chatre@intel.com,
-	tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
-	x86@kernel.org, hpa@zytor.com, paulmck@kernel.org,
-	rdunlap@infradead.org, tj@kernel.org, peterz@infradead.org,
-	seanjc@google.com, kim.phillips@amd.com, jmattson@google.com,
-	ilpo.jarvinen@linux.intel.com, jithu.joseph@intel.com,
-	kan.liang@linux.intel.com, nikunj@amd.com,
-	daniel.sneddon@linux.intel.com, pbonzini@redhat.com,
-	rick.p.edgecombe@intel.com, rppt@kernel.org,
-	maciej.wieczor-retman@intel.com, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, eranian@google.com,
-	peternewman@google.com, dhagiani@amd.com
-Subject: Re: [PATCH v5 1/2] x86/resctrl: Remove hard-coded memory bandwidth
- limit
-Message-ID: <20240123103623.GAZa-Wp79DMgeArPJz@fat_crate.local>
-References: <20231201005720.235639-1-babu.moger@amd.com>
- <c26a8ca79d399ed076cf8bf2e9fbc58048808289.1705359148.git.babu.moger@amd.com>
+	(Authenticated sender: kholk11)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id B9DB137820A9;
+	Tue, 23 Jan 2024 10:38:42 +0000 (UTC)
+Message-ID: <cfee57f3-5940-44c3-a93b-3a5160dc8351@collabora.com>
+Date: Tue, 23 Jan 2024 11:38:42 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <c26a8ca79d399ed076cf8bf2e9fbc58048808289.1705359148.git.babu.moger@amd.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RESEND v2] arm64: dts: mt8195-cherry-tomato: change
+ watchdog reset boot flow
+To: Chen-Yu Tsai <wenst@chromium.org>,
+ Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Hsin-Te Yuan <yuanhsinte@chromium.org>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-mediatek@lists.infradead.org,
+ =?UTF-8?Q?N=C3=ADcolas_F_=2E_R_=2E_A_=2E_Prado?= <nfraprado@collabora.com>
+References: <20231228105717.719624-1-yuanhsinte@chromium.org>
+ <CAGXv+5H-mpXZ_0H_HchDWeTgx+4Nkxh6651DEs1C62mrXczTkA@mail.gmail.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <CAGXv+5H-mpXZ_0H_HchDWeTgx+4Nkxh6651DEs1C62mrXczTkA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jan 15, 2024 at 04:52:27PM -0600, Babu Moger wrote:
-> Fixes: 4d05bf71f157 ("x86/resctrl: Introduce AMD QOS feature")
+Il 23/01/24 05:03, Chen-Yu Tsai ha scritto:
+> +CC Nicolas
+> 
+> On Thu, Dec 28, 2023 at 6:57 PM Hsin-Te Yuan <yuanhsinte@chromium.org> wrote:
+>>
+>> The external output reset signal was originally disabled and sent from
+>> firmware. However, an unfixed bug in the firmware on tomato prevents
+>> the signal from being sent, causing the device to fail to boot. To fix
+>> this, enable external output reset signal to allow the device to reboot
+>> normally.
+>>
+>> Signed-off-by: Hsin-Te Yuan <yuanhsinte@chromium.org>
+> 
+> Friendly ping?
+> 
+> Also wondering if you folks hit this, or if you haven't triggered the
+> watchdog at all.
+> 
 
-What's the point of this Fixes tag? You want this backported to stable?
+I have never seen any watchdog timeout on Tomato R2.
 
--- 
-Regards/Gruss,
-    Boris.
+In any case - this commit misses a Fixes tag...
 
-https://people.kernel.org/tglx/notes-about-netiquette
+Cheers,
+Angelo
+
+> ChenYu
+> 
+>> ---
+>>
+>> Changes in v2:
+>> - Limit the effect only on tomato.
+>>
+>> ---
+>>   arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r1.dts | 4 ++++
+>>   arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r2.dts | 4 ++++
+>>   arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r3.dts | 4 ++++
+>>   3 files changed, 12 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r1.dts b/arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r1.dts
+>> index 2d5e8f371b6d..a82d716f10d4 100644
+>> --- a/arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r1.dts
+>> +++ b/arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r1.dts
+>> @@ -23,3 +23,7 @@ &sound {
+>>   &ts_10 {
+>>          status = "okay";
+>>   };
+>> +
+>> +&watchdog {
+>> +       /delete-property/ mediatek,disable-extrst;
+>> +};
+>> diff --git a/arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r2.dts b/arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r2.dts
+>> index 2586c32ce6e6..2fe20e0dad83 100644
+>> --- a/arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r2.dts
+>> +++ b/arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r2.dts
+>> @@ -43,3 +43,7 @@ &sound {
+>>   &ts_10 {
+>>          status = "okay";
+>>   };
+>> +
+>> +&watchdog {
+>> +       /delete-property/ mediatek,disable-extrst;
+>> +};
+>> diff --git a/arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r3.dts b/arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r3.dts
+>> index f54f9477b99d..dd294ca98194 100644
+>> --- a/arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r3.dts
+>> +++ b/arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r3.dts
+>> @@ -44,3 +44,7 @@ &sound {
+>>   &ts_10 {
+>>          status = "okay";
+>>   };
+>> +
+>> +&watchdog {
+>> +       /delete-property/ mediatek,disable-extrst;
+>> +};
+>> --
+>> 2.43.0.472.g3155946c3a-goog
+>>
