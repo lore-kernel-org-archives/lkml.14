@@ -1,143 +1,165 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEBBB59B4C;
-	Tue, 23 Jan 2024 09:33:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FA8959B4C;
+	Tue, 23 Jan 2024 09:33:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706002407; cv=none; b=n/kS31Z2KOPvCjIylzTXtTDteetasoMmJzQY0zaLVPbiEHnPqJaBBp4MnElCfZfORwFPHN8J1lWKnQ7T7ZpYQFa+WmLtbnaRDwCRCUFT1FooJ22KYm7C5A7Ii+2zmNSRkHlfmxN6jcQjCsg/OU4coN0uj8denvhBPB5quxpmd7c=
+	t=1706002420; cv=none; b=AW5dlAvX5/9XJ3j6YG1rSTE3EHwUg1YXMlyCsrOYSHVWBmozGppQhtTLeip12OCZbVbPq1/Eq/MByxJV0kO1119C0HIRdlm/enFCqUeQFDQEqhhvwzeYChT34V7nLuzb0U3BM7/uLTKi3JFwoKs1yXBlrt8DJ6F5Y/IVfrv5MPA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706002407; c=relaxed/simple;
-	bh=tUV9HeYaIlBPoxnsQQp32B4Sy5G/GzhwU1EEi/HJ3HE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=LaFfbfVNZWU0vz/pQVJLuHzx+cORRBWaD1fi/YxdofwVylnfVaoeHOKG9zo5r5uen9XV1U7QOMXIrwZwe/YnkTFdFgASqgmvrP1ClgK+xCjpORJNmrLBA6y3vCNPlj+9LC8aj71pAHLPVtAfuYC7+ygK3tLZSl9nFRSby1MBFO4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=RmYaGF1Y; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1706002420; c=relaxed/simple;
+	bh=2KnS/m/aJXF9pgC7sa33Pkk2SdNYQMgvjyWG/WyoxTs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FqMPnLs3ItmhDv5lsRW81fvzHegP85mwv4+l9VsqzC5/d2braGMMR82/VGdw0Ecvc8r1wYi9igxjkWiLETxWJRuUUQ6v9SrW0g8SUsqVPF3LdGSsbebJFQ1gBso4tLVurBENLX5n7RFNaUJfOGyBoD3QX+IPh8/tBy/RMwGOqV8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=S+BrXl9K; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=S+BrXl9K; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="RmYaGF1Y"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40N7MUfQ010744;
-	Tue, 23 Jan 2024 09:33:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=LTfonBMvnMBR44qAE8QB5c/aqCnkCTT8Mrrh/XXED9o=; b=Rm
-	YaGF1YQ496OaN+QiCMoPOtu2QkqktvVXFRaYPFGIHjmgTsuTTkbC0QJ14IZ9N++Z
-	/nnpDWeQ0GKouFANAA9T+xCZi404flJ1/mujpUxu8KJex5VgB5AmJQ1G8DoXshxa
-	cuFOPSl9VPbDPh/yfwjWOyacF37o+5v4JKeMrJMfm6MAvB80WbkMxdC2fmfnxcUC
-	puEcFKlsqaIcmOdnMB58gL401GVsqJYWyOqXhyBD2bAs9EwW9nxlvvvLkEDdv8CE
-	4cHsm3wAYdOcnU0n7Dbj05ElXAeqoreKXthQFmpoLa4q62so+HCX87QF63PYHFUD
-	3xw1AsBsMs2Q4tIJvz8w==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vt8140cu1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 23 Jan 2024 09:33:17 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 40N9XGOZ014957
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 23 Jan 2024 09:33:16 GMT
-Received: from [10.216.0.128] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Tue, 23 Jan
- 2024 01:33:11 -0800
-Message-ID: <e993b237-46fb-3a0b-dc91-41e27ea0ab98@quicinc.com>
-Date: Tue, 23 Jan 2024 15:03:03 +0530
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="S+BrXl9K";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="S+BrXl9K"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 3249622177;
+	Tue, 23 Jan 2024 09:33:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1706002417; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vr0dVSL74POTu+Iy/t8VsndcOHjm5FnK2rIR21aIjBA=;
+	b=S+BrXl9K9p1cn9yvSqLBO6VScZ2ywrf6is1PxTTlOrOQLKR/o1eBgNPpxkLlrCuQiXFQQl
+	ppba9WHp4P1Rk+Xl+nS5t5H/PqltWHfRSpGhUke8SVx0Y9i2fBBGEWEMzWKRzzqxG8e32f
+	9YiuDQWiNDXvvemyB6ndXo393rAodMo=
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1706002417; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vr0dVSL74POTu+Iy/t8VsndcOHjm5FnK2rIR21aIjBA=;
+	b=S+BrXl9K9p1cn9yvSqLBO6VScZ2ywrf6is1PxTTlOrOQLKR/o1eBgNPpxkLlrCuQiXFQQl
+	ppba9WHp4P1Rk+Xl+nS5t5H/PqltWHfRSpGhUke8SVx0Y9i2fBBGEWEMzWKRzzqxG8e32f
+	9YiuDQWiNDXvvemyB6ndXo393rAodMo=
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 13D05136A4;
+	Tue, 23 Jan 2024 09:33:37 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id bXbOAfGHr2VMBwAAD6G6ig
+	(envelope-from <mhocko@suse.com>); Tue, 23 Jan 2024 09:33:37 +0000
+Date: Tue, 23 Jan 2024 10:33:36 +0100
+From: Michal Hocko <mhocko@suse.com>
+To: "T.J. Mercier" <tjmercier@google.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Shakeel Butt <shakeelb@google.com>,
+	Muchun Song <muchun.song@linux.dev>,
+	Andrew Morton <akpm@linux-foundation.org>, android-mm@google.com,
+	yuzhao@google.com, yangyifei03@kuaishou.com,
+	cgroups@vger.kernel.org, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Revert "mm:vmscan: fix inaccurate reclaim during
+ proactive reclaim"
+Message-ID: <Za-H8NNW9bL-I4gj@tiehlicka>
+References: <20240121214413.833776-1-tjmercier@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.14.0
-Subject: Re: [PATCH v6 01/12] clk: qcom: branch: Add a helper for setting the
- enable bit
-To: Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Bjorn Andersson
-	<andersson@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Michael Turquette
-	<mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, Rob Herring
-	<robh+dt@kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>
-CC: Marijn Suijten <marijn.suijten@somainline.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        Johan Hovold
-	<johan+linaro@kernel.org>,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-References: <20230717-topic-branch_aon_cleanup-v6-0-46d136a4e8d0@linaro.org>
- <20230717-topic-branch_aon_cleanup-v6-1-46d136a4e8d0@linaro.org>
-Content-Language: en-US
-From: Imran Shaik <quic_imrashai@quicinc.com>
-In-Reply-To: <20230717-topic-branch_aon_cleanup-v6-1-46d136a4e8d0@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: -9zgUxEza7hK566H9pMD3G5V06JJNCFs
-X-Proofpoint-ORIG-GUID: -9zgUxEza7hK566H9pMD3G5V06JJNCFs
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-23_04,2024-01-23_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- spamscore=0 mlxlogscore=999 clxscore=1011 impostorscore=0 malwarescore=0
- suspectscore=0 bulkscore=0 adultscore=0 phishscore=0 mlxscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2311290000 definitions=main-2401230069
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240121214413.833776-1-tjmercier@google.com>
+X-Spam-Level: 
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.com header.s=susede1 header.b=S+BrXl9K
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-3.01 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
+	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 MIME_GOOD(-0.10)[text/plain];
+	 DWL_DNSWL_MED(-2.00)[suse.com:dkim];
+	 NEURAL_HAM_SHORT(-0.20)[-1.000];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	 DKIM_TRACE(0.00)[suse.com:+];
+	 MX_GOOD(-0.01)[];
+	 RCPT_COUNT_TWELVE(0.00)[12];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:dkim];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 MID_RHS_NOT_FQDN(0.50)[];
+	 RCVD_TLS_ALL(0.00)[]
+X-Spam-Score: -3.01
+X-Rspamd-Queue-Id: 3249622177
+X-Spam-Flag: NO
 
-
-
-On 1/13/2024 8:20 PM, Konrad Dybcio wrote:
-> We hardcode some clocks to be always-on, as they're essential to the
-> functioning of the SoC / some peripherals. Add a helper to do so
-> to make the writes less magic.
+On Sun 21-01-24 21:44:12, T.J. Mercier wrote:
+> This reverts commit 0388536ac29104a478c79b3869541524caec28eb.
 > 
-> Reviewed-by: Johan Hovold <johan+linaro@kernel.org>
-> Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-> Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+> Proactive reclaim on the root cgroup is 10x slower after this patch when
+> MGLRU is enabled, and completion times for proactive reclaim on much
+> smaller non-root cgroups take ~30% longer (with or without MGLRU).
+
+What is the reclaim target in these pro-active reclaim requests?
+
+> With
+> root reclaim before the patch, I observe average reclaim rates of
+> ~70k pages/sec before try_to_free_mem_cgroup_pages starts to fail and
+> the nr_retries counter starts to decrement, eventually ending the
+> proactive reclaim attempt.
+
+Do I understand correctly that the reclaim target is over estimated and
+you expect that the reclaim process breaks out early>
+
+> After the patch the reclaim rate is
+> consistently ~6.6k pages/sec due to the reduced nr_pages value causing
+> scan aborts as soon as SWAP_CLUSTER_MAX pages are reclaimed. The
+> proactive reclaim doesn't complete after several minutes because
+> try_to_free_mem_cgroup_pages is still capable of reclaiming pages in
+> tiny SWAP_CLUSTER_MAX page chunks and nr_retries is never decremented.
+
+I do not understand this part. How does a smaller reclaim target manages
+to have reclaimed > 0 while larger one doesn't?
+ 
+> The docs for memory.reclaim say, "the kernel can over or under reclaim
+> from the target cgroup" which this patch was trying to fix. Revert it
+> until a less costly solution is found.
+> 
+> Signed-off-by: T.J. Mercier <tjmercier@google.com>
 > ---
->   drivers/clk/qcom/clk-branch.h | 7 +++++++
->   1 file changed, 7 insertions(+)
+>  mm/memcontrol.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/clk/qcom/clk-branch.h b/drivers/clk/qcom/clk-branch.h
-> index 8ffed603c050..0514bc43100b 100644
-> --- a/drivers/clk/qcom/clk-branch.h
-> +++ b/drivers/clk/qcom/clk-branch.h
-> @@ -64,6 +64,7 @@ struct clk_mem_branch {
->   #define CBCR_FORCE_MEM_PERIPH_OFF	BIT(12)
->   #define CBCR_WAKEUP			GENMASK(11, 8)
->   #define CBCR_SLEEP			GENMASK(7, 4)
-> +#define CBCR_CLOCK_ENABLE		BIT(0)
->   
->   static inline void qcom_branch_set_force_mem_core(struct regmap *regmap,
->   						  struct clk_branch clk, bool on)
-> @@ -98,6 +99,12 @@ static inline void qcom_branch_set_sleep(struct regmap *regmap, struct clk_branc
->   			   FIELD_PREP(CBCR_SLEEP, val));
->   }
->   
-> +static inline void qcom_branch_set_clk_en(struct regmap *regmap, u32 cbcr)
-> +{
-> +	regmap_update_bits(regmap, cbcr, CBCR_CLOCK_ENABLE,
-> +			   CBCR_CLOCK_ENABLE);
-> +}
-> +
-
-Could you please help me understand how this helper function is useful?
-Seems like this is just for reducing parameters compared to 
-regmap_update_bits(). But anyhow the same is being done in the existing
-clock controller drivers with a comment which explains the functionality.
-
-Thanks & Regards,
-Imran
-
->   extern const struct clk_ops clk_branch_ops;
->   extern const struct clk_ops clk_branch2_ops;
->   extern const struct clk_ops clk_branch_simple_ops;
+> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> index e4c8735e7c85..cee536c97151 100644
+> --- a/mm/memcontrol.c
+> +++ b/mm/memcontrol.c
+> @@ -6956,8 +6956,8 @@ static ssize_t memory_reclaim(struct kernfs_open_file *of, char *buf,
+>  			lru_add_drain_all();
+>  
+>  		reclaimed = try_to_free_mem_cgroup_pages(memcg,
+> -					min(nr_to_reclaim - nr_reclaimed, SWAP_CLUSTER_MAX),
+> -					GFP_KERNEL, reclaim_options);
+> +						nr_to_reclaim - nr_reclaimed,
+> +						GFP_KERNEL, reclaim_options);
+>  
+>  		if (!reclaimed && !nr_retries--)
+>  			return -EAGAIN;
+> -- 
+> 2.43.0.429.g432eaa2c6b-goog
 > 
+
+-- 
+Michal Hocko
+SUSE Labs
