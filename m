@@ -1,80 +1,90 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38ED14403;
-	Tue, 23 Jan 2024 20:50:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 904675250;
+	Tue, 23 Jan 2024 20:57:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706043034; cv=none; b=e0l2HGqi66jeLGuWq1ny9+g+NJ0pVHDqlbtcxG4aaCaslXDf8ntRpzENoFCxX6F3Lm5qUHd5ioVyvXAVkk0KIZ0pGljQ8cbdkC3G4iR4dZ4O7PO8BXqxyVvcNg3QzZaQp6dt8ya9ZwXGySqYFeOcBwPpdVKw+LKTSa0TuHyG9VA=
+	t=1706043438; cv=none; b=QMzO174EVuNExjE+2n94vzZUkrPisfmbaeLjNBzDH1hYKkafS5EOd/wmetM+eHdD2cBLX0I+iXQ5fZyxJfW+ZmH4OatG/h+EFQ5KM8L8ZPgZHPs4KAdhAu136fHOcMe2BBYwDHShHaBF1BrhvefjToZMtSYbqIDohre6okAaXnU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706043034; c=relaxed/simple;
-	bh=MYddOfrG4LOTcyvzHKRcFXsA6OLpJzlhOr/O3WNYetY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p7L1wpskossdvv9QIMxHIMcctG8ThpIgZSAUOQorI2+cMW7i4nLucUw/tBYMb8T72nB1fnCsPN4m/A9tRrYzp4+BsQ6w/w51AIofwtaC9nWVHmhPP/J9uPABQFB+WAJb61q85PGRtirD3zqHhO0mMfFTS/z0tzf+qxW0PeRGCxo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NvZm30Ik; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706043438; c=relaxed/simple;
+	bh=Qk3x8dqsv1qQiDdx/sUfNPuTrucAaY1crd6XyC3bwAc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=uQ/0n1Bz5+keCyaGmyW393pM7PIS1F5oXjXwJvIvMwoy94IUHQEg2n8Z0OwDXO8diQqQssJiDk9IhabnvkQevVOVKs8NuzxT1FSkRctBQ2E24Z+XHV8AoI269RT8OGDENa9Xb9FcKlEIZLiJOgTQdSt1jiLPQoQPlIBLwHpws5k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Gs1OgDRh; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NvZm30Ik"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80ACCC433F1;
-	Tue, 23 Jan 2024 20:50:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706043033;
-	bh=MYddOfrG4LOTcyvzHKRcFXsA6OLpJzlhOr/O3WNYetY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NvZm30IkyvfCAZlVER5qlDaInlsI0WB1/yuf1au0OGjfmgUAKZC85cm7qSrDyfes5
-	 Eq3BDkTQQUsiv6oRNzKe2XffR3Mlop4TKkO0FBYr1jfk4b6kZ3Y4GsG39upbsgkSk1
-	 /oe39y8OzmTCo9hRmNkPjLrL54FoGz6mxWzeWVQoSv9Dx+PqRn503/LtbaC3jp5ceA
-	 xhlThuRnkWFyfsAuV76+wjGpNUV2WU98x5SP9pUbWp5HxZq4KOunZ9fdiquKMOuKzm
-	 xmiSCeJFJdnK2mUhTpQMk7rynrPBORDBwJXZ2ASK+JMJ9d/l7PgG5Tv+jlRV2REBjX
-	 ZHv9Emql5iB0A==
-Date: Tue, 23 Jan 2024 14:50:31 -0600
-From: Rob Herring <robh@kernel.org>
-To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-Cc: daniel.lezcano@linaro.org, tglx@linutronix.de,
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-	shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-	linux-imx@nxp.com, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	Peng Fan <peng.fan@nxp.com>
-Subject: Re: [PATCH 1/2] dt-bindings: timer: nxp,sysctr-timer: support i.MX95
-Message-ID: <20240123205031.GA1890036-robh@kernel.org>
-References: <20240122092225.2083191-1-peng.fan@oss.nxp.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gs1OgDRh"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-339261a6ec2so3147048f8f.0;
+        Tue, 23 Jan 2024 12:57:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1706043435; x=1706648235; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8/zvyCf7Yo4bMfKCjWxvWf8T9kOG2qLOCH9hQfg6UWw=;
+        b=Gs1OgDRhdF42X/sSL9eS3JSrcds7M2a0ZrmDu7BLYDIvYt5vz+VD403gjQboxFxAqa
+         y2275JZ6YTEDtEc2nQWLq4Ov3nSKhQY3Zn+dwabMRaqYatmf2OOz3JkkAYt5fPZA5NpY
+         Gk/bjbkmQITsZUbjS8qo3yD3i75DO2LCo0PFPDQkSP5f1CQaogHEdT1KQp1rhy/gO7Rs
+         R2p4r+JImKKAk9MJcUVubQDMwRNmy0QgUC6DFRf8paLTTSj+qv9SuW97wJEhBvCnswhb
+         oESBzjYQ3g/OQ+j0yAgKtzQfNkqt3AzlGR8FXok8wzYEvK+21Cz/iIOkIFMUaQnqgO+e
+         HBWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706043435; x=1706648235;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8/zvyCf7Yo4bMfKCjWxvWf8T9kOG2qLOCH9hQfg6UWw=;
+        b=ZQ9FRpfnGUyt+obvhEwU0dFGmRdRPA6KJy1B29M282SapCTKprKtW6m2RYm1vgFMMd
+         16XPWyNmlCEps56t8JwHG7f8azLhHyei7V0ls2Udx93W0KWlp7/v0QE3OyjEldgylhr0
+         p8qwxS2Y4Y0w+5yT5n+gvfc97DTrW3Pz2pL8crDJR3V5pM5/5M75hGM2Jn7RQY7mbH8C
+         r/IBU5pk0VTQTyq+zdVG92esWJrg8H83ogphmoTkqVcK7lqJptCdmxSFubZEhelgP5O5
+         dUOyVUAck0AVs0YGi64iKF7mZXiJsAL3nX9Ct8fEPIAvKhzfmDSs85z9J1q4Bz4C05+T
+         F84A==
+X-Gm-Message-State: AOJu0Yx/9smP/mF7w8g1xf5gf6x21c702EAjF9VT3hbzcay71Ge9tAaM
+	Ab8xaxCkPTKK5Wnh11SGCg9mloOIASs75kVM1LOydI+DF5G+mPzu
+X-Google-Smtp-Source: AGHT+IEGWVDOmhMh2CcmH98qX/zmGj+R8TRFm5n1pzOFRnjzDpwsw4e2BFNlV0MLjxy1vjY03h6c9w==
+X-Received: by 2002:a5d:5f53:0:b0:337:c288:2595 with SMTP id cm19-20020a5d5f53000000b00337c2882595mr4433474wrb.78.1706043434520;
+        Tue, 23 Jan 2024 12:57:14 -0800 (PST)
+Received: from jernej-laptop.localnet (86-58-14-70.dynamic.telemach.net. [86.58.14.70])
+        by smtp.gmail.com with ESMTPSA id d21-20020adfa355000000b003392a486758sm9520919wrb.99.2024.01.23.12.57.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Jan 2024 12:57:14 -0800 (PST)
+From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
+To: Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+ Samuel Holland <samuel@sholland.org>, Maxime Ripard <mripard@kernel.org>,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject:
+ Re: [PATCH] dt-bindings: sram: narrow regex for unit address to hex numbers
+Date: Tue, 23 Jan 2024 21:57:12 +0100
+Message-ID: <9225339.CDJkKcVGEf@jernej-laptop>
+In-Reply-To: <20240123083450.20996-1-krzysztof.kozlowski@linaro.org>
+References: <20240123083450.20996-1-krzysztof.kozlowski@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240122092225.2083191-1-peng.fan@oss.nxp.com>
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-On Mon, Jan 22, 2024 at 05:22:24PM +0800, Peng Fan (OSS) wrote:
-> From: Peng Fan <peng.fan@nxp.com>
+Dne torek, 23. januar 2024 ob 09:34:50 CET je Krzysztof Kozlowski napisal(a):
+> Regular expression used to match the unit address part should not allow
+> non-hex numbers.
 > 
-> i.MX95 System counter module has similar design as i.MX93, so add
-> fallback compatible with nxp,sysctr-timer
-> 
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> ---
->  .../devicetree/bindings/timer/nxp,sysctr-timer.yaml         | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/timer/nxp,sysctr-timer.yaml b/Documentation/devicetree/bindings/timer/nxp,sysctr-timer.yaml
-> index 2b9653dafab8..4f0b660d5ce3 100644
-> --- a/Documentation/devicetree/bindings/timer/nxp,sysctr-timer.yaml
-> +++ b/Documentation/devicetree/bindings/timer/nxp,sysctr-timer.yaml
-> @@ -18,7 +18,11 @@ description: |
->  
->  properties:
->    compatible:
-> -    const: nxp,sysctr-timer
-> +    oneOf:
-> +      - const: nxp,sysctr-timer
-> +      - items:
-> +          - const: nxp,imx95-sysctr-timer
-> +          - const: nxp,sysctr-timer
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Based on the driver changes, imx95 is not compatible with the existing 
-hardware. Different register layout equals not compatible.
+Merged, thanks!
 
-Rob
+Best regards,
+Jernej
+
+
+
