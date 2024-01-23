@@ -1,120 +1,117 @@
-Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85A624F211;
-	Tue, 23 Jan 2024 22:18:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66D8D3FB32;
+	Tue, 23 Jan 2024 22:22:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706048289; cv=none; b=W4EF8OHkJjyBZ8TkA5NBVkRcCu0Pn/ICfFjIIhoXDTG0HQ8XKCVlPm/jl73V+iG5ctfjCUGM/P/Rg4gDBzp2gEwOYhF2uI8es8GrvCFTzuTs6/XdlpOIdpWrDP0UgQnAlkpyCu6E/+4nDBrVwx1SuzbXlXV8YH7U8uIJFHhrtaY=
+	t=1706048527; cv=none; b=nDx33MtTWN5PdnOidlr8ouz5ngw1WjKjJCpgCev4mBYSjHpJORUt8XX8cyt3KPQwzWJzfuR1JNHMQMOc4P+n1s+KTI7kdkBbJUK3CbP31OwMV3TsbVovzfzRWqHPAosH8d0IPKBApgvJbgGvszS4xP4kuZpmFLG+kAwF5aiMvvA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706048289; c=relaxed/simple;
-	bh=7pV9x3NQmIGRm7ICc9Pgmv7Nj3R4TIsAeaVRF50Ts9w=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=qP0D4Fe/88EjuVEKg+iNDXKcBkA/ztNHy+pL5ozG5qpDtDGT/sS/qDrd4qPDUlSmJqfYcD08IsKkaFXUIGLJARY1iLB9keNkcuNK+9ROEHT6DQMNqTlGNpBhQyqPolh5lg4DXkwY3zqNpuJZYCbgOEEPPkPR0SGy7Y30C9V6pRQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=nRk88Dcn; arc=none smtp.client-ip=168.119.38.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
+	s=arc-20240116; t=1706048527; c=relaxed/simple;
+	bh=EzwRwlhyI9kA9Jd55DwG+gIrmMJ8fBPSINqDqU0+1SM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cBUFDB23saf0YPzcx0dajlL0KxxLUh8H2k69ELqHmdOVX4z62pRhRY/QU2QHKjTLXFglXGTuQ6vQ0pxS6CsnTVsX+h4JSB+PrwRI4FMp3zIPBTKC2CY0u1Ph5NYZrTj8Vpu24aTA6YVc+UIZfuUJsonq2+syKtMekInu8w63cv0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nCuDScnk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="nRk88Dcn"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-	Resent-Cc:Resent-Message-ID; bh=fb+aJv8HD8MKHoL2qErWawmWGsVeusQx5f3Xw3e0Ow4=;
-	t=1706048287; x=1707257887; b=nRk88DcnC13n75FuKAe63hU96apWsfJl4w8TnyjgP35G7PP
-	TY/WL+2lgbfHJeCPlEzQFlsg0MrHEJu9lFb8jmdDfKn1POBX4dS/ha6N2t5q/lGcbyyGh1XzT3Emd
-	ZctH4x2blgRhwmZFN+4nD0urToLiG2kA6n3BROEjf5s7HD5altIJEAUjZXb+8iHOoxS44wJVGptKC
-	9ah9U7pyLWIYAWwU4tkJPmVSILJ1ejYiwxZzzA6BUaZDaL1XOiMTkx5DtNabe8OQoq+IXaDQrHj2J
-	tl9iIYTeYQQ5+xj9vYQUsXJqfuYYWxxPZMX+KG027lILe5aAzT5pwtggP7hMO5Xw==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.97)
-	(envelope-from <johannes@sipsolutions.net>)
-	id 1rSP5W-0000000FGNa-2A9F;
-	Tue, 23 Jan 2024 23:17:46 +0100
-Message-ID: <a6adae9df117daab7457260c030cc97d8608eccb.camel@sipsolutions.net>
-Subject: Re: [PATCH 0/2] kernel-doc: Remove deprecated kernel-doc option
- 'functions'
-From: Johannes Berg <johannes@sipsolutions.net>
-To: Jonathan Corbet <corbet@lwn.net>, Anna-Maria Behnsen
-	 <anna-maria@linutronix.de>, linux-doc@vger.kernel.org
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
- Borislav Petkov <bp@alien8.de>, x86@kernel.org, Mike Rapoport
- <rppt@kernel.org>, Herbert Xu <herbert@gondor.apana.org.au>, "David S.
- Miller" <davem@davemloft.net>,  Marco Elver <elver@google.com>, Alexander
- Potapenko <glider@google.com>, Shuah Khan <shuah@kernel.org>,  Moritz
- Fischer <mdf@kernel.org>, Wu Hao <hao.wu@intel.com>, Xu Yilun
- <yilun.xu@intel.com>,  Dipen Patel <dipenp@nvidia.com>, Philipp Zabel
- <p.zabel@pengutronix.de>, Heikki Krogerus
- <heikki.krogerus@linux.intel.com>, David Airlie <airlied@gmail.com>, Daniel
- Vetter <daniel@ffwll.ch>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
- Thomas Zimmermann <tzimmermann@suse.de>, Jiri Kosina <jikos@kernel.org>,
- Benjamin Tissoires <benjamin.tissoires@redhat.com>, 
- linux-kernel@vger.kernel.org
-Date: Tue, 23 Jan 2024 23:17:45 +0100
-In-Reply-To: <87y1cfiu2y.fsf@meer.lwn.net>
-References: <20240122132820.46633-1-anna-maria@linutronix.de>
-	 <c0fd30e8e6d175eab50d7d5212117107e5251e4d.camel@sipsolutions.net>
-	 <87y1cfiu2y.fsf@meer.lwn.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.3 (3.50.3-1.fc39) 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nCuDScnk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE971C433F1;
+	Tue, 23 Jan 2024 22:22:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706048527;
+	bh=EzwRwlhyI9kA9Jd55DwG+gIrmMJ8fBPSINqDqU0+1SM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=nCuDScnk5OMkc0SF7hb4kstl87dZz28o9lnN91iCFE15A3nNkVSGiauCYJV+ETIs0
+	 0fj+9tD1d4ls045IQABfYhs8xknV49SYHXeeuBBcoya7hnt4b6RWJ8OqtNvaCXmgxw
+	 OhODmj+Z3H2wZxjOSCPIJtzfwCS6/BI/TvcZvwvvPRynLwLsVbrMC3x3DeQJ12g+wP
+	 a72oX3WFJpXP+4SyhQiqawXqfieVdc4cQp8WpCiIpwUkkBKQwjZQFmyx6gKJaRY9oD
+	 k9dp+iNwkRVQ7fmKr3flfJAYL12B2Uel4dw648sHh2W3lQ3jp+HdPsd5zOJagr7GPn
+	 hCq1P1S2Tj21g==
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-50f1c524010so5248966e87.3;
+        Tue, 23 Jan 2024 14:22:06 -0800 (PST)
+X-Gm-Message-State: AOJu0Yy8B8txMzYH7M6+XZfxnEm49N3D2qqFfi4lCMNpNXBACuwT6F+h
+	iw+00r2aYe4+Rtw6UnzcTh9cp9lOyInzvFJBrMECXNoQYvD+5yoYm+64cY6/KFipYiOFjyuaLMT
+	ghyOzd3jzyssmjIaJLO9t/jXBMQQ=
+X-Google-Smtp-Source: AGHT+IF1CUodDtCMAW+NVQPE7jGtYRkmWBnHNrxZXeGF1ISeA10pmyI6sPx3p8WupA3heZ8MeYXxHsOu3FAUZ9mxDAM=
+X-Received: by 2002:a05:6512:138f:b0:50e:f724:5b0 with SMTP id
+ fc15-20020a056512138f00b0050ef72405b0mr1723376lfb.97.1706048525166; Tue, 23
+ Jan 2024 14:22:05 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-malware-bazaar: not-scanned
+References: <CAPhsuW7-r=UAO8f7Ok08vCx2kdVx6mZADyZ-LknNE8csnX+L8g@mail.gmail.com>
+ <20240123215307.8083-1-dan@danm.net>
+In-Reply-To: <20240123215307.8083-1-dan@danm.net>
+From: Song Liu <song@kernel.org>
+Date: Tue, 23 Jan 2024 14:21:53 -0800
+X-Gmail-Original-Message-ID: <CAPhsuW7KMLHHrcyZhKS_m_fwWSKM66VFXaLj9fmY+ab5Mu3pvA@mail.gmail.com>
+Message-ID: <CAPhsuW7KMLHHrcyZhKS_m_fwWSKM66VFXaLj9fmY+ab5Mu3pvA@mail.gmail.com>
+Subject: Re: [REGRESSION] 6.7.1: md: raid5 hang and unresponsive system;
+ successfully bisected
+To: Dan Moulding <dan@danm.net>
+Cc: gregkh@linuxfoundation.org, junxiao.bi@oracle.com, 
+	linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org, 
+	regressions@lists.linux.dev, stable@vger.kernel.org, yukuai1@huaweicloud.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2024-01-23 at 15:05 -0700, Jonathan Corbet wrote:
->=20
-> So I feel like I'm missing something; the problem with Sphinx and
-> namespacing is separate from whether kernel-doc recognizes "-functions";
-> I don't think that taking out this support will make the other problem
-> any harder to solve.  Do you see something I'm not?
+Hi Dan,
 
-Well, I was thinking that today, in the rst files, we use
+On Tue, Jan 23, 2024 at 1:53=E2=80=AFPM Dan Moulding <dan@danm.net> wrote:
+>
+> > I think we still want d6e035aad6c0 in 6.7.2. We may need to revert
+> > 0de40f76d567 on top of that. Could you please test it out? (6.7.1 +
+> > d6e035aad6c0 + revert 0de40f76d567.
+>
+> I was operating under the assumption that the two commits were
+> intended to exist as a pair (the one reverts the old fix, because the
+> next commit has what is supposed to be a better fix). But since the
+> regression still exists, even with both patches applied, the old fix
+> must be reapplied to resolve the current regression.
+>
+> But, as you've requested, I have tested 6.7.1 + d6e035aad6c0 + revert
+> 0de40f76d567 and it seems fine. So I have no issue if you think it
+> makes sense to accept d6e035aad6c0 on its own, even though it would
+> break up the pair of commits.
 
-.. kernel-doc:: include/net/cfg80211.h
-   :functions:
-        cfg80211_rx_assoc_resp
+Thanks for running the test!
 
-(for example).
+>
+> > OTOH, I am not able to reproduce the issue. Could you please help
+> > get more information:
+> >   cat /proc/mdstat
+>
+> Here is /proc/mdstat from one of the systems where I can reproduce it:
+>
+>     $ cat /proc/mdstat
+>     Personalities : [raid6] [raid5] [raid4]
+>     md0 : active raid5 dm-0[4](J) sdc[3] sda[0] sdb[1]
+>           3906764800 blocks super 1.2 level 5, 512k chunk, algorithm 2 [3=
+/3] [UUU]
+>
+>     unused devices: <none>
+>
+> dm-0 is an LVM logical volume which is backed by an NVMe SSD. The
+> others are run-of-the-mill SATA SSDs.
+>
+> >  profile (perf, etc.) of the md thread
+>
+> I might need a little more pointing in the direction of what exactly
+> to look for and under what conditions (i.e. should I run perf while
+> the thread is stuck in the 100% CPU loop? what kind of report should I
+> ask perf for?). Also, are there any debug options I could enable in
+> the kernel configuration that might help gather more information?
+> Maybe something in debugfs? I currently get absolutely no warnings or
+> errors in dmesg when the problem occurs.
 
-This clearly references the *function* cfg80211_rx_assoc_resp(), at
-least it makes that intent clear.
+This appears the md thread hit some infinite loop, so I would like to
+know what it is doing. We can probably get the information with the
+perf tool, something like:
 
-We also had a *struct* called cfg80211_rx_assoc_resp, until we removed
-it recently because of the sphinx namespacing issues.
+perf record -a
+perf report
 
-
-Now if we change the reference to the function to be just
-
-.. kernel-doc:: include/net/cfg80211.h
-   :identifiers:
-        cfg80211_rx_assoc_resp
-
-then how do you know that it's actually referencing the function vs. the
-struct? I mean, OK, today it can only reference the single "thing" (**)
-that sphinx accepts ...  but hoping that some day the sphinx namespacing
-issue will be solved, we'd need a way to actually reference the
-different namespaces from the rst files, no? So it seemed to me that
-just unconditionally referencing an "identifier" makes that harder, not
-easier?
-
-We have 'struct class' for example, and use
-
-.. kernel-doc:: include/linux/device/class.h
-   :identifiers: class
-
-to refer to it. At least you know it's not a function, though if you
-also had an 'enum class' you'd not be able to figure it out.
-
-
-(**) Also, I think a struct or enum name isn't actually called an
-identifier in C? So maybe that's a bad term regardless of the
-namespacing. But I guess even if I'm right (and I'm not really sure)
-then that's too late now.
-
-johannes
+Thanks,
+Song
