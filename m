@@ -1,133 +1,114 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A750A481C6;
-	Tue, 23 Jan 2024 08:06:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A7F45675D
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 08:06:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705997180; cv=none; b=Yw37sSOcjTHcImvkeSK0N4rfGH0YZhXNccGVgt0WfCs7ncd+EPlJ7ujEOjwXSYr9ZKKbZb9g0pnhP0iP0DKRfxPPLKoPD+zdgDbGjHOiDtEdVsk6Lm1tuvktB72TBGCDMpHUX4uQpliRhNUHc36QJYkmCwkOs9ye0ZZpVjJ8okk=
+	t=1705997187; cv=none; b=MuBMymaxRoR4eb+/MoL2lYol0IMwQiPB67To2BpPWwNhlDeYBJhvHYvi3/Wl2KwEhd0OKC8XX86uzf3wi6q2BScpVaw8yTop0OY0yHOjbxXRn69OZ+zSM6Efrxn5aR7VlBO8GU0B5lehIXdUX9/Ata0Appop2qKmGE7hCK03KuY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705997180; c=relaxed/simple;
-	bh=4/K55dB9rh4UZmkNTtpX2GXfSp70c5vicsJHlLGsTA0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UWvjsYpjUX3dQrXAzWK+G43mTPIMXXMtf7WyPu1WcZxLhc3/iU9suDrIRprw+9iMmqc4ZF8df//ftu2XfvcQkoskxsKKWbi4t7bUkqIczZyVdF7J4SbIVSjF/qrLbAR5VNfO4JDsZIHC8pWLOxgES/CT8//4LWJC2F8nRA9c+xk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 3f2a04d7271c4a8bb35cbb34bf93eb72-20240123
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.35,REQID:6ee0d275-512d-4ca5-93e0-c4010540e78b,IP:10,
-	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTI
-	ON:release,TS:-5
-X-CID-INFO: VERSION:1.1.35,REQID:6ee0d275-512d-4ca5-93e0-c4010540e78b,IP:10,UR
-	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:-5
-X-CID-META: VersionHash:5d391d7,CLOUDID:84ae8e8e-e2c0-40b0-a8fe-7c7e47299109,B
-	ulkID:24012219255757WX6MZL,BulkQuantity:5,Recheck:0,SF:19|44|64|66|24|17|1
-	02,TC:nil,Content:0,EDM:-3,IP:-2,URL:0,File:nil,Bulk:40,QS:nil,BEC:nil,COL
-	:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI
-X-UUID: 3f2a04d7271c4a8bb35cbb34bf93eb72-20240123
-Received: from mail.kylinos.cn [(39.156.73.10)] by mailgw
-	(envelope-from <chentao@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 1568919713; Tue, 23 Jan 2024 16:00:44 +0800
-Received: from mail.kylinos.cn (localhost [127.0.0.1])
-	by mail.kylinos.cn (NSMail) with SMTP id 19C69E000EBA;
-	Tue, 23 Jan 2024 16:00:44 +0800 (CST)
-X-ns-mid: postfix-65AF722C-37049320
-Received: from [172.20.15.234] (unknown [172.20.15.234])
-	by mail.kylinos.cn (NSMail) with ESMTPA id CF4ADE000EBA;
-	Tue, 23 Jan 2024 16:00:38 +0800 (CST)
-Message-ID: <ea1a51bb-4e82-4df6-88b3-e080448eb4ab@kylinos.cn>
-Date: Tue, 23 Jan 2024 16:00:38 +0800
+	s=arc-20240116; t=1705997187; c=relaxed/simple;
+	bh=LZ+NZo7qdlXNCUJZcu2qtSXl9a+sOqKHa4APCYHWXZ4=;
+	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=EePeEo8EUuk8yo56LLNnW6Mx1k7/TtdHsd4KY9jbPPLZE27/n2pQQS+86JHYELRX3zsxw8PewPaYl958TZw6WmXfvhYhtGqfYWXp/8WQFZAtfvluSHw/KcT0noAM4e8luLG9O7FnP4wMTQ0Mzmk6TUH1eHxFJKjmj5BvxFy4ZjY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.17])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4TK0511RKzz1xmcD;
+	Tue, 23 Jan 2024 16:05:25 +0800 (CST)
+Received: from canpemm500002.china.huawei.com (unknown [7.192.104.244])
+	by mail.maildlp.com (Postfix) with ESMTPS id 34F981A0172;
+	Tue, 23 Jan 2024 16:06:16 +0800 (CST)
+Received: from [10.173.135.154] (10.173.135.154) by
+ canpemm500002.china.huawei.com (7.192.104.244) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 23 Jan 2024 16:06:09 +0800
+Subject: Re: [PATCH] mm/memory-failure: fix crash in split_huge_page_to_list
+ from soft_offline_page
+To: Matthew Wilcox <willy@infradead.org>
+CC: <naoya.horiguchi@nec.com>, <akpm@linux-foundation.org>,
+	<linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>
+References: <20240120065729.3276395-1-linmiaohe@huawei.com>
+ <Zax60-Qu14QFuDod@casper.infradead.org>
+ <aaff56ad-7bbe-8aa9-cd18-2ac9f4ea23f4@huawei.com>
+ <Za59h0ORxsj3t3GW@casper.infradead.org>
+From: Miaohe Lin <linmiaohe@huawei.com>
+Message-ID: <a9e02fcf-da11-1f0e-1e71-ce88a93d747b@huawei.com>
+Date: Tue, 23 Jan 2024 16:06:09 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dmaengine: Add a null pointer check to the
- dma_request_chan
-To: Vinod Koul <vkoul@kernel.org>
-Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240118033052.193282-1-chentao@kylinos.cn>
- <Za5QoCO_o0duPJ4J@matsya>
+In-Reply-To: <Za59h0ORxsj3t3GW@casper.infradead.org>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
-From: Kunwu Chan <chentao@kylinos.cn>
-In-Reply-To: <Za5QoCO_o0duPJ4J@matsya>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ canpemm500002.china.huawei.com (7.192.104.244)
 
-Thanks for your reply.
-
-On 2024/1/22 19:25, Vinod Koul wrote:
-> On 18-01-24, 11:30, Kunwu Chan wrote:
->> kasprintf() returns a pointer to dynamically allocated memory
->> which can be NULL upon failure. Ensure the allocation was successful
->> by checking the pointer validity.
+On 2024/1/22 22:36, Matthew Wilcox wrote:
+> On Mon, Jan 22, 2024 at 08:57:06PM +0800, Miaohe Lin wrote:
+>> On 2024/1/21 10:00, Matthew Wilcox wrote:
+>>> On Sat, Jan 20, 2024 at 02:57:29PM +0800, Miaohe Lin wrote:
+>>>>  {
+>>>> -	/* Soft offline could migrate non-LRU movable pages */
+>>>> -	if ((flags & MF_SOFT_OFFLINE) && __PageMovable(page))
+>>>> +	/*
+>>>> +	 * Soft offline could migrate non-LRU movable pages.
+>>>> +	 * Note that page->mapping is overloaded with slab->slab_list or slabs
+>>>> +	 * fields which might make slab pages appear like non-LRU movable pages.
+>>>> +	 * So __PageMovable() has to be done after PageSlab() is checked.
+>>>> +	 */
+>>>> +	if ((flags & MF_SOFT_OFFLINE) && !PageSlab(page) && __PageMovable(page))
+>>>>  		return true;
+>>>>  
+>>>>  	return PageLRU(page) || is_free_buddy_page(page);
+>>>
+>>> I think would make more sense as
+>>>
+>>> +	if (PageSlab(page))
+>>> +		return false;
 >>
->> Signed-off-by: Kunwu Chan <chentao@kylinos.cn>
->> ---
->>   drivers/dma/dmaengine.c | 2 ++
->>   1 file changed, 2 insertions(+)
+>> Do you mean add PageSlab check above "if ((flags & MF_SOFT_OFFLINE) && __PageMovable(page))" block
+>> so we don't need to add more comment?
+> 
+> Yes, although not just that we don't need to add a comment.
+> Fundamentally, if you see PageSlab, you don't need to test anything
+> else, you know it's not migratable.
+
+Yes, this really makes sense.
+
+> 
+>> I have a concern that __PageMovable() seems unreliable now if we access page from random context.
+>> This might introduce some potential problems. For example, offline_pages() might be stumped with
+>> such pages without any progress until signal occurs IIUC:
 >>
->> diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
->> index 491b22240221..a6f808d13aa4 100644
->> --- a/drivers/dma/dmaengine.c
->> +++ b/drivers/dma/dmaengine.c
->> @@ -856,6 +856,8 @@ struct dma_chan *dma_request_chan(struct device *d=
-ev, const char *name)
->>   #ifdef CONFIG_DEBUG_FS
->>   	chan->dbg_client_name =3D kasprintf(GFP_KERNEL, "%s:%s", dev_name(d=
-ev),
->>   					  name);
->> +	if (!chan->dbg_client_name)
->> +		return chan;
->=20
-> That is wrong, you cant return a half done channel here
-> Pls see rest of the code for reference
-I handle the error path like line 862 in 'dma_request_chan', though i=20
-think it's not so perfect. Why it just return chan in line 862 when in=20
-error? I would be very grateful if it could help me solve this puzzle
+>>   offline_pages
+>>     ..
+>>     do {
+>>       scan_movable_pages
+>>         if (__PageMovable(page)) -- It might be slab page here. ret will also be set to 0.
+>>           goto found;
+>>       do_migrate_range -- Failed to isolate slab page and retry.
+>>     } while (!ret) -- retry since ret is 0.
+>>
+>> There might be many similar scenes, but I haven't taken them more closely. Maybe these are
+>> just dumb problems...
+> 
+> Yep, lots of places are insufficiently careful about testing
+> PageMovable.  This will get fixed with memdescs, but we're a fair way
+> from having memdescs ...
 
-dma_request_chan find and return the ``name`` DMA channel associated=20
-with the 'dev' device. The association is done via DT, ACPI or board=20
-file based dma_slave_map matching table.
+I believe memdescs will fix all these mess, but we might need to fix them before memdescs becoming ready as a compromise.
 
-So when error occurs, just do the opposite, like in 'dma_release_channel'=
-.
+Thanks.
 
-look likes:
----
-
-         chan->dbg_client_name =3D kasprintf(GFP_KERNEL, "%s:%s",=20
-dev_name(dev),
-                                           name);
-+       if (!chan->dbg_client_name) {
-+               dma_cap_clear(DMA_SLAVE, chan->device->cap_mask);
-+               dma_cap_zero(chan->device->cap_mask);
-+               dma_chan_put(chan);
-+               chan->slave =3D NULL;
-+               chan =3D NULL;
-+               return chan;
-+       }
-
----
-It's that right by clear the cap and set chan to NULL=EF=BC=9F
-
-
->=20
->>   #endif
->>  =20
->>   	chan->name =3D kasprintf(GFP_KERNEL, "dma:%s", name);
->> --=20
->> 2.39.2
->=20
---=20
-Thanks,
-   Kunwu
+> 
+> .
+> 
 
