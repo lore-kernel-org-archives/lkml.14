@@ -1,58 +1,38 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBD7F55E5F
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 07:42:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BC1C55E62;
+	Tue, 23 Jan 2024 07:42:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705995750; cv=none; b=jlkW95wTQo3rgTfSOep0Ji+4eenpIyRe4pazLULUNbcHosjT+wnqrtDUasRL0xqTSE2OnzG6Z6/J/PaOsdg9HCfQw5RvbWXeVyHlaErA+/31J4V6DApMaKTRL2DUUfSD1OvbAaYsxrCEQVA7q+WskZzLeZ6VVO5bI3b9pN19bTc=
+	t=1705995750; cv=none; b=KTgD2ySqdUUIesFqha8pfC+ymSxMVGz9tZDLsAa9Vac//nVW6EmOC+xfo0rvua06sBvhzbvQm0iy3AYWP15Wdo02FNX51+bhHVr9O61wBDQwWnKpS3+6FXyPKG6I6K/wot/sR8YrcTepyhVEihS8XViDN+q7seqlBVWj8KKrzPU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1705995750; c=relaxed/simple;
-	bh=JWKLpEnUqbZPxWxBgUXtsoZIxn9SZGbGJYV7gU8Siew=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=RQM5qNGYWFKdbeWZTdT8XKwqGK7Co13DjUiiKFycwkOLfP919VCq8KnNKttDtgMBSTS8ycSu6bjncEbdnXBRtzpngKeGWCorXjl5xC2TP2MMKn3s6l6D3AFlBo2NOWYwFEvhdY82bnlNB9RTWa9vebG7MWNz+hJR+nrhPQfm3Hw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=fkCZcliv; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	bh=/Ky7Ep269Hk21quP39msGOAez4BJHg26ia+TzLNBuVE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PTx7h26ey4vR6+EQa5/1radHbB4i107t4Fu4Z5j+aut9GVUi9nHPNjdsar7TjYeHymvWJcraiy1fPTzkRjMDik+VbxDUNAZ4kTznnubfBJIRyQFWcbQgNJJ9KjRvJJ/ucUG1p2/E9Z+h0uAI7h9Sf9ezqKjEmxtyvKFeV+X51E8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=FW1lyyvm; arc=none smtp.client-ip=212.227.15.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="fkCZcliv"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1d76943baafso6715355ad.2
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 23:42:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1705995747; x=1706600547; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:references:cc:to:from
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=BK2huOGh+t33JPuoLKMJUqKIMCs44dBRDK1GJoZeQVw=;
-        b=fkCZclivyEH5xMZDSd+9Qg02T8bqubD8E9GJXOZt1nh8CFcOxVQKubwjjfaa17X54X
-         UgS4FImmiYBKc3SF+j/67uLczz2/R2SJGa9X2+oWJvwzNRhEFZwzZXLVGJc5d3nXosxT
-         iItA//pPkV9sVdOu24pfSrxXsZ79+tJasIjiuVX3Q01zKDkGHyQ8JYuSKpLIpZg+YLQj
-         JEjlNtPUJR/KetxGFn0cTnsUzztmwml0bEi2VIOLFxBf2dRryIZmRDmiVVehYDWEjAkn
-         ENOiVpRJ/wxXJoIroq5UFMFBWWq5ZvP4ZxLuSgNVmzhmL5jSSRV0ascKmUq90BjBJEyi
-         SQfw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705995747; x=1706600547;
-        h=content-transfer-encoding:in-reply-to:references:cc:to:from
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=BK2huOGh+t33JPuoLKMJUqKIMCs44dBRDK1GJoZeQVw=;
-        b=sWItOtzRf9euNALs5pdroSozq6nt9dH3JYgSUVNM8RkZyqqETW24Mg3jaUyK0YJ6K7
-         6dADKhghY0cNRayMLqB0uMyFURrKrEy0AbKPBx+sQH+lsWzOaoWv5cFQ789rLBjaprUd
-         +3CgDDDckNErTtclLwLedXrxapd5jQVj9pViaKGTBjrT6Qb8zShScg8QYraw7/oR8tgA
-         wdnoBFmv0bTQ5lpM4Sq4EaLKSmTcja1izTkk2FIzds9/3kZoFboPJnjtgUmxTxZQ4BNI
-         m5Nbqb9Ao7xUIYLfu15SUEpMyvjtfRiFEPbgxTl9E/0RQU+bqdV4UA6yw+a71eCJhBri
-         f6YA==
-X-Gm-Message-State: AOJu0YzGDtqm8Mk3Ufd2gU7+LakCo746RjUhFUtnmNxSTeTHcqUujqEK
-	O+iGXeOivZioOLiZs409FKeAdDv7vHZsExP7wZYeYwCklIaK2/Xtt1EJUjTFOM4=
-X-Google-Smtp-Source: AGHT+IHxb4Zz1UaqZF9UTqtvSFYoUuEyJgTb83dg9wT/SQjaDQYa4BnE+Ec98fgQ1hXH8yfou4pE4w==
-X-Received: by 2002:a17:903:22c9:b0:1d6:f139:cc20 with SMTP id y9-20020a17090322c900b001d6f139cc20mr3893200plg.32.1705995747019;
-        Mon, 22 Jan 2024 23:42:27 -0800 (PST)
-Received: from [10.254.236.83] ([139.177.225.255])
-        by smtp.gmail.com with ESMTPSA id h16-20020a170902ac9000b001d76ac29241sm883624plr.59.2024.01.22.23.42.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 22 Jan 2024 23:42:26 -0800 (PST)
-Message-ID: <78e8ea43-9d22-46ab-82c2-c6883d545772@bytedance.com>
-Date: Tue, 23 Jan 2024 15:42:20 +0800
+	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="FW1lyyvm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+	s=s31663417; t=1705995723; x=1706600523; i=wahrenst@gmx.net;
+	bh=/Ky7Ep269Hk21quP39msGOAez4BJHg26ia+TzLNBuVE=;
+	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
+	 In-Reply-To;
+	b=FW1lyyvmSOepgMolaBYLicMCTguuIV7FHQ+LhniGDOW187gxp9dMLpOPROkedCza
+	 lJkT59Vn1h5Nbyae+zG/akFvTm+Rw3WootVkff8zW67FgyssSMAzLApmblBb8afgc
+	 XzpZnjyE9REJosBzSAIDzOGYZEUcD3pUiCKZqCpSP69+ZmCjzV6CI/fNLTOlpQq3n
+	 5ELOOoPP/4LKHs+Is8H31ynLGDf7+p0L/losu6GBefrUQis8GTFreIfduPjIT02Zx
+	 rPy0srsGec2r2oIgzVNV+L45+uDlMfbt0Lm1zeN9kVpbJ29nlJY4NGf5NupexgxJe
+	 dPbVTAnP+brZVPZq7g==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.1.167] ([37.4.248.43]) by mail.gmx.net (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1Mq2nA-1qo9qj1QYM-00n83a; Tue, 23
+ Jan 2024 08:42:03 +0100
+Message-ID: <85fe8c8b-ea08-4f24-9a06-33a5678c1a0a@gmx.net>
+Date: Tue, 23 Jan 2024 08:42:01 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,119 +40,167 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] mm/slub: directly load freelist from cpu partial slab
- in the likely case
+Subject: Re: [PATCH v4 3/3] arm64: dts: imx93: Add phyBOARD-Segin-i.MX93
+ support
+To: Wadim Egorov <w.egorov@phytec.de>, Mathieu Othacehe <othacehe@gnu.org>,
+ Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+ Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>,
+ Li Yang <leoyang.li@nxp.com>, Primoz Fiser <primoz.fiser@norik.com>,
+ Christoph Stoidner <c.stoidner@phytec.de>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org
+References: <20240122095306.14084-1-othacehe@gnu.org>
+ <20240122095306.14084-4-othacehe@gnu.org>
+ <537266fe-0bf7-4208-a9f3-ae27f462c6ed@phytec.de>
 Content-Language: en-US
-From: Chengming Zhou <zhouchengming@bytedance.com>
-To: Vlastimil Babka <vbabka@suse.cz>,
- "Christoph Lameter (Ampere)" <cl@linux.com>
-Cc: Hyeonggon Yoo <42.hyeyoo@gmail.com>, Joonsoo Kim
- <iamjoonsoo.kim@lge.com>, Pekka Enberg <penberg@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>,
- Roman Gushchin <roman.gushchin@linux.dev>,
- David Rientjes <rientjes@google.com>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org
-References: <20240117-slab-misc-v1-0-fd1c49ccbe70@bytedance.com>
- <20240117-slab-misc-v1-1-fd1c49ccbe70@bytedance.com>
- <76641777-1918-2b29-b6aa-bda9b5467aa3@gentwo.org>
- <412b8618-0941-4d9d-85df-ee480695e7f7@bytedance.com>
- <a2132c63-99a5-7fa2-9f2a-cccf6b40fe9e@linux.com>
- <e81d914b-8718-4dbb-a2d8-d5298fe66d1a@bytedance.com>
- <ac0ce290-58a7-42b2-a7e4-72e241717c63@suse.cz>
- <36964450-f45a-4f35-a187-dc493246ef59@bytedance.com>
-In-Reply-To: <36964450-f45a-4f35-a187-dc493246ef59@bytedance.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: Stefan Wahren <wahrenst@gmx.net>
+In-Reply-To: <537266fe-0bf7-4208-a9f3-ae27f462c6ed@phytec.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:TBhRzAvEq7kXjopTV3OOvjTGvLbk/dHvnj3MvPABnqEaH5koOvG
+ NJKJDZLgFxCWXRs4kvR7O+cNqp0riBhKqekdQXX7FOZ8huvQb6yNqsKalAbs951W9vmBkVY
+ 9ENhKlm9aBU/bl/BBGruwABcGFfCdBSRFu+xIiH54M/W8R2Mdi3DPcEhaat6zvEFSjn9xZZ
+ 1wIcBExd5XNMYF78XkVlw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:aBQQa9GZRyo=;ChimGMRT8O6EtacR23H1rRswAMA
+ C2gu7Do5TC+f4NUdJuKTRXRwNgIzvJij/E8s3fH2HLA89tfqehFQc4uzKW8g+3+ehIHFCG3a3
+ 3X63TyEY7LIY6sRx1zgKyVNgq/VIHhxOeINHraWwIEPO5hL9C8fPRaKVG2qnmUDQa/Wo0oseB
+ 92od87/PFlQAS2f/IAMWWfAmQPDl68G/LWOxfJqiCvoWq/gREtXFnoFtn8fv4HqvbQZSdLe+W
+ /f0a/t7vy5x7WaLbuxM6Lh1raoFMpXytO6b8rfZO9m939czIKS/d50lV8NjLdgpuGQuWYK96c
+ xFNhG8lTIBgVm3c8jCCg1zB+RtFRjQ5WXPUe7hZm6+JZswOgblRTVH0kM7y11l8wokFm0S7k6
+ jyU9bVEIGoSlrTWM4uF3yJoPhCMQPG1hFcIQAc9iXL6XmR9J+Yri/5z6UeFSxBs/t6N9q9QFG
+ Sohui3bRzTSpGF6p7WX4s77OxaFD+P+/U2DqchIGfQd69V7DS5ZrWs3MeN1AUHjuGE8cH9pcQ
+ LWqLwhBMCRO7HO/5xXLqQ4EVcnCW3PMt/Q2SRCfsv80NZ+iOy6DfV/vYvu9xdaDY7Z8LqT7ky
+ H34Uo2av8laT3XsVIf6Rbj0MVGkofXR7MlUVcsWFKSJ+Iu2j0/a18CHBDzAL9A/7EGPNOfelO
+ SE7GvBr1K/HoUiTwibwcqx4nCqs1lDQIbj3vmkNPtFDw51/LeQOVK1+rM/lwi3YhCYKbd0nfP
+ 6K6hjJlWUDIvBfVCkg1CaWyOQiXoXMsGQ6lmwRWi40apsrx46jSdcyOr0I7mDSq81Cdbu38bP
+ KtFKKQomWSDpvmAsx3JNXudZQETgyZYulkXrnyY/7xEzYW2S47ydEs9INFpJZFGBtl+wGj0k8
+ ih0DuoM41wF4JpxH0VnCiEA2CJXfpNe+Ht8w8mtXXUruKopU7efzGeRjBUgEwlVplN1iKNaT0
+ 3iqR+VZeZeW+soP6NN7XtEo4LNo=
 
-On 2024/1/23 10:51, Chengming Zhou wrote:
-> On 2024/1/23 01:13, Vlastimil Babka wrote:
->> On 1/19/24 04:53, Chengming Zhou wrote:
->>> On 2024/1/19 06:14, Christoph Lameter (Ampere) wrote:
->>>> On Thu, 18 Jan 2024, Chengming Zhou wrote:
->>>>
->>>>> So get_freelist() has two cases to handle: cpu slab and cpu partial list slab.
->>>>> The latter is NOT frozen, so need to remove "VM_BUG_ON(!new.frozen)" from it.
->>>>
->>>> Right so keep the check if it is the former?
->>>>
->>>
->>> Ok, I get it. Maybe like this:
+Hi Wadim,
+
+Am 23.01.24 um 07:11 schrieb Wadim Egorov:
+> Hey Mathieu,
+>
+> Am 22.01.24 um 10:53 schrieb Mathieu Othacehe:
+>> Add basic support for phyBOARD-Segin-i.MX93.
+>> Main features are:
+>> * eMMC
+>> * Ethernet
+>> * SD-Card
+>> * UART
 >>
->> I think that's just too ugly for a VM_BUG_ON(). I'd just remove the check
->> and be done with that.
-> 
-> Ok with me.
-> 
+>> Signed-off-by: Mathieu Othacehe <othacehe@gnu.org>
+>> ---
+>> =C2=A0 arch/arm64/boot/dts/freescale/Makefile=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0 1 +
+>> =C2=A0 .../dts/freescale/imx93-phyboard-segin.dts=C2=A0=C2=A0=C2=A0 | 1=
+41 ++++++++++++++++++
+>> =C2=A0 .../boot/dts/freescale/imx93-phycore-som.dtsi | 127 ++++++++++++=
+++++
+>> =C2=A0 3 files changed, 269 insertions(+)
+>> =C2=A0 create mode 100644
+>> arch/arm64/boot/dts/freescale/imx93-phyboard-segin.dts
+>> =C2=A0 create mode 100644
+>> arch/arm64/boot/dts/freescale/imx93-phycore-som.dtsi
 >>
->> I have a somewhat different point. You reused get_freelist() but in fact
->> it's more like freeze_slab(), but that one uses slab_update_freelist() and
->> we are under the local_lock so we want the cheaper __slab_update_freelist(),
->> which get_freelist() has and I guess that's why you reused that one.
-> 
-> Right, we already have the lock_lock, so reuse get_freelist().
-> 
->>
->> However get_freelist() also assumes it can return NULL if the freelist is
->> empty. If that's possible to happen on the percpu partial list, we should
->> not "goto load_freelist;" but rather create a new label above that, above
->> the "if (!freelist) {" block that handles the case.
->>
->> If that's not possible to happen (needs careful audit) and we have guarantee
-> 
-> Yes, it's not possible for now.
-> 
->> that slabs on percpu partial list must have non-empty freelist, then we
->> probably instead want a new __freeze_slab() variant that is like
->> freeze_slab(), but uses __slab_update_freelist() and probably also has
->> VM_BUG_ON(!freelist) before returning it?
->>
-> 
-> Instead of introducing another new function, how about still reusing get_freelist()
-> and VM_BUG_ON(!freelist) after calling it? I feel this is simpler.
-> 
-> Thanks!
+>> diff --git a/arch/arm64/boot/dts/freescale/Makefile
+>> b/arch/arm64/boot/dts/freescale/Makefile
+>> index 2e027675d7bb..65db918c821c 100644
+>> --- a/arch/arm64/boot/dts/freescale/Makefile
+>> +++ b/arch/arm64/boot/dts/freescale/Makefile
+>> @@ -201,6 +201,7 @@ dtb-$(CONFIG_ARCH_MXC) +=3D
+>> imx8qxp-colibri-iris-v2.dtb
+>> =C2=A0 dtb-$(CONFIG_ARCH_MXC) +=3D imx8qxp-mek.dtb
+>> =C2=A0 dtb-$(CONFIG_ARCH_MXC) +=3D imx8ulp-evk.dtb
+>> =C2=A0 dtb-$(CONFIG_ARCH_MXC) +=3D imx93-11x11-evk.dtb
+>> +dtb-$(CONFIG_ARCH_MXC) +=3D imx93-phyboard-segin.dtb
+>> =C2=A0 dtb-$(CONFIG_ARCH_MXC) +=3D imx93-tqma9352-mba93xxca.dtb
+>> =C2=A0 dtb-$(CONFIG_ARCH_MXC) +=3D imx93-tqma9352-mba93xxla.dtb
+>> =C2=A0 diff --git a/arch/arm64/boot/dts/freescale/imx93-phyboard-segin.=
+dts
+>> b/arch/arm64/boot/dts/freescale/imx93-phyboard-segin.dts
+>> new file mode 100644
+>> index 000000000000..5433c33d1322
+>> --- /dev/null
+>> +++ b/arch/arm64/boot/dts/freescale/imx93-phyboard-segin.dts
+>> @@ -0,0 +1,141 @@
+>> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+>> +/*
+>> + * Copyright (C) 2023 PHYTEC Messtechnik GmbH
+>> + * Author: Wadim Egorov <w.egorov@phytec.de>, Christoph Stoidner
+>> <c.stoidner@phytec.de>
+>> + * Copyright (C) 2024 Mathieu Othacehe <m.othacehe@gmail.com>
+>> + *
+>> + * Product homepage:
+>> + * phyBOARD-Segin carrier board is reused for the i.MX93 design.
+>> + *
+>> https://www.phytec.de/produkte/single-board-computer/phyboard-segin-imx=
+6ul/
+>> + */
+>> +
+>> +#include "imx93-phycore-som.dtsi"
+>> +
+>> +/{
+>> +=C2=A0=C2=A0=C2=A0 model =3D "PHYTEC phyBOARD-Segin-i.MX93";
+>> +=C2=A0=C2=A0=C2=A0 compatible =3D "phytec,imx93-phyboard-segin",
+>> "phytec,imx93-phycore-som",
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 "fsl,imx93";
+>> +
+>> +=C2=A0=C2=A0=C2=A0 chosen {
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 stdout-path =3D &lpuart1;
+>> +=C2=A0=C2=A0=C2=A0 };
+>> +
+>> +=C2=A0=C2=A0=C2=A0 reg_usdhc2_vmmc: regulator-usdhc2 {
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 compatible =3D "regulator-f=
+ixed";
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 enable-active-high;
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 gpio =3D <&gpio3 7 GPIO_ACT=
+IVE_HIGH>;
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pinctrl-names =3D "default"=
+;
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pinctrl-0 =3D <&pinctrl_reg=
+_usdhc2_vmmc>;
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 regulator-min-microvolt =3D=
+ <3300000>;
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 regulator-max-microvolt =3D=
+ <3300000>;
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 regulator-name =3D "VCC_SD"=
+;
+>> +=C2=A0=C2=A0=C2=A0 };
+>> +};
+>> +
+>> +/* GPIOs */
+>> +&gpio1 {
+>> +=C2=A0=C2=A0=C2=A0 pinctrl-names =3D "default";
+>> +=C2=A0=C2=A0=C2=A0 pinctrl-0 =3D <&pinctrl_gpio1>;
+>
+> You are doing more than you describing in your changes log.
+> Here you are forcing a gpio-only functionality for the X16 header. But
+> the pins we route down to the X16 expansion connector can be also used
+> differently.
 
-Does this look fine?
+i think the word "forcing" is little bit hard in this case. It doesn't
+define a gpio-hog.
 
-diff --git a/mm/slub.c b/mm/slub.c
-index 2ef88bbf56a3..fda402b2d649 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -3326,7 +3326,6 @@ static inline void *get_freelist(struct kmem_cache *s, struct slab *slab)
-                counters = slab->counters;
+> Typically we provide device tree overlays for different use cases on
+> this expansion connectors.
 
-                new.counters = counters;
--               VM_BUG_ON(!new.frozen);
+Can you please explain why the device tree overlays cannot overwrite the
+pinmuxing?
 
-                new.inuse = slab->objects;
-                new.frozen = freelist != NULL;
-@@ -3498,18 +3497,20 @@ static void *___slab_alloc(struct kmem_cache *s, gfp_t gfpflags, int node,
+>
+> Please drop the muxing.
+>
+> Same applies for the gpio names.
+What's the problem with defining gpio line names for user friendliness?
+The Raspberry Pi has also an expansion header, all the pins can be muxed
+to different functions but still have gpio line names.
 
-                slab = slub_percpu_partial(c);
-                slub_set_percpu_partial(c, slab);
--               local_unlock_irqrestore(&s->cpu_slab->lock, flags);
--               stat(s, CPU_PARTIAL_ALLOC);
-
--               if (unlikely(!node_match(slab, node) ||
--                            !pfmemalloc_match(slab, gfpflags))) {
--                       slab->next = NULL;
--                       __put_partials(s, slab);
--                       continue;
-+               if (likely(node_match(slab, node) &&
-+                          pfmemalloc_match(slab, gfpflags))) {
-+                       c->slab = slab;
-+                       freelist = get_freelist(s, slab);
-+                       VM_BUG_ON(!freelist);
-+                       stat(s, CPU_PARTIAL_ALLOC);
-+                       goto load_freelist;
-                }
-
--               freelist = freeze_slab(s, slab);
--               goto retry_load_slab;
-+               local_unlock_irqrestore(&s->cpu_slab->lock, flags);
-+
-+               slab->next = NULL;
-+               __put_partials(s, slab);
-        }
- #endif
-
+Best regards
