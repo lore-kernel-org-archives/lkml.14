@@ -1,44 +1,44 @@
 Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9072E14E2CF;
-	Tue, 23 Jan 2024 00:22:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E05D6151CC1;
+	Tue, 23 Jan 2024 00:22:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.134.136.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705969368; cv=none; b=pYaRKxyYE+XUjJ06ARitPwf4flTqFD4UOR7pwwBQQ8ALSEmLzuKilv3Wx7ktjDNoABtW54EWwsbQMdHK3Rx/QanApptRQaz0beEx8v98oM+q8/aBWug6r4Cqqx7F54ujI66P/cHq1urCx1KCPCBvTjxi7shzSUWHYMD6mWUAqv0=
+	t=1705969368; cv=none; b=NuPPFlW66iz3GnhbPS1No8PPOdKErALsLNrUyrvFlbYhLXyO96xCrPV7m3ZC/75+rGa2yz1kCuunOqphSer+GB0nnnxlMkapVXasK0yGRXaqN7a6lvQH+q1ejnnC06qrSnLftZMFDvKKB14LhecA05SAXB2wxFRwJ3ncn3KRgZU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1705969368; c=relaxed/simple;
-	bh=anTVTNUztn2JGpPeY0WJZiZzHDCKn+UgMrVUKZCXJiY=;
+	bh=UuGG+E/cBBOlFOuGRHBHh8cTWAmu4YzcsHsZq3wM5To=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=pvbfWwmixfNAJZpAl/u/wYsSZw9fiMf6moUdYwGnrISzyYRfxfHADgzQc69awjGeH9JyBUzRc/iZdtxKOD1Z9wcnHjc38XxJEKegYmFUrOhU86JPVIBxolwfYIwcGUdSZaD95Q1hEZ5ecCKk/TuVBEefzTfR55fywj/s3YBKQq4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=K6mCCVX0; arc=none smtp.client-ip=134.134.136.65
+	 MIME-Version; b=P6xNJ9aQ3b+X2/PzRF9YPEILIvEF+CmJcYUkVu9XtTtxK72btusYb4JhONfSpqDS+0dnwZeGsoGiHyD+iALcn30XjkL2lmlLGAwgICwiwjM7eaoTv0bUPcS0BFYhxKZfMlW65eg+t40nLon0WmNFqRlc9ZShzrHTOOfCeLO1P3Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SL/GUP1G; arc=none smtp.client-ip=134.134.136.65
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K6mCCVX0"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SL/GUP1G"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1705969361; x=1737505361;
+  t=1705969366; x=1737505366;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=anTVTNUztn2JGpPeY0WJZiZzHDCKn+UgMrVUKZCXJiY=;
-  b=K6mCCVX0Lu9qNP9SUzPl92iaDHZKsthce1L9m30oZzHbGeRmiakmXEsE
-   v8Unt1gfFkJVra4FYFRfH+TXll92F9re0X5K0rhPNEN6mwSzP2XT9/2wJ
-   Wu7UXbbqSUg1ikTQsLffcWeQhrrYE4QQvLd6KAXWn1vP7IxRJnWRnkvpC
-   21PX+/cwuGTcBt66GHuIKVuZwSTPOgs6wc2ZoiPLkuNqVEqsefYRnSpyY
-   Ln5hLAdqX1J4TgsOLHBRJyBxgV+6Z3TqGk9xZjnS6eDaMItghlMWKjxcL
-   IVQQQEe0oZLZJDVKiECsocC+MIESO7NsgT4WmnFAZivsSt04Y+PtAiDRb
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10961"; a="405125670"
+  bh=UuGG+E/cBBOlFOuGRHBHh8cTWAmu4YzcsHsZq3wM5To=;
+  b=SL/GUP1GSV7XaATdgiHxZfWn8tqh9uhVcLWXG3gk2iDsIwzf+FVMsi5k
+   DJzCYMwto4YW4kUN2CmvN7MHDVYTNGB/pxZ/9HvRGHezskZGNBbg11cWv
+   wd+wW09JWyGSRyOIoS7km0K5lBgZSCUWGUE352pUBgSxwWodE4t5KlwVp
+   LdDwWfVQOwO7lADbh383EmRjPqm6fltlLmuansJGzL54rtsSGaVzWcYtO
+   A+mPA1MWtMvQ9SSz1WrdgfS4sV2uOOFzdhWLbmIwEkZSwTSYd+qrWtF+C
+   O//ey1PDB4kO5RKPcwc2L6/EAToUPiK1tcBSsyB5GOGAFIUGEMPgJZXoS
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10961"; a="405125703"
 X-IronPort-AV: E=Sophos;i="6.05,212,1701158400"; 
-   d="scan'208";a="405125670"
+   d="scan'208";a="405125703"
 Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 16:22:39 -0800
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 16:22:41 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.05,212,1701158400"; 
-   d="scan'208";a="27825647"
+   d="scan'208";a="27825668"
 Received: from ls.sc.intel.com (HELO localhost) ([172.25.112.31])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 16:22:39 -0800
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 16:22:41 -0800
 From: isaku.yamahata@intel.com
 To: kvm@vger.kernel.org,
 	linux-kernel@vger.kernel.org
@@ -51,11 +51,10 @@ Cc: isaku.yamahata@intel.com,
 	Kai Huang <kai.huang@intel.com>,
 	chen.bo@intel.com,
 	hang.yuan@intel.com,
-	tina.zhang@intel.com,
-	Xiaoyao Li <xiaoyao.li@intel.com>
-Subject: [PATCH v7 06/13] KVM: TDX: Pass desired page level in err code for page fault handler
-Date: Mon, 22 Jan 2024 16:22:21 -0800
-Message-Id: <d1bf6ba80d7dbe259316633bd8382c183438ec81.1705965958.git.isaku.yamahata@intel.com>
+	tina.zhang@intel.com
+Subject: [PATCH v7 12/13] KVM: x86/mmu: Make kvm fault handler aware of large page of private memslot
+Date: Mon, 22 Jan 2024 16:22:27 -0800
+Message-Id: <9b2b24606fc5c80402c8565e2213dec3b6a20cc7.1705965958.git.isaku.yamahata@intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1705965958.git.isaku.yamahata@intel.com>
 References: <cover.1705965958.git.isaku.yamahata@intel.com>
@@ -67,156 +66,170 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Xiaoyao Li <xiaoyao.li@intel.com>
+From: Isaku Yamahata <isaku.yamahata@intel.com>
 
-For TDX, EPT violation can happen when TDG.MEM.PAGE.ACCEPT.
-And TDG.MEM.PAGE.ACCEPT contains the desired accept page level of TD guest.
+struct kvm_page_fault.req_level is the page level which takes care of the
+faulted-in page size.  For now its calculation is only for the conventional
+kvm memslot by host_pfn_mapping_level() that traverses page table.
 
-1. KVM can map it with 4KB page while TD guest wants to accept 2MB page.
+However, host_pfn_mapping_level() cannot be used for private kvm memslot
+because private pages of private kvm memlost aren't mapped into user
+virtual address space.  Instead, page order is given when getting pfn.
+Remember it in struct kvm_page_fault and use it.
 
-  TD geust will get TDX_PAGE_SIZE_MISMATCH and it should try to accept
-  4KB size.
-
-2. KVM can map it with 2MB page while TD guest wants to accept 4KB page.
-
-  KVM needs to honor it because
-  a) there is no way to tell guest KVM maps it as 2MB size. And
-  b) guest accepts it in 4KB size since guest knows some other 4KB page
-     in the same 2MB range will be used as shared page.
-
-For case 2, it need to pass desired page level to MMU's
-page_fault_handler. Use bit 29:31 of kvm PF error code for this purpose.
-
-Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
+Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
 ---
- arch/x86/kvm/vmx/common.h   |  6 +++++-
- arch/x86/kvm/vmx/tdx.c      | 22 ++++++++++++++++++++--
- arch/x86/kvm/vmx/tdx_arch.h | 19 +++++++++++++++++++
- arch/x86/kvm/vmx/vmx.c      |  2 +-
- 4 files changed, 45 insertions(+), 4 deletions(-)
+ arch/x86/kvm/mmu/mmu.c          | 34 +++++++++++++++++----------------
+ arch/x86/kvm/mmu/mmu_internal.h | 12 +++++++++++-
+ arch/x86/kvm/mmu/tdp_mmu.c      |  2 +-
+ 3 files changed, 30 insertions(+), 18 deletions(-)
 
-diff --git a/arch/x86/kvm/vmx/common.h b/arch/x86/kvm/vmx/common.h
-index 027aa4175d2c..787f59c44abc 100644
---- a/arch/x86/kvm/vmx/common.h
-+++ b/arch/x86/kvm/vmx/common.h
-@@ -67,7 +67,8 @@ static inline void vmx_handle_external_interrupt_irqoff(struct kvm_vcpu *vcpu,
- }
+diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+index a9e7a3d2d362..c7c816c969a9 100644
+--- a/arch/x86/kvm/mmu/mmu.c
++++ b/arch/x86/kvm/mmu/mmu.c
+@@ -3154,10 +3154,10 @@ static int host_pfn_mapping_level(struct kvm *kvm, gfn_t gfn,
  
- static inline int __vmx_handle_ept_violation(struct kvm_vcpu *vcpu, gpa_t gpa,
--					     unsigned long exit_qualification)
-+					     unsigned long exit_qualification,
-+					     int err_page_level)
+ static int __kvm_mmu_max_mapping_level(struct kvm *kvm,
+ 				       const struct kvm_memory_slot *slot,
+-				       gfn_t gfn, int max_level, bool is_private)
++				       gfn_t gfn, int max_level, int host_level,
++				       bool is_private)
  {
- 	u64 error_code;
+ 	struct kvm_lpage_info *linfo;
+-	int host_level;
  
-@@ -90,6 +91,9 @@ static inline int __vmx_handle_ept_violation(struct kvm_vcpu *vcpu, gpa_t gpa,
- 	if (kvm_is_private_gpa(vcpu->kvm, gpa))
- 		error_code |= PFERR_GUEST_ENC_MASK;
- 
-+	if (err_page_level > PG_LEVEL_NONE)
-+		error_code |= (err_page_level << PFERR_LEVEL_START_BIT) & PFERR_LEVEL_MASK;
-+
- 	return kvm_mmu_page_fault(vcpu, gpa, error_code, NULL, 0);
- }
- 
-diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
-index e2a0d521f806..747152af0882 100644
---- a/arch/x86/kvm/vmx/tdx.c
-+++ b/arch/x86/kvm/vmx/tdx.c
-@@ -1858,7 +1858,20 @@ void tdx_deliver_interrupt(struct kvm_lapic *apic, int delivery_mode,
- 
- static int tdx_handle_ept_violation(struct kvm_vcpu *vcpu)
- {
-+	union tdx_ext_exit_qualification ext_exit_qual;
- 	unsigned long exit_qual;
-+	int err_page_level = 0;
-+
-+	ext_exit_qual.full = tdexit_ext_exit_qual(vcpu);
-+
-+	if (ext_exit_qual.type >= NUM_EXT_EXIT_QUAL) {
-+		pr_err("EPT violation at gpa 0x%lx, with invalid ext exit qualification type 0x%x\n",
-+			tdexit_gpa(vcpu), ext_exit_qual.type);
-+		kvm_vm_bugged(vcpu->kvm);
-+		return 0;
-+	} else if (ext_exit_qual.type == EXT_EXIT_QUAL_ACCEPT) {
-+		err_page_level = tdx_sept_level_to_pg_level(ext_exit_qual.req_sept_level);
-+	}
- 
- 	if (kvm_is_private_gpa(vcpu->kvm, tdexit_gpa(vcpu))) {
- 		/*
-@@ -1885,7 +1898,7 @@ static int tdx_handle_ept_violation(struct kvm_vcpu *vcpu)
+ 	max_level = min(max_level, max_huge_page_level);
+ 	for ( ; max_level > PG_LEVEL_4K; max_level--) {
+@@ -3166,24 +3166,23 @@ static int __kvm_mmu_max_mapping_level(struct kvm *kvm,
+ 			break;
  	}
  
- 	trace_kvm_page_fault(vcpu, tdexit_gpa(vcpu), exit_qual);
--	return __vmx_handle_ept_violation(vcpu, tdexit_gpa(vcpu), exit_qual);
-+	return __vmx_handle_ept_violation(vcpu, tdexit_gpa(vcpu), exit_qual, err_page_level);
+-	if (is_private)
+-		return max_level;
+-
+ 	if (max_level == PG_LEVEL_4K)
+ 		return PG_LEVEL_4K;
+ 
+-	host_level = host_pfn_mapping_level(kvm, gfn, slot);
++	if (!is_private) {
++		WARN_ON_ONCE(host_level != PG_LEVEL_NONE);
++		host_level = host_pfn_mapping_level(kvm, gfn, slot);
++	}
++	WARN_ON_ONCE(host_level == PG_LEVEL_NONE);
+ 	return min(host_level, max_level);
  }
  
- static int tdx_handle_ept_misconfig(struct kvm_vcpu *vcpu)
-@@ -2752,6 +2765,7 @@ static int tdx_init_mem_region(struct kvm *kvm, struct kvm_tdx_cmd *cmd)
- 	struct kvm_tdx_init_mem_region region;
- 	struct kvm_vcpu *vcpu;
- 	struct page *page;
-+	u64 error_code;
- 	int idx, ret = 0;
- 	bool added = false;
+ int kvm_mmu_max_mapping_level(struct kvm *kvm,
+ 			      const struct kvm_memory_slot *slot, gfn_t gfn,
+-			      int max_level)
++			      int max_level, bool faultin_private)
+ {
+-	bool is_private = kvm_slot_can_be_private(slot) &&
+-			  kvm_mem_is_private(kvm, gfn);
+-
+-	return __kvm_mmu_max_mapping_level(kvm, slot, gfn, max_level, is_private);
++	return __kvm_mmu_max_mapping_level(kvm, slot, gfn, max_level,
++					   PG_LEVEL_NONE, faultin_private);
+ }
  
-@@ -2809,7 +2823,11 @@ static int tdx_init_mem_region(struct kvm *kvm, struct kvm_tdx_cmd *cmd)
- 		kvm_tdx->source_pa = pfn_to_hpa(page_to_pfn(page)) |
- 				     (cmd->flags & KVM_TDX_MEASURE_MEMORY_REGION);
+ void kvm_mmu_hugepage_adjust(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault)
+@@ -3208,7 +3207,8 @@ void kvm_mmu_hugepage_adjust(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault
+ 	 */
+ 	fault->req_level = __kvm_mmu_max_mapping_level(vcpu->kvm, slot,
+ 						       fault->gfn, fault->max_level,
+-						       fault->is_private);
++						       fault->host_level,
++						       kvm_is_faultin_private(fault));
+ 	if (fault->req_level == PG_LEVEL_4K || fault->huge_page_disallowed)
+ 		return;
  
--		ret = kvm_mmu_map_tdp_page(vcpu, region.gpa, TDX_SEPT_PFERR,
-+		/* TODO: large page support. */
-+		error_code = TDX_SEPT_PFERR;
-+		error_code |= (PG_LEVEL_4K << PFERR_LEVEL_START_BIT) &
-+			PFERR_LEVEL_MASK;
-+		ret = kvm_mmu_map_tdp_page(vcpu, region.gpa, error_code,
- 					   PG_LEVEL_4K);
- 		put_page(page);
- 		if (ret)
-diff --git a/arch/x86/kvm/vmx/tdx_arch.h b/arch/x86/kvm/vmx/tdx_arch.h
-index 0207cce72b27..eb62b8804cb4 100644
---- a/arch/x86/kvm/vmx/tdx_arch.h
-+++ b/arch/x86/kvm/vmx/tdx_arch.h
-@@ -227,6 +227,25 @@ union tdx_sept_level_state {
- 	u64 raw;
+@@ -4332,6 +4332,7 @@ static int kvm_faultin_pfn_private(struct kvm_vcpu *vcpu,
+ 				   struct kvm_page_fault *fault)
+ {
+ 	int max_order, r;
++	u8 max_level;
+ 
+ 	if (!kvm_slot_can_be_private(fault->slot)) {
+ 		kvm_mmu_prepare_memory_fault_exit(vcpu, fault);
+@@ -4345,8 +4346,9 @@ static int kvm_faultin_pfn_private(struct kvm_vcpu *vcpu,
+ 		return r;
+ 	}
+ 
+-	fault->max_level = min(kvm_max_level_for_order(max_order),
+-			       fault->max_level);
++	max_level = kvm_max_level_for_order(max_order);
++	fault->host_level = max_level;
++	fault->max_level = min(max_level, fault->max_level);
+ 	fault->map_writable = !(fault->slot->flags & KVM_MEM_READONLY);
+ 
+ 	return RET_PF_CONTINUE;
+@@ -4396,7 +4398,7 @@ static int __kvm_faultin_pfn(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault
+ 		return -EFAULT;
+ 	}
+ 
+-	if (fault->is_private)
++	if (kvm_is_faultin_private(fault))
+ 		return kvm_faultin_pfn_private(vcpu, fault);
+ 
+ 	async = false;
+@@ -6805,7 +6807,7 @@ static bool kvm_mmu_zap_collapsible_spte(struct kvm *kvm,
+ 		 */
+ 		if (sp->role.direct &&
+ 		    sp->role.level < kvm_mmu_max_mapping_level(kvm, slot, sp->gfn,
+-							       PG_LEVEL_NUM)) {
++							       PG_LEVEL_NUM, false)) {
+ 			kvm_zap_one_rmap_spte(kvm, rmap_head, sptep);
+ 
+ 			if (kvm_available_flush_remote_tlbs_range())
+diff --git a/arch/x86/kvm/mmu/mmu_internal.h b/arch/x86/kvm/mmu/mmu_internal.h
+index cc0a95e554b5..1e6bf3875779 100644
+--- a/arch/x86/kvm/mmu/mmu_internal.h
++++ b/arch/x86/kvm/mmu/mmu_internal.h
+@@ -358,6 +358,9 @@ struct kvm_page_fault {
+ 	 * is changing its own translation in the guest page tables.
+ 	 */
+ 	bool write_fault_to_shadow_pgtable;
++
++	/* valid only for private memslot && private gfn */
++	enum pg_level host_level;
  };
  
-+union tdx_ext_exit_qualification {
-+	struct {
-+		u64 type		:  4;
-+		u64 reserved0		: 28;
-+		u64 req_sept_level	:  3;
-+		u64 err_sept_level	:  3;
-+		u64 err_sept_state	:  8;
-+		u64 err_sept_is_leaf	:  1;
-+		u64 reserved1		: 17;
-+	};
-+	u64 full;
-+};
-+
-+enum tdx_ext_exit_qualification_type {
-+	EXT_EXIT_QUAL_NONE = 0,
-+	EXT_EXIT_QUAL_ACCEPT = 1,
-+	NUM_EXT_EXIT_QUAL,
-+};
-+
- /*
-  * Global scope metadata field ID.
-  * See Table "Global Scope Metadata", TDX module 1.5 ABI spec.
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 79f031b2b727..695e4ad022d3 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -5752,7 +5752,7 @@ static int handle_ept_violation(struct kvm_vcpu *vcpu)
- 	if (unlikely(allow_smaller_maxphyaddr && !kvm_vcpu_is_legal_gpa(vcpu, gpa)))
- 		return kvm_emulate_instruction(vcpu, 0);
+ int kvm_tdp_page_fault(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault);
+@@ -452,7 +455,7 @@ static inline int kvm_mmu_do_page_fault(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
  
--	return __vmx_handle_ept_violation(vcpu, gpa, exit_qualification);
-+	return __vmx_handle_ept_violation(vcpu, gpa, exit_qualification, PG_LEVEL_NONE);
+ int kvm_mmu_max_mapping_level(struct kvm *kvm,
+ 			      const struct kvm_memory_slot *slot, gfn_t gfn,
+-			      int max_level);
++			      int max_level, bool faultin_private);
+ void kvm_mmu_hugepage_adjust(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault);
+ void disallowed_hugepage_adjust(struct kvm_page_fault *fault, u64 spte, int cur_level);
+ 
+@@ -470,4 +473,11 @@ static inline bool kvm_hugepage_test_mixed(struct kvm_memory_slot *slot, gfn_t g
  }
+ #endif
  
- static int handle_ept_misconfig(struct kvm_vcpu *vcpu)
++static inline bool kvm_is_faultin_private(const struct kvm_page_fault *fault)
++{
++	if (IS_ENABLED(CONFIG_KVM_GENERIC_PRIVATE_MEM))
++		return fault->is_private && kvm_slot_can_be_private(fault->slot);
++	return false;
++}
++
+ #endif /* __KVM_X86_MMU_INTERNAL_H */
+diff --git a/arch/x86/kvm/mmu/tdp_mmu.c b/arch/x86/kvm/mmu/tdp_mmu.c
+index bd9ec77e7933..42c8cf1abdf8 100644
+--- a/arch/x86/kvm/mmu/tdp_mmu.c
++++ b/arch/x86/kvm/mmu/tdp_mmu.c
+@@ -2183,7 +2183,7 @@ static void zap_collapsible_spte_range(struct kvm *kvm,
+ 			continue;
+ 
+ 		max_mapping_level = kvm_mmu_max_mapping_level(kvm, slot,
+-							      iter.gfn, PG_LEVEL_NUM);
++							      iter.gfn, PG_LEVEL_NUM, false);
+ 		if (max_mapping_level < iter.level)
+ 			continue;
+ 
 -- 
 2.25.1
 
