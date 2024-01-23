@@ -1,85 +1,187 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f43.google.com (mail-ot1-f43.google.com [209.85.210.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 631E91FBE;
-	Tue, 23 Jan 2024 02:51:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E25E2811
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 02:53:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705978291; cv=none; b=TDtkeqvEF3P0h3SrY3wQ4XoufE1v92mfMVXmOa58ybgqNkdJx97t45+ITNbFPiIS2L4la21Fr7l594q4C90UHca3V1SrElyQa2Qolrsh6DKrhYmEmm6KNDRWELoON6Nqa8xnsC6R3UpYQX/0UVaD0w9qYMupFFxvvAuprwt5X6o=
+	t=1705978413; cv=none; b=UuCNjRgotJ8+Z/1rC0nR0EDIJ9ACFmaEc3ldVlZ6IuCzikJDqowpFQjqDDkRF1V9Add6lz3WqcAyPWaWHMHsNMCm3+gV+YcYS/PDXjX9cS0LgG1j2FmySMkg2GvnJgvuW7v5hYkuYNNlS9pjqNXB1Pk8Cln78Ikuce2jpBP8Wyo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705978291; c=relaxed/simple;
-	bh=wCFAGCdjL92EtlxtfRHKDG0JhlIQGFfhuL4KcJbBF7s=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=iY1l22pP86MEfM1s4GbTE209ryTTSD16CLHmPsJcCI/Gq9tq0uI28txVCMLxtQhu+cUxKcRhxDFFXskNdWjyFNq/su7qLbfZ7/gJBChev/8UPx8kbdZuLtb6Jq71oOaENgLt40hE+8afoFN6CHrMAJM3wlU87GE29UKTAnzP+wI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KZpqN2Yw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1705978413; c=relaxed/simple;
+	bh=cC55pTITuXahQpx5YCMQPJ0anjw73aDUUrh4ymutob4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=k+nmor2gBQThKk9bTyGcgNbiTd0ZUxK0HGcXcGA3AybXXDutsof5IHU8vpb6Jnmvee+3LeoTBHlDB/gQcuprkl/rrwVvgBAE+7nBbhFdhRdO2bwcGG2MqGNUHO+xcuSeeUb+Av6uwl8J9UfuYeMpqOiBdCf27ONpND9/PZs65UQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZLRAbMT5; arc=none smtp.client-ip=209.85.210.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KZpqN2Yw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA0C8C43390;
-	Tue, 23 Jan 2024 02:51:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705978291;
-	bh=wCFAGCdjL92EtlxtfRHKDG0JhlIQGFfhuL4KcJbBF7s=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=KZpqN2YwaFhawn6OAzQ07gadVTQA7uH7DtXfJEgLrYrqobaOfXhUukReonuopvHEj
-	 EdyDuEvSoE29JvwcRnq7KvGeGhmVNu8idXygYTd3GFnhEnA3fN3fSbrpZixpnBoqoI
-	 AmWOqsZIunA7fj61+Y1cVW5GSaK+769XlLPthc1+GJXkn96hvG8Qv6fs/4BkYGdBQJ
-	 fD2Tstf84JVngzAZ4VpAl60/dChtoOjOWCRZi2rF9vTdQFWtppRJJNTVNn+Vq3zySY
-	 uwIFpkdBAXhZgWFLiSPR5gL3JM8LSZtQ/WPWsk0IU5GlMsf/LcQjwt3rvfTKoTsn9K
-	 JoLsS4VL5QWEw==
-Date: Mon, 22 Jan 2024 18:51:29 -0800
-From: Kees Cook <kees@kernel.org>
-To: Kent Overstreet <kent.overstreet@linux.dev>,
- Kees Cook <keescook@chromium.org>
-CC: linux-hardening@vger.kernel.org,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
- linux-kernel@vger.kernel.org
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_00/82=5D_overflow=3A_Refacto?= =?US-ASCII?Q?r_open-coded_arithmetic_wrap-around?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <337u2jcp3s2vrvotj4jppgpr7zas5fod6k3mhe263ghpux7s5x@knz6eibm2jis>
-References: <20240122235208.work.748-kees@kernel.org> <337u2jcp3s2vrvotj4jppgpr7zas5fod6k3mhe263ghpux7s5x@knz6eibm2jis>
-Message-ID: <4DE92BD2-50FE-4634-ACF3-E0CC735EDAEB@kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZLRAbMT5"
+Received: by mail-ot1-f43.google.com with SMTP id 46e09a7af769-6e0eed0427cso995927a34.0
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 18:53:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1705978411; x=1706583211; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=uOBCaJ52Y1g1wzfxl07PVL77XlQF0EwMm9afVAokmvY=;
+        b=ZLRAbMT5C0b/oyf12DbDmWL8GIWiRrfHIy9CGljNLL4r3aMR/LPRALk47yABSsHYhl
+         3yfeMP9sCJLnO/gBJ9bjeCCWXPB75hM31//j2ojGFQtAFbknwOiGp8P1mCEVSdH+qtRp
+         x6w59P8IO0WeNOx6tZ2NbanMPVVy7m92IvtrWv/UoFDG0UnBozdoC4o5smoY5WVzjLjC
+         +K1JAz30qzDN8QRJPfURTz5o2LUYRN3OumEHfPmcHb+LFdw0w0bN8CIojAIxW05STwPn
+         liM9EUn8WRrY8XNyXAzddhIKQPxhklSiRIaxf3aR96SCT5QtE7dD+ikgL0TabjaMCxNC
+         nFOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705978411; x=1706583211;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=uOBCaJ52Y1g1wzfxl07PVL77XlQF0EwMm9afVAokmvY=;
+        b=OOPWzjWdbXYDeybOQykCQwY5b2XAhYQm5GAPzzFubJM6Dozv+4OQPQY1lG8z13+FT8
+         4s/FrxO2KjHnfvv172IQrEZtWLdz/2AD8cDIrJmhdNBNmZP6BDRAWbZ7iTAd1rfqNdgN
+         rYm4bCHmbbdO/m1LvMt2g3KqmiXtSfhPVYlqOHYdsE+UHTjL0k/rSBWjd7s8gvE/BLAO
+         E0/0T7c2fFpJ3KHFf/HWI0bI7KmZiqAPEXBwto2CDc1nr8edE+FADYcAUqiv0NpzI3Zh
+         OB81PNCXsMDodtRn+Jb52l6/KfFUbi32Xqg6BIKaRxc/A3t6FkXOon/lsndCFW85ZTom
+         r0hQ==
+X-Gm-Message-State: AOJu0YzuLuTv+IS0HXbhsnAlmNLy4g4A09TSOsmO9NZroIg+zLdekr5G
+	ZZ2gtRWjiS8W5KsqkkThD0nemOCCwLfo9GevZJZkokq6YU5ht4q+ISQ6U2Wi2XWvm7oHfhbqljK
+	/3OSN42BZ6eWgTl/4YOHzGJEe/THIVAXwa26z
+X-Google-Smtp-Source: AGHT+IFXnuoWHsPt7MY3gRiy78pyvptCCA/Wzy2bbiGjmlKPmzoyWRp+/5K0w+QS+OWCk9JQTFxdNGfCk/E9iYZ3T2w=
+X-Received: by 2002:a05:6870:4624:b0:213:4043:aaf2 with SMTP id
+ z36-20020a056870462400b002134043aaf2mr810089oao.83.1705978410832; Mon, 22 Jan
+ 2024 18:53:30 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
+References: <20240117192534.1327608-1-dylanbhatch@google.com>
+ <20240119141501.GA23739@redhat.com> <20240119141529.GB23739@redhat.com>
+ <CADBMgpxC+BP-wfrM-wP1nbZOcRb0LbsmMDQ3LQ8hUKYsF3QECw@mail.gmail.com>
+ <20240120204552.c0708fd10fc8e2442c447049@linux-foundation.org> <20240121120754.GA2814@redhat.com>
+In-Reply-To: <20240121120754.GA2814@redhat.com>
+From: Dylan Hatch <dylanbhatch@google.com>
+Date: Mon, 22 Jan 2024 18:53:19 -0800
+Message-ID: <CADBMgpz7k=LhktfcJhSDBDWN0oLeQxPqhOVws3fq0LNpnfOSYg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] getrusage: use sig->stats_lock
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Kees Cook <keescook@chromium.org>, 
+	Frederic Weisbecker <frederic@kernel.org>, "Joel Fernandes (Google)" <joel@joelfernandes.org>, 
+	Ard Biesheuvel <ardb@kernel.org>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, 
+	"Eric W. Biederman" <ebiederm@xmission.com>, Vincent Whitchurch <vincent.whitchurch@axis.com>, 
+	Dmitry Vyukov <dvyukov@google.com>, Luis Chamberlain <mcgrof@kernel.org>, 
+	Mike Christie <michael.christie@oracle.com>, David Hildenbrand <david@redhat.com>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Stefan Roesch <shr@devkernel.io>, 
+	Joey Gouly <joey.gouly@arm.com>, Josh Triplett <josh@joshtriplett.org>, Helge Deller <deller@gmx.de>, 
+	Ondrej Mosnacek <omosnace@redhat.com>, Florent Revest <revest@chromium.org>, 
+	Miguel Ojeda <ojeda@kernel.org>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-
-
-On January 22, 2024 6:22:13 PM PST, Kent Overstreet <kent=2Eoverstreet@lin=
-ux=2Edev> wrote:
->On Mon, Jan 22, 2024 at 04:26:35PM -0800, Kees Cook wrote:
->> In our continuing effort to eliminate root causes of flaws in the kerne=
-l,
->> this series is the start to providing a way to have sensible coverage
->> for catching unexpected arithmetic wrap-around=2E
->>=20
->This all seems fine, but=2E=2E=2E Rust already has this at the type syste=
-m
->level=2E=2E=2E=2E
+On Sun, Jan 21, 2024 at 4:09=E2=80=AFAM Oleg Nesterov <oleg@redhat.com> wro=
+te:
 >
->I know you're not one of the people bringing bickering into the Rust
->threads, so I'm wondering if perhaps your secret plan is to annoy the
->die hard "I want everything to be fast with razor blades everywhere" C
->programmers enough to finally get onboard the "let's just switch to a
->language with less razor wire" train=2E
+> Dylan, do you have a better description? Can you share your repro?
 
-I don't want to annoy anyone, but yeah, in the process of getting rid of d=
-angerous stuff we do end up asking people to make changes they're not used =
-to=2E I hope to make it as easy as possible, though=2E
+That description seems accurate to me.
 
-I'm a big fan of Rust, but I know it's not going to happen over night; the=
-re is a LOT of C code in Linux=2E :) I look at making the kernel safer by r=
-emoving as many C foot-guns as possible=2E As we remove the ambiguities in =
-C that lead to vulnerabilities, we'll eventually meet halfway with the new =
-Rust code=2E
+> although I think that something simple like
+>
+>         #define NT BIG_NUMBER
+>
+>         pthread_barrier_t barr;
+>
+>         void *thread(void *arg)
+>         {
+>                 struct rusage ru;
+>
+>                 pthread_barrier_wait(&barr);
+>                 for (;;)
+>                         getrusage(RUSAGE_SELF, &ru);
+>                 return NULL;
+>         }
+>
+>         int main(void)
+>         {
+>                 pthread_barrier_init(&barr, NULL, NT);
+>
+>                 for (int n =3D 0; n < NT-1; ++n) {
+>                         pthread_t pt;
+>                         pthread_create(&pt, NULL, thread, NULL);
+>                 }
+>                 thread(NULL);
+>
+>                 return 0;
+>         }
+>
+> should work if you have a machine with a lot of memory/cpus.
+>
+> Oleg.
+>
 
--Kees
+Here's my repro, very similar to what you've sent:
 
---=20
-Kees Cook
+#define _GNU_SOURCE
+#include <sys/resource.h>
+#include <sched.h>
+#include <sys/wait.h>
+#include <stdio.h>
+#include <sys/mman.h>
+#include <stdlib.h>
+#include <unistd.h>
+
+int thrd_func(void *data) {
+       struct rusage usage;
+       int *complete =3D (void *)data;
+
+       while (!*complete);
+       while (1) {
+              getrusage(RUSAGE_SELF, &usage);
+       }
+}
+
+#define STACK_SIZE (1024)
+
+int main(int argc, char **argv) {
+       if (argc !=3D 2) {
+              printf("Usage: %s <thread count>\n", argv[0]);
+              exit(EXIT_SUCCESS);
+       }
+       const int cnt =3D atoi(argv[1]);
+       int pids[cnt];
+       int complete =3D 0;
+       printf("Starting test with %d threads...\n", cnt);
+       for (int i =3D 0; i < cnt; i++) {
+              char *stack =3D mmap(NULL, STACK_SIZE, PROT_READ | PROT_WRITE=
+,
+                                               MAP_PRIVATE |
+MAP_ANONYMOUS | MAP_STACK, -1, 0);
+              if (stack =3D=3D MAP_FAILED) {
+                     perror("mmap() failed\n");
+                    return -1;
+              }
+
+              pids[i] =3D clone(thrd_func, stack + STACK_SIZE, CLONE_THREAD
+                               | CLONE_SIGHAND | CLONE_FS | CLONE_VM |
+CLONE_FILES, (void *) &complete);
+
+              if (pids[i] =3D=3D -1) {
+                     perror("clone() failed\n");
+                     return pids[i];
+              }
+       }
+       complete =3D 1;
+       printf("waiting on threads...\n");
+       sleep(100);
+       complete =3D 0;
+       printf("test finished.\n");
+       exit(EXIT_SUCCESS);
+}
+
+I can't remember exactly why I chose to call mmap and clone directly instea=
+d
+of using pthreads... but I do know what mmap'ing in a smaller stack size
+makes the repro more reliable since you can create more threads. It
+seemed like around 250K threads was about enough to reliably produce
+the lockup, but your mileage may vary.
