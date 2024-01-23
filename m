@@ -1,135 +1,104 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF2507FBC5
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 19:04:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8C1C7FBC5
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 19:05:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706036700; cv=none; b=n3bg6H9SI7P+ffp+3W2VapH2xvIONQVO/p61nlR0s+cgXZ0PBPPt3tjL5VP2aFw/oRbXT/q0+JOKQwNWbjpeo+b9/fDtQUtZUFNObW9cc+1B3shsWJYJLZxTVzGRbYedIEOClG5gRTE1yYtbBx8BRKOrdn0I65DHrhsfUAgUTsc=
+	t=1706036726; cv=none; b=HxhPZpATwbvEvzWrak6aL9I4nNkUQP8LQqISHS9zTZbTsgNuPfoPgfDGgIP1TAGRcMo0zkrG37pToGkYXKxcccHi8jN9l8kF1moA3YjdoZlvrLFmOglNHj/n8EJS0luEq4TOgpB/OhpY53v7opEKFfOulqKuwczgmiewr1DqMtc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706036700; c=relaxed/simple;
-	bh=inpYRunu7a+/P69OHKJdfPr+xzfMvH62XScswjJIiSA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SDgucBj8wRpK8onqwcWQWfTPbpULdei6jA7At5lRDJb+R92GM6C/E+QaycgBWZWLzo4S4Y0fBB2tOK4wp4SZ0m3v5rpKwDDSDM5EKIEFylXRBusQ3lGD+/HU7JvDTbqrb1j/TEfJkCfeZB48X8RDjvQ1scIZe+7xa3wqpapeYmA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=h2K4ezdB; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1706036726; c=relaxed/simple;
+	bh=OCbI+NLF1YGu498IgDblfbl3chaPTQws1Te3v7nNHtw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JnsVj2mGGKycfRbn1lRY4XYzj3M7VQDqqvsnAfO57bt4/8oYowF4/7vam76LUIGT27CHc/HcP35626dJ2Vy8/bezuyOPE+m6vXVwm2vaYs2z5H4jVd08eoavF7C2fVHLwQ0hFRdNcfFGrjhFWqgv8rjhoPBjx/+mTCBRnYVVo9s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DjXDEbto; arc=none smtp.client-ip=209.85.215.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="h2K4ezdB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1706036697;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=L/sN5hulO719YCIZsmMNq+K6W2dI39cuVDmxC+XWuWg=;
-	b=h2K4ezdBmLUc/XeWusRR+m6nC7UuFwtLY/t/z4qjtpdmFmNAaAMuHuHR0N2XIrpJ65o/es
-	AHYWoZykL9jWNUQ2qEXgRQ4JvcW6rR9tzDm4ePmbBGC1hPr9LmdoJrx5isV0a90L7OU+uo
-	ZrdTIfGtflQe36WWB+ktu79O/iuzc60=
-Received: from mail-lf1-f69.google.com (mail-lf1-f69.google.com
- [209.85.167.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-360-qVIQZkS4NkuJCX-ldSG-mA-1; Tue, 23 Jan 2024 14:04:55 -0500
-X-MC-Unique: qVIQZkS4NkuJCX-ldSG-mA-1
-Received: by mail-lf1-f69.google.com with SMTP id 2adb3069b0e04-50e7b2ac430so3388434e87.1
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 11:04:55 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DjXDEbto"
+Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-517ab9a4a13so3649719a12.1
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 11:05:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1706036724; x=1706641524; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bVERgvysCWGTIRLyfCXZM2M+ukaLtX3i/mU0WUPzMyA=;
+        b=DjXDEbtoQ6dLI9g5+CvSohqx73PLyl7pRSa/1T6ewLrPMGTjRKUwBmLRiBe8qYE9JT
+         junPd/eidBbQYHrRpP0aKgtC+pJmxHmKJgwySFfIUKjtofr8Bt5SqPPYrwfx1g/kFPS/
+         NK39wVMn5i8LKfTvVVoywUrNWXpTAA4LTEzV+UDOECFHsuIwqku6QJucKZJl+XzLXoQj
+         gLe9zGNfPad4su04Y8dFSpm2NWr+2bhC2xK/nYNwsxFSxxl5oBHqcO7BAvRNUvNx1M3J
+         twJruxlZDCilQYp2v7/yyriUbU6vJRpqvvLT21O+mf8rQSPfXPwCpkmiOWMZSFsgZkeG
+         zBaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706036694; x=1706641494;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=L/sN5hulO719YCIZsmMNq+K6W2dI39cuVDmxC+XWuWg=;
-        b=t2HfT272+vTZEnRD11ss1n0AnbCPIA6tK46CqvTwyssCDUE7mI8worSpB5FaQiuTtt
-         /bZXXFkLjdSwzW4j5qjNzEXrWFpa96huHrLIUcui7QuJSYBNTCFB4iEHLhgUJJm6xBMG
-         UjWEp5wh7oiZnJAhXn6WMryf1G67t9sUb9HsJye0pzfBeZhtKZdzDO4fTUQNsmp2ziaR
-         tiCVQ2KkGsY88v1EVZufYIVBCta0uJoucczOkYuJU1nuXSL0BkgaudTJ78o/QiysXxZ6
-         7il3OGvZI4tvZ2IVdz6DiA4+g3DwdJETTbLj5vJ33ODGtvgqe9tzblgsKTquhWmMC6j1
-         q56Q==
-X-Gm-Message-State: AOJu0YzprY4Hg4I+A+MbsPLTw/zam+cUXK/hFenwK+2NkdrKInDkAH8H
-	lW/Y6KV7pkUAEqv79K1FsFiAzj+Qtg1VVyXMPinqKI8sejrQRsOPRdbBPzU+BSZWJU6juwBq/fX
-	rv6UEpa19erVqpGw159RKPaxP4UIV24Z6eXE2Dc2213WB9M06DshGVVff0FXQvg==
-X-Received: by 2002:a05:6512:2256:b0:510:e05:4361 with SMTP id i22-20020a056512225600b005100e054361mr160053lfu.3.1706036694487;
-        Tue, 23 Jan 2024 11:04:54 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IELdDdUxhnmzOyCMSiWHb7nJmmPa4jYjqQ90Y7Q/9boZpyaEPI4tuKbVIU7sH1yj2FDxMnD/Q==
-X-Received: by 2002:a05:6512:2256:b0:510:e05:4361 with SMTP id i22-20020a056512225600b005100e054361mr160048lfu.3.1706036694162;
-        Tue, 23 Jan 2024 11:04:54 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id vs7-20020a170907a58700b00a2caa85c0c1sm13758772ejc.30.2024.01.23.11.04.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 23 Jan 2024 11:04:53 -0800 (PST)
-Message-ID: <c0d59d12-edf3-44eb-adfd-29c3dc1bde23@redhat.com>
-Date: Tue, 23 Jan 2024 20:04:53 +0100
+        d=1e100.net; s=20230601; t=1706036724; x=1706641524;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=bVERgvysCWGTIRLyfCXZM2M+ukaLtX3i/mU0WUPzMyA=;
+        b=H+jggi2cmlcYJVdCNhrmPCuu9D374PYFwk+4SLh2XQfvXbUYeA7Q+zI2cd+SV7/sEo
+         xQ0xHPrYLIajW2SusjU+YUTt9oMqwfAc4uwdt5NalVciY6I76dC4m357T+ZrW4F+b2r0
+         Oaee7ZUbzUhnukJU7WJwlGNvZVoH5xldndGIXUdpdBzCdY6tXvIkCBnOEpRxDgVPpQj/
+         2nHiV85Fp54nJht92wK2XJrx6iojM56N3BB9rPOsuxdYAeFLD00PwNb2USUBcigEf4UD
+         8Pt+JlTxssByXIcgfZuB09TYWQ2aj97TRTkwpkEXIbPn6eEO8ROA7Miwf+UaXboJDIfp
+         YNmw==
+X-Gm-Message-State: AOJu0YzKKrivmhtR0M6/p0l5E4TNKgZpjbFX4DfNXCqjAeMj8dbuPTOP
+	BGHmKmv/33Q36uj+r/zi0N7CcTGMGWZiMEZF84uBdvDROQLpobiYpnzQGaPe976NxjIw8bjo1xc
+	/syIUB8FuzlFDT4Gaj8gTKPUFaVmWXzeSxdF1eQ==
+X-Google-Smtp-Source: AGHT+IEmzTb6pGV6jReIafVXWwbj4cum+U8ODr9yAF3ZBzIkY6pczw4WK0Mea40kpolMuPv8pK9QI+1MXj9Fb/brwsM=
+X-Received: by 2002:a17:90a:6f82:b0:290:6b5f:fcd5 with SMTP id
+ e2-20020a17090a6f8200b002906b5ffcd5mr3070046pjk.0.1706036724112; Tue, 23 Jan
+ 2024 11:05:24 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] ahci: asm1166: correct count of reported ports
-Content-Language: en-US, nl
-To: linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: dlemoal@kernel.org
-References: <20240123183002.15499-1-conikost@gentoo.org>
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20240123183002.15499-1-conikost@gentoo.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20240123153421.715951-1-tudor.ambarus@linaro.org> <20240123153421.715951-2-tudor.ambarus@linaro.org>
+In-Reply-To: <20240123153421.715951-2-tudor.ambarus@linaro.org>
+From: Sam Protsenko <semen.protsenko@linaro.org>
+Date: Tue, 23 Jan 2024 13:05:13 -0600
+Message-ID: <CAPLW+4k3EmkzW9K638umFNav1HvofYHV=WnXPmDaRTXuFDN7Bw@mail.gmail.com>
+Subject: Re: [PATCH 01/21] spi: dt-bindings: samsung: add google,gs101-spi compatible
+To: Tudor Ambarus <tudor.ambarus@linaro.org>
+Cc: broonie@kernel.org, andi.shyti@kernel.org, arnd@arndb.de, 
+	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
+	alim.akhtar@samsung.com, linux-spi@vger.kernel.org, 
+	linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-arch@vger.kernel.org, andre.draszik@linaro.org, 
+	peter.griffin@linaro.org, kernel-team@android.com, willmcvicker@google.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Conrad,
-
-On 1/23/24 19:30, Conrad Kostecki wrote:
-> The ASM1166 SATA host controller always reports wrongly,
-> that it has 32 ports. But in reality, it only has six ports.
-> 
-> This seems to be a hardware issue, as all tested ASM1166
-> SATA host controllers reports such high count of ports.
-> 
-> Example output: ahci 0000:09:00.0: AHCI 0001.0301
-> 32 slots 32 ports 6 Gbps 0xffffff3f impl SATA mode.
-> 
-> By adjusting the port_map, the count is limited to six ports.
-> 
-> New output: ahci 0000:09:00.0: AHCI 0001.0301
-> 32 slots 32 ports 6 Gbps 0x3f impl SATA mode.
-> 
-> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=211873
-> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=218346
-> Signed-off-by: Conrad Kostecki <conikost@gentoo.org>
-
-Looks like this is a double submission of the earlier
-version (which did make it to the list).
-
-Anyways this version looks good to me too:
-
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-
-Regards,
-
-Hans
-
-
-
+On Tue, Jan 23, 2024 at 9:34=E2=80=AFAM Tudor Ambarus <tudor.ambarus@linaro=
+.org> wrote:
+>
+> Add "google,gs101-spi" dedicated compatible for representing SPI of
+> Google GS101 SoC.
+>
+> Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
 > ---
->  drivers/ata/ahci.c | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/drivers/ata/ahci.c b/drivers/ata/ahci.c
-> index 3a5f3255f51b..762c5d8b7c1a 100644
-> --- a/drivers/ata/ahci.c
-> +++ b/drivers/ata/ahci.c
-> @@ -663,6 +663,11 @@ MODULE_PARM_DESC(mobile_lpm_policy, "Default LPM policy for mobile chipsets");
->  static void ahci_pci_save_initial_config(struct pci_dev *pdev,
->  					 struct ahci_host_priv *hpriv)
->  {
-> +	if (pdev->vendor == PCI_VENDOR_ID_ASMEDIA && pdev->device == 0x1166) {
-> +		dev_info(&pdev->dev, "ASM1166 has only six ports\n");
-> +		hpriv->saved_port_map = 0x3f;
-> +	}
-> +
->  	if (pdev->vendor == PCI_VENDOR_ID_JMICRON && pdev->device == 0x2361) {
->  		dev_info(&pdev->dev, "JMB361 has only one port\n");
->  		hpriv->saved_port_map = 1;
 
+Reviewed-by: Sam Protsenko <semen.protsenko@linaro.org>
 
-
+>  Documentation/devicetree/bindings/spi/samsung,spi.yaml | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/Documentation/devicetree/bindings/spi/samsung,spi.yaml b/Doc=
+umentation/devicetree/bindings/spi/samsung,spi.yaml
+> index 79da99ca0e53..386ea8b23993 100644
+> --- a/Documentation/devicetree/bindings/spi/samsung,spi.yaml
+> +++ b/Documentation/devicetree/bindings/spi/samsung,spi.yaml
+> @@ -17,6 +17,7 @@ properties:
+>    compatible:
+>      oneOf:
+>        - enum:
+> +          - google,gs101-spi
+>            - samsung,s3c2443-spi # for S3C2443, S3C2416 and S3C2450
+>            - samsung,s3c6410-spi
+>            - samsung,s5pv210-spi # for S5PV210 and S5PC110
+> --
+> 2.43.0.429.g432eaa2c6b-goog
+>
