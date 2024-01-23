@@ -1,265 +1,153 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A5B96524BD;
-	Tue, 23 Jan 2024 07:34:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF8262B9C0;
+	Tue, 23 Jan 2024 07:36:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705995283; cv=none; b=pEgYkJxu5M4jWILznCaVp7LK0fdfkqJAgFES8yyPv8iNw5jrdEOw3ekKQP+hNyornRL3JOLc3R7+3BND8x8VAgoqaQj4m301Rnm/aP8dyF43Nhj+10rM1hj6GtXjF43x4dP/bAMh9wycVY07k1tBPkrG/6oP8Lto5W94G1GQ58M=
+	t=1705995385; cv=none; b=krWzgM4FqPHh5Po0mufSiSyaacuimKHGQq7ElIPDXMwvfbSgKoTazetK3NSTaTXEKawbhBik6MicIKLzoOgVF9WwSDgWRoTDDtnyjzDOyjo3p6VyZ198yfjqRPPYOsw0feyURrrwsz3RSqN5Pq2zdosQlHXhXhq3yoSrHab59oA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705995283; c=relaxed/simple;
-	bh=98KyiI99ifJmLHoiV9CZ2qQA+r8d8kp7WTmcbbRFYac=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IElIutVngIyJ5FPSmkXPD0Q/QQyI3rikoSQNzdoPCPyKAzlRnLkA357NE5JpWvLr9pBNCPT3mxtk8c+AEwKYx1PlJbiDmfKFJoMt0g3fhILm3RDvmHx/dDZT1SfX3JCAT/rNXU484D+p/e1dxVNxYsJZhM/UMtFJ2aAynB64azw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [111.9.175.10])
-	by gateway (Coremail) with SMTP id _____8DxfeuSUKdlpQUBAA--.4788S3;
-	Wed, 17 Jan 2024 11:59:14 +0800 (CST)
-Received: from Board-3A3000 (unknown [111.9.175.10])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxF82OUKdl27AFAA--.593S2;
-	Wed, 17 Jan 2024 11:59:12 +0800 (CST)
-Date: Wed, 17 Jan 2024 11:59:10 +0800
-From: Huang Pei <huangpei@loongson.cn>
-To: Yajun Deng <yajun.deng@linux.dev>
-Cc: Mike Rapoport <rppt@kernel.org>, Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	linux-mm@kvack.org, Bibo Mao <maobibo@loongson.cn>,
-	linux-mips@vger.kernel.org, Paul Burton <paulburton@kernel.org>,
-	Li Xuefeng <lixuefeng@loongson.cn>,
-	Yang Tiezhu <yangtiezhu@loongson.cn>,
-	Gao Juxin <gaojuxin@loongson.cn>,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	s=arc-20240116; t=1705995385; c=relaxed/simple;
+	bh=RONb+w30PwJfAdE6WvIlbcO0ThwKw/iY7UkyK1YT6Hk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=eTcvDzcO7331pntdLJW1mtxMfKxEDpaVarmc8w3WPOWjLD/ZkqAOtXemDmLVmzduXRM8QOleMHadJDtg6/aJjaF1R7e+2WOAeO4kzEW4s/Ez4bvcIAmxp8O6Zz6jyrdovhm0cwuvcSQPFDefShLZ8AKY9yTCNPU0YtuWDm0GjFE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=yjpWZT5I; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="yjpWZT5I"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1705995382;
+	bh=RONb+w30PwJfAdE6WvIlbcO0ThwKw/iY7UkyK1YT6Hk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=yjpWZT5I4L21f59z0O8zIlh3zXmK/YWUjiAx/7ueI/Zd/8fzpzx9EyJkeF+KLQxpV
+	 vYU+3lqu8MSK6lbJK9tjM8HgnJNmO5eFLAAc+s9IbfiMyy7LdN76x1ZCccJ/NvAS9B
+	 0sghzR1FFnrI6Td4+IGjpfqNHJQH1BFUmFBfwESp7vwo8WJknodVYqX03iQ+s+KQVE
+	 NPiR8VXkg0hH2iNY0461oBv9e9Spi5dpz8kIJTZud2qFLW5Jyip0Jueurt8qnEcqxH
+	 yhFrRSttKNvBTHS2ovlN8vB49CAVl4OQthwORC7KKiCJOvnQKPJKfC0nxTqjPQp2jK
+	 CEva9SZ+eibnA==
+Received: from localhost.localdomain (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: usama.anjum)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id D553F3782066;
+	Tue, 23 Jan 2024 07:36:19 +0000 (UTC)
+From: Muhammad Usama Anjum <usama.anjum@collabora.com>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	Shuah Khan <shuah@kernel.org>
+Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>,
+	kernel@collabora.com,
+	linux-mm@kvack.org,
+	linux-kselftest@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: memblock_reserve for unadded region (was: [PATCH] MIPS:
- loongson64: fix boot failure)
-Message-ID: <20240117035910.453ofvotbvkzje6k@Board-3A3000>
-References: <20231225093025.23215-1-huangpei@loongson.cn>
- <731134fd-4b3d-418c-84ee-80646bffcc01@flygoat.com>
- <ZaZAqMwuql9Y5Gra@kernel.org>
- <20240116122304.qwzy7san2vgspt2x@Board-3A3000>
- <3fc2f75e-d163-1ad1-009a-0e4538011885@linux.dev>
- <20240117030113.gs2fjs6vydthsc6l@Board-3A3000>
- <234ddaeb-5988-858d-6ba1-0fef90fb7a87@linux.dev>
+Subject: [PATCH v2 2/2] selftests/mm: run_vmtests: remove sudo and conform to tap
+Date: Tue, 23 Jan 2024 12:36:14 +0500
+Message-ID: <20240123073615.920324-2-usama.anjum@collabora.com>
+X-Mailer: git-send-email 2.42.0
+In-Reply-To: <20240123073615.920324-1-usama.anjum@collabora.com>
+References: <20240123073615.920324-1-usama.anjum@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <234ddaeb-5988-858d-6ba1-0fef90fb7a87@linux.dev>
-X-CM-TRANSID:AQAAf8BxF82OUKdl27AFAA--.593S2
-X-CM-SenderInfo: xkxd0whshlqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW3JrWxtr1kKFyDCF13Aw18Zwc_yoWfGFWrpr
-	1fJF17CrW8Jr18Jr4Utr15Jr1jyw1Yk3WUXr9rJr18Zryq9r13Xr18Xr10gFyDJrW8JF1I
-	qr1UXF12vw1UAwcCm3ZEXasCq-sJn29KB7ZKAUJUUUUx529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUB0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4UJVWxJr1ln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
-	xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r12
-	6r1DMcIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr4
-	1lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_
-	Gr1l4IxYO2xFxVAFwI0_GFv_Wrylx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67
-	AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8I
-	cVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI
-	8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v2
-	6r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU4SoGDUUUU
-X-Gw-Check: 3048a62aa90648ec
 
-On Wed, Jan 17, 2024 at 11:17:18AM +0800, Yajun Deng wrote:
-> 
-> On 2024/1/17 11:01, Huang Pei wrote:
-> > On Wed, Jan 17, 2024 at 10:20:00AM +0800, Yajun Deng wrote:
-> > > On 2024/1/16 20:23, Huang Pei wrote:
-> > > > On Tue, Jan 16, 2024 at 10:39:04AM +0200, Mike Rapoport wrote:
-> > > > > On Mon, Jan 15, 2024 at 02:08:21PM +0000, Jiaxun Yang wrote:
-> > > > > > Hi mm folks,
-> > > > > > 
-> > > > > > Just a quick question, what is the expected behavior of memblock_reserve
-> > > > > > a region that is not added to memblock with memblock_add?
-> > > > > > 
-> > > > > > I'm unable to find any documentation about memblock_reserve in comments and
-> > > > > > boot-time-mm, but as per my understanding to the code, this should be a
-> > > > > > legit usage?
-> > > > > Yes, memblock allows reserving memory that was not added to memblock with
-> > > > > memblock_add().
-> > > > I think arch/platform specific code should fix this bug, like,
-> > > > --------------------------------------------------------------------------
-> > > > //for loongson64
-> > > > memblock_set_node(0, 1ULL << 44, &memblock.reserved, 0);
-> > > > 
-> > > > --------------------------------------------------------------------------
-> > > > 
-> > > > or maybe memblock provide something like memblock_reserve_node
-> > > Hi pei,
-> > > 
-> > > Can you test the following patch to see if it fixes this bug?
-> > > 
-> > > diff --git a/mm/mm_init.c b/mm/mm_init.c
-> > > index 2c19f5515e36..97721d99fdce 100644
-> > > --- a/mm/mm_init.c
-> > > +++ b/mm/mm_init.c
-> > > @@ -708,6 +708,9 @@ static void __meminit init_reserved_page(unsigned long
-> > > pfn, int nid)
-> > >          pg_data_t *pgdat;
-> > >          int zid;
-> > > 
-> > > +       if (unlikely(nid == NUMA_NO_NODE || nid >= MAX_NUMNODES))
-> > > +               nid = early_pfn_to_nid(pfn);
-> > > +
-> > >          if (early_page_initialised(pfn, nid))
-> > >                  return;
-> > I do not think this fix set the right nid, ONLY arch/platform know that
-> > nid
-> > 
-> >   int __meminit early_pfn_to_nid(unsigned long pfn)
-> > {
-> > 	static DEFINE_SPINLOCK(early_pfn_lock);
-> > 	int nid;
-> > 
-> > 	spin_lock(&early_pfn_lock);
-> > 	nid = __early_pfn_to_nid(pfn,
-> > 			&early_pfnnid_cache);
-> > 	if (nid < 0)
-> > 	//!!!first_online_node MAY NOT be the node the pfn belong to!!!
-> > 		nid = first_online_node;
-> > 
-> > 	spin_unlock(&early_pfn_lock);
-> > 
-> > 	return
-> > 		nid;
-> > }
-> 
-> 
-> Okay, I don't think this bug is caused by commit 61167ad5fecd ("mm: pass nid
-> to reserve_bootmem_region()"),
-> 
-> because even if you revert this commit, it will still get nid by
-> early_pfn_to_nid(). Did I get that right?
+Remove sudo as some test running environments may not have sudo
+available. Instead skip the test if root privileges aren't available in
+the test.
 
-Yes, more accurately, this bug is exposed by commit 61167ad5fecd. My
-previous fix is based on presumptions that memory_reserve should reserve memory 
-added by memblock_add{,_node}, if going across this limitation, there need
-to set the valid nid for reserved memory region.
-> 
-> > > 
-> > > > > > In practical we run into uninitialized nid of reserved block problem, should
-> > > > > > we fix it
-> > > > > > in our usage, or on memblock side?
-> > > > > Apparently it's a bug in memblock :(
-> > > > > 
-> > > > > If you revert 61167ad5fecd ("mm: pass nid to reserve_bootmem_region()")
-> > > > > does the issue disappear?
-> > > > Yes, I git bisect this commit.
-> > > > 
-> > > > But I don't think it is a bug in memblock. IMO, memblock_reserve under
-> > > > NUMA set nid of reserved region to MAX_NUMNODES, which is the point
-> > > > that cause the "memblock_get_region_node from memmap_init_reserved_pages "
-> > > > passing a invalid node id(aka MAX_NUMNODES) to "reserver_bootmem_region
-> > > > -> init_reserved_page -> early_pfn_to_nid". If arch-specific code DOES NOT
-> > > > initialize the nid of reserved region(only it know that), or the reserved
-> > > > region NOT within a memblock added by memblock_add, memblock can not
-> > > > give a valid node id to the reserved region. Commit 61167ad5fecd ("mm: pass nid to
-> > > > reserve_bootmem_region()") just reveals the embarrassment case by an
-> > > > out of bound memory access.
-> > > > 
-> > > > > > Thanks
-> > > > > > 
-> > > > > > 在 2023/12/25 09:30, Huang Pei 写道:
-> > > > > > > Since commit 61167ad5fecd("mm: pass nid to reserve_bootmem_region()),
-> > > > > > > loongson64 booting failed with CONFIG_DEFERRED_STRUCT_PAGE_INIT like
-> > > > > > > this:
-> > > > > > > ----------------------------------------------------------------------
-> > > > > > >     Call Trace:
-> > > > > > >     [<ffffffff8235d088>] reserve_bootmem_region+0xa8/0x184
-> > > > > > >     [<ffffffff82333940>] memblock_free_all+0x104/0x2a8
-> > > > > > >     [<ffffffff8231d8e4>] mem_init+0x84/0x94
-> > > > > > >     [<ffffffff82330958>] mm_core_init+0xf8/0x308
-> > > > > > >     [<ffffffff82318c38>] start_kernel+0x43c/0x86c
-> > > > > > > 
-> > > > > > >     Code: 10400028  2402fff0  de420000 <dc432880> 0203182b 14600022
-> > > > > > >     64420070  00003025  24040003
-> > > > > > > 
-> > > > > > >     ---[ end trace 0000000000000000 ]---
-> > > > > > >     Kernel panic - not syncing: Attempted to kill the idle task!
-> > > > > > >     ---[ end Kernel panic - not syncing: Attempted to kill the idle task! ]---
-> > > > > > > ----------------------------------------------------------------------
-> > > > > > > 
-> > > > > > > The root cause is no memory region "0x0-0x1fffff" paired with
-> > > > > > > memory-reserved region "0x0-0x1fffff" and "0x0-0xfff", with "memblock
-> > > > > > > =debug":
-> > > > > > > 
-> > > > > > > ----------------------------------------------------------------------
-> > > > > > >      memory[0x0]     [0x0000000000200000-0x000000000effffff],
-> > > > > > >      0x000000000ee00000 bytes on node 0 flags: 0x0 !!!!here
-> > > > > > >      memory[0x1]     [0x0000000090000000-0x00000000fdffffff],
-> > > > > > >      0x000000006e000000 bytes on node 0 flags: 0x0
-> > > > > > >      memory[0x2]     [0x0000000100000000-0x000000027fffffff],
-> > > > > > >      0x0000000180000000 bytes on node 0 flags: 0x0
-> > > > > > >      memory[0x3]     [0x0000100000000000-0x000010000fffffff],
-> > > > > > >      0x0000000010000000 bytes on node 1 flags: 0x0
-> > > > > > >      memory[0x4]     [0x0000100090000000-0x000010027fffffff],
-> > > > > > >      0x00000001f0000000 bytes on node 1 flags: 0x0
-> > > > > > >      reserved.cnt  = 0x1f
-> > > > > > >      reserved[0x0]   [0x0000000000000000-0x000000000190c80a],
-> > > > > > >      0x000000000190c80b bytes flags: 0x0 !!!!oops 0x0-0x1fffff not in memory[0]
-> > > > > > >      reserved[0x1]   [0x000000000190c810-0x000000000190eea3],
-> > > > > > >      0x0000000000002694 bytes flags: 0x0
-> > > > > > > ----------------------------------------------------------------------
-> > > > > > > 
-> > > > > > > It caused memory-reserved region "0x0-0x1fffff" without valid node id
-> > > > > > > in "memblock_get_region_node" from "memmap_init_reserved_pages", lead to
-> > > > > > > "reserve_bootmem_region-> init_reserved_page -> early_pfn_to_nid()"
-> > > > > > > accessing "node_data" out of bound.
-> > > > > > > 
-> > > > > > > To fix this bug, we should remove unnecessary memory block reservation.
-> > > > > > > 
-> > > > > > > +. no need to reserve 0x0-0x1fffff below kernel loading address, since
-> > > > > > > it is not registered by "memblock_add_node"
-> > > > > > > 
-> > > > > > > +. no need to reserve 0x0-0xfff for exception handling if it is not
-> > > > > > > registered by "memblock_add" either.
-> > > > > > > 
-> > > > > > > Fixes: commit 61167ad5fecd("mm: pass nid to reserve_bootmem_region())
-> > > > > > > Signed-off-by: Huang Pei <huangpei@loongson.cn>
-> > > > > > > ---
-> > > > > > >     arch/mips/kernel/traps.c    | 3 ++-
-> > > > > > >     arch/mips/loongson64/numa.c | 2 --
-> > > > > > >     2 files changed, 2 insertions(+), 3 deletions(-)
-> > > > > > > 
-> > > > > > > diff --git a/arch/mips/kernel/traps.c b/arch/mips/kernel/traps.c
-> > > > > > > index 246c6a6b0261..9b632b4c10c3 100644
-> > > > > > > --- a/arch/mips/kernel/traps.c
-> > > > > > > +++ b/arch/mips/kernel/traps.c
-> > > > > > > @@ -2007,7 +2007,8 @@ unsigned long vi_handlers[64];
-> > > > > > >     void reserve_exception_space(phys_addr_t addr, unsigned long size)
-> > > > > > >     {
-> > > > > > > -	memblock_reserve(addr, size);
-> > > > > > > +	if(memblock_is_region_memory(addr, size))
-> > > > > > > +		memblock_reserve(addr, size);
-> > > > > > >     }
-> > > > > > >     void __init *set_except_vector(int n, void *addr)
-> > > > > > > diff --git a/arch/mips/loongson64/numa.c b/arch/mips/loongson64/numa.c
-> > > > > > > index 8f61e93c0c5b..0f516dde81da 100644
-> > > > > > > --- a/arch/mips/loongson64/numa.c
-> > > > > > > +++ b/arch/mips/loongson64/numa.c
-> > > > > > > @@ -130,8 +130,6 @@ static void __init node_mem_init(unsigned int node)
-> > > > > > >     			memblock_reserve((node_addrspace_offset | 0xfe000000),
-> > > > > > >     					 32 << 20);
-> > > > > > > -		/* Reserve pfn range 0~node[0]->node_start_pfn */
-> > > > > > > -		memblock_reserve(0, PAGE_SIZE * start_pfn);
-> > > > > > >     	}
-> > > > > > >     }
-> > > > > > -- 
-> > > > > > ---
-> > > > > > Jiaxun Yang
-> > > > > > 
-> > > > > -- 
-> > > > > Sincerely yours,
-> > > > > Mike.
+Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
+---
+Changes since v1:
+- Added this patch in v2
+
+We are allocating 2*RLIMIT_MEMLOCK.rlim_max memory and mmap() isn't
+failing. This seems like true bug in the kernel. Even the root user
+shouldn't be able to allocate more memory than allowed MEMLOCKed memory.
+Any ideas?
+---
+ tools/testing/selftests/mm/on-fault-limit.c | 36 ++++++++++-----------
+ tools/testing/selftests/mm/run_vmtests.sh   |  2 +-
+ 2 files changed, 18 insertions(+), 20 deletions(-)
+
+diff --git a/tools/testing/selftests/mm/on-fault-limit.c b/tools/testing/selftests/mm/on-fault-limit.c
+index b5888d613f34e..0ea98ffab3589 100644
+--- a/tools/testing/selftests/mm/on-fault-limit.c
++++ b/tools/testing/selftests/mm/on-fault-limit.c
+@@ -5,40 +5,38 @@
+ #include <string.h>
+ #include <sys/time.h>
+ #include <sys/resource.h>
++#include "../kselftest.h"
+ 
+-static int test_limit(void)
++static void test_limit(void)
+ {
+-	int ret = 1;
+ 	struct rlimit lims;
+ 	void *map;
+ 
+-	if (getrlimit(RLIMIT_MEMLOCK, &lims)) {
+-		perror("getrlimit");
+-		return ret;
+-	}
++	if (getrlimit(RLIMIT_MEMLOCK, &lims))
++		ksft_exit_fail_msg("getrlimit: %s\n", strerror(errno));
+ 
+-	if (mlockall(MCL_ONFAULT | MCL_FUTURE)) {
+-		perror("mlockall");
+-		return ret;
+-	}
++	if (mlockall(MCL_ONFAULT | MCL_FUTURE))
++		ksft_exit_fail_msg("mlockall: %s\n", strerror(errno));
+ 
+ 	map = mmap(NULL, 2 * lims.rlim_max, PROT_READ | PROT_WRITE,
+ 		   MAP_PRIVATE | MAP_ANONYMOUS | MAP_POPULATE, -1, 0);
++
++	ksft_test_result(map == MAP_FAILED, "Failed mmap\n");
++
+ 	if (map != MAP_FAILED)
+-		printf("mmap should have failed, but didn't\n");
+-	else {
+-		ret = 0;
+ 		munmap(map, 2 * lims.rlim_max);
+-	}
+-
+ 	munlockall();
+-	return ret;
+ }
+ 
+ int main(int argc, char **argv)
+ {
+-	int ret = 0;
++	ksft_print_header();
++	ksft_set_plan(1);
++
++	if (getuid())
++		ksft_test_result_skip("Require root privileges to run\n");
++	else
++		test_limit();
+ 
+-	ret += test_limit();
+-	return ret;
++	ksft_finished();
+ }
+diff --git a/tools/testing/selftests/mm/run_vmtests.sh b/tools/testing/selftests/mm/run_vmtests.sh
+index 12754af00b39c..863bbc2015332 100755
+--- a/tools/testing/selftests/mm/run_vmtests.sh
++++ b/tools/testing/selftests/mm/run_vmtests.sh
+@@ -294,7 +294,7 @@ echo "$nr_hugepgs" > /proc/sys/vm/nr_hugepages
+ 
+ CATEGORY="compaction" run_test ./compaction_test
+ 
+-CATEGORY="mlock" run_test sudo -u nobody ./on-fault-limit
++CATEGORY="mlock" run_test ./on-fault-limit
+ 
+ CATEGORY="mmap" run_test ./map_populate
+ 
+-- 
+2.42.0
 
