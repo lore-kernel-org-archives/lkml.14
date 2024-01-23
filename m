@@ -1,207 +1,138 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E1B7524A4;
-	Tue, 23 Jan 2024 06:43:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 662FF50263
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 06:45:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705992199; cv=none; b=NE+FtUly0uI/wrBsK/WFd1H/Us29XlogLpufcf7EBTf/ipXMmhpKnEOQYnbiw+rwYW5OaHxlxc2ESUW0caR4wup2d2S0EaVtHFSHUtQ58ptvfo2VgnCysPqM4T4rdjUUxEcNL0W8vncSebt5lK4QzellW4nz85IEgkehzPuLrlo=
+	t=1705992338; cv=none; b=B+HbvPqz4Y/ovroPjQg8rGUKpRFOvGPjZ6EbZgTbQenvuNWCwAabGY9LNO5h20NRvE+p/Fty1ZhNK02WN19Bzb4a9F48Kg6CVKxAlpfFFIO9rnvalCp7IicfHoJrgAfOo1Vso5d7LyLWNldhnEpZ3/xYPqWo0rSG1hZmkh9P4/E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705992199; c=relaxed/simple;
-	bh=W6IM59aFdpsXM36kU3enHoCT7JiyixPOs1BAXIz9u88=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=skvgQfwROEJqHuyNh5ySwC/U59iySIg/5fAvapFm659UJyq2gc/bIJBMxcwYJfNibZ/+Lyrl6BwQGmJ6SQRWOX8HSso1esUhrnyojumQAb4xk/3bxMh1QwkmL6j2mMId3xTVemCkfwXJonJBCho3LQL9ifdybTHZZBSb8Ea07CA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D8iN8cPB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1705992338; c=relaxed/simple;
+	bh=t/tQhqebbJMtWe/6w66DZ1En16T5xwr2Nkyq3Ik6suU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RuGLP1YBdrng9mh/ahMm+gfY9EWZmRKdfJVxsSJEljjMcXbFLmLuwZdRNFyR8zQgBvZp9+0upno2fjJaYpkL9GRpoEsyJ7Z7OjMcCXqf0urr+sGtYCtwED0LU9HWf0vBkEovxyeK6SXaP0tRs3eExUSOA3HbMeqV0ckoTsLcfno=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2VOooJ6E; arc=none smtp.client-ip=209.85.128.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D8iN8cPB"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id C2DD8C43390;
-	Tue, 23 Jan 2024 06:43:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705992198;
-	bh=W6IM59aFdpsXM36kU3enHoCT7JiyixPOs1BAXIz9u88=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=D8iN8cPBlCt9yrHA0E2usAWnTOv0ceVoejE0dPm6/kbSfqDHJqEukdjL/1DEZu/CW
-	 VTKglv3i5b87NHdgwBepFUb5RVtUKECrSsTmPr7dzQUaKeFXRV5rPkXMc92cxhv2c6
-	 inyWt7eAynzqgJQjAt8QvnrL5ZUGfDzqwN1Sp53KRYhr7pF2GK6MdfDStBQeZYAPzK
-	 9qeL3eU9LHGiQo/yTjzsw8mDTZbWPxLdGv0ZxsyP6KhhsM3/KhZH1xY8t3U4xyhy0w
-	 46k5ocVUP3eLujVwsjZEa2fKev1D9gfrhFuYkqcx9KMGmOJ72/bFHDZ7Rv4JIF1iOh
-	 4BeZriWbKYKlA==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A50D0C47DDF;
-	Tue, 23 Jan 2024 06:43:18 +0000 (UTC)
-From: Fenglin Wu via B4 Relay <devnull+quic_fenglinw.quicinc.com@kernel.org>
-Date: Tue, 23 Jan 2024 14:42:24 +0800
-Subject: [PATCH 2/2] arm64: dts: qcom: sm8650-qrd: add PM8010 regulators
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2VOooJ6E"
+Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-5ffe7e7b7b3so16887947b3.3
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 22:45:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1705992336; x=1706597136; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PoTQEe2OLzexfh/hP6idvwNfJdYn+1MZAqnZalpJe8M=;
+        b=2VOooJ6EcUCx5pm0KE2TqQWKNMyWHeA0Xo6lW6zHPOn9KEawo2dmbUs9jcCH6/ywbg
+         wL1WPNOeCHnVK3r0+lBdg1wdAivNnaFaXI7JzAcw3fg36SJMhG8t1I4BZ2sMvCwYnSME
+         f18rQO7hxspvPSjmNC6MO5kapVorHn6wT4OubUvZ/QRzVCRXuEQxvmzwHlApzognYDeP
+         /RGIdmjlm/4M/MUR11B22zCrcJWWLsmg8p/LxlDK0HZyEln4WGarjckOAv/2S1MnTQyU
+         SOLJtm63HEFgKiUYiVAE8KEmsbqRKc4EVU7cu3rTzZvgD3XytBJ73rCvw58nrcJeqWSr
+         ZQ9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705992336; x=1706597136;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=PoTQEe2OLzexfh/hP6idvwNfJdYn+1MZAqnZalpJe8M=;
+        b=MOjaoNZDKeyNMPFS1QvEc4tACz6A1xuBt8KetswokLQpEqGVU0vqpeqJVruoIoahIy
+         5jIGkLCiOihu7ZlyDGV5VYe4uO82/6G0E/2Ymwu90y5TxF3Ene8Itp0ze5M/ZngBNjwj
+         8vXZ8KFDCxhCdOhmKCUchvBtdWSa8GEWhD7SssetDE9H8CsBgrZdrs7O9Nr0srF/ClKu
+         Q2cgVU9zc73Ehzem7P/WDlS+e1P5dYj2UA/RJrwzwSPM1fJwDoyU8USpXDn4SAMfO/Ri
+         RBT/z+HLiwqgYPZwrjzEvX1tc/56Bst7MSAae8XpRddllg9RwRFmX/89MA0PVTlHe7Z/
+         E0HA==
+X-Gm-Message-State: AOJu0YzETFIhnN/Ku4imjJwkRBpibR826haANPoHZnaiPirBB9nzP9dC
+	om28eoeRIRDNQj7OAvE16FOViTHrpPbUYrk21uO1NgcWqg5n7sVGJjFb388mEg7SyWrp2z8n+lu
+	flsQ+jExRRvKVq7PjV8Lv7y3/hO1mOkwgnsli
+X-Google-Smtp-Source: AGHT+IEBqXVQUIfO9mccqsYMSFKUq4apywgfGuA1NVIzT8EfPN/xT4990ujq0TPyyxp+o6U+5W7GppWF3JfUAOUZ4Rs=
+X-Received: by 2002:a81:a090:0:b0:5ff:ae75:fe6f with SMTP id
+ x138-20020a81a090000000b005ffae75fe6fmr3254872ywg.44.1705992336083; Mon, 22
+ Jan 2024 22:45:36 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240123-sm8650_pm8010_support-v1-2-dec2224d5740@quicinc.com>
-References: <20240123-sm8650_pm8010_support-v1-0-dec2224d5740@quicinc.com>
-In-Reply-To: <20240123-sm8650_pm8010_support-v1-0-dec2224d5740@quicinc.com>
-To: kernel@quicinc.com, Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh+dt@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, quic_collinsd@quicinc.com, 
- Fenglin Wu <quic_fenglinw@quicinc.com>
-X-Mailer: b4 0.13-dev-83828
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1705992197; l=4110;
- i=quic_fenglinw@quicinc.com; s=20230725; h=from:subject:message-id;
- bh=PlYF8bjp7tmNp066AtzxBMH/atroxUuklQesSrZwfQ0=;
- b=NKWGsWHknezrrOYZwH4XD3ImCuqFjobocVLviK9pk7t4coZhezftxZQFTtMbxmGtRY80fGeTl
- k2mhbGbrw1lCY+avu+jk3Me4t/H2iDaOmRWBdFLpFDz2vUthCeCdL6x
-X-Developer-Key: i=quic_fenglinw@quicinc.com; a=ed25519;
- pk=hleIDz3Unk1zeiwwOnZUjoQVMMelRancDFXg927lNjI=
-X-Endpoint-Received:
- by B4 Relay for quic_fenglinw@quicinc.com/20230725 with auth_id=68
-X-Original-From: Fenglin Wu <quic_fenglinw@quicinc.com>
-Reply-To: <quic_fenglinw@quicinc.com>
+References: <20231226214610.109282-1-surenb@google.com> <170578498755.24348.16166096320323933297.git-patchwork-notify@kernel.org>
+ <Zaw31DVa9q3JZASo@shell.armlinux.org.uk> <CAJuCfpGV_CwQm+PuiqRz3L1x7QnpgE9LQb4PPChqFv0mzbYeBw@mail.gmail.com>
+In-Reply-To: <CAJuCfpGV_CwQm+PuiqRz3L1x7QnpgE9LQb4PPChqFv0mzbYeBw@mail.gmail.com>
+From: Suren Baghdasaryan <surenb@google.com>
+Date: Mon, 22 Jan 2024 22:45:25 -0800
+Message-ID: <CAJuCfpHVCLB0+G0amOk8tC=+--aX39n_ZRbKfhqhvJjdqjTVag@mail.gmail.com>
+Subject: Re: [PATCH 1/1] arch/mm/fault: fix major fault accounting when
+ retrying under per-VMA lock
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+Cc: patchwork-bot+linux-riscv@kernel.org, linux-riscv@lists.infradead.org, 
+	akpm@linux-foundation.org, willy@infradead.org, will@kernel.org, 
+	catalin.marinas@arm.com, palmer@dabbelt.com, mpe@ellerman.id.au, 
+	christophe.leroy@csgroup.eu, agordeev@linux.ibm.com, 
+	gerald.schaefer@linux.ibm.com, dave.hansen@linux.intel.com, luto@kernel.org, 
+	peterz@infradead.org, x86@kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Fenglin Wu <quic_fenglinw@quicinc.com>
+On Sun, Jan 21, 2024 at 11:38=E2=80=AFPM Suren Baghdasaryan <surenb@google.=
+com> wrote:
+>
+> On Sat, Jan 20, 2024 at 1:15=E2=80=AFPM Russell King (Oracle)
+> <linux@armlinux.org.uk> wrote:
+> >
+> > On Sat, Jan 20, 2024 at 09:09:47PM +0000, patchwork-bot+linux-riscv@ker=
+nel.org wrote:
+> > > Hello:
+> > >
+> > > This patch was applied to riscv/linux.git (fixes)
+> > > by Andrew Morton <akpm@linux-foundation.org>:
+> > >
+> > > On Tue, 26 Dec 2023 13:46:10 -0800 you wrote:
+> > > > A test [1] in Android test suite started failing after [2] was merg=
+ed.
+> > > > It turns out that after handling a major fault under per-VMA lock, =
+the
+> > > > process major fault counter does not register that fault as major.
+> > > > Before [2] read faults would be done under mmap_lock, in which case
+> > > > FAULT_FLAG_TRIED flag is set before retrying. That in turn causes
+> > > > mm_account_fault() to account the fault as major once retry complet=
+es.
+> > > > With per-VMA locks we often retry because a fault can't be handled
+> > > > without locking the whole mm using mmap_lock. Therefore such retrie=
+s
+> > > > do not set FAULT_FLAG_TRIED flag. This logic does not work after [2=
+]
+> > > > because we can now handle read major faults under per-VMA lock and
+> > > > upon retry the fact there was a major fault gets lost. Fix this by
+> > > > setting FAULT_FLAG_TRIED after retrying under per-VMA lock if
+> > > > VM_FAULT_MAJOR was returned. Ideally we would use an additional
+> > > > VM_FAULT bit to indicate the reason for the retry (could not handle
+> > > > under per-VMA lock vs other reason) but this simpler solution seems
+> > > > to work, so keeping it simple.
+> > > >
+> > > > [...]
+> > >
+> > > Here is the summary with links:
+> > >   - [1/1] arch/mm/fault: fix major fault accounting when retrying und=
+er per-VMA lock
+> > >     https://git.kernel.org/riscv/c/46e714c729c8
+> > >
+> > > You are awesome, thank you!
+> >
+> > Now that 32-bit ARM has support for the per-VMA lock, does that also
+> > need to be patched?
+>
+> Yes, I think so. I missed the ARM32 change that added support for
+> per-VMA locks. Will post a similar patch for it tomorrow.
 
-Add PM8010 regulator device nodes for sm8650-qrd board.
+Fix for ARM posted at
+https://lore.kernel.org/all/20240123064305.2829244-1-surenb@google.com/
 
-Signed-off-by: Fenglin Wu <quic_fenglinw@quicinc.com>
----
- arch/arm64/boot/dts/qcom/sm8650-qrd.dts | 118 ++++++++++++++++++++++++++++++++
- 1 file changed, 118 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/qcom/sm8650-qrd.dts b/arch/arm64/boot/dts/qcom/sm8650-qrd.dts
-index 592a67a47c78..361894fa201a 100644
---- a/arch/arm64/boot/dts/qcom/sm8650-qrd.dts
-+++ b/arch/arm64/boot/dts/qcom/sm8650-qrd.dts
-@@ -436,6 +436,124 @@ vreg_l3i_1p2: ldo3 {
- 						   RPMH_REGULATOR_MODE_HPM>;
- 		};
- 	};
-+
-+	regulators-6 {
-+		compatible = "qcom,pm8010-rpmh-regulators";
-+		qcom,pmic-id = "m";
-+
-+		vdd-l1-l2-supply = <&vreg_s1c_1p2>;
-+		vdd-l3-l4-supply = <&vreg_bob2>;
-+		vdd-l5-supply = <&vreg_s6c_1p8>;
-+		vdd-l6-l7-supply = <&vreg_bob1>;
-+
-+		vreg_l1m_1p1: ldo1 {
-+			regulator-name = "vreg_l1m_1p1";
-+			regulator-min-microvolt = <1104000>;
-+			regulator-max-microvolt = <1104000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l2m_1p056: ldo2 {
-+			regulator-name = "vreg_l2m_1p056";
-+			regulator-min-microvolt = <1056000>;
-+			regulator-max-microvolt = <1056000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l3m_2p8: ldo3 {
-+			regulator-name = "vreg_l3m_2p8";
-+			regulator-min-microvolt = <2800000>;
-+			regulator-max-microvolt = <2800000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l4m_2p8: ldo4 {
-+			regulator-name = "vreg_l4m_2p8";
-+			regulator-min-microvolt = <2800000>;
-+			regulator-max-microvolt = <2800000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l5m_1p8: ldo5 {
-+			regulator-name = "vreg_l5m_1p8";
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l6m_2p8: ldo6 {
-+			regulator-name = "vreg_l6m_2p8";
-+			regulator-min-microvolt = <2800000>;
-+			regulator-max-microvolt = <2800000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l7m_2p96: ldo7 {
-+			regulator-name = "vreg_l7m_2p96";
-+			regulator-min-microvolt = <2960000>;
-+			regulator-max-microvolt = <2960000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+	};
-+
-+	regulators-7 {
-+		compatible = "qcom,pm8010-rpmh-regulators";
-+		qcom,pmic-id = "n";
-+
-+		vdd-l1-l2-supply = <&vreg_s1c_1p2>;
-+		vdd-l3-l4-supply = <&vreg_s6c_1p8>;
-+		vdd-l5-l6-supply = <&vreg_bob2>;
-+		vdd-l7-supply = <&vreg_bob1>;
-+
-+		vreg_l1n_1p1: ldo1 {
-+			regulator-name = "vreg_l1n_1p1";
-+			regulator-min-microvolt = <1104000>;
-+			regulator-max-microvolt = <1104000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l2n_1p056: ldo2 {
-+			regulator-name = "vreg_l2n_1p056";
-+			regulator-min-microvolt = <1056000>;
-+			regulator-max-microvolt = <1056000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l3n_1p8: ldo3 {
-+			regulator-name = "vreg_l3n_1p8";
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l4n_1p8: ldo4 {
-+			regulator-name = "vreg_l4n_1p8";
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l5n_2p8: ldo5 {
-+			regulator-name = "vreg_l5n_2p8";
-+			regulator-min-microvolt = <2800000>;
-+			regulator-max-microvolt = <2800000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l6n_2p8: ldo6 {
-+			regulator-name = "vreg_l6n_2p8";
-+			regulator-min-microvolt = <2800000>;
-+			regulator-max-microvolt = <2800000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l7n_3p3: ldo7 {
-+			regulator-name = "vreg_l7n_3p3";
-+			regulator-min-microvolt = <3304000>;
-+			regulator-max-microvolt = <3304000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+	};
- };
- 
- &dispcc {
-
--- 
-2.25.1
-
+> Thanks,
+> Suren.
+>
+> >
+> > --
+> > RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+> > FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
