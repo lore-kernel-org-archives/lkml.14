@@ -1,107 +1,122 @@
-Received: from out-175.mta1.migadu.com (out-175.mta1.migadu.com [95.215.58.175])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 691CD525A
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 02:23:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 757DF2570;
+	Tue, 23 Jan 2024 02:23:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705976604; cv=none; b=dzj3BvzNDNaIeU1FocyaFX04tFMHjMfGVU6NtFVgwaztNAKxeWASPFcODGOSdHjtkN2l+OOLeWFjGAY40RyRzVl/Ek5Np1Prre8zy5lj01df9TNT7jp+K/Vm8mXGvkz6ApUBiJdYK7UJPAfR1E8BzEyhNeoL2ENKs6OHQDShSmM=
+	t=1705976630; cv=none; b=dsLgyBQb3xTqJCdphOqIuul87XQN2B6Ppm3aCkjq30Vmz/i54qhSceo3nK71sKeswo3rVG3zy6vk0d1f8YiOvK68WVg6sG+uQu/DO/3W1sIrU06CRjhvXGpDJnqpWBiktaAZ0MkS4v+uZpJVOK6lWk0YjlWVDuaE9osCxIerKYY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705976604; c=relaxed/simple;
-	bh=O3GX1nlYcs0zSCd7nC1/5Xu01YhkOecXq9lefI4hJyo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=tEW5YbkBnmo6wnjLRSMQ9ODOrAAv597VRB/8yeJ4JyZz5dJoELZ3OJ3exem/UZfU/9zA6hrgpEYtdnywnK6R1rWBtQCTktZtxvKhkONHlWi4MHuUFTvLvVJQ1Gei03DvO+jFpoksgJXZvkJpgLh1avhBXKh/bV82WS+8B5pzPZc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=GRBybsmf; arc=none smtp.client-ip=95.215.58.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1705976630; c=relaxed/simple;
+	bh=JeB4i+pR0KhtpVTA4opmZxB6zloih/QMQdza1YMB5Sk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ozTBd5be3op9yIBavyCKChjjm9W3a0mNumQTjzibVK1Novf//NAfrwO8Gv+Sor/FmMl88oNmz03Vo+SHOPSzKE5kg5BB0DPhuJJ4C0epZfAtqA4sDj8ff3oj8UDvJApXDxPUrhNCuk+EfVynid02ZCIWanzlS7bYRPvEXWOeTrE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=goO5vUZ4; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="GRBybsmf"
-Message-ID: <2a1d6a9b-f486-44c8-6d1d-e6bab4dc3ced@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1705976600;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Fy9JI9s5CgHc9vU6scmFm3fgR9U6bOckIRvEe1L/hPs=;
-	b=GRBybsmfuXKfd/mLRS+wIrZFlZhpe5WRZDKnbLkyNE08NsBjmFBbwFh81efoeyV1P1WVoU
-	6v4Wtv83tk6Q9yBSGWM4QQd0AFwYf6FQL8TQguA0eKL0vRpmzSPfJrxMlNqbBgsid1RAfm
-	rVJdEY1UzcYcbLOjMvO++uDDfQGi4pk=
-Date: Tue, 23 Jan 2024 10:23:14 +0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="goO5vUZ4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1705976629; x=1737512629;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=JeB4i+pR0KhtpVTA4opmZxB6zloih/QMQdza1YMB5Sk=;
+  b=goO5vUZ4S/LftCGbsM8qOix7k+tT6udCc3oFolYGAAReVzNYglNnCyBW
+   d3oGW5JL/mxR23w8pXQjwS0s7xCRwVJndeDtwht26VWZKpuTaob+iErNp
+   EuLJF+z9a9m/SCoKWTBKHAotrwZ8sPkKX9A8k/sbKqJ5Ixr6Hhnxi0ytY
+   2sUAlX4RIVL6fsAbOkTCli5ynHpymDK4WkEk0xVC8W2QVBtQUZE6Ypplw
+   Tyt6S7qXhmtanCfTT7eP7qwo6m4NR05Zjq3DWy6muruOSk4l9Ac9C6NlS
+   A3aSqbunnJ9SXfVL1A6WKeIPqGJrHZRfGldyh27qnMf7dJMUw/3ApPT+0
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10961"; a="1272591"
+X-IronPort-AV: E=Sophos;i="6.05,213,1701158400"; 
+   d="scan'208";a="1272591"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 18:23:48 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,213,1701158400"; 
+   d="scan'208";a="1431375"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by fmviesa003.fm.intel.com with ESMTP; 22 Jan 2024 18:23:45 -0800
+Date: Tue, 23 Jan 2024 10:20:29 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+Cc: hao.wu@intel.com, trix@redhat.com, mdf@kernel.org, yilun.xu@intel.com,
+	linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] fpga: dfl: afu: update initialization of port_hdr driver
+Message-ID: <Za8ibeJc82Xkbpct@yilunxu-OptiPlex-7050>
+References: <20240122172433.537525-1-matthew.gerlach@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH] mm/mmap: introduce vma_range_init()
-Content-Language: en-US
-To: "Liam R. Howlett" <Liam.Howlett@Oracle.com>,
- Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org
-References: <20240111021526.3461825-1-yajun.deng@linux.dev>
- <20240122220031.pwiravglee7o7k34@revolver>
- <20240122154031.b710f834b14d9027176f439a@linux-foundation.org>
- <20240123001830.glqdmrv2qc56zfpc@revolver>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yajun Deng <yajun.deng@linux.dev>
-In-Reply-To: <20240123001830.glqdmrv2qc56zfpc@revolver>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240122172433.537525-1-matthew.gerlach@linux.intel.com>
 
+On Mon, Jan 22, 2024 at 09:24:33AM -0800, Matthew Gerlach wrote:
+> Revision 2 of the Device Feature List (DFL) Port feature has
+> slightly different requirements than revision 1. Revision 2
+> does not need the port to reset at driver startup. In fact,
 
-On 2024/1/23 08:18, Liam R. Howlett wrote:
-> * Andrew Morton <akpm@linux-foundation.org> [240122 18:40]:
->> On Mon, 22 Jan 2024 17:00:31 -0500 "Liam R. Howlett" <Liam.Howlett@Oracle.com> wrote:
->>
->>> * Yajun Deng <yajun.deng@linux.dev> [240110 21:15]:
->>>> There is a lot of code needs to set the range of vma, introduce
->>>> vma_range_init() to initialize the range of vma.
->>>>
->>>> Signed-off-by: Yajun Deng <yajun.deng@linux.dev>
->>>> ---
->>>>   include/linux/mm.h |  9 +++++++++
->>>>   mm/mmap.c          | 29 +++++++----------------------
->>>>   2 files changed, 16 insertions(+), 22 deletions(-)
->>> This isn't a whole lot of code, are there others?  We're losing code
->>> clarity in favour of saving 6 lines?
->>>
->> Oh.  I thought it was a nice cleanup which made things more clear.
-> I'm not totally against it; that's why I suggested the changes below. I
-> think a name change would go a long way for clarity. It's not as much as
-> I though it would be though.
->
->>>> diff --git a/include/linux/mm.h b/include/linux/mm.h
->>>> index f5a97dec5169..abb4534be3cc 100644
->>>> --- a/include/linux/mm.h
->>>> +++ b/include/linux/mm.h
->>>> @@ -3516,6 +3516,15 @@ static inline bool range_in_vma(struct vm_area_struct *vma,
->>>>   	return (vma && vma->vm_start <= start && end <= vma->vm_end);
->>>>   }
->>>>   
->>>> +static inline void vma_range_init(struct vm_area_struct *vma,
->>> Any reason this can't be in mm/internal.h ?
->> That would be good.
-> One other thing, do we trust this to be inlined correctly by the
-> compiler or should this be __always_inline?  I'd expect it to be okay as
-> it is, but I've been proven wrong in a perf trace before..
->
+Please help illustrate what's the difference between Revision 1 & 2, and
+why revision 2 needs not.
 
-Okay, I would take __always_inline and put it in mm/internal.h in v2.
+> performing a port reset during driver initialization can cause
+> driver race conditions when the port is connected to a different
 
->>> vma_range_set(), vma_set_range(), or just vma_range() might be a better
->>> name?  My thinking is that some of these are actually modifying the vma
->>> and not just initializing it, right?
->> I'd vote for vma_set_range().
->>
-> Using vma_set_range() leaves vma_range() or vma_size(), which could be
-> added for the calculations of vma->vm_end - vma->vm_start.  Davidlohr
-> suggested such a beast a few years ago, but that one would need to live
-> in the include/linux/mm.h as it occurs a lot more.
->
-> $ git grep "vma->vm_end - vma->vm_start" | wc -l
-> 198
->
-> .. for just those named vma.
->
+Please reorganize this part, in this description there seems be a
+software racing bug and the patch is a workaround. But the fact is port
+reset shouldn't been done for a new HW.
+
+BTW: Is there a way to tell whether the port is connected to a different
+PF? Any guarantee that revision 3, 4 ... would need a port reset or not?
+
+Thanks,
+Yilun
+
+> PCIe Physical Function (PF) than the management PF performing
+> the actual port reset.
+> 
+> Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+> ---
+>  drivers/fpga/dfl-afu-main.c | 13 ++++++++++++-
+>  1 file changed, 12 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/fpga/dfl-afu-main.c b/drivers/fpga/dfl-afu-main.c
+> index c0a75ca360d6..7d7f80cd264f 100644
+> --- a/drivers/fpga/dfl-afu-main.c
+> +++ b/drivers/fpga/dfl-afu-main.c
+> @@ -417,7 +417,18 @@ static const struct attribute_group port_hdr_group = {
+>  static int port_hdr_init(struct platform_device *pdev,
+>  			 struct dfl_feature *feature)
+>  {
+> -	port_reset(pdev);
+> +	void __iomem *base;
+> +	u8 rev;
+> +
+> +	base = dfl_get_feature_ioaddr_by_id(&pdev->dev, PORT_FEATURE_ID_HEADER);
+> +
+> +	rev = dfl_feature_revision(base);
+> +
+> +	if (rev < 2)
+> +		port_reset(pdev);
+> +
+> +	if (rev > 2)
+> +		dev_info(&pdev->dev, "unexpected port feature revision, %u\n", rev);
+
+Remove the print. It is indicating an error but the function returns OK.
+
+Thanks,
+Yilun
+
+>  
+>  	return 0;
+>  }
+> -- 
+> 2.34.1
+> 
+> 
