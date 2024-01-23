@@ -1,114 +1,159 @@
-Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF229604B7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01325604BB
 	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 12:53:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706014435; cv=none; b=GsSheGZVJpGjnq+Qz+yfXsiWJ/j21IOS+rV8ArMF0ar7MFjPY+tRBHNO/Q7375k3p+Gxl704UOYAwnFpuB+5tsEr7koce0/nBGdKUhjXE80XxrVRniXE4D12GYK3NHUMaOhRjVVdoQFFEhprIEooYXY4rirN7/NumZ+uuVuCjQM=
+	t=1706014435; cv=none; b=FhD5iUfK3WeOMQu9F9MqPwQfHQ8XcwbG8BTul8zyqQpRKkGL1DVApkfskYBWhX4JDIo8hRuFLijtw3A8HJOrbvg6IfUzsaCT59pyM81kot5L0X45zqxM14zr46TIpjmqDgz3eQHjCAbqw1fw1gUEgj0aU8f93+Jmsnm0wHc8pkE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1706014435; c=relaxed/simple;
-	bh=SrubDBE5WcpcfK7f3xovnFiXn5W/MQUApTBY96p2ZzE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fxiXfUeHcIQtMnRZ5WqtMCV//+Smy0DbLR9m6mnu2Xepf3UEetXyXmD2CW//UhOdj/U4bjF+A8ZpLSW0SsxtkoycTt93u99pBCYyTAkTYhuVkrjYLKMRYcaTTpIAH7JlKPszRq59emh9rQbj2CILOHtEKYOt9cE/zP4vmWaJJTk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=miusm1XE; arc=none smtp.client-ip=209.85.128.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	bh=cwuXnq3/bfsRA6gd3Cmv/vE1KIT+6qbbvUHp22hvsww=;
+	h=Message-ID:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type:Date; b=NneJhQIwGzHWvquKOCqUv2Ij+jZtbrCipEjl96HRedqvcaYG5eRSdrE/HX3jYmXNbCOe8y2Anw6CXZDhG+ZUcddo10VH2LYAPkhLI0Vb7DNbG88tChRGxIQYm/gDqCJDQwncQueC7WQ1Ib5MLSxiFYJ2KcIYZWK8StoQg+7Fyso=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=MPgHBCAW; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=29fejpEh; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="miusm1XE"
-Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-600094c5703so17267697b3.3
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 04:53:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706014433; x=1706619233; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Z+asE/AToOCsan6HoT4XnPwjdlU0T+m2L6pRIK9YYNg=;
-        b=miusm1XEW4kveUW39ihoH7X2eavQf30EvZ5jgVfQWWY/zt/IWT22Rm+4iDYPEIVkki
-         2TLNjczpT94D4VDDycDi6L03wipZAqwwisLsWa/xIxepIGeqP0cVZxjK0dXzHL6K+jgc
-         M8ApoJ1YNlZXrp7Q80rdHzUeWd5/seBUnP06WpRchKAb4aYecJLRtYbmICvX+KWaukaP
-         TRmKIJ4zm2CDeoHgCsRBkPfphfQdDdtcJIjGzzmXmj/Q7BNpjvM2fdD/606BivVFpJxb
-         Gbu/LHx9nlo6APz1V7Hb4mJO8/IK2RmitPxp+HlO7Y8mIKJ6w+Kvjs4dXOzx1TXdAz4p
-         Stww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706014433; x=1706619233;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Z+asE/AToOCsan6HoT4XnPwjdlU0T+m2L6pRIK9YYNg=;
-        b=MgIWHOvXM39XFQ7VVt6+WofBH+CyIAmbtfvQWq1lOhTIsAyShlQUTWCDKZ6IPASvx9
-         +ZvcpjXGFQ9iZZVMUYhxo1/C92e/7/JMd7i4zTF5s+3hzJKQi/eMNp4Anpmwtn2KPqvx
-         lV0nYl6ljC1J0jfNqSGgpXdIPz4DyzPVKAEEGYTB7JTjgG0q8MRXFpwuJuN1E/CyLZyq
-         NBEi7blDHRsWmceuyqagSrMWgfXXF2o0jiSAmCQugVz6lsaw2MKKkiXgbQ7E7dUVHERl
-         hBPP/29grTYuN3rPZ3f++DlA5vdnJRIl+mArh7cE5OW48u9WhBU5H+ta/dU/Pl32AIfd
-         BweA==
-X-Gm-Message-State: AOJu0YzdMWchb1hiD3U6tN6t0PEJYrZtp/n0H/JdE7LWwC5zigyDEoO/
-	t5w86lmxsr/QsWbeXeZ+obusgF+TbAbLki4+PkZ7VFJt6m1ccw8Gd2UMYwNq3WpzjhXTT5kUlN6
-	a5xyFP+K/BPNEpNHcZc+nOxF5+XH/Tx3AIFDX3A==
-X-Google-Smtp-Source: AGHT+IF0zt7gwjJbmvCQYkLw24rgqNSfBdkANuOxWkItD7WSZEKNeUhd5CZMquNm3DCcAVEY1T/CrJcgJ5At/Eh1vmI=
-X-Received: by 2002:a81:9113:0:b0:5e3:320b:7c with SMTP id i19-20020a819113000000b005e3320b007cmr4912440ywg.37.1706014432844;
- Tue, 23 Jan 2024 04:53:52 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MPgHBCAW";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="29fejpEh"
+Message-ID: <20240117115909.142089057@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1706014431;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 references:references; bh=bGJfOwxea2Kzkpm6jN0bfhkDx1w055b9eqyYHBC+Rt4=;
+	b=MPgHBCAWenhjltLbt1mj9/hPj+TgPDdNbAxfp9bJ8FdqNit6f4OxPc3OGCwecsuKGIGC9y
+	WdQU8Kjut+4GDL4dDeZuppgtVQQzAf4QreWTv1w+vFk847ISie/0DSZPFvKc8lX/1Aeek2
+	llSrdEYy+q2fQPwk1h3F5emnDbmphf7qmYEOQCqnjiEwKUDf2D7Dd8W1urf1p8e4i9OeCK
+	uwqCZddcDu6qWk/59VsWhu+B2zxZoQlpWlhHpbk8y/5973AMBEYjINXXuoUUoeVmFiwi64
+	fOnHijzgSRgVC+GZtK3A2RIpJQN5HYdZANzb05hl5M6qz92sxN5QzPgIM51JXQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1706014431;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 references:references; bh=bGJfOwxea2Kzkpm6jN0bfhkDx1w055b9eqyYHBC+Rt4=;
+	b=29fejpEhesOhnZ9wsgFnV8n2wT9d0ZivSWRM+k+OoJ5+/5LJ16C0dris2zqBjFf2y2j6u9
+	aFWlilt48t33naAA==
+From: Thomas Gleixner <tglx@linutronix.de>
+To: LKML <linux-kernel@vger.kernel.org>
+Cc: x86@kernel.org,
+ Tom Lendacky <thomas.lendacky@amd.com>,
+ Andrew Cooper <andrew.cooper3@citrix.com>,
+ Arjan van de Ven <arjan@linux.intel.com>,
+ Huang Rui <ray.huang@amd.com>,
+ Juergen Gross <jgross@suse.com>,
+ Dimitri Sivanich <dimitri.sivanich@hpe.com>,
+ Sohil Mehta <sohil.mehta@intel.com>,
+ K Prateek Nayak <kprateek.nayak@amd.com>,
+ Kan Liang <kan.liang@linux.intel.com>,
+ Zhang Rui <rui.zhang@intel.com>,
+ "Paul E. McKenney" <paulmck@kernel.org>,
+ Feng Tang <feng.tang@intel.com>,
+ Andy Shevchenko <andy@infradead.org>,
+ Michael Kelley <mhklinux@outlook.com>,
+ "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Subject: [patch v5 13/19] x86/mm/numa: Use core domain size on AMD
+References: <20240117115752.863482697@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240122-gdsc-hwctrl-v4-0-9061e8a7aa07@linaro.org> <20240122-gdsc-hwctrl-v4-1-9061e8a7aa07@linaro.org>
-In-Reply-To: <20240122-gdsc-hwctrl-v4-1-9061e8a7aa07@linaro.org>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Tue, 23 Jan 2024 13:53:17 +0100
-Message-ID: <CAPDyKFp3F16iQnR9jw6_AJStWvGv2u8CHsF4YJCZSxJj-8p0LA@mail.gmail.com>
-Subject: Re: [PATCH v4 1/5] PM: domains: Allow devices attached to genpd to be
- managed by HW
-To: Abel Vesa <abel.vesa@linaro.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Kevin Hilman <khilman@kernel.org>, Pavel Machek <pavel@ucw.cz>, 
-	Len Brown <len.brown@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Bjorn Andersson <andersson@kernel.org>, Andy Gross <agross@kernel.org>, 
-	Konrad Dybcio <konrad.dybcio@linaro.org>, Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Stanimir Varbanov <stanimir.k.varbanov@gmail.com>, 
-	Vikash Garodia <quic_vgarodia@quicinc.com>, "Bryan O'Donoghue" <bryan.odonoghue@linaro.org>, 
-	Mauro Carvalho Chehab <mchehab@kernel.org>, Taniya Das <quic_tdas@quicinc.com>, 
-	Jagadeesh Kona <quic_jkona@quicinc.com>, Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
-	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, 
-	linux-media@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 23 Jan 2024 13:53:50 +0100 (CET)
 
-[...]
+From: Thomas Gleixner <tglx@linutronix.de>
 
-> +
-> +/**
-> + * dev_pm_genpd_get_hwmode - Get the HW mode setting for the device.
-> + *
-> + * @dev: Device for which the current HW-mode setting should be fetched.
-> + *
-> + * This helper function allows consumer drivers to fetch the current HW mode
-> + * setting of its the device.
-> + *
-> + * It is assumed that the users guarantee that the genpd wouldn't be detached
-> + * while this routine is getting called.
-> + */
-> +bool dev_pm_genpd_get_hwmode(struct device *dev)
-> +{
-> +       struct generic_pm_domain *genpd;
-> +
-> +       genpd = dev_to_genpd_safe(dev);
-> +       if (!genpd)
-> +               return false;
-> +
-> +       if (genpd->get_hwmode_dev)
-> +               return genpd->get_hwmode_dev(genpd, dev);
+cpuinfo::topo::x86_coreid_bits is about to be phased out. Use the core
+domain size from the topology information.
 
-Not sure why I haven't spotted this before - but we should probably
-assign dev_gpd_data(dev)->hw_mode here, rather than returning the
-result from the callback directly.
+Add a comment why the early MPTABLE parsing is required and decrapify the
+loop which sets the APIC ID to node map.
 
-> +
-> +       return dev_gpd_data(dev)->hw_mode;
-> +}
-> +EXPORT_SYMBOL_GPL(dev_pm_genpd_get_hwmode);
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Tested-by: Juergen Gross <jgross@suse.com>
+Tested-by: Sohil Mehta <sohil.mehta@intel.com>
+Tested-by: Michael Kelley <mhklinux@outlook.com>
 
-[...]
 
-Kind regards
-Uffe
+---
+ arch/x86/include/asm/topology.h |    5 +++++
+ arch/x86/mm/amdtopology.c       |   35 ++++++++++++++++-------------------
+ 2 files changed, 21 insertions(+), 19 deletions(-)
+---
+--- a/arch/x86/include/asm/topology.h
++++ b/arch/x86/include/asm/topology.h
+@@ -121,6 +121,11 @@ struct x86_topology_system {
+ 
+ extern struct x86_topology_system x86_topo_system;
+ 
++static inline unsigned int topology_get_domain_size(enum x86_topology_domains dom)
++{
++	return x86_topo_system.dom_size[dom];
++}
++
+ extern const struct cpumask *cpu_coregroup_mask(int cpu);
+ extern const struct cpumask *cpu_clustergroup_mask(int cpu);
+ 
+--- a/arch/x86/mm/amdtopology.c
++++ b/arch/x86/mm/amdtopology.c
+@@ -54,13 +54,11 @@ static __init int find_northbridge(void)
+ 
+ int __init amd_numa_init(void)
+ {
+-	u64 start = PFN_PHYS(0);
++	unsigned int numnodes, cores, apicid;
++	u64 prevbase, start = PFN_PHYS(0);
+ 	u64 end = PFN_PHYS(max_pfn);
+-	unsigned numnodes;
+-	u64 prevbase;
+-	int i, j, nb;
+ 	u32 nodeid, reg;
+-	unsigned int bits, cores, apicid_base;
++	int i, j, nb;
+ 
+ 	if (!early_pci_allowed())
+ 		return -EINVAL;
+@@ -158,26 +156,25 @@ int __init amd_numa_init(void)
+ 		return -ENOENT;
+ 
+ 	/*
+-	 * We seem to have valid NUMA configuration.  Map apicids to nodes
+-	 * using the coreid bits from early_identify_cpu.
++	 * We seem to have valid NUMA configuration. Map apicids to nodes
++	 * using the size of the core domain in the APIC space.
+ 	 */
+-	bits = boot_cpu_data.x86_coreid_bits;
+-	cores = 1 << bits;
+-	apicid_base = 0;
++	cores = topology_get_domain_size(TOPO_CORE_DOMAIN);
+ 
+ 	/*
+-	 * get boot-time SMP configuration:
++	 * Scan MPTABLE to map the local APIC and ensure that the boot CPU
++	 * APIC ID is valid. This is required because on pre ACPI/SRAT
++	 * systems IO-APICs are mapped before the boot CPU.
+ 	 */
+ 	early_get_smp_config();
+ 
+-	if (boot_cpu_physical_apicid > 0) {
+-		pr_info("BSP APIC ID: %02x\n", boot_cpu_physical_apicid);
+-		apicid_base = boot_cpu_physical_apicid;
++	apicid = boot_cpu_physical_apicid;
++	if (apicid > 0)
++		pr_info("BSP APIC ID: %02x\n", apicid);
++
++	for_each_node_mask(i, numa_nodes_parsed) {
++		for (j = 0; j < cores; j++, apicid++)
++			set_apicid_to_node(apicid, i);
+ 	}
+-
+-	for_each_node_mask(i, numa_nodes_parsed)
+-		for (j = apicid_base; j < cores + apicid_base; j++)
+-			set_apicid_to_node((i << bits) + j, i);
+-
+ 	return 0;
+ }
+
