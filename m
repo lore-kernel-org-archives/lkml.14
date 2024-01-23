@@ -1,547 +1,183 @@
-Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
+Received: from mx0b-0064b401.pphosted.com (mx0b-0064b401.pphosted.com [205.220.178.238])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F8987F7F0
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 16:56:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706028987; cv=none; b=SkRbXRGmNXxkyyXFxKW0RLPCGb8ojjAuSVhBJ6+xxBVaTcJXb/kaGiI2tla/x+Elm9vhk01OS2T7TYnkRQXABwywmYU1kde7ctBh52gNrDk9PsAbh/Pmqu1s8mIGZiFI50FBJPulhxdziyHukozOr7lxhUogGHLNbziEhqK+jks=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706028987; c=relaxed/simple;
-	bh=3qrdXrKxtIYgerEZli56bPqIlX+PlGpPgXyp5uxux5c=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=X24x/GABQ8ZXt82r4sOsUcvZHLFoDTqFg+R1c9apn5LwDRJqgkbOX0LN71HVTVatpA7baL26XoGF8bMzh/FjbWZ50akIg96hqvZ6v4RjOFnRfJoheoaGpvgbwDeUJEi+OyFVezmdZH8YEDXh4Pc3FYHqzgnfmi+b3kc5VMaKF28=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=au9wyjY/; arc=none smtp.client-ip=217.70.183.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EC375733D;
+	Tue, 23 Jan 2024 16:58:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.178.238
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706029121; cv=fail; b=i51Vm//pwKWof4NOzkAtkN7ii343y1iDz361iidCH+SXncqv3qKTI5IhObi6XX8rTy/Z1Ykklon10ts42t8ASYMLCBT0vrIbtIq7CdpBmEwLsS6OCMFsn//U8rLPwHl32WvXe1pnVRP2rrKBaA88fMjRAbGdFrGxsfn8WneZtCQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706029121; c=relaxed/simple;
+	bh=CQiCnAxw1xDXewOhwWsa9qehGPz5SGyAJIcjvko12ok=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=WsIxq5bBYs1Dg8zLWYyZlht7I9c5NrvZK7McRauHfS7KAusYJpqwkSa4kuo5Vx5p7mIunlaTn837e1DQLi04BiXQE/7XJWTSDe6M5zz6ZUKs0NUEQ9bcacWWQyfK+kmJL4zlanamluCe++UM15vk5HEo0k3NX/dICWjMraTcS4M=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; dkim=pass (2048-bit key) header.d=windriver.com header.i=@windriver.com header.b=b2CMzWLR; arc=fail smtp.client-ip=205.220.178.238
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="au9wyjY/"
-Received: by mail.gandi.net (Postfix) with ESMTPA id 1029C1C0003;
-	Tue, 23 Jan 2024 16:56:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1706028981;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fV/YW27tefRpPT/W2vEAoQJ09BLiOkroaYWZbpirsGU=;
-	b=au9wyjY/UFNKogfgrlbqLr3XZ/2MIbZ0ZLm/G+QRogqmndY+OZYKm6KezLBA6ALOd2uTv/
-	C1RTHGEXAoof+QfCZBQ0NQXy9flrAlU74WfuSzi1wQxYGJFbYLzbDnJwHspbFtDIxvV8Za
-	oZO3r86FDwMjciSVoKn3b2Jj7g1VN5vgpmKxdlGAzEPdEbxFTLhH1mhyYp3zm3PTfgGBw/
-	+LN7GPsnCihijl1BKSJvfU7JcCOSM3TTD4RbAGfcgHDscieXif2vgRdsFJkC1n0hcFYIRy
-	TaEeAXfnvec9Az7NybjK83x6B6hCiqka88/5ORmPmmADMlkLX1D9OMUf+pg6DQ==
-From: Herve Codina <herve.codina@bootlin.com>
-To: Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>
-Cc: linux-kernel@vger.kernel.org,
-	alsa-devel@alsa-project.org,
-	Herve Codina <herve.codina@bootlin.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: [PATCH 1/1] ASoC: codecs: Add support for the framer codec
-Date: Tue, 23 Jan 2024 17:56:13 +0100
-Message-ID: <20240123165615.250303-2-herve.codina@bootlin.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240123165615.250303-1-herve.codina@bootlin.com>
-References: <20240123165615.250303-1-herve.codina@bootlin.com>
+	dkim=pass (2048-bit key) header.d=windriver.com header.i=@windriver.com header.b="b2CMzWLR"
+Received: from pps.filterd (m0250812.ppops.net [127.0.0.1])
+	by mx0a-0064b401.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40N3fC8g011365;
+	Tue, 23 Jan 2024 16:58:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=windriver.com;
+	 h=from:to:cc:subject:date:message-id:content-transfer-encoding
+	:content-type:mime-version; s=PPS06212021; bh=PgpiAsCyPf7QfY4KVH
+	XMKIX8PHx94TGuao87xzS9gn8=; b=b2CMzWLR1soylWsTTgTcCyylI4D5kR4kim
+	8p0X+dytWmCA2/UIZM5LREOt4hzEkmpr3GQAWHH5nWdNXp8SbTwi6+cJAdO4Z61d
+	3YHDmivRUI+gJ7Qacdo1Ir/YOwTIzx1bs9muTM/E541CJuZXXcSSOCQN6AVuINDP
+	SnpZjqcClUUTI4tDZizFpJjhlpokuT3X1TM4NIqzlLu1JVp9JuQFl9wHl8zDpSa8
+	Giz+lsCEaGQ7nWTAm1FsAOemm7MDQU85zBoy1q8+kBD22Ilf7SKnLdOykhUjW3St
+	y4IFwal0D+TJYkWd5QoXhMGo+hpjUo4gUtqXoFyF6I7KQ1SJivjw==
+Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2168.outbound.protection.outlook.com [104.47.57.168])
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 3vr5573mec-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 23 Jan 2024 16:58:15 +0000 (GMT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BLTLKbOB8hWx/RdN033IAOrrkMUN7SCeSHTD8UyODkrXb/Wv0/+Xqrt7LOHIe/xfpIqQi1D5YjFXYXeiP2QD42T3eEc6hatEWsGVC8qdBgz5jK+viusmhlEINct+OoN7e228WrdGBnPJMoO26bhxowX41IV5OjaxIqYD5X+BqiXhbHcaSBpsCVDQzPyUG/OHDov7fqjUFT1oFbHH/5hk7uzDtNttuxy6CQTNfS1SPIocbtGL121tALnunNaDU+fokhej9glYbKjEIWygkQRfXblJoHnltFEL5jj7qDk1jk/JA/YNM16GJIN3Tj5UbvQZBq//hNBjpmmalvaSXNcw/w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=PgpiAsCyPf7QfY4KVHXMKIX8PHx94TGuao87xzS9gn8=;
+ b=VChOY839FXYjQS93aVmKhTK/9Ys5umWRcqMIVIj7zzZJtx8pvcP0Iy54tDMS5RieS8NI7aFLow8U/DgsHf5wiZUNJZZ0XUueI9+zPsGaGchdCMKWTsgEIWRSlKpcCg55ofqf4kbu51MOo0p+K/NAWUlncPWFphlxX4aTzYovWs2G3DMneDGWuAI4vK4a5OnFu2vv9vs9pHsK0No3xa1GRbkLEtnMgbNqCNO51Pnwe83oX7ycXvjgBFUAi8fw9j7eHJLnw/v9EwA/siFwoRY/oUw2oMDozfzsBrSVW/ORdppNbiNl4XFUUbM9e6fZwjgA8RuiQ/mnffizgiYZiCvJYA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=windriver.com; dmarc=pass action=none
+ header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
+Received: from DM4PR11MB5327.namprd11.prod.outlook.com (2603:10b6:5:392::22)
+ by DM6PR11MB4673.namprd11.prod.outlook.com (2603:10b6:5:2a4::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7202.37; Tue, 23 Jan
+ 2024 16:58:12 +0000
+Received: from DM4PR11MB5327.namprd11.prod.outlook.com
+ ([fe80::7c2e:5b95:fdc2:30e]) by DM4PR11MB5327.namprd11.prod.outlook.com
+ ([fe80::7c2e:5b95:fdc2:30e%3]) with mapi id 15.20.7202.035; Tue, 23 Jan 2024
+ 16:58:12 +0000
+From: ovidiu.panait@windriver.com
+To: linux-kernel@vger.kernel.org, iommu@lists.linux.dev
+Cc: robin.murphy@arm.com, will@kernel.org, joro@8bytes.org, jgg@ziepe.ca,
+        Ovidiu Panait <ovidiu.panait@windriver.com>
+Subject: [PATCH] iommu: iommu_group_alloc_default_domain: Fix ops->default_domain codepath
+Date: Tue, 23 Jan 2024 18:58:29 +0200
+Message-Id: <20240123165829.630276-1-ovidiu.panait@windriver.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: VI1PR04CA0048.eurprd04.prod.outlook.com
+ (2603:10a6:802:2::19) To DM4PR11MB5327.namprd11.prod.outlook.com
+ (2603:10b6:5:392::22)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-GND-Sasl: herve.codina@bootlin.com
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR11MB5327:EE_|DM6PR11MB4673:EE_
+X-MS-Office365-Filtering-Correlation-Id: 67a91ff2-739d-41ff-5458-08dc1c347ba5
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 
+	rKruvXK+aBmxToO145Jp90vUhcI8/ro8Lr8XyD7L4oOr/uv8gCjR0Q+uBkeignve3jqEJKkZa2ePWU19fTfpLZaZBdU++UprQ9OVOU8R9tXlv4AuH5s+ST74GLBzWGdZInwK8/skqW7L5bHlcEzvvb7yH7GVLpUxGmrVxl6k3nbVSIfHeeAxJ7HEqiG+EeJapg9ExJyhyRP3jEWUOz5LoTDanp99spPoxF3UTXrJGAG0Heb9iTdP1yYtQukuhIez61FqReFeyReJ8dthbwlXNTmQPxBgh/otmHMn4PRou9ymQkV63ao4FBGoHjKXk1WBAuKgadFkD2RYExp+OG78j9UtSAlDtQ/23oPFDW3QUeyznJJ7fxc8lbSI1+i9ITtx7NKisor3a1AqIJWKgVNX4Zg9xk+pbE0zeUVSpr5Q3JBd/cx/8gsu7XsGedLrPZB6XdC7gZ60ydzY37V4EGUByX0QyrSvqVhg29IPhte5HgGP7urLZyLfpwUpRsr8EjaAigNwx5fC55jmedEF+ZVz/i9P2fSjqMJ6yhhcLx9lnZhmuKD1aQ5UBdAicAd79rgEZnypqwaS/29DRYNtjIftxKOt7nMTu6jWG//3PjS6czo=
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR11MB5327.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(39850400004)(396003)(136003)(376002)(346002)(230922051799003)(451199024)(1800799012)(64100799003)(186009)(66946007)(66476007)(316002)(66556008)(36756003)(38350700005)(6486002)(4326008)(8676002)(38100700002)(8936002)(86362001)(52116002)(26005)(6506007)(478600001)(6512007)(9686003)(1076003)(2616005)(6666004)(83380400001)(107886003)(41300700001)(5660300002)(2906002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?us-ascii?Q?B8Sv03r8R8xOS/ZFFJvqyTcH5S2KQqn/o+RIMbYVnbG3wxYdsVVO2PLyYry1?=
+ =?us-ascii?Q?oBVjGx3/bWm/OSYbAQqDiYjGpeE/1ltDfhCKJLw1sQ1Wv9uvnrHd5vWGtTKn?=
+ =?us-ascii?Q?GdvjAagaacEYK8AC1AqdmQ+bD776kFyQj72rY2nlSJL8bmQNopCT2e+IFJJY?=
+ =?us-ascii?Q?QU0FtAoM4vVUMcatuKP9nly9hYlkAUaZnqZjmJ8Ny3I0GAk0LdJGsuK43dxm?=
+ =?us-ascii?Q?JSHoTsrRi5g/MfMeXXygQEfs0Q+LkzORKlaOkd+Dohl0zhoIoLadt0n4WpVi?=
+ =?us-ascii?Q?AES5miDiRwez4gMv69YBn2KmzsC03B98YWrn03pydreGqwPYsHPJyYpHtdf4?=
+ =?us-ascii?Q?4q0B7GSh6ccb4Pw95vy2l8ByaD2zpIVeYZ86IIEu53V2yzqsufbpt/n2SGRC?=
+ =?us-ascii?Q?Vyv6kiC9BVHDU5sEEO0MwrmQwwAPgOrLj7gLXj5I1IvpREZWVn3tGJwcf2No?=
+ =?us-ascii?Q?HUEWuTqNgDaynBVl8he5whnUA14Uva3SqYE+x7fv3ha2qZX2WsIaKnHVkVjr?=
+ =?us-ascii?Q?67UC6atKEk4l3Cc+Z2xOfc16vZxpJmYFq+BtV8jXDLsW3FHL+FLVn0tmN5jW?=
+ =?us-ascii?Q?JbOezlL3QPCQh2eDmUFKNwyyWZSVCAOjJY0XxN/kftFzP9NkyJ9r0rMKaToZ?=
+ =?us-ascii?Q?i3zG1FSqnYXiUCargZiDyv6UWy8E2UtuLsetaoPhQiIMLqPgAQHx71K6n5gc?=
+ =?us-ascii?Q?NpImvHxVrE/J9KOZOFer2EwTxnO++S42fbZ283+R3b93zhiCv20rXFeinH6l?=
+ =?us-ascii?Q?Nymm2rxLk7VM5BRUy5O/O2uFEVNlgFSG9dtxAhhqN9QidaxnAKbNz3Cm75ar?=
+ =?us-ascii?Q?ufomMx9YzHm9AUN3sGsG5LG7vgbFQO0pGCM3UqVNWGkNMcVo9coWuTH5Fkjm?=
+ =?us-ascii?Q?2JdtEShZD9WdiN7u2exadEPGKCo5I40NIz9y0SwPnabciYC1GVW6lV7IpziQ?=
+ =?us-ascii?Q?dISlbGZb30N7TvTQP6+XQKrQ606Yf4hlIdTnl85vX1rQWotY+ENN4zA+2Ptp?=
+ =?us-ascii?Q?8WqB9JDpZATo2xcvSJ6R8ApkRladrlN1WFTkwX562FCt8uV4kSa8IBcRLAwM?=
+ =?us-ascii?Q?a9xOvBlB9gTlPa0SZzRALnh6H2arlmtou0q96SjWPAgCHw9wh8pOgKFkLk3W?=
+ =?us-ascii?Q?viohKCVukvwTHNtAgqRBEwFyM6sDpaAM6fbXHwFlp2c1FplFAUSYpQU/HjBE?=
+ =?us-ascii?Q?WXIHjTVizUCSCHQwGb9DkEEz/M9xQqATEnrbhq1WzUl8KHIJxYlTil9ia4et?=
+ =?us-ascii?Q?LcmQNESs+rfXERNpcIhH2H5IAbkWo4FxkV0p2VuozcFfeV7B5g8mAn+vPZNL?=
+ =?us-ascii?Q?AMen171SynFYZLD1qxjqATQgcMPLJog9KS5E+Pyum78PiajB91v59g68cbQS?=
+ =?us-ascii?Q?YVKGv81IXnQCMrjMpgZCvR/tGOBxZV0N57u99zcM90Jqxp0QpMBxvoghB0ZW?=
+ =?us-ascii?Q?MmNfC3S2rH86IJLqiY58HZkftpPCNc51DSub2dVLisnOtvOOfAgc6BJEb13d?=
+ =?us-ascii?Q?BJhFFF0qhw4j8zcgTUoFEul2gTSIIUWU409uNxVDv3X4564npNwpon6MfqNY?=
+ =?us-ascii?Q?DflZeZFiyrjmPClewZZHzat8nxZsPCBodU+AojIBJDWBI7IX0msqhG5IADGe?=
+ =?us-ascii?Q?MQ=3D=3D?=
+X-OriginatorOrg: windriver.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 67a91ff2-739d-41ff-5458-08dc1c347ba5
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR11MB5327.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jan 2024 16:58:12.0793
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: LiIex2dwKUaCEUB8/jR4EOMo4iBSJjRt+WPysJcv5GlqZh/aRz4enp9/KHWUbTNoqznisPlFUxeuRXFVJJc7Sa5frlWwm1tnA+JUValtdQw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB4673
+X-Proofpoint-GUID: Gk2lxkVcu14qDdMBdgsZpSoSfN80qxHV
+X-Proofpoint-ORIG-GUID: Gk2lxkVcu14qDdMBdgsZpSoSfN80qxHV
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-01-23_09,2024-01-23_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxscore=0
+ mlxlogscore=906 adultscore=0 malwarescore=0 spamscore=0 suspectscore=0
+ priorityscore=1501 phishscore=0 clxscore=1011 impostorscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2311290000 definitions=main-2401230124
 
-The framer codec interacts with a framer.
-It allows to use some of the framer timeslots as audio channels to
-transport audio data over the framer E1/T1/J1 lines.
-It also reports line carrier detection events through the ALSA jack
-detection feature.
+From: Ovidiu Panait <ovidiu.panait@windriver.com>
 
-Signed-off-by: Herve Codina <herve.codina@bootlin.com>
-Reviewed-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+Since commit [1], FSL_PAMU initialization on t4240rdb board fails
+with: "fsl-pamu-domain: pamu_domain_init: Can't register iommu device".
+
+Commit [1] changed the behavior for drivers that set ops->default_domain,
+as the function iommu_group_alloc_default_domain() is now called with
+"req_type == IOMMU_DOMAIN_IDENTITY", rather than "req_type == 0". This
+causes the following EINVAL condition to be hit during FSL_PAMU
+initialization:
+  ...
+       if (ops->default_domain) {
+               if (req_type)
+                       return ERR_PTR(-EINVAL);
+               return ops->default_domain;
+       }
+  ...
+
+To avoid this issue when ops->default_domain != NULL, remove the check for
+non-zero req_type and always return the proper default domain, as set in
+the driver.
+
+  [1] 0f6a90436a57 ("iommu: Do not use IOMMU_DOMAIN_DMA [...]")
+
+Fixes: 0f6a90436a57 ("iommu: Do not use IOMMU_DOMAIN_DMA if CONFIG_IOMMU_DMA is not enabled")
+Signed-off-by: Ovidiu Panait <ovidiu.panait@windriver.com>
 ---
- sound/soc/codecs/Kconfig        |  15 ++
- sound/soc/codecs/Makefile       |   2 +
- sound/soc/codecs/framer-codec.c | 413 ++++++++++++++++++++++++++++++++
- 3 files changed, 430 insertions(+)
- create mode 100644 sound/soc/codecs/framer-codec.c
+ drivers/iommu/iommu.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-diff --git a/sound/soc/codecs/Kconfig b/sound/soc/codecs/Kconfig
-index 59f9742e9ff4..7edc3d6686c2 100644
---- a/sound/soc/codecs/Kconfig
-+++ b/sound/soc/codecs/Kconfig
-@@ -114,6 +114,7 @@ config SND_SOC_ALL_CODECS
- 	imply SND_SOC_ES8328_I2C
- 	imply SND_SOC_ES7134
- 	imply SND_SOC_ES7241
-+	imply SND_SOC_FRAMER
- 	imply SND_SOC_GTM601
- 	imply SND_SOC_HDAC_HDMI
- 	imply SND_SOC_HDAC_HDA
-@@ -1101,6 +1102,20 @@ config SND_SOC_ES8328_SPI
- 	depends on SPI_MASTER
- 	select SND_SOC_ES8328
+diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+index 68e648b55767..8e79a074e560 100644
+--- a/drivers/iommu/iommu.c
++++ b/drivers/iommu/iommu.c
+@@ -1798,11 +1798,8 @@ iommu_group_alloc_default_domain(struct iommu_group *group, int req_type)
+ 	 * domain. This should always be either an IDENTITY/BLOCKED/PLATFORM
+ 	 * domain. Do not use in new drivers.
+ 	 */
+-	if (ops->default_domain) {
+-		if (req_type)
+-			return ERR_PTR(-EINVAL);
++	if (ops->default_domain)
+ 		return ops->default_domain;
+-	}
  
-+config SND_SOC_FRAMER
-+	tristate "Framer codec"
-+	depends on GENERIC_FRAMER
-+	help
-+	  Enable support for the framer codec.
-+	  The framer codec uses the generic framer infrastructure to transport
-+	  some audio data over an analog E1/T1/J1 line.
-+	  This codec allows to use some of the time slots available on the TDM
-+	  bus on which the framer is connected to transport the audio data.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called snd-soc-framer.
-+
-+
- config SND_SOC_GTM601
- 	tristate 'GTM601 UMTS modem audio codec'
- 
-diff --git a/sound/soc/codecs/Makefile b/sound/soc/codecs/Makefile
-index f53baa2b9565..0eaf286ec438 100644
---- a/sound/soc/codecs/Makefile
-+++ b/sound/soc/codecs/Makefile
-@@ -122,6 +122,7 @@ snd-soc-es8326-objs := es8326.o
- snd-soc-es8328-objs := es8328.o
- snd-soc-es8328-i2c-objs := es8328-i2c.o
- snd-soc-es8328-spi-objs := es8328-spi.o
-+snd-soc-framer-objs := framer-codec.o
- snd-soc-gtm601-objs := gtm601.o
- snd-soc-hdac-hdmi-objs := hdac_hdmi.o
- snd-soc-hdac-hda-objs := hdac_hda.o
-@@ -512,6 +513,7 @@ obj-$(CONFIG_SND_SOC_ES8326)    += snd-soc-es8326.o
- obj-$(CONFIG_SND_SOC_ES8328)	+= snd-soc-es8328.o
- obj-$(CONFIG_SND_SOC_ES8328_I2C)+= snd-soc-es8328-i2c.o
- obj-$(CONFIG_SND_SOC_ES8328_SPI)+= snd-soc-es8328-spi.o
-+obj-$(CONFIG_SND_SOC_FRAMER)	+= snd-soc-framer.o
- obj-$(CONFIG_SND_SOC_GTM601)    += snd-soc-gtm601.o
- obj-$(CONFIG_SND_SOC_HDAC_HDMI) += snd-soc-hdac-hdmi.o
- obj-$(CONFIG_SND_SOC_HDAC_HDA) += snd-soc-hdac-hda.o
-diff --git a/sound/soc/codecs/framer-codec.c b/sound/soc/codecs/framer-codec.c
-new file mode 100644
-index 000000000000..e5fcde9ee308
---- /dev/null
-+++ b/sound/soc/codecs/framer-codec.c
-@@ -0,0 +1,413 @@
-+// SPDX-License-Identifier: GPL-2.0
-+//
-+// Framer ALSA SoC driver
-+//
-+// Copyright 2023 CS GROUP France
-+//
-+// Author: Herve Codina <herve.codina@bootlin.com>
-+
-+#include <linux/clk.h>
-+#include <linux/framer/framer.h>
-+#include <linux/module.h>
-+#include <linux/notifier.h>
-+#include <linux/platform_device.h>
-+#include <linux/slab.h>
-+#include <sound/jack.h>
-+#include <sound/pcm_params.h>
-+#include <sound/soc.h>
-+#include <sound/tlv.h>
-+
-+#define FRAMER_NB_CHANNEL	32
-+#define FRAMER_JACK_MASK (SND_JACK_LINEIN | SND_JACK_LINEOUT)
-+
-+struct framer_codec {
-+	struct framer *framer;
-+	struct device *dev;
-+	struct snd_soc_jack jack;
-+	struct notifier_block nb;
-+	struct work_struct carrier_work;
-+	int max_chan_playback;
-+	int max_chan_capture;
-+};
-+
-+static int framer_dai_set_tdm_slot(struct snd_soc_dai *dai, unsigned int tx_mask,
-+				   unsigned int rx_mask, int slots, int width)
-+{
-+	struct framer_codec *framer = snd_soc_component_get_drvdata(dai->component);
-+
-+	switch (width) {
-+	case 0:
-+		/* Not set -> default 8 */
-+	case 8:
-+		break;
-+	default:
-+		dev_err(dai->dev, "tdm slot width %d not supported\n", width);
-+		return -EINVAL;
-+	}
-+
-+	framer->max_chan_playback = hweight32(tx_mask);
-+	if (framer->max_chan_playback > FRAMER_NB_CHANNEL) {
-+		dev_err(dai->dev, "too many tx slots defined (mask = 0x%x) supported max %d\n",
-+			tx_mask, FRAMER_NB_CHANNEL);
-+		return -EINVAL;
-+	}
-+
-+	framer->max_chan_capture = hweight32(rx_mask);
-+	if (framer->max_chan_capture > FRAMER_NB_CHANNEL) {
-+		dev_err(dai->dev, "too many rx slots defined (mask = 0x%x) supported max %d\n",
-+			rx_mask, FRAMER_NB_CHANNEL);
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+/*
-+ * The constraints for format/channel is to match with the number of 8bit
-+ * time-slots available.
-+ */
-+static int framer_dai_hw_rule_channels_by_format(struct snd_soc_dai *dai,
-+						 struct snd_pcm_hw_params *params,
-+						 unsigned int nb_ts)
-+{
-+	struct snd_interval *c = hw_param_interval(params, SNDRV_PCM_HW_PARAM_CHANNELS);
-+	snd_pcm_format_t format = params_format(params);
-+	struct snd_interval ch = {0};
-+	int width;
-+
-+	width = snd_pcm_format_physical_width(format);
-+	if (width == 8 || width == 16 || width == 32 || width == 64) {
-+		ch.max = nb_ts * 8 / width;
-+	} else {
-+		dev_err(dai->dev, "format physical width %d not supported\n", width);
-+		return -EINVAL;
-+	}
-+
-+	ch.min = ch.max ? 1 : 0;
-+
-+	return snd_interval_refine(c, &ch);
-+}
-+
-+static int framer_dai_hw_rule_playback_channels_by_format(struct snd_pcm_hw_params *params,
-+							  struct snd_pcm_hw_rule *rule)
-+{
-+	struct snd_soc_dai *dai = rule->private;
-+	struct framer_codec *framer = snd_soc_component_get_drvdata(dai->component);
-+
-+	return framer_dai_hw_rule_channels_by_format(dai, params, framer->max_chan_playback);
-+}
-+
-+static int framer_dai_hw_rule_capture_channels_by_format(struct snd_pcm_hw_params *params,
-+							 struct snd_pcm_hw_rule *rule)
-+{
-+	struct snd_soc_dai *dai = rule->private;
-+	struct framer_codec *framer = snd_soc_component_get_drvdata(dai->component);
-+
-+	return framer_dai_hw_rule_channels_by_format(dai, params, framer->max_chan_capture);
-+}
-+
-+static int framer_dai_hw_rule_format_by_channels(struct snd_soc_dai *dai,
-+						 struct snd_pcm_hw_params *params,
-+						 unsigned int nb_ts)
-+{
-+	struct snd_mask *f_old = hw_param_mask(params, SNDRV_PCM_HW_PARAM_FORMAT);
-+	unsigned int channels = params_channels(params);
-+	unsigned int slot_width;
-+	snd_pcm_format_t format;
-+	struct snd_mask f_new;
-+
-+	if (!channels || channels > nb_ts) {
-+		dev_err(dai->dev, "channels %u not supported\n", nb_ts);
-+		return -EINVAL;
-+	}
-+
-+	slot_width = (nb_ts / channels) * 8;
-+
-+	snd_mask_none(&f_new);
-+	pcm_for_each_format(format) {
-+		if (snd_mask_test_format(f_old, format)) {
-+			if (snd_pcm_format_physical_width(format) <= slot_width)
-+				snd_mask_set_format(&f_new, format);
-+		}
-+	}
-+
-+	return snd_mask_refine(f_old, &f_new);
-+}
-+
-+static int framer_dai_hw_rule_playback_format_by_channels(struct snd_pcm_hw_params *params,
-+							  struct snd_pcm_hw_rule *rule)
-+{
-+	struct snd_soc_dai *dai = rule->private;
-+	struct framer_codec *framer = snd_soc_component_get_drvdata(dai->component);
-+
-+	return framer_dai_hw_rule_format_by_channels(dai, params, framer->max_chan_playback);
-+}
-+
-+static int framer_dai_hw_rule_capture_format_by_channels(struct snd_pcm_hw_params *params,
-+							 struct snd_pcm_hw_rule *rule)
-+{
-+	struct snd_soc_dai *dai = rule->private;
-+	struct framer_codec *framer = snd_soc_component_get_drvdata(dai->component);
-+
-+	return framer_dai_hw_rule_format_by_channels(dai, params, framer->max_chan_capture);
-+}
-+
-+static u64 framer_formats(u8 nb_ts)
-+{
-+	unsigned int format_width;
-+	unsigned int chan_width;
-+	snd_pcm_format_t format;
-+	u64 formats_mask;
-+
-+	if (!nb_ts)
-+		return 0;
-+
-+	formats_mask = 0;
-+	chan_width = nb_ts * 8;
-+	pcm_for_each_format(format) {
-+		/* Support physical width multiple of 8bit */
-+		format_width = snd_pcm_format_physical_width(format);
-+		if (format_width == 0 || format_width % 8)
-+			continue;
-+
-+		/*
-+		 * And support physical width that can fit N times in the
-+		 * channel
-+		 */
-+		if (format_width > chan_width || chan_width % format_width)
-+			continue;
-+
-+		formats_mask |= pcm_format_to_bits(format);
-+	}
-+	return formats_mask;
-+}
-+
-+static int framer_dai_startup(struct snd_pcm_substream *substream,
-+			      struct snd_soc_dai *dai)
-+{
-+	struct framer_codec *framer = snd_soc_component_get_drvdata(dai->component);
-+	snd_pcm_hw_rule_func_t hw_rule_channels_by_format;
-+	snd_pcm_hw_rule_func_t hw_rule_format_by_channels;
-+	unsigned int frame_bits;
-+	u64 format;
-+	int ret;
-+
-+	if (substream->stream == SNDRV_PCM_STREAM_CAPTURE) {
-+		format = framer_formats(framer->max_chan_capture);
-+		hw_rule_channels_by_format = framer_dai_hw_rule_capture_channels_by_format;
-+		hw_rule_format_by_channels = framer_dai_hw_rule_capture_format_by_channels;
-+		frame_bits = framer->max_chan_capture * 8;
-+	} else {
-+		format = framer_formats(framer->max_chan_playback);
-+		hw_rule_channels_by_format = framer_dai_hw_rule_playback_channels_by_format;
-+		hw_rule_format_by_channels = framer_dai_hw_rule_playback_format_by_channels;
-+		frame_bits = framer->max_chan_playback * 8;
-+	}
-+
-+	ret = snd_pcm_hw_constraint_mask64(substream->runtime,
-+					   SNDRV_PCM_HW_PARAM_FORMAT, format);
-+	if (ret) {
-+		dev_err(dai->dev, "Failed to add format constraint (%d)\n", ret);
-+		return ret;
-+	}
-+
-+	ret = snd_pcm_hw_rule_add(substream->runtime, 0, SNDRV_PCM_HW_PARAM_CHANNELS,
-+				  hw_rule_channels_by_format, dai,
-+				  SNDRV_PCM_HW_PARAM_FORMAT, -1);
-+	if (ret) {
-+		dev_err(dai->dev, "Failed to add channels rule (%d)\n", ret);
-+		return ret;
-+	}
-+
-+	ret = snd_pcm_hw_rule_add(substream->runtime, 0,  SNDRV_PCM_HW_PARAM_FORMAT,
-+				  hw_rule_format_by_channels, dai,
-+				  SNDRV_PCM_HW_PARAM_CHANNELS, -1);
-+	if (ret) {
-+		dev_err(dai->dev, "Failed to add format rule (%d)\n", ret);
-+		return ret;
-+	}
-+
-+	ret = snd_pcm_hw_constraint_single(substream->runtime,
-+					   SNDRV_PCM_HW_PARAM_FRAME_BITS,
-+					   frame_bits);
-+	if (ret < 0) {
-+		dev_err(dai->dev, "Failed to add frame_bits constraint (%d)\n", ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static u64 framer_dai_formats[] = {
-+	SND_SOC_POSSIBLE_DAIFMT_DSP_B,
-+};
-+
-+static const struct snd_soc_dai_ops framer_dai_ops = {
-+	.startup	= framer_dai_startup,
-+	.set_tdm_slot	= framer_dai_set_tdm_slot,
-+	.auto_selectable_formats     = framer_dai_formats,
-+	.num_auto_selectable_formats = ARRAY_SIZE(framer_dai_formats),
-+};
-+
-+static struct snd_soc_dai_driver framer_dai_driver = {
-+	.name = "framer",
-+	.playback = {
-+		.stream_name = "Playback",
-+		.channels_min = 1,
-+		.channels_max = FRAMER_NB_CHANNEL,
-+		.rates = SNDRV_PCM_RATE_8000,
-+		.formats = U64_MAX, /* Will be refined on DAI .startup() */
-+	},
-+	.capture = {
-+		.stream_name = "Capture",
-+		.channels_min = 1,
-+		.channels_max = FRAMER_NB_CHANNEL,
-+		.rates = SNDRV_PCM_RATE_8000,
-+		.formats = U64_MAX, /* Will be refined on DAI .startup() */
-+	},
-+	.ops = &framer_dai_ops,
-+};
-+
-+static void framer_carrier_work(struct work_struct *work)
-+{
-+	struct framer_codec *framer = container_of(work, struct framer_codec, carrier_work);
-+	struct framer_status framer_status;
-+	int jack_status;
-+	int ret;
-+
-+	ret = framer_get_status(framer->framer, &framer_status);
-+	if (ret) {
-+		dev_err(framer->dev, "get framer status failed (%d)\n", ret);
-+		return;
-+	}
-+
-+	jack_status = framer_status.link_is_on ? FRAMER_JACK_MASK : 0;
-+	snd_soc_jack_report(&framer->jack, jack_status, FRAMER_JACK_MASK);
-+}
-+
-+static int framer_carrier_notifier(struct notifier_block *nb, unsigned long action,
-+				   void *data)
-+{
-+	struct framer_codec *framer = container_of(nb, struct framer_codec, nb);
-+
-+	switch (action) {
-+	case FRAMER_EVENT_STATUS:
-+		queue_work(system_power_efficient_wq, &framer->carrier_work);
-+		break;
-+	default:
-+		return NOTIFY_DONE;
-+	}
-+
-+	return NOTIFY_OK;
-+}
-+
-+static int framer_component_probe(struct snd_soc_component *component)
-+{
-+	struct framer_codec *framer = snd_soc_component_get_drvdata(component);
-+	struct framer_status status;
-+	char *name;
-+	int ret;
-+
-+	INIT_WORK(&framer->carrier_work, framer_carrier_work);
-+
-+	name = "carrier";
-+	if (component->name_prefix) {
-+		name = kasprintf(GFP_KERNEL, "%s carrier", component->name_prefix);
-+		if (!name)
-+			return -ENOMEM;
-+	}
-+
-+	ret = snd_soc_card_jack_new(component->card, name, FRAMER_JACK_MASK, &framer->jack);
-+	if (component->name_prefix)
-+		kfree(name); /* A copy is done by snd_soc_card_jack_new */
-+	if (ret) {
-+		dev_err(component->dev, "Cannot create jack\n");
-+		return ret;
-+	}
-+
-+	ret = framer_init(framer->framer);
-+	if (ret) {
-+		dev_err(component->dev, "framer init failed (%d)\n", ret);
-+		return ret;
-+	}
-+
-+	ret = framer_power_on(framer->framer);
-+	if (ret) {
-+		dev_err(component->dev, "framer power-on failed (%d)\n", ret);
-+		goto framer_exit;
-+	}
-+
-+	/* Be sure that get_status is supported */
-+	ret = framer_get_status(framer->framer, &status);
-+	if (ret) {
-+		dev_err(component->dev, "get framer status failed (%d)\n", ret);
-+		goto framer_power_off;
-+	}
-+
-+	framer->nb.notifier_call = framer_carrier_notifier;
-+	ret = framer_notifier_register(framer->framer, &framer->nb);
-+	if (ret) {
-+		dev_err(component->dev, "Cannot register event notifier\n");
-+		goto framer_power_off;
-+	}
-+
-+	/* Queue work to set the initial value */
-+	queue_work(system_power_efficient_wq, &framer->carrier_work);
-+
-+	return 0;
-+
-+framer_power_off:
-+	framer_power_off(framer->framer);
-+framer_exit:
-+	framer_exit(framer->framer);
-+	return ret;
-+}
-+
-+static void framer_component_remove(struct snd_soc_component *component)
-+{
-+	struct framer_codec *framer = snd_soc_component_get_drvdata(component);
-+
-+	framer_notifier_unregister(framer->framer, &framer->nb);
-+	cancel_work_sync(&framer->carrier_work);
-+	framer_power_off(framer->framer);
-+	framer_exit(framer->framer);
-+}
-+
-+static const struct snd_soc_component_driver framer_component_driver = {
-+	.probe		= framer_component_probe,
-+	.remove		= framer_component_remove,
-+	.endianness	= 1,
-+};
-+
-+static int framer_codec_probe(struct platform_device *pdev)
-+{
-+	struct framer_codec *framer;
-+
-+	framer = devm_kzalloc(&pdev->dev, sizeof(*framer), GFP_KERNEL);
-+	if (!framer)
-+		return -ENOMEM;
-+
-+	framer->dev = &pdev->dev;
-+
-+	/* Get framer from parents node */
-+	framer->framer = devm_framer_get(&pdev->dev, NULL);
-+	if (IS_ERR(framer->framer))
-+		return dev_err_probe(&pdev->dev, PTR_ERR(framer->framer), "get framer failed\n");
-+
-+	platform_set_drvdata(pdev, framer);
-+
-+	return devm_snd_soc_register_component(&pdev->dev, &framer_component_driver,
-+					       &framer_dai_driver, 1);
-+}
-+
-+static struct platform_driver framer_codec_driver = {
-+	.driver = {
-+		.name = "framer-codec",
-+	},
-+	.probe = framer_codec_probe,
-+};
-+module_platform_driver(framer_codec_driver);
-+
-+MODULE_AUTHOR("Herve Codina <herve.codina@bootlin.com>");
-+MODULE_DESCRIPTION("FRAMER ALSA SoC driver");
-+MODULE_LICENSE("GPL");
+ 	if (req_type)
+ 		return __iommu_group_alloc_default_domain(group, req_type);
 -- 
-2.43.0
+2.34.1
 
