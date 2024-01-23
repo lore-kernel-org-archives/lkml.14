@@ -1,184 +1,257 @@
-Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
+Received: from mail-oo1-f44.google.com (mail-oo1-f44.google.com [209.85.161.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D72F516274B
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 00:36:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59AD24E1D0;
+	Tue, 23 Jan 2024 00:38:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705970186; cv=none; b=BAQRtWoWk3fYOaqm/smL+Vvr09fq1FJ6xEBncRmcc9tcOe0vFawbri9r9sxpXRbMZKDbUD3ZDfllyLOgyx6u75UQWh8gaDsSws2jgByEG5S19fV5q9+f+TY2YAjvl+uwo4TAV2MqW88ve3wSNua2BTvoZJAxG9s9lOtApIPZ4wQ=
+	t=1705970297; cv=none; b=qnJ4/RoWjssXbBv0jdp2+ItE52VNP02PQkKVvqjSjd+tbNhH1BvKjpDs1GesRg6CfHvZKN/A5HXd/EIerYD/kHk73x3X52zfRAQBQieTNZTg85BISfatgf3YeDUcs+XWE5Z0zCNMp11MFmGnm099hkhA1M53Um+MPzWEt+M5H58=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705970186; c=relaxed/simple;
-	bh=ep/lIptA9L4lr+f06tjVEEoLQ4MXnnp5iyNA3nOOpBE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=RTFCyCag5o5n7YMF8IZGZRaiQbsIjcLHgXkyabcCqdseKmJ7AGCeerB7k9ymfeoEv730RxFUG+PcruYCAA5N1sXzUOSb8+EWcNWXpQkYyyZt6i7++x3Pjrr+ztuuJJNDCcU11z95yOJyCkNLOjrQFHMJpEEtrmw0fxk7h5k1VD0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=D717a4+h; arc=none smtp.client-ip=209.85.215.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="D717a4+h"
-Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-53fa455cd94so1775821a12.2
-        for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 16:36:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1705970184; x=1706574984; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Gu7JD83IcutVIpR+vN3JS6ozq09X5iWFwWB5AcENu1U=;
-        b=D717a4+hchIOaKmqCVEbuWLkT6x4LFiOyOsg9820QbdtTjnxtBvHUX6v4s6sZAbgvD
-         D4akV6dkP7oQx+px2xduOIbAhE/yLcXvQFa9oQhjhlsoZtyGFvpTPXrv6LxqsYGwZgtO
-         dX9BlM60yl+1W5Ip70JgQgCk7MGQ1OsMud9/0=
+	s=arc-20240116; t=1705970297; c=relaxed/simple;
+	bh=1f6ds+PzqCOuGKAn4vCGEwmO9VbdsXZdA+pxwer+96c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tw1YLlrc0pk/t9mfwEQwpzsNoPxtecjBgMcuusxlRsHrwYGp5Ri8vhiVLfyT1QWqnN4+h+Dp1GPJuES0ev0T991uaqCliYfwb3r7zZNWHVgid/jvY88rc8jHqWckMppcPHEAH+isvztAjnMv53RSwLHjrMy0qnB4qeLJc6BEWXA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.161.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oo1-f44.google.com with SMTP id 006d021491bc7-595ac2b6c59so2455150eaf.2;
+        Mon, 22 Jan 2024 16:38:15 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705970184; x=1706574984;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1705970294; x=1706575094;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Gu7JD83IcutVIpR+vN3JS6ozq09X5iWFwWB5AcENu1U=;
-        b=FNkH5eMguHVczx0tmGA4YGE4aybz0dDRMnFmApAzEwvwdYKTMaIVTtenWwKuqpIWAD
-         lDu0Ztz2pxNuq4B49eaQoPWaXAmfNmR4p+gynHC20adf6c/bNRB1b0vxkRLT/o2MDakI
-         Dnz+j7VaFh8fPO7dP/0uhjJnN6PqPULY8zGMTVGggB9IMcbCyix3pNZxV2fDDtws9EC0
-         TZ0yMmRR6XI5Qth0PsLTxN4P0KDKGX9D5ZNWiPcspCG3wAWTbmHWy10qj5qOZmUvB8qO
-         0CK595BJ9Wh7hIN5czLqL6bi8S5e6ofbVcCtBvzhwuNbWZZRnvXs5bA7e7LmNGUyzatu
-         vvkA==
-X-Gm-Message-State: AOJu0Yy/862tNedv6H5qc1OELhexZqSUQ2Fj5K2T7ZfKPIiVw8/c2hv/
-	afonzCpCPkot1R/4QGxCeNre+NgQm+w1bwpWPRT1T2R/rhYQ0gKnCE3ZuWQiTA==
-X-Google-Smtp-Source: AGHT+IHU9ZlgSYh0eMx7669Diqv2Km4wEiGnQJDHlmT3vbHjtvtixLA5vnHZex0ljbCE4nmOmTLkXQ==
-X-Received: by 2002:a17:90b:3443:b0:290:20:2e7d with SMTP id lj3-20020a17090b344300b0029000202e7dmr2129175pjb.47.1705970184314;
-        Mon, 22 Jan 2024 16:36:24 -0800 (PST)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id sx7-20020a17090b2cc700b0029072c64439sm5247062pjb.5.2024.01.22.16.36.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jan 2024 16:36:18 -0800 (PST)
-From: Kees Cook <keescook@chromium.org>
-To: linux-hardening@vger.kernel.org
-Cc: Kees Cook <keescook@chromium.org>,
-	Kent Overstreet <kent.overstreet@linux.dev>,
-	Brian Foster <bfoster@redhat.com>,
-	linux-bcachefs@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 42/82] bcachefs: Refactor intentional wrap-around test
-Date: Mon, 22 Jan 2024 16:27:17 -0800
-Message-Id: <20240123002814.1396804-42-keescook@chromium.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240122235208.work.748-kees@kernel.org>
-References: <20240122235208.work.748-kees@kernel.org>
+        bh=7pFnzcW0cMQ5USerji8uEumVMyt2s6WDXvMVlGp/NTc=;
+        b=Q2Tam5jq0mDoGIok7qMHxQrsvun978c2xVy5W5Qb/SSYgo5LTKZba0tm3bpBQUrabM
+         8d//ltBSpZmSGwsnJlK6UPLxNvRM+EU000EPPpDOcRN3F5+g164qu1Ev/4aDYEH9ZXKc
+         d+YyrygsFGaJBCGyhMbIG4KQFXfMVkZoi5aBDTTepNUQCCs/tba4vfnd73HY2gNdMQts
+         8NAPF8No+zZrvTij4h+DdxtpffMkQCAn6gga2p+QtUwFeRo0D8pqpqmWuzu1QUpUhsOz
+         dOdBPIKy8nYklgnglGz9NlGnxmP/1V1c+xYlZqhddbmNBe9KEAb28ebNY7diwyuJDr6A
+         Z3vA==
+X-Gm-Message-State: AOJu0Yyu/Avf6JvDT2VMQOzmobJfUk687FOIQv4a1vIwX6x3hNXf9fkL
+	8yr9GMOou+Rz218sNRoV7mOGJoXj+R7oN8uvpvlJtG8xipuKHwqeeCb9lqUcs+UmPpZS61PiHqp
+	JFZaBPRBdErcAEeiSi+3vwLRpxb0=
+X-Google-Smtp-Source: AGHT+IFgbYCDKFVyj17JxJqJ0bt5MEN3Rp6fBSDs193Kx6Eh/ELM074Qbj4qiswwpUtK9QkPhNNoaog6hOPEeIin/Nk=
+X-Received: by 2002:a05:6358:9141:b0:175:c16b:126f with SMTP id
+ r1-20020a056358914100b00175c16b126fmr3726702rwr.56.1705970294244; Mon, 22 Jan
+ 2024 16:38:14 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3557; i=keescook@chromium.org;
- h=from:subject; bh=ep/lIptA9L4lr+f06tjVEEoLQ4MXnnp5iyNA3nOOpBE=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBlrwgI2+Elt1IhHtkv5xgC3b3FRvTtskbiERH9l
- 1ZNTeeF/b2JAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZa8ICAAKCRCJcvTf3G3A
- JjCLD/9xtD8moVS+50gZifAJkdU1ZG18tKRem8TQm9iujCTKM7k0RA9Gt8uWtXoWJI2iqcmr7so
- 6wDWNya25DwDHnA6i6cJcDCSKOUIWj9scqgsnc/vc4ITbCC36C8LufYn9hTR2C8dxojAdmv+oWg
- AbBeJl5BpJ/nNaasEJCbPtG/FaEqLUr1cVCXz1f4t/JfMlxIvR3A1axBfLBZIMGjQDtJYXHkL9p
- LFdbnw42F7LQAZdMegEC8ocQU04rYslKCLVrwhOjQCcsv6Ws6kE9vl7RJy+m+9uPUWC0Sl3Du+I
- kaPcZbyCi8S96+rC+3Sqkn8nxgB0Ji3KlCWYiom6XD/SCas2mJlZV/Fsgw4ZogGoScMiYHeDVxA
- 3uTAn740ytyh0GrA0mTeQCmVpWEEgRgl8yAEEFpN/x5prVl7B7OWBB3fLqipeDFvn+08dE6MQ44
- bK5og4830KAx7t1L/91syH794xNxDXyBfKMXgc8jHBAoPFLHV3Z11nzBQfhMFaLNyc3nKMCbkiP
- HgAKEE2E/rqRQZXoovbv2UsHH9qCg3D+20pG3URgwo9T1LgXTwOm94X59lEyn4fM80SQYA4kwUq
- lecpfKL9uzLXFqhGSnccEE+zNNjAHSFYJQxxeCm4t8TK3hf2xjDUryQOdhwdB+FESFtDBAzIc48 oZI7aHBEQ8bWKPQ==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+References: <20240122070859.1394479-2-zegao@tencent.com> <20240122070859.1394479-6-zegao@tencent.com>
+In-Reply-To: <20240122070859.1394479-6-zegao@tencent.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Mon, 22 Jan 2024 16:38:03 -0800
+Message-ID: <CAM9d7cjWdZa9oh-6CmydvtzOEkkWMip8yfxTS4L_PZnq4K7B1w@mail.gmail.com>
+Subject: Re: [PATCH v2 4/4] perf sched: Commit to evsel__taskstate() to parse
+ task state info
+To: Ze Gao <zegao2021@gmail.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, Ze Gao <zegao@tencent.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-In an effort to separate intentional arithmetic wrap-around from
-unexpected wrap-around, we need to refactor places that depend on this
-kind of math. One of the most common code patterns of this is:
+Hello,
 
-	VAR + value < VAR
+On Sun, Jan 21, 2024 at 11:11=E2=80=AFPM Ze Gao <zegao2021@gmail.com> wrote=
+:
+>
+> Now that we have evsel__taskstate() which no longer relies on the
+> hardcoded task state string and has good backward compatibility,
+> we have a good reason to use it.
+>
+> Note TASK_STATE_TO_CHAR_STR and task bitmasks are useless now so
+> we remove them for good. And now we pass the state info back and
+> forth in a symbolic char which explains itself well instead.
+>
+> Signed-off-by: Ze Gao <zegao@tencent.com>
+> ---
+>  tools/perf/builtin-sched.c | 46 +++++++++-----------------------------
+>  1 file changed, 10 insertions(+), 36 deletions(-)
+>
+> diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+> index ced6fffe8110..f1d62f6b6cab 100644
+> --- a/tools/perf/builtin-sched.c
+> +++ b/tools/perf/builtin-sched.c
+> @@ -92,13 +92,6 @@ struct sched_atom {
+>         struct task_desc        *wakee;
+>  };
+>
+> -#define TASK_STATE_TO_CHAR_STR "RSDTtXZPI"
+> -
+> -/* task state bitmask, copied from include/linux/sched.h */
+> -#define TASK_RUNNING           0
+> -#define TASK_INTERRUPTIBLE     1
+> -#define TASK_UNINTERRUPTIBLE   2
+> -
+>  enum thread_state {
+>         THREAD_SLEEPING =3D 0,
+>         THREAD_WAIT_CPU,
+> @@ -255,7 +248,7 @@ struct thread_runtime {
+>         u64 total_preempt_time;
+>         u64 total_delay_time;
+>
+> -       int last_state;
+> +       char last_state;
+>
+>         char shortname[3];
+>         bool comm_changed;
+> @@ -425,7 +418,7 @@ static void add_sched_event_wakeup(struct perf_sched =
+*sched, struct task_desc *t
+>  }
+>
+>  static void add_sched_event_sleep(struct perf_sched *sched, struct task_=
+desc *task,
+> -                                 u64 timestamp, u64 task_state __maybe_u=
+nused)
+> +                                 u64 timestamp, const char task_state __=
+maybe_unused)
+>  {
+>         struct sched_atom *event =3D get_new_event(task, timestamp);
+>
+> @@ -849,7 +842,7 @@ static int replay_switch_event(struct perf_sched *sch=
+ed,
+>                    *next_comm  =3D evsel__strval(evsel, sample, "next_com=
+m");
+>         const u32 prev_pid =3D evsel__intval(evsel, sample, "prev_pid"),
+>                   next_pid =3D evsel__intval(evsel, sample, "next_pid");
+> -       const u64 prev_state =3D evsel__intval(evsel, sample, "prev_state=
+");
+> +       const char prev_state =3D evsel__taskstate(evsel, sample, "prev_s=
+tate");
+>         struct task_desc *prev, __maybe_unused *next;
+>         u64 timestamp0, timestamp =3D sample->time;
+>         int cpu =3D sample->cpu;
+> @@ -1039,13 +1032,6 @@ static int thread_atoms_insert(struct perf_sched *=
+sched, struct thread *thread)
+>         return 0;
+>  }
+>
+> -static char sched_out_state(u64 prev_state)
+> -{
+> -       const char *str =3D TASK_STATE_TO_CHAR_STR;
+> -
+> -       return str[prev_state];
+> -}
+> -
+>  static int
+>  add_sched_out_event(struct work_atoms *atoms,
+>                     char run_state,
+> @@ -1121,7 +1107,7 @@ static int latency_switch_event(struct perf_sched *=
+sched,
+>  {
+>         const u32 prev_pid =3D evsel__intval(evsel, sample, "prev_pid"),
+>                   next_pid =3D evsel__intval(evsel, sample, "next_pid");
+> -       const u64 prev_state =3D evsel__intval(evsel, sample, "prev_state=
+");
+> +       const char prev_state =3D evsel__taskstate(evsel, sample, "prev_s=
+tate");
+>         struct work_atoms *out_events, *in_events;
+>         struct thread *sched_out, *sched_in;
+>         u64 timestamp0, timestamp =3D sample->time;
+> @@ -1157,7 +1143,7 @@ static int latency_switch_event(struct perf_sched *=
+sched,
+>                         goto out_put;
+>                 }
+>         }
+> -       if (add_sched_out_event(out_events, sched_out_state(prev_state), =
+timestamp))
+> +       if (add_sched_out_event(out_events, prev_state, timestamp))
+>                 return -1;
+>
+>         in_events =3D thread_atoms_search(&sched->atom_root, sched_in, &s=
+ched->cmp_pid);
+> @@ -2022,24 +2008,12 @@ static void timehist_header(struct perf_sched *sc=
+hed)
+>         printf("\n");
+>  }
+>
+> -static char task_state_char(struct thread *thread, int state)
+> -{
+> -       static const char state_to_char[] =3D TASK_STATE_TO_CHAR_STR;
+> -       unsigned bit =3D state ? ffs(state) : 0;
+> -
+> -       /* 'I' for idle */
+> -       if (thread__tid(thread) =3D=3D 0)
+> -               return 'I';
+> -
+> -       return bit < sizeof(state_to_char) - 1 ? state_to_char[bit] : '?'=
+;
+> -}
+> -
+>  static void timehist_print_sample(struct perf_sched *sched,
+>                                   struct evsel *evsel,
+>                                   struct perf_sample *sample,
+>                                   struct addr_location *al,
+>                                   struct thread *thread,
+> -                                 u64 t, int state)
+> +                                 u64 t, const char state)
+>  {
+>         struct thread_runtime *tr =3D thread__priv(thread);
+>         const char *next_comm =3D evsel__strval(evsel, sample, "next_comm=
+");
+> @@ -2080,7 +2054,7 @@ static void timehist_print_sample(struct perf_sched=
+ *sched,
+>         print_sched_time(tr->dt_run, 6);
+>
+>         if (sched->show_state)
+> -               printf(" %5c ", task_state_char(thread, state));
+> +               printf(" %5c ", thread->tid =3D=3D 0 ? 'I' : state);
 
-Notably, this is considered "undefined behavior" for signed and pointer
-types, which the kernel works around by using the -fno-strict-overflow
-option in the build[1] (which used to just be -fwrapv). Regardless, we
-want to get the kernel source to the position where we can meaningfully
-instrument arithmetic wrap-around conditions and catch them when they
-are unexpected, regardless of whether they are signed[2], unsigned[3],
-or pointer[4] types.
+This resulted in a build error with reference count checker.
 
-Refactor open-coded wrap-around addition test to use add_would_overflow().
-This paves the way to enabling the wrap-around sanitizers in the future.
+  $ make EXTRA_CFLAGS=3D-DREFCNT_CHECKING=3D1
+  ...
+  builtin-sched.c: In function =E2=80=98timehist_print_sample=E2=80=99:
+  builtin-sched.c:2057:39: error: =E2=80=98struct thread=E2=80=99 has no me=
+mber named =E2=80=98tid=E2=80=99
+   2057 |                 printf(" %5c ", thread->tid =3D=3D 0 ? 'I' : stat=
+e);
+        |
 
-Link: https://git.kernel.org/linus/68df3755e383e6fecf2354a67b08f92f18536594 [1]
-Link: https://github.com/KSPP/linux/issues/26 [2]
-Link: https://github.com/KSPP/linux/issues/27 [3]
-Link: https://github.com/KSPP/linux/issues/344 [4]
-Cc: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: Brian Foster <bfoster@redhat.com>
-Cc: linux-bcachefs@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- fs/bcachefs/bkey.c  | 4 ++--
- fs/bcachefs/fs.c    | 2 +-
- fs/bcachefs/quota.c | 2 +-
- fs/bcachefs/util.c  | 2 +-
- 4 files changed, 5 insertions(+), 5 deletions(-)
+The struct thread is protected by the refcount checker so
+you should not access the members directly.  Instead,
+please use a help function like thread__tid().
 
-diff --git a/fs/bcachefs/bkey.c b/fs/bcachefs/bkey.c
-index 76e79a15ba08..c68f1cfd579e 100644
---- a/fs/bcachefs/bkey.c
-+++ b/fs/bcachefs/bkey.c
-@@ -448,7 +448,7 @@ static bool bkey_format_has_too_big_fields(const struct bkey_format *f)
- 			: 0;
- 		u64 field_offset = le64_to_cpu(f->field_offset[i]);
- 
--		if (packed_max + field_offset < packed_max ||
-+		if (add_would_overflow(packed_max, field_offset) ||
- 		    packed_max + field_offset > unpacked_max)
- 			return true;
- 	}
-@@ -664,7 +664,7 @@ int bch2_bkey_format_invalid(struct bch_fs *c,
- 				: 0;
- 			u64 field_offset = le64_to_cpu(f->field_offset[i]);
- 
--			if (packed_max + field_offset < packed_max ||
-+			if (add_would_overflow(packed_max, field_offset) ||
- 			    packed_max + field_offset > unpacked_max) {
- 				prt_printf(err, "field %u too large: %llu + %llu > %llu",
- 					   i, packed_max, field_offset, unpacked_max);
-diff --git a/fs/bcachefs/fs.c b/fs/bcachefs/fs.c
-index ec419b8e2c43..00a606171656 100644
---- a/fs/bcachefs/fs.c
-+++ b/fs/bcachefs/fs.c
-@@ -901,7 +901,7 @@ static int bch2_fiemap(struct inode *vinode, struct fiemap_extent_info *info,
- 	if (ret)
- 		return ret;
- 
--	if (start + len < start)
-+	if (add_would_overflow(start, len))
- 		return -EINVAL;
- 
- 	start >>= 9;
-diff --git a/fs/bcachefs/quota.c b/fs/bcachefs/quota.c
-index e68b34eab90a..1738b1fc1c75 100644
---- a/fs/bcachefs/quota.c
-+++ b/fs/bcachefs/quota.c
-@@ -392,7 +392,7 @@ static void __bch2_quota_transfer(struct bch_memquota *src_q,
- 				  enum quota_counters counter, s64 v)
- {
- 	BUG_ON(v > src_q->c[counter].v);
--	BUG_ON(v + dst_q->c[counter].v < v);
-+	BUG_ON(add_would_overflow(v, dst_q->c[counter].v));
- 
- 	src_q->c[counter].v -= v;
- 	dst_q->c[counter].v += v;
-diff --git a/fs/bcachefs/util.c b/fs/bcachefs/util.c
-index a135136adeee..2200c81edbd2 100644
---- a/fs/bcachefs/util.c
-+++ b/fs/bcachefs/util.c
-@@ -148,7 +148,7 @@ static int __bch2_strtou64_h(const char *cp, u64 *res)
- 		return -ERANGE;
- 
- 	f_n = div_u64(f_n * b, f_d);
--	if (v + f_n < v)
-+	if (add_would_overflow(v, f_n))
- 		return -ERANGE;
- 	v += f_n;
- 
--- 
-2.34.1
+Thanks,
+Namhyung
 
+>
+>         if (sched->show_next) {
+>                 snprintf(nstr, sizeof(nstr), "next: %s[%d]", next_comm, n=
+ext_pid);
+> @@ -2152,9 +2126,9 @@ static void timehist_update_runtime_stats(struct th=
+read_runtime *r,
+>                 else if (r->last_time) {
+>                         u64 dt_wait =3D tprev - r->last_time;
+>
+> -                       if (r->last_state =3D=3D TASK_RUNNING)
+> +                       if (r->last_state =3D=3D 'R')
+>                                 r->dt_preempt =3D dt_wait;
+> -                       else if (r->last_state =3D=3D TASK_UNINTERRUPTIBL=
+E)
+> +                       else if (r->last_state =3D=3D 'D')
+>                                 r->dt_iowait =3D dt_wait;
+>                         else
+>                                 r->dt_sleep =3D dt_wait;
+> @@ -2579,7 +2553,7 @@ static int timehist_sched_change_event(struct perf_=
+tool *tool,
+>         struct thread_runtime *tr =3D NULL;
+>         u64 tprev, t =3D sample->time;
+>         int rc =3D 0;
+> -       int state =3D evsel__intval(evsel, sample, "prev_state");
+> +       const char state =3D evsel__taskstate(evsel, sample, "prev_state"=
+);
+>
+>         addr_location__init(&al);
+>         if (machine__resolve(machine, &al, sample) < 0) {
+> --
+> 2.41.0
+>
