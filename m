@@ -1,45 +1,45 @@
 Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8E168005D;
-	Tue, 23 Jan 2024 16:37:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20B587F7DE;
+	Tue, 23 Jan 2024 16:37:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706027830; cv=none; b=OMRVzw+bxBwWh/X9Oj2Oq3p6gp5+uW1KSz896DMBH9tP8H1A4+FJ3O46SM+QaIQDg10+Ut28QzZ8HoBRC52KDFiwJekEwRxRFR0eys/3GTc5AFqbnZB4SPh8ctZ8qhQMjmLbrU1IzTtzzeGkq6V4I/tcwbNOL2vQuLE6tOP754o=
+	t=1706027830; cv=none; b=BtQlPEoCYObVPOGBvVwASc9+iVi6plE6d5Xtxjq/1HuiPgF1GtmBIuyprTw6TytfM2TFtZka6R88nP4vfTHeLnr2hsKRukWEqGmoC8X5DW01VBwTK0vGKsyb0GgkAmW+Hq6SnYm7+OvqB/TWuBUWOAPCa+N+8cPvSJvhr7hwUuY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1706027830; c=relaxed/simple;
-	bh=HqyDbZstUWJOaMyZ4TiG/oEUrlUvngFXfqf5DbMzNi0=;
+	bh=6/dLm2MjBZeLAHh+W3gQoWesu1TbtOA/vZ3gQb2SLuI=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qJCghWFqF33X0A00TtI0mfSidHCQVHESKOkowL6VA5nNa2cxV5hqf6811YkEGoDsK04WXOJY0mJM/QWyTHGtgOQvadecwD+B7KuDWCCWFTkY5JQqSxSK8o2ZKKT/kOqJ+nxTXsQ3KUXUDP3IE9hh9lS8UPHy3YXXqsl69+QiEpI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Z4imqtNS; arc=none smtp.client-ip=198.47.19.142
+	 MIME-Version:Content-Type; b=l2dsJ1N3XnChtvf+Q5uJmjIOUra8Y/2tnHzsdTBkAq++iJ6nW0YsDHpUPN+3+/IZn8EsbYwTLIKKfGBr7J7dkWK/HmKdiP3Lk7RWTkVopr5GrZ3jTfW+cveADbgYFV/1Svo2WqhNEGc3jKu9Hh4tHKpyrY1MYw/f7l07ItJ+BwQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=JCcERF7c; arc=none smtp.client-ip=198.47.19.142
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Z4imqtNS"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 40NGb0s0094139;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="JCcERF7c"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 40NGb0vx094143;
 	Tue, 23 Jan 2024 10:37:00 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
 	s=ti-com-17Q1; t=1706027820;
-	bh=kVXImxDJPM4A7YrQnUDOEbJIk29vaGvEJQGgWRehcUA=;
+	bh=zL7aZs11+xEUFcKlyHOFpkpjBIT3t+hkCmsvfTqmT94=;
 	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=Z4imqtNSh7hFg4AmEfTGwNX1/h8bMgvjZZEjwc3EiKeniyaKolR/dqfW4j+KgEkaA
-	 tGx+/pafkNm1MkAdG8xrLFrsmXSDbUD6uIrHRzuFYTFpks6l1rKQ8kQPDwjrVnh8/Z
-	 1VQn9ht3Vh6taqfgNbMC2WHP2vcLFJcdT88FTem0=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 40NGb0IK034013
+	b=JCcERF7cRlA4mIEjiFkSaIyqQ2Q3/NjrRSASUv1vdEJyXtE5lZiesEUkmQ6Ww5Wfz
+	 iOOGQZPvR6dYqICJeDgifUf9lLIJ/NWAWj0wjIzjmBOsB3GWOF2H/LuNZdYS9vjtES
+	 3Qo7Hv5a6hT1yTdqvbZpIPF/wEw0MUGxoXThrphI=
+Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 40NGb0Bo000610
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
 	Tue, 23 Jan 2024 10:37:00 -0600
-Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 23
- Jan 2024 10:36:59 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ Jan 2024 10:37:00 -0600
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 23 Jan 2024 10:36:59 -0600
+ Frontend Transport; Tue, 23 Jan 2024 10:37:00 -0600
 Received: from lelvsmtp6.itg.ti.com ([10.249.42.149])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 40NGars4123403;
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 40NGars6123403;
 	Tue, 23 Jan 2024 10:36:59 -0600
 From: Andrew Davis <afd@ti.com>
 To: Sebastian Reichel <sre@kernel.org>,
@@ -52,9 +52,9 @@ To: Sebastian Reichel <sre@kernel.org>,
 CC: <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         Andrew Davis
 	<afd@ti.com>
-Subject: [PATCH 16/21] power: supply: da9150: Use devm_iio_channel_get() helper
-Date: Tue, 23 Jan 2024 10:36:48 -0600
-Message-ID: <20240123163653.384385-17-afd@ti.com>
+Subject: [PATCH 18/21] power: supply: rx51: Use devm_iio_channel_get() helper
+Date: Tue, 23 Jan 2024 10:36:50 -0600
+Message-ID: <20240123163653.384385-19-afd@ti.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240123163653.384385-1-afd@ti.com>
 References: <20240123163653.384385-1-afd@ti.com>
@@ -74,97 +74,85 @@ forgetting to release on error paths.
 
 Signed-off-by: Andrew Davis <afd@ti.com>
 ---
- drivers/power/supply/da9150-charger.c | 57 +++++++--------------------
- 1 file changed, 14 insertions(+), 43 deletions(-)
+ drivers/power/supply/rx51_battery.c | 45 +++++++----------------------
+ 1 file changed, 11 insertions(+), 34 deletions(-)
 
-diff --git a/drivers/power/supply/da9150-charger.c b/drivers/power/supply/da9150-charger.c
-index 37db9e4ed7f30..77e2d42382e45 100644
---- a/drivers/power/supply/da9150-charger.c
-+++ b/drivers/power/supply/da9150-charger.c
-@@ -521,36 +521,26 @@ static int da9150_charger_probe(struct platform_device *pdev)
- 	charger->dev = dev;
+diff --git a/drivers/power/supply/rx51_battery.c b/drivers/power/supply/rx51_battery.c
+index e2bfc81f0fd97..d532c670661b6 100644
+--- a/drivers/power/supply/rx51_battery.c
++++ b/drivers/power/supply/rx51_battery.c
+@@ -192,7 +192,6 @@ static int rx51_battery_probe(struct platform_device *pdev)
+ {
+ 	struct power_supply_config psy_cfg = {};
+ 	struct rx51_device_info *di;
+-	int ret;
  
- 	/* Acquire ADC channels */
--	charger->ibus_chan = iio_channel_get(dev, "CHAN_IBUS");
--	if (IS_ERR(charger->ibus_chan)) {
--		ret = PTR_ERR(charger->ibus_chan);
--		goto ibus_chan_fail;
+ 	di = devm_kzalloc(&pdev->dev, sizeof(*di), GFP_KERNEL);
+ 	if (!di)
+@@ -209,41 +208,23 @@ static int rx51_battery_probe(struct platform_device *pdev)
+ 
+ 	psy_cfg.drv_data = di;
+ 
+-	di->channel_temp = iio_channel_get(di->dev, "temp");
+-	if (IS_ERR(di->channel_temp)) {
+-		ret = PTR_ERR(di->channel_temp);
+-		goto error;
 -	}
-+	charger->ibus_chan = devm_iio_channel_get(dev, "CHAN_IBUS");
-+	if (IS_ERR(charger->ibus_chan))
-+		return PTR_ERR(charger->ibus_chan);
++	di->channel_temp = devm_iio_channel_get(di->dev, "temp");
++	if (IS_ERR(di->channel_temp))
++		return PTR_ERR(di->channel_temp);
  
--	charger->vbus_chan = iio_channel_get(dev, "CHAN_VBUS");
--	if (IS_ERR(charger->vbus_chan)) {
--		ret = PTR_ERR(charger->vbus_chan);
--		goto vbus_chan_fail;
+-	di->channel_bsi  = iio_channel_get(di->dev, "bsi");
+-	if (IS_ERR(di->channel_bsi)) {
+-		ret = PTR_ERR(di->channel_bsi);
+-		goto error_channel_temp;
 -	}
-+	charger->vbus_chan = devm_iio_channel_get(dev, "CHAN_VBUS");
-+	if (IS_ERR(charger->vbus_chan))
-+		return PTR_ERR(charger->vbus_chan);
++	di->channel_bsi  = devm_iio_channel_get(di->dev, "bsi");
++	if (IS_ERR(di->channel_bsi))
++		return PTR_ERR(di->channel_bsi);
  
--	charger->tjunc_chan = iio_channel_get(dev, "CHAN_TJUNC");
--	if (IS_ERR(charger->tjunc_chan)) {
--		ret = PTR_ERR(charger->tjunc_chan);
--		goto tjunc_chan_fail;
+-	di->channel_vbat = iio_channel_get(di->dev, "vbat");
+-	if (IS_ERR(di->channel_vbat)) {
+-		ret = PTR_ERR(di->channel_vbat);
+-		goto error_channel_bsi;
 -	}
-+	charger->tjunc_chan = devm_iio_channel_get(dev, "CHAN_TJUNC");
-+	if (IS_ERR(charger->tjunc_chan))
-+		return PTR_ERR(charger->tjunc_chan);
++	di->channel_vbat = devm_iio_channel_get(di->dev, "vbat");
++	if (IS_ERR(di->channel_vbat))
++		return PTR_ERR(di->channel_vbat);
  
--	charger->vbat_chan = iio_channel_get(dev, "CHAN_VBAT");
--	if (IS_ERR(charger->vbat_chan)) {
--		ret = PTR_ERR(charger->vbat_chan);
--		goto vbat_chan_fail;
+ 	di->bat = power_supply_register(di->dev, &di->bat_desc, &psy_cfg);
+-	if (IS_ERR(di->bat)) {
+-		ret = PTR_ERR(di->bat);
+-		goto error_channel_vbat;
 -	}
-+	charger->vbat_chan = devm_iio_channel_get(dev, "CHAN_VBAT");
-+	if (IS_ERR(charger->vbat_chan))
-+		return PTR_ERR(charger->vbat_chan);
++	if (IS_ERR(di->bat))
++		return PTR_ERR(di->bat);
  
- 	/* Register power supplies */
- 	charger->usb = power_supply_register(dev, &usb_desc, NULL);
--	if (IS_ERR(charger->usb)) {
--		ret = PTR_ERR(charger->usb);
--		goto usb_fail;
--	}
-+	if (IS_ERR(charger->usb))
-+		return PTR_ERR(charger->usb);
- 
- 	charger->battery = power_supply_register(dev, &battery_desc, NULL);
- 	if (IS_ERR(charger->battery)) {
-@@ -619,19 +609,6 @@ static int da9150_charger_probe(struct platform_device *pdev)
- battery_fail:
- 	power_supply_unregister(charger->usb);
- 
--usb_fail:
--	iio_channel_release(charger->vbat_chan);
+ 	return 0;
 -
--vbat_chan_fail:
--	iio_channel_release(charger->tjunc_chan);
+-error_channel_vbat:
+-	iio_channel_release(di->channel_vbat);
+-error_channel_bsi:
+-	iio_channel_release(di->channel_bsi);
+-error_channel_temp:
+-	iio_channel_release(di->channel_temp);
+-error:
 -
--tjunc_chan_fail:
--	iio_channel_release(charger->vbus_chan);
--
--vbus_chan_fail:
--	iio_channel_release(charger->ibus_chan);
--
--ibus_chan_fail:
- 	return ret;
+-	return ret;
  }
  
-@@ -659,12 +636,6 @@ static void da9150_charger_remove(struct platform_device *pdev)
+ static void rx51_battery_remove(struct platform_device *pdev)
+@@ -251,10 +232,6 @@ static void rx51_battery_remove(struct platform_device *pdev)
+ 	struct rx51_device_info *di = platform_get_drvdata(pdev);
  
- 	power_supply_unregister(charger->battery);
- 	power_supply_unregister(charger->usb);
+ 	power_supply_unregister(di->bat);
 -
--	/* Release ADC channels */
--	iio_channel_release(charger->ibus_chan);
--	iio_channel_release(charger->vbus_chan);
--	iio_channel_release(charger->tjunc_chan);
--	iio_channel_release(charger->vbat_chan);
+-	iio_channel_release(di->channel_vbat);
+-	iio_channel_release(di->channel_bsi);
+-	iio_channel_release(di->channel_temp);
  }
  
- static struct platform_driver da9150_charger_driver = {
+ #ifdef CONFIG_OF
 -- 
 2.39.2
 
