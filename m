@@ -1,172 +1,169 @@
-Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68E2E5EE9A;
-	Tue, 23 Jan 2024 13:43:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7227E5F840;
+	Tue, 23 Jan 2024 13:43:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706017393; cv=none; b=Kk8mLno/MlPTcIPmLTdeUEwYk/PqacWqMby04diCOxaG/hZTM0vnG18TRfPYXTlN7S+L9o0KJX2xjISKAjjJqn499lr3akVIC+n77E20SJ6Pn+fxr9fWmIv2BVKvWGH6br4+9oXg3tdl3jarWlGOt6XRhtqp2ue30v8bXKsK9Ts=
+	t=1706017439; cv=none; b=GheOyaGKzoqyzVN4v4cEvran/KHYjs/jWoCpZHWC7al0hQ3nrAt8AGwpseED4/xUBQ8i6/XXLlrjJRfz+U2mplOTTKqe4BdOW2v04pKD9mGMgCyWBgA9T2EYKZJuAItttEB6+D+dulFwqgiajBOg2hchTFkeMDfW70yiyxnuqEs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706017393; c=relaxed/simple;
-	bh=Jb9itl957EFVoNO5FWQy9uocQU42xFzLex48PwPhTqo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=i2gFPXbDLsuiJeHhjryq6juw6GReeIbz6At4quHKJxOhnN7WvMhWY6jzvv/Q2vB9wW2uQY9FE7Wt2dwNsDphyWzHyw5xT6mWkeOcPuqpbba8orMLnD2tNJfLlRx9UK2GObCmUebGRw/HMVjciXMbQ2uQIPVJ0bIzTxpcYFwPQU0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-5edfcba97e3so43988207b3.2;
-        Tue, 23 Jan 2024 05:43:11 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706017390; x=1706622190;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Ta8VXhfkrMNIwJSy/HBWlj17p8HnvVLoiI7h5yLdjII=;
-        b=GO9Rd3TbSJdxA+RJbUCZOXh/q7c4dclE73jVHDMqOG6fdKYhkOmSktHhVQROe0uidD
-         Kpo+dDiJbZFJGCYUaPXXl2wRD6WSP8OvrAV7i94itz9bMReXqv1m9+i0pBat1KAbXBe/
-         WHGIoUY0ba+tsdaOfzDz8Sq6Ksl5D1koPI2UuV3UN9Prvm/OJ0DBBOGo56LDriWlJL4i
-         hYGKhRBAqlnOgyohEHHbwfs8381rocR79Rb7kDbsdvRyL4m7W/HkjVWkP/kSaMirzsYQ
-         /TWjjAxf3Qdc/DN9TeGBbEq7e+p1d2zDNmjZRmfyP1AOg/Cnrl88kaFQKtS2Mi/F152U
-         GlOw==
-X-Gm-Message-State: AOJu0YyCSAOhfn8Yh9F//yH0JxF2lLkOlFdJ7hxt0AGA9aXD89wvOd+s
-	senrQAdsc1WTPVT37iXBZd474kNrh45DgbodgVVryZrGhg4H9+HqIdxFKR8Wf6g=
-X-Google-Smtp-Source: AGHT+IHxjorUYIUGj5cuOXZdUYvwecuOQnqM2naYCWagiysYPgxFGUzVgD0y3Fqucr9HLeE2hT20Ow==
-X-Received: by 2002:a0d:cb8b:0:b0:5ff:5beb:d570 with SMTP id n133-20020a0dcb8b000000b005ff5bebd570mr4683025ywd.43.1706017390085;
-        Tue, 23 Jan 2024 05:43:10 -0800 (PST)
-Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com. [209.85.128.175])
-        by smtp.gmail.com with ESMTPSA id w197-20020a0dd4ce000000b005ff9acf4683sm3296792ywd.123.2024.01.23.05.43.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 23 Jan 2024 05:43:09 -0800 (PST)
-Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-5f2d4aaa2fdso43943317b3.1;
-        Tue, 23 Jan 2024 05:43:09 -0800 (PST)
-X-Received: by 2002:a0d:f5c3:0:b0:5fb:da77:af07 with SMTP id
- e186-20020a0df5c3000000b005fbda77af07mr4704548ywf.32.1706017389477; Tue, 23
- Jan 2024 05:43:09 -0800 (PST)
+	s=arc-20240116; t=1706017439; c=relaxed/simple;
+	bh=LhPh2JflSkf4Eh9L4wigdSNPjwvTJS+d6yoBjqkQUu4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=a/qwaK1P769iTLxYFYYcetJgJ8Y+dmXhqGNv62NGGU1CpOjzDM1noT9RMLL8oPGr9WVaU5MOYFMQhXotTLfr9hadLEVEvM2Q+x1/hwZgtpydlmNdUf0rnV166iqvAXYoz9sIkSGHGElUVsWUJNcnWiARoVot91nXGD0kLyKmXoM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=o855QV/e; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="o855QV/e"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40N9svH4025268;
+	Tue, 23 Jan 2024 13:43:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=jCQOtSJ9PoUIcSjoiIspfcchAoWUzG5bAaJvDSmlONY=; b=o8
+	55QV/eNfSUXYbsetOlNX40v7eRtXBjRlAWnV2lfd9neGmAXXvYJ89pb3KSbMOmBl
+	6j0lmqYLb0u3mlDnVBnpIAKlfcUS4zSLPIRseaoS9bjIlv9/sTsqH/rW6sMxn2UV
+	JOCTfYo+1O3gryeOTi4HtqRPcqiPki0YKl4Q2E73rZbsi4cw0lddRbAolDIaBxnh
+	wX+kLBPg74JKD9APD/NUakhvc+u/XmMRZe7wFLmgeij+9/0SSq+fimYJCR0mNLdP
+	s7BtyOkSUotzq4KTp5sSAzJuu0oPi8QDxy0gxIPprsnWfjFya5AyqyHekRDPLVzp
+	eykkoXQBcWhXIESyP93w==
+Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vt9un8r0k-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 23 Jan 2024 13:43:35 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 40NDhZXO025227
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 23 Jan 2024 13:43:35 GMT
+Received: from [10.216.46.55] (10.80.80.8) by nasanex01a.na.qualcomm.com
+ (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Tue, 23 Jan
+ 2024 05:43:27 -0800
+Message-ID: <99a9a562-9f6f-411c-be1c-0a28fc2524dd@quicinc.com>
+Date: Tue, 23 Jan 2024 19:13:23 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240122235208.work.748-kees@kernel.org> <20240123002814.1396804-27-keescook@chromium.org>
- <CAMuHMdWa9tXQRHkkX-W+5n8kuCvEFZdsfStPtYGA0MZpTGX79Q@mail.gmail.com> <c915b476-784c-4d64-8063-f18837350568@helsinkinet.fi>
-In-Reply-To: <c915b476-784c-4d64-8063-f18837350568@helsinkinet.fi>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 23 Jan 2024 14:42:57 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdVhPV0-BCe-90oh5tpwt1S8bOQsyRE+vemVGORSfS-gBg@mail.gmail.com>
-Message-ID: <CAMuHMdVhPV0-BCe-90oh5tpwt1S8bOQsyRE+vemVGORSfS-gBg@mail.gmail.com>
-Subject: Re: [PATCH 27/82] m68k: Refactor intentional wrap-around calculation
-To: Eero Tamminen <oak@helsinkinet.fi>
-Cc: Kees Cook <keescook@chromium.org>, linux-hardening@vger.kernel.org, 
-	Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Liam Howlett <liam.howlett@oracle.com>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
-	Hugh Dickins <hughd@google.com>, linux-m68k@lists.linux-m68k.org, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] arm64: dts: qcom: qcm6490-idp: add display and panel
+Content-Language: en-US
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Konrad Dybcio
+	<konrad.dybcio@linaro.org>
+CC: <andersson@kernel.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+        <catalin.marinas@arm.com>, <will@kernel.org>,
+        <quic_bjorande@quicinc.com>, <geert+renesas@glider.be>,
+        <arnd@arndb.de>, <neil.armstrong@linaro.org>,
+        <nfraprado@collabora.com>, <m.szyprowski@samsung.com>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <quic_abhinavk@quicinc.com>, <quic_rajeevny@quicinc.com>,
+        <quic_vproddut@quicinc.com>
+References: <20240116094935.9988-1-quic_riteshk@quicinc.com>
+ <20240116094935.9988-3-quic_riteshk@quicinc.com>
+ <20a8efd1-e243-434e-8f75-aa786ac8014f@linaro.org>
+ <CAA8EJpqQVuS+yqXQ2y5sNQrRVg7tcQAJ3ywsEjg+O=7TkUZWLQ@mail.gmail.com>
+From: Ritesh Kumar <quic_riteshk@quicinc.com>
+In-Reply-To: <CAA8EJpqQVuS+yqXQ2y5sNQrRVg7tcQAJ3ywsEjg+O=7TkUZWLQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: RvR87RTdicsPBy4455whRNbg-5dkbgAK
+X-Proofpoint-GUID: RvR87RTdicsPBy4455whRNbg-5dkbgAK
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-01-23_06,2024-01-23_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
+ priorityscore=1501 adultscore=0 clxscore=1015 spamscore=0
+ lowpriorityscore=0 bulkscore=0 mlxscore=0 impostorscore=0 phishscore=0
+ malwarescore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2311290000 definitions=main-2401230100
 
-Hi Eero,
 
-On Tue, Jan 23, 2024 at 2:30=E2=80=AFPM Eero Tamminen <oak@helsinkinet.fi> =
-wrote:
-> On 23.1.2024 10.13, Geert Uytterhoeven wrote:
-> > On Tue, Jan 23, 2024 at 1:35=E2=80=AFAM Kees Cook <keescook@chromium.or=
-g> wrote:
-> >> In an effort to separate intentional arithmetic wrap-around from
-> >> unexpected wrap-around, we need to refactor places that depend on this
-> >> kind of math. One of the most common code patterns of this is:
-> >>
-> >>          VAR + value < VAR
-> >>
-> >> Notably, this is considered "undefined behavior" for signed and pointe=
-r
-> >> types, which the kernel works around by using the -fno-strict-overflow
-> >> option in the build[1] (which used to just be -fwrapv). Regardless, we
-> >> want to get the kernel source to the position where we can meaningfull=
-y
-> >> instrument arithmetic wrap-around conditions and catch them when they
-> >> are unexpected, regardless of whether they are signed[2], unsigned[3],
-> >> or pointer[4] types.
-> >>
-> >> Refactor open-coded unsigned wrap-around addition test to use
-> >> check_add_overflow(), retaining the result for later usage (which remo=
-ves
-> >> the redundant open-coded addition). This paves the way to enabling the
-> >> unsigned wrap-around sanitizer[2] in the future.
-> >>
-> >> Link: https://git.kernel.org/linus/68df3755e383e6fecf2354a67b08f92f185=
-36594 [1]
-> >> Link: https://github.com/KSPP/linux/issues/26 [2]
-> >> Link: https://github.com/KSPP/linux/issues/27 [3]
-> >> Link: https://github.com/KSPP/linux/issues/344 [4]
-> >> Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-> >> Cc: Andrew Morton <akpm@linux-foundation.org>
-> >> Cc: Arnd Bergmann <arnd@arndb.de>
-> >> Cc: Liam Howlett <liam.howlett@oracle.com>
-> >> Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-> >> Cc: Hugh Dickins <hughd@google.com>
-> >> Cc: linux-m68k@lists.linux-m68k.org
-> >> Signed-off-by: Kees Cook <keescook@chromium.org>
-> >
-> > Thanks for your patch!
-> >
-> >> --- a/arch/m68k/kernel/sys_m68k.c
-> >> +++ b/arch/m68k/kernel/sys_m68k.c
-> >> @@ -391,10 +391,11 @@ sys_cacheflush (unsigned long addr, int scope, i=
-nt cache, unsigned long len)
-> >>
-> >>                  mmap_read_lock(current->mm);
-> >>          } else {
-> >> +               unsigned long sum;
-> >
-> > "sum" sounds like this is a dummy variable, to please the third
-> > parameter of check_add_overflow()...
-> >
-> >>                  struct vm_area_struct *vma;
-> >>
-> >>                  /* Check for overflow.  */
-> >
-> > I agree with Liam: please drop the comment.
-> >
-> >> -               if (addr + len < addr)
-> >> +               if (check_add_overflow(addr, len, &sum))
-> >>                          goto out;
-> >>
-> >>                  /*
-> >> @@ -403,7 +404,7 @@ sys_cacheflush (unsigned long addr, int scope, int=
- cache, unsigned long len)
-> >>                   */
-> >>                  mmap_read_lock(current->mm);
-> >>                  vma =3D vma_lookup(current->mm, addr);
-> >> -               if (!vma || addr + len > vma->vm_end)
-> >> +               if (!vma || sum > vma->vm_end)
-> >
-> > ... Oh, it is actually used. What about renaming it to "end" instead?
+On 1/16/2024 6:27 PM, Dmitry Baryshkov wrote:
+
+> On Tue, 16 Jan 2024 at 14:06, Konrad Dybcio <konrad.dybcio@linaro.org> wrote:
+>>
+>>
+>> On 1/16/24 10:49, Ritesh Kumar wrote:
+>>> Enable Display Subsystem with Novatek NT36672E Panel
+>>> on qcm6490 idp platform.
+>>>
+>>> Signed-off-by: Ritesh Kumar <quic_riteshk@quicinc.com>
+>>> ---
+>>>    arch/arm64/boot/dts/qcom/qcm6490-idp.dts | 100 +++++++++++++++++++++++
+>>>    1 file changed, 100 insertions(+)
+>>>
+>>> diff --git a/arch/arm64/boot/dts/qcom/qcm6490-idp.dts b/arch/arm64/boot/dts/qcom/qcm6490-idp.dts
+>>> index 2a6e4907c5ee..efa5252130a1 100644
+>>> --- a/arch/arm64/boot/dts/qcom/qcm6490-idp.dts
+>>> +++ b/arch/arm64/boot/dts/qcom/qcm6490-idp.dts
+>>> @@ -9,6 +9,7 @@
+>>>    #define PM7250B_SID 8
+>>>    #define PM7250B_SID1 9
+>>>
+>>> +#include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
+>>>    #include <dt-bindings/regulator/qcom,rpmh-regulator.h>
+>>>    #include "sc7280.dtsi"
+>>>    #include "pm7250b.dtsi"
+>>> @@ -38,6 +39,25 @@
+>>>                stdout-path = "serial0:115200n8";
+>>>        };
+>>>
+>>> +     lcd_disp_bias: lcd-disp-bias-regulator {
+>>> +             compatible = "regulator-fixed";
+>>> +             regulator-name = "lcd_disp_bias";
+>>> +             regulator-min-microvolt = <5500000>;
+>>> +             regulator-max-microvolt = <5500000>;
+>>> +             gpio = <&pm7250b_gpios 2 GPIO_ACTIVE_HIGH>;
+>>> +             enable-active-high;
+>>> +             pinctrl-names = "default";
+>>> +             pinctrl-0 = <&lcd_disp_bias_en>;
+>> property-n
+>> property-names
+>>
+>> all throughout the patch
+
+Thanks, I will update in the new version.
+
+>>> +&gpu {
+>>> +     status = "disabled";
+>>> +};
+>> Hm.. generally we disable the GPU in the SoC DT, but that doesn't
+>> seem to have happened here..
+>>
+>> Thinking about it more, is disabling it here necessary? Does it
+>> not fail gracefully?
+> Missed this.
 >
-> IMHO this is more descriptive:
-> +               if (check_add_overflow(addr, len, &sum))
->
-> than this:
-> +               if (check_add_overflow(addr, len, &end))
->
-> "sum" is IMHO quite obviously sum of the preceding args, whereas I do
-> not know what "end" would be.
+> I'd say, I don't see a reason to disable it at all. The GPU should be
+> working on sc7280 / qcm4290.
 
-"end" is the end of the block of size "len" pointed to by "addr".
+With GPU device node enabled, adreno_bind failure is seen as the 
+"speed_bin" was not populated on QCM6490 target which leads to display 
+bind failure.
+Spoke with GPU team and on QCM6490 board, only CPU rendering is 
+supported for now and there is no plan to enable GPU rendering in near 
+future.
 
-IMHO "if (sum > vma->vm_end)" is less descriptive...
+In this regard, what do you suggest
 
-Gr{oetje,eeting}s,
+1) Disable GPU in QCM6490 DT (as per the current patch)
+2) Disable GPU in the SoC DT, but enable it in other platform DTs. (This 
+will prompt change in all the dt's and we don't have all the devices to 
+test)
 
-                        Geert
+Please let me know your views on it.
 
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
 
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+Thanks,
+Ritesh
