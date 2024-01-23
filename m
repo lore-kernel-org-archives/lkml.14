@@ -1,93 +1,174 @@
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 122F45CAF
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 18:30:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A43B3D3A7;
+	Tue, 23 Jan 2024 18:36:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706034624; cv=none; b=R7l3qPr29g1hZ0ezhYKPa6lI+RMh4eNkXyanSrM9dcfO+E3+cv392c0KLUMValfsGHCh8ju+vyo+8jQk0+PO7PjdCE4u7jpxVdA+Qa1D5miFhgxxGNxAMDZfgoG+v7ndkREUYd7V8fH1vUjV2OZ58YuZ+z7gujS9twOFwsNM23A=
+	t=1706034963; cv=none; b=j0qGT0fmsTpE1hypEm/pgLxo18Yp3xSCK0cEJncVNIW9xcC2LCNrlNLmN/D3C7hWDMsc45+IUDR5RnL4WiQOuKlUNaC7aGB0pS0GFnxlHWVk4HoC7DYyL7Z4Nd1TmaET2gT18z6HNCYskICQK6OTlOlgip+qXTyK0o+qASUsBNU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706034624; c=relaxed/simple;
-	bh=ZS2enheDeK4zJ9S2SV37FPzoLxHBRNEPkvykl3qRBAU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iu4YSLubFn7JFG96eQY45WXgtFBpiijDkHiBvpSg4uciEg+pp6a5sVjuzBL/PfRwx9wviR7PWFQsENJ4rQGLajhlbKpZawEGIoR4f6oPxByFSPUY/plIhAHtojqHQ58UrLqqYLZK/1570vCrkNwx1yxaY7cOm2LmDPLGhYwkGng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=BUQKdiSb; arc=none smtp.client-ip=209.85.208.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1706034963; c=relaxed/simple;
+	bh=t1pzSPXGOsOeKApuKD4PdRlt/9pcnIsQsfFyQqYr8LU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=F4gV0JUqD1dJ5UQmfXayboKFkC53fvW5OYXYq0CdDdlC2jT+POvKObwSvwqrT7rZxU/GdDnGJVpBf/+kz0MoyhCi4WsJ+bZLVWGp+5InIqiul0VR6jdr+lGnKwF3razMH8WaGjFUz3ClPE3SQnMj1aOka/51pjwyQrFn9/zbfiQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=d3ED7TlE; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=ZyvYkxpO; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=d3ED7TlE; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=ZyvYkxpO; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BUQKdiSb"
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2cf13c259f3so9520511fa.2
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 10:30:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706034620; x=1706639420; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=QlXjW7G6UiHX4sDWl2sKV5O6lj3QKX2Rb8bw1BWqDJ4=;
-        b=BUQKdiSbIhyKl9bupztHG7jy4leRx305MxIUsl9vhRcrAd2l+N0++eeNq/WyQR0OH8
-         +qqOD11Ms+Od6LmYnOE/Yt/54EK0CPhSrcz9e2exYBo0mWcJfnoAT/is/ez/dD3mqoEH
-         9GJm/8/7P04KjixGTYs824mQz8bjKkcHOSvoa70lj9a107o6XjdCACNW6vIxLD9Iwe2R
-         tChIrDF7MgNqBx76k3kNQg0sdS6X3/vDwIT33D/4XihqFekslZOKYtpPOON5BSmX4JZ0
-         FHoBUAX+BHGJJrXDaDDmWIfHfiEtOzzVJKVuZIIL4ls/s427p5H2GoWGAI+S535d9dk7
-         Hkew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706034620; x=1706639420;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=QlXjW7G6UiHX4sDWl2sKV5O6lj3QKX2Rb8bw1BWqDJ4=;
-        b=B8ILt3FVXxgh/ln1pmx6SWxZySoJEHx2ucLAUhCKDhS6W78ub2x+AMpN8SPfF5AgVr
-         XRTRALyeE2s2lm0jsr085DXqNkNlDSrSNmMC5yVcSi1OpMLObvpnM8nFl7g/PFe3/tc3
-         o2NPqoH+8f2YELChGS32Dx02v3L3RoRCarBUg8zmY05j6Rv0HhAOoFLJJ5hz+FnPMH1Q
-         eUjhsV/L2/NBIkfQK9BEWXJplqoMXoTN8AsvUgVdCvKliCARmfLjObOr9W7FWMld2Hh1
-         xgsUm9n78jh8fdkuNBcxqezlHfWIv/fp/YWFtZfgYb9jCJMklN0X/hbyMBfurKE2rXdt
-         X76Q==
-X-Gm-Message-State: AOJu0YyUxO/f6ZtCf2Whm0I2BoZdpbRjhtf73gbustb6D0t27whQB0zb
-	Iittgi75qQ984KWwpC/xZGe30fMtZtMdgNJszFOYBSqGT4fREdZdYD83nfv33OU=
-X-Google-Smtp-Source: AGHT+IEzws/74GeYqifibzUh+CjXvSxGj4oufXbF6Vz+MoQFBLYcPla5kMRVXNHUIYKkx7PjpYbHyg==
-X-Received: by 2002:a05:6512:ea8:b0:510:ec4:4ee4 with SMTP id bi40-20020a0565120ea800b005100ec44ee4mr30023lfb.152.1706034620261;
-        Tue, 23 Jan 2024 10:30:20 -0800 (PST)
-Received: from [172.30.205.123] (UNUSED.212-182-62-129.lubman.net.pl. [212.182.62.129])
-        by smtp.gmail.com with ESMTPSA id q20-20020a056512211400b0050bea32beeasm2398479lfr.216.2024.01.23.10.30.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 23 Jan 2024 10:30:19 -0800 (PST)
-Message-ID: <a9b20408-3669-47a0-96c2-3a26c6d61826@linaro.org>
-Date: Tue, 23 Jan 2024 19:30:19 +0100
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="d3ED7TlE";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="ZyvYkxpO";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="d3ED7TlE";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="ZyvYkxpO"
+Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:98])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 24ABD21F6E;
+	Tue, 23 Jan 2024 18:35:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1706034959;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fZRULxGLXy9hvggXyq6ZTd7Xgbc+PvTyWIeHZ+8GHI4=;
+	b=d3ED7TlEbKVPY11uywbn0STxTPHOmptbA23Kp96qErUcnZ7C8eFheGMLXtdPI+8zl2N1Wt
+	djYisy3x096eIENgZlhyZ7A+fdlgCGHy2Oqgcr9SVFQDm/n8oxrbHtAgB+LYZ7Cqvg17BB
+	Kqk1xjIDbgFDRgGDk8faXt3OLrbAu/o=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1706034959;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fZRULxGLXy9hvggXyq6ZTd7Xgbc+PvTyWIeHZ+8GHI4=;
+	b=ZyvYkxpOG0yXXaGxOtumdwI8QdVAbA9NBCkcTdTAuWLL2W4Z+3I7hsxXYcTAof4ND7ZChc
+	Y7e166FgID+iq6DQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1706034959;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fZRULxGLXy9hvggXyq6ZTd7Xgbc+PvTyWIeHZ+8GHI4=;
+	b=d3ED7TlEbKVPY11uywbn0STxTPHOmptbA23Kp96qErUcnZ7C8eFheGMLXtdPI+8zl2N1Wt
+	djYisy3x096eIENgZlhyZ7A+fdlgCGHy2Oqgcr9SVFQDm/n8oxrbHtAgB+LYZ7Cqvg17BB
+	Kqk1xjIDbgFDRgGDk8faXt3OLrbAu/o=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1706034959;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fZRULxGLXy9hvggXyq6ZTd7Xgbc+PvTyWIeHZ+8GHI4=;
+	b=ZyvYkxpOG0yXXaGxOtumdwI8QdVAbA9NBCkcTdTAuWLL2W4Z+3I7hsxXYcTAof4ND7ZChc
+	Y7e166FgID+iq6DQ==
+Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id E6ED81329F;
+	Tue, 23 Jan 2024 18:35:58 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap2.dmz-prg2.suse.org with ESMTPSA
+	id hE12Nw4HsGXEDAAAn2gu4w
+	(envelope-from <dsterba@suse.cz>); Tue, 23 Jan 2024 18:35:58 +0000
+Date: Tue, 23 Jan 2024 19:35:37 +0100
+From: David Sterba <dsterba@suse.cz>
+To: Johannes Thumshirn <Johannes.Thumshirn@wdc.com>
+Cc: Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
+	Naohiro Aota <Naohiro.Aota@wdc.com>,
+	"linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	Damien Le Moal <dlemoal@kernel.org>
+Subject: Re: [PATCH 1/2] btrfs: zoned: use rcu list for iterating devices to
+ collect stats
+Message-ID: <20240123183537.GJ31555@suse.cz>
+Reply-To: dsterba@suse.cz
+References: <20240122-reclaim-fix-v1-0-761234a6d005@wdc.com>
+ <20240122-reclaim-fix-v1-1-761234a6d005@wdc.com>
+ <20240122213428.GE31555@twin.jikos.cz>
+ <9ab48353-2033-4ab6-8334-28859d5e9e0f@wdc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 02/11] arm64: dts: qcom: x1e80100: Add SMP2P nodes
-Content-Language: en-US
-To: Abel Vesa <abel.vesa@linaro.org>, Andy Gross <agross@kernel.org>,
- Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Sibi Sankar <quic_sibis@quicinc.com>,
- Rajendra Nayak <quic_rjendra@quicinc.com>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240123-x1e80100-dts-missing-nodes-v4-0-072dc2f5c153@linaro.org>
- <20240123-x1e80100-dts-missing-nodes-v4-2-072dc2f5c153@linaro.org>
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
-In-Reply-To: <20240123-x1e80100-dts-missing-nodes-v4-2-072dc2f5c153@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9ab48353-2033-4ab6-8334-28859d5e9e0f@wdc.com>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=d3ED7TlE;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=ZyvYkxpO
+X-Spamd-Result: default: False [-3.01 / 50.00];
+	 ARC_NA(0.00)[];
+	 HAS_REPLYTO(0.30)[dsterba@suse.cz];
+	 R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 TO_DN_EQ_ADDR_SOME(0.00)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 BAYES_HAM(-3.00)[100.00%];
+	 MIME_GOOD(-0.10)[text/plain];
+	 REPLYTO_ADDR_EQ_FROM(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 DKIM_TRACE(0.00)[suse.cz:+];
+	 MX_GOOD(-0.01)[];
+	 RCPT_COUNT_SEVEN(0.00)[7];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 RCVD_TLS_ALL(0.00)[];
+	 MID_RHS_MATCH_FROM(0.00)[]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: 24ABD21F6E
+X-Spam-Level: 
+X-Spam-Score: -3.01
+X-Spam-Flag: NO
 
-
-
-On 1/23/24 12:01, Abel Vesa wrote:
-> From: Sibi Sankar <quic_sibis@quicinc.com>
+On Tue, Jan 23, 2024 at 07:49:22AM +0000, Johannes Thumshirn wrote:
+> On 22.01.24 22:35, David Sterba wrote:
+> > On Mon, Jan 22, 2024 at 02:51:03AM -0800, Johannes Thumshirn wrote:
+> >> As btrfs_zoned_should_reclaim only has to iterate the device list in order
+> >> to collect stats on the device's total and used bytes, we don't need to
+> >> take the full blown mutex, but can iterate the device list in a rcu_read
+> >> context.
+> >>
+> >> Signed-off-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+> >> ---
+> >>   fs/btrfs/zoned.c | 6 +++---
+> >>   1 file changed, 3 insertions(+), 3 deletions(-)
+> >>
+> >> diff --git a/fs/btrfs/zoned.c b/fs/btrfs/zoned.c
+> >> index 168af9d000d1..b7e7b5a5a6fa 100644
+> >> --- a/fs/btrfs/zoned.c
+> >> +++ b/fs/btrfs/zoned.c
+> >> @@ -2423,15 +2423,15 @@ bool btrfs_zoned_should_reclaim(struct btrfs_fs_info *fs_info)
+> >>   	if (fs_info->bg_reclaim_threshold == 0)
+> >>   		return false;
+> >>   
+> >> -	mutex_lock(&fs_devices->device_list_mutex);
+> >> -	list_for_each_entry(device, &fs_devices->devices, dev_list) {
+> >> +	rcu_read_lock();
+> >> +	list_for_each_entry_rcu(device, &fs_devices->devices, dev_list) {
+> >>   		if (!device->bdev)
+> >>   			continue;
+> >>   
+> >>   		total += device->disk_total_bytes;
+> >>   		used += device->bytes_used;
+> >>   	}
+> >> -	mutex_unlock(&fs_devices->device_list_mutex);
+> >> +	rcu_read_unlock();
+> > 
+> > This is basically only a hint and inaccuracies in the total or used
+> > values would be transient, right? The sum is calculated each time the
+> > funciton is called, not stored anywhere so in the unlikely case of
+> > device removal it may skip reclaim once, but then pick it up later.
+> > Any actual removal of the block groups in verified again and properly
+> > locked in btrfs_reclaim_bgs_work().
+> > 
 > 
-> SMP2P is used for interrupting and being interrupted about remoteproc
-> state changes related to the audio, compute and sensor subsystems.
-> 
-> Signed-off-by: Sibi Sankar <quic_sibis@quicinc.com>
-> Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
-> ---
+> Yes.
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
-
-Konrad
+So please add it to the changelog as an explanation why the mutex -> rcu
+switch is safe, thanks.
