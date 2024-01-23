@@ -1,65 +1,155 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC5005B1FE;
-	Tue, 23 Jan 2024 22:25:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7B3E5B1F9;
+	Tue, 23 Jan 2024 22:25:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706048760; cv=none; b=RGC+EQ4OBuj+nh9UVR+ClYtwE2ssH30n7tyMWg8m6zaTt67pX4SFq2h9jcsWVMwwTlp+OX3mO5GLx2LQsrOp3w5ZO10gldZ//qLe/OhdLRD4wuULPBDpkcRsbcPzBibEU5HQH7G4+OTdxIr39gTP1C9l9qaiLgUG4MLKLtqCq6s=
+	t=1706048760; cv=none; b=AClE3nbYpa4lbd6QTHPwzXrdaZSB5rqoHcx00z2AQwU1ZXr97nhO40IjieOv/gW616mXrV+XUwHPh0eecTNncrAaUgdgD7+dbPt7tVS/ttAve+LHHoBPSL4RcSykhIUMk9Cf2r9IRwtdCN2myGwKwANBwPyRkj8OvKGyDnS6dxs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1706048760; c=relaxed/simple;
-	bh=B1kmLh0XTuUciawhYX2WtVS7ycXcBHNZJ+aUpLr1nNE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nIFasShcfTRgSrf8agVBrYWCxUIGBmfWeaT6RoWuWfciSg0bce99W4c4vWYAYhxhw4F0ExZjINv7WoDLD06ud4so6cldPv0bjgI4fuJ+1XO9ZxZh3G9RhxNZIH3VuUNwt3PjBeHgbsk+UWS4k2SlaIeL3U9vJRvPs8+kJkBvdzY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xx8jUSqR; arc=none smtp.client-ip=10.30.226.201
+	bh=W/h3IgHJjXPAT07ii07veSU9p8SnGe0D62+S1FXuNBA=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=fa8ESIaFnpiUtiwWlEjq/QDDj5RNw8K+D3K3ZsseguPYgfa1YlIJpq3kYV8rQLUlBQZtlcEbyHyKrZ9Y12Yc1ewAq8oexFa7rx3Et9WXOM/h3HLTHSjSPUgbx3yEP8uT2/pI+YBu9wFZQuhM/QfOMbvfSRMdPy8ZzSl83zlEUl4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=sp9Mr4IM; arc=none smtp.client-ip=198.47.23.249
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xx8jUSqR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C65DBC433F1;
-	Tue, 23 Jan 2024 22:25:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706048759;
-	bh=B1kmLh0XTuUciawhYX2WtVS7ycXcBHNZJ+aUpLr1nNE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Xx8jUSqReIgJXbH9PETzh+aNrwDM/CVN6bUXqCsUjm3Wz0cLfGrPPZOfHujwkIYJB
-	 5Ai1+h1BMemRK0XA3RidktCgA5BLg+aelQtfIZoylDcClP7tGzH5sjYpYFzsDLffFE
-	 E4NCO6al9a7DAbgryQBpAgw1N/vYsESPHBrt3C5EpHLL6gRZeY46Omfo9tblYJ2STU
-	 gLLQbU8b+eMOrMVDPHEPT/hSEs93gT7YBEi2+chR2vjcyxJ187uA+6XU0mirlf1j0N
-	 XeeE2rIjtJFwVSFThXYe51UL5ORG88V2hP+NabXrMOQQVWv3KJM2x6GfKALX5XP9RD
-	 qy3l/Y5A74v1A==
-Date: Tue, 23 Jan 2024 23:25:55 +0100
-From: Andi Shyti <andi.shyti@kernel.org>
-To: Tudor Ambarus <tudor.ambarus@linaro.org>
-Cc: broonie@kernel.org, arnd@arndb.de, robh+dt@kernel.org, 
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, alim.akhtar@samsung.com, 
-	linux-spi@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arch@vger.kernel.org, 
-	andre.draszik@linaro.org, peter.griffin@linaro.org, semen.protsenko@linaro.org, 
-	kernel-team@android.com, willmcvicker@google.com
-Subject: Re: [PATCH 04/21] spi: s3c64xx: remove unneeded (void *) casts in
- of_match_table
-Message-ID: <2csebdjr3ayq4v5zz27ygu7bcpwzymjyg4j2gcx74fjovkfrxz@rjancstkwnmz>
-References: <20240123153421.715951-1-tudor.ambarus@linaro.org>
- <20240123153421.715951-5-tudor.ambarus@linaro.org>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="sp9Mr4IM"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 40NMPfTg058369;
+	Tue, 23 Jan 2024 16:25:41 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1706048741;
+	bh=uDlLKfvRk83ppe6pFtTJRHIFZe3P3FGahQJQbEddx8U=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=sp9Mr4IMuEDqHCJt15an33a/eHVp+0XD8+jITLQLFkF22+ygp4yUxFwt+yIimEaff
+	 psz75RHSYfhtsBZUoQw2x7zyUzWxiWk0E2V0sP54FbQDqcxqphMRLINExgF/K+1T5u
+	 BSZFWXy7kjsOi+xxne9DfNa28wdS6ZChfHRTqkeU=
+Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 40NMPfXI004736
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 23 Jan 2024 16:25:41 -0600
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 23
+ Jan 2024 16:25:41 -0600
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Tue, 23 Jan 2024 16:25:41 -0600
+Received: from lelvsmtp6.itg.ti.com ([10.249.42.149])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 40NMPabd064564;
+	Tue, 23 Jan 2024 16:25:40 -0600
+From: Andrew Davis <afd@ti.com>
+To: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
+        Tero
+ Kristo <kristo@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Krzysztof
+ Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+CC: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Andrew Davis
+	<afd@ti.com>
+Subject: [PATCH 10/11] arm64: dts: ti: k3-j721e-som-p0: Do not split single items
+Date: Tue, 23 Jan 2024 16:25:35 -0600
+Message-ID: <20240123222536.875797-10-afd@ti.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240123222536.875797-1-afd@ti.com>
+References: <20240123222536.875797-1-afd@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240123153421.715951-5-tudor.ambarus@linaro.org>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-Hi Tudor,
+Each "mboxes" item is composed of two cells. It seems these got split
+as they appeared to be two items in an array, but are actually a single
+two-cell item. Rejoin these cells.
 
-On Tue, Jan 23, 2024 at 03:34:03PM +0000, Tudor Ambarus wrote:
-> of_device_id::data is an opaque pointer. No explicit cast is needed.
-> Remove unneeded (void *) casts in of_match_table. While here align the
-> compatible and data members.
-> 
-> Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
+Signed-off-by: Andrew Davis <afd@ti.com>
+---
+ arch/arm64/boot/dts/ti/k3-j721e-som-p0.dtsi | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-Reviewed-by: Andi Shyti <andi.shyti@kernel.org>
+diff --git a/arch/arm64/boot/dts/ti/k3-j721e-som-p0.dtsi b/arch/arm64/boot/dts/ti/k3-j721e-som-p0.dtsi
+index a75611eec7914..8724ae20fb23e 100644
+--- a/arch/arm64/boot/dts/ti/k3-j721e-som-p0.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-j721e-som-p0.dtsi
+@@ -549,58 +549,58 @@ mbox_c71_0: mbox-c71-0 {
+ };
+ 
+ &mcu_r5fss0_core0 {
+-	mboxes = <&mailbox0_cluster0>, <&mbox_mcu_r5fss0_core0>;
++	mboxes = <&mailbox0_cluster0 &mbox_mcu_r5fss0_core0>;
+ 	memory-region = <&mcu_r5fss0_core0_dma_memory_region>,
+ 			<&mcu_r5fss0_core0_memory_region>;
+ };
+ 
+ &mcu_r5fss0_core1 {
+-	mboxes = <&mailbox0_cluster0>, <&mbox_mcu_r5fss0_core1>;
++	mboxes = <&mailbox0_cluster0 &mbox_mcu_r5fss0_core1>;
+ 	memory-region = <&mcu_r5fss0_core1_dma_memory_region>,
+ 			<&mcu_r5fss0_core1_memory_region>;
+ };
+ 
+ &main_r5fss0_core0 {
+-	mboxes = <&mailbox0_cluster1>, <&mbox_main_r5fss0_core0>;
++	mboxes = <&mailbox0_cluster1 &mbox_main_r5fss0_core0>;
+ 	memory-region = <&main_r5fss0_core0_dma_memory_region>,
+ 			<&main_r5fss0_core0_memory_region>;
+ };
+ 
+ &main_r5fss0_core1 {
+-	mboxes = <&mailbox0_cluster1>, <&mbox_main_r5fss0_core1>;
++	mboxes = <&mailbox0_cluster1 &mbox_main_r5fss0_core1>;
+ 	memory-region = <&main_r5fss0_core1_dma_memory_region>,
+ 			<&main_r5fss0_core1_memory_region>;
+ };
+ 
+ &main_r5fss1_core0 {
+-	mboxes = <&mailbox0_cluster2>, <&mbox_main_r5fss1_core0>;
++	mboxes = <&mailbox0_cluster2 &mbox_main_r5fss1_core0>;
+ 	memory-region = <&main_r5fss1_core0_dma_memory_region>,
+ 			<&main_r5fss1_core0_memory_region>;
+ };
+ 
+ &main_r5fss1_core1 {
+-	mboxes = <&mailbox0_cluster2>, <&mbox_main_r5fss1_core1>;
++	mboxes = <&mailbox0_cluster2 &mbox_main_r5fss1_core1>;
+ 	memory-region = <&main_r5fss1_core1_dma_memory_region>,
+ 			<&main_r5fss1_core1_memory_region>;
+ };
+ 
+ &c66_0 {
+ 	status = "okay";
+-	mboxes = <&mailbox0_cluster3>, <&mbox_c66_0>;
++	mboxes = <&mailbox0_cluster3 &mbox_c66_0>;
+ 	memory-region = <&c66_0_dma_memory_region>,
+ 			<&c66_0_memory_region>;
+ };
+ 
+ &c66_1 {
+ 	status = "okay";
+-	mboxes = <&mailbox0_cluster3>, <&mbox_c66_1>;
++	mboxes = <&mailbox0_cluster3 &mbox_c66_1>;
+ 	memory-region = <&c66_1_dma_memory_region>,
+ 			<&c66_1_memory_region>;
+ };
+ 
+ &c71_0 {
+ 	status = "okay";
+-	mboxes = <&mailbox0_cluster4>, <&mbox_c71_0>;
++	mboxes = <&mailbox0_cluster4 &mbox_c71_0>;
+ 	memory-region = <&c71_0_dma_memory_region>,
+ 			<&c71_0_memory_region>;
+ };
+-- 
+2.39.2
 
-Thanks,
-Andi
