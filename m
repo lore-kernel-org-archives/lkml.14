@@ -1,145 +1,96 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E7EC7F7DE;
-	Tue, 23 Jan 2024 17:14:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 552CF80021;
+	Tue, 23 Jan 2024 17:14:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706030073; cv=none; b=DGsemnoy3GyaVWepd+dEJOL3J5LWsduP5d4iLoIi0M2j6eWS/QH8rkbXFPnHET/yYfcKLa+YiKOyAvpVCWijjpltuyhh026lNKrNr/RqPScYRQl+qjuJlgUne4+ST4yYxU4z4LklcLHPgrixl1BB2oCqTBxV2/pM54TZlSuB97g=
+	t=1706030078; cv=none; b=XKPOp9Eyfq9szEPXTIG5M3VekLkBZ7W4ZIfUIBeGl1W7fGqh49E62sXqVale15FqYLcebyRmaGsJ5QaHktlHu6rjA5hfPNqtIzKEpH/7JoSM7u9DSCGLFznzoUFmju+Rvie39jsHH/UlM6YhdTLwqX6BlCEyIKWVovDGgf4ivic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706030073; c=relaxed/simple;
-	bh=75op/UILW8qXFGBuR14WbnKN2oEjWm2tsZZHmguGNIQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=YegcNmQ74g3nLhe6S5ZR0xmc03RV91qmFtiw73vVslbxiRSqldlcysVei/ITbqzCrnkrUHevkf5oRWfv8DsnJ8gdK4TBs0bIjmrkalLuiUnCjo2RZPiT5q0WRAyZsL2HI5xLs+k3lJjdR6rRtxE6XrKASwgUzzaPQzXpsbOPaPI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 563861FB;
-	Tue, 23 Jan 2024 09:15:15 -0800 (PST)
-Received: from e125769.cambridge.arm.com (e125769.cambridge.arm.com [10.1.196.26])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E84063F5A1;
-	Tue, 23 Jan 2024 09:14:28 -0800 (PST)
-From: Ryan Roberts <ryan.roberts@arm.com>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	Yang Shi <shy828301@gmail.com>,
-	Rik van Riel <riel@surriel.com>,
-	Matthew Wilcox <willy@infradead.org>
-Cc: Ryan Roberts <ryan.roberts@arm.com>,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: [PATCH v1] mm: thp_get_unmapped_area must honour topdown preference
-Date: Tue, 23 Jan 2024 17:14:20 +0000
-Message-Id: <20240123171420.3970220-1-ryan.roberts@arm.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1706030078; c=relaxed/simple;
+	bh=VCYhCGCtLx/Jyo1j6/LXONR0VkamWENNT6rk6KXghPs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=I2qUwJ0djy8armwyF7pQRp5NJr68vJKz43QNSuK9scUDTNLuAdrVON2c+t+v++AQXvxt7TkA0E7TGU29yt+XB8ggFZmELAPVfIP797Jqa8VUPM6nPAG3oVvKFQuTyMoy5mxBdIsKmJzAbuXGMIMewYhg6mVIcdId/vctn50mPTQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M1ByY1vf; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M1ByY1vf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C50A3C43390;
+	Tue, 23 Jan 2024 17:14:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706030077;
+	bh=VCYhCGCtLx/Jyo1j6/LXONR0VkamWENNT6rk6KXghPs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=M1ByY1vfZIGPwnhFUO61nlYWKDPVjRsVMHAbF21f3ov4WV0oGLNuAROs6NF7ZQ0mW
+	 zUcLEvz0SgQ0x9X58ziLybT2gjt88WTjgnwoK6CtsJtUBQPXDw+/4w7bcHNlisqYS8
+	 +gwvxCcjOGuxt1D2DDp3oDUyvA6GJ8kFLYRCU8EjJWyqnLGzSXh1SLiKn7YWA1VZgl
+	 5AKg4fRGp/rsrxPVF4UeVdjyBuCML2Eqe92IgrzYZnjDYNSXY4k+vF8RlcYePA001c
+	 otnw5/VZizMeyEX3gT+5fmw6jiVZmUgNMb6BTmfUtkbR6yT9TgWJkPiGpwazy+8c2U
+	 vlndxs9XEHZiA==
+Date: Tue, 23 Jan 2024 17:14:32 +0000
+From: Conor Dooley <conor@kernel.org>
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: chunfeng.yun@mediatek.com, gregkh@linuxfoundation.org,
+	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org, matthias.bgg@gmail.com, linux@roeck-us.net,
+	heikki.krogerus@linux.intel.com, cy_huang@richtek.com,
+	linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] dt-bindings: usb: mt6360-tcpc: Drop
+ interrupt-names
+Message-ID: <20240123-procurer-jumbo-ebbec485505d@spud>
+References: <20240119094105.98312-1-angelogioacchino.delregno@collabora.com>
+ <20240119-eldest-discharge-e2d3812be0a9@spud>
+ <12b7b339-498b-45c1-bc5e-05e07660aefa@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="v/T4NYLhZdUREOS8"
+Content-Disposition: inline
+In-Reply-To: <12b7b339-498b-45c1-bc5e-05e07660aefa@collabora.com>
 
-The addition of commit efa7df3e3bb5 ("mm: align larger anonymous
-mappings on THP boundaries") caused the "virtual_address_range" mm
-selftest to start failing on arm64. Let's fix that regression.
 
-There were 2 visible problems when running the test; 1) it takes much
-longer to execute, and 2) the test fails. Both are related:
+--v/T4NYLhZdUREOS8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The (first part of the) test allocates as many 1GB anonymous blocks as
-it can in the low 256TB of address space, passing NULL as the addr hint
-to mmap. Before the faulty patch, all allocations were abutted and
-contained in a single, merged VMA. However, after this patch, each
-allocation is in its own VMA, and there is a 2M gap between each VMA.
-This causes the 2 problems in the test: 1) mmap becomes MUCH slower
-because there are so many VMAs to check to find a new 1G gap. 2) mmap
-fails once it hits the VMA limit (/proc/sys/vm/max_map_count). Hitting
-this limit then causes a subsequent calloc() to fail, which causes the
-test to fail.
+On Mon, Jan 22, 2024 at 11:32:30AM +0100, AngeloGioacchino Del Regno wrote:
+> Il 19/01/24 17:32, Conor Dooley ha scritto:
+> > On Fri, Jan 19, 2024 at 10:41:04AM +0100, AngeloGioacchino Del Regno wr=
+ote:
+> > > This IP has only one interrupt, hence interrupt-names is not necessary
+> > > to have.
+> > > Since there is no user yet, simply remove interrupt-names.
+> >=20
+> > I'm a bit confused chief. Patch 2 in this series removes a user of this
+> > property from a driver, so can you explain how this statement is true?
+> >=20
+> > Maybe I need to drink a few cans of Monster and revisit this patchset?
+> >=20
+>=20
+> What I mean with "there is no user" is that there's no device tree with a=
+ny
+> mt6360-tcpc node upstream yet, so there is no meaningful ABI breakage.
+> Different story would be if there was a device tree using this already, in
+> which case, you can make a required property optional but not remove it.
 
-The problem is that arm64 (unlike x86) selects
-ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT. But __thp_get_unmapped_area()
-allocates len+2M then always aligns to the bottom of the discovered gap.
-That causes the 2M hole.
+Not every devicetree lives within the kernel.. If the driver is using
+it, I'm not inclined to agree that it should be removed.
 
-Fix this by detecting cases where we can still achive the alignment goal
-when moved to the top of the allocated area, if configured to prefer
-top-down allocation.
+--v/T4NYLhZdUREOS8
+Content-Type: application/pgp-signature; name="signature.asc"
 
-While we are at it, fix thp_get_unmapped_area's use of pgoff, which
-should always be zero for anonymous mappings. Prior to the faulty
-change, while it was possible for user space to pass in pgoff!=0, the
-old mm->get_unmapped_area() handler would not use it.
-thp_get_unmapped_area() does use it, so let's explicitly zero it before
-calling the handler. This should also be the correct behavior for arches
-that define their own get_unmapped_area() handler.
+-----BEGIN PGP SIGNATURE-----
 
-Fixes: efa7df3e3bb5 ("mm: align larger anonymous mappings on THP boundaries")
-Closes: https://lore.kernel.org/linux-mm/1e8f5ac7-54ce-433a-ae53-81522b2320e1@arm.com/
-Cc: stable@vger.kernel.org
-Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
----
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZa/z+AAKCRB4tDGHoIJi
+0lIGAQDy+QnvesimA/OIHScQAKviK34M6BooBy+5efXbpLxirgEAsWPYDApgg5q7
+5GO9YGhChTlvElCUHbl0NhBDEWtLsgY=
+=kCYX
+-----END PGP SIGNATURE-----
 
-Applies on top of v6.8-rc1. Would be good to get this into the next -rc.
-
-Thanks,
-Ryan
-
- mm/huge_memory.c | 10 ++++++++--
- mm/mmap.c        |  6 ++++--
- 2 files changed, 12 insertions(+), 4 deletions(-)
-
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index 94ef5c02b459..8c66f88e71e9 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -809,7 +809,7 @@ static unsigned long __thp_get_unmapped_area(struct file *filp,
- {
- 	loff_t off_end = off + len;
- 	loff_t off_align = round_up(off, size);
--	unsigned long len_pad, ret;
-+	unsigned long len_pad, ret, off_sub;
-
- 	if (off_end <= off_align || (off_end - off_align) < size)
- 		return 0;
-@@ -835,7 +835,13 @@ static unsigned long __thp_get_unmapped_area(struct file *filp,
- 	if (ret == addr)
- 		return addr;
-
--	ret += (off - ret) & (size - 1);
-+	off_sub = (off - ret) & (size - 1);
-+
-+	if (current->mm->get_unmapped_area == arch_get_unmapped_area_topdown &&
-+	    !off_sub)
-+		return ret + size;
-+
-+	ret += off_sub;
- 	return ret;
- }
-
-diff --git a/mm/mmap.c b/mm/mmap.c
-index b78e83d351d2..d89770eaab6b 100644
---- a/mm/mmap.c
-+++ b/mm/mmap.c
-@@ -1825,15 +1825,17 @@ get_unmapped_area(struct file *file, unsigned long addr, unsigned long len,
- 		/*
- 		 * mmap_region() will call shmem_zero_setup() to create a file,
- 		 * so use shmem's get_unmapped_area in case it can be huge.
--		 * do_mmap() will clear pgoff, so match alignment.
- 		 */
--		pgoff = 0;
- 		get_area = shmem_get_unmapped_area;
- 	} else if (IS_ENABLED(CONFIG_TRANSPARENT_HUGEPAGE)) {
- 		/* Ensures that larger anonymous mappings are THP aligned. */
- 		get_area = thp_get_unmapped_area;
- 	}
-
-+	/* Always treat pgoff as zero for anonymous memory. */
-+	if (!file)
-+		pgoff = 0;
-+
- 	addr = get_area(file, addr, len, pgoff, flags);
- 	if (IS_ERR_VALUE(addr))
- 		return addr;
---
-2.25.1
-
+--v/T4NYLhZdUREOS8--
