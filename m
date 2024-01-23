@@ -1,46 +1,46 @@
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2067.outbound.protection.outlook.com [40.107.22.67])
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2084.outbound.protection.outlook.com [40.107.21.84])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95BFB54669;
-	Tue, 23 Jan 2024 23:11:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.22.67
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76BD155C21;
+	Tue, 23 Jan 2024 23:11:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.84
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706051473; cv=fail; b=ky848K9poDWEyPAVesULNvH3Mb9BWu9fJbJ013fqSk0LacF/Q5U6Xu98Z1dohkMK1odSIJU1Y+ZnV9bYnDKRgcvPHbSAVJpJ7FIRIVuFgetG+bIQAS9rOzL68TLcGWNP4e0gYPYgZf2rU1Peegvy+eduSovylQ7GynBIQ4NKhAE=
+	t=1706051486; cv=fail; b=Jd+ihO7/nEDbFpC1GCfB6gSPCwKQAfhuDkE01s/gx8vkMG3RQbwu2qYRVm6d/dXcVifAQEqYcGNnE2vTbD2GkOfwHheaQ3gvRFan0newcGNlXd8AnMRqtquqmKUVaG/khGff6XuLWyIptNbmjFg35SgfMDCw/87c420wOG7Brco=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706051473; c=relaxed/simple;
-	bh=L3gpGBAQE0dQR2BNSrVRNNEW9irCL0rFWiOFcy1UVdc=;
+	s=arc-20240116; t=1706051486; c=relaxed/simple;
+	bh=aFPOfC8o6TVPkgK9tJDSz3OHkxkHBGqRxh2jknv+gHs=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=BuBCnIJDWd3e0KIgsZ9GQkDcLEYJUUkQ6vffYPhMF+1Pf5kCogqTHUgcz5Gm4nFG6uiBWC+QHiVBUlnh1Gpqs2USu4A1+QBT93fmmhhcETxPtRt0/TuIqbG+feljsowjzq4PJL4UPgoyiv4Ta6qRiWNLmvsEXGOqSS7sG5CfldA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=QEQjZ1uM; arc=fail smtp.client-ip=40.107.22.67
+	 Content-Type:MIME-Version; b=txnhHyr3kG/ccmlAoqT/vZb9TMRVUE95NnRrcrNw954KPRcdU5ZGyMEmR9fTmDGieLxPVtmwZCFRayb/crnejIXhGmRJ1EjKhGri58mvpYmocmgJv3FyTtcaBnBk47hdGOuqbNoGrOpHRxjReXWSVFvt0tbvUtdsnqHZHn5wNdI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=BVWniPr2; arc=fail smtp.client-ip=40.107.21.84
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="QEQjZ1uM"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="BVWniPr2"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=a3LUQGChm6XgcJAfm6b81xWfH3EPDolVdQLhFvH9mCySJpTVdSWj7Z60EoB2jdj5DNQKxFD0psFszdKBsLnvWq+ayJbaK4jRTkX4W69NcJLS41YG8vao+lxOQl1TATNvlszWsfDP492OBh/YQRZz8OxTJXZYACTdVzCOwZyMoHODQB/d3VH4yoc2HI9Fk9MiDpHN+IAnyE+1tBYoTEdqlA0mf+87p2z/Rt724m+1o0oFd8e9jcV04kSlB4O+eFm9GVyucd5ad2E8I5fSXRC5orjk+Eor5a4fKQg3++Diwn7Dmy7pmGik9pvKZxt8Oib15RquVOYot1Xu9e2SxMpJuQ==
+ b=ePTGC7DJI/Pul4BDfqMeZsMRYu+ue2Px0yk9rcUJOyRm8l95DJCVgsK+qAbdoEJCSW8RKo4k2N+WDRgQJF38D92tf8sxWi91JMNsYgpRNDGW5sljwban5o1fglPNs/EFhfSnIVno2yL5nMMq6bt6Huzg27JeZQVRoxKpnddEu06VDp6XjdP5LDRERAKWvQa/23Vda7hRXh26eP5NHYnKMCLp3V6/Bj++tHKSilRBrxj8Duoe0s62bHyj+4PdDNe9eBHSFBN0CTqqRlQHOrGPvPzPRu0anmai5yqcmxA7fCvOdGlsRQGy+zwOOj7/luE8IFnUR1y7LLNQheMLKbT8BA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Fcy5kB1x4dlvkv4Sat8Bsj+EbLAUuA8NXlPmUML4HK4=;
- b=aS5nc97ClbuVGOWH/1Aydyzd6v6JZ2rRc7Mt43i34evF5Xyuds4yZ5osporwzGYypA4n7CweD7AscTeV/v022Q1jEbJXniZYofH3OhuG4tVC0Y7yEGt/fkIltCm7WRR59UXcu50ynskE8CfMLtfFNK40Zz7LZL8bhL7NqzWbyb/x+A7WTgt/siXzKfFBPTP/85ml/XiDOXaWAMxz4j7baYoznRgd9n4lphvVQkmW8zzUVkpmrJFJI5ClPBCiwFbJBHduCmbQ15l+M+Z8lTPqXtNh0XNtssPyEncAoshTFU+XDsJ7k85EG2Ti5njk/83o488ljypyZpGMfLBxXUxZ2w==
+ bh=Jv63bzvfpmi9X4WF+c0Nny0z07mV+I5l+14mQv4nxik=;
+ b=Mi4AlJZDwrJjPiQtLzasNmj/0ZYbqndCtjcTdu1KwS0EoL9iww3GYvwk5xhs3YNPiM+3aztx8D82zwlPNUG/dpPz4QoriAo7TjEf5xucuOIj1q3bCbzkDx3wuaHevdXbvZn2rVYPacg4g97HuTA6CACq82Bn4brG7rvzRa0TKRHuFNIwaRVGz7RGhPvRqyvYqi64V5NxYZx68/Qx5GEUjpEc4PmAHNIrn61OU9VqKWXfQF9zI4woVu6GUtvw/BvU0vBbc3uMOnFG3528+fVMNzo+9Oq+q7Z6iyYNguK1OuVOgrXw2z3cNPGADuD5xCGEq4Da2edIxrWg6HRskytqDg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Fcy5kB1x4dlvkv4Sat8Bsj+EbLAUuA8NXlPmUML4HK4=;
- b=QEQjZ1uMnwdII/2NDxYtcq0BBzfPQLVX5moAOWkvUOkhANNf1GxEcMBZnzsxgEN9T2vmAVB39e3eAtYQVT07vl45kxmZ8+vonqhWUhSS393O6mtJKacaneIztZEIA1z6K3L8yS/qmufzefD8nwQvo2OvdxknNJw8IX4zZ29SgQ0=
+ bh=Jv63bzvfpmi9X4WF+c0Nny0z07mV+I5l+14mQv4nxik=;
+ b=BVWniPr2ZSxKGJtjky4zmmm64vkzkPlnClMRo7onIPjMoc9j2u15OkApVkTfmfFhI+vb18DtvhdBuUd9hf1CWMcwKNMScQ7ligAv4KV18XLzjoZ9v/bETKaRqNjm6+e7NuAQxqg6hSw+L0pOi32jU0WXF2uKLcl6pxbqq5n3AiI=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nxp.com;
 Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
  by DB9PR04MB9475.eurprd04.prod.outlook.com (2603:10a6:10:367::18) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7202.32; Tue, 23 Jan
- 2024 23:11:04 +0000
+ 2024 23:11:20 +0000
 Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
  ([fe80::c8b4:5648:8948:e85c]) by PAXPR04MB9642.eurprd04.prod.outlook.com
  ([fe80::c8b4:5648:8948:e85c%3]) with mapi id 15.20.7202.035; Tue, 23 Jan 2024
- 23:11:04 +0000
+ 23:11:20 +0000
 From: Frank Li <Frank.Li@nxp.com>
 To: frank.li@nxp.com
 Cc: alexandre.belloni@bootlin.com,
@@ -58,9 +58,9 @@ Cc: alexandre.belloni@bootlin.com,
 	miquel.raynal@bootlin.com,
 	robh@kernel.org,
 	zbigniew.lukwinski@linux.intel.com
-Subject: [PATCH v4 1/8] i3c: add target mode support
-Date: Tue, 23 Jan 2024 18:10:36 -0500
-Message-Id: <20240123231043.3891847-2-Frank.Li@nxp.com>
+Subject: [PATCH v4 5/8] i3c: target: add svc target controller support
+Date: Tue, 23 Jan 2024 18:10:40 -0500
+Message-Id: <20240123231043.3891847-6-Frank.Li@nxp.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240123231043.3891847-1-Frank.Li@nxp.com>
 References: <20240123231043.3891847-1-Frank.Li@nxp.com>
@@ -77,1516 +77,945 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|DB9PR04MB9475:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0d4f4d84-35b1-467d-430e-08dc1c6892cf
+X-MS-Office365-Filtering-Correlation-Id: de96b0d0-35f1-4fe9-1e97-08dc1c689bfd
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	og9qDKuGIrtDQgacj/JBXIJsIFjUfgX6NwFn6RcRaQv2/hTIZeN7n/zx0baWlrZh+fXavaCJshfetytpeTqEBDwiaoXp+as244lTqAa0EYJXIRp+7IjARIWeFrxoNuPffkHP9+sGcnTT/0kHuCWfgAcekDuEkCyVCiYVuZKF6V6OBuDGELhRz1gWWUiwj5cFzXlEVHn09e8+eEeJwitjQ6or20Jk0moL+EU6wwrdBYbdBmRz39jMMbfAYUd1mIvIVAUjhL1RHJ1ZL0HYwifFR0xiO8Y7JGXf6/QTv/STEh5yy5ZOEr3vUAr8CC+0kJekLPtMDn38iV+deZm/+qsmtJaf2dqKRfX6qDYrEGYRSHn08/3qq8fbToObPrGVOtjU41GoyWqrhJiftlampvAAKrJRKU8iDRGZStmk4QPtsML2APqiptbVdnHPdLvh90+LhXA9+Jhh8gvWTnKfoj7Ewa4M4086sQbYlWpF/ZXwQCbqRjnm+tHjzm7y7eX/mUSMOOcnMsP7XHpOPsRxXQ+28bmTZIueVRyPO1SY2Sn0S5WWfBLe8WVqfXFp065HqIhfNIp5ln8uUGHcdzWjnN78WZsV0S685x9Vs/yxzLNLq8HSu5zH0NFX6oEF3d1vVpsx
+	9Vu4TH+U6x8qFekwClHr9mD+FL6sHmRuaCu2McjZ0UVrZbe+fU/zLD4kTWkfr7//mX0/DkrAZW9pi7o+/TIKkCI53zxcw1l41bulAlGKC8Nxul5Umfy6vfB05VSztfp9lOsK2losMuFg5foVX4dUtD4jkoovV2u6St54D++aC/2sx5Ee+cWuRh8Eh/Q3/2DBJCrIk3rcnhRSiwGX7SodAj9nol5fWxcdMiOS8Hpr4r5vPO5HLFMBxv6F0fd3Pb9VFiB3bLDQ5rrT6uVb5dUpWfz7p9ofKNMq2MspzMvPFkJ6Ztp54VRzNKlIErfqpDcy2t/5CJwOUoO9b97YzRWc0qg670IBIwQ9/picsfHhksgVhPfKoWoZROT/sSomoX102tFg/KuYV2hirJRnvjjHZdI82y6YOISYnLQDntNJ9ly15pXisg2N1PzTn+NEB38FmVJb+KTgES40awgZ5mji2QI4ay4yT3WXrZiN3LNCYqmurSmBt1XYIiCoJT3L2GW4aFFg3qL0TBwgw0g4R8qHgeEdV7YnE4mac3cfqO2mQhV4ZOn1rRw4MO9A6QbJGX3AuG03GyDsqIj5O3XyWhXwWAHVvEi/wBUS0dg0wqKbo+A9SUqE3wLuvRlkG5Y1J6U+1cUi3Dd9pV1RWa9begfroyA8dP2RMfniJEUm+Tu7okU=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(376002)(396003)(346002)(366004)(39860400002)(230922051799003)(1800799012)(451199024)(64100799003)(186009)(1076003)(83380400001)(66946007)(2616005)(26005)(6506007)(6512007)(38100700002)(478600001)(2906002)(8676002)(30864003)(34206002)(8936002)(4326008)(7416002)(37006003)(52116002)(5660300002)(66476007)(6486002)(66556008)(316002)(6666004)(36756003)(38350700005)(86362001)(41300700001)(579004);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(376002)(396003)(346002)(366004)(39860400002)(230273577357003)(230173577357003)(230922051799003)(1800799012)(451199024)(64100799003)(186009)(1076003)(83380400001)(66946007)(2616005)(26005)(6506007)(6512007)(38100700002)(478600001)(2906002)(8676002)(30864003)(34206002)(8936002)(4326008)(7416002)(37006003)(52116002)(5660300002)(66476007)(6486002)(66556008)(316002)(6666004)(36756003)(38350700005)(86362001)(41300700001);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?japw3hv1SfW5Aui/mxXWMhyb+3I+CpxW1NiTXjBy+45bhJDl9qMDPTNJJzvB?=
- =?us-ascii?Q?lLZRpJ03zsJFDcwr2Sh+r+1unl89WpYebzUbREEbgaBPbTWv5BlS8MhaFWic?=
- =?us-ascii?Q?hQDMw1Kfxq7VDUQx3nr41FypuboNGzHmho3U5zV3i3h362U6QpMJCc8xUcmy?=
- =?us-ascii?Q?gW2thHvUQiG91CQMM9ZtQCrPWfC6Gnrp1WB4mJYiEkmW2ySaI3SmlWn4swQX?=
- =?us-ascii?Q?O65H9Zz9AkOUdopGlqLsoX7y2H0x7AOeFdrGOs1AcpKsepnCuU8yulEDEWrY?=
- =?us-ascii?Q?9Dhi36jho7h3Y1pjawUz0st3i5QtAuT/ftP+YUm0RH5UJo6Jd5o8jvEh64yQ?=
- =?us-ascii?Q?LlDYzbxqM2NLh0h1HmQMcq2F4qksPzkSknBboC/C9o53+7ZVomZdSb8OWI1o?=
- =?us-ascii?Q?Eo3RJwicyqyuKQQFky/XlLz9xQDTaQGkIEn3a67RAw9vz3z0fINw0yqvy4w2?=
- =?us-ascii?Q?zIa9Q+jBgH9SVfgqZlB6+ZgIPJgnFaXX4uzzGYkGBxKhehwykXnLBQRKkZfx?=
- =?us-ascii?Q?rK5RMutdZDiCAB/uwF9BlW91RBT7Abs15Q78guZib5HqvFWG8+fQKGMsrif/?=
- =?us-ascii?Q?jDyC6BrXD4pq3faUd7u6iKkIqWpVmM8ob6wmvyBnCq+kxUHUmsCFOGnX5IzQ?=
- =?us-ascii?Q?aA5gC/Nd//Ig/Rp6Tq4n9IKlbd9J9ERAwO9UxSlMxA/y4EK6SWqSfzvqzPzI?=
- =?us-ascii?Q?r7ctxMhdS2UhZk7Ui2KKor91yLqvib298u1lsKSSSaY38yBuxJHQ7/fVe8aG?=
- =?us-ascii?Q?BxowIO/z25y+dMbs3V7Ebc3AEdBIQ5sxI4OACSwHl5lYHPimp607+dedfhjd?=
- =?us-ascii?Q?PK1xhAUSHviwlZuPtZRYGYI2SXJL06ZHdERJAQYNNSz5Z69h5rS5htNYJ94S?=
- =?us-ascii?Q?RD1nauL62/Cv4T+LpzoF5wJuoufWnqVnOCH+eS+9T50M5AiHgGHMPMCtGdKB?=
- =?us-ascii?Q?IJrXde6lvgC8qptM/WMB/qAYdYv+hnvUEnWxhfoVkcoqbDsZeI0jJCW0cL2M?=
- =?us-ascii?Q?r/+PpoaWn/rqsQyksEqsryE9heBaHltsHhQy1LIRAXB1Zk8Y61KMvYBRedFa?=
- =?us-ascii?Q?5aMQ4i/j9tGA+cDXaWGHUVFI7mFfHFROje/obzRXZ1pAsOerdcCVreN957vz?=
- =?us-ascii?Q?IeOkzmkNP4NmB/8n7h40K1Mz0uM0ntzYHvTR4SXemBQgw++mECU4vaoH0F7p?=
- =?us-ascii?Q?zjOUvbOg0cQ9SRd0cFesk2etw/97fjCRYlizdubSiuixgqJm7EWWJpP04WnF?=
- =?us-ascii?Q?i666vsYDwZn3w3VHp5DdxxWNDlqCd1wyXXtrzo01Q4mhfbBUX6kZklX+MjQ4?=
- =?us-ascii?Q?f9GHbiRfG7bB2YgfqQIEljXQf4liUFr+DCHrYzoj4tLbAmQ4KJcoUBhNrJgO?=
- =?us-ascii?Q?A3FQn5fUhtxu5mNvj4eTMJ/NmDle3rAPZEw/Z9kSJZIThTATLwNCKL6/PpnQ?=
- =?us-ascii?Q?3bFA0Endt9+kT9xuIW12/XPRzJY+SmQ7FNj7l/8AxOZtXLXs8yYyq59vaQPx?=
- =?us-ascii?Q?fWrpklJQVr0bBNSfrgk92dgnEUFWK7BuMgJTr5bsFvQpTUI5/G144KhZRDyT?=
- =?us-ascii?Q?k2CasrziHHWPeeA93ENvafIIzohlizbIzmcdrrFg?=
+	=?us-ascii?Q?RSieNdyjvqq2BEpfEVvAKjv93Lk9K+pReIu66Om/g2uYqs/Gr/6JHiCg+oHp?=
+ =?us-ascii?Q?5ZFAo5GP2Fe8HxCYnsLOGbUG6xX8ItsN8hnfhazQZ6akY5mFsAherjbZNDtP?=
+ =?us-ascii?Q?0O6kNQqZPp1wgxvdDTTfTBuLBSiMT1GjBOE2Cgmc9E3GvcHGZieK8lM7kXdQ?=
+ =?us-ascii?Q?T7RaKckZi9H1GfKGc/WVN4cNz8XAPTbX58O/qTrcq0BdiQgf/pHmhWDnzXpV?=
+ =?us-ascii?Q?xrAAc8Qj6oRPFxMVNmfWpz9L+KcDzbE6vPLdf7VAr4THFeHIA0cLC3onhs8r?=
+ =?us-ascii?Q?3j1EnuIM5PJAd2/P8OXjOQ0x4K4fVuTiVZdjhsfGNGaDi71yLNxZxUGy2mY4?=
+ =?us-ascii?Q?4nu/gjGX2YpVaFTeRraTlPZXyrTHP4Z4urRtxYDQ1BcTkXW2hQOJIlPBHobd?=
+ =?us-ascii?Q?7NrP8Vio0BjzqewMYwq+BS/fB8asCeFPQ6MaFPWftXSjbrye9iPmFF/jZTkE?=
+ =?us-ascii?Q?j2+lf37UKKaIMSsGLaB/WrUTovUoLBWIm5RzHsJgtJsxMACV6GZvBKFYwiSu?=
+ =?us-ascii?Q?NrPSBv+lW3j35i+SanrXCHwrQpasBqnvt28X85vmGRYNzFYtm1WU0C9ScGaT?=
+ =?us-ascii?Q?i6qoUoDELMYTvb+H/0I+L+irPIrz+y7nB3MIPZwtyuxsf4phgjwBQimKg/Qc?=
+ =?us-ascii?Q?xHeVAg8WM9kVTuqTTcytCAqRC1tEbn23igvhVJcDGXYhOuHbvcYl4P/qlabS?=
+ =?us-ascii?Q?LPQh8mNccl9t+bvcbnAJNiKpB1zQv+iYQHhTg9B1H4P99NR7ttpmLxhTE7JP?=
+ =?us-ascii?Q?CUb2L866huJ+7dCjag8bdO4n9gGz2YgQCAhCPxN4/1BdSt/1dO9PzqtoNgw0?=
+ =?us-ascii?Q?7//2fZosn0nol52afvpj0gj9Nn8Z7yK7/kdHpuezuQua5OxstQ3njnAZDzwc?=
+ =?us-ascii?Q?91Pe4CZiR8BCyH9IhDVsHKHPC9w2cYa9vNzIj21uPHEW/n+96+AvODyH1n6/?=
+ =?us-ascii?Q?4/u2LgOPqnMYptc0E/5tERY8vuePRHoI9xM81j2sAmZpgLfdQHC78sP1Sn9j?=
+ =?us-ascii?Q?ca2JQPm5dbhIrOyflX/ZEBHo1WH42GTEwqh0bjTLe0ZBV7ekHo8paMaRiH/K?=
+ =?us-ascii?Q?Uv4fmOQBFsK8lrL9m2hL3iYWIpX9yv3tg1jJqzEqNKG+ikUddhDk2OQ15KE1?=
+ =?us-ascii?Q?rsPIDr271dpjaZmHjbDTFFzDzGXlBE0n/Fz5hBinA7jvv8dOIFXHF96zmVOc?=
+ =?us-ascii?Q?+W1j1gWH56jztJRRjY1qgoV2AGUPHS9G0u7p8ezXm4nxtD26sNKuwPQ/ntVg?=
+ =?us-ascii?Q?+23voKlBTK7PDwjFBz+P1pv+4GgTz5meLDGiM6cwUle/NnmjwKOw5xOosjtR?=
+ =?us-ascii?Q?h0zXwg9UxaS9ehvSLAcm8x0CVel0L/n0vM+euLSNQVRKdxZZhjT+dF03qTdt?=
+ =?us-ascii?Q?al0tfSB1mRckS3EdmBFzTZOgAtJrFcgbNB/UgWkI66PvILF7pdeF0ChCLN3K?=
+ =?us-ascii?Q?5vJRwzt/I+/+3G7Y38zAqPQUqN2JPjgA+VoExNnhDU5CBzP3YC1YLSJfzLz9?=
+ =?us-ascii?Q?GIkN4jWUpOEdMXW2LMCZ6tERli/WCnH+ztwfZ6mExicpBqz3bhmdtEg3jpZO?=
+ =?us-ascii?Q?Bf774m6/8wPDWiYDRQctTfpnvN0kQysDmtcfUAiO?=
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0d4f4d84-35b1-467d-430e-08dc1c6892cf
+X-MS-Exchange-CrossTenant-Network-Message-Id: de96b0d0-35f1-4fe9-1e97-08dc1c689bfd
 X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jan 2024 23:11:04.5945
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jan 2024 23:11:20.1782
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: uEAU+FeMD7weqwV8+Bs1fud8EjYqfadTn0P+FsgdcnVKfruQ5i/h1nXxFvplC9qTd66aGoCVjL+geTYBFWDq/g==
+X-MS-Exchange-CrossTenant-UserPrincipalName: ocAii78Ii4+Qa6ohvKb2ABAbll9Xrmjy0vqtVEuRIw1ki2Ud5htpNBGU7p2i1r/alCU9gLpzUfP6DeFJhJ6JGQ==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR04MB9475
 
-Introduce a new target core layer in order to support target functions in
-linux kernel. This comprises the controller library and function library.
-Controller library implements functions specific to an target controller
-and function library implements functions specific to an target function.
-
-Introduce a new configfs entry to configure the target function configuring
-and bind the target function with target controller.
+Add Silvaco I3C target controller support
 
 Signed-off-by: Frank Li <Frank.Li@nxp.com>
 ---
- drivers/i3c/Kconfig        |  28 +-
- drivers/i3c/Makefile       |   2 +
- drivers/i3c/i3c-cfs.c      | 389 +++++++++++++++++++++++++++
- drivers/i3c/target.c       | 453 +++++++++++++++++++++++++++++++
- include/linux/i3c/target.h | 527 +++++++++++++++++++++++++++++++++++++
- 5 files changed, 1398 insertions(+), 1 deletion(-)
- create mode 100644 drivers/i3c/i3c-cfs.c
- create mode 100644 drivers/i3c/target.c
- create mode 100644 include/linux/i3c/target.h
 
-diff --git a/drivers/i3c/Kconfig b/drivers/i3c/Kconfig
-index 30a441506f61c..d59a7eb83d13a 100644
---- a/drivers/i3c/Kconfig
-+++ b/drivers/i3c/Kconfig
-@@ -10,7 +10,7 @@ menuconfig I3C
- 	  support for high speed transfers and native interrupt support
- 	  without the need for extra pins.
+Notes:
+    Change from v2 to v3
+    - fix build warning
+
+ drivers/i3c/master/Makefile         |   2 +-
+ drivers/i3c/master/svc-i3c-main.c   |  37 +-
+ drivers/i3c/master/svc-i3c-target.c | 776 ++++++++++++++++++++++++++++
+ drivers/i3c/master/svc-i3c.h        |   3 +
+ 4 files changed, 812 insertions(+), 6 deletions(-)
+ create mode 100644 drivers/i3c/master/svc-i3c-target.c
+
+diff --git a/drivers/i3c/master/Makefile b/drivers/i3c/master/Makefile
+index 484cb81f45821..b9ed6c9e7be13 100644
+--- a/drivers/i3c/master/Makefile
++++ b/drivers/i3c/master/Makefile
+@@ -2,6 +2,6 @@
+ obj-$(CONFIG_CDNS_I3C_MASTER)		+= i3c-master-cdns.o
+ obj-$(CONFIG_DW_I3C_MASTER)		+= dw-i3c-master.o
+ obj-$(CONFIG_AST2600_I3C_MASTER)	+= ast2600-i3c-master.o
+-svc-i3c-objs				+= svc-i3c-main.o svc-i3c-master.o
++svc-i3c-objs				+= svc-i3c-main.o svc-i3c-master.o svc-i3c-target.o
+ obj-$(CONFIG_SVC_I3C_MASTER)		+= svc-i3c.o
+ obj-$(CONFIG_MIPI_I3C_HCI)		+= mipi-i3c-hci/
+diff --git a/drivers/i3c/master/svc-i3c-main.c b/drivers/i3c/master/svc-i3c-main.c
+index 053b2bd9d8317..34d9f1e64b1c0 100644
+--- a/drivers/i3c/master/svc-i3c-main.c
++++ b/drivers/i3c/master/svc-i3c-main.c
+@@ -7,24 +7,51 @@
  
--	  The I3C protocol also standardizes the slave device types and is
-+	  The I3C protocol also standardizes the target device types and is
- 	  mainly designed to communicate with sensors.
+ #include "svc-i3c.h"
  
- 	  If you want I3C support, you should say Y here and also to the
-@@ -22,3 +22,29 @@ menuconfig I3C
- if I3C
- source "drivers/i3c/master/Kconfig"
- endif # I3C
++static bool svc_i3c_is_master(struct device *dev)
++{
++	const char *mode = NULL;
 +
-+config I3C_TARGET
-+	bool "I3C Target Support"
-+	help
-+	  Support I3C Target Mode.
++	device_property_read_string(dev, "mode", &mode);
 +
-+	  Enable this configuration option to support configurable I3C target.
-+	  This should be enabled if the platform has a I3C controller that can
-+	  operate in target mode.
++	if (!mode)
++		return true;
 +
-+	  Enabling this option will build the I3C target library, which includes
-+	  target controller library and target function library.
++	if (strncmp(mode, "target", 6) == 0)
++		return false;
 +
-+	  If in doubt, say "N" to disable target support.
++	return true;
++}
 +
-+config I3C_TARGET_CONFIGFS
-+	bool "I3C Target Configfs Support"
-+	depends on I3C_TARGET
-+	select CONFIGFS_FS
-+	help
-+	  Configfs entry for target function and controller.
+ static int svc_i3c_probe(struct platform_device *pdev)
+ {
+-	return svc_i3c_master_probe(pdev);
++	if (svc_i3c_is_master(&pdev->dev))
++		return svc_i3c_master_probe(pdev);
 +
-+	  This will enable the configfs entry that can be used to configure
-+	  the target function and used to bind the function with a target
-+	  controller.
++	return svc_i3c_target_probe(pdev);
+ }
+ 
+ static void svc_i3c_remove(struct platform_device *pdev)
+ {
+-	svc_i3c_master_remove(pdev);
++	if (svc_i3c_is_master(&pdev->dev))
++		return svc_i3c_master_remove(pdev);
 +
-diff --git a/drivers/i3c/Makefile b/drivers/i3c/Makefile
-index 11982efbc6d91..c275aeae8970c 100644
---- a/drivers/i3c/Makefile
-+++ b/drivers/i3c/Makefile
-@@ -1,4 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0
- i3c-y				:= device.o master.o
- obj-$(CONFIG_I3C)		+= i3c.o
-+obj-$(CONFIG_I3C_TARGET)                += target.o
-+obj-$(CONFIG_I3C_TARGET_CONFIGFS)       += i3c-cfs.o
- obj-$(CONFIG_I3C)		+= master/
-diff --git a/drivers/i3c/i3c-cfs.c b/drivers/i3c/i3c-cfs.c
++	svc_i3c_target_remove(pdev);
+ }
+ 
+ static int __maybe_unused svc_i3c_runtime_suspend(struct device *dev)
+ {
+-	return svc_i3c_master_runtime_suspend(dev);
++	if (svc_i3c_is_master(dev))
++		return svc_i3c_master_runtime_suspend(dev);
++
++	return -EINVAL;
+ }
+ 
+ static int __maybe_unused svc_i3c_runtime_resume(struct device *dev)
+ {
+-	return svc_i3c_master_runtime_resume(dev);
++	if (svc_i3c_is_master(dev))
++		return svc_i3c_master_runtime_resume(dev);
++
++	return -EINVAL;
+ }
+ 
+ static const struct dev_pm_ops svc_i3c_pm_ops = {
+@@ -49,4 +76,4 @@ static struct platform_driver svc_i3c_master = {
+ 		.pm = &svc_i3c_pm_ops,
+ 	},
+ };
+-module_platform_driver(svc_i3c_master);
+\ No newline at end of file
++module_platform_driver(svc_i3c_master);
+diff --git a/drivers/i3c/master/svc-i3c-target.c b/drivers/i3c/master/svc-i3c-target.c
 new file mode 100644
-index 0000000000000..a2f0f44fcdaea
+index 0000000000000..094efb60cb404
 --- /dev/null
-+++ b/drivers/i3c/i3c-cfs.c
-@@ -0,0 +1,389 @@
++++ b/drivers/i3c/master/svc-i3c-target.c
+@@ -0,0 +1,776 @@
 +// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Configfs to configure the I3C Slave
-+ *
-+ * Copyright (C) 2023 NXP
-+ * Author: Frank Li <Frank.Li@nxp.com>
-+ */
-+
-+#include <linux/configfs.h>
-+#include <linux/module.h>
-+#include <linux/i3c/target.h>
-+#include <linux/idr.h>
-+#include <linux/slab.h>
-+
-+static DEFINE_MUTEX(functions_mutex);
-+static struct config_group *functions_group;
-+static struct config_group *controllers_group;
-+
-+struct i3c_target_func_group {
-+	struct config_group group;
-+	struct i3c_target_func *func;
-+};
-+
-+struct i3c_target_ctrl_group {
-+	struct config_group group;
-+	struct i3c_target_ctrl *ctrl;
-+};
-+
-+static inline struct i3c_target_func_group *to_i3c_target_func_group(struct config_item *item)
-+{
-+	return container_of(to_config_group(item), struct i3c_target_func_group, group);
-+}
-+
-+static inline struct i3c_target_ctrl_group *to_i3c_target_ctrl_group(struct config_item *item)
-+{
-+	return container_of(to_config_group(item), struct i3c_target_ctrl_group, group);
-+}
-+
-+static int i3c_target_ctrl_func_link(struct config_item *ctrl_cfg, struct config_item *func_cfg)
-+{
-+	struct i3c_target_func_group *func_group = to_i3c_target_func_group(func_cfg);
-+	struct i3c_target_ctrl_group *ctrl_group = to_i3c_target_ctrl_group(ctrl_cfg);
-+	struct i3c_target_ctrl *ctrl = ctrl_group->ctrl;
-+	struct i3c_target_func *func = func_group->func;
-+	int ret;
-+
-+	ret = i3c_target_ctrl_add_func(ctrl, func);
-+	if (ret)
-+		return ret;
-+
-+	ret = i3c_target_func_bind(func);
-+	if (ret) {
-+		i3c_target_ctrl_remove_func(ctrl, func);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static void i3c_target_ctrl_func_unlink(struct config_item *ctrl_cfg, struct config_item *func_cfg)
-+{
-+	struct i3c_target_func_group *func_group = to_i3c_target_func_group(func_cfg->ci_parent);
-+	struct i3c_target_ctrl_group *ctrl_group = to_i3c_target_ctrl_group(ctrl_cfg);
-+	struct i3c_target_ctrl *ctrl = ctrl_group->ctrl;
-+	struct i3c_target_func *func = func_group->func;
-+
-+	i3c_target_func_unbind(func);
-+	i3c_target_ctrl_remove_func(ctrl, func);
-+}
-+
-+static ssize_t i3c_target_ctrl_hotjoin_store(struct config_item *item, const char *page, size_t len)
-+{
-+	struct i3c_target_ctrl_group *ctrl_group = to_i3c_target_ctrl_group(item);
-+	struct i3c_target_ctrl *ctrl;
-+	int ret;
-+
-+	ctrl = ctrl_group->ctrl;
-+
-+	ret = i3c_target_ctrl_hotjoin(ctrl);
-+	if (ret) {
-+		dev_err(&ctrl->dev, "failed to hotjoin i3c target controller\n");
-+		return -EINVAL;
-+	}
-+
-+	return len;
-+}
-+
-+static ssize_t i3c_target_ctrl_hotjoin_show(struct config_item *item, char *page)
-+{
-+	return sysfs_emit(page, "%d\n", 0);
-+}
-+
-+CONFIGFS_ATTR(i3c_target_ctrl_, hotjoin);
-+
-+static struct configfs_item_operations i3c_target_ctrl_item_ops = {
-+	.allow_link     = i3c_target_ctrl_func_link,
-+	.drop_link      = i3c_target_ctrl_func_unlink,
-+};
-+
-+static struct configfs_attribute *i3c_target_ctrl_attrs[] = {
-+	&i3c_target_ctrl_attr_hotjoin,
-+	NULL,
-+};
-+
-+static const struct config_item_type i3c_target_ctrl_type = {
-+	.ct_item_ops    = &i3c_target_ctrl_item_ops,
-+	.ct_attrs	= i3c_target_ctrl_attrs,
-+	.ct_owner       = THIS_MODULE,
-+};
-+
-+/**
-+ * i3c_target_cfs_add_ctrl_group() - add I3C target controller group
-+ * @ctrl: I3C target controller device
-+ *
-+ * Return: Pointer to struct config_group
-+ */
-+struct config_group *i3c_target_cfs_add_ctrl_group(struct i3c_target_ctrl *ctrl)
-+{
-+	struct i3c_target_ctrl_group *ctrl_group;
-+	struct config_group *group;
-+	int ret;
-+
-+	ctrl_group = kzalloc(sizeof(*ctrl_group), GFP_KERNEL);
-+	if (!ctrl_group) {
-+		ret = -ENOMEM;
-+		goto err;
-+	}
-+
-+	group = &ctrl_group->group;
-+
-+	config_group_init_type_name(group, dev_name(&ctrl->dev), &i3c_target_ctrl_type);
-+	ret = configfs_register_group(controllers_group, group);
-+	if (ret) {
-+		pr_err("failed to register configfs group for %s\n", dev_name(&ctrl->dev));
-+		goto err_register_group;
-+	}
-+
-+	ctrl_group->ctrl = ctrl;
-+
-+	return group;
-+
-+err_register_group:
-+	kfree(ctrl_group);
-+
-+err:
-+	return ERR_PTR(ret);
-+}
-+EXPORT_SYMBOL(i3c_target_cfs_add_ctrl_group);
-+
-+/**
-+ * i3c_target_cfs_remove_ctrl_group() - remove I3C target controller group
-+ * @group: the group to be removed
-+ */
-+void i3c_target_cfs_remove_ctrl_group(struct config_group *group)
-+{
-+	struct i3c_target_ctrl_group *ctrl_group;
-+
-+	if (!group)
-+		return;
-+
-+	ctrl_group = container_of(group, struct i3c_target_ctrl_group, group);
-+	i3c_target_ctrl_put(ctrl_group->ctrl);
-+	configfs_unregister_group(&ctrl_group->group);
-+	kfree(ctrl_group);
-+}
-+EXPORT_SYMBOL(i3c_target_cfs_remove_ctrl_group);
-+
-+#define I3C_SLAVE_ATTR_R(_name)                                                \
-+static ssize_t i3c_target_func_##_name##_show(struct config_item *item, char *page)    \
-+{                                                                              \
-+	struct i3c_target_func *func = to_i3c_target_func_group(item)->func;                     \
-+	return sysfs_emit(page, "0x%04x\n", func->_name);               \
-+}
-+
-+#define I3C_SLAVE_ATTR_W(_name, _u)                                            \
-+static ssize_t i3c_target_func_##_name##_store(struct config_item *item,               \
-+				       const char *page, size_t len)           \
-+{                                                                              \
-+	_u val;                                                               \
-+	struct i3c_target_func *func = to_i3c_target_func_group(item)->func;                     \
-+	if (kstrto##_u(page, 0, &val) < 0)                                      \
-+		return -EINVAL;                                                \
-+	func->_name = val;                                              \
-+	return len;                                                            \
-+}
-+
-+I3C_SLAVE_ATTR_R(vendor_id);
-+I3C_SLAVE_ATTR_W(vendor_id, u16);
-+CONFIGFS_ATTR(i3c_target_func_, vendor_id);
-+
-+I3C_SLAVE_ATTR_R(vendor_info);
-+I3C_SLAVE_ATTR_W(vendor_info, u16);
-+CONFIGFS_ATTR(i3c_target_func_, vendor_info);
-+
-+I3C_SLAVE_ATTR_R(part_id);
-+I3C_SLAVE_ATTR_W(part_id, u16);
-+CONFIGFS_ATTR(i3c_target_func_, part_id);
-+
-+I3C_SLAVE_ATTR_R(instance_id);
-+I3C_SLAVE_ATTR_W(instance_id, u8);
-+CONFIGFS_ATTR(i3c_target_func_, instance_id);
-+
-+I3C_SLAVE_ATTR_R(ext_id);
-+I3C_SLAVE_ATTR_W(ext_id, u16);
-+CONFIGFS_ATTR(i3c_target_func_, ext_id);
-+
-+I3C_SLAVE_ATTR_R(max_write_len);
-+I3C_SLAVE_ATTR_W(max_write_len, u16);
-+CONFIGFS_ATTR(i3c_target_func_, max_write_len);
-+
-+I3C_SLAVE_ATTR_R(max_read_len);
-+I3C_SLAVE_ATTR_W(max_read_len, u16);
-+CONFIGFS_ATTR(i3c_target_func_, max_read_len);
-+
-+I3C_SLAVE_ATTR_R(bcr);
-+I3C_SLAVE_ATTR_W(bcr, u8);
-+CONFIGFS_ATTR(i3c_target_func_, bcr);
-+
-+I3C_SLAVE_ATTR_R(dcr);
-+I3C_SLAVE_ATTR_W(dcr, u8);
-+CONFIGFS_ATTR(i3c_target_func_, dcr);
-+
-+static struct configfs_attribute *i3c_target_func_attrs[] = {
-+	&i3c_target_func_attr_vendor_id,
-+	&i3c_target_func_attr_vendor_info,
-+	&i3c_target_func_attr_part_id,
-+	&i3c_target_func_attr_instance_id,
-+	&i3c_target_func_attr_ext_id,
-+	&i3c_target_func_attr_max_write_len,
-+	&i3c_target_func_attr_max_read_len,
-+	&i3c_target_func_attr_bcr,
-+	&i3c_target_func_attr_dcr,
-+	NULL,
-+};
-+
-+static const struct config_item_type i3c_target_func_type = {
-+	.ct_attrs       = i3c_target_func_attrs,
-+	.ct_owner       = THIS_MODULE,
-+};
-+
-+static struct config_group *i3c_target_func_make(struct config_group *group, const char *name)
-+{
-+	struct i3c_target_func_group *func_group;
-+	struct i3c_target_func *func;
-+	int err;
-+
-+	func_group = kzalloc(sizeof(*func_group), GFP_KERNEL);
-+	if (!func_group)
-+		return ERR_PTR(-ENOMEM);
-+
-+	config_group_init_type_name(&func_group->group, name, &i3c_target_func_type);
-+
-+	func = i3c_target_func_create(group->cg_item.ci_name, name);
-+	if (IS_ERR(func)) {
-+		pr_err("failed to create i3c target function device\n");
-+		err = -EINVAL;
-+		goto free_group;
-+	}
-+
-+	func->group = &func_group->group;
-+
-+	func_group->func = func;
-+
-+	return &func_group->group;
-+
-+free_group:
-+	kfree(func_group);
-+
-+	return ERR_PTR(err);
-+}
-+
-+static void i3c_target_func_drop(struct config_group *group, struct config_item *item)
-+{
-+	config_item_put(item);
-+}
-+
-+static struct configfs_group_operations i3c_target_func_group_ops = {
-+	.make_group     = &i3c_target_func_make,
-+	.drop_item      = &i3c_target_func_drop,
-+};
-+
-+static const struct config_item_type i3c_target_func_group_type = {
-+	.ct_group_ops   = &i3c_target_func_group_ops,
-+	.ct_owner       = THIS_MODULE,
-+};
-+
-+/**
-+ * i3c_target_cfs_add_func_group() - add I3C target function group
-+ * @name: group name
-+ *
-+ * Return: Pointer to struct config_group
-+ */
-+struct config_group *i3c_target_cfs_add_func_group(const char *name)
-+{
-+	struct config_group *group;
-+
-+	group = configfs_register_default_group(functions_group, name,
-+						&i3c_target_func_group_type);
-+	if (IS_ERR(group))
-+		pr_err("failed to register configfs group for %s function\n",
-+		       name);
-+
-+	return group;
-+}
-+EXPORT_SYMBOL(i3c_target_cfs_add_func_group);
-+
-+/**
-+ * i3c_target_cfs_remove_func_group() - add I3C target function group
-+ * @group: group to be removed
-+ */
-+void i3c_target_cfs_remove_func_group(struct config_group *group)
-+{
-+	if (IS_ERR_OR_NULL(group))
-+		return;
-+
-+	configfs_unregister_default_group(group);
-+}
-+EXPORT_SYMBOL(i3c_target_cfs_remove_func_group);
-+
-+static const struct config_item_type i3c_target_controllers_type = {
-+	.ct_owner       = THIS_MODULE,
-+};
-+
-+static const struct config_item_type i3c_target_functions_type = {
-+	.ct_owner       = THIS_MODULE,
-+};
-+
-+static const struct config_item_type i3c_target_type = {
-+	.ct_owner       = THIS_MODULE,
-+};
-+
-+static struct configfs_subsystem i3c_target_cfs_subsys = {
-+	.su_group = {
-+		.cg_item = {
-+			.ci_namebuf = "i3c_target",
-+			.ci_type = &i3c_target_type,
-+		},
-+	},
-+	.su_mutex = __MUTEX_INITIALIZER(i3c_target_cfs_subsys.su_mutex),
-+};
-+
-+static int __init i3c_target_cfs_init(void)
-+{
-+	int ret;
-+	struct config_group *root = &i3c_target_cfs_subsys.su_group;
-+
-+	config_group_init(root);
-+
-+	ret = configfs_register_subsystem(&i3c_target_cfs_subsys);
-+	if (ret) {
-+		pr_err("Error %d while registering subsystem %s\n",
-+		       ret, root->cg_item.ci_namebuf);
-+		goto err;
-+	}
-+
-+	functions_group = configfs_register_default_group(root, "functions",
-+							  &i3c_target_functions_type);
-+	if (IS_ERR(functions_group)) {
-+		ret = PTR_ERR(functions_group);
-+		pr_err("Error %d while registering functions group\n",
-+		       ret);
-+		goto err_functions_group;
-+	}
-+
-+	controllers_group =
-+		configfs_register_default_group(root, "controllers",
-+						&i3c_target_controllers_type);
-+	if (IS_ERR(controllers_group)) {
-+		ret = PTR_ERR(controllers_group);
-+		pr_err("Error %d while registering controllers group\n",
-+		       ret);
-+		goto err_controllers_group;
-+	}
-+
-+	return 0;
-+
-+err_controllers_group:
-+	configfs_unregister_default_group(functions_group);
-+
-+err_functions_group:
-+	configfs_unregister_subsystem(&i3c_target_cfs_subsys);
-+
-+err:
-+	return ret;
-+}
-+module_init(i3c_target_cfs_init);
-+
-+MODULE_DESCRIPTION("I3C FUNC CONFIGFS");
-+MODULE_AUTHOR("Frank Li <Frank.Li@nxp.com>");
-diff --git a/drivers/i3c/target.c b/drivers/i3c/target.c
-new file mode 100644
-index 0000000000000..f0bcda2c4599f
---- /dev/null
-+++ b/drivers/i3c/target.c
-@@ -0,0 +1,453 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * configfs to configure the I3C Slave
-+ *
-+ * Copyright (C) 2023 NXP
-+ * Author: Frank Li <Frank.Li@nxp.com>
-+ */
-+
-+#include <linux/configfs.h>
-+#include <linux/module.h>
-+#include <linux/i3c/target.h>
-+#include <linux/idr.h>
-+#include <linux/slab.h>
-+
-+static DEFINE_MUTEX(func_lock);
-+static struct class *i3c_target_ctrl_class;
-+
-+static void i3c_target_func_dev_release(struct device *dev)
-+{
-+	struct i3c_target_func *func = to_i3c_target_func(dev);
-+
-+	kfree(func->name);
-+	kfree(func);
-+}
-+
-+static const struct device_type i3c_target_func_type = {
-+	.release        = i3c_target_func_dev_release,
-+};
-+
-+static int i3c_target_func_match_driver(struct device *dev, struct device_driver *drv)
-+{
-+	return !strncmp(dev_name(dev), drv->name, strlen(drv->name));
-+}
-+
-+static int i3c_target_func_device_probe(struct device *dev)
-+{
-+	struct i3c_target_func *func = to_i3c_target_func(dev);
-+	struct i3c_target_func_driver *driver = to_i3c_target_func_driver(dev->driver);
-+
-+	if (!driver->probe)
-+		return -ENODEV;
-+
-+	func->driver = driver;
-+
-+	return driver->probe(func);
-+}
-+
-+static void i3c_target_func_device_remove(struct device *dev)
-+{
-+	struct i3c_target_func *func = to_i3c_target_func(dev);
-+	struct i3c_target_func_driver *driver = to_i3c_target_func_driver(dev->driver);
-+
-+	if (driver->remove)
-+		driver->remove(func);
-+	func->driver = NULL;
-+}
-+
-+static const struct bus_type i3c_target_func_bus_type = {
-+	.name = "i3c_target_func",
-+	.probe = i3c_target_func_device_probe,
-+	.remove = i3c_target_func_device_remove,
-+	.match = i3c_target_func_match_driver,
-+};
-+
-+static void i3c_target_ctrl_release(struct device *dev)
-+{
-+	kfree(to_i3c_target_ctrl(dev));
-+}
-+
-+static void devm_i3c_target_ctrl_release(struct device *dev, void *res)
-+{
-+	struct i3c_target_ctrl *ctrl = *(struct i3c_target_ctrl **)res;
-+
-+	i3c_target_ctrl_destroy(ctrl);
-+}
-+
-+struct i3c_target_ctrl *
-+__devm_i3c_target_ctrl_create(struct device *dev, const struct i3c_target_ctrl_ops *ops,
-+			     struct module *owner)
-+{
-+	struct i3c_target_ctrl **ptr, *ctrl;
-+
-+	ptr = devres_alloc(devm_i3c_target_ctrl_release, sizeof(*ptr), GFP_KERNEL);
-+	if (!ptr)
-+		return ERR_PTR(-ENOMEM);
-+
-+	ctrl = __i3c_target_ctrl_create(dev, ops, owner);
-+	if (!IS_ERR(ctrl)) {
-+		*ptr = ctrl;
-+		devres_add(dev, ptr);
-+	} else {
-+		devres_free(ptr);
-+	}
-+
-+	return ctrl;
-+}
-+
-+static int devm_i3c_target_ctrl_match(struct device *dev, void *res, void *match_data)
-+{
-+	struct i3c_target_ctrl **ptr = res;
-+
-+	return *ptr == match_data;
-+}
-+
-+/**
-+ * __i3c_target_ctrl_create() - create a new target controller device
-+ * @dev: device that is creating the new target controller
-+ * @ops: function pointers for performing target controller  operations
-+ * @owner: the owner of the module that creates the target controller device
-+ *
-+ * Return: Pointer to struct i3c_target_ctrl
-+ */
-+struct i3c_target_ctrl *
-+__i3c_target_ctrl_create(struct device *dev, const struct i3c_target_ctrl_ops *ops,
-+			struct module *owner)
-+{
-+	struct i3c_target_ctrl *ctrl;
-+	int ret;
-+
-+	if (WARN_ON(!dev))
-+		return ERR_PTR(-EINVAL);
-+
-+	ctrl = kzalloc(sizeof(*ctrl), GFP_KERNEL);
-+	if (!ctrl)
-+		return ERR_PTR(-ENOMEM);
-+
-+	device_initialize(&ctrl->dev);
-+	ctrl->dev.class = i3c_target_ctrl_class;
-+	ctrl->dev.parent = dev;
-+	ctrl->dev.release = i3c_target_ctrl_release;
-+	ctrl->ops = ops;
-+
-+	ret = dev_set_name(&ctrl->dev, "%s", dev_name(dev));
-+	if (ret)
-+		goto put_dev;
-+
-+	ret = device_add(&ctrl->dev);
-+	if (ret)
-+		goto put_dev;
-+
-+	ctrl->group = i3c_target_cfs_add_ctrl_group(ctrl);
-+	if (!ctrl->group)
-+		goto put_dev;
-+
-+	return ctrl;
-+
-+put_dev:
-+	put_device(&ctrl->dev);
-+	kfree(ctrl);
-+
-+	return ERR_PTR(ret);
-+}
-+EXPORT_SYMBOL_GPL(__i3c_target_ctrl_create);
-+
-+/**
-+ * devm_i3c_target_ctrl_destroy() - destroy the target controller device
-+ * @dev: device that hat has to be destroy
-+ * @ctrl: the target controller device that has to be destroy
-+ *
-+ * Invoke to create a new target controller device and add it to i3c_target class. While at that, it
-+ * also associates the device with the i3c_target using devres. On driver detach, release function
-+ * is invoked on the devres data, then devres data is freed.
-+ */
-+void devm_i3c_target_ctrl_destroy(struct device *dev, struct i3c_target_ctrl *ctrl)
-+{
-+	int r;
-+
-+	r = devres_destroy(dev, devm_i3c_target_ctrl_release, devm_i3c_target_ctrl_match,
-+			   ctrl);
-+	dev_WARN_ONCE(dev, r, "couldn't find I3C controller resource\n");
-+}
-+EXPORT_SYMBOL_GPL(devm_i3c_target_ctrl_destroy);
-+
-+/**
-+ * i3c_target_ctrl_destroy() - destroy the target controller device
-+ * @ctrl: the target controller device that has to be destroyed
-+ *
-+ * Invoke to destroy the I3C target device
-+ */
-+void i3c_target_ctrl_destroy(struct i3c_target_ctrl *ctrl)
-+{
-+	i3c_target_cfs_remove_ctrl_group(ctrl->group);
-+	device_unregister(&ctrl->dev);
-+}
-+EXPORT_SYMBOL_GPL(i3c_target_ctrl_destroy);
-+
-+/**
-+ * i3c_target_ctrl_add_func() - bind I3C target function to an target controller
-+ * @ctrl: the controller device to which the target function should be added
-+ * @func: the target function to be added
-+ *
-+ * An I3C target device can have only one functions.
-+ */
-+int i3c_target_ctrl_add_func(struct i3c_target_ctrl *ctrl, struct i3c_target_func *func)
-+{
-+	if (ctrl->func)
-+		return -EBUSY;
-+
-+	ctrl->func = func;
-+	func->ctrl = ctrl;
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(i3c_target_ctrl_add_func);
-+
-+/**
-+ * i3c_target_ctrl_remove_func() - unbind I3C target function to an target controller
-+ * @ctrl: the controller device to which the target function should be removed
-+ * @func: the target function to be removed
-+ *
-+ * An I3C target device can have only one functions.
-+ */
-+void i3c_target_ctrl_remove_func(struct i3c_target_ctrl *ctrl, struct i3c_target_func *func)
-+{
-+	ctrl->func = NULL;
-+}
-+EXPORT_SYMBOL_GPL(i3c_target_ctrl_remove_func);
-+
-+/**
-+ * i3c_target_ctrl_get() - get the I3C target controller
-+ * @name: device name of the target controller
-+ *
-+ * Invoke to get struct i3c_target_ctrl * corresponding to the device name of the
-+ * target controller
-+ */
-+struct i3c_target_ctrl *i3c_target_ctrl_get(const char *name)
-+{
-+	int ret = -EINVAL;
-+	struct i3c_target_ctrl *ctrl;
-+	struct device *dev;
-+	struct class_dev_iter iter;
-+
-+	class_dev_iter_init(&iter, i3c_target_ctrl_class, NULL, NULL);
-+	while ((dev = class_dev_iter_next(&iter))) {
-+		if (strcmp(name, dev_name(dev)))
-+			continue;
-+
-+		ctrl = to_i3c_target_ctrl(dev);
-+		if (!try_module_get(ctrl->ops->owner)) {
-+			ret = -EINVAL;
-+			goto err;
-+		}
-+
-+		class_dev_iter_exit(&iter);
-+		get_device(&ctrl->dev);
-+		return ctrl;
-+	}
-+
-+err:
-+	class_dev_iter_exit(&iter);
-+	return ERR_PTR(ret);
-+}
-+EXPORT_SYMBOL_GPL(i3c_target_ctrl_get);
-+
-+/**
-+ * i3c_target_ctrl_put() - release the I3C endpoint controller
-+ * @ctrl: target controller returned by pci_target_get()
-+ *
-+ * release the refcount the caller obtained by invoking i3c_target_ctrl_get()
-+ */
-+void i3c_target_ctrl_put(struct i3c_target_ctrl *ctrl)
-+{
-+	if (!ctrl || IS_ERR(ctrl))
-+		return;
-+
-+	module_put(ctrl->ops->owner);
-+	put_device(&ctrl->dev);
-+}
-+EXPORT_SYMBOL_GPL(i3c_target_ctrl_put);
-+
-+/**
-+ * i3c_target_ctrl_hotjoin() - trigger device hotjoin
-+ * @ctrl:  target controller
-+ *
-+ * return: 0: success, others failure
-+ */
-+int i3c_target_ctrl_hotjoin(struct i3c_target_ctrl *ctrl)
-+{
-+	if (!ctrl || IS_ERR(ctrl))
-+		return -EINVAL;
-+
-+	if (!ctrl->ops->hotjoin)
-+		return -EINVAL;
-+
-+	return ctrl->ops->hotjoin(ctrl);
-+}
-+EXPORT_SYMBOL_GPL(i3c_target_ctrl_hotjoin);
-+
-+/**
-+ * i3c_target_func_bind() - Notify the function driver that the function device has been bound to a
-+ *			   controller device
-+ * @func: the function device which has been bound to the controller device
-+ *
-+ * Invoke to notify the function driver that it has been bound to a controller device
-+ */
-+int i3c_target_func_bind(struct i3c_target_func *func)
-+{
-+	struct device *dev = &func->dev;
-+	int ret;
-+
-+	if (!func->driver) {
-+		dev_WARN(dev, "func device not bound to driver\n");
-+		return -EINVAL;
-+	}
-+
-+	if (!try_module_get(func->driver->owner))
-+		return -EAGAIN;
-+
-+	mutex_lock(&func->lock);
-+	ret = func->driver->ops->bind(func);
-+	if (!ret)
-+		func->is_bound = true;
-+	mutex_unlock(&func->lock);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(i3c_target_func_bind);
-+
-+/**
-+ * i3c_target_func_unbind() - Notify the function driver that the binding between the function
-+ *			      device and controller device has been lost.
-+ * @func: the function device which has lost the binding with the controller device.
-+ *
-+ * Invoke to notify the function driver that the binding between the function device and controller
-+ * device has been lost.
-+ */
-+void i3c_target_func_unbind(struct i3c_target_func *func)
-+{
-+	if (!func->driver) {
-+		dev_WARN(&func->dev, "func device not bound to driver\n");
-+		return;
-+	}
-+
-+	mutex_lock(&func->lock);
-+	if (func->is_bound)
-+		func->driver->ops->unbind(func);
-+	mutex_unlock(&func->lock);
-+
-+	module_put(func->driver->owner);
-+}
-+EXPORT_SYMBOL_GPL(i3c_target_func_unbind);
-+
-+/**
-+ * i3c_target_func_create() - create a new I3C function device
-+ * @drv_name: the driver name of the I3C function device.
-+ * @name: the name of the function device.
-+ *
-+ * Invoke to create a new I3C function device by providing the name of the function device.
-+ */
-+struct i3c_target_func *i3c_target_func_create(const char *drv_name, const char *name)
-+{
-+	struct i3c_target_func *func;
-+	struct device *dev;
-+	int ret;
-+
-+	func = kzalloc(sizeof(*func), GFP_KERNEL);
-+	if (!func)
-+		return ERR_PTR(-ENOMEM);
-+
-+	dev = &func->dev;
-+	device_initialize(dev);
-+	dev->bus = &i3c_target_func_bus_type;
-+	dev->type = &i3c_target_func_type;
-+	mutex_init(&func->lock);
-+
-+	ret = dev_set_name(dev, "%s.%s", drv_name, name);
-+	if (ret) {
-+		put_device(dev);
-+		return ERR_PTR(ret);
-+	}
-+
-+	ret = device_add(dev);
-+	if (ret) {
-+		put_device(dev);
-+		return ERR_PTR(ret);
-+	}
-+
-+	return func;
-+}
-+EXPORT_SYMBOL_GPL(i3c_target_func_create);
-+
-+/**
-+ * __i3c_target_func_register_driver() - register a new I3C function driver
-+ * @driver: structure representing I3C function driver
-+ * @owner: the owner of the module that registers the I3C function driver
-+ *
-+ * Invoke to register a new I3C function driver.
-+ */
-+int __i3c_target_func_register_driver(struct i3c_target_func_driver *driver, struct module *owner)
-+{
-+	int ret = -EEXIST;
-+
-+	if (!driver->ops)
-+		return -EINVAL;
-+
-+	if (!driver->ops->bind || !driver->ops->unbind)
-+		return -EINVAL;
-+
-+	driver->driver.bus = &i3c_target_func_bus_type;
-+	driver->driver.owner = owner;
-+
-+	ret = driver_register(&driver->driver);
-+	if (ret)
-+		return ret;
-+
-+	i3c_target_cfs_add_func_group(driver->driver.name);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(__i3c_target_func_register_driver);
-+
-+/**
-+ * i3c_target_func_unregister_driver() - unregister the I3C function driver
-+ * @fd: the I3C function driver that has to be unregistered
-+ *
-+ * Invoke to unregister the I3C function driver.
-+ */
-+void i3c_target_func_unregister_driver(struct i3c_target_func_driver *fd)
-+{
-+	mutex_lock(&func_lock);
-+	mutex_unlock(&func_lock);
-+}
-+EXPORT_SYMBOL_GPL(i3c_target_func_unregister_driver);
-+
-+static int __init i3c_target_init(void)
-+{
-+	int ret;
-+
-+	i3c_target_ctrl_class = class_create("i3c_target");
-+	if (IS_ERR(i3c_target_ctrl_class)) {
-+		pr_err("failed to create i3c target class --> %ld\n",
-+		       PTR_ERR(i3c_target_ctrl_class));
-+		return PTR_ERR(i3c_target_ctrl_class);
-+	}
-+
-+	ret = bus_register(&i3c_target_func_bus_type);
-+	if (ret) {
-+		class_destroy(i3c_target_ctrl_class);
-+		pr_err("failed to register i3c target func bus --> %d\n", ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+module_init(i3c_target_init);
-+
-+static void __exit i3c_target_exit(void)
-+{
-+	class_destroy(i3c_target_ctrl_class);
-+	bus_unregister(&i3c_target_func_bus_type);
-+}
-+module_exit(i3c_target_exit);
-+
-diff --git a/include/linux/i3c/target.h b/include/linux/i3c/target.h
-new file mode 100644
-index 0000000000000..9b73114588350
---- /dev/null
-+++ b/include/linux/i3c/target.h
-@@ -0,0 +1,527 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
 +/*
 + * Copyright 2023 NXP.
 + *
 + * Author: Frank Li <Frank.Li@nxp.com>
 + */
 +
-+#ifndef I3C_TARGET_H
-+#define I3C_TARGET_H
++#include <linux/bitfield.h>
++#include <linux/clk.h>
++#include <linux/completion.h>
++#include <linux/errno.h>
++#include <linux/i3c/target.h>
++#include <linux/i3c/target.h>
++#include <linux/interrupt.h>
++#include <linux/iopoll.h>
++#include <linux/list.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/pinctrl/consumer.h>
++#include <linux/platform_device.h>
++#include <linux/pm_runtime.h>
++#include <linux/clk.h>
++#include <linux/console.h>
++#include <linux/i3c/device.h>
++#include <linux/kernel.h>
++#include <linux/mod_devicetable.h>
 +
-+#include <linux/device.h>
++#include "svc-i3c.h"
 +
-+struct i3c_target_func;
-+struct i3c_target_ctrl;
-+
-+/**
-+ * struct i3c_target_func_ops - set of function pointers for performing i3c target function
-+ *				operations
-+ * @bind: ops to perform when a controller device has been bound to function device
-+ * @unbind: ops to perform when a binding has been lost between a controller device and function
-+ *	    device
-+ */
-+struct i3c_target_func_ops {
-+	int (*bind)(struct i3c_target_func *func);
-+	void (*unbind)(struct i3c_target_func *func);
++enum i3c_clks {
++	PCLK,
++	FCLK,
++	SCLK,
++	MAXCLK,
 +};
 +
-+/**
-+ * struct i3c_target_func_driver - represents the I3C function driver
-+ * @probe: ops to perform when a new function device has been bound to the function driver
-+ * @remove: ops to perform when the binding between the function device and function driver is
-+ *	    broken
-+ * @name: I3C Function driver name
-+ * @driver: I3C Function driver
-+ * @ops: set of function pointers for performing function operations
-+ * @owner: the owner of the module that registers the I3C function driver
-+ * @epf_group: list of configfs group corresponding to the I3C function driver
-+ */
-+struct i3c_target_func_driver {
-+	int (*probe)(struct i3c_target_func *func);
-+	void (*remove)(struct i3c_target_func *func);
++struct svc_i3c_target {
++	struct device *dev;
++	void __iomem *regs;
++	int irq;
++	struct clk_bulk_data clks[MAXCLK];
 +
-+	char *name;
-+	struct device_driver driver;
-+	struct i3c_target_func_ops *ops;
-+	struct module *owner;
++	struct list_head txq;
++	spinlock_t txq_lock; /* protect tx queue */
++	struct list_head rxq;
++	spinlock_t rxq_lock; /* protect rx queue */
++	struct list_head cq;
++	spinlock_t cq_lock; /* protect complete queue */
++
++	struct work_struct work;
++	struct workqueue_struct *workqueue;
++
++	struct completion dacomplete;
++	struct i3c_target_ctrl_features features;
++
++	spinlock_t ctrl_lock; /* protext access SCTRL register */
 +};
 +
-+/**
-+ * struct i3c_target_func - represents the I3C function device
-+ * @dev: the I3C function device
-+ * @name: the name of the I3C function device
-+ * @driver: the function driver to which this function device is bound
-+ * @group: configfs group associated with the EPF device
-+ * @lock: mutex to protect i3c_target_func_ops
-+ * @ctrl: binded I3C controller device
-+ * @is_bound: indicates if bind notification to function driver has been invoked
-+ * @vendor_id: vendor id
-+ * @part_id: part id
-+ * @instance_id: instance id
-+ * @ext_id: ext id
-+ * @vendor_info: vendor info
-+ * @static_addr: static address for I2C. It is 0 for I3C.
-+ * @max_write_len: maximum write length
-+ * @max_read_len: maximum read length
-+ * @bcr: bus characteristics register (BCR)
-+ * @dcr: device characteristics register (DCR)
-+ */
-+struct i3c_target_func {
-+	struct device dev;
-+	char *name;
-+	struct i3c_target_func_driver *driver;
-+	struct config_group *group;
-+	/* mutex to protect against concurrent access of i3c_target_func_ops */
-+	struct mutex lock;
-+	struct i3c_target_ctrl *ctrl;
-+	bool is_bound;
++#define I3C_SCONFIG	0x4
++#define   I3C_SCONFIG_SLVENA_MASK	BIT(0)
++#define	  I3C_SCONFIG_OFFLINE_MASK	BIT(9)
++#define   I3C_SCONFIG_SADDR_MASK	GENMASK(31, 25)
 +
-+	u16 vendor_id;
-+	u16 part_id;
-+	u8 instance_id;
-+	u16 ext_id;
-+	u8 vendor_info;
-+	u16 static_addr;
-+	u16 max_write_len;	//0 is hardware default max value
-+	u16 max_read_len;	//0 is hardware default max value
-+	u8 bcr;
-+	u8 dcr;
-+};
++#define I3C_SSTATUS	0x8
++#define	  I3C_SSTATUS_STNOTSTOP_MASK	BIT(0)
++#define	  I3C_SSTATUS_STOP_MASK		BIT(10)
++#define	  I3C_SSTATUS_RX_PEND_MASK	BIT(11)
++#define   I3C_SSTATUS_TXNOTFULL_MASK	BIT(12)
++#define	  I3C_SSTATUS_DACHG_MASK	BIT(13)
++#define	  I3C_SSTATUS_EVDET_MASK	GENMASK(21, 20)
++#define	  I3C_SSTATUS_EVDET_ACKED	0x3
++#define	  I3C_SSTATUS_IBIDIS_MASK	BIT(24)
++#define	  I3C_SSTATUS_HJDIS_MASK	BIT(27)
 +
-+enum i3c_request_stat {
-+	I3C_REQUEST_OKAY,
-+	I3C_REQUEST_PARTIAL,
-+	I3C_REQUEST_ERR,
-+	I3C_REQUEST_CANCEL,
-+};
++#define I3C_SCTRL	0xc
++#define   I3C_SCTRL_EVENT_MASK		GENMASK(1, 0)
++#define	  I3C_SCTRL_EVENT_IBI		0x1
++#define	  I3C_SCTRL_EVENT_HOTJOIN	0x3
++#define   I3C_SCTRL_EXTDATA_MASK	BIT(3)
++#define   I3C_SCTRL_IBIDATA_MASK	GENMASK(15, 8)
 +
-+/**
-+ * struct i3c_request - represents the an I3C transfer request
-+ * @buf: data buffer
-+ * @length: data length
-+ * @complete: call back function when request finished or cancelled
-+ * @context: general data for complete callback function
-+ * @list: link list
-+ * @status: transfer status
-+ * @actual: how much actually transferred
-+ * @ctrl: I3C target controller associate with this request
-+ * @tx: transfer direction, 1: target to master, 0: master to target
-+ */
-+struct i3c_request {
-+	void *buf;
-+	unsigned int length;
++#define I3C_SINTSET	0x10
++#define I3C_SINTCLR	0x14
++#define   I3C_SINT_START	BIT(8)
++#define   I3C_SINT_MATCHED	BIT(9)
++#define   I3C_SINT_STOP		BIT(10)
++#define   I3C_SINT_RXPEND	BIT(11)
++#define   I3C_SINT_TXSEND	BIT(12)
++#define   I3C_SINT_DACHG	BIT(13)
++#define   I3C_SINT_CCC		BIT(14)
++#define   I3C_SINT_ERRWARN	BIT(15)
++#define   I3C_SINT_DDRMAATCHED	BIT(16)
++#define   I3C_SINT_CHANDLED	BIT(17)
++#define   I3C_SINT_EVENT	BIT(18)
++#define   I3C_SINT_SLVRST	BIT(19)
 +
-+	void (*complete)(struct i3c_request *req);
-+	void *context;
-+	struct list_head list;
++#define I3C_SDATACTRL	0x2c
++#define   I3C_SDATACTRL_RXEMPTY_MASK	BIT(31)
++#define   I3C_SDATACTRL_TXFULL_MASK	BIT(30)
++#define	  I3C_SDATACTRL_RXCOUNT_MASK	GENMASK(28, 24)
++#define	  I3C_SDATACTRL_TXCOUNT_MASK	GENMASK(20, 16)
++#define   I3C_SDATACTRL_FLUSHFB_MASK	BIT(1)
++#define   I3C_SDATACTRL_FLUSHTB_MASK	BIT(0)
 +
-+	enum i3c_request_stat status;
-+	unsigned int actual;
-+	struct i3c_target_ctrl *ctrl;
-+	bool tx;
-+};
++#define I3C_SWDATAB	0x30
++#define   I3C_SWDATAB_END_ALSO_MASK	BIT(16)
++#define	  I3C_SWDATAB_END_MASK		BIT(8)
 +
-+/**
-+ * struct i3c_target_ctrl_features - represents I3C target controller features.
-+ * @tx_fifo_sz: tx hardware fifo size
-+ * @rx_fifo_sz: rx hardware fifo size
-+ */
-+struct i3c_target_ctrl_features {
-+	u32 tx_fifo_sz;
-+	u32 rx_fifo_sz;
-+};
++#define I3C_SWDATAE	0x34
++#define I3C_SRDATAB	0x40
 +
-+/**
-+ * struct i3c_target_ctrl_ops - set of function pointers for performing controller operations
-+ * @set_config: set I3C controller configuration
-+ * @enable: enable I3C controller
-+ * @disable: disable I3C controller
-+ * @raise_ibi: raise IBI interrupt to master
-+ * @alloc_request: allocate a i3c_request, optional, default use kmalloc
-+ * @free_request: free a i3c_request, default use kfree
-+ * @queue: queue an I3C transfer
-+ * @dequeue: dequeue an I3C transfer
-+ * @cancel_all_reqs: call all pending requests
-+ * @fifo_status: current FIFO status
-+ * @fifo_flush: flush hardware FIFO
-+ * @hotjoin: raise hotjoin request to master
-+ * @set_status_format1: set i3c status format1
-+ * @get_status_format1: get i3c status format1
-+ * @get_addr: get i3c dynmatic address
-+ * @get_features: ops to get the features supported by the I3C target controller
-+ * @owner: the module owner containing the ops
-+ */
-+struct i3c_target_ctrl_ops {
-+	int (*set_config)(struct i3c_target_ctrl *ctrl, struct i3c_target_func *func);
-+	int (*enable)(struct i3c_target_ctrl *ctrl);
-+	int (*disable)(struct i3c_target_ctrl *ctrl);
-+	int (*raise_ibi)(struct i3c_target_ctrl *ctrl, void *p, u8 size);
++#define I3C_SCAPABILITIES 0x60
++#define   I3C_SCAPABILITIES_FIFOTX_MASK     GENMASK(27, 26)
++#define   I3C_SCAPABILITIES_FIFORX_MASK     GENMASK(29, 28)
 +
-+	struct i3c_request *(*alloc_request)(struct i3c_target_ctrl *ctrl, gfp_t gfp_flags);
-+	void (*free_request)(struct i3c_request *req);
++#define I3C_SMAXLIMITS	0x68
++#define   I3C_SMAXLIMITS_MAXRD_MASK  GENMASK(11, 0)
++#define   I3C_SMAXLIMITS_MAXWR_MASK  GENMASK(27, 16)
 +
-+	int (*queue)(struct i3c_request *req, gfp_t gfp_flags);
-+	int (*dequeue)(struct i3c_request *req);
++#define I3C_SIDPARTNO	0x6c
 +
-+	void (*cancel_all_reqs)(struct i3c_target_ctrl *ctrl, bool tx);
++#define I3C_SIDEXT	0x70
++#define	  I3C_SIDEXT_BCR_MASK	GENMASK(23, 16)
++#define	  I3C_SIDEXT_DCR_MASK	GENMASK(15, 8)
++#define I3C_SVENDORID	0x74
 +
-+	int (*fifo_status)(struct i3c_target_ctrl *ctrl, bool tx);
-+	void (*fifo_flush)(struct i3c_target_ctrl *ctrl, bool tx);
-+	int (*hotjoin)(struct i3c_target_ctrl *ctrl);
-+	int (*set_status_format1)(struct i3c_target_ctrl *ctrl, u16 status);
-+	u16 (*get_status_format1)(struct i3c_target_ctrl *ctrl);
-+	u8  (*get_addr)(struct i3c_target_ctrl *ctrl);
-+	const struct i3c_target_ctrl_features *(*get_features)(struct i3c_target_ctrl *ctrl);
-+	struct module *owner;
-+};
++#define I3C_SMAPCTRL0	0x11c
++#define	  I3C_SMAPCTRL0_ENA_MASK	BIT(0)
++#define   I3C_SMAPCTRL0_DA_MASK	GENMASK(7, 1)
 +
-+/**
-+ * struct i3c_target_ctrl - represents the I3C target device
-+ * @dev: I3C target device
-+ * @ops: function pointers for performing endpoint operations
-+ * @func: target functions present in this controller device
-+ * @group: configfs group representing the I3C controller device
-+ */
-+struct i3c_target_ctrl {
-+	struct device dev;
-+	const struct i3c_target_ctrl_ops *ops;
-+	struct i3c_target_func *func;
-+	struct config_group *group;
-+};
++#define I3C_IBIEXT1	0x140
++#define   I3C_IBIEXT1_CNT_MASK	GEN_MASK(2, 0)
++#define   I3C_IBIEXT1_MAX_MASK	GEN_MASK(4, 6)
++#define   I3C_IBIEXT1_EXT1_SHIFT	8
++#define   I3C_IBIEXT1_EXT2_SHIFT	16
++#define   I3C_IBIEXT1_EXT3_SHIFT	24
 +
-+/**
-+ * i3c_target_ctrl_raise_ibi() - Raise IBI to master
-+ * @ctrl: I3C target controller
-+ * @p: optional data for IBI
-+ * @size: size of optional data
-+ *
-+ * Returns: Zero for success, or an error code in case of failure
-+ */
-+static inline int i3c_target_ctrl_raise_ibi(struct i3c_target_ctrl *ctrl, void *p, u8 size)
++#define I3C_IBIEXT2	0x144
++#define	  I3C_IBIEXT2_EXT4_SHIFT	0
++#define	  I3C_IBIEXT2_EXT5_SHIFT	8
++#define	  I3C_IBIEXT2_EXT6_SHIFT	16
++#define	  I3C_IBIEXT2_EXT7_SHIFT	24
++
++static int svc_i3c_target_enable(struct i3c_target_ctrl *ctrl)
 +{
-+	if (ctrl && ctrl->ops && ctrl->ops->raise_ibi)
-+		return ctrl->ops->raise_ibi(ctrl, p, size);
++	struct svc_i3c_target *svc;
++	u32 val;
 +
-+	return -EINVAL;
++	svc = dev_get_drvdata(&ctrl->dev);
++
++	val = readl_relaxed(svc->regs + I3C_SCONFIG);
++	val |= I3C_SCONFIG_SLVENA_MASK;
++	writel_relaxed(val, svc->regs + I3C_SCONFIG);
++
++	return 0;
 +}
 +
-+/**
-+ * i3c_target_ctrl_cancel_all_reqs() - Cancel all pending request
-+ * @ctrl: I3C target controller
-+ * @tx: Transfer diretion queue
-+ */
-+static inline void i3c_target_ctrl_cancel_all_reqs(struct i3c_target_ctrl *ctrl, bool tx)
++static int svc_i3c_target_disable(struct i3c_target_ctrl *ctrl)
 +{
-+	if (ctrl && ctrl->ops && ctrl->ops->cancel_all_reqs)
-+		ctrl->ops->cancel_all_reqs(ctrl, tx);
++	struct svc_i3c_target *svc;
++	u32 val;
++
++	svc = dev_get_drvdata(&ctrl->dev);
++
++	val = readl_relaxed(svc->regs + I3C_SCONFIG);
++	val &= ~I3C_SCONFIG_SLVENA_MASK;
++	writel_relaxed(val, svc->regs + I3C_SCONFIG);
++
++	return 0;
 +}
 +
-+/**
-+ * i3c_target_ctrl_set_config() - Set controller configuration
-+ * @ctrl: I3C target controller device
-+ * @func: Function device
-+ *
-+ * Returns: Zero for success, or an error code in case of failure
-+ */
-+static inline int
-+i3c_target_ctrl_set_config(struct i3c_target_ctrl *ctrl, struct i3c_target_func *func)
++static int svc_i3c_target_set_config(struct i3c_target_ctrl *ctrl, struct i3c_target_func *func)
 +{
-+	if (ctrl && ctrl->ops && ctrl->ops->set_config)
-+		return ctrl->ops->set_config(ctrl, func);
++	struct svc_i3c_target *svc;
++	u32 val;
++	u32 wm, rm;
 +
-+	return -EINVAL;
++	svc = dev_get_drvdata(&ctrl->dev);
++
++	if (func->static_addr > 0x7F)
++		return -EINVAL;
++
++	val = readl_relaxed(svc->regs + I3C_SCONFIG);
++	val &= ~I3C_SCONFIG_SLVENA_MASK;
++	val |= FIELD_PREP(I3C_SCONFIG_SADDR_MASK, func->static_addr);
++	writel_relaxed(val, svc->regs + I3C_SCONFIG);
++
++	if (func->part_id)
++		writel_relaxed((func->part_id << 16) |
++				((func->instance_id << 12) & GENMASK(15, 12)) |
++				(func->ext_id & GENMASK(11, 0)), svc->regs + I3C_SIDPARTNO);
++
++	writel_relaxed(FIELD_PREP(I3C_SIDEXT_BCR_MASK, func->bcr) |
++		       FIELD_PREP(I3C_SIDEXT_DCR_MASK, func->dcr),
++		       svc->regs + I3C_SIDEXT);
++
++	wm = func->max_write_len == 0 ?
++	     FIELD_GET(I3C_SMAXLIMITS_MAXWR_MASK, I3C_SMAXLIMITS_MAXWR_MASK) : func->max_write_len;
++
++	wm = max_t(u32, val, 8);
++
++	rm = func->max_read_len == 0 ?
++	     FIELD_GET(I3C_SMAXLIMITS_MAXRD_MASK, I3C_SMAXLIMITS_MAXRD_MASK) : func->max_read_len;
++	rm = max_t(u32, val, 16);
++
++	val = FIELD_PREP(I3C_SMAXLIMITS_MAXRD_MASK, rm) | FIELD_PREP(I3C_SMAXLIMITS_MAXWR_MASK, wm);
++	writel_relaxed(val, svc->regs + I3C_SMAXLIMITS);
++
++	writel_relaxed(func->vendor_id, svc->regs + I3C_SVENDORID);
++	return 0;
 +}
 +
-+/**
-+ * i3c_target_ctrl_enable() - Enable I3C controller
-+ * @ctrl: I3C target controller device
-+ *
-+ * Returns: Zero for success, or an error code in case of failure
-+ */
-+static inline int
-+i3c_target_ctrl_enable(struct i3c_target_ctrl *ctrl)
++static const struct i3c_target_ctrl_features *svc_i3c_get_features(struct i3c_target_ctrl *ctrl)
 +{
-+	if (ctrl && ctrl->ops && ctrl->ops->enable)
-+		return ctrl->ops->enable(ctrl);
++	struct svc_i3c_target *svc;
 +
-+	return -EINVAL;
++	svc = dev_get_drvdata(&ctrl->dev);
++
++	if (!svc)
++		return NULL;
++
++	return &svc->features;
 +}
 +
-+/**
-+ * i3c_target_ctrl_disable() - Disable I3C controller
-+ * @ctrl: I3C target controller device
-+ *
-+ * Returns: Zero for success, or an error code in case of failure
-+ */
-+static inline int
-+i3c_target_ctrl_disable(struct i3c_target_ctrl *ctrl)
++static void svc_i3c_queue_complete(struct svc_i3c_target *svc, struct i3c_request *complete)
 +{
-+	if (ctrl && ctrl->ops && ctrl->ops->disable)
-+		return ctrl->ops->disable(ctrl);
++	unsigned long flags;
 +
-+	return -EINVAL;
++	spin_lock_irqsave(&svc->cq_lock, flags);
++	list_add_tail(&complete->list, &svc->cq);
++	spin_unlock_irqrestore(&svc->cq_lock, flags);
++	queue_work(svc->workqueue, &svc->work);
 +}
 +
-+/**
-+ * i3c_target_ctrl_alloc_request() - Alloc an I3C transfer
-+ * @ctrl: I3C target controller device
-+ * @gfp_flags: additional gfp flags used when allocating the buffers
-+ *
-+ * Returns: Zero for success, or an error code in case of failure
-+ */
-+static inline struct i3c_request *
-+i3c_target_ctrl_alloc_request(struct i3c_target_ctrl *ctrl, gfp_t gfp_flags)
++static void svc_i3c_fill_txfifo(struct svc_i3c_target *svc)
 +{
-+	struct i3c_request *req = NULL;
++	struct i3c_request *req, *complete = NULL;
++	unsigned long flags;
++	int val;
 +
-+	if (ctrl && ctrl->ops && ctrl->ops->alloc_request)
-+		req = ctrl->ops->alloc_request(ctrl, gfp_flags);
++	spin_lock_irqsave(&svc->txq_lock, flags);
++	while ((!!(req = list_first_entry_or_null(&svc->txq, struct i3c_request, list))) &&
++	       !((readl_relaxed(svc->regs + I3C_SDATACTRL) & I3C_SDATACTRL_TXFULL_MASK))) {
++		while (!(readl_relaxed(svc->regs + I3C_SDATACTRL)
++					& I3C_SDATACTRL_TXFULL_MASK)) {
++			val = *(u8 *)(req->buf + req->actual);
++
++			if (req->actual + 1 == req->length)
++				writel_relaxed(val, svc->regs + I3C_SWDATAE);
++			else
++				writel_relaxed(val, svc->regs + I3C_SWDATAB);
++
++			req->actual++;
++
++			if (req->actual == req->length) {
++				list_del(&req->list);
++				complete = req;
++				spin_unlock_irqrestore(&svc->txq_lock, flags);
++
++				svc_i3c_queue_complete(svc, complete);
++				return;
++
++				spin_lock_irqsave(&svc->txq_lock, flags);
++				break;
++			}
++		}
++	}
++	spin_unlock_irqrestore(&svc->txq_lock, flags);
++}
++
++static int svc_i3c_target_queue(struct i3c_request *req, gfp_t gfp)
++{
++	struct svc_i3c_target *svc;
++	struct list_head *q;
++	unsigned long flags;
++	spinlock_t *lk;
++
++	svc = dev_get_drvdata(&req->ctrl->dev);
++	if (!svc)
++		return -EINVAL;
++
++	if (req->tx) {
++		q = &svc->txq;
++		lk = &svc->txq_lock;
++	} else {
++		q = &svc->rxq;
++		lk = &svc->rxq_lock;
++	}
++
++	spin_lock_irqsave(lk, flags);
++	list_add_tail(&req->list, q);
++	spin_unlock_irqrestore(lk, flags);
++
++	if (req->tx)
++		svc_i3c_fill_txfifo(svc);
++
++	if (req->tx)
++		writel_relaxed(I3C_SINT_TXSEND, svc->regs + I3C_SINTSET);
 +	else
-+		req = kzalloc(sizeof(*req), gfp_flags);
++		writel_relaxed(I3C_SINT_RXPEND, svc->regs + I3C_SINTSET);
 +
-+	if (req)
-+		req->ctrl = ctrl;
-+
-+	return req;
++	return 0;
 +}
 +
-+/**
-+ * i3c_target_ctrl_free_request() - Free an I3C transfer
-+ * @req: I3C transfer request
-+ *
-+ * Returns: Zero for success, or an error code in case of failure
-+ */
-+static inline void
-+i3c_target_ctrl_free_request(struct i3c_request *req)
++static int svc_i3c_dequeue(struct i3c_request *req)
 +{
-+	struct i3c_target_ctrl *ctrl;
++	struct svc_i3c_target *svc;
++	unsigned long flags;
++	spinlock_t *lk;
 +
-+	if (!req)
++	svc = dev_get_drvdata(&req->ctrl->dev);
++	if (!svc)
++		return -EINVAL;
++
++	if (req->tx)
++		lk = &svc->txq_lock;
++	else
++		lk = &svc->rxq_lock;
++
++	spin_lock_irqsave(lk, flags);
++	list_del(&req->list);
++	spin_unlock_irqrestore(lk, flags);
++
++	return 0;
++}
++
++static void svc_i3c_target_fifo_flush(struct i3c_target_ctrl *ctrl, bool tx)
++{
++	struct svc_i3c_target *svc;
++	u32 val;
++
++	svc = dev_get_drvdata(&ctrl->dev);
++
++	val = readl_relaxed(svc->regs + I3C_SDATACTRL);
++
++	val |= tx ? I3C_SDATACTRL_FLUSHTB_MASK : I3C_SDATACTRL_FLUSHFB_MASK;
++
++	writel_relaxed(val, svc->regs + I3C_SDATACTRL);
++}
++
++static int
++svc_i3c_target_raise_ibi(struct i3c_target_ctrl *ctrl, void *p, u8 size)
++{
++	struct svc_i3c_target *svc;
++	unsigned long flags;
++	u8 *ibidata = p;
++	u32 ext1 = 0, ext2 = 0;
++	u32 val;
++	int ret;
++
++	svc = dev_get_drvdata(&ctrl->dev);
++
++	if (size && !p)
++		return -EINVAL;
++
++	if (size > 8)
++		return -EINVAL;
++
++	val = readl_relaxed(svc->regs + I3C_SSTATUS);
++	if (val & I3C_SSTATUS_IBIDIS_MASK)
++		return -EINVAL;
++
++	ret = readl_relaxed_poll_timeout(svc->regs + I3C_SCTRL, val,
++					 !(val & I3C_SCTRL_EVENT_MASK), 0, 10000);
++	if (ret) {
++		dev_err(&ctrl->dev, "Timeout when polling for NO event pending");
++		val &= ~I3C_SCTRL_EVENT_MASK;
++		writel_relaxed(val, svc->regs + I3C_SCTRL);
++		return -ENAVAIL;
++	}
++
++	spin_lock_irqsave(&svc->ctrl_lock, flags);
++
++	val = readl_relaxed(svc->regs + I3C_SCTRL);
++
++	val &= ~I3C_SCTRL_EVENT_MASK | I3C_SCTRL_IBIDATA_MASK;
++	val |= FIELD_PREP(I3C_SCTRL_EVENT_MASK, I3C_SCTRL_EVENT_IBI);
++
++	if (size) {
++		val |= FIELD_PREP(I3C_SCTRL_IBIDATA_MASK, *ibidata);
++		ibidata++;
++
++		if (size > 1)
++			val |= I3C_SCTRL_EXTDATA_MASK;
++
++		size--;
++		if (size > 0) {
++			ext1 |= (size + 2);
++			ext1 |= (*ibidata++) << I3C_IBIEXT1_EXT1_SHIFT;
++			size--;
++		}
++
++		if (size > 0) {
++			ext1 |= (*ibidata++) << I3C_IBIEXT1_EXT2_SHIFT;
++			size--;
++		}
++
++		if (size > 0) {
++			ext1 |= (*ibidata++) << I3C_IBIEXT1_EXT3_SHIFT;
++			size--;
++		}
++
++		writel_relaxed(ext1, svc->regs + I3C_IBIEXT1);
++
++		if (size > 0) {
++			ext2 |= (*ibidata++) << I3C_IBIEXT2_EXT4_SHIFT;
++			size--;
++		}
++
++		if (size > 0) {
++			ext2 |= (*ibidata++) << I3C_IBIEXT2_EXT5_SHIFT;
++			size--;
++		}
++
++		if (size > 0) {
++			ext2 |= (*ibidata++) << I3C_IBIEXT2_EXT6_SHIFT;
++			size--;
++		}
++
++		if (size > 0) {
++			ext2 |= (*ibidata++) << I3C_IBIEXT2_EXT7_SHIFT;
++			size--;
++		}
++
++		writeb_relaxed(ext2, svc->regs + I3C_IBIEXT2);
++	}
++
++	/* Issue IBI*/
++	writel_relaxed(val, svc->regs + I3C_SCTRL);
++	spin_unlock_irqrestore(&svc->ctrl_lock, flags);
++
++	ret = readl_relaxed_poll_timeout(svc->regs + I3C_SCTRL, val,
++					 !(val & I3C_SCTRL_EVENT_MASK), 0, 1000000);
++	if (ret) {
++		dev_err(&ctrl->dev, "Timeout when polling for IBI finish\n");
++
++		//clear event to above hang bus
++		spin_lock_irqsave(&svc->ctrl_lock, flags);
++		val = readl_relaxed(svc->regs + I3C_SCTRL);
++		val &= ~I3C_SCTRL_EVENT_MASK;
++		writel_relaxed(val, svc->regs + I3C_SCTRL);
++		spin_unlock_irqrestore(&svc->ctrl_lock, flags);
++
++		return -ENAVAIL;
++	}
++
++	return 0;
++}
++
++static void svc_i3c_target_complete(struct work_struct *work)
++{
++	struct svc_i3c_target *svc = container_of(work, struct svc_i3c_target, work);
++	struct i3c_request *req;
++	unsigned long flags;
++
++	spin_lock_irqsave(&svc->cq_lock, flags);
++	while (!list_empty(&svc->cq)) {
++		req = list_first_entry(&svc->cq, struct i3c_request, list);
++		list_del(&req->list);
++		spin_unlock_irqrestore(&svc->cq_lock, flags);
++		req->complete(req);
++
++		spin_lock_irqsave(&svc->cq_lock, flags);
++	}
++	spin_unlock_irqrestore(&svc->cq_lock, flags);
++}
++
++static irqreturn_t svc_i3c_target_irq_handler(int irq, void *dev_id)
++{
++	struct i3c_request *req, *complete = NULL;
++	struct svc_i3c_target *svc = dev_id;
++	unsigned long flags;
++	u32 statusFlags;
++
++	statusFlags = readl(svc->regs + I3C_SSTATUS);
++	writel(statusFlags, svc->regs + I3C_SSTATUS);
++
++	if (statusFlags & I3C_SSTATUS_DACHG_MASK)
++		complete_all(&svc->dacomplete);
++
++	if (statusFlags & I3C_SSTATUS_RX_PEND_MASK) {
++		spin_lock_irqsave(&svc->rxq_lock, flags);
++		req = list_first_entry_or_null(&svc->rxq, struct i3c_request, list);
++
++		if (!req) {
++			writel_relaxed(I3C_SINT_RXPEND, svc->regs + I3C_SINTCLR);
++		} else {
++			while (!(readl_relaxed(svc->regs + I3C_SDATACTRL) &
++					       I3C_SDATACTRL_RXEMPTY_MASK)) {
++				*(u8 *)(req->buf + req->actual) =
++							readl_relaxed(svc->regs + I3C_SRDATAB);
++				req->actual++;
++
++				if (req->actual == req->length) {
++					complete = req;
++					list_del(&req->list);
++					break;
++				}
++			}
++
++			if (req->actual != req->length && (statusFlags & I3C_SSTATUS_STOP_MASK)) {
++				complete = req;
++				list_del(&req->list);
++			}
++		}
++		spin_unlock_irqrestore(&svc->rxq_lock, flags);
++
++		if (complete) {
++			spin_lock_irqsave(&svc->cq_lock, flags);
++			list_add_tail(&complete->list, &svc->cq);
++			spin_unlock_irqrestore(&svc->cq_lock, flags);
++			queue_work(svc->workqueue, &svc->work);
++			complete = NULL;
++		}
++	}
++
++	if (statusFlags & I3C_SSTATUS_TXNOTFULL_MASK) {
++		svc_i3c_fill_txfifo(svc);
++		spin_lock_irqsave(&svc->txq_lock, flags);
++		if (list_empty(&svc->txq))
++			writel_relaxed(I3C_SINT_TXSEND, svc->regs + I3C_SINTCLR);
++		spin_unlock_irqrestore(&svc->txq_lock, flags);
++	}
++
++	return IRQ_HANDLED;
++}
++
++static void svc_i3c_cancel_all_reqs(struct i3c_target_ctrl *ctrl, bool tx)
++{
++	struct svc_i3c_target *svc;
++	struct i3c_request *req;
++	struct list_head *q;
++	unsigned long flags;
++	spinlock_t *lk;
++
++	svc = dev_get_drvdata(&ctrl->dev);
++	if (!svc)
 +		return;
 +
-+	ctrl = req->ctrl;
-+	if (ctrl && ctrl->ops && ctrl->ops->free_request)
-+		ctrl->ops->free_request(req);
++	if (tx) {
++		q = &svc->txq;
++		lk = &svc->txq_lock;
++	} else {
++		q = &svc->rxq;
++		lk = &svc->rxq_lock;
++	}
++
++	spin_lock_irqsave(lk, flags);
++	while (!list_empty(q)) {
++		req = list_first_entry(q, struct i3c_request, list);
++		list_del(&req->list);
++		spin_unlock_irqrestore(lk, flags);
++
++		req->status = I3C_REQUEST_CANCEL;
++		req->complete(req);
++		spin_lock_irqsave(lk, flags);
++	}
++	spin_unlock_irqrestore(lk, flags);
++}
++
++static int svc_i3c_hotjoin(struct i3c_target_ctrl *ctrl)
++{
++	struct svc_i3c_target *svc;
++	int ret;
++	u32 val;
++	u32 cfg;
++
++	svc = dev_get_drvdata(&ctrl->dev);
++	if (!svc)
++		return -EINVAL;
++
++	reinit_completion(&svc->dacomplete);
++
++	val = readl_relaxed(svc->regs + I3C_SSTATUS);
++	if (val & I3C_SSTATUS_HJDIS_MASK) {
++		dev_err(&ctrl->dev, "Hotjoin disabled by i3c master\n");
++		return -EINVAL;
++	}
++
++	ret = readl_relaxed_poll_timeout(svc->regs + I3C_SCTRL, val,
++					 !(val & I3C_SCTRL_EVENT_MASK), 0, 10000);
++	if (ret) {
++		dev_err(&ctrl->dev, "Timeout when polling for none event pending");
++		return -ENAVAIL;
++	}
++
++	cfg = readl_relaxed(svc->regs + I3C_SCONFIG);
++	cfg |= I3C_SCONFIG_OFFLINE_MASK;
++	writel_relaxed(cfg, svc->regs + I3C_SCONFIG);
++
++	val &= ~(I3C_SCTRL_EVENT_MASK | I3C_SCTRL_IBIDATA_MASK);
++	val |= FIELD_PREP(I3C_SCTRL_EVENT_MASK, I3C_SCTRL_EVENT_HOTJOIN);
++	/* Issue hotjoin*/
++	writel_relaxed(val, svc->regs + I3C_SCTRL);
++
++	ret = readl_relaxed_poll_timeout(svc->regs + I3C_SCTRL, val,
++					 !(val & I3C_SCTRL_EVENT_MASK), 0, 100000);
++	if (ret) {
++		val &= ~FIELD_PREP(I3C_SCTRL_EVENT_MASK, I3C_SCTRL_EVENT_MASK);
++		writel_relaxed(val, svc->regs + I3C_SCTRL);
++		dev_err(&ctrl->dev, "Timeout when polling for HOTJOIN finish\n");
++		return -EINVAL;
++	}
++
++	val = readl_relaxed(svc->regs + I3C_SSTATUS);
++	val = FIELD_GET(I3C_SSTATUS_EVDET_MASK, val);
++	if (val != I3C_SSTATUS_EVDET_ACKED) {
++		dev_err(&ctrl->dev, "Master NACKED hotjoin request\n");
++		return -EINVAL;
++	}
++
++	writel_relaxed(I3C_SINT_DACHG, svc->regs + I3C_SINTSET);
++	ret = wait_for_completion_timeout(&svc->dacomplete, msecs_to_jiffies(100));
++	writel_relaxed(I3C_SINT_DACHG, svc->regs + I3C_SINTCLR);
++	if (!ret) {
++		dev_err(&ctrl->dev, "wait for da assignment timeout\n");
++		return -EIO;
++	}
++
++	val = readl_relaxed(svc->regs + I3C_SMAPCTRL0);
++	val = FIELD_GET(I3C_SMAPCTRL0_DA_MASK, val);
++	dev_info(&ctrl->dev, "Get dynamtic address 0x%x\n", val);
++	return 0;
++}
++
++static int svc_i3c_set_status_format1(struct i3c_target_ctrl *ctrl, u16 status)
++{
++	struct svc_i3c_target *svc;
++	unsigned long flags;
++	u32 val;
++
++	svc = dev_get_drvdata(&ctrl->dev);
++
++	spin_lock_irqsave(&svc->ctrl_lock, flags);
++	val = readl_relaxed(svc->regs + I3C_SCTRL);
++	val &= 0xFFFF;
++	val |= status << 16;
++	writel_relaxed(val, svc->regs + I3C_SCTRL);
++	spin_unlock_irqrestore(&svc->ctrl_lock, flags);
++
++	return 0;
++}
++
++static u16 svc_i3c_get_status_format1(struct i3c_target_ctrl *ctrl)
++{
++	struct svc_i3c_target *svc;
++
++	svc = dev_get_drvdata(&ctrl->dev);
++
++	return readl_relaxed(svc->regs + I3C_SCTRL) >> 16;
++}
++
++static u8 svc_i3c_get_addr(struct i3c_target_ctrl *ctrl)
++{
++	struct svc_i3c_target *svc;
++	int val;
++
++	svc = dev_get_drvdata(&ctrl->dev);
++
++	val = readl_relaxed(svc->regs + I3C_SMAPCTRL0);
++
++	if (val & I3C_SMAPCTRL0_ENA_MASK)
++		return FIELD_GET(I3C_SMAPCTRL0_DA_MASK, val);
++
++	return 0;
++}
++
++static int svc_i3c_fifo_status(struct i3c_target_ctrl *ctrl, bool tx)
++{
++	struct svc_i3c_target *svc;
++	int val;
++
++	svc = dev_get_drvdata(&ctrl->dev);
++
++	val = readl_relaxed(svc->regs + I3C_SDATACTRL);
++
++	if (tx)
++		return FIELD_GET(I3C_SDATACTRL_TXCOUNT_MASK, val);
 +	else
-+		kfree(req);
++		return FIELD_GET(I3C_SDATACTRL_RXCOUNT_MASK, val);
 +}
 +
-+/**
-+ * i3c_target_ctrl_queue() - Queue an I3C transfer
-+ * @req: I3C transfer request
-+ * @gfp_flags: additional gfp flags used when allocating the buffers
-+ *
-+ * Returns: Zero for success, or an error code in case of failure
-+ */
-+static inline int
-+i3c_target_ctrl_queue(struct i3c_request *req, gfp_t gfp_flags)
++static struct i3c_target_ctrl_ops svc_i3c_target_ops = {
++	.set_config = svc_i3c_target_set_config,
++	.enable = svc_i3c_target_enable,
++	.disable = svc_i3c_target_disable,
++	.queue = svc_i3c_target_queue,
++	.dequeue = svc_i3c_dequeue,
++	.raise_ibi = svc_i3c_target_raise_ibi,
++	.fifo_flush = svc_i3c_target_fifo_flush,
++	.cancel_all_reqs = svc_i3c_cancel_all_reqs,
++	.get_features = svc_i3c_get_features,
++	.hotjoin = svc_i3c_hotjoin,
++	.fifo_status = svc_i3c_fifo_status,
++	.set_status_format1 = svc_i3c_set_status_format1,
++	.get_status_format1 = svc_i3c_get_status_format1,
++	.get_addr = svc_i3c_get_addr,
++};
++
++int svc_i3c_target_probe(struct platform_device *pdev)
 +{
-+	struct i3c_target_ctrl *ctrl;
-+	int ret = -EINVAL;
++	struct device *dev = &pdev->dev;
++	struct i3c_target_ctrl *target;
++	struct svc_i3c_target *svc;
++	int ret;
++	u32 val;
 +
-+	if (!req)
-+		return -EINVAL;
++	svc = devm_kzalloc(dev, sizeof(*svc), GFP_KERNEL);
++	if (!svc)
++		return -ENOMEM;
 +
-+	ctrl = req->ctrl;
++	svc->regs = devm_platform_ioremap_resource(pdev, 0);
++	if (IS_ERR(svc->regs))
++		return PTR_ERR(svc->regs);
 +
-+	req->actual = 0;
-+	req->status = 0;
-+	if (ctrl && ctrl->ops && ctrl->ops->queue)
-+		ret = ctrl->ops->queue(req, gfp_flags);
++	svc->clks[PCLK].id = "pclk";
++	svc->clks[FCLK].id = "fast_clk";
++	svc->clks[SCLK].id = "slow_clk";
 +
-+	return ret;
-+}
++	ret = devm_clk_bulk_get(dev, MAXCLK, svc->clks);
++	if (ret < 0) {
++		dev_err(dev, "fail get clks: %d\n", ret);
++		return ret;
++	}
 +
-+/**
-+ * i3c_target_ctrl_dequeue() - Dequeue an I3C transfer
-+ * @req: I3C transfer request
-+ *
-+ * Returns: Zero for success, or an error code in case of failure
-+ */
-+static inline int
-+i3c_target_ctrl_dequeue(struct i3c_request *req)
-+{
-+	struct i3c_target_ctrl *ctrl;
-+	int ret = -EINVAL;
++	ret = clk_bulk_prepare_enable(MAXCLK, svc->clks);
++	if (ret < 0) {
++		dev_err(dev, "fail enable clks: %d\n", ret);
++		return ret;
++	}
 +
-+	if (!req)
-+		return -EINVAL;
++	svc->irq = platform_get_irq(pdev, 0);
++	if (svc->irq < 0)
++		return svc->irq;
 +
-+	ctrl = req->ctrl;
-+	if (ctrl && ctrl->ops && ctrl->ops->dequeue)
-+		ret = ctrl->ops->dequeue(req);
++	INIT_LIST_HEAD(&svc->txq);
++	INIT_LIST_HEAD(&svc->rxq);
++	INIT_LIST_HEAD(&svc->cq);
++	spin_lock_init(&svc->txq_lock);
++	spin_lock_init(&svc->rxq_lock);
++	spin_lock_init(&svc->cq_lock);
++	spin_lock_init(&svc->ctrl_lock);
 +
-+	return ret;
-+}
++	init_completion(&svc->dacomplete);
 +
-+/**
-+ * i3c_target_ctrl_fifo_status() - Get controller FIFO status
-+ * @ctrl: I3C target controller device
-+ * @tx: 1: Target to master, 0: master to target
-+ *
-+ * Returns: How much data in FIFO
-+ */
-+static inline int
-+i3c_target_ctrl_fifo_status(struct i3c_target_ctrl *ctrl, bool tx)
-+{
-+	if (ctrl && ctrl->ops && ctrl->ops->fifo_status)
-+		return ctrl->ops->fifo_status(ctrl, tx);
++	INIT_WORK(&svc->work, svc_i3c_target_complete);
++	svc->workqueue = alloc_workqueue("%s-cq", 0, 0, dev_name(dev));
++	if (!svc->workqueue)
++		return -ENOMEM;
++
++	/* Disable all IRQ */
++	writel_relaxed(0xFFFFFFFF, svc->regs + I3C_SINTCLR);
++
++	val = readl_relaxed(svc->regs + I3C_SCAPABILITIES);
++	svc->features.tx_fifo_sz  = FIELD_GET(I3C_SCAPABILITIES_FIFOTX_MASK, val);
++	svc->features.tx_fifo_sz = 2 << svc->features.tx_fifo_sz;
++
++	svc->features.rx_fifo_sz = FIELD_GET(I3C_SCAPABILITIES_FIFORX_MASK, val);
++	svc->features.rx_fifo_sz = 2 << svc->features.rx_fifo_sz;
++
++	ret = devm_request_irq(dev, svc->irq, svc_i3c_target_irq_handler, 0, "svc-i3c-irq", svc);
++	if (ret)
++		return -ENOENT;
++
++	target = devm_i3c_target_ctrl_create(dev, &svc_i3c_target_ops);
++	if (!target)
++		return -ENOMEM;
++
++	dev_set_drvdata(&target->dev, svc);
 +
 +	return 0;
 +}
 +
-+/**
-+ * i3c_target_ctrl_fifo_flush() - Flush controller FIFO
-+ * @ctrl: I3C target controller device
-+ * @tx: 1: Target to master, 0: master to target
-+ *
-+ */
-+static inline void
-+i3c_target_ctrl_fifo_flush(struct i3c_target_ctrl *ctrl, bool tx)
++void svc_i3c_target_remove(struct platform_device *pdev)
 +{
-+	if (ctrl && ctrl->ops && ctrl->ops->fifo_flush)
-+		return ctrl->ops->fifo_flush(ctrl, tx);
 +}
+diff --git a/drivers/i3c/master/svc-i3c.h b/drivers/i3c/master/svc-i3c.h
+index 0bd1f0112a071..634837f146b2e 100644
+--- a/drivers/i3c/master/svc-i3c.h
++++ b/drivers/i3c/master/svc-i3c.h
+@@ -8,4 +8,7 @@ void svc_i3c_master_remove(struct platform_device *pdev);
+ int svc_i3c_master_runtime_suspend(struct device *dev);
+ int svc_i3c_master_runtime_resume(struct device *dev);
+ 
++int svc_i3c_target_probe(struct platform_device *pdev);
++void svc_i3c_target_remove(struct platform_device *pdev);
 +
-+/**
-+ * i3c_target_ctrl_get_features() - Get controller supported features
-+ * @ctrl: I3C target controller device
-+ *
-+ * Returns: The pointer to struct i3c_target_ctrl_features
-+ */
-+static inline const struct i3c_target_ctrl_features*
-+i3c_target_ctrl_get_features(struct i3c_target_ctrl *ctrl)
-+{
-+	if (ctrl && ctrl->ops && ctrl->ops->get_features)
-+		return ctrl->ops->get_features(ctrl);
-+
-+	return NULL;
-+}
-+
-+/**
-+ * i3c_target_ctrl_set_status_format1() - Set controller supported features
-+ * @ctrl: I3C target controller device
-+ * @status: I3C GETSTATUS format1
-+ *
-+ * Returns: Zero for success, or an error code in case of failure
-+ */
-+static inline int
-+i3c_target_ctrl_set_status_format1(struct i3c_target_ctrl *ctrl, u16 status)
-+{
-+	if (ctrl && ctrl->ops && ctrl->ops->set_status_format1)
-+		return ctrl->ops->set_status_format1(ctrl, status);
-+
-+	return -EINVAL;
-+}
-+
-+/**
-+ * i3c_target_ctrl_get_status_format1() - Get controller supported features
-+ * @ctrl: I3C target controller device
-+ *
-+ * Return: I3C GETSTATUS format1
-+ */
-+static inline u16
-+i3c_target_ctrl_get_status_format1(struct i3c_target_ctrl *ctrl)
-+{
-+	if (ctrl && ctrl->ops && ctrl->ops->get_status_format1)
-+		return ctrl->ops->get_status_format1(ctrl);
-+
-+	return 0;
-+}
-+
-+/**
-+ * i3c_target_ctrl_get_addr() - Get controller address
-+ * @ctrl: I3C target controller device
-+ *
-+ * Return: address
-+ */
-+static inline u8 i3c_target_ctrl_get_addr(struct i3c_target_ctrl *ctrl)
-+{
-+	if (ctrl && ctrl->ops && ctrl->ops->get_addr)
-+		return ctrl->ops->get_addr(ctrl);
-+
-+	return 0;
-+}
-+
-+#define to_i3c_target_ctrl(device) container_of((device), struct i3c_target_ctrl, dev)
-+
-+#define to_i3c_target_func(func_dev) container_of((func_dev), struct i3c_target_func, dev)
-+#define to_i3c_target_func_driver(drv) (container_of((drv), struct i3c_target_func_driver, driver))
-+
-+#define i3c_target_ctrl_create(dev, ops) \
-+		__i3c_target_ctrl_create((dev), (ops), THIS_MODULE)
-+#define devm_i3c_target_ctrl_create(dev, ops) \
-+		__devm_i3c_target_ctrl_create((dev), (ops), THIS_MODULE)
-+
-+#ifdef CONFIG_I3C_TARGET
-+struct i3c_target_ctrl *
-+__devm_i3c_target_ctrl_create(struct device *dev, const struct i3c_target_ctrl_ops *ops,
-+			     struct module *owner);
-+struct i3c_target_ctrl *
-+__i3c_target_ctrl_create(struct device *dev, const struct i3c_target_ctrl_ops *ops,
-+			struct module *owner);
-+
-+void devm_i3c_target_ctrl_destroy(struct device *dev, struct i3c_target_ctrl *epc);
-+void i3c_target_ctrl_destroy(struct i3c_target_ctrl *epc);
-+
-+int i3c_target_ctrl_add_func(struct i3c_target_ctrl *ctrl, struct i3c_target_func *func);
-+void i3c_target_ctrl_remove_func(struct i3c_target_ctrl *ctrl, struct i3c_target_func *func);
-+int i3c_target_ctrl_hotjoin(struct i3c_target_ctrl *ctrl);
-+
-+struct config_group *i3c_target_cfs_add_ctrl_group(struct i3c_target_ctrl *ctrl);
-+
-+void i3c_target_cfs_remove_ctrl_group(struct config_group *group);
-+struct config_group *i3c_target_cfs_add_func_group(const char *name);
-+void i3c_target_cfs_remove_func_group(struct config_group *group);
-+struct i3c_target_ctrl *i3c_target_ctrl_get(const char *name);
-+void i3c_target_ctrl_put(struct i3c_target_ctrl *ctrl);
-+
-+int i3c_target_func_bind(struct i3c_target_func *func);
-+void i3c_target_func_unbind(struct i3c_target_func *func);
-+struct i3c_target_func *i3c_target_func_create(const char *drv_name, const char *name);
-+
-+#define i3c_target_func_register_driver(drv) \
-+	__i3c_target_func_register_driver(drv, THIS_MODULE)
-+
-+int __i3c_target_func_register_driver(struct i3c_target_func_driver *drv, struct module *owner);
-+void i3c_target_func_unregister_driver(struct i3c_target_func_driver *drv);
-+#else
-+static inline struct i3c_target_ctrl *
-+__devm_i3c_target_ctrl_create(struct device *dev, const struct i3c_target_ctrl_ops *ops,
-+			     struct module *owner)
-+{
-+	return NULL;
-+}
-+
-+static inline struct i3c_target_ctrl *
-+__i3c_target_ctrl_create(struct device *dev, const struct i3c_target_ctrl_ops *ops,
-+			struct module *owner)
-+{
-+	return NULL;
-+}
-+#endif
-+
-+#define DECLARE_I3C_TARGET_FUNC(_name, _probe, _remove, _ops)			\
-+	static struct i3c_target_func_driver _name ## i3c_func = {		\
-+		.driver.name = __stringify(_name),				\
-+		.owner  = THIS_MODULE,						\
-+		.probe = _probe,						\
-+		.remove = _remove,						\
-+		.ops = _ops							\
-+	};									\
-+	MODULE_ALIAS("i3cfunc:" __stringify(_name))
-+
-+#define DECLARE_I3C_TARGET_INIT(_name, _probe, _remove, _ops)			\
-+	DECLARE_I3C_TARGET_FUNC(_name, _probe, _remove, _ops);			\
-+	static int __init _name ## mod_init(void)				\
-+	{									\
-+		return i3c_target_func_register_driver(&_name ## i3c_func);	\
-+	}									\
-+	static void __exit _name ## mod_exit(void)				\
-+	{									\
-+		i3c_target_func_unregister_driver(&_name ## i3c_func);		\
-+	}									\
-+	module_init(_name ## mod_init);						\
-+	module_exit(_name ## mod_exit)
-+
-+#endif
+ #endif
+\ No newline at end of file
 -- 
 2.34.1
 
