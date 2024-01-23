@@ -1,124 +1,119 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
+Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E9E45257;
-	Tue, 23 Jan 2024 07:25:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6950B6FB3;
+	Tue, 23 Jan 2024 07:31:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=130.133.4.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705994734; cv=none; b=X9Z99ql662Y8H64bprY6fcwd6AgMzxTa1LsT828hTSnSZNqMoEJIxhDt7/zyKrGodotREnUJN9XpADaQcKFQIb7t5TuhtAV37DZ5AFhiETYX3eyI1Sa9EHEjakNj8v133P9IZpX/zRlF1cX/MrFv6Dz1WaZ3yES9Mq/TbFLBe6M=
+	t=1705995108; cv=none; b=iHi0UlBL66tO+SB3fHROm9BraygPugmXl5/NpLbqFfqLJe80UI/anM0dGuUUAWNaKHDykW2/qQSZbuInsEukBTRpjebl7U4p1x+7ugSCHHgnY0H0cT7RVs29oKcI+9L/prgX1uOk9YhvtIosv6Wltf/DOpX4BAENz/A8YVG92AQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705994734; c=relaxed/simple;
-	bh=bONvD8Ha14F6R8BU5+1e4oFxuXsdFHJK7r5bFwQINyE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WoIIoqvsGJ6Y2kbxKkobyS0jI+ZU8J0q88SUqK9XR/p3DkR6YLHyxqtZ9zWZbFABF4ruo4MFPNv8UPdeWXAhpqXvURWSZFkMOpDvvcpXoqe4qEGbHH0l1ZZWjNkxTQT33l3BJM0C77pqom7abYEe3A99gY5ksXzxjEwkdw8ixWs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YMVKSCJv; arc=none smtp.client-ip=192.55.52.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YMVKSCJv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1705994733; x=1737530733;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=bONvD8Ha14F6R8BU5+1e4oFxuXsdFHJK7r5bFwQINyE=;
-  b=YMVKSCJvxUI7KkqNeeRkwJ/PB6gwXfBkAbBipkrj5DvxnilW4j7uCLus
-   hkDE4u71FCsjIPf8DSYf1D2w8ceneRf4+VKo5dTq0fLfUswPv3ShJEJYP
-   5xFrqoRKGWexrGljwXDftQypBApbeynzLbOqqUZXdE42VwS5loLO6KTau
-   wMdZNVUHDssn2fYYTs6hOIoX/Jmd8f2wgpFgDnVL2OUDKo03CG/zC9FXY
-   3LISS9TEmRzSG2F5f+DK8Nt0YvLInzVtHEKvd8dTbO7BVNLVOzJvhFrmO
-   1AnLiAA2s5pzJF3GeuDODz7N9XVM/+93KdRPazEysuMFTntHwg+oNf65I
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10961"; a="398589853"
-X-IronPort-AV: E=Sophos;i="6.05,213,1701158400"; 
-   d="scan'208";a="398589853"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 23:23:28 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,213,1701158400"; 
-   d="scan'208";a="1497994"
-Received: from lkp-server01.sh.intel.com (HELO 961aaaa5b03c) ([10.239.97.150])
-  by fmviesa003.fm.intel.com with ESMTP; 22 Jan 2024 23:23:24 -0800
-Received: from kbuild by 961aaaa5b03c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rSB7y-0007FT-0w;
-	Tue, 23 Jan 2024 07:23:22 +0000
-Date: Tue, 23 Jan 2024 15:22:26 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>,
-	Jassi Brar <jassisinghbrar@gmail.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Dong Aisheng <aisheng.dong@nxp.com>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	NXP Linux Team <linux-imx@nxp.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	Peng Fan <peng.fan@nxp.com>
-Subject: Re: [PATCH 2/3] mailbox: imx: get RR/TR registers num from Parameter
- register
-Message-ID: <202401231557.HLHet6y7-lkp@intel.com>
-References: <20240122-imx-mailbox-v1-2-81413f655210@nxp.com>
+	s=arc-20240116; t=1705995108; c=relaxed/simple;
+	bh=d1uBcc8CRiiZv15DfQXhWt3tWYJYVbQZV+GX+qgTwPY=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=PyWhsevhf0nxh4Yig37RfQxmfHLc7CTOSF0kadSkaCrnpZGbirVMwao2H8zbC5/4av96ydQ4izPk6mU9pB1FAfRswcYEt4MP+d2FkX8QI6JH5CKsQtaH6re/4CiujqN7kouzbYSclMKEjNet08uyBoksOp+8LLzNt+LcvqgkJdk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=physik.fu-berlin.de; spf=pass smtp.mailfrom=zedat.fu-berlin.de; arc=none smtp.client-ip=130.133.4.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=physik.fu-berlin.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zedat.fu-berlin.de
+Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
+          by outpost.zedat.fu-berlin.de (Exim 4.95)
+          with esmtps (TLS1.3)
+          tls TLS_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@zedat.fu-berlin.de>)
+          id 1rSBFv-000FjX-5t; Tue, 23 Jan 2024 08:31:35 +0100
+Received: from p5dc556fd.dip0.t-ipconnect.de ([93.197.86.253] helo=suse-laptop.fritz.box)
+          by inpost2.zedat.fu-berlin.de (Exim 4.95)
+          with esmtpsa (TLS1.3)
+          tls TLS_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@physik.fu-berlin.de>)
+          id 1rSBFu-003B84-Ty; Tue, 23 Jan 2024 08:31:35 +0100
+Message-ID: <0f7bcdda163b25cb28ee0409b55f3d69f0f896ea.camel@physik.fu-berlin.de>
+Subject: Re: [PATCH 73/82] sh: Refactor intentional wrap-around test
+From: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+To: Kees Cook <keescook@chromium.org>, linux-hardening@vger.kernel.org
+Cc: Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker
+ <dalias@libc.org>,  linux-sh@vger.kernel.org, "Gustavo A. R. Silva"
+ <gustavoars@kernel.org>, Bill Wendling <morbo@google.com>, Justin Stitt
+ <justinstitt@google.com>, linux-kernel@vger.kernel.org
+Date: Tue, 23 Jan 2024 08:31:34 +0100
+In-Reply-To: <20240123002814.1396804-73-keescook@chromium.org>
+References: <20240122235208.work.748-kees@kernel.org>
+	 <20240123002814.1396804-73-keescook@chromium.org>
+Autocrypt: addr=glaubitz@physik.fu-berlin.de; prefer-encrypt=mutual;
+ keydata=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
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.3 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240122-imx-mailbox-v1-2-81413f655210@nxp.com>
+X-Original-Sender: glaubitz@physik.fu-berlin.de
+X-ZEDAT-Hint: PO
 
-Hi Peng,
+Hello Kees,
 
-kernel test robot noticed the following build errors:
+On Mon, 2024-01-22 at 16:27 -0800, Kees Cook wrote:
+> In an effort to separate intentional arithmetic wrap-around from
+> unexpected wrap-around, we need to refactor places that depend on this
+> kind of math. One of the most common code patterns of this is:
+>=20
+> 	VAR + value < VAR
+>=20
+> Notably, this is considered "undefined behavior" for signed and pointer
+> types, which the kernel works around by using the -fno-strict-overflow
+> option in the build[1] (which used to just be -fwrapv). Regardless, we
+> want to get the kernel source to the position where we can meaningfully
+> instrument arithmetic wrap-around conditions and catch them when they
+> are unexpected, regardless of whether they are signed[2], unsigned[3],
+> or pointer[4] types.
+>=20
+> Refactor open-coded wrap-around addition test to use add_would_overflow()=
+.
+> This paves the way to enabling the wrap-around sanitizers in the future.
+>=20
+> Link: https://git.kernel.org/linus/68df3755e383e6fecf2354a67b08f92f185365=
+94 [1]
+> Link: https://github.com/KSPP/linux/issues/26 [2]
+> Link: https://github.com/KSPP/linux/issues/27 [3]
+> Link: https://github.com/KSPP/linux/issues/344 [4]
+> Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
+> Cc: Rich Felker <dalias@libc.org>
+> Cc: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+> Cc: linux-sh@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>  arch/sh/kernel/sys_sh.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/arch/sh/kernel/sys_sh.c b/arch/sh/kernel/sys_sh.c
+> index a5a7b33ed81a..e390caeb8c00 100644
+> --- a/arch/sh/kernel/sys_sh.c
+> +++ b/arch/sh/kernel/sys_sh.c
+> @@ -66,7 +66,7 @@ asmlinkage int sys_cacheflush(unsigned long addr, unsig=
+ned long len, int op)
+>  	 * Verify that the specified address region actually belongs
+>  	 * to this process.
+>  	 */
+> -	if (addr + len < addr)
+> +	if (add_would_overflow(addr, len))
+>  		return -EFAULT;
+> =20
+>  	mmap_read_lock(current->mm);
 
-[auto build test ERROR on ad5c60d66016e544c51ed98635a74073f761f45d]
+Sounds like a very sensible change to me.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Peng-Fan-OSS/dt-bindings-mailbox-fsl-mu-add-i-MX95-Generic-ELE-V2X-MU-compatible/20240122-100424
-base:   ad5c60d66016e544c51ed98635a74073f761f45d
-patch link:    https://lore.kernel.org/r/20240122-imx-mailbox-v1-2-81413f655210%40nxp.com
-patch subject: [PATCH 2/3] mailbox: imx: get RR/TR registers num from Parameter register
-config: i386-buildonly-randconfig-003-20240123 (https://download.01.org/0day-ci/archive/20240123/202401231557.HLHet6y7-lkp@intel.com/config)
-compiler: gcc-11 (Debian 11.3.0-12) 11.3.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240123/202401231557.HLHet6y7-lkp@intel.com/reproduce)
+Acked-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202401231557.HLHet6y7-lkp@intel.com/
+Adrian
 
-All errors (new ones prefixed by >>):
-
-   drivers/mailbox/imx-mailbox.c: In function 'imx_mu_get_tr_rr':
->> drivers/mailbox/imx-mailbox.c:749:32: error: implicit declaration of function 'FIELD_GET' [-Werror=implicit-function-declaration]
-     749 |                 priv->num_tr = FIELD_GET(IMX_MU_V2_TR_MASK, val);
-         |                                ^~~~~~~~~
-   cc1: some warnings being treated as errors
-
-
-vim +/FIELD_GET +749 drivers/mailbox/imx-mailbox.c
-
-   742	
-   743	static void imx_mu_get_tr_rr(struct imx_mu_priv *priv)
-   744	{
-   745		u32 val;
-   746	
-   747		if (priv->dcfg->type & IMX_MU_V2) {
-   748			val = imx_mu_read(priv, IMX_MU_V2_PAR_OFF);
- > 749			priv->num_tr = FIELD_GET(IMX_MU_V2_TR_MASK, val);
-   750			priv->num_rr = FIELD_GET(IMX_MU_V2_RR_MASK, val);
-   751		} else {
-   752			priv->num_tr = 4;
-   753			priv->num_rr = 4;
-   754		}
-   755	}
-   756	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+--=20
+ .''`.  John Paul Adrian Glaubitz
+: :' :  Debian Developer
+`. `'   Physicist
+  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
