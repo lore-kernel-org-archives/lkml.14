@@ -1,148 +1,100 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E53660269;
-	Tue, 23 Jan 2024 13:28:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D6125FB8F;
+	Tue, 23 Jan 2024 13:30:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706016519; cv=none; b=RrY/7ZmXD7f5Oa74rTuDpwtXjZeDdXImS6RlK+rA6oIcavy1+vUqHJ7TyZpkHmetR+QRtERrqTVWhPFaDoKaTLgZ47s4Jds6o9UAUr1hj0BvdHtCngZWR2lAuf8/Z1JmNDH1CpuTsYCBbAVMBGAxrL9r1c7311ErFzO/h7bhp1c=
+	t=1706016642; cv=none; b=hFY+HlTly1S4UM+cB1JxPoTch3mOH7CNlJ6gxF8pun6NQYGFZa96FHkveLy8b94RvL1ASY89eeXjyWicZenrybXG2vkdlB9RrkWjTa0YNugnl3v1+3l4MzE0HhkOejFQ+8MURWmvHzDfR7n1P/WkxpxQwOBvkMTct3l3UedrSu0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706016519; c=relaxed/simple;
-	bh=NJc04YeV9kOqCLAh9fn3kVyDWlVh70iAMeCv/H6zMYQ=;
+	s=arc-20240116; t=1706016642; c=relaxed/simple;
+	bh=KibFd8MBsZByh8wCB8U6lrdmc1z1Zxybm7RMOqyABPg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dWagO0MgOSSzdvq20IOnL1kIO18VtdhuhIwghW+9s2Xh8rLRhc1Qg/xMYZYVv3Mi3CUppU+Fzl+I4Sq7bVB04dQ8FJpj8WyY5RvsKmlHlnqZ+qLci6VF+lUe0GXv2M8JtMdjRRDj3GbonoSiP4AhRHLi3TWxS0zqwNB1nEze7Is=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=IdnEp3jB; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	 Content-Type:Content-Disposition:In-Reply-To; b=RDiMFI8V2aOezeNfAMTdpQhwlXffsNvNuYIHNLrJf8dxDC5RltPn54/sTHqjQpQd5br+aBtlfPELrqQrIegVWgxWz+2/Qz4MpV/a4/VvD/M1yYZSDVzYGS8D70aZqSyqBqha1FiorTM4nX1cM+PtiZIJAcRX1NqnP8HOeBUtIQA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nGw5zGFA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="IdnEp3jB"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=bDhJF4aVPbj4qdYQrzDaOMUJoNeiDqHjPb9iFMH77ME=; b=IdnEp3jBKIndIWP5XIcwMJoMZK
-	VXAFBeu/Bv043OgntYF4+y/xj9qap4lxUJj/TR17iVnq4OTkxCGofK+sQd0TfJJd2l7haKwWUVxfU
-	ZJf9cDAC9ySAxC+NkZQn2KbyP01YUyuVx2Wd9QLC1WmInPbkvTtHosurY6tHla6fMQSlKB+iOcLw0
-	3z1303J4SsJlIPCGZI1Q5n/8BCxks6XJq2hl5U000/f/yLcwbfqMyQRfn7uwgnT5Eo4Oy/uzxSGIX
-	3OtPDik/U9GB1G5G40b6fP6tQ/K61kRvCxs7BJHtd+K/BfdeBoFp6jBvSaRd+AiGP0aW5GW3rJGXs
-	1F0TkSkg==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:42766)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1rSGpM-0002S5-2a;
-	Tue, 23 Jan 2024 13:28:32 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1rSGpL-0001z0-LP; Tue, 23 Jan 2024 13:28:31 +0000
-Date: Tue, 23 Jan 2024 13:28:31 +0000
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, linux-pm@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-acpi@vger.kernel.org,
-	linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-riscv@lists.infradead.org, kvmarm@lists.linux.dev,
-	x86@kernel.org, acpica-devel@lists.linuxfoundation.org,
-	linux-csky@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-ia64@vger.kernel.org, linux-parisc@vger.kernel.org,
-	Salil Mehta <salil.mehta@huawei.com>,
-	Jean-Philippe Brucker <jean-philippe@linaro.org>,
-	jianyong.wu@arm.com, justin.he@arm.com,
-	James Morse <james.morse@arm.com>
-Subject: Re: [PATCH RFC v3 05/21] ACPI: Rename ACPI_HOTPLUG_CPU to include
- 'present'
-Message-ID: <Za++/11n5KA1VS3p@shell.armlinux.org.uk>
-References: <ZXmn46ptis59F0CO@shell.armlinux.org.uk>
- <E1rDOgD-00Dvk2-3h@rmk-PC.armlinux.org.uk>
- <CAJZ5v0g9nfLrEf9u4Ksw6BOWJQ9iv8Z-O8RsLU6jR5zk0ahxRw@mail.gmail.com>
- <20240122180013.000016d5@Huawei.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nGw5zGFA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F576C433B2;
+	Tue, 23 Jan 2024 13:30:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706016642;
+	bh=KibFd8MBsZByh8wCB8U6lrdmc1z1Zxybm7RMOqyABPg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=nGw5zGFANiFKDc3iZ0ueCZ7ClysP/2NF3ZdjrnZL5coRBEPyjzsYvjlnePgGD2sCF
+	 Y3Agq+tRsz24/qZtAjyo8hKEfDdaH5KOfUZnlbU9WZRyJfaXaUBt22HSx22oLXkLxq
+	 UavKTCxR8hXfsvmORiTAGLn090CrSAONTB4sInp1T/41ESPCjyhvxSi8gUWtVjXHPa
+	 mFBkVU+5F8ObhR+tyw9zhLS6genFhYBZjSr0A5fa5wtChksFLRJd1u7PSFbiFNeJSf
+	 uFVlrxzw3hwj9sMj2JbGJGEluGW8WxlKXsbRR/H+/2dsS7KxdXfyiAZCptkh8XwhkC
+	 YY7O5Gr0SHnVg==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1rSGre-000000005bR-4ANN;
+	Tue, 23 Jan 2024 14:30:55 +0100
+Date: Tue, 23 Jan 2024 14:30:54 +0100
+From: Johan Hovold <johan@kernel.org>
+To: Mark Brown <broonie@kernel.org>
+Cc: Johan Hovold <johan+linaro@kernel.org>,
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+	Banajit Goswami <bgoswami@quicinc.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+	alsa-devel@alsa-project.org, linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 0/4] ASoC: qcom: volume fixes and codec cleanups
+Message-ID: <Za-_jrByhGnKJo66@hovoldconsulting.com>
+References: <20240119112420.7446-1-johan+linaro@kernel.org>
+ <170596045016.161959.16318695944363636291.b4-ty@kernel.org>
+ <Za9xnEXYczA5rsw3@hovoldconsulting.com>
+ <93fee0e1-ce92-4aba-8e4b-0861f78c32c9@sirena.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="EIzISCNBNizK6IyV"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240122180013.000016d5@Huawei.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+In-Reply-To: <93fee0e1-ce92-4aba-8e4b-0861f78c32c9@sirena.org.uk>
 
-On Mon, Jan 22, 2024 at 06:00:13PM +0000, Jonathan Cameron wrote:
-> On Mon, 18 Dec 2023 21:35:16 +0100
-> "Rafael J. Wysocki" <rafael@kernel.org> wrote:
-> 
-> > On Wed, Dec 13, 2023 at 1:49 PM Russell King <rmk+kernel@armlinux.org.uk> wrote:
-> > >
-> > > From: James Morse <james.morse@arm.com>
-> > >
-> > > The code behind ACPI_HOTPLUG_CPU allows a not-present CPU to become
-> > > present.  
-> > 
-> > Right.
-> > 
-> > > This isn't the only use of HOTPLUG_CPU. On arm64 and riscv
-> > > CPUs can be taken offline as a power saving measure.  
-> > 
-> > But still there is the case in which a non-present CPU can become
-> > present, isn't it there?
-> 
-> Not yet defined by the architectures (and I'm assuming it probably never will be).
-> 
-> The original proposal we took to ARM was to do exactly that - they pushed
-> back hard on the basis there was no architecturally safe way to implement it.
-> Too much of the ARM arch has to exist from the start of time.
-> 
-> https://lore.kernel.org/linux-arm-kernel/cbaa6d68-6143-e010-5f3c-ec62f879ad95@arm.com/
-> is one of the relevant threads of the kernel side of that discussion.
-> 
-> Not to put specific words into the ARM architects mouths, but the
-> short description is that there is currently no demand for working
-> out how to make physical CPU hotplug possible, as such they will not
-> provide an architecturally compliant way to do it for virtual CPU hotplug and
-> another means is needed (which is why this series doesn't use the present bit
-> for that purpose and we have the Online capable bit in MADT/GICC)
-> 
-> It was a 'fun' dance of several years to get to that clarification.
-> As another fun fact, the same is defined for x86, but I don't think
-> anyone has used it yet (GICC for ARM has an online capable bit in the flags to
-> enable this, which was remarkably similar to the online capable bit in the
-> flags of the Local APIC entries as added fairly recently).
-> 
-> > 
-> > > On arm64 an offline CPU may be disabled by firmware, preventing it from
-> > > being brought back online, but it remains present throughout.
-> > >
-> > > Adding code to prevent user-space trying to online these disabled CPUs
-> > > needs some additional terminology.
-> > >
-> > > Rename the Kconfig symbol CONFIG_ACPI_HOTPLUG_PRESENT_CPU to reflect
-> > > that it makes possible CPUs present.  
-> > 
-> > Honestly, I don't think that this change is necessary or even useful.
-> 
-> Whilst it's an attempt to avoid future confusion, the rename is
-> not something I really care about so my advice to Russell is drop
-> it unless you are attached to it!
 
-While I agree that it isn't a necessity, I don't fully agree that it
-isn't useful.
+--EIzISCNBNizK6IyV
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-One of the issues will be that while Arm64 will support hotplug vCPU,
-it won't be setting ACPI_HOTPLUG_CPU because it doesn't support
-the present bit changing. So I can see why James decided to rename
-it - because with Arm64's hotplug vCPU, the idea that ACPI_HOTPLUG_CPU
-somehow enables hotplug CPU support is now no longer true.
+On Tue, Jan 23, 2024 at 01:05:21PM +0000, Mark Brown wrote:
+> On Tue, Jan 23, 2024 at 08:58:20AM +0100, Johan Hovold wrote:
+>=20
+> > Could you consider applying at least patches 1/4 and 3/4 for 6.8 as
+> > well?
+>=20
+> Please check git and resend anything you think has been missed.  When
+> you resent the whole series rather than just the problematic patch that
+> most likely confused b4.
 
-Keeping it as ACPI_HOTPLUG_CPU makes the code less obvious, because it
-leads one to assume that it ought to be enabled for Arm64's
-implementatinon, and that could well cause issues in the future if
-people make the assumption that "ACPI_HOTPLUG_CPU" means hotplug CPU
-is supported in ACPI. It doesn't anymore.
+Everything appears to be in your for-6.8 branch now, thanks!
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+The merge commit for the series does not include the volume limit patch,
+so it looks like that one got applied separately before you applied the
+rest of the series:
+
+	https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git/commit/?=
+h=3Dfor-6.8&id=3D7c70825d1603001e09907b383ed5d1bd283d61a0
+
+But all four patches are there now.
+
+Johan
+
+--EIzISCNBNizK6IyV
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQQHbPq+cpGvN/peuzMLxc3C7H1lCAUCZa+/iwAKCRALxc3C7H1l
+CMtpAP98w7aVuLW19jNSfZ3BUPnjVVkkmnVwtY+jMSRIelgdhQEA7KV427bhDrQn
+O88Zy32EeW/p+d9Z70o4eoCMiN5wPAw=
+=OcqY
+-----END PGP SIGNATURE-----
+
+--EIzISCNBNizK6IyV--
