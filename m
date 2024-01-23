@@ -1,166 +1,107 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C9EC75A0E6
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 09:41:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from out162-62-57-210.mail.qq.com (out162-62-57-210.mail.qq.com [162.62.57.210])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D4AC5A0E1
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 09:43:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.210
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706002895; cv=none; b=BkeMB4i+DIaLDELI+p4EsRZ5yu/9pd09o0MIQRiJ2OXcjgECvsvpnR2GRXJ9EGWygnaMUWmJZGP4hZHmwg+Mg5LjUNWO5kFzNaLQjsOS47MKMmlbKkhkTm8k7yjxyjeFTHuTJy26fh08JlufzKXkEmc9eZBQntQKiF+k6eDc7Vs=
+	t=1706002993; cv=none; b=eQdJv5oNfAucV9H6mVs7C4A9unlz2SzWcPoAfb7IRx6BQHsmhz1Px6aBLjxswjiLQBAOIgsWB64zv0niquuytP7Fw5Mw5EeE2jEEZMWqC5VHXHkY4GW+UEVlbFc1oblJigOZkgRkn1YELx5GNYi+9cmyDOfDcy51ynBtd0d3k1c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706002895; c=relaxed/simple;
-	bh=VPijt7WJ4Q6vpo4Ha3DbzXk8a9d5iHBUi63j2srWCJM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DEU/HEKgFILAEmzMFINNAhjeN+8B4cYXzdosxjoTWvSWvAEeLcA7JDzbKz3XWiH+/fzaX3ZqPuqKOAeefoPaQIal5c3YCAFv2ziVi+nLh4/Iik/fjKe8mzXlC0z+4vUDAAnLgGwhZQ/hfZPR14vKqTX234Oi8kEbhj+c/Md0Rts=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 881A91FB;
-	Tue, 23 Jan 2024 01:42:17 -0800 (PST)
-Received: from [10.57.77.165] (unknown [10.57.77.165])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 05D3D3F5A1;
-	Tue, 23 Jan 2024 01:41:30 -0800 (PST)
-Message-ID: <bad7ec4a-1507-4ec4-996a-ea29d07d47a0@arm.com>
-Date: Tue, 23 Jan 2024 09:41:29 +0000
+	s=arc-20240116; t=1706002993; c=relaxed/simple;
+	bh=YPP0YTe/9IJFtbCkKNrxhkrt4sm0OkXTj+Zqrs0nRp0=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=AJDvNV+N+kC0g2W3/JxhyAEA49UaLrf2BsE8P6qcWYiGUYRqbPV685cbgAT12nJt1blcQIIK1SxY6uUcLkkj3DR0W7WXn9QUWZxfAgu9NMdmS8H3Js0vJzrf8XaKIqth5ZBerfLrTgrbW0JRRJ1l2/fEJqjEbgxHalj+AA04bjA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=yM50sxVJ; arc=none smtp.client-ip=162.62.57.210
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="yM50sxVJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1706002980; bh=+CRKnVcR3h+JM71OjkQUJDD8vGVitvaueNse3CJrgh4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=yM50sxVJwP9FGMLfz+1b11V658hXyxPwn8svVdELsgGoOj2skeRC7Rry3gVxp42kg
+	 krL4xdpZybDehMARFRNsK1CtSoO5UOnFRwusbifRZvXxYKBFdxroK71FnAVNNx/yLa
+	 5hIhSeI0pLm8VK9CU3M56mh9a25T1hfSz46ULbWU=
+Received: from pek-lxu-l1.wrs.com ([111.198.225.215])
+	by newxmesmtplogicsvrszc5-2.qq.com (NewEsmtp) with SMTP
+	id 9E301E78; Tue, 23 Jan 2024 17:39:35 +0800
+X-QQ-mid: xmsmtpt1706002775tmlm02b91
+Message-ID: <tencent_EA9AECE6CEAC79FA6CAC2DDD6D0095E8EA0A@qq.com>
+X-QQ-XMAILINFO: MyirvGjpKb1jsLensBhyuSzjwEXhI/W0gU14Gsp1+R0Qhxif/85j9gMCyAJQv+
+	 RugVqwsNKn42/hjoCKSnvh6uFSjoahOjIK+1Opzzybw6qfGqMGMTayw9VT6c0mXWOnirDon0mTx8
+	 C7hjWsXEBCIMVMp2IN/oE7n3j0MSodfTpG2/M3Quj7zukGpEJpLTyzNmOYACPOkhF80DNvhokk+M
+	 ZaLitHB2F8nqWLAkl0I4PhtBAwrOYY+zpEzwTN/qwqusMmcrmVAV5/9kaj+8LYc8AweWtMVSvpEX
+	 b0Eql2+bN92mGI0yzHRTGDNeo+HxIF60lQQ+CjFgSWkrIfyiresX5oftOUNkUiVE7wiYBvQGuqJv
+	 mKWLghkA1hXTTqmiVUeMTjBjL7b6izGjMWqhK2cFMVNHK1m6zzdbPr4ww3JzetsmrO9eCSYkjuEF
+	 Sml6+PeTwfj4RvoIDaZHX27tVhhlMQbFJIg4KjDGoBTbzMQSI2KI1A5SoicBbMoHCRJYMIvbAzjk
+	 NqHUWSj/kUQjR7/rqzARLVv9Nk771RBjX/5td7dS1M2Oriy9qximGa7IG2sMcvvlRnhqAAQ7kpd/
+	 NWdDAH8JrbBwuDOzX84hLDtKJtV2grtEMuEpW6sLl8pDnk2QP/l2kHPPTeNYDzIZsckeqNOYRSfV
+	 NYS4VkbyF198Nm3bOeFhcRvu/9yQeqd2JIPlC8iz4eyTLQz6y8TnShthuAvaKq0WeMgTUIwzojdQ
+	 bpuMMj7NmIcEyWXBfAGre5EhALwDDfh0ou/9KOWirP6+nRbQVgQ2ZYcep0Z8XkZ22kF++pSRICnL
+	 mAPqmB1s5jTrB47oJAp0kU158EpDGhTjyOu20yo3zX5hk+AwjTgn6tiuhsmF1Ogte6xC0f6mHNFm
+	 lxgxgk1qWoDmhU6VtH2hXMC4l2/7nIhsnUymPz42P1+SL5s8eTrx0bpge528jdEx6UHpGaxfKkAB
+	 FQh03KxhHDhgLCkyfYeA==
+X-QQ-XMRINFO: Mp0Kj//9VHAxr69bL5MkOOs=
+From: Edward Adam Davis <eadavis@qq.com>
+To: syzbot+1d37bef05da87b99c5a6@syzkaller.appspotmail.com
+Cc: linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [can?] memory leak in j1939_netdev_start
+Date: Tue, 23 Jan 2024 17:39:35 +0800
+X-OQ-MSGID: <20240123093934.3441462-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <00000000000060446d060af10f08@google.com>
+References: <00000000000060446d060af10f08@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RESEND PATCH] mm: align larger anonymous mappings on THP
- boundaries
-Content-Language: en-GB
-To: Yang Shi <shy828301@gmail.com>
-Cc: Matthew Wilcox <willy@infradead.org>,
- Yang Shi <yang@os.amperecomputing.com>, riel@surriel.com, cl@linux.com,
- akpm@linux-foundation.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org
-References: <20231214223423.1133074-1-yang@os.amperecomputing.com>
- <1e8f5ac7-54ce-433a-ae53-81522b2320e1@arm.com>
- <Zav3UK7ESNxCMjyP@casper.infradead.org>
- <b75cb59a-734f-43d5-b565-fc9bb8c5ed05@arm.com>
- <CAHbLzkpT6padaDo8GimCcQReSGybQn_ntzj+wsZbTXe3urtK-g@mail.gmail.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <CAHbLzkpT6padaDo8GimCcQReSGybQn_ntzj+wsZbTXe3urtK-g@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On 22/01/2024 19:43, Yang Shi wrote:
-> On Mon, Jan 22, 2024 at 3:37 AM Ryan Roberts <ryan.roberts@arm.com> wrote:
->>
->> On 20/01/2024 16:39, Matthew Wilcox wrote:
->>> On Sat, Jan 20, 2024 at 12:04:27PM +0000, Ryan Roberts wrote:
->>>> However, after this patch, each allocation is in its own VMA, and there is a 2M
->>>> gap between each VMA. This causes 2 problems: 1) mmap becomes MUCH slower
->>>> because there are so many VMAs to check to find a new 1G gap. 2) It fails once
->>>> it hits the VMA limit (/proc/sys/vm/max_map_count). Hitting this limit then
->>>> causes a subsequent calloc() to fail, which causes the test to fail.
->>>>
->>>> Looking at the code, I think the problem is that arm64 selects
->>>> ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT. But __thp_get_unmapped_area() allocates
->>>> len+2M then always aligns to the bottom of the discovered gap. That causes the
->>>> 2M hole. As far as I can see, x86 allocates bottom up, so you don't get a hole.
->>>
->>> As a quick hack, perhaps
->>> #ifdef ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT
->>> take-the-top-half
->>> #else
->>> current-take-bottom-half-code
->>> #endif
->>>
->>> ?
-> 
-> Thanks for the suggestion. It makes sense to me. Doing the alignment
-> needs to take into account this.
-> 
->>
->> There is a general problem though that there is a trade-off between abutting
->> VMAs, and aligning them to PMD boundaries. This patch has decided that in
->> general the latter is preferable. The case I'm hitting is special though, in
->> that both requirements could be achieved but currently are not.
->>
->> The below fixes it, but I feel like there should be some bitwise magic that
->> would give the correct answer without the conditional - but my head is gone and
->> I can't see it. Any thoughts?
-> 
-> Thanks Ryan for the patch. TBH I didn't see a bitwise magic without
-> the conditional either.
-> 
->>
->> Beyond this, though, there is also a latent bug where the offset provided to
->> mmap() is carried all the way through to the get_unmapped_area()
->> impelementation, even for MAP_ANONYMOUS - I'm pretty sure we should be
->> force-zeroing it for MAP_ANONYMOUS? Certainly before this change, for arches
->> that use the default get_unmapped_area(), any non-zero offset would not have
->> been used. But this change starts using it, which is incorrect. That said, there
->> are some arches that override the default get_unmapped_area() and do use the
->> offset. So I'm not sure if this is a bug or a feature that user space can pass
->> an arbitrary value to the implementation for anon memory??
-> 
-> Thanks for noticing this. If I read the code correctly, the pgoff used
-> by some arches to workaround VIPT caches, and it looks like it is for
-> shared mapping only (just checked arm and mips). And I believe
-> everybody assumes 0 should be used when doing anonymous mapping. The
-> offset should have nothing to do with seeking proper unmapped virtual
-> area. But the pgoff does make sense for file THP due to the alignment
-> requirements. I think it should be zero'ed for anonymous mappings,
-> like:
-> 
-> diff --git a/mm/mmap.c b/mm/mmap.c
-> index 2ff79b1d1564..a9ed353ce627 100644
-> --- a/mm/mmap.c
-> +++ b/mm/mmap.c
-> @@ -1830,6 +1830,7 @@ get_unmapped_area(struct file *file, unsigned
-> long addr, unsigned long len,
->                 pgoff = 0;
->                 get_area = shmem_get_unmapped_area;
->         } else if (IS_ENABLED(CONFIG_TRANSPARENT_HUGEPAGE)) {
-> +               pgoff = 0;
->                 /* Ensures that larger anonymous mappings are THP aligned. */
->                 get_area = thp_get_unmapped_area;
->         }
+please test memory leak in j1939_netdev_start
 
-I think it would be cleaner to just zero pgoff if file==NULL, then it covers the
-shared case, the THP case, and the non-THP case properly. I'll prepare a
-separate patch for this.
+#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
 
-
-> 
->>
->> Finally, the second test failure I reported (ksm_tests) is actually caused by a
->> bug in the test code, but provoked by this change. So I'll send out a fix for
->> the test code separately.
->>
->>
->> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
->> index 4f542444a91f..68ac54117c77 100644
->> --- a/mm/huge_memory.c
->> +++ b/mm/huge_memory.c
->> @@ -632,7 +632,7 @@ static unsigned long __thp_get_unmapped_area(struct file *filp,
->>  {
->>         loff_t off_end = off + len;
->>         loff_t off_align = round_up(off, size);
->> -       unsigned long len_pad, ret;
->> +       unsigned long len_pad, ret, off_sub;
->>
->>         if (off_end <= off_align || (off_end - off_align) < size)
->>                 return 0;
->> @@ -658,7 +658,13 @@ static unsigned long __thp_get_unmapped_area(struct file *filp,
->>         if (ret == addr)
->>                 return addr;
->>
->> -       ret += (off - ret) & (size - 1);
->> +       off_sub = (off - ret) & (size - 1);
->> +
->> +       if (current->mm->get_unmapped_area == arch_get_unmapped_area_topdown &&
->> +           !off_sub)
->> +               return ret + size;
->> +
->> +       ret += off_sub;
->>         return ret;
->>  }
-> 
-> I didn't spot any problem, would you please come up with a formal patch?
-
-Yeah, I'll aim to post today.
-
+diff --git a/net/can/j1939/socket.c b/net/can/j1939/socket.c
+index 14c431663233..1d1f1348eeca 100644
+--- a/net/can/j1939/socket.c
++++ b/net/can/j1939/socket.c
+@@ -141,6 +141,7 @@ static void j1939_sk_queue_drop_all(struct j1939_priv *priv,
+ 				 sk_session_queue_entry) {
+ 		list_del_init(&session->sk_session_queue_entry);
+ 		session->err = err;
++		printk("s: %p, %s\n", session, __func__);
+ 		j1939_session_put(session);
+ 	}
+ 	spin_unlock_bh(&jsk->sk_session_queue_lock);
+diff --git a/net/can/j1939/transport.c b/net/can/j1939/transport.c
+index fe3df23a2595..0b09bf60b08b 100644
+--- a/net/can/j1939/transport.c
++++ b/net/can/j1939/transport.c
+@@ -278,6 +278,7 @@ static void j1939_session_destroy(struct j1939_session *session)
+ 
+ 	while ((skb = skb_dequeue(&session->skb_queue)) != NULL) {
+ 		/* drop ref taken in j1939_session_skb_queue() */
++		printk("s: %p, skb: %p, %s\n", session, skb, __func__);
+ 		skb_unref(skb);
+ 		kfree_skb(skb);
+ 	}
+@@ -1552,6 +1553,7 @@ j1939_session *j1939_session_fresh_new(struct j1939_priv *priv,
+ 	/* alloc data area */
+ 	skb_put(skb, size);
+ 	/* skb is recounted in j1939_session_new() */
++	printk("s: %p, skb: %p, %s\n", session, skb, __func__);
+ 	return session;
+ }
+ 
+@@ -1758,6 +1760,7 @@ static void j1939_xtp_rx_rts(struct j1939_priv *priv, struct sk_buff *skb,
+ 		j1939_tp_set_rxtimeout(session, 1250);
+ 	}
+ 
++	printk("s: %p, %s\n", session, __func__);
+ 	j1939_session_put(session);
+ }
+ 
 
