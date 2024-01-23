@@ -1,114 +1,120 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A1B756755
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 14:39:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.120
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A475F4878F;
+	Tue, 23 Jan 2024 14:40:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706020752; cv=none; b=qP6PJYMgoUnEIeBJso2HlAJMv4FLdnFROdwZR07aX+tWeiIUgeWLZ3o5V7F+MalWeLIaJbOvZy5H/zoQv5YzyBKFeHcdnIHi/3qVoyg9K94Xa4CPSDwJJ/r7XvaZVXBNskYbOT2C5e/Kt4e+Zgd6b3bPzH4vQth3U6/pWv+K/sA=
+	t=1706020817; cv=none; b=EW6On3aNdJxlT6xvVOmyFDbk213gAR9IwItzU9I8E13moAnRtVfl8QblmSChYofL7BZms8jJKUrnFVDNsF09+UXvoEx1W02oqLxVpeLARiCsB4C9G4Blw4cuLafnNbkl490m8ow7UQ2kHov3WixGSu4aP0hP/9ifOghcubqKd2A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706020752; c=relaxed/simple;
-	bh=90efiydoJUFwFSGiHQI4dQGybhe96j9FBwZwRp774Eg=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=RAan/JSMtyxHL6Z1aLte0bOmD2Mxl6XheftphihcAkhdVAlwL9EuV9i2pirDEsDTfTzkI/w1MWr2Xe64saMzG8YeS/bYK2V9oyx2grunX0TxmRt/S32N5R7VUGLnyjbzwEU9Z4ariVmlo9iy05kmUNJwP3ESejIxUBfW8+rF04k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iXqW0xhR; arc=none smtp.client-ip=192.55.52.120
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1706020817; c=relaxed/simple;
+	bh=7OrEELPqwl1P/+/gYysQOWDUrrVY1g6F2G52cR4MOb8=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=hkbvhM9WUihs3X84RnwxTq1AUvqOoZ2XSsG96Drv7JWP/t7bSXuP/oaoyqZEgNdS+mzbZmjp8eRHe+ciqKSB7gvBbRjQfLz8X8sN2ACz8nL1fuXuboPtA2fg5U8shKk5lQiT8m7+mG5Y1inXbeNbCmUoXM9Qd9jXejtpiG3lKLc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vQ+tKRUF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iXqW0xhR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706020751; x=1737556751;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=90efiydoJUFwFSGiHQI4dQGybhe96j9FBwZwRp774Eg=;
-  b=iXqW0xhRDMkzz1cUUGsfxHt5uBqOp3AOhaZaA+YiuudJWlcHrmo0X4fK
-   cizAZzR21lUHqiB2Q3OqSO7kUSMz05RDiX92qEBDqR4wkxyFHdFJn/A5L
-   hyFRZwIAKvPeuCA1dNqtHQIil65OUYyU1Bu1xxmC8dhw2BZhK4O3yCKOU
-   QHzA7f7dGCi/KlwcdlSQqAEkTdDdn2yBhLckdDAoWqoGQLoLC4dk2UH8h
-   0OeBQfbQxj+sZkjet2nqimO+FYGxEvIdaF+Ex0GlHYSqydQEidWfzXx9k
-   cWWsVgvrWuDxYeg0P0GlSm0IGBbIKaqnLG2AvGXlmoSkqzpYrw5uZNanK
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="400401583"
-X-IronPort-AV: E=Sophos;i="6.05,214,1701158400"; 
-   d="scan'208";a="400401583"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2024 06:39:09 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="1117272579"
-X-IronPort-AV: E=Sophos;i="6.05,214,1701158400"; 
-   d="scan'208";a="1117272579"
-Received: from pzsolt-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.40.183])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2024 06:39:04 -0800
-From: Jani Nikula <jani.nikula@linux.intel.com>
-To: Thomas Zimmermann <tzimmermann@suse.de>, javierm@redhat.com,
- chenhuacai@kernel.org
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Thomas
- Zimmermann <tzimmermann@suse.de>, Jaak Ristioja <jaak@ristioja.ee>, Huacai
- Chen <chenhuacai@loongson.cn>, Thorsten Leemhuis
- <regressions@leemhuis.info>
-Subject: Re: [PATCH] Revert "drivers/firmware: Move sysfb_init() from
- device_initcall to subsys_initcall_sync"
-In-Reply-To: <20240123120937.27736-1-tzimmermann@suse.de>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20240123120937.27736-1-tzimmermann@suse.de>
-Date: Tue, 23 Jan 2024 16:39:02 +0200
-Message-ID: <874jf4nmgp.fsf@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vQ+tKRUF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07282C43394;
+	Tue, 23 Jan 2024 14:40:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706020817;
+	bh=7OrEELPqwl1P/+/gYysQOWDUrrVY1g6F2G52cR4MOb8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=vQ+tKRUF54hRd0uRx9LGKJXikF5x23IHF5X9zUujFmtIFHVv+bbowa/dLUDMauDJD
+	 o27P+MW0BuxpctPbvE5wZV9U+CDJXcUbnQUICamFxR/g7CIhK2d8ZksGHxUDljrQX4
+	 kHK/7xaEe6b002yPwRc+REQEvMgKtIIwHEcZOVTP0lpl2j03xiD4aM3F0cojPyYKFv
+	 /OQVy1S1AZLzkYCP3mcvioxzHy22Mswgl93hGXuqc0qgZeFNtVaZrLnXMy06aIj+Yj
+	 C531TVsxcpk46Z0SgRCfx65arUDUTN66WDovMkPyiF4A+whLIVBKUpqxwAhGx0OQnP
+	 AbSwEcWY+QKqw==
+Date: Tue, 23 Jan 2024 23:40:13 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Ye Bin <yebin10@huawei.com>
+Cc: <rostedt@goodmis.org>, <mathieu.desnoyers@efficios.com>,
+ <linux-trace-kernel@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 3/7] tracing/probes: support '%pd' type for print
+ struct dentry's name
+Message-Id: <20240123234013.52b1834908da7be0272e7a73@kernel.org>
+In-Reply-To: <20240123092139.3698375-4-yebin10@huawei.com>
+References: <20240123092139.3698375-1-yebin10@huawei.com>
+	<20240123092139.3698375-4-yebin10@huawei.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, 23 Jan 2024, Thomas Zimmermann <tzimmermann@suse.de> wrote:
-> This reverts commit 60aebc9559492cea6a9625f514a8041717e3a2e4.
->
-> Commit 60aebc9559492cea ("drivers/firmware: Move sysfb_init() from
-> device_initcall to subsys_initcall_sync") messes up initialization order
-> of the graphics drivers and leads to blank displays on some systems. So
-> revert the commit.
->
-> To make the display drivers fully independent from initialization
-> order requires to track framebuffer memory by device and independently
-> from the loaded drivers. The kernel currently lacks the infrastructure
-> to do so.
->
-> Reported-by: Jaak Ristioja <jaak@ristioja.ee>
-> Closes: https://lore.kernel.org/dri-devel/ZUnNi3q3yB3zZfTl@P70.localdomain/T/#t
-> Reported-by: Huacai Chen <chenhuacai@loongson.cn>
-> Closes: https://lore.kernel.org/dri-devel/20231108024613.2898921-1-chenhuacai@loongson.cn/
-> Closes: https://gitlab.freedesktop.org/drm/intel/-/issues/10133
+On Tue, 23 Jan 2024 17:21:35 +0800
+Ye Bin <yebin10@huawei.com> wrote:
 
-FWIW,
-
-Acked-by: Jani Nikula <jani.nikula@intel.com>
-
-but would be great to get a Tested-by from Jaak or from the gitlab issue
-reporter.
-
-Thanks.
-
-
-> Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
-> Cc: Javier Martinez Canillas <javierm@redhat.com>
-> Cc: Thorsten Leemhuis <regressions@leemhuis.info>
-> Cc: Jani Nikula <jani.nikula@linux.intel.com>
+> Similar to '%pd' for printk, use '%pd' for print struct dentry's name.
+> 
+> Signed-off-by: Ye Bin <yebin10@huawei.com>
 > ---
->  drivers/firmware/sysfb.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/firmware/sysfb.c b/drivers/firmware/sysfb.c
-> index 82fcfd29bc4d2..3c197db42c9d9 100644
-> --- a/drivers/firmware/sysfb.c
-> +++ b/drivers/firmware/sysfb.c
-> @@ -128,4 +128,4 @@ static __init int sysfb_init(void)
->  }
+>  kernel/trace/trace_kprobe.c | 6 ++++++
+>  kernel/trace/trace_probe.h  | 1 +
+>  2 files changed, 7 insertions(+)
+> 
+> diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
+> index c4c6e0e0068b..00b74530fbad 100644
+> --- a/kernel/trace/trace_kprobe.c
+> +++ b/kernel/trace/trace_kprobe.c
+> @@ -779,6 +779,7 @@ static int __trace_kprobe_create(int argc, const char *argv[])
+>  	char buf[MAX_EVENT_NAME_LEN];
+>  	char gbuf[MAX_EVENT_NAME_LEN];
+>  	char abuf[MAX_BTF_ARGS_LEN];
+> +	char dbuf[MAX_DENTRY_ARGS_LEN];
+
+Hmm, no, I don't like to expand stack anymore. Please allocate it
+from heap.
+
+>  	struct traceprobe_parse_context ctx = { .flags = TPARG_FL_KERNEL };
 >  
->  /* must execute after PCI subsystem for EFI quirks */
-> -subsys_initcall_sync(sysfb_init);
-> +device_initcall(sysfb_init);
+>  	switch (argv[0][0]) {
+> @@ -930,6 +931,11 @@ static int __trace_kprobe_create(int argc, const char *argv[])
+>  		argv = new_argv;
+>  	}
+>  
+> +	ret = traceprobe_expand_dentry_args(argc, argv, dbuf,
+> +					    MAX_DENTRY_ARGS_LEN);
+> +	if (ret)
+> +		goto out;
+
+And calling this here will not cover the trace_fprobe. 
+
+Could you call this from traceprobe_expand_meta_args() instead of
+calling it directly from trace_kprobe? Then it can be used from
+fprobe_event too.
+
+Thank you,
+
+> +
+>  	/* setup a probe */
+>  	tk = alloc_trace_kprobe(group, event, addr, symbol, offset, maxactive,
+>  				argc, is_return);
+> diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
+> index 553371a4e0b1..d9c053824975 100644
+> --- a/kernel/trace/trace_probe.h
+> +++ b/kernel/trace/trace_probe.h
+> @@ -34,6 +34,7 @@
+>  #define MAX_ARRAY_LEN		64
+>  #define MAX_ARG_NAME_LEN	32
+>  #define MAX_BTF_ARGS_LEN	128
+> +#define MAX_DENTRY_ARGS_LEN	256
+
+Why do you think 
+
+>  #define MAX_STRING_SIZE		PATH_MAX
+>  #define MAX_ARG_BUF_LEN		(MAX_TRACE_ARGS * MAX_ARG_NAME_LEN)
+>  
+> -- 
+> 2.31.1
+> 
+> 
+
 
 -- 
-Jani Nikula, Intel
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
