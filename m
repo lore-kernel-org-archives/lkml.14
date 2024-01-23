@@ -1,124 +1,86 @@
-Received: from mail-oa1-f42.google.com (mail-oa1-f42.google.com [209.85.160.42])
+Received: from mail-oo1-f52.google.com (mail-oo1-f52.google.com [209.85.161.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1F794E1D1;
-	Tue, 23 Jan 2024 06:06:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6353A4F20B
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 06:06:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705989986; cv=none; b=os/c2JKZRuwPlhWTvN0dNUJ9PUh4RupSvHpSFrNsJtd6Oz8gi+h8I91QNoR7nnrvubZQexSm+xjbABzAMMIa9j7Nb00X1t+9AD4N93xc1uILRl+i8OJZPdgHwQTHnWb5qdwhxCmhbAPSkcjAVZeOi26t6918iULRCqCEJypcsmQ=
+	t=1705990008; cv=none; b=lynUoPwZuEMbUerwXgFY5+/ReeijcelaQAq5HTd+55VbmukEOXyckbqUPdzhCy+i7sdsubW1IQa28y6BhjaH/OzKifykkuGCGTAw+jiFlMVhc2Nu0XHqRlLjCK6D/F+l5RqbqUARkKCSp/CRsTzDuCY46ZqwFYN/CqLJ99uqRGA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705989986; c=relaxed/simple;
-	bh=T6sQjSVZoDPqa9QnD1KIBSNd8H86TmcVZKXVVSAGVs4=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=ogAX21q/xplCxBAeAF9CC870rTz9e0XSjAVybt1reM87MFD3UT4vA6JN3ET/02nw1Pnq5RMY941wmwRXBBdCUAu0zNopQrBnl74Kj2eN8ArIpvcwnVlpUN0/8i+1m21nvffWObGULAJfS7zJ/Qnw89wXSPl4T7/9liHMvOJstjw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jbuM46BZ; arc=none smtp.client-ip=209.85.160.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1705990008; c=relaxed/simple;
+	bh=T4q6Sos/5XPEHqzYjmwsu0Dp48aHhx68Cm+I4CUBH0U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UIG5TRmze/R0sazJtFGVtcy3+FDI1iRJzkAKyyB3rjnpeAZ42/njTQKK5+bh7J76V3dQXHAHtTMmAWTRvyRRiL7teASewNIp1NXU8TpUAOPnE34JoSMNCebXSAL0zSN+gHXyvDAL/On37YwxHXK5FIEIs/VQ8CeXTHeyHZ2jhWk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=BXJDkejz; arc=none smtp.client-ip=209.85.161.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jbuM46BZ"
-Received: by mail-oa1-f42.google.com with SMTP id 586e51a60fabf-206689895bfso2017844fac.1;
-        Mon, 22 Jan 2024 22:06:23 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BXJDkejz"
+Received: by mail-oo1-f52.google.com with SMTP id 006d021491bc7-5986d902ae6so2278226eaf.3
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 22:06:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705989983; x=1706594783; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :references:cc:to:from:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=FyasXNOru482cNRTIapaiSgeT6NkIVhvCSkzZTrAFxM=;
-        b=jbuM46BZ7qiRDI1Cd5I0Mou4/F0xtY1R2cYwSWuFb3jZP2H6tS4Q5t3/CJHL5qyoSv
-         Uf59M9l+nGGi1Xty8FzIqR3tHl/szUIqEVwprL+kkANufKLuGv7WTdEeqA03LhSrnYi1
-         70M1Og+4/S+ltijpkUAEwjSG1WYaQxoRk8D+411RuDF2HbkpwpmU7KMgdwnf/ylBxocV
-         chCE8GuPKuv2eSVhX0juI2/EXY/jBCxLMxL4fqOwgp9ZequZ7amwK3kBDZBrNVTH9clJ
-         GfVfRlPEek5QB07kbp8Olg8cQKOgGNt2CmBKPE5W76/xSmWfpCvO+l5XyziSM9wQvCvS
-         tPqg==
+        d=linaro.org; s=google; t=1705990004; x=1706594804; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=xDHsih41QhHdQq0FnZ41+qAtDYu4tobNnucMLu+mtEc=;
+        b=BXJDkejzrKiDUTkoEAo6LLXQmJU2em23LK3lCcUqHN84QUwBjwo/zleQCx+xKXqiCR
+         THAi/Er6WNCDndmkBF8CMMo5XrlvkaNwtu4sgBcJVxEAGSac1txQ+46mNtqsAhUDSWiz
+         D07VM2Qw+SfR7RQ5avSuKjug+HcnWQTJddvkVm3IquZj0GCHRwmXInRYULv1tZTW5/dH
+         5btq6Y6EvbwsBqKPBXAWulyLuvH8dnyU+yCPTXllIXqfHBnmOsnY8+GmlIPoeqQ9ZfuC
+         XWWQOlm4aBOwRyRX8UeX//Cp2Mqm5yZFtd09oEHuRwaSaVCXks2e+LgK/PuaCKF3CQcv
+         z5Dw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705989983; x=1706594783;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :references:cc:to:from:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=FyasXNOru482cNRTIapaiSgeT6NkIVhvCSkzZTrAFxM=;
-        b=Nsu/An/jkA7Tb4pB6YpflxFyHXFZ++tjtL5MXh782idqhlh27h5KL4CaFe2baO30VN
-         9ahCgx4IwchaxOk7VskhPZhyp2bGFwfayXLIeBqfB6iy++Oo3Q8YPsKfhhdHV96xtr2l
-         5V07vNKHIIswdjnjVoNBjxc8CKL+7WBIO7FlIK0gG6CmHpyypq6iP5/n1av+fjbksJFA
-         dLKixU79NfsBULkDkOKSXOhMfHeuwwjDLjupDiOVzjvCMmg0heEzls9/HmpGRPVMob0U
-         Rk64jfDCbYpBmbiATkAZ1ceNEL0UeXmBubhBtr1Oo9jIW3+QSg3qPJ1VYxFVvX8lGQDO
-         A7iw==
-X-Gm-Message-State: AOJu0YxRhwDz69G6LLRXjkJke5Sk65ARLk67+09sKKIYd6lfngs5dovU
-	GrIWwXQ9sS/KpGml6CVDLFPVztaPqzScO4bceq14hlJwcgiOvE+5CKtQo3f7AsQ=
-X-Google-Smtp-Source: AGHT+IE4D1JuAkCSQ7Fb326LiGuRPqMBr/ykQ7H891Gii8X/IMt/rqHAe3qD7m1pSz+B2DzUP5bcVw==
-X-Received: by 2002:a05:6870:4154:b0:210:e532:af4a with SMTP id r20-20020a056870415400b00210e532af4amr943465oad.119.1705989983048;
-        Mon, 22 Jan 2024 22:06:23 -0800 (PST)
-Received: from ddawson.local ([2602:ae:1f29:8500:aaa1:59ff:fe2b:a859])
-        by smtp.gmail.com with ESMTPSA id j8-20020a63e748000000b005c6e8fa9f24sm9115992pgk.49.2024.01.22.22.06.22
+        d=1e100.net; s=20230601; t=1705990004; x=1706594804;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xDHsih41QhHdQq0FnZ41+qAtDYu4tobNnucMLu+mtEc=;
+        b=kOfyr/VpWpYq1DIcC5fRX+JLAqlbt0knVn/EGWjDjtDTCOvfqzPNp+KH/WtSLaKeck
+         +mHW3M5xIHWCulW67AxvFXm3EdkDbGJO0YF4ij/3XP02QkmC2Dtm++2Jqq2oTxW1N7xT
+         MRUSi0FRrOf6RiGnswkhGHhJ6tRlYQFzE0HblzzIwZGkbid0ZZ2JqLBk+qSxzyFsGYHE
+         XDjN+Q3Gel7SVV+BW69YeAsLrTMHoBYW0PJve0Zrk/JZJm4mX/xi1/Vl5Qd/6JX0mNle
+         wTlC6RepF0azJ+K+pr8VCIkdVnh6tdsh5t0jCPsIYrsoyAxNiwuhL+3Kqb0wbHRLVy1r
+         sGPw==
+X-Gm-Message-State: AOJu0YxWz9l2fRvSs47npDHTBszE1IVtZbFepwUBbf7g0g8iT0s5Q+k+
+	Dj31yGyrrnIt62s+23Mkd3pzUy9VtsA4D/rRJphpNKWyuvwgVIcqj5CR9AwMYng=
+X-Google-Smtp-Source: AGHT+IHVcvmqk7JJCvw2qP+ZR34MAkZSZ1sPIGmyhTAV6YQKNGqB100KNSxmn5GNnYDiSXxZUAa4Ig==
+X-Received: by 2002:a05:6358:719:b0:176:6184:d5b0 with SMTP id e25-20020a056358071900b001766184d5b0mr1672221rwj.9.1705990004316;
+        Mon, 22 Jan 2024 22:06:44 -0800 (PST)
+Received: from localhost ([122.172.81.83])
+        by smtp.gmail.com with ESMTPSA id o125-20020a62cd83000000b006dd7f773c67sm207626pfg.167.2024.01.22.22.06.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jan 2024 22:06:22 -0800 (PST)
-Received: from [127.0.0.1] (unknown [127.0.0.1])
-	by ddawson.local (Postfix) with ESMTP id 5A7E1301E2DA;
-	Mon, 22 Jan 2024 21:56:33 -0800 (PST)
-Message-ID: <358aaf68-0618-41e6-9adf-04e211eb690e@gmail.com>
-Date: Mon, 22 Jan 2024 21:56:28 -0800
+        Mon, 22 Jan 2024 22:06:43 -0800 (PST)
+Date: Tue, 23 Jan 2024 11:36:41 +0530
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: tianyu2 <tianyu2@kernelsoft.com>
+Cc: rafael@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
+	kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+	linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] cpufreq: imx6: use regmap to read ocotp register
+Message-ID: <20240123060641.gtqghndtja2m6rzu@vireshk-i7>
+References: <20240109114521.518195-1-tianyu2@kernelsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [inline_data] ext4: Stale flags before sync when convert to
- non-inline
-From: Daniel Dawson <danielcdawson@gmail.com>
-To: Theodore Ts'o <tytso@mit.edu>, Andreas Dilger <adilger.kernel@dilger.ca>
-Cc: linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <5189fe60-c3e3-4bc6-89d4-1033cf4337c3@gmail.com>
-Content-Language: en-US
-Autocrypt: addr=danielcdawson@gmail.com; keydata=
- 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
- bi1gCpm8
-In-Reply-To: <5189fe60-c3e3-4bc6-89d4-1033cf4337c3@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240109114521.518195-1-tianyu2@kernelsoft.com>
 
-On 11/28/23 10:15 PM, Daniel Dawson wrote:
-> When a file is converted from inline to non-inline, it has stale flags 
-> until sync.
+On 09-01-24, 19:45, tianyu2 wrote:
+> Reading the ocotp register directly is unsafe and will cause the system
+> to hang if its clock is not turned on in CCM. The regmap interface has
+> clk enabled, which can solve this problem.
+> 
+> Signed-off-by: tianyu2 <tianyu2@kernelsoft.com>
+> ---
+>  drivers/cpufreq/imx6q-cpufreq.c | 45 +++++++++++----------------------
+>  1 file changed, 15 insertions(+), 30 deletions(-)
 
-> Why is this a problem? Because some code will fail under such a 
-> condition, for example, lseek(..., SEEK_HOLE) will result in ENOENT.
-
-
-Just tested. Still happening on 6.8-rc1.
+Applied. Thanks.
 
 -- 
-PGP fingerprint: 5BBD5080FEB0EF7F142F8173D572B791F7B4422A
-
+viresh
