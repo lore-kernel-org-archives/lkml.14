@@ -1,177 +1,205 @@
-Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+Received: from out2-smtp.messagingengine.com (out2-smtp.messagingengine.com [66.111.4.26])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48EC5A40
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 03:45:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=210.61.82.184
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705981561; cv=fail; b=h+LWbBjcNXdzIojUvKZOOu+zCMbcfw+VMglf2QflXriRCp6PMDi0FqCnf0+RzzC3AVV95vKoRDSRitVHvZlK6s+IwF6QBj0W6NNjYU9ZUQmRJGx+CIIYOXLKO6ZH5ydS0YdiVCALMIM8l/C+NI2DM3W+cOKZ6zgg5dyV+tU7m44=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705981561; c=relaxed/simple;
-	bh=nym3tq8XJ8WXBmUWXl8Lgt6Lwse6KYpIKi4i+kpl77M=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=K31/YjF0a8pkbGEPiaaK9t07ZQjNKtgOWEx7ILUaOckgqgKMQF8sTyU6gf9Odz2Pn37AsP/0t7r1A+JqSUe+mbdPBGSxJ8RRsVJHKQ+feqISDTvvabhR79+MBKKxodqMvSsznvfpwQL26oCTyCK0mAKgWCsfkJLbDbjtBBeae0w=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=lR6ncsxK; dkim=pass (1024-bit key) header.d=mediateko365.onmicrosoft.com header.i=@mediateko365.onmicrosoft.com header.b=crJn85M8; arc=fail smtp.client-ip=210.61.82.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E317315C6
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 03:47:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.111.4.26
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1705981631; cv=none; b=Kbgshmf1TGeKdjgAwb3EzB5vJ8TYBPnzRcEhko1yd7cuHyQF3SnKC1B+vBrIXcTu9+7dyk5KlQezCI6J2fC6FxF8H3rUl3gfVK+nXwuEzjiI72AHLysNNqnVw5UFL300u3bLNreb9L782ij7yRK91XJhkazgOLiX3VEoCjPLwrE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1705981631; c=relaxed/simple;
+	bh=oh4apvSWdmMkF18+DQ+QPTbHpZZBWwkxm6XwqLBEwxY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=QQCqCb5iGsHodmNFUZzQINCDok6SMR4MYWJfq/KhxjZzBY0JDMDBEGtiWb4OIeGo2ODgHowx7H4s0SkNvjvQ9fWqkyXvYJg6MsvT2t6FaQNLt7VKSqRROB+WMZuw86b13f/RDSMIFfMQV1gVZreIbbubeBG+kG9wXsvSntMzQjE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sent.com; spf=pass smtp.mailfrom=sent.com; dkim=pass (2048-bit key) header.d=sent.com header.i=@sent.com header.b=R8JVod3l; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=IBydtwlk; arc=none smtp.client-ip=66.111.4.26
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sent.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sent.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="lR6ncsxK";
-	dkim=pass (1024-bit key) header.d=mediateko365.onmicrosoft.com header.i=@mediateko365.onmicrosoft.com header.b="crJn85M8"
-X-UUID: e392b40cb9a111eea2298b7352fd921d-20240123
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=MIME-Version:Content-Transfer-Encoding:Content-ID:Content-Type:In-Reply-To:References:Message-ID:Date:Subject:CC:To:From; bh=nym3tq8XJ8WXBmUWXl8Lgt6Lwse6KYpIKi4i+kpl77M=;
-	b=lR6ncsxKD/+m6QALSMZ9qizL/3EYhT5lDHDOGCubLyRiCUTAc/uJXDuSbPLLbzoM+5Nm2XhJ9lOQFHIXMTeXC0exofJSl5QErW7rddQOvv6Vzl84QyOnf1+ebG1RUjb3eemsE2oqeDNOuKISm1ZpjBaevGHpr/1VloPSm6A9zjk=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.36,REQID:5941d36d-3c3b-45d4-87cc-b3b478c0b0f7,IP:0,U
-	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:0
-X-CID-META: VersionHash:6e16cf4,CLOUDID:334b762f-1ab8-4133-9780-81938111c800,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
-	RL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,
-	SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: e392b40cb9a111eea2298b7352fd921d-20240123
-Received: from mtkmbs10n2.mediatek.inc [(172.21.101.183)] by mailgw02.mediatek.com
-	(envelope-from <walter.chang@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 1092717496; Tue, 23 Jan 2024 11:45:45 +0800
-Received: from mtkmbs10n1.mediatek.inc (172.21.101.34) by
- mtkmbs11n2.mediatek.inc (172.21.101.187) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.26; Tue, 23 Jan 2024 11:45:44 +0800
-Received: from HK2PR02CU002.outbound.protection.outlook.com (172.21.101.237)
- by mtkmbs10n1.mediatek.inc (172.21.101.34) with Microsoft SMTP Server id
- 15.2.1118.26 via Frontend Transport; Tue, 23 Jan 2024 11:45:44 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OswCXbpMayESGJ4QTUUCGq4O7Dc2SKWWa0q8M5fC478OzI+AUENprs4VBo1GJKlxIABjUcZysUYcTZVUyxym5lhcYdlX/xJbvR0fu6bh9LGw4ogzlEN2eQWzikBx1df1o6kFOb2glvK1p/hg36tBmWkIXLSRcbkT3cwB4iyQ6K47CwDU2Lulpg65ixzVStvdpVX8LlltTyLPBBA34uEJ2EbRFutdFdRjHyqITQ6jink/wcplP10bEr8CA1Iseq0JYxxbQM1qMBxztzsk9tdehKRNmvXf+UadSZP69uvtxj/TIRg7LESx/n5JUmURYgTFG+z+Qtxx82A72xjGEbt8Mw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=nym3tq8XJ8WXBmUWXl8Lgt6Lwse6KYpIKi4i+kpl77M=;
- b=NbCjbgh/vJGPgCmsno/K38isRIORRSOCrgmlcdCbGplntk7LiBD3hvMzIPv7EENHXuCq/kklCnQKnHsqfrc3fPFCR/SxylcTxq5j6DD442psOXGFLgByaZeQ8RayiuYj+hE80aTSeEhYkJCYJILq6bTfvlnNmJuZ9dlf4af+OEKe/fyfJVLMAkve3AgLP1GXZWteIKQIhD6LSMH4CRj/25FtD69Y9mPK5Tls6p1bKOiAAGVL0DlYfWQyowzVN78axnMy/bpQsJGkrouY/HNc0NmFsuKCiL6GgJCnUaUcXjpk/j+uOiIops3uOSeXWspwi23/802/q0vD0qEWqvtK/g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mediatek.com; dmarc=pass action=none header.from=mediatek.com;
- dkim=pass header.d=mediatek.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mediateko365.onmicrosoft.com; s=selector2-mediateko365-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nym3tq8XJ8WXBmUWXl8Lgt6Lwse6KYpIKi4i+kpl77M=;
- b=crJn85M8OsZYW7UDbAJSvE7qFSMsGe7whosyBy5PIIYzY4PbprVI1MWc/ZLeRos8U79mxdgKTkqyVb+7oAMm1on3mhzJGpwR8igPDqbXxiuwMY+wSg1xkOo1cf3N8g0j5cUy4iJrxZEFAb1im+JF9TD9KcQN+toYaJfR3C2Saws=
-Received: from KL1PR03MB5777.apcprd03.prod.outlook.com (2603:1096:820:64::14)
- by SEYPR03MB7272.apcprd03.prod.outlook.com (2603:1096:101:88::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7202.36; Tue, 23 Jan
- 2024 02:40:40 +0000
-Received: from KL1PR03MB5777.apcprd03.prod.outlook.com
- ([fe80::e2ac:4b70:8ac3:ba3d]) by KL1PR03MB5777.apcprd03.prod.outlook.com
- ([fe80::e2ac:4b70:8ac3:ba3d%6]) with mapi id 15.20.7202.035; Tue, 23 Jan 2024
- 02:40:40 +0000
-From: =?utf-8?B?V2FsdGVyIENoYW5nICjlvLXntq3lk7Ip?= <Walter.Chang@mediatek.com>
-To: "tglx@linutronix.de" <tglx@linutronix.de>, "daniel.lezcano@linaro.org"
-	<daniel.lezcano@linaro.org>, "matthias.bgg@gmail.com"
-	<matthias.bgg@gmail.com>, "jstultz@google.com" <jstultz@google.com>,
-	"angelogioacchino.delregno@collabora.com"
-	<angelogioacchino.delregno@collabora.com>, "macro@orcam.me.uk"
-	<macro@orcam.me.uk>
-CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
-	wsd_upstream <wsd_upstream@mediatek.com>,
-	=?utf-8?B?Q2FzcGVyIExpICjmnY7kuK3mpq4p?= <casper.li@mediatek.com>,
-	=?utf-8?B?Q2h1bi1IdW5nIFd1ICjlt6vpp7/lro8p?= <Chun-hung.Wu@mediatek.com>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>,
-	=?utf-8?B?U3RhbmxleSBDaHUgKOacseWOn+mZnik=?= <stanley.chu@mediatek.com>,
-	=?utf-8?B?RnJlZGR5IEhzaW4gKOi+m+aBkuixkCk=?= <Freddy.Hsin@mediatek.com>
-Subject: Re: [PATCH v5 0/4] Support timer drivers as loadable modules
-Thread-Topic: [PATCH v5 0/4] Support timer drivers as loadable modules
-Thread-Index: AQHZiGcAlWtFKUKClEylT3CLdkSqYK+SicEAgVWwiQA=
-Date: Tue, 23 Jan 2024 02:40:40 +0000
-Message-ID: <6c49a9cd98e9ae2c0e81cfd51d88b5ce6c02c607.camel@mediatek.com>
-References: <20230517022557.24388-1-walter.chang@mediatek.com>
-	 <4c2f66f1-2623-306f-f1d3-83a32a0c2885@linaro.org>
-In-Reply-To: <4c2f66f1-2623-306f-f1d3-83a32a0c2885@linaro.org>
-Accept-Language: zh-TW, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=mediatek.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: KL1PR03MB5777:EE_|SEYPR03MB7272:EE_
-x-ms-office365-filtering-correlation-id: 8a7442d7-d234-4ba6-6e02-08dc1bbcb02e
-x-ld-processed: a7687ede-7a6b-4ef6-bace-642f677fbe31,ExtAddr
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: GMs5Fmsvho+KYLH/trmMGKhcaQrWu+RdvwYuFc4oaOZF9PyPmLcYn+uA1lgGru5topO0sYXnLgGUVm4/msZMgjD/2srziCp52nr7Nop8UY7+NkRa6r1jvfuDLCtE7DqdOsI8s+TngXEx/657idbnnhFDVL1wQPUPS106YuV7DtbuMAw41xX+00s1uxN7u+ICBm3/Hnjc4712LmkwNR5juAx3Yd8Myy8vaj/YAnMicdovp6J/C8mX54F32C/CCjLjfItpvWqyU3Bnyq/idmYLrlhb9MiIA0qhOM1UwrCLkHgrMvpd5d4UiaaI72TlVlxbeuLYz+PBR2Zzp6iPyzwptxZimKN9Qk8JXJYw1/y0tPldUXUWlFBYGPAZgrdG9JdKfwnHVK2nGkRhm/yuUibU6okDzeRkIwzZHYfVBJQHG+YACNYcij2vgoeKzXu8NkwAlDm6SxAXsRN2zp87o/ZZnP+SAjct4zrA55uPLgE8/YtmBCDnP2uA1VEYfeMHbfhC7l9brLuELYelYngPrtD/+gACPuofsuPUtsG8ePEQgV2Sw8nrKZNQoZyPWkytjajhNu50A3oXBQrqm+Er+PU6a6fuvrfZrV75Ul+wxry9/knH3lWo6l3Bcd7KB8UFgETC5PzUMBbSMHdbSaG++IkOBdU+rkQfp8qmRmHVEhXlRCQ=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:KL1PR03MB5777.apcprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(346002)(39860400002)(376002)(396003)(136003)(230273577357003)(230173577357003)(230922051799003)(451199024)(64100799003)(1800799012)(186009)(86362001)(71200400001)(478600001)(6486002)(36756003)(85182001)(38070700009)(2616005)(107886003)(26005)(83380400001)(4744005)(110136005)(2906002)(316002)(54906003)(64756008)(6512007)(6506007)(5660300002)(8936002)(8676002)(4326008)(66446008)(41300700001)(38100700002)(66946007)(66556008)(66476007)(76116006)(122000001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?THEzMTducFBlZmUwbHVSM3FpUWUvTkoxbEdqMmJ0Y1ZwN3RSRnF6bUpBV3Zv?=
- =?utf-8?B?cU1FeURzYVFITUhyUklPWFdxMFU3bVhkVFpONnlHelRaclNQYzR2c0NHZGVB?=
- =?utf-8?B?b2YrWDlyTjVXd3NUSk0wMDZMQ21RSTk0bkUrLzVWR3ZmdTBHWmt1clRWNUtH?=
- =?utf-8?B?S05KanpLdHhtRVoreUhEQy8zZTBPdmtCb2M1Y1RvNVF1d2ZFaUdrTlU4MnV1?=
- =?utf-8?B?WHNRWWJhb3kvaE5RcU03NUlhc05LSThycUZ6amQzSzZmdnNFZ0E1VFhueFh1?=
- =?utf-8?B?S3pMQWszV1l3WE5tMWt5NjJYQ2VVZllWTnA3dEZCOG9MZVpoYithbXNNMG1s?=
- =?utf-8?B?dlpzbm45dHp6TnNvRk1DanlTNWVuYUtjSW5VZmV5V1c3QUE4NkVBVXozdnQz?=
- =?utf-8?B?MEFjbTVFbzZXd255WUlId1d6YUhZeWcxOXZQdSs3MHJBZzhDRVBLUjE1N3p6?=
- =?utf-8?B?Q0tDRmRGN1MweHpHV3MwcEJhQ1JDS1NybXI5cWZaSjN6U0lXMzF6ZXdlenpU?=
- =?utf-8?B?enQvYm9RNUduVGFzMFU3b1dPdCtyVDFFRTlHNmxMZXA0TS9scHFEY1FvT0cy?=
- =?utf-8?B?M3JuK0x4ZXY2TUcvbzY2em10WnRRWTNoRTdhbFdITU5ZemtCb2hjRzlKZ3dO?=
- =?utf-8?B?Y0JCOEozemdrNkh2RjZ1RDNGMk9ZdHo0dmRNbEtHYWo4YnNHcGFSTi9QRk52?=
- =?utf-8?B?L1k5azNwR0h5U2tiM1JtVE9kMy9DQkFiWWRqVm5hTGJhK0JxS0hjMU54Z3hk?=
- =?utf-8?B?bjl3R1lyL2JPWU02MkxlTndXRVkva3VhcUt0WFhHbmFpdk5GQ2FweUxFTjBh?=
- =?utf-8?B?WnJUODVjWERVL0EzUVZVR2RUK0x2MVNLRW5Hd1FWVEVYTm1lTU5lczRrOXRw?=
- =?utf-8?B?elNwdUNxWG1uUDFIZmpEK3NtdHFWSHpoSlhLaEpwaWtKRTV1cnlwQlBja0Rz?=
- =?utf-8?B?emV4UEN5N08vb0xlc0VwNHpNQ3NrWWpHKytMSWhMU1pwVEpCNWQ4SVg1Z2xC?=
- =?utf-8?B?YzRwMU1pOFJVem0vRit6REF6RkpjOEM3a0VILzNOeWlER3dnTmtTSG85d1JQ?=
- =?utf-8?B?aWNGUkpMOGJjU0I3dHc2UmhqQXJpSGhkVmZlY0JjSmxBeHVuRnBLR2xXS0dT?=
- =?utf-8?B?cG9sY3d3MFdyZ0pVcGtaWlJKUVM3UFpoWHR3MzNVYXF0SEl5SVRsSVZ6aU1z?=
- =?utf-8?B?YkMvdzdpSFdtNk8xQ3NzOEsyZjJ6Q2xzeXJlVkttQjIyZUgrNjdRdEpWaFhX?=
- =?utf-8?B?TmovZHM2M2pubTFaVllRQk5GTitZU2VHdXdGcGlWY3o0K3N4aDg4VE91YVh4?=
- =?utf-8?B?M3RUOXpLUnQreXpiZzJBOHhqS2pSTWJMdGdKRE44SkZCM3BpWlZORXlNNWpi?=
- =?utf-8?B?VmVHeE1hN3NpaWMzTXY4V09uemt4dURuRTE2TFcyaEEwN0d0Uzh1OWQ1WE54?=
- =?utf-8?B?UEtRNWkvVGdvQlh5Y2NBNWVIUGRkQnRTRHRqaWxCTDE1K1d0Zlo4RDRleFIy?=
- =?utf-8?B?MXJLMXpnR1FpM0RkbzNRNEZMYkVNTHVXRno5K2tkT2pXaEIxMkVVZVZicFUx?=
- =?utf-8?B?TmN5WGJiTEhadHNzdzQxc2VTZFpOMkF5d3VYd0M0YU5ESnVHT0JDaUlkSzBV?=
- =?utf-8?B?Q2M4SGNaM2N3Y205WHdjSzhpSEJrN2ErV2dsQW1RS2dMaitsUGdDRmhLS3dn?=
- =?utf-8?B?aDBKeVpYZ21IeGpnRXZTWXdTSCtPY1pUWVdlRTVTdGFEYi9BckpaYjNneGds?=
- =?utf-8?B?eWZqaUNYdkNZOVFRUmtqZkZyaExZWFlnUnFBcEUwNk85RWVPRUV3UlFxT2o3?=
- =?utf-8?B?eEg3eVdFZWJNUm1Ic0dUSlNodGVtSm91dUtJM0o0dEFNN1ZkVVROcGF4NEVH?=
- =?utf-8?B?blNLV0llNGFYKzJaYzVCR05yemJleXBxYlpYazAxNi9KV0wxTU9vdHV6Qmhz?=
- =?utf-8?B?c1lZSjhZSHdtckxBT0g5aTM3UlpITm1uZ2s5TWVQS01tZ0VrbElRMGFxOTBm?=
- =?utf-8?B?NWRKUjVlNHVlZ0VxVDY5YXBzb0oxeGdxcnRyK1F5UGdmVnZPaWs5TzJ1NE9v?=
- =?utf-8?B?ek1nazVsQ2ZhN2VIV21YMUY4NVhTSUNpSFJsdFJyQ1lQUHVLZmx0YWhiRXhK?=
- =?utf-8?B?dUFsZ3JpelV6dzFBekVjc3FtcVFGcHlMYUZKWU5rQk41d3h2cTBKMldsNU85?=
- =?utf-8?B?cUE9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <809029198396F84A85E56542583462C6@apcprd03.prod.outlook.com>
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=sent.com header.i=@sent.com header.b="R8JVod3l";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="IBydtwlk"
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+	by mailout.nyi.internal (Postfix) with ESMTP id 39D365C0051;
+	Mon, 22 Jan 2024 22:47:08 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute6.internal (MEProxy); Mon, 22 Jan 2024 22:47:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sent.com; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to; s=fm3; t=
+	1705981628; x=1706068028; bh=mC6ae0v7zXTnCM6lhVafmauC3M7j0hzzYKY
+	Z+UScLOA=; b=R8JVod3laPmb7g1HLtsYlFfqWul2+VE2dg3TQlgwT3R5cPWzbis
+	EcZkF+hmp86rGEd6ibctWpwxhzerM8OsVEvs8/Yr7HA2RWvxe5b/xrq9zwUNS1v0
+	M+3wVSTD3eNLrED3w2G/ZM11O/jyeLhf4wpxkT2sj/0sAvg6aV5v/xfC9d/a/GIb
+	ZhvssWRXPSwph6Pa+atCSApUSwUwXuDD3A3AHJoU47PAenkdkURR0GUOL3lP1ESt
+	KiaVNtVpqEn6hTgDmbV5hR4iRI+EK0UblW3Wmha4wPSd2tFEoITwM1H/4dSAzz03
+	zrv6xTwoQ5uE1MVN4SEtipS+r/RHpdCMb+w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
+	1705981628; x=1706068028; bh=mC6ae0v7zXTnCM6lhVafmauC3M7j0hzzYKY
+	Z+UScLOA=; b=IBydtwlk9+lvDYtAAJ8KD4EgF1URCX6jmKxJV6kJUZZylFudmUa
+	t1e68onsyFym0E8LQt6q7fsJmxputLlJh3XVYp+jur7Rgu5X9nJ1Aah2n11OySOn
+	sTM/yRuXWY8cxihEUQ/3YKiKxkPIQW34g0OPQfdl5WANkeINHBkhstCX3BhkVqiP
+	QadejVULEhjzkZefAcGBCUkuXc7eR3JG1RPFORj3VMvhseq0fKGrlnRh2KbpH5EG
+	513h2uRqcBY6KSIuB3oT5mlYXULKr0YMFmL1HLV4St0SVYsPnbkQsJ+vVGEziMlu
+	LXUi1kNb69FU+PBU8baYumXkx+AaZd1gq/Q==
+X-ME-Sender: <xms:uzavZSlMg_16TVJO9JBBWVNK1-Zo8hURa9Cd2Y4MNaUIsyMrP-V9eQ>
+    <xme:uzavZZ1fFvNIDOSxel1q80DvrQZIJcWmGl8CG2bcx9UihWhuBP9FENRCVGZpDaDUq
+    pdnyNYNiAYqPQpadA>
+X-ME-Received: <xmr:uzavZQocityrnUhsrPX05SDSpwG-s0jxchkNiSUjriCPbi0tEcemKkWv1uRS1Rkl28HND-V8p0Ao9Uynxh4SE-rVEABWOHCEmoa2X-kpDh14YYd4hhcbtT4j>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrvdekjedgieduucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhephffvvefufffkofgjfhhrgggtgfesthekredtredtjeenucfhrhhomhepkghi
+    ucgjrghnuceoiihirdihrghnsehsvghnthdrtghomheqnecuggftrfgrthhtvghrnhepje
+    ekteekffelleekudfftdefvddtjeejuedtuedtteegjefgvedtfedujeekieevnecuvehl
+    uhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepiihirdihrghnse
+    hsvghnthdrtghomh
+X-ME-Proxy: <xmx:uzavZWlYGsZDF1Vsc0HnW4xKK05EZCziFoDYku7MD7IhZrWOgoc_PA>
+    <xmx:uzavZQ2_tc_40gXR8IJjIABzjnoUDdwzueh4mrLCJjqSUNiWoV7I6Q>
+    <xmx:uzavZdui6qDbfhFKTwFLHKSuZ-sakUp3uvxXJ71pWPVAIpRg-rG1TQ>
+    <xmx:vDavZXs40tljvTj_XTxJkowRgvUwJCeM8dESfW1mx07yc61YBry5Sw>
+Feedback-ID: iccd040f4:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 22 Jan 2024 22:47:07 -0500 (EST)
+From: Zi Yan <zi.yan@sent.com>
+To: linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Cc: Zi Yan <ziy@nvidia.com>,
+	"Huang, Ying" <ying.huang@intel.com>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	David Hildenbrand <david@redhat.com>,
+	"Yin, Fengwei" <fengwei.yin@intel.com>,
+	Yu Zhao <yuzhao@google.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Kemeng Shi <shikemeng@huaweicloud.com>,
+	Mel Gorman <mgorman@techsingularity.net>,
+	Rohan Puri <rohan.puri15@gmail.com>,
+	Mcgrof Chamberlain <mcgrof@kernel.org>,
+	Adam Manzanares <a.manzanares@samsung.com>,
+	"Vishal Moola (Oracle)" <vishal.moola@gmail.com>
+Subject: [PATCH v2 1/3] mm/compaction: enable compacting >0 order folios.
+Date: Mon, 22 Jan 2024 22:46:33 -0500
+Message-ID: <20240123034636.1095672-2-zi.yan@sent.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240123034636.1095672-1-zi.yan@sent.com>
+References: <20240123034636.1095672-1-zi.yan@sent.com>
+Reply-To: Zi Yan <ziy@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: KL1PR03MB5777.apcprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8a7442d7-d234-4ba6-6e02-08dc1bbcb02e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Jan 2024 02:40:40.3262
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a7687ede-7a6b-4ef6-bace-642f677fbe31
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: nARzXdGa0UwAFlz+fxYU8MyHIYbnT7135e9sWHh8/We+zHL+A429YRHaYAZQzesqBqyaMvm77jimaHLS9HOyP0DkDHk+yrRp496bFHmnM6E=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEYPR03MB7272
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-T24gTW9uLCAyMDIzLTA2LTE5IGF0IDE4OjQ0ICswMjAwLCBEYW5pZWwgTGV6Y2FubyB3cm90ZToN
-Cj4gIAkgDQo+IEV4dGVybmFsIGVtYWlsIDogUGxlYXNlIGRvIG5vdCBjbGljayBsaW5rcyBvciBv
-cGVuIGF0dGFjaG1lbnRzIHVudGlsDQo+IHlvdSBoYXZlIHZlcmlmaWVkIHRoZSBzZW5kZXIgb3Ig
-dGhlIGNvbnRlbnQuDQo+ICANCj4gQXMgSSBhbHJlYWR5IHNhaWQsIEknbSBub3QgdmVyeSBjb21m
-b3J0YWJsZSB3aXRoIHRoZXNlIGNoYW5nZXMgYW5kDQo+IHRoZSANCj4gcG90ZW50aWFsIGltcGFj
-dCBpdCBjYW4gaGF2ZSBvbiB0aGUgb3ZlcmFsbCB0aW1lIGZyYW1ld29yay4NCj4gDQo+IEkgd2ls
-bCBwaWNrIHRoZSBzZXJpZXMgaWYgVGhvbWFzIGdpdmVzIGl0cyBBY2tlZC1ieQ0KPiANCj4gVGhh
-bmtzDQo+IA0KDQpIaSBUaG9tYXMsDQoNCkdlbnRsZSBwaW5nIGZvciB0aGlzIHNlcmllcy4NCg0K
-V2Ugd291bGQgbGlrZSB0byBrbm93IHlvdXIgb3BpbmlvbiBvbiB0aGUgdGltZSBmcmFtZXdvcmsg
-Y2hhbmdlcyB3ZSd2ZQ0KZGlzY3Vzc2VkLg0KDQpUaGFua3MsDQpXYWx0ZXIgQ2hhbmcNCg==
+From: Zi Yan <ziy@nvidia.com>
+
+migrate_pages() supports >0 order folio migration and during compaction,
+even if compaction_alloc() cannot provide >0 order free pages,
+migrate_pages() can split the source page and try to migrate the base pages
+from the split. It can be a baseline and start point for adding support for
+compacting >0 order folios.
+
+Suggested-by: Huang Ying <ying.huang@intel.com>
+Signed-off-by: Zi Yan <ziy@nvidia.com>
+---
+ mm/compaction.c | 43 +++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 35 insertions(+), 8 deletions(-)
+
+diff --git a/mm/compaction.c b/mm/compaction.c
+index 27ada42924d5..61389540e1f1 100644
+--- a/mm/compaction.c
++++ b/mm/compaction.c
+@@ -816,6 +816,21 @@ static bool too_many_isolated(struct compact_control *cc)
+ 	return too_many;
+ }
+ 
++/*
++ * 1. if the page order is larger than or equal to target_order (i.e.,
++ * cc->order and when it is not -1 for global compaction), skip it since
++ * target_order already indicates no free page with larger than target_order
++ * exists and later migrating it will most likely fail;
++ *
++ * 2. compacting > pageblock_order pages does not improve memory fragmentation,
++ * skip them;
++ */
++static bool skip_isolation_on_order(int order, int target_order)
++{
++	return (target_order != -1 && order >= target_order) ||
++		order >= pageblock_order;
++}
++
+ /**
+  * isolate_migratepages_block() - isolate all migrate-able pages within
+  *				  a single pageblock
+@@ -1009,7 +1024,7 @@ isolate_migratepages_block(struct compact_control *cc, unsigned long low_pfn,
+ 		/*
+ 		 * Regardless of being on LRU, compound pages such as THP and
+ 		 * hugetlbfs are not to be compacted unless we are attempting
+-		 * an allocation much larger than the huge page size (eg CMA).
++		 * an allocation larger than the compound page size.
+ 		 * We can potentially save a lot of iterations if we skip them
+ 		 * at once. The check is racy, but we can consider only valid
+ 		 * values and the only danger is skipping too much.
+@@ -1017,11 +1032,18 @@ isolate_migratepages_block(struct compact_control *cc, unsigned long low_pfn,
+ 		if (PageCompound(page) && !cc->alloc_contig) {
+ 			const unsigned int order = compound_order(page);
+ 
+-			if (likely(order <= MAX_PAGE_ORDER)) {
+-				low_pfn += (1UL << order) - 1;
+-				nr_scanned += (1UL << order) - 1;
++			/*
++			 * Skip based on page order and compaction target order
++			 * and skip hugetlbfs pages.
++			 */
++			if (skip_isolation_on_order(order, cc->order) ||
++			    PageHuge(page)) {
++				if (order <= MAX_PAGE_ORDER) {
++					low_pfn += (1UL << order) - 1;
++					nr_scanned += (1UL << order) - 1;
++				}
++				goto isolate_fail;
+ 			}
+-			goto isolate_fail;
+ 		}
+ 
+ 		/*
+@@ -1146,10 +1168,11 @@ isolate_migratepages_block(struct compact_control *cc, unsigned long low_pfn,
+ 			}
+ 
+ 			/*
+-			 * folio become large since the non-locked check,
+-			 * and it's on LRU.
++			 * Check LRU folio order under the lock
+ 			 */
+-			if (unlikely(folio_test_large(folio) && !cc->alloc_contig)) {
++			if (unlikely(skip_isolation_on_order(folio_order(folio),
++							     cc->order) &&
++				     !cc->alloc_contig)) {
+ 				low_pfn += folio_nr_pages(folio) - 1;
+ 				nr_scanned += folio_nr_pages(folio) - 1;
+ 				folio_set_lru(folio);
+@@ -1767,6 +1790,10 @@ static struct folio *compaction_alloc(struct folio *src, unsigned long data)
+ 	struct compact_control *cc = (struct compact_control *)data;
+ 	struct folio *dst;
+ 
++	/* this makes migrate_pages() split the source page and retry */
++	if (folio_test_large(src) > 0)
++		return NULL;
++
+ 	if (list_empty(&cc->freepages)) {
+ 		isolate_freepages(cc);
+ 
+-- 
+2.43.0
+
