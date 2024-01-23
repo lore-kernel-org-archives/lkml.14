@@ -1,71 +1,52 @@
-Received: from mail-oa1-f46.google.com (mail-oa1-f46.google.com [209.85.160.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99A5960253
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 15:38:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EFF26025A;
+	Tue, 23 Jan 2024 15:39:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706024340; cv=none; b=CvWJ4tcrI4pTsjZgHjMVn88SnXQklSI6zsSfG4OJQYR3T7zQ0n57PUQmFceOwQfyZ3ZACz3hItFoSBHPFnVkmrVNLM9OOryz39YcN6SUGixTUpWHbVgtLaoSGV/gPwNkbbNlgIGZeAEm4BsBZfTHrl7cwCuVDQdjaFUANyA5KkQ=
+	t=1706024377; cv=none; b=L2EYutP8nivL04C5Joe+HdCdk/qCqi7R5GwwiDRUwIr9Wef7hAvUs35pPjuOqbhsRXAM7fvFgNbNDUD673Vipo3wuj+slV5phr2mcfdMej8RYxrcxTLccrSEyNXg+vKAN/0jxzlTcsOOQvfvP7Y8Z/18ijrYCWmVbEmj/RP1gFA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706024340; c=relaxed/simple;
-	bh=t1G+kBjFokoEv87HEn+pzRZOA6hOVC+Lp7RYHJOHV4Y=;
+	s=arc-20240116; t=1706024377; c=relaxed/simple;
+	bh=I+Fk/lQymdlUbpEC80NeWgpwGxk57+2otkrBbMctKZw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FhD2wnjVIcJHIOvhJ5JV8cur0Bt8jl2M55HqbSlqJPwkJMWwzlaGqtOEfJEtKWkZtGbA4PQ8CT6nc+OPiMvlcoFec6jlFBRUHGLGX3FlvKy+J1H/4dL5z/rJhwnhKGrfp9ltxMpAyVREsDCor+WmDshHBsQ3aKmjWb5oZDDMH3U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=FlsQcOUa; arc=none smtp.client-ip=209.85.160.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=HVK5wIyzDH4PgqDGbH02cvJBAJiIyyRe6YJhZzF6EeolnyJitlh7LrQk00JvZSF2PsT5Cxf2nFLwXIACNlItozMsk65peOfm6u2JnxZdFnpCjDJjmuNpPIjRo29VStd6ZhjFEv7Bl43XwhSY6Eajr2yPrPlQJfrJK7O4jEAwPIM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YYASV1HO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="FlsQcOUa"
-Received: by mail-oa1-f46.google.com with SMTP id 586e51a60fabf-21499c9650cso152657fac.1
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 07:38:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1706024336; x=1706629136; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=1nP0lWvVSdV3ePRrfwC4/bRX6mgra3C2ztXq0kulIvo=;
-        b=FlsQcOUa0H3BtIu5tvcmvdBnDPAYqmHKRqe/BbF5wEXMsMBn5fb2qHIIQcHi0GBpIl
-         af3gJb+z/Jmdz0XIsODS5/0a9dMo5OJXwwm+Zdmx4zbNT09/FDnDiuf52Be8IgBQJCX3
-         CB3aXoNome2VPBQu+1vf6xvIkp98e44orh2SomftkmRb/2K7nF2bboXHr5qhTpit7JVh
-         VSEYUU0Pp9CMg12XVMli0bPciOKNrix75ziaK8uOK+UST6y/PxDcwz6NtY60M6wuL0AN
-         B77BUpAX9Zots+KRVYHr0kYXUePoyh07mDO1fe5wHKSwqn7Wu35TppxVwRTCqxZSaAUj
-         nX4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706024336; x=1706629136;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1nP0lWvVSdV3ePRrfwC4/bRX6mgra3C2ztXq0kulIvo=;
-        b=ShaIhLHj/r/SKsKgCLQUPg9l6syDZygrUbDI5aovEEk3RbdCC1zUZg3qwbC2Up1OQp
-         Gg6XY6H5I6BZV1AWbAaK0E2bu0hscEfAF5RCBUBI+GutEBWSSyi9TVMmVP9RltRRYcyC
-         ktlHW1GyXBQQz3kNXT57hk173NuX6rq+HYRpJIpELyyqd4UZ4OZO0kJFw9QbkledXJVH
-         Rwn34jNj93HSGZnh+odtfC17GVdnSmAAtKQifkH+LZvbnxV3X7o3yHkGQNtoJSDSVJt3
-         IKzViUFDL401zciqoQPZnxas9NCrjwlS2F10Ur8cdIvOqeiVi/AWXPM1kBMlEBbUr48v
-         j7NQ==
-X-Gm-Message-State: AOJu0YyHzz1HHX+qVDPoAzAOQtHkXVVIJkHV025I3PkpujxgPIay/fvm
-	H8nRMwZhm4bGiPZK7VVSyx5B6Z0P6gSuIhJdLBLRptu5W0v9HiJ6eeR8ZuUMbl0=
-X-Google-Smtp-Source: AGHT+IEjyxHRQmDZau+xZqO7ups8UN2Vf2ApNGwlzm1r1pP4SSCaGsrMcbfuRBOxqpOwUglj0NWFgw==
-X-Received: by 2002:a05:6871:5224:b0:203:88b1:31ce with SMTP id ht36-20020a056871522400b0020388b131cemr1659751oac.117.1706024336410;
-        Tue, 23 Jan 2024 07:38:56 -0800 (PST)
-Received: from localhost (2603-7000-0c01-2716-97cf-7b55-44af-acd6.res6.spectrum.com. [2603:7000:c01:2716:97cf:7b55:44af:acd6])
-        by smtp.gmail.com with ESMTPSA id d15-20020a056214184f00b006819a4354basm3567426qvy.37.2024.01.23.07.38.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jan 2024 07:38:56 -0800 (PST)
-Date: Tue, 23 Jan 2024 10:38:51 -0500
-From: Johannes Weiner <hannes@cmpxchg.org>
-To: Yosry Ahmed <yosryahmed@google.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Nhat Pham <nphamcs@gmail.com>, Chris Li <chrisl@kernel.org>,
-	Chengming Zhou <zhouchengming@bytedance.com>,
-	Huang Ying <ying.huang@intel.com>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] mm: zswap: remove unnecessary tree cleanups in
- zswap_swapoff()
-Message-ID: <20240123153851.GA1745986@cmpxchg.org>
-References: <20240120024007.2850671-1-yosryahmed@google.com>
- <20240120024007.2850671-3-yosryahmed@google.com>
- <20240122201906.GA1567330@cmpxchg.org>
- <CAJD7tkaATS48HVuBfbOmPM3EvRUoPFr66WhF64UC4FkyVH5exg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YYASV1HO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4624C433F1;
+	Tue, 23 Jan 2024 15:39:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706024377;
+	bh=I+Fk/lQymdlUbpEC80NeWgpwGxk57+2otkrBbMctKZw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=YYASV1HO9BUhRE8EBNVhLjYVoHangNHpU0L5uj7Y42Cu5bWnRvNJeRWazLyuQrer5
+	 APO9qGWK3YKE6tDETMwmr3jFp2H6Nhc8XC3jtsKleDA+mbdjKIxHRhakMaKDIQrT4v
+	 zitFyW4NMzHFGan/wNpyQ2G2jz4fNCvFqKfADdmXROdId2+GqQPjHo0TRwaYqGxHRp
+	 HngteP7XQSXapOYoT3hOaxMUlpMiSU1LO1Sd0qMICB0bFyQ9//zZdNf/5boJveNJ9X
+	 qTpbgG1sOoBO4fepWow6PsYHNv58s1P0obMg9p+As6FcIOBwfvEQU4qT5VICAoVimK
+	 fbA/y5AZw1aXA==
+Date: Tue, 23 Jan 2024 16:39:31 +0100
+From: Christian Brauner <brauner@kernel.org>
+To: Vinicius Costa Gomes <vinicius.gomes@intel.com>
+Cc: Amir Goldstein <amir73il@gmail.com>, hu1.chen@intel.com, 
+	miklos@szeredi.hu, malini.bhandaru@intel.com, tim.c.chen@intel.com, 
+	mikko.ylinen@intel.com, lizhen.you@intel.com, linux-unionfs@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-fsdevel <linux-fsdevel@vger.kernel.org>, 
+	Linus Torvalds <torvalds@linux-foundation.org>, David Howells <dhowells@redhat.com>, 
+	Seth Forshee <sforshee@kernel.org>
+Subject: Re: [RFC] HACK: overlayfs: Optimize overlay/restore creds
+Message-ID: <20240123-apparat-flohen-a18640d08ae2@brauner>
+References: <CAOQ4uxg-WvdcuCrQg7zp03ocNZoT-G2bpi=Y6nVxMTodyFAUbg@mail.gmail.com>
+ <20231214220222.348101-1-vinicius.gomes@intel.com>
+ <CAOQ4uxhJmjeSSM5iQyDadbj5UNjPqvh1QPLpSOVEYFbNbsjDQQ@mail.gmail.com>
+ <87v88zp76v.fsf@intel.com>
+ <CAOQ4uxiCVv7zbfn2BPrR9kh=DvGxQtXUmRvy2pDJ=G7rxjBrgg@mail.gmail.com>
+ <CAOQ4uxhxvFt3_Wb3BGcjj4pGp=OFTBHNPJ4r4eH8245t-+CW+g@mail.gmail.com>
+ <20231218-intim-lehrstellen-dbe053d6c3a8@brauner>
+ <875y0vp41g.fsf@intel.com>
+ <CAOQ4uxibYMQw0iszKhE5uxBnyayHWjqp4ZnOOiugO3GxMRS1eA@mail.gmail.com>
+ <87le9qntwo.fsf@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,73 +56,125 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJD7tkaATS48HVuBfbOmPM3EvRUoPFr66WhF64UC4FkyVH5exg@mail.gmail.com>
+In-Reply-To: <87le9qntwo.fsf@intel.com>
 
-On Mon, Jan 22, 2024 at 12:39:16PM -0800, Yosry Ahmed wrote:
-> On Mon, Jan 22, 2024 at 12:19 PM Johannes Weiner <hannes@cmpxchg.org> wrote:
-> >
-> > On Sat, Jan 20, 2024 at 02:40:07AM +0000, Yosry Ahmed wrote:
-> > > During swapoff, try_to_unuse() makes sure that zswap_invalidate() is
-> > > called for all swap entries before zswap_swapoff() is called. This means
-> > > that all zswap entries should already be removed from the tree. Simplify
-> > > zswap_swapoff() by removing the tree cleanup loop, and leaving an
-> > > assertion in its place.
-> > >
-> > > Signed-off-by: Yosry Ahmed <yosryahmed@google.com>
-> >
-> > Acked-by: Johannes Weiner <hannes@cmpxchg.org>
-> >
-> > That's a great simplification.
-> >
-> > Removing the tree->lock made me double take, but at this point the
-> > swapfile and its cache should be fully dead and I don't see how any of
-> > the zswap operations that take tree->lock could race at this point.
+On Tue, Dec 19, 2023 at 06:33:59AM -0800, Vinicius Costa Gomes wrote:
+> Amir Goldstein <amir73il@gmail.com> writes:
 > 
-> It took me a while staring at the code to realize this loop is pointless.
-> 
-> However, while I have your attention on the swapoff path, there's a
-> slightly irrelevant problem that I think might be there, but I am not
-> sure.
-> 
-> It looks to me like swapoff can race with writeback, and there may be
-> a chance of UAF for the zswap tree. For example, if zswap_swapoff()
-> races with shrink_memcg_cb(), I feel like we may free the tree as it
-> is being used. For example if zswap_swapoff()->kfree(tree) happen
-> right before shrink_memcg_cb()->list_lru_isolate(l, item).
-> 
-> Please tell me that I am being paranoid and that there is some
-> protection against zswap writeback racing with swapoff. It feels like
-> we are very careful with zswap entries refcounting, but not with the
-> zswap tree itself.
-
-Hm, I don't see how.
-
-Writeback operates on entries from the LRU. By the time
-zswap_swapoff() is called, try_to_unuse() -> zswap_invalidate() should
-will have emptied out the LRU and tree.
-
-Writeback could have gotten a refcount to the entry and dropped the
-tree->lock. But then it does __read_swap_cache_async(), and while
-holding the page lock checks the tree under lock once more; if that
-finds the entry valid, it means try_to_unuse() hasn't started on this
-page yet, and would be held up by the page lock/writeback state.
-
-> > > Chengming, Chris, I think this should make the tree split and the xarray
-> > > conversion patches simpler (especially the former). If others agree,
-> > > both changes can be rebased on top of this.
+> > On Mon, Dec 18, 2023 at 11:57 PM Vinicius Costa Gomes
+> > <vinicius.gomes@intel.com> wrote:
+> >>
+> >> Christian Brauner <brauner@kernel.org> writes:
+> >>
+> >> >> > Yes, the important thing is that an object cannot change
+> >> >> > its non_refcount property during its lifetime -
+> >> >>
+> >> >> ... which means that put_creds_ref() should assert that
+> >> >> there is only a single refcount - the one handed out by
+> >> >> prepare_creds_ref() before removing non_refcount or
+> >> >> directly freeing the cred object.
+> >> >>
+> >> >> I must say that the semantics of making a non-refcounted copy
+> >> >> to an object whose lifetime is managed by the caller sounds a lot
+> >> >> less confusing to me.
+> >> >
+> >> > So can't we do an override_creds() variant that is effectively just:
 > >
-> > The resulting code is definitely simpler, but this patch is not a
-> > completely trivial cleanup, either. If you put it before Chengming's
-> > patch and it breaks something, it would be difficult to pull out
-> > without affecting the tree split.
+> > Yes, I think that we can....
+> >
+> >> >
+> >> > /* caller guarantees lifetime of @new */
+> >> > const struct cred *foo_override_cred(const struct cred *new)
+> >> > {
+> >> >       const struct cred *old = current->cred;
+> >> >       rcu_assign_pointer(current->cred, new);
+> >> >       return old;
+> >> > }
+> >> >
+> >> > /* caller guarantees lifetime of @old */
+> >> > void foo_revert_creds(const struct cred *old)
+> >> > {
+> >> >       const struct cred *override = current->cred;
+> >> >       rcu_assign_pointer(current->cred, old);
+> >> > }
+> >> >
+> >
+> > Even better(?), we can do this in the actual guard helpers to
+> > discourage use without a guard:
+> >
+> > struct override_cred {
+> >         struct cred *cred;
+> > };
+> >
+> > DEFINE_GUARD(override_cred, struct override_cred *,
+> >             override_cred_save(_T),
+> >             override_cred_restore(_T));
+> >
+> > ...
+> >
+> > void override_cred_save(struct override_cred *new)
+> > {
+> >         new->cred = rcu_replace_pointer(current->cred, new->cred, true);
+> > }
+> >
+> > void override_cred_restore(struct override_cred *old)
+> > {
+> >         rcu_assign_pointer(current->cred, old->cred);
+> > }
+> >
+> >> > Maybe I really fail to understand this problem or the proposed solution:
+> >> > the single reference that overlayfs keeps in ovl->creator_cred is tied
+> >> > to the lifetime of the overlayfs superblock, no? And anyone who needs a
+> >> > long term cred reference e.g, file->f_cred will take it's own reference
+> >> > anyway. So it should be safe to just keep that reference alive until
+> >> > overlayfs is unmounted, no? I'm sure it's something quite obvious why
+> >> > that doesn't work but I'm just not seeing it currently.
+> >>
+> >> My read of the code says that what you are proposing should work. (what
+> >> I am seeing is that in the "optimized" cases, the only practical effect
+> >> of override/revert is the rcu_assign_pointer() dance)
+> >>
+> >> I guess that the question becomes: Do we want this property (that the
+> >> 'cred' associated with a subperblock/similar is long lived and the
+> >> "inner" refcount can be omitted) to be encoded in the constructor? Or do
+> >> we want it to be "encoded" in a call by call basis?
+> >>
+> >
+> > Neither.
+> >
+> > Christian's proposal does not involve marking the cred object as
+> > long lived, which looks a much better idea to me.
+> >
 > 
-> Are you suggesting I rebase this on top of Chengming's patches? I can
-> definitely do this, but the patch will be slightly less
-> straightforward, and if the tree split patches break something it
-> would be difficult to pull out as well. If you feel like this patch is
-> more likely to break things, I can rebase.
+> In my mind, I am reading his suggestion as the flag "long lived
+> cred/lives long enough" is "in our brains" vs. what I proposed that the
+> flag was "in the object". The effect of the "flag" is the same: when to
+> use a lighter version (no refcount) of override/revert.
+> 
+> What I was thinking was more more under the covers, implicit. And I can
+> see the advantages of having them more explicit.
+> 
+> > The performance issues you observed are (probably) due to get/put
+> > of cred refcount in the helpers {override,revert}_creds().
+> >
+> 
+> Yes, they are. Sorry that it was lost in the context. The original
+> report is here:
+> 
+> https://lore.kernel.org/all/20231018074553.41333-1-hu1.chen@intel.com/
+> 
+> > Christian suggested lightweight variants of {override,revert}_creds()
+> > that do not change refcount. Combining those with a guard and
+> > I don't see what can go wrong (TM).
+> >
+> > If you try this out and post a patch, please be sure to include the
+> > motivation for the patch along with performance numbers in the
+> > commit message, even if only posting an RFC patch.
+> >
+> 
+> Of course.
+> 
+> And to be sure, I will go with Christian's suggestion, it looks neat,
+> and having a lighter version of references is a more common idiom.
 
-Yeah I think it's more subtle. I'd only ask somebody to rebase an
-already tested patch on a newer one if the latter were an obvious,
-low-risk, prep-style patch. Your patch is good, but it doesn't quite
-fit into this particular category, so I'd say no jumping the queue ;)
+Did this ever go anywhere?
