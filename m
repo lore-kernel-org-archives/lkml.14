@@ -1,174 +1,196 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B70120DF3;
-	Tue, 23 Jan 2024 01:55:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CB6065BA6
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 01:58:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705974929; cv=none; b=KECcQT2llweYfHnm0rm1jtg/cuToTHNDsoZiUbJe7Z9XXJhQ3xUI+QooTbRTHM1VGtSaA97MOzQBF2PX/QmqE4xhaU/nX02gUd6uzVIlStTQRl8kfDIEu/ykgN0uN1P0EcdADEEDFQyGGuN9yejIS+IJRSrbnCgjEEHZcw1f3aw=
+	t=1705975100; cv=none; b=rKRK1KcyL4N55JY0d/pVEDXeS49e6tDiJb8nxBjqZgxiQmoJJ9CTL7xIPGInK3Gb09TiPTcaFnNwuNRo/91DHDh2T7+KpJHlNFQNMX6g1UD/PX3ANglVBxjSF4vFFqtbzuBgS7H5fxc0GzOLRwAgidYt6zXcx12hGpWTDiBIi+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705974929; c=relaxed/simple;
-	bh=PlMfCQXOLuiUnoNxI1m0m3HX0MZ+Lbok1A9R0kJJkU0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ccu+2Vd5VnbZiFcn5SVIZyQ6XV2tol+1P4SmiVYq9esJuEE6zGN6YUKJobcB7Vt+9OmU/a2EetTq5DJX7/Tyuq9ZLk0mv8GDNXwWSWGUSIFgqne5onX76ypiA94prpGMGwtzevJOhO2sstQHRDIYzlk0oixwoq5lQn8w+R8U4Qk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H52PV/vs; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1705975100; c=relaxed/simple;
+	bh=C0cmY3Yc126hc3Jzzmo/IPOo+CewaLsKcA1hSSoU9oc=;
+	h=Date:Subject:In-Reply-To:CC:From:To:Message-ID:Mime-Version:
+	 Content-Type; b=cHmyijYz12fAsVBz5jbn0n6WWIfHkGRjFvO0hNv8+e0YTNHnv4FNI0msTD0T7PCgKg4KjPKrUI+lidhbhnL8vreZ/Ul1s99KBfe0WUjqRwwy+u6NxLD/JkIzF5uyUcjgA2hBPtMYf3vGkWwxmjflG46FGf+0l7B9BrTIFvZ48Fk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com; spf=pass smtp.mailfrom=dabbelt.com; dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b=2JOi9WUH; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dabbelt.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H52PV/vs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29637C433F1;
-	Tue, 23 Jan 2024 01:55:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705974928;
-	bh=PlMfCQXOLuiUnoNxI1m0m3HX0MZ+Lbok1A9R0kJJkU0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=H52PV/vsOGBLGJju20vxT4kJSE5HpjzukyjNVqZE99c+ElcwL/a6lImQ36/ySzLZ4
-	 3ibsX6zzoxiX9283SQcwd4hQJM5jwZUrvsWOYAjxnushnLd5sWMxIbSVerkFf4Xn3C
-	 oDXWFA+7P3kIFG7C2Zl3AUEuGv2QiIzbukRv0ML/vCMhG/0TA7d0ybW64wCf55tv5p
-	 Brd2JKuz7iy2v86ysWG4lg9DL0DlxPbEtD9807LeBJ+5nn+QkhjkEyU8/zydK9XGPC
-	 54QgeNurSdnxO3JytHTUZLiUM/CB8/NkuqS5XlOZCj+c6aMyhFULDUMnUktkrHIgl6
-	 anWa0eEGm7h1A==
-Date: Tue, 23 Jan 2024 01:55:25 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Vincent Guittot <vincent.guittot@linaro.org>
-Cc: linux@armlinux.org.uk, catalin.marinas@arm.com, will@kernel.org,
-	paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
-	sudeep.holla@arm.com, gregkh@linuxfoundation.org, rafael@kernel.org,
-	mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
-	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-	mgorman@suse.de, bristot@redhat.com, vschneid@redhat.com,
-	viresh.kumar@linaro.org, lenb@kernel.org, robert.moore@intel.com,
-	lukasz.luba@arm.com, ionela.voinescu@arm.com,
-	pierre.gondois@arm.com, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org,
-	conor.dooley@microchip.com, suagrfillet@gmail.com,
-	ajones@ventanamicro.com, lftan@kernel.org, beata.michalska@arm.com,
-	=?iso-8859-1?Q?N=EDcolas_F=2E_R=2E_A=2E?= Prado <nfraprado@collabora.com>
-Subject: Re: [PATCH v7 3/7] cpufreq/schedutil: Use a fixed reference frequency
-Message-ID: <Za8cjQXptttuyb6c@finisterre.sirena.org.uk>
-References: <20231211104855.558096-1-vincent.guittot@linaro.org>
- <20231211104855.558096-4-vincent.guittot@linaro.org>
+	dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b="2JOi9WUH"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1d71e24845aso20284365ad.0
+        for <linux-kernel@vger.kernel.org>; Mon, 22 Jan 2024 17:58:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dabbelt-com.20230601.gappssmtp.com; s=20230601; t=1705975098; x=1706579898; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:to:from:cc
+         :in-reply-to:subject:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=xl1bS9xx12/4+TlYvqy1BacmMJQkNZFYVSIgYjkxeXA=;
+        b=2JOi9WUHZey91jPG/eqkEKD87lUZXBsg5GyTTKnQrSxkMGsWcPjTHghbaLaSM6CG3m
+         IpVRwHzc895eydG2Z1UX+yHwScZ+qU3nEQuu7SClxotSIqI0EmGYRddtHybS+qNXCq3P
+         5zaW65u9aVDNsz+Tz6q1sjr76L4kZTKdcqbe7khBZLUfnw7sEbNUDsDPp9D0QLGG0h9U
+         kqNWZrr2eOzBClCVK7BejyRkHYjBT5aj5ODxdHR+XzKqcvit2h7/wKVZ+tWqeU+ymhGE
+         MwVd0J1zPhHj4hDShCWhVv5Jmy3nugagIkph4up1mdHfd7pccD4sTzHTDF4jWm3Svq9A
+         o5bg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705975098; x=1706579898;
+        h=content-transfer-encoding:mime-version:message-id:to:from:cc
+         :in-reply-to:subject:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xl1bS9xx12/4+TlYvqy1BacmMJQkNZFYVSIgYjkxeXA=;
+        b=IV2uFgBRuLmGS7qV/FRXYlJXa7QeK7LekT4tZcAC1+boPIXUmiyoesz/94CI1+xg0L
+         /40JaImUUZ5BNyN7xH31xxkGNGUhfQ4fZe0m3WoiZf+Pp7B6AfxRTOI9ymbq4N7QTvNa
+         PYfBBnAXcF+RPKxGt8tCkPB/u04JBBGYLPkscWlHTutPDElbqrRejht9f/ex13ytl0kL
+         Ca3ry5J6XZVnWEzgOlVdsHR3g/Ckpl3rf7tbnBpqNNpxgUmnrvhJEolApd3/Wmja7B+A
+         o/PB8g33cCeISnAl8KEe4T1mgOfsDPPJWV0dyfoogRztztsvDOjV/IaaoQkgYgoL+RWD
+         sA4A==
+X-Gm-Message-State: AOJu0Yz778dRZTAJMtZuSB7kUw1m3EZY5gy8FF7qRsqRidcDGXGAobER
+	UZpJhsq6wUEEgX9e5sqTv7RSgU0/BzPcT5OgwJiUeo7MRCBSGhr+j5IMOq9bHoc=
+X-Google-Smtp-Source: AGHT+IGfPm27pCdlWIEdcPx9mb5M1+rrIWMsXK6AMdbrIt8teRpxerMx5/kPe/+y5EpMdTUT160Btw==
+X-Received: by 2002:a17:902:ef93:b0:1d7:131a:1f05 with SMTP id iz19-20020a170902ef9300b001d7131a1f05mr2047709plb.23.1705975097784;
+        Mon, 22 Jan 2024 17:58:17 -0800 (PST)
+Received: from localhost ([192.184.165.199])
+        by smtp.gmail.com with ESMTPSA id d5-20020a170902ef0500b001d7244c8ee0sm5634529plx.117.2024.01.22.17.58.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Jan 2024 17:58:17 -0800 (PST)
+Date: Mon, 22 Jan 2024 17:58:17 -0800 (PST)
+X-Google-Original-Date: Mon, 22 Jan 2024 17:58:10 PST (-0800)
+Subject:     Re: [PATCH v3 00/10] RISC-V crypto with reworked asm files
+In-Reply-To: <20240122002024.27477-1-ebiggers@kernel.org>
+CC: linux-crypto@vger.kernel.org, linux-riscv@lists.infradead.org,
+  linux-kernel@vger.kernel.org, aou@eecs.berkeley.edu, andy.chiu@sifive.com, Ard Biesheuvel <ardb@kernel.org>,
+  christoph.muellner@vrull.eu, heiko@sntech.de, jerry.shih@sifive.com,
+  Paul Walmsley <paul.walmsley@sifive.com>, phoebe.chen@sifive.com, hongrong.hsu@sifive.com
+From: Palmer Dabbelt <palmer@dabbelt.com>
+To: ebiggers@kernel.org
+Message-ID: <mhng-4b573769-2306-43f9-8c7a-c7a1bc461502@palmer-ri-x1c9>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="rky4jjSVNSd+SvwM"
-Content-Disposition: inline
-In-Reply-To: <20231211104855.558096-4-vincent.guittot@linaro.org>
-X-Cookie: Two heads are more numerous than one.
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
+On Sun, 21 Jan 2024 16:19:11 PST (-0800), ebiggers@kernel.org wrote:
+> This patchset, which applies to v6.8-rc1, adds cryptographic algorithm
+> implementations accelerated using the RISC-V vector crypto extensions
+> (https://github.com/riscv/riscv-crypto/releases/download/v1.0.0/riscv-crypto-spec-vector.pdf)
+> and RISC-V vector extension
+> (https://github.com/riscv/riscv-v-spec/releases/download/v1.0/riscv-v-spec-1.0.pdf).
+> The following algorithms are included: AES in ECB, CBC, CTR, and XTS modes;
+> ChaCha20; GHASH; SHA-2; SM3; and SM4.
+>
+> In general, the assembly code requires a 64-bit RISC-V CPU with VLEN >= 128,
+> little endian byte order, and vector unaligned access support.  The ECB, CTR,
+> XTS, and ChaCha20 code is designed to naturally scale up to larger VLEN values.
+> Building the assembly code requires tip-of-tree binutils (future 2.42) or
+> tip-of-tree clang (future 18.x).  All algorithms pass testing in QEMU, using
+> CONFIG_CRYPTO_MANAGER_EXTRA_TESTS=y.  Much of the assembly code is derived from
+> OpenSSL code that was added by https://github.com/openssl/openssl/pull/21923.
+> It's been cleaned up for integration with the kernel, e.g. reducing code
+> duplication, eliminating use of .inst and perlasm, and fixing a few bugs.
+>
+> This patchset incorporates the work of multiple people, including Jerry Shih,
+> Heiko Stuebner, Christoph Müllner, Phoebe Chen, Charalampos Mitrodimas, and
+> myself.  This patchset went through several versions from Heiko (last version
+> https://lore.kernel.org/linux-crypto/20230711153743.1970625-1-heiko@sntech.de),
+> then several versions from Jerry (last version:
+> https://lore.kernel.org/linux-crypto/20231231152743.6304-1-jerry.shih@sifive.com),
+> then finally several versions from me.  Thanks to everyone who has contributed
+> to this patchset or its prerequisites.  Since v6.8-rc1, all prerequisite kernel
+> patches are upstream.  I think this is now ready, and I'd like for it to be
+> applied for 6.9, either to the crypto or riscv tree (at maintainers' choice).
 
---rky4jjSVNSd+SvwM
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I'm OK taking this through the RISC-V tree if folks want, I've gone and 
+queued it up for my tester.  Just LMK if it should go somewhere else, 
+otherwise it'll end up on for-next in a day or so (I'm trying to get LTO 
+builds added right now, so it might take a bit).
 
-On Mon, Dec 11, 2023 at 11:48:51AM +0100, Vincent Guittot wrote:
-> cpuinfo.max_freq can change at runtime because of boost as an example. This
-> implies that the value could be different than the one that has been
-> used when computing the capacity of a CPU.
-
-So, this seems very weird but I just finished a bisection of a failure
-that showed up during the merge window with the DT kselftests on
-meson-gxl-s905x-libretech-cc (Libretech Le Potato) running an arm64
-defconfig.  Looking at the commit this seems like a very surprising
-false result but I verified that the commit before this one runs fine
-and reproduced the failure, the bisect does seem to converge well also
-so it appears like there's something going on.  Does this ring any bells
-for anyone?
-
-The test is timed out by the kselftest wrapper:
-
-   kselftest: Running tests in dt
-   TAP version 13
-   1..1
-   # timeout set to 45
-   # selftests: dt: test_unprobed_devices.sh
-   # TAP version 13
-   #
-   not ok 1 selftests: dt: test_unprobed_devices.sh # TIMEOUT 45 seconds
-
-with no obvious effect on the system, a successful run takes less than
-20 seconds so it shouldn't be that the timing is marginal.  I'm guessing
-that reading the one of the files under /sys/devices hung.  No other
-boards in my lab are affected and I'm not immediately seeing anything
-remarkable about this board.  Full log from a bad run at:
-
-    https://lava.sirena.org.uk/scheduler/job/493329
-
-and a good run:
-
-    https://lava.sirena.org.uk/scheduler/job/492453
-
-Bisect log (the skipped commits didn't build):
-
-git bisect start
-# status: waiting for both good and bad commits
-# bad: [4fbbed7872677b0a28ba8237169968171a61efbd] Merge tag 'timers-core-2024-01-21' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
-git bisect bad 4fbbed7872677b0a28ba8237169968171a61efbd
-# status: waiting for good commit(s), bad commit known
-# good: [0dd3ee31125508cd67f7e7172247f05b7fd1753a] Linux 6.7
-git bisect good 0dd3ee31125508cd67f7e7172247f05b7fd1753a
-# bad: [ba5afb9a84df2e6b26a1b6389b98849cd16ea757] fs: rework listmount() implementation
-git bisect bad ba5afb9a84df2e6b26a1b6389b98849cd16ea757
-# bad: [de927f6c0b07d9e698416c5b287c521b07694cac] Merge tag 's390-6.8-1' of git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux
-git bisect bad de927f6c0b07d9e698416c5b287c521b07694cac
-# bad: [35f11a3710cdcbbc5090d14017a6295454e0cc73] Merge tag 'mtd/for-6.8' of git://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux
-git bisect bad 35f11a3710cdcbbc5090d14017a6295454e0cc73
-# bad: [d30e51aa7b1f6fa7dd78d4598d1e4c047fcc3fb9] Merge tag 'slab-for-6.8' of git://git.kernel.org/pub/scm/linux/kernel/git/vbabka/slab
-git bisect bad d30e51aa7b1f6fa7dd78d4598d1e4c047fcc3fb9
-# skip: [968b80332432172dbbb773e749a43bdc846d1a13] Merge tag 'powerpc-6.8-1' of git://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux
-git bisect skip 968b80332432172dbbb773e749a43bdc846d1a13
-# good: [372a34e66fb7f95124fadae9c600b231c35696a7] fs: replace f_rcuhead with f_task_work
-git bisect good 372a34e66fb7f95124fadae9c600b231c35696a7
-# good: [ae24db43b3b427eb290b58d55179c32f0a7539d1] powerpc/ftrace: Remove nops after the call to ftrace_stub
-git bisect good ae24db43b3b427eb290b58d55179c32f0a7539d1
-# skip: [3cf1d6a5fbf3f724d12b01635319924239d42c00] Merge tag 'm68k-for-v6.8-tag1' of git://git.kernel.org/pub/scm/linux/kernel/git/geert/linux-m68k
-git bisect skip 3cf1d6a5fbf3f724d12b01635319924239d42c00
-# good: [2a33e2ddc6ebf9b5468091aded8a38f57de9a580] splice: remove permission hook from do_splice_direct()
-git bisect good 2a33e2ddc6ebf9b5468091aded8a38f57de9a580
-# good: [9b7e9e2f5d5c3d079ec46bc71b114012e362ea6e] fs: factor out backing_file_splice_{read,write}() helpers
-git bisect good 9b7e9e2f5d5c3d079ec46bc71b114012e362ea6e
-# good: [12c1b632d970c0138b4c5c65a1065e7d0604d272] fs: reformat idmapped mounts entry
-git bisect good 12c1b632d970c0138b4c5c65a1065e7d0604d272
-# good: [d23627a7688fabff0096a7beaff1a93de76afaad] EDAC/igen6: Add Intel Raptor Lake-P SoCs support
-git bisect good d23627a7688fabff0096a7beaff1a93de76afaad
-# skip: [ab5f3fcb7c72094684760e0cd8954d8d570b5e83] Merge tag 'arm64-upstream' of git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux
-git bisect skip ab5f3fcb7c72094684760e0cd8954d8d570b5e83
-# good: [eb183b2cd0a6549992eca3c4ada0b1bc1d9340f5] Revert "perf/arm_dmc620: Remove duplicate format attribute #defines"
-git bisect good eb183b2cd0a6549992eca3c4ada0b1bc1d9340f5
-# good: [1ab33c03145d0f6c345823fc2da935d9a1a9e9fc] asm-generic: make sparse happy with odd-sized put_unaligned_*()
-git bisect good 1ab33c03145d0f6c345823fc2da935d9a1a9e9fc
-# good: [794c68b20408bb6899f90314e36e256924cc85a1] x86/CPU/AMD: Get rid of amd_erratum_1485[]
-git bisect good 794c68b20408bb6899f90314e36e256924cc85a1
-# bad: [11137d384996bb05cf33c8163db271e1bac3f4bf] sched/fair: Simplify util_est
-git bisect bad 11137d384996bb05cf33c8163db271e1bac3f4bf
-# good: [9c0b4bb7f6303c9c4e2e34984c46f5a86478f84d] sched/cpufreq: Rework schedutil governor performance estimation
-git bisect good 9c0b4bb7f6303c9c4e2e34984c46f5a86478f84d
-# good: [599457ba15403037b489fe536266a3d5f9efaed7] cpufreq: Use the fixed and coherent frequency for scaling capacity
-git bisect good 599457ba15403037b489fe536266a3d5f9efaed7
-# bad: [50b813b147e9eb6546a1fc49d4e703e6d23691f2] cpufreq/cppc: Move and rename cppc_cpufreq_{perf_to_khz|khz_to_perf}()
-git bisect bad 50b813b147e9eb6546a1fc49d4e703e6d23691f2
-# bad: [15cbbd1d317e07b4e5c6aca5d4c5579539a82784] energy_model: Use a fixed reference frequency
-git bisect bad 15cbbd1d317e07b4e5c6aca5d4c5579539a82784
-# bad: [b3edde44e5d4504c23a176819865cd603fd16d6c] cpufreq/schedutil: Use a fixed reference frequency
-git bisect bad b3edde44e5d4504c23a176819865cd603fd16d6c
-# first bad commit: [b3edde44e5d4504c23a176819865cd603fd16d6c] cpufreq/schedutil: Use a fixed reference frequency
-
---rky4jjSVNSd+SvwM
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmWvHIwACgkQJNaLcl1U
-h9BKeAf+IFKGcFk0BJUojgKhxZlLR+EoeCrr+qKvkf4MJnUJL08q61JYwLMM819p
-6VM9aQxyVMZV4odlJ1iquxKsIWhGNsGjZoUN+75nVoNvC33xq3bWyi4hQuwuI5pD
-QdMDesukSV+dxpIGQ99rMt5DvYPUx17pGYP12O169bX5CH5KSxY/9Ct/tjgxs6tH
-zw+2s7IATJ1b2ShOFKgrhpk30UoaB0kHl/ojFa6+5AoAJtNXcXA2V0ho2I3ochZV
-F/NwOGdv0N0keLAuXoatUutq+MUfM8gRSitwO6Vg9VJ1EozUI8LFBeHsO9M98X7K
-Ey0zu/yA6e8muzklAjcX3c0cFCMVHw==
-=pMbb
------END PGP SIGNATURE-----
-
---rky4jjSVNSd+SvwM--
+>
+> Below is the changelog for my versions of the patchset.  For the changelog of
+> the older versions, see the above links.
+>
+> Changed in v3:
+>   - Fixed a bug in the AES-XTS implementation where it assumed the CPU
+>     always set vl to the maximum possible value.  This was okay for
+>     QEMU, but the vector spec allows CPUs to have different behavior.
+>   - Increased the LMUL for AES-ECB to 8, as the registers are available.
+>   - Fixed some license text that I had mistakenly changed when doing a
+>     find-and-replace of code.
+>   - Addressed a checkpatch warning by not including filename in file.
+>   - Rename some labels.
+>   - Constify a variable.
+>
+> Changed in v2:
+>   - Merged the AES modules together to prevent a build error.
+>   - Only unregister AES algorithms that were registered.
+>   - Corrected walksize properties to match the LMUL used by asm code.
+>   - Simplified the CTR and XTS glue code slightly.
+>   - Minor cleanups.
+>
+> Changed in v1:
+>   - Refer to my cover letter
+>     https://lore.kernel.org/linux-crypto/20240102064743.220490-1-ebiggers@kernel.org/
+>
+> Eric Biggers (1):
+>   RISC-V: add TOOLCHAIN_HAS_VECTOR_CRYPTO
+>
+> Heiko Stuebner (2):
+>   RISC-V: add helper function to read the vector VLEN
+>   RISC-V: hook new crypto subdir into build-system
+>
+> Jerry Shih (7):
+>   crypto: riscv - add vector crypto accelerated AES-{ECB,CBC,CTR,XTS}
+>   crypto: riscv - add vector crypto accelerated ChaCha20
+>   crypto: riscv - add vector crypto accelerated GHASH
+>   crypto: riscv - add vector crypto accelerated SHA-{256,224}
+>   crypto: riscv - add vector crypto accelerated SHA-{512,384}
+>   crypto: riscv - add vector crypto accelerated SM3
+>   crypto: riscv - add vector crypto accelerated SM4
+>
+>  arch/riscv/Kbuild                             |   1 +
+>  arch/riscv/Kconfig                            |   7 +
+>  arch/riscv/crypto/Kconfig                     |  93 +++
+>  arch/riscv/crypto/Makefile                    |  23 +
+>  arch/riscv/crypto/aes-macros.S                | 156 +++++
+>  arch/riscv/crypto/aes-riscv64-glue.c          | 550 ++++++++++++++++++
+>  .../crypto/aes-riscv64-zvkned-zvbb-zvkg.S     | 312 ++++++++++
+>  arch/riscv/crypto/aes-riscv64-zvkned-zvkb.S   | 146 +++++
+>  arch/riscv/crypto/aes-riscv64-zvkned.S        | 180 ++++++
+>  arch/riscv/crypto/chacha-riscv64-glue.c       | 101 ++++
+>  arch/riscv/crypto/chacha-riscv64-zvkb.S       | 294 ++++++++++
+>  arch/riscv/crypto/ghash-riscv64-glue.c        | 168 ++++++
+>  arch/riscv/crypto/ghash-riscv64-zvkg.S        |  72 +++
+>  arch/riscv/crypto/sha256-riscv64-glue.c       | 137 +++++
+>  .../sha256-riscv64-zvknha_or_zvknhb-zvkb.S    | 225 +++++++
+>  arch/riscv/crypto/sha512-riscv64-glue.c       | 133 +++++
+>  .../riscv/crypto/sha512-riscv64-zvknhb-zvkb.S | 203 +++++++
+>  arch/riscv/crypto/sm3-riscv64-glue.c          | 112 ++++
+>  arch/riscv/crypto/sm3-riscv64-zvksh-zvkb.S    | 123 ++++
+>  arch/riscv/crypto/sm4-riscv64-glue.c          | 107 ++++
+>  arch/riscv/crypto/sm4-riscv64-zvksed-zvkb.S   | 117 ++++
+>  arch/riscv/include/asm/vector.h               |  11 +
+>  crypto/Kconfig                                |   3 +
+>  23 files changed, 3274 insertions(+)
+>  create mode 100644 arch/riscv/crypto/Kconfig
+>  create mode 100644 arch/riscv/crypto/Makefile
+>  create mode 100644 arch/riscv/crypto/aes-macros.S
+>  create mode 100644 arch/riscv/crypto/aes-riscv64-glue.c
+>  create mode 100644 arch/riscv/crypto/aes-riscv64-zvkned-zvbb-zvkg.S
+>  create mode 100644 arch/riscv/crypto/aes-riscv64-zvkned-zvkb.S
+>  create mode 100644 arch/riscv/crypto/aes-riscv64-zvkned.S
+>  create mode 100644 arch/riscv/crypto/chacha-riscv64-glue.c
+>  create mode 100644 arch/riscv/crypto/chacha-riscv64-zvkb.S
+>  create mode 100644 arch/riscv/crypto/ghash-riscv64-glue.c
+>  create mode 100644 arch/riscv/crypto/ghash-riscv64-zvkg.S
+>  create mode 100644 arch/riscv/crypto/sha256-riscv64-glue.c
+>  create mode 100644 arch/riscv/crypto/sha256-riscv64-zvknha_or_zvknhb-zvkb.S
+>  create mode 100644 arch/riscv/crypto/sha512-riscv64-glue.c
+>  create mode 100644 arch/riscv/crypto/sha512-riscv64-zvknhb-zvkb.S
+>  create mode 100644 arch/riscv/crypto/sm3-riscv64-glue.c
+>  create mode 100644 arch/riscv/crypto/sm3-riscv64-zvksh-zvkb.S
+>  create mode 100644 arch/riscv/crypto/sm4-riscv64-glue.c
+>  create mode 100644 arch/riscv/crypto/sm4-riscv64-zvksed-zvkb.S
+>
+>
+> base-commit: 6613476e225e090cc9aad49be7fa504e290dd33d
