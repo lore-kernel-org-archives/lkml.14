@@ -1,120 +1,62 @@
-Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23B5060BBD;
-	Tue, 23 Jan 2024 01:52:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8737960DD6;
+	Tue, 23 Jan 2024 01:54:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705974757; cv=none; b=GVe0qPtVAxlRF376zfcje7PVQmWuPU7VjMblZwveANxG0d/BRmQpes7d6ZwLxLl/15th3xhe8HPQ7/m1D/JF330ja/LDx3T2h1JwleruRDan/7nI71rl+HuqUif2pDTBfmmyweZ3aQh1xV16dRrPdEkIAV2JQOBRraRnlwiGnqo=
+	t=1705974851; cv=none; b=PTkpeJbL2mW4y3WekBbVMwnHWq1YEeChCcWSwHsaeYhSPcWjkCUbg6pWPYWRvXJty3OT1NiOwze2kGLbg3Cg8Hzwlzb6M3fCeuoC0CejbSpChOWtAwjrwCH7y/oDy7KEpiyxfg+hclPjSdGJr0DgnZlDOAFD5OOGFUw/MNPYlYo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705974757; c=relaxed/simple;
-	bh=8u0AgQw2OqnO0fPDfMvidyN8sk5sZzKAvfBOInESfwI=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=AB3e5OmqZ/lZfvuLvDB2N/7kCRBCJZekK2/GPf+cfM2PAJtRP77biw5PZCU7uWJ7tRv599sFHbflEa/7ImOwlwdhNdIJ+KICh2mEatPdxvSQfh9OgnBIk/CE7O04WmNMpP6yToT/R6OcnbMcA/fWTSz9MqSuHX9zSaJryeDd23w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=nw024Zjw; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="nw024Zjw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1705974752;
-	bh=p4hRPKTKLs19pGw1tsRGHFw3u8tWxyLxRDhe/WLRu8o=;
-	h=Date:From:To:Cc:Subject:From;
-	b=nw024ZjwreNqT3lbQ1YINKu+7B3nesrH5scQbmofdzQFHQO7rMRWMZRnXjWha43Mp
-	 fA46Z4algPtQu9EXvAjilKYlEG3mgSfxY0Yx/ISi718HcqjTsZ+z9/7Pfar6OAFRvr
-	 MVSPGHKm4nBmVzUxSTAocGTU+dKUPwVMyZDld6d5KodF0JPl9YAEGKAAlmhbZPAT9I
-	 +g2vb3gN7/+Qmyyikf4b/eAwKV1Ztq6JKmxzH8ngobPaceJp6nA/AQTlbyaDoi3cAV
-	 gmSaCq3dHQ98WbOIoI6K/j93Qf1s59l5+uNBL75FXq1fyN94360Sap/GJFk8/gVdTA
-	 BDZ/UoPjtwUkQ==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4TJqpl3Ls9z4xc5;
-	Tue, 23 Jan 2024 12:52:31 +1100 (AEDT)
-Date: Tue, 23 Jan 2024 12:52:27 +1100
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Christian Brauner <brauner@kernel.org>
-Cc: Baokun Li <libaokun1@huawei.com>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: linux-next: build failure after merge of the vfs-brauner tree
-Message-ID: <20240123125227.0521c8d9@canb.auug.org.au>
+	s=arc-20240116; t=1705974851; c=relaxed/simple;
+	bh=nt6Hl62u5AXRkmcTQcS/xesbw7puA81xqOiLHvBdtHM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=EYbb8ChhcjUUAN63QHu1K2qwn4tvly+U4WyxylcTEQQ6HgCJsz2j80dWH+KxOlmlYTI5/ADJ31YsCy0MG9UiNbZbOHDht0CHeY1vf12nD+AYwgg6rHO7wHQ4JT72cFhGouJwSWM9nI83KVmkBS7rGBL43Qh9tCtf+TBda8PUXIs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3510C433C7;
+	Tue, 23 Jan 2024 01:54:09 +0000 (UTC)
+Date: Mon, 22 Jan 2024 20:55:39 -0500
+From: Steven Rostedt <rostedt@goodmis.org>
+To: George Guo <dongtai.guo@linux.dev>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Dennis Zhou <dennis@kernel.org>, Tejun
+ Heo <tj@kernel.org>, Christoph Lameter <cl@linux.com>, Andrew Morton
+ <akpm@linux-foundation.org>, George Guo <guodongtai@kylinos.cn>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-mm@kvack.org
+Subject: Re: [PATCH] percpu: improve percpu_alloc_percpu_fail event trace
+Message-ID: <20240122205539.705f5701@gandalf.local.home>
+In-Reply-To: <20240123094443.00007b20@linux.dev>
+References: <20240122073629.2594271-1-dongtai.guo@linux.dev>
+	<20240122105700.05e5ee46@gandalf.local.home>
+	<20240123094443.00007b20@linux.dev>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/wwEr_+0bHO.BR4FXWEX7H1T";
- protocol="application/pgp-signature"; micalg=pgp-sha256
-
---Sig_/wwEr_+0bHO.BR4FXWEX7H1T
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 
-Hi all,
+On Tue, 23 Jan 2024 09:44:43 +0800
+George Guo <dongtai.guo@linux.dev> wrote:
 
-After merging the vfs-brauner tree, today's linux-next build (powerpc
-allnoconfig) failed like this:
+> There are two reasons of percpu_alloc failed without warnings: 
+> 
+> 1. do_warn is false
+> 2. do_warn is true and warn_limit is reached the limit.
 
-In file included from <command-line>:
-In function 'i_size_read',
-    inlined from '__iomap_dio_rw' at fs/iomap/direct-io.c:570:16:
-include/linux/compiler_types.h:435:45: error: call to '__compiletime_assert=
-_229' declared with attribute error: Need native word sized stores/loads fo=
-r atomicity.
-  435 |         _compiletime_assert(condition, msg, __compiletime_assert_, =
-__COUNTER__)
-      |                                             ^
-include/linux/compiler_types.h:416:25: note: in definition of macro '__comp=
-iletime_assert'
-  416 |                         prefix ## suffix();                        =
-     \
-      |                         ^~~~~~
-include/linux/compiler_types.h:435:9: note: in expansion of macro '_compile=
-time_assert'
-  435 |         _compiletime_assert(condition, msg, __compiletime_assert_, =
-__COUNTER__)
-      |         ^~~~~~~~~~~~~~~~~~~
-include/linux/compiler_types.h:438:9: note: in expansion of macro 'compilet=
-ime_assert'
-  438 |         compiletime_assert(__native_word(t),                       =
-     \
-      |         ^~~~~~~~~~~~~~~~~~
-include/asm-generic/barrier.h:206:9: note: in expansion of macro 'compileti=
-me_assert_atomic_type'
-  206 |         compiletime_assert_atomic_type(*p);                        =
-     \
-      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-include/linux/fs.h:911:16: note: in expansion of macro 'smp_load_acquire'
-  911 |         return smp_load_acquire(&inode->i_size);
-      |                ^~~~~~~~~~~~~~~~
+Yes I know the reasons.
 
-Caused by commit
+> 
+> Showing do_warn and warn_limit makes things simple, maybe dont need
+> kprobe again.
 
-  4bbd51d0f0ad ("fs: make the i_size_read/write helpers be smp_load_acquire=
-/store_release()")
+It's up to the maintainers of that code to decide if it's worth it or not,
+but honestly, my opinion it is not.
 
-I have used the vfs-brauner tree from next-20240122 for today.
+The trace event in question is to trace that percpu_alloc failed and why.
+It's not there to determine why it did not produce a printk message.
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/wwEr_+0bHO.BR4FXWEX7H1T
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmWvG9sACgkQAVBC80lX
-0Gx1pAf+Pp3PjPzFgxC3P/a1IpT8KMzUv2pWUgcj5V8YoY2CDrQ2GngcpGhBDOu9
-yXfMmRwl2otPoa1S91d5M/7yCd7HNnfwaKTNMfqfUKc+H/nPBwmOZjxVmDWKp4PJ
-CM8l2TgLD3ysiV3nTc0WkuiynuBx9UqH+YGSxe4JNTXJEvKdOYBxV2dbKtO8mnbJ
-79tt37I3phHjGCGbe/Kc2I0EIaHgxp0AjP34CREu2Pw8oYDTbZi0lj7orokHpCi4
-FYhtNW0TNWNDJoNEjFuXhvZj2TuZ3m0uL74itjabtkAsIbvKWEb2qt/+6Ok/8Y4L
-eoqP02gtV+uHTWlKO4OEoYJQ+/+mkA==
-=QcsJ
------END PGP SIGNATURE-----
-
---Sig_/wwEr_+0bHO.BR4FXWEX7H1T--
+-- Steve
