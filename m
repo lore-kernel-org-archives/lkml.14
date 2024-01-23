@@ -1,148 +1,172 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A241C5026F;
-	Tue, 23 Jan 2024 14:45:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 610B150A65;
+	Tue, 23 Jan 2024 14:46:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706021102; cv=none; b=tYa5BBQ4/SFcbDSNXJYa9C/Ds1FWe0NR30Efl/zLrNCAWvQDsaV9/GawikjQ5Jyz4u66WDF5DB7od1pexgPNGFJ/6tsEkbbMSDynRKJq++XFP9t0gjHV7POm6SUm/tjyy5zuVwqit8X/ZclnTn8fQTm0BvkbGwsbVVwknTKs72w=
+	t=1706021200; cv=none; b=gj/AzOMrKuA5RwxIVWwDTqihi3zvt01Pv9ORL0JgX6OIuBlPrOAJrURfNbXMVR9pTo6XZFa/fj3Ugh/mQvuIAFNmLnAvnWN1NOMCgbpzu7NZXzoWsepeOBZZXMol8ySnKU1F37R5cldON8tjHqlwrkZpM2EjazAIXPOkG80v7F8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706021102; c=relaxed/simple;
-	bh=+8mWQtyFcnYGhfR0wkSQ68fK9+UKR6e+xL/523DTfrE=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=aU9/kxnr2+YeurUxjFusLPE02lJ9WNkE/QQVwVjiZ5py0OPVmztnX+ilUtjorDnAQh1UJEGNMxJnJp7xqUC23wN4SSLajW0RA+IP6dv1R+yX/lftCv5pifHzCkzyC85RRqYR2QLuhuOKw9g8KH4jVJ3qG3/x3Ca+/3u2evmFvH8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=oYH9+34T; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1706021200; c=relaxed/simple;
+	bh=vS4HCbaJXPXyBZzvRsr+j79C6f12lT2v06pG/wqiCQ0=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hzxqzsYz7cdwPV3eksg31Daa+jz1RJpK0NjLGPjV+VPglCkIfgfHLlLTn8BZ7Hld+X+FaITKq1g7tMmxvCAkiRGwqHGigj+yeRkckp6hVzeXwmU859C0WnUZV5pSzfTsQCoVSl/JoQWUh2OvaqhN/K3CVKe+J33Jn3b0prn8FkM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ZaxFBDQc; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="oYH9+34T"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1706021099;
-	bh=+8mWQtyFcnYGhfR0wkSQ68fK9+UKR6e+xL/523DTfrE=;
-	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
-	b=oYH9+34T274wj0pmflwVQkZtj4kzL8X0IozbxHiUB9ZxNClluGgTttaT4fIDBM3zg
-	 /c1PI1tgscghRptoWKdEndPRz85x5eU6/hvZbRgXGcEzBx1qKSGoG2YiotL/+9Cgkh
-	 0wJKLLagQx9oMACCrnO+GquHBAVe+sfJk8P5q3JGCeo7eGpzy2rVybdaE15QyxXOV+
-	 Os1+/IMiq88hvgXLTh1OsOLQNCcWVOL7DFqRR+I2ojRiKPmVS5QRIwzRcKuHmO6dvq
-	 34SAn06OsRTaNegs093K7Ji1pGJo3EF3K4EpazlyotI676TaEKiNelO8qOIS21m3Rh
-	 4thZ6PDfmB0jg==
-Received: from [100.96.234.34] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: usama.anjum)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id DC41437820AF;
-	Tue, 23 Jan 2024 14:44:56 +0000 (UTC)
-Message-ID: <4bf9bf87-0622-4824-9026-d7ab5839f433@collabora.com>
-Date: Tue, 23 Jan 2024 19:45:08 +0500
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ZaxFBDQc"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40NDaGmK011658;
+	Tue, 23 Jan 2024 14:46:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-type; s=qcppdkim1; bh=U5PLBym+lB74aH4+z1oq
+	nztVitfqjwoz3FAlJGCWR7w=; b=ZaxFBDQcuYNi9ZMRXN/OrLaWNq2kGIEsPlwb
+	a7BlcS1GLdOafq2vQdmmFxGukyBbAsnMxm++1dWwK3+AFVe46ihEdfIi0qx+Efnc
+	NTLEZD5GSH55sOL5cSQSey+ki2GReP6sAbdqokdeO/SC5wKEkUVJ1hg+V4t+vMRa
+	+m0xG1ROOR0MhsFi5VTWMPigkfokELUHgLHlMcx0F0jEsuUgNGOD6zybvtNIMkwv
+	117v3RhtPbGB3KTjJJ0EAl0pSG9IW8ooZ3Qd94JThdHQU7R5kzza5FZ8j2/Zjcq2
+	Bvuf5Dh9tPj2p6rm38xQTdmadCasjhcSyY1lXfHxV+DwQUQYxw==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vt9un8wtk-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 23 Jan 2024 14:46:17 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 40NEkG9d014409
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 23 Jan 2024 14:46:16 GMT
+Received: from hu-bibekkum-hyd.qualcomm.com (10.80.80.8) by
+ nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Tue, 23 Jan 2024 06:46:11 -0800
+From: Bibek Kumar Patro <quic_bibekkum@quicinc.com>
+To: <will@kernel.org>, <robin.murphy@arm.com>, <joro@8bytes.org>,
+        <dmitry.baryshkov@linaro.org>, <konrad.dybcio@linaro.org>,
+        <jsnitsel@redhat.com>, <quic_bjorande@quicinc.com>, <mani@kernel.org>,
+        <quic_eberman@quicinc.com>, <robdclark@chromium.org>,
+        <u.kleine-koenig@pengutronix.de>, <robh@kernel.org>,
+        <vladimir.oltean@nxp.com>, <quic_pkondeti@quicinc.com>,
+        <quic_molvera@quicinc.com>
+CC: <linux-arm-msm@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <iommu@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
+        Bibek Kumar Patro
+	<quic_bibekkum@quicinc.com>
+Subject: [PATCH v9 1/5] iommu/arm-smmu: re-enable context caching in smmu reset operation
+Date: Tue, 23 Jan 2024 20:15:39 +0530
+Message-ID: <20240123144543.9405-2-quic_bibekkum@quicinc.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20240123144543.9405-1-quic_bibekkum@quicinc.com>
+References: <20240123144543.9405-1-quic_bibekkum@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>, kernel@collabora.com,
- linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
- linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
- Shuah Khan <shuah@kernel.org>
-Subject: Re: [PATCH v2 1/2] selftests/mm: run_vmtests.sh: add missing tests
-Content-Language: en-US
-To: Ryan Roberts <ryan.roberts@arm.com>
-References: <20240123073615.920324-1-usama.anjum@collabora.com>
- <e92f7c49-5268-421e-a017-af268c845b1b@arm.com>
-From: Muhammad Usama Anjum <usama.anjum@collabora.com>
-In-Reply-To: <e92f7c49-5268-421e-a017-af268c845b1b@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: BzudYR6vSDfiv2d2ikm3YXbWdQqMFEDQ
+X-Proofpoint-GUID: BzudYR6vSDfiv2d2ikm3YXbWdQqMFEDQ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-01-23_08,2024-01-23_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
+ priorityscore=1501 adultscore=0 clxscore=1015 spamscore=0
+ lowpriorityscore=0 bulkscore=0 mlxscore=0 impostorscore=0 phishscore=0
+ malwarescore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2311290000 definitions=main-2401230108
 
-Hi Ryan,
+Default MMU-500 reset operation disables context caching in
+prefetch buffer. It is however expected for context banks using
+the ACTLR register to retain their prefetch value during reset
+and runtime suspend.
 
-Thank you so much for reviewing and getting involved.
+Replace default MMU-500 reset operation with Qualcomm specific reset
+operation which envelope the default reset operation and re-enables
+context caching in prefetch buffer for Qualcomm SoCs.
 
-On 1/23/24 2:33 PM, Ryan Roberts wrote:
-> On 23/01/2024 07:36, Muhammad Usama Anjum wrote:
->> Add missing tests to run_vmtests.sh. The mm kselftests are run through
->> run_vmtests.sh. If a test isn't present in this script, it'll not run
->> with run_tests or `make -C tools/testing/selftests/mm run_tests`.
->>
->> Cc: Ryan Roberts <ryan.roberts@arm.com>
->> Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
->> ---
->> Changes since v1:
->> - Copy the original scripts and their dependence script to install directory as well
->> ---
->>  tools/testing/selftests/mm/Makefile       | 3 +++
->>  tools/testing/selftests/mm/run_vmtests.sh | 3 +++
->>  2 files changed, 6 insertions(+)
->>
->> diff --git a/tools/testing/selftests/mm/Makefile b/tools/testing/selftests/mm/Makefile
->> index 2453add65d12f..c9c8112a7262e 100644
->> --- a/tools/testing/selftests/mm/Makefile
->> +++ b/tools/testing/selftests/mm/Makefile
->> @@ -114,6 +114,9 @@ TEST_PROGS := run_vmtests.sh
->>  TEST_FILES := test_vmalloc.sh
->>  TEST_FILES += test_hmm.sh
->>  TEST_FILES += va_high_addr_switch.sh
->> +TEST_FILES += charge_reserved_hugetlb.sh
->> +TEST_FILES += write_hugetlb_memory.sh
->> +TEST_FILES += hugetlb_reparenting_test.sh
-> 
-> I see you are exporting 3 scripts, but only invoking 2 of them from
-> run_vmtests.sh below. Is one a helper that gets called indirectly?
-Yeah, write_hugetlb_memory.sh is needed by charge_reserved_hugetlb.sh. I'll
-put a comment there.
+Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+Signed-off-by: Bibek Kumar Patro <quic_bibekkum@quicinc.com>
+---
+ drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c | 36 ++++++++++++++++++++--
+ 1 file changed, 33 insertions(+), 3 deletions(-)
 
-> 
->>  
->>  include ../lib.mk
->>  
->> diff --git a/tools/testing/selftests/mm/run_vmtests.sh b/tools/testing/selftests/mm/run_vmtests.sh
->> index 246d53a5d7f28..12754af00b39c 100755
->> --- a/tools/testing/selftests/mm/run_vmtests.sh
->> +++ b/tools/testing/selftests/mm/run_vmtests.sh
->> @@ -248,6 +248,9 @@ CATEGORY="hugetlb" run_test ./map_hugetlb
->>  CATEGORY="hugetlb" run_test ./hugepage-mremap
->>  CATEGORY="hugetlb" run_test ./hugepage-vmemmap
->>  CATEGORY="hugetlb" run_test ./hugetlb-madvise
->> +CATEGORY="hugetlb" run_test ./charge_reserved_hugetlb.sh -cgroup-v2
->> +CATEGORY="hugetlb" run_test ./hugetlb_reparenting_test.sh -cgroup-v2
->> +CATEGORY="hugetlb" run_test ./hugetlb-read-hwpoison
-> 
-> I'm not really a fan of adding this last test here; its destructive because it
-> poisons 8 hugepages. So at a minimum, I think you need to modify the code in
-> run_vmtests.sh to ensure those extra pages are allocated (there is already a
-> section in the script that allocates hugepages).
-> 
-> However, given this test is destructive, I'd prefer that it wasn't run as part
-> of the main test set. Because the first time you run it, it will presumably
-> pass, but now some of the hugepages are poisoned so next time you run it, there
-> won't be enough unpoisoned hugepages and a test will fail. So you have very
-> confusing behaviour for a developer who might be running these tests multiple
-> times per boot (e.g. me).
-> 
-> Perhaps we can add a -d (destructive) option to the script, and this test will
-> only be run if that option is passed?
-Ideally we should be able to fix these tests before enabling them and there
-shouldn't be any side-effect of these. I'm struggling with the
-configurations where I'm getting consistent results. Studying and analyzing
-how and how many hugetlbs are being allocated/deallocated isn't straight
-forward enough in these.
+diff --git a/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c b/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c
+index 549ae4dba3a6..c432e80a69fc 100644
+--- a/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c
++++ b/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c
+@@ -14,6 +14,16 @@
 
-I'll spend more time to either put it under some flag or modify the tests
-to don't entangle with each other.
+ #define QCOM_DUMMY_VAL	-1
 
-> 
-> Thanks,
-> Ryan
-> 
-> 
->>  
->>  nr_hugepages_tmp=$(cat /proc/sys/vm/nr_hugepages)
->>  # For this test, we need one and just one huge page
-> 
-> 
++/*
++ * SMMU-500 TRM defines BIT(0) as CMTLB (Enable context caching in the
++ * macro TLB) and BIT(1) as CPRE (Enable context caching in the prefetch
++ * buffer). The remaining bits are implementation defined and vary across
++ * SoCs.
++ */
++
++#define CPRE			(1 << 1)
++#define CMTLB			(1 << 0)
++
+ static struct qcom_smmu *to_qcom_smmu(struct arm_smmu_device *smmu)
+ {
+ 	return container_of(smmu, struct qcom_smmu, smmu);
+@@ -376,11 +386,31 @@ static int qcom_smmu_def_domain_type(struct device *dev)
+ 	return match ? IOMMU_DOMAIN_IDENTITY : 0;
+ }
 
--- 
-BR,
-Muhammad Usama Anjum
++static int qcom_smmu500_reset(struct arm_smmu_device *smmu)
++{
++	int ret;
++	u32 val;
++	int i;
++
++	ret = arm_mmu500_reset(smmu);
++	if (ret)
++		return ret;
++
++	/* arm_mmu500_reset() disables CPRE which is re-enabled here */
++	for (i = 0; i < smmu->num_context_banks; ++i) {
++		val = arm_smmu_cb_read(smmu, i, ARM_SMMU_CB_ACTLR);
++		val |= CPRE;
++		arm_smmu_cb_write(smmu, i, ARM_SMMU_CB_ACTLR, val);
++	}
++
++	return 0;
++}
++
+ static int qcom_sdm845_smmu500_reset(struct arm_smmu_device *smmu)
+ {
+ 	int ret;
+
+-	arm_mmu500_reset(smmu);
++	qcom_smmu500_reset(smmu);
+
+ 	/*
+ 	 * To address performance degradation in non-real time clients,
+@@ -407,7 +437,7 @@ static const struct arm_smmu_impl qcom_smmu_500_impl = {
+ 	.init_context = qcom_smmu_init_context,
+ 	.cfg_probe = qcom_smmu_cfg_probe,
+ 	.def_domain_type = qcom_smmu_def_domain_type,
+-	.reset = arm_mmu500_reset,
++	.reset = qcom_smmu500_reset,
+ 	.write_s2cr = qcom_smmu_write_s2cr,
+ 	.tlb_sync = qcom_smmu_tlb_sync,
+ };
+@@ -432,7 +462,7 @@ static const struct arm_smmu_impl qcom_adreno_smmu_v2_impl = {
+ static const struct arm_smmu_impl qcom_adreno_smmu_500_impl = {
+ 	.init_context = qcom_adreno_smmu_init_context,
+ 	.def_domain_type = qcom_smmu_def_domain_type,
+-	.reset = arm_mmu500_reset,
++	.reset = qcom_smmu500_reset,
+ 	.alloc_context_bank = qcom_adreno_smmu_alloc_context_bank,
+ 	.write_sctlr = qcom_adreno_smmu_write_sctlr,
+ 	.tlb_sync = qcom_smmu_tlb_sync,
+--
+2.17.1
+
