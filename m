@@ -1,43 +1,44 @@
 Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CC611350E0;
-	Tue, 23 Jan 2024 00:22:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F2B614D45E;
+	Tue, 23 Jan 2024 00:22:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.134.136.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705969359; cv=none; b=DM/TLwK42ihWUtuk9pjpHEgWW/sLymnodxUGfJ0V2pDvWrntfMI70wz2VX9EYw/Uhestd1EBbeThbgO1p9jT4R3x/A6rmbNsU0SDTS92YMsG7K2kcycAjJpGpNhIfXghLSeDBtY6o3F1npB4v2+2fhBL14hmfv8tjNvdAMSUOq4=
+	t=1705969361; cv=none; b=F3KocvEZT1Bv5ya8FP7kw36xmPApThSKm12q4wkPz/aLr1XoYprMmrfZEXrAhSyxIDIxohvXGZrxZzjCWq/pAZOnRBNtlpu9izmIGfeUoQisTe92tN3QWrIN63j64B57mYYGBCUwK5LMqKO/rxhCCx2vhVwVDdgXvilrNg7jKCs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705969359; c=relaxed/simple;
-	bh=OkrKYToEqMSBdgXRUW+l60iAc1MVrx4Y2qtcgh1ypAw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Vol9cEliq+7RmSQbe+dmitAp5KU4lDabuGG1bojW8NoG0DJgKu02VavmvdZQoF/vpzv6SX6ZVKnV5Ln5agi/xLbdzHQDbgQrpan8Tg2KGF6MCeYijiQXP5Yw6MixDgQJ0fZJVPrKN7ESjrYXN4ui3rP5hJgYIYsVyV3Mmaosux4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YytDiKb8; arc=none smtp.client-ip=134.134.136.65
+	s=arc-20240116; t=1705969361; c=relaxed/simple;
+	bh=R8cBMPqil2+5pjGW+al9piEQU44M2m54kdZoD0oUf8w=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=LwD+YJZ3kmAKBCe3cQq5Creock9LduXAhnmUftqPPkkV/Mv+DnXlVHbI1XUlVX6asNmlbE0b50mW1VaFuBEmJ/FnzPGD+xa27gm+S8j8np4vXxJBDS6MbKycQiTL8F9yL4M+a+1msb4e7SYO+WfdriLqtZ9uw5WGUuLWp65sUjo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GfxJBnDD; arc=none smtp.client-ip=134.134.136.65
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YytDiKb8"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GfxJBnDD"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1705969357; x=1737505357;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=OkrKYToEqMSBdgXRUW+l60iAc1MVrx4Y2qtcgh1ypAw=;
-  b=YytDiKb8IMnK/DFRIOqEZwOhObeYFWsnbm4v2vN1WIryXV+uMnfGGOUo
-   ZM6KfmR5z0NPGBPpiqwuV74fRxGnbeIpvCbMFll959LsLXyp/5lWvgxTk
-   Y3r1+d0Bevi6Kj+nF5e9/nSzdxXM8aJLdpKuJpFMDzJpGXwQ5oaIS9M7L
-   I4R7h0eNr61BiZuCxSjUZUWHMmEe49EqhkHKGs3pY1kIzI6cXpTu4RN76
-   xZ64wDXZAGk1H1PoGcekbVoO8IWqraY4bDdTI2Un9Sf4rQRjHtz5LEaNE
-   Hvfug/xcSBfm76mpOpPIpm7G40ZUoyL5NN2DhS+oYj0NHVDvAOJaQx3me
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10961"; a="405125633"
+  t=1705969359; x=1737505359;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=R8cBMPqil2+5pjGW+al9piEQU44M2m54kdZoD0oUf8w=;
+  b=GfxJBnDDhfz42jEJPsWkzAqSaPyVDSW/CFp1Rc/tVaK6v37NJICwlbNs
+   CiXbXtnBWBkLrf6wirmw//dgGhGCU3lYwHtP+PIeDCzNWvQtQ+C1HTxNY
+   9LbMKhDyMq99Fs+WiLkc4Tyd31D5ZAKJw/BgZormfhUfXAWmEz6EalOKv
+   EwgxC2+PcVW3G/F97k2Y4b+IkB37i0R5Q3bg5BbJH70ZviCxKAcsKuEcs
+   a+7jqHPH/miPwuRXtTXwv5RjpV8hXccKPTqi0q8TJGfm5ewnjtYY6AfIU
+   35cV9JQN1QxJ/K6L4vPt1dL1SSivJJwxQvHr2PEkjWpS2XcHEYm96VHSk
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10961"; a="405125645"
 X-IronPort-AV: E=Sophos;i="6.05,212,1701158400"; 
-   d="scan'208";a="405125633"
+   d="scan'208";a="405125645"
 Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 16:22:36 -0800
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 16:22:37 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.05,212,1701158400"; 
-   d="scan'208";a="27825616"
+   d="scan'208";a="27825624"
 Received: from ls.sc.intel.com (HELO localhost) ([172.25.112.31])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 16:22:35 -0800
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2024 16:22:36 -0800
 From: isaku.yamahata@intel.com
 To: kvm@vger.kernel.org,
 	linux-kernel@vger.kernel.org
@@ -50,11 +51,14 @@ Cc: isaku.yamahata@intel.com,
 	Kai Huang <kai.huang@intel.com>,
 	chen.bo@intel.com,
 	hang.yuan@intel.com,
-	tina.zhang@intel.com
-Subject: [PATCH v7 00/13] KVM TDX: TDP MMU: large page support
-Date: Mon, 22 Jan 2024 16:22:15 -0800
-Message-Id: <cover.1705965958.git.isaku.yamahata@intel.com>
+	tina.zhang@intel.com,
+	Xiaoyao Li <xiaoyao.li@intel.com>
+Subject: [PATCH v7 02/13] KVM: TDX: Pass KVM page level to tdh_mem_page_aug()
+Date: Mon, 22 Jan 2024 16:22:17 -0800
+Message-Id: <63c4832507b9b10383e00b33ce2ab6e756ecdf3b.1705965958.git.isaku.yamahata@intel.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <cover.1705965958.git.isaku.yamahata@intel.com>
+References: <cover.1705965958.git.isaku.yamahata@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,168 +67,82 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Isaku Yamahata <isaku.yamahata@intel.com>
+From: Xiaoyao Li <xiaoyao.li@intel.com>
 
-This patch series is based on "v17 KVM TDX: basic feature support".  It
-implements large page support for TDP MMU by allowing populating of the large
-page and splitting it when necessary.
+Level info is needed in tdx_clflush_page() to generate the correct page
+size.
 
-Feedback for options to merge sub-pages into a large page are welcome.
+Besides, explicitly pass level info to SEAMCALL instead of assuming
+it's zero. It works naturally when 2MB support lands.
 
-Discussion on 1GB huge page support
-===================================
-This is out of scope of this patch series. It will be addressed as follow up.
-Currently I'm thinking the following design.  Here is a rough sketch
+Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
+Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
+---
+v7:
+- Don't pass level to tdh_mem_page_add() as it supports only 4K page.
+- catch up for change of tdx_seamcall()
+---
+ arch/x86/kvm/vmx/tdx.c     |  2 +-
+ arch/x86/kvm/vmx/tdx_ops.h | 12 +++++++++---
+ 2 files changed, 10 insertions(+), 4 deletions(-)
 
-TDH.PAGE.MEM.AUG() and TDG.MEM.PAGE.ACCEPT() support only 4KB and 2MB. not 1GB.
-Because it takes too long to convert 1GB page into private .  It need to promote
-from 512 2MB pages to 1GB page on host side.
-
-* On unmapping
-Break large page from 1GB/2MB to 2MB/4KB.  In some cases, break twice. 1GB ->
-2MB -> 4KB.  the 2MB page is allocated and 2MB mapping is allowed by
-shared/private. (no partial 4KB private/shared mix.)
-
-* Mapping 2MB page
-If some 4KB pages of 2MB are mapped, map all non-present 4KB pages and try to
-promote it to 2MB. Note: promotion to 2MB may fail if the guest accepted some,
-doesn't some.  If there is no partial 4KB mapping (2MB entry in 1GB EPT page is
-none), map 2MB directly.
-
-* Mapping 1GB page
-When The 1GB page is allocated and 1GB mapping is alloed by shared/private, the
-following sketches the operations.
-
-** Try to map all sub 2MB pages.
-   If the 2MB EPT entry has 4KB cyhild, skip the entry unless it maps the
-   faulting GPA. Don't go down to map 4KB because mapping 4KB, it would take
-   too logn to promote 2MB and try to promote it to 1GB.
-   If the 2MB EPT entry maps the faulting GPA, fallback to 2MB case.
-
-** If there is no 4KB mapping, i.e. the 1GB EPT entry was none or the 2MB EPT
-   entry was none or leaf. (no child), try to promote only once. i.e. 2MB ->
-   1GB. Don't try promote twice from 4KB to 2MB to 1GB because it takes too long
-   time.
-
-* KVM NX recovery thread trying promote 4KB/2MB pages to 2MB/1GB page.
-** 2MB EPT table: scan the EPT entries and map 4KB page if not present. If all
-   4KB pages are mapped, try to promote to 2MB mapping. The promotion may fail
-   due to partial accept.
-
-** 1GB EPT table: Scan the EPT entries and map 2MB page if not present. Don't go
-   down to 4KB page. If all 2MB pages are mapped, try to promote to 1GB
-   mapping. the promoption may fail due to partial accept.
-
-Splitting large pages when necessary
-====================================
-* It already tracking whether GFN is private or shared.  When it's changed,
-  update lpage_info to prevent a large page.
-* TDX provides page level on Secure EPT violation.  Pass around the page level
-  that the lower level functions needs.
-* Even if the page is the large page in the host, at the EPT level, only some
-  sub-pages are mapped.  In such cases abandon to map large pages and step into
-  the sub-page level, unlike the conventional EPT.
-* When zapping spte and the spte is for a large page, split and zap it unlike
-  the conventional EPT because otherwise the protected page contents will be
-  lost.
-
-Merging small pages into a large page if possible
-=================================================
-On normal EPT violation, check whether pages can be merged into a large page
-after mapping it.
-
-TDX operation
-=============
-The following describes what TDX operations procedures.
-
-* EPT violation trick
-Such track (zapping the EPT entry to trigger EPT violation) doesn't work for
-TDX.  For TDX, it will lose the contents of the protected page to zap a page
-because the protected guest page is un-associated from the guest TD.  Instead,
-TDX provides a different way to trigger EPT violation without losing the page
-contents so that VMM can detect guest TD activity by blocking/unblocking
-Secure-EPT entry.  TDH.MEM.RANGE.BLOCK and TDH.MEM.RANGE.UNBLOCK.  They
-correspond to clearing/setting a present bit in an EPT entry with page contents
-still kept.  By TDH.MEM.RANGE.BLOCK and TLB shoot down, VMM can cause guest TD
-to trigger EPT violation.  After that, VMM can unblock it by
-TDH.MEM.RANGE.UNBLOCK and resume guest TD execution.  The procedure is as
-follows.
-
-  - Block Secure-EPT entry by TDH.MEM.RANGE.BLOCK.
-  - TLB shoot down.
-  - Wait for guest TD to trigger EPT violation.
-  - Unblock Secure-EPT entry by TDH.MEM.RANGE.UNBLOCK to resume the guest TD.
-
-* merging sub-pages into a large page
-The following steps are needed.
-- Ensure that all sub-pages are mapped.
-- TLB shoot down.
-- Merge sub-pages into a large page (TDH.MEM.PAGE.PROMOTE).
-  This requires all sub-pages are mapped.
-- Cache flush Secure EPT page used to map subpages.
-
-Thanks,
-
-Changes from v6:
-- Rebased to v18 TDX KVM v6.8-rc1 based patch series
-- use struct tdx_module_args
-- minor improve on comment, commit message
-
-Changes from v5:
-- Switched to TDX module 1.5 base.
-
-Chnages from v4:
-- Rebased to v16 TDX KVM v6.6-rc2 base
-
-Changes from v3:
-- Rebased to v15 TDX KVM v6.5-rc1 base
-
-Changes from v2:
-- implemented page merging path
-- rebased to TDX KVM v11
-
-Changes from v1:
-- implemented page merging path
-- rebased to UPM v10
-- rebased to TDX KVM v10
-- rebased to kvm.git queue + v6.1-rc8
-
-Isaku Yamahata (4):
-  KVM: x86/tdp_mmu: Allocate private page table for large page split
-  KVM: x86/tdp_mmu: Try to merge pages into a large page
-  KVM: TDX: Implement merge pages into a large page
-  KVM: x86/mmu: Make kvm fault handler aware of large page of private
-    memslot
-
-Xiaoyao Li (9):
-  KVM: TDX: Flush cache based on page size before TDX SEAMCALL
-  KVM: TDX: Pass KVM page level to tdh_mem_page_aug()
-  KVM: TDX: Pass size to reclaim_page()
-  KVM: TDX: Update tdx_sept_{set,drop}_private_spte() to support large
-    page
-  KVM: MMU: Introduce level info in PFERR code
-  KVM: TDX: Pass desired page level in err code for page fault handler
-  KVM: x86/tdp_mmu: Split the large page when zap leaf
-  KVM: x86/tdp_mmu, TDX: Split a large page when 4KB page within it
-    converted to shared
-  KVM: TDX: Allow 2MB large page for TD GUEST
-
- arch/x86/include/asm/kvm-x86-ops.h |   3 +
- arch/x86/include/asm/kvm_host.h    |  11 ++
- arch/x86/kvm/Kconfig               |   1 +
- arch/x86/kvm/mmu/mmu.c             |  45 +++--
- arch/x86/kvm/mmu/mmu_internal.h    |  35 +++-
- arch/x86/kvm/mmu/tdp_iter.c        |  37 +++-
- arch/x86/kvm/mmu/tdp_iter.h        |   2 +
- arch/x86/kvm/mmu/tdp_mmu.c         | 276 ++++++++++++++++++++++++++---
- arch/x86/kvm/vmx/common.h          |   6 +-
- arch/x86/kvm/vmx/tdx.c             | 222 +++++++++++++++++------
- arch/x86/kvm/vmx/tdx_arch.h        |  21 +++
- arch/x86/kvm/vmx/tdx_errno.h       |   3 +
- arch/x86/kvm/vmx/tdx_ops.h         |  56 ++++--
- arch/x86/kvm/vmx/vmx.c             |   2 +-
- 14 files changed, 608 insertions(+), 112 deletions(-)
-
+diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
+index 67bb0c4c73a7..549dec05ccad 100644
+--- a/arch/x86/kvm/vmx/tdx.c
++++ b/arch/x86/kvm/vmx/tdx.c
+@@ -1520,7 +1520,7 @@ static int tdx_mem_page_aug(struct kvm *kvm, gfn_t gfn,
+ 	union tdx_sept_entry entry;
+ 	u64 err;
+ 
+-	err = tdh_mem_page_aug(kvm_tdx->tdr_pa, gpa, hpa, &out);
++	err = tdh_mem_page_aug(kvm_tdx->tdr_pa, gpa, tdx_level, hpa, &out);
+ 	if (unlikely(err == TDX_ERROR_SEPT_BUSY)) {
+ 		tdx_unpin(kvm, pfn);
+ 		return -EAGAIN;
+diff --git a/arch/x86/kvm/vmx/tdx_ops.h b/arch/x86/kvm/vmx/tdx_ops.h
+index 2afd927eaa45..ce722e917d14 100644
+--- a/arch/x86/kvm/vmx/tdx_ops.h
++++ b/arch/x86/kvm/vmx/tdx_ops.h
+@@ -59,6 +59,11 @@ static inline int pg_level_to_tdx_sept_level(enum pg_level level)
+ 	return level - 1;
+ }
+ 
++static inline enum pg_level tdx_sept_level_to_pg_level(int tdx_level)
++{
++	return tdx_level + 1;
++}
++
+ static inline void tdx_clflush_page(hpa_t addr, enum pg_level level)
+ {
+ 	clflush_cache_range(__va(addr), KVM_HPAGE_SIZE(level));
+@@ -108,6 +113,7 @@ static inline u64 tdh_mng_addcx(hpa_t tdr, hpa_t addr)
+ static inline u64 tdh_mem_page_add(hpa_t tdr, gpa_t gpa, hpa_t hpa, hpa_t source,
+ 				   struct tdx_module_args *out)
+ {
++	/* TDH.MEM.PAGE.ADD() suports only 4K page. tdx 4K page level = 0 */
+ 	struct tdx_module_args in = {
+ 		.rcx = gpa,
+ 		.rdx = tdr,
+@@ -178,16 +184,16 @@ static inline u64 tdh_mem_page_relocate(hpa_t tdr, gpa_t gpa, hpa_t hpa,
+ 	return tdx_seamcall_sept(TDH_MEM_PAGE_RELOCATE, &in, out);
+ }
+ 
+-static inline u64 tdh_mem_page_aug(hpa_t tdr, gpa_t gpa, hpa_t hpa,
++static inline u64 tdh_mem_page_aug(hpa_t tdr, gpa_t gpa, int level, hpa_t hpa,
+ 				   struct tdx_module_args *out)
+ {
+ 	struct tdx_module_args in = {
+-		.rcx = gpa,
++		.rcx = gpa | level,
+ 		.rdx = tdr,
+ 		.r8 = hpa,
+ 	};
+ 
+-	tdx_clflush_page(hpa, PG_LEVEL_4K);
++	tdx_clflush_page(hpa, tdx_sept_level_to_pg_level(level));
+ 	return tdx_seamcall_sept(TDH_MEM_PAGE_AUG, &in, out);
+ }
+ 
 -- 
 2.25.1
 
