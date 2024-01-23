@@ -1,98 +1,102 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [217.72.192.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02355128375;
-	Tue, 23 Jan 2024 19:05:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DB79128378
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 19:06:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706036730; cv=none; b=ohFeGCTnXQ7apDWThOCmbU35j4jihmAvhnn1h34RTOmqHKg+bmaEV7pGo+1xOjI/CgrhohW2FbIB4ej9v7G6SGbtGMmt7Kig8nYyNjzas/eWS2ljHaYje0TEx+RQF69QwvaNQlBlzBFCWIdt+vVLPsHfXSqzHAfk7mP5Rg+cKk4=
+	t=1706036787; cv=none; b=DFLtPVy6VY7Zs73Fq7Ub3kNYVhmPMXihXBw8Ry82cNOT/uz71Y+850AdnD0zXanZLhj2fgWy66K0OIQiqyLuV0yGDPhB2u4F4zWZYbPsKpvKnvbFirVC2MyY4+mtp2H7H1jn1yifJRq+X4cH2zdbxlA3nf129uzLjiNpNvzQt1o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706036730; c=relaxed/simple;
-	bh=K+POQtrUPBrvK9huteUY/chYhWLFqoQivtt56NqPe5U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iN9Byko6viLCQwx5tNOYEF5cpvvYfRpkC0KVRPTRH6PcOhC8FRhnM15mTp8emZI60HP/n3o+NPGGjSONMoc6IXh3NVnZjSd1Aw16dYWs/Iv/M/b9r6HyFJqTQwarYktdyUxeMm1M7ycS5Agpr0tgy/N+sn1FB3N2nz6zTu4Z5t8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu; spf=pass smtp.mailfrom=heusel.eu; arc=none smtp.client-ip=217.72.192.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=heusel.eu
-Received: from localhost ([141.70.80.5]) by mrelayeu.kundenserver.de (mreue109
- [212.227.15.183]) with ESMTPSA (Nemesis) id 1MS3rB-1reH5O269r-00TU4z; Tue, 23
- Jan 2024 20:05:13 +0100
-Date: Tue, 23 Jan 2024 20:05:11 +0100
-From: Christian Heusel <christian@heusel.eu>
-To: Mario Limonciello <mario.limonciello@amd.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, 
-	Basavaraj Natikar <Basavaraj.Natikar@amd.com>, Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, 
-	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>, "open list:PIN CONTROL SUBSYSTEM" <linux-gpio@vger.kernel.org>, 
-	open list <linux-kernel@vger.kernel.org>, "Rafael J . Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH] pinctrl: amd: Add IRQF_ONESHOT to the interrupt request
-Message-ID: <q336uhrwuvhaf2x4fc6tneaavgugcyszgn75vzbrr4ksf7oxhi@3qcwff6nuvei>
-References: <20240123180818.3994-1-mario.limonciello@amd.com>
+	s=arc-20240116; t=1706036787; c=relaxed/simple;
+	bh=5IKq56rZiQOYgPeWbGnpyMEk8pqBBnPZA0ayr4DR8xg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ufBu3hQjlmWtxHOhvw53kI2GpYvWGQ8nrLCgfpEzKljls0yYz60wSSGNnkXmBw3To/KKQ9GMTRzwNyABcDLGYeEspP12EqaydJbG1blugazJB2sBH4Z0V6liz9ouI7Avg3ycZ/FcoSRK7JUSnAVnCFFkAAjKhX2hs6PygLEohKk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=H8ZB+YR9; arc=none smtp.client-ip=209.85.210.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="H8ZB+YR9"
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-6dd7deb57d4so750739b3a.1
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 11:06:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1706036785; x=1706641585; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kdLtmnUfI+i2IE7Csxqqy3c+cHq7ckx9/lEVoMFKEOA=;
+        b=H8ZB+YR9cEdBWEfz5ekJjjjLZumA1iqc/cZ7hYQwjt7Xqjd2T5jDhh2Nn+matZ6KjA
+         j4K9QuphvwtovvlggoRvup10qCkZ5JPN1UweQKOALMghSOYYMYiasTSDXGnx7kjoBSxR
+         QeU/bdEc9vLiwY+OVd0tQgw6VFptcVQPvsjgDKFYzdUxljbiMFzQOdiOlujTy1LcZcE9
+         XE5d9U6372aYzJu0SKOo3mWGaSRt691/tW7YhqM/j/p4rEXWWPYR21mm3m7s6W3bUlUG
+         I4/sLZTOfED8u1Xr7QH+2m/hnaONnLbuoNl90hQ9hakSpRBljD8fOdWThnUZ4V32zlRs
+         1kAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706036785; x=1706641585;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=kdLtmnUfI+i2IE7Csxqqy3c+cHq7ckx9/lEVoMFKEOA=;
+        b=CLVswSI3AoyUnrNzDoWpgHF64D/OVv5X7vQWJiuR3qAWc/g02XCl0hwc4B7p9PMmjg
+         lCWxj5yBFk3vu4JRZGT6sqiYlBOsIJwmr9ljoCCwAZBc5oIusOjeCVJ4LuQtHTWGzjEA
+         myuxFm24zdEneLuCN3sF1TedOHfPLBtcwd4Zhz1FFuWB85dU7TVm0Bg94omugXekCYlN
+         NsJidDEK2CfFE6gWaNG1rto82gzR+vPi5PjNkrWfV0Sz+nMN7uEQnQYJYdOyWjuI78iE
+         iqVlp0B2cq4WtTqs3DWn0SotZQRVsh2tvR81Ulr/dGYCfHWmLZ/zp3me++vYy3DGAmUX
+         DiCA==
+X-Gm-Message-State: AOJu0Yycwh9g1vd3JGRVrGOmubS+5x2+pUVbcwgrsgHuWyjiloEJHVyK
+	Bz8DBglYoEXYn9+EHOvzLxKrJq+xlsTnTUSt/dyZDdOLHxEt7NpLMf0CJ+gfFUMjn8xOJZESPsa
+	Ca60BWpzP2qjjHXpe+Nc+5yBceI24wAFHDVDMnA==
+X-Google-Smtp-Source: AGHT+IE7eMXgr8fyduKjXpnWZmowsEhu4ODPRkNQaCqLV70A0lHSDhtv7fTrbwCQAQct8ubtrHaDOhEQ26uZTOBuRjU=
+X-Received: by 2002:aa7:9a47:0:b0:6d9:a0da:4fbc with SMTP id
+ x7-20020aa79a47000000b006d9a0da4fbcmr3559257pfj.36.1706036785556; Tue, 23 Jan
+ 2024 11:06:25 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="bsyluouxdqi3s7n6"
-Content-Disposition: inline
-In-Reply-To: <20240123180818.3994-1-mario.limonciello@amd.com>
-X-Provags-ID: V03:K1:Gm5kXVdpfIXtk/gCwj1eOdDhwOzgaN8U8D5zrISYj85b3E54iZy
- bMOBRdYRu6GRvORY/NEe/imBtmKYd1IklLyoBy35vvyzOlC/EowijU6rbpKPmJLcZyTaKr6
- po8C4aA4sBY4mJEYUJ5TnZ8IPhKH0eZL0++bjz6DnJMJ97fz4j2DfUkDbhyt8QcvfwZg47o
- aEFTf/FWayI0v3pTHDM1g==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:mYY3OSjtAOc=;R/bgZE0U+xSL5JoVr42K9OMX1hh
- +2Y2WiSRdMlsHXqjzIlcSMZG1cQtkaherMHk0HQZV9/W/t5c7a1ozfpIPoowRWa8bh8IF3Sd1
- YwZlr1iHECa6uHCXdkFfSS3riR4nBJRmXynbevtf6GdyvldoAehNBSp3qzC63IEc7GtKznNZP
- TxityFSNtz7wc5KaSsdnrn1Wmb1CD8viNy7YLrMbucuy8XFFChqvHa6pkAhPNpDwKwSpShfYt
- YJzzNRVC2+cvU3sqUuPjPsOvknZHlrUWiBWPAZuztbkHGifP6FhdOrq8ZEXIBEt/zhJWf3SRW
- SfMlQMcj0kdC7IrSH1n1G7kQZ0JermjzRAy9MoDMQUaCSHCf6O3G/QfgRfB21EP8WT5izevDe
- VzSHU1jUbZbCJ2KdXZfVpPfViFZhe5Tvg4Nc3M3SOCHQHJFFfv550EplI9get9XBnNtyEGVFp
- DQYlTO02FtgbH9sQhVWLWhkf5VGGQIYvkgim0tVipKZ2MDcuFIXUwrWgUMtGjYvH/cduGR1o7
- zuwMTihsU2HjLXL8PrqTtRKnGA7LETaA2DkHB0gaBlQ8KXtC0GF1SdL4f0wWzOMYKKHTGV4Eo
- nQ7gePvlLAs4yUyStQ9yqezAg6bPJVCT4s4orcSu08N7rKFmww8kukZ8YqPCTcJNqF00SWIbx
- tI7buIn8r9wH6lzhb21g5nUWxUse1K/D5nl8kULDZNLTYFOonaC6dR861wPlKjC5sHLfsQJny
- OzAA8jaSpf5qPwTJL4tCRE+5/ULZA/YXKcXYap9Dr7TZY76xVYsVJle3Xqt7LsR+TWY+Hcoai
- haOHwREKoaDfL+MofTF9x6LsjDZbSeKjzU00jUTCSHHwlBRo2SV0v9rRvH/2E2rFbJy8B9G4s
- JjAkaV063OCv3Hg==
+References: <20240123153421.715951-1-tudor.ambarus@linaro.org> <20240123153421.715951-4-tudor.ambarus@linaro.org>
+In-Reply-To: <20240123153421.715951-4-tudor.ambarus@linaro.org>
+From: Sam Protsenko <semen.protsenko@linaro.org>
+Date: Tue, 23 Jan 2024 13:06:14 -0600
+Message-ID: <CAPLW+4n-ryLp+MEv1tgX4RfMdtWP+kAyzABqyQ1uJ+V5f0_WuQ@mail.gmail.com>
+Subject: Re: [PATCH 03/21] spi: s3c64xx: remove extra blank line
+To: Tudor Ambarus <tudor.ambarus@linaro.org>
+Cc: broonie@kernel.org, andi.shyti@kernel.org, arnd@arndb.de, 
+	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
+	alim.akhtar@samsung.com, linux-spi@vger.kernel.org, 
+	linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-arch@vger.kernel.org, andre.draszik@linaro.org, 
+	peter.griffin@linaro.org, kernel-team@android.com, willmcvicker@google.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, Jan 23, 2024 at 9:34=E2=80=AFAM Tudor Ambarus <tudor.ambarus@linaro=
+.org> wrote:
+>
+> Remove extra blank line.
+>
+> Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
+> ---
 
---bsyluouxdqi3s7n6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Reviewed-by: Sam Protsenko <semen.protsenko@linaro.org>
 
-On 24/01/23 12:08PM, Mario Limonciello wrote:
-> This should fix the GPIO controller failing to work after commit
-> 7a36b901a6eb ("ACPI: OSL: Use a threaded interrupt handler for SCI").
-> ```
-> [    0.417335] genirq: Flags mismatch irq 9. 00000088 (pinctrl_amd) vs. 00002080 (acpi)
-> [    0.420073] amd_gpio: probe of AMDI0030:00 failed with error -16
-> ```
-
-I have just applied this on top of 6.8-rc1 and the error in dmesg went
-away, so from my perspective this fix looks good.
-
-Tested-by: Christian Heusel <christian@heusel.eu>
-
---bsyluouxdqi3s7n6
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEb3ea3iR6a4oPcswTwEfU8yi1JYUFAmWwDecACgkQwEfU8yi1
-JYVBDg/8CSAC9XQWg61EgRJl3sUloUO1V+grtvVxy+q9LbmgwplE7FghQbZBp0Vf
-1cC52D4oGczxJ7Qr5+A/79na9AbdqNecfe/FIiz1V0e9jWyUd05Gcb7jzcspNrGA
-K+Vqel4Ut/inGXXqbMxIPfD5oWTRquQ42gYyijHFJDXAm2N1upUHz7Gay5kWhx+b
-EFvnSOnlxpkWdPM2l6fIIhZd24RfpYyWj7/lGCsII795YvMLfYyqQ0o0LA+LLrOZ
-qipuT+ZPZfpVLsxjpj3cGTWV65RYpestNXiFhsr0zSi3HHOKGSoBvI86i9i5lOgy
-wDuDuSr4MhEd5FPNoqBp2jKL94YI6qu4pockUOom92q+I2kdjEMGOk2VtZBPkoW9
-wNsCcqGgXbbRB7FN745a7Q78A6yEFxd4W+irbTRyFm26LFSys/6sOIwjodxLkSf3
-RvaIVXgnwsHTtP/K5OTf92SBsAbmHDDXAS/Vqv+LSZyy2qs3DIf/pijMLq7QahTf
-knhNdMjDNxRLmD2Gvr4Be6Go3Q6lzU9OSmkhzfrAa3Rktsai+7R55jWUVahfD84e
-c49u6KUKJ0mls8m1E2ggQPLL+kxjiZqLYzaHIpVmGCNqGIR0fm5As7wMnZXqv3iU
-IUHABPX6Y+sBlCLCyPFyTnPfrKGCKw6LBq+CoZout8KK5XJCD+c=
-=ydZH
------END PGP SIGNATURE-----
-
---bsyluouxdqi3s7n6--
+>  drivers/spi/spi-s3c64xx.c | 1 -
+>  1 file changed, 1 deletion(-)
+>
+> diff --git a/drivers/spi/spi-s3c64xx.c b/drivers/spi/spi-s3c64xx.c
+> index 187b617e3e14..26d389d95af9 100644
+> --- a/drivers/spi/spi-s3c64xx.c
+> +++ b/drivers/spi/spi-s3c64xx.c
+> @@ -16,7 +16,6 @@
+>  #include <linux/pm_runtime.h>
+>  #include <linux/spi/spi.h>
+>
+> -
+>  #define MAX_SPI_PORTS          12
+>  #define S3C64XX_SPI_QUIRK_CS_AUTO      (1 << 1)
+>  #define AUTOSUSPEND_TIMEOUT    2000
+> --
+> 2.43.0.429.g432eaa2c6b-goog
+>
