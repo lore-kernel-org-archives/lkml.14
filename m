@@ -1,148 +1,106 @@
-Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out203-205-221-235.mail.qq.com (out203-205-221-235.mail.qq.com [203.205.221.235])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 462635A0E1
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 09:17:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 120BF58114
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 09:18:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.235
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706001459; cv=none; b=VK4TmMSzNDpwGtWdHbSvvN0nIdWf930TWQUyvL5kXq1EV2LDO7DCc3FkpwGuNTD+9NV7q2arPDjSXuD6koey0Zbr1Ei5XJbcyiflkhH/vfVH75w8CeUkcLE3FrXn6qpxAwTEZs6mt2kkraiWvIFDOlfJsSeI4EFw2Af+6Zcsytc=
+	t=1706001532; cv=none; b=r3xirEbwWRQqRdQUl4HVomPKUduvBCTZy8OtWm3nU9TOz6eVZIfValt/H9RKtaueQZW6K+6UI0S18pckBTuNhB4MqER1GskmG+pw6fBPmf3oZ0jtruMbrFCrsGWtCYYqsjjEohl8j4uX9WiyhFOKN1Vt5YHPfsVpbSdlfoLFU1k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706001459; c=relaxed/simple;
-	bh=vMa2hStUb/HBHEAOmVVBt9+phjXe3qp/wDiYbJU4sDE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EHkNHm4/Yqrz8+Mcc0wb19MyieY/rO02q747Ug1tLqDYkWOkeWygTeAsvnMw4TjWR1Urs94tmtmR39tDP8Z+LndKkkU4Q+0+uRMSW0h97eyFhm34lfruhKt93iOReyYjz6d1AybWQjIDpzyaV5GyVdwsu3Wy8t63x3y8nEe9+n0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=FtGeokez; arc=none smtp.client-ip=209.85.215.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1706001532; c=relaxed/simple;
+	bh=aAGgqY+rMgNNKy/gloryFu6vmcVkrONZJRen5Osj/5g=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=GmY3+YEkpn54Wv8z8OMzdATe7OKj65MGkPEV/f1k+3Wd7rtGidoIof79SUQHkZz0wE418/XZOMGLbNe3nVUh+q0APtqlxVrnZNQVVDyx5X6MFYKXY0PZasi59JW9zafts5WhH3wB4Zjmdm+56BW3kApDerefwZq8KKVWPSS+5qc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=G7wO2Lz3; arc=none smtp.client-ip=203.205.221.235
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="FtGeokez"
-Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-5cf1f4f6c3dso1943593a12.2
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 01:17:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1706001456; x=1706606256; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=FUofm+ew+Pio2petyAhks6Ox3YcBrjMrAFlRRu8MTNM=;
-        b=FtGeokezO2CUvVljfkucoRaoAOyu+Z0z4uR1wE8XBmsIgKk4UDm1rlO+aBXIlpwp9z
-         SvlFU4Q0sSx0t9ATp6HJ4W9COS5MzdkTzxoFT/nFOjz1RKEwXGRYNV2XRup8XUa1PMe3
-         9q3JFJP2DT+ix9vZ/DlafgvwLz0+IOGQuhHnAmu0viLReYjOKiTlwhhyuQIYLL8cZ05D
-         alX3tcGcAUXYnK5466rQPKVKqcAQHoMKT+ygOPU83+VHgvcwXHenmeaDxXDkzvAqS3fA
-         uiEbBckR/mUYlQVuamPjmq1LLuH4SD+BUq0TE2lwVdzLae3kXHsXl+O3Otb6OUEDAY1G
-         hFdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706001456; x=1706606256;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=FUofm+ew+Pio2petyAhks6Ox3YcBrjMrAFlRRu8MTNM=;
-        b=gPXOqQaAYqcuqxqJvnZiEeTKV9y+ObjcggdzDt7vINItQPO3rxRt6P9qylx5CSIp/8
-         zsYfKy8OCJmOFXEL8siAkL/JaMBW3/vYiLWu+DIKvrpzOOfJrH1s5aSrw/BVxgvTYIfA
-         qD4ALBBu6XVBJeZP+TFZ0Bol2uZcigVQpi+4gfbWwJXjBL+/x3l3uXM8hyFotQBKsujr
-         Sso5JUkyTjdNVm19bFo2WPAvgcFWijLWGMwbOwSlcMRaBliDvhkrBxChhwxCWVAf4qIP
-         2rYS2GN0ic53uVK304DcsNAcgE/rlrozjWHUwgI4PFgg6uCsT0AB8gIk/X/WFIGeP6HW
-         WwyQ==
-X-Gm-Message-State: AOJu0YycgICBT2zS4Qjk8jMt7mV6yorf6znk4Xbc7AORyCq/9Qaf/P+l
-	Thv1h4MIsIJ/ZGViyAHrfB1udEOa4gUZTeQATO2hd2fty7PQVl6yQmLYyJJ4Rog=
-X-Google-Smtp-Source: AGHT+IG4RfqW8JyEOUwbE/yAxGB8roRfEGq+y6WPhU1adbIWKyE4aKVODNKSfoY5U8n2iQea6YKh7A==
-X-Received: by 2002:a05:6a20:47ca:b0:199:a934:db77 with SMTP id ey10-20020a056a2047ca00b00199a934db77mr2675981pzb.61.1706001456550;
-        Tue, 23 Jan 2024 01:17:36 -0800 (PST)
-Received: from [10.254.236.83] ([139.177.225.239])
-        by smtp.gmail.com with ESMTPSA id 4-20020a170902e9c400b001d706e373a9sm8274921plk.292.2024.01.23.01.17.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 23 Jan 2024 01:17:36 -0800 (PST)
-Message-ID: <85f44b37-982f-4363-804b-7572a8e503cf@bytedance.com>
-Date: Tue, 23 Jan 2024 17:17:30 +0800
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="G7wO2Lz3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1706001521; bh=lRy1jxHb+0LX8QlNoKRPQZV2gc3nzm5+xpwR2/5JSv4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=G7wO2Lz3CkLxn0xusWOu5zb5pAPXvazpIhu19EBDanI8OTZBvGCHknhtiOGijeaCd
+	 N65k/0HhzCQeZvqJ/Ob27tTO+BYe6P0YiLUy3vN3FEV6MktaXSGt7nk5Ci8sOwUkOx
+	 /SBcesXchf7+gEj9BPEdcj9HIse1mcuoeKuXu0zs=
+Received: from pek-lxu-l1.wrs.com ([111.198.225.215])
+	by newxmesmtplogicsvrszc5-1.qq.com (NewEsmtp) with SMTP
+	id 30A1ECEB; Tue, 23 Jan 2024 17:12:10 +0800
+X-QQ-mid: xmsmtpt1706001130tlxq65waw
+Message-ID: <tencent_9744F767376B06D113772362E96A43A14405@qq.com>
+X-QQ-XMAILINFO: NDAhN78L72+TYqMQdjygMcxuOS7nTfYfezPpsRaKCR5Rtrat2VeFEc2yYeNarE
+	 UoJEfvayF6lYml1+u373ay0v7UjLPyDEJuPlYkmK8DnhypOgo2QudPORberPvYgMQSNnke2ns4Jv
+	 g8UnYXuoYNHYG/pZ3tF2a9pKRG/TWz1aO0lAQQIFuOPo6WKTAzA7HhgPrRtzehCNMc2e9o9p5huG
+	 gB6KFELNBR87bYPrqBzYbNDrrk3ITLlRE/ks5adfdbBMVtBGhuv/UAHMR698pMHba/ge3+WQEu23
+	 gLwO9Npm4+umWFRpxP+6WPbzR2WzfJFvuu4wWBV1KUD0fC9jj64yrJ+iiZnc7M8jIdGgIEaMKlSu
+	 jVo07cJVpBgfy1zPoT9wPWFFsNU0ZUXrLgpClQofG1OLLbPykPRNENoa1xqudz2PtxZG5DOsatJV
+	 HEyaR7ttE1ROV4DRUW5X59qWrfncp/gO+hGk1L0gwjwMoOef7jjPdB529A3a2AwC8vxgpZNjAJTn
+	 1LeKbCVNG4yJXzibyWExXQ9DyjzdYI6pNTVzaVjXeG3k/GGD+jrqzrce+LF2VQ0hevnhqU2ICYwc
+	 wbWax38C3r2Lv2iCdk/6UpXFKXwv1hAhfDWdSSyOmiG25uD2WfnFHUBwjweFh95ZyMFydTgrhG6v
+	 79QvBnN5UmqbCpYI7buXFEPIfSFeYv2/iDHA7ZHGsOMscXIHSHPBCWxmTPe2bd2Ut5+Ufhy9vxQ6
+	 ExeztAnh+hIBKZa2ckdEubGyaYT+WxR57jirEA5DMybjiwMLu9V95HxhBpqIGqD99onvi4EOsQfX
+	 Auzhpxln1G/9ezCNp5xsAbGIekliFJ80qBDDiZEeVlgbNb2f1HToN23tkughbBbGeb0we6tQuBfI
+	 pjEZlF7zN/cT0t2Okb0Sj+jB1cN3GFcgcvnDdy5OQEgejznx/2wI0C6pMx44khoKdaFr+TZ+TQ
+X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
+From: Edward Adam Davis <eadavis@qq.com>
+To: syzbot+1d37bef05da87b99c5a6@syzkaller.appspotmail.com
+Cc: linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [can?] memory leak in j1939_netdev_start
+Date: Tue, 23 Jan 2024 17:12:11 +0800
+X-OQ-MSGID: <20240123091210.3404807-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <00000000000060446d060af10f08@google.com>
+References: <00000000000060446d060af10f08@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] mm/slub: directly load freelist from cpu partial slab
- in the likely case
-Content-Language: en-US
-To: Vlastimil Babka <vbabka@suse.cz>,
- "Christoph Lameter (Ampere)" <cl@linux.com>
-Cc: Hyeonggon Yoo <42.hyeyoo@gmail.com>, Joonsoo Kim
- <iamjoonsoo.kim@lge.com>, Pekka Enberg <penberg@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>,
- Roman Gushchin <roman.gushchin@linux.dev>,
- David Rientjes <rientjes@google.com>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org
-References: <20240117-slab-misc-v1-0-fd1c49ccbe70@bytedance.com>
- <20240117-slab-misc-v1-1-fd1c49ccbe70@bytedance.com>
- <76641777-1918-2b29-b6aa-bda9b5467aa3@gentwo.org>
- <412b8618-0941-4d9d-85df-ee480695e7f7@bytedance.com>
- <a2132c63-99a5-7fa2-9f2a-cccf6b40fe9e@linux.com>
- <e81d914b-8718-4dbb-a2d8-d5298fe66d1a@bytedance.com>
- <ac0ce290-58a7-42b2-a7e4-72e241717c63@suse.cz>
- <36964450-f45a-4f35-a187-dc493246ef59@bytedance.com>
- <0974c3b7-a964-44b6-a588-e08c6f79eec9@suse.cz>
-From: Chengming Zhou <zhouchengming@bytedance.com>
-In-Reply-To: <0974c3b7-a964-44b6-a588-e08c6f79eec9@suse.cz>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 2024/1/23 16:24, Vlastimil Babka wrote:
-> On 1/23/24 03:51, Chengming Zhou wrote:
->> On 2024/1/23 01:13, Vlastimil Babka wrote:
->>> On 1/19/24 04:53, Chengming Zhou wrote:
->>>> On 2024/1/19 06:14, Christoph Lameter (Ampere) wrote:
->>>>> On Thu, 18 Jan 2024, Chengming Zhou wrote:
->>>>>
->>>>>> So get_freelist() has two cases to handle: cpu slab and cpu partial list slab.
->>>>>> The latter is NOT frozen, so need to remove "VM_BUG_ON(!new.frozen)" from it.
->>>>>
->>>>> Right so keep the check if it is the former?
->>>>>
->>>>
->>>> Ok, I get it. Maybe like this:
->>>
->>> I think that's just too ugly for a VM_BUG_ON(). I'd just remove the check
->>> and be done with that.
->>
->> Ok with me.
->>
->>>
->>> I have a somewhat different point. You reused get_freelist() but in fact
->>> it's more like freeze_slab(), but that one uses slab_update_freelist() and
->>> we are under the local_lock so we want the cheaper __slab_update_freelist(),
->>> which get_freelist() has and I guess that's why you reused that one.
->>
->> Right, we already have the lock_lock, so reuse get_freelist().
->>
->>>
->>> However get_freelist() also assumes it can return NULL if the freelist is
->>> empty. If that's possible to happen on the percpu partial list, we should
->>> not "goto load_freelist;" but rather create a new label above that, above
->>> the "if (!freelist) {" block that handles the case.
->>>
->>> If that's not possible to happen (needs careful audit) and we have guarantee
->>
->> Yes, it's not possible for now.
->>
->>> that slabs on percpu partial list must have non-empty freelist, then we
->>> probably instead want a new __freeze_slab() variant that is like
->>> freeze_slab(), but uses __slab_update_freelist() and probably also has
->>> VM_BUG_ON(!freelist) before returning it?
->>>
->>
->> Instead of introducing another new function, how about still reusing get_freelist()
->> and VM_BUG_ON(!freelist) after calling it? I feel this is simpler.
-> 
-> Could you measure if introducing new function that sets new.frozen = 1; has
-> any performance benefit? If not, we can reuse get_freelist() as you say.
-> Thanks!
-> 
+please test memory leak in j1939_netdev_start
 
-I just tested using the new function: __freeze_slab() that uses __slab_update_freelist()
-and sets new.frozen = 1, but found the performance is a little worse than reusing
-get_freelist().
+#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 98b1cc82c4af
 
-The reason I think maybe more code memory footprint? I don't look deep into that.
+diff --git a/net/can/j1939/socket.c b/net/can/j1939/socket.c
+index 14c431663233..1d1f1348eeca 100644
+--- a/net/can/j1939/socket.c
++++ b/net/can/j1939/socket.c
+@@ -141,6 +141,7 @@ static void j1939_sk_queue_drop_all(struct j1939_priv *priv,
+ 				 sk_session_queue_entry) {
+ 		list_del_init(&session->sk_session_queue_entry);
+ 		session->err = err;
++		printk("s: %p, %s\n", session, __func__);
+ 		j1939_session_put(session);
+ 	}
+ 	spin_unlock_bh(&jsk->sk_session_queue_lock);
+diff --git a/net/can/j1939/transport.c b/net/can/j1939/transport.c
+index fe3df23a2595..0b09bf60b08b 100644
+--- a/net/can/j1939/transport.c
++++ b/net/can/j1939/transport.c
+@@ -278,6 +278,7 @@ static void j1939_session_destroy(struct j1939_session *session)
+ 
+ 	while ((skb = skb_dequeue(&session->skb_queue)) != NULL) {
+ 		/* drop ref taken in j1939_session_skb_queue() */
++		printk("s: %p, skb: %p, %s\n", session, skb, __func__);
+ 		skb_unref(skb);
+ 		kfree_skb(skb);
+ 	}
+@@ -1552,6 +1553,7 @@ j1939_session *j1939_session_fresh_new(struct j1939_priv *priv,
+ 	/* alloc data area */
+ 	skb_put(skb, size);
+ 	/* skb is recounted in j1939_session_new() */
++	printk("s: %p, skb: %p, %s\n", session, skb, __func__);
+ 	return session;
+ }
+ 
+@@ -1758,6 +1760,7 @@ static void j1939_xtp_rx_rts(struct j1939_priv *priv, struct sk_buff *skb,
+ 		j1939_tp_set_rxtimeout(session, 1250);
+ 	}
+ 
++	printk("s: %p, %s\n", session, __func__);
+ 	j1939_session_put(session);
+ }
+ 
 
-Anyway it looks better to reuse get_freelist(), I will update a version later.
-
-Thanks!
