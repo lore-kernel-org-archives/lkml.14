@@ -1,218 +1,239 @@
-Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D17C55A784;
-	Tue, 23 Jan 2024 10:00:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=67.231.156.173
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706004003; cv=fail; b=mjCmrFFcXqnawGb33vrRAk7O8n2mkdh6UTwgkmiAtJ2CCV4s7DJ3ZkQSLCIT0Y1l7D3cU04UpE0zVitzWoABBWwrTCKfN+6K2Hk4dXzVgjryjW2/YBosSqVbrAgGFCP6F6J42jNDYmWCFJTW5Z/vQsr+EdXZUVQzTR0IWjdCThQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706004003; c=relaxed/simple;
-	bh=3yOaUG20m26G/AN9Mb8MIFIbbhoKrKYeZhW+6gBKTEo=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=GeFLySlsNJAuaAUP1KdLPpS2k0kQK8XzUEegn2GErQTBOxKqr/S7+mqqslNJmrqC6tdWyFsxnOmKy1WHHgabmxxsZa/nuHDI4DZEyoP/9i6pL8meC6FaOnCjkzukexdfJK08lqYHrOMAa6NiAhaHQe4JlEdgHaRLufQOi8mcWMs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b=CnrqCCH+; arc=fail smtp.client-ip=67.231.156.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70E705A0F4;
+	Tue, 23 Jan 2024 10:00:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706004028; cv=none; b=fcBUMcSy2q03y3iqTd2AazL9mBW/UMALEFTKfFiUk9lgS1JFb4XCHz7qJSi/on0hCpvdMVTaqRTpTUv+VJsGH95ev8XFTD20Zm4pYBlO2wDM0bvC+/uqKDxuefh0EFD5+QILdlCEsfq96tA0wW1W2av3FPK1aHbUtNQNurNmx0c=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706004028; c=relaxed/simple;
+	bh=tWtM0aRE7gi8J0xM0NngvsObtVXPw8EzFJdj7ZUJtEY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CfsCZFEOPBITo0nU1WHLK3Hr9IZggK2MJ8t5wZ5pJoMyQDWxzWQxDkk3hG3z8EAVD1F+CPiRDA6SBC7a/l+2AjBPBCYw8dTZKP/2OFo5Esw8Ac+iW618To/WV4tKEdKiuPVRgg6TFsjpU9FWADhnf7Ikbql/35Iq4+r9PPuH8gw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GS5ysBOp; arc=none smtp.client-ip=209.85.215.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="CnrqCCH+"
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-	by mx0b-0016f401.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40N1FEGD029110;
-	Tue, 23 Jan 2024 01:59:49 -0800
-Received: from nam12-dm6-obe.outbound.protection.outlook.com (mail-dm6nam12lp2168.outbound.protection.outlook.com [104.47.59.168])
-	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 3vrejnh0fh-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 23 Jan 2024 01:59:49 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lhKF7ubwUqX91/pOrGNOarygtXef9GJkV0LqA0uxZz5HdLG4XWsbVD5X2i2TW4tF51ctZCU6nYVZEdpEtUYc/WUuMB+mAxeWdhRyUh8+AwgyF4cFwitFy82zRkEbLlcb5cFxXzNQbKjwVrNN8v6LAQNxG5QPDFOzYjg+9IzCjnZWOFiiNcZWo6mZBAF8/08xXVk1vbyQEjchY94LSHr54eUfv94lMbgPf9raLdXLKOrmBng5/9zlQqf1gdBWcM1Yvp2ZxfAgzhc2YJZuHqQ/pMFGKAV6hC9Kbo1dDV1gkNpCaOw8aOM803/7CQXEfyR4NaOpdF+rxsh2NpQJ9NKJpw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=zRJoCeNNYToJOcMzaNaMmbtOSxhL88tAGm0ue3E46IY=;
- b=ZsZJ1SS+r8RsT13NAhifgpV/xCcG9HPpYgO2sS39k7ktjB+Wucp1vEcVUmDcnTpiMSSD2CEBThirL7qnW2/OtCFZ1550NTg3naG2Z0SXI48tTtLsestp4ernQujZUEbvDVTDAlp9GjLh+5AkVJFHLwwxq/RlOxKGREDKhWTLVMOQ3++SXws9g0QKWihIWbriexJtkWO3CU5VQ+VIaYvZ+bbwa11xRbf600ZHfFDhRW1qtbIGgSCCluHxSEI1ogYJse4RJys61zV3B5nPgSx8/0J1/MIMzFA16qRPO2oGzNxJbfckpdon+c35dBgQIVjAMlVLrKZ6Ul6lxCHmRTzowA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
- dkim=pass header.d=marvell.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GS5ysBOp"
+Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-5cf1f4f6c3dso1964893a12.2;
+        Tue, 23 Jan 2024 02:00:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=marvell.onmicrosoft.com; s=selector1-marvell-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zRJoCeNNYToJOcMzaNaMmbtOSxhL88tAGm0ue3E46IY=;
- b=CnrqCCH+O/W/RdyEv7tYkQd+j3wVxT1dMC8S06CJlcEgsetw2KB7KoW3sBXWg2RSJu7rFg58VYWS5nVw/XU7cj6uCGH8J7cXujmQnmqQBaP/e8KJPRmmll+9WNFWZsiaE9aOMbrQqrD7e2D/sjO6qgWvag7NpYup8x6WNJdM/E0=
-Received: from BN9PR18MB4251.namprd18.prod.outlook.com (2603:10b6:408:11c::10)
- by SA0PR18MB3536.namprd18.prod.outlook.com (2603:10b6:806:73::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.16; Tue, 23 Jan
- 2024 09:59:46 +0000
-Received: from BN9PR18MB4251.namprd18.prod.outlook.com
- ([fe80::9b7a:456c:8794:2cae]) by BN9PR18MB4251.namprd18.prod.outlook.com
- ([fe80::9b7a:456c:8794:2cae%4]) with mapi id 15.20.7228.020; Tue, 23 Jan 2024
- 09:59:46 +0000
-From: Elad Nachman <enachman@marvell.com>
-To: Rob Herring <robh@kernel.org>, "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
-        Paolo
- Abeni <pabeni@redhat.com>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>
-CC: "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [EXT] [PATCH net-next] net: marvell,prestera: Fix example PCI bus
- addressing
-Thread-Topic: [EXT] [PATCH net-next] net: marvell,prestera: Fix example PCI
- bus addressing
-Thread-Index: AQHaTWjekYS38TgPe0usgBWB/YnaQLDnI/lQ
-Date: Tue, 23 Jan 2024 09:59:46 +0000
-Message-ID: 
- <BN9PR18MB4251944C1AE34057DACD7556DB742@BN9PR18MB4251.namprd18.prod.outlook.com>
-References: <20240122173514.935742-1-robh@kernel.org>
-In-Reply-To: <20240122173514.935742-1-robh@kernel.org>
-Accept-Language: he-IL, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BN9PR18MB4251:EE_|SA0PR18MB3536:EE_
-x-ms-office365-filtering-correlation-id: 1d8463f0-ff27-4845-251d-08dc1bfa0788
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 
- roLAz8snjw3df5c/V9D039EJwi7E+nkiuZ8sBo2xZlqgPxEBMnipCqFR8p2tQMVM6ivjszm6le+fobzgoOkOQV1Adr5CIh1O8AgVnQ++bDPxyTn7m5tll1gn9ldI5Oel5ufkQu4gyfzvYY0OsaBKplipmvRhhJFQMXkWiq0b5qyOMws4NqmH+xqOqBFD5YX82mXK8WCfYzDz2MYcMx5gCWjD4a5LaY30G8QYvi9y6rkETEzZd2SH5fZ8q/1gUta9QMHMX9BdcvH2z9xrRiVxB/BBi9kZlOFy/u7+JYTj77RsaL1qx5th/ix8ZIaYidVpVrV3yoeh9K4JCUhwyLuzfS4dfeD71b7QFD8BMguFs3P8mEAHlARWEWkmaqb38hmy8SdSw2Df+54CtFHgtKB2w3PPLwku3Wkr6+5PW6Yrs4Cm6VZdsTcAbqZsLKIxvj8UBzIL71fsKe6xrAGBuF85tDR9x2N+t6M7qRfyx2/bTPjl2+6S9B3WajduPzFCOf2rvkIUTjahW7AVGhCgBZesBxIyN8HMT2wkKBZ1EFH0l+SXT0uPOwcHhB9e9pGoubaHMszNo2UG9poe9vq5f66qy8g8z4YxgaoHLlVlpYpdWy+rBFu2rcwsmLT34f/RUTJ3WZfFy2ua2ymWoo6WVCxlZg==
-x-forefront-antispam-report: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN9PR18MB4251.namprd18.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(366004)(136003)(39860400002)(396003)(346002)(230922051799003)(230173577357003)(230273577357003)(186009)(64100799003)(451199024)(1800799012)(2906002)(478600001)(33656002)(41300700001)(122000001)(86362001)(83380400001)(38100700002)(7696005)(6506007)(8936002)(71200400001)(8676002)(4326008)(64756008)(316002)(66556008)(66476007)(76116006)(9686003)(7416002)(66946007)(110136005)(26005)(966005)(52536014)(54906003)(5660300002)(66446008)(53546011)(55016003)(38070700009);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: 
- =?us-ascii?Q?qjhs1+cGGdhozVv6vlPvpDo9Z5+8Lr8SB6SsbN9/eCKZuyVig1aao8s0OpKi?=
- =?us-ascii?Q?4npiFYED+hQQO6+qjPKclR0ooCyaixjJelbigQBy+4zXbYkq82Pwt5ognHPm?=
- =?us-ascii?Q?VywzY632ctp0gpkOkoWW+ZeJOxaDeMNgn9gTzQv9dzuMHvA3wXBoBVR052xO?=
- =?us-ascii?Q?duZeepciTobIMEr4G/uKuV4Bs3PlWBPuRBkKBFW9OZ0qE6jM8j5V6obvdFgB?=
- =?us-ascii?Q?bxjbLdOD6hQLrCyiMqiEyCzJwtoyaDlnqCjj2cyEskt0tvTysjGTTESEOLd3?=
- =?us-ascii?Q?uToReMx10/HlO3l1rz1MCna7ntxARzKAQ+76qspW/JcNf0PAi7FtY6ap5x6H?=
- =?us-ascii?Q?stgkanzk7N1b7tPMtE5uSGFdSAAv1aeCUVtA/+T+Nj23vo2dmWnFbTvkJ+ym?=
- =?us-ascii?Q?2S5FQEBuwB53jmQzZW3iUBmD4kDp6Q+F8w7pJAqJpj57rZyzMB1glfX8q+Q9?=
- =?us-ascii?Q?tV6rGPwxapDNI92xGRYCgxdAB6qLRfPKGk4bzPl3QlkLjuBnvarM1oZpjPTj?=
- =?us-ascii?Q?NyEnoukc/IO/QpXmMuPBMc4HtK1zLH26Z/2RsC0Qw5uUP7aPRH8nBtYTf5jV?=
- =?us-ascii?Q?NeCohAKWoKOiJB6zclFrrdpMU/MFqX/T7zZaRnCflggXPmhVbEstbUpNPaGj?=
- =?us-ascii?Q?Gws/q6QAPDnepOrbfioCZvS7fM0dJ7aYMiRy6l9HU1XR0rciEOdZ4KwJ3bpl?=
- =?us-ascii?Q?t+yyVsfpmMKjsdr5hb28gqj6x0OCQp0MolxJwllO2y8GnViH+dz6q4yxoxV9?=
- =?us-ascii?Q?a52Thvj3/lvvXLqoGyZhcS7iAMjJcBWS/jZH2xO+UrbryQvgUL/Zb0NMG3Uj?=
- =?us-ascii?Q?1qgiQRhItlsKsjbH0qmfIgZii1EhRdcXmRmXMs2WX7L4/UeKONgQMwNjL+n1?=
- =?us-ascii?Q?LqveN6kr3W45fSzlSOEf8dJxesnWXorgK8Pabv2Tvjk8uU0YZhNp2tSmJcNz?=
- =?us-ascii?Q?EnxYQTdshIeHK8Vow0HQkDgBDhKEz/aJnt9aCfBhZ5Da3pDfIgYSlqBBR30a?=
- =?us-ascii?Q?xbi6kZ3SSffKaBNPgkz/IY5QKRt3ZDX1WToJ9zkMYWe8eydJTV3cjZEDZtmh?=
- =?us-ascii?Q?z8cXA9A0sLQ+x5j2fQCFmXzRNFTsqhsrrovsphCCo0wX7U7/DC+wvDHRd72t?=
- =?us-ascii?Q?a2eW6Kahhp7nWMVqIX6SquhYU7EnaSevArUzHOP20sX2R/E96SVvmJwcG996?=
- =?us-ascii?Q?kK2rRRuUMb98OjQXyypPNSg/3cpizitCfLPcVAXWAAeVvYp+TrT6Zq62vkm3?=
- =?us-ascii?Q?LYHKeadCiLOko2/I6XFwtM7cjhYKztSqr1Bn3ENSPGoKmVNBPkyY3tPKqsHq?=
- =?us-ascii?Q?ZBueqjorehyDhJWl3lgxG22UgbaAY9W9FTs6Pe/bivvKwoDU2xoVm96hiVdf?=
- =?us-ascii?Q?uSuQr4xqb3Db4sDWVkm7eGXsp0pUuTmrcCRD/eCJSRHiMCeWGdRhAIcbooC0?=
- =?us-ascii?Q?hxMJMVMI5oZFPgV/X+jc8L1av/LiFPH/ONPnac37kpOsiJxVK3RXeKO8yacx?=
- =?us-ascii?Q?Gq/RwwDIldVVQ1TFNy2FK+1HOQ7BFWaFbpLBqTU7QcIVTkLleT/lDDfrdjlK?=
- =?us-ascii?Q?AULLcon8iFh6L1PR5+jR/cDgt5pcQLxnFLzMfT4l?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        d=gmail.com; s=20230601; t=1706004025; x=1706608825; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=F+ctDPNeFBq/VjlK1sIBZskqA0s3m7Q2NTDa1byxa0M=;
+        b=GS5ysBOp4OboGgT1pk+B91RmHTPE8YaCUZeVdlsPzZBluEznHcXvWH02MFqLIXZ6bO
+         BCoa6qKiSqbAhueMS2kUKpCY6A4EtFwvEP7pBxCarTMJp/g+OpmX7+foIxQbgyDqyJaM
+         TBVkHdApNGcH1N53Nns2nP7zZxRGPN9QLYmSa7eKa/snmx0ht/FQ6CafZyfVJHtU7DZz
+         9c0HGF3Dig5vgdN6q61Cz2TEcE4RS/MTmsuzjRN0v11FKQXRaD9YXAVbindNaem34vrx
+         U69FjhUWN95DJaHa/m+dIKf+07AZAEyIokAw/4MHzIkO6/bwojQdNtiIaew3q6VagtN8
+         H5Fw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706004025; x=1706608825;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=F+ctDPNeFBq/VjlK1sIBZskqA0s3m7Q2NTDa1byxa0M=;
+        b=DD2hqWPLATy1KRQ2RB8IJOSdfgKG7cJ+zm+hKYxi6G01m5xKsScYAZoTO4FIBGwGvi
+         qJMpGc1tHgC+r4RXGtXvOq88ZzrbCsh/cKdmdxaVn4Yw5it5IwINqqvyKhywi9GHQUT0
+         rHZlirvfwU3PB1bv8rKrGQvZsaxHeYymw/6Of0WMnfJufJZcv45V50C5YMg+SkTxyQCi
+         xZhYJYweZYCKZrVmyVbUTkgSmhWEtewftdFn0h4oWK23WSYyfksWFQBCSmEfE4NS3rWl
+         qq4yAH360VPjSXuU07ZAKmPsITyl6pI5U+/DA9vRHnQDZ4tH/lELhBslxgPD0/WAb6N2
+         5iAw==
+X-Gm-Message-State: AOJu0Yz4gPP0gwCzHscnVShtz08palbAISibOhUw2RC7CSq/x9Gfo2Ci
+	gZ470aaU9yo6/2RbYwFc7P68tr/unf0dn/N4zHCwKSKEgoIma60O
+X-Google-Smtp-Source: AGHT+IFhl6oGMpu/Q2RixaDZx/DlJFHiVeGGPWYCGCf11/ly5Pxkq/dWyQ7cXN7oG4ew+lJWTJrwKw==
+X-Received: by 2002:a17:90b:88e:b0:290:8a26:248 with SMTP id bj14-20020a17090b088e00b002908a260248mr1772945pjb.17.1706004025346;
+        Tue, 23 Jan 2024 02:00:25 -0800 (PST)
+Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id q6-20020a17090ac10600b00290b567b27csm2781206pjt.46.2024.01.23.02.00.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 23 Jan 2024 02:00:24 -0800 (PST)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <1fbd3b4d-620f-4d2f-852a-e3a275bb425d@roeck-us.net>
+Date: Tue, 23 Jan 2024 02:00:22 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: marvell.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BN9PR18MB4251.namprd18.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1d8463f0-ff27-4845-251d-08dc1bfa0788
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Jan 2024 09:59:46.1472
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: mWi7LXmk8ekuoT7KfNJowD/jWuZ3azb8EltADIcs4A5brL5eCoonuwPLsJ2iyT4PZC6gh/FVPAe7JBymQv21Qg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR18MB3536
-X-Proofpoint-ORIG-GUID: kofLRl3dciAvnwhGNGbz4u6HPKEUs9Nh
-X-Proofpoint-GUID: kofLRl3dciAvnwhGNGbz4u6HPKEUs9Nh
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-23_05,2024-01-23_01,2023-05-22_02
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 03/10] watchdog: rzg2l_wdt: Check return status of
+ pm_runtime_put()
+Content-Language: en-US
+To: claudiu beznea <claudiu.beznea@tuxon.dev>, wim@linux-watchdog.org,
+ robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+ geert+renesas@glider.be, magnus.damm@gmail.com, mturquette@baylibre.com,
+ sboyd@kernel.org, p.zabel@pengutronix.de, biju.das.jz@bp.renesas.com
+Cc: linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+ linux-clk@vger.kernel.org, Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+References: <20240122111115.2861835-1-claudiu.beznea.uj@bp.renesas.com>
+ <20240122111115.2861835-4-claudiu.beznea.uj@bp.renesas.com>
+ <c857cdd4-459b-41ae-b4bb-0da45e461335@roeck-us.net>
+ <92db308f-075c-4799-9777-5bc14438ce68@tuxon.dev>
+From: Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+In-Reply-To: <92db308f-075c-4799-9777-5bc14438ce68@tuxon.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
+On 1/22/24 23:02, claudiu beznea wrote:
+> 
+> 
+> On 22.01.2024 19:31, Guenter Roeck wrote:
+>> On 1/22/24 03:11, Claudiu wrote:
+>>> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+>>>
+>>> pm_runtime_put() may return an error code. Check its return status.
+>>>
+>>> Fixes: 2cbc5cd0b55f ("watchdog: Add Watchdog Timer driver for RZ/G2L")
+>>> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+>>> ---
+>>>    drivers/watchdog/rzg2l_wdt.c | 6 +++++-
+>>>    1 file changed, 5 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/watchdog/rzg2l_wdt.c b/drivers/watchdog/rzg2l_wdt.c
+>>> index 4ab9e7c5e771..0554965027cd 100644
+>>> --- a/drivers/watchdog/rzg2l_wdt.c
+>>> +++ b/drivers/watchdog/rzg2l_wdt.c
+>>> @@ -144,9 +144,13 @@ static int rzg2l_wdt_start(struct watchdog_device
+>>> *wdev)
+>>>    static int rzg2l_wdt_stop(struct watchdog_device *wdev)
+>>>    {
+>>>        struct rzg2l_wdt_priv *priv = watchdog_get_drvdata(wdev);
+>>> +    int ret;
+>>>          rzg2l_wdt_reset(priv);
+>>> -    pm_runtime_put(wdev->parent);
+>>> +
+>>> +    ret = pm_runtime_put(wdev->parent);
+>>> +    if (ret < 0)
+>>> +        return ret;
+>>>          return 0;
+>>>    }
+>>
+>> A simple
+>>      return pm_runtime_put();
+>> might do.
+> 
+> pm_runtime_put() may return 1 if the device is already suspended though
+> this call trace:
+> 
+> pm_runtime_put() ->
+>     __pm_runtime_idle() ->
+>         rpm_idle() ->
+>             rpm_suspend() ->
+>                 rpm_check_suspend_allowed() [1]
+> 
+> That return value is not considered error thus I wanted to consider it
+> here, too.
+> 
+Good point.
 
+> [1]
+> https://elixir.bootlin.com/linux/latest/source/drivers/base/power/runtime.c#L278
+> 
+>>
+>> However, one question: Given that pm_runtime_put() returns -ENOSYS if
+>> CONFIG_PM is disabled, that means the driver will depend on CONFIG_PM=y.
+> 
+> Indeed, the driver depends on CONFIG_PM=y for proper working. It is for
+> devices selecting ARCH_RZG2L and RZ/V2M (ARM64 based uarch) which select
+> CONFIG_PM=y:
+> https://elixir.bootlin.com/linux/latest/source/drivers/soc/renesas/Kconfig#L45
+> 
+> The driver is written with CONFIG_PM=y dependency in mind (e.g. the clocks
+> are enabled though runtime PM APIs).
+> 
+>> Assuming this is intentional, would it make sense to explicitly declare
+>> that dependency in Kconfig ? It doesn't seem to make any sense to build
+>> the driver if it won't work anyway.
+> 
+> The dependency exists there for ARCH_RZG2L and RZ/V2M devices but not
+> directly and it is not strict (in the sense that we allow to build the
+> driver w/o CONFIG_PM (I think this is good to check build on different
+> configurations, the COMPILE_TEST is there anyway in [1]) ). E.g.:
+> 
+> RENESAS_RZG2LWDT depends on ARCH_RENESAS [1]
+> ARCH_RENESAS is the ARMv8 uarch flag [2]
+> SOC_RENESAS is set if ARCH_RENESAS [3]
+> ARCH_RZG2L is visible only if SOC_RENESAS [4]
+> ARCH_RZG2L selects PM [5]
+> RZ/V2M selects PM [6]
+> 
+> Please let me know what do you think about it?
+> 
+If the driver indeed depends on CONFIG_PM, that should be made explicit.
 
-> -----Original Message-----
-> From: Rob Herring <robh@kernel.org>
-> Sent: Monday, January 22, 2024 7:35 PM
-> To: David S. Miller <davem@davemloft.net>; Eric Dumazet
-> <edumazet@google.com>; Jakub Kicinski <kuba@kernel.org>; Paolo Abeni
-> <pabeni@redhat.com>; Krzysztof Kozlowski
-> <krzysztof.kozlowski+dt@linaro.org>; Conor Dooley <conor+dt@kernel.org>;
-> Miquel Raynal <miquel.raynal@bootlin.com>
-> Cc: netdev@vger.kernel.org; devicetree@vger.kernel.org; linux-
-> kernel@vger.kernel.org
-> Subject: [EXT] [PATCH net-next] net: marvell,prestera: Fix example PCI bu=
-s
-> addressing
->=20
-> External Email
->=20
-> ----------------------------------------------------------------------
-> The example for PCI devices has some addressing errors. 'reg' is written =
-as if
-> the parent bus is PCI, but the default bus for examples is 1 address and =
-size
-> cell. 'ranges' is defining config space with a size of 0. Generally, conf=
-ig space
-> should not be defined in 'ranges', only PCI memory and I/O spaces. Fix th=
-ese
-> issues by updating the values with made-up, but valid values.
->=20
-> This was uncovered with recent dtschema changes.
->=20
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
->  Documentation/devicetree/bindings/net/marvell,prestera.yaml | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/net/marvell,prestera.yaml
-> b/Documentation/devicetree/bindings/net/marvell,prestera.yaml
-> index 5ea8b73663a5..16ff892f7bbd 100644
-> --- a/Documentation/devicetree/bindings/net/marvell,prestera.yaml
-> +++ b/Documentation/devicetree/bindings/net/marvell,prestera.yaml
-> @@ -78,8 +78,8 @@ examples:
->      pcie@0 {
->          #address-cells =3D <3>;
->          #size-cells =3D <2>;
-> -        ranges =3D <0x0 0x0 0x0 0x0 0x0 0x0>;
-> -        reg =3D <0x0 0x0 0x0 0x0 0x0 0x0>;
-> +        ranges =3D <0x02000000 0x0 0x100000 0x10000000 0x0 0x0>;
-> +        reg =3D <0x0 0x1000>;
->          device_type =3D "pci";
->=20
->          switch@0,0 {
-> --
-> 2.43.0
->=20
+Guenter
 
-This yaml has a mix-up of device P/N (belonging to AC3, BC2) and PCIe IDs (=
-belonging to AC3X, Aldrin2)
-Looks like a part of the yaml was updated, and another part was not
+> Thank you,
+> Claudiu Beznea
+> 
+> 
+> [1]
+> https://elixir.bootlin.com/linux/latest/source/drivers/watchdog/Kconfig#L913
+> [2]
+> https://elixir.bootlin.com/linux/latest/source/arch/arm64/Kconfig.platforms#L273
+> [3]
+> https://elixir.bootlin.com/linux/latest/source/drivers/soc/renesas/Kconfig#L2
+> [4]
+> https://elixir.bootlin.com/linux/latest/source/drivers/soc/renesas/Kconfig#L9
+> [5]
+> https://elixir.bootlin.com/linux/latest/source/drivers/soc/renesas/Kconfig#L45
+> [6]
+> https://elixir.bootlin.com/linux/latest/source/drivers/soc/renesas/Kconfig#L328
+> 
+> 
+>>
+>> Thanks,
+>> Guenter
+>>
+> 
 
-There is a reference here of actual usage of prestera switch device:
-https://github.com/dentproject/linux/blob/dent-linux-5.15.y/arch/arm64/boot=
-/dts/marvell/accton-as4564-26p.dts
-
-So actual ranges and reg could be used instead of made up ones.
-
-But the actual real life dts places the prestera at the top level of the dt=
-s, not under pci.
-
-I am not aware of any dts/dtsi using such kind of switch node under pcie no=
-de, similar to the example given in the yaml file, and did not manage to fi=
-nd any under latest linux-next for both arm and arm64 dts directories (plea=
-se correct me here if I am wrong).
-
-So the question here is if this pci example really necessary for the preste=
-ra device, or can be removed altogether (which is what I think is best to d=
-o).
-
-Elad.
