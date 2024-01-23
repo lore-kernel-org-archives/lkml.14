@@ -1,106 +1,94 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 124DB59B69
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 09:54:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ECE95A0E9
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 09:54:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706003683; cv=none; b=AFYm9mYRsNhYUj6XlGfl2giQwFD8/lTK5AnegMubncuUKux0xrSPzSS4FnY3BTzo3j40ZIem0dgtKZtf92K7AK6jk3QNyY/+QAwj9D9yBCPa9N+YnJSQ9ysceqUOUWRQXkI4eKPeX6KBeXixBspeteeqsRI/+ZBqRPBg4BV0mkk=
+	t=1706003699; cv=none; b=G1agy/tICV25a99mredQyUcgFnhpO8tIt5t4nMzHH4AV08frqidMb43Vddy5W6ICkub0XCTUh7jhU96Z4YIeHgo4Kbfqdq1d5q5W+F0vZBsvFKbXxxETmS8J/IAArwluz4pfOtatuob0mLz6EBtZ70X16W1PhmkGBu+R9dt5kcc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706003683; c=relaxed/simple;
-	bh=eV1aYAij36ErrxE/KFibUvTwNYPn7OUCmx40RKggj5M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GBGfzf0HR5wg/B0TJGlCTp7q/m9MYaRBzy5wzT/b/iwBIyeMwGNOqpimfgK1A3BHUTCYXVZ/J9xmifXPJSU/SyeZJ0Cfz9ngyUMrWESrNsQ5AI13OMshIzS7sn5VkbxPaM0h9X1V/brIPRr0fkXZNEYWG3ZXJN2ynzaLaWE3PW4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=a+BgiAgR; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1706003699; c=relaxed/simple;
+	bh=s9+X44rPvtMGKpTNWIFeGkpPDxkX8dmkzY3qoWw0MEg=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=JXDG9Onb/Jo2jvdrktU307JwFqdcRH18wjKIaeu4UdRh0Z2+/FqcNvMaS1V3q80/uV+cW0M3SCRYnO9+ougGn3N+aS9dQXAAXzCC/lNR6uPGPkb94X1WPVm1JruOl2xAYPTW2VV6rwRymewJbZE2yYJxQM1FgMsrFoFWKEj4VM0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=AS2hSVaF; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="a+BgiAgR"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a28a6cef709so404884166b.1
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 01:54:41 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AS2hSVaF"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-33921b95dddso1944495f8f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 01:54:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1706003680; x=1706608480; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=k5pQ0aAjBUgS36bFeU8hxTh3VJtNzSaVjd2DImOspnw=;
-        b=a+BgiAgRJ6WwILOqJySZOmTShWuZ2Rwc3tetL+odpA8K1Vt2nacmkahvWOYJMJIIy/
-         5GiVZ56nAYB2g1J0WiG2I+0uOZInh/UWpiCDDIhDHMKQ1JxwUGt7P9MEBVzLQoQ6CYHv
-         IAzTvMaECt9gkripXnZOoCZmyLMtMITQmb5dHGHpdQlUEWRYlraA7Fv29tUSRmMllMSA
-         mqpimlMBADEaFmMzuCSKnRbo+g9tEOw0nj68gf3OJoYlVsYJ/IWwIRvRRIw6mCWRf4rT
-         YI11e73b0Ul+yH3yaTJ2XZFHKaM+1Gi1rBAmomklUKa/OQlVBvrnPKFdJLt31Devf6N2
-         zsrA==
+        d=linaro.org; s=google; t=1706003696; x=1706608496; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Im8GtCvE7H26gkn/fdW7k+g4Cg7EiQCmiyIP3+igXQU=;
+        b=AS2hSVaFOPuPZ7iRgo43bn97pX4mFEmUJyRDZzU1Sche6I6ZQ5ma/ABTD+cgxSz8Hz
+         joTNvO1OcAkqQDGijJgqQ509dx4LFTuzevvIKjik/fuS+z0Eg/t69tO+uePlTwdkkz4Z
+         dEKgXYic56E7Q5Dk6WWyf75kZB0+4xBUHLTfDd2/3iFOj+pfQw+d/LCreqhGiPoJsfU4
+         sXQHbUbiPxHhJ6gjoVZtYGgDBzd7tnsAxDNk2YSqm6P+0JONO0/OYY0AQIUIXDDBMBv9
+         5P9i772SvcqQIiD5RzBjuTVH2us2QwCv0VbfVMpq+GWzG+S28lulIk3NayWRmLWKCtfE
+         XfGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706003680; x=1706608480;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=k5pQ0aAjBUgS36bFeU8hxTh3VJtNzSaVjd2DImOspnw=;
-        b=pl4x5bSMPGnJ41au0yAybSBvExUb+8JN//DqVzejRP9g7pVDYSAqCj6ePqPyjurppS
-         Wmjxw0c9Ht44fYUgxAbpRF+ij/+oXLqgEzfiXUWfEOH+XE/Grl75LE9CNAPXW0S+fK9F
-         GnK1R30jiO9p/lzKS659iYH1oPFHZ+5q9AZg7dO112kUY6HOnlQtS73cn1Vh+ZvA3X6r
-         BYPPPISXerDQKTvBF407tuC/u/HhxqjA0Btd3bJqWPaeYUkkTAfxG+Z/VsxKt6FvIjpW
-         vNd2emQcDUZLxBlh97Y+2FFSxj+2MazsWOmu9btP2R2duASizY03+pIsYTZlbta12pGR
-         GauA==
-X-Gm-Message-State: AOJu0YwPrI2/nK+l9ia3iXdVuVv12zCqnWopgeadYpBh5qiCcg9+X7Ps
-	ZxtyPxTG8hNBTxpbb50JqxKdqQIUmebQS8YvgLmAi3AD1lixFWFFLryzmLgsvbj/taf+rFd3lxx
-	QciN3gA5Ox7KYcFHd5ZL7SmBTnnYhQxoDnQEm
-X-Google-Smtp-Source: AGHT+IFiNb0gII9xlJrGDRXcA2JW5tXZJ5H5zdCdISF6vOZZl7rkbRXWVdFZCvKRB3/OFzNy1LpZIq/WvS4eFotWuHE=
-X-Received: by 2002:a17:906:3adb:b0:a2c:34e8:6429 with SMTP id
- z27-20020a1709063adb00b00a2c34e86429mr3144327ejd.69.1706003679963; Tue, 23
- Jan 2024 01:54:39 -0800 (PST)
+        d=1e100.net; s=20230601; t=1706003696; x=1706608496;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Im8GtCvE7H26gkn/fdW7k+g4Cg7EiQCmiyIP3+igXQU=;
+        b=YYNsdUKm1ZixoqgUo808iN9baSsx1Wvgm5897inRmS9OTmiXQfw3LnBtHAMI2VcPjv
+         GeJ06SDORz+lpxUPAm5tusyuutii4cDoZVVJayG8n3RWM8JHWY71X52XUCWEZSadVow7
+         TVIx4EnPSYFjFT7W6liuef0Lj5afK1x/otyqRfHnWn4+tHvY5dv2pBaltF+5l+VgpKlv
+         3NsSn0JA+VASO+L4liabpufzNrTepJ8KGGVPt3iEVUUwbx/Y9a4Qi7OhJCMV1C5FgIJK
+         7/9vMQ0wX/84OHCOmp1mxfPJRbam1+Y0DNpDpkNAUKRXDhFKEwTCrdULRdJIyDCeV2de
+         B/8g==
+X-Gm-Message-State: AOJu0YzqHp5Ar5SM00jLfFJR3zPOF9mBcMB6k0VR+q0eyIZ9weHgM1+N
+	zhuAAh2o1ba8JtcobqDDK1GuWbxlg7rrguaSfW/539XkZiUlnBCZYdxWy+rvRco=
+X-Google-Smtp-Source: AGHT+IHw/B87/PaQqzMO5KRdBZBLAqtogyyjUnxTtDRW9gb+I3AZovHZMua5klsp86mAFZRTrAyj7A==
+X-Received: by 2002:a05:600c:2183:b0:40d:1d1c:ffaa with SMTP id e3-20020a05600c218300b0040d1d1cffaamr335809wme.169.1706003695716;
+        Tue, 23 Jan 2024 01:54:55 -0800 (PST)
+Received: from [127.0.1.1] ([178.197.215.66])
+        by smtp.gmail.com with ESMTPSA id l34-20020a05600c1d2200b0040e89ade84bsm21649964wms.4.2024.01.23.01.54.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Jan 2024 01:54:55 -0800 (PST)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: mturquette@baylibre.com, sboyd@kernel.org, 
+ krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
+ linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, s.nawrocki@samsung.com, tomasz.figa@gmail.com, 
+ Varada Pavani <v.pavani@samsung.com>
+Cc: linux-samsung-soc@vger.kernel.org, alim.akhtar@samsung.com, 
+ aswani.reddy@samsung.com, pankaj.dubey@samsung.com
+In-Reply-To: <20231219115834.65720-1-v.pavani@samsung.com>
+References: <CGME20231219115856epcas5p371abeb4264f60309e597b90954e6d58c@epcas5p3.samsung.com>
+ <20231219115834.65720-1-v.pavani@samsung.com>
+Subject: Re: (subset) [PATCH 1/2] dt-bindings: clock: Fix spelling mistake
+ in 'tesla,fsd-clock.yaml'
+Message-Id: <170600369366.35728.6701987973179299907.b4-ty@linaro.org>
+Date: Tue, 23 Jan 2024 10:54:53 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240120024007.2850671-1-yosryahmed@google.com>
- <20240120024007.2850671-2-yosryahmed@google.com> <87wms0toh4.fsf@yhuang6-desk2.ccr.corp.intel.com>
- <CAJD7tkb=-0mP1CXEmAd4QjMXKgep7myHShiwUSNnY1cjfRqfJA@mail.gmail.com>
-In-Reply-To: <CAJD7tkb=-0mP1CXEmAd4QjMXKgep7myHShiwUSNnY1cjfRqfJA@mail.gmail.com>
-From: Yosry Ahmed <yosryahmed@google.com>
-Date: Tue, 23 Jan 2024 01:54:03 -0800
-Message-ID: <CAJD7tkZSY4SJ89VxCotkLoB6VWN1SexuOTeNTaUKxqqPwbDvFQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] mm: swap: update inuse_pages after all cleanups are done
-To: "Huang, Ying" <ying.huang@intel.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Nhat Pham <nphamcs@gmail.com>, Chris Li <chrisl@kernel.org>, 
-	Chengming Zhou <zhouchengming@bytedance.com>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.12.4
 
-> Alternatively, we may just hold the spinlock in try_to_unuse() when we
-> check si->inuse_pages at the end. This will also ensure that any calls
-> to swap_range_free() have completed. Let me know what you prefer.
 
-To elaborate, I mean replacing this patch and the memory barriers with
-the diff below.
+On Tue, 19 Dec 2023 17:28:33 +0530, Varada Pavani wrote:
+> Fix typo 'inteernal' to 'internal' in 'Documentation/devicetree/
+> bindings/clock/tesla,fsd-clock.yaml'.
+> 
+> 
 
-diff --git a/mm/swapfile.c b/mm/swapfile.c
-index 2fedb148b9404..9b932ecbd80a8 100644
---- a/mm/swapfile.c
-+++ b/mm/swapfile.c
-@@ -2046,6 +2046,7 @@ static int try_to_unuse(unsigned int type)
-        struct swap_info_struct *si = swap_info[type];
-        struct folio *folio;
-        swp_entry_t entry;
-+       unsigned int inuse;
-        unsigned int i;
+Applied, thanks!
 
-        if (!READ_ONCE(si->inuse_pages))
-@@ -2123,8 +2124,14 @@ static int try_to_unuse(unsigned int type)
-         * and even shmem_writepage() could have been preempted after
-         * folio_alloc_swap(), temporarily hiding that swap.  It's easy
-         * and robust (though cpu-intensive) just to keep retrying.
-+        *
-+        * Read si->inuse_pages with the lock held to make sure that cleanups in
-+        * swap_range_free() are completed when we read si->inuse_pages == 0.
-         */
--       if (READ_ONCE(si->inuse_pages)) {
-+       spin_lock(&si->lock);
-+       inuse = si->inuse_pages;
-+       spin_unlock(&si->lock);
-+       if (inuse) {
-                if (!signal_pending(current))
-                        goto retry;
-                return -EINTR;
+[1/2] dt-bindings: clock: Fix spelling mistake in 'tesla,fsd-clock.yaml'
+      https://git.kernel.org/krzk/linux/c/5b62ea0b85ea8e11945f862fd2eee16ac3a45d4b
+
+Best regards,
+-- 
+Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
