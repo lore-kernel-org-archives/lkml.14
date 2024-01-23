@@ -1,36 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60DC11102
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 03:13:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FBC0A2D
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 03:13:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705979603; cv=none; b=E55Vk+c63bvc4NS3qODQiyiARbfOrhRUmMa0jt0NpsJ+NR44sx0oonxcE4rtnY0t12Y7x57KK3x5bv3Wh33IpUH3u8uOZ+5DECYmKZXEN1c0+YhjGM/jh2wmXWRwWz8bEiOlwA6otsngegYo564Wq3v2SgbDQC4VGLjcTRHBFug=
+	t=1705979603; cv=none; b=rWQMwqBbmsx6Yszs9TMAm30oO/2lajhCvopQ4RLb/pVK0d7AsTMBDCZsZlEohlQoTyhC5Q+SOj0rMgJpUqtEK5+z6T/BQ/xZlNQaR753tbeT6hpHZg3iQ1cCaICN34Ke5BOBDJIIbMyWWmd6/5zMCsNZgb+0XPpWPQ1yw++k8H4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1705979603; c=relaxed/simple;
-	bh=g1vOPJnY9t3y2bVhIPnU2h6iLtYDdE5uoCvaW6dG+O4=;
+	bh=tlLAY6EO02qx1b+oRH7VARDvczbq9v+as7OlbaqoAos=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=lvsVILXeXkQR7AKknv6/VcPlG/eYSrFWTU5WLfbA1IR9G2dt4w2YbayW5R9g3N0d3PICil5T6bZWFWrLyDMwHVDDRwVxHt4RYCbj+ML1B8D+ESi7Tw7cqQaC6qOQZEHBBiNZjQ/nNivqd0I8BunsvKSBvOW+J5vF2dmZx/r4Ijw=
+	 Content-Type; b=skFrvnaa6TdVZ1+Fay6YiVZnXodAxkBu27m0aIK/TboNHsMm9F8jLy5zRZ/x5dWDecwpJcuF9Boi2QHkSbqkEoIB/blgKeRo+4YNHWZL5dzm7C+Au2lXHL85+7pKV64+w5x29RehyDKyqXVs3+ACjT4XtRK4QUUp9jWlNXpOn/I=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0CF5C43394;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3437C433C7;
 	Tue, 23 Jan 2024 03:13:22 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.97)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1rS7FU-00000002i9Q-45QQ;
+	id 1rS7FU-00000002i8w-3Oab;
 	Mon, 22 Jan 2024 22:14:52 -0500
-Message-ID: <20240123031452.830697973@goodmis.org>
+Message-ID: <20240123031452.667736338@goodmis.org>
 User-Agent: quilt/0.67
-Date: Mon, 22 Jan 2024 22:08:28 -0500
+Date: Mon, 22 Jan 2024 22:08:27 -0500
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org
 Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Mark Rutland <mark.rutland@arm.com>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  Andrew Morton <akpm@linux-foundation.org>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Geert Uytterhoeven <geert@linux-m68k.org>,
- Kees Cook <keescook@chromium.org>
-Subject: [for-linus][PATCH 2/2] eventfs: Save directory inodes in the eventfs_inode structure
+ Petr Pavlu <petr.pavlu@suse.com>,
+ Tom Zanussi <tom.zanussi@linux.intel.com>
+Subject: [for-linus][PATCH 1/2] tracing: Ensure visibility when inserting an element into tracing_map
 References: <20240123030826.619242906@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -40,117 +39,124 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+From: Petr Pavlu <petr.pavlu@suse.com>
 
-The eventfs inodes and directories are allocated when referenced. But this
-leaves the issue of keeping consistent inode numbers and the number is
-only saved in the inode structure itself. When the inode is no longer
-referenced, it can be freed. When the file that the inode was representing
-is referenced again, the inode is once again created, but the inode number
-needs to be the same as it was before.
+Running the following two commands in parallel on a multi-processor
+AArch64 machine can sporadically produce an unexpected warning about
+duplicate histogram entries:
 
-Just making the inode numbers the same for all files is fine, but that
-does not work with directories. The find command will check for loops via
-the inode number and having the same inode number for directories triggers:
+ $ while true; do
+     echo hist:key=id.syscall:val=hitcount > \
+       /sys/kernel/debug/tracing/events/raw_syscalls/sys_enter/trigger
+     cat /sys/kernel/debug/tracing/events/raw_syscalls/sys_enter/hist
+     sleep 0.001
+   done
+ $ stress-ng --sysbadaddr $(nproc)
 
-  # find /sys/kernel/tracing
-find: File system loop detected;
-'/sys/kernel/debug/tracing/events/initcall/initcall_finish' is part of the same file system loop as
-'/sys/kernel/debug/tracing/events/initcall'.
-[..]
+The warning looks as follows:
 
-Linus pointed out that the eventfs_inode structure ends with a single
-32bit int, and on 64 bit machines, there's likely a 4 byte hole due to
-alignment. We can use this hole to store the inode number for the
-eventfs_inode. All directories in eventfs are represented by an
-eventfs_inode and that data structure can hold its inode number.
+[ 2911.172474] ------------[ cut here ]------------
+[ 2911.173111] Duplicates detected: 1
+[ 2911.173574] WARNING: CPU: 2 PID: 12247 at kernel/trace/tracing_map.c:983 tracing_map_sort_entries+0x3e0/0x408
+[ 2911.174702] Modules linked in: iscsi_ibft(E) iscsi_boot_sysfs(E) rfkill(E) af_packet(E) nls_iso8859_1(E) nls_cp437(E) vfat(E) fat(E) ena(E) tiny_power_button(E) qemu_fw_cfg(E) button(E) fuse(E) efi_pstore(E) ip_tables(E) x_tables(E) xfs(E) libcrc32c(E) aes_ce_blk(E) aes_ce_cipher(E) crct10dif_ce(E) polyval_ce(E) polyval_generic(E) ghash_ce(E) gf128mul(E) sm4_ce_gcm(E) sm4_ce_ccm(E) sm4_ce(E) sm4_ce_cipher(E) sm4(E) sm3_ce(E) sm3(E) sha3_ce(E) sha512_ce(E) sha512_arm64(E) sha2_ce(E) sha256_arm64(E) nvme(E) sha1_ce(E) nvme_core(E) nvme_auth(E) t10_pi(E) sg(E) scsi_mod(E) scsi_common(E) efivarfs(E)
+[ 2911.174738] Unloaded tainted modules: cppc_cpufreq(E):1
+[ 2911.180985] CPU: 2 PID: 12247 Comm: cat Kdump: loaded Tainted: G            E      6.7.0-default #2 1b58bbb22c97e4399dc09f92d309344f69c44a01
+[ 2911.182398] Hardware name: Amazon EC2 c7g.8xlarge/, BIOS 1.0 11/1/2018
+[ 2911.183208] pstate: 61400005 (nZCv daif +PAN -UAO -TCO +DIT -SSBS BTYPE=--)
+[ 2911.184038] pc : tracing_map_sort_entries+0x3e0/0x408
+[ 2911.184667] lr : tracing_map_sort_entries+0x3e0/0x408
+[ 2911.185310] sp : ffff8000a1513900
+[ 2911.185750] x29: ffff8000a1513900 x28: ffff0003f272fe80 x27: 0000000000000001
+[ 2911.186600] x26: ffff0003f272fe80 x25: 0000000000000030 x24: 0000000000000008
+[ 2911.187458] x23: ffff0003c5788000 x22: ffff0003c16710c8 x21: ffff80008017f180
+[ 2911.188310] x20: ffff80008017f000 x19: ffff80008017f180 x18: ffffffffffffffff
+[ 2911.189160] x17: 0000000000000000 x16: 0000000000000000 x15: ffff8000a15134b8
+[ 2911.190015] x14: 0000000000000000 x13: 205d373432323154 x12: 5b5d313131333731
+[ 2911.190844] x11: 00000000fffeffff x10: 00000000fffeffff x9 : ffffd1b78274a13c
+[ 2911.191716] x8 : 000000000017ffe8 x7 : c0000000fffeffff x6 : 000000000057ffa8
+[ 2911.192554] x5 : ffff0012f6c24ec0 x4 : 0000000000000000 x3 : ffff2e5b72b5d000
+[ 2911.193404] x2 : 0000000000000000 x1 : 0000000000000000 x0 : ffff0003ff254480
+[ 2911.194259] Call trace:
+[ 2911.194626]  tracing_map_sort_entries+0x3e0/0x408
+[ 2911.195220]  hist_show+0x124/0x800
+[ 2911.195692]  seq_read_iter+0x1d4/0x4e8
+[ 2911.196193]  seq_read+0xe8/0x138
+[ 2911.196638]  vfs_read+0xc8/0x300
+[ 2911.197078]  ksys_read+0x70/0x108
+[ 2911.197534]  __arm64_sys_read+0x24/0x38
+[ 2911.198046]  invoke_syscall+0x78/0x108
+[ 2911.198553]  el0_svc_common.constprop.0+0xd0/0xf8
+[ 2911.199157]  do_el0_svc+0x28/0x40
+[ 2911.199613]  el0_svc+0x40/0x178
+[ 2911.200048]  el0t_64_sync_handler+0x13c/0x158
+[ 2911.200621]  el0t_64_sync+0x1a8/0x1b0
+[ 2911.201115] ---[ end trace 0000000000000000 ]---
 
-That last int was also purposely placed at the end of the structure to
-prevent holes from within. Now that there's a 4 byte number to hold the
-inode, both the inode number and the last integer can be moved up in the
-structure for better cache locality, where the llist and rcu fields can be
-moved to the end as they are only used when the eventfs_inode is being
-deleted.
+The problem appears to be caused by CPU reordering of writes issued from
+__tracing_map_insert().
 
-Link: https://lore.kernel.org/all/CAMuHMdXKiorg-jiuKoZpfZyDJ3Ynrfb8=X+c7x0Eewxn-YRdCA@mail.gmail.com/
-Link: https://lore.kernel.org/linux-trace-kernel/20240122152748.46897388@gandalf.local.home
+The check for the presence of an element with a given key in this
+function is:
 
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Fixes: 53c41052ba31 ("eventfs: Have the inodes all for files and directories all be the same")
+ val = READ_ONCE(entry->val);
+ if (val && keys_match(key, val->key, map->key_size)) ...
+
+The write of a new entry is:
+
+ elt = get_free_elt(map);
+ memcpy(elt->key, key, map->key_size);
+ entry->val = elt;
+
+The "memcpy(elt->key, key, map->key_size);" and "entry->val = elt;"
+stores may become visible in the reversed order on another CPU. This
+second CPU might then incorrectly determine that a new key doesn't match
+an already present val->key and subsequently insert a new element,
+resulting in a duplicate.
+
+Fix the problem by adding a write barrier between
+"memcpy(elt->key, key, map->key_size);" and "entry->val = elt;", and for
+good measure, also use WRITE_ONCE(entry->val, elt) for publishing the
+element. The sequence pairs with the mentioned "READ_ONCE(entry->val);"
+and the "val->key" check which has an address dependency.
+
+The barrier is placed on a path executed when adding an element for
+a new key. Subsequent updates targeting the same key remain unaffected.
+
+From the user's perspective, the issue was introduced by commit
+c193707dde77 ("tracing: Remove code which merges duplicates"), which
+followed commit cbf4100efb8f ("tracing: Add support to detect and avoid
+duplicates"). The previous code operated differently; it inherently
+expected potential races which result in duplicates but merged them
+later when they occurred.
+
+Link: https://lore.kernel.org/linux-trace-kernel/20240122150928.27725-1-petr.pavlu@suse.com
+
+Fixes: c193707dde77 ("tracing: Remove code which merges duplicates")
+Signed-off-by: Petr Pavlu <petr.pavlu@suse.com>
+Acked-by: Tom Zanussi <tom.zanussi@linux.intel.com>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-Reviewed-by: Kees Cook <keescook@chromium.org>
 ---
- fs/tracefs/event_inode.c | 14 +++++++++++---
- fs/tracefs/internal.h    |  7 ++++---
- 2 files changed, 15 insertions(+), 6 deletions(-)
+ kernel/trace/tracing_map.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
-index 6795fda2af19..6b211522a13e 100644
---- a/fs/tracefs/event_inode.c
-+++ b/fs/tracefs/event_inode.c
-@@ -34,7 +34,15 @@ static DEFINE_MUTEX(eventfs_mutex);
+diff --git a/kernel/trace/tracing_map.c b/kernel/trace/tracing_map.c
+index c774e560f2f9..a4dcf0f24352 100644
+--- a/kernel/trace/tracing_map.c
++++ b/kernel/trace/tracing_map.c
+@@ -574,7 +574,12 @@ __tracing_map_insert(struct tracing_map *map, void *key, bool lookup_only)
+ 				}
  
- /* Choose something "unique" ;-) */
- #define EVENTFS_FILE_INODE_INO		0x12c4e37
--#define EVENTFS_DIR_INODE_INO		0x134b2f5
-+
-+/* Just try to make something consistent and unique */
-+static int eventfs_dir_ino(struct eventfs_inode *ei)
-+{
-+	if (!ei->ino)
-+		ei->ino = get_next_ino();
-+
-+	return ei->ino;
-+}
+ 				memcpy(elt->key, key, map->key_size);
+-				entry->val = elt;
++				/*
++				 * Ensure the initialization is visible and
++				 * publish the elt.
++				 */
++				smp_wmb();
++				WRITE_ONCE(entry->val, elt);
+ 				atomic64_inc(&map->hits);
  
- /*
-  * The eventfs_inode (ei) itself is protected by SRCU. It is released from
-@@ -396,7 +404,7 @@ static struct dentry *create_dir(struct eventfs_inode *ei, struct dentry *parent
- 	inode->i_fop = &eventfs_file_operations;
- 
- 	/* All directories will have the same inode number */
--	inode->i_ino = EVENTFS_DIR_INODE_INO;
-+	inode->i_ino = eventfs_dir_ino(ei);
- 
- 	ti = get_tracefs(inode);
- 	ti->flags |= TRACEFS_EVENT_INODE;
-@@ -802,7 +810,7 @@ static int eventfs_iterate(struct file *file, struct dir_context *ctx)
- 
- 		name = ei_child->name;
- 
--		ino = EVENTFS_DIR_INODE_INO;
-+		ino = eventfs_dir_ino(ei_child);
- 
- 		if (!dir_emit(ctx, name, strlen(name), ino, DT_DIR))
- 			goto out_dec;
-diff --git a/fs/tracefs/internal.h b/fs/tracefs/internal.h
-index 12b7d0150ae9..45397df9bb65 100644
---- a/fs/tracefs/internal.h
-+++ b/fs/tracefs/internal.h
-@@ -55,6 +55,10 @@ struct eventfs_inode {
- 	struct eventfs_attr		*entry_attrs;
- 	struct eventfs_attr		attr;
- 	void				*data;
-+	unsigned int			is_freed:1;
-+	unsigned int			is_events:1;
-+	unsigned int			nr_entries:30;
-+	unsigned int			ino;
- 	/*
- 	 * Union - used for deletion
- 	 * @llist:	for calling dput() if needed after RCU
-@@ -64,9 +68,6 @@ struct eventfs_inode {
- 		struct llist_node	llist;
- 		struct rcu_head		rcu;
- 	};
--	unsigned int			is_freed:1;
--	unsigned int			is_events:1;
--	unsigned int			nr_entries:30;
- };
- 
- static inline struct tracefs_inode *get_tracefs(const struct inode *inode)
+ 				return entry->val;
 -- 
 2.43.0
 
