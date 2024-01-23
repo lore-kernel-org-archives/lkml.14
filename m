@@ -1,45 +1,46 @@
-Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C49487FBA9;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 153237F7E2;
 	Tue, 23 Jan 2024 16:37:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706027825; cv=none; b=qIyq+a8vRJq7JY40EXciq4cYeDZd2fsxeyeepNq1C+AQALEiTpElLUgY4pYr+lbsaOoP8+LHRT07SrnhlmM7wMZciHaBGs4bJkduLXZa5hT4OPT0SXd8yjWJ6swWULVTCKfAb6V7mVH4w6npiGae/3kZmcXo5h3g0S5XdzLwZmA=
+	t=1706027825; cv=none; b=NQ2Ux2oExXWp++FRZv1WzAYc4VUKnl6hx1G6v2zOXmrVV18nvM7JVziJg5cp3eyEQlFnPIu8bslfcR1xcOIFJ1qrqz0NW34p8nXJN0uxA7a1U3+IQwr4WcE4CDeeZVNdZYcCwPBferT0VFAibHBSUQ0/1esKyhUg/6/m2yVYKLE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1706027825; c=relaxed/simple;
-	bh=pWH8NAHtrCvFVSYAPVsf9lKe7zVZF7vWQZ1xReqHAuY=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=AQ84sQhtPJYqNoMslH2dP/qsQqrHwHyg+/qHGoh0I3u3kgqMLEpTqUTtmY976Ml1mJ1sq8eLBfdIt4YEkn1PdUumHJqIxJwPOqy5zLcSkEkriN550Y2XhjTSE+vZNUa7xefKZ7bLlng3lSyhwXOZ1jQbdbiXPL4xrxPVL7DxqJg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=V5Zeaq+W; arc=none smtp.client-ip=198.47.19.141
+	bh=OY2361TGwrkXPrQ1UsenLqUtBgbOE0Azmm4BwfLansg=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=kOSQzyd/55s/YZSjgZ7dXkl7Zvz8a07PqyvRX/t5CazK6SQtkCg2UrC0+M9FROAuyz0u1/gP+l6Oeu6ogL1H/oyGKmbQj35RudoMXZzI5pXs++qTGBLGagK0sFCv8Nh9rGOw2L5wV7IPgl4NyRh7XKAfJSkNuDcQrIg8nex+Z4k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=YhJCOtRC; arc=none smtp.client-ip=198.47.23.248
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="V5Zeaq+W"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 40NGasLk077073;
-	Tue, 23 Jan 2024 10:36:54 -0600
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="YhJCOtRC"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 40NGatk2049949;
+	Tue, 23 Jan 2024 10:36:55 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1706027814;
-	bh=q7pRp5x0RG+L6or32Q9nmMCN27zczX+N7SM2pF7W3VM=;
-	h=From:To:CC:Subject:Date;
-	b=V5Zeaq+WPMJp9Zw0v/NXFVWhBsUpMgB0ankkefCZPSaH5bKFd156fx3V2SYT/9v/4
-	 /f2ckNyaCkNIAxuJ2PA5pIlxZeN8HI963n5y3HLyXit7jKIWkuNtn8Ea9v9jslLRvS
-	 AfOvNsoOjqYdf0jEFKwIhydGWeamoblA5Ph5C79I=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 40NGasnq000545
+	s=ti-com-17Q1; t=1706027815;
+	bh=kY60sQE2O0mWnnL7W1my2Lgy6WoutICMhmnbxu89kcA=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=YhJCOtRCdPuqytKsPHHQo9zyjvkAqoOHUcWNfmezYI1V8ft+l3nIKTaKt4uCci1lt
+	 Pd1G7JlLLw9rXw7wLzcVnEIuqud/y3hxz1cTD3inGCts6FLMBl40bvjYeW3A7ZmDcm
+	 D2LdiCvcXyX6tXwemYHky7+2dZls4ph3xayMZOyY=
+Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 40NGathg033944
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 23 Jan 2024 10:36:54 -0600
-Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+	Tue, 23 Jan 2024 10:36:55 -0600
+Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 23
- Jan 2024 10:36:54 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ Jan 2024 10:36:55 -0600
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 23 Jan 2024 10:36:54 -0600
+ Frontend Transport; Tue, 23 Jan 2024 10:36:55 -0600
 Received: from lelvsmtp6.itg.ti.com ([10.249.42.149])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 40NGarrm123403;
-	Tue, 23 Jan 2024 10:36:54 -0600
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 40NGarrp123403;
+	Tue, 23 Jan 2024 10:36:55 -0600
 From: Andrew Davis <afd@ti.com>
 To: Sebastian Reichel <sre@kernel.org>,
         Support Opensource
@@ -51,10 +52,12 @@ To: Sebastian Reichel <sre@kernel.org>,
 CC: <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         Andrew Davis
 	<afd@ti.com>
-Subject: [PATCH 00/21] Power supply register with devm
-Date: Tue, 23 Jan 2024 10:36:32 -0600
-Message-ID: <20240123163653.384385-1-afd@ti.com>
+Subject: [PATCH 03/21] power: supply: ds2760: Use devm_power_supply_register() helper
+Date: Tue, 23 Jan 2024 10:36:35 -0600
+Message-ID: <20240123163653.384385-4-afd@ti.com>
 X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240123163653.384385-1-afd@ti.com>
+References: <20240123163653.384385-1-afd@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,60 +68,44 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-Hello all,
+Use the device lifecycle managed register function. This helps prevent
+mistakes like unregistering out of order in cleanup functions and
+forgetting to unregister on error paths.
 
-This is a semi-automated series converting several drivers
-under power/supply over to using devm_power_supply_register().
-The more trivial cases are first, the last 3 drivers needed
-a little pre-work to convert their IIO uses over to devm before
-power_supply_register() could be switched.
+Signed-off-by: Andrew Davis <afd@ti.com>
+---
+ drivers/power/supply/ds2760_battery.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-Thanks,
-Andrew
-
-Andrew Davis (21):
-  power: supply: da9030: Use devm_power_supply_register() helper
-  power: supply: da9052: Use devm_power_supply_register() helper
-  power: supply: ds2760: Use devm_power_supply_register() helper
-  power: supply: goldfish: Use devm_power_supply_register() helper
-  power: supply: lp8727: Use devm_power_supply_register() helper
-  power: supply: lp8788: Use devm_power_supply_register() helper
-  power: supply: max14577: Use devm_power_supply_register() helper
-  power: supply: max77693: Use devm_power_supply_register() helper
-  power: supply: max8925: Use devm_power_supply_register() helper
-  power: supply: pcf50633: Use devm_power_supply_register() helper
-  power: supply: rt5033: Use devm_power_supply_register() helper
-  power: supply: tps65090: Use devm_power_supply_register() helper
-  power: supply: wm831x: Use devm_power_supply_register() helper
-  power: supply: wm831x: Use devm_power_supply_register() helper
-  power: supply: wm8350: Use devm_power_supply_register() helper
-  power: supply: da9150: Use devm_iio_channel_get() helper
-  power: supply: da9150: Use devm_power_supply_register() helper
-  power: supply: rx51: Use devm_iio_channel_get() helper
-  power: supply: rx51: Use devm_power_supply_register() helper
-  power: supply: twl4030_madc: Use devm_iio_channel_get() helper
-  power: supply: twl4030_madc: Use devm_power_supply_register() helper
-
- drivers/power/supply/da9030_battery.c       |  6 +-
- drivers/power/supply/da9052-battery.c       |  4 +-
- drivers/power/supply/da9150-charger.c       | 72 ++++++---------------
- drivers/power/supply/ds2760_battery.c       |  4 +-
- drivers/power/supply/goldfish_battery.c     | 24 ++-----
- drivers/power/supply/lp8727_charger.c       | 35 ++--------
- drivers/power/supply/lp8788-charger.c       | 21 ++----
- drivers/power/supply/max14577_charger.c     |  6 +-
- drivers/power/supply/max77693_charger.c     |  8 +--
- drivers/power/supply/max8925_power.c        | 36 +++--------
- drivers/power/supply/pcf50633-charger.c     | 23 +++----
- drivers/power/supply/rt5033_battery.c       | 14 +---
- drivers/power/supply/rx51_battery.c         | 57 ++++------------
- drivers/power/supply/tps65090-charger.c     | 18 ++----
- drivers/power/supply/twl4030_madc_battery.c | 59 ++++-------------
- drivers/power/supply/wm831x_backup.c        | 13 +---
- drivers/power/supply/wm831x_power.c         | 24 +++----
- drivers/power/supply/wm8350_power.c         | 29 ++-------
- 18 files changed, 121 insertions(+), 332 deletions(-)
-
+diff --git a/drivers/power/supply/ds2760_battery.c b/drivers/power/supply/ds2760_battery.c
+index 40fba31be1744..7cf4ea06b5003 100644
+--- a/drivers/power/supply/ds2760_battery.c
++++ b/drivers/power/supply/ds2760_battery.c
+@@ -739,7 +739,7 @@ static int w1_ds2760_add_slave(struct w1_slave *sl)
+ 	if (current_accum)
+ 		ds2760_battery_set_current_accum(di, current_accum);
+ 
+-	di->bat = power_supply_register(dev, &di->bat_desc, &psy_cfg);
++	di->bat = devm_power_supply_register(dev, &di->bat_desc, &psy_cfg);
+ 	if (IS_ERR(di->bat)) {
+ 		dev_err(di->dev, "failed to register battery\n");
+ 		retval = PTR_ERR(di->bat);
+@@ -762,7 +762,6 @@ static int w1_ds2760_add_slave(struct w1_slave *sl)
+ 	goto success;
+ 
+ workqueue_failed:
+-	power_supply_unregister(di->bat);
+ batt_failed:
+ di_alloc_failed:
+ success:
+@@ -777,7 +776,6 @@ static void w1_ds2760_remove_slave(struct w1_slave *sl)
+ 	cancel_delayed_work_sync(&di->monitor_work);
+ 	cancel_delayed_work_sync(&di->set_charged_work);
+ 	destroy_workqueue(di->monitor_wqueue);
+-	power_supply_unregister(di->bat);
+ }
+ 
+ #ifdef CONFIG_OF
 -- 
 2.39.2
 
