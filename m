@@ -1,119 +1,64 @@
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00F1758212;
-	Tue, 23 Jan 2024 09:19:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B0535812D;
+	Tue, 23 Jan 2024 09:19:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706001556; cv=none; b=EyUUfEbjVhSO1wnjGtnF7NhFtxL4EZT+gj7vW8Sb93m0EdzoGK6P5FBkSaWdpmFFDRfQWYL83/JOGS2S0Oq6Ph+5m1BG0trzoQsmWLGZykhzip0sCdo0IO2RAFM3Uetl2IFaANP4pO6H4eYQ6Rh+0QKDoI+NXGllgqqXFkBb0yA=
+	t=1706001569; cv=none; b=UvBFGNTuBQxOrDvnPDujTHhIlcwK9PdN4I91pJm9Zmlc0z2B30ns/j9kzQRi+9IBUe17hgLS8a8k1X/FrzSu/O9i+TswH8z9P/w5vIL8oAdvg8yXpqcBYMIEGshcd+eV/LHUB/TA3RCtAUAKbUnh9JuXUBhkWgWee5lWEk6OB4E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706001556; c=relaxed/simple;
-	bh=kYEzP77hAItk65iHZF+3d1AGqaHOMtv6LJ964mV0QIM=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HYt3KvD8CfU4UUJOtC3Qe4NCE3jik+BtdVh2xx6NOVjvE4+JIxyQHoRYbestF9dptas+oEsV/wpRtTi/LsIEEOTMQFHcZESVTmLjWcMkPLzY4xCjE7jz55YwolHSsGBFClhXgg62jKKT87Fn0KVHBy3otkNYZbvZ0UZNxN2/XLM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.194])
-	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4TK1hv44lmz18LMp;
-	Tue, 23 Jan 2024 17:18:07 +0800 (CST)
-Received: from canpemm500010.china.huawei.com (unknown [7.192.105.118])
-	by mail.maildlp.com (Postfix) with ESMTPS id DC21E140578;
-	Tue, 23 Jan 2024 17:19:08 +0800 (CST)
-Received: from huawei.com (10.175.127.227) by canpemm500010.china.huawei.com
- (7.192.105.118) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Tue, 23 Jan
- 2024 17:19:04 +0800
-From: Ye Bin <yebin10@huawei.com>
-To: <rostedt@goodmis.org>, <mhiramat@kernel.org>,
-	<mathieu.desnoyers@efficios.com>, <linux-trace-kernel@vger.kernel.org>
-CC: <linux-kernel@vger.kernel.org>, <yebin10@huawei.com>
-Subject: [PATCH v4 2/7] tracing/probes: add traceprobe_expand_dentry_args() helper
-Date: Tue, 23 Jan 2024 17:21:34 +0800
-Message-ID: <20240123092139.3698375-3-yebin10@huawei.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20240123092139.3698375-1-yebin10@huawei.com>
-References: <20240123092139.3698375-1-yebin10@huawei.com>
+	s=arc-20240116; t=1706001569; c=relaxed/simple;
+	bh=aD4SlO0Hu0Mw0mKb5dOzItJkI2KAfCmtVe2oegO3tLs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=F8gJc/qTYBIs9fu0lEtGcTSBYpHXMfC/jyKBD9Pst36xv2LTBkfEx1eVYIC7YJdSEQYRG6coDIU9T7kalL35Y/5MkZGb7bpT3jjWGTAa/EF2U4WWDZfdNun6EhqhPoBDC123IK25gC+ORRAfYcteBrRsso/GD8YqKjFre+6nvaA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z/q+Llqu; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z/q+Llqu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A03EC433C7;
+	Tue, 23 Jan 2024 09:19:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706001568;
+	bh=aD4SlO0Hu0Mw0mKb5dOzItJkI2KAfCmtVe2oegO3tLs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Z/q+Llqut5iXtP7BpwidsR6GcYZMozz4c5J1If8e/trDCO8vZBKITGwAJ6tgY+4Cq
+	 7aFARNPvskdIG/cYDYBA+V57G1Of1v+C38mus57lcU7z+AdQn1ndrDiR4mXNwNrXF0
+	 FTqu8HXmehMfWFvtcYdpXdH74ihzV9le08+Io1jDAsEinQbCkSiNKTW6Vzf75nOIO+
+	 EJ1CfyPxHUDG0LG0FCf627ofEe/vOU5SjYzsKe/4n+h7mvUZ+QXAMH1ig8mWSeBU6s
+	 KalNc7yX4+3hRGT7nra4KgefM4xljWJ0eyzZSDSXlZGYZHzSzdQx2qUz3YAGrCZdzm
+	 GI4SGQv173kyQ==
+Date: Tue, 23 Jan 2024 09:19:22 +0000
+From: Simon Horman <horms@kernel.org>
+To: Fabian Pfitzner <f.pfitzner@pengutronix.de>
+Cc: Michael Hennerich <michael.hennerich@analog.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Alexandru Tachici <alexandru.tachici@analog.com>,
+	kernel@pengutronix.de, netdev@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: phy: adin: add missing clock option
+Message-ID: <20240123091922.GL126470@kernel.org>
+References: <20240122110311.2725036-1-f.pfitzner@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- canpemm500010.china.huawei.com (7.192.105.118)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240122110311.2725036-1-f.pfitzner@pengutronix.de>
 
-Add traceprobe_expand_dentry_args() to expand dentry args. this API is
-prepare to support "%pd" print format for kprobe.
+On Mon, Jan 22, 2024 at 12:03:12PM +0100, Fabian Pfitzner wrote:
+> The GP_CLK pin on Adin1300 PHY's offers three different output clocks.
+> This patch adds the missing 125MHz recovered clock option which is not
+> yet availible in the driver.
 
-Signed-off-by: Ye Bin <yebin10@huawei.com>
----
- kernel/trace/trace_probe.c | 36 ++++++++++++++++++++++++++++++++++++
- kernel/trace/trace_probe.h |  2 ++
- 2 files changed, 38 insertions(+)
+nit: available
 
-diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-index 4dc74d73fc1d..cc8bd7ea5341 100644
---- a/kernel/trace/trace_probe.c
-+++ b/kernel/trace/trace_probe.c
-@@ -1565,6 +1565,42 @@ const char **traceprobe_expand_meta_args(int argc, const char *argv[],
- 	return ERR_PTR(ret);
- }
- 
-+int traceprobe_expand_dentry_args(int argc, const char *argv[], char *buf,
-+				  int bufsize)
-+{
-+	int i, used, ret;
-+
-+	used = 0;
-+	for (i = 0; i < argc; i++) {
-+		size_t idx;
-+
-+		if (str_has_suffix(argv[i], ":%pd", &idx)) {
-+			char *tmp = kstrdup(argv[i], GFP_KERNEL);
-+			char *equal;
-+
-+			if (!tmp)
-+				return -ENOMEM;
-+
-+			equal = strchr(tmp, '=');
-+			if (equal)
-+				*equal = '\0';
-+			tmp[idx] = '\0';
-+			ret = snprintf(buf + used, bufsize - used,
-+				       "%s%s+0x0(+0x%zx(%s)):string",
-+				       equal ? tmp : "", equal ? "=" : "",
-+				       offsetof(struct dentry, d_name.name),
-+				       equal ? equal + 1 : tmp);
-+			kfree(tmp);
-+			if (ret >= bufsize - used)
-+				return -ENOMEM;
-+			argv[i] = buf + used;
-+			used += ret + 1;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
- void traceprobe_finish_parse(struct traceprobe_parse_context *ctx)
- {
- 	clear_btf_context(ctx);
-diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
-index 850d9ecb6765..553371a4e0b1 100644
---- a/kernel/trace/trace_probe.h
-+++ b/kernel/trace/trace_probe.h
-@@ -402,6 +402,8 @@ extern int traceprobe_parse_probe_arg(struct trace_probe *tp, int i,
- const char **traceprobe_expand_meta_args(int argc, const char *argv[],
- 					 int *new_argc, char *buf, int bufsize,
- 					 struct traceprobe_parse_context *ctx);
-+extern int traceprobe_expand_dentry_args(int argc, const char *argv[], char *buf,
-+					 int bufsize);
- 
- extern int traceprobe_update_arg(struct probe_arg *arg);
- extern void traceprobe_free_probe_arg(struct probe_arg *arg);
--- 
-2.31.1
-
+...
