@@ -1,65 +1,58 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22BF45F56C
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 13:55:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E72C75D8E2
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 13:55:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706018114; cv=none; b=S++g/AH4XK2stgNLBMOwop1NDUpA+kI6DAzBVCDLi5oZALJ3yB6+GItORQIeyns4rw9kVZdoMyS9USvhWIq2xm1q1Le0YrjXRF6m8B89lX8AaXToe24kPvRvzBpvLcggW6wpXEXul3qcABhEZVwvvGC+Q5LDvnDI4TzkR6kSas8=
+	t=1706018135; cv=none; b=uIQj2/VyK4o0U8KZEt+D0Xcpr+KYPB8x4cCrSeGCfXNohbPyhNSDxXBk/053HoenoLCUNbfiBT1X7LLv2gvemPgzG7EibYJLksxCWcpoAnn18pffGBrv3agKx1Kbtm69/d9oz/FHD4Jd34LHOkwDnrI2cA03orAzmkqnmnykBqo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706018114; c=relaxed/simple;
-	bh=H20HIdDwKk+Z1z3xGM1RE4qVtkFXkzG6kVrv6ifHtNw=;
+	s=arc-20240116; t=1706018135; c=relaxed/simple;
+	bh=99xEFdwuEmJa0szQk3ftvlnaVsfzfuVj2jwniqsIkK4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NlZgIopTCmBtCLjet8817oiM6kY6uE3YHOdrFiCx1hZJlDnw2/eMOww48RovwGR+vLvWWIi0m2NTvIyShctIbvg7tnvsE/oo1G6Do59dEOCnn+fR37Z1TDCfGOotL37Mykwz7MRHmIlqgVvYdpty/d9MmCjN82ukOzDZZrXe+d4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=asDsAfLj; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 In-Reply-To:Content-Type; b=dQ8vCsPe5ykInzRtp02ppNtgu9QGI/VJyIF6IcmM4tIn/YwZEFv8sjd2m9EYFIy4ncc/ef+6fNdCz2ifh1cu1OxpCiW/S6+pMlJfgqU+HYUvQXz6/Meo2lD7M7lUBFm6mQN1S5+eva2amJAhkVllyj7jMcfSaXbTjrgmDCCz0sM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=AXVfmAyO; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="asDsAfLj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1706018112;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=WbJQ58Ljpuy8Vw/B7ZBTw3hv4ANT/jjJ7tp8ylORPFw=;
-	b=asDsAfLjOMmV6XyLHJ3luV+vhSVP37HMPDmgq/625X5Qn/WPzA1lDPwwRuf0GZ1yM5keRp
-	tLToJ352mN9Qq9d7qXvn6forUMJ1Q0z0Wem29U4qf7oqLcyrQtzZ8yUddOqgfLnJqZRxmD
-	ylQni1S2kuNad4LRO98U9YPqXs7OBUE=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-605-St9Px_8oOdC8EzvfwNtaHA-1; Tue, 23 Jan 2024 08:55:10 -0500
-X-MC-Unique: St9Px_8oOdC8EzvfwNtaHA-1
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-337d589ef4dso2964030f8f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 05:55:10 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AXVfmAyO"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-339231c062bso2993891f8f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 05:55:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1706018131; x=1706622931; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=kZ1hKv5VDOr5/44Jp2vD0q8l5uuzQgADOI66zgGp3Gc=;
+        b=AXVfmAyOghnopjfgLqZJet29JPg45HmphFrC1dwTpSDux1m1S4aNw+5XXm3SPXI1aw
+         Yg3EfVU5kGFWacCEDeMfKgjE2WV4PGiouruWiMeaYKf4XBwAYisFMQITArqGS5ST0knD
+         FdODGoR0WuitFk9eY1tyaVzWx41x6KxlE4NephQoCFJQkg1eRndMWXbV4a0bbnrVulSc
+         ZclrW28+Km0+yVYjGzmS79oEVgiLhEq0m1xLYWi3hLjCJGWOTIzgP122N9bRnqBoYD9j
+         fRhC0NR5rJT9Pwd6DZSH/5jEqyjRrOXxsyOF06RxdMvkWXMU/MX6uYqLZhAGKqKeiKO3
+         /EYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706018109; x=1706622909;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
-         :references:cc:to:content-language:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WbJQ58Ljpuy8Vw/B7ZBTw3hv4ANT/jjJ7tp8ylORPFw=;
-        b=evcnNdKW6fk/+04Hq/tjWvat24PPZojyA8hQrOKIF4/Ii9cDnP7C6zAgCImZ0Kbe6N
-         FTalvxyGZlka2G0v4IjKrdZCVjmaMu2uN/p4UUAezsy6ws0zcnX5kTJfC596sKJs8hW8
-         Cs2roI08RevJptDRDPQoK9qciTxR1XOpUa9t2V/ZbYeDkZHxQtZXz0t5EesKlEPzSFqt
-         14/oETxI/JH2HzMdbVgc1eS7bYr0+uok9Sga+oc7Nwk+kjvZZpDSIjCaKtyKI+f6ICdI
-         r6uhkbmofEk6tSzAsqi+fNgSGLjyfjcS19Xqp5ugF4EQYB8f3LV7HJIrwPP5o0rBDW/8
-         IQiA==
-X-Gm-Message-State: AOJu0Yy+ezJWR2f9hg8/sQ+6ZkvkBiONJX1gN+Qbrl5Ao8ePIRYKHf00
-	hLBQj49+JK94vyGACzd4CfTk2LJrwL+3b41wnv9m43Un4aSVyh3eXcnAbzy3IFiX7zQTxDmbO3l
-	hvCVEM6bDn0sjJf7M7F3TdAEDPfDoDHT3nqpjAk8lUpLRa6qMG6ULErDvgnoxtg==
-X-Received: by 2002:adf:e501:0:b0:337:b53e:6065 with SMTP id j1-20020adfe501000000b00337b53e6065mr3769041wrm.41.1706018109547;
-        Tue, 23 Jan 2024 05:55:09 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IE0w0V/ld9eCbEjxciaXWhGg6pUEgVKCYMwUZNd7z5oyfWTKYjjYNbrxMD5nf1aExtZi4ADgA==
-X-Received: by 2002:adf:e501:0:b0:337:b53e:6065 with SMTP id j1-20020adfe501000000b00337b53e6065mr3769019wrm.41.1706018109107;
-        Tue, 23 Jan 2024 05:55:09 -0800 (PST)
-Received: from ?IPV6:2003:cb:c741:de00:bf0f:cd46:dc1c:2de9? (p200300cbc741de00bf0fcd46dc1c2de9.dip0.t-ipconnect.de. [2003:cb:c741:de00:bf0f:cd46:dc1c:2de9])
-        by smtp.gmail.com with ESMTPSA id l11-20020a5d674b000000b003392c727cadsm7565717wrw.27.2024.01.23.05.55.07
+        d=1e100.net; s=20230601; t=1706018131; x=1706622931;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=kZ1hKv5VDOr5/44Jp2vD0q8l5uuzQgADOI66zgGp3Gc=;
+        b=VTUCvLIno1ny93H5TyLczyV9e0M0I93s/A0HL/5fYTKEKlBxf8KiSpGtvMz9Zm9U9J
+         ZRhMQjNkWyacfP8MDQLSKxmjdQVXpjJDpS8CZtCau1IQ5KZv4rRIVAx1G71iLP+nUo0q
+         NgfvXlWXiWVV33OU/boVBNwQfKh81xxLxjuyQ+s1BUpOJFKq93mVwCaFIxWnRccXntIW
+         vsGvu/7lq3nmAozyFOMafLV7RCjv8xi2ayV2MPhnOajHCXJZhhxk8Ju8DENmjxZII4v9
+         zkuk1y427vrdxkTB4Q43qYT541lNBTTwozoA45gEy/OFe5UhcGNdY75i63/FqbeevD/O
+         auag==
+X-Gm-Message-State: AOJu0YyWoGTgEy0XxaigOueZLOTJOxpXp1dsMdaQ7LFL4k11tXfmjcUo
+	LHnzJ+VgvQhXpMRkyPV7EPxbkqd+ExeqVoui8jQtZ/uSAkwx4EWwvYcdPRwqgCA=
+X-Google-Smtp-Source: AGHT+IHocjplUQdh1eO7JOaIhz8tihztwFBxV3+rfPDQ6Zm14OlHLC1nxnCx5TTphoukhfxu5TxXwg==
+X-Received: by 2002:a05:600c:d6:b0:40e:540b:1b51 with SMTP id u22-20020a05600c00d600b0040e540b1b51mr160268wmm.132.1706018131172;
+        Tue, 23 Jan 2024 05:55:31 -0800 (PST)
+Received: from [192.168.1.20] ([178.197.215.66])
+        by smtp.gmail.com with ESMTPSA id b5-20020a5d4d85000000b00337d5aa55cdsm13344989wru.53.2024.01.23.05.55.29
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 23 Jan 2024 05:55:08 -0800 (PST)
-Message-ID: <c92c2460-c66a-46c7-b84f-0732965dcf73@redhat.com>
-Date: Tue, 23 Jan 2024 14:55:06 +0100
+        Tue, 23 Jan 2024 05:55:30 -0800 (PST)
+Message-ID: <78e296fb-a3dc-4e00-94bc-91dab7294887@linaro.org>
+Date: Tue, 23 Jan 2024 14:55:28 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,192 +60,106 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 10/11] mm/memory: ignore dirty/accessed/soft-dirty bits
- in folio_pte_batch()
+Subject: Re: [PATCH] dt-bindings: clock: support NXP i.MX95
 Content-Language: en-US
-To: Ryan Roberts <ryan.roberts@arm.com>, linux-kernel@vger.kernel.org
-Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
- Matthew Wilcox <willy@infradead.org>, Russell King <linux@armlinux.org.uk>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Dinh Nguyen <dinguyen@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>,
- Nicholas Piggin <npiggin@gmail.com>,
- Christophe Leroy <christophe.leroy@csgroup.eu>,
- "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
- "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Alexander Gordeev <agordeev@linux.ibm.com>,
- Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
- Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
- Christian Borntraeger <borntraeger@linux.ibm.com>,
- Sven Schnelle <svens@linux.ibm.com>, "David S. Miller"
- <davem@davemloft.net>, linux-arm-kernel@lists.infradead.org,
- linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
- linux-s390@vger.kernel.org, sparclinux@vger.kernel.org
-References: <20240122194200.381241-1-david@redhat.com>
- <20240122194200.381241-11-david@redhat.com>
- <59592b50-fe89-4b32-8490-2e6c296f972f@arm.com>
- <76740e33-9b52-4e23-b407-8ae38bac15ec@redhat.com>
- <94d33a07-c59a-4315-9c64-8b4d959ca1f4@arm.com>
-From: David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <94d33a07-c59a-4315-9c64-8b4d959ca1f4@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+To: Peng Fan <peng.fan@nxp.com>, "Peng Fan (OSS)" <peng.fan@oss.nxp.com>,
+ "robh+dt@kernel.org" <robh+dt@kernel.org>,
+ "krzysztof.kozlowski+dt@linaro.org" <krzysztof.kozlowski+dt@linaro.org>,
+ "conor+dt@kernel.org" <conor+dt@kernel.org>,
+ "abelvesa@kernel.org" <abelvesa@kernel.org>,
+ "mturquette@baylibre.com" <mturquette@baylibre.com>,
+ "sboyd@kernel.org" <sboyd@kernel.org>,
+ "shawnguo@kernel.org" <shawnguo@kernel.org>,
+ "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+ "kernel@pengutronix.de" <kernel@pengutronix.de>,
+ "festevam@gmail.com" <festevam@gmail.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ dl-linux-imx <linux-imx@nxp.com>,
+ "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20240121114623.1418597-1-peng.fan@oss.nxp.com>
+ <273a80a7-2a60-4490-9c3c-c33dc14be9e7@linaro.org>
+ <DU0PR04MB9417A8F4230D2C7C76D1550988742@DU0PR04MB9417.eurprd04.prod.outlook.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <DU0PR04MB9417A8F4230D2C7C76D1550988742@DU0PR04MB9417.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 23.01.24 14:42, Ryan Roberts wrote:
-> On 23/01/2024 13:06, David Hildenbrand wrote:
->> On 23.01.24 13:25, Ryan Roberts wrote:
->>> On 22/01/2024 19:41, David Hildenbrand wrote:
->>>> Let's ignore these bits: they are irrelevant for fork, and will likely
->>>> be irrelevant for upcoming users such as page unmapping.
->>>>
->>>> Signed-off-by: David Hildenbrand <david@redhat.com>
->>>> ---
->>>>    mm/memory.c | 10 ++++++++--
->>>>    1 file changed, 8 insertions(+), 2 deletions(-)
->>>>
->>>> diff --git a/mm/memory.c b/mm/memory.c
->>>> index f563aec85b2a8..341b2be845b6e 100644
->>>> --- a/mm/memory.c
->>>> +++ b/mm/memory.c
->>>> @@ -953,24 +953,30 @@ static __always_inline void __copy_present_ptes(struct
->>>> vm_area_struct *dst_vma,
->>>>        set_ptes(dst_vma->vm_mm, addr, dst_pte, pte, nr);
->>>>    }
->>>>    +static inline pte_t __pte_batch_clear_ignored(pte_t pte)
->>>> +{
->>>> +    return pte_clear_soft_dirty(pte_mkclean(pte_mkold(pte)));
->>>> +}
->>>> +
->>>>    /*
->>>>     * Detect a PTE batch: consecutive (present) PTEs that map consecutive
->>>>     * pages of the same folio.
->>>>     *
->>>>     * All PTEs inside a PTE batch have the same PTE bits set, excluding the PFN.
->>>
->>> nit: last char should be a comma (,) not a full stop (.)
->>>
->>>> + * the accessed bit, dirty bit and soft-dirty bit.
->>>>     */
->>>>    static inline int folio_pte_batch(struct folio *folio, unsigned long addr,
->>>>            pte_t *start_ptep, pte_t pte, int max_nr)
->>>>    {
->>>>        unsigned long folio_end_pfn = folio_pfn(folio) + folio_nr_pages(folio);
->>>>        const pte_t *end_ptep = start_ptep + max_nr;
->>>> -    pte_t expected_pte = pte_next_pfn(pte);
->>>> +    pte_t expected_pte = __pte_batch_clear_ignored(pte_next_pfn(pte));
->>>>        pte_t *ptep = start_ptep + 1;
->>>>          VM_WARN_ON_FOLIO(!pte_present(pte), folio);
->>>>          while (ptep != end_ptep) {
->>>> -        pte = ptep_get(ptep);
->>>> +        pte = __pte_batch_clear_ignored(ptep_get(ptep));
->>>>              if (!pte_same(pte, expected_pte))
->>>>                break;
->>>
->>> I think you'll lose dirty information in the child for private mappings? If the
->>> first pte in a batch is clean, but a subsequent page is dirty, you will end up
->>> setting all the pages in the batch as clean in the child. Previous behavior
->>> would preserve dirty bit for private mappings.
->>>
->>> In my version (v3) that did arbitrary batching, I had some fun and games
->>> tracking dirty, write and uffd_wp:
->>> https://lore.kernel.org/linux-arm-kernel/20231204105440.61448-2-ryan.roberts@arm.com/
->>>
->>> Also, I think you will currently either set soft dirty on all or none of the
->>> pages in the batch, depending on the value of the first. I previously convinced
->>> myself that the state was unimportant so always cleared it in the child to
->>> provide consistency.
+On 23/01/2024 14:08, Peng Fan wrote:
+> Hi Conor, Krzysztof
+> 
+> I replied you both here.
+> 
+>> Subject: Re: [PATCH] dt-bindings: clock: support NXP i.MX95
 >>
->> Good points regarding dirty and soft-dirty. I wanted to avoid passing flags to
->> folio_pte_batch(), but maybe that's just what we need to not change behavior.
+>> On 21/01/2024 12:46, Peng Fan (OSS) wrote:
+>>> From: Peng Fan <peng.fan@nxp.com>
+>>>
+>>> Add i.MX95 clock dt-binding header file
+>>>
+>>> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+>>
+>> This should be squashed with respective binding patch.
 > 
-> I think you could not bother with the enforce_uffd_wp - just always enforce
-> uffd-wp. So that's one simplification vs mine. Then you just need an any_dirty
-
-I think I'll just leave uffd-wp alone for now, corner case with 
-fork/munmap that can be optimized later on top if really needed.
-
-Regarding soft-dirty (which is set automatically much more often), I can 
-certainly ignore the bit if !vma_soft_dirty_enabled(vma) [which is true 
-in most of the cases]. So that's easy to handle. But likely, soft-dirty 
-for the child is completely unexpressive and should always be cleared. 
-Have to double check what the vmflag will be for the child process.
-
-> flag following the same pattern as your any_writable. Then just set dirty on the
-> whole batch in the child if any were dirty in the parent.
-
-Regarding dirtying, I'm not 100% sure yet if we should just always dirty 
-all ptes if any is dirty, or if we should preserve the state for private 
-VMAs for now.
-
+> i.MX95 use SCMI firmware, the SCP processor handles
+> clock/power/pinmux/reset/performance and etc.
 > 
-> Although now I'm wondering if there is a race here... What happens if a page in
-> the parent becomes dirty after you have checked it but before you write protect
-> it? Isn't that already a problem with the current non-batched version? Why do we
-> even to preserve dirty in the child for private mappings?
+> I just add the index that SCMI exports, and Linux/UBoot
+> will use the index and go through SCMI to do real HW
+> configuration.
+> 
+> In such case, should I still add HW information in
+> a yaml binding doc? I am not sure what should be added
+> if yes.
 
-I suspect, because the parent could zap the anon folio. If the folio is 
-clean, but the PTE dirty, I suspect that we could lose data of the child 
-if we were to evict that clean folio (swapout).
+Then why do you need it in the binding? I don't see any use of this.
 
-So I assume we simply copy the dirty PTE bit, so the system knows that 
-that folio is actually dirty, because one PTE is dirty.
-
-Touching only PTEs avoids having to mess with folio flags.
-
-But that's just pure speculation. E.g., fs/proc/task_mmu.c does some 
-slightly different accounting if a PTE is dirty. But usually, it checks 
-if either the PTE or the folios is dirty.
-
-I'll have to do some more digging.
-
--- 
-Cheers,
-
-David / dhildenb
+Best regards,
+Krzysztof
 
