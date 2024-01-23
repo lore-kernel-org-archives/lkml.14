@@ -1,138 +1,94 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 395035DF00;
-	Tue, 23 Jan 2024 12:28:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC34B5DF1D;
+	Tue, 23 Jan 2024 12:29:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.88
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706012913; cv=none; b=oROpqbZ6X1L24CEYgKnfGYp5TM03EBy/TvdJH1+fX+8ZAJQA8vXqxlQI7cVvEjkrAE38FQxQTGwnGK51Pcls4GdBeiEqwRVhi3CAhkGRixg7+w6KL5jDF0Yu2mE+ueeTtBw+LfVqk3ZQqCnRA7qGdxDOYvqTGEB+aF20HGua2b8=
+	t=1706012942; cv=none; b=V9KnUrldA0le+P+xWBgwvxoodSBePKu38bD9S3/gD8MYY24BFVWVLrfN5fUpBSnkGXdrjui7y1J/Cl+3YOxOfPE4mka+U71UzOMAV3azXJTWDGz8S//+2i6kfAXnN1Bdx2pzZNCl/4bWBEkLrXbHb0ABcAPb4dd8FToLWpr6xQ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706012913; c=relaxed/simple;
-	bh=U1Wm9oAyEK9SoZyY9g3iPj8Ybyi1tRDJeV2UVkh7Wvo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=k4+yHgJ9xwtqFBQ1i1v6YgZhuTSlfMAoo0qWkgbLuaqWjQt44lvhwX6CPdunqmAbiZ6cqlfEZ42+zhU7nr2fpFPPhs/D1eBiNA6mMfGyM19X4IA4TWAJJ/qkJA7Hs45j0MIwxBr2z84A2u7iykEdm4HLclY4hn/Ifzmd4T2tkT4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7B0011FB;
-	Tue, 23 Jan 2024 04:29:15 -0800 (PST)
-Received: from [10.57.77.165] (unknown [10.57.77.165])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6882C3F762;
-	Tue, 23 Jan 2024 04:28:26 -0800 (PST)
-Message-ID: <40112a27-eddb-4c1a-a859-a34e202e6564@arm.com>
-Date: Tue, 23 Jan 2024 12:28:25 +0000
+	s=arc-20240116; t=1706012942; c=relaxed/simple;
+	bh=fa13xu/t9vD3MafwP+nS2cWhEeHXrK5C1PsxHCLZJHI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=b5xx34fPumssO3KOC1fQhlusAiYTB2Qopw5J0P53qs8IIdPWy/Q6VkU71BxAfVC/cNBMgbuv5H24YcqDyfye8l92yE/Rw6cvB87ZAp5mU6RMKkdGsqKPrEmhzMdOFDQAojezhgysdGyb1uRFdY9bXtUlPo6zYN1SegDOKl9pTEY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZjxEFgFE; arc=none smtp.client-ip=192.55.52.88
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZjxEFgFE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706012941; x=1737548941;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=fa13xu/t9vD3MafwP+nS2cWhEeHXrK5C1PsxHCLZJHI=;
+  b=ZjxEFgFEeQmd42aOsCYA7TW1xjHjMp6aPFTz71Nt0KvDksV5LikOERed
+   0UDB06G/sF7H7XSwsIeWWiiFkzYFoQuHW+AdyOad/du9+H90h9+Zfcw/i
+   wl0+InBEzbj8F4NdWqla3Rp54gZA+1+hr7A3CJNVof1wU9MXs2ZEqLaTP
+   3Ff47BmEChijV0k5xcCTH9+flaLOHNH6XejdVVkyOjLQuvQrT+3ffOmOn
+   b/DLk3lCTLzHrCI9LI+HTj5mscTsfLRFLdTbZaJPuE4p4vUvC7a5ohRs3
+   RJNUcLNWDKcpTSc2cl2ZpZ5AM2h0fsu1Dg/HunFclSuzh2TI8eyKpN5D5
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10961"; a="432662304"
+X-IronPort-AV: E=Sophos;i="6.05,214,1701158400"; 
+   d="scan'208";a="432662304"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2024 04:28:59 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10961"; a="786050302"
+X-IronPort-AV: E=Sophos;i="6.05,214,1701158400"; 
+   d="scan'208";a="786050302"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga002.jf.intel.com with ESMTP; 23 Jan 2024 04:28:57 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+	id BCDE4483; Tue, 23 Jan 2024 13:34:19 +0200 (EET)
+Date: Tue, 23 Jan 2024 13:34:19 +0200
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc: Andreas Noever <andreas.noever@gmail.com>,
+	Michael Jamet <michael.jamet@intel.com>,
+	Yehezkel Bernat <YehezkelShB@gmail.com>,
+	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+	linux-usb@vger.kernel.org
+Subject: Re: [PATCH] thunderbolt: Remove usage of the deprecated
+ ida_simple_xx() API
+Message-ID: <20240123113419.GN2543524@black.fi.intel.com>
+References: <7fce4c8c4345d283dbfadd3cea60fdc49f9ca087.1705007397.git.christophe.jaillet@wanadoo.fr>
+ <20240122112922.GH2543524@black.fi.intel.com>
+ <d11852b1-6d9c-4ced-83cb-96e753edd45d@wanadoo.fr>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 09/11] mm/memory: optimize fork() with PTE-mapped THP
-Content-Language: en-GB
-To: David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org
-Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
- Matthew Wilcox <willy@infradead.org>, Russell King <linux@armlinux.org.uk>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Dinh Nguyen <dinguyen@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>,
- Nicholas Piggin <npiggin@gmail.com>,
- Christophe Leroy <christophe.leroy@csgroup.eu>,
- "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
- "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Alexander Gordeev <agordeev@linux.ibm.com>,
- Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
- Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
- Christian Borntraeger <borntraeger@linux.ibm.com>,
- Sven Schnelle <svens@linux.ibm.com>, "David S. Miller"
- <davem@davemloft.net>, linux-arm-kernel@lists.infradead.org,
- linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
- linux-s390@vger.kernel.org, sparclinux@vger.kernel.org
-References: <20240122194200.381241-1-david@redhat.com>
- <20240122194200.381241-10-david@redhat.com>
- <63be0c3c-bf34-4cbb-b47b-7c9be0e65058@arm.com>
- <31a0661e-fa69-419c-9936-98bfe168d5a7@redhat.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <31a0661e-fa69-419c-9936-98bfe168d5a7@redhat.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <d11852b1-6d9c-4ced-83cb-96e753edd45d@wanadoo.fr>
 
-On 23/01/2024 12:19, David Hildenbrand wrote:
-> [...]
+On Mon, Jan 22, 2024 at 06:57:42PM +0100, Christophe JAILLET wrote:
+> Le 22/01/2024 à 12:29, Mika Westerberg a écrit :
+> > On Thu, Jan 11, 2024 at 10:10:21PM +0100, Christophe JAILLET wrote:
+> > > ida_alloc() and ida_free() should be preferred to the deprecated
+> > > ida_simple_get() and ida_simple_remove().
+> > > 
+> > > Note that the upper limit of ida_simple_get() is exclusive, but the one of
+> > > ida_alloc_range()/ida_alloc_max() is inclusive. So a -1 has been added
+> > > when needed.
+> > 
+> > Looks tood to me but wanted to check if you tested this on a real
+> > hardware or you just build tested?
+> > 
+> > 
 > 
->>
->> I wrote some documentation for this (based on Matthew's docs for set_ptes() in
->> my version. Perhaps it makes sense to add it here, given this is overridable by
->> the arch.
->>
->> /**
->>   * wrprotect_ptes - Write protect a consecutive set of pages.
->>   * @mm: Address space that the pages are mapped into.
->>   * @addr: Address of first page to write protect.
->>   * @ptep: Page table pointer for the first entry.
->>   * @nr: Number of pages to write protect.
->>   *
->>   * May be overridden by the architecture, else implemented as a loop over
->>   * ptep_set_wrprotect().
->>   *
->>   * Context: The caller holds the page table lock. The PTEs are all in the same
->>   * PMD.
->>   */
->>
+> Hi,
 > 
-> I could have sworn I had a documentation at some point. Let me add some, thanks.
+> It was compile tested only.
 > 
-> [...]
-> 
->>> +
->>> +    /*
->>> +     * If we likely have to copy, just don't bother with batching. Make
->>> +     * sure that the common "small folio" case stays as fast as possible
->>> +     * by keeping the batching logic separate.
->>> +     */
->>> +    if (unlikely(!*prealloc && folio_test_large(folio) && max_nr != 1)) {
->>> +        nr = folio_pte_batch(folio, addr, src_pte, pte, max_nr);
->>> +        if (folio_test_anon(folio)) {
->>> +            folio_ref_add(folio, nr);
->>> +            if (unlikely(folio_try_dup_anon_rmap_ptes(folio, page,
->>> +                                  nr, src_vma))) {
->>
->> What happens if its not the first page of the batch that fails here? Aren't you
->> signalling that you need a prealloc'ed page for the wrong pte? Shouldn't you
->> still batch copy all the way up to the failing page first? Perhaps it all comes
->> out in the wash and these events are so infrequent that we don't care about the
->> lost batching opportunity?
-> 
-> I assume you mean the weird corner case that some folio pages in the range have
-> PAE set, others don't -- and the folio maybe pinned.
-> 
-> In that case, we fallback to individual pages, and might have preallocated a
-> page although we wouldn't have to preallocate one for processing the next page
-> (that doesn't have PAE set).
-> 
-> It should all work, although not optimized to the extreme, and as it's a corner
-> case, we don't particularly care. Hopefully, in the future we'll only have a
-> single PAE flag per folio.
-> 
-> Or am I missing something?
+> Transformation has been done with the help of the cocci script below.
 
-No, your explanation makes sense. Just wanted to check this all definitely
-worked, because the flow is slightly different to my previous version that was
-doing try_dup_rmap page-by-page.
+Okay that's what I thought too. I ran some testing on a real hardware
+and did not see any issues.
 
-> 
->>
->>> +                folio_ref_sub(folio, nr);
->>> +                return -EAGAIN;
->>> +            }
->>> +            rss[MM_ANONPAGES] += nr;
->>> +            VM_WARN_ON_FOLIO(PageAnonExclusive(page), folio);
->>> +        } else {
->>> +            folio_ref_add(folio, nr);
->>
->> Perhaps hoist this out to immediately after folio_pte_batch() since you're
->> calling it on both branches?
-> 
-> Makes sense, thanks.
-> 
-
+Applied to thunderbolt.git/next, thanks!
