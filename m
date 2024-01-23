@@ -1,264 +1,200 @@
-Received: from mx1.sberdevices.ru (mx1.sberdevices.ru [37.18.73.165])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E31A27FBB0;
-	Tue, 23 Jan 2024 17:08:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.18.73.165
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52134187A
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 17:08:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706029706; cv=none; b=gU+gSe/niONA22Vq4Xe13a9WZ+MdwLi6Y5zFaqyJK2IjkMkLoDG6S3rF4ZYu97B5sJtZTruHWZpxQBo6FQHGRLEVIqBb3xACrbOBxQa7KSsKhkbZd0SX5XHTEG/wnLFI1ulHnBs51VjA94muUhj6C8s5UIJYtANxTlyGGjKdxLg=
+	t=1706029740; cv=none; b=HOvTnkgNRQdpqJ8brTCUFHozYhzaKAQ1P6u3+b7NzCn4zOkmUJc21RGZPWCs1DACXSJYry0E12siwfOh54jeslA4xozfR/uwGyLdYZH4jRh1y7y7Y45bKCUz7VkOeIiuUTHoCE0A9c66lJHe1ydshFDwdwfGOkcgwN9Q4X6JbAo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706029706; c=relaxed/simple;
-	bh=K7UieHG9RsHgDBpcjxeQWQsIDLszF4my3Mke2V00m8I=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mBxhl9qGMAqBpnxg9JGw564x0tdm23+gxTCqvpYveuLIgvjGFWheP9ZDutIKAqAx20UQCpUERuyiW6VQ6cBekHbweW8zE0rD/4sjmoeQYmPciTvsgGN6dmKkBUQBlDgG/nNKLvGPWajcm0ZFqxJ62cuyJESGJhwQCqVMkR3u68I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=OW2U8mrF; arc=none smtp.client-ip=37.18.73.165
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=salutedevices.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=salutedevices.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="OW2U8mrF"
-Received: from p-infra-ksmg-sc-msk01 (localhost [127.0.0.1])
-	by mx1.sberdevices.ru (Postfix) with ESMTP id CF144100006;
-	Tue, 23 Jan 2024 19:58:42 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru CF144100006
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
-	s=mail; t=1706029122;
-	bh=T4w8YmD8VWdxpwAM+qh0428tx6ubcLSqso0bV80y5tA=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
-	b=OW2U8mrFmmUws3AnpObTsP2zgQzmnMiJAXPzGJKlsN99SOoUuhYWrcOKs6FvO6Cyi
-	 eM3U9mon2s9MAPx1W3uCaxAEsqLq9qS8shsuGvUp83HvMN3yRTOFUiCcJXYJYMdh4+
-	 ysRYd/QhQzwVaDQS1BGMvyV5/xUAlIN8W0i0HQXAYA3bLBw+B6kSvgBF3gwXO/msNK
-	 2dshPoNEmSSlCHNiUMTDpZKJDbUNgB6xHqtK0UlxomqNYeHVZj4Lbsz+qjP15OpZuf
-	 v1b7uFJco1/+D2qV8kaZKTugOswrxiuxCGmwUmQ2nbO0JUj4kDdWnBmXS39siksiMK
-	 QAe6ljTv0Yobw==
-Received: from smtp.sberdevices.ru (p-i-exch-sc-m01.sberdevices.ru [172.16.192.107])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mx1.sberdevices.ru (Postfix) with ESMTPS;
-	Tue, 23 Jan 2024 19:58:42 +0300 (MSK)
-Received: from user-A520M-DS3H.sberdevices.ru (100.64.160.123) by
- p-i-exch-sc-m01.sberdevices.ru (172.16.192.107) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Tue, 23 Jan 2024 19:58:42 +0300
-From: Alexey Romanov <avromanov@salutedevices.com>
-To: <neil.armstrong@linaro.org>, <clabbe@baylibre.com>,
-	<herbert@gondor.apana.org.au>, <davem@davemloft.net>, <robh+dt@kernel.org>,
-	<krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-	<khilman@baylibre.com>, <jbrunet@baylibre.com>,
-	<martin.blumenstingl@googlemail.com>
-CC: <linux-crypto@vger.kernel.org>, <linux-amlogic@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <kernel@salutedevices.com>, Alexey
- Romanov <avromanov@salutedevices.com>
-Subject: [PATCH v2 01/20] drivers: crypto: meson: don't hardcode IRQ count
-Date: Tue, 23 Jan 2024 19:58:12 +0300
-Message-ID: <20240123165831.970023-2-avromanov@salutedevices.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240123165831.970023-1-avromanov@salutedevices.com>
-References: <20240123165831.970023-1-avromanov@salutedevices.com>
+	s=arc-20240116; t=1706029740; c=relaxed/simple;
+	bh=TAwP5lWL0q0rWth29pNEVCmD+etrS5ec3mhMC0ES/U0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=gKnCBpBy/bjbNdj7O7NRYGIM8kodCdjmKqy/5ufSkhdv63r5x/B24nPSW+pLvGQ/BYsGbmQYSsQ2rA4E2Uv0VsGJKcDv1GsvwOc2l4I2W96unR93oCM3OOlRcgaW7TsQ5CD8qT1mHEe3GJ8lrI80lXjY8jUyP+2cCa/OQKveVdg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rSKGb-0004yc-EG; Tue, 23 Jan 2024 18:08:53 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rSKGa-001sVw-Lj; Tue, 23 Jan 2024 18:08:52 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rSKGa-006TIn-1t;
+	Tue, 23 Jan 2024 18:08:52 +0100
+From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Santosh Shilimkar <ssantosh@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	kernel@pengutronix.de
+Subject: [PATCH v2] memory: emif: Drop usage of platform_driver_probe()
+Date: Tue, 23 Jan 2024 18:08:47 +0100
+Message-ID: <20240123170846.1362597-2-u.kleine-koenig@pengutronix.de>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5174; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=TAwP5lWL0q0rWth29pNEVCmD+etrS5ec3mhMC0ES/U0=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBlr/KeDTVpnmrTLspToC4ym6tTxyFjhN/EOBP/9 BRfldlDEqKJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZa/yngAKCRCPgPtYfRL+ TvSkB/93+6JuBCYm7/SaAbnfZ5gfIrPk23SV6iV8Z/Q2BFcFzFBCaizbPjWrqByz8NEBQUKnCdh Y9rRrDrzVCzQD44JXHqDAafFvh6rTCUdvCOdnlyrBVmDhYcvceFgNn7130qZ9vIu3PgEnlZKjqr amG7KFyTJqy8Q1oDy/fGtUC2lrxRuGq6E8/xSgTwF0EtUj1y5q2KP0uU32cncsvvEAFpqJvMuXH DWAqnRdYSug9z2xYp9aQi6k1jViJVJUpBV3kJ0xsm78EU8/qouzFU64uJOCo7X1KM9v4Sj3YpSi 5cCd1qDapBg6evLgGuVuI7+8yLin5KLJDcgFPSprtV1oZ1lU
+X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: p-i-exch-sc-m01.sberdevices.ru (172.16.192.107) To
- p-i-exch-sc-m01.sberdevices.ru (172.16.192.107)
-X-KSMG-Rule-ID: 10
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 182873 [Jan 23 2024]
-X-KSMG-AntiSpam-Version: 6.1.0.3
-X-KSMG-AntiSpam-Envelope-From: avromanov@salutedevices.com
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 7 0.3.7 6d6bf5bd8eea7373134f756a2fd73e9456bb7d1a, {Tracking_from_domain_doesnt_match_to}, 100.64.160.123:7.1.2;127.0.0.199:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;smtp.sberdevices.ru:7.1.1,5.0.1;salutedevices.com:7.1.1, FromAlignment: s, ApMailHostAddress: 100.64.160.123
-X-MS-Exchange-Organization-SCL: -1
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean
-X-KSMG-LinksScanning: Clean
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/01/23 13:53:00 #23383939
-X-KSMG-AntiVirus-Status: Clean, skipped
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-IRQ count is no longer hardcoded, and make it part of
-struct meson_flow. We need this for extend driver support for
-other Amlogic SoC's.
+There are considerations to drop platform_driver_probe() as a concept
+that isn't relevant any more today. It comes with an added complexity
+that makes many users hold it wrong. (E.g. this driver should have
+better used __init instead of __init_or_module to mark functions only
+relevant to .probe() and mark the driver struct with __refdata.)
 
-Signed-off-by: Alexey Romanov <avromanov@salutedevices.com>
+This fixes a W=1 build warning:
+
+	WARNING: modpost: drivers/memory/emif: section mismatch in reference: emif_driver+0x4 (section: .data) -> emif_remove (section: .exit.text)
+
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 ---
- drivers/crypto/amlogic/amlogic-gxl-cipher.c |  2 +-
- drivers/crypto/amlogic/amlogic-gxl-core.c   | 47 ++++++++++++---------
- drivers/crypto/amlogic/amlogic-gxl.h        |  8 ++--
- 3 files changed, 31 insertions(+), 26 deletions(-)
+Hello,
 
-diff --git a/drivers/crypto/amlogic/amlogic-gxl-cipher.c b/drivers/crypto/amlogic/amlogic-gxl-cipher.c
-index 29048da6f50a..b19032f92415 100644
---- a/drivers/crypto/amlogic/amlogic-gxl-cipher.c
-+++ b/drivers/crypto/amlogic/amlogic-gxl-cipher.c
-@@ -19,7 +19,7 @@
+(implicit) v1 can be found at
+https://lore.kernel.org/linux-kernel/cover.1702829744.git.u.kleine-koenig@pengutronix.de
+.
+
+Krzysztof applied the first two patches of that series. Patch #3 didn't
+apply any more, so this is a rebase of this last patch on top of
+
+	git://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux-mem-ctrl.git refs/heads/for-next
+
+Best regards
+Uwe
+
+ drivers/memory/emif.c | 25 +++++++++++++------------
+ 1 file changed, 13 insertions(+), 12 deletions(-)
+
+diff --git a/drivers/memory/emif.c b/drivers/memory/emif.c
+index c5a24501db9b..8c5ad5c025fa 100644
+--- a/drivers/memory/emif.c
++++ b/drivers/memory/emif.c
+@@ -139,7 +139,7 @@ static int emif_mr4_show(struct seq_file *s, void *unused)
  
- static int get_engine_number(struct meson_dev *mc)
+ DEFINE_SHOW_ATTRIBUTE(emif_mr4);
+ 
+-static void __init_or_module emif_debugfs_init(struct emif_data *emif)
++static void emif_debugfs_init(struct emif_data *emif)
  {
--	return atomic_inc_return(&mc->flow) % MAXFLOW;
-+	return atomic_inc_return(&mc->flow) % mc->flow_cnt;
- }
- 
- static bool meson_cipher_need_fallback(struct skcipher_request *areq)
-diff --git a/drivers/crypto/amlogic/amlogic-gxl-core.c b/drivers/crypto/amlogic/amlogic-gxl-core.c
-index f54ab0d0b1e8..35ec64df5b3a 100644
---- a/drivers/crypto/amlogic/amlogic-gxl-core.c
-+++ b/drivers/crypto/amlogic/amlogic-gxl-core.c
-@@ -28,8 +28,8 @@ static irqreturn_t meson_irq_handler(int irq, void *data)
- 	int flow;
- 	u32 p;
- 
--	for (flow = 0; flow < MAXFLOW; flow++) {
--		if (mc->irqs[flow] == irq) {
-+	for (flow = 0; flow < mc->flow_cnt; flow++) {
-+		if (mc->chanlist[flow].irq == irq) {
- 			p = readl(mc->base + ((0x04 + flow) << 2));
- 			if (p) {
- 				writel_relaxed(0xF, mc->base + ((0x4 + flow) << 2));
-@@ -110,7 +110,7 @@ static int meson_debugfs_show(struct seq_file *seq, void *v)
- 	struct meson_dev *mc __maybe_unused = seq->private;
- 	int i;
- 
--	for (i = 0; i < MAXFLOW; i++)
-+	for (i = 0; i < mc->flow_cnt; i++)
- 		seq_printf(seq, "Channel %d: nreq %lu\n", i,
- #ifdef CONFIG_CRYPTO_DEV_AMLOGIC_GXL_DEBUG
- 			   mc->chanlist[i].stat_req);
-@@ -153,14 +153,32 @@ static void meson_free_chanlist(struct meson_dev *mc, int i)
-  */
- static int meson_allocate_chanlist(struct meson_dev *mc)
- {
-+	struct platform_device *pdev = to_platform_device(mc->dev);
- 	int i, err;
- 
--	mc->chanlist = devm_kcalloc(mc->dev, MAXFLOW,
-+	mc->flow_cnt = platform_irq_count(pdev);
-+	if (mc->flow_cnt <= 0) {
-+		dev_err(mc->dev, "No IRQs defined\n");
-+		return -ENODEV;
-+	}
-+
-+	mc->chanlist = devm_kcalloc(mc->dev, mc->flow_cnt,
- 				    sizeof(struct meson_flow), GFP_KERNEL);
- 	if (!mc->chanlist)
- 		return -ENOMEM;
- 
--	for (i = 0; i < MAXFLOW; i++) {
-+	for (i = 0; i < mc->flow_cnt; i++) {
-+		mc->chanlist[i].irq = platform_get_irq(pdev, i);
-+		if (mc->chanlist[i].irq < 0)
-+			return mc->chanlist[i].irq;
-+
-+		err = devm_request_irq(mc->dev, mc->chanlist[i].irq,
-+				       meson_irq_handler, 0, "aml-crypto", mc);
-+		if (err < 0) {
-+			dev_err(mc->dev, "Cannot request IRQ for flow %d\n", i);
-+			return err;
-+		}
-+
- 		init_completion(&mc->chanlist[i].complete);
- 
- 		mc->chanlist[i].engine = crypto_engine_alloc_init(mc->dev, true);
-@@ -230,7 +248,7 @@ static void meson_unregister_algs(struct meson_dev *mc)
- static int meson_crypto_probe(struct platform_device *pdev)
- {
- 	struct meson_dev *mc;
--	int err, i;
-+	int err;
- 
- 	mc = devm_kzalloc(&pdev->dev, sizeof(*mc), GFP_KERNEL);
- 	if (!mc)
-@@ -252,19 +270,6 @@ static int meson_crypto_probe(struct platform_device *pdev)
- 		return err;
+ 	if (IS_ENABLED(CONFIG_DEBUG_FS)) {
+ 		emif->debugfs_root = debugfs_create_dir(dev_name(emif->dev), NULL);
+@@ -150,7 +150,7 @@ static void __init_or_module emif_debugfs_init(struct emif_data *emif)
  	}
- 
--	for (i = 0; i < MAXFLOW; i++) {
--		mc->irqs[i] = platform_get_irq(pdev, i);
--		if (mc->irqs[i] < 0)
--			return mc->irqs[i];
--
--		err = devm_request_irq(&pdev->dev, mc->irqs[i], meson_irq_handler, 0,
--				       "gxl-crypto", mc);
--		if (err < 0) {
--			dev_err(mc->dev, "Cannot request IRQ for flow %d\n", i);
--			return err;
--		}
--	}
--
- 	err = clk_prepare_enable(mc->busclk);
- 	if (err != 0) {
- 		dev_err(&pdev->dev, "Cannot prepare_enable busclk\n");
-@@ -294,7 +299,7 @@ static int meson_crypto_probe(struct platform_device *pdev)
- error_alg:
- 	meson_unregister_algs(mc);
- error_flow:
--	meson_free_chanlist(mc, MAXFLOW - 1);
-+	meson_free_chanlist(mc, mc->flow_cnt - 1);
- 	clk_disable_unprepare(mc->busclk);
- 	return err;
  }
-@@ -309,7 +314,7 @@ static void meson_crypto_remove(struct platform_device *pdev)
  
- 	meson_unregister_algs(mc);
- 
--	meson_free_chanlist(mc, MAXFLOW - 1);
-+	meson_free_chanlist(mc, mc->flow_cnt - 1);
- 
- 	clk_disable_unprepare(mc->busclk);
+-static void __exit emif_debugfs_exit(struct emif_data *emif)
++static void emif_debugfs_exit(struct emif_data *emif)
+ {
+ 	if (IS_ENABLED(CONFIG_DEBUG_FS)) {
+ 		debugfs_remove_recursive(emif->debugfs_root);
+@@ -671,7 +671,7 @@ static void disable_and_clear_all_interrupts(struct emif_data *emif)
+ 	clear_all_interrupts(emif);
  }
-diff --git a/drivers/crypto/amlogic/amlogic-gxl.h b/drivers/crypto/amlogic/amlogic-gxl.h
-index 1013a666c932..79177cfa8b88 100644
---- a/drivers/crypto/amlogic/amlogic-gxl.h
-+++ b/drivers/crypto/amlogic/amlogic-gxl.h
-@@ -22,8 +22,6 @@
- #define MESON_OPMODE_ECB 0
- #define MESON_OPMODE_CBC 1
  
--#define MAXFLOW 2
--
- #define MAXDESC 64
+-static int __init_or_module setup_interrupts(struct emif_data *emif, u32 irq)
++static int setup_interrupts(struct emif_data *emif, u32 irq)
+ {
+ 	u32		interrupts, type;
+ 	void __iomem	*base = emif->base;
+@@ -702,7 +702,7 @@ static int __init_or_module setup_interrupts(struct emif_data *emif, u32 irq)
  
- #define DESC_LAST BIT(18)
-@@ -62,6 +60,7 @@ struct meson_desc {
-  * @keylen:	keylen for this flow operation
-  * @complete:	completion for the current task on this flow
-  * @status:	set to 1 by interrupt if task is done
-+ * @irq:	IRQ number for amlogic-crypto
-  * @t_phy:	Physical address of task
-  * @tl:		pointer to the current ce_task for this flow
-  * @stat_req:	number of request done by this flow
-@@ -70,6 +69,7 @@ struct meson_flow {
- 	struct crypto_engine *engine;
- 	struct completion complete;
- 	int status;
-+	int irq;
- 	unsigned int keylen;
- 	dma_addr_t t_phy;
- 	struct meson_desc *tl;
-@@ -85,7 +85,7 @@ struct meson_flow {
-  * @dev:	the platform device
-  * @chanlist:	array of all flow
-  * @flow:	flow to use in next request
-- * @irqs:	IRQ numbers for amlogic-crypto
-+ * @flow_cnt:	flow count for amlogic-crypto
-  * @dbgfs_dir:	Debugfs dentry for statistic directory
-  * @dbgfs_stats: Debugfs dentry for statistic counters
-  */
-@@ -95,7 +95,7 @@ struct meson_dev {
- 	struct device *dev;
- 	struct meson_flow *chanlist;
- 	atomic_t flow;
--	int irqs[MAXFLOW];
-+	int flow_cnt;
- #ifdef CONFIG_CRYPTO_DEV_AMLOGIC_GXL_DEBUG
- 	struct dentry *dbgfs_dir;
+ }
+ 
+-static void __init_or_module emif_onetime_settings(struct emif_data *emif)
++static void emif_onetime_settings(struct emif_data *emif)
+ {
+ 	u32				pwr_mgmt_ctrl, zq, temp_alert_cfg;
+ 	void __iomem			*base = emif->base;
+@@ -826,7 +826,7 @@ static int is_custom_config_valid(struct emif_custom_configs *cust_cfgs,
+ 	return valid;
+ }
+ 
+-static void __init_or_module of_get_custom_configs(struct device_node *np_emif,
++static void of_get_custom_configs(struct device_node *np_emif,
+ 		struct emif_data *emif)
+ {
+ 	struct emif_custom_configs	*cust_cfgs = NULL;
+@@ -875,7 +875,7 @@ static void __init_or_module of_get_custom_configs(struct device_node *np_emif,
+ 	emif->plat_data->custom_configs = cust_cfgs;
+ }
+ 
+-static void __init_or_module of_get_ddr_info(struct device_node *np_emif,
++static void of_get_ddr_info(struct device_node *np_emif,
+ 		struct device_node *np_ddr,
+ 		struct ddr_device_info *dev_info)
+ {
+@@ -909,7 +909,7 @@ static void __init_or_module of_get_ddr_info(struct device_node *np_emif,
+ 		dev_info->io_width = __fls(io_width) - 1;
+ }
+ 
+-static struct emif_data * __init_or_module of_get_memory_device_details(
++static struct emif_data *of_get_memory_device_details(
+ 		struct device_node *np_emif, struct device *dev)
+ {
+ 	struct emif_data		*emif = NULL;
+@@ -982,7 +982,7 @@ static struct emif_data * __init_or_module of_get_memory_device_details(
+ 	return emif;
+ }
+ 
+-static struct emif_data *__init_or_module get_device_details(
++static struct emif_data *get_device_details(
+ 		struct platform_device *pdev)
+ {
+ 	u32				size;
+@@ -1086,7 +1086,7 @@ static struct emif_data *__init_or_module get_device_details(
+ 	return NULL;
+ }
+ 
+-static int __init_or_module emif_probe(struct platform_device *pdev)
++static int emif_probe(struct platform_device *pdev)
+ {
+ 	struct emif_data	*emif;
+ 	int			irq, ret;
+@@ -1141,7 +1141,7 @@ static int __init_or_module emif_probe(struct platform_device *pdev)
+ 	return -ENODEV;
+ }
+ 
+-static void __exit emif_remove(struct platform_device *pdev)
++static void emif_remove(struct platform_device *pdev)
+ {
+ 	struct emif_data *emif = platform_get_drvdata(pdev);
+ 
+@@ -1165,7 +1165,8 @@ MODULE_DEVICE_TABLE(of, emif_of_match);
  #endif
+ 
+ static struct platform_driver emif_driver = {
+-	.remove_new	= __exit_p(emif_remove),
++	.probe		= emif_probe,
++	.remove_new	= emif_remove,
+ 	.shutdown	= emif_shutdown,
+ 	.driver = {
+ 		.name = "emif",
+@@ -1173,7 +1174,7 @@ static struct platform_driver emif_driver = {
+ 	},
+ };
+ 
+-module_platform_driver_probe(emif_driver, emif_probe);
++module_platform_driver(emif_driver);
+ 
+ MODULE_DESCRIPTION("TI EMIF SDRAM Controller Driver");
+ MODULE_LICENSE("GPL");
+
+base-commit: d10e03cf9a4d78c67ef779dab5a5f4fb94fb835e
 -- 
-2.34.1
+2.43.0
 
