@@ -1,128 +1,93 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10F208120A
-	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 18:06:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 843698120A
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 18:07:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706033194; cv=none; b=KXXBM8X/YdSzjcqeQAx8s8pyofBPjNrm9KxPfLZQGPmSHFGeBvDVp9EXRAQnTShK+9aLGaPPKWDfrfOYLRImb6CdlCC5nZYDQRCeEj0MoB3RBiubhZWK8tX7QpdyoIZbTI7GNjiVrVhkHlE4zhc2sKLnceVAqIq0nAiseoPH4/U=
+	t=1706033248; cv=none; b=F/R6IDQfkc3plJ8IOQqOLpPZ155g6mPUVMs6qkSvdy7aUFpAugqSJrAJUlw8UoUe5Mj16M0j27jwhUqssHXMd94kA2WHGq7kcQ/3ZmbVyifzZQt2MG3t3RevRFHkjQZ6l/zOKyQ5iLpY/n1XexKdCzhve59dh9Gl2/icSbMxr94=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706033194; c=relaxed/simple;
-	bh=DSKd2JcJ2/mza9EM+Xnm+jdVYiFpr3Vkuf4kEF/SCIw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fNBOifAECOqZCM5Fa0yWiDOn7eaNMIuDIliOX2oEftKK9khXPfvCYcGUSiXryopLIFLN9PwVhT+YiR6oaicDpoBjoO3lTqs+hNqO5247GwvvUnYLCPV3dUrR0OHtwhPvk8QqtMmKmxAu2FyTkkWVLIR2eE2zNkBHxMQ2cjFYWqg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=SXl8Q/ec; arc=none smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1706033248; c=relaxed/simple;
+	bh=WmmUAs9dYg2tpGBQSm4FkkZZKJGkqPcMjMmbgfDTdTU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mPZQrh07zG9n5caWtHvlzfrt8nFEMhRSQC/+kiXhRqHzS/798U5FbMlsrP6HwVihFMR4FqJQvyo4VZg5pQn84Q1oYvBDWAgqYwOdJtUwAWFWRerCXCysaVyhXLZXYc+DFsrYOueo7rG2fKQwfteqGPkg4G8eY6Zyyx9w6G+vS/0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gaYN2Jjs; arc=none smtp.client-ip=209.85.167.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="SXl8Q/ec"
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-55a3a875f7fso5091673a12.3
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 10:06:32 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gaYN2Jjs"
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-50e7dd8bce8so5419010e87.1
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 10:07:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1706033191; x=1706637991; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=sPOVFQl2tkZfe3QyiMSbVqeq8qtXQuoltOLEZXEAb4Y=;
-        b=SXl8Q/ecMZB/UMQysXz88PMxEHev6hL077NpL5gsMW0TCuAY6Qi4bOPVjKrRIksIgR
-         x2PfsxlrYyrbtec2IZKHXirj/fN+YmY2ITshai5EaHMNKEezjye6HWUsAwvkgJ6KEQ1Y
-         wkDBxgZphwqfTAI2QGvHisqkiDS+3EfNAzQp4=
+        d=linaro.org; s=google; t=1706033244; x=1706638044; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=9Pb+zq/lFi+My3SWtUJKw70vr/q64D82KHMmsj5HP3k=;
+        b=gaYN2JjsunK1kPkh/0hy4VmLfROJ9RiDZqz+HD9BGQEQotrxj2tY/XvT0ZlcrTmKzG
+         WgPf0IQ5TuiAfbevSfsUquDb9AqqRcFN4cuAwmRYaBGPB0W6VBknPirl0esArbMl/brj
+         w3m5rrlDOud8T3DSHbpVw7uXF/VHgn6Q4Nfb+Rblkyxbfcpi387zFYR+9f1ww/80UaKK
+         gTpp5chQMZg/QnL88sP0M6HPpqBnnV+a03t/1cwwGppv+Uimg9Kq4wXtjgCG+/SoSeAR
+         71WhiTIxq5TfyvorWXftiX+nEKkXII4VPkf29n1FGElOLzYOcPV1NMwBtmQi/+0rJBdw
+         MSAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706033191; x=1706637991;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=sPOVFQl2tkZfe3QyiMSbVqeq8qtXQuoltOLEZXEAb4Y=;
-        b=e97DUPTzNvWWPrvxVjDLyjwV6FVQMtWO+1qd6vzwZyf7iAd7dhPLYldu6q7GQznYFO
-         QYPjEAkrYIaSmGJoFbwAhivLLCWx0vJdMsruCgjOLwvgcFKWe086n1ZOVkoeenQNGIap
-         2TiHs69qIB2D9OkDG0dxPuNseVx9zAvnitZ8Ueag1HkcPZ2k2qCzKItl0wzjPPSZxOII
-         Uv9SxAm5IfsIVingyGRkZJcwNKYxfGqDGWHaC2sjHXdpBMNvBe7+h6E+i1dpMoRR+R6Y
-         mPLM5BUxeBlnj8f46UCVGoBx2OxX4XYZdss4pWhvCdOqI/7pnLBasFqbRDUSCL3HYt+6
-         vyCQ==
-X-Gm-Message-State: AOJu0YzzqU31KgjEzSrPpoqHjj/PDfOUZjHJJXBhUE9PRxPRRbfYtO7T
-	J60XYWvx5H8txSpM8hFgTgQfTOED95dnAoPOr106Xd+5z32DV4f/oObSlN+ifsD9QgnZIljE1B7
-	jOKPMlQ==
-X-Google-Smtp-Source: AGHT+IGuCpCKRJ4FDd1KtYXNPnslibBkt0oY7DoecV/2/jGdZ6Krdp+ioznD2JIKYpXi+We222DN4Q==
-X-Received: by 2002:aa7:dd44:0:b0:558:251b:3bd1 with SMTP id o4-20020aa7dd44000000b00558251b3bd1mr1078528edw.37.1706033191009;
-        Tue, 23 Jan 2024 10:06:31 -0800 (PST)
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com. [209.85.128.42])
-        by smtp.gmail.com with ESMTPSA id x9-20020aa7cd89000000b00558e0481b2fsm14224968edv.47.2024.01.23.10.06.30
-        for <linux-kernel@vger.kernel.org>
+        d=1e100.net; s=20230601; t=1706033244; x=1706638044;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=9Pb+zq/lFi+My3SWtUJKw70vr/q64D82KHMmsj5HP3k=;
+        b=A2DdFdzOUZINzBU71VGhYfa49rliKcMpGy4JZIjGqyutXQ2+pZYPbH6bOh8BjDKScN
+         H6S0fp4j5yNoxR/x5HD8kmLj+CSAYpj5jc6CNsL0WD3yrHN5YkLuNQqWY9Ohxw51U9hv
+         HOz0kLUIKrz4eKoSwLJWifiontL9ifhNK3i29aNOU3qap4pMhGZiqCoFRVyIvZWbLTXt
+         TkDs6phUbZ9FjRhwFutlCvu3X+uGvNmyoIewgpjuGi5q0sz/QC7wZDyz8tak3JXJNnj8
+         ou7vODQSSZKo1t0nmiLLk0uMqwRbjs9RPFxsD3NCoumq3WjxLGqvxy3tOeT6t5Jpe9As
+         cz2Q==
+X-Gm-Message-State: AOJu0YxHIrnG/St76NjIkW8ByxkpnBddv/F8ztEmIZVqO46efYePLnDV
+	9TwJ6v5pR9INX3xXY5bV43XlwPMeCzpfPQvx6GyaE5xFBdC/WM3jdcMNnJDxRDY=
+X-Google-Smtp-Source: AGHT+IGUnZcwd5AxLTv0bg9KbSvLUhoISLP5js+d83riWZasU8zSm82K8lsZ02NuGHx7B6Qiaf26HA==
+X-Received: by 2002:a05:6512:b07:b0:50e:80ff:2d0f with SMTP id w7-20020a0565120b0700b0050e80ff2d0fmr3427234lfu.98.1706033244625;
+        Tue, 23 Jan 2024 10:07:24 -0800 (PST)
+Received: from [172.30.205.123] (UNUSED.212-182-62-129.lubman.net.pl. [212.182.62.129])
+        by smtp.gmail.com with ESMTPSA id d17-20020a05651233d100b0050e8e88b529sm2344518lfg.237.2024.01.23.10.07.23
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 23 Jan 2024 10:06:30 -0800 (PST)
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-40ea5653f6bso43304865e9.3
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 10:06:30 -0800 (PST)
-X-Received: by 2002:a05:600c:42cb:b0:40e:4ab9:70df with SMTP id
- j11-20020a05600c42cb00b0040e4ab970dfmr368030wme.245.1706033189635; Tue, 23
- Jan 2024 10:06:29 -0800 (PST)
+        Tue, 23 Jan 2024 10:07:24 -0800 (PST)
+Message-ID: <a5c61d74-1cb0-4476-8cde-c6b11a76e2ee@linaro.org>
+Date: Tue, 23 Jan 2024 19:07:23 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240122235208.work.748-kees@kernel.org> <20240123002814.1396804-34-keescook@chromium.org>
- <CAHk-=whS7FSbBoo1gxe+83twO2JeGNsUKMhAcfWymw9auqBvjg@mail.gmail.com> <202401221713.3FCABC9290@keescook>
-In-Reply-To: <202401221713.3FCABC9290@keescook>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Tue, 23 Jan 2024 10:06:12 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wgMPVv-mDxA2qcywpLCRLojtaKmP13h7bVo4m=XN202xA@mail.gmail.com>
-Message-ID: <CAHk-=wgMPVv-mDxA2qcywpLCRLojtaKmP13h7bVo4m=XN202xA@mail.gmail.com>
-Subject: Re: [PATCH 34/82] ipc: Refactor intentional wrap-around calculation
-To: Kees Cook <keescook@chromium.org>
-Cc: linux-hardening@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, 
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Mark Brown <broonie@kernel.org>, 
-	Mike Kravetz <mike.kravetz@oracle.com>, Vasily Averin <vasily.averin@linux.dev>, 
-	Alexander Mikhalitsyn <alexander@mihalicyn.com>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
-	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 01/11] arm64: dts: qcom: x1e80100: Add IPCC node
+Content-Language: en-US
+To: Abel Vesa <abel.vesa@linaro.org>, Andy Gross <agross@kernel.org>,
+ Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Sibi Sankar <quic_sibis@quicinc.com>,
+ Rajendra Nayak <quic_rjendra@quicinc.com>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240123-x1e80100-dts-missing-nodes-v4-0-072dc2f5c153@linaro.org>
+ <20240123-x1e80100-dts-missing-nodes-v4-1-072dc2f5c153@linaro.org>
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+In-Reply-To: <20240123-x1e80100-dts-missing-nodes-v4-1-072dc2f5c153@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, 22 Jan 2024 at 17:38, Kees Cook <keescook@chromium.org> wrote:
->
-> I've tried to find the right balance between not enough details and too
-> much. I guess I got it wrong.
 
-My complaint isn't about the level of detail.
 
-My complaint is about how the commit log IS ACTIVELY MISLEADING
-GARBAGE and does not match the actual patch in any way, shape, or
-form.
+On 1/23/24 12:01, Abel Vesa wrote:
+> From: Sibi Sankar <quic_sibis@quicinc.com>
+> 
+> Add the IPCC node, used to send and receive IPC signals with
+> remoteprocs.
+> 
+> Signed-off-by: Sibi Sankar <quic_sibis@quicinc.com>
+> Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
+> ---
 
-It talks about completely irrelevant issues that simply have nothing
-to do with it.
+Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
 
-It talks about undefined behavior and about a "unsigned wrap-around
-sanitizer[2]", which is nonsensical, since there is no undefined
-behavior to sanitize. It literally gives a link to a github "issue"
-for that claim, but when you follow the link, it's actually about
-*signed* overflow, which is something entirely different.
-
-And honestly, the patch itself is garbage. The code is fine. Any
-"sanitizer" that complains about that code is pure and utter shite.
-
-Really.
-
-If you actually have some real "detect unsigned wraparound" tool
-(NOTE: that is *NOT* undefined behavior, and that is *NOT* a
-"sanitizer", it's at most some helpful checker), then such a tool had
-better recognize the perfectly fine traditional idiom for this, which
-is to do the addition and check that the result is smaller. Like the
-code does.
-
-See what I'm saying? The patch is garbage. Any sanitizer that would
-complain about the old code is garbage. And the commit message is
-worse than garbage, it is actively misleading to the point that I'd
-call it lying, trying to confuse the issues by bringing up things that
-are utterly and entirely irrelevant to the patch.
-
-So:
-
- - get rid of that commit message that is lying garbage
-
- - fix the so-called "sanitizer".
-
- - stop calling the unsigned wrap-around a "sanitizer" and talking
-about "undefined behavior" in the same sentence, since it's neither.
-
-Do you really not see why I think that thing is actively *WRONG*?
-
-           Linus
+Konrad
