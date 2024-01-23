@@ -1,109 +1,82 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8595559B62;
-	Tue, 23 Jan 2024 09:33:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from out-189.mta1.migadu.com (out-189.mta1.migadu.com [95.215.58.189])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9317859B62
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 09:33:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706002425; cv=none; b=QxcK8wUVYWa+BJqqeI/IIDJDTJ92Bef1S8sUrXjFFuHRYXMcWBJtF0V7SolvkD6pebp3zDxZHsyJ1UjGhpSNi1TZr9rEuIx73v6TaX5seSxd/wC7Ubrx5ao3BcU7NgFuoQTbOm+84mqO5RW75jrkyYWo8CushfhhJlAakm2TCkc=
+	t=1706002434; cv=none; b=E+AGkol6jOpbqkVHkdu/M1DzZyAAIhz00sdtfHpllIXrZXiscX7c1ccfur+Q50dVTwF9eWBxqfNYjCt+1Y1tsTXnzwLcFbD7zJ62bgbpu2niqmlaiB/E/1nqvOC8L1WuXOSNLC43vgmjb6/A6uQPuAF4M29S/3w3wYoUKPIx448=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706002425; c=relaxed/simple;
-	bh=jtfVkdL6JvKuPixP2eull7hNXa+QZLAVSJb4hUeRoZs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EkMaN1busJYiGZSbVUdNbz9JHspw2CYKPNpWyQy8uCssaOgZvMKdEr+vu89a86fSdBXs7K63Wm1Gl9BvqVuGS8IDd8qh3zaaVRBoJAhnpzyqzDVpRXOj8T4hFFGbGbk2SUK3rBDEhmE2NVBpIOW8DAH30p5ndP0TChqjnYQwEts=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1F0D91FB;
-	Tue, 23 Jan 2024 01:34:26 -0800 (PST)
-Received: from [10.57.77.165] (unknown [10.57.77.165])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AF2463F5A1;
-	Tue, 23 Jan 2024 01:33:39 -0800 (PST)
-Message-ID: <e92f7c49-5268-421e-a017-af268c845b1b@arm.com>
-Date: Tue, 23 Jan 2024 09:33:38 +0000
+	s=arc-20240116; t=1706002434; c=relaxed/simple;
+	bh=eVMXKZAo6mMH3XIzuesaTRxENZPYrR21d0pV00ugJoA=;
+	h=Subject:MIME-Version:Content-Type:From:Date:Message-Id:To:Cc; b=AvMmCfbIEXRs8uq9pSCAR9Bn7rRzEL4YfwV9IswuoYYpzs6yhsHBiBpVRgxJWl5HN1L1RpghU0IC+DGJHG7CadJXa88dvSDrAxYV5JptsJgt3kbwh5CqeON87MypIJNcd8A71to8xyde71hcXop63Zr1V/iO8AFat8g31lGno8g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=linux.dev; arc=none smtp.client-ip=95.215.58.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Subject: [PATCH v2 0/3] mm/slub: some minor optimization and cleanup
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] selftests/mm: run_vmtests.sh: add missing tests
-Content-Language: en-GB
-To: Muhammad Usama Anjum <usama.anjum@collabora.com>,
- Andrew Morton <akpm@linux-foundation.org>, Shuah Khan <shuah@kernel.org>
-Cc: kernel@collabora.com, linux-mm@kvack.org,
- linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240123073615.920324-1-usama.anjum@collabora.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <20240123073615.920324-1-usama.anjum@collabora.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-b4-tracking: H4sIAOiHr2UC/22MwQqDMBBEf0X23C1Jagjtqf8hPSTrWgMaIWsFEf+9S889DW+YeQcI18wCj+aAyl
+ uWvBQFd2mAxljejLlXBmdca6wNKFNMOGch9NEPtxC9dT6A7lMUxlRjoVEf5TNNWo5Z1qXuP/9mNbp/
+ qs2iwaG31N6JEgfzTPvKvar4SssMr/M8v5IA8fSrAAAA
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Chengming Zhou <zhouchengming@bytedance.com>
+Date: Tue, 23 Jan 2024 09:33:28 +0000
+Message-Id: <20240117-slab-misc-v2-0-81766907896e@bytedance.com>
+To: Joonsoo Kim <iamjoonsoo.kim@lge.com>, Vlastimil Babka <vbabka@suse.cz>, David Rientjes <rientjes@google.com>,
+ Roman Gushchin <roman.gushchin@linux.dev>, Pekka Enberg <penberg@kernel.org>, Christoph Lameter <cl@linux.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Hyeonggon Yoo <42.hyeyoo@gmail.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>, linux-kernel@vger.kernel.org, Chengming Zhou <zhouchengming@bytedance.com>,
+ linux-mm@kvack.org, "Christoph Lameter (Ampere)" <cl@linux.com>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1706002427; l=1261;
+ i=zhouchengming@bytedance.com; s=20231204; h=from:subject:message-id;
+ bh=eVMXKZAo6mMH3XIzuesaTRxENZPYrR21d0pV00ugJoA=;
+ b=7EmvuAw7LCSLOid/Dwt/QI7NYHltCGe5nToDs6wYquYL4RGXYdJ8Nk17M+xbUBH28eqpO843V
+ XlC9mRiHUnKBFUuoCLBCzCVxqGBRRLpNTDF6kXvt7MYn7/sm41HyuAb
+X-Developer-Key: i=zhouchengming@bytedance.com; a=ed25519;
+ pk=xFTmRtMG3vELGJBUiml7OYNdM393WOMv0iWWeQEVVdA=
+X-Migadu-Flow: FLOW_OUT
 
-On 23/01/2024 07:36, Muhammad Usama Anjum wrote:
-> Add missing tests to run_vmtests.sh. The mm kselftests are run through
-> run_vmtests.sh. If a test isn't present in this script, it'll not run
-> with run_tests or `make -C tools/testing/selftests/mm run_tests`.
-> 
-> Cc: Ryan Roberts <ryan.roberts@arm.com>
-> Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
-> ---
-> Changes since v1:
-> - Copy the original scripts and their dependence script to install directory as well
-> ---
->  tools/testing/selftests/mm/Makefile       | 3 +++
->  tools/testing/selftests/mm/run_vmtests.sh | 3 +++
->  2 files changed, 6 insertions(+)
-> 
-> diff --git a/tools/testing/selftests/mm/Makefile b/tools/testing/selftests/mm/Makefile
-> index 2453add65d12f..c9c8112a7262e 100644
-> --- a/tools/testing/selftests/mm/Makefile
-> +++ b/tools/testing/selftests/mm/Makefile
-> @@ -114,6 +114,9 @@ TEST_PROGS := run_vmtests.sh
->  TEST_FILES := test_vmalloc.sh
->  TEST_FILES += test_hmm.sh
->  TEST_FILES += va_high_addr_switch.sh
-> +TEST_FILES += charge_reserved_hugetlb.sh
-> +TEST_FILES += write_hugetlb_memory.sh
-> +TEST_FILES += hugetlb_reparenting_test.sh
+Changes in v2:
+- Add VM_BUG_ON(!freelist) after get_freelist() for cpu partial slab case,
+  since it's not possible to happen for this case.
+- Collect tags.
+- Link to v1: https://lore.kernel.org/r/20240117-slab-misc-v1-0-fd1c49ccbe70@bytedance.com
 
-I see you are exporting 3 scripts, but only invoking 2 of them from
-run_vmtests.sh below. Is one a helper that gets called indirectly?
+Hi,
 
->  
->  include ../lib.mk
->  
-> diff --git a/tools/testing/selftests/mm/run_vmtests.sh b/tools/testing/selftests/mm/run_vmtests.sh
-> index 246d53a5d7f28..12754af00b39c 100755
-> --- a/tools/testing/selftests/mm/run_vmtests.sh
-> +++ b/tools/testing/selftests/mm/run_vmtests.sh
-> @@ -248,6 +248,9 @@ CATEGORY="hugetlb" run_test ./map_hugetlb
->  CATEGORY="hugetlb" run_test ./hugepage-mremap
->  CATEGORY="hugetlb" run_test ./hugepage-vmemmap
->  CATEGORY="hugetlb" run_test ./hugetlb-madvise
-> +CATEGORY="hugetlb" run_test ./charge_reserved_hugetlb.sh -cgroup-v2
-> +CATEGORY="hugetlb" run_test ./hugetlb_reparenting_test.sh -cgroup-v2
-> +CATEGORY="hugetlb" run_test ./hugetlb-read-hwpoison
+This series include a minor optimization of cpu partial slab fastpath,
+which directly load freelist from cpu partial slab in the likely case.
 
-I'm not really a fan of adding this last test here; its destructive because it
-poisons 8 hugepages. So at a minimum, I think you need to modify the code in
-run_vmtests.sh to ensure those extra pages are allocated (there is already a
-section in the script that allocates hugepages).
+It has small performance improvement in testing:
+perf bench sched messaging -g 5 -t -l 100000
 
-However, given this test is destructive, I'd prefer that it wasn't run as part
-of the main test set. Because the first time you run it, it will presumably
-pass, but now some of the hugepages are poisoned so next time you run it, there
-won't be enough unpoisoned hugepages and a test will fail. So you have very
-confusing behaviour for a developer who might be running these tests multiple
-times per boot (e.g. me).
+            mm-stable   slub-optimize
+Total time      7.473    7.209
 
-Perhaps we can add a -d (destructive) option to the script, and this test will
-only be run if that option is passed?
+The other two patches are cleanups, which are included for convenience.
 
-Thanks,
-Ryan
+Thanks for review and comment!
 
+Signed-off-by: Chengming Zhou <zhouchengming@bytedance.com>
+---
+Chengming Zhou (3):
+      mm/slub: directly load freelist from cpu partial slab in the likely case
+      mm/slub: remove full list manipulation for non-debug slab
+      mm/slub: remove unused parameter in next_freelist_entry()
 
->  
->  nr_hugepages_tmp=$(cat /proc/sys/vm/nr_hugepages)
->  # For this test, we need one and just one huge page
+ mm/slub.c | 32 ++++++++++++++------------------
+ 1 file changed, 14 insertions(+), 18 deletions(-)
+---
+base-commit: ab27740f76654ed58dd32ac0ba0031c18a6dea3b
+change-id: 20240117-slab-misc-5a5f37a51257
 
+Best regards,
+-- 
+Chengming Zhou <zhouchengming@bytedance.com>
