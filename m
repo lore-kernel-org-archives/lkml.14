@@ -1,180 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 395E35D90B;
-	Tue, 23 Jan 2024 11:03:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C173F5DF13
+	for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 11:04:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706007822; cv=none; b=oh3/t5k2y/x8CBu/Ym36LKlKuXQ9w/Xemg6bpd2O1s8XCHD5/MJEvYYDIFJv6AxEIg/JzuvbRSROe24zT5RP+2Btkc7AINU3eaqZBcrdy1P5JCEfeSFEJnYVrpFctv+vBmP2KEGAQ5DQrpjplgfJUdVftmkIwcuZSGLDLEJIqtc=
+	t=1706007853; cv=none; b=MIyD1SALhaPmIxXoJlXB42pR57/aI58AvJbBegMS+8BSr2ZotMe/ynm1nPwv/KHBaOINUM6x4Sc1QT5mYo4Lw1Is9ZZ79NCiMSwnJq/YFYSOX1MsroZ4ke61qKr937T3mtb622i7KSiN7YmBc4UYyi0fj8xHUY/NQaRXI63KRR8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706007822; c=relaxed/simple;
-	bh=yxslJnBmg5lxtsS0rsR6gRhm2LlSKzD9dPNmd8c8t9U=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=nrORnU/Bx5PbZgZxrURN6IoLC0xEO1rUd9YQY56/sZer/0qAjCIe8B8dNLgJaW95BbuBGp4ZnkPXcebf9FXA5i/rVHHvUjYAeqEN4zQKWPaPaY4yBvM2lyy1s0anNkQq3QQfcgMd9DdkwWHmMPGuqx+O8+kV+WKpp2J+F6lfHoc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LAQA9lLk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706007853; c=relaxed/simple;
+	bh=2i6lV9/1dpM70IMRlA2HW1ksIVKBRL+Sy8MAykGS0LQ=;
+	h=Message-ID:Date:MIME-Version:From:To:CC:Subject:Content-Type; b=GaH8HASPeCY+8SN/VwUykJHPoA6z4b2sF7Eem2KUI2dUIZZpqDKi5uIZoynynkbscx9r4eOg0dMVM1ojjfBe7NsW2Xo9vr02lneQe9ZQKV3yqODcqgvn2htmZex6+qxp7VrcdnDbtf1cFOprWjicv2inwnWIR8Szbvi88ZHeYvI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=p6xYMsIK; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LAQA9lLk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 293BEC433F1;
-	Tue, 23 Jan 2024 11:03:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706007821;
-	bh=yxslJnBmg5lxtsS0rsR6gRhm2LlSKzD9dPNmd8c8t9U=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=LAQA9lLk1o09pZ0OU8sEoF/LI25bbOJBw4xu8n0aWQpPnTEx4nmNze4zTXnxYEmmg
-	 vi2y9jUVu4NQOo95uUULh2cBfA0tQq6g/j6fLGB0gUTJLstUoWvHdXcdrPMCzcB55M
-	 VJ+ftYWffw3aPPns9d6PsiayBWddORbduSkroNcohTeAv3s7vkKT54j7zn0iGxg6z/
-	 CrOJHnVUl+S3tYSe9ipau5qYUAZ88qVU077iPrvLsGtbyB3QPhmECoVyhcFWxhoPD+
-	 2Nz9K11GGtgzIUG9fupGmRZTjAy5X2382nFvcUOJT/hZPWvwQwATwHPZDORIzM9wNs
-	 4kPXh7FplRA3w==
-From: Lorenzo Pieralisi <lpieralisi@kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Marc Zyngier <maz@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-acpi@vger.kernel.org,
-	acpica-devel@lists.linux.dev,
-	Fang Xiang <fangxiang3@xiaomi.com>,
-	Robert Moore <robert.moore@intel.com>
-Subject: [PATCH v5 1/1] irqchip/gic-v3: Enable non-coherent redistributors/ITSes ACPI probing
-Date: Tue, 23 Jan 2024 12:03:32 +0100
-Message-Id: <20240123110332.112797-2-lpieralisi@kernel.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240123110332.112797-1-lpieralisi@kernel.org>
-References: <20240123110332.112797-1-lpieralisi@kernel.org>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="p6xYMsIK"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40NAEF0T024765;
+	Tue, 23 Jan 2024 11:03:57 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:from:to:cc:subject:content-type
+	:content-transfer-encoding; s=qcppdkim1; bh=ep+LJJCGCPOiBkIso0Gx
+	eydK6txy6MfI/exTM73RNrI=; b=p6xYMsIKphvCwTjSyT3TWEty4p2cL3XF3Sr0
+	/hEKPkGWDBBRBaH9hHvBzE59N1fSoBHv6Dv7Nhsyq9jeai/bk2NSiE4I9rxKiQ1Q
+	Z0GofyBhCLC4nyIcu3LE1ZR4z4KsebRUFFllJ5NcICo48CZ03lqtcDaV6s12lEnH
+	jB0SU7EUXt+wnep2X5O2vXkJ45bU/r9C7KhzGmPy+JcZ5JeL/i2rERtHaMj7tWJz
+	Mw3p8rEp0Rmk0sik/hPuxTYEJ0z39yInShUdas9AEv9YpvSlCDXTPC81BHzvD93V
+	IqIgJ0IBoppuzt9Y4kMaFvHBeSWcW0nYQTj/lmW+sOED39/sKQ==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vt8140jd0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 23 Jan 2024 11:03:57 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 40NB3uKU028388
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 23 Jan 2024 11:03:56 GMT
+Received: from [10.214.66.119] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Tue, 23 Jan
+ 2024 03:03:54 -0800
+Message-ID: <56154bf4-c1e2-16d5-c6e2-c2dee42d3377@quicinc.com>
+Date: Tue, 23 Jan 2024 16:33:51 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Content-Language: en-US
+From: Charan Teja Kalla <quic_charante@quicinc.com>
+To: <Liam.Howlett@oracle.com>, Matthew Wilcox <willy@infradead.org>
+CC: "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        LKML
+	<linux-kernel@vger.kernel.org>
+Subject: Purpose of maple_node objects to be its size aligned
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: hCX1sMD41WRuH3wU0PexQVokd9gePt1y
+X-Proofpoint-ORIG-GUID: hCX1sMD41WRuH3wU0PexQVokd9gePt1y
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-01-23_05,2024-01-23_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ spamscore=0 mlxlogscore=998 clxscore=1011 impostorscore=0 malwarescore=0
+ suspectscore=0 bulkscore=0 adultscore=0 phishscore=0 mlxscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2311290000 definitions=main-2401230080
 
-The GIC architecture specification defines a set of registers for
-redistributors and ITSes that control the sharebility and cacheability
-attributes of redistributors/ITSes initiator ports on the interconnect
-(GICR_[V]PROPBASER, GICR_[V]PENDBASER, GITS_BASER<n>).
+I am just curious about the purpose of maple node slab objects to be its
+size aligned, but I can understand why they need to be cache aligned.
 
-Architecturally the GIC provides a means to drive shareability and
-cacheability attributes signals but it is not mandatory for designs to
-wire up the corresponding interconnect signals that control the
-cacheability/shareability of transactions.
+void __init maple_tree_init(void)
+{
+	maple_node_cache = kmem_cache_create("maple_node",
+			sizeof(struct maple_node),
+			sizeof(struct maple_node),// Alignment of the slab object.
+			SLAB_PANIC, NULL);
+}
 
-Redistributors and ITSes interconnect ports can be connected to
-non-coherent interconnects that are not able to manage the
-shareability/cacheability attributes; this implicitly makes the
-redistributors and ITSes non-coherent observers.
+Reason for the ask is, when slub debug enabled with option Z, the change
+[1] makes the total object to be 256 * 3 (=768)bytes.  This turns out to
+be a problem in debug builds where the unreclaimable slab consumption
+itself is very high thus exerting the memory pressure on the system.
 
-To enable non-coherent GIC designs on ACPI based systems, parse the MADT
-GICC/GICR/ITS subtables non-coherent flags to determine whether the
-respective components are non-coherent observers and force the
-shareability attributes to be programmed into the redistributors and
-ITSes registers.
+maple_node:
+  orginal object size 	   = 256b
+  after slub_debug enabled = 768b
 
-An ACPI global function (acpi_get_madt_revision()) is added to retrieve
-the MADT revision, in that it is essential to check the MADT revision
-before checking for flags that were added with MADT revision 7 so that
-if the kernel is booted with an ACPI MADT table with revision < 7 it
-skips parsing the newly added flags (that should be zeroed reserved
-values for MADT versions < 7 but they could turn out to be buggy and
-should be ignored).
 
-Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc: Robin Murphy <robin.murphy@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Marc Zyngier <maz@kernel.org>
----
- drivers/acpi/processor_core.c    | 15 +++++++++++++++
- drivers/irqchip/irq-gic-v3-its.c |  4 ++++
- drivers/irqchip/irq-gic-v3.c     |  9 +++++++++
- include/linux/acpi.h             |  3 +++
- 4 files changed, 31 insertions(+)
+If, there is no special requirement, other than just needs to be cache
+aligned, thinking of the below:
 
-diff --git a/drivers/acpi/processor_core.c b/drivers/acpi/processor_core.c
-index b203cfe28550..915713c0e9b7 100644
---- a/drivers/acpi/processor_core.c
-+++ b/drivers/acpi/processor_core.c
-@@ -215,6 +215,21 @@ phys_cpuid_t __init acpi_map_madt_entry(u32 acpi_id)
- 	return rv;
- }
- 
-+int __init acpi_get_madt_revision(void)
-+{
-+	struct acpi_table_header *madt = NULL;
-+	int revision;
-+
-+	if (ACPI_FAILURE(acpi_get_table(ACPI_SIG_MADT, 0, &madt)))
-+		return -EINVAL;
-+
-+	revision = madt->revision;
-+
-+	acpi_put_table(madt);
-+
-+	return revision;
-+}
-+
- static phys_cpuid_t map_mat_entry(acpi_handle handle, int type, u32 acpi_id)
+--- a/lib/maple_tree.c
++++ b/lib/maple_tree.c
+@@ -6283,8 +6283,8 @@ bool mas_nomem(struct ma_state *mas, gfp_t gfp)
+ void __init maple_tree_init(void)
  {
- 	struct acpi_buffer buffer = { ACPI_ALLOCATE_BUFFER, NULL };
-diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index fec1b58470df..a60c560ce891 100644
---- a/drivers/irqchip/irq-gic-v3-its.c
-+++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -5591,6 +5591,10 @@ static int __init gic_acpi_parse_madt_its(union acpi_subtable_headers *header,
- 		goto node_err;
- 	}
- 
-+	if (acpi_get_madt_revision() >= 7 &&
-+	    (its_entry->flags & ACPI_MADT_ITS_NON_COHERENT))
-+		its->flags |= ITS_FLAGS_FORCE_NON_SHAREABLE;
-+
- 	err = its_probe_one(its);
- 	if (!err)
- 		return 0;
-diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
-index 98b0329b7154..8cb8dff86c12 100644
---- a/drivers/irqchip/irq-gic-v3.c
-+++ b/drivers/irqchip/irq-gic-v3.c
-@@ -2356,6 +2356,11 @@ gic_acpi_parse_madt_redist(union acpi_subtable_headers *header,
- 		pr_err("Couldn't map GICR region @%llx\n", redist->base_address);
- 		return -ENOMEM;
- 	}
-+
-+	if (acpi_get_madt_revision() >= 7 &&
-+	    (redist->flags & ACPI_MADT_GICR_NON_COHERENT))
-+		gic_data.rdists.flags |= RDIST_FLAGS_FORCE_NON_SHAREABLE;
-+
- 	gic_request_region(redist->base_address, redist->length, "GICR");
- 
- 	gic_acpi_register_redist(redist->base_address, redist_base);
-@@ -2380,6 +2385,10 @@ gic_acpi_parse_madt_gicc(union acpi_subtable_headers *header,
- 		return -ENOMEM;
- 	gic_request_region(gicc->gicr_base_address, size, "GICR");
- 
-+	if (acpi_get_madt_revision() >= 7 &&
-+	    (gicc->flags & ACPI_MADT_GICC_NON_COHERENT))
-+		gic_data.rdists.flags |= RDIST_FLAGS_FORCE_NON_SHAREABLE;
-+
- 	gic_acpi_register_redist(gicc->gicr_base_address, redist_base);
- 	return 0;
+        maple_node_cache = kmem_cache_create("maple_node",
+-                       sizeof(struct maple_node), sizeof(struct
+maple_node),
+-                       SLAB_PANIC, NULL);
++                       sizeof(struct maple_node), 0,
++                       SLAB_HWCACHE_ALIGN | SLAB_PANIC, NULL);
  }
-diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-index b7165e52b3c6..4eedab0e51c3 100644
---- a/include/linux/acpi.h
-+++ b/include/linux/acpi.h
-@@ -284,6 +284,9 @@ static inline bool invalid_phys_cpuid(phys_cpuid_t phys_id)
- 	return phys_id == PHYS_CPUID_INVALID;
- }
- 
-+
-+int __init acpi_get_madt_revision(void);
-+
- /* Validate the processor object's proc_id */
- bool acpi_duplicate_processor_id(int proc_id);
- /* Processor _CTS control */
--- 
-2.34.1
 
+
+[1]d86bd1bece6f ("mm/slub: support left redzone")
+
+Thanks,
+charan
