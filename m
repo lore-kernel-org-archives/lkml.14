@@ -1,256 +1,180 @@
-Received: from mickerik.phytec.de (mickerik.phytec.de [91.26.50.163])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B10DD171A2
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 05:13:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.26.50.163
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 106F3168CC
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 05:14:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706073239; cv=none; b=MPgLgKHwxx9VTs4FQk+s1zOmfq+j35rGlOzgIaMpgTNVd+i5y5v3RnbfH5ROojb+MSI8eSWNeK4jmMbew1XeVizMF4WNzL/u9cgIYKYy1cFp5V51j5HW48eqhFU/M94vk91pppFZqBvdaGdNSRVNKn822hhhJ6cZ9RCpElqOfmM=
+	t=1706073244; cv=none; b=UUlC2tiMVpdcv/HUE/UAm5+Z0w6/Rx4+tdEzCEIf+Wzei9NWu8WnKK5qDdjSuHCYF3VNl0Mez+uqjiPhgInf9LEzis9pfe9VcJTTpSHuFuFhu1unaa4Mmg8MHUKJA5Pa3PKWztCwngwxXtTUdL85+vcllKGS83m3eSe1/nzcgrk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706073239; c=relaxed/simple;
-	bh=j0Ft59/vVMe9YartpH/9GGwsUHkrmD3Q9IzIAVDnKpg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=tK7hX1RvxxHbiqTCjCPwrsJ/DoT1eEqH9HcV2ZiOi29CKlFDyvV4CBEbAUppW2LHLZ7RfxuQIj1qZL+kEQNUlXSIR/11onfZO7PsNkgLbOZbTFIHiLdnIDdlxkMYuxH+cE7t6G5rM8Fmu6gfEXktXhVNb4H9vHofHFnB0hHsZCE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytec.de; spf=pass smtp.mailfrom=phytec.de; dkim=pass (1024-bit key) header.d=phytec.de header.i=@phytec.de header.b=TG+UG42Z; arc=none smtp.client-ip=91.26.50.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytec.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytec.de
+	s=arc-20240116; t=1706073244; c=relaxed/simple;
+	bh=SwKTYhqF3vapdayBBHL5fa8lI3JifUYyDl1bRGMZKPc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-type; b=dBi/pZnpFBbIiisavnJfOi9rRbyZZXimogm7sm/tVZJ6diJ+65pCKhylMyIQEnc186kGMq5J/a5IwLR0HKd4kS+3GT6c24dgjD0+nYWKWzCYlEk493igifNm1lyv5C3kPTgt8LtZJeLlSFs1gDGJ/AhtRWY03LSHGxMjwwaWlC0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iGQKsgA3; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=phytec.de header.i=@phytec.de header.b="TG+UG42Z"
-DKIM-Signature: v=1; a=rsa-sha256; d=phytec.de; s=a4; c=relaxed/simple;
-	q=dns/txt; i=@phytec.de; t=1706073232; x=1708665232;
-	h=From:Sender:Reply-To:Subject:Date:Message-ID:To:CC:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=j0Ft59/vVMe9YartpH/9GGwsUHkrmD3Q9IzIAVDnKpg=;
-	b=TG+UG42ZwK5L/dSyAk9w2/BFREwX0gpk1Pl5RqC9UBOyXKInjXwH1TNwqs5ybjpw
-	zhKCHxriAxiKIxtGCwW34GTvoU71RbaXipveZQvXFrOhX0QfuC7eCkaRux6Q20mc
-	oZ95hFliTLKlKlc5SRY6QmTf/UaOh9EOwxwtW9hp7XI=;
-X-AuditID: ac14000a-fbefe7000000290d-f5-65b09c903d25
-Received: from berlix.phytec.de (Unknown_Domain [172.25.0.12])
-	(using TLS with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(Client did not present a certificate)
-	by mickerik.phytec.de (PHYTEC Mail Gateway) with SMTP id 49.0E.10509.09C90B56; Wed, 24 Jan 2024 06:13:52 +0100 (CET)
-Received: from [172.25.39.28] (172.25.0.11) by Berlix.phytec.de (172.25.0.12)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.6; Wed, 24 Jan
- 2024 06:14:12 +0100
-Message-ID: <008317aa-4dd1-4889-8c64-5e4396d83931@phytec.de>
-Date: Wed, 24 Jan 2024 06:13:39 +0100
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iGQKsgA3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1706073242;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Phdml9nXkCmStja6K/ul2BV3Rap702N5eGmMqDodNlo=;
+	b=iGQKsgA3ceAx71XYIIhRzWqf8KQxsQwpDJOkp9kN5e7V8Bjxs0xvLW5Dog4yS2dLVfi1hE
+	/XCpbAnLu9/JnrEUx2hPPKRCVOJql/j+Ryy2mTa7PGF6vhVtU21Ot9cm/jJBK6vJirYeC6
+	rkX+MZh93moInZ2Bh76MFR3huL4vza0=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-578-zlaUeep3MaKZl_-kOvhPYQ-1; Wed, 24 Jan 2024 00:13:55 -0500
+X-MC-Unique: zlaUeep3MaKZl_-kOvhPYQ-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 96BC0837225;
+	Wed, 24 Jan 2024 05:13:54 +0000 (UTC)
+Received: from MiWiFi-R3L-srv.redhat.com (unknown [10.72.116.117])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id E65CE1C060AF;
+	Wed, 24 Jan 2024 05:13:48 +0000 (UTC)
+From: Baoquan He <bhe@redhat.com>
+To: linux-kernel@vger.kernel.org
+Cc: kexec@lists.infradead.org,
+	x86@kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-s390@vger.kernel.org,
+	linux-sh@vger.kernel.org,
+	linux-mips@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	loongarch@lists.linux.dev,
+	akpm@linux-foundation.org,
+	ebiederm@xmission.com,
+	hbathini@linux.ibm.com,
+	piliu@redhat.com,
+	viro@zeniv.linux.org.uk,
+	Baoquan He <bhe@redhat.com>
+Subject: [PATCH linux-next v3 07/14] arm64, crash: wrap crash dumping code into crash related ifdefs
+Date: Wed, 24 Jan 2024 13:12:47 +0800
+Message-ID: <20240124051254.67105-8-bhe@redhat.com>
+In-Reply-To: <20240124051254.67105-1-bhe@redhat.com>
+References: <20240124051254.67105-1-bhe@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 3/3] arm64: dts: imx93: Add phyBOARD-Segin-i.MX93
- support
-To: Stefan Wahren <wahrenst@gmx.net>, Mathieu Othacehe <othacehe@gnu.org>, Rob
- Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam
-	<festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Li Yang
-	<leoyang.li@nxp.com>, Primoz Fiser <primoz.fiser@norik.com>, Christoph
- Stoidner <c.stoidner@phytec.de>
-CC: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <upstream@lists.phytec.de>
-References: <20240122095306.14084-1-othacehe@gnu.org>
- <20240122095306.14084-4-othacehe@gnu.org>
- <537266fe-0bf7-4208-a9f3-ae27f462c6ed@phytec.de>
- <85fe8c8b-ea08-4f24-9a06-33a5678c1a0a@gmx.net>
- <7944bd80-32d7-4ac3-9c0a-806394262f1c@phytec.de>
- <08ef805a-b041-4db0-aaf7-51d5d06596ff@gmx.net>
-Content-Language: en-US
-From: Wadim Egorov <w.egorov@phytec.de>
-In-Reply-To: <08ef805a-b041-4db0-aaf7-51d5d06596ff@gmx.net>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-type: text/plain
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: Florix.phytec.de (172.25.0.13) To Berlix.phytec.de
- (172.25.0.12)
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrIIsWRmVeSWpSXmKPExsWyRpKBR3fCnA2pBkfnqVus2XuOyWL+kXOs
-	Fg+v+lusmrqTxaLvxUNmi0PNB5gsNj2+xmrR9Wsls8XlXXPYLM7f3cJscaLrIatF694j7BZ/
-	t29isXixRdyi+526xfETncwOAh47Z91l91i8aT+bR9s0M49NqzrZPO5c28PmsXlJvUd/dwur
-	x/evG1g9Nr7bweTR/9fA4/MmuQDuKC6blNSczLLUIn27BK6MtrcHmQue6Ffc3LSYuYHxjXoX
-	IyeHhICJxIRJUxi7GLk4hAQWM0nsPvaWHSQhJHCXUeLQ9yoQm1fARuLY+n6wOIuAqkTLnzus
-	EHFBiZMzn7CA2KIC8hL3b80AqxEWCJLYcPwvG8hQEYF2Fon7uyawgzjMAm2MElMnvGGDWLeS
-	SeL31CdMIC3MAuISt57MB7PZBNQl7mz4BrSCg4NTwFri1Q85iBILicVvDrJD2PISzVtnM0Nc
-	Ki/x4tJyFoh35CWmnXvNDGGHShzZtJppAqPwLCTHzkKybRaSsbOQjF3AyLKKUSg3Mzk7tSgz
-	W68go7IkNVkvJXUTIyiaRRi4djD2zfE4xMjEwXiIUYKDWUmE94bkulQh3pTEyqrUovz4otKc
-	1OJDjNIcLErivKs7glOFBNITS1KzU1MLUotgskwcnFINjOZ+h6LzPijK8/b8PS3DG6U3t+/P
-	0Z73qwr38zF9EZxz5debid89uq0/bQl6/M7pk8PjYxxZXaJqRY7fVkUpB115ceO77EOHw6vn
-	mM75dUJxD3NLv+asPfO+LfP+2So6v8UgpcQjf+m0c/JX3hxWEz+wa1ebvXtM67NnT66eDzvW
-	Pfnn0pUrgy4qsRRnJBpqMRcVJwIA4tsbV9QCAAA=
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.7
 
-Hi,
+Now crash codes under kernel/ folder has been split out from kexec
+code, crash dumping can be separated from kexec reboot in config
+items on arm64 with some adjustments.
 
-Am 23.01.24 um 11:21 schrieb Stefan Wahren:
-> Hi Wadim,
->
-> Am 23.01.24 um 09:25 schrieb Wadim Egorov:
->>
->> Am 23.01.24 um 08:42 schrieb Stefan Wahren:
->>> Hi Wadim,
->>>
->>> Am 23.01.24 um 07:11 schrieb Wadim Egorov:
->>>> Hey Mathieu,
->>>>
->>>> Am 22.01.24 um 10:53 schrieb Mathieu Othacehe:
->>>>> Add basic support for phyBOARD-Segin-i.MX93.
->>>>> Main features are:
->>>>> * eMMC
->>>>> * Ethernet
->>>>> * SD-Card
->>>>> * UART
->>>>>
->>>>> Signed-off-by: Mathieu Othacehe <othacehe@gnu.org>
->>>>> ---
->>>>>   arch/arm64/boot/dts/freescale/Makefile        |   1 +
->>>>>   .../dts/freescale/imx93-phyboard-segin.dts    | 141
->>>>> ++++++++++++++++++
->>>>>   .../boot/dts/freescale/imx93-phycore-som.dtsi | 127 
->>>>> ++++++++++++++++
->>>>>   3 files changed, 269 insertions(+)
->>>>>   create mode 100644
->>>>> arch/arm64/boot/dts/freescale/imx93-phyboard-segin.dts
->>>>>   create mode 100644
->>>>> arch/arm64/boot/dts/freescale/imx93-phycore-som.dtsi
->>>>>
->>>>> diff --git a/arch/arm64/boot/dts/freescale/Makefile
->>>>> b/arch/arm64/boot/dts/freescale/Makefile
->>>>> index 2e027675d7bb..65db918c821c 100644
->>>>> --- a/arch/arm64/boot/dts/freescale/Makefile
->>>>> +++ b/arch/arm64/boot/dts/freescale/Makefile
->>>>> @@ -201,6 +201,7 @@ dtb-$(CONFIG_ARCH_MXC) +=
->>>>> imx8qxp-colibri-iris-v2.dtb
->>>>>   dtb-$(CONFIG_ARCH_MXC) += imx8qxp-mek.dtb
->>>>>   dtb-$(CONFIG_ARCH_MXC) += imx8ulp-evk.dtb
->>>>>   dtb-$(CONFIG_ARCH_MXC) += imx93-11x11-evk.dtb
->>>>> +dtb-$(CONFIG_ARCH_MXC) += imx93-phyboard-segin.dtb
->>>>>   dtb-$(CONFIG_ARCH_MXC) += imx93-tqma9352-mba93xxca.dtb
->>>>>   dtb-$(CONFIG_ARCH_MXC) += imx93-tqma9352-mba93xxla.dtb
->>>>>   diff --git a/arch/arm64/boot/dts/freescale/imx93-phyboard-segin.dts
->>>>> b/arch/arm64/boot/dts/freescale/imx93-phyboard-segin.dts
->>>>> new file mode 100644
->>>>> index 000000000000..5433c33d1322
->>>>> --- /dev/null
->>>>> +++ b/arch/arm64/boot/dts/freescale/imx93-phyboard-segin.dts
->>>>> @@ -0,0 +1,141 @@
->>>>> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
->>>>> +/*
->>>>> + * Copyright (C) 2023 PHYTEC Messtechnik GmbH
->>>>> + * Author: Wadim Egorov <w.egorov@phytec.de>, Christoph Stoidner
->>>>> <c.stoidner@phytec.de>
->>>>> + * Copyright (C) 2024 Mathieu Othacehe <m.othacehe@gmail.com>
->>>>> + *
->>>>> + * Product homepage:
->>>>> + * phyBOARD-Segin carrier board is reused for the i.MX93 design.
->>>>> + *
->>>>> https://www.phytec.de/produkte/single-board-computer/phyboard-segin-imx6ul/ 
->>>>>
->>>>>
->>>>> + */
->>>>> +
->>>>> +#include "imx93-phycore-som.dtsi"
->>>>> +
->>>>> +/{
->>>>> +    model = "PHYTEC phyBOARD-Segin-i.MX93";
->>>>> +    compatible = "phytec,imx93-phyboard-segin",
->>>>> "phytec,imx93-phycore-som",
->>>>> +             "fsl,imx93";
->>>>> +
->>>>> +    chosen {
->>>>> +        stdout-path = &lpuart1;
->>>>> +    };
->>>>> +
->>>>> +    reg_usdhc2_vmmc: regulator-usdhc2 {
->>>>> +        compatible = "regulator-fixed";
->>>>> +        enable-active-high;
->>>>> +        gpio = <&gpio3 7 GPIO_ACTIVE_HIGH>;
->>>>> +        pinctrl-names = "default";
->>>>> +        pinctrl-0 = <&pinctrl_reg_usdhc2_vmmc>;
->>>>> +        regulator-min-microvolt = <3300000>;
->>>>> +        regulator-max-microvolt = <3300000>;
->>>>> +        regulator-name = "VCC_SD";
->>>>> +    };
->>>>> +};
->>>>> +
->>>>> +/* GPIOs */
->>>>> +&gpio1 {
->>>>> +    pinctrl-names = "default";
->>>>> +    pinctrl-0 = <&pinctrl_gpio1>;
->>>>
->>>> You are doing more than you describing in your changes log.
->>>> Here you are forcing a gpio-only functionality for the X16 header. But
->>>> the pins we route down to the X16 expansion connector can be also used
->>>> differently.
->>>
->>> i think the word "forcing" is little bit hard in this case. It doesn't
->>> define a gpio-hog.
->>
->> You are defaulting it to be a GPIO.
-> Sure, but i still cannot see the problem. Are you concerned about
-> hardware damage, different behavior in comparison to your downstream BSP
-> or overwriting the bootloader defaults?
->>
->>>
->>>> Typically we provide device tree overlays for different use cases on
->>>> this expansion connectors.
->>>
->>> Can you please explain why the device tree overlays cannot overwrite 
->>> the
->>> pinmuxing?
->>
->> It can, and it should. Thats why I mentioned to use different overlays
->> for different use cases.
->> I think it is nicer to have a board only defining it's static 
->> components.
-> Yes and i would consider the line names as static and board specific.
->> At this point we do not know what users will use the expansion
->> connector for.
->> Adding this kind of functionality with overlays follows the idea of
->> defining components where they are actually used/implemented: soc,
->> som/board level.
->> You can find a few of the adapters we provide as dtsi files in
->>   arch/arm/boot/dts/nxp/imx/*peb*
->> Nowadays we have overlays and can use them instead.
->>
->>
->>>
->>>>
->>>> Please drop the muxing.
->>>>
->>>> Same applies for the gpio names.
->>> What's the problem with defining gpio line names for user friendliness?
->>> The Raspberry Pi has also an expansion header, all the pins can be 
->>> muxed
->>> to different functions but still have gpio line names.
->>
->> This may cause confusion if you use overlays defining other
->> functionalities as the names you define.
-> I agree most of the line names on the Raspberry Pi contains a function,
-> which wasn't the best idea for an expansion header. But this doesn't
-> mean we must do this here, too.
->
-> I just want to give you feedback from my point of view as a user. I
-> would expect that the gpio line names are defined regardless of the used
-> overlay.
+Here wrap up crash dumping codes with CONFIG_CRASH_DUMP ifdeffery.
 
-I appreciate the feedback :)
-Defining line names should be fine. But I would still prefer to have the 
-muxing in an overlay bound to a specific use case.
+Signed-off-by: Baoquan He <bhe@redhat.com>
+---
+ arch/arm64/include/asm/kexec.h         |  2 +-
+ arch/arm64/kernel/machine_kexec.c      |  2 +-
+ arch/arm64/kernel/machine_kexec_file.c | 10 ++++++++--
+ arch/arm64/mm/init.c                   |  2 +-
+ 4 files changed, 11 insertions(+), 5 deletions(-)
 
-Regards,
-Wadim
+diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
+index 9ac9572a3bbe..4d9cc7a76d9c 100644
+--- a/arch/arm64/include/asm/kexec.h
++++ b/arch/arm64/include/asm/kexec.h
+@@ -80,7 +80,7 @@ static inline void crash_setup_regs(struct pt_regs *newregs,
+ 	}
+ }
+ 
+-#if defined(CONFIG_KEXEC_CORE) && defined(CONFIG_HIBERNATION)
++#if defined(CONFIG_CRASH_DUMP) && defined(CONFIG_HIBERNATION)
+ extern bool crash_is_nosave(unsigned long pfn);
+ extern void crash_prepare_suspend(void);
+ extern void crash_post_resume(void);
+diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
+index b38aae5b488d..82e2203d86a3 100644
+--- a/arch/arm64/kernel/machine_kexec.c
++++ b/arch/arm64/kernel/machine_kexec.c
+@@ -255,7 +255,7 @@ void machine_crash_shutdown(struct pt_regs *regs)
+ 	pr_info("Starting crashdump kernel...\n");
+ }
+ 
+-#ifdef CONFIG_HIBERNATION
++#if defined(CONFIG_CRASH_DUMP) && defined(CONFIG_HIBERNATION)
+ /*
+  * To preserve the crash dump kernel image, the relevant memory segments
+  * should be mapped again around the hibernation.
+diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
+index 0e017358f4ba..af1ca875c52c 100644
+--- a/arch/arm64/kernel/machine_kexec_file.c
++++ b/arch/arm64/kernel/machine_kexec_file.c
+@@ -39,6 +39,7 @@ int arch_kimage_file_post_load_cleanup(struct kimage *image)
+ 	return kexec_image_post_load_cleanup_default(image);
+ }
+ 
++#ifdef CONFIG_CRASH_DUMP
+ static int prepare_elf_headers(void **addr, unsigned long *sz)
+ {
+ 	struct crash_mem *cmem;
+@@ -80,6 +81,7 @@ static int prepare_elf_headers(void **addr, unsigned long *sz)
+ 	kfree(cmem);
+ 	return ret;
+ }
++#endif
+ 
+ /*
+  * Tries to add the initrd and DTB to the image. If it is not possible to find
+@@ -93,8 +95,8 @@ int load_other_segments(struct kimage *image,
+ 			char *cmdline)
+ {
+ 	struct kexec_buf kbuf;
+-	void *headers, *dtb = NULL;
+-	unsigned long headers_sz, initrd_load_addr = 0, dtb_len,
++	void *dtb = NULL;
++	unsigned long initrd_load_addr = 0, dtb_len,
+ 		      orig_segments = image->nr_segments;
+ 	int ret = 0;
+ 
+@@ -102,7 +104,10 @@ int load_other_segments(struct kimage *image,
+ 	/* not allocate anything below the kernel */
+ 	kbuf.buf_min = kernel_load_addr + kernel_size;
+ 
++#ifdef CONFIG_CRASH_DUMP
+ 	/* load elf core header */
++	void *headers;
++	unsigned long headers_sz;
+ 	if (image->type == KEXEC_TYPE_CRASH) {
+ 		ret = prepare_elf_headers(&headers, &headers_sz);
+ 		if (ret) {
+@@ -130,6 +135,7 @@ int load_other_segments(struct kimage *image,
+ 		kexec_dprintk("Loaded elf core header at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
+ 			      image->elf_load_addr, kbuf.bufsz, kbuf.memsz);
+ 	}
++#endif
+ 
+ 	/* load initrd */
+ 	if (initrd) {
+diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+index 74c1db8ce271..c1f6213e77f3 100644
+--- a/arch/arm64/mm/init.c
++++ b/arch/arm64/mm/init.c
+@@ -100,7 +100,7 @@ static void __init arch_reserve_crashkernel(void)
+ 	bool high = false;
+ 	int ret;
+ 
+-	if (!IS_ENABLED(CONFIG_KEXEC_CORE))
++	if (!IS_ENABLED(CONFIG_CRASH_RESERVE))
+ 		return;
+ 
+ 	ret = parse_crashkernel(cmdline, memblock_phys_mem_size(),
+-- 
+2.41.0
 
->
-> But at the end it's your product.
->>
->> Regards,
->> Wadim
->>
->>
->>>
->>> Best regards
->
