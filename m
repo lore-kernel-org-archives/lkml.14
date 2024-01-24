@@ -1,79 +1,89 @@
-Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20ED81B59F
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 11:01:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.152.168
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E3D42BAE2;
+	Wed, 24 Jan 2024 11:02:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706094093; cv=none; b=HWlQ5snnRiS5b+B6pKbn2jGClvlp4jP7comg6KHcyMQ2vUdSk4ApaCFrUNoFJ9o6fK0zjdJTryJbaGHfQ0MxwMx/Ow7f1SqeVc9RjS4PEh25znJdZy2nscCBwVL0ajNE7LGDc0StzGIYKV+aCJkud7E4BtVpD8jPTmlPuDoGc+M=
+	t=1706094133; cv=none; b=OOKrF4hnLsXex6h/1o660+oDN4A31ShRvLgPaepF9keF9eHP7Ml3gBD6OZk09G3bfjAKWUjTPSAgX6PTmfli+04UunngCwdXVVdu+WZRumknimgtVxJ+T5/fNd56LhNLTndms2vmharJyxK/dSjyNytvwLuVpPLzmPRdweHDFgE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706094093; c=relaxed/simple;
-	bh=nXjQm9pxB4OBi7P7cQxdR6tOb1Xaf8tNG19Uf9ztXJc=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LRaniC9srcfU4IUOnvOZ1VzLkroqFsP+F+3cae6J6e2e7KuS9ALM4P3GChL6exR4vnlNm1R6bauzcey8T+wx46dTws7USbeO/04NXyoTLw750xDbPLlzqV19HSeFRByX94cTawwgR28UPRHS2Uj8O6uinfOzG3wFypkmM3rdcms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=DK6Ytl6N; arc=none smtp.client-ip=67.231.152.168
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
+	s=arc-20240116; t=1706094133; c=relaxed/simple;
+	bh=/DEfx/ggTlSTK4fsO2AMargKWkKOetex3+rtGaqvoN0=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=mHh0GAy7s6nSPLM4GE5k0EkMjO6npy53Ld8PmCOvjw5tx2Tzrl65OxmclsRjQMc5wG7lcQaUMkrxTPpysq++sQcvyN2N6cPikkvSwhLQwvFLJu+0re7wXM0FMSp1VRW+AKugG7oZM4Oy48BX5vRFM8IfSIibXkKu6X85U+s5S1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bfnGWgUR; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="DK6Ytl6N"
-Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
-	by mx0b-001ae601.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40O6RXoP022084;
-	Wed, 24 Jan 2024 05:01:22 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=
-	date:from:to:cc:subject:message-id:references:mime-version
-	:content-type:in-reply-to; s=PODMain02222019; bh=Nuu5pfDsxpWyiex
-	Gbs0jpfyR5a3ackAw/VZy6NSnBKY=; b=DK6Ytl6N4/+X/5MM/G1urTdYelG0JOM
-	AWJ8Phn5K5e3vjamvGKGoeGLNeoDTR8SzbhlujoHl+4jieMzrq8z6GbHzCF6RQKU
-	lZlDrNNV7WO37R9jtqqzJo23Ei8Nw4wE5LBr96KCn0UNjv5HaMV02qm6Fu+1hNBH
-	7UIZ9ow6NDhZFg+/cia75j+Vel340+gSvwh/3u/X5tiuEeWTbmphnI2vdKi7eaQW
-	ddTf/ygEt3OO1etQcQm6TOI3D7qlrsJQjhzCY7MbESSnjo1Fj9mRc7LDUN4D4+fO
-	EuLs6xALo/WsZow3rrzYVLAAujEbFW2ESZpEfEInCUZ3eYZ3r64/ihA==
-Received: from ediex02.ad.cirrus.com ([84.19.233.68])
-	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 3vtmf9rpka-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 24 Jan 2024 05:01:22 -0600 (CST)
-Received: from ediex01.ad.cirrus.com (198.61.84.80) by ediex02.ad.cirrus.com
- (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Wed, 24 Jan
- 2024 11:01:20 +0000
-Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
- ediex01.ad.cirrus.com (198.61.84.80) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40 via Frontend Transport; Wed, 24 Jan 2024 11:01:20 +0000
-Received: from ediswmail9.ad.cirrus.com (ediswmail9.ad.cirrus.com [198.61.86.93])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTPS id 82180820243;
-	Wed, 24 Jan 2024 11:01:20 +0000 (UTC)
-Date: Wed, 24 Jan 2024 11:01:02 +0000
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
-To: Maciej Strozek <mstrozek@opensource.cirrus.com>
-CC: Lee Jones <lee@kernel.org>, <patches@opensource.cirrus.com>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [RESEND PATCH v3] mfd: wm831x: Remove redundant forever while
- loop
-Message-ID: <ZbDt7to9i462oWlT@ediswmail9.ad.cirrus.com>
-References: <20240123154259.81258-1-mstrozek@opensource.cirrus.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bfnGWgUR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706094132; x=1737630132;
+  h=from:to:cc:in-reply-to:references:subject:message-id:
+   date:mime-version:content-transfer-encoding;
+  bh=/DEfx/ggTlSTK4fsO2AMargKWkKOetex3+rtGaqvoN0=;
+  b=bfnGWgURe8ygCS2Us9gERHQuYG4WBRV8E410GI1GXBbe7HvCPF4y2SUV
+   y9u3Xx71d4oKru54HyjERFtAa2oA1TOGk1HYIBRzgga5ffpncNdCI9SV7
+   ynf4zTx8xBhxNTMBKVpXoxqlCDgGi1HPoLv/RdXhwq0tz8sYuj/zmIuA6
+   x7GqPj1cp2Rexw+qXlQ+awIBAwaYIkuDA+she/AaXjbcItinohvO9ROnL
+   bjiUJHvYkISfuLROO9qxjinBNqpdBsqyKa3UupODhqSGI3J/8uYjbcUt9
+   dMxCqxpspi5XbE2DAGpc0nJYNk7R3wktM70tiGsgg9jNHxwfQ3ChkK4e9
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="8464452"
+X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
+   d="scan'208";a="8464452"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jan 2024 03:02:11 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="786382012"
+X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
+   d="scan'208";a="786382012"
+Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.48.46])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jan 2024 03:02:07 -0800
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: Henrique de Moraes Holschuh <hmh@hmh.eng.br>, 
+ Hans de Goede <hdegoede@redhat.com>, ibm-acpi-devel@lists.sourceforge.net, 
+ platform-driver-x86@vger.kernel.org, 
+ Colin Ian King <colin.i.king@gmail.com>
+Cc: kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20240106154740.55202-1-colin.i.king@gmail.com>
+References: <20240106154740.55202-1-colin.i.king@gmail.com>
+Subject: Re: [PATCH][next] platform/x86: thinkpad_acpi: remove redundant
+ assignment to variable i
+Message-Id: <170609412156.14220.14891875070775431708.b4-ty@linux.intel.com>
+Date: Wed, 24 Jan 2024 13:02:01 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20240123154259.81258-1-mstrozek@opensource.cirrus.com>
-X-Proofpoint-GUID: IiLjbf_8iiZgVZMoLOZE11uHWRLeclmh
-X-Proofpoint-ORIG-GUID: IiLjbf_8iiZgVZMoLOZE11uHWRLeclmh
-X-Proofpoint-Spam-Reason: safe
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.12.3
 
-On Tue, Jan 23, 2024 at 03:42:59PM +0000, Maciej Strozek wrote:
-> Current code excutes only once despite the while loop, so remove the
-> loop. Also msleep(1) will likely result in a larger sleep, so increase
-> its value for clarity while keeping the same behaviour.
+On Sat, 06 Jan 2024 15:47:40 +0000, Colin Ian King wrote:
+
+> The variable i is being initialized with the value 0 that is never
+> read, it is being re-assigned 0 again in a for-loop statement later
+> on. The initialization is redundant and can be removed.
 > 
-> Signed-off-by: Maciej Strozek <mstrozek@opensource.cirrus.com>
-> ---
+> The initialization of variable n can also be deferred after the
+> sanity check on pointer n and the declaration of all the int variables
+> can be combined as a final code clear-up.
+> 
+> [...]
 
-Reviewed-by: Charles Keepax <ckeepax@opensource.cirrus.com>
 
-Thanks,
-Charles
+Thank you for your contribution, it has been applied to my local
+review-ilpo branch. Note it will show up in the public
+platform-drivers-x86/review-ilpo branch only once I've pushed my
+local branch there, which might take a while.
+
+The list of commits applied:
+[1/1] platform/x86: thinkpad_acpi: remove redundant assignment to variable i
+      commit: 214509e5d61d294193b220f397418e76879f74c0
+
+--
+ i.
+
