@@ -1,223 +1,130 @@
-Received: from mail-m49214.qiye.163.com (mail-m49214.qiye.163.com [45.254.49.214])
+Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64ED846B4;
-	Wed, 24 Jan 2024 03:19:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.214
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3E585C98
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 03:19:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.118
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706066366; cv=none; b=lslZQMWJBqbGNg6OdxStGleXqDqbUQyDvrViCJacdlktrQOIURD92u5ibWek04f6IlYjl+zJ8rlHWdkj+IogdbZ//8fvTezz8jgiIC9FWouBPgkeHoq9dI6KJIFV81dfmdQiNkfb8fiDAEwPomvYn3MkX9KN1hUZxwyznvlmLMU=
+	t=1706066391; cv=none; b=MTG/xk6nJ9TE/udQevzpuA/ThQxHwcpdd0agjUfviQeMdY2GQDuQClowevlAq/XDlQLK23Rf9vdIQwglRyQ4AsNSzO0khDfdGn0OdeU3aaTFdfZBRNXt+Yl0N76rqTAgXbN1NXmhB6Zbn7PQZWXxTW+cB5jq58mZq5puTAX8294=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706066366; c=relaxed/simple;
-	bh=2Afcxvj7vwAOm7pIOzh9bPfEuegqAozbnRiCL18B2Cg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=s1PrUKCAznU2S/B55H6WP9lxNIO2FBMXmj4WzDZ0QKdjYiV90laf0SXrzPBd2xiH4j+4wlsr/ooWPXv10l9BR3pB+Le68BFF7/H/o0gWsvQAhvfDBUBezAjVAHcUBwWWkYwsYr9WcxVw9BzDyn7tedz6aNGSj/n1V15NWrWxTxs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=QfH2Us9E; arc=none smtp.client-ip=45.254.49.214
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="QfH2Us9E"
-DKIM-Signature: a=rsa-sha256;
-	b=QfH2Us9Eq8B0ueN4t3tCCXCgmbIqlFl7ZJymOQuLq7M9YeL9smUzrKpL905TUTtNqsltZOxtpgQpdHkuqvWUXq0CZPZmy8JLlcS1NlFLVNWSTCiKR0ghlYv2lzXt/RCUWBVgMKQx0A0tv8P0Ew9Cyzg2QyIlvURz7W7Yw0MY5Gg=;
-	s=default; c=relaxed/relaxed; d=rock-chips.com; v=1;
-	bh=TAinrEkDcwYxgKcucbTjUS75lf3OZ7z9iVmkDRaZ18I=;
-	h=date:mime-version:subject:message-id:from;
-Received: from [172.16.12.141] (unknown [58.22.7.114])
-	by mail-m12779.qiye.163.com (Hmail) with ESMTPA id 660777801C6;
-	Wed, 24 Jan 2024 10:42:32 +0800 (CST)
-Message-ID: <e1c56975-6a55-4b75-a447-dd2d0eec62e2@rock-chips.com>
-Date: Wed, 24 Jan 2024 10:42:31 +0800
+	s=arc-20240116; t=1706066391; c=relaxed/simple;
+	bh=HWEHevNF4RRS3BZnDbsEM9K5QcaLshRXcS3REW1M6vc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=uQw7tgTD7bMiWV3gzxuT1JFS8RN6ZHZhfoRKyAQzDa9m/9roJJ8Yac6Gtxo70wdU9kWI4HmhAWzQsMJwPDwwp2grvOFZVp+gLyHIFaVVT4veevUpMhuQbZ96hBn9RmQRdXqn/UzZZF99QRq4DETUsP1Ff5ENgN4PUf911pJDl3k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; arc=none smtp.client-ip=115.124.30.118
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R731e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045170;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0W.EiNDX_1706066385;
+Received: from localhost(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0W.EiNDX_1706066385)
+          by smtp.aliyun-inc.com;
+          Wed, 24 Jan 2024 11:19:45 +0800
+From: Jingbo Xu <jefflexu@linux.alibaba.com>
+To: xiang@kernel.org,
+	chao@kernel.org,
+	linux-erofs@lists.ozlabs.org
+Cc: huyue2@coolpad.com,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] erofs: get rid of unneeded GFP_NOFS
+Date: Wed, 24 Jan 2024 11:19:45 +0800
+Message-Id: <20240124031945.130782-1-jefflexu@linux.alibaba.com>
+X-Mailer: git-send-email 2.19.1.6.gb485710b
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/3] phy: rockchip: Add Samsung HDMI/DP Combo PHY driver
-Content-Language: en-US
-To: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
- Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I
- <kishon@kernel.org>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
- Philipp Zabel <p.zabel@pengutronix.de>, Johan Jonker <jbx6244@gmail.com>,
- Sebastian Reichel <sebastian.reichel@collabora.com>,
- Algea Cao <algea.cao@rock-chips.com>, linux-phy@lists.infradead.org,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
- kernel@collabora.com, Heiko Stuebner <heiko@sntech.de>
-References: <20240119193806.1030214-1-cristian.ciocaltea@collabora.com>
- <20240119193806.1030214-4-cristian.ciocaltea@collabora.com>
- <20240122121409.GW4700@pengutronix.de>
- <00c749f7-3eb9-4bd1-a057-43a692b77d68@collabora.com>
-From: Andy Yan <andy.yan@rock-chips.com>
-In-Reply-To: <00c749f7-3eb9-4bd1-a057-43a692b77d68@collabora.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZQkIdTlZNHx9NTUxKTEJLTk9VEwETFh
-	oSFyQUDg9ZV1kYEgtZQVlOQ1VJSVVMVUpKT1lXWRYaDxIVHRRZQVlPS0hVSk1PSU5IVUpLS1VKQk
-	tLWQY+
-X-HM-Tid: 0a8d395908efb24fkuuu660777801c6
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6NUk6ORw*MzwtCAJMAxoCKRIz
-	DU8aCwJVSlVKTEtNS01PSk5IT0xCVTMWGhIXVRoVHwJVAhoVOwkUGBBWGBMSCwhVGBQWRVlXWRIL
-	WUFZTkNVSUlVTFVKSk9ZV1kIAVlBQ0NITDcG
+Content-Transfer-Encoding: 8bit
 
-Hi Cristian:
+Clean up some leftovers since there is no way for EROFS to be called
+again from a reclaim context.
 
-On 1/24/24 08:58, Cristian Ciocaltea wrote:
-> On 1/22/24 14:14, Sascha Hauer wrote:
->> On Fri, Jan 19, 2024 at 09:38:03PM +0200, Cristian Ciocaltea wrote:
->>> Add driver for the Rockchip HDMI/eDP TX Combo PHY found on RK3588 SoC.
->>>
->>> The PHY is based on a Samsung IP block and supports HDMI 2.1 TMDS, FRL
->>> and eDP links.  The maximum data rate is 12Gbps (HDMI 2.1 FRL), while
->>> the minimum is 250Mbps (HDMI 2.1 TMDS).
->>>
->>> Co-developed-by: Algea Cao <algea.cao@rock-chips.com>
->>> Signed-off-by: Algea Cao <algea.cao@rock-chips.com>
->>> Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
->>> ---
->>>   drivers/phy/rockchip/Kconfig                  |    8 +
->>>   drivers/phy/rockchip/Makefile                 |    1 +
->>>   .../phy/rockchip/phy-rockchip-samsung-hdptx.c | 2045 +++++++++++++++++
->>>   3 files changed, 2054 insertions(+)
->>>   create mode 100644 drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c
->>>
->>> diff --git a/drivers/phy/rockchip/Kconfig b/drivers/phy/rockchip/Kconfig
->>> index 94360fc96a6f..95666ac6aa3b 100644
->>> --- a/drivers/phy/rockchip/Kconfig
->>> +++ b/drivers/phy/rockchip/Kconfig
->>> @@ -83,6 +83,14 @@ config PHY_ROCKCHIP_PCIE
->>>   	help
->>>   	  Enable this to support the Rockchip PCIe PHY.
->>>   
->>> +config PHY_ROCKCHIP_SAMSUNG_HDPTX
->>> +	tristate "Rockchip Samsung HDMI/DP Combo PHY driver"
->>> +	depends on (ARCH_ROCKCHIP || COMPILE_TEST) && OF
->>> +	select GENERIC_PHY
->>> +	help
->>> +	  Enable this to support the Rockchip HDMI/DP Combo PHY
->>> +	  with Samsung IP block.
->>> +
->>>   config PHY_ROCKCHIP_SNPS_PCIE3
->>>   	tristate "Rockchip Snps PCIe3 PHY Driver"
->>>   	depends on (ARCH_ROCKCHIP && OF) || COMPILE_TEST
->>> diff --git a/drivers/phy/rockchip/Makefile b/drivers/phy/rockchip/Makefile
->>> index 7eab129230d1..3d911304e654 100644
->>> --- a/drivers/phy/rockchip/Makefile
->>> +++ b/drivers/phy/rockchip/Makefile
->>> @@ -8,6 +8,7 @@ obj-$(CONFIG_PHY_ROCKCHIP_INNO_HDMI)	+= phy-rockchip-inno-hdmi.o
->>>   obj-$(CONFIG_PHY_ROCKCHIP_INNO_USB2)	+= phy-rockchip-inno-usb2.o
->>>   obj-$(CONFIG_PHY_ROCKCHIP_NANENG_COMBO_PHY)	+= phy-rockchip-naneng-combphy.o
->>>   obj-$(CONFIG_PHY_ROCKCHIP_PCIE)		+= phy-rockchip-pcie.o
->>> +obj-$(CONFIG_PHY_ROCKCHIP_SAMSUNG_HDPTX)	+= phy-rockchip-samsung-hdptx.o
->>>   obj-$(CONFIG_PHY_ROCKCHIP_SNPS_PCIE3)	+= phy-rockchip-snps-pcie3.o
->>>   obj-$(CONFIG_PHY_ROCKCHIP_TYPEC)	+= phy-rockchip-typec.o
->>>   obj-$(CONFIG_PHY_ROCKCHIP_USB)		+= phy-rockchip-usb.o
->>> diff --git a/drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c b/drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c
->>> new file mode 100644
->>> index 000000000000..d8171ea5ce2b
->>> --- /dev/null
->>> +++ b/drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c
->>> @@ -0,0 +1,2045 @@
->>> +// SPDX-License-Identifier: GPL-2.0+
->>> +/*
->>> + * Copyright (c) 2021-2022 Rockchip Electronics Co., Ltd.
->>> + * Copyright (c) 2024 Collabora Ltd.
->>> + *
->>> + * Author: Algea Cao <algea.cao@rock-chips.com>
->>> + * Author: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
->>> + */
->>> +#include <linux/bitfield.h>
->>> +#include <linux/clk.h>
->>> +#include <linux/delay.h>
->>> +#include <linux/mfd/syscon.h>
->>> +#include <linux/module.h>
->>> +#include <linux/of.h>
->>> +#include <linux/of_platform.h>
->>> +#include <linux/phy/phy.h>
->>> +#include <linux/platform_device.h>
->>> +#include <linux/rational.h>
->>> +#include <linux/regmap.h>
->>> +#include <linux/reset.h>
->>> +
->>> +#define GRF_HDPTX_CON0			0x00
->>> +#define HDPTX_I_PLL_EN			BIT(7)
->>> +#define HDPTX_I_BIAS_EN			BIT(6)
->>> +#define HDPTX_I_BGR_EN			BIT(5)
->>> +#define GRF_HDPTX_STATUS		0x80
->>> +#define HDPTX_O_PLL_LOCK_DONE		BIT(3)
->>> +#define HDPTX_O_PHY_CLK_RDY		BIT(2)
->>> +#define HDPTX_O_PHY_RDY			BIT(1)
->>> +#define HDPTX_O_SB_RDY			BIT(0)
->>> +
->>> +#define CMN_REG0000			0x0000
->>
->> These register names are not particularly helpful. Maybe use a
->>
->> #define CMN_REG(x)			((x) * 4)
->>
->> Instead?
-> 
-> Yes, sounds good.
-> 
->>> +
->>> +static int hdptx_lcpll_frl_mode_config(struct rockchip_hdptx_phy *hdptx,
->>> +				       u32 rate)
->>> +{
->>> +	u32 bit_rate = rate & DATA_RATE_MASK;
->>> +	u8 color_depth = (rate & COLOR_DEPTH_MASK) ? 1 : 0;
->>> +	const struct lcpll_config *cfg = lcpll_cfg;
->>> +
->>> +	for (; cfg->bit_rate != ~0; cfg++)
->>> +		if (bit_rate == cfg->bit_rate)
->>> +			break;
->>
->> You could use ARRAY_SIZE() to iterate over the array and save the extra
->> entry at the end. Likewise for the other arrays used in the driver.
-> 
-> Sure, will do.
-> 
->>> +
->>> +	if (cfg->bit_rate == ~0)
->>> +		return -EINVAL;
->>> +
->>
->>> +static int rockchip_hdptx_phy_power_on(struct phy *phy)
->>> +{
->>> +	struct rockchip_hdptx_phy *hdptx = phy_get_drvdata(phy);
->>> +	int bus_width = phy_get_bus_width(hdptx->phy);
->>> +	int bit_rate = bus_width & DATA_RATE_MASK;
->>
->> What is going on here? bus_width is set to 8 in probe() using
->> phy_set_bus_width(), but the value you pull out of phy_get_bus_width()
->> is expected to contain the bit_rate and several other flags.
->>
->> It looks like you are tunneling flags from some other driver using this
->> field. Isn't there a better way to accomplish this? If not, I think this
->> needs some explanation.
-> 
-> Indeed, sorry for missing a comment here.  The flags are set by the
-> bridge driver to enable 10-bit color depth, FRL and EARC.  So far I
-> couldn't find an alternative approach to pass custom data using the PHY API.
-> 
->> At least the variable should be renamed. it's called "bus_width" and it's
->> passed to functions like hdptx_lcpll_frl_mode_config() which has this
->> parameter named "rate" which is quite confusing.
-> 
-> I think for the initial support it's not really necessary to implement
-> all those features.  Andy, should we drop them until a better solution
-> is found?
+Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
+---
+ fs/erofs/fscache.c | 2 +-
+ fs/erofs/inode.c   | 2 +-
+ fs/erofs/utils.c   | 2 +-
+ fs/erofs/zdata.c   | 8 ++++----
+ 4 files changed, 7 insertions(+), 7 deletions(-)
 
-I'm fine with it.
-It would be very appreciated if some linux-phy or drm bridge experts can give
-some suggestions about how to pass different custom phy modes.
+diff --git a/fs/erofs/fscache.c b/fs/erofs/fscache.c
+index bc12030393b2..5ff90026fd43 100644
+--- a/fs/erofs/fscache.c
++++ b/fs/erofs/fscache.c
+@@ -459,7 +459,7 @@ static struct erofs_fscache *erofs_fscache_acquire_cookie(struct super_block *sb
+ 
+ 	inode->i_size = OFFSET_MAX;
+ 	inode->i_mapping->a_ops = &erofs_fscache_meta_aops;
+-	mapping_set_gfp_mask(inode->i_mapping, GFP_NOFS);
++	mapping_set_gfp_mask(inode->i_mapping, GFP_KERNEL);
+ 	inode->i_blkbits = EROFS_SB(sb)->blkszbits;
+ 	inode->i_private = ctx;
+ 
+diff --git a/fs/erofs/inode.c b/fs/erofs/inode.c
+index 3d616dea55dc..36e638e8b53a 100644
+--- a/fs/erofs/inode.c
++++ b/fs/erofs/inode.c
+@@ -60,7 +60,7 @@ static void *erofs_read_inode(struct erofs_buf *buf,
+ 		} else {
+ 			const unsigned int gotten = sb->s_blocksize - *ofs;
+ 
+-			copied = kmalloc(vi->inode_isize, GFP_NOFS);
++			copied = kmalloc(vi->inode_isize, GFP_KERNEL);
+ 			if (!copied) {
+ 				err = -ENOMEM;
+ 				goto err_out;
+diff --git a/fs/erofs/utils.c b/fs/erofs/utils.c
+index 5dea308764b4..e146d09151af 100644
+--- a/fs/erofs/utils.c
++++ b/fs/erofs/utils.c
+@@ -81,7 +81,7 @@ struct erofs_workgroup *erofs_insert_workgroup(struct super_block *sb,
+ repeat:
+ 	xa_lock(&sbi->managed_pslots);
+ 	pre = __xa_cmpxchg(&sbi->managed_pslots, grp->index,
+-			   NULL, grp, GFP_NOFS);
++			   NULL, grp, GFP_KERNEL);
+ 	if (pre) {
+ 		if (xa_is_err(pre)) {
+ 			pre = ERR_PTR(xa_err(pre));
+diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
+index 692c0c39be63..583c062cd0e4 100644
+--- a/fs/erofs/zdata.c
++++ b/fs/erofs/zdata.c
+@@ -230,7 +230,7 @@ static int z_erofs_bvec_enqueue(struct z_erofs_bvec_iter *iter,
+ 		struct page *nextpage = *candidate_bvpage;
+ 
+ 		if (!nextpage) {
+-			nextpage = erofs_allocpage(pagepool, GFP_NOFS);
++			nextpage = erofs_allocpage(pagepool, GFP_KERNEL);
+ 			if (!nextpage)
+ 				return -ENOMEM;
+ 			set_page_private(nextpage, Z_EROFS_SHORTLIVED_PAGE);
+@@ -302,7 +302,7 @@ static struct z_erofs_pcluster *z_erofs_alloc_pcluster(unsigned int size)
+ 		if (nrpages > pcs->maxpages)
+ 			continue;
+ 
+-		pcl = kmem_cache_zalloc(pcs->slab, GFP_NOFS);
++		pcl = kmem_cache_zalloc(pcs->slab, GFP_KERNEL);
+ 		if (!pcl)
+ 			return ERR_PTR(-ENOMEM);
+ 		pcl->pclustersize = size;
+@@ -694,7 +694,7 @@ static void z_erofs_cache_invalidate_folio(struct folio *folio,
+ 	DBG_BUGON(stop > folio_size(folio) || stop < length);
+ 
+ 	if (offset == 0 && stop == folio_size(folio))
+-		while (!z_erofs_cache_release_folio(folio, GFP_NOFS))
++		while (!z_erofs_cache_release_folio(folio, 0))
+ 			cond_resched();
+ }
+ 
+@@ -713,7 +713,7 @@ int erofs_init_managed_cache(struct super_block *sb)
+ 	set_nlink(inode, 1);
+ 	inode->i_size = OFFSET_MAX;
+ 	inode->i_mapping->a_ops = &z_erofs_cache_aops;
+-	mapping_set_gfp_mask(inode->i_mapping, GFP_NOFS);
++	mapping_set_gfp_mask(inode->i_mapping, GFP_KERNEL);
+ 	EROFS_SB(sb)->managed_cache = inode;
+ 	return 0;
+ }
+-- 
+2.19.1.6.gb485710b
 
-> 
->> Sascha
-> 
-> Thanks for the review,
-> Cristian
