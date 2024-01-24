@@ -1,80 +1,80 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0307713341A;
-	Wed, 24 Jan 2024 20:27:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26AB317F3;
+	Wed, 24 Jan 2024 20:30:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706128056; cv=none; b=CZe0pk7YjMvtPy9AOgkcTQ7oAf30bhurbVOENWa0j3fewmtftpbFM2opa7sHFWNyIuYbVIz1NeAqSBU4s7XrW3nB2AHLFs3a6aadw22ky1jNhL3f836zaqDi+TOtDc1M1KcdnyE/RCB9siPSgw8n+ti0p7rGI/GC3jPzMSkXrLI=
+	t=1706128227; cv=none; b=CC6+gK6rmxR/5wDqtD6kL/j4o5CQQXTypXUXGdBEiEbILSlNjp8DIu/X40P0+VBYqeN0y25OrYvsWVF+h0aPdXf40xvUamD64KXqZzni/s28qYgjQkTsTNZuZyMBUGwlCfoZPSVteexKfV7SXCB6ZnLwAngKT3dsFxTTAXUZ0RQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706128056; c=relaxed/simple;
-	bh=VDCwxQU9FEHBnkrktNliUQSJyl6fzdsH5Lr1UcvqzLU=;
-	h=From:In-Reply-To:Content-Type:References:Date:Cc:To:MIME-Version:
-	 Message-ID:Subject; b=TC3utk4Upp9hVbC56/RVWAAgxbOaqT6ezzyxr1NCOCsT/XHI36vCCgozFxUw76ucbrIJyNlARh/643bz9er7YXmJ9f+HwvF92bn0JT62Sre24v2pbrKQgnxX46vKMVWZGfL+2lJgpTGO0BZs2+dQwSfD+kkxIyRLO6QkA3A+yKM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Received: from hamburger.collabora.co.uk (hamburger.collabora.co.uk [IPv6:2a01:4f8:1c1b:c794::1])
-	by madrid.collaboradmins.com (Postfix) with ESMTP id 8955337813E9;
-	Wed, 24 Jan 2024 20:27:23 +0000 (UTC)
-From: "Shreeya Patel" <shreeya.patel@collabora.com>
-In-Reply-To: <20240123174434.819712739@linuxfoundation.org>
+	s=arc-20240116; t=1706128227; c=relaxed/simple;
+	bh=7E96YLzl01LGs3tIQR8nbla5IaWuZRVsGIuS0bJ9CzU=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=lzZfQr4lwvkZF9KNtbWins6OYsT+afl8VPuTVNYcHcSjX1pKNZiI9SIToY8KNK81swEjRK76r3lqhzWOGPy1e4aTQUmZU3ZsvGrfnbF9PXR3uj6IcNgpSAFwxSa+T7qe6mr+su9oCkRNUpwEbmYbEmnwVhFjWgd8YErUfVpSpgg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KduiNtAw; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KduiNtAw"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 8C83BC43394;
+	Wed, 24 Jan 2024 20:30:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706128226;
+	bh=7E96YLzl01LGs3tIQR8nbla5IaWuZRVsGIuS0bJ9CzU=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=KduiNtAwZIx/I/f6Cbt9YS2wXTbz1SEXUy9R2myM36I5ojYB01E84P16k9FpzjNyn
+	 s9oLIXWqYk0T+q5fFbiPP2vtmLn4AcULVQ9jTq6U0Fsi8ysZq5s6xaV9/geGfP25xG
+	 fUtvpsyO2d/nHVv75dl4z0HzirRcLac6hwJjhyvh4AhuwhzLXWubKeTK3+U0vA/+UV
+	 PksdEG9qJGJFl6YoiFDd8jaL/hpTZajzbixCoNik1O1KNYX3xXu9VPISrvG8z6gid6
+	 rM7n5i6YoMoertn1+Rihg6O+QQLB0WIDmZ1bN3n6PD20Q1TVUmq5MMIb13WK2+z852
+	 vPEjBwN48ToGA==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 72213D8C962;
+	Wed, 24 Jan 2024 20:30:26 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
-X-Forward: 127.0.0.1
-References: <20240123174434.819712739@linuxfoundation.org>
-Date: Wed, 24 Jan 2024 20:27:23 +0000
-Cc: stable@vger.kernel.org, patches@lists.linux.dev, linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, allen.lkml@gmail.com, "Gustavo Padovan" <gustavo.padovan@collabora.com>, "kernelci-regressions mailing list" <kernelci-regressions@lists.collabora.co.uk>
-To: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <53f5-65b17280-3-34c04d40@156471994>
-Subject: =?utf-8?q?Re=3A?= [PATCH =?utf-8?q?5=2E4?= 000/193] 
- =?utf-8?q?5=2E4=2E268-rc2?= review
-User-Agent: SOGoMail 5.9.1
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net v3] net: stmmac: Wait a bit for the reset to take effect
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <170612822646.416.13224306306608084186.git-patchwork-notify@kernel.org>
+Date: Wed, 24 Jan 2024 20:30:26 +0000
+References: <AS8P193MB1285A810BD78C111E7F6AA34E4752@AS8P193MB1285.EURP193.PROD.OUTLOOK.COM>
+In-Reply-To: <AS8P193MB1285A810BD78C111E7F6AA34E4752@AS8P193MB1285.EURP193.PROD.OUTLOOK.COM>
+To: Bernd Edlinger <bernd.edlinger@hotmail.de>
+Cc: alexandre.torgue@foss.st.com, joabreu@synopsys.com, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ mcoquelin.stm32@gmail.com, netdev@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ jiri@nvidia.com, akpm@linux-foundation.org, fancer.lancer@gmail.com
 
-On Tuesday, January 23, 2024 23:16 IST, Greg Kroah-Hartman <gregkh@linu=
-xfoundation.org> wrote:
+Hello:
 
-> This is the start of the stable review cycle for the 5.4.268 release.
-> There are 193 patches in this series, all will be posted as a respons=
-e
-> to this one.  If anyone has any issues with these being applied, plea=
-se
-> let me know.
->=20
-> Responses should be made by Thu, 25 Jan 2024 17:44:10 +0000.
-> Anything received after that time might be too late.
->=20
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4=
-.268-rc2.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc=
-.git linux-5.4.y
-> and the diffstat can be found below.
->=20
+This patch was applied to netdev/net.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-KernelCI report for stable-rc/linux-5.4.y for this week.
+On Mon, 22 Jan 2024 19:19:09 +0100 you wrote:
+> otherwise the synopsys_id value may be read out wrong,
+> because the GMAC_VERSION register might still be in reset
+> state, for at least 1 us after the reset is de-asserted.
+> 
+> Add a wait for 10 us before continuing to be on the safe side.
+> 
+> > From what have you got that delay value?
+> 
+> [...]
 
-## stable-rc HEAD for linux-5.4.y:
-Date: 2024-01-24
-https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.=
-git/log/?h=3D6207e0931754e4be20272a062c996b9dc9e68d62
+Here is the summary with links:
+  - [net,v3] net: stmmac: Wait a bit for the reset to take effect
+    https://git.kernel.org/netdev/net/c/a5f5eee282a0
 
-## Build failures:
-No build failures seen for the stable-rc/linux-5.4.y commit head \o/
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-## Boot failures:
-No **new** boot failures seen for the stable-rc/linux-5.4.y commit head=
- \o/
-
-Tested-by: kernelci.org bot <bot@kernelci.org>
-
-Thanks,
-Shreeya Patel
 
