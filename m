@@ -1,169 +1,138 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8091D1AAB1;
-	Wed, 24 Jan 2024 11:19:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1BE11AACA
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 11:19:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706095157; cv=none; b=R91zDBohULUC9m1hJ6eJ8ZB5TDsRuvutIxo9MKwvodVxh+liO7jBH1G9rGRsezvYaImkYX9orJ17lCXTvsu08pydtPF8tyKicIUahZoHEtXdsKsRwi7RSMJmZbDuyKGSxmIKGeknc7Rq0ncWfBNiUnDWDIvMBVZn4/zt1byCzCY=
+	t=1706095181; cv=none; b=ZoavDOmjmGlP9Isd0AAmGPbG9xs97zSn0nZLM4HJbBO2F8sDw+qdn/5Tz2fuwrhyhVmSWyQ5Kp0xMQYcdv++D19R7kNplTLLSAGfj7fAWTfogyByU2+QvyN3YxqFnTjSu+9xu7RGJ8tKk4OESnqfeaDyYauxYWvJ49rCjiBxq+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706095157; c=relaxed/simple;
-	bh=5jTFMkVQhPK7g3HGR/4LstOjZdNhgG5VgwuT7R8QRIQ=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VDyniR3/YpU5Nq1UB3w2uqn5DdUOQZArenvwgauXMwJhJF/cqXUinWgeMSYA0KAtN/fJ4G0m8nsRtT1+8geqEoQBfumNL+MgV/wCk4nTarcgNg7zAAW+In1j5ZsLWQFEUWpdCrgdfcwszdF0/65TOj28J6H0zkXvy2liOkszBQU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Sg0foj8h; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1706095181; c=relaxed/simple;
+	bh=exF1qXGKYskZom0x21RTewAyP5aHcW/MBt7fN555E7Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IdSHqmyhOaPq2MW/7sSxzeHHk7mPfpccHbgPso/HLoN2wD+p0hxWZIvDTFFvcgXn8ZjfgFsNLh7vqLdnAy8H6ND6VGIDg2dYRBvFVwh3CqgHpK80ZZTp1eyWQbgPfQOcBZOvfWD5Q38GPYTAJWOw4VVVe3Xbh8kpwZYfnnMoxiM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IZqCWq7e; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sg0foj8h"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-40e76626170so58912535e9.2;
-        Wed, 24 Jan 2024 03:19:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706095153; x=1706699953; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ax2WAgA+IWHYbycpjwhzRdnKEjPRyvd6ox/DAOqjIDc=;
-        b=Sg0foj8hS7CGXyES5AIaXCIrvoh8ap8etdk9T3Y7b6q1oRYezhV8DW8B6uUtQjwpQL
-         wxjZTCz2Dm96M66JOvxBuELZD5GwjKgjyltFkn5x8Em1z+RneOrBKUTOGbRBJxiYz+Wr
-         gSn609ochAsdNm+XqkyvtSexnQoDYNgAfV6AIq2JnmJxtSYRAtrF9OyOTP1zrfUNP9Tm
-         khuMtmdwTeBpBNLL0hQhlcPlzNM01cZNpBFo9Xev9abwfOVz59tPmY+WDSirdVDInPJ2
-         BR79Il5jjug7BAA5duGeUu2H2eRlB+sg11R5M497TLnW+Pf+JIdMBiPt4TuM0KyhcKLe
-         ReNg==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IZqCWq7e"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1706095178;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=5Tdg6Pxwo5yb88aEPcd5SX3GxtpgWjx+EchJ6YmUkm4=;
+	b=IZqCWq7eccGSNjjnjoimtbaaMDVyPofHUIW+F+B5A2RmrTa/E3AiUg/ylz7RIWzTlOgLLC
+	5k7dZEruACX9ovrH0PUmaTDpUKVRTT9FkF9NpqnSmvnrCA00JehRprKXfLdb2rVSKbYtYE
+	APsQBfcbSqongdN6+p9Dbl7nuF7/P3Y=
+Received: from mail-vs1-f71.google.com (mail-vs1-f71.google.com
+ [209.85.217.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-372-LXFs8guYN2ST3etikcoKRw-1; Wed, 24 Jan 2024 06:19:37 -0500
+X-MC-Unique: LXFs8guYN2ST3etikcoKRw-1
+Received: by mail-vs1-f71.google.com with SMTP id ada2fe7eead31-469be81ec74so537150137.1
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 03:19:37 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706095153; x=1706699953;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ax2WAgA+IWHYbycpjwhzRdnKEjPRyvd6ox/DAOqjIDc=;
-        b=NswKLeJJWqIEM7TWusRWK8fvll5Q3rj7XS1YkyU5y7/lJz/1EoZCAS01EXgDfRNOcc
-         9oJiwBdNMiBCsxTH5mIAlxqJqwIahYnCplxrV1ZOgvde7FTkMOYmIJK76plHlJ/ZBuu2
-         +LiZ74rtAu/R/u/6n78951QYDIs4oK05ZXJLPw30ILvblHVxK3rDK5Za1i403yOLYxwQ
-         SZC+smzT+yaNuH2iWSp36fbseiQFjsyL2ZH/LqwU5f5LCc5QhGMsSbzMHKTMFivtiqAd
-         ta0kMMRGvE7aLcVIL8eEJ0Olb31yQBrt16eMz2GSPS2KO0Ak9qkx4JDjUWguR+GoqpnH
-         TCrw==
-X-Gm-Message-State: AOJu0YzEUuaqAs8Mbl5mXWviGaPBV7dVG1DNWdN2KILRPFZbxUsJep+/
-	yTKG4yv4n6DhXO3QuVvpkNh3iwKGZhkDoGTFRZKiXzrRGuA8uw1J
-X-Google-Smtp-Source: AGHT+IEHrYSNYEV1+Dcij+tz/QoBsH6YJTLbxoqlNBdasWoDuViAcRoyJDbwKwUowv7rYDqrt1memg==
-X-Received: by 2002:a05:600c:3145:b0:40e:b93c:940f with SMTP id h5-20020a05600c314500b0040eb93c940fmr966856wmo.28.1706095153415;
-        Wed, 24 Jan 2024 03:19:13 -0800 (PST)
-Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
-        by smtp.gmail.com with ESMTPSA id p16-20020a05600c469000b0040e39cbf2a4sm49817817wmo.42.2024.01.24.03.19.12
+        d=1e100.net; s=20230601; t=1706095177; x=1706699977;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=5Tdg6Pxwo5yb88aEPcd5SX3GxtpgWjx+EchJ6YmUkm4=;
+        b=vZ5a4+/8se8xGLayowS+lHZdRYDnJ4HTHYhY47ndRqheZCLzZPOjkPPDwIaQyk/uUg
+         OzNRalxtYKP++rBbjNNpMx/Bf6IHZKvZPmgusQdJXYexuhJ7vC+tbBJMi/BF96u2IS1V
+         ZEJNoEegU/VZJX1H/y1UD1xkxXAcUhcn4k4Loe+NQsM+7KrFYSYJXjcA+6lWSNu0S7TX
+         pgRTKOv6RLmnTmxXkWY9zos3MiDw1mQzxhuL1uFpzZDmNtmpBimWGb03Vdj4bLXJYa/4
+         T3hfVoaI/ROjcBKR5l+1v3hTq4+qQxzQqZP8GiTgAKKBwaiL8KG9FKmQBZ2h0yajcZFK
+         ksWQ==
+X-Gm-Message-State: AOJu0Yzr4w++8ibyAWmZeEzYBZk6qDOwiC4FOOFGK2xx4M8FIp0z/kJe
+	Pktk5uiGsBxHM4uPRdHA3g4+yteIaJkexNQbuGpngXiapMA9gsZBrVMQlcegp/7SS73+kSyUNDl
+	a/RqpS8XnLnPDTqaUMlTLy9S/c5sqZUfcJDgL0ce79AmOMGb0Jt/WuCbWUNOFkA==
+X-Received: by 2002:a67:cf4d:0:b0:469:aec1:b425 with SMTP id f13-20020a67cf4d000000b00469aec1b425mr1668111vsm.3.1706095176866;
+        Wed, 24 Jan 2024 03:19:36 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFfq/53hwK5W6EYfpAy/CIrTd6ajQQRINtlI/Tva0zppHFqHuvfSChD8fb6zOGYnC6pXS//nA==
+X-Received: by 2002:a67:cf4d:0:b0:469:aec1:b425 with SMTP id f13-20020a67cf4d000000b00469aec1b425mr1668087vsm.3.1706095176567;
+        Wed, 24 Jan 2024 03:19:36 -0800 (PST)
+Received: from pstanner-thinkpadt14sgen1.muc.redhat.com (nat-pool-muc-t.redhat.com. [149.14.88.26])
+        by smtp.gmail.com with ESMTPSA id ql3-20020a056214540300b00686aa6dbcbfsm1027016qvb.81.2024.01.24.03.19.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jan 2024 03:19:13 -0800 (PST)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Wed, 24 Jan 2024 12:19:11 +0100
-To: Sven Schnelle <svens@linux.ibm.com>
-Cc: Ryan Roberts <ryan.roberts@arm.com>, Jiri Olsa <olsajiri@gmail.com>,
-	David Hildenbrand <david@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Yin Fengwei <fengwei.yin@intel.com>, Yu Zhao <yuzhao@google.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	Yang Shi <shy828301@gmail.com>,
-	"Huang, Ying" <ying.huang@intel.com>, Zi Yan <ziy@nvidia.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Itaru Kitayama <itaru.kitayama@gmail.com>,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	John Hubbard <jhubbard@nvidia.com>,
-	David Rientjes <rientjes@google.com>,
-	Vlastimil Babka <vbabka@suse.cz>, Hugh Dickins <hughd@google.com>,
-	Kefeng Wang <wangkefeng.wang@huawei.com>,
-	Barry Song <21cnbao@gmail.com>,
-	Alistair Popple <apopple@nvidia.com>, linux-mm@kvack.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Barry Song <v-songbaohua@oppo.com>, linux-s390@vger.kernel.org
-Subject: Re: [PATCH v9 02/10] mm: Non-pmd-mappable, large folios for
- folio_add_new_anon_rmap()
-Message-ID: <ZbDyLzoIm0GdQzZA@krava>
-References: <20231207161211.2374093-1-ryan.roberts@arm.com>
- <20231207161211.2374093-3-ryan.roberts@arm.com>
- <ZaMR2EWN-HvlCfUl@krava>
- <41dc7dff-1ea8-4894-a487-88d46ec2b2d8@redhat.com>
- <ZaRKMwKJIBmh8-lD@krava>
- <1188e67e-5c04-4bb5-b242-78d92c3fc85c@arm.com>
- <yt9d1qa7x9qv.fsf@linux.ibm.com>
+        Wed, 24 Jan 2024 03:19:36 -0800 (PST)
+From: Philipp Stanner <pstanner@redhat.com>
+To: Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>,
+	Lucas Stach <l.stach@pengutronix.de>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>
+Cc: NXP Linux Team <linux-imx@nxp.com>,
+	dri-devel@lists.freedesktop.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Philipp Stanner <pstanner@redhat.com>
+Subject: [PATCH v4 0/2] drm/imx/dcss: implement region request and devres
+Date: Wed, 24 Jan 2024 12:19:03 +0100
+Message-ID: <20240124111904.18261-2-pstanner@redhat.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <yt9d1qa7x9qv.fsf@linux.ibm.com>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jan 24, 2024 at 12:15:52PM +0100, Sven Schnelle wrote:
-> Ryan Roberts <ryan.roberts@arm.com> writes:
-> 
-> > On 14/01/2024 20:55, Jiri Olsa wrote:
-> >> On Sun, Jan 14, 2024 at 06:33:56PM +0100, David Hildenbrand wrote:
-> >>> On 13.01.24 23:42, Jiri Olsa wrote:
-> >>>> On Thu, Dec 07, 2023 at 04:12:03PM +0000, Ryan Roberts wrote:
-> >>>>> In preparation for supporting anonymous multi-size THP, improve
-> >>>>> folio_add_new_anon_rmap() to allow a non-pmd-mappable, large folio to be
-> >>>>> passed to it. In this case, all contained pages are accounted using the
-> >>>>> order-0 folio (or base page) scheme.
-> >>>>>
-> >>>>> Reviewed-by: Yu Zhao <yuzhao@google.com>
-> >>>>> Reviewed-by: Yin Fengwei <fengwei.yin@intel.com>
-> >>>>> Reviewed-by: David Hildenbrand <david@redhat.com>
-> >>>>> Reviewed-by: Barry Song <v-songbaohua@oppo.com>
-> >>>>> Tested-by: Kefeng Wang <wangkefeng.wang@huawei.com>
-> >>>>> Tested-by: John Hubbard <jhubbard@nvidia.com>
-> >>>>> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
-> >>>>> ---
-> >>>>>   mm/rmap.c | 28 ++++++++++++++++++++--------
-> >>>>>   1 file changed, 20 insertions(+), 8 deletions(-)
-> >>>>>
-> >>>>> diff --git a/mm/rmap.c b/mm/rmap.c
-> >>>>> index 2a1e45e6419f..846fc79f3ca9 100644
-> >>>>> --- a/mm/rmap.c
-> >>>>> +++ b/mm/rmap.c
-> >>>>> @@ -1335,32 +1335,44 @@ void page_add_anon_rmap(struct page *page, struct vm_area_struct *vma,
-> >>>>>    * This means the inc-and-test can be bypassed.
-> >>>>>    * The folio does not have to be locked.
-> >>>>>    *
-> >>>>> - * If the folio is large, it is accounted as a THP.  As the folio
-> >>>>> + * If the folio is pmd-mappable, it is accounted as a THP.  As the folio
-> >>>>>    * is new, it's assumed to be mapped exclusively by a single process.
-> >>>>>    */
-> >>>>>   void folio_add_new_anon_rmap(struct folio *folio, struct vm_area_struct *vma,
-> >>>>>   		unsigned long address)
-> >>>>>   {
-> >>>>> -	int nr;
-> >>>>> +	int nr = folio_nr_pages(folio);
-> >>>>> -	VM_BUG_ON_VMA(address < vma->vm_start || address >= vma->vm_end, vma);
-> >>>>> +	VM_BUG_ON_VMA(address < vma->vm_start ||
-> >>>>> +			address + (nr << PAGE_SHIFT) > vma->vm_end, vma);
-> >>>>
-> >>>> hi,
-> >>>> I'm hitting this bug (console output below) with adding uprobe
-> >>>> on simple program like:
-> >>>>
-> >>>>    $ cat up.c
-> >>>>    int main(void)
-> >>>>    {
-> >>>>       return 0;
-> >>>>    }
-> >>>>
-> >>>>    # bpftrace -e 'uprobe:/home/jolsa/up:_start {}'
-> >>>>
-> >>>>    $ ./up
-> >>>>
-> >>>> it's on top of current linus tree master:
-> >>>>    052d534373b7 Merge tag 'exfat-for-6.8-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/linkinjeon/exfat
-> >>>>
-> >>>> before this patch it seems to work, I can send my .config if needed
-> >
-> > Thanks for the bug report!
-> 
-> I just hit the same bug in our CI, but can't find the fix in -next. Is
-> this in the queue somewhere?
+@Laurentiu:
+Thank you very much for the review. I was indeed on an older branch. As
+Linus's master is currently broken for ARM64 [1], unfortunately, I built
+it instead against:
+60096f0a77600ac2cc92b82fee279d1905576950
 
-we hit it as well, but I can see the fix in linux-next/master
+Hope that's fine.
 
-  4c137bc28064 uprobes: use pagesize-aligned virtual address when replacing pages
 
-jirka
+Changes in v4:
+- Add Laurentiu's Reviewed-by to patch #1
+- Remove unnecsseray struct device pointers from all touched files
+- Rebase against newer kernel due to changes in dcss_drv_platform_remove()
+
+Changes in v3:
+- Fix build errors (missing variable, forgotten remove to call of deleted
+  function)
+
+Changes in v2:
+- Add the region-request to this patch-series. That was previously a
+  separate patch.
+
+dcss currently does not request its memory resource. This series adds
+that request with devres. As we're at it, it also ports all the ioremaps
+and associated allocations to devres.
+
+I can build this, but I don't have the hardware available to test it. So
+you might want to have a closer look.
+
+P.
+
+[1] https://lore.kernel.org/lkml/45ad1d0f-a10f-483e-848a-76a30252edbe@paulmck-laptop/
+
+
+Philipp Stanner (2):
+  drm/imx/dcss: request memory region
+  drm/imx/dcss: have all init functions use devres
+
+ drivers/gpu/drm/imx/dcss/dcss-blkctl.c | 13 ++-----------
+ drivers/gpu/drm/imx/dcss/dcss-ctxld.c  | 14 +++-----------
+ drivers/gpu/drm/imx/dcss/dcss-dev.c    | 19 +++++++++----------
+ drivers/gpu/drm/imx/dcss/dcss-dev.h    |  1 -
+ drivers/gpu/drm/imx/dcss/dcss-dpr.c    | 21 +++------------------
+ drivers/gpu/drm/imx/dcss/dcss-drv.c    | 12 +++---------
+ drivers/gpu/drm/imx/dcss/dcss-dtg.c    | 26 +++++---------------------
+ drivers/gpu/drm/imx/dcss/dcss-scaler.c | 21 +++------------------
+ drivers/gpu/drm/imx/dcss/dcss-ss.c     | 12 +++---------
+ 9 files changed, 31 insertions(+), 108 deletions(-)
+
+-- 
+2.43.0
+
