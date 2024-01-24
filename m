@@ -1,54 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D4061B270;
-	Wed, 24 Jan 2024 11:10:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A620B1AAB1;
+	Wed, 24 Jan 2024 11:12:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706094619; cv=none; b=EYckNteAs6J3UjQpOS26fjwpuJcd6ke9kdKIt+Zmuy7JlB3aYTauExrerPV0TdihQWgCksgovAU8Eobkd/zMDXO9GwBhagK30gSFY/R+msL66sSspLG6RXXM+fr0nbd54lz4Y+yQaWOzySUN76MffT1tMJ5MTobWn6m+WYl7GcM=
+	t=1706094744; cv=none; b=iH2twWOUzbwNMiDSVHvlb/mR+o/HxdLmZiPIOW12J/4iLvqWz9nyei5OpsUsS+63qv1InHIahfh4iM9BZ2M/yPdX1Teh94W4bGOyV0izzw6t8as2U4EcmNl9s1aNk7RbYqSDslYg8vZ/iz4KLcoVItMzRDI7MdGJnU+li4WozQw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706094619; c=relaxed/simple;
-	bh=+w+VRj28ZZ5d/t/eU5tEL2OQlofsSoXJCeaJoafaDuM=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=G99Iy28MJFr2/5RbxufayzL0Nr7vAKC+SYnLnNu3bN+UeepFZExxvV1DlXovP/Khun88nNeqpbV2yo1VpyhS1r/pzVfcRpWfPME1SVweOmlrVQCEpWGoJTUr5hBSUr7aFeI//5m/taiUlIrO8XlkpdU7RjRf+80jV3oI62ui5W8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kt8kBt1d; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1706094744; c=relaxed/simple;
+	bh=iLT/bR6Zsyw1fYzc/w5vCqhnKqDhBtU6rUjRHGojV5I=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=kJekrEcRVn/8sjM/JiGw/TpQZJqhhI6Gad5FxkT/GE0lLyaeVF4QoSXdU9yF4sUrOaZqL5dYX4CZWWE+PM6YHrYlMuiin1Ui7hU6OqnOrlcqtoyTZ7rcjo8u1DAJ54kJ67EkR5vftryk8Vkozs4qwwjqrlJsdradHsrXVKrEOqM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d7kXGFFC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kt8kBt1d"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706094619; x=1737630619;
-  h=from:to:cc:in-reply-to:references:subject:message-id:
-   date:mime-version:content-transfer-encoding;
-  bh=+w+VRj28ZZ5d/t/eU5tEL2OQlofsSoXJCeaJoafaDuM=;
-  b=kt8kBt1d9e4AFhM5eGCqbvSh4eqrn3L4Uv5QGfYr8llVp+ZYwNpw9tYk
-   H9c13iosz5gMSMVIJ1OWyjJgm7E6QZyoyNW63PL1WpjBmeilUlU+hkTMv
-   DYhyETDgV4CYBjdVoUz04ZlKY3xV6dphDY+Tamk0g036TUSqqEE2JEDz6
-   UYcOYovIQu1Z/oQgQbJhQZ5hdJNjoh2BgewKdfh3/tlgwKvLTNrjxISZu
-   FYpF3WKXGPZB2P0tRprATs/Qccu3FnhRAXiOyqQSzTsBiQXo/Tv0DdXJl
-   DcsLOwkA/pWFygss/2dqgyvtOrA2IX16C62P9ylXhM8rk0OktTrxn0LTp
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="8922933"
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="8922933"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jan 2024 03:10:18 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="929646645"
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="929646645"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.48.46])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jan 2024 03:10:16 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: hdegoede@redhat.com, Armin Wolf <W_Armin@gmx.de>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20240121200824.2778-1-W_Armin@gmx.de>
-References: <20240121200824.2778-1-W_Armin@gmx.de>
-Subject: Re: [PATCH v2] platform/x86: wmi: Use ACPI device name in netlink
- event
-Message-Id: <170609461058.14533.1507817163086160025.b4-ty@linux.intel.com>
-Date: Wed, 24 Jan 2024 13:10:10 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d7kXGFFC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30AFCC433F1;
+	Wed, 24 Jan 2024 11:12:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706094744;
+	bh=iLT/bR6Zsyw1fYzc/w5vCqhnKqDhBtU6rUjRHGojV5I=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=d7kXGFFCE/exwAXRKyRjBRRsD9xKANci0LbmeCPUbUb42faK2WeOpPl9v63Cx9+gC
+	 9oSW4W3gcJovefLd1dtoReKYuMdTwkERLOXOS+GeSCx3ksaR7R45g069oB0YPdI0gr
+	 1CBO38Z0m2R9qeDZ9kuV9DDuCgyDgChpIt01UG/ldhgi32YAyBLw7pUF6hbjCZx/tm
+	 AV/IAZ1ZDvh/pXz9TKI4qXqRzp3x08JyNgZvWC/o7OzWHf9aT1bc9vxvov0+yyAui7
+	 VpQ1rosyYtqeaTYUEhFzBbBzN7xKlqQ4T2igTJdmPs09ZRxI4xxf2OOkBmVfujpTxr
+	 n4G8zl16pggeA==
+From: Christian Brauner <brauner@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	Randy Dunlap <rdunlap@infradead.org>
+Cc: Christian Brauner <brauner@kernel.org>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Jan Kara <jack@suse.cz>,
+	linux-fsdevel@vger.kernel.org,
+	Namjae Jeon <linkinjeon@kernel.org>,
+	Dave Chinner <david@fromorbit.com>,
+	Anton Altaparmakov <anton@tuxera.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	linux-doc@vger.kernel.org
+Subject: Re: [PATCH -next] fs: remove NTFS classic from docum. index
+Date: Wed, 24 Jan 2024 12:12:09 +0100
+Message-ID: <20240124-jemals-bauarbeiten-01fad2b4e889@brauner>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240124011424.731-1-rdunlap@infradead.org>
+References: <20240124011424.731-1-rdunlap@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -56,31 +52,34 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.12.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1100; i=brauner@kernel.org; h=from:subject:message-id; bh=iLT/bR6Zsyw1fYzc/w5vCqhnKqDhBtU6rUjRHGojV5I=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaRu+NBnFDw9z/f49zWTBWVqFT418t1nkk9/9HXCHYtb2 Y+YOxL3dJSyMIhxMciKKbI4tJuEyy3nqdhslKkBM4eVCWQIAxenAEzEfBHDf7/7zbNOTrkUz7/Y TD9G6MzfEs8FEzk/p35srGV1li3SdmL4p+h+K3JaMrtK7CWWZWl+HdZmUwvXHuaZkXQqTv9j96O rHAA=
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Transfer-Encoding: 8bit
 
-On Sun, 21 Jan 2024 21:08:24 +0100, Armin Wolf wrote:
-
-> The device name inside the ACPI netlink event is limited to
-> 15 characters, so the WMI device name will get truncated.
+On Tue, 23 Jan 2024 17:14:24 -0800, Randy Dunlap wrote:
+> With the remove of the NTFS classic filesystem, also remove its
+> documentation entry from the filesystems index to prevent a
+> kernel-doc warning:
 > 
-> This can be observed with kacpimon when receiving an event
-> from WMI device "9DBB5994-A997-11DA-B012-B622A1EF5492":
+> Documentation/filesystems/index.rst:63: WARNING: toctree contains reference to nonexisting document 'filesystems/ntfs'
 > 
-> 	netlink:  9DBB5994-A997- 000000d0 00000000
 > 
 > [...]
 
+Applied to the vfs.fs branch of the vfs/vfs.git tree.
+Patches in the vfs.fs branch should appear in linux-next soon.
 
-Thank you for your contribution, it has been applied to my local
-review-ilpo branch. Note it will show up in the public
-platform-drivers-x86/review-ilpo branch only once I've pushed my
-local branch there, which might take a while.
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
 
-The list of commits applied:
-[1/1] platform/x86: wmi: Use ACPI device name in netlink event
-      commit: 3f399b5d7189bcb608c75abc85fe39f7a5509cfa
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
 
---
- i.
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
 
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs.fs
+
+[1/1] fs: remove NTFS classic from docum. index
+      https://git.kernel.org/vfs/vfs/c/06b8db3a7dde
