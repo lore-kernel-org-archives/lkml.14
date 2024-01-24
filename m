@@ -1,180 +1,141 @@
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2079.outbound.protection.outlook.com [40.107.93.79])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4116DBE45
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 02:51:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706064667; cv=none; b=gWIQA7vt43wgKOsG32QjoWkiC1gzrXCkM6pjqUx1BXUfiBqd4AZ8OqyqUoe1nQs41onwdrwwtWAGElyM5ty/pxkFkz6wNRKr8cfw/T1mpsUA2M1YAbexaxEqppXM6TkCPkpOwiaBTMwxJFWYj61DglFBfW/Xa8AUC+enHmYZn1E=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706064667; c=relaxed/simple;
-	bh=ycNP+a8NhST+9uaMU0omn9nmqoiUGhkB6HDfgVWWHXA=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=rpvI0iGmM4fqYRzwe3Qej3OrmS/nwclHIZvvhSlg7mhC9fgBvN4h0U+Vnc/VZGQYiCgjMSDBd8iaIvDK7zu5qzg8szafBuPytrt7D+4S2X4cQH37G7nRPpggAoTukFU3KMjJmPoIT2HwBKsU7mTCfFpy5R14oKCPBbdU7B1S1sA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-361a7af102eso27368285ab.1
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 18:51:04 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706064664; x=1706669464;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=L+g72DXx2jSxu6m10Huj2z9SBaJK1Z8TtWL2BpS8toM=;
-        b=buG+thY+YCr7g2iiQoR5vQn/xQni80x7IlTF8p14FYJ5WzOtpCBLQGSvSs+AsohaHR
-         hZ38TiiuQ2EHGdQd00HwV7NjxETniVpzNwTJt8SE79M4FUgQEKUQrQ5Dc/TxLs+xs8BO
-         yztWxag40cYA02KfEyv29LgGaWw6L566NbnreeuGmhDiBFNbOf8g3AW8zPLSYJTy4v3j
-         snk00+0PtgS7dBb5T2qC5G/JWGYGJNz9SUGan61pOjTTKJStUoj5HtU9oeWS6X5ZfAFH
-         yavoDnnDZJZfTC1fmE44YIJzeh/2AXQQMPi+PTlWmBCdnVszJ+INRqeowJRYcLRkVYcE
-         ZMxQ==
-X-Gm-Message-State: AOJu0YzxQBqgbhuiO7MOcrp5J8VyCVVpC0Z2kpmCe5/gorItERJhyPs6
-	guXeAdGs8HJMO41SAtMSlzt/g/WwTsoN868qroud5/TgbI/Olt+nhuJDxKEGet6s2BTqmsBN7ua
-	1IVuR4/EkwXVRvan8JZ5bh6ZPUEtjhF7cw8sZAqe67I77FRw72Ac3vDI=
-X-Google-Smtp-Source: AGHT+IFSQdcwMvqO343/QjGS/JmJue0nwvIn+qoLmYri3GIlru835ixqrtHuaVA/5dyAfVKpHYwFv/eEiS3Dfwop7PYdwjBBWDBx
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FCF646B4
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 02:54:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.79
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706064849; cv=fail; b=Pxcxwl2c7MIHwx305jJHLo5ZnKU39eEQfAwnY67kA/gQzRmGw2SxAJeMy78G1c5TQq6jHLOPXHs2iZ+xesq038bGhAjmp4QFJIzgA/oNLIXlRIHI+HL3x70cPeEeDCMnXgxwZR5Sbf83V9x0mPc8M7+Cr0EZcJsurZ/ra99sIGI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706064849; c=relaxed/simple;
+	bh=sVcDNeUh7fsYktx5246lAlf0oeTGsGFaF2eU6dNKmQI=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=t9grCZRWckc/q28Sn/vmH5u2Xh4bnK4er8CfPz+2+fPYQzWmzTMIs0IuNvJtVA4bAao56akwYA2mVCrRTx88URKElzO+gP6w8WoFwSQW26qYZWsRQfYmbAL3vycyWdoXFXzDe6JbhJw5AVst1UZ+IWMT/6jkPI/E8xaW+5RDyyM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=kCgZ5qjj; arc=fail smtp.client-ip=40.107.93.79
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="kCgZ5qjj"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hyz0iFS7y2JSRV3QTsSHYUjW5CZKXDyMB7bOOpPJT36Yq2kcqvSZTCf3HYgrtnWB+NZS0i2ytDiotiH7ZJMQUXgHlGTwVcGFkHp3ZmvCG4ho31/4TcDwt8b/edmBW7zb6mz0MVNECVLUTJtaXym46hweXEfUI6n2cdmJSxYPdtesDEyRLlt9DYEFqQaTqYn1n52o3czVPgl0oXETBuu87v6+ljlgOwRyYEA2Rnjhh9c5QPf9h998M6JuouEKggCAj6qk0QaRbqX8GvwQG6z0nIZMMXsNVtuaib0Tw8bqkFj/CaNSa6LJHd625xhHRO3Q2Eo3j0hL9QfSnWyangyWBw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=A078BbaAGY/zU6JL5BJwe7eSaF1X+L8idnxCjUVxvc0=;
+ b=boYcr/A5dH7+lSOnUrYs3xfTis10xyz/7l79V4wfq2RsJVBWbqkU8s2qoR+BoeqfR33/9Q98hJeOMN0OSGCBQYvs2UnR2jugmW0jbZQrryOy27ZPzEPKJ7CbPmymIvquCeRx3c96crg22Yj5UxVcvp1+Pt2rxsdk4jq0+rjn80yfy/KWqllQxaYn19O7UQLCJ06MM8pZd4xCG3xoj/ndwIbBU+15wycsOblMMWE2kajCzUfxMKTE98Z+5pc6P4hQeltrmDgHJp4jvp15XaPPO+SsUeFWSA5I4iE+96NblrSrMLuLN11AFGJr7WvJ/Ld6m5cCdfAhNCTASPRpC924Bw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=ideasonboard.com smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=A078BbaAGY/zU6JL5BJwe7eSaF1X+L8idnxCjUVxvc0=;
+ b=kCgZ5qjjNuqma8svSnKn7rCMmU31W4k+4FkFovItRy7BltmQE2agAYg6XANeHdpCl06KuxxwL3lCXhQnRHDe+2EhCdAOJy06PZmmjmC9q9B8jK9B/zQtBJeQHmuji4oCUOaYiLyi5yoMxU1y1BXENkDwSA8jxBqUcACFENBuux0=
+Received: from SN7PR04CA0110.namprd04.prod.outlook.com (2603:10b6:806:122::25)
+ by CH2PR12MB4938.namprd12.prod.outlook.com (2603:10b6:610:34::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7202.37; Wed, 24 Jan
+ 2024 02:54:06 +0000
+Received: from SN1PEPF0002636C.namprd02.prod.outlook.com
+ (2603:10b6:806:122:cafe::98) by SN7PR04CA0110.outlook.office365.com
+ (2603:10b6:806:122::25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.22 via Frontend
+ Transport; Wed, 24 Jan 2024 02:54:05 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
+Received: from SATLEXMB03.amd.com (165.204.84.17) by
+ SN1PEPF0002636C.mail.protection.outlook.com (10.167.241.137) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7202.16 via Frontend Transport; Wed, 24 Jan 2024 02:54:05 +0000
+Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.34; Tue, 23 Jan
+ 2024 20:54:04 -0600
+Received: from xsjanatoliy50.xilinx.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server id 15.1.2507.34 via Frontend
+ Transport; Tue, 23 Jan 2024 20:54:04 -0600
+From: Anatoliy Klymenko <anatoliy.klymenko@amd.com>
+To: <laurent.pinchart@ideasonboard.com>, <maarten.lankhorst@linux.intel.com>,
+	<mripard@kernel.org>, <tzimmermann@suse.de>, <airlied@gmail.com>,
+	<daniel@ffwll.ch>, <michal.simek@amd.com>, <dri-devel@lists.freedesktop.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v3 1/5] drm: xlnx: zynqmp_dpsub: Make drm bridge discoverable
+Date: Tue, 23 Jan 2024 18:53:58 -0800
+Message-ID: <20240124025402.373620-2-anatoliy.klymenko@amd.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240124025402.373620-1-anatoliy.klymenko@amd.com>
+References: <20240124025402.373620-1-anatoliy.klymenko@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:2193:b0:35f:e864:f6f with SMTP id
- j19-20020a056e02219300b0035fe8640f6fmr48222ila.0.1706064664346; Tue, 23 Jan
- 2024 18:51:04 -0800 (PST)
-Date: Tue, 23 Jan 2024 18:51:04 -0800
-In-Reply-To: <tencent_748DB7122CDDCBDDB29965CF870D9225BF07@qq.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000484891060fa82256@google.com>
-Subject: Re: [syzbot] [can?] memory leak in j1939_netdev_start
-From: syzbot <syzbot+1d37bef05da87b99c5a6@syzkaller.appspotmail.com>
-To: eadavis@qq.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN1PEPF0002636C:EE_|CH2PR12MB4938:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1e32c268-01e2-4c48-a3c6-08dc1c87bac1
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	MSWJ4t/kOnLJPwzzEwsglrVEjJ/C7vV5PRKZviuj0eZrJArZf5k2nDipz8TTenkXoN8ddr3HqRkkJFSzJWfkh6tpcFxte3HlQ+/DWMGktRW4yWgg81lEAeID6C+3xN36Q7TYuC/ofKGNJFXUrC5HEpMsLEbJ8uv9taTFx73VCYHC4LXB2uCjfpmxzOP2IuqQDaW6gO9xyEDkHBmCYoo0hGG/vsyQAjYHcqRPZ8vwTtCCYb6mPhsGs25FE6XAIWD8LN/xposJ7lSdiA5AhGbrZYDOqzN0eWICd/7Ei/OJgWcDEAPoJoTc3/9209ApJdQTvkm0AnQnBxOHBMzis82HlhXZbiKdhx0hQtd+tg5GvSiSeXfa+PjwJNINC9vYkawf6gX+CvR00RBZ9HN/ZO2rlJIzbNwGUW+0ZQKPK9E7+we5azIW3Vdaf2rKrAq8N81wVW/cEE0o4x4cVkiuQwTRc4X5e5t5xpEURa26fVqJ9YuxcAfgMY3twOo5oNfn57cs0/jePuX+t2lfD4YMPk9Okd+nRGKPbhb5EQhcm7JQRoY8XLrlI8+8yFoOwKMYSo5gNL7i1jFW5pDALoQADT1/TJFcevk02hVuZ2b8MVE24uRkGxautbeWsKqHalasw1YIjg5eQiZBjEOKhjwBOCAfCo9Q6VlvWZNMfa6N8+SHYPxw13ty7/8S18EBQwmqj7ujWYlbIupRUOVo07hX4ZD+PmizAcndAGB0B9uYPJkaEAsaCeOwqpm4dR4UzwkYLA5/NNst1glp5wHX41UUCJQSwE33NBFgyDAXy2cbbPdB+VkArlzOXu9j+H8697Nftv6LEpqw6PIRmFQ27AYWUDXUjJGQ0yUCdWk+7zVJugUYGsbaxw7CXNTpWW3aCwwizeZ+
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(346002)(396003)(39860400002)(376002)(136003)(230173577357003)(230273577357003)(230922051799003)(82310400011)(186009)(64100799003)(451199024)(1800799012)(40470700004)(46966006)(36840700001)(70206006)(110136005)(41300700001)(316002)(70586007)(82740400003)(478600001)(6666004)(356005)(86362001)(40460700003)(81166007)(40480700001)(36756003)(2616005)(336012)(1076003)(26005)(426003)(44832011)(2906002)(36860700001)(5660300002)(921011)(47076005)(8676002)(8936002)(83380400001)(83996005)(36900700001)(2101003);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jan 2024 02:54:05.8558
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1e32c268-01e2-4c48-a3c6-08dc1c87bac1
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SN1PEPF0002636C.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4938
 
-Hello,
+ZynqMP DPSUB supports 2 input modes: DMA based and live video.
 
-syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-memory leak in corrupted
+In the first mode, the driver implements CRTC and DP encoder DRM bridge
+to model the complete display pipeline. In this case, DRM bridge is
+being directly instantiated within the driver, not using any bridge
+discovery mechanisms.
 
-BUG: memory leak
-unreferenced object 0xffff88810e94a000 (size 8192):
-  comm "syz-executor.4", pid 5915, jiffies 4294946150
-  hex dump (first 32 bytes):
-    00 a0 94 0e 81 88 ff ff 00 a0 94 0e 81 88 ff ff  ................
-    00 00 00 00 00 00 00 00 00 00 70 10 81 88 ff ff  ..........p.....
-  backtrace (crc 77c14305):
-    [<ffffffff815fa713>] kmemleak_alloc_recursive include/linux/kmemleak.h:42 [inline]
-    [<ffffffff815fa713>] slab_post_alloc_hook mm/slub.c:3817 [inline]
-    [<ffffffff815fa713>] slab_alloc_node mm/slub.c:3860 [inline]
-    [<ffffffff815fa713>] kmalloc_trace+0x283/0x330 mm/slub.c:4007
-    [<ffffffff845842c9>] kmalloc include/linux/slab.h:590 [inline]
-    [<ffffffff845842c9>] kzalloc include/linux/slab.h:711 [inline]
-    [<ffffffff845842c9>] j1939_priv_create net/can/j1939/main.c:135 [inline]
-    [<ffffffff845842c9>] j1939_netdev_start+0x159/0x6f0 net/can/j1939/main.c:272
-    [<ffffffff84585f2e>] j1939_sk_bind+0x21e/0x550 net/can/j1939/socket.c:486
-    [<ffffffff83f04a8c>] __sys_bind+0x11c/0x130 net/socket.c:1847
-    [<ffffffff83f04abc>] __do_sys_bind net/socket.c:1858 [inline]
-    [<ffffffff83f04abc>] __se_sys_bind net/socket.c:1856 [inline]
-    [<ffffffff83f04abc>] __x64_sys_bind+0x1c/0x20 net/socket.c:1856
-    [<ffffffff84bc08c0>] do_syscall_x64 arch/x86/entry/common.c:52 [inline]
-    [<ffffffff84bc08c0>] do_syscall_64+0x50/0x140 arch/x86/entry/common.c:83
-    [<ffffffff84c0008b>] entry_SYSCALL_64_after_hwframe+0x63/0x6b
+In the live video input mode video signal is generated by FPGA fabric
+and passed into DPSUB over the connected bus. In this mode driver
+exposes the DP encoder as a DRM bridge, expecting external CRTC to
+discover it via drm_of_find_panel_or_bridge() or a similar call. This
+discovery relies on drm_bridge.of_node being properly set.
 
-BUG: memory leak
-unreferenced object 0xffff888122f26000 (size 8192):
-  comm "syz-executor.1", pid 5923, jiffies 4294946164
-  hex dump (first 32 bytes):
-    00 60 f2 22 81 88 ff ff 00 60 f2 22 81 88 ff ff  .`.".....`."....
-    00 00 00 00 00 00 00 00 00 80 60 10 81 88 ff ff  ..........`.....
-  backtrace (crc c2cb0355):
-    [<ffffffff815fa713>] kmemleak_alloc_recursive include/linux/kmemleak.h:42 [inline]
-    [<ffffffff815fa713>] slab_post_alloc_hook mm/slub.c:3817 [inline]
-    [<ffffffff815fa713>] slab_alloc_node mm/slub.c:3860 [inline]
-    [<ffffffff815fa713>] kmalloc_trace+0x283/0x330 mm/slub.c:4007
-    [<ffffffff845842c9>] kmalloc include/linux/slab.h:590 [inline]
-    [<ffffffff845842c9>] kzalloc include/linux/slab.h:711 [inline]
-    [<ffffffff845842c9>] j1939_priv_create net/can/j1939/main.c:135 [inline]
-    [<ffffffff845842c9>] j1939_netdev_start+0x159/0x6f0 net/can/j1939/main.c:272
-    [<ffffffff84585f2e>] j1939_sk_bind+0x21e/0x550 net/can/j1939/socket.c:486
-    [<ffffffff83f04a8c>] __sys_bind+0x11c/0x130 net/socket.c:1847
-    [<ffffffff83f04abc>] __do_sys_bind net/socket.c:1858 [inline]
-    [<ffffffff83f04abc>] __se_sys_bind net/socket.c:1856 [inline]
-    [<ffffffff83f04abc>] __x64_sys_bind+0x1c/0x20 net/socket.c:1856
-    [<ffffffff84bc08c0>] do_syscall_x64 arch/x86/entry/common.c:52 [inline]
-    [<ffffffff84bc08c0>] do_syscall_64+0x50/0x140 arch/x86/entry/common.c:83
-    [<ffffffff84c0008b>] entry_SYSCALL_64_after_hwframe+0x63/0x6b
+Assign device OF node to the bridge prior to registering it. This will
+make said bridge discoverable by an external CRTC driver.
 
-BUG: memory leak
-unreferenced object 0xffff888122c06700 (size 240):
-  comm "softirq", pid 0, jiffies 4294946164
-  hex dump (first 32 bytes):
-    68 42 2f 22 81 88 ff ff 68 42 2f 22 81 88 ff ff  hB/"....hB/"....
-    00 80 60 10 81 88 ff ff 00 00 00 00 00 00 00 00  ..`.............
-  backtrace (crc 205e59a3):
-    [<ffffffff815f9bba>] kmemleak_alloc_recursive include/linux/kmemleak.h:42 [inline]
-    [<ffffffff815f9bba>] slab_post_alloc_hook mm/slub.c:3817 [inline]
-    [<ffffffff815f9bba>] slab_alloc_node mm/slub.c:3860 [inline]
-    [<ffffffff815f9bba>] kmem_cache_alloc_node+0x28a/0x330 mm/slub.c:3903
-    [<ffffffff83f1844f>] __alloc_skb+0x1ef/0x230 net/core/skbuff.c:641
-    [<ffffffff8458ceea>] alloc_skb include/linux/skbuff.h:1296 [inline]
-    [<ffffffff8458ceea>] j1939_session_fresh_new net/can/j1939/transport.c:1536 [inline]
-    [<ffffffff8458ceea>] j1939_xtp_rx_rts_session_new net/can/j1939/transport.c:1634 [inline]
-    [<ffffffff8458ceea>] j1939_xtp_rx_rts+0x4ba/0xa70 net/can/j1939/transport.c:1738
-    [<ffffffff8458d9d5>] j1939_tp_cmd_recv net/can/j1939/transport.c:2063 [inline]
-    [<ffffffff8458d9d5>] j1939_tp_recv+0x1b5/0x7f0 net/can/j1939/transport.c:2150
-    [<ffffffff84583e99>] j1939_can_recv+0x349/0x4e0 net/can/j1939/main.c:112
-    [<ffffffff845748e4>] deliver net/can/af_can.c:572 [inline]
-    [<ffffffff845748e4>] can_rcv_filter+0xd4/0x290 net/can/af_can.c:606
-    [<ffffffff84574fa0>] can_receive+0xf0/0x140 net/can/af_can.c:663
-    [<ffffffff845750e0>] can_rcv+0xf0/0x130 net/can/af_can.c:687
-    [<ffffffff83f50e66>] __netif_receive_skb_one_core+0x66/0x90 net/core/dev.c:5534
-    [<ffffffff83f50edd>] __netif_receive_skb+0x1d/0x90 net/core/dev.c:5648
-    [<ffffffff83f5123c>] process_backlog+0xbc/0x190 net/core/dev.c:5976
-    [<ffffffff83f523ce>] __napi_poll+0x3e/0x310 net/core/dev.c:6576
-    [<ffffffff83f52de8>] napi_poll net/core/dev.c:6645 [inline]
-    [<ffffffff83f52de8>] net_rx_action+0x3d8/0x510 net/core/dev.c:6778
-    [<ffffffff84bde94d>] __do_softirq+0xbd/0x2b0 kernel/softirq.c:553
+Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-BUG: memory leak
-unreferenced object 0xffff8881231e0000 (size 131072):
-  comm "softirq", pid 0, jiffies 4294946164
-  hex dump (first 32 bytes):
-    0e 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-  backtrace (crc f7abe560):
-    [<ffffffff815f315e>] __kmalloc_large_node+0xde/0x150 mm/slub.c:3935
-    [<ffffffff815f8faf>] __do_kmalloc_node mm/slub.c:3969 [inline]
-    [<ffffffff815f8faf>] __kmalloc_node_track_caller+0x35f/0x420 mm/slub.c:4001
-    [<ffffffff83f146a6>] kmalloc_reserve+0x96/0x170 net/core/skbuff.c:582
-    [<ffffffff83f18335>] __alloc_skb+0xd5/0x230 net/core/skbuff.c:651
-    [<ffffffff8458ceea>] alloc_skb include/linux/skbuff.h:1296 [inline]
-    [<ffffffff8458ceea>] j1939_session_fresh_new net/can/j1939/transport.c:1536 [inline]
-    [<ffffffff8458ceea>] j1939_xtp_rx_rts_session_new net/can/j1939/transport.c:1634 [inline]
-    [<ffffffff8458ceea>] j1939_xtp_rx_rts+0x4ba/0xa70 net/can/j1939/transport.c:1738
-    [<ffffffff8458d9d5>] j1939_tp_cmd_recv net/can/j1939/transport.c:2063 [inline]
-    [<ffffffff8458d9d5>] j1939_tp_recv+0x1b5/0x7f0 net/can/j1939/transport.c:2150
-    [<ffffffff84583e99>] j1939_can_recv+0x349/0x4e0 net/can/j1939/main.c:112
-    [<ffffffff845748e4>] deliver net/can/af_can.c:572 [inline]
-    [<ffffffff845748e4>] can_rcv_filter+0xd4/0x290 net/can/af_can.c:606
-    [<ffffffff84574fa0>] can_receive+0xf0/0x140 net/can/af_can.c:663
-    [<ffffffff845750e0>] can_rcv+0xf0/0x130 net/can/af_can.c:687
-    [<ffffffff83f50e66>] __netif_receive_skb_one_core+0x66/0x90 net/core/dev.c:5534
-    [<ffffffff83f50edd>] __netif_receive_skb+0x1d/0x90 net/core/dev.c:5648
-    [<ffffffff83f5123c>] process_backlog+0xbc/0x190 net/core/dev.c:5976
-    [<ffffffff83f523ce>] __napi_poll+0x3e/0x310 net/core/dev.c:6576
-    [<ffffffff83f52de8>] napi_poll net/core/dev.c:6645 [inline]
-    [<ffffffff83f52de8>] net_rx_action+0x3d8/0x510 net/core/dev.c:6778
-    [<ffffffff84bde94d>] __do_softirq+0xbd/0x2b0 kernel/softirq.c:553
+Signed-off-by: Anatoliy Klymenko <anatoliy.klymenko@amd.com>
+---
+ drivers/gpu/drm/xlnx/zynqmp_dp.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-
-
-Tested on:
-
-commit:         615d3006 Merge tag 'trace-v6.8-rc1' of git://git.kerne..
-git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-console output: https://syzkaller.appspot.com/x/log.txt?x=100e8b3be80000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=9f6b64adeddd3dbc
-dashboard link: https://syzkaller.appspot.com/bug?extid=1d37bef05da87b99c5a6
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=17d2a6f7e80000
+diff --git a/drivers/gpu/drm/xlnx/zynqmp_dp.c b/drivers/gpu/drm/xlnx/zynqmp_dp.c
+index a0606fab0e22..d60b7431603f 100644
+--- a/drivers/gpu/drm/xlnx/zynqmp_dp.c
++++ b/drivers/gpu/drm/xlnx/zynqmp_dp.c
+@@ -1721,6 +1721,7 @@ int zynqmp_dp_probe(struct zynqmp_dpsub *dpsub)
+ 	bridge->ops = DRM_BRIDGE_OP_DETECT | DRM_BRIDGE_OP_EDID
+ 		    | DRM_BRIDGE_OP_HPD;
+ 	bridge->type = DRM_MODE_CONNECTOR_DisplayPort;
++	bridge->of_node = dp->dev->of_node;
+ 	dpsub->bridge = bridge;
+ 
+ 	/*
+-- 
+2.25.1
 
