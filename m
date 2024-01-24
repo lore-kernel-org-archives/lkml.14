@@ -1,141 +1,76 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC7657CF03;
-	Wed, 24 Jan 2024 16:16:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D9557CF03;
+	Wed, 24 Jan 2024 16:17:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706112978; cv=none; b=n0iReUBG/HFwW5ZXTxtX9wcMq3QVuArw1UtkjqiCmMGDzx4UvS29W8yf7AoOur/9/QMygpheUQ1EuzQ4uuyRBg3ANF5K3zyeE71QPcwOrnqHWC0zC3EIiQBjdzy8HPOl1WnvSP1x2uqTVTxEHW+G/yz2aowK8v716orVoo9zmGg=
+	t=1706113041; cv=none; b=nkva5FqsHOYhOUy/BV+/9MzYS8VYbVP5fTy97gf4b7B/aMcO4ocwxjCPzaePHXDcMElnhaeOJygRIs4LWC/k+U1M3VjoyFPCD1UgieGJbqDgdiX1Y0DqcGk3LjrjUzREQp/tFl4rgz6+v1mLmlFnDH2ogcPN/3gMitV3treV8ZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706112978; c=relaxed/simple;
-	bh=/Y+fj7oNVpD22CS0LwKmfcpc8EY7p2jBwyx6uzCSGuQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=snC3OmL0tTLzFhO5YlUI5fGCzFoA0FjbLOOV1pT9Oed1a7DqHkSDcOHfyQb23HSTSb+hikIPpP0J5wWn/prfuX1JmJRBBv2COvQvMsEhZcEDUwckb3g2NfSNBB2X4FU/7Zu249/vELyZdMujyXoSxMCV22YMKmdHL17nHcY/5Zc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D9Q8tohb; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D9Q8tohb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 565D9C433C7;
-	Wed, 24 Jan 2024 16:16:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706112978;
-	bh=/Y+fj7oNVpD22CS0LwKmfcpc8EY7p2jBwyx6uzCSGuQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=D9Q8tohbTthid5ztVhtaVxbxx3yvOdQKUGlWCsQJ/OuscgR3JRyNUUgeUaVE2oOuk
-	 +bJVlq2yiLjhBKHSNVcXFz1p7rVrs3/FvBxevhML7MgFgKsXtg0iHtDEkZ6yaEpLiY
-	 ysVuXtpPNV5eia0sqv3dN3o73bDlp2nNQWehBv20mhQa83AObgUirj5+zeBUGltVg0
-	 W7UHH0Bv8RvzuXR7iLqdQr6enjKqzeg/mYv2oNIHLgjTPODb94VCj8PGhUz04N3aJV
-	 T/ZGpK2RsIP4TuFd3N93fvhybWUxff+jgO5y9dtJZ357UV0iMFdA9GmufN3kFRvuDb
-	 f57vFsuz2SbNA==
-Date: Wed, 24 Jan 2024 16:16:12 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Michal Simek <michal.simek@amd.com>
-Cc: linux-kernel@vger.kernel.org, monstr@monstr.eu, michal.simek@xilinx.com,
-	git@xilinx.com, Conor Dooley <conor+dt@kernel.org>,
-	Krishna Potthuri <sai.krishna.potthuri@amd.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Sai Krishna Potthuri <lakshmi.sai.krishna.potthuri@xilinx.com>,
-	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
-	"moderated list:ARM/ZYNQ ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>,
-	"open list:PIN CONTROL SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Subject: Re: [PATCH] dt-bindings: pinctr: pinctrl-zynq: Fix compatible string
-Message-ID: <20240124-frolic-onyx-56bd63791aca@spud>
-References: <c1307a4dd5e30290acacc786cb2170deb9eaa539.1706087258.git.michal.simek@amd.com>
+	s=arc-20240116; t=1706113041; c=relaxed/simple;
+	bh=+Bdszo43BcEN1DaJmlTgTYQHqv7S0WaelZBt5xQMMkk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=OYsOldU5Y7Lui+84/d78E3/42PUM9oP3EAUZlWs/viySsfXZLeR2OkIQ31lK739YxbWASsTAgxGRsLGL6I6IVlpkkThtEC4IKCFipQv0p8HHfu5IMaTQ8KXQr/FDArTDnEVuIVw1hKpvX6HVSVdySH5AXkrSIt0f0IUJ2F4GDpI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=acm.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=acm.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1d71cb97937so35391665ad.3;
+        Wed, 24 Jan 2024 08:17:20 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706113040; x=1706717840;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=+Bdszo43BcEN1DaJmlTgTYQHqv7S0WaelZBt5xQMMkk=;
+        b=LQPlerVEU/Z/il4ETbt/YPKvr2U9deooywEryFeaedP5WUbUsj/ZwnhANpYhhmDnZ/
+         xlSLog0836bnZK0bsNBM8CucZNk5wVYGpCfu4MRKQB2szOJkJhX0VAa1F6FTOfukM33g
+         hy/nvoJq7U+sO4QhEbF9ZDza3ntK/cvTp5QMuSj38lklAndhKiqs8jE1Y+rI1UYEqbMz
+         HPG09o6NxSBlBoXQE28oSdpIt+VhzaIbAUvosRGnletuQug1r4x5S7bTJBIW8Coy87uY
+         E0Dz6lVGB9WZp7zdDdcV2lvU6OIYT0XSBYph+JYFgfnH5h61c76aGc1PCTtatNrFErqh
+         3rew==
+X-Gm-Message-State: AOJu0Yz1tPza+EUtj6zS5/9RVu5JMOw2L7qhVBvCwgrIlvHLR9YzGWUT
+	4u7NvFwVT9c1jwlpj69c15lRpa7iA2XJJUoMbrFlIxUXnyTd15xn
+X-Google-Smtp-Source: AGHT+IHzXI4gTNMTprrybtMnYNEdZMgcb7EzH7OPaLzl3Mu0L6JmbLJygZk48DrcvYjzZoRbZqrPgg==
+X-Received: by 2002:a17:903:41c6:b0:1d7:55c7:e5c with SMTP id u6-20020a17090341c600b001d755c70e5cmr720214ple.25.1706113039707;
+        Wed, 24 Jan 2024 08:17:19 -0800 (PST)
+Received: from [192.168.51.14] (c-73-231-117-72.hsd1.ca.comcast.net. [73.231.117.72])
+        by smtp.gmail.com with ESMTPSA id y4-20020a170902d64400b001d7465c213bsm5767988plh.197.2024.01.24.08.17.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 24 Jan 2024 08:17:19 -0800 (PST)
+Message-ID: <92463403-ea32-4545-a466-21243cd454e2@acm.org>
+Date: Wed, 24 Jan 2024 08:17:16 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="2FhCrXjjKDsJhluq"
-Content-Disposition: inline
-In-Reply-To: <c1307a4dd5e30290acacc786cb2170deb9eaa539.1706087258.git.michal.simek@amd.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] scsi: ufs: core: Remove the ufshcd_release in
+ ufshcd_err_handling_prepare
+Content-Language: en-US
+To: hoyoung seo <hy50.seo@samsung.com>, linux-scsi@vger.kernel.org,
+ linux-kernel@vger.kernel.org, alim.akhtar@samsung.com, avri.altman@wdc.com,
+ jejb@linux.ibm.com, martin.petersen@oracle.com, beanhuo@micron.com,
+ kwangwon.min@samsung.com, kwmad.kim@samsung.com, sh425.lee@samsung.com,
+ sc.suh@samsung.com, quic_nguyenb@quicinc.com, cpgs@samsung.com,
+ grant.jung@samsung.com, junwoo80.lee@samsung.com
+References: <CGME20240122083204epcas2p26a1bca522e201972ca072e0b24d23a52@epcas2p2.samsung.com>
+ <20240122083324.11797-1-hy50.seo@samsung.com>
+ <06e0ae57-f567-4b90-ad68-4ae73909c29e@acm.org>
+ <017501da4da5$405e5ec0$c11b1c40$@samsung.com>
+From: Bart Van Assche <bvanassche@acm.org>
+In-Reply-To: <017501da4da5$405e5ec0$c11b1c40$@samsung.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
+On 1/22/24 18:38, hoyoung seo wrote:
+> When err_handler is completed, active_reqs becomes negative because
+> ufshcd_release() is called again in ufshcd_err_handling_unprepare().
+> I tested it while printing the log, and if I misanalyzed it, let me know.
 
---2FhCrXjjKDsJhluq
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Jan 24, 2024 at 10:07:46AM +0100, Michal Simek wrote:
-> Compatible string doesn't really match with compatible string listed in t=
-he
-> driver itself. While binding was converted from txt to yaml
-> xlnx,zynq-pinctrl was listed as compatible string but example was using
-> xlnx,pinctrl-zynq and also this string is used in all DTSes.
-> xlnx,zynq-pinctrl is used only in dt binding and not present in any DT
-> which is stable for quite a long time that's why use old compatible string
-> and update binding document instead of starting to use unused compatible
-> string.
->=20
-> Fixes: 153df45acda0 ("dt-bindings: pinctrl: pinctrl-zynq: Convert to yaml=
-")
-> Signed-off-by: Michal Simek <michal.simek@amd.com>
-
-I assume that U-Boot etc all use the "incorrect" compatible as was in
-the example? If they do, then the patch seems good to me.
+Please repeat your analysis. I think this patch is wrong.
 
 Thanks,
-Conor.
 
-> ---
->=20
->  .../{xlnx,zynq-pinctrl.yaml =3D> xlnx,pinctrl-zynq.yaml}      | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->  rename Documentation/devicetree/bindings/pinctrl/{xlnx,zynq-pinctrl.yaml=
- =3D> xlnx,pinctrl-zynq.yaml} (98%)
->=20
-> diff --git a/Documentation/devicetree/bindings/pinctrl/xlnx,zynq-pinctrl.=
-yaml b/Documentation/devicetree/bindings/pinctrl/xlnx,pinctrl-zynq.yaml
-> similarity index 98%
-> rename from Documentation/devicetree/bindings/pinctrl/xlnx,zynq-pinctrl.y=
-aml
-> rename to Documentation/devicetree/bindings/pinctrl/xlnx,pinctrl-zynq.yaml
-> index d2676f92ef5b..de6c10ba36c4 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/xlnx,zynq-pinctrl.yaml
-> +++ b/Documentation/devicetree/bindings/pinctrl/xlnx,pinctrl-zynq.yaml
-> @@ -1,7 +1,7 @@
->  # SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
->  %YAML 1.2
->  ---
-> -$id: http://devicetree.org/schemas/pinctrl/xlnx,zynq-pinctrl.yaml#
-> +$id: http://devicetree.org/schemas/pinctrl/xlnx,pinctrl-zynq.yaml#
->  $schema: http://devicetree.org/meta-schemas/core.yaml#
-> =20
->  title: Xilinx Zynq Pinctrl
-> @@ -28,7 +28,7 @@ description: |
-> =20
->  properties:
->    compatible:
-> -    const: xlnx,zynq-pinctrl
-> +    const: xlnx,pinctrl-zynq
-> =20
->    reg:
->      description: Specifies the base address and size of the SLCR space.
-> @@ -181,7 +181,7 @@ examples:
->    - |
->      #include <dt-bindings/pinctrl/pinctrl-zynq.h>
->      pinctrl0: pinctrl@700 {
-> -       compatible =3D "xlnx,zynq-pinctrl";
-> +       compatible =3D "xlnx,pinctrl-zynq";
->         reg =3D <0x700 0x200>;
->         syscon =3D <&slcr>;
-> =20
-> --=20
-> 2.36.1
->=20
-
---2FhCrXjjKDsJhluq
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHQEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZbE3zAAKCRB4tDGHoIJi
-0sPzAQCNRelXi/3uPTNzp0NMcUDp2hCNDXY/Zz1AqGOkW9F1fQD3bklsW3G6KflA
-U0OhD68HpwMBn+rmyCVmS5flpbfqBQ==
-=9BWH
------END PGP SIGNATURE-----
-
---2FhCrXjjKDsJhluq--
+Bart.
