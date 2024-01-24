@@ -1,157 +1,159 @@
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2064.outbound.protection.outlook.com [40.107.100.64])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C7C07A708
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 15:43:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.64
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706110998; cv=fail; b=iDCyNVNnUQMAk9aSvh5vjoVgLUnvZDe7HBsO/Xzkh6k+ga35Gvmf3oBifRIERR1RJYUfI8hiIZIkv6zDQ5x+6BAGQGBEq1VO/LlYAW5AfSkutNQP/uJC5WqdSoq0oyxqNLD6e0209PSuknnT50geXrCkmDirq76mtUM+uLtmBPc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706110998; c=relaxed/simple;
-	bh=usKaRL0p8w8Q2g5InLJV/pejuQVpzrIt0DWMieH0pGo=;
-	h=Message-ID:Date:Subject:To:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=Ykb5S9Xp4us5WQL+ai8sHASP5fljDXWnlJfYNbSURTlJxV5svqBMTkQYUAlB4j0V3NNWY3922om3pIToxiDyPLh6x0P++Eevoe9xzHn1egMzAz5XKDeBx1WxsVBIJyTjpCL0hCwO4ddtMgclxvF0HT8+t23jeorIu6gdJNbeQIc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=IZU4FLg/; arc=fail smtp.client-ip=40.107.100.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="IZU4FLg/"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XHmwVK05WXgy8Lh9FlXSoJmL1FVCivTMo8TJicI4YoUMVe3/BfPVkJFnB67UJTkNQ/9Ed6VEP0voVZu3qqXmkv5Uw+C9BlpfdNK8SUjzMEpVYtp7pY6TZToviJpO1kqdpNMIU6a+HzT1cl7MlyL7gJpwgRDZq7EvrOt0BwbrwSjQr/55/ut513BbgC2M5Ib+J75M1ZPxPQ+xhnbC9+aIgup6sTT3lNadeu7qSS/a/QI2JIifQZkGdKWH0uVmBxUNRt3DrhFwcYhFuxKCJmk42QHLVc58qPkEvUfChgOMdObWibLi4JIdzChgv8bjsR0NjIk4Oo66HOonOU8lMlepqg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=DEBMLzVEW9gnAACPL3twQBipvAdh7Si4lMtRNqj8l6Q=;
- b=EzZhjId8F9a1vsoQ8gPJSlAntqs+5B/q4adZ48qOHbkayLWQh0iy43UpBz6FjUjkrPUCjfMQDD2tcC9xDHxWa6/U/0LFPdR+UU6iYrWeBwohSLSY6S7pFeszd4ltDFmohUgPTa0r6LQE6Ex5EtxdO6t8kmUncHocSJoS8J/BFI3WPH8Qfj/5FWYT3kHjQ4LEfyjk8c1Lp0f5NZYnZWDTevfvC0AtWHqfQwc5LSGHv7cZrehQZnkCClIEUZZ1Ekn99LgYFEDxAhrX751dAmeuanrk7gBiXsCo7shskDrwOI5j5G/vGB3WtC6FAG9lDdTeqo9aQJi+Wbm+u63xVfbBOg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DEBMLzVEW9gnAACPL3twQBipvAdh7Si4lMtRNqj8l6Q=;
- b=IZU4FLg/sr8G3RAJbDVnFxcAWWgXLrqAKbcOM8rJJqaU6Zz/2YtecmjFR9b59A0piIDer7f9iA6iomWB0lcFkqj2nGm98jW5SulraaC+juEO32bfjnlM2uy+llAezVbpRxH+isQV53rijHchVytmgDDC9SB6W+8IXbXJjW8BoiU=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by DM6PR12MB4928.namprd12.prod.outlook.com (2603:10b6:5:1b8::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.24; Wed, 24 Jan
- 2024 15:43:13 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::ce8d:7121:cb06:91ba]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::ce8d:7121:cb06:91ba%4]) with mapi id 15.20.7202.039; Wed, 24 Jan 2024
- 15:43:12 +0000
-Message-ID: <3669170a-f04b-4f7e-ad16-b62c20ee5838@amd.com>
-Date: Wed, 24 Jan 2024 09:43:09 -0600
-User-Agent: Mozilla Thunderbird
-Subject: Re: regression/bisected/6.8 commit
- f7fe64ad0f22ff034f8ebcfbd7299ee9cc9b57d7 leads to GPU hang when I open GNOME
- activities
-To: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>, matthew.brost@intel.com,
- ltuikov89@gmail.com, Alex Deucher <alexdeucher@gmail.com>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>,
- dri-devel <dri-devel@lists.freedesktop.org>,
- amd-gfx list <amd-gfx@lists.freedesktop.org>,
- Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
-References: <CABXGCsM2VLs489CH-vF-1539-s3in37=bwuOWtoeeE+q26zE+Q@mail.gmail.com>
- <CABXGCsNz_B+OFBcp=fuC+Kzd-PN+dNM+z=x9e=ePVN5RiahD3g@mail.gmail.com>
-Content-Language: en-US
-From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <CABXGCsNz_B+OFBcp=fuC+Kzd-PN+dNM+z=x9e=ePVN5RiahD3g@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SA1P222CA0074.NAMP222.PROD.OUTLOOK.COM
- (2603:10b6:806:2c1::20) To MN0PR12MB6101.namprd12.prod.outlook.com
- (2603:10b6:208:3cb::10)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3997B43154;
+	Wed, 24 Jan 2024 15:44:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706111089; cv=none; b=KiW5zOHO3vUOAIJlHw7oMhUlTrFJZNYZRoCgwTrExfGofCJwJyT38vkCOeWENVgBpcFFJ5NOfnX62PVkxt3st374xyaHbHWfjBLvifrFRr7IVps998JQtbL0tfh8eoN4YQ5vhwyBf9DrLZDwHeYlMwLeOmnheLF0Ikcnd8z+ut0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706111089; c=relaxed/simple;
+	bh=xXU+SmS5rXnzSe8RPZ7/n8+45OblHnQVcz7krecSA54=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QVz/J7VIf77G96JsiTdUzCTLaqF0BnVClDYUJKEVe2tVLxla4ElOC6m26GUCY7pahQAnK/YeGdwXBVuvK3D2k20b12rolwD98KtbMk4yduSg51tFphUZOd3QLfRMDP/8oou9803wtKQqOV2/X4QYf3Gp5KYfzinKroJB5Kmpblc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94EFFC433C7;
+	Wed, 24 Jan 2024 15:44:47 +0000 (UTC)
+Message-ID: <7f40af24-79a8-466c-8906-7104988124fb@xs4all.nl>
+Date: Wed, 24 Jan 2024 16:44:45 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|DM6PR12MB4928:EE_
-X-MS-Office365-Filtering-Correlation-Id: b1994cc0-3b00-4536-cd60-08dc1cf32bde
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	xlyYLjjLqzLeKejgX61qj7uQnR7FgBgQ9g8CxL+XJLOzMePoPXxuIqZ7lQpwj9e00h3SeZChST1JPx2kFArz5ZA5gjtYOZdVlokn6Gb9Ll6XqeaIk/IqzQSKs+n4nvx/j0CqfMFkaXGsbvxODen2XqhqE3TAdO8omxEhPmANIOlm+iuFYtrwRKR0lpcxHitBoySU5Et/hvPc4zAXPwTVxEUiMLSzznulxqM++t1cDJt3GHW7bZP8gglFIL4VnB2ZHhbmK74TpMcOdNNKLpOnq4ts7VHebUe/P3xZuh2hN37MabOPu1SeNxa2y145JR1lRjj82Oeh8XDFyMPBXSoQIQznVfj4aHdxfphOYsqZrapbSDWJeDTvuSX/4SM3+K8xyEZ6d7qSo3Q4gQTf7o7kRtdyN/o8F09gcN5KSQH7gQWeopStSlkFfNuwDuvtK/0q7rt+1936ThSy37140d+TWYRmt5Bc/uUrKrp+Md1GYxTzW8N5D/35mIGXcpjY6WYGCXkH8pH+REiENBuP5YEMDTLM2EF3UzUZLCrshWskL3SQrgMCgSZo1SGO7IzvjEeueqIOTU8lGj48HwEdIbG8RtBfMGYgos4RtOyir4noaNCCtRJkTm2immIxt2HkXVAE
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(39860400002)(346002)(376002)(366004)(396003)(230922051799003)(451199024)(64100799003)(1800799012)(186009)(66946007)(66556008)(66476007)(110136005)(316002)(6512007)(6506007)(53546011)(2616005)(41300700001)(26005)(478600001)(86362001)(6486002)(966005)(36756003)(31696002)(38100700002)(83380400001)(6666004)(8936002)(4744005)(31686004)(2906002)(5660300002)(44832011)(8676002)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?SnFMV2tYQ3llV0pJUDNsamhqYmUzKzRONFF6WTgxUStsaktsQzd6a28yOTFH?=
- =?utf-8?B?blFBREEwZHpMVTJSaFRZcG5RaDlNUjdOWnJERTRFeDZEZUtSL2ozNUlJeHZI?=
- =?utf-8?B?aFpsTitsU1pQbHl6TVV0d05QN2RMTnJBZHllZEdTeFU0NTZ5blhwUSthOHBp?=
- =?utf-8?B?T0l0Y3BIS05JckZoN2UvMEplbjR5UHMvNklXMmNKMjkvV2tWeXhqeTFTbjlu?=
- =?utf-8?B?VTRwcWlGYXRPOXRUWGhTL2EydlFpZERvbFVXcWhIVmE4RC9MbEtjRU1vUUNU?=
- =?utf-8?B?SGFIWnoyVDQwQy9iZGFXR2V0VCtPOGtyeklvMHdLelh2TVl1bmxtaGM5c0hD?=
- =?utf-8?B?Ky8yNWJ4T2ZxU2d3d25sc3luY0F5aEc2TncvdEwzTlRqekVPVDR4Zy9QdmFr?=
- =?utf-8?B?M0hzKzlEVkM2bGVoVXdCU0I5MEZJcTYxK2VMOUFXNDVaNTFEN1V5UVc4eW1E?=
- =?utf-8?B?Q3lLVFloUXdzTDZ5UmYyWS9aN2ZOVlNKM29pZjlQUEpFSG5uRmUyR09kc1NX?=
- =?utf-8?B?ZmlZTUJMWTVocERzaXkvRDJ3dTZmUGVxOVhYSUQ1Q2ZZZTNLZlhrZEs0cEZH?=
- =?utf-8?B?UWRIdm5RUk9BNXZLc1pNZzZHZnRZYlYzRlRjMjdqZE5WT3ZsRHFqcUxRek5W?=
- =?utf-8?B?WFN5MTE1aVdYcHB5bHBCZ0FSeXdZZHZjc2NxWENtUk01bnBJTnV6ZE9ULzFu?=
- =?utf-8?B?RVQzNTcydlBBT2FnMjl3RzB0cEEwRUZGaU1SaFB2TzNqR0Z1VXg4a2xrYkZR?=
- =?utf-8?B?MXdOODNtaTBxQWU5V1BYMjJna2t0M0R0MjVVWkwvR1pWczZIRmlEWDlNb01j?=
- =?utf-8?B?MU9VU2p4cVU1VnJHWEpvNFB4UHBiYTFobHN2RnlYa3Npb1R0bWZQMXBFaDVO?=
- =?utf-8?B?Ni9WK1lZSUZuZDRldWgrMjFmWnRNVFV2TndkTUJqL1R1WFgxT1RtUm9odDdm?=
- =?utf-8?B?cWY0Z2JXdkg4Ky85ZGwxYjJsUzVIOVJpZzFiYmc0bUVzbDhZYzVSeEJwQnhV?=
- =?utf-8?B?SVZ5emh1bU9aUHdiWHhPWFVCZ0xPYWkwZ3dGenNwOUJkTllmNnZPREZqUjlK?=
- =?utf-8?B?NVJMNm91Qnl6Qmp3WFI3M2dCZEpxQ0RwOHZEdVFldThlQi96T2hqanRGS3dM?=
- =?utf-8?B?cVdVNWhqazV2L050MXVQTHdZZWRqOTk3QVM0NnVTRFlGTlZNeExGM1A4S2RI?=
- =?utf-8?B?WmRFYnJLd0NRLzcwZE9KRUlmUFRwbThJeW1mQ05KQjVuVEx3Vm52RWMvejYr?=
- =?utf-8?B?dGV6c0c1WjJtY1NHci9YMGloOS9wUXU3Z05kVjM0QXU4alIrclNGcUx0dUs2?=
- =?utf-8?B?Y1NJckQrRFF0ak9hNlZJRHp0WERKTE5ib3I1d1NiSjhQbmpvdWNvUWFjdWpC?=
- =?utf-8?B?cUFUTFRvNlRLUUEyZDlyNUltYTNvbkRMWnpBWkVxakFMT1lrbEhiQjBFOFg5?=
- =?utf-8?B?dWVUUUtSdmVmV1dtalUzYUNRNmVma3E3NkQxSUpVWTJ6RFpOR1p0T0pCOU5E?=
- =?utf-8?B?QjdMQ1h0NVIvT3pLc2VjZEVTRUNRV3ZzTFlzeTZldzZkWGxVQkxDSThNK3Qz?=
- =?utf-8?B?MHhlZEhSSmw5Zm5GMUJRNURCN2VSYkRIWDBRSHRQNERRZXMyK0F6L1NwTkIy?=
- =?utf-8?B?NmQxemtkMklLeVpHNGg3aDhEV3hsUVNRR3Ftbjlha1ZhQ2RBdGMvb2hzaGJ5?=
- =?utf-8?B?OHlZdko1ZjZFcEIvVzJOSkwrbU54UmVQZDlBWUtIWXJtbU9mVlFMRmIyWCtS?=
- =?utf-8?B?bktTYSt0ZkYra1FVS1hVOVpQclBMSDM0aVh5VzlDbjFyT0VnN1ozYTNYbWpS?=
- =?utf-8?B?eWV1dndERUZhbloyZFN2SVB3ZldtQTlpdXlEK1JmcHNBR3hpRUZaR1NuZVlU?=
- =?utf-8?B?RzFBVE1ncld3bE5LS0lRZWlOZ0l0RCtWQVJXdnZNZjhKM2VpU2RXUUx3NEhr?=
- =?utf-8?B?SDE3c0VXdk55SE1lOFBCK1U2QzNsaFlyWEtIVFpjaUpQYUt4alhqY3h1cm1X?=
- =?utf-8?B?UitCZ2h5a3l0Q0N5K3RjdXZuNVFWWG1xQW9wcmdTbmdWdS9jZGtsRWtVNWFO?=
- =?utf-8?B?b2FRRUY4cmZLU2xhOVhyajFleXA4cktYb1FlcFVPUC9QQ3hRUVFueHJJZGZB?=
- =?utf-8?Q?4j+Z198XSLRjQhCciTe6Gr3ka?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b1994cc0-3b00-4536-cd60-08dc1cf32bde
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jan 2024 15:43:12.0265
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ghiNaaQPJ6gyWiDl6YDWG69JQvnyGxcXKd2yY2l/xgpOax+uARXTfxsyVTOOG23R6IACzNtVXKD9bmJ44ifrMQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4928
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v17 8/8] media: verisilicon: Support deleting buffers on
+ capture queue
+Content-Language: en-US, nl
+To: Benjamin Gaignard <benjamin.gaignard@collabora.com>, mchehab@kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+ kernel@collabora.com
+References: <20240119094944.26763-1-benjamin.gaignard@collabora.com>
+ <20240119094944.26763-9-benjamin.gaignard@collabora.com>
+ <56c1410e-7a4c-4913-823d-83b8bc0ac002@xs4all.nl>
+ <1cd7c504-c384-4c9c-bedd-79cd8aed8484@collabora.com>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Autocrypt: addr=hverkuil@xs4all.nl; keydata=
+ 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
+In-Reply-To: <1cd7c504-c384-4c9c-bedd-79cd8aed8484@collabora.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 1/24/2024 08:37, Mikhail Gavrilov wrote:
-> On Wed, Jan 24, 2024 at 7:19 AM Mikhail Gavrilov
-> <mikhail.v.gavrilov@gmail.com> wrote:
+On 24/01/2024 16:35, Benjamin Gaignard wrote:
+> 
+> Le 24/01/2024 à 13:52, Hans Verkuil a écrit :
+>> On 19/01/2024 10:49, Benjamin Gaignard wrote:
+>>> Allow to delete buffers on capture queue because it the one which
+>>> own the decoded buffers. After a dynamic resolution change lot of
+>>> them could remain allocated but won't be used anymore so deleting
+>>> them save memory.
+>>> Do not add this feature on output queue because the buffers are
+>>> smaller, fewer and always recycled even after a dynamic resolution
+>>> change.
+>>>
+>>> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@collabora.com>
+>>> ---
+>>>   drivers/media/platform/verisilicon/hantro_drv.c  | 1 +
+>>>   drivers/media/platform/verisilicon/hantro_v4l2.c | 1 +
+>>>   2 files changed, 2 insertions(+)
+>>>
+>>> diff --git a/drivers/media/platform/verisilicon/hantro_drv.c b/drivers/media/platform/verisilicon/hantro_drv.c
+>>> index db3df6cc4513..f6b0a676a740 100644
+>>> --- a/drivers/media/platform/verisilicon/hantro_drv.c
+>>> +++ b/drivers/media/platform/verisilicon/hantro_drv.c
+>>> @@ -248,6 +248,7 @@ queue_init(void *priv, struct vb2_queue *src_vq, struct vb2_queue *dst_vq)
+>>>       dst_vq->timestamp_flags = V4L2_BUF_FLAG_TIMESTAMP_COPY;
+>>>       dst_vq->lock = &ctx->dev->vpu_mutex;
+>>>       dst_vq->dev = ctx->dev->v4l2_dev.dev;
+>>> +    src_vq->supports_delete_bufs = true;
+>> As I mentioned, I remain unconvinced by this. It is just making the API inconsistent
+>> since if you support delete_bufs, then why support it for one queue only and not both?
+> 
+> Because the both queues don't handle the same type of data.
+> For example for a stateless decoder, for me, it makes sense to allow delete decoded frames
+> if they won't be used anymore but that won't makes sense for bitstream buffers.
+
+But is there any reason why you wouldn't support this feature? We support VIDIOC_CREATE_BUFS
+as well, even though most drivers do not need it, but it is cheap to add.
+
+Deleting buffers is a generic feature, and I don't see why you wouldn't just offer it
+for both queues.
+
+Regards,
+
+	Hans
+
+> 
 >>
->> Who could dig into it, please?
+>>>         return vb2_queue_init(dst_vq);
+>>>   }
+>>> diff --git a/drivers/media/platform/verisilicon/hantro_v4l2.c b/drivers/media/platform/verisilicon/hantro_v4l2.c
+>>> index 941fa23c211a..34eab90e8a42 100644
+>>> --- a/drivers/media/platform/verisilicon/hantro_v4l2.c
+>>> +++ b/drivers/media/platform/verisilicon/hantro_v4l2.c
+>>> @@ -756,6 +756,7 @@ const struct v4l2_ioctl_ops hantro_ioctl_ops = {
+>>>       .vidioc_dqbuf = v4l2_m2m_ioctl_dqbuf,
+>>>       .vidioc_prepare_buf = v4l2_m2m_ioctl_prepare_buf,
+>>>       .vidioc_create_bufs = v4l2_m2m_ioctl_create_bufs,
+>>> +    .vidioc_delete_bufs = v4l2_m2m_ioctl_delete_bufs,
+>>>       .vidioc_expbuf = v4l2_m2m_ioctl_expbuf,
+>>>         .vidioc_subscribe_event = v4l2_ctrl_subscribe_event,
+>> In my view setting vidioc_delete_bufs should enable this feature, and if
+>> for some strange reason only one queue support it, then make a wrapper
+>> callback that returns an error when used with the wrong queue.
+>>
+>> Also note that patch 6/8 never checks for q->supports_delete_bufs in
+>> vb2_core_delete_bufs(), which is wrong!
 > 
-> You decided to revert it?
-> https://lkml.org/lkml/2024/1/22/1866
-
-It's not a straight "git revert" on 6.8-rc1 because of some other 
-contextual changes.
-
-I posted that as an RFC specifically "in case" that's the direction we 
-go and don't get a proper solution together.
-
-Matthew also posted a debugging patch here for use with ftrace and the 
-GPU scheduler events: https://gitlab.freedesktop.org/drm/amd/-/issues/3124
-
-I reproduced it with that as well and posted my ftrace results.
-
+> I will fix that in next version.
+> Regards,
+> Benjamin
 > 
-> Also I forgot to attach the kernel build .config in the previous
-> message. I'm going to fix it here.
-> It may be useful for reproducing my bug script.
-> 
+>>
+>> Regards,
+>>
+>>     Hans
+>>
 
