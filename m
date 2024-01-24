@@ -1,62 +1,65 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A3CA1381
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 03:29:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 721BD1381
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 03:33:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.115
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706066997; cv=none; b=ZkvdEsp8+2tLMDB12qrxvTyipeCoSq0a0WP/3PgwxKovIyD7gZU2Yc4lctH6L9qLrU6YkSRgFoSkkCamyBVC/HrEldejBNgmd3lQGlhL0RR7Wo6lJQHu3iWfz8sv8nf///H78SxbaIJS75GxGvJ8BMEBz4MkVySgO73os+3gBmc=
+	t=1706067200; cv=none; b=HlDlNxHndkh6gi4KJOcgQe7G6dx6H0CNUgWiDarLzpnNjI+rXC+03Ub+rG0N6/fa/ZJ2pajzzXqyd2f/XxZB7tSSb1T7TDjBJbtZZbZOvqOWe3cKPzvU7HWs+Kvokoxz97hUXJikWBZy7djQA6rTjBa0h1cHK133IHMbGJ2UwbA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706066997; c=relaxed/simple;
-	bh=rSaAlk94pMBR8JXrSQ+PW4+MqsgT6LSmV+ZN3ZU7qKo=;
+	s=arc-20240116; t=1706067200; c=relaxed/simple;
+	bh=Z2hOeFRMM+FsKPNrqSzFr6A+EoRmF0tPO+vSo613Wyc=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=ld5eQ6lWkcQBlgazvD3eOXU1uLK38oh51YAUkv6SIFjKt0s1NjPiiU7g8adsyEy6RxsCL7axU67cf6qGS9DQd88i8NiQodq6glEg6QBLkiAynOqPW5h35N6PwA1OIk17obm89DSgjpgZ+VzeOdBaGRJS64+Kb4AwNzGEcgQ6qqQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kCoUQYNO; arc=none smtp.client-ip=198.175.65.14
+	 MIME-Version:Content-Type; b=neeA+ptiKINbORU4V10LHo4ygZ+l+RvAEdiLhMjDmYx2CnWAU029ImcGmSQB514NrEwgRh1hIjjdgZJOELmmAi4UIexekyHgdK0qRthUh22Toj0Dw1wlhw2NXp0/EyQxT5qGT0bciMggjcz24IBq2Vp6Vw8OcRBFAYOorzH444g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fBzmJndX; arc=none smtp.client-ip=192.55.52.115
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kCoUQYNO"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fBzmJndX"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706066996; x=1737602996;
+  t=1706067198; x=1737603198;
   h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=rSaAlk94pMBR8JXrSQ+PW4+MqsgT6LSmV+ZN3ZU7qKo=;
-  b=kCoUQYNOgStJgcYAzeOXLu3UGUS1EdqI+wssLpIfy6ixlKum6rsIfgep
-   Zsa52R7cTQosKkLMDSJUL2xtgbrYuzF4FEGryO0H8k2TIPEzpIp7d5cXk
-   cyIRIafKrDX50icJoqvGS/YTQ3hKUGUvKjkpOfwSRQld3EyuQ47aBFtgQ
-   WIzvqcxrhGu22g5gW3zlhkS0aV+Q+5VR1J+kK/2AwTUlQ+l1U2PBNjtfP
-   ORxQqd0xuQuUmUNf/AgtN0oyEKtFNK9gCMtcP89rhiNfATMxiJ03Uzk+L
-   A6j6kuvcOodC88ESYQLxvKMZaMWhFfneW65TYJKGt4pX7cvn048AW4Ch0
+   message-id:mime-version:content-transfer-encoding;
+  bh=Z2hOeFRMM+FsKPNrqSzFr6A+EoRmF0tPO+vSo613Wyc=;
+  b=fBzmJndXfzJmIep/z+bkaLTBgbpIBzmrBLWeLpsB1cCfQwS7EeJ+E8qm
+   hcWPrl+5Jm6R43vltq/KAwHJDpkjo2cOONDJHYHJ1Zo+teJy42WWNXGAF
+   Kr0OhxeUKdkTspyl++3NFS7wr32uk32eFTTv15pbpP1CTGZ1/N4Q0lWBg
+   S2dapJi9PTDRgTP3A/m6VrhE4Dql9Zsekkb6sZ4DvfzWW2tsF8qStH+bj
+   zYc0y+Hix15ISbxi0d0CSsLrT+xi3G94SCt3VgZFMupXQh3sq7PTSKKLN
+   qWAq5qh/3YrAfUTYrPXqSGfm4WKuSK812aEb56Wb86KQCUkTtqc8I6V12
    w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="1614996"
+X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="401386917"
 X-IronPort-AV: E=Sophos;i="6.05,215,1701158400"; 
-   d="scan'208";a="1614996"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2024 19:29:55 -0800
+   d="scan'208";a="401386917"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2024 19:33:16 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.05,215,1701158400"; 
-   d="scan'208";a="28251243"
+   d="scan'208";a="27967128"
 Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2024 19:29:53 -0800
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2024 19:33:13 -0800
 From: "Huang, Ying" <ying.huang@intel.com>
-To: Yosry Ahmed <yosryahmed@google.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,  Johannes Weiner
- <hannes@cmpxchg.org>,  Nhat Pham <nphamcs@gmail.com>,  Chris Li
- <chrisl@kernel.org>,  Chengming Zhou <zhouchengming@bytedance.com>,
-  linux-mm@kvack.org,  linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] mm: swap: update inuse_pages after all cleanups are
- done
-In-Reply-To: <CAJD7tkbKxfuy-uWrOMVnOeDpx-TuJwosxk2jG_0Gx4bi1tUBog@mail.gmail.com>
-	(Yosry Ahmed's message of "Tue, 23 Jan 2024 19:20:17 -0800")
-References: <20240120024007.2850671-1-yosryahmed@google.com>
-	<20240120024007.2850671-2-yosryahmed@google.com>
-	<87wms0toh4.fsf@yhuang6-desk2.ccr.corp.intel.com>
-	<CAJD7tkb=-0mP1CXEmAd4QjMXKgep7myHShiwUSNnY1cjfRqfJA@mail.gmail.com>
-	<878r4ftodl.fsf@yhuang6-desk2.ccr.corp.intel.com>
-	<CAJD7tkbKxfuy-uWrOMVnOeDpx-TuJwosxk2jG_0Gx4bi1tUBog@mail.gmail.com>
-Date: Wed, 24 Jan 2024 11:27:56 +0800
-Message-ID: <874jf3tnpf.fsf@yhuang6-desk2.ccr.corp.intel.com>
+To: Kairui Song <ryncsn@gmail.com>
+Cc: linux-mm@kvack.org,  Andrew Morton <akpm@linux-foundation.org>,  Chris
+ Li <chrisl@kernel.org>,  Hugh Dickins <hughd@google.com>,  Johannes Weiner
+ <hannes@cmpxchg.org>,  Matthew Wilcox <willy@infradead.org>,  Michal Hocko
+ <mhocko@suse.com>,  Yosry Ahmed <yosryahmed@google.com>,  David
+ Hildenbrand <david@redhat.com>,  linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 8/9] mm/swap: introduce a helper for swapin without
+ vmfault
+In-Reply-To: <CAMgjq7C8z-zEw9X-s-C4cy5NhfC4DuiK2-4Ca5SeOZ0NGZMm0w@mail.gmail.com>
+	(Kairui Song's message of "Mon, 22 Jan 2024 19:35:19 +0800")
+References: <20240102175338.62012-1-ryncsn@gmail.com>
+	<20240102175338.62012-9-ryncsn@gmail.com>
+	<875y039utw.fsf@yhuang6-desk2.ccr.corp.intel.com>
+	<CAMgjq7DkyZU0udhSUEfCMMT84Vad20UauXz9pzQp4c=cVFtiMw@mail.gmail.com>
+	<87sf2z1hxt.fsf@yhuang6-desk2.ccr.corp.intel.com>
+	<CAMgjq7C9p-Et2jqyztLp2DHyG8AZrHCnNjXfHkbQrCMDVx-p_g@mail.gmail.com>
+	<87a5oxx48b.fsf@yhuang6-desk2.ccr.corp.intel.com>
+	<CAMgjq7C8z-zEw9X-s-C4cy5NhfC4DuiK2-4Ca5SeOZ0NGZMm0w@mail.gmail.com>
+Date: Wed, 24 Jan 2024 11:31:14 +0800
+Message-ID: <87zfwvs8zh.fsf@yhuang6-desk2.ccr.corp.intel.com>
 User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -64,66 +67,343 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Yosry Ahmed <yosryahmed@google.com> writes:
+Kairui Song <ryncsn@gmail.com> writes:
 
->> > In swap_range_free, we want to make sure that the write to
->> > si->inuse_pages in swap_range_free() happens *after* the cleanups
->> > (specifically zswap_invalidate() in this case).
->> > In swap_off, we want to make sure that the cleanups following
->> > try_to_unuse() (e.g. zswap_swapoff) happen *after* reading
->> > si->inuse_pages == 0 in try_to_unuse().
->> >
->> > So I think we want smp_wmb() in swap_range_free() and smp_mb() in
->> > try_to_unuse(). Does the below look correct to you?
->> >
->> > diff --git a/mm/swapfile.c b/mm/swapfile.c
->> > index 2fedb148b9404..a2fa2f65a8ddd 100644
->> > --- a/mm/swapfile.c
->> > +++ b/mm/swapfile.c
->> > @@ -750,6 +750,12 @@ static void swap_range_free(struct
->> > swap_info_struct *si, unsigned long offset,
->> >                 offset++;
->> >         }
->> >         clear_shadow_from_swap_cache(si->type, begin, end);
->> > +
->> > +       /*
->> > +        * Make sure that try_to_unuse() observes si->inuse_pages reaching 0
->> > +        * only after the above cleanups are done.
->> > +        */
->> > +       smp_wmb();
->> >         atomic_long_add(nr_entries, &nr_swap_pages);
->> >         WRITE_ONCE(si->inuse_pages, si->inuse_pages - nr_entries);
->> >  }
->> > @@ -2130,6 +2136,11 @@ static int try_to_unuse(unsigned int type)
->> >                 return -EINTR;
->> >         }
->> >
->> > +       /*
->> > +        * Make sure that further cleanups after try_to_unuse() returns happen
->> > +        * after swap_range_free() reduces si->inuse_pages to 0.
->> > +        */
->> > +       smp_mb();
->> >         return 0;
->> >  }
+> On Mon, Jan 22, 2024 at 2:40=E2=80=AFPM Huang, Ying <ying.huang@intel.com=
+> wrote:
 >>
->> We need to take care of "si->inuse_pages" checking at the beginning of
->> try_to_unuse() too.  Otherwise, it looks good to me.
+>> Kairui Song <ryncsn@gmail.com> writes:
+>>
+>> > On Mon, Jan 15, 2024 at 9:54=E2=80=AFAM Huang, Ying <ying.huang@intel.=
+com> wrote:
+>> >>
+>> >> Kairui Song <ryncsn@gmail.com> writes:
+>> >>
+>> >> > Huang, Ying <ying.huang@intel.com> =E4=BA=8E2024=E5=B9=B41=E6=9C=88=
+9=E6=97=A5=E5=91=A8=E4=BA=8C 09:11=E5=86=99=E9=81=93=EF=BC=9A
+>> >> >>
+>> >> >> Kairui Song <ryncsn@gmail.com> writes:
+>> >> >>
+>> >> >> > From: Kairui Song <kasong@tencent.com>
+>> >> >> >
+>> >> >> > There are two places where swapin is not caused by direct anon p=
+age fault:
+>> >> >> > - shmem swapin, invoked indirectly through shmem mapping
+>> >> >> > - swapoff
+>> >> >> >
+>> >> >> > They used to construct a pseudo vmfault struct for swapin functi=
+on.
+>> >> >> > Shmem has dropped the pseudo vmfault recently in commit ddc1a5cb=
+c05d
+>> >> >> > ("mempolicy: alloc_pages_mpol() for NUMA policy without vma"). S=
+wapoff
+>> >> >> > path is still using one.
+>> >> >> >
+>> >> >> > Introduce a helper for them both, this help save stack usage for=
+ swapoff
+>> >> >> > path, and help apply a unified swapin cache and readahead policy=
+ check.
+>> >> >> >
+>> >> >> > Due to missing vmfault info, the caller have to pass in mempolicy
+>> >> >> > explicitly, make it different from swapin_entry and name it
+>> >> >> > swapin_entry_mpol.
+>> >> >> >
+>> >> >> > This commit convert swapoff to use this helper, follow-up commit=
+s will
+>> >> >> > convert shmem to use it too.
+>> >> >> >
+>> >> >> > Signed-off-by: Kairui Song <kasong@tencent.com>
+>> >> >> > ---
+>> >> >> >  mm/swap.h       |  9 +++++++++
+>> >> >> >  mm/swap_state.c | 40 ++++++++++++++++++++++++++++++++--------
+>> >> >> >  mm/swapfile.c   | 15 ++++++---------
+>> >> >> >  3 files changed, 47 insertions(+), 17 deletions(-)
+>> >> >> >
+>> >> >> > diff --git a/mm/swap.h b/mm/swap.h
+>> >> >> > index 9180411afcfe..8f790a67b948 100644
+>> >> >> > --- a/mm/swap.h
+>> >> >> > +++ b/mm/swap.h
+>> >> >> > @@ -73,6 +73,9 @@ struct folio *swap_cluster_readahead(swp_entry=
+_t entry, gfp_t flag,
+>> >> >> >               struct mempolicy *mpol, pgoff_t ilx);
+>> >> >> >  struct folio *swapin_entry(swp_entry_t entry, gfp_t flag,
+>> >> >> >                           struct vm_fault *vmf, enum swap_cache_=
+result *result);
+>> >> >> > +struct folio *swapin_entry_mpol(swp_entry_t entry, gfp_t gfp_ma=
+sk,
+>> >> >> > +                             struct mempolicy *mpol, pgoff_t il=
+x,
+>> >> >> > +                             enum swap_cache_result *result);
+>> >> >> >
+>> >> >> >  static inline unsigned int folio_swap_flags(struct folio *folio)
+>> >> >> >  {
+>> >> >> > @@ -109,6 +112,12 @@ static inline struct folio *swapin_entry(sw=
+p_entry_t swp, gfp_t gfp_mask,
+>> >> >> >       return NULL;
+>> >> >> >  }
+>> >> >> >
+>> >> >> > +static inline struct page *swapin_entry_mpol(swp_entry_t entry,=
+ gfp_t gfp_mask,
+>> >> >> > +             struct mempolicy *mpol, pgoff_t ilx, enum swap_cac=
+he_result *result)
+>> >> >> > +{
+>> >> >> > +     return NULL;
+>> >> >> > +}
+>> >> >> > +
+>> >> >> >  static inline int swap_writepage(struct page *p, struct writeba=
+ck_control *wbc)
+>> >> >> >  {
+>> >> >> >       return 0;
+>> >> >> > diff --git a/mm/swap_state.c b/mm/swap_state.c
+>> >> >> > index 21badd4f0fc7..3edf4b63158d 100644
+>> >> >> > --- a/mm/swap_state.c
+>> >> >> > +++ b/mm/swap_state.c
+>> >> >> > @@ -880,14 +880,13 @@ static struct folio *swap_vma_readahead(sw=
+p_entry_t targ_entry, gfp_t gfp_mask,
+>> >> >> >   * in.
+>> >> >> >   */
+>> >> >> >  static struct folio *swapin_direct(swp_entry_t entry, gfp_t gfp=
+_mask,
+>> >> >> > -                               struct vm_fault *vmf, void *shad=
+ow)
+>> >> >> > +                                struct mempolicy *mpol, pgoff_t=
+ ilx,
+>> >> >> > +                                void *shadow)
+>> >> >> >  {
+>> >> >> > -     struct vm_area_struct *vma =3D vmf->vma;
+>> >> >> >       struct folio *folio;
+>> >> >> >
+>> >> >> > -     /* skip swapcache */
+>> >> >> > -     folio =3D vma_alloc_folio(GFP_HIGHUSER_MOVABLE, 0,
+>> >> >> > -                             vma, vmf->address, false);
+>> >> >> > +     folio =3D (struct folio *)alloc_pages_mpol(gfp_mask, 0,
+>> >> >> > +                     mpol, ilx, numa_node_id());
+>> >> >> >       if (folio) {
+>> >> >> >               if (mem_cgroup_swapin_charge_folio(folio, NULL,
+>> >> >> >                                                  GFP_KERNEL, ent=
+ry)) {
+>> >> >> > @@ -943,18 +942,18 @@ struct folio *swapin_entry(swp_entry_t ent=
+ry, gfp_t gfp_mask,
+>> >> >> >               goto done;
+>> >> >> >       }
+>> >> >> >
+>> >> >> > +     mpol =3D get_vma_policy(vmf->vma, vmf->address, 0, &ilx);
+>> >> >> >       if (swap_use_no_readahead(swp_swap_info(entry), entry)) {
+>> >> >> > -             folio =3D swapin_direct(entry, gfp_mask, vmf, shad=
+ow);
+>> >> >> > +             folio =3D swapin_direct(entry, gfp_mask, mpol, ilx=
+, shadow);
+>> >> >> >               cache_result =3D SWAP_CACHE_BYPASS;
+>> >> >> >       } else {
+>> >> >> > -             mpol =3D get_vma_policy(vmf->vma, vmf->address, 0,=
+ &ilx);
+>> >> >> >               if (swap_use_vma_readahead())
+>> >> >> >                       folio =3D swap_vma_readahead(entry, gfp_ma=
+sk, mpol, ilx, vmf);
+>> >> >> >               else
+>> >> >> >                       folio =3D swap_cluster_readahead(entry, gf=
+p_mask, mpol, ilx);
+>> >> >> > -             mpol_cond_put(mpol);
+>> >> >> >               cache_result =3D SWAP_CACHE_MISS;
+>> >> >> >       }
+>> >> >> > +     mpol_cond_put(mpol);
+>> >> >> >  done:
+>> >> >> >       if (result)
+>> >> >> >               *result =3D cache_result;
+>> >> >> > @@ -962,6 +961,31 @@ struct folio *swapin_entry(swp_entry_t entr=
+y, gfp_t gfp_mask,
+>> >> >> >       return folio;
+>> >> >> >  }
+>> >> >> >
+>> >> >> > +struct folio *swapin_entry_mpol(swp_entry_t entry, gfp_t gfp_ma=
+sk,
+>> >> >> > +                             struct mempolicy *mpol, pgoff_t il=
+x,
+>> >> >> > +                             enum swap_cache_result *result)
+>> >> >> > +{
+>> >> >> > +     enum swap_cache_result cache_result;
+>> >> >> > +     void *shadow =3D NULL;
+>> >> >> > +     struct folio *folio;
+>> >> >> > +
+>> >> >> > +     folio =3D swap_cache_get_folio(entry, NULL, 0, &shadow);
+>> >> >> > +     if (folio) {
+>> >> >> > +             cache_result =3D SWAP_CACHE_HIT;
+>> >> >> > +     } else if (swap_use_no_readahead(swp_swap_info(entry), ent=
+ry)) {
+>> >> >> > +             folio =3D swapin_direct(entry, gfp_mask, mpol, ilx=
+, shadow);
+>> >> >> > +             cache_result =3D SWAP_CACHE_BYPASS;
+>> >> >> > +     } else {
+>> >> >> > +             folio =3D swap_cluster_readahead(entry, gfp_mask, =
+mpol, ilx);
+>> >> >> > +             cache_result =3D SWAP_CACHE_MISS;
+>> >> >> > +     }
+>> >> >> > +
+>> >> >> > +     if (result)
+>> >> >> > +             *result =3D cache_result;
+>> >> >> > +
+>> >> >> > +     return folio;
+>> >> >> > +}
+>> >> >> > +
+>> >> >> >  #ifdef CONFIG_SYSFS
+>> >> >> >  static ssize_t vma_ra_enabled_show(struct kobject *kobj,
+>> >> >> >                                    struct kobj_attribute *attr, =
+char *buf)
+>> >> >> > diff --git a/mm/swapfile.c b/mm/swapfile.c
+>> >> >> > index 5aa44de11edc..2f77bf143af8 100644
+>> >> >> > --- a/mm/swapfile.c
+>> >> >> > +++ b/mm/swapfile.c
+>> >> >> > @@ -1840,18 +1840,13 @@ static int unuse_pte_range(struct vm_are=
+a_struct *vma, pmd_t *pmd,
+>> >> >> >       do {
+>> >> >> >               struct folio *folio;
+>> >> >> >               unsigned long offset;
+>> >> >> > +             struct mempolicy *mpol;
+>> >> >> >               unsigned char swp_count;
+>> >> >> >               swp_entry_t entry;
+>> >> >> > +             pgoff_t ilx;
+>> >> >> >               int ret;
+>> >> >> >               pte_t ptent;
+>> >> >> >
+>> >> >> > -             struct vm_fault vmf =3D {
+>> >> >> > -                     .vma =3D vma,
+>> >> >> > -                     .address =3D addr,
+>> >> >> > -                     .real_address =3D addr,
+>> >> >> > -                     .pmd =3D pmd,
+>> >> >> > -             };
+>> >> >> > -
+>> >> >> >               if (!pte++) {
+>> >> >> >                       pte =3D pte_offset_map(pmd, addr);
+>> >> >> >                       if (!pte)
+>> >> >> > @@ -1871,8 +1866,10 @@ static int unuse_pte_range(struct vm_area=
+_struct *vma, pmd_t *pmd,
+>> >> >> >               pte_unmap(pte);
+>> >> >> >               pte =3D NULL;
+>> >> >> >
+>> >> >> > -             folio =3D swapin_entry(entry, GFP_HIGHUSER_MOVABLE,
+>> >> >> > -                                  &vmf, NULL);
+>> >> >> > +             mpol =3D get_vma_policy(vma, addr, 0, &ilx);
+>> >> >> > +             folio =3D swapin_entry_mpol(entry, GFP_HIGHUSER_MO=
+VABLE,
+>> >> >> > +                                       mpol, ilx, NULL);
+>> >> >> > +             mpol_cond_put(mpol);
+>> >> >> >               if (!folio) {
+>> >> >> >                       /*
+>> >> >> >                        * The entry could have been freed, and wi=
+ll not
+>> >> >>
+>> >> >> IIUC, after the change, we will always use cluster readahead for
+>> >> >> swapoff.  This may be OK.  But, at least we need some test results=
+ which
+>> >> >> show that this will not cause any issue for this behavior change. =
+ And
+>> >> >> the behavior change should be described explicitly in patch descri=
+ption.
+>> >> >
+>> >> > Hi Ying
+>> >> >
+>> >> > Actually there is a swap_use_no_readahead check in swapin_entry_mpo=
+l,
+>> >> > so when readahaed is not needed (SYNC_IO), it's just skipped.
+>> >> >
+>> >> > And I think VMA readahead is not helpful swapoff, swapoff is already
+>> >> > walking the VMA, mostly uninterrupted in kernel space. With VMA
+>> >> > readahead or not, it will issue IO page by page.
+>> >> > The benchmark result I posted before is actually VMA readhead vs
+>> >> > no-readahead for ZRAM, sorry I didn't make it clear. It's obvious
+>> >> > no-readahead is faster.
+>> >> >
+>> >> > For actual block device, cluster readahead might be a good choice f=
+or
+>> >> > swapoff, since all pages will be read for swapoff, there has to be
+>> >> > enough memory for all swapcached page to stay in memory or swapoff
+>> >> > will fail anyway, and cluster read is faster for block devices.
+>> >>
+>> >> It's possible.  But please run the tests on some actual block devices
+>> >> and show your results.  Random memory accessing pattern should be
+>> >> tested, and the swap space usage should be > 50% to show some not so
+>> >> friendly situation.
+>> >>
+>> >
+>> > Hi Ying,
+>> >
+>> > I setup a test environment and did following test, and found that
+>> > cluster readahaed for swapoff is actually much worse in default setup:
+>> >
+>> > 1. Setup MySQL server using 2G memcg, with 28G buffer pool, and 24G NV=
+ME swap
+>> > 2. Stress test with sysbench for 15min.
+>> > 3. Remove the 2G memcg limit and swapoff.
+>> >
+>> > Before this patch, swapoff will take about 9m.
+>> > After this patch, swapoff will take about 30m.
+>>
+>> Thanks for data!
+>>
+>> > After some analysis I found the reason is that cluster readahead is
+>> > almost disabled (window =3D=3D 1 or 2) during swapoff, because it will
+>> > detect a very low hit rate on fragmented swap. But VMA readhead is
+>> > much more aggressive here since swapoff is walking the VMA, with a
+>> > very high hit rate.
+>> >
+>> > But If I force cluster readahead to use a large window for swapoff,
+>> > the swapoff performance boost by a lot:
+>> > By adding following change in swap_cluster_readahead:
+>> >
+>> > if (unlikely(!(si->flags & SWP_WRITEOK)))
+>> >     mask =3D max_t(unsigned long, 1 << READ_ONCE(page_cluster), PMD_SI=
+ZE
+>> > / PAGE_SIZE) - 1;
+>> >
+>> > The swapoff will take only 40s to finish, more than 10x faster than
+>> > the VMA readahead path (9m), because VMA readhead is still doing 4K
+>> > random IO just with a longer queue due to async readahead. But cluster
+>> > readhead will be doing 2M IO now.
+>> > I think PMD size window is good here since it still keep a balance
+>> > between good IO performance and the swapoff progress can still be
+>> > interrupted, and the system is responsible. And in most cases we
+>> > expect swapoff to success, if it fail, the RA windows should still
+>> > keep the side effect of extra swapcache being generated acceptable.
+>>
+>> swapoff performance isn't very important because swapoff is a very rare
+>> operation.  It's OK to optimize it if the change is simple and doesn't
+>> compromise other stuff.  But, as you said below, using large readahead
+>> window makes mempolicy issue more serious.  Why isn't the original
+>> swapoff performance good enough for you?
 >
-> Hmm, why isn't one barrier at the end of the function enough? I think
-> all we need is that before we return from try_to_unuse(), all the
-> cleanups in swap_range_free() are taken care of, which the barrier at
-> the end should be doing. We just want instructions after
-> try_to_unuse() to not get re-ordered before si->inuse_pages is read as
-> 0, right?
+> Thanks for the reply.
+>
+> I think I'll just keep the original VMA readahead policy here then.
+> Just I noticed that VMA readhead will also violate ranged memory
+> policy too... That's some different issue, looks trivial though.
 
-Because at the begin of try_to_unuse() as below, after reading, function
-returns directly without any memory barriers.
-
-  if (!READ_ONCE(si->inuse_pages))
-        return 0;
+During reviewing your patch, I found that too.  I think that they can be
+fixed because we have enough information.
 
 --
 Best Regards,
 Huang, Ying
+
+>>
+>> > But this showed a bad effect of ignoring mem policy. Actually this is
+>> > not a new issue, cluster readhead is already violating VMA's mem
+>> > policy since it does readhead only based on entry value not VMA, the
+>> > entry being swapped in is not aware of which VMA it belongs.
+>> >
+>> > And I was thinking, maybe we can just drop the mpol all the way, and
+>> > use the nid from page shadow to alloc pages, that may save a lot of
+>> > effort, and make cluster readhead more usable in general, also might
+>> > simplify a lot of code. How do you think? If this is acceptable, I
+>> > think I can send out a new series first and then rework this one
+>> > later.
+>>
+>> The "shadow" node can be reclaimed, please take a look at
+>> scan_shadow_nodes().  Although this hasn't been implemented, it may be
+>> implemented someday.
+>
+> Right, I noticed upstream commit 5649d113ffce ("swap_state: update
+> shadow_nodes for anonymous page") started reclaiming anon pages
+> shadows now, thanks for the info.
