@@ -1,127 +1,154 @@
-Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from air.basealt.ru (air.basealt.ru [194.107.17.39])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1CE718E0C
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 10:21:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08F061946F;
+	Wed, 24 Jan 2024 10:21:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.107.17.39
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706091680; cv=none; b=J426rt4nB314lGn2z6PAndoDzPo2QFjm8uBw77yLZHnIlt0bMnEVSiUQc82w0NQhhZqum7P6BvXZ3742wvOmPs8UlEqs5fijVHmLpvBhohNtp/tm4SYZhcDNaMBm2gXJGRdqdtU6xjH3W3cYz0IfMW0OsKf6ClW3rYGUZsKYHKs=
+	t=1706091691; cv=none; b=SPmi2vJNR9c+BjHAcQsQE1X5gBNFqrTgy/3irAekaJERZR4dPLgDdsqRR7pL6bpKIa8ABKTYE0UBG4dJZQCHFEwHq57llMItxWCyMW2Lq6XydqiSj9Vd/yKqpOS0V0RMHmfbiIJLKZqj5hllh3nU/oGwjc3Sp3zda7PtNJRWRag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706091680; c=relaxed/simple;
-	bh=ewX7gY72o0cl/yYtspnOPfn5OfSuWve6SbfDlOaK0u4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=K1KrFFnDMsKvrXiPk47ZhTg3o25U1CQ7DmIIic2OtlIL5/fKJ2w70ytuKi7u/06RfqASm3ThfbpuUWqtBQpX78b6I2TFkYi+to+2iBwTQItOGvII1ngDbGhpLJbH5sflxpoMyu3lylicMZFzU1SPMxPEk39pxLCl9lO4jPVlJ48=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hCMnp+bB; arc=none smtp.client-ip=209.85.219.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hCMnp+bB"
-Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-dc371b04559so1730165276.0
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 02:21:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706091678; x=1706696478; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=oahrr0zPn7dyTHABN+YgjB62XpZ+3yBv/LwJfePBLo0=;
-        b=hCMnp+bBiLITDg/sLLkPFHu+Thcyva66Ve2kaglOP9lRu2AoY5ZVF/E1iCtcP4P41k
-         nyccSxaoxN3Ym3YL5xPCvicX3b6E2We1BoCRsBxazoTTj0newp95SNpgBZwzkqTq/rK9
-         5zzoPlYy7Z5sOkSquetM/YhdREcGum/clcYOWkV8/f1pQ7uszClp+o2yqpnPGqQko5Cp
-         2WqjyBoFLAhihKusRdWHe7diY0DIK4W1TFWWQ9GU2h1jqHWW3rwmbi/QrU49UoyZ15xe
-         nJ53Q1lClK4Te5HJi8C9BcPwrU8Ao/sbF6GFaVnSIr/OUsfDg6W1IcN1v0BLTb21nhHq
-         UNDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706091678; x=1706696478;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=oahrr0zPn7dyTHABN+YgjB62XpZ+3yBv/LwJfePBLo0=;
-        b=N9qODzXpJuR+9w1E5sltoT+uQ6U6stQsOIZS3bYw6HOr5Q1DtiyFBPKi6kCXBxXzk5
-         OpQA94DW/QFNyK7DAn/U+SAcHw7py0CZxVYa5wfb7uguFDCHeQXrLOlLPNu5fLWjtgZm
-         FUAsxK+2KkdmqJZ9QIvyWRi7LxtMu3vthuPXxNfdDUquTaihZuqEEVJFbStknwBiwGKJ
-         sW1uFF0NiErMcRu9N+DFtP8SmbH5pFHkBGUGFUfwO3USoI6TnHlCeAFfM2g38NZvSy2/
-         lrHnHr5FS4OnwrXtqAsmmnv/aObTGTgs279rNEEeTN/Uxggw0RM+bWTjCGlp2cGCYSDP
-         zBkA==
-X-Gm-Message-State: AOJu0Yz0F/7NqAZjvgYhT5ctFzgm4I+dfOHQI/nwG2li1BYKNFIE8gbZ
-	B5mGTA7D+djev+H8jmJvd0xQvSkjJ8knbGODxdDt6oRmNwFkA7uyduh+rdrETPAnQzZZGPlfg0I
-	gRZkEUQVGlde5ntUOspoegsNrLb95RtGqoMBYFg==
-X-Google-Smtp-Source: AGHT+IGVtGg/WkPzc49U9WuM15rlSuAsDRUaw6mcw+yY8QDg2i3KDIhJyIoiFrhlnelKM6n+BFEPpnW1/A4dbXsMEAc=
-X-Received: by 2002:a25:c402:0:b0:dbf:6240:d8a8 with SMTP id
- u2-20020a25c402000000b00dbf6240d8a8mr457643ybf.17.1706091677756; Wed, 24 Jan
- 2024 02:21:17 -0800 (PST)
+	s=arc-20240116; t=1706091691; c=relaxed/simple;
+	bh=uaN3LU8WCx1N5fdq/9B44/4QcDRIu1L6RQvDR3R3yjM=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=MvTgDwGuljECtYH1Y2xSqI/f/+FGNFah5HKDkDq6dVYxB/iBqw7m3Qa9k1PKMWlNd1bt1SGAvSx/RHdPdOrt27FMuby1zcXvFdWwpWAuHGOVXNIKvLkwgAbXLFHn5ll1uhXLC2sB4uz7Winbul2Ehyvb3M2LF2RtUdsIIAa/Ubo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=altlinux.org; spf=pass smtp.mailfrom=altlinux.org; arc=none smtp.client-ip=194.107.17.39
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=altlinux.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altlinux.org
+Received: by air.basealt.ru (Postfix, from userid 490)
+	id 5F3FB2F20242; Wed, 24 Jan 2024 10:14:33 +0000 (UTC)
+X-Spam-Level: 
+Received: from altlinux.malta.altlinux.ru (obninsk.basealt.ru [217.15.195.17])
+	by air.basealt.ru (Postfix) with ESMTPSA id 2951F2F2022A;
+	Wed, 24 Jan 2024 10:14:31 +0000 (UTC)
+From: kovalev@altlinux.org
+To: pablo@netfilter.org,
+	laforge@gnumonks.org,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	osmocom-net-gprs@lists.osmocom.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: kovalev@altlinux.org,
+	nickel@altlinux.org,
+	oficerovas@altlinux.org,
+	dutyrok@altlinux.org
+Subject: [PATCH 1/1] gtp: fix use-after-free and null-ptr-deref in gtp_genl_dump_pdp()
+Date: Wed, 24 Jan 2024 13:14:04 +0300
+Message-Id: <20240124101404.161655-2-kovalev@altlinux.org>
+X-Mailer: git-send-email 2.33.8
+In-Reply-To: <20240124101404.161655-1-kovalev@altlinux.org>
+References: <20240124101404.161655-1-kovalev@altlinux.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240122225710.1952066-1-peter.griffin@linaro.org>
- <20240122225710.1952066-3-peter.griffin@linaro.org> <dd8402e7-f8cc-4ddd-a748-e176b6b534a9@app.fastmail.com>
-In-Reply-To: <dd8402e7-f8cc-4ddd-a748-e176b6b534a9@app.fastmail.com>
-From: Peter Griffin <peter.griffin@linaro.org>
-Date: Wed, 24 Jan 2024 10:21:05 +0000
-Message-ID: <CADrjBPpchS0NdqS-mRmmatOksGHc4KdRniJXGDPTS1z73eU9kA@mail.gmail.com>
-Subject: Re: [PATCH 2/9] soc: samsung: exynos-pmu: Add exynos_pmu_update/read/write
- APIs and SoC quirks
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Rob Herring <robh+dt@kernel.org>, krzysztof.kozlowski+dt@linaro.org, 
-	Guenter Roeck <linux@roeck-us.net>, Wim Van Sebroeck <wim@linux-watchdog.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>, jaewon02.kim@samsung.com, 
-	chanho61.park@samsung.com, Sam Protsenko <semen.protsenko@linaro.org>, 
-	kernel-team@android.com, Tudor Ambarus <tudor.ambarus@linaro.org>, 
-	=?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>, 
-	saravanak@google.com, William McVicker <willmcvicker@google.com>, linux-fsd@tesla.com, 
-	linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-samsung-soc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hi Arnd,
+From: Vasiliy Kovalev <kovalev@altlinux.org>
 
-On Tue, 23 Jan 2024 at 08:11, Arnd Bergmann <arnd@arndb.de> wrote:
->
-> On Mon, Jan 22, 2024, at 23:57, Peter Griffin wrote:
->
-> > --- a/include/linux/soc/samsung/exynos-pmu.h
-> > +++ b/include/linux/soc/samsung/exynos-pmu.h
-> > @@ -21,11 +21,39 @@ enum sys_powerdown {
-> >  extern void exynos_sys_powerdown_conf(enum sys_powerdown mode);
-> >  #ifdef CONFIG_EXYNOS_PMU
-> >  extern struct regmap *exynos_get_pmu_regmap(void);
-> > +extern int exynos_pmu_update_bits(unsigned int offset, unsigned int
-> > mask,
-> > +                               unsigned int val);
-> > +extern int exynos_pmu_update(unsigned int offset, unsigned int mask,
-> > +                          unsigned int val);
-> > +extern int exynos_pmu_write(unsigned int offset, unsigned int val);
-> > +extern int exynos_pmu_read(unsigned int offset, unsigned int *val);
-> >  #else
-> >  static inline struct regmap *exynos_get_pmu_regmap(void)
-> >  {
-> >       return ERR_PTR(-ENODEV);
-> >  }
-> > +
-> > +static inline int exynos_pmu_update_bits(unsigned int offset, unsigned
-> > int mask,
-> > +                                      unsigned int val);
-> > +{
-> > +     return ERR_PTR(-ENODEV);
-> > +}
-> > +
-> > +static inline int exynos_pmu_update(unsigned int offset, unsigned int
-> > mask,
-> > +                                 unsigned int val);
-> > +{
-> > +     return ERR_PTR(-ENODEV);
-> > +}
->
-> This won't build since you have the wrong return type.
-> I would suggest you just remove the #ifdef check entirely
-> and instead require drivers using this to have correct
-> dependencies.
+After unloading the module, an instance continues to exist that accesses
+outdated memory addresses.
 
-Whoops, will fix it in v2. We need those stubs for platforms like
-ARCH_S3C64XX that don't have a PMU but use some of the same drivers.
+To prevent this, the dump_pdp_en flag has been added, which blocks the
+dump of pdp contexts by a false value. And only after these checks can
+the net_generic() function be called.
 
-Thanks,
+These errors were found using the syzkaller program:
 
-Peter.
+Syzkaller hit 'general protection fault in gtp_genl_dump_pdp' bug.
+gtp: GTP module loaded (pdp ctx size 104 bytes)
+gtp: GTP module unloaded
+general protection fault, probably for non-canonical address
+0xdffffc0000000001:0000 [#1] SMP KASAN NOPTI
+KASAN: null-ptr-deref in range [0x0000000000000008-0x000000000000000f]
+CPU: 0 PID: 2782 Comm: syz-executor139 Not tainted 5.10.200-std-def-alt1 #1
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.0-alt1
+RIP: 0010:gtp_genl_dump_pdp+0x1b1/0x790 [gtp]
+...
+Call Trace:
+ genl_lock_dumpit+0x6b/0xa0 net/netlink/genetlink.c:623
+ netlink_dump+0x575/0xc70 net/netlink/af_netlink.c:2271
+ __netlink_dump_start+0x64e/0x910 net/netlink/af_netlink.c:2376
+ genl_family_rcv_msg_dumpit+0x2b8/0x310 net/netlink/genetlink.c:686
+ genl_family_rcv_msg net/netlink/genetlink.c:780 [inline]
+ genl_rcv_msg+0x450/0x5a0 net/netlink/genetlink.c:800
+ netlink_rcv_skb+0x150/0x440 net/netlink/af_netlink.c:2497
+ genl_rcv+0x29/0x40 net/netlink/genetlink.c:811
+ netlink_unicast_kernel net/netlink/af_netlink.c:1322 [inline]
+ netlink_unicast+0x54e/0x800 net/netlink/af_netlink.c:1348
+ netlink_sendmsg+0x914/0xe00 net/netlink/af_netlink.c:1916
+ sock_sendmsg_nosec net/socket.c:651 [inline]
+ __sock_sendmsg+0x159/0x190 net/socket.c:663
+ ____sys_sendmsg+0x712/0x870 net/socket.c:2376
+ ___sys_sendmsg+0xf8/0x170 net/socket.c:2430
+ __sys_sendmsg+0xea/0x1b0 net/socket.c:2459
+ do_syscall_64+0x33/0x40 arch/x86/entry/common.c:46
+ entry_SYSCALL_64_after_hwframe+0x62/0xc7
+RIP: 0033:0x7f2ea16c2d49
+
+Fixes: 94a6d9fb88df ("gtp: fix wrong condition in gtp_genl_dump_pdp()")
+Signed-off-by: Vasiliy Kovalev <kovalev@altlinux.org>
+---
+ drivers/net/gtp.c | 18 +++++++++++++++---
+ 1 file changed, 15 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/net/gtp.c b/drivers/net/gtp.c
+index 477b4d4f860bd3..3fc4639711cd83 100644
+--- a/drivers/net/gtp.c
++++ b/drivers/net/gtp.c
+@@ -1675,6 +1675,8 @@ static int gtp_genl_get_pdp(struct sk_buff *skb, struct genl_info *info)
+ 	return err;
+ }
+ 
++static bool dump_pdp_en;
++
+ static int gtp_genl_dump_pdp(struct sk_buff *skb,
+ 				struct netlink_callback *cb)
+ {
+@@ -1684,12 +1686,19 @@ static int gtp_genl_dump_pdp(struct sk_buff *skb,
+ 	struct pdp_ctx *pctx;
+ 	struct gtp_net *gn;
+ 
+-	gn = net_generic(net, gtp_net_id);
+-
+-	if (cb->args[4])
++	/* Do not allow further operations if the module is
++	 * unloaded before or after the process is blocked.
++	 */
++	if (!dump_pdp_en)
+ 		return 0;
+ 
+ 	rcu_read_lock();
++	if (!dump_pdp_en || cb->args[4]) {
++		rcu_read_unlock();
++		return 0;
++	}
++	gn = net_generic(net, gtp_net_id);
++
+ 	list_for_each_entry_rcu(gtp, &gn->gtp_dev_list, list) {
+ 		if (last_gtp && last_gtp != gtp)
+ 			continue;
+@@ -1914,6 +1923,8 @@ static int __init gtp_init(void)
+ 	if (err < 0)
+ 		goto unreg_genl_family;
+ 
++	dump_pdp_en = true;
++
+ 	pr_info("GTP module loaded (pdp ctx size %zd bytes)\n",
+ 		sizeof(struct pdp_ctx));
+ 	return 0;
+@@ -1930,6 +1941,7 @@ late_initcall(gtp_init);
+ 
+ static void __exit gtp_fini(void)
+ {
++	dump_pdp_en = false;
+ 	genl_unregister_family(&gtp_genl_family);
+ 	rtnl_link_unregister(&gtp_link_ops);
+ 	unregister_pernet_subsys(&gtp_net_ops);
+-- 
+2.33.8
+
