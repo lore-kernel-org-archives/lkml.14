@@ -1,56 +1,35 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FEE41842;
-	Wed, 24 Jan 2024 01:30:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 077C915A5;
+	Wed, 24 Jan 2024 01:30:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706059812; cv=none; b=fMaayZpveHBrBgIwQXZboIcdVjc7qsmb8mfms/IAuLuvDoB53Tnxkg7oe6QgajQ+DmDcgRLVTy8dG4HDUYN5ZTPJe+ESYMn9JUpJvGmqWwDNgkpG/3r4D2RvgvuZb+Zw/+QvvX1EcCzMo475syILa/1HOEN3U0D52KOJqJ59uAQ=
+	t=1706059831; cv=none; b=iacp3vGOolruDwZ4Nx+7AvutIcsWa2NTaMfRpMP+BqKiqm9PGIroEmjrTjL0IDpno7ysgXu8hApwmNFQRwh3QekmFa+A1VZhyCeVcy1v2fxfYTuxeJI2AhNJQKHkSsXvmYlSYFXz7kRyjLZ8bePXATyq7zGoRgCqO8GTXSsWgy4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706059812; c=relaxed/simple;
-	bh=NtAGrG5ZVUfxOpHnwIUN/o79MwAWDi+dzyZYGdfD7Hs=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=HnOVpzj6XvD4WEVs4tORMAuM6k92sXjxegRsOQXB1ZMwtldkhpkhwgPZtZIpGzjHlOj5B7ugdyygnk86anIVK3lEByRUmBI2Qj0rwizLwuRvwnSemMavFpq16UyhbeQXbaNZnLNVQo/XLe/jA3M01ALJjUmmBVuIWgZXzzwANj8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 0bbcbf84f5b84bd5b7f9669488c5eb53-20240124
-X-CID-O-RULE: Release_Ham
-X-CID-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.35,REQID:cd248ffa-ee3d-4b45-8f20-b57da0cb9ae0,IP:15,
-	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTI
-	ON:release,TS:0
-X-CID-INFO: VERSION:1.1.35,REQID:cd248ffa-ee3d-4b45-8f20-b57da0cb9ae0,IP:15,UR
-	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:0
-X-CID-META: VersionHash:5d391d7,CLOUDID:e9a613fe-c16b-4159-a099-3b9d0558e447,B
-	ulkID:240124093002G6S37MJB,BulkQuantity:0,Recheck:0,SF:66|38|24|17|19|44|1
-	02,TC:nil,Content:0,EDM:-3,IP:-2,URL:0,File:nil,Bulk:nil,QS:nil,BEC:nil,CO
-	L:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_FSD,TF_CID_SPAM_FSI,TF_CID_SPAM_SNR,TF_CID_SPAM_FAS
-X-UUID: 0bbcbf84f5b84bd5b7f9669488c5eb53-20240124
-X-User: liucong2@kylinos.cn
-Received: from localhost.localdomain [(116.128.244.171)] by mailgw
-	(envelope-from <liucong2@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 1784765844; Wed, 24 Jan 2024 09:30:01 +0800
-From: Cong Liu <liucong2@kylinos.cn>
-To: shyam-sundar.s-k@amd.com,
-	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Mario Limonciello <mario.limonciello@amd.com>
-Cc: linux-kernel@vger.kernel.org,
-	liucong2@kylinos.cn,
-	platform-driver-x86@vger.kernel.org
-Subject: [PATCH v2] platform/x86/amd/pmf: Fix memory leak in amd_pmf_get_pb_data()
-Date: Wed, 24 Jan 2024 09:29:38 +0800
-Message-Id: <20240124012939.6550-1-liucong2@kylinos.cn>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <b7bd8769-5f97-4c9a-be80-8d1acac92b19@amd.com>
-References: <b7bd8769-5f97-4c9a-be80-8d1acac92b19@amd.com>
+	s=arc-20240116; t=1706059831; c=relaxed/simple;
+	bh=JTWzB95tQksa5MDrICl6BaP8CqbXJ+U4hsSFxWdgIA4=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=ir1mpOFXVszOR5Om2FhEMVjPwSB2KSnEo6T533gEGr6yHqtXAMTffeejpj4wVaw/wnHxWXbAlhKCe8yDfrVt1vm5r4zsCAniOEwc9HHjkkqP1IUh1RClNGF6TZ6TVIYELAV67ZJscUTnHB75+7JXqUAuS7MVckq/AT7rVpFMZc0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DbbP3Mqd; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DbbP3Mqd"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 6C690C43390;
+	Wed, 24 Jan 2024 01:30:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706059830;
+	bh=JTWzB95tQksa5MDrICl6BaP8CqbXJ+U4hsSFxWdgIA4=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=DbbP3MqdEZJFOzOklIithRbKpINxz+tksq4FB6ZpcGAjrkfEUEMduTLc/zy/YHo4P
+	 FBDDv/gMTZfas+dX+PIWiYWMUzsd2UjvRGw8F4WjqsO4ZEOSpUX2MRk36R91Vec5Jy
+	 uOqEEpQBBEN4ROSIlb8IcMsCglS3nfy2gwWydJH3BP3u/5l7P/tNsouJRvPez0oWu4
+	 ztyzBwDEZ7rv0caQ9/UyQHCW8g804b0MtHjxed2XwPfgQxAEzKzr2F/23rP8LFPnEM
+	 ba89sJdQCzufcWk/wssLYvjohfvXr5PPh25/5joIvIqb7kwMU8meB/w0LVAjORp7y/
+	 lewwCp7QkbNAQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 53536DFF767;
+	Wed, 24 Jan 2024 01:30:30 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -58,34 +37,44 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net 1/1] hv_netvsc: Calculate correct ring size when PAGE_SIZE
+ is not 4 Kbytes
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <170605983033.14933.2315449295954740333.git-patchwork-notify@kernel.org>
+Date: Wed, 24 Jan 2024 01:30:30 +0000
+References: <20240122162028.348885-1-mhklinux@outlook.com>
+In-Reply-To: <20240122162028.348885-1-mhklinux@outlook.com>
+To: Michael Kelley <mhkelley58@gmail.com>
+Cc: haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+ netdev@vger.kernel.org
 
-amd_pmf_get_pb_data() will allocate memory for the policy buffer,
-but does not free it if copy_from_user() fails. This leads to a memory
-leak.
+Hello:
 
-Fixes: 10817f28e533 ("platform/x86/amd/pmf: Add capability to sideload of policy binary")
-Reviewed-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-Signed-off-by: Cong Liu <liucong2@kylinos.cn>
----
- drivers/platform/x86/amd/pmf/tee-if.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+This patch was applied to netdev/net.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-diff --git a/drivers/platform/x86/amd/pmf/tee-if.c b/drivers/platform/x86/amd/pmf/tee-if.c
-index 502ce93d5cdd..f8c0177afb0d 100644
---- a/drivers/platform/x86/amd/pmf/tee-if.c
-+++ b/drivers/platform/x86/amd/pmf/tee-if.c
-@@ -298,8 +298,10 @@ static ssize_t amd_pmf_get_pb_data(struct file *filp, const char __user *buf,
- 	if (!new_policy_buf)
- 		return -ENOMEM;
- 
--	if (copy_from_user(new_policy_buf, buf, length))
-+	if (copy_from_user(new_policy_buf, buf, length)) {
-+		kfree(new_policy_buf);
- 		return -EFAULT;
-+	}
- 
- 	kfree(dev->policy_buf);
- 	dev->policy_buf = new_policy_buf;
+On Mon, 22 Jan 2024 08:20:28 -0800 you wrote:
+> From: Michael Kelley <mhklinux@outlook.com>
+> 
+> Current code in netvsc_drv_init() incorrectly assumes that PAGE_SIZE
+> is 4 Kbytes, which is wrong on ARM64 with 16K or 64K page size. As a
+> result, the default VMBus ring buffer size on ARM64 with 64K page size
+> is 8 Mbytes instead of the expected 512 Kbytes. While this doesn't break
+> anything, a typical VM with 8 vCPUs and 8 netvsc channels wastes 120
+> Mbytes (8 channels * 2 ring buffers/channel * 7.5 Mbytes/ring buffer).
+> 
+> [...]
+
+Here is the summary with links:
+  - [net,1/1] hv_netvsc: Calculate correct ring size when PAGE_SIZE is not 4 Kbytes
+    https://git.kernel.org/netdev/net/c/6941f67ad37d
+
+You are awesome, thank you!
 -- 
-2.34.1
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
