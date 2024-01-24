@@ -1,120 +1,95 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 779257A725;
-	Wed, 24 Jan 2024 16:07:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A9697CF0F;
+	Wed, 24 Jan 2024 16:08:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706112474; cv=none; b=W+97xLwZ+60Qxukcj9cEW3onbfs8VwSl9uVSER9KwCxOoHN2YgzK70bjq3eMGe+c9vH6A2LxxzCdcOo5RWu2Wn77TJTLFGXzX68pO753lLCPeh3nilTM4DHPvH7EcxGgDXblqK4YsnJu70WX+t3HzK7zLMEueKYZOPY/eLnB3lY=
+	t=1706112507; cv=none; b=sf8dscwkNa6RsScf/86zMCnkioKdgDDaFJiJSTlgU3TxfxLcgqzLPzRe6kr96kICsD3O3bAQukw9tx8baLogKeBKOQZ1oYnvKwbHE+tHq7hyVEQdoSFY8rR2eI+D7T9CfKMmEgC0FKJC8nlYO2ZWRqDIS+Y9zDZpgrEoe7ZjSho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706112474; c=relaxed/simple;
-	bh=T7a150d0tNI47ue4XaQznSfvq2Kxgb5U4vfbNPnQC8A=;
+	s=arc-20240116; t=1706112507; c=relaxed/simple;
+	bh=DaWdpN7BwW9Rz3N8clEZtNYY2V+QP/urU1Sjx36U/Bk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZJRpGgOh3VcydrvIhOr3qXUP+Cb+fWLx7aqp1/WkPx7TigNt9Q6iynQZhV21tbuzM7vZumDQYTNh8XyIL3libYFHq70G2dLOJpGJdW1iDY2PtqIKP41XEk5G+wiPciOjL7O1ywXFwSZF9m/pRK7j+UxycDvRCy4O63RUaIPHDUI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AkpFFABp; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=oAQiOrSyDRqDXh1rvDrskykIG+QVw34qgQOetyPqwUQUvM0cGOUfdqFav0IucDbqrI9vHIKiJF6UenCA0askaBKVAuEvqfzyeAw7EMtliEycwvF5gTPFIeP0RGz6nlGUBqy2kXSWESKXLhM7Q8g28lvLT+a0dINoOFUT6dcbfE8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RihsbLcV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AkpFFABp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09351C433C7;
-	Wed, 24 Jan 2024 16:07:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RihsbLcV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FE91C433C7;
+	Wed, 24 Jan 2024 16:08:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706112473;
-	bh=T7a150d0tNI47ue4XaQznSfvq2Kxgb5U4vfbNPnQC8A=;
+	s=k20201202; t=1706112507;
+	bh=DaWdpN7BwW9Rz3N8clEZtNYY2V+QP/urU1Sjx36U/Bk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=AkpFFABpJpTm/W1yHzgIqYaAmRMtNDO5b92DqnfpJ9VvStTZi3E6ggtnDYcXTOVlB
-	 iNx4pUbYzt0tcyikh5RqvEpp0BEO3jkA1R0Y/85ophbqGpAqrdZhQntlarok19SYWv
-	 tawp6S6Up5fHCAESVLn9OyiV0mshvWYYRBLl+1fLzsLpWUicgiOt6d9FbsjK/td7yd
-	 kk0IiuVM/FrFcaNjzCWwDQ0vJ9gmg34xBicaLGB3OaT831MO9mZ4mxl95DOVM9rx6t
-	 BcvznleZzDNrXOtRRAB8BjbnRSQbKUyzkmms6eDFIC4iblaWvabJ6ChrazHprXFXF9
-	 H0tXWbdwMy2sA==
-Date: Wed, 24 Jan 2024 16:07:48 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Esben Haabendal <esben@geanix.com>
-Cc: devicetree@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-	Jose Abreu <joabreu@synopsys.com>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] dt-bindings: net: snps,dwmac: Add
- time-based-scheduling property
-Message-ID: <20240124-reptilian-icing-a95b20f123be@spud>
-References: <b365dc6f756a3fad4dfaa2675c98f4078aba8a55.1706105494.git.esben@geanix.com>
- <30ce8f45b8752c603acc861ebb2f18d74d2f8a07.1706105494.git.esben@geanix.com>
+	b=RihsbLcVCC6tH/nJwjn7CCvFgwm8zNWzNMQq6aGrHx04N1lljeiUcNpM8F96CR+JW
+	 XbYFOgVdK1D/kSgWO49KB+iQsthwA3p3z/QaQg4NQBvHfT7/0o09sLfHnRzctIwm1D
+	 NJf2ErpXMaQMZfZGNtE+fLccoHe+jcP34ol9dTcaFVPU6nfjNGDzu5nsH0pJyGEHYX
+	 79GCzjK4/CY1Q7Jr+XHS5g/FqPATtiu+a0B8eecWxIDqcrjI0K3AlrnZ4E0RHaZCOr
+	 qU2PC9fO5iN+EUJOetdXdVvgvxnNuDnriE/uk3FM6IggoE/hKO7HSoV3DTG5DLREvf
+	 7TlGEc9ULeVbw==
+Date: Wed, 24 Jan 2024 16:08:22 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: Jonas Gorski <jonas.gorski@gmail.com>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Amit Kumar Mahapatra <amit.kumar-mahapatra@amd.com>,
+	"linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH] spi: Raise limit on number of chip selects
+Message-ID: <e7e5982b-7b85-477d-8649-a58ea1d40e29@sirena.org.uk>
+References: <20240122-spi-multi-cs-max-v1-1-a7e98cd5f6c7@kernel.org>
+ <20240123120430.75c7ace0@bootlin.com>
+ <cefafa30-b78d-471b-83e0-b05060d806d4@sirena.org.uk>
+ <93385fc2-7596-4f66-b0c1-07d7d5c9ed8d@csgroup.eu>
+ <49b52941-6205-48bd-b2ae-e334018ac5cd@sirena.org.uk>
+ <CAOiHx==FzSyyqP3NzLTeOSVxUQYy3ZhypZrDLsc-OjGCdSzvUA@mail.gmail.com>
+ <801eecbe-4bf9-4bb8-9de0-1a7ca6673ddf@roeck-us.net>
+ <CAOiHx=mM7kpzR-MOshsgXZM+CSB0nawfWxMhpt=tuhmJyMTCzQ@mail.gmail.com>
+ <38630519-733c-4598-97a7-19a5e6306513@sirena.org.uk>
+ <bc19929e-8231-4bb6-bb36-555a68cb7335@csgroup.eu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="orGn1OOIBTBi4VY0"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="La/ghchXRX65G8k0"
 Content-Disposition: inline
-In-Reply-To: <30ce8f45b8752c603acc861ebb2f18d74d2f8a07.1706105494.git.esben@geanix.com>
+In-Reply-To: <bc19929e-8231-4bb6-bb36-555a68cb7335@csgroup.eu>
+X-Cookie: To err is human, to moo bovine.
 
 
---orGn1OOIBTBi4VY0
+--La/ghchXRX65G8k0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jan 24, 2024 at 03:33:06PM +0100, Esben Haabendal wrote:
-> Time Based Scheduling can be enabled per TX queue, if supported by the
-> controller.
+On Wed, Jan 24, 2024 at 03:28:32PM +0000, Christophe Leroy wrote:
 
-If time based scheduling is not supported by the controller, then the
-property should not be present! The presence of a property like this
-should mean that the feature is supported, using it is up to the
-operating system.
+> Should we revert that commit 4d8ff6b0991d ("spi: Add multi-cs memories=20
+> support in SPI core") and implement something simpler ?
 
-That said, why is this a property that should be in DT? If support is
-per controller is it not sufficient to use the compatible to determine
-if this is supported?
+I really don't want to keep going through the pain with having people
+constantly adding access for chip select that bypass the helpers if we
+can avoid it, there's been a constant need for fixups which have just
+added to the pain with the multi CS stuff.  My thinking was to get the
+API in place and then improve the implementation behind it.
 
-Thanks,
-Conor.
-
->=20
-> Signed-off-by: Esben Haabendal <esben@geanix.com>
-> ---
->  Documentation/devicetree/bindings/net/snps,dwmac.yaml | 6 ++++++
->  1 file changed, 6 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/net/snps,dwmac.yaml b/Docu=
-mentation/devicetree/bindings/net/snps,dwmac.yaml
-> index 5c2769dc689a..301e9150ecc3 100644
-> --- a/Documentation/devicetree/bindings/net/snps,dwmac.yaml
-> +++ b/Documentation/devicetree/bindings/net/snps,dwmac.yaml
-> @@ -399,6 +399,12 @@ properties:
->              type: boolean
->              description: TX checksum offload is unsupported by the TX qu=
-eue.
-> =20
-> +          snps,time-based-scheduling:
-> +            type: boolean
-> +            description:
-> +              Time Based Scheduling will be enabled for TX queue.
-> +              This is typically not supported for TX queue 0.
-> +
->          allOf:
->            - if:
->                required:
-> --=20
-> 2.43.0
->=20
-
---orGn1OOIBTBi4VY0
+--La/ghchXRX65G8k0
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZbE11AAKCRB4tDGHoIJi
-0v8wAP9TtkDEdLKEVA0n+83492ltV8gpozpt7NTDo9bSA8pPRwEAk2CFLW1Ac02u
-hfaJxQ8KnrIuHQjJ9wb8ToaEVgPN9Ag=
-=Q0u6
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmWxNfUACgkQJNaLcl1U
+h9ANugf/ZmDCYh5tXW2idgNrbFAju9Znmq74ViirQWDW6ezLyn3RTrKW3DErXQFA
+KZR5lkvczxXmU2MGa3Po06YCvGwkSTbNPydt1k9U2eZJ+J6tS8Rf+wKQFbsbg4IC
+8SsYWl4muzcTU12DdIIrNwpb4m6IQNGIaoSlDgC9Nr1k0rX4SGnbLtS1cCKspaDA
+Gc6VnRxjITw1NxqXbA8lWXT/DR4ESVCcUvIpKfnkhqaceWy26o6lJTkzYBhqx//3
+vW6lZZGOqz9BwDNgim/I0RWkus3Rn5rTP5vCwejLvBCuQaki7MS7qfmrCrDfOA1+
+uny2FStMImMdPvWqoi79dau1Kc/PdA==
+=dJ/B
 -----END PGP SIGNATURE-----
 
---orGn1OOIBTBi4VY0--
+--La/ghchXRX65G8k0--
