@@ -1,95 +1,78 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13B45620
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 00:40:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 081FDEC5;
+	Wed, 24 Jan 2024 00:44:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706056854; cv=none; b=OO+xS5dRzDAtB3jwSyROzl9UTb6sQAZ4S31CJUDCz42vm1mSVYqEKsDTN1spJD+/X+Z2ibQ3TvCeqs+FfPrvcG1QdtMiXhUGDANUUVCYf5SE0F+8BquPltM36bX/Xe96ia8HqAa5n+lPWh8j3UpGmrGQWApSaHWV78Y6bgm97Ug=
+	t=1706057074; cv=none; b=FfUppzB4E0RLZi+vjqLX2VAkqKYDWbefpwoXnVlU1MqJxp4tyXLmInE+MKQBKFPrvDES/bQMttt538KkXSF1N2hUkYtuOUjG3byRz6Xc+8NnNCe/BtHLewHUhJ816QJOejrrFTUmuXHILX6VeBNQ7ChLNRhVBOejTzcvKeaoJE8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706056854; c=relaxed/simple;
-	bh=ER5Bp0V1Zhc+FoYdut0RUMjI9BKEJAxh4pg9D81lGAw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ulIr/oDc4QBCC+WSw6Dqah6Z1MBFq3pKaC4Z6uXBeuU0epppcxiHu9w9eR8rR+lRbsqLPxF1UsrA8IP9Y8Ub5k61UPpoLI1JuHkCFcLahsAkpH5wbuk4Jtc6fkX3KwE/SYYHAWA5iQwKsfMuzjeZmHDmcLNI+biWDeflevETzUo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hoh3yJdM; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hoh3yJdM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1706056851;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xiOvb37QfLscKQcu8Koz59w2wt96DY2PQzu4935ySGU=;
-	b=hoh3yJdM8gu1Rsx476XTScARP8ha1dzRYfyoztyZ6zf6hT8dCvuLKyxk5PKjCRd+cziNyv
-	L3NVA807d38cuoSZHtSEf+Irw557tQ5w6BkxWpQFTC9t4AI5xTa5BzqKV3getoEgrn1qtd
-	LKmhMKE20hRuJPhu9t3hAUZvqBGsLkE=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-388-g_pKhG1NPECvcelyEyiKkQ-1; Tue, 23 Jan 2024 19:40:46 -0500
-X-MC-Unique: g_pKhG1NPECvcelyEyiKkQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id EB5A6835380;
-	Wed, 24 Jan 2024 00:40:45 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.7])
-	by smtp.corp.redhat.com (Postfix) with SMTP id B2A0151D5;
-	Wed, 24 Jan 2024 00:40:44 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Wed, 24 Jan 2024 01:39:32 +0100 (CET)
-Date: Wed, 24 Jan 2024 01:39:30 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: Dylan Hatch <dylanbhatch@google.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	"Eric W. Biederman" <ebiederm@xmission.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/2] getrusage: use sig->stats_lock
-Message-ID: <20240124003930.GA26412@redhat.com>
-References: <20240122155023.GA26169@redhat.com>
- <CADBMgpxNUoaermXsEj0Hs0KT=Q0xRpz5y+Px=oAGDP2Efg8yyw@mail.gmail.com>
+	s=arc-20240116; t=1706057074; c=relaxed/simple;
+	bh=MsBFXOkvirWva83YIYZLGwPypy+AaQBKfn8SHtTTJVg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ZFEp9IpfYwVaF8gL+kVAyzM07kI7rMZXzlLnBzisM9DsAGyeME4tbYajlrEFFtWVzMwvl/HgiC5IfGoDURY9mn85f1HUTkH/wY2zpLc7go2jLsPfntHpoaVOqpNpDvFL+C8+hKlUdaWKConKpJ8JC71bcCK1aDJ0WWEuuMW1fes=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; arc=none smtp.client-ip=115.124.30.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=yang.lee@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0W.E3rAK_1706057066;
+Received: from localhost(mailfrom:yang.lee@linux.alibaba.com fp:SMTPD_---0W.E3rAK_1706057066)
+          by smtp.aliyun-inc.com;
+          Wed, 24 Jan 2024 08:44:27 +0800
+From: Yang Li <yang.lee@linux.alibaba.com>
+To: lgirdwood@gmail.com,
+	broonie@kernel.org,
+	perex@perex.cz,
+	tiwai@suse.com
+Cc: linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Yang Li <yang.lee@linux.alibaba.com>
+Subject: [PATCH -next] ASoC: codecs: Remove unneeded semicolon
+Date: Wed, 24 Jan 2024 08:44:25 +0800
+Message-Id: <20240124004425.54020-1-yang.lee@linux.alibaba.com>
+X-Mailer: git-send-email 2.20.1.7.g153144c
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CADBMgpxNUoaermXsEj0Hs0KT=Q0xRpz5y+Px=oAGDP2Efg8yyw@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
+Content-Transfer-Encoding: 8bit
 
-On 01/23, Dylan Hatch wrote:
->
-> I have one last question -- is there possibly an edge case in which
-> the hard lockup
-> can still happen? How likely is it for many writers to force enough
-> readers to do a
-> retry on the seqlock, disabling irq and causing the lockup?
+In the wcd939x codec driver, there are two instances where semicolons
+are used after closing braces of a switch-case statement. These
+semicolons are not required and do not adhere to the coding style
+guidelines.
 
-I don't know how likely is it, and I guess the repro should be more creative ;)
+This patch removes the unnecessary semicolons at the end of the
+switch-case statements which cleans up the code and ensures consistency
+with the rest of the kernel coding style.
 
-But yes. Please see the TODO: section in the changelog,
+Signed-off-by: Yang Li <yang.lee@linux.alibaba.com>
+---
+ sound/soc/codecs/wcd939x.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-	- Turn sig->stats_lock into seqcount_rwlock_t, this way the
-	  readers in the slow mode won't exclude each other.
-
-and more importantly,
-
-	- stats_lock has to disable irqs because ->siglock can be taken
-	  in irq context, it would be very nice to change __exit_signal()
-	  to avoid the siglock->stats_lock dependency.
-
-There are other users which take stats_lock under siglock (and the
-"fs/proc: do_task_stat" series changes 2 of them to not do this), but
-__exit_signal() is most problematic.
-
-If we remove this dependency, we can turn read_seqbegin_or_lock_irqsave()
-into read_seqbegin_or_lock() which doesn't disable irqs.
-
-Oleg.
+diff --git a/sound/soc/codecs/wcd939x.c b/sound/soc/codecs/wcd939x.c
+index 0ccc7b31d0c1..c49894aad8a5 100644
+--- a/sound/soc/codecs/wcd939x.c
++++ b/sound/soc/codecs/wcd939x.c
+@@ -970,7 +970,7 @@ static int wcd939x_codec_enable_dmic(struct snd_soc_dapm_widget *w,
+ 	default:
+ 		dev_err(component->dev, "%s: Invalid DMIC Selection\n", __func__);
+ 		return -EINVAL;
+-	};
++	}
+ 
+ 	switch (event) {
+ 	case SND_SOC_DAPM_PRE_PMU:
+@@ -1292,7 +1292,7 @@ static int wcd939x_micbias_control(struct snd_soc_component *component,
+ 		dev_err(component->dev, "%s: Invalid micbias number: %d\n",
+ 			__func__, micb_num);
+ 		return -EINVAL;
+-	};
++	}
+ 
+ 	switch (req) {
+ 	case MICB_PULLUP_ENABLE:
+-- 
+2.20.1.7.g153144c
 
