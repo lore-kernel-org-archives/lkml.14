@@ -1,17 +1,17 @@
 Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C40960DC0;
-	Wed, 24 Jan 2024 12:00:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9CD7067E71;
+	Wed, 24 Jan 2024 12:00:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706097615; cv=none; b=jCQaHL5ECk41QhJhR7DsesLD1x+qqj3QPATApc/qokZaFypUPpK3OhanOmexb/58lAXJzq7nENOs0K620VGeJo2rkv2s5+9x5imvipHs0ut2pr3hlcqMj/UubiStvRDb2iVdkv3fzdC9K0hdNrgF3EkvB97LxvEXu9Z+SOiMWGw=
+	t=1706097618; cv=none; b=WSjvNfCGXjnO3DiTFYyRHTSzNtfW0g0xPpt54CH40FuE9wSGjfbLfd2d7Le3H4WgkBy0YF5kFgQPPvYEcr6y8VaDvTK7bRkL9wyN4cInJHkwGPr9C8Bm/Y1dw/iPCaZFnPLKhRFZNkNwF9GL//HNc4fkiebTUErv23JClAMxAMk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706097615; c=relaxed/simple;
-	bh=rOOuSh+1eZIFPiRqy8Z4jjiN4PmFYfqaD61RmkKO4sk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=SnTc9+v727RnY8ds6ZxSI+r2ibDZSr2SA8waKJx71JSehByx0nsSmag7nl0oWgHdW0sbbvHZaYaLdEFQ+esEOI6B/HxO/S+DVvdy4mZ13M844msNm50r5jsfsKNreN8Ok2n1D5ddP4SDixK3ThqwzA3rFj49U0k0QmBAnvtmHeQ=
+	s=arc-20240116; t=1706097618; c=relaxed/simple;
+	bh=VZqpdCT23a4FLYa7casjJexKzDefLDFZjLgIXAUOM2A=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=dn04dRZ9CNFxEIUTdPo6bkr0IGQ/FSIHmLDS70KN9DYlnFzT4DaWH/3csme5qzQeDs1vvj3o8SRvLNyiZgDixESWzrUUoz+R9sbCpCgbe6gGFp5nzsYgpDWw2RfraHnzscmb4aF6O34b3WZ9H7u0CUmS3KoNP2B2ZIAAW2puYnQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-d85ff70000001748-a5-65b0fbb74714
+X-AuditID: a67dfc5b-d85ff70000001748-d3-65b0fbb8fd1e
 From: Byungchul Park <byungchul@sk.com>
 To: linux-kernel@vger.kernel.org
 Cc: kernel_team@skhynix.com,
@@ -72,44 +72,44 @@ Cc: kernel_team@skhynix.com,
 	longman@redhat.com,
 	hdanton@sina.com,
 	her0gyugyu@gmail.com
-Subject: [PATCH v11 22/26] dept: Record the latest one out of consecutive waits of the same class
-Date: Wed, 24 Jan 2024 20:59:33 +0900
-Message-Id: <20240124115938.80132-23-byungchul@sk.com>
+Subject: [PATCH v11 26/26] locking/lockdep, fs/jbd2: Use a weaker annotation in journal handling
+Date: Wed, 24 Jan 2024 20:59:37 +0900
+Message-Id: <20240124115938.80132-27-byungchul@sk.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20240124115938.80132-1-byungchul@sk.com>
 References: <20240124115938.80132-1-byungchul@sk.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAAzWSe0yTZxSHfd/v2mrdl47oK25xaUK2weSyiR51UWN0fiY6tkwTcTHawReo
-	FDAFQUxIEIoybgKxFhQJoqm1oGDBiBYYg3DTcNkgiqwwrERt5JZi0QKyAcZ/Tp6c3/k9fx2e
-	UtoYb14TEy/pYtRaFSun5WMrytbfm62SAsdTgyE/OxDcbzJoKK6sYKHndjmCipozGJwte+DJ
-	9CiC2c5uCoyGHgRXnw1SUNM6hKDenMpC78hK6HNPsNBhyGIh7VolC3+9nsNgv1iAody6Hx7l
-	lWFo9Lykwehk4bIxDS+MVxg8JgsHphQfcJgvcTD3LAg6hh4zUD/gB0Uldhbq6jtoaK11YOh9
-	UMzCUMV/DDxqbaehJz+HgVvjZSy8njZRYHJPcPB3YymGKv2C6OzUPANtOY0Yzl6/g6HvqQ1B
-	Q8YwBmvFYxaa3aMYqq0GCmZutCBw5I5xkJ7t4eDymVwEWekXaeh+38aA3h4Ms++K2R1bxObR
-	CUrUVyeK9dOltPiwjIj3Lw1yor5hgBNLrSfFarOveK3OicWrLjcjWi2/s6LVVcCJmWN9WBzv
-	6uLE9sJZWhzpM+Kf1h6Wfx8uaTUJki5g2zF5ZPfdKeaEc/mpXMcISkFtskwk44mwgXT9e5P9
-	yPeuz9OLzApfkv5+D7XIXsIXpDrnBZOJ5DwlnFtOzJOdS4VPBTV5M1zCLDIt+BDH1NOlskLY
-	SK4YUpkP0nWkvKpxSSRb2N8qGli6UQrBZNhynluUEiFNRv6ZNHIfCmvIn+Z+Og8pStEyC1Jq
-	YhKi1RrtBv/IpBjNKf+w2GgrWngpU/Lcr7XI1fNLExJ4pFqh2GGplJSMOiEuKboJEZ5SeSn6
-	19yWlIpwddJpSRd7VHdSK8U1obU8rVqt+HY6MVwpRKjjpShJOiHpPqaYl3mnoBsNEau6zh8J
-	m3Gl231tmrf5b/WfJWY/4I9+TiZKDF+l2WO3H4ja+mPoN93J856ve5exXj5/JDe3bw4IOX3h
-	t+PeXiGuSkxmMlKKn/+AVlI+Bbnu2kN5u507d9mOfWLYmmBM33c8KvS7wqwQbeveEm9nZJNt
-	MsrY+XOhX802+6aD71+o6LhIdZAvpYtT/w/5RYusTgMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAAzWSa0iTcRSH+793Z5OXKfRqYTWQQMmUNA4Y0YfAl6AIiaL6UCtfcl5rS51F
-	5GVqaWpac13UvLFsWurmrXJiWtqKnOYok3kbUg5NI51oXkqNvhwezu+c59OPwSXFpBcjj70i
-	KGJl0VJKRIiOhqTtbl6qEwK+rXpC/u0AcM7dJKCotoaC3ufVCGoaUjBwvA2FL/NTCJY+WnDQ
-	anoRlI0N4dDQNYzAVJVKQf+4G1idMxSYNdkUpFXUUtA3uYyBrbAAg2rDEfhwpxyD9sXvBGgd
-	FDzSpmFrYwKDRZ2eBl2yD9irHtKwPBYI5uHPJHQWm0kwDfrBgxIbBa0mMwFdLXYM+l8WUTBc
-	84eED13vCOjNzyHh2XQ5BZPzOhx0zhkaPrWXYlCnXrNlzK6S0J3TjkFGZT0G1q+vELTdHMXA
-	UPOZgk7nFAZGgwaH30/eIrDn/qAh/fYiDY9SchFkpxcSYFnpJkFtC4alhSLqYAjfOTWD82pj
-	Im+aLyX49+Uc/+LhEM2r2wZpvtQQzxurfPmKVgfGl/1ykrxBf4viDb8KaD7rhxXjp3t6aP7d
-	/SWCH7dqsWPbTov2hwvR8gRBsefAOVGEpXGWvORwVeXax1Ey6nbJQi4MxwZxzZWrxDpT7C5u
-	YGARX2cPdgdnzPlGZiERg7OZrlzVz4/UeuDOyri50RJynQnWh7PPft14FrP7uGJNKvlPup2r
-	rmvfELms7Z89GNy4kbDB3Kg+j76DRKVokx55yGMTYmTy6GB/ZVREUqxc5X8hLsaA1kqju76c
-	34Lm+kM7EMsg6WbxQX2tICFlCcqkmA7EMbjUQzzg+VyQiMNlSVcFRdxZRXy0oOxAWxlCukV8
-	+KRwTsJelF0RogThkqD4n2KMi1cyKgr0Nt9LpiMuj72/H7WZubHz+ONDJZGWEXpB0xDmmsoO
-	iNRu9VbjqdBrm+J8t9i8A0Ysx576z7gPZTZVWE6f+PLkza3itsjvBY0TvvGOkTRpXWPf3iB5
-	il/6PpuyMKQir0cv3J3Xvm4ISjjjSYU1qVTh51ULOMuZwqKycxJXzFJCGSEL9MUVStlfR33r
-	vzADAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAAzWSbUyTZxiF9zzvZzu6vOsIvIrJli5mDhQURe8ZZ1hitmfLjDNmf1wiNvYN
+	NBYkLZ9LNICoyJdKhPqBs6CptRSLBQ0KJQwjgsSCQqAiNEAIA6RA0DbryqaUbX/uXDnn5OT+
+	cXhK+ZBZy2vTMiR9mlqnYuW03BtWs6k52CBtrvdEwIXSzeB7W0RDtd3GQt+dOgS2pnwMM4+/
+	gyH/HILgs14KjJV9CGrGRylo6vQgcFoKWOif/AgGfAssdFeWsHDyhp2F56+XMYxUVWCoc+yF
+	nvO1GNoDf9BgnGHhqvEkXjnTGAJmKwfmvPUwYbnCwfL4Fuj2DDLgHI6By7+NsNDq7Kahs3kC
+	Q//DahY8tncM9HR20dB3oYyB+vlaFl77zRSYfQscvGg3YWgoXCk6/eYfBp6UtWM4ffMuhoGX
+	LQjaisYwOGyDLDzyzWFodFRS8Netxwgmyr0cnCoNcHA1vxxByakqGnr/fsJA4UgCBP+sZhN3
+	kkdzCxQpbMwmTr+JJk9rRfLgyihHCtuGOWJyZJJGSzS50TqDSc2SjyEO61mWOJYqOFLsHcBk
+	3uXiSNelIE0mB4z4p6iD8l0aSafNkvRxuw/LUxY902z6XVlOgfkBk4eCXDGS8aKwTSy4OUkX
+	I36VrV5NSGaFL0S3O0CFOFz4TGwsm2KKkZynhDMfipbFZ2zI+EQ4LHa+WVgN0cJ60V10G4dY
+	IWwXL5Y/Z/7t/1Ssa2hfzchW9PrLw3SIlUKCOGY9x4VKRaFEJp6ZafrvoTXi7xY3fR4pTOgD
+	K1Jq07JS1VrdttiU3DRtTuyRY6kOtLIo8/HlX5rRUt+BDiTwSBWmSLTaJSWjzjLkpnYgkadU
+	4Qr3mjuSUqFR5/4q6Y8l6TN1kqEDRfG0KlIR78/WKIVkdYZ0VJLSJf3/LuZla/NQTOnUgQBq
+	8R/cYZg12dsyut++WjxxfVPuZHxYzvzHO69H5Rza802+K+t74muuvkfG9zdEbK1K32Bftjm4
+	+8lDvovGlri4a4mxR/r3HL205CuPKLrlCki28J7MrumMH0brX83mxciTvv6yav+6jb37fvw8
+	Mvlbj9NQsU7X+pWm5+dsl4o2pKi3RFN6g/o93sw5bE0DAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAAzWSe0hTcRzF+/3u09XitsRu2UMWURS9SONb9vorL0FR/2hFD1deckxnbGrZ
+	g6YzM01T0ZnOQq2WTVObPazUlqJpkY80M7OV2kNRW2gTbfZwQv8cPpxzOH8dlpDlUPNYpTpc
+	1KgVIXJaQkp2+epXPnSWimu6JjZC6qU14PgZT0JOSRENzcWFCIruRWPor/WDt6ODCJyvmgjI
+	zGhGkNf9gYB7dTYElQUxNLR+ngltDjsNDRmJNOivl9DQMjCBocuQhqHQshNepuRjsI5/IyGz
+	nwZjph5PSh+GcZOZAZNuCfQUZDMw0b0WGmztFNRcbaCgsnMFZF3roqGisoGEuvIeDK2Pc2iw
+	Ff2l4GVdPQnNqUkU3PmeT8PAqIkAk8POwGtrLobS2Mm1uJE/FDxPsmKIu3EXQ9u7Jwiq4j9h
+	sBS101DjGMRQZskg4NetWgQ9yUMMnL80zoAxOhlB4nkDCU2/n1MQ2+UDzrEcepuvUDNoJ4TY
+	shNC5WguKbzI54VH2R8YIbaqkxFyLRFCWcFy4XpFPxbyhh2UYDFfpAXLcBojJAy1YeF7YyMj
+	1F9xksLntky8e/5+yaYgMUQZKWpWbwmUBP+w9dHH77qdjDE9onTIySQgluU5b948FJSA3Fia
+	W8p3dIwTLnbnvPiypK9UApKwBHdhOl/w4xXtCmZzgXzdiH2qRHJL+I7429jFUm49n57cQrmY
+	5xbxhaXWqY7bpH8nq5N0sYzz4T+ZLzMpSJKLppmRu1IdGapQhvis0qqCo9TKk6uOhoVa0ORn
+	TGcnUsvRz1a/asSxSD5Dus1cIsooRaQ2KrQa8Swhd5d2zC0WZdIgRdQpURN2WBMRImqrkSdL
+	yudIdwSIgTLumCJcVInicVHzP8Ws2zwdWl/V5GkI9M+b9WDgo7rl97oFuw3LSus773v5djc9
+	8JHNaXltVJ027NFlmw8Vp2+3Ru+znzD4Z5T3Rg3n92/9ZrRdO6f3YFQHjBEevX2bA/QjGxYe
+	OfzeviHduj15bHXS2N4YXYD/DG+vo/V4MfO0N/Qg7KutULU/DvsSf7P1zLM3TjmpDVasXU5o
+	tIp/akcm2y8DAAA=
 X-CFilter-Loop: Reflected
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -117,54 +117,34 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The current code records all the waits for later use to track relation
-between waits and events in each context. However, since the same class
-is handled the same way, it'd be okay to record only one on behalf of
-the others if they all have the same class.
+jbd2 journal handling code doesn't want any jbd2_might_wait_for_commit()
+to be between start_this_handle() and stop_this_handle(). So it marks
+the region with rwsem_acquire_read() and rwsem_release().
 
-Even though it's the ideal to search the whole history buffer for that,
-since it'd cost too high, alternatively, let's keep the latest one at
-least when the same class'ed waits consecutively appear.
+However, the annotation is too strong for that purpose. We don't have to
+use more than try lock annotation for that.
+
+Furthermore, now that Dept was introduced, false positive alarms was
+reported by that. Replaced it with try lock annotation.
 
 Signed-off-by: Byungchul Park <byungchul@sk.com>
 ---
- kernel/dependency/dept.c | 21 ++++++++++++++++++++-
- 1 file changed, 20 insertions(+), 1 deletion(-)
+ fs/jbd2/transaction.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/dependency/dept.c b/kernel/dependency/dept.c
-index 1b8fa9f69d73..5c996f11abd5 100644
---- a/kernel/dependency/dept.c
-+++ b/kernel/dependency/dept.c
-@@ -1521,9 +1521,28 @@ static struct dept_wait_hist *new_hist(void)
- 	return wh;
- }
+diff --git a/fs/jbd2/transaction.c b/fs/jbd2/transaction.c
+index 5f08b5fd105a..2c159a547e15 100644
+--- a/fs/jbd2/transaction.c
++++ b/fs/jbd2/transaction.c
+@@ -460,7 +460,7 @@ static int start_this_handle(journal_t *journal, handle_t *handle,
+ 	read_unlock(&journal->j_state_lock);
+ 	current->journal_info = handle;
  
-+static struct dept_wait_hist *last_hist(void)
-+{
-+	int pos_n = hist_pos_next();
-+	struct dept_wait_hist *wh_n = hist(pos_n);
-+
-+	/*
-+	 * This is the first try.
-+	 */
-+	if (!pos_n && !wh_n->wait)
-+		return NULL;
-+
-+	return hist(pos_n + DEPT_MAX_WAIT_HIST - 1);
-+}
-+
- static void add_hist(struct dept_wait *w, unsigned int wg, unsigned int ctxt_id)
- {
--	struct dept_wait_hist *wh = new_hist();
-+	struct dept_wait_hist *wh;
-+
-+	wh = last_hist();
-+
-+	if (!wh || wh->wait->class != w->class || wh->ctxt_id != ctxt_id)
-+		wh = new_hist();
- 
- 	if (likely(wh->wait))
- 		put_wait(wh->wait);
+-	rwsem_acquire_read(&journal->j_trans_commit_map, 0, 0, _THIS_IP_);
++	rwsem_acquire_read(&journal->j_trans_commit_map, 0, 1, _THIS_IP_);
+ 	jbd2_journal_free_transaction(new_transaction);
+ 	/*
+ 	 * Ensure that no allocations done while the transaction is open are
 -- 
 2.17.1
 
