@@ -1,58 +1,58 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 279A317559
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 07:21:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A59D156E4
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 07:22:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706080897; cv=none; b=cRRnA/w4H31J33EAPRawIO1kQYL2hnWgr0lWr/OPwwFTCyyCbvLU9pTTvN3ffdoQBuB2k1yFHSq3ReC+HMZq27fF0feu9QOBQKIwlqpfJNa2mL12+iHd77PuzYgePLOU7sIHvv6go/ex1yWyfooCWL33czIEhz2GXMyYDnkbNfU=
+	t=1706080953; cv=none; b=FPyNxEqdnEwL/Iut8zy+baVdptnMjZ1MuZtgv+n9jzn/5fXmtF91mJ+zG6TQThFChnb+OTeRwm4/gm6f8p58pUzR5ZR3X/VLxWGH1ghRU7u2+2UhGybOw1Qzp4cOuiwXMOSmESgF5ndz3wdyf7+ML2VOt3VzItaLJ9mYRiLmlWA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706080897; c=relaxed/simple;
-	bh=H4FPoZmhlXh+UBl1asCFne9JixAG+p+9IHwyhrhCo5o=;
+	s=arc-20240116; t=1706080953; c=relaxed/simple;
+	bh=KXPYa/18+xPKUUlyN2gXtEQTyDzmUyFHAk84iMlyEh8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=X7mHuNvn/ppYYHY0CMaPuml8C+nqKRNllyCDPp0wVL/IUu/8d0fM6mJSdKKsbqlCI/tnxrkgaZLMloUFg816OH0X81BgCTjiDOi/aWTbiGxcvhONyP6dlse3oqWZ1ivnt/Dej2yZt/G5RStnP6iI6/hv4a56xjxpFXHRl82Nhg8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=EZwxF7M+; arc=none smtp.client-ip=209.85.210.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	 In-Reply-To:Content-Type; b=e33zig3ShpluF2f3kKjoQ1jSjQ1Q7KarAGNIZXSeDAW1oozU3aW2DZXUjrhULpEjxEhFGE3P5Ege840/L0l45WiWk+Ctg6KfQwtRQ8lgzRdhB9ZRGjvBFHykac48WyFdDGE/0tdhK8MVdcvE1D95pWh8QjWeLuV898ucV+4qKOg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Ovx7AEyq; arc=none smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="EZwxF7M+"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-6dd6c3c8a0eso1276741b3a.3
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 23:21:34 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ovx7AEyq"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a271a28aeb4so548358266b.2
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 23:22:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1706080894; x=1706685694; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
+        d=linaro.org; s=google; t=1706080949; x=1706685749; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=p6qgzXs3nbDCD4wLGTSejG/03+G+KZIJh31uHA04T3Q=;
-        b=EZwxF7M+UzQZXoMSn1pEU1nYjXjTsoakHMRhoXxAGlEMwg1Q1PcMf6OeRALh2Pgo/c
-         NqD3oJZs+kyWWnRkleoEO64gXRkkTvoQDtVT1Ziq0GvK7M//KMij5bbYQR5GWsPsHgAy
-         TdRmwzBqC728PI+X/mYnuNNJgKAfXOVyjFqMBzEuunnWz47sjn3rAtOreZR9exn1AGkL
-         zGeqEwtBqkplVHTXG6pFj8tJ/49/eCVR8at5p89m2mRj69IcaY7mYLc/rGY9WoGffMTX
-         DQDa0ULXm6L5eBLPwNH6mWdmMEZZ1OfcxXLW04yAPVKPra/7NsfEuEhe4l+na/LbeHD2
-         8Xyg==
+        bh=74nQwkPGzi/fWf5wR+BH+XBmoovS6yknmDdHMmlxxzI=;
+        b=Ovx7AEyqTzoLCVfe9gDrrYUubxl8ivzXIoFhMMKfp8cE+UyWuzyMOVFs62do7AvrAM
+         QSxP9G4A66ZhhJBlpU0aKg2p0Ecea4NZ7ifPKO93/fprP1ZrdDL6gYGfHqNQpoA36TEl
+         RBIH/JZeAHtN4ZfRibhWEPdyGoNRtHEHRYuf5TSFkBHUrtzWEgBv+pJU1iIi5VqHg/hX
+         sY/4Cs98V3dT5GSsIDkRkxA9K83QHiyRGYD7dKO0dMXROiitC2hbPjbnkm51hzhxaT9N
+         +QJlGx8sP7Wnq45QjpYK0YtcmySVomjJZ62e+tttlZXiCbCkvW3CPSBGWgFqeXV6CY4w
+         O8+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706080894; x=1706685694;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1706080949; x=1706685749;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=p6qgzXs3nbDCD4wLGTSejG/03+G+KZIJh31uHA04T3Q=;
-        b=AJ0CY1S1n7B8Z0Ehq0HMOX3c6qpi0FPUyH5s2WK0RZwvYgaxgvP2hoqkVJjxQFUyIr
-         pvxBeY/tg/o2pIjHcSZBJipO6XcgjELpfjd/nJFitdWt0bGsAGv0X/+z2x9rGIjKNPP9
-         Z4bgZwJqA12OnFuaYLOnO4cdci6C5DbyjII2e40Eq+YC4E4AVkFPiZgjIOwLmT6bla2U
-         dRNUmqeDqhEVWJSWxFA2/G0gjlaqo8pw8nTuZfsQaQfigKkoVIyjFlIeUcxhXX+q0+A+
-         YcipuPlwlVdbzO3xuOPgY7MPL7YJ/FmLC1uIl0PgSQ4H+goTecS4kVbqJubwo7fbi7OV
-         rcqg==
-X-Gm-Message-State: AOJu0YxXyNCXPYYFoU/VMjHOsT6YWBOUHtIRoSDtEJMTaWmfs0911byy
-	SzH+p9cCsOyGagrSANFPuyIUw/ueiJDn4QpgZ4XKunWd2XPWPxvkSQq9N0vAk48=
-X-Google-Smtp-Source: AGHT+IGhTSDybLlJ8KNCkFczYV9Bwwg1uq8s3cZJ+hBG5T57FY1HS7XjRrxe2joN1a2M/D1GbPmpSQ==
-X-Received: by 2002:a62:ce87:0:b0:6dd:a2ea:6626 with SMTP id y129-20020a62ce87000000b006dda2ea6626mr24143pfg.16.1706080894338;
-        Tue, 23 Jan 2024 23:21:34 -0800 (PST)
-Received: from [10.255.203.131] ([139.177.225.236])
-        by smtp.gmail.com with ESMTPSA id t40-20020aa78fa8000000b006daca8ecb85sm12932159pfs.139.2024.01.23.23.21.31
+        bh=74nQwkPGzi/fWf5wR+BH+XBmoovS6yknmDdHMmlxxzI=;
+        b=KSGv7INj9uLeqNfKNKiIfk0G5mHA2AcXmrU864nybyvCOiku2QKG5g9GDoLYHv3s5i
+         ccWmvPymfwUN6h29WL3uc4rNBnYfjWF08ZMm/8fa05GRrV0dvlRFOZBXr0BzVGnGrVQB
+         D6MbNN9W7SYqeeTA2aDwJHIHCjrA47pYwSF69eBzY6ZHO8GHhBs/jQ5wOfYdsog9bneF
+         RU0b6rXs3rUdX45hRauNkZruecku6r+lbKRyulBdlsQqT5lpo+tm+c7vA2AWG9TGc8j+
+         r9n7Tr+CAg0tbzGYk89H0q0JOXyw3P4uXdgU48bkhkHA+x0Tb/NCpNkYdx95+Ds6DOGx
+         ANug==
+X-Gm-Message-State: AOJu0Yxx54P9HAbBYKfumBkXj7cYkJ6ivACdccdfYZvnoHnIRORPVxRK
+	x8CeBMHHSj9AmwWpbOYvb0vlcqplpDDlrvVLhHySd2eD9w/wA/s1xk5AiRHkYuQ=
+X-Google-Smtp-Source: AGHT+IFtkOvHj0t36DzD9lPSd8R1ObltV3wZbnavVyiBgI63pojO5xiM0r0i8GmOgRy6S9P44hEMuQ==
+X-Received: by 2002:a17:906:d295:b0:a2c:d9fb:ed3d with SMTP id ay21-20020a170906d29500b00a2cd9fbed3dmr589490ejb.78.1706080949205;
+        Tue, 23 Jan 2024 23:22:29 -0800 (PST)
+Received: from [192.168.1.20] ([178.197.215.66])
+        by smtp.gmail.com with ESMTPSA id o26-20020a170906289a00b00a2bd8953af2sm15042138ejd.55.2024.01.23.23.22.27
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 23 Jan 2024 23:21:33 -0800 (PST)
-Message-ID: <f3fa799f-1815-4cfe-abc8-3ba929fcd1ba@bytedance.com>
-Date: Wed, 24 Jan 2024 15:20:13 +0800
+        Tue, 23 Jan 2024 23:22:28 -0800 (PST)
+Message-ID: <3300a9f9-40f2-4a23-849e-52858e4ed4d6@linaro.org>
+Date: Wed, 24 Jan 2024 08:22:27 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,219 +60,131 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] mm: zswap: remove unnecessary tree cleanups in
- zswap_swapoff()
+Subject: Re: [PATCH v2 16/20] dt-bindings: crypto: meson: add new compatibles
 Content-Language: en-US
-To: Yosry Ahmed <yosryahmed@google.com>, Johannes Weiner <hannes@cmpxchg.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Nhat Pham <nphamcs@gmail.com>,
- Chris Li <chrisl@kernel.org>, Huang Ying <ying.huang@intel.com>,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <20240120024007.2850671-1-yosryahmed@google.com>
- <20240120024007.2850671-3-yosryahmed@google.com>
- <20240122201906.GA1567330@cmpxchg.org>
- <CAJD7tkaATS48HVuBfbOmPM3EvRUoPFr66WhF64UC4FkyVH5exg@mail.gmail.com>
- <20240123153851.GA1745986@cmpxchg.org>
- <CAJD7tkasHsRnT_75-TXsEe58V9_OW6m3g6CF7Kmsvz8CKRG_EA@mail.gmail.com>
- <20240123201234.GC1745986@cmpxchg.org>
- <CAJD7tkZC6w2EaE=j2NEVWn1s7Lo2A7YZh8LiZ+w72jQzFFWLUQ@mail.gmail.com>
-From: Chengming Zhou <zhouchengming@bytedance.com>
-In-Reply-To: <CAJD7tkZC6w2EaE=j2NEVWn1s7Lo2A7YZh8LiZ+w72jQzFFWLUQ@mail.gmail.com>
+To: Alexey Romanov <avromanov@salutedevices.com>, neil.armstrong@linaro.org,
+ clabbe@baylibre.com, herbert@gondor.apana.org.au, davem@davemloft.net,
+ robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+ khilman@baylibre.com, jbrunet@baylibre.com,
+ martin.blumenstingl@googlemail.com
+Cc: linux-crypto@vger.kernel.org, linux-amlogic@lists.infradead.org,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, kernel@salutedevices.com
+References: <20240123165831.970023-1-avromanov@salutedevices.com>
+ <20240123165831.970023-17-avromanov@salutedevices.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20240123165831.970023-17-avromanov@salutedevices.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On 2024/1/24 05:02, Yosry Ahmed wrote:
-> On Tue, Jan 23, 2024 at 12:12 PM Johannes Weiner <hannes@cmpxchg.org> wrote:
->>
->> On Tue, Jan 23, 2024 at 07:54:49AM -0800, Yosry Ahmed wrote:
->>> On Tue, Jan 23, 2024 at 7:38 AM Johannes Weiner <hannes@cmpxchg.org> wrote:
->>>>
->>>> On Mon, Jan 22, 2024 at 12:39:16PM -0800, Yosry Ahmed wrote:
->>>>> On Mon, Jan 22, 2024 at 12:19 PM Johannes Weiner <hannes@cmpxchg.org> wrote:
->>>>>>
->>>>>> On Sat, Jan 20, 2024 at 02:40:07AM +0000, Yosry Ahmed wrote:
->>>>>>> During swapoff, try_to_unuse() makes sure that zswap_invalidate() is
->>>>>>> called for all swap entries before zswap_swapoff() is called. This means
->>>>>>> that all zswap entries should already be removed from the tree. Simplify
->>>>>>> zswap_swapoff() by removing the tree cleanup loop, and leaving an
->>>>>>> assertion in its place.
->>>>>>>
->>>>>>> Signed-off-by: Yosry Ahmed <yosryahmed@google.com>
->>>>>>
->>>>>> Acked-by: Johannes Weiner <hannes@cmpxchg.org>
->>>>>>
->>>>>> That's a great simplification.
->>>>>>
->>>>>> Removing the tree->lock made me double take, but at this point the
->>>>>> swapfile and its cache should be fully dead and I don't see how any of
->>>>>> the zswap operations that take tree->lock could race at this point.
->>>>>
->>>>> It took me a while staring at the code to realize this loop is pointless.
->>>>>
->>>>> However, while I have your attention on the swapoff path, there's a
->>>>> slightly irrelevant problem that I think might be there, but I am not
->>>>> sure.
->>>>>
->>>>> It looks to me like swapoff can race with writeback, and there may be
->>>>> a chance of UAF for the zswap tree. For example, if zswap_swapoff()
->>>>> races with shrink_memcg_cb(), I feel like we may free the tree as it
->>>>> is being used. For example if zswap_swapoff()->kfree(tree) happen
->>>>> right before shrink_memcg_cb()->list_lru_isolate(l, item).
->>>>>
->>>>> Please tell me that I am being paranoid and that there is some
->>>>> protection against zswap writeback racing with swapoff. It feels like
->>>>> we are very careful with zswap entries refcounting, but not with the
->>>>> zswap tree itself.
->>>>
->>>> Hm, I don't see how.
->>>>
->>>> Writeback operates on entries from the LRU. By the time
->>>> zswap_swapoff() is called, try_to_unuse() -> zswap_invalidate() should
->>>> will have emptied out the LRU and tree.
->>>>
->>>> Writeback could have gotten a refcount to the entry and dropped the
->>>> tree->lock. But then it does __read_swap_cache_async(), and while
->>>> holding the page lock checks the tree under lock once more; if that
->>>> finds the entry valid, it means try_to_unuse() hasn't started on this
->>>> page yet, and would be held up by the page lock/writeback state.
->>>
->>> Consider the following race:
->>>
->>> CPU 1                                 CPU 2
->>> # In shrink_memcg_cb()     # In swap_off
->>> list_lru_isolate()
->>>                                             zswap_invalidate()
->>>                                             ..
->>>                                             zswap_swapoff() -> kfree(tree)
->>> spin_lock(&tree->lock);
->>>
->>> Isn't this a UAF or am I missing something here?
->>
->> Oof. You're right, it looks like there is a bug. Digging through the
->> history, I think this is actually quite old: the original backend
->> shrinkers would pluck something off their LRU, drop all locks, then
->> try to acquire tree->lock. There is no protection against swapoff.
->>
->> The lock that is supposed to protect this is the LRU lock. That's
->> where reclaim and invalidation should synchronize. But it's not right:
->>
->> 1. We drop the LRU lock before acquiring the tree lock. We should
->>    instead trylock the tree while still holding the LRU lock to make
->>    sure the tree is safe against swapoff.
->>
->> 2. zswap_invalidate() acquires the LRU lock when refcount hits 0. But
->>    it must always cycle the LRU lock before freeing the tree for that
->>    synchronization to work.
->>
->> Once we're holding a refcount to the entry, it's safe to drop all
->> locks for the next step because we'll then work against the swapcache
->> and entry: __read_swap_cache_async() will try to pin and lock whatever
->> swap entry is at that type+offset. This also pins the type's current
->> tree. HOWEVER, if swapoff + swapon raced, this could be a different
->> tree than what we had in @tree, so
->>
->> 3. we shouldn't pass @tree to zswap_writeback_entry(). It needs to
->>    look up zswap_trees[] again after __read_swap_cache_async()
->>    succeeded to validate the entry.
->>
->> Once it succeeded, we can validate the entry. The entry is valid due
->> to our refcount. The zswap_trees[type] is valid due to the cache pin.
->>
->> However, if validation failed and we have a non-zero writeback_result,
->> there is one last bug:
->>
->> 4. the original entry's tree is no longer valid for the entry put.
->>
->> The current scheme handles invalidation fine (which is good because
->> that's quite common). But it's fundamentally unsynchronized against
->> swapoff (which has probably gone undetected because that's rare).
->>
->> I can't think of an immediate solution to this, but I wanted to put my
->> analysis out for comments.
+On 23/01/2024 17:58, Alexey Romanov wrote:
+> Now we can use crypto driver at G12A/G12B/S4/A1/SM1/AXG.
 > 
+> Signed-off-by: Alexey Romanov <avromanov@salutedevices.com>
+> ---
+>  .../bindings/crypto/amlogic,gxl-crypto.yaml   | 31 ++++++++++++++++---
+>  1 file changed, 27 insertions(+), 4 deletions(-)
 > 
-> Thanks for the great analysis, I missed the swapoff/swapon race myself :)
-> 
-> The first solution that came to mind for me was refcounting the zswap
-> tree with RCU with percpu-refcount, similar to how cgroup refs are
-> handled (init in zswap_swapon() and kill in zswap_swapoff()). I think
-> the percpu-refcount may be an overkill in terms of memory usage
-> though. I think we can still do our own refcounting with RCU, but it
-> may be more complicated.
-Hello,
+> diff --git a/Documentation/devicetree/bindings/crypto/amlogic,gxl-crypto.yaml b/Documentation/devicetree/bindings/crypto/amlogic,gxl-crypto.yaml
+> index 948e11ebe4ee..a7145b126a06 100644
+> --- a/Documentation/devicetree/bindings/crypto/amlogic,gxl-crypto.yaml
+> +++ b/Documentation/devicetree/bindings/crypto/amlogic,gxl-crypto.yaml
+> @@ -11,8 +11,15 @@ maintainers:
+>  
+>  properties:
+>    compatible:
+> -    items:
+> -      - const: amlogic,gxl-crypto
+> +    oneOf:
+> +      - items:
 
-I also thought about this problem for some time, maybe something like below
-can be changed to fix it? It's likely I missed something, just some thoughts.
+That's just enum.
 
-IMHO, the problem is caused by the different way in which we use zswap entry
-in the writeback, that should be much like zswap_load().
+> +          - enum:
+> +              - amlogic,g12a-crypto
+> +              - amlogic,s4-crypto
+> +              - amlogic,a1-crypto
+> +      - items:
+> +          - const: amlogic,gxl-crypto
+> +          - const: amlogic,axg-crypto
 
-The zswap_load() comes in with the folio locked in swap cache, so it has
-stable zswap tree to search and lock... But in writeback case, we don't,
-shrink_memcg_cb() comes in with only a zswap entry with lru list lock held,
-then release lru lock to get tree lock, which maybe freed already.
+This is neither explained nor correct. You just affected all DTS.
 
-So we should change here, we read swpentry from entry with lru list lock held,
-then release lru lock, to try to lock corresponding folio in swap cache,
-if we success, the following things is much the same like zswap_load().
-We can get tree lock, to recheck the invalidate race, if no race happened,
-we can make sure the entry is still right and get refcount of it, then
-release the tree lock.
+>  
+>    reg:
+>      maxItems: 1
+> @@ -32,8 +39,24 @@ required:
+>    - compatible
+>    - reg
+>    - interrupts
+> -  - clocks
+> -  - clock-names
+> +
+> +if:
 
-The main differences between this writeback with zswap_load() is the handling
-of lru entry and the tree lifetime. The whole zswap_load() function has the
-stable reference of zswap tree, but it's not for shrink_memcg_cb() bottom half
-after __swap_writepage() since we unlock the folio after that. So we can't
-reference the tree after that.
+Missing allOf
 
-This problem is easy to fix, we can zswap_invalidate_entry(tree, entry) early
-in tree lock, since thereafter writeback can't fail. BTW, I think we should
-also zswap_invalidate_entry() early in zswap_load() and only support the
-zswap_exclusive_loads_enabled mode, but that's another topic.
+> +  properties:
+> +    compatible:
+> +      contains:
+> +        enum:
+> +          - amlogic,gxl-crypto
+> +then:
+> +  required:
+> +    - clocks
+> +    - clock-names
 
-The second difference is the handling of lru entry, which is easy that we
-just zswap_lru_del() in tree lock.
+Why? Also not explained.
 
-So no any path can reference the entry from tree or lru after we release
-the tree lock, so we can just zswap_free_entry() after writeback.
+Entire patch was not tested and it unexpectedly affects/changes existing
+bindings without explanation in commit msg.
 
-Thanks!
 
-// lru list lock held
-shrink_memcg_cb()
-  swpentry = entry->swpentry
-  // Don't isolate entry from lru list here, just use list_lru_putback()
-  spin_unlock(lru list lock)
 
-  folio = __read_swap_cache_async(swpentry)
-  if (!folio)
-    return
-
-  if (!folio_was_allocated)
-    folio_put(folio)
-    return
-
-  // folio is locked, swapcache is secured against swapoff
-  tree = get tree from swpentry
-  spin_lock(&tree->lock)
-
-  // check invalidate race? No
-  if (entry == zswap_rb_search())
-
-  // so we can make sure this entry is still right
-  // zswap_invalidate_entry() since the below writeback can't fail
-  zswap_entry_get(entry)
-  zswap_invalidate_entry(tree, entry)
-
-  // remove from lru list
-  zswap_lru_del()
-
-  spin_unlock(&tree->lock)
-
-  __zswap_load()
-
-  __swap_writepage() // folio unlock
-  folio_put(folio)
-
-  // entry is safe to free, since it's removed from tree and lru above
-  zswap_free_entry(entry)
+Best regards,
+Krzysztof
 
