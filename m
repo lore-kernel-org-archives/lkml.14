@@ -1,174 +1,127 @@
-Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0D6017BB5
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 09:08:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.119
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA5BF17BBA
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 09:08:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706087319; cv=none; b=OgQ8msGA2jTfI/18L2OuR594D60EiGKbiIOfJaQDCXeqPJSi+nbH8aumzGr4LoAQmFtY8iw1Zn5zRAdyXGjKZ6dr2gYVXd2bppGxND3L1gQqOLcRqnB7woCLCg2OW0k8gFo8WupNzD2Xdxif5qMOb6EtA2cRvM5wOHXTKIjvewI=
+	t=1706087320; cv=none; b=hBf6a1QY1g91/xj5gyB1G2QFvKsMxyk1pi+IHahErItPUefNAlz4uA7aKORlpt8thUP2gAFwvsQMgwakWmD1poTqmRxO3C1fcN0pGNu9waJ+gvj9XgG/Mb8WXZWseNg7qnBTJ21DJvHKN9ZyU55/VNn+BPdXJLES6QbVhXt2fgI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706087319; c=relaxed/simple;
-	bh=JOj8r2f7qR44MX7gLA5NhPnoaPXH4cwBhdfccGRndaM=;
-	h=Message-ID:Subject:Date:From:To:Cc:References:In-Reply-To; b=IycEQBPC8nVKpOhBYIx5wR3QP1k8Uokz32KRa8abU6B4HPzcnY8GZdYkyK5odwNdwIhA/eo+P2+yA30ygDEI4nh2F5SMC89x8fOuMBkteGccjcxENUlE0rpYGtQ94jGyQphfMmisM7GHL0hvYCFXckLwHb4PSheA2G3oYii/bAE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; arc=none smtp.client-ip=115.124.30.119
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=xuanzhuo@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0W.G5-fL_1706087310;
-Received: from localhost(mailfrom:xuanzhuo@linux.alibaba.com fp:SMTPD_---0W.G5-fL_1706087310)
-          by smtp.aliyun-inc.com;
-          Wed, 24 Jan 2024 17:08:31 +0800
-Message-ID: <1706087207.116824-1-xuanzhuo@linux.alibaba.com>
-Subject: Re: [PATCH v2 1/3] virtio_net: Preserve virtio header before XDP program execution
-Date: Wed, 24 Jan 2024 17:06:47 +0800
-From: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-To: Liang Chen <liangchen.linux@gmail.com>
-Cc: virtualization@lists.linux-foundation.org,
- linux-kernel@vger.kernel.org,
- liangchen.linux@gmail.com,
- mst@redhat.com,
- jasowang@redhat.com,
- hengqi@linux.alibaba.com
-References: <20240124085721.54442-1-liangchen.linux@gmail.com>
- <20240124085721.54442-2-liangchen.linux@gmail.com>
-In-Reply-To: <20240124085721.54442-2-liangchen.linux@gmail.com>
+	s=arc-20240116; t=1706087320; c=relaxed/simple;
+	bh=6/KlTA0J6uFnfl5c8rIDF12UeY21Z4ml6g/NHKbxJj0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IvueDxFvhSIGtenluz5frLf05nY4g20gpHoGW2zkqUbnE3yyICF91oqMcjtUDjVxxpB8ydO/C1ZKqgqhT8DTL6K9KyobZvp/eWaa0GBCG1/mJsQ8kgOMrseo+6k5LXF5Qo5VsIqLIQbmIS6N1Wi0cWuXDadAEt5wwoVpxrzKbd4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rSZFF-0001ed-9Q; Wed, 24 Jan 2024 10:08:29 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rSZFE-0021Y0-I6; Wed, 24 Jan 2024 10:08:28 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rSZFE-0070pg-1U;
+	Wed, 24 Jan 2024 10:08:28 +0100
+Date: Wed, 24 Jan 2024 10:08:28 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: Jerome Brunet <jbrunet@baylibre.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-amlogic@lists.infradead.org, linux-pwm@vger.kernel.org, JunYi Zhao <junyi.zhao@amlogic.com>
+Subject: Re: [PATCH v4 3/6] pwm: meson: generalize 4 inputs clock on meson8
+ pwm type
+Message-ID: <4kcbh4dezgpic2dpgdi2swtx2puqiq74w2tungmxipf4nznpn7@u4g4f3cimps4>
+References: <20231222111658.832167-1-jbrunet@baylibre.com>
+ <20231222111658.832167-4-jbrunet@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="6rb4fnput74ewssa"
+Content-Disposition: inline
+In-Reply-To: <20231222111658.832167-4-jbrunet@baylibre.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On Wed, 24 Jan 2024 16:57:19 +0800, Liang Chen <liangchen.linux@gmail.com> wrote:
-> The xdp program may overwrite the inline virtio header. To ensure the
-> integrity of the virtio header, it is saved in a data structure that
-> wraps both the xdp_buff and the header before running the xdp program.
->
-> Signed-off-by: Liang Chen <liangchen.linux@gmail.com>
+
+--6rb4fnput74ewssa
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hello Jerome,
+
+On Fri, Dec 22, 2023 at 12:16:51PM +0100, Jerome Brunet wrote:
+> Meson8 pwm type always has 4 input clocks. Some inputs may be grounded,
+> like in the AO domain of some SoCs.
+>=20
+> Drop the parent number parameter and make this is constant.
+> This is also done to make addition of generic meson8 compatible easier.
+>=20
+> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 > ---
->  drivers/net/virtio_net.c | 43 +++++++++++++++++++++++++++++-----------
->  1 file changed, 31 insertions(+), 12 deletions(-)
->
-> diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
-> index d7ce4a1011ea..b56828804e5f 100644
-> --- a/drivers/net/virtio_net.c
-> +++ b/drivers/net/virtio_net.c
-> @@ -349,6 +349,11 @@ struct virtio_net_common_hdr {
->  	};
->  };
->
-> +struct virtnet_xdp_buff {
-> +	struct xdp_buff xdp;
-> +	struct virtio_net_common_hdr hdr;
+>  drivers/pwm/pwm-meson.c | 19 ++++++-------------
+>  1 file changed, 6 insertions(+), 13 deletions(-)
+>=20
+> diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
+> index 2971bbf3b5e7..ef50c337f444 100644
+> --- a/drivers/pwm/pwm-meson.c
+> +++ b/drivers/pwm/pwm-meson.c
+> @@ -60,7 +60,7 @@
+>  #define MISC_A_EN		BIT(0)
+> =20
+>  #define MESON_NUM_PWMS		2
+> -#define MESON_MAX_MUX_PARENTS	4
+> +#define MESON_NUM_MUX_PARENTS	4
+> =20
+>  static struct meson_pwm_channel_data {
+>  	u8		reg_offset;
+> @@ -98,7 +98,6 @@ struct meson_pwm_channel {
+> =20
+>  struct meson_pwm_data {
+>  	const char * const *parent_names;
 
-Not all items of the hdr are useful, we can just save the useful items.
+I suggest to make this
 
-> +};
-> +
->  static void virtnet_sq_free_unused_buf(struct virtqueue *vq, void *buf);
->
->  static bool is_xdp_frame(void *ptr)
-> @@ -1199,9 +1204,10 @@ static struct sk_buff *receive_small_xdp(struct net_device *dev,
->  	unsigned int headroom = vi->hdr_len + header_offset;
->  	struct virtio_net_hdr_mrg_rxbuf *hdr = buf + header_offset;
->  	struct page *page = virt_to_head_page(buf);
-> +	struct virtnet_xdp_buff virtnet_xdp;
->  	struct page *xdp_page;
-> +	struct xdp_buff *xdp;
->  	unsigned int buflen;
-> -	struct xdp_buff xdp;
->  	struct sk_buff *skb;
->  	unsigned int metasize = 0;
->  	u32 act;
-> @@ -1233,17 +1239,23 @@ static struct sk_buff *receive_small_xdp(struct net_device *dev,
->  		page = xdp_page;
->  	}
->
-> -	xdp_init_buff(&xdp, buflen, &rq->xdp_rxq);
-> -	xdp_prepare_buff(&xdp, buf + VIRTNET_RX_PAD + vi->hdr_len,
-> +	xdp = &virtnet_xdp.xdp;
-> +	xdp_init_buff(xdp, buflen, &rq->xdp_rxq);
-> +	xdp_prepare_buff(xdp, buf + VIRTNET_RX_PAD + vi->hdr_len,
->  			 xdp_headroom, len, true);
->
-> -	act = virtnet_xdp_handler(xdp_prog, &xdp, dev, xdp_xmit, stats);
-> +	/* Copy out the virtio header, as it may be overwritten by the
-> +	 * xdp program.
-> +	 */
-> +	memcpy(&virtnet_xdp.hdr, hdr, vi->hdr_len);
+	const char *parent_names[MESON_NUM_MUX_PARENTS];
 
-Can we put this into virtnet_xdp_handler?
+to make it more explicit that really four entries are needed here. This
+also makes is unnecessary to add the additional NULL entries to
+pwm_gxbb_ao_parent_names and the other arrays.
 
-And just do that when the hash is negotiated.
+Best regards
+Uwe
 
-> +
-> +	act = virtnet_xdp_handler(xdp_prog, xdp, dev, xdp_xmit, stats);
->
->  	switch (act) {
->  	case XDP_PASS:
->  		/* Recalculate length in case bpf program changed it */
-> -		len = xdp.data_end - xdp.data;
-> -		metasize = xdp.data - xdp.data_meta;
-> +		len = xdp->data_end - xdp->data;
-> +		metasize = xdp->data - xdp->data_meta;
->  		break;
->
->  	case XDP_TX:
-> @@ -1254,7 +1266,7 @@ static struct sk_buff *receive_small_xdp(struct net_device *dev,
->  		goto err_xdp;
->  	}
->
-> -	skb = virtnet_build_skb(buf, buflen, xdp.data - buf, len);
-> +	skb = virtnet_build_skb(buf, buflen, xdp->data - buf, len);
->  	if (unlikely(!skb))
->  		goto err;
->
-> @@ -1591,10 +1603,11 @@ static struct sk_buff *receive_mergeable_xdp(struct net_device *dev,
->  	int num_buf = virtio16_to_cpu(vi->vdev, hdr->num_buffers);
->  	struct page *page = virt_to_head_page(buf);
->  	int offset = buf - page_address(page);
-> +	struct virtnet_xdp_buff virtnet_xdp;
->  	unsigned int xdp_frags_truesz = 0;
->  	struct sk_buff *head_skb;
->  	unsigned int frame_sz;
-> -	struct xdp_buff xdp;
-> +	struct xdp_buff *xdp;
->  	void *data;
->  	u32 act;
->  	int err;
-> @@ -1604,16 +1617,22 @@ static struct sk_buff *receive_mergeable_xdp(struct net_device *dev,
->  	if (unlikely(!data))
->  		goto err_xdp;
->
-> -	err = virtnet_build_xdp_buff_mrg(dev, vi, rq, &xdp, data, len, frame_sz,
-> +	xdp = &virtnet_xdp.xdp;
-> +	err = virtnet_build_xdp_buff_mrg(dev, vi, rq, xdp, data, len, frame_sz,
->  					 &num_buf, &xdp_frags_truesz, stats);
->  	if (unlikely(err))
->  		goto err_xdp;
->
-> -	act = virtnet_xdp_handler(xdp_prog, &xdp, dev, xdp_xmit, stats);
-> +	/* Copy out the virtio header, as it may be overwritten by the
-> +	 * xdp program.
-> +	 */
-> +	memcpy(&virtnet_xdp.hdr, hdr, vi->hdr_len);
-> +
-> +	act = virtnet_xdp_handler(xdp_prog, xdp, dev, xdp_xmit, stats);
->
->  	switch (act) {
->  	case XDP_PASS:
-> -		head_skb = build_skb_from_xdp_buff(dev, vi, &xdp, xdp_frags_truesz);
-> +		head_skb = build_skb_from_xdp_buff(dev, vi, xdp, xdp_frags_truesz);
->  		if (unlikely(!head_skb))
->  			break;
->  		return head_skb;
-> @@ -1626,7 +1645,7 @@ static struct sk_buff *receive_mergeable_xdp(struct net_device *dev,
->  		break;
->  	}
->
-> -	put_xdp_frags(&xdp);
-> +	put_xdp_frags(xdp);
->
->  err_xdp:
->  	put_page(page);
-> --
-> 2.40.1
->
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--6rb4fnput74ewssa
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmWw04sACgkQj4D7WH0S
+/k4MBwf/RJ2RnPMTRGHy4+MlxDEmIhRVYEzgGL1RRFV939kzYtusENpZpGIQ2mXu
+E60HnA+QkB/q4MoAFSLk81DulYhW3fIn7AURwQ19rdCtgn3d+7zGnA+G+JiPmCXx
+I0jHMlpak+0iexEcTDeahUHixs0DrxD1/kG9eTtipV17OZuBlTGyw8QDqcHAKFow
+0czC72kNUxlOp/W77jS0V367u/onArkMSIOh1N4JZ+yNX0ZuOugc18RD0wU5eCo3
+FASi7J+U/zZaBAFXeS2BXMrq1bLMjBmrc6dDGoNusqCD/YGfTqxQKmptwFcHWvQy
+huYzkvDx8jvj6TmgK+i+/+PjgTV9ow==
+=0D4C
+-----END PGP SIGNATURE-----
+
+--6rb4fnput74ewssa--
