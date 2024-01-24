@@ -1,206 +1,115 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BABD27CF12
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 15:49:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.55.52.93
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706111357; cv=fail; b=IpeBFdsXGcr9CJz8w5Q7pzASSq8ova2fmZONVVuLO3EkipjhSUi2iDf91k8wJ+lcv+qi/wp3kaRpOZBFdDqm7tUJ6sflU6uZ0vOSTok1d6cfDoob0sa4XoHAmwO4Wv9kfRlwbgHP8macM0MMyRA9rIAdvkwZdgGqDVS4GY1GdGU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706111357; c=relaxed/simple;
-	bh=8CgVZUCRvC8rw1sZ3ggW6w0mrGtUXlvrP0pq0JjkhVk=;
-	h=Content-Type:In-Reply-To:References:Subject:From:To:CC:Date:
-	 Message-ID:MIME-Version; b=Lv44wUczf2vJtuU5Hexfx8B1nJBYYXtAxtqKbAigdsAxyYxms4y8vSH0pw07OC4t9WqjKlnLyYvdu1D5q3IIxbUy1fS/rd5Z+SSTaKQ2b+Il7fTTjV2CXzZouJsfuBfP15Y3dVPv6m0t/kaBGX+fUEYTWEqnNQ29CKW9E7019+8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=i8nxWEpC; arc=fail smtp.client-ip=192.55.52.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75E0B40C1B;
+	Wed, 24 Jan 2024 15:50:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706111453; cv=none; b=nWyLBTMjwFVZpNt2mLJ6qR23XY/Krw54kuO0EmfQUqp9YHBV8A6SGvSc90h1QUamM6RsDPQfJTQ+1ZRI7RwhKWjzxfd86aNMnj7Ih9JImu/B+77/2vKIZI7JXwsuYA5h6GRZOr15IzAlzB9a71kzOXBN/WTNNfdpXeD3c0B2Ypg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706111453; c=relaxed/simple;
+	bh=+KGnq5xhZfux8mPndMDUbCACV0/9DWPx0zZEPoA/AyA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Qsy5DpjZ6gemMspLlZmrg8u9gWKs3s7rPao1Lpky2VLKsWpSzII8WmTxhmLi1BLPEvm91xSWHPMBoU4ciUHpbBdR2KDYySAQRo5V3Py4UIKHRHFvuWhxK41IMBYZqkLtuv2dEYROqapaIXrWdRvjpzzWx7/cmFYKGwwJOxpNF6c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=roqsoZzU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="i8nxWEpC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706111354; x=1737647354;
-  h=content-transfer-encoding:in-reply-to:references:subject:
-   from:to:cc:date:message-id:mime-version;
-  bh=8CgVZUCRvC8rw1sZ3ggW6w0mrGtUXlvrP0pq0JjkhVk=;
-  b=i8nxWEpCb5UTHS662yYZuR2UCIHA8aigAtbXZBiNsJ3RxJVP3Gvf8r7A
-   CPxafC1PPria7PD/q+FIiNiAUSmhjTwYWHotM57HpIfXkY8bUSIU7yTt3
-   rBVBeW+mEfj2hF2dec+B06IG7EbKiT7adM8+Lo7y2MZYxpni1sRD1rDG0
-   5pvVlq2wRpn/JdhcN6NnUsDS8zwbAGf/Z/xoA1hADgPSAsvWEFOtXdjVO
-   8EZucukBW4G5tXR5qWD3H9cY+zrVPR8WIIj6gOfDdBEA3VWrLC1e1fdho
-   eO2ePm+8DmWOI1tUaTszj6WYi+2pMVsMl/1VUnuHpIz6y0HkrKNHJU1He
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="399035255"
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="399035255"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jan 2024 07:49:13 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="2070875"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by fmviesa004.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 24 Jan 2024 07:49:14 -0800
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Wed, 24 Jan 2024 07:49:12 -0800
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Wed, 24 Jan 2024 07:49:12 -0800
-Received: from NAM04-MW2-obe.outbound.protection.outlook.com (104.47.73.168)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Wed, 24 Jan 2024 07:49:12 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Nsjze+bO0uuuD6rDF0p4UWHoO4Uko5v+V2uePURgTM2/JEUM6zzUvbWp7mGxNddSEkvsEXWWApHpow7lhP2nzUgp0p01Wxn55fO+Rjp+KBU37AVeZYUVdLHG0U9r+sNqAJC0RRrJHepQGF4IWSQG3vULI1LZi9Uztq2loqbNpXNYvd6b+k98PVKh5vDuHHVxU8BVJ6T5Qp8mACUmCvEBPaN26iiewnzkS0mjUSZtjgA+YeNlwrFAAN6CrvPqLJGUxwqH2UGxjrwJIbSZhsNQeOXAmMU13ouenULoAOdraN69ClrZ6QOpcI2yc7sAELWM1yLFgiQyXRoT7VA4EWQgpw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=BbeyerYEnp0zxF2dKwMg73YWtdYFYa0n3jxoAuZnKUI=;
- b=F1DkG5nSLrOeYIewIBXadmLda5FymXHX78IUh5c9mH79Pm7QTRPzJPax/ZLK5ymt3WCdoskoysNNkwVaj26DVWQJUveEvBdXEPzfOkOrYRbFWEFNizKh9Gy0BbNFrbpx4yaGwENOspKQlhvMleByl5uBVIFp+wni9pY3jxEBAZnrOZhRpCNTrK4TWRN3FtuoHe5fqw7OXZDmumhkA9oC9Ao8SizcM2n76OvtFo8Z7cDoR9JthYvjCnBpVlAkmzo/vjsQhR0KsRLs2MoJNy8mBOnV09bwzRcguofn5Z5gqEUMi2P2Me1mFsiN9J2Wkgc1QBLsW3dpI54+1VsQcuBu9w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8287.namprd11.prod.outlook.com (2603:10b6:510:1c7::14)
- by IA1PR11MB6444.namprd11.prod.outlook.com (2603:10b6:208:3a7::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7202.34; Wed, 24 Jan
- 2024 15:49:09 +0000
-Received: from PH8PR11MB8287.namprd11.prod.outlook.com
- ([fe80::559e:7844:adc9:7793]) by PH8PR11MB8287.namprd11.prod.outlook.com
- ([fe80::559e:7844:adc9:7793%7]) with mapi id 15.20.7202.034; Wed, 24 Jan 2024
- 15:49:09 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <ZbEsfl0tGLY+xJl0@yury-ThinkPad>
-References: <20240124050205.3646390-1-lucas.demarchi@intel.com> <20240124050205.3646390-2-lucas.demarchi@intel.com> <87v87jkvrx.fsf@intel.com> <gvkvihpcc45275idrfukjqbvgem767evrux5sx5lnh5hofqemk@ppbkcauitvwb> <ZbEsfl0tGLY+xJl0@yury-ThinkPad>
-Subject: Re: Re: [PATCH 1/3] bits: introduce fixed-type genmasks
-From: Gustavo Sousa <gustavo.sousa@intel.com>
-To: Lucas De Marchi <lucas.demarchi@intel.com>, Yury Norov
-	<yury.norov@gmail.com>
-CC: <intel-gfx@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-	<dri-devel@lists.freedesktop.org>, Andy Shevchenko
-	<andriy.shevchenko@linux.intel.com>, <intel-xe@lists.freedesktop.org>, "Jani
- Nikula" <jani.nikula@intel.com>
-Date: Wed, 24 Jan 2024 12:49:04 -0300
-Message-ID: <170611134445.31262.2799581830173501277@gjsousa-mobl2>
-User-Agent: alot/0.10
-X-ClientProxiedBy: SJ0PR03CA0237.namprd03.prod.outlook.com
- (2603:10b6:a03:39f::32) To PH8PR11MB8287.namprd11.prod.outlook.com
- (2603:10b6:510:1c7::14)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="roqsoZzU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 320D5C433F1;
+	Wed, 24 Jan 2024 15:50:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706111452;
+	bh=+KGnq5xhZfux8mPndMDUbCACV0/9DWPx0zZEPoA/AyA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=roqsoZzUwrBCx6VpNHxpyMprPpNLzWwNxaC8J1QmWfTgfiPdVzTPZ7UERyMuvEju8
+	 99NeRN/IW5xwDBI0dLBIpnPTBDqi4t1vVVDhMnkxvL8kcEp7Avs86EqcXsJVj07AG9
+	 vEavvGENuv0YXcGwqG10PnFwaGWuibb+OfOhaDK0CDZq0AnkprMfFYpVUHIE6CWZW0
+	 JsqscjfUejpb0p5aPEC4S6DxbgtRA1tSuQxPOAefieY1vkRC4CwwbhYQs8Z5wZwqeG
+	 kgF7goIjeG2ZWbPCfXndgxJDn4ZuCk+HFQXQMJrd2o29lDH3SmUkXZ1L6s267QH/Mv
+	 V69aCB1brVKqg==
+Date: Wed, 24 Jan 2024 15:50:46 +0000
+From: Lee Jones <lee@kernel.org>
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Linux Next Mailing List <linux-next@vger.kernel.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	David Miller <davem@davemloft.net>,
+	"Eric W. Biederman" <ebiederm@xmission.com>,
+	Florian Fainelli <f.fainelli@gmail.com>,
+	Hector Martin <marcan@marcan.st>,
+	"Jason A. Donenfeld" <Jason@zx2c4.com>,
+	Jean Delvare <jdelvare@suse.de>,
+	Micah Morton <mortonm@chromium.org>,
+	Mike Marshall <hubcap@omnibond.com>, Pavel Machek <pavel@ucw.cz>,
+	Theodore Ts'o <tytso@mit.edu>
+Subject: Re: linux-next: trees being removed
+Message-ID: <20240124155046.GB74950@google.com>
+References: <20240124130101.428c09a3@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8287:EE_|IA1PR11MB6444:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4427fd7e-e66b-45d6-c7c6-08dc1cf400ef
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: rCEAugbiT7z9+/ukSeYojki4rdY1vi6b4H/XpEHFsOvW7a9xTAVMklSQcsRJFRumQ3UCL6XLMhFUQR5MxZ5ETeWGXLcIdr3rf0tek0A0VOH3uhw+HOcDGlGITHBNW1fz2v2u13iifLO6nK2+vSq9t+OCM6fZN3s62xBKYPXDW8wrT+6YhcxofqoR9ymUqMABhwxGeYp4AxeVGzHsSay2rgjaAgDbT2nsE/2a1vxO84joU+kV4cyoXmOndkxGUoT49RsNPjZui8xyKkSgz2csa2D6e2qRwNEFkc4Z/gSumIZTxeGd0QU+NCldzc9XrLd7FDzDKnK0arm9EQ62OqWt2w6AoTBZvobWx8p4leM+oRQZiTMzi/a/40hBWU8/AgbG593Bk4ff5JIyI+O9NOfOqoQH6plblQkjjFqsSpXdKrrUlqs4h6AyBgh7FhOxkZvuMSCgZ2q0sTrwinxADbT38rG9ypGHK2YWvmIK6rZgfXv+w5n7l6M42FtqPBg/l6tmbE75IuSaR6WnQIkfr6gFd3zTkuJ3tiHYmxKEMcVtr94MpALlWCffsjxCyR9+PTze
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8287.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7916004)(39860400002)(136003)(366004)(376002)(346002)(396003)(230922051799003)(1800799012)(186009)(64100799003)(451199024)(4326008)(44832011)(83380400001)(8676002)(8936002)(9686003)(316002)(26005)(6512007)(6486002)(110136005)(54906003)(66946007)(5660300002)(6666004)(6506007)(66476007)(66556008)(478600001)(82960400001)(33716001)(41300700001)(2906002)(86362001)(38100700002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?Y2U4TUJEZ3RCRjY1NlhRazQ1RlpQUndSNXNDTjBJV1BOUTJ4bm9JVUZuRTh0?=
- =?utf-8?B?T0xGa3hadkZ3U1hNSlhhYUFheFNEekswaTRtZWFsSnV2ckdtbDduLy92UUcx?=
- =?utf-8?B?R25hNGwrbE5INWwwOVptUWVlOVB4MDhUWXpXREpsUnFHZUt3dm1jbkNEOTE0?=
- =?utf-8?B?KzdnZkVuZzUvOHdJUzRCd3FvbElkR2I5RFR3QVBxWks3YkFyTTljU0RBaWxH?=
- =?utf-8?B?bTNzR1JvRzU1QXUxL3VuSXQ4UFVpTFZzU0g2L3F1alAwWWhlbzNFTmY1am1J?=
- =?utf-8?B?KzVrL2lESWtZYVhtdWdWNlYzYWl3TWRsZU9yS0xRRUtNRzdRaTIzMU1ibVJ3?=
- =?utf-8?B?cGdndTlaNlRSS3o0Z21hemxjOEEydHE5VXdEKytwZlpUekZCdE04cnAyekJP?=
- =?utf-8?B?SW9XSm1ZY1ljZWNjTWZwbytqQS9JNWRPS08zK05MbHFkMTZ1RWpZL3M5QmUw?=
- =?utf-8?B?T0ZGV1NHVXl2VmdnVnhpdWk5cnk4QU5sZGhPczRYQ1NqSTFXNVoxdk9zMmpY?=
- =?utf-8?B?MXF1R3JkVkVLdDZZUjFDVDlISllaQkdTM1F1T3lNRTQ4SWZFamxocDNaZWpU?=
- =?utf-8?B?ZzdwaVRyaHl1TWs4NE84TW5rd2YvZDN1L0Z1SFVJUG5YSTdacGpNdGJYN2pr?=
- =?utf-8?B?cm4vcGt6bktSai96VDgzZVdHb1Q1S2hqNXp1Z2VKWktOSXpIZG1KSkFZWC9F?=
- =?utf-8?B?KzVocS92QnE4UWFvZGdGN3dPT00xYW9sMndNVGZ5eUQwSVN5V2RHNkRKMmE2?=
- =?utf-8?B?R0ZJK1dZS0grYnJLK3NsUTlMVHdwRVRHWEtTQzF6ZFUyemdTcHlMSzVjTU5M?=
- =?utf-8?B?dzhuQlNkc05xZTlxK3d0UzRudTZzMFk0SHU3QXRCYXN0RitPakZGT1JtTDla?=
- =?utf-8?B?Z09vZWF5UVZacWdiVmk3NHRCOVIzWVRkcFdmUTg1akRvZUwvRUQ4SXJRc1Vl?=
- =?utf-8?B?NGQralNQM1M5UnI2elcxckhyRmI1bnhORVI5SVI1aXhHS0hxNFhKbjBTcEVx?=
- =?utf-8?B?MmliamJTeXljSXpMTS9NaDBqdWhSS1lBUTVaYWFjcDdtSXArWUhIVmxLNmFw?=
- =?utf-8?B?VzVWb1MzWi9MU1NlNlNuTFRxRFh2RDlsR3FpTHl2cERiU2tBWHVzeDlNU0VY?=
- =?utf-8?B?eTFybGZ0M2FQRkhpeEk5NDNDQU9LVURpZmNQWjUzRVh5ZjFQM2pVZmw3MGtk?=
- =?utf-8?B?REJMOElDQ1EyQjZYc3BzUVIwRnBrSEVzUlVxM2VmekZ1QmEyOUx1aXM3ZzNj?=
- =?utf-8?B?Z0NHQWJBeFdBT1IyK3EvOVVlYVR3Rm53VEthSHFPNDdybHE3Z04vMmxOWlZB?=
- =?utf-8?B?cS92d0pybEhDb3Q1eTZVMkZZM3VHSE9aYTg0WXFrS3pBVFlOcWRnakkvS0dD?=
- =?utf-8?B?cjJZdUVLYzhQcENVbGJNY0N6b1lINUQwa1k4TlpXR0tiN0lLRnJUWkZGWUtY?=
- =?utf-8?B?NzNkSmpvQmMvUlNoVlJzTVR4ZDdFRWcyOU1yL3duSzI3elRlS0J0cUY1M25C?=
- =?utf-8?B?YzJZcjRUTlZEbmg2NUdUSG9HQWJQT1dKaGU1a3RiQTVPdUdkZGZlMHZSUTJV?=
- =?utf-8?B?b3AvUytZRG53VFdEUEE2c2d2ek5JVXJSY21RRVNKR1grbnJuWTY2bnRjVWta?=
- =?utf-8?B?UFZzRE83WGJRajBtcDhhN1NHOEtkNDh2cHlZNW9wMjF2QVJYSGRUT2w2THJz?=
- =?utf-8?B?aS9JLzBubmdMMkowQThKRDBuSEVhOFBUV1ZyVmpQN2xUNmpwSUsvSzdQLzdU?=
- =?utf-8?B?L1RseEtJWXBtRDdKc0pzTno1aHhXY2oyYkpwMDQ4V3lKeit5KzZWTlBhU2I4?=
- =?utf-8?B?bEsxMElvb2lacWhjVFg2UFRIVlNUeVVOQ0d0TzhBWUJWZVNDbnF6dXNIWnpP?=
- =?utf-8?B?ZGYya0VHVVNoSDBMUHVtaTJ6RHkxaUFFSVlzbjlPM0JzMnU0NExiMnJjeTJq?=
- =?utf-8?B?YmFVdktJYVVZQUwwMlFqbzRXSDkvWSt4YTJ3dWoxTURUR3IzSFdkZjQzcVYz?=
- =?utf-8?B?cHd1bUtCT2hqcGt3Rm13OXdweCtTMnduMmdycjFCOGhvZERMcnpVcUhwWWQz?=
- =?utf-8?B?TWk5eFFyK1Rxc0VWTC9ub0dBaUdKSERsNVNKRU1ISGc1ZkJ3WlRZNzA3a1pa?=
- =?utf-8?B?T1VzNUxMbnBvZTZRV1p6MXJ4UDMyV2ZYbzZZZ1VrN1VrMW1OS25DQ1JueWdQ?=
- =?utf-8?B?Umc9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4427fd7e-e66b-45d6-c7c6-08dc1cf400ef
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8287.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jan 2024 15:49:09.4172
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: FQdO1Ti59ATkqvCLGvWvrV62waqjyUcG0w+8aGnYtMdo531b37+cvNItpjMwUzvPG3G2APPx9X17ZWLB9pzTwA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR11MB6444
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240124130101.428c09a3@canb.auug.org.au>
 
-Quoting Yury Norov (2024-01-24 12:27:58-03:00)
->On Wed, Jan 24, 2024 at 08:03:53AM -0600, Lucas De Marchi wrote:
->> On Wed, Jan 24, 2024 at 09:58:26AM +0200, Jani Nikula wrote:
->> > On Tue, 23 Jan 2024, Lucas De Marchi <lucas.demarchi@intel.com> wrote:
->> > > From: Yury Norov <yury.norov@gmail.com>
->> > >=20
->> > > Generalize __GENMASK() to support different types, and implement
->> > > fixed-types versions of GENMASK() based on it. The fixed-type versio=
-n
->> > > allows more strict checks to the min/max values accepted, which is
->> > > useful for defining registers like implemented by i915 and xe driver=
-s
->> > > with their REG_GENMASK*() macros.
->> >=20
->> > Mmh, the commit message says the fixed-type version allows more strict
->> > checks, but none are actually added. GENMASK_INPUT_CHECK() remains the
->> > same.
->> >=20
->> > Compared to the i915 and xe versions, this is more lax now. You could
->> > specify GENMASK_U32(63,32) without complaints.
->>=20
->> Doing this on top of the this series:
->>=20
->> -#define   XELPDP_PORT_M2P_COMMAND_TYPE_MASK            REG_GENMASK(30, =
-27)
->> +#define   XELPDP_PORT_M2P_COMMAND_TYPE_MASK            REG_GENMASK(62, =
-32)
->>=20
->> and I do get a build failure:
->>=20
->> ../drivers/gpu/drm/i915/display/intel_cx0_phy.c: In function =E2=80=98__=
-intel_cx0_read_once=E2=80=99:
->> ../include/linux/bits.h:41:31: error: left shift count >=3D width of typ=
-e [-Werror=3Dshift-count-overflow]
->>    41 |          (((t)~0ULL - ((t)(1) << (l)) + 1) & \
->>       |                               ^~
->
->I would better include this in commit message to avoid people's
->confusion. If it comes to v2, can you please do it and mention that
->this trick relies on shift-count-overflow compiler check?
+On Wed, 24 Jan 2024, Stephen Rothwell wrote:
 
-Wouldn't it be better to have explicit check that l and h are not out of bo=
-unds
-based on BITS_PER_TYPE() than relying on a compiler flag that could be turn=
-ed
-off (maybe for some questionable reason, but even so)?
+> The following trees are going to be removed from linux-next because they
+> have not been updated in more than a year.  If you want a tree restored,
+> just let me know (and update its branch).
+> 
+> Tree			Last commit date
+>   URL
+>   commits (if any)
+> -----------------------------------------
+> asahi-soc-fixes		2022-08-14 15:50:18 -0700
+>   https://github.com/AsahiLinux/linux.git#asahi-soc/fixes
+> backlight-fixes		2023-01-01 13:53:16 -0800
+>   git://git.kernel.org/pub/scm/linux/kernel/git/lee/backlight.git#for-backlight-fixes
 
---
-Gustavo Sousa
+This is still active, when it's needed.
+
+> broadcom-fixes		2022-10-16 15:36:24 -0700
+>   https://github.com/Broadcom/stblinux.git#fixes
+> dmi			2022-09-23 14:53:14 +0200
+>   git://git.kernel.org/pub/scm/linux/kernel/git/jdelvare/staging.git#dmi-for-next
+> leds			2022-12-25 13:41:39 -0800
+>   git://git.kernel.org/pub/scm/linux/kernel/git/pavel/linux-leds.git#for-next
+> mfd-fixes		2023-01-01 13:53:16 -0800
+>   git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git#for-mfd-fixes
+
+As is this one.
+
+I'll update them both now if it helps.
+
+> orangefs		2022-12-07 15:18:30 -0500
+>   git://git.kernel.org/pub/scm/linux/kernel/git/hubcap/linux#for-next
+> random			2023-01-04 12:11:29 -0800
+>   git://git.kernel.org/pub/scm/linux/kernel/git/crng/random.git#master
+> safesetid		2022-07-15 18:24:42 +0000
+>   https://github.com/micah-morton/linux.git#safesetid-next
+> sparc			2022-09-30 11:58:23 +0100
+>   git://git.kernel.org/pub/scm/linux/kernel/git/davem/sparc.git#master
+>   2d2b17d08bfc ("sparc: Unbreak the build")
+>   (This commit has been included in Linus' tree as part of another commit)
+> userns			2022-11-30 12:54:24 -0600
+>   git://git.kernel.org/pub/scm/linux/kernel/git/ebiederm/user-namespace.git#for-next
+>   54e1011bd95a ("sysctl: Allow change system v ipc sysctls inside ipc namespace")
+>   f9b90c2062b2 ("docs: Add information about ipc sysctls limitations")
+>   7608b6a72ed0 ("sysctl: Allow to change limits for posix messages queues")
+>   a799be9bafe3 ("ipc/ipc_sysctl: Add missing include of linux/cred.h")
+>   b895e6689ebf ("sysctl: Fix mq permission check")
+>   295227b10192 ("ucount: Fix atomic_long_inc_below argument type")
+>   b4b11b58cd02 ("ucount: Use atomic_long_try_cmpxchg in atomic_long_inc_below")
+>   (only these last 2 commits actually change anything in Linus' tree)
+> 
+> -- 
+> Cheers,
+> Stephen Rothwell
+
+
+
+-- 
+Lee Jones [李琼斯]
