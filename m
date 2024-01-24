@@ -1,71 +1,107 @@
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 541C360DEC
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 12:08:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.86.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A0A763500
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 12:10:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706098099; cv=none; b=sssgfrmRoPgspZBA52vAZ/HMEU1eev5K24N68bCGNr+GIYURmCUqODv4srQa/SroW+Sw4grfG4FDquYtb2f5IZG5mboxBWvvcPY43QyY4LS8BDwHnSf/O7FWjFzT/KS8RanvcydLVovbBKIuLFAN/S7PSDySSMiehhCqde0EQ0Q=
+	t=1706098259; cv=none; b=MfGQQUXpKaUx7SrkP/bZ5jCbEWbTxeI/MS96i+JjgulwnWQDdTFPj4NLXSXqsDQ2OGGA8pOh4wCyypfiH42YM5RG07IPlJpkmWnNDSZsJhiLUeFLdbSsBunp4WnQN/DdQwwTauBVjlyOCvn/MtaDYLY3W8cKggtWiSt8LnPRHa4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706098099; c=relaxed/simple;
-	bh=j8m38Wxa0ueG/c2usEBBoOWFaURw0WrD5+sPcGSKHQw=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 MIME-Version:Content-Type; b=dBIJ7Yi91nqYOUwnRDVRmkxoT/yhlJ2BfnLD+oeAxTkEhhfXL10l4BMACTbFs0zFf5bMvPl4DgnvbeMu/89iB2YQTUE6zA8Xe3dqQMakCMgucEv37UNfX++SVCsdzZlF1KdfaGDlv8iXWtC+f6N+BVwyAhDsKkmgaI4htoctJS4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.86.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-65-CWVIYUQzONCGT7J_c3iAPg-1; Wed, 24 Jan 2024 12:08:14 +0000
-X-MC-Unique: CWVIYUQzONCGT7J_c3iAPg-1
-Received: from AcuMS.Aculab.com (10.202.163.4) by AcuMS.aculab.com
- (10.202.163.4) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Wed, 24 Jan
- 2024 12:07:55 +0000
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.048; Wed, 24 Jan 2024 12:07:55 +0000
-From: David Laight <David.Laight@ACULAB.COM>
-To: 'Jens Axboe' <axboe@kernel.dk>, LKML <linux-kernel@vger.kernel.org>
-CC: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner
-	<brauner@kernel.org>
-Subject: RE: [PATCH] iov_iter: streamline iovec/bvec alignment iteration
-Thread-Topic: [PATCH] iov_iter: streamline iovec/bvec alignment iteration
-Thread-Index: AQHaTjVALU/5Ken0i0iH5Q5cLi4B8rDo3vlA
-Date: Wed, 24 Jan 2024 12:07:55 +0000
-Message-ID: <9b43b9f3a32642e5a6388f3b1c8b114d@AcuMS.aculab.com>
-References: <bd2f28ab-78cf-4ae0-a62a-d23a94fb3839@kernel.dk>
-In-Reply-To: <bd2f28ab-78cf-4ae0-a62a-d23a94fb3839@kernel.dk>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
+	s=arc-20240116; t=1706098259; c=relaxed/simple;
+	bh=hBBe2xh59Q4+C63aRE6jewMWx0A0Jwfw4ICW1/4xxvk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TTN03oLuudSqZe3WhgMotZNY2uyjX3fPV3plhQj1jQPzK8nHnkXhd7IhaKJvR0PQJiqdur+/Zj8Guf/GwOAuHsR8AK6P4BbRO4GEbxPFfCZCG7x1jlB8bF0VqhV97LWoTC6kahspywGAMs5xtRnYIovl1R+QNCSUsLZHzb+cmR8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=aTdGRbzQ; arc=none smtp.client-ip=209.85.208.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aTdGRbzQ"
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2cf108f6a2dso20473481fa.3
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 04:10:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1706098255; x=1706703055; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=jxqLYnJl0Q8qohdE/H5PX6zIbzKF8rVClXxhczfIt+Y=;
+        b=aTdGRbzQ0IzNOcCw53gXx1ONy4dFroCtZUnBDZ/1TO01/PXtmHhwT4JlaFSPKR51Sy
+         BkECo2AEkDzNhZicocNjDKZr1iTgq95p34vHI3Jgw5Ek7uTu+gpL7K6kfDwtIRNjlwoR
+         jiQmEF8TevNI3MK9ehy5rF7QVzS/DtqYVCuVQ18e5q5snnh/zvUcABiD4j1zU35wdOWW
+         XcFXgxcVZXeu3uyIH4MXyvjSSCKFLekxR5A/HKdZpBDlQZm8qOIprThZT8IVKLJvNDrt
+         QChnb5bkk6HeAT/qBqtcOqXQ/od4HIO2g8XWWnt8C2fs6YSPMQ20SA2bM71JvjRKv/Ih
+         NRvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706098255; x=1706703055;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=jxqLYnJl0Q8qohdE/H5PX6zIbzKF8rVClXxhczfIt+Y=;
+        b=gZpEJDzHa/W30QNAGSE2U0qfG8ZYbsJWdL9CjMIcuz2yVFN9LrCXJ6S5zGWpG7KXwU
+         IegbPDx2o18ZLcVFT3bmRCWhrEQkANk4nd3hM8Z+lZ1tTh6ka4Fus+vbKLnbcYnQNW9l
+         A4h9yG8Eq/PhFz+Umd5IoNoIN+X1OiwqtSTH2oTnKTeQiWsnLYcaOaC8WQOjThHHzHRe
+         RjU6Di/ldf7KE/U/OuGNPT3PTwTBN8bM8ablts9L6U4mMQT4mNsWO3eQKqXcfO3qgpxN
+         vMrdjf41EMMJvNd9IRIriojRcjupm0S77m0NpwCgzedusb9YZWAveaOBfjsOs4girXVj
+         9DcA==
+X-Gm-Message-State: AOJu0YxqrrgMI97kyy689FVSrkKDBTjyDHyUGYDJKKcUCxuWAsrRguGn
+	Mxd/mHtCzmxCa6xZXqoPfBNPKG5GCwiNIjRdMXzZv71ohQqKDjSRVJwt7y3+/9s=
+X-Google-Smtp-Source: AGHT+IEaLmOyU1xEoCIKY6SDGgPvE9yM+XwFW3GAikfxY2Ntww+EkTI1EUX72zmAXJwNZw0kGholAw==
+X-Received: by 2002:a2e:87c9:0:b0:2ce:19d:211a with SMTP id v9-20020a2e87c9000000b002ce019d211amr681590ljj.62.1706098255309;
+        Wed, 24 Jan 2024 04:10:55 -0800 (PST)
+Received: from [172.30.205.123] (UNUSED.212-182-62-129.lubman.net.pl. [212.182.62.129])
+        by smtp.gmail.com with ESMTPSA id c3-20020a2ea1c3000000b002ccdb771df0sm3869539ljm.108.2024.01.24.04.10.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 24 Jan 2024 04:10:54 -0800 (PST)
+Message-ID: <5192c3b1-46fd-455d-aa67-b05bf5c54e19@linaro.org>
+Date: Wed, 24 Jan 2024 13:10:53 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/3] clk: qcom: gcc-msm8953: add MDSS_BCR reset
+To: Luca Weiss <luca@z3ntu.xyz>, ~postmarketos/upstreaming@lists.sr.ht,
+ phone-devel@vger.kernel.org, Bjorn Andersson <andersson@kernel.org>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Vladimir Lypak <vladimir.lypak@gmail.com>
+References: <20240123-msm8953-mdss-reset-v1-0-bb8c6d3ce897@z3ntu.xyz>
+ <20240123-msm8953-mdss-reset-v1-2-bb8c6d3ce897@z3ntu.xyz>
 Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+In-Reply-To: <20240123-msm8953-mdss-reset-v1-2-bb8c6d3ce897@z3ntu.xyz>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-RnJvbTogSmVucyBBeGJvZQ0KPiBTZW50OiAyMyBKYW51YXJ5IDIwMjQgMTk6NDkNCj4gDQo+IFJl
-d3JpdGUgaW92X2l0ZXJfYWxpZ25lZF9pb3ZlYygpIGFuZCBpb3ZfaXRlcl9hbGlnbmVkX2J2ZWMo
-KSB0byBiZSBib3RoDQo+IGVhc2llciB0byByZWFkLCBhbmQgYWxzbyBzaWduaWZpY2FudGx5IG1v
-cmUgY29tcGFjdCBpbiB0ZXJtcyBvZg0KPiBnZW5lcmF0ZWQgY29kZS4gVGhpcyBzYXZlcyAxNzgg
-Ynl0ZXMgb2YgdGV4dCBvbiB4ODYtNjQgZm9yIG1lICh3aXRoDQo+IGNsYW5nLTE4KSBhbmQgMTM2
-IGJ5dGVzIG9uIGFybTY0ICh3aXRoIGdjYy0xMykuDQo+IA0KLi4uDQo+IGRpZmYgLS1naXQgYS9s
-aWIvaW92X2l0ZXIuYyBiL2xpYi9pb3ZfaXRlci5jDQo+IGluZGV4IGUwYWE2YjQ0MGNhNS4uMmZj
-YzQ3ZDgyMmUzIDEwMDY0NA0KPiAtLS0gYS9saWIvaW92X2l0ZXIuYw0KPiArKysgYi9saWIvaW92
-X2l0ZXIuYw0KPiBAQCAtNzE0LDEyICs3MTQsMTEgQEAgRVhQT1JUX1NZTUJPTChpb3ZfaXRlcl9k
-aXNjYXJkKTsNCi4uLg0KPiAtCWZvciAoayA9IDA7IGsgPCBpLT5ucl9zZWdzOyBrKyssIHNraXAg
-PSAwKSB7DQo+IC0JCWNvbnN0IHN0cnVjdCBpb3ZlYyAqaW92ID0gaXRlcl9pb3YoaSkgKyBrOw0K
-PiArCWRvIHsNCj4gIAkJc2l6ZV90IGxlbiA9IGlvdi0+aW92X2xlbiAtIHNraXA7DQoNCklzIGkt
-Pm5yX3NlZ3MgYWxsb3dlZCB0byBiZSB6ZXJvPw0KVGhlIG9sZCBjb2RlIChzZWVtZWQgdG8pIGNo
-ZWNrIGZvciB6ZXJvLg0KVGhlIG5ldyB2ZXJzaW9uIHdpbGwgZ28gaG9ycmlibHkgd3JvbmcuDQoN
-CglEYXZpZA0KDQotDQpSZWdpc3RlcmVkIEFkZHJlc3MgTGFrZXNpZGUsIEJyYW1sZXkgUm9hZCwg
-TW91bnQgRmFybSwgTWlsdG9uIEtleW5lcywgTUsxIDFQVCwgVUsNClJlZ2lzdHJhdGlvbiBObzog
-MTM5NzM4NiAoV2FsZXMpDQo=
 
+
+On 1/23/24 22:03, Luca Weiss wrote:
+> From: Vladimir Lypak <vladimir.lypak@gmail.com>
+> 
+> Add an entry in the gcc driver for the MDSS_BCR reset found on MSM8953.
+> 
+> Signed-off-by: Vladimir Lypak <vladimir.lypak@gmail.com>
+> [luca: expand commit message, move entry]
+> Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
+> ---
+
+I found some more definitions in lk2nd
+
+88:#define  GCC_CRYPTO_BCR                    (CLK_CTL_BASE + 0x16000)
+106:#define SDCC1_BCR                          (CLK_CTL_BASE + 0x42000) /* block reset*/
+125:#define SDCC2_BCR                          (CLK_CTL_BASE + 0x43000) /* block reset */
+150:#define USB_HS_BCR                         (CLK_CTL_BASE + 0x41000)
+155:#define GCC_QUSB2_PHY_BCR                  (CLK_CTL_BASE + 0x4103C)
+168:#define USB_30_BCR                  (CLK_CTL_BASE + 0x3F070)
+189:#define USB3_PHY_BCR                (CLK_CTL_BASE + 0x3F034)
+190:#define USB3PHY_PHY_BCR                 (CLK_CTL_BASE + 0x3F03C)
+
+Couldn't find this one though, did you confirm that MDSS goes off
+when you assert it?
+
+Konrad
