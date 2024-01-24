@@ -1,235 +1,284 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
+Received: from out-175.mta1.migadu.com (out-175.mta1.migadu.com [95.215.58.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09B99182CF
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 10:09:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.88
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D270B18645
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 10:10:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706090944; cv=none; b=BINoQ54CFQBx0z+WcILUkAyIpFuHm5A2zr/XjKkYhzf+7iaJl0wvMTPTkRSqN84ON3Uft4c1yAMUgAZUKUN2e3Nbi8XzEO8o5ToO6HVPnNtgOJnOi3TZPf8vQew5oB+fwRdATbrtAzc195T2XfoA19cpg22z/lNkJfS16FY0d8s=
+	t=1706091055; cv=none; b=jU4uyLCBwIykdH4DW4TlBI/s1RP+wGyDCofVJSulqkEKKuW0jPpCftMVYfKmr2pzCK68qrQt2+VIIHIEz5FH4JE/zo2KgHRTfa5XuhZHK7Ts7Le/K3xrAs5CYrZWEMaCJ6vdQklWOk0TS+EjEp8pRn0ie9lp/H24yv6M9kWATYw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706090944; c=relaxed/simple;
-	bh=yIfmTIvjF9rFFLgppXl3MTS5v52yjQDv02ZpwxEON08=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=H1eMQkBGnIusPFa82joG3laiXcpYGAIws6+EwoXuSf0MUaiH5HjsLhiOOjvCuFnK2Xl7HEH1+wky7R1IY9py286IahuUf4t5+aiAXy8Me4K4Sc9yYdjosaWYEcnvBQz51m5EbAUjeOcR03fGMlFgPT8kr1r3XvIRxHQLjycIOp0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=m1/T8JR3; arc=none smtp.client-ip=192.55.52.88
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1706091055; c=relaxed/simple;
+	bh=SSWNhg1BeWMjlsW8eOblnkY8M41Gr7UmMlQfPptWizU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Xgb5gex5aCRcNeR1FT5O3w6c7kZzoWpZRATUgTY2OoROdM2+LhnH/PEF1bxtQ0kRF/aBN7PzsSsxbjYoiHo9fYSj//jEM/sBR8f1feLP0mUz6TrIlukhehuzwdn5VoIZpdFzsqI32hPnM0SXurXqMhMEguUt2PnqFe4bvYwvLhs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Kj5GJSSt; arc=none smtp.client-ip=95.215.58.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="m1/T8JR3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706090942; x=1737626942;
-  h=date:from:to:cc:subject:message-id;
-  bh=yIfmTIvjF9rFFLgppXl3MTS5v52yjQDv02ZpwxEON08=;
-  b=m1/T8JR3xgeWTUwOQ0yro5DuqAH8KhEvzLeE6rJG7jfjjoh8RKyP3qwB
-   A+dITEI3tq9s27hxDk/5KmkMMH2THzahbkmHuQmNNGQBHxJJi815ZLTx2
-   tHxQMY1i0yKbyElD510jOygZwUVVuSeP+tPKnwZHTS2txET6y2T6c5S+5
-   JfIak4bqUrwNw/u32DG3b8j31Zz9smoKHLSIzDzkaGzoz260xObn736xB
-   y9kucMy7sIcoadf+Xs3HnoOUlbUFwKOT+sh/+EwvMDH+pf8nOwh4LP2rd
-   bK0dzlZbr0Z4VThLszysLgTza0oP0YgbEH/i74m6cpmQeqJgyh5Zjg8nm
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="432952131"
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="432952131"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jan 2024 02:09:00 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="929630090"
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="929630090"
-Received: from lkp-server01.sh.intel.com (HELO 961aaaa5b03c) ([10.239.97.150])
-  by fmsmga001.fm.intel.com with ESMTP; 24 Jan 2024 02:08:59 -0800
-Received: from kbuild by 961aaaa5b03c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rSaBk-00082d-2f;
-	Wed, 24 Jan 2024 10:08:56 +0000
-Date: Wed, 24 Jan 2024 18:08:45 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:x86/merge] BUILD SUCCESS
- 4b323027574fc89d5e3e0b3a5cfed69c0f13e244
-Message-ID: <202401241842.tIfbajmZ-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Kj5GJSSt"
+Message-ID: <fc421c38-66b7-4d4e-abfa-051eccbf793c@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1706091051;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=kazOr6AAUqaXXxOqjGWomQo5TpJnFcKaIZXSMkHqQh4=;
+	b=Kj5GJSStFxxpSQW/5cQIZZSMUR8GOXhqanSovUXTJMwsCAN9lITPvR1nvMwgCOn7dVvIAO
+	Z31fJeY4dcB0XYncgCP+XSqc4LCNRDUAFOMO6R8Lzybp0I5JAf+/IKdnzGSNAuQreabNc9
+	jztywpVNReG6Q3OnAo7Tjxhm34KjWsU=
+Date: Wed, 24 Jan 2024 10:10:46 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Subject: Re: [PATCH 3/4] net: wan: fsl_qmc_hdlc: Add runtime timeslots changes
+ support
+Content-Language: en-US
+To: Herve Codina <herve.codina@bootlin.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, Andrew Lunn <andrew@lunn.ch>,
+ Mark Brown <broonie@kernel.org>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+References: <20240123164912.249540-1-herve.codina@bootlin.com>
+ <20240123164912.249540-4-herve.codina@bootlin.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Vadim Fedorenko <vadim.fedorenko@linux.dev>
+In-Reply-To: <20240123164912.249540-4-herve.codina@bootlin.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/merge
-branch HEAD: 4b323027574fc89d5e3e0b3a5cfed69c0f13e244  Merge branch 'x86/percpu' into x86/merge, to ease integration testing
+On 23/01/2024 16:49, Herve Codina wrote:
+> QMC channels support runtime timeslots changes but nothing is done at
+> the QMC HDLC driver to handle these changes.
+> 
+> Use existing IFACE ioctl in order to configure the timeslots to use.
+> 
+> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+> Reviewed-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+> Acked-by: Jakub Kicinski <kuba@kernel.org>
+> ---
+>   drivers/net/wan/fsl_qmc_hdlc.c | 169 ++++++++++++++++++++++++++++++++-
+>   1 file changed, 168 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/wan/fsl_qmc_hdlc.c b/drivers/net/wan/fsl_qmc_hdlc.c
+> index 31b637ec8390..82019cd96365 100644
+> --- a/drivers/net/wan/fsl_qmc_hdlc.c
+> +++ b/drivers/net/wan/fsl_qmc_hdlc.c
+> @@ -32,6 +32,7 @@ struct qmc_hdlc {
+>   	struct qmc_hdlc_desc tx_descs[8];
+>   	unsigned int tx_out;
+>   	struct qmc_hdlc_desc rx_descs[4];
+> +	u32 slot_map;
+>   };
+>   
+>   static inline struct qmc_hdlc *netdev_to_qmc_hdlc(struct net_device *netdev)
+> @@ -202,6 +203,162 @@ static netdev_tx_t qmc_hdlc_xmit(struct sk_buff *skb, struct net_device *netdev)
+>   	return NETDEV_TX_OK;
+>   }
+>   
+> +static int qmc_hdlc_xlate_slot_map(struct qmc_hdlc *qmc_hdlc,
+> +				   u32 slot_map, struct qmc_chan_ts_info *ts_info)
+> +{
+> +	u64 ts_mask_avail;
+> +	unsigned int bit;
+> +	unsigned int i;
+> +	u64 ts_mask;
+> +	u64 map;
+> +
+> +	/* Tx and Rx masks must be identical */
+> +	if (ts_info->rx_ts_mask_avail != ts_info->tx_ts_mask_avail) {
+> +		dev_err(qmc_hdlc->dev, "tx and rx available timeslots mismatch (0x%llx, 0x%llx)\n",
+> +			ts_info->rx_ts_mask_avail, ts_info->tx_ts_mask_avail);
+> +		return -EINVAL;
+> +	}
+> +
+> +	ts_mask_avail = ts_info->rx_ts_mask_avail;
+> +	ts_mask = 0;
+> +	map = slot_map;
+> +	bit = 0;
+> +	for (i = 0; i < 64; i++) {
+> +		if (ts_mask_avail & BIT_ULL(i)) {
+> +			if (map & BIT_ULL(bit))
+> +				ts_mask |= BIT_ULL(i);
+> +			bit++;
+> +		}
+> +	}
+> +
+> +	if (hweight64(ts_mask) != hweight64(map)) {
+> +		dev_err(qmc_hdlc->dev, "Cannot translate timeslots 0x%llx -> (0x%llx,0x%llx)\n",
+> +			map, ts_mask_avail, ts_mask);
+> +		return -EINVAL;
+> +	}
+> +
+> +	ts_info->tx_ts_mask = ts_mask;
+> +	ts_info->rx_ts_mask = ts_mask;
+> +	return 0;
+> +}
+> +
+> +static int qmc_hdlc_xlate_ts_info(struct qmc_hdlc *qmc_hdlc,
+> +				  const struct qmc_chan_ts_info *ts_info, u32 *slot_map)
+> +{
+> +	u64 ts_mask_avail;
+> +	unsigned int bit;
+> +	unsigned int i;
+> +	u64 ts_mask;
+> +	u64 map;
+> +
 
-elapsed time: 1473m
+Starting from here ...
 
-configs tested: 161
-configs skipped: 3
+> +	/* Tx and Rx masks must be identical */
+> +	if (ts_info->rx_ts_mask_avail != ts_info->tx_ts_mask_avail) {
+> +		dev_err(qmc_hdlc->dev, "tx and rx available timeslots mismatch (0x%llx, 0x%llx)\n",
+> +			ts_info->rx_ts_mask_avail, ts_info->tx_ts_mask_avail);
+> +		return -EINVAL;
+> +	}
+> +	if (ts_info->rx_ts_mask != ts_info->tx_ts_mask) {
+> +		dev_err(qmc_hdlc->dev, "tx and rx timeslots mismatch (0x%llx, 0x%llx)\n",
+> +			ts_info->rx_ts_mask, ts_info->tx_ts_mask);
+> +		return -EINVAL;
+> +	}
+> +
+> +	ts_mask_avail = ts_info->rx_ts_mask_avail;
+> +	ts_mask = ts_info->rx_ts_mask;
+> +	map = 0;
+> +	bit = 0;
+> +	for (i = 0; i < 64; i++) {
+> +		if (ts_mask_avail & BIT_ULL(i)) {
+> +			if (ts_mask & BIT_ULL(i))
+> +				map |= BIT_ULL(bit);
+> +			bit++;
+> +		}
+> +	}
+> +
+> +	if (hweight64(ts_mask) != hweight64(map)) {
+> +		dev_err(qmc_hdlc->dev, "Cannot translate timeslots (0x%llx,0x%llx) -> 0x%llx\n",
+> +			ts_mask_avail, ts_mask, map);
+> +		return -EINVAL;
+> +	}
+> +
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+till here the block looks like copy of the block from previous function.
+It worth to make a separate function for it, I think.
 
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allmodconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                   randconfig-001-20240123   gcc  
-arc                   randconfig-002-20240123   gcc  
-arm                              allmodconfig   gcc  
-arm                               allnoconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                                 defconfig   clang
-arm                   randconfig-001-20240123   gcc  
-arm                   randconfig-002-20240123   gcc  
-arm                   randconfig-003-20240123   gcc  
-arm                   randconfig-004-20240123   gcc  
-arm64                            allmodconfig   clang
-arm64                             allnoconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                 randconfig-001-20240123   gcc  
-arm64                 randconfig-002-20240123   gcc  
-arm64                 randconfig-003-20240123   gcc  
-arm64                 randconfig-004-20240123   gcc  
-csky                             allmodconfig   gcc  
-csky                              allnoconfig   gcc  
-csky                             allyesconfig   gcc  
-csky                                defconfig   gcc  
-csky                  randconfig-001-20240123   gcc  
-csky                  randconfig-002-20240123   gcc  
-hexagon                          allmodconfig   clang
-hexagon                           allnoconfig   clang
-hexagon                          allyesconfig   clang
-hexagon                             defconfig   clang
-hexagon               randconfig-001-20240123   clang
-hexagon               randconfig-002-20240123   clang
-i386                             allmodconfig   clang
-i386                              allnoconfig   clang
-i386                             allyesconfig   clang
-i386         buildonly-randconfig-001-20240123   gcc  
-i386         buildonly-randconfig-002-20240123   gcc  
-i386         buildonly-randconfig-003-20240123   gcc  
-i386         buildonly-randconfig-004-20240123   gcc  
-i386         buildonly-randconfig-005-20240123   gcc  
-i386         buildonly-randconfig-006-20240123   gcc  
-i386                                defconfig   gcc  
-i386                  randconfig-001-20240123   gcc  
-i386                  randconfig-002-20240123   gcc  
-i386                  randconfig-003-20240123   gcc  
-i386                  randconfig-004-20240123   gcc  
-i386                  randconfig-005-20240123   gcc  
-i386                  randconfig-006-20240123   gcc  
-i386                  randconfig-011-20240123   clang
-i386                  randconfig-012-20240123   clang
-i386                  randconfig-013-20240123   clang
-i386                  randconfig-014-20240123   clang
-i386                  randconfig-015-20240123   clang
-i386                  randconfig-016-20240123   clang
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch             randconfig-001-20240123   gcc  
-loongarch             randconfig-002-20240123   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-mips                              allnoconfig   clang
-mips                             allyesconfig   gcc  
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-nios2                 randconfig-001-20240123   gcc  
-nios2                 randconfig-002-20240123   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                         allyesconfig   gcc  
-openrisc                            defconfig   gcc  
-parisc                           allmodconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc                randconfig-001-20240123   gcc  
-parisc                randconfig-002-20240123   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   clang
-powerpc                           allnoconfig   gcc  
-powerpc                          allyesconfig   clang
-powerpc               randconfig-001-20240123   gcc  
-powerpc               randconfig-002-20240123   gcc  
-powerpc               randconfig-003-20240123   gcc  
-powerpc64             randconfig-001-20240123   gcc  
-powerpc64             randconfig-002-20240123   gcc  
-powerpc64             randconfig-003-20240123   gcc  
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   clang
-riscv                            allyesconfig   gcc  
-riscv                               defconfig   gcc  
-riscv                 randconfig-001-20240123   gcc  
-riscv                 randconfig-002-20240123   gcc  
-s390                             allmodconfig   gcc  
-s390                              allnoconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                                defconfig   gcc  
-s390                  randconfig-001-20240123   clang
-s390                  randconfig-002-20240123   clang
-sh                               allmodconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                                  defconfig   gcc  
-sh                    randconfig-001-20240123   gcc  
-sh                    randconfig-002-20240123   gcc  
-sparc                            allmodconfig   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64                             defconfig   gcc  
-sparc64               randconfig-001-20240123   gcc  
-sparc64               randconfig-002-20240123   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   clang
-um                                  defconfig   gcc  
-um                             i386_defconfig   gcc  
-um                    randconfig-001-20240123   gcc  
-um                    randconfig-002-20240123   gcc  
-um                           x86_64_defconfig   gcc  
-x86_64                            allnoconfig   gcc  
-x86_64                           allyesconfig   clang
-x86_64       buildonly-randconfig-001-20240124   clang
-x86_64       buildonly-randconfig-002-20240124   clang
-x86_64       buildonly-randconfig-003-20240124   clang
-x86_64       buildonly-randconfig-004-20240124   clang
-x86_64       buildonly-randconfig-005-20240124   clang
-x86_64       buildonly-randconfig-006-20240124   clang
-x86_64                              defconfig   gcc  
-x86_64                randconfig-001-20240124   gcc  
-x86_64                randconfig-002-20240124   gcc  
-x86_64                randconfig-003-20240124   gcc  
-x86_64                randconfig-004-20240124   gcc  
-x86_64                randconfig-005-20240124   gcc  
-x86_64                randconfig-006-20240124   gcc  
-x86_64                randconfig-011-20240124   clang
-x86_64                randconfig-012-20240124   clang
-x86_64                randconfig-013-20240124   clang
-x86_64                randconfig-014-20240124   clang
-x86_64                randconfig-015-20240124   clang
-x86_64                randconfig-016-20240124   clang
-x86_64                randconfig-071-20240124   clang
-x86_64                randconfig-072-20240124   clang
-x86_64                randconfig-073-20240124   clang
-x86_64                randconfig-074-20240124   clang
-x86_64                randconfig-075-20240124   clang
-x86_64                randconfig-076-20240124   clang
-x86_64                          rhel-8.3-rust   clang
-xtensa                            allnoconfig   gcc  
-xtensa                randconfig-001-20240123   gcc  
-xtensa                randconfig-002-20240123   gcc  
+> +	if (map >= BIT_ULL(32)) {
+> +		dev_err(qmc_hdlc->dev, "Slot map out of 32bit (0x%llx,0x%llx) -> 0x%llx\n",
+> +			ts_mask_avail, ts_mask, map);
+> +		return -EINVAL;
+> +	}
+> +
+> +	*slot_map = map;
+> +	return 0;
+> +}
+> +
+> +static int qmc_hdlc_set_iface(struct qmc_hdlc *qmc_hdlc, int if_iface, const te1_settings *te1)
+> +{
+> +	struct qmc_chan_ts_info ts_info;
+> +	int ret;
+> +
+> +	ret = qmc_chan_get_ts_info(qmc_hdlc->qmc_chan, &ts_info);
+> +	if (ret) {
+> +		dev_err(qmc_hdlc->dev, "get QMC channel ts info failed %d\n", ret);
+> +		return ret;
+> +	}
+> +	ret = qmc_hdlc_xlate_slot_map(qmc_hdlc, te1->slot_map, &ts_info);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = qmc_chan_set_ts_info(qmc_hdlc->qmc_chan, &ts_info);
+> +	if (ret) {
+> +		dev_err(qmc_hdlc->dev, "set QMC channel ts info failed %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	qmc_hdlc->slot_map = te1->slot_map;
+> +
+> +	return 0;
+> +}
+> +
+> +static int qmc_hdlc_ioctl(struct net_device *netdev, struct if_settings *ifs)
+> +{
+> +	struct qmc_hdlc *qmc_hdlc = netdev_to_qmc_hdlc(netdev);
+> +	te1_settings te1;
+> +
+> +	switch (ifs->type) {
+> +	case IF_GET_IFACE:
+> +		ifs->type = IF_IFACE_E1;
+> +		if (ifs->size < sizeof(te1)) {
+> +			if (!ifs->size)
+> +				return 0; /* only type requested */
+> +
+> +			ifs->size = sizeof(te1); /* data size wanted */
+> +			return -ENOBUFS;
+> +		}
+> +
+> +		memset(&te1, 0, sizeof(te1));
+> +
+> +		/* Update slot_map */
+> +		te1.slot_map = qmc_hdlc->slot_map;
+> +
+> +		if (copy_to_user(ifs->ifs_ifsu.te1, &te1, sizeof(te1)))
+> +			return -EFAULT;
+> +		return 0;
+> +
+> +	case IF_IFACE_E1:
+> +	case IF_IFACE_T1:
+> +		if (!capable(CAP_NET_ADMIN))
+> +			return -EPERM;
+> +
+> +		if (netdev->flags & IFF_UP)
+> +			return -EBUSY;
+> +
+> +		if (copy_from_user(&te1, ifs->ifs_ifsu.te1, sizeof(te1)))
+> +			return -EFAULT;
+> +
+> +		return qmc_hdlc_set_iface(qmc_hdlc, ifs->type, &te1);
+> +
+> +	default:
+> +		return hdlc_ioctl(netdev, ifs);
+> +	}
+> +}
+> +
+>   static int qmc_hdlc_open(struct net_device *netdev)
+>   {
+>   	struct qmc_hdlc *qmc_hdlc = netdev_to_qmc_hdlc(netdev);
+> @@ -328,13 +485,14 @@ static const struct net_device_ops qmc_hdlc_netdev_ops = {
+>   	.ndo_open       = qmc_hdlc_open,
+>   	.ndo_stop       = qmc_hdlc_close,
+>   	.ndo_start_xmit = hdlc_start_xmit,
+> -	.ndo_siocwandev	= hdlc_ioctl,
+> +	.ndo_siocwandev = qmc_hdlc_ioctl,
+>   };
+>   
+>   static int qmc_hdlc_probe(struct platform_device *pdev)
+>   {
+>   	struct device_node *np = pdev->dev.of_node;
+>   	struct qmc_hdlc *qmc_hdlc;
+> +	struct qmc_chan_ts_info ts_info;
+>   	struct qmc_chan_info info;
+>   	hdlc_device *hdlc;
+>   	int ret;
+> @@ -364,6 +522,15 @@ static int qmc_hdlc_probe(struct platform_device *pdev)
+>   		return -EINVAL;
+>   	}
+>   
+> +	ret = qmc_chan_get_ts_info(qmc_hdlc->qmc_chan, &ts_info);
+> +	if (ret) {
+> +		dev_err(qmc_hdlc->dev, "get QMC channel ts info failed %d\n", ret);
+> +		return ret;
+> +	}
+> +	ret = qmc_hdlc_xlate_ts_info(qmc_hdlc, &ts_info, &qmc_hdlc->slot_map);
+> +	if (ret)
+> +		return ret;
+> +
+>   	qmc_hdlc->netdev = alloc_hdlcdev(qmc_hdlc);
+>   	if (!qmc_hdlc->netdev) {
+>   		dev_err(qmc_hdlc->dev, "failed to alloc hdlc dev\n");
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
