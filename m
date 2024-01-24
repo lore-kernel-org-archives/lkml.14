@@ -1,166 +1,105 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from eggs.gnu.org (eggs.gnu.org [209.51.188.92])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66440168D7;
-	Wed, 24 Jan 2024 07:50:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E62E917542;
+	Wed, 24 Jan 2024 07:51:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.51.188.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706082649; cv=none; b=bVNvzbjUJ+P4oX2QlB9bxfooCA9+FMBxpkmt1dSBOB49xlNmrw3QDKUE4KDYjA785xlUQStxcHvQDE/fJRD/zbXMMcpujj0MaXxQ+p1QQfQHlDOs3dnmDXXvTxAiN83X5Eju2raAPF4ORMwiP4+o/rSMuJ+BphxGEYPeNySu7tM=
+	t=1706082688; cv=none; b=nAestmrDElydLqzCTn717ghrnaTU/LpcHXi2LGXUueMfqfQa4AP6FKyIURx2mDYZVhr9C2YRr0pGM4tPZRS+8g0fDHrNLk1f6bda7Rs8rAJvnDvq1XGYn45JLCS4GzbCwnFPAsQSMIhtD4PjB0+zJ5JqnaoS/90Zkf+7cqZQLLM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706082649; c=relaxed/simple;
-	bh=cC2LHOBYxvF1gJoW39qXQupPj84QBL5OBB3dmmbB0Y4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XQYwz3/s64p1+KZUafpobl1iZajrXwRGY2dQOiSAWkOmJH8usnoz1UKk+SBnKJmbPSFkLi06T/tZPKTsV/T3OJXImAD5NfpzHKxxcUUZGCzosxaKX24uD6VMCeAr4CcAZalLPxCzywWHRroNePs3cGipyVJtdJJjjd+DrWerH9s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=d9yJYnB8; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=d9yJYnB8; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1706082688; c=relaxed/simple;
+	bh=DcFSPhT3LeuMsdh0kljwg6YnnEEpXhf+WOiAEbOy9xQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JQwJTRfqWXMtDZHIntPQzrbVbc+ukOnEc/goyCfsnVt5GpTcBUWYvyQSa+nk0XtjubJxSs8H4Xiew6psi0UacJg6vTI9FeO3LfMn1tisqx81AjZ9QB2fJd0UnMxOsnRim7Mr/y62iousF2GSULJWCtbhzU9k/a+p7axFZ1chqo4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gnu.org; spf=pass smtp.mailfrom=gnu.org; dkim=pass (2048-bit key) header.d=gnu.org header.i=@gnu.org header.b=MakCWVCd; arc=none smtp.client-ip=209.51.188.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gnu.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gnu.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="d9yJYnB8";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="d9yJYnB8"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 2C8D021EB6;
-	Wed, 24 Jan 2024 07:50:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1706082644; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=sUY8xqCzF/ho9H6VnM7nIW3YTPMmxBLu+pNBzIkIdWc=;
-	b=d9yJYnB8gVI3nNOhaiezeRXyIDCwE3OFGeee6sYMbH9eTyPTWPGRq6gf/75o5M7uWPSftQ
-	1ItK3LWFd4chp+82V2UIy8EDmTrYn42Lv1IelQop4bBQJMiUBj8ICT99u3/PMD1maW8bMe
-	wPcoLOpfnPIdANtQ1Q6tjip8lUE7k4Q=
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1706082644; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=sUY8xqCzF/ho9H6VnM7nIW3YTPMmxBLu+pNBzIkIdWc=;
-	b=d9yJYnB8gVI3nNOhaiezeRXyIDCwE3OFGeee6sYMbH9eTyPTWPGRq6gf/75o5M7uWPSftQ
-	1ItK3LWFd4chp+82V2UIy8EDmTrYn42Lv1IelQop4bBQJMiUBj8ICT99u3/PMD1maW8bMe
-	wPcoLOpfnPIdANtQ1Q6tjip8lUE7k4Q=
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 098771333E;
-	Wed, 24 Jan 2024 07:50:43 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id vhqROlPBsGWhXAAAD6G6ig
-	(envelope-from <mhocko@suse.com>); Wed, 24 Jan 2024 07:50:43 +0000
-Date: Wed, 24 Jan 2024 08:50:43 +0100
-From: Michal Hocko <mhocko@suse.com>
-To: Johannes Weiner <hannes@cmpxchg.org>
-Cc: "T.J. Mercier" <tjmercier@google.com>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Shakeel Butt <shakeelb@google.com>,
-	Muchun Song <muchun.song@linux.dev>,
-	Andrew Morton <akpm@linux-foundation.org>, android-mm@google.com,
-	yuzhao@google.com, yangyifei03@kuaishou.com,
-	cgroups@vger.kernel.org, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Revert "mm:vmscan: fix inaccurate reclaim during
- proactive reclaim"
-Message-ID: <ZbDBU_1BcLkKmLbA@tiehlicka>
-References: <20240121214413.833776-1-tjmercier@google.com>
- <Za-H8NNW9bL-I4gj@tiehlicka>
- <CABdmKX2K4MMe9rsKfWi9RxUS5G1RkLVzuUkPnovt5O2hqVmbWA@mail.gmail.com>
- <20240123164819.GB1745986@cmpxchg.org>
+	dkim=pass (2048-bit key) header.d=gnu.org header.i=@gnu.org header.b="MakCWVCd"
+Received: from fencepost.gnu.org ([2001:470:142:3::e])
+	by eggs.gnu.org with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.90_1)
+	(envelope-from <othacehe@gnu.org>)
+	id 1rSY2R-0004j5-Ca; Wed, 24 Jan 2024 02:51:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=gnu.org;
+	s=fencepost-gnu-org; h=MIME-Version:Date:Subject:To:From:in-reply-to:
+	references; bh=0rTSBM8FAiLBtJbaMKADVCeePIBHC+QW0h8Zr7BMfQU=; b=MakCWVCddnpJR4
+	LaW0p+qScZgkL6uoVzsNKThNpzAhNtVBAjYJBQs/bb+kEPDCMzjeOAWCHtLaUaKkpHSRkJfdNFvG2
+	CXr+be8omi/+xEHpby2FmUN9NF5d3xfZzgFn+bEzYyZU/xyiUjPWkCehuAgvoUk0ilZdyoD4In/Ov
+	bJvb/5Wyuq9pKSyb6FM6gRPlcIwz9t4fYNN1WJLt+AIOLsJs6Ubd4oTX5xRWmk03NFesKcR0ks83B
+	jryrTkRssG/elxpiNBjgDjPSHWpfp8Zt4ypgCL8LeTTA7hOmMVkWf10tMD1SFo7h6oJlBS0t2hIRy
+	ydhI0YgBohroiyjpEhXg==;
+From: Mathieu Othacehe <othacehe@gnu.org>
+To: Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	NXP Linux Team <linux-imx@nxp.com>,
+	Li Yang <leoyang.li@nxp.com>,
+	Primoz Fiser <primoz.fiser@norik.com>,
+	Stefan Wahren <wahrenst@gmx.net>,
+	Christoph Stoidner <c.stoidner@phytec.de>,
+	Wadim Egorov <w.egorov@phytec.de>
+Cc: devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Mathieu Othacehe <othacehe@gnu.org>
+Subject: [PATCH v5 0/3] Add phyBOARD-Segin-i.MX93 support
+Date: Wed, 24 Jan 2024 08:49:27 +0100
+Message-ID: <20240124074930.26101-1-othacehe@gnu.org>
+X-Mailer: git-send-email 2.41.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240123164819.GB1745986@cmpxchg.org>
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.com header.s=susede1 header.b=d9yJYnB8
-X-Spamd-Result: default: False [-2.81 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
-	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	 DKIM_TRACE(0.00)[suse.com:+];
-	 MX_GOOD(-0.01)[];
-	 RCPT_COUNT_TWELVE(0.00)[12];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:dkim];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 MID_RHS_NOT_FQDN(0.50)[];
-	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-3.00)[100.00%]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: 2C8D021EB6
-X-Spam-Level: 
-X-Spam-Score: -2.81
-X-Spam-Flag: NO
+Content-Transfer-Encoding: 8bit
 
-On Tue 23-01-24 11:48:19, Johannes Weiner wrote:
-> The revert isn't a straight-forward solution.
-> 
-> The patch you're reverting fixed conventional reclaim and broke
-> MGLRU. Your revert fixes MGLRU and breaks conventional reclaim.
-> 
-> On Tue, Jan 23, 2024 at 05:58:05AM -0800, T.J. Mercier wrote:
-> > They both are able to make progress. The main difference is that a
-> > single iteration of try_to_free_mem_cgroup_pages with MGLRU ends soon
-> > after it reclaims nr_to_reclaim, and before it touches all memcgs. So
-> > a single iteration really will reclaim only about SWAP_CLUSTER_MAX-ish
-> > pages with MGLRU. WIthout MGLRU the memcg walk is not aborted
-> > immediately after nr_to_reclaim is reached, so a single call to
-> > try_to_free_mem_cgroup_pages can actually reclaim thousands of pages
-> > even when sc->nr_to_reclaim is 32. (I.E. MGLRU overreclaims less.)
-> > https://lore.kernel.org/lkml/20221201223923.873696-1-yuzhao@google.com/
-> 
-> Is that a feature or a bug?
-> 
->  * 1. Memcg LRU only applies to global reclaim, and the round-robin incrementing
->  *    of their max_seq counters ensures the eventual fairness to all eligible
->  *    memcgs. For memcg reclaim, it still relies on mem_cgroup_iter().
-> 
-> If it bails out exactly after nr_to_reclaim, it'll overreclaim
-> less. But with steady reclaim in a complex subtree, it will always hit
-> the first cgroup returned by mem_cgroup_iter() and then bail. This
-> seems like a fairness issue.
+Hello,
 
-Agreed. We would need to re-introduce something like we used to have
-before 1ba6fc9af35bf.
+This adds support for the phyBOARD-Segin-i.MX93 board.
+In this v5, I removed the gpio-line-names that were controversial.
 
-> We should figure out what the right method for balancing fairness with
-> overreclaim is, regardless of reclaim implementation. Because having
-> two different approaches and reverting dependent things back and forth
-> doesn't make sense.
+Thanks,
 
-Absolutely agreed!
+Signed-off-by: Mathieu Othacehe <othacehe@gnu.org>
+---
+Changes in v5:
+- Remove the gpio-line-names
+- Fix the product URLs
+Changes in v4:
+- Add gpio-line-names to gpio-vf610 dt-bindings documentation
+- Add the heartbeat SoM LED
+- Add support for the FEC ethernet port
+- Restore the original authors in the copyright
+- Add gpio-line-names for the GPIOs on the X16 header
+Changes in v3:
+- Update documentation to match PHYTEC naming
+- Remove useless properties
+- Update pinmux from PHYTEC downstream kernel
+Changes in v2: 
+- Remove useless line
+- Add missing reserved-memory entries
 
-> Using an LRU to rotate through memcgs over multiple reclaim cycles
-> seems like a good idea. Why is this specific to MGLRU? Shouldn't this
-> be a generic piece of memcg infrastructure?
-> 
-> Then there is the question of why there is an LRU for global reclaim,
-> but not for subtree reclaim. Reclaiming a container with multiple
-> subtrees would benefit from the fairness provided by a container-level
-> LRU order just as much; having fairness for root but not for subtrees
-> would produce different reclaim and pressure behavior, and can cause
-> regressions when moving a service from bare-metal into a container.
-> 
-> Figuring out these differences and converging on a method for cgroup
-> fairness would be the better way of fixing this. Because of the
-> regression risk to the default reclaim implementation, I'm inclined to
-> NAK this revert.
+v4: https://lore.kernel.org/linux-devicetree/20240122095306.14084-1-othacehe@gnu.org/
 
-I do agree that a simple revert doesn't seem to be the way to go.
+Mathieu Othacehe (3):
+  dt-bindings: arm: fsl: Add phyBOARD-Segin-i.MX93
+  dt-bindings: gpio: gpio-vf610: add gpio-line-names
+  arm64: dts: imx93: Add phyBOARD-Segin-i.MX93 support
+
+ .../devicetree/bindings/arm/fsl.yaml          |   6 +
+ .../devicetree/bindings/gpio/gpio-vf610.yaml  |   2 +
+ arch/arm64/boot/dts/freescale/Makefile        |   1 +
+ .../dts/freescale/imx93-phyboard-segin.dts    | 117 ++++++++++++++++
+ .../boot/dts/freescale/imx93-phycore-som.dtsi | 126 ++++++++++++++++++
+ 5 files changed, 252 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/freescale/imx93-phyboard-segin.dts
+ create mode 100644 arch/arm64/boot/dts/freescale/imx93-phycore-som.dtsi
 
 -- 
-Michal Hocko
-SUSE Labs
+2.41.0
+
