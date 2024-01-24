@@ -1,100 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E22D220E6;
-	Wed, 24 Jan 2024 01:38:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75D021841
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 01:42:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706060339; cv=none; b=VY9J2QJqTK8Ca7dWYFZqYpl4ZrG1T0JFzk7e8G7BRKyWuopqVaI3w7w/6vHUnU4+Ziq10210g6VyU+0e8taKMj9PZ8BVEMvuGGy2FX7WgtVyTvyIwJd/7Mto4AoPGe4QOvV7zr6aEqrIjhE58+49aUXrDH+lh7cE+eSwxSBBq5U=
+	t=1706060569; cv=none; b=j8F3tmLLC4ZoLpHLNqZV1VOJEXMZ6uF/kqz3Xk28uRhBc5CelKnMA1bY8/YTq9Vuag4MpI2Ltq5ygT1kp4WuhtyRAfDcq5o7/E4Jrm36eFUJUgS8xIMAK1AGlCg7gp+jRexCRbCSnhEDZ1p/s2zGFiuONeU1dnUw8e82EdqmOj4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706060339; c=relaxed/simple;
-	bh=T/SApjS4NcwCV6e9qX6lfk7qF4ETSE5E2S3aJnDWIjA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GH+1S5IGCRxl/nOwi2gNht2YynZcnCaZuPHiChyE7a1ZzQv43jlddyatpzJfnMqtNQGu705xtRL6JAQAujlAojixSMQsNdGp5SATKMLfCaXHpH+Ppa1XOQYViRDKNbU+V/7VNmTXnwaLNcQBqG3zN1kZ0CJjONod1yYNr4okYAM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D956C433F1;
-	Wed, 24 Jan 2024 01:38:55 +0000 (UTC)
-Date: Tue, 23 Jan 2024 20:38:53 -0500
-From: Steven Rostedt <rostedt@goodmis.org>
-To: "Naik, Avadhut" <avadnaik@amd.com>
-Cc: Tony Luck <tony.luck@intel.com>, Avadhut Naik <avadhut.naik@amd.com>,
- linux-trace-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
- bp@alien8.de, x86@kernel.org, linux-kernel@vger.kernel.org,
- yazen.ghannam@amd.com
-Subject: Re: [PATCH] tracing: Include PPIN in mce_record tracepoint
-Message-ID: <20240123203853.66655e95@rorschach.local.home>
-In-Reply-To: <be870e14-eeb9-4dcf-ba43-a72ef66a3d87@amd.com>
-References: <20240123235150.3744089-1-avadhut.naik@amd.com>
-	<ZbBV4EGrZw6hJ5IE@agluck-desk3>
-	<be870e14-eeb9-4dcf-ba43-a72ef66a3d87@amd.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1706060569; c=relaxed/simple;
+	bh=Wi0dBOunA4YSez/cdE83nXy8S01fE4+/kRqg1Lt2dZM=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=KR3fD/xia7vMxBY68BeuZyae3x3YuqmiTIwL88DKdtsACMSOGtBP9Bqizo/AZcs3Xs58RUxgkRgNfoHNUF9dJS92VMtjTQH50CGyKRo+1cUQdmh8GciJ7jeYCMMUPCjjToAbgl9OOAX/eOVaj10aj8MODPuzzaqfcZijZ78k0Yg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XqMUvpFE; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XqMUvpFE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706060567; x=1737596567;
+  h=date:from:to:cc:subject:message-id;
+  bh=Wi0dBOunA4YSez/cdE83nXy8S01fE4+/kRqg1Lt2dZM=;
+  b=XqMUvpFEN/RvyEjZMz2tQS+oHmjJUcZlgxo+ibOHbJzXJj347Fj9Q9h9
+   Qks/w9QsYqtb7xVIodDaCr/IYwx+l0uFEfcejxpgnZGzvhX9EEr4tmNHE
+   KYA5EaWZRE43vuLCI9U0z853LGqQd66xZ633ZwEgu9cpzSsnQ4Dx68u5/
+   6JLWXbNV5UZbWdBV8LzymafSkZmsXtYycRCdKXjkIYK5OXrHyBO0ItyVZ
+   ULMmVDmMknypzPrbkCSA2iFoNZhMsl+7goszetarsMofX71sTO6aRVDmn
+   xL4CECCrUf/wEUDtpoCsPyUM1YPDdqraZgAFSWZDVGIDzkiVeBX4jUy+C
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="15225447"
+X-IronPort-AV: E=Sophos;i="6.05,215,1701158400"; 
+   d="scan'208";a="15225447"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2024 17:42:47 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="856521308"
+X-IronPort-AV: E=Sophos;i="6.05,215,1701158400"; 
+   d="scan'208";a="856521308"
+Received: from lkp-server01.sh.intel.com (HELO 961aaaa5b03c) ([10.239.97.150])
+  by fmsmga004.fm.intel.com with ESMTP; 23 Jan 2024 17:42:45 -0800
+Received: from kbuild by 961aaaa5b03c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rSSHr-0007m7-24;
+	Wed, 24 Jan 2024 01:42:43 +0000
+Date: Wed, 24 Jan 2024 09:42:03 +0800
+From: kernel test robot <lkp@intel.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:x86/urgent] BUILD SUCCESS
+ 090e3bec01763e415bccae445f5bfe3d0c61b629
+Message-ID: <202401240901.JYDQz2oB-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
 
-On Tue, 23 Jan 2024 19:29:52 -0600
-"Naik, Avadhut" <avadnaik@amd.com> wrote:
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/urgent
+branch HEAD: 090e3bec01763e415bccae445f5bfe3d0c61b629  x86/cpu: Add model number for Intel Clearwater Forest processor
 
-> > But some questions:
-> > 
-> > 1) Are tracepoints a user visible ABI? Adding a new field in the middle
-> > feels like it might be problematic. I asked this question many years
-> > ago and Steven Rostedt said there was some tracing library in the works
-> > that would make this OK for appplications using that library.
-> >   
-> 
-> I think they can be user visible through the "trace" and "trace_pipe" in
-> /sys/kernel/debug/tracing. But you will have to enable the events you want
-> to trace through /sys/kernel/debug/tracing/events/<event-name>/enable.
-> 
-> AFAIK, this (adding field in the middle) shouldn't be problematic as we
-> have the tracepoint format available in debugfs. For e.g. with this patch,
-> the format is as follows:
-> 
-> [root avadnaik]# cat /sys/kernel/debug/tracing/events/mce/mce_record/format 
-> name: mce_record
-> ID: 113
-> format:
->         field:unsigned short common_type;       offset:0;       size:2; signed:0;
->         field:unsigned char common_flags;       offset:2;       size:1; signed:0;
->         field:unsigned char common_preempt_count;       offset:3;       size:1; signed:0;
->         field:int common_pid;   offset:4;       size:4; signed:1;
-> 
->         field:u64 mcgcap;       offset:8;       size:8; signed:0;
->         field:u64 mcgstatus;    offset:16;      size:8; signed:0;
->         field:u64 status;       offset:24;      size:8; signed:0;
->         field:u64 addr; offset:32;      size:8; signed:0;
->         field:u64 misc; offset:40;      size:8; signed:0;
->         field:u64 synd; offset:48;      size:8; signed:0;
->         field:u64 ipid; offset:56;      size:8; signed:0;
->         field:u64 ip;   offset:64;      size:8; signed:0;
->         field:u64 tsc;  offset:72;      size:8; signed:0;
->         field:u64 ppin; offset:80;      size:8; signed:0;
->         field:u64 walltime;     offset:88;      size:8; signed:0;
->         field:u32 cpu;  offset:96;      size:4; signed:0;
->         field:u32 cpuid;        offset:100;     size:4; signed:0;
->         field:u32 apicid;       offset:104;     size:4; signed:0;
->         field:u32 socketid;     offset:108;     size:4; signed:0;
->         field:u8 cs;    offset:112;     size:1; signed:0;
->         field:u8 bank;  offset:113;     size:1; signed:0;
->         field:u8 cpuvendor;     offset:114;     size:1; signed:0;
-> 
-> print fmt: "CPU: %d, MCGc/s: %llx/%llx, MC%d: %016Lx, IPID: %016Lx, ADDR/MISC/SYND: %016Lx/%016Lx/%016Lx, RIP: %02x:<%016Lx>, TSC: %llx, PPIN: %llx, PROCESSOR: %u:%x, TIME: %llu, SOCKET: %u, APIC: %x", REC->cpu, REC->mcgcap, REC->mcgstatus, REC->bank, REC->status, REC->ipid, REC->addr, REC->misc, REC->synd, REC->cs, REC->ip, REC->tsc, REC->ppin, REC->cpuvendor, REC->cpuid, REC->walltime, REC->socketid, REC->apicid
-> 
-> 
-> Just quickly tried with rasdaemon and things seem to be okay.
-> 
-> Also, not a cent percent sure, but the library you are mentioning of, I think
-> its the libtraceevent library and IIUC, it utilizes the above tracepoint format.
-> 
+elapsed time: 905m
 
-Yes, rasdaemon uses libtraceevent (or a copy of it internally) that
-reads the format file to find fields. You can safely add fields to the
-middle of the event structure and the parsing will be just fine.
+configs tested: 26
+configs skipped: 135
 
--- Steve
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+tested configs:
+i386                             allmodconfig   clang
+i386                              allnoconfig   clang
+i386                             allyesconfig   clang
+i386         buildonly-randconfig-001-20240123   gcc  
+i386         buildonly-randconfig-002-20240123   gcc  
+i386         buildonly-randconfig-003-20240123   gcc  
+i386         buildonly-randconfig-004-20240123   gcc  
+i386         buildonly-randconfig-005-20240123   gcc  
+i386         buildonly-randconfig-006-20240123   gcc  
+i386                                defconfig   gcc  
+i386                  randconfig-001-20240123   gcc  
+i386                  randconfig-002-20240123   gcc  
+i386                  randconfig-003-20240123   gcc  
+i386                  randconfig-004-20240123   gcc  
+i386                  randconfig-005-20240123   gcc  
+i386                  randconfig-006-20240123   gcc  
+i386                  randconfig-011-20240123   clang
+i386                  randconfig-012-20240123   clang
+i386                  randconfig-013-20240123   clang
+i386                  randconfig-014-20240123   clang
+i386                  randconfig-015-20240123   clang
+i386                  randconfig-016-20240123   clang
+x86_64                            allnoconfig   gcc  
+x86_64                           allyesconfig   clang
+x86_64                              defconfig   gcc  
+x86_64                          rhel-8.3-rust   clang
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
