@@ -1,45 +1,46 @@
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2046.outbound.protection.outlook.com [40.107.100.46])
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2087.outbound.protection.outlook.com [40.107.93.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 097988F72
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 02:54:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DCF2BA24
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 02:54:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.87
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706064853; cv=fail; b=JkTEjtutZAkMJ0zmr4zGDEOV+60n5DrFXG9ak2RSbT+dqJZI5CgrOqNW4Xm3+VRisU+yqIjB5l4XfE+IFyRUzdP7DuEtMbqEiw3DWwGOkiY5Vq7a7rOa+5TtMnHZrnoy2WzIjuG+aRYQdy7mbmhi8WlRQLWUegTtYeh5mq+lYH8=
+	t=1706064854; cv=fail; b=mL2ng8iZq79ocG+OESeN1BBVErhWSEyO1FYS4g13cwInEqpvOAKSJSZWtbl5p0dJAa99CuOpGd7T4gaT32gN372hFeDMmhMy/kF5VeqGiJcmtJfSeInOOVL1PBGKWWw2XT8KZEk27ZmhstXZ03KerQwyW50hH/KfoeHCIuEDvv0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706064853; c=relaxed/simple;
-	bh=9/havw7LIG0Jl1MG9ZI1Dbj2ihv66OxA4H1z6+06zK4=;
+	s=arc-20240116; t=1706064854; c=relaxed/simple;
+	bh=PRmfjapv2gmPIQcMTytu3GqdUj/t4O/CYovSgnQrTN4=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CuGM15lC26nKFpnOEhjIZWPWNLIaqEkX9rcLa3/CSr5RmunKwUfaUtfdJdSt24puppRQM03syRb/X7zl0fAZF1hlzresUd3TaE9irfWpGIqH6CIeN8/3Jld94VuKCaJJU0ZCdsQqs/SS6G76+32d6CL2uqu5DfLC/YgmQvhs9Mo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=D0lfzwor; arc=fail smtp.client-ip=40.107.100.46
+	 MIME-Version:Content-Type; b=OSiA6yUqQgwR3yRKVe86Qnfr7zlrRRF1Ck7P4IXc9fNekrnXlHxnpzwOCFu6nyU6sTVms8gt1tXeETp5i+gec0swmiC56MjLqCK4HxBx/7JKB/YsCMKlV3XgJHELGnNPHtiZ2zmglMoRC0+hHPocUmPWsphr9jOK7BeoQRyk/As=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=gG16RFnf; arc=fail smtp.client-ip=40.107.93.87
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="D0lfzwor"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="gG16RFnf"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZJ05E4X0S8HxCKFSQDogyX+tx7ukuL6L43WmTNJdcVphTWTadtckbWGCYJSIOnGpxKI9VUiOUG8RPe89p0yHKndjqrEaB5sH6xp5gE1fURM/l+v/S9tnay/3wNzy0cTr5lhV1mgF3OutwPWbyf6KWDK4JC90haNzJGlVwJw0FWJa0naTTdXRnHq4rtwLHSZ7S4D2uW4bW2PtR8L6Qcv4Wjua5+nv45hzRzx/LlYUYSpZKd0SC9DP4C0zrQm3pYo+aJs6nJ6LZyfehi67Avf1fkjDDmMpdgP2hgn9U4eC4o44mdFNY4cYl9no5rV0SoViIPxx5yT/c4dntnWgar2rWg==
+ b=RJbUX/jKB3HPJtMw/zVk7mzJF7Yj+hGHbMXnawP02y5SuZ4pNyEf91avnGJB15aXxy9wxqq81W43UmYP3Zs6QgBZLx0Exal+yLhTT6/iVzjpe5gYDGS8JauG+1L5+R7lpNTDS7MP97IJvh7sWrO1xfgBBHyyELA9gB4WUxz60Cs0BS1tyuX9zjtEoDm8j1LdzTI0Ay++czZc1bpe2xLb4EokFCRuE4uX7wcMkGbVlW1Z5sQVphTsd5V9/IOZj4l38s7wSBreypxPnCerGuyzPBLZ+T8EMltloNjYpXLlBxgsQK7TfaGxaF9wtY7hFjuoXyQOMs5A0DpPcJV6VvL8ew==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Ro1x0XU0Vy+Jr6q29q7S5YrkHI5kVh8EnU6b+srSyEU=;
- b=iur3kL0sL9i/xCEvSGBOzhah9lafCWdj9ABZ9YtNW7/UrHqw3gSOGw7nxlFNKdEXoCYJzy5xY8HzjJoo6noo/+atXtu8IG93CIggkOWqkeHEc+uvDxlS3+1V9pTSFp8JwsKZt47ebR3SFYd1wKKkUDy5WM+jtYpHiVXbpSzs4VHU9gTrfJUeNxmOnPZj5rI0gUKB+wNKd/hzKEFVmU9JqSbQEd16X0JaPNj0aLPXFRckbv8pRky5qJW/VoqPSwRTLsxRtWK9V13BzsvFzpbXi2DhI10bIVNhc1BbPEzOMFDnlFGOOkCzHp6xZFyEZN/d01f84PA6ctPAabW3+jObFw==
+ bh=sbYhtGPpxSXx/5jQiSZ/ohKOZc6mALk5xxnOCV2OPeg=;
+ b=AR0uVJCEAyvUUsMo0oUo17EIUoaI+WIy+yO8C4iDJ7cr38rLVjxSU5SsgUA/KV/rua1RDbwOlkqeIBYQ2nWLTzIapN/9Bjm//5DYnVdY31OtDkpKlIJ+GeGaBki9zg5UzOeU6WviSCuUwmSP5stPQoygqYCt84gQHoHswlOzARJeWt8RWYK9+1HiR5dZialqa+k/2dW7pvo0sk4i3++AQIiF38WMIlE6mnkFhrOielU5SPOZor4t8e12qG0ZmxjrXC2+fAxXDbtaNxHbrJTdlCK5K2gbmR6Ct0ngzp9C/uEhImFtpdbSB9cOfOmSy7g5b2c3n92XVprB7i1ow/wWNQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=ideasonboard.com smtp.mailfrom=amd.com;
  dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
  header.from=amd.com; dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ro1x0XU0Vy+Jr6q29q7S5YrkHI5kVh8EnU6b+srSyEU=;
- b=D0lfzworJQ0Txd+MPmTrVqQaiW42+i9sgT8umbO0kcZrSdlTYg9IRlA6aHqVP1xZjKbnFS7XaBPOZYEIR6a99wgNxRl0imwnEi7Dq1Gwhh1abKfgwe2uvcgZWA4QlrTrtmJYdREvOjisexWT5wAR463ryO7zbJfdQ1yeaCVlYLA=
-Received: from DM6PR07CA0076.namprd07.prod.outlook.com (2603:10b6:5:337::9) by
- SJ2PR12MB8183.namprd12.prod.outlook.com (2603:10b6:a03:4f4::7) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7228.22; Wed, 24 Jan 2024 02:54:08 +0000
-Received: from SN1PEPF0002636D.namprd02.prod.outlook.com
- (2603:10b6:5:337:cafe::91) by DM6PR07CA0076.outlook.office365.com
- (2603:10b6:5:337::9) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7202.38 via Frontend
- Transport; Wed, 24 Jan 2024 02:54:08 +0000
+ bh=sbYhtGPpxSXx/5jQiSZ/ohKOZc6mALk5xxnOCV2OPeg=;
+ b=gG16RFnfzOGTfEGg37mlF6KvRzS1GEhvMBq/CoZWdG7QQpBeKmXiAjYQGvleF1xV0J3MU2aTSTG3OLpgR8l4aZIEIVekCCP3J0VUNAIlPYIWTJIptrbAmEMxjbuKQkymaVzRYV7BqiwCufhJv5Nd+pJfXijs2sSvv6tId5obVm8=
+Received: from SN7PR04CA0097.namprd04.prod.outlook.com (2603:10b6:806:122::12)
+ by IA0PR12MB7723.namprd12.prod.outlook.com (2603:10b6:208:431::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.22; Wed, 24 Jan
+ 2024 02:54:07 +0000
+Received: from SN1PEPF0002636C.namprd02.prod.outlook.com
+ (2603:10b6:806:122:cafe::47) by SN7PR04CA0097.outlook.office365.com
+ (2603:10b6:806:122::12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.22 via Frontend
+ Transport; Wed, 24 Jan 2024 02:54:06 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -47,28 +48,24 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
 Received: from SATLEXMB03.amd.com (165.204.84.17) by
- SN1PEPF0002636D.mail.protection.outlook.com (10.167.241.138) with Microsoft
+ SN1PEPF0002636C.mail.protection.outlook.com (10.167.241.137) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7202.16 via Frontend Transport; Wed, 24 Jan 2024 02:54:08 +0000
-Received: from SATLEXMB08.amd.com (10.181.40.132) by SATLEXMB03.amd.com
+ 15.20.7202.16 via Frontend Transport; Wed, 24 Jan 2024 02:54:06 +0000
+Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB03.amd.com
  (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.34; Tue, 23 Jan
- 2024 20:54:07 -0600
-Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB08.amd.com
- (10.181.40.132) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.32; Tue, 23 Jan
- 2024 18:54:07 -0800
+ 2024 20:54:05 -0600
 Received: from xsjanatoliy50.xilinx.com (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server id 15.1.2507.34 via Frontend
- Transport; Tue, 23 Jan 2024 20:54:06 -0600
+ Transport; Tue, 23 Jan 2024 20:54:05 -0600
 From: Anatoliy Klymenko <anatoliy.klymenko@amd.com>
 To: <laurent.pinchart@ideasonboard.com>, <maarten.lankhorst@linux.intel.com>,
 	<mripard@kernel.org>, <tzimmermann@suse.de>, <airlied@gmail.com>,
 	<daniel@ffwll.ch>, <michal.simek@amd.com>, <dri-devel@lists.freedesktop.org>,
 	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v3 4/5] drm: xlnx: zynqmp_dpsub: Filter interrupts against mask
-Date: Tue, 23 Jan 2024 18:54:01 -0800
-Message-ID: <20240124025402.373620-5-anatoliy.klymenko@amd.com>
+Subject: [PATCH v3 2/5] drm: xlnx: zynqmp_dpsub: Fix timing for live mode
+Date: Tue, 23 Jan 2024 18:53:59 -0800
+Message-ID: <20240124025402.373620-3-anatoliy.klymenko@amd.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240124025402.373620-1-anatoliy.klymenko@amd.com>
 References: <20240124025402.373620-1-anatoliy.klymenko@amd.com>
@@ -82,64 +79,50 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN1PEPF0002636D:EE_|SJ2PR12MB8183:EE_
-X-MS-Office365-Filtering-Correlation-Id: dce21088-766d-4d7d-9e93-08dc1c87bc47
+X-MS-TrafficTypeDiagnostic: SN1PEPF0002636C:EE_|IA0PR12MB7723:EE_
+X-MS-Office365-Filtering-Correlation-Id: 77602114-7b14-434c-618a-08dc1c87bb61
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	odM+Yc3cLGG8DTtI/A9rC9xp60KpdTBtqCFTotbh/DXm0b4wOYcAtoFzofuR5jQ4IL9xlTOV8NNEDJTKah4Gt7Tw3XkfVcA1lQ7lpW6azA75rV+xrSMjNNphtslLKkp/LtcCbFByTkyq7BSAWN80LIOEofzGiPpakW1gmx79xjUlhEmR1fkHqntmuN+jnj9EbZ8W4WNfwvDdNAbs/t6q7ZPNc2BmaYpVatLk65Cq96VtyKxOoIuAiSAipeLtyRhdwuo2d28t3y43QU752MxQ6hqa8mkMVmoIgIVK6M6DzF46qZ+UhOuCIP47Gv0ukq8AxvdDmmhM9Yx7AGWK8LS5exQavd7erf9B9q2kH4POCj+hrmLxKPvy6MxRY4cDux71q80QJL/WDOXVpC80PzPKnbqaxq4iP8PCATVrlt4AABtrKUoYhe5d7cflh4W/TTf74bIHdrX28ZNDxF+0HuVjDpFytNOSbyP0jFQvRsu5Xfrt2d140Hfbp3x+AAS4mIbEXAOklpPvmLT58SqSGkmLC1GbNemdpbsNBFhlnaBMTHhYmyGU7tb/Db7aBQVZXZHXVCuwXeSb+/H0ARiLQFNay4f7KCtaAMWFohmYNDcG+Joz7s2XNNT+YzXozvF1upckU13qJW1i9nUEKWJS2bN7QO214u1BuFeXQXPeR41vdkt1c1cDy9YawgdkdewlVDu1zGdFQDL+lZt8WLxwRH9LoFhAcJvTlESsj3nGsibboeMBb7TYS5lkVlGNvguz9ffrTS9tZZ2MNSi6eJ0SUKAW6Wyj0hZVQYsyCsLAULHKNjBsiDqMJBhEIsMbW2z757g1xvboZVTansUrrZjWaiLFmw==
+	WNFYDaIxSNik4kLjU/J0cxkF+LY9cpRtGOIpGkFKhFEK9XWVNBb2l+5A/gf4ANv7uJKOXQmoNiSFbOht0DEu5saw/Pi6jdfS6bmaX5ii4UNU3Za0FKPLo9WtvIGsLNdqsooZ79m5RrOdg+IDQzoj1kCOo2vVXkX8YoI6dWtG68sJHab333687dHV9oTml0eGMPPuUMOKC1NBW5e0wPpXTLjvp3cXUTTlkhU1l1LKELyGW12HgU/WuP1q7NYwf6xbIMnMFarPC3vIJsfmaCpqsSCqnmKmrp//h4zC8G77hZcUf86lR9u/X++HVKb70+RF7PhwoliFUWG2qHB2zVHA7tGrBvk3590jkbgCDhGpxd2jHEyBZhUJ7IbjX7+yg/eS+bvEMdTT2q43rxDXxg4WGXzMFNEE2G6PoP/nyM9EnOPkf0fK2fR4QRmi6mONAsIHqIBUx0In9MH4Tl6aKNUACmi+gCB1jfICIb31DtJje5kBCqbUONa5Tn0vP7A+duGQXxkfov9twL/2vyr6IOhRIwqC4L9bx2fV9zUSMAGv+RCRQvE1U/HqnZGVpRPkbVf4KxsfxqryDXfk3IUchEofHwqTqb2vRm+qfSiitR8OBYbv5aQB/MgwOfLlWg5TUjMl+uovDNlMcC4oVX70/ONOiVEqlwtBNnR7S4e1u+KbAgiWrMw2J7MH75Icmgpo929VRQNWLdHbHAO3wU3LE4zAulHltStzmbT4Ov0HTWHHidgP1QK18wDjhC+UjpKQc+/7dSa2bAF+yjYWmfahOUIlPXcdrs/6vhxHpFUBAFnkfLdas+nqyQXkINJ1eCmdWnrt7Q0uVM1JhnztjsWHzOPKhc+jqyM7Zt1lsH+SO6oeOyD5CRvfV8qMQ9gnMqtk0IED
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(136003)(376002)(396003)(39860400002)(346002)(230922051799003)(82310400011)(451199024)(1800799012)(64100799003)(186009)(36840700001)(46966006)(40470700004)(40480700001)(83380400001)(40460700003)(1076003)(921011)(47076005)(26005)(82740400003)(8676002)(8936002)(44832011)(356005)(70206006)(70586007)(110136005)(5660300002)(316002)(86362001)(478600001)(336012)(81166007)(2906002)(426003)(36860700001)(2616005)(41300700001)(36756003)(6666004)(83996005)(2101003)(36900700001);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(39860400002)(396003)(136003)(376002)(346002)(230922051799003)(230173577357003)(230273577357003)(1800799012)(64100799003)(451199024)(82310400011)(186009)(40470700004)(46966006)(36840700001)(41300700001)(336012)(426003)(1076003)(921011)(40460700003)(40480700001)(26005)(47076005)(36860700001)(36756003)(478600001)(6666004)(2616005)(83380400001)(81166007)(82740400003)(356005)(44832011)(5660300002)(2906002)(4744005)(110136005)(86362001)(70586007)(70206006)(316002)(8676002)(8936002)(2101003)(36900700001)(83996005);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jan 2024 02:54:08.4115
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jan 2024 02:54:06.9183
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: dce21088-766d-4d7d-9e93-08dc1c87bc47
+X-MS-Exchange-CrossTenant-Network-Message-Id: 77602114-7b14-434c-618a-08dc1c87bb61
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	SN1PEPF0002636D.namprd02.prod.outlook.com
+	SN1PEPF0002636C.namprd02.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB8183
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB7723
 
-Filter out status register against the interrupts' mask.
+Expect external video timing in live video input mode, program
+DPSUB acordingly.
 
-Some events are being reported via DP status register, even if
-corresponding interrupts have been disabled. One instance of such event
-leads to generation of VBLANK when the driver is in DRM bridge mode,
-which in turn results in NULL pointer dereferencing. We should avoid
-processing such events in an interrupt handler context.
-
-This problem is less noticeable when the driver operates in DMA mode, as
-in this case we have DRM CRTC object instantiated and DRM framework
-simply discards unwanted VBLANKs in drm_handle_vblank().
+Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
 
 Signed-off-by: Anatoliy Klymenko <anatoliy.klymenko@amd.com>
 ---
- drivers/gpu/drm/xlnx/zynqmp_dp.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/xlnx/zynqmp_disp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/xlnx/zynqmp_dp.c b/drivers/gpu/drm/xlnx/zynqmp_dp.c
-index 5a3335e1fffa..9f48e5bbcdec 100644
---- a/drivers/gpu/drm/xlnx/zynqmp_dp.c
-+++ b/drivers/gpu/drm/xlnx/zynqmp_dp.c
-@@ -1627,7 +1627,14 @@ static irqreturn_t zynqmp_dp_irq_handler(int irq, void *data)
- 	/* clear status register as soon as we read it */
- 	zynqmp_dp_write(dp, ZYNQMP_DP_INT_STATUS, status);
- 	mask = zynqmp_dp_read(dp, ZYNQMP_DP_INT_MASK);
--	if (!(status & ~mask))
-+
-+	/*
-+	 * Status register may report some events, which corresponding interrupts
-+	 * have been disabled. Filter out those events against interrupts' mask.
-+	 */
-+	status &= ~mask;
-+
-+	if (!status)
- 		return IRQ_NONE;
+diff --git a/drivers/gpu/drm/xlnx/zynqmp_disp.c b/drivers/gpu/drm/xlnx/zynqmp_disp.c
+index 407bc07cec69..8a39b3accce5 100644
+--- a/drivers/gpu/drm/xlnx/zynqmp_disp.c
++++ b/drivers/gpu/drm/xlnx/zynqmp_disp.c
+@@ -1166,7 +1166,7 @@ void zynqmp_disp_enable(struct zynqmp_disp *disp)
+ 	/* Choose clock source based on the DT clock handle. */
+ 	zynqmp_disp_avbuf_set_clocks_sources(disp, disp->dpsub->vid_clk_from_ps,
+ 					     disp->dpsub->aud_clk_from_ps,
+-					     true);
++					     disp->dpsub->vid_clk_from_ps);
+ 	zynqmp_disp_avbuf_enable_channels(disp);
+ 	zynqmp_disp_avbuf_enable_audio(disp);
  
- 	/* dbg for diagnostic, but not much that the driver can do */
 -- 
 2.25.1
 
