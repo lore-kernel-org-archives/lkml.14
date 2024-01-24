@@ -1,179 +1,116 @@
-Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from out162-62-57-49.mail.qq.com (out162-62-57-49.mail.qq.com [162.62.57.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7734323C9;
-	Wed, 24 Jan 2024 01:27:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52C8210E6
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 01:29:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706059625; cv=none; b=KH//5+pj/uOsdl5EpTcPNRDfJU1cpAwe6dGiEYFYcSyJ3wsJZy1aMmYgDxOPQcqijlErUCILyq89FfStkt4ZwY4Uh0kRxG4wkoDqiqzRqxscAMgUZNZLs6BkDZHzvPG0r/6dq5zrXqIMa4DVdfl8ZrWiEyz1tch5s63+tci0dn0=
+	t=1706059789; cv=none; b=hS8/rq7p6EVWvfqj62VxdLMYOOHiwEovCG+lbFBL4juQScL67CLPJMQOLQ1l1W8EVrA2mm2B0G8mOcdu1GTV8VgKqZEPJD30Qm9ANChPwAhxlDJWCIQz5XV4RI/DefdnSfw0V/q6Lq+BlVzTbR75AchdQ54VQz/wlRFY8tg6BvY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706059625; c=relaxed/simple;
-	bh=CwnF1RLedr0VAG5gpWbO8BA47Nu19+G9Eezjy1BRssI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WGqIk/9Nc0UxzKLcmkKJeaQPNmE5ed/tyClp2OuLMTMnWqdVyBTZNqOeDnyvFxnJ+4k+OBOcbyJ7XJFmscWMplVrPi+gH8GB6Ewmq6YPsXqeDXoccBtzBRXwoLqpmlQubmfspoEVG36QKVd2spySAJtKHOiG3/o0MKzXuqzl0Lk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=P3YtdJXD; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1706059789; c=relaxed/simple;
+	bh=LE66kJu4hVpSN+qHT1WdB0wFdWHrCE8XWrvd+6Kcc0Q=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=JCV/PbbiVqD/75fx50nVgaJoRxqZDRUkAxUFLEHxFXH3z1hWI9DAIOKJdmiwQ7usQpznsqReZeUGaiHsxRKiPuC7z1C53Q1dmZfE27ZC2HYaIJupuvr+rC9e9ha6e9x5tgwrxmBPKxbSXmo9wn86yEmpymNRYbPVt37tvYzQxPQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=w7rjGixl; arc=none smtp.client-ip=162.62.57.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="P3YtdJXD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1706059620;
-	bh=YnVXiiq94aCxCahXVksW2BxErM3PzztZ/SdNRmm/714=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=P3YtdJXDRvbh3VvzkhBRYfv63vXkwTqLrlN93BFx/Bma4xYNh9dRfJTaFd8Bn1nL7
-	 RfGhwG3F638RE8BK8ILMFOQ56S6NUmcJPHdNCr0sXoQyk5Jix6KScGYTymJGZztLj6
-	 hJ832DlR4QewqjJo4AGDd6mEpJTgL+f2ISyfmjEIhFmGMASTX+seghpuz/KcCnA+PJ
-	 8tF2YhPlPUfnud2O5oJYbZD8yfP1GrhhGmZG6BUZChu6Ks5pXRBoQyk93uEoW9T4y6
-	 HiZaGt9H8eGboYCSmp4rwPciwZCC8ZVyWR4I/Ie3QgkwV0YLTP6dE+15Uk55ab9BSo
-	 3r8DK5C73IUvw==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4TKRBr3W9Tz4x2T;
-	Wed, 24 Jan 2024 12:27:00 +1100 (AEDT)
-Date: Wed, 24 Jan 2024 12:26:59 +1100
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Linux Kernel Mailing
- List <linux-kernel@vger.kernel.org>
-Subject: linux-next: stats (Was: Linux 6.8-rc1)
-Message-ID: <20240124122659.0405e382@canb.auug.org.au>
-In-Reply-To: <CAHk-=wiB4iHTtfZKiy5pC24uOjun4fbj4kSX0=ZnGsOXadMf6g@mail.gmail.com>
-References: <CAHk-=wiB4iHTtfZKiy5pC24uOjun4fbj4kSX0=ZnGsOXadMf6g@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="w7rjGixl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1706059475; bh=4fR2pMO3VZ6t+WGmY8/iEYyP0Wk8N6+SImSjNbWePos=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=w7rjGixlbaXETWH/m3Jm+DZVD75hTizmYRSnjTIKFAxubwGq96uXRtGsybU9impjK
+	 SaRQAZYm+YJEALn0oKxDvgBgNvnfLWdufPJhbgT6LOKmz2rjWE6CISxOhTplipIOib
+	 RS+6h0mO1LucVOyqC9mlKwM34xJoIHJFWA1ZaFNI=
+Received: from pek-lxu-l1.wrs.com ([111.198.225.215])
+	by newxmesmtplogicsvrszc5-2.qq.com (NewEsmtp) with SMTP
+	id 6211A428; Wed, 24 Jan 2024 09:24:33 +0800
+X-QQ-mid: xmsmtpt1706059473t4llu2rh7
+Message-ID: <tencent_748DB7122CDDCBDDB29965CF870D9225BF07@qq.com>
+X-QQ-XMAILINFO: MesT5uKpDagVPJ3kolclE5lfPKVB+RJ86Ll0dZN8DGO+bfPoIOw4FoKeKB2kBW
+	 ta3FFa+wUFL6bR//Yk67I1fPVte2rLCuURZUvgMkRQ5nqs4i5/uMFAzFbeN2iTNUru4HEvyjObEG
+	 8GWGxP0ucilLjcAIpHNkTHhwti1tM/x32rU9Nt+sWm9NFgmVy42XwiabmhmgDpUp3NQXPIs189Od
+	 bqVBEvIPlL3iCCiqQEBNI5ne4ZqRg6FQIO2eTwtclJtQ9XOAJaTSAtMxwYqI/2vejzODE6SMsioJ
+	 YX+kqRgXZ5t71RCQra197FTDycvHHn33aYhPCi7oL/dbixpp1uFluJglEZ3KYubabjlgGlml3o3p
+	 1KekFiJNdhjs2f9uaFzcThUcgZBVTCqjDUOkD+HXyiPQRGjYZOS8nEy0rMdi9X91a2YNg2J/3xfY
+	 SQN7Xhky5vPFpH2x49u0hqq4Zsz32C6ezpFx8MA3dPwgohUIiy+woU67lkDaFox/2GLPcHU5AYU3
+	 uwmCKni4J1TdSvNVGHnFL73ckw44ErC/1wYVkaB5uuA2Tb04ze2RX7ZPsxpoKp1Kw6pdPI2CnfbP
+	 Ud/lothlbPePNjqelw79MO8T1Bxqd3bJNshHMYs+WwZJ9ri4J9HE8urYZAXH9389YpEwJUfta0Gt
+	 6GtsqkRJ+lC2VtT2JV5WQB/bahnTIzBEkF27p70Olj9vGOgQgL3oXkv0yf3pXUcZL6u+/5oujM1C
+	 nMofPzlmx4JlphiJyNPj03L3E6NAIfqOI7lCqM2hC3ZrqP+B6/8k9lmu9r/yoBLUNlRhPbqaBudj
+	 etRpx0FHCehn6Yi/414pXhIdd/AyrlUz7tqwG7IXiKp0J/bp875nVoereskSydVUTTWlXsCV94fw
+	 5QsQT8AlPIYDG/IbljIaVL0HflZxKQF8bQMOmoJKBmtvnsyAs2897cyYxbIELabi/y2Hg5IagL
+X-QQ-XMRINFO: M/715EihBoGSf6IYSX1iLFg=
+From: Edward Adam Davis <eadavis@qq.com>
+To: syzbot+1d37bef05da87b99c5a6@syzkaller.appspotmail.com
+Cc: linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [can?] memory leak in j1939_netdev_start
+Date: Wed, 24 Jan 2024 09:24:34 +0800
+X-OQ-MSGID: <20240124012433.4165387-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <00000000000060446d060af10f08@google.com>
+References: <00000000000060446d060af10f08@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/3VfPglI5Xlmd_t6os2PkxDm";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
 
---Sig_/3VfPglI5Xlmd_t6os2PkxDm
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+please test memory leak in j1939_netdev_start
 
-Hi all,
+#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
 
-As usual, the executive friendly graph is at
-http://neuling.org/linux-next-size.html :-)
+diff --git a/net/can/j1939/socket.c b/net/can/j1939/socket.c
+index 14c431663233..1d1f1348eeca 100644
+--- a/net/can/j1939/socket.c
++++ b/net/can/j1939/socket.c
+@@ -141,6 +141,7 @@ static void j1939_sk_queue_drop_all(struct j1939_priv *priv,
+ 				 sk_session_queue_entry) {
+ 		list_del_init(&session->sk_session_queue_entry);
+ 		session->err = err;
++		printk("s: %p, %s\n", session, __func__);
+ 		j1939_session_put(session);
+ 	}
+ 	spin_unlock_bh(&jsk->sk_session_queue_lock);
+diff --git a/net/can/j1939/transport.c b/net/can/j1939/transport.c
+index fe3df23a2595..4e5f6037db46 100644
+--- a/net/can/j1939/transport.c
++++ b/net/can/j1939/transport.c
+@@ -283,6 +283,7 @@ static void j1939_session_destroy(struct j1939_session *session)
+ 	}
+ 	__j1939_session_drop(session);
+ 	j1939_priv_put(session->priv);
++	printk("free session: %p, %s\n", session, __func__);
+ 	kfree(session);
+ }
+ 
+@@ -1552,6 +1553,8 @@ j1939_session *j1939_session_fresh_new(struct j1939_priv *priv,
+ 	/* alloc data area */
+ 	skb_put(skb, size);
+ 	/* skb is recounted in j1939_session_new() */
++	printk("s: %p, skb: %p, size: %d, csk: %d, %s\n", 
++		session, skb, size, sizeof(struct can_skb_priv), __func__);
+ 	return session;
+ }
+ 
+@@ -1758,6 +1761,7 @@ static void j1939_xtp_rx_rts(struct j1939_priv *priv, struct sk_buff *skb,
+ 		j1939_tp_set_rxtimeout(session, 1250);
+ 	}
+ 
++	printk("s: %p, %s\n", session, __func__);
+ 	j1939_session_put(session);
+ }
+ 
+@@ -2005,6 +2009,8 @@ struct j1939_session *j1939_tp_send(struct j1939_priv *priv,
+ 	if (!session)
+ 		return ERR_PTR(-ENOMEM);
+ 
++	printk("s: %p, size: %d, %s\n", session, size, __func__);
++
+ 	/* skb is recounted in j1939_session_new() */
+ 	sock_hold(skb->sk);
+ 	session->sk = skb->sk;
 
-(No merge commits counted, next-20240108 was the first linux-next after
-the merge window opened.)
-
-Commits in v6.8-rc1 (relative to v6.7):            12239
-Commits in next-20240108:                          11796
-Commits with the same SHA1:                        11318
-Commits with the same patch_id:                      201 (1)
-Commits with the same subject line:                   14 (1)
-
-(1) not counting those in the lines above.
-
-So commits in -rc1 that were in next-20240108:     11533 94%
-
-Some breakdown of the list of extra commits (relative to next-20240108)
-in -rc1:
-
-Top ten first word of commit summary:
-
-     88 drm
-     47 riscv
-     47 bcachefs
-     25 net
-     25 dt-bindings
-     18 s390
-     17 mailbox
-     16 selftests
-     15 pci
-     15 maintainers
-
-Top ten authors:
-
-     42 kent.overstreet@linux.dev
-     16 kuba@kernel.org
-     15 u.kleine-koenig@pengutronix.de
-     14 rdunlap@infradead.org
-     12 arnd@arndb.de
-     10 hch@lst.de
-      9 zhoubinbin@loongson.cn
-      9 zhao1.liu@intel.com
-      9 nathan@kernel.org
-      9 ira.weiny@intel.com
-
-Top ten commiters:
-
-     69 palmer@rivosinc.com
-     53 alexander.deucher@amd.com
-     49 kuba@kernel.org
-     47 kent.overstreet@linux.dev
-     30 stfrench@microsoft.com
-     28 axboe@kernel.dk
-     25 kbusch@kernel.org
-     22 chenhuacai@kernel.org
-     21 rafael.j.wysocki@intel.com
-     20 jaswinder.singh@linaro.org
-
-There are also 263 commits in next-20240108 that didn't make it into
-v6.8-rc1.
-
-Top ten first word of commit summary:
-
-     40 drm
-     28 x86
-     25 i2c
-     20 fs
-     20 arm
-     14 soc
-      7 dt-bindings
-      6 bluetooth
-      5 lib
-      5 firmware
-
-Top ten authors:
-
-     36 yury.norov@gmail.com
-     25 ubizjak@gmail.com
-     25 andriy.shevchenko@linux.intel.com
-     17 almaz.alexandrovich@paragon-software.com
-     11 yangchen.openbmc@gmail.com
-      9 kkartik@nvidia.com
-      8 jani.nikula@intel.com
-      7 jouni.hogander@intel.com
-      7 arnd@arndb.de
-      6 suijingfeng@loongson.cn
-
-Top ten commiters:
-
-     38 yury.norov@gmail.com
-     27 mingo@kernel.org
-     26 wsa@kernel.org
-     22 joel@jms.id.au
-     17 almaz.alexandrovich@paragon-software.com
-     11 treding@nvidia.com
-     11 jani.nikula@intel.com
-     10 l.stach@pengutronix.de
-      7 jouni.hogander@intel.com
-      7 ebiederm@xmission.com
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/3VfPglI5Xlmd_t6os2PkxDm
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmWwZ2MACgkQAVBC80lX
-0Gytegf/QSal6eIoJx6guRerZDEftNZude6uKuCMDi+pXjXaMQwT+5yrma5gS4gS
-8RJ8r/s9m69C4laA49c4fPuJ2KArt+dLcheR2mJjOC+4AUVMxBIPeCjTS/FakAe5
-r2sjsubIk49ktRazntpiSPd2LRATxPhDW+iboVrvdK5GfDVmIiLer2vZLeJWW59K
-ZEWdsuEVcL95VP49SyZ2kn8vLaNpF8xxGRqIeq1Zha7cUIJtnbzEi+sL8cpsbiAO
-ajzgO8yTNB9BqAIJ6gNHmUSHgTApvNKmhHVngRjHWJ76Tv5cRtStFhC7SU+Wd2gF
-VJ3bC/q32IXKD1aBDq/jv5d7olOR4g==
-=e+b3
------END PGP SIGNATURE-----
-
---Sig_/3VfPglI5Xlmd_t6os2PkxDm--
