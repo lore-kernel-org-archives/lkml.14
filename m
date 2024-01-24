@@ -1,24 +1,58 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99D9812BF05;
-	Wed, 24 Jan 2024 17:51:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEE8F129A97
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 17:52:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706118696; cv=none; b=BMcpH14/fjpBEgsjPuNdNaEo0wCm2eoAMim9wJoV6VBXvtcgvdiLVANZUXXtMm1OSq+lxR9vh0N1ZmBQE8VJluGtcWGxufWZFmygx/bs6kw8XA+hnCH+jUauw2l2/W7IP5drtQKWogp6MWvf0cnr0JMTg+SGnGaiGrWht/LEKEM=
+	t=1706118754; cv=none; b=EBQzboWHh/mhFyKflX8dXMwT6lvneGIuK83dM/ZIEI4mTEJtGT/Vmzmu6w6g7Q09+9mW8FOr7u9AQN54xvNZM9KJ4lv/i1M2kqo/AGujRZNzxpIu048p4emSws/hux+Yl60Q6A7W0Vn5DTv6XqbxSH5IkGGoSXDdy14hps0lNds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706118696; c=relaxed/simple;
-	bh=yKIM21Iww3LTk3QxAjQzqREIegASwkkai/qDvoZNrkc=;
+	s=arc-20240116; t=1706118754; c=relaxed/simple;
+	bh=2nzwYy5eLPzezXEa8LQ+/BiHlD0Mt33Sf5tv11jdlcs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=B8du6fAuCP7bqpg37wynjpBZBm59LGpM9zkoqZHzqy6kocL+QzVjQ58xmD4yQB+iXwZUTNB8TkHSI3RXFMpuyWFQhhQYp3Ml3xYDczTFQKGXTRVbeDjTYYypDzCLeBxim22K3typ8kZj5Y2TbA172ucQp2QmeEDUx4Ob96K7kzI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1rShPP-0004yI-KF; Wed, 24 Jan 2024 18:51:31 +0100
-Message-ID: <e7eb12a9-67ed-45b1-aaf6-e1df52a247bd@leemhuis.info>
-Date: Wed, 24 Jan 2024 18:51:28 +0100
+	 In-Reply-To:Content-Type; b=ubJbpVwpqPY9c3gaab5eFwxWdHftTLpiKjItwX/oa/zODTUejTsA0U3G3nA5Nl4aZLPgp6ZdrrXzmrooLeqDtAwVR+Dtf5CGcDaldrBDnQSPafcQWPDOUVEbsePgunMiASY5XKg5mxPo61h7AglLFMdkdmijQtjZrFCVCd4x/jg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Sj1xzL0G; arc=none smtp.client-ip=209.85.167.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Sj1xzL0G"
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-5100c4aa08cso2070216e87.2
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 09:52:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1706118751; x=1706723551; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=vTlQZ1fr4MYjqJNvKsZeP6R4Md0Qcnn9S554f0tlhZM=;
+        b=Sj1xzL0G+MwmNSKuOkkY7myMdHQ1x3Kxu3y7yCD0qhrsFazeFB2DmzpwEAuuqxiTaF
+         JC6Kn14LUf0kaW1TSSC/sxmsjzbxKdyCAnV1QwJ2eQ1aTzhGquHuOwdk8AxCffrTLypC
+         iQhVPcoZb9W5foxRMSC8oUbPK2gfejJnGatH57z+M/kGPkYDmNS5fwnKQWG0R5mt9LD4
+         6aclUOHYbSnnSD15L/FDpTS813RVfySH4ZUbOJVZHEmcR5JG7+CHPmFaEhKfyUoX5V7C
+         Q1+wwd9NERY5kgVaB98++XAO75doawh59Xttk/wBqI6s2IUPnBs3jNQrcolnMOrRYHVG
+         KoNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706118751; x=1706723551;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=vTlQZ1fr4MYjqJNvKsZeP6R4Md0Qcnn9S554f0tlhZM=;
+        b=e5HJf5K61IqAdCPkujZzJFZUYJWyCB2cyTMqrBUwS9ze2nvMA14l3B+JHVlg3sPPst
+         t3IEXlhkllF+lNM7F0CCAF8NM9Nsg5rOazwH83BzutYXcfjYqp1SKlG9ZkO0WYDr/8cX
+         0GhPo6xkkwXIlqrL69LC0Ej4OGLwaCyX7CvDYBsy1MhIUvTUhnmx+Uwb8bylxZsgEdKr
+         vzly+NQrOnrbaGLhXiZ7otxZxpIb2xA59xh365tIElYQ5CzjG9bfLwJoLgVbeadDacNA
+         ZfFcT4EK25sdM+mPI9oT1GmpafeDZYkZrsDdzYXiKrgnRLHwFAyD3nR8TttlAC6kbNls
+         0TDw==
+X-Gm-Message-State: AOJu0YwNnMjumh0HidV/i+CrnrkL8A04yvGVUSwAQVB6MK6/wwVOkRsb
+	qdWb0airjrL72xg04y7HJIwSZ20GVswvz8Mm3Kg+jnlh7CQGQaTqLKrKGOAz4B0=
+X-Google-Smtp-Source: AGHT+IFVZa2kg7IyRx7QJp069qZ9912rNwBb+h/X1nfVuEMEY0k4ho5ymWS2GZhOS354vQXe07M81g==
+X-Received: by 2002:a05:6512:3b98:b0:510:19dd:6c56 with SMTP id g24-20020a0565123b9800b0051019dd6c56mr18096lfv.125.1706118750800;
+        Wed, 24 Jan 2024 09:52:30 -0800 (PST)
+Received: from [172.30.204.154] (UNUSED.212-182-62-129.lubman.net.pl. [212.182.62.129])
+        by smtp.gmail.com with ESMTPSA id u1-20020a056512128100b0050eb25590ffsm2621579lfs.207.2024.01.24.09.52.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 24 Jan 2024 09:52:30 -0800 (PST)
+Message-ID: <7c74ef2b-0031-4861-9d97-2c242db14d5e@linaro.org>
+Date: Wed, 24 Jan 2024 18:52:27 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -26,87 +60,34 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [git pull] drm for 6.8
-Content-Language: en-US, de-DE
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Dave Airlie <airlied@gmail.com>, Daniel Vetter <daniel.vetter@ffwll.ch>,
- dri-devel <dri-devel@lists.freedesktop.org>,
- LKML <linux-kernel@vger.kernel.org>,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>,
- Mario Limonciello <mario.limonciello@amd.com>,
- Vlastimil Babka <vbabka@suse.cz>, Donald Carr <sirspudd@gmail.com>
-References: <CAPM=9twKBmO2Svky-zeP+KS8qWHFj9zrgeBqW9y__tUwcAYZhw@mail.gmail.com>
- <2faccc1a-7fdd-499b-aa0a-bd54f4068f3e@suse.cz>
- <CAOVeLGRxXfs4wxSmB2ULZS72NvJkWQvZyPRz0rAmQyFtL39ekw@mail.gmail.com>
- <0a782904-bb19-4111-979a-31b52aa44ca9@suse.cz>
- <a51ddb8c-cf11-4394-a2fe-ca855749ff02@amd.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <a51ddb8c-cf11-4394-a2fe-ca855749ff02@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1706118694;3934329c;
-X-HE-SMSGID: 1rShPP-0004yI-KF
+Subject: Re: [PATCH] net: ethernet: qualcomm: Remove QDF24xx support
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: patchwork-bot+netdevbpf@kernel.org, timur@kernel.org,
+ davem@davemloft.net, edumazet@google.com, pabeni@redhat.com,
+ marijn.suijten@somainline.org, linux-kernel@vger.kernel.org,
+ netdev@vger.kernel.org
+References: <20240122-topic-qdf_cleanup_net-v1-1-caf0d9c4408a@linaro.org>
+ <170605983124.14933.9916722082205803213.git-patchwork-notify@kernel.org>
+ <0679f568-60e7-47d8-b86e-052a9eb4c103@linaro.org>
+ <20240124073558.41c1b99d@kernel.org>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+In-Reply-To: <20240124073558.41c1b99d@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Linus, if you have a minute, I'd really like to know...
 
-On 24.01.24 17:41, Mario Limonciello wrote:
-> On 1/24/2024 10:24, Vlastimil Babka wrote:
->> On 1/24/24 16:31, Donald Carr wrote:
->>> On Wed, Jan 24, 2024 at 7:06 AM Vlastimil Babka <vbabka@suse.cz> wrote:
->>>> When testing the rc1 on my openSUSE Tumbleweed desktop, I've started
->>>> experiencing "frozen desktop" (KDE/Wayland) issues. The symptoms are
->>>> that
->>>> everything freezes including mouse cursor. After a while it either
->>>> resolves,
->>>> or e.g. firefox crashes (if it was actively used when it froze) or it's
->>>> frozen for too long and I reboot with alt-sysrq-b. When it's frozen
->>>> I can
->>>> still ssh to the machine, and there's nothing happening in dmesg.
->>>> The machine is based on Amd Ryzen 7 2700 and Radeon RX7600.
->>> [...]
->>> I am experiencing the exact same symptoms;
+
+On 1/24/24 16:35, Jakub Kicinski wrote:
+> On Wed, 24 Jan 2024 13:38:19 +0100 Konrad Dybcio wrote:
+>> Jakub, can we please drop this (or should I send a revert)?
 >>
->> Big thanks to Thorsten who suggested I look at the following:
->>
->> https://lore.kernel.org/all/20240123021155.2775-1-mario.limonciello@amd.com/
->> https://lore.kernel.org/all/CABXGCsM2VLs489CH-vF-1539-s3in37=bwuOWtoeeE+q26zE+Q@mail.gmail.com/
->>
->> Instead of further bisection I've applied Mario's revert from the
->> first link
->> on top of 6.8-rc1 and the issue seems gone for me now.
+>> It turned out that Qualcomm is actually still using this internally,
+>> for "reasons".. [1]
 > 
-> Thanks for confirming.  I don't think we should jump right to the revert
-> right now.
->
->  I posted it in case that is the direction we need to go
-> (simple git revert didn't work due to contextual changes).
-> 
-> Let's give the folks who work on GPU scheduler some time to understand
-> the failure and see if they can fix it.
+> Oh, I thought you only meant they are using the UART driver (somehow).
+> I'll revert, sorry.
 
-...how you think about this and other situations like this. Given that
-we have
+Thanks for taking care of this!
 
-* two affected people in this thread
-* one earlier thread about it
-* the machine that made Mario write the patch
-* and I have someone in #fedora-kernel that likely is affected as well
-
-it seems that this is not some corner case very few people run into.
-Hence I tend to say that this should be dealt with rather sooner than
-later. Maybe before rc2? Or is this asking too much?
-
-The thing from my point of view is, that each such problem might
-discourage testers from testing again or lead to thoughts like "I only
-start testing after -rc4". Not to mention that other people will try to
-bisect the problem like Vlastimil did, which will cost them quite some
-time and effort -- only to find out that we known about the problem
-already and did not quickly fix it. That is discouraging for them as
-well and thus bad for field testing I'd assume.
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+Konrad
