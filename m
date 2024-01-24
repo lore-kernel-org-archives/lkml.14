@@ -1,208 +1,113 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C90217542;
-	Wed, 24 Jan 2024 08:11:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4606171DD
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 08:12:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706083886; cv=none; b=OPQL+42fxJIIPhYGDmcMFgxkwjevgMrpBQcsrP3rsq6dT23YVL1DeXNvkOT2bOHbjlJhu9j36vDKblFUv7ksExSC1RlAWbK2DbgOYWIdMPVodGX7ajI+rf/fNoeZ7eKpJdlsZIdhHD7nmM1PVT+OF1j41Txy4b0IaIIYqGO1CQ4=
+	t=1706083960; cv=none; b=HZryLTa9VF7D1vSxpn026P/xxUEQhzwqlRSYMcMuypiROW7mWq31X1xmd2uSPCwUSpa1iRSLTRBvLjMIOCCTGEXqtZJPfm8H8oeXzWWgDBKUULBiIIXr4q4dIuQPpjB9aE0gugRMEIXGwkGAGp1bXzqXfLSn6DKbrNXKGu7ULrM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706083886; c=relaxed/simple;
-	bh=+eI7bPLmEB1v+Dyc3X2fZC6r5js6f9RaDDwre1lY988=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NG9YO3VpWsK6p6v16CiZy2Gml/sNwODtR9ljL6QVA7j5MB47eZA5+ea1Dpr+tUolb+ztieiV+hXMNbO7tiLY8mU/ckdv8lTTFyYl8PsFOkNj4EPQhFHwPqgFqc5Z0QUfPrbb1DsgaOQn7Wi5TNnKNvW+lAGeAlxtFRg/nnEY4yA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NhKdXh9L; arc=none smtp.client-ip=192.55.52.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1706083960; c=relaxed/simple;
+	bh=C8kYfDx/P9hnWkyKHcdyWPTZdI2VSXngwIerXp0qFns=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IhxK+W4lw4BzjHDMPYgma871P5dBudlC40HnhWBgiUVO4vv41IMxvyjVeJWrQY7wRaggSY+fTcHTvc0CEhRR8GRBDYqVXLjfCa4qjFIdere5zIe9GR+dzdLZHFcPzyHHOWLou/O8WTLcYJbMLlWt3Ako+byhHqQ2KaaECwYKoUM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=YBbty9sG; arc=none smtp.client-ip=209.85.219.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NhKdXh9L"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706083884; x=1737619884;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=+eI7bPLmEB1v+Dyc3X2fZC6r5js6f9RaDDwre1lY988=;
-  b=NhKdXh9LL8hKfdzap6Pdn1d020f7FGxS0LtjD68tucag6/8QOnFVheWf
-   pYztlUXEOGyP3HOMEUbVoFKjYk747VeZ4CeNCVo52uQSroNv6MNbPCoPM
-   Hl0x7SFbMjdzznAW6Z3Q1dAWdhtYM4yBCYOyJj0dhdW+CrlAS5QEbU2A7
-   hk4ZJ1Nnn22JLEPEXD5aVd9cOG+A2gO3yAAe26awvXrGYznFOBcaOzzsr
-   UDOeiwGSreMJDChQ/JgmuX4TV0wesMv8yzlhq40fkqmDHGeqqSzdWJg1P
-   ZKdCkEK4UHdU0M7xWClH+0SGWPzgcQiCswEG6/egV39hzNrQh0aqeR8ee
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="398930061"
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="398930061"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jan 2024 00:11:23 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="929594812"
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="929594812"
-Received: from kuha.fi.intel.com ([10.237.72.185])
-  by fmsmga001.fm.intel.com with SMTP; 24 Jan 2024 00:11:20 -0800
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Wed, 24 Jan 2024 10:11:19 +0200
-Date: Wed, 24 Jan 2024 10:11:19 +0200
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To: "Christian A. Ehrhardt" <lk@c--e.de>
-Cc: linux-usb@vger.kernel.org, Dell.Client.Kernel@dell.com,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Jack Pham <quic_jackp@quicinc.com>,
-	Fabrice Gasnier <fabrice.gasnier@foss.st.com>,
-	Samuel =?utf-8?B?xIxhdm9q?= <samuel@cavoj.net>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 3/3] usb: ucsi_acpi: Quirk to ack a connector change
- ack cmd
-Message-ID: <ZbDGJ3x5cFr4gmyz@kuha.fi.intel.com>
-References: <20240121204123.275441-1-lk@c--e.de>
- <20240121204123.275441-4-lk@c--e.de>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YBbty9sG"
+Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-dc22ade26d8so4027682276.1
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 00:12:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1706083957; x=1706688757; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3nlrvezwsoefYOiDE66ptLKogdw8xj1n98YMDFjoN+M=;
+        b=YBbty9sG7JivTyRuJzpHonuXmx+JIN1C4fibeYvcSg++Z6PyIykvNZnjzH3m29c5FU
+         xBSjAX8Z4Y0cAg/XDe512kDKk6+UO4B1ck2I3hkyD91wRUmfGw0RKM0Pq1XamRPypEo+
+         9Lf7/Rvr3obTej/2lwzBzhojd/ijWYCWszSiE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706083957; x=1706688757;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3nlrvezwsoefYOiDE66ptLKogdw8xj1n98YMDFjoN+M=;
+        b=RlpykVMtzWOi/7PiB0ScC1/ivaYzAEBsF84pJKMKOlsoOyQz+IHxATwQLkrubNCE7L
+         lO3xGrSWV/55BJE0Ex9moy+vY2oK3GKLkQPMMs9UvbnjdohFk57OLN6hO6yzi3RgU5f2
+         ClSInWg9hctRhSN/9cQbMPNgzLdLs3LwC7r5+6GgoBHtMmLdb4pVhrVcjN0JfCmDTKhP
+         TFr37BaFTAmwzkCfQhpv9EGC+069RcjXZnocSKuDbfNbjGH08/4h8VTy7EaOSNon4gj0
+         V5O4p1vd2imZruTAtQx36H7YrRuMIgT93wEWMl0MaBnuLKSPnuBlU40teEAbvjOEixy8
+         fy6A==
+X-Gm-Message-State: AOJu0YynCzfAWf2bOL5AwL3ab8jsapAjcgN/ywmQgpZ5i+Q6PYCjSOpX
+	2L+2KS2f+1SLOQHds7QRofm6hhhw+ngxbWcmrwYHZ1TUV8YolBO7c83NZaaEHWwIx8SJlRCuSoz
+	mzPWMlajNznYIRCE/JpZpFlrgZAUVJqSpd3kx
+X-Google-Smtp-Source: AGHT+IEXXNpGL3FkHpH7UVTAE98t9kuK82tJy02EY3Po3kf0mUsz/lQ5QYroraVfAgTjUCCe1Q2enF+omVYI5Wnnfpw=
+X-Received: by 2002:a5b:345:0:b0:dbe:d3ef:d54b with SMTP id
+ q5-20020a5b0345000000b00dbed3efd54bmr291405ybp.93.1706083957672; Wed, 24 Jan
+ 2024 00:12:37 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240121204123.275441-4-lk@c--e.de>
+References: <20240123223039.1471557-1-abhishekpandit@google.com> <20240123143026.v1.1.Iacf5570a66b82b73ef03daa6557e2fc0db10266a@changeid>
+In-Reply-To: <20240123143026.v1.1.Iacf5570a66b82b73ef03daa6557e2fc0db10266a@changeid>
+From: Prashant Malani <pmalani@chromium.org>
+Date: Wed, 24 Jan 2024 00:12:26 -0800
+Message-ID: <CACeCKaftJSGba3ebs58=cB5aRLuOnbvhQX2V6+5=t9GPC08_Uw@mail.gmail.com>
+Subject: Re: [PATCH v1 1/3] usb: typec: ucsi: Limit read size on v1.2
+To: Abhishek Pandit-Subedi <abhishekpandit@google.com>
+Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>, linux-usb@vger.kernel.org, 
+	jthies@google.com, Abhishek Pandit-Subedi <abhishekpandit@chromium.org>, 
+	Bjorn Andersson <andersson@kernel.org>, Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
+	Fabrice Gasnier <fabrice.gasnier@foss.st.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Hans de Goede <hdegoede@redhat.com>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Saranya Gopal <saranya.gopal@intel.com>, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, Jan 21, 2024 at 09:41:23PM +0100, Christian A. Ehrhardt wrote:
-> The PPM on some Dell laptops seems to expect that the ACK_CC_CI
-> command to clear the connector change notification is in turn
-> followed by another ACK_CC_CI to acknowledge the ACK_CC_CI command
-> itself. This is in violation of the UCSI spec that states:
-> 
->     "The only notification that is not acknowledged by the OPM is
->      the command completion notification for the ACK_CC_CI or the
->      PPM_RESET command."
-> 
-> Add a quirk to send this ack anyway.
-> Apply the quirk to all Dell systems.
-> 
-> On the first command that acks a connector change send a dummy
-> command to determine if it runs into a timeout. Only activate
-> the quirk if it does. This ensure that we do not break Dell
-> systems that do not need the quirk.
-> 
-> Signed-off-by: Christian A. Ehrhardt <lk@c--e.de>
+Hi Abhishek,
 
-Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+On Tue, Jan 23, 2024 at 2:30=E2=80=AFPM Abhishek Pandit-Subedi
+<abhishekpandit@google.com> wrote:
+>
+> From: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+>
+> Between UCSI 1.2 and UCSI 2.0, the size of the MESSAGE_IN region was
+> increased from 16 to 256. In order to avoid overflowing reads for older
+> systems, add a mechanism to use the read UCSI version to truncate read
+> sizes on UCSI v1.2.
+>
+> Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+I have one nit (mentioned in side-band but reproducing here for consistency=
+),
+but will defer to the maintainer on that.
 
-> ---
->  drivers/usb/typec/ucsi/ucsi_acpi.c | 71 ++++++++++++++++++++++++++++--
->  1 file changed, 68 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/usb/typec/ucsi/ucsi_acpi.c b/drivers/usb/typec/ucsi/ucsi_acpi.c
-> index fa222080887d..928eacbeb21a 100644
-> --- a/drivers/usb/typec/ucsi/ucsi_acpi.c
-> +++ b/drivers/usb/typec/ucsi/ucsi_acpi.c
-> @@ -25,6 +25,8 @@ struct ucsi_acpi {
->  	unsigned long flags;
->  	guid_t guid;
->  	u64 cmd;
-> +	bool dell_quirk_probed;
-> +	bool dell_quirk_active;
->  };
->  
->  static int ucsi_acpi_dsm(struct ucsi_acpi *ua, int func)
-> @@ -126,12 +128,73 @@ static const struct ucsi_operations ucsi_zenbook_ops = {
->  	.async_write = ucsi_acpi_async_write
->  };
->  
-> -static const struct dmi_system_id zenbook_dmi_id[] = {
-> +/*
-> + * Some Dell laptops expect that an ACK command with the
-> + * UCSI_ACK_CONNECTOR_CHANGE bit set is followed by a (separate)
-> + * ACK command that only has the UCSI_ACK_COMMAND_COMPLETE bit set.
-> + * If this is not done events are not delivered to OSPM and
-> + * subsequent commands will timeout.
-> + */
-> +static int
-> +ucsi_dell_sync_write(struct ucsi *ucsi, unsigned int offset,
-> +		     const void *val, size_t val_len)
-> +{
-> +	struct ucsi_acpi *ua = ucsi_get_drvdata(ucsi);
-> +	u64 cmd = *(u64 *)val, ack = 0;
-> +	int ret;
-> +
-> +	if (UCSI_COMMAND(cmd) == UCSI_ACK_CC_CI &&
-> +	    cmd & UCSI_ACK_CONNECTOR_CHANGE)
-> +		ack = UCSI_ACK_CC_CI | UCSI_ACK_COMMAND_COMPLETE;
-> +
-> +	ret = ucsi_acpi_sync_write(ucsi, offset, val, val_len);
-> +	if (ret != 0)
-> +		return ret;
-> +	if (ack == 0)
-> +		return ret;
-> +
-> +	if (!ua->dell_quirk_probed) {
-> +		ua->dell_quirk_probed = true;
-> +
-> +		cmd = UCSI_GET_CAPABILITY;
-> +		ret = ucsi_acpi_sync_write(ucsi, UCSI_CONTROL, &cmd,
-> +					   sizeof(cmd));
-> +		if (ret == 0)
-> +			return ucsi_acpi_sync_write(ucsi, UCSI_CONTROL,
-> +						    &ack, sizeof(ack));
-> +		if (ret != -ETIMEDOUT)
-> +			return ret;
-> +
-> +		ua->dell_quirk_active = true;
-> +		dev_err(ua->dev, "Firmware bug: Additional ACK required after ACKing a connector change.\n");
-> +		dev_err(ua->dev, "Firmware bug: Enabling workaround\n");
-> +	}
-> +
-> +	if (!ua->dell_quirk_active)
-> +		return ret;
-> +
-> +	return ucsi_acpi_sync_write(ucsi, UCSI_CONTROL, &ack, sizeof(ack));
-> +}
-> +
-> +static const struct ucsi_operations ucsi_dell_ops = {
-> +	.read = ucsi_acpi_read,
-> +	.sync_write = ucsi_dell_sync_write,
-> +	.async_write = ucsi_acpi_async_write
-> +};
-> +
-> +static const struct dmi_system_id ucsi_acpi_quirks[] = {
->  	{
->  		.matches = {
->  			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
->  			DMI_MATCH(DMI_PRODUCT_NAME, "ZenBook UX325UA_UM325UA"),
->  		},
-> +		.driver_data = (void *)&ucsi_zenbook_ops,
-> +	},
-> +	{
-> +		.matches = {
-> +			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
-> +		},
-> +		.driver_data = (void *)&ucsi_dell_ops,
->  	},
->  	{ }
->  };
-> @@ -160,6 +223,7 @@ static int ucsi_acpi_probe(struct platform_device *pdev)
->  {
->  	struct acpi_device *adev = ACPI_COMPANION(&pdev->dev);
->  	const struct ucsi_operations *ops = &ucsi_acpi_ops;
-> +	const struct dmi_system_id *id;
->  	struct ucsi_acpi *ua;
->  	struct resource *res;
->  	acpi_status status;
-> @@ -189,8 +253,9 @@ static int ucsi_acpi_probe(struct platform_device *pdev)
->  	init_completion(&ua->complete);
->  	ua->dev = &pdev->dev;
->  
-> -	if (dmi_check_system(zenbook_dmi_id))
-> -		ops = &ucsi_zenbook_ops;
-> +	id = dmi_first_match(ucsi_acpi_quirks);
-> +	if (id)
-> +		ops = id->driver_data;
->  
->  	ua->ucsi = ucsi_create(&pdev->dev, ops);
->  	if (IS_ERR(ua->ucsi))
-> -- 
-> 2.40.1
+The above notwithstanding, FWIW:
+Reviewed-by: Prashant Malani<pmalani@chromium.org>
 
--- 
-heikki
+> @@ -1556,6 +1569,15 @@ int ucsi_register(struct ucsi *ucsi)
+>         if (!ucsi->version)
+>                 return -ENODEV;
+>
+> +       /*
+> +        * Version format is JJ.M.N (JJ =3D Major version, M =3D Minor ve=
+rsion,
+> +        * N =3D sub-minor version).
+> +        */
+> +       dev_info(ucsi->dev, "Registered UCSI interface with version %x.%x=
+.%x",
+> +                UCSI_BCD_GET_MAJOR(ucsi->version),
+> +                UCSI_BCD_GET_MINOR(ucsi->version),
+> +                UCSI_BCD_GET_SUBMINOR(ucsi->version));
+
+nit: I think this doesn't need to be dev_info() and can be just
+dev_dbg(), but will
+defer to the maintainer.
+
+Thanks,
+
+-Prashant
