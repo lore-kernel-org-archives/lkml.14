@@ -1,171 +1,95 @@
-Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12C7918625;
-	Wed, 24 Jan 2024 09:52:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F10A1862B;
+	Wed, 24 Jan 2024 09:52:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706089962; cv=none; b=m0+1IqX7e2b/X+c5mSNgolynGota0l1mwII4YtBn2DEXPFWfe9apu9Av7lsIwZSVI+L0KuEahOP+GlRzlQaAz2ArovD73l0SwOFnyZFtTOVbir39q6mcKrauek4VFLFtlhWgYk9S7AiteWd8Em0FMnIiM+XHdPj8Z9NRPjoTeyA=
+	t=1706089969; cv=none; b=TG/nqmHRCoscbNRg76wBybJwpKgK68NtCq591AtNB3DpRSfsicyQ3FCHynjJOJK+SBXt54583iSSfNSlNIGk85d3oY6j4M+NdBr1qVt9uNWzbx6kW/msuF4hNynVzA7PKJdYbV8AoFXH90DNUvmuzQp+rYi6rMjDx4ZEB2p+3fs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706089962; c=relaxed/simple;
-	bh=x1fsVDdsOFD6tbu+vLQ3FdacZX1F0b/QkoHTJwiwpSc=;
+	s=arc-20240116; t=1706089969; c=relaxed/simple;
+	bh=25EbN1mzjVCHuiUk7bybepZ+ZKPqcs9G8ruiHFzlSOc=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=npPifhcr46u1iuxqtjbd9Pt64dZV3jREYuYalLBNnqrk7nrCJB/3S4KY25O3p7TwJTA0b86lA++njSoCLMxW029JPqUa7hEdj71adC66rgGMlpaNpbfEev8HtmOm5oG3w8XruoklEPR+ud4NsXzs+SqsUfRbWmC3rjzBDwIvSUI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-5ffb07bed9bso29900077b3.0;
-        Wed, 24 Jan 2024 01:52:38 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706089958; x=1706694758;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Gb9WF/ExCOiStM1ck1NToosyRyKsQZOXa+C3tVqzcsc=;
-        b=fFlGpVlzdZV89ZaTo7voBO7EWe1M0M8l4O78QQOzAuKuou5F0jqsZT1uuYUSV3lX7M
-         5oppDdJ728LArM+diyiNbH/ZiJZbOvhIpdCCmZCNHVL/QDDi66K6otR/GCEZFRQ68qkU
-         jWilULytMulFTQjV9c+sd0Y8faCAuK16ieqFnvlbd3vJno254ihjcfZH4MutjNym40kS
-         cN26WVuJtDMMh82JdzWjelCMUT7AYCOZYrftI1fJkblvIT/ifTZYV/iLJnURlZFOnNz1
-         9XDri4POJiFXlewCe3tjvQcRJX+kPUo+bVl4eZLg64y67Zh735J8+iAkWnd83l40j2Cs
-         dxUg==
-X-Gm-Message-State: AOJu0YzhtKy6RkQax8r/GQ5eF5qepsP14pk2EbE5f02crRCoa357eqhV
-	9e/JVVBqTSHXkrnVUaBV+xtUIBwRA2JEyUVgzcYywH3z2tZJtew8rfAHQXVB11o=
-X-Google-Smtp-Source: AGHT+IEOQC01b0M5bEfgaa2k8oik+PCvmRiuqQqMnZIjR3CfDSsWTus6Ql/mWEkIEurxeX6BGER6jg==
-X-Received: by 2002:a0d:d94c:0:b0:5d7:1940:8dfe with SMTP id b73-20020a0dd94c000000b005d719408dfemr329592ywe.101.1706089957751;
-        Wed, 24 Jan 2024 01:52:37 -0800 (PST)
-Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com. [209.85.219.180])
-        by smtp.gmail.com with ESMTPSA id a126-20020a0dd884000000b005ffa3fa57f9sm3548291ywe.51.2024.01.24.01.52.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 24 Jan 2024 01:52:37 -0800 (PST)
-Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-db4364ecd6aso3263909276.2;
-        Wed, 24 Jan 2024 01:52:37 -0800 (PST)
-X-Received: by 2002:a25:7801:0:b0:dc2:1dd0:1d1b with SMTP id
- t1-20020a257801000000b00dc21dd01d1bmr315581ybc.19.1706089957157; Wed, 24 Jan
- 2024 01:52:37 -0800 (PST)
+	 To:Cc:Content-Type; b=BtkVI5VPGNiASSxaIyUb+IpWaKHdYxdu2iz0L0rxg7b+tTgZHaH6YQsoD+n7dCoBznX/a+Zh9tGglYER95k2zSHByRClca4TObDDFP+DU6GgftEdST/HNyUyOGVEv2H4/aA97Ghkr5Ah5WtvQWxzmgQNE7t7F2EC0ku35F3moNs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LohNP/1W; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LohNP/1W"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5626C433A6;
+	Wed, 24 Jan 2024 09:52:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706089968;
+	bh=25EbN1mzjVCHuiUk7bybepZ+ZKPqcs9G8ruiHFzlSOc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=LohNP/1WsXyvDwB6ZKygdTeX5gGsJGwHTcP8DUMUVNJIoqWWxaeTKWO2rwQ7pGdMe
+	 Wi7PuJYn7Ait0IUYTY5YSrOPtKNVt02Zq7kaK1vrqZstPs/Clz6XXvfeL8R1AlZH0e
+	 ZWqtTpvJLsNgdxFagjroCPf4qvnbST0SA/l51bYa0mkm/OoAj5/dVQgE3orY7WPmai
+	 cdxgMzQQNckRX6EN2Zn66xnLdYOe+AHCNlWaJ8Ts4vGg2iwMShmvg81npuALXESq6n
+	 TmghtQH34bN4NDRWiWNwoVDBo2KO1Db05a01hWwMzreegJ3WO+K9sLU6EfFSHuvilG
+	 TCgTD2r6ZDQXg==
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-55a9008c185so6607323a12.1;
+        Wed, 24 Jan 2024 01:52:48 -0800 (PST)
+X-Gm-Message-State: AOJu0YzDuOrONT+IVSwaSGep+2nAzGgcKYOodnpTPdYuxSjjja9KPzCh
+	Ia4F9v2BNf6UT9XON585KDdRQ4QWd/mNpYVdK72kC8U2iKV6g+cmNPy7KSEu9iIclpi1oqLwJGz
+	+C8/CpN21NEerOWlbwbcYnDXQIyU=
+X-Google-Smtp-Source: AGHT+IFSvORXsCyI9FFQ4azhLnmjHti6TOi5ATesVQ/VgI+SXE2UF1JjHJkkjjXZa7Cg/PLX3C+VGzO/U1ajcX3RRxc=
+X-Received: by 2002:a05:6402:1bc5:b0:55a:8431:ba7c with SMTP id
+ ch5-20020a0564021bc500b0055a8431ba7cmr934471edb.37.1706089967348; Wed, 24 Jan
+ 2024 01:52:47 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231125163559.824210-1-masahiroy@kernel.org> <CAMuHMdWm6u1wX7efZQf=2XUAHascps76YQac6rdnQGhc8nop_Q@mail.gmail.com>
- <d21298d9-fed6-4e08-9780-dbcb388b9ccc@smile.fr> <CAK7LNASaG4DpHTb3YHMd8d8DJ5H3z0aiUcSqX+=7CZb99kRU8A@mail.gmail.com>
-In-Reply-To: <CAK7LNASaG4DpHTb3YHMd8d8DJ5H3z0aiUcSqX+=7CZb99kRU8A@mail.gmail.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 24 Jan 2024 10:52:25 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdWLMNj=Yvf4QxxrCxf-UBr-VXUxfJei+V2bNd0M7D1OhQ@mail.gmail.com>
-Message-ID: <CAMuHMdWLMNj=Yvf4QxxrCxf-UBr-VXUxfJei+V2bNd0M7D1OhQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] kconfig: remove unneeded symbol_empty variable
-To: Masahiro Yamada <masahiroy@kernel.org>
-Cc: Yoann Congal <yoann.congal@smile.fr>, linux-kbuild@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	Linux-Renesas <linux-renesas-soc@vger.kernel.org>, 
-	Vegard Nossum <vegard.nossum@oracle.com>
+References: <20240118121542.748351-1-maobibo@loongson.cn> <20240118121542.748351-4-maobibo@loongson.cn>
+In-Reply-To: <20240118121542.748351-4-maobibo@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Wed, 24 Jan 2024 17:52:36 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H4q0B3fXjkwtEQaCLk789UkLbWe8Zd8L7bMLWea1yq70w@mail.gmail.com>
+Message-ID: <CAAhV-H4q0B3fXjkwtEQaCLk789UkLbWe8Zd8L7bMLWea1yq70w@mail.gmail.com>
+Subject: Re: [PATCH v3 3/3] irqchip/loongson-eiointc: Typo fix in function eiointc_domain_alloc
+To: Bibo Mao <maobibo@loongson.cn>
+Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>, Thomas Gleixner <tglx@linutronix.de>, 
+	linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Sergey Shtylyov <s.shtylyov@omp.ru>, lvjianmin@loongson.cn
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Yamada-san,
+Acked-by: Huacai Chen <chenhuacai@loongson.cn>
 
-On Wed, Jan 24, 2024 at 9:10=E2=80=AFAM Masahiro Yamada <masahiroy@kernel.o=
-rg> wrote:
-> On Wed, Jan 24, 2024 at 12:11=E2=80=AFAM Yoann Congal <yoann.congal@smile=
-.fr> wrote:
-> > Le 23/01/2024 =C3=A0 13:54, Geert Uytterhoeven a =C3=A9crit :
-> > > On Sat, Nov 25, 2023 at 5:36=E2=80=AFPM Masahiro Yamada <masahiroy@ke=
-rnel.org> wrote:
-> > >> This is used only for initializing other variables.
-> > >>
-> > >> Use the empty string "".
-> > >>
-> > >> Please note newval.tri is unused for S_INT/HEX/STRING.
-> > >>
-> > >> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> > >
-> > > Thanks for your patch, which is now commit 4e244c10eab345a7
-> > > ("kconfig: remove unneeded symbol_empty variable") in v6.8-rc1.
-> > >
-> > > When running "make <foo>_defconfig" with <foo>_defconfig an SMP
-> > > defconfig without explicit configuration of CONFIG_LOG_CPU_MAX_BUF_SH=
-IFT,
-> > > the aforementioned commit causes a change in the generated .config:
-> > >
-> > > -CONFIG_LOG_CPU_MAX_BUF_SHIFT=3D12
-> > > +CONFIG_LOG_CPU_MAX_BUF_SHIFT=3D0
-> > >
-> > > It looks like CONFIG_BASE_SMALL=3D0 is treated as a string instead of
-> > > the integer number zero?
-> > >
-> > > init/Kconfig=3Dconfig LOG_CPU_MAX_BUF_SHIFT
-> > > init/Kconfig-   int "CPU kernel log buffer size contribution (13 =3D>=
- 8
-> > > KB, 17 =3D> 128KB)"
-> > > init/Kconfig-   depends on SMP
-> > > init/Kconfig-   range 0 21
-> > > init/Kconfig:   default 12 if !BASE_SMALL
-> > > init/Kconfig:   default 0 if BASE_SMALL
-> > >
-> > > Note that reverting 4e244c10eab345a7 is not sufficient to fix the iss=
-ue.
-> > > Also reverting commit 6262afa10ef7cc8f ("kconfig: default to zero if
-> > > int/hex symbol lacks default property") does fix it.
-> >
-> > (Since I'd really like 6262afa10ef7cc8f ("kconfig: default to zero if i=
-nt/hex symbol lacks default property") to stay, allow me to try to help)
-> >
-> > The problem is quite easy to reproduce:
-> >   $ make x86_64_defconfig
-> >   $ grep 'LOG_CPU_MAX_BUF_SHIFT\|BASE_SMALL\|BASE_FULL' .config
-> >   CONFIG_LOG_CPU_MAX_BUF_SHIFT=3D0
-> >   CONFIG_BASE_FULL=3Dy
-> >   CONFIG_BASE_SMALL=3D0
-> > Here, CONFIG_LOG_CPU_MAX_BUF_SHIFT should be 12 not 0.
+But I think moving this simplest patch to the first one is better.
+
+Huacai
+
+On Thu, Jan 18, 2024 at 8:15=E2=80=AFPM Bibo Mao <maobibo@loongson.cn> wrot=
+e:
 >
+> There is small typo in function eiointc_domain_alloc, and there is no
+> definition about struct eiointc, instead it should be struct eiointc_priv=
+.
+> It is strange that there is no warning with gcc compiler. This patch
+> fixes the typo issue.
 >
+> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+> ---
+>  drivers/irqchip/irq-loongson-eiointc.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> I could not produce it in this way.
-> I ran the same commands as yours.
+> diff --git a/drivers/irqchip/irq-loongson-eiointc.c b/drivers/irqchip/irq=
+-loongson-eiointc.c
+> index 86f4faad0695..1a25e0613d50 100644
+> --- a/drivers/irqchip/irq-loongson-eiointc.c
+> +++ b/drivers/irqchip/irq-loongson-eiointc.c
+> @@ -252,7 +252,7 @@ static int eiointc_domain_alloc(struct irq_domain *do=
+main, unsigned int virq,
+>         int ret;
+>         unsigned int i, type;
+>         unsigned long hwirq =3D 0;
+> -       struct eiointc *priv =3D domain->host_data;
+> +       struct eiointc_priv *priv =3D domain->host_data;
 >
-> CONFIG_LOG_CPU_MAX_BUF_SHIFT=3D12 for me.
+>         ret =3D irq_domain_translate_onecell(domain, arg, &hwirq, &type);
+>         if (ret)
+> --
+> 2.39.3
 >
->
->
-> masahiro@zoe:~/ref/linux(master)$ git describe
-> v6.8-rc1-29-g615d30064886
-> masahiro@zoe:~/ref/linux(master)$ git diff
-> masahiro@zoe:~/ref/linux(master)$ make  x86_64_defconfig
-> #
-> # No change to .config
-> #
-> masahiro@zoe:~/ref/linux(master)$ grep
-> 'LOG_CPU_MAX_BUF_SHIFT\|BASE_SMALL\|BASE_FULL' .config
-> CONFIG_LOG_CPU_MAX_BUF_SHIFT=3D12
-> CONFIG_BASE_FULL=3Dy
-> CONFIG_BASE_SMALL=3D0
-
-Interesting...
-
-$ git describe
-v6.8-rc1-29-g615d300648869c77
-$ make  x86_64_defconfig
-[...]
-$ grep 'LOG_CPU_MAX_BUF_SHIFT\|BASE_SMALL\|BASE_FULL' .config
-CONFIG_LOG_CPU_MAX_BUF_SHIFT=3D0
-CONFIG_BASE_FULL=3Dy
-CONFIG_BASE_SMALL=3D0
-
-Does it depend on the flex/bison version?
-I have Ubuntu LTS flex 2.6.4-8build2 and bison 2:3.8.2+dfsg-1build1.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
