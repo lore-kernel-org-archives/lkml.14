@@ -1,377 +1,150 @@
-Received: from mail-lj1-f201.google.com (mail-lj1-f201.google.com [209.85.208.201])
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 657BB3D3AE
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 11:20:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B649C1AAD0;
+	Wed, 24 Jan 2024 11:23:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706095258; cv=none; b=PHY3/IK7sLTVxm2OEg3jMG7SWfaRgPxgm0B94KzOEXC80qq+62DDDrYXnQEEnj9dyPfAz8+/EFrjXtZRoZ4i2Ugdj9wtnYJUw5jF/X+ypM4qk/mfbASGg9zRnk7hsVfzyczI3/91z3VSBT+CcwsFYy2VQ8SS0zmOOH4V0UY2544=
+	t=1706095382; cv=none; b=tYd8/4iIlMYMvHtQlWNTPZ1k6niwAfnZWmGlV90DF2JTYSvAJykYE+GFvwqYCPR3g0qwRdRo5ov3V/5SNw6mBGJjH3Q5WSWpmKqbD1WNwGGIcCYwKU7LCqPMEDfwTfRPc9FpFz76qFDtZB53uNXdZMyICUhwEszAwGXlw2M1va0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706095258; c=relaxed/simple;
-	bh=N81WtFNSKMRQnbGYXHdbc93PTVhG91qfzypfB7FfqFo=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=dVAvJ90km0kUtEKvCxFzQgH1eWyOC4S1uZ2Z05y4SkTJJlzgF2AMmsZ1K4LQSg7dj1Z63XEqF76S8vCqivHt6lAmybOPTfdwKMPYTBGX9CyCDzMyER+GbF5/0yX7mmX2KsmKckHgHpt3E7ji3RJR0bxoQDwYV48YcroHnBZ9UiU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=aDyd8QDr; arc=none smtp.client-ip=209.85.208.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+	s=arc-20240116; t=1706095382; c=relaxed/simple;
+	bh=ZzIGwtAn2QzZ+2GpJ7X6yrHuHp8dp5kYFExvtnM8l2I=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=t8N4/nM5Odnbi1rZbP8kmEFBS6ngtlsQeavdmUKramz/VJBmEegI4MOb0y549sl0RuvMvmPAGSojube9kL4m0PJkQRtS0WOoXgE3kgCznHyDE3kUh7qfZn7gELhLUif21jH1sejijBY+3JyIKTD9L44Ba1NiS1MXDM1ItDSobzw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=J+f1d/8X; arc=none smtp.client-ip=209.85.208.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aDyd8QDr"
-Received: by mail-lj1-f201.google.com with SMTP id 38308e7fff4ca-2cf21012d68so3459031fa.1
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 03:20:56 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J+f1d/8X"
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2cf108d8dbeso20220061fa.3;
+        Wed, 24 Jan 2024 03:23:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1706095254; x=1706700054; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=nrRXgrslTecg1zPHQayAhfd4pFFDrfAYfBFQIHxLZuo=;
-        b=aDyd8QDrUhdFZU2ZwJTY2X0e+37ERkuPGW+cch7xttIaKPAy2CQWrEZSq5pNvbOMDZ
-         fSFzW32KDGlvWI5LY8yDCpmxjuw0iG2wOer9gQB02wodveY/jsyHjGBVIBl5/6FNKWC2
-         rKGeGT3qc8gYhyDGLXxp4ujwd9OMsX0+KMPcm6Q9n166yfbPalaRYprNaE550PdTMJrd
-         I4PzRMBJhnAhaNvZKk+izmYxcx/x/pwxqIxwSFAX5vfE5rpv/zxKtIg/G9Uqh1XTGYkA
-         HwmxUdKIsfzAzA/zlacLCJQ/5ZfB+QprvFIAGXwBtbKrNXAZsm04RscAow2AcLzeFV3b
-         z1Vg==
+        d=gmail.com; s=20230601; t=1706095379; x=1706700179; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WlGnsP1Guq+73aimmzzt0YePXReMuB30joC9rhAKutI=;
+        b=J+f1d/8XGutKJmZWOymV5cAHxEGsfaQfPN+r0jgwFabAScsHDJamR+NPnzKpxIf2Dv
+         OahEM/yUYu6vt/QwbzZ1RjNGMFz76pnLKhQMtZVLqp7+f0B8tPvSDKLzenrPVw8JHkAR
+         uYPN0PZiRNxxOXO4vtMyMSvOlvKKaDYenaBZ8IHAw/TeCiVjTFA1BROudaxsi4rHaUHJ
+         D74w6uSS7GmzO9hsRoiAE/s9MPDTwcZiubTC96bPru8MDJ3FmzIyW96+1s5L3qLlCKxU
+         uliMP03HV5MCpWj1bOuIpHjv4KYDTdHPQcwai/2HZ1fJ0h2CQ50xX8HNZAoRjDNx6UGX
+         Vr4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706095254; x=1706700054;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=nrRXgrslTecg1zPHQayAhfd4pFFDrfAYfBFQIHxLZuo=;
-        b=IBE/B8QjjkaxRgwF1HYYjTPiqxIiqQJSEtDlD2uvF0cHQ0POp+0bjEQofqGJy+1S71
-         vrcM+VhFov9YXxYL+fxs/Y2bovQM4rmdhGlJRUdjEwEs1kT0B0OLnuLj8smJlvdedxf3
-         h1mnrRSpYRngm6LDK94kHCkm6+z2kA4GPyunKG73pE2jsiLR4BlTaRR7fcT/s76esdFJ
-         sU7M4I3bDldtWYNaawtWV2ZA9a+KPSHcEPghCSE6cBcZ3SIqyD/g2+oL9Sb9uiEhoGpf
-         BDeddBeh6JdRKme8Y7Mrs0sz1ug1Sed7hCKFC6MG/we4qHwDFrW+x5YZ4kKCBdsHEjT2
-         iNmw==
-X-Gm-Message-State: AOJu0Yxn/Xu389xKCr4ysyxGQludgMm/HNfRlzjFCeDSQtsiG4aZF8GV
-	n9TxPqMGtkHjmDR9Ou3Bzy4SFZkakn+Bl/IJTGb3J1WXBxSVR6qU++1xVoAFqGtZ8pN39c9xTNx
-	hMmeG1+9b60EpDg==
-X-Google-Smtp-Source: AGHT+IFz9frXq/IIhNd/HhEZJVxc8Tq5uNg7IKRPCngg3LDmeiDJeDNzAUzhLqCkahqINQMfwt0C69cmE0H04Uk=
-X-Received: from aliceryhl2.c.googlers.com ([fda3:e722:ac3:cc00:68:949d:c0a8:572])
- (user=aliceryhl job=sendgmr) by 2002:a2e:bb90:0:b0:2cd:3985:eda1 with SMTP id
- y16-20020a2ebb90000000b002cd3985eda1mr2768lje.2.1706095254370; Wed, 24 Jan
- 2024 03:20:54 -0800 (PST)
-Date: Wed, 24 Jan 2024 11:20:23 +0000
-In-Reply-To: <20240124-alice-mm-v1-0-d1abcec83c44@google.com>
+        d=1e100.net; s=20230601; t=1706095379; x=1706700179;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WlGnsP1Guq+73aimmzzt0YePXReMuB30joC9rhAKutI=;
+        b=ZKSK/y/HEeUXW97Te8xkg+/zP9EpEk3ZjYYyORoXOsXHR7O+R4A9SL+c9B9FE6cFAi
+         Pg10OTvQlrxAvYI0j6CexwmSBXeW3pJZkK+NxNJFN4O58EcA1x+++pWXXkUh7PjGqB7Z
+         BWOq4nZS+A2X2cQAETt0Fcmnit4DOMIOVcEQCkxmRHB2poM/0ksdUK+AgZeS3peM3RRV
+         HnSZ/06rwS/va/ixHvMoMbtSZFxYtffuTr1tp07w8whO5ZX8rzpyvuzljp+wsLdVe6kc
+         9bkDKFuWxNU1SvKes4c1o0n+aUW9XKpA3wKLQXxpAxwFAl4sCRazZrTiFZIT7zfL6PFM
+         m6CA==
+X-Gm-Message-State: AOJu0Yx8Un1Qk7dGXHNezIqxOKlMToll6N5uKkFvm+wiNpvgDGs5XYfr
+	ScsaH/TjqG98lLCH0TnDf/Mwv9FDMVsdgh/RPU98bem/n4elXRNeL6GPh1IP3Vt5JeQQ5/RrSi0
+	jQmw2u8xpaN9X0IBZtUYaLreg2ns=
+X-Google-Smtp-Source: AGHT+IEkb3Xpt+58vOiWxG6JhAbfK2iGy3KLOjaay+O2w7JwGWLv/HZUJ/QgwApQxLQVRQ6d1ibzMMIw8aMxLzlr/rQ=
+X-Received: by 2002:a2e:bc25:0:b0:2cc:e51c:4d0c with SMTP id
+ b37-20020a2ebc25000000b002cce51c4d0cmr974155ljf.66.1706095378493; Wed, 24 Jan
+ 2024 03:22:58 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240124-alice-mm-v1-0-d1abcec83c44@google.com>
-X-Developer-Key: i=aliceryhl@google.com; a=openpgp; fpr=49F6C1FAA74960F43A5B86A1EE7A392FDE96209F
-X-Developer-Signature: v=1; a=openpgp-sha256; l=11163; i=aliceryhl@google.com;
- h=from:subject:message-id; bh=N81WtFNSKMRQnbGYXHdbc93PTVhG91qfzypfB7FfqFo=;
- b=owEBbQKS/ZANAwAKAQRYvu5YxjlGAcsmYgBlsPKK0JA8Zn/8fTWeul7MILwvqo4hqE5J1nIUM
- axDWW8fwGKJAjMEAAEKAB0WIQSDkqKUTWQHCvFIvbIEWL7uWMY5RgUCZbDyigAKCRAEWL7uWMY5
- Rm0kD/0aSmWKR0JUq7UIpj7N3VtpSj7KrkXZdy1amJr0u1avQQjFq9yE/PIj38sEdEE1suDOToU
- dRI9djXHUYa3Nh1omuaW/T142IK4B9+JN7HTLnGCIi4mTmPc16/EcNgLldkFxnmW3mAEfB6FNyX
- SVkN/B4txu6t5Z3qwC8ON3dnErm5qj6Yd0bM51mbJxITOmtvHE3JlRMS5Mz05cNGj6fRgJnaHNC
- /8WwfKDyaRUzo1P5anOxC1bzYH8+dYB56TMycgeD8IL3deDWGgc3ovtO4bQKkalQqmtM1B+y2af
- DTj+YLCQYkmaQQxY6XjSPyaHL9ta8Myz5T1EXkVCN9UCadPuJai9NGDIHFjKmpsZ0kzlKg2KoJm
- EW4CONBVL2c+WiJ9VTzMZtV3OccEd1HUWAsOOHrELChSIDcvSnmVIM6WFG9iTasYpSiLQO6umLa
- DmChChXddgMdofdcGox6ge6O+qV3YjYSwjfpcwmxs6jzsGd0r7Cvf4N+3763HAKLvsnbAKfS6n9
- wpvhKCYomus0rAeH0gL7aEzDUAbNn3ihEIHeUgAchMnyQpF9TeEhJT1t6XsN0OujjtBfKAB+zNO
- uPfVktRS/SNitORyjGF2i9fUAuCBBJ78T1nt0jctO6JOUfPMnV7nLAl1zN4GYMyspyHvL+1yFAc 0qDOIiO7uKOBrWA==
-X-Mailer: b4 0.13-dev-26615
-Message-ID: <20240124-alice-mm-v1-3-d1abcec83c44@google.com>
-Subject: [PATCH 3/3] rust: add abstraction for `struct page`
-From: Alice Ryhl <aliceryhl@google.com>
-To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	"=?utf-8?q?Bj=C3=B6rn_Roy_Baron?=" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
-	Andreas Hindborg <a.hindborg@samsung.com>, Kees Cook <keescook@chromium.org>, 
-	Al Viro <viro@zeniv.linux.org.uk>, Andrew Morton <akpm@linux-foundation.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	"=?utf-8?q?Arve_Hj=C3=B8nnev=C3=A5g?=" <arve@android.com>, Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>, 
-	Joel Fernandes <joel@joelfernandes.org>, Carlos Llamas <cmllamas@google.com>, 
-	Suren Baghdasaryan <surenb@google.com>, Arnd Bergmann <arnd@arndb.de>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	Alice Ryhl <aliceryhl@google.com>, Christian Brauner <brauner@kernel.org>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+References: <20240122110722.690223-1-yi.sun@unisoc.com> <20240122110722.690223-2-yi.sun@unisoc.com>
+ <ZbAQLRLNSx-IRRwM@kbusch-mbp.dhcp.thefacebook.com>
+In-Reply-To: <ZbAQLRLNSx-IRRwM@kbusch-mbp.dhcp.thefacebook.com>
+From: yi sun <sunyibuaa@gmail.com>
+Date: Wed, 24 Jan 2024 19:22:21 +0800
+Message-ID: <CALpufv1XRYX7bv-NAUMmRjWr0jhDC1xrd+d48XejJZPjZZLEYQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] blk-mq: introduce blk_mq_tagset_wait_request_completed()
+To: Keith Busch <kbusch@kernel.org>
+Cc: Yi Sun <yi.sun@unisoc.com>, axboe@kernel.dk, mst@redhat.com, jasowang@redhat.com, 
+	xuanzhuo@linux.alibaba.com, pbonzini@redhat.com, stefanha@redhat.com, 
+	virtualization@lists.linux.dev, linux-block@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, zhiguo.niu@unisoc.com, hongyu.jin@unisoc.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Adds a new struct called `Page` that wraps a pointer to `struct page`.
-This struct is assumed to hold ownership over the page, so that Rust
-code can allocate and manage pages directly.
+In my case, I want all hw queues owned by this device to be clean.
+Because in the virtio device, each hw queue corresponds to a virtqueue,
+and all virtqueues will be deleted when vdev suspends.
 
-The page type has various methods for reading and writing into the page.
-These methods will temporarily map the page to allow the operation. All
-of these methods use a helper that takes an offset and length, performs
-bounds checks, and returns a pointer to the given offset in the page.
+The blk_mq_tagset_wait_request_completed() function can ensure that
+the device has processed all in_flight requests , and these requests have
+become the complete state. I don=E2=80=99t understand the blk_mq_freeze_que=
+ue()
+function very well. Can the function ensure that all requests have become
+complete status? How should I use the function to achieve the same effect?
 
-This patch only adds support for pages of order zero, as that is all
-Rust Binder needs. However, it is written to make it easy to add support
-for higher-order pages in the future. To do that, you would add a const
-generic parameter to `Page` that specifies the order. Most of the
-methods do not need to be adjusted, as the logic for dealing with
-mapping multiple pages at once can be isolated to just the
-`with_pointer_into_page` method. Finally, the struct can be renamed to
-`Pages<ORDER>`, and the type alias `Page = Pages<0>` can be introduced.
+ps: requests become in_flight status in virtio_queue_rq() and become comple=
+te
+status in virtblk_done().
 
-Rust Binder needs to manage pages directly as that is how transactions
-are delivered: Each process has an mmap'd region for incoming
-transactions. When an incoming transaction arrives, the Binder driver
-will choose a region in the mmap, allocate and map the relevant pages
-manually, and copy the incoming transaction directly into the page. This
-architecture allows the driver to copy transactions directly from the
-address space of one process to another, without an intermediate copy
-to a kernel buffer.
+Yi
 
-This code is based on Wedson's page abstractions from the old rust
-branch, but it has been modified by Alice by removing the incomplete
-support for higher-order pages, and by introducing the `with_*` helpers
-to consolidate the bounds checking logic into a single place.
-
-Co-developed-by: Wedson Almeida Filho <wedsonaf@gmail.com>
-Signed-off-by: Wedson Almeida Filho <wedsonaf@gmail.com>
-Signed-off-by: Alice Ryhl <aliceryhl@google.com>
----
- rust/bindings/bindings_helper.h |   1 +
- rust/helpers.c                  |  20 +++++
- rust/kernel/lib.rs              |   1 +
- rust/kernel/page.rs             | 176 ++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 198 insertions(+)
-
-diff --git a/rust/bindings/bindings_helper.h b/rust/bindings/bindings_helper.h
-index c0cb4b05b918..7698f5b349d3 100644
---- a/rust/bindings/bindings_helper.h
-+++ b/rust/bindings/bindings_helper.h
-@@ -21,3 +21,4 @@
- const size_t RUST_CONST_HELPER_ARCH_SLAB_MINALIGN = ARCH_SLAB_MINALIGN;
- const gfp_t RUST_CONST_HELPER_GFP_KERNEL = GFP_KERNEL;
- const gfp_t RUST_CONST_HELPER___GFP_ZERO = __GFP_ZERO;
-+const gfp_t RUST_CONST_HELPER___GFP_HIGHMEM = ___GFP_HIGHMEM;
-diff --git a/rust/helpers.c b/rust/helpers.c
-index 187f445fbf19..e6541119160b 100644
---- a/rust/helpers.c
-+++ b/rust/helpers.c
-@@ -25,6 +25,8 @@
- #include <linux/build_bug.h>
- #include <linux/err.h>
- #include <linux/errname.h>
-+#include <linux/gfp.h>
-+#include <linux/highmem.h>
- #include <linux/mutex.h>
- #include <linux/refcount.h>
- #include <linux/sched/signal.h>
-@@ -127,6 +129,24 @@ int rust_helper_signal_pending(struct task_struct *t)
- }
- EXPORT_SYMBOL_GPL(rust_helper_signal_pending);
- 
-+struct page *rust_helper_alloc_pages(gfp_t gfp_mask, unsigned int order)
-+{
-+       return alloc_pages(gfp_mask, order);
-+}
-+EXPORT_SYMBOL_GPL(rust_helper_alloc_pages);
-+
-+void *rust_helper_kmap_local_page(struct page *page)
-+{
-+       return kmap_local_page(page);
-+}
-+EXPORT_SYMBOL_GPL(rust_helper_kmap_local_page);
-+
-+void rust_helper_kunmap_local(const void *addr)
-+{
-+       kunmap_local(addr);
-+}
-+EXPORT_SYMBOL_GPL(rust_helper_kunmap_local);
-+
- refcount_t rust_helper_REFCOUNT_INIT(int n)
- {
- 	return (refcount_t)REFCOUNT_INIT(n);
-diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
-index 041233305fda..9f31faf88973 100644
---- a/rust/kernel/lib.rs
-+++ b/rust/kernel/lib.rs
-@@ -41,6 +41,7 @@
- pub mod kunit;
- #[cfg(CONFIG_NET)]
- pub mod net;
-+pub mod page;
- pub mod prelude;
- pub mod print;
- mod static_assert;
-diff --git a/rust/kernel/page.rs b/rust/kernel/page.rs
-new file mode 100644
-index 000000000000..f83c889d39e3
---- /dev/null
-+++ b/rust/kernel/page.rs
-@@ -0,0 +1,176 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+//! Kernel page allocation and management.
-+
-+use crate::{bindings, error::code::*, error::Result, user_ptr::UserSlicePtrReader};
-+use core::{
-+    alloc::AllocError,
-+    ffi::c_void,
-+    ptr::{self, NonNull},
-+};
-+
-+/// A bitwise shift for the page size.
-+pub const PAGE_SHIFT: usize = bindings::PAGE_SHIFT as usize;
-+/// The number of bytes in a page.
-+pub const PAGE_SIZE: usize = 1 << PAGE_SHIFT;
-+/// A bitwise mask for the page size.
-+pub const PAGE_MASK: usize = PAGE_SIZE - 1;
-+
-+/// A pointer to a page that owns the page allocation.
-+///
-+/// # Invariants
-+///
-+/// The pointer points at a page, and has ownership over the page.
-+pub struct Page {
-+    page: NonNull<bindings::page>,
-+}
-+
-+// SAFETY: It is safe to transfer page allocations between threads.
-+unsafe impl Send for Page {}
-+
-+// SAFETY: Calling `&self` methods on this type in parallel is safe. It might
-+// allow you to perform a data race on bytes stored in the page, but we treat
-+// this like data races on user pointers.
-+unsafe impl Sync for Page {}
-+
-+impl Page {
-+    /// Allocates a new set of contiguous pages.
-+    pub fn new() -> Result<Self, AllocError> {
-+        // SAFETY: These are the correct arguments to allocate a single page.
-+        let page = unsafe {
-+            bindings::alloc_pages(
-+                bindings::GFP_KERNEL | bindings::__GFP_ZERO | bindings::__GFP_HIGHMEM,
-+                0,
-+            )
-+        };
-+
-+        match NonNull::new(page) {
-+            // INVARIANT: We checked that the allocation above succeeded.
-+            Some(page) => Ok(Self { page }),
-+            None => Err(AllocError),
-+        }
-+    }
-+
-+    /// Returns a raw pointer to the page.
-+    pub fn as_ptr(&self) -> *mut bindings::page {
-+        self.page.as_ptr()
-+    }
-+
-+    /// Runs a piece of code with this page mapped to an address.
-+    ///
-+    /// It is up to the caller to use the provided raw pointer correctly.
-+    pub fn with_page_mapped<T>(&self, f: impl FnOnce(*mut c_void) -> T) -> T {
-+        // SAFETY: `page` is valid due to the type invariants on `Page`.
-+        let mapped_addr = unsafe { bindings::kmap_local_page(self.as_ptr()) };
-+
-+        let res = f(mapped_addr);
-+
-+        // SAFETY: This unmaps the page mapped above.
-+        //
-+        // Since this API takes the user code as a closure, it can only be used
-+        // in a manner where the pages are unmapped in reverse order. This is as
-+        // required by `kunmap_local`.
-+        //
-+        // In other words, if this call to `kunmap_local` happens when a
-+        // different page should be unmapped first, then there must necessarily
-+        // be a call to `kmap_local_page` other than the call just above in
-+        // `with_page_mapped` that made that possible. In this case, it is the
-+        // unsafe block that wraps that other call that is incorrect.
-+        unsafe { bindings::kunmap_local(mapped_addr) };
-+
-+        res
-+    }
-+
-+    /// Runs a piece of code with a raw pointer to a slice of this page, with
-+    /// bounds checking.
-+    ///
-+    /// If `f` is called, then it will be called with a pointer that points at
-+    /// `off` bytes into the page, and the pointer will be valid for at least
-+    /// `len` bytes. The pointer is only valid on this task, as this method uses
-+    /// a local mapping.
-+    ///
-+    /// If `off` and `len` refers to a region outside of this page, then this
-+    /// method returns `EINVAL` and does not call `f`.
-+    pub fn with_pointer_into_page<T>(
-+        &self,
-+        off: usize,
-+        len: usize,
-+        f: impl FnOnce(*mut u8) -> Result<T>,
-+    ) -> Result<T> {
-+        let bounds_ok = off <= PAGE_SIZE && len <= PAGE_SIZE && (off + len) <= PAGE_SIZE;
-+
-+        if bounds_ok {
-+            self.with_page_mapped(move |page_addr| {
-+                // SAFETY: The `off` integer is at most `PAGE_SIZE`, so this pointer offset will
-+                // result in a pointer that is in bounds or one off the end of the page.
-+                f(unsafe { page_addr.cast::<u8>().add(off) })
-+            })
-+        } else {
-+            Err(EINVAL)
-+        }
-+    }
-+
-+    /// Maps the page and reads from it into the given buffer.
-+    ///
-+    /// # Safety
-+    ///
-+    /// Callers must ensure that `dest` is valid for writing `len` bytes.
-+    pub unsafe fn read(&self, dest: *mut u8, offset: usize, len: usize) -> Result {
-+        self.with_pointer_into_page(offset, len, move |from_ptr| {
-+            // SAFETY: If `with_pointer_into_page` calls into this closure, then
-+            // it has performed a bounds check and guarantees that `from_ptr` is
-+            // valid for `len` bytes.
-+            unsafe { ptr::copy(from_ptr, dest, len) };
-+            Ok(())
-+        })
-+    }
-+
-+    /// Maps the page and writes into it from the given buffer.
-+    ///
-+    /// # Safety
-+    ///
-+    /// Callers must ensure that `src` is valid for reading `len` bytes.
-+    pub unsafe fn write(&self, src: *const u8, offset: usize, len: usize) -> Result {
-+        self.with_pointer_into_page(offset, len, move |to_ptr| {
-+            // SAFETY: If `with_pointer_into_page` calls into this closure, then
-+            // it has performed a bounds check and guarantees that `to_ptr` is
-+            // valid for `len` bytes.
-+            unsafe { ptr::copy(src, to_ptr, len) };
-+            Ok(())
-+        })
-+    }
-+
-+    /// Maps the page and zeroes the given slice.
-+    pub fn fill_zero(&self, offset: usize, len: usize) -> Result {
-+        self.with_pointer_into_page(offset, len, move |to_ptr| {
-+            // SAFETY: If `with_pointer_into_page` calls into this closure, then
-+            // it has performed a bounds check and guarantees that `to_ptr` is
-+            // valid for `len` bytes.
-+            unsafe { ptr::write_bytes(to_ptr, 0u8, len) };
-+            Ok(())
-+        })
-+    }
-+
-+    /// Copies data from userspace into this page.
-+    pub fn copy_into_page(
-+        &self,
-+        reader: &mut UserSlicePtrReader,
-+        offset: usize,
-+        len: usize,
-+    ) -> Result {
-+        self.with_pointer_into_page(offset, len, move |to_ptr| {
-+            // SAFETY: If `with_pointer_into_page` calls into this closure, then
-+            // it has performed a bounds check and guarantees that `to_ptr` is
-+            // valid for `len` bytes.
-+            unsafe { reader.read_raw(to_ptr, len) }
-+        })
-+    }
-+}
-+
-+impl Drop for Page {
-+    fn drop(&mut self) {
-+        // SAFETY: By the type invariants, we have ownership of the page and can
-+        // free it.
-+        unsafe { bindings::__free_pages(self.page.as_ptr(), 0) };
-+    }
-+}
-
--- 
-2.43.0.429.g432eaa2c6b-goog
-
+On Wed, Jan 24, 2024 at 3:14=E2=80=AFAM Keith Busch <kbusch@kernel.org> wro=
+te:
+>
+> On Mon, Jan 22, 2024 at 07:07:21PM +0800, Yi Sun wrote:
+> > In some cases, it is necessary to wait for all requests to become compl=
+ete
+> > status before performing other operations. Otherwise, these requests wi=
+ll never
+> > be processed successfully.
+> >
+> > For example, when the virtio device is in hibernation, the virtqueues
+> > will be deleted. It must be ensured that virtqueue is not in use before=
+ being deleted.
+> > Otherwise the requests in the virtqueue will be lost. This function can=
+ ensure
+> > that all requests have been taken out of the virtqueues.
+> >
+> > Prepare for fixing this kind of issue by introducing
+> > blk_mq_tagset_wait_request_completed().
+>
+> Does blk_mq_freeze_queue() not work for your use case? I think that
+> should work unless you have some driver specific requests entered that
+> don't ever get released.
+>
+> > +static bool blk_mq_tagset_count_inflight_rqs(struct request *rq, void =
+*data)
+> > +{
+> > +     unsigned int *count =3D data;
+> > +
+> > +     if (blk_mq_request_started(rq) && !blk_mq_request_completed(rq))
+> > +             (*count)++;
+> > +     return true;
+> > +}
+> > +
+> > +/**
+> > + * blk_mq_tagset_wait_request_completed - Wait for all inflight reques=
+ts
+> > + * to become completed.
+> > + *
+> > + * Note: This function has to be run after all IO queues are shutdown.
+> > + */
+> > +void blk_mq_tagset_wait_request_completed(struct blk_mq_tag_set *tagse=
+t)
+> > +{
+> > +     while (true) {
+> > +             unsigned int count =3D 0;
+> > +
+> > +             blk_mq_tagset_busy_iter(tagset,
+> > +                             blk_mq_tagset_count_inflight_rqs, &count)=
+;
+>
+> If the tagset is shared, then one active user can prevent this from ever
+> completing. It sounds like your use case cares about just one specific
+> request_queue, not all of them.
+>
+> > +             if (!count)
+> > +                     break;
+> > +             msleep(20);
+> > +     }
+> > +}
+> > +EXPORT_SYMBOL(blk_mq_tagset_wait_request_completed);
