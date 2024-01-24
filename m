@@ -1,179 +1,141 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89E1317C60;
-	Wed, 24 Jan 2024 09:20:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E640418036
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 09:20:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706088007; cv=none; b=UEwXs4bfgB99OQAxHrjdEdCC5rJvt9mnUyAvaniDti6SJbT59xCNnP7cFOLQ2YPuTBK7/gBxxZOZiMg5IEbem0mM1c8MWFM8VvV50M7N8RqPif5nvZBrQMfDBFgrtr36b49oUEteD+Lo4nPNsh89YxTrXHtRgd7tbcSb6LLX8B4=
+	t=1706088013; cv=none; b=UGvcW/HruVZEpLw8hwMBdxP/soy+8k5jL4MMaRVPfGWBJu4TcGbKAxSofjou4bi6wmvbqX4ND7HO5ISoSF4U4btpFtYLVSdEyj+ItBj80YW41NRQyvSPLWM851/5uG57ORteJEsuwUNt7hzS5zSf8aNOPwpm3ICZD2tzCVYH0n4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706088007; c=relaxed/simple;
-	bh=NnnCt3x2MjeWU+TuhRK8/jx2gmdbjoesdllieJVuNzE=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Q2YUnxbE2zOiTMe3dI0w5Y44YWMaHlTeaEOdzlzKpUhsAkLyiwiRTIUJhrH6acdVSbOMtrIJtru2vyBhjiypMYKySR8CPH1suinwjDG13pLkskBEl2tbZ83C5ZFC0OBB2AzAzfR4kFySAtSA2kMJ4m5pRevDmXplq+9Ey7lZutc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.214])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4TKdff2KZwz29kjF;
-	Wed, 24 Jan 2024 17:18:18 +0800 (CST)
-Received: from kwepemm600009.china.huawei.com (unknown [7.193.23.164])
-	by mail.maildlp.com (Postfix) with ESMTPS id 8AB011A016B;
-	Wed, 24 Jan 2024 17:19:47 +0800 (CST)
-Received: from huawei.com (10.175.104.67) by kwepemm600009.china.huawei.com
- (7.193.23.164) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Wed, 24 Jan
- 2024 17:18:22 +0800
-From: Yu Kuai <yukuai3@huawei.com>
-To: <agk@redhat.com>, <snitzer@kernel.org>, <mpatocka@redhat.com>,
-	<dm-devel@lists.linux.dev>, <xni@redhat.com>, <song@kernel.org>,
-	<yukuai3@huawei.com>, <jbrassow@f14.redhat.com>, <neilb@suse.de>,
-	<heinzm@redhat.com>, <shli@fb.com>, <akpm@osdl.org>
-CC: <linux-kernel@vger.kernel.org>, <linux-raid@vger.kernel.org>,
-	<yukuai1@huaweicloud.com>, <yi.zhang@huawei.com>, <yangerkun@huawei.com>
-Subject: [PATCH v2 06/11] dm-raid: really frozen sync_thread during suspend
-Date: Wed, 24 Jan 2024 17:14:16 +0800
-Message-ID: <20240124091421.1261579-7-yukuai3@huawei.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240124091421.1261579-1-yukuai3@huawei.com>
-References: <20240124091421.1261579-1-yukuai3@huawei.com>
+	s=arc-20240116; t=1706088013; c=relaxed/simple;
+	bh=SEqCpZT6APAqjYjHdfthclsSjN9J9NtcFcgDByg6704=;
+	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
+	 MIME-Version:Content-Type; b=mIxA0fzD/+94E+ts1kUPaG5Za66PUie9Yl8WhIVVHgM9WIqcrBoBqK4UTUV4nbxr5Gj1Y/mhekx/cZuTgwJ08IhG661n0lyUeADaY06VbIHwGK7RawN94S87VcOVGcipyU5SRUNK8R2LZPzrRO9p9/lzhMC7ulRY3MFejbtK5V4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=lNPdkd1a; arc=none smtp.client-ip=209.85.208.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="lNPdkd1a"
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2cdf69bb732so56794391fa.3
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 01:20:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1706088010; x=1706692810; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:in-reply-to:date
+         :subject:cc:to:from:user-agent:references:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XKfrsIh+is/CrcG9RcsWASRz9/Tq/yuaNYUtRHDrGYY=;
+        b=lNPdkd1ar7PFVviCpzhXDewaVecUKlLnzjPk3HY9rmPz59I/WszYxTx6SG1hoInhWf
+         NMDDJ2kISFP7DNQk7x+JsHcomdQ/UrL3VPCrY7jsqwau8sprZShZ5ZLwfynfXCkpGRY9
+         IqAJKpuFgvKbpraglPjNItwmJFG8NgIWv/S+HhNwAmOuVHuwYdP26RPGT3qP4TbaS37a
+         A6DWoc/cyK1dhjrcj0MI84jXqnqatCxK5ZgtPXUYckNRi2WnjhFOW/NrKjSrFtFnHt/v
+         m0EtZakTWAtFUDnXOCMKW2AZfLCfG7E2yvS0PrbOHoAKvSjPnCqW7X0WH6DZdpdet6v0
+         cQOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706088010; x=1706692810;
+        h=content-transfer-encoding:mime-version:message-id:in-reply-to:date
+         :subject:cc:to:from:user-agent:references:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=XKfrsIh+is/CrcG9RcsWASRz9/Tq/yuaNYUtRHDrGYY=;
+        b=fvaHHS3MPQMZjowPTNDOXQaumQ0dIds5Qzh+fJ8ERrRsozNyQZK4AB8rHlypPoPpBk
+         htqfvIlYh5dM87A18EF6lVLHhhcsJmTQ1DE6pOns1Mmsy3W4c/PdfkrPvu3Nd3PT5QQ0
+         bt39bu5EEKBeoS05L/9eUWkibP0wZXITKuJo/MCHAL4kV/Le1M/TLa/zBKtYs7TYO6sr
+         JJQVWM7A6npqcvURfiV+pXr+mQ78GbQbT98mFMHTXFlEbSgUXI4EOPslqseuc6EglVHb
+         zxIu3a9iQ9gZurDdlsrKUj6l3Jndx6s0T0KyUQMnEgTmwdyDK4Mo4ixGM+qwaPWvCpkq
+         ltaw==
+X-Gm-Message-State: AOJu0YxTjFGuJvv1t2lg2pmlQGGDGVEvaEScXY+agVM9dE7lpgQMbaIl
+	eu8fzDjJl8Bc5rIPL23zlRIK8inF+dL5I7akpVpjkJ1nsj+ujQMvU5D/X/+uOao=
+X-Google-Smtp-Source: AGHT+IEZUUso/GaClxXInQJERF5pL3kfwim7rmyD5VQKB34/cKfjEP6E08ieSs6LZXIkiNyWTfvtDA==
+X-Received: by 2002:a2e:9c95:0:b0:2cd:5cfd:b13 with SMTP id x21-20020a2e9c95000000b002cd5cfd0b13mr332903lji.17.1706088009899;
+        Wed, 24 Jan 2024 01:20:09 -0800 (PST)
+Received: from localhost ([2a01:e0a:3c5:5fb1:d8b6:17b6:386f:c67b])
+        by smtp.gmail.com with ESMTPSA id bw12-20020a0560001f8c00b00337cef427f8sm15938313wrb.70.2024.01.24.01.20.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Jan 2024 01:20:09 -0800 (PST)
+References: <20231222111658.832167-1-jbrunet@baylibre.com>
+ <20231222111658.832167-6-jbrunet@baylibre.com>
+ <gyhea42rtydw3g45lfkfbxfm6xcbwibz67vw7xke2sm7powz2a@i33g4pyanu4l>
+User-agent: mu4e 1.10.8; emacs 29.1
+From: Jerome Brunet <jbrunet@baylibre.com>
+To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, Thierry Reding
+ <thierry.reding@gmail.com>, Neil Armstrong <neil.armstrong@linaro.org>,
+ Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
+ <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
+ Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org,
+ linux-pwm@vger.kernel.org, JunYi Zhao <junyi.zhao@amlogic.com>
+Subject: Re: [PATCH v4 5/6] pwm: meson: don't carry internal clock elements
+ around
+Date: Wed, 24 Jan 2024 10:16:17 +0100
+In-reply-to: <gyhea42rtydw3g45lfkfbxfm6xcbwibz67vw7xke2sm7powz2a@i33g4pyanu4l>
+Message-ID: <1jttn3w0ja.fsf@starbuckisacylon.baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- kwepemm600009.china.huawei.com (7.193.23.164)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-1) The flag MD_RECOVERY_FROZEN doesn't mean that sync thread is frozen,
-   it only prevent new sync_thread to start, and it can't stop the
-   running sync thread;
-2) The flag MD_RECOVERY_FROZEN doesn't mean that writes are stopped, use
-   it as condition for md_stop_writes() in raid_postsuspend() doesn't
-   look correct.
-3) raid_message can set/clear the flag MD_RECOVERY_FROZEN at anytime,
-   and if MD_RECOVERY_FROZEN is cleared while the array is suspended,
-   new sync_thread can start unexpected.
 
-Fix above problems by using the new helper to suspend the array during
-suspend, also disallow raid_message() to change sync_thread status
-during suspend.
+On Wed 24 Jan 2024 at 10:02, Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutr=
+onix.de> wrote:
 
-Note that after commit f52f5c71f3d4 ("md: fix stopping sync thread"), the
-test shell/lvconvert-raid-reshape.sh start to hang in stop_sync_thread(),
-and with previous fixes, the test won't hang there anymore, however, the
-test will still fail and complain that ext4 is corrupted. And with this
-patch, the test won't hang due to stop_sync_thread() or fail due to ext4
-is corrupted anymore. However, there is still a deadlock related to
-dm-raid456 that will be fixed in following patches.
+> [[PGP Signed Part:Undecided]]
+> On Fri, Dec 22, 2023 at 12:16:53PM +0100, Jerome Brunet wrote:
+>> Pointers to the internal clock elements of the PWM are useless
+>> after probe. There is no need to carry this around in the device
+>> data. Just let devres deal with it.
+>>=20
+>> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+>> ---
+>>  drivers/pwm/pwm-meson.c | 67 ++++++++++++++++++++++++-----------------
+>>  1 file changed, 39 insertions(+), 28 deletions(-)
+>>=20
+>> diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
+>> index 15c44185d784..fb113bc8da29 100644
+>> --- a/drivers/pwm/pwm-meson.c
+>> +++ b/drivers/pwm/pwm-meson.c
+>> @@ -90,9 +90,6 @@ struct meson_pwm_channel {
+>>  	unsigned int hi;
+>>  	unsigned int lo;
+>>=20=20
+>> -	struct clk_mux mux;
+>> -	struct clk_divider div;
+>> -	struct clk_gate gate;
+>>  	struct clk *clk;
+>>  };
+>>=20=20
+>> @@ -442,6 +439,13 @@ static int meson_pwm_init_channels(struct device *d=
+ev)
+>>  		struct meson_pwm_channel *channel =3D &meson->channels[i];
+>>  		struct clk_parent_data div_parent =3D {}, gate_parent =3D {};
+>>  		struct clk_init_data init =3D {};
+>> +		struct clk_divider *div;
+>> +		struct clk_gate *gate;
+>> +		struct clk_mux *mux;
+>> +
+>> +		mux =3D devm_kzalloc(dev, sizeof(*mux), GFP_KERNEL);
+>> +		if (!mux)
+>> +			return -ENOMEM;
+>
+> I don't like this change. While it doesn't increase the memory used, it
+> fragments the used memory and increases the overhead of memory
+> management and the number of devm allocations.
+>
+> Are these members of meson_pwm_channel in the way for anything later?
 
-Reported-by: Mikulas Patocka <mpatocka@redhat.com>
-Closes: https://lore.kernel.org/all/e5e8afe2-e9a8-49a2-5ab0-958d4065c55e@redhat.com/
-Fixes: 1af2048a3e87 ("dm raid: fix deadlock caused by premature md_stop_writes()")
-Fixes: 9dbd1aa3a81c ("dm raid: add reshaping support to the target")
-Fixes: f52f5c71f3d4 ("md: fix stopping sync thread")
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
----
- drivers/md/dm-raid.c | 38 +++++++++++++++++++++++++++++---------
- 1 file changed, 29 insertions(+), 9 deletions(-)
+Not really. It is just not useful on the SoCs which do use it and not
+used at all starting from s4/a1.
 
-diff --git a/drivers/md/dm-raid.c b/drivers/md/dm-raid.c
-index eb009d6bb03a..5ce3c6020b1b 100644
---- a/drivers/md/dm-raid.c
-+++ b/drivers/md/dm-raid.c
-@@ -3240,11 +3240,12 @@ static int raid_ctr(struct dm_target *ti, unsigned int argc, char **argv)
- 	rs->md.ro = 1;
- 	rs->md.in_sync = 1;
- 
--	/* Keep array frozen until resume. */
--	set_bit(MD_RECOVERY_FROZEN, &rs->md.recovery);
--
- 	/* Has to be held on running the array */
- 	mddev_suspend_and_lock_nointr(&rs->md);
-+
-+	/* Keep array frozen until resume. */
-+	md_frozen_sync_thread(&rs->md);
-+
- 	r = md_run(&rs->md);
- 	rs->md.in_sync = 0; /* Assume already marked dirty */
- 	if (r) {
-@@ -3722,6 +3723,9 @@ static int raid_message(struct dm_target *ti, unsigned int argc, char **argv,
- 	if (!mddev->pers || !mddev->pers->sync_request)
- 		return -EINVAL;
- 
-+	if (test_bit(RT_FLAG_RS_SUSPENDED, &rs->runtime_flags))
-+		return -EBUSY;
-+
- 	if (!strcasecmp(argv[0], "frozen"))
- 		set_bit(MD_RECOVERY_FROZEN, &mddev->recovery);
- 	else
-@@ -3791,15 +3795,31 @@ static void raid_io_hints(struct dm_target *ti, struct queue_limits *limits)
- 	blk_limits_io_opt(limits, chunk_size_bytes * mddev_data_stripes(rs));
- }
- 
-+static void raid_presuspend(struct dm_target *ti)
-+{
-+	struct raid_set *rs = ti->private;
-+
-+	mddev_lock_nointr(&rs->md);
-+	md_frozen_sync_thread(&rs->md);
-+	mddev_unlock(&rs->md);
-+}
-+
-+static void raid_presuspend_undo(struct dm_target *ti)
-+{
-+	struct raid_set *rs = ti->private;
-+
-+	mddev_lock_nointr(&rs->md);
-+	md_unfrozen_sync_thread(&rs->md);
-+	mddev_unlock(&rs->md);
-+}
-+
- static void raid_postsuspend(struct dm_target *ti)
- {
- 	struct raid_set *rs = ti->private;
- 
- 	if (!test_and_set_bit(RT_FLAG_RS_SUSPENDED, &rs->runtime_flags)) {
- 		/* Writes have to be stopped before suspending to avoid deadlocks. */
--		if (!test_bit(MD_RECOVERY_FROZEN, &rs->md.recovery))
--			md_stop_writes(&rs->md);
--
-+		md_stop_writes(&rs->md);
- 		mddev_suspend(&rs->md, false);
- 	}
- }
-@@ -4012,8 +4032,6 @@ static int raid_preresume(struct dm_target *ti)
- 	}
- 
- 	/* Check for any resize/reshape on @rs and adjust/initiate */
--	/* Be prepared for mddev_resume() in raid_resume() */
--	set_bit(MD_RECOVERY_FROZEN, &mddev->recovery);
- 	if (mddev->recovery_cp && mddev->recovery_cp < MaxSector) {
- 		set_bit(MD_RECOVERY_REQUESTED, &mddev->recovery);
- 		mddev->resync_min = mddev->recovery_cp;
-@@ -4056,9 +4074,9 @@ static void raid_resume(struct dm_target *ti)
- 			rs_set_capacity(rs);
- 
- 		mddev_lock_nointr(mddev);
--		clear_bit(MD_RECOVERY_FROZEN, &mddev->recovery);
- 		mddev->ro = 0;
- 		mddev->in_sync = 0;
-+		md_unfrozen_sync_thread(mddev);
- 		mddev_unlock_and_resume(mddev);
- 	}
- }
-@@ -4074,6 +4092,8 @@ static struct target_type raid_target = {
- 	.message = raid_message,
- 	.iterate_devices = raid_iterate_devices,
- 	.io_hints = raid_io_hints,
-+	.presuspend = raid_presuspend,
-+	.presuspend_undo = raid_presuspend_undo,
- 	.postsuspend = raid_postsuspend,
- 	.preresume = raid_preresume,
- 	.resume = raid_resume,
--- 
-2.39.2
+What about a dedicated struct for the 3 clock elements and a single
+devm_kzalloc() instead of 3 ?=20
 
+>
+> Best regards
+> Uwe
+
+
+--=20
+Jerome
