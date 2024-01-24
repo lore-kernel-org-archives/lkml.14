@@ -1,277 +1,182 @@
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 780AA15AD0;
-	Wed, 24 Jan 2024 07:24:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEF461643A
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 07:25:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706081092; cv=none; b=NAf1QoN03viI2+KNxjgldTJyhCc2bRG4Dl8TtP2sXAIzDuo9lZg2W8nkdbxM38PYYCOB453kJKr0epB3vyCt44j1ew6CrWPRGMuBlly3ObzEAEYpbYzNQLKu4c9cVLYTwnT4xUUgD7Klbm5HZZtrVdlPGnZ0zVfIzEwoNcGti9s=
+	t=1706081123; cv=none; b=Zn8xA3Tz+bmUx2qOuGj0Mvs8wPrXudx0C7bAOHfs1f1Nk2zTC0twpCPqHWnovhDV0IkVZdZ+pgtySLl5ek4DnzfemMX6oGVs4NGUiuLHlRmKfoow5FHnMr85yn4MyVN+gp6eEt5LjRMfdy32CrOx8vFUlnpMXOhvSNRD4CBA64w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706081092; c=relaxed/simple;
-	bh=WWcer+kqlrBjmyHjO8nVJpN9FjCZ90bTxdh1Y+qumqw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=F88fxr0Lo0lXICmvucYWgC2wOHW4w9Pt0qOeGRJnFHkoU5FLbl2j5R3li63GgQ513OF5UHfJUDJvPvcA5GonYeGfy0Xa2vX12ECcGDMh1EWEW/NfCneUsClqh+zh7VCaXJVqRxpq8xdfqpbtFZzIgeFcVVYBYvBRqZb6aiLxJAg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FKiqW/cI; arc=none smtp.client-ip=209.85.167.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1706081123; c=relaxed/simple;
+	bh=AIukQQBJ/4XCF8WoHZk5ydLR6nAbk7M0ObWxjTdjOes=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MoxwM+cwiR0f7cppy8PbdY6EOFVGAwklF7ROJk2Jcd73oOx07/SsBJ3e+M5XGfxJ42EJlBGP9mAPT56JMPr6aOxl7p4gUk/LBcTP40cc56+SlvhBb1e4lujRU52/u/JRG+xWQf8aNsVdLDS+R3SPmMO3MRmAQa/EPhstgHxW4QA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=e2IRNoet; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FKiqW/cI"
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-5100ed2b33dso801369e87.0;
-        Tue, 23 Jan 2024 23:24:50 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="e2IRNoet"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a30e445602cso166371366b.0
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 23:25:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706081088; x=1706685888; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=54W4OuXjo14UqfedG3c4VPXK+UL+VMD/8Mdf376TSqU=;
-        b=FKiqW/cIFWd5ywaZ3FVmEIpqAI/bGTy0BrzLKga/Ir6HU+a6BfqatPobaLYoU84Iun
-         zBN2aymBgBuvTYvMXOepe+cj9AFU7TxGds2rJtScgI2RgLtQY1xrekp5K+2IwsZggk12
-         mF0DYIFMdX6j5RtbRaCwesl1c7qAi6h8TF2hIM+9vbs3MmRJIcOBY99BO5QdudwL7lUc
-         MZzy08YzJ63QaSw4JZQR6WqXYYEZQFyHs6DYgf8qSEt9nK0Wx2jnuAPmCjCcN1WB4PBG
-         gqbqMSpsPTMMW35cdiP56IlnST24YyvE6jzlnS6MlJSgB4xkqee7tzIqokQsIuarP64t
-         8qrg==
+        d=linaro.org; s=google; t=1706081120; x=1706685920; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=a8jrcqPgI/3vhSKgHemTJgRZzsqVydzJRui6v8D9poY=;
+        b=e2IRNoetKtfZztuGrvgjwYXPvlQLeLsjSENFgIs1ffUOKEPmwVzox4Z5pqYRNAoAbu
+         UC3FI9WLt/YbGyyS4wYx71KGJKFkgj8WX+m8eMpvt0P3lsAq2CT+JN/Ey+iZe/6Xi+pM
+         bDWSyT2QBRYTm3WVAitx1Ys0OsSDKVUJ+yc8YKFGkQ3DYTdLMjdQZRuULdI/jGaLEtCq
+         109/amc0Y01SJ1YS2jJKiPKiyxWFabPn325WDVBr83NBL2k+BcCExv/F7WO0HRtIeiRl
+         M94h+HN3gEa7AHTgHrRo5ewLZ3hG0O+nJIcdmDgzB7khlySMyjQws3qnnIW+T/9Sj39N
+         b5lA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706081088; x=1706685888;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=54W4OuXjo14UqfedG3c4VPXK+UL+VMD/8Mdf376TSqU=;
-        b=rLGGPGl7neDLyiHM+9Juub72n36WNFRks2A1gw3BjpjqHZGkisNnuMGyiHMnuUdmdI
-         KObuJ4SP1cEdstqSEwPAiFZheljqp1tjVqc2FUNStRxEcMXytwtFy3VH/x19/m7Lbuof
-         Nb5E7Mte8QLnjIBELPJj2o8R18fHtm4oevZDel0K585oK6kiOdnvRKYBpHQzoWWQ6KxT
-         d3U3oIIg1r8gxYn//WTMQhjUUFVZ69x4+59pxdOx4xg3UV6THkeSdQu/MHB0M03USrj8
-         S4Fl68ZdEU2Z8JdI20U6A60HEyHgyVQDasH8j0ZZ66NaJ7vYWmfmVyuFnCZqpESxROI3
-         CmhQ==
-X-Gm-Message-State: AOJu0YzA5iWoHAVpyHAVhHAGfdc46bkbvQ0IHMNWmSimW9rxoyBLo+Bj
-	4Aux1WhqJ3N4ZvZKpKWvf/Mm8GSBFvb8WoMXTQbKCg/ldLFql5dY9rpPIvEl
-X-Google-Smtp-Source: AGHT+IHTfE2goIfBHZ68udQ1ciU6FVyuhqOmN5nUmX6sQlg1y3BOKcXiVbzBhsr2WeopVT66DlEYcw==
-X-Received: by 2002:a05:6512:a90:b0:50e:a9da:7b2b with SMTP id m16-20020a0565120a9000b0050ea9da7b2bmr4041835lfu.94.1706081088081;
-        Tue, 23 Jan 2024 23:24:48 -0800 (PST)
-Received: from user-PC.. ([178.134.198.138])
-        by smtp.gmail.com with ESMTPSA id c18-20020a056512105200b0050e64a0c62dsm2481708lfb.240.2024.01.23.23.24.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jan 2024 23:24:47 -0800 (PST)
-From: Maksim Kiselev <bigunclemax@gmail.com>
-To: 
-Cc: Justin Sanders <justin@coraid.com>,
-	Jens Axboe <axboe@kernel.dk>,
-	linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Maksim Kiselev <bigunclemax@gmail.com>
-Subject: [PATCH v1 0/1] aoe: possible interrupt unsafe locking scenario
-Date: Wed, 24 Jan 2024 10:24:35 +0300
-Message-Id: <20240124072436.3745720-1-bigunclemax@gmail.com>
-X-Mailer: git-send-email 2.40.1
+        d=1e100.net; s=20230601; t=1706081120; x=1706685920;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=a8jrcqPgI/3vhSKgHemTJgRZzsqVydzJRui6v8D9poY=;
+        b=ADKFkAhS9eILrngMHYIa5qRKriR3UCntMPyeqOA6S4+iuwF+omFkgL8IKEpWsNXK2c
+         xP9dzyOqsVCFdMANhd7A7wIzw+s5jEHs5ngAolsrl/qOYZiypQ+fpagELiLLF9kf+SAx
+         z7Cd+SlFGCemr9VEfq8Sz2FfaVtHuZTpNyE7qbYllh0f3B/SUX5zPXXV9Rwgd6KywC8D
+         aNVjKdSpeQ0uu0yRl701hDgwjWiqI2Ai8pecZ/MgD1L6ljrgvX5ykSTlg01JqNAPV651
+         5eCC3tJR8OiDg2PCNkNZz8KbldRXZfvUZzEY/9/eQwjInza0VsxlfgmOCkCywcYhKfrG
+         2Lew==
+X-Gm-Message-State: AOJu0Yy2IA1RaEKr8jKNKm4ALMB8+WG0dyd8Lp7DStaOYmF6elxxOgn+
+	VlWu3uajPrw7LWhu5tfZ7zqyHf9G3UrZyRR5QFZ+RxBbh075l9AKuQ4m7UGJs6o=
+X-Google-Smtp-Source: AGHT+IF2w0IOR+JXC8jt+izTDTWD09ku7STu4bgoty/Dh+g0U34bBf+smbNWdjyx6BtSeavBr7MNzw==
+X-Received: by 2002:a17:906:251b:b0:a30:dd59:858e with SMTP id i27-20020a170906251b00b00a30dd59858emr680795ejb.60.1706081119968;
+        Tue, 23 Jan 2024 23:25:19 -0800 (PST)
+Received: from [192.168.1.20] ([178.197.215.66])
+        by smtp.gmail.com with ESMTPSA id e4-20020a170906c00400b00a298adde5a1sm15092803ejz.189.2024.01.23.23.25.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 23 Jan 2024 23:25:18 -0800 (PST)
+Message-ID: <71290f34-f3e6-4190-af8a-5fea61faedda@linaro.org>
+Date: Wed, 24 Jan 2024 08:25:16 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 0/6] reset: gpio: ASoC: shared GPIO resets
+Content-Language: en-US
+To: Chris Packham <Chris.Packham@alliedtelesis.co.nz>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konrad.dybcio@linaro.org>,
+ Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+ Banajit Goswami <bgoswami@quicinc.com>, Liam Girdwood <lgirdwood@gmail.com>,
+ Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>,
+ "Rafael J. Wysocki" <rafael@kernel.org>,
+ Viresh Kumar <viresh.kumar@linaro.org>, Frank Rowand
+ <frowand.list@gmail.com>, Jaroslav Kysela <perex@perex.cz>,
+ Takashi Iwai <tiwai@suse.com>,
+ "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
+ "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+ "linux-sound@vger.kernel.org" <linux-sound@vger.kernel.org>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>,
+ Sean Anderson <sean.anderson@seco.com>
+References: <20240123141311.220505-1-krzysztof.kozlowski@linaro.org>
+ <6c3e4b71-c92f-4f1e-8435-b5cfb7f47117@alliedtelesis.co.nz>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <6c3e4b71-c92f-4f1e-8435-b5cfb7f47117@alliedtelesis.co.nz>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi all,
+On 23/01/2024 20:28, Chris Packham wrote:
+> 
+> On 24/01/24 03:13, Krzysztof Kozlowski wrote:
+>> Hi,
+>>
+>> Patch #2 (cpufreq: do not open-code of_phandle_args_equal()) and patch #4
+>> (reset: Instantiate reset GPIO controller for shared reset-gpios) depend on OF
+>> change (patch #1).
+>>
+>> Changes in v4
+>> =============
+>> 1. New patches:
+>>     of: add of_phandle_args_equal() helper
+>>     cpufreq: do not open-code of_phandle_args_equal()
+>>
+>> 2. reset-gpio.c:
+>>     - Drop unneeded comment (Bartosz), add Rb tag.
+>>     - Do not assign of_node.
+>>
+>> 3. reset/core.c:
+>>     - Implement most of Bartosz feedback (I responded to one which I did not
+>>       implement) and comments from Philipp.
+>>     - Expect either rcdev->of_args or rcdev->of_node.
+>>     - Drop __reset_gpios_args_match() and use common helper (Philipp).
+>>     - Move declarations of automatic-cleanup variables in
+>>       __reset_add_reset_gpio_lookup() to place of use (Bartosz).
+>>     - Separate gpio_device_get_label() and kstrdup() (Philipp).
+>>     - Correct doc for __reset_add_reset_gpio_device(), rewrite few comments.
+>>     - Drop unneeded "r" variable in __reset_find_rcdev() (Philipp).
+>>     - Drop of_phandle_args initialization in __of_reset_control_get (Philipp).
+>>     - Check if CONFIG_RESET_GPIO is enabled before trying to look up reset-gpios.
+>>
+>> 4. Drop Chris' patch: "i2c: muxes: pca954x: Allow sharing reset GPIO", because
+>>     discussion is on going.
+> 
+> I actually think it would have been OK as-is with your latest change to 
+> return NULL when CONFIG_RESET_GPIO is not enabled. But I'm happy to 
+> submit it independently after this series lands. It'll give me a chance 
+> to do a bit more testing.
 
-I'm using an AoE device on board with D1 SoC (riscv arch).
-When I enabled CONFIG_PROVE_LOCKING option, I got the warning below.
-After some investigations, I made a not very elegant, but working solution.
-The patch sent with next message.
+Yeah, I wasn't sure if the concerns are really resolved. I think you can
+send your patch separately because there is no clear dependency, so also
+no clear benefits of me taking your patch into this patchset.
 
-I would be glad to know what you think about this.
-
-[ 3039.629033] aoe: 0050b6b92f30 e1.1 v4019 has 264192 sectors                                            
-[ 3039.637315]                                                                                            
-[ 3039.638831] =====================================================                                      
-[ 3039.644921] WARNING: SOFTIRQ-safe -> SOFTIRQ-unsafe lock order detected                                
-[ 3039.651534] 6.7.0-next-20240119-00003-gc826d21919ac-dirty #7 Not tainted                               
-[ 3039.658233] -----------------------------------------------------                                      
-[ 3039.664322] kworker/0:0/8 [HC0[0]:SC0[0]:HE0:SE1] is trying to acquire:                                
-[ 3039.670940] ffffffd803082a60 (&bdev->bd_size_lock){+.+.}-{2:2}, at: bdev_set_nr_sectors+0x20/0x44      
-[ 3039.679854]                                                                                            
-[ 3039.679854] and this task is already holding:                                                          
-[ 3039.685684] ffffffd803b44238 (&d->lock){..-.}-{2:2}, at: aoeblk_gdalloc+0xe8/0x322                     
-[ 3039.693298] which would create a new lock dependency:                                                  
-[ 3039.698349]  (&d->lock){..-.}-{2:2} -> (&bdev->bd_size_lock){+.+.}-{2:2}                               
-[ 3039.705089]                                                                                            
-[ 3039.705089] but this new dependency connects a SOFTIRQ-irq-safe lock:                                  
-[ 3039.713002]  (&d->lock){..-.}-{2:2}                                                                    
-[ 3039.713023]                                                                                            
-[ 3039.713023] ... which became SOFTIRQ-irq-safe at:                                                      
-[ 3039.722682]   __lock_acquire+0x730/0x170c                                                              
-[ 3039.726704]   lock_acquire+0xb2/0x21a                                                                  
-[ 3039.730375]   _raw_spin_lock_irqsave+0x3a/0x64                                                         
-[ 3039.734833]   aoecmd_cfg_rsp+0xc6/0x43a                                                                
-[ 3039.738683]   aoenet_rcv+0x19a/0x1c2                                                                   
-[ 3039.742267]   __netif_receive_skb_list_core+0x13c/0x146                                                
-[ 3039.747510]   netif_receive_skb_list_internal+0x19e/0x2ae                                              
-[ 3039.752920]   napi_complete_done+0x4a/0x16a                                                            
-[ 3039.757115]   r8152_poll+0x20c/0x79c                                                                   
-[ 3039.760700]   __napi_poll.constprop.0+0x26/0x19a                                                       
-[ 3039.765328]   net_rx_action+0x10e/0x226                                                                
-[ 3039.769175]   __do_softirq+0x180/0x3a4                                                                 
-[ 3039.772937]   irq_exit_rcu+0x7e/0xa6                                                                   
-[ 3039.776524]   handle_riscv_irq+0x40/0x4e                                                               
-[ 3039.780466]   call_on_irq_stack+0x1c/0x28                                                              
-[ 3039.784486]                                                                                            
-[ 3039.784486] to a SOFTIRQ-irq-unsafe lock:                                                              
-[ 3039.789970]  (&bdev->bd_size_lock){+.+.}-{2:2}                                                         
-[ 3039.789992]                                                                                            
-[ 3039.789992] ... which became SOFTIRQ-irq-unsafe at:                                                    
-[ 3039.800777] ...                                                                                        
-[ 3039.800783]   __lock_acquire+0x3a2/0x170c                                                              
-[ 3039.806548]   lock_acquire+0xb2/0x21a                                                                  
-[ 3039.810221]   _raw_spin_lock+0x2c/0x40                                                                 
-[ 3039.813980]   bdev_set_nr_sectors+0x20/0x44                                                            
-[ 3039.818173]   set_capacity+0xe/0x16                                                                    
-[ 3039.821680]   zram_add+0xdc/0x1fa                                                                      
-[ 3039.825006]   zram_init+0xf8/0x124                                                                     
-[ 3039.828422]   do_one_initcall+0x4e/0x1ca                                                               
-[ 3039.832356]   kernel_init_freeable+0x1be/0x218                                                         
-[ 3039.836812]   kernel_init+0x1e/0x10a                                                                   
-[ 3039.840405]   ret_from_fork+0xe/0x1c                                                                   
-[ 3039.843991]                                                                                            
-[ 3039.843991] other info that might help us debug this:                                                  
-[ 3039.843991]                                                                                            
-[ 3039.851990]  Possible interrupt unsafe locking scenario:                                               
-[ 3039.851990]                                                                                            
-[ 3039.858773]        CPU0                    CPU1                                                        
-[ 3039.863302]        ----                    ----                                                        
-[ 3039.867829]   lock(&bdev->bd_size_lock);                                                               
-[ 3039.871762]                                local_irq_disable();                                        
-[ 3039.877678]                                lock(&d->lock);                                             
-[ 3039.883172]                                lock(&bdev->bd_size_lock);                                  
-[ 3039.889619]   <Interrupt>                                                                              
-[ 3039.892241]     lock(&d->lock);                                                                        
-[ 3039.895393]                                                                                            
-[ 3039.895393]  *** DEADLOCK ***                                                                          
-[ 3039.895393]                                                                                            
-[ 3039.901309] 3 locks held by kworker/0:0/8:                                                             
-[ 3039.905409]  #0: ffffffd802a95530 ((wq_completion)aoe_wq){+.+.}-{0:0}, at: process_one_work+0x110/0x3ce
-[ 3039.914849]  #1: ffffffc800043db8 ((work_completion)(&d->work)){+.+.}-{0:0}, at: process_one_work+0x110
-/0x3ce                                                                                                    
-[ 3039.924799]  #2: ffffffd803b44238 (&d->lock){..-.}-{2:2}, at: aoeblk_gdalloc+0xe8/0x322                
-[ 3039.932848]                                                                                            
-[ 3039.932848] the dependencies between SOFTIRQ-irq-safe lock and the holding lock:                       
-[ 3039.941715] -> (&d->lock){..-.}-{2:2} {                                                                
-[ 3039.945576]    IN-SOFTIRQ-W at:                                                                        
-[ 3039.948724]                     __lock_acquire+0x730/0x170c                                            
-[ 3039.954307]                     lock_acquire+0xb2/0x21a                                                
-[ 3039.959538]                     _raw_spin_lock_irqsave+0x3a/0x64                                       
-[ 3039.965554]                     aoecmd_cfg_rsp+0xc6/0x43a                                              
-[ 3039.970966]                     aoenet_rcv+0x19a/0x1c2                                                 
-[ 3039.976112]                     __netif_receive_skb_list_core+0x13c/0x146                              
-[ 3039.982915]                     netif_receive_skb_list_internal+0x19e/0x2ae                            
-[ 3039.989885]                     napi_complete_done+0x4a/0x16a                                          
-[ 3039.995641]                     r8152_poll+0x20c/0x79c                                                 
-[ 3040.000788]                     __napi_poll.constprop.0+0x26/0x19a                                     
-[ 3040.006977]                     net_rx_action+0x10e/0x226                                              
-[ 3040.012384]                     __do_softirq+0x180/0x3a4                                               
-[ 3040.017706]                     irq_exit_rcu+0x7e/0xa6                                                 
-[ 3040.022854]                     handle_riscv_irq+0x40/0x4e                                             
-[ 3040.028355]                     call_on_irq_stack+0x1c/0x28                                            
-[ 3040.033937]    INITIAL USE at:                                                                         
-[ 3040.036999]                    __lock_acquire+0x3ae/0x170c                                             
-[ 3040.042492]                    lock_acquire+0xb2/0x21a                                                 
-[ 3040.047638]                    _raw_spin_lock_irqsave+0x3a/0x64                                        
-[ 3040.053565]                    aoecmd_cfg_rsp+0xc6/0x43a                                               
-[ 3040.058893]                    aoenet_rcv+0x19a/0x1c2                                                  
-[ 3040.063951]                    __netif_receive_skb_list_core+0x13c/0x146                               
-[ 3040.070663]                    netif_receive_skb_list_internal+0x19e/0x2ae                             
-[ 3040.077547]                    napi_complete_done+0x4a/0x16a                                           
-[ 3040.083215]                    r8152_poll+0x20c/0x79c                                                  
-[ 3040.088273]                    __napi_poll.constprop.0+0x26/0x19a                                      
-[ 3040.094376]                    net_rx_action+0x10e/0x226                                               
-[ 3040.099696]                    __do_softirq+0x180/0x3a4                                                
-[ 3040.104931]                    irq_exit_rcu+0x7e/0xa6                                                  
-[ 3040.109992]                    handle_riscv_irq+0x40/0x4e                                              
-[ 3040.115402]                    call_on_irq_stack+0x1c/0x28                                             
-[ 3040.120896]  }                                                                                         
-[ 3040.122565]  ... key      at: [<ffffffff822deea8>] __key.2+0x0/0x10                                    
-[ 3040.128848]                                                                                            
-[ 3040.128848] the dependencies between the lock to be acquired                                           
-[ 3040.128856]  and SOFTIRQ-irq-unsafe lock:                                                              
-[ 3040.139994] -> (&bdev->bd_size_lock){+.+.}-{2:2} {                                                     
-[ 3040.144811]    HARDIRQ-ON-W at:                                                                        
-[ 3040.147960]                     __lock_acquire+0x390/0x170c                                            
-[ 3040.153542]                     lock_acquire+0xb2/0x21a                                                
-[ 3040.158774]                     _raw_spin_lock+0x2c/0x40                                               
-[ 3040.164093]                     bdev_set_nr_sectors+0x20/0x44                                          
-[ 3040.169848]                     set_capacity+0xe/0x16                                                  
-[ 3040.174912]                     zram_add+0xdc/0x1fa                                                    
-[ 3040.179798]                     zram_init+0xf8/0x124                                                   
-[ 3040.184775]                     do_one_initcall+0x4e/0x1ca                                             
-[ 3040.190269]                     kernel_init_freeable+0x1be/0x218                                       
-[ 3040.196288]                     kernel_init+0x1e/0x10a                                                 
-[ 3040.201439]                     ret_from_fork+0xe/0x1c                                                 
-[ 3040.206587]    SOFTIRQ-ON-W at:                                                                        
-[ 3040.209735]                     __lock_acquire+0x3a2/0x170c                                            
-[ 3040.215316]                     lock_acquire+0xb2/0x21a                                                
-[ 3040.220546]                     _raw_spin_lock+0x2c/0x40                                               
-[ 3040.225866]                     bdev_set_nr_sectors+0x20/0x44                                          
-[ 3040.231618]                     set_capacity+0xe/0x16                                                  
-[ 3040.236678]                     zram_add+0xdc/0x1fa                                                    
-[ 3040.241563]                     zram_init+0xf8/0x124                                                   
-[ 3040.246536]                     do_one_initcall+0x4e/0x1ca                                             
-[ 3040.252028]                     kernel_init_freeable+0x1be/0x218                                       
-[ 3040.258044]                     kernel_init+0x1e/0x10a                                                 
-[ 3040.263193]                     ret_from_fork+0xe/0x1c                                                 
-[ 3040.268341]    INITIAL USE at:                                                                         
-[ 3040.271402]                    __lock_acquire+0x3ae/0x170c                                             
-[ 3040.276896]                    lock_acquire+0xb2/0x21a                                                 
-[ 3040.282041]                    _raw_spin_lock+0x2c/0x40                                                
-[ 3040.287273]                    bdev_set_nr_sectors+0x20/0x44                                           
-[ 3040.292939]                    set_capacity+0xe/0x16                                                   
-[ 3040.297913]                    zram_add+0xdc/0x1fa                                                     
-[ 3040.302712]                    zram_init+0xf8/0x124                                                    
-[ 3040.307600]                    do_one_initcall+0x4e/0x1ca                                              
-[ 3040.313005]                    kernel_init_freeable+0x1be/0x218                                        
-[ 3040.318936]                    kernel_init+0x1e/0x10a                                                  
-[ 3040.323998]                    ret_from_fork+0xe/0x1c                                                  
-[ 3040.329059]  }                                                                                         
-[ 3040.330728]  ... key      at: [<ffffffff822d4d18>] __key.5+0x0/0x10                                    
-[ 3040.337010]  ... acquired at:                                                                          
-[ 3040.339980]    check_prev_add+0xf8/0xb40                                                               
-[ 3040.343913]    __lock_acquire+0xd0e/0x170c                                                             
-[ 3040.348017]    lock_acquire+0xb2/0x21a                                                                 
-[ 3040.351775]    _raw_spin_lock+0x2c/0x40                                                                
-[ 3040.355620]    bdev_set_nr_sectors+0x20/0x44                                                           
-[ 3040.359899]    set_capacity+0xe/0x16                                                                   
-[ 3040.363486]    +0x180/0x322                                                              
-[ 3040.367514]    aoecmd_sleepwork+0x2e/0x7c                                                              
-[ 3040.371536]    process_one_work+0x176/0x3ce                                                            
-[ 3040.375740]    worker_thread+0x19a/0x348                                                               
-[ 3040.379674]    kthread+0xd0/0xec                                                                       
-[ 3040.382918]    ret_from_fork+0xe/0x1c                                                                  
-[ 3040.386596]                                                                                            
-[ 3040.388091]                                                                                            
-[ 3040.388091] stack backtrace:                                                                           
-[ 3040.392449] CPU: 0 PID: 8 Comm: kworker/0:0 Not tainted 6.7.0-next-20240119-00003-gc826d21919ac-dirty #7
-[ 3040.401929] Hardware name: Sipeed Lichee RV Dock (DT)                                                  
-[ 3040.406983] Workqueue: aoe_wq aoecmd_sleepwork                                                         
-[ 3040.411450] Call Trace:                                                                                
-[ 3040.413901] [<ffffffff800067b2>] dump_backtrace+0x1c/0x24                                              
-[ 3040.419316] [<ffffffff809d176a>] show_stack+0x2c/0x38                                                  
-[ 3040.424382] [<ffffffff809de7c2>] dump_stack_lvl+0x2e/0x48                                              
-[ 3040.429798] [<ffffffff809de7f0>] dump_stack+0x14/0x1c                                                  
-[ 3040.434862] [<ffffffff800511fc>] check_irq_usage+0x786/0x798                                           
-[ 3040.440531] [<ffffffff80051306>] check_prev_add+0xf8/0xb40                                             
-[ 3040.446026] [<ffffffff80053b22>] __lock_acquire+0xd0e/0x170c                                           
-[ 3040.451693] [<ffffffff80054cc4>] lock_acquire+0xb2/0x21a                                               
-[ 3040.457013] [<ffffffff809e91be>] _raw_spin_lock+0x2c/0x40                                              
-[ 3040.462424] [<ffffffff8032468c>] bdev_set_nr_sectors+0x20/0x44                                         
-[ 3040.468268] [<ffffffff8033ff0c>] set_capacity+0xe/0x16                                                 
-[ 3040.473422] [<ffffffff805d32e2>] aoeblk_gdalloc+0x180/0x322                                            
-[ 3040.479013] [<ffffffff805d5208>] aoecmd_sleepwork+0x2e/0x7c                                            
-[ 3040.484599] [<ffffffff8002b612>] process_one_work+0x176/0x3ce                                          
-[ 3040.490361] [<ffffffff8002ba04>] worker_thread+0x19a/0x348                                             
-[ 3040.495857] [<ffffffff80033d08>] kthread+0xd0/0xec                                                     
-[ 3040.500661] [<ffffffff809e9ebe>] ret_from_fork+0xe/0x1c                                                
-[ 3040.538247]  etherd/e1.1: p1
-
-Maksim Kiselev (1):
-  aoe: avoid potential deadlock at set_capacity
-
- drivers/block/aoe/aoeblk.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
--- 
-2.40.1
+Best regards,
+Krzysztof
 
