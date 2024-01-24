@@ -1,70 +1,65 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E44E713175F;
-	Wed, 24 Jan 2024 19:05:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78D6912CDA0;
+	Wed, 24 Jan 2024 19:05:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.255.230.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706123160; cv=none; b=jBOY6l5jhz3psSNF7AFiz1aCwH0g6o/K3d3NWnH846SH58zb9I3ax2hRxJjC9Fdh/BLnRxWyBSbSVaOTVGYVAMY6z31TrHZXbY2wWSNLq5/zQMLkOUEHyvsToZM8PAn3298COXghVndD0gQGCscStn7qTjIvv/ldrlkyidyw3vM=
+	t=1706123160; cv=none; b=r0tTfZ2xINqvUxf2eB7O6T0YPNnwtoRRsTf3NpgqzGArBY9LtZLr5odbECNdJvnETT5pIsYKXrb//Kbifh3RH/jDzfwngT/1VXq0tRrInfiV0oYNlMGWY90K/JUgp5jZz5G1F3dQpHwRUMczNTC5cPmRE7LemqIMjxprtlednRI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1706123160; c=relaxed/simple;
-	bh=imucOcIYJoDxBoguCA9kKtfF8C6b6OBmEsZ9isDRAcU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eJakCngAYI2OmFmisIs5VriFsviSmLLzKfgnli1RLoND8kdS6Q4C9WBBP+9NbjMwtM+KlXP2tAK8jn5JSzlzmrZLf2f7GeUqvhUzz8C8m8A7xnFs/5hD0mof4CD+tpzG2IrABUeMkBnIceIvr/1efVfc+9lUE2Lq0CLHMLJFOG8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vn3Jl+i1; arc=none smtp.client-ip=10.30.226.201
+	bh=j3ppBYKS2aBy3MCuBBzhzI0ZpLlu6832vbWamcxbxzw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Sn4490W3y5GOpbWnshfJoaK0/DTUiPoXvy7EbkKihWDnHZcdWygurabH6v8YwJTFeOdDvknzlBb3vd8g+RHWHTVXSI7xWfQXg5+2w8iwBmGd9Qx6FkkLg/aAzrzVnHSAKFiWIjdguOMgl2xeQWnUbmYiLfn/vxoY22LNDsK12G0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz; spf=pass smtp.mailfrom=ucw.cz; dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b=E9yOoh/X; arc=none smtp.client-ip=46.255.230.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ucw.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vn3Jl+i1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4871AC43390;
-	Wed, 24 Jan 2024 19:05:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706123159;
-	bh=imucOcIYJoDxBoguCA9kKtfF8C6b6OBmEsZ9isDRAcU=;
-	h=From:To:Cc:Subject:Date:From;
-	b=Vn3Jl+i1E0EO7I2lys9SH2ZRpWyGeXaCqr0rSCqBbjE/BNKyjS9mZTECFV1vubUes
-	 bCo5nuQhw3oGNZ1pZxHkInoQTlRLTqAW3hR/NFxa/WVm3IazDlx0Q5McosukLlzvob
-	 L2hGBo9mU0AR5qbCyEBc04xecf8ocv/L2Kgn4rIuZpRIq4wu2OWc74eqgB2tl86d4B
-	 AZgxus53bUc6h/9TSURvg+AyzZW87O3Rs7V7wTOWenhkzlek/xmCU5tOuSxmG8H9dw
-	 C5x8Of/kaLoSnLsxwxH0/TACDLSYozLl5IfPP64vMSR4aGMvXRKeA37ijFyAjaVRO3
-	 byFsEvnWIrUVw==
-From: Rob Herring <robh@kernel.org>
-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: linux-i2c@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] dt-bindings: i2c: mux: i2c-demux-pinctrl: Drop i2c-mux.yaml reference
-Date: Wed, 24 Jan 2024 13:05:50 -0600
-Message-ID: <20240124190552.1551929-1-robh@kernel.org>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b="E9yOoh/X"
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+	id C77C11C0050; Wed, 24 Jan 2024 20:05:55 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ucw.cz; s=gen1;
+	t=1706123155;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=C5DRll6lmXicAwr6wsX/zY977edd4j9dNj3nxzpjkUE=;
+	b=E9yOoh/XdqoV6B0MScSmcAAvDVLfNkzCttT5SFGF6npMVkCcGoScic/s+VzYvc3wihSP0O
+	50PIe5mnpL180Jnp8UZn6liv2d70E5acbkSi2jmfTpiCeiZ3zct9cAZ6611PuifubtNBxH
+	THzZrwL4MNMiKMsZcadSa0PMyF5qJpM=
+Date: Wed, 24 Jan 2024 20:05:55 +0100
+From: Pavel Machek <pavel@ucw.cz>
+To: Martijn Braam <martijn@brixit.nl>
+Cc: fiona.klute@gmx.de, phone-devel@vger.kernel.org, icenowy@aosc.xyz,
+	megous@megous.com, kernel list <linux-kernel@vger.kernel.org>,
+	alain.volmat@foss.st.com, sakari.ailus@linux.intel.com,
+	linux-media@vger.kernel.org
+Subject: Re: Front camera on pinephone
+Message-ID: <ZbFfk5yXTxNi-rob@ucw.cz>
+References: <ZaY44AHISMIh8fHM@duo.ucw.cz>
+ <2c720f2e-3c73-4a77-92e0-5da8fce86b3f@brixit.nl>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2c720f2e-3c73-4a77-92e0-5da8fce86b3f@brixit.nl>
 
-The I2C de-mux is different than an I2C mux, so i2c-mux.yaml is not
-relevant and shouldn't be referenced.
+Hi!
 
-Signed-off-by: Rob Herring <robh@kernel.org>
----
- Documentation/devicetree/bindings/i2c/i2c-demux-pinctrl.yaml | 1 -
- 1 file changed, 1 deletion(-)
+> Isn't this simply the case of picking the gc2145 bits from Megis tree?
+> 
+> https://megous.com/git/linux/tree/arch/arm64/boot/dts/allwinner/sun50i-a64-pinephone.dtsi?h=orange-pi-5.10#n410
 
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-demux-pinctrl.yaml b/Documentation/devicetree/bindings/i2c/i2c-demux-pinctrl.yaml
-index 2c08f2a7cf1e..dd3d24212551 100644
---- a/Documentation/devicetree/bindings/i2c/i2c-demux-pinctrl.yaml
-+++ b/Documentation/devicetree/bindings/i2c/i2c-demux-pinctrl.yaml
-@@ -32,7 +32,6 @@ description: |
-       +-------------------------------+
- 
- allOf:
--  - $ref: i2c-mux.yaml
-   - $ref: /schemas/i2c/i2c-controller.yaml#
- 
- properties:
--- 
-2.43.0
+Well, that, adjusting dts bits to the new driver, testing and
+submitting the patch. And it looks someone did the work and patches
+are floating around. GOod :-).
 
+I'm fighting with kexec crashing as soon as I pass dtb. Do I need to
+modify the dtb somehow?
+
+Best regards,
+								Pavel
