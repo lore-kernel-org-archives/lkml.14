@@ -1,44 +1,44 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4B3A1775A;
-	Wed, 24 Jan 2024 02:42:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76F0C17BA3;
+	Wed, 24 Jan 2024 02:42:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.120
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706064164; cv=none; b=HlYrl/tfHcJf5MEO/yWIUoQjzvcJBGaScDplS27kIdxJcOtLGEO6haXL7gSsDWEaEKjou79MPrW7kswUYoim9fYOiGe2j5TbBeKNFBKDmHImc/ExquROEx6VsJu5HYKpfLj3Z/VlpE0pr5KJJs/CHDU/F4DVg5n52zdvJmJTHyw=
+	t=1706064165; cv=none; b=n7k27sgtNiUf0JXz9QcepDjvRMNpmoW8+2MGuZgTSLs75nvddF+qxlrEBeqPOPl/pQDuEvw0VvfRRLUSFLcVPSwBHdPW/eYf809LlND3ZPoKykIvYOjkdZgx9TH8Ir8jtArda2y/nXu7t6IiGLuOHt4lNGlbPT3dNvUk+l9bgNI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706064164; c=relaxed/simple;
-	bh=0UE5IUCUA6slej5/EM6zfvBhsHMVYZs9Yfo7sj2LfOU=;
+	s=arc-20240116; t=1706064165; c=relaxed/simple;
+	bh=ky/X9OZtJn3bDUIMsiZj6Q/CKpBiasfn5wmoF4H7EIQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=kPr4wQ+NSPNbk4GBuGfYmKCQSS6l0R9RuFujCBYdUw1O1L4GxtJrQ+GIHpHhLO4lL+JC+tPSIKwOttuPCW0Tahi9odavG6i8VE1fZt8+O4zo+VdBn6qB5joIBpn587NNkgHcQ/KsOO9PreBeULAJYLxfyDE0U21mVPFU5BIzpNU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XRchG6Oe; arc=none smtp.client-ip=192.55.52.120
+	 MIME-Version; b=XRsRUCZW0z6RfaiVDKVls62MmasF9gnz7Fzl22/tp6qlsQb69szWOJSLt7yXexHAJMRig4GSc+rPa6bPITgm3ZJoennBch12rvf94zqiMy8gN2kGrsjfa+mIWzfk/Ghvm+lLv5c4IpCk0P+TYcqkRL1ReaAhzUkLYjmcj103Xo0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jt25OZLY; arc=none smtp.client-ip=192.55.52.120
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XRchG6Oe"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jt25OZLY"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706064162; x=1737600162;
+  t=1706064163; x=1737600163;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=0UE5IUCUA6slej5/EM6zfvBhsHMVYZs9Yfo7sj2LfOU=;
-  b=XRchG6OeN4qO7/YgppHEaV6KSn10R7WErRL81IN6tTF3RDJ0crXWGG3e
-   O2ysLyzIBA94qrq28Tu4qczlwor6YnOT6wpMWJ1EjdwOZuW/4UT8m4NyM
-   Zoc9vqmHdLko97K/bsD0BPq137kwp5viCs0xREyOX76ABGpzhVdG3Ip3S
-   4bM6FCinbB8jwvcpBRMzrQebq4Otg9q+kwNMzElflVddnuJ7naGGHTnHt
-   eC9HiRrRzF/JEazvqHLaTy47ay5Wi/KmUe+972AKXpaGf86u7YT3uheIQ
-   H/XiQ8EN3cyT/CcCsp5XrtLDtsop/g8QLZjY/ISnZ82H7OPGTEozLk+4U
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="400586513"
+  bh=ky/X9OZtJn3bDUIMsiZj6Q/CKpBiasfn5wmoF4H7EIQ=;
+  b=jt25OZLYS7LpZOu5zHqGSROrwMt/7ISLhFBLOB9hapQwFZFSrylUm+Gt
+   b/jswxurHGf7uUEfbg6FPArDWW1jzBr3RkCHK5of4Bm8SEAxaPWmj6FLC
+   0uFHUpc/8uwIH6gLtCmvjHahBwXpaMa9g0OunD0RxO9bxgd0TYMQjd3lD
+   o5Kw99Ci0kXhso6DQfNduh6jTmlZOmS3+NJoGY1WeWQ/1YHWyuZk9u6rW
+   E6+4OsUfax8enofYiXXbrKGpMUUb7odN3Vk4tRW3YiCybc9vLi0wEQa2a
+   7bVqyvlD/XW0f3BQa/kdMzOQvVn7uK0gbPVGfAVkjCPbgECYUvtoUIrsr
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="400586525"
 X-IronPort-AV: E=Sophos;i="6.05,215,1701158400"; 
-   d="scan'208";a="400586513"
+   d="scan'208";a="400586525"
 Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2024 18:42:38 -0800
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2024 18:42:39 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.05,215,1701158400"; 
-   d="scan'208";a="1825873"
+   d="scan'208";a="1825885"
 Received: from 984fee00a5ca.jf.intel.com ([10.165.9.183])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2024 18:42:38 -0800
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2024 18:42:39 -0800
 From: Yang Weijiang <weijiang.yang@intel.com>
 To: seanjc@google.com,
 	pbonzini@redhat.com,
@@ -53,9 +53,9 @@ Cc: peterz@infradead.org,
 	mlevitsk@redhat.com,
 	john.allen@amd.com,
 	weijiang.yang@intel.com
-Subject: [PATCH v9 14/27] KVM: x86: Initialize kvm_caps.supported_xss
-Date: Tue, 23 Jan 2024 18:41:47 -0800
-Message-Id: <20240124024200.102792-15-weijiang.yang@intel.com>
+Subject: [PATCH v9 16/27] KVM: x86: Add fault checks for guest CR4.CET setting
+Date: Tue, 23 Jan 2024 18:41:49 -0800
+Message-Id: <20240124024200.102792-17-weijiang.yang@intel.com>
 X-Mailer: git-send-email 2.39.3
 In-Reply-To: <20240124024200.102792-1-weijiang.yang@intel.com>
 References: <20240124024200.102792-1-weijiang.yang@intel.com>
@@ -67,49 +67,43 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Set original kvm_caps.supported_xss to (host_xss & KVM_SUPPORTED_XSS) if
-XSAVES is supported. host_xss contains the host supported xstate feature
-bits for thread FPU context switch, KVM_SUPPORTED_XSS includes all KVM
-enabled XSS feature bits, the resulting value represents the supervisor
-xstates that are available to guest and are backed by host FPU framework
-for swapping {guest,host} XSAVE-managed registers/MSRs.
+Check potential faults for CR4.CET setting per Intel SDM requirements.
+CET can be enabled if and only if CR0.WP == 1, i.e. setting CR4.CET ==
+1 faults if CR0.WP == 0 and setting CR0.WP == 0 fails if CR4.CET == 1.
 
+Co-developed-by: Sean Christopherson <seanjc@google.com>
+Signed-off-by: Sean Christopherson <seanjc@google.com>
 Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
+Reviewed-by: Chao Gao <chao.gao@intel.com>
 Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
 ---
- arch/x86/kvm/x86.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ arch/x86/kvm/x86.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
 diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 7b7a15aab3aa..f50c5a523b92 100644
+index bde780ae69bf..b418e4f5277b 100644
 --- a/arch/x86/kvm/x86.c
 +++ b/arch/x86/kvm/x86.c
-@@ -226,6 +226,8 @@ static struct kvm_user_return_msrs __percpu *user_return_msrs;
- 				| XFEATURE_MASK_BNDCSR | XFEATURE_MASK_AVX512 \
- 				| XFEATURE_MASK_PKRU | XFEATURE_MASK_XTILE)
+@@ -1006,6 +1006,9 @@ int kvm_set_cr0(struct kvm_vcpu *vcpu, unsigned long cr0)
+ 	    (is_64_bit_mode(vcpu) || kvm_is_cr4_bit_set(vcpu, X86_CR4_PCIDE)))
+ 		return 1;
  
-+#define KVM_SUPPORTED_XSS     0
++	if (!(cr0 & X86_CR0_WP) && kvm_is_cr4_bit_set(vcpu, X86_CR4_CET))
++		return 1;
 +
- u64 __read_mostly host_efer;
- EXPORT_SYMBOL_GPL(host_efer);
+ 	static_call(kvm_x86_set_cr0)(vcpu, cr0);
  
-@@ -9715,12 +9717,13 @@ static int __kvm_x86_vendor_init(struct kvm_x86_init_ops *ops)
- 		host_xcr0 = xgetbv(XCR_XFEATURE_ENABLED_MASK);
- 		kvm_caps.supported_xcr0 = host_xcr0 & KVM_SUPPORTED_XCR0;
+ 	kvm_post_set_cr0(vcpu, old_cr0, cr0);
+@@ -1217,6 +1220,9 @@ int kvm_set_cr4(struct kvm_vcpu *vcpu, unsigned long cr4)
+ 			return 1;
  	}
-+	if (boot_cpu_has(X86_FEATURE_XSAVES)) {
-+		rdmsrl(MSR_IA32_XSS, host_xss);
-+		kvm_caps.supported_xss = host_xss & KVM_SUPPORTED_XSS;
-+	}
  
- 	rdmsrl_safe(MSR_EFER, &host_efer);
++	if ((cr4 & X86_CR4_CET) && !kvm_is_cr0_bit_set(vcpu, X86_CR0_WP))
++		return 1;
++
+ 	static_call(kvm_x86_set_cr4)(vcpu, cr4);
  
--	if (boot_cpu_has(X86_FEATURE_XSAVES))
--		rdmsrl(MSR_IA32_XSS, host_xss);
--
- 	kvm_init_pmu_capability(ops->pmu_ops);
- 
- 	if (boot_cpu_has(X86_FEATURE_ARCH_CAPABILITIES))
+ 	kvm_post_set_cr4(vcpu, old_cr4, cr4);
 -- 
 2.39.3
 
