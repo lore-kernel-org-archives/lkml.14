@@ -1,108 +1,126 @@
-Received: from h3cspam02-ex.h3c.com (smtp.h3c.com [60.191.123.50])
+Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24E1115BE;
-	Wed, 24 Jan 2024 01:56:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.191.123.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FAC017CD;
+	Wed, 24 Jan 2024 02:01:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706061367; cv=none; b=NiasLuxjxWwnJkYNDFHTesRiIZ+meof3RlQ8RSJ7jGTLro1Z6QdbRK00bue2mzAcz8qh1ER2sXmxcVY6KqL97aYrEEZ2Zs5AKjfK9eKGwIBlCRJE8VJAOJ1OP7VTovXHTpeo2ofCY5AIgu4u3yBI8M3t489lPpG7fNLR9DYtYIE=
+	t=1706061685; cv=none; b=XOV0l8vFLc4H7mCma8fUR9DWncn78Nifx6scO6mJrMU5EhlXIoQlPrGehRupSFQ051tXBe7y7Gy6f1265QW58A0D+dCxs+2H8Cx9MMr3cCEjYfl3FTQK9j0oM6sZMm46tzmHZ59840X3UDl2a7fuYKw4kHCXjv3EMCHQupLvxwI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706061367; c=relaxed/simple;
-	bh=KzfL/eA5X9Q8Ecu3aHYbw/T9JAuqCN1j0cbZS03ao4c=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=CyqB0neKcUozh7oAt2ioQyza2P/p9Gc2K/MFNj90kk3XfevvOZ5SXLVNskMvH+V/hG3161c6Ut/tGJeifLEjsrXqOpHq6pd1yZT9OROajzuwwvADiand9eIomqk+wAC6srC2hxp8Dhi1F3XMv1HTCECKPCfkyoTSSF9EW1C4bN0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=h3c.com; spf=pass smtp.mailfrom=h3c.com; arc=none smtp.client-ip=60.191.123.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=h3c.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=h3c.com
-Received: from mail.maildlp.com ([172.25.15.154])
-	by h3cspam02-ex.h3c.com with ESMTP id 40O1sptq034324;
-	Wed, 24 Jan 2024 09:54:51 +0800 (GMT-8)
-	(envelope-from hu.yadi@h3c.com)
-Received: from DAG6EX09-BJD.srv.huawei-3com.com (unknown [10.153.34.11])
-	by mail.maildlp.com (Postfix) with ESMTP id 2F6EB2004BC6;
-	Wed, 24 Jan 2024 09:59:30 +0800 (CST)
-Received: from DAG6EX02-IMDC.srv.huawei-3com.com (10.62.14.11) by
- DAG6EX09-BJD.srv.huawei-3com.com (10.153.34.11) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.27; Wed, 24 Jan 2024 09:54:52 +0800
-Received: from DAG6EX02-IMDC.srv.huawei-3com.com ([fe80::4c21:7c89:4f9d:e4c4])
- by DAG6EX02-IMDC.srv.huawei-3com.com ([fe80::4c21:7c89:4f9d:e4c4%16]) with
- mapi id 15.02.1258.027; Wed, 24 Jan 2024 09:54:52 +0800
-From: Huyadi <hu.yadi@h3c.com>
-To: =?utf-8?B?J01pY2thw6tsIFNhbGHDvG4n?= <mic@digikod.net>
-CC: "jmorris@namei.org" <jmorris@namei.org>,
-        "serge@hallyn.com"
-	<serge@hallyn.com>,
-        "shuah@kernel.org" <shuah@kernel.org>,
-        "mathieu.desnoyers@efficios.com" <mathieu.desnoyers@efficios.com>,
-        "amir73il@gmail.com" <amir73il@gmail.com>,
-        "brauner@kernel.org"
-	<brauner@kernel.org>,
-        "avagin@google.com" <avagin@google.com>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org"
-	<linux-security-module@vger.kernel.org>,
-        "linux-kselftest@vger.kernel.org"
-	<linux-kselftest@vger.kernel.org>,
-        "514118380@qq.com" <514118380@qq.com>,
-        "konstantin.meskhidze@huawei.com" <konstantin.meskhidze@huawei.com>
-Subject: =?utf-8?B?5Zue5aSNOiDlm57lpI06IFtQQVRDSCB2NF0gc2VsZnRlc3RzL2xhbmRsb2Nr?=
- =?utf-8?Q?:Fix_two_build_issues?=
-Thread-Topic: =?utf-8?B?5Zue5aSNOiBbUEFUQ0ggdjRdIHNlbGZ0ZXN0cy9sYW5kbG9jazpGaXggdHdv?=
- =?utf-8?Q?_build_issues?=
-Thread-Index: AQHaR51Te/ejhd6BskWKYK0XmAmChrDgkaUAgAbFurD//7YlAIABM8jQ
-Date: Wed, 24 Jan 2024 01:54:52 +0000
-Message-ID: <381b0dd202074938b527c5b27c86c34f@h3c.com>
-References: <20240115102409.19799-1-hu.yadi@h3c.com>
- <20240119.Ugaehae2ze5b@digikod.net>
- <adec399e50c74b30b59480d92c431241@h3c.com>
- <20240123.deeT9hegh4vo@digikod.net>
-In-Reply-To: <20240123.deeT9hegh4vo@digikod.net>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-sender-location: DAG2
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	s=arc-20240116; t=1706061685; c=relaxed/simple;
+	bh=MRdtvG8pQ96PEh72/XRLyS2XdvhflNuwultr1W9eCo0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=EAzfJWSoop59MBo4Lqr2f/nYgw26ZfCVcD6uBWNyqhhrUHQi9sY0zZ43c026HinMWZTJXv5AA3YyV8zV/1aKGh53POaLjYWLIsDuWShLUOn34irKFVOwL9pRACN1DylWUmJ9e+yyY5DlxeYAL0g0WgZhKs+8n42WK+hsA10GZ+s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=DR4uHRrp; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="DR4uHRrp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1706061678;
+	bh=Pgm92d7EvsbO07suhqUnGCLrKYIQcZuz2VMy95wg+gs=;
+	h=Date:From:To:Cc:Subject:From;
+	b=DR4uHRrp+Bc0Td3Yys5hTTt+XfnudrhCG2BGKc6T+dDaYTcZrMRqhyy3R5CVFKRx9
+	 C9jXp8Sbwrp7F33Y01waWFrT9qLr0lDOxodqFt7PPdT+LtRaWwSlvV4Yz0XkA565aM
+	 xWTtzUEiaLvJppsbOlBHkD2gbAG/EXTyKnTx2inoyDcRRgg5tby6MRVcFZC8LDJLpz
+	 hIDztQSSihL9gWo57PoNoN5bXyT9xjHvHeHdffnIQ+f9hhFx+W6Ztx+ty+ErNVFM0o
+	 Gk9XPzhTupS0W28ANdDFcTmL7Pl54CKKZ6hxjdcndx3yavkG13bspoYC8xCkHRamen
+	 8ZZ2UWArw08Kg==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4TKRyJ5FJ3z4wcg;
+	Wed, 24 Jan 2024 13:01:12 +1100 (AEDT)
+Date: Wed, 24 Jan 2024 13:01:01 +1100
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, David Miller
+ <davem@davemloft.net>, "Eric W. Biederman" <ebiederm@xmission.com>, Florian
+ Fainelli <f.fainelli@gmail.com>, Hector Martin <marcan@marcan.st>, "Jason
+ A. Donenfeld" <Jason@zx2c4.com>, Jean Delvare <jdelvare@suse.de>, Lee Jones
+ <lee@kernel.org>, Micah Morton <mortonm@chromium.org>, Mike Marshall
+ <hubcap@omnibond.com>, Pavel Machek <pavel@ucw.cz>, Theodore Ts'o
+ <tytso@mit.edu>
+Subject: linux-next: trees being removed
+Message-ID: <20240124130101.428c09a3@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-DNSRBL: 
-X-SPAM-SOURCE-CHECK: pass
-X-MAIL:h3cspam02-ex.h3c.com 40O1sptq034324
+Content-Type: multipart/signed; boundary="Sig_/bPEb4N_WcQx9cktdPsZTtVv";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-DQo+T24gVHVlLCBKYW4gMjMsIDIwMjQgYXQgMTI6MDQ6MTdQTSArMDAwMCwgSHV5YWRpIHdyb3Rl
-Og0KPj4gDQo+PiA+PiBDaGFuZ2VzIHYzIC0+IHYyOg0KPj4gPj4gIC0gYWRkIGhlbHBlciBvZiBn
-ZXR0aWQgaW5zdGVhZCBvZiBfX05SX2dldHRpZA0KPj4gPj4gIC0gYWRkIGdjYy9nbGliYyB2ZXJz
-aW9uIGluZm8gaW4gY29tbWVudHMgQ2hhbmdlcyB2MSAtPiB2MjoNCj4+ID4+ICAtIGZpeCB3aGl0
-ZXNwYWNlIGVycm9yDQo+PiA+PiAgLSByZXBsYWNlIFNZU19nZXR0aWQgd2l0aCBfTlJfZ2V0dGlk
-DQo+PiA+PiANCj4+ID4+ICB0b29scy90ZXN0aW5nL3NlbGZ0ZXN0cy9sYW5kbG9jay9mc190ZXN0
-LmMgIHwgNSArKysrLSANCj4+ID4+IHRvb2xzL3Rlc3Rpbmcvc2VsZnRlc3RzL2xhbmRsb2NrL25l
-dF90ZXN0LmMgfCA3ICsrKysrKy0NCj4+ID4+ICAyIGZpbGVzIGNoYW5nZWQsIDEwIGluc2VydGlv
-bnMoKyksIDIgZGVsZXRpb25zKC0pDQo+PiA+PiANCj4+ID4+IGRpZmYgLS1naXQgYS90b29scy90
-ZXN0aW5nL3NlbGZ0ZXN0cy9sYW5kbG9jay9mc190ZXN0LmMNCj4+ID4+IGIvdG9vbHMvdGVzdGlu
-Zy9zZWxmdGVzdHMvbGFuZGxvY2svZnNfdGVzdC5jDQo+PiA+PiBpbmRleCAxOGUxZjg2YTYyMzQu
-LmE5OTJjZjdjMGFkMSAxMDA2NDQNCj4+ID4+IC0tLSBhL3Rvb2xzL3Rlc3Rpbmcvc2VsZnRlc3Rz
-L2xhbmRsb2NrL2ZzX3Rlc3QuYw0KPj4gPj4gKysrIGIvdG9vbHMvdGVzdGluZy9zZWxmdGVzdHMv
-bGFuZGxvY2svZnNfdGVzdC5jDQo+PiA+PiBAQCAtNDU3Miw3ICs0NTcyLDEwIEBAIEZJWFRVUkVf
-VkFSSUFOVChsYXlvdXQzX2ZzKQ0KPj4gPj4gIC8qIGNsYW5nLWZvcm1hdCBvZmYgKi8NCj4+ID4+
-ICBGSVhUVVJFX1ZBUklBTlRfQUREKGxheW91dDNfZnMsIHRtcGZzKSB7DQo+PiA+PiAgCS8qIGNs
-YW5nLWZvcm1hdCBvbiAqLw0KPj4gPj4gLQkubW50ID0gbW50X3RtcCwNCj4+ID4+ICsJLm1udCA9
-IHsNCj4+ID4+ICsJCS50eXBlID0gInRtcGZzIiwNCj4+ID4+ICsJCS5kYXRhID0gInNpemU9NG0s
-bW9kZT03MDAiLA0KPj4gPj4gKwl9LA0KPj4gPg0KPj4gPkkgcmVxdWVzdGVkIHNvbWUgY2hhbmdl
-cyBoZXJlLg0KPj4gPg0KPj4gDQo+PiBDb3VsZCB5b3UgZ2l2ZSBtZSBzb21lIGluc3BpcmF0aW9u
-IGhvdyB0byBmaXggaXQ/IA0KPj4gaXQgbG9va3MgZmluZSB0byBtZSB0byBhc3NpZ24gdmFsdWUg
-YXMgYWJvdmUsIHdoaWNoIGNvbnNpc3RlbnQgd2l0aCBvdGhlciBwc2V1ZG8gRlMgdGVzdHMuDQo+
-PiBUaGFua3MgaW4gYWR2YW5jZS4NCj4NCj5KdXN0IGFkZCBhbmQgdXNlIHRoaXMgZm9yIHRoZSB0
-d28gdG1wZnMgZGF0YToNCj4jZGVmaW5lIE1OVF9UTVBfREFUQSAic2l6ZT00bSxtb2RlPTcwMCIN
-Cj4NCj5Zb3UgY2FuIGFsc28gbWFrZSB0aGUgbW50X3RtcCB2YXJpYWJsZSBzdGF0aWMgY29uc3Qu
-DQoNCg0Kc3RhdGljIGNvbnN0IGlzIG5vdCB1c2VmdWwgZm9yIHRoZSBjYXNlLCB0aGUgZXJyb3Qg
-c3RpbGwsIGFuZCBJJ2xsIHVzZSBtYWNybyBkZWZpbml0aW9uIHRvIHNvbHZlIGl0Lg0KdGhhbmtz
-IHlvdXIgd2FybWx5IGluc3RydWN0aW9uLEknbGwgc2VuZCBuZXh0IHZlcnNpb24gLCBwbGVhc2Ug
-aGVscCB0byByZXZpZXcgaXQuDQoNCg0KPiANCj4gPj4gIAkuZmlsZV9wYXRoID0gZmlsZTFfczFk
-MSwNCj4gPj4gIH07DQo+ID4+IA0KPiAgICANCg==
+--Sig_/bPEb4N_WcQx9cktdPsZTtVv
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+
+The following trees are going to be removed from linux-next because they
+have not been updated in more than a year.  If you want a tree restored,
+just let me know (and update its branch).
+
+Tree			Last commit date
+  URL
+  commits (if any)
+-----------------------------------------
+asahi-soc-fixes		2022-08-14 15:50:18 -0700
+  https://github.com/AsahiLinux/linux.git#asahi-soc/fixes
+backlight-fixes		2023-01-01 13:53:16 -0800
+  git://git.kernel.org/pub/scm/linux/kernel/git/lee/backlight.git#for-backl=
+ight-fixes
+broadcom-fixes		2022-10-16 15:36:24 -0700
+  https://github.com/Broadcom/stblinux.git#fixes
+dmi			2022-09-23 14:53:14 +0200
+  git://git.kernel.org/pub/scm/linux/kernel/git/jdelvare/staging.git#dmi-fo=
+r-next
+leds			2022-12-25 13:41:39 -0800
+  git://git.kernel.org/pub/scm/linux/kernel/git/pavel/linux-leds.git#for-ne=
+xt
+mfd-fixes		2023-01-01 13:53:16 -0800
+  git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git#for-mfd-fixes
+orangefs		2022-12-07 15:18:30 -0500
+  git://git.kernel.org/pub/scm/linux/kernel/git/hubcap/linux#for-next
+random			2023-01-04 12:11:29 -0800
+  git://git.kernel.org/pub/scm/linux/kernel/git/crng/random.git#master
+safesetid		2022-07-15 18:24:42 +0000
+  https://github.com/micah-morton/linux.git#safesetid-next
+sparc			2022-09-30 11:58:23 +0100
+  git://git.kernel.org/pub/scm/linux/kernel/git/davem/sparc.git#master
+  2d2b17d08bfc ("sparc: Unbreak the build")
+  (This commit has been included in Linus' tree as part of another commit)
+userns			2022-11-30 12:54:24 -0600
+  git://git.kernel.org/pub/scm/linux/kernel/git/ebiederm/user-namespace.git=
+#for-next
+  54e1011bd95a ("sysctl: Allow change system v ipc sysctls inside ipc names=
+pace")
+  f9b90c2062b2 ("docs: Add information about ipc sysctls limitations")
+  7608b6a72ed0 ("sysctl: Allow to change limits for posix messages queues")
+  a799be9bafe3 ("ipc/ipc_sysctl: Add missing include of linux/cred.h")
+  b895e6689ebf ("sysctl: Fix mq permission check")
+  295227b10192 ("ucount: Fix atomic_long_inc_below argument type")
+  b4b11b58cd02 ("ucount: Use atomic_long_try_cmpxchg in atomic_long_inc_bel=
+ow")
+  (only these last 2 commits actually change anything in Linus' tree)
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/bPEb4N_WcQx9cktdPsZTtVv
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmWwb10ACgkQAVBC80lX
+0GzyrAf/Rbui1YdTbzAVFmoO7OLlNZJc5cCSWUsEy5u7N+BHIZYGt/X/dBNIqikj
+OHJzGU5V2MHOvboB/8kjEtbdVY1mIGft5R7mdg6djjUjOsxEG9L6hx3bHteelYIH
+lrG/260Muf/xSjBhFn0cKGBaFuJyoBgbaLItKgPIt0yICnKeWfteCz65I6QaQsmT
+4mJop9c7eRtHf89z3GzA0+wKGGOUI6SlCnrMG3ZsKBWgf2uxbj1E2MYM+poLIGwd
+1pyXKRrio/mRNqIXqrDtmKvQrniggZNsgl2+r/SGjowQhIlUqmw/a2zwF9S/8x2T
+TXhhzKYQRPYr4vVssezdkGZofnS66A==
+=uKqs
+-----END PGP SIGNATURE-----
+
+--Sig_/bPEb4N_WcQx9cktdPsZTtVv--
