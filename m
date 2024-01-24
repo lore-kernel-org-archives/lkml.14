@@ -1,64 +1,35 @@
-Received: from mail-ot1-f42.google.com (mail-ot1-f42.google.com [209.85.210.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBB96E541;
-	Wed, 24 Jan 2024 04:45:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61179BE79;
+	Wed, 24 Jan 2024 04:50:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706071507; cv=none; b=Ag5UTmiEa9mbhPN65qK+2QDyRuqNHKcFW6jCguLPDmBOiz3kXygL5eOMcCv6BxC7qimiUCRCMKIanJeyWe23G7D7s7+1nP7qsPEvectctDa9KThPhfiBPp1UAE9wiCLE811F8VOfKnsYdoLhBwl7sjc+OqsHBtwXouVtT9HjvjA=
+	t=1706071826; cv=none; b=inq7bkvnAnP7QwTn6T1dCPfUt7VGZDaJo+uwrz3YwgK3EFI95+pGB0IX2FDqylzDypz7m53aMPb2FFUex67NveIz6FJf+aB/upbLd6kuKFGiQecE/EvYjw3ceSRITwPh4OGW4/PGRa4Wub4biDxF2DNbJaCTw73VUfCmnqibfrM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706071507; c=relaxed/simple;
-	bh=HG2CE0slLM+zfM9cl3xfZIFM34z86iPxIyEAtAZxsKc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VURvb+pE3co51uvhe9BFjpocoEuEXe4LvdFrHVR/k2bdWosFbv2IVJgqLripySsyXEBqSTPqDxIAIM5JiQbUAFDfpBQWeFY4SZInq53E9vL2wimbF7CQCFKHI9a4cWM+VYFeZvuMRrOqc2LDeaWU8aj3Yl3lABT/Cjf0vapDG2U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bw8f1dlQ; arc=none smtp.client-ip=209.85.210.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1706071826; c=relaxed/simple;
+	bh=ueRRoOlH78hfKpV0d5rbN0kmVpLLZ6tp1SNyhyIfn6U=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=dWPZ1smtM46Lrr/s59D1bAv7PaV4eiRTOAOdmdg1Pib55u+h/WvSdj8MOHJ+v1fZQKPw5E9NG/3iWeEO/SbF+GVMNjCrkdhJoDYmokQRBpws+O095kYNo2NB/6hEDNY9lU4RVKFxicJz2VHqmze8Fw7BKJEbco680Qf0cOiUZ3E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ls84FGpd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bw8f1dlQ"
-Received: by mail-ot1-f42.google.com with SMTP id 46e09a7af769-6ddeb015ec6so3606456a34.0;
-        Tue, 23 Jan 2024 20:45:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706071505; x=1706676305; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=gGgSbSJDivepBAQscRWXv1w+9CizaCLGjHSR1PUV2ww=;
-        b=bw8f1dlQ42TeFxuL/ObmaTN8pzL9THyllWnqawKyED+OvQKEYccuVs40OJvb5CfYem
-         iRFuE9jn4XMp3svE4JP+U+89v6O3D7rELlCQSmYUilFu93nHG+yYdhLyYCzcswjd+5u/
-         J7NH7/ZhZ7KQ9MSoTqMLkAdORRb65+eFk38gf0LvEEE9VcLLA6pCONkn0uu3lz9wzFqW
-         AGt8bxFrQhUTsyIQhxfQMQlhFFypPtG/HvjhrEQ1FOTSM9SW91YQP8y7tD4Dag4gjGRy
-         oB0SuasNBQD9kALpsdkG/Bs5e1zK3qREyeam498Yf/mN8dt/CMIe71X5InXT5IiWFA1/
-         VF6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706071505; x=1706676305;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=gGgSbSJDivepBAQscRWXv1w+9CizaCLGjHSR1PUV2ww=;
-        b=sqvfBZp/unWjQjbWSUucqpFhAepOFq3RPqV5dFe6ILgk2id4zuKi4g6VjeBNOYC7yR
-         Rn9DabMWWjMCDw57DYYxmXMRp5rDvdrZXmue+gPqn64agu8TOp6JLzkM4v6u/CBK4+W0
-         j/aEsXfahSU4qfWdUUyITZN40k73eDQflgh8iNENXZIrCsH3L7I5q5XC231cmCb+iuQz
-         OU/p6s2W1dyIKJjP0FwGY7/yhy7MVicGwGT1kZuXSYO1l7Jsc67WhlmfBFTkqn5pDE5w
-         KCdRxzG865wNq6kIuti7i1h9tYu4foE8ilq9ZYgYoooRSmuxt/xflvWoGzdctFsq2rBF
-         RFBw==
-X-Gm-Message-State: AOJu0YzVupuO/AxKTGBVkOAMQJ/M0t7Dzp/P45THxjlpHMvSl7AFjjFk
-	NKRnYRsmwLjcLtA29MKAwkXoJpqzGKKDRSDsI87+QChS2FEUgRJ+
-X-Google-Smtp-Source: AGHT+IEpVgByW/QWlzRTnlLOnwTOi9AodCnQDVVf7rrk+L4l0By3Z2Y/vxoE0HDz8cq1CZw5wDN3+Q==
-X-Received: by 2002:a9d:6a90:0:b0:6db:ffa2:f1fa with SMTP id l16-20020a9d6a90000000b006dbffa2f1famr1066109otq.14.1706071505037;
-        Tue, 23 Jan 2024 20:45:05 -0800 (PST)
-Received: from my-computer.uh.edu ([129.7.0.38])
-        by smtp.googlemail.com with ESMTPSA id bn11-20020a0568300c8b00b006ce28044207sm2442078otb.58.2024.01.23.20.45.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jan 2024 20:45:04 -0800 (PST)
-From: Andrew Ballance <andrewjballance@gmail.com>
-To: mchehab@kernel.org,
-	corbet@lwn.net,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Andrew Ballance <andrewjballance@gmail.com>
-Subject: [PATCH] docs: sphinx-pre-install fix-noto-sans-cjk on fedora
-Date: Tue, 23 Jan 2024 22:39:18 -0600
-Message-ID: <20240124043918.31771-1-andrewjballance@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ls84FGpd"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id E2D4EC43390;
+	Wed, 24 Jan 2024 04:50:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706071825;
+	bh=ueRRoOlH78hfKpV0d5rbN0kmVpLLZ6tp1SNyhyIfn6U=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=ls84FGpd8XLTXhNLgn89FxV/boxwhUGf9EyVVrZdFp6KSA8noNQQlmEgk30iXF01i
+	 SwWHJUqsXiHneiI+JnWzg/Z3Zr24QmxJKSA/0/Mivp7pv9LQ1gz3YReyeHuf4HqOrx
+	 WedDbMOYcuXzMxgzrbhZryDLUCm4Z6aAgFk7/uGfSmEhS+KJ77be4F/p+0WbpjXE1H
+	 f01tc4m11bV4xzBBOdClxfh6MM48bxb6P+1RKsX6aVWq0G3owuERobt2+lXdj/WGUz
+	 sQ5jPouu4oCtr/APyBbj79TGJzQiIrw4e6YNGcCx8zkfULeSDNlaCCIjwQBrtmt+Lf
+	 QICLCQ6ACNDkA==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id CB23FDFF76A;
+	Wed, 24 Jan 2024 04:50:25 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,50 +37,44 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH bpf-next v7 0/2] Skip callback tests if jit is disabled in
+ test_verifier
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <170607182582.16094.17473776124345852474.git-patchwork-notify@kernel.org>
+Date: Wed, 24 Jan 2024 04:50:25 +0000
+References: <20240123090351.2207-1-yangtiezhu@loongson.cn>
+In-Reply-To: <20240123090351.2207-1-yangtiezhu@loongson.cn>
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
+ eddyz87@gmail.com, john.fastabend@gmail.com, jolsa@kernel.org,
+ houtao@huaweicloud.com, song@kernel.org, bpf@vger.kernel.org,
+ linux-kernel@vger.kernel.org
 
-fedora 38 and later changed the directory and package name that
-provides NotoSansCJK-Regular.ttc. this adds the new search path and
-suggests the correct package if on fedora 38 or later.
+Hello:
 
-Signed-off-by: Andrew Ballance <andrewjballance@gmail.com>
----
- scripts/sphinx-pre-install | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+This series was applied to bpf/bpf-next.git (master)
+by Andrii Nakryiko <andrii@kernel.org>:
 
-diff --git a/scripts/sphinx-pre-install b/scripts/sphinx-pre-install
-index 25aefbb35377..948f284bfc8b 100755
---- a/scripts/sphinx-pre-install
-+++ b/scripts/sphinx-pre-install
-@@ -421,6 +421,7 @@ sub give_redhat_hints()
- 	#
- 	my $old = 0;
- 	my $rel;
-+	my $noto_sans_redhat = "google-noto-sans-cjk-ttc-fonts";
- 	$rel = $1 if ($system_release =~ /release\s+(\d+)/);
- 
- 	if (!($system_release =~ /Fedora/)) {
-@@ -438,6 +439,9 @@ sub give_redhat_hints()
- 		if ($rel && $rel < 26) {
- 			$old = 1;
- 		}
-+		if ($rel && $rel >= 38) {
-+			$noto_sans_redhat = "google-noto-sans-cjk-fonts";
-+		}
- 	}
- 	if (!$rel) {
- 		printf("Couldn't identify release number\n");
-@@ -446,8 +450,9 @@ sub give_redhat_hints()
- 	}
- 
- 	if ($pdf) {
--		check_missing_file(["/usr/share/fonts/google-noto-cjk/NotoSansCJK-Regular.ttc"],
--				   "google-noto-sans-cjk-ttc-fonts", 2);
-+		check_missing_file(["/usr/share/fonts/google-noto-cjk/NotoSansCJK-Regular.ttc",
-+				    "/usr/share/fonts/google-noto-sans-cjk-fonts/NotoSansCJK-Regular.ttc"],
-+				   $noto_sans_redhat, 2);
- 	}
- 
- 	check_rpm_missing(\@fedora26_opt_pkgs, 2) if ($pdf && !$old);
+On Tue, 23 Jan 2024 17:03:49 +0800 you wrote:
+> Thanks very much for the feedbacks from Eduard, John, Jiri, Daniel,
+> Hou Tao, Song Liu and Andrii.
+> 
+> v7:
+>   -- Add an explicit flag F_NEEDS_JIT_ENABLED for checking,
+>      thanks Andrii.
+> 
+> [...]
+
+Here is the summary with links:
+  - [bpf-next,v7,1/2] selftests/bpf: Move is_jit_enabled() into testing_helpers
+    https://git.kernel.org/bpf/bpf-next/c/15b4f88dcc0a
+  - [bpf-next,v7,2/2] selftests/bpf: Skip callback tests if jit is disabled in test_verifier
+    https://git.kernel.org/bpf/bpf-next/c/0b50478fd877
+
+You are awesome, thank you!
 -- 
-2.43.0
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
