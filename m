@@ -1,104 +1,76 @@
-Received: from cvs.openbsd.org (cvs.openbsd.org [199.185.137.3])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F09613341F;
-	Wed, 24 Jan 2024 20:37:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.185.137.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E10372AEEE;
+	Wed, 24 Jan 2024 20:40:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706128624; cv=none; b=YozqtUEClP0s8706fT6srqV0ncu3sHGPB2XAXw3A+udL71L5/IS9G+TXT+cX7SA31XmdSt0q85KjDHq14OI4oNbqJGgU4AKeKt+1pDXTHt6CQKUhq5wU2/mloeWS6c80AQHo3XX4isY6r3L0G+bG1JL+l0NMD7Ds3Ud/ooM82Tk=
+	t=1706128826; cv=none; b=iLtDI3g2gsBPO9kNl6ACNxAwzoWr9YMb8Yt4Gh0ztet+yW8z7r0R2H0Tz2WcwrDYwRPBZ0HlG0pQ2r6uhO5YMwZi7HEI+Qy7LRK5fqSp2g2zSRnLxjho6rXj4vI32fMEBWy7gjSe9Evw7Jg5kLs9U/8uqVeKEw+kmsyxF4NrmHA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706128624; c=relaxed/simple;
-	bh=qAbil4CI0GaxYPzRWGXFLvmaTeTW+0u/q2km4lPInBk=;
-	h=From:To:Subject:In-reply-to:References:MIME-Version:Content-Type:
-	 Date:Message-ID; b=Z68Hrty6OC8nL/Bhsw16jpD4SW5EIEVVPwF+6hzyqXwCtfNRWxcUyVW7VdLyf947DnEIj9KEQozn8q2eR0oq5AE+nb5YJZvtEvpxKE4YznBQYnHmkZreftELPpV8xPztbsJV4R4p+2wcdXORjxa4mz6fVTQmBzwcTu4cPsZPgnQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=openbsd.org; spf=pass smtp.mailfrom=openbsd.org; dkim=pass (2048-bit key) header.d=openbsd.org header.i=@openbsd.org header.b=0o7fBzG7; arc=none smtp.client-ip=199.185.137.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=openbsd.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=openbsd.org
+	s=arc-20240116; t=1706128826; c=relaxed/simple;
+	bh=wxK0+Y4TomStm0KAfGk+VX83jR39mMxWmjbT3HXrJes=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=EZ+GTWUEr+BkUaiUaiVnG/kZv7iJIF7kiDnXxSGuiCKEBW5D1y3Fug3dTfgWhRrnWLm8JmxNOVK5GAxLgU+VciB1Ulk6DE/mb3uOlXUCm8Yj0KwePDxGMGMj2oIHl9laXjnu40fQgttDPTxMFsGWGCfO0vwE5GSsdmgEqmwtwkI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oZ1jA/gb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=openbsd.org header.i=@openbsd.org header.b="0o7fBzG7"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; s=selector1; bh=qAbil4CI0G
-	axYPzRWGXFLvmaTeTW+0u/q2km4lPInBk=; h=date:references:in-reply-to:
-	subject:to:from; d=openbsd.org; b=0o7fBzG7svwTo7Kh/7vEMdx4zsLVBwfhUjx7
-	LzKHCLemDhJUdJ7kBZaqq01ZZ6mlhV0jWW06VsG6SUsO7zj0FeYsoxnPL9UtPen++V47RQ
-	ErfXssKrPcoH8QLd+hU+jukqcPmjimWifKkdopTDURMn9dO7cqzVoKyFukCGefgWOYXTio
-	xURM/Wusq1CJvrg1T+Azs3147HZSSvjL+B5MXaUTyh8ZOw3ldi6leFFdbZoK66gbnu2Eg3
-	///ySdBAMqzJCTTXtIrNNoQccj9/O8GFah537gVUnEWwIe/8wXXjb5KYV0+qI/7G4QlCcH
-	GnAgpHEqv2ufgXUk2hJGztMgSA==
-Received: from cvs.openbsd.org (localhost [127.0.0.1])
-	by cvs.openbsd.org (OpenSMTPD) with ESMTP id 065cb52c;
-	Wed, 24 Jan 2024 13:37:01 -0700 (MST)
-From: "Theo de Raadt" <deraadt@openbsd.org>
-To: "Liam R. Howlett" <Liam.Howlett@Oracle.com>,
-    Jeff Xu <jeffxu@chromium.org>, akpm@linux-foundation.org,
-    keescook@chromium.org, jannh@google.com, sroettger@google.com,
-    willy@infradead.org, gregkh@linuxfoundation.org,
-    torvalds@linux-foundation.org, usama.anjum@collabora.com,
-    rdunlap@infradead.org, jeffxu@google.com, jorgelo@chromium.org,
-    groeck@chromium.org, linux-kernel@vger.kernel.org,
-    linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
-    pedro.falcato@gmail.com, dave.hansen@intel.com,
-    linux-hardening@vger.kernel.org
-Mail-Followup-To: "Liam R. Howlett" <Liam.Howlett@Oracle.com>,
-                  Jeff Xu <jeffxu@chromium.org>,
-                  akpm@linux-foundation.org, keescook@chromium.org,
-                  jannh@google.com, sroettger@google.com,
-                  willy@infradead.org, gregkh@linuxfoundation.org,
-                  torvalds@linux-foundation.org,
-                  usama.anjum@collabora.com, rdunlap@infradead.org,
-                  jeffxu@google.com, jorgelo@chromium.org,
-                  groeck@chromium.org, linux-kernel@vger.kernel.org,
-                  linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
-                  pedro.falcato@gmail.com, dave.hansen@intel.com,
-                  linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v7 2/4] mseal: add mseal syscall
-In-reply-to: <20240124200628.ti327diy7arb7byb@revolver>
-References: <20240122152905.2220849-1-jeffxu@chromium.org> <20240122152905.2220849-3-jeffxu@chromium.org> <20240123181457.idckaydk7dt7q2qy@revolver> <CABi2SkX=wKnHmooxXzBnJxxmtfSjvfgYabN1Wh1LxFYjtFoFaQ@mail.gmail.com> <20240124200628.ti327diy7arb7byb@revolver>
-Comments: In-reply-to "Liam R. Howlett" <Liam.Howlett@Oracle.com>
-   message dated "Wed, 24 Jan 2024 15:06:28 -0500."
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oZ1jA/gb"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 93040C433C7;
+	Wed, 24 Jan 2024 20:40:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706128825;
+	bh=wxK0+Y4TomStm0KAfGk+VX83jR39mMxWmjbT3HXrJes=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=oZ1jA/gb0v2BG2acW4NcjnoaKitl6nXPGBR1OL2LAUOWt6orAjtutYVSbzTddSl5h
+	 Ht4we90CIWg2rsBfhGbqvEhjkYRgJHx4zFJWarim8qZgVIrTS0vlREdOvzS11NzK8e
+	 Hi2c9avOd2AbXSIK8lARTn+DuKbKYIVywd02B8GjFtEKP9YgX7oF8K0LPjhEzwJku+
+	 hVghTScxuIVUvmzwTWe2V9MihE9sHZ5S3phMpmyvxH2e0wtK4HSmFIa3vP3bxFkd99
+	 Vwms0v7wlV1KCB69jH6BZmnQYhJ4QFJq25diTK9qARkUCSf7LjbX5xI7EYrL5hl21M
+	 S/AklizdtpjRw==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 754FFDFF762;
+	Wed, 24 Jan 2024 20:40:25 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <54058.1706128621.1@cvs.openbsd.org>
-Date: Wed, 24 Jan 2024 13:37:01 -0700
-Message-ID: <98656.1706128621@cvs.openbsd.org>
+Content-Transfer-Encoding: 8bit
+Subject: Re: [net v4 PATCH 1/1] net: mvpp2: clear BM pool before initialization
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <170612882547.7254.6622322810423301984.git-patchwork-notify@kernel.org>
+Date: Wed, 24 Jan 2024 20:40:25 +0000
+References: <20240119035914.2595665-1-jpatel2@marvell.com>
+In-Reply-To: <20240119035914.2595665-1-jpatel2@marvell.com>
+To: Jenishkumar Patel [C] <jpatel2@marvell.com>
+Cc: marcin.s.wojtas@gmail.com, linux@armlinux.org.uk, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org
 
-Liam R. Howlett <Liam.Howlett@Oracle.com> wrote:
+Hello:
 
-> > Adding mseal() into picture, however, the heap is then sealed
-> > partially, user can still free it, but the memory remains to be RO,
-> > and the result of brk-shrink is nondeterministic, depending on if
-> > munmap() will try to free the sealed memory.(brk uses munmap to shrink
-> > the heap).
+This patch was applied to netdev/net.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-"You are holding it wrong".
+On Thu, 18 Jan 2024 19:59:14 -0800 you wrote:
+> Register value persist after booting the kernel using
+> kexec which results in kernel panic. Thus clear the
+> BM pool registers before initialisation to fix the issue.
+> 
+> Fixes: 3f518509dedc ("ethernet: Add new driver for Marvell Armada 375 network unit")
+> Signed-off-by: Jenishkumar Maheshbhai Patel <jpatel2@marvell.com>
+> 
+> [...]
 
-> > [...]. We could document above mentioned limitations so devs are
-> > more careful at the time to choose what memory to seal.
+Here is the summary with links:
+  - [net,v4,1/1] net: mvpp2: clear BM pool before initialization
+    https://git.kernel.org/netdev/net/c/9f538b415db8
 
-You mean like they need to be careful what memory they map, careful
-what memory they unmap, careful what they do with mprotect, careful
-about not writing or reading out of bounds, etc.  They need to be
-careful about everything.
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-Programmers have complete control over the address space in a program.
-This is Linux we are talking about, it still doesn't have strict policy
-on W | X memory, but misuse of mseal is suddenly a developer crisis?
-
-Why is this memory attribute different, and how does it actually help?
-
-When they use mseal on objects with unproven future, the program will
-crash later, beautifully demonstrating that they held it wrong.  Then
-they can fix their abusive incorrect code.
-
-This discussion about the malloc heap is ridiculous.  Obviously it is
-programmer error to lock the permissions on memory you will free for
-reuse.  But you can't fix this problem with malloc(), without breaking
-other extremely common circumstances where the allocation of memory
-and PERMANENT-USE-WITHOUT-RELEASE of such memory are seperated over a
-memory boundary, unless you start telling all open source library authors
-to always use MAP_SEALABLE in their mmap() calls.
 
