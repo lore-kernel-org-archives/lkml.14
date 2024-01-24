@@ -1,90 +1,100 @@
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BBA9134757;
-	Wed, 24 Jan 2024 20:31:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5981164CFE;
+	Wed, 24 Jan 2024 20:34:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706128309; cv=none; b=KbNnpGXOsjLjRIdW+gLCOybKFI5V4XJkU7Rv3t/vI0FUu/viIShLl8QvWyA3i3d2w6wgpd6aJG/zEqlKSU3ffsH35azcMf0nHJWPvaYx5GavxbRGn+Pn3+wDnyoPClZyMitVJ5Az8mDsHkBt5q+9GJ+G4mIxnW8/9gJ3B4O7WK4=
+	t=1706128481; cv=none; b=W+YKXhQMjB69cbuMU1byctpN4aNDjn97nkI7X7GwHxMn+Z5o7rKjN/mlpFXyScbq2/Xco3spl2zOZpnOD21pVmqzQ0xkX+2IdE9yeogmPVcOXXMIoK1zYAfX/OEwoglO0z3KKq7HohUmBhdM+5jh1b7Mn9tLLj38tXQPYMIlc5c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706128309; c=relaxed/simple;
-	bh=8jgRx1Ebpfo3V8P6upG202YRHaUAoTVmSD8UvYQ4OPw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=H5Ep8Er/5YuZBMqRJ5D+VHggUTmXQ+79I+OBGg05+jkufSb5iLpsGK5TMsVhaYbTwioJ1DtxOvRxCF7PyCGkXRIUTrf+nAlQkYKWOC3aIkBCCmeH60QdSPJ5QBPizOKLFSjxgRikwKnwha0bMRGteWOCll06gtI568zH5HWTFKY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jk7zXi2M; arc=none smtp.client-ip=209.85.167.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1706128481; c=relaxed/simple;
+	bh=njWPHFRX9VBUYd2HwT+iNnDCR9j7CQAq4CCN3sSHM5M=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=NgoKaDSqrjOA5GpEbl2JbGgXchnO1xAVC6xzZUmRB7kbzO/qeDOxDdacRE+l4S2ARBnzqqEnlCq40XVkiB3+XT6SeudZu1wq3gwqLOD69UyGOlCunboX3r/kt1ll2XCZmYhwTFZ7SR6MwBL5O5ztwsJhI8BKxPh3jB09NEefIWs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=C5JB22Eq; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jk7zXi2M"
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-50e9e5c97e1so7458671e87.0;
-        Wed, 24 Jan 2024 12:31:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706128306; x=1706733106; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8jgRx1Ebpfo3V8P6upG202YRHaUAoTVmSD8UvYQ4OPw=;
-        b=jk7zXi2MOjxjXpz8PSAIwBH2zRfDk1YtbHwGfOXjYkQAA8cg2AxmJL/IE97NlJs8zE
-         QAcuowTYjLKPwYwENuEKws1so7AwCaTmzEeuRCPmIuhqOWnTZFer5AFf4VxqXLmgnaF8
-         kyQvwcTJiN2xYJWa1o4q5Cm1e+DfJft1wdSG2uU+qpBIGGgNtLBEftpPsT3ZJ6Jj3/i7
-         Hwa+G/W1yYZH0gBw1S4tzyr2IYCFvtXRrhz+7Ve5WdpoQGvnkPU2YqUW6mnXKrADbxb7
-         Our++8VELuI+G0o+hMCJvdTnssxrDPbQXyR7z24h/YgjWiMi7U3Q78L/cZxy1e1jDoA4
-         5seA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706128306; x=1706733106;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8jgRx1Ebpfo3V8P6upG202YRHaUAoTVmSD8UvYQ4OPw=;
-        b=HFLH7Ext9GJRZIzpvimu9NrLyndBxGU3Z7y0IptFqfMz3V9VB1FPsO0YGbqJlGL8+k
-         P8lW1VckDICiflzzbKDk9ojmQEX4vZOqGMeXrD/jzzq6DIgEbroJQp1RUMTyN6JyCfK8
-         L19bae95ToYOyfMYd54TvA9BuYuhO9YJzHiinSBtzwp9dD1plm+Y0RFtuAZhMvKN8Mfg
-         aWH1CwbfoWOfZMr0G8x2Aw/MYV8soBFN6e3W/qe2mX9pA8UbCB1WKtyI9R7FbwCBzF9Y
-         cV0PBH2v6kUbLZef01bF81RTgJQ6vS8+FLAqRL/VNl4uefI+QYlbr6eJVlV6N6tg+A2E
-         xbwA==
-X-Gm-Message-State: AOJu0YyxYgoqd4allCh7fhvL4BRltioJYpXzXuhPE8GRGFs1oyaolhz+
-	wfrk5DnhnfFe/M8BGDo0jbExMnPpIzMgCLbG3a97NVhMbm6pNmhmEkz6dyepCgLuq3BU3nfxSFO
-	DDjNaQEMS759pJqohdMQK74lAODBRlqqxdIk=
-X-Google-Smtp-Source: AGHT+IEvshG7K8I4wt3i9BmnCXK/Qng+RZGZX7HoIcZS4rZRpDxHgjOg+KutOqFsoKKEZMeTiY1lLHcxvLkKAYKIwH4=
-X-Received: by 2002:a19:e016:0:b0:510:16f3:8087 with SMTP id
- x22-20020a19e016000000b0051016f38087mr326122lfg.32.1706128306118; Wed, 24 Jan
- 2024 12:31:46 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="C5JB22Eq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1706128478;
+	bh=njWPHFRX9VBUYd2HwT+iNnDCR9j7CQAq4CCN3sSHM5M=;
+	h=From:Date:Subject:To:Cc:From;
+	b=C5JB22EqSKntWSOxCynR/3Q7KltjJGBsros94uUbGKsx1dC0xSmAdKdbrUjNOmBtK
+	 /TxEDUHA4qPAfC9Pce4Z19DbgsQhTwCaPv6vY//qvjOjjjazKCkO06tkRpJnT7eYEk
+	 AewFIv1eRaXAYaNbAI0YJ1aMHlZ69Av9QAkdHGVenR0zbBD1GxQ4B33sJbArvSygUz
+	 tkomH6fOW9qRa3SyPWdoJWCki5VTvCr2avwut32LBGfbzp7MHm3HfRx+1JUhEYoa/w
+	 sWYREUhas6l1uIC61K0kVrialRtZL1VHQDD3+bBqU4w/O2vsIXx1I6lXFbpCvpqNGK
+	 veHP2lyYMhOeA==
+Received: from [192.168.0.47] (zone.collabora.co.uk [167.235.23.81])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: nfraprado)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 5AFFB37813E9;
+	Wed, 24 Jan 2024 20:34:34 +0000 (UTC)
+From: =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
+Date: Wed, 24 Jan 2024 17:31:43 -0300
+Subject: [PATCH] cpufreq: mediatek-hw: Don't error out if supply is not
+ found
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240124151222.1448570-1-ckeepax@opensource.cirrus.com> <ZbEqpbwTOlWBHrL2@ediswmail9.ad.cirrus.com>
-In-Reply-To: <ZbEqpbwTOlWBHrL2@ediswmail9.ad.cirrus.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Wed, 24 Jan 2024 22:31:09 +0200
-Message-ID: <CAHp75Ve=iuDBKVLFNr--zVUnfASXWDUMoYoOzoM_6tsf0YkX1g@mail.gmail.com>
-Subject: Re: [PATCH 1/6] mfd: cs42l43: Tidy up header includes
-To: Charles Keepax <ckeepax@opensource.cirrus.com>
-Cc: lee@kernel.org, broonie@kernel.org, alsa-devel@alsa-project.org, 
-	patches@opensource.cirrus.com, linux-kernel@vger.kernel.org, 
-	linux-spi@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20240124-mtk-cpufreq-hw-regulator-enodev-fix-v1-1-6f9fb7275886@collabora.com>
+X-B4-Tracking: v=1; b=H4sIAK5zsWUC/x2NSwqEMBAFryK9tiEJIuNcZXAhpqONTuJ0/IF4d
+ 5tZ1qN4dUEmYcrwLi4Q2jlzigq2LKAfuzgQslcGZ1xlrKvwu07YL1sQ+uF4oNCwzd2aBCkmTzs
+ GPjHUVuWmfjXegD4tQjr/K5/2vh88GESLdQAAAA==
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, Mark Brown <broonie@kernel.org>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+ kernel@collabora.com, linux-pm@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-mediatek@lists.infradead.org, "kernelci.org bot" <bot@kernelci.org>, 
+ =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
+X-Mailer: b4 0.12.4
 
-On Wed, Jan 24, 2024 at 5:20=E2=80=AFPM Charles Keepax
-<ckeepax@opensource.cirrus.com> wrote:
-> On Wed, Jan 24, 2024 at 03:12:17PM +0000, Charles Keepax wrote:
-> > Use more forward declarations, move header guards to cover other
-> > includes, and rely less on including headers through other headers.
+devm_regulator_get_optional() returns -ENODEV if no supply can be found.
+By introducing its usage, commit 788715b5f21c ("cpufreq: mediatek-hw:
+Wait for CPU supplies before probing") caused the driver to fail probe
+if no supply was present in any of the CPU DT nodes.
 
-...
+Use devm_regulator_get() instead since the CPUs do require supplies
+even if not described in the DT. It will gracefully return a dummy
+regulator if none is found in the DT node, allowing probe to succeed.
 
-> Apologies Andy, I forgot to CC you on this series, hopefully you
-> can pick up off the list, but let me know if you want me to
-> resend.
+Fixes: 788715b5f21c ("cpufreq: mediatek-hw: Wait for CPU supplies before probing")
+Reported-by: kernelci.org bot <bot@kernelci.org>
+Closes: https://linux.kernelci.org/test/case/id/65b0b169710edea22852a3fa/
+Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
+---
+ drivers/cpufreq/mediatek-cpufreq-hw.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Suggested-by automatically being converted to Cc, how do you send your seri=
-es?
+diff --git a/drivers/cpufreq/mediatek-cpufreq-hw.c b/drivers/cpufreq/mediatek-cpufreq-hw.c
+index a1aa9385980a..8d097dcddda4 100644
+--- a/drivers/cpufreq/mediatek-cpufreq-hw.c
++++ b/drivers/cpufreq/mediatek-cpufreq-hw.c
+@@ -312,7 +312,7 @@ static int mtk_cpufreq_hw_driver_probe(struct platform_device *pdev)
+ 			return dev_err_probe(&pdev->dev, -EPROBE_DEFER,
+ 					     "Failed to get cpu%d device\n", cpu);
+ 
+-		cpu_reg = devm_regulator_get_optional(cpu_dev, "cpu");
++		cpu_reg = devm_regulator_get(cpu_dev, "cpu");
+ 		if (IS_ERR(cpu_reg))
+ 			return dev_err_probe(&pdev->dev, PTR_ERR(cpu_reg),
+ 					     "CPU%d regulator get failed\n", cpu);
 
-P.S> I saw that you sent a v2 already, am I right?
+---
+base-commit: 9ac3ebaef3cc43ecd136911c44f1427286ee5a05
+change-id: 20240124-mtk-cpufreq-hw-regulator-enodev-fix-f614019689d0
 
---=20
-With Best Regards,
-Andy Shevchenko
+Best regards,
+-- 
+Nícolas F. R. A. Prado <nfraprado@collabora.com>
+
