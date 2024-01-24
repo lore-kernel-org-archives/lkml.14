@@ -1,194 +1,307 @@
-Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38CBF1774E
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 08:22:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63AC517572
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 08:22:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706084562; cv=none; b=M0KdhEm3Man6v2Dt5Vx8RGwGhwVQAUCByaKsBHyTq8mwH/iVx+WapsCe/usP8qW0r82KuXj+RLbnSFK+sWdwe2r8WFtp/9QiOyHb+JN3moS8kHafs+0wkR9Y0e/eBP+IQnafpotmP4+3yrExQ2po0MQiAu4kl9X3Nq4Ev/HvRJM=
+	t=1706084565; cv=none; b=mUO3KJx7mZEZ7vhRBPISiio3gbI9uC9recZ5c8bOyOY8F/ijT5DukKviB8EJAi8XC9E3B9y1YRuTp7u3T0f+xZ3VU7IBCcXwDx5L8npa8bdIuiX/CQkOtYeKaQtEtpncBiQq78VcRXEzsCWRQFz9GIPtTuVwPJVad7UJAHisNoI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706084562; c=relaxed/simple;
-	bh=GwYYyIKHpPbisEwWC6WETTohGHFFDsZNlW29Ta37IRU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tQ20xxMV2Adf+tvVg5kI++x3WGoP3ePWmFxx8UwfWPUb2V/kcYZR8pPsS5Okh+hru+9f6hgbLX2cj1lb7fJCmACvVv8NFo4eXu8fYD/nnEFGifpLpMaeikfseUKY8i+1KHU1dFeoNHmh9L+Bb325PlxujjB6Rio+z0fZR43QNFA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=eb5fDZ/D; arc=none smtp.client-ip=209.85.215.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1706084565; c=relaxed/simple;
+	bh=p9xxsKE47BRCCzcGZBCseP1f0ej9KUvrtDS/BG/oTrE=;
+	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
+	 Content-Type:References; b=WEcFbV7IAYxljNMMZ/f5IFDcO8FVB8dl/astAjpHsv2OSy8lypfbxkAzGBIpK3Oz/KRcvtQKYH/CWksBOxu5p4+8Afie9DqS8anySuGFl7Azg4C/rEesgFqkUKQJ2P/TRULlUkQnOWIMjtJPqHeCb/buUQDfxrrOT3ZK8qAJ3CY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=EKGpWJEF; arc=none smtp.client-ip=203.254.224.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eb5fDZ/D"
-Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-5d42e7ab8a9so633452a12.3
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 00:22:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706084559; x=1706689359; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=xHnMGTip0k5WQr/ocF61LjVmzrROreb8ZXQsvgEPM10=;
-        b=eb5fDZ/DgdxAvh1qiMCYwQGoY6EeTDznvXpToqOE4i37MCsStZSxiCXJQI/HS8RAnm
-         Pc+dNHBYCkxk2DnCezCoN9zhqg383U67VurebYOiWc3t2cFsOI5OHOClRL2SUmIWet+L
-         OmbglyBreoy0XfwKP++GRtkL5+Rkqy1hD92/VKYA7OnWEzxNxEAGQuv3cwskmqkRWtFB
-         4PSzz4Vxom9bJnOWSeeuHplf4sS/mJSDMrbi/5UXgBveCZXA612iug/a/rZ0r1pPKtMs
-         nua1kkaZV5uMtqEaBoYFhfjjPNo7epf2xSrEY8WavA1Ak/9squqi9KGooAHaIf/ewOSL
-         afOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706084559; x=1706689359;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xHnMGTip0k5WQr/ocF61LjVmzrROreb8ZXQsvgEPM10=;
-        b=usSLnzno6vTJC14xNNy/KeXlWLJO2WRvESPFEakxR18lS2tyXIUdRbyvinZZ1s3Cf3
-         L4LfyHkrRagnGaR/V8BYXZZMaEaVNEs3tN1hwwFxb9VUgBhl1oSqjacAQsvL3okREVdX
-         f68lN3PPtuV3WlYpBVkG7DwwQ8sFT02KeWz0Ydhr7QH9ezGnOfGM3GRmQzUjfPVxD1bn
-         UT4ypiOJIOnNld8z8qxsgIgLc6LC6w/jrU1YQU23seQJ5m/srIoXCNOtaWMywzn0H23U
-         dc+t3QGtf9UgWhE4+pMPO0M7rYMRBaJIuBz08R0jHqmvwLG9UHFX4pGy/DSkG2H6YrbY
-         CPkg==
-X-Gm-Message-State: AOJu0YwfU+D4EvgaX5z7HI0q86LsiJ5Yzvo62TAQauY4ydiPJg2mmKkx
-	5hZBKSUyMr841GFYEz9/1Srern+B7RtLzArorSApdVB95UpY6blSQIlRt6hJYQ==
-X-Google-Smtp-Source: AGHT+IFYijfZfQJRYeJr90+4Q5xmMq6ccGYCRmITy1K5PGzM1guUVEdm+Q1tNA1zYNMr19HRhkaD0g==
-X-Received: by 2002:a05:6a20:6115:b0:19c:32cf:8ff2 with SMTP id m21-20020a056a20611500b0019c32cf8ff2mr273690pzb.79.1706084559474;
-        Wed, 24 Jan 2024 00:22:39 -0800 (PST)
-Received: from thinkpad ([117.217.189.109])
-        by smtp.gmail.com with ESMTPSA id z66-20020a626545000000b006dbe6eba197sm4768321pfb.217.2024.01.24.00.22.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jan 2024 00:22:39 -0800 (PST)
-Date: Wed, 24 Jan 2024 13:52:31 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Nitin Rawat <quic_nitirawa@quicinc.com>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	"James E.J. Bottomley" <jejb@linux.ibm.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
-	Can Guo <quic_cang@quicinc.com>,
-	Naveen Kumar Goud Arepalli <quic_narepall@quicinc.com>
-Subject: Re: [PATCH V1 1/2] scsi: ufs: qcom : Refactor phy_power_on/off calls
-Message-ID: <20240124082231.GA4906@thinkpad>
-References: <20240112153348.2778-1-quic_nitirawa@quicinc.com>
- <20240112153348.2778-2-quic_nitirawa@quicinc.com>
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="EKGpWJEF"
+Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
+	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20240124082241epoutp02f3af3a5916dbf40515f04fb4d0eca235~tOt6Yk3-X0267002670epoutp02-
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 08:22:41 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20240124082241epoutp02f3af3a5916dbf40515f04fb4d0eca235~tOt6Yk3-X0267002670epoutp02-
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1706084561;
+	bh=R5VbhjhJVO8m4BgjCBAU+C1rYvkYBd3wZ2ug5Ml/88E=;
+	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+	b=EKGpWJEF0zpSo81OWNqMSljiRQ32fWPfc6KPNlJVyWLiQ56ITJNVmTM44Y3rKFLR+
+	 xN86nOLXqNZU/rnZO1AdgOjfrZkRfMN0tUPOutAXlrkoMBvw3goCQXQdZpU4oR2EPI
+	 TfMVhRN2gu7tbW9RBlJh8vTLyJP4d7XFuBf9fFl0=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+	epcas5p1.samsung.com (KnoxPortal) with ESMTP id
+	20240124082241epcas5p1bd3312b6a923e5ba85857413994a2308~tOt55RoXl1857318573epcas5p1J;
+	Wed, 24 Jan 2024 08:22:41 +0000 (GMT)
+Received: from epsmgec5p1-new.samsung.com (unknown [182.195.38.174]) by
+	epsnrtp2.localdomain (Postfix) with ESMTP id 4TKcQR2dMcz4x9Pv; Wed, 24 Jan
+	2024 08:22:39 +0000 (GMT)
+Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
+	epsmgec5p1-new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	C4.B5.19369.FC8C0B56; Wed, 24 Jan 2024 17:22:39 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
+	20240124065319epcas5p12681e301fd10a8da9f063f9fc1581d01~tNf4U_fHF0975209752epcas5p1N;
+	Wed, 24 Jan 2024 06:53:19 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20240124065319epsmtrp1f32bb73c3b9651595741bfd10bd3be1e~tNf4TOi9i2267022670epsmtrp1a;
+	Wed, 24 Jan 2024 06:53:19 +0000 (GMT)
+X-AuditID: b6c32a50-c99ff70000004ba9-4f-65b0c8cfaa23
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+	epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	54.55.08755.FD3B0B56; Wed, 24 Jan 2024 15:53:19 +0900 (KST)
+Received: from FDSFTE462 (unknown [107.122.81.248]) by epsmtip2.samsung.com
+	(KnoxPortal) with ESMTPA id
+	20240124065316epsmtip2581a492f05445697e6023d189fec380a~tNf1tsIX72736927369epsmtip2K;
+	Wed, 24 Jan 2024 06:53:16 +0000 (GMT)
+From: "Shradha Todi" <shradha.t@samsung.com>
+To: "'Manivannan Sadhasivam'" <manivannan.sadhasivam@linaro.org>
+Cc: <linux-clk@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-pci@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-samsung-soc@vger.kernel.org>, <mturquette@baylibre.com>,
+	<sboyd@kernel.org>, <jingoohan1@gmail.com>, <lpieralisi@kernel.org>,
+	<kw@linux.com>, <robh@kernel.org>, <bhelgaas@google.com>,
+	<krzysztof.kozlowski@linaro.org>, <alim.akhtar@samsung.com>,
+	<linux@armlinux.org.uk>, <m.szyprowski@samsung.com>,
+	<pankaj.dubey@samsung.com>
+In-Reply-To: <20240120150303.GB5405@thinkpad>
+Subject: RE: [PATCH v3 1/2] clk: Provide managed helper to get and enable
+ bulk clocks
+Date: Wed, 24 Jan 2024 12:23:15 +0530
+Message-ID: <05ea01da4e92$0357d310$0a077930$@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240112153348.2778-2-quic_nitirawa@quicinc.com>
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQK3Yhu837gawrdP2S3E1hwP53Jf7wFhoUR7AWI/r/kCQ7XGLK8GH1bw
+Content-Language: en-in
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrBJsWRmVeSWpSXmKPExsWy7bCmuu75ExtSDT53CFk8mLeNzWJJU4bF
+	ii8z2S32vt7KbtHQ85vVYtPja6wWH3vusVpc3jWHzeLsvONsFjPO72OyODR1L6NFy58WFou1
+	R+6yW9xt6WS1uHjK1WLR1i/sFv/37GC3+HdtI4uDkMflaxeZPd7faGX32DnrLrvHgk2lHptW
+	dbJ53Lm2h83jyZXpTB6bl9R79G1ZxejxeZNcAFdUtk1GamJKapFCal5yfkpmXrqtkndwvHO8
+	qZmBoa6hpYW5kkJeYm6qrZKLT4CuW2YO0EtKCmWJOaVAoYDE4mIlfTubovzSklSFjPziElul
+	1IKUnAKTAr3ixNzi0rx0vbzUEitDAwMjU6DChOyMOUvXMhasMKiYtn8bcwPjFPUuRk4OCQET
+	iVMfvjOB2EICexglLu2QgLA/MUrc7zPuYuQCsr8xSkxdv4QdpuHL8pmsEIm9jBIzp3ayQzgv
+	GCUWbZnPCFLFJqAj8eTKH2YQW0TAQaL97ScWkCJmgfvMEhd6z4Pt4xTQlbj6fRMriC0sEC7x
+	88pPMJtFQFVi8tb5YDavgKXEurP/WCBsQYmTM5+A2cwC2hLLFr5mhjhJQeLn02WsEMvcJJ6c
+	bmKGqBGXOPqzhxlksYRAO6fEoQXToX5wkVhx+D0ThC0s8er4Fqi4lMTL/jYoO11i5eYZUAty
+	JL5tXgJVby9x4MocoCM4gBZoSqzfpQ8RlpWYemodE8RePone30+gynkldsyDsZUlvvzdwwJh
+	S0rMO3aZdQKj0iwkr81C8tosJC/MQti2gJFlFaNUakFxbnpqsmmBoW5eajk8xpPzczcxgpO8
+	VsAOxtUb/uodYmTiYDzEKMHBrCTCe0NyXaoQb0piZVVqUX58UWlOavEhRlNggE9klhJNzgfm
+	mbySeEMTSwMTMzMzE0tjM0Mlcd7XrXNThATSE0tSs1NTC1KLYPqYODilGpiydTwcpogvMMz5
+	tF3kyNVdr9jDV35Ie9rGprsqsX/Oaw39bd7thyd/vXze01T66pJ50hKXK5f6rj278mTt2jvi
+	i7zE2VVt63QzP977xZS4TvzS45Rdu8S+7tN/ah1rOe3wTZMbr0Or+S8qx94y0evXT57wOcz2
+	SdlykdIJBzx6yzRN6jWeR56LcYnu6Kxe8qvnRaNgXfkxWcdVPe6Zm/Yfdjnc1xmxMkZMtJql
+	cnpja5raXHvfjGiF4F9cHd53rXkyVY5Wtf3lEA/mujjZ+Plr1jV225o09e5+ntESYa994E79
+	y868KUt+lWkfa49eUe6yZuH2Mt27khMuXk/I5DpzN2Ri9zmxyd3BT9K7OZVYijMSDbWYi4oT
+	AZRMtxZ7BAAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrIIsWRmVeSWpSXmKPExsWy7bCSvO79zRtSDX6uYbV4MG8bm8WSpgyL
+	FV9mslvsfb2V3aKh5zerxabH11gtPvbcY7W4vGsOm8XZecfZLGac38dkcWjqXkaLlj8tLBZr
+	j9xlt7jb0slqcfGUq8WirV/YLf7v2cFu8e/aRhYHIY/L1y4ye7y/0crusXPWXXaPBZtKPTat
+	6mTzuHNtD5vHkyvTmTw2L6n36NuyitHj8ya5AK4oLpuU1JzMstQifbsErozlvf9YCxbpV5zY
+	8ZitgfG/ahcjJ4eEgInEl+UzWbsYuTiEBHYzSuy4+IEFIiEp8fniOiYIW1hi5b/n7BBFzxgl
+	Dp84C5ZgE9CReHLlDzOILSLgINH+9hMLSBGzwEdmic2zf0KNvcMoseraCrAqTgFdiavfN7GC
+	2MICoRIXG9exgdgsAqoSk7fOB4vzClhKrDv7jwXCFpQ4OfMJmM0soC3x9OZTOHvZwtfMEOcp
+	SPx8uowV4go3iSenm5ghasQljv7sYZ7AKDwLyahZSEbNQjJqFpKWBYwsqxglUwuKc9Nziw0L
+	DPNSy/WKE3OLS/PS9ZLzczcxgmNdS3MH4/ZVH/QOMTJxMB5ilOBgVhLhvSG5LlWINyWxsiq1
+	KD++qDQntfgQozQHi5I4r/iL3hQhgfTEktTs1NSC1CKYLBMHp1QDU7eL2yuRM6dUum5fzlP4
+	3+9UVLD55Qr9N43s9ufX31k932J9CGN3+Bppo5Dt/gbsVYtnv7ode/FQ84KFexvmLLNW+sZ0
+	PqrubVyHgtusvq3rAs0CWHYKnc3tXS5flrZ6o75p40Rj2a28smmXJxxs/NHsmTthcmlPVJHd
+	9UeFZ1ZwBy+X37thBjd3vSRb4ZqdKb7HHRucm5/U3lzBXr69KujACsvIzGnFcz48lzAu7RSx
+	3b088zb3knPZZ28ECHxY+endC2n2/ezcUYKvLn27aXVshUN5tsSrp06Gq1kemFz2EJ+VdOD7
+	ywt7+Asyon9OYpt5cOPKOy+3z3nw/H27gejEimLvFdU7QnUjFnSLRCuxFGckGmoxFxUnAgAV
+	H02gZAMAAA==
+X-CMS-MailID: 20240124065319epcas5p12681e301fd10a8da9f063f9fc1581d01
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20240110110156epcas5p36bac4093be0fa6eaa501d7eaed4d43d3
+References: <20240110110115.56270-1-shradha.t@samsung.com>
+	<CGME20240110110156epcas5p36bac4093be0fa6eaa501d7eaed4d43d3@epcas5p3.samsung.com>
+	<20240110110115.56270-2-shradha.t@samsung.com>
+	<20240120150303.GB5405@thinkpad>
 
-On Fri, Jan 12, 2024 at 09:03:47PM +0530, Nitin Rawat wrote:
-> Commit 3f6d1767b1a0 ("phy: ufs-qcom: Refactor all init steps into
-> phy_poweron") removes the phy_power_on/off from ufs_qcom_setup_clocks
 
-s/removes/moved
 
-> to suspend/resume func.
-> 
-> To have a better power saving, remove the phy_power_on/off calls from
-> resume/suspend path and put them back to ufs_qcom_setup_clocks, so that
-> PHY's regulators & clks can be turned on/off along with UFS's clocks.
-> 
-> Since phy phy_power_on is separated out from phy calibrate, make
-> separate calls to phy_power_on and phy_calibrate calls from ufs qcom
-> driver.
-> 
+> -----Original Message-----
+> From: Manivannan Sadhasivam <manivannan.sadhasivam=40linaro.org>
+> Sent: 20 January 2024 20:33
+> To: Shradha Todi <shradha.t=40samsung.com>
+> Cc: linux-clk=40vger.kernel.org; linux-kernel=40vger.kernel.org; linux-
+> pci=40vger.kernel.org; linux-arm-kernel=40lists.infradead.org; linux-sams=
+ung-
+> soc=40vger.kernel.org; mturquette=40baylibre.com; sboyd=40kernel.org;
+> jingoohan1=40gmail.com; lpieralisi=40kernel.org; kw=40linux.com; robh=40k=
+ernel.org;
+> bhelgaas=40google.com; krzysztof.kozlowski=40linaro.org;
+> alim.akhtar=40samsung.com; linux=40armlinux.org.uk;
+> m.szyprowski=40samsung.com
+> Subject: Re: =5BPATCH v3 1/2=5D clk: Provide managed helper to get and en=
+able bulk
+> clocks
+>=20
+> On Wed, Jan 10, 2024 at 04:31:14PM +0530, Shradha Todi wrote:
+> > Provide a managed devm_clk_bulk* wrapper to get and enable all bulk
+> > clocks in order to simplify drivers that keeps all clocks enabled for
+> > the time of driver operation.
+> >
+> > Suggested-by: Marek Szyprowski <m.szyprowski=40samsung.com>
+> > Signed-off-by: Shradha Todi <shradha.t=40samsung.com>
+> > ---
+> >  drivers/clk/clk-devres.c =7C 41
+> ++++++++++++++++++++++++++++++++++++++++
+> >  include/linux/clk.h      =7C 25 ++++++++++++++++++++++++
+> >  2 files changed, 66 insertions(+)
+> >
+> > diff --git a/drivers/clk/clk-devres.c b/drivers/clk/clk-devres.c index
+> > 4fb4fd4b06bd..05b0ff4bc1d4 100644
+> > --- a/drivers/clk/clk-devres.c
+> > +++ b/drivers/clk/clk-devres.c
+> > =40=40 -102,6 +102,7 =40=40
+> EXPORT_SYMBOL_GPL(devm_clk_get_optional_enabled);
+> >  struct clk_bulk_devres =7B
+> >  	struct clk_bulk_data *clks;
+> >  	int num_clks;
+> > +	void (*exit)(int num_clks, const struct clk_bulk_data *clks);
+> >  =7D;
+> >
+> >  static void devm_clk_bulk_release(struct device *dev, void *res) =40=
+=40
+> > -182,6 +183,46 =40=40 int __must_check devm_clk_bulk_get_all(struct dev=
+ice
+> > *dev,  =7D  EXPORT_SYMBOL_GPL(devm_clk_bulk_get_all);
+> >
+> > +static void devm_clk_bulk_release_all_enabled(struct device *dev,
+> > +void *res) =7B
+> > +	struct clk_bulk_devres *devres =3D res;
+> > +
+> > +	if (devres->exit)
+> > +		devres->exit(devres->num_clks, devres->clks);
+> > +
+> > +	clk_bulk_put_all(devres->num_clks, devres->clks); =7D
+> > +
+> > +int __must_check devm_clk_bulk_get_all_enabled(struct device *dev,
+> > +				  struct clk_bulk_data **clks, int *num_clks)
+>=20
+> What is the user supposed to do with =22num_clks=22 when you are already =
+handling
+> the enable part?
+>=20
 
-Above change should be in a separate patch.
+Since the initial clk_bulk_get_all was returning the num_clks value, the th=
+ought was to maintain this
+as the user might want to have a check in their driver whether x number of =
+clocks were successfully
+retrieved and enabled.
 
-> Also add a mutex lock to protect the usage of is_phy_pwr_on against
-> possible racing.
-> 
-> Co-developed-by: Can Guo <quic_cang@quicinc.com>
-> Signed-off-by: Can Guo <quic_cang@quicinc.com>
-> Co-developed-by: Naveen Kumar Goud Arepalli <quic_narepall@quicinc.com>
-> Signed-off-by: Naveen Kumar Goud Arepalli <quic_narepall@quicinc.com>
-> Signed-off-by: Nitin Rawat <quic_nitirawa@quicinc.com>
-> ---
->  drivers/ufs/host/ufs-qcom.c | 104 +++++++++++++++++++++++-------------
->  drivers/ufs/host/ufs-qcom.h |   4 ++
->  2 files changed, 72 insertions(+), 36 deletions(-)
-> 
-> diff --git a/drivers/ufs/host/ufs-qcom.c b/drivers/ufs/host/ufs-qcom.c
-> index 39eef470f8fa..2721a30f0db8 100644
-> --- a/drivers/ufs/host/ufs-qcom.c
-> +++ b/drivers/ufs/host/ufs-qcom.c
-> @@ -338,6 +338,46 @@ static u32 ufs_qcom_get_hs_gear(struct ufs_hba *hba)
->  	return UFS_HS_G3;
->  }
-> 
-> +static int ufs_qcom_phy_power_on(struct ufs_hba *hba)
-> +{
-> +	struct ufs_qcom_host *host = ufshcd_get_variant(hba);
-> +	struct phy *phy = host->generic_phy;
-> +	int ret = 0;
-> +
-> +	mutex_lock(&host->phy_mutex);
+> > +=7B
+> > +	struct clk_bulk_devres *devres;
+> > +	int ret;
+> > +
+> > +	devres =3D devres_alloc(devm_clk_bulk_release_all_enabled,
+> > +			      sizeof(*devres), GFP_KERNEL);
+> > +	if (=21devres)
+> > +		return -ENOMEM;
+> > +
+> > +	ret =3D clk_bulk_get_all(dev, &devres->clks);
+> > +	if (ret > 0) =7B
+> > +		*clks =3D devres->clks;
+> > +		devres->num_clks =3D ret;
+> > +		*num_clks =3D ret;
+> > +		devres_add(dev, devres);
+>=20
+> If you move the statements inside this condition to the end of this funct=
+ion, you
+> could get rid of the exit() callback and directly use
+> clk_bulk_disable_unprepare() in devm_clk_bulk_release_all_enabled().
+>=20
 
-You do not need mutex to protect a variable. If you want to ensure that the
-access to the flag is atomic, you can use test_and_{set/clear}_bit helpers.
+Okay=21 I will change this in the next patchset as suggested
 
-> +	if (!host->is_phy_pwr_on) {
-> +		ret = phy_power_on(phy);
-> +		if (ret) {
-> +			mutex_unlock(&host->phy_mutex);
-> +			return ret;
-> +		}
-> +		host->is_phy_pwr_on = true;
-> +	}
-> +	mutex_unlock(&host->phy_mutex);
-> +
-> +	return ret;
-> +}
-> +
-> +static int ufs_qcom_phy_power_off(struct ufs_hba *hba)
-> +{
-> +	struct ufs_qcom_host *host = ufshcd_get_variant(hba);
-> +	struct phy *phy = host->generic_phy;
-> +	int ret = 0;
-> +
-> +	mutex_lock(&host->phy_mutex);
-> +	if (host->is_phy_pwr_on) {
-> +		ret = phy_power_off(phy);
-> +		if (ret) {
-> +			mutex_unlock(&host->phy_mutex);
-> +			return ret;
-> +		}
-> +		host->is_phy_pwr_on = false;
-> +	}
-> +	mutex_unlock(&host->phy_mutex);
-> +
-> +	return ret;
-> +}
-> +
->  static int ufs_qcom_power_up_sequence(struct ufs_hba *hba)
->  {
->  	struct ufs_qcom_host *host = ufshcd_get_variant(hba);
-> @@ -378,13 +418,18 @@ static int ufs_qcom_power_up_sequence(struct ufs_hba *hba)
->  		goto out_disable_phy;
-> 
->  	/* power on phy - start serdes and phy's power and clocks */
-> -	ret = phy_power_on(phy);
-> +	ret = ufs_qcom_phy_power_on(hba);
->  	if (ret) {
->  		dev_err(hba->dev, "%s: phy power on failed, ret = %d\n",
->  			__func__, ret);
->  		goto out_disable_phy;
->  	}
-> 
-> +	ret = phy_calibrate(phy);
-> +	if (ret) {
-> +		dev_err(hba->dev, "%s: Failed to calibrate PHY %d\n",
-> +				  __func__, ret);
+> > +	=7D else =7B
+> > +		devres_free(devres);
+> > +		return ret;
+> > +	=7D
+> > +
+> > +	ret =3D clk_bulk_prepare_enable(devres->num_clks, *clks);
+> > +	if (=21ret)
+> > +		devres->exit =3D clk_bulk_disable_unprepare;
+>=20
+> Here you can just do clk_bulk_put_all() and devres_free() directly becaus=
+e you
+> know that the driver won't proceed after this error.
+>=20
+> - Mani
+>=20
 
-Even though the driver already has a lot of "__func__" to print the function
-names in error log, please do not add more. I will get rid of the existing ones
-at some point.
+Thanks for the review, Mani. Will change this as suggested=21
 
-- Mani
-
--- 
-மணிவண்ணன் சதாசிவம்
+> > +
+> > +	return ret;
+> > +=7D
+> > +EXPORT_SYMBOL_GPL(devm_clk_bulk_get_all_enabled);
+> > +
+> >  static int devm_clk_match(struct device *dev, void *res, void *data)
+> > =7B
+> >  	struct clk **c =3D res;
+> > diff --git a/include/linux/clk.h b/include/linux/clk.h index
+> > 1ef013324237..bf3e9bee5754 100644
+> > --- a/include/linux/clk.h
+> > +++ b/include/linux/clk.h
+> > =40=40 -438,6 +438,24 =40=40 int __must_check
+> > devm_clk_bulk_get_optional(struct device *dev, int num_clks,  int
+> __must_check devm_clk_bulk_get_all(struct device *dev,
+> >  				       struct clk_bulk_data **clks);
+> >
+> > +/**
+> > + * devm_clk_bulk_get_all_enabled - managed get multiple clk consumers =
+and
+> > + *					enable all clk
+> > + * =40dev: device for clock =22consumer=22
+> > + * =40clks: pointer to the clk_bulk_data table of consumer
+> > + * =40num_clks: out parameter to store the number of clk_bulk_data
+> > + *
+> > + * Returns success (0) or negative errno.
+> > + *
+> > + * This helper function allows drivers to get several clk
+> > + * consumers and enable all of them in one operation with management.
+> > + * The clks will automatically be disabled and freed when the device
+> > + * is unbound.
+> > + */
+> > +
+> > +int __must_check devm_clk_bulk_get_all_enabled(struct device *dev,
+> > +				struct clk_bulk_data **clks, int *num_clks);
+> > +
+> >  /**
+> >   * devm_clk_get - lookup and obtain a managed reference to a clock pro=
+ducer.
+> >   * =40dev: device for clock =22consumer=22
+> > =40=40 -960,6 +978,13 =40=40 static inline int __must_check
+> devm_clk_bulk_get_all(struct device *dev,
+> >  	return 0;
+> >  =7D
+> >
+> > +static inline int __must_check devm_clk_bulk_get_all_enabled(struct de=
+vice
+> *dev,
+> > +				struct clk_bulk_data **clks, int *num_clks) =7B
+> > +
+> > +	return 0;
+> > +=7D
+> > +
+> >  static inline struct clk *devm_get_clk_from_child(struct device *dev,
+> >  				struct device_node *np, const char *con_id)  =7B
+> > --
+> > 2.17.1
+> >
+>=20
+> --
+> =E0=AE=AE=E0=AE=A3=E0=AE=BF=E0=AE=B5=E0=AE=A3=E0=AF=8D=E0=AE=A3=E0=AE=A9=
+=E0=AF=8D=20=E0=AE=9A=E0=AE=A4=E0=AE=BE=E0=AE=9A=E0=AE=BF=E0=AE=B5=E0=AE=AE=
+=E0=AF=8D=0D=0A=0D=0A
