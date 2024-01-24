@@ -1,139 +1,146 @@
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A143039AC0
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 23:36:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98E661350E0
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 23:42:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706139394; cv=none; b=c6Fer3eFmFbqCW/FAPFfMAiyMzXqEBF5qIeDmheyag+jUeDeb1LmgnVaHqTN7U1VTd3jXy6zDnC4/LE7xonEExQdXaQ53ayId6OPgBTNzQuvpvKFg4do1gp73GNuQNJ2iC8MI47CndXGrhSiYdZ0W1qdV6Se+ict4SUgtsniKmU=
+	t=1706139731; cv=none; b=lnEiCW4OgylesLqTsxPCE3hWnbo5hVsfcmJwZDxHiDOQCzcAxc27ehoMcfmOy8jjGpMY3Bf+fl7ZKEzZyTHsdm7ry3KXa/681iRg9OsbJIjAlW/6U0pGolU/SytQxbW5ryBy8i8Fizgnjgj2e+3AaM7CtIQD1gdrsg5xaLcvByI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706139394; c=relaxed/simple;
-	bh=+tvGycd8fkh1gM7sNFqcMBJjG5Qf+7FDcOeuXUANgAs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Qxj5b3ZhftZtp9F5XZEwsc/t7cfhoidCL9S64eSjQt2mCZeuu/zdCepWMutUD+9p17Y1zfWrcon/saJG6gfgSL14d4vdGPSmEo18orUd5xWMb5K1rTI1/Xh90v7sXFrQrKDJhXAz0Nm5ZRiv4WHNkfR3DXqxvXLhJkVgglYld1Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JRh/uJvD; arc=none smtp.client-ip=209.85.208.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1706139731; c=relaxed/simple;
+	bh=IKmIcga6k5Dg0BlXa1TCH4mzfOReTRLYuv6E/ZEXKag=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=LZoG7p6Rzua+U9f4giVz+ZiMTTN8CqkzfFRd90AbnDdale64yGny1oWpl5jTztYqADnfkw4wk5YEIEkNcUoivNNLz54arNxNgHwzgak/UdK+OQ+MlIAvt63AvxmtWzOFSRnhdQ/TD8HrK10kRvif36gQbgDlHsG1mmYx7u6dGgA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=a9gzdftA; arc=none smtp.client-ip=209.85.128.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JRh/uJvD"
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2cd04078ebeso2031031fa.1
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 15:36:32 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="a9gzdftA"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-5ffee6fcdc1so59414887b3.2
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 15:42:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706139391; x=1706744191; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=/vKlrOmknMa0N0UOD2DGqbxqnH0CSwsvClTmdidQIo4=;
-        b=JRh/uJvDGC1WO3ui9dBHsdSKYvBITKgSz01cUj8PB/qdJ+tAezgKFkzk0ImvRi+G3x
-         SUcRLeQjYFaJfPw26H7JhID5V+R75HRdvmd7sKf0PvjdQlpD77HvYMuepn0LFeu6sCXY
-         lNue1BBI7eFaSK4+n97BUTxx3W4sWeIbxtPl+Pv/mlHrHaW+TLsj0So/O2X8Kfi0fQeX
-         AH3af3XBq7G4eN+LGM8p/c8zmWqfGG+DVQVNWLC9Q0btkrS9Jj9HP17A2Dme6aom5b40
-         ezYnRp/2WavI1Agni8WtlSLfkOckXStjKk0SJ3r6GIjUaVc+ZjFrJJtuLaT2RB0SivWp
-         fTnw==
+        d=google.com; s=20230601; t=1706139728; x=1706744528; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=RfW74auTs+0F7HhMDAnZCc535TjNzx9jhVgMO/Hoggc=;
+        b=a9gzdftAWUoGzIOczaW8J8FZ3/SM/8jxR4RKGiust+1szKi4gjEZYg0RW0HQYJ3dZu
+         rH4Ha7vePH5Zo3TFltsQn6G6Vlr5/5X6gGfsGJJnLcQZuGC0vY5Dw1lSskIFUuCivYX0
+         5p9ECpRocpU7PDTSxJzUzzbPNI7e2g1IkqbTnVPGCNUY469XzdkqYeoiHtCSmJZh2ONQ
+         hn4NPPxW/lYyTTNQ6JxCuYlBm7m5Xu8XpnqWWahZLc5Om+k8Cbfrac2F9oahBpPYamjB
+         3Vtaz0UD7Wx7b4/Z/QY0sMKduvPn7zjxCO1H239uKwMzC+fCYBGv6mEl/pNYBbiiW0VQ
+         RT0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706139391; x=1706744191;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/vKlrOmknMa0N0UOD2DGqbxqnH0CSwsvClTmdidQIo4=;
-        b=UqwY4YqdX3GJn0LZ/lKMMaI/imFvhXjPbhw13ta07mm8Hkq5LZg6tJi1Mn+aFKk7BR
-         1zFtJl3CY9EA1sX+I0mVpIsR2gH5VXC57b7xpk5w75eB/fFpMl4E0ivV4QUIU/JjZd++
-         +TPxeYPmbjiFrk9TX33Cu7BSBlemxA1WZfLc/vIHrhOl+bFrGIaalQQa5G+YRBoYd5IG
-         CmsDx/j8tp1iJeQ1ZLpl3CSmJ4ctgByQ9S5A++u15hlcL+htzTPtMz6KcevMlk3TyPzX
-         SSsJ1KvZTO857vVcmzgwY/beGqgwbdq3LNpJ78YHk9clpE4QtDRKyLdtp2Z7DhKuBI8M
-         gQ2A==
-X-Gm-Message-State: AOJu0Yx7kjH6dcObzbYadSwm2/5Pj4swoP9Shs1niYb95cB7PfQLJtGo
-	MvhDPmBB//MENQfraPvPhffLjKzpAT5w7nlNmfRCOz74j4ho70Se53pe1hmn3Ws=
-X-Google-Smtp-Source: AGHT+IHMxl3uJPZqublNZwqgF2mxbIXuF8HFJdMOVCo4DxsM+TsBQn3zKVJqZHDSr5rfY2UR6qF/xw==
-X-Received: by 2002:a2e:5cc8:0:b0:2cd:fb91:4b1d with SMTP id q191-20020a2e5cc8000000b002cdfb914b1dmr198813ljb.21.1706139390692;
-        Wed, 24 Jan 2024 15:36:30 -0800 (PST)
-Received: from [172.30.205.155] (UNUSED.212-182-62-129.lubman.net.pl. [212.182.62.129])
-        by smtp.gmail.com with ESMTPSA id t6-20020a2e9546000000b002cf15a1d917sm104841ljh.105.2024.01.24.15.36.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 24 Jan 2024 15:36:30 -0800 (PST)
-Message-ID: <30e890e8-42dd-4b36-a133-95bb34c109d8@linaro.org>
-Date: Thu, 25 Jan 2024 00:36:29 +0100
+        d=1e100.net; s=20230601; t=1706139728; x=1706744528;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=RfW74auTs+0F7HhMDAnZCc535TjNzx9jhVgMO/Hoggc=;
+        b=j2iHmp2pBshSl9258hqXkmx0wKzVuGOpRMc7KfS2uvvEcGzUIoP3wevL2fnobh7jQs
+         30eYN84tUuv05t39DC+mYL6XJPOVPNkgql2T/HKNbh2tUvNEc1EL99WOaI3767k/ITDu
+         IAv7x1zxZonXjEqTu2PEvLe06dUCgZQZXFVm9CfrMFgZl76Koty38Xl3cTk1KLEjfSiQ
+         QckTghI6gqE9FqNdB5qvMMUZZqRp0p9+Uw/o9W8HG0/ESjpaYd94UFVf6sOvZA7s7/Bi
+         G79lN/UGcRxjTOa0pm4nUoZTO/BuUXFKP6eFwis4FDwJhpfNjb6cl/UvPeUad1uIGZFq
+         7EpQ==
+X-Gm-Message-State: AOJu0Yzc519diBM/Af1U331N2/bU8nP0zszKjM9iGyZqK71LoHd5JTKb
+	XRehkGGln34m8ga/y5jmn7fe8nKj+lAAWR7SII8Tkp0NzNB31sPoEYgmjhJMcblIObvgrrdmxG1
+	kYEbrrg==
+X-Google-Smtp-Source: AGHT+IE557Wa0s97f9sVCD0XX8RUVF49ObClcOfweWvyxtSeP1M6VsyAtIF2K58FzML/bjhFjlX1mr8SeV+Y
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:b4e5:2ab4:c78c:bc24])
+ (user=irogers job=sendgmr) by 2002:a05:690c:a90:b0:5f3:f658:ba2a with SMTP id
+ ci16-20020a05690c0a9000b005f3f658ba2amr569226ywb.7.1706139728536; Wed, 24 Jan
+ 2024 15:42:08 -0800 (PST)
+Date: Wed, 24 Jan 2024 15:42:00 -0800
+Message-Id: <20240124234200.1510417-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] arm64: dts: qcom: sm8650-mtp: add PM8010
- regulators
-Content-Language: en-US
-To: David Collins <quic_collinsd@quicinc.com>, quic_fenglinw@quicinc.com,
- kernel@quicinc.com, Bjorn Andersson <andersson@kernel.org>,
- Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, Neil Armstrong <neil.armstrong@linaro.org>
-References: <20240123-sm8650_pm8010_support-v2-0-52f517b20a1d@quicinc.com>
- <20240123-sm8650_pm8010_support-v2-1-52f517b20a1d@quicinc.com>
- <892058db-8013-879d-6c6f-3fbbf4ed3c57@quicinc.com>
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
-In-Reply-To: <892058db-8013-879d-6c6f-3fbbf4ed3c57@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.43.0.429.g432eaa2c6b-goog
+Subject: [PATCH v1] perf pmu: Treat the msr pmu as software
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@arm.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Perry Taylor <perry.taylor@intel.com>, Samantha Alt <samantha.alt@intel.com>, 
+	Caleb Biggers <caleb.biggers@intel.com>, Weilin Wang <weilin.wang@intel.com>, 
+	Edward Baker <edward.baker@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 
+The msr PMU is a software one, meaning msr events may be grouped
+with events in a hardware context. As the msr PMU isn't marked as a
+software PMU by perf_pmu__is_software, groups with the msr PMU in
+are broken and the msr events placed in a different group. This
+may lead to multiplexing errors where a hardware event isn't
+counted while the msr event, such as tsc, is. Fix all of this by
+marking the msr PMU as software, which agrees with the driver.
 
+Before:
+```
+$ perf stat -e '{slots,tsc}' -a true
+WARNING: events were regrouped to match PMUs
 
-On 1/24/24 20:15, David Collins wrote:
-> On 1/23/24 00:49, Fenglin Wu via B4 Relay wrote:
->> From: Fenglin Wu <quic_fenglinw@quicinc.com>
->>
->> Add PM8010 regulator device nodes for sm8650-mtp board.
->>
->> Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
->> Signed-off-by: Fenglin Wu <quic_fenglinw@quicinc.com>
->> ---
->>   arch/arm64/boot/dts/qcom/sm8650-mtp.dts | 118 ++++++++++++++++++++++++++++++++
->>   1 file changed, 118 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/qcom/sm8650-mtp.dts b/arch/arm64/boot/dts/qcom/sm8650-mtp.dts
->> index 9d916edb1c73..3791971efee6 100644
->> --- a/arch/arm64/boot/dts/qcom/sm8650-mtp.dts
->> +++ b/arch/arm64/boot/dts/qcom/sm8650-mtp.dts
->> @@ -428,6 +428,124 @@ vreg_l3i_1p2: ldo3 {
->>   						   RPMH_REGULATOR_MODE_HPM>;
->>   		};
->>   	};
->> +
->> +	regulators-6 {
->> +		compatible = "qcom,pm8010-rpmh-regulators";
->> +		qcom,pmic-id = "m";
->> +
->> +		vdd-l1-l2-supply = <&vreg_s1c_1p2>;
->> +		vdd-l3-l4-supply = <&vreg_bob2>;
->> +		vdd-l5-supply = <&vreg_s6c_1p8>;
->> +		vdd-l6-l7-supply = <&vreg_bob1>;
-> 
-> Please replace this line with:
-> 
-> vdd-l6-supply = <&vreg_bob1>;
-> vdd-l7-supply = <&vreg_bob1>;
-> 
->> +
->> +		vreg_l1m_1p1: ldo1 {
->> +			regulator-name = "vreg_l1m_1p1";
->> +			regulator-min-microvolt = <1104000>;
->> +			regulator-max-microvolt = <1104000>;
->> +			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-> 
-> Optional:
-> PM8010 L1 and L2 physically support LPM vs HPM configuration.
-> Therefore, these lines could be added here to allow such configuration
-> by software at runtime:
-> 
-> regulator-allow-set-load;
-> regulator-allowed-modes = <RPMH_REGULATOR_MODE_LPM
-> 			   RPMH_REGULATOR_MODE_HPM>;
+ Performance counter stats for 'system wide':
 
-David,
+         1,750,335      slots
+         4,243,557      tsc
 
-I was under the impression that *all* RPMh regulators support
-modesetting. Would that be an incorrect assumption to make?
+       0.001456717 seconds time elapsed
+```
 
-Konrad
+After:
+```
+$ perf stat -e '{slots,tsc}' -a true
+ Performance counter stats for 'system wide':
+
+        12,526,380      slots
+         3,415,163      tsc
+
+       0.001488360 seconds time elapsed
+```
+
+Fixes: 251aa040244a ("perf parse-events: Wildcard most "numeric" events")
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+The fixes tag is close enough rather than being fully accurate. The
+regression was introduced earlier by the automatic event regrouping.
+---
+ tools/perf/util/pmu.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
+
+diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+index 3c9609944a2f..88b9aa7d3a27 100644
+--- a/tools/perf/util/pmu.c
++++ b/tools/perf/util/pmu.c
+@@ -1760,6 +1760,12 @@ bool pmu__name_match(const struct perf_pmu *pmu, const char *pmu_name)
+ 
+ bool perf_pmu__is_software(const struct perf_pmu *pmu)
+ {
++	const char *known_sw_pmus[] = {
++		"kprobe",
++		"msr",
++		"uprobe",
++	};
++
+ 	if (pmu->is_core || pmu->is_uncore || pmu->auxtrace)
+ 		return false;
+ 	switch (pmu->type) {
+@@ -1771,7 +1777,11 @@ bool perf_pmu__is_software(const struct perf_pmu *pmu)
+ 	case PERF_TYPE_BREAKPOINT:	return true;
+ 	default: break;
+ 	}
+-	return !strcmp(pmu->name, "kprobe") || !strcmp(pmu->name, "uprobe");
++	for (size_t i = 0; i < ARRAY_SIZE(known_sw_pmus); i++) {
++		if (!strcmp(pmu->name, known_sw_pmus[i]))
++			return true;
++	}
++	return false;
+ }
+ 
+ FILE *perf_pmu__open_file(const struct perf_pmu *pmu, const char *name)
+-- 
+2.43.0.429.g432eaa2c6b-goog
+
