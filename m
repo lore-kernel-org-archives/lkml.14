@@ -1,116 +1,245 @@
-Received: from out162-62-57-49.mail.qq.com (out162-62-57-49.mail.qq.com [162.62.57.49])
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2061.outbound.protection.outlook.com [40.107.94.61])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52C8210E6
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 01:29:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.49
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706059789; cv=none; b=hS8/rq7p6EVWvfqj62VxdLMYOOHiwEovCG+lbFBL4juQScL67CLPJMQOLQ1l1W8EVrA2mm2B0G8mOcdu1GTV8VgKqZEPJD30Qm9ANChPwAhxlDJWCIQz5XV4RI/DefdnSfw0V/q6Lq+BlVzTbR75AchdQ54VQz/wlRFY8tg6BvY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706059789; c=relaxed/simple;
-	bh=LE66kJu4hVpSN+qHT1WdB0wFdWHrCE8XWrvd+6Kcc0Q=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=JCV/PbbiVqD/75fx50nVgaJoRxqZDRUkAxUFLEHxFXH3z1hWI9DAIOKJdmiwQ7usQpznsqReZeUGaiHsxRKiPuC7z1C53Q1dmZfE27ZC2HYaIJupuvr+rC9e9ha6e9x5tgwrxmBPKxbSXmo9wn86yEmpymNRYbPVt37tvYzQxPQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=w7rjGixl; arc=none smtp.client-ip=162.62.57.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2496B1104;
+	Wed, 24 Jan 2024 01:29:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.61
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706059801; cv=fail; b=czEnb1jYYQKtfibOJpL/na8JbbbAGsC3Xm0lt5GtbmaQ99eLD4oGAMHNY8HAx55vHST+EAIhbKB3JFHVC6lb+ug+QGIV7IcqVgU84m4B8S8QCv2Es24S+aQ09zUDVL4B0JkY+fARjvXhZqRGE1tMaoRaHLK5Q4QpwckTlOxKqsA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706059801; c=relaxed/simple;
+	bh=P4I7Ia/w11Q/xRLJdlUGUL5pG6erQs9Vk4nELt96MYM=;
+	h=Message-ID:Date:From:Subject:To:Cc:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=VWN3zqqAXHLubtcd2oPy2owupeSTqnhTuVANHH3QqUSrtR71DPzaKEtWEtXnIR7FqMgwNh6C5YxR8Td1glW8A3Ub50OtINx2jJjjOkTlidCEo716z4uLcPC/QIZ8rvIF2GDV1sbMa3iis0AqVdtbcfbUQi5PYNtT7ODFw296yBs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=MZkekyko; arc=fail smtp.client-ip=40.107.94.61
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="w7rjGixl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1706059475; bh=4fR2pMO3VZ6t+WGmY8/iEYyP0Wk8N6+SImSjNbWePos=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=w7rjGixlbaXETWH/m3Jm+DZVD75hTizmYRSnjTIKFAxubwGq96uXRtGsybU9impjK
-	 SaRQAZYm+YJEALn0oKxDvgBgNvnfLWdufPJhbgT6LOKmz2rjWE6CISxOhTplipIOib
-	 RS+6h0mO1LucVOyqC9mlKwM34xJoIHJFWA1ZaFNI=
-Received: from pek-lxu-l1.wrs.com ([111.198.225.215])
-	by newxmesmtplogicsvrszc5-2.qq.com (NewEsmtp) with SMTP
-	id 6211A428; Wed, 24 Jan 2024 09:24:33 +0800
-X-QQ-mid: xmsmtpt1706059473t4llu2rh7
-Message-ID: <tencent_748DB7122CDDCBDDB29965CF870D9225BF07@qq.com>
-X-QQ-XMAILINFO: MesT5uKpDagVPJ3kolclE5lfPKVB+RJ86Ll0dZN8DGO+bfPoIOw4FoKeKB2kBW
-	 ta3FFa+wUFL6bR//Yk67I1fPVte2rLCuURZUvgMkRQ5nqs4i5/uMFAzFbeN2iTNUru4HEvyjObEG
-	 8GWGxP0ucilLjcAIpHNkTHhwti1tM/x32rU9Nt+sWm9NFgmVy42XwiabmhmgDpUp3NQXPIs189Od
-	 bqVBEvIPlL3iCCiqQEBNI5ne4ZqRg6FQIO2eTwtclJtQ9XOAJaTSAtMxwYqI/2vejzODE6SMsioJ
-	 YX+kqRgXZ5t71RCQra197FTDycvHHn33aYhPCi7oL/dbixpp1uFluJglEZ3KYubabjlgGlml3o3p
-	 1KekFiJNdhjs2f9uaFzcThUcgZBVTCqjDUOkD+HXyiPQRGjYZOS8nEy0rMdi9X91a2YNg2J/3xfY
-	 SQN7Xhky5vPFpH2x49u0hqq4Zsz32C6ezpFx8MA3dPwgohUIiy+woU67lkDaFox/2GLPcHU5AYU3
-	 uwmCKni4J1TdSvNVGHnFL73ckw44ErC/1wYVkaB5uuA2Tb04ze2RX7ZPsxpoKp1Kw6pdPI2CnfbP
-	 Ud/lothlbPePNjqelw79MO8T1Bxqd3bJNshHMYs+WwZJ9ri4J9HE8urYZAXH9389YpEwJUfta0Gt
-	 6GtsqkRJ+lC2VtT2JV5WQB/bahnTIzBEkF27p70Olj9vGOgQgL3oXkv0yf3pXUcZL6u+/5oujM1C
-	 nMofPzlmx4JlphiJyNPj03L3E6NAIfqOI7lCqM2hC3ZrqP+B6/8k9lmu9r/yoBLUNlRhPbqaBudj
-	 etRpx0FHCehn6Yi/414pXhIdd/AyrlUz7tqwG7IXiKp0J/bp875nVoereskSydVUTTWlXsCV94fw
-	 5QsQT8AlPIYDG/IbljIaVL0HflZxKQF8bQMOmoJKBmtvnsyAs2897cyYxbIELabi/y2Hg5IagL
-X-QQ-XMRINFO: M/715EihBoGSf6IYSX1iLFg=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+1d37bef05da87b99c5a6@syzkaller.appspotmail.com
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [can?] memory leak in j1939_netdev_start
-Date: Wed, 24 Jan 2024 09:24:34 +0800
-X-OQ-MSGID: <20240124012433.4165387-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <00000000000060446d060af10f08@google.com>
-References: <00000000000060446d060af10f08@google.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="MZkekyko"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=i/AuOTIi33dXiGziNa96Hn03C0hd5naN7C+3oI8ZIDRcJiSVnmAk6/29AIRa//tHHh71T8zPX8HdaP9W1ajfApV7C/r9nedYKK8wNs9ZnnsKNB/LovUu8R722z+931tk4sdOcXZlm8iIJMBbMmiMLNPWIbuh5oXRG43S+jj4cWCmBnGlEu16SNsSgry9YPgXpMyAtNzaKrhCWeQOFH7kYRUq1DEUyilkClwaew+FRebfGCaZwAUFDypbd5wxwXzIj5DQN1V9r8wJvXOn647r5DQSXbsqUWObuTITN7zwllHT1/eCunsSy0UV6N8ggfE8+UH3TeEQcimasaTQB+Pifw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=bTAQgn3P2eTj3FFBK2jUKg8MaI+TANVXo8R6k9OaGfI=;
+ b=GpcDZ/PBGNbkX3al86WeDBwCYklrDeSohtLTEFtoCEu1q//AyKh/EXs0YpvOaVgCqJ6X39EDMSTG08Zn9OvTJ8AGt0kessHsw+dazx0spVYcnv3ygleeIfx0GNpmqw4xkAnfWttVnnjk7lYrv2PMTkCG3oIft/HamuuRz/yczcztC9IqeAUesG8hrxAxtnE920DjwYvrr9F8B5rSqOMP4NxNaQRD25c2Rjrgg1om+ZmchzdV4IqcqCHxns/GzqUya/gS7yGdTn5NN/q6aBsYfOZ0htJoYP9ZxgklLW0ON/GTe6c3QKLuQuUca6yn+jq/40AsMR4TYDCLqqvraSJWXw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bTAQgn3P2eTj3FFBK2jUKg8MaI+TANVXo8R6k9OaGfI=;
+ b=MZkekykoTV2FsFN0P/+emc0Dof8sRVp2ekwEDVLWkfrE9m5zvptUY8xuBArGXGA0w4eY9FMNFAGHcEHs3jHuvGwTTeFKu1U5Uua8jb/HCpMf0u0kVVf0uxB02Hzy6qL9xqqTQlG4dvHCD1wUTbAcNs7Q89p7qlUTk42/V9n/ONM=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from CH3PR12MB8403.namprd12.prod.outlook.com (2603:10b6:610:133::14)
+ by CY5PR12MB6551.namprd12.prod.outlook.com (2603:10b6:930:41::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7202.32; Wed, 24 Jan
+ 2024 01:29:56 +0000
+Received: from CH3PR12MB8403.namprd12.prod.outlook.com
+ ([fe80::ea0e:199a:3686:40d4]) by CH3PR12MB8403.namprd12.prod.outlook.com
+ ([fe80::ea0e:199a:3686:40d4%4]) with mapi id 15.20.7202.035; Wed, 24 Jan 2024
+ 01:29:56 +0000
+Message-ID: <be870e14-eeb9-4dcf-ba43-a72ef66a3d87@amd.com>
+Date: Tue, 23 Jan 2024 19:29:52 -0600
+User-Agent: Mozilla Thunderbird
+From: "Naik, Avadhut" <avadnaik@amd.com>
+Subject: [PATCH] tracing: Include PPIN in mce_record tracepoint
+To: Tony Luck <tony.luck@intel.com>, Avadhut Naik <avadhut.naik@amd.com>
+Cc: linux-trace-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
+ rostedt@goodmis.org, bp@alien8.de, x86@kernel.org,
+ linux-kernel@vger.kernel.org, yazen.ghannam@amd.com
+References: <20240123235150.3744089-1-avadhut.naik@amd.com>
+ <ZbBV4EGrZw6hJ5IE@agluck-desk3>
+Content-Language: en-US
+In-Reply-To: <ZbBV4EGrZw6hJ5IE@agluck-desk3>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SN7P220CA0013.NAMP220.PROD.OUTLOOK.COM
+ (2603:10b6:806:123::18) To CH3PR12MB8403.namprd12.prod.outlook.com
+ (2603:10b6:610:133::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR12MB8403:EE_|CY5PR12MB6551:EE_
+X-MS-Office365-Filtering-Correlation-Id: 94f1a336-4f7c-4e07-88d5-08dc1c7bf89e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	wRoBEIC0me3I+iioiWrWYemOz7T0oUsRRH5na0pBqgg45IllwZ1IdvAkSpuyN+AB2pGzrv90nrQMUeAFbb7V8VpBIbNxkqDrurmkuCxQigSNm1rNddivp6EWSiTO0RQbWn4AeLLLHxPpBwPVUP8aWsSErUewh3wR9KBSMQQIbgleCRHHXJCZeNCASmVWCDu4TF5cqPst7wDDJhxXdduNImkFNKfDU/yIuZRRaP84mhBv75qWc/qPDg/xjDKKVnb+5UUNAvA/tLZmqM1Q7zXFs7LwU742Aji8M0EfLUIxTPm4irRqcZjUp1+Tr1s/AwWfE8QW9Z+HApCZRpM5mKrVeX4eDIaAttuW+w5Cc+HYyIo6JWHXdR4rdV1ybzKW3iXL8nFNkuefpA4W5lgsukCVInQMpVYKZ6z8joR+TWWiljQ2PIbNsLp9Vljk1ELEfTpL8j/HJo4QZNHRNTgXIGE9nBluMm7yy6mjc70P3QQzZs/ogZwxRqgLtFi7wNVfqAWaL3PP/XkceNvA16gwLEljFaDSqqZ5qWc8sap4vBmimnLVJs6CRk3jCZReMdabDRzDuY6a+DFK4xwAB71fzAxhQNQkTMtR4c9MLgGjq+ZkCznlXIOH4AFv3LbhjFAKN6w2EUixW/VPZfzefp5exNUa1w==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8403.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(396003)(376002)(136003)(39860400002)(366004)(230922051799003)(1800799012)(186009)(64100799003)(451199024)(38100700002)(36756003)(31696002)(31686004)(26005)(2616005)(66946007)(8676002)(478600001)(66556008)(6486002)(110136005)(6666004)(8936002)(53546011)(6512007)(6506007)(316002)(66476007)(6636002)(83380400001)(2906002)(4326008)(5660300002)(41300700001)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?YkUyZDR0N3kwOFEyemNqaUxoc2NpZEorZ1FlaFVxb2NBWEIzNjV0V1ZsZzZs?=
+ =?utf-8?B?SFE2ZnVYY0sybjVhZEw0aUoyenNJQWdyZStFdUc2dkNKbitDYjBMeWI1bUpa?=
+ =?utf-8?B?cW1QR2ZHaTV4bUw5emhiUWZyNmhDNC9yWlIvQ25qVW9TdGhjYTIwOE5LQ2dF?=
+ =?utf-8?B?cEpMZDErOEhYMWMxZUtWWk5KWWNlRG1RdFIraysrc1FVVXdXRmZURVZtc3A1?=
+ =?utf-8?B?cm5JOVhrSHVSNlJIZDlLTkc1ck5zaEt2dG1Ibm9FSVBHaUcycG1UK042KzR3?=
+ =?utf-8?B?RkNFV0FGVkNvT3dkQlZSeHcwWWVOOENWREEwM3pja2lTWGE0RDVYOUI4dFpM?=
+ =?utf-8?B?RUxtSi9NZ0w0VmVaWTJkeS9LdEJkUjFnTE94empqTFRCWXA3Mk5uSFRrcTdp?=
+ =?utf-8?B?bU9yM1pWeGtVTFVtTjAvTXRJQk9wQUlJK01OcGtIL2xvTWRIcm1TazloU2dH?=
+ =?utf-8?B?clpHNjVZdEM4Vm1qb1hNazNxREFsaXJTb1R3aG9Ic2NsRTc4WTFpRWNwdlZV?=
+ =?utf-8?B?YmZrNEtEcXZDMFk1Q2ViMCtLSEVZMjNzUmFOU253RFRoSU5pclBVeGI5YlNt?=
+ =?utf-8?B?TGp5eHZLWTBMVFlJWW5MZDFVQTJlQjI2Zi83U2FHOU4rcUJPamc0Qlp4d0hk?=
+ =?utf-8?B?Z0xETkhLYlBPSWFYbGplVUpTdTU4bVBBdFB3elFiMk1vSThta2UrMElZYlp0?=
+ =?utf-8?B?QlZKT04vbk1mcFFlMzJ4M3dyRm80ejJYYnlnZFJxVGx1UlI4T2cwNHkxNENq?=
+ =?utf-8?B?Yzh3dkg4R0x1dFFQUVdUcHJLcEQrZUpQN3AwdDVaLzJvbGdyenJBR2dlcEIy?=
+ =?utf-8?B?RCs1SjFiQ3NWNE9YclBlNjJFNHJ2VHl5T1FvQytOeHhjbjQyaTIwUG9xVUcr?=
+ =?utf-8?B?bGk2RnB5Z2Z0NFFZaWJsVTNUZGphaXlLUlJRYUQyVFdmSTJITjl4aDcxVWJL?=
+ =?utf-8?B?VFRZbmhBaE55VXh5UnorVS9FY1hDU0NHcjBGelRmLzJ5NzR1T1hycWswS25h?=
+ =?utf-8?B?cFEzNXZBSXFjUzRUSmpCcmtpQi8zM3dMSHdIQXBERzNkcXkrdmpSYnpaaHJu?=
+ =?utf-8?B?ZC9PRWRsSXNLSXFPRHF3ZEFEbjZYRWdORWF3Y1hCNnNnemJMMnpzU01wcEdU?=
+ =?utf-8?B?TTNreW4wTUpBak04VXN1TmJZY3hLbDkxT0dKck5YQUZGWFBiZVYrakNhWVlh?=
+ =?utf-8?B?d2RWQTA4NmExRG5iVnJpeE5DRkhKNStaalVtQWljdEZZYzN6Q29WOURwQVdR?=
+ =?utf-8?B?SXozalBJR3NqQVd5QlMrWWQ0Y3pSWlpXTGRlWGJ3dzArL2NMRUpOdEc2dFll?=
+ =?utf-8?B?a2xTSk9iVEkwQk0vV3h0VDVjYm02Mm1UbnY5c1g4bFRzZEQvWTRIbDdzanIv?=
+ =?utf-8?B?TTlObzhBTTFkZUFRQzZLcmUwTHNGRFNaMVIxZFZSMUdPMDcwekpHVmdPaUZn?=
+ =?utf-8?B?eEUyUWdoZzNvenRkTmdMYWN6a3MxcVJpVWdsZ2E5UjlyNFVnM1BMR1R1RGF4?=
+ =?utf-8?B?SGxtQWs3TzFzWFVYSDQ1Q0J3K1RxdWh4YVpVMTB4TndrM2lCazdRclE2ZHVp?=
+ =?utf-8?B?OURraDJ1S0MwdXQ5bTFUZk0xTXN1M2gzVGI4RnRTSXpQN0tGM3kvVW9YM0JZ?=
+ =?utf-8?B?NkwwYmMxWTlIdmlmWXUvaXY0WEV6MkpYeGxZMGs1dTNVSzhRb3IyK1loalRs?=
+ =?utf-8?B?NVg4ZXNOMStyRUZHSmMwR0pZWUZ0eVk3YzRKUUg1enBGZjZCMmhIb1NuQTNr?=
+ =?utf-8?B?QWwwMDFjYzhqNC9nM1d5Vks0TUFVdWE0WEN5SzMxZGNIenFyVnREZ21xa3RR?=
+ =?utf-8?B?R1lDbGhTMVF6eEx6bmlMYldjZmN1RndRMVYvL0lKL2RNN2NBYXEwR01YMzhk?=
+ =?utf-8?B?Q0JUR2xJb3lSd0IvSG82bkduYW9mbDMvVGw1a3Zkb0NkaTdiOFEzSElWUHNM?=
+ =?utf-8?B?TlZ5am8zZW5yZkZmOENhTnNrMHBIM0pJL0ZwRnBSNWtQZEYxRGF0THFXejRn?=
+ =?utf-8?B?ZC9saE9MN2VvL3pFUnB0QUl3cjBUMDNNNjlOVXFKMEgzMkE5NkgveHEwSUpS?=
+ =?utf-8?B?ZlJuUUdnMkEvNTlYbEI0V0lERmVVUXJVcmptdzQyWXRJSXpIZ2liRExHM2Nv?=
+ =?utf-8?Q?T/eUxm9sn9GDw48Rr5N2gFzLE?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 94f1a336-4f7c-4e07-88d5-08dc1c7bf89e
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8403.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jan 2024 01:29:55.9985
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: oy4TdQX8YC7Ho4A/MEHVsuZbYhf9Y5PvJak0+aZzQuQM0WkhI4/beYYpHGwaBanT0f2RN/HAhzQj3TP7K8eYuA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6551
 
-please test memory leak in j1939_netdev_start
+Hi,
 
-#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+On 1/23/2024 6:12 PM, Tony Luck wrote:
+> On Tue, Jan 23, 2024 at 05:51:50PM -0600, Avadhut Naik wrote:
+>> Machine Check Error information from struct mce is exported to userspace
+>> through the mce_record tracepoint.
+>>
+>> Currently, however, the PPIN (Protected Processor Inventory Number) field
+>> of struct mce is not exported through the tracepoint.
+>>
+>> Export PPIN through the tracepoint as it may provide useful information
+>> for debug and analysis.
+> 
+> Awesome. I've been meaning to update the tracepoint for ages, but
+> it never gets to the top of the queue.
+> 
+> But some questions:
+> 
+> 1) Are tracepoints a user visible ABI? Adding a new field in the middle
+> feels like it might be problematic. I asked this question many years
+> ago and Steven Rostedt said there was some tracing library in the works
+> that would make this OK for appplications using that library.
+> 
 
-diff --git a/net/can/j1939/socket.c b/net/can/j1939/socket.c
-index 14c431663233..1d1f1348eeca 100644
---- a/net/can/j1939/socket.c
-+++ b/net/can/j1939/socket.c
-@@ -141,6 +141,7 @@ static void j1939_sk_queue_drop_all(struct j1939_priv *priv,
- 				 sk_session_queue_entry) {
- 		list_del_init(&session->sk_session_queue_entry);
- 		session->err = err;
-+		printk("s: %p, %s\n", session, __func__);
- 		j1939_session_put(session);
- 	}
- 	spin_unlock_bh(&jsk->sk_session_queue_lock);
-diff --git a/net/can/j1939/transport.c b/net/can/j1939/transport.c
-index fe3df23a2595..4e5f6037db46 100644
---- a/net/can/j1939/transport.c
-+++ b/net/can/j1939/transport.c
-@@ -283,6 +283,7 @@ static void j1939_session_destroy(struct j1939_session *session)
- 	}
- 	__j1939_session_drop(session);
- 	j1939_priv_put(session->priv);
-+	printk("free session: %p, %s\n", session, __func__);
- 	kfree(session);
- }
- 
-@@ -1552,6 +1553,8 @@ j1939_session *j1939_session_fresh_new(struct j1939_priv *priv,
- 	/* alloc data area */
- 	skb_put(skb, size);
- 	/* skb is recounted in j1939_session_new() */
-+	printk("s: %p, skb: %p, size: %d, csk: %d, %s\n", 
-+		session, skb, size, sizeof(struct can_skb_priv), __func__);
- 	return session;
- }
- 
-@@ -1758,6 +1761,7 @@ static void j1939_xtp_rx_rts(struct j1939_priv *priv, struct sk_buff *skb,
- 		j1939_tp_set_rxtimeout(session, 1250);
- 	}
- 
-+	printk("s: %p, %s\n", session, __func__);
- 	j1939_session_put(session);
- }
- 
-@@ -2005,6 +2009,8 @@ struct j1939_session *j1939_tp_send(struct j1939_priv *priv,
- 	if (!session)
- 		return ERR_PTR(-ENOMEM);
- 
-+	printk("s: %p, size: %d, %s\n", session, size, __func__);
-+
- 	/* skb is recounted in j1939_session_new() */
- 	sock_hold(skb->sk);
- 	session->sk = skb->sk;
+I think they can be user visible through the "trace" and "trace_pipe" in
+/sys/kernel/debug/tracing. But you will have to enable the events you want
+to trace through /sys/kernel/debug/tracing/events/<event-name>/enable.
 
+AFAIK, this (adding field in the middle) shouldn't be problematic as we
+have the tracepoint format available in debugfs. For e.g. with this patch,
+the format is as follows:
+
+[root avadnaik]# cat /sys/kernel/debug/tracing/events/mce/mce_record/format 
+name: mce_record
+ID: 113
+format:
+        field:unsigned short common_type;       offset:0;       size:2; signed:0;
+        field:unsigned char common_flags;       offset:2;       size:1; signed:0;
+        field:unsigned char common_preempt_count;       offset:3;       size:1; signed:0;
+        field:int common_pid;   offset:4;       size:4; signed:1;
+
+        field:u64 mcgcap;       offset:8;       size:8; signed:0;
+        field:u64 mcgstatus;    offset:16;      size:8; signed:0;
+        field:u64 status;       offset:24;      size:8; signed:0;
+        field:u64 addr; offset:32;      size:8; signed:0;
+        field:u64 misc; offset:40;      size:8; signed:0;
+        field:u64 synd; offset:48;      size:8; signed:0;
+        field:u64 ipid; offset:56;      size:8; signed:0;
+        field:u64 ip;   offset:64;      size:8; signed:0;
+        field:u64 tsc;  offset:72;      size:8; signed:0;
+        field:u64 ppin; offset:80;      size:8; signed:0;
+        field:u64 walltime;     offset:88;      size:8; signed:0;
+        field:u32 cpu;  offset:96;      size:4; signed:0;
+        field:u32 cpuid;        offset:100;     size:4; signed:0;
+        field:u32 apicid;       offset:104;     size:4; signed:0;
+        field:u32 socketid;     offset:108;     size:4; signed:0;
+        field:u8 cs;    offset:112;     size:1; signed:0;
+        field:u8 bank;  offset:113;     size:1; signed:0;
+        field:u8 cpuvendor;     offset:114;     size:1; signed:0;
+
+print fmt: "CPU: %d, MCGc/s: %llx/%llx, MC%d: %016Lx, IPID: %016Lx, ADDR/MISC/SYND: %016Lx/%016Lx/%016Lx, RIP: %02x:<%016Lx>, TSC: %llx, PPIN: %llx, PROCESSOR: %u:%x, TIME: %llu, SOCKET: %u, APIC: %x", REC->cpu, REC->mcgcap, REC->mcgstatus, REC->bank, REC->status, REC->ipid, REC->addr, REC->misc, REC->synd, REC->cs, REC->ip, REC->tsc, REC->ppin, REC->cpuvendor, REC->cpuid, REC->walltime, REC->socketid, REC->apicid
+
+
+Just quickly tried with rasdaemon and things seem to be okay.
+
+Also, not a cent percent sure, but the library you are mentioning of, I think
+its the libtraceevent library and IIUC, it utilizes the above tracepoint format.
+
+> 2) While you are adding to the tracepoint, should we batch up all
+> the useful changes that have been made to "struct mce". I think the
+> new fields that might be of use are:
+> 
+>         __u64 synd;             /* MCA_SYND MSR: only valid on SMCA systems */
+>         __u64 ipid;             /* MCA_IPID MSR: only valid on SMCA systems */
+>         __u64 ppin;             /* Protected Processor Inventory Number */
+>         __u32 microcode;        /* Microcode revision */
+> 
+
+synd and ipid are already a part of mce_record tracepoint. (They too have been
+added in the middle). Will add the microcode field in the next version.
+
+>>
+>> Signed-off-by: Avadhut Naik <avadhut.naik@amd.com>
+>> ---
+>>  include/trace/events/mce.h | 5 ++++-
+>>  1 file changed, 4 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/include/trace/events/mce.h b/include/trace/events/mce.h
+>> index 1391ada0da3b..657b93ec8176 100644
+>> --- a/include/trace/events/mce.h
+>> +++ b/include/trace/events/mce.h
+>> @@ -25,6 +25,7 @@ TRACE_EVENT(mce_record,
+>>  		__field(	u64,		ipid		)
+>>  		__field(	u64,		ip		)
+>>  		__field(	u64,		tsc		)
+>> +		__field(	u64,		ppin	)
+>>  		__field(	u64,		walltime	)
+>>  		__field(	u32,		cpu		)
+>>  		__field(	u32,		cpuid		)
+>> @@ -45,6 +46,7 @@ TRACE_EVENT(mce_record,
+>>  		__entry->ipid		= m->ipid;
+>>  		__entry->ip		= m->ip;
+>>  		__entry->tsc		= m->tsc;
+>> +		__entry->ppin		= m->ppin;
+>>  		__entry->walltime	= m->time;
+>>  		__entry->cpu		= m->extcpu;
+>>  		__entry->cpuid		= m->cpuid;
+>> @@ -55,7 +57,7 @@ TRACE_EVENT(mce_record,
+>>  		__entry->cpuvendor	= m->cpuvendor;
+>>  	),
+> 
+> ... rest of patch trimmed.
+> 
+> -Tony
+
+-- 
+Thanks,
+Avadhut Naik
