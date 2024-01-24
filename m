@@ -1,66 +1,56 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B09BE63126
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 12:29:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF00D633EA;
+	Wed, 24 Jan 2024 12:30:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706099384; cv=none; b=d5JrBSCtPiM3ayYFCuqDxvFFvxnjpMonhHRVTmL+KFQX85amq3wWysXLvVTnVPpbojAqLXyfqnALq7KLlg3IE9rcnqmLc5IlW4Ywbq7X1Od1uJocHFnxg985Vpeg2jgdAgCMwto7TVYQ/agsCAP42oXBCAdB2jsDwvUYpv7I3MM=
+	t=1706099409; cv=none; b=OrEUwKsy/OHviPn79WeIWEPbuPeuDdj2RuAZVjUj0AjoT8fbzfw9yMZZz2m1vEk2LbPCAzvdmcQL0VPq2jaU8DeUfjcdM/S9/PnCKXpeeyaMTt9AzemXaEgxHLZTaFus8gmjndW2VuRVFN4SKkGJD9Mo7K4DhXiX93MOR3+0FwU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706099384; c=relaxed/simple;
-	bh=zXZzstidznwktnfwkp33qJ95ppoP9GSUCB2MycHr+pY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=IJkYo2slqOAhqLlaNVDesJOkQVWhtKBBS2QwUVaJNG8hKT5UYhxsEyKEGqXaloZOUDVGQ9U+8DUVU0CgmOv2qd22ECOWjTQMPdnelA1KeR06rLRCMN6c/QiLi23YbYmQT37ZDPh0tEAxBGtjbAsn0sNzpfI99GcF6IdgEVKxCW8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=shopee.com; spf=pass smtp.mailfrom=shopee.com; dkim=pass (2048-bit key) header.d=shopee.com header.i=@shopee.com header.b=ABH5kuva; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=shopee.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shopee.com
+	s=arc-20240116; t=1706099409; c=relaxed/simple;
+	bh=jTWOxO1XAaoksmE8rhYXp3rHaYDWjO/isGrkm2WxrRY=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=fEFMH2te4jXctzfzMQE47R98ZvuDdnGKWBk8KTlyLAiY2st/ZfeoMk1DJDOHirw0BlLFA7CPZSpXLZI7EJel+SQ9VkLbsUFEo/+tbaMAldxAS1xiyeM/dA+FMAXt38JXrAd62Ajcj8pebNc9e6oPjBmu7glI0kFBr9c3bIUuKNk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=GrrzSW06; arc=none smtp.client-ip=198.47.19.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=shopee.com header.i=@shopee.com header.b="ABH5kuva"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1d730b6943bso16905485ad.2
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 04:29:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shopee.com; s=shopee.com; t=1706099382; x=1706704182; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=LiD0rjQFmh/9BQJEz2Ao34wuQ4GFoyU1gClHa9sv83Q=;
-        b=ABH5kuva2qfgLW1eE47yv6bMGUBfpiCYo30h90UD0JHImyCDweYnyxzqwS0M/1k5zd
-         3ueVg/1oGd2q/uUlr8MwwfHLAXwB7QVvyURE0x/WBzmLkZ9JpqlG10NIMB5c2UkMRw9F
-         8/XFZeS8wV+98ZJ8Nlk070ApV6aw5XwHMwgYHgeug1oZTq84/7zOCvk/gSLQZKd72mby
-         8FGdIe5TfeMVbXkWoowRWDkkpbJTBH8QQLSSjPcIUBtyry62Xj4fW7aeIhPDZ04bYkfT
-         V0p+2d+jLOOVLDlopHEv5wPR4d1OQbakXCgae9/M3zm3O1tS+XWa6i1eR+35pyNSF24i
-         fjhg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706099382; x=1706704182;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=LiD0rjQFmh/9BQJEz2Ao34wuQ4GFoyU1gClHa9sv83Q=;
-        b=kwEjprIC+l8UUyDC8slGJwVtsR53p3CLka0k3AJoDNKNin7fmEDlzIq7UBxbx6CTWq
-         m6MBjTIYuRgcgg0EeFQMF1R8PnCXS7T4zeScbdH8NHSP+JDTSAENzeDe7byIm4x1lJ26
-         4KeMjARn6sG0TycyLYufu40iUH3wnNuEIEmoCV2USBBsTbOBinb0x1JAI/Z/cYRkuvbU
-         rdYPyy2tCvLnBlpUsQQdFe+7cYLvLncNA1GSWQ8lV6xlN3pqlbyPYmjPJWUXOezKEi8Z
-         1/kpIH9ESYzNeYJ6COaDJlIvrLyJmnsrKFOJ1U5xr/LrjP72svxrHfGyOm2bmaYYIS8s
-         nSUA==
-X-Gm-Message-State: AOJu0YyDKsjq2wG7qZtea73CaRegZJTpL3GtP2WH/2Ilc8Kkf8XuuTzp
-	ZPF4hmTcybiKGfXKO7HG91Yf98zuK8qGEGWxdWTtrlOt1VP1f9L3guYjoQ0aL/g=
-X-Google-Smtp-Source: AGHT+IFNpOJaMHwui3sOu7Y4nD94Fm2TbGPvpczWao+z56w7IkLdelVIVe37r6D00fB2Bmqs4UmJUw==
-X-Received: by 2002:a17:903:2283:b0:1d5:e313:8380 with SMTP id b3-20020a170903228300b001d5e3138380mr618116plh.2.1706099381894;
-        Wed, 24 Jan 2024 04:29:41 -0800 (PST)
-Received: from ubuntu-haifeng.default.svc.cluster.local ([101.127.248.173])
-        by smtp.gmail.com with ESMTPSA id m3-20020a170902f20300b001d6f8b31ddcsm10414605plc.3.2024.01.24.04.29.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jan 2024 04:29:41 -0800 (PST)
-From: Haifeng Xu <haifeng.xu@shopee.com>
-To: tglx@linutronix.de
-Cc: mingo@redhat.com,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org,
-	linux-kernel@vger.kernel.org,
-	Haifeng Xu <haifeng.xu@shopee.com>
-Subject: [PATCH] x86/cpu: Remove unused aperfmperf_get_khz()
-Date: Wed, 24 Jan 2024 12:28:17 +0000
-Message-Id: <20240124122817.1295451-1-haifeng.xu@shopee.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="GrrzSW06"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 40OCTfSf119955;
+	Wed, 24 Jan 2024 06:29:41 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1706099381;
+	bh=jF9L84KMv0wHb4XbV69aBeG5tl9iTIPpMYjJbs4VL3k=;
+	h=From:To:CC:Subject:Date;
+	b=GrrzSW06ziO+anZC1hXgZd+snymbYsxBpDvt0Y94qVq5m7Hx+n0KMGkmblGCtB9UE
+	 j50eViQ5p5ulPLcvwcm2WGmvjoi6ajkXzHuACXDha4qDFo1bX1189u9YRDb6nrBkcR
+	 XtB9pQZFYm/YkVrUt/cbUvEzbn8qW3YNuAOOkS10=
+Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 40OCTft8051628
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Wed, 24 Jan 2024 06:29:41 -0600
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 24
+ Jan 2024 06:29:41 -0600
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Wed, 24 Jan 2024 06:29:41 -0600
+Received: from uda0492258.dhcp.ti.com (uda0492258.dhcp.ti.com [172.24.227.9])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 40OCTaNb127501;
+	Wed, 24 Jan 2024 06:29:37 -0600
+From: Siddharth Vadapalli <s-vadapalli@ti.com>
+To: <bhelgaas@google.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
+        <robh@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
+        <conor+dt@kernel.org>
+CC: <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <vigneshr@ti.com>, <afd@ti.com>, <srk@ti.com>, <s-vadapalli@ti.com>
+Subject: [PATCH v3] dt-bindings: PCI: ti,j721e-pci-host: Add support for J722S SoC
+Date: Wed, 24 Jan 2024 17:59:36 +0530
+Message-ID: <20240124122936.816142-1-s-vadapalli@ti.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,26 +58,62 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-aperfmperf_get_khz() isn't used by anyone, remove it to clean up.
+TI's J722S SoC has one instance of a Gen3 Single-Lane PCIe controller.
+The controller on J722S SoC is similar to the one present on TI's AM64
+SoC, with the difference being that the controller on AM64 SoC supports
+up to Gen2 link speed while the one on J722S SoC supports Gen3 link speed.
 
-Signed-off-by: Haifeng Xu <haifeng.xu@shopee.com>
+Update the bindings with a new compatible for J722S SoC.
+
+Technical Reference Manual of J722S SoC: https://www.ti.com/lit/zip/sprujb3
+
+Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
 ---
- arch/x86/kernel/cpu/cpu.h | 1 -
- 1 file changed, 1 deletion(-)
 
-diff --git a/arch/x86/kernel/cpu/cpu.h b/arch/x86/kernel/cpu/cpu.h
-index 885281ae79a5..6bbee333d055 100644
---- a/arch/x86/kernel/cpu/cpu.h
-+++ b/arch/x86/kernel/cpu/cpu.h
-@@ -81,7 +81,6 @@ extern void check_null_seg_clears_base(struct cpuinfo_x86 *c);
- void cacheinfo_amd_init_llc_id(struct cpuinfo_x86 *c);
- void cacheinfo_hygon_init_llc_id(struct cpuinfo_x86 *c);
+Hello,
+
+This patch is based on linux-next tagged next-20240124.
+
+v2:
+https://lore.kernel.org/r/20240122064457.664542-1-s-vadapalli@ti.com/
+Changes since v2:
+- Added fallback compatible for "ti,j722s-pcie-host" as
+  "ti,j721e-pcie-host" based on Conor's suggestion at:
+  https://lore.kernel.org/r/20240122-getting-drippy-bb22a0634092@spud/#t
+
+v1:
+https://lore.kernel.org/r/20240117102526.557006-1-s-vadapalli@ti.com/
+Changes since v1:
+- Dropped patches 1/3 and 2/3 of the v1 series as discussed in the v1
+  thread.
+- Updated patch 3/3 which is the v1 for this patch by dropping the checks
+  for the "num-lanes" property and "max-link-speed" property since the PCI
+  driver already validates the "num-lanes" property.
+
+Regards,
+Siddharth.
+
+ Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml b/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
+index b7a534cef24d..ac69deeaf1ee 100644
+--- a/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
++++ b/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
+@@ -23,6 +23,10 @@ properties:
+         items:
+           - const: ti,j7200-pcie-host
+           - const: ti,j721e-pcie-host
++      - description: PCIe controller in J722S
++        items:
++          - const: ti,j722s-pcie-host
++          - const: ti,j721e-pcie-host
  
--unsigned int aperfmperf_get_khz(int cpu);
- void cpu_select_mitigations(void);
- 
- extern void x86_spec_ctrl_setup_ap(void);
+   reg:
+     maxItems: 4
 -- 
-2.25.1
+2.34.1
 
