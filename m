@@ -1,152 +1,151 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BA841292E1
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 17:05:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF9047E58B;
+	Wed, 24 Jan 2024 17:06:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706115945; cv=none; b=KOPk3zID6PKiNf6aMm3hbRdgnrx+ImTPFKIeUHPfDS1dzcQtTRJ8y1QtPGClVIkd078ek1RkMJKvU5FSPSzBaoSv6gqiqM8L+wbdnpeoU39wk9TEcEd1N4F4g5iXtbsS6PGkfNncHcP/d4AYCn1HsSrE5V2rGqSGX/YZ+uhEPpQ=
+	t=1706115982; cv=none; b=a0yXHEKMHNOOb1Y4vayspR4mtoF6ZPfGXppMSCT5Z8bYSXGqwEltHc5VqkGt33kFtVa8h8r7M/wy9P9qrdlhompHJEx2N7j424U/JojVzvOczwdDsbejqFJfdVo9hu4RAQcrDjNJGIdRSOJ+UdTId/UzisfuSx16EK+rQph5yvc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706115945; c=relaxed/simple;
-	bh=3rLpbH9TxDLwqTYzfL+gAm8SDz7YKrWvuQPGpKHVxno=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hluESTlVXO7vLEj/ov6lIDC8qrK9x87weWYtTn38dOYejREm0CDtfFoDqmD774SzV3JpqroEc99JZkkHoM+oVlD5+av/GAQrlS2ehU+ympWngiJ5z81V55qbDOtWs0VVL/SeJyVYKqzG3yEzuVp55HSmXWITJuv07ceDQakr07k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vg4qqDuy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706115982; c=relaxed/simple;
+	bh=U7lCqVMGrtZDU6zhviF7Qx9nA+uvNFyijhmN2Y2H6Ho=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=YH8XUpbSuPU7QttBH6d9vwFEzXe3nMNCqbgoUXZkVoIOKBfFnhWVd/UTUEX/Ds+JLK33/3JR5oJARszSHtqP9B5VOpVJGCehqs1U6bH36e4+zJfj7colmpNgG4f7oWSjkHedklL3LCvWtuoNKFOT8rVvDJ1hMvDbvqIfjlgpuvo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eckTCup/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vg4qqDuy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC9C5C433C7;
-	Wed, 24 Jan 2024 17:05:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eckTCup/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76181C43390;
+	Wed, 24 Jan 2024 17:06:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706115944;
-	bh=3rLpbH9TxDLwqTYzfL+gAm8SDz7YKrWvuQPGpKHVxno=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Vg4qqDuykNEPszLPrOj3WVHt2+IWNF4VYtJnXEuBGLuZ97X8YmliQh60bLzFAxuuQ
-	 bohOfSKHiqFzobB1EoJrFe1QzZ0Ch7FRDrljo3acl03u4KUM3HfdZCItw5LvIEQNGL
-	 +UlyYuYN3NMntl/X3ReQeK3JMxCNVIADU+/xUcFINYVfPrU5DFBLwaZFO7NUG/azBL
-	 eCqPaUZzKZ+SthVI78rsCXQNNXXyWk8xaAmSKo0AdUpbwHG+nOZmoUeuOGMXmiDMaC
-	 AgNFHECZDuxyYFihka2vblwHHATOyTTHioLAlJ/sQrj/+hj4GUIPFp6IDLal0iYY2R
-	 lF5jsKMKQzGUg==
-From: Frederic Weisbecker <frederic@kernel.org>
-To: LKML <linux-kernel@vger.kernel.org>
-Cc: Frederic Weisbecker <frederic@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@kernel.org>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Peng Liu <liupeng17@lenovo.com>,
-	Joel Fernandes <joel@joelfernandes.org>
-Subject: [PATCH 15/15] tick: Assume timekeeping is correctly handed over upon last offline idle call
-Date: Wed, 24 Jan 2024 18:04:59 +0100
-Message-ID: <20240124170459.24850-16-frederic@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240124170459.24850-1-frederic@kernel.org>
-References: <20240124170459.24850-1-frederic@kernel.org>
+	s=k20201202; t=1706115982;
+	bh=U7lCqVMGrtZDU6zhviF7Qx9nA+uvNFyijhmN2Y2H6Ho=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=eckTCup/fuIPxn2crgJaj4gUoyjChf1g4b1ZkHRaYiimKr+gruOeLtJnF6g/QzcTc
+	 zJ8avrQcv/vifQym+rneVJMZgtSBzjW+0D3D0z1ilUJaC83oie/hHE4A464o3vCZty
+	 ev/Ka3iwZRO9st3SibCZBdUMvCUrZJTIn6OKD+N9RGMNVC9ypAGiLOVWQWrJY58fTD
+	 zwbzkT3pjaCCFxAyI4/+xFNPGJE4Q2UXVd6z5RW979ITYpaly9awX4MkoUGtOarCWU
+	 DOxJi0JJoZvK7HVhXLQMlCc0Vju5WRRY89P1xh0VGLFk5PpqPZgFvZsEQUz/5745Ne
+	 b9ADjyqHLnv0w==
+Date: Wed, 24 Jan 2024 09:06:20 -0800
+From: Jakub Kicinski <kuba@kernel.org>
+To: Danielle Ratson <danieller@nvidia.com>
+Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "davem@davemloft.net"
+ <davem@davemloft.net>, "edumazet@google.com" <edumazet@google.com>,
+ "pabeni@redhat.com" <pabeni@redhat.com>, "corbet@lwn.net" <corbet@lwn.net>,
+ "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "sdf@google.com"
+ <sdf@google.com>, "kory.maincent@bootlin.com" <kory.maincent@bootlin.com>,
+ "maxime.chevallier@bootlin.com" <maxime.chevallier@bootlin.com>,
+ "vladimir.oltean@nxp.com" <vladimir.oltean@nxp.com>,
+ "przemyslaw.kitszel@intel.com" <przemyslaw.kitszel@intel.com>,
+ "ahmed.zaki@intel.com" <ahmed.zaki@intel.com>, "richardcochran@gmail.com"
+ <richardcochran@gmail.com>, "shayagr@amazon.com" <shayagr@amazon.com>,
+ "paul.greenwalt@intel.com" <paul.greenwalt@intel.com>, "jiri@resnulli.us"
+ <jiri@resnulli.us>, "linux-doc@vger.kernel.org"
+ <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+ <linux-kernel@vger.kernel.org>, mlxsw <mlxsw@nvidia.com>, Petr Machata
+ <petrm@nvidia.com>, Ido Schimmel <idosch@nvidia.com>
+Subject: Re: [RFC PATCH net-next 9/9] ethtool: Add ability to flash
+ transceiver modules' firmware
+Message-ID: <20240124090620.69af41a6@kernel.org>
+In-Reply-To: <DM6PR12MB45169D23F12F3680FF8E07F8D87B2@DM6PR12MB4516.namprd12.prod.outlook.com>
+References: <20240122084530.32451-1-danieller@nvidia.com>
+	<20240122084530.32451-10-danieller@nvidia.com>
+	<20240122210534.5054b202@kernel.org>
+	<DM6PR12MB45168E425B2C1832F6D26453D8742@DM6PR12MB4516.namprd12.prod.outlook.com>
+	<20240123074955.72c27eb0@kernel.org>
+	<DM6PR12MB45169D23F12F3680FF8E07F8D87B2@DM6PR12MB4516.namprd12.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-The timekeeping duty is handed over from the outgoing CPU on stop
-machine, then the oneshot tick is stopped right after.  Therefore it's
-guaranteed that the current CPU isn't the timekeeper upon its last call
-to idle.
+On Wed, 24 Jan 2024 15:46:55 +0000 Danielle Ratson wrote:
+> > > The file_name parameter is not really needed inside the work. Once we
+> > > called request_firmware_direct(), we have all that we need in
+> > > module_fw->fw. Do we still need to avoid that situation? If so, can
+> > > you please suggest how? =20
+> >=20
+> > I'd pass it to module_flash_fw_schedule() as a separate argument, if it=
+ doesn't
+> > have to be saved. =20
+>=20
+> It doesn=E2=80=99t make the module_fw->file_name attribute redundant?
 
-Besides, calling tick_nohz_idle_stop_tick() while the dying CPU goes
-into idle suggests that the tick is going to be stopped while it is
-actually stopped already from the appropriate CPU hotplug state.
+This is what I mean:
 
-Remove the confusing call and the obsolete case handling and convert it
-to a sanity check that verifies the above assumption.
-
-Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
----
- include/linux/tick.h      |  2 ++
- kernel/cpu.c              |  1 +
- kernel/sched/idle.c       |  1 -
- kernel/time/tick-common.c |  4 ++++
- kernel/time/tick-sched.c  | 13 +------------
- 5 files changed, 8 insertions(+), 13 deletions(-)
-
-diff --git a/include/linux/tick.h b/include/linux/tick.h
-index c7840ae8ebaf..44fddfa93e18 100644
---- a/include/linux/tick.h
-+++ b/include/linux/tick.h
-@@ -29,8 +29,10 @@ static inline void tick_cleanup_dead_cpu(int cpu) { }
- 
- #if defined(CONFIG_GENERIC_CLOCKEVENTS) && defined(CONFIG_HOTPLUG_CPU)
- extern int tick_cpu_dying(unsigned int cpu);
-+extern void tick_assert_timekeeping_handover(void);
- #else
- #define tick_cpu_dying	NULL
-+static inline void tick_assert_timekeeping_handover(void) { }
- #endif
- 
- #if defined(CONFIG_GENERIC_CLOCKEVENTS) && defined(CONFIG_SUSPEND)
-diff --git a/kernel/cpu.c b/kernel/cpu.c
-index 5a8ad4f5ccf3..7e84a7b0675e 100644
---- a/kernel/cpu.c
-+++ b/kernel/cpu.c
-@@ -1399,6 +1399,7 @@ void cpuhp_report_idle_dead(void)
- 	struct cpuhp_cpu_state *st = this_cpu_ptr(&cpuhp_state);
- 
- 	BUG_ON(st->state != CPUHP_AP_OFFLINE);
-+	tick_assert_timekeeping_handover();
- 	rcutree_report_cpu_dead();
- 	st->state = CPUHP_AP_IDLE_DEAD;
- 	/*
-diff --git a/kernel/sched/idle.c b/kernel/sched/idle.c
-index 31231925f1ec..b15d40cad7ea 100644
---- a/kernel/sched/idle.c
-+++ b/kernel/sched/idle.c
-@@ -291,7 +291,6 @@ static void do_idle(void)
- 		local_irq_disable();
- 
- 		if (cpu_is_offline(cpu)) {
--			tick_nohz_idle_stop_tick();
- 			cpuhp_report_idle_dead();
- 			arch_cpu_idle_dead();
- 		}
-diff --git a/kernel/time/tick-common.c b/kernel/time/tick-common.c
-index 9cd09eea06d6..fb0fdec8719a 100644
---- a/kernel/time/tick-common.c
-+++ b/kernel/time/tick-common.c
-@@ -396,6 +396,10 @@ int tick_broadcast_oneshot_control(enum tick_broadcast_state state)
- EXPORT_SYMBOL_GPL(tick_broadcast_oneshot_control);
- 
- #ifdef CONFIG_HOTPLUG_CPU
-+void tick_assert_timekeeping_handover(void)
-+{
-+	WARN_ON_ONCE(tick_do_timer_cpu == smp_processor_id());
-+}
- /*
-  * Stop the tick and transfer the timekeeping job away from a dying cpu.
-  */
-diff --git a/kernel/time/tick-sched.c b/kernel/time/tick-sched.c
-index 5e7fe19b9977..a98e026244b0 100644
---- a/kernel/time/tick-sched.c
-+++ b/kernel/time/tick-sched.c
-@@ -1118,18 +1118,7 @@ static bool report_idle_softirq(void)
- 
- static bool can_stop_idle_tick(int cpu, struct tick_sched *ts)
+diff --git a/net/ethtool/module.c b/net/ethtool/module.c
+index 69cedb3ede6d..ea048a7089d9 100644
+--- a/net/ethtool/module.c
++++ b/net/ethtool/module.c
+@@ -229,7 +229,7 @@ static int module_flash_fw_work_init(struct ethtool_mod=
+ule_fw_flash *module_fw,
+ }
+=20
+ static int
+-module_flash_fw_schedule(struct net_device *dev,
++module_flash_fw_schedule(struct net_device *dev, const char *file_name,
+ 			 struct ethtool_module_fw_flash_params *params,
+ 			 struct netlink_ext_ack *extack)
  {
--	/*
--	 * If this CPU is offline and it is the one which updates
--	 * jiffies, then give up the assignment and let it be taken by
--	 * the CPU which runs the tick timer next. If we don't drop
--	 * this here, the jiffies might be stale and do_timer() never
--	 * gets invoked.
--	 */
--	if (unlikely(!cpu_online(cpu))) {
--		if (cpu == tick_do_timer_cpu)
--			tick_do_timer_cpu = TICK_DO_TIMER_NONE;
--		return false;
--	}
-+	WARN_ON_ONCE(cpu_is_offline(cpu));
- 
- 	if (unlikely(!tick_sched_flag_test(ts, TS_FLAG_NOHZ)))
- 		return false;
--- 
-2.43.0
-
+@@ -254,8 +254,7 @@ module_flash_fw_schedule(struct net_device *dev,
+ 		return -ENOMEM;
+=20
+ 	module_fw->params =3D *params;
+-	err =3D request_firmware(&module_fw->fw, module_fw->params.file_name,
+-			       &dev->dev);
++	err =3D request_firmware(&module_fw->fw, file_name, &dev->dev);
+ 	if (err) {
+ 		NL_SET_ERR_MSG(extack,
+ 			       "Failed to request module firmware image");
+@@ -288,6 +287,7 @@ static int module_flash_fw(struct net_device *dev, stru=
+ct nlattr **tb,
+ 			   struct netlink_ext_ack *extack)
+ {
+ 	struct ethtool_module_fw_flash_params params =3D {};
++	const char *file_name;
+ 	struct nlattr *attr;
+=20
+ 	if (!tb[ETHTOOL_A_MODULE_FW_FLASH_FILE_NAME]) {
+@@ -297,8 +297,7 @@ static int module_flash_fw(struct net_device *dev, stru=
+ct nlattr **tb,
+ 		return -EINVAL;
+ 	}
+=20
+-	params.file_name =3D
+-		nla_data(tb[ETHTOOL_A_MODULE_FW_FLASH_FILE_NAME]);
++	file_name =3D nla_data(tb[ETHTOOL_A_MODULE_FW_FLASH_FILE_NAME]);
+=20
+ 	attr =3D tb[ETHTOOL_A_MODULE_FW_FLASH_PASSWORD];
+ 	if (attr) {
+@@ -306,7 +305,7 @@ static int module_flash_fw(struct net_device *dev, stru=
+ct nlattr **tb,
+ 		params.password_valid =3D true;
+ 	}
+=20
+-	return module_flash_fw_schedule(dev, &params, extack);
++	return module_flash_fw_schedule(dev, file_name, &params, extack);
+ }
+=20
+ int ethnl_act_module_fw_flash(struct sk_buff *skb, struct genl_info *info)
+diff --git a/net/ethtool/module_fw.h b/net/ethtool/module_fw.h
+index 969de116f995..888f082f8daf 100644
+--- a/net/ethtool/module_fw.h
++++ b/net/ethtool/module_fw.h
+@@ -13,12 +13,10 @@ void ethtool_cmis_fw_update(struct work_struct *work);
+=20
+ /**
+  * struct ethtool_module_fw_flash_params - module firmware flashing parame=
+ters
+- * @file_name: Firmware image file name.
+  * @password: Module password. Only valid when @pass_valid is set.
+  * @password_valid: Whether the module password is valid or not.
+  */
+ struct ethtool_module_fw_flash_params {
+-	const char *file_name;
+ 	u32 password;
+ 	u8 password_valid:1;
+ };
