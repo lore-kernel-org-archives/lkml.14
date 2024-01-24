@@ -1,54 +1,45 @@
-Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29743DDCE
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 05:41:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.9.28.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66221F501;
+	Wed, 24 Jan 2024 05:44:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706074892; cv=none; b=q1w1bpFHFT3KXbTI7uw3/ROcXjLUIlq4d6kLIhZ00lzNEhmnZjDvBUUCKgK9fOZDi4Y8A6lZOXDsH99fi+9yPc2U/GMDh6Dca4Z6eYJ9u+KoKoxDUkm44CDdJByQuUmTqfAYdvauID/vLw1ZSh6fpCB0fJgaq1EnHkEBgN1wr4g=
+	t=1706075090; cv=none; b=hd64UdJM9DDHcD8hRHLbNL+Ool7Gq2VkqZSLlDRMS2PlckvfUm6zy5JLNfI3QOKQx6wQAMvBk5efabi2giJxaW9KWjPH8tPewlb3PGCZH/2fbmtrS0PjFsR+qyqusPdn5yLlhPhMgQFDF99k4Jw2em2XivoYXH4QFAAfFreJXXU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706074892; c=relaxed/simple;
-	bh=RLLxUdkDPBsC4Vc8m/92Z8uc3PsBrwkuLEFD0qAnxk8=;
+	s=arc-20240116; t=1706075090; c=relaxed/simple;
+	bh=wydq3m3awroYwRKyCn8UdwP+RAL9z4c7EejX5926Jyg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=A0XqUHkgSXYCq0hUmQcp2kOpbHET1AbAwkv8csqk/mr0M6qalTpH7pwn75DAw4es52Zr12erhsJb8EaBG1x8nRlLZPEUGM4VpJiYGG4L29dPqY0ytmBBGVL3P4nsgyY0CRo4Gnzh6p/3aPVquDBTtI5SvRLfI13FvcSM5RWa+iQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu; spf=pass smtp.mailfrom=mit.edu; dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b=F0BpVUTY; arc=none smtp.client-ip=18.9.28.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
+	 Content-Type:Content-Disposition:In-Reply-To; b=bNS/gFAA1EAitMFIpAdhBPESLfn/ueCWAw57JTpnnYToa2I6CmwwHMw40q9xqTjw3d7GmUKgjFuI5akz39M87cNxyBEPb/yLGH+capm5geIHXAVbKpa0BG0XPZYNs7k58IyqLKG/mjZKd79a/hXrBfhLChRT7EkY/asx31g2j80=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ry/iJkcO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b="F0BpVUTY"
-Received: from cwcc.thunk.org (pool-173-48-122-36.bstnma.fios.verizon.net [173.48.122.36])
-	(authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 40O5aZSQ021415
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 24 Jan 2024 00:36:36 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mit.edu; s=outgoing;
-	t=1706074597; bh=sRhoaUO93OYOZ4Mh1rIvfQPvG6ITdq3qLbPLkxj4DZc=;
-	h=Date:From:Subject:Message-ID:MIME-Version:Content-Type;
-	b=F0BpVUTYIIq9DhD6RIMbtl8UtRyoZOfiiIWalFE4m3/nj+EyRGTrwU07sQz/KoWal
-	 NpwtarN3J7R0VIgTAZxNMn3j1CcW3B17QaYGzOmNRp+6OKAtvZqKBwWOCGFOh6NikM
-	 NjSG7Ek2kdVd08NvNoixsHjp72hiUpfCLyRR5H/fkOVd0EKbl0mlsmdiQyV/KrMt8S
-	 VlENNQZuzuAQAmho+7Lw/Nb0AaHZVmCdD4cPY7xQFtiETbaRjXgBCh9I1UYcfFDzNH
-	 HWTSjgdWUITuD/nyJOFZe0PRnXoXMgy98sSEevoH28zJJCQMS239VPFd3TJk/qhuI3
-	 8d6NgA4oLWMew==
-Received: by cwcc.thunk.org (Postfix, from userid 15806)
-	id E029415C04DD; Wed, 24 Jan 2024 00:36:34 -0500 (EST)
-Date: Wed, 24 Jan 2024 00:36:34 -0500
-From: "Theodore Ts'o" <tytso@mit.edu>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Alexander Gordeev <agordeev@linux.ibm.com>, G@mit.edu,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-scsi <linux-scsi@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [GIT PULL] final round of SCSI updates for the 6.7+ merge window
-Message-ID: <20240124053634.GD1452899@mit.edu>
-References: <d2ce7bc75cadd3d39858c02f7f6f0b4286e6319b.camel@HansenPartnership.com>
- <CAHk-=wi8-9BCn+KxwtwrZ0g=Xpjin_D3p8ZYoT+4n2hvNeCh+w@mail.gmail.com>
- <7b104abd42691c3e3720ca6667f5e52d75ab6a92.camel@HansenPartnership.com>
- <CAHk-=wi03SZ4Yn9FRRsxnMv1ED5Qw25Bk9-+ofZVMYEDarHtHQ@mail.gmail.com>
- <20240121063038.GA1452899@mit.edu>
- <CAHk-=whhvPKxpRrZPOnjiKPVqWYC3OVKdGy5Z3joEk4vjbTh6Q@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ry/iJkcO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AB01C433C7;
+	Wed, 24 Jan 2024 05:44:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706075090;
+	bh=wydq3m3awroYwRKyCn8UdwP+RAL9z4c7EejX5926Jyg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ry/iJkcO2HUVEdQ7x7oBemcfuHqJLabZ2pEtEkfpCmGxW+KA1kPHTtCLCH9cdugrE
+	 ifbeEdyDnPdsimCGVzqKdQtuHze+DLoBulaP5++3w/72QxWVQwSEizTz+IFImdiZ1w
+	 FaQUp8lZumV5yd64FOj0MErKaaoKUuJY+JOvwLTTqpe9O4XIJmoW1DAnEiWez+Nlst
+	 NrUNpAS1Ks8Y4BoaX0+FBEiUGWK3RYWMUylRn8Ka+N/VNXdZD+zUqWBTDbleMGwxEu
+	 8Rs1GKw6RzShKppIdHvtzgbdmPvb1WF2QzprGmU++4NfjllOl9lPwSK4Zy3AqBtFGZ
+	 bO/B9sQMFANWA==
+Date: Wed, 24 Jan 2024 11:14:45 +0530
+From: Vinod Koul <vkoul@kernel.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: andersson@kernel.org, konrad.dybcio@linaro.org, sboyd@kernel.org,
+	mturquette@baylibre.com, robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+	linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, quic_cang@quicinc.com,
+	Conor Dooley <conor.dooley@microchip.com>
+Subject: Re: [PATCH v2 01/16] dt-bindings: phy: qmp-ufs: Fix PHY clocks
+Message-ID: <ZbCjzeMTKtbRxJHw@matsya>
+References: <20231218120712.16438-1-manivannan.sadhasivam@linaro.org>
+ <20231218120712.16438-2-manivannan.sadhasivam@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -57,36 +48,22 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHk-=whhvPKxpRrZPOnjiKPVqWYC3OVKdGy5Z3joEk4vjbTh6Q@mail.gmail.com>
+In-Reply-To: <20231218120712.16438-2-manivannan.sadhasivam@linaro.org>
 
-On Sun, Jan 21, 2024 at 10:48:35AM -0800, Linus Torvalds wrote:
-> On Sat, 20 Jan 2024 at 22:30, Theodore Ts'o <tytso@mit.edu> wrote:
-> >
-> > Linus, you haven't been complaining about my key, which hopefully
-> > means that I'm not causing you headaches
+On 18-12-23, 17:36, Manivannan Sadhasivam wrote:
+> All QMP UFS PHYs except MSM8996 require 3 clocks:
 > 
-> Well, honestly, while I pointed out that if everybody was expiring
-> keys, I'd have this headache once or twice a week, the reality is that
-> pretty much nobody is. There's James, you, and a handful of others.
+> * ref - 19.2MHz reference clock from RPMh
+> * ref_aux - Auxiliary reference clock from GCC
+> * qref - QREF clock from GCC or TCSR (since SM8550)
 > 
-> So in practice, I hit this every couple of months, not weekly. And if
-> I can pick up updates from the usual sources, it's all fine. James'
-> setup just doesn't match anybody elses, so it's grating.
+> MSM8996 only requires 'ref' and 'qref' clocks. Hence, fix the binding to
+> reflect the actual clock topology.
+> 
+> This change obviously breaks the ABI, but it is inevitable since the
+> clock topology needs to be accurately described in the binding.
 
-If we told those people who wantg to pursue key rotation to just
-always upload keys to the Kernel keyring, using the instructions
-here[1], and at the beginning of each merge window, you updated your
-local clone of the kernel keyring git repo[2], and then ran the
-scripts/korg-refresh-keys, the headache to you would be limited to
-running "cd ~/git/korg-pgpkeys ; git pull ;
-./scripts/korg-refresh-keys" every 2 or 3 months.  The work you'd have
-to do would be a fixed amount of work, even if more people were using
-PGP key rotation.
+This fails to apply on phy/fixes, pls rebase
 
-[1] https://korg.docs.kernel.org/pgpkeys.html
-[2] https://git.kernel.org/pub/scm/docs/kernel/pgpkeys.git
-
-Would that be an acceptable (hopefully minimal!) amount of annoyance
-for you?
-
-					- Ted
+-- 
+~Vinod
