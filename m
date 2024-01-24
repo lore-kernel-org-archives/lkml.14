@@ -1,175 +1,194 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01385468A;
-	Wed, 24 Jan 2024 02:02:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706061743; cv=fail; b=VBBsq+sJotkadftylhy1vUI70k3txgRAqydLzr2F9rJZ1lcJE8q1Dfbg6RnTIL0tsv/AOQTnzU96r0G9+1YoC+j3YBGrMG+rCMQfgTOCm2UYcofq6SfrKnOX4KQ4V0wp+ChwsuW5vD05s3/dX4iI1WiRX0NbxekDJvzcY3T7gS8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706061743; c=relaxed/simple;
-	bh=i5iK8DPyDTICGfBH5mAD84WRB4grYwxoiVt/wlGsAV0=;
-	h=To:Cc:Subject:From:Message-ID:References:Date:In-Reply-To:
-	 Content-Type:MIME-Version; b=UaPXHBjqm0N3exhNF8t2+5xjvkBYHomjQN0c5a8Izpx7ZcyKxKCHYSiHeysoSQH1uZnaGYz4lDqv/F/zGWzX0OmNQ0JCVwZalAVGrd56hbwCBg/J9qsaSw10E9Wj04IDuz8MBaPGjkKsgN9uYfO495wCYe/ojNMeBIzbY+lEj2E=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=AyxMdf1O; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=qBXeOOIc; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6077717CB
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 02:05:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706061907; cv=none; b=lv6JrvfXCjb8edK2kVkUL35YzZWQx/97frv2DvJQEOn7bxJpiQ9gXHCnvRfqCCu/B88cNb4kLgKbs5S0BWGTosSt/71INv7aDVNRMwhpFtpKU80YIZ06cdQndI8Us1TvsP2z4JFd2Fp2rsjR0jAOa4KSIeBPTod5gPmuMv7dTB0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706061907; c=relaxed/simple;
+	bh=r1PJI/1kQSGO0bzUHL8vHtByzkwdMZSWVNQZCiZTVgg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=l/4Aj+vcfJLg1uzOjrD0lKyt7zKNC19MRh0COc0hJ614XdHlYkfK2ILQPhenPkih1Gh+uui/l79sbrTfvbam3yiR9z+Hh0BHsT4SYA9tij46iRXHOq/ewI5Vra+t6CanPwhs9fh1vaDN8HkJuqjXDBU+x8dXcIAlvBdxYhiv2ME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DbiV+kWc; arc=none smtp.client-ip=209.85.218.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="AyxMdf1O";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="qBXeOOIc"
-Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 40NMuALP011684;
-	Wed, 24 Jan 2024 02:00:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : message-id : references : date : in-reply-to : content-type :
- mime-version; s=corp-2023-11-20;
- bh=1YFvq4HEp8zaPcpzDHYwYBVSPZNDBDco8QjUDMCOEm8=;
- b=AyxMdf1OwpU6C18sxDpV1KsoPMtIib9wyj0+zbKBHUqE+MibBERdRI3BY8aXQcNP5/Qw
- N6yvISq7dC+HsrkvLW+xzBjWmJLyAK1ThYpE4cpiVPgBC18zhNyBJCzIOnYEsJivVuND
- LtjUT8Etp0303qUgz5WCC6ZGt6t/lotEy3lWuAnInlEd/qfXGw1JTlQXBPSm7HjdZJzp
- rrPn57n2MG/22WRhQEqfYZ+wxfPQLK5u7S2WqwyZh2WvApHOWVCqbGi0ctgJvjfo0B9i
- ghuzqrmGVrST2b0cruKOdPjXf2fsSECDpdLqLbwKSB0BfWe8OYPo+gp5t2kCoXRtEAZW 1Q== 
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3vr7cuqxm5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 24 Jan 2024 02:00:58 +0000
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 40O1CcNi001721;
-	Wed, 24 Jan 2024 02:00:57 GMT
-Received: from nam04-mw2-obe.outbound.protection.outlook.com (mail-mw2nam04lp2168.outbound.protection.outlook.com [104.47.73.168])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3vs3237s1y-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 24 Jan 2024 02:00:57 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YBS82i9RD7XSQUSGq3pIuUQHxI4qAcf/vN1PiE9DV6gDg+3V05Sf4w7H+riGEPUb8IHvnXRPEMPRNAIetySGrdSTZghY9jKztWJLeTeDHbquJlnNdXSg/vlm4oxcSYr/TiD7QFL5xX3+EwzpGB3j/eiY+Mg8zLTKA01FhlZ0GNY2Bxf/Nra9dfJUFHDJcr+gd4MAmlDgTWeP97tUIntWQX9Ae/+S+V2RPHAKBNaAvpWAUcOgxpVvoXGNiU7XnE5pkpwQzZoEjquCHQtvx9JjT/nDRW4cBfLe3M7Cx68kSzfPcrOrLSBsaYEBRFqQ/PJ4KQvrxe6XoICjP4UPvT8yig==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=1YFvq4HEp8zaPcpzDHYwYBVSPZNDBDco8QjUDMCOEm8=;
- b=Ic8ImRSrPuVH60rqZRC+w0swFrlGF/EEVlSIoIqZDy90cW/aj/aiOpW1a2VcQokt7kE3tyWVNeeX9bJ6DyMRK2/Gni0LqH2TkKCVXSXXai7CGxqwLDDdCX17FEXWvDW/FU7gpl6FpYl/aRUOc6gCxjgWBvCJc7zXQxPrSb57xED2/z09KlrXGtZzYOwBFhuOKp0GFq29f0ogidC0BmWS6fJjF6DKAnWyaCp78Ed84QGW1yd6DAbj6a+sfh9uFxa0C/A+9WW1/5IcJFnUOrN6RXB7Ify61uTnRAU2PkEJDikWqCOhjrxzmGW5QC2m8JRy5OaUnu9QVGEhx1H3hH8a8Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DbiV+kWc"
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a271a28aeb4so532030666b.2
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 18:05:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1YFvq4HEp8zaPcpzDHYwYBVSPZNDBDco8QjUDMCOEm8=;
- b=qBXeOOIchXzblPw9bQI/rygFULrKaYhUlloQEDHaGmRMl1cpMGqyn330n33fpMYzYR0fhEL4H9Ojn0XVKO2ltEfw13WY/f9kJyfxGrC63I7PhE6QzPkfJb2Rt7+Z4JKE4YQlogH10jT3EwtuYtKklJSJJDPUGn9DxQpoKqYfXLQ=
-Received: from PH0PR10MB4759.namprd10.prod.outlook.com (2603:10b6:510:3d::12)
- by IA0PR10MB6724.namprd10.prod.outlook.com (2603:10b6:208:43e::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.22; Wed, 24 Jan
- 2024 02:00:54 +0000
-Received: from PH0PR10MB4759.namprd10.prod.outlook.com
- ([fe80::3676:ea76:7966:1654]) by PH0PR10MB4759.namprd10.prod.outlook.com
- ([fe80::3676:ea76:7966:1654%4]) with mapi id 15.20.7202.035; Wed, 24 Jan 2024
- 02:00:54 +0000
-To: Maramaina Naresh <quic_mnaresh@quicinc.com>
-Cc: "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen"
- <martin.petersen@oracle.com>,
-        Peter Wang <peter.wang@mediatek.com>,
-        "Matthias Brugger" <matthias.bgg@gmail.com>,
-        AngeloGioacchino Del Regno
- <angelogioacchino.delregno@collabora.com>,
-        Alim Akhtar
- <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Bart Van
- Assche <bvanassche@acm.org>,
-        Stanley Jhu <chu.stanley@gmail.com>, <linux-scsi@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>, <quic_cang@quicinc.com>,
-        <quic_nguyenb@quicinc.com>
-Subject: Re: [PATCH V6 0/2] Add CPU latency QoS support for ufs driver
-From: "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-Message-ID: <yq1a5ovze0z.fsf@ca-mkp.ca.oracle.com>
-References: <20231219123706.6463-1-quic_mnaresh@quicinc.com>
-Date: Tue, 23 Jan 2024 21:00:51 -0500
-In-Reply-To: <20231219123706.6463-1-quic_mnaresh@quicinc.com> (Maramaina
-	Naresh's message of "Tue, 19 Dec 2023 18:07:04 +0530")
-Content-Type: text/plain
-X-ClientProxiedBy: SJ0PR13CA0032.namprd13.prod.outlook.com
- (2603:10b6:a03:2c2::7) To PH0PR10MB4759.namprd10.prod.outlook.com
- (2603:10b6:510:3d::12)
+        d=gmail.com; s=20230601; t=1706061903; x=1706666703; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Mz18PLpP6eIAAHQsjlKzV2SEMfvKNheWYiqzzwRjC/4=;
+        b=DbiV+kWcboLwbUBUF24bSLdKvYP+WXCyO3dAGQlCcQHTaTawAYow6z79Xau4UfnhI5
+         hkrfzEuguDA7D1XqBS8iQkMblBZwBdL3fKtmF/ecjZjPa0pCsIQ6KQ45Z/MHPgyQAM9h
+         htZvlnbAcJGJrV6l3QjNYtLQwMHO/RH2DrnBJorciuxhdELjyoBMJ2C4fhC7ftbdTtfe
+         VVEYCi/8D+dR6ax3DLdxweEBfE2h4e2HNGgYyFOV6E60zJNiAxVoi8DSBmhmy9QtqEFu
+         mdA3CGUQPVLmKkyzWhOvCRXs342GTJUJtodcv5wdDfI1Di92xtNMj8tmZOqHNr2Ksl1k
+         lOrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706061903; x=1706666703;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Mz18PLpP6eIAAHQsjlKzV2SEMfvKNheWYiqzzwRjC/4=;
+        b=ik3yjhtuY7EoeLfEDTqQ7mZeS9pE6SiebZCAmK84b8cXeVrgkgIhInsOt4ZDl/jemB
+         c6U5mqSRiBpwQg3YL41DAR2IC5vr3z9xhKADxQbFyJpsxv4nbVAtXtd2JiNTLuL3vPFa
+         GcvpWZxaD7rNMs/x5zl35DyXhagi0QWGIfJ+THFAU6zJWpNXMUDqPK4Ma3zuohElq5aC
+         xUUyiuDu4PLjE3zpCZgAA6a1T18DHX1aHsND8PycDJGcdsVcSouLyqjsxzb23NDjyFsl
+         s3x8B1vaiJk/fz1sS3RKRnI+hn7gQmKIaIbnd2d4tVnRBHNjTlb7Xf+vWGdPHI7VpLxY
+         Vigw==
+X-Gm-Message-State: AOJu0Yzxkmo8KQgTSxoZ2fblVM1z7ZG5YJ5GMXktuIYQ3slTeJbf0gP0
+	8JnJzEYk3wVd6COIsYkX5A+canDDZ0z0NuEcUl8jxDYOV9b6mcFUBUMKMnTwM0QPvz6Rl+0sqWW
+	Mqs+PYnU1T+jX0Tks4iQTz3xXvXY=
+X-Google-Smtp-Source: AGHT+IEC/iEHtF88l+XDyVk0+7TQNGzjDlH8ORcmDLo/Kp6VakT3Mpq6n1fu1GQ233zIm6C5vEBrmGtEYeUcZmiRLBw=
+X-Received: by 2002:a17:906:c182:b0:a30:d64c:b718 with SMTP id
+ g2-20020a170906c18200b00a30d64cb718mr366577ejz.12.1706061903232; Tue, 23 Jan
+ 2024 18:05:03 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH0PR10MB4759:EE_|IA0PR10MB6724:EE_
-X-MS-Office365-Filtering-Correlation-Id: e7657fb8-79d7-47ee-d0aa-08dc1c804c77
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	TWJ2S137zqQdKDltTcU/o5VPxxZt1r2uttoyfy2zhZg3+KfVkRIGlkYRa0TMqXVfNvFBfN1qmcRAQXBBFNQ3rSR/b4/IzgmlgwKoU9dXWffXp805frv5r2S8YRBAkCDvTTYseWrkfZsZWUgSZ2+9VGGj55F+6tBrBWsM+gRbodgFN4+sTSbXWmEegMirNNDXU+ffUQyrwF9lbTQ4a587OMi63MbRV8lmKniEU4v8emJzjAE0ZiYFzx5j+tac9DOeTFVC/6KULxds9616uEl6RbEbwFAAfrmXNPeCudtJ8jvX27Lz+EmvMDeQClqP05MXwjg2JxkeKqQxgIfZ8Y3wt1C7QQeO+qbX0fBHMVgxsYntGjL+kuRy+9q1DVpFiYNgbr9kUSy6rTqYRwRw7lrc04sO19lA0qZ6LIK9E3VG92DRe3O8VhXwjBp+54nEkCCwuM1CLoSIJ0FjyfWy4B9MtWzXg4QUn3DaiiXtcJ+7Y5vbEJrFB7ALbGp2W3uh6Vq4e/GaVoKFiF/ROJMnykPnwfSPkovymNQul9MCx5Kfb/JeP1vnNSGf5LZfA5PAui5z
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR10MB4759.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(136003)(376002)(346002)(396003)(366004)(230922051799003)(186009)(64100799003)(451199024)(1800799012)(2906002)(7416002)(5660300002)(6916009)(66556008)(54906003)(66476007)(316002)(66946007)(4326008)(8676002)(8936002)(478600001)(6486002)(6512007)(558084003)(86362001)(38100700002)(26005)(6666004)(41300700001)(36916002)(6506007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?Rn7kuLMIKvpq99pWw935haJNTD93fO2C/nfoS4Lr4ZokMUI0Oq7yh74cLGMu?=
- =?us-ascii?Q?ox1C/7Cbb7sPh1hg+iAuTBfWruY2fOjJiHCt/zuZeUGXx3UC/zn16Iu4zYaA?=
- =?us-ascii?Q?EaGSliKhXt90ri0vMYc71gOPbgpr8zUlF/bFYb17FniFl+s4gFCFsAf191j3?=
- =?us-ascii?Q?FBSo33PsDzZZLJXOS1i3uP7zsnYYsudO3JZa8Ro0xrA/qbB9VzfelBwxXy4X?=
- =?us-ascii?Q?hKbZwPG89jH4cqbk/Ng+vUnHK1PvZaHmBzmvXdE7d7P/TuJwOzRhd2Cdo5Vj?=
- =?us-ascii?Q?UbfvThtHmZbgKyIJO+joFoSOM3CZNJ/mkChsbYILSfTFGmahlDl8sbXoWfS0?=
- =?us-ascii?Q?ewA5V5+HGRrf+W5SM2ehbS2/ETNdhglyNIHxr9AmwQDpiYr0T4uTzHkQEt6f?=
- =?us-ascii?Q?2uolJshuhAeDyeAVR+aHbTZkkIDjjBSamVEZdv0AynZG+Dp8lFubPF0GgNR7?=
- =?us-ascii?Q?4io7EhG6wJZE+ZfIJq2x+dS4qdrdU+V1b1kmbuvqHOpw4xOzLZp+FcEZQcqt?=
- =?us-ascii?Q?jdJ5bjLzsbBvxa74igqBsfEaAdeDZiTAvYgNG9C6KhJdS99Oyv+a0My6guhT?=
- =?us-ascii?Q?bL2eTLxqV0wAlajPY3fxAM6eI8m5pTZiuzVlnX8rDTf2Rly/xt2Zg/StBwzO?=
- =?us-ascii?Q?4WDPDbPW0stv3GQb+5yn+DBYNh7W/q8knW2gqY/2E17Dq6YrN58XeF/FPNpT?=
- =?us-ascii?Q?otgKF8f1kcDEO2idYbM4w0WdWXgUn27USgsMWlxqzZaqcoJk3cfYZEPrT5Ci?=
- =?us-ascii?Q?S9+x5aMwr2GohTn3CTqgMnr7hqQk1a/yZsOX3XD+XkaEvz9eWy7BNwwrjYB/?=
- =?us-ascii?Q?0JqSqJAwQ6e8hIvfe8eK7LArGxC9qrRSqzs6B1gvwGDEcfN9ZWOcUZBFxhf1?=
- =?us-ascii?Q?ZkyW0GlZlgFm0osgCvQj8OHCr8sSTUvPah+k7SpyMw3d3g7HDTbF/Z1J3H8X?=
- =?us-ascii?Q?FKybW2coQyND0DSlAd0WfAmo4dWicFFxGhyPoYw1BlWmtqOLtZ51WMltkHUP?=
- =?us-ascii?Q?7q6sn7Uh/xJANriPbtzFbzTS35Up4u/gLemWDxyeqF4+DD4fWPcaAavMfh0q?=
- =?us-ascii?Q?HBjlx9GTnmAHfri50a6ZrRD9XGKaScMdEzdqzUfm0wP2KR3uQtPAkzRWNMv/?=
- =?us-ascii?Q?y72hCYArecaTyBZRLuc2hk04WlNUxV/OIPG8eLjiEpdQhz87AczKL/6RZ4EX?=
- =?us-ascii?Q?jdP9ZjN3XeG1zaAsSKNiG2l9jo7Ljv9u2z0UZlmGGV8QXKiyCx7yBAOZeVDR?=
- =?us-ascii?Q?HWkPJl3m1Mc4sixkI86CFLQLN8AQ9HdeZ2uwm1of3rxYJx+jrKtpY6hDrnHn?=
- =?us-ascii?Q?COpYnVz93PrHrWXnOcWyGLt8zIhkp4nyIGFprBUrbvJ3eZaMsZ8dojIfhqAq?=
- =?us-ascii?Q?USIJDk8LeUxwUPRVTmSnmqss/qohEa0R9DMjSaXOTr0Kih8BjtHBX2bqJf+q?=
- =?us-ascii?Q?Q49MBSxFGd7nkxqE+p9fK0H0A2x4BgcY/L4wAKT90v/VYOxYuggHWRAqRmv5?=
- =?us-ascii?Q?9ylxtHvRstBfNwJ9TZbV+a3tLqha+wUjZiX5iH377bN4np3fAbqH6ELXSEHW?=
- =?us-ascii?Q?Nibf5kuoyDykjyR4bixlub7afOX9xvGpPpz9Epn5v3g+Al/ZmrgRJq6AvYpd?=
- =?us-ascii?Q?+Q=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	OOk7ywZEhu9waVCWZLf3X69K1nin2/PhaPJ799qN2P9GQVwVTKg+/4T60YmOAKs5v9aR3lsbkvpZoMAuK4ytJweNjS175Q/f860sZnU6YcmzbCvHRQ0WIjp+QwhSW9ycoARAJUWqAI9bPNcodfaqLwM3vXsJ07qPgrRC/dgrgIZTpPLYaznugDY+KHC7QHMv5jfBy5dLR1H21yi48/dErMRCVxqyv9FcO2umn6a6qO6pT0SdXHChplYRBJTdkzpH9t3oCDpc1rBdQPo4Wu4VFpOQmuEEa3ILoyvn38+6ux76sPVDPMC9weAK0gbTLfqWz03BLPllNWcqMmS2/VNO2COZ837k2QnVVOotcvAqdRrmRxEXXK5/+CRxTjieJMaDDMgqRXO1dIDt+UG9MO2qPcD7+c5gMfpiSXbAtD0xnVbSy3voATdnHKhBCEwZokAb6ssyHq2uddM94WLdraDzBBNC9ZohT6DsFugDSzTPgdKl2NrLlegLOo2RtTJ5YPwwqWHONDNIS3GNuczzGd4Su4Y1eFLyxkyrAdtS0rgio/HIfOvWUpymwmmjVMJhZobm4rF7ZA33xEh8Jg0UgRAf0/a1hq3z7PZT8UVJ2xq6kbA=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e7657fb8-79d7-47ee-d0aa-08dc1c804c77
-X-MS-Exchange-CrossTenant-AuthSource: PH0PR10MB4759.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jan 2024 02:00:54.5040
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: o0Zz71njcK1ZUepZQ4RMGBJB4j5Nn1yDB1jh4L0SHU7/Gf5O3CgtbPPq2+pYAZeYXobbu5niiBkH4RqwOoGgr8k2c93O3wck/uGs0nZVBfE=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR10MB6724
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-23_15,2024-01-23_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=0
- phishscore=0 malwarescore=0 mlxscore=0 mlxlogscore=808 spamscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2401240013
-X-Proofpoint-ORIG-GUID: aBWgtrvSLc5m1YOPRyRPj7uUD6KwYLnp
-X-Proofpoint-GUID: aBWgtrvSLc5m1YOPRyRPj7uUD6KwYLnp
+References: <20240122102256.261374-1-liangchen.linux@gmail.com> <4ada64aa-87ec-4340-9892-be52c1f27a97@linux.alibaba.com>
+In-Reply-To: <4ada64aa-87ec-4340-9892-be52c1f27a97@linux.alibaba.com>
+From: Liang Chen <liangchen.linux@gmail.com>
+Date: Wed, 24 Jan 2024 10:04:51 +0800
+Message-ID: <CAKhg4t+ayD-MPK8FwZFURZyX32d8gk26GdytwRiRjJBwBbaR6w@mail.gmail.com>
+Subject: Re: [PATCH] virtio_net: Support RX hash XDP hint
+To: Heng Qi <hengqi@linux.alibaba.com>
+Cc: mst@redhat.com, jasowang@redhat.com, 
+	virtualization@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Mon, Jan 22, 2024 at 7:10=E2=80=AFPM Heng Qi <hengqi@linux.alibaba.com> =
+wrote:
+>
+> Hi Liang Chen,
+>
+> =E5=9C=A8 2024/1/22 =E4=B8=8B=E5=8D=886:22, Liang Chen =E5=86=99=E9=81=93=
+:
+> > The RSS hash report is a feature that's part of the virtio specificatio=
+n.
+> > Currently, virtio backends like qemu, vdpa (mlx5), and potentially vhos=
+t
+> > (still a work in progress as per [1]) support this feature. While the
+> > capability to obtain the RSS hash has been enabled in the normal path,
+> > it's currently missing in the XDP path. Therefore, we are introducing X=
+DP
+> > hints through kfuncs to allow XDP programs to access the RSS hash.
+> >
+> > Signed-off-by: Liang Chen <liangchen.linux@gmail.com>
+> > ---
+> >   drivers/net/virtio_net.c | 56 +++++++++++++++++++++++++++++++++++++++=
++
+> >   1 file changed, 56 insertions(+)
+> >
+> > diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
+> > index d7ce4a1011ea..1463a4709e3c 100644
+> > --- a/drivers/net/virtio_net.c
+> > +++ b/drivers/net/virtio_net.c
+> > @@ -4579,6 +4579,60 @@ static void virtnet_set_big_packets(struct virtn=
+et_info *vi, const int mtu)
+> >       }
+> >   }
+> >
+> > +static int virtnet_xdp_rx_hash(const struct xdp_md *_ctx, u32 *hash,
+> > +                        enum xdp_rss_hash_type *rss_type)
+> > +{
+> > +     const struct xdp_buff *xdp =3D (void *)_ctx;
+> > +     struct virtio_net_hdr_v1_hash *hdr_hash;
+> > +     struct virtnet_info *vi;
+> > +
+> > +     if (!(xdp->rxq->dev->features & NETIF_F_RXHASH))
+>
+> I think 'vi->has_rss_hash_report' should be used here.
+> NETIF_F_RXHASH cannot guarantee that the hash report feature is negotiate=
+d,
+> and accessing hash_report and hash_value is unsafe at this time.
+>
 
-Maramaina,
+My understanding is that rxhash in dev->features is turned on only if
+the corresponding hw feature is set. We will double check on this.
 
-> Add CPU latency QoS support for ufs driver. This improves random io
-> performance by 15% for ufs.
+> > +             return -ENODATA;
+> > +
+> > +     vi =3D netdev_priv(xdp->rxq->dev);
+> > +     hdr_hash =3D (struct virtio_net_hdr_v1_hash *)(xdp->data - vi->hd=
+r_len);
+>
+> If the virtio-net-hdr is overrided by the XDP prog, how can this be done
+> correctly and as expected?
+>
 
-Applied to 6.9/scsi-staging, thanks!
+Yeah, thanks for bringing up this concern. We are actively working on
+a fix of this issue(possibly with a wrapper structure of xdp_buff).
 
--- 
-Martin K. Petersen	Oracle Linux Engineering
+Thanks,
+Liang
+
+> Thanks,
+> Heng
+>
+> > +
+> > +     switch (__le16_to_cpu(hdr_hash->hash_report)) {
+> > +             case VIRTIO_NET_HASH_REPORT_TCPv4:
+> > +                     *rss_type =3D XDP_RSS_TYPE_L4_IPV4_TCP;
+> > +                     break;
+> > +             case VIRTIO_NET_HASH_REPORT_UDPv4:
+> > +                     *rss_type =3D XDP_RSS_TYPE_L4_IPV4_UDP;
+> > +                     break;
+> > +             case VIRTIO_NET_HASH_REPORT_TCPv6:
+> > +                     *rss_type =3D XDP_RSS_TYPE_L4_IPV6_TCP;
+> > +                     break;
+> > +             case VIRTIO_NET_HASH_REPORT_UDPv6:
+> > +                     *rss_type =3D XDP_RSS_TYPE_L4_IPV6_UDP;
+> > +                     break;
+> > +             case VIRTIO_NET_HASH_REPORT_TCPv6_EX:
+> > +                     *rss_type =3D XDP_RSS_TYPE_L4_IPV6_TCP_EX;
+> > +                     break;
+> > +             case VIRTIO_NET_HASH_REPORT_UDPv6_EX:
+> > +                     *rss_type =3D XDP_RSS_TYPE_L4_IPV6_UDP_EX;
+> > +                     break;
+> > +             case VIRTIO_NET_HASH_REPORT_IPv4:
+> > +                     *rss_type =3D XDP_RSS_TYPE_L3_IPV4;
+> > +                     break;
+> > +             case VIRTIO_NET_HASH_REPORT_IPv6:
+> > +                     *rss_type =3D XDP_RSS_TYPE_L3_IPV6;
+> > +                     break;
+> > +             case VIRTIO_NET_HASH_REPORT_IPv6_EX:
+> > +                     *rss_type =3D XDP_RSS_TYPE_L3_IPV6_EX;
+> > +                     break;
+> > +             case VIRTIO_NET_HASH_REPORT_NONE:
+> > +             default:
+> > +                     *rss_type =3D XDP_RSS_TYPE_NONE;
+> > +     }
+> > +
+> > +     *hash =3D __le32_to_cpu(hdr_hash->hash_value);
+> > +     return 0;
+> > +}
+> > +
+> > +static const struct xdp_metadata_ops virtnet_xdp_metadata_ops =3D {
+> > +     .xmo_rx_hash                    =3D virtnet_xdp_rx_hash,
+> > +};
+> > +
+> >   static int virtnet_probe(struct virtio_device *vdev)
+> >   {
+> >       int i, err =3D -ENOMEM;
+> > @@ -4613,6 +4667,8 @@ static int virtnet_probe(struct virtio_device *vd=
+ev)
+> >       dev->ethtool_ops =3D &virtnet_ethtool_ops;
+> >       SET_NETDEV_DEV(dev, &vdev->dev);
+> >
+> > +     dev->xdp_metadata_ops =3D &virtnet_xdp_metadata_ops;
+> > +
+> >       /* Do we support "hardware" checksums? */
+> >       if (virtio_has_feature(vdev, VIRTIO_NET_F_CSUM)) {
+> >               /* This opens up the world of extra features. */
+>
