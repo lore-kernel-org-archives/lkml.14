@@ -1,169 +1,98 @@
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1A8B1862E;
-	Wed, 24 Jan 2024 10:15:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A1141862A;
+	Wed, 24 Jan 2024 10:19:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706091348; cv=none; b=KSqOR47UN/drNpGko9zdipSU0S9aWPzxjuIXhxU+N6YQmeE6lLhvAftjCIlw7XkY3cBnp0qIZrrlKBhfNMI9WurYJ3ZlrV3yg8Cd1ShwScRneAYT2AFnyndHQi7HPWHYdMgkN4DHZ+c2RIhnpKDIDMcp99ocExz3UN0JecFgQcE=
+	t=1706091554; cv=none; b=K0HyNUGAjLCQYb0iYw3C1AgxAx1K9TN8I4HW4bjQMd2SLLNlvTeEg8ACvHoudOJVzz6bYTYGNfO3+OFmkNek2u/BsChHC/o9m/C6a7FJ1jEoCgNkL/cFE/J5i77lUluY3Lh1WKW2mopshOTbrCj8Oc7fFBVQYWOgLVLZZPjJMtw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706091348; c=relaxed/simple;
-	bh=3KQWhQUwONwsinXPwABZKJVj6BEl9WSweJhnvwfsGh8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mTlnb8H0w5edhmP2xf4rMdu232PZ/RmJSzoLKNao4lmI+WWsUgfQ4L2L4mYevreN/TUMwgDiz7pSepnHCmb7pJIiPKPnWzkeLQl4wYc4TM2njxEd/IjvTnnFhLVRYmMijlAAY+/V3tgcZpLri8gsAf5/cjswQ3Zwm8z4tavaIp0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=flawful.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (1024-bit key) header.d=flawful.org header.i=@flawful.org header.b=XLYvistR; dkim=pass (1024-bit key) header.d=flawful.org header.i=@flawful.org header.b=F4MMYTza; arc=none smtp.client-ip=209.85.167.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=flawful.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1706091554; c=relaxed/simple;
+	bh=yeYvgeBO8qftPD9gLi2kowkyqy92YLE64bSsre7Tjc8=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=nuL4siSBc0W3P4ZLQMPtgQwUKWKDsLf9JgKT5LrnLBiPacCDGPejurW+9TvxqWCqwQnpP3WuOhWfg/3keElsQw/CxmhekxNGQRSBN3ustQPdaTrtfqA4t+yfDrMqG4A67OXARLtKP5N0wPRJKwuFDfRluRAIpxf8zmVxbuBdWk4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=wpoeUIZd; arc=none smtp.client-ip=68.232.153.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=flawful.org header.i=@flawful.org header.b="XLYvistR";
-	dkim=pass (1024-bit key) header.d=flawful.org header.i=@flawful.org header.b="F4MMYTza"
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-50f11e3ba3aso7691351e87.1;
-        Wed, 24 Jan 2024 02:15:45 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706091343; x=1706696143;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:dkim-signature:dkim-signature
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=GbXSTzcz0OzwsQ3PjuvIo0Y6PD8ojggK6PR8Fzfjhyk=;
-        b=jBSKWEH0nlnk8VDa5sykj0C5mH6sXcv6KQGCsPnzSyhBM/3yPFBViZRMlvJ52bz236
-         Os499g7ysODi9Tgw6POKJnf22g5vkQw6WHVwO7QiGKZubaAUDfvm58VtLtIOIjql7P7p
-         37OqYEaTNW5QjtnzUPxE+v1xj9/NJNu8WdPQoGncaNAv7W8UXOiQLb2lnQ35mMTeWUP4
-         dMLu+bLdnHApXsYwQOJUByr0K0UpHgxPCda8WoSLKVIeqLCz2+d0MjQAPy4px2OWVKaS
-         zKBxjzJFwnec/5yEc7q9RU9/08Chyve0yMctjethafFn1arTLmfYpzhd805i8ojWEH6h
-         STBA==
-X-Gm-Message-State: AOJu0Yx1vQEIA5+n9JxtEAy0BKEDboTc8J5+fopKTiXLbmUdLjE6l6g5
-	tQ0y1sN3yxqLiHuzk0AOenDxjs/rCGrcvDJ39AFwjkxVz1IhDHHqMfdZQGvo
-X-Google-Smtp-Source: AGHT+IGsJaXYmPUorVt7J4tg5m+HTLbXtsk6tye6awVYomNPZ+EnkCA/UbobJmIHY/EGIvDrsC334g==
-X-Received: by 2002:a05:6512:717:b0:50e:262d:4834 with SMTP id b23-20020a056512071700b0050e262d4834mr2935512lfs.135.1706091343340;
-        Wed, 24 Jan 2024 02:15:43 -0800 (PST)
-Received: from flawful.org (c-06f0e255.011-101-6d6c6d3.bbcust.telenor.se. [85.226.240.6])
-        by smtp.gmail.com with ESMTPSA id l13-20020a056512110d00b0050e9e1cb265sm2523848lfg.112.2024.01.24.02.15.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jan 2024 02:15:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=flawful.org; s=mail;
-	t=1706091341; bh=3KQWhQUwONwsinXPwABZKJVj6BEl9WSweJhnvwfsGh8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XLYvistRAGw+5aG4kznXKYAp0gDE4/Rr5v0wAk2vO7ZjzJ5/HXtz3cd6B5NpJVdLh
-	 rK972LNvVTUke5DfcmhOBuRmG5VSw/xhwNSBzD+tyJx6z12prxin/lrayYirUWyZkJ
-	 E0jMPh6vjCo+wAB3chWDKGI8VwxYQufk0X6FumEo=
-Received: by flawful.org (Postfix, from userid 112)
-	id 2CE80375; Wed, 24 Jan 2024 11:15:40 +0100 (CET)
-X-Spam-Level: 
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=flawful.org; s=mail;
-	t=1706091328; bh=3KQWhQUwONwsinXPwABZKJVj6BEl9WSweJhnvwfsGh8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=F4MMYTza4x1N5d1+CZ/0LlC6pXCXigKisI7Obtr1LcoagHLrIq+jBiBMD8r4YlRv1
-	 pW0yvZcq2cE+DKHsXDYa6ZvL1jHWVJX6L9wsTyTNEiwPzwulJq5idiGqS8Boy3Qa92
-	 OD4Ju6rd1TYVMrCJ6mPw3NZ9K4ANiQvsI+Pknj1E=
-Received: from x1-carbon (OpenWrt.lan [192.168.1.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by flawful.org (Postfix) with ESMTPSA id DA5CF32F;
-	Wed, 24 Jan 2024 11:15:12 +0100 (CET)
-Date: Wed, 24 Jan 2024 11:15:11 +0100
-From: Niklas Cassel <nks@flawful.org>
-To: Lennert Buytenhek <kernel@wantstofly.org>
-Cc: Niklas Cassel <cassel@kernel.org>, Damien Le Moal <dlemoal@kernel.org>,
-	linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: ASMedia ASM1062 (AHCI) hang after "ahci 0000:28:00.0: Using
- 64-bit DMA addresses"
-Message-ID: <ZbDjL0TDnUfzknZS@x1-carbon>
-References: <ZaZ2PIpEId-rl6jv@wantstofly.org>
- <ZaaQpiW3OOZTSyXw@x1-carbon>
- <ZahDNr97MSPNSHW_@wantstofly.org>
- <ZahaKaV1jlHQ0sUx@x1-carbon>
- <ZbAo_LqpbiGMfTtW@wantstofly.org>
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="wpoeUIZd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1706091552; x=1737627552;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=yeYvgeBO8qftPD9gLi2kowkyqy92YLE64bSsre7Tjc8=;
+  b=wpoeUIZdU036XdM2SrZYdYO1BDFJ1ojAmsdzpLSWikVhHaCgeMxAo/c2
+   g+QXxFXJj7blRHe7UjKUXPiEIgZtiMTcRgN7vbnybksZchTrI5F6VrLuq
+   Kn6ftT/b6+/ZLRglUBIpzvQXkbL9eS3ZbQbSbDIfZwIViBX83kvO4opnL
+   XdZn9fPFK85qgVIWSXmcVFn6sFAqiHQBpmoE7ss8uW8vb+04uNId+JodK
+   DaMAPhAHTjT7m6UbD0gkAMKp095XSI4FbrJ+U9nhm5NwCY3nymJB5VLzi
+   8WFVD9I0I4hA1tEizgDkkJaMYHbsaUKIvbiljV9SFTyAaZTi9wLWjSTjh
+   w==;
+X-CSE-ConnectionGUID: T28/u+jsQSe9VqMzdG+pyA==
+X-CSE-MsgGUID: 4+gZpKMHQZ6Tx3AWTlULPg==
+X-IronPort-AV: E=Sophos;i="6.05,216,1701154800"; 
+   d="scan'208";a="245938232"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 24 Jan 2024 03:19:11 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Wed, 24 Jan 2024 03:18:48 -0700
+Received: from DEN-DL-M31836.microsemi.net (10.10.85.11) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
+ 15.1.2507.35 via Frontend Transport; Wed, 24 Jan 2024 03:18:46 -0700
+From: Horatiu Vultur <horatiu.vultur@microchip.com>
+To: <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
+	<pabeni@redhat.com>
+CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<UNGLinuxDriver@microchip.com>, <maxime.chevallier@bootlin.com>, "Horatiu
+ Vultur" <horatiu.vultur@microchip.com>
+Subject: [PATCH net v2] net: lan966x: Fix port configuration when using SGMII interface
+Date: Wed, 24 Jan 2024 11:17:58 +0100
+Message-ID: <20240124101758.406068-1-horatiu.vultur@microchip.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZbAo_LqpbiGMfTtW@wantstofly.org>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-On Tue, Jan 23, 2024 at 11:00:44PM +0200, Lennert Buytenhek wrote:
-> On Wed, Jan 17, 2024 at 11:52:25PM +0100, Niklas Cassel wrote:
+In case the interface between the MAC and the PHY is SGMII, then the bit
+GIGA_MODE on the MAC side needs to be set regardless of the speed at
+which it is running.
 
-(snip)
+Fixes: d28d6d2e37d1 ("net: lan966x: add port module support")
+Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
+Reviewed-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
 
-> This all suggests to me that the ASM1061 drops the upper 21 bits of all
-> DMA addresses.  Going back to the original report, on the Asus Pro WS
-> WRX80E-SAGE SE WIFI, we also see DMA addresses that seem to have been
-> capped to 43 bits:
-> 
-> > [Thu Jan  4 23:12:54 2024] ahci 0000:28:00.0: Using 64-bit DMA addresses
-> > [Thu Jan  4 23:12:54 2024] ahci 0000:28:00.0: AMD-Vi: Event logged [IO_PAGE_FAULT domain=0x0035 address=0x7fffff00000 flags=0x0000]
-> > [Thu Jan  4 23:12:54 2024] ahci 0000:28:00.0: AMD-Vi: Event logged [IO_PAGE_FAULT domain=0x0035 address=0x7fffff00300 flags=0x0000]
-> > [Thu Jan  4 23:12:54 2024] ahci 0000:28:00.0: AMD-Vi: Event logged [IO_PAGE_FAULT domain=0x0035 address=0x7fffff00380 flags=0x0000]
-> 
-> Since in this test the X570 AHCI controller is inside the chipset and
-> the ASM1061 in a PCIe slot, this doesn't 100% prove that the ASM1061 is
-> at fault (e.g. the upstream IOMMUs for the X570 AHCI controller and the
-> ASM1061 could be behaving differently), and to 100% prove this theory I
-> would have to find a non-ASM1061 AHCI controller and put it in the same
-> PCIe slot as the ASM1061 is currently in, and try to make it DMA to
-> address 0xffffffff00000000, and verify that the I/O page faults on the
-> host report 0xffffffff00000000 and not 0x7fffff00000 -- but I think that
-> the current evidence is perhaps good enough?
+---
+v1->v2:
+- update comment to match the changes to if condition
+---
+ drivers/net/ethernet/microchip/lan966x/lan966x_port.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-It does indeed look like the same issue on the internal ASMedia ASM1061 on
-your Asus Pro WS WRX80E-SAGE SE WIFI and the stand alone ASMedia ASM1061
-PCI card connected to your other X570 based motherboard.
+diff --git a/drivers/net/ethernet/microchip/lan966x/lan966x_port.c b/drivers/net/ethernet/microchip/lan966x/lan966x_port.c
+index 92108d354051c..2e83bbb9477e0 100644
+--- a/drivers/net/ethernet/microchip/lan966x/lan966x_port.c
++++ b/drivers/net/ethernet/microchip/lan966x/lan966x_port.c
+@@ -168,9 +168,10 @@ static void lan966x_port_link_up(struct lan966x_port *port)
+ 	lan966x_taprio_speed_set(port, config->speed);
+ 
+ 	/* Also the GIGA_MODE_ENA(1) needs to be set regardless of the
+-	 * port speed for QSGMII ports.
++	 * port speed for QSGMII or SGMII ports.
+ 	 */
+-	if (phy_interface_num_ports(config->portmode) == 4)
++	if (phy_interface_num_ports(config->portmode) == 4 ||
++	    config->portmode == PHY_INTERFACE_MODE_SGMII)
+ 		mode = DEV_MAC_MODE_CFG_GIGA_MODE_ENA_SET(1);
+ 
+ 	lan_wr(config->duplex | mode,
+-- 
+2.34.1
 
-However, ASMedia ASM1061 seems to be quite common, so I'm surprised that
-no one has ever reported this problem before, so what has changed?
-Perhaps there is some recent kernel patch that introduced this?
-
-The commit was introduced:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=4bf7fda4dce22214c70c49960b1b6438e6260b67
-was reverted:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=af3e9579ecfbe1796334bb25a2f0a6437983673a
-and was then introduced in a new form:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=791c2b17fb4023f21c3cbf5f268af01d9b8cb7cc
-
-I suppose that these commits might be recent enough that we have not received
-any bug reports for ASMedia ASM1061 since then.
-
-
-If you can find another PCIe card (e.g. a AHCI controller or NVMe controller)
-that you can plug in to the same slot on the X570 motherboard,
-I agree that it would confirm your theory.
-
-
-If you don't have any other PCIe card, do you possibly have another system,
-with an IOMMU and a free PCIe slot that you can plug your ASMedia ASM1061
-PCI card and perform the same test?
-
-(Preferably something that is not AMD, to rule out a amd_iommu issue,
-since both Asus Pro WS WRX80E-SAGE SE WIFI and X570 use amd_iommu.)
-
-If we see the same behavior that the device drops the upper 21-bits there
-when using the trick in your test patch, that would also confirm your theory.
-
-
-> 
-> There are two ways to handle this -- either set the DMA mask for ASM106x
-> parts to 43 bits, or take the lazy route and just use AHCI_HFLAG_32BIT_ONLY
-> for these parts.  I feel that the former would be more appropriate, as
-> there seem to be plenty of bits beyond bit 31 that do work, but I will
-> defer to your judgement on this matter.  What do you think the right way
-> to handle this apparent hardware quirk is?
-
-I've seen something similar for NVMe, where some NVMe controllers from
-Amazon was violating the spec, and only supported 48-bit DMA addresses,
-even though NVMe spec requires you to support 64-bit DMA addresses, see:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=4bdf260362b3be529d170b04662638fd6dc52241
-
-It is possible that ASMedia ASM1061 has a similar problem (but for AHCI)
-and only supports 43-bit DMA addresses, even though it sets AHCI CAP.S64A,
-which says "Indicates whether the HBA can access 64-bit data structures.".
-
-I think the best thing is to do a similar quirk, where we set the dma_mask
-accordingly.
-
-
-Kind regards,
-Niklas
