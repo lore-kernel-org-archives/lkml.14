@@ -1,101 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 799F060DC0;
-	Wed, 24 Jan 2024 11:59:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8C6560DE6;
+	Wed, 24 Jan 2024 11:59:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706097588; cv=none; b=owxy3roAry+v4O09GyxxQcY/kXVfnLz5f1S7v9i/JgcCuyQ8Q+Pm4tDimiZ8cj2LfCNKy0RU7pC8yqL+RCXyR7cEdu/f8sRVn2nkvp7xFPEUE3SQeh4E8ynLhrWjjMyymavpUDKrmNWV4+rowlOApi+oIzltkNc4yO5iEkP8ny0=
+	t=1706097598; cv=none; b=PwrEk+Cvoo0h8zfgpx1R97m014CLJ/CvXM6t4zSPGJbd9KXKJX/6Cu21pHPGl6cDmJitvaAVTw+BXn5bnTJXgVmJnqsp8bGWSBC7qtLvoZl0n2SVJUICjF3Xi6xAEiYMKzrQQYZgjniLp2LqJvhR1YGbS5wWbbeW/fAztjGoHMk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706097588; c=relaxed/simple;
-	bh=oarX1fEBRPBcI5XEhiEXf7uHfTjLyDcKLCnvwlckcXs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=nb2hPfU/8a3ySSLCevfKFOaBu0hvAwPCOuFIXcF6p+Tg0mgGU208H3HnyElIpe1Z2SDLz+AjUR7VVpAz0awksXqVI2PQNVu0OKh1H1/utV3iprRSelIOVNCuoXepzaZ8lQYPAy9igO2b77LVWsq6DE0gDqEUmRKerN34IiH2jak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tmGVDOk6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706097598; c=relaxed/simple;
+	bh=JvuIjypDvkkdN9ibt0BBKV8d8snZJ5FLk81yKrdEgSI=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=dUofORVlBQVK3t8pJ+tbzNguJhowbq9wDrg3hyE943he3LJ7obZ8vEGhtB4Ct8FpWofvSmQDBCf5IqXu7Ab4/KUV6eusr0RrjpPiPnVBDMHnZXetKDljxJuUWqf5QWE4ihnwearsd0qAAUiQ92cLaH84ouK7LDsXfwQHI3IJ7VI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=rABzFyZf; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=eDXqHNek; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=rABzFyZf; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=eDXqHNek; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tmGVDOk6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA57DC433C7;
-	Wed, 24 Jan 2024 11:59:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706097588;
-	bh=oarX1fEBRPBcI5XEhiEXf7uHfTjLyDcKLCnvwlckcXs=;
-	h=References:In-Reply-To:From:Date:Subject:To:From;
-	b=tmGVDOk6vAIgARhEPO6uqnyjz2VgVTyoTUqiOLvyv5fGrqBRG/g/l2rQ6J8a5Dhnu
-	 MfycHEAbv4oOi/H48w8TD1XTVRcvVsBmyEWSJVL/fOR/y1Q5c8WTSD/FwoHCl+BtUN
-	 8fSMby52xE3R4DaHY6zLBSrrQ8TTWLsga1RGaKp5Gdnslw1BEJS11NWgiVXke9c1ji
-	 tHY1SaocR+9yigB5R/zRcTUgVawYu7CDiiIDCoM1Y5nW6Y+BoQpiPQ7fEVkjul6uye
-	 8SEg3Wyb5kBPCth/5UXbJFyQ+7qDT6ekkwrRzcaA3z4naIz81KflbhRZUGzZg6gEDu
-	 2NqAUYtZka+3Q==
-Received: by mail-oo1-f50.google.com with SMTP id 006d021491bc7-594cb19c5d9so2577566eaf.0;
-        Wed, 24 Jan 2024 03:59:47 -0800 (PST)
-X-Gm-Message-State: AOJu0YwqwSeoIveJHXaSrTZBAi6/bHdc5wg9Xuh7NR+SF8qTXePczyjk
-	uUagtL9lnvAePlv3753MwHCgOvARXu/DSS3lK/N+4sDMEPZXxO9JU9NRQK3dKeN4lF37wItxur0
-	SmsHLBM1zoeK43oB5zzyFTDL7bl4=
-X-Google-Smtp-Source: AGHT+IFRnV323hQjxgtJU/VsUH5tXwMdr/gaNQrlgBSZy7mxmGPas1ccoR85KkChRda3o3h4p8l5AFyXWBX4M/gX/UA=
-X-Received: by 2002:a05:6870:a686:b0:210:8e0f:43f0 with SMTP id
- i6-20020a056870a68600b002108e0f43f0mr457408oam.57.1706097587313; Wed, 24 Jan
- 2024 03:59:47 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="rABzFyZf";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="eDXqHNek";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="rABzFyZf";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="eDXqHNek"
+Received: from hawking.nue2.suse.org (unknown [10.168.4.11])
+	by smtp-out1.suse.de (Postfix) with ESMTP id 0F7CC222F1;
+	Wed, 24 Jan 2024 11:59:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1706097595; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZZVqt4zJTdAbKIcvjcw57N6juLTvcK2zWsqCYdTEkzE=;
+	b=rABzFyZfdgfGTIN6EqHqjzCwkFbrZGeYaR23huV2qj1Y1POshzhbj2fcHtpQiUOa3eEzwK
+	DFb1i4OKJBR2vBJeiGOBztSPd+CpmsP9Duf8DCYe2acUDT89VCLKzA2odd8Cm0eGjYOwf3
+	8etjhPdCq56aTIeWCJmvV0pnAsGV5g8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1706097595;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZZVqt4zJTdAbKIcvjcw57N6juLTvcK2zWsqCYdTEkzE=;
+	b=eDXqHNek1XSv/H1vmu8SrDWDhmtIaJ4kuylg7jvmq0lh8t75j3VboHCzSfgG6yC2Kg8/TF
+	6CgGhucIQjkbrICQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1706097595; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZZVqt4zJTdAbKIcvjcw57N6juLTvcK2zWsqCYdTEkzE=;
+	b=rABzFyZfdgfGTIN6EqHqjzCwkFbrZGeYaR23huV2qj1Y1POshzhbj2fcHtpQiUOa3eEzwK
+	DFb1i4OKJBR2vBJeiGOBztSPd+CpmsP9Duf8DCYe2acUDT89VCLKzA2odd8Cm0eGjYOwf3
+	8etjhPdCq56aTIeWCJmvV0pnAsGV5g8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1706097595;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZZVqt4zJTdAbKIcvjcw57N6juLTvcK2zWsqCYdTEkzE=;
+	b=eDXqHNek1XSv/H1vmu8SrDWDhmtIaJ4kuylg7jvmq0lh8t75j3VboHCzSfgG6yC2Kg8/TF
+	6CgGhucIQjkbrICQ==
+Received: by hawking.nue2.suse.org (Postfix, from userid 17005)
+	id E7C9E4A04B3; Wed, 24 Jan 2024 12:59:54 +0100 (CET)
+From: Andreas Schwab <schwab@suse.de>
+To: Xi Ruoyao <xry111@xry111.site>
+Cc: linux-mips@vger.kernel.org,  linux-kernel@vger.kernel.org,  Jiaxun Yang
+ <jiaxun.yang@flygoat.com>,  Thomas Bogendoerfer
+ <tsbogend@alpha.franken.de>,  libc-alpha@sourceware.org
+Subject: Re: Strange EFAULT on mips64el returned by syscall when another
+ thread is forking
+In-Reply-To: <75e9fd7b08562ad9b456a5bdaacb7cc220311cc9.camel@xry111.site> (Xi
+	Ruoyao's message of "Wed, 24 Jan 2024 18:42:30 +0800")
+References: <75e9fd7b08562ad9b456a5bdaacb7cc220311cc9.camel@xry111.site>
+X-Yow: ...It's REAL ROUND..  And it's got a POINTY PART right in the MIDDLE!!
+ The shape is SMOOTH..  ..And COLD.. It feels very COMFORTABLE on my
+ CHEEK..  I'm getting EMOTIONAL..
+Date: Wed, 24 Jan 2024 12:59:54 +0100
+Message-ID: <mvmplxraqmd.fsf@suse.de>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240120083255.2757978-1-masahiroy@kernel.org> <Za6H2NfODGU419hX@buildd.core.avm.de>
-In-Reply-To: <Za6H2NfODGU419hX@buildd.core.avm.de>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Wed, 24 Jan 2024 20:59:11 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATABD0S40dnGznQNmPYAi_i0eh2ftYQfBm98teG7QPd5A@mail.gmail.com>
-Message-ID: <CAK7LNATABD0S40dnGznQNmPYAi_i0eh2ftYQfBm98teG7QPd5A@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: fix W= flags in the help message
-To: Masahiro Yamada <masahiroy@kernel.org>, linux-kbuild@vger.kernel.org, 
-	Nathan Chancellor <nathan@kernel.org>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+Authentication-Results: smtp-out1.suse.de;
+	none
+X-Spam-Level: 
+X-Spam-Score: -1.42
+X-Spamd-Result: default: False [-1.42 / 50.00];
+	 ARC_NA(0.00)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 MIME_GOOD(-0.10)[text/plain];
+	 RCPT_COUNT_FIVE(0.00)[6];
+	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 NEURAL_HAM_SHORT(-0.01)[-0.038];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 RCVD_COUNT_ZERO(0.00)[0];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 MID_RHS_MATCH_FROM(0.00)[];
+	 BAYES_HAM(-0.31)[75.41%]
+X-Spam-Flag: NO
 
-On Tue, Jan 23, 2024 at 12:21=E2=80=AFAM Nicolas Schier <n.schier@avm.de> w=
-rote:
->
-> On Sat, Jan 20, 2024 at 05:32:55PM +0900, Masahiro Yamada wrote:
-> > W=3Dc and W=3De are supported.
-> >
-> > Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> > ---
-> >
-> >  Makefile | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/Makefile b/Makefile
-> > index f288eb2dc8fd..8c6a935c62e6 100644
-> > --- a/Makefile
-> > +++ b/Makefile
-> > @@ -1653,7 +1653,7 @@ help:
-> >       @echo  '                       (sparse by default)'
-> >       @echo  '  make C=3D2   [targets] Force check of all c source with=
- $$CHECK'
-> >       @echo  '  make RECORDMCOUNT_WARN=3D1 [targets] Warn about ignored=
- mcount sections'
-> > -     @echo  '  make W=3Dn   [targets] Enable extra build checks, n=3D1=
-,2,3 where'
-> > +     @echo  '  make W=3Dn   [targets] Enable extra build checks, n=3D1=
-,2,3,c,e where'
->
-> In the top of scripts/Makefile.extrawarn we have kind of a duplication
-> of this description.  Might you want to update that too?
+On Jan 24 2024, Xi Ruoyao wrote:
 
-W=3De is already mentioned in scripts/Makefile.extrawarn.
-W=3Dc is handled in scripts/kconfig/Makefile.
+> Now I'm suspecting this might be a kernel bug.  Any pointer to further
+> triage?
 
-So, I believe it is OK as-is.
+Is this a regression?
 
-
-
-
-
-> Reviewed-by: Nicolas Schier <nicolas@fjasle.eu>
-
-
-
---=20
-Best Regards
-Masahiro Yamada
+-- 
+Andreas Schwab, SUSE Labs, schwab@suse.de
+GPG Key fingerprint = 0196 BAD8 1CE9 1970 F4BE  1748 E4D4 88E3 0EEA B9D7
+"And now for something completely different."
