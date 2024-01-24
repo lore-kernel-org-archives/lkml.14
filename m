@@ -1,225 +1,147 @@
-Received: from m12.mail.163.com (m12.mail.163.com [220.181.12.217])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 69F8D1AAB9;
-	Wed, 24 Jan 2024 11:46:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.181.12.217
+Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6DED59173
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 11:47:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706096794; cv=none; b=R6L+SiYWg5hyZBfg99cs58T5pm4wluxFTB+gelqse5mAQUg5iqDUIS7FrQO0XNhflIFPm840gyVxuvfeaf8XXTNek1bEGp9yZvOQGjLdmVHJubr8rkI6WWHEaKDUimOylnzGkaeikIv7zWVa3dk5x0pxOMUe9DGyjXPBEBhJclU=
+	t=1706096865; cv=none; b=lJMfxQ2X/klhrJV90NQL0K89fnIDAI2YKZ51sp7/zhoYLKNKbHhOtQMZDhPn9PLQhe9WfCnXAMIBFlkD3sC4ZHxa3F9pyaaZGMuAUd2fabUKgRRuAI9aJaScRk0ojs8Pahf6PtLDTX1Cc6YJu3eF7xhmhFK5giTa3vYmTpQfQb8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706096794; c=relaxed/simple;
-	bh=5oedPBFDyGgrAqNeFwg9kzaY0HTbTyXdfLAZtKr9V48=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=t655NQOzr+w1BxE0xkP+cAH8c8I+jcNfGl3QF6ifRP3zr5L0wPBiz397JPkCLlVllIygdBzF/JcMFbwY1rA88mz1oK0PPZ0QjNdUs5asExq4x093wUEQa9irsOv0aNdZMYQ/svyAEylwFyJoWPRauAN20SVI60vR6hChGRexYTs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=Txtcs5P4; arc=none smtp.client-ip=220.181.12.217
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1706096865; c=relaxed/simple;
+	bh=dwUFUgXnc97o1JhfPJM4lmSZq785hcoEF4F3egx8Bq4=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:References; b=hHx91DHRvhcTqNxZr5FmzasvkjeACreZthdEdGsSzKYZ5ZUwd2MiOBQLfa0lz0bjebqUR8HNu+5CLt1L4BQ/PYFKbB3yg4p1vIsIKdd9w7yBnbcTc+NyMtsHEkazxsKOIiuaM084SjR+A+KEaw6Ei0b3JmUUPmS1iNGOQcSb86M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=ZQPhwcOO; arc=none smtp.client-ip=203.254.224.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="Txtcs5P4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=wGebF
-	RUnRk8fvrwL6ousNvwVdKBhNLO+VLoC9JTvANM=; b=Txtcs5P4tExeI/mRBpegJ
-	NzmSVqft7aSarTNtquPL+Yu07x/N+HDxoyORWR9VC1wcH0zsBAW78vA12eSfk7WC
-	coD7PX9T1E+TCccgNBvZENY7abDuSxsve0Qm3vfdg8BUWXJcI+h7/6igjOBrSDV9
-	hUgZzkbPKp+NFRTfSH5JVg=
-Received: from localhost.localdomain (unknown [111.202.47.2])
-	by zwqz-smtp-mta-g5-2 (Coremail) with SMTP id _____wDXX41K+LBlczHnAA--.19015S2;
-	Wed, 24 Jan 2024 19:45:14 +0800 (CST)
-From: wangkeqi <wangkeqi_chris@163.com>
-To: davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com
-Cc: netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	fw@strlen.de,
-	wangkeqi <wangkeqiwang@didiglobal.com>,
-	kernel test robot <oliver.sang@intel.com>,
-	fengwei.yin@intel.com
-Subject: [PATCH net v3] connector: cn_netlink_has_listeners replaces proc_event_num_listeners
-Date: Wed, 24 Jan 2024 19:44:37 +0800
-Message-Id: <20240124114437.160930-1-wangkeqi_chris@163.com>
-X-Mailer: git-send-email 2.27.0
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ZQPhwcOO"
+Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
+	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20240124114740epoutp012ec12de9a254295c59f1d7c6283638bc~tRg41MHbS0149501495epoutp01d
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 11:47:40 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20240124114740epoutp012ec12de9a254295c59f1d7c6283638bc~tRg41MHbS0149501495epoutp01d
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1706096860;
+	bh=FAgkRhdAC59JFAtm6cZa0lcuph+thmUnykW5y5DcQUI=;
+	h=From:To:Cc:Subject:Date:References:From;
+	b=ZQPhwcOOfJhIjaSXLhqK2zJoqczs0rv2migJCof/kn3ULLzW8g0KCQYcFiCl24kGr
+	 uQUujZUwy26sFlTqUSfNSSB09LOAnXeUEl5JrqQwmhnA3N3t4owtlU5n8jucRMlSI/
+	 qoZeie0nFR4yq6jC7TUg6KVlsgTyPgUEnJHxS4jQ=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+	epcas5p1.samsung.com (KnoxPortal) with ESMTP id
+	20240124114740epcas5p13e64a477aeab25808dfb39ee2f01be06~tRg4XzjGz0304803048epcas5p1s;
+	Wed, 24 Jan 2024 11:47:40 +0000 (GMT)
+Received: from epsmgec5p1-new.samsung.com (unknown [182.195.38.178]) by
+	epsnrtp1.localdomain (Postfix) with ESMTP id 4TKhyy3jbvz4x9Pv; Wed, 24 Jan
+	2024 11:47:38 +0000 (GMT)
+Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
+	epsmgec5p1-new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	11.D5.19369.AD8F0B56; Wed, 24 Jan 2024 20:47:38 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
+	20240124103850epcas5p48fcb1e92172efd246b8292a294740dd1~tQkx79-pI2047220472epcas5p47;
+	Wed, 24 Jan 2024 10:38:50 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20240124103850epsmtrp126601239072c5bb26298f097af4e18d4~tQkx6KDW32198721987epsmtrp1T;
+	Wed, 24 Jan 2024 10:38:50 +0000 (GMT)
+X-AuditID: b6c32a50-c99ff70000004ba9-ff-65b0f8da8882
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+	epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	04.6C.08817.9B8E0B56; Wed, 24 Jan 2024 19:38:49 +0900 (KST)
+Received: from cheetah.sa.corp.samsungelectronics.net (unknown
+	[107.109.115.53]) by epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20240124103847epsmtip26853ef4be44a9903676df0f3deffbbfd~tQkvY2buE0212502125epsmtip2q;
+	Wed, 24 Jan 2024 10:38:47 +0000 (GMT)
+From: Shradha Todi <shradha.t@samsung.com>
+To: linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-samsung-soc@vger.kernel.org
+Cc: mturquette@baylibre.com, sboyd@kernel.org, jingoohan1@gmail.com,
+	lpieralisi@kernel.org, kw@linux.com, robh@kernel.org, bhelgaas@google.com,
+	krzysztof.kozlowski@linaro.org, alim.akhtar@samsung.com,
+	linux@armlinux.org.uk, m.szyprowski@samsung.com,
+	manivannan.sadhasivam@linaro.org, pankaj.dubey@samsung.com, Shradha Todi
+	<shradha.t@samsung.com>
+Subject: [PATCH v4 0/2] Add helper function to get and enable all bulk
+ clocks
+Date: Wed, 24 Jan 2024 16:08:36 +0530
+Message-Id: <20240124103838.32478-1-shradha.t@samsung.com>
+X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrKJsWRmVeSWpSXmKPExsWy7bCmpu6tHxtSDT7cEbN4MG8bm8WSpgyL
+	FV9mslvsfb2V3aKh5zerxabH11gtPvbcY7W4vGsOm8XZecfZLGac38dkcWjqXkaLlj8tLBZr
+	j9xlt7jb0slqcfGUq8WirV/YLf7v2cFu8e/aRhaL3sO1DsIel69dZPZ4f6OV3WPnrLvsHgs2
+	lXpsWtXJ5nHn2h42jydXpjN5bF5S79G3ZRWjx+dNcgFcUdk2GamJKalFCql5yfkpmXnptkre
+	wfHO8aZmBoa6hpYW5koKeYm5qbZKLj4Bum6ZOUBvKSmUJeaUAoUCEouLlfTtbIryS0tSFTLy
+	i0tslVILUnIKTAr0ihNzi0vz0vXyUkusDA0MjEyBChOyMw7828Ja8JCz4tmrlAbGD+xdjJwc
+	EgImElOamtm6GLk4hAT2MErcOtXNBOF8YpQ48e4wO4TzjVFiVuNTli5GDrCWr1v9IOJ7GSX+
+	fullgXBamSQ+7uoCm8smoCXR+LWLGSQhIrAYaO6OzawgDrPAEyaJJTf+soBUCQv4Szw5uo8V
+	xGYRUJX4ufwzWDevgJXE1O2f2SAulJdYveEA2CQJgbUcEh3Nk6ESLhKf9r9lgrCFJV4d3wL1
+	kpTEy/42KDtdYuXmGcwQdo7Et81LoOrtJQ5cmQP2D7OApsT6XfoQYVmJqafWgZUwC/BJ9P5+
+	AlXOK7FjHoytLPHl7x4WCFtSYt6xy6wQtofEjLfTwGqEBGIlFixuZZ/AKDsLYcMCRsZVjFKp
+	BcW56anJpgWGunmp5fCoSs7P3cQITq9aATsYV2/4q3eIkYmD8RCjBAezkgjvDcl1qUK8KYmV
+	ValF+fFFpTmpxYcYTYGBNpFZSjQ5H5jg80riDU0sDUzMzMxMLI3NDJXEeV+3zk0REkhPLEnN
+	Tk0tSC2C6WPi4JRqYOrwDwhQVk6sj0hu0bSWLltwNcQ+/X3p/ocbemoqnF6+v787SLNI+/XT
+	uYe+7LT5Zm/tI3Wl7LjhsicGy9/1XTv508nvlujUmdH3+TYvFQniV1u9zeXegbDwqFuOb+yO
+	7ebNeqLi0VR7Mq4t4a192Ly3BVrVc3cvcI13n37p8TyB28t1LwWdty+Lm7KkZq5brkCFlEtd
+	fS7Ldwmh4xu4P/VKPXhx9PYb1fNXAnz7sp9NtV4RMWnOSutPkZ51IVcfC7Guk8oy7dO90rz8
+	hvXCj4wZOxvE1X6vfO8lvknni5jwec/N+5ddmXGzw4v36f+vK0WNfL2f9fxrN+t/WXvGePFG
+	jV7937w8Umax7zq5LJRYijMSDbWYi4oTAd8/t8c4BAAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrHLMWRmVeSWpSXmKPExsWy7bCSvO7OFxtSDS7ssbJ4MG8bm8WSpgyL
+	FV9mslvsfb2V3aKh5zerxabH11gtPvbcY7W4vGsOm8XZecfZLGac38dkcWjqXkaLlj8tLBZr
+	j9xlt7jb0slqcfGUq8WirV/YLf7v2cFu8e/aRhaL3sO1DsIel69dZPZ4f6OV3WPnrLvsHgs2
+	lXpsWtXJ5nHn2h42jydXpjN5bF5S79G3ZRWjx+dNcgFcUVw2Kak5mWWpRfp2CVwZB/5tYS14
+	yFnx7FVKA+MH9i5GDg4JAROJr1v9uhi5OIQEdjNKzH14gqWLkRMoLinx+eI6JghbWGLlv+fs
+	EEXNTBLt/w6wgSTYBLQkGr92MYMkRASWM0r8PPmUCcRhFvjCJDHp4S4mkBXCAr4SJ2+VgjSw
+	CKhK/Fz+mR3E5hWwkpi6/TMbxAZ5idUbDjBPYORZwMiwilEytaA4Nz232LDAKC+1XK84Mbe4
+	NC9dLzk/dxMjOMi1tHYw7ln1Qe8QIxMH4yFGCQ5mJRHeG5LrUoV4UxIrq1KL8uOLSnNSiw8x
+	SnOwKInzfnvdmyIkkJ5YkpqdmlqQWgSTZeLglGpg0s75XbaO4/P+SR94++7fz1pySv3WzRXN
+	99QXM1qFSc4MVfHjv/KDIYWj6sad6F19UrKJf/K2pgRbnrvy5BVXYlX7jcrSCIkVf9wPfdhZ
+	NC0t9PexdfLPHz5fbppvqXxFeIGyoJ/4+80c4eu6GpLXd6wyTPWMYOd9Pbn4u1fx3J/WZad+
+	+gc9eTZvWlDkosQdOrKNG2WnNnhsalrou3nxsp3M9+7YNAWI/uVPOZ11+912xn98+ZrXN+1M
+	M68u/SKzNPnlRg7WWTOyFn29e80p6fgqm2u5Gb+mHPbx5T33nLe6uDZta59p06Rl7QXmUm2m
+	Cwx/Xnjw7njk++W/Pk/YZq11ZZH2waMc+3Vqv12Z+EeJpTgj0VCLuag4EQAt8+rK4QIAAA==
+X-CMS-MailID: 20240124103850epcas5p48fcb1e92172efd246b8292a294740dd1
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20240124103850epcas5p48fcb1e92172efd246b8292a294740dd1
+References: <CGME20240124103850epcas5p48fcb1e92172efd246b8292a294740dd1@epcas5p4.samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wDXX41K+LBlczHnAA--.19015S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxtw4UZFW7Kr1rXF1kGr1rWFg_yoW7tFW8pF
-	Z0vr9IyrWDKr17Wwn8A3Wq9r13Za4kXa1UCrWxK3s3Arn5KrykXFW8tanxZr1fJwn5Kr17
-	Zw47KFWa9F4DAaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UDR6cUUUUU=
-X-CM-SenderInfo: 5zdqwy5htlsupkul2qqrwthudrp/1tbiQBJv3GVOBNybAQAAsI
 
-From: wangkeqi <wangkeqiwang@didiglobal.com>
+Create a managed API wrapper to get all the bulk clocks and enable them
+as it is a very common practice in many drivers. The second patch uses
+this API to adapt to clk_bulk_* APIs in the exynos driver.
+v1:
+ - https://lore.kernel.org/lkml/20231009062216.6729-1-shradha.t@samsung.com/
+v2:
+ - https://lore.kernel.org/lkml/20231115065621.27014-1-shradha.t@samsung.com/
+ - Addressed Manivannan's comments to improve patch
+v3:
+ - https://lore.kernel.org/all/20240110110115.56270-1-shradha.t@samsung.com/
+ - Took Marek's suggestion to make a common bulk clk wrapper and use it in
+   the exynos driver
+v4:
+ - Addressed Alim and Manivannan's comments
+ - Changed enabled->enable and disabled->disable in function name
+ - Remove num_clks out parameter as it is not required by user
+ - Removed exit callback and used function name directly in release
 
-It is inaccurate to judge whether proc_event_num_listeners is
-cleared by cn_netlink_send_mult returning -ESRCH.
-In the case of stress-ng netlink-proc, -ESRCH will always be returned,
-because netlink_broadcast_filtered will return -ESRCH,
-which may cause stress-ng netlink-proc performance degradation.
-If the judgment condition is modified to whether there is a listener.
-proc_event_num_listeners will still be wrong due to concurrency.
-So replace the counter with cn_netlink_has_listeners
+Shradha Todi (2):
+  clk: Provide managed helper to get and enable bulk clocks
+  PCI: exynos: Adapt to clk_bulk_* APIs
 
-Reported-by: kernel test robot <oliver.sang@intel.com>
-Closes: https://lore.kernel.org/oe-lkp/202401112259.b23a1567-oliver.sang@intel.com
-Fixes: c46bfba133 ("connector: Fix proc_event_num_listeners count not cleared")
-Signed-off-by: wangkeqi <wangkeqiwang@didiglobal.com>
-Cc: fengwei.yin@intel.com
-Cc: fw@strlen.de
----
- drivers/connector/cn_proc.c   | 33 +++++++++++++++++++++------------
- drivers/connector/connector.c |  9 +++++++++
- include/linux/connector.h     |  1 +
- 3 files changed, 31 insertions(+), 12 deletions(-)
+ drivers/clk/clk-devres.c                | 40 ++++++++++++++++++
+ drivers/pci/controller/dwc/pci-exynos.c | 54 ++-----------------------
+ include/linux/clk.h                     | 24 +++++++++++
+ 3 files changed, 68 insertions(+), 50 deletions(-)
 
-diff --git a/drivers/connector/cn_proc.c b/drivers/connector/cn_proc.c
-index 3d5e6d705..4898e974c 100644
---- a/drivers/connector/cn_proc.c
-+++ b/drivers/connector/cn_proc.c
-@@ -85,6 +85,16 @@ static int cn_filter(struct sock *dsk, struct sk_buff *skb, void *data)
- 	return 1;
- }
- 
-+static int cn_netlink_has_listeners(void)
-+{
-+	struct sock *sk = get_cdev_nls();
-+
-+	if (sk)
-+		return netlink_has_listeners(sk, CN_IDX_PROC);
-+	else
-+		return 0;
-+}
-+
- static inline void send_msg(struct cn_msg *msg)
- {
- 	__u32 filter_data[2];
-@@ -108,9 +118,8 @@ static inline void send_msg(struct cn_msg *msg)
- 		filter_data[1] = 0;
- 	}
- 
--	if (cn_netlink_send_mult(msg, msg->len, 0, CN_IDX_PROC, GFP_NOWAIT,
--			     cn_filter, (void *)filter_data) == -ESRCH)
--		atomic_set(&proc_event_num_listeners, 0);
-+	cn_netlink_send_mult(msg, msg->len, 0, CN_IDX_PROC, GFP_NOWAIT,
-+			     cn_filter, (void *)filter_data);
- 
- 	local_unlock(&local_event.lock);
- }
-@@ -122,7 +131,7 @@ void proc_fork_connector(struct task_struct *task)
- 	__u8 buffer[CN_PROC_MSG_SIZE] __aligned(8);
- 	struct task_struct *parent;
- 
--	if (atomic_read(&proc_event_num_listeners) < 1)
-+	if (!cn_netlink_has_listeners())
- 		return;
- 
- 	msg = buffer_to_cn_msg(buffer);
-@@ -151,7 +160,7 @@ void proc_exec_connector(struct task_struct *task)
- 	struct proc_event *ev;
- 	__u8 buffer[CN_PROC_MSG_SIZE] __aligned(8);
- 
--	if (atomic_read(&proc_event_num_listeners) < 1)
-+	if (!cn_netlink_has_listeners())
- 		return;
- 
- 	msg = buffer_to_cn_msg(buffer);
-@@ -176,7 +185,7 @@ void proc_id_connector(struct task_struct *task, int which_id)
- 	__u8 buffer[CN_PROC_MSG_SIZE] __aligned(8);
- 	const struct cred *cred;
- 
--	if (atomic_read(&proc_event_num_listeners) < 1)
-+	if (!cn_netlink_has_listeners())
- 		return;
- 
- 	msg = buffer_to_cn_msg(buffer);
-@@ -213,7 +222,7 @@ void proc_sid_connector(struct task_struct *task)
- 	struct proc_event *ev;
- 	__u8 buffer[CN_PROC_MSG_SIZE] __aligned(8);
- 
--	if (atomic_read(&proc_event_num_listeners) < 1)
-+	if (!cn_netlink_has_listeners())
- 		return;
- 
- 	msg = buffer_to_cn_msg(buffer);
-@@ -237,7 +246,7 @@ void proc_ptrace_connector(struct task_struct *task, int ptrace_id)
- 	struct proc_event *ev;
- 	__u8 buffer[CN_PROC_MSG_SIZE] __aligned(8);
- 
--	if (atomic_read(&proc_event_num_listeners) < 1)
-+	if (!cn_netlink_has_listeners())
- 		return;
- 
- 	msg = buffer_to_cn_msg(buffer);
-@@ -269,7 +278,7 @@ void proc_comm_connector(struct task_struct *task)
- 	struct proc_event *ev;
- 	__u8 buffer[CN_PROC_MSG_SIZE] __aligned(8);
- 
--	if (atomic_read(&proc_event_num_listeners) < 1)
-+	if (!cn_netlink_has_listeners())
- 		return;
- 
- 	msg = buffer_to_cn_msg(buffer);
-@@ -295,7 +304,7 @@ void proc_coredump_connector(struct task_struct *task)
- 	struct task_struct *parent;
- 	__u8 buffer[CN_PROC_MSG_SIZE] __aligned(8);
- 
--	if (atomic_read(&proc_event_num_listeners) < 1)
-+	if (!cn_netlink_has_listeners())
- 		return;
- 
- 	msg = buffer_to_cn_msg(buffer);
-@@ -328,7 +337,7 @@ void proc_exit_connector(struct task_struct *task)
- 	struct task_struct *parent;
- 	__u8 buffer[CN_PROC_MSG_SIZE] __aligned(8);
- 
--	if (atomic_read(&proc_event_num_listeners) < 1)
-+	if (!cn_netlink_has_listeners())
- 		return;
- 
- 	msg = buffer_to_cn_msg(buffer);
-@@ -370,7 +379,7 @@ static void cn_proc_ack(int err, int rcvd_seq, int rcvd_ack)
- 	struct proc_event *ev;
- 	__u8 buffer[CN_PROC_MSG_SIZE] __aligned(8);
- 
--	if (atomic_read(&proc_event_num_listeners) < 1)
-+	if (!cn_netlink_has_listeners())
- 		return;
- 
- 	msg = buffer_to_cn_msg(buffer);
-diff --git a/drivers/connector/connector.c b/drivers/connector/connector.c
-index 7f7b94f61..42bcb39ba 100644
---- a/drivers/connector/connector.c
-+++ b/drivers/connector/connector.c
-@@ -129,6 +129,15 @@ int cn_netlink_send(struct cn_msg *msg, u32 portid, u32 __group,
- }
- EXPORT_SYMBOL_GPL(cn_netlink_send);
- 
-+struct sock *get_cdev_nls(void)
-+{
-+	if (cn_already_initialized == 1)
-+		return cdev.nls;
-+	else
-+		return NULL;
-+}
-+EXPORT_SYMBOL_GPL(get_cdev_nls);
-+
- /*
-  * Callback helper - queues work and setup destructor for given data.
-  */
-diff --git a/include/linux/connector.h b/include/linux/connector.h
-index cec2d99ae..255466aea 100644
---- a/include/linux/connector.h
-+++ b/include/linux/connector.h
-@@ -127,6 +127,7 @@ int cn_netlink_send_mult(struct cn_msg *msg, u16 len, u32 portid,
-  */
- int cn_netlink_send(struct cn_msg *msg, u32 portid, u32 group, gfp_t gfp_mask);
- 
-+struct sock *get_cdev_nls(void);
- int cn_queue_add_callback(struct cn_queue_dev *dev, const char *name,
- 			  const struct cb_id *id,
- 			  void (*callback)(struct cn_msg *, struct netlink_skb_parms *));
 -- 
-2.27.0
+2.17.1
 
