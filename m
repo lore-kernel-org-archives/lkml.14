@@ -1,41 +1,54 @@
-Received: from h3cspam02-ex.h3c.com (smtp.h3c.com [60.191.123.50])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D325D17D2;
-	Wed, 24 Jan 2024 02:33:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.191.123.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58D824402;
+	Wed, 24 Jan 2024 02:33:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706063605; cv=none; b=Cz/vpHR8IwOKgaGhpa+HzcdCcCLQ0BOYVy9yx/xvRTQv+8/IS340YyRUIzBCJjsZEgxQbp6RRcDQ8hSJpgLiM7xu242UoLiDKnoW7a/2eUFqr847YP3k6Az3Y6nyb1Y5jnLPT4pSXzwY5Y5aiG8eTKhHgd3ysNc2mRAAD9J/ie0=
+	t=1706063620; cv=none; b=GqHOU52vhvXdwKZ44kvyQ2OEpl3qj+dnbHED6vczKX+oqJbH8kNoF/LdnBBH8LW1h1syHVWFmWtJd1bQl8E5+Zvq/2I4UAyufAGVshr2PYzWDTfMjpFvMJyliIQoNnweQOf9MMoKEl6TI1i8P8NniKhs0P9oMBL8efSYMZIqjo8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706063605; c=relaxed/simple;
-	bh=Ag4z4OsYP+97hG1MIP2IUr0FcWfaENxt6PYc5zeDSz4=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=L/C1Wsp4znKJCzgv2BxsmG8hdZP2NYnxTSUBQ9FaKcK8p6ujXC3Z4ivP2KR00UTp3q3zjjdTHTRO0WXyBeSYOzmX1Y/Uu5WIBcF1WTcfyYYRZiu94ey4DDBxFgilfUOihFrfggiWfqC+t0ri4otC/CxWX4twBxOkBNULvt7JBFw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=h3c.com; spf=pass smtp.mailfrom=h3c.com; arc=none smtp.client-ip=60.191.123.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=h3c.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=h3c.com
-Received: from mail.maildlp.com ([172.25.15.154])
-	by h3cspam02-ex.h3c.com with ESMTP id 40O2VFcs080566;
-	Wed, 24 Jan 2024 10:31:27 +0800 (GMT-8)
-	(envelope-from hu.yadi@h3c.com)
-Received: from DAG6EX02-IMDC.srv.huawei-3com.com (unknown [10.62.14.11])
-	by mail.maildlp.com (Postfix) with ESMTP id 6B21C2004C48;
-	Wed, 24 Jan 2024 10:36:06 +0800 (CST)
-Received: from localhost.localdomain (10.99.206.12) by
- DAG6EX02-IMDC.srv.huawei-3com.com (10.62.14.11) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.2.1258.27; Wed, 24 Jan 2024 10:31:28 +0800
-From: Hu Yadi <hu.yadi@h3c.com>
-To: <jmorris@namei.org>, <serge@hallyn.com>, <shuah@kernel.org>,
-        <mathieu.desnoyers@efficios.com>, <mic@digikod.net>,
-        <amir73il@gmail.com>, <brauner@kernel.org>, <avagin@google.com>
-CC: <linux-api@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-security-module@vger.kernel.org>,
-        <linux-kselftest@vger.kernel.org>, <514118380@qq.com>,
-        <konstantin.meskhidze@huawei.com>, "Hu.Yadi"
-	<hu.yadi@h3c.com>
-Subject: [PATCH] selftests/landlock:Fix fs_test build issues with old libc
-Date: Wed, 24 Jan 2024 10:29:08 +0800
-Message-ID: <20240124022908.42100-1-hu.yadi@h3c.com>
+	s=arc-20240116; t=1706063620; c=relaxed/simple;
+	bh=FL+pr4dyrSEYYZj9+gnRMdPMX6n5TMwj+txbGf5lE3k=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=cfUN1TeK0z+0nzC2lXwuYMQbSvmZIS3WBtasPvMHptZHVe00B05edCvb2uxPIxHxB6+x9TSvMZlUeJiJzwWOUeIuv0uKwIWe2Sy9ZKmE2MBwAUHhd3cILY0+EYh+rVJzXeOiY7RzV7WTAAJITNMwVEv3oSzpdAcbqSXhfQyym8c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=D7j5D5XD; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="D7j5D5XD"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40O0UEln027872;
+	Wed, 24 Jan 2024 02:33:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:to:cc:subject:date:message-id:mime-version:content-type; s=
+	qcppdkim1; bh=aphJM1OrJDGrU1DnpiZruNE4xg1uwTRC5GcBTmn2ics=; b=D7
+	j5D5XDfF4EphNhepoVoyF770hUDe8mF4pJu4sjpHqOpdvYHHd4OKvw2seVONMwIC
+	+xjg0goZJTpXHMQrVfN1m62dWdA4WxPU8L0MoMMttwWn4pLUXwZRbniY3M2ANLoR
+	uB2RJ8D/vfXpoS5aHr8xImsQVwq/4or6cRJNUFo+kmWyU6o6iktH2bs2OekxutcF
+	AgLD0oxDML6r2w030ZHwF6SgmzmWdIZRhdNJsbgfdXEkzVc3CWUWUBpIWxMHVgYr
+	sT34gfxMvp4txQS0O+wa47/ER7gfK4qHlNwZ/cqI6WmffImqRY2NBtHl6Y2vA98a
+	CmsKovJjYfULnvWj+gEQ==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vtmhrgjm9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 24 Jan 2024 02:33:35 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 40O2XYJs011207
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 24 Jan 2024 02:33:34 GMT
+Received: from tengfan2-gv.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Tue, 23 Jan 2024 18:33:28 -0800
+From: Tengfei Fan <quic_tengfan@quicinc.com>
+To: <andersson@kernel.org>, <konrad.dybcio@linaro.org>,
+        <linus.walleij@linaro.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>
+CC: <linux-arm-msm@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kernel@quicinc.com>, Tengfei Fan <quic_tengfan@quicinc.com>
+Subject: [PATCH 0/2] dt-bindings: pinctrl: qcom: update SM4450 pinctrl
+Date: Wed, 24 Jan 2024 10:33:03 +0800
+Message-ID: <20240124023305.15755-1-quic_tengfan@quicinc.com>
 X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -44,55 +57,36 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-ClientProxiedBy: BJSMTP01-EX.srv.huawei-3com.com (10.63.20.132) To
- DAG6EX02-IMDC.srv.huawei-3com.com (10.62.14.11)
-X-DNSRBL: 
-X-SPAM-SOURCE-CHECK: pass
-X-MAIL:h3cspam02-ex.h3c.com 40O2VFcs080566
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: Fgf2iqPYXS4AYbjbYEOdY6RkATjjAogC
+X-Proofpoint-ORIG-GUID: Fgf2iqPYXS4AYbjbYEOdY6RkATjjAogC
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-01-23_15,2024-01-23_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ adultscore=0 suspectscore=0 clxscore=1011 impostorscore=0 phishscore=0
+ mlxscore=0 bulkscore=0 malwarescore=0 mlxlogscore=681 spamscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2401190000 definitions=main-2401240018
 
-From: "Hu.Yadi" <hu.yadi@h3c.com>
+Fix the wrong compatible name and consolidate functions in SM4450
+pinctrl dt-bindings document.
 
-Fixes: 04f9070e99a4 ("selftests/landlock: Add tests for pseudo filesystems")
-
-one issues comes up while building selftest/landlock on my side
-(gcc 7.3/glibc-2.28/kernel-4.19)
-
-gcc -Wall -O2 -isystem   fs_test.c -lcap -o selftests/landlock/fs_test
-fs_test.c:4575:9: error: initializer element is not constant
-  .mnt = mnt_tmp,
-         ^~~~~~~
-
-Signed-off-by: Hu.Yadi <hu.yadi@h3c.com>
-Suggested-by: Jiao <jiaoxupo@h3c.com>
-Reviewed-by: Berlin <berlin@h3c.com>
+Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
 ---
- tools/testing/selftests/landlock/fs_test.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/landlock/fs_test.c b/tools/testing/selftests/landlock/fs_test.c
-index 18e1f86a6234..1f2584b4dfce 100644
---- a/tools/testing/selftests/landlock/fs_test.c
-+++ b/tools/testing/selftests/landlock/fs_test.c
-@@ -40,6 +40,7 @@ int renameat2(int olddirfd, const char *oldpath, int newdirfd,
+Tengfei Fan (2):
+  dt-bindings: pinctrl: qcom: modify the wrong compatible name
+  dt-bindings: pinctrl: qcom: consolidate functions
 
- #define TMP_DIR "tmp"
- #define BINARY_PATH "./true"
-+#define MNT_TMP_DATA "size=4m,mode=700"
+ .../bindings/pinctrl/qcom,sm4450-tlmm.yaml    | 53 +++++++------------
+ 1 file changed, 18 insertions(+), 35 deletions(-)
 
- /* Paths (sibling number and depth) */
- static const char dir_s1d1[] = TMP_DIR "/s1d1";
-@@ -4572,7 +4573,10 @@ FIXTURE_VARIANT(layout3_fs)
- /* clang-format off */
- FIXTURE_VARIANT_ADD(layout3_fs, tmpfs) {
- 	/* clang-format on */
--	.mnt = mnt_tmp,
-+	.mnt = {
-+		.type = "tmpfs",
-+		.data = MNT_TMP_DATA,
-+	},
- 	.file_path = file1_s1d1,
- };
 
---
-2.23.0
+base-commit: 774551425799cb5bbac94e1768fd69eec4f78dd4
+-- 
+2.17.1
 
