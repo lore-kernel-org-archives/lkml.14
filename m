@@ -1,36 +1,36 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E01C135A56;
-	Wed, 24 Jan 2024 22:33:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF9D2136651;
+	Wed, 24 Jan 2024 22:33:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706135599; cv=none; b=MJH7xeciJI1vv3kHVA3Q+zTAZYPorIn0/mQ80HDgZ36so1lAO4mJqDhN7thJvolip1FVSxO7RTdPLKjAZczxd/9mTf/RIBQ/1iylPmmuxN5zWP0pVmLwleoVly0ZA/MYBrFxNnNBJkGj58vqIHhUesx1UrFVA5gcn/OqNS2Zwus=
+	t=1706135600; cv=none; b=lUppW+Ol0mS+dsDx3yoISzBX7xG+LNRZ1RQC6KwQcUtwy8vDdvYYLKq/3GlhSQLPuoNYElLviQo7TqMhRc+uy9+0KwbMVMr5hG8M1JPkWM+Rv0rmhtWTTyV6ziRX5GJ1fZZ4bvwwaxKP+YqHaIrEhwcxtBqGfofpgBXggj4SLLk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706135599; c=relaxed/simple;
-	bh=W+XG7gUVjX2CJXaxEMB61egMLVz4lNEs6++C8B0jnZs=;
+	s=arc-20240116; t=1706135600; c=relaxed/simple;
+	bh=qomwzeZ0+VdI6mZ2yu+WT993r+YiIAfvdX9TkSDmq08=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=N+qA5Oqck2w3XvWujeORyxUIB58/ANK8wA4jcAacyY2av/ULI49AXPCVn+Kyq5b93KSFN4iyD7X90lEX9rlnGN4kNc+/oWMxgQmv33bU+pqOiTdTnOGStUDt38NuQDBYX2LAbrSiBm5PqfBeb7UncxWKargeRvmfMeimrKTsgKs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=XwLOTZhY; arc=none smtp.client-ip=212.227.17.21
+	 MIME-Version:Content-Type; b=LvtE096BYOxyLAYFJStrEx3Ga1t3t2CjXrULx/NCH3E+klbUmrHjYEf9qoIbb/uAJ755q3zqh4DuvNElconqPf3qPOoDMZmLeFbPJ6laX6voES+jYalz6jFrFLGxavQ5Xw9jvcmQm8D41puGRDUdSTVj3WQWxus8KgxNNI7phyc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=RN9y/4ct; arc=none smtp.client-ip=212.227.17.22
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="XwLOTZhY"
+	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="RN9y/4ct"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-	s=s31663417; t=1706135557; x=1706740357; i=wahrenst@gmx.net;
-	bh=W+XG7gUVjX2CJXaxEMB61egMLVz4lNEs6++C8B0jnZs=;
+	s=s31663417; t=1706135563; x=1706740363; i=wahrenst@gmx.net;
+	bh=qomwzeZ0+VdI6mZ2yu+WT993r+YiIAfvdX9TkSDmq08=;
 	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:
 	 References;
-	b=XwLOTZhYKGcOKVwX/KTtIyl2EZYGLncjwnR0fJeWGd0uId7TE1noTkKyOfeXv+nn
-	 pFXDdPGCzBFS/O7+OI+e71AmtFOa8j5qkdqQZcg1MGItVefjDSbSz+HNeWJPLTksb
-	 1Asrr5UCSD8+7YlWaeATw7VUFALy6Eidc2H3CR7Bv24vc0sXNjd84NguczG02EAcI
-	 /oQiZnbalzbg09CpPD3qAiQXtq47URTUpvH/UApH8ynmXA+XPVzFL2t0CvTiQsOZF
-	 xy3AjVDvyLb/aDwlvacLBPZReR+ZWTeGy3Cvp7OZeC8XJU/Fs5E0xJABHxt8FPwND
-	 70j0mWrtQyCFxUzg5w==
+	b=RN9y/4ctJFpF3bqorIIKKoX6tEIqUXGLM65tihxfggrHmF8H7xqotvmpsYbz5yXO
+	 p9EC+WsSbHBkPeLNIswS0emRMyMb9xyLKrP1l4j3HwG+jMmS5NggF0JniRGaoNgcL
+	 6sCyfM16zmkYXUZ+uispQrE1mYZZmHIAlhoPZ/vaIFYlkE4ZXuhSOEnuXBzZ877hG
+	 f/2XJn7zvG0zy9y6v4mlVXmr2Gi05SblwcBW8H9qqrGD43y2jpzCoHfpQwc4NMdcx
+	 fpWLN+acuxmDoB7EWhHxU1NhDq9oaKS0ioyTb8TO8bLfXdIqwIpXe8/lX43CLwU2t
+	 GGQisCIG3j8i+Fdg4A==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from stefanw-SCHENKER ([37.4.248.43]) by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1Mof57-1qiBie2pOj-00p20r; Wed, 24
- Jan 2024 23:32:37 +0100
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1M6lpG-1rSDZN0LNu-008InS; Wed, 24
+ Jan 2024 23:32:43 +0100
 From: Stefan Wahren <wahrenst@gmx.net>
 To: "David S. Miller" <davem@davemloft.net>,
 	Eric Dumazet <edumazet@google.com>,
@@ -40,11 +40,10 @@ Cc: Lino Sanfilippo <LinoSanfilippo@gmx.de>,
 	Florian Fainelli <f.fainelli@gmail.com>,
 	netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Stefan Wahren <wahrenst@gmx.net>,
-	Jacob Keller <jacob.e.keller@intel.com>
-Subject: [PATCH V3 02/14 next] qca_spi: Improve SPI IRQ handling
-Date: Wed, 24 Jan 2024 23:31:59 +0100
-Message-Id: <20240124223211.4687-3-wahrenst@gmx.net>
+	Stefan Wahren <wahrenst@gmx.net>
+Subject: [PATCH V3 13/14 next] mailmap: add entry for Stefan Wahren
+Date: Wed, 24 Jan 2024 23:32:10 +0100
+Message-Id: <20240124223211.4687-14-wahrenst@gmx.net>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240124223211.4687-1-wahrenst@gmx.net>
 References: <20240124223211.4687-1-wahrenst@gmx.net>
@@ -54,93 +53,51 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:aL6VB/gYI/E9S57gwbqxv807a1LZCLoaNBRTrL4zhQqVL3P83zu
- gb+CXzh1WmHLfPfRstfzmjTxREd3Kqww7xpEZz9L5U5kB6aicd5dQp/slzKw0FVhCHeLdw1
- SDL01NjMwn9pE4jFfg4bFAizsVNxLoqYbdK/zObzwkoMvZUnRykI1PryhxmR5QwsmIYsSmH
- /SdWxVmOGsc+PSeNFTlow==
+X-Provags-ID: V03:K1:YvVG3RKT34IC/0QHC/pRgLRH4saf1SaSfj6zVwL6L1JmhH6unri
+ KwWjTh4rmzviK1sL6EgRECqznvz7eH0BQ1w4/unCD3WEHP/H8sJdF70IMyqZae91g75/LZD
+ W9ZL4Z5j/ZL7Nd5eFuKBw0kythuKEL7yQVT2vVVMLr/wlF0nGs+lf/2Zszya667dxCcQoVt
+ wBpOaUh72q9X0eRVXFmmQ==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:PpK0zX9pg1Y=;GZXcBir7R06/D2XQlG2oEyGhOCS
- grTnmSIjwzsyZlg/L1yL9OwCx+WXOYzjPR85KZwn+t0h1G7jOICV9vVRpshcjVmtkp1C/dWES
- fuuEyEn60yE9xuvNOcMnxwZad/h5hThCWLf4VITkMMZRQyZdFzgsyQgL86kW9Mrox2jcesOa6
- HbowcOkhoOO0OpLJGce2lZEscXGLkqm6buCWJZ+N/Gi3OEB272iUUolqM/IyhHkntHybFrhdr
- kqwZAEVB2t5gPj4MFfJXFWcf3m76ccbcR6OZB/cnjylhR74f26gmgj8kP453pqgWTeFDfmjNF
- 45uXxFYrbfen2+7bA12Y0ubreazyrkWM9JO0DOL0DNkvLdKauzTlJdBVnEATj3XUndisiJ0lm
- W89MKOK1C+gUnUb7/76M0r/KYOIkh/ClhIbqJlISNcvxqkg7Pk4478RfJ7DH7UZghrzAT8xUL
- 60xh8y3rElSUB+pfC+JJ4CebiyUlGeZ7nyV9W9v57nhzKXSTj+Nz2TCPdXFQn/br0Y2T24LXN
- +L46eDYcbG7CUUVAbm5oA/pdIzG/owNcmXbf36W8hJMks0MXYcOKbiS0qP9n/rJL5p6CI1tb4
- BAlyeqEDWBfeL0QtpqCC5fFnYkHkFSdCclmcRLkgnS7ggcmMuKZ+KENmeJcvmQCANw6aCki6N
- F7UT64wyqA4NW7bF8qAsVg+3E8oFHv30BM2indy+yQk3IK2ieuRrm98/vdj//nffrXZEPbgz7
- QIN143ThNSgqf31Zf3LPjaI6Xn/z4DUgixCqkU7fS1WcsvZLSzTuHTXlrCqfPW7OvMuzEWHwi
- PY82GPr0BDSLGbCiQ3T8HZpHmW/p49M57oMc4BBCLQuBxYxNdZsw4Nu/0CI8XPjYYp1O6kKxT
- Xu/pmZnk7LMx3UgOXx+CA5AVcJIJrUxVjvR3E9igyb2M3n7lw2DvCuEZnLjzJVJB8KcvvZjWk
- YHPOng==
+UI-OutboundReport: notjunk:1;M01:P0:iBC/vrINn5k=;FX0F+DH5/dJMmVAgy8RdOCzM5Ou
+ fr9OnPM62P+9dcLlnlFSjQ1kSxCstegu7cXaFY2bAKDshHvWQr/wniARP4LlRKevGF3dp93SL
+ C0spCZRugw5SOIu3K7XQITA56PEYc1PgaRU7EaoEkgkthcSAc7iUpnlKu2sovCUvZEmzm/MiN
+ TG1gL3heJCXLrU4uFF9pEDijW+fhbTQDgW4iIlGr3MYsBz00YMpgqS/GjMoz+VHJEKQ1YZ6JD
+ Ur6dqv+sB7ebYBG2Qlwz0cPeNgx6yoZ0CdZXC9ECoOhkWtGKFxP/afLBSDnOrZajqQC9yj3h6
+ Q7LRZSdVUUOiMVIZCgZ9ihf4iLqy3ij4uRs6NJoNgqq59moYZOa/A7TSga9OZNwKZGppL7NkK
+ uApVIukrr+2MjIa6/O2KE2Y5J3wLM54QLUS++EZGRRzB0unXwsGIF/BFt7CXLQzbELdcpPSld
+ 8BIcWt0//VrsspyjI6WSyP9aYnbBKEYSDJnpqs72im1gPM89FYbezpxAO8B4LaSm+s7AJO8nk
+ rOMd316h6y3Ef63j41fo8UCYG9CH6GyxrKLZ/ocjKPZYGnNWps+1C305Xyl1T2LGrpv0Xffwh
+ XsB43UII1sb7SMjIJ1wQBmTBOIeOmw3gezB3m/bMgj7Twwblgagq+jY4ui0bRmC/osAdQE+5t
+ RULFvpEtYoW7tyL0y/poUNDDCHypDVEq94u/sqP8uIDxjei2xAAWFbcVRdp7s3KvELxewNQAB
+ hQT0PyV+ST8gwFQXLJN/k1W9O6Kh0byduegAMJBUCx5LOd4PcZ6pSjfF6LnsL5KmQDfhbmrJI
+ w22GXVqG73/aQdnhb06VjFm70MxajN7CYc4FEfkshcghgOuWmDIEgtA4v3vui6Hbze9FgGQ7A
+ n70fFGgOlLY/GTfLu0m7VroMNMZwsLAvB3mvuNSMR+WgDvi9xuPm2UPyvMTNsnuKxJfDRAh8z
+ ysO1oA==
 
-The functions qcaspi_netdev_open/close are responsible of request &
-free of the SPI interrupt, which wasn't the best choice because
-allocation problems are discovered not during probe. So let us split
-IRQ allocation & enabling, so we can take advantage of a device
-managed IRQ.
+Add a .mailmap entry because my old i2se.com address will be
+deactivated in the near future.
 
 Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
-Reviewed-by: Jacob Keller <jacob.e.keller@intel.com>
 =2D--
- drivers/net/ethernet/qualcomm/qca_spi.c | 20 +++++++++++---------
- 1 file changed, 11 insertions(+), 9 deletions(-)
+ .mailmap | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/qualcomm/qca_spi.c b/drivers/net/etherne=
-t/qualcomm/qca_spi.c
-index fc272ca7bdca..294d4ee3b38f 100644
-=2D-- a/drivers/net/ethernet/qualcomm/qca_spi.c
-+++ b/drivers/net/ethernet/qualcomm/qca_spi.c
-@@ -687,7 +687,6 @@ static int
- qcaspi_netdev_open(struct net_device *dev)
- {
- 	struct qcaspi *qca =3D netdev_priv(dev);
--	int ret =3D 0;
-
- 	if (!qca)
- 		return -EINVAL;
-@@ -697,13 +696,7 @@ qcaspi_netdev_open(struct net_device *dev)
- 	qca->sync =3D QCASPI_SYNC_UNKNOWN;
- 	qcafrm_fsm_init_spi(&qca->frm_handle);
-
--	ret =3D request_irq(qca->spi_dev->irq, qcaspi_intr_handler, 0,
--			  dev->name, qca);
--	if (ret) {
--		netdev_err(dev, "%s: unable to get IRQ %d (irqval=3D%d).\n",
--			   QCASPI_DRV_NAME, qca->spi_dev->irq, ret);
--		return ret;
--	}
-+	enable_irq(qca->spi_dev->irq);
-
- 	/* SPI thread takes care of TX queue */
- 	kthread_unpark(qca->spi_thread);
-@@ -720,7 +713,7 @@ qcaspi_netdev_close(struct net_device *dev)
- 	kthread_park(qca->spi_thread);
-
- 	qcaspi_write_register(qca, SPI_REG_INTR_ENABLE, 0, wr_verify);
--	free_irq(qca->spi_dev->irq, qca);
-+	disable_irq(qca->spi_dev->irq);
-
- 	return 0;
- }
-@@ -987,6 +980,15 @@ qca_spi_probe(struct spi_device *spi)
-
- 	spi_set_drvdata(spi, qcaspi_devs);
-
-+	ret =3D devm_request_irq(&spi->dev, spi->irq, qcaspi_intr_handler,
-+			       IRQF_NO_AUTOEN, qca->net_dev->name, qca);
-+	if (ret) {
-+		dev_err(&spi->dev, "Unable to get IRQ %d (irqval=3D%d).\n",
-+			spi->irq, ret);
-+		free_netdev(qcaspi_devs);
-+		return ret;
-+	}
-+
- 	ret =3D of_get_ethdev_address(spi->dev.of_node, qca->net_dev);
- 	if (ret) {
- 		eth_hw_addr_random(qca->net_dev);
+diff --git a/.mailmap b/.mailmap
+index 04998f7bda81..95b4fe465cc6 100644
+=2D-- a/.mailmap
++++ b/.mailmap
+@@ -568,6 +568,7 @@ Simon Kelley <simon@thekelleys.org.uk>
+ Sricharan Ramabadhran <quic_srichara@quicinc.com> <sricharan@codeaurora.o=
+rg>
+ Srinivas Ramana <quic_sramana@quicinc.com> <sramana@codeaurora.org>
+ Sriram R <quic_srirrama@quicinc.com> <srirrama@codeaurora.org>
++Stefan Wahren <wahrenst@gmx.net> <stefan.wahren@i2se.com>
+ St=C3=A9phane Witzmann <stephane.witzmann@ubpmes.univ-bpclermont.fr>
+ Stephen Hemminger <stephen@networkplumber.org> <shemminger@linux-foundati=
+on.org>
+ Stephen Hemminger <stephen@networkplumber.org> <shemminger@osdl.org>
 =2D-
 2.34.1
 
