@@ -1,42 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 999E8131E53;
-	Wed, 24 Jan 2024 19:07:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AAF6131E53;
+	Wed, 24 Jan 2024 19:07:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706123251; cv=none; b=Fby6/X1S7tSqOyK2R+/v1rCqOmgE4CMiPYwCeBcfd7QoGzykYjrc+tJh40358oOknVFMjj+w4UwgApXG6POCGv9ghuWpQ3MVGl621mLAo7cYYTMmixS0CfcYjHYbgzq8xN+dPR6DUUyEaEFMPBr1wzCKRKGH0frDM8SKTqtu//E=
+	t=1706123262; cv=none; b=eN7yf6wWjb2wqQ8B6O8FWbvMMLKqYbOwQCKzliwt6AezSOZ/fZuRGpDH6Ohe+YTllaYmcssgmatzTnNmwMuqus+y9wBnl7GjuP6jdSKgrDIt9hDZiisEFjlMs0PoWCXeOWQJlVUDhGelGrjmzuMqWSdBZqweX4Dx0SE+5K5TdZo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706123251; c=relaxed/simple;
-	bh=SKRO+C4Y09BLBmwNyikwqGEZSpIUdd4Hbjgub5WPK3I=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dS3e2ga9j16kmY/8/o2bP48gsCzCWRM2u7mZCm/Sct+3ikQC//zrh43/+Sg30fL55GfafZ2W/DFFd9otKuz4uP94E7PQqFL32nJ2bVq7Ot7tGE4EeFbU36+LYZRBP5pP7BG8gLmZ9Vc+eCANfCopNY67yeEyZp8ZUd1RjFfj/Ws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fvj7dcBD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706123262; c=relaxed/simple;
+	bh=TdxQU3YryQCBnITLJXSQAWFjdGX2PU9YEPKxMGf1UwY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Q/WklsoHBjXO4vSUWoH34sDwEklUtr6L4lqSida6vMu+JRQSqN2eai5ebm+dfpTKZodFst0edTvj3DnVoX2TGMXZIvwEnIKOPEDOf6KbOZMBY8t8d9UvswxgXeHd+RcBq3wMKdp+UZ/4PoC8aM4sZMXjG71NQBGXTLC1lZs7mXc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=byT6uExd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fvj7dcBD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2DCAC433F1;
-	Wed, 24 Jan 2024 19:07:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="byT6uExd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BDE4C433C7;
+	Wed, 24 Jan 2024 19:07:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706123251;
-	bh=SKRO+C4Y09BLBmwNyikwqGEZSpIUdd4Hbjgub5WPK3I=;
+	s=k20201202; t=1706123261;
+	bh=TdxQU3YryQCBnITLJXSQAWFjdGX2PU9YEPKxMGf1UwY=;
 	h=From:To:Cc:Subject:Date:From;
-	b=fvj7dcBDuVqkNSjRoKF34m2NAZ6ufwLS7z8I/HAo+qa1lEuijXSL9+e3Qemr8VOXB
-	 ts+ZVPqXrjWxhIXuq9+XkUiKa9mAPASb+mvZZtS8jWXGtqsdQw2pn4J4JBObm1kqXc
-	 D/ggPrioyDoTmSUxT2J0giFaaCEljCF9tcflopH08w/HglC3yp1LPqql133zM1L6BU
-	 VGjyoVIfNNV5HBLdK9urDvtwlC9qdzUt2DLeWTcdRTHmtCxhCMUqA0yNj3fnf1iQ12
-	 +0fXaBWRPsmTJfdYbLTMoG8hLWuJyYYXv/X0fQJyZwwfW8mlgREcxTK2K0smjqHbr5
-	 qUV2jNNGpNhKQ==
+	b=byT6uExdY4Ky84T/iiyve2BeIlakHz3ow2o8xkpoG+PSvoMWDLhDRfls+oerycyLf
+	 HeCuBmrwJBFuFlNfJJjFtAo8MXEBpSMrdc41O59Yg4lYB38j22gTKQnBxp+w8T1+YB
+	 M/gUXnMfhl0qP2e8KBO6v+/0iscBGncIZxQNvJYO4TTEGHcQTsYdNekrIxN0zeK4ai
+	 1xR9sC5mh1op189gi0blfunq1aua40MMSeAWREBi1tEt+h1uMON+Fg8Q1sPn2O5Y05
+	 /xolTm5gOk+52tXO4Ujdilt0eyqv+nlyO5HmbP9hlNaMLTv3ufnQmLZwQZO1G/EfK7
+	 Yh3bp6lO5RyYA==
 From: Rob Herring <robh@kernel.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+To: Alim Akhtar <alim.akhtar@samsung.com>,
+	Avri Altman <avri.altman@wdc.com>,
+	Bart Van Assche <bvanassche@acm.org>,
 	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Xu Yang <xu.yang_2@nxp.com>,
-	Peng Fan <peng.fan@nxp.com>
-Cc: linux-usb@vger.kernel.org,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: linux-scsi@vger.kernel.org,
 	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-samsung-soc@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: usb: Clean-up "usb-phy" constraints
-Date: Wed, 24 Jan 2024 13:07:24 -0600
-Message-ID: <20240124190725.1554080-1-robh@kernel.org>
+Subject: [PATCH] dt-bindings: ufs: samsung,exynos-ufs: Add size constraints on "samsung,sysreg"
+Date: Wed, 24 Jan 2024 13:07:33 -0600
+Message-ID: <20240124190733.1554314-1-robh@kernel.org>
 X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -46,45 +48,36 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-"usb-phy" has multiple type definitions. Unify the type with the looser
-definition, phandle-array, as there are cases with multiple entries
-(USB2 and USB3). However, the 'phandle-array' type alone is a bit
-ambiguous. It can be either just an array of phandles or an array of
-phandles plus args. "usb-phy" is the former and needs to constrain each
-entry to a single phandle value.
+The 'phandle-array' type is a bit ambiguous. It can be either just an
+array of phandles or an array of phandles plus args. "samsung,sysreg" is
+the latter and needs to be constrained to a single entry with a phandle and
+offset.
 
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- Documentation/devicetree/bindings/usb/ci-hdrc-usb2.yaml | 2 +-
- Documentation/devicetree/bindings/usb/usb.yaml          | 2 ++
- 2 files changed, 3 insertions(+), 1 deletion(-)
+ .../devicetree/bindings/ufs/samsung,exynos-ufs.yaml      | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.yaml b/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.yaml
-index b7e664f7395b..3b56e0edb1c6 100644
---- a/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.yaml
-+++ b/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.yaml
-@@ -313,7 +313,7 @@ properties:
+diff --git a/Documentation/devicetree/bindings/ufs/samsung,exynos-ufs.yaml b/Documentation/devicetree/bindings/ufs/samsung,exynos-ufs.yaml
+index 88cc1e3a0c88..b2b509b3944d 100644
+--- a/Documentation/devicetree/bindings/ufs/samsung,exynos-ufs.yaml
++++ b/Documentation/devicetree/bindings/ufs/samsung,exynos-ufs.yaml
+@@ -55,9 +55,12 @@ properties:
  
-   usb-phy:
-     description: phandle for the PHY device. Use "phys" instead.
--    $ref: /schemas/types.yaml#/definitions/phandle
-+    maxItems: 1
-     deprecated: true
- 
-   fsl,usbphy:
-diff --git a/Documentation/devicetree/bindings/usb/usb.yaml b/Documentation/devicetree/bindings/usb/usb.yaml
-index 326b14f05d1c..1761b7aa92f0 100644
---- a/Documentation/devicetree/bindings/usb/usb.yaml
-+++ b/Documentation/devicetree/bindings/usb/usb.yaml
-@@ -25,6 +25,8 @@ properties:
- 
-   usb-phy:
+   samsung,sysreg:
      $ref: /schemas/types.yaml#/definitions/phandle-array
+-    description: Should be phandle/offset pair. The phandle to the syscon node
+-                 which indicates the FSYSx sysreg interface and the offset of
+-                 the control register for UFS io coherency setting.
 +    items:
-+      maxItems: 1
-     description:
-       List of all the USB PHYs on this HCD to be accepted by the legacy USB
-       Physical Layer subsystem.
++      - items:
++          - description: phandle to FSYSx sysreg node
++          - description: offset of the control register for UFS io coherency setting
++    description:
++      Phandle and offset to the FSYSx sysreg for UFS io coherency setting.
+ 
+   dma-coherent: true
+ 
 -- 
 2.43.0
 
