@@ -1,94 +1,125 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6899C811E4;
-	Wed, 24 Jan 2024 20:21:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D786913341A
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 20:21:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706127688; cv=none; b=gQnzlIxXxS+zUVwcZnX35vlcTmi/ATysUR6S5Q7k5wYVIklCUV4lxIx0EcIJR9emb46RZP6ZPksv3WNleU6OytMadNlwQKAEc9rrnb3df7t1TpnbTTzhtf5vAV/8Ax7lV0aG0NkwPUH3hXK/bY07fHgG2DM4N6mr93bb8yUn/qE=
+	t=1706127712; cv=none; b=lLixK/raNGTVBhFZljXfwNOVcK4bELQ7qPN6Z9Hf4LraFNZIF2oxh58/nMGIA1yFIqPJbv1+vHCBhFYkrtXPu/c6PeNetErF8vVv8jvPGHyw6poO8judlHRTaqHPM+cm4LgM3qCH3TGSeXaIp4rVuxOBgTRG2GWMUWLkWasJMWE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706127688; c=relaxed/simple;
-	bh=VW4mEIcdmik+s5egPBqVRNRoX+de9lNQLbQm1R62l4M=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Rg5D6nY/Men2++/HidMMjr6l8BMnbIizrsdVLF3vnF/TB3ACo0prjmKlnv0iF8Y1/34NQbTRfynsPmO+x4ROtFyixXeoYhEJBwB0sQPG7Gt/PbbEUdQUIVv39DIAK1Hw/g06FoNLxDbFkRLIo3yQajqLLMZTGrjn5WrtDpLvy4M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dE9tWOUM; arc=none smtp.client-ip=209.85.218.49
+	s=arc-20240116; t=1706127712; c=relaxed/simple;
+	bh=LNSKSzvs2ljLvTMYKnjzvlKWDygso/Wh3QR4cqKrHPg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qKsZllZMVp4FSMNsUwxnXPEWU1FgEEfYc8nxvLGKQ3wotl5husG7AxhsJrbApa20aN145DQfCQXopshPHJ0okqBtPRbkRjxSXEACw0KyXUJIPxxr/xKHu7L9vqDPyiqAUSA9ZhNd9PjgLaWxxDJGxHLHeyVEbBojrDtk81p8Ybs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YhtQrtTL; arc=none smtp.client-ip=209.85.210.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dE9tWOUM"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a30f7c9574eso170657666b.0;
-        Wed, 24 Jan 2024 12:21:26 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YhtQrtTL"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-6ddc0c02665so589047b3a.0
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 12:21:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706127684; x=1706732484; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ChRDax5hJj6+YTMJxBY2kDCwCF/6rG7mvJwTLJmb7rA=;
-        b=dE9tWOUM77q/4kHPm/tDtrU+45nkBMUvKLbNmTNtB/NDpbytEiNHIaz+9ekSZ3rzmE
-         dUEAorsqjzuermmH6NnLwByRNbXe1r18LXZkVGPhfiyjtSlAO2+NDx6QRuR529rUqIg+
-         l0GQzmzCU0hKSh4meoECT4IwjYGlyi19We4YxFna0I5hqPedJyn7Lqm2Md1embd5r4YR
-         ugBt2ctMkdjemWTmKDbGYRZIhW8cORgN9AQUN8LbTBFni61E9bu/uKv7gEEJReFKDD5c
-         iFB1ldxvVpcCtMTe0/vlQy7olIuWUQ6Bb78C4lV7xSz3MQtAaX9ZTAcueIUEDb2s5ELD
-         i6Gw==
+        d=gmail.com; s=20230601; t=1706127710; x=1706732510; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gMwNi5kNbBjiibbpUwYiOJds2nMSzlktlZQe4MVPO8Q=;
+        b=YhtQrtTLJuKXM1gD+Qcfwgjwv9BCldfANNHJO54u2o3rmYKofw2fLhaiwtSLOyYkV2
+         2QUD46MNighRiNKgyd8RAA7LcJzveeMUe4hkMW7CSWFzbkVG2yxxRhjoVQ29C1o8afcv
+         +FBPTYGdTGW1dVTZ3MHbpwZ/Uq9pdysRh2U290F0c03xnFV/out9Jy54Gg+EroWvf7sQ
+         X3tdClq8YaJ1KvcmuPyl1a+RaFzYJPqVRk3zGiQc79tZjGXGjKEykGx5cXnA2FrF0T5S
+         v+ZWfpX/Sacmz0T14xKG4wWCaQKCpDsIDzTLT5xKzzXb9GfCcA43xZgxBiBVxZnLMEmR
+         WxZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706127684; x=1706732484;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ChRDax5hJj6+YTMJxBY2kDCwCF/6rG7mvJwTLJmb7rA=;
-        b=YDkuT/yQduEhyPK9lU0Hdm99GSjjCvR6VrLuhpDovu+Z+5ArTrMLKiDBeyujDkcUNR
-         7nErHkYL56ZgdY+z4Bbi7leT5Iueq2YVZGu8ApPlkaKOymrAdYqlhcvyoHj5pEi4Zctn
-         +uL7/gdf+CLjLyv0IWjAvI94oAX1UvJMSnTsIwKscw0WdO8ZyMbxbGLr572+Tak/wutx
-         kN0sEPT0Ky2AgBYXMDfM93Ark00KPjIEMhReK943UYFrcJKLq9ALY8WpWmr40hLialw4
-         q75DMgcQp7eKKw5WAHVLm5QtI8AW9uwnnj7SNTGtw5rPA5Luk0hLgqaYTjbAGQD/gedz
-         vASQ==
-X-Gm-Message-State: AOJu0Yzu+tFI+HMMjgSW7ahN6yuIDxjmMah3K8Ou4Zc937aDRu1UHk91
-	alSotZ9wEPEIixALCag5pzRl3zqlSxJtiAXpKxTHNUhtqpq5RwdZ
-X-Google-Smtp-Source: AGHT+IFdiG2NXpLxaUC69wnle/LvaJbZhVfrAQgsr2s46zHIaM+Y9faBfFjTZ7KPYhHCqlzfWoe7fQ==
-X-Received: by 2002:a17:906:5294:b0:a31:49ad:f37e with SMTP id c20-20020a170906529400b00a3149adf37emr256936ejm.73.1706127684298;
-        Wed, 24 Jan 2024 12:21:24 -0800 (PST)
-Received: from localhost.localdomain (ip-94-112-167-15.bb.vodafone.cz. [94.112.167.15])
-        by smtp.gmail.com with ESMTPSA id su13-20020a17090703cd00b00a26a93731c5sm226398ejb.111.2024.01.24.12.21.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jan 2024 12:21:23 -0800 (PST)
-From: Ilya Dryomov <idryomov@gmail.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: ceph-devel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [GIT PULL] Ceph fixes for 6.8-rc2
-Date: Wed, 24 Jan 2024 21:21:06 +0100
-Message-ID: <20240124202109.1567593-1-idryomov@gmail.com>
-X-Mailer: git-send-email 2.41.0
+        d=1e100.net; s=20230601; t=1706127710; x=1706732510;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=gMwNi5kNbBjiibbpUwYiOJds2nMSzlktlZQe4MVPO8Q=;
+        b=FbPwLjpikp9zwUK+IUL8A09zyn8DwWzlzCc+X5YIrRYbEd3Tr6lyKxAgaTQ7ArqzyJ
+         NAepqNAM78Gtzr2zCbbhqsieKH4TZ6homeYYlkFoNa9JSt/Df9y9qIm1oopa4kJc+kkK
+         dIuUC5mC164F41y18SnefWzbVSJUKn6L3fxmchmct7+Pc95kOZ/ob+tKcZLU8xu0fK9k
+         JPuDNsxsMTQ03uqtFSixNrR1L2raAyeib/JAl/r4FNYh68gz7RCwLL1MRfb0U+m3w2+h
+         8XuobhPEhaZUQpJDQnOTynRQnKIdDcn1R4rq6riEmqtYZHRxYYDJ8ofZs3QisIrthKwq
+         8fyA==
+X-Gm-Message-State: AOJu0YzwWNNxnpltxyZnnnrpqP5bZ07+vFyQGwZs2qKbsuH4BRQT07YA
+	4DX394KXtlAjJtlVlI0q1Yy7w4oOC+fSWZ3/FtI4IC5A91ODsIKVR1gyyfrclm+Bbq7je+Ejk5r
+	mU83St/FgKmWkh+tV9N85f7F32xU=
+X-Google-Smtp-Source: AGHT+IGDX6D0oFWtuFmABbjGrfo2fIBX+9sdMbFAJJSPrhHlAu3U99NIGliSiXlr+T1LZUpUf+2FYFbJk2PC6b5dWag=
+X-Received: by 2002:aa7:9a11:0:b0:6db:e5d6:68c5 with SMTP id
+ w17-20020aa79a11000000b006dbe5d668c5mr126236pfj.7.1706127710103; Wed, 24 Jan
+ 2024 12:21:50 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CADBGO79JycAycKXm9A46pLrGZHTsySV4NH+yvV7VFU-8reMF=Q@mail.gmail.com>
+In-Reply-To: <CADBGO79JycAycKXm9A46pLrGZHTsySV4NH+yvV7VFU-8reMF=Q@mail.gmail.com>
+From: Paul Zimmerman <pauldzim@gmail.com>
+Date: Wed, 24 Jan 2024 13:21:23 -0700
+Message-ID: <CADBGO78cNfZZFA_iDbjatiyvSwF3G7DjbddqTpQyw4zMoyC5ZQ@mail.gmail.com>
+Subject: Re: [REGRESSION BISECTED] 6.8-rc1 - Wayland hangs when connecting via
+ VNC or RDP
+To: Luben Tuikov <ltuikov89@gmail.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Linus,
+I forgot to say what graphics driver I'm using. It is amdgpu.
 
-The following changes since commit 6613476e225e090cc9aad49be7fa504e290dd33d:
+p.s. Sorry for the bad formatting in my previous email, it has been a while
+since I posted to LKML.
 
-  Linux 6.8-rc1 (2024-01-21 14:11:32 -0800)
+Thanks,
+Paul
 
-are available in the Git repository at:
-
-  https://github.com/ceph/ceph-client.git tags/ceph-for-6.8-rc2
-
-for you to fetch changes up to ded080c86b3f99683774af0441a58fc2e3d60cae:
-
-  rbd: don't move requests to the running list on errors (2024-01-22 00:14:10 +0100)
-
-----------------------------------------------------------------
-A fix to avoid triggering an assert in some cases where RBD exclusive
-mappings are involved and a deprecated API cleanup.
-
-----------------------------------------------------------------
-Christophe JAILLET (1):
-      rbd: remove usage of the deprecated ida_simple_*() API
-
-Ilya Dryomov (1):
-      rbd: don't move requests to the running list on errors
-
- drivers/block/rbd.c | 32 +++++++++++++++++++-------------
- 1 file changed, 19 insertions(+), 13 deletions(-)
+On Wed, Jan 24, 2024 at 12:47=E2=80=AFPM Paul Zimmerman <pauldzim@gmail.com=
+> wrote:
+>
+> When I attempt to connect via VNC or RDP to my Ubuntu desktop, the Waylan=
+d
+> server seems to hang. The desktop GUI no longer works either locally or
+> remotely. I can still log in via ssh, so the system is still alive,
+> but the GUI is
+> frozen. If I boot into Xorg instead, everything works fine. Kernel 6.7
+> works fine
+> also.
+>
+> I bisected this to commit f7fe64ad0f22 "drm/sched: Split free_job into
+> own work item".
+> That commit does not revert cleanly however.
+>
+> I don't see anything in dmesg when this happens. Here is a snippet from
+> journalctl when it happens:
+> Jan 23 16:14:30 paulz-Precision-5820-Tower systemd[2826]: Started
+> Tracker metadata extractor.
+> Jan 23 16:14:55 paulz-Precision-5820-Tower systemd[2826]: Started
+> Application launched by gnome-session-binary.
+> Jan 23 16:16:47 paulz-Precision-5820-Tower
+> gnome-remote-desktop-daemon[4158]: [16:16:47:810] [4158:4896]
+> [ERROR][com.freerdp.core.peer] - Incorrect RDP header.
+> Jan 23 16:16:47 paulz-Precision-5820-Tower
+> gnome-remote-desktop-daemon[4158]: [16:16:47:810] [4158:4896]
+> [ERROR][com.freerdp.core.peer] - peer_recv_callback:
+> CONNECTION_STATE_ACTIVE - peer_recv_pdu() fail
+> Jan 23 16:16:47 paulz-Precision-5820-Tower
+> gnome-remote-desktop-daemon[4158]: [16:16:47:810] [4158:4896]
+> [ERROR][com.freerdp.core.transport] - transport_check_fds:
+> transport->ReceiveCallback() - -1
+> Jan 23 16:16:47 paulz-Precision-5820-Tower gnome-remote-de[4158]:
+> Unable to check file descriptor, closing connection
+> Jan 23 16:16:47 paulz-Precision-5820-Tower systemd[1]:
+> run-user-1001-gnome\x2dremote\x2ddesktop-cliprdr\x2d9Tp4LD.mount:
+> Deactivated successfully.
+>
+> This is on an x86_64 Xeon system running Ubuntu 22.04.3.  Any hints on ho=
+w to
+> debug this further? Is there a way to turn on additional debug prints for=
+ this?
+>
+> Thanks,
+> Paul
