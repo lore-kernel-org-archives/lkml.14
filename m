@@ -1,36 +1,36 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEB9E1E882;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29879135A52;
 	Wed, 24 Jan 2024 22:33:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706135599; cv=none; b=MZ9d0N5/LjaUw4GPvt/Y+t0Zag8sb3LYIdBUiwvIaRno84aaWuKCS6lSopRZMBhPTGJtWvKYhVLt+IigKUGsC0e/wTWIus+EWCGRzFUDlHxzqzLFMi93gwcuFX2mIrLohphpZ/HiXkL8fy2/ABx9bgyqBUj+7aZEIrUYAm/20eQ=
+	t=1706135599; cv=none; b=rfAe7nQCxQZQ87QKzdP+Mp5hwCcj509nVVsJlJHc81Okfwn1xZ/SpB09KDnQgFW9YXPl1patKx1S7CYaE7AXkCI8o9EqPmG2Xmvnzt+47AKwu18ndl5dv0csF9rG+35P+V0bPMLzGLom3zjsbZNT4wSq6IYpedNiqGamEHFtDdQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1706135599; c=relaxed/simple;
-	bh=qrDaTsk7HTfc8TrmJHba7pRVGRstI4yMYwXgF2rjUlY=;
+	bh=DKx8YCk6CvT5TPKgEWvZvqxJNyIHRyULsJ4f2zOAZbQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Ny3tCSlCJsFenumjcTGT/4uD24y88YSS8NR3/Y7/cCSyffskd6U1eXXW78gy4nmDugQddXUVk9qBR7zm7iX3oU9QeePodvr2bBW/lm6tgTpfKN5i9274Q1FauwRUsZNpHcudw+2Nhod8v+1w5Mehstncm+n+EtmuFris81TULzk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=QocG5xe8; arc=none smtp.client-ip=212.227.17.21
+	 MIME-Version; b=Q/N/ZlT071I+tyi99ZkUEa3pCK7LkpFVd0KQh3JUcsx7WrFWUki4JdJVOMuGe8JxdWcvZjjKY4jKcw65Kptkk1kQZPwveyFCFb6p2yaNcY374wPX175ejHEdzM7ctwx61SvNjicIotw9WgMYIo/GMglOMDNXAK3iqjeOCJm6JLk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=GVv1oiMn; arc=none smtp.client-ip=212.227.17.20
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="QocG5xe8"
+	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="GVv1oiMn"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-	s=s31663417; t=1706135558; x=1706740358; i=wahrenst@gmx.net;
-	bh=qrDaTsk7HTfc8TrmJHba7pRVGRstI4yMYwXgF2rjUlY=;
+	s=s31663417; t=1706135560; x=1706740360; i=wahrenst@gmx.net;
+	bh=DKx8YCk6CvT5TPKgEWvZvqxJNyIHRyULsJ4f2zOAZbQ=;
 	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:
 	 References;
-	b=QocG5xe8JcuBN+Kydmhil3GdAGNCirjPCxAsym2xBAtYF7jzLiDzx3u9znVZ2/sX
-	 mMLh43TkkYW7BCPiHfH6e2XpAkyBbO8mSWlahIrAMGDpydBKOxEeeVyin3DmLFNls
-	 hPKp47Fuuc7rBVrD7ck0mt7tWN+fTgj1lDMkGkCeN865z6Bk63ZcqO76p5xakwxD+
-	 2NtnwhHwGe24hxa8XiJ/3+lieqJ7xImemro9LauvycFTbZskuhHYzEHBFdcKVfXhJ
-	 X0Vx+oybsAfDzSklncFKJyz1x+LGwL8tzhOHYeK28szd14Vn1E5IncYq+0eeVGQbF
-	 siulkBqY2IAqNwPQwg==
+	b=GVv1oiMnWyRdqCtF9xB36UNqK21KrJyA4vtWVReKV+QUAk6jUug5fh5S8gWmvX8h
+	 D0GRy/DXzjsk+Egc5EvoLdmrNK9h46HZTId8jfUEp+NuvfBjFxNCbVZes8CUPvxK+
+	 5yJYfel52IjhG2sHrvd4jALZEoXR9v5snY2rtNVrgsm2OqlSuFp4M7dyeJddJeXsY
+	 /cJpqeLSjvDcF/xzyHsYj8ZCXkX87+D5/p/S3ELgpmDQuRMYIcViqDaeMibyhIfXX
+	 zkQLxXBHufvEqG+VoyucMovjcg+1H+SfTxQyZiNWxUxPxy5p8A5pnMVJnAxX1317j
+	 jCEXfhokq4bmAJwuRg==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from stefanw-SCHENKER ([37.4.248.43]) by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1N5G9t-1r3AVX363h-011BeL; Wed, 24
- Jan 2024 23:32:38 +0100
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MKKUp-1ro1qB30QR-00LpTf; Wed, 24
+ Jan 2024 23:32:40 +0100
 From: Stefan Wahren <wahrenst@gmx.net>
 To: "David S. Miller" <davem@davemloft.net>,
 	Eric Dumazet <edumazet@google.com>,
@@ -42,9 +42,9 @@ Cc: Lino Sanfilippo <LinoSanfilippo@gmx.de>,
 	linux-kernel@vger.kernel.org,
 	Stefan Wahren <wahrenst@gmx.net>,
 	Jacob Keller <jacob.e.keller@intel.com>
-Subject: [PATCH V3 04/14 next] qca_7k_common: Drop unnecessary function description
-Date: Wed, 24 Jan 2024 23:32:01 +0100
-Message-Id: <20240124223211.4687-5-wahrenst@gmx.net>
+Subject: [PATCH V3 08/14 next] qca_spi: Improve calculation of RX buffer size
+Date: Wed, 24 Jan 2024 23:32:05 +0100
+Message-Id: <20240124223211.4687-9-wahrenst@gmx.net>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240124223211.4687-1-wahrenst@gmx.net>
 References: <20240124223211.4687-1-wahrenst@gmx.net>
@@ -55,61 +55,61 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:haDaJ774AzzypKlRpr+jQwx8oGav0zVwZAc/Q2T11GxpOsacOAO
- a4b8i1YA0My3Ff8GlWQTeQyCxyYN3/e8l6Jukc4mCRzKPT7Jl2VBa8ACqBRnRTy80wsHSAU
- U5zTZxumjiwN9OwYp3ZaSly2CUsT/wnpGMG3NnapHbMlDVCQiUyQpDhIgYK/of0pJR50Fbb
- Hod8ZRaevpb8Sh4JQfKxQ==
+X-Provags-ID: V03:K1:PBoXn1z7n6aZj88X6gKN7TzTl6JnE/RGUP8sTmqzy6ZP1uoZVvg
+ OWv9vZgB8/gRdauVDngHXYqDbrSTMHEu6IBhbPsj04adI/rlHUYZD2lR+3yaFmGLOehyHwy
+ 5ErWugWu3vJDqB/SEgmmvXFDd0aROcAbeH06G85J7zXe/JzzM3Tl4CAWI372nGjSHRtEkdq
+ OjpSd+Ofyf/rGyf1QqObA==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:0GZ4805+wNI=;Zg9tXZn4ciFBgbquN0uYItUapEL
- XlIGVmCCMmJJrRIa/DIJxhP4VwM3K7h5M8N3/GPFlR6TW9qA1tIs/BHk1SQx2LvtFj/T3MKq7
- td0NSpL9sV/8VgKdzYPcCClVcd5owmwi/LETrEn2OwBbWW5Bts6ONrY7wI+IgztKL1+sWQ0YP
- W5Wx7z8fygA7OOGvPdYC4I7A6VjwcKDT2xNbelnwZgNkUazm3y/5fR7FlKASEvlxYVLAF0fQJ
- 8FOs3lJPC9367XPHst1BllIM418tfGR679BW7WCc5B443ggIT7UVhRymJGEzqRWx8iIJ6X0fB
- GKlLG0mBy0FIAfTKUhSYlwpypXtIeA9pLFV/hxg3LiG5RRPXyFDnn82SuEo4BIwP4dsL2vZK2
- 6984+9TP3UMm3jxbOa+BGDLQBzzWcpIExE/ac81vg4OszMtwZZ+mtdqd1QdaInBW20E0d71Ms
- wNWqj/MySXDel73HXMBsRfhI9fsZW3hIGKgZi4um3kT3/6raWBAxBXf1bMCAa8TD8LPp5qJ2K
- FJV+J/sc6pp7Ig13YHcgRAyYGJZPBulV/oFAQrkfU+ObtLWF1M2b/H7FqdZWzlAjcpThqwYxP
- B4jUBlquellLJCxzomHUIDxTEYhwzdIMhT1eMO4IXnPR+F2U7WZV006bj0UzYqzpPcnOEdQ6Q
- zXo1gP/5UGJub8uqhwxPGjLEcnOuXarS6vQCDMdR8JJJLFv47xll9uNiwamOGxx3wK5oXO8hx
- dTJkuatGUYvmK2s+657ycUcZmkusa7LAtlNxCBPbKkPue3nx2uWFa/zqZvrBQz2Ky/DrhhHUv
- Ap+lgoQCRlDYwMIa50N1/YcmjjW/Mo/nM6OvNWOButXCpsnr5chp3I+H0S1PnylsmdD3izXR8
- EcdNnJ2vCatY2ejiWBO2JR6byBMiz3qcolm/yJMF51schVIs1VbpkVN7ONfj00+z6OTa4V5K8
- Ox0CDDC+ZGQiwUfm4Qj/+P9y+c4=
+UI-OutboundReport: notjunk:1;M01:P0:8aTzaSACv8Q=;D2gdFLGU8Wv2c5/OSBbKtOaPqpV
+ 435zqOgGrggpm0CpQpbyAT4rjUNF3jrqG5h9cjSqQNdDl70zgURr8GV6DhoIQc7VLnBVMVxec
+ e1VU1ySvY6JN7Fq/p+jglJn3z/mA1c9nWV3grzxFoxtO+mkj3tP1yv9Fw5r7KhgCEXP4GOplO
+ u5CYY7ZDAq2glX7gjSnK8Mcj43jnWOEjfvjtbOzUE4AZkTkzSMcljqF5K62KI11Tk4NuSykMU
+ UQMfjiqYljTahB1g7kgJfv8QErLXGkIbkllENP5vWShq6nB/CkfFnptjpYRGHyBY1mgYJiIPe
+ MYLEkjkEwBuGkg94NDPtjOcXTXyu/i/biHnDhutwlIlrN33TlScymWlLmTicXZDl86FCSfAj1
+ CldZWSBTlSGoXnLNLE3OWBJiW+LQgLyEzHz6X0n9BFKICyGu47BP7C9jSABQEYY55N495/c2P
+ If98fNfBc7bGmu3bkL8hVqW8nMZY20pWBu/CRRP4n0tIRPnhetyrTihXhqJo1IKFeHmuvjKsP
+ zf77pQkoWA5zBB7cdwVAq4iqkWtMPrjubWxPvxDof8ALwnJs3AnNMgalXXkdLvHQbt6Mc21/L
+ 7SPwhPnFkKTV/xKTk6GrQK6bLPIU6Ev0sgp5cHKjO0R2X+5Xr++t1luIOcj0Lgrer829mQBDc
+ Jx4gQGDzISqC4pfUhMAZr3VudKeL8gHjzj4n0tRONWQ1r5aDyKRsltLPDLvbTWMUF6LzRcvD5
+ Otc/v9Kh9zT6lDI6L7Ntj0soFzxFcuLpNSsfKc6eT+H5SY3F8y8g75wf/UtM/EzGgJZ0rfA+e
+ Kdr7OdGR4K4Z5Cs6C5mTPSZ0r/EuRSO5s/q2REspm4Khu7MsKum7DUpem2ldTdMvFs2BCVOw6
+ nyODdfuTWz3Kr6m+/DOrJ+cCPR7Uohh0ZzUKYTDKIn2mJRm+GDNQj+9pd6F/dF2K/y6ZQiyef
+ AnThCw==
 
-qcafrm_fsm_decode has the almost the same function description in
-qca_7k_common.c. So drop the comment here.
+There are two points with the calculation of RX buffer size which are
+not optimal:
+1. dev->mtu is a mutual parameter and it's currently initialized with
+   QCAFRM_MAX_MTU. But for RX buffer size calculation we always need the
+   maximum possible MTU. So better use the define directly.
+2. This magic number 4 represent the hardware generated frame length
+   which is specific to SPI. We better replace this with the suitable
+   define.
+
+There is no functional change.
 
 Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
 Reviewed-by: Jacob Keller <jacob.e.keller@intel.com>
 =2D--
- drivers/net/ethernet/qualcomm/qca_7k_common.h | 11 -----------
- 1 file changed, 11 deletions(-)
+ drivers/net/ethernet/qualcomm/qca_spi.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/qualcomm/qca_7k_common.h b/drivers/net/e=
-thernet/qualcomm/qca_7k_common.h
-index 928554f11e35..71bdf5d9f8d7 100644
-=2D-- a/drivers/net/ethernet/qualcomm/qca_7k_common.h
-+++ b/drivers/net/ethernet/qualcomm/qca_7k_common.h
-@@ -128,17 +128,6 @@ static inline void qcafrm_fsm_init_uart(struct qcafrm=
-_handle *handle)
- 	handle->state =3D handle->init;
- }
+diff --git a/drivers/net/ethernet/qualcomm/qca_spi.c b/drivers/net/etherne=
+t/qualcomm/qca_spi.c
+index 80182f8a4a50..6d2859aad921 100644
+=2D-- a/drivers/net/ethernet/qualcomm/qca_spi.c
++++ b/drivers/net/ethernet/qualcomm/qca_spi.c
+@@ -813,8 +813,8 @@ qcaspi_netdev_init(struct net_device *dev)
+ 	qca->clkspeed =3D qcaspi_clkspeed;
+ 	qca->burst_len =3D qcaspi_burst_len;
+ 	qca->spi_thread =3D NULL;
+-	qca->buffer_size =3D (dev->mtu + VLAN_ETH_HLEN + QCAFRM_HEADER_LEN +
+-		QCAFRM_FOOTER_LEN + 4) * QCASPI_RX_MAX_FRAMES;
++	qca->buffer_size =3D (QCAFRM_MAX_MTU + VLAN_ETH_HLEN + QCAFRM_HEADER_LEN=
+ +
++		QCAFRM_FOOTER_LEN + QCASPI_HW_PKT_LEN) * QCASPI_RX_MAX_FRAMES;
 
--/*   Gather received bytes and try to extract a full Ethernet frame
-- *   by following a simple state machine.
-- *
-- * Return:   QCAFRM_GATHER       No Ethernet frame fully received yet.
-- *           QCAFRM_NOHEAD       Header expected but not found.
-- *           QCAFRM_INVLEN       QCA7K frame length is invalid
-- *           QCAFRM_NOTAIL       Footer expected but not found.
-- *           > 0                 Number of byte in the fully received
-- *                               Ethernet frame
-- */
--
- s32 qcafrm_fsm_decode(struct qcafrm_handle *handle, u8 *buf, u16 buf_len,=
- u8 recv_byte);
+ 	memset(&qca->stats, 0, sizeof(struct qcaspi_stats));
 
- #endif /* _QCA_FRAMING_H */
 =2D-
 2.34.1
 
