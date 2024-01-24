@@ -1,233 +1,137 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C5DB62A1F
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 12:19:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D96CD63115;
+	Wed, 24 Jan 2024 12:19:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706098765; cv=none; b=NX0bW/y50Udd53H0LvglsMZEUN8abYR2Mq2uV6+cQJNB0U0KJLTrho44VuBkgdVpuAjg7Nc1FoPa401HYnLC+aWs5oLcRh6Rdd3HiqMsesKX8+8nT5LoIdLB5bbRRJZ8XxtEa73XBJYrKkpfjk7lrsGJVSvoYj3n8euQekFKpes=
+	t=1706098784; cv=none; b=UqCKH1yeE0Gspkj0quwpSEJ2RIzap+ZJpxBjbSj0I72CBuynQUNtTxt4L3BJnMQOxIjSPIpNeVszkxvlr2u6pAYeuSyQkNW77E3+MLXWMXGOHN7l0d01E6I1MQWpAP+PXQZBj6ZXb+SbBjRJvUhVyTCkC90ftUkiFUYMi0KVyd0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706098765; c=relaxed/simple;
-	bh=U5lEJVyFbxg2pmjnbrdPBL1BiT27zP7nzCU6tIyonv8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GtpJfLHxZO/BP83N994zxervGAIRzfhHyTCeg5wWa3T+wR8pnQMEq9dT3xXKvwkI5+2MdHoqrqBhFT7h2kijVPMEygFp+/uBCdgHNbYIFe/xkDWz2/Y42Lzqd67LRymELB+8cR+puTVcH+8XGzGV2zONUHKs/pbW2CMGBfRpgHo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ETkVSK6W; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1706098784; c=relaxed/simple;
+	bh=9Ku4BKxZ6bGsXYD+z5ODPIV3wgtHmNAQqGbIzS9G2b0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=UQLIcdJyX1MRuvlmBBtATY+jmjkYrqYSmp1h+mv1hx1pwTcTA3Q0kQz5SCnUxgBqYeyOW4hjUq8sxayyxGY6MaSpnBEuCYrFSGVVxqivX0bUHGpJIMPqIgNbp/4b+EruO2BJWyqXv3qzrVFFdpI54X6aLrxGK4si1ystM4yTZto=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VVh+Owxx; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ETkVSK6W"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1706098763;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MPrykbxqTIv163rZLfh6MnbjAPqozUKt8gNIIqFn3No=;
-	b=ETkVSK6WUw1twQVeXAGX94TMvNMMdZuyUA8bYOQdd5mpzJLzg0s2qIHoT7i/k0ayboqbjZ
-	drnHUC5ChDKHRIQcOre+N0fV2JMyXM53+OJwPJnt4EBa62Rw7mTQYVmsegl1zJoR49vn55
-	0eUHOxBvX6c6LveWVn2nuY/zgT4SLNc=
-Received: from mail-pf1-f200.google.com (mail-pf1-f200.google.com
- [209.85.210.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-586-NfmZrDtJO8CQ7jy1L6XljA-1; Wed, 24 Jan 2024 07:19:21 -0500
-X-MC-Unique: NfmZrDtJO8CQ7jy1L6XljA-1
-Received: by mail-pf1-f200.google.com with SMTP id d2e1a72fcca58-6ddc1bf229bso22525b3a.1
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 04:19:21 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VVh+Owxx"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1d720c7fc04so30618155ad.2;
+        Wed, 24 Jan 2024 04:19:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1706098782; x=1706703582; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Vx+0cl1ZNPikMxNrIrAgJ2neRZewXxRa0JMeCuH3m4Q=;
+        b=VVh+OwxxksfZiQQ9QoOzm5tMiC0U0V6yHy9C7qfzHPTrJyjGURESdMaBPp9Iw1uuc1
+         DGhCt7zzXDe8FY2p2k88JHBp2a0Aosjmpt5vfC96w8A8aq5DrQZZVYYjA2mYPIwRdw2q
+         0eKf7WzwRJpSeJW11hfNUvp+vJn9hYxFQgXGVEnTapUgtnqcdkmKFbDXqyy6Q4vo0q3S
+         ejYrw1GgJkjhB4Uk9nE2pMi7FwZ13ZI74SmjuUNUH0p1gsKzuYCzxqm0p6DVpsSCn3yf
+         G1G9t4RqVFR8fbPYpyTy5RwrnVWMOtbim2wi9I73wysbckOdcrm+XByA7CzsZR8r0NX/
+         4p2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706098760; x=1706703560;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MPrykbxqTIv163rZLfh6MnbjAPqozUKt8gNIIqFn3No=;
-        b=NFM2yTOntY12roL1CcYS7a9LJZIiWAZTjNDNFzffY7om65LWp8pF9scgZulAtZXYLT
-         O5oR8RQ2jwoIEI4r56xIUURmBREWMJ2CqM+NWeRpYa+TEklTUoShceo39idh66E/N3xD
-         Qdck4Tv2cGP1Z+rR1JwwkAfazDzCezqQj6d2OaIx/bgujQAgjHcLGXmOQSK7vgOluEEE
-         61Tt/f5FPdkAPD0boQ7izQ/vr9JvIRzl42Lxr8olCsrZz9dAfzr/RgoVuvtAwua0wtFB
-         g5Bg8WAxE4ueqQLoQHFNA3dlaNBHD3dgnkIVHnizGhtNWNOB3/ylDrHiwNGs2LGAXG6G
-         WJzA==
-X-Gm-Message-State: AOJu0YxHAB4VPWUxhcoDvALE0EyA1URagIu7kSlSKIN9YVjwa+h+zFwn
-	UsXBe9Z2rD95EOIwcDfizTh9hONE6rEFxWm3z/c+k8pUqO6No6y8x6T/7wox44GYjbB8OEZLJiH
-	+zwkOU7gTh4RANVQ/VvN8MF7M4DXfOVoUtQorwkCKJ5RuSPxiZTZRelmf5gCgWQQfYNCx42y+nv
-	V/E4wuuF+gjOgehIt+/67l4M+I3Z9DMj8OZzNw
-X-Received: by 2002:a05:6a00:3315:b0:6dd:9f47:3d17 with SMTP id cq21-20020a056a00331500b006dd9f473d17mr1134097pfb.11.1706098760419;
-        Wed, 24 Jan 2024 04:19:20 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEdhwiWH5x8NPWwJR6QSRw9+Fue8W5iFWtDmYBFh8GLtEXPHE+KeIP0BmE5gL/bCFPrbIUEgLvmdEqM2Y0sxqg=
-X-Received: by 2002:a05:6a00:3315:b0:6dd:9f47:3d17 with SMTP id
- cq21-20020a056a00331500b006dd9f473d17mr1134075pfb.11.1706098760109; Wed, 24
- Jan 2024 04:19:20 -0800 (PST)
+        d=1e100.net; s=20230601; t=1706098782; x=1706703582;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Vx+0cl1ZNPikMxNrIrAgJ2neRZewXxRa0JMeCuH3m4Q=;
+        b=KiKbnf1k5bZ1eHNxKuTS/iFsPlJpTexKILF44v+G1zmiy+SsfI85TAmoftMNZA930H
+         pJLZ9wffGcV2W2dFGp9ydvGtuFkGBvqcipn5qlW6GE+t4tVA3cPsWhMsP7tny9AcF97J
+         EFvNHsG6reEtN+eH1M7cTwe5T6SxSlbIrzb0TvrHmqV6k+ZZIw9wnP1UIkYjKZ1sOrC4
+         j/gl1A9ckm1oNPWQrbLa3oZp5jIVih8cBh1TN2Ypeq2wXoj4UD5craFnblDR53YH/ECy
+         k2GCu0cajTYjmARn2RVlN4FjaRlmbQuGMiqoBU3/V6tibKuDcdDrXctZeAKlX3Czt68x
+         3wcg==
+X-Gm-Message-State: AOJu0Yyu8TR45DLVhkxR0LA9TRjlhufcZAmFxRM7urcwSBqF/C+2m053
+	sZGEnywx60asConyjkD/dh66HyOtWlfwoA//ReydsuP0+Xpk+EWc43HE7dW1
+X-Google-Smtp-Source: AGHT+IFdNny+bWLyCfvWrvX9wp+Ixz9vTCKjCQ7pHqqxwX+5BepJrnXdP5Gu12nxVi5HTuYQOsC4Eg==
+X-Received: by 2002:a17:903:191:b0:1d7:2d44:576b with SMTP id z17-20020a170903019100b001d72d44576bmr733561plg.59.1706098781952;
+        Wed, 24 Jan 2024 04:19:41 -0800 (PST)
+Received: from carrot.. (i223-218-154-72.s42.a014.ap.plala.or.jp. [223.218.154.72])
+        by smtp.gmail.com with ESMTPSA id j17-20020a170902f25100b001d70e83f9c3sm9816456plc.242.2024.01.24.04.19.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Jan 2024 04:19:40 -0800 (PST)
+From: Ryusuke Konishi <konishi.ryusuke@gmail.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-nilfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] nilfs2: fix data corruption in dsync block recovery for small block sizes
+Date: Wed, 24 Jan 2024 21:19:36 +0900
+Message-Id: <20240124121936.10575-1-konishi.ryusuke@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240124091421.1261579-1-yukuai3@huawei.com>
-In-Reply-To: <20240124091421.1261579-1-yukuai3@huawei.com>
-From: Xiao Ni <xni@redhat.com>
-Date: Wed, 24 Jan 2024 20:19:08 +0800
-Message-ID: <CALTww28G_CmSxzJZVDqHmPgdmT1e2X8+QcToiUOGV1msAisTcQ@mail.gmail.com>
-Subject: Re: [PATCH v2 00/11] dm-raid: fix v6.7 regressions
-To: Yu Kuai <yukuai3@huawei.com>
-Cc: agk@redhat.com, snitzer@kernel.org, mpatocka@redhat.com, 
-	dm-devel@lists.linux.dev, song@kernel.org, jbrassow@f14.redhat.com, 
-	neilb@suse.de, heinzm@redhat.com, shli@fb.com, akpm@osdl.org, 
-	linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org, 
-	yukuai1@huaweicloud.com, yi.zhang@huawei.com, yangerkun@huawei.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jan 24, 2024 at 5:18=E2=80=AFPM Yu Kuai <yukuai3@huawei.com> wrote:
->
-> First regression related to stop sync thread:
->
-> The lifetime of sync_thread is designed as following:
->
-> 1) Decide want to start sync_thread, set MD_RECOVERY_NEEDED, and wake up
-> daemon thread;
-> 2) Daemon thread detect that MD_RECOVERY_NEEDED is set, then set
-> MD_RECOVERY_RUNNING and register sync_thread;
-> 3) Execute md_do_sync() for the actual work, if it's done or
-> interrupted, it will set MD_RECOVERY_DONE and wake up daemone thread;
-> 4) Daemon thread detect that MD_RECOVERY_DONE is set, then clear
-> MD_RECOVERY_RUNNING and unregister sync_thread;
->
-> In v6.7, we fix md/raid to follow this design by commit f52f5c71f3d4
-> ("md: fix stopping sync thread"), however, dm-raid is not considered at
-> that time, and following test will hang:
+The helper function nilfs_recovery_copy_block() of
+nilfs_recovery_dsync_blocks(), which recovers data from logs created by
+data sync writes during a mount after an unclean shutdown, incorrectly
+calculates the on-page offset when copying repair data to the file's page
+cache.  In environments where the block size is smaller than the page size,
+this flaw can cause data corruption and leak uninitialized memory bytes
+during the recovery process.
 
-Hi Kuai
+Fix these issues by correcting this byte offset calculation on the page.
 
-Thanks very much for the patch set. I reported the dm raid deadlock
-when stopping dm raid and we had the patch set "[PATCH v5 md-fixes
-0/3] md: fix stopping sync thread" which has patch f52f5c71f3d4. So we
-indeed considered dm-raid that time. Because we want to resolve the
-deadlock problem. I re-look patch f52f5c71f3d4. It has two major
-changes. One is to use a common function stop_sync_thread for stopping
-sync thread. This can fix the deadlock problem. The second change
-changes the way to reap sync thread. mdraid and dmraid reap sync
-thread in __md_stop_writes. So the patch looks overweight.
+Signed-off-by: Ryusuke Konishi <konishi.ryusuke@gmail.com>
+Tested-by: Ryusuke Konishi <konishi.ryusuke@gmail.com>
+Cc: <stable@vger.kernel.org>
+---
+Andrew, please apply this patch as a bug fix.
 
-Before f52f5c71f3d4  do_md_stop release reconfig_mutex before waiting
-sync_thread to finish. So there should not be the deadlock problem
-which has been fixed in 130443d60b1b ("md: refactor
-idle/frozen_sync_thread() to fix deadlock"). So we only need to change
-__md_stop_writes to stop sync thread like do_md_stop and reap sync
-thread directly.
+This patch may conflict with the first patch of the kmap conversion series
+that I posted earlier.
 
-Maybe this can avoid deadlock? I'll try this way and give the test result.
->
-> shell/integrity-caching.sh
-> shell/lvconvert-raid-reshape.sh
->
-> This patch set fix the broken test by patch 1-4;
->  - patch 1 fix that step 4) is broken by suspended array;
->  - patch 2 fix that step 4) is broken by read-only array;
->  - patch 3 fix that step 3) is broken that md_do_sync() doesn't set
->  MD_RECOVERY_DONE; Noted that this patch will introdece new problem that
->  data will be corrupted, which will be fixed in later patches.
->  - patch 4 fix that setp 1) is broken that sync_thread is register and
->  MD_RECOVERY_RUNNING is set directly;
->
-> With patch 1-4, the above test won't hang anymore, however, the test
-> will still fail and complain that ext4 is corrupted;
+Since this fix should be a priority, I made it against the mainline
+so that it can be applied before the kmap conversion patches.
 
-For patch3, as I mentioned today, the root cause is
-dm-raid->rs_start_reshape sets MD_RECOVERY_WAIT. So md_do_sync returns
-when MD_RECOVERY_WAIT is set. It's the reason why dm-raid can't stop
-sync thread when start a new reshape. . The way in patch3 looks like a
-workaround. We need to figure out if dm raid really needs to set
-MD_RECOVERY_WAIT. Because now we stop sync thread in an asynchronous
-way. So the deadlock problem which was fixed in 644e2537f (dm raid:
-fix stripe adding reshape deadlock) may disappear. Maybe we can revert
-the patch.
+If the conflict ia a problem for your patch handling, please drop the
+first patch of the kmap conversion series (it can be dropped independently).
+In that case, I will repost the patch that resolves the conflict.
 
-Best Regards
-Xiao
 
->
-> Second regression related to frozen sync thread:
->
-> Noted that for raid456, if reshape is interrupted, then call
-> "pers->start_reshape" will corrupt data. This is because dm-raid rely on
-> md_do_sync() doesn't set MD_RECOVERY_DONE so that new sync_thread won't
-> be registered, and patch 3 just break this.
->
->  - Patch 5-6 fix this problem by interrupting reshape and frozen
->  sync_thread in dm_suspend(), then unfrozen and continue reshape in
-> dm_resume(). It's verified that dm-raid tests won't complain that
-> ext4 is corrupted anymore.
->  - Patch 7 fix the problem that raid_message() call
->  md_reap_sync_thread() directly, without holding 'reconfig_mutex'.
->
-> Last regression related to dm-raid456 IO concurrent with reshape:
->
-> For raid456, if reshape is still in progress, then IO across reshape
-> position will wait for reshape to make progress. However, for dm-raid,
-> in following cases reshape will never make progress hence IO will hang:
->
-> 1) the array is read-only;
-> 2) MD_RECOVERY_WAIT is set;
-> 3) MD_RECOVERY_FROZEN is set;
->
-> After commit c467e97f079f ("md/raid6: use valid sector values to determin=
-e
-> if an I/O should wait on the reshape") fix the problem that IO across
-> reshape position doesn't wait for reshape, the dm-raid test
-> shell/lvconvert-raid-reshape.sh start to hang at raid5_make_request().
->
-> For md/raid, the problem doesn't exist because:
->
-> 1) If array is read-only, it can switch to read-write by ioctl/sysfs;
-> 2) md/raid never set MD_RECOVERY_WAIT;
-> 3) If MD_RECOVERY_FROZEN is set, mddev_suspend() doesn't hold
->    'reconfig_mutex' anymore, it can be cleared and reshape can continue b=
-y
->    sysfs api 'sync_action'.
->
-> However, I'm not sure yet how to avoid the problem in dm-raid yet.
->
->  - patch 9-11 fix this problem by detecting the above 3 cases in
->  dm_suspend(), and fail those IO directly.
->
-> If user really meet the IO error, then it means they're reading the wrong
-> data before c467e97f079f. And it's safe to read/write the array after
-> reshape make progress successfully.
->
-> Tests:
->
-> I already run the following two tests many times and verified that they
-> won't fail anymore:
->
-> shell/integrity-caching.sh
-> shell/lvconvert-raid-reshape.sh
->
-> For other tests, I'm still running. However, I'm sending this patchset
-> in case people think the fixes is not appropriate. Running the full
-> tests will cost lots of time in my VM, and I'll update full test results
-> soon.
->
-> Yu Kuai (11):
->   md: don't ignore suspended array in md_check_recovery()
->   md: don't ignore read-only array in md_check_recovery()
->   md: make sure md_do_sync() will set MD_RECOVERY_DONE
->   md: don't register sync_thread for reshape directly
->   md: export helpers to stop sync_thread
->   dm-raid: really frozen sync_thread during suspend
->   md/dm-raid: don't call md_reap_sync_thread() directly
->   dm-raid: remove mddev_suspend/resume()
->   dm-raid: add a new helper prepare_suspend() in md_personality
->   md: export helper md_is_rdwr()
->   md/raid456: fix a deadlock for dm-raid456 while io concurrent with
->     reshape
->
->  drivers/md/dm-raid.c |  76 +++++++++++++++++++++----------
->  drivers/md/md.c      | 104 ++++++++++++++++++++++++++++---------------
->  drivers/md/md.h      |  16 +++++++
->  drivers/md/raid10.c  |  16 +------
->  drivers/md/raid5.c   |  61 +++++++++++++------------
->  5 files changed, 171 insertions(+), 102 deletions(-)
->
-> --
-> 2.39.2
->
+Thanks,
+Ryusuke Konishi
+
+ fs/nilfs2/recovery.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/fs/nilfs2/recovery.c b/fs/nilfs2/recovery.c
+index 0955b657938f..a9b8d77c8c1d 100644
+--- a/fs/nilfs2/recovery.c
++++ b/fs/nilfs2/recovery.c
+@@ -472,9 +472,10 @@ static int nilfs_prepare_segment_for_recovery(struct the_nilfs *nilfs,
+ 
+ static int nilfs_recovery_copy_block(struct the_nilfs *nilfs,
+ 				     struct nilfs_recovery_block *rb,
+-				     struct page *page)
++				     loff_t pos, struct page *page)
+ {
+ 	struct buffer_head *bh_org;
++	size_t from = pos & ~PAGE_MASK;
+ 	void *kaddr;
+ 
+ 	bh_org = __bread(nilfs->ns_bdev, rb->blocknr, nilfs->ns_blocksize);
+@@ -482,7 +483,7 @@ static int nilfs_recovery_copy_block(struct the_nilfs *nilfs,
+ 		return -EIO;
+ 
+ 	kaddr = kmap_atomic(page);
+-	memcpy(kaddr + bh_offset(bh_org), bh_org->b_data, bh_org->b_size);
++	memcpy(kaddr + from, bh_org->b_data, bh_org->b_size);
+ 	kunmap_atomic(kaddr);
+ 	brelse(bh_org);
+ 	return 0;
+@@ -521,7 +522,7 @@ static int nilfs_recover_dsync_blocks(struct the_nilfs *nilfs,
+ 			goto failed_inode;
+ 		}
+ 
+-		err = nilfs_recovery_copy_block(nilfs, rb, page);
++		err = nilfs_recovery_copy_block(nilfs, rb, pos, page);
+ 		if (unlikely(err))
+ 			goto failed_page;
+ 
+-- 
+2.34.1
 
