@@ -1,170 +1,116 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDD5B17BB2
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 09:05:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83EA317BB2
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 09:07:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706087117; cv=none; b=HzqQ6JdO2b7DbYSvrlG5doYwvwmZ8GpohF254tkBMb0FyqSDH80SABwzciPAEl5Qjz3pWGA51MQGhV76zQw2tznPVDqwfM4+572oNsDMeSQhkGG2ut2JCaOhtFDS+IMAR1i4cRPvjKOMSd4kf5PutFMERlwvirrxk5EYzOb3FWE=
+	t=1706087259; cv=none; b=atNrPOysGCxeAGs6ivfkdHXLtP28q1Cr1JSguhbCd/P1q4kvE7u90FoiUXdnEISDIpO1IFm0FgxFARFWDaBFUsk7xAYEAFYNCKa3PLDHJhXv3piUfZ4a1MAKiqRJqXINbBvIkjV9EmegZL9ly04fUpE84bqxZYjx+611BXFFpKk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706087117; c=relaxed/simple;
-	bh=bYGjWyfNDuuEy/uhJ2BsahwEeQkQmwNi/I2B366Ra5w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ckuqldGufjeFFoejXmixmbkFu7Ts3bjgt/FsnmmeLlJAvg/NVdM+9av6XqQyiNXIPM44NQ18jnxkWQs8erxj2n2Qsju6QIEtPk2VqYhDDSo+DqVL/QgMLv9IFhz2uPJIKQ0sPde1O3rPQtrYSDuq0fEdaQDGq2n+MuRQIxCcVzE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=WcIIr6q1; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1706087259; c=relaxed/simple;
+	bh=IXM6p4NQ5xNMIp+I08MpFl/C4xzL887zpVFg7lffNJQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UWAEIycbG7m4aRFI2O4OI+ZZe7kfiXR2cITQHWnoB8013vs6zZGd9rQHU9MbT5Z2AEYU7aHO0p8ZY/jCEARWqN9Cst+ySJcDoOJSg0mIDhGDvSqbUvUAUFWozo1t9U0MfQ1cZDbBsMtBR8HWrY65jjfqV1UBUMa7KXtEFlHonJw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TUJx2hii; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WcIIr6q1"
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-5100b424f8fso1308117e87.0
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 01:05:14 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TUJx2hii"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-40e865bccb4so37345e9.0
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 01:07:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1706087113; x=1706691913; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9TdYwfAa3Kb++bbinJAM8F6n7j06tuxaI+2yyckzaPc=;
-        b=WcIIr6q1JjNbUJ44GICbccxKaSJ2iIJ7tzpKtG9ffIPrtoR5l0+qXYJ6/qWg4ucD6A
-         PrgDTdSXKxI5o3hLlWT+OGXXqCiJNaSaeRUjObAT6VSMyuVpvUXuqLgyCPnAjPYkx7oi
-         LJBozvVgB8INR5E6l303x/Ypyv66yvXwfAswQ=
+        d=google.com; s=20230601; t=1706087256; x=1706692056; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=SI39RK/rWNckwv2r4B917cux2i/pKiQn7x4kFloCx1A=;
+        b=TUJx2hiiFXxEQO9IQO4ITipdfTgUi18peJAvMnVsL8dIUc62kd3gjl7G2/axNg8bNj
+         hbvQknLjtRLLBcscEGmAeRMBuNttn7tAK1jlZrYtTPtOdZP1Mxa6lputKsJ8A756gvmz
+         GQtW+efuCYYLZbKLnU8pSQtDahsa4HOsY8nl3Lv4uJH88Aahjb69eyMF+ZfXpVlOsPUH
+         yEP4EHMTbfVgISteoPGj8rhkK7TlZCy9pAYaYbRP6hTrxXiOhbyNpUppDNJHxo7gdK85
+         do662d5S31U+q/9doKBYhIgicgVzb5cA7QMZ9s9ihmLeG1V1sdtUqLKM5Aas1cxzrFZG
+         2VAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706087113; x=1706691913;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9TdYwfAa3Kb++bbinJAM8F6n7j06tuxaI+2yyckzaPc=;
-        b=KjAyzMKYz7ow82DyDla62dzM7edR2U/gsMl1B1o77nTE+WmdhXdBFWkFBKUg3+A6pL
-         qDnnCoApvRKPRrNYMNDFvuf6QhjLX2knaoD/7DnTbNaZfy6NiJH7yiKx7CmvMXba+r5T
-         NTtfSt8XAM36IJ/gRkne8vAznojcLIQ4FLtUfHrYFVIKnUr5BuJpyLlqPCpGFHGGtptH
-         JhbVhvoJt5MtPDQbtZK65TbXG+AzllNbM0NTef/tpktnI4k23s7l6gYhqcR/h6tMlISe
-         zhD0R0iukEYpfFTAYaSH8wy0EU50U8CIvFGdfYCiGrorcB/TCnse3eSEUilr3tDaewuG
-         KEvA==
-X-Gm-Message-State: AOJu0YzEtUEZ9gtlfpxw/UNHZC0Nfs9zdbeG3b7ziWx57CYjYYM0R+Rd
-	q3+K0DsC6szku3Ximdlikknqw9rOnAE3jCI/w1dff5Ei71aX9LDCjrj5Ei7OYUiMIjW9t50rvRp
-	89yGbH4s=
-X-Google-Smtp-Source: AGHT+IE9fD6P5YWF0X5LhrLGvHRVXYARSd3FElyorN15GvNyG66wjXP2y5GOm+eqT9AyZrYixx8ZSQ==
-X-Received: by 2002:a05:6512:23a4:b0:510:e95:3b32 with SMTP id c36-20020a05651223a400b005100e953b32mr723311lfv.109.1706087112793;
-        Wed, 24 Jan 2024 01:05:12 -0800 (PST)
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com. [209.85.218.48])
-        by smtp.gmail.com with ESMTPSA id j9-20020a508a89000000b00554930be765sm16741570edj.97.2024.01.24.01.05.12
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 24 Jan 2024 01:05:12 -0800 (PST)
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a2f79e79f0cso515744466b.2
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 01:05:12 -0800 (PST)
-X-Received: by 2002:a17:906:1756:b0:a30:cc71:7340 with SMTP id
- d22-20020a170906175600b00a30cc717340mr560441eje.120.1706087112019; Wed, 24
- Jan 2024 01:05:12 -0800 (PST)
+        d=1e100.net; s=20230601; t=1706087256; x=1706692056;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SI39RK/rWNckwv2r4B917cux2i/pKiQn7x4kFloCx1A=;
+        b=hktC/D4rTeDFBJmWSA3UwApby5gRpB9xDr2qkJaauaxibjX5aq8r+EEYyS0T0qLjvp
+         8WQBNZsjWrtq0LeKf6DfkNLHGnQ5/uZU2bz3lsxIESVs2SCz6YUlJoRLvi8N6iBC3pA2
+         jL1uj0wd8cfZcZub/hF3YAakgmDChhcBQPECAf40mQ5PRnU8jwYbZd+qfkdLaJTI7BDg
+         a15uLWx6zS0HNPgjTBdfkmOLn2p+3m/2Z2R5CXMiy16mTC94GchUYB5InxY1ok1yGKkR
+         RJviK3S2IHKLcALN+JpaKk2jEIllLuh+dgKBIFLezgxxkWbWmTg2bPKWylHjo0TzSZHq
+         sF+A==
+X-Gm-Message-State: AOJu0YzHptkyMnN05M64uSHYd89AxqKsf5j8Z2GJmh8Jq/vy3UO584Qj
+	gihU+7pNSuP45otepGKw03s+s8oJkTqJPXsb4L+WzrjpdE4VZrZERj1CZgGnUQ==
+X-Google-Smtp-Source: AGHT+IG0lrnvSdMVJPjDEKWKykbbZOKABVazci9lTsykpHwLQImNw7JnWtDPfFCpWv5+CfrTrixLkQ==
+X-Received: by 2002:a05:600c:5107:b0:40e:b963:6076 with SMTP id o7-20020a05600c510700b0040eb9636076mr41367wms.5.1706087255568;
+        Wed, 24 Jan 2024 01:07:35 -0800 (PST)
+Received: from google.com (185.83.140.34.bc.googleusercontent.com. [34.140.83.185])
+        by smtp.gmail.com with ESMTPSA id s16-20020a5d5110000000b0033763a9ea2dsm9142555wrt.63.2024.01.24.01.07.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Jan 2024 01:07:35 -0800 (PST)
+Date: Wed, 24 Jan 2024 09:07:33 +0000
+From: Sebastian Ene <sebastianene@google.com>
+To: Oliver Upton <oliver.upton@linux.dev>
+Cc: Marc Zyngier <maz@kernel.org>, James Morse <james.morse@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org,
+	kernel-team@android.com, stable@vger.kernel.org
+Subject: Re: [PATCH] KVM: arm64: Fix circular locking dependency
+Message-ID: <ZbDTVX1y2bRtJf-G@google.com>
+References: <20240123164818.1306122-2-sebastianene@google.com>
+ <Za_43qOnVsCPauEr@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240124-send-upstream-v3-1-5097c9862a73@chromium.org> <786c85c7-7b38-4a2a-85ec-282196de7b5e@collabora.com>
-In-Reply-To: <786c85c7-7b38-4a2a-85ec-282196de7b5e@collabora.com>
-From: Hsin-Te Yuan <yuanhsinte@chromium.org>
-Date: Wed, 24 Jan 2024 17:04:35 +0800
-X-Gmail-Original-Message-ID: <CAHc4DNKXOb54v7qJZJ2EsVP1KkMq7WnSJJLWhb2SzuhW_=qnxQ@mail.gmail.com>
-Message-ID: <CAHc4DNKXOb54v7qJZJ2EsVP1KkMq7WnSJJLWhb2SzuhW_=qnxQ@mail.gmail.com>
-Subject: Re: [PATCH v3] arm64: dts: mt8195-cherry-tomato: change watchdog
- reset boot flow
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: Hsin-Te Yuan <yuanhsinte@chromium.org>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Matthias Brugger <matthias.bgg@gmail.com>, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-mediatek@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Za_43qOnVsCPauEr@linux.dev>
 
-Hi AngeloGioacchino,
+On Tue, Jan 23, 2024 at 05:35:26PM +0000, Oliver Upton wrote:
+> On Tue, Jan 23, 2024 at 04:48:19PM +0000, Sebastian Ene wrote:
+> > The rule inside kvm enforces that the vcpu->mutex is taken *inside*
+> > kvm->lock. The rule is violated by the pkvm_create_hyp_vm which acquires
 
-This bug can be triggered by stopping watchdog daemon and running
-`sleep 60 > /dev/watchdog`.
+Hi Oliver,
 
-Regards,
-Hsin-Te
+>                                          ^~~~~~~~~~~~~~~~~~
+> 
+> nit: always suffix function names with '()'
+> 
+> > the kvm->lock while already holding the vcpu->mutex lock from
+> > kvm_vcpu_ioctl. Follow the rule by taking the config lock while getting the
+> > VM handle and make sure that this is cleaned on VM destroy under the
+> > same lock.
+> 
+> It is always better to describe a lock in terms of what data it
+> protects, the critical section(s) are rather obvious here.
+> 
+>   Avoid the circular locking dependency altogether by protecting the hyp
+>   vm handle with the config_lock, much like we already do for other
+>   forms of VM-scoped data.
+> 
+> > Signed-off-by: Sebastian Ene <sebastianene@google.com>
+> > Cc: stable@vger.kernel.org
+> 
+> nitpicks aside, this looks fine.
+> 
+> Reviewed-by: Oliver Upton <oliver.upton@linux.dev>
+> 
 
+Thanks for the suggestions, I updated the comit message and I will push
+a V2 of the patch with the above and the Reviewed-by tag.
 
+Thanks,
+Seb
 
-On Wed, Jan 24, 2024 at 4:27=E2=80=AFPM AngeloGioacchino Del Regno
-<angelogioacchino.delregno@collabora.com> wrote:
->
-> Il 24/01/24 08:51, Hsin-Te Yuan ha scritto:
-> > From: Hsin-Te Yuan <yuanhsinte@google.com>
-> >
-> > The external output reset signal was originally disabled and sent from
-> > firmware. However, an unfixed bug in the firmware on tomato prevents
-> > the signal from being sent, causing the device to fail to boot. To fix
-> > this, enable external output reset signal to allow the device to reboot
-> > normally.
-> >
-> > Fixes: 5eb2e303ec6b ("arm64: dts: mediatek: Introduce MT8195 Cherry pla=
-tform's Tomato")
-> > Signed-off-by: Hsin-Te Yuan <yuanhsinte@chromium.org>
->
-> Can't trigger the bug, but also this commit gives no side effects, so:
->
-> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collab=
-ora.com>
->
->
-> > ---
-> > Changes in v3:
-> > - Add Fixes tag
-> >
-> > Changes in v2:
-> > - Limit the effect only on tomato.
-> > ---
-> >   arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r1.dts | 4 ++++
-> >   arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r2.dts | 4 ++++
-> >   arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r3.dts | 4 ++++
-> >   3 files changed, 12 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r1.dts b=
-/arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r1.dts
-> > index 2d5e8f371b6de..a82d716f10d44 100644
-> > --- a/arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r1.dts
-> > +++ b/arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r1.dts
-> > @@ -23,3 +23,7 @@ &sound {
-> >   &ts_10 {
-> >       status =3D "okay";
-> >   };
-> > +
-> > +&watchdog {
-> > +     /delete-property/ mediatek,disable-extrst;
-> > +};
-> > diff --git a/arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r2.dts b=
-/arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r2.dts
-> > index 2586c32ce6e6f..2fe20e0dad836 100644
-> > --- a/arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r2.dts
-> > +++ b/arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r2.dts
-> > @@ -43,3 +43,7 @@ &sound {
-> >   &ts_10 {
-> >       status =3D "okay";
-> >   };
-> > +
-> > +&watchdog {
-> > +     /delete-property/ mediatek,disable-extrst;
-> > +};
-> > diff --git a/arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r3.dts b=
-/arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r3.dts
-> > index f54f9477b99da..dd294ca98194c 100644
-> > --- a/arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r3.dts
-> > +++ b/arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r3.dts
-> > @@ -44,3 +44,7 @@ &sound {
-> >   &ts_10 {
-> >       status =3D "okay";
-> >   };
-> > +
-> > +&watchdog {
-> > +     /delete-property/ mediatek,disable-extrst;
-> > +};
-> >
-> > ---
-> > base-commit: 64b50fcb03649ca7f0d762a50e7a3484cfc1d586
-> > change-id: 20230818-send-upstream-e91e615a893c
-> >
-> > Best regards,
->
+> -- 
+> Thanks,
+> Oliver
