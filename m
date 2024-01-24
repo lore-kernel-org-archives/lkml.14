@@ -1,16 +1,16 @@
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F04856310C
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AACD6310F
 	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 12:22:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706098947; cv=none; b=Q+Q5KjRno+6O6oUhcgDvh+j/0pDCzlrPJDoEdXrw0QpGaHziYKx7IQZM6rO1IC385Ej2WdFhDFxRIrcBLRQLctUdbtpxMrSGAPfEWKRtoHLqXu1A8WcblqzsV8sDsnpbE1/pOOMXAPyMkT0gUDi364BNBgu+LomU/2WybqsAe2k=
+	t=1706098947; cv=none; b=RlWAvz3ipUFSdlG9EOe+fO3eGIVtgVYeiRyhI3ePO8420z1EV7Pb9KL9PUWIVyJLug4iFBoTH9bOnA6up7U/KM5MV1Q0DtRxS5RgJ8wqyK7ajEm2366xrZo7aJ/Y5+I1hkCDQPbfiG05TVP9T7TRVuUG0Imp1IfNQhqsFfPzL0U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1706098947; c=relaxed/simple;
-	bh=viEuHOnCMvFs1FiV9peHFb17kutxKUU/HIZcjaimZ5g=;
+	bh=HHxbDfRuHjBw0BBMrvLJdWgyYMSpJ3v1+tlxqNpDDsA=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Z83eAm/Bol6cnlAxqUZJFaiqi+N/2A7IbinFiurd6nnw/HxrxqF0iZ2o93OuS94KGTtdNoM/TnONKhvjFu2qp53YZnPoFuByy5dBk0InY7GMWxE4Vtx26dpOTeF9OW3AZZw136X2DSUMet+/sEFEsBSuBr21I+XUdKqlkiLqC9k=
+	 MIME-Version; b=eJMuNV5ZVOlNShni0bhb5XVBfNcqKS7MObi8eQUe7lvTmw6upHQhhdbHJh/YETMF22ovrJtVen9QGJprRWcfVbSEyckSaUvskBa8EtA5jiN4QEi3fLK25VEATbnBbfFUaG9TmEsL8dn9kaDxXWswC+QB5ksgM7WX0iI4gzSA6oU=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
@@ -18,15 +18,15 @@ Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <ore@pengutronix.de>)
-	id 1rScGd-0007o9-1C; Wed, 24 Jan 2024 13:22:07 +0100
+	id 1rScGd-0007o8-1C; Wed, 24 Jan 2024 13:22:07 +0100
 Received: from [2a0a:edc0:0:1101:1d::ac] (helo=dude04.red.stw.pengutronix.de)
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <ore@pengutronix.de>)
-	id 1rScGc-0023Zg-2a; Wed, 24 Jan 2024 13:22:06 +0100
+	id 1rScGc-0023Ze-1P; Wed, 24 Jan 2024 13:22:06 +0100
 Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
 	(envelope-from <ore@pengutronix.de>)
-	id 1rScGb-00341Y-37;
+	id 1rScGb-00341O-34;
 	Wed, 24 Jan 2024 13:22:05 +0100
 From: Oleksij Rempel <o.rempel@pengutronix.de>
 To: Sebastian Reichel <sre@kernel.org>,
@@ -46,9 +46,9 @@ Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
 	linux-pm@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	=?UTF-8?q?S=C3=B8ren=20Andersen?= <san@skov.dk>
-Subject: [PATCH v2 5/8] nvmem: provide consumer access to cell size metrics
-Date: Wed, 24 Jan 2024 13:22:01 +0100
-Message-Id: <20240124122204.730370-6-o.rempel@pengutronix.de>
+Subject: [PATCH v2 4/8] dt-bindings: power: reset: add bindings for NVMEM hardware storing PSCR Data
+Date: Wed, 24 Jan 2024 13:22:00 +0100
+Message-Id: <20240124122204.730370-5-o.rempel@pengutronix.de>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240124122204.730370-1-o.rempel@pengutronix.de>
 References: <20240124122204.730370-1-o.rempel@pengutronix.de>
@@ -64,77 +64,75 @@ X-SA-Exim-Mail-From: ore@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Add nvmem_cell_get_size() function to provide access to cell size
-metrics. In some cases we may get cell size less as consumer would
-expect it. So, nvmem_cell_write() would fail with incorrect buffer size.
+Add device tree bindings that describe hardware implementations of
+Non-Volatile Memory (NVMEM) used for storing Power State Change Reasons
+(PSCR).
 
 Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
 ---
- drivers/nvmem/core.c           | 25 +++++++++++++++++++++++++
- include/linux/nvmem-consumer.h |  7 +++++++
- 2 files changed, 32 insertions(+)
+ .../bindings/power/reset/pscrr-nvmem.yaml     | 53 +++++++++++++++++++
+ 1 file changed, 53 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power/reset/pscrr-nvmem.yaml
 
-diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
-index 980123fb4dde..a21e5649fcda 100644
---- a/drivers/nvmem/core.c
-+++ b/drivers/nvmem/core.c
-@@ -1790,6 +1790,31 @@ int nvmem_cell_write(struct nvmem_cell *cell, void *buf, size_t len)
- 
- EXPORT_SYMBOL_GPL(nvmem_cell_write);
- 
-+/**
-+ * nvmem_cell_get_size() - Get the size of a given nvmem cell
-+ * @cell: nvmem cell to be queried.
-+ * @bytes: Pointer to store the size of the cell in bytes. Can be NULL.
-+ * @bits: Pointer to store the size of the cell in bits. Can be NULL.
-+ *
-+ * Return: 0 on success or negative on failure.
-+ */
-+int nvmem_cell_get_size(struct nvmem_cell *cell, size_t *bytes, size_t *bits)
-+{
-+	struct nvmem_cell_entry *entry = cell->entry;
+diff --git a/Documentation/devicetree/bindings/power/reset/pscrr-nvmem.yaml b/Documentation/devicetree/bindings/power/reset/pscrr-nvmem.yaml
+new file mode 100644
+index 000000000000..779920dea283
+--- /dev/null
++++ b/Documentation/devicetree/bindings/power/reset/pscrr-nvmem.yaml
+@@ -0,0 +1,53 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/power/reset/pscrr-nvmem.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+	if (!entry->nvmem)
-+		return -EINVAL;
++title: Generic NVMEM Power State Change Reason Recorder
 +
-+	if (bytes)
-+		*bytes = entry->bytes;
++maintainers:
++  - Oleksij Rempel <o.rempel@pengutronix.de>
 +
-+	if (bits)
-+		*bits = entry->nbits;
++description: This binding describes the Non-Volatile Memory (NVMEM) hardware
++  that stores Power State Change Reasons (PSCR).
 +
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(nvmem_cell_get_size);
++allOf:
++  - $ref: pscrr.yaml#
 +
- static int nvmem_cell_read_common(struct device *dev, const char *cell_id,
- 				  void *val, size_t count)
- {
-diff --git a/include/linux/nvmem-consumer.h b/include/linux/nvmem-consumer.h
-index 34c0e58dfa26..bcb0e17e415d 100644
---- a/include/linux/nvmem-consumer.h
-+++ b/include/linux/nvmem-consumer.h
-@@ -56,6 +56,7 @@ void nvmem_cell_put(struct nvmem_cell *cell);
- void devm_nvmem_cell_put(struct device *dev, struct nvmem_cell *cell);
- void *nvmem_cell_read(struct nvmem_cell *cell, size_t *len);
- int nvmem_cell_write(struct nvmem_cell *cell, void *buf, size_t len);
-+int nvmem_cell_get_size(struct nvmem_cell *cell, size_t *bytes, size_t *bits);
- int nvmem_cell_read_u8(struct device *dev, const char *cell_id, u8 *val);
- int nvmem_cell_read_u16(struct device *dev, const char *cell_id, u16 *val);
- int nvmem_cell_read_u32(struct device *dev, const char *cell_id, u32 *val);
-@@ -128,6 +129,12 @@ static inline int nvmem_cell_write(struct nvmem_cell *cell,
- 	return -EOPNOTSUPP;
- }
- 
-+static inline int nvmem_cell_get_size(struct nvmem_cell *cell, size_t *bytes,
-+				      size_t *bits)
-+{
-+	return -EOPNOTSUPP;
-+}
++properties:
++  compatible:
++    const: pscrr-nvmem
 +
- static inline int nvmem_cell_read_u8(struct device *dev,
- 				     const char *cell_id, u8 *val)
- {
++  nvmem-cells:
++    description: |
++      A phandle pointing to the nvmem-cells node where the power state change
++      reasons are stored.
++    maxItems: 1
++
++  nvmem-cell-names:
++    items:
++      - const: pscr
++
++  pscr-under-voltage: true
++  pscr-over-current: true
++  pscr-regulator-failure: true
++  pscr-over-temperature: true
++
++required:
++  - compatible
++  - nvmem-cells
++  - nvmem-cell-names
++
++additionalProperties: false
++
++examples:
++  - |
++    power-state-change-reason {
++      compatible = "pscrr-nvmem";
++      nvmem-cells = <&pscr_cell>;
++      nvmem-cell-names = "pscr";
++      pscr-under-voltage = <1>;
++      pscr-over-temperature = <2>;
++    };
++...
 -- 
 2.39.2
 
