@@ -1,108 +1,132 @@
-Received: from wout3-smtp.messagingengine.com (wout3-smtp.messagingengine.com [64.147.123.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EFB718048;
-	Wed, 24 Jan 2024 07:42:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FE64168DA
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 07:45:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706082165; cv=none; b=N8vuwide4Md7MAO+g4ZQooq4PIuTYHh7YqwocKneyHyJ6sHChu5b8a/AiY2JFWlp3C+n1R001cVd29/UyQQFTmJOS2SaFdGcHN4qH3k5sFsQc7u6yHNaFQP+1G4zSPycj4vvgFOkiqTXGfoM4wBCsXtY46BzZZhGRCY5feihl1w=
+	t=1706082338; cv=none; b=GAPQCcSp5Qt31GwkquSpd4To6yhXar2vIhVA3xSpcJ7LtmiYwehyKkerLhxOdD3IoHTKuRqRfKcYY7cH+4rgL/KIYwMIHWoi48+UlUqKfLXHEM4QQB2D4EG+kb1MkIKQAYenc5WF2ypQVdg5zrfkDbG21ZxKxm15nIlQYF5Oezs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706082165; c=relaxed/simple;
-	bh=PcCuuppOrBjs9Lnu8OSd/Gc4sHxxj/UW6vJ8UQVEhTQ=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=mqC2NpEUDF4OloFNufRglL9PzqbTbcH9oXVrVhf7MPInMqaTs59uWgpl7YPJB++5CKBSWAlISGVtaeF/YI/5/nKleTBEuNr4fXT5bqxm+ZEtszXDnVG5iR77f8wnrE2iWI4/VZL33/m5G4zZyo1JoRazmmO9NqVPg/T4YMBRe7A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=DBPiIArT; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=jJ6pI0rk; arc=none smtp.client-ip=64.147.123.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1706082338; c=relaxed/simple;
+	bh=05A1V42ISzk91H47v/1k8F5cOUyqcqx459Ycs2uRiyQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=k9nrv3a0U6v73PBK1XCmZccceMo5PsM8bAtUE+NspEZJ05pfGziLuwgq3nt3IvxeI8shuCvleMQA/NyRoOYfggdTF4Y+TeuU1AVPDh1eKKpwje2Q2BrHHLj8Y3646j5dKQhqzzp/rw5D6tpzHE6m8GVvjZfXLNTigpcL2nJDiWQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Q3E30Tr7; arc=none smtp.client-ip=209.85.208.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="DBPiIArT";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="jJ6pI0rk"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailout.west.internal (Postfix) with ESMTP id B9BA13200A1D;
-	Wed, 24 Jan 2024 02:42:41 -0500 (EST)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Wed, 24 Jan 2024 02:42:42 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm2; t=1706082161; x=1706168561; bh=9frl7d0quE
-	YosV82pk2Zk+QUQPaeI3HmPSHPBAWKNGs=; b=DBPiIArTARxG2MxVBtRrgx40kc
-	ncYUEzgK1ODbtQyBpiKwd3fV9hU+tl5pWsupqhmtmGiuexZ1cR0VoW21q4JIhemb
-	frRU0OdTm4Qq7nL5GMD+Dc2hNHYYX/T6bz4D7BujmxtR0t0ck3ToDmGBgBIIKkVn
-	8sTK3fj4Og6SOYRWTleIyXMxGtE0SWtgC9XZ5t21PBJfiOjC1QS0VfVYOpI9q1r2
-	O+zO+Kcv01YwBwu2ZvV7yr615Jdd9y/tGbVqrGF3gqRKlH23n49h6z25ryddumfe
-	oi2lxhdHczM22FNdP1Hu5Du5Oe5QmAY1P5PQda+dXXpfOI12yRjCJSSfitkg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm3; t=1706082161; x=1706168561; bh=9frl7d0quEYosV82pk2Zk+QUQPae
-	I3HmPSHPBAWKNGs=; b=jJ6pI0rkgQHyAf0L009dR9D5tIhOUmJKJLWfbHbbhuMQ
-	pAs+XGPQzPX+M26BphAlfwVpQ2IGQnwW9abzZek5u7ncHtLnZyIWHKX0qydQpaRN
-	TyUu9Fd5TtqBqEh0Lz1OBl9yY2/d5roQ4ASq3UXLE6bxTMFd6b0goz4UDGGnmQfT
-	KifZ9L6oPGjOJZl8cghv3JkuLT5+sMNQk5rO6Y5yl6xMGUJStGtRwsXkATV578M7
-	w/aUa2RQmbMFvzdbHRE5hCQC3IsPzdNjEzDnXrovHG+mE9E018bLd94+F+05ekpP
-	aLEf7a3ZNYltn7JM78HzWDYPpytDrLTm8C+YHPksZA==
-X-ME-Sender: <xms:cL-wZWlaIMW5EkLFsg17wW6a8rt0eTWrTZgitprv9nfFv29nxHIuEw>
-    <xme:cL-wZd3wwq4AQCXEi_tXelv54J4AhX22Wtxz3bZxS6kkUXz7kNe0ipPKAth1va74N
-    JCuS0Wbzgtrb3LDTrM>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrvdeltddgjeejucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
-    teffnecuvehluhhsthgvrhfuihiivgepudenucfrrghrrghmpehmrghilhhfrhhomheprg
-    hrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:cb-wZUp0gzaSaK7QckfzGVftAtM9AiXQvE0KSeSe7eoUSbKRhVlR1Q>
-    <xmx:cb-wZalrjvXl9BtY9o5GQcerwcDPGPygbh84iUEJudoTX2Ni30hGVA>
-    <xmx:cb-wZU1xbYxkvk2zw7gTUcskmweinhotYhmKMh7uZD1hAvDyi2ugjg>
-    <xmx:cb-wZeor7VAQesBCt-0f72anrofWAunuKoIiIX4LrXwpXOqBfyTMsg>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id E04F2B6008D; Wed, 24 Jan 2024 02:42:40 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-119-ga8b98d1bd8-fm-20240108.001-ga8b98d1b
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Q3E30Tr7"
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-55a179f5fa1so6054727a12.0
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 23:45:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1706082334; x=1706687134; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rvG442LOHG+Ot3BClfANwtHkjvhl+RcGyuBNzT4bkhE=;
+        b=Q3E30Tr7UwicUq8KsvB9Nt6PJeUbFNI7JD1m3uiiASmOmCqZ5EE/IzwMrYFho21nok
+         VIzDjKQqgVsh/7Kr2GWrGObV3LI0LXxKZCwrBqKZdf7Sk7h9b0JKji9icaC07F7Plf8H
+         K3py/1uCBCVf0znmSkFzWSsYSJb6ZKffTtpWL+ufH4CL5hYsrKE8kbpvixqgbdtRQd9+
+         /Dh4qO7TBDN305ljw6Bjvs7M3E6GI+krg+ivxMYnzWtidP0SP9/bc+3zgp8a99NUGTfk
+         nm5rbGHBFpux/OHlWAHETHW+3cZFaexW8lrNSmllIv7MTK3NjPlpAX8tB0mVpkVg6UIj
+         PH3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706082334; x=1706687134;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rvG442LOHG+Ot3BClfANwtHkjvhl+RcGyuBNzT4bkhE=;
+        b=aFnPtUyGUchzaTXs8xEA2gp8HPfjKEKWi7SH6d7cWVRiXsa3pagpEcDoGiNyrBOlwS
+         BGPRmfr/DkzUg47jBFHClXmQ3PJN33iZWW8PJeFfuBU+pDW88b9xKsIACAeMPjNJdyKS
+         AHswnZPqe4p3XoZfyBX07tBA0mKbM5vf4sBjtzNW8P2EB1Xol14pvMtsJfd/FLclhKOm
+         17um0sRIDxFv0weKOH8Jr0prH6hLCZi8VqZuwt7kuerDJNbaRdOW7Wq4yLfYDpbxZkyz
+         1mCnKh2roLlkFKgTVgFJhPvd99gQFpP9EjS0yN/wPTcuTfcVE3Llsg/p9kHDJAJ2ajfJ
+         /Z3w==
+X-Gm-Message-State: AOJu0YyE7HanIp93+sfLCf0LzCuHLGvX+nMxfUqmP/QNDrqos3o4sG9T
+	p/HXahHm12rN/bSrzYnNWPKOOekaZ+yjdYh2CNftrZV7J4RVj5ztMRsFHmJY4c0=
+X-Google-Smtp-Source: AGHT+IFKJ5JzIQYT07scGs0jeluh6Z6hoVdJotYx/+32TFQ6MXa9NX+X/ooKaL8xLirc0Yw4l/nAzg==
+X-Received: by 2002:aa7:c40b:0:b0:559:ca4e:d817 with SMTP id j11-20020aa7c40b000000b00559ca4ed817mr1564880edq.73.1706082334623;
+        Tue, 23 Jan 2024 23:45:34 -0800 (PST)
+Received: from krzk-bin.. ([178.197.215.66])
+        by smtp.gmail.com with ESMTPSA id c4-20020a056402100400b0055c8a30152bsm1306951edu.83.2024.01.23.23.45.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Jan 2024 23:45:34 -0800 (PST)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+	Banajit Goswami <bgoswami@quicinc.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Frank Rowand <frowand.list@gmail.com>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	alsa-devel@alsa-project.org,
+	linux-arm-msm@vger.kernel.org,
+	linux-sound@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH v5 1/6] of: Add of_phandle_args_equal() helper
+Date: Wed, 24 Jan 2024 08:45:22 +0100
+Message-Id: <20240124074527.48869-2-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240124074527.48869-1-krzysztof.kozlowski@linaro.org>
+References: <20240124074527.48869-1-krzysztof.kozlowski@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <4027ec4c-1e11-40fc-a9af-07732d7c3c1a@app.fastmail.com>
-In-Reply-To: <20240124004028.16826-9-zfigura@codeweavers.com>
-References: <20240124004028.16826-1-zfigura@codeweavers.com>
- <20240124004028.16826-9-zfigura@codeweavers.com>
-Date: Wed, 24 Jan 2024 08:42:19 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Elizabeth Figura" <zfigura@codeweavers.com>,
- "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
- linux-kernel@vger.kernel.org, linux-api@vger.kernel.org
-Cc: wine-devel@winehq.org,
- =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>,
- "Wolfram Sang" <wsa@kernel.org>, "Arkadiusz Hiler" <ahiler@codeweavers.com>,
- "Peter Zijlstra" <peterz@infradead.org>
-Subject: Re: [RFC PATCH 8/9] ntsync: Introduce NTSYNC_IOC_PUT_MUTEX.
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jan 24, 2024, at 01:40, Elizabeth Figura wrote:
-> @@ -738,6 +803,8 @@ static long ntsync_char_ioctl(struct file *file, 
-> diff --git a/include/uapi/linux/ntsync.h b/include/uapi/linux/ntsync.h
-> index 26d1b3d4847f..2e44e7e77776 100644
-> --- a/include/uapi/linux/ntsync.h
-> +++ b/include/uapi/linux/ntsync.h
-> @@ -46,5 +46,7 @@ struct ntsync_wait_args {
->  					      struct ntsync_wait_args)
->  #define NTSYNC_IOC_CREATE_MUTEX		_IOWR(NTSYNC_IOC_BASE, 5, \
->  					      struct ntsync_mutex_args)
-> +#define NTSYNC_IOC_PUT_MUTEX		_IOWR(NTSYNC_IOC_BASE, 6, \
-> +					      struct ntsync_mutex_args)
-> 
+Add a helper comparing two "struct of_phandle_args" to avoid
+reinventing the wheel.
 
-In your implementation, this argument is not written back to
-user space, so I think this should be _IOW rather than than _IORW.
+Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
 
-Again, no practical difference here.
+Dependency of cpufreq and reset change.
+---
+ include/linux/of.h | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-     Arnd
+diff --git a/include/linux/of.h b/include/linux/of.h
+index 6a9ddf20e79a..85bcc05b278d 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -1065,6 +1065,22 @@ static inline int of_parse_phandle_with_optional_args(const struct device_node *
+ 					    0, index, out_args);
+ }
+ 
++/**
++ * of_phandle_args_equal() - Compare two of_phandle_args
++ * @a1:		First of_phandle_args to compare
++ * @a2:		Second of_phandle_args to compare
++ *
++ * Return: True if a1 and a2 are the same (same node pointer, same phandle
++ * args), false otherwise.
++ */
++static inline bool of_phandle_args_equal(const struct of_phandle_args *a1,
++					 const struct of_phandle_args *a2)
++{
++	return a1->np == a2->np &&
++	       a1->args_count == a2->args_count &&
++	       !memcmp(a1->args, a2->args, sizeof(a1->args[0]) * a1->args_count);
++}
++
+ /**
+  * of_property_count_u8_elems - Count the number of u8 elements in a property
+  *
+-- 
+2.34.1
+
