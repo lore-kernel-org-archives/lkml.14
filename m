@@ -1,164 +1,152 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+Received: from mail-vk1-f171.google.com (mail-vk1-f171.google.com [209.85.221.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FAB618AF4
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 08:58:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E749518E2E
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 08:58:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706086727; cv=none; b=Kra7PF0iwHK0HHsCacfsKr0MpZkriqVppKyptZxJTk8rvsCVbQGYAtpHIxU8H21fhzZndmL1KNHaOhnb1P7xRRLMtO9bW6rdgyq4vLJCX5Rg6HxVMbqaVX0m7/poZ7HVWl1Tem1981P8gEvh+hQp7EfrIJoafcm2WHyz+d5kct0=
+	t=1706086732; cv=none; b=Eo2e7q7cMTauIv3dUrlrSs3+AkWA69ODJ3nRYMkYebWV1UcuEwRtp3A/TXJvQB0QN6YI9Zs21lFls9MzBx1tqLWmZdSelw5Fpnvh1bWoxjZGYOi9PIg4gFeePuRF9fvPclwSemntIgZBaBXzsxdy9huVXuXZQwi1sKSjD0yZP8k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706086727; c=relaxed/simple;
-	bh=e83VYaOS+ohDX9NqoEmbl86kN06hJQqQLEN1Cb5MMwE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Z4sDoyBtQIGQyd/Z2fBZwmEYTEbn7dIH9ZIoIK5vUvDtYyKWCELb2POYzuOEwWVeWr7Pm6Iwp6NAFddO+n6j8WIO5gw72kIx4gZ5EaZlc5yhuZl+LKvRHi7a0Ykj5mSrs70360RAnV8lP/TuUbfu5iUuSbPc0jfL4kqgXt04nj8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gQSOiGCL; arc=none smtp.client-ip=209.85.216.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1706086732; c=relaxed/simple;
+	bh=6A2agHWPglD1APaJ96geKgF4ubgM9XgIXuQcxewyelA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=M8NBcNaXzMryh9Ei/po6Qii2PHivTv1CsvbZ95BG3e4i0s0RNnYCXTUhfFqPw5gFeS2PQNDFoax15Cc7SwgL4xLiuPj7jWJEbfeLGYONKnV5ACASyjddKkYwcRAzVs/u1BlwIXVgtueJvy3KkZXNhSr6RHYBu4ENHboIpOV/9hA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dW+mg23T; arc=none smtp.client-ip=209.85.221.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gQSOiGCL"
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2901f9ea918so2776074a91.3
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 00:58:45 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dW+mg23T"
+Received: by mail-vk1-f171.google.com with SMTP id 71dfb90a1353d-4bd78dfe523so16148e0c.0
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 00:58:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706086725; x=1706691525; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YCaG2FhLI+ULzJLYRzk2AkDEJ54d7JQsIyeO5H61ju8=;
-        b=gQSOiGCL1lWkWvKcBJWgrWLyy/E4QawIZ6uQq1qT3Tp6p8ffUKypOvQNgOQW2ZU5SL
-         OipukLKtD0wXCgFd1a8dNoihCiVDaRSPcbHBnThUZkc8mwJrkdC9OfxLGslRPH3bDo54
-         wcO4XOPq2yN9djThvQ8uLO5DCid4X6WLfyf+d1ny7DCcsAyR5dETOlDuz/0x7+UqBGP7
-         /XHqMHfOSP+znXhjOn5J7pzUVMiRFvzFWxHOrX+RY7eky9oGM3EmGlFDMc/ycgPFAq2f
-         PiD5ismvOMwnaXToJv1ik2yujNmUAZDBeytdGqCdvXkkxRIEOG0hRTd0GP8pL9YK0ORp
-         O4vA==
+        d=linaro.org; s=google; t=1706086730; x=1706691530; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=wb2TmrQlec/Mf3yh+lhjrs8umkcGGEn+Bj8EU6iIEHk=;
+        b=dW+mg23TtUNG0gYCGkz8jFPtl6rJ0z8l0oG4jTkyGXVgaYQtH4mrONiPHv4c/bLbaL
+         75d2jv8KmET8QGo8/mjoCLIWjPnqNziPgvPOhRLHB+35THVIBCwhHbZdJZxliL5uXITF
+         KJbDjo99aj+0bw4UuzOm7GNZOgy5GJ61S54zV4GhN9yl0YLedYR/jCCogeTOhL+hXm7F
+         kKyGxQOfi11jq7q4OEBgcgrvqbJ/3eZYb+hyX79EszC4K66CrTisNp7zSIrkQwFb+AA/
+         /efdTzDmLiF7qYQEYJIHbMkf82jWSGvD+tsnz/lIGnFE3ChXscrtfnZo4ePe7rpL7x3S
+         yMAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706086725; x=1706691525;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YCaG2FhLI+ULzJLYRzk2AkDEJ54d7JQsIyeO5H61ju8=;
-        b=p2H8FtNhuG2rChrqKaX53NDsMPWcvT+Uk5kfwFe8W38P228+rZNTN6NkXIRHqKByC8
-         ieuX8OwzcYSGHOuyVim44cPzoXx4bz+RaC/CHvny06OQlsebyTvOYKAOWshsTjM8Imaw
-         HoQSIIgW86QjJ7ecCFoj2kl3tQa49vatsMW/OXndLKHMg/qRVrXdDhDTt4+IQYz/7P9f
-         bcZswmkoadsVCdvHHKYP9OSYXgGHRePGDz0RdHnj0bq/KCod7Gj75y/cw2TWkLjFhZR6
-         NfjalcLc1tKTKRjmm11Ni6WUbdd9HDUiss5cCSbYgvVc+060kzsSBNYHroOMv3MYSPjM
-         aWGA==
-X-Gm-Message-State: AOJu0Yxn7bX2wi68Au3sgkCEb9tROn6zb7HsAx1iKW+Vtz0P4z8YGNXi
-	T64C/3H1a/oUpR9c/rSWik+X76dK6H96U3IWRanI7yiTGKSH5WT44/OF/3kk
-X-Google-Smtp-Source: AGHT+IFPGrGWhb1Ny8AdbAA6Fc5MnoDmXHW5eNVLBfnh1MQ27z1kg/juqZ0/OXtEEa3QE6CQbT4kXQ==
-X-Received: by 2002:a17:90a:e557:b0:28e:3817:5844 with SMTP id ei23-20020a17090ae55700b0028e38175844mr3326022pjb.42.1706086725407;
-        Wed, 24 Jan 2024 00:58:45 -0800 (PST)
-Received: from localhost.localdomain ([107.167.25.130])
-        by smtp.googlemail.com with ESMTPSA id sb3-20020a17090b50c300b0028ffc524085sm13192233pjb.56.2024.01.24.00.58.42
+        d=1e100.net; s=20230601; t=1706086730; x=1706691530;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=wb2TmrQlec/Mf3yh+lhjrs8umkcGGEn+Bj8EU6iIEHk=;
+        b=n3HS1F+xjf/7Nghc0eWA0/BmAO7x5XCuPCrBmDZCdGmnmPBYFUYjm8X1x/bjtPfr8W
+         IdCUqR8lnCnVUcmp0sCbI2MDXmPkfV1KuCPGSQO1pbMmkrOEg4nvpiZ170r7l5HNNHm1
+         fpN0KUguiJy+KeeUoXhA3we+qUA+D0dxfbVbQv3DpTCRZcuccm2aakZ53SpuBMjd+2VN
+         7NwIEwdudg0iJAvR4xURuvvp/NSMXHT7ZHSmEBk6Fx5zhLc0T6RkVzTqEZajVr/UaMq9
+         O3jI0nrIHzXp+E7qhBhl6z/+vu+Zz9hO57NWMoWvLBy/lNvFjOR87tR4M0OcIsuiaC14
+         YkIQ==
+X-Gm-Message-State: AOJu0Yzejjgim3wAdZk70Sm1UpfxN7Lo02w3FZnmDuWiXsvGGJUCV3+2
+	a7fQ0Jfgt3M23MSlUoQMlj6gE2YGPCB3FqQdpMQjY9oKxMQv2z4rziELWtzqEA==
+X-Google-Smtp-Source: AGHT+IHNl1ACK3L5Be2b8Nbsu6WHFviUzLaBTgGDg98+Fj/yv3drk7c1yF3spYfyyD4DRj8/t8c/4w==
+X-Received: by 2002:a05:6122:1c0d:b0:4bd:1677:9458 with SMTP id et13-20020a0561221c0d00b004bd16779458mr1835683vkb.32.1706086729854;
+        Wed, 24 Jan 2024 00:58:49 -0800 (PST)
+Received: from thinkpad ([117.217.189.109])
+        by smtp.gmail.com with ESMTPSA id f1-20020a056122044100b004b723acd1e1sm2619411vkk.11.2024.01.24.00.58.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jan 2024 00:58:44 -0800 (PST)
-From: Liang Chen <liangchen.linux@gmail.com>
-To: mst@redhat.com,
-	jasowang@redhat.com,
-	hengqi@linux.alibaba.com,
-	xuanzhuo@linux.alibaba.com
-Cc: virtualization@lists.linux-foundation.org,
-	linux-kernel@vger.kernel.org,
-	liangchen.linux@gmail.com
-Subject: [PATCH v2 3/3] virtio_net: Support RX hash XDP hint
-Date: Wed, 24 Jan 2024 16:57:21 +0800
-Message-Id: <20240124085721.54442-4-liangchen.linux@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240124085721.54442-1-liangchen.linux@gmail.com>
-References: <20240124085721.54442-1-liangchen.linux@gmail.com>
+        Wed, 24 Jan 2024 00:58:49 -0800 (PST)
+Date: Wed, 24 Jan 2024 14:28:39 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Andrew Halaney <ahalaney@redhat.com>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	"James E.J. Bottomley" <jejb@linux.ibm.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	echanude@redhat.com, linux-arm-msm@vger.kernel.org,
+	linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] scsi: ufs: qcom: Clarify comments about the initial
+ phy_gear
+Message-ID: <20240124085839.GH4906@thinkpad>
+References: <20240123-ufs-reinit-comments-v1-1-ff2b3532d7fe@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240123-ufs-reinit-comments-v1-1-ff2b3532d7fe@redhat.com>
 
-The RSS hash report is a feature that's part of the virtio specification.
-Currently, virtio backends like qemu, vdpa (mlx5), and potentially vhost
-(still a work in progress as per [1]) support this feature. While the
-capability to obtain the RSS hash has been enabled in the normal path,
-it's currently missing in the XDP path. Therefore, we are introducing XDP
-hints through kfuncs to allow XDP programs to access the RSS hash.
+On Tue, Jan 23, 2024 at 01:13:36PM -0600, Andrew Halaney wrote:
+> The comments that currently are within the hw_ver < 4 conditional
+> are misleading. They really apply to various branches of the
+> conditionals there and incorrectly state that the phy_gear value
+> can increase.
+> 
+> Right now the logic is to:
+> 
+>     * Default to max supported gear for phy_gear
+>     * Set phy_gear to minimum value if version < 4 since those versions
+>       only support one PHY init sequence (and therefore don't need reinit)
+>     * Set phy_gear to the optimal value if the device version is already
+>       populated in the controller registers on boot
+> 
+> Let's move some of the comment to outside the if statement and clean up
+> the bit left about switching to a higher gear on reinit. This way the
+> comment more accurately reflects the logic.
+> 
+> Signed-off-by: Andrew Halaney <ahalaney@redhat.com>
 
-1.
-https://lore.kernel.org/all/20231015141644.260646-1-akihiko.odaki@daynix.com/#r
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-Signed-off-by: Liang Chen <liangchen.linux@gmail.com>
----
- drivers/net/virtio_net.c | 53 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 53 insertions(+)
+- Mani
 
-diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
-index 2de46eb4c661..ed6a4aa3fe04 100644
---- a/drivers/net/virtio_net.c
-+++ b/drivers/net/virtio_net.c
-@@ -4604,6 +4604,58 @@ static void virtnet_set_big_packets(struct virtnet_info *vi, const int mtu)
- 	}
- }
- 
-+static int virtnet_xdp_rx_hash(const struct xdp_md *_ctx, u32 *hash,
-+			       enum xdp_rss_hash_type *rss_type)
-+{
-+	const struct virtnet_xdp_buff *virtnet_xdp = (void *)_ctx;
-+	struct virtio_net_hdr_v1_hash *hdr_hash;
-+
-+	if (!(virtnet_xdp->xdp.rxq->dev->features & NETIF_F_RXHASH))
-+		return -ENODATA;
-+
-+	hdr_hash = (struct virtio_net_hdr_v1_hash *)(&virtnet_xdp->hdr);
-+
-+	switch (__le16_to_cpu(hdr_hash->hash_report)) {
-+	case VIRTIO_NET_HASH_REPORT_TCPv4:
-+		*rss_type = XDP_RSS_TYPE_L4_IPV4_TCP;
-+		break;
-+	case VIRTIO_NET_HASH_REPORT_UDPv4:
-+		*rss_type = XDP_RSS_TYPE_L4_IPV4_UDP;
-+		break;
-+	case VIRTIO_NET_HASH_REPORT_TCPv6:
-+		*rss_type = XDP_RSS_TYPE_L4_IPV6_TCP;
-+		break;
-+	case VIRTIO_NET_HASH_REPORT_UDPv6:
-+		*rss_type = XDP_RSS_TYPE_L4_IPV6_UDP;
-+		break;
-+	case VIRTIO_NET_HASH_REPORT_TCPv6_EX:
-+		*rss_type = XDP_RSS_TYPE_L4_IPV6_TCP_EX;
-+		break;
-+	case VIRTIO_NET_HASH_REPORT_UDPv6_EX:
-+		*rss_type = XDP_RSS_TYPE_L4_IPV6_UDP_EX;
-+		break;
-+	case VIRTIO_NET_HASH_REPORT_IPv4:
-+		*rss_type = XDP_RSS_TYPE_L3_IPV4;
-+		break;
-+	case VIRTIO_NET_HASH_REPORT_IPv6:
-+		*rss_type = XDP_RSS_TYPE_L3_IPV6;
-+		break;
-+	case VIRTIO_NET_HASH_REPORT_IPv6_EX:
-+		*rss_type = XDP_RSS_TYPE_L3_IPV6_EX;
-+		break;
-+	case VIRTIO_NET_HASH_REPORT_NONE:
-+	default:
-+		*rss_type = XDP_RSS_TYPE_NONE;
-+	}
-+
-+	*hash = __le32_to_cpu(hdr_hash->hash_value);
-+	return 0;
-+}
-+
-+static const struct xdp_metadata_ops virtnet_xdp_metadata_ops = {
-+	.xmo_rx_hash			= virtnet_xdp_rx_hash,
-+};
-+
- static int virtnet_probe(struct virtio_device *vdev)
- {
- 	int i, err = -ENOMEM;
-@@ -4729,6 +4781,7 @@ static int virtnet_probe(struct virtio_device *vdev)
- 				  VIRTIO_NET_RSS_HASH_TYPE_UDP_EX);
- 
- 		dev->hw_features |= NETIF_F_RXHASH;
-+		dev->xdp_metadata_ops = &virtnet_xdp_metadata_ops;
- 	}
- 
- 	if (vi->has_rss_hash_report)
+> ---
+> This is a minor comment cleanup inspired by my mistaken understanding of
+> the flow over at [0]
+> 
+> [0] https://lore.kernel.org/linux-arm-msm/20240123143615.GD19029@thinkpad/
+> ---
+>  drivers/ufs/host/ufs-qcom.c | 15 ++++++++++-----
+>  1 file changed, 10 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/ufs/host/ufs-qcom.c b/drivers/ufs/host/ufs-qcom.c
+> index 39eef470f8fa..d9ec2dfbbda4 100644
+> --- a/drivers/ufs/host/ufs-qcom.c
+> +++ b/drivers/ufs/host/ufs-qcom.c
+> @@ -843,15 +843,20 @@ static void ufs_qcom_set_phy_gear(struct ufs_qcom_host *host)
+>  	struct ufs_host_params *host_params = &host->host_params;
+>  	u32 val, dev_major;
+>  
+> +	/*
+> +	 * Default to powering up the PHY to the max gear possible, which is
+> +	 * backwards compatible with lower gears but not optimal from
+> +	 * a power usage point of view. After device negotiation, if the
+> +	 * gear is lower a reinit will be performed to program the PHY
+> +	 * to the ideal gear for this combo of controller and device.
+> +	 */
+>  	host->phy_gear = host_params->hs_tx_gear;
+>  
+>  	if (host->hw_ver.major < 0x4) {
+>  		/*
+> -		 * For controllers whose major HW version is < 4, power up the
+> -		 * PHY using minimum supported gear (UFS_HS_G2). Switching to
+> -		 * max gear will be performed during reinit if supported.
+> -		 * For newer controllers, whose major HW version is >= 4, power
+> -		 * up the PHY using max supported gear.
+> +		 * These controllers only have one PHY init sequence,
+> +		 * let's power up the PHY using that (the minimum supported
+> +		 * gear, UFS_HS_G2).
+>  		 */
+>  		host->phy_gear = UFS_HS_G2;
+>  	} else if (host->hw_ver.major >= 0x5) {
+> 
+> ---
+> base-commit: 319fbd8fc6d339e0a1c7b067eed870c518a13a02
+> change-id: 20240123-ufs-reinit-comments-17c44af62651
+> 
+> Best regards,
+> -- 
+> Andrew Halaney <ahalaney@redhat.com>
+> 
+
 -- 
-2.40.1
-
+மணிவண்ணன் சதாசிவம்
