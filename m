@@ -1,138 +1,113 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F2167A703;
-	Wed, 24 Jan 2024 12:44:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4D0B76918
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 12:45:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706100262; cv=none; b=SJKYen8t7HkBhtJaMbPcJggD1NvpBokOebVa5qSRDE3DQUeCshRCLQrmbLaS3I00RyH8f5veBveXXs/jrEtWJQErmYFfP6zxBspUNN+ttb7v9mqOewBWp08sojLulpmusVYHNIZI74L5tbJf4PZEdTmS9QvvqRMNO2f3Bwcj5mQ=
+	t=1706100304; cv=none; b=huYAsFcdgBnWiTBtvHDPkHnZvtjZq0KOQQXRNxWm3CgoUL/f1LWehLIpWr1sUyvblHAs60XITkcFuQlEycdMpIy4P8NCjraFZyVjqbTjbFgf5u8H1baz+PupApN53Jg+mq3UZRc7syYWTbROx8iRuQRjI/bYuQrvUysdiWqetbM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706100262; c=relaxed/simple;
-	bh=tnRe5Ei/YJTczxwZvDToOZWUhjsn9sVDHvqVg2zKHrA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=C3vOWKmeewoOkbSqw8B5B/fzKCZXgEfdGTowFD6yp0CR8nHF4RxPnhX1QZjy/VOP0NlBgyTkdiYRJnwqXYPG4ykD2adxKg6oqXli/ugbM8TiE4zEtEWc+GabtmSSgocO4N/JIEypvC5HQ+HKafd6jRrngcNjBcN9UsgPcQ8r2dI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=cgf8QpQv; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="cgf8QpQv"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40OCYqcZ012776;
-	Wed, 24 Jan 2024 12:44:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=maWhpjGGQMcpu7vtMvFkjeOy5RBxMSnQ1uDy31yUj6Y=; b=cg
-	f8QpQvV8gnpxy7VshpA26KTuELDphwZmmr6oiZr+FS6+jksdvPIbmH43laC4mCZx
-	oo2ivb8cX/jZwzH7ED6wuuY51+tEXiWhXW2JT0JVuCms0c/SfwiJWLlQZjMPwR4u
-	Mwsv428nwMgBDKgQDz0Q6azY+qnwwLL++F5Acz85uHgyqqnSEVgMjZ1wWmMnwBmW
-	gv7nxIJROSoL7iZLPzG4kPYuWzO7a/KSLHIxzNPb3vD9TgQ7nwykTaMJJpXK0UT6
-	798wNRpLEcyMc/VlL+UQIHs4tsrGOJUCdEVXlZj15lawNkZKvQGeEN7qKz4NhsZg
-	qk+hjp/kq0++ksfDxo/g==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vtmgxhrbq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 24 Jan 2024 12:44:17 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 40OCiGPx011456
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 24 Jan 2024 12:44:16 GMT
-Received: from [10.216.58.233] (10.80.80.8) by nalasex01b.na.qualcomm.com
- (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Wed, 24 Jan
- 2024 04:44:09 -0800
-Message-ID: <2f369f2e-1bad-caf8-a4f6-0e7de588de81@quicinc.com>
-Date: Wed, 24 Jan 2024 18:14:05 +0530
+	s=arc-20240116; t=1706100304; c=relaxed/simple;
+	bh=0lNY9JM6i1cyRanexkIXDsWXhY843ieXctUNb+I5i5Y=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=DshGBQfNvwvZ8pbKb5sVuiYvDPmhna9lBofPu00EAtVoIj1xuQzP1vBrE8BN1EW7UfEJ80UN/O/viZ6GtNQMC45147No2Xcv4DDYI+XNanJxxia85LcZPMgGwm0wFPZ3pSCeJS4goLvCJp1GtRtO85wcVx/F0ZpG01DuxbT7Fo4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ore@pengutronix.de>)
+	id 1rSccj-0001gO-94; Wed, 24 Jan 2024 13:44:57 +0100
+Received: from [2a0a:edc0:0:1101:1d::ac] (helo=dude04.red.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ore@pengutronix.de>)
+	id 1rScci-002424-GQ; Wed, 24 Jan 2024 13:44:56 +0100
+Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1rScci-00362d-1Q;
+	Wed, 24 Jan 2024 13:44:56 +0100
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+To: Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
+	kernel@pengutronix.de,
+	linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	NXP Linux Team <linux-imx@nxp.com>,
+	Fabio Estevam <festevam@gmail.com>,
+	=?UTF-8?q?S=C3=B8ren=20Andersen?= <san@skov.dk>
+Subject: [PATCH v1 1/1] ARM: dts: imx6: skov: add aliases for all ethernet nodes
+Date: Wed, 24 Jan 2024 13:44:55 +0100
+Message-Id: <20240124124455.738187-1-o.rempel@pengutronix.de>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Subject: Re: [PATCH 1/2] dt-bindings: hwinfo: Introduce board-id
-Content-Language: en-US
-To: Trilok Soni <quic_tsoni@quicinc.com>,
-        Elliot Berman
-	<quic_eberman@quicinc.com>
-CC: <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
-        <conor+dt@kernel.org>, <agross@kernel.org>, <konrad.dybcio@linaro.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <kernel@quicinc.com>,
-        Conor Dooley
-	<conor@kernel.org>, <andersson@kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski@linaro.org>
-References: <1705749649-4708-1-git-send-email-quic_amrianan@quicinc.com>
- <1705749649-4708-2-git-send-email-quic_amrianan@quicinc.com>
- <6e40dd60-884f-be23-0052-d14f7194f844@quicinc.com>
- <f21bc259-45fa-d14b-a556-625b813287f4@quicinc.com>
- <499320f4-f6b1-4582-9512-89ab505305b6@linaro.org>
- <20240123-sterilize-flap-8971aa3bad4b@spud>
- <1941558d-d1e0-43b7-9208-65b9ba191bc2@quicinc.com>
- <fd2c8c1b-02f3-2750-3449-f93fc119fda2@quicinc.com>
-From: Amrit Anand <quic_amrianan@quicinc.com>
-In-Reply-To: <fd2c8c1b-02f3-2750-3449-f93fc119fda2@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: HsnQFIIeRa7qEX2ChADq64gB-W4kP5Dt
-X-Proofpoint-GUID: HsnQFIIeRa7qEX2ChADq64gB-W4kP5Dt
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-24_06,2024-01-24_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 clxscore=1011
- malwarescore=0 bulkscore=0 phishscore=0 mlxlogscore=999 suspectscore=0
- priorityscore=1501 lowpriorityscore=0 impostorscore=0 spamscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2401190000 definitions=main-2401240092
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
+Add aliases for all ethernet nodes including the switch. It makes it
+easier to find this nodes by the boot loader.
 
-On 1/24/2024 1:35 AM, Trilok Soni wrote:
-> On 1/23/2024 10:51 AM, Elliot Berman wrote:
->>
->> On 1/23/2024 9:18 AM, Conor Dooley wrote:
->>> On Tue, Jan 23, 2024 at 12:50:07PM +0100, Krzysztof Kozlowski wrote:
->>>> On 22/01/2024 11:10, Amrit Anand wrote:
->>>>> On 1/21/2024 12:40 AM, Trilok Soni wrote:
->>>>>> On 1/20/2024 3:20 AM, Amrit Anand wrote:
->>>>>>> From: Elliot Berman <quic_eberman@quicinc.com>
->>>>>>>
->>>>>>> Device manufacturers frequently ship multiple boards or SKUs under a
->>>>>>> single software package. These software packages will ship multiple
->>>>>>> devicetree blobs and require some mechanism to pick the correct DTB for
->>>>>>> the board the software package was deployed. Introduce a common
->>>>>>> definition for adding board identifiers to device trees. board-id
->>>>>>> provides a mechanism for bootloaders to select the appropriate DTB which
->>>>>>> is vendor/OEM-agnostic.
->>>>>> Please extend CC list to more architectures? linux-arm-kernel, risc-v etc; since
->>>>>> the proposal below is not specific to ARM but any architecture is using the
->>>>>> devicetree.
->>>>> Wouldn't devicetree@vger.kernel.org will have concern folks from all the
->>>>> architectures?
->>>>> Please correct me.
->>>> No.
->>> The chromium guys should get a CC on future versions of this stuff,
->>> since they like doing wacky things with compatible strings in their
->>> bootloader and this problem is one they also face. Doug Anderson and the
->>> mediatek chromebook folks would be a good start.
->>>
->> Please CC Peter Griffin from Linaro as he helped restart this
->> discussion at Plumbers.
->>
->> Peter Griffin <peter.griffin@linaro.org>
->>
->> Also, for the oneplus boards:
->> Caleb Connolly <caleb.connolly@linaro.org>
-> Thank you everyone. Amrit - please take care of above comments
-> when you post next revision and as suggested please add other
-> architecture mailing lists using the devicetree. Thank you.
-Sure, will keep this in mind when sending next version. Thanks for 
-pointing out.
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+---
+ arch/arm/boot/dts/nxp/imx/imx6qdl-skov-cpu.dtsi | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-Thanks,
-Amrit.
+diff --git a/arch/arm/boot/dts/nxp/imx/imx6qdl-skov-cpu.dtsi b/arch/arm/boot/dts/nxp/imx/imx6qdl-skov-cpu.dtsi
+index 2731faede1cb..d59d5d0e1d19 100644
+--- a/arch/arm/boot/dts/nxp/imx/imx6qdl-skov-cpu.dtsi
++++ b/arch/arm/boot/dts/nxp/imx/imx6qdl-skov-cpu.dtsi
+@@ -13,10 +13,14 @@ chosen {
+ 	aliases {
+ 		can0 = &can1;
+ 		can1 = &can2;
++		ethernet0 = &fec;
++		ethernet1 = &lan1;
++		ethernet2 = &lan2;
+ 		mdio-gpio0 = &mdio;
+ 		nand = &gpmi;
+ 		rtc0 = &i2c_rtc;
+ 		rtc1 = &snvs;
++		switch0 = &switch;
+ 		usb0 = &usbh1;
+ 		usb1 = &usbotg;
+ 	};
+@@ -60,7 +64,7 @@ mdio: mdio {
+ 		gpios = <&gpio1 31 GPIO_ACTIVE_HIGH>,
+ 			<&gpio1 22 GPIO_ACTIVE_HIGH>;
+ 
+-		switch@0 {
++		switch: switch@0 {
+ 			compatible = "microchip,ksz8873";
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&pinctrl_switch>;
+@@ -73,13 +77,13 @@ ports {
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+ 
+-				ports@0 {
++				lan1: ports@0 {
+ 					reg = <0>;
+ 					phy-mode = "internal";
+ 					label = "lan1";
+ 				};
+ 
+-				ports@1 {
++				lan2: ports@1 {
+ 					reg = <1>;
+ 					phy-mode = "internal";
+ 					label = "lan2";
+-- 
+2.39.2
+
