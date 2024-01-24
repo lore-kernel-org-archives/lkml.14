@@ -1,319 +1,229 @@
-Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33D811426C
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 10:41:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3731117551;
+	Wed, 24 Jan 2024 10:42:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706092893; cv=none; b=t3ijgGlr40+uH1VG4lNhXwS0alRPhd79fD/fu2c7rtKOxYBMlnxEaLxBEhkovGfmL8ocPkrW5zd8b6z2e7fx7fCMGxlaYK5AkfpctRkHPAWdYcAL8m+LWkuAnd4SC6MFTEqQdnlChNr9kkexN/imtC4f27/tZsMSLOIxhdwzKAE=
+	t=1706092979; cv=none; b=mjTwSPFvv/3YlpkrKQtYCl+cCGIqRJxwAe0qZ5LeDYo/ODcrubAv4oZ+uDA1hJEUwNjMeZzKFhk5iBhdKSbsGrqJ9qVqa40nRTVLDnfD5U/2ElDQ7qRJPduSLZ/gHYO2MSh5pPapKSBAE/Fy6TIAL7eHkHBYPbA3bj7Ai8yGMik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706092893; c=relaxed/simple;
-	bh=7t/ckmKzHlheLjok9vFG6UB4uGApUEbePlDwZjvDVW8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=l94OUwE+ose3/m45rf/nMlrFsS8PNO2oxU9x+fOkD5q52XWuVfY+eycbtLmHyVvLzKU8NpUCHZHoUhXOiABTY4TbYKQTWWB8RSLOPrgLTA2gmvviliFO6c6w88s2HSA6WAv9WW8s3YwIaDyzSG6l9wjomk6yJnvd3TkX/Jisxjw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mA366/0k; arc=none smtp.client-ip=209.85.222.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1706092979; c=relaxed/simple;
+	bh=oxmjWtPvBx5rEhH4YdjT7eWZot350oQd77Q9C4n8EQI=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=fWf+Dg3T5eqmqboyhB/L0i6phkdNT1cqN6Nejru4fwSaqs0rJw7SoG/+QcWPG4vzoLtaolRtveiMWVwrLgvE9ohKs9dU7Zb5/wOt9BSrKrnbQe0FTmP9tq0jLO2q50azXrn0cSH1SS3MwxOuabJTtvxL6ObwCTD8kdLC1R3P988=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=mMpXXIRf; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=TnqR0Lgc; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mA366/0k"
-Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-78315243c11so342765985a.3
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 02:41:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706092889; x=1706697689; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=QiROMXXFXODb7L7UjqjyOxVrJ4ER2WDfQ75RZrjuQlI=;
-        b=mA366/0ksJC0dQX2JHwhMLRJylFBdvGyv1ItB3e3OH9GbRQ9gyzGcULbpvo+xAXevb
-         1eLrG/neangBb+WrW9Pvu7HqoyAJLLC/KsVVYrSWgD62/1nv+wD8sePOxT/AU3NG+G8+
-         N1zzgbbJNInpCErcRWL0Q+bhIhX87F8kOGCLLZ22+ETBfXgF84wzbRfAd1KrugGWDYa3
-         kwzXsYTOL0k0NhuT+o5Y3lRDB/9y6HYAH613TUUvsvn/Z4CwKM+0wbgsbW75PfaFpknX
-         NItTrQC9QOUlean2GDdo+M9mV3WoCoOe6gUWlsaoxw60RDUAYXt/CxtCKIbhrG34IXnR
-         tUBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706092889; x=1706697689;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=QiROMXXFXODb7L7UjqjyOxVrJ4ER2WDfQ75RZrjuQlI=;
-        b=fP698ipFx02WXp2TPk/CGeD4iIKgdSRIigaB7Z5ZGIq+rOzoXZF3mnuxWMudF2oPF1
-         jlB6cM+w+sn4XmdRH3nxslZCnBNw7+VE1dpkhJ0GgoLQWwIFtjB/+ucnT38mEOgpdxp1
-         66KZz5mXPwE9g8ChQ9nCXF5bT95zA6YMvQWTfaZF6kFlPnFBE9SmxzbGmttYM2eWLcvt
-         R8TrFGaPtYW5iXDAeWQjOlw605bLjPeu1X4jYLlc1HELRmCEyyjKNW+F/3Rkln2LhOut
-         KC47WQWSa+bosrfLqMV8Si6R2o2oh107oZQWDn7koLUkw8ADxE1r7M9CTvxDh+Fg+7iL
-         EpWA==
-X-Gm-Message-State: AOJu0YxhjKeN6Lw8l+qzLYVur3L3V0MSpPZImo8op+2zGhWzbAUEUtQ5
-	IGtLqVv+xygJ3cmbHuX4Ea/fRG1BZIIkiOFzsDopCumSDdIGHZVhFlQXcE9oHaN7Q9r44/VUhzY
-	eM0mdpA86kTfRd7b0RTNhEcWu61x1dcvGHFRzMg==
-X-Google-Smtp-Source: AGHT+IFdsL92eDpEceUPy/NWPdnUioo8kum7OltCPI/0zSDnxL1Kdg86w6Gpzo+sJQrbnoYeqGoisoDoMIBXSecc9ys=
-X-Received: by 2002:ad4:5ce7:0:b0:686:309e:14d2 with SMTP id
- iv7-20020ad45ce7000000b00686309e14d2mr3021783qvb.119.1706092889057; Wed, 24
- Jan 2024 02:41:29 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="mMpXXIRf";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="TnqR0Lgc"
+Date: Wed, 24 Jan 2024 10:42:54 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1706092975;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=oxjl9tdgLylb446oB4wTQBq/k8U/wbxYM/OPAQBZMQk=;
+	b=mMpXXIRf5If4pma6AMsDv06fkhFZAqX9rqY27x2v7SRcANRp1c5zx76g2E6WwVfAhHZnAJ
+	SepXZw2Pco0Ayn1uPzSwB427clVz4JjjmDn8yDK1cLWpvXvu95OpAesDouoTnoz+1Xu54o
+	g2FQCK/I+WSESVaHAd2Vmb8d3f0ODp5Kbr9qg4b477BtzHIKnwAopFZ9xeClK2rar9STCM
+	NTp8jfDEdDChcV6+qgMDhjSL6HTn1Aax2NeFXsEzZOIk4H0ezd5FDTQjhqcn3h6cegEJpw
+	KAlKLhhsj+HW5bRJ4zn+VyLo/qTksKqxC9uxbxY9jIlRGhXVWc1XvC3ghWi7Gg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1706092975;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=oxjl9tdgLylb446oB4wTQBq/k8U/wbxYM/OPAQBZMQk=;
+	b=TnqR0LgcfAhDyWGoPHViG2LonnOL8fGCRUo1nIufonWhtWxi5Texl6ZVOdl+gou+6j0zOG
+	zV/Qg0EnZ0kn6sAg==
+From: "tip-bot2 for Tony Luck" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject:
+ [tip: x86/cache] x86/resctrl: Implement new mba_MBps throttling heuristic
+Cc: Xiaochen Shen <xiaochen.shen@intel.com>, Tony Luck <tony.luck@intel.com>,
+ "Borislav Petkov (AMD)" <bp@alien8.de>,
+ Reinette Chatre <reinette.chatre@intel.com>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20240122180807.70518-1-tony.luck@intel.com>
+References: <20240122180807.70518-1-tony.luck@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240122225710.1952066-1-peter.griffin@linaro.org>
- <20240122225710.1952066-3-peter.griffin@linaro.org> <26b9a75c-3721-4d7a-985e-772d9f67e6d5@linaro.org>
-In-Reply-To: <26b9a75c-3721-4d7a-985e-772d9f67e6d5@linaro.org>
-From: Peter Griffin <peter.griffin@linaro.org>
-Date: Wed, 24 Jan 2024 10:41:16 +0000
-Message-ID: <CADrjBPqTqe+HDN_ye41sR_yJgnUXOWwkZsQyujptPPfzg+EBeg@mail.gmail.com>
-Subject: Re: [PATCH 2/9] soc: samsung: exynos-pmu: Add exynos_pmu_update/read/write
- APIs and SoC quirks
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: arnd@arndb.de, robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, 
-	linux@roeck-us.net, wim@linux-watchdog.org, conor+dt@kernel.org, 
-	alim.akhtar@samsung.com, jaewon02.kim@samsung.com, chanho61.park@samsung.com, 
-	semen.protsenko@linaro.org, kernel-team@android.com, tudor.ambarus@linaro.org, 
-	andre.draszik@linaro.org, saravanak@google.com, willmcvicker@google.com, 
-	linux-fsd@tesla.com, linux-watchdog@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Message-ID: <170609297426.398.11727734850392673356.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-Hi Krzysztof,
+The following commit has been merged into the x86/cache branch of tip:
 
-Thanks for the review feedback.
+Commit-ID:     c2427e70c1630d98966375fffc2b713ab9768a94
+Gitweb:        https://git.kernel.org/tip/c2427e70c1630d98966375fffc2b713ab9768a94
+Author:        Tony Luck <tony.luck@intel.com>
+AuthorDate:    Mon, 22 Jan 2024 10:08:07 -08:00
+Committer:     Borislav Petkov (AMD) <bp@alien8.de>
+CommitterDate: Wed, 24 Jan 2024 11:32:01 +01:00
 
-On Tue, 23 Jan 2024 at 11:17, Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
->
-> On 22/01/2024 23:57, Peter Griffin wrote:
-> > Newer Exynos SoCs have atomic set/clear bit hardware for PMU registers as
-> > these registers can be accessed by multiple masters. Some platforms also
-> > protect the PMU registers for security hardening reasons so they can't be
-> > written by normal world and are only write acessible in el3 via a SMC call.
->
->
-> Typo? accessible?
+x86/resctrl: Implement new mba_MBps throttling heuristic
 
-Will fix in v2.
->
-> >
-> > Add support for both of these usecases using SoC specific quirks that are
-> > determined from the DT compatible string.>
-> > Drivers which need to read and write PMU registers should now use these
-> > new exynos_pmu_*() APIs instead of obtaining a regmap using
-> > syscon_regmap_lookup_by_phandle()
-> >
-> > Depending on the SoC specific quirks, the exynos_pmu_*() APIs will access
-> > the PMU register in the appropriate way.
-> >
-> > Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-> > ---
-> >  drivers/soc/samsung/exynos-pmu.c       | 209 ++++++++++++++++++++++++-
-> >  drivers/soc/samsung/exynos-pmu.h       |   4 +
-> >  include/linux/soc/samsung/exynos-pmu.h |  28 ++++
-> >  3 files changed, 234 insertions(+), 7 deletions(-)
-> >
-> > diff --git a/drivers/soc/samsung/exynos-pmu.c b/drivers/soc/samsung/exynos-pmu.c
-> > index 250537d7cfd6..e9e933ede568 100644
-> > --- a/drivers/soc/samsung/exynos-pmu.c
-> > +++ b/drivers/soc/samsung/exynos-pmu.c
-> > @@ -5,6 +5,7 @@
-> >  //
-> >  // Exynos - CPU PMU(Power Management Unit) support
-> >
-> > +#include <linux/arm-smccc.h>
-> >  #include <linux/of.h>
-> >  #include <linux/of_address.h>
-> >  #include <linux/mfd/core.h>
-> > @@ -12,29 +13,204 @@
-> >  #include <linux/of_platform.h>
-> >  #include <linux/platform_device.h>
-> >  #include <linux/delay.h>
-> > +#include <linux/regmap.h>
-> >
-> >  #include <linux/soc/samsung/exynos-regs-pmu.h>
-> >  #include <linux/soc/samsung/exynos-pmu.h>
-> >
-> >  #include "exynos-pmu.h"
-> >
-> > +/**
-> > + * DOC: Quirk flags for different Exynos PMU IP-cores
-> > + *
-> > + * This driver supports multiple Exynos based SoCs, each of which might have a
-> > + * different set of registers and features supported.
-> > + *
-> > + * Quirk flags described below serve the purpose of telling the driver about
-> > + * mentioned SoC traits, and can be specified in driver data for each particular
-> > + * supported device.
-> > + *
-> > + * %QUIRK_HAS_ATOMIC_BITSETHW: PMU IP has special atomic bit set/clear HW
-> > + * to protect against PMU registers being accessed from multiple bus masters.
-> > + *
-> > + * %QUIRK_PMU_ALIVE_WRITE_SEC: PMU registers are *not* write accesible from
-> > + * normal world. This is found on some SoCs as a security hardening measure. PMU
-> > + * registers on these SoCs can only be written via a SMC call and registers are
-> > + * checked by EL3 firmware against an allowlist before the write can procede.
-> > + * Note: This quirk should only be set for platforms whose el3 firmware
-> > + * implements the TENSOR_SMC_PMU_SEC_REG interface below.
-> > + */
-> > +
-> > +#define QUIRK_HAS_ATOMIC_BITSETHW            BIT(0)
-> > +#define QUIRK_PMU_ALIVE_WRITE_SEC            BIT(1)
-> > +
-> > +#define PMUALIVE_MASK GENMASK(14, 0)
-> > +
-> >  struct exynos_pmu_context {
-> >       struct device *dev;
-> >       const struct exynos_pmu_data *pmu_data;
-> > +     struct regmap *pmureg;
-> > +     void __iomem *pmu_base_addr;
-> > +     phys_addr_t pmu_base_pa;
-> > +     /* protect PMU reg atomic update operations */
-> > +     spinlock_t update_lock;
-> >  };
-> >
-> > -void __iomem *pmu_base_addr;
-> >  static struct exynos_pmu_context *pmu_context;
-> >
-> > +/*
-> > + * Some SoCs are configured so that PMU_ALIVE registers can only be written
-> > + * from el3. As Linux needs to write some of these registers, the following
-> > + * SMC register read/write/read,write,modify interface is used.
-> > + *
-> > + * Note: This SMC interface is known to be implemented on gs101 and derivative
-> > + * SoCs.
-> > + */
-> > +#define TENSOR_SMC_PMU_SEC_REG                       (0x82000504)
-> > +#define TENSOR_PMUREG_READ                   0
-> > +#define TENSOR_PMUREG_WRITE                  1
-> > +#define TENSOR_PMUREG_RMW                    2
->
-> These are tensor specific...
->
-> > +
-> > +int set_priv_reg(phys_addr_t reg, u32 val)
->
-> ...but this not...
->
-> > +{
-> > +     struct arm_smccc_res res;
-> > +
-> > +     arm_smccc_smc(TENSOR_SMC_PMU_SEC_REG,
->
-> ... and this is again.
->
-> Some naming should be clarified, e.g. tensor specific functions should
-> have some prefix as well, e.g. tensor_writel(), tensor_cmpxchg() or
-> something similar.
+The mba_MBps feedback loop increases throttling when a group is using
+more bandwidth than the target set by the user in the schemata file, and
+decreases throttling when below target.
 
-Noted. I will add a tensor prefix on these two functions as well in v2.
+To avoid possibly stepping throttling up and down on every poll a flag
+"delta_comp" is set whenever throttling is changed to indicate that the
+actual change in bandwidth should be recorded on the next poll in
+"delta_bw". Throttling is only reduced if the current bandwidth plus
+delta_bw is below the user target.
 
->
->
-> > +                   reg,
-> > +                   TENSOR_PMUREG_WRITE,
-> > +                   val, 0, 0, 0, 0, &res);
-> > +
-> > +     if (res.a0)
-> > +             pr_warn("%s(): SMC failed: %lu\n", __func__, res.a0);
-> > +
-> > +     return (int)res.a0;
-> > +}
-> > +
-> > +int rmw_priv_reg(phys_addr_t reg, u32 mask, u32 val)
-> > +{
-> > +     struct arm_smccc_res res;
-> > +
-> > +     arm_smccc_smc(TENSOR_SMC_PMU_SEC_REG,
-> > +                   reg,
-> > +                   TENSOR_PMUREG_RMW,
-> > +                   mask, val, 0, 0, 0, &res);
-> > +
-> > +     if (res.a0)
-> > +             pr_warn("%s(): SMC failed: %lu\n", __func__, res.a0);
-> > +
-> > +     return (int)res.a0;
-> > +}
-> > +
-> > +/*
-> > + * For SoCs that have set/clear bit hardware (as indicated by
-> > + * QUIRK_HAS_ATOMIC_BITSETHW) this function can be used when
-> > + * the PMU register will be accessed by multiple masters.
-> > + *
-> > + * For example, to set bits 13:8 in PMU reg offset 0x3e80
-> > + * exynos_pmu_set_bit_atomic(0x3e80, 0x3f00, 0x3f00);
-> > + *
-> > + * To clear bits 13:8 in PMU offset 0x3e80
-> > + * exynos_pmu_set_bit_atomic(0x3e80, 0x0, 0x3f00);
-> > + */
-> > +static inline void exynos_pmu_set_bit_atomic(unsigned int offset,
-> > +                                          u32 val, u32 mask)
-> > +{
-> > +     unsigned long flags;
-> > +     unsigned int i;
-> > +
-> > +     spin_lock_irqsave(&pmu_context->update_lock, flags);
-> > +     for (i = 0; i < 32; i++) {
-> > +             if (mask & BIT(i)) {
-> > +                     if (val & BIT(i)) {
-> > +                             offset |= 0xc000;
-> > +                             pmu_raw_writel(i, offset);
-> > +                     } else {
-> > +                             offset |= 0x8000;
-> > +                             pmu_raw_writel(i, offset);
-> > +                     }
-> > +             }
-> > +     }
-> > +     spin_unlock_irqrestore(&pmu_context->update_lock, flags);
-> > +}
-> > +
-> > +int exynos_pmu_update_bits(unsigned int offset, unsigned int mask,
-> > +                        unsigned int val)
-> > +{
-> > +     if (pmu_context->pmu_data &&
-> > +         pmu_context->pmu_data->quirks & QUIRK_PMU_ALIVE_WRITE_SEC)
-> > +             return rmw_priv_reg(pmu_context->pmu_base_pa + offset,
-> > +                                 mask, val);
-> > +
-> > +     return regmap_update_bits(pmu_context->pmureg, offset, mask, val);
-> > +}
-> > +EXPORT_SYMBOL(exynos_pmu_update_bits);
->
-> You need kerneldoc for all exported functions.
->
-> Also, EXPORT_SYMBOL_GPL
+This algorithm works well if the workload has steady bandwidth needs.
+But it can go badly wrong if the workload moves to a different phase
+just as the throttling level changed. E.g. if the workload becomes
+essentially idle right as throttling level is increased, the value
+calculated for delta_bw will be more or less the old bandwidth level.
+If the workload then resumes, Linux may never reduce throttling because
+current bandwidth plus delta_bw is above the target set by the user.
 
-Will fix both in v2.
+Implement a simpler heuristic by assuming that in the worst case the
+currently measured bandwidth is being controlled by the current level of
+throttling. Compute how much it may increase if throttling is relaxed to
+the next higher level. If that is still below the user target, then it
+is ok to reduce the amount of throttling.
 
->
-> > +
-> >  void pmu_raw_writel(u32 val, u32 offset)
-> >  {
-> > -     writel_relaxed(val, pmu_base_addr + offset);
-> > +     if (pmu_context->pmu_data &&
-> > +         pmu_context->pmu_data->quirks & QUIRK_PMU_ALIVE_WRITE_SEC)
-> > +             return (void)set_priv_reg(pmu_context->pmu_base_pa + offset,
-> > +                                       val);
-> > +
-> > +     return writel_relaxed(val, pmu_context->pmu_base_addr + offset);
-> >  }
-> >
->
-> ...
->
-> > diff --git a/drivers/soc/samsung/exynos-pmu.h b/drivers/soc/samsung/exynos-pmu.h
-> > index 1c652ffd79b4..570c6e4dc8c3 100644
-> > --- a/drivers/soc/samsung/exynos-pmu.h
-> > +++ b/drivers/soc/samsung/exynos-pmu.h
-> > @@ -25,8 +25,12 @@ struct exynos_pmu_data {
-> >       void (*pmu_init)(void);
-> >       void (*powerdown_conf)(enum sys_powerdown);
-> >       void (*powerdown_conf_extra)(enum sys_powerdown);
-> > +     u32 quirks;
-> >  };
-> >
-> > +int set_priv_reg(phys_addr_t reg, u32 val);
-> > +int rmw_priv_reg(phys_addr_t reg, u32 mask, u32 val);
->
-> Why these are in the header?
+Fixes: ba0f26d8529c ("x86/intel_rdt/mba_sc: Prepare for feedback loop")
+Reported-by: Xiaochen Shen <xiaochen.shen@intel.com>
+Signed-off-by: Tony Luck <tony.luck@intel.com>
+Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
+Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
+Tested-by: Xiaochen Shen <xiaochen.shen@intel.com>
+Link: https://lore.kernel.org/r/20240122180807.70518-1-tony.luck@intel.com
+---
+ arch/x86/kernel/cpu/resctrl/internal.h |  4 +--
+ arch/x86/kernel/cpu/resctrl/monitor.c  | 42 +++++--------------------
+ 2 files changed, 10 insertions(+), 36 deletions(-)
 
-Will fix in v2.
-
-regards,
-
-Peter.
+diff --git a/arch/x86/kernel/cpu/resctrl/internal.h b/arch/x86/kernel/cpu/resctrl/internal.h
+index e3dc35a..52e7e7d 100644
+--- a/arch/x86/kernel/cpu/resctrl/internal.h
++++ b/arch/x86/kernel/cpu/resctrl/internal.h
+@@ -295,14 +295,10 @@ struct rftype {
+  * struct mbm_state - status for each MBM counter in each domain
+  * @prev_bw_bytes: Previous bytes value read for bandwidth calculation
+  * @prev_bw:	The most recent bandwidth in MBps
+- * @delta_bw:	Difference between the current and previous bandwidth
+- * @delta_comp:	Indicates whether to compute the delta_bw
+  */
+ struct mbm_state {
+ 	u64	prev_bw_bytes;
+ 	u32	prev_bw;
+-	u32	delta_bw;
+-	bool	delta_comp;
+ };
+ 
+ /**
+diff --git a/arch/x86/kernel/cpu/resctrl/monitor.c b/arch/x86/kernel/cpu/resctrl/monitor.c
+index acca577..3a6c069 100644
+--- a/arch/x86/kernel/cpu/resctrl/monitor.c
++++ b/arch/x86/kernel/cpu/resctrl/monitor.c
+@@ -440,9 +440,6 @@ static void mbm_bw_count(u32 rmid, struct rmid_read *rr)
+ 
+ 	cur_bw = bytes / SZ_1M;
+ 
+-	if (m->delta_comp)
+-		m->delta_bw = abs(cur_bw - m->prev_bw);
+-	m->delta_comp = false;
+ 	m->prev_bw = cur_bw;
+ }
+ 
+@@ -520,11 +517,11 @@ static void update_mba_bw(struct rdtgroup *rgrp, struct rdt_domain *dom_mbm)
+ {
+ 	u32 closid, rmid, cur_msr_val, new_msr_val;
+ 	struct mbm_state *pmbm_data, *cmbm_data;
+-	u32 cur_bw, delta_bw, user_bw;
+ 	struct rdt_resource *r_mba;
+ 	struct rdt_domain *dom_mba;
+ 	struct list_head *head;
+ 	struct rdtgroup *entry;
++	u32 cur_bw, user_bw;
+ 
+ 	if (!is_mbm_local_enabled())
+ 		return;
+@@ -543,7 +540,6 @@ static void update_mba_bw(struct rdtgroup *rgrp, struct rdt_domain *dom_mbm)
+ 
+ 	cur_bw = pmbm_data->prev_bw;
+ 	user_bw = dom_mba->mbps_val[closid];
+-	delta_bw = pmbm_data->delta_bw;
+ 
+ 	/* MBA resource doesn't support CDP */
+ 	cur_msr_val = resctrl_arch_get_config(r_mba, dom_mba, closid, CDP_NONE);
+@@ -555,49 +551,31 @@ static void update_mba_bw(struct rdtgroup *rgrp, struct rdt_domain *dom_mbm)
+ 	list_for_each_entry(entry, head, mon.crdtgrp_list) {
+ 		cmbm_data = &dom_mbm->mbm_local[entry->mon.rmid];
+ 		cur_bw += cmbm_data->prev_bw;
+-		delta_bw += cmbm_data->delta_bw;
+ 	}
+ 
+ 	/*
+ 	 * Scale up/down the bandwidth linearly for the ctrl group.  The
+ 	 * bandwidth step is the bandwidth granularity specified by the
+ 	 * hardware.
+-	 *
+-	 * The delta_bw is used when increasing the bandwidth so that we
+-	 * dont alternately increase and decrease the control values
+-	 * continuously.
+-	 *
+-	 * For ex: consider cur_bw = 90MBps, user_bw = 100MBps and if
+-	 * bandwidth step is 20MBps(> user_bw - cur_bw), we would keep
+-	 * switching between 90 and 110 continuously if we only check
+-	 * cur_bw < user_bw.
++	 * Always increase throttling if current bandwidth is above the
++	 * target set by user.
++	 * But avoid thrashing up and down on every poll by checking
++	 * whether a decrease in throttling is likely to push the group
++	 * back over target. E.g. if currently throttling to 30% of bandwidth
++	 * on a system with 10% granularity steps, check whether moving to
++	 * 40% would go past the limit by multiplying current bandwidth by
++	 * "(30 + 10) / 30".
+ 	 */
+ 	if (cur_msr_val > r_mba->membw.min_bw && user_bw < cur_bw) {
+ 		new_msr_val = cur_msr_val - r_mba->membw.bw_gran;
+ 	} else if (cur_msr_val < MAX_MBA_BW &&
+-		   (user_bw > (cur_bw + delta_bw))) {
++		   (user_bw > (cur_bw * (cur_msr_val + r_mba->membw.min_bw) / cur_msr_val))) {
+ 		new_msr_val = cur_msr_val + r_mba->membw.bw_gran;
+ 	} else {
+ 		return;
+ 	}
+ 
+ 	resctrl_arch_update_one(r_mba, dom_mba, closid, CDP_NONE, new_msr_val);
+-
+-	/*
+-	 * Delta values are updated dynamically package wise for each
+-	 * rdtgrp every time the throttle MSR changes value.
+-	 *
+-	 * This is because (1)the increase in bandwidth is not perfectly
+-	 * linear and only "approximately" linear even when the hardware
+-	 * says it is linear.(2)Also since MBA is a core specific
+-	 * mechanism, the delta values vary based on number of cores used
+-	 * by the rdtgrp.
+-	 */
+-	pmbm_data->delta_comp = true;
+-	list_for_each_entry(entry, head, mon.crdtgrp_list) {
+-		cmbm_data = &dom_mbm->mbm_local[entry->mon.rmid];
+-		cmbm_data->delta_comp = true;
+-	}
+ }
+ 
+ static void mbm_update(struct rdt_resource *r, struct rdt_domain *d, int rmid)
