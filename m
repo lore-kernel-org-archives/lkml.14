@@ -1,88 +1,209 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4A8777622;
-	Wed, 24 Jan 2024 15:12:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1154C7A707;
+	Wed, 24 Jan 2024 15:12:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.149.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706109152; cv=none; b=DdGmZsay+uThWdJC9gKlbezA+t6gm7wYSV6Mkh3rtkH3XCgqqYVlf7dIwdtufk+FkYtywWLSBntlXaOfuQa3ZlMkblNbY2suZgRQSbHqClpeFB8srTh9NZi9KLBSRqO61v839iiQCSwuw3sQUw8wCosBUpLP0Xv69seZB8iF8dE=
+	t=1706109160; cv=none; b=ITYLpX9efdsozkCa4bZ1uEACT6SyWg6uvGGj9liwU2O8TOQmLrt1XhLWfkdJkj4dRWC6aNaYShjhdLOIbCwpGJh01ItIeaOeywUyN/tqrQy3QlaYw2K9hNSHWRn3QDYcz3P2JMqD9ZU+lPZRV55d50HbFvBO06BopVtqDRgF4b8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706109152; c=relaxed/simple;
-	bh=wfC03zoZ3529QzlkL1NJxd4ZXGSNuHiPokwD376BEfo=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=inqSxX5iYG3WUpnCZMhbdNK3GUzeQ0hV+GXAmymqrU8gMThjnDRR2CsH+APXUmDhtH3qTamTuXhmR4BTlLmPlTitZQMAJmIW+Qia1VETCIJsL1nnzU84diWUuLt66n4+L2AsxxBayFX/o9x4xjDUOsiiC1CnSeuXMQMP+nLbsN8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ePlmf1xU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706109160; c=relaxed/simple;
+	bh=pk9SStOkm9HtYlm53RC4FWe7ynG+SM2C/0oSSEXRu/A=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=DQyaJ2qypMtn1wN1dyEi6hCXhOmItp0rEQ6aiHrTgp4V7f64AroIrWd1w9pZDSd6GIS25Vn6y6YNBSyT065xJi5FqNq3D+GBnWIAqFdPDSQUfsRNCieEpbrxQ055vFyjAzo6GbJ8wNyXh3tkS+FJ8cRrDfFQmsdXAibfIvIjKL0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=R3u9vIWX; arc=none smtp.client-ip=67.231.149.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ePlmf1xU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5249C433F1;
-	Wed, 24 Jan 2024 15:12:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706109151;
-	bh=wfC03zoZ3529QzlkL1NJxd4ZXGSNuHiPokwD376BEfo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=ePlmf1xUwF23xA/cp661E1kcGNECj8m+f6ryEwXXq8GOlxstCfllrybJV6LPGtNz4
-	 ybkYUd6JQO67OTKgIDQ5O0ubWHEvb104gmNITK/JqvKGrvYQ7/5rVJz9pfY00qaK8e
-	 Y1hrcW8XxWfXFy0jEke1cgQc5hFxA09i9hem1lbLFmKeN7qu73nwcIilbtLPK+Bz8c
-	 tVJf/ruIDcpAprzGlrupxvLfsBYTaHhNokhNujxd0OTZITDMtaKXRDaH7dAoVCI1xK
-	 ltNUWDw7Gf+JG44iZCdjrl+li29Y5AUyJFhZYlHsaVHaNDCiXbaTtV3/unoxhyf3iK
-	 Gqgxth/7H5bow==
-Date: Wed, 24 Jan 2024 07:12:29 -0800
-From: Jakub Kicinski <kuba@kernel.org>
-To: Dmitry Safonov <dima@arista.com>
-Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Shuah Khan
- <shuah@kernel.org>, Dmitry Safonov <0x7f454c46@gmail.com>, Mohammad Nassiri
- <mnassiri@ciena.com>, netdev@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/3] selftests/net: A couple of typos fixes in
- key-management test
-Message-ID: <20240124071229.6a7262cc@kernel.org>
-In-Reply-To: <a9a5378d-c908-4a83-a63d-3e9928733a3d@arista.com>
-References: <20240118-tcp-ao-test-key-mgmt-v1-0-3583ca147113@arista.com>
-	<20240118085129.6313054b@kernel.org>
-	<358faa27-3ea3-4e63-a76f-7b5deeed756d@arista.com>
-	<20240118091327.173f3cb0@kernel.org>
-	<a9a5378d-c908-4a83-a63d-3e9928733a3d@arista.com>
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="R3u9vIWX"
+Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
+	by mx0a-001ae601.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40O7L4cv000450;
+	Wed, 24 Jan 2024 09:12:26 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=
+	from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding:content-type; s=PODMain02222019; bh=s
+	34WAcFS7YmLudj+Nc5iYgo1xcAFqjeqgfAxqyK01rU=; b=R3u9vIWXl/AMzsBrx
+	F+g39TK/Htc+WQkKqRk0mH93zMTxvFff082Gk7JFsmT2Kw5a8gCPQ6qqH88Qt32j
+	0qCN6wo/o2xSPUZN7wz1nsQjBr9BgimjdvV72q3QHaiWa7jsle1Qbq8Uty8kRoyN
+	cuwLuVVNJTtjVBA9QqQNAcNO97ofR0OXcPjOA7DzLk5bsJwTXQ1XOd9CxntFwOcm
+	AEfkLr0nQ7Ipl4jp/p6Q4xh0uxuuceHsKAwRENkkpnsNnT+QHP9u1vBEzesH8jWq
+	otFK9nQswhUSjyhuAGYw46LRT/BzXUveaozihSen1gP93KqWHxRDZmpAAfTJdTLE
+	b8qFQ==
+Received: from ediex02.ad.cirrus.com ([84.19.233.68])
+	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 3vtmfhgxx7-2
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 24 Jan 2024 09:12:25 -0600 (CST)
+Received: from ediex02.ad.cirrus.com (198.61.84.81) by ediex02.ad.cirrus.com
+ (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Wed, 24 Jan
+ 2024 15:12:22 +0000
+Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
+ anon-ediex02.ad.cirrus.com (198.61.84.81) with Microsoft SMTP Server id
+ 15.2.1118.40 via Frontend Transport; Wed, 24 Jan 2024 15:12:22 +0000
+Received: from ediswws07.ad.cirrus.com (ediswws07.ad.cirrus.com [198.90.208.14])
+	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id 29F52820246;
+	Wed, 24 Jan 2024 15:12:22 +0000 (UTC)
+From: Charles Keepax <ckeepax@opensource.cirrus.com>
+To: <lee@kernel.org>, <broonie@kernel.org>
+CC: <alsa-devel@alsa-project.org>, <patches@opensource.cirrus.com>,
+        <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>
+Subject: [PATCH 1/6] mfd: cs42l43: Tidy up header includes
+Date: Wed, 24 Jan 2024 15:12:17 +0000
+Message-ID: <20240124151222.1448570-1-ckeepax@opensource.cirrus.com>
+X-Mailer: git-send-email 2.30.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-ORIG-GUID: AozGL7WfIKeRKsB6yIVyXAejrXDCfbYL
+X-Proofpoint-GUID: AozGL7WfIKeRKsB6yIVyXAejrXDCfbYL
+X-Proofpoint-Spam-Reason: safe
 
-On Fri, 19 Jan 2024 18:39:14 +0000 Dmitry Safonov wrote:
-> > You probably want something smaller to be honest.
-> > tools/testing/selftests/net/config has a lot of stuff in it 
-> > and it's actually missing a lot more. I'm working thru adding
-> > the missing options to tools/testing/selftests/net/config 
-> > right now so far I got:  
-> 
-> Thanks!
-> 
-> I'll send a patch for it in version 2 (as I anyway need to address
-> Simon's feedback).
+Use more forward declarations, move header guards to cover other
+includes, and rely less on including headers through other headers.
 
-Hi Dmitry!
+Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+---
+ drivers/mfd/cs42l43-i2c.c   |  6 +++++-
+ drivers/mfd/cs42l43-sdw.c   |  6 +++++-
+ drivers/mfd/cs42l43.c       |  8 +++++++-
+ drivers/mfd/cs42l43.h       |  9 +++++----
+ include/linux/mfd/cs42l43.h | 13 +++++++------
+ 5 files changed, 29 insertions(+), 13 deletions(-)
 
-I put TCP_AO and VETH in the config and the tests seem to fail with
+diff --git a/drivers/mfd/cs42l43-i2c.c b/drivers/mfd/cs42l43-i2c.c
+index 4922211680c96..7162274a0b551 100644
+--- a/drivers/mfd/cs42l43-i2c.c
++++ b/drivers/mfd/cs42l43-i2c.c
+@@ -6,11 +6,15 @@
+  *                         Cirrus Logic International Semiconductor Ltd.
+  */
+ 
++#include <linux/array_size.h>
+ #include <linux/err.h>
+-#include <linux/errno.h>
+ #include <linux/i2c.h>
++#include <linux/mfd/cs42l43.h>
+ #include <linux/mfd/cs42l43-regs.h>
++#include <linux/mod_devicetable.h>
+ #include <linux/module.h>
++#include <linux/pm.h>
++#include <linux/regmap.h>
+ 
+ #include "cs42l43.h"
+ 
+diff --git a/drivers/mfd/cs42l43-sdw.c b/drivers/mfd/cs42l43-sdw.c
+index 1d85bbf8cdd5d..d6962a5a35f65 100644
+--- a/drivers/mfd/cs42l43-sdw.c
++++ b/drivers/mfd/cs42l43-sdw.c
+@@ -6,11 +6,15 @@
+  *                         Cirrus Logic International Semiconductor Ltd.
+  */
+ 
++#include <linux/array_size.h>
+ #include <linux/device.h>
+ #include <linux/err.h>
+-#include <linux/errno.h>
++#include <linux/mfd/cs42l43.h>
+ #include <linux/mfd/cs42l43-regs.h>
++#include <linux/mod_devicetable.h>
+ #include <linux/module.h>
++#include <linux/pm.h>
++#include <linux/regmap.h>
+ #include <linux/soundwire/sdw.h>
+ #include <linux/soundwire/sdw_registers.h>
+ #include <linux/soundwire/sdw_type.h>
+diff --git a/drivers/mfd/cs42l43.c b/drivers/mfd/cs42l43.c
+index 7b6d07cbe6fc6..4e2bc5ad244a5 100644
+--- a/drivers/mfd/cs42l43.c
++++ b/drivers/mfd/cs42l43.c
+@@ -6,18 +6,24 @@
+  *                         Cirrus Logic International Semiconductor Ltd.
+  */
+ 
++#include <linux/array_size.h>
+ #include <linux/bitops.h>
+ #include <linux/build_bug.h>
+ #include <linux/delay.h>
++#include <linux/device.h>
+ #include <linux/err.h>
+-#include <linux/errno.h>
+ #include <linux/firmware.h>
++#include <linux/gpio/consumer.h>
+ #include <linux/jiffies.h>
+ #include <linux/mfd/core.h>
++#include <linux/mfd/cs42l43.h>
+ #include <linux/mfd/cs42l43-regs.h>
+ #include <linux/module.h>
++#include <linux/pm.h>
+ #include <linux/pm_runtime.h>
++#include <linux/regmap.h>
+ #include <linux/soundwire/sdw.h>
++#include <linux/types.h>
+ 
+ #include "cs42l43.h"
+ 
+diff --git a/drivers/mfd/cs42l43.h b/drivers/mfd/cs42l43.h
+index eb4caf3938332..70129db9f916e 100644
+--- a/drivers/mfd/cs42l43.h
++++ b/drivers/mfd/cs42l43.h
+@@ -6,15 +6,16 @@
+  *                         Cirrus Logic International Semiconductor Ltd.
+  */
+ 
+-#include <linux/mfd/cs42l43.h>
+-#include <linux/pm.h>
+-#include <linux/regmap.h>
+-
+ #ifndef CS42L43_CORE_INT_H
+ #define CS42L43_CORE_INT_H
+ 
+ #define CS42L43_N_DEFAULTS 176
+ 
++struct cs42l43;
++struct dev_pm_ops;
++struct device;
++struct reg_default;
++
+ extern const struct dev_pm_ops cs42l43_pm_ops;
+ extern const struct reg_default cs42l43_reg_default[CS42L43_N_DEFAULTS];
+ 
+diff --git a/include/linux/mfd/cs42l43.h b/include/linux/mfd/cs42l43.h
+index cf8263aab41bd..2239d8585e785 100644
+--- a/include/linux/mfd/cs42l43.h
++++ b/include/linux/mfd/cs42l43.h
+@@ -6,20 +6,21 @@
+  *                         Cirrus Logic International Semiconductor Ltd.
+  */
+ 
++#ifndef CS42L43_CORE_EXT_H
++#define CS42L43_CORE_EXT_H
++
+ #include <linux/completion.h>
+-#include <linux/device.h>
+-#include <linux/gpio/consumer.h>
+ #include <linux/mutex.h>
+ #include <linux/regmap.h>
+ #include <linux/regulator/consumer.h>
+-#include <linux/soundwire/sdw.h>
+ #include <linux/workqueue.h>
+ 
+-#ifndef CS42L43_CORE_EXT_H
+-#define CS42L43_CORE_EXT_H
+-
+ #define CS42L43_N_SUPPLIES		3
+ 
++struct device;
++struct gpio_desc;
++struct sdw_slave;
++
+ enum cs42l43_irq_numbers {
+ 	CS42L43_PLL_LOST_LOCK,
+ 	CS42L43_PLL_READY,
+-- 
+2.30.2
 
-selftests: net/tcp_ao: rst_ipv4
-not ok 1 # error 834[lib/kconfig.c:143] Failed to initialize kconfig 2: No such file or directory
-# Planned tests != run tests (0 != 1)
-# Totals: pass:0 fail:0 xfail:0 xpass:0 skip:0 error:1
-
-The script does:
-
-target=net/tcp_ao
-make mrproper
-
-vng -v -b -f tools/testing/selftests/$target
-# build the scripts
-make headers
-make -C tools/testing/selftests/$target
-
-vng -v -r arch/x86/boot/bzImage --user root
-# inside the VM
-make -C tools/testing/selftests TARGETS=$target run_tests
