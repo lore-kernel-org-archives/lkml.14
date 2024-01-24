@@ -1,129 +1,97 @@
-Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 868B910E5;
-	Wed, 24 Jan 2024 01:20:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0095EC5;
+	Wed, 24 Jan 2024 01:26:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706059246; cv=none; b=J2E0jEW+/aewpLE3LzdCzjfnbli52+2kb2H55KR/yHbOd6Lgle/IFVJm6kwxYgJXUTpLcRuzzJxmDSoexAVBuAaUw5qHZAd6nD+xheAHK/l+mJ+dHG2bcAgeSArN+co5bp/huAKLaGgty0m52vFkses8xL4Xo9ZoK11GnB4+XCE=
+	t=1706059603; cv=none; b=PI3wKPzZaCqwvpJp/2/yP2PdMY92OkvE9g3mmI4EzrZi6BEj4bj+yGLgpDD6yd89ZVE85PIPXn7d2jreDSWk/8KrA+Pp1ez3LCJLvF7cWFBR8dLuzhtkcD/sn7iXPMLw6Pl9dqXcIO+NemjPXiXpDNaGJDd24IJTMrDFRkdMM3U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706059246; c=relaxed/simple;
-	bh=DlUG2Zfv+VlC9R78AA7XXMcscCle7LDwie4DRrQrrS0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dkSnCHumjwonKCB7lfx3L8YkYdb63QoKLOuE0fXhXDiroOeMhvCMsfdoqihkLQoXIcf6RrF/XMC/JkoXa0oG0IFeZWKALQ1mGvQWaSYTk4kNMYsuNiEBY/FzSxb839gTac3mh3Rxkx5V9iCIoHgQsztq7MFPIMyJoxrHJLxM5LM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=YmOWnwON; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1706059603; c=relaxed/simple;
+	bh=j34jFf8Lg18z7ESEocx5XiCdaa6sLj8slT2vXXI7dxs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oQu6YIDE570nGQAnhD2YV/2hSsMQTSaEA+evxV7oZK+OSGG+6ILTBHBuNvYzQ5EKPAgGkGEcz0N342TB9qDGZkO99jkd5xgzdJcB/s0VMICEXEAHhVj6MS8Vgdt/vxDhUA5hhcKQRLodoJOTHoFKFUn01+e+j+bbutyBoV82aVo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=LZns3JX3; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="YmOWnwON"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1706059241;
-	bh=asYAKAHzzR5q9ebahZtAuIYyNofHyBLRh6/Ww9HqgsE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=YmOWnwONzpqZisp4gxI7yM1h9NcFd/B4O8H+4A64RQa65JxJ+A5weP5QMdFm3LhFZ
-	 /OPbSydxNhOo/zl5JoXq7N4soubnk/aLNoXoc7Xcl44zvdljJB6v9RLpIyYLmJR8Xd
-	 b0T3lAdm3/t5JJzpduy21xoxaxE58SVIg9fBItlDXfSY4eIniseNZdaBDkSDGGSjFU
-	 kf2f4w32KeGskWTv2UrIUBddUk2/37FnY/v+jQ7aSvHL3Huyf/Hm80+R6i4Zi8QSDR
-	 N33mi1dVodAQPtEtuoOJtwdLA2gkQUFVY0SO77eRTqfphv1F1ANRpUNmy0ho5/ycNz
-	 dt9Pqd4kekLcA==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4TKR3Y1Bxjz4wby;
-	Wed, 24 Jan 2024 12:20:41 +1100 (AEDT)
-Date: Wed, 24 Jan 2024 12:20:40 +1100
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Christian Brauner <brauner@kernel.org>
-Cc: Baokun Li <libaokun1@huawei.com>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: Re: linux-next: build failure after merge of the vfs-brauner tree
-Message-ID: <20240124122040.04cd2c8a@canb.auug.org.au>
-In-Reply-To: <20240123125227.0521c8d9@canb.auug.org.au>
-References: <20240123125227.0521c8d9@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LZns3JX3"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+	bh=ZACLddTL1hSFNg3sqrkIaMx4QGJCs1G4xd7qc8mSFn4=; b=LZns3JX3XgwT8Y7AJ55eZAeysU
+	Ar/vuIoH7PuwnzsCSL6JaKURMxziF86onll5n6P2I1SXOODVTYa2JMiJ/NikIzKOzg0PSVTH7VqTv
+	uVdiNr+aMiCYKp2l1B2GDC3F0aGh+Lo7RfMcYjTMPqr/9aoFjZedJcc7Kp/P5Mc4fARrZWJ8RaqNd
+	rfRWFc1dYHZHfbegPYWnBRojURt5XWMbQG7XIJNpizkDnHSAbvoFr278udfKZ983dLqtNhWOHjqp4
+	BByZS5ie+MSZyNp6iWhrClKwrurOOJ7weRBslC8mzS7+GVh/wa0fUHpsAvW65tDqoYi0IK+RfGDTV
+	ER3w6AzA==;
+Received: from [50.53.50.0] (helo=[192.168.254.15])
+	by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+	id 1rSS2J-0010iQ-24;
+	Wed, 24 Jan 2024 01:26:41 +0000
+Message-ID: <8eac7bf0-86c5-43ef-99e0-0896c994184a@infradead.org>
+Date: Tue, 23 Jan 2024 17:26:39 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/oWBOxkiS20m+fB2I4rUQ7ZR";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6/8] Documentation: Create a new folder for all timer
+ internals
+Content-Language: en-US
+To: Anna-Maria Behnsen <anna-maria@linutronix.de>,
+ linux-kernel@vger.kernel.org
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+ Frederic Weisbecker <frederic@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+ John Stultz <jstultz@google.com>, Stephen Boyd <sboyd@kernel.org>,
+ Jonathan Corbet <corbet@lwn.net>, Clemens Ladisch <clemens@ladisch.de>,
+ linux-doc@vger.kernel.org
+References: <20240123164702.55612-1-anna-maria@linutronix.de>
+ <20240123164702.55612-7-anna-maria@linutronix.de>
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20240123164702.55612-7-anna-maria@linutronix.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
---Sig_/oWBOxkiS20m+fB2I4rUQ7ZR
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi,
 
-Hi all,
+On 1/23/24 08:47, Anna-Maria Behnsen wrote:
+> The structure of documentation changed. There is 'core-api' where also
+> timer related documentation belongs to. But the timer related documentation
+> (doesn't matter whether it is up to date or outdated) is still located in a
+> separate folder with no relation to core-api.
+> 
+> Create a new folder which is located below core-api and make it the new
+> place for all timer related documentation. Instead of revisiting all files
+> below the already existing timer folder right now, add a warning banner to
+> the top of all those files. When it is ensured the content is up to date,
+> they can be moved to the final destination.
+> 
+> Signed-off-by: Anna-Maria Behnsen <anna-maria@linutronix.de>
+> ---
+>  Documentation/core-api/index.rst        |  1 +
+>  Documentation/core-api/timers/index.rst | 22 ++++++++++++++++++++++
+>  Documentation/timers/highres.rst        |  5 +++++
+>  Documentation/timers/hpet.rst           |  5 +++++
+>  Documentation/timers/hrtimers.rst       |  5 +++++
+>  Documentation/timers/index.rst          |  5 +++++
+>  Documentation/timers/no_hz.rst          |  4 ++++
+>  Documentation/timers/timekeeping.rst    |  5 +++++
+>  Documentation/timers/timers-howto.rst   |  5 +++++
 
-On Tue, 23 Jan 2024 12:52:27 +1100 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
->=20
-> After merging the vfs-brauner tree, today's linux-next build (powerpc
-> allnoconfig) failed like this:
->=20
-> In file included from <command-line>:
-> In function 'i_size_read',
->     inlined from '__iomap_dio_rw' at fs/iomap/direct-io.c:570:16:
-> include/linux/compiler_types.h:435:45: error: call to '__compiletime_asse=
-rt_229' declared with attribute error: Need native word sized stores/loads =
-for atomicity.
->   435 |         _compiletime_assert(condition, msg, __compiletime_assert_=
-, __COUNTER__)
->       |                                             ^
-> include/linux/compiler_types.h:416:25: note: in definition of macro '__co=
-mpiletime_assert'
->   416 |                         prefix ## suffix();                      =
-       \
->       |                         ^~~~~~
-> include/linux/compiler_types.h:435:9: note: in expansion of macro '_compi=
-letime_assert'
->   435 |         _compiletime_assert(condition, msg, __compiletime_assert_=
-, __COUNTER__)
->       |         ^~~~~~~~~~~~~~~~~~~
-> include/linux/compiler_types.h:438:9: note: in expansion of macro 'compil=
-etime_assert'
->   438 |         compiletime_assert(__native_word(t),                     =
-       \
->       |         ^~~~~~~~~~~~~~~~~~
-> include/asm-generic/barrier.h:206:9: note: in expansion of macro 'compile=
-time_assert_atomic_type'
->   206 |         compiletime_assert_atomic_type(*p);                      =
-       \
->       |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> include/linux/fs.h:911:16: note: in expansion of macro 'smp_load_acquire'
->   911 |         return smp_load_acquire(&inode->i_size);
->       |                ^~~~~~~~~~~~~~~~
->=20
-> Caused by commit
->=20
->   4bbd51d0f0ad ("fs: make the i_size_read/write helpers be smp_load_acqui=
-re/store_release()")
->=20
-> I have used the vfs-brauner tree from next-20240122 for today.
+When can we remove the old, "might be outdated" files?
+Do you think that some of their contents might be valuable to someone?
 
-Pending a better resolution, today I have reverted that commit and the
-following one.
+I prefer not to have the old documentation and the new.
 
---=20
-Cheers,
-Stephen Rothwell
+>  9 files changed, 57 insertions(+)
+>  create mode 100644 Documentation/core-api/timers/index.rst
+> 
 
---Sig_/oWBOxkiS20m+fB2I4rUQ7ZR
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+Thanks.
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmWwZegACgkQAVBC80lX
-0GwPMAf9GnMCwBQOZ0NigjRc3FjjD1Y8bDXIXTo+EGovtHKenqWztRjLFB093BWP
-dDxqGiNHBFRk/Qly4u8MX2EBRdbYF7S1W8nEF54DfbAJgZCH5ADnDYIdXR30/Zsl
-nvhYbGdLI6BMzqB0axafN1Wcz2sRqh7h3MwimYXSNlAqvJdaoI0XXTMX0NPWityB
-EUhOb7qO0IQXjGCQRMTITHElqd2qoTxHMa+WAPd408eTBlCxM+sjGwlbPs2GvQm0
-pcp9DUr46Wm16xXDvUwaOUgIWGfw26XMmXqKFT3F9xJLyhzh8KncYuXy9xEESEV5
-jbpHSFM4K1RTPB1Te/MZ44KuoHeC7A==
-=Vnmt
------END PGP SIGNATURE-----
-
---Sig_/oWBOxkiS20m+fB2I4rUQ7ZR--
+-- 
+#Randy
