@@ -1,58 +1,58 @@
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DF211428F
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 06:34:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2955D275
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 06:38:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706078054; cv=none; b=MWZ/51dcN9t4nKTJieSfHkfiK9SjXypgah4SUZX9D+zEZI4O/RNkPYfGFloenXGO2onZuBbNtcOnaYyW7SZBcpLTf80gHXoIUWFDVi1CWzJpPGW6czX6+BhdD6dZijqwO/A1CrTypAlwe87qZ+q1hz/Way+EejuaNSDkRszbqUo=
+	t=1706078316; cv=none; b=sArWECMNLWESAg26Rk4CK2wEW/IL9MuwelY9/PEClayCZJ0yduSAcAce8RnVZ3Xo7XqIOpXuvckwBYjjYNLbaLJSeaxkLVbb3lR2ZiIpsaEixPmrvAbyMTgwBhrLhCyaywB6W2dVKqf4Ujf3JtbRbK1Kzi9MTiAOJ5r9Gg62zoE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706078054; c=relaxed/simple;
-	bh=L+THUiwmAARSADYIRz0u64nl4DCcopfBuIz76DH9F9o=;
+	s=arc-20240116; t=1706078316; c=relaxed/simple;
+	bh=iIRKuV8f2gWOeDsD9smdj8g40Bi1ybJL6ZTZNPN1lXQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SL8vUVgl/5cK4hiXCPkNgFPRgbk0rTmgXxpo4cTMp0RVQ8c2dYnTpWciKSEKRqqZYSt6B728Sb7cpwA5YHVBIZMnGqR0iS/QrPTfrogWzMaAt/f6o282vT6ufz5KdSee0sV7+jWQLqPJFmvjiXxKo1jD0HjnzWP9+PCnRYombpg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=e1zk9p8s; arc=none smtp.client-ip=209.85.167.41
+	 In-Reply-To:Content-Type; b=dzHTWwk8WhXCI4hJrvGIb+/Jxcc+QncPsEJtKPIgQ+gTjsgHPwsOqvphpyAVBkz03Rqvps5SOLvRkGT73idMSkuvJ9i0ONPezce6VTuoSxl7n8g9XBSGQJbb8RciL3nU3EtfJ2CBy1sl+9J4GfdzxexrZDvdbJu5fBgxCbbcElg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qgZ2uknl; arc=none smtp.client-ip=209.85.128.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="e1zk9p8s"
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-5100c3f7df1so1348657e87.0
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 22:34:13 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qgZ2uknl"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-40eb033c192so15531435e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 22:38:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706078051; x=1706682851; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1706078313; x=1706683113; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=vfNWnUWcm3WPEBVslcuE4aBui9NgU4AGTeDXSpoH9UY=;
-        b=e1zk9p8sxOqkgK1nq39MNWxwoAzzodi0gouFTGbmtFv1C93k15LDfbW1LS+8JimgWN
-         nd/keSx7V2nhsS7sYr0PJ1eQQ0erYKhnCOvxsVFCMNw2EYKHcv+/j7KjBoKxpLS3RcXB
-         e81UnIqcSsBHFGr8ccR1xElLRfC9nxY86AyjKm0a1irWRZ5nPqCneIJkF2weHW8/5ZRN
-         5+HIBkM8fWAJSgpyNCYLxMdj7eWViWSjpr7AjzWfYdZ/FXbFSJoSAVmfnni9+OvA5/uL
-         nVbwVsBtkmVv8WoNX2mGq0YAIbfHbnnsuunMyyWxQ1WV1m4nvbS/68Bc7yfOdmzpuBxM
-         5k9Q==
+        bh=iIRKuV8f2gWOeDsD9smdj8g40Bi1ybJL6ZTZNPN1lXQ=;
+        b=qgZ2uknldcLY43WMtwIbF73tv/4mefbBH1JFCxgsmY6hm98S8LSOhSIrdZY4iRJrff
+         k8tA0bVw3iplfJL1pJIWMwTZYnZCB7YuazTYWWpkJeTuUg8WQTkFBUwLbsFogDMRSgSY
+         HUH0WRCbJT3Dm/W55sFJX1fn6oNL/hC8Qn+JbiA37Wh5ivrbeo5p1zRv01g+cR5VtU5a
+         jCOJi6Q3BJDPiVFG8xHpl11VqYlZKqh0zsNkNalM5MIbQCZQmJ7msR5hVIf6YqYp3ddq
+         Kqnwg6v1kvDo/adm70HDA5aUAmqEI9sq4eIdi6+rIBcm5z4gPLZ82UwqnBYX6C1rj/Tq
+         DHOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706078051; x=1706682851;
+        d=1e100.net; s=20230601; t=1706078313; x=1706683113;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vfNWnUWcm3WPEBVslcuE4aBui9NgU4AGTeDXSpoH9UY=;
-        b=oDyP4NwylBKJSObEN4C25IyjT2Ga/oWl4QqyYqLyLcHuYBFUoI9h4unt6FAn1PSB+2
-         SGs9k9+6eO3ba3Dkmv+eHX5BGBG48cV8Tv+iC6cx1Z2xFj3Ba4qGDRZPTTW4T/Hnp08U
-         FwknFlkw8Gugb6veg04j0C5oDWfe66XRT+t/mY/pD4Z3dSfANd61y+y5pBtdwb/gk7TO
-         5Jk0fuG3lff2iOxmq1BAuG6YjE7q2c8u8WbRD3DkWiwULx9jt9XBjPXfe+iQOOPa9cI6
-         tN6flJ+ZwrbrLijWe4P+BGgXD8zg6nBQ3HgRCG/5feLUg0YI5pAfYzx2hJBmKCtATlHb
-         LHLA==
-X-Gm-Message-State: AOJu0YzJMpObl/AscfkJ0QDW49Er1U7KMG1htsstjg9Jk2/98Zd1BX5l
-	lGl7u5RVjpH9uZKLO8VIp7KSPMtzNYFqA0Kd6EIc8PogGRnujvqRM/jsAvDloRk=
-X-Google-Smtp-Source: AGHT+IG7fUo88pMASepU5qZZLwqvGAdHoLhOHiZFHeH8aD0WcxgPFajpan06yafeLMt2vz+PejV9Gw==
-X-Received: by 2002:a05:6512:718:b0:510:d70:4823 with SMTP id b24-20020a056512071800b005100d704823mr497608lfs.44.1706078051338;
-        Tue, 23 Jan 2024 22:34:11 -0800 (PST)
+        bh=iIRKuV8f2gWOeDsD9smdj8g40Bi1ybJL6ZTZNPN1lXQ=;
+        b=ueJl2frQiIErajEQ4MT72o1FRr+L/QTHu2aZTtdb7AF7/n4ypAZFxVgjxTHiVI6Z3B
+         EClQ2alK/a/lfxsLTo0Q8mRS4PlZguPOVa4Qc9feF80+VCeKX1wZ9bMVwfEpEkYCbjpl
+         zPS9sfjDJnQXeBwHaN9rKu2RtKrHCjZB3zZ+KEB3f7v+lB6kZ7KbcEy4nYCWs2rrKvJc
+         5ymtDsCimNwe8qp+n9IC+1lNK19isvADKwsRtzQYHrO7fyzsSXTLLDSxDLJnEqTbQeVp
+         /jnwfUbtclQ8Pe5JsnRUPbBZ51BYlscoriV4Pt1uGXCNfy1xB7OLQh6p2Yi/UlveMpQQ
+         qGlQ==
+X-Gm-Message-State: AOJu0Yw9sTsUgCEYkhGiBEfBtQQMsUnJduQ/wwfCZbQWeMpfFkybb7jc
+	zZiURLfL6PAeKdjhxKeoxLWmR8gaGEdu4P8s/bL4ukLOLH1Kr4xfD607KUbujhs=
+X-Google-Smtp-Source: AGHT+IGzrR4WMVdf2dr9FVcfc5kfcw6dxDVIZ+LdeRuPoS1Y3w0JEDhsBfTu+DqeOd+oA4xgVtWP9A==
+X-Received: by 2002:a05:600c:1d24:b0:40e:45c0:ad64 with SMTP id l36-20020a05600c1d2400b0040e45c0ad64mr310263wms.14.1706078313034;
+        Tue, 23 Jan 2024 22:38:33 -0800 (PST)
 Received: from [192.168.1.20] ([178.197.215.66])
-        by smtp.gmail.com with ESMTPSA id d13-20020a05651233cd00b0050e7b6ee12bsm2490852lfg.296.2024.01.23.22.34.09
+        by smtp.gmail.com with ESMTPSA id f7-20020adff8c7000000b0033921c383b2sm12623550wrq.67.2024.01.23.22.38.31
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 23 Jan 2024 22:34:10 -0800 (PST)
-Message-ID: <28b3f4c6-9bd3-4a26-95d1-8809690b68a2@linaro.org>
-Date: Wed, 24 Jan 2024 07:34:08 +0100
+        Tue, 23 Jan 2024 22:38:32 -0800 (PST)
+Message-ID: <88e8cffb-024d-4f4d-ba1f-e0be9ee85e31@linaro.org>
+Date: Wed, 24 Jan 2024 07:38:31 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,23 +60,16 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] dt-bindings: clock: qcom,gcc-sm8150: Add support for
- bi_tcxo_ao
+Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: qcom: modify the wrong
+ compatible name
 Content-Language: en-US
-To: Satya Priya Kakitapalli <quic_skakitap@quicinc.com>,
- Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konrad.dybcio@linaro.org>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Taniya Das <quic_tdas@quicinc.com>
-Cc: linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- Ajit Pandey <quic_ajipan@quicinc.com>,
- Imran Shaik <quic_imrashai@quicinc.com>,
- Jagadeesh Kona <quic_jkona@quicinc.com>
-References: <20240123-gcc-ao-support-v1-0-6c18d5310874@quicinc.com>
- <20240123-gcc-ao-support-v1-1-6c18d5310874@quicinc.com>
+To: Tengfei Fan <quic_tengfan@quicinc.com>, andersson@kernel.org,
+ konrad.dybcio@linaro.org, linus.walleij@linaro.org, robh+dt@kernel.org,
+ krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org
+Cc: linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel@quicinc.com
+References: <20240124023305.15755-1-quic_tengfan@quicinc.com>
+ <20240124023305.15755-2-quic_tengfan@quicinc.com>
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
@@ -122,37 +115,16 @@ Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
  fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
  D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20240123-gcc-ao-support-v1-1-6c18d5310874@quicinc.com>
+In-Reply-To: <20240124023305.15755-2-quic_tengfan@quicinc.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 23/01/2024 17:34, Satya Priya Kakitapalli wrote:
-> Add support for bi_tcxo_ao, this allows to put an active only vote on
-> the critical clocks.
-> 
-> Signed-off-by: Satya Priya Kakitapalli <quic_skakitap@quicinc.com>
-> ---
->  Documentation/devicetree/bindings/clock/qcom,gcc-sm8150.yaml | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/qcom,gcc-sm8150.yaml b/Documentation/devicetree/bindings/clock/qcom,gcc-sm8150.yaml
-> index 58ccb7df847c..17e29e9bbc11 100644
-> --- a/Documentation/devicetree/bindings/clock/qcom,gcc-sm8150.yaml
-> +++ b/Documentation/devicetree/bindings/clock/qcom,gcc-sm8150.yaml
-> @@ -23,11 +23,13 @@ properties:
->    clocks:
->      items:
->        - description: Board XO source
-> +      - description: Board XO active only source
->        - description: Sleep clock source
->  
->    clock-names:
->      items:
->        - const: bi_tcxo
-> +      - const: bi_tcxo_ao
->        - const: sleep_clk
+On 24/01/2024 03:33, Tengfei Fan wrote:
+> Use right compatible name "qcom,sm4450-tlmm" instead of
+> "qcom,sm4450-pinctrl".
 
-You cannot add clocks in the middle. The order is fixed.
+Why do you claim this one is right and other is wrong? Provide
+arguments. To me the compatible looks correct.
 
 Best regards,
 Krzysztof
