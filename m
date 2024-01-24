@@ -1,112 +1,86 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3371718045;
-	Wed, 24 Jan 2024 09:56:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7A1417C6E;
+	Wed, 24 Jan 2024 09:57:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706090192; cv=none; b=Ha6ji6hL2K3zt71GsD6WHdnYRMON7uma8Sr3L8LwJ0r/BAh/wyNxoX2IYF7krxnx8wqYHEOJxcH2Nhx/biOquEsUihFBYJgsTqXP0Hf3b5dMCpLkQe/Bv3Vkgv243J5bkyJtmBceR8VODp0Wk24y9bToTXfGKj/kqmGevomZ9gs=
+	t=1706090252; cv=none; b=QdMMkpTVrjQoWu6R+FJYyqyuQXGjcZw/1IAkMsqK347GoaMXjv9vpButoWtSqNEVG8GtgpUpwaNMwUXx//xSp/64PQFsFJ8s+fdw1tj5VehuFMVd7kKnk+vtiukjuEl67RMxArXVzx3GYLNn7mTqa9B1DhHkulkR1Gt2rN52oeE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706090192; c=relaxed/simple;
-	bh=vQ+I9Ge+8bH1NA9WH7CqoqMtBiQEOSibipcnd/i3Qso=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=e57gkUQuflVtHQWgUcEsgXtezwQ6O2pxGFRnXtGtB/KLZ7soRBzwK95gh8musC8Z5NqtITVUi3wX7UTk3J/g/oZtEK9cobjdIPl2K0ZR2fRyJ+sPTdejyWuXgU7mA251YDbkpbRRARxU4JWo3APjDoEo+PC9isuYtdH4k1fWuuQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qT+xUCo8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706090252; c=relaxed/simple;
+	bh=9+hKMgNhK0f6pEf/gbfH0HV3V5FHbRS671inekWpQlk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ewTW9mS+JbPtStVh/86gFwfmyc1vifRSf6o+gnU3BIhkevB+QBNaAsmXJBqlicWdr+NexSgzQrQl2O01gLnepJHTXbLHpnaaQVjC8ClfWRD+blYleGMXa366RpF4SetKFCqTNIHn2aDdZLWicC1nqzoape1KQC6fSg7Y4ejSaaY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=cu3eigpU; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qT+xUCo8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8244C433B1;
-	Wed, 24 Jan 2024 09:56:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706090191;
-	bh=vQ+I9Ge+8bH1NA9WH7CqoqMtBiQEOSibipcnd/i3Qso=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=qT+xUCo8olWgqunC2fwyMUCPxe71wcF6swjsgLnths5AtynaNSt3Q7VPVIfo9Ra6d
-	 gq7TwCNm5UF54c4Tw7Ub8jZG5zfrunm9o5YMOwqtp3VP2MJQfNWGXnAL9u0/ooelN/
-	 d18topr4lldBvI9B2wji0KkF8wg1y1SLQOVq9gnr0it4Ef8bbDoW3JnUMNpmmyYUfY
-	 M5SvglWKSpjO/tvPLOUrrCRGH/komGq7p93CDurqd/r2osBLaMpNPPojQPg0ZoNEce
-	 e7btvPfKlmErrm6soS8BYAL8vRw8g4esrskw+sYb1mp159siTv74pLObiR24OsJ9aY
-	 83BZa90fM48cg==
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-5100893015fso1880330e87.1;
-        Wed, 24 Jan 2024 01:56:31 -0800 (PST)
-X-Gm-Message-State: AOJu0YwGNGM53ihFyQhDCHdc/GjC8vxhpe95j4Y7uWGje9w20uxZY3uP
-	1RsR3qu5dcxmUK1v37HWK3OJcL9YR4hQhgvOilMxkfwGt8mYh/Zv3Q+OlA1JA5HQav0dZ1cxDUD
-	7Oh5OJi1P/S5uC8pjNiQ7YAfluzc=
-X-Google-Smtp-Source: AGHT+IE3rPZK17ixDxsL+YcPJ/Q2xlEvwkcSUy8VmnbYNcPTU5xivtsjD2pYBrLIsytxrVaBRIobhJSEJqchFBAWaX0=
-X-Received: by 2002:ac2:5a06:0:b0:510:ca2:6b69 with SMTP id
- q6-20020ac25a06000000b005100ca26b69mr491573lfn.99.1706090189885; Wed, 24 Jan
- 2024 01:56:29 -0800 (PST)
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="cu3eigpU"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 347E540E01A9;
+	Wed, 24 Jan 2024 09:57:26 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id Y0rsV01bne4u; Wed, 24 Jan 2024 09:57:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1706090244; bh=Wto19mwz6qJ8ocgEL/gMtNXJgnaeFsjJB6kj/OkwYo0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=cu3eigpUjChBJTCD/hAw5mjfgJEHHw6B4s6u4ZmNj0d+5LEzcvUIdv09VBtPD9UqD
+	 SSzMty3hlSB7Tmki1utFQ0sK/eF1Bfwd3KpLdWmG6gWTA9M9K1+10XXdJYJy+8CSSJ
+	 DwrRnBtBCb1+6uy7Y5LZkr8DhoUoqIi/EBTBPpf5B/PY7mt9tjT6QDfHegQC8UgMwg
+	 2Pj7syZ1T2cmLebELuNFJ17U/OMK/UcfDL4uCMNsG3Ybh978r31+Uq0IzJgSF+xMtf
+	 unIU5bN54CgTcfSZGwOSlCKE9jx5kP+ZamDhZJzjuUZqA8Vx6nAIxYXWz4oe7OSe++
+	 V1VqHw1i1qoXykDWSZ2DJY/ADblFdD+vbfXQK68JQ2H2uAQZHQtYOljsECw4oSnXwe
+	 6vKCNDIpBKIkQ6L9njqxzG5K6StncKR9PVXVSu3O2fHtJp9C2lXZS5Im6oeNsvnjMv
+	 2RbsGexzBLDMyT1mmTY87yP4qkIlxuFFp3rEj6z5SnOIkoFcAp9cpauRBML3MvBKkN
+	 MFdgaiNySpC198OdSCjRrlh+l6jRllabsrsF33f/esFOYyYB0I/b1VpQq+K/ZAtNNF
+	 UPaqPD585GJaHC3hzj/5I1+D3rKhsD0DhuWcjRUGtUsjpCw4zpnctxbFGHd0s41NmP
+	 4Jjr1z/00jR+fwpBzdXlXBEg=
+Received: from zn.tnic (pd953033e.dip0.t-ipconnect.de [217.83.3.62])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id DFBA140E0177;
+	Wed, 24 Jan 2024 09:57:14 +0000 (UTC)
+Date: Wed, 24 Jan 2024 10:57:08 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: "Naik, Avadhut" <avadnaik@amd.com>, Tony Luck <tony.luck@intel.com>,
+	Avadhut Naik <avadhut.naik@amd.com>,
+	linux-trace-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
+	x86@kernel.org, linux-kernel@vger.kernel.org, yazen.ghannam@amd.com
+Subject: Re: [PATCH] tracing: Include PPIN in mce_record tracepoint
+Message-ID: <20240124095708.GAZbDe9Hks0tL2Aj94@fat_crate.local>
+References: <20240123235150.3744089-1-avadhut.naik@amd.com>
+ <ZbBV4EGrZw6hJ5IE@agluck-desk3>
+ <be870e14-eeb9-4dcf-ba43-a72ef66a3d87@amd.com>
+ <20240123203853.66655e95@rorschach.local.home>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240118121542.748351-1-maobibo@loongson.cn> <20240118121542.748351-3-maobibo@loongson.cn>
-In-Reply-To: <20240118121542.748351-3-maobibo@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 24 Jan 2024 17:56:18 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H45A4m-imDh8UZqXJ3WXduMyubbd1ze-EgZtqqbfjHt1g@mail.gmail.com>
-Message-ID: <CAAhV-H45A4m-imDh8UZqXJ3WXduMyubbd1ze-EgZtqqbfjHt1g@mail.gmail.com>
-Subject: Re: [PATCH v3 2/3] irqchip/loongson-eiointc: Refine irq affinity
- setting during resume
-To: Bibo Mao <maobibo@loongson.cn>
-Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Sergey Shtylyov <s.shtylyov@omp.ru>, lvjianmin@loongson.cn
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240123203853.66655e95@rorschach.local.home>
 
-I can give an Acked-by if these lines are also removed in our internal repo=
-.
+On Tue, Jan 23, 2024 at 08:38:53PM -0500, Steven Rostedt wrote:
+> Yes, rasdaemon uses libtraceevent (or a copy of it internally) that
+> reads the format file to find fields. You can safely add fields to the
+> middle of the event structure and the parsing will be just fine.
 
-Huacai
+Should we worry about tools who consume the event "blindly", without the
+lib?
 
-On Thu, Jan 18, 2024 at 8:15=E2=80=AFPM Bibo Mao <maobibo@loongson.cn> wrot=
-e:
->
-> During suspend and resume, CPUs except CPU0 are hot-unpluged and IRQs
-> are migrated to CPU0. So it is not necessary to restore irq affinity for
-> eiointc irq controller when system resumes. This patch removes the piece
-> of code about irq affinity restoring in function eiointc_resume.
->
-> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-> ---
->  drivers/irqchip/irq-loongson-eiointc.c | 16 ----------------
->  1 file changed, 16 deletions(-)
->
-> diff --git a/drivers/irqchip/irq-loongson-eiointc.c b/drivers/irqchip/irq=
--loongson-eiointc.c
-> index 6143adb1b73b..86f4faad0695 100644
-> --- a/drivers/irqchip/irq-loongson-eiointc.c
-> +++ b/drivers/irqchip/irq-loongson-eiointc.c
-> @@ -315,23 +315,7 @@ static int eiointc_suspend(void)
->
->  static void eiointc_resume(void)
->  {
-> -       int i, j;
-> -       struct irq_desc *desc;
-> -       struct irq_data *irq_data;
-> -
->         eiointc_router_init(0);
-> -
-> -       for (i =3D 0; i < nr_pics; i++) {
-> -               for (j =3D 0; j < eiointc_priv[0]->vec_count; j++) {
-> -                       desc =3D irq_resolve_mapping(eiointc_priv[i]->eio=
-intc_domain, j);
-> -                       if (desc && desc->handle_irq && desc->handle_irq =
-!=3D handle_bad_irq) {
-> -                               raw_spin_lock(&desc->lock);
-> -                               irq_data =3D irq_domain_get_irq_data(eioi=
-ntc_priv[i]->eiointc_domain, irq_desc_get_irq(desc));
-> -                               eiointc_set_irq_affinity(irq_data, irq_da=
-ta->common->affinity, 0);
-> -                               raw_spin_unlock(&desc->lock);
-> -                       }
-> -               }
-> -       }
->  }
->
->  static struct syscore_ops eiointc_syscore_ops =3D {
-> --
-> 2.39.3
->
+I guess no until we break some use case and then we will have to revert.
+At least this is what we've done in the past...
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
