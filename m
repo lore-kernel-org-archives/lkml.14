@@ -1,70 +1,154 @@
-Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C756A1FDC
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 03:13:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2201D46BF;
+	Wed, 24 Jan 2024 03:14:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706065988; cv=none; b=fVUFwTQ8CYJ/7zvW9AHKJCQNeYlfP24neAyOFCTTX4Nc1oEFjEz6KvLKzLa4H29VSyFupIFUqZUNCyiKh4QgGhA8cJn0ElB7A6sbIAKjFrGzZYvpul298rtLBfA3D9KBWp6a9BOPUy4L8RgXtjmcPs8T/Wik91pppmA6gMYMAqQ=
+	t=1706066069; cv=none; b=bRBePVbFlsS55/lFPCd8Bd9EPLcj7c7QCqxtMyjG5cv5ymKYafRK56ewjqlYGWwerUyPHKO2BvWMzkiRJxj1DE84SAUqoxtSKKa1JXld0r8iAr4WUZuuGdoi1mRnNhX7PeHD7OPsoN8HWa0nWkydQxicrmXs+Z2WMHn94+boqAU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706065988; c=relaxed/simple;
-	bh=w01aMp201H6VWZNQ37i2iLMbZxPXmWRmhch+jUDgNkk=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=WaFpX8pJSYfVEXnQWbR1I/rfaxhljF6zEcWEU48lCCjKrxvndWwedvxK4cBWOenDPLntj/ZYDwE+3tIx5bTyUtveBnzz7o6QB3Iz0dt9Vqg0yTcVw2CgBBPgDIWTf9rHxMBhXVR6BCA6wq2nFMFuSw6Cci3dB9eKTf2b0W00PRE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-7bedddd00d5so410846439f.3
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 19:13:06 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706065986; x=1706670786;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ChLC0C/DZwwNzt8D451FXLemj6J/mBxJU4hzpYjiQSY=;
-        b=jdDfpKIVsSFFuK/MnjHBKqVBmIEaJIw7tZLlsej0/+EpY9ZZ4XI3OrcYHeBVEdS0cx
-         TcfEK7J49HxcNBEgvgo6ujJqnRF9PC5q0rxzOI67k0OOTkpQTYwBmQLQN8uukKcPteCi
-         DfkjFPgyNPhpiBZ5rNH0Nswy2nSdCN1N8UvZG/qCJvAmIvBiSTl+SWsDmMzuwwoJuAxB
-         Pjx9QolHRe0XKUGgGIC+YmXjJOJ5pSRI+BzyfEsjhMAkF+lvBb1I+3Z8tILb9AGQ9/CQ
-         WMLGIQMj+xvBNugfYGp7ck1VX32+EnsojxJv4R3Ze2ePBp8wcST9yD03bEH8HrdUDps+
-         szqQ==
-X-Gm-Message-State: AOJu0YyqfSy28eJIATkRtifQRydkmMF05F020Pi7Sap2cqa4eufIPoMb
-	ZLFs77k6DdukbBCVii7YIqYH3swxAD37DC+pfAY3g0ryQ0GglpzHTIyPi15YESoy1a518W0aSAT
-	WULKsH6J/Rnywm2XLx4n/ZET0ZSkGdlQWUCUFMR8OuXJ82hyiuoaTj08=
-X-Google-Smtp-Source: AGHT+IGnhA04iRpv01odYyOpQkc+whytR4BuVv8gSP+mg9ucelQToolvhCL3CRWmvHV4wtE0T4vA2cmWn0eXdh3b3hQU1qfttzsA
+	s=arc-20240116; t=1706066069; c=relaxed/simple;
+	bh=g3vDQVNYQHCfXhK9AZEZvl7enAqSQCJdQIj+M8vN8m8=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=mUq5zyRHNpFRzsFXghDVRAHwbI55cRBl6rrlNrVeEWKN+zl/lqUy7jSKPNTAOfnLGtguYduhZemSIMdqTC+FtW8LCSFpvWNrt+UcwrkiE/tDFrrA+NlB3ZOg6Gb0rjuAbCybFDCxfZQu2kkiQIEh5aQThriezsuokESBKRWrVRI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4TKTZd0SHRz4f3lgR;
+	Wed, 24 Jan 2024 11:14:17 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id 58BB11A017A;
+	Wed, 24 Jan 2024 11:14:23 +0800 (CST)
+Received: from [10.174.176.73] (unknown [10.174.176.73])
+	by APP1 (Coremail) with SMTP id cCh0CgBXKBGNgLBloWgsBw--.40402S3;
+	Wed, 24 Jan 2024 11:14:23 +0800 (CST)
+Subject: Re: [PATCH 3/5] md: make sure md_do_sync() will set MD_RECOVERY_DONE
+To: Xiao Ni <xni@redhat.com>, Yu Kuai <yukuai1@huaweicloud.com>
+Cc: mpatocka@redhat.com, dm-devel@lists.linux.dev, msnitzer@redhat.com,
+ heinzm@redhat.com, song@kernel.org, linux-raid@vger.kernel.org,
+ linux-kernel@vger.kernel.org, yi.zhang@huawei.com, yangerkun@huawei.com,
+ "yukuai (C)" <yukuai3@huawei.com>
+References: <20240120103734.4155446-1-yukuai1@huaweicloud.com>
+ <20240120103734.4155446-4-yukuai1@huaweicloud.com>
+ <CALTww28NL+yBT8bcL2=ATJr79eL45=TF-EXHUD8NsfCXXTG3Qw@mail.gmail.com>
+From: Yu Kuai <yukuai1@huaweicloud.com>
+Message-ID: <c024a07e-0a93-aaad-a946-ac74ae3bdaeb@huaweicloud.com>
+Date: Wed, 24 Jan 2024 11:14:21 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1a84:b0:360:17a7:d897 with SMTP id
- k4-20020a056e021a8400b0036017a7d897mr77474ilv.4.1706065985976; Tue, 23 Jan
- 2024 19:13:05 -0800 (PST)
-Date: Tue, 23 Jan 2024 19:13:05 -0800
-In-Reply-To: <tencent_85364A4A447431779D67703D19366A97C009@qq.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000000ec514060fa87179@google.com>
-Subject: Re: [syzbot] [jfs?] WARNING in dbAdjTree
-From: syzbot <syzbot+ab18fa9c959320611727@syzkaller.appspotmail.com>
-To: eadavis@qq.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CALTww28NL+yBT8bcL2=ATJr79eL45=TF-EXHUD8NsfCXXTG3Qw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:cCh0CgBXKBGNgLBloWgsBw--.40402S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxWF15Gw13GFWfWr18tFW5ZFb_yoW5Ww15p3
+	y8GFn0krW8Ary29F9Fqa4YqFyY9r4FyrZ8CFyfWwn8Ar93Kr13GFy0ka1UZFWDAF1fJa10
+	va15JF9xZFyFkFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9Y14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4U
+	JVW0owA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kI
+	c2xKxwCYjI0SjxkI62AI1cAE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4
+	AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE
+	17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMI
+	IF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq
+	3wCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCT
+	nIWIevJa73UjIFyTuYvjfUoOJ5UUUUU
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-Hello,
+Hi,
 
-syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+在 2024/01/24 10:58, Xiao Ni 写道:
+> Hi all
+> 
+> MD_RECOVERY_WAIT was introduced in d5d885fd5. From this patch,
+> MD_RECOVERY_WAIT only has one usage during creating raid device.
+> resync job needs to wait until pers->start finishes(The only place
+> which is checked). If we remove it from md_do_sync, will it break the
+> logic? Or we don't need this flag anymore? If so can we remove this
+> flag?
+> 
+> dm-raid uses this bit in patch 644e2537f (dm raid: fix stripe adding
+> reshape deadlock). It's the reason why md_do_sync can't set
+> MD_RECOVERY_DONE. Now we stop sync thread asynchronously, can we
+> revert this patch?
 
-Reported-and-tested-by: syzbot+ab18fa9c959320611727@syzkaller.appspotmail.com
+I made some changes that will be sent for v2 that sync_thread is frozen
+from dm suspend to resume, so I think the flag can be removed, and I
+actually tried that, howver, dm-raid tests failed because ext4 is
+corrupted. Anyway, let's focus on dm-raid regression for now and we can
+try to remove this flag later.
 
-Tested on:
+Thanks,
+Kuai
 
-commit:         615d3006 Merge tag 'trace-v6.8-rc1' of git://git.kerne..
-git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-console output: https://syzkaller.appspot.com/x/log.txt?x=1455ed8be80000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=d4460091fe9fceda
-dashboard link: https://syzkaller.appspot.com/bug?extid=ab18fa9c959320611727
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=171ad715e80000
+> 
+> Best Regards
+> Xiao
+> 
+> On Sat, Jan 20, 2024 at 6:41 PM Yu Kuai <yukuai1@huaweicloud.com> wrote:
+>>
+>> From: Yu Kuai <yukuai3@huawei.com>
+>>
+>> stop_sync_thread() will interrupt md_do_sync(), and md_do_sync() must
+>> set MD_RECOVERY_DONE, so that follow up md_check_recovery() will
+>> unregister sync_thread, clear MD_RECOVERY_RUNNING and wake up
+>> stop_sync_thread().
+>>
+>> Before this patch, if MD_RECOVERY_WAIT is set or the array is read-only,
+>> md_do_sync() will return without setting MD_RECOVERY_DONE, hence use
+>> stop_sync_thread() directly will hang because md_check_recovery() can't
+>> clear MD_RECOVERY_RUNNING, which is possible for dm-raid.
+>>
+>> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+>> ---
+>>   drivers/md/md.c | 10 ++++++----
+>>   1 file changed, 6 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/md/md.c b/drivers/md/md.c
+>> index 6906d023f1d6..ba45c7be3dbe 100644
+>> --- a/drivers/md/md.c
+>> +++ b/drivers/md/md.c
+>> @@ -8788,12 +8788,13 @@ void md_do_sync(struct md_thread *thread)
+>>          int ret;
+>>
+>>          /* just incase thread restarts... */
+>> -       if (test_bit(MD_RECOVERY_DONE, &mddev->recovery) ||
+>> -           test_bit(MD_RECOVERY_WAIT, &mddev->recovery))
+>> +       if (test_bit(MD_RECOVERY_DONE, &mddev->recovery))
+>>                  return;
+>> -       if (!md_is_rdwr(mddev)) {/* never try to sync a read-only array */
+>> +
+>> +       if (test_bit(MD_RECOVERY_WAIT, &mddev->recovery) ||
+>> +           !md_is_rdwr(mddev)) {/* never try to sync a read-only array */
+>>                  set_bit(MD_RECOVERY_INTR, &mddev->recovery);
+>> -               return;
+>> +               goto out;
+>>          }
+>>
+>>          if (mddev_is_clustered(mddev)) {
+>> @@ -9171,6 +9172,7 @@ void md_do_sync(struct md_thread *thread)
+>>                                                  mddev->array_sectors);
+>>          }
+>>
+>> +out:
+>>          spin_lock(&mddev->lock);
+>>          if (!test_bit(MD_RECOVERY_INTR, &mddev->recovery)) {
+>>                  /* We completed so min/max setting can be forgotten if used. */
+>> --
+>> 2.39.2
+>>
+>>
+> 
+> .
+> 
 
-Note: testing is done by a robot and is best-effort only.
