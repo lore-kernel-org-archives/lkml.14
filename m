@@ -1,54 +1,56 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09E521272B6;
-	Wed, 24 Jan 2024 17:47:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85DCB129A75;
+	Wed, 24 Jan 2024 17:47:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706118435; cv=none; b=YPl+6pgF2WjyVkUBjnuBM2jHRuUGXQcotktCECcoeKhKclfwDgwSny9Vb/KvP3B2Sycmj/cSNI1YRyB/xxMmFp3ErB+gf2FgUIwJqPoLUFHhfJvllRWOgaCDgp0/Iukk8wa787xRhrAiZ3oC1JxODHs9/0QyP7F01Rs2m8oJWgQ=
+	t=1706118440; cv=none; b=DIVmdhqBjw3gMYb9bg/4NsaMblum2qhHcpMczN2ZKqNi2npBY6N9G1236184nt/0wGW1IvE3fTU91qE9NnwmnGJkgd+VyY6TjKrCvAJUF9AUswTUgkYzDHixSheiDUlT9URrewqaLsi0MvXRsqcllVdcP/hZLW2pSSHOHGzEWbc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706118435; c=relaxed/simple;
-	bh=QkUjubpofB5Azx+kpt9gh8KxjVh40iHtdBvvB8Y+8qA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=RTMPJLp/ZYMPdkaVyMwGYtM04LpnLKoZDkxV7CP3dYPIGJh474mz5LKfeavs2QPKi+uBcPtCXE09pyy0sGkfUyX+BuCo9Xh0ane1tMPzLDRFScl1c3Azjt31PyRUEiFSIqOALCY0C2u2CQYPYOayvsK/OS+nitSpDU3EjeAtZ60=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R7/1fHU4; arc=none smtp.client-ip=209.85.214.177
+	s=arc-20240116; t=1706118440; c=relaxed/simple;
+	bh=TkD/7afEOAUYVVvFi9uEo60vgXmIeQpiZhHvrjTnZfU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=dfsBoKMCeaVmNZ8zjem07qk4yba2XNBpwkmo19CrpIEVgv6R6tyywYTbzLjt1hC9qQaoborA+1vJlZg+D4COk/zMjSKFEUAicM3NEp7VyOGkeviG+bSmpIzxfNrwzYhWkCrD1ze8roXyV7RBwK26ep5GoXomxhGAYXA8lpXZdgg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ov/jQv3V; arc=none smtp.client-ip=209.85.214.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R7/1fHU4"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1d72f71f222so24194475ad.1;
-        Wed, 24 Jan 2024 09:47:13 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ov/jQv3V"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1d731314e67so20452715ad.1;
+        Wed, 24 Jan 2024 09:47:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706118433; x=1706723233; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=lQxbBT+TSvZsQ3Ou+NOpiUNwjKU/hcS1Evjle7FB36Y=;
-        b=R7/1fHU4GkG52F1Sc5CMcp5hYKl9mL339t1pQ76FPq6+m6UAkNucov+Z2fVBrwSzQF
-         LEcrNGmoRdQtAeO1KHv7zPcMiqVP0bjD6zBcStjAMUgt4npTQUYET1G7Mzzsu4mi5QRZ
-         clXrLq/Fi/IsuEugEIqD1hz5jHtRhct4WntQN9ZMJavyP2ez+8isZ99hnmoK9Dansm5C
-         vtI2XNTNIjuvxSKJ+kl0mDqQP7mxH04awZVPus1KqUrLa6+sjAHaiTIRUf4QRNhOmdn+
-         3JNa3HdSlXMKgg/rai5NblyuD0Sg3Nsie75fHKwZ0uGDg2oEqwDZWfeAyx6vxCEet6h4
-         Gpew==
+        d=gmail.com; s=20230601; t=1706118438; x=1706723238; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=g2riTuEepe/mUCMr3Pq4qIV5z/xG84DnFng4TZ3aCOM=;
+        b=Ov/jQv3VpXNL41tRtMMKv8I2hDUNg7UMPVVFYF7wyFqOAYMfoaNQZG0L0hATqta9S9
+         k9wYPYr0q5yoUkruVXZ7FXcCQKGP6EEtCfdgB5NBq45WTTJ8dZOEHXbWDDqwVC/tlD1/
+         dwgCxGv0VQSdifBa3126hEsytCYCUROknGCgc/zsdWOWzyu6N7g7+CJzecxTPVM1Luzq
+         3auv1sgiCenVorlVX8doPkB9wqN/6yYimptmpmUIEuGQoM/yKV2povBpQrgtuh+7m0Vo
+         f/ZmLTCAwxIpyYt+jZIJZsylhi0AXd6XnWgov8ZasQscEgFtA0+FFJ4NkqbCbVkbudpZ
+         D3xQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706118433; x=1706723233;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=lQxbBT+TSvZsQ3Ou+NOpiUNwjKU/hcS1Evjle7FB36Y=;
-        b=jhb1z1RzyPDTO+TR2xxhujQv2uhfopBoRoVVmAaX23k9Pzgq9jyh0W0SFa1dhi+QZM
-         yf4D06iSQjofT0KqMRD6mGZC8blaXlpRO3tczpUIY8OVf8xLXDNHvLb7b/GGa9tftv2Y
-         pLZWh5T7yLc3oHd77of+Qo3Sr0XZz/JH2uoNDS6y98pCz2lcuFhcDJpMZ3GgKI4w0a6h
-         JVNGxOMIgvBiYg2yk4MklhB8cIA9FDKYVV0dx/iB5UTDmy37Wgg9jpD+qUMD2fixwwuh
-         RPsgzVAmsUxXbJDwEEaIIE6WXz3CgEZnoKhqFFS0PaTII1cBxkY6rs1aYneNtU4JWlCl
-         4g2A==
-X-Gm-Message-State: AOJu0Yw6cBKp77hb9sV9KqQHjl8kEKbW0darRKPEgtdcyzXL6+DA2GP5
-	yELU3yscHBG4BnW46ca8mQcE4axuwQ2/Xlne3yWYWyJByq709WL5
-X-Google-Smtp-Source: AGHT+IGzjoUJsq3bpdJ+H9jC6qnkNhXQggYHoUKJzgWHNvJuuMcNny1bRMvoJ80FJJykhqBP2FqGFQ==
-X-Received: by 2002:a17:902:d902:b0:1d6:fcc3:c99a with SMTP id c2-20020a170902d90200b001d6fcc3c99amr1060350plz.62.1706118433148;
-        Wed, 24 Jan 2024 09:47:13 -0800 (PST)
+        d=1e100.net; s=20230601; t=1706118438; x=1706723238;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=g2riTuEepe/mUCMr3Pq4qIV5z/xG84DnFng4TZ3aCOM=;
+        b=YAYCE1Bh0IVTWYxaRAgsG3HxydYCrRUc1Z7InjjJwNcrgfBZeI5cKZIgXIMcfm70t2
+         8nAaxmQBIN2fiNV5EK1E5dEBrRN5jSYho9+h8FqmVB3lqCH2n1ICm8Ka1DRnv4D/HzE2
+         lwAZNVhnJnn6FhQ58OdE6NutMXzXms4fzOdQnfh3rZ8dgeCArq8QLJHuxo6NIgOeS54c
+         nC6cHO6vi/QG0kyedoHaHYkKxz/3kgGL0Lsi9i7Q7BOp8OSNQGdoUPVRuSxUOC9NxFN0
+         FCcPQhIRVx/WY4jKLHpmPKxFhZierv2Lq2LE90DMIHiefaCSUwffSyZoCEiTkTQhXRS1
+         TzWg==
+X-Gm-Message-State: AOJu0YzKkXjoDw3DHpe4KVHSy2hyqZFNv7Hf0BvZC/vb457zg7Fd2mTQ
+	aXnsVgYcjw7+Sjg9jcuqLl83m2iEI1H0mqIOc4TdFcKrrJho0op5
+X-Google-Smtp-Source: AGHT+IHPILvOnHNGuFqWVxNSI/EpMY7ZDayJzLHwYh06YXl06KCUCYCzokJKyfYpPr43PnSANBUZwQ==
+X-Received: by 2002:a17:902:d48e:b0:1d4:b37a:e0a8 with SMTP id c14-20020a170902d48e00b001d4b37ae0a8mr993977plg.118.1706118437795;
+        Wed, 24 Jan 2024 09:47:17 -0800 (PST)
 Received: from localhost ([2601:644:9380:8cd0::7fb4])
-        by smtp.gmail.com with ESMTPSA id t7-20020a170902b20700b001d740687d1csm6144225plr.193.2024.01.24.09.47.12
+        by smtp.gmail.com with ESMTPSA id p7-20020a170902b08700b001d733c88646sm6965518plr.216.2024.01.24.09.47.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jan 2024 09:47:12 -0800 (PST)
+        Wed, 24 Jan 2024 09:47:17 -0800 (PST)
 From: Matthew Wood <thepacketgeek@gmail.com>
 To: "David S. Miller" <davem@davemloft.net>,
 	Eric Dumazet <edumazet@google.com>,
@@ -57,230 +59,226 @@ To: "David S. Miller" <davem@davemloft.net>,
 Cc: leitao@debian.org,
 	netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v1 0/8] netconsole: Add userdata append support
-Date: Wed, 24 Jan 2024 09:46:58 -0800
-Message-ID: <20240124174711.1906102-1-thepacketgeek@gmail.com>
+Subject: [PATCH net-next v1 2/8] net: netconsole: move netconsole_target config_item to config_group
+Date: Wed, 24 Jan 2024 09:47:00 -0800
+Message-ID: <20240124174711.1906102-3-thepacketgeek@gmail.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240124174711.1906102-1-thepacketgeek@gmail.com>
+References: <20240124174711.1906102-1-thepacketgeek@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Add the ability to add custom userdata to every outbound netconsole message
-as a collection of key/value pairs, allowing users to add metadata to every
-netconsole message which can be used for  for tagging, filtering, and
-aggregating log messages.
+In order to support a nested userdata config_group in later patches,
+use a config_group for netconsole_target instead of a
+config_item. It's a no-op functionality-wise, since
+config_group maintains all features of a config_item via the cg_item
+member.
 
-In a previous patch series the ability to prepend the uname release was
-added towards the goals above. This patch series builds on that
-idea to allow any userdata, keyed by a user provided name, to be
-included in netconsole messages.
+Signed-off-by: Matthew Wood <thepacketgeek@gmail.com>
+---
+ drivers/net/netconsole.c | 59 ++++++++++++++++++++++------------------
+ 1 file changed, 32 insertions(+), 27 deletions(-)
 
-If CONFIG_NETCONSOLE_DYNAMIC is enabled an additional userdata
-directory will be presented in the netconsole configfs tree, allowing
-the addition of userdata entries.
-
-    /sys/kernel/config/netconsole/
-			<target>/
-				enabled
-				release
-				dev_name
-				local_port
-				remote_port
-				local_ip
-				remote_ip
-				local_mac
-				remote_mac
-				userdata/
-					<key>/
-						value
-					<key>/
-						value
-          ...
-
-Testing for this series is as follows:
-
-Build every patch without CONFIG_NETCONSOLE_DYNAMIC, and also built
-with CONFIG_NETCONSOLE_DYNAMIC enabled for every patch after the config
-option was added
-
-Test Userdata configfs
-
-    # Adding userdata
-    cd /sys/kernel/config/netconsole/ && mkdir cmdline0 && cd cmdline0
-    mkdir userdata/release && echo hotfix1 > userdata/release/value
-    preview=3D$(for f in `ls userdata`; do echo $f=3D$(cat userdata/$f/valu=
-e); done)
-    [[ "$preview" =3D=3D $'release=3Dhotfix1' ]] && echo pass || echo fail
-    mkdir userdata/testing && echo something > userdata/testing/value
-    preview=3D$(for f in `ls userdata`; do echo $f=3D$(cat userdata/$f/valu=
-e); done)
-    [[ "$preview" =3D=3D $'release=3Dhotfix1\ntesting=3Dsomething' ]] && ec=
-ho pass || echo fail
-    #
-    # Removing Userdata
-    rmdir userdata/testing
-    preview=3D$(for f in `ls userdata`; do echo $f=3D$(cat userdata/$f/valu=
-e); done)
-    [[ "$preview" =3D=3D $'release=3Dhotfix1' ]] && echo pass || echo fail
-    rmdir userdata/release
-    [[ `cat userdata/complete` =3D=3D $'release=3Dhotfix1' ]] && echo pass =
-|| echo fail
-    #
-    # Adding userdata key with too large of 6.7.0-rc8-virtme,12,481,1795410=
-4,-directory name [<54 chars]
-    mkdir userdata/testing12345678901234567890123456789012345678901234567890
-    [[ $? =3D=3D 1 ]] && echo pass || echo fail
-    #
-    # Adding userdata value with too large of value [<200 chars]
-    mkdir userdata/testing
-    echo `for i in {1..201};do printf "%s" "v";done` > userdata/testing/val=
-ue
-    [[ $? =3D=3D 1 ]] && echo pass || echo fail
-    rmdir userdata/testing
-
-- Output:
-
-    pass
-    pass
-    pass
-    pass
-    pass
-    mkdir: cannot create directory =E2=80=98cmdline0/userdata/testing123456=
-78901234567890123456789012345678901234567890=E2=80=99: File name too long
-    pass
-    bash: echo: write error: Message too long
-    pass
-
-Test netconsole messages (w/ msg fragmentation)
-
-    echo `for i in {1..996};do printf "%s" "v";done` > /dev/kmsg
-
-- Output:
-
-    6.7.0-rc8-virtme,12,484,84321212,-,ncfrag=3D0/997;vvvvvvvvvvvvvvvvvvvvv=
-vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv=
-vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv=
-vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv=
-vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv=
-vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv=
-vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv=
-vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv=
-vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv=
-vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv=
-vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv=
-vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv=
-vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv=
-vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv6.7.0-rc8-virtme,12,484,84321212,-,ncfrag=3D=
-952/997;vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
-
-Test empty userdatum
-
-    cd /sys/kernel/config/netconsole/ && mkdir cmdline0
-    mkdir cmdline0/userdata/empty
-    echo test > /dev/kmsg
-    rmdir cmdline0/userdata/empty
-
-- Output:
-
-Test netconsole messages (w/o userdata fragmentation)
-
-    cd /sys/kernel/config/netconsole/ && mkdir cmdline0
-    mkdir cmdline0/userdata/release && echo hotfix1 > cmdline0/userdata/rel=
-ease/value
-    mkdir cmdline0/userdata/testing && echo something > cmdline0/userdata/t=
-esting/value
-    echo test > /dev/kmsg
-    rmdir cmdline0/userdata/release
-    rmdir cmdline0/userdata/testing
-
-- Output:
-    6.7.0-rc8-virtme,12,500,1646292204,-;test
-    release=3Dhotfix1
-    testing=3Dsomething
-
-Test netconsole messages (w/ long body fragmentation)
-    cd /sys/kernel/config/netconsole/ && mkdir cmdline0
-    mkdir cmdline0/userdata/release && echo hotfix1 > cmdline0/userdata/rel=
-ease/value
-    mkdir cmdline0/userdata/testing && echo something > cmdline0/userdata/t=
-esting/value
-    echo `for i in {1..996};do printf "%s" "v";done` > /dev/kmsg
-    rmdir cmdline0/userdata/release
-    rmdir cmdline0/userdata/testing
-
-- Output:
-    6.7.0-rc8-virtme,12,486,156664417,-,ncfrag=3D0/1031;vvvvvvvvvvvvvvvvvvv=
-vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv=
-vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv=
-vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv=
-vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv=
-vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv=
-vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv=
-vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv=
-vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv=
-vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv=
-vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv=
-vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv=
-vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv=
-vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv6.7.0-rc8-virtme,12,486,156664417,-,ncfrag=
-=3D950/1031;vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
-    release=3Dhotfix1
-    testing=3Dsomething
-
-Test netconsole messages (w/ long userdata fragmentation)
-
-    cd /sys/kernel/config/netconsole/ && mkdir cmdline0
-    LOREM=3D"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed d=
-o eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad mi=
-nim veniam, quis nostrud exercitation ullamco laboris nisi ut"
-    for i in {0..5}; do mkdir cmdline0/userdata/value${i} && echo ${LOREM} =
-> cmdline0/userdata/value${i}/value; done
-    echo test > /dev/kmsg
-    for i in {0..5}; do rmdir cmdline0/userdata/value${i}; done
-
-- Output:
-    6.7.0-rc8-virtme,12,487,221763007,-,ncfrag=3D0/1241;test
-    value0=3DLorem ipsum dolor sit amet, consectetur adipiscing elit, sed d=
-o eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad mi=
-nim veniam, quis nostrud exercitation ullamco laboris nisi ut
-    value1=3DLorem ipsum dolor sit amet, consectetur adipiscing elit, sed d=
-o eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad mi=
-nim veniam, quis nostrud exercitation ullamco laboris nisi ut
-    value2=3DLorem ipsum dolor sit amet, consectetur adipiscing elit, sed d=
-o eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad mi=
-nim veniam, quis nostrud exercitation ullamco laboris nisi ut
-    value3=3DLorem ipsum dolor sit amet, consectetur adipiscing elit, sed d=
-o eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad mi=
-nim veniam, quis nostrud exercitation ullamco laboris nisi ut
-    value4=3DLorem ipsum dolor sit amet, consectetur adipiscing elit, sed d=
-o eiusmod tempor incididunt ut labore et dolore magn6.7.0-rc8-virtme,12,487=
-,221763007,-,ncfrag=3D950/1241;a aliqua. Ut enim ad minim veniam, quis nost=
-rud exercitation ullamco laboris nisi ut
-    value5=3DLorem ipsum dolor sit amet, consectetur adipiscing elit, sed d=
-o eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad mi=
-nim veniam, quis nostrud exercitation ullamco laboris nisi ut
-
-
-Matthew Wood (8):
-  net: netconsole: cleanup formatting lints
-  net: netconsole: move netconsole_target config_item to config_group
-  net: netconsole: move newline trimming to function
-  net: netconsole: add docs for appending netconsole user data
-  net: netconsole: add a userdata config_group member to
-    netconsole_target
-  net: netconsole: cache userdata formatted string in netconsole_target
-  net: netconsole: append userdata to netconsole messages
-  net: netconsole: append userdata to fragmented netconsole messages
-
- Documentation/networking/netconsole.rst |  68 +++++
- drivers/net/netconsole.c                | 355 ++++++++++++++++++++----
- 2 files changed, 369 insertions(+), 54 deletions(-)
-
---
+diff --git a/drivers/net/netconsole.c b/drivers/net/netconsole.c
+index 93fc3b509706..5e720bcf7102 100644
+--- a/drivers/net/netconsole.c
++++ b/drivers/net/netconsole.c
+@@ -102,7 +102,7 @@ static struct console netconsole_ext;
+ struct netconsole_target {
+ 	struct list_head	list;
+ #ifdef	CONFIG_NETCONSOLE_DYNAMIC
+-	struct config_item	item;
++	struct config_group	group;
+ #endif
+ 	bool			enabled;
+ 	bool			extended;
+@@ -134,14 +134,14 @@ static void __exit dynamic_netconsole_exit(void)
+  */
+ static void netconsole_target_get(struct netconsole_target *nt)
+ {
+-	if (config_item_name(&nt->item))
+-		config_item_get(&nt->item);
++	if (config_item_name(&nt->group.cg_item))
++		config_group_get(&nt->group);
+ }
+ 
+ static void netconsole_target_put(struct netconsole_target *nt)
+ {
+-	if (config_item_name(&nt->item))
+-		config_item_put(&nt->item);
++	if (config_item_name(&nt->group.cg_item))
++		config_group_put(&nt->group);
+ }
+ 
+ #else	/* !CONFIG_NETCONSOLE_DYNAMIC */
+@@ -221,9 +221,13 @@ static struct netconsole_target *alloc_and_init(void)
+ 
+ static struct netconsole_target *to_target(struct config_item *item)
+ {
+-	return item ?
+-		container_of(item, struct netconsole_target, item) :
+-		NULL;
++	struct config_group *cfg_group;
++
++	cfg_group = to_config_group(item);
++	if (!cfg_group)
++		return NULL;
++	return container_of(to_config_group(item),
++			    struct netconsole_target, group);
+ }
+ 
+ /*
+@@ -370,7 +374,7 @@ static ssize_t release_store(struct config_item *item, const char *buf,
+ 	mutex_lock(&dynamic_netconsole_mutex);
+ 	if (nt->enabled) {
+ 		pr_err("target (%s) is enabled, disable to update parameters\n",
+-		       config_item_name(&nt->item));
++		       config_item_name(&nt->group.cg_item));
+ 		err = -EINVAL;
+ 		goto out_unlock;
+ 	}
+@@ -398,7 +402,7 @@ static ssize_t extended_store(struct config_item *item, const char *buf,
+ 	mutex_lock(&dynamic_netconsole_mutex);
+ 	if (nt->enabled) {
+ 		pr_err("target (%s) is enabled, disable to update parameters\n",
+-		       config_item_name(&nt->item));
++		       config_item_name(&nt->group.cg_item));
+ 		err = -EINVAL;
+ 		goto out_unlock;
+ 	}
+@@ -425,7 +429,7 @@ static ssize_t dev_name_store(struct config_item *item, const char *buf,
+ 	mutex_lock(&dynamic_netconsole_mutex);
+ 	if (nt->enabled) {
+ 		pr_err("target (%s) is enabled, disable to update parameters\n",
+-		       config_item_name(&nt->item));
++		       config_item_name(&nt->group.cg_item));
+ 		mutex_unlock(&dynamic_netconsole_mutex);
+ 		return -EINVAL;
+ 	}
+@@ -450,7 +454,7 @@ static ssize_t local_port_store(struct config_item *item, const char *buf,
+ 	mutex_lock(&dynamic_netconsole_mutex);
+ 	if (nt->enabled) {
+ 		pr_err("target (%s) is enabled, disable to update parameters\n",
+-		       config_item_name(&nt->item));
++		       config_item_name(&nt->group.cg_item));
+ 		goto out_unlock;
+ 	}
+ 
+@@ -473,7 +477,7 @@ static ssize_t remote_port_store(struct config_item *item,
+ 	mutex_lock(&dynamic_netconsole_mutex);
+ 	if (nt->enabled) {
+ 		pr_err("target (%s) is enabled, disable to update parameters\n",
+-		       config_item_name(&nt->item));
++		       config_item_name(&nt->group.cg_item));
+ 		goto out_unlock;
+ 	}
+ 
+@@ -495,7 +499,7 @@ static ssize_t local_ip_store(struct config_item *item, const char *buf,
+ 	mutex_lock(&dynamic_netconsole_mutex);
+ 	if (nt->enabled) {
+ 		pr_err("target (%s) is enabled, disable to update parameters\n",
+-		       config_item_name(&nt->item));
++		       config_item_name(&nt->group.cg_item));
+ 		goto out_unlock;
+ 	}
+ 
+@@ -532,7 +536,7 @@ static ssize_t remote_ip_store(struct config_item *item, const char *buf,
+ 	mutex_lock(&dynamic_netconsole_mutex);
+ 	if (nt->enabled) {
+ 		pr_err("target (%s) is enabled, disable to update parameters\n",
+-		       config_item_name(&nt->item));
++		       config_item_name(&nt->group.cg_item));
+ 		goto out_unlock;
+ 	}
+ 
+@@ -570,7 +574,7 @@ static ssize_t remote_mac_store(struct config_item *item, const char *buf,
+ 	mutex_lock(&dynamic_netconsole_mutex);
+ 	if (nt->enabled) {
+ 		pr_err("target (%s) is enabled, disable to update parameters\n",
+-		       config_item_name(&nt->item));
++		       config_item_name(&nt->group.cg_item));
+ 		goto out_unlock;
+ 	}
+ 
+@@ -638,7 +642,7 @@ static struct netconsole_target *find_cmdline_target(const char *name)
+ 
+ 	spin_lock_irqsave(&target_list_lock, flags);
+ 	list_for_each_entry(nt, &target_list, list) {
+-		if (!strcmp(nt->item.ci_name, name)) {
++		if (!strcmp(nt->group.cg_item.ci_name, name)) {
+ 			ret = nt;
+ 			break;
+ 		}
+@@ -652,8 +656,8 @@ static struct netconsole_target *find_cmdline_target(const char *name)
+  * Group operations and type for netconsole_subsys.
+  */
+ 
+-static struct config_item *make_netconsole_target(struct config_group *group,
+-						  const char *name)
++static struct config_group *make_netconsole_target(struct config_group *group,
++						   const char *name)
+ {
+ 	struct netconsole_target *nt;
+ 	unsigned long flags;
+@@ -665,8 +669,9 @@ static struct config_item *make_netconsole_target(struct config_group *group,
+ 	if (!strncmp(name, NETCONSOLE_PARAM_TARGET_PREFIX,
+ 		     strlen(NETCONSOLE_PARAM_TARGET_PREFIX))) {
+ 		nt = find_cmdline_target(name);
+-		if (nt)
+-			return &nt->item;
++		if (nt) {
++			return &nt->group;
++		}
+ 	}
+ 
+ 	nt = alloc_and_init();
+@@ -674,14 +679,14 @@ static struct config_item *make_netconsole_target(struct config_group *group,
+ 		return ERR_PTR(-ENOMEM);
+ 
+ 	/* Initialize the config_item member */
+-	config_item_init_type_name(&nt->item, name, &netconsole_target_type);
++	config_group_init_type_name(&nt->group, name, &netconsole_target_type);
+ 
+ 	/* Adding, but it is disabled */
+ 	spin_lock_irqsave(&target_list_lock, flags);
+ 	list_add(&nt->list, &target_list);
+ 	spin_unlock_irqrestore(&target_list_lock, flags);
+ 
+-	return &nt->item;
++	return &nt->group;
+ }
+ 
+ static void drop_netconsole_target(struct config_group *group,
+@@ -701,11 +706,11 @@ static void drop_netconsole_target(struct config_group *group,
+ 	if (nt->enabled)
+ 		netpoll_cleanup(&nt->np);
+ 
+-	config_item_put(&nt->item);
++	config_item_put(&nt->group.cg_item);
+ }
+ 
+ static struct configfs_group_operations netconsole_subsys_group_ops = {
+-	.make_item	= make_netconsole_target,
++	.make_group	= make_netconsole_target,
+ 	.drop_item	= drop_netconsole_target,
+ };
+ 
+@@ -731,8 +736,8 @@ static void populate_configfs_item(struct netconsole_target *nt,
+ 
+ 	snprintf(target_name, sizeof(target_name), "%s%d",
+ 		 NETCONSOLE_PARAM_TARGET_PREFIX, cmdline_count);
+-	config_item_init_type_name(&nt->item, target_name,
+-				   &netconsole_target_type);
++	config_group_init_type_name(&nt->group, target_name,
++				    &netconsole_target_type);
+ }
+ 
+ #endif	/* CONFIG_NETCONSOLE_DYNAMIC */
+-- 
 2.43.0
 
