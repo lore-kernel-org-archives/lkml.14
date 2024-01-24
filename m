@@ -1,44 +1,44 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E747028389;
-	Wed, 24 Jan 2024 02:42:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A60842C69B;
+	Wed, 24 Jan 2024 02:42:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.120
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706064172; cv=none; b=QIvtOYp0Uwtet5CIdY10vBSIN69fYgnCdZ7Se8z8yl4Q0K1gC7WZURCiPGHgpyLklev5GBtp2FmJRW8s4IGel6O83cRwvkkhyo2Gh+Ysc9HwE4+KDx11M5x0xTgFYQSHnn2DLbQS3QMz0x8tGZRAOq8M32Voz+slrdYO/bIHWPE=
+	t=1706064173; cv=none; b=APp/7gek0pGzFMcOUhZ5P67vqSzYDPYcb59y9BMBljM2AQclc0fz+wtq0aRmPSi9U/o/YEjumTxxmsZfkyhsh1vx9YMEQF7uPPXsDM8lQnuJ5BQ6SKTDPZd65Acet+fY37iwtzy49ip6eSOp0PUhAMaRH0Kw4c6cuCY1Q8ejC+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706064172; c=relaxed/simple;
-	bh=VzRTyBG95NMIc7bDJOln3dLMG8SRjMb/e4tnQdiKqPY=;
+	s=arc-20240116; t=1706064173; c=relaxed/simple;
+	bh=UwRtvVNhqC9a4CUwgibiSghyasJhQAcBvz9o6nhR8wU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=NdnL99xVuNWjIT8cN8W7/6DsVt0jIjOYCtPM8r2tYJCST+PkcgrAuchYkf3q3nqNpLsOixaog9mdoo6bTbVTslfD7Wqg6ieJ4NjMwfhQuurmiXUQUVK9jtCJExziWf1AHwT+pTpFaeFugZ9AS2GIUOO4w71qqKdDwIFOSyJLaXk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UxLr68fV; arc=none smtp.client-ip=192.55.52.120
+	 MIME-Version; b=naZyBYLth+/LAvOk3HS71kHwHwT6eRbJua3cV7pLdpFx9wAlflt+PWt7Tkg+e2Lvz8mfgCQRIxv6xTKDhyKmDAYrNo9AdbYwY8LgZYbFU/S2wBbrvEekORl2YxRrl2anL+I5dYyI9BH/fJ8wC8n/K1UosPZ9K5z+CwRxSJe5EZ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CSXHSVNq; arc=none smtp.client-ip=192.55.52.120
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UxLr68fV"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CSXHSVNq"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706064169; x=1737600169;
+  t=1706064171; x=1737600171;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=VzRTyBG95NMIc7bDJOln3dLMG8SRjMb/e4tnQdiKqPY=;
-  b=UxLr68fVgWd7ARNLV1Xi16Nrqtj93xxsABiCNcWyqTB49wJYdzfrjxU0
-   qpAWW7TajgWbgfZXvERv+HdCfBivREAIlyeBHfbw6Hjcbq/09mCoS5PvC
-   Y3W+gcKMYr51yh1impw4wETWgsiXKdLYeQ5GHenOe53YGHdRtDniwpxsr
-   c4MSBhG7mQ4K11gng4RXZIe/RvKwcH8UkQWqgcrqMNKOssXOpyf3tPyNU
-   ntUtBCj+QQcqj7zMlHsdwtK7kkR7U38BHy/G0MNKOgoP2Kwo3gu6BnS/q
-   8fq10TdLOTy7bafFrYjNEPzRFKBfOtKkB+Pxfa0o0n3Ey6FazdCKfrqCz
+  bh=UwRtvVNhqC9a4CUwgibiSghyasJhQAcBvz9o6nhR8wU=;
+  b=CSXHSVNq7Y5/fnoT+ZxQSv2cOsDsoqnXwePOoYu9WpBy7fi57rkZ34oE
+   0V6bN/J3Q8TlJVo1AHK7YWfkLN1Noyz3tetksL6TuqSJVEIUozZO8ZR2c
+   o90teJ8/jf0VGzJc6SwVSi+vlHE6voEUDIPZ8B0FR8N4Fm3C2KK5CVO+N
+   +3P0HNHzPHt6dxchYz0vsCx9pwUAoq5T8CI50Ejb9Q5JwK446HiRXjkEN
+   9+nI/Oz6DeYn/mnN87n7fKD6QDXeaE7RohILVm9KPvLVdv5XE8gaGgKQX
+   xxaOBBK0QuSzDXVRhto/a8Udz6O/j9wpIQI7jiYkgF4R2gUxKY2V+yo7a
    w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="400586588"
+X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="400586599"
 X-IronPort-AV: E=Sophos;i="6.05,215,1701158400"; 
-   d="scan'208";a="400586588"
+   d="scan'208";a="400586599"
 Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2024 18:42:44 -0800
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2024 18:42:45 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.05,215,1701158400"; 
-   d="scan'208";a="1825929"
+   d="scan'208";a="1825939"
 Received: from 984fee00a5ca.jf.intel.com ([10.165.9.183])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2024 18:42:44 -0800
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2024 18:42:45 -0800
 From: Yang Weijiang <weijiang.yang@intel.com>
 To: seanjc@google.com,
 	pbonzini@redhat.com,
@@ -53,9 +53,9 @@ Cc: peterz@infradead.org,
 	mlevitsk@redhat.com,
 	john.allen@amd.com,
 	weijiang.yang@intel.com
-Subject: [PATCH v9 25/27] KVM: nVMX: Introduce new VMX_BASIC bit for event error_code delivery to L1
-Date: Tue, 23 Jan 2024 18:41:58 -0800
-Message-Id: <20240124024200.102792-26-weijiang.yang@intel.com>
+Subject: [PATCH v9 27/27] KVM: x86: Stop emulating for CET protected branch instructions
+Date: Tue, 23 Jan 2024 18:42:00 -0800
+Message-Id: <20240124024200.102792-28-weijiang.yang@intel.com>
 X-Mailer: git-send-email 2.39.3
 In-Reply-To: <20240124024200.102792-1-weijiang.yang@intel.com>
 References: <20240124024200.102792-1-weijiang.yang@intel.com>
@@ -67,99 +67,103 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Per SDM description(Vol.3D, Appendix A.1):
-"If bit 56 is read as 1, software can use VM entry to deliver a hardware
-exception with or without an error code, regardless of vector"
+Don't emulate the branch instructions, e.g., CALL/RET/JMP etc., when CET
+is active in guest, return KVM_INTERNAL_ERROR_EMULATION to userspace to
+handle it.
 
-Modify has_error_code check before inject events to nested guest. Only
-enforce the check when guest is in real mode, the exception is not hard
-exception and the platform doesn't enumerate bit56 in VMX_BASIC, in all
-other case ignore the check to make the logic consistent with SDM.
+KVM doesn't emulate CPU behaviors to check CET protected stuffs while
+emulating guest instructions, instead it stops emulation on detecting
+the instructions in process are CET protected. By doing so, it can avoid
+generating bogus #CP in guest and preventing CET protected execution flow
+subversion from guest side.
 
 Suggested-by: Chao Gao <chao.gao@intel.com>
 Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
-Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
 ---
- arch/x86/kvm/vmx/nested.c | 27 ++++++++++++++++++---------
- arch/x86/kvm/vmx/nested.h |  5 +++++
- 2 files changed, 23 insertions(+), 9 deletions(-)
+ arch/x86/kvm/emulate.c | 27 ++++++++++++++++-----------
+ 1 file changed, 16 insertions(+), 11 deletions(-)
 
-diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index b2e9853584b8..468a7cf75035 100644
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -1230,9 +1230,9 @@ static int vmx_restore_vmx_basic(struct vcpu_vmx *vmx, u64 data)
- {
- 	const u64 feature_and_reserved =
- 		/* feature (except bit 48; see below) */
--		BIT_ULL(49) | BIT_ULL(54) | BIT_ULL(55) |
-+		BIT_ULL(49) | BIT_ULL(54) | BIT_ULL(55) | BIT_ULL(56) |
- 		/* reserved */
--		BIT_ULL(31) | GENMASK_ULL(47, 45) | GENMASK_ULL(63, 56);
-+		BIT_ULL(31) | GENMASK_ULL(47, 45) | GENMASK_ULL(63, 57);
- 	u64 vmx_basic = vmcs_config.nested.basic;
+diff --git a/arch/x86/kvm/emulate.c b/arch/x86/kvm/emulate.c
+index e223043ef5b2..ad15ce055a1d 100644
+--- a/arch/x86/kvm/emulate.c
++++ b/arch/x86/kvm/emulate.c
+@@ -178,6 +178,7 @@
+ #define IncSP       ((u64)1 << 54)  /* SP is incremented before ModRM calc */
+ #define TwoMemOp    ((u64)1 << 55)  /* Instruction has two memory operand */
+ #define IsBranch    ((u64)1 << 56)  /* Instruction is considered a branch. */
++#define IsProtected ((u64)1 << 57)  /* Instruction is protected by CET. */
  
- 	if (!is_bitwise_subset(vmx_basic, data, feature_and_reserved))
-@@ -2865,7 +2865,6 @@ static int nested_check_vm_entry_controls(struct kvm_vcpu *vcpu,
- 		u8 vector = intr_info & INTR_INFO_VECTOR_MASK;
- 		u32 intr_type = intr_info & INTR_INFO_INTR_TYPE_MASK;
- 		bool has_error_code = intr_info & INTR_INFO_DELIVER_CODE_MASK;
--		bool should_have_error_code;
- 		bool urg = nested_cpu_has2(vmcs12,
- 					   SECONDARY_EXEC_UNRESTRICTED_GUEST);
- 		bool prot_mode = !urg || vmcs12->guest_cr0 & X86_CR0_PE;
-@@ -2882,12 +2881,20 @@ static int nested_check_vm_entry_controls(struct kvm_vcpu *vcpu,
- 		    CC(intr_type == INTR_TYPE_OTHER_EVENT && vector != 0))
- 			return -EINVAL;
+ #define DstXacc     (DstAccLo | SrcAccHi | SrcWrite)
  
--		/* VM-entry interruption-info field: deliver error code */
--		should_have_error_code =
--			intr_type == INTR_TYPE_HARD_EXCEPTION && prot_mode &&
--			x86_exception_has_error_code(vector);
--		if (CC(has_error_code != should_have_error_code))
--			return -EINVAL;
-+		/*
-+		 * Cannot deliver error code in real mode or if the interrupt
-+		 * type is not hardware exception. For other cases, do the
-+		 * consistency check only if the vCPU doesn't enumerate
-+		 * VMX_BASIC_NO_HW_ERROR_CODE_CC.
-+		 */
-+		if (!prot_mode || intr_type != INTR_TYPE_HARD_EXCEPTION) {
-+			if (CC(has_error_code))
-+				return -EINVAL;
-+		} else if (!nested_cpu_has_no_hw_errcode_cc(vcpu)) {
-+			if (CC(has_error_code !=
-+			       x86_exception_has_error_code(vector)))
-+				return -EINVAL;
-+		}
+@@ -4098,9 +4099,9 @@ static const struct opcode group4[] = {
+ static const struct opcode group5[] = {
+ 	F(DstMem | SrcNone | Lock,		em_inc),
+ 	F(DstMem | SrcNone | Lock,		em_dec),
+-	I(SrcMem | NearBranch | IsBranch,       em_call_near_abs),
+-	I(SrcMemFAddr | ImplicitOps | IsBranch, em_call_far),
+-	I(SrcMem | NearBranch | IsBranch,       em_jmp_abs),
++	I(SrcMem | NearBranch | IsBranch | IsProtected, em_call_near_abs),
++	I(SrcMemFAddr | ImplicitOps | IsBranch | IsProtected, em_call_far),
++	I(SrcMem | NearBranch | IsBranch | IsProtected, em_jmp_abs),
+ 	I(SrcMemFAddr | ImplicitOps | IsBranch, em_jmp_far),
+ 	I(SrcMem | Stack | TwoMemOp,		em_push), D(Undefined),
+ };
+@@ -4362,11 +4363,11 @@ static const struct opcode opcode_table[256] = {
+ 	/* 0xC8 - 0xCF */
+ 	I(Stack | SrcImmU16 | Src2ImmByte | IsBranch, em_enter),
+ 	I(Stack | IsBranch, em_leave),
+-	I(ImplicitOps | SrcImmU16 | IsBranch, em_ret_far_imm),
+-	I(ImplicitOps | IsBranch, em_ret_far),
+-	D(ImplicitOps | IsBranch), DI(SrcImmByte | IsBranch, intn),
++	I(ImplicitOps | SrcImmU16 | IsBranch | IsProtected, em_ret_far_imm),
++	I(ImplicitOps | IsBranch | IsProtected, em_ret_far),
++	D(ImplicitOps | IsBranch), DI(SrcImmByte | IsBranch | IsProtected, intn),
+ 	D(ImplicitOps | No64 | IsBranch),
+-	II(ImplicitOps | IsBranch, em_iret, iret),
++	II(ImplicitOps | IsBranch | IsProtected, em_iret, iret),
+ 	/* 0xD0 - 0xD7 */
+ 	G(Src2One | ByteOp, group2), G(Src2One, group2),
+ 	G(Src2CL | ByteOp, group2), G(Src2CL, group2),
+@@ -4382,7 +4383,7 @@ static const struct opcode opcode_table[256] = {
+ 	I2bvIP(SrcImmUByte | DstAcc, em_in,  in,  check_perm_in),
+ 	I2bvIP(SrcAcc | DstImmUByte, em_out, out, check_perm_out),
+ 	/* 0xE8 - 0xEF */
+-	I(SrcImm | NearBranch | IsBranch, em_call),
++	I(SrcImm | NearBranch | IsBranch | IsProtected, em_call),
+ 	D(SrcImm | ImplicitOps | NearBranch | IsBranch),
+ 	I(SrcImmFAddr | No64 | IsBranch, em_jmp_far),
+ 	D(SrcImmByte | ImplicitOps | NearBranch | IsBranch),
+@@ -4401,7 +4402,7 @@ static const struct opcode opcode_table[256] = {
+ static const struct opcode twobyte_table[256] = {
+ 	/* 0x00 - 0x0F */
+ 	G(0, group6), GD(0, &group7), N, N,
+-	N, I(ImplicitOps | EmulateOnUD | IsBranch, em_syscall),
++	N, I(ImplicitOps | EmulateOnUD | IsBranch | IsProtected, em_syscall),
+ 	II(ImplicitOps | Priv, em_clts, clts), N,
+ 	DI(ImplicitOps | Priv, invd), DI(ImplicitOps | Priv, wbinvd), N, N,
+ 	N, D(ImplicitOps | ModRM | SrcMem | NoAccess), N, N,
+@@ -4432,8 +4433,8 @@ static const struct opcode twobyte_table[256] = {
+ 	IIP(ImplicitOps, em_rdtsc, rdtsc, check_rdtsc),
+ 	II(ImplicitOps | Priv, em_rdmsr, rdmsr),
+ 	IIP(ImplicitOps, em_rdpmc, rdpmc, check_rdpmc),
+-	I(ImplicitOps | EmulateOnUD | IsBranch, em_sysenter),
+-	I(ImplicitOps | Priv | EmulateOnUD | IsBranch, em_sysexit),
++	I(ImplicitOps | EmulateOnUD | IsBranch | IsProtected, em_sysenter),
++	I(ImplicitOps | Priv | EmulateOnUD | IsBranch | IsProtected, em_sysexit),
+ 	N, N,
+ 	N, N, N, N, N, N, N, N,
+ 	/* 0x40 - 0x4F */
+@@ -4971,6 +4972,10 @@ int x86_decode_insn(struct x86_emulate_ctxt *ctxt, void *insn, int insn_len, int
+ 	if (ctxt->d == 0)
+ 		return EMULATION_FAILED;
  
- 		/* VM-entry exception error code */
- 		if (CC(has_error_code &&
-@@ -7011,6 +7018,8 @@ static void nested_vmx_setup_basic(struct nested_vmx_msrs *msrs)
- 
- 	if (cpu_has_vmx_basic_inout())
- 		msrs->basic |= VMX_BASIC_INOUT;
-+	if (cpu_has_vmx_basic_no_hw_errcode())
-+		msrs->basic |= VMX_BASIC_NO_HW_ERROR_CODE_CC;
- }
- 
- static void nested_vmx_setup_cr_fixed(struct nested_vmx_msrs *msrs)
-diff --git a/arch/x86/kvm/vmx/nested.h b/arch/x86/kvm/vmx/nested.h
-index cce4e2aa30fb..747061c2aeb9 100644
---- a/arch/x86/kvm/vmx/nested.h
-+++ b/arch/x86/kvm/vmx/nested.h
-@@ -285,6 +285,11 @@ static inline bool nested_cr4_valid(struct kvm_vcpu *vcpu, unsigned long val)
- 	       __kvm_is_valid_cr4(vcpu, val);
- }
- 
-+static inline bool nested_cpu_has_no_hw_errcode_cc(struct kvm_vcpu *vcpu)
-+{
-+	return to_vmx(vcpu)->nested.msrs.basic & VMX_BASIC_NO_HW_ERROR_CODE_CC;
-+}
++	if ((opcode.flags & IsProtected) &&
++	    (ctxt->ops->get_cr(ctxt, 4) & X86_CR4_CET))
++		return EMULATION_FAILED;
 +
- /* No difference in the restrictions on guest and host CR4 in VMX operation. */
- #define nested_guest_cr4_valid	nested_cr4_valid
- #define nested_host_cr4_valid	nested_cr4_valid
+ 	ctxt->execute = opcode.u.execute;
+ 
+ 	if (unlikely(emulation_type & EMULTYPE_TRAP_UD) &&
 -- 
 2.39.3
 
