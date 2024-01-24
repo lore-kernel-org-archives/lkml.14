@@ -1,46 +1,45 @@
 Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34B38131757;
-	Wed, 24 Jan 2024 18:37:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8173813175B;
+	Wed, 24 Jan 2024 18:37:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706121434; cv=none; b=pt/beOm9mcoqpT2UfHF50rmjOvA0tqayzzUklrBnzcDO9yddCpQudM2pgPzp+Dg9lvHy7O3GY3YTEO07hXVgw97VtpDrNLQOGO+RiFn2GHPSzHgAw31m75DUXmkE4C3jbSef3L9KGWrurV51+ePyxBW8IxsrVXtu/QzEEWpA/9k=
+	t=1706121435; cv=none; b=M0v2qThV6NDpdZOP61hvpep4DVfdplp9Iiqo5KBghsPW0BKzZjeAuR17jcK3rdtZqtSAVD4UOjD5XPxtl1rq7CBHiraVK9IMfJSm4r92JT8YSBiTX/CwZT9OQ3I4LHC7OOXsh+DLD0LZubrqgLG8iHVMekROFESeQd4XTmxU9Jg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706121434; c=relaxed/simple;
-	bh=xC/30zjEDKsQj2Y+zZTcMWYVEh0CxLo58RcmlfY5mAw=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=g0vYzavmsHx0xmNNuisDAuLKyjHcTDSudn/JRF86V0U922kH0/9P0i8R6ICEULRTgikM7at6oQXzFWe6DnpiF/SC+aCuzrQcawOOiRkhYNZ1nQK8dRTBEPWJw+2hlY378yccBG7x2x0udBawHWvPpGvJSaDMyPOOlMEKZ/bsOMk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=YOxXBdSJ; arc=none smtp.client-ip=198.47.23.249
+	s=arc-20240116; t=1706121435; c=relaxed/simple;
+	bh=iG57NcwKzxzsfvNL3nXLFfmGOl0sbfcz5pb2zB8p7UA=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=bggEn4VMW4XEek3nswrTAKEegnOQXr3BBxGyL1N1cQEIiAOw6UpVVYUKluDOmE9mPqn6ESTtDCNXNuWBW4DfYgJPhrMdyXSvQWG1J1OC6JdWbHOnB0OI/uuhmmkWLLFo83SNAmA14BgL5GsyFQ2x8yBrn1sdNgqhYII6ougBa4c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=pQEaLkpX; arc=none smtp.client-ip=198.47.23.249
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="YOxXBdSJ"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 40OIb2fX128728;
-	Wed, 24 Jan 2024 12:37:02 -0600
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="pQEaLkpX"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 40OIb1br128720;
+	Wed, 24 Jan 2024 12:37:01 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1706121422;
-	bh=GjbOImoox0tR8x+R9TADsdC+j+QS+DMQ1DAEW80lqOY=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=YOxXBdSJoi3tcypi6Q6qk7mZg/KQj4Z2NstBZZLdYoUkBrxwfLJweXHBMjGTLu24d
-	 4eDAa6jqFePWcWhKhfn3lc56iioL9KTXxZuHHK78R5yIfu0DqKnjrQTL0I4N+H0L5c
-	 eTJFHkHs+9ZhbTVm6DTB9TqrrssEYKXE33gusYDA=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 40OIb2Gp015413
+	s=ti-com-17Q1; t=1706121421;
+	bh=eMpEFn5T1KMfQWMTOUI/dvHdj9BaMlSxU8vJDfk3c+w=;
+	h=From:To:CC:Subject:Date;
+	b=pQEaLkpXlIi6Wap/GvGWidEfxxFo+9dMEFfhlLzKRNj63gHheWpO1wn+mzXfobvmx
+	 9/9A/70zBWyjzep6TH3GowkmfZHSvPUwLSCslFuc072xc2hj4vFK1rB9Dxxz7JMcSG
+	 00+S9yVHVr6qnXksF8RFBaRtfrtPTRQVUxtQqaWo=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 40OIb1P7004186
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 24 Jan 2024 12:37:02 -0600
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+	Wed, 24 Jan 2024 12:37:01 -0600
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 24
  Jan 2024 12:37:01 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
  Frontend Transport; Wed, 24 Jan 2024 12:37:01 -0600
 Received: from lelvsmtp6.itg.ti.com ([10.249.42.149])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 40OIb0bB106485;
-	Wed, 24 Jan 2024 12:37:01 -0600
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 40OIb0b9106485;
+	Wed, 24 Jan 2024 12:37:00 -0600
 From: Andrew Davis <afd@ti.com>
 To: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
         Tero
@@ -51,12 +50,10 @@ To: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
 	<conor+dt@kernel.org>
 CC: <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, Andrew Davis <afd@ti.com>
-Subject: [PATCH 3/4] arm64: dts: ti: k3-am65: Remove PCIe endpoint nodes
-Date: Wed, 24 Jan 2024 12:36:58 -0600
-Message-ID: <20240124183659.149119-3-afd@ti.com>
+Subject: [PATCH 1/4] arm64: dts: ti: k3-j7200: Enable PCIe nodes at the board level
+Date: Wed, 24 Jan 2024 12:36:56 -0600
+Message-ID: <20240124183659.149119-1-afd@ti.com>
 X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240124183659.149119-1-afd@ti.com>
-References: <20240124183659.149119-1-afd@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,65 +64,45 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-These nodes are example nodes for the PCIe controller in "endpoint" mode.
-By default the controller is in "root complex" mode and there is already a
-DT node for the same.
+PCIe node defined in the top-level J7200 SoC dtsi file is incomplete
+and will not be functional unless it is extended with a SerDes PHY.
 
-Examples should go in the bindings or other documentation.
+As the PHY and mode is only known at the board integration level, this
+node should only be enabled when provided with this information.
 
-Remove this node.
+Disable the PCIe node in the dtsi files and only enable when it is
+actually pinned out on a given board.
 
 Signed-off-by: Andrew Davis <afd@ti.com>
 ---
- arch/arm64/boot/dts/ti/k3-am65-main.dtsi | 28 ------------------------
- 1 file changed, 28 deletions(-)
+ arch/arm64/boot/dts/ti/k3-j7200-common-proc-board.dts | 1 +
+ arch/arm64/boot/dts/ti/k3-j7200-main.dtsi             | 1 +
+ 2 files changed, 2 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-index fcea544656360..b922b483ea0f7 100644
---- a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-@@ -886,20 +886,6 @@ pcie0_rc: pcie@5500000 {
- 		status = "disabled";
+diff --git a/arch/arm64/boot/dts/ti/k3-j7200-common-proc-board.dts b/arch/arm64/boot/dts/ti/k3-j7200-common-proc-board.dts
+index cee2b4b0eb87d..7e4fd7ab9750c 100644
+--- a/arch/arm64/boot/dts/ti/k3-j7200-common-proc-board.dts
++++ b/arch/arm64/boot/dts/ti/k3-j7200-common-proc-board.dts
+@@ -382,6 +382,7 @@ serdes0_qsgmii_link: phy@1 {
+ };
+ 
+ &pcie1_rc {
++	status = "okay";
+ 	reset-gpios = <&exp1 2 GPIO_ACTIVE_HIGH>;
+ 	phys = <&serdes0_pcie_link>;
+ 	phy-names = "pcie-phy";
+diff --git a/arch/arm64/boot/dts/ti/k3-j7200-main.dtsi b/arch/arm64/boot/dts/ti/k3-j7200-main.dtsi
+index da67bf8fe703e..1e2434caa7ffa 100644
+--- a/arch/arm64/boot/dts/ti/k3-j7200-main.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-j7200-main.dtsi
+@@ -770,6 +770,7 @@ pcie1_rc: pcie@2910000 {
+ 		ranges = <0x01000000 0x0 0x18001000  0x00 0x18001000  0x0 0x0010000>,
+ 			 <0x02000000 0x0 0x18011000  0x00 0x18011000  0x0 0x7fef000>;
+ 		dma-ranges = <0x02000000 0x0 0x0 0x0 0x0 0x10000 0x0>;
++		status = "disabled";
  	};
  
--	pcie0_ep: pcie-ep@5500000 {
--		compatible = "ti,am654-pcie-ep";
--		reg = <0x0 0x5500000 0x0 0x1000>, <0x0 0x5501000 0x0 0x1000>, <0x0 0x10000000 0x0 0x8000000>, <0x0 0x5506000 0x0 0x1000>;
--		reg-names = "app", "dbics", "addr_space", "atu";
--		power-domains = <&k3_pds 120 TI_SCI_PD_EXCLUSIVE>;
--		ti,syscon-pcie-mode = <&scm_conf 0x4060>;
--		num-ib-windows = <16>;
--		num-ob-windows = <16>;
--		max-link-speed = <2>;
--		dma-coherent;
--		interrupts = <GIC_SPI 340 IRQ_TYPE_EDGE_RISING>;
--		status = "disabled";
--	};
--
- 	pcie1_rc: pcie@5600000 {
- 		compatible = "ti,am654-pcie-rc";
- 		reg = <0x0 0x5600000 0x0 0x1000>, <0x0 0x5601000 0x0 0x1000>, <0x0 0x18000000 0x0 0x2000>, <0x0 0x5606000 0x0 0x1000>;
-@@ -921,20 +907,6 @@ pcie1_rc: pcie@5600000 {
- 		status = "disabled";
- 	};
- 
--	pcie1_ep: pcie-ep@5600000 {
--		compatible = "ti,am654-pcie-ep";
--		reg = <0x0 0x5600000 0x0 0x1000>, <0x0 0x5601000 0x0 0x1000>, <0x0 0x18000000 0x0 0x4000000>, <0x0 0x5606000 0x0 0x1000>;
--		reg-names = "app", "dbics", "addr_space", "atu";
--		power-domains = <&k3_pds 121 TI_SCI_PD_EXCLUSIVE>;
--		ti,syscon-pcie-mode = <&scm_conf 0x4070>;
--		num-ib-windows = <16>;
--		num-ob-windows = <16>;
--		max-link-speed = <2>;
--		dma-coherent;
--		interrupts = <GIC_SPI 355 IRQ_TYPE_EDGE_RISING>;
--		status = "disabled";
--	};
--
- 	mcasp0: mcasp@2b00000 {
- 		compatible = "ti,am33xx-mcasp-audio";
- 		reg = <0x0 0x02b00000 0x0 0x2000>,
+ 	pcie1_ep: pcie-ep@2910000 {
 -- 
 2.39.2
 
