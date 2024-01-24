@@ -1,117 +1,109 @@
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24F3112AAFB
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 17:23:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 089837CF18;
+	Wed, 24 Jan 2024 17:24:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706116983; cv=none; b=g2AabDBpg6KhLuZE3kdQNRSGlMR+q77wxl7qOeEe0Hz7v3MTpCiihC4vq8gbpDWcNmhVp6pWQbtIE8Tn5qHiLDejWNkgXIHwJQSDCWhCu8rVzFq03fpSAjshQsAgAwdiLTK80RkV1Gz+EmR3KFesCU+y5NLRfsKxrRRcm2OGb/I=
+	t=1706117048; cv=none; b=uMi+S0USr3KrBYEB8zgkoZt2ErsKnzTgWwSEVje7ZPfRzl2kyQHzb/GGI2yFGA3WY8J4un9SnDwpgLOMArm9lhzVAGi1caawGluVCogopqyN/kHWG32a1bgCkLHQ542MXv5sGn7e1GT464M8iSuAmA63Fpq+63cY6rqQrYxsBvk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706116983; c=relaxed/simple;
-	bh=1qsiuKA8J/U5HtTK7VX7ozeNvAKnJpMbUXqVOveYMK8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rSKM2MQnK5w9xOTaC2/a1kVpPBSort/cbRwE9Bmk5MBv3Qn8xSsiDK+mblHHUa7sqsP4XXsR74yBEbvYLXAf9b6XoNO7kX//1vWAZ8N2IE5CMDAMEAEyLYcHW9jgilv4jM/Qk9ZQZ0U0QFNGaKew+TRwOImQqMHJB+D0HRy2PMo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=A9AwBggs; arc=none smtp.client-ip=217.70.183.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="A9AwBggs"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 0F8F040003;
-	Wed, 24 Jan 2024 17:22:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1706116979;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NR9X+f8hzi6LukUwFvLmWHpES6M8Hue32FNHn1qEfC8=;
-	b=A9AwBggsTrv9qKpv6izgrNets4YClPaiv+ZV53LkzmNlflbQYEvLMKLE1SKOr5qUOF5uQn
-	PRlSFVqNDppd2AyZmp3b5p0MEpw5b/3zahbcChm0Xe9JXLZ/E6EhuVN+4Aiej1kWHY+iif
-	iP8YfZOGANGosY1RZJWV/6YyMYE4z6GeecvRyZOY8087BCntZNl+nzDyKcQ1Wzw3zOSe3c
-	vr8uSTczAaTzRZephI0zvW1/z44Q08mlLywAagwm3BgmN9v9kiNXLhz2orkgIeKMyjoHNY
-	ZXW+TSj0lWjoZ8WcPncTAd/lKaF7Fd5x+zVRyIhqYrUoBExodg1RlFQ2BxJALw==
-Date: Wed, 24 Jan 2024 18:22:56 +0100
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Arnd Bergmann
- <arnd@arndb.de>, regressions@lists.linux.dev, =?UTF-8?B?UmFmYcWCIE1pxYJl?=
- =?UTF-8?B?Y2tp?= <rafal@milecki.pl>, Chen-Yu Tsai <wenst@chromium.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, asahi@lists.linux.dev,
- Sven Peter <sven@svenpeter.dev>, Michael Walle <michael@walle.cc>,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] nvmem: include bit index in cell sysfs file name
-Message-ID: <20240124182256.776c164b@xps-13>
-In-Reply-To: <20240122153442.7250-1-arnd@kernel.org>
-References: <20240122153442.7250-1-arnd@kernel.org>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1706117048; c=relaxed/simple;
+	bh=Nel1C4fahRSLksyTQGpvXQXEvhkmWvAfgHn6lsWzUdE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=BvJpRX7DIa9SC39n3p3LYXup8jFoJZklmflEPV7xDjpniGjoL7crGGpKPz+cd7pWrZ5XJ7/IUm1RVlNxJsUUubEfYE3nVhWaYaN/KNOe44YkQyDT3MePBsXtoYrOLWi/Ah16EEH7ds0U0axLI/nxnm5iF1Pm0vWXIKyvOs6jKfM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E06A71FB;
+	Wed, 24 Jan 2024 09:24:49 -0800 (PST)
+Received: from ewhatever.cambridge.arm.com (ewhatever.cambridge.arm.com [10.1.197.1])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 0AF5A3F762;
+	Wed, 24 Jan 2024 09:24:03 -0800 (PST)
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+To: linux-kernel@vger.kernel.org
+Cc: kvm@vger.kernel.org,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Feng Liu <feliu@nvidia.com>,
+	"Michael S . Tsirkin" <mst@redhat.com>,
+	Yishai Hadas <yishaih@nvidia.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Jean-Philippe Brucker <jean-philippe@linaro.org>
+Subject: [PATCH] virtio: uapi: Drop __packed attribute in linux/virtio_pci.h:
+Date: Wed, 24 Jan 2024 17:23:45 +0000
+Message-Id: <20240124172345.853129-1-suzuki.poulose@arm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-Sasl: miquel.raynal@bootlin.com
+Content-Transfer-Encoding: 8bit
 
-Hi Arnd,
+Commit 92792ac752aa ("virtio-pci: Introduce admin command sending function")
+added "__packed" structures to UAPI header linux/virtio_pci.h. This triggers
+build failures in the consumer userspace applications without proper "definition"
+of __packed (e.g., kvmtool build fails).
 
-arnd@kernel.org wrote on Mon, 22 Jan 2024 16:34:10 +0100:
+Moreover, the structures are already packed well, and doesn't need explicit
+packing, similar to the rest of the structures in all virtio_* headers. Remove
+the __packed attribute.
 
-> From: Arnd Bergmann <arnd@arndb.de>
->=20
-> Creating sysfs files for all Cells caused a boot failure for linux-6.8-rc=
-1 on
-> Apple M1, which (in downstream dts files) has multiple nvmem cells that u=
-se the
-> same byte address. This causes the device probe to fail with
+Fixes: commit 92792ac752aa ("virtio-pci: Introduce admin command sending function")
+Cc: Feng Liu <feliu@nvidia.com>
+Cc: Michael S. Tsirkin <mst@redhat.com>
+Cc: Yishai Hadas <yishaih@nvidia.com>
+Cc: Alex Williamson <alex.williamson@redhat.com>
+Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>
+Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+---
+ include/uapi/linux/virtio_pci.h | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-o_O	I didn't even know this was allowed...
+diff --git a/include/uapi/linux/virtio_pci.h b/include/uapi/linux/virtio_pci.h
+index ef3810dee7ef..a8208492e822 100644
+--- a/include/uapi/linux/virtio_pci.h
++++ b/include/uapi/linux/virtio_pci.h
+@@ -240,7 +240,7 @@ struct virtio_pci_cfg_cap {
+ #define VIRTIO_ADMIN_CMD_LEGACY_DEV_CFG_READ		0x5
+ #define VIRTIO_ADMIN_CMD_LEGACY_NOTIFY_INFO		0x6
+ 
+-struct __packed virtio_admin_cmd_hdr {
++struct virtio_admin_cmd_hdr {
+ 	__le16 opcode;
+ 	/*
+ 	 * 1 - SR-IOV
+@@ -252,20 +252,20 @@ struct __packed virtio_admin_cmd_hdr {
+ 	__le64 group_member_id;
+ };
+ 
+-struct __packed virtio_admin_cmd_status {
++struct virtio_admin_cmd_status {
+ 	__le16 status;
+ 	__le16 status_qualifier;
+ 	/* Unused, reserved for future extensions. */
+ 	__u8 reserved2[4];
+ };
+ 
+-struct __packed virtio_admin_cmd_legacy_wr_data {
++struct virtio_admin_cmd_legacy_wr_data {
+ 	__u8 offset; /* Starting offset of the register(s) to write. */
+ 	__u8 reserved[7];
+ 	__u8 registers[];
+ };
+ 
+-struct __packed virtio_admin_cmd_legacy_rd_data {
++struct virtio_admin_cmd_legacy_rd_data {
+ 	__u8 offset; /* Starting offset of the register(s) to read. */
+ };
+ 
+@@ -275,7 +275,7 @@ struct __packed virtio_admin_cmd_legacy_rd_data {
+ 
+ #define VIRTIO_ADMIN_CMD_MAX_NOTIFY_INFO 4
+ 
+-struct __packed virtio_admin_cmd_notify_info_data {
++struct virtio_admin_cmd_notify_info_data {
+ 	__u8 flags; /* 0 = end of list, 1 = owner device, 2 = member device */
+ 	__u8 bar; /* BAR of the member or the owner device */
+ 	__u8 padding[6];
+-- 
+2.34.1
 
-> [    0.605336] sysfs: cannot create duplicate filename '/devices/platform=
-/soc@200000000/2922bc000.efuse/apple_efuses_nvmem0/cells/efuse@a10'
-> [    0.605347] CPU: 7 PID: 1 Comm: swapper/0 Tainted: G S                =
- 6.8.0-rc1-arnd-5+ #133
-> [    0.605355] Hardware name: Apple Mac Studio (M1 Ultra, 2022) (DT)
-> [    0.605362] Call trace:
-> [    0.605365]  show_stack+0x18/0x2c
-> [    0.605374]  dump_stack_lvl+0x60/0x80
-> [    0.605383]  dump_stack+0x18/0x24
-> [    0.605388]  sysfs_warn_dup+0x64/0x80
-> [    0.605395]  sysfs_add_bin_file_mode_ns+0xb0/0xd4
-> [    0.605402]  internal_create_group+0x268/0x404
-> [    0.605409]  sysfs_create_groups+0x38/0x94
-> [    0.605415]  devm_device_add_groups+0x50/0x94
-> [    0.605572]  nvmem_populate_sysfs_cells+0x180/0x1b0
-> [    0.605682]  nvmem_register+0x38c/0x470
-> [    0.605789]  devm_nvmem_register+0x1c/0x6c
-> [    0.605895]  apple_efuses_probe+0xe4/0x120
-> [    0.606000]  platform_probe+0xa8/0xd0
->=20
-> As far as I can tell, this is a problem for any device with multiple cell=
-s on
-> different bits of the same address. Avoid the issue by changing the file =
-name
-> to include the first bit number.
-
-There is only one bit number right? We are talking about byte offsets
-so this value can only range from 0 to 7? If we understand each other
-correctly then why not, I'm fine with the extra ",0" thing.
-
-> Fixes: 0088cbc19276 ("nvmem: core: Expose cells through sysfs")
-> Link: https://github.com/AsahiLinux/linux/blob/bd0a1a7d4/arch/arm64/boot/=
-dts/apple/t600x-dieX.dtsi#L156
-> Cc: regressions@lists.linux.dev
-> Cc: Miquel Raynal <miquel.raynal@bootlin.com>
-> Cc: Rafa=C5=82 Mi=C5=82ecki <rafal@milecki.pl>
-> Cc: Chen-Yu Tsai <wenst@chromium.org>
-> Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: asahi@lists.linux.dev
-> Cc: Sven Peter <sven@svenpeter.dev>
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
-
-Thanks,
-Miqu=C3=A8l
