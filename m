@@ -1,143 +1,244 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f44.google.com (mail-io1-f44.google.com [209.85.166.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FBD685C5D
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 14:49:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00E2C77656
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 14:49:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706107763; cv=none; b=Fv3z+FyOF+qILFv3JnnQvtpCxut9eeu9Z8XEt1kakAE1bvF2uo9KNi1ey0TB9WL4w1xEP6+FnMKyhy9l06WTylQXO4KnaYjrSizJmMPmK3f11ElP4pNIIne/IIWZ7Q70LtB0z9TevwrzvF7rqRpJGmf2AE+myozq9apoDeIxBWM=
+	t=1706107801; cv=none; b=rAywnRrbB0YNlnxM4mJDKEyITa5ItTyzn234EtG39z15BwWjyzkN1iln+NxsNMuQKKwCKtI9dDZfLnAUmbEJ9QWhzDu7ypIGNuKsUsOxTGajuDyXdBOIGqf4Nx2XiAiPRcGwAr3ksmJ1jjQYYNTq8y+jJIC92glKhYlQNeFjid0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706107763; c=relaxed/simple;
-	bh=wrZ8xW7UkYZOxzyfUsSQ27WNRFcJn00rozogY+4egik=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=pW8uXZ/2jhkuwIr1Nk4hwE+ONoYSL2oTShhqoWVCzvZk9Oi9S3MJgwEiR5Voe+Z6RxkDl6nL6nHlkvg3AxoKmRzhyXCwJj+7qPVE8ZCtXlNLxm82mWGq+y/uAAQSaMDzjoQuoSYdy5qB4T9mF7g8qryyIkTnP801dackdnvRgss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ozvxQbs2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706107801; c=relaxed/simple;
+	bh=cg2x3kiPaiLPeSSGJpnohOZYf+YIgP1iHarhGR64V6o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kmgj7dYZwRby5ZSNNm05CWZ6qajxeDNo6YZRZR0vYrcYYbFGT8mp2IaI2KS5TDtE/IPwvrKK9gaOVttN/mqVpqD10iIMnR6VURbyHSPFRUsIdJrpcaf+IWJp/aCJrfqwqLMfFRmq4sFIron3wK/YPPRfn8TG0n9wyUf9Tso2XXE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=jlM8NqEj; arc=none smtp.client-ip=209.85.166.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ozvxQbs2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3CECC433F1;
-	Wed, 24 Jan 2024 14:49:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706107762;
-	bh=wrZ8xW7UkYZOxzyfUsSQ27WNRFcJn00rozogY+4egik=;
-	h=From:To:Cc:Subject:Date:From;
-	b=ozvxQbs2hx8v1XXKc82x4SIPBaYV5sJ9tivRFo+j0ZnsPepSLYgTsegf5CsWISwaH
-	 72hxLcJZY3gW53fvG3uazQX4L94WvwQMB48t1lY97P2UY0jSkjcult8KFVYj4BO9lD
-	 hThJx+SV6k4tUHQ5gVlWwW4fPdD7zAOH3dVFnp9pcsNRzoDJc82uckZjTXrAG+vQlp
-	 8LM+YoLrWTvVWMx/VyQxQJWc6ky02ALA4KpLwTUyK14jPsxiY3SMgJldTykRKgNT7I
-	 cV7Tejfm2iW4misVc6JL2LIYGe7VieiZKdUoQ1uhkMexHAPhdRjctwZH3kmj0l/k/p
-	 4JWNKj//oU7Ag==
-From: Chao Yu <chao@kernel.org>
-To: jaegeuk@kernel.org
-Cc: linux-f2fs-devel@lists.sourceforge.net,
-	linux-kernel@vger.kernel.org,
-	Chao Yu <chao@kernel.org>,
-	Zhiguo Niu <zhiguo.niu@unisoc.com>
-Subject: [PATCH] f2fs: fix to avoid potential panic during recovery
-Date: Wed, 24 Jan 2024 22:49:15 +0800
-Message-Id: <20240124144915.19445-1-chao@kernel.org>
-X-Mailer: git-send-email 2.40.1
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="jlM8NqEj"
+Received: by mail-io1-f44.google.com with SMTP id ca18e2360f4ac-7bb06f56fe9so64630039f.0
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 06:49:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1706107797; x=1706712597; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=mOYIlDrM1fPoCbXofl74IMyTSxnlXM/nUzwB8nUiQJs=;
+        b=jlM8NqEjCa0YfpawTRszzutS1cZzsl0pDKOhAqbeMtfyKpQ8J/13Z4UTTmxFWpyznW
+         AG+ltlP/NRtDR44as1unIPpnl7xJyGqHTKOEPMfGwI45kBQ9xJ6WqGMhmAp0G23FkT3H
+         dKD/Z3Fy+xARYU+IZ5AUpMexbFnfCfO4cwUBPA87CszoSMI2m2Qm262fe01bShAHogtR
+         GLnPhlLbg+P5YI3TVTWTU7Y9bs2N6iYLWB+s4B3TgnELpbihYiSnPr9Yl2e/+rUSKdkc
+         x12Xh2OlIqpyUw7O9kOuQdfFtkoW0bR1X07OGG7SFuSlDtPqgJ4JahODbM8ShhZ0mM7k
+         x9Uw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706107797; x=1706712597;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=mOYIlDrM1fPoCbXofl74IMyTSxnlXM/nUzwB8nUiQJs=;
+        b=KFln1KSHP6/tlNEea/X3Bk6As4RsbDGyLQaLt5bEpdHIVU88s9nqGmzyb9j0iKsm2c
+         YxMfOt2NuM4nltPbFz170u8g9oHy6R8+H7fHzTa7BJFdnOf2kmQzDZMlsea6sqqiQ95i
+         srPhQo7ie24brBm5J+8JnoE+s8oIttxN8n/8gco1tACKZi/0qKpFQ0In8M7Nlx8FpemG
+         D36KgOoIvTeYNa9C2xjKjuPstdzvKnkJFCXUVViC1BZTRt3CmnjBhMyfUaSQtSo4jxTf
+         9iDQvdZ5I2V+7Sm7mFunOgMCYQL2RIAEpO5Jf+nRMz2ieqjASgAh6z1j/BeMPBMImJh5
+         3yLw==
+X-Gm-Message-State: AOJu0YyItbW+BVCHV96oZoM3+F5fPaLn+6Mik0qWUBy1vZ9WG2aSXr1v
+	ZzCzz2NKxlanjvy80KNytut3lmw6iyUuirXey72qqL/AHNvvkxOwKFLkCuoHdunG1+pq+9ieXza
+	5J2I=
+X-Google-Smtp-Source: AGHT+IHFS0HF1xPNeZIJlxWyOL4exNyi+jE+ZN5lIbXvX5t4yXCqm9Tj6wshMgaexNmur12rhlOCvg==
+X-Received: by 2002:a5d:8c8f:0:b0:7be:edbc:629f with SMTP id g15-20020a5d8c8f000000b007beedbc629fmr2844632ion.0.1706107796882;
+        Wed, 24 Jan 2024 06:49:56 -0800 (PST)
+Received: from [192.168.1.116] ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id et24-20020a0566382a1800b0046e509dd7a1sm4038191jab.118.2024.01.24.06.49.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 24 Jan 2024 06:49:56 -0800 (PST)
+Message-ID: <229ccad8-c8e5-46d5-8587-2d64182b5d68@kernel.dk>
+Date: Wed, 24 Jan 2024 07:49:55 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] iov_iter: streamline iovec/bvec alignment iteration
+Content-Language: en-US
+To: David Laight <David.Laight@ACULAB.COM>,
+ LKML <linux-kernel@vger.kernel.org>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>
+References: <bd2f28ab-78cf-4ae0-a62a-d23a94fb3839@kernel.dk>
+ <9b43b9f3a32642e5a6388f3b1c8b114d@AcuMS.aculab.com>
+From: Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <9b43b9f3a32642e5a6388f3b1c8b114d@AcuMS.aculab.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-During recovery, if FAULT_BLOCK is on, it is possible that
-f2fs_reserve_new_block() will return -ENOSPC during recovery,
-then it may trigger panic.
+On 1/24/24 5:07 AM, David Laight wrote:
+> From: Jens Axboe
+>> Sent: 23 January 2024 19:49
+>>
+>> Rewrite iov_iter_aligned_iovec() and iov_iter_aligned_bvec() to be both
+>> easier to read, and also significantly more compact in terms of
+>> generated code. This saves 178 bytes of text on x86-64 for me (with
+>> clang-18) and 136 bytes on arm64 (with gcc-13).
+>>
+> ...
+>> diff --git a/lib/iov_iter.c b/lib/iov_iter.c
+>> index e0aa6b440ca5..2fcc47d822e3 100644
+>> --- a/lib/iov_iter.c
+>> +++ b/lib/iov_iter.c
+>> @@ -714,12 +714,11 @@ EXPORT_SYMBOL(iov_iter_discard);
+> ...
+>> -	for (k = 0; k < i->nr_segs; k++, skip = 0) {
+>> -		const struct iovec *iov = iter_iov(i) + k;
+>> +	do {
+>>  		size_t len = iov->iov_len - skip;
+> 
+> Is i->nr_segs allowed to be zero?
 
-Also, if fault injection rate is 1 and only FAULT_BLOCK fault
-type is on, it may encounter deadloop in loop of block reservation.
+Not if size is not zero.
 
-Let's change as below to fix these issues:
-- remove bug_on() to avoid panic.
-- limit the loop count of block reservation to avoid potential
-deadloop.
+> The old code (seemed to) check for zero.
+> The new version will go horribly wrong.
 
-Fixes: 956fa1ddc132 ("f2fs: fix to check return value of f2fs_reserve_new_block()")
-Reported-by: Zhiguo Niu <zhiguo.niu@unisoc.com>
-Signed-off-by: Chao Yu <chao@kernel.org>
----
- fs/f2fs/f2fs.h     |  5 +++++
- fs/f2fs/recovery.c | 33 ++++++++++++++++-----------------
- 2 files changed, 21 insertions(+), 17 deletions(-)
+In other spots we do check both segments and size, but not that
+nr_segments is non-zero to begin with. So I think this revised version
+may be better. Saves 176 bytes of text on arm64 for me, and 126 bytes on
+x86-64. I'll send out a v3.
 
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index a62c7e037456..5993b721e92c 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -76,6 +76,11 @@ struct f2fs_fault_info {
+
+diff --git a/lib/iov_iter.c b/lib/iov_iter.c
+index e0aa6b440ca5..5e34639c5d1e 100644
+--- a/lib/iov_iter.c
++++ b/lib/iov_iter.c
+@@ -714,12 +714,12 @@ EXPORT_SYMBOL(iov_iter_discard);
+ static bool iov_iter_aligned_iovec(const struct iov_iter *i, unsigned addr_mask,
+ 				   unsigned len_mask)
+ {
++	const struct iovec *iov = iter_iov(i);
+ 	size_t size = i->count;
+ 	size_t skip = i->iov_offset;
+-	unsigned k;
++	unsigned long nr_segs = i->nr_segs;
  
- extern const char *f2fs_fault_name[FAULT_MAX];
- #define IS_FAULT_SET(fi, type) ((fi)->inject_type & BIT(type))
+-	for (k = 0; k < i->nr_segs; k++, skip = 0) {
+-		const struct iovec *iov = iter_iov(i) + k;
++	do {
+ 		size_t len = iov->iov_len - skip;
+ 
+ 		if (len > size)
+@@ -729,34 +729,37 @@ static bool iov_iter_aligned_iovec(const struct iov_iter *i, unsigned addr_mask,
+ 		if ((unsigned long)(iov->iov_base + skip) & addr_mask)
+ 			return false;
+ 
++		iov++;
+ 		size -= len;
+-		if (!size)
+-			break;
+-	}
++		skip = 0;
++	} while (size && --nr_segs);
 +
-+/* maximum retry count for injected failure */
-+#define DEFAULT_FAILURE_RETRY_COUNT		8
-+#else
-+#define DEFAULT_FAILURE_RETRY_COUNT		1
- #endif
- 
- /*
-diff --git a/fs/f2fs/recovery.c b/fs/f2fs/recovery.c
-index d0f24ccbd1ac..aad1d1a9b3d6 100644
---- a/fs/f2fs/recovery.c
-+++ b/fs/f2fs/recovery.c
-@@ -611,6 +611,19 @@ static int check_index_in_prev_nodes(struct f2fs_sb_info *sbi,
- 	return 0;
+ 	return true;
  }
  
-+static int f2fs_reserve_new_block_retry(struct dnode_of_data *dn)
-+{
-+	int i, err = 0;
-+
-+	for (i = DEFAULT_FAILURE_RETRY_COUNT; i > 0; i--) {
-+		err = f2fs_reserve_new_block(dn);
-+		if (!err)
-+			break;
-+	}
-+
-+	return err;
-+}
-+
- static int do_recover_data(struct f2fs_sb_info *sbi, struct inode *inode,
- 					struct page *page)
+ static bool iov_iter_aligned_bvec(const struct iov_iter *i, unsigned addr_mask,
+ 				  unsigned len_mask)
  {
-@@ -712,14 +725,8 @@ static int do_recover_data(struct f2fs_sb_info *sbi, struct inode *inode,
- 		 */
- 		if (dest == NEW_ADDR) {
- 			f2fs_truncate_data_blocks_range(&dn, 1);
--			do {
--				err = f2fs_reserve_new_block(&dn);
--				if (err == -ENOSPC) {
--					f2fs_bug_on(sbi, 1);
--					break;
--				}
--			} while (err &&
--				IS_ENABLED(CONFIG_F2FS_FAULT_INJECTION));
-+
-+			err = f2fs_reserve_new_block_retry(&dn);
- 			if (err)
- 				goto err;
- 			continue;
-@@ -727,16 +734,8 @@ static int do_recover_data(struct f2fs_sb_info *sbi, struct inode *inode,
+-	size_t size = i->count;
++	const struct bio_vec *bvec = i->bvec;
+ 	unsigned skip = i->iov_offset;
+-	unsigned k;
++	size_t size = i->count;
++	unsigned long nr_segs = i->nr_segs;
  
- 		/* dest is valid block, try to recover from src to dest */
- 		if (f2fs_is_valid_blkaddr(sbi, dest, META_POR)) {
--
- 			if (src == NULL_ADDR) {
--				do {
--					err = f2fs_reserve_new_block(&dn);
--					if (err == -ENOSPC) {
--						f2fs_bug_on(sbi, 1);
--						break;
--					}
--				} while (err &&
--					IS_ENABLED(CONFIG_F2FS_FAULT_INJECTION));
-+				err = f2fs_reserve_new_block_retry(&dn);
- 				if (err)
- 					goto err;
- 			}
+-	for (k = 0; k < i->nr_segs; k++, skip = 0) {
+-		size_t len = i->bvec[k].bv_len - skip;
++	do {
++		size_t len = bvec->bv_len;
+ 
+ 		if (len > size)
+ 			len = size;
+ 		if (len & len_mask)
+ 			return false;
+-		if ((unsigned long)(i->bvec[k].bv_offset + skip) & addr_mask)
++		if ((unsigned long)(bvec->bv_offset + skip) & addr_mask)
+ 			return false;
+ 
++		bvec++;
+ 		size -= len;
+-		if (!size)
+-			break;
+-	}
++		skip = 0;
++	} while (size && --nr_segs);
++
+ 	return true;
+ }
+ 
+@@ -800,13 +803,13 @@ EXPORT_SYMBOL_GPL(iov_iter_is_aligned);
+ 
+ static unsigned long iov_iter_alignment_iovec(const struct iov_iter *i)
+ {
++	const struct iovec *iov = iter_iov(i);
+ 	unsigned long res = 0;
+ 	size_t size = i->count;
+ 	size_t skip = i->iov_offset;
+-	unsigned k;
++	unsigned long nr_segs = i->nr_segs;
+ 
+-	for (k = 0; k < i->nr_segs; k++, skip = 0) {
+-		const struct iovec *iov = iter_iov(i) + k;
++	do {
+ 		size_t len = iov->iov_len - skip;
+ 		if (len) {
+ 			res |= (unsigned long)iov->iov_base + skip;
+@@ -814,30 +817,33 @@ static unsigned long iov_iter_alignment_iovec(const struct iov_iter *i)
+ 				len = size;
+ 			res |= len;
+ 			size -= len;
+-			if (!size)
+-				break;
+ 		}
+-	}
++		iov++;
++		skip = 0;
++	} while (size && --nr_segs);
++
+ 	return res;
+ }
+ 
+ static unsigned long iov_iter_alignment_bvec(const struct iov_iter *i)
+ {
++	const struct bio_vec *bvec = i->bvec;
+ 	unsigned res = 0;
+ 	size_t size = i->count;
+ 	unsigned skip = i->iov_offset;
+-	unsigned k;
++	unsigned long nr_segs = i->nr_segs;
+ 
+-	for (k = 0; k < i->nr_segs; k++, skip = 0) {
+-		size_t len = i->bvec[k].bv_len - skip;
+-		res |= (unsigned long)i->bvec[k].bv_offset + skip;
++	do {
++		size_t len = bvec->bv_len - skip;
++		res |= (unsigned long)bvec->bv_offset + skip;
+ 		if (len > size)
+ 			len = size;
+ 		res |= len;
++		bvec++;
+ 		size -= len;
+-		if (!size)
+-			break;
+-	}
++		skip = 0;
++	} while (size && --nr_segs);
++
+ 	return res;
+ }
+ 
+
 -- 
-2.40.1
+Jens Axboe
 
