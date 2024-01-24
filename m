@@ -1,84 +1,137 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70E821350C2;
-	Wed, 24 Jan 2024 20:52:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 632097C091
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 20:54:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706129540; cv=none; b=X6qNPV0HfTPpJ9vC0xnwqNBbzdKiN5ikkx1ip+B0bPZ5RIAnpB/iQowaO3sDcoTpjljvkP++K0I+14Z00AJ6NMB+gKMDcKTiO6fmaEdfS0ATcn7O0clbkh4NwCbFWr38ozDNKZ2bVTf2M9IvYGiB0041K3KpQ8Zi/dCs6OXqq/8=
+	t=1706129674; cv=none; b=b+sWF+/fIBYreANuRzVY3U8Y3iN8FdCy9zWHkAj3Mof8ZZxqKn+c8CPM3CWcYrs8lG+dRn3gQRhEOWgpcQHe/SrrSTRFUecanxJunx8KPlXj5KeO+ECJXDfAQMHkHVm6PBFL/JM9rRCZ2fEXiaeiGK/qT/2FLjAiinYmIdJB7ik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706129540; c=relaxed/simple;
-	bh=Lq2wvvcWH0lcKD+XRWckbLxwDQv4YOsl/2uTC/5zKlM=;
+	s=arc-20240116; t=1706129674; c=relaxed/simple;
+	bh=8PpHpDGTvd15z1lyjwFnCzu8+TWE5IPpOUUlHpqfM8g=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kcdcc+xwO8Ybn24ejBi6TXd48K33v4sbmVdsSyHJvkNEMZDshapq8CqXUvxQx26iHDjBAA5teGdm3ZJZqnTMdxzv/YOmyZUM9uSQN1QJuECpT2QHorXdgXLfVSoCntC9xb52SbuXYCJDyFkXRSMnBKPdAJAkqazNtixc98yJ/SY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=arnQ/DFh; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=bW3MpML7OrE0SieK7MheJclMW00F+LV4GotWPww6YKmLKZHBB+mNOGEADxc+XECEltTEpJKaQ/hOcgSXtZKdch7KOaeoeButqhyr94tMs8W4bCln5+9fWaHY6uoxKDKs0qrDpG5NTYy9+MyexVSg9Ab8XPsvrIfVUGd/xYUzgIM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FiZ+MbSY; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="arnQ/DFh"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a2d7e2e7fe0so14825966b.1;
-        Wed, 24 Jan 2024 12:52:18 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FiZ+MbSY"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a311e9cca0cso118236366b.1
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 12:54:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706129536; x=1706734336; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1706129670; x=1706734470; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Lq2wvvcWH0lcKD+XRWckbLxwDQv4YOsl/2uTC/5zKlM=;
-        b=arnQ/DFhoI3TrsmlhTgUrsrRfq2g5xfZPvHnpVlEscDv/c1SycoU1kt8scY21YFoET
-         VRWu+1Rm7+9QCsu5VCOjkwQwzQkcDGlo3Spgd75KscrkJn9Mm4lgSGTtDLBhYhEGYkrZ
-         K97DeHtdxZIEWAMeocL8RJftVHsw0P3+0tTQIxqOweaQ/v6e9cRUdrdH/s4wZvTLWDS5
-         P/IRkiAJcg8/4WbxceoKP9QNu8WDHPJptkoqayh9RDBIHZOLyViy1CKB2lcHDXWYr/V3
-         OsiP7BV6kKwkOGUu/Vjud6fh5tu8D385JjiVdu3LfxL/C5qopT7SUC2TnC4nVBoXceKO
-         TlIw==
+        bh=8PpHpDGTvd15z1lyjwFnCzu8+TWE5IPpOUUlHpqfM8g=;
+        b=FiZ+MbSYqFFf7hsqNZCFjGDz5HvIHlgjw8V+yyavc5t+5M5ryzgM9ywZOLHLEysz9N
+         14F5oOhWBaE3YrZjwAjdTa9CvJq8/tN+9LaQFW40uyfVXuDrIXbdfweNX8GExJ79Uj0i
+         5/fTprhLFkppv1r5GP5mQG9fM9kD332Qk+tRIf1X3xPD8xqUJgjIyvM65edcz3kSUFwF
+         /hwFiaL7PyFYcKaY82xZMi8Kltc40G0tznxItB/zhLyHSf7RUgH15y6Myv6IHpyyspGG
+         nK67m+jKjjltwAxgQSp6arAw+konL172NPfokMiEtVLpkRcAxzFe/mmctMhW2onctpgj
+         XZbg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706129536; x=1706734336;
+        d=1e100.net; s=20230601; t=1706129670; x=1706734470;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Lq2wvvcWH0lcKD+XRWckbLxwDQv4YOsl/2uTC/5zKlM=;
-        b=LGq7AvYMFoLbdsPzgIu2NpuhQ2Rqr6PgEG0CuEvMAOyBUGOSAwu8N4iLaC+Y++1l6c
-         HI4BKoqLb1tpslva/qpiryf3IPYyDehyrcvMfwFmWcWUG0dOiw38sxp0iFOL34Y8dL/Z
-         JjvsxkvbhPnVH7qsG8+zgLi2fADmJO5vTm1YyDPSQQSBzZ6AP38tko3zuJA4RpuDndkI
-         ZQwWmEvSOJ+z2fbN10NO3rv67j+A2+hb8rZEuq01Y3gLyuUZnGbpMqKV1cicwT9r6Cvl
-         Xj8U/9i5COT8LEACpQ7WqYJa/sspiQj0s50FQfyy5c8VisXEkZmsrVj0nX26a99tr+sp
-         azKw==
-X-Gm-Message-State: AOJu0YwOk9AGb5Pa6PnvmZJVyJm4K7VAjw9jbHpVWC+wpzRWEUSsN05R
-	7fuEW3uzbgjiyISRzXJICmpXDyfEBq1Z/Si1TFtkFVSnV3a2kHqexNcBySu3Q/6H0HSYHZIWSha
-	eXI5xh6EVUqcGm9bLSt5sNuX+uu0=
-X-Google-Smtp-Source: AGHT+IEYFWPLw+3WJbyvV8ucSHMH4Lcdn82CMUL29kZl3sSg/w0RroU7mSwAw1vM6+VvVYDIjYKl/NL56kcNCOtPiGM=
-X-Received: by 2002:a17:906:ce5c:b0:a30:e1b6:2879 with SMTP id
- se28-20020a170906ce5c00b00a30e1b62879mr243561ejb.1.1706129536440; Wed, 24 Jan
- 2024 12:52:16 -0800 (PST)
+        bh=8PpHpDGTvd15z1lyjwFnCzu8+TWE5IPpOUUlHpqfM8g=;
+        b=v0tIoB756kmxUt4K+EEr5rzW8U/Ph0LdZWXMSOnMHOihGZwO2QSKMUlZvD8iJHq59W
+         xf/VVj7+EiWVsBkCn4pU6S/qZ6LNDS0VSklPo077RyL4vTfrwwB3iLAtr9hQ/jKONX3a
+         pUeZzjALRSNaisBh9ccbo9nkfTqpL8wDxxYao7aHgl7bEhbcMMb6Ky1SDM5JBdjMT0o7
+         zOvmRjCYfsLX1CZ9lj6xxSomf0V6fATp6h1mOSJ6Y1KxMS/DJTmExtqxCqFK6U9P/Iuc
+         VoDSYQ4g0Oy9XDbLnJjIpFQRV3WxuceXd5xSbu0xU8E3kcgEAXHaCuh7miLxEgmdYFE0
+         Iong==
+X-Gm-Message-State: AOJu0Yy+cKMNfUx4hCgv+7xsjcjvnPUS73w68nxrcA3dTGsZqYLzxvuR
+	oGWLpoh4Udw3L5o33GJMprwBOo532a2p9TJJIJYBi7Bfqt64/rwfZDYaEp+9+rAsDTVt5g8Fhei
+	g8iCFQud69de/mMJfmUTYwC/TiEuR4lDsfmPb
+X-Google-Smtp-Source: AGHT+IFQWuIM/i4iz3prv5tuO7tWXlBOX7HrLWHwiZ4AjwTkkZqPJOMU3T7di+dK4PngjAfTyy/+XdKG5uJUYqGzGjE=
+X-Received: by 2002:a17:907:c5c4:b0:a31:524f:60e4 with SMTP id
+ ts4-20020a170907c5c400b00a31524f60e4mr333052ejc.38.1706129670335; Wed, 24 Jan
+ 2024 12:54:30 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240124153016.1541616-1-ckeepax@opensource.cirrus.com> <20240124153016.1541616-3-ckeepax@opensource.cirrus.com>
-In-Reply-To: <20240124153016.1541616-3-ckeepax@opensource.cirrus.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Wed, 24 Jan 2024 22:51:39 +0200
-Message-ID: <CAHp75Vf=3U3pjFXck8isd7jcNuDbrPWRLCtN=RL5U+wFxZp0sg@mail.gmail.com>
-Subject: Re: [PATCH v2 3/6] mfd: cs42l43: Use __u8 type rather than u8 for
- firmware interface
-To: Charles Keepax <ckeepax@opensource.cirrus.com>
-Cc: lee@kernel.org, broonie@kernel.org, alsa-devel@alsa-project.org, 
-	patches@opensource.cirrus.com, linux-kernel@vger.kernel.org, 
-	linux-spi@vger.kernel.org
+References: <20240124100023.660032-1-yosryahmed@google.com> <CALvZod5+S5RLt5t=+ZvrRgOkAhNvC9mJo1SE7r6Ms1LRodV3RQ@mail.gmail.com>
+In-Reply-To: <CALvZod5+S5RLt5t=+ZvrRgOkAhNvC9mJo1SE7r6Ms1LRodV3RQ@mail.gmail.com>
+From: Yosry Ahmed <yosryahmed@google.com>
+Date: Wed, 24 Jan 2024 12:53:52 -0800
+Message-ID: <CAJD7tkYR8-Xo566=KwxiZDJVOqG0NvYCo0jwg59Loqd22CwCuA@mail.gmail.com>
+Subject: Re: [PATCH] mm: memcg: optimize parent iteration in memcg_rstat_updated()
+To: Shakeel Butt <shakeelb@google.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Michal Hocko <mhocko@kernel.org>, Roman Gushchin <roman.gushchin@linux.dev>, 
+	Muchun Song <muchun.song@linux.dev>, cgroups@vger.kernel.org, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, kernel test robot <oliver.sang@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jan 24, 2024 at 5:30=E2=80=AFPM Charles Keepax
-<ckeepax@opensource.cirrus.com> wrote:
+On Wed, Jan 24, 2024 at 9:38=E2=80=AFAM Shakeel Butt <shakeelb@google.com> =
+wrote:
+>
+> On Wed, Jan 24, 2024 at 2:00=E2=80=AFAM Yosry Ahmed <yosryahmed@google.co=
+m> wrote:
+> >
+> > In memcg_rstat_updated(), we iterate the memcg being updated and its
+> > parents to update memcg->vmstats_percpu->stats_updates in the fast path
+> > (i.e. no atomic updates). According to my math, this is 3 memory loads
+> > (and potentially 3 cache misses) per memcg:
+> > - Load the address of memcg->vmstats_percpu.
+> > - Load vmstats_percpu->stats_updates (based on some percpu calculation)=
+.
+> > - Load the address of the parent memcg.
+> >
+> > Avoid most of the cache misses by caching a pointer from each struct
+> > memcg_vmstats_percpu to its parent on the corresponding CPU. In this
+> > case, for the first memcg we have 2 memory loads (same as above):
+> > - Load the address of memcg->vmstats_percpu.
+> > - Load vmstats_percpu->stats_updates (based on some percpu calculation)=
+.
+> >
+> > Then for each additional memcg, we need a single load to get the
+> > parent's stats_updates directly. This reduces the number of loads from
+> > O(3N) to O(2+N) -- where N is the number of memcgs we need to iterate.
 
-Hmm... Don't we need a commit message, even if it mostly repeats the
-Subject line?
+This is actually O(1+N) not O(2+N). Every memcg needs one load, and
+the first one needs an extra load.
 
-> Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+> >
+> > Additionally, stash a pointer to memcg->vmstats in each struct
+> > memcg_vmstats_percpu such that we can access the atomic counter that al=
+l
+> > CPUs fold into, memcg->vmstats->stats_updates.
+> > memcg_should_flush_stats() is changed to memcg_vmstats_needs_flush() to
+> > accept a struct memcg_vmstats pointer accordingly.
+> >
+> > In struct memcg_vmstats_percpu, make sure both pointers together with
+> > stats_updates live on the same cacheline. Finally, update
+> > mem_cgroup_alloc() to take in a parent pointer and initialize the new
+> > cache pointers on each CPU. The percpu loop in mem_cgroup_alloc() may
+> > look concerning, but there are multiple similar loops in the cgroup
+> > creation path (e.g. cgroup_rstat_init()), most of which are hidden
+> > within alloc_percpu().
+> >
+> > According to Oliver's testing [1], this fixes multiple 30-38%
+> > regressions in vm-scalability, will-it-scale-tlb_flush2, and
+> > will-it-scale-fallocate1. This comes at a cost of 2 more pointers per
+> > CPU (<2KB on a machine with 128 CPUs).
+> >
+> > [1] https://lore.kernel.org/lkml/ZbDJsfsZt2ITyo61@xsang-OptiPlex-9020/
+> >
+> > Fixes: 8d59d2214c23 ("mm: memcg: make stats flushing threshold per-memc=
+g")
+> > Tested-by: kernel test robot <oliver.sang@intel.com>
+> > Reported-by: kernel test robot <oliver.sang@intel.com>
+> > Closes: https://lore.kernel.org/oe-lkp/202401221624.cb53a8ca-oliver.san=
+g@intel.com
+> > Signed-off-by: Yosry Ahmed <yosryahmed@google.com>
+> > ---
+>
+> Nice work.
+>
+> Acked-by: Shakeel Butt <shakeelb@google.com>
 
-
---=20
-With Best Regards,
-Andy Shevchenko
+Thanks!
