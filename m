@@ -1,56 +1,56 @@
 Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB2C7C8D2
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 04:30:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCEEAC8D2
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 04:30:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706070623; cv=none; b=OTjSxqvcrds1hwL+bIDFn3p0xBdFJ5GpVNprOGaWP/jsSDpN/MxK5e3WFDeRT2/hVkBy6sIlXCpL6hQrCcF22IGgXCdedL2qBSUH9eSFeaj6tDSVsoQTsiBEQf+bHxuyTPhBq6XS/w8tHrJEYZn0m3ECTDOwwzW43HpSARkHPdY=
+	t=1706070628; cv=none; b=IIv4czOrB/w/2jrs4aS59/tXBjfv0LcLVE4/fPZckMNaA1eemLWk9WxxZLOVrJoHVuDrG07p8sOWaj3WXvZA7zf/wQvcS4aFLhbuwXs9nZ6uTSZTLADEzQ6fs0mNiyD5Uh1ZEiv0czrUxD+xMidnkt7PsiyiIsGAC/E+rw56Gzw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706070623; c=relaxed/simple;
-	bh=Vi/GfW1dMQPoGBuKzYbsciwSwEbn5gukZ6R2a6MtY+w=;
+	s=arc-20240116; t=1706070628; c=relaxed/simple;
+	bh=wAPN92LmutrG1J7tODQK7l+NELlZtviSaofT8hDTZX8=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=Eqph+cR3psER+fHjSdFcmh56CVkUP17Non6dTamOyG66vc8rz5xdsF80Gpnf0YooWXukHF4Uc8OR36i+q3g6bufIGb7gFyCMuDbymFgppSpFY7ysx3vVpH5Fbsd7EUPoOAekOf/hXD0n30Ce22MJ1EpPnCS9dZe9Tdd2KkqswsY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZKwuifcd; arc=none smtp.client-ip=209.85.128.202
+	 To:Content-Type; b=qqDn/i8di4BuHqO0ehuDjTBpv5RiV9hpTVEIoST6tdprjkzGPYOIf6hQn1+CssP8E1MR7GAOEWrm+sJljeLG3IX0UC7YN8IM6O3TyLj5/Jdh3g+xN6OcL9Z4sie/BqaZ/+TqffpZ/od2qRQjy11sMzRCEMaQ0E5J1s3pa3LQo7U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2h5VVtCi; arc=none smtp.client-ip=209.85.128.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZKwuifcd"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-5f0fd486b9aso63562927b3.2
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 20:30:21 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2h5VVtCi"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-5e8d2c6903dso93622327b3.0
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 20:30:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1706070621; x=1706675421; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1706070626; x=1706675426; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=NGesi/lkn/z+ibscMuM5m5HKI16hb6v/aTcwmpsw9TE=;
-        b=ZKwuifcd1sXYBpwthPqpMbGMO0e41n7mnUDZ2amFZvyquT1643vj4e4rrBRmICD3vK
-         zXPU0gkOW6zZ7jAOShcWzT3B4jFEXUBMkQJ5oel7Tz5ZL6qbOE8SND+b6AEHI437NVxD
-         quMteipk7AdAobMNh1lpnLFXMIZip9ztVhu067S4OyeCSYl4v3Ow0kfj8fYGPUq4jn8k
-         tZJtINh6MhGnoeiuP0cGgsza2U+D/aMyRfmpL5+IrGrzbBkV5PgitNUrIceusAiKLawy
-         St9+YX+ruz1/jqUvHxGf8mvymMecdQWVmCjz/6oW1F80rw9S6FTJgMWfnA/GpW3juacB
-         a9vA==
+        bh=tZ4oZgP0u854CsY5ow/oTQ92HkoqG8y7HxBbY77RLxY=;
+        b=2h5VVtCikY8ahjW8YJ56VzXPTIRlujumIx4cYrX7gyOhzHAEL6/IouAoZF4kSrDmc7
+         NMV53qNIBrOmw+MPnnJqJHDq41hxr4RV4ut/JJPXWASFjD3rNV/DVM7QK9csL9JP/pFy
+         lJI6FUYJOALsN8LIRp7kzzh4vsKm5LelvmzKMs0LL8AzeZ9XqQm5LHKm9yQ4x4FWJbp4
+         KspVg83i27ebyk1Q4ssFW7FVTOFGOJYHEaPwPga8pC5snnwa6Tnmhin/G7B+QGzMcsUi
+         iBizrhjsUifySqMMG8SMsFgoOpCo6TC+iZ8EeFs2w2A79t7pOkq9sahFhFgBHWaZpPPp
+         GRdw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706070621; x=1706675421;
+        d=1e100.net; s=20230601; t=1706070626; x=1706675426;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=NGesi/lkn/z+ibscMuM5m5HKI16hb6v/aTcwmpsw9TE=;
-        b=LqkF4VNDcYySPC6ujHQIxxn+iNd3FN4ymxBGHElGPP93NaJsT6GJkcJRwOHclvItdh
-         lItHMGiv07gdKo9fHxwH8lU3KSKaQ1GUSZPOsLqLDEvgHl/Fl4H86iOSxQoB9JBxdZcv
-         OxiWF9uBRh0gkaFd7r2gX+OP+UXFOqnOMzhbSZoZWm+FHjcUguOcviJtLncl7GJFEQC5
-         c6E73z2AulPUTJ8XmJNYb28vRDso4lD+k+8FAoNMR+ARjNYJGvyvFU3pVb+PmErdPTEU
-         yV/eF5YnAqny2D6meEjg1DQu/QLn3CxYqGzayIksunH7fqhn1MIRs2DeVjrFgJ7jX8hw
-         EXrg==
-X-Gm-Message-State: AOJu0YwKinBzuNPy/FMkCnIWvfY/1QKUcRSZTFZ18F02IfVhT5hP8uKI
-	+j6wDCKPhSqzUU43x0xADf4sYydMu09QIkcKPCJr6Tbh6M5HTbZCfFFlhqbtp+/+91Lb3S8qWNR
-	6xONoWA==
-X-Google-Smtp-Source: AGHT+IFuyLICJEIzRyi+Jplw1i4utF9oYp3mAPPTFQaHlqHi3G4RBhbpQUYe7uRk+csKQHqIDFE1YEy6OGoA
+        bh=tZ4oZgP0u854CsY5ow/oTQ92HkoqG8y7HxBbY77RLxY=;
+        b=VmLzkCYoMMn11dZiQQ2zlj9bNCag+d1DLa6+xt0Tdh96S2CAuUeEkSsFiZ7jxN0IKd
+         7R5f9OKze3eaZ3ANOCVrnZZcSsKV79KRilXl8eVi4zEXYDu9r2gB9+B16nLfxK8TZF+I
+         ZYgQVOzOTEzQb6toP5+gY8uuz0HpIA7Y3XAaSoCu+oZKOGiLYavcjg+W02jWDpI4u31y
+         O48XTeg2tc0v3PrMHxPs/KJ5xCx4yZ/XOzXKOH1YDikDyG12cs8vb617g1yqeSfNHtaB
+         pisXFKaZojnGVwaeAQ2ZSPjPgCs+4zIYor/gHMqGjAK4CwfM8+8PFLQmO2Dy03gvf9BE
+         deTw==
+X-Gm-Message-State: AOJu0YwsP1VYjhKtmC7DT6esW7O22yRChrtTQ2+aqhlPY5FeMJV6jaaP
+	Z10X57L/AKRf3dJAaYCXCeiiShZdTs50jSBdxJvABPci/JBCDtlFtvRzKyNiRxfAvkEPHIj3tnI
+	rYQxu3g==
+X-Google-Smtp-Source: AGHT+IGz1evaAtu5wd1hbGCCuNwF5lnKKQm7avVw1zbNQRovesO9EjIJpUKhNkORobP3DGp98F/q3jJTkbX3
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:b37:2438:2b2f:daae])
- (user=irogers job=sendgmr) by 2002:a81:99d6:0:b0:5e6:1070:44e0 with SMTP id
- q205-20020a8199d6000000b005e6107044e0mr74539ywg.5.1706070621186; Tue, 23 Jan
- 2024 20:30:21 -0800 (PST)
-Date: Tue, 23 Jan 2024 20:30:11 -0800
+ (user=irogers job=sendgmr) by 2002:a81:57d8:0:b0:5ff:9315:7579 with SMTP id
+ l207-20020a8157d8000000b005ff93157579mr142336ywb.6.1706070625900; Tue, 23 Jan
+ 2024 20:30:25 -0800 (PST)
+Date: Tue, 23 Jan 2024 20:30:13 -0800
 In-Reply-To: <20240124043015.1388867-1-irogers@google.com>
-Message-Id: <20240124043015.1388867-2-irogers@google.com>
+Message-Id: <20240124043015.1388867-4-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -59,7 +59,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240124043015.1388867-1-irogers@google.com>
 X-Mailer: git-send-email 2.43.0.429.g432eaa2c6b-goog
-Subject: [PATCH v2 1/5] perf list: Switch error message to pr_err
+Subject: [PATCH v2 3/5] perf test: Workaround debug output in list test
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -72,28 +72,55 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Using printf can interrupt perf list output, use pr_err which can
-respect debug settings and the debug file.
+Write the json output to a specific file to avoid debug output
+breaking it.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 Acked-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/util/print-events.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/tests/shell/list.sh | 21 ++++++++++++++++++---
+ 1 file changed, 18 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/util/print-events.c b/tools/perf/util/print-events.c
-index b0fc48be623f..9e47712507cc 100644
---- a/tools/perf/util/print-events.c
-+++ b/tools/perf/util/print-events.c
-@@ -66,7 +66,7 @@ void print_tracepoint_events(const struct print_callbacks *print_cb __maybe_unus
+diff --git a/tools/perf/tests/shell/list.sh b/tools/perf/tests/shell/list.sh
+index 22b004f2b23e..8a868ae64560 100755
+--- a/tools/perf/tests/shell/list.sh
++++ b/tools/perf/tests/shell/list.sh
+@@ -3,17 +3,32 @@
+ # SPDX-License-Identifier: GPL-2.0
  
- 	put_tracing_file(events_path);
- 	if (events_fd < 0) {
--		printf("Error: failed to open tracing events directory\n");
-+		pr_err("Error: failed to open tracing events directory\n");
- 		return;
- 	}
+ set -e
+-err=0
  
+ shelldir=$(dirname "$0")
+ # shellcheck source=lib/setup_python.sh
+ . "${shelldir}"/lib/setup_python.sh
+ 
++list_output=$(mktemp /tmp/__perf_test.list_output.json.XXXXX)
++
++cleanup() {
++  rm -f "${list_output}"
++
++  trap - EXIT TERM INT
++}
++
++trap_cleanup() {
++  cleanup
++  exit 1
++}
++trap trap_cleanup EXIT TERM INT
++
+ test_list_json() {
+   echo "Json output test"
+-  perf list -j | $PYTHON -m json.tool
++  perf list -j -o "${list_output}"
++  $PYTHON -m json.tool "${list_output}"
+   echo "Json output test [Success]"
+ }
+ 
+ test_list_json
+-exit $err
++cleanup
++exit 0
 -- 
 2.43.0.429.g432eaa2c6b-goog
 
