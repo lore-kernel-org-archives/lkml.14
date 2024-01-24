@@ -1,92 +1,113 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B11661798C;
-	Wed, 24 Jan 2024 09:42:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D1A518026
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 09:42:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706089351; cv=none; b=smEbk1HpXhlUNB2JARaLxaE8yLNCH2qQX9df1N7ksK0z5kNDUUddWUBcfzvOK/qe9B7SRFtdg/uX9thdT59qzXueGj/crtaSNGlvNe21+xqJ5MYtp6MV2PBKYCQhGwB4hLywNfP1mFIF6XyOE3123NrihOF0JRFjSMjk06X6Rvo=
+	t=1706089376; cv=none; b=jkaOLqcW4A8U7a0PH+Li8INW7qNOxzhQ7TrgQ+OE0CT7XusFdJouCuqPX/kL8/+DEL2nCMg5rzJRz5qGC0QZOQfSPJWU9aMR9LXe6lavzk7jMJjHqFW0d9ZlncluSTkSAL7WzrfWadxXbYXvf1rnllvl48/QLvyUKLfTJi02gTE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706089351; c=relaxed/simple;
-	bh=JDrsz0CKwL+aPZhb85e2CY9gnCQafK8RTcFyutCW7mo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=pDU1hX/gXyJxkw30d18vFzDCQKGqU9JPSr2entNeFO+WDBYWLY23yihBOCRpNHEvjpUHAdBkAVCO6zeaxrg3G4Dd3vEfuItSn3hY6VtCDlvN8/AlMzRGsT1rimKxCmIj+/NexHmM7p6d178dplgahveatSDu3lCpWbHFntOG6+U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 2a995f7cc3054f0c90ab071957e8d838-20240124
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.35,REQID:21e3d530-1a18-4978-816b-9179cc7e7ddc,IP:20,
-	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTI
-	ON:release,TS:5
-X-CID-INFO: VERSION:1.1.35,REQID:21e3d530-1a18-4978-816b-9179cc7e7ddc,IP:20,UR
-	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:5
-X-CID-META: VersionHash:5d391d7,CLOUDID:38e63383-8d4f-477b-89d2-1e3bdbef96d1,B
-	ulkID:2401241737004LUCFGAT,BulkQuantity:0,Recheck:0,SF:19|44|66|38|24|17|1
-	02,TC:nil,Content:0,EDM:-3,IP:-2,URL:0,File:nil,Bulk:nil,QS:nil,BEC:nil,CO
-	L:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI
-X-UUID: 2a995f7cc3054f0c90ab071957e8d838-20240124
-Received: from mail.kylinos.cn [(39.156.73.10)] by mailgw
-	(envelope-from <chentao@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 1046508456; Wed, 24 Jan 2024 17:36:57 +0800
-Received: from mail.kylinos.cn (localhost [127.0.0.1])
-	by mail.kylinos.cn (NSMail) with SMTP id 98545E000EB9;
-	Wed, 24 Jan 2024 17:36:57 +0800 (CST)
-X-ns-mid: postfix-65B0DA39-4239131226
-Received: from kernel.. (unknown [172.20.15.234])
-	by mail.kylinos.cn (NSMail) with ESMTPA id 98C0EE000EB9;
-	Wed, 24 Jan 2024 17:36:48 +0800 (CST)
-From: Kunwu Chan <chentao@kylinos.cn>
-To: mpe@ellerman.id.au,
-	npiggin@gmail.com,
-	christophe.leroy@csgroup.eu,
-	aneesh.kumar@kernel.org,
-	naveen.n.rao@linux.ibm.com
-Cc: linuxppc-dev@lists.ozlabs.org,
-	kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Kunwu Chan <chentao@kylinos.cn>
-Subject: [PATCH] KVM: PPC: code cleanup for kvmppc_book3s_irqprio_deliver
-Date: Wed, 24 Jan 2024 17:36:47 +0800
-Message-Id: <20240124093647.479176-1-chentao@kylinos.cn>
-X-Mailer: git-send-email 2.39.2
+	s=arc-20240116; t=1706089376; c=relaxed/simple;
+	bh=c7AtDwtfUT29Girxwftwf36NoI+3PFJkKiX9LOmNFk4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=H1FO4a5WyGhu1WJ26d+UsNB143mpjAfNZ5j8qhzf5S3wsGicAH3joV0GtBOMxDyEKsmv2uTU61wiY8LUXc6XE8bGlolXbC/m8CIBtsddXL4Mo8Oxd3Ipfjo5EkzD0eVjPnOGKyG8kawlJF8qiWlwt5ezmapU4af5hyuYpbnSjzY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rSZmM-0003ht-Lz; Wed, 24 Jan 2024 10:42:42 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rSZmL-0021gA-J6; Wed, 24 Jan 2024 10:42:41 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rSZmL-0071nX-1a;
+	Wed, 24 Jan 2024 10:42:41 +0100
+Date: Wed, 24 Jan 2024 10:42:41 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: Jerome Brunet <jbrunet@baylibre.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-amlogic@lists.infradead.org, linux-pwm@vger.kernel.org, JunYi Zhao <junyi.zhao@amlogic.com>
+Subject: Re: [PATCH v4 3/6] pwm: meson: generalize 4 inputs clock on meson8
+ pwm type
+Message-ID: <oyayapgrwaetyhuu6ua2nejcpgydmkijqdgtdlfqvq5jvc6nzp@xgvnwvjja3im>
+References: <20231222111658.832167-1-jbrunet@baylibre.com>
+ <20231222111658.832167-4-jbrunet@baylibre.com>
+ <4kcbh4dezgpic2dpgdi2swtx2puqiq74w2tungmxipf4nznpn7@u4g4f3cimps4>
+ <1jy1cfw0qa.fsf@starbuckisacylon.baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="a3xdp7xgdzkgzofk"
+Content-Disposition: inline
+In-Reply-To: <1jy1cfw0qa.fsf@starbuckisacylon.baylibre.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+
+
+--a3xdp7xgdzkgzofk
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-This part was commented from commit 2f4cf5e42d13 ("Add book3s.c")
-in about 14 years before.
-If there are no plans to enable this part code in the future,
-we can remove this dead code.
+On Wed, Jan 24, 2024 at 10:11:59AM +0100, Jerome Brunet wrote:
+> On Wed 24 Jan 2024 at 10:08, Uwe Kleine-K=F6nig <u.kleine-koenig@pengutro=
+nix.de> wrote:
+> > I suggest to make this
+> >
+> > 	const char *parent_names[MESON_NUM_MUX_PARENTS];
+>=20
+> Ok.
+>=20
+> >
+> > to make it more explicit that really four entries are needed here. This
+> > also makes is unnecessary to add the additional NULL entries to
+> > pwm_gxbb_ao_parent_names and the other arrays.
+>=20
+> I would normally agree but I'd prefer to be explicit.
+>=20
+> There are some instance where the NULL is in the middle, this can't go
+> away. I think it looks if some inputs are explicitly NULL while the
+> other are implicit.
 
-Signed-off-by: Kunwu Chan <chentao@kylinos.cn>
----
- arch/powerpc/kvm/book3s.c | 3 ---
- 1 file changed, 3 deletions(-)
+Adding soem NULLs explicitly is fine for me. Using an array of fixed length
+still (somewhat) ensures that later no shorter arrays are added which
+result in surprises.
 
-diff --git a/arch/powerpc/kvm/book3s.c b/arch/powerpc/kvm/book3s.c
-index 8acec144120e..c2f50e04eec8 100644
---- a/arch/powerpc/kvm/book3s.c
-+++ b/arch/powerpc/kvm/book3s.c
-@@ -360,9 +360,6 @@ static int kvmppc_book3s_irqprio_deliver(struct kvm_v=
-cpu *vcpu,
- 		break;
- 	}
-=20
--#if 0
--	printk(KERN_INFO "Deliver interrupt 0x%x? %x\n", vec, deliver);
--#endif
-=20
- 	if (deliver)
- 		kvmppc_inject_interrupt(vcpu, vec, 0);
+Best reagrds
+Uwe
+
 --=20
-2.39.2
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
+--a3xdp7xgdzkgzofk
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmWw25AACgkQj4D7WH0S
+/k5e0wf7BlbmFsY4+YWO4iLdNo0BVoOnMnfSSNw2yPZA+YdUvXeulZDQTshMRkgQ
+xNmIvXbYDeBBIUFQ64FzQQ89VyKcwTX459zycaNAg06N51FSdCM1EQO1F/Y6fqy1
+g4+9fH3mHi+UJkcekm0st27G0uTvfiJ7RtkyQYK2KMD1OBmYr2ADURGmMppLzvLX
+6XMsShbScQdqNKMGa2MGjB4plt3IzjyX5ZMRYaMdZABnZJsKJGXWfcr9p3fLZ3I+
+Dvkti+CdMw7zHXAelVFD2EMKCMbV33PjedcIzBe9TTOQM5SPtoZHy3QIbQ+WdqNK
+sbr4C8C10SJBSSUbB1NJfIJfQUTNhw==
+=ENZk
+-----END PGP SIGNATURE-----
+
+--a3xdp7xgdzkgzofk--
