@@ -1,36 +1,36 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEBD31353F3;
-	Wed, 24 Jan 2024 22:33:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35410137C25;
+	Wed, 24 Jan 2024 22:33:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706135600; cv=none; b=Y/uMxi5zgvhw5aU1PTAsfSngjQT2TLv0YANKpIxGJ01/Vbcj2/MIkaNNn+FYqoNDxgxUisT8sjlMUcJU66B93U82toQLJDbFAXHP3vapkNy3ScXBPdikTXi+b0cdH2vfcqxz2IQ2npTvLKvnc9oXnRzuy+x5uaqVP9yU6eIEkJc=
+	t=1706135601; cv=none; b=KWZINK5jcJmhG1KcHFgmQK5NJArzrL/gQeLJw3ZvLAKVSxjJqhFPv0oeTPqN/ta3A09pDx1meI8YcyQvSUthp1wrAG3stn6aLI6ODxCZBWRyrRLvYubv/QeBYlNo4H7dtr30g3mxzRE72KfUag+0n8ewvZV+wQoKv+Zw+E08+t4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706135600; c=relaxed/simple;
-	bh=ZkQWzZ1tqQ+RtdmjwZVBTOtlj+vwXzEAwzG2LCDJfng=;
+	s=arc-20240116; t=1706135601; c=relaxed/simple;
+	bh=k46vRpXLmQ05TSStQTxL2RYgiONz7SsdmJja7gLHbZI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=qQbaCHb5oQS+pjvQDsEn5hj/gpJIrCUJB9cZdbtACqybaSoOgcnKtWdF57Up50sqVj+NwcU0WgIihwwY7jWo2LeonM77UTtgFjrU6fu7+MaQy/PjoQKWsFT21yEgJu2+mY2h7o6FwLmxkeePl61ihNwE9xIibPDZbSKQHiLawt4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=iY6VFbsc; arc=none smtp.client-ip=212.227.17.21
+	 MIME-Version; b=I6UmxBEG5NUk5Ft0BjUqzjWHoyiBwt4ovup94lmX88Ti7COLlFt219gUKSNU3/7TGKPLbP1nvUy3XeIgzdAX77u7RGnKAaJ0R4JstFhuryq/nZVNttQMkYrVQvcHQ6ZY9a2Xt7gOpJYfcMjuuIF5lnaguAPoHVoxjKbQ4/LeN2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=X8MZ59Fa; arc=none smtp.client-ip=212.227.17.22
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="iY6VFbsc"
+	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="X8MZ59Fa"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-	s=s31663417; t=1706135558; x=1706740358; i=wahrenst@gmx.net;
-	bh=ZkQWzZ1tqQ+RtdmjwZVBTOtlj+vwXzEAwzG2LCDJfng=;
+	s=s31663417; t=1706135561; x=1706740361; i=wahrenst@gmx.net;
+	bh=k46vRpXLmQ05TSStQTxL2RYgiONz7SsdmJja7gLHbZI=;
 	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:
 	 References;
-	b=iY6VFbscuKy7fMaZbS4ls4F6iM/doo8A72dKzcm6G3ARJioGHEQ7U8ZFX3HXbxxu
-	 M7mPY+odDnD02ll1v3EYKdb4TjXTOlncWCp1LmuyEnsYFuivnK8bObNOtQCpx4Lpb
-	 8fjpfG6TTIuuGwMIIMtIBETKJhBJAQOhA2OpYnBteC7ZuDrP1McIggWkRGdlUJ1Ea
-	 2/gvUKTw/XLwNr766YjpR+zfuI+ayyV6FFloaPNmowqCNpZy7t9vJjT8s44KJp3oZ
-	 bCTf8Ly6B53gJia6Bumy6NFEytKNhgTxxbqNPN2aDtGi0VcGHVXwW5uId8/7UtMAk
-	 3TBuCmyYEG1Y22W5CQ==
+	b=X8MZ59Faskn5zwSgJ4RtSebhqtXQS2S77BE98/tKPG0AIbacw4j86O48LCNPxE0d
+	 E9d/VEE9F1SckTZPw8mNSMMJk3IQiiRzkQwAFHDqmx2nYlT4CZ2K5rd9v+i1AEfb2
+	 w0MwKmYkqzXw9Rx2xt5eZAejhzVFcomRGztOD3rh059xp+Houa+P2I9diecV5wVAs
+	 FeDXFbDcN+z/SmOOj7XjbJIPBQDtWznL9RwBnXccMVjtR0RDs7C7/1eUuyOmvBjAa
+	 PH6amBrXnpVw1E4XrwSMqS1NiVcM0mhpkYo+EX81FaMTiwrEPQtSdQpHX6JtA7B1h
+	 q3B91IH2RNlKJMVBZg==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from stefanw-SCHENKER ([37.4.248.43]) by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1N4zAy-1r3RUQ0rno-010uXA; Wed, 24
- Jan 2024 23:32:38 +0100
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MDywu-1rL6pp0pDo-009uJ6; Wed, 24
+ Jan 2024 23:32:41 +0100
 From: Stefan Wahren <wahrenst@gmx.net>
 To: "David S. Miller" <davem@davemloft.net>,
 	Eric Dumazet <edumazet@google.com>,
@@ -42,9 +42,9 @@ Cc: Lino Sanfilippo <LinoSanfilippo@gmx.de>,
 	linux-kernel@vger.kernel.org,
 	Stefan Wahren <wahrenst@gmx.net>,
 	Jacob Keller <jacob.e.keller@intel.com>
-Subject: [PATCH V3 03/14 next] qca_spi: Avoid skb_copy_expand in TX path
-Date: Wed, 24 Jan 2024 23:32:00 +0100
-Message-Id: <20240124223211.4687-4-wahrenst@gmx.net>
+Subject: [PATCH V3 09/14 next] qca_spi: Log expected signature in error case
+Date: Wed, 24 Jan 2024 23:32:06 +0100
+Message-Id: <20240124223211.4687-10-wahrenst@gmx.net>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240124223211.4687-1-wahrenst@gmx.net>
 References: <20240124223211.4687-1-wahrenst@gmx.net>
@@ -55,51 +55,54 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:l6d25/OxlNTDfb9rsSl/KAhlnToWqi0QjdZWqxfWfLo1e6aJTjI
- OtG3wQef5tap9sVXOCxPq7YmyXE8+DIglZw9Bp9hWEnlDc+oTSyARKyhEKyoBEVmLE2E+IZ
- hpl4AfMxF3eo55hEU7pvRiU/v2v6L+GkTR5jnaaLjqGswfI2VhRCf6pvWEdRGbiQTPnQ/f3
- NSidEML+mYhdxGRd6Ta3g==
+X-Provags-ID: V03:K1:dLdi0zahvxkgjsOoYMSSrmqPRETKk4DjTwif4r/ZSXb0u0dQBlS
+ F6wY4N0xMyiwVx3G/OTTEsoGdIWcXpMaMP0OtLKPmqjAWXkykedj71s7SqFleMG9AoD9fHp
+ zqZpQzGAa6rqOtkeLGy4ut7Vsz3iG3eaEDMdlDa7f1cTgGuiU3i+qbbLn38v2iwjv00BT+A
+ IP+gckdJkiy4EOZ9S3SWA==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:Xhtu9VDwTRk=;H8oiTroUBKrKH8kvEeuyfZNp7yV
- VRl7jmuLStV4Jz9TALf8/EqpClXB/mGEJwyHMqPLAVNWO5m9zCMsWX8DnjpBKhMOx5uO1vMbr
- TKHA0zVZpze/dq9xQM5aNIjvvAAbz3CYzbklBUqYwQ2QMaetJKcLBGCTm+esYM++UhX1rn6jP
- Cvd4KB3AkBxAPVjnnYqdTKo0gEw+rUmifnilCNFMWSDcVsu9QuV/IJohpEl/pKGNHdH5d69WW
- faFmxtoHvUls2ANGluQ9zm2Zb+LlrTfvVZUy1fqcOTY3h272xvMA4bZdNx0WibXQv+V9lIZn/
- QHDabkIhXC5pt6zjr0siYuN/9cqTDvgVeuLb0xBZZixrIUg6fITwS9H2MzVp77gUq5iLbk/Ey
- +3/GYtDg3A56DhznQ+8uBn1ZQpSv4L9PNdkaexPFTtYIhoChWPOqooB2CkBClrmd5/sLYDFBj
- WX31W2/QWYXZUpokeKVmuq545a0RHjzSYTnAaG0SrhUdZ08QSQPww147Nwr2oVjlpM4QuwbuD
- DE0yvvymodkS+y8b77iqRmyAAsO2fkpkNrh+HlDDMSF00lEPRlpLIxskzHU57174QKrajuSbI
- dqyBnZzQJ7uCg1lZW39d0RmkQsi4i5xCygk5mXInJ8wgmyINJFiIoZFVFoFFRioGE+bCTYQ7R
- re7M6qbAd5k7FrczPgt8jK4g7MUqtH+4UUGVvPyuSAtogHiXVIh4Vo6an8+GDxfkAsRcGCUZG
- BBY0nLryo7mGV0NFY5m7pGGLvuwWcofCDovdl/7FVk9XE56HHtEgDpTS1DBGWfXXpUrlhZqOY
- qxJFtafZ9aZcLO5yDj6r+U4THriKzGBq9F/EgyGDdPZMdMe32/h9XzANMVmkIq2DuVqY9rkZ6
- aYZj+bOmiFi5dBmrpe1p+75HEzLwUScFijlI2zeKiCMffVLDN6AwAOeDfqfEMSVkBwCEuROhz
- Wi4/Ig==
+UI-OutboundReport: notjunk:1;M01:P0:njsc23fLaME=;k/DZ59u1mWpIhnxuR4KdZft2Xds
+ ghqXGQ6gHi8/C94swPgvN3kx5tSMOpOsVt1BX2lbRa0YrSQTyjTNusmuAR6tOSdWpwaviN4dF
+ CdoKTr44H2y9hevuJhVyoc0etyPOtJZxBKj61crvuuHmfdTXhHlsIfUzygzcLE/YY3ODKfdu5
+ U8CnNGS7ShP+uSiZ1HBtL0cpGtYuSXuwywdnsvs5aMby4/ztQ//azFxbXcmtlphn+zMaNTPkE
+ 7OxPx487wd1TXoCTNij1Wj6bzOs5vP64RWHbQjzwc96EsM7E4qopzmgO4taH+LWqVFx0ffmvC
+ kF0rHQHhXWh7ppdRUZHPGPRtX3I5XjJMZ3eYSXWN4T+LxQgkxyW/sn5eMOjlfCsL+Ghlg1K2H
+ 1DQOlM/FomaswwhxcDuwi981hFDuMErm9ZZq2XR4gmzFUhDqdOkVgmBTKIYmCbbgSN1C3TUgk
+ 17iSoYsnXic4bogKQoTkxQz0YY6tJM18uVDYwmPXTD/eE/a8H6kX8HIAUgYxxUCECW7MAvvKq
+ qdYF1TLxH0xwaX2VH5NSVGvpikXDr0h+aMXqTW0x8ZMxoEjDbFkEDqpfGjGGzc+/NZw8W9u0F
+ O2rEfnD5aRkV1Fu4m7/7qYLTKSxzeHRYCHoVq2EF8IFD7MArrrVieMr2jd97zFJUEmWhpiDIr
+ EYnor44Z3CNZTs0QUEen0wWSLwoXFy50TkLw5rIteGqOTaXrRlNMBY8QK1hPQdC4kmQOHK2ln
+ AgtJ9AI/Bt2Pgw5wGUE0c0pqJxOrAgsOAjJAf0KFn/+bBcLYPAaummvLxjQKEBS6G5BjHTY30
+ s7j0rS/bEZcTCMYTOKqgQNoRZO8NyAJz/ns6oo6CeIYhmZrnERkWOCeLyrrhC+wXJ8CCxGHut
+ jMRAnPiZuhnDbn0U4rFXgR4PFYInIrfsx2fm1Xn5k4XrICJtT7URedge88XsqyPxqA18XbRKn
+ 0Bc4FQ==
 
-The skb spare room needs to be expanded for SPI header, footer
-and possible padding within the TX path. So announce the necessary
-space in order to avoid expensive skb_copy_expand calls.
+Most of the users doesn't know the expected signature of the QCA700x.
+So provide it within the error message. Btw use lowercase for hex as
+in the rest of the driver.
 
 Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
 Reviewed-by: Jacob Keller <jacob.e.keller@intel.com>
 =2D--
- drivers/net/ethernet/qualcomm/qca_spi.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/ethernet/qualcomm/qca_spi.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/net/ethernet/qualcomm/qca_spi.c b/drivers/net/etherne=
 t/qualcomm/qca_spi.c
-index 294d4ee3b38f..919a400412cb 100644
+index 6d2859aad921..c5d240fe4146 100644
 =2D-- a/drivers/net/ethernet/qualcomm/qca_spi.c
 +++ b/drivers/net/ethernet/qualcomm/qca_spi.c
-@@ -877,6 +877,8 @@ qcaspi_netdev_setup(struct net_device *dev)
- 	qcaspi_set_ethtool_ops(dev);
- 	dev->watchdog_timeo =3D QCASPI_TX_TIMEOUT;
- 	dev->priv_flags &=3D ~IFF_TX_SKB_SHARING;
-+	dev->needed_tailroom =3D ALIGN(QCAFRM_FOOTER_LEN + QCAFRM_MIN_LEN, 4);
-+	dev->needed_headroom =3D ALIGN(QCAFRM_HEADER_LEN, 4);
- 	dev->tx_queue_len =3D 100;
+@@ -1005,8 +1005,8 @@ qca_spi_probe(struct spi_device *spi)
+ 		qcaspi_read_register(qca, SPI_REG_SIGNATURE, &signature);
 
- 	/* MTU range: 46 - 1500 */
+ 		if (signature !=3D QCASPI_GOOD_SIGNATURE) {
+-			dev_err(&spi->dev, "Invalid signature (0x%04X)\n",
+-				signature);
++			dev_err(&spi->dev, "Invalid signature (expected 0x%04x, read 0x%04x)\n=
+",
++				QCASPI_GOOD_SIGNATURE, signature);
+ 			free_netdev(qcaspi_devs);
+ 			return -EFAULT;
+ 		}
 =2D-
 2.34.1
 
