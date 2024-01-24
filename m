@@ -1,46 +1,46 @@
-Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
+Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C49D0131752;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A9B6131E25;
 	Wed, 24 Jan 2024 18:47:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706122055; cv=none; b=rkdFzViCIDbvt4cEIfIpiaNkKUcgsgUVT1NrzyVf2cd4AnN99+gTvUFyk80eaTggdlRMNkgEXsybW6S0WzQVJIt/HVeRnX9mWvxZ3H1xATPy/aOwI05ilEFus1zpNVtyuBqMeSy43NnRlG4DzYhVrAnOCaMDyTDIhUX+OiF+/PM=
+	t=1706122055; cv=none; b=BVjr7sNrpnegH5rSQeUyRWOhUTEq9ELMqBzS1ePolDuew3Qf3nAN98gUmYXKUBsTxDBIUYghPmB1mtfMkRp2zj0Em1esg1NJcKILVrCvKxOckw3oYZFje0cPb5T/4SOXeI4xkUmSyuFktiGKOtLdFYr8kF+pyXaBVmfQi3d+ZaE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1706122055; c=relaxed/simple;
-	bh=b2qE7VDKsHvQGPNI3szdTHbuRPAp9MUbEgsgvUB7k50=;
+	bh=8nBXFuhUztEFB9n0j4paOy0b2N4h7+tpkHbKx1XCvUE=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WVTJMXJZZx3WnFoLalv366CUxbI59s+UhDcPL2kzkN8M6Sxds0Rb3v1kjccuKxfTSHLDnwD9pxOd/vvYYJAVeqYJ+d6vc8feDIULrTEsoD/B8MkLdNil2y2dzYCVDSMn3LMUwHrb9YbrWKufRhctTWOAZ3kT5d4DffkoHVYllzM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=WjIzXEcD; arc=none smtp.client-ip=198.47.23.248
+	 MIME-Version:Content-Type; b=rv6AnpXNXp/x+HxJd584NSOBLe2JUdOc1QPjSn0Efa7G9zy+iMvzGdbITmw4mCGWUpwm1+Yerbe2t+2SjuOvGP97IMg/vsxP5Ek7n0b9E6pF9M/+iCju1C7qSrfxTRWvcPMJb/Jh1Ph1KVZqARb9AwvOWsE210CAwDP9zdDz/do=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=GCtKzcQ6; arc=none smtp.client-ip=198.47.19.141
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="WjIzXEcD"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 40OIlP9j109681;
-	Wed, 24 Jan 2024 12:47:25 -0600
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="GCtKzcQ6"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 40OIlQNc093964;
+	Wed, 24 Jan 2024 12:47:26 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1706122045;
-	bh=73/9jMiPQ8U4q0QWE9vK/xJuc9SMVQhJrK9fAR5DaTU=;
+	s=ti-com-17Q1; t=1706122046;
+	bh=64TzqFIU47CdeaXYnEfO5gKZVhsoSAcPvR2wWTO9VYM=;
 	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=WjIzXEcDueBXAMVmjCIwPsJhw7CIxL5LlaBHj/iEht0371dQ4NymGPJKKPzrJprNp
-	 jKOzrSmhxX2uVvmwp+jdw3qV4p8A8UFGp1mFw8mgF2OB+YHVqAICK8rH7n1T5BcLau
-	 rLJCtniIohJ+I6AZYuaCDBpKvGbkNIbLIkJYK3Wk=
-Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 40OIlPjd014145
+	b=GCtKzcQ6hXnAiJjst5pWLn0Sstq9akSJE8pilE4ijnLhIxWSsP595CFJ4jXGwvDU1
+	 zOFQN9sYI5+4W8efVMZ4dOSHE6D6wTgFeZiQxQXAMW5YGDnCW0TTukIK6Ovrg4IlfD
+	 iVQLAUiqwkrpZf1WBtRMY6ntlDL05sT9rmFIhJPc=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 40OIlQYS052079
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 24 Jan 2024 12:47:25 -0600
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+	Wed, 24 Jan 2024 12:47:26 -0600
+Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 24
- Jan 2024 12:47:25 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ Jan 2024 12:47:26 -0600
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 24 Jan 2024 12:47:25 -0600
+ Frontend Transport; Wed, 24 Jan 2024 12:47:26 -0600
 Received: from lelvsmtp6.itg.ti.com ([10.249.42.149])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 40OIlNaQ119099;
-	Wed, 24 Jan 2024 12:47:24 -0600
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 40OIlNaS119099;
+	Wed, 24 Jan 2024 12:47:25 -0600
 From: Andrew Davis <afd@ti.com>
 To: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
         Tero
@@ -51,9 +51,9 @@ To: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
 	<conor+dt@kernel.org>
 CC: <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, Andrew Davis <afd@ti.com>
-Subject: [PATCH 04/11] arm64: dts: ti: k3-j7200: Convert usb_serdes_mux node into reg-mux
-Date: Wed, 24 Jan 2024 12:47:15 -0600
-Message-ID: <20240124184722.150615-4-afd@ti.com>
+Subject: [PATCH 06/11] arm64: dts: ti: k3-j721e: Convert usb_serdes_mux node into reg-mux
+Date: Wed, 24 Jan 2024 12:47:17 -0600
+Message-ID: <20240124184722.150615-6-afd@ti.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240124184722.150615-1-afd@ti.com>
 References: <20240124184722.150615-1-afd@ti.com>
@@ -73,26 +73,28 @@ as needed.
 
 Signed-off-by: Andrew Davis <afd@ti.com>
 ---
- arch/arm64/boot/dts/ti/k3-j7200-main.dtsi | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/ti/k3-j721e-main.dtsi | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/ti/k3-j7200-main.dtsi b/arch/arm64/boot/dts/ti/k3-j7200-main.dtsi
-index 50d1f173bde31..e9898d52d83a7 100644
---- a/arch/arm64/boot/dts/ti/k3-j7200-main.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-j7200-main.dtsi
-@@ -48,9 +48,10 @@ cpsw0_phy_gmii_sel: phy@4044 {
+diff --git a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
+index c168bfbd303da..db3855ae798a2 100644
+--- a/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
+@@ -70,10 +70,11 @@ cpsw0_phy_gmii_sel: phy@4044 {
  		};
  
  		usb_serdes_mux: mux-controller@4000 {
 -			compatible = "mmio-mux";
 +			compatible = "reg-mux";
-+			reg = <0x4000 0x4>;
++			reg = <0x4000 0x20>;
  			#mux-control-cells = <1>;
--			mux-reg-masks = <0x4000 0x8000000>; /* USB0 to SERDES0 lane 1/3 mux */
-+			mux-reg-masks = <0x0 0x8000000>; /* USB0 to SERDES0 lane 1/3 mux */
+-			mux-reg-masks = <0x4000 0x8000000>, /* USB0 to SERDES0/3 mux */
+-					<0x4010 0x8000000>; /* USB1 to SERDES1/2 mux */
++			mux-reg-masks = <0x0 0x8000000>, /* USB0 to SERDES0/3 mux */
++					<0x10 0x8000000>; /* USB1 to SERDES1/2 mux */
  		};
- 	};
  
+ 		ehrpwm_tbclk: clock-controller@4140 {
 -- 
 2.39.2
 
