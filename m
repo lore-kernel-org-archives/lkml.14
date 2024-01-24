@@ -1,117 +1,135 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx01.omp.ru (mx01.omp.ru [90.154.21.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08603133423
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 20:16:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE177132C17;
+	Wed, 24 Jan 2024 20:18:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.154.21.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706127371; cv=none; b=AsSluvc53w4J7AxEhjuz6sks8MXBNKE+eS72Du5ENQt/4Ki5v9uqNnHdXEtVm86CWN5jK9DyCAlHKFjj4IE8AXYBo7ONKCoA9MMaAPTiZ333EUd/h6oInzm2Y4G9TbdriEtG+M5VtCVSwkwx32tH9Whmn/mmPP+r5v8Anfe8isQ=
+	t=1706127530; cv=none; b=oTms3oBYxSN/p+F/vHKd68EYWi+gP6Rd7c84H+KNLw1jpjJDd+AMFQwk76alYiei1e/mQO7ynF9FVHG32oioXUcCH1h0xV6/nxI5yIr6AtriRvH/AUEZRhdZJDOAxKAtJqg0NHXm5ZD74qZ1vxzT9qkx4RxbCv8qLsF/Y4hrEdY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706127371; c=relaxed/simple;
-	bh=AXDCwXx73owg7wj63GSw7ngnDK8Hm+d9fCiD3naBQM8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rtF3RWO+JYV6j1Sz89FyXYXJLikhW9NQkJxuxokfnVkjcNLPb7IeVQOw62gCpIjy5Qqv/Y2l9E8NSlg0BpoqBbKzR23XWsY5QXHtlXDqqIFaRbsyZ+VtnYzFY0u28Cez3zeYbYjJz4J/qXaGWoc0zo7+OB0xV2ElATvg2hEG3Cs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=ak4Ozkqu; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ak4Ozkqu"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1d780a392fdso11126175ad.3
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 12:16:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1706127369; x=1706732169; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=M9ZXapP4CBzb1A7zLIfbhm/sqmLOdGM3rVISnRAyWrU=;
-        b=ak4OzkqudJOZiRpN3nm/SZuMEENLUmjgNOFhpt5rgM2ASt6P0HxiqdOf7Q3puiLZj2
-         JD3Hmyr21NO1KbWXRub9TD0xkfOvPibPJts3HtAp0sVsDoQniqzRp5QT/5uMIwCV5gt4
-         jDNhY1emRTtWGv+h40IibHV5FOdcXh9t1R1u4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706127369; x=1706732169;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=M9ZXapP4CBzb1A7zLIfbhm/sqmLOdGM3rVISnRAyWrU=;
-        b=xGzyj8WsPT1pltZmOghd6mp8wJZNbDFiAph/CYTCeZhGE9luGIEoptdMGbiuDiqsKp
-         MxU38B7jeARuRT2+1x0v9GBXgnjt3hSJdN+1OW7NreiqZtTz7t3x/Z8fCV94B/2Vm40T
-         JN4EZsJMUwvPPQQVkHu/sy5yTIHUP0WULI7wLU0PMbqK41Y0n1wKJN94DwIB3BbfrF5I
-         CaWbR6ZgiyqHVuIN1cBBXNKCouAo9QhJGS/Z/MdbWk5Oqo00BQ6PKiPuAcqqlGFGL4qj
-         FZPKHLSUFjZ6j8iqbes9qVQsx1pt5QqoU+FYSpYOriAG0L1TvxnC1KFY1685ChIElB+w
-         KodA==
-X-Gm-Message-State: AOJu0YydBogONTWghYjjGAq+upCKBfEHP/zhXzU3WJRMcYRwfKzhbAff
-	dM/Oo1HzVR3WkNrTXKcda6mh7HecNSX4c+BEOtPZJTYtWzIZ4BcFCqAadu7OjA==
-X-Google-Smtp-Source: AGHT+IGHchkhtFJWS8YRr7A4F/OJ0bBqhApewB8XUKYtacaZB9fZnHw7eK4j5Pe/5pPgkaOZuifTkA==
-X-Received: by 2002:a17:90a:9417:b0:28d:6230:c1a2 with SMTP id r23-20020a17090a941700b0028d6230c1a2mr87254pjo.50.1706127369470;
-        Wed, 24 Jan 2024 12:16:09 -0800 (PST)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id f18-20020a17090aa79200b00290ffbe5ca3sm44874pjq.55.2024.01.24.12.16.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jan 2024 12:16:08 -0800 (PST)
-Date: Wed, 24 Jan 2024 12:16:08 -0800
-From: Kees Cook <keescook@chromium.org>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: linux-hardening@vger.kernel.org, Len Brown <lenb@kernel.org>,
-	linux-acpi@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 35/82] ACPI: custom_method: Refactor intentional
- wrap-around test
-Message-ID: <202401241215.32C7B45EF@keescook>
-References: <20240122235208.work.748-kees@kernel.org>
- <20240123002814.1396804-35-keescook@chromium.org>
- <CAJZ5v0gLr69vzLr_+yhP4z96nzFZjDfaPR-sTdkiv08vHbBe7w@mail.gmail.com>
+	s=arc-20240116; t=1706127530; c=relaxed/simple;
+	bh=RZpp6IHx31AhesQ6a89N4n47chb3EOWzqHq8eqcwoqM=;
+	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=XeBrwM81nEfjiQ/Ak9/M5Zo3j0rV44sOE1wfl5ra1yf9oS/qzznEgNH/NYqTmqsUg1iZaOFwhm8tN4JnUePgPRxEUFXbwWSKaw9837JsoEnZZYBt5wAcp4vlwOzfigFKmYaxIUJWu5x02F1sdEcOJylQARBHFz3r12YPtfrsC9U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru; spf=pass smtp.mailfrom=omp.ru; arc=none smtp.client-ip=90.154.21.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=omp.ru
+Received: from [192.168.1.105] (178.176.73.201) by msexch01.omp.ru
+ (10.188.4.12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1258.12; Wed, 24 Jan
+ 2024 23:18:32 +0300
+Subject: Re: [PATCH net-next v4 10/15] net: ravb: Move delay mode set in the
+ driver's ndo_open API
+To: Claudiu <claudiu.beznea@tuxon.dev>, <davem@davemloft.net>,
+	<edumazet@google.com>, <kuba@kernel.org>, <pabeni@redhat.com>,
+	<richardcochran@gmail.com>, <p.zabel@pengutronix.de>,
+	<geert+renesas@glider.be>
+CC: <netdev@vger.kernel.org>, <linux-renesas-soc@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, Claudiu Beznea
+	<claudiu.beznea.uj@bp.renesas.com>
+References: <20240123125829.3970325-1-claudiu.beznea.uj@bp.renesas.com>
+ <20240123125829.3970325-11-claudiu.beznea.uj@bp.renesas.com>
+From: Sergey Shtylyov <s.shtylyov@omp.ru>
+Organization: Open Mobile Platform
+Message-ID: <b0a4f320-6218-2631-a5a0-26cfa9a25ee1@omp.ru>
+Date: Wed, 24 Jan 2024 23:18:31 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJZ5v0gLr69vzLr_+yhP4z96nzFZjDfaPR-sTdkiv08vHbBe7w@mail.gmail.com>
+In-Reply-To: <20240123125829.3970325-11-claudiu.beznea.uj@bp.renesas.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: msexch01.omp.ru (10.188.4.12) To msexch01.omp.ru
+ (10.188.4.12)
+X-KSE-ServerInfo: msexch01.omp.ru, 9
+X-KSE-AntiSpam-Interceptor-Info: scan successful
+X-KSE-AntiSpam-Version: 6.1.0, Database issued on: 01/24/2024 20:03:06
+X-KSE-AntiSpam-Status: KAS_STATUS_NOT_DETECTED
+X-KSE-AntiSpam-Method: none
+X-KSE-AntiSpam-Rate: 59
+X-KSE-AntiSpam-Info: Lua profiles 182912 [Jan 24 2024]
+X-KSE-AntiSpam-Info: Version: 6.1.0.3
+X-KSE-AntiSpam-Info: Envelope from: s.shtylyov@omp.ru
+X-KSE-AntiSpam-Info: LuaCore: 7 0.3.7 6d6bf5bd8eea7373134f756a2fd73e9456bb7d1a
+X-KSE-AntiSpam-Info: {rep_avail}
+X-KSE-AntiSpam-Info: {Tracking_from_domain_doesnt_match_to}
+X-KSE-AntiSpam-Info: {relay has no DNS name}
+X-KSE-AntiSpam-Info: {SMTP from is not routable}
+X-KSE-AntiSpam-Info: {Found in DNSBL: 178.176.73.201 in (user)
+ b.barracudacentral.org}
+X-KSE-AntiSpam-Info: {Found in DNSBL: 178.176.73.201 in (user)
+ dbl.spamhaus.org}
+X-KSE-AntiSpam-Info:
+	127.0.0.199:7.1.2;omp.ru:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1
+X-KSE-AntiSpam-Info: ApMailHostAddress: 178.176.73.201
+X-KSE-AntiSpam-Info: {DNS response errors}
+X-KSE-AntiSpam-Info: Rate: 59
+X-KSE-AntiSpam-Info: Status: not_detected
+X-KSE-AntiSpam-Info: Method: none
+X-KSE-AntiSpam-Info: Auth:dmarc=temperror header.from=omp.ru;spf=temperror
+ smtp.mailfrom=omp.ru;dkim=none
+X-KSE-Antiphishing-Info: Clean
+X-KSE-Antiphishing-ScanningType: Heuristic
+X-KSE-Antiphishing-Method: None
+X-KSE-Antiphishing-Bases: 01/24/2024 20:07:00
+X-KSE-Antivirus-Interceptor-Info: scan successful
+X-KSE-Antivirus-Info: Clean, bases: 1/24/2024 5:13:00 PM
+X-KSE-Attachment-Filter-Triggered-Rules: Clean
+X-KSE-Attachment-Filter-Triggered-Filters: Clean
+X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
 
-On Wed, Jan 24, 2024 at 08:52:48PM +0100, Rafael J. Wysocki wrote:
-> On Tue, Jan 23, 2024 at 2:03 AM Kees Cook <keescook@chromium.org> wrote:
-> >
-> > In an effort to separate intentional arithmetic wrap-around from
-> > unexpected wrap-around, we need to refactor places that depend on this
-> > kind of math. One of the most common code patterns of this is:
-> >
-> >         VAR + value < VAR
-> >
-> > Notably, this is considered "undefined behavior" for signed and pointer
-> > types, which the kernel works around by using the -fno-strict-overflow
-> > option in the build[1] (which used to just be -fwrapv). Regardless, we
-> > want to get the kernel source to the position where we can meaningfully
-> > instrument arithmetic wrap-around conditions and catch them when they
-> > are unexpected, regardless of whether they are signed[2], unsigned[3],
-> > or pointer[4] types.
-> >
-> > Refactor open-coded wrap-around addition test to use add_would_overflow().
-> > This paves the way to enabling the wrap-around sanitizers in the future.
-> >
-> > Link: https://git.kernel.org/linus/68df3755e383e6fecf2354a67b08f92f18536594 [1]
-> > Link: https://github.com/KSPP/linux/issues/26 [2]
-> > Link: https://github.com/KSPP/linux/issues/27 [3]
-> > Link: https://github.com/KSPP/linux/issues/344 [4]
-> > Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-> > Cc: Len Brown <lenb@kernel.org>
-> > Cc: linux-acpi@vger.kernel.org
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > ---
-> >  drivers/acpi/custom_method.c | 2 +-
+On 1/23/24 3:58 PM, Claudiu wrote:
+
+> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 > 
-> I may attempt to drop custom_method.c in this cycle, is there a
-> problem if I take this into my tree for now?
+> Delay parsing and setting were done in the driver's probe API. As some IP
+> variants switch to reset mode (and thus registers content is lost) when
 
-The helper doesn't exist in tree yet, but it may be a bit before these
-refactors land, so if custom_method vanishes before then, that's great!
-:)
+   s/registers content/the register contents/, perhaps?
 
--Kees
+> setting clocks (due to module standby functionality) to be able to
+> implement runtime PM keep the delay parsing in the driver's probe function
+> and move the delay applying function to the driver's ndo_open API.
+> 
+> Along with it, both delay specific functions were kept together.
+> 
+> Reviewed-by: Sergey Shtylyov <s.shtylyov@omp.ru>
+> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+[...]
 
--- 
-Kees Cook
+> diff --git a/drivers/net/ethernet/renesas/ravb_main.c b/drivers/net/ethernet/renesas/ravb_main.c
+> index 8956c33c60e2..69d4854d6738 100644
+> --- a/drivers/net/ethernet/renesas/ravb_main.c
+> +++ b/drivers/net/ethernet/renesas/ravb_main.c
+> @@ -1800,6 +1800,59 @@ static int ravb_compute_gti(struct net_device *ndev)
+>  	return 0;
+>  }
+>  
+> +/* Set tx and rx clock internal delay modes */
+> +static void ravb_parse_delay_mode(struct device_node *np, struct net_device *ndev)
+
+   Wait, why are you moving this? Its call site didn't move -- it's still
+down in the probe() method...
+
+[...]
+> @@ -2785,10 +2793,7 @@ static int ravb_probe(struct platform_device *pdev)
+>  	if (error)
+>  		goto out_rpm_put;
+>  
+> -	if (info->internal_delay) {
+> -		ravb_parse_delay_mode(np, ndev);
+> -		ravb_set_delay_mode(ndev);
+> -	}
+> +	ravb_parse_delay_mode(np, ndev);
+>  
+>  	/* Allocate descriptor base address table */
+>  	priv->desc_bat_size = sizeof(struct ravb_desc) * DBAT_ENTRY_NUM;
+> 
+
+MBR, Sergey
