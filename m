@@ -1,45 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED197133419;
-	Wed, 24 Jan 2024 19:06:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F337C6A004;
+	Wed, 24 Jan 2024 19:07:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706123164; cv=none; b=f7MiBbsprjzEryg0c1JjwFeFBM5weyDQEnvyPyyhgGxRu+NtegyiUK1jcp8sM0IA89LYZWsLYxBZlKHoR5IZ123kAogzVQWdiyYDsAv4fyz7FiVEqQkughCQhHkw9lHA7cCzeU25zoh2SN0ZnIfXwHjYifMhT2zWF90ug7QtIH4=
+	t=1706123240; cv=none; b=ntdUmtlj1N7c8xBeRXTFzA2p0+5qTGdFlq6mo5fIBSIvOKvnxx/69rthizmSxUUwObS457DNGBYygcySmwoxmTD5Iz3a4DNMoBRnPf6L2TA79lWvLJi/FQ6WsodcW/kHYBTWUAJgh0eM/Cw9KzWi4CM9M6UCGnyuzoCz31Lr9N4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706123164; c=relaxed/simple;
-	bh=kV3NuM/ThI2ctlYG96NqZpX0dOEPgAX+5rJlxXkagyc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kUZXfz5vLvPCnvDybqhzjUIO07QTEcs2DLNdQcXUdfLUWZLljlhsR8srreTIptYAB1ITIJUSgMgiNBuZLbBRRu9DUmrkeyEcz/JbAmoehDGWZuc2+283NF4dhWFhWsz0kfBZ+POQcjqepj5EGEfeyCozWrCB+ooLJnIeKJaBjHQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ton5xh4y; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706123240; c=relaxed/simple;
+	bh=ZOMG0BPoG356t+LC9zBOmep2nMZDeJ/aYYf9HLTtk2M=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oLGCyYosA/bBiozb15j5M431I9Ieip9/hRwEMifLfuIVlBqrkQLsARfZVNDgyoRfxRCbaecf17cBDU5KQKo3uPqh70cHmJczVfql0BamjR11GZwEWFvIFI3zOkoTljdPdC3LaiA4avw+zZQtC2XS8QZKQXHQ1zfDXYhoYidSXX0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EzusQ3YD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ton5xh4y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18F5EC433F1;
-	Wed, 24 Jan 2024 19:06:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EzusQ3YD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4AA9DC433F1;
+	Wed, 24 Jan 2024 19:07:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706123163;
-	bh=kV3NuM/ThI2ctlYG96NqZpX0dOEPgAX+5rJlxXkagyc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Ton5xh4yaVGx8UA2icp9+gasMr7pCs47dGdFHCtq8ObBbtRRmoLsLZDiYa3rVWTQd
-	 vK4z8JqS3o6yhmMxflih2fv9tm2olSMHh5Mbq74In1EQxmxHBe9/YQ5hcqua+zZGpH
-	 8udn0UQ0NvXipmQ66lSIBqUXywKm7E1TONNp8l6aWOUwmu1ZZSOVwikqBt/xr1N3tp
-	 Jw+jo966NMtGeuo6iISogVNhJcl37ckuw4CkNxzGjJwfzHLYc1sPpdfQX+krJg9thm
-	 uEOj75v+3jVg7AV9VnoyyQw6ZeTpfZMcrjm9eMu4X0pMn/S+/nGviDD7KwZyePHMmQ
-	 9LTABCuY/c81w==
+	s=k20201202; t=1706123239;
+	bh=ZOMG0BPoG356t+LC9zBOmep2nMZDeJ/aYYf9HLTtk2M=;
+	h=From:To:Cc:Subject:Date:From;
+	b=EzusQ3YDgLM8XXrewy+6C2dXHp5on2QwntBfbmkws4MVDUlAFfQbEpPvhsDPlBATb
+	 T35aRFL3zp3BtMRM3ehDdTwSklEjR3o8yMePaX1k55TCHewrTosU//Az5xV6EvrDmA
+	 r+hruCv/H4Z/n1mD4VOjpGRdni17dBQ28sVRNwaWGA+cvPZKwfGw2ERpaoDYlmi5Ld
+	 CcM7abjk38jnSw1gPrKGjqShtYVs0Xkw4MjFUEp9yJVVxHXbDT+zuiusN+ZwLhF7uQ
+	 9Jb3bYCClzV4XDRuDJB4nTCbxjvqAzwDgzr/xNU8rweOrgJtb1wYrcG8kpHOsMRvbH
+	 1W4O/dVjjwHpw==
 From: Rob Herring <robh@kernel.org>
-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: linux-i2c@vger.kernel.org,
-	devicetree@vger.kernel.org,
+To: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Lukas Wunner <lukas@wunner.de>
+Cc: devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] dt-bindings: i2c: mux: i2c-demux-pinctrl: Define "i2c-parent" constraints
-Date: Wed, 24 Jan 2024 13:05:51 -0600
-Message-ID: <20240124190552.1551929-2-robh@kernel.org>
+Subject: [PATCH] dt-bindings: tpm: Drop type from "resets"
+Date: Wed, 24 Jan 2024 13:07:14 -0600
+Message-ID: <20240124190714.1553772-1-robh@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240124190552.1551929-1-robh@kernel.org>
-References: <20240124190552.1551929-1-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,28 +43,27 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The 'phandle-array' type is a bit ambiguous. It can be either just an
-array of phandles or an array of phandles plus args. "i2c-parent" is
-the former and needs to constrain each entry to a single phandle value.
+"resets" is a standard property which already has a type. Users only need
+to define how many clocks and what each clock is if more than 1 clock.
 
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- Documentation/devicetree/bindings/i2c/i2c-demux-pinctrl.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+ Documentation/devicetree/bindings/tpm/tpm-common.yaml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-demux-pinctrl.yaml b/Documentation/devicetree/bindings/i2c/i2c-demux-pinctrl.yaml
-index dd3d24212551..b813f6d4810c 100644
---- a/Documentation/devicetree/bindings/i2c/i2c-demux-pinctrl.yaml
-+++ b/Documentation/devicetree/bindings/i2c/i2c-demux-pinctrl.yaml
-@@ -40,6 +40,8 @@ properties:
+diff --git a/Documentation/devicetree/bindings/tpm/tpm-common.yaml b/Documentation/devicetree/bindings/tpm/tpm-common.yaml
+index 90390624a8be..3c1241b2a43f 100644
+--- a/Documentation/devicetree/bindings/tpm/tpm-common.yaml
++++ b/Documentation/devicetree/bindings/tpm/tpm-common.yaml
+@@ -42,7 +42,7 @@ properties:
  
-   i2c-parent:
-     $ref: /schemas/types.yaml#/definitions/phandle-array
-+    items:
-+      maxItems: 1
-     description:
-       List of phandles of I2C masters available for selection.  The first one
-       will be used as default.
+   resets:
+     description: Reset controller to reset the TPM
+-    $ref: /schemas/types.yaml#/definitions/phandle
++    maxItems: 1
+ 
+   reset-gpios:
+     description: Output GPIO pin to reset the TPM
 -- 
 2.43.0
 
