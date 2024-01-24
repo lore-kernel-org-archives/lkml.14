@@ -1,119 +1,138 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B01A31AACF;
-	Wed, 24 Jan 2024 10:43:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E98B31B273
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 10:43:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706092988; cv=none; b=OEu8pxl1t7Fn4mz/QxkU+f75iESiiEN/pl9o/GR9bvq/SaIDRFoK1LtelXnNC2fFSNFpY1Sfx2Mo11Wpzh9iMsbZbdHLBbERs+jGdjIUIXGwYTnhLoeGMyJ4lDJjZhdiEmpkqpTeDDA/eKoUdYgLSyLiubg2kvgfDr8woXCr9vQ=
+	t=1706092991; cv=none; b=DN3yxqRHTMg0yInejtFphYtEK5RyI9Xv2/vn9koxTiC4Eosd3sS0042UUSXNbnr6Wijj+a/zIq2gAIYGU0Rxzv5DQdJ0WMo/+meFTaJUrQuO39RWu/DY4X1VatVJ9UET5o0XOZBVOeQTsoBk5WLftgnIuut9+4YE1MoKQJ/Y5VY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706092988; c=relaxed/simple;
-	bh=tFO9N8l/2OmrITVJ+vRPW1z9XlwVNvQOqgrof22Fl8o=;
-	h=Message-ID:Subject:From:To:Cc:Date:Content-Type:MIME-Version; b=B5l42xF2BCCYpO8+VN1c2CHEQcuIc4AnXSfL8pbeXWoEMsDcyFJaMmWg/Nm1rnfNae6WbPUPy8Z8oxK87PV7aD4OoMXMWokHdQaqxrM4Qo68myUgN2HRB9WuON8wXs6j8nzvjb31gLbVqRU5x/YtCb5Gow7Vcd1Q25UyLnvgFkc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=g3YnBGJc; arc=none smtp.client-ip=89.208.246.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
+	s=arc-20240116; t=1706092991; c=relaxed/simple;
+	bh=tm8SYL6OBqZKJ3UXZA0SZY268RFJ9rT+2W3TJ8wRTfM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Z2lyXGAf+X4x2TNOyIDo/b81LJVnjjPICB49pMuNgwqzFyt+3naeWX/7XRfrU5ux6KfBqAlS8h6VkG/vTzgAdLvxWTAXtKaLCkuqjh/JHjIHS+Pk9xjhUMI5FRuL7/Pezoismt0eMnvTpcddXazLR6KtGu0WWkMmYW+1/v1Gcgg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=welx1qfB; arc=none smtp.client-ip=209.85.208.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="g3YnBGJc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1706092979;
-	bh=tFO9N8l/2OmrITVJ+vRPW1z9XlwVNvQOqgrof22Fl8o=;
-	h=Subject:From:To:Cc:Date:From;
-	b=g3YnBGJcjj+JuzPYUXQs+EJC9VQBwxMFtwis6scpLRSArQDHmmDy2mo2ir4qnhtEY
-	 xbxRIkLGjDeTEk4lS/pjt+3t2G7ibDo68MrO2E3m8iIPzn3Y/PatuR62UT1T7qDPHi
-	 JjPP5fZPtg1XIBY+KDO0RKps9jZCdQgpVokF/774=
-Received: from [IPv6:2408:8471:101c:6a2e:1fb0:74c0:f402:1b17] (unknown [IPv6:2408:8471:101c:6a2e:1fb0:74c0:f402:1b17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 87AE566F94;
-	Wed, 24 Jan 2024 05:42:55 -0500 (EST)
-Message-ID: <75e9fd7b08562ad9b456a5bdaacb7cc220311cc9.camel@xry111.site>
-Subject: Strange EFAULT on mips64el returned by syscall when another thread
- is forking
-From: Xi Ruoyao <xry111@xry111.site>
-To: linux-mips@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, libc-alpha@sourceware.org
-Date: Wed, 24 Jan 2024 18:42:30 +0800
-Autocrypt: addr=xry111@xry111.site; prefer-encrypt=mutual;
- keydata=mDMEYnkdPhYJKwYBBAHaRw8BAQdAsY+HvJs3EVKpwIu2gN89cQT/pnrbQtlvd6Yfq7egugi0HlhpIFJ1b3lhbyA8eHJ5MTExQHhyeTExMS5zaXRlPoiTBBMWCgA7FiEEkdD1djAfkk197dzorKrSDhnnEOMFAmJ5HT4CGwMFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgkQrKrSDhnnEOPHFgD8D9vUToTd1MF5bng9uPJq5y3DfpcxDp+LD3joA3U2TmwA/jZtN9xLH7CGDHeClKZK/ZYELotWfJsqRcthOIGjsdAPuDgEYnkdPhIKKwYBBAGXVQEFAQEHQG+HnNiPZseiBkzYBHwq/nN638o0NPwgYwH70wlKMZhRAwEIB4h4BBgWCgAgFiEEkdD1djAfkk197dzorKrSDhnnEOMFAmJ5HT4CGwwACgkQrKrSDhnnEOPjXgD/euD64cxwqDIqckUaisT3VCst11RcnO5iRHm6meNIwj0BALLmWplyi7beKrOlqKfuZtCLbiAPywGfCNg8LOTt4iMD
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.3 
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="welx1qfB"
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-55c89dbef80so6139a12.1
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 02:43:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1706092988; x=1706697788; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zqCT08+MvCKkOTXY4Y0tOOr9UtqwBr/HZdtw0FsPlto=;
+        b=welx1qfBG8rQ0qTKu6refLligzZY+FgISLKCihmtE3zHP/JhtWgOq//RkkzxEkSibe
+         nKTRGPzn2A/4j8nGpvpN6SJvBd4R2GQgweHlkAKyIBEG7NfRQxcvbdErUwbB+8pR40qo
+         KSCFvZrK5qOwDLXo0r1VmttiRyJimak12eJQcZoH4Uofdfzs68t85LnQxU/8mZhCJl0/
+         0ml7dEPwhiDepB5DvT6DWF+io7faIYHq/LW3NndftKn8mbT5T6MmlYLF9jdPVa9Y4ywh
+         nazoH1832EyVvdSVUYWsDyGV6RRUn+hcHLdv6Z9yh11ZSUlOc3cK9k5BLsUb2BrAyTWo
+         ThEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706092988; x=1706697788;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zqCT08+MvCKkOTXY4Y0tOOr9UtqwBr/HZdtw0FsPlto=;
+        b=Ps7LP4/ZSK0Yhj3gRbdaR9nbGCPssgGqOI2iFZfSOd3D92t+siajU6CVyNGzkv/aC+
+         BxKxyQkUfRezxaPxZ93JfStrN06L0bpUYYrG8eEVRcxy9/eMTm3whg+kcaVaNDBA8nx5
+         mIxNPagsFNp19WBKmglMvlU9GZuWvfcJisnSS+O7kqkZpULTb75hV5S+jaRM2uuE6M22
+         GYvVywDDwdkQBOUURWn62ytsXHfbguRlcLf9AYHHHAG8uYexQfTUgcWMEZqJ0gKRoBTG
+         6ww56HCqRoe1enjerZ82dqOmh3CwLg7kVXQVcAJrZjcv8yHhIGQ0IYHff00ZhJOB4Ona
+         t+rQ==
+X-Gm-Message-State: AOJu0YyLSMl6/iEuWmrWsuDCztrUss/fHPulmD87ThalLseUZEecyzzN
+	rbOOAykhEYSbJ9PCVJ3RvIPnfUdDyT42+XwtWRzZ5qR2nvnZDzsrIjgtk8sUk1iXkrG1tZ9m/HB
+	XmUQ47qJ739Sa49Jp21l+VrcZ7q57xSZ87dpo
+X-Google-Smtp-Source: AGHT+IFA4Tc1j4sf2WdSd9/PHzO6hw9s+bdVXHkMEgmkV/sJrLFCLqNCgSWRThpV968rVYpmG1ZNtjXk5o4YzlQpA2I=
+X-Received: by 2002:a05:6402:3109:b0:55c:6037:c237 with SMTP id
+ dc9-20020a056402310900b0055c6037c237mr99964edb.6.1706092987914; Wed, 24 Jan
+ 2024 02:43:07 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20240124101404.161655-1-kovalev@altlinux.org> <20240124101404.161655-2-kovalev@altlinux.org>
+In-Reply-To: <20240124101404.161655-2-kovalev@altlinux.org>
+From: Eric Dumazet <edumazet@google.com>
+Date: Wed, 24 Jan 2024 11:42:54 +0100
+Message-ID: <CANn89iKxC5KiqZ-NS7qkgX-6qcUYBJVsdbesXwrAOKTh=oJyZg@mail.gmail.com>
+Subject: Re: [PATCH 1/1] gtp: fix use-after-free and null-ptr-deref in gtp_genl_dump_pdp()
+To: kovalev@altlinux.org
+Cc: pablo@netfilter.org, laforge@gnumonks.org, davem@davemloft.net, 
+	kuba@kernel.org, pabeni@redhat.com, osmocom-net-gprs@lists.osmocom.org, 
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, nickel@altlinux.org, 
+	oficerovas@altlinux.org, dutyrok@altlinux.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Wed, Jan 24, 2024 at 11:14=E2=80=AFAM <kovalev@altlinux.org> wrote:
+>
+> From: Vasiliy Kovalev <kovalev@altlinux.org>
+>
+> After unloading the module, an instance continues to exist that accesses
+> outdated memory addresses.
+>
+> To prevent this, the dump_pdp_en flag has been added, which blocks the
+> dump of pdp contexts by a false value. And only after these checks can
+> the net_generic() function be called.
+>
+> These errors were found using the syzkaller program:
+>
+> Syzkaller hit 'general protection fault in gtp_genl_dump_pdp' bug.
+> gtp: GTP module loaded (pdp ctx size 104 bytes)
+> gtp: GTP module unloaded
+> general protection fault, probably for non-canonical address
+> 0xdffffc0000000001:0000 [#1] SMP KASAN NOPTI
+> KASAN: null-ptr-deref in range [0x0000000000000008-0x000000000000000f]
+> CPU: 0 PID: 2782 Comm: syz-executor139 Not tainted 5.10.200-std-def-alt1 =
+#1
+> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.0-alt1
+> RIP: 0010:gtp_genl_dump_pdp+0x1b1/0x790 [gtp]
+> ...
+> Call Trace:
+>  genl_lock_dumpit+0x6b/0xa0 net/netlink/genetlink.c:623
+>  netlink_dump+0x575/0xc70 net/netlink/af_netlink.c:2271
+>  __netlink_dump_start+0x64e/0x910 net/netlink/af_netlink.c:2376
+>  genl_family_rcv_msg_dumpit+0x2b8/0x310 net/netlink/genetlink.c:686
+>  genl_family_rcv_msg net/netlink/genetlink.c:780 [inline]
+>  genl_rcv_msg+0x450/0x5a0 net/netlink/genetlink.c:800
+>  netlink_rcv_skb+0x150/0x440 net/netlink/af_netlink.c:2497
+>  genl_rcv+0x29/0x40 net/netlink/genetlink.c:811
+>  netlink_unicast_kernel net/netlink/af_netlink.c:1322 [inline]
+>  netlink_unicast+0x54e/0x800 net/netlink/af_netlink.c:1348
+>  netlink_sendmsg+0x914/0xe00 net/netlink/af_netlink.c:1916
+>  sock_sendmsg_nosec net/socket.c:651 [inline]
+>  __sock_sendmsg+0x159/0x190 net/socket.c:663
+>  ____sys_sendmsg+0x712/0x870 net/socket.c:2376
+>  ___sys_sendmsg+0xf8/0x170 net/socket.c:2430
+>  __sys_sendmsg+0xea/0x1b0 net/socket.c:2459
+>  do_syscall_64+0x33/0x40 arch/x86/entry/common.c:46
+>  entry_SYSCALL_64_after_hwframe+0x62/0xc7
+> RIP: 0033:0x7f2ea16c2d49
+>
+> Fixes: 94a6d9fb88df ("gtp: fix wrong condition in gtp_genl_dump_pdp()")
+> Signed-off-by: Vasiliy Kovalev <kovalev@altlinux.org>
+> ---
+>  drivers/net/gtp.c | 18 +++++++++++++++---
+>  1 file changed, 15 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/net/gtp.c b/drivers/net/gtp.c
+> index 477b4d4f860bd3..3fc4639711cd83 100644
+> --- a/drivers/net/gtp.c
+> +++ b/drivers/net/gtp.c
+> @@ -1675,6 +1675,8 @@ static int gtp_genl_get_pdp(struct sk_buff *skb, st=
+ruct genl_info *info)
+>         return err;
+>  }
+>
+> +static bool dump_pdp_en;
+> +
 
-When I'm testing Glibc master branch for upcoming 2.39 release, I
-noticed an alarming test failure on mips64el:
+Hmm, it seems there is a missing try_module_get() somewhere...
 
-FAIL: stdlib/tst-arc4random-thread
-
-I've gathered some info about it and pasted my findings into
-https://sourceware.org/glibc/wiki/Testing/Tests/stdlib/tst-arc4random-threa=
-d.
-
-Finally I was able to reduce the test case into:
-
-#include <stdlib.h>
-#include <errno.h>
-#include <pthread.h>
-#include <unistd.h>
-#include <fcntl.h>
-
-void *
-test_thread (void *)
-{
-  char buf[16] =3D {};
-  int fd =3D open("/dev/zero", O_RDONLY);
-  while (1)
-    {
-      ssize_t ret =3D read (fd, buf, 7);
-      if (ret =3D=3D -1 && errno =3D=3D EFAULT)
-	abort ();
-    }
-}
-
-void *
-fork_thread (void *)
-{
-  while (1)
-    {
-      if (!fork ())
-	_exit (0);
-    }
-}
-
-int
-main (void)
-{
-  pthread_t test_th;
-  pthread_t fork_th;
-
-  pthread_create (&test_th, NULL, test_thread, NULL);
-  pthread_create (&fork_th, NULL, fork_thread, NULL);
-  pthread_join (test_th, NULL);
-  pthread_join (fork_th, NULL);
-}
-
-When running this on the mainline kernel (revision 6.8.0-rc1+-
-g7ed2632ec7d72e926b9e8bcc9ad1bb0cd37274bf) it fails in milliseconds.=20
-Some "interesting" aspects:
-
-1. This is related to the size parameter passed to read ().  When it's
-less than 8 it fails, but when it's 8 or greater there is no failure.
-2. This is not related to if "buf" is initialized or not.
-
-Now I'm suspecting this might be a kernel bug.  Any pointer to further
-triage?
-
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
+__netlink_dump_start() does one, so perhaps we reach __netlink_dump_start()
+with a NULL in control->module ?
