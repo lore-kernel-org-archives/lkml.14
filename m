@@ -1,36 +1,36 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C35D130E3D;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51FEE7C08E;
 	Wed, 24 Jan 2024 22:33:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706135597; cv=none; b=ciWrwkX0btv4BEmgyh+ZE2qTfjw7F2oViXY1s2DRLvj3VuZs409/CoWAktlZ+a+T+TYnc56+7/gNVenshADACmuS6VG3S0zFFNrgZIXro4Mk8BC7T1Tmwyl+KZdcQ47vxbWSKYShFN8IbQEVBxjbG33SSDnB5qdND0x6gfcNYjk=
+	t=1706135597; cv=none; b=Rbbv4PI+OD5SHW1xRIcjrIuea/G/kAbugQ6K3NCOmqV/HcYkVcm2LexOAQomNJU9OSvC5prXHey2K/hnJMBHb5syn4hvTUXAgpEAXyVE1LFSmZSZL8ANv7Q0MBD/19NLQN+F/EPEU6gCW5e9l9rNtEbxBLAtNYMKMH4l6EjmMdw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1706135597; c=relaxed/simple;
-	bh=aPLUUURCdX8yefR9B+X+EaFFqrqIchv4U4ygOF8Vdzc=;
+	bh=tkLKTn8DhkyrcCxWX8yT7dnXK3EVIGJJiLfX8uXj23M=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ZmDXALMz2gAt1iAD9Da5zrxzt1kN91Oy+w/HgdymDH7z9NBIUOYSMfnurHqbH6JA9iNOEQIWolIjDRfFpBiLDY8DiJHffi2g+wjJJkD6CFt2zDatzf5rqWWBLBI26DqEgg42a5q+qYEO1qAZxDqRF4ztU9AasLJCm2/4rpzxJGI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=QLwRG93g; arc=none smtp.client-ip=212.227.17.22
+	 MIME-Version; b=BwaKMVGgIYJqKJkyr6EzT0MV0ZfDQkAnpsbSfmNukdAwL/LSqCLzgxtibNu8wcswLaRh8IQ4b67wvOSJaEl07lbCWEgOetrCvh9CYKvgK9DgNdLovQKyYwqhj3/+vuZM+UpgjYPKEcsLw41UsfP8htMZfTOiGZyD/OMYQfLUgEQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=IrZFIK6c; arc=none smtp.client-ip=212.227.17.21
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="QLwRG93g"
+	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="IrZFIK6c"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-	s=s31663417; t=1706135561; x=1706740361; i=wahrenst@gmx.net;
-	bh=aPLUUURCdX8yefR9B+X+EaFFqrqIchv4U4ygOF8Vdzc=;
+	s=s31663417; t=1706135562; x=1706740362; i=wahrenst@gmx.net;
+	bh=tkLKTn8DhkyrcCxWX8yT7dnXK3EVIGJJiLfX8uXj23M=;
 	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:
 	 References;
-	b=QLwRG93gvugH69luDdbo1sna8wmWggF6jXwuflJC9Zaig0l1InFcAmQ4XagZ73UE
-	 HrqvtGHUdjWh9C6hI2evhPS6dRVwdvRn/gnkMzC1RozhoHoSTg6nbZ5AEfkq3yaxZ
-	 z06+9W9ICdN8Ws1dcgi5rNvTPoD4aZMsZwRYAXui8eb4mszpdAUekd5RimcN0Y9l/
-	 te/Q5sPlc0vqtwHdyUjFkmZFN2NG4Fd94UgwBunGS5oMN5vRAbkZbMYUX1jOR4xhI
-	 ke7dMkASvAdTgLjVAMVRzSLxPAiPbVZ3KDJbIiDITGWqkMY96FvF/m+jPeXawAaA1
-	 79d7a+8HZw5zJ5mqew==
+	b=IrZFIK6cLJSYUSlJRhn4JJls7izj3y65r29pBWImkw038qmeonmwRIXx45LoSktO
+	 fOxgG5wCGRNHwR2KwAeFZ9A9depFBpmD4Yy7/JHCSk85DlJYSt4ObA+1Vru9lYPiD
+	 RttKCU8mzSvbSAjN9z8E+6iJxH/4ujBR2VvuinnQwXiIXEhg6Eub4RijFytk2qN5E
+	 +eTkpasUdHy4WAHfb2Ds8lhoZR9gwkoS7t9XXYynbC9uEXLPseSqM8nCN4P+OjClS
+	 355H66aeERcj3mEFWkEnG9UVXCDfbEldLzdhhQ8AoDzn9LDdGAgBoC5RzIIrUh69l
+	 irUTBpMGLFmewWIvTg==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from stefanw-SCHENKER ([37.4.248.43]) by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MI5QF-1rGyEw2jN1-00F9Ux; Wed, 24
- Jan 2024 23:32:41 +0100
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MJVHU-1rme822j2e-00JuCa; Wed, 24
+ Jan 2024 23:32:42 +0100
 From: Stefan Wahren <wahrenst@gmx.net>
 To: "David S. Miller" <davem@davemloft.net>,
 	Eric Dumazet <edumazet@google.com>,
@@ -40,11 +40,12 @@ Cc: Lino Sanfilippo <LinoSanfilippo@gmx.de>,
 	Florian Fainelli <f.fainelli@gmail.com>,
 	netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
+	Stefan Wahren <stefan.wahren@i2se.com>,
 	Stefan Wahren <wahrenst@gmx.net>,
 	Jacob Keller <jacob.e.keller@intel.com>
-Subject: [PATCH V3 10/14 next] qca_spi: Adjust log of SPI_REG_RDBUF_BYTE_AVA
-Date: Wed, 24 Jan 2024 23:32:07 +0100
-Message-Id: <20240124223211.4687-11-wahrenst@gmx.net>
+Subject: [PATCH V3 12/14 next] qca_7k: Replace old mail address
+Date: Wed, 24 Jan 2024 23:32:09 +0100
+Message-Id: <20240124223211.4687-13-wahrenst@gmx.net>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240124223211.4687-1-wahrenst@gmx.net>
 References: <20240124223211.4687-1-wahrenst@gmx.net>
@@ -55,52 +56,79 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:RKnQJ8mFyiEBeynNQ4tWzggzqo0rymb9752Iu0YtU45KsP6H+TG
- oDZpwW3VdD5CuZOXwKB4LGdYx4qXDa5a/tmMqUBHk5uULAwzMzkHhHPXh2byWyJTUUSgyd4
- o2NgSxCCOW6xmlUtjp1ZXXGBu4CYVd6jPFvC22DmV6tTTX5cixPnNqA/VaPPvoAZgbFPtX2
- aK5fKIWCvBfArcFwiQP5g==
+X-Provags-ID: V03:K1:q3a0x4qQk5+uqt/dkBIkcBItlhLqcHvgSjgq3jq9a/cLwV2w2pa
+ VNoMrGlqqCcgPzvNc3BpOaqTqVmf/42k7oY73heOOxeG+T1gEOnon9RiZss6d2ZRZ3MugWv
+ 8PQ1j69qHhr4S8A/qV34gdFwAN3ofLP5+IsH61op3JbWkw+ALUuEiPWRIlE95tGH3wYl3WT
+ +U7w8vlHYL4rZlocBrUeA==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:ugjREs5rMqw=;0rqJ9cyuQ05gzrybB2cW0gMwyRI
- VqY+YM0/rwxeISipI4WR+P6DR20f6BEKSp39Kt3Fu412Un9ffHFr7Pzx97B6dHjGHC2wYFKXN
- d/HDEf8yza0+Z8pXSzeVA7hHMb5QDJBaFzXw3HBvSqk7mNfwdOzsB9VHEsv6EQamQ/KHPWV+I
- ZgaudVXhBOsN/YPHxd4WHwtnZSs8ZwW+OUhnvemOtwh2qL9NRr7PRLGO73u0tyQcILMZO8q76
- o/pyu32qjp8JfP3th+QV+p9p1NkwAp2pwkhi48PuDesvw7vkgpbgGmMskQ7fdLz3Ls3vMjM9s
- oPryfuIbsO9JtTiTRUz6cktknpirmmGCJz9jwtpVZ02fz38DPKrbNuB/Bp3JdnMWFS0XdlYES
- +ZbrzIcp+KY8wdkiYe92OGYtXQ8M/cX3ecStR8i4ACYuETbdXfCrfkBmD3H0ig42ObXJZ91M8
- Cfay/Yr7Vep4nM9af7LrNEsek/WH++8Vkgx2yjAG7Iz/vW/Ir8ClWojVSKpwj9uZLd90x78s3
- mSjaRypq5yjswP2QwjzTqH0gxCPIEMoNPjeiTS0eqjAzEDYFQInmUhFZZ/xSbXQe5/st68MJ0
- q6VM5DR2nGpEbLg0WEWrMmFjq7wrKRID0Nsz3jtIyjrBCW/4KtoC9NfoD/3etQIqz87taa+rJ
- 1Tk69fiamUJVk8dEqxbI7tvvWcJDnDWStIZX234Vy3ozWafxc6ejmBBcQXfWzTet7NWmG6bTl
- BwPUKrbQOvWy9trA/j0Y+uSFKf8MVoKDsFBLu1ZqQnK6X6Cgjyie8ai2V0WqQnh7IsADr7nX2
- t6kPO3sNAGx33FDoMJbiAFjjKmiM/T97vgqQrRfaXoIVUifbXXNFmAa4YJ+sP29vVNOXz1ucU
- z+tSW6QLvlpTuHg1FlW0xFa/23ikmt8/6sp1+B/IXPHDrYSwa6xKa36bnoU9g/qv1gJD8bF7Z
- hUW0FOoJERHoqMzxMkC90uDddqk=
+UI-OutboundReport: notjunk:1;M01:P0:LAFXGoU9gpE=;V/M62mMDW3UBbW8g/Ves+20EiTZ
+ SQxZqTrmxwXRDo9u41vuZ1EM9pWS9B6uZYyaUVje7ji27lHIrzLLMH3XJiQV9laDcRyFteQ4h
+ fPQcqV0GgBTIhKT5nkXGMBQm3hxZTcQUcHtpm4OojGrNXqRrlSizuiJ6hVatmQQgPK1k8awFf
+ OpVuuAhMthUyrK0F9wwyEsSF2MHNTq9yWLBqwz+atQg2uBVGbncMAES/LvY6yJtLXE49luyrE
+ UtIe7lkC2quU3N7JpgKJX5e+GZfi1hBPTMYuHHsSdaTR1OM+wgblND6w3f+n5lWv6dv7uZ555
+ 6LVU1jmtcia/SDZ/0dU6J6dIaE2wWrUQXqPmV3OtCVf1jyD4dnvImi0nq1MRGOS/4wWiODt7U
+ aywniOPj2AmVA+vDZEpYmjG3Cotf4ifo0afffZvRrNJWIJLJrihcRvn1YiBEJWPQRxNEUKHkv
+ Q7gSzujbjEa5gnLDCVFNqd9c8nVWkIeL+DFvfOisMjQW5WE25xPN2NisEhuM+hEhL3OdGgP2v
+ OSzE59W1uTCyIKrkCLlVfZtx8Mm7EvWrPGM5nvGpBlS+7tI3hIg47LJTWBg/SgvjPmtZgqvxR
+ nN7a5J1kAKv+Qq0NfTVgwym6f9xUj+j4Dl4gEm8aTJZbkaO1hBcR6P0ntltGCptUtSJkWjG/H
+ ovT2mOrA2zNVKqKanSKXEnM+BymDKpIzoakpUzZ1ShrrbfU3TOeVkWLIOfwhT8mjzb0eC7lRJ
+ AmEX2RYkOgDQeHrkq2kuRFoJ8UWIkar4qNFW/ljg3BR2CBxliJURUjRvw+DLXm8uPxqz6dZii
+ QhMv4z36EdVhVdS5NAHCu9245tUY1RSBWZTwMHcdTu8BqySLZsRKhaq+9yBDgFa9C2PrfUrVI
+ f4dLxCnwUqwltUKks0k225O4FN8V2coY0InXWBsf0KkaQSOaYSKWAI1jd/24Ykl6sEul892Ul
+ BWpNJSxFo8UDgA848eTjAn89Id4=
 
-All known SPI registers of the QCA700x are 16 bit long. So adjust
-the formater width accordingly.
+From: Stefan Wahren <stefan.wahren@i2se.com>
 
+The company I2SE has been acquired a long time ago. Switch to
+my private mail address before the I2SE account is deactivated.
+
+Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
 Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
 Reviewed-by: Jacob Keller <jacob.e.keller@intel.com>
 =2D--
- drivers/net/ethernet/qualcomm/qca_spi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/qualcomm/qca_7k_common.c | 2 +-
+ drivers/net/ethernet/qualcomm/qca_spi.c       | 2 +-
+ drivers/net/ethernet/qualcomm/qca_uart.c      | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
+diff --git a/drivers/net/ethernet/qualcomm/qca_7k_common.c b/drivers/net/e=
+thernet/qualcomm/qca_7k_common.c
+index be2f754efd21..5302da587620 100644
+=2D-- a/drivers/net/ethernet/qualcomm/qca_7k_common.c
++++ b/drivers/net/ethernet/qualcomm/qca_7k_common.c
+@@ -149,5 +149,5 @@ EXPORT_SYMBOL_GPL(qcafrm_fsm_decode);
+
+ MODULE_DESCRIPTION("Qualcomm Atheros QCA7000 common");
+ MODULE_AUTHOR("Qualcomm Atheros Communications");
+-MODULE_AUTHOR("Stefan Wahren <stefan.wahren@i2se.com>");
++MODULE_AUTHOR("Stefan Wahren <wahrenst@gmx.net>");
+ MODULE_LICENSE("Dual BSD/GPL");
 diff --git a/drivers/net/ethernet/qualcomm/qca_spi.c b/drivers/net/etherne=
 t/qualcomm/qca_spi.c
-index c5d240fe4146..d3109eb24b4d 100644
+index 7c63baeb3844..29be0fe0b235 100644
 =2D-- a/drivers/net/ethernet/qualcomm/qca_spi.c
 +++ b/drivers/net/ethernet/qualcomm/qca_spi.c
-@@ -359,7 +359,7 @@ qcaspi_receive(struct qcaspi *qca)
- 	/* Read the packet size. */
- 	qcaspi_read_register(qca, SPI_REG_RDBUF_BYTE_AVA, &available);
+@@ -1042,6 +1042,6 @@ module_spi_driver(qca_spi_driver);
 
--	netdev_dbg(net_dev, "qcaspi_receive: SPI_REG_RDBUF_BYTE_AVA: Value: %08x=
-\n",
-+	netdev_dbg(net_dev, "qcaspi_receive: SPI_REG_RDBUF_BYTE_AVA: Value: %04x=
-\n",
- 		   available);
+ MODULE_DESCRIPTION("Qualcomm Atheros QCA7000 SPI Driver");
+ MODULE_AUTHOR("Qualcomm Atheros Communications");
+-MODULE_AUTHOR("Stefan Wahren <stefan.wahren@i2se.com>");
++MODULE_AUTHOR("Stefan Wahren <wahrenst@gmx.net>");
+ MODULE_LICENSE("Dual BSD/GPL");
+ MODULE_VERSION(QCASPI_DRV_VERSION);
+diff --git a/drivers/net/ethernet/qualcomm/qca_uart.c b/drivers/net/ethern=
+et/qualcomm/qca_uart.c
+index d0db9d0adad7..321fd8d00730 100644
+=2D-- a/drivers/net/ethernet/qualcomm/qca_uart.c
++++ b/drivers/net/ethernet/qualcomm/qca_uart.c
+@@ -397,6 +397,6 @@ module_serdev_device_driver(qca_uart_driver);
 
- 	if (available > QCASPI_HW_BUF_LEN + QCASPI_HW_PKT_LEN) {
+ MODULE_DESCRIPTION("Qualcomm Atheros QCA7000 UART Driver");
+ MODULE_AUTHOR("Qualcomm Atheros Communications");
+-MODULE_AUTHOR("Stefan Wahren <stefan.wahren@i2se.com>");
++MODULE_AUTHOR("Stefan Wahren <wahrenst@gmx.net>");
+ MODULE_LICENSE("Dual BSD/GPL");
+ MODULE_VERSION(QCAUART_DRV_VERSION);
 =2D-
 2.34.1
 
