@@ -1,118 +1,150 @@
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 069711799E
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 08:38:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DD0C1774E;
+	Wed, 24 Jan 2024 08:39:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706085524; cv=none; b=o4x/R11YLA7Xo3zd7uIcS9ZcFcUcsUv/vwn6la5bVi3S3tqZ8OW+xExOZu7Bep8bD/Z/VjGXAw53y/x9Jrc61p0kPWpP2bd7IV/sHA0FQTQQVSNlGPrDqcpljyMZDEEqUqwLm+BEfyjpgVdHA6D7+Ty5Hae/51lQCrZ7P3uq3No=
+	t=1706085544; cv=none; b=WvXeGfV4qlkAgGPiyv+2XhTuabIIgiVUSOSUPWZACdHl8R6kChGIyXEihn4JUs0On1lySCVexP1MI2yK9yCi8YwfAeJ3lV4zW3ZvoUPBbR3yS7JvP4ZFOwJbZl2UEe5CKM9h7nU3ML3NpSC9eCSw2pdNHvCUgFjjE+7rth8hmVI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706085524; c=relaxed/simple;
-	bh=D/eQ9P4RCw3rHW5sQCHc3F8xx4YvkOg1xY7lET+BG5o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=a89uPhQvHCE4Zyv42oQgs7CPoblyGhh+tkukTSeXUX1drB8jbMiA/xo7tXo/nXD0iepehnvsweiMHg5N8ty/j8i3Gsxw6iWJCb5aLpTbqvgAykUhw1StNy/B+WM7cSwAqU0O0BgkkCGQLpyOn9crN3Cbw9j4yvPGf+ganEKrCKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
-Received: by mail.gandi.net (Postfix) with ESMTPSA id B9D7640002;
-	Wed, 24 Jan 2024 08:38:30 +0000 (UTC)
-Message-ID: <cd68cf4e-7a6b-4875-ae1b-0c28a6eacaad@ghiti.fr>
-Date: Wed, 24 Jan 2024 09:38:30 +0100
+	s=arc-20240116; t=1706085544; c=relaxed/simple;
+	bh=ehSk/KOw6EwCI/rQd4tsmYaL42+ZGGoyWxxF44nf3mU=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EuJyLLhSOts6bKQI91vhs8oltseDIvvGxUi6hIBJvp7iWRx5HwpJ/DTU8IPm1op/ouLP2l/lGq3NDgP4Iua995uj2XKvT3QjknmIztNAj1kDTdOOMfh6Hpu3L+z0fK6jjiGgZDY7MeGdrmFiwuN2iVwsvvqwHkNIAG+Jn3tW/Hw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=asnp5vqX; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="asnp5vqX"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-40eacb6067dso35858905e9.1;
+        Wed, 24 Jan 2024 00:39:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1706085541; x=1706690341; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZgawM6UIZB879asIllB4qg34rmAKLHEiPy/nkyJy3IA=;
+        b=asnp5vqXcqqFfTSGyyTeaiaHgoLFhQ3nwWqwvfkCh+0QrMFZkv4FszeF/qL1tkwpcq
+         8pwWdx6EP0l85N2RvEV5wSS3O8KnHVnsegecSwIhcPZ9tfgYLb8po70nXQAWFBHh4lfa
+         fr3Qm/zOlJAQYidCvijUwisJNr7SjHPfWLjcbVXIJCCwT0zfr1rUQprJ+pNJjFvkNd/F
+         n+HJuu0mVlNvNkst6MfCb4PmcIsslJl63VZwntRPG6480NgZBd0LNdekNNhSA+6u5+uk
+         PRfY70mN0FoZn3yRfdlRqRidbLKIDUGhiyX3aYbr5j6fQenu+d9aVdp+zlVbEdf/NnHV
+         xHAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706085541; x=1706690341;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZgawM6UIZB879asIllB4qg34rmAKLHEiPy/nkyJy3IA=;
+        b=MgDFkKyHttaFTy9WnAcSJOHvFMfJjwZwMVhhkmIGnp/pChrSpX8441efo09GLRwrMP
+         VW6aEmSj3nVO9wLhmIwaHrILbEJ+zrVlOKPAH2RubhUGj/gqlfyO5CqMnKh2wZpZp/zO
+         FQExbSsCSmZgB2pS6WMCpwmt19YGt5sM/b7TucE4KkwYgdl+TicLL750Hd7c2I/nK1gA
+         ivvKyHcMXudf6r90o+wfyeHJmJH1MRhiH60BMMRQrAGq2b0S/P8vl01ukh18+bMykA78
+         fmDzrDS4zg78AKvC/xuGiLlEwcLYqoHgE9EVzyw9DyrGOi0oSttxgHoS16ZfVlCl7JHl
+         oLdg==
+X-Gm-Message-State: AOJu0Yz7wlX4TgrrC47gbBls8CLwBQ6L/1GcQSN5NA9/pUiD4VnevXPD
+	UlpAJEseTteKFSIiIK5R8AHJeRGhAyHN28AWwkdaLMCqCy8Rd+ex
+X-Google-Smtp-Source: AGHT+IEicp6kAZUWVsNFA2XQ0bSqFDDu68KUb3xWtsxsMyBwWLImjacQfs3cRCWXO6Vw/pr6lq5Tsg==
+X-Received: by 2002:a05:600c:56d3:b0:40d:8fcd:31aa with SMTP id ju19-20020a05600c56d300b0040d8fcd31aamr728892wmb.327.1706085541182;
+        Wed, 24 Jan 2024 00:39:01 -0800 (PST)
+Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
+        by smtp.gmail.com with ESMTPSA id n21-20020a05600c3b9500b0040eaebc4e8fsm8646371wms.1.2024.01.24.00.39.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Jan 2024 00:39:00 -0800 (PST)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Wed, 24 Jan 2024 09:38:58 +0100
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Ravi Bangoria <ravi.bangoria@amd.com>,
+	Ross Zwisler <zwisler@chromium.org>,
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+	Shirisha G <shirisha@linux.ibm.com>,
+	Kajol Jain <kjain@linux.ibm.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 5/5] perf test: Make daemon signal test less racy
+Message-ID: <ZbDMovjeAZBUSiMn@krava>
+References: <20240124043015.1388867-1-irogers@google.com>
+ <20240124043015.1388867-6-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [External] [PATCH] riscv: Fix wrong size passed to
- local_flush_tlb_range_asid()
-Content-Language: en-US
-To: Dennis Zhou <dennis@kernel.org>, yunhui cui <cuiyunhui@bytedance.com>,
- Alexandre Ghiti <alexghiti@rivosinc.com>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Geert Uytterhoeven <geert@linux-m68k.org>, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <20240123132730.2297719-1-alexghiti@rivosinc.com>
- <CAEEQ3wk5edUFTuE3H3KDGkCXj0+=i7Z1BM2M+6X-Tk9_m8X_iQ@mail.gmail.com>
- <ZbDICZkatO3/lGf/@snowbird>
-From: Alexandre Ghiti <alex@ghiti.fr>
-In-Reply-To: <ZbDICZkatO3/lGf/@snowbird>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-GND-Sasl: alex@ghiti.fr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240124043015.1388867-6-irogers@google.com>
 
-Hi Dennis, Yunhui,
+On Tue, Jan 23, 2024 at 08:30:15PM -0800, Ian Rogers wrote:
+> The daemon signal test sends signals and then expects files to be
+> written. It was observed on an Intel Alderlake that the signals were
+> sent too quickly leading to the 3 expected files not appearing. To
+> avoid this send the next signal only after the expected previous file
+> has appeared. To avoid an infinite loop the number of retries is
+> limited.
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> Acked-by: Namhyung Kim <namhyung@kernel.org>
 
-On 24/01/2024 09:19, Dennis Zhou wrote:
-> Hello,
->
-> On Wed, Jan 24, 2024 at 10:44:12AM +0800, yunhui cui wrote:
->> Hi Alexandre,
->>
->> On Tue, Jan 23, 2024 at 9:31 PM Alexandre Ghiti <alexghiti@rivosinc.com> wrote:
->>> local_flush_tlb_range_asid() takes the size as argument, not the end of
->>> the range to flush, so fix this by computing the size from the end and
->>> the start of the range.
->>>
->>> Fixes: 7a92fc8b4d20 ("mm: Introduce flush_cache_vmap_early()")
->>> Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
->>> ---
->>>   arch/riscv/mm/tlbflush.c | 2 +-
->>>   1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>> diff --git a/arch/riscv/mm/tlbflush.c b/arch/riscv/mm/tlbflush.c
->>> index 8d12b26f5ac3..9619965f6501 100644
->>> --- a/arch/riscv/mm/tlbflush.c
->>> +++ b/arch/riscv/mm/tlbflush.c
->>> @@ -68,7 +68,7 @@ static inline void local_flush_tlb_range_asid(unsigned long start,
->>>
->>>   void local_flush_tlb_kernel_range(unsigned long start, unsigned long end)
->>>   {
->>> -       local_flush_tlb_range_asid(start, end, PAGE_SIZE, FLUSH_TLB_NO_ASID);
->>> +       local_flush_tlb_range_asid(start, end - start, PAGE_SIZE, FLUSH_TLB_NO_ASID);
->>>   }
-> Well this was a miss during code review.. I'm going to take another look
-> tomorrow and then likely pull this into a fixes branch.
->
->> What makes me curious is that this patch has not been tested?
->> BTW, It is best to keep the parameter order of all functions in
->> tlbflush.c consistent: cpumask, start, size, stride, asid.
->>
-> I can't speak to the riscv communities testing/regression suites, but
-> this would only be caught in a performance regression test.
->
-> That being said, Alexandre, can you please lmk what level of testing
-> this has gone through?
+Acked-by: Jiri Olsa <jolsa@kernel.org>
 
+jirka
 
-All my patches go through the same level of testing:
-
-* Build/boot an Ubuntu kernel with and without KASAN + a few simple 
-testsuites (libhugetlbfs, riscv kselftests and other)
-* Build/boot a simple rootfs on ~40 different rv64 configs
-* Build/boot a simple rootfs on ~30 different rv32 configs
-
-And I run LTP/full kselftests/perf testsuite on a weekly basis on every 
-rc. All this validation is done on qemu.
-
-The patch is functional, it "simply" flushes the whole TLB instead of a 
-few entries, so the only way to catch that would have been a performance 
-regression. But given it only runs on qemu, it would have been hard to 
-catch any performance regression since that involves the TLB.
-
-@Yunhui: Please let me know how I should validate my patches better.
-
-Thanks,
-
-Alex
-
-
-> Thanks,
-> Dennis
->
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
+> ---
+>  tools/perf/tests/shell/daemon.sh | 34 ++++++++++++++++++++++----------
+>  1 file changed, 24 insertions(+), 10 deletions(-)
+> 
+> diff --git a/tools/perf/tests/shell/daemon.sh b/tools/perf/tests/shell/daemon.sh
+> index 4c598cfc5afa..e5fa8d6f9eb1 100755
+> --- a/tools/perf/tests/shell/daemon.sh
+> +++ b/tools/perf/tests/shell/daemon.sh
+> @@ -414,16 +414,30 @@ EOF
+>  	# start daemon
+>  	daemon_start ${config} test
+>  
+> -	# send 2 signals
+> -	perf daemon signal --config ${config} --session test
+> -	perf daemon signal --config ${config}
+> -
+> -	# stop daemon
+> -	daemon_exit ${config}
+> -
+> -	# count is 2 perf.data for signals and 1 for perf record finished
+> -	count=`ls ${base}/session-test/*perf.data* | wc -l`
+> -	if [ ${count} -ne 3 ]; then
+> +        # send 2 signals then exit. Do this in a loop watching the number of
+> +        # files to avoid races. If the loop retries more than 600 times then
+> +        # give up.
+> +	local retries=0
+> +	local signals=0
+> +	local success=0
+> +	while [ ${retries} -lt 600 ] && [ ${success} -eq 0 ]; do
+> +		local files
+> +		files=`ls ${base}/session-test/*perf.data* 2> /dev/null | wc -l`
+> +		if [ ${signals} -eq 0 ]; then
+> +			perf daemon signal --config ${config} --session test
+> +			signals=1
+> +		elif [ ${signals} -eq 1 ] && [ $files -ge 1 ]; then
+> +			perf daemon signal --config ${config}
+> +			signals=2
+> +		elif [ ${signals} -eq 2 ] && [ $files -ge 2 ]; then
+> +			daemon_exit ${config}
+> +			signals=3
+> +		elif [ ${signals} -eq 3 ] && [ $files -ge 3 ]; then
+> +			success=1
+> +		fi
+> +		retries=$((${retries} +1))
+> +	done
+> +	if [ ${success} -eq 0 ]; then
+>  		error=1
+>  		echo "FAILED: perf data no generated"
+>  	fi
+> -- 
+> 2.43.0.429.g432eaa2c6b-goog
+> 
