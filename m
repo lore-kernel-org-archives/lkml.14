@@ -1,62 +1,66 @@
-Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9C6377F3E;
-	Wed, 24 Jan 2024 18:37:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15EC7131729
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 18:37:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706121435; cv=none; b=tTgfAfAjBLrft+9MAa47cy7sAY8amSgcQccPm9TpH7a7odYpyBHNnOpH418IfLYWOkqz/TikmWodxmt/xy7t8GLUSJ7NSkjtdEgMdOSHiHSPacucdeHls9j5+tC03jUGeX+6Cy4CW+0SG8+H2U/KlEPEmBO0+7S2lXJ4/WQW1nk=
+	t=1706121479; cv=none; b=He6XkJRCG25qZwx0RnLc1d58absARp0Dz2m/w/gqcUqini3/dgA1KGalpJMAn5y+KJUea8YnPzt8qXLjOolRgNwmQEaDkCpKUxuWTv5bdpPbsBbF3HMTYG/xbGjPps0UhkfM9Cy1Y6JSEhKJx9qSkcMgqVxukt3ZkuGYyyP7rcg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706121435; c=relaxed/simple;
-	bh=EX6PSsFWL+yVpTH9N+1rGkFZBXeONRvhWO9gy64TLHk=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JFrVQybHMYRe+g7Q7GQPGHikCsMVq20LAijMmDGVlmlrQ0iI1E5lWHisYhbP0FKldUNOuqlB6ugtr4j9OzhWwizlXoHP0hCgU2yNkEgyDM7G0HsnLJwXgMa6HuC731qmxZBIHeJST7wY34uQUpDyR1e2p8E8HNDxo4SASRkhBJU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=WkGWKe/i; arc=none smtp.client-ip=198.47.19.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1706121479; c=relaxed/simple;
+	bh=Xyb5CKMj+NvIbbsu1uryZ5g8Ev7TOk4OhIHNmRBnZg8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gPdtnvMNTfHOPL64phM7XQ/bfgOXvmjupJqP2zf87Ly2Vm/eKC5aFrDPnj8UguchZlnPtMjakW0qEtCnZQwPxoWv5bjbAjs8QkXzG6mIwoT85bVRXPeZJei6E/hME0m0wpTolistZ35DbB/32lOFvUFG1pG9Sf1RJj6FnqaMe88=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=e9zednOA; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="WkGWKe/i"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 40OIb3nB091374;
-	Wed, 24 Jan 2024 12:37:03 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1706121423;
-	bh=05zB4D5fH6Svarpqnx2uwXC2aEC5mSfYSDje+qKJcAI=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=WkGWKe/iNhdDXw/oUrhjVyzzm+HYXJgM3UQC/jcpc+KqLuZ9md4gzdPnLfV8lZbCz
-	 EfMN0ucEBeIaE7q4w3AwM4jcQY4G0nNx1Xiy0ZHh21p3nrjPzIyesXFGepV1reVROr
-	 PK83AQEoCSc5rjes4xZcg0edM/HhUpHoT6sjarJQ=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 40OIb3e7015467
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 24 Jan 2024 12:37:03 -0600
-Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 24
- Jan 2024 12:37:02 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 24 Jan 2024 12:37:02 -0600
-Received: from lelvsmtp6.itg.ti.com ([10.249.42.149])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 40OIb0bC106485;
-	Wed, 24 Jan 2024 12:37:01 -0600
-From: Andrew Davis <afd@ti.com>
-To: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
-        Tero
- Kristo <kristo@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Krzysztof
- Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>
-CC: <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Andrew Davis <afd@ti.com>
-Subject: [PATCH 4/4] arm64: dts: ti: k3-am64: Remove PCIe endpoint node
-Date: Wed, 24 Jan 2024 12:36:59 -0600
-Message-ID: <20240124183659.149119-4-afd@ti.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240124183659.149119-1-afd@ti.com>
-References: <20240124183659.149119-1-afd@ti.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e9zednOA"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1d73066880eso36233975ad.3
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 10:37:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1706121477; x=1706726277; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=uy1zbE7Ow0ZllWQflOItrn5r6MhCAv/GdXD6u9M4X4w=;
+        b=e9zednOA6agMto/5t+gKbvzJBK0x06SDr1UNDBoYvHcX8hKhBZVUepC67P0tzFkRVp
+         Smwki7PVafIs2oX2fciPK5NLjy99/iKLhzIvjxFPSIqUGppcUPa6Nf2UdGp8x/xvMPdS
+         KGyFZRE199RIYyesIT9ebQ6TDE6YppazCm+nLZR/lOur/cZ7dDxY32fZrQJCMscMcPbX
+         iwDQF9MjklzX++nRkBqciuFrwpq5ZIbuV35VkrwUDJEYOQaJirrYr4IhjL1HDXPrrXVC
+         MSpEjetvxBeRmaW06wsjQhe13RYFl9sBtE4iCO04kSBjIj1Kn5v4l6L71DeN/vAVE7ME
+         s5Dg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706121477; x=1706726277;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=uy1zbE7Ow0ZllWQflOItrn5r6MhCAv/GdXD6u9M4X4w=;
+        b=spjwVCyl+RHq0bKxdS9Ar9rIEPTF/GWhIzsFULpRcHcSKKpPLeTRRP9AIwhlYhhNFh
+         9ZPt/7nruCcgEtoy4BnpSROeHSMB8GXBaukSAkiS2jRLa2JO11C13d2B4GQuLFwUZgDt
+         j/rAyGmjOl//nusmQRtQlfkL2uuBZpD2x2Kz1KOvi5H6bmkEIq9RSawVcT9ONwB30jWN
+         n0c7ovg+ZEyTgXdQ97Z4UGAvS8g90VNfgfTY3JclITw1qXlUo4D3S9Vmkql9vj34PA5G
+         UbaRC9+UlYL+xgX7hUdYm14fe/BFRDiNiWJ/dIiGN8PtGEHsaRsqnQToVQzasz9c7ywG
+         X8oQ==
+X-Gm-Message-State: AOJu0YwF2y0Gk29NGlja90bH3FoVSAd3aMSIUYXWkh3GaO+QDCGgzdmh
+	Zy2VTNODzDU3FYIR4ITT2voZ9Xlf2eGuS0TzV9jWXF6Y9JeVSclJ
+X-Google-Smtp-Source: AGHT+IEEtOOn3AthjBuyeWZtT1koM4VgPdfcfUM6YWfT8gLBjkbiB9Zl/25bjS2JgSgzdfT2MElqLA==
+X-Received: by 2002:a17:903:4295:b0:1d5:7220:9ff with SMTP id ju21-20020a170903429500b001d5722009ffmr1204364plb.117.1706121477275;
+        Wed, 24 Jan 2024 10:37:57 -0800 (PST)
+Received: from kousik.local ([2405:201:c006:31fd:9614:de6d:cab9:f490])
+        by smtp.gmail.com with ESMTPSA id mm14-20020a1709030a0e00b001d7222d8caasm8729214plb.50.2024.01.24.10.37.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Jan 2024 10:37:56 -0800 (PST)
+From: Kousik Sanagavarapu <five231003@gmail.com>
+To: dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Kousik Sanagavarapu <five231003@gmail.com>
+Subject: [PATCH] gpu: drm: display: indent fix in comment
+Date: Thu, 25 Jan 2024 00:05:56 +0530
+Message-ID: <20240124183659.511731-1-five231003@gmail.com>
+X-Mailer: git-send-email 2.43.0.370.g8962b674a6.dirty
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,70 +68,54 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-This node is an example node for the PCIe controller in "endpoint" mode.
-By default the controller is in "root complex" mode and there is already a
-DT node for the same.
+The comments explaining the function "drm_dp_mst_atom_check_mgr()" had
+uneven indentation which made "make htmldocs" complain:
 
-Examples should go in the bindings or other documentation.
+	Documentation/gpu/drm-kms-helpers:296:
+	./drivers/gpu/drm/display/drm_dp_mst_topology.c:5496:
+	ERROR: Unexpected indentation.
 
-Remove this node.
+	Documentation/gpu/drm-kms-helpers:296:
+	./drivers/gpu/drm/display/drm_dp_mst_topology.c:5500:
+	WARNING: Block quote ends without a blank line; unexpected unindent.
 
-Signed-off-by: Andrew Davis <afd@ti.com>
+Fix this by getting the indent right.
+
+Signed-off-by: Kousik Sanagavarapu <five231003@gmail.com>
 ---
- arch/arm64/boot/dts/ti/k3-am64-main.dtsi | 19 -------------------
- arch/arm64/boot/dts/ti/k3-am642-evm.dts  |  6 ------
- 2 files changed, 25 deletions(-)
+ drivers/gpu/drm/display/drm_dp_mst_topology.c | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am64-main.dtsi b/arch/arm64/boot/dts/ti/k3-am64-main.dtsi
-index e348114f42e01..d5938f966a2dd 100644
---- a/arch/arm64/boot/dts/ti/k3-am64-main.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am64-main.dtsi
-@@ -1041,25 +1041,6 @@ pcie0_rc: pcie@f102000 {
- 		status = "disabled";
- 	};
- 
--	pcie0_ep: pcie-ep@f102000 {
--		compatible = "ti,am64-pcie-ep", "ti,j721e-pcie-ep";
--		reg = <0x00 0x0f102000 0x00 0x1000>,
--		      <0x00 0x0f100000 0x00 0x400>,
--		      <0x00 0x0d000000 0x00 0x00800000>,
--		      <0x00 0x68000000 0x00 0x08000000>;
--		reg-names = "intd_cfg", "user_cfg", "reg", "mem";
--		interrupt-names = "link_state";
--		interrupts = <GIC_SPI 203 IRQ_TYPE_EDGE_RISING>;
--		ti,syscon-pcie-ctrl = <&main_conf 0x4070>;
--		max-link-speed = <2>;
--		num-lanes = <1>;
--		power-domains = <&k3_pds 114 TI_SCI_PD_EXCLUSIVE>;
--		clocks = <&k3_clks 114 0>;
--		clock-names = "fck";
--		max-functions = /bits/ 8 <1>;
--		status = "disabled";
--	};
--
- 	epwm0: pwm@23000000 {
- 		compatible = "ti,am64-epwm", "ti,am3352-ehrpwm";
- 		#pwm-cells = <3>;
-diff --git a/arch/arm64/boot/dts/ti/k3-am642-evm.dts b/arch/arm64/boot/dts/ti/k3-am642-evm.dts
-index 8c5651d2cf5dd..6412c52c8001a 100644
---- a/arch/arm64/boot/dts/ti/k3-am642-evm.dts
-+++ b/arch/arm64/boot/dts/ti/k3-am642-evm.dts
-@@ -705,12 +705,6 @@ &pcie0_rc {
- 	num-lanes = <1>;
- };
- 
--&pcie0_ep {
--	phys = <&serdes0_pcie_link>;
--	phy-names = "pcie-phy";
--	num-lanes = <1>;
--};
--
- &ecap0 {
- 	status = "okay";
- 	/* PWM is available on Pin 1 of header J12 */
+diff --git a/drivers/gpu/drm/display/drm_dp_mst_topology.c b/drivers/gpu/drm/display/drm_dp_mst_topology.c
+index bd6c24d4213c..f26cc85e7dbf 100644
+--- a/drivers/gpu/drm/display/drm_dp_mst_topology.c
++++ b/drivers/gpu/drm/display/drm_dp_mst_topology.c
+@@ -5490,15 +5490,15 @@ EXPORT_SYMBOL(drm_dp_mst_atomic_enable_dsc);
+  * Returns:
+  *   - 0 if the new state is valid
+  *   - %-ENOSPC, if the new state is invalid, because of BW limitation
+- *         @failing_port is set to:
+- *         - The non-root port where a BW limit check failed
+- *           with all the ports downstream of @failing_port passing
+- *           the BW limit check.
+- *           The returned port pointer is valid until at least
+- *           one payload downstream of it exists.
+- *         - %NULL if the BW limit check failed at the root port
+- *           with all the ports downstream of the root port passing
+- *           the BW limit check.
++ *     @failing_port is set to:
++ *
++ *       - The non-root port where a BW limit check failed with all the ports
++ *         downstream of @failing_port passing the BW limit check.
++ *         The returned port pointer is valid until at least one payload
++ *         downstream of it exists.
++ *       - %NULL if the BW limit check failed at the root port with all the
++ *         ports downstream of the root port passing the BW limit check.
++ *
+  *   - %-EINVAL, if the new state is invalid, because the root port has
+  *     too many payloads.
+  */
 -- 
-2.39.2
+2.43.0.370.g8962b674a6.dirty
 
