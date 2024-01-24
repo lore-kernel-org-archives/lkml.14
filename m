@@ -1,151 +1,101 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9167977640;
-	Wed, 24 Jan 2024 13:08:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF38777622;
+	Wed, 24 Jan 2024 13:09:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706101717; cv=none; b=ijxhzKGtlm9GgY76aw5QQJ2nCZr/+3WWol4CpZxcTrEVaeeub8meABzxNkmveo8ykID+1BNiQdgGGbw1Xtp0xGuocpAeGPGbLVxCPfOcei67Z9RLpipPQ1ohxO3GU8irzWF5EDRjFdXVw4eThbK9KsVMK3mpMU1wToIO9mNLhIU=
+	t=1706101752; cv=none; b=b6CwT6hPioh+lbgF8nmtSA6dPBYJ1OsJqIELc06KLOHvp36oTue3tltRBEwh1yYQ835mwBUgBqeSCDBl7jYO9tCbf9xQXeszivbDTEo/OplBUn+URu9ln01deGuNv8WQRBkcTYfU3MCKHXGpFAHLbkFEOpmqq7azWTUtngcYAnE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706101717; c=relaxed/simple;
-	bh=LRKdvEQWoCEx4ySV7N81w6fG9TXYEayrBjmBpv5mIUM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M/pFWPKkgr7kTq1wkEexq1d6jkj8BpLgqd1ytYXUZclYyUaHxQdBesqe1HBKT9KY0iWGv32kUvz9zClTPWAFGFiMsyih/RvqtfilEwWTFZB2sNnlwC98QQGB4h95uFNmffKftLGCaUciIuW6nBA3x2hRIWkHrMslicYxSEbjp5Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RN2ZUfo7; arc=none smtp.client-ip=192.198.163.8
+	s=arc-20240116; t=1706101752; c=relaxed/simple;
+	bh=NFxolRs646jfhfXCCby0HyE2+Jgy/482MfM1tdDgMV8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NLRGW6PSt8mayIntNbrXMzkKJLNqK60amsFyNsJahjBobXIVPpunXutUxReVDySol6QWCeLYPj++4FzuprEfFPFtOSvXrHTxpM5fhuJ58pR3jY1bNYw8Gf+jV/EzdCbQ93c4CLbrh5TF6uNCBFE9BnzIcegTbh100E/5M74OmZ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.helo=mgamail.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HT65R6BC; arc=none smtp.client-ip=192.198.163.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.helo=mgamail.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RN2ZUfo7"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HT65R6BC"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706101715; x=1737637715;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=LRKdvEQWoCEx4ySV7N81w6fG9TXYEayrBjmBpv5mIUM=;
-  b=RN2ZUfo7PHjrnmDobH2GtdPWshoIE815A9QbeAygdNbFFifOur2Z6xs9
-   rAo8Nj/3ES4xnHDrst+hU5acZv/D29zLyH8H8yjzoaPs+Qs9992uZMg4f
-   qABxPxN+pL5SvJ39pxygq3o9+Xm+drTPL+Tcv78H0f746u9xpsXkZIXo/
-   BqpzCYlvyrsMMt1/PnMLOZl7ED5/N7Ic7SjLeer++zTpbHj0BJITOvpf7
-   IBfq5iWanP8EmyA1s4qcyjGEzMks79+REgeBWrzLNGxWfwetadyIeU8gR
-   JKjrTX89DX3Fe06n4fPyoaFgK0X6zWIdOykU73iyrL+ov9HQ8ri6nIQwv
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="15361425"
+  t=1706101750; x=1737637750;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=NFxolRs646jfhfXCCby0HyE2+Jgy/482MfM1tdDgMV8=;
+  b=HT65R6BC7no+3XQinNRlOrpAmMtSb7AAZ1AQm6tz/JrSQJUiCEm6R+cx
+   siJ13n8WknxSDbcZ/6XLgXUnbRb+IT7/bor8APRHmjWqcKUrq45tCxx7Q
+   79HTqtUP0NVaoCUIAwcPJYsewej7TmqrzRuIOG16BqrU7fCcokJ4osRiH
+   3wpTK6clZfwpaJfMKrDFcgKwxDAlc+OgLyRtejwL5T/VYIA8tLDIxkqzo
+   Rkj83w/czGsCyNwZM+QECp53s5+xPFZo/5aFxBSB61mFK0L5ikt6aI3zi
+   OWDLQ6hQ6ta9ewxfBKS3DVDGyMkNbQAjhF5rtqggUjHjiIBeCPeb9GU3b
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="8597952"
 X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="15361425"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jan 2024 05:08:34 -0800
+   d="scan'208";a="8597952"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jan 2024 05:09:09 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="929680051"
+X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="735925597"
 X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="929680051"
-Received: from kuha.fi.intel.com ([10.237.72.185])
-  by fmsmga001.fm.intel.com with SMTP; 24 Jan 2024 05:08:30 -0800
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Wed, 24 Jan 2024 15:08:30 +0200
-Date: Wed, 24 Jan 2024 15:08:30 +0200
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To: "Christian A. Ehrhardt" <lk@c--e.de>
-Cc: linux-usb@vger.kernel.org, Dell.Client.Kernel@dell.com,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Jack Pham <quic_jackp@quicinc.com>,
-	Fabrice Gasnier <fabrice.gasnier@foss.st.com>,
-	Samuel =?utf-8?B?xIxhdm9q?= <samuel@cavoj.net>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/3] usb: ucsi: Add missing ppm_lock
-Message-ID: <ZbELzi94Z+eyPUKL@kuha.fi.intel.com>
-References: <20240121204123.275441-1-lk@c--e.de>
- <20240121204123.275441-2-lk@c--e.de>
- <ZbDFoGL1GnxZAXER@kuha.fi.intel.com>
- <ZbD8toNjyjiLp8an@cae.in-ulm.de>
+   d="scan'208";a="735925597"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga003.jf.intel.com with ESMTP; 24 Jan 2024 05:09:05 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+	id A140F9F; Wed, 24 Jan 2024 15:03:23 +0200 (EET)
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: Paolo Bonzini <pbonzini@redhat.com>,
+	Wanpeng Li <wanpengli@tencent.com>,
+	Vitaly Kuznetsov <vkuznets@redhat.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>
+Cc: x86@kernel.org,
+	kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	David Rientjes <rientjes@google.com>
+Subject: [PATCH, RESEND] x86/sev: Fix SEV check in sev_map_percpu_data()
+Date: Wed, 24 Jan 2024 15:03:17 +0200
+Message-ID: <20240124130317.495519-1-kirill.shutemov@linux.intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZbD8toNjyjiLp8an@cae.in-ulm.de>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jan 24, 2024 at 01:04:06PM +0100, Christian A. Ehrhardt wrote:
-> 
-> Hi Heikki,
-> 
-> Thanks for looking into this.
-> 
-> On Wed, Jan 24, 2024 at 10:09:04AM +0200, Heikki Krogerus wrote:
-> > On Sun, Jan 21, 2024 at 09:41:21PM +0100, Christian A. Ehrhardt wrote:
-> > > Calling ->sync_write must be done while holding the PPM lock as
-> > > the mailbox logic does not support concurrent commands.
-> > > 
-> > > At least since the addition of partner task this means that
-> > > ucsi_acknowledge_connector_change should be called with the
-> > > PPM lock held as it calls ->sync_write.
-> > > 
-> > > Thus protect the only call to ucsi_acknowledge_connector_change
-> > > with the PPM. All other calls to ->sync_write already happen
-> > > under the PPM lock.
-> > > 
-> > > Fixes: b9aa02ca39a4 ("usb: typec: ucsi: Add polling mechanism for partner tasks like alt mode checking")
-> > > Cc: stable@vger.kernel.org
-> > > Signed-off-by: Christian A. Ehrhardt <lk@c--e.de>
-> > > ---
-> > >  drivers/usb/typec/ucsi/ucsi.c | 2 ++
-> > >  1 file changed, 2 insertions(+)
-> > > 
-> > > diff --git a/drivers/usb/typec/ucsi/ucsi.c b/drivers/usb/typec/ucsi/ucsi.c
-> > > index 61b64558f96c..8f9dff993b3d 100644
-> > > --- a/drivers/usb/typec/ucsi/ucsi.c
-> > > +++ b/drivers/usb/typec/ucsi/ucsi.c
-> > > @@ -935,7 +935,9 @@ static void ucsi_handle_connector_change(struct work_struct *work)
-> > >  
-> > >  	clear_bit(EVENT_PENDING, &con->ucsi->flags);
-> > >  
-> > > +	mutex_lock(&ucsi->ppm_lock);
-> > >  	ret = ucsi_acknowledge_connector_change(ucsi);
-> > > +	mutex_unlock(&ucsi->ppm_lock);
-> > >  	if (ret)
-> > >  		dev_err(ucsi->dev, "%s: ACK failed (%d)", __func__, ret);
-> > 
-> > Is this really actually fixing some issue? The function has already
-> > taken the connector lock, so what exactly could happen without this?
-> 
-> I've definitely _seen_ issues with the quirk from PATCH 3/3 if the
-> lock is missing. I'm pretty sure from looking at the code that races
-> with other connectors can happen without the quirk, too.
-> 
-> The PPM lock protects the Mailbox and the ACK_PENDING/COMMAND_PENDING
-> bits and I could observe cases where ucsi_acpi_sync_write() was entered
-> with the COMMAND_PENDING bit already set. One possible sequence is this:
-> 
-> ucsi_connector_change() for connector #1
-> 	=> schedules partner tasks
-> 	=> Acks the connector change
-> 	=> Releases locks
-> ucsi_connecotr_change() for connector #2
-> 	=> acquire con lock for #2
-> 	=> Start to process connector state change
-> 	=> Processing reaches the point right before 
-> 	   ucsi_acknowledge_connector_change()
-> Connector #1 workqueue starts to process one of the partner tasks
-> 	=> Acquire con lock for connector #1
-> 	=> Acquire ppm lock
-> 	=> Enter ucsi_exec_command()
-> 	=> ->sync_write() starts to use the mailbox and sets
-> 	   COMMAND_PENDING
-> 	=> ->sync_write blocks waiting for the command completion
-> 	   with wait_for_completion_timeout().
-> ucsi_connector_change() for connector #2 continues
-> 	=> execute ucsi_acknowledge_connector_change() and start using
-> 	   the mailbox that is still in use.
-> 	=> BOOM
-> 
-> There is a simpler an much more likely sequence with the dell quirk active.
+The function sev_map_percpu_data() checks if it is running on an SEV
+platform by checking the CC_ATTR_GUEST_MEM_ENCRYPT attribute. However,
+this attribute is also defined for TDX.
 
-Okay.
+To avoid false positives, add a cc_vendor check.
 
-Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Fixes: 4d96f9109109 ("x86/sev: Replace occurrences of sev_active() with cc_platform_has()")
+Suggested-by: Borislav Petkov (AMD) <bp@alien8.de>
+Acked-by: David Rientjes <rientjes@google.com>
+---
+ arch/x86/kernel/kvm.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
+diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
+index dfe9945b9bec..428ee74002e1 100644
+--- a/arch/x86/kernel/kvm.c
++++ b/arch/x86/kernel/kvm.c
+@@ -434,7 +434,8 @@ static void __init sev_map_percpu_data(void)
+ {
+ 	int cpu;
+ 
+-	if (!cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT))
++	if (cc_vendor != CC_VENDOR_AMD ||
++	    !cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT))
+ 		return;
+ 
+ 	for_each_possible_cpu(cpu) {
 -- 
-heikki
+2.43.0
+
