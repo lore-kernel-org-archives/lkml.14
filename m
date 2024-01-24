@@ -1,163 +1,294 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F0F318EAB
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 11:08:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C07F71A726
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 11:10:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706094517; cv=none; b=JTrHfUvBe8znNPXAgelTijbZ2rDZ14XyuAUfi93XLAOn5VBQY0tC+4hiHTITOepVpiUSSdJZ3U2goS25Q88D735X/Q8/uR6c4Ss/ykuHAzqShYV+rTMiGg6dzFOubUEq7tjpfbSE4UdsDF7lRzu/Eb9J1GfRf9i9nEVL/swULFM=
+	t=1706094617; cv=none; b=U3P4afS01mqBA9IEU+irfM3dIfr7WO5H9tVzdhEg68j/cUXJi73vve1m9jrWgXC47FNiTwUDxGANteS+wVTFVJj6YAhtVDYPfc2SioGontli2BPYjhhXgETWV9lzat3I1uKtmLXD6yNP/MJjlAAWqKw4mWSwz6lZH2jin7NJ3Fc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706094517; c=relaxed/simple;
-	bh=vGrX/rFRy2nIfvHaeaOI0cJDKuGKhHtLFsgdEgBb4Io=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RMGUMvJaRLeR104aoEfzjycHfeg0QiGlzH/sL6iOaNNeIvsCZ6av7Ir4aK80zuOCVYMlMWfap8qDyJGOXF4drpVG34Qpxh4sK3s3tTpPc+HSaFk81ARprHT1d3fO++8gMNqVHi03+3ouIQsdaUBUQTu8JS6am7++xQlEdVreluE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=FZOP5ifo; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="FZOP5ifo"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1d720c7fc04so30128365ad.2
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 03:08:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1706094513; x=1706699313; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=7Rk8fcu6A6NHTsGijWS+PcKuTxBzRD/BNnHc/f3Adl0=;
-        b=FZOP5ifoGe4paLeHI9+JJ02Ce4I6I+r0dGdRTa7N0cqje2CUNM/a6K+mbPMVI/DHnV
-         uX4Au/hk3SePOnhUh4KVTQb6kvWE+zC3A0nDxH5pF/KPh6XY2HnwiazRr4fsTtPet96u
-         hmEz7ROGMgZhwjCbCbnUChgyOflILl8sPKvi8r854Wf85bwm0cvmHZkTgFzPMR2RbKeY
-         ixTbO0/uZWUS3sqYcO04DPcCrdBzoq/ZcdVpJL2XbIoSBM6Ch8GGQ4j80B73H1tAqcpg
-         209dDXDpLYlV2iXzApDhFFgwOOgWueNWqC0qS3ERQRWJR+xZR+neeWp9i6YoaJeMSQcV
-         PZXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706094513; x=1706699313;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7Rk8fcu6A6NHTsGijWS+PcKuTxBzRD/BNnHc/f3Adl0=;
-        b=TRrjHkxtzugh4fUuh/t+Oq472vg+h24Wvwa9+mhtY8AGj+EuMbgICcTVj500NfHNxE
-         Sg80b5NyyWgQAqFdScwIG43RhLrukq/Flyo7DUdY3mAv8nDF1SibdMJvqU8cy5CnKlYn
-         ny0/2tgQJRdkjk2L9bJFll1lxVYaEy9pQI0t53LR9ykT8G36VPzuitV8sb11lN4wpP5r
-         ZoII+ZKqr+L3iXIyHXNRMolybu6RyRivyJ6vF5P4yJOGInovRZgcn+MwAFi0+0SsLr1C
-         aVIbH7wAJkoKqq1KPiiEbQPLBLOSpQf8ZmHlRIC2g0NxlNwPSmikolLytCZx2RFDVQuh
-         psKw==
-X-Gm-Message-State: AOJu0YwUH9STzfi4ZuA6Iib8lbNltiPv+Qg4docdm4jLua8UtIpYpgCF
-	rOziMIg0pcjEO8tugySa2jISxr2Sgt5Br+byBWJG36FfhD/WvKlqhnkj/P9kOIg=
-X-Google-Smtp-Source: AGHT+IEl+c3kyXnbW9duvQUC0q/nmMh2wLOUu9SraYa+z6FazMmQA1r4yPdQ6y4yjrmk4rQYMTc0aA==
-X-Received: by 2002:a17:902:b409:b0:1d6:f1d5:e7ba with SMTP id x9-20020a170902b40900b001d6f1d5e7bamr499836plr.120.1706094513506;
-        Wed, 24 Jan 2024 03:08:33 -0800 (PST)
-Received: from dread.disaster.area (pa49-181-38-249.pa.nsw.optusnet.com.au. [49.181.38.249])
-        by smtp.gmail.com with ESMTPSA id t4-20020a170902b20400b001d6eed31a1bsm8021118plr.245.2024.01.24.03.08.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jan 2024 03:08:32 -0800 (PST)
-Received: from dave by dread.disaster.area with local (Exim 4.96)
-	(envelope-from <david@fromorbit.com>)
-	id 1rSb7N-00Ed7G-1y;
-	Wed, 24 Jan 2024 22:08:29 +1100
-Date: Wed, 24 Jan 2024 22:08:29 +1100
-From: Dave Chinner <david@fromorbit.com>
-To: Jan Kara <jack@suse.cz>
-Cc: syzbot <syzbot+87466712bb342796810a@syzkaller.appspotmail.com>,
-	axboe@kernel.dk, brauner@kernel.org, chandan.babu@oracle.com,
-	dchinner@redhat.com, djwong@kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-xfs@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [xfs?] KASAN: null-ptr-deref Write in
- xfs_filestream_select_ag
-Message-ID: <ZbDvrQj6KLNSSy9/@dread.disaster.area>
-References: <000000000000d207ef05f7790759@google.com>
- <00000000000084a9da060fad26bf@google.com>
- <20240124100120.x3mwjbj7epfw3ffo@quack3>
+	s=arc-20240116; t=1706094617; c=relaxed/simple;
+	bh=x0UMWNgKSQ4c/Fz4r73GHHhRSs2Ej9FoMCtnlolrcuQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gfwtzskT+mKj1Vpzjn5xtC+XXSJgg4pF6gQC/Xuu/W/AB0OtZEHOjhxFjuaB2OFl/ysUymwvjVK44fk8FVgslDUCTvkx78zC1zpiXIx90XwFP0yhKGeMPcojI5QgyqMb9AvEW7Gp5e9fc70S6o9LPwNIIpVxQM/UpdfL6NL3CpI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F1D0F1FB;
+	Wed, 24 Jan 2024 03:10:58 -0800 (PST)
+Received: from [192.168.1.100] (unknown [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6E1123F762;
+	Wed, 24 Jan 2024 03:10:12 -0800 (PST)
+Message-ID: <02acf049-90ad-644c-c2aa-381b8b12e944@arm.com>
+Date: Wed, 24 Jan 2024 11:10:11 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240124100120.x3mwjbj7epfw3ffo@quack3>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH 2/8] coresight: Make language around "activated" sinks
+ consistent
+Content-Language: en-US
+To: Suzuki K Poulose <suzuki.poulose@arm.com>, coresight@lists.linaro.org
+Cc: Mike Leach <mike.leach@linaro.org>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com
+References: <20231212155407.1429121-1-james.clark@arm.com>
+ <20231212155407.1429121-3-james.clark@arm.com>
+ <137f3f74-0732-4a01-9c14-680ab45107d8@arm.com>
+From: James Clark <james.clark@arm.com>
+In-Reply-To: <137f3f74-0732-4a01-9c14-680ab45107d8@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jan 24, 2024 at 11:01:20AM +0100, Jan Kara wrote:
-> On Wed 24-01-24 00:50:10, syzbot wrote:
-> > syzbot suspects this issue was fixed by commit:
-> > 
-> > commit 6f861765464f43a71462d52026fbddfc858239a5
-> > Author: Jan Kara <jack@suse.cz>
-> > Date:   Wed Nov 1 17:43:10 2023 +0000
-> > 
-> >     fs: Block writes to mounted block devices
-> > 
-> > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=119af36be80000
-> > start commit:   17214b70a159 Merge tag 'fsverity-for-linus' of git://git.k..
-> > git tree:       upstream
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=d40f6d44826f6cf7
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=87466712bb342796810a
-> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1492946ac80000
-> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12e45ad6c80000
+
+
+On 08/01/2024 11:21, Suzuki K Poulose wrote:
+> Hi James,
 > 
-> So this surprises me a bit because XFS isn't using block device buffer
-> cache and thus syzbot has no way of corrupting cached metadata even before
-> these changes. The reproducer tries to mount the loop device again after
-> mounting the XFS image so I can imagine something bad happens but it isn't
-> all that clear what. So I'll defer to XFS maintainers whether they want to
-> mark this bug as fixed or investigate further.
+> 
+> On 12/12/2023 15:53, James Clark wrote:
+>> Activated has the specific meaning of a sink that's selected for use by
+>> the user via sysfs. But comments in some code that's shared by Perf use
+>> the same word, so in those cases change them to just say "selected"
+>> instead. With selected implying either via Perf or "activated" via
+>> sysfs.
+>>
+>> coresight_get_enabled_sink() doesn't actually get an enabled sink, it
+>> only gets an activated one, so change that too.
+>>
+> 
+> These changes look good to me. Please see a minor nit below.
+> 
+>> And change the activated variable name to include "sysfs" so it can't
+>> be confused as a general status.
+>>
+>> Signed-off-by: James Clark <james.clark@arm.com>
+>> ---
+>>   drivers/hwtracing/coresight/coresight-core.c | 51 ++++++++------------
+>>   drivers/hwtracing/coresight/coresight-priv.h |  2 -
+>>   include/linux/coresight.h                    | 14 +++---
+>>   3 files changed, 27 insertions(+), 40 deletions(-)
+>>
+>> diff --git a/drivers/hwtracing/coresight/coresight-core.c
+>> b/drivers/hwtracing/coresight/coresight-core.c
+>> index 965bb6d4e1bf..f79aa9ff9b64 100644
+>> --- a/drivers/hwtracing/coresight/coresight-core.c
+>> +++ b/drivers/hwtracing/coresight/coresight-core.c
+>> @@ -500,7 +500,7 @@ static void coresight_disable_path_from(struct
+>> list_head *path,
+>>           /*
+>>            * ETF devices are tricky... They can be a link or a sink,
+>>            * depending on how they are configured.  If an ETF has been
+>> -         * "activated" it will be configured as a sink, otherwise
+>> +         * selected as a sink it will be configured as a sink, otherwise
+>>            * go ahead with the link configuration.
+>>            */
+>>           if (type == CORESIGHT_DEV_TYPE_LINKSINK)
+>> @@ -578,7 +578,7 @@ int coresight_enable_path(struct list_head *path,
+>> enum cs_mode mode,
+>>           /*
+>>            * ETF devices are tricky... They can be a link or a sink,
+>>            * depending on how they are configured.  If an ETF has been
+>> -         * "activated" it will be configured as a sink, otherwise
+>> +         * selected as a sink it will be configured as a sink, otherwise
+>>            * go ahead with the link configuration.
+>>            */
+>>           if (type == CORESIGHT_DEV_TYPE_LINKSINK)
+>> @@ -635,15 +635,21 @@ struct coresight_device
+>> *coresight_get_sink(struct list_head *path)
+>>       return csdev;
+>>   }
+>>   +/**
+>> + * coresight_find_activated_sysfs_sink - returns the first sink
+>> activated via
+>> + * sysfs using connection based search starting from the source
+>> reference.
+>> + *
+>> + * @csdev: Coresight source device reference
+>> + */
+>>   static struct coresight_device *
+>> -coresight_find_enabled_sink(struct coresight_device *csdev)
+>> +coresight_find_activated_sysfs_sink(struct coresight_device *csdev)
+>>   {
+>>       int i;
+>>       struct coresight_device *sink = NULL;
+>>         if ((csdev->type == CORESIGHT_DEV_TYPE_SINK ||
+>>            csdev->type == CORESIGHT_DEV_TYPE_LINKSINK) &&
+>> -         csdev->activated)
+>> +         csdev->sysfs_sink_activated)
+>>           return csdev;
+>>         /*
+>> @@ -654,7 +660,7 @@ coresight_find_enabled_sink(struct
+>> coresight_device *csdev)
+>>             child_dev = csdev->pdata->out_conns[i]->dest_dev;
+>>           if (child_dev)
+>> -            sink = coresight_find_enabled_sink(child_dev);
+>> +            sink = coresight_find_activated_sysfs_sink(child_dev);
+>>           if (sink)
+>>               return sink;
+>>       }
+>> @@ -662,21 +668,6 @@ coresight_find_enabled_sink(struct
+>> coresight_device *csdev)
+>>       return NULL;
+>>   }
+>>   -/**
+>> - * coresight_get_enabled_sink - returns the first enabled sink using
+>> - * connection based search starting from the source reference
+>> - *
+>> - * @source: Coresight source device reference
+>> - */
+>> -struct coresight_device *
+>> -coresight_get_enabled_sink(struct coresight_device *source)
+>> -{
+>> -    if (!source)
+>> -        return NULL;
+>> -
+>> -    return coresight_find_enabled_sink(source);
+>> -}
+>> -
+>>   static int coresight_sink_by_id(struct device *dev, const void *data)
+>>   {
+>>       struct coresight_device *csdev = to_coresight_device(dev);
+>> @@ -810,11 +801,10 @@ static void coresight_drop_device(struct
+>> coresight_device *csdev)
+>>    * @sink:    The final sink we want in this path.
+>>    * @path:    The list to add devices to.
+>>    *
+>> - * The tree of Coresight device is traversed until an activated sink is
+>> - * found.  From there the sink is added to the list along with all the
+>> - * devices that led to that point - the end result is a list from source
+>> - * to sink. In that list the source is the first device and the sink the
+>> - * last one.
+>> + * The tree of Coresight device is traversed until the selected sink
+>> is found.
+> 
+> minor nit: s/until the selected/until *a* selected/
+> 
+> There could be multiple sinks activated that can be reached from the
+> source. But we choose the "closest" possible selected sink for a source.
+> So, it may be better to drop "the".
+> 
+> 
 
-I've consistently ignored this bug because it is doing stuff with
-corrupted V4 XFS filesystems.
+For _coresight_build_path() this isn't strictly true because the sink is
+passed in as an argument so there is only one. The only function that
+behaves like that is coresight_find_activated_sysfs_sink() which already
+seems to be documented properly.
 
-The key part of the strace is as follows. /dev/loop0 has been set up
-to point to a memfd that maps the reproducer's internal memory. Then
-we see:
+To clarify it I'll just change "until the selected" to "until @sink" is
+found.
 
-....
-[   50.859261][ T5070] XFS (loop0): Deprecated V4 format (crc=0) will not be supported after September 2030.
-[   50.869976][ T5070] XFS (loop0): Mounting V4 Filesystem 5e6273b8-2167-42bb-911b-418aa14a1261
-[pid  5070] mount("/dev/loop0", "./file0", "xfs", 0, "filestreams,swidth=0x0000000000000000,nodiscard,logbufs=00000000000000000006,attr2,,nouuid") = 0
-[pid  5070] openat(AT_FDCWD, "./file0", O_RDONLY|O_DIRECTORY) = 3
-[pid  5070] chdir("./file0")            = 0
-[pid  5070] ioctl(4, LOOP_CLR_FD)       = 0
-[pid  5070] close(4)                    = 0
-[pid  5070] open("./bus", O_RDWR|O_CREAT|O_TRUNC|O_NONBLOCK|O_SYNC|O_DIRECT|O_LARGEFILE|O_NOATIME, 000) = 4
-[pid  5070] mount("/dev/loop0", "./bus", NULL, MS_BIND, NULL) = 0
-[pid  5070] open("./bus", O_RDWR|O_NOCTTY|O_SYNC|O_NOATIME|0x3c) = 5
-[pid  5070] openat(AT_FDCWD, "memory.current", O_RDWR|O_CREAT|O_NOCTTY|O_TRUNC|O_APPEND|FASYNC|0x18, 000) = 6
+>> + * From there the sink is added to the list along with all the
+>> devices that led
+>> + * to that point - the end result is a list from source to sink. In
+>> that list
+>> + * the source is the first device and the sink the last one.
+>>    */
+>>   static int _coresight_build_path(struct coresight_device *csdev,
+>>                    struct coresight_device *sink,
+>> @@ -824,7 +814,7 @@ static int _coresight_build_path(struct
+>> coresight_device *csdev,
+>>       bool found = false;
+>>       struct coresight_node *node;
+>>   -    /* An activated sink has been found.  Enqueue the element */
+>> +    /* The selected sink has been found.  Enqueue the element */
+> 
+> Similarly here.
+> 
 
-And then there's a corruption report and then the KASAN error.
+Same as above.
 
-AFAICT, what the reproducer is doing is setting internal memory as
-backing device for /dev/loop0, then mounting it, then creating a
-file in that XFS filesystem, then doing a bind mount of /dev/loop0
-to that file, then opening that file again (which now points to
-/dev/loop0) and overwriting it.
-
-As XFS writes back the data to the file, it's actually overwriting
-the loop device backing file. i.e. scribbling over the internal
-memory of the syzkaller program. The filesystem then goes to read
-metadata from the filesystem, and gets back metadata containing:
-
-[   52.672334][ T4733] 00000000: 66 69 6c 65 73 74 72 65 61 6d 73 2c 73 77 69 64  filestreams,swid
-[   52.681652][ T4733] 00000010: 74 68 3d 30 78 30 30 30 30 30 30 30 30 30 30 30  th=0x00000000000
-[   52.690810][ T4733] 00000020: 30 30 30 30 30 2c 6e 6f 64 69 73 63 61 72 64 2c  00000,nodiscard,
-[   52.700296][ T4733] 00000030: 6c 6f 67 62 75 66 73 3d 30 30 30 30 30 30 30 30  logbufs=00000000
-[   52.709453][ T4733] 00000040: 30 30 30 30 30 30 30 30 30 30 30 36 2c 61 74 74  000000000006,att
-[   52.718572][ T4733] 00000050: 72 32 2c 00 47 ba 76 39 f2 50 ff 99 2f fb b8 b1  r2,.G.v9.P../...
-[   52.728140][ T4733] 00000060: 4c 3a 9b c2 e1 81 d0 9c 24 97 6b 33 7f 55 f4 90  L:......$.k3.U..
-[   52.737174][ T4733] 00000070: 15 4c b3 65 d3 52 86 f0 51 c3 11 75 df a1 cc f1  .L.e.R..Q..u....
-
-The mount options used to mount the filesystem in the first place.
-
-I'd suggest that ithe commit the bisect landed on is blocking the
-second open of "./bus" after it was bind mounted to /dev/loop0 and
-so the write that corrupts the filesystem image never occurs, and so
-the XFS filesystem never trips over that error and hence never
-triggers the KASAN warning.
-
-So, yeah, I can see why syzbot might think that commit fixed the
-problem. But it didn't - it just broke the reproducer so the
-corruption that triggered the problem never manifested...
-
--Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+> Rest looks fine to me.
+> 
+> Suzuki
+> 
+> 
+>>       if (csdev == sink)
+>>           goto out;
+>>   @@ -1145,7 +1135,7 @@ int coresight_enable(struct coresight_device
+>> *csdev)
+>>           goto out;
+>>       }
+>>   -    sink = coresight_get_enabled_sink(csdev);
+>> +    sink = coresight_find_activated_sysfs_sink(csdev);
+>>       if (!sink) {
+>>           ret = -EINVAL;
+>>           goto out;
+>> @@ -1259,7 +1249,7 @@ static ssize_t enable_sink_show(struct device *dev,
+>>   {
+>>       struct coresight_device *csdev = to_coresight_device(dev);
+>>   -    return scnprintf(buf, PAGE_SIZE, "%u\n", csdev->activated);
+>> +    return scnprintf(buf, PAGE_SIZE, "%u\n",
+>> csdev->sysfs_sink_activated);
+>>   }
+>>     static ssize_t enable_sink_store(struct device *dev,
+>> @@ -1274,10 +1264,7 @@ static ssize_t enable_sink_store(struct device
+>> *dev,
+>>       if (ret)
+>>           return ret;
+>>   -    if (val)
+>> -        csdev->activated = true;
+>> -    else
+>> -        csdev->activated = false;
+>> +    csdev->sysfs_sink_activated = !!val;
+>>         return size;
+>>   diff --git a/drivers/hwtracing/coresight/coresight-priv.h
+>> b/drivers/hwtracing/coresight/coresight-priv.h
+>> index 30c051055e54..ced5be05a527 100644
+>> --- a/drivers/hwtracing/coresight/coresight-priv.h
+>> +++ b/drivers/hwtracing/coresight/coresight-priv.h
+>> @@ -130,8 +130,6 @@ void coresight_disable_path(struct list_head *path);
+>>   int coresight_enable_path(struct list_head *path, enum cs_mode mode,
+>>                 void *sink_data);
+>>   struct coresight_device *coresight_get_sink(struct list_head *path);
+>> -struct coresight_device *
+>> -coresight_get_enabled_sink(struct coresight_device *source);
+>>   struct coresight_device *coresight_get_sink_by_id(u32 id);
+>>   struct coresight_device *
+>>   coresight_find_default_sink(struct coresight_device *csdev);
+>> diff --git a/include/linux/coresight.h b/include/linux/coresight.h
+>> index a4cb7dd6ca23..65131bfbd904 100644
+>> --- a/include/linux/coresight.h
+>> +++ b/include/linux/coresight.h
+>> @@ -229,10 +229,12 @@ struct coresight_sysfs_link {
+>>    * @refcnt:    keep track of what is in use.
+>>    * @orphan:    true if the component has connections that haven't
+>> been linked.
+>>    * @enable:    'true' if component is currently part of an active path.
+>> - * @activated:    'true' only if a _sink_ has been activated.  A sink
+>> can be
+>> - *        activated but not yet enabled.  Enabling for a _sink_
+>> - *        happens when a source has been selected and a path is enabled
+>> - *        from source to that sink.
+>> + * @sysfs_sink_activated: 'true' when a sink has been selected for
+>> use via sysfs
+>> + *        by writing a 1 to the 'enable_sink' file.  A sink can be
+>> + *        activated but not yet enabled.  Enabling for a _sink_ happens
+>> + *        when a source has been selected and a path is enabled from
+>> + *        source to that sink. A sink can also become enabled but not
+>> + *        activated if it's used via Perf.
+>>    * @ea:        Device attribute for sink representation under PMU
+>> directory.
+>>    * @def_sink:    cached reference to default sink found for this
+>> device.
+>>    * @nr_links:   number of sysfs links created to other components
+>> from this
+>> @@ -252,9 +254,9 @@ struct coresight_device {
+>>       struct device dev;
+>>       atomic_t refcnt;
+>>       bool orphan;
+>> -    bool enable;    /* true only if configured as part of a path */
+>> +    bool enable;
+>>       /* sink specific fields */
+>> -    bool activated;    /* true only if a sink is part of a path */
+>> +    bool sysfs_sink_activated;
+>>       struct dev_ext_attribute *ea;
+>>       struct coresight_device *def_sink;
+>>       /* sysfs links between components */
+> 
