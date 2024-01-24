@@ -1,124 +1,85 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FEEB134CA;
-	Wed, 24 Jan 2024 12:53:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E0F077642
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 12:56:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706100792; cv=none; b=f4oyi3Tbpi90ohyOEgHxC/wDFzAPuyXQ5ldE2/nAXgha3YY2+XID/sGKYCNoo+QGrRBSJiLIR7TAU6ShWaG6cl0R8e4aZZf1X/kuXtJrVAHiOp8Xwa3rBxszJlqaZgEjPYbqYO/aUYOi7Wbz/8aWk+JsAXE3hp5cp4Bh3uZbweY=
+	t=1706100989; cv=none; b=JX4F0CmzoAyB3XnoZ9flnfs5FFZ4JZ9UIMi0MMwVoVLJyCMhVqhzxdA5TbUFePTBDIM02rCpJev2AXA9K/PNbeDTRD6mJfqGtvOhA27jTzwwZp4pu5q+mkRI4dRRAdwHU3xAp/g1LJysXV13g884ulzWplkMASbsv27KI9yBtV8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706100792; c=relaxed/simple;
-	bh=n6rll6s7gTiLTrIT6eIcRRrA5/96I1nCBmqQ+A92tjI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ic+ZAAz6z1dvFuDn2uXJy7r1PkvHu8sSuaf/dB9T9lAdndSG32ez7cARNRIKk8NjEx3f1307n3OWufcUSL+Sm0fb8G/meQeP1WzWo9J1Ac/dVDqoRHpehAgRND9xs4sIZZjhun8qi+A7cHSz8YM8pHA6pKZ5Z+MfbMBQ0Qwl5zs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pv5ubDch; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pv5ubDch"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C6FEC433C7;
-	Wed, 24 Jan 2024 12:53:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706100791;
-	bh=n6rll6s7gTiLTrIT6eIcRRrA5/96I1nCBmqQ+A92tjI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Pv5ubDchPLmyMxslb3G/fj5ng/UziQOhc0yp3+tmoYBZhOGgFRgdb+OaUHDBoz2LV
-	 TjoaXjq4UmTakQDZABTQTimHC1Mxcik0tXG5mAU390CgQ1MK5832SpYJw4AxM8P/V/
-	 WGnyZHcbs6/5RWkcwNq+nfgEPa+NddQbr8aCa1V009KGcMl1y3C5XU9vCP8SK9xWiR
-	 zS43/dhUWKrZei6BrqPv5J7z4JqXufCBCXyMXSf6gPJfGyiSBCsTVLA4EiocfgjBYC
-	 PWPoJFlxspizRDo5iuTBMYCEfKqRiBFtecTkhYOYI+MG9V2AvXUHhCziwD9jd+FEPc
-	 QevqdHFJt9hvw==
-Date: Wed, 24 Jan 2024 13:53:07 +0100
-From: Andi Shyti <andi.shyti@kernel.org>
-To: JiSheng Teoh <jisheng.teoh@starfivetech.com>
-Cc: Michal Simek <michal.simek@amd.com>, 
-	Leyfoon Tan <leyfoon.tan@starfivetech.com>, 
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 RESEND] i2c: cadence: Add system suspend and resume PM
- support
-Message-ID: <y2sxh2jkvujnaxeknbunogkumywjlohp3hi6dkf5dkc3qko27s@vg2qggq7lzrz>
-References: <20240119013326.3405484-1-jisheng.teoh@starfivetech.com>
- <ko44i4n5synf3uugp4wmjoe6eikyw3bzjtmarduwvskmk4d3dr@uewx27aa6ake>
- <ZQ0PR01MB1160390D00404D24A31A1522EB75A@ZQ0PR01MB1160.CHNPR01.prod.partner.outlook.cn>
- <3w4vaxoderuhwkqec6rwem2wrjlvql2ohyh77zqpwege7ercpl@5ac4p5mw7nhp>
- <ZQ0PR01MB1160DC63A1CC70F79036057EEB7BA@ZQ0PR01MB1160.CHNPR01.prod.partner.outlook.cn>
+	s=arc-20240116; t=1706100989; c=relaxed/simple;
+	bh=UTgGTB6lK4mod76UKu9bIx9yLmqPqk/Vo+rhgIwef1g=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=PM8uBynLDnqWMu+SlezmVLN4Hi2zgvooGUGJGoYuu0TMwnIK5K00SrzkE/tbV2SJIhkOgtcH4JusmaZot1JnCNUsM1VA3eeW0x4z3SvVggmJhLBfUp673RODvviIrLUKTHmEk+XNp+zzHWrdFKjuA1MIpC4FuLdUROM7UsRq1q8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1rScnk-0002cm-5F; Wed, 24 Jan 2024 13:56:20 +0100
+Received: from [2a0a:edc0:0:900:1d::4e] (helo=lupine)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1rScni-00243J-Sw; Wed, 24 Jan 2024 13:56:18 +0100
+Received: from pza by lupine with local (Exim 4.96)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1rScni-000BSu-2g;
+	Wed, 24 Jan 2024 13:56:18 +0100
+Message-ID: <63a1bfa2acb84bc24b87a8dbd60b665c733d13cd.camel@pengutronix.de>
+Subject: Re: [PATCH] usb: dwc3-of-simple: Stop using
+ of_reset_control_array_get() directly
+From: Philipp Zabel <p.zabel@pengutronix.de>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Thinh Nguyen <Thinh.Nguyen@synopsys.com>, Martin Blumenstingl
+ <martin.blumenstingl@googlemail.com>, Neil Armstrong
+ <neil.armstrong@linaro.org>,  Felipe Balbi <balbi@kernel.org>,
+ linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Wed, 24 Jan 2024 13:56:18 +0100
+In-Reply-To: <2024012400-subtitle-magnitude-45ff@gregkh>
+References: 
+	<20240124-dwc3-of-simple-reset-control-array-fix-v1-1-808182cc3f0e@pengutronix.de>
+	 <2024012400-subtitle-magnitude-45ff@gregkh>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZQ0PR01MB1160DC63A1CC70F79036057EEB7BA@ZQ0PR01MB1160.CHNPR01.prod.partner.outlook.cn>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Hi Jisheng,
+On Mi, 2024-01-24 at 04:39 -0800, Greg Kroah-Hartman wrote:
+> On Wed, Jan 24, 2024 at 12:26:20PM +0100, Philipp Zabel wrote:
+> > Use of_reset_control_array_get_optional_exclusive() instead, it is
+> > implemented as:
+> >=20
+> >   static inline struct reset_control *
+> >   of_reset_control_array_get_optional_exclusive(struct device_node *nod=
+e)
+> >   {
+> >           return of_reset_control_array_get(node, false, true, true);
+> >   }
+> >=20
+> > This makes the code easier to understand and removes the last remaining
+> > direct use of of_reset_control_array_get(). No functional changes.
+> >=20
+> > Fixes: f4cc91ddd856 ("usb: dwc3: of-simple: remove Amlogic GXL and AXG =
+compatibles")
+>=20
+> No functional change, but a Fixes: tag?  That doesn't make sense to me,
+> sorry.
 
-On Wed, Jan 24, 2024 at 04:46:43AM +0000, JiSheng Teoh wrote:
-> Hi Andi,
-> > 
-> > ...
-> > 
-> > > > > +static int __maybe_unused cdns_i2c_resume(struct device *dev) {
-> > > > > +	struct cdns_i2c *xi2c = dev_get_drvdata(dev);
-> > > > > +	int err;
-> > > > > +
-> > > > > +	err = cdns_i2c_runtime_resume(dev);
-> > > > > +	if (err)
-> > > > > +		return err;
-> > > > > +
-> > > > > +	if (pm_runtime_status_suspended(dev)) {
-> > > > > +		err = cdns_i2c_runtime_suspend(dev);
-> > > > > +		if (err)
-> > > > > +			return err;
-> > > >
-> > > > We call the cdns_i2c_resume() functions to come up from a suspended
-> > > > state. But, if we fail to resume, we call the suspend and return '0' (because this always returns '0').
-> > > >
-> > > > In other words, if we take this path, we call resume, but we still end up suspended and return success.
-> > > >
-> > > > Andi
-> > > >
-> > >
-> > > My understanding is that during system level resume 'cdns_i2c_resume()', the i2c device itself can still be held in runtime suspend
-> > regardless of the change in system level PM.
-> > > Looking back at this, we invoke cdns_i2c_runtime_resume() to enable clock and init the i2c device, the runtime PM state is still
-> > unchanged and kept suspended.
-> > > pm_runtime_status_suspended() will be evaluated as true, and runtime suspend 'cdns_i2c_runtime_suspend()' is invoked to
-> > disable the clock. This balances the clock count enabled earlier.
-> > 
-> > If this is your issue, what if we do not enable the clock during resume? and we just mark the device as resumed?
-> > 
-> That will work as well. The i2c device will be runtime resumed again during cdns_i2c_master_xfer() anyway, but thought that it
-> would be a good idea to check if the i2c device is able runtime resume during a system level resume.
+The referenced patch made the boolean parameters const but missed that
+there is a static inline wrapper for this combination. I can drop the
+Fixes: tag and describe this in the text.
 
-That's fine, I think it might work this way, as well, so let's
-keept it at your original implementation.
-
-If we save here, we add complication somewhere else.
-
-Reviewed-by: Andi Shyti <andi.shyti@kernel.org>
-
-Before applying the patch I will read it again to make sure all
-is balanced.
-
-Thanks,
-Andi
-
-> > > The runtime PM state is only resumed during cdns_i2c_master_xfer() through pm_runtime_resume_and_get(), and subsequently
-> > kept suspended through pm_runtime_put_autosuspend().
-> > > Since the cdns_i2c_runtime_suspend() always return '0', I will simplify them as follow:
-> > > +if (pm_runtime_status_suspended(dev))
-> > > +	cdns_i2c_runtime_suspend(dev);
-> > 
-> > I'd prefer checking the error value, even though we are sure on the expected return. It's more future proof.
-> > 
-> > Andi
-> > 
-> Ok, I will keep the original changes.
-> 
-> > > > > +	}
-> > > > > +
-> > > > > +	i2c_mark_adapter_resumed(&xi2c->adap);
-> > > > > +
-> > > > > +	return 0;
-> > > > > +}
+regards
+Philipp
