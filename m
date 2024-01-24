@@ -1,255 +1,137 @@
-Received: from mail-ot1-f47.google.com (mail-ot1-f47.google.com [209.85.210.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1D2A17736;
-	Wed, 24 Jan 2024 04:25:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05C60BE74;
+	Wed, 24 Jan 2024 04:25:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706070337; cv=none; b=bBIGYVI/0M3fGTfXRJr0zYYu7VEg80MNXj1Dbhhh1ankJYaqGPAnhozj6Gl4iyAoXlPsGPN0lJkKOwhylz4VKDNhR1uI5iPiyS8eVS5kUR+7kqcVcOw8YPLmgC9JLRUf4FFr9uw8fsDComjfd+CsPOj3IW/tCDtsJBWym55NBhU=
+	t=1706070358; cv=none; b=BbcRbNPmQajuBKznUxcCJvaZFzgPaKU4yD30JSWI64Da0u8ubGqUjEFjd/t5v6TjaKBUkJVzZQvxZJSDKlY5SWpYwX0BXattvqtxQUQz9oxzwZU4Th7FLaxFbkXOwScMfkS2jAAvTCL8wfHcUKI4AAxlddGulMuobI0/zoZ/B4k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706070337; c=relaxed/simple;
-	bh=Os+LjW32DNoAp84uFJujdZEAdr7jSUq6SR5OelqDce4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dI4TOmb+WqzLpzzI6r1HWhikSWTnhjTafD2hYqM95dswb9zj5h+66ywrG5NivTtO1t9RBJ5wbHFShfwprhhXWTCXXyD0qqXATRMRIzp7qjsb/BBLAtVO+b0Cqx4oL9iXoTFmevcIlmYlLdf9sRjJuEa/FdwszChKoXmYJW1ITRQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bgMl+VYr; arc=none smtp.client-ip=209.85.210.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1706070358; c=relaxed/simple;
+	bh=7ZWW+8qHDNDoQXk/hD+0GuH82VHOG4uW2aOnjSqYjh0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
+	 In-Reply-To:To:CC; b=NkBvf5dMOwmF5Piq4wbax5lLh7TkXTjck5YS9/g5F0gpLtHhfAVwdwThxTKZOTlabHwAM4Q1SNnhdpHJb+qC+6LojMuw4zLglxgtCOcCklvSiPS7XBZ14N4Jr1oQSzHCknVKITPAqMsk14NDgNCh912HCk8kcAbl0/AnKa/Ger0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=oT7qZipJ; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bgMl+VYr"
-Received: by mail-ot1-f47.google.com with SMTP id 46e09a7af769-6e0e08c70f7so2476078a34.2;
-        Tue, 23 Jan 2024 20:25:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706070335; x=1706675135; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5/4uC4ThCc6lr4x+9JZtlV6yhdWs1NTs0bqZsB9jdbg=;
-        b=bgMl+VYrn+htOxpoKQHsIYxfs0NTNCqRrbqS/10x/M00Ra4AS2keA1SZRvyyYvbpmh
-         4ysq0mN39GPhA2OMTmpYDAMA3BYspfyiZr8lIFCiTOYfDND12mnZJcNKjXTF3JpH99Ag
-         9DhDQlB19SSu/r6Gq+t8u6Kln4f/18lApFJV4bdt+jqA4Kwm9IAjDO8rrurNj64fdwpL
-         rQCY9ofF20veIZTZGz7KoziazHJIoh5zq1si056+aNtqJ87N6VooDfWEVvYteayK6QOJ
-         kA0p0l0t0ejEIUp70lMI9DskdJtaNNgf03MuRJ6QoIjh9613DAB3jX8j/W4lCayS48sU
-         scLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706070335; x=1706675135;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5/4uC4ThCc6lr4x+9JZtlV6yhdWs1NTs0bqZsB9jdbg=;
-        b=ADqa+i+hTQcScCCTBFLmzzdvOBjadPN1ZmT7bSZcCdnvSvwn5CXPkXc62LHatdUBe0
-         2J5LSxpV5O6mP6dYcgnRrwDDSOhY7PZ0kfoVIMFjToMcq2TQtcg2dwy9bsW7rUvGP2Tj
-         KGRroL4qFBrtT0/hEMh0loOKPTlCt5MH2zrPL8S9GoeeuyGePWa0JsSZtqOQwXzCldtd
-         yBQxea2+6spUck9mC0ID7fERwW+u0t8AafI6NHutaabwv27E9jNaqAsfUOj3wlgwlB4o
-         IW7QOvO4q0gr/skqkyvFba8epJornsX/gPxsqXN0Z2Ek1IyL5ADwxGl2+eoVZloIJ6TE
-         siYQ==
-X-Gm-Message-State: AOJu0Yw21FgBGz0ZzuQ8ESRWd4vZoqu/8mUysZzTO3i9YEyhmkgfU9ok
-	vALCNRYpIpDdvW50rhL8xLCkUNGN+dGEzUtPplWOneES2TXx+tSLA0JbPNcJLES9IiPNJNTCfHp
-	o2BgfuqBOAZQ7GdPp0KEZTm38EN8=
-X-Google-Smtp-Source: AGHT+IEYiylJBYXfY49cWvNnLFhEHwCUuaq0khwyMFUen1BASnXDw/KkbiRwBecqao7tETU5i622l0W0+ynXIZ7ogCE=
-X-Received: by 2002:a05:6830:22c1:b0:6dd:e9e2:de67 with SMTP id
- q1-20020a05683022c100b006dde9e2de67mr945773otc.20.1706070334462; Tue, 23 Jan
- 2024 20:25:34 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="oT7qZipJ"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40O41Y6p020644;
+	Wed, 24 Jan 2024 04:25:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:date:subject:mime-version:content-type
+	:content-transfer-encoding:message-id:references:in-reply-to:to
+	:cc; s=qcppdkim1; bh=vtJobCucxjhRKCLo3qeZp87nG4VsdWwAweQjG0KAvcE
+	=; b=oT7qZipJnO6R855AUZhdV5jx1Ga9e19xKIwIwgswa554p7uXTZl7kzpHK+g
+	SC2CVP+5Wag0AO9lOtNS+hHZHDMi+NWgGndvyt794oMhEDYmw3anRJGwuzDtGn6v
+	luCP4wOcL0yI5uJ+/BTbBDrnr0qHK+Bp/ggciLc5usUGbN5Z2fBGwAzTq+OdKuCX
+	vJ79ys46QiqlOLEyKt6fnWWcMrza/Lrv8OB/DekwZBjoxasUmWbFIgP0y0yGg3xV
+	V4cHyK/5wm5YdPgOu2IX4HFGviczTKF3UkJAheGk0jO+u3gH8/NrD9ipkMCTryfy
+	zAPjYAUyfiXb41e1ZeJOC4CktOA==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vtmmegqr6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 24 Jan 2024 04:25:17 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 40O4PGQe030413
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 24 Jan 2024 04:25:16 GMT
+Received: from [169.254.0.1] (10.49.16.6) by nalasex01c.na.qualcomm.com
+ (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Tue, 23 Jan
+ 2024 20:25:16 -0800
+From: Bjorn Andersson <quic_bjorande@quicinc.com>
+Date: Tue, 23 Jan 2024 20:25:16 -0800
+Subject: [PATCH v3 2/8] clk: qcom: gdsc: Enable supply reglator in GPU GX
+ handler
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240123204437.1322700-1-irogers@google.com>
-In-Reply-To: <20240123204437.1322700-1-irogers@google.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Tue, 23 Jan 2024 20:25:22 -0800
-Message-ID: <CAEf4BzZY7qnnBJ+zFtdjRf0YuwSDWXQvYG7U-kY+7t0g_OTZZQ@mail.gmail.com>
-Subject: Re: [PATCH v2] libbpf: Add some details for BTF parsing failures
-To: Ian Rogers <irogers@google.com>
-Cc: Alan Maguire <alan.maguire@oracle.com>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
-	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20240123-sa8295p-gpu-v3-2-d5b4474c8f33@quicinc.com>
+References: <20240123-sa8295p-gpu-v3-0-d5b4474c8f33@quicinc.com>
+In-Reply-To: <20240123-sa8295p-gpu-v3-0-d5b4474c8f33@quicinc.com>
+To: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio
+	<konrad.dybcio@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        "Krzysztof
+ Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        Taniya Das <quic_tdas@quicinc.com>,
+        Johan Hovold
+	<johan+linaro@kernel.org>
+CC: <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-pm@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        "Bjorn
+ Andersson" <quic_bjorande@quicinc.com>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1706070315; l=1360;
+ i=quic_bjorande@quicinc.com; s=20230915; h=from:subject:message-id;
+ bh=7ZWW+8qHDNDoQXk/hD+0GuH82VHOG4uW2aOnjSqYjh0=;
+ b=Ytv5aKLPjCbdZqOMtasS50BWZ4k4OZvAlWurSVggSYMUGJkOBm9KJN7NJA5JKc8RFi9JUo6MZ
+ XQZHm7rvW8cCuTijAmK/fj5R/wI0SqYNTqq/OLsqJqOiRAHy+NNa5qg
+X-Developer-Key: i=quic_bjorande@quicinc.com; a=ed25519;
+ pk=VkhObtljigy9k0ZUIE1Mvr0Y+E1dgBEH9WoLQnUtbIM=
+X-ClientProxiedBy: nalasex01c.na.qualcomm.com (10.47.97.35) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: WfxGJpnezKWqMoEl91iD932uD15vmf-I
+X-Proofpoint-ORIG-GUID: WfxGJpnezKWqMoEl91iD932uD15vmf-I
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-01-24_01,2024-01-23_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
+ phishscore=0 lowpriorityscore=0 suspectscore=0 mlxscore=0 adultscore=0
+ clxscore=1015 priorityscore=1501 spamscore=0 mlxlogscore=937
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2401190000 definitions=main-2401240029
 
-On Tue, Jan 23, 2024 at 12:44=E2=80=AFPM Ian Rogers <irogers@google.com> wr=
-ote:
->
-> As CONFIG_DEBUG_INFO_BTF is default off the existing "failed to find
-> valid kernel BTF" message makes diagnosing the kernel build issue some
-> what cryptic. Add a little more detail with the hope of helping users.
->
-> Before:
-> ```
-> libbpf: failed to find valid kernel BTF
-> libbpf: Error loading vmlinux BTF: -3
-> libbpf: failed to load object 'lock_contention_bpf'
-> libbpf: failed to load BPF skeleton 'lock_contention_bpf': -3
-> ```
->
-> After no access /sys/kernel/btf/vmlinux:
-> ```
-> libbpf: Unable to access canonical vmlinux BTF from /sys/kernel/btf/vmlin=
-ux
-> libbpf: Error loading vmlinux BTF: -3
-> libbpf: failed to load object 'lock_contention_bpf'
-> libbpf: failed to load BPF skeleton 'lock_contention_bpf': -3
-> ```
->
-> After no BTF /sys/kernel/btf/vmlinux:
-> ```
-> libbpf: Failed to load vmlinux BTF from /sys/kernel/btf/vmlinux, was CONF=
-IG_DEBUG_INFO_BTF enabled?
-> libbpf: Error loading vmlinux BTF: -3
-> libbpf: failed to load object 'lock_contention_bpf'
-> libbpf: failed to load BPF skeleton 'lock_contention_bpf': -3
-> ```
->
-> Closes: https://lore.kernel.org/bpf/CAP-5=3DfU+DN_+Y=3DY4gtELUsJxKNDDCOvJ=
-zPHvjUVaUoeFAzNnig@mail.gmail.com/
-> Signed-off-by: Ian Rogers <irogers@google.com>
->
-> ---
-> v2. Try to address review comments from Andrii Nakryiko.
-> ---
->  tools/lib/bpf/btf.c | 49 ++++++++++++++++++++++++++++++++-------------
->  1 file changed, 35 insertions(+), 14 deletions(-)
->
-> diff --git a/tools/lib/bpf/btf.c b/tools/lib/bpf/btf.c
-> index ee95fd379d4d..d8a05dda0836 100644
-> --- a/tools/lib/bpf/btf.c
-> +++ b/tools/lib/bpf/btf.c
-> @@ -4920,16 +4920,25 @@ static int btf_dedup_remap_types(struct btf_dedup=
- *d)
->         return 0;
->  }
->
-> +static struct btf *btf__load_vmlinux_btf_path(const char *path)
+The GX GDSC is modelled to aid the GMU in powering down the GPU in the
+event that the GPU crashes, so that it can be restarted again. But in
+the event that the power-domain is supplied through a dedicated
+regulator (in contrast to being a subdomin of another power-domain),
+something needs to turn that regulator on, both to make sure things are
+powered and to match the operation in gdsc_disable().
 
-I don't think we need this helper, you literally call btf__parse() and
-pr_debug(), that's all
+Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+Signed-off-by: Bjorn Andersson <quic_bjorande@quicinc.com>
+---
+ drivers/clk/qcom/gdsc.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-> +{
-> +       struct btf *btf;
-> +       int err;
-> +
-> +       btf =3D btf__parse(path, NULL);
-> +       err =3D libbpf_get_error(btf);
+diff --git a/drivers/clk/qcom/gdsc.c b/drivers/clk/qcom/gdsc.c
+index 5358e28122ab..e7a4068b9f39 100644
+--- a/drivers/clk/qcom/gdsc.c
++++ b/drivers/clk/qcom/gdsc.c
+@@ -557,7 +557,15 @@ void gdsc_unregister(struct gdsc_desc *desc)
+  */
+ int gdsc_gx_do_nothing_enable(struct generic_pm_domain *domain)
+ {
+-	/* Do nothing but give genpd the impression that we were successful */
+-	return 0;
++	struct gdsc *sc = domain_to_gdsc(domain);
++	int ret = 0;
++
++	/* Enable the parent supply, when controlled through the regulator framework. */
++	if (sc->rsupply)
++		ret = regulator_enable(sc->rsupply);
++
++	/* Do nothing with the GDSC itself */
++
++	return ret;
+ }
+ EXPORT_SYMBOL_GPL(gdsc_gx_do_nothing_enable);
 
-we should stop using libbpf_get_error, in libbpf v1.0+ it's best to do just
+-- 
+2.25.1
 
-btf =3D btf__parse(path, NULL);
-if (!btf) {
-    err =3D -errno;
-    pr_debug(...);
-    return NULL;
-}
-
-> +       pr_debug("loading kernel BTF '%s': %d\n", path, err);
-> +       return err ? NULL : btf;
-> +}
-> +
->  /*
->   * Probe few well-known locations for vmlinux kernel image and try to lo=
-ad BTF
->   * data out of it to use for target BTF.
->   */
->  struct btf *btf__load_vmlinux_btf(void)
->  {
-> +       /* fall back locations, trying to find vmlinux on disk */
->         const char *locations[] =3D {
-> -               /* try canonical vmlinux BTF through sysfs first */
-> -               "/sys/kernel/btf/vmlinux",
-> -               /* fall back to trying to find vmlinux on disk otherwise =
-*/
->                 "/boot/vmlinux-%1$s",
->                 "/lib/modules/%1$s/vmlinux-%1$s",
->                 "/lib/modules/%1$s/build/vmlinux",
-> @@ -4938,29 +4947,41 @@ struct btf *btf__load_vmlinux_btf(void)
->                 "/usr/lib/debug/boot/vmlinux-%1$s.debug",
->                 "/usr/lib/debug/lib/modules/%1$s/vmlinux",
->         };
-> -       char path[PATH_MAX + 1];
-> +       const char *location;
->         struct utsname buf;
->         struct btf *btf;
-> -       int i, err;
-> +       int i;
->
-> -       uname(&buf);
-> +       /* try canonical vmlinux BTF through sysfs first */
-> +       location =3D "/sys/kernel/btf/vmlinux";
-> +       if (faccessat(AT_FDCWD, location, R_OK, AT_EACCESS) =3D=3D 0) {
-> +               btf =3D btf__load_vmlinux_btf_path(location);
-> +               if (btf)
-> +                       return btf;
-> +
-> +               pr_warn("Failed to load vmlinux BTF from %s, was CONFIG_D=
-EBUG_INFO_BTF enabled?\n",
-> +                       location);
-
-Mentioning CONFIG_DEBUG_INFO_BTF seems inappropriate here,
-/sys/kernel/btf/vmlinux exists, we just failed to parse its data,
-right? So it's not about CONFIG_DEBUG_INFO_BTF, we just don't support
-something in BTF data. Just pr_warn("Failed to load vmlinux BTF from
-%s: %d", location, err); should be good
-
-> +       } else
-> +               pr_warn("Unable to access canonical vmlinux BTF from %s\n=
-", location);
-
-here the question of CONFIG_DEBUG_INFO_BTF is more appropriate, if
-/sys/kernel/btf/vmlinux (on modern enough kernels) is missing, then
-CONFIG_DEBUG_INFO_BTF is missing, probably. But I'd emit this only
-after trying all the fallback paths and not finding anything.
-
-also stylistical nit: if one side of if has {}, the other has to have
-{} as well, even if it's just one line
-
->
-> +       uname(&buf);
->         for (i =3D 0; i < ARRAY_SIZE(locations); i++) {
-> -               snprintf(path, PATH_MAX, locations[i], buf.release);
-> +               char path[PATH_MAX + 1];
-> +
-> +               snprintf(path, sizeof(path), locations[i], buf.release);
->
-> +               btf =3D btf__load_vmlinux_btf_path(path);
->                 if (faccessat(AT_FDCWD, path, R_OK, AT_EACCESS))
->                         continue;
->
-> -               btf =3D btf__parse(path, NULL);
-> -               err =3D libbpf_get_error(btf);
-> -               pr_debug("loading kernel BTF '%s': %d\n", path, err);
-> -               if (err)
-> -                       continue;
-> +               btf =3D btf__load_vmlinux_btf_path(location);
-> +               if (btf)
-> +                       return btf;
->
-> -               return btf;
-> +               pr_warn("Failed to load vmlinux BTF from %s, was CONFIG_D=
-EBUG_INFO_BTF enabled?\n",
-
-we should do better here as well. We should distinguish between "there
-is vmlinux image, but it has no BTF" vs "there is no vmlinux image" vs
-"vmlinux image is there, there is BTF, but we can't parse it". See
-btf__parse(). We return -ENODATA if ELF doesn't have BTF, that's the
-first situation. We can probably use faccessat() check for second
-situation. Everything else can be reported as pr_debug() with location
-(but still no CONFIG_DEBUG_INFO_BTF, it's meaningless for fallback BTF
-locations)
-
-> +                       path);
->         }
->
-> -       pr_warn("failed to find valid kernel BTF\n");
-
-and then here we can probably warn that we failed to find any kernel
-BTF, and suggest CONFIG_DEBUG_INFO_BTF
-
->         return libbpf_err_ptr(-ESRCH);
->  }
->
-> --
-> 2.43.0.429.g432eaa2c6b-goog
->
