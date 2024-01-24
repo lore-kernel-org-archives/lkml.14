@@ -1,114 +1,101 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAB65130E5A;
-	Wed, 24 Jan 2024 18:32:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBB3D131736;
+	Wed, 24 Jan 2024 18:35:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706121162; cv=none; b=csPfxavfIH4389bB35aqO65fWcmsws11rlYkglDm08kegUQ5WLhaR07jRhicuego477AXtj0ukVZ0Kf7BwBCegP+MPc3+/WX4yCys5KUPyApaoxFOXRuW+4LQobAWoX8Qp6k8Mh9tYEHaFIFvlShViuKAXk8f21CVyhD47jIff0=
+	t=1706121323; cv=none; b=iN1royiKBD69R5zH9GJaU+OG1LAcRDMaIsRRPTYvR+mf+lz4xIVwAtAqMc/qTQZQyWaBFdkVs9h2VJpEdsafCBYKMpdF0WLo5ZjGPcC+zvVlS3+0iCYP38JLFnv6sw/noPxRWygvxOLF89bMEBDkAFykcCjukQcDNUWNnhlONoQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706121162; c=relaxed/simple;
-	bh=1ptnX18ROuZF1++MBajLh5HKvxdkkKwzGW8IoJy13AM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VXSHcucUN5GxM6+v42pZqwLOxOFkVD/GvCO2UxKPIvJnjaABjKVXva9uXgH3lzO9bqgHlRnf+hIW4pO4vWhS8YszAFf6YaK4QVIC1anN8tEVMb2Ne74lvZtTvDYJxieh2GTMFTYoPd+RBaz+8Yi2gVTYbEWXjLm3HcrAGjfltC0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=d7jMUbwJ; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1706121323; c=relaxed/simple;
+	bh=HV8WbzLtbALjf0RHVLBi+3NjxnPq8PuBiJQdJZPosN8=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=QOf4x505paHbHx6RgEFX7h78wTZP24UototGfk3y7S2pDGV2sg+k33AiTNWoKHG2+heIg75+KRdO0yIbmrwS6L6EiDJudDL1moQ5FO76jEIDIkUVb6pyEV3GlI2tEpR+GrQSZSkGLZvh8BJVLxpJv4Muk/AsfgDKx/MgJINTHW0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=MG2U1rlM; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=8TG60APR; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="d7jMUbwJ"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 0AC5F40E01A9;
-	Wed, 24 Jan 2024 18:32:37 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id pm4fXtx2h_D8; Wed, 24 Jan 2024 18:32:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1706121154; bh=vaEqhiwCC6NaERNe6TMVeVGP6JVmokf1utfp4cV9z9k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=d7jMUbwJEUTZ+kYI59q0QtfID7t0vONybXbFFqog6jM80eJpN3mLntKS5KmV0Xj0f
-	 8TpPiOJ+dwOlWvJ6Yuh+Ti0Uz3Ei7JwqZvSyQiYtYL4jcNorMRI6Z+bwArf5pks2H8
-	 Nx8f+XeJXchVWiDbIBXkg/hyOiFfs4nwH11+GPAQrD5BUeXomUsG4D8L3fiu91Uo43
-	 gXYEnZM75XLpNz84jFIA/ew8w7paePlL0thVhoG7KLUCWZol02ZaNGFvAXYC/cHDqT
-	 cyAKdiNnsxxgn7ic6AhBIXo14IDfsBMikWSJWW5/9W9Z70/dENMuuA5c8ceVj/kKfJ
-	 PiTaSj34viEkzaUTNVc9JutpGVOkTps0OnE1wt/HCiBQva7wia2KuaakT6XDRbpTSN
-	 aBCTg/XE4sRgKTth3hGdHQQvQ2MWv0xLhko+tfcBHjYgzaegE4AHLA6dpOYYcFb6Bg
-	 GbXkwWIXpJyFnPcvhIAC6Ru3BriU6YcDEC+pCTMY1KmSWjGv5QFd+9xbzc1iXjusYH
-	 08balh8wPFrA08XlDml96tzWqQal1rVZ6IeG1UBlgy8R6WZ/MxFmEXvgKMpef9amz+
-	 prsWsIZPWjUK6qLaheRNL1z/KVPjYTYwoOtxNgHm9Pj+ApsPPevx26o9UljmA3HnFe
-	 bgcI8RCcottEYSU9XPCRfyU4=
-Received: from zn.tnic (pd953033e.dip0.t-ipconnect.de [217.83.3.62])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 28B8C40E00C5;
-	Wed, 24 Jan 2024 18:32:00 +0000 (UTC)
-Date: Wed, 24 Jan 2024 19:31:53 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Reinette Chatre <reinette.chatre@intel.com>
-Cc: Babu Moger <babu.moger@amd.com>, corbet@lwn.net, fenghua.yu@intel.com,
-	tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
-	x86@kernel.org, hpa@zytor.com, paulmck@kernel.org,
-	rdunlap@infradead.org, tj@kernel.org, peterz@infradead.org,
-	yanjiewtw@gmail.com, kim.phillips@amd.com, lukas.bulwahn@gmail.com,
-	seanjc@google.com, jmattson@google.com, leitao@debian.org,
-	jpoimboe@kernel.org, rick.p.edgecombe@intel.com,
-	kirill.shutemov@linux.intel.com, jithu.joseph@intel.com,
-	kai.huang@intel.com, kan.liang@linux.intel.com,
-	daniel.sneddon@linux.intel.com, pbonzini@redhat.com,
-	sandipan.das@amd.com, ilpo.jarvinen@linux.intel.com,
-	peternewman@google.com, maciej.wieczor-retman@intel.com,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	eranian@google.com
-Subject: Re: [PATCH] x86/resctrl: Fix unneeded variable warning reported by
- kernel test robot
-Message-ID: <20240124183153.GFZbFXmTKTLEpwZshW@fat_crate.local>
-References: <202401241810.jbd8Ipa1-lkp@intel.com>
- <84128a3c83654493f637b8349153af10d69e2752.1706118776.git.babu.moger@amd.com>
- <39c4501e-4937-49de-b12b-742e6201df6f@intel.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MG2U1rlM";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="8TG60APR"
+Date: Wed, 24 Jan 2024 18:35:19 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1706121319;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=rlbYUkWbENWNM1uWju8Uka1amvbOMMDwz/0QrtLWLi8=;
+	b=MG2U1rlMEuvXWt4SZfdhMqCz/o19pDgWAv2cqiMmArz7qA1+erMzgJSsh5evpgjj1h/dun
+	bc/N/d3hgsoUx78khlwQ9Y0U3zed5B3XHQs6aiUPJoGg3qLCMeqQo+BIcP1ZwXFQxES27c
+	szPeQO/bbJoVIBl3RgUId74VqjvrhFO2OaXZMQRhcrpeNL0u7TwJbcv8ERNmfI+cDe3MKm
+	V2LPaxuRPqpKSPQKTtFY2gcuWsVsaUSSVywBBNTjJLXPkGt/K0cjIGXwhobzLmZ+NiPEPN
+	DcMlOjuYOVgG+xnRbx2mTXo9cx+XJczcq9f2c2gqwa4dH6Ea8zrY5Ih62TkmHg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1706121319;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=rlbYUkWbENWNM1uWju8Uka1amvbOMMDwz/0QrtLWLi8=;
+	b=8TG60APR/+sRB6DWiuUgUxnJG4P8er5aHdDbvgFZISMa3UqfCYpsb1txCVncfMET54Bg6n
+	8JKxgvWDvvNHS8Bw==
+From: "tip-bot2 for Dawei Li" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: irq/core] genirq: Remove unneeded forward declaration
+Cc: Dawei Li <dawei.li@shingroup.cn>, Thomas Gleixner <tglx@linutronix.de>,
+ x86@kernel.org, linux-kernel@vger.kernel.org, maz@kernel.org
+In-Reply-To: <20240122085716.2999875-4-dawei.li@shingroup.cn>
+References: <20240122085716.2999875-4-dawei.li@shingroup.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <39c4501e-4937-49de-b12b-742e6201df6f@intel.com>
+Message-ID: <170612131900.398.5223210179509173916.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jan 24, 2024 at 10:25:17AM -0800, Reinette Chatre wrote:
-> This can be confusing since it implies that the patch you mention
-> introduces the issue but instead the variable has been unneeded since
-> the original:
-> 92bd5a139033 ("x86/resctrl: Add interface to write mbm_total_bytes_config")
+The following commit has been merged into the irq/core branch of tip:
 
-What I said. :)
+Commit-ID:     9676635685fe348003a29948d9726e5d9e4b4a6e
+Gitweb:        https://git.kernel.org/tip/9676635685fe348003a29948d9726e5d9e4b4a6e
+Author:        Dawei Li <dawei.li@shingroup.cn>
+AuthorDate:    Mon, 22 Jan 2024 16:57:14 +08:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Wed, 24 Jan 2024 16:02:48 +01:00
 
-> To help clarify you can mention this order of events and also add an
-> appropriate "Fixes:" tag.
-> 
-> > cocci warnings: (new ones prefixed by >>)
-> >>> arch/x86/kernel/cpu/resctrl/rdtgroup.c:1621:5-8: Unneeded variable: "ret". Return "  0" on line 1655
-> > 
-> > Fix the warning by removing the variable "ret" and returning 0 directly.
-> 
-> cocci warning was spot on*. This fix is not just a change to "make a
-> warning go away" but instead fixing an actual problem.
-> It can just be "Remove the unneeded variable and return 0 directly".
+genirq: Remove unneeded forward declaration
 
-I'll fix all up before applying.
+The protoype of irq_flow_handler_t is independent of irq_data, so remove
+unneeded forward declaration.
 
-> * I'll add a private setup with the goal to catch these earlier.
+Signed-off-by: Dawei Li <dawei.li@shingroup.cn>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lore.kernel.org/r/20240122085716.2999875-4-dawei.li@shingroup.cn
 
-Except that it doesn't fire with the patch that added the code. It looks
-like the cocci script needs adjustment...
+---
+ include/linux/irqhandler.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+diff --git a/include/linux/irqhandler.h b/include/linux/irqhandler.h
+index c30f454..72dd1eb 100644
+--- a/include/linux/irqhandler.h
++++ b/include/linux/irqhandler.h
+@@ -8,7 +8,7 @@
+  */
+ 
+ struct irq_desc;
+-struct irq_data;
++
+ typedef	void (*irq_flow_handler_t)(struct irq_desc *desc);
+ 
+ #endif
