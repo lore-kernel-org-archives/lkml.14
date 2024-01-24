@@ -1,83 +1,136 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18D5040C1B
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 16:10:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51F7540C1B;
+	Wed, 24 Jan 2024 16:10:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706112618; cv=none; b=mWPR4ztMHIgGotY9Vc3iLEcveUI0izR5HXwW1IvX1K8t9Xx2WnFBO0ptbJQ0a7wF2eRFU9IDGOfg5Pds0DGc3Cz8OQz5l7cVntTeGj0hZ6SfdWmZpDhRxohytRySys7Pr2YDR1imEtlugBvi8fs/tMmYBnuOUFGP/QnT3LJr7+U=
+	t=1706112629; cv=none; b=cKyiHq3o1AstkyJjLv699kI9IEhOTXoutaRzK8zT2XGKIEQK8jP3wkMT7br9VxVQeTlyyd6Yw0NOdjYZ29hTHCNNa3EOxIeU3lzmFhsnRvkg7wjPx7pU8zHhnxt2uNafBGvXr3Om7MPxuPP84tqNWTaFSHPrv8Z6z80wxSFT1Z8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706112618; c=relaxed/simple;
-	bh=Ujoipw9dh78mtkpsy6gJoGIWkFJGg9vH0lQ7gLAMv7k=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=CwK7V5xK2hwZ7akL+J8/5Zi+CPWVPsqZ5PtyFY6eChB2SpY8MINwJVpBB9MZWdlXi0wCej2MqKPWMr96JvStJ0gHDFMyrgqADk1YztLKTN6thRi7BLIRFld84knmRCFaDHoMsamNZqVqniGMoIhSWePOxhlKB+IhOaZz1CSY9a0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from ptz.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::77] helo=[IPv6:::1])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <l.stach@pengutronix.de>)
-	id 1rSfnA-0007qU-9Q; Wed, 24 Jan 2024 17:07:56 +0100
-Message-ID: <4e495bd7449159b9fe1710b673b6f9b4f185862d.camel@pengutronix.de>
-Subject: Re: [PATCH 2/2] drm/etnaviv: Disable SH_EU clock gating on
- VIPNano-Si+
-From: Lucas Stach <l.stach@pengutronix.de>
-To: Philipp Zabel <p.zabel@pengutronix.de>, Russell King
- <linux+etnaviv@armlinux.org.uk>, Christian Gmeiner
- <christian.gmeiner@gmail.com>,  David Airlie <airlied@gmail.com>, Daniel
- Vetter <daniel@ffwll.ch>
-Cc: etnaviv@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org
-Date: Wed, 24 Jan 2024 17:07:55 +0100
-In-Reply-To: <20240124-etnaviv-npu-v1-2-a5aaf64aec65@pengutronix.de>
-References: <20240124-etnaviv-npu-v1-0-a5aaf64aec65@pengutronix.de>
-	 <20240124-etnaviv-npu-v1-2-a5aaf64aec65@pengutronix.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
+	s=arc-20240116; t=1706112629; c=relaxed/simple;
+	bh=SalXPkmNubfGiQcSbtanqRQSq5xrw4Ucd7dpoHNEfPg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XK9j234Qep87NZq3uV0lVvxO817RC1s/LofeMTfDfhp8gqckRry03BtIj9P9/7uxuKuZ+1Wqk0TRB1/P4fF6chBm7MESy4MNOI02JeZvQq020bEojuFflqrJ3dKt80zAvlE2Vzk5qJq12/PUH6tOnltS5RDWb+Ti84LH4Rt3uFQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Txqt/r9E; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Txqt/r9E"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47ADDC433C7;
+	Wed, 24 Jan 2024 16:10:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706112629;
+	bh=SalXPkmNubfGiQcSbtanqRQSq5xrw4Ucd7dpoHNEfPg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Txqt/r9E4X+x35VNp0w/xCp316LfHogdEXOyL+dfA+JhLsthGLWmBPZVc7aAmwVjs
+	 oAYyBDzF6pCTvE3Lly4F3Q09AEetMXO9i06J7YJEt2ckvA4n0/Jido+oJfC0ObyLWd
+	 XC2ZZ/TG7MAhLyg48x/Ks5U1DNUZ6cctYX02P+ZZnBajhdVaWxe+KG2g5Ln1+DeGt5
+	 g+2lRiDKODDHjOqPZt4M5RPecQLJAK8sAdryi1eIOUMX8OCXr6rnfR7vbISEGCRVZm
+	 MvvhxCEev7ZKdLLQXrqY7CllqJjOzsEzBFlWDa1tEkqBwlX4oQmYwJfGFstKbiZkJp
+	 ODRbW4wYNQvcA==
+Date: Wed, 24 Jan 2024 16:10:24 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Siddharth Vadapalli <s-vadapalli@ti.com>
+Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
+	robh@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, vigneshr@ti.com, afd@ti.com,
+	srk@ti.com
+Subject: Re: [PATCH v3] dt-bindings: PCI: ti,j721e-pci-host: Add support for
+ J722S SoC
+Message-ID: <20240124-unmatched-plating-019a3055cf5e@spud>
+References: <20240124122936.816142-1-s-vadapalli@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:900:1d::77
-X-SA-Exim-Mail-From: l.stach@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="XMTtUXZ1FD8n2B8o"
+Content-Disposition: inline
+In-Reply-To: <20240124122936.816142-1-s-vadapalli@ti.com>
 
-Am Mittwoch, dem 24.01.2024 um 10:22 +0100 schrieb Philipp Zabel:
-> Disable SH_EU clock gating for the VIPNano-Si+ NPU on i.MX8MP.
-> Taken from linux-imx lf-6.1.36-2.1.0, specifically [1].
+
+--XMTtUXZ1FD8n2B8o
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, Jan 24, 2024 at 05:59:36PM +0530, Siddharth Vadapalli wrote:
+> TI's J722S SoC has one instance of a Gen3 Single-Lane PCIe controller.
+> The controller on J722S SoC is similar to the one present on TI's AM64
+> SoC, with the difference being that the controller on AM64 SoC supports
+> up to Gen2 link speed while the one on J722S SoC supports Gen3 link speed.
 >=20
-> [1] https://github.com/nxp-imx/linux-imx/blob/lf-6.1.36-2.1.0/drivers/mxc=
-/gpu-viv/hal/kernel/arch/gc_hal_kernel_hardware.c#L2747-L2761
+> Update the bindings with a new compatible for J722S SoC.
 >=20
-> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+> Technical Reference Manual of J722S SoC: https://www.ti.com/lit/zip/spruj=
+b3
+>=20
+> Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
+
+Cheers,
+Conor.
+
 > ---
->  drivers/gpu/drm/etnaviv/etnaviv_gpu.c | 4 ++++
+>=20
+> Hello,
+>=20
+> This patch is based on linux-next tagged next-20240124.
+>=20
+> v2:
+> https://lore.kernel.org/r/20240122064457.664542-1-s-vadapalli@ti.com/
+> Changes since v2:
+> - Added fallback compatible for "ti,j722s-pcie-host" as
+>   "ti,j721e-pcie-host" based on Conor's suggestion at:
+>   https://lore.kernel.org/r/20240122-getting-drippy-bb22a0634092@spud/#t
+>=20
+> v1:
+> https://lore.kernel.org/r/20240117102526.557006-1-s-vadapalli@ti.com/
+> Changes since v1:
+> - Dropped patches 1/3 and 2/3 of the v1 series as discussed in the v1
+>   thread.
+> - Updated patch 3/3 which is the v1 for this patch by dropping the checks
+>   for the "num-lanes" property and "max-link-speed" property since the PCI
+>   driver already validates the "num-lanes" property.
+>=20
+> Regards,
+> Siddharth.
+>=20
+>  Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml | 4 ++++
 >  1 file changed, 4 insertions(+)
 >=20
-> diff --git a/drivers/gpu/drm/etnaviv/etnaviv_gpu.c b/drivers/gpu/drm/etna=
-viv/etnaviv_gpu.c
-> index 9b8445d2a128..e28332a2560d 100644
-> --- a/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
-> +++ b/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
-> @@ -641,6 +641,10 @@ static void etnaviv_gpu_enable_mlcg(struct etnaviv_g=
-pu *gpu)
->  		pmc |=3D VIVS_PM_MODULE_CONTROLS_DISABLE_MODULE_CLOCK_GATING_SE |
->  		       VIVS_PM_MODULE_CONTROLS_DISABLE_MODULE_CLOCK_GATING_RA;
+> diff --git a/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml=
+ b/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
+> index b7a534cef24d..ac69deeaf1ee 100644
+> --- a/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
+> +++ b/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
+> @@ -23,6 +23,10 @@ properties:
+>          items:
+>            - const: ti,j7200-pcie-host
+>            - const: ti,j721e-pcie-host
+> +      - description: PCIe controller in J722S
+> +        items:
+> +          - const: ti,j722s-pcie-host
+> +          - const: ti,j721e-pcie-host
 > =20
-> +	/* Disable SH_EU clock gating on affected core revisions. */
-> +	if (etnaviv_is_model_rev(gpu, GC8000, 0x8002))
-> +		pmc |=3D VIVS_PM_MODULE_CONTROLS_DISABLE_MODULE_CLOCK_GATING_SH_EU;
-> +
-With the other clock gate disables in the driver we match on all chip
-revisions found in downstream drivers, even if etnaviv hasn't been
-tested with the specific GPU. To stay consistent, this workaround
-should also match GC8000r7200 and GC9200r6304, same as the downstream
-driver.
+>    reg:
+>      maxItems: 4
+> --=20
+> 2.34.1
+>=20
 
-Regards,
-Lucas
+--XMTtUXZ1FD8n2B8o
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZbE2bwAKCRB4tDGHoIJi
+0jHrAQCIBSaSCKrkq41PAo1JM5MQwnH1H5lerQzNSHd34orjQQD/QiTReBxf2B8K
+0HBXqv1UMcgBysJE8No3ifA4Cdp2vA0=
+=tVT8
+-----END PGP SIGNATURE-----
+
+--XMTtUXZ1FD8n2B8o--
