@@ -1,142 +1,98 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4A747763A
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 12:45:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8CDA76918;
+	Wed, 24 Jan 2024 12:45:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706100309; cv=none; b=BFikDFFkhC0vc2KbpAaQBrOQvYQgaeLzy27FdfKlhI5DE1wbTILBuVwFoD8vbOqAKG4i2zn/So2MR4FeYFPFsL2egFBjYtAfgOli03QF7b7NHZVB+b85czTIIltUFFUZQTUbQwdVUEzYI+z4LDQrfOpU1hztELvAEX74mqSU86M=
+	t=1706100310; cv=none; b=l2UWQfpqRQDIHB8L1fVdn4ofW6nV3Fiw7/3IqQpPvVmKtqpqlonKGbAsOpdUVjIDdrX6R2sNoskUdA2c7/7VtREmfzsWKtnHWZ9rkOv2yimerTTb8QW39trLCAZa73o2zzlLYiFy4UfWqGkUXw7hBHGquqXCMgUq/qO5LNi+TkE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706100309; c=relaxed/simple;
-	bh=XKi0zVwjjfVwdJlARkO2RrHn8fFmHl2ls0r3ZRqrlhY=;
-	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=Ldj8tJHskEm0iF0+UkWMWMreb1uHfi8ruAtKFpdl5w0ZoZNWxouIdz5chkuW1vHXJWzAzbOiNsEHJeJW11Yu+tCiUizNjG7145uYgKJx6DDKl+Go6n/SY9BCu8t5Y6Adsi/BsoLj0pboZwY5ndfTX/ZxFatJzsXzLGNNsIxaGNA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.214])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4TKkDC5GGhz1xmT3;
-	Wed, 24 Jan 2024 20:44:11 +0800 (CST)
-Received: from kwepemm600013.china.huawei.com (unknown [7.193.23.68])
-	by mail.maildlp.com (Postfix) with ESMTPS id 42DB91A016E;
-	Wed, 24 Jan 2024 20:44:49 +0800 (CST)
-Received: from [10.174.178.46] (10.174.178.46) by
- kwepemm600013.china.huawei.com (7.193.23.68) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Wed, 24 Jan 2024 20:44:48 +0800
-Subject: Re: [Linux Kernel Bug] memory leak in ubi_attach
-To: Chenyuan Yang <chenyuan0y@gmail.com>
-CC: <linux-mtd@lists.infradead.org>, <richard@nod.at>,
-	<miquel.raynal@bootlin.com>, <vigneshr@ti.com>,
-	<linux-kernel@vger.kernel.org>, <syzkaller@googlegroups.com>, Zijie Zhao
-	<zzjas98@gmail.com>
-References: <CALGdzuo8_EXr4aUAw6X9S+yzMPi25Y82netPLWsd+3n-Ov9Pnw@mail.gmail.com>
- <10779b09-3413-6374-b4a1-1efd8821c5f2@huawei.com>
- <CALGdzuryBbCqGAhox9ZWaQHD5dSQNApfGmCP+rYZ7O4MCRH+rw@mail.gmail.com>
-From: Zhihao Cheng <chengzhihao1@huawei.com>
-Message-ID: <7138a98c-1562-3059-07b6-4d918bec9d1a@huawei.com>
-Date: Wed, 24 Jan 2024 20:44:36 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+	s=arc-20240116; t=1706100310; c=relaxed/simple;
+	bh=TZXm+kuPZ4nvGmxpZjlQE8EIcmBZdeT0tswbj5rQmKk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hPxG1NmbQuEW3gSXHp8IphEFNAUj9i1HjWBXBhVGb+r25oq9kM7Zoof/cKV/n7O4pK0miKQuHNpFe8VBLm1LDlv+qwav5XP7skxAA2Q+lpf4f3OxSsx3o0n9H8+bamBeUhTF0bbVhASNZHTBrdH5KSMTiixbCLVkgbmxsazJLeo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lUmH60PG; arc=none smtp.client-ip=209.85.128.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lUmH60PG"
+Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-5edfcba97e3so55809187b3.2;
+        Wed, 24 Jan 2024 04:45:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1706100307; x=1706705107; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TZXm+kuPZ4nvGmxpZjlQE8EIcmBZdeT0tswbj5rQmKk=;
+        b=lUmH60PG+lTytt1bs+Dgq/gLt1mGApiq63Iv2zYphUTeUIztS2n3ECaOSodn0g11Oj
+         0g/e12sTCuSNhiz7VGIN+BAdxLq0US4BAONucqIyLNIxRKCpEnH+cTv93KTBPvT7UofC
+         k9Okm2ntbRXSjGru42SJwJdL6nyCXMNZfM5u+0fubfMTHqx/GhV1K3V/vsF0KcECq3oT
+         rkETCEy9SF0Un9ILy7XSEoIKMCa+WxXIpsfz+/qY1aFA+9D0ho8YcSPf7DGA5wroM0wx
+         hSujFhoEBDYVG+5FJ7chgRCxW1apYXExI2ppNMFo6cynYo6XKhnlyY1JVnn1F9iQ1gqw
+         XLxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706100307; x=1706705107;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TZXm+kuPZ4nvGmxpZjlQE8EIcmBZdeT0tswbj5rQmKk=;
+        b=i1dR2ypffQhuxHHjK4Fbxi/bQC0Urj9uirdKpjk0zBUooqGGmho5qtTX+ezYayOJET
+         qDDLSF4JjWaS+troiFwYf0vym4HONYnE2WAFotXzONGfgs5BY2i0KZK+CfYVXEE9hDaH
+         WjPZwU4i1qmoIsnqkXE3wD8op57sKpsr0nK10dNiuD8lxlkBVTZRaZ1ULbibAtRa+44n
+         p61v01J8ihBaxl4fIvhdByDEyHYX6/N3o/A5pRSLMobtIFCZkWnyCRzy/HwwcHDKRuR6
+         68VuK3VSFBz8N/HfWI0naADZij3XPE604AevnccbMYuLmHRHuXMBuZftftPxwatE4Rir
+         Jh9w==
+X-Gm-Message-State: AOJu0YzmNg+lUHY4hxzL22tyRzUo+8HF2jqGQcVWztxsyNj0JoQ9PMtg
+	drJ7PzrEdNiSwfuga/W9T754Bx1Mh2uZi99U/Htps2H9mkqwAmswDI8IA4OuXIMSOBu3GcDEXlO
+	QwUe2W61CBMV0pZtcjoHmDr5K+TpTVQ+2TOwh/sMLha4=
+X-Google-Smtp-Source: AGHT+IGhg2BSC76jnAi74QGv0SbZtJZCUiJjbfeZOPD5ypEKfiEUJ0ZOdlvGhrFpnODlmLZfQJtgvgOBQT8gRfiznek=
+X-Received: by 2002:a81:7c85:0:b0:5ff:67f5:f3 with SMTP id x127-20020a817c85000000b005ff67f500f3mr708565ywc.38.1706100307452;
+ Wed, 24 Jan 2024 04:45:07 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <CALGdzuryBbCqGAhox9ZWaQHD5dSQNApfGmCP+rYZ7O4MCRH+rw@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- kwepemm600013.china.huawei.com (7.193.23.68)
+References: <20240121111730.262429-1-foxywang@tencent.com> <f898e36f-ba02-4c52-a3be-06caac13323e@linux.ibm.com>
+In-Reply-To: <f898e36f-ba02-4c52-a3be-06caac13323e@linux.ibm.com>
+From: Yi Wang <up2wing@gmail.com>
+Date: Wed, 24 Jan 2024 20:44:56 +0800
+Message-ID: <CAN35MuQvQ7mbNCR=udA2xCu9wZ+qjSEM6eZ+6giJ8BBATsA-Ew@mail.gmail.com>
+Subject: Re: [v2 0/4] KVM: irqchip: synchronize srcu only if needed
+To: Christian Borntraeger <borntraeger@linux.ibm.com>
+Cc: seanjc@google.com, pbonzini@redhat.com, tglx@linutronix.de, 
+	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, 
+	hpa@zytor.com, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	wanpengli@tencent.com, foxywang@tencent.com, oliver.upton@linux.dev, 
+	maz@kernel.org, anup@brainfault.org, atishp@atishpatra.org, 
+	frankja@linux.ibm.com, imbrenda@linux.ibm.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-在 2024/1/23 12:57, Chenyuan Yang 写道:
-> Hi Zhihao,
-> 
-> Thanks for your prompt reply! Here are the files related to this memory leak.
-> 
-> Best,
-> Chenyuan
-> 
+On Wed, Jan 24, 2024 at 8:14=E2=80=AFPM Christian Borntraeger
+<borntraeger@linux.ibm.com> wrote:
+>
+> Am 21.01.24 um 12:17 schrieb Yi Wang:
+> > From: Yi Wang <foxywang@tencent.com>
+> >
+> > We found that it may cost more than 20 milliseconds very accidentally
+> > to enable cap of KVM_CAP_SPLIT_IRQCHIP on a host which has many vms
+> > already.
+> >
+> > The reason is that when vmm(qemu/CloudHypervisor) invokes
+> > KVM_CAP_SPLIT_IRQCHIP kvm will call synchronize_srcu_expedited() and
+> > might_sleep and kworker of srcu may cost some delay during this period.
+> > One way makes sence is setup empty irq routing when creating vm and
+> > so that x86/s390 don't need to setup empty/dummy irq routing.
+> >
+> > Note: I have no s390 machine so the s390 patch has not been tested.
+>
+> I just did a quick sniff and it still seems to work. No performance check=
+ etc.
 
-Can you provide a kernel config and the cmdline? I can't reproduce the 
-problem by both C program and syz program. But after analyzing the log:
+Thanks very much, Christian!
 
-     [<ffffffff8157274e>] __kmalloc_node_track_caller+0x4e/0x120 
-mm/slab_common.c:1027
-     [<ffffffff81561e1f>] kstrdup+0x3f/0x70 mm/util.c:62
-     [<ffffffff81561ea7>] kstrdup_const+0x57/0x80 mm/util.c:85
-     [<ffffffff824d4596>] kvasprintf_const+0xc6/0x110 lib/kasprintf.c:48
-     [<ffffffff84aaeadf>] kobject_set_name_vargs+0x3f/0xe0 lib/kobject.c:272
-     [<ffffffff84aaef41>] kobject_add_varg lib/kobject.c:366 [inline]
-     [<ffffffff84aaef41>] kobject_init_and_add+0x71/0xe0 lib/kobject.c:455
-     [<ffffffff8162085a>] sysfs_slab_add+0x10a/0x210 mm/slub.c:6168
-     [<ffffffff81628474>] __kmem_cache_create+0x1b4/0x5a0 mm/slub.c:5120
-     [<ffffffff81571dca>] create_cache mm/slab_common.c:235 [inline]
-     [<ffffffff81571dca>] kmem_cache_create_usercopy+0x16a/0x2e0 
-mm/slab_common.c:340
-     [<ffffffff81571f51>] kmem_cache_create+0x11/0x20 mm/slab_common.c:395
-     [<ffffffff82e40fc5>] alloc_ai drivers/mtd/ubi/attach.c:1464 [inline]
-     [<ffffffff82e40fc5>] ubi_attach+0xb5/0x1e00 
-drivers/mtd/ubi/attach.c:1560
-     [<ffffffff82e302f8>] ubi_attach_mtd_dev+0x878/0x1130 
-drivers/mtd/ubi/build.c:1000
-     [<ffffffff82e3176d>] ctrl_cdev_ioctl+0x1dd/0x250 
-drivers/mtd/ubi/cdev.c:1043
-     [<ffffffff816b0e23>] vfs_ioctl fs/ioctl.c:51 [inline]
-     [<ffffffff816b0e23>] __do_sys_ioctl fs/ioctl.c:871 [inline]
-
-The leaked memory is located in 'kobj->name', the kobj comes from 
-kmem_cache and it is used to create entry under 
-sysfs('/sys/kernel/slab'). If kmem_cache_destroy() is missed to be 
-called in someone exiting path in UBI, there will be more memleak 
-messages reported (eg. ai->aeb_slab_cache). So I guess the potentional 
-problem has nothing to do with UBI.
-After looking through the implementation of create_cache, the life time 
-of 'kobj->name' is along with kobj, it can be always released even in 
-error handling paths. To figure out what happens I need to reproduce it 
-on my local machine.
-
-> On Mon, Jan 22, 2024 at 10:55 PM Zhihao Cheng <chengzhihao1@huawei.com> wrote:
->>
->> 在 2024/1/23 11:53, Chenyuan Yang 写道:
->>> Dear Linux Kernel Developers for UBI,
->>>
->>> We encountered "memory leak in ubi_attach" when testing UBI with
->>> Syzkaller and our generated specifications.
->>>
->>> syz repro: https://drive.google.com/file/d/17FoGw6akfufz05U-oRBP2wXmOiFF1VUq/view?usp=drive_link
->>> C reproducer: https://drive.google.com/file/d/1ayd3lmHPvqNoI01pQEdU832EktpTUnZ_/view?usp=drive_link
->>> report: https://drive.google.com/file/d/1hC2arY3FbQt-6L5rbDfY-DQ2oH82IIGq/view?usp=drive_link
->>> stats: https://drive.google.com/file/d/1REig9fV0H1fYPWaiicc-JVLlCpo7TTw4/view?usp=drive_link
->>
->> I can't open above links in company, may you post these files in attachment?
->>
->>>
->>> This memory leak is triggered by `ioctl$UBI_IOCATT`, where
->>> `ubi_attach_info` invokes `kmem_cache_create`
->>> (https://elixir.bootlin.com/linux/v6.7/source/drivers/mtd/ubi/attach.c#L1464).
->>> It seems that the memory leak occurs when the slab cache is
->>> successfully created. I apologize for not being able to conduct a
->>> deeper analysis of the root cause, as my expertise in UBI drivers is
->>> limited.
->>>
->>> If you have any questions or require more information, please feel
->>> free to contact us.
->>>
->>> Reported-by: Chenyuan Yang <chenyuan0y@gmail.com>
->>>
->>> Best,
->>> Chenyuan
->>>
->>>
->>> ______________________________________________________
->>> Linux MTD discussion mailing list
->>> http://lists.infradead.org/mailman/listinfo/linux-mtd/
->>>
->>
->>
->> ______________________________________________________
->> Linux MTD discussion mailing list
->> http://lists.infradead.org/mailman/listinfo/linux-mtd/
-
+---
+Best wishes
+Yi Wang
