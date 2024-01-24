@@ -1,44 +1,44 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBA5318036;
-	Wed, 24 Jan 2024 02:42:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D52B718E1E;
+	Wed, 24 Jan 2024 02:42:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.120
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706064166; cv=none; b=ntSkGpstBW37Q54dTSdxr4q56BHBBuy+f9/1bcOWCV1twVqLZYfLVdAV0FpPOUqTUcdboEPDdTH+RZzwFZtP9vOQyjYRtICjJHHspCKmvxFGGBy7dH0Y2DHPo18JkwfPlYYFCquVtBoZZiyDvuHKvzwIFaLIijd5wY4zYTSFRHg=
+	t=1706064168; cv=none; b=EgUyayNWxWgdk1JOfRUn0J79pc+00N9V9gOYnCjvPLInly/cLWCv9X3OqiOQrOLgtwveD/PHhq5b3JeBfShuiVwldOTMEnLqgON9e46KLfFX9+QePjQSd7WP9Z82Ux+r5EapKXu5QtaF4m868ofnzbDGlgUAdkeuDlrAOpqsByc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706064166; c=relaxed/simple;
-	bh=Ky/BGy7YdiRQEiX3OiH3FB749KKoV/jpv2wQq4kCc/0=;
+	s=arc-20240116; t=1706064168; c=relaxed/simple;
+	bh=h8um0cUpGOSDzpshStMJ7pABEvMbvAz9TJHO3NVRyXM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=bSjaSz6u5s/noF9Nx/MsfL6pZFk7uOdBRc0M0Ztt2IS/J5wj4K+k9PgTUH66HV9RU6743PggBC/9Dp0UvRbrnkILrGsLpyXVeWdAAZuQIR+ziXexqaGQcdEJOTH++OTGwj2lVLXfDORNwBhRU36UL1g7C4X3LW0hfziNWI+rdR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CbDVM2+4; arc=none smtp.client-ip=192.55.52.120
+	 MIME-Version; b=N7wwVHQbkDRfOobNLs2MEL6Kxvs5hg03q/4Z1attXQ+Fja/maePuui0wuKd6s/lAOV8ySLKN8DFX0lQzIYz/ClgL8UCnkCj4qUNVseRzZ22vB+BHdKi09+hJC2fMS/sK80LHA20UZTw2JHyjwOXU4srxxkNBtSROOeqNqWwRhbc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RD+YoJYk; arc=none smtp.client-ip=192.55.52.120
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CbDVM2+4"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RD+YoJYk"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706064164; x=1737600164;
+  t=1706064166; x=1737600166;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=Ky/BGy7YdiRQEiX3OiH3FB749KKoV/jpv2wQq4kCc/0=;
-  b=CbDVM2+4HxyEX3niapZFJsSmH+tjZvljW8aLC/mh7+C9sP5iWdLyRoJL
-   k+eLsDeSOtFlODZY6zk5LmHu7uYqQRqVqB97xKC7cvSWVfpoxA1f7A0yH
-   d2AK97KCXlx/SykIyzpYxbA6LjrJNEwReN5J4kVBvwptsTbjANHqsgO0a
-   58MyltWSPHOjWsF2Mw09FHEc+d6duvemgVZ4i6uitir2hRrKWQibCHLCi
-   e0gLiAtcXW/Xc4DCPAh0uiDYr5pIRyNZ8+8sg2W5Ra4upmaqxgju74mZf
-   Yt0HIfRYWHteqqVy/dCOp7NVjzDApY8N09Ds0VJkFr/M076ACgW4r1uf2
+  bh=h8um0cUpGOSDzpshStMJ7pABEvMbvAz9TJHO3NVRyXM=;
+  b=RD+YoJYksDxfDmMEAVbos7KH/+l5xlDjF0Z+Rd323aJSSO4ok4bzjcev
+   QXU3mpVb9vqRxnu+0YZNcAv2lahXIL4QzIb+UlvzGCt8ef4ATyUOxk3c+
+   emEst1PpeTr++i7cSwloMa3ye6jb74XQPrn5WEL8kn+O6sDSokwPB26Pe
+   loA2hxRdYrLZsN3ghT+9mScAPPmXZN6xM4OSjvlxDrRX5ug5ZTkb+q25c
+   0Mluy8WpTxuwOtdM9FWfP+D2VRnmBnADJb+P+aFa6mjbpW8udwCxjxNa1
+   YkjHbTesc3R1ubnWH1fug1MeymsCN1hX8JuSkekQBmmmTlGf9fqOJN0qI
    w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="400586537"
+X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="400586556"
 X-IronPort-AV: E=Sophos;i="6.05,215,1701158400"; 
-   d="scan'208";a="400586537"
+   d="scan'208";a="400586556"
 Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2024 18:42:40 -0800
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2024 18:42:42 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.05,215,1701158400"; 
-   d="scan'208";a="1825894"
+   d="scan'208";a="1825909"
 Received: from 984fee00a5ca.jf.intel.com ([10.165.9.183])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2024 18:42:40 -0800
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2024 18:42:42 -0800
 From: Yang Weijiang <weijiang.yang@intel.com>
 To: seanjc@google.com,
 	pbonzini@redhat.com,
@@ -52,11 +52,10 @@ Cc: peterz@infradead.org,
 	rick.p.edgecombe@intel.com,
 	mlevitsk@redhat.com,
 	john.allen@amd.com,
-	weijiang.yang@intel.com,
-	Zhang Yi Z <yi.z.zhang@linux.intel.com>
-Subject: [PATCH v9 18/27] KVM: VMX: Introduce CET VMCS fields and control bits
-Date: Tue, 23 Jan 2024 18:41:51 -0800
-Message-Id: <20240124024200.102792-19-weijiang.yang@intel.com>
+	weijiang.yang@intel.com
+Subject: [PATCH v9 21/27] KVM: x86: Save and reload SSP to/from SMRAM
+Date: Tue, 23 Jan 2024 18:41:54 -0800
+Message-Id: <20240124024200.102792-22-weijiang.yang@intel.com>
 X-Mailer: git-send-email 2.39.3
 In-Reply-To: <20240124024200.102792-1-weijiang.yang@intel.com>
 References: <20240124024200.102792-1-weijiang.yang@intel.com>
@@ -68,106 +67,85 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Control-flow Enforcement Technology (CET) is a kind of CPU feature used
-to prevent Return/CALL/Jump-Oriented Programming (ROP/COP/JOP) attacks.
-It provides two sub-features(SHSTK,IBT) to defend against ROP/COP/JOP
-style control-flow subversion attacks.
+Save CET SSP to SMRAM on SMI and reload it on RSM. KVM emulates HW arch
+behavior when guest enters/leaves SMM mode,i.e., save registers to SMRAM
+at the entry of SMM and reload them at the exit to SMM. Per SDM, SSP is
+one of such registers on 64-bit Arch, and add the support for SSP. Note,
+on 32-bit Arch, SSP is not defined in SMRAM, so fail 32-bit CET guest
+launch.
 
-Shadow Stack (SHSTK):
-  A shadow stack is a second stack used exclusively for control transfer
-  operations. The shadow stack is separate from the data/normal stack and
-  can be enabled individually in user and kernel mode. When shadow stack
-  is enabled, CALL pushes the return address on both the data and shadow
-  stack. RET pops the return address from both stacks and compares them.
-  If the return addresses from the two stacks do not match, the processor
-  generates a #CP.
-
-Indirect Branch Tracking (IBT):
-  IBT introduces instruction(ENDBRANCH)to mark valid target addresses of
-  indirect branches (CALL, JMP etc...). If an indirect branch is executed
-  and the next instruction is _not_ an ENDBRANCH, the processor generates
-  a #CP. These instruction behaves as a NOP on platforms that have no CET.
-
-Several new CET MSRs are defined to support CET:
-  MSR_IA32_{U,S}_CET: CET settings for {user,supervisor} CET respectively.
-
-  MSR_IA32_PL{0,1,2,3}_SSP: SHSTK pointer linear address for CPL{0,1,2,3}.
-
-  MSR_IA32_INT_SSP_TAB: Linear address of SHSTK pointer table, whose entry
-			is indexed by IST of interrupt gate desc.
-
-Two XSAVES state bits are introduced for CET:
-  IA32_XSS:[bit 11]: Control saving/restoring user mode CET states
-  IA32_XSS:[bit 12]: Control saving/restoring supervisor mode CET states.
-
-Six VMCS fields are introduced for CET:
-  {HOST,GUEST}_S_CET: Stores CET settings for kernel mode.
-  {HOST,GUEST}_SSP: Stores current active SSP.
-  {HOST,GUEST}_INTR_SSP_TABLE: Stores current active MSR_IA32_INT_SSP_TAB.
-
-On Intel platforms, two additional bits are defined in VM_EXIT and VM_ENTRY
-control fields:
-If VM_EXIT_LOAD_CET_STATE = 1, host CET states are loaded from following
-VMCS fields at VM-Exit:
-  HOST_S_CET
-  HOST_SSP
-  HOST_INTR_SSP_TABLE
-
-If VM_ENTRY_LOAD_CET_STATE = 1, guest CET states are loaded from following
-VMCS fields at VM-Entry:
-  GUEST_S_CET
-  GUEST_SSP
-  GUEST_INTR_SSP_TABLE
-
-Co-developed-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
-Signed-off-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
+Suggested-by: Sean Christopherson <seanjc@google.com>
+Suggested-by: Chao Gao <chao.gao@intel.com>
 Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
-Reviewed-by: Chao Gao <chao.gao@intel.com>
 Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
 ---
- arch/x86/include/asm/vmx.h | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/x86/kvm/cpuid.c | 11 +++++++++++
+ arch/x86/kvm/smm.c   |  8 ++++++++
+ arch/x86/kvm/smm.h   |  2 +-
+ 3 files changed, 20 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/include/asm/vmx.h b/arch/x86/include/asm/vmx.h
-index 0e73616b82f3..451fd4f4fedc 100644
---- a/arch/x86/include/asm/vmx.h
-+++ b/arch/x86/include/asm/vmx.h
-@@ -104,6 +104,7 @@
- #define VM_EXIT_CLEAR_BNDCFGS                   0x00800000
- #define VM_EXIT_PT_CONCEAL_PIP			0x01000000
- #define VM_EXIT_CLEAR_IA32_RTIT_CTL		0x02000000
-+#define VM_EXIT_LOAD_CET_STATE                  0x10000000
+diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+index 3ab133530573..95233b0879a3 100644
+--- a/arch/x86/kvm/cpuid.c
++++ b/arch/x86/kvm/cpuid.c
+@@ -149,6 +149,17 @@ static int kvm_check_cpuid(struct kvm_vcpu *vcpu,
+ 		if (vaddr_bits != 48 && vaddr_bits != 57 && vaddr_bits != 0)
+ 			return -EINVAL;
+ 	}
++	/*
++	 * Prevent 32-bit guest launch if shadow stack is exposed as SSP
++	 * state is not defined for 32-bit SMRAM.
++	 */
++	best = cpuid_entry2_find(entries, nent, 0x80000001,
++				 KVM_CPUID_INDEX_NOT_SIGNIFICANT);
++	if (best && !(best->edx & F(LM))) {
++		best = cpuid_entry2_find(entries, nent, 0x7, 0);
++		if (best && (best->ecx & F(SHSTK)))
++			return -EINVAL;
++	}
  
- #define VM_EXIT_ALWAYSON_WITHOUT_TRUE_MSR	0x00036dff
+ 	/*
+ 	 * Exposing dynamic xfeatures to the guest requires additional
+diff --git a/arch/x86/kvm/smm.c b/arch/x86/kvm/smm.c
+index 45c855389ea7..7aac9c54c353 100644
+--- a/arch/x86/kvm/smm.c
++++ b/arch/x86/kvm/smm.c
+@@ -275,6 +275,10 @@ static void enter_smm_save_state_64(struct kvm_vcpu *vcpu,
+ 	enter_smm_save_seg_64(vcpu, &smram->gs, VCPU_SREG_GS);
  
-@@ -117,6 +118,7 @@
- #define VM_ENTRY_LOAD_BNDCFGS                   0x00010000
- #define VM_ENTRY_PT_CONCEAL_PIP			0x00020000
- #define VM_ENTRY_LOAD_IA32_RTIT_CTL		0x00040000
-+#define VM_ENTRY_LOAD_CET_STATE                 0x00100000
+ 	smram->int_shadow = static_call(kvm_x86_get_interrupt_shadow)(vcpu);
++
++	if (guest_can_use(vcpu, X86_FEATURE_SHSTK))
++		KVM_BUG_ON(kvm_msr_read(vcpu, MSR_KVM_SSP, &smram->ssp),
++			   vcpu->kvm);
+ }
+ #endif
  
- #define VM_ENTRY_ALWAYSON_WITHOUT_TRUE_MSR	0x000011ff
+@@ -564,6 +568,10 @@ static int rsm_load_state_64(struct x86_emulate_ctxt *ctxt,
+ 	static_call(kvm_x86_set_interrupt_shadow)(vcpu, 0);
+ 	ctxt->interruptibility = (u8)smstate->int_shadow;
  
-@@ -345,6 +347,9 @@ enum vmcs_field {
- 	GUEST_PENDING_DBG_EXCEPTIONS    = 0x00006822,
- 	GUEST_SYSENTER_ESP              = 0x00006824,
- 	GUEST_SYSENTER_EIP              = 0x00006826,
-+	GUEST_S_CET                     = 0x00006828,
-+	GUEST_SSP                       = 0x0000682a,
-+	GUEST_INTR_SSP_TABLE            = 0x0000682c,
- 	HOST_CR0                        = 0x00006c00,
- 	HOST_CR3                        = 0x00006c02,
- 	HOST_CR4                        = 0x00006c04,
-@@ -357,6 +362,9 @@ enum vmcs_field {
- 	HOST_IA32_SYSENTER_EIP          = 0x00006c12,
- 	HOST_RSP                        = 0x00006c14,
- 	HOST_RIP                        = 0x00006c16,
-+	HOST_S_CET                      = 0x00006c18,
-+	HOST_SSP                        = 0x00006c1a,
-+	HOST_INTR_SSP_TABLE             = 0x00006c1c
- };
++	if (guest_can_use(vcpu, X86_FEATURE_SHSTK))
++		KVM_BUG_ON(kvm_msr_write(vcpu, MSR_KVM_SSP, smstate->ssp),
++			   vcpu->kvm);
++
+ 	return X86EMUL_CONTINUE;
+ }
+ #endif
+diff --git a/arch/x86/kvm/smm.h b/arch/x86/kvm/smm.h
+index a1cf2ac5bd78..1e2a3e18207f 100644
+--- a/arch/x86/kvm/smm.h
++++ b/arch/x86/kvm/smm.h
+@@ -116,8 +116,8 @@ struct kvm_smram_state_64 {
+ 	u32 smbase;
+ 	u32 reserved4[5];
  
- /*
+-	/* ssp and svm_* fields below are not implemented by KVM */
+ 	u64 ssp;
++	/* svm_* fields below are not implemented by KVM */
+ 	u64 svm_guest_pat;
+ 	u64 svm_host_efer;
+ 	u64 svm_host_cr4;
 -- 
 2.39.3
 
