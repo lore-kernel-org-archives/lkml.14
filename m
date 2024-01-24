@@ -1,168 +1,124 @@
-Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E84F524C;
-	Wed, 24 Jan 2024 03:22:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D72F1381;
+	Wed, 24 Jan 2024 03:29:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.134.136.31
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706066534; cv=none; b=bDbsL26+ywuuzXQEx2vAXpeyesAQU/a+kOegCYLqjDMpTuq8QI+5NfgCrlX8SqMwcexh8HvCINwORglJD5bbWqRSNxwZudPbzklxraj43pqJqmGZJya7ut5p/5Tye5vhDYw7CBwqfeZoGVMGHziZB54m1UHPCJlmQR+lnaozyCo=
+	t=1706066949; cv=none; b=DMpVQYDdqm+79JSKa0Yo/hw3aT94t6qbQxMYmJeNJ5C/U8x4fUdacBNoKRTvGWa3BTsjnZiEnYrzLC7503HYjC4GMqmf2GZkmKexI3GSP0P0Yf8W5vENLfP9Rr5w9cS/RO0ZusBKZLG+R2gn4+CPNtGZmEkQHcTvioeSVdmVEm8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706066534; c=relaxed/simple;
-	bh=QIZBf1kkH+VXUncxbQEtkWRVJgkIw5LyVIjqmrdxNRg=;
-	h=Subject:To:References:CC:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=pfv+UZjkWMqagifQb+JGR7kGzFptdXqSu30idL5Mw3l4a0DLJ4bR8/BtFXoCUy35/V5aQawq6IEV6CXpu0EoIiuC5RmOH/TIhxyKMIIoFcjmgEyA56pQyKKv+x+o+JDNhUSzTVBmQgAmsajb4tTnETFur2zGi9tWO7fNyVzBs8g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.112])
-	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4TKTjf6c3pz1Q8Ck;
-	Wed, 24 Jan 2024 11:20:22 +0800 (CST)
-Received: from canpemm500010.china.huawei.com (unknown [7.192.105.118])
-	by mail.maildlp.com (Postfix) with ESMTPS id 4258B140516;
-	Wed, 24 Jan 2024 11:21:52 +0800 (CST)
-Received: from [10.174.178.185] (10.174.178.185) by
- canpemm500010.china.huawei.com (7.192.105.118) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Wed, 24 Jan 2024 11:21:46 +0800
-Subject: Re: [PATCH v4 7/7] selftests/ftrace: add test cases for VFS type
- "%pd" and "%pD"
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-References: <20240123092139.3698375-1-yebin10@huawei.com>
- <20240123092139.3698375-8-yebin10@huawei.com>
- <20240124103201.6dd8d466b1b734796418c1c4@kernel.org>
-CC: <rostedt@goodmis.org>, <mathieu.desnoyers@efficios.com>,
-	<linux-trace-kernel@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-From: "yebin (H)" <yebin10@huawei.com>
-Message-ID: <65B08249.6050704@huawei.com>
-Date: Wed, 24 Jan 2024 11:21:45 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:38.0) Gecko/20100101
- Thunderbird/38.1.0
+	s=arc-20240116; t=1706066949; c=relaxed/simple;
+	bh=LEKebXaU68il7ohv0EYVm0bpFq9dmjW5BYBJT6VpT8E=;
+	h=Content-Type:To:Cc:Subject:References:Date:MIME-Version:From:
+	 Message-ID:In-Reply-To; b=Tlpn1vRYtrOhQSClihDoDaABVotQoMezJFneoEUToZIE72U8pprgx4wNimfDBHybRFA2Q4HRO2uuG4NnRg1l+TVpxdv69XQsF8U2R6HsFTq9mj6MOgLEdBiriEoGuNn9RxK3Q7wjdWI4Brh4rdaWSBpTlIMlZQWXp5qKYLieqVU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=D/NWX0IE; arc=none smtp.client-ip=134.134.136.31
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="D/NWX0IE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706066947; x=1737602947;
+  h=to:cc:subject:references:date:mime-version:
+   content-transfer-encoding:from:message-id:in-reply-to;
+  bh=LEKebXaU68il7ohv0EYVm0bpFq9dmjW5BYBJT6VpT8E=;
+  b=D/NWX0IEjq+FluU77bRl1pe5ooB7wdWhx3Z63suva+c1WuIfXQWSUEOt
+   DOzwCuBHa/ZLUOejgI1qvs45RnhnQXcaclGGNB3xbHm0IAIdzNl9oYfYg
+   NdvidBC/XPglqlS3qePuFI0OAN0p6yXGkYchIli6WvN+WkblDBVbjND0W
+   bOZkaKuFv9wre+PV488NBvDvoL09XE9+EfY+so/qx6trfsduNqehdooGW
+   t1WdaUlWE+hCuYhB8pYOx6BHzD2FnEm3f0f2Cc61JOMKRXI9Wg6tVSSs5
+   Sbh9JUk0ounTqNcwCWszzSZCfAA2oAneWNJ48WgaRGUbElaQ4Tb9Gf5eO
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="466002819"
+X-IronPort-AV: E=Sophos;i="6.05,215,1701158400"; 
+   d="scan'208";a="466002819"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2024 19:29:06 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,215,1701158400"; 
+   d="scan'208";a="1765232"
+Received: from hhuan26-mobl.amr.corp.intel.com ([10.92.17.168])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-SHA; 23 Jan 2024 19:29:04 -0800
+Content-Type: text/plain; charset=iso-8859-15; format=flowed; delsp=yes
+To: dave.hansen@linux.intel.com, tj@kernel.org, mkoutny@suse.com,
+ linux-kernel@vger.kernel.org, linux-sgx@vger.kernel.org, x86@kernel.org,
+ cgroups@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+ hpa@zytor.com, sohil.mehta@intel.com, "Jarkko Sakkinen" <jarkko@kernel.org>
+Cc: zhiquan1.li@intel.com, kristen@linux.intel.com, seanjc@google.com,
+ zhanb@microsoft.com, anakrish@microsoft.com, mikko.ylinen@linux.intel.com,
+ yangjie@microsoft.com
+Subject: Re: [PATCH v7 04/15] x86/sgx: Implement basic EPC misc cgroup
+ functionality
+References: <20240122172048.11953-1-haitao.huang@linux.intel.com>
+ <20240122172048.11953-5-haitao.huang@linux.intel.com>
+ <CYLIJZZJON62.24BNN310T3B2F@suppilovahvero>
+Date: Tue, 23 Jan 2024 21:29:03 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20240124103201.6dd8d466b1b734796418c1c4@kernel.org>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- canpemm500010.china.huawei.com (7.192.105.118)
+From: "Haitao Huang" <haitao.huang@linux.intel.com>
+Organization: Intel
+Message-ID: <op.2h07ypcmwjvjmi@hhuan26-mobl.amr.corp.intel.com>
+In-Reply-To: <CYLIJZZJON62.24BNN310T3B2F@suppilovahvero>
+User-Agent: Opera Mail/1.0 (Win32)
 
+On Mon, 22 Jan 2024 14:25:53 -0600, Jarkko Sakkinen <jarkko@kernel.org>  
+wrote:
 
-
-On 2024/1/24 9:32, Masami Hiramatsu (Google) wrote:
-> On Tue, 23 Jan 2024 17:21:39 +0800
-> Ye Bin <yebin10@huawei.com> wrote:
->
->> This patch adds test cases for new print format type "%pd/%pD".The test cases
->> test the following items:
->> 1. Test README if add "%pd/%pD" type;
->> 2. Test "%pd" type for dput();
->> 3. Test "%pD" type for vfs_read();
+> On Mon Jan 22, 2024 at 7:20 PM EET, Haitao Huang wrote:
+>> From: Kristen Carlson Accardi <kristen@linux.intel.com>
 >>
->> Signed-off-by: Ye Bin <yebin10@huawei.com>
->> ---
->>   .../ftrace/test.d/kprobe/kprobe_args_vfs.tc   | 79 +++++++++++++++++++
->>   1 file changed, 79 insertions(+)
->>   create mode 100644 tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_vfs.tc
+>> SGX Enclave Page Cache (EPC) memory allocations are separate from normal
+>> RAM allocations, and are managed solely by the SGX subsystem. The
+>> existing cgroup memory controller cannot be used to limit or account for
+>> SGX EPC memory, which is a desirable feature in some environments.  For
+>> example, in a Kubernates environment, a user can request certain EPC
+>> quota for a pod but the orchestrator can not enforce the quota to limit
+>> runtime EPC usage of the pod without an EPC cgroup controller.
 >>
->> diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_vfs.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_vfs.tc
->> new file mode 100644
->> index 000000000000..1d8edd294dd6
->> --- /dev/null
->> +++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_vfs.tc
->> @@ -0,0 +1,79 @@
->> +#!/bin/sh
->> +# SPDX-License-Identifier: GPL-2.0
->> +# description: Kprobe event VFS type argument
->> +# requires: kprobe_events
->> +
->> +case `uname -m` in
->> +x86_64)
->> +  ARG1=%di
->> +;;
->> +i[3456]86)
->> +  ARG1=%ax
->> +;;
->> +aarch64)
->> +  ARG1=%x0
->> +;;
->> +arm*)
->> +  ARG1=%r0
->> +;;
->> +ppc64*)
->> +  ARG1=%r3
->> +;;
->> +ppc*)
->> +  ARG1=%r3
-> You can merge this ppc* and ppc64* cases :)
->
->> +;;
->> +s390*)
->> +  ARG1=%r2
->> +;;
->> +mips*)
->> +  ARG1=%r4
->> +;;
->> +loongarch*)
->> +  ARG1=%r4
->> +;;
->> +riscv*)
->> +  ARG1=%a0
-> Anyway, I wonder why don't you use '$arg1' instead of these registers.
-> Is there any reason?
->
-> Thank you,
-I looked at the parameter parsing code again, and using "$arg1" requires 
-the kernel to
-enable the CONFIG_HAVE_FUNCTION_ARG_ACCESS_API configuration.
->> +;;
->> +*)
->> +  echo "Please implement other architecture here"
->> +  exit_untested
->> +esac
->> +
->> +: "Test argument %pd/%pD in README"
->> +grep -q "%pd/%pD" README
->> +
->> +: "Test argument %pd with name"
->> +echo "p:testprobe dput name=${ARG1}:%pd" > kprobe_events
->> +echo 1 > events/kprobes/testprobe/enable
->> +grep -q "1" events/kprobes/testprobe/enable
->> +echo 0 > events/kprobes/testprobe/enable
->> +grep "dput" trace | grep -q "enable"
->> +echo "" > kprobe_events
->> +echo "" > trace
->> +
->> +: "Test argument %pd without name"
->> +echo "p:testprobe dput ${ARG1}:%pd" > kprobe_events
->> +echo 1 > events/kprobes/testprobe/enable
->> +grep -q "1" events/kprobes/testprobe/enable
->> +echo 0 > events/kprobes/testprobe/enable
->> +grep "dput" trace | grep -q "enable"
->> +echo "" > kprobe_events
->> +echo "" > trace
->> +
->> +: "Test argument %pD with name"
->> +echo "p:testprobe vfs_read name=${ARG1}:%pD" > kprobe_events
->> +echo 1 > events/kprobes/testprobe/enable
->> +grep -q "1" events/kprobes/testprobe/enable
->> +echo 0 > events/kprobes/testprobe/enable
->> +grep "vfs_read" trace | grep -q "enable"
->> +echo "" > kprobe_events
->> +echo "" > trace
->> +
->> +: "Test argument %pD without name"
->> +echo "p:testprobe vfs_read ${ARG1}:%pD" > kprobe_events
->> +echo 1 > events/kprobes/testprobe/enable
->> +grep -q "1"  events/kprobes/testprobe/enable
->> +echo 0 > events/kprobes/testprobe/enable
->> +grep "vfs_read" trace | grep -q "enable"
->> +echo "" > kprobe_events
->> +echo "" > trace
->> -- 
->> 2.31.1
+>> Utilize the misc controller [admin-guide/cgroup-v2.rst, 5-9. Misc] to
+>> limit and track EPC allocations per cgroup. Earlier patches have added
+>> the "sgx_epc" resource type in the misc cgroup subsystem. Add basic
+>> support in SGX driver as the "sgx_epc" resource provider:
 >>
+>> - Set "capacity" of EPC by calling misc_cg_set_capacity()
+>> - Update EPC usage counter, "current", by calling charge and uncharge
+>> APIs for EPC allocation and deallocation, respectively.
+>> - Setup sgx_epc resource type specific callbacks, which perform
+>> initialization and cleanup during cgroup allocation and deallocation,
+>> respectively.
+>>
+>> With these changes, the misc cgroup controller enables user to set a  
+>> hard
+>> limit for EPC usage in the "misc.max" interface file. It reports current
+>> usage in "misc.current", the total EPC memory available in
+>> "misc.capacity", and the number of times EPC usage reached the max limit
+>> in "misc.events".
+>>
+>> For now, the EPC cgroup simply blocks additional EPC allocation in
+>> sgx_alloc_epc_page() when the limit is reached. Reclaimable pages are
+>> still tracked in the global active list, only reclaimed by the global
+>> reclaimer when the total free page count is lower than a threshold.
+>>
+>> Later patches will reorganize the tracking and reclamation code in the
+>> global reclaimer and implement per-cgroup tracking and reclaiming.
+>>
+>> Co-developed-by: Sean Christopherson <sean.j.christopherson@intel.com>
+>> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+>> Signed-off-by: Kristen Carlson Accardi <kristen@linux.intel.com>
+>> Co-developed-by: Haitao Huang <haitao.huang@linux.intel.com>
+>> Signed-off-by: Haitao Huang <haitao.huang@linux.intel.com>
 >
+> For consistency sake I'd also add co-developed-by for Kristen. This is
+> at least the format suggested by kernel documentation.
+>
+She is the "From Author", so only Signed-off-by is needed for her  
+according to the second example in the doc[1]?
 
+Thanks
+Haitao
+[1]https://docs.kernel.org/process/submitting-patches.html#when-to-use-acked-by-cc-and-co-developed-by
