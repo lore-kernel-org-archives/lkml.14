@@ -1,96 +1,75 @@
-Received: from www530.your-server.de (www530.your-server.de [188.40.30.78])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB84323C9;
-	Wed, 24 Jan 2024 14:51:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.40.30.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1FC0362
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 14:52:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706107889; cv=none; b=e2LBfMknXpok0VWdvJCwahO5nr56ZhePnwBFVf/TD+0Q3FjgXoSf+WQORxg4tZd3quHklYd7up7dd4oF1oOGlIUu4wDUjqmTlh3ryrVpgg4thcUwenNWr3HtVnUkO2dnx6lqSMK/ncWfab/1Tc/7OyRBEqXSeboezcg/UXLhQQc=
+	t=1706107956; cv=none; b=aXT9biLntJpjE5foEsVE7psy74hL29e14++Ep/kbNxLkgtk1bcL2cBUj/HGXzpJyQ9bYqU6IEebUvRr1bdZ7bX1UKPI4a9+9L8NRapc8bP+kF5qKsoGyGTmakqvgwlpsQNUH3GpxwW+DG4gl+mCu/M8RBwnXOpJCcq+Zk0lz3as=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706107889; c=relaxed/simple;
-	bh=24wJJWVUh2cZb1nXQXw4kmreJhJJdyXf+GeakqvGMdY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EEEPdYI1vRDAkO/KUnsfGs6J8mx02qniAdGXqrfpJH0K+CdzPjovQd520B/VS4tgdvQVC32zfbPSN/ZJzW4ShiJCbW8PdnWsc51CW1o4HwalDCHCWar3MMtis1X4a6mYspj111+RW3hXzntxTQHm2igQabwZMGv9wmNUgQLTIwE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=geanix.com; spf=pass smtp.mailfrom=geanix.com; dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b=X6wbqruh; arc=none smtp.client-ip=188.40.30.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=geanix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=geanix.com
+	s=arc-20240116; t=1706107956; c=relaxed/simple;
+	bh=PgUauHGGR60fPglyTjPAB/5swegamxCnZ5ahUXY87eY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=K0yPL1QxRHVpvlJ5hC80wMrf4qQMaynOct8Z+mJ/S80gviVXbXwzeag8q2lQd5qD6BBJphn6aZ53zHFmM8X/ubr/CWrDc+FbsGB7ff3rUtqcTEypBJafyPaC57RxI8VYpZyX4Ndwn+TwqOEu7zyereROYeGGPJYjUO/0lbhsFaI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aiInJE32; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="X6wbqruh"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=geanix.com;
-	s=default2211; h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:
-	Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:In-Reply-To:References;
-	bh=s48UK9/txojh0jP006gnClU0QGtWU0AZknMA7NCP1qs=; b=X6wbqruhAC9y80cXiNvdROZnFE
-	slorrNyyr70EfUee+kPi1OzkuDOHpdN1b+iXK95JJ7d04D7rqY5sGiZS/Hzq9Uk0yyk/ofm9SHaV7
-	Zybr9hEvECyWPnkrui/U2iGj4W4B+0xtuzYI/cfufrKSOLZ7MLjicm6lgTSeIRq9+BC4NIaSGjfe/
-	65m9cGr+KUz2Tk/eVAhtH8ZMal8vWAfmupnLtX+CHewTTCuz7GGLwOjTrRGLKK7Px3H5WEcn04cjX
-	MQMqSuarP3Fs9fOZc984VQbsTPH1Roq2kk44sRaM5Phl9iIePsVrEYWUXJHRx1fpb7KJ1H0Qlcx7c
-	0lrqTswQ==;
-Received: from sslproxy01.your-server.de ([78.46.139.224])
-	by www530.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <esben@geanix.com>)
-	id 1rSeJF-000NYX-2A; Wed, 24 Jan 2024 15:32:57 +0100
-Received: from [87.49.43.79] (helo=localhost)
-	by sslproxy01.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <esben@geanix.com>)
-	id 1rSeJE-0006ur-80; Wed, 24 Jan 2024 15:32:56 +0100
-From: Esben Haabendal <esben@geanix.com>
-To: netdev@vger.kernel.org,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Jose Abreu <joabreu@synopsys.com>,
-	"David S. Miller" <davem@davemloft.net>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aiInJE32"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9757FC433C7;
+	Wed, 24 Jan 2024 14:52:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706107956;
+	bh=PgUauHGGR60fPglyTjPAB/5swegamxCnZ5ahUXY87eY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=aiInJE32WSG4IVDgZHIN//8kLNzqbo0uSMdZv4E3IgOZ/ELh7r05W1jC0jCkQKZTd
+	 qkhoTK+Fh8Q3wTCIlyEA/OJvk7nQZQR/GySBg+4ih1H/EDk7BQBeEzZgn6is/rHNW+
+	 LwwV3CtyHmhhkeHBSuvWncEmn3MjdMR/+CzitHXgXLjvMVNDTDOdyGqoeqccZhnZwv
+	 Fu/LsFySfWViAaiFczdQ/Xg4dwpe5t6xB8SnFPE29kuIVh9paDPacZThWBNqwSDvOm
+	 9a9ZunhtR8zE2iQhZ5l/LGMPMfUrhv+tgAk4P8qQyilj8kgTyXmjOX6beuc+zGS9mR
+	 GhzPcQmAGiBWA==
+Date: Wed, 24 Jan 2024 15:52:33 +0100
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Anna-Maria Behnsen <anna-maria@linutronix.de>
+Cc: linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+	John Stultz <jstultz@google.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
 	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Christian Marangi <ansuelsmth@gmail.com>
-Cc: stable@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/3] net: stmmac: do not clear TBS enable bit on link up/down
-Date: Wed, 24 Jan 2024 15:32:55 +0100
-Message-ID: <b365dc6f756a3fad4dfaa2675c98f4078aba8a55.1706105494.git.esben@geanix.com>
-X-Mailer: git-send-email 2.43.0
+	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+	Arjan van de Ven <arjan@infradead.org>,
+	"Paul E . McKenney" <paulmck@kernel.org>,
+	Rik van Riel <riel@surriel.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Sebastian Siewior <bigeasy@linutronix.de>,
+	Giovanni Gherdovich <ggherdovich@suse.cz>,
+	Lukasz Luba <lukasz.luba@arm.com>,
+	"Gautham R . Shenoy" <gautham.shenoy@amd.com>,
+	Srinivas Pandruvada <srinivas.pandruvada@intel.com>,
+	K Prateek Nayak <kprateek.nayak@amd.com>
+Subject: Re: [PATCH v10 17/20] timers: Introduce function to check timer base
+ is_idle flag
+Message-ID: <ZbEkMRfP_v7Jt81y@localhost.localdomain>
+References: <20240115143743.27827-1-anna-maria@linutronix.de>
+ <20240115143743.27827-18-anna-maria@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Authenticated-Sender: esben@geanix.com
-X-Virus-Scanned: Clear (ClamAV 0.103.10/27164/Wed Jan 24 10:45:32 2024)
+In-Reply-To: <20240115143743.27827-18-anna-maria@linutronix.de>
 
-With the dma conf being reallocated on each call to stmmac_open(), any
-information in there is lost, unless we specifically handle it.
+Le Mon, Jan 15, 2024 at 03:37:40PM +0100, Anna-Maria Behnsen a écrit :
+>  flag
+> 
+> To prepare for the conversion of the NOHZ timer placement to a pull at
+> expiry time model it's required to have a function that returns the value
+> of the is_idle flag of the timer base to keep the hierarchy states during
+> online in sync with timer base state.
+> 
+> No functional change.
+> 
+> Signed-off-by: Anna-Maria Behnsen <anna-maria@linutronix.de>
 
-The STMMAC_TBS_EN bit is set when adding an etf qdisc, and the etf qdisc
-therefore would stop working when link was set down and then back up.
-
-Fixes: ba39b344e924 ("net: ethernet: stmicro: stmmac: generate stmmac dma conf before open")
-Cc: stable@vger.kernel.org
-Signed-off-by: Esben Haabendal <esben@geanix.com>
----
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index a0e46369ae15..691bf3ef5e30 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -3932,6 +3932,9 @@ static int __stmmac_open(struct net_device *dev,
- 	priv->rx_copybreak = STMMAC_RX_COPYBREAK;
- 
- 	buf_sz = dma_conf->dma_buf_sz;
-+	for (int i = 0; i < MTL_MAX_TX_QUEUES; i++)
-+		if (priv->dma_conf.tx_queue[i].tbs & STMMAC_TBS_EN)
-+			dma_conf->tx_queue[i].tbs = priv->dma_conf.tx_queue[i].tbs;
- 	memcpy(&priv->dma_conf, dma_conf, sizeof(*dma_conf));
- 
- 	stmmac_reset_queues_param(priv);
--- 
-2.43.0
-
+Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
