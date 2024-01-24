@@ -1,298 +1,213 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2087.outbound.protection.outlook.com [40.107.220.87])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 779201272DD
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 18:23:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706120593; cv=none; b=gm/N/ZpD0ADsl62sE9lqhAwHpWtlf2DicFIbeBJzNQ8kb2r52twK/mAtzWuJPCt0Y52czFid+La/iuSL+lUrKYOyktri/NiKubscaKZBXDcTW6RsOll7dMqrNELOEtaO/EQrYQ4F2oTNAjQHTRVqKkoO+xxuAXxw4QL8JZx33hY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706120593; c=relaxed/simple;
-	bh=2mXvrAHHwck2/+NZUSDwz1ny21p8dc8cBOMPp/7aqvw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=W2mfQPRfqHxjom36B5tsYey4dkNFeHzQf7Q49LcTooQMMSus8rBUuPc912S/wfN2m+PtQoHavqtDiWr0nIAyCUqOo4OV9S9x2BWu6dFMOS8/q0niFOCmW04h/g11hHrQdeJWeKMsmqjhDh2WZr3CpkFige3SoVrpLUinuJNTsnI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=097l/vib; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A1491272DD
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 18:23:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.87
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706120639; cv=fail; b=cUyeQ+zR5he3spyKPvAjxMUSSuRfoajdtoOP3UUGWsvZaNG54WFxGCJxJ+sy2RJ0l7wR3j6NCTJBX5dixLmthHkJIIsG9BPWE+4lbUYn23Jov2xqCz5qfcxLjpgI53zdFzVk9bi7U+FuIOTHEiJf6xLeSzspz/4aFaqIjNcJdsY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706120639; c=relaxed/simple;
+	bh=+RJQp0Rs4BRRwc6nXZvC7B/WU7mwQq8n4g2LIp2VrzE=;
+	h=Message-ID:Date:Subject:From:To:Cc:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=sdUtSPuDCMWP1RZaFIO6Ir9uiF9Io2onGV6LML4gOwqlkauNNpWnYeysQI/7PxBNDJxP4j76QrVg9jES4Wby5d0BZbYNfsAmRzukVAR3tJtBOwBgJn7YhBqwwOJuZ1YRM+lwjf47C3JFqxuQu628EhVHFlz5SHOZCQ4h6hGH5DI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=u7G3pw1J; arc=fail smtp.client-ip=40.107.220.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="097l/vib"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1d72d240c69so7215ad.1
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 10:23:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1706120591; x=1706725391; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MBSlGGzC+ndsfxMntMp63Rfkey8ww42uOli1u6PEN00=;
-        b=097l/vibJUV614gykJEaTlVs6BqkaMBIUeywHHtJgZ5XKF94DtX6puy3c2mBtFi+cw
-         di21L+0RxqAeUiXeyyKJRuqYclXkDDjjTVO37lHe9Nth4Hpa5o1RcOk5Hlf9eAXVHTwc
-         vwrd3lR4e9Al23IJBB5KwOyJjayWWiLgS266YCcQuF/oMIujiP5y/BWrBUa0pqlx+Pj9
-         d6t47R+QadTEbmt3F+PoryWVHUT5x215B/enEUFaGacELjxDrhd3zCOqO/CtAJN9iqm2
-         jNVpc4ARzeqkFGar6C3CWM+TJcdTGcbAVTKM0mlQBk3RBlX309L9r+HSyMEUjAuNxJFO
-         pZIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706120591; x=1706725391;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MBSlGGzC+ndsfxMntMp63Rfkey8ww42uOli1u6PEN00=;
-        b=ls/0oEotSjoR0bYDNPExX2eW7GZhfme1stSanXZlncpsNVgdtXBdGJiDYvaFzT/Dni
-         VmVaNNJ15TCbWx1x1muIrv0NXVyV6LVoMzgBYzzN0JHu/mspx/BXout3nFlnyY58qkEm
-         Yp1zhGrWjYx/pjbAM4OALCtrb1KehHTMN6t3lXAmA+/vMMK9Iax6GT7SNsx+RJZHJgm4
-         39HIZuyrfozdwQ8vMM1ptiInQ+EkOkqK1unyywWRv1bMwJVJkH+gVJvLjXJjzMPHi+Xg
-         /20kAfmeNzuJQKxkeB5zTXhReNisc+WJ+wIRiDEKUWXIFULjuZVZxjhp8k1tC8Fp2hiW
-         /d7g==
-X-Gm-Message-State: AOJu0YzR+uI24OxVHTZJ1CiGnE2oH2ONVzhVrfUdN/OGkj6Vup5qo4fs
-	Ms7kUeQ6q+2kWq2u00ws7+Xn56yd8M6Z1nLjnY4T5zzt4wDCqA0CsCsD7+J0LEVlM+AG8jekY6q
-	FqHuShjcO6qPN06QA3E9W/ro4Fg+jhZYEgK5J
-X-Google-Smtp-Source: AGHT+IGB8cGJJ/pFXDswRQL3IHeDH/3NQA7pnTuUCdyhwdXibmDEqjKMpvDavHlMfPT5MSYOfGyDn+hWonc7OGeb7BU=
-X-Received: by 2002:a17:902:ec84:b0:1d7:4b04:108e with SMTP id
- x4-20020a170902ec8400b001d74b04108emr186100plg.15.1706120590477; Wed, 24 Jan
- 2024 10:23:10 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="u7G3pw1J"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Jp31aX0OaU0QXKv4TPkjHcICq+aJfcxBuj7njNhaWI8411lHsEgbfauyNTbGByc+qauiYqRL8uEpuev30KUHjKkpV+Njd0GCuO/T0AB3lv9+qzMdRJQdGli5PbQsDWMwkEGKfDR7/hHE9j4jboJo9XrMCX0dfRTbM3GTRjrMDJf94lo7G/RIzn9nl6oFd9LvH2nIbYyPeraRDwAdpTToPamx9ykMEy/XkRtG58HPjmFpJTg3rL3yt8A6GpMfaDGK/hVrbp0BNfzqspzuB54NqQ8lmazNfRbrqCOxnVGNIOjUNBj0nQhpgZNy6tH6o06RtkabvT31pNzsY+Yr9ZSXcg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=9iJOH+xVTBBy6FmcfA3EjBXEWJTdUgSstRqiS2ln60M=;
+ b=kLB5CT/JW3lf9I+un3QUpmUaoSMpEs4N98TzyADCnKswaEsWulf/Zmo3TUAEjsbi73yRik8Swch8mhQBjAI0BJh3U23uwYOYCJHA0YQrfqtXABzSz/tTxmOLmKd6W1rmwGLbnq5fUdCR5wTGQeTbpM9jVWAJJHPVkHcY7xFHK5VgsuzuO7RR568NAQ1jIBTI+p7xigYYukq2oV162UP0KQgnnytec4gJYJSsEN0bw4nObWwsh/2FUUgcZQnA/veEeFZfUhkqvcWeU9jYOwGwlLptbY/HyOA9sToIoRNMtwmzSpS1ck1mN9dNhQIdjJamVkP0lx/tqy6C7pTwYmL2BA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9iJOH+xVTBBy6FmcfA3EjBXEWJTdUgSstRqiS2ln60M=;
+ b=u7G3pw1J7geWeEM6XlIup/wd28d+eXxzCiEV1r4hKrxTCLy67XkI8GvzgdYM2aNyAKdLsNQrIuCR6cZ6n/sfAxLT2M0gURPDItAqYkUZfNStRXQI7xsnnVUoVobKcPVgXGbw7KY11Kqq4aKwOG8Yz3Vd5LNLOQq1T4AiEZRukk4=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
+ by DS0PR12MB7655.namprd12.prod.outlook.com (2603:10b6:8:11e::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7202.37; Wed, 24 Jan
+ 2024 18:23:54 +0000
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::ce8d:7121:cb06:91ba]) by MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::ce8d:7121:cb06:91ba%4]) with mapi id 15.20.7202.039; Wed, 24 Jan 2024
+ 18:23:54 +0000
+Message-ID: <54efe4c8-38d8-4a5f-ac7a-aeb7a4e3535f@amd.com>
+Date: Wed, 24 Jan 2024 12:23:52 -0600
+User-Agent: Mozilla Thunderbird
+Subject: Re: [git pull] drm for 6.8
+Content-Language: en-US
+From: Mario Limonciello <mario.limonciello@amd.com>
+To: Thorsten Leemhuis <regressions@leemhuis.info>,
+ Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Dave Airlie <airlied@gmail.com>, Daniel Vetter <daniel.vetter@ffwll.ch>,
+ dri-devel <dri-devel@lists.freedesktop.org>,
+ LKML <linux-kernel@vger.kernel.org>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Donald Carr <sirspudd@gmail.com>
+References: <CAPM=9twKBmO2Svky-zeP+KS8qWHFj9zrgeBqW9y__tUwcAYZhw@mail.gmail.com>
+ <2faccc1a-7fdd-499b-aa0a-bd54f4068f3e@suse.cz>
+ <CAOVeLGRxXfs4wxSmB2ULZS72NvJkWQvZyPRz0rAmQyFtL39ekw@mail.gmail.com>
+ <0a782904-bb19-4111-979a-31b52aa44ca9@suse.cz>
+ <a51ddb8c-cf11-4394-a2fe-ca855749ff02@amd.com>
+ <e7eb12a9-67ed-45b1-aaf6-e1df52a247bd@leemhuis.info>
+ <05ddb2da-b182-4791-8ef7-82179fd159a8@amd.com>
+In-Reply-To: <05ddb2da-b182-4791-8ef7-82179fd159a8@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: DM6PR11CA0024.namprd11.prod.outlook.com
+ (2603:10b6:5:190::37) To MN0PR12MB6101.namprd12.prod.outlook.com
+ (2603:10b6:208:3cb::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240123185036.3461837-1-kan.liang@linux.intel.com> <20240123185036.3461837-7-kan.liang@linux.intel.com>
-In-Reply-To: <20240123185036.3461837-7-kan.liang@linux.intel.com>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 24 Jan 2024 10:22:59 -0800
-Message-ID: <CAP-5=fWhvkeo7CCcn0p4+fSo9vv7G9t9Pvp4HxjahfKTCr14ug@mail.gmail.com>
-Subject: Re: [PATCH V4 6/7] perf mem: Clean up perf_mem_events__record_args()
-To: kan.liang@linux.intel.com
-Cc: acme@kernel.org, namhyung@kernel.org, peterz@infradead.org, 
-	mingo@redhat.com, jolsa@kernel.org, adrian.hunter@intel.com, 
-	john.g.garry@oracle.com, will@kernel.org, james.clark@arm.com, 
-	mike.leach@linaro.org, leo.yan@linaro.org, yuhaixin.yhx@linux.alibaba.com, 
-	renyu.zj@linux.alibaba.com, tmricht@linux.ibm.com, ravi.bangoria@amd.com, 
-	atrajeev@linux.vnet.ibm.com, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|DS0PR12MB7655:EE_
+X-MS-Office365-Filtering-Correlation-Id: f1dc435b-e129-4bae-76de-08dc1d099f5f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	Z/PBhxoFbzLGu8rrSXYqelAtGw0LFjkppd52+qw/IuAZ50l1wWKR8BG3Q4VUm2Odc+ykB5pBc/zbgCOl0JIxzTvy6MdzOrVKQgXFwlPGXMtUiPGH3k+Kwh0Z8Abgza5h5m2YPHb7zGO7heFFq9+27D8UxlIBJDBBwxVhGpakkt2tDPjQd2spsr/3cq5Bo3h0lk4BBBiprMHyhYE9Qtv4zYmG36Ng9mqqr6Wrq5xfAFEeWF4N1O9ZiupePN5XfcxArR7tdGYZZgrS1puHg1AnUPEVYe9T4n6NWIjgiobN8NVcBeLJ92nzItGRfukXyuosH2g/T4NwGSBuVDW8IoeNYv+N8JlB+cU2C7BiJWMJET3R6vjLOmWZQWTF2X9bhzxHy0tJgRVnx6L+VcrQJTL6jVGc+7QRgx7ncorOGurqltGckSkOD0rSkLeYSzBZBGyV+D398OnHQYUA1Xd0tx3CSsn1CDu7Jlo9bgguDDtgu64uyBvqXYVXuZmiLdAsE1rnqYkA0LbT167z2NiLhGSu39QJo+Sv38PFP4r9H9GO3vpiPl2l1eAKMLjx4h3CsDq37ZP8l5gcBjzMFR8vk/1WdcFOjfH/2NaDKHPp8smVqVjEo0qYBlAn2wf46aIa7mcCuwdzyoKBxnFzaRxLo71lwhxpHSDaZwP/Em56fIgZ3gY=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(346002)(376002)(396003)(136003)(366004)(230922051799003)(1800799012)(64100799003)(451199024)(186009)(6512007)(7416002)(66899024)(6506007)(53546011)(26005)(83380400001)(2616005)(41300700001)(8936002)(36756003)(8676002)(4326008)(316002)(44832011)(2906002)(54906003)(5660300002)(86362001)(110136005)(31696002)(66476007)(66556008)(6486002)(966005)(478600001)(31686004)(66946007)(38100700002)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?WTJKdUhqLzdXZGRybVM5OEhBaWk0cDFyYm42ZndhYzRWVjhlck5vQmZuQlNz?=
+ =?utf-8?B?YTRZbm5QNVVVbXVKbThIclV1NWE5ODdKYk5wS3hVMmVYNmllQkczQkt3SzMv?=
+ =?utf-8?B?UzJkWVpORHVpVlpKL1hGOUh0MTMzais4c3kySFdLRGpUL2ZMK082bDlGcXlY?=
+ =?utf-8?B?UGJtekZVNkpGZks5SjdyQmVtYVNXaHhxYmxGNjJ3NlJvckNsTldveXV0WEZZ?=
+ =?utf-8?B?WWpOakNsM0l5emJGSlU3MnhGUHAyeWg4WHN2UzRQbHhpTWRTN3RMSWtFTlhY?=
+ =?utf-8?B?SWRPSGsybVlPRkRVcWdRYnVVN2YyUVVpcUpYOEttY1pkL2NtTzZOSFppLzNM?=
+ =?utf-8?B?d2VMOUVmblZSWXAxYXp3OGFwVU96MC85RWxLdTFOTXlqTVByTDE1U0hzeitY?=
+ =?utf-8?B?NUdibnNhNDFGeVhsQmVEWUd5QThEcVdOb3U5Q24rZjBtNjF2aTkxQTVMYXZE?=
+ =?utf-8?B?SzNPUjZjU0hXenJsbUV2SmF0Q1YvK01kU3ZHWVM5WEdYTjUybTZIclJ4Vjd5?=
+ =?utf-8?B?RktpL2JLeUZqNkwxWWtxRlgzeE9LbWNoR3BhZy9Jd2Z0eTlwSzNDUnlsUGRz?=
+ =?utf-8?B?R3ZkSzRQNnBOVGpoMFRFZEdXOWpQbFZHZ2FtZjdwMEg2UVdoVS9IWUo3UVdy?=
+ =?utf-8?B?Zk8rVHQzclVXdXJFQzFBRG1KWURNL0pXa1lmL3RPQ0xxSEg0dTg0M0h0M2pj?=
+ =?utf-8?B?WVhqTmsvSWszNG90cEVFUVU2RHFkQ1dPdE84MGVRcTlneEN3dGNjRnFwbUUr?=
+ =?utf-8?B?VlBvUS9yVGJFanlZaXlUL0gvN3JIbWR2bTA1NW9pbCtORzh4N0l2SFJvRmdo?=
+ =?utf-8?B?OVpFcldPYmRuTW42T2V0ZmRydzJEbkhTcitFcklmbWxwek1nRmIrV0h0NnRS?=
+ =?utf-8?B?SjlSUS9xZlNsckx5WkhydkFIT25renhPQklFQ2lHUHowcm5MZ0syMWV3TVJG?=
+ =?utf-8?B?dmZpMFV1VlYySTh6cHhLRWo2ZGgxeFJNY2EvaUNXS2JrK0RXZUl5V0FlaXVD?=
+ =?utf-8?B?d1oyOHZFTXNmT3Npa21PS3ZRWFJ0aWh0QWxQWEY1V25IQkFLZjFCUmtsQVJ4?=
+ =?utf-8?B?Nmg3T3hKY2NoVTA2V2VNYVBZbVJERDhtTnY1NU4rVG1namsyT25QbTR0N0lm?=
+ =?utf-8?B?V09oQmlmZjlhZFhpV0xvTW5xbW55K28weXduTU1wVFIzc1hCWU4xV2dmRW83?=
+ =?utf-8?B?ckhINDJYdTVVMzJpTmV3SVpsRkNWaXllbStqVzNaMXhWcXBFN3BiQUx6RUdG?=
+ =?utf-8?B?WW5FaUFOMW9JUGxRUnBQWXZOVTJ5ZWh5bkh3OTJmY25WdmNoU3U5RnhudVlr?=
+ =?utf-8?B?dlRZMXFjZVk4ZElGc0ZSWjR4QmlCRUUzL2s3T1BOdnVrclFTdWtzR3NkYnhq?=
+ =?utf-8?B?d3lGVi9iNWhidGVQWEVRZm1GVzVMVHJzN0thc0xia1M4UmxtblhEaUkvdmxn?=
+ =?utf-8?B?NGFOK3lJSkpoU0Y1Uk83MWlsTFpMMXJNMS9vN2thZUcyYkZYMWg4SnVFdGNj?=
+ =?utf-8?B?RVRsQTdrcWhFTUdxNk1vWjVMYUQwZjYvM25WUDZUcVNxWWQ0dkt4MlNOeXY3?=
+ =?utf-8?B?ckswVWpsRkR2WTdYbUdDSHlpQ0J1RHpUdUZqam5qOTcwWEF6K3Z5YmlrcDJm?=
+ =?utf-8?B?dkdjZWpHUFVtNzJNTFBreW1lTGVBa1N3V01PaEJBeFFja21UTDlFVXJQdGlu?=
+ =?utf-8?B?UWtxMlRGQU9NNHMwZlZsUkNTYVZhbmFYSE5CZWM0aHlmeDFhRFNpTE1VaFUy?=
+ =?utf-8?B?K0pqR2U2SURnRVRPZ3hRS0tWQnY2M3hRS0RWOTVVN3dBUDFsS0dVSXN1LzRZ?=
+ =?utf-8?B?cHo5elljZHhlK2RXUDJUTDJhZHhOeE5VZGYxd05BMm5hZVBhTTZyQWhCdWkv?=
+ =?utf-8?B?NkFpbGtYZTBTVXRmTFFvSG04KzNpR1pEano0UFk4MG53Yy9HWW5TSFR4dEJh?=
+ =?utf-8?B?dDlHQVZ3OENUenlTTWhEUldLNExqaEZNYW5MbmJ6Q0x5b3VhR1NYN1pQRlZJ?=
+ =?utf-8?B?NnRpaWpZbjlBVFF5NW1KMTJiTFNzaFhqNTlGeURPZkFWRkVJdkVWbEVWYWhH?=
+ =?utf-8?B?TUNvaktIUW85RE9SUE1MNTNOL1hFVTFBZ1prSkx4Q3A3cEkwOGZtSmhxcHgy?=
+ =?utf-8?Q?bMzk8Ene5W7/XYtBAbuiFs+x4?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f1dc435b-e129-4bae-76de-08dc1d099f5f
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jan 2024 18:23:54.6895
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: lZLWAfy7pcB4TGG844KYruMqdazgcQ/1pIUtkKGTxRXzNPMSvGnhjocBZHvRs637UUFZnZdjtL5t7ayesOS7WQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB7655
 
-On Tue, Jan 23, 2024 at 10:51=E2=80=AFAM <kan.liang@linux.intel.com> wrote:
->
-> From: Kan Liang <kan.liang@linux.intel.com>
->
-> The current code iterates all memory PMUs. It doesn't matter if the
-> system has only one memory PMU or multiple PMUs. The check of
-> perf_pmus__num_mem_pmus() is not required anymore.
->
-> The rec_tmp is not used in c2c and mem. Removing them as well.
->
-> Suggested-by: Leo Yan <leo.yan@linaro.org>
-> Tested-by: Leo Yan <leo.yan@linaro.org>
-> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+On 1/24/2024 11:52, Mario Limonciello wrote:
+> On 1/24/2024 11:51, Thorsten Leemhuis wrote:
+>> Linus, if you have a minute, I'd really like to know...
+>>
+>> On 24.01.24 17:41, Mario Limonciello wrote:
+>>> On 1/24/2024 10:24, Vlastimil Babka wrote:
+>>>> On 1/24/24 16:31, Donald Carr wrote:
+>>>>> On Wed, Jan 24, 2024 at 7:06 AM Vlastimil Babka <vbabka@suse.cz> 
+>>>>> wrote:
+>>>>>> When testing the rc1 on my openSUSE Tumbleweed desktop, I've started
+>>>>>> experiencing "frozen desktop" (KDE/Wayland) issues. The symptoms are
+>>>>>> that
+>>>>>> everything freezes including mouse cursor. After a while it either
+>>>>>> resolves,
+>>>>>> or e.g. firefox crashes (if it was actively used when it froze) or 
+>>>>>> it's
+>>>>>> frozen for too long and I reboot with alt-sysrq-b. When it's frozen
+>>>>>> I can
+>>>>>> still ssh to the machine, and there's nothing happening in dmesg.
+>>>>>> The machine is based on Amd Ryzen 7 2700 and Radeon RX7600.
+>>>>> [...]
+>>>>> I am experiencing the exact same symptoms;
+>>>>
+>>>> Big thanks to Thorsten who suggested I look at the following:
+>>>>
+>>>> https://lore.kernel.org/all/20240123021155.2775-1-mario.limonciello@amd.com/
+>>>> https://lore.kernel.org/all/CABXGCsM2VLs489CH-vF-1539-s3in37=bwuOWtoeeE+q26zE+Q@mail.gmail.com/
+>>>>
+>>>> Instead of further bisection I've applied Mario's revert from the
+>>>> first link
+>>>> on top of 6.8-rc1 and the issue seems gone for me now.
+>>>
+>>> Thanks for confirming.  I don't think we should jump right to the revert
+>>> right now.
+>>>
+>>>    I posted it in case that is the direction we need to go
+>>> (simple git revert didn't work due to contextual changes).
+>>>
+>>> Let's give the folks who work on GPU scheduler some time to understand
+>>> the failure and see if they can fix it.
+>>
+>> ...how you think about this and other situations like this. Given that
+>> we have
+>>
+>> * two affected people in this thread
+>> * one earlier thread about it
+>> * the machine that made Mario write the patch
+>> * and I have someone in #fedora-kernel that likely is affected as well
+>>
+>> it seems that this is not some corner case very few people run into.
+>> Hence I tend to say that this should be dealt with rather sooner than
+>> later. Maybe before rc2? Or is this asking too much?
+>>
+>> The thing from my point of view is, that each such problem might
+>> discourage testers from testing again or lead to thoughts like "I only
+>> start testing after -rc4". Not to mention that other people will try to
+>> bisect the problem like Vlastimil did, which will cost them quite some
+>> time and effort -- only to find out that we known about the problem
+>> already and did not quickly fix it. That is discouraging for them as
+>> well and thus bad for field testing I'd assume.
+>>
+>> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+>> -- 
+>> Everything you wanna know about Linux kernel regression tracking:
+>> https://linux-regtracking.leemhuis.info/about/#tldr
+>> If I did something stupid, please tell me, as explained on that page.
+> 
+> A test patch was just posted.  I haven't gotten a chance to try it yet. 
+> I will this afternoon.
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+The test patch [1] posted to [2] works for me.  I expect that Matthew 
+will post it to dri-devel and this can catch RC2 or RC3.
 
-Thanks for the cleanup!
-Ian
+[1] 
+https://gitlab.freedesktop.org/drm/amd/uploads/ca8dfaa22d6f5d247c28acf6cf3eafd2/0001-Drain-all-entities-in-DRM-run-jon-worker.patch
+[2] https://gitlab.freedesktop.org/drm/amd/-/issues/3124
 
-> ---
->  tools/perf/builtin-c2c.c     | 15 ++-------------
->  tools/perf/builtin-mem.c     | 18 ++----------------
->  tools/perf/util/mem-events.c | 34 ++++++++++++----------------------
->  tools/perf/util/mem-events.h |  3 +--
->  4 files changed, 17 insertions(+), 53 deletions(-)
->
-> diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
-> index 838481505e08..3bcb903b6b38 100644
-> --- a/tools/perf/builtin-c2c.c
-> +++ b/tools/perf/builtin-c2c.c
-> @@ -3245,9 +3245,8 @@ static const char * const *record_mem_usage =3D __u=
-sage_record;
->
->  static int perf_c2c__record(int argc, const char **argv)
->  {
-> -       int rec_argc, i =3D 0, j, rec_tmp_nr =3D 0;
-> +       int rec_argc, i =3D 0, j;
->         const char **rec_argv;
-> -       char **rec_tmp;
->         int ret;
->         bool all_user =3D false, all_kernel =3D false;
->         bool event_set =3D false;
-> @@ -3285,12 +3284,6 @@ static int perf_c2c__record(int argc, const char *=
-*argv)
->         if (!rec_argv)
->                 return -1;
->
-> -       rec_tmp =3D calloc(rec_argc + 1, sizeof(char *));
-> -       if (!rec_tmp) {
-> -               free(rec_argv);
-> -               return -1;
-> -       }
-> -
->         rec_argv[i++] =3D "record";
->
->         if (!event_set) {
-> @@ -3319,7 +3312,7 @@ static int perf_c2c__record(int argc, const char **=
-argv)
->         rec_argv[i++] =3D "--phys-data";
->         rec_argv[i++] =3D "--sample-cpu";
->
-> -       ret =3D perf_mem_events__record_args(rec_argv, &i, rec_tmp, &rec_=
-tmp_nr);
-> +       ret =3D perf_mem_events__record_args(rec_argv, &i);
->         if (ret)
->                 goto out;
->
-> @@ -3346,10 +3339,6 @@ static int perf_c2c__record(int argc, const char *=
-*argv)
->
->         ret =3D cmd_record(i, rec_argv);
->  out:
-> -       for (i =3D 0; i < rec_tmp_nr; i++)
-> -               free(rec_tmp[i]);
-> -
-> -       free(rec_tmp);
->         free(rec_argv);
->         return ret;
->  }
-> diff --git a/tools/perf/builtin-mem.c b/tools/perf/builtin-mem.c
-> index ef64bae77ca7..1d92e309c97c 100644
-> --- a/tools/perf/builtin-mem.c
-> +++ b/tools/perf/builtin-mem.c
-> @@ -72,10 +72,9 @@ static const char * const *record_mem_usage =3D __usag=
-e;
->
->  static int __cmd_record(int argc, const char **argv, struct perf_mem *me=
-m)
->  {
-> -       int rec_argc, i =3D 0, j, tmp_nr =3D 0;
-> +       int rec_argc, i =3D 0, j;
->         int start, end;
->         const char **rec_argv;
-> -       char **rec_tmp;
->         int ret;
->         bool all_user =3D false, all_kernel =3D false;
->         struct perf_mem_event *e;
-> @@ -116,15 +115,6 @@ static int __cmd_record(int argc, const char **argv,=
- struct perf_mem *mem)
->         if (!rec_argv)
->                 return -1;
->
-> -       /*
-> -        * Save the allocated event name strings.
-> -        */
-> -       rec_tmp =3D calloc(rec_argc + 1, sizeof(char *));
-> -       if (!rec_tmp) {
-> -               free(rec_argv);
-> -               return -1;
-> -       }
-> -
->         rec_argv[i++] =3D "record";
->
->         e =3D perf_pmu__mem_events_ptr(pmu, PERF_MEM_EVENTS__LOAD_STORE);
-> @@ -163,7 +153,7 @@ static int __cmd_record(int argc, const char **argv, =
-struct perf_mem *mem)
->                 rec_argv[i++] =3D "--data-page-size";
->
->         start =3D i;
-> -       ret =3D perf_mem_events__record_args(rec_argv, &i, rec_tmp, &tmp_=
-nr);
-> +       ret =3D perf_mem_events__record_args(rec_argv, &i);
->         if (ret)
->                 goto out;
->         end =3D i;
-> @@ -193,10 +183,6 @@ static int __cmd_record(int argc, const char **argv,=
- struct perf_mem *mem)
->
->         ret =3D cmd_record(i, rec_argv);
->  out:
-> -       for (i =3D 0; i < tmp_nr; i++)
-> -               free(rec_tmp[i]);
-> -
-> -       free(rec_tmp);
->         free(rec_argv);
->         return ret;
->  }
-> diff --git a/tools/perf/util/mem-events.c b/tools/perf/util/mem-events.c
-> index 7d7df3d0b2b9..a20611b4fb1b 100644
-> --- a/tools/perf/util/mem-events.c
-> +++ b/tools/perf/util/mem-events.c
-> @@ -218,14 +218,14 @@ void perf_pmu__mem_events_list(struct perf_pmu *pmu=
-)
->         }
->  }
->
-> -int perf_mem_events__record_args(const char **rec_argv, int *argv_nr,
-> -                                char **rec_tmp, int *tmp_nr)
-> +int perf_mem_events__record_args(const char **rec_argv, int *argv_nr)
->  {
->         const char *mnt =3D sysfs__mount();
->         struct perf_pmu *pmu =3D NULL;
-> -       int i =3D *argv_nr, k =3D 0;
->         struct perf_mem_event *e;
-> -
-> +       int i =3D *argv_nr;
-> +       const char *s;
-> +       char *copy;
->
->         while ((pmu =3D perf_pmus__scan_mem(pmu)) !=3D NULL) {
->                 for (int j =3D 0; j < PERF_MEM_EVENTS__MAX; j++) {
-> @@ -240,30 +240,20 @@ int perf_mem_events__record_args(const char **rec_a=
-rgv, int *argv_nr,
->                                 return -1;
->                         }
->
-> -                       if (perf_pmus__num_mem_pmus() =3D=3D 1) {
-> -                               rec_argv[i++] =3D "-e";
-> -                               rec_argv[i++] =3D perf_pmu__mem_events_na=
-me(j, pmu);
-> -                       } else {
-> -                               const char *s =3D perf_pmu__mem_events_na=
-me(j, pmu);
-> -
-> -                               if (!perf_pmu__mem_events_supported(mnt, =
-pmu, e))
-> -                                       continue;
-> +                       s =3D perf_pmu__mem_events_name(j, pmu);
-> +                       if (!s || !perf_pmu__mem_events_supported(mnt, pm=
-u, e))
-> +                               continue;
->
-> -                               rec_argv[i++] =3D "-e";
-> -                               if (s) {
-> -                                       char *copy =3D strdup(s);
-> -                                       if (!copy)
-> -                                               return -1;
-> +                       copy =3D strdup(s);
-> +                       if (!copy)
-> +                               return -1;
->
-> -                                       rec_argv[i++] =3D copy;
-> -                                       rec_tmp[k++] =3D copy;
-> -                               }
-> -                       }
-> +                       rec_argv[i++] =3D "-e";
-> +                       rec_argv[i++] =3D copy;
->                 }
->         }
->
->         *argv_nr =3D i;
-> -       *tmp_nr =3D k;
->         return 0;
->  }
->
-> diff --git a/tools/perf/util/mem-events.h b/tools/perf/util/mem-events.h
-> index f817a507b106..c97cd3caa766 100644
-> --- a/tools/perf/util/mem-events.h
-> +++ b/tools/perf/util/mem-events.h
-> @@ -46,8 +46,7 @@ struct perf_pmu *perf_mem_events_find_pmu(void);
->  bool is_mem_loads_aux_event(struct evsel *leader);
->
->  void perf_pmu__mem_events_list(struct perf_pmu *pmu);
-> -int perf_mem_events__record_args(const char **rec_argv, int *argv_nr,
-> -                                char **rec_tmp, int *tmp_nr);
-> +int perf_mem_events__record_args(const char **rec_argv, int *argv_nr);
->
->  int perf_mem__tlb_scnprintf(char *out, size_t sz, struct mem_info *mem_i=
-nfo);
->  int perf_mem__lvl_scnprintf(char *out, size_t sz, struct mem_info *mem_i=
-nfo);
-> --
-> 2.35.1
->
