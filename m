@@ -1,200 +1,106 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49E2A7764B
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 12:57:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 376B87A70E
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 12:57:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706101066; cv=none; b=LQDKA0ph1GbL3dzHtmqg6JxTWQmxX0XLiNyFGTJaznSbccpg8mDF7nwZe+ITg1aH/Y7l1A3bMf+NnoCk+RM3S/mKSsGRtWF1ALPEZH3QXzbsepd4pLvp2W0c8/uZ5bcZFZZEMlI3omigZjRgy8rBReXHfoTl3CiZ2LrKcbNHVwQ=
+	t=1706101072; cv=none; b=u4lU9g0v3B4QVJ/7mRiW1fRQ8CrvzeutqyX3HPojz4MkqgSu7nU2DK5nIuhbeQvMoGLfBVp7Kjy2Q10Rn/mG+LLTCWMspt6Br5GQp+pZwgwt9DN27II6ccXS42QcLWMm4jhdDYhYgUgYFCTrCUZCzLAJjdqPY5t21Y0QCY9xQH8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706101066; c=relaxed/simple;
-	bh=M5FU8ERT1UOGSpIjXvNR+/fCsjlJAuzf0kiANygS8PU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=o0XvCKH0A8YCSeKFuBtxu5yxCkXXoQB1Ecw/rV7RJYDX1OfZDzNFbDUgMMAyK95plI1GSP35qCvoijGnHLlhGgUsFXQ1sOd4e3A82KHQMIkLxrSYybjNPpUQxsLaQpzDIfBcVJ8kKLE3givXg1xbzLrUmRscum6xu9oyyvEeHtM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.helo=mgamail.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nvZo7bBm; arc=none smtp.client-ip=192.55.52.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.helo=mgamail.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nvZo7bBm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706101065; x=1737637065;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=M5FU8ERT1UOGSpIjXvNR+/fCsjlJAuzf0kiANygS8PU=;
-  b=nvZo7bBmDP8mc1UwknvxsACgOoaR41HctvJyNrHZAPONbdWmKEGcx/4q
-   v0w7FCGtWJPvKprQ44zAuf6aXhGwHZnV1pXRSigeN6XuxIXkLkT7BJ6ll
-   B0L3A6tXVEkGJKuPGFHQE4vU4pj97kZPez90XxSWKPYQsvxSK0BP36U1Q
-   cvPMakUDabidLPhqW3jcd/URi4TkhKKUBrT7NRz+uUkDqGvVCjQ55MhAM
-   7tq6RkjgSYzcq+FqBpCNOAmj1acEp8SWp0v5js3M9lTfg5zzu912W2NCw
-   hIypBZKWO5ObokN1rlPpU7kc6mo9QGp+E7PC8VJpPbVs5AGoFB7NTgR+N
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="398990896"
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="398990896"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jan 2024 04:57:43 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="876685871"
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="876685871"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by FMSMGA003.fm.intel.com with ESMTP; 24 Jan 2024 04:57:38 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id D3FCCB01; Wed, 24 Jan 2024 14:56:02 +0200 (EET)
-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To: Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	Elena Reshetova <elena.reshetova@intel.com>,
-	Jun Nakajima <jun.nakajima@intel.com>,
-	Rick Edgecombe  <rick.p.edgecombe@intel.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	"Kalra, Ashish" <ashish.kalra@amd.com>,
-	Sean Christopherson <seanjc@google.com>,
-	"Huang, Kai" <kai.huang@intel.com>,
-	Baoquan He <bhe@redhat.com>,
-	kexec@lists.infradead.org,
-	linux-coco@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCHv6 15/16] x86/mm: Introduce kernel_ident_mapping_free()
-Date: Wed, 24 Jan 2024 14:55:56 +0200
-Message-ID: <20240124125557.493675-16-kirill.shutemov@linux.intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240124125557.493675-1-kirill.shutemov@linux.intel.com>
-References: <20240124125557.493675-1-kirill.shutemov@linux.intel.com>
+	s=arc-20240116; t=1706101072; c=relaxed/simple;
+	bh=tJ+470kAh1XcjBObyL4GrXop5Kek18ea66H3lxd7KMc=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=gpOi5cZso+akyGG3dGqemaO4qPUilimp/qWm2acFbdDiYyCJjBJfet93DwNRscXUKfQxqjz7Fb/aPtoivSSOoX1Yp4jUcfEFZQRHoLIuf6Ts8S5nbNYvchbVUbCRABRXQhAh/UF8Ai4oLkzr7Y/x1yrbIPne5vU1nUneNNWW5eE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1rScp6-0002i4-Oi; Wed, 24 Jan 2024 13:57:44 +0100
+Received: from [2a0a:edc0:0:900:1d::4e] (helo=lupine)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1rScp5-00243g-Ry; Wed, 24 Jan 2024 13:57:43 +0100
+Received: from pza by lupine with local (Exim 4.96)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1rScp0-000BVW-2V;
+	Wed, 24 Jan 2024 13:57:38 +0100
+Message-ID: <7b85f1490b990ef881b07b1dde32b94e43e427c0.camel@pengutronix.de>
+Subject: Re: [PATCH] usb: dwc3-of-simple: Stop using
+ of_reset_control_array_get() directly
+From: Philipp Zabel <p.zabel@pengutronix.de>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Thinh Nguyen <Thinh.Nguyen@synopsys.com>, Martin Blumenstingl
+ <martin.blumenstingl@googlemail.com>, Neil Armstrong
+ <neil.armstrong@linaro.org>,  Felipe Balbi <balbi@kernel.org>,
+ linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Wed, 24 Jan 2024 13:57:38 +0100
+In-Reply-To: <2024012441-gender-crock-016c@gregkh>
+References: 
+	<20240124-dwc3-of-simple-reset-control-array-fix-v1-1-808182cc3f0e@pengutronix.de>
+	 <2024012441-gender-crock-016c@gregkh>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-The helper complements kernel_ident_mapping_init(): it frees the
-identity mapping that was previously allocated. It will be used in the
-error path to free a partially allocated mapping or if the mapping is no
-longer needed.
+On Mi, 2024-01-24 at 04:39 -0800, Greg Kroah-Hartman wrote:
+> On Wed, Jan 24, 2024 at 12:26:20PM +0100, Philipp Zabel wrote:
+> > Use of_reset_control_array_get_optional_exclusive() instead, it is
+> > implemented as:
+> >=20
+> >   static inline struct reset_control *
+> >   of_reset_control_array_get_optional_exclusive(struct device_node *nod=
+e)
+> >   {
+> >           return of_reset_control_array_get(node, false, true, true);
+> >   }
+> >=20
+> > This makes the code easier to understand and removes the last remaining
+> > direct use of of_reset_control_array_get(). No functional changes.
+>=20
+> Does this mean the function should be removed or made static now?
 
-The caller provides a struct x86_mapping_info with the free_pgd_page()
-callback hooked up and the pgd_t to free.
+I consider "hiding" it from general use by renaming it to
+__of_reset_control_array_get().
 
-Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
----
- arch/x86/include/asm/init.h |  3 ++
- arch/x86/mm/ident_map.c     | 73 +++++++++++++++++++++++++++++++++++++
- 2 files changed, 76 insertions(+)
+There are other, indirect users of this function, but it is always
+called via a more self-explanatory static inline function:
 
-diff --git a/arch/x86/include/asm/init.h b/arch/x86/include/asm/init.h
-index cc9ccf61b6bd..14d72727d7ee 100644
---- a/arch/x86/include/asm/init.h
-+++ b/arch/x86/include/asm/init.h
-@@ -6,6 +6,7 @@
- 
- struct x86_mapping_info {
- 	void *(*alloc_pgt_page)(void *); /* allocate buf for page table */
-+	void (*free_pgt_page)(void *, void *); /* free buf for page table */
- 	void *context;			 /* context for alloc_pgt_page */
- 	unsigned long page_flag;	 /* page flag for PMD or PUD entry */
- 	unsigned long offset;		 /* ident mapping offset */
-@@ -16,4 +17,6 @@ struct x86_mapping_info {
- int kernel_ident_mapping_init(struct x86_mapping_info *info, pgd_t *pgd_page,
- 				unsigned long pstart, unsigned long pend);
- 
-+void kernel_ident_mapping_free(struct x86_mapping_info *info, pgd_t *pgd);
-+
- #endif /* _ASM_X86_INIT_H */
-diff --git a/arch/x86/mm/ident_map.c b/arch/x86/mm/ident_map.c
-index 968d7005f4a7..3996af7b4abf 100644
---- a/arch/x86/mm/ident_map.c
-+++ b/arch/x86/mm/ident_map.c
-@@ -4,6 +4,79 @@
-  * included by both the compressed kernel and the regular kernel.
-  */
- 
-+static void free_pte(struct x86_mapping_info *info, pmd_t *pmd)
-+{
-+	pte_t *pte = pte_offset_kernel(pmd, 0);
-+
-+	info->free_pgt_page(pte, info->context);
-+}
-+
-+static void free_pmd(struct x86_mapping_info *info, pud_t *pud)
-+{
-+	pmd_t *pmd = pmd_offset(pud, 0);
-+	int i;
-+
-+	for (i = 0; i < PTRS_PER_PMD; i++) {
-+		if (!pmd_present(pmd[i]))
-+			continue;
-+
-+		if (pmd_leaf(pmd[i]))
-+			continue;
-+
-+		free_pte(info, &pmd[i]);
-+	}
-+
-+	info->free_pgt_page(pmd, info->context);
-+}
-+
-+static void free_pud(struct x86_mapping_info *info, p4d_t *p4d)
-+{
-+	pud_t *pud = pud_offset(p4d, 0);
-+	int i;
-+
-+	for (i = 0; i < PTRS_PER_PUD; i++) {
-+		if (!pud_present(pud[i]))
-+			continue;
-+
-+		if (pud_leaf(pud[i]))
-+			continue;
-+
-+		free_pmd(info, &pud[i]);
-+	}
-+
-+	info->free_pgt_page(pud, info->context);
-+}
-+
-+static void free_p4d(struct x86_mapping_info *info, pgd_t *pgd)
-+{
-+	p4d_t *p4d = p4d_offset(pgd, 0);
-+	int i;
-+
-+	for (i = 0; i < PTRS_PER_P4D; i++) {
-+		if (!p4d_present(p4d[i]))
-+			continue;
-+
-+		free_pud(info, &p4d[i]);
-+	}
-+
-+	if (pgtable_l5_enabled())
-+		info->free_pgt_page(pgd, info->context);
-+}
-+
-+void kernel_ident_mapping_free(struct x86_mapping_info *info, pgd_t *pgd)
-+{
-+	int i;
-+
-+	for (i = 0; i < PTRS_PER_PGD; i++) {
-+		if (!pgd_present(pgd[i]))
-+			continue;
-+
-+		free_p4d(info, &pgd[i]);
-+	}
-+
-+	info->free_pgt_page(pgd, info->context);
-+}
-+
- static void ident_pmd_init(struct x86_mapping_info *info, pmd_t *pmd_page,
- 			   unsigned long addr, unsigned long end)
- {
--- 
-2.43.0
+drivers/amba/bus.c:
+	of_reset_control_array_get_optional_shared()
 
+drivers/net/dsa/lantiq_gswip.c:
+	of_reset_control_array_get_exclusive()
+
+drivers/phy/cadence/phy-cadence-sierra.c:
+	of_reset_control_array_get_exclusive()
+
+drivers/phy/cadence/phy-cadence-torrent.c:
+	of_reset_control_array_get_exclusive()
+
+drivers/soc/tegra/pmc.c:
+	of_reset_control_array_get_exclusive_released()
+
+drivers/usb/dwc3/dwc3-of-simple.c:
+	of_reset_control_array_get()
+
+I would like to eventually replace the use of multiple boolean
+parameters for configuration. It is hard to read and errors have
+slipped through in the past (e.g. a57f68ddc886, "reset: Fix devm bulk
+optional exclusive control getter").
+
+regards
+Philipp
