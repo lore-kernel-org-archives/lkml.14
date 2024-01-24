@@ -1,179 +1,104 @@
-Received: from vps-vb.mhejs.net (vps-vb.mhejs.net [37.28.154.113])
+Received: from cvs.openbsd.org (cvs.openbsd.org [199.185.137.3])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECD0C13474A;
-	Wed, 24 Jan 2024 20:48:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.28.154.113
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BB101292FB;
+	Wed, 24 Jan 2024 20:51:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.185.137.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706129333; cv=none; b=KrH+amEL1VLGQGgx8yvh57wp7NKXLQmEfwnOP5J0VU+83S7x+qAbJW7CIe1i8gT1vqEEI7oHYXOOF1ESHUsLMJY9+1+m7POLVBS1D8lTWvKowu4PmOOhEi/ZXa2kKMVylUoxjjVIyMbtwsyId3uZdHYVIM5OhXuLig5iePXmlKA=
+	t=1706129500; cv=none; b=eQveOtboNHq2NuaL6TiyOT+yltgJhFDBmngOR+JPxNLRGNszWSaH2nacBFuju6AYdTgCzueyUf6oLorj5ef/zDHaDlbUlTTXnj4hA4GnGaMieSpxPq4x5rd/P0xJ957HXWjii2WW02viIVAwNwvxVnMTuhap9XyYKYxpUZKiesU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706129333; c=relaxed/simple;
-	bh=6FC/0e29kJXWgGL2yi5/vbe6wptoY2zpI5hp51jovMo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MJCM9CZavBxuUh+xrit494KulpjJvcMHLrghZw2J9yRrXZ4RBqg0wQPGw0HExAoP7aLBXcJt1Q1f0OkDGZLpF0hkjLKQ5ioHs3GlrqMYbONsqRogHSmb7AHs2icdEMrZlD8LDb67SzRxdv14ZHuDa1pS4oOi/5eTQKCoCQUvixM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=maciej.szmigiero.name; spf=pass smtp.mailfrom=maciej.szmigiero.name; arc=none smtp.client-ip=37.28.154.113
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=maciej.szmigiero.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=maciej.szmigiero.name
-Received: from MUA
-	by vps-vb.mhejs.net with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <mail@maciej.szmigiero.name>)
-	id 1rSjhi-0003sJ-QU; Wed, 24 Jan 2024 21:18:34 +0100
-From: "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>
-To: Paolo Bonzini <pbonzini@redhat.com>,
-	Sean Christopherson <seanjc@google.com>
-Cc: Maxim Levitsky <mlevitsk@redhat.com>,
-	kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] KVM: x86: Give a hint when Win2016 might fail to boot due to XSAVES erratum
-Date: Wed, 24 Jan 2024 21:18:21 +0100
-Message-ID: <b83ab45c5e239e5d148b0ae7750133a67ac9575c.1706127425.git.maciej.szmigiero@oracle.com>
-X-Mailer: git-send-email 2.42.0
+	s=arc-20240116; t=1706129500; c=relaxed/simple;
+	bh=Z6R0DSevUsWp/ES4X1fSbzidtHovZqFHyGVCe23vpOQ=;
+	h=From:To:Subject:In-reply-to:References:MIME-Version:Content-Type:
+	 Date:Message-ID; b=UWOGTIGDuwxKQhU7FmA8qIGThVbVZZQB+b1Dioa5wxtFuqFXoiV2QURFpdP2/DRTp6z954bOnc6uvJFDldwQam3k1n+unHNCC1ibULcIp4ZN4qRPIJakRQDYYtgUP5uNBxreg61HBJ+KXJChqWqDgf8VoZ/zLJYwV0nHlySytVw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=openbsd.org; spf=pass smtp.mailfrom=openbsd.org; dkim=pass (2048-bit key) header.d=openbsd.org header.i=@openbsd.org header.b=43WCwO/h; arc=none smtp.client-ip=199.185.137.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=openbsd.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=openbsd.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=openbsd.org header.i=@openbsd.org header.b="43WCwO/h"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; s=selector1; bh=Z6R0DSevUs
+	Wp/ES4X1fSbzidtHovZqFHyGVCe23vpOQ=; h=date:references:in-reply-to:
+	subject:to:from; d=openbsd.org; b=43WCwO/hWJyeW7jniZUXpoRulSjG7aM+cwLo
+	LzWTShoquiNAk1T+jrBK6SMcVIbDB+V51FxS9Zuoa7yiu+uJnEuLsJ/yl3R4QijJGWRmA+
+	MuBAO63A7qp4qRUizMMMzUN6XAGwCoXnwb0F5rMrZ4VU9kSXuZdV+Jj/ccK03N0lH3Umrl
+	MN7q+ffha9DN63HMmBAKUyeVOvCqaJdaDlJ+terJSrnNEtPcy/81YKlwfVbfv9eMhcxKAo
+	9EwcDoScJoOvaPYrzj+sXkmj/yw3YsTkr8zdGWgUHmkb4NzKMV5P7efFXj4UsndWP7FpdP
+	viVTF2l2zifSmurxqYEMPZ+8LQ==
+Received: from cvs.openbsd.org (localhost [127.0.0.1])
+	by cvs.openbsd.org (OpenSMTPD) with ESMTP id 302f01a8;
+	Wed, 24 Jan 2024 13:51:37 -0700 (MST)
+From: "Theo de Raadt" <deraadt@openbsd.org>
+To: "Liam R. Howlett" <Liam.Howlett@Oracle.com>,
+    Jeff Xu <jeffxu@chromium.org>, akpm@linux-foundation.org,
+    keescook@chromium.org, jannh@google.com, sroettger@google.com,
+    willy@infradead.org, gregkh@linuxfoundation.org,
+    torvalds@linux-foundation.org, usama.anjum@collabora.com,
+    rdunlap@infradead.org, jeffxu@google.com, jorgelo@chromium.org,
+    groeck@chromium.org, linux-kernel@vger.kernel.org,
+    linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
+    pedro.falcato@gmail.com, dave.hansen@intel.com,
+    linux-hardening@vger.kernel.org
+Mail-Followup-To: "Liam R. Howlett" <Liam.Howlett@Oracle.com>,
+                  Jeff Xu <jeffxu@chromium.org>,
+                  akpm@linux-foundation.org, keescook@chromium.org,
+                  jannh@google.com, sroettger@google.com,
+                  willy@infradead.org, gregkh@linuxfoundation.org,
+                  torvalds@linux-foundation.org,
+                  usama.anjum@collabora.com, rdunlap@infradead.org,
+                  jeffxu@google.com, jorgelo@chromium.org,
+                  groeck@chromium.org, linux-kernel@vger.kernel.org,
+                  linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
+                  pedro.falcato@gmail.com, dave.hansen@intel.com,
+                  linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v7 2/4] mseal: add mseal syscall
+In-reply-to: <98656.1706128621@cvs.openbsd.org>
+References: <20240122152905.2220849-1-jeffxu@chromium.org> <20240122152905.2220849-3-jeffxu@chromium.org> <20240123181457.idckaydk7dt7q2qy@revolver> <CABi2SkX=wKnHmooxXzBnJxxmtfSjvfgYabN1Wh1LxFYjtFoFaQ@mail.gmail.com> <20240124200628.ti327diy7arb7byb@revolver> <98656.1706128621@cvs.openbsd.org>
+Comments: In-reply-to "Theo de Raadt" <deraadt@openbsd.org>
+   message dated "Wed, 24 Jan 2024 13:37:01 -0700."
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <38861.1706129497.1@cvs.openbsd.org>
+Date: Wed, 24 Jan 2024 13:51:37 -0700
+Message-ID: <82138.1706129497@cvs.openbsd.org>
 
-From: "Maciej S. Szmigiero" <maciej.szmigiero@oracle.com>
+Theo de Raadt <deraadt@openbsd.org> wrote:
 
-Since commit b0563468eeac ("x86/CPU/AMD: Disable XSAVES on AMD family 0x17")
-kernel unconditionally clears the XSAVES CPU feature bit on Zen1/2 CPUs.
+> This discussion about the malloc heap is ridiculous.  Obviously it is
+> programmer error to lock the permissions on memory you will free for
+> reuse.  But you can't fix this problem with malloc(), without breaking
+> other extremely common circumstances where the allocation of memory
+> and PERMANENT-USE-WITHOUT-RELEASE of such memory are seperated over a
+> memory boundary, unless you start telling all open source library authors
 
-Because KVM CPU caps are initialized from the kernel boot CPU features this
-makes the XSAVES feature also unavailable for KVM guests in this case.
-At the same time the XSAVEC feature is left enabled.
+  ^^^^^^^^^^^^^^^ library boundary, sorry
 
-Unfortunately, having XSAVEC but no XSAVES in CPUID breaks Hyper-V enabled
-Windows Server 2016 VMs that have more than one vCPU.
+> to always use MAP_SEALABLE in their mmap() calls.
 
-Let's at least give users hint in the kernel log what could be wrong since
-these VMs currently simply hang at boot with a black screen - giving no
-clue what suddenly broke them and how to make them work again.
+Example:
 
-Trigger the kernel message hint based on the particular guest ID written to
-the Guest OS Identity Hyper-V MSR implemented by KVM.
+1. libcrypto (or some other library) has some ways to allocate memory and
+   provide it to an application.
+2. Even if this is using malloc(), heap allocations over a pagesize are
+   page-aligned, so even then following assumptions are sound.
+3. I have an application which uses that memory, but will never release the memory
+   until program termination
+4. The library interface is public and used by many programs, so the library
+   author has a choice of using MAP_SEALABLE or not using MAP_SEALABLE
 
-Defer this check to when the L1 Hyper-V hypervisor enables SVM in EFER
-since we want to limit this message to Hyper-V enabled Windows guests only
-(Windows session running nested as L2) but the actual Guest OS Identity MSR
-write is done by L1 and happens before it enables SVM.
+Due to your choice, my application cannot make lock the memory permissions
+unless that library author chooses MAP_SEALABLE
 
-Fixes: b0563468eeac ("x86/CPU/AMD: Disable XSAVES on AMD family 0x17")
-Signed-off-by: Maciej S. Szmigiero <maciej.szmigiero@oracle.com>
----
- arch/x86/include/asm/kvm_host.h |  2 ++
- arch/x86/kvm/hyperv.c           | 48 +++++++++++++++++++++++++++++++++
- arch/x86/kvm/hyperv.h           |  3 +++
- arch/x86/kvm/x86.c              |  4 +++
- 4 files changed, 57 insertions(+)
+If they choose to use MAP_SEALABLE, all programs get this memory you consider
+less safe.
 
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 7bc1daf68741..c4b63be775df 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -1145,6 +1145,8 @@ struct kvm_hv {
- 	unsigned int synic_auto_eoi_used;
- 
- 	struct kvm_hv_syndbg hv_syndbg;
-+
-+	bool xsaves_xsavec_warned;
- };
- #endif
- 
-diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
-index 238afd7335e4..41485ae35b23 100644
---- a/arch/x86/kvm/hyperv.c
-+++ b/arch/x86/kvm/hyperv.c
-@@ -1322,6 +1322,54 @@ static bool hv_check_msr_access(struct kvm_vcpu_hv *hv_vcpu, u32 msr)
- 	return false;
- }
- 
-+#define KVM_HV_WIN2016_GUEST_ID 0x1040a00003839
-+#define KVM_HV_WIN2016_GUEST_ID_MASK (~GENMASK_ULL(23, 16)) /* mask out the service version */
-+
-+/*
-+ * Hyper-V enabled Windows Server 2016 SMP VMs fail to boot in !XSAVES && XSAVEC
-+ * configuration.
-+ * Such configuration can result from, for example, AMD Erratum 1386 workaround.
-+ *
-+ * Print a notice so users aren't left wondering what's suddenly gone wrong.
-+ */
-+static void kvm_hv_xsaves_xsavec_maybe_warn_unlocked(struct kvm_vcpu *vcpu)
-+{
-+	struct kvm *kvm = vcpu->kvm;
-+	struct kvm_hv *hv = to_kvm_hv(kvm);
-+
-+	if (hv->xsaves_xsavec_warned)
-+		return;
-+
-+	if (!vcpu->arch.hyperv_enabled)
-+		return;
-+
-+	if ((hv->hv_guest_os_id & KVM_HV_WIN2016_GUEST_ID_MASK) !=
-+	    KVM_HV_WIN2016_GUEST_ID)
-+		return;
-+
-+	/* UP configurations aren't affected */
-+	if (atomic_read(&kvm->online_vcpus) < 2)
-+		return;
-+
-+	if (boot_cpu_has(X86_FEATURE_XSAVES) ||
-+	    !guest_cpuid_has(vcpu, X86_FEATURE_XSAVEC))
-+		return;
-+
-+	pr_notice_ratelimited("Booting SMP Windows KVM VM with !XSAVES && XSAVEC. "
-+			      "If it fails to boot try disabling XSAVEC in the VM config.\n");
-+
-+	hv->xsaves_xsavec_warned = true;
-+}
-+
-+void kvm_hv_xsaves_xsavec_maybe_warn(struct kvm_vcpu *vcpu)
-+{
-+	struct kvm_hv *hv = to_kvm_hv(vcpu->kvm);
-+
-+	mutex_lock(&hv->hv_lock);
-+	kvm_hv_xsaves_xsavec_maybe_warn_unlocked(vcpu);
-+	mutex_unlock(&hv->hv_lock);
-+}
-+
- static int kvm_hv_set_msr_pw(struct kvm_vcpu *vcpu, u32 msr, u64 data,
- 			     bool host)
- {
-diff --git a/arch/x86/kvm/hyperv.h b/arch/x86/kvm/hyperv.h
-index 1dc0b6604526..923e64903da9 100644
---- a/arch/x86/kvm/hyperv.h
-+++ b/arch/x86/kvm/hyperv.h
-@@ -182,6 +182,8 @@ void kvm_hv_setup_tsc_page(struct kvm *kvm,
- 			   struct pvclock_vcpu_time_info *hv_clock);
- void kvm_hv_request_tsc_page_update(struct kvm *kvm);
- 
-+void kvm_hv_xsaves_xsavec_maybe_warn(struct kvm_vcpu *vcpu);
-+
- void kvm_hv_init_vm(struct kvm *kvm);
- void kvm_hv_destroy_vm(struct kvm *kvm);
- int kvm_hv_vcpu_init(struct kvm_vcpu *vcpu);
-@@ -267,6 +269,7 @@ int kvm_hv_vcpu_flush_tlb(struct kvm_vcpu *vcpu);
- static inline void kvm_hv_setup_tsc_page(struct kvm *kvm,
- 					 struct pvclock_vcpu_time_info *hv_clock) {}
- static inline void kvm_hv_request_tsc_page_update(struct kvm *kvm) {}
-+static inline void kvm_hv_xsaves_xsavec_maybe_warn(struct kvm_vcpu *vcpu) {}
- static inline void kvm_hv_init_vm(struct kvm *kvm) {}
- static inline void kvm_hv_destroy_vm(struct kvm *kvm) {}
- static inline int kvm_hv_vcpu_init(struct kvm_vcpu *vcpu)
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 27e23714e960..db0a2c40d749 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -1782,6 +1782,10 @@ static int set_efer(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- 	if ((efer ^ old_efer) & KVM_MMU_EFER_ROLE_BITS)
- 		kvm_mmu_reset_context(vcpu);
- 
-+	if (guest_cpuid_is_amd_or_hygon(vcpu) &&
-+	    efer & EFER_SVME)
-+		kvm_hv_xsaves_xsavec_maybe_warn(vcpu);
-+
- 	return 0;
- }
- 
+Exactly what is being gained here?
+
+
+
+
+
