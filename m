@@ -1,94 +1,141 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E8D17E564
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 16:46:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C10D47CF1C
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 16:48:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706114782; cv=none; b=Epv6mYLgHx5VHqgCFZQaZSbVsUMwBV8zmvDdpvqDjQx/JHgijYhMgdavIKV8CmHD2URbfP6fwXTGXMK76amrdkBu3xpmkgJ4AAoCxp7EcFRHGxOFLl+TbCRq4SCvHGqJO/blgCHqj3O1nPZcLZttjQGyqwFOk5hY2favf7jlpaM=
+	t=1706114888; cv=none; b=dMJ08FUij8UjIel+CVX71fhveagaJcACia6lR/GUl9E+1khk8D6h0BIkdDFTgv6yVxKrnw4pGhkb0K3LIopvlvNJ1b+UCGuLrZXm26yBT1yeC8/Mfy5/HVSPg4wOm/h9OJO2TEFtGmmrub+cU1rzWac1kHMQiV8tRIdqTTRhiLk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706114782; c=relaxed/simple;
-	bh=2p6qpEQ0FQqgHQ9MZJ6hGygl88/GlnO048hMSuetf9g=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pJPh2Opgloi/Mtkk0KvhG/xU08J2J7e08j2C6Vfk6pW2WfaHFsx79fneMF4bkGH6FkNqq7+hSQfEAvo3GUlqBuu6d6lTB95V9VI7l0TBJboAMxwThh1t1nvZzeIcleENoXcU+PRoB54G/f3DA/fy/WZvP8XX4eQQMn38gQUUrA8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=Ed5XcKxR; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1706114888; c=relaxed/simple;
+	bh=hWmCZIpPN2us1XGyAgS1SXD2VMgRqqSnFVFB7++XIsQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YItIn469hXgift5zJlbsIwwxZ6froBH3y8fXvKFavjoDeodzqCiF04cwMjsbx0Tr1vDgFPcPVYceyXivMKNWfzugjbnLWHD4dJ9RdB+24YyMzzMmu2kDCuXpvQEx95DRgUTCLJEJ00o/ir37/Ln+CrIVP170ZlVxSSEyUnNcVbM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=VjLsKW8e; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=y5akeZec; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=n3rHKEOI; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=VUm2Bo5F; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="Ed5XcKxR"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a30e445602cso253058266b.0
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 08:46:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1706114778; x=1706719578; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=gAV9hUjIFjsOqBZPLiRvCMjNyiBrTHJa47CjdZfZGyc=;
-        b=Ed5XcKxRANEFyjUxjVjM+3EXeg433iIdKQ+NHDBO13fP02ova6nbaTF5/mIECUYlcC
-         oXqTqFqOKVJSU//AI1yKMDVsZo2EU//OFwcHjf/BQTPjZ5k1gJqueUPRHoZt16kiA4OD
-         B8HhzlYJYM3GkFggqr5BhGgp38ODjMzMEJ35o=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706114778; x=1706719578;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=gAV9hUjIFjsOqBZPLiRvCMjNyiBrTHJa47CjdZfZGyc=;
-        b=BTgALKaU9ejRLx8Yp/MOzCt+bdRlLMLSZh0FHztxxU4CFNVi01Yro86b2LG8tFfUYv
-         yRG01P0uU8ZlVD3wA5X3tco88aw82DS4BWsL+E5wo+IUufzt4+IPslE0k1Zkg1Oz9+hq
-         PSVyzNmyWWQtRfoAKTe+yTHt9d82UNX7YdQ12Eh3V8p4tkxm7AZOYhx5FniB2ykquO7E
-         rEnCDmbL7y7sr3g875XY/gu3vPiGeVpLSD/sN4bYNctGyWMEoNuPBb8mbXOVrWzl+GO9
-         nwWbRUWDeeZt5pac1pp05xoesMf/J4zP2xZdTtx/DlI4DvmsoHFcHxj0ARluKzqM3gq+
-         2WWA==
-X-Gm-Message-State: AOJu0Yyo4ZbNDKTLCyetZyfIPZGQ0PzZVyyfVXsKc7xljwNtn7vIuh9g
-	L3mmtvrOoOo41PsAhz8XjDGwtK0ZraVKq4sR8Web8xoHh2dispFpUfI7gktsEcxLb1mWEtSr4Wc
-	DQCAhLQ==
-X-Google-Smtp-Source: AGHT+IHNL24nucBfshUVDSzQRPjH08wW9PegIDLUPa8Gmh/xrAjBVP7+x3cDhc/qK7B9b+WR7qQmIw==
-X-Received: by 2002:a17:906:4097:b0:a30:d9ee:3db6 with SMTP id u23-20020a170906409700b00a30d9ee3db6mr1505217ejj.51.1706114778692;
-        Wed, 24 Jan 2024 08:46:18 -0800 (PST)
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com. [209.85.208.47])
-        by smtp.gmail.com with ESMTPSA id h23-20020a170906261700b00a311a356760sm65509ejc.68.2024.01.24.08.46.17
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 24 Jan 2024 08:46:17 -0800 (PST)
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-55cdaa96f34so658776a12.1
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 08:46:17 -0800 (PST)
-X-Received: by 2002:aa7:d44a:0:b0:55c:c7f5:4ce3 with SMTP id
- q10-20020aa7d44a000000b0055cc7f54ce3mr1287114edr.5.1706114777365; Wed, 24 Jan
- 2024 08:46:17 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="VjLsKW8e";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="y5akeZec";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="n3rHKEOI";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="VUm2Bo5F"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id E9CDE1FD7F;
+	Wed, 24 Jan 2024 16:48:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1706114885; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=deYdVLn3EVvqbbVHh0i0wtu2QgPNSehyZazTApJhKrg=;
+	b=VjLsKW8e5EPEbuhjj8KaEYARrveb7pltz8WOa/t50vMZq0RC50cmcwJhFJahvCYz0zKb0R
+	EMqeWCabn4qhXZbfceA61xMmUUZb7JUpuNp99kbSNeRPd61Xz3V8YNpsf3qzURRvbkZsEa
+	2ozLYC7KmNNaIoc7GA/1yj9gNpPmjxs=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1706114885;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=deYdVLn3EVvqbbVHh0i0wtu2QgPNSehyZazTApJhKrg=;
+	b=y5akeZecYCJTgBXh0WymglY9yUNbxf/kWMvPN2wHN4crsyCwChg/UeXRBeztZ2UyLT1MNP
+	KAiLuzRI83gWzxBQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1706114884; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=deYdVLn3EVvqbbVHh0i0wtu2QgPNSehyZazTApJhKrg=;
+	b=n3rHKEOIwjFMCKSJOmcR+ynCMfv9lIRBpxe0dwFy0F0d1P3Y1tQAue4Et42BHkiLIQH+Sa
+	S1Eg9pbGwOwf2hqhIJZ6wJBQro4MlGyffrOi1meEuwcE8cd+Zd7NJY1aH3X5680z3g+4cA
+	swhK1QpQzMZjqtw4vlPz2Dikk0DjdlU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1706114884;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=deYdVLn3EVvqbbVHh0i0wtu2QgPNSehyZazTApJhKrg=;
+	b=VUm2Bo5FCbkFkainJTn81ZmquvCQ7FT+Vhm7FLkFYHAJtr4iczVYJrDIJ3KcB2FUijIxyH
+	XxWAvN5hU6mKIcCg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D60081333E;
+	Wed, 24 Jan 2024 16:48:04 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id qlg7NEQ/sWUqKgAAD6G6ig
+	(envelope-from <jwiesner@suse.de>); Wed, 24 Jan 2024 16:48:04 +0000
+Received: by incl.suse.cz (Postfix, from userid 1000)
+	id E34359C97B; Wed, 24 Jan 2024 17:48:03 +0100 (CET)
+Date: Wed, 24 Jan 2024 17:48:03 +0100
+From: Jiri Wiesner <jwiesner@suse.de>
+To: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: linux-kernel@vger.kernel.org, John Stultz <jstultz@google.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Stephen Boyd <sboyd@kernel.org>, Feng Tang <feng.tang@intel.com>
+Subject: Re: [PATCH v3] clocksource: Skip watchdog check for large watchdog
+ intervals
+Message-ID: <20240124164803.GN3303@incl>
+References: <20240122172350.GA740@incl>
+ <616658ba-0e69-447b-8b52-5051a5aa9bc0@paulmck-laptop>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <ZbE4qn9_h14OqADK@kevinlocke.name> <202401240832.02940B1A@keescook>
-In-Reply-To: <202401240832.02940B1A@keescook>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Wed, 24 Jan 2024 08:46:00 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wgJmDuYOQ+m_urRzrTTrQoobCJXnSYMovpwKckGgTyMxA@mail.gmail.com>
-Message-ID: <CAHk-=wgJmDuYOQ+m_urRzrTTrQoobCJXnSYMovpwKckGgTyMxA@mail.gmail.com>
-Subject: Re: [6.8-rc1 Regression] Unable to exec apparmor_parser from virt-aa-helper
-To: Kees Cook <keescook@chromium.org>
-Cc: Kevin Locke <kevin@kevinlocke.name>, John Johansen <john.johansen@canonical.com>, 
-	Josh Triplett <josh@joshtriplett.org>, Mateusz Guzik <mjguzik@gmail.com>, 
-	Al Viro <viro@zeniv.linux.org.uk>, linux-mm@kvack.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <616658ba-0e69-447b-8b52-5051a5aa9bc0@paulmck-laptop>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+Authentication-Results: smtp-out2.suse.de;
+	none
+X-Spam-Level: **
+X-Spam-Score: 2.15
+X-Spamd-Result: default: False [2.15 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 MIME_GOOD(-0.10)[text/plain];
+	 NEURAL_SPAM_SHORT(2.75)[0.918];
+	 RCPT_COUNT_FIVE(0.00)[6];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 MID_RHS_NOT_FQDN(0.50)[];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-0.00)[24.19%]
+X-Spam-Flag: NO
 
-On Wed, 24 Jan 2024 at 08:35, Kees Cook <keescook@chromium.org> wrote:
->
-> Oh, yikes. This means the LSM lost the knowledge that this open is an
-> _exec_, not a _read_.
->
-> I will starting looking at this. John might be able to point me in the
-> right direction more quickly, though.
+On Wed, Jan 24, 2024 at 08:03:42AM -0800, Paul E. McKenney wrote:
+> On Mon, Jan 22, 2024 at 06:23:50PM +0100, Jiri Wiesner wrote:
+> > diff --git a/kernel/time/clocksource.c b/kernel/time/clocksource.c
+> > index c108ed8a9804..3052b1f1168e 100644
+> > --- a/kernel/time/clocksource.c
+> > +++ b/kernel/time/clocksource.c
+> > @@ -99,6 +99,7 @@ static u64 suspend_start;
+> >   * Interval: 0.5sec.
+> >   */
+> >  #define WATCHDOG_INTERVAL (HZ >> 1)
+> > +#define WATCHDOG_INTERVAL_MAX_NS ((2 * WATCHDOG_INTERVAL) * (NSEC_PER_SEC / HZ))
+> 
+> We need something here to force 64-bit arithmetic on 32-bit systems
+> correct?
 
-One obvious change in -rc1 is that the exec open was moved much
-earlier: commit 978ffcbf00d8 ("execve: open the executable file before
-doing anything else").
-
-If the code ends up deciding "is this an exec" based on some state
-flag that hasn't been set, that would explain it.
-
-Something like "current->in_execve", perhaps?
-
-               Linus
+I think it is not strictly necessary because
+(2 * HZ / 2) * (NSEC_PER_SEC / HZ) = HZ * (NSEC_PER_SEC / HZ)
+so even a 32-bit integer would not overflow when NSEC_PER_SEC / HZ is 
+bracketed. But I could make a change to:
++#define WATCHDOG_INTERVAL_MAX_NS ((int64_t)(2ULL * WATCHDOG_INTERVAL * NSEC_PER_SEC / HZ))
+to make it explicit and remove the risk of overflow if the constant was 
+increased (for testing purposes for instance).
+-- 
+Jiri Wiesner
+SUSE Labs
