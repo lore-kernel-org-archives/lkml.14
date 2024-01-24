@@ -1,117 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B258B77641;
-	Wed, 24 Jan 2024 14:20:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AABDC7A70E;
+	Wed, 24 Jan 2024 14:21:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706106043; cv=none; b=ltsZ8Pksd3bJ1yrreE7QIUGEuG+flwF1geYNZb6qLX2kpYDU9Rdvlc++JVI3/pUBEIzTPZiJPVp1qB9jh8kS+0eC79DxpzTDh/4sEs5iU4bCqSJrzH427pSphhNsIyuXNnfuAgh/+HCiF9kf1j8fwwFMxhl/Ef8xUgC7kFc4omI=
+	t=1706106072; cv=none; b=eq+48fGgdph8aiM8UCKMKv/Mp/cbQMkEtD+CGsD30B9gZXERLye/UEtnoUWOyhU1Um5KwWLYFktqvsj3kRJa1X6i3J+p8xBkSIK5KGR31TkNad9f9mORKkp4D1FKaMqRmIN6DBLNt2KMXHnT8OzLeEy3Bg8mlQOmlvFzs749pAg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706106043; c=relaxed/simple;
-	bh=cZwooKZYY+5BxcC/oTMQ6fPAMp5nU8PfPmstszDkUQw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pZcKNz5TyM1Wwl1ham5WvUgKDzNv1TOROYM+qqFrc2jptXHsvzaqoXAIjb9zfxfS6XSOisZPmOXgfVs9e+sQ46kPxLWwVV2c+iqA3LGfsCNoawP+MCc1p3cKiWLMVHzrliVFaLIQDWha+BxFUbDki+iJF1GKo8eENSv6ROi4D0w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j9fhaF0j; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706106072; c=relaxed/simple;
+	bh=UslCulOJ4hP1Tj0nrRmZ2+wbi2W8i3qotKFb2uburGg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=F7WJJEHqgQOxFYcsRB7s1/XoUn/lDbwas8U80yLavGlOpkVVDkSoUeVOZIkkXcPGt2sVOMU+XEpEqrjOFxxKr8XXM27JnN4NwAqu9SdMYpF0zdlI3gYF+EO/sA0do9rUYIUj7jSnLVmvkw+xfLtG5CCEPp+J6EhyIu2223ZMBWE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=d4W1/8eK; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j9fhaF0j"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F3BFC433F1;
-	Wed, 24 Jan 2024 14:20:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706106043;
-	bh=cZwooKZYY+5BxcC/oTMQ6fPAMp5nU8PfPmstszDkUQw=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=j9fhaF0jRiU4dn2ygpxvyPiRkUv1hD3E8jANrC8fc+AdPMBxjRgorSZ75Uh4dPxkb
-	 EPhxfsYtbxPof0WQH3kooCzZODEqCjBAuQqaEORiN3vsik91a/WOkAvT4Tci5YqBhB
-	 Pkm9YYXgbmWRW83bJdQ4xplrXSItNmej84/n+Q6LWFoomXfrQAtvUhyWcuVmwtRbDm
-	 fPbyR3yC+Dqb/8M5XNOF8Vh+WtEjRSChu8wbQ/l9JxMkpAngXIGxoHEVqGSFkRpoZY
-	 WWuFDWg/waOnx4BMuVTbPPL5yj5Ji6xcpGCwqdDE+JgmQCzXfyhHSvLZaJ761/AUT6
-	 qws8JAbw1XLkQ==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id CADFECE0E8B; Wed, 24 Jan 2024 06:20:42 -0800 (PST)
-Date: Wed, 24 Jan 2024 06:20:42 -0800
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Jiri Wiesner <jwiesner@suse.de>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Next Mailing List <linux-next@vger.kernel.org>
-Subject: Re: linux-next: build failure after merge of the rcu tree
-Message-ID: <f9225eac-7ed9-4abe-8ffc-94936ece0238@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <20240124151743.052082af@canb.auug.org.au>
- <20240124094954.GL3303@incl>
- <6b5c4acc-f184-4ad9-9029-dd7967fe4a04@paulmck-laptop>
- <20240124133105.GM3303@incl>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d4W1/8eK"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1d750660a0aso17160495ad.0;
+        Wed, 24 Jan 2024 06:21:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1706106070; x=1706710870; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=vkM7C9VM6ZU2FxPGHAohF+g/nyjtbEK3pFaS9kpNcFU=;
+        b=d4W1/8eKg4px+YehuFC9nz4GY6OI7IzmB79hKUx74ivKzWAsMXn0/Fsrtv4KOHR5WH
+         /IHIiithkObEf10YEqJ0/KKP7D1UexZ+XnrtIHixJEgew9huj174mwgXv//+I75SHkSv
+         QVaOB5hyBq1CfzRA3dXdWXU0N4QrRlSLqJyGxvD/5pRI4szGj2LvOThjGQYkbebfmexO
+         ZJ16MRom/YbKuuJ95l3zNJCNA7sf3o+tguTj6Xf+RAT+5TpigdqhB/C5yeGlYjNJfeDt
+         s2v+4AlS19jWOJ/xXptTfpQ1Jhf3nLcKU0keTmjA/2eXBMg0St1ZMdbabEKYT698Egm4
+         mVeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706106070; x=1706710870;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=vkM7C9VM6ZU2FxPGHAohF+g/nyjtbEK3pFaS9kpNcFU=;
+        b=KUIYfmk/Pbsj/wyK8QIe3O6yIFHE3clAy8AGQ8WCsL4V4njfsTuZdZ6AhStbzE2fmn
+         T4suhHbMLOWCS72RlZCGqhrvsvysODEmnh5aqSu1x8ZRnrjWLIbIUWdRdo0xg0ConEmR
+         /5p87hfX/z+9q2sG+1Zuc3wOnOll/xa+yjTiBHgQRRoGQoSS9Em1DiNSaEH2c5YtbP4D
+         MUFw3D0LdF4LnAkSGrybiLWcqR1ncG8D6ebxOq/kFHeDsNr9VL8j47o6+CBQiXQXfv6P
+         GNThPrmc6I9lCZLexnZiZCQQdod7qz7PqL1k3c2m6/EAunHe3Xr8GB2lHDd1tsVCCKBq
+         +qfg==
+X-Gm-Message-State: AOJu0Yw3RNXkeusJKMIo73S/8HTmIyIGwYeTDgexu07dpO7gA/LY3M2q
+	gf5wYwZCT9zr8Xv10IIcjqvgjStxmAGLFDN9XmS6KWlPJWWJLk3b
+X-Google-Smtp-Source: AGHT+IF40Uft6qdKvHYCwchjPCpWLMrA/WX9D91nJJwLr/P8AKj7oyRiZsst11c/Y341gKFa9sTVhA==
+X-Received: by 2002:a17:902:7b90:b0:1d5:4c3b:2aab with SMTP id w16-20020a1709027b9000b001d54c3b2aabmr754138pll.114.1706106069910;
+        Wed, 24 Jan 2024 06:21:09 -0800 (PST)
+Received: from hdebian.corp.toradex.com ([201.82.41.210])
+        by smtp.gmail.com with ESMTPSA id j2-20020a056a00234200b006ddb77d443asm634848pfj.209.2024.01.24.06.21.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Jan 2024 06:21:09 -0800 (PST)
+From: Hiago De Franco <hiagofranco@gmail.com>
+To: Shawn Guo <shawnguo@kernel.org>,
+	linux-arm-kernel@lists.infradead.org
+Cc: Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	NXP Linux Team <linux-imx@nxp.com>,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Hiago De Franco <hiago.franco@toradex.com>
+Subject: [PATCH v2 0/2] nxp: imx: Add support for Apalis Evaluation Board v1.2
+Date: Wed, 24 Jan 2024 11:13:18 -0300
+Message-ID: <20240124141849.26254-1-hiagofranco@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240124133105.GM3303@incl>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jan 24, 2024 at 02:31:05PM +0100, Jiri Wiesner wrote:
-> On Wed, Jan 24, 2024 at 04:12:23AM -0800, Paul E. McKenney wrote:
-> > On Wed, Jan 24, 2024 at 10:49:54AM +0100, Jiri Wiesner wrote:
-> > > On Wed, Jan 24, 2024 at 03:17:43PM +1100, Stephen Rothwell wrote:
-> > > > After merging the rcu tree, today's linux-next build (i386 defconfig)
-> > > > failed like this:
-> > > > In file included from include/linux/dev_printk.h:14,
-> > > >                  from include/linux/device.h:15,
-> > > >                  from kernel/time/clocksource.c:10:
-> > > > kernel/time/clocksource.c: In function 'clocksource_watchdog':
-> > > > kernel/time/clocksource.c:103:34: error: integer overflow in expression of type 'long int' results in '-1619276800' [-Werror=overflow]
-> > > >   103 |                                  * NSEC_PER_SEC / HZ)
-> > > >       |                                  ^
-> > > > Caused by commit
-> > > >   1a4545025600 ("clocksource: Skip watchdog check for large watchdog intervals")
-> > > > I have used the rcu tree from next-20240123 for today.
-> > > 
-> > > This particular patch is still beging discussed on the LKML. This is the 
-> > > latest submission with improved variable naming, increased threshold and 
-> > > changes to the log and the warning message (as proposed by tglx):
-> > > https://lore.kernel.org/lkml/20240122172350.GA740@incl/
-> > > Especially the change to the message is important. I think this message 
-> > > will be commonplace on 8 NUMA node (and larger) machines. If there is 
-> > > anything else I can do to assist please let me know.
-> > 
-> > Here is the offending #define:
-> > 
-> > #define WATCHDOG_INTR_MAX_NS	((WATCHDOG_INTERVAL + (WATCHDOG_INTERVAL >> 1))\
-> > 				 * NSEC_PER_SEC / HZ)
-> > 
-> > The problem is that these things are int or long, and on i386, that
-> > is only 32 bits.  NSEC_PER_SEC is one billion, and WATCHDOG_INTERVAL
-> > is often 1000, which overflows.  The division by HZ gets this back in
-> > range at about 1.5x10^9.
-> 
-> Exactly.
-> 
-> > So this computation must be done in 64 bits even on 32-bit systems.
-> > My thought would be a cast to u64, then back to long for the result.
-> 
-> This will be a more precise solution than enclosing NSEC_PER_SEC / HZ in 
-> brackets, which I chose to do in the v2 of this patch.
-> 
-> > Whatever approach, Jiri, would you like to send an updated patch?
-> 
-> Yes, I can incorporate the casting to u64 and back to long into the patch. 
-> At this point, I am not sure which version to use. There are:
-> * v1 (submitted to the LKML on Jan 3rd): the patch that got merged into linux-next
-> * v2 (submitted to the LKML on Jan 10th): that has an alternative fix for the interger overflow
-> * v3 (submitted to the LKML on Jan 22nd): that incoporates suggestions by Thomas Gleixner
-> 
-> I could update the v3 of this patch with casting to u64 and back to long. 
-> WATCHDOG_INTERVAL_MAX_NS got set to 2 * WATCHDOG_INTERVAL in v3 - a change 
-> I do not entirely agree with. I think WATCHDOG_INTERVAL_MAX_NS should be 
-> kept narrow so as not to impose a limit on time skew that is too strict 
-> for readout intervals approaching 2 * WATCHDOG_INTERVAL in their length. 
-> The question is what is too strict.
+From: Hiago De Franco <hiago.franco@toradex.com>
 
-Please accept my apologies!  I should have caught your updates.
+This patch series introduces support for the new Apalis Evaluation Board
+v1.2. With the introduction of v1.2, a common dtsi file, containing
+shared configurations for both apalis-eval.dts and apalis-eval-v1.2.dts,
+has been created. The eval and eval-v1.2 dts files will now capture the
+differences between these two boards. Additionally, updates have been
+made to nxp/imx/Makefile and arm/fsl.yaml to accommodate these changes.
 
-I will drop my current version of your patch and queue your v3 for review
-and testing.
+v1:
+  - https://lore.kernel.org/all/20240122123526.43400-1-hiagofranco@gmail.com/
 
-							Thanx, Paul
+v2:
+  - Add missing off-on-delay-us property with 100ms to reg_3v3_mmc and
+  reg_3v3_sd.
+  - Fix startup-delay-us property from 100us (reg_3v3_mmc and reg_3v3_sd)
+  and 1ms (reg_can1 and reg_can2) to 10ms.
+  - Fix pinctrl mux from 0xb000 to 0x1b0b0.
+  - Add Acked-by: Conor Dooley.
+  - Add Reviewed-by: Francesco Dolcini.
+
+Hiago De Franco (2):
+  dt-bindings: arm: fsl: Add toradex,apalis_imx6q-eval-v1.2 board
+  arm: dts: nxp: imx: Add support for Apalis Evaluation Board v1.2
+
+ .../devicetree/bindings/arm/fsl.yaml          |   3 +-
+ arch/arm/boot/dts/nxp/imx/Makefile            |   1 +
+ .../dts/nxp/imx/imx6q-apalis-eval-v1.2.dts    | 200 ++++++++++++++++++
+ .../boot/dts/nxp/imx/imx6q-apalis-eval.dts    | 108 +---------
+ .../boot/dts/nxp/imx/imx6q-apalis-eval.dtsi   | 120 +++++++++++
+ 5 files changed, 325 insertions(+), 107 deletions(-)
+ create mode 100644 arch/arm/boot/dts/nxp/imx/imx6q-apalis-eval-v1.2.dts
+ create mode 100644 arch/arm/boot/dts/nxp/imx/imx6q-apalis-eval.dtsi
+
+-- 
+2.43.0
+
