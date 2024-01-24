@@ -1,150 +1,100 @@
-Received: from mail-oa1-f41.google.com (mail-oa1-f41.google.com [209.85.160.41])
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DE2D7A702;
-	Wed, 24 Jan 2024 14:11:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E79760DFF;
+	Wed, 24 Jan 2024 14:14:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706105464; cv=none; b=QTE2BBfKAi6CDTU4DdI8NKxRhZzym4PyI5G2Z7QL6EF1GM7jnKhThOt3eNmP70tky3OxTZPwUpzY2I0ELL7+xpM+l4Kv80bnE11Uu01387lesI+C/SIxJ74O29PL2tq3TRCAXRakvtJz/zKxtZjNMj4kcefzomLFlWQDVrbh9ew=
+	t=1706105653; cv=none; b=Z3MlwmiRNNU+xV1FKMwIKtGv3ulK1THd7pz88X7hvV8Xvql28hUYLLDS+Dt55nOeIHgHwjsPxuGvrF+Z0n3eISK2wW1ib8Lp6M6TlZf+otqu9M8x3we2aEw66GfA2RR4AsElRHw2CGDeVBggsvTYSjQGxxX2vMw9OZ3izeoL+z4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706105464; c=relaxed/simple;
-	bh=9L8i8MRxTRUovMnf6B3+TaY9uldZPEBNGPy4Z42mzbQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fOLzB4TvRqwis0H5thPM0hsiCr7OK4yv7tIxSQJORcEwz3ES4WzwEUSMdRnEfR7lLvudM4KPyyrAKle3n13zl8Kd4cFeQWetZX/eOtjIevMHOyxrG4G8NaOWUl6/3SsPwUV7VcLY+h5bT4MPIAfHYFb3K2ZgKUTn41H4Sg4a4gM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FVdhfrOF; arc=none smtp.client-ip=209.85.160.41
+	s=arc-20240116; t=1706105653; c=relaxed/simple;
+	bh=ayLeps8v3W7HX8vlungxHlMOuxcEHcvYI51ejw6W6y4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tptyAykvizZsItVkiZLDqGgyf/8IqWygOnyGZ0TjK9hnCPf3G4ioDekHMdT5fHq+lBzGVF+hAJC5+Pj8regL9n3WvyRzUWsWHbMBcTax7Etvuh5t0zcESk83rnckT9wGsLvAzmOvaf77pE/RxWnyBJ482OhDziU/CLeKDAuSgh4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Nghjgqqm; arc=none smtp.client-ip=209.85.218.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FVdhfrOF"
-Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-21481a3de56so1077094fac.2;
-        Wed, 24 Jan 2024 06:11:03 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nghjgqqm"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a28fb463a28so541043266b.3;
+        Wed, 24 Jan 2024 06:14:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706105462; x=1706710262; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+xnTLTL2SSu5RMv39utUojmUyQtnjJr+CK/qkZj7DKg=;
-        b=FVdhfrOFBatCCeZQTPJ8mSWNAf2fnyYlwVy2Ul1Im5TjONatvNd3nVsHLKbGgpwpBt
-         hzey21lSer2m48/n1/YfF4gM0UXpwpogSStTsqLoKaGmRph7uPa+gSWkz+aaNTZXdx9v
-         jaPMybe1kl0muO/0sz60XIpJLeevM5OiDeI8Whk+QADmXFxEWa01SH3bQkJGcx6FUMhb
-         eY++ePAU82RTV89K/hhQHM857Jgr3QQqhwg8PNcpNdLGvSMetCeuzW6R75XIw2Na22QG
-         Lat+H3l2/hQpxq1KIb5yodzU2qjq7O14QsJwQxW7ciTgDYWjQpX0wQCgnLpYOBIhOSnT
-         YHAQ==
+        d=gmail.com; s=20230601; t=1706105650; x=1706710450; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=RVt0ZnKeByvzhrfkzssJmlz6f1Lvfiy149b2/exZGTI=;
+        b=NghjgqqmN9zD+1HEfq0faYl/BWOF/o3EcsFMGLgR1xdXx9NCWVovmWxZMJXQCkSGJo
+         67Bv+T/QcBmKIKhrEX23qwS8U6dkMwDXJO8O0nYiujcnjW5fCB6SXkXdq0lL4prgdH+S
+         Kss+w5Gp/j7XGF8BCYNJgDCiD1JD93NYN/l6GQYmkK4TOTgSF1mjpl2rBX18aW6qM7zA
+         Gn9x/eJzRaIoJ4nDBjVCPqCsH8XTgcra04Mtc1j6Axdb52bJErk7ZbBVYqYP283ogEFm
+         EzLA5ntm4q0fElz/p1toQvdL2K0e7pCRbIaOvkDA9xc1ktagFkPdVa/IOzt+mREPtw1M
+         2AZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706105462; x=1706710262;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+xnTLTL2SSu5RMv39utUojmUyQtnjJr+CK/qkZj7DKg=;
-        b=AR6aVWzz1p0mFu/tH4RHcIDhYhZfMm+jInoAk0z0tqqeUqWIEz8AS/KMy+7x32ZOzx
-         ocJ/pkzVBJQTGIc7tzWz82jfi7iK8xGZ+il7AoPAilxJnt/NdFtXdLsdeJwoheZ7NQBs
-         zQazgUfNlSW6hp/rr6Ql48lO6tyNcLFfZFjdC4poHWaO0YGjf3PZeaqIaore9uK0MMaG
-         /GNQP84WvKbl69wnmbqaboNdQ+LWqVcULcEjJdwh87x5qNSzrlErtGjsLB5AEkwOz40l
-         84qQchkUHqnCxb3qvvYltLU7+/ECJLW7foQJ37HS8Wtxb1JDol1a2guzkzH+Toysuhv9
-         4Cfg==
-X-Gm-Message-State: AOJu0Yxnn33uQVVUeT1hvmf9cjpq7qyXDAuYFwiYdvLZJLwsY4aZB5Mr
-	R+Jcfarq6x8JUlfYWBiYGDUM5R08lQ0Pq72rmmWDRwLtFR2mE86UgQmOeTdUjEIoY0uWPAyveRt
-	iNQXWJh9B4ssFrk8CBeGbZldRRW8hhpRj8u3OQg==
-X-Google-Smtp-Source: AGHT+IG9TfD3j0DFTfi1uYZGWP5PaLsWSpYqgym4p+3+gRdC4L7CR6qMM9jCbxA/d6Y6YRCwVXNlWQo0VQ1qeLtd9Vs=
-X-Received: by 2002:a05:6870:718f:b0:214:9c65:b969 with SMTP id
- d15-20020a056870718f00b002149c65b969mr1784734oah.6.1706105462338; Wed, 24 Jan
- 2024 06:11:02 -0800 (PST)
+        d=1e100.net; s=20230601; t=1706105650; x=1706710450;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RVt0ZnKeByvzhrfkzssJmlz6f1Lvfiy149b2/exZGTI=;
+        b=M7jRcQ543oXrQQBFexf0xQ3/Ydn1v+uDuGq/0ByGlYytLeRCbVDnF1iZ1pzkqPDhOv
+         CBRpV5NxtmCaIoSMoBvVxkEFYc+3PX8avxvNdnSszBcMACt9Hp5g+sARFBWmRuNsAkYt
+         N2S+zt6PnwF2XcgstlmF0UoNd7IfaZS55iwtkgb8wq2Vbhq9NBRz/EMoikCVof+/51xA
+         cMHbiQdlUZ6fdxwD5GTrIM9uz7tBkUQy0wVGSw7w2oi3qNBXT0oxvsxZwI0badkB/cS7
+         AKhqbMtoG6NEzkaB5Ue8pnjImnKUeBABaFghVL3sG2NfcXPpgbGBRJIqNzv3KtVOuEq9
+         d49Q==
+X-Gm-Message-State: AOJu0YxGhfoYrtpA3M3TREuCC/y3kxtVV0QnUwr/oInBA1kF/6DSUa2U
+	dN7YnwuHDk4xueCdICHroomfVM5He1fu2hw/VXNza1cjd9jLWurU
+X-Google-Smtp-Source: AGHT+IF9Si4NHAOAqa3uYGeUJLR9rrnIrYwH+j1jIF67RS+3PdY09F2BJ2FydAo0qGhNxG2VPd32pA==
+X-Received: by 2002:a17:906:f197:b0:a2f:71f1:b9e4 with SMTP id gs23-20020a170906f19700b00a2f71f1b9e4mr780499ejb.53.1706105649844;
+        Wed, 24 Jan 2024 06:14:09 -0800 (PST)
+Received: from andrea ([31.189.8.91])
+        by smtp.gmail.com with ESMTPSA id vb5-20020a170907d04500b00a30f04cb266sm1142517ejc.5.2024.01.24.06.14.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Jan 2024 06:14:09 -0800 (PST)
+Date: Wed, 24 Jan 2024 15:13:58 +0100
+From: Andrea Parri <parri.andrea@gmail.com>
+To: paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
+	mathieu.desnoyers@efficios.com, paulmck@kernel.org, corbet@lwn.net
+Cc: mmaas@google.com, hboehm@google.com, striker@us.ibm.com,
+	charlie@rivosinc.com, rehn@rivosinc.com,
+	linux-riscv@lists.infradead.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/4] membarrier: riscv: Core serializing command
+Message-ID: <ZbEbJpnUoFPW0fhd@andrea>
+References: <20240110145533.60234-1-parri.andrea@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240124113042.44300-1-jefflexu@linux.alibaba.com> <CAJfpegtkSgRO-24bdnA4xUMFW5vFwSDQ7WkcowNR69zmbRwKqQ@mail.gmail.com>
-In-Reply-To: <CAJfpegtkSgRO-24bdnA4xUMFW5vFwSDQ7WkcowNR69zmbRwKqQ@mail.gmail.com>
-From: Amir Goldstein <amir73il@gmail.com>
-Date: Wed, 24 Jan 2024 16:10:50 +0200
-Message-ID: <CAOQ4uxjN6f=M8jjM0-_eysLy8Jx1+r0Dy3MhWHc8f2r7RnEmdQ@mail.gmail.com>
-Subject: Re: [PATCH] fuse: add support for explicit export disabling
-To: Miklos Szeredi <miklos@szeredi.hu>
-Cc: Jingbo Xu <jefflexu@linux.alibaba.com>, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240110145533.60234-1-parri.andrea@gmail.com>
 
-On Wed, Jan 24, 2024 at 2:17=E2=80=AFPM Miklos Szeredi <miklos@szeredi.hu> =
-wrote:
->
-> On Wed, 24 Jan 2024 at 12:30, Jingbo Xu <jefflexu@linux.alibaba.com> wrot=
-e:
-> >
-> > open_by_handle_at(2) can fail with -ESTALE with a valid handle returned
-> > by a previous name_to_handle_at(2) for evicted fuse inodes, which is
-> > especially common when entry_valid_timeout is 0, e.g. when the fuse
-> > daemon is in "cache=3Dnone" mode.
-> >
-> > The time sequence is like:
-> >
-> >         name_to_handle_at(2)    # succeed
-> >         evict fuse inode
-> >         open_by_handle_at(2)    # fail
-> >
-> > The root cause is that, with 0 entry_valid_timeout, the dput() called i=
-n
-> > name_to_handle_at(2) will trigger iput -> evict(), which will send
-> > FUSE_FORGET to the daemon.  The following open_by_handle_at(2) will sen=
-d
-> > a new FUSE_LOOKUP request upon inode cache miss since the previous inod=
-e
-> > eviction.  Then the fuse daemon may fail the FUSE_LOOKUP request with
-> > -ENOENT as the cached metadata of the requested inode has already been
-> > cleaned up during the previous FUSE_FORGET.  The returned -ENOENT is
-> > treated as -ESTALE when open_by_handle_at(2) returns.
-> >
-> > This confuses the application somehow, as open_by_handle_at(2) fails
-> > when the previous name_to_handle_at(2) succeeds.  The returned errno is
-> > also confusing as the requested file is not deleted and already there.
-> > It is reasonable to fail name_to_handle_at(2) early in this case, after
-> > which the application can fallback to open(2) to access files.
-> >
-> > Since this issue typically appears when entry_valid_timeout is 0 which
-> > is configured by the fuse daemon, the fuse daemon is the right person t=
-o
-> > explicitly disable the export when required.
-> >
-> > Also considering FUSE_EXPORT_SUPPORT actually indicates the support for
-> > lookups of "." and "..", and there are existing fuse daemons supporting
-> > export without FUSE_EXPORT_SUPPORT set, for compatibility, we add a new
-> > INIT flag for such purpose.
->
-> This looks good overall.
->
-> >
-> > Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
-> > ---
-> > RFC: https://lore.kernel.org/all/20240123093701.94166-1-jefflexu@linux.=
-alibaba.com/
-> > ---
-> >  fs/fuse/inode.c           | 11 ++++++++++-
-> >  include/uapi/linux/fuse.h |  2 ++
-> >  2 files changed, 12 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/fs/fuse/inode.c b/fs/fuse/inode.c
-> > index 2a6d44f91729..851940c0e930 100644
-> > --- a/fs/fuse/inode.c
-> > +++ b/fs/fuse/inode.c
-> > @@ -1110,6 +1110,11 @@ static struct dentry *fuse_get_parent(struct den=
-try *child)
-> >         return parent;
-> >  }
-> >
-> > +/* only for fid encoding; no support for file handle */
-> > +static const struct export_operations fuse_fid_operations =3D {
->
-> Nit: I'd call this fuse_no_export_operations (or something else that
-> emphasizes the fact that this is only for encoding and not for full
-> export support).
+On Wed, Jan 10, 2024 at 03:55:29PM +0100, Andrea Parri wrote:
+> Changes since v2 ([1]):
+>   - amaned inline comments
+>   - drop ARCH_HAS_MEMBARRIER, create membarrrier.rst
+> 
+> Changes since v1 ([2]):
+>   - add smp_mb() in switch_mm()
+>   - introduce ARCH_HAS_MEMBARRIER, amend documentation
+> 
+> Changes since RFC ([3]):
+>   - introduce prepare_sync_core_cmd()
+>   - fix nosmp builds
+> 
+> [1] https://lore.kernel.org/lkml/20231211094414.8078-1-parri.andrea@gmail.com/
+> [2] https://lore.kernel.org/lkml/20231127103235.28442-1-parri.andrea@gmail.com/
+> [3] https://lore.kernel.org/lkml/20230803040111.5101-1-parri.andrea@gmail.com/
+> 
+> Andrea Parri (4):
+>   membarrier: riscv: Add full memory barrier in switch_mm()
+>   membarrier: Create Documentation/scheduler/membarrier.rst
+>   locking: Introduce prepare_sync_core_cmd()
+>   membarrier: riscv: Provide core serializing command
 
-Not that I really care what the name is, but overlayfs already has
-ovl_export_fid_operations and the name aspires from AT_HANDLE_FID,
-which is already documented in man pages.
+Gentle ping to the riscv&membarrier people who have survived the merge
+window: any other thoughts on this series? suggestions for a v4?
 
-How about fuse_export_fid_operations?
-
-Thanks,
-Amir.
+  Andrea
