@@ -1,75 +1,118 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FE6A182DD;
-	Wed, 24 Jan 2024 09:20:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B21DD1946B;
+	Wed, 24 Jan 2024 09:20:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706088015; cv=none; b=ghn510BRO2xGSE2Nww3bybOB/BC7j+p84oXsESbsJ9XbOy8WxIxaYepB1P+/swaKV/xzbczfLvnNme7/N+Yh5wWTz6ZONQmztSAF1Xl5FTNVm+y/dOrC0xhFDd3QrWxomzm2P/9u879jgQrUL6Ni/PKzWF0Yv9Mz9v3kBvERH5s=
+	t=1706088021; cv=none; b=p58wKP0zntS+Hq/qP1feSwWm5lkzhvO4sM4gh9BKe0maP14wyuq4oKSuYK4B7xreKyqPoM1UlrOhdleO6bXwyrrH5RJ+I1dHuSmnLfga2WZ0E/y+/O7kHXeO7zc0IyUKilysK5kykPo+SRY2+PndvxCFMiESip9lOoZF5c5Pf8o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706088015; c=relaxed/simple;
-	bh=0RNVoVPorVZfd5XfeIrUrbw9uQITz+8rwALrIiiF5SI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Fk1bcq41CSORHkXm88eTSBV930pAQuoMkxaE69n+JnmUVZ6dY3GQbcSTNVnVqv6CkBVrKZK6ONbnZ03ErWQHlbxv22D2kewEsHAeizZV1oZ3zH2D4RexhJmbYfhkSuYwEZieazU0h+gtI/I9eqab5qwq7Zv162KbycsxwfTrCzo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=pWIw3d6+; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pWIw3d6+"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=c+ZfvrjquqzlfSZdWFV1/+Mtsm0Gets8I4mX6+MdRHE=; b=pWIw3d6+jgURd/sfpZEVB1Aiml
-	vM1O8VgYkw32OUUokRaha95eKs81ULZjWXHkhsUL3xnYi7r7PvBvftRJ8l4CSHNqUStqBEYptww4D
-	5KSU1WgXxBv2BaluAoqZEYsilp+LiZ0knK8rhJU64j2F2+50DSmcLEdVbXywP+/yzCxyOilVOC2wm
-	y7Ccnq0mtlWXFXosjW8h+s6X6n93pkulx1j6D9nuxjBLhhu4+TqaE36D+HZyhXzvfetcHgG74Acqa
-	xTyMXU0qUnkKRyArkhnttoLhuWK0guIAsi4jn+v3AktzS0GlKGmF6eyYdu04dmhsFi5YWj+aJgTfH
-	x171c8qQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.96 #2 (Red Hat Linux))
-	id 1rSZQX-002BYQ-1t;
-	Wed, 24 Jan 2024 09:20:09 +0000
-Date: Wed, 24 Jan 2024 01:20:09 -0800
-From: Christoph Hellwig <hch@infradead.org>
-To: "zhaoyang.huang" <zhaoyang.huang@unisoc.com>
-Cc: Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Zhaoyang Huang <huangzhaoyang@gmail.com>, steve.kang@unisoc.com
-Subject: Re: [PATCHv2 1/1] block: introduce content activity based ioprio
-Message-ID: <ZbDWSUkT/OjHTe0t@infradead.org>
-References: <20240124085334.3060748-1-zhaoyang.huang@unisoc.com>
+	s=arc-20240116; t=1706088021; c=relaxed/simple;
+	bh=kJ1nYmW4cicbBwQfSgo5X6zUUeLx3T+g5jG9se6tsaM=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=m75eKYQdjrhjGTt9Yn6xguJyfeI1jhahqwRM0PYL7AtDuc6b3O91jrT8MNhL2YVhBMvMxJd63kBJNAzcyB5F0mkMK2J9phIeJkQUbMlg5jUru9u94ogVFChVWflgTA+/yBKBE3OkfdEaPVOoOPzx/3x4ZW/mXpq+MfymYOe4844=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.214])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4TKdfx2jxGz29kj6;
+	Wed, 24 Jan 2024 17:18:33 +0800 (CST)
+Received: from kwepemm600009.china.huawei.com (unknown [7.193.23.164])
+	by mail.maildlp.com (Postfix) with ESMTPS id 987251A0172;
+	Wed, 24 Jan 2024 17:20:02 +0800 (CST)
+Received: from huawei.com (10.175.104.67) by kwepemm600009.china.huawei.com
+ (7.193.23.164) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Wed, 24 Jan
+ 2024 17:18:24 +0800
+From: Yu Kuai <yukuai3@huawei.com>
+To: <agk@redhat.com>, <snitzer@kernel.org>, <mpatocka@redhat.com>,
+	<dm-devel@lists.linux.dev>, <xni@redhat.com>, <song@kernel.org>,
+	<yukuai3@huawei.com>, <jbrassow@f14.redhat.com>, <neilb@suse.de>,
+	<heinzm@redhat.com>, <shli@fb.com>, <akpm@osdl.org>
+CC: <linux-kernel@vger.kernel.org>, <linux-raid@vger.kernel.org>,
+	<yukuai1@huaweicloud.com>, <yi.zhang@huawei.com>, <yangerkun@huawei.com>
+Subject: [PATCH v2 07/11] md/dm-raid: don't call md_reap_sync_thread() directly
+Date: Wed, 24 Jan 2024 17:14:17 +0800
+Message-ID: <20240124091421.1261579-8-yukuai3@huawei.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240124091421.1261579-1-yukuai3@huawei.com>
+References: <20240124091421.1261579-1-yukuai3@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240124085334.3060748-1-zhaoyang.huang@unisoc.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ kwepemm600009.china.huawei.com (7.193.23.164)
 
-On Wed, Jan 24, 2024 at 04:53:34PM +0800, zhaoyang.huang wrote:
->  void __bio_add_page(struct bio *bio, struct page *page,
->  		unsigned int len, unsigned int off)
->  {
-> +	int class, level, hint, activity;
-> +
-> +	class = IOPRIO_PRIO_CLASS(bio->bi_ioprio);
-> +	level = IOPRIO_PRIO_LEVEL(bio->bi_ioprio);
-> +	hint = IOPRIO_PRIO_HINT(bio->bi_ioprio);
-> +	activity = IOPRIO_PRIO_ACTIVITY(bio->bi_ioprio);
-> +
->  	WARN_ON_ONCE(bio_flagged(bio, BIO_CLONED));
->  	WARN_ON_ONCE(bio_full(bio, len));
->  
->  	bvec_set_page(&bio->bi_io_vec[bio->bi_vcnt], page, len, off);
->  	bio->bi_iter.bi_size += len;
->  	bio->bi_vcnt++;
-> +	activity += bio_page_if_active(bio, page, IOPRIO_NR_ACTIVITY);
-> +	bio->bi_ioprio = IOPRIO_PRIO_VALUE_ACTIVITY(class, level, hint, activity);
+Currently md_reap_sync_thread() is called from raid_message() directly
+without holding 'reconfig_mutex', this is definitely unsafe because
+md_reap_sync_thread() can change many fields that is protected by
+'reconfig_mutex'.
 
-If you need to touch anything in the block layer I/O path
-you're doign this wrong.  The file system that is submitting the
-I/O needs to be in control of the priorities.
-must not hack the assignment behind the 
+However, hold 'reconfig_mutex' here is still problematic because this
+will cause deadlock, for example, commit 130443d60b1b ("md: refactor
+idle/frozen_sync_thread() to fix deadlock").
+
+Fix this problem by using stop_sync_thread() to unregister sync_thread,
+like md/raid did.
+
+Fixes: be83651f0050 ("DM RAID: Add message/status support for changing sync action")
+Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+---
+ drivers/md/dm-raid.c | 28 ++++++++++++++++++----------
+ 1 file changed, 18 insertions(+), 10 deletions(-)
+
+diff --git a/drivers/md/dm-raid.c b/drivers/md/dm-raid.c
+index 5ce3c6020b1b..6b6c011d9f69 100644
+--- a/drivers/md/dm-raid.c
++++ b/drivers/md/dm-raid.c
+@@ -3719,6 +3719,7 @@ static int raid_message(struct dm_target *ti, unsigned int argc, char **argv,
+ {
+ 	struct raid_set *rs = ti->private;
+ 	struct mddev *mddev = &rs->md;
++	int ret = 0;
+ 
+ 	if (!mddev->pers || !mddev->pers->sync_request)
+ 		return -EINVAL;
+@@ -3726,17 +3727,24 @@ static int raid_message(struct dm_target *ti, unsigned int argc, char **argv,
+ 	if (test_bit(RT_FLAG_RS_SUSPENDED, &rs->runtime_flags))
+ 		return -EBUSY;
+ 
+-	if (!strcasecmp(argv[0], "frozen"))
+-		set_bit(MD_RECOVERY_FROZEN, &mddev->recovery);
+-	else
+-		clear_bit(MD_RECOVERY_FROZEN, &mddev->recovery);
++	if (!strcasecmp(argv[0], "frozen")) {
++		ret = mddev_lock(mddev);
++		if (ret)
++			return ret;
+ 
+-	if (!strcasecmp(argv[0], "idle") || !strcasecmp(argv[0], "frozen")) {
+-		if (mddev->sync_thread) {
+-			set_bit(MD_RECOVERY_INTR, &mddev->recovery);
+-			md_reap_sync_thread(mddev);
+-		}
+-	} else if (decipher_sync_action(mddev, mddev->recovery) != st_idle)
++		md_frozen_sync_thread(mddev);
++		mddev_unlock(mddev);
++	} else if (!strcasecmp(argv[0], "idle")) {
++		ret = mddev_lock(mddev);
++		if (ret)
++			return ret;
++
++		md_idle_sync_thread(mddev);
++		mddev_unlock(mddev);
++	}
++
++	clear_bit(MD_RECOVERY_FROZEN, &mddev->recovery);
++	if (decipher_sync_action(mddev, mddev->recovery) != st_idle)
+ 		return -EBUSY;
+ 	else if (!strcasecmp(argv[0], "resync"))
+ 		; /* MD_RECOVERY_NEEDED set below */
+-- 
+2.39.2
+
