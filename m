@@ -1,140 +1,118 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1468175BF
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 08:38:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 069711799E
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 08:38:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706085511; cv=none; b=cETRDUwnGJQ2nA0oWMr7aRHcr6w3MhaP3YWiKpRGZHZSMQOYRRse7ysEudd0D87raChEodst3AH/MWuvELDAt3++KbdYZMDYqEkgMOOn44UT927iZuUdxUpNEvG3OwJ+ntSEOPYkWiKN2f6OnqxS2AqnLeX/dsh3AYg2B+2BuqA=
+	t=1706085524; cv=none; b=o4x/R11YLA7Xo3zd7uIcS9ZcFcUcsUv/vwn6la5bVi3S3tqZ8OW+xExOZu7Bep8bD/Z/VjGXAw53y/x9Jrc61p0kPWpP2bd7IV/sHA0FQTQQVSNlGPrDqcpljyMZDEEqUqwLm+BEfyjpgVdHA6D7+Ty5Hae/51lQCrZ7P3uq3No=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706085511; c=relaxed/simple;
-	bh=jlz6yDARmYRfIwcJEftzYZRs+rGjhCsFQhkX+BsxAu4=;
-	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
-	 MIME-Version:Content-Type; b=ACJoJf1//7/pRuHO5SDO9wkbPuaZCD5z3q5JbzfDpFZnVHlihv3UgYoEuWUunmVD2bH/n9Xvo73v2O3bDGDMe2hzBm3fQ27jFOhKUQNUY9z0311hoSOLU6DIcZmJL6TjUnGazxXc7UZ+exZVaF9ZwWIN40BOzfibVc3ZOIOfZCU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=krn/OveB; arc=none smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="krn/OveB"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-337d5480a6aso4916027f8f.1
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 00:38:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1706085507; x=1706690307; darn=vger.kernel.org;
-        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
-         :user-agent:references:from:to:cc:subject:date:message-id:reply-to;
-        bh=h1FUWfiTuw8iaOnUVAaUBuSlg9Mxe6vb31eu30jmGPc=;
-        b=krn/OveBgwleslyeOJOyOKtmVAp4dAQsEM5wZawFiBK5IPvQW57QAd+7dcwE96kJKN
-         HbOsxi8SWTGY+61VE2s3PeteyevJKeyupkzERqr8sCHIJNQB39zTM7tySOXKbMp6lY5W
-         4bZo3t5Z1axLrnTzVc13n9QDvS38kdwig3gO5r/qPcdbSxLRl/lBc6z2Fk2Pf3wB9tzG
-         Y4glRu6mVW1cVa0Gg42LctbGJ57p/JGP82FH6h6aSPSeQzoD5DR0lIts2BOgOS+IvGOf
-         7wzbXaxc+S7GF4eeDdLM2nrtK1xWz9hEiKZRWb5HIj3it7rpQMO0zSf0B655TkJOMErr
-         SmDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706085507; x=1706690307;
-        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
-         :user-agent:references:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=h1FUWfiTuw8iaOnUVAaUBuSlg9Mxe6vb31eu30jmGPc=;
-        b=YtW6VByWjT9VKTXXy3po2BcI+AEGiMwFaa3BwNmQEGDCejhAIku1NYEJpyt3IZjPHM
-         5ZsxanfZfLg3/NVlZ7RgK9LNNs+/2p1d6sVh2kox6Qr3c0l+0TheQ9cEyPI3/QJBkEyg
-         vQnJA7PpeZNVENYKgUuBtQ7KNR0RnSJGn3sjBEmqD//eYNi7KuNzAcWPAiBxFfgo4IDg
-         JQB8ZFkjrSgcY68TStHPgmepu4SExqayTsEz8TUv2jTA1AwnHTFI/RZOUUi4C2TVK+k7
-         sIL+uAyeRbslg3DDeYQhX78pE9CUbVVvDjQKCRh1L2QVGMGVPpfoQPYlWXDtQgmaQ1tX
-         ZK1A==
-X-Gm-Message-State: AOJu0YysyBxwFgvzqHy86pT6ezIbYiFNW/cfmgzB+DOTjUBj49ab0t6X
-	epNhYHUKI+kx1O+Eb+zxidIOI3RzdVfMQ76z9FrT1KNNOZ8GvI3LYa8C88SGbmQ=
-X-Google-Smtp-Source: AGHT+IHWDnX0w1SzsoI8DA0xPySEzo5xJtqS7XZt2YHYZTHRfUc5D0hbaLhIUuqtBbzsb1EykQ2hjw==
-X-Received: by 2002:a5d:6d52:0:b0:337:bcec:d45e with SMTP id k18-20020a5d6d52000000b00337bcecd45emr300741wri.35.1706085507028;
-        Wed, 24 Jan 2024 00:38:27 -0800 (PST)
-Received: from localhost ([2a01:e0a:3c5:5fb1:d8b6:17b6:386f:c67b])
-        by smtp.gmail.com with ESMTPSA id df10-20020a5d5b8a000000b0033947d7651asm2936415wrb.5.2024.01.24.00.38.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jan 2024 00:38:26 -0800 (PST)
-References: <20240123165831.970023-1-avromanov@salutedevices.com>
- <20240123165831.970023-3-avromanov@salutedevices.com>
-User-agent: mu4e 1.10.8; emacs 29.1
-From: Jerome Brunet <jbrunet@baylibre.com>
-To: Alexey Romanov <avromanov@salutedevices.com>
-Cc: neil.armstrong@linaro.org, clabbe@baylibre.com,
- herbert@gondor.apana.org.au, davem@davemloft.net, robh+dt@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
- khilman@baylibre.com, jbrunet@baylibre.com,
- martin.blumenstingl@googlemail.com, linux-crypto@vger.kernel.org,
- linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- kernel@salutedevices.com
-Subject: Re: [PATCH v2 02/20] drivers: crypto: meson: make CLK controller
- optional
-Date: Wed, 24 Jan 2024 09:28:00 +0100
-In-reply-to: <20240123165831.970023-3-avromanov@salutedevices.com>
-Message-ID: <1j34unxh1a.fsf@starbuckisacylon.baylibre.com>
+	s=arc-20240116; t=1706085524; c=relaxed/simple;
+	bh=D/eQ9P4RCw3rHW5sQCHc3F8xx4YvkOg1xY7lET+BG5o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=a89uPhQvHCE4Zyv42oQgs7CPoblyGhh+tkukTSeXUX1drB8jbMiA/xo7tXo/nXD0iepehnvsweiMHg5N8ty/j8i3Gsxw6iWJCb5aLpTbqvgAykUhw1StNy/B+WM7cSwAqU0O0BgkkCGQLpyOn9crN3Cbw9j4yvPGf+ganEKrCKk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
+Received: by mail.gandi.net (Postfix) with ESMTPSA id B9D7640002;
+	Wed, 24 Jan 2024 08:38:30 +0000 (UTC)
+Message-ID: <cd68cf4e-7a6b-4875-ae1b-0c28a6eacaad@ghiti.fr>
+Date: Wed, 24 Jan 2024 09:38:30 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [External] [PATCH] riscv: Fix wrong size passed to
+ local_flush_tlb_range_asid()
+Content-Language: en-US
+To: Dennis Zhou <dennis@kernel.org>, yunhui cui <cuiyunhui@bytedance.com>,
+ Alexandre Ghiti <alexghiti@rivosinc.com>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Geert Uytterhoeven <geert@linux-m68k.org>, linux-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20240123132730.2297719-1-alexghiti@rivosinc.com>
+ <CAEEQ3wk5edUFTuE3H3KDGkCXj0+=i7Z1BM2M+6X-Tk9_m8X_iQ@mail.gmail.com>
+ <ZbDICZkatO3/lGf/@snowbird>
+From: Alexandre Ghiti <alex@ghiti.fr>
+In-Reply-To: <ZbDICZkatO3/lGf/@snowbird>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-GND-Sasl: alex@ghiti.fr
 
+Hi Dennis, Yunhui,
 
-On Tue 23 Jan 2024 at 19:58, Alexey Romanov <avromanov@salutedevices.com> wrote:
-
-> Not all Amlogic SoC's uses CLK controller.
-
-That's fairly short description and very likely to be wrong.
-
-Of all the SoCs I have seen mentionned in the bindings, they all have clock
-"controllers"
-
-I'd assume you meant "this crypto ip does not take a clock input on some
-SoCs", correct ?
-
-If that is what you mean, giving the list of the SoCs which - according
-to you - do or don't take a clock ip input would be helpful.
-
+On 24/01/2024 09:19, Dennis Zhou wrote:
+> Hello,
 >
-> Signed-off-by: Alexey Romanov <avromanov@salutedevices.com>
-> ---
->  drivers/crypto/amlogic/amlogic-gxl-core.c | 11 ++---------
->  1 file changed, 2 insertions(+), 9 deletions(-)
+> On Wed, Jan 24, 2024 at 10:44:12AM +0800, yunhui cui wrote:
+>> Hi Alexandre,
+>>
+>> On Tue, Jan 23, 2024 at 9:31 PM Alexandre Ghiti <alexghiti@rivosinc.com> wrote:
+>>> local_flush_tlb_range_asid() takes the size as argument, not the end of
+>>> the range to flush, so fix this by computing the size from the end and
+>>> the start of the range.
+>>>
+>>> Fixes: 7a92fc8b4d20 ("mm: Introduce flush_cache_vmap_early()")
+>>> Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+>>> ---
+>>>   arch/riscv/mm/tlbflush.c | 2 +-
+>>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/arch/riscv/mm/tlbflush.c b/arch/riscv/mm/tlbflush.c
+>>> index 8d12b26f5ac3..9619965f6501 100644
+>>> --- a/arch/riscv/mm/tlbflush.c
+>>> +++ b/arch/riscv/mm/tlbflush.c
+>>> @@ -68,7 +68,7 @@ static inline void local_flush_tlb_range_asid(unsigned long start,
+>>>
+>>>   void local_flush_tlb_kernel_range(unsigned long start, unsigned long end)
+>>>   {
+>>> -       local_flush_tlb_range_asid(start, end, PAGE_SIZE, FLUSH_TLB_NO_ASID);
+>>> +       local_flush_tlb_range_asid(start, end - start, PAGE_SIZE, FLUSH_TLB_NO_ASID);
+>>>   }
+> Well this was a miss during code review.. I'm going to take another look
+> tomorrow and then likely pull this into a fixes branch.
 >
-> diff --git a/drivers/crypto/amlogic/amlogic-gxl-core.c b/drivers/crypto/amlogic/amlogic-gxl-core.c
-> index 35ec64df5b3a..a58644be76e9 100644
-> --- a/drivers/crypto/amlogic/amlogic-gxl-core.c
-> +++ b/drivers/crypto/amlogic/amlogic-gxl-core.c
-> @@ -263,16 +263,10 @@ static int meson_crypto_probe(struct platform_device *pdev)
->  		dev_err(&pdev->dev, "Cannot request MMIO err=%d\n", err);
->  		return err;
->  	}
-> -	mc->busclk = devm_clk_get(&pdev->dev, "blkmv");
-> +	mc->busclk = devm_clk_get_optional_enabled(&pdev->dev, "blkmv");
-
-Assuming some SoC actually don't have an input clock (I'm not
-convinced), the clock still ain't optional for the ones which do.
-
-Use the compatible to properly claim the ressource (or not) 
-
->  	if (IS_ERR(mc->busclk)) {
->  		err = PTR_ERR(mc->busclk);
-> -		dev_err(&pdev->dev, "Cannot get core clock err=%d\n", err);
-> -		return err;
-> -	}
-> -
-> -	err = clk_prepare_enable(mc->busclk);
-> -	if (err != 0) {
-> -		dev_err(&pdev->dev, "Cannot prepare_enable busclk\n");
-> +		dev_err(&pdev->dev, "Cannot get and enable core clock err=%d\n", err);
->  		return err;
->  	}
->  
-> @@ -300,7 +294,6 @@ static int meson_crypto_probe(struct platform_device *pdev)
->  	meson_unregister_algs(mc);
->  error_flow:
->  	meson_free_chanlist(mc, mc->flow_cnt - 1);
-> -	clk_disable_unprepare(mc->busclk);
->  	return err;
->  }
+>> What makes me curious is that this patch has not been tested?
+>> BTW, It is best to keep the parameter order of all functions in
+>> tlbflush.c consistent: cpumask, start, size, stride, asid.
+>>
+> I can't speak to the riscv communities testing/regression suites, but
+> this would only be caught in a performance regression test.
+>
+> That being said, Alexandre, can you please lmk what level of testing
+> this has gone through?
 
 
--- 
-Jerome
+All my patches go through the same level of testing:
+
+* Build/boot an Ubuntu kernel with and without KASAN + a few simple 
+testsuites (libhugetlbfs, riscv kselftests and other)
+* Build/boot a simple rootfs on ~40 different rv64 configs
+* Build/boot a simple rootfs on ~30 different rv32 configs
+
+And I run LTP/full kselftests/perf testsuite on a weekly basis on every 
+rc. All this validation is done on qemu.
+
+The patch is functional, it "simply" flushes the whole TLB instead of a 
+few entries, so the only way to catch that would have been a performance 
+regression. But given it only runs on qemu, it would have been hard to 
+catch any performance regression since that involves the TLB.
+
+@Yunhui: Please let me know how I should validate my patches better.
+
+Thanks,
+
+Alex
+
+
+> Thanks,
+> Dennis
+>
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
