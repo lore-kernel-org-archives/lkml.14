@@ -1,216 +1,183 @@
-Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-db3eur04on2081.outbound.protection.outlook.com [40.107.6.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F48E12BE82;
-	Wed, 24 Jan 2024 17:47:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706118448; cv=none; b=VB/Rm0scIPpH/xV1vFVUUYyfiGUHcbzR5R0mv7e+sY7lYHgwXxBkTuIUO3AiqV0T0AWVBWJFT6riLB+xwvStfyX3UfCk8XovKkaD9KZvz1b/zEFgwQch5RnKYRBXOJPz2MziQ4ASAvnjmhwV8quKxZvCAzGzFYl3VZQwljfqwoM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19C0E129A75;
+	Wed, 24 Jan 2024 17:47:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.6.81
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706118448; cv=fail; b=nGZ48EZWW6U4vJYJfXgpCYL+CCGSWmn3mQuoPYDutrNWF0ixoXi0SsD5u551LrNQzcUa89GutyvtuB+w7njGYyX3ESNI+H/oDJILh1Z72ltssqLTW4wAa/i1KWTh0MDCansy0kYjOr4htTxJt3NipVcXYPowYh+MJW56pE3xUFk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1706118448; c=relaxed/simple;
-	bh=Jjv/TuEFrl542Uz2oPY2+FJwkmzA1uzPImxNDC4FnrI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Gz9DcnNP9cuXwMqSVvqqPzaoLaV6BvUxiSL5YTRurTuv8FFUVCmHdD8o57jIyWe/snMelhq8jBg8Hu9LFQc7VbP0SsYwYFdVz7KYC8BrTp1lLSbACJrpNBXPF2iw8YsixVDxIW/vMyEiA+MKasS3kwyN/g2lM0sXpiyh534tWuU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Gh+1Hasm; arc=none smtp.client-ip=209.85.215.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	bh=CecXqqUQNUztXbgS/sQnGwa1/ONJnh+EFDVoYaKv9Vw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=KRrdyjFLmn6xJWeGKQzmDkMheRojSxiSMMUgqNnu6Z6NBSJLeTpWBr3CVYC4Ozuqipe5MbYxNXkswdItpfWQZmiMZWjn9PGTACRLX+picK9TDJmikcZYfTAfOTf36mZl4dJU29ekiHjp101dcQyCKunp3QCJZIQPDqlVJLlXhlE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=J8Z3DOmk; arc=fail smtp.client-ip=40.107.6.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gh+1Hasm"
-Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-53fbf2c42bfso4095691a12.3;
-        Wed, 24 Jan 2024 09:47:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706118446; x=1706723246; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6yr4N28qTdreJQILPMIL8Vba8ZMs6hXrf/fYG9mRvfk=;
-        b=Gh+1HasmqJacU8EJ00LtEwisiIY1EPc/ZxwqM8qR0eGv2aA3q/ku9pcJst0AZzD4vE
-         IuPXK0+3jGTqx3WIiKW4kCT3gkOdAQxloCJmu9wUwnZrWLeok9h4L+FdNAH65j84G65n
-         csHe/5O7K+/95RtY07Phff24ChEkqjT5OYLLArnY2nf+JKPpv4uvE/n7q3ZVx6LzLgm3
-         S/Sfy2zNhMKu+7FQF2531l2LopBtHXvTfgrHIiMGSqfEdG7idNfbLsCku2+RwuasmBFl
-         WG1VOMg56YoWJZ/CqPAYnQDu9m4S7CfO2ZpxDShS8PJsj5UJjbP8xis+/zg3eJA95QUB
-         Ysqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706118446; x=1706723246;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6yr4N28qTdreJQILPMIL8Vba8ZMs6hXrf/fYG9mRvfk=;
-        b=nfBXPCLaqmneyC2b3+VgapczHM46rM6fLsB2bzaFWMy51nGnpngGPNo94GK96EHYhK
-         kZJFQM/u/KT2F6V/WWKefNhi+CBaZcjqD5g0w8iTiXYBHvoNiNUDEew49fBtL4+V4Oc2
-         KRe2jjHT55pVXQmfcLCtjT9eZywPGlDn/SfyOMn/k7GdxpqGsFlJB70zdfXLGcV6Fb61
-         FXeRoBJoStrn/om6ShT0+2VA1P359vs8/gYGW+1g9AFWYDZa29RS20BQy5sWgc9PXGqo
-         krxMWfqNA2ptGVAM0OIYY9JvonLx2ae0la6YEYlNus4rhiQ2BoORULcsmGfge+XWNVNi
-         lggA==
-X-Gm-Message-State: AOJu0Ywe5m/wYoIfjB0TsZkqwSSFbN7iTRtGeVPGjX/6n63cMEcTxsND
-	rU5HNsEaUcAm+q0GCMPzejFzL4Lz4wtKbZv+7bNzLFmhw6C0qlbU
-X-Google-Smtp-Source: AGHT+IFcM1ZqAfg+43OOysJA4KTHZItl2rd9oGtRVwM/1yHN/6BBFXY8dfTg7i7fxN8aMzUgdLAb/Q==
-X-Received: by 2002:a05:6a20:671c:b0:199:a725:9b59 with SMTP id q28-20020a056a20671c00b00199a7259b59mr1075725pzh.114.1706118445804;
-        Wed, 24 Jan 2024 09:47:25 -0800 (PST)
-Received: from localhost ([2601:644:9380:8cd0::7fb4])
-        by smtp.gmail.com with ESMTPSA id ey15-20020a056a0038cf00b006db05eb1301sm14174896pfb.21.2024.01.24.09.47.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jan 2024 09:47:25 -0800 (PST)
-From: Matthew Wood <thepacketgeek@gmail.com>
-To: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>
-Cc: leitao@debian.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v1 6/8] net: netconsole: cache userdata formatted string in netconsole_target
-Date: Wed, 24 Jan 2024 09:47:04 -0800
-Message-ID: <20240124174711.1906102-7-thepacketgeek@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240124174711.1906102-1-thepacketgeek@gmail.com>
-References: <20240124174711.1906102-1-thepacketgeek@gmail.com>
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="J8Z3DOmk"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Jz5GrN13zvvZa8wJn1hH5Ma3b4ldDJSwMRVRv3DJX+1DZY2DvMRzOvPr/DP1wyCaJuWjsuCrUjTcdTWsgyIeBML85jBqNSjgnwMRLiTpgWnjvEFiWTvoZD04WxjChvDIsm2Pw7NGlZSEyQZ/aJAAtiFoLUDoku8tuFstqezOiDFCmfYwyHTAhTOT5OQPI4yyMcKwokPHmI0yGw0t7jvPqeWis8lHbWDWHTfNy0vi7wHri2v/oG6/v8awtC4B2wBRonBP+E29jl0QPHjzdwERfG3XNn3claacVtAeezsMH9/1kK0KAB8D/wowdj4a+PhM4CJuhz9BJmCW1ganWgnHEg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=K4z8tJ3R9qttqMdfJs0s9kQTDnXv5kOfYx6SDR7F8gY=;
+ b=XgP5p5q0MtdggjPsoc5b3wQoEB5QhWTEwUX6Pge6k9wIgNQ477rchb5tzNUZGARAOgiPax0EoFgYxp/Tg9TzcdF4ovxQiXqOLQ8k7H0icnhbslY7Oe52HmIyv2RNfbT30VAEgivUNrsd4GoeyVgD/oe8LBJRKCyVciIAw/Dj/UUmgxDeCedwP9I2d+qxPr0bF0bTsB8S3A4oO9hEG2/rfj7/H935PZHV1rDRSl07atyzqomApzqhvLQ8YS3nmglCMTnT3JSXSOSF3lFOHJUXA/mJB86a/i4Te2tC8IK4vFWWl3gTk2GojC42YfrRXgzBX5HiVeuq76Qb9uyUPvgJkQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=K4z8tJ3R9qttqMdfJs0s9kQTDnXv5kOfYx6SDR7F8gY=;
+ b=J8Z3DOmke2cPSUaM5CgQn0kj8lIt1/7mAbrAu06UxUc90u+GDhqVIkroHkxfeeg8AOhD8r7I6HxhsNwLtsMBLnvkVmiZtyFkU1Yo5fGv1m0Giwx5kpV/uT6ksLBejNHzXY/fmyv0w3f3M51cdHC/CMBdiISB32OCEQ4gfoFP7Q8=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by PA4PR04MB9367.eurprd04.prod.outlook.com (2603:10a6:102:2aa::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7202.36; Wed, 24 Jan
+ 2024 17:47:23 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::c8b4:5648:8948:e85c]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::c8b4:5648:8948:e85c%3]) with mapi id 15.20.7202.035; Wed, 24 Jan 2024
+ 17:47:23 +0000
+Date: Wed, 24 Jan 2024 12:47:14 -0500
+From: Frank Li <Frank.li@nxp.com>
+To: Conor Dooley <conor@kernel.org>
+Cc: ran.wang_1@nxp.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, Felipe Balbi <balbi@kernel.org>,
+	"open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>,
+	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>, mark.rutland@arm.com,
+	pku.leo@gmail.com, sergei.shtylyov@cogentembedded.com
+Subject: Re: [PATCH 1/2] dt-bindings: usb: dwc3: Add snps,host-vbus-glitches
+ avoiding vbus glitch
+Message-ID: <ZbFNIvEaAJCxC2VB@lizhi-Precision-Tower-5810>
+References: <20240119213130.3147517-1-Frank.Li@nxp.com>
+ <20240124-unclothed-dodgy-c78b1fffa752@spud>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240124-unclothed-dodgy-c78b1fffa752@spud>
+X-ClientProxiedBy: BYAPR11CA0094.namprd11.prod.outlook.com
+ (2603:10b6:a03:f4::35) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|PA4PR04MB9367:EE_
+X-MS-Office365-Filtering-Correlation-Id: bba188a5-e27d-4d4e-15ab-08dc1d0484f1
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	0TBqwmJiOKbIjPTLueNmnPcgRlFptYaILIk97sVQvruI9gjsQz2EM1GpWimHfdHfe237gfu9FwMa3h5Zp3CM+evDIRMWb29edtFEoHdmCXGFSQD0VA8T9EBYTlylujbDX4Bmvs+FOqxH851ro1qj5hRrsPpy82sSOQ9lYyHWPgpmuu7rV8o7qgOg7wzs+63RDHqXzOkppG/dwqfhivKCn/c/KhfajzUZuXvhmQWI0ebEwoSUG+mcOunvg+Zyij5PwdcWT+ZFPraNZJe60wjlEx1rL/0cXBhH+JG/PMDSGti+sTkWcsPKU0i+VwASR+bd8N+KIQc35cjv+CcK0rW3BhWgsboEcTHkGwENk2LMq+WOptgw+rSKC77Ayfx0cMQ0ZD6l2eW6fGGGKOJ9FFgAWFQV/nNGO50y8WY4FpLpapxrRN/wZvXVhysRk9VFMZBRBphrL+7AB6g3OAPqtpoMLLuLiClLZoeCFR2m+DCrz/D/PL60jpc9K13m7JfIgGM9vhT4DX89dDNfEbWWDzAI3XuQP3yHPJv62xg+SRqDh8kLbT7rawM69FcXQnRY3cs/GPIWj5I4ynUStncC9QlboE1p7jCq+pjZLrgqqpkw+2flKLPOs2O7SmA8c4dpMFholZAsAHinN+K8W1PmoSThQksMRf0Nd+0VeqjwFzXwv3w=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7916004)(39860400002)(376002)(346002)(396003)(136003)(366004)(230922051799003)(230173577357003)(230273577357003)(1800799012)(451199024)(186009)(64100799003)(83380400001)(86362001)(38350700005)(41300700001)(8676002)(33716001)(52116002)(38100700002)(6512007)(4326008)(26005)(9686003)(6506007)(6666004)(316002)(6916009)(66946007)(66556008)(54906003)(2906002)(7416002)(5660300002)(66476007)(478600001)(8936002)(6486002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?BlMF7gC2WhEpXpwPydN2yea4KxtsXkDCFcIl/ZQH4KhZ3de5NJka6OvAzbnh?=
+ =?us-ascii?Q?OFWTgxQlIePqhHSOqRVoYD3R7WKOAjLu95SpF592bLXueqmapCD6fdXjvfzd?=
+ =?us-ascii?Q?GUpOSLjU2wnh1XohLfYx1uKPxlU0NpPLJ5WAHMOwWceg0GAbkrs3Nr44NhVq?=
+ =?us-ascii?Q?UxVzNCNaxhrxZCTevG1FdMcSKL+VjFwlHq3gr2WJOwYK6QI0GjfvyJqF5QEh?=
+ =?us-ascii?Q?uPg1BtXZR0Mp3KAcCbWqdAuv1cO5i0OkuqjkVG5uAQNRW1Qh5CauMvqpBRqW?=
+ =?us-ascii?Q?aa2Z2l/S5h77KxBld7QmlQ0LtpIuEKJVF6NrcjHyHm/tUviyDeIBhYSsVoId?=
+ =?us-ascii?Q?inGrh553VTZgrLLxO9rWaPOpIPYkDyf1U3dMDkiaZmM2DnAGU679acEarttC?=
+ =?us-ascii?Q?Fv69LO0Gi1ul2xqU2VfFhTMXwRVns/xOZm0FutO9l2jL9roZTByfpZwjytcG?=
+ =?us-ascii?Q?z+vpGHq6r9pO67tCqBXey4YBgaYs8UWjaVCDEHMdaikWbn92NfrIEFug9Wbd?=
+ =?us-ascii?Q?vw4gYSo+KgMZkat8LGxGfLTzc06sK+/nTmWzrvHn+Bnh+9CNuN51kQyCiPHC?=
+ =?us-ascii?Q?e9Z++37akXsBHddaaXVDb2+9N67HKdYn6eUrUAVhJF7BDD+SqsUoNE0CZkF5?=
+ =?us-ascii?Q?tv6gcoIx9XtQHDgEp7klqhn1y7qQQ/UoH72c7r8TIHVhnmbMeKehOdmrdEQT?=
+ =?us-ascii?Q?v/i+KiuHrH7zFhROpnlVMon+kSeXLK5t03QoVknw6giZnTkGE9ixVAFnCXdz?=
+ =?us-ascii?Q?jYcd8isr7w7tycXGxwUE41tPhGp3Mqhrtlu9kmx3KKv2MIAm0fZauG44M+me?=
+ =?us-ascii?Q?801NoJJ6f5m8iGR7krPIfENDVwC5BVgkO0o8OI4jXYV/BWy890BvbUL76EOS?=
+ =?us-ascii?Q?JIt+pbBRgm3si5WlEghs+Ec6xbFdcbIN9QNVYku4XqV2lC7sb96/b2/gbXBd?=
+ =?us-ascii?Q?hazGgtu6l/7N1oAHhgtiSyLohs6rSAn2SFjFwz3cbRodMBfXiA1X7DK2SNKu?=
+ =?us-ascii?Q?RkDvp1YP2gdkaa8dkclkR+zTJlxSq1AFpuMANTweTWYA8adR0he0jj7KYG4y?=
+ =?us-ascii?Q?LaBMoO9S6QjEew0bS1ng+sV4wxDR4tAuKODo3UwVXcghm52d2EG14BZPyiJC?=
+ =?us-ascii?Q?JvHl38aV1sCzj3VpL8O0O3kf6YKmAHcZIEgZ23WXZJnFopuv308ajVUoJgfx?=
+ =?us-ascii?Q?cnJErOk6yQPHrtA9+mjPz+lzOeAuxGAedUsBWehpss71MCR9CPopcIz8kEoS?=
+ =?us-ascii?Q?ZRw8W9raGJAtyEocPMFdxuoay1P35OWzNkHeAw4sH+pXvsm3SDgiXL3/KUKt?=
+ =?us-ascii?Q?OpLnGcrIqhb4PbeLaujmE4TlCSbLKqfakDSfYUWC2jnoN5R9dvItUj6D4DE2?=
+ =?us-ascii?Q?akoyGXf0iI9gKhu5kBLH+DO7YNUrWLGt7DfK2FtSVFEjH3hBLPrDEKSkwXBA?=
+ =?us-ascii?Q?lgEho3sZ6ZwGxtK07x3nnCgdXumIoiiNgSZRNk168um83rRFGjnqq3nZ6hxh?=
+ =?us-ascii?Q?iAQ0FBKMu/JKRRvlKPqGOJM+Z18f1uEdvGO9vyxLtnsd2N6mWiPg4BtS02rr?=
+ =?us-ascii?Q?ErHHIha1L2+9U95Rc6Z79Kf7OeRL09PUIRAfiQcm?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bba188a5-e27d-4d4e-15ab-08dc1d0484f1
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jan 2024 17:47:22.9605
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: h3LXhktswaGu7+MHocOKvGV4Y/pypSpcY2uUwrAaY0EKThScOXlsbO8f6tp0oV1r9VxkqiFKDZXLKxb/ItrKLA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA4PR04MB9367
 
-Store a formatted string for userdata that will be appended to netconsole
-messages. The string has a capacity of 4KB, as calculated by the userdatum
-entry length of 256 bytes and a max of 16 userdata entries.
+On Wed, Jan 24, 2024 at 05:36:42PM +0000, Conor Dooley wrote:
+> On Fri, Jan 19, 2024 at 04:31:28PM -0500, Frank Li wrote:
+> > From: Ran Wang <ran.wang_1@nxp.com>
+> > 
+> > When DWC3 is set to host mode by programming register DWC3_GCTL, VBUS
+> > (or its control signal) will turn on immediately on related Root Hub
+> > ports. Then the VBUS will be de-asserted for a little while during xhci
+> > reset (conducted by xhci driver) for a little while and back to normal.
+> > 
+> > This VBUS glitch might cause some USB devices emuration fail if kernel
+> > boot with them connected. One SW workaround which can fix this is to
+> > program all PORTSC[PP] to 0 to turn off VBUS immediately after setting
+> > host mode in DWC3 driver(per signal measurement result, it will be too
+> > late to do it in xhci-plat.c or xhci.c).
+> > 
+> > Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
+> > Reviewed-by: Peter Chen <peter.chen@nxp.com>
+> > Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> > ---
+> >  Documentation/devicetree/bindings/usb/snps,dwc3.yaml | 7 +++++++
+> >  1 file changed, 7 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/usb/snps,dwc3.yaml b/Documentation/devicetree/bindings/usb/snps,dwc3.yaml
+> > index 203a1eb66691f..dbf272b76e0b5 100644
+> > --- a/Documentation/devicetree/bindings/usb/snps,dwc3.yaml
+> > +++ b/Documentation/devicetree/bindings/usb/snps,dwc3.yaml
+> > @@ -273,6 +273,13 @@ properties:
+> >        with an external supply.
+> >      type: boolean
+> >  
+> > +  snps,host-vbus-glitches:
+> > +    description:
+> > +      When set, power off all Root Hub ports immediately after
+> > +      setting host mode to avoid vbus (negative) glitch happen in later
+> > +      xhci reset. And the vbus will back to 5V automatically when reset done.
+> > +    type: boolean
+> 
+> Why do we want to have a property for this at all? The commit message
+> seems to describe a problem that's limited to specific configurations
+> and appears to be somethng the driver should do unconditionally.
+> 
+> Could you explain why this cannot be done unconditionally please?
 
-Update the stored netconsole_target->userdata_complete string with the new
-formatted userdata values when a userdatum is created, edited, or
-removed. Each userdata entry contains a trailing newline, which will be
-formatted as such in netconsole messages::
+It depends on board design, not all system vbus can be controller by root
+hub port. If it is always on, it will not trigger this issue.
 
-    6.7.0-rc8-virtme,12,500,1646292204,-;test
-    release=foo
-    something=bar
-    6.7.0-rc8-virtme,12,500,1646292204,-;another test
-    release=foo
-    something=bar
+Frank
 
-Enforcement of MAX_USERDATA_ITEMS is done in userdatum_make_item;
-update_userdata will not check for this case but will skip any userdata
-children over the limit of MAX_USERDATA_ITEMs.
+> 
+> Thanks,
+> Conor.
+> 
+> > +
+> >    snps,is-utmi-l1-suspend:
+> >      description:
+> >        True when DWC3 asserts output signal utmi_l1_suspend_n, false when
+> > -- 
+> > 2.34.1
+> > 
 
-If a userdata entry/dir is created but no value is provided, that entry
-will be skipped. This is in part because update_userdata() can't be
-called in userdatum_make_item() since the item will not have been added
-to the userdata config_group children yet. To preserve the experience of
-adding an empty userdata that doesn't show up in the netconsole
-messages, purposefully skip emtpy userdata items even when
-update_userdata() can be called.
-
-Co-developed-by: Breno Leitao <leitao@debian.org>
-Signed-off-by: Breno Leitao <leitao@debian.org>
-Signed-off-by: Matthew Wood <thepacketgeek@gmail.com>
----
- drivers/net/netconsole.c | 61 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 61 insertions(+)
-
-diff --git a/drivers/net/netconsole.c b/drivers/net/netconsole.c
-index 26a3bb070ad0..7de693d0773f 100644
---- a/drivers/net/netconsole.c
-+++ b/drivers/net/netconsole.c
-@@ -108,6 +108,8 @@ struct netconsole_target {
- #ifdef	CONFIG_NETCONSOLE_DYNAMIC
- 	struct config_group	group;
- 	struct config_group userdata_group;
-+	char userdata_complete[MAX_USERDATA_ENTRY_LENGTH * MAX_USERDATA_ITEMS];
-+	size_t userdata_length;
- #endif
- 	bool			enabled;
- 	bool			extended;
-@@ -637,10 +639,50 @@ static ssize_t userdatum_value_show(struct config_item *item, char *buf)
- 	return sysfs_emit(buf, "%s\n", &(to_userdatum(item)->value[0]));
- }
- 
-+static void update_userdata(struct netconsole_target *nt)
-+{
-+	int complete_idx = 0, child_count = 0;
-+	struct list_head *entry;
-+	struct userdata *ud;
-+
-+	/* Clear the current string in case the last userdatum was deleted */
-+	nt->userdata_length = 0;
-+	nt->userdata_complete[0] = 0;
-+
-+	ud = to_userdata(&nt->userdata_group.cg_item);
-+	list_for_each(entry, &nt->userdata_group.cg_children) {
-+		struct userdatum *udm_item;
-+		struct config_item *item;
-+
-+		if (child_count >= MAX_USERDATA_ITEMS)
-+			break;
-+		child_count++;
-+
-+		item = container_of(entry, struct config_item, ci_entry);
-+		udm_item = to_userdatum(item);
-+
-+		/* Skip userdata with no value set */
-+		if (strnlen(udm_item->value, MAX_USERDATA_VALUE_LENGTH) == 0)
-+			continue;
-+
-+		/* This doesn't overflow userdata_complete since it will write
-+		 * one entry length (1/MAX_USERDATA_ITEMS long), entry count is
-+		 * checked to not exceed MAX items with child_count above
-+		 */
-+		complete_idx += scnprintf(&nt->userdata_complete[complete_idx],
-+					  MAX_USERDATA_ENTRY_LENGTH, "%s=%s\n",
-+					  item->ci_name, udm_item->value);
-+	}
-+	nt->userdata_length = strnlen(nt->userdata_complete,
-+				      sizeof(nt->userdata_complete));
-+}
-+
- static ssize_t userdatum_value_store(struct config_item *item, const char *buf,
- 				     size_t count)
- {
- 	struct userdatum *udm = to_userdatum(item);
-+	struct netconsole_target *nt;
-+	struct userdata *ud;
- 	int ret;
- 
- 	if (count > MAX_USERDATA_VALUE_LENGTH)
-@@ -653,6 +695,10 @@ static ssize_t userdatum_value_store(struct config_item *item, const char *buf,
- 		goto out_unlock;
- 	trim_newline(udm->value, sizeof(udm->value));
- 
-+	ud = to_userdata(item->ci_parent);
-+	nt = userdata_to_target(ud);
-+	update_userdata(nt);
-+
- 	mutex_unlock(&dynamic_netconsole_mutex);
- 	return count;
- out_unlock:
-@@ -707,12 +753,27 @@ static struct config_item *userdatum_make_item(struct config_group *group,
- 	return &udm->item;
- }
- 
-+static void userdatum_drop(struct config_group *group, struct config_item *item)
-+{
-+	struct netconsole_target *nt;
-+	struct userdata *ud;
-+
-+	ud = to_userdata(&group->cg_item);
-+	nt = userdata_to_target(ud);
-+
-+	mutex_lock(&dynamic_netconsole_mutex);
-+	update_userdata(nt);
-+	config_item_put(item);
-+	mutex_unlock(&dynamic_netconsole_mutex);
-+}
-+
- static struct configfs_attribute *userdata_attrs[] = {
- 	NULL,
- };
- 
- static struct configfs_group_operations userdata_ops = {
- 	.make_item		= userdatum_make_item,
-+	.drop_item		= userdatum_drop,
- };
- 
- static struct config_item_type userdata_type = {
--- 
-2.43.0
 
