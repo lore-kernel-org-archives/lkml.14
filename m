@@ -1,125 +1,98 @@
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7773577647
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 13:00:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.134.136.31
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A6E977F1A;
+	Wed, 24 Jan 2024 13:00:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706101238; cv=none; b=A6WX5dcKOnjEiXcUNZEI/qobk4g/ug3pBarSOHj9pxhu2mv5jDO8/Q7niMC9Ozv76uClhwEuYP+zXLGdDMLOkx5NsLIMRbLEiFrpFaorUX+u/9sKd+QkSDyPsVI+gEmQM6QJovf8Ou4K3kuDMxP45cpG0RN2/uXEhaUBVwh+Q5U=
+	t=1706101244; cv=none; b=UZ+Ith1HkTZ875YE7V/g4dkc9kFurZ0JZwssThasuhsji10jGVXcp0RDaPOEq6Ag1vQzxM+vEQcOaa9bbPRI/xCXd6Vo5LQHGFwUd5Rf+ayDGEGEWOguYvUXyxShFG6x+oHiqsA89AcXJbLwb2vmaueCGKpTWswNtx7iAuX7YEI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706101238; c=relaxed/simple;
-	bh=LcZSO2fCT5WaMkS6shCgOhCUo14EJT04WN8x+U0u+KI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kCLXuaZdIM+fl2Ss5pg2743aXvgUDO0EbVJrtDUJ4py2Zi4pRHLiEPOcIkYKmBtZdijyOxSgSI5U8bCnN5Ak7C47yPmou68saZiIwCMvPy0a7xwOFQ1rwy2677aawXkzS5l5sEc7Rrq6n4JbqhXzZ+gn3VrcwGagQr1oDEhIABY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.helo=mgamail.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Htu9OG+i; arc=none smtp.client-ip=134.134.136.31
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.helo=mgamail.intel.com
+	s=arc-20240116; t=1706101244; c=relaxed/simple;
+	bh=/vkNrDXpJXxQEVwMKcAclY2ef9tG0/Qkc2+hembTXCA=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=FBB6o+YmPZ813hPJnjtflscJTIRObbPhp/y+H4QO8OUDNR6I+AYkRPPYdQpF5LGgpJnDrp6EebjZgzhEhc6VglxL+bAjmTwZV8HiWRj36dKfu6452xdRqYS3klHZ1jPQ1EM9NBirBH/Tb1ds/g9pu68fVH/ctJIZoJJVX2LbzRY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cpkiq0P8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Htu9OG+i"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706101236; x=1737637236;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=LcZSO2fCT5WaMkS6shCgOhCUo14EJT04WN8x+U0u+KI=;
-  b=Htu9OG+ikgK27I6Zk/fFbTLy6xe8OT6DO3OgzGyynoiHkxlGvyUNt9v9
-   vYyv4uXwqmI+ExRSkJUz8qv8nK4snZmvaX9dhlyaudJMSMdE+V2RpXBra
-   y3dkb8LKSCQwOUsq2R8TgA2P3LhJ5ohL9valE6EStKj3xfcb0uQzNu0EA
-   L2EI9J130wwLtk4oybdBWXV75k8r4bO/x5YgIl4vYnV08N+BIuLMiKoCV
-   uiUHZy7USy7WUs7bjwZYcC2JHA9+u18tKWEjmGqqIt1OvDTfu+WliaHaj
-   i7vnhhgBTlX9XpV93w/LaZ8Sljbv57T7mmjcmPJOrjjGYqjHN0zDgxbRf
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="466111464"
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="466111464"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jan 2024 05:00:35 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="735924337"
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="735924337"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga003.jf.intel.com with ESMTP; 24 Jan 2024 05:00:30 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id 4F2D86B7; Wed, 24 Jan 2024 14:56:02 +0200 (EET)
-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To: Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	Elena Reshetova <elena.reshetova@intel.com>,
-	Jun Nakajima <jun.nakajima@intel.com>,
-	Rick Edgecombe  <rick.p.edgecombe@intel.com>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	"Kalra, Ashish" <ashish.kalra@amd.com>,
-	Sean Christopherson <seanjc@google.com>,
-	"Huang, Kai" <kai.huang@intel.com>,
-	Baoquan He <bhe@redhat.com>,
-	kexec@lists.infradead.org,
-	linux-coco@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCHv6 05/16] x86/kexec: Keep CR4.MCE set during kexec for TDX guest
-Date: Wed, 24 Jan 2024 14:55:46 +0200
-Message-ID: <20240124125557.493675-6-kirill.shutemov@linux.intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240124125557.493675-1-kirill.shutemov@linux.intel.com>
-References: <20240124125557.493675-1-kirill.shutemov@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cpkiq0P8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4781BC433F1;
+	Wed, 24 Jan 2024 13:00:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706101243;
+	bh=/vkNrDXpJXxQEVwMKcAclY2ef9tG0/Qkc2+hembTXCA=;
+	h=From:Subject:Date:To:Cc:From;
+	b=cpkiq0P86Glwwo7ls0WM5gModHbtdp4TmSOjkZn7aXDO0zVmejAX6wD4sRs1eydx3
+	 mJFjxtsYMuFaf/2426+kX7XEKC8rPCtfecdfEutJAGG2rDivi721407YI+8d2XydUp
+	 zByS5e0/VushAH7CZbd3aGOtzEPTrHx9NpmExnoaBAzMCJb4qVBSLZSRh4Mv+cfjjr
+	 K0cR9bceHwscAuTAfGi0CTqp3HbSIEpNFxeXBpr23Qr1+e1d1ND3QLYxKFEt+Te3IL
+	 7sH97TipamMFpf/ZvDra8hhfjhCJ1AUtARsVcgAssGWKFvFiQtzqmyBIzU0JK08q+l
+	 CjwfX5FKZBUgA==
+From: Mark Brown <broonie@kernel.org>
+Subject: [PATCH v4 0/2] kselftest/seccomp: Convert to KTAP output
+Date: Wed, 24 Jan 2024 13:00:17 +0000
+Message-Id: <20240124-b4-kselftest-seccomp-benchmark-ktap-v4-0-cfd2bd2a31cf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAOIJsWUC/53NvQ6CMBSG4VshnT2mPS1/Tt6HcSjlVBoUSEuIh
+ nDvFhIH46KO7zc838wCeUeBHZKZeZpccH0XQ+0SZhrdXQhcHZshRylQlFApaANd7UhhhEDG9Lc
+ BKupMc9O+hXbUA8g0z7gsUOa8YFEaPFl3315O59iNC2PvH9vpJNb1N38SwMGWJSEWmRQVP7bkO
+ 7rue39h68GEL1RxgfgdihHVVAuZkyatxAcq/0BlRPMiraxVhitbv6HLsjwBkLK/H4EBAAA=
+To: Kees Cook <keescook@chromium.org>, 
+ Andy Lutomirski <luto@amacapital.net>, Will Drewry <wad@chromium.org>, 
+ Shuah Khan <shuah@kernel.org>
+Cc: linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Mark Brown <broonie@kernel.org>, Anders Roxell <anders.roxell@linaro.org>
+X-Mailer: b4 0.13-dev-a684c
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1459; i=broonie@kernel.org;
+ h=from:subject:message-id; bh=/vkNrDXpJXxQEVwMKcAclY2ef9tG0/Qkc2+hembTXCA=;
+ b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBlsQn3ZgOre9hm5oZQLIzXFo6+XtyVqivfhysaNEtc
+ /6uyumCJATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCZbEJ9wAKCRAk1otyXVSH0DkFB/
+ 0bfy6SCjD0imEgAhIiyEUF+LhZpSIr7GV7U1uwQPwHCpwLxP1eD3JRpcyOHCBDpd/84ozflKE4EbzD
+ bSCZ5dxJCAASx1ZKc0EDYEE0h/LzC0U63kC+rr/48ZU6a2+qrq/50YoUmXqYf7JokKokpvVJIxWCuS
+ 6mOlPkxTikR/6YFogHKlScGhLagF4bwvBUqKo1pxjBO9V7lENqltFsxErnfe2HlBAdr0GjbNSd0pm7
+ yR1TDRaMO2I0u8KiGpA1g6Br8ozny8QQgWct+AfTM54+yF01I5hCSbLxgXkN2pH6DmCBLWUJ2w/fYS
+ XDdSRCYBDncwoQKgR2I8RWRyya7aLY
+X-Developer-Key: i=broonie@kernel.org; a=openpgp;
+ fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
 
-TDX guests are not allowed to clear CR4.MCE. Attempt to clear it leads
-to #VE.
+Currently the seccomp benchmark selftest produces non-standard output,
+meaning that while it makes a number of checks of the performance it
+observes this has to be parsed by humans.  This means that automated
+systems running this suite of tests are almost certainly ignoring the
+results which isn't ideal for spotting problems.  Let's rework things so
+that each check that the program does is reported as a test result to
+the framework.
 
-Use alternatives to keep the flag during kexec for TDX guests.
-
-The change doesn't affect non-TDX-guest environments.
-
-Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Reviewed-by: Kai Huang <kai.huang@intel.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- arch/x86/kernel/relocate_kernel_64.S | 5 +++++
- 1 file changed, 5 insertions(+)
+Changes in v4:
+- Silence checkpatch noise.
+- Link to v3: https://lore.kernel.org/r/20240122-b4-kselftest-seccomp-benchmark-ktap-v3-0-785bff4c04fd@kernel.org
 
-diff --git a/arch/x86/kernel/relocate_kernel_64.S b/arch/x86/kernel/relocate_kernel_64.S
-index 56cab1bb25f5..e144bcf60cbe 100644
---- a/arch/x86/kernel/relocate_kernel_64.S
-+++ b/arch/x86/kernel/relocate_kernel_64.S
-@@ -5,6 +5,8 @@
-  */
- 
- #include <linux/linkage.h>
-+#include <linux/stringify.h>
-+#include <asm/alternative.h>
- #include <asm/page_types.h>
- #include <asm/kexec.h>
- #include <asm/processor-flags.h>
-@@ -145,12 +147,15 @@ SYM_CODE_START_LOCAL_NOALIGN(identity_mapped)
- 	 * Set cr4 to a known state:
- 	 *  - physical address extension enabled
- 	 *  - 5-level paging, if it was enabled before
-+	 *  - Machine check exception on TDX guest. Clearing MCE is not allowed
-+	 *    in TDX guests.
- 	 */
- 	movl	$X86_CR4_PAE, %eax
- 	testq	$X86_CR4_LA57, %r13
- 	jz	1f
- 	orl	$X86_CR4_LA57, %eax
- 1:
-+	ALTERNATIVE "", __stringify(orl $X86_CR4_MCE, %eax), X86_FEATURE_TDX_GUEST
- 	movq	%rax, %cr4
- 
- 	jmp 1f
+Changes in v3:
+- Re-add signoff.
+- Link to v2: https://lore.kernel.org/r/20240122-b4-kselftest-seccomp-benchmark-ktap-v2-0-aed137eaea41@kernel.org
+
+Changes in v2:
+- Rebase onto v6.8-rc1.
+- Link to v1: https://lore.kernel.org/r/20231219-b4-kselftest-seccomp-benchmark-ktap-v1-0-f99e228631b0@kernel.org
+
+---
+Mark Brown (2):
+      kselftest/seccomp: Use kselftest output functions for benchmark
+      kselftest/seccomp: Report each expectation we assert as a KTAP test
+
+ .../testing/selftests/seccomp/seccomp_benchmark.c  | 104 +++++++++++++--------
+ 1 file changed, 64 insertions(+), 40 deletions(-)
+---
+base-commit: 6613476e225e090cc9aad49be7fa504e290dd33d
+change-id: 20231219-b4-kselftest-seccomp-benchmark-ktap-357603823708
+
+Best regards,
 -- 
-2.43.0
+Mark Brown <broonie@kernel.org>
 
