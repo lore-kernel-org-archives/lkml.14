@@ -1,111 +1,97 @@
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
+Received: from www530.your-server.de (www530.your-server.de [188.40.30.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52A5D7C0AC
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 14:32:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 795ED60DD1;
+	Wed, 24 Jan 2024 14:33:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.40.30.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706106776; cv=none; b=CYHu0ejkhal2oKS3jQCoivN1xZqJGx3x8WUM2jPhZvZzs0Xu2Pgp/S8Dr3acBEI79ZgzsUUgqZ/eaztoXozSsILWRUHiopfUCm27ierrq5OPFKua4uCLzBgtz1Cwn74ArCAduAsL+g5uBVGn87QRLypFGctsVlU70w0N9zSE1q4=
+	t=1706106795; cv=none; b=s+aKjtqMtZ3Ok2lQEyUjQcasr9ghqySyEr0Qy3pkb2jzFRlmLkA9DdQKMW4K30fab2TcyOYWr9VOu4sVe3HDHPi8405ulKpShqRx9FUuOXWpqtO2JQko8270Orq+Wg5ghRddD7bG6P9BqZr507XULOGoEvjaZz59hOWdC1GAVpU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706106776; c=relaxed/simple;
-	bh=SGy6w76d9qMQU6Gymdvkz8zKWoqqWnDIAnzRUBVn5f0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qcTtdBmyQKTvKcDlcoKlAMyrsw0KSx7cfOMFUbOqPB6AX7zsaL2wcL7UHiYkYaSUFvPjf/vDd7csjMbez6DWP/Y0CwDZufr/4BGvzZ1UkZ/JxVxcF8rZ/2JaBJbwrYNAW0MiwehvidS59tR3UoS2itjZq5u/1C9C3BuzGhC+hok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=erz5Nwxg; arc=none smtp.client-ip=213.97.179.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1706106795; c=relaxed/simple;
+	bh=vPpxGx3jdv7gATwmSPZOYv7TCt6Wkt2McFWe5Uq8e1A=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=lb/StMGq7WreeU26FcYRPYgNvau+2C43LA8fWjryCVILS8+3xLA/aUZ8WXoQ0Zc7/yTTKTrmiPRlnczM2DhoJdvS/KP2PimVV7FINo+jP4xWm//vwwfGhG8u8J9PzQOS5oazt903A6Kv7XVuuIKTjVe+X22EwmrlaegoEWvehSA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=geanix.com; spf=pass smtp.mailfrom=geanix.com; dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b=dWr1NJAh; arc=none smtp.client-ip=188.40.30.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=geanix.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=geanix.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="erz5Nwxg"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="dWr1NJAh"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=geanix.com;
+	s=default2211; h=Content-Transfer-Encoding:MIME-Version:References:
+	In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
 	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=KSCRQ8Cern7/I4IZd68USYEPrfyEIj1eh/gSvT2+TPU=; b=erz5NwxgWEGVusRpKvzE5vQ4b8
-	bE/65fMuNzDQuoHMN3o9guy3LZnX59cNLY7KzL2HIs0BCIOLcsUi0TMcJ7VunM/NdyJQOlR4biefv
-	OyKRB2k8vjp743kGgWu7a4uRAt1+BTrrmqG6Wlq5MHeruGJyOV8jztHPHCPTKVcx82WAcpASXzPiV
-	VdxrePLiP5Ctm91ERBezXhxF1hQGrHMGHQtXrfa/rHMY20B2L1IJStm7Dxie7vxEfvRTlS0OSVG86
-	5934s8EqhWI9hcJZG1vUDABwx2kPXAPraixPlQx0pfSfNX5jxMfo5U4KeEI8ZDqx2cc9vYJsXUVQk
-	T195PLjQ==;
-Received: from 201-42-129-194.dsl.telesp.net.br ([201.42.129.194] helo=[192.168.1.111])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1rSe1e-009f2o-84; Wed, 24 Jan 2024 15:14:46 +0100
-Message-ID: <68171ce1-3ccb-4699-8577-434d9b717acf@igalia.com>
-Date: Wed, 24 Jan 2024 11:14:40 -0300
+	Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=OtP8seYmSML3PMcVqkf6WfD0WEgT7yLINsGkyK/5yRY=; b=dWr1NJAh2O4A7EL6JyQkEBZIVJ
+	Mo2YCfPIx9Ge2pYrb4Lo+ndhfWGE7LOXst4905l2N6eudCvEiDQzdaOIgiejSl/mRHr+zm8chVoFu
+	mz6q4BoKMTBkMxa41EFJbFAODYnSdLcuIHKVMnGbFgaSWav9gY0/NXISgY9pVoGcR4VrT62kcS4Gj
+	Xp8BwMj+yQqZuHkUDHx+VSQ6UR/mmm5HAGXTO8Ibd8TtU4CFOzyWHEVN8qtDz5UvIaOqLJH9SHfkX
+	cZ0GwA8Jf7uiMy5BUyDU5tZ/sCLmFeqMMH69DIHjO7CVA9ZEFbgSdr/Jc99QRc7OVW0Hpkj+bQtjA
+	Azl0nMGQ==;
+Received: from sslproxy01.your-server.de ([78.46.139.224])
+	by www530.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <esben@geanix.com>)
+	id 1rSeJQ-000NaO-OK; Wed, 24 Jan 2024 15:33:08 +0100
+Received: from [87.49.43.79] (helo=localhost)
+	by sslproxy01.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <esben@geanix.com>)
+	id 1rSeJP-0008fi-RM; Wed, 24 Jan 2024 15:33:08 +0100
+From: Esben Haabendal <esben@geanix.com>
+To: devicetree@vger.kernel.org,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+	Jose Abreu <joabreu@synopsys.com>
+Cc: netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 2/3] dt-bindings: net: snps,dwmac: Add time-based-scheduling property
+Date: Wed, 24 Jan 2024 15:33:06 +0100
+Message-ID: <30ce8f45b8752c603acc861ebb2f18d74d2f8a07.1706105494.git.esben@geanix.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <b365dc6f756a3fad4dfaa2675c98f4078aba8a55.1706105494.git.esben@geanix.com>
+References: <b365dc6f756a3fad4dfaa2675c98f4078aba8a55.1706105494.git.esben@geanix.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] drm/amdgpu: Implement check_async_props for planes
-Content-Language: en-US
-To: =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>
-Cc: dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, kernel-dev@igalia.com,
- alexander.deucher@amd.com, christian.koenig@amd.com,
- Simon Ser <contact@emersion.fr>, Pekka Paalanen <ppaalanen@gmail.com>,
- daniel@ffwll.ch, Daniel Stone <daniel@fooishbar.org>,
- =?UTF-8?B?J01hcmVrIE9sxaHDoWsn?= <maraeo@gmail.com>,
- Dave Airlie <airlied@gmail.com>, Xaver Hugl <xaver.hugl@gmail.com>,
- Joshua Ashton <joshua@froggi.es>, =?UTF-8?Q?Michel_D=C3=A4nzer?=
- <michel.daenzer@mailbox.org>
-References: <20240119181235.255060-1-andrealmeid@igalia.com>
- <20240119181235.255060-3-andrealmeid@igalia.com> <Zaq-r7UZpEy7_Rrn@intel.com>
-From: =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>
-In-Reply-To: <Zaq-r7UZpEy7_Rrn@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Authenticated-Sender: esben@geanix.com
+X-Virus-Scanned: Clear (ClamAV 0.103.10/27164/Wed Jan 24 10:45:32 2024)
 
-Hi Ville,
+Time Based Scheduling can be enabled per TX queue, if supported by the
+controller.
 
-Em 19/01/2024 15:25, Ville Syrjälä escreveu:
-> On Fri, Jan 19, 2024 at 03:12:35PM -0300, André Almeida wrote:
->> AMD GPUs can do async flips with changes on more properties than just
->> the FB ID, so implement a custom check_async_props for AMD planes.
->>
->> Allow amdgpu to do async flips with IN_FENCE_ID and FB_DAMAGE_CLIPS
->> properties. For userspace to check if a driver support this two
->> properties, the strategy for now is to use TEST_ONLY commits.
->>
->> Signed-off-by: André Almeida <andrealmeid@igalia.com>
->> ---
->> v2: Drop overlay plane option for now
->>
->>   .../amd/display/amdgpu_dm/amdgpu_dm_plane.c   | 29 +++++++++++++++++++
->>   1 file changed, 29 insertions(+)
->>
->> diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_plane.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_plane.c
->> index 116121e647ca..7afe8c1b62d4 100644
->> --- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_plane.c
->> +++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_plane.c
->> @@ -25,6 +25,7 @@
->>    */
->>   
->>   #include <drm/drm_atomic_helper.h>
->> +#include <drm/drm_atomic_uapi.h>
->>   #include <drm/drm_blend.h>
->>   #include <drm/drm_gem_atomic_helper.h>
->>   #include <drm/drm_plane_helper.h>
->> @@ -1430,6 +1431,33 @@ static void amdgpu_dm_plane_drm_plane_destroy_state(struct drm_plane *plane,
->>   	drm_atomic_helper_plane_destroy_state(plane, state);
->>   }
->>   
->> +static int amdgpu_dm_plane_check_async_props(struct drm_property *prop,
->> +					  struct drm_plane *plane,
->> +					  struct drm_plane_state *plane_state,
->> +					  struct drm_mode_object *obj,
->> +					  u64 prop_value, u64 old_val)
->> +{
->> +	struct drm_mode_config *config = &plane->dev->mode_config;
->> +	int ret;
->> +
->> +	if (prop != config->prop_fb_id &&
->> +	    prop != config->prop_in_fence_fd &&
-> 
-> IN_FENCE should just be allowed always.
+Signed-off-by: Esben Haabendal <esben@geanix.com>
+---
+ Documentation/devicetree/bindings/net/snps,dwmac.yaml | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-Do you mean that the common path should allow IN_FENCE_FD for all drivers?
+diff --git a/Documentation/devicetree/bindings/net/snps,dwmac.yaml b/Documentation/devicetree/bindings/net/snps,dwmac.yaml
+index 5c2769dc689a..301e9150ecc3 100644
+--- a/Documentation/devicetree/bindings/net/snps,dwmac.yaml
++++ b/Documentation/devicetree/bindings/net/snps,dwmac.yaml
+@@ -399,6 +399,12 @@ properties:
+             type: boolean
+             description: TX checksum offload is unsupported by the TX queue.
+ 
++          snps,time-based-scheduling:
++            type: boolean
++            description:
++              Time Based Scheduling will be enabled for TX queue.
++              This is typically not supported for TX queue 0.
++
+         allOf:
+           - if:
+               required:
+-- 
+2.43.0
+
