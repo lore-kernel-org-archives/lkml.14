@@ -1,36 +1,36 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29879135A52;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E01C135A56;
 	Wed, 24 Jan 2024 22:33:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706135599; cv=none; b=rfAe7nQCxQZQ87QKzdP+Mp5hwCcj509nVVsJlJHc81Okfwn1xZ/SpB09KDnQgFW9YXPl1patKx1S7CYaE7AXkCI8o9EqPmG2Xmvnzt+47AKwu18ndl5dv0csF9rG+35P+V0bPMLzGLom3zjsbZNT4wSq6IYpedNiqGamEHFtDdQ=
+	t=1706135599; cv=none; b=MJH7xeciJI1vv3kHVA3Q+zTAZYPorIn0/mQ80HDgZ36so1lAO4mJqDhN7thJvolip1FVSxO7RTdPLKjAZczxd/9mTf/RIBQ/1iylPmmuxN5zWP0pVmLwleoVly0ZA/MYBrFxNnNBJkGj58vqIHhUesx1UrFVA5gcn/OqNS2Zwus=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1706135599; c=relaxed/simple;
-	bh=DKx8YCk6CvT5TPKgEWvZvqxJNyIHRyULsJ4f2zOAZbQ=;
+	bh=W+XG7gUVjX2CJXaxEMB61egMLVz4lNEs6++C8B0jnZs=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Q/N/ZlT071I+tyi99ZkUEa3pCK7LkpFVd0KQh3JUcsx7WrFWUki4JdJVOMuGe8JxdWcvZjjKY4jKcw65Kptkk1kQZPwveyFCFb6p2yaNcY374wPX175ejHEdzM7ctwx61SvNjicIotw9WgMYIo/GMglOMDNXAK3iqjeOCJm6JLk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=GVv1oiMn; arc=none smtp.client-ip=212.227.17.20
+	 MIME-Version; b=N+qA5Oqck2w3XvWujeORyxUIB58/ANK8wA4jcAacyY2av/ULI49AXPCVn+Kyq5b93KSFN4iyD7X90lEX9rlnGN4kNc+/oWMxgQmv33bU+pqOiTdTnOGStUDt38NuQDBYX2LAbrSiBm5PqfBeb7UncxWKargeRvmfMeimrKTsgKs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=XwLOTZhY; arc=none smtp.client-ip=212.227.17.21
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="GVv1oiMn"
+	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="XwLOTZhY"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-	s=s31663417; t=1706135560; x=1706740360; i=wahrenst@gmx.net;
-	bh=DKx8YCk6CvT5TPKgEWvZvqxJNyIHRyULsJ4f2zOAZbQ=;
+	s=s31663417; t=1706135557; x=1706740357; i=wahrenst@gmx.net;
+	bh=W+XG7gUVjX2CJXaxEMB61egMLVz4lNEs6++C8B0jnZs=;
 	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:
 	 References;
-	b=GVv1oiMnWyRdqCtF9xB36UNqK21KrJyA4vtWVReKV+QUAk6jUug5fh5S8gWmvX8h
-	 D0GRy/DXzjsk+Egc5EvoLdmrNK9h46HZTId8jfUEp+NuvfBjFxNCbVZes8CUPvxK+
-	 5yJYfel52IjhG2sHrvd4jALZEoXR9v5snY2rtNVrgsm2OqlSuFp4M7dyeJddJeXsY
-	 /cJpqeLSjvDcF/xzyHsYj8ZCXkX87+D5/p/S3ELgpmDQuRMYIcViqDaeMibyhIfXX
-	 zkQLxXBHufvEqG+VoyucMovjcg+1H+SfTxQyZiNWxUxPxy5p8A5pnMVJnAxX1317j
-	 jCEXfhokq4bmAJwuRg==
+	b=XwLOTZhYKGcOKVwX/KTtIyl2EZYGLncjwnR0fJeWGd0uId7TE1noTkKyOfeXv+nn
+	 pFXDdPGCzBFS/O7+OI+e71AmtFOa8j5qkdqQZcg1MGItVefjDSbSz+HNeWJPLTksb
+	 1Asrr5UCSD8+7YlWaeATw7VUFALy6Eidc2H3CR7Bv24vc0sXNjd84NguczG02EAcI
+	 /oQiZnbalzbg09CpPD3qAiQXtq47URTUpvH/UApH8ynmXA+XPVzFL2t0CvTiQsOZF
+	 xy3AjVDvyLb/aDwlvacLBPZReR+ZWTeGy3Cvp7OZeC8XJU/Fs5E0xJABHxt8FPwND
+	 70j0mWrtQyCFxUzg5w==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from stefanw-SCHENKER ([37.4.248.43]) by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MKKUp-1ro1qB30QR-00LpTf; Wed, 24
- Jan 2024 23:32:40 +0100
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1Mof57-1qiBie2pOj-00p20r; Wed, 24
+ Jan 2024 23:32:37 +0100
 From: Stefan Wahren <wahrenst@gmx.net>
 To: "David S. Miller" <davem@davemloft.net>,
 	Eric Dumazet <edumazet@google.com>,
@@ -42,9 +42,9 @@ Cc: Lino Sanfilippo <LinoSanfilippo@gmx.de>,
 	linux-kernel@vger.kernel.org,
 	Stefan Wahren <wahrenst@gmx.net>,
 	Jacob Keller <jacob.e.keller@intel.com>
-Subject: [PATCH V3 08/14 next] qca_spi: Improve calculation of RX buffer size
-Date: Wed, 24 Jan 2024 23:32:05 +0100
-Message-Id: <20240124223211.4687-9-wahrenst@gmx.net>
+Subject: [PATCH V3 02/14 next] qca_spi: Improve SPI IRQ handling
+Date: Wed, 24 Jan 2024 23:31:59 +0100
+Message-Id: <20240124223211.4687-3-wahrenst@gmx.net>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240124223211.4687-1-wahrenst@gmx.net>
 References: <20240124223211.4687-1-wahrenst@gmx.net>
@@ -55,61 +55,92 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:PBoXn1z7n6aZj88X6gKN7TzTl6JnE/RGUP8sTmqzy6ZP1uoZVvg
- OWv9vZgB8/gRdauVDngHXYqDbrSTMHEu6IBhbPsj04adI/rlHUYZD2lR+3yaFmGLOehyHwy
- 5ErWugWu3vJDqB/SEgmmvXFDd0aROcAbeH06G85J7zXe/JzzM3Tl4CAWI372nGjSHRtEkdq
- OjpSd+Ofyf/rGyf1QqObA==
+X-Provags-ID: V03:K1:aL6VB/gYI/E9S57gwbqxv807a1LZCLoaNBRTrL4zhQqVL3P83zu
+ gb+CXzh1WmHLfPfRstfzmjTxREd3Kqww7xpEZz9L5U5kB6aicd5dQp/slzKw0FVhCHeLdw1
+ SDL01NjMwn9pE4jFfg4bFAizsVNxLoqYbdK/zObzwkoMvZUnRykI1PryhxmR5QwsmIYsSmH
+ /SdWxVmOGsc+PSeNFTlow==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:8aTzaSACv8Q=;D2gdFLGU8Wv2c5/OSBbKtOaPqpV
- 435zqOgGrggpm0CpQpbyAT4rjUNF3jrqG5h9cjSqQNdDl70zgURr8GV6DhoIQc7VLnBVMVxec
- e1VU1ySvY6JN7Fq/p+jglJn3z/mA1c9nWV3grzxFoxtO+mkj3tP1yv9Fw5r7KhgCEXP4GOplO
- u5CYY7ZDAq2glX7gjSnK8Mcj43jnWOEjfvjtbOzUE4AZkTkzSMcljqF5K62KI11Tk4NuSykMU
- UQMfjiqYljTahB1g7kgJfv8QErLXGkIbkllENP5vWShq6nB/CkfFnptjpYRGHyBY1mgYJiIPe
- MYLEkjkEwBuGkg94NDPtjOcXTXyu/i/biHnDhutwlIlrN33TlScymWlLmTicXZDl86FCSfAj1
- CldZWSBTlSGoXnLNLE3OWBJiW+LQgLyEzHz6X0n9BFKICyGu47BP7C9jSABQEYY55N495/c2P
- If98fNfBc7bGmu3bkL8hVqW8nMZY20pWBu/CRRP4n0tIRPnhetyrTihXhqJo1IKFeHmuvjKsP
- zf77pQkoWA5zBB7cdwVAq4iqkWtMPrjubWxPvxDof8ALwnJs3AnNMgalXXkdLvHQbt6Mc21/L
- 7SPwhPnFkKTV/xKTk6GrQK6bLPIU6Ev0sgp5cHKjO0R2X+5Xr++t1luIOcj0Lgrer829mQBDc
- Jx4gQGDzISqC4pfUhMAZr3VudKeL8gHjzj4n0tRONWQ1r5aDyKRsltLPDLvbTWMUF6LzRcvD5
- Otc/v9Kh9zT6lDI6L7Ntj0soFzxFcuLpNSsfKc6eT+H5SY3F8y8g75wf/UtM/EzGgJZ0rfA+e
- Kdr7OdGR4K4Z5Cs6C5mTPSZ0r/EuRSO5s/q2REspm4Khu7MsKum7DUpem2ldTdMvFs2BCVOw6
- nyODdfuTWz3Kr6m+/DOrJ+cCPR7Uohh0ZzUKYTDKIn2mJRm+GDNQj+9pd6F/dF2K/y6ZQiyef
- AnThCw==
+UI-OutboundReport: notjunk:1;M01:P0:PpK0zX9pg1Y=;GZXcBir7R06/D2XQlG2oEyGhOCS
+ grTnmSIjwzsyZlg/L1yL9OwCx+WXOYzjPR85KZwn+t0h1G7jOICV9vVRpshcjVmtkp1C/dWES
+ fuuEyEn60yE9xuvNOcMnxwZad/h5hThCWLf4VITkMMZRQyZdFzgsyQgL86kW9Mrox2jcesOa6
+ HbowcOkhoOO0OpLJGce2lZEscXGLkqm6buCWJZ+N/Gi3OEB272iUUolqM/IyhHkntHybFrhdr
+ kqwZAEVB2t5gPj4MFfJXFWcf3m76ccbcR6OZB/cnjylhR74f26gmgj8kP453pqgWTeFDfmjNF
+ 45uXxFYrbfen2+7bA12Y0ubreazyrkWM9JO0DOL0DNkvLdKauzTlJdBVnEATj3XUndisiJ0lm
+ W89MKOK1C+gUnUb7/76M0r/KYOIkh/ClhIbqJlISNcvxqkg7Pk4478RfJ7DH7UZghrzAT8xUL
+ 60xh8y3rElSUB+pfC+JJ4CebiyUlGeZ7nyV9W9v57nhzKXSTj+Nz2TCPdXFQn/br0Y2T24LXN
+ +L46eDYcbG7CUUVAbm5oA/pdIzG/owNcmXbf36W8hJMks0MXYcOKbiS0qP9n/rJL5p6CI1tb4
+ BAlyeqEDWBfeL0QtpqCC5fFnYkHkFSdCclmcRLkgnS7ggcmMuKZ+KENmeJcvmQCANw6aCki6N
+ F7UT64wyqA4NW7bF8qAsVg+3E8oFHv30BM2indy+yQk3IK2ieuRrm98/vdj//nffrXZEPbgz7
+ QIN143ThNSgqf31Zf3LPjaI6Xn/z4DUgixCqkU7fS1WcsvZLSzTuHTXlrCqfPW7OvMuzEWHwi
+ PY82GPr0BDSLGbCiQ3T8HZpHmW/p49M57oMc4BBCLQuBxYxNdZsw4Nu/0CI8XPjYYp1O6kKxT
+ Xu/pmZnk7LMx3UgOXx+CA5AVcJIJrUxVjvR3E9igyb2M3n7lw2DvCuEZnLjzJVJB8KcvvZjWk
+ YHPOng==
 
-There are two points with the calculation of RX buffer size which are
-not optimal:
-1. dev->mtu is a mutual parameter and it's currently initialized with
-   QCAFRM_MAX_MTU. But for RX buffer size calculation we always need the
-   maximum possible MTU. So better use the define directly.
-2. This magic number 4 represent the hardware generated frame length
-   which is specific to SPI. We better replace this with the suitable
-   define.
-
-There is no functional change.
+The functions qcaspi_netdev_open/close are responsible of request &
+free of the SPI interrupt, which wasn't the best choice because
+allocation problems are discovered not during probe. So let us split
+IRQ allocation & enabling, so we can take advantage of a device
+managed IRQ.
 
 Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
 Reviewed-by: Jacob Keller <jacob.e.keller@intel.com>
 =2D--
- drivers/net/ethernet/qualcomm/qca_spi.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/qualcomm/qca_spi.c | 20 +++++++++++---------
+ 1 file changed, 11 insertions(+), 9 deletions(-)
 
 diff --git a/drivers/net/ethernet/qualcomm/qca_spi.c b/drivers/net/etherne=
 t/qualcomm/qca_spi.c
-index 80182f8a4a50..6d2859aad921 100644
+index fc272ca7bdca..294d4ee3b38f 100644
 =2D-- a/drivers/net/ethernet/qualcomm/qca_spi.c
 +++ b/drivers/net/ethernet/qualcomm/qca_spi.c
-@@ -813,8 +813,8 @@ qcaspi_netdev_init(struct net_device *dev)
- 	qca->clkspeed =3D qcaspi_clkspeed;
- 	qca->burst_len =3D qcaspi_burst_len;
- 	qca->spi_thread =3D NULL;
--	qca->buffer_size =3D (dev->mtu + VLAN_ETH_HLEN + QCAFRM_HEADER_LEN +
--		QCAFRM_FOOTER_LEN + 4) * QCASPI_RX_MAX_FRAMES;
-+	qca->buffer_size =3D (QCAFRM_MAX_MTU + VLAN_ETH_HLEN + QCAFRM_HEADER_LEN=
- +
-+		QCAFRM_FOOTER_LEN + QCASPI_HW_PKT_LEN) * QCASPI_RX_MAX_FRAMES;
+@@ -687,7 +687,6 @@ static int
+ qcaspi_netdev_open(struct net_device *dev)
+ {
+ 	struct qcaspi *qca =3D netdev_priv(dev);
+-	int ret =3D 0;
 
- 	memset(&qca->stats, 0, sizeof(struct qcaspi_stats));
+ 	if (!qca)
+ 		return -EINVAL;
+@@ -697,13 +696,7 @@ qcaspi_netdev_open(struct net_device *dev)
+ 	qca->sync =3D QCASPI_SYNC_UNKNOWN;
+ 	qcafrm_fsm_init_spi(&qca->frm_handle);
 
+-	ret =3D request_irq(qca->spi_dev->irq, qcaspi_intr_handler, 0,
+-			  dev->name, qca);
+-	if (ret) {
+-		netdev_err(dev, "%s: unable to get IRQ %d (irqval=3D%d).\n",
+-			   QCASPI_DRV_NAME, qca->spi_dev->irq, ret);
+-		return ret;
+-	}
++	enable_irq(qca->spi_dev->irq);
+
+ 	/* SPI thread takes care of TX queue */
+ 	kthread_unpark(qca->spi_thread);
+@@ -720,7 +713,7 @@ qcaspi_netdev_close(struct net_device *dev)
+ 	kthread_park(qca->spi_thread);
+
+ 	qcaspi_write_register(qca, SPI_REG_INTR_ENABLE, 0, wr_verify);
+-	free_irq(qca->spi_dev->irq, qca);
++	disable_irq(qca->spi_dev->irq);
+
+ 	return 0;
+ }
+@@ -987,6 +980,15 @@ qca_spi_probe(struct spi_device *spi)
+
+ 	spi_set_drvdata(spi, qcaspi_devs);
+
++	ret =3D devm_request_irq(&spi->dev, spi->irq, qcaspi_intr_handler,
++			       IRQF_NO_AUTOEN, qca->net_dev->name, qca);
++	if (ret) {
++		dev_err(&spi->dev, "Unable to get IRQ %d (irqval=3D%d).\n",
++			spi->irq, ret);
++		free_netdev(qcaspi_devs);
++		return ret;
++	}
++
+ 	ret =3D of_get_ethdev_address(spi->dev.of_node, qca->net_dev);
+ 	if (ret) {
+ 		eth_hw_addr_random(qca->net_dev);
 =2D-
 2.34.1
 
