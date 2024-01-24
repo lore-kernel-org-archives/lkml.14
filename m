@@ -1,290 +1,256 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mickerik.phytec.de (mickerik.phytec.de [91.26.50.163])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C099F168CC
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 05:13:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B10DD171A2
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 05:13:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.26.50.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706073233; cv=none; b=N0yKLssCda16RGJCScyjVrGytn2ket/Tgu2N29rWbZHC2f9Cpz6YFNTdNzzUR3AwK9MwMJNSrehfuCIr7ytPUIcXjsFziYzmsrPi3bDFKtxITsKfEHq9jK8InOPxBFj1yWHZtVkel/sNAKKuKHYck52tieOzTOZ2WBrk8m3MSnU=
+	t=1706073239; cv=none; b=MPgLgKHwxx9VTs4FQk+s1zOmfq+j35rGlOzgIaMpgTNVd+i5y5v3RnbfH5ROojb+MSI8eSWNeK4jmMbew1XeVizMF4WNzL/u9cgIYKYy1cFp5V51j5HW48eqhFU/M94vk91pppFZqBvdaGdNSRVNKn822hhhJ6cZ9RCpElqOfmM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706073233; c=relaxed/simple;
-	bh=qoehxXH+szItKiu0nH2m56SGekQ9V5lR1pUUMHtpOa4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-type; b=mG++JMeFWz5SXnAfeqtXmTrS1M11ih8iJyP83c6Ld1haVgWnKj43JuzamsqtwIWb9ej4xXXkCRsg+eoUNQtOn6rAsoA5/ncRSx5j076YjpSEICAzX9CCD2DEHGby4u2boiDreSBlWluebm95e4iS2DI4S8oWNDDv31wt8KYAk0w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gBx+Zug9; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1706073239; c=relaxed/simple;
+	bh=j0Ft59/vVMe9YartpH/9GGwsUHkrmD3Q9IzIAVDnKpg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=tK7hX1RvxxHbiqTCjCPwrsJ/DoT1eEqH9HcV2ZiOi29CKlFDyvV4CBEbAUppW2LHLZ7RfxuQIj1qZL+kEQNUlXSIR/11onfZO7PsNkgLbOZbTFIHiLdnIDdlxkMYuxH+cE7t6G5rM8Fmu6gfEXktXhVNb4H9vHofHFnB0hHsZCE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytec.de; spf=pass smtp.mailfrom=phytec.de; dkim=pass (1024-bit key) header.d=phytec.de header.i=@phytec.de header.b=TG+UG42Z; arc=none smtp.client-ip=91.26.50.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytec.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytec.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gBx+Zug9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1706073230;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FFN/EE6fSgOxg2WRz1Lwt2Z6P21vAYaIGhzAxf9cqz8=;
-	b=gBx+Zug94JRM4T06ku213MEapxYxxcsvv8g9o1bEsTtHW9UCph9sbc9eD7OSKfaVapjqlR
-	sD5ar+q0aKoAnLYEbxyyMkFJGV6C+v4bo7xASav79kmL8zkCCmt/wdSQ0AOdsVDRtqo6+x
-	NyuLcapNw+F+dhgjUEA2o54PoVngYoI=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-371-WKyY6avVNPaClo8a68Hclg-1; Wed, 24 Jan 2024 00:13:49 -0500
-X-MC-Unique: WKyY6avVNPaClo8a68Hclg-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 3EC2F800074;
-	Wed, 24 Jan 2024 05:13:48 +0000 (UTC)
-Received: from MiWiFi-R3L-srv.redhat.com (unknown [10.72.116.117])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 491601C060AF;
-	Wed, 24 Jan 2024 05:13:40 +0000 (UTC)
-From: Baoquan He <bhe@redhat.com>
-To: linux-kernel@vger.kernel.org
-Cc: kexec@lists.infradead.org,
-	x86@kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-s390@vger.kernel.org,
-	linux-sh@vger.kernel.org,
-	linux-mips@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	loongarch@lists.linux.dev,
-	akpm@linux-foundation.org,
-	ebiederm@xmission.com,
-	hbathini@linux.ibm.com,
-	piliu@redhat.com,
-	viro@zeniv.linux.org.uk,
-	Baoquan He <bhe@redhat.com>
-Subject: [PATCH linux-next v3 06/14] x86, crash: wrap crash dumping code into crash related ifdefs
-Date: Wed, 24 Jan 2024 13:12:46 +0800
-Message-ID: <20240124051254.67105-7-bhe@redhat.com>
-In-Reply-To: <20240124051254.67105-1-bhe@redhat.com>
-References: <20240124051254.67105-1-bhe@redhat.com>
+	dkim=pass (1024-bit key) header.d=phytec.de header.i=@phytec.de header.b="TG+UG42Z"
+DKIM-Signature: v=1; a=rsa-sha256; d=phytec.de; s=a4; c=relaxed/simple;
+	q=dns/txt; i=@phytec.de; t=1706073232; x=1708665232;
+	h=From:Sender:Reply-To:Subject:Date:Message-ID:To:CC:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=j0Ft59/vVMe9YartpH/9GGwsUHkrmD3Q9IzIAVDnKpg=;
+	b=TG+UG42ZwK5L/dSyAk9w2/BFREwX0gpk1Pl5RqC9UBOyXKInjXwH1TNwqs5ybjpw
+	zhKCHxriAxiKIxtGCwW34GTvoU71RbaXipveZQvXFrOhX0QfuC7eCkaRux6Q20mc
+	oZ95hFliTLKlKlc5SRY6QmTf/UaOh9EOwxwtW9hp7XI=;
+X-AuditID: ac14000a-fbefe7000000290d-f5-65b09c903d25
+Received: from berlix.phytec.de (Unknown_Domain [172.25.0.12])
+	(using TLS with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(Client did not present a certificate)
+	by mickerik.phytec.de (PHYTEC Mail Gateway) with SMTP id 49.0E.10509.09C90B56; Wed, 24 Jan 2024 06:13:52 +0100 (CET)
+Received: from [172.25.39.28] (172.25.0.11) by Berlix.phytec.de (172.25.0.12)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.6; Wed, 24 Jan
+ 2024 06:14:12 +0100
+Message-ID: <008317aa-4dd1-4889-8c64-5e4396d83931@phytec.de>
+Date: Wed, 24 Jan 2024 06:13:39 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 3/3] arm64: dts: imx93: Add phyBOARD-Segin-i.MX93
+ support
+To: Stefan Wahren <wahrenst@gmx.net>, Mathieu Othacehe <othacehe@gnu.org>, Rob
+ Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam
+	<festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, Li Yang
+	<leoyang.li@nxp.com>, Primoz Fiser <primoz.fiser@norik.com>, Christoph
+ Stoidner <c.stoidner@phytec.de>
+CC: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <upstream@lists.phytec.de>
+References: <20240122095306.14084-1-othacehe@gnu.org>
+ <20240122095306.14084-4-othacehe@gnu.org>
+ <537266fe-0bf7-4208-a9f3-ae27f462c6ed@phytec.de>
+ <85fe8c8b-ea08-4f24-9a06-33a5678c1a0a@gmx.net>
+ <7944bd80-32d7-4ac3-9c0a-806394262f1c@phytec.de>
+ <08ef805a-b041-4db0-aaf7-51d5d06596ff@gmx.net>
+Content-Language: en-US
+From: Wadim Egorov <w.egorov@phytec.de>
+In-Reply-To: <08ef805a-b041-4db0-aaf7-51d5d06596ff@gmx.net>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.7
+X-ClientProxiedBy: Florix.phytec.de (172.25.0.13) To Berlix.phytec.de
+ (172.25.0.12)
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrIIsWRmVeSWpSXmKPExsWyRpKBR3fCnA2pBkfnqVus2XuOyWL+kXOs
+	Fg+v+lusmrqTxaLvxUNmi0PNB5gsNj2+xmrR9Wsls8XlXXPYLM7f3cJscaLrIatF694j7BZ/
+	t29isXixRdyi+526xfETncwOAh47Z91l91i8aT+bR9s0M49NqzrZPO5c28PmsXlJvUd/dwur
+	x/evG1g9Nr7bweTR/9fA4/MmuQDuKC6blNSczLLUIn27BK6MtrcHmQue6Ffc3LSYuYHxjXoX
+	IyeHhICJxIRJUxi7GLk4hAQWM0nsPvaWHSQhJHCXUeLQ9yoQm1fARuLY+n6wOIuAqkTLnzus
+	EHFBiZMzn7CA2KIC8hL3b80AqxEWCJLYcPwvG8hQEYF2Fon7uyawgzjMAm2MElMnvGGDWLeS
+	SeL31CdMIC3MAuISt57MB7PZBNQl7mz4BrSCg4NTwFri1Q85iBILicVvDrJD2PISzVtnM0Nc
+	Ki/x4tJyFoh35CWmnXvNDGGHShzZtJppAqPwLCTHzkKybRaSsbOQjF3AyLKKUSg3Mzk7tSgz
+	W68go7IkNVkvJXUTIyiaRRi4djD2zfE4xMjEwXiIUYKDWUmE94bkulQh3pTEyqrUovz4otKc
+	1OJDjNIcLErivKs7glOFBNITS1KzU1MLUotgskwcnFINjOZ+h6LzPijK8/b8PS3DG6U3t+/P
+	0Z73qwr38zF9EZxz5debid89uq0/bQl6/M7pk8PjYxxZXaJqRY7fVkUpB115ceO77EOHw6vn
+	mM75dUJxD3NLv+asPfO+LfP+2So6v8UgpcQjf+m0c/JX3hxWEz+wa1ebvXtM67NnT66eDzvW
+	Pfnn0pUrgy4qsRRnJBpqMRcVJwIA4tsbV9QCAAA=
 
-Now crash codes under kernel/ folder has been split out from kexec
-code, crash dumping can be separated from kexec reboot in config
-items on x86 with some adjustments.
+Hi,
 
-Here, also change some ifdefs or IS_ENABLED() check to more appropriate
-ones, e,g
- - #ifdef CONFIG_KEXEC_CORE -> #ifdef CONFIG_CRASH_DUMP
- - (!IS_ENABLED(CONFIG_KEXEC_CORE)) - > (!IS_ENABLED(CONFIG_CRASH_RESERVE))
+Am 23.01.24 um 11:21 schrieb Stefan Wahren:
+> Hi Wadim,
+>
+> Am 23.01.24 um 09:25 schrieb Wadim Egorov:
+>>
+>> Am 23.01.24 um 08:42 schrieb Stefan Wahren:
+>>> Hi Wadim,
+>>>
+>>> Am 23.01.24 um 07:11 schrieb Wadim Egorov:
+>>>> Hey Mathieu,
+>>>>
+>>>> Am 22.01.24 um 10:53 schrieb Mathieu Othacehe:
+>>>>> Add basic support for phyBOARD-Segin-i.MX93.
+>>>>> Main features are:
+>>>>> * eMMC
+>>>>> * Ethernet
+>>>>> * SD-Card
+>>>>> * UART
+>>>>>
+>>>>> Signed-off-by: Mathieu Othacehe <othacehe@gnu.org>
+>>>>> ---
+>>>>>   arch/arm64/boot/dts/freescale/Makefile        |   1 +
+>>>>>   .../dts/freescale/imx93-phyboard-segin.dts    | 141
+>>>>> ++++++++++++++++++
+>>>>>   .../boot/dts/freescale/imx93-phycore-som.dtsi | 127 
+>>>>> ++++++++++++++++
+>>>>>   3 files changed, 269 insertions(+)
+>>>>>   create mode 100644
+>>>>> arch/arm64/boot/dts/freescale/imx93-phyboard-segin.dts
+>>>>>   create mode 100644
+>>>>> arch/arm64/boot/dts/freescale/imx93-phycore-som.dtsi
+>>>>>
+>>>>> diff --git a/arch/arm64/boot/dts/freescale/Makefile
+>>>>> b/arch/arm64/boot/dts/freescale/Makefile
+>>>>> index 2e027675d7bb..65db918c821c 100644
+>>>>> --- a/arch/arm64/boot/dts/freescale/Makefile
+>>>>> +++ b/arch/arm64/boot/dts/freescale/Makefile
+>>>>> @@ -201,6 +201,7 @@ dtb-$(CONFIG_ARCH_MXC) +=
+>>>>> imx8qxp-colibri-iris-v2.dtb
+>>>>>   dtb-$(CONFIG_ARCH_MXC) += imx8qxp-mek.dtb
+>>>>>   dtb-$(CONFIG_ARCH_MXC) += imx8ulp-evk.dtb
+>>>>>   dtb-$(CONFIG_ARCH_MXC) += imx93-11x11-evk.dtb
+>>>>> +dtb-$(CONFIG_ARCH_MXC) += imx93-phyboard-segin.dtb
+>>>>>   dtb-$(CONFIG_ARCH_MXC) += imx93-tqma9352-mba93xxca.dtb
+>>>>>   dtb-$(CONFIG_ARCH_MXC) += imx93-tqma9352-mba93xxla.dtb
+>>>>>   diff --git a/arch/arm64/boot/dts/freescale/imx93-phyboard-segin.dts
+>>>>> b/arch/arm64/boot/dts/freescale/imx93-phyboard-segin.dts
+>>>>> new file mode 100644
+>>>>> index 000000000000..5433c33d1322
+>>>>> --- /dev/null
+>>>>> +++ b/arch/arm64/boot/dts/freescale/imx93-phyboard-segin.dts
+>>>>> @@ -0,0 +1,141 @@
+>>>>> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+>>>>> +/*
+>>>>> + * Copyright (C) 2023 PHYTEC Messtechnik GmbH
+>>>>> + * Author: Wadim Egorov <w.egorov@phytec.de>, Christoph Stoidner
+>>>>> <c.stoidner@phytec.de>
+>>>>> + * Copyright (C) 2024 Mathieu Othacehe <m.othacehe@gmail.com>
+>>>>> + *
+>>>>> + * Product homepage:
+>>>>> + * phyBOARD-Segin carrier board is reused for the i.MX93 design.
+>>>>> + *
+>>>>> https://www.phytec.de/produkte/single-board-computer/phyboard-segin-imx6ul/ 
+>>>>>
+>>>>>
+>>>>> + */
+>>>>> +
+>>>>> +#include "imx93-phycore-som.dtsi"
+>>>>> +
+>>>>> +/{
+>>>>> +    model = "PHYTEC phyBOARD-Segin-i.MX93";
+>>>>> +    compatible = "phytec,imx93-phyboard-segin",
+>>>>> "phytec,imx93-phycore-som",
+>>>>> +             "fsl,imx93";
+>>>>> +
+>>>>> +    chosen {
+>>>>> +        stdout-path = &lpuart1;
+>>>>> +    };
+>>>>> +
+>>>>> +    reg_usdhc2_vmmc: regulator-usdhc2 {
+>>>>> +        compatible = "regulator-fixed";
+>>>>> +        enable-active-high;
+>>>>> +        gpio = <&gpio3 7 GPIO_ACTIVE_HIGH>;
+>>>>> +        pinctrl-names = "default";
+>>>>> +        pinctrl-0 = <&pinctrl_reg_usdhc2_vmmc>;
+>>>>> +        regulator-min-microvolt = <3300000>;
+>>>>> +        regulator-max-microvolt = <3300000>;
+>>>>> +        regulator-name = "VCC_SD";
+>>>>> +    };
+>>>>> +};
+>>>>> +
+>>>>> +/* GPIOs */
+>>>>> +&gpio1 {
+>>>>> +    pinctrl-names = "default";
+>>>>> +    pinctrl-0 = <&pinctrl_gpio1>;
+>>>>
+>>>> You are doing more than you describing in your changes log.
+>>>> Here you are forcing a gpio-only functionality for the X16 header. But
+>>>> the pins we route down to the X16 expansion connector can be also used
+>>>> differently.
+>>>
+>>> i think the word "forcing" is little bit hard in this case. It doesn't
+>>> define a gpio-hog.
+>>
+>> You are defaulting it to be a GPIO.
+> Sure, but i still cannot see the problem. Are you concerned about
+> hardware damage, different behavior in comparison to your downstream BSP
+> or overwriting the bootloader defaults?
+>>
+>>>
+>>>> Typically we provide device tree overlays for different use cases on
+>>>> this expansion connectors.
+>>>
+>>> Can you please explain why the device tree overlays cannot overwrite 
+>>> the
+>>> pinmuxing?
+>>
+>> It can, and it should. Thats why I mentioned to use different overlays
+>> for different use cases.
+>> I think it is nicer to have a board only defining it's static 
+>> components.
+> Yes and i would consider the line names as static and board specific.
+>> At this point we do not know what users will use the expansion
+>> connector for.
+>> Adding this kind of functionality with overlays follows the idea of
+>> defining components where they are actually used/implemented: soc,
+>> som/board level.
+>> You can find a few of the adapters we provide as dtsi files in
+>>   arch/arm/boot/dts/nxp/imx/*peb*
+>> Nowadays we have overlays and can use them instead.
+>>
+>>
+>>>
+>>>>
+>>>> Please drop the muxing.
+>>>>
+>>>> Same applies for the gpio names.
+>>> What's the problem with defining gpio line names for user friendliness?
+>>> The Raspberry Pi has also an expansion header, all the pins can be 
+>>> muxed
+>>> to different functions but still have gpio line names.
+>>
+>> This may cause confusion if you use overlays defining other
+>> functionalities as the names you define.
+> I agree most of the line names on the Raspberry Pi contains a function,
+> which wasn't the best idea for an expansion header. But this doesn't
+> mean we must do this here, too.
+>
+> I just want to give you feedback from my point of view as a user. I
+> would expect that the gpio line names are defined regardless of the used
+> overlay.
 
-Signed-off-by: Baoquan He <bhe@redhat.com>
----
- arch/x86/kernel/Makefile           | 4 ++--
- arch/x86/kernel/cpu/mshyperv.c     | 4 ++++
- arch/x86/kernel/kexec-bzimage64.c  | 4 ++++
- arch/x86/kernel/kvm.c              | 4 ++--
- arch/x86/kernel/machine_kexec_64.c | 3 +++
- arch/x86/kernel/reboot.c           | 2 +-
- arch/x86/kernel/setup.c            | 2 +-
- arch/x86/kernel/smp.c              | 2 +-
- arch/x86/xen/enlighten_hvm.c       | 4 ++++
- 9 files changed, 22 insertions(+), 7 deletions(-)
+I appreciate the feedback :)
+Defining line names should be fine. But I would still prefer to have the 
+muxing in an overlay bound to a specific use case.
 
-diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
-index 913d4022131e..3668b1edef2d 100644
---- a/arch/x86/kernel/Makefile
-+++ b/arch/x86/kernel/Makefile
-@@ -100,9 +100,9 @@ obj-$(CONFIG_TRACING)		+= trace.o
- obj-$(CONFIG_RETHOOK)		+= rethook.o
- obj-$(CONFIG_VMCORE_INFO)	+= vmcore_info_$(BITS).o
- obj-$(CONFIG_KEXEC_CORE)	+= machine_kexec_$(BITS).o
--obj-$(CONFIG_KEXEC_CORE)	+= relocate_kernel_$(BITS).o crash.o
-+obj-$(CONFIG_KEXEC_CORE)	+= relocate_kernel_$(BITS).o
- obj-$(CONFIG_KEXEC_FILE)	+= kexec-bzimage64.o
--obj-$(CONFIG_CRASH_DUMP)	+= crash_dump_$(BITS).o
-+obj-$(CONFIG_CRASH_DUMP)	+= crash_dump_$(BITS).o crash.o
- obj-y				+= kprobes/
- obj-$(CONFIG_MODULES)		+= module.o
- obj-$(CONFIG_X86_32)		+= doublefault_32.o
-diff --git a/arch/x86/kernel/cpu/mshyperv.c b/arch/x86/kernel/cpu/mshyperv.c
-index 01fa06dd06b6..f8163a59026b 100644
---- a/arch/x86/kernel/cpu/mshyperv.c
-+++ b/arch/x86/kernel/cpu/mshyperv.c
-@@ -210,6 +210,7 @@ static void hv_machine_shutdown(void)
- 		hyperv_cleanup();
- }
- 
-+#ifdef CONFIG_CRASH_DUMP
- static void hv_machine_crash_shutdown(struct pt_regs *regs)
- {
- 	if (hv_crash_handler)
-@@ -221,6 +222,7 @@ static void hv_machine_crash_shutdown(struct pt_regs *regs)
- 	/* Disable the hypercall page when there is only 1 active CPU. */
- 	hyperv_cleanup();
- }
-+#endif
- #endif /* CONFIG_KEXEC_CORE */
- #endif /* CONFIG_HYPERV */
- 
-@@ -497,7 +499,9 @@ static void __init ms_hyperv_init_platform(void)
- 
- #if IS_ENABLED(CONFIG_HYPERV) && defined(CONFIG_KEXEC_CORE)
- 	machine_ops.shutdown = hv_machine_shutdown;
-+#ifdef CONFIG_CRASH_DUMP
- 	machine_ops.crash_shutdown = hv_machine_crash_shutdown;
-+#endif
- #endif
- 	if (ms_hyperv.features & HV_ACCESS_TSC_INVARIANT) {
- 		/*
-diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
-index 2a422e00ed4b..b55737b83a84 100644
---- a/arch/x86/kernel/kexec-bzimage64.c
-+++ b/arch/x86/kernel/kexec-bzimage64.c
-@@ -263,11 +263,13 @@ setup_boot_parameters(struct kimage *image, struct boot_params *params,
- 	memset(&params->hd0_info, 0, sizeof(params->hd0_info));
- 	memset(&params->hd1_info, 0, sizeof(params->hd1_info));
- 
-+#ifdef CONFIG_CRASH_DUMP
- 	if (image->type == KEXEC_TYPE_CRASH) {
- 		ret = crash_setup_memmap_entries(image, params);
- 		if (ret)
- 			return ret;
- 	} else
-+#endif
- 		setup_e820_entries(params);
- 
- 	nr_e820_entries = params->e820_entries;
-@@ -433,12 +435,14 @@ static void *bzImage64_load(struct kimage *image, char *kernel,
- 		return ERR_PTR(-EINVAL);
- 	}
- 
-+#ifdef CONFIG_CRASH_DUMP
- 	/* Allocate and load backup region */
- 	if (image->type == KEXEC_TYPE_CRASH) {
- 		ret = crash_load_segments(image);
- 		if (ret)
- 			return ERR_PTR(ret);
- 	}
-+#endif
- 
- 	/*
- 	 * Load purgatory. For 64bit entry point, purgatory  code can be
-diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
-index dfe9945b9bec..acfc2d3183bc 100644
---- a/arch/x86/kernel/kvm.c
-+++ b/arch/x86/kernel/kvm.c
-@@ -769,7 +769,7 @@ static struct notifier_block kvm_pv_reboot_nb = {
-  * won't be valid. In cases like kexec, in which you install a new kernel, this
-  * means a random memory location will be kept being written.
-  */
--#ifdef CONFIG_KEXEC_CORE
-+#ifdef CONFIG_CRASH_DUMP
- static void kvm_crash_shutdown(struct pt_regs *regs)
- {
- 	kvm_guest_cpu_offline(true);
-@@ -852,7 +852,7 @@ static void __init kvm_guest_init(void)
- 	kvm_guest_cpu_init();
- #endif
- 
--#ifdef CONFIG_KEXEC_CORE
-+#ifdef CONFIG_CRASH_DUMP
- 	machine_ops.crash_shutdown = kvm_crash_shutdown;
- #endif
- 
-diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
-index bc0a5348b4a6..b180d8e497c3 100644
---- a/arch/x86/kernel/machine_kexec_64.c
-+++ b/arch/x86/kernel/machine_kexec_64.c
-@@ -508,6 +508,8 @@ int arch_kimage_file_post_load_cleanup(struct kimage *image)
- }
- #endif /* CONFIG_KEXEC_FILE */
- 
-+#ifdef CONFIG_CRASH_DUMP
-+
- static int
- kexec_mark_range(unsigned long start, unsigned long end, bool protect)
- {
-@@ -552,6 +554,7 @@ void arch_kexec_unprotect_crashkres(void)
- {
- 	kexec_mark_crashkres(false);
- }
-+#endif
- 
- /*
-  * During a traditional boot under SME, SME will encrypt the kernel,
-diff --git a/arch/x86/kernel/reboot.c b/arch/x86/kernel/reboot.c
-index 830425e6d38e..1287b0d5962f 100644
---- a/arch/x86/kernel/reboot.c
-+++ b/arch/x86/kernel/reboot.c
-@@ -796,7 +796,7 @@ struct machine_ops machine_ops __ro_after_init = {
- 	.emergency_restart = native_machine_emergency_restart,
- 	.restart = native_machine_restart,
- 	.halt = native_machine_halt,
--#ifdef CONFIG_KEXEC_CORE
-+#ifdef CONFIG_CRASH_DUMP
- 	.crash_shutdown = native_machine_crash_shutdown,
- #endif
- };
-diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-index 84201071dfac..899d839a2954 100644
---- a/arch/x86/kernel/setup.c
-+++ b/arch/x86/kernel/setup.c
-@@ -471,7 +471,7 @@ static void __init arch_reserve_crashkernel(void)
- 	bool high = false;
- 	int ret;
- 
--	if (!IS_ENABLED(CONFIG_KEXEC_CORE))
-+	if (!IS_ENABLED(CONFIG_CRASH_RESERVE))
- 		return;
- 
- 	ret = parse_crashkernel(cmdline, memblock_phys_mem_size(),
-diff --git a/arch/x86/kernel/smp.c b/arch/x86/kernel/smp.c
-index 2908e063d7d8..18266cc3d98c 100644
---- a/arch/x86/kernel/smp.c
-+++ b/arch/x86/kernel/smp.c
-@@ -286,7 +286,7 @@ struct smp_ops smp_ops = {
- 	.smp_cpus_done		= native_smp_cpus_done,
- 
- 	.stop_other_cpus	= native_stop_other_cpus,
--#if defined(CONFIG_KEXEC_CORE)
-+#if defined(CONFIG_CRASH_DUMP)
- 	.crash_stop_other_cpus	= kdump_nmi_shootdown_cpus,
- #endif
- 	.smp_send_reschedule	= native_smp_send_reschedule,
-diff --git a/arch/x86/xen/enlighten_hvm.c b/arch/x86/xen/enlighten_hvm.c
-index 3f8c34707c50..09e3db7ff990 100644
---- a/arch/x86/xen/enlighten_hvm.c
-+++ b/arch/x86/xen/enlighten_hvm.c
-@@ -149,12 +149,14 @@ static void xen_hvm_shutdown(void)
- 		xen_reboot(SHUTDOWN_soft_reset);
- }
- 
-+#ifdef CONFIG_CRASH_DUMP
- static void xen_hvm_crash_shutdown(struct pt_regs *regs)
- {
- 	native_machine_crash_shutdown(regs);
- 	xen_reboot(SHUTDOWN_soft_reset);
- }
- #endif
-+#endif
- 
- static int xen_cpu_up_prepare_hvm(unsigned int cpu)
- {
-@@ -236,8 +238,10 @@ static void __init xen_hvm_guest_init(void)
- 
- #ifdef CONFIG_KEXEC_CORE
- 	machine_ops.shutdown = xen_hvm_shutdown;
-+#ifdef CONFIG_CRASH_DUMP
- 	machine_ops.crash_shutdown = xen_hvm_crash_shutdown;
- #endif
-+#endif
- }
- 
- static __init int xen_parse_nopv(char *arg)
--- 
-2.41.0
+Regards,
+Wadim
 
+>
+> But at the end it's your product.
+>>
+>> Regards,
+>> Wadim
+>>
+>>
+>>>
+>>> Best regards
+>
