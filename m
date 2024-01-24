@@ -1,113 +1,370 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D21A61754D;
-	Wed, 24 Jan 2024 05:36:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EA77DDAF;
+	Wed, 24 Jan 2024 05:37:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706074586; cv=none; b=Lc+k6EIGIj5imCDwSGh0/zJ64s2nM1AzmVKDbmqSPZkQ3hgapSqknV11Snha52CZvjigIL2R6cqp1CxN7bTgsSCtm6mIu/oXs1Wc3OjSyIRDGaow7YCbnATzTCpzYKYxl9rr/gRcpsGw2UDqXsloSWAT9XMqVBzl+8/m0aifmZI=
+	t=1706074638; cv=none; b=DtGSbOc8HNo+pLeoHnpGM1o7bcDbAZgdxlTdB9fdQh6cvxXgXnobo07PhQpo7JRP9cBYBzKZ1q26nLDnSpg/MlGLpEIK2FEPI+5Ge9qIHYbNCwtGDbompXrCpvcgjxG9GDGwdYLJ+/OBd25AoTou80uAKdF0gqPvpdFgb9zRJDM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706074586; c=relaxed/simple;
-	bh=FTonyJYMrGMeqQkJelHx/h0+QUGv7Ul6tpIhRdwERfk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=pW0DRbnX7KJXu1EE9c/s0juMfZB/jVodJ8UzGmT1lM71V8DJcVG1NldPNlq0Bt7gk4zPWixYbbcd5stOdbGp/Kp3RMGyFjz24rjEB13AOygJWJeDj0xOuah17Hy7/z4mjDMdu5127TyVpIxlRPyGeaRp2zHley0MKw7J5IDDBVI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y4hH24+L; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1706074638; c=relaxed/simple;
+	bh=DTbgu68fzH6nG6Q2YaiW8VrSqXE4h5AZ+gNK4dDgZHI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jtTqCrkfs4wEqW75cn/Ent7L0I22KbJf9qPTyUNMxLIM1GnXL0FdwjUmqaGocpvN4B27WR9QVhfab/Hu6oOL9Q2OSEDcU3V3WUvuMF8sqia8X7lSGOL882e4oQJHHre1Ky76x2AIK5R3TJlb7NM3SP368WpkS0fw+9dbnYMy31s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O9YAZRhk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y4hH24+L"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1d7393de183so17028505ad.3;
-        Tue, 23 Jan 2024 21:36:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706074584; x=1706679384; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Cpy9sRZAItz627ZVJHW5k+R1D4QC+yLepEX4TtJReRw=;
-        b=Y4hH24+LcCgH8JOzf4dsLKlISbyZHXZBxVQFmlrmC2S3BQL3jNi+ClC5L04uspVwkl
-         bqzWfwRrZyATwfxFCdXriK33r/c06Sdqn5nSDL//QEvUFg0rlwgMRBcivnPN3C8o9LNJ
-         3pFtlTcWSEzx+1f9kfd6qzxb+mhLDjzPZZXhzP8o6r1p4H7DN2NnnwweIz871CxoJ8I9
-         mpSckjtMg0TY9rlZnWoncBxeTJ4p8wUT+GMCMY9vGcsMERBQ1THxeXuivJtjfnrk/del
-         93QVqOpFDu3CN9f1pSOqUrXubRgNSFwBphBzihbCbD8vXEz9dSe4xdNP56NhfxbwGc4H
-         bj8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706074584; x=1706679384;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Cpy9sRZAItz627ZVJHW5k+R1D4QC+yLepEX4TtJReRw=;
-        b=tpC6KvMsYUSlA3eGIQAEjqFSn8zqifPVo5AeGqYhuBw5p+KJj4HVfWSQIjMfKzeyew
-         eeb+FTt/MmqqmKjke7z5wzpl9DpnbicGyX2s5Z9VwWoL3AeD7jjysK3qI+D++bm5KI+1
-         zEksJiQbOGoJWg/L3oB3TxpADhyRLIBraCs/o5rT1Xw1Q9SHGErx7f/l65tlM9z3EabW
-         thYM4srePvXoI427Q05XG74fWQ0hfzI4FQzlAirBdK3HldFd33bntFl69sZiZuGozcGL
-         Rkd0GS8rnB2tjcFYNFuDFdpSpTFRQDhKFnUq+IIQYoDddj6+B9R561zDqvsoLqLcxXv/
-         B7uA==
-X-Gm-Message-State: AOJu0YxcQoEqcG9nAek/WSG65EbDoIYabkNNx5xZ0v6wSWWsKT6h0+Pu
-	zU3iuHTLlHvjtn6OJyIkpk82xg4YtTa0C6faYGa70qAYOw+2mUmm
-X-Google-Smtp-Source: AGHT+IEIOYQLu0dIgIPZVyXxKuK3uq5zhGh24Xtj2CiTZiBfSNhz+tQUUn79+VEaRwxYntSMRlyOXA==
-X-Received: by 2002:a17:903:2447:b0:1d4:7687:833a with SMTP id l7-20020a170903244700b001d47687833amr215421pls.17.1706074584135;
-        Tue, 23 Jan 2024 21:36:24 -0800 (PST)
-Received: from ubuntu.. ([117.18.48.102])
-        by smtp.gmail.com with ESMTPSA id kt6-20020a170903088600b001d755acec64sm4015663plb.189.2024.01.23.21.36.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jan 2024 21:36:23 -0800 (PST)
-From: Hongyu Jin <hongyu.jin.cn@gmail.com>
-To: agk@redhat.com,
-	snitzer@kernel.org,
-	mpatocka@redhat.com,
-	axboe@kernel.dk,
-	ebiggers@kernel.org
-Cc: zhiguo.niu@unisoc.com,
-	ke.wang@unisoc.com,
-	yibin.ding@unisoc.com,
-	hongyu.jin@unisoc.com,
-	linux-kernel@vger.kernel.org,
-	dm-devel@lists.linux.dev,
-	linux-block@vger.kernel.org
-Subject: [PATCH v8 5/5] dm-crypt: Fix lost ioprio when queuing write bios
-Date: Wed, 24 Jan 2024 13:35:56 +0800
-Message-Id: <20240124053556.126468-6-hongyu.jin.cn@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240124053556.126468-1-hongyu.jin.cn@gmail.com>
-References: <20231221103139.15699-6-hongyu.jin.cn@gmail.com>
- <20240124053556.126468-1-hongyu.jin.cn@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O9YAZRhk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E36A9C433F1;
+	Wed, 24 Jan 2024 05:37:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706074637;
+	bh=DTbgu68fzH6nG6Q2YaiW8VrSqXE4h5AZ+gNK4dDgZHI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=O9YAZRhk8Oq6rH34wGwwR8T3V3rvJPuB/5mneOsMCzADyhMVmPwVu0aFNcqHFkjWj
+	 olZd0yfLUZ4Ws4lfVNQDd90M7qrS8ElrbD9mC4HZsDl6lr3PmI51F5j5/nXyjNNXf6
+	 C+1gCTt1TSjH1wXWcfs5aOeKSJvhvmQFEyFC3RdM4b5sld9mK154TngHeSBciWnceU
+	 StUvLsIMnvUoSxmepQuO8z9KtCYTopusBHK5xqJqMyH1vPhljZaJeSBIg7qkbv1LRD
+	 KHUlNsjrs4HBWVRhBfwV/Jud+MUwOr6BuPMbcIirT751KsuMIT11NxqQITJyOhKFxP
+	 wrNZZwhyfh8WQ==
+Date: Wed, 24 Jan 2024 11:07:13 +0530
+From: Vinod Koul <vkoul@kernel.org>
+To: Nitin Rawat <quic_nitirawa@quicinc.com>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	"James E.J. Bottomley" <jejb@linux.ibm.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
+	Can Guo <quic_cang@quicinc.com>,
+	Naveen Kumar Goud Arepalli <quic_narepall@quicinc.com>
+Subject: Re: [PATCH V1 2/2] phy: qcom: Refactor phy_power_on and
+ phy_calibrate callbacks
+Message-ID: <ZbCiCVx3W1d186r-@matsya>
+References: <20240112153348.2778-1-quic_nitirawa@quicinc.com>
+ <20240112153348.2778-3-quic_nitirawa@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240112153348.2778-3-quic_nitirawa@quicinc.com>
 
-From: Hongyu Jin <hongyu.jin@unisoc.com>
+On 12-01-24, 21:03, Nitin Rawat wrote:
+> Commit 052553af6a31 ("ufs/phy: qcom: Refactor to use phy_init call")
+> puts enabling regulators & clks, calibrating UFS PHY, starting serdes
+> and polling PCS ready status into phy_power_on.
+> 
+> In Current code regulators enable, clks enable, calibrating UFS PHY,
+> start_serdes and polling PCS_ready_status are part of phy_power_on.
+> 
+> UFS PHY registers are retained after power collapse, meaning calibrating
+> UFS PHY, start_serdes and polling PCS_ready_status can be done only when
+> hba is powered_on, and not needed every time when phy_power_on is called
+> during resume. Hence keep the code which enables PHY's regulators & clks
+> in phy_power_on and move the rest steps into phy_calibrate function.
+> 
+> Refactor the code to enable PHY regulators & clks in phy_power_on and
+> move rest of the code to phy_calibrate function.
+> 
+> Co-developed-by: Can Guo <quic_cang@quicinc.com>
+> Signed-off-by: Can Guo <quic_cang@quicinc.com>
+> Co-developed-by: Naveen Kumar Goud Arepalli <quic_narepall@quicinc.com>
+> Signed-off-by: Naveen Kumar Goud Arepalli <quic_narepall@quicinc.com>
+> Signed-off-by: Nitin Rawat <quic_nitirawa@quicinc.com>
+> ---
+>  drivers/phy/qualcomm/phy-qcom-qmp-ufs.c | 183 +++++++++---------------
+>  1 file changed, 67 insertions(+), 116 deletions(-)
+> 
+> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c b/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c
+> index 3c2e6255e26f..ae0218738b0b 100644
+> --- a/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c
+> +++ b/drivers/phy/qualcomm/phy-qcom-qmp-ufs.c
+> @@ -32,14 +32,15 @@
+>  /* QPHY_SW_RESET bit */
+>  #define SW_RESET				BIT(0)
+>  /* QPHY_POWER_DOWN_CONTROL */
+> -#define SW_PWRDN				BIT(0)
+> +#define SW_PWRUP				BIT(0)
+> +#define SW_PWRDN				0
 
-Since dm-crypt queues writes to a different kernel thread (workqueue),
-the bios will dispatch from tasks with different io_context->ioprio
-settings and blkcg than the submitting task, thus giving incorrect
-ioprio to the io scheduler.
+why change this? so which bit is for PWR control, it is still bit 0
+right?
 
-Get the original io priority setting via struct dm_crypt_io::base_bio
-and set this priority to the bio for write.
+>  /* QPHY_START_CONTROL bits */
+>  #define SERDES_START				BIT(0)
+>  #define PCS_START				BIT(1)
+>  /* QPHY_PCS_READY_STATUS bit */
+>  #define PCS_READY				BIT(0)
+> 
+> -#define PHY_INIT_COMPLETE_TIMEOUT		10000
+> +#define PHY_INIT_COMPLETE_TIMEOUT		1000000
 
-Link: https://lore.kernel.org/dm-devel/alpine.LRH.2.11.1612141049250.13402@mail.ewheeler.net
+why change timeout? this should be explained in log, even better a
+individual patch explaining why this was changed
 
-Signed-off-by: Hongyu Jin <hongyu.jin@unisoc.com>
----
- drivers/md/dm-crypt.c | 1 +
- 1 file changed, 1 insertion(+)
+> 
+>  struct qmp_phy_init_tbl {
+>  	unsigned int offset;
+> @@ -1464,8 +1465,25 @@ static void qmp_ufs_init_registers(struct qmp_ufs *qmp, const struct qmp_phy_cfg
+>  		qmp_ufs_pcs_init(qmp, &cfg->tbls_hs_g4);
+>  }
+> 
+> -static int qmp_ufs_com_init(struct qmp_ufs *qmp)
+> +static int qmp_ufs_power_off(struct phy *phy)
+> +{
+> +	struct qmp_ufs *qmp = phy_get_drvdata(phy);
+> +	const struct qmp_phy_cfg *cfg = qmp->cfg;
+> +
+> +	/* Put PHY into POWER DOWN state: active low */
+> +	qphy_clrbits(qmp->pcs, cfg->regs[QPHY_PCS_POWER_DOWN_CONTROL],
+> +			SW_PWRDN);
 
-diff --git a/drivers/md/dm-crypt.c b/drivers/md/dm-crypt.c
-index 855b482cbff1..e0804a86946f 100644
---- a/drivers/md/dm-crypt.c
-+++ b/drivers/md/dm-crypt.c
-@@ -1683,6 +1683,7 @@ static struct bio *crypt_alloc_buffer(struct dm_crypt_io *io, unsigned int size)
- 				 GFP_NOIO, &cc->bs);
- 	clone->bi_private = io;
- 	clone->bi_end_io = crypt_endio;
-+	clone->bi_ioprio = io->base_bio->bi_ioprio;
- 
- 	remaining_size = size;
- 
+this will clear the bit, i think you are interpreting this as right
+which this is not
+
+> +
+> +	clk_bulk_disable_unprepare(cfg->num_clks, qmp->clks);
+> +
+> +	regulator_bulk_disable(cfg->num_vregs, qmp->vregs);
+> +
+> +	return 0;
+> +}
+> +
+> +static int qmp_ufs_power_on(struct phy *phy)
+>  {
+> +	struct qmp_ufs *qmp = phy_get_drvdata(phy);
+>  	const struct qmp_phy_cfg *cfg = qmp->cfg;
+>  	void __iomem *pcs = qmp->pcs;
+>  	int ret;
+> @@ -1480,8 +1498,7 @@ static int qmp_ufs_com_init(struct qmp_ufs *qmp)
+>  	if (ret)
+>  		goto err_disable_regulators;
+> 
+> -	qphy_setbits(pcs, cfg->regs[QPHY_PCS_POWER_DOWN_CONTROL], SW_PWRDN);
+> -
+> +	qphy_setbits(pcs, cfg->regs[QPHY_PCS_POWER_DOWN_CONTROL], SW_PWRUP);
+
+
+>  	return 0;
+> 
+>  err_disable_regulators:
+> @@ -1490,61 +1507,7 @@ static int qmp_ufs_com_init(struct qmp_ufs *qmp)
+>  	return ret;
+>  }
+> 
+> -static int qmp_ufs_com_exit(struct qmp_ufs *qmp)
+> -{
+> -	const struct qmp_phy_cfg *cfg = qmp->cfg;
+> -
+> -	reset_control_assert(qmp->ufs_reset);
+> -
+> -	clk_bulk_disable_unprepare(cfg->num_clks, qmp->clks);
+> -
+> -	regulator_bulk_disable(cfg->num_vregs, qmp->vregs);
+> -
+> -	return 0;
+> -}
+> -
+> -static int qmp_ufs_init(struct phy *phy)
+> -{
+> -	struct qmp_ufs *qmp = phy_get_drvdata(phy);
+> -	const struct qmp_phy_cfg *cfg = qmp->cfg;
+> -	int ret;
+> -	dev_vdbg(qmp->dev, "Initializing QMP phy\n");
+> -
+> -	if (cfg->no_pcs_sw_reset) {
+> -		/*
+> -		 * Get UFS reset, which is delayed until now to avoid a
+> -		 * circular dependency where UFS needs its PHY, but the PHY
+> -		 * needs this UFS reset.
+> -		 */
+> -		if (!qmp->ufs_reset) {
+> -			qmp->ufs_reset =
+> -				devm_reset_control_get_exclusive(qmp->dev,
+> -								 "ufsphy");
+> -
+> -			if (IS_ERR(qmp->ufs_reset)) {
+> -				ret = PTR_ERR(qmp->ufs_reset);
+> -				dev_err(qmp->dev,
+> -					"failed to get UFS reset: %d\n",
+> -					ret);
+> -
+> -				qmp->ufs_reset = NULL;
+> -				return ret;
+> -			}
+> -		}
+> -
+> -		ret = reset_control_assert(qmp->ufs_reset);
+> -		if (ret)
+> -			return ret;
+> -	}
+> -
+> -	ret = qmp_ufs_com_init(qmp);
+> -	if (ret)
+> -		return ret;
+> -
+> -	return 0;
+> -}
+> -
+> -static int qmp_ufs_power_on(struct phy *phy)
+> +static int qmp_ufs_phy_calibrate(struct phy *phy)
+>  {
+>  	struct qmp_ufs *qmp = phy_get_drvdata(phy);
+>  	const struct qmp_phy_cfg *cfg = qmp->cfg;
+> @@ -1553,11 +1516,21 @@ static int qmp_ufs_power_on(struct phy *phy)
+>  	unsigned int val;
+>  	int ret;
+> 
+> +	qphy_setbits(pcs, cfg->regs[QPHY_PCS_POWER_DOWN_CONTROL], SW_PWRUP);
+> +
+> +	ret = reset_control_assert(qmp->ufs_reset);
+> +	if (ret) {
+> +		dev_err(qmp->dev, "Failed to assert UFS PHY reset %d\n", ret);
+> +		return ret;
+> +	}
+> +
+>  	qmp_ufs_init_registers(qmp, cfg);
+> 
+>  	ret = reset_control_deassert(qmp->ufs_reset);
+> -	if (ret)
+> +	if (ret) {
+> +		dev_err(qmp->dev, "Failed to deassert UFS PHY reset %d\n", ret);
+>  		return ret;
+> +	}
+> 
+>  	/* Pull PHY out of reset state */
+>  	if (!cfg->no_pcs_sw_reset)
+> @@ -1577,59 +1550,6 @@ static int qmp_ufs_power_on(struct phy *phy)
+>  	return 0;
+>  }
+> 
+> -static int qmp_ufs_power_off(struct phy *phy)
+> -{
+> -	struct qmp_ufs *qmp = phy_get_drvdata(phy);
+> -	const struct qmp_phy_cfg *cfg = qmp->cfg;
+> -
+> -	/* PHY reset */
+> -	if (!cfg->no_pcs_sw_reset)
+> -		qphy_setbits(qmp->pcs, cfg->regs[QPHY_SW_RESET], SW_RESET);
+> -
+> -	/* stop SerDes */
+> -	qphy_clrbits(qmp->pcs, cfg->regs[QPHY_START_CTRL], SERDES_START);
+> -
+> -	/* Put PHY into POWER DOWN state: active low */
+> -	qphy_clrbits(qmp->pcs, cfg->regs[QPHY_PCS_POWER_DOWN_CONTROL],
+> -			SW_PWRDN);
+> -
+> -	return 0;
+> -}
+> -
+> -static int qmp_ufs_exit(struct phy *phy)
+> -{
+> -	struct qmp_ufs *qmp = phy_get_drvdata(phy);
+> -
+> -	qmp_ufs_com_exit(qmp);
+> -
+> -	return 0;
+> -}
+> -
+> -static int qmp_ufs_enable(struct phy *phy)
+> -{
+> -	int ret;
+> -
+> -	ret = qmp_ufs_init(phy);
+> -	if (ret)
+> -		return ret;
+> -
+> -	ret = qmp_ufs_power_on(phy);
+> -	if (ret)
+> -		qmp_ufs_exit(phy);
+> -
+> -	return ret;
+> -}
+> -
+> -static int qmp_ufs_disable(struct phy *phy)
+> -{
+> -	int ret;
+> -
+> -	ret = qmp_ufs_power_off(phy);
+> -	if (ret)
+> -		return ret;
+> -	return qmp_ufs_exit(phy);
+> -}
+> -
+>  static int qmp_ufs_set_mode(struct phy *phy, enum phy_mode mode, int submode)
+>  {
+>  	struct qmp_ufs *qmp = phy_get_drvdata(phy);
+> @@ -1641,9 +1561,10 @@ static int qmp_ufs_set_mode(struct phy *phy, enum phy_mode mode, int submode)
+>  }
+> 
+>  static const struct phy_ops qcom_qmp_ufs_phy_ops = {
+> -	.power_on	= qmp_ufs_enable,
+> -	.power_off	= qmp_ufs_disable,
+> +	.power_on	= qmp_ufs_power_on,
+> +	.power_off	= qmp_ufs_power_off,
+>  	.set_mode	= qmp_ufs_set_mode,
+> +	.calibrate	= qmp_ufs_phy_calibrate,
+>  	.owner		= THIS_MODULE,
+>  };
+> 
+> @@ -1809,6 +1730,32 @@ static int qmp_ufs_parse_dt(struct qmp_ufs *qmp)
+>  	return 0;
+>  }
+> 
+> +static int qmp_ufs_get_phy_reset(struct qmp_ufs *qmp)
+> +{
+> +	const struct qmp_phy_cfg *cfg = qmp->cfg;
+> +	int ret;
+> +
+> +	if (!cfg->no_pcs_sw_reset)
+> +		return 0;
+> +
+> +	/*
+> +	 * Get UFS reset, which is delayed until now to avoid a
+> +	 * circular dependency where UFS needs its PHY, but the PHY
+> +	 * needs this UFS reset.
+> +	 */
+> +
+> +	qmp->ufs_reset = devm_reset_control_get_exclusive(qmp->dev,
+> +							  "ufsphy");
+> +	if (IS_ERR(qmp->ufs_reset)) {
+> +		ret = PTR_ERR(qmp->ufs_reset);
+> +		dev_err(qmp->dev, "failed to get UFS reset: %d\n", ret);
+> +		qmp->ufs_reset = NULL;
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  static int qmp_ufs_probe(struct platform_device *pdev)
+>  {
+>  	struct device *dev = &pdev->dev;
+> @@ -1835,6 +1782,10 @@ static int qmp_ufs_probe(struct platform_device *pdev)
+>  	if (ret)
+>  		return ret;
+> 
+> +	ret = qmp_ufs_get_phy_reset(qmp);
+> +	if (ret)
+> +		return ret;
+> +
+
+I think this patch should be split to moving code around to helper fn
+and then add logic for moving power up/down calls, pls dont mix
+everything in single patch
+
+
+>  	/* Check for legacy binding with child node. */
+>  	np = of_get_next_available_child(dev->of_node, NULL);
+>  	if (np) {
+> --
+> 2.43.0
+
 -- 
-2.34.1
-
+~Vinod
