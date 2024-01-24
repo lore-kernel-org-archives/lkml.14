@@ -1,106 +1,109 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 376B87A70E
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 12:57:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0C0C7764C
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 12:59:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.134.136.31
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706101072; cv=none; b=u4lU9g0v3B4QVJ/7mRiW1fRQ8CrvzeutqyX3HPojz4MkqgSu7nU2DK5nIuhbeQvMoGLfBVp7Kjy2Q10Rn/mG+LLTCWMspt6Br5GQp+pZwgwt9DN27II6ccXS42QcLWMm4jhdDYhYgUgYFCTrCUZCzLAJjdqPY5t21Y0QCY9xQH8=
+	t=1706101148; cv=none; b=tvbv5ShKyaCA9rPzsQeaCOeqSqxGgkKWN90RZtFHy3SBCeiotOi9a2OAdZTWoavyq4Qq4YRuPZ+5WneP/CgxnAVYu9XZEPkNq9AM5FSfDgOc+EhMW2q0CZXHMj+MnZk0HP+YBTTGqNVbXVO7vQMeYQBJSXZOagfT92+Lf97FQto=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706101072; c=relaxed/simple;
-	bh=tJ+470kAh1XcjBObyL4GrXop5Kek18ea66H3lxd7KMc=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=gpOi5cZso+akyGG3dGqemaO4qPUilimp/qWm2acFbdDiYyCJjBJfet93DwNRscXUKfQxqjz7Fb/aPtoivSSOoX1Yp4jUcfEFZQRHoLIuf6Ts8S5nbNYvchbVUbCRABRXQhAh/UF8Ai4oLkzr7Y/x1yrbIPne5vU1nUneNNWW5eE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1rScp6-0002i4-Oi; Wed, 24 Jan 2024 13:57:44 +0100
-Received: from [2a0a:edc0:0:900:1d::4e] (helo=lupine)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1rScp5-00243g-Ry; Wed, 24 Jan 2024 13:57:43 +0100
-Received: from pza by lupine with local (Exim 4.96)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1rScp0-000BVW-2V;
-	Wed, 24 Jan 2024 13:57:38 +0100
-Message-ID: <7b85f1490b990ef881b07b1dde32b94e43e427c0.camel@pengutronix.de>
-Subject: Re: [PATCH] usb: dwc3-of-simple: Stop using
- of_reset_control_array_get() directly
-From: Philipp Zabel <p.zabel@pengutronix.de>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Thinh Nguyen <Thinh.Nguyen@synopsys.com>, Martin Blumenstingl
- <martin.blumenstingl@googlemail.com>, Neil Armstrong
- <neil.armstrong@linaro.org>,  Felipe Balbi <balbi@kernel.org>,
- linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Wed, 24 Jan 2024 13:57:38 +0100
-In-Reply-To: <2024012441-gender-crock-016c@gregkh>
-References: 
-	<20240124-dwc3-of-simple-reset-control-array-fix-v1-1-808182cc3f0e@pengutronix.de>
-	 <2024012441-gender-crock-016c@gregkh>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+	s=arc-20240116; t=1706101148; c=relaxed/simple;
+	bh=S6F/Ky7eP00etA13aVi6LSez70wEvbCqE2JWP4lJSJ4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=nqq/dH8hvOuU+8/05LYASVBwN1cxMJrlkBC5v24VEeTpR/0r486M/AZdQLel+SYxc/1JmiA3qCVJ2w5OAg/BaALHUSQqzAY3mwIjakK62LdZDW6zbO0ENJtaa9G+OTv2owaKlHOibZpMZ6Yhq77vSdvG5g506PhzHq5MtcN7KTM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.helo=mgamail.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MaS7l749; arc=none smtp.client-ip=134.134.136.31
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.helo=mgamail.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MaS7l749"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706101146; x=1737637146;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=S6F/Ky7eP00etA13aVi6LSez70wEvbCqE2JWP4lJSJ4=;
+  b=MaS7l749X3/vP1jrQPzVafgoQQHmBJF7POwuc5BOe5e9mWrB8kzvYRf2
+   YOJk2RiuORQxGEvtFYuLWyVcAmHjFCvkSTicw3JD9RfdNpz5BXQzKu7oC
+   biN+5svn1+FMPqoR97Mx1HfJ2m21HbHK1PuvunyxPMgF5TxtB924gIJvd
+   cMzlGh9Jrw61hjqZ0IADZD0s7dVd4DFndVcJhJ5yAe3osXikIo9iEP/dx
+   M7VqmJysRVGm/Lv6yx9HIS84P8tGJnZ1PCZDvlbVSHABTCDuL1xft7Yni
+   vaVNwxKDIL6GBD72s5i0f9EsOjtKfa118A3Mf6H1s29Oz6s9XYJW9/XPX
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="466110877"
+X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
+   d="scan'208";a="466110877"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jan 2024 04:59:06 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="735924193"
+X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
+   d="scan'208";a="735924193"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga003.jf.intel.com with ESMTP; 24 Jan 2024 04:58:58 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+	id 21B765E8; Wed, 24 Jan 2024 14:56:02 +0200 (EET)
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	Elena Reshetova <elena.reshetova@intel.com>,
+	Jun Nakajima <jun.nakajima@intel.com>,
+	Rick Edgecombe  <rick.p.edgecombe@intel.com>,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	"Kalra, Ashish" <ashish.kalra@amd.com>,
+	Sean Christopherson <seanjc@google.com>,
+	"Huang, Kai" <kai.huang@intel.com>,
+	Baoquan He <bhe@redhat.com>,
+	kexec@lists.infradead.org,
+	linux-coco@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: [PATCHv6 02/16] x86/apic: Mark acpi_mp_wake_* variables as __ro_after_init
+Date: Wed, 24 Jan 2024 14:55:43 +0200
+Message-ID: <20240124125557.493675-3-kirill.shutemov@linux.intel.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240124125557.493675-1-kirill.shutemov@linux.intel.com>
+References: <20240124125557.493675-1-kirill.shutemov@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8bit
 
-On Mi, 2024-01-24 at 04:39 -0800, Greg Kroah-Hartman wrote:
-> On Wed, Jan 24, 2024 at 12:26:20PM +0100, Philipp Zabel wrote:
-> > Use of_reset_control_array_get_optional_exclusive() instead, it is
-> > implemented as:
-> >=20
-> >   static inline struct reset_control *
-> >   of_reset_control_array_get_optional_exclusive(struct device_node *nod=
-e)
-> >   {
-> >           return of_reset_control_array_get(node, false, true, true);
-> >   }
-> >=20
-> > This makes the code easier to understand and removes the last remaining
-> > direct use of of_reset_control_array_get(). No functional changes.
->=20
-> Does this mean the function should be removed or made static now?
+acpi_mp_wake_mailbox_paddr and acpi_mp_wake_mailbox initialized once
+during ACPI MADT init and never changed.
 
-I consider "hiding" it from general use by renaming it to
-__of_reset_control_array_get().
+Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Acked-by: Kai Huang <kai.huang@intel.com>
+---
+ arch/x86/kernel/acpi/madt_wakeup.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-There are other, indirect users of this function, but it is always
-called via a more self-explanatory static inline function:
+diff --git a/arch/x86/kernel/acpi/madt_wakeup.c b/arch/x86/kernel/acpi/madt_wakeup.c
+index 7f164d38bd0b..cf79ea6f3007 100644
+--- a/arch/x86/kernel/acpi/madt_wakeup.c
++++ b/arch/x86/kernel/acpi/madt_wakeup.c
+@@ -6,10 +6,10 @@
+ #include <asm/processor.h>
+ 
+ /* Physical address of the Multiprocessor Wakeup Structure mailbox */
+-static u64 acpi_mp_wake_mailbox_paddr;
++static u64 acpi_mp_wake_mailbox_paddr __ro_after_init;
+ 
+ /* Virtual address of the Multiprocessor Wakeup Structure mailbox */
+-static struct acpi_madt_multiproc_wakeup_mailbox *acpi_mp_wake_mailbox;
++static struct acpi_madt_multiproc_wakeup_mailbox *acpi_mp_wake_mailbox __ro_after_init;
+ 
+ static int acpi_wakeup_cpu(u32 apicid, unsigned long start_ip)
+ {
+-- 
+2.43.0
 
-drivers/amba/bus.c:
-	of_reset_control_array_get_optional_shared()
-
-drivers/net/dsa/lantiq_gswip.c:
-	of_reset_control_array_get_exclusive()
-
-drivers/phy/cadence/phy-cadence-sierra.c:
-	of_reset_control_array_get_exclusive()
-
-drivers/phy/cadence/phy-cadence-torrent.c:
-	of_reset_control_array_get_exclusive()
-
-drivers/soc/tegra/pmc.c:
-	of_reset_control_array_get_exclusive_released()
-
-drivers/usb/dwc3/dwc3-of-simple.c:
-	of_reset_control_array_get()
-
-I would like to eventually replace the use of multiple boolean
-parameters for configuration. It is hard to read and errors have
-slipped through in the past (e.g. a57f68ddc886, "reset: Fix devm bulk
-optional exclusive control getter").
-
-regards
-Philipp
