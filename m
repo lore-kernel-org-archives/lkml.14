@@ -1,44 +1,44 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF5C8C2D5;
-	Wed, 24 Jan 2024 02:42:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD768FBF6;
+	Wed, 24 Jan 2024 02:42:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.120
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706064157; cv=none; b=FbHUTt7u34ovzfzyIpSWen3vsDbbfqQrffIpnske7EvOIPqj4a06udxyhVKokR5jCqIdNEK9AVMRewhKBYKiWCwWBBMx+qZ1GCptFUoxDignDKAnvXI2TcEc2XCyOmCFfva4dGbT/o5Ex6cLx4OMYxh8/BQME10C52nzi/xG5+w=
+	t=1706064160; cv=none; b=ZulyoLAK6r8j7KWeHG156gU3/9c+Yc6jTR2opmQZr4L1wnU4ehEBDSsLCnLFILTpc5UqKNbq5zceQppU4jXgEeNQD/uRNbeTPmBwgDZcvABO8AsBsf3VlpPflu1AcOWhHoloiPx4TC3lfReIzZr5oXz7ItVFfqaWy3ThVTBoC1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706064157; c=relaxed/simple;
-	bh=LwDKejYOhhJpC60ZUyFt7HkfISAfrU72v8OHnIWa074=;
+	s=arc-20240116; t=1706064160; c=relaxed/simple;
+	bh=mnzEVlzgWkMulqUCa41he1GtyrHqz8Magus+6evCOOA=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=YqHK3tu8ZIVEiI/xZ1EWvw4BBnF48ei4o0fB1019I46Q5hxa/HOXwMwWxzSpMQjTzDzbzBP404+PDesI/H/bXQAydLVAVqg+/On5ZQGePPzXxrGan9uzJEGYir2pzAvwS6bvPPSpy2gY16opz/GpIN2ZZ/iZVsbGKKHH8Iu2I0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aPmaa4pr; arc=none smtp.client-ip=192.55.52.120
+	 MIME-Version; b=nK/KNQvFX2GcYkTE/UpZdp0unPrZcxz1KtwvXQwq9mqaVS+0qRNJoVxHDI40ZaE/BVSJoOEul9SPsHA1aptacpZg8lh/uIT1n83qKTnoRtOeYlmXO8i1sffxwyxbGNvKxUAmiXMSSCSBqRlqoHwRoeFslNt3X7BovuuSJ+Mka1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=i9OJaSVb; arc=none smtp.client-ip=192.55.52.120
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aPmaa4pr"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="i9OJaSVb"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706064155; x=1737600155;
+  t=1706064158; x=1737600158;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=LwDKejYOhhJpC60ZUyFt7HkfISAfrU72v8OHnIWa074=;
-  b=aPmaa4pr//DeHt5HnBC/MLc/F5c/53JwIZBUx0jVFkI/OA1L963eVeMT
-   XYmMUUXYhrx79Nw2Jbu/YtwVCSVPIki+Oe3rUpDKpdm4dI7UV6Mn8gkDC
-   CVp8B9skpBSXbkFk7waS8+uYhTV2XGrWF2kyfVq5yOqJe8DYH07esonnU
-   9twOftjGbcIM8gcIdav8C5gZuJSL2YIm9eHmkxq+zwN7wubGlJ8IuAZT/
-   N3maW2tpYjzvvdUfswe0lgFeB65sRgYfR6BZp0ea3Nk2Y9X5iT9XOSKfA
-   A0bEnO2awk9Slj64OJi6dR8eV1zkyEtHvGcON6x0cTxh0PloSD/0ojc05
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="400586446"
+  bh=mnzEVlzgWkMulqUCa41he1GtyrHqz8Magus+6evCOOA=;
+  b=i9OJaSVbTEex5kpuog4ExnbY6MFevjv9eZl40a7FB+OAhgcPJtk/Hakq
+   enrNaPJgHN5G4Q3SRVa5RybEzhyMz3CKX2dkvRtrr5yzAa7n8YygzE8Pz
+   NcS1B3O4x0/EU1uCg0b2xIRGv6bqmY2FVs5syyDJkG8rFgvi3vYOLCTfP
+   RE7+3jfjXqL/iCDjhzKnkJIwG1WfnrZKGN1M5WmoaPe2Cj9HCxSRGxPIX
+   1f79sfq9ZA9CJTpAhR/3gD+A4/OlzefuoL85AzVDuto0X7pLCfc3sOyAz
+   UsV3VOhwxxGZU5p+pV+3Kp97cFPriCNmwgJGjcdI3VSdUUA3c88Lo9QSj
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="400586471"
 X-IronPort-AV: E=Sophos;i="6.05,215,1701158400"; 
-   d="scan'208";a="400586446"
+   d="scan'208";a="400586471"
 Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2024 18:42:33 -0800
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2024 18:42:35 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.05,215,1701158400"; 
-   d="scan'208";a="1825840"
+   d="scan'208";a="1825852"
 Received: from 984fee00a5ca.jf.intel.com ([10.165.9.183])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2024 18:42:32 -0800
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2024 18:42:35 -0800
 From: Yang Weijiang <weijiang.yang@intel.com>
 To: seanjc@google.com,
 	pbonzini@redhat.com,
@@ -53,9 +53,9 @@ Cc: peterz@infradead.org,
 	mlevitsk@redhat.com,
 	john.allen@amd.com,
 	weijiang.yang@intel.com
-Subject: [PATCH v9 05/27] x86/fpu/xstate: Introduce fpu_guest_cfg for guest FPU configuration
-Date: Tue, 23 Jan 2024 18:41:38 -0800
-Message-Id: <20240124024200.102792-6-weijiang.yang@intel.com>
+Subject: [PATCH v9 09/27] KVM: x86: Rename kvm_{g,s}et_msr() to menifest emulation operations
+Date: Tue, 23 Jan 2024 18:41:42 -0800
+Message-Id: <20240124024200.102792-10-weijiang.yang@intel.com>
 X-Mailer: git-send-email 2.39.3
 In-Reply-To: <20240124024200.102792-1-weijiang.yang@intel.com>
 References: <20240124024200.102792-1-weijiang.yang@intel.com>
@@ -67,161 +67,144 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Define new fpu_guest_cfg to hold all guest FPU settings so that it can
-differ from generic kernel FPU settings, e.g., enabling CET supervisor
-xstate by default for guest fpstate while it's remained disabled in
-kernel FPU config.
+Rename kvm_{g,s}et_msr() to kvm_emulate_msr_{read,write}() to make it
+more obvious that KVM uses these helpers to emulate guest behaviors,
+i.e., host_initiated == false in these helpers.
 
-The kernel dynamic xfeatures are specifically used by guest fpstate now,
-add the mask for guest fpstate so that guest_perm.__state_permit ==
-(fpu_kernel_cfg.default_xfeature | XFEATURE_MASK_KERNEL_DYNAMIC). And
-if guest fpstate is re-allocated to hold user dynamic xfeatures, the
-resulting permissions are consumed before calculate new guest fpstate.
-
-With new guest FPU config added, there're 3 categories of FPU configs in
-kernel, the usages and key fields are recapped as below.
-
-kernel FPU config:
-  @fpu_kernel_cfg.max_features
-  - all known and CPU supported user and supervisor features except
-    independent kernel features
-
-  @fpu_kernel_cfg.default_features
-  - all known and CPU supported user and supervisor features except
-    dynamic kernel features, independent kernel features and dynamic
-    userspace features.
-
-  @fpu_kernel_cfg.max_size
-  - size of compacted buffer with 'fpu_kernel_cfg.max_features'
-
-  @fpu_kernel_cfg.default_size
-  - size of compacted buffer with 'fpu_kernel_cfg.default_features'
-
-user FPU config:
-  @fpu_user_cfg.max_features
-  - all known and CPU supported user features
-
-  @fpu_user_cfg.default_features
-  - all known and CPU supported user features except dynamic userspace
-    features.
-
-  @fpu_user_cfg.max_size
-  - size of non-compacted buffer with 'fpu_user_cfg.max_features'
-
-  @fpu_user_cfg.default_size
-  - size of non-compacted buffer with 'fpu_user_cfg.default_features'
-
-guest FPU config:
-  @fpu_guest_cfg.max_features
-  - all known and CPU supported user and supervisor features except
-    independent kernel features.
-
-  @fpu_guest_cfg.default_features
-  - all known and CPU supported user and supervisor features except
-    independent kernel features and dynamic userspace features.
-
-  @fpu_guest_cfg.max_size
-  - size of compacted buffer with 'fpu_guest_cfg.max_features'
-
-  @fpu_guest_cfg.default_size
-  - size of compacted buffer with 'fpu_guest_cfg.default_features'
-
+Suggested-by: Sean Christopherson <seanjc@google.com>
 Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
 Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
 ---
- arch/x86/include/asm/fpu/types.h |  2 +-
- arch/x86/kernel/fpu/core.c       | 14 +++++++++++---
- arch/x86/kernel/fpu/xstate.c     | 10 ++++++++++
- 3 files changed, 22 insertions(+), 4 deletions(-)
+ arch/x86/include/asm/kvm_host.h |  4 ++--
+ arch/x86/kvm/smm.c              |  4 ++--
+ arch/x86/kvm/vmx/nested.c       | 13 +++++++------
+ arch/x86/kvm/x86.c              | 10 +++++-----
+ 4 files changed, 16 insertions(+), 15 deletions(-)
 
-diff --git a/arch/x86/include/asm/fpu/types.h b/arch/x86/include/asm/fpu/types.h
-index c6fd13a17205..306825ad6bc0 100644
---- a/arch/x86/include/asm/fpu/types.h
-+++ b/arch/x86/include/asm/fpu/types.h
-@@ -602,6 +602,6 @@ struct fpu_state_config {
- };
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index 7bc1daf68741..5c665165024c 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -2013,8 +2013,8 @@ void kvm_prepare_emulation_failure_exit(struct kvm_vcpu *vcpu);
+ void kvm_enable_efer_bits(u64);
+ bool kvm_valid_efer(struct kvm_vcpu *vcpu, u64 efer);
+ int __kvm_get_msr(struct kvm_vcpu *vcpu, u32 index, u64 *data, bool host_initiated);
+-int kvm_get_msr(struct kvm_vcpu *vcpu, u32 index, u64 *data);
+-int kvm_set_msr(struct kvm_vcpu *vcpu, u32 index, u64 data);
++int kvm_emulate_msr_read(struct kvm_vcpu *vcpu, u32 index, u64 *data);
++int kvm_emulate_msr_write(struct kvm_vcpu *vcpu, u32 index, u64 data);
+ int kvm_emulate_rdmsr(struct kvm_vcpu *vcpu);
+ int kvm_emulate_wrmsr(struct kvm_vcpu *vcpu);
+ int kvm_emulate_as_nop(struct kvm_vcpu *vcpu);
+diff --git a/arch/x86/kvm/smm.c b/arch/x86/kvm/smm.c
+index dc3d95fdca7d..45c855389ea7 100644
+--- a/arch/x86/kvm/smm.c
++++ b/arch/x86/kvm/smm.c
+@@ -535,7 +535,7 @@ static int rsm_load_state_64(struct x86_emulate_ctxt *ctxt,
  
- /* FPU state configuration information */
--extern struct fpu_state_config fpu_kernel_cfg, fpu_user_cfg;
-+extern struct fpu_state_config fpu_kernel_cfg, fpu_user_cfg, fpu_guest_cfg;
+ 	vcpu->arch.smbase =         smstate->smbase;
  
- #endif /* _ASM_X86_FPU_H */
-diff --git a/arch/x86/kernel/fpu/core.c b/arch/x86/kernel/fpu/core.c
-index a21a4d0ecc34..516af626bf6a 100644
---- a/arch/x86/kernel/fpu/core.c
-+++ b/arch/x86/kernel/fpu/core.c
-@@ -33,9 +33,10 @@ DEFINE_STATIC_KEY_FALSE(__fpu_state_size_dynamic);
- DEFINE_PER_CPU(u64, xfd_state);
+-	if (kvm_set_msr(vcpu, MSR_EFER, smstate->efer & ~EFER_LMA))
++	if (kvm_emulate_msr_write(vcpu, MSR_EFER, smstate->efer & ~EFER_LMA))
+ 		return X86EMUL_UNHANDLEABLE;
+ 
+ 	rsm_load_seg_64(vcpu, &smstate->tr, VCPU_SREG_TR);
+@@ -626,7 +626,7 @@ int emulator_leave_smm(struct x86_emulate_ctxt *ctxt)
+ 
+ 		/* And finally go back to 32-bit mode.  */
+ 		efer = 0;
+-		kvm_set_msr(vcpu, MSR_EFER, efer);
++		kvm_emulate_msr_write(vcpu, MSR_EFER, efer);
+ 	}
  #endif
  
--/* The FPU state configuration data for kernel and user space */
-+/* The FPU state configuration data for kernel, user space and guest. */
- struct fpu_state_config	fpu_kernel_cfg __ro_after_init;
- struct fpu_state_config fpu_user_cfg __ro_after_init;
-+struct fpu_state_config fpu_guest_cfg __ro_after_init;
+diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+index db0ad1e6ec4b..b2e9853584b8 100644
+--- a/arch/x86/kvm/vmx/nested.c
++++ b/arch/x86/kvm/vmx/nested.c
+@@ -958,7 +958,7 @@ static u32 nested_vmx_load_msr(struct kvm_vcpu *vcpu, u64 gpa, u32 count)
+ 				__func__, i, e.index, e.reserved);
+ 			goto fail;
+ 		}
+-		if (kvm_set_msr(vcpu, e.index, e.value)) {
++		if (kvm_emulate_msr_write(vcpu, e.index, e.value)) {
+ 			pr_debug_ratelimited(
+ 				"%s cannot write MSR (%u, 0x%x, 0x%llx)\n",
+ 				__func__, i, e.index, e.value);
+@@ -994,7 +994,7 @@ static bool nested_vmx_get_vmexit_msr_value(struct kvm_vcpu *vcpu,
+ 		}
+ 	}
  
- /*
-  * Represents the initial FPU state. It's mostly (but not completely) zeroes,
-@@ -536,8 +537,15 @@ void fpstate_reset(struct fpu *fpu)
- 	fpu->perm.__state_perm		= fpu_kernel_cfg.default_features;
- 	fpu->perm.__state_size		= fpu_kernel_cfg.default_size;
- 	fpu->perm.__user_state_size	= fpu_user_cfg.default_size;
--	/* Same defaults for guests */
--	fpu->guest_perm = fpu->perm;
-+
-+	/* Guest permission settings */
-+	fpu->guest_perm.__state_perm	= fpu_guest_cfg.default_features;
-+	fpu->guest_perm.__state_size	= fpu_guest_cfg.default_size;
-+	/*
-+	 * Set guest's __user_state_size to fpu_user_cfg.default_size so that
-+	 * existing uAPIs can still work.
-+	 */
-+	fpu->guest_perm.__user_state_size = fpu_user_cfg.default_size;
+-	if (kvm_get_msr(vcpu, msr_index, data)) {
++	if (kvm_emulate_msr_read(vcpu, msr_index, data)) {
+ 		pr_debug_ratelimited("%s cannot read MSR (0x%x)\n", __func__,
+ 			msr_index);
+ 		return false;
+@@ -2686,7 +2686,7 @@ static int prepare_vmcs02(struct kvm_vcpu *vcpu, struct vmcs12 *vmcs12,
+ 
+ 	if ((vmcs12->vm_entry_controls & VM_ENTRY_LOAD_IA32_PERF_GLOBAL_CTRL) &&
+ 	    kvm_pmu_has_perf_global_ctrl(vcpu_to_pmu(vcpu)) &&
+-	    WARN_ON_ONCE(kvm_set_msr(vcpu, MSR_CORE_PERF_GLOBAL_CTRL,
++	    WARN_ON_ONCE(kvm_emulate_msr_write(vcpu, MSR_CORE_PERF_GLOBAL_CTRL,
+ 				     vmcs12->guest_ia32_perf_global_ctrl))) {
+ 		*entry_failure_code = ENTRY_FAIL_DEFAULT;
+ 		return -EINVAL;
+@@ -4568,8 +4568,9 @@ static void load_vmcs12_host_state(struct kvm_vcpu *vcpu,
+ 	}
+ 	if ((vmcs12->vm_exit_controls & VM_EXIT_LOAD_IA32_PERF_GLOBAL_CTRL) &&
+ 	    kvm_pmu_has_perf_global_ctrl(vcpu_to_pmu(vcpu)))
+-		WARN_ON_ONCE(kvm_set_msr(vcpu, MSR_CORE_PERF_GLOBAL_CTRL,
+-					 vmcs12->host_ia32_perf_global_ctrl));
++		WARN_ON_ONCE(kvm_emulate_msr_write(vcpu,
++					MSR_CORE_PERF_GLOBAL_CTRL,
++					vmcs12->host_ia32_perf_global_ctrl));
+ 
+ 	/* Set L1 segment info according to Intel SDM
+ 	    27.5.2 Loading Host Segment and Descriptor-Table Registers */
+@@ -4744,7 +4745,7 @@ static void nested_vmx_restore_host_state(struct kvm_vcpu *vcpu)
+ 				goto vmabort;
+ 			}
+ 
+-			if (kvm_set_msr(vcpu, h.index, h.value)) {
++			if (kvm_emulate_msr_write(vcpu, h.index, h.value)) {
+ 				pr_debug_ratelimited(
+ 					"%s WRMSR failed (%u, 0x%x, 0x%llx)\n",
+ 					__func__, j, h.index, h.value);
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 27e23714e960..0e7dc3398293 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -1976,17 +1976,17 @@ static int kvm_set_msr_with_filter(struct kvm_vcpu *vcpu, u32 index, u64 data)
+ 	return kvm_set_msr_ignored_check(vcpu, index, data, false);
  }
  
- static inline void fpu_inherit_perms(struct fpu *dst_fpu)
-diff --git a/arch/x86/kernel/fpu/xstate.c b/arch/x86/kernel/fpu/xstate.c
-index ca4b83c142eb..9cbdc83d1eab 100644
---- a/arch/x86/kernel/fpu/xstate.c
-+++ b/arch/x86/kernel/fpu/xstate.c
-@@ -681,6 +681,7 @@ static int __init init_xstate_size(void)
+-int kvm_get_msr(struct kvm_vcpu *vcpu, u32 index, u64 *data)
++int kvm_emulate_msr_read(struct kvm_vcpu *vcpu, u32 index, u64 *data)
  {
- 	/* Recompute the context size for enabled features: */
- 	unsigned int user_size, kernel_size, kernel_default_size;
-+	unsigned int guest_default_size;
- 	bool compacted = cpu_feature_enabled(X86_FEATURE_XCOMPACTED);
+ 	return kvm_get_msr_ignored_check(vcpu, index, data, false);
+ }
+-EXPORT_SYMBOL_GPL(kvm_get_msr);
++EXPORT_SYMBOL_GPL(kvm_emulate_msr_read);
  
- 	/* Uncompacted user space size */
-@@ -702,13 +703,18 @@ static int __init init_xstate_size(void)
- 	kernel_default_size =
- 		xstate_calculate_size(fpu_kernel_cfg.default_features, compacted);
+-int kvm_set_msr(struct kvm_vcpu *vcpu, u32 index, u64 data)
++int kvm_emulate_msr_write(struct kvm_vcpu *vcpu, u32 index, u64 data)
+ {
+ 	return kvm_set_msr_ignored_check(vcpu, index, data, false);
+ }
+-EXPORT_SYMBOL_GPL(kvm_set_msr);
++EXPORT_SYMBOL_GPL(kvm_emulate_msr_write);
  
-+	guest_default_size =
-+		xstate_calculate_size(fpu_guest_cfg.default_features, compacted);
-+
- 	if (!paranoid_xstate_size_valid(kernel_size))
- 		return -EINVAL;
+ static void complete_userspace_rdmsr(struct kvm_vcpu *vcpu)
+ {
+@@ -8386,7 +8386,7 @@ static int emulator_set_msr_with_filter(struct x86_emulate_ctxt *ctxt,
+ static int emulator_get_msr(struct x86_emulate_ctxt *ctxt,
+ 			    u32 msr_index, u64 *pdata)
+ {
+-	return kvm_get_msr(emul_to_vcpu(ctxt), msr_index, pdata);
++	return kvm_emulate_msr_read(emul_to_vcpu(ctxt), msr_index, pdata);
+ }
  
- 	fpu_kernel_cfg.max_size = kernel_size;
- 	fpu_user_cfg.max_size = user_size;
-+	fpu_guest_cfg.max_size = kernel_size;
- 
- 	fpu_kernel_cfg.default_size = kernel_default_size;
-+	fpu_guest_cfg.default_size = guest_default_size;
- 	fpu_user_cfg.default_size =
- 		xstate_calculate_size(fpu_user_cfg.default_features, false);
- 
-@@ -829,6 +835,10 @@ void __init fpu__init_system_xstate(unsigned int legacy_size)
- 	fpu_user_cfg.default_features = fpu_user_cfg.max_features;
- 	fpu_user_cfg.default_features &= ~XFEATURE_MASK_USER_DYNAMIC;
- 
-+	fpu_guest_cfg.max_features = fpu_kernel_cfg.max_features;
-+	fpu_guest_cfg.default_features = fpu_guest_cfg.max_features;
-+	fpu_guest_cfg.default_features &= ~XFEATURE_MASK_USER_DYNAMIC;
-+
- 	/* Store it for paranoia check at the end */
- 	xfeatures = fpu_kernel_cfg.max_features;
- 
+ static int emulator_check_pmc(struct x86_emulate_ctxt *ctxt,
 -- 
 2.39.3
 
