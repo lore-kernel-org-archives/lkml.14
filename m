@@ -1,121 +1,130 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F17E2132C15;
-	Wed, 24 Jan 2024 14:31:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38C47132C00;
+	Wed, 24 Jan 2024 14:31:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706106668; cv=none; b=ctSzCc6jwRedXmDMkF69acRxNgQZYA5D8MjxVv68+BgaaDq8UGEYAOVbOeHN4+2S6cRrpjYUw9S64sH7KVy2P+99++M/mW6llDhRXEH2lLB1WGytOqFgtEa0Hq184sBHaYXqRC9Zb6Frvb3A7DZUnkY2lu87zrp4/zkR/BrnF14=
+	t=1706106668; cv=none; b=NDCDYM1rFagAXas8PxTlrvMPCOZ/eFJcOSIBfBPUqAx7jMyjlL1healx7fdevZunS8tTLHBlQjnA05GJ84E9xE57qGdq7MrHF/56vHxakN+53qiheyEh0FjmDuQ6+rHZLGQ2USTB2+olWSW19urd8YG9d3glLedMCZS5XnIGlwU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1706106668; c=relaxed/simple;
-	bh=/98Awh1CB37Jj8VC10X0uE1E820OU/1QxbbiYEcjqBk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rNBf6JPOEDLkwHxehoRgJnUBREInDjxscrz8RD9zg4rPkagr/XLUxy4yBMapwMrkm1mnNNrrH597BqJQyrBEXGuP5j0rs6GLZNB73MyaD4N4chA5B0Z8qPWZ6MVS/C3Z6iaQhW+KyHjHif+kUtfaVjLJmEcrqu/DetlEajrL/Bc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=azZ1dkw5; arc=none smtp.client-ip=10.30.226.201
+	bh=ruhqYG75t7/UEmAoJwOenf32CdfU8FzhLCozj+uXgds=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ah/wh1+fx60IBOKICo2/AU2HkmYgI+BipZHP1hxt5Qeq5yHdyRd8fEWJdicbTM6HYwaaINC/UjSCK+88ZfQ0CVIpIX6LcdHC4yaenYxf8rJ3Dq/jZEvSxkj+nOsSRL403ENycd2konRDxlxJa/E1Lcp7WUYhrHN0AaNdNi4KD4Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=dm7veX6v; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="azZ1dkw5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A057C433F1;
-	Wed, 24 Jan 2024 14:31:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706106667;
-	bh=/98Awh1CB37Jj8VC10X0uE1E820OU/1QxbbiYEcjqBk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=azZ1dkw5CsaQqrKymBGPILUKjzPdMKCD30u7C3lJUgNH+6F00FoKiaPKmu2n8ah/4
-	 3RS56RPGXTG0qFMk+38NSge8XOqe7tAyxK73Fd8jGPS8zdxkDhwSwHQg51AW3ubyXO
-	 DXr0HaL5KbM+0R/+uqZH06cD8J592EmK1TS4rgDkSidsGPhyeOEy8vgNDygYuolNKk
-	 F2bHCWiSK3d0TUVtILztH/OtAsuFVOCqBLS2c7dVCBqVhLQBQh0n/GiqvPKTigBISf
-	 wcuIGObhD0o9Uf/PGTv90+67qB/cyokzkWvAXaLjA3v/827nnxsctywzRdfRZ0hl8l
-	 2BEYUp2InH6iQ==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Benjamin Berg <benjamin@sipsolutions.net>,
-	Richard Weinberger <richard@nod.at>,
-	Sasha Levin <sashal@kernel.org>,
-	anton.ivanov@cambridgegreys.com,
-	johannes@sipsolutions.net,
-	linux-um@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.10 3/7] um: Don't use vfprintf() for os_info()
-Date: Wed, 24 Jan 2024 09:30:44 -0500
-Message-ID: <20240124143057.1284274-3-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240124143057.1284274-1-sashal@kernel.org>
-References: <20240124143057.1284274-1-sashal@kernel.org>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="dm7veX6v"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40OCel7D026053;
+	Wed, 24 Jan 2024 14:31:03 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-type; s=qcppdkim1; bh=l4V0st4SQHaLxMTIgnHL
+	zaU45ue1oKK4zA0OU8lqL7k=; b=dm7veX6vLlNsUre82RVF44hehjLgueYY8g4K
+	IpbDNXYJpF8v230Vy2ZC+K6lHRa7V2UPSRWxDjgAt6EJWySkfwotVkdYgcUQJNS+
+	c4I75YZZQTwtW0nOIGqrqx9nIL5OV0GamHffFQHurRqh7MIN6tBzpNQ0v6pRjZNG
+	1E711JNbrAGCQcv+Dz3h5XSDVmESO1S5sNq5oQBit/lG9K/PK5zASAa8Nrx7Jamq
+	aDiUeAdudi3Zdp/PyKU4iW4vH9uCkpAeGEtn2Cqst4gU9xKWm1/o1rOmGv5ZvvyJ
+	0WV7SnIJg99KxGVTp7LpBQavSINPesPE0iXkWs5VODgutqXarw==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vtyf78na1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 24 Jan 2024 14:31:02 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 40OEV1bQ028189
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 24 Jan 2024 14:31:01 GMT
+Received: from hu-janathot-hyd.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Wed, 24 Jan 2024 06:30:59 -0800
+From: Janaki Ramaiah Thota <quic_janathot@quicinc.com>
+To: Marcel Holtmann <marcel@holtmann.org>,
+        Luiz Augusto von Dentz
+	<luiz.dentz@gmail.com>,
+        Balakrishna Godavarthi <quic_bgodavar@quicinc.com>
+CC: <quic_mohamull@quicinc.com>, <quic_hbandi@quicinc.com>,
+        <linux-bluetooth@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 1/1] Bluetooth: hci_qca: Set BDA quirk bit if fwnode exists in DT
+Date: Wed, 24 Jan 2024 20:00:42 +0530
+Message-ID: <20240124143042.27790-2-quic_janathot@quicinc.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20240124143042.27790-1-quic_janathot@quicinc.com>
+References: <20240124143042.27790-1-quic_janathot@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.10.208
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: shguZOhcnPf6qcrZ7jjKGi2SKOHtUjP2
+X-Proofpoint-ORIG-GUID: shguZOhcnPf6qcrZ7jjKGi2SKOHtUjP2
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-01-24_06,2024-01-24_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ bulkscore=0 adultscore=0 priorityscore=1501 malwarescore=0 suspectscore=0
+ impostorscore=0 phishscore=0 clxscore=1015 mlxscore=0 mlxlogscore=972
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2401190000 definitions=main-2401240105
 
-From: Benjamin Berg <benjamin@sipsolutions.net>
+BT adapter going into UNCONFIGURED state during BT turn ON when
+devicetree has no local-bd-address node.
 
-[ Upstream commit 236f9fe39b02c15fa5530b53e9cca48354394389 ]
+Bluetooth will not work out of the box on such devices, to avoid this
+problem, added check to set HCI_QUIRK_USE_BDADDR_PROPERTY based on
+local-bd-address node entry.
 
-The threads allocated inside the kernel have only a single page of
-stack. Unfortunately, the vfprintf function in standard glibc may use
-too much stack-space, overflowing it.
+When this quirk is not set, the public Bluetooth address read by host
+from controller though HCI Read BD Address command is
+considered as valid.
 
-To make os_info safe to be used by helper threads, use the kernel
-vscnprintf function into a smallish buffer and write out the information
-to stderr.
+Fixes: e668eb1e1578 ("Bluetooth: hci_core: Don't stop BT if the BD address missing in dts")
 
-Signed-off-by: Benjamin Berg <benjamin@sipsolutions.net>
-Signed-off-by: Richard Weinberger <richard@nod.at>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Janaki Ramaiah Thota <quic_janathot@quicinc.com>
 ---
- arch/um/os-Linux/util.c | 19 +++++++++++++++++--
- 1 file changed, 17 insertions(+), 2 deletions(-)
+ drivers/bluetooth/hci_qca.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/arch/um/os-Linux/util.c b/arch/um/os-Linux/util.c
-index 07327425d06e..56d9589e1cd1 100644
---- a/arch/um/os-Linux/util.c
-+++ b/arch/um/os-Linux/util.c
-@@ -166,23 +166,38 @@ __uml_setup("quiet", quiet_cmd_param,
- "quiet\n"
- "    Turns off information messages during boot.\n\n");
- 
-+/*
-+ * The os_info/os_warn functions will be called by helper threads. These
-+ * have a very limited stack size and using the libc formatting functions
-+ * may overflow the stack.
-+ * So pull in the kernel vscnprintf and use that instead with a fixed
-+ * on-stack buffer.
-+ */
-+int vscnprintf(char *buf, size_t size, const char *fmt, va_list args);
+diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+index 94b8c406f0c0..06193546ebb6 100644
+--- a/drivers/bluetooth/hci_qca.c
++++ b/drivers/bluetooth/hci_qca.c
+@@ -7,6 +7,7 @@
+  *
+  *  Copyright (C) 2007 Texas Instruments, Inc.
+  *  Copyright (c) 2010, 2012, 2018 The Linux Foundation. All rights reserved.
++ *  Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+  *
+  *  Acknowledgements:
+  *  This file is based on hci_ll.c, which was...
+@@ -1904,7 +1905,17 @@ static int qca_setup(struct hci_uart *hu)
+ 	case QCA_WCN6750:
+ 	case QCA_WCN6855:
+ 	case QCA_WCN7850:
+-		set_bit(HCI_QUIRK_USE_BDADDR_PROPERTY, &hdev->quirks);
 +
- void os_info(const char *fmt, ...)
- {
-+	char buf[256];
- 	va_list list;
-+	int len;
++		/* Set BDA quirk bit for reading BDA value from fwnode property
++		 * only if that property exist in DT.
++		 */
++		if (fwnode_property_present(dev_fwnode(hdev->dev.parent), "local-bd-address")) {
++			set_bit(HCI_QUIRK_USE_BDADDR_PROPERTY, &hdev->quirks);
++			bt_dev_info(hdev, "setting quirk bit to read BDA from fwnode later");
++		} else {
++			bt_dev_dbg(hdev, "local-bd-address` is not present in the devicetree so not setting quirk bit for BDA");
++		}
++
+ 		hci_set_aosp_capable(hdev);
  
- 	if (quiet_info)
- 		return;
- 
- 	va_start(list, fmt);
--	vfprintf(stderr, fmt, list);
-+	len = vscnprintf(buf, sizeof(buf), fmt, list);
-+	fwrite(buf, len, 1, stderr);
- 	va_end(list);
- }
- 
- void os_warn(const char *fmt, ...)
- {
-+	char buf[256];
- 	va_list list;
-+	int len;
- 
- 	va_start(list, fmt);
--	vfprintf(stderr, fmt, list);
-+	len = vscnprintf(buf, sizeof(buf), fmt, list);
-+	fwrite(buf, len, 1, stderr);
- 	va_end(list);
- }
+ 		ret = qca_read_soc_version(hdev, &ver, soc_type);
 -- 
-2.43.0
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
