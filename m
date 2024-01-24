@@ -1,88 +1,96 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4484C1B277
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 11:26:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ACCD20DFC;
+	Wed, 24 Jan 2024 11:26:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.149.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706095591; cv=none; b=aHkc2yJZKRzCPSO0W9IAypKwbOEM7OeH1LqdPNmevnH65sQf7CGuAG7aLfheQ1OyaM09qs98/pRWcxlaIRUqRlP4XpwsIc5UAB9mfJOCx/Ofmgu3jfe3p59DIruU3NUPNe1HYPMT1Q3UDWZh74Qr3UIs7Ru/V0i0b4MCrnnvOXQ=
+	t=1706095603; cv=none; b=HB1q4Gq+Gf956Rg5BuRBLPGKseL3lP0WMo+bDh8YtGyz9iAFKdXMHvfZ/fLU92o681xNem7Kgnr7+T7352OJRI6lU7/VNP3E4R3xA/scLGq8gaRb9lFUK/uZzDB9klet4JD+RowcNhc04CBmGLWM2WFwMW31BvplIETEjflJoC0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706095591; c=relaxed/simple;
-	bh=Q1sHbIivfI+zsL7lmcpRgEA34+6RBDIe5bColoq7y0o=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=ZBVCYttWFzM/5gawdlvqQx6JcG/FGMawEqNoXfYIxagyPqrfU9haGxIZtAN3mBrvIrVkmopBlZ3fECX+T0YJdhpwgeWDSjc4BjzCtDSEZnharGSD6wew1AKK0FOBCldMqiYamidQUVXUEbSCyOKOwHBwaExCuhjf2OzXgR9r2Oc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from dude05.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::54])
-	by metis.whiteo.stw.pengutronix.de with esmtp (Exim 4.92)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1rSbOe-0003Xk-P4; Wed, 24 Jan 2024 12:26:20 +0100
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Date: Wed, 24 Jan 2024 12:26:20 +0100
-Subject: [PATCH] usb: dwc3-of-simple: Stop using
- of_reset_control_array_get() directly
+	s=arc-20240116; t=1706095603; c=relaxed/simple;
+	bh=kV/sxm1U0+3xpgRr2Rkrcgch+1wluHu/zLwXJZP8viE=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=mfosYgjD6hLOK8J0EjnvYi6S6pNgzNl9WLpHFPcWsCQ2M+puYcWFCYBsqllAA+q7hBiKCdqCHqHcRkcUYWCUYgaLisd6QRs/thrqi4c423ZIc6rgCGGHcCxRSQdH+XHr4Zqs24QpzwKwgmOVTG94JhiXHCWgerJT8DhK8O9e8qc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=mMlvmbJs; arc=none smtp.client-ip=67.231.149.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="mMlvmbJs"
+Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
+	by mx0a-001ae601.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40O5ABQp018377;
+	Wed, 24 Jan 2024 05:26:19 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=
+	from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding:content-type; s=PODMain02222019; bh=n
+	5r0vO0PazysdxJ9oNYTV9c+7VMZDjyUxc5PUe3ztBE=; b=mMlvmbJsTn/xyJx+1
+	Yh51sHFkK+56IgiIngJDJ/7ZFjU30Borj7BrF5jmEf4nZUV+s9saHkxz6vB6g9AL
+	AxkZOhELxBREfMWcMwO4Z2xWtwkXsEXoKceXAKSFgp6Vx7lJeWDt6yE0K+DyJRMm
+	IgW+HjJNl1qyvTfu1QGemaL0QaL6Ve0vmXavG7Y59wEq+wVZnFEeGQaiQE/i1l8j
+	zzZ4bCeP4MVT57PeZdThPJXNtswrzxdJCz0yJYCn12roYKGKoBmMMRLAc1WDpg0p
+	s/UTjdFWq9jnhq2QDKkgwxkt09K2M0ryBOc6b0cdlmQdUsvQZwmm8k9K/bDuztQ0
+	cBY8Q==
+Received: from ediex01.ad.cirrus.com ([84.19.233.68])
+	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 3vtmfhgqah-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 24 Jan 2024 05:26:19 -0600 (CST)
+Received: from ediex02.ad.cirrus.com (198.61.84.81) by ediex01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Wed, 24 Jan
+ 2024 11:26:07 +0000
+Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
+ anon-ediex02.ad.cirrus.com (198.61.84.81) with Microsoft SMTP Server id
+ 15.2.1118.40 via Frontend Transport; Wed, 24 Jan 2024 11:26:07 +0000
+Received: from ediswws06.ad.cirrus.com (ediswws06.ad.cirrus.com [198.90.251.117])
+	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id 82E1B820243;
+	Wed, 24 Jan 2024 11:26:07 +0000 (UTC)
+From: Richard Fitzgerald <rf@opensource.cirrus.com>
+To: <tiwai@suse.com>, <soyer@irl.hu>, <shenghao-ding@ti.com>
+CC: <perex@perex.cz>, <linux-kernel@vger.kernel.org>,
+        <linux-sound@vger.kernel.org>, <alsa-devel@alsa-project.org>,
+        <patches@opensource.cirrus.com>,
+        Richard Fitzgerald
+	<rf@opensource.cirrus.com>
+Subject: [PATCH 0/2] ALSA: hda: Move component binding support into separate library
+Date: Wed, 24 Jan 2024 11:26:05 +0000
+Message-ID: <20240124112607.77614-1-rf@opensource.cirrus.com>
+X-Mailer: git-send-email 2.30.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240124-dwc3-of-simple-reset-control-array-fix-v1-1-808182cc3f0e@pengutronix.de>
-X-B4-Tracking: v=1; b=H4sIANvzsGUC/x2NQQrCMBBFr1Jm7UAbs6heRVyE5FcHalJmilVK7
- +7g8n14/+1kUIHRtdtJ8RaTVh2GU0f5meoDLMWZQh9iP4TIZctnbhObvJYZrDCsnFtdtc2cVNO
- XJ/kwIi5jcGsshfxsUfj8D93ux/EDDMqhbngAAAA=
-To: Thinh Nguyen <Thinh.Nguyen@synopsys.com>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
- Neil Armstrong <neil.armstrong@linaro.org>, Felipe Balbi <balbi@kernel.org>
-Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Philipp Zabel <p.zabel@pengutronix.de>
-X-Mailer: b4 0.13-dev-f0463
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:1101:1d::54
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-ORIG-GUID: twIJfo5xVnJV5rQPc3hZTj21K2X2vnK1
+X-Proofpoint-GUID: twIJfo5xVnJV5rQPc3hZTj21K2X2vnK1
+X-Proofpoint-Spam-Reason: safe
 
-Use of_reset_control_array_get_optional_exclusive() instead, it is
-implemented as:
+The Cirrus Logic amplifiers are currently paired with Realtek HDA codecs.
+But they could be used with other codecs. To prepare for this, these two
+patches move the manager side of the component binding out of the Realtek
+driver into a library module.
 
-  static inline struct reset_control *
-  of_reset_control_array_get_optional_exclusive(struct device_node *node)
-  {
-          return of_reset_control_array_get(node, false, true, true);
-  }
+The first patch tweaks the CS35L41 code so that it is not hardcoded to
+CS35L41, and changes the TAS2781 handling so that it re-uses that code
+instead of having a near-identical copy of it.
 
-This makes the code easier to understand and removes the last remaining
-direct use of of_reset_control_array_get(). No functional changes.
+Can someone please test that these two patches don't break TAS2781?
+I have checked that they should work in theory but I don't have hardware
+to test on.
 
-Fixes: f4cc91ddd856 ("usb: dwc3: of-simple: remove Amlogic GXL and AXG compatibles")
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
----
- drivers/usb/dwc3/dwc3-of-simple.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+Richard Fitzgerald (2):
+  ALSA: hda: realtek: Re-work CS35L41 fixups to re-use for other amps
+  ALSA: hda: realtek: Move hda_component implementation to module
 
-diff --git a/drivers/usb/dwc3/dwc3-of-simple.c b/drivers/usb/dwc3/dwc3-of-simple.c
-index d1539fc9eabd..9cf9ee1b637b 100644
---- a/drivers/usb/dwc3/dwc3-of-simple.c
-+++ b/drivers/usb/dwc3/dwc3-of-simple.c
-@@ -52,8 +52,7 @@ static int dwc3_of_simple_probe(struct platform_device *pdev)
- 	if (of_device_is_compatible(np, "rockchip,rk3399-dwc3"))
- 		simple->need_reset = true;
- 
--	simple->resets = of_reset_control_array_get(np, false, true,
--						    true);
-+	simple->resets = of_reset_control_array_get_optional_exclusive(np);
- 	if (IS_ERR(simple->resets)) {
- 		ret = PTR_ERR(simple->resets);
- 		dev_err(dev, "failed to get device resets, err=%d\n", ret);
+ MAINTAINERS                   |   1 +
+ sound/pci/hda/Kconfig         |   4 +
+ sound/pci/hda/Makefile        |   2 +
+ sound/pci/hda/hda_component.c | 169 ++++++++++++++++++++++++++
+ sound/pci/hda/hda_component.h |  59 +++++++++
+ sound/pci/hda/patch_realtek.c | 217 ++++------------------------------
+ 6 files changed, 261 insertions(+), 191 deletions(-)
+ create mode 100644 sound/pci/hda/hda_component.c
 
----
-base-commit: 6613476e225e090cc9aad49be7fa504e290dd33d
-change-id: 20240124-dwc3-of-simple-reset-control-array-fix-e4e9822028dd
-
-Best regards,
 -- 
-Philipp Zabel <p.zabel@pengutronix.de>
+2.30.2
 
