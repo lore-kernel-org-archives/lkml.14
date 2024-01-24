@@ -1,201 +1,151 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2058.outbound.protection.outlook.com [40.107.220.58])
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2072.outbound.protection.outlook.com [40.107.101.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBD47129A93
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 17:52:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.58
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5F257C08B;
+	Wed, 24 Jan 2024 17:53:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.101.72
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706118754; cv=fail; b=kvfm2/gJOnrcIsHGIs/zzZkyIjtvLzcIzY1GTnwoY5lJXZsqqJfthGNaV9kaEEUDY5GSHbMUxJ6MyfHwEhg+n85fzeg2yyDZwBVU8/YOVl2/4ur/Nn+AZXOzYiy52rK1Jb1AwJAeep+0VdGr+IzG1kFL0if6h3kHAsshDnZ3j9s=
+	t=1706118790; cv=fail; b=e3IEu2N/9tlOYI0Kd6wlcKgSVKAMH4hanDyLbqGR5GlyfAOSJRcojWbZdaHYvdPfcwjQqSe3R445G3/3/yu7BUecsK2c5EyuKI6i/BBW01aTcGXaAdIOVxFLjIHCwT5p2O6JzEumKc9gKq7WIU1sxKeVsv9pdcz3cUNH6P/6KDY=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706118754; c=relaxed/simple;
-	bh=qiwzXXrUEck37B2CR1hjuMx69mNix/JbUkAKeRvwdJM=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=oznWcfvzwN87dLw3MYclBxXs/iyM5A0lxn8ZXxzIdxadRQZLrxocSx6HKhHEy+EdRzm5mFpgY3Stkny2dsx2QG5UyZXJgeKZuDikpxNnFGLrx5RbH7OeE1hkv0BFOmJusXchbtw3nF+sdTDatDB+0+0hAtur13KQDHOLTC1uSds=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=S67ITcvn; arc=fail smtp.client-ip=40.107.220.58
+	s=arc-20240116; t=1706118790; c=relaxed/simple;
+	bh=pLXEeu5AUTY0lXQVFbSlPTGM8hifEOLN8y55qnXpz7E=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=mej/RkUgypwYpcHV9cUtSYgZSnC1EkLbRcl84eb1vlupwcvsK1r8PCZ8Wjkg/OT9t2s7EoTEGB8qQnCLRsNByv12DUj3cOdlkyIhp2ySpGk1FSwT2VZ/aRcnw0vbct1H5B+oKm/TcDU7Y8KtMPnkUqD3l3Mhyb3F4t5o6NagO6s=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=T4WiChGj; arc=fail smtp.client-ip=40.107.101.72
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="S67ITcvn"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="T4WiChGj"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=eJqWHcNqQfktQBDeJHXrJu2bsUp24Isx/pCloLEgLpvD05BHGsQst3lHY3aUGDmYLvaHD98GjbFoOVtdVcIbPF81gTaFUITuJXLQBdKTmTgZRj3HF19JrY9UJwjVnGv4y389E+h4kjj61SYyPJ2UvLxgJEwGcGF1g6e0O/Ud83wb0Gkh3RmKVj56htGCo+BOFWd8/8YnTOvAROP0m6nc5o0Brn1jTjTanmA4lZpoNEf2HdVQmS1lork4eJQfYho84Y08w5QV3ER+dbcw8CrG1aRe89+DMcYyhUTYkNomKb2g9Z3KQVyWcAFj8b0/kTe+5gWUjuP10qZJ4geFoudWRg==
+ b=lNmTZAIPrWttnj++GATfYvb+lT43tFVIvGhjAmgCkjGtMu1DQr0aD5pSOCilGqc9PR8lcTAhLk8u3y6TMhRiWYoC24C40WZTHrxQtj7hkNUCKEcoUPWW8SYv5o+Sy83nORFB6+chCNcCDuZOEhuf59Pko4IpvgfvRUoT7mDCdf3uYIgOfvL0WJrKNEVBf/Uk0Qr7BvPk6DOcjDkTNkQ1wq9oNzEUUjXHITgVLXIdqHTgtKqlbGyx3naAtIVk0ozT28vpuNKta+p8wq8fvnqyNVg2ky5j9d99PRQVJP1aF7AyLvuHcY2oRSsTwGwpQFJTEOWYgCLiiWl0Q3kgjD/pYw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=WHqGWJPD/4nck7UiwVtFKDSnZFVQghZoXI2ghwfREHw=;
- b=UeRD7pOtng2RPq8vXtzYF5vAbWNEEJri01e0WW8GuXppjLSWryyrFKxbWZsDDoZhf4tfykd9AiWeOtMAAqPFGjGfseRtGMrfhie3bLaSq+FK1+16lO9ULbubwmU1knkQIaAbeLsc5OXByLHJ9c25OeheTK9xMGisI7OA3tU8uevsOrtPTIZtht0fYmUfdRlpoM5IJQ4i0j/RLxti8q9pzJjVjELmXYa/tBiImfsfv/5gWiOUu0zru17z59GhEBPecQseuOdzf+w1SWv9OJVe7ct1fknEy2/R7d2POL6qUgV2QYwLuQPFAWrzI00nRJe5rSt4wysaf+mTEjxQZjDSMA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+ bh=CfB/j9lhCHvu8Pijbw6rDDaNOzMD/oxR8qbbNXqK2Jg=;
+ b=U3Yv2Z+wvHcuzFpjeqxBd5IO6DvEoIDFI9OKMRwZyFClIE6JkeKwk+N6L9bUgMyq1bOCJI3H+xYvb2A2RDIXugGd/8064cAnbeCEbBLi0A52OpfpPJWaRqINsWH9iAMNidp2/JO+Y2EZHPEzpRpnNy62nbtDylDggKmYy7ozqHuPIr1aPUgpDKwovYOeMeblE7ltWpAswKFhn1me7bomdp11qQ0LQZKWFBH24+udcBAW8PJTGeG9hzJ5JJjPOYJS+m+yEr7mplL75h9FvNgHsNuWCioij+MpjMqguBrxXChOHB1AiwR/CsWAfNUb1Arx58H/QEdYco29Q+M2sJV7FA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=lwn.net smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WHqGWJPD/4nck7UiwVtFKDSnZFVQghZoXI2ghwfREHw=;
- b=S67ITcvnqA6phA8urYD43dx9aL3McuD+MVhs5xiKg4wn3EVMifEf/747kBXFz4umTTcDRXFmd3viw1diuFvsLDF6uRr3Ki920I2Siad+yU7JvcU+7ovVIJsq8qAK+nV/NTYdtVEp3O1BXgvVltnmAkSPPl3QqgvV0UyzTtH3KTM=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by CY8PR12MB7657.namprd12.prod.outlook.com (2603:10b6:930:9d::14) with
+ bh=CfB/j9lhCHvu8Pijbw6rDDaNOzMD/oxR8qbbNXqK2Jg=;
+ b=T4WiChGjZsX4D59qzAK9Uk6ZwIbebXaduN7T2RcAnigsjWHGHOFu89OzTLwBJZ/Qeh3U/FszbN2RyWTTy/50/4BhntfEbh91kgrU5tZQJhoFOzdavTTTXc1d5Epf1kPFYFV7cJwwQfWgGlHveaxTatWhVwChhvU6PoJkPJLwlFw=
+Received: from BYAPR02CA0051.namprd02.prod.outlook.com (2603:10b6:a03:54::28)
+ by SJ0PR12MB5456.namprd12.prod.outlook.com (2603:10b6:a03:3ae::12) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7202.37; Wed, 24 Jan
- 2024 17:52:30 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::ce8d:7121:cb06:91ba]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::ce8d:7121:cb06:91ba%4]) with mapi id 15.20.7202.039; Wed, 24 Jan 2024
- 17:52:30 +0000
-Message-ID: <05ddb2da-b182-4791-8ef7-82179fd159a8@amd.com>
-Date: Wed, 24 Jan 2024 11:52:27 -0600
-User-Agent: Mozilla Thunderbird
-Subject: Re: [git pull] drm for 6.8
-Content-Language: en-US
-To: Thorsten Leemhuis <regressions@leemhuis.info>,
- Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Dave Airlie <airlied@gmail.com>, Daniel Vetter <daniel.vetter@ffwll.ch>,
- dri-devel <dri-devel@lists.freedesktop.org>,
- LKML <linux-kernel@vger.kernel.org>,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>,
- Vlastimil Babka <vbabka@suse.cz>, Donald Carr <sirspudd@gmail.com>
-References: <CAPM=9twKBmO2Svky-zeP+KS8qWHFj9zrgeBqW9y__tUwcAYZhw@mail.gmail.com>
- <2faccc1a-7fdd-499b-aa0a-bd54f4068f3e@suse.cz>
- <CAOVeLGRxXfs4wxSmB2ULZS72NvJkWQvZyPRz0rAmQyFtL39ekw@mail.gmail.com>
- <0a782904-bb19-4111-979a-31b52aa44ca9@suse.cz>
- <a51ddb8c-cf11-4394-a2fe-ca855749ff02@amd.com>
- <e7eb12a9-67ed-45b1-aaf6-e1df52a247bd@leemhuis.info>
-From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <e7eb12a9-67ed-45b1-aaf6-e1df52a247bd@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: DS7PR03CA0089.namprd03.prod.outlook.com
- (2603:10b6:5:3bb::34) To MN0PR12MB6101.namprd12.prod.outlook.com
- (2603:10b6:208:3cb::10)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.22; Wed, 24 Jan
+ 2024 17:53:06 +0000
+Received: from SJ5PEPF000001D4.namprd05.prod.outlook.com
+ (2603:10b6:a03:54:cafe::fa) by BYAPR02CA0051.outlook.office365.com
+ (2603:10b6:a03:54::28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.22 via Frontend
+ Transport; Wed, 24 Jan 2024 17:53:06 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ SJ5PEPF000001D4.mail.protection.outlook.com (10.167.242.56) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7202.16 via Frontend Transport; Wed, 24 Jan 2024 17:53:05 +0000
+Received: from bmoger-ubuntu.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.34; Wed, 24 Jan
+ 2024 11:53:01 -0600
+From: Babu Moger <babu.moger@amd.com>
+To: <corbet@lwn.net>, <fenghua.yu@intel.com>, <reinette.chatre@intel.com>,
+	<tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
+	<dave.hansen@linux.intel.com>
+CC: <x86@kernel.org>, <hpa@zytor.com>, <paulmck@kernel.org>,
+	<rdunlap@infradead.org>, <tj@kernel.org>, <peterz@infradead.org>,
+	<yanjiewtw@gmail.com>, <babu.moger@amd.com>, <kim.phillips@amd.com>,
+	<lukas.bulwahn@gmail.com>, <seanjc@google.com>, <jmattson@google.com>,
+	<leitao@debian.org>, <jpoimboe@kernel.org>, <rick.p.edgecombe@intel.com>,
+	<kirill.shutemov@linux.intel.com>, <jithu.joseph@intel.com>,
+	<kai.huang@intel.com>, <kan.liang@linux.intel.com>,
+	<daniel.sneddon@linux.intel.com>, <pbonzini@redhat.com>,
+	<sandipan.das@amd.com>, <ilpo.jarvinen@linux.intel.com>,
+	<peternewman@google.com>, <maciej.wieczor-retman@intel.com>,
+	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<eranian@google.com>
+Subject: [PATCH] x86/resctrl: Fix unneeded variable warning reported by kernel test robot
+Date: Wed, 24 Jan 2024 11:52:56 -0600
+Message-ID: <84128a3c83654493f637b8349153af10d69e2752.1706118776.git.babu.moger@amd.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <202401241810.jbd8Ipa1-lkp@intel.com>
+References: <202401241810.jbd8Ipa1-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|CY8PR12MB7657:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7793f3a4-5d9c-4aed-a32d-08dc1d053c12
+X-MS-TrafficTypeDiagnostic: SJ5PEPF000001D4:EE_|SJ0PR12MB5456:EE_
+X-MS-Office365-Filtering-Correlation-Id: d1891647-e394-45d1-87eb-08dc1d055150
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	qkBniext6puR9yl1gzo3gPeICL/J1w5KJXqGjrZxBbRlyba9fIYp2rKRX7DwuZrv25GgloIgtR3pXi3e2g3dkpMV0sQj2BQt0Ue9qmkc9SKxDRv/bhM6eRtW7AuEZuopTK55q4lCz49T8r1K2dgMpQkPMWtavkSZdrfGElEMuXfURzKP1F3G6imKL5MVlXIG/5FmwBcV0d8gE9b9qzGK7lDcJBh+R3JxKhdP8V6GzeIC91g7prMgvLkUZy3vpar04SiDpoZJE0PX/NweLgueWRMIOKJqbtu607GDoP3w6dQPhBecrmQfSW4audfEBPzDE9d5wAgNX3SfGzlebZec+wBct1xnZpE7ABwF7tN9u3Vqeduf0dGQNT7EMdnNDBPSu6dNjfi/9UorJxbvfaP+tj09eWiSKW9udK+e3uM7OAqL1Q2JIzNLapwloyeh5u7EgDcfjKwkhVODWt07tpCurQnzF823Q0QwuUmLQUnNYXrD2WtUqh5w85zx7+ijStc/TzD6wN9U5la7PPYoPmk6Wv8au94OOARoHQaMNts63sQmuAq4wfEvrcoZmczBd4zC9TZq67VayUZeDPlPmM0GxCB7TBzPw5Sbx5UeTNArriraWSuJO7Y89UjV9grVGVM2b/F+h708DHtqLyshCNS9/MEJ6oyZIJKme6Ba12dYR8CDvrP8KHFdHyKaMrbzWWxr
+	yIGm3rOYQ+JH1iC8EWmfQNLkj7cic4VZRlYlq9trMxp+LGOEV82biXgoqYyqiqhqtNlTZIxqXaB9+vOz7pvMbM8iX4I8OuVclub4Cgu9w0xfRY86ybhGarqSIOpNxMOgK2Hotx7qS6CmFuDbmSusbe0c5KYnehWbdmVSii3fixaxZG+7c3G32UuGkhIqyJhB4PimEhrAuWujHVCNBdK+ENON2hMwG0qh44El45b4lKCk8pxtyXrruEZYcLw/8na1gLpKs9OHeximvDOnUIfiKe+hxluCf1xXii1/Poft9phHSJmXE5Tk94oL5JpiBTajAvjpTVTd9ABBrEQvhwNO5RZbNT+yDkXQWp2wHxOKlUdQOK+0QqdcAdXCAWZZ77dvqMOug++XRc88KBsWlKlotW/QnQEfaGWuLp9U3kS3h8Jz8aNsBCDJSG7dbjlcJB0wZ0bozDmquYiizsIiRD8OcB/tbivmGSMuGvrIVZk6bHtQW2x3h82hBr72X82aPG5SDVcf9kh+e6MVh2HBmpdJMDnB8bgzdh1symkaoMMwhsNuCu3Yhb6cLkY4yo+PV8B0jqPssVvip3WXbFcE8bbdMiAjRTwgd2oA8CMX9+XTU6YntG17drAKxnbbCv5zKanVZ5/I1vvx/c58yhwH2WncQ57ica1x7zYcojn8CfiR047aLlJ6o2w/DbEgoxfJJlVfvzQGbxTzY9ZBx0b9EscBjI++hDJoSOEoG6RfIekhYIIo81fyGH0RqSG9JrDJVbra25drehW14oLdth7Aq88pewnWYhXQ5HR5DEQ3EOUmZV5CGM0THPTCz/gyIzZnLC2A
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(39860400002)(136003)(346002)(376002)(396003)(230922051799003)(186009)(64100799003)(451199024)(1800799012)(31686004)(66899024)(83380400001)(36756003)(86362001)(31696002)(26005)(38100700002)(41300700001)(6486002)(6512007)(6506007)(44832011)(54906003)(2906002)(316002)(478600001)(966005)(4326008)(53546011)(110136005)(66946007)(6666004)(66556008)(7416002)(66476007)(2616005)(5660300002)(8936002)(8676002)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?ditPd2xzUXh1L01pZm9xR3hXUVBmbFc1TE9zdzNUZUJhdjREVER1YjU4V09O?=
- =?utf-8?B?M3hIUTExV2QwVEV3VnQyQUQ5SncxRWF4dWhrbVNBTVpTN3lIbXA2aVV3cSsy?=
- =?utf-8?B?cU5wZjR3U25iL21KOW5BUzRaSEY0OVkrSmNuVXI3Y0d5RnEzdlY1dkNxUU5E?=
- =?utf-8?B?YW1LRXRDUUF4MnBMQ3FmUVBhTDFZTFd4VXA5OVFzWEJoRUtFY1FlZUlwR1NC?=
- =?utf-8?B?NVpiTDRrbkQ0Z0IvbWlWdUNNNktFaE1yZ1ZYa0kwMVY4N2RtSDc1bzJnMmdu?=
- =?utf-8?B?TndOVHIvYVoxRklzUmgvWGVuZW41VEErN3VvSWZtOW1VK3lvUXU0KzdmWFpr?=
- =?utf-8?B?dzRNWHdNQ09PME5kUlRDWmJwdzlNM2pBNmxnT1VOOURBeUZ4cndsTStMQTRQ?=
- =?utf-8?B?U05idzRQendQVm9EQVVSVzJZaTM1eUladnpaYUNHdThOYWtLNWhXbDZvaGtM?=
- =?utf-8?B?aGEzcWhaUlk5T29EdVBsczR4Y1Y5OGNrMHJJSFpTKzRmMlRtcWlnUGY0Ylk3?=
- =?utf-8?B?OU02TFZDZXl6Zjc2V1lLYWpzNlVjcHVkZGRsYnllbENhTTUvaWVtVUthclV6?=
- =?utf-8?B?NGkxaEtzUzZFbWtubUZPbmcyUVdaUlJGNlFUbGsrV2dvSTgwMW04SEU5cGF6?=
- =?utf-8?B?bVZrdVBJcTRoZkI2V2lWZFdlaDZ2M0ovT3E5a252dEU4SzdVaW1icDdwVnN1?=
- =?utf-8?B?Y0F3MlkwSTBZYzU2czU0Vnl0aEdYdkJNbmd6ZlBUMk8wT1NjdnlsaXlMVDBr?=
- =?utf-8?B?V090TFk5RityeklpaDJrTzBuVWVyYXFTN3UxZHVwdURhbUZnMzNxdU9nQ3or?=
- =?utf-8?B?TUd6Y3d4MkVxY3luNHZzQVdWUUJyS0VlQzlMb0h3SkhKbmQ5L0RpYjQ2SUtM?=
- =?utf-8?B?bDVEYWlOQ3g0K3UyQ29wNzFaTVRZTSttQXA1eDRURlUraWJBZXRZbHRNd01S?=
- =?utf-8?B?ZWJ3MGRZeFFNL1hDb2VnRkxzeGhpajhpQ0h0eWQrK3FLbXlyTVk5Yzg4dVRF?=
- =?utf-8?B?TFBhSytHT0lCcDArUFZIWkphR0pPT05wRUhhSTU3UVhFaXgxeUk4Tkt1S2M3?=
- =?utf-8?B?M2RwUnFaTC9sd2MwTzk3YVcxNXgwbGRBL1FtMzl5Mm1rcjlxNVJjWFFNbkJt?=
- =?utf-8?B?d20vQTBUaTYrbmlsUFNxaW11VW1XTTJ1ajVmOHlwZlFXNmtodDJIaEY5WjNs?=
- =?utf-8?B?eElrc0swZURPMkpYM0ZkSTFwWW1Ja2xnNlFQSXpsOEhlejJ5UnFzZU1PZHZG?=
- =?utf-8?B?SCtZMi9PU3BDZFQ5dTUxNDIvS1FMYjR0MUNUWUdEMEZ5WHZ5ZzQ4RVFkbyt5?=
- =?utf-8?B?Yk9WU21EMHNFM3ptS3BSSTFzVUlxODArcUxCNitwckMxcDdoTnY4SHRLSFoy?=
- =?utf-8?B?dE1OQ0svNFZtSGZSOHhiWUxDSmNTNW9pd0NtbkRsNXl6YXh4WEM2S0tHNEhj?=
- =?utf-8?B?bDZKdHowTzFONjdZeklHZHVFNjRZVFNDUGxhUjljem1DZFo5dWpRbUd2TjQ2?=
- =?utf-8?B?Nk44dTh3Q0N5SnNwbWE4R2tzY3NxTGN1ZDVadXFub3F1bjJaL2syMjl2em5Z?=
- =?utf-8?B?MWMwM3g0K043aHRJc3k1NmlWTWZMV0ZYcHJTdFJna2J1SXBheEJyc2tCaVJV?=
- =?utf-8?B?Qnh3U3NJOExTTDFlWkxzWDdPTzliYW8wR0xHWnBBdm1UNjRrU3h5Q3FyclBL?=
- =?utf-8?B?OGQyeDMvMUVzRGQ4Wi9hYzlhem5HZG1QWDdyZXhyaWtCRFdrUHRsV2JvVDZ3?=
- =?utf-8?B?bldrcnM0S052ZC9VSGJRZElQd2NNbHZsVUV0U2x5SHA3eEl3RFc1bnNwam95?=
- =?utf-8?B?UVlVVExYUmtZVXVBUjMyQ1dOUW5KQWRlODdRMW9vMTlxclNkaWJPdTNwUUpp?=
- =?utf-8?B?ekxmVXF5Wm04cCt2V3l5Vld3K0t0aERZMVhNd0ljM2ZpeS9HZFFDNHZBQ2FQ?=
- =?utf-8?B?OHYvNzV1MGhicitacmIyWnVCL2QvS2RiWHFzbVdxWjlsVWMzejhYWk1pMll1?=
- =?utf-8?B?Zms0dlVnS2dxcVJzSE5SWVZKNTNNblNmb1lNNG9DRVIyUUR4aDdUb25tV0NE?=
- =?utf-8?B?cFdTVS82OVR6bEdocmRXWk9JcDY1Vncva2VxQVFqOGdjQ1dHVTVKREJKZEto?=
- =?utf-8?Q?Gu0vYn4MJmKLcqzWTPNhLcdAC?=
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(346002)(396003)(39860400002)(136003)(376002)(230173577357003)(230273577357003)(230922051799003)(82310400011)(1800799012)(64100799003)(186009)(451199024)(46966006)(36840700001)(40470700004)(110136005)(70206006)(316002)(70586007)(26005)(54906003)(40460700003)(40480700001)(2616005)(82740400003)(356005)(478600001)(966005)(81166007)(16526019)(7696005)(6666004)(8936002)(4326008)(8676002)(5660300002)(7406005)(7416002)(47076005)(83380400001)(44832011)(41300700001)(336012)(426003)(36860700001)(86362001)(2906002)(36756003)(36900700001);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7793f3a4-5d9c-4aed-a32d-08dc1d053c12
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jan 2024 17:52:30.0886
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jan 2024 17:53:05.4635
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Network-Message-Id: d1891647-e394-45d1-87eb-08dc1d055150
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 3oWTDX9SqQQRs/hoRWq3N/UvQ9z1t3JwMdq9JmXFvcljNXNQbkm6wxHhAfQAzhxrDC+bLjpS0QckK9ArvVo6kA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7657
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ5PEPF000001D4.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB5456
 
-On 1/24/2024 11:51, Thorsten Leemhuis wrote:
-> Linus, if you have a minute, I'd really like to know...
-> 
-> On 24.01.24 17:41, Mario Limonciello wrote:
->> On 1/24/2024 10:24, Vlastimil Babka wrote:
->>> On 1/24/24 16:31, Donald Carr wrote:
->>>> On Wed, Jan 24, 2024 at 7:06 AM Vlastimil Babka <vbabka@suse.cz> wrote:
->>>>> When testing the rc1 on my openSUSE Tumbleweed desktop, I've started
->>>>> experiencing "frozen desktop" (KDE/Wayland) issues. The symptoms are
->>>>> that
->>>>> everything freezes including mouse cursor. After a while it either
->>>>> resolves,
->>>>> or e.g. firefox crashes (if it was actively used when it froze) or it's
->>>>> frozen for too long and I reboot with alt-sysrq-b. When it's frozen
->>>>> I can
->>>>> still ssh to the machine, and there's nothing happening in dmesg.
->>>>> The machine is based on Amd Ryzen 7 2700 and Radeon RX7600.
->>>> [...]
->>>> I am experiencing the exact same symptoms;
->>>
->>> Big thanks to Thorsten who suggested I look at the following:
->>>
->>> https://lore.kernel.org/all/20240123021155.2775-1-mario.limonciello@amd.com/
->>> https://lore.kernel.org/all/CABXGCsM2VLs489CH-vF-1539-s3in37=bwuOWtoeeE+q26zE+Q@mail.gmail.com/
->>>
->>> Instead of further bisection I've applied Mario's revert from the
->>> first link
->>> on top of 6.8-rc1 and the issue seems gone for me now.
->>
->> Thanks for confirming.  I don't think we should jump right to the revert
->> right now.
->>
->>    I posted it in case that is the direction we need to go
->> (simple git revert didn't work due to contextual changes).
->>
->> Let's give the folks who work on GPU scheduler some time to understand
->> the failure and see if they can fix it.
-> 
-> ...how you think about this and other situations like this. Given that
-> we have
-> 
-> * two affected people in this thread
-> * one earlier thread about it
-> * the machine that made Mario write the patch
-> * and I have someone in #fedora-kernel that likely is affected as well
-> 
-> it seems that this is not some corner case very few people run into.
-> Hence I tend to say that this should be dealt with rather sooner than
-> later. Maybe before rc2? Or is this asking too much?
-> 
-> The thing from my point of view is, that each such problem might
-> discourage testers from testing again or lead to thoughts like "I only
-> start testing after -rc4". Not to mention that other people will try to
-> bisect the problem like Vlastimil did, which will cost them quite some
-> time and effort -- only to find out that we known about the problem
-> already and did not quickly fix it. That is discouraging for them as
-> well and thus bad for field testing I'd assume.
-> 
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-> --
-> Everything you wanna know about Linux kernel regression tracking:
-> https://linux-regtracking.leemhuis.info/about/#tldr
-> If I did something stupid, please tell me, as explained on that page.
+kernel test robot reported the following warning after the commit
+54e35eb8611c ("x86/resctrl: Read supported bandwidth sources from CPUID").
 
-A test patch was just posted.  I haven't gotten a chance to try it yet. 
-I will this afternoon.
+cocci warnings: (new ones prefixed by >>)
+>> arch/x86/kernel/cpu/resctrl/rdtgroup.c:1621:5-8: Unneeded variable: "ret". Return "  0" on line 1655
+
+Fix the warning by removing the variable "ret" and returning 0 directly.
+
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202401241810.jbd8Ipa1-lkp@intel.com/
+Signed-off-by: Babu Moger <babu.moger@amd.com>
+---
+ arch/x86/kernel/cpu/resctrl/rdtgroup.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+index 2b69e560b05f..6057f96df73f 100644
+--- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
++++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+@@ -1618,7 +1618,6 @@ static int mbm_config_write_domain(struct rdt_resource *r,
+ 				   struct rdt_domain *d, u32 evtid, u32 val)
+ {
+ 	struct mon_config_info mon_info = {0};
+-	int ret = 0;
+ 
+ 	/*
+ 	 * Read the current config value first. If both are the same then
+@@ -1652,7 +1651,7 @@ static int mbm_config_write_domain(struct rdt_resource *r,
+ 	resctrl_arch_reset_rmid_all(r, d);
+ 
+ out:
+-	return ret;
++	return 0;
+ }
+ 
+ static int mon_config_write(struct rdt_resource *r, char *tok, u32 evtid)
+-- 
+2.34.1
+
