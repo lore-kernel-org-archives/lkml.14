@@ -1,142 +1,167 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.toke.dk (mail.toke.dk [45.145.95.4])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D25057A738
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 17:11:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80A777E762;
+	Wed, 24 Jan 2024 17:12:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.145.95.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706116280; cv=none; b=P8lCCrII2zPsS9vpvMJpm0yJVb78IZtOGLD3EXWZFUkC0xcUCAKdalsz1BMsi3BBAuxEF3A9HgZjv8jkVXPzO7B2bpdPeYuZqj1lIb8qis2H11McIYC2Mb5CJw7lw+6qQcaYI/imiw6x7Mw+gSuB3tJM95VS9DmDo3OxpR/9j1o=
+	t=1706116330; cv=none; b=IwBty8/niXW4sDwi1keTuAeMeMYGPubu+z8BgspPQ5iz7GsqrBokKgPx8vep/1by1zIilbCnf8h+drz9YXskXts/zpTM52/zskj/xXrTfPh3t0c/eBDIYvJ1OcDI/7i5O1CmZ6p45lKZabpa5M/aXVKEfVXv8LlsnKslSeIxjhQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706116280; c=relaxed/simple;
-	bh=Kl/HAVfdMhADs0Tsv5S4YUd1uTXeFaa2nCYlPTrHhvs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dIvyXNTTWshZPZOuy7REdoa0eKlzaZn7dh3WzRN9EEdcvyjDDACC0WOPxFQGWQUSX5yhlkNCLcm36cMH0o5F7fQTEbv4izanOzJUdb+/Tj14IEOA2wnL96JFtmIHklZFth1RCpv7dA9uBUwOmPaIA7Y5++3CKTM94JPpi5Z1BE4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=JNcinWZC; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1706116330; c=relaxed/simple;
+	bh=5qz2F9Z7NYBi7ZTnYZWey+cuP9uUiWX83QGOe5SsFBM=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=LdErJmIlEN/Yolw9C17Pkr8eueidvRivrTQKimEee1+/HhCVDjLR5EuwthjCXibxOluUn99aao7tnAgjUJUsmuaabrj5pyf5qXhSRYDXzAY3VwU9Tn7scF/Sg+U6r9hK0/6rx71RZquoDMrH75nUAO1thx0wppn5tOLA7Fv+73g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=toke.dk; spf=pass smtp.mailfrom=toke.dk; dkim=pass (2048-bit key) header.d=toke.dk header.i=@toke.dk header.b=QNluEfPs; arc=none smtp.client-ip=45.145.95.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=toke.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=toke.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="JNcinWZC"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a30d2bd22e7so186033966b.0
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 09:11:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1706116277; x=1706721077; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=9RzKprHyYfiPaLEeOIvMtbDAp0S6N60JXbJyiLEkNDw=;
-        b=JNcinWZCDRQmg0eD0Wsa2vTLfEUk5U5b0m8rGQ/dFnAd8k1f77zKjx1BCz3jsOrRE6
-         IS1EwfIK2aFhce3YxMMy3mztI8kcCF+GJIrcLDU2XB0n2iWjStO2rfO7XemJmu/MXsQi
-         buR04ph/1VVMRmNmO43TH2gHz13ZsCwUMKEbk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706116277; x=1706721077;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9RzKprHyYfiPaLEeOIvMtbDAp0S6N60JXbJyiLEkNDw=;
-        b=o5HvCB2NOSkfIICNulIQNwc6PfLw3fuLtJRy5oYo8PXK6Wi5G6tKMZ6nCK0J7AdQl0
-         1xmE5gXYShPeAR4eQldFsteN/2cas5XVa4VXuxkn8cB2G7sx8+8o12+/UgqXas0m3UtH
-         hTesxmE6+EKIp/exzTtcv6q4FWa7j8qm45NnevXZ+9OMJM9rFRheFyXexwWqspWxbDbo
-         Ug6aJI0Lj/ubbfb/B8dfvr3H5mz03SWr/hVjLM0cNIcdg93NhOmFXPiLCGL0sLIEtWHG
-         mtynMERq2z9qIi2hE37bffHoCPHf6MegXkq1OaGNut9ZE3ioygmSx6N8T2YyQoYhe+Ew
-         LReg==
-X-Gm-Message-State: AOJu0YxRL/XvKkGIBYtUmASAG7HYREdEcJR5xLrSyRpMBCi9gPZOEi56
-	OAxzHnGqW26WWVxDlCCbIn8IDFrOlzWORYLGmMKtZ9zNC9C0UW6Y5+ooL45zyxgOSwRj1C50Lls
-	QuQBnlQ==
-X-Google-Smtp-Source: AGHT+IGuC1ROVFITtavqYcW9YkJ/A8ZvXMw3EHD2H4FH+YemcJljvuHXPjPctC+WslhwquUP9WYAdw==
-X-Received: by 2002:a17:907:9058:b0:a28:a36e:98ac with SMTP id az24-20020a170907905800b00a28a36e98acmr773752ejc.68.1706116276937;
-        Wed, 24 Jan 2024 09:11:16 -0800 (PST)
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com. [209.85.208.51])
-        by smtp.gmail.com with ESMTPSA id r17-20020a1709067fd100b00a2c7d34157asm77730ejs.180.2024.01.24.09.11.15
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 24 Jan 2024 09:11:16 -0800 (PST)
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-55a354a65afso5044700a12.0
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 09:11:15 -0800 (PST)
-X-Received: by 2002:a05:6402:440d:b0:55c:8a2e:df41 with SMTP id
- y13-20020a056402440d00b0055c8a2edf41mr1934309eda.84.1706116275091; Wed, 24
- Jan 2024 09:11:15 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=toke.dk header.i=@toke.dk header.b="QNluEfPs"
+From: Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@toke.dk>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=toke.dk; s=20161023;
+	t=1706115966; bh=5qz2F9Z7NYBi7ZTnYZWey+cuP9uUiWX83QGOe5SsFBM=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=QNluEfPsizytP2tnYUMdOgBwVBeQGESRulGkuYWC/HVzkxWxG/RT2PEdUKegyRqZ2
+	 MQdVzI70/J9t6+B0+0l01dlTBZMpnz8HdZP3Wg9URyDIvmSW/9tU7+rRhqafTEWT87
+	 jVvGT9bv0QSi8VaF010SEcli4WGPYyoYaDa9S886kdtehoLtwnDG/K9m8XUzv9z/4H
+	 3K9DDJIArw0k5wmGc0UE+E9RfAreEsWEpYmT5ZkbD++1LmXla8nkLWZqrfTrxGvvGi
+	 NTpefIHxTO1P7uUndY4pZYKjVJxCxe6fZ9Rshov4Z6JkoXm4S3qMHDrce2o8WR3YqY
+	 LO5bq88ADNV3g==
+To: Ubisectech Sirius <bugreport@ubisectech.com>, linux-trace-kernel
+ <linux-trace-kernel@vger.kernel.org>, linux-kernel
+ <linux-kernel@vger.kernel.org>
+Cc: johannes <johannes@sipsolutions.net>, kvalo <kvalo@kernel.org>
+Subject: Re: general protection fault in ath9k_wmi_event_tasklet
+In-Reply-To: <ed1d2c66-1193-4c81-9542-d514c29ba8b8.bugreport@ubisectech.com>
+References: <ed1d2c66-1193-4c81-9542-d514c29ba8b8.bugreport@ubisectech.com>
+Date: Wed, 24 Jan 2024 18:06:06 +0100
+X-Clacks-Overhead: GNU Terry Pratchett
+Message-ID: <878r4e4q69.fsf@toke.dk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <ZbE4qn9_h14OqADK@kevinlocke.name> <202401240832.02940B1A@keescook>
- <CAHk-=wgJmDuYOQ+m_urRzrTTrQoobCJXnSYMovpwKckGgTyMxA@mail.gmail.com> <CAHk-=wijSFE6+vjv7vCrhFJw=y36RY6zApCA07uD1jMpmmFBfA@mail.gmail.com>
-In-Reply-To: <CAHk-=wijSFE6+vjv7vCrhFJw=y36RY6zApCA07uD1jMpmmFBfA@mail.gmail.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Wed, 24 Jan 2024 09:10:58 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wiZj-C-ZjiJdhyCDGK07WXfeROj1ACaSy7OrxtpqQVe-g@mail.gmail.com>
-Message-ID: <CAHk-=wiZj-C-ZjiJdhyCDGK07WXfeROj1ACaSy7OrxtpqQVe-g@mail.gmail.com>
-Subject: Re: [6.8-rc1 Regression] Unable to exec apparmor_parser from virt-aa-helper
-To: Kees Cook <keescook@chromium.org>
-Cc: Kevin Locke <kevin@kevinlocke.name>, John Johansen <john.johansen@canonical.com>, 
-	Josh Triplett <josh@joshtriplett.org>, Mateusz Guzik <mjguzik@gmail.com>, 
-	Al Viro <viro@zeniv.linux.org.uk>, linux-mm@kvack.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org
-Content-Type: multipart/mixed; boundary="00000000000085dd51060fb42625"
+Content-Type: text/plain
 
---00000000000085dd51060fb42625
-Content-Type: text/plain; charset="UTF-8"
+"Ubisectech Sirius" <bugreport@ubisectech.com> writes:
 
-On Wed, 24 Jan 2024 at 08:54, Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> Hmm. That whole thing is disgusting. I think it should have checked
-> FMODE_EXEC, and I have no idea why it doesn't.
+> Hello.
+> We are Ubisectech Sirius Team, the vulnerability lab of China ValiantSec. Recently, our team has discovered a issue in Linux kernel 6.7.0-g9d1694dc91ce. Attached to the email were a POC file of the issue.
+> Stack dump:
+> general protection fault, probably for non-canonical address 0xdffffc0000000038: 0000 [#1] PREEMPT SMP KASAN
+> KASAN: null-ptr-deref in range [0x00000000000001c0-0x00000000000001c7]
+> CPU: 0 PID: 16 Comm: ksoftirqd/0 Not tainted 6.7.0-g9d1694dc91ce #20
+> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.15.0-1 04/01/2014
+> RIP: 0010:__queue_work+0x9d/0x1160 kernel/workqueue.c:1727
+> Call Trace:
+> <TASK>
+> queue_work_on+0xf2/0x110 kernel/workqueue.c:1837
+> queue_work include/linux/workqueue.h:548 [inline]
+> ieee80211_queue_work net/mac80211/util.c:898 [inline]
+> ieee80211_queue_work+0x111/0x180 net/mac80211/util.c:891
+> ath9k_wmi_event_tasklet+0x327/0x450 drivers/net/wireless/ath/ath9k/wmi.c:168
+> tasklet_action_common.constprop.0+0x229/0x390 kernel/softirq.c:780
+> __do_softirq+0x1d4/0x85e kernel/softirq.c:553
+> run_ksoftirqd kernel/softirq.c:921 [inline]
+> run_ksoftirqd+0x31/0x60 kernel/softirq.c:913
+> smpboot_thread_fn+0x63c/0x9f0 kernel/smpboot.c:164
+> kthread+0x2cc/0x3b0 kernel/kthread.c:388
+> ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:147
+> ret_from_fork_asm+0x11/0x20 arch/x86/entry/entry_64.S:242
+> </TASK>
+> Modules linked in:
+> ---[ end trace 0000000000000000 ]---
+> RIP: 0010:__queue_work+0x9d/0x1160 kernel/workqueue.c:1727
+> Thank you for taking the time to read this email and we look forward
+> to working with you further.
 
-Maybe because FMODE_EXEC gets set for uselib() calls too? I dunno. I
-think it would be even better if we had the 'intent' flags from
-'struct open_flags' available, but they aren't there in the
-file_open() security chain.
+Hmm, so from eyeballing the code in question, this looks like it is
+another initialisation race along the lines of the one fixed in commit:
+8b3046abc99e ("ath9k_htc: fix NULL pointer dereference at ath9k_htc_tx_get_packet()")
 
-Anyway, moving current->in_execve earlier looks fairly trivial, but I
-worry about the randomness. I'd be *so*( much happier if this crazy
-flag went away, and it got changed to look at the open intent instead.
+Could you please test the patch below and see if you can still reproduce
+this issue with that applied?
 
-Attached patch is ENTIRELY UNTESTED. And disgusting.
+-Toke
 
-I went back and looked. This whole disgusting thing goes back to 2009
-and commit f9ce1f1cda8b ("Add in_execve flag into task_struct").
 
-              Linus
 
---00000000000085dd51060fb42625
-Content-Type: text/x-patch; charset="US-ASCII"; name="patch.diff"
-Content-Disposition: attachment; filename="patch.diff"
-Content-Transfer-Encoding: base64
-Content-ID: <f_lrs1gcul0>
-X-Attachment-Id: f_lrs1gcul0
-
-IGZzL2V4ZWMuYyB8IDcgKysrKy0tLQogMSBmaWxlIGNoYW5nZWQsIDQgaW5zZXJ0aW9ucygrKSwg
-MyBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9mcy9leGVjLmMgYi9mcy9leGVjLmMKaW5kZXgg
-OGNkZDViMmRkMDljLi5mYzFkNmJlZmU4MzAgMTAwNjQ0Ci0tLSBhL2ZzL2V4ZWMuYworKysgYi9m
-cy9leGVjLmMKQEAgLTE4NDMsNyArMTg0Myw2IEBAIHN0YXRpYyBpbnQgYnBybV9leGVjdmUoc3Ry
-dWN0IGxpbnV4X2JpbnBybSAqYnBybSkKIAkgKiB3aGVyZSBzZXR1aWQtbmVzcyBpcyBldmFsdWF0
-ZWQuCiAJICovCiAJY2hlY2tfdW5zYWZlX2V4ZWMoYnBybSk7Ci0JY3VycmVudC0+aW5fZXhlY3Zl
-ID0gMTsKIAlzY2hlZF9tbV9jaWRfYmVmb3JlX2V4ZWN2ZShjdXJyZW50KTsKIAogCXNjaGVkX2V4
-ZWMoKTsKQEAgLTE4NjAsNyArMTg1OSw2IEBAIHN0YXRpYyBpbnQgYnBybV9leGVjdmUoc3RydWN0
-IGxpbnV4X2JpbnBybSAqYnBybSkKIAlzY2hlZF9tbV9jaWRfYWZ0ZXJfZXhlY3ZlKGN1cnJlbnQp
-OwogCS8qIGV4ZWN2ZSBzdWNjZWVkZWQgKi8KIAljdXJyZW50LT5mcy0+aW5fZXhlYyA9IDA7Ci0J
-Y3VycmVudC0+aW5fZXhlY3ZlID0gMDsKIAlyc2VxX2V4ZWN2ZShjdXJyZW50KTsKIAl1c2VyX2V2
-ZW50c19leGVjdmUoY3VycmVudCk7CiAJYWNjdF91cGRhdGVfaW50ZWdyYWxzKGN1cnJlbnQpOwpA
-QCAtMTg3OSw3ICsxODc3LDYgQEAgc3RhdGljIGludCBicHJtX2V4ZWN2ZShzdHJ1Y3QgbGludXhf
-YmlucHJtICpicHJtKQogCiAJc2NoZWRfbW1fY2lkX2FmdGVyX2V4ZWN2ZShjdXJyZW50KTsKIAlj
-dXJyZW50LT5mcy0+aW5fZXhlYyA9IDA7Ci0JY3VycmVudC0+aW5fZXhlY3ZlID0gMDsKIAogCXJl
-dHVybiByZXR2YWw7CiB9CkBAIC0xOTEwLDYgKzE5MDcsNyBAQCBzdGF0aWMgaW50IGRvX2V4ZWN2
-ZWF0X2NvbW1vbihpbnQgZmQsIHN0cnVjdCBmaWxlbmFtZSAqZmlsZW5hbWUsCiAJLyogV2UncmUg
-YmVsb3cgdGhlIGxpbWl0IChzdGlsbCBvciBhZ2FpbiksIHNvIHdlIGRvbid0IHdhbnQgdG8gbWFr
-ZQogCSAqIGZ1cnRoZXIgZXhlY3ZlKCkgY2FsbHMgZmFpbC4gKi8KIAljdXJyZW50LT5mbGFncyAm
-PSB+UEZfTlBST0NfRVhDRUVERUQ7CisJY3VycmVudC0+aW5fZXhlY3ZlID0gMTsKIAogCWJwcm0g
-PSBhbGxvY19icHJtKGZkLCBmaWxlbmFtZSwgZmxhZ3MpOwogCWlmIChJU19FUlIoYnBybSkpIHsK
-QEAgLTE5NjUsNiArMTk2Myw3IEBAIHN0YXRpYyBpbnQgZG9fZXhlY3ZlYXRfY29tbW9uKGludCBm
-ZCwgc3RydWN0IGZpbGVuYW1lICpmaWxlbmFtZSwKIAlmcmVlX2Jwcm0oYnBybSk7CiAKIG91dF9y
-ZXQ6CisJY3VycmVudC0+aW5fZXhlY3ZlID0gMDsKIAlwdXRuYW1lKGZpbGVuYW1lKTsKIAlyZXR1
-cm4gcmV0dmFsOwogfQpAQCAtMTk4NSw2ICsxOTg0LDcgQEAgaW50IGtlcm5lbF9leGVjdmUoY29u
-c3QgY2hhciAqa2VybmVsX2ZpbGVuYW1lLAogCWlmIChJU19FUlIoZmlsZW5hbWUpKQogCQlyZXR1
-cm4gUFRSX0VSUihmaWxlbmFtZSk7CiAKKwljdXJyZW50LT5pbl9leGVjdmUgPSAxOwogCWJwcm0g
-PSBhbGxvY19icHJtKGZkLCBmaWxlbmFtZSwgMCk7CiAJaWYgKElTX0VSUihicHJtKSkgewogCQly
-ZXR2YWwgPSBQVFJfRVJSKGJwcm0pOwpAQCAtMjAyNCw2ICsyMDI0LDcgQEAgaW50IGtlcm5lbF9l
-eGVjdmUoY29uc3QgY2hhciAqa2VybmVsX2ZpbGVuYW1lLAogb3V0X2ZyZWU6CiAJZnJlZV9icHJt
-KGJwcm0pOwogb3V0X3JldDoKKwljdXJyZW50LT5pbl9leGVjdmUgPSAwOwogCXB1dG5hbWUoZmls
-ZW5hbWUpOwogCXJldHVybiByZXR2YWw7CiB9Cg==
---00000000000085dd51060fb42625--
+diff --git a/drivers/net/wireless/ath/ath9k/htc.h b/drivers/net/wireless/ath/ath9k/htc.h
+index 237f4ec2cffd..6c33e898b300 100644
+--- a/drivers/net/wireless/ath/ath9k/htc.h
++++ b/drivers/net/wireless/ath/ath9k/htc.h
+@@ -306,7 +306,6 @@ struct ath9k_htc_tx {
+ 	DECLARE_BITMAP(tx_slot, MAX_TX_BUF_NUM);
+ 	struct timer_list cleanup_timer;
+ 	spinlock_t tx_lock;
+-	bool initialized;
+ };
+ 
+ struct ath9k_htc_tx_ctl {
+@@ -515,6 +514,7 @@ struct ath9k_htc_priv {
+ 	unsigned long ps_usecount;
+ 	bool ps_enabled;
+ 	bool ps_idle;
++	bool initialized;
+ 
+ #ifdef CONFIG_MAC80211_LEDS
+ 	enum led_brightness brightness;
+diff --git a/drivers/net/wireless/ath/ath9k/htc_drv_init.c b/drivers/net/wireless/ath/ath9k/htc_drv_init.c
+index dae3d9c7b640..fc339079ee8c 100644
+--- a/drivers/net/wireless/ath/ath9k/htc_drv_init.c
++++ b/drivers/net/wireless/ath/ath9k/htc_drv_init.c
+@@ -966,6 +966,10 @@ int ath9k_htc_probe_device(struct htc_target *htc_handle, struct device *dev,
+ 
+ 	htc_handle->drv_priv = priv;
+ 
++	/* Allow ath9k_wmi_event_tasklet() to operate. */
++	smp_wmb();
++	priv->initialized = true;
++
+ 	return 0;
+ 
+ err_init:
+diff --git a/drivers/net/wireless/ath/ath9k/htc_drv_txrx.c b/drivers/net/wireless/ath/ath9k/htc_drv_txrx.c
+index 672789e3c55d..768ed8ea5c9f 100644
+--- a/drivers/net/wireless/ath/ath9k/htc_drv_txrx.c
++++ b/drivers/net/wireless/ath/ath9k/htc_drv_txrx.c
+@@ -814,10 +814,6 @@ int ath9k_tx_init(struct ath9k_htc_priv *priv)
+ 	skb_queue_head_init(&priv->tx.data_vo_queue);
+ 	skb_queue_head_init(&priv->tx.tx_failed);
+ 
+-	/* Allow ath9k_wmi_event_tasklet(WMI_TXSTATUS_EVENTID) to operate. */
+-	smp_wmb();
+-	priv->tx.initialized = true;
+-
+ 	return 0;
+ }
+ 
+diff --git a/drivers/net/wireless/ath/ath9k/wmi.c b/drivers/net/wireless/ath/ath9k/wmi.c
+index 1476b42b52a9..805ad31edba2 100644
+--- a/drivers/net/wireless/ath/ath9k/wmi.c
++++ b/drivers/net/wireless/ath/ath9k/wmi.c
+@@ -155,6 +155,12 @@ void ath9k_wmi_event_tasklet(struct tasklet_struct *t)
+ 		}
+ 		spin_unlock_irqrestore(&wmi->wmi_lock, flags);
+ 
++		/* Check if ath9k_htc_probe_device() completed. */
++		if (!data_race(priv->initialized)) {
++			kfree_skb(skb);
++			continue;
++		}
++
+ 		hdr = (struct wmi_cmd_hdr *) skb->data;
+ 		cmd_id = be16_to_cpu(hdr->command_id);
+ 		wmi_event = skb_pull(skb, sizeof(struct wmi_cmd_hdr));
+@@ -169,10 +175,6 @@ void ath9k_wmi_event_tasklet(struct tasklet_struct *t)
+ 					     &wmi->drv_priv->fatal_work);
+ 			break;
+ 		case WMI_TXSTATUS_EVENTID:
+-			/* Check if ath9k_tx_init() completed. */
+-			if (!data_race(priv->tx.initialized))
+-				break;
+-
+ 			spin_lock_bh(&priv->tx.tx_lock);
+ 			if (priv->tx.flags & ATH9K_HTC_OP_TX_DRAIN) {
+ 				spin_unlock_bh(&priv->tx.tx_lock);
