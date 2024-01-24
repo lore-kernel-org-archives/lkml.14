@@ -1,57 +1,56 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DB1C13667A
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 22:45:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA803137C54
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 22:45:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706136303; cv=none; b=CZAPUtjLeMDp0+hF66BMumefiRv6k6NQ95mK69wvQhqchXJa/vaVcHZLg7NPA46dYAMQMxXYO0SVIQiOk64vOusrwcfi3HuJMRP5Thb79JWvZbLCAVc3iVDH1hTieW7MbJqj6+R63Wfddp92ABklMDBr5GNDek1En36OvKqVKq8=
+	t=1706136305; cv=none; b=jpAmp8SlGXQ4+1Mr0rIEObIARXIN95SHlLLOVyfs2PccGgW/JnV6UNl/2SmauCd6UU2DRPV/GfoyuCI5qGHbHW2p2letjNvrYm7OlK+6KafElrQ7LoURA1+xBygzIQ3T7KsxBDzAhkHRcIiKDsHZodK0loFwvX/EZ8+tGDvo18o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706136303; c=relaxed/simple;
-	bh=MqGX90ifKvDAB4mcnexas5BdXpJwH6BIFxBoDJQyEo8=;
+	s=arc-20240116; t=1706136305; c=relaxed/simple;
+	bh=D9k18Awv+U2dEMlY5zBqAz1WwWpla93wLTyXIuHu79o=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=S/J5RQX+5/W1wPN7q3LSRwnovSxp3XvW83M/rRFK0N2HLL2o+WLjZkpuM+YMYdql/iAiBXP0t5YlJW5jknS7Rjp6FWaPwZLPA/N25u98GILuyyZ0eVVKM+jNEOzlZjN+ejGtwd0i8epZlpgL19wgBGTyWCcOjGOV5GQ8BTO+4ho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=darkphysics.net; spf=pass smtp.mailfrom=darkphysics.net; dkim=pass (2048-bit key) header.d=darkphysics.net header.i=@darkphysics.net header.b=lJL84VaC; arc=none smtp.client-ip=209.85.214.173
+	 MIME-Version; b=sj9DLuLx2I2QQuDHn5pnsm6pBHMf9z6NiFQoUQGpK1tg8wvkNCWHJDnUroeGJhEkO8kRN22pBmobvglG/9FrIsZwp/3SaQ2Dok76Z67JaQcJANW8qHj8Q9rrVhciQbZ3xnArCzg4WS4VTiUtwGL1F5g+KAt+ZmB+zoNyay8tvog=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=darkphysics.net; spf=pass smtp.mailfrom=darkphysics.net; dkim=pass (2048-bit key) header.d=darkphysics.net header.i=@darkphysics.net header.b=Q/MdWwQn; arc=none smtp.client-ip=209.85.214.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=darkphysics.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=darkphysics.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=darkphysics.net header.i=@darkphysics.net header.b="lJL84VaC"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1d74678df08so24599075ad.1
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 14:45:01 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=darkphysics.net header.i=@darkphysics.net header.b="Q/MdWwQn"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1d427518d52so1289815ad.0
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 14:45:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=darkphysics.net; s=google; t=1706136300; x=1706741100; darn=vger.kernel.org;
+        d=darkphysics.net; s=google; t=1706136303; x=1706741103; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=iu8HUr+B6TPinTUaPQf0bFQfe6Q8eXlbxgT6SE9l4WM=;
-        b=lJL84VaCPHRV/dzzm6oPuzLmX+ZLaeIeIjj/Jzx28n+zFeDIOtDIFW8fuhEofRneF3
-         3cWI0Dyr+zdPzqZOPXyBlowiiIsyXPGWAa9LXgcVm3x7KS0FyUO4OQ8P7JOSGyVonLkD
-         1Kmxxx+rpyce6kiKYoe70lTw8xs6o6pFyGmjsjOHQ30YPkgSXExTaSwGOIOu+o+KEDrW
-         ElhfeM8jgI9QWTqGXai6LJIs4omnrmfL1Z+Em57qboTlbhGPJsW/chrmCA2GDVblXe/j
-         icnCTC7E8TfbvhLwrJmIiYSOKwULfWpNuwnnNzIt/tNhhmKYfPXhzriiNxa0udd3BJaR
-         utBA==
+        bh=2LRZsfdwfrORDxZGKvig5TSB0A65chM/WW3zBOa9jbg=;
+        b=Q/MdWwQnTAjyQFw8s5Q+2o8gJWOn/stvn5/0JGQ4RKEnjy2Hv14BvGqdwhCoOAbaR4
+         Qwd/kliG2z0IQl2lh5eXuW0SQA0EpCbSv8HhfwoXVnppy82tS96nY4ElGtXTngsMWcfH
+         4ynRPdlzjjcj8g7cPzXk7hRs89wlV0Aus7log8AyuiH8jfOQ6CUd6beu6FlEZhIo869l
+         QuC0PfTnExc0YfZ9roUnCs2I4A8+eRR2pluKKlh+9qFPmo0OW00kSq3GkARyDtjFuzxp
+         qnujbaTrCHNrDHjLv7Z4qdUs36EoDa7O7UZFmvJNXu//zl10rAWoOCf5Vjb6S4sLUYx3
+         XzlQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706136300; x=1706741100;
+        d=1e100.net; s=20230601; t=1706136303; x=1706741103;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=iu8HUr+B6TPinTUaPQf0bFQfe6Q8eXlbxgT6SE9l4WM=;
-        b=EuuL97mgVn+AaNI2FdBbDAW2mQnOi0BHBotEj8NmygBRe2AvJCUgYP3Hyre25fboos
-         meRPoY29XR841b6MQjjrdX7jdffZ3QXjVl03B3H7mXVis7zDuZXgIzVMbskdf0Ei4Ntr
-         u6hEcnhj6c/HmND0icmNiBggi/dW3McF0zBnzu9xGp5vZQWxrpkXGoQ6QYul+maWFjgp
-         H/VeCfNMeZdYWyaKB0hE1TMQcK+hYn8qTily+rVVC8mXF0+jgEueEOkYfFc3byXbw6zJ
-         v/g83N4NNaMjV1JZ97xTAejsg+n26XlaIVngmuaIjzgCNlPgfAa33745unWRNfRRWQwO
-         H99w==
-X-Gm-Message-State: AOJu0YweZoGIEJI1e5p6FjsiFGmq7SEiXNnkUWrRBZzHLRApnkFiUuTF
-	c3bAZ48F53xoW3Hxl6qnPZxOu2oBsgmBoGYr8CMk2s+LTJVBJ0zgcSRyCUEgejJC2mWaAKp1Y5l
-	A
-X-Google-Smtp-Source: AGHT+IF26Bc8sizywlTaTIeoI/iPF3Rp4xvRlzxMR6zS1SW856AIhx5UxfdW9z4BQ0qAm0d14is1ig==
-X-Received: by 2002:a17:902:d4c1:b0:1d7:5d64:b2b8 with SMTP id o1-20020a170902d4c100b001d75d64b2b8mr114508plg.106.1706136300628;
-        Wed, 24 Jan 2024 14:45:00 -0800 (PST)
+        bh=2LRZsfdwfrORDxZGKvig5TSB0A65chM/WW3zBOa9jbg=;
+        b=f42yUHdbfK0I3IQrqaRusggo3MdmUl/CSX7VdTYBgs7OOSpZa3gLe6rZfFK3Do8u/1
+         aX93EawiX6MHSo0AhsdB1Frc2+fxaxzLlWBTeJ+qjwQ9PhUuSsyhcfrSjtifVnNIq7Bs
+         BJIu6NNHVuKLFaeS6rYXmjEOcnJTpDcxpXizaQUZB9HPQiEpdLgaqhgO2baujLIaDL2c
+         ixNEFuB+4nl665NEEXZSjGiFr3nB4fWbikN303Vvz9Q821jmSxFtixzBGfu2kqGHCPrN
+         ekraQvdrk+T2cHjatl0wk1Hma9wuWS5WA3Roqf1UttSgBDFDvwKfKl2PuqrVjfCkF4ke
+         u8Gg==
+X-Gm-Message-State: AOJu0YySeAs081KaTfX0LJClHFPKYTjf8nJDSZXW/7S0anpBGhQhkAG/
+	nehYWVT8ZOwecN1kJP9UTL+SDu96rrWkGaX58wuUtgq3yD/Bp78uJ9IOkZVceXE=
+X-Google-Smtp-Source: AGHT+IEY27lzmdA2Ee4fGHWMp3iV2kWGGYcxqXR9yHlBYLPOximp6zNF+uanQXJukAI/fN9pbTsEvw==
+X-Received: by 2002:a17:903:24c:b0:1d0:4802:3b6c with SMTP id j12-20020a170903024c00b001d048023b6cmr64595plh.4.1706136303355;
+        Wed, 24 Jan 2024 14:45:03 -0800 (PST)
 Received: from oatmeal.darkphysics (c-76-146-178-2.hsd1.wa.comcast.net. [76.146.178.2])
-        by smtp.gmail.com with ESMTPSA id i5-20020a170902c28500b001d73a2acc0csm6743987pld.283.2024.01.24.14.44.59
+        by smtp.gmail.com with ESMTPSA id i5-20020a170902c28500b001d73a2acc0csm6743987pld.283.2024.01.24.14.45.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jan 2024 14:44:59 -0800 (PST)
+        Wed, 24 Jan 2024 14:45:02 -0800 (PST)
 From: Tree Davies <tdavies@darkphysics.net>
 To: gregkh@linuxfoundation.org,
 	philipp.g.hortmann@gmail.com,
@@ -59,9 +58,9 @@ To: gregkh@linuxfoundation.org,
 Cc: linux-staging@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	Tree Davies <tdavies@darkphysics.net>
-Subject: [PATCH 05/18] Staging: rtl8192e: Rename function pointer SetHwRegHandler()
-Date: Wed, 24 Jan 2024 14:44:39 -0800
-Message-Id: <20240124224452.968724-6-tdavies@darkphysics.net>
+Subject: [PATCH 08/18] Staging: rtl8192e: Rename variable PeerHTInfoBuf
+Date: Wed, 24 Jan 2024 14:44:42 -0800
+Message-Id: <20240124224452.968724-9-tdavies@darkphysics.net>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240124224452.968724-1-tdavies@darkphysics.net>
 References: <20240124224452.968724-1-tdavies@darkphysics.net>
@@ -73,166 +72,83 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Rename function pointer SetHwRegHandler to set_hw_reg_handler to fix checkpatch
+Rename variable PeerHTInfoBuf to peer_ht_info_buf to fix checkpatch
 warning Avoid CamelCase.
 
 Signed-off-by: Tree Davies <tdavies@darkphysics.net>
 ---
- drivers/staging/rtl8192e/rtl8192e/r8192E_dev.c |  4 ++--
- drivers/staging/rtl8192e/rtl8192e/rtl_core.c   | 12 ++++++------
- drivers/staging/rtl8192e/rtl8192e/rtl_dm.c     |  6 +++---
- drivers/staging/rtl8192e/rtllib.h              |  2 +-
- drivers/staging/rtl8192e/rtllib_softmac.c      |  6 +++---
- 5 files changed, 15 insertions(+), 15 deletions(-)
+ drivers/staging/rtl8192e/rtl819x_HT.h     |  2 +-
+ drivers/staging/rtl8192e/rtl819x_HTProc.c | 14 +++++++-------
+ drivers/staging/rtl8192e/rtllib_softmac.c |  2 +-
+ 3 files changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/staging/rtl8192e/rtl8192e/r8192E_dev.c b/drivers/staging/rtl8192e/rtl8192e/r8192E_dev.c
-index 9b9d95ba06df..4cd3d7b7c31c 100644
---- a/drivers/staging/rtl8192e/rtl8192e/r8192E_dev.c
-+++ b/drivers/staging/rtl8192e/rtl8192e/r8192E_dev.c
-@@ -164,7 +164,7 @@ void rtl92e_set_reg(struct net_device *dev, u8 variable, u8 *val)
- 				    eACI);
- 			break;
- 		}
--		priv->rtllib->SetHwRegHandler(dev, HW_VAR_ACM_CTRL,
-+		priv->rtllib->set_hw_reg_handler(dev, HW_VAR_ACM_CTRL,
- 					      &pAcParam);
- 		break;
- 	}
-@@ -1698,7 +1698,7 @@ void rtl92e_stop_adapter(struct net_device *dev, bool reset)
- 	u32	ulRegRead;
+diff --git a/drivers/staging/rtl8192e/rtl819x_HT.h b/drivers/staging/rtl8192e/rtl819x_HT.h
+index 29e1206078fe..18dab893270f 100644
+--- a/drivers/staging/rtl8192e/rtl819x_HT.h
++++ b/drivers/staging/rtl8192e/rtl819x_HT.h
+@@ -100,7 +100,7 @@ struct rt_hi_throughput {
+ 	enum ht_spec_ver peer_ht_spec_ver;
+ 	struct ht_capab_ele SelfHTCap;
+ 	u8 peer_ht_cap_buf[32];
+-	u8 PeerHTInfoBuf[32];
++	u8 peer_ht_info_buf[32];
+ 	u8 ampdu_enable;
+ 	u8 current_ampdu_enable;
+ 	u8 ampdu_factor;
+diff --git a/drivers/staging/rtl8192e/rtl819x_HTProc.c b/drivers/staging/rtl8192e/rtl819x_HTProc.c
+index cea3284dd787..98f0ac80f1fd 100644
+--- a/drivers/staging/rtl8192e/rtl819x_HTProc.c
++++ b/drivers/staging/rtl8192e/rtl819x_HTProc.c
+@@ -442,11 +442,11 @@ void ht_on_assoc_rsp(struct rtllib_device *ieee)
+ 	else
+ 		pPeerHTCap = (struct ht_capab_ele *)(ht_info->peer_ht_cap_buf);
  
- 	op_mode = RT_OP_MODE_NO_LINK;
--	priv->rtllib->SetHwRegHandler(dev, HW_VAR_MEDIA_STATUS, &op_mode);
-+	priv->rtllib->set_hw_reg_handler(dev, HW_VAR_MEDIA_STATUS, &op_mode);
+-	if (!memcmp(ht_info->PeerHTInfoBuf, EWC11NHTInfo, sizeof(EWC11NHTInfo)))
++	if (!memcmp(ht_info->peer_ht_info_buf, EWC11NHTInfo, sizeof(EWC11NHTInfo)))
+ 		pPeerHTInfo = (struct ht_info_ele *)
+-			     (&ht_info->PeerHTInfoBuf[4]);
++			     (&ht_info->peer_ht_info_buf[4]);
+ 	else
+-		pPeerHTInfo = (struct ht_info_ele *)(ht_info->PeerHTInfoBuf);
++		pPeerHTInfo = (struct ht_info_ele *)(ht_info->peer_ht_info_buf);
  
- 	if (!priv->rtllib->bSupportRemoteWakeUp) {
- 		u1bTmp = 0x0;
-diff --git a/drivers/staging/rtl8192e/rtl8192e/rtl_core.c b/drivers/staging/rtl8192e/rtl8192e/rtl_core.c
-index f986dbb215e4..79e66b726b28 100644
---- a/drivers/staging/rtl8192e/rtl8192e/rtl_core.c
-+++ b/drivers/staging/rtl8192e/rtl8192e/rtl_core.c
-@@ -236,14 +236,14 @@ static void _rtl92e_update_cap(struct net_device *dev, u16 cap)
- 		if (priv->dot11_current_preamble_mode != PREAMBLE_SHORT) {
- 			ShortPreamble = true;
- 			priv->dot11_current_preamble_mode = PREAMBLE_SHORT;
--			priv->rtllib->SetHwRegHandler(dev, HW_VAR_ACK_PREAMBLE,
-+			priv->rtllib->set_hw_reg_handler(dev, HW_VAR_ACK_PREAMBLE,
- 					(unsigned char *)&ShortPreamble);
- 		}
- 	} else {
- 		if (priv->dot11_current_preamble_mode != PREAMBLE_LONG) {
- 			ShortPreamble = false;
- 			priv->dot11_current_preamble_mode = PREAMBLE_LONG;
--			priv->rtllib->SetHwRegHandler(dev, HW_VAR_ACK_PREAMBLE,
-+			priv->rtllib->set_hw_reg_handler(dev, HW_VAR_ACK_PREAMBLE,
- 					      (unsigned char *)&ShortPreamble);
- 		}
- 	}
-@@ -256,13 +256,13 @@ static void _rtl92e_update_cap(struct net_device *dev, u16 cap)
- 		   (!priv->rtllib->ht_info->current_rt2rt_long_slot_time)) {
- 			if (cur_slot_time != SHORT_SLOT_TIME) {
- 				slot_time_val = SHORT_SLOT_TIME;
--				priv->rtllib->SetHwRegHandler(dev,
-+				priv->rtllib->set_hw_reg_handler(dev,
- 					 HW_VAR_SLOT_TIME, &slot_time_val);
- 			}
- 		} else {
- 			if (cur_slot_time != NON_SHORT_SLOT_TIME) {
- 				slot_time_val = NON_SHORT_SLOT_TIME;
--				priv->rtllib->SetHwRegHandler(dev,
-+				priv->rtllib->set_hw_reg_handler(dev,
- 					 HW_VAR_SLOT_TIME, &slot_time_val);
- 			}
- 		}
-@@ -301,7 +301,7 @@ static void _rtl92e_qos_activate(void *data)
- 		goto success;
+ #ifdef VERBOSE_DEBUG
+ 	print_hex_dump_bytes("%s: ", __func__, DUMP_PREFIX_NONE,
+@@ -520,8 +520,8 @@ void ht_initialize_ht_info(struct rtllib_device *ieee)
+ 	       sizeof(ht_info->SelfHTCap));
+ 	memset((void *)(&ht_info->peer_ht_cap_buf), 0,
+ 	       sizeof(ht_info->peer_ht_cap_buf));
+-	memset((void *)(&ht_info->PeerHTInfoBuf), 0,
+-	       sizeof(ht_info->PeerHTInfoBuf));
++	memset((void *)(&ht_info->peer_ht_info_buf), 0,
++	       sizeof(ht_info->peer_ht_info_buf));
  
- 	for (i = 0; i <  QOS_QUEUE_NUM; i++)
--		priv->rtllib->SetHwRegHandler(dev, HW_VAR_AC_PARAM, (u8 *)(&i));
-+		priv->rtllib->set_hw_reg_handler(dev, HW_VAR_AC_PARAM, (u8 *)(&i));
+ 	ht_info->sw_bw_in_progress = false;
  
- success:
- 	mutex_unlock(&priv->mutex);
-@@ -660,7 +660,7 @@ static void _rtl92e_init_priv_handler(struct net_device *dev)
- 	priv->rtllib->GetHalfNmodeSupportByAPsHandler =
- 						rtl92e_is_halfn_supported_by_ap;
+@@ -579,8 +579,8 @@ void ht_reset_self_and_save_peer_setting(struct rtllib_device *ieee,
  
--	priv->rtllib->SetHwRegHandler = rtl92e_set_reg;
-+	priv->rtllib->set_hw_reg_handler = rtl92e_set_reg;
- 	priv->rtllib->AllowAllDestAddrHandler = rtl92e_set_monitor_mode;
- 	priv->rtllib->init_gain_handler = rtl92e_init_gain;
- 	priv->rtllib->rtllib_ips_leave_wq = rtl92e_rtllib_ips_leave_wq;
-diff --git a/drivers/staging/rtl8192e/rtl8192e/rtl_dm.c b/drivers/staging/rtl8192e/rtl8192e/rtl_dm.c
-index 92143c50c149..57e1a361a7c9 100644
---- a/drivers/staging/rtl8192e/rtl8192e/rtl_dm.c
-+++ b/drivers/staging/rtl8192e/rtl8192e/rtl_dm.c
-@@ -1185,7 +1185,7 @@ static void _rtl92e_dm_check_edca_turbo(struct net_device *dev)
- 		if (priv->bcurrent_turbo_EDCA) {
- 			u8 tmp = AC0_BE;
+ 		if (pNetwork->bssht.bd_ht_info_len > 0 &&
+ 		    pNetwork->bssht.bd_ht_info_len <=
+-		    sizeof(ht_info->PeerHTInfoBuf))
+-			memcpy(ht_info->PeerHTInfoBuf,
++		    sizeof(ht_info->peer_ht_info_buf))
++			memcpy(ht_info->peer_ht_info_buf,
+ 			       pNetwork->bssht.bd_ht_info_buf,
+ 			       pNetwork->bssht.bd_ht_info_len);
  
--			priv->rtllib->SetHwRegHandler(dev, HW_VAR_AC_PARAM,
-+			priv->rtllib->set_hw_reg_handler(dev, HW_VAR_AC_PARAM,
- 						      (u8 *)(&tmp));
- 			priv->bcurrent_turbo_EDCA = false;
- 		}
-@@ -1636,7 +1636,7 @@ static void _rtl92e_dm_start_hw_fsync(struct net_device *dev)
- 	struct r8192_priv *priv = rtllib_priv(dev);
- 
- 	rtl92e_writel(dev, rOFDM0_RxDetector2, 0x465c12cf);
--	priv->rtllib->SetHwRegHandler(dev, HW_VAR_RF_TIMING,
-+	priv->rtllib->set_hw_reg_handler(dev, HW_VAR_RF_TIMING,
- 				      (u8 *)(&rf_timing));
- 	rtl92e_writeb(dev, 0xc3b, 0x41);
- }
-@@ -1647,7 +1647,7 @@ static void _rtl92e_dm_end_hw_fsync(struct net_device *dev)
- 	struct r8192_priv *priv = rtllib_priv(dev);
- 
- 	rtl92e_writel(dev, rOFDM0_RxDetector2, 0x465c52cd);
--	priv->rtllib->SetHwRegHandler(dev, HW_VAR_RF_TIMING, (u8 *)
-+	priv->rtllib->set_hw_reg_handler(dev, HW_VAR_RF_TIMING, (u8 *)
- 				     (&rf_timing));
- 	rtl92e_writeb(dev, 0xc3b, 0x49);
- }
-diff --git a/drivers/staging/rtl8192e/rtllib.h b/drivers/staging/rtl8192e/rtllib.h
-index 0a366874a827..cd45a9c46a94 100644
---- a/drivers/staging/rtl8192e/rtllib.h
-+++ b/drivers/staging/rtl8192e/rtllib.h
-@@ -1491,7 +1491,7 @@ struct rtllib_device {
- 	void (*init_gain_handler)(struct net_device *dev, u8 Operation);
- 	void (*ScanOperationBackupHandler)(struct net_device *dev,
- 					   u8 Operation);
--	void (*SetHwRegHandler)(struct net_device *dev, u8 variable, u8 *val);
-+	void (*set_hw_reg_handler)(struct net_device *dev, u8 variable, u8 *val);
- 
- 	void (*AllowAllDestAddrHandler)(struct net_device *dev,
- 					bool bAllowAllDA, bool WriteIntoReg);
 diff --git a/drivers/staging/rtl8192e/rtllib_softmac.c b/drivers/staging/rtl8192e/rtllib_softmac.c
-index b5cd030f28c8..b5fe471f765b 100644
+index aa98d22db90a..9ee6364f7b00 100644
 --- a/drivers/staging/rtl8192e/rtllib_softmac.c
 +++ b/drivers/staging/rtl8192e/rtllib_softmac.c
-@@ -2256,11 +2256,11 @@ static void rtllib_mlme_disassociate_request(struct rtllib_device *rtllib,
- 			rtllib->current_network.bssid[i] = 0x22;
- 		op_mode = RT_OP_MODE_NO_LINK;
- 		rtllib->op_mode = RT_OP_MODE_NO_LINK;
--		rtllib->SetHwRegHandler(rtllib->dev, HW_VAR_MEDIA_STATUS,
-+		rtllib->set_hw_reg_handler(rtllib->dev, HW_VAR_MEDIA_STATUS,
- 					(u8 *)(&op_mode));
- 		rtllib_disassociate(rtllib);
- 
--		rtllib->SetHwRegHandler(rtllib->dev, HW_VAR_BSSID,
-+		rtllib->set_hw_reg_handler(rtllib->dev, HW_VAR_BSSID,
- 					rtllib->current_network.bssid);
- 	}
- }
-@@ -2270,7 +2270,7 @@ static void rtllib_mgnt_disconnect_ap(struct rtllib_device *rtllib, u8 asRsn)
- 	bool filter_out_nonassociated_bssid = false;
- 
- 	filter_out_nonassociated_bssid = false;
--	rtllib->SetHwRegHandler(rtllib->dev, HW_VAR_CECHK_BSSID,
-+	rtllib->set_hw_reg_handler(rtllib->dev, HW_VAR_CECHK_BSSID,
- 				(u8 *)(&filter_out_nonassociated_bssid));
- 	rtllib_mlme_disassociate_request(rtllib, rtllib->current_network.bssid,
- 				       asRsn);
+@@ -1609,7 +1609,7 @@ rtllib_rx_assoc_resp(struct rtllib_device *ieee, struct sk_buff *skb,
+ 				memcpy(ieee->ht_info->peer_ht_cap_buf,
+ 				       network->bssht.bd_ht_cap_buf,
+ 				       network->bssht.bd_ht_cap_len);
+-				memcpy(ieee->ht_info->PeerHTInfoBuf,
++				memcpy(ieee->ht_info->peer_ht_info_buf,
+ 				       network->bssht.bd_ht_info_buf,
+ 				       network->bssht.bd_ht_info_len);
+ 				ieee->handle_assoc_response(ieee->dev,
 -- 
 2.39.2
 
