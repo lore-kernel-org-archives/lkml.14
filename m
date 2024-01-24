@@ -1,141 +1,79 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C41BE541
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 05:22:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F151BD2F5
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 05:29:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706073725; cv=none; b=K0LW6LR+vYs20mKWx6Np+zTQgu5PxZ0gBI8Zj6PAWolAAlZE/q+q5nBvZN4mEBWi2b7TdMcAZXdzCQtJK8sTmxr4LmXGZtH55v/1FW678a7ewxkAbTyKm/Z+7g6L3SzvcVIwGfybrbtU/B2tLs7g3oJsE5smCaqd0EqyXa93jko=
+	t=1706074152; cv=none; b=Akw8/AJBAzGv4diElWyfB/h9kCJQvoLIfrQPJ9/4pBy7Fx4hzgJX1R5SalM9MT6xYq9sH50a3OEzUQzEC3N6FmkUCzYkzahOL50yZikyaNPSCWq+lVjCNqNNZcbYPmsg8DyR03ck8B34avHiBjdPiXDmz+ItsHayfPVWu90mrAg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706073725; c=relaxed/simple;
-	bh=hU252DMMuSZQLgzYBhf+Vx2BxaVBXcFr8qCm+J/aDJM=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=cKhrbRRrPj3Ub3FkS4FeHL8u/KhHgx3xo3sp3hx94L2s3JUFAOkWOtZ4wBj21GB+BM9bJukvbWIknT6VRGsHZjOryDoPdYS6fmduaMrXEW1zSO03TfJbKaC1pnmlPpruvGPzXuussgTvy4si6CSTlFSUiZqYKGbOzEMeo8EZs58=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kfb5632t; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kfb5632t"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706073723; x=1737609723;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=hU252DMMuSZQLgzYBhf+Vx2BxaVBXcFr8qCm+J/aDJM=;
-  b=kfb5632tXL4QiyZD4Cz9nV3cIOAdiyONF+kae1ZoknTvdzkXQLtFFfQU
-   RY+EkXTc5sAS+KrVPcdKB2Szw/wFC7m3F+wMTe/WmEqb1fo2m0C2MSlts
-   n5HgfoO8eaQV3gZGpQpE0RPCgsKwoeMWYzNB4CLjC8zBigmeTZ9XpPy2R
-   lkrIOgNyghvX3OmEOCV3Nm2dTCYmDIuI4M2/0mj1ZEeXbRtlGQQUHoPaH
-   PklwWczKOvo9AbI2Z+1/TL2ncuTNPNZFO4kDlYsoCpPAvlIf1bSEKCwmj
-   ha5DKmVqYk9+oRHXKUc8gyclcYpY0oBRMcj6xHY5KcOmtMh3Xn1YK/Asj
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="15261380"
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="15261380"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2024 21:22:02 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="959392792"
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="959392792"
-Received: from yhuang6-desk2.sh.intel.com (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2024 21:21:59 -0800
-From: "Huang, Ying" <ying.huang@intel.com>
-To: Yosry Ahmed <yosryahmed@google.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,  Johannes Weiner
- <hannes@cmpxchg.org>,  Nhat Pham <nphamcs@gmail.com>,  Chris Li
- <chrisl@kernel.org>,  Chengming Zhou <zhouchengming@bytedance.com>,
-  linux-mm@kvack.org,  linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] mm: swap: enforce updating inuse_pages at the
- end of swap_range_free()
-In-Reply-To: <20240124045113.415378-2-yosryahmed@google.com> (Yosry Ahmed's
-	message of "Wed, 24 Jan 2024 04:51:11 +0000")
-References: <20240124045113.415378-1-yosryahmed@google.com>
-	<20240124045113.415378-2-yosryahmed@google.com>
-Date: Wed, 24 Jan 2024 13:20:02 +0800
-Message-ID: <87v87js3y5.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	s=arc-20240116; t=1706074152; c=relaxed/simple;
+	bh=SCaqfREY4WYRJaSH+a4M/iV9rOUo2A/5FsH8cNKe8wI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=aVLqz8Bc0uW8ZYT7MvVGZ8LaXgyR5Pwaq6wi3h5KCWLhg8GNmShopus//bXe64Q0BGgu/T0R5hVGclGLtRWh6kOf2f6q9hpqNoJ2swEswQ3Ux+JNk9AWrkImIqEIaa9SLuIIHwag4kxvfG4oH/MPJ9DdTxbqQ0ofBVzZhPMl/aM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 03f5958d14f34d72b6830c9b16f59e57-20240124
+X-CID-O-RULE: Release_Ham
+X-CID-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.35,REQID:514ec0a1-fb3a-47b7-b0db-28a4bdd692ba,IP:10,
+	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTI
+	ON:release,TS:-5
+X-CID-INFO: VERSION:1.1.35,REQID:514ec0a1-fb3a-47b7-b0db-28a4bdd692ba,IP:10,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:-5
+X-CID-META: VersionHash:5d391d7,CLOUDID:f00716fe-c16b-4159-a099-3b9d0558e447,B
+	ulkID:240124131300ADXQEYSM,BulkQuantity:0,Recheck:0,SF:44|66|24|17|19|102,
+	TC:nil,Content:0,EDM:-3,IP:-2,URL:11|1,File:nil,Bulk:nil,QS:nil,BEC:nil,CO
+	L:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI,TF_CID_SPAM_ULN,
+	TF_CID_SPAM_SNR
+X-UUID: 03f5958d14f34d72b6830c9b16f59e57-20240124
+X-User: huxiaoying@kylinos.cn
+Received: from localhost.localdomain [(112.64.161.44)] by mailgw
+	(envelope-from <huxiaoying@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 2033242904; Wed, 24 Jan 2024 13:12:57 +0800
+From: Tom Hu <huxiaoying@kylinos.cn>
+To: linux-kernel@vger.kernel.org
+Cc: minyard@acm.org,
+	xiaoying_hu@126.com,
+	huxiaoying <huxiaoying@kylinos.cn>
+Subject: [PATCH] char: warnning msg for devm_snprintf failed to allocate memory.
+Date: Wed, 24 Jan 2024 13:12:54 +0800
+Message-Id: <20240124051254.476341-1-huxiaoying@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+Content-Transfer-Encoding: 8bit
 
-Yosry Ahmed <yosryahmed@google.com> writes:
+From: huxiaoying <huxiaoying@kylinos.cn>
 
-> In swap_range_free(), we update inuse_pages then do some cleanups (arch
-> invalidation, zswap invalidation, swap cache cleanups, etc). During
-> swapoff, try_to_unuse() checks that inuse_pages is 0 to make sure all
-> swap entries are freed. Make sure we only update inuse_pages after we
-> are done with the cleanups in swap_range_free(), and use the proper
-> memory barriers to enforce it. This makes sure that code following
-> try_to_unuse() can safely assume that swap_range_free() ran for all
-> entries in thr swapfile (e.g. swap cache cleanup, zswap_swapoff()).
->
-> In practice, this currently isn't a problem because swap_range_free() is
-> called with the swap info lock held, and the swapoff code happens to
-> spin for that after try_to_unuse(). However, this seems fragile and
-> unintentional, so make it more relable and future-proof. This also
-> facilitates a following simplification of zswap_swapoff().
->
-> Signed-off-by: Yosry Ahmed <yosryahmed@google.com>
+Signed-off-by: Tom Hu <huxiaoying@kylinos.cn>
+---
+ drivers/char/ipmi/ipmb_dev_int.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-LGTM, Thanks!
+diff --git a/drivers/char/ipmi/ipmb_dev_int.c b/drivers/char/ipmi/ipmb_dev_int.c
+index 49100845fcb7..8e703ecb27c3 100644
+--- a/drivers/char/ipmi/ipmb_dev_int.c
++++ b/drivers/char/ipmi/ipmb_dev_int.c
+@@ -321,6 +321,9 @@ static int ipmb_probe(struct i2c_client *client)
+ 	ipmb_dev->miscdev.name = devm_kasprintf(&client->dev, GFP_KERNEL,
+ 						"%s%d", "ipmb-",
+ 						client->adapter->nr);
++	if (!ipmb_dev->miscdev.name)
++		pr_warn("Failed to allocate mem to miscdev.name\n");
++
+ 	ipmb_dev->miscdev.fops = &ipmb_fops;
+ 	ipmb_dev->miscdev.parent = &client->dev;
+ 	ret = misc_register(&ipmb_dev->miscdev);
+-- 
+2.25.1
 
-Reviewed-by: "Huang, Ying" <ying.huang@intel.com>
-
-> ---
->  mm/swapfile.c | 18 +++++++++++++++---
->  1 file changed, 15 insertions(+), 3 deletions(-)
->
-> diff --git a/mm/swapfile.c b/mm/swapfile.c
-> index b11b6057d8b5f..0580bb3e34d77 100644
-> --- a/mm/swapfile.c
-> +++ b/mm/swapfile.c
-> @@ -737,8 +737,6 @@ static void swap_range_free(struct swap_info_struct *si, unsigned long offset,
->  		if (was_full && (si->flags & SWP_WRITEOK))
->  			add_to_avail_list(si);
->  	}
-> -	atomic_long_add(nr_entries, &nr_swap_pages);
-> -	WRITE_ONCE(si->inuse_pages, si->inuse_pages - nr_entries);
->  	if (si->flags & SWP_BLKDEV)
->  		swap_slot_free_notify =
->  			si->bdev->bd_disk->fops->swap_slot_free_notify;
-> @@ -752,6 +750,14 @@ static void swap_range_free(struct swap_info_struct *si, unsigned long offset,
->  		offset++;
->  	}
->  	clear_shadow_from_swap_cache(si->type, begin, end);
-> +
-> +	/*
-> +	 * Make sure that try_to_unuse() observes si->inuse_pages reaching 0
-> +	 * only after the above cleanups are done.
-> +	 */
-> +	smp_wmb();
-> +	atomic_long_add(nr_entries, &nr_swap_pages);
-> +	WRITE_ONCE(si->inuse_pages, si->inuse_pages - nr_entries);
->  }
->  
->  static void set_cluster_next(struct swap_info_struct *si, unsigned long next)
-> @@ -2049,7 +2055,7 @@ static int try_to_unuse(unsigned int type)
->  	unsigned int i;
->  
->  	if (!READ_ONCE(si->inuse_pages))
-> -		return 0;
-> +		goto success;
->  
->  retry:
->  	retval = shmem_unuse(type);
-> @@ -2130,6 +2136,12 @@ static int try_to_unuse(unsigned int type)
->  		return -EINTR;
->  	}
->  
-> +success:
-> +	/*
-> +	 * Make sure that further cleanups after try_to_unuse() returns happen
-> +	 * after swap_range_free() reduces si->inuse_pages to 0.
-> +	 */
-> +	smp_mb();
->  	return 0;
->  }
