@@ -1,44 +1,44 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 562F117541;
-	Wed, 24 Jan 2024 02:42:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89AE517596;
+	Wed, 24 Jan 2024 02:42:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.120
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706064162; cv=none; b=jraaZdaxLTk7uqXxSSRZiL8Xi+GAP1r69mopqKEIClXI1UGiwJ+4ot/42iLzsSQbLA02f6d0CydoTvywmIWimeitaQ5dgx5h5+XMnmGeN72OsOpX/3PEdCXzjKl/hz/q81KpNlbBtk04p7jzDULvH6o99hYiw2vm1kgi3/4eGkY=
+	t=1706064163; cv=none; b=R7ym0eeJz+q/sVsknf6sW8klrvIrz6KI5/PFrUcYPvST7tC9OsllLdDZQitkjJAuRmAuPI5XL1fJjN+mV4QSfErNRh8dStF7qZAc1tg4prDZyIdwjNNHoDJBvVfGAncXfdY44l/153AVzPTYbgIzCEUTMZ16GMVdiqIOnMBZTrA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706064162; c=relaxed/simple;
-	bh=deVC/2fUZfj8WeG3WjFFJ61TeWJaKY/1dV/6Kp3bPHY=;
+	s=arc-20240116; t=1706064163; c=relaxed/simple;
+	bh=Lh/HRtmyTmg9PjjoKlPhg0GrQura9c97fLsX2mTq5DU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=pS69gigGbe53+CbCaZ9kGxV7J+/733Bd6Zv8nRPl25+n5z1od9vGSGSSf7WqleBFcVGxs1UJvdO1/oplqmH+cnW5WR45JYflkqrRD9iTUdnp8u5qE/km/O7/vdpTFej+xpVq1eonC8Qp+nelooLIn9ilDVyLgkl0F76zg1EpTSs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hbARKvv8; arc=none smtp.client-ip=192.55.52.120
+	 MIME-Version; b=EZgdM9AIEwsUL/QOYkc62kdWvSWOGoe7PFT52CzXcA7OhPoXPLGs3JU/Gx03MaR+tadBSfHWqagTe7G8lZASNxprSxOKsH6NDr+6HisRR3TlEAQtt8yElJUWsbHqTwfL+Xz4Ul8mhnygCae2AIJyMYBrfz0yCDVANU0ro5qrNug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AqnQCJNY; arc=none smtp.client-ip=192.55.52.120
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hbARKvv8"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AqnQCJNY"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706064160; x=1737600160;
+  t=1706064161; x=1737600161;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=deVC/2fUZfj8WeG3WjFFJ61TeWJaKY/1dV/6Kp3bPHY=;
-  b=hbARKvv83UznF+VpyRQI3xoqkpb8fAV5VlVb1g7L1hgRsRDSoLNZGZb5
-   OpJNPUOIDx21TmWoRFe4i21UO41h7QhiI5tzIA0J30capf2vhAX5J1Al5
-   7fH735ACQVOGVjKXOmvunagP9s8f12ATQ/KnOj56Va4LYF7DgYw/MeOqo
-   VZpqQ7yGUuRAdh0YXQYNlbHVr/YlLGXiKDjBZ1X//3p/WxY66wQUvHHuV
-   2Sr9L4zuaS1uH3uhwyJOTIiTvw953QFmlUOhX98GJv2I4JiDnWbO1gSXO
-   mRQ2gdDFnIk+NxftlPKTiU0lMMOuk1/avHhawqry84S7ONPuzQteMO4QD
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="400586484"
+  bh=Lh/HRtmyTmg9PjjoKlPhg0GrQura9c97fLsX2mTq5DU=;
+  b=AqnQCJNYg6C/IVPfeJxmbeu7jttdbR2LtRpu+PoQ23DVqw1Rsc5MrEQO
+   +Uwlf7SPM2BsgSNrKDsJPnfCSrYQwqraNFCr6x0QGmTwlfnSKaWgNlOm7
+   Xhl1bD4Bu69fl+zPet0Bon89n3lxuAEuHcri2ErSxKBpJSZD9utt0jNPU
+   vhmU0tu198rLwG5VvdisE1+A1EcL7XDB3yHleV594GoWqsLUcoizIhJkL
+   k2Lj23qGah4mboYLllMdh1PlVcd1bejWeyekJ5Mz17GYBduMsoHBAr7PZ
+   v85hyDJr1ddnqw38FxypTVi7hxdfzZYuPdknEBh8t7s+acpGGTiGN2UD+
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="400586504"
 X-IronPort-AV: E=Sophos;i="6.05,215,1701158400"; 
-   d="scan'208";a="400586484"
+   d="scan'208";a="400586504"
 Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2024 18:42:36 -0800
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2024 18:42:37 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.05,215,1701158400"; 
-   d="scan'208";a="1825858"
+   d="scan'208";a="1825869"
 Received: from 984fee00a5ca.jf.intel.com ([10.165.9.183])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2024 18:42:36 -0800
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2024 18:42:37 -0800
 From: Yang Weijiang <weijiang.yang@intel.com>
 To: seanjc@google.com,
 	pbonzini@redhat.com,
@@ -52,10 +52,11 @@ Cc: peterz@infradead.org,
 	rick.p.edgecombe@intel.com,
 	mlevitsk@redhat.com,
 	john.allen@amd.com,
-	weijiang.yang@intel.com
-Subject: [PATCH v9 11/27] KVM: x86: Add kvm_msr_{read,write}() helpers
-Date: Tue, 23 Jan 2024 18:41:44 -0800
-Message-Id: <20240124024200.102792-12-weijiang.yang@intel.com>
+	weijiang.yang@intel.com,
+	Zhang Yi Z <yi.z.zhang@linux.intel.com>
+Subject: [PATCH v9 13/27] KVM: x86: Refresh CPUID on write to guest MSR_IA32_XSS
+Date: Tue, 23 Jan 2024 18:41:46 -0800
+Message-Id: <20240124024200.102792-14-weijiang.yang@intel.com>
 X-Mailer: git-send-email 2.39.3
 In-Reply-To: <20240124024200.102792-1-weijiang.yang@intel.com>
 References: <20240124024200.102792-1-weijiang.yang@intel.com>
@@ -67,91 +68,128 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Wrap __kvm_{get,set}_msr() into two new helpers for KVM usage and use the
-helpers to replace existing usage of the raw functions.
-kvm_msr_{read,write}() are KVM-internal helpers, i.e. used when KVM needs
-to get/set a MSR value for emulating CPU behavior, i.e., host_initiated ==
-%true in the helpers.
+Update CPUID.(EAX=0DH,ECX=1).EBX to reflect current required xstate size
+due to XSS MSR modification.
+CPUID(EAX=0DH,ECX=1).EBX reports the required storage size of all enabled
+xstate features in (XCR0 | IA32_XSS). The CPUID value can be used by guest
+before allocate sufficient xsave buffer.
+
+Note, KVM does not yet support any XSS based features, i.e. supported_xss
+is guaranteed to be zero at this time.
+
+Opportunistically modify XSS write access logic as:
+If XSAVES is not enabled in the guest CPUID, forbid setting IA32_XSS msr
+to anything but 0, even if the write is host initiated.
 
 Suggested-by: Sean Christopherson <seanjc@google.com>
+Co-developed-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
+Signed-off-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
 Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
 Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
 ---
  arch/x86/include/asm/kvm_host.h |  3 ++-
- arch/x86/kvm/cpuid.c            |  2 +-
- arch/x86/kvm/x86.c              | 16 +++++++++++++---
- 3 files changed, 16 insertions(+), 5 deletions(-)
+ arch/x86/kvm/cpuid.c            | 15 ++++++++++++++-
+ arch/x86/kvm/x86.c              | 16 ++++++++++++----
+ 3 files changed, 28 insertions(+), 6 deletions(-)
 
 diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 5c665165024c..40dd796ea085 100644
+index 40dd796ea085..6efaaaa15945 100644
 --- a/arch/x86/include/asm/kvm_host.h
 +++ b/arch/x86/include/asm/kvm_host.h
-@@ -2012,9 +2012,10 @@ void kvm_prepare_emulation_failure_exit(struct kvm_vcpu *vcpu);
+@@ -772,7 +772,6 @@ struct kvm_vcpu_arch {
+ 	bool at_instruction_boundary;
+ 	bool tpr_access_reporting;
+ 	bool xfd_no_write_intercept;
+-	u64 ia32_xss;
+ 	u64 microcode_version;
+ 	u64 arch_capabilities;
+ 	u64 perf_capabilities;
+@@ -828,6 +827,8 @@ struct kvm_vcpu_arch {
  
- void kvm_enable_efer_bits(u64);
- bool kvm_valid_efer(struct kvm_vcpu *vcpu, u64 efer);
--int __kvm_get_msr(struct kvm_vcpu *vcpu, u32 index, u64 *data, bool host_initiated);
- int kvm_emulate_msr_read(struct kvm_vcpu *vcpu, u32 index, u64 *data);
- int kvm_emulate_msr_write(struct kvm_vcpu *vcpu, u32 index, u64 data);
-+int kvm_msr_read(struct kvm_vcpu *vcpu, u32 index, u64 *data);
-+int kvm_msr_write(struct kvm_vcpu *vcpu, u32 index, u64 data);
- int kvm_emulate_rdmsr(struct kvm_vcpu *vcpu);
- int kvm_emulate_wrmsr(struct kvm_vcpu *vcpu);
- int kvm_emulate_as_nop(struct kvm_vcpu *vcpu);
+ 	u64 xcr0;
+ 	u64 guest_supported_xcr0;
++	u64 guest_supported_xss;
++	u64 ia32_xss;
+ 
+ 	struct kvm_pio_request pio;
+ 	void *pio_data;
 diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-index 624954203b40..acc360c76318 100644
+index acc360c76318..3ab133530573 100644
 --- a/arch/x86/kvm/cpuid.c
 +++ b/arch/x86/kvm/cpuid.c
-@@ -1548,7 +1548,7 @@ bool kvm_cpuid(struct kvm_vcpu *vcpu, u32 *eax, u32 *ebx,
- 		*edx = entry->edx;
- 		if (function == 7 && index == 0) {
- 			u64 data;
--		        if (!__kvm_get_msr(vcpu, MSR_IA32_TSX_CTRL, &data, true) &&
-+		        if (!kvm_msr_read(vcpu, MSR_IA32_TSX_CTRL, &data) &&
- 			    (data & TSX_CTRL_CPUID_CLEAR))
- 				*ebx &= ~(F(RTM) | F(HLE));
- 		} else if (function == 0x80000007) {
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 3671f4868d1b..594c9e025f95 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -1920,8 +1920,8 @@ static int kvm_set_msr_ignored_check(struct kvm_vcpu *vcpu,
-  * Returns 0 on success, non-0 otherwise.
-  * Assumes vcpu_load() was already called.
-  */
--int __kvm_get_msr(struct kvm_vcpu *vcpu, u32 index, u64 *data,
--		  bool host_initiated)
-+static int __kvm_get_msr(struct kvm_vcpu *vcpu, u32 index, u64 *data,
-+			 bool host_initiated)
- {
- 	struct msr_data msr;
- 	int ret;
-@@ -1947,6 +1947,16 @@ int __kvm_get_msr(struct kvm_vcpu *vcpu, u32 index, u64 *data,
- 	return ret;
+@@ -275,7 +275,8 @@ static void __kvm_update_cpuid_runtime(struct kvm_vcpu *vcpu, struct kvm_cpuid_e
+ 	best = cpuid_entry2_find(entries, nent, 0xD, 1);
+ 	if (best && (cpuid_entry_has(best, X86_FEATURE_XSAVES) ||
+ 		     cpuid_entry_has(best, X86_FEATURE_XSAVEC)))
+-		best->ebx = xstate_required_size(vcpu->arch.xcr0, true);
++		best->ebx = xstate_required_size(vcpu->arch.xcr0 |
++						 vcpu->arch.ia32_xss, true);
+ 
+ 	best = __kvm_find_kvm_cpuid_features(vcpu, entries, nent);
+ 	if (kvm_hlt_in_guest(vcpu->kvm) && best &&
+@@ -312,6 +313,17 @@ static u64 vcpu_get_supported_xcr0(struct kvm_vcpu *vcpu)
+ 	return (best->eax | ((u64)best->edx << 32)) & kvm_caps.supported_xcr0;
  }
  
-+int kvm_msr_write(struct kvm_vcpu *vcpu, u32 index, u64 data)
++static u64 vcpu_get_supported_xss(struct kvm_vcpu *vcpu)
 +{
-+	return __kvm_set_msr(vcpu, index, data, true);
++	struct kvm_cpuid_entry2 *best;
++
++	best = kvm_find_cpuid_entry_index(vcpu, 0xd, 1);
++	if (!best)
++		return 0;
++
++	return (best->ecx | ((u64)best->edx << 32)) & kvm_caps.supported_xss;
 +}
 +
-+int kvm_msr_read(struct kvm_vcpu *vcpu, u32 index, u64 *data)
-+{
-+	return __kvm_get_msr(vcpu, index, data, true);
-+}
-+
- static int kvm_get_msr_ignored_check(struct kvm_vcpu *vcpu,
- 				     u32 index, u64 *data, bool host_initiated)
+ static bool kvm_cpuid_has_hyperv(struct kvm_cpuid_entry2 *entries, int nent)
  {
-@@ -12296,7 +12306,7 @@ void kvm_vcpu_reset(struct kvm_vcpu *vcpu, bool init_event)
- 						  MSR_IA32_MISC_ENABLE_BTS_UNAVAIL;
- 
- 		__kvm_set_xcr(vcpu, 0, XFEATURE_MASK_FP);
--		__kvm_set_msr(vcpu, MSR_IA32_XSS, 0, true);
-+		kvm_msr_write(vcpu, MSR_IA32_XSS, 0);
+ #ifdef CONFIG_KVM_HYPERV
+@@ -362,6 +374,7 @@ static void kvm_vcpu_after_set_cpuid(struct kvm_vcpu *vcpu)
  	}
  
- 	/* All GPRs except RDX (handled below) are zeroed on RESET/INIT. */
+ 	vcpu->arch.guest_supported_xcr0 = vcpu_get_supported_xcr0(vcpu);
++	vcpu->arch.guest_supported_xss = vcpu_get_supported_xss(vcpu);
+ 
+ 	kvm_update_pv_runtime(vcpu);
+ 
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index b3a39886e418..7b7a15aab3aa 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -3924,20 +3924,28 @@ int kvm_set_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+ 			vcpu->arch.ia32_tsc_adjust_msr += adj;
+ 		}
+ 		break;
+-	case MSR_IA32_XSS:
+-		if (!msr_info->host_initiated &&
+-		    !guest_cpuid_has(vcpu, X86_FEATURE_XSAVES))
++	case MSR_IA32_XSS: {
++		/*
++		 * If KVM reported support of XSS MSR, even guest CPUID doesn't
++		 * support XSAVES, still allow userspace to set default value(0)
++		 * to this MSR.
++		 */
++		if (!guest_cpuid_has(vcpu, X86_FEATURE_XSAVES) &&
++		    !(msr_info->host_initiated && data == 0))
+ 			return 1;
+ 		/*
+ 		 * KVM supports exposing PT to the guest, but does not support
+ 		 * IA32_XSS[bit 8]. Guests have to use RDMSR/WRMSR rather than
+ 		 * XSAVES/XRSTORS to save/restore PT MSRs.
+ 		 */
+-		if (data & ~kvm_caps.supported_xss)
++		if (data & ~vcpu->arch.guest_supported_xss)
+ 			return 1;
++		if (vcpu->arch.ia32_xss == data)
++			break;
+ 		vcpu->arch.ia32_xss = data;
+ 		kvm_update_cpuid_runtime(vcpu);
+ 		break;
++	}
+ 	case MSR_SMI_COUNT:
+ 		if (!msr_info->host_initiated)
+ 			return 1;
 -- 
 2.39.3
 
