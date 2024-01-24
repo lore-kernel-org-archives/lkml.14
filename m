@@ -1,131 +1,118 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDA8A17562;
-	Wed, 24 Jan 2024 08:27:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3202A2F3F
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 08:30:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706084860; cv=none; b=uWmi0erUCQIPV81+qFKd0K6OsGMiOMX27CDd1BS69se5wA10y859Ov7TD0OXMVgzWFcNkvn1oq2MMoezmpXRiaLNrQI2VoZtnluFGa9XZrdjBhazlaqg7VZmHJVN65eWZJy0SQ3tLohOSuhR2Yo4BpTJQMDWZOWcAv2AYxDTQgk=
+	t=1706085026; cv=none; b=lva4GTMkK8Fz/p4zrQ1BV5vkp9Ycn+2l3U6tjEzitrIWzKcw6v+cL3APEcJfZ8Dd1t76uYCC8vYHnsZkw7LrHo7o3EqeKoRiLSR0yT++uZ6slR3Y+3eKs4OXA6fUo9hGfXFif0pCvZKP/5CPg3Wgv0SbDH3W10v9O8+qEYu2NwY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706084860; c=relaxed/simple;
-	bh=D/3W7RJsCcBLtUtTh+4k2/CoFhq/vowhmOY8IGXc+KY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IJxW81I8PLxWkNj3R9MgWBFT8zOZB3uVBBhTz92ZNI4ONp2BPhcv9KZNGy57O+ngl6/AeE2z2sNxpV9uoEHL1CYN+hwcG15A4v3U7P23XoS5glcKoKWgRI3FwS19HlH1+evhG1jfzroAHkCaqUiGQsrESGiJyPb6Kakz97RwEo4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=GUdmYU31; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1706085026; c=relaxed/simple;
+	bh=ZKsH2VREsO19/Ss18aLaVOH/PWpISvXjzjfUPgj1H/0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fIV4fZGtgMI3loWwIYPe0vCotNAz3mFA/ZSOfNTKiTi0emPYksRlqgB9Z39PnOCogbHut9Gsoy0Bjusmv4ZBy1TAhIYpsjPAyHWUL/3GiKZgjcJyISjcBvB2EKWi2YhtYqE1soHdBPWFsPxIIWi8+vlbx1RgRLRgmZv5SiKPIKg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FDpalqq6; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="GUdmYU31"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1706084856;
-	bh=D/3W7RJsCcBLtUtTh+4k2/CoFhq/vowhmOY8IGXc+KY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=GUdmYU31XCa+Z1vt3C9m2f0rfVL1OZ9JKUXOaN4LdVZVjs17LHcviQj0irZzOeTY6
-	 O/f3aAMZClPhrwsB66gVFkT+FCi2ZxYtDuuPKzo9gKd1cbnxhmjZoC0hpV+CmeEaEH
-	 /bxiC0t59kRvGt5L5ayeha5x4O0IglqFxWchpx46q54mLXov9m3/o/nhg8gI7yFNct
-	 kOrc2H3CruKpZgDHHf7CF1ifpQHRJMADYx2grxbIy+Kdpi71DUQ28NKrew5wUZs8pY
-	 lR9OvIH4igtikPQsyIw5I+TIsJhCVMqcDI25Y7YHpXpmLy0PinRVqQsUdpKBcpjH71
-	 e+33HKPdsW3yw==
-Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 1D5AE3782074;
-	Wed, 24 Jan 2024 08:27:36 +0000 (UTC)
-Message-ID: <786c85c7-7b38-4a2a-85ec-282196de7b5e@collabora.com>
-Date: Wed, 24 Jan 2024 09:27:35 +0100
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FDpalqq6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1706085023;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=TNoxPybDnpkJWKABzryLmZgP0Fmh6igqY9ezgktqVMM=;
+	b=FDpalqq6hO9fN/rLU2gH1siZEFCN8qQ5dhaRDLw1v3xSzzw1NFEFqlTKTYovF8ZLbb1AzY
+	jGYUPPR/HRXs8Dr9X6RcMgC/8kVBxH9yeoZe5y2JPsvN9nkigdf53V9On8AvXcPwaleebE
+	lvww6RvfRoCg7BVIRR/H0ffrrDUb6vY=
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
+ [209.85.222.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-149-eRO5HtwWNzKq86K5nKV80Q-1; Wed, 24 Jan 2024 03:30:21 -0500
+X-MC-Unique: eRO5HtwWNzKq86K5nKV80Q-1
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7831bc14ae3so794993085a.2
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 00:30:21 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706085021; x=1706689821;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=TNoxPybDnpkJWKABzryLmZgP0Fmh6igqY9ezgktqVMM=;
+        b=TESjf9XIzicO8+7js855585CidE6ZtHj0EccAs0JCyMg6V2+MjgRTcEbP98GqWNMbE
+         8S0rtO4kczl0pDz0P/FzYAyfI/SaiJIYQzX6Rc+KNNOROGziykTb0KvasdLv5iyJPyj8
+         4a4HCElpv2haB6G1Brh8TSSz02u0Morw+0ZEbx/yZ5XprJqweBNRspDtK+a8NTOzRsUZ
+         vu1eiQiSWlFiL6XY47Uzh1qWNGeW1HyfoUQ+zjKG1bEb4BanuLa0LMaUCu/lEutid+85
+         ju5o7x3wl/pZGi0QnrzOH2JbeXsgjECtCAIm4VQ/GpdALxMpQMBV/hKdVK88jx+TveOh
+         9GmQ==
+X-Gm-Message-State: AOJu0YzXTun/BHh3wcU3a2N6bd6q3fASNpL7w8ljWsJLrWYYDIs6KyZh
+	4qzz93uVmsupSaW+Dnb29mAgKEcB5M17jq6h1VEAiOxNBJbn3QxAFEa6q0v7qa4XhJmR6NUmY8L
+	f3Z1tT2X1vr/D/ykv9xLZSkyyoDFebnsX1mbFLu4XOTlbuytHP7mqzLywiMsGsg==
+X-Received: by 2002:a05:620a:208d:b0:783:930f:e57b with SMTP id e13-20020a05620a208d00b00783930fe57bmr8350553qka.2.1706085021295;
+        Wed, 24 Jan 2024 00:30:21 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGsDa+MqKTkS/2hX7pQN9KwB/1dwy7C2SPrF6fJ6q8TvmFhcLIzZnhzFvmgrddDClhyR41mqA==
+X-Received: by 2002:a05:620a:208d:b0:783:930f:e57b with SMTP id e13-20020a05620a208d00b00783930fe57bmr8350544qka.2.1706085021021;
+        Wed, 24 Jan 2024 00:30:21 -0800 (PST)
+Received: from LeoBras.redhat.com ([2804:1b3:a803:96a5:ba81:becc:80f3:6a79])
+        by smtp.gmail.com with ESMTPSA id q17-20020a05620a039100b007839e82e148sm2556386qkm.129.2024.01.24.00.30.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Jan 2024 00:30:20 -0800 (PST)
+From: Leonardo Bras <leobras@redhat.com>
+To: Tejun Heo <tj@kernel.org>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Marcelo Tosatti <mtosatti@redhat.com>
+Cc: Leonardo Bras <leobras@redhat.com>,
+	linux-kernel@vger.kernel.org
+Subject: [RFC PATCH v1 1/1] wq: Avoid using isolated cpus' timers on unbounded queue_delayed_work
+Date: Wed, 24 Jan 2024 05:29:37 -0300
+Message-ID: <20240124082938.2527697-2-leobras@redhat.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] arm64: dts: mt8195-cherry-tomato: change watchdog
- reset boot flow
-To: Hsin-Te Yuan <yuanhsinte@chromium.org>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- Hsin-Te Yuan <yuanhsinte@google.com>
-References: <20240124-send-upstream-v3-1-5097c9862a73@chromium.org>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <20240124-send-upstream-v3-1-5097c9862a73@chromium.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Il 24/01/24 08:51, Hsin-Te Yuan ha scritto:
-> From: Hsin-Te Yuan <yuanhsinte@google.com>
-> 
-> The external output reset signal was originally disabled and sent from
-> firmware. However, an unfixed bug in the firmware on tomato prevents
-> the signal from being sent, causing the device to fail to boot. To fix
-> this, enable external output reset signal to allow the device to reboot
-> normally.
-> 
-> Fixes: 5eb2e303ec6b ("arm64: dts: mediatek: Introduce MT8195 Cherry platform's Tomato")
-> Signed-off-by: Hsin-Te Yuan <yuanhsinte@chromium.org>
+When __queue_delayed_work() is called with WORK_CPU_UNBOUND, it means any
+cpu is able to run the work, as well as any cpu timer is able to be used.
 
-Can't trigger the bug, but also this commit gives no side effects, so:
+This is not good if a system does use CPU isolation, because it can take
+away some valuable cpu time to:
+1 - deal with the timer interrupt,
+2 - schedule-out the desired task,
+3 - queue work on a random workqueue, and
+4 - schedule the desired task back to the cpu.
 
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+So to fix this, during __queue_delayed_work(), if both:
+- Work is not cpu-bounded,
+- CPU isolation is in place,
+then pick a random non-isolated cpu to use both the timer and the
+system per-cpu workqueue.
 
+Signed-off-by: Leonardo Bras <leobras@redhat.com>
+---
+ kernel/workqueue.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-> ---
-> Changes in v3:
-> - Add Fixes tag
-> 
-> Changes in v2:
-> - Limit the effect only on tomato.
-> ---
->   arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r1.dts | 4 ++++
->   arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r2.dts | 4 ++++
->   arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r3.dts | 4 ++++
->   3 files changed, 12 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r1.dts b/arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r1.dts
-> index 2d5e8f371b6de..a82d716f10d44 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r1.dts
-> +++ b/arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r1.dts
-> @@ -23,3 +23,7 @@ &sound {
->   &ts_10 {
->   	status = "okay";
->   };
-> +
-> +&watchdog {
-> +	/delete-property/ mediatek,disable-extrst;
-> +};
-> diff --git a/arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r2.dts b/arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r2.dts
-> index 2586c32ce6e6f..2fe20e0dad836 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r2.dts
-> +++ b/arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r2.dts
-> @@ -43,3 +43,7 @@ &sound {
->   &ts_10 {
->   	status = "okay";
->   };
-> +
-> +&watchdog {
-> +	/delete-property/ mediatek,disable-extrst;
-> +};
-> diff --git a/arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r3.dts b/arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r3.dts
-> index f54f9477b99da..dd294ca98194c 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r3.dts
-> +++ b/arch/arm64/boot/dts/mediatek/mt8195-cherry-tomato-r3.dts
-> @@ -44,3 +44,7 @@ &sound {
->   &ts_10 {
->   	status = "okay";
->   };
-> +
-> +&watchdog {
-> +	/delete-property/ mediatek,disable-extrst;
-> +};
-> 
-> ---
-> base-commit: 64b50fcb03649ca7f0d762a50e7a3484cfc1d586
-> change-id: 20230818-send-upstream-e91e615a893c
-> 
-> Best regards,
+diff --git a/kernel/workqueue.c b/kernel/workqueue.c
+index 76e60faed8923..0c50f41d9f95e 100644
+--- a/kernel/workqueue.c
++++ b/kernel/workqueue.c
+@@ -1954,6 +1954,14 @@ static void __queue_delayed_work(int cpu, struct workqueue_struct *wq,
+ 		return;
+ 	}
+ 
++	/*
++	 * If the work is cpu-unbound, and cpu isolation is in place, only
++	 * schedule use timers from housekeeping cpus. In favor of avoiding
++	 * cacheline bouncing, run the WQ in the same cpu as the timer.
++	 */
++	if (cpu == WORK_CPU_UNBOUND && housekeeping_enabled(HK_TYPE_TIMER))
++		cpu = housekeeping_any_cpu(HK_TYPE_TIMER);
++
+ 	dwork->wq = wq;
+ 	dwork->cpu = cpu;
+ 	timer->expires = jiffies + delay;
+-- 
+2.43.0
 
