@@ -1,221 +1,278 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B73E8171C8
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 07:21:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.14
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706080880; cv=fail; b=CVWAOFRl5u6PC2ZdUVvjeI7K0S9eZEpg9jF2uH1RYB1E2yn4KQs1rADsjPrXp/xiSunANZhUKEqg76Hux4Sr9p3GtY4kQbSAlaa8iTk5h0HgVp1Lum5p+UT/C0h0iM1qr/0ea+929ap7LfJUMJujEPnvSsWum4YM6+2eIWkoRTc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706080880; c=relaxed/simple;
-	bh=LxBnni7lYX1Eio4BFql/1I0LnJpBF8eYpwPuGbj5aCw=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=GwKD+Y48uRt23udJosTmXeMX9IdLquTqKUYcljRHPCOQkONkP+n3G48UU7OPXxOfPFx0wA8twSNwY12oRFv6fp6oIvk+eQEC6sxqBDJVwq6q0o0XVPBn0dKeNMSpeP9K4CuMl1833EBJMpY7pWLHwHmXHVZxa2Z2ULc0Ab96A8Y=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=O6vAhZUS; arc=fail smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 279A317559
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 07:21:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706080897; cv=none; b=cRRnA/w4H31J33EAPRawIO1kQYL2hnWgr0lWr/OPwwFTCyyCbvLU9pTTvN3ffdoQBuB2k1yFHSq3ReC+HMZq27fF0feu9QOBQKIwlqpfJNa2mL12+iHd77PuzYgePLOU7sIHvv6go/ex1yWyfooCWL33czIEhz2GXMyYDnkbNfU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706080897; c=relaxed/simple;
+	bh=H4FPoZmhlXh+UBl1asCFne9JixAG+p+9IHwyhrhCo5o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=X7mHuNvn/ppYYHY0CMaPuml8C+nqKRNllyCDPp0wVL/IUu/8d0fM6mJSdKKsbqlCI/tnxrkgaZLMloUFg816OH0X81BgCTjiDOi/aWTbiGxcvhONyP6dlse3oqWZ1ivnt/Dej2yZt/G5RStnP6iI6/hv4a56xjxpFXHRl82Nhg8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=EZwxF7M+; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="O6vAhZUS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706080878; x=1737616878;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=LxBnni7lYX1Eio4BFql/1I0LnJpBF8eYpwPuGbj5aCw=;
-  b=O6vAhZUSVx0UtQ8iTrOjaMIJBeCNXsdjN+eoI/94Lp1ioL3g9xuATXQp
-   PTJtc5g2v/n9gBYjDk8VHMHlsWswysZkxMiBK+RbdNf75jB8bm1s7Usbp
-   RfCQNC8DjzrX0S5WQ7GzVX/Uwf+abh9orH5Lx0F4692jOyPDP/8DWwc63
-   aAlMiwCTrhcJg0KEljFi3pbiHeyegalVqmIyCOjjM9wiNI6gEe/jCtHZs
-   5wOql7eia3ix3zKTXf6nDqeFbkq3TKAuo1Uw54F3YMFzm8hPaV+0ko68L
-   G1JPnIjUPrGOgEBHjuKgPeH9faNy1n6f72Hgvmbsd53wH1XK5uvgIZ/Dl
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="1653839"
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="1653839"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2024 23:21:18 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="820366673"
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="820366673"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by orsmga001.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 23 Jan 2024 23:21:16 -0800
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 23 Jan 2024 23:21:16 -0800
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Tue, 23 Jan 2024 23:21:16 -0800
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.41) by
- edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Tue, 23 Jan 2024 23:21:16 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EFSvpNzD+5r+Pnmpn3zT3+WIqE1ng/ptVIhUj4R/6IUxEI6I3xw1nG48P0WNg5RvpvOWzhP15E1fqPuoI/sxD+DPnm/s/+qnJhixmwgAzcswkYp+czjkxN3e6e4LycyerThWsVwrQt0oIaQCdeRiI5PYFt5nvkuEDvRZm/whEdwnnRanBNW4+364EGDdXLPsZVmRQ0dheKMv8VZPM+hjyyHblYZKlD54IXDoN1GIVJq4nvGri3bXE8Pgkn1qcSZZrUzCQJw44s/WaSKqrbPe/vGN+jLAxsABOiWP/DgKZDL99o0HVqWciMXdntna4CaM3hvpSyn6i73Z74uAsZJO7A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=LxBnni7lYX1Eio4BFql/1I0LnJpBF8eYpwPuGbj5aCw=;
- b=bd1o4xR/AWACIf8Z2A30jM+Qyf7epeMQiTTjz78zOP28+oxwpQPnbhBWQTXL1vnVlBcWnjsPdPX+3jK1sAD8qv6S2seuhvI3w2A076vYfdfi2gmIsRLW/K4PpcWG9hi7qAIvkgEM/ojhVP9fQckE6IrJAhV+pi2LQ6Ie5H6Yg3lkWmEWO3EDZfyzjuajLu4sTPvrSlSFDFPErhSKg1ZX8iD1C36RoQZ3pvwn36vAaKJgBZjfTJ3Xuh8umkfkXn1ZFIe83KdsPQfi/5+Ri1M9DWHQ/tW92tIVkrzTxZyerpAml3D4GaeqI3lfeU9HDOkA9EiEtksGSqMLNnzlkUVF0Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from DM8PR11MB5751.namprd11.prod.outlook.com (2603:10b6:8:12::16) by
- IA0PR11MB8303.namprd11.prod.outlook.com (2603:10b6:208:487::9) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7228.22; Wed, 24 Jan 2024 07:21:14 +0000
-Received: from DM8PR11MB5751.namprd11.prod.outlook.com
- ([fe80::89b0:d67c:ea7f:465f]) by DM8PR11MB5751.namprd11.prod.outlook.com
- ([fe80::89b0:d67c:ea7f:465f%3]) with mapi id 15.20.7228.022; Wed, 24 Jan 2024
- 07:21:14 +0000
-From: "Wang, Xiao W" <xiao.w.wang@intel.com>
-To: David Laight <David.Laight@ACULAB.COM>, 'Andrew Jones'
-	<ajones@ventanamicro.com>
-CC: "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>,
-	"palmer@dabbelt.com" <palmer@dabbelt.com>, "aou@eecs.berkeley.edu"
-	<aou@eecs.berkeley.edu>, "conor.dooley@microchip.com"
-	<conor.dooley@microchip.com>, "heiko@sntech.de" <heiko@sntech.de>, "Li,
- Haicheng" <haicheng.li@intel.com>, "linux-riscv@lists.infradead.org"
-	<linux-riscv@lists.infradead.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] riscv: Optimize crc32 with Zbc extension
-Thread-Topic: [PATCH] riscv: Optimize crc32 with Zbc extension
-Thread-Index: AQHaP65h4Tgp9DgCwEu/ue2vJWxme7DcmyaAgAAk0gCAC9siMA==
-Date: Wed, 24 Jan 2024 07:21:14 +0000
-Message-ID: <DM8PR11MB57515558DE051F2246907FE8B87B2@DM8PR11MB5751.namprd11.prod.outlook.com>
-References: <20240105080830.3738117-1-xiao.w.wang@intel.com>
- <20240116-9f09b002afc2337ab5e41e3f@orel>
- <1153d2dd82cf43adb6062627d8d89b27@AcuMS.aculab.com>
-In-Reply-To: <1153d2dd82cf43adb6062627d8d89b27@AcuMS.aculab.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DM8PR11MB5751:EE_|IA0PR11MB8303:EE_
-x-ms-office365-filtering-correlation-id: 500c5e9f-683b-4ac3-8f98-08dc1cad0c73
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: X+ZE2T9Sam30bueEBUp147IMqEUbHiUd1UNkLY1Yo7GZe5cDkG+o41q82bq+Ivwm47mrH3TxZaxEEsKic4nI1ZzGL5spPE87ZUbP0LNPNnLJ5a2paF1FDyI10Y1r56mFmNRvokYRye8YHchkFY4BfRPhSGeAKS9Id3h89liCM/K6EnXHRGERWVRxRuWA3QE4EaRTKNgihklPdfYC6ynA1Sg+7XyF7n2dUnkom2JtxpvmskhHEdN70W1gutd4bLHG6YkxlVVomPpq2mUgjm6Vg1LRNlj2wXmDFIJPRWZehBo2pSVVUWcWVFdib3mvJ8xciTSJYfUi0Yrqb2NsUyovq69EGhkO1Nn/xyewC+GcGbsE/Oj8ceYvX0ZrCV2Yp5Xr2Re9rcVIUbD06/57vpn4Gze2UmgVFQhtJS9AYJRoE3w1g5dJyKXwibWbWVxiAHuYzhflH+kc7X4nOFHFpbvLlkBoSoQPSdom1qhkQVOjZPM4dbDeMxRgSeCN7O6v+id5xCC+SjzLf7l2//VSZ8OpIpxvM6RHdqQ1qLk6MZTv7TYv4EL9TJeWGRom4fhoopy3ApB8B7PabWT+YFHg7nvd7eYRMDBN+kR3PIhlPIy2ELD1AEF6+eYKg8l5qVigKlJ5
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM8PR11MB5751.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(396003)(136003)(366004)(346002)(39860400002)(230922051799003)(1800799012)(451199024)(64100799003)(186009)(83380400001)(55016003)(26005)(4326008)(478600001)(8676002)(8936002)(110136005)(52536014)(5660300002)(66446008)(82960400001)(64756008)(316002)(66476007)(66556008)(54906003)(86362001)(66946007)(38100700002)(2906002)(76116006)(9686003)(53546011)(122000001)(7696005)(6506007)(71200400001)(38070700009)(41300700001)(33656002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?WWxlM09kUmROOStvUkV3eW43YWJJUDU5M05WazNjbXlzOEYwZEE5MU1yVmc4?=
- =?utf-8?B?dXBua2FjYzBJNFNrSHU5NnlWMWR1RlpvZDN5MTArRm9iYm5BeEh4ZUtNRjAv?=
- =?utf-8?B?bGl5VGJIOFdROWVOM2dUQWRUMk1LdEtvenc1bHdabEV4VUFuT3EwcGhLWXla?=
- =?utf-8?B?TThyWnliVURKYUhnZVJYQUR4SkhuQnRnVHp0aDVMcnVVYTFyMStlMzVFK0do?=
- =?utf-8?B?RnR1bTZOSkhFNDFsbE1xM1B6Sm1sSmRnQy9zRnNFcVFodmp2Z0hkMlhGTlBW?=
- =?utf-8?B?UnRiaWZqQXVLbE5XZFg0cHU1SXMyU3RmS0I3cmJBM1RucjdUSFFIK1NIYWor?=
- =?utf-8?B?MjBvWDV6ZVkwaHdsQWhjS1Z4cmpPSmxTaWdyVVptRUhrUFNFSjl0dDExNGM3?=
- =?utf-8?B?WGVhM0Y5UzF6VWxyV0p1aFk1LzZxRTNHSEY1dndyRnpIZjQySFhGR3k3TlVx?=
- =?utf-8?B?V0MrMTFlcFh5NWVOTHY2S1MwcmRkdEZDaHZWTGZzSi8wbGlDMVlyL21aSVBV?=
- =?utf-8?B?Qnl4TkhFd09EZStpMEgwWmFLVG9yY0VWVWhvUEVvQVBKRlZzZWFOcEx3MTFP?=
- =?utf-8?B?TDIwbjc2WE5LTmpocGlIYmo0b3R1REcvZndZWWdMOWlSV2IrL2NGNlFRWEND?=
- =?utf-8?B?ekZxNmxZemFCbC9CNnNvSm0xSnUyUkZILzdkOU9TYmR1QVZHUFl2a0xyeWE2?=
- =?utf-8?B?djNIc1RMa2ZuRjFlNEt0czRFUmYxWmhlTDJrTXJWYVlVaXJPY0Zxd0ZGWlUr?=
- =?utf-8?B?eGt0V3pqZnZVcjBFTmU5NVhKUSt0eDA4WHFYREpwNkRodzNzZTZIOXZBNGZJ?=
- =?utf-8?B?NEl5Sm1ONlJPWElkRFpDZVVRRXZzT2RtaFBydm5NcmZVYXFqb0YxNDRCRGtS?=
- =?utf-8?B?b21TMHdCMG8yUlhQV0xHOTZLWUtxS01LNGZ6ekxmNmlZc3p4YmZRYjRNdTlX?=
- =?utf-8?B?QXlhbnVvTXh2Qm5qMEZhVmNqWktWcUs1NCtqWWxaQ04vWmk3RnpVMklQMG9Q?=
- =?utf-8?B?Wko2YWkzaUd2dmhXd3VvMDJaYlNSYUhqTURWWC8xTTRWcEY2QjFLcHNKRnE5?=
- =?utf-8?B?SXA2dDdlbnhIb29ORFNaSzlEOFkvTXQ4M1RFL1pla1l4ZzlzREd2RGZqT0No?=
- =?utf-8?B?Y0E5Zmx0RnIvbVlwdndEMWhETWhUZ2pSRjY1OXlPdWh4MXlEeUVXRDNyV0hu?=
- =?utf-8?B?emRkdE45TWY0bmVvckNqeTF2aGE4Njh5eWllcGprS1c0S3lqaHlLdzhhbVR6?=
- =?utf-8?B?WUxTZ1RNSFAvZmhDaFVVaGFlNU94N0xMM0ZuVGdaenIzaXNRM3lBbGxSNlJv?=
- =?utf-8?B?ekhQTWtCR0NhWUZSRktCR0x3OWJhMk1Db1NUU0JtNHo4eGhKTHFTYllFeDl6?=
- =?utf-8?B?RXNlMVhpNWpWT3dEMTQvbHM2Kzh5ckhuWkJmWWtBaFIxS2tIQ3pWSVY5RWNm?=
- =?utf-8?B?U0hpMXFhYjFJSnZ0ZmtGYkt3ekpOeDl5US9IWHY1VzhtR0NyQVlvc2M2NDBD?=
- =?utf-8?B?dlNWZWxaTUVmei9lcmFnckhhQ1prSmh5QzA2UW9uK0s5R1ZBZU4rdkVLaW5w?=
- =?utf-8?B?dEtvc3QrUlFNYkVScXYybjRWNjJWQmpteUNVS3IycURidVZqNncvSDVXTFRI?=
- =?utf-8?B?bEpjZG9MWEtYTkpxdHphQmRmWk9KZys1S0xnc3B0MjlFR2RXSmtlVWRnUitG?=
- =?utf-8?B?ZEdIYnRsTmsreUFLckY2K3lmamRXTFZDMDBPLy85RlJ6ekRxbjBuY05lZUdH?=
- =?utf-8?B?NzZvd3ZXSGxkcU9QcjZZMkhHd2lYTUpYY1UrOXZ5NlhsRUFVNEpyMlVNWE5k?=
- =?utf-8?B?RTIyUEQxZ25DbENoTURYeTBFSWJjMnluUEtKLzRBWEM0bEVucFNGN1FsZTQ0?=
- =?utf-8?B?NS9ZWG1VSkpCL2lTQVFaS2NpNWNKYkg5ajk5S2I1YXBFZEVmTnJBbHYzNHdS?=
- =?utf-8?B?QWhZdlhOYm5WR3RzSWpPNGM0WkxXc3VnUXh5bDVISEkzSTkvNk04bWREZ0w3?=
- =?utf-8?B?ZU0xNUtVdmp1czRCVGFtR3dxNEJBZkZrUzhrMk04UUlqVFZ1ZXZBM25sZXBP?=
- =?utf-8?B?b3hWRGRxQm03YUZzNlNFQ3FFM284NjNlMGViYS9xZzhMYXhqOE55bEdkcVBQ?=
- =?utf-8?Q?3lzgUCVfu0GI6bD0sgMXsDeaF?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="EZwxF7M+"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-6dd6c3c8a0eso1276741b3a.3
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 23:21:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1706080894; x=1706685694; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=p6qgzXs3nbDCD4wLGTSejG/03+G+KZIJh31uHA04T3Q=;
+        b=EZwxF7M+UzQZXoMSn1pEU1nYjXjTsoakHMRhoXxAGlEMwg1Q1PcMf6OeRALh2Pgo/c
+         NqD3oJZs+kyWWnRkleoEO64gXRkkTvoQDtVT1Ziq0GvK7M//KMij5bbYQR5GWsPsHgAy
+         TdRmwzBqC728PI+X/mYnuNNJgKAfXOVyjFqMBzEuunnWz47sjn3rAtOreZR9exn1AGkL
+         zGeqEwtBqkplVHTXG6pFj8tJ/49/eCVR8at5p89m2mRj69IcaY7mYLc/rGY9WoGffMTX
+         DQDa0ULXm6L5eBLPwNH6mWdmMEZZ1OfcxXLW04yAPVKPra/7NsfEuEhe4l+na/LbeHD2
+         8Xyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706080894; x=1706685694;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=p6qgzXs3nbDCD4wLGTSejG/03+G+KZIJh31uHA04T3Q=;
+        b=AJ0CY1S1n7B8Z0Ehq0HMOX3c6qpi0FPUyH5s2WK0RZwvYgaxgvP2hoqkVJjxQFUyIr
+         pvxBeY/tg/o2pIjHcSZBJipO6XcgjELpfjd/nJFitdWt0bGsAGv0X/+z2x9rGIjKNPP9
+         Z4bgZwJqA12OnFuaYLOnO4cdci6C5DbyjII2e40Eq+YC4E4AVkFPiZgjIOwLmT6bla2U
+         dRNUmqeDqhEVWJSWxFA2/G0gjlaqo8pw8nTuZfsQaQfigKkoVIyjFlIeUcxhXX+q0+A+
+         YcipuPlwlVdbzO3xuOPgY7MPL7YJ/FmLC1uIl0PgSQ4H+goTecS4kVbqJubwo7fbi7OV
+         rcqg==
+X-Gm-Message-State: AOJu0YxXyNCXPYYFoU/VMjHOsT6YWBOUHtIRoSDtEJMTaWmfs0911byy
+	SzH+p9cCsOyGagrSANFPuyIUw/ueiJDn4QpgZ4XKunWd2XPWPxvkSQq9N0vAk48=
+X-Google-Smtp-Source: AGHT+IGhTSDybLlJ8KNCkFczYV9Bwwg1uq8s3cZJ+hBG5T57FY1HS7XjRrxe2joN1a2M/D1GbPmpSQ==
+X-Received: by 2002:a62:ce87:0:b0:6dd:a2ea:6626 with SMTP id y129-20020a62ce87000000b006dda2ea6626mr24143pfg.16.1706080894338;
+        Tue, 23 Jan 2024 23:21:34 -0800 (PST)
+Received: from [10.255.203.131] ([139.177.225.236])
+        by smtp.gmail.com with ESMTPSA id t40-20020aa78fa8000000b006daca8ecb85sm12932159pfs.139.2024.01.23.23.21.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 23 Jan 2024 23:21:33 -0800 (PST)
+Message-ID: <f3fa799f-1815-4cfe-abc8-3ba929fcd1ba@bytedance.com>
+Date: Wed, 24 Jan 2024 15:20:13 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM8PR11MB5751.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 500c5e9f-683b-4ac3-8f98-08dc1cad0c73
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Jan 2024 07:21:14.3059
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: UBMVBqpGFER8L19mHnOZQfXEHyzPwhVwLJkcgv2IeW2rehVR4YZXohv9VSq9d+IpuJCQWD4Yhz+aWj30rlQO9Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR11MB8303
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] mm: zswap: remove unnecessary tree cleanups in
+ zswap_swapoff()
+Content-Language: en-US
+To: Yosry Ahmed <yosryahmed@google.com>, Johannes Weiner <hannes@cmpxchg.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Nhat Pham <nphamcs@gmail.com>,
+ Chris Li <chrisl@kernel.org>, Huang Ying <ying.huang@intel.com>,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <20240120024007.2850671-1-yosryahmed@google.com>
+ <20240120024007.2850671-3-yosryahmed@google.com>
+ <20240122201906.GA1567330@cmpxchg.org>
+ <CAJD7tkaATS48HVuBfbOmPM3EvRUoPFr66WhF64UC4FkyVH5exg@mail.gmail.com>
+ <20240123153851.GA1745986@cmpxchg.org>
+ <CAJD7tkasHsRnT_75-TXsEe58V9_OW6m3g6CF7Kmsvz8CKRG_EA@mail.gmail.com>
+ <20240123201234.GC1745986@cmpxchg.org>
+ <CAJD7tkZC6w2EaE=j2NEVWn1s7Lo2A7YZh8LiZ+w72jQzFFWLUQ@mail.gmail.com>
+From: Chengming Zhou <zhouchengming@bytedance.com>
+In-Reply-To: <CAJD7tkZC6w2EaE=j2NEVWn1s7Lo2A7YZh8LiZ+w72jQzFFWLUQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-SGkgRGF2aWQsDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogRGF2aWQg
-TGFpZ2h0IDxEYXZpZC5MYWlnaHRAQUNVTEFCLkNPTT4NCj4gU2VudDogV2VkbmVzZGF5LCBKYW51
-YXJ5IDE3LCAyMDI0IDE6MTYgQU0NCj4gVG86ICdBbmRyZXcgSm9uZXMnIDxham9uZXNAdmVudGFu
-YW1pY3JvLmNvbT47IFdhbmcsIFhpYW8gVw0KPiA8eGlhby53LndhbmdAaW50ZWwuY29tPg0KPiBD
-YzogcGF1bC53YWxtc2xleUBzaWZpdmUuY29tOyBwYWxtZXJAZGFiYmVsdC5jb207DQo+IGFvdUBl
-ZWNzLmJlcmtlbGV5LmVkdTsgY29ub3IuZG9vbGV5QG1pY3JvY2hpcC5jb207IGhlaWtvQHNudGVj
-aC5kZTsgTGksDQo+IEhhaWNoZW5nIDxoYWljaGVuZy5saUBpbnRlbC5jb20+OyBsaW51eC1yaXNj
-dkBsaXN0cy5pbmZyYWRlYWQub3JnOyBsaW51eC0NCj4ga2VybmVsQHZnZXIua2VybmVsLm9yZw0K
-PiBTdWJqZWN0OiBSRTogW1BBVENIXSByaXNjdjogT3B0aW1pemUgY3JjMzIgd2l0aCBaYmMgZXh0
-ZW5zaW9uDQo+IA0KPiAuLi4NCj4gPiA+ICtzdGF0aWMgaW5saW5lIHUzMiBfX3B1cmUgY3JjMzJf
-bGVfZ2VuZXJpYyh1MzIgY3JjLCB1bnNpZ25lZCBjaGFyIGNvbnN0ICpwLA0KPiA+ID4gKyNpZiAo
-QklUU19QRVJfTE9ORyA9PSA2NCkNCj4gPiA+ICsJCQkJCSAgc2l6ZV90IGxlbiwgdTMyIHBvbHks
-IHU2NCBwb2x5X3F0LA0KPiA+ID4gKyNlbHNlDQo+ID4gPiArCQkJCQkgIHNpemVfdCBsZW4sIHUz
-MiBwb2x5LCB1MzIgcG9seV9xdCwNCj4gPiA+ICsjZW5kaWYNCj4gPg0KPiA+IEhvdyBhYm91dCBj
-cmVhdGluZyBhIG5ldyB0eXBlIGZvciBwb2x5X3F0LCBkZWZpbmVkIGFzIHU2NCBmb3IgeGxlbj02
-NA0KPiA+IGFuZCB1MzIgZm9yIHhsZW49MzIgdG8gYXZvaWQgdGhlICNpZmRlZj8NCj4gDQo+IHVu
-c2lnbmVkIGxvbmcgPw0KDQpZZXMsIGl0J3Mgc2ltcGxlci4gdGhhbmtzLg0KDQo+IA0KPiAuLi4N
-Cj4gPiA+ICsJZm9yIChpbnQgaSA9IDA7IGkgPCBsZW47IGkrKykgew0KPiA+ID4gKyNpZiAoQklU
-U19QRVJfTE9ORyA9PSA2NCkNCj4gPiA+ICsJCXMgPSAodW5zaWduZWQgbG9uZyljcmMgPDwgMzI7
-DQo+ID4gPiArCQlzIF49IF9fY3B1X3RvX2JlNjQoKnBfdWwrKyk7DQo+ID4gPiArI2Vsc2UNCj4g
-PiA+ICsJCXMgPSBjcmMgXiBfX2NwdV90b19iZTMyKCpwX3VsKyspOw0KPiA+ID4gKyNlbmRpZg0K
-PiA+DQo+ID4gQ291bGQgd3JpdGUgdGhlIGFib3ZlIHdpdGhvdXQgI2lmZGVmIHdpdGgNCj4gDQo+
-IEhhdmVuJ3QgSSBzZWVuIGEgYnBmIHBhdGNoIHRoYXQgcmF0aGVyIGltcGxpZXMgdGhhdCBieXRl
-c3dhcA0KPiBpcyBsaWtlbHkgdG8gYmUgdHJ1bHkgaG9ycmlkPw0KPiANCj4gSSd2ZSBub3QgdHJp
-ZWQgdG8gcGFyc2UgdGhlIGNyYyBjb2RlIChhbHRob3VnaCBJIGRvIHVuZGVyc3RhbmQNCj4gaG93
-IGl0IHNob3VsZCB3b3JrKS4gQnV0IEknbSBzdXJwcmlzZWQgeW91IG5lZWQgYSBieXRlc3dhcC4N
-Cj4gDQo+IEFmdGVyIGFsbCwgdGhlIGNyYyBpcyBiYXNpY2FsbHkgYSBsb25nIGRpdmlzaW9uIG9m
-IHRoZSBidWZmZXINCj4gYnkgdGhlIGNyYyBjb25zdGFudC4NCg0KRm9yIHRoZSAqX2JlIG1vZGUs
-IHRoZSBBUEkgZXhwZWN0cyB0aGF0IHdpdGhpbiBlYWNoIGJ5dGUgZnJvbSB0aGUgZGF0YQ0Kc3Ry
-ZWFtLHRoZSBoaWdoZXIgb3JkZXIgcG9seSBiaXQgc2l0cyBhdCBtb3JlIHNpZ25pZmljYW50IGJp
-dCBwb3NpdGlvbiwgYW5kIHdpdGhpbg0KdGhlIHBhcmFtZXRlciAidTMyIGNyYyIsIHRoZSBoaWdo
-ZXIgb3JkZXIgcG9seSBiaXQgc2l0cyBhdCBtb3JlIHNpZ25pZmljYW50IGJpdA0KcG9zaXRpb24s
-IHJlZ2FyZGxlc3Mgb2YgQ1BVIGVuZGlhbm5lc3MuDQoNCkFmdGVyIHRoZSB1bnNpZ25lZCBsb25n
-IGRhdGEgbG9hZGluZyBmcm9tIG1lbW9yeSBpbnRvIGEgcmVnaXN0ZXIsIHRoZQ0KImhpZ2hlciBv
-cmRlciBwb2x5IGJpdCBzaXRzIGF0IG1vcmUgc2lnbmlmaWNhbnQgYml0IHBvc2l0aW9uIiBpcyB0
-cnVlIGZvciBlYWNoIGJ5dGUsDQpidXQgbm90IGZvciB0aGUgd2hvbGUgcmVnaXN0ZXIgb24gYSBs
-aXR0bGUgZW5kaWFuIENQVS4gSW4gb3JkZXIgdG8gZG8gdGhlIFhPUiBpbg0KcyBePSBfX2NwdV90
-b19iZTY0KCpwX3VsKyspLCBhbmQgaW4gb3JkZXIgdG8gcnVuIHRoZSBDTE1VTCBpbnNuIGF0IFhM
-RU4NCnNjYWxlLCB3ZSBuZWVkIHRvIHJlYXJyYW5nZSB0aGUgd2hvbGUgcmVnaXN0ZXIgYml0cyB0
-byBnZXQgdGhlbSByaWdodGx5IG9yZGVyZWQuDQoNCj4gDQo+IFRoZSBDUkMgSSd2ZSBkb25lIHJl
-Y2VudGx5IGlzIHRoZSBoZGxjIGNyYy0xNi4NCj4gTXkgbmlvcyB2ZXJzaW9uIChhbHNvIG1pcHMt
-bGlrZSkgaGFzOg0KPiANCj4gc3RhdGljIF9faW5saW5lX18gdWludDMyX3QNCj4gY3JjX3N0ZXAo
-dWludDMyX3QgY3JjLCB1aW50MzJfdCBieXRlX3ZhbCkNCj4gew0KPiAjaWYgZGVmaW5lZChjcmNf
-c3RlcF9jaSkNCj4gICAgIHJldHVybiBjcmNfc3RlcF9jaShieXRlX3ZhbCwgY3JjKTsNCj4gI2Vs
-c2UNCj4gICAgIHVpbnQzMl90IHQgPSBjcmMgXiAoYnl0ZV92YWwgJiAweGZmKTsNCj4gICAgIHQg
-PSAodCBeIHQgPDwgNCkgJiAweGZmOw0KPiAgICAgcmV0dXJuIGNyYyA+PiA4IF4gdCA8PCA4IF4g
-dCA8PCAzIF4gdCA+PiA0Ow0KPiAjZW5kaWYNCj4gfQ0KPiANCj4gSSBub3JtYWxseSB1c2UgYSBj
-dXN0b20gaW5zdHJ1Y3Rpb24gZm9yIHRoZSBsb2dpYyAtIG9uZSBjbG9jay4NCj4gQnV0IHRoZSBD
-IGNvZGUgaXMgb25seSBhIGNvdXBsZSBvZiBjbG9ja3Mgc2xvd2VyIHRoYXQgdGhlIGJlc3QNCj4g
-dGFibGUgbG9va3VwIHZlcnNpb24uDQo+IE9uIGFueXRoaW5nIHBpcGVsaW5lZCBhbmQgbXVsdGkt
-aXNzdWUgdGhlIEMgY29kZSBpcyBsaWtlbHkgdG8NCj4gYmUgZmFzdGVyIHRoYW4gYSBsb29rdXAg
-dGFibGUhDQoNCkkgZG9uJ3QgdW5kZXJzdGFuZCB5b3VyIGNvZGUgcGllY2UsIGJ1dCBpdCBsb29r
-cyBvbmx5IHRoZSBsZWFzdCBzaWduaWZpY2FudCBieXRlDQpvZiAidWludDMyX3QgYnl0ZV92YWwi
-IGlzIGludm9sdmVkIGluIHRoaXMgY3JjMTYgY2FsY3VsYXRpb24sIEkgZG9uJ3QgdW5kZXJzdGFu
-ZA0KaG93IGl0IGNhbiB3b3JrLg0KDQpCUnMsDQpYaWFvDQoNCj4gSSBkb24ndCBrbm93IGlmIGFu
-eSBvZiB0aGUgMzJiaXQgY3JjIGNhbiBiZSByZWR1Y2VkIHRoZSBzYW1lIHdheS4NCj4gDQo+IAlE
-YXZpZA0KPiANCj4gLQ0KPiBSZWdpc3RlcmVkIEFkZHJlc3MgTGFrZXNpZGUsIEJyYW1sZXkgUm9h
-ZCwgTW91bnQgRmFybSwgTWlsdG9uIEtleW5lcywgTUsxDQo+IDFQVCwgVUsNCj4gUmVnaXN0cmF0
-aW9uIE5vOiAxMzk3Mzg2IChXYWxlcykNCg0K
+On 2024/1/24 05:02, Yosry Ahmed wrote:
+> On Tue, Jan 23, 2024 at 12:12 PM Johannes Weiner <hannes@cmpxchg.org> wrote:
+>>
+>> On Tue, Jan 23, 2024 at 07:54:49AM -0800, Yosry Ahmed wrote:
+>>> On Tue, Jan 23, 2024 at 7:38 AM Johannes Weiner <hannes@cmpxchg.org> wrote:
+>>>>
+>>>> On Mon, Jan 22, 2024 at 12:39:16PM -0800, Yosry Ahmed wrote:
+>>>>> On Mon, Jan 22, 2024 at 12:19 PM Johannes Weiner <hannes@cmpxchg.org> wrote:
+>>>>>>
+>>>>>> On Sat, Jan 20, 2024 at 02:40:07AM +0000, Yosry Ahmed wrote:
+>>>>>>> During swapoff, try_to_unuse() makes sure that zswap_invalidate() is
+>>>>>>> called for all swap entries before zswap_swapoff() is called. This means
+>>>>>>> that all zswap entries should already be removed from the tree. Simplify
+>>>>>>> zswap_swapoff() by removing the tree cleanup loop, and leaving an
+>>>>>>> assertion in its place.
+>>>>>>>
+>>>>>>> Signed-off-by: Yosry Ahmed <yosryahmed@google.com>
+>>>>>>
+>>>>>> Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+>>>>>>
+>>>>>> That's a great simplification.
+>>>>>>
+>>>>>> Removing the tree->lock made me double take, but at this point the
+>>>>>> swapfile and its cache should be fully dead and I don't see how any of
+>>>>>> the zswap operations that take tree->lock could race at this point.
+>>>>>
+>>>>> It took me a while staring at the code to realize this loop is pointless.
+>>>>>
+>>>>> However, while I have your attention on the swapoff path, there's a
+>>>>> slightly irrelevant problem that I think might be there, but I am not
+>>>>> sure.
+>>>>>
+>>>>> It looks to me like swapoff can race with writeback, and there may be
+>>>>> a chance of UAF for the zswap tree. For example, if zswap_swapoff()
+>>>>> races with shrink_memcg_cb(), I feel like we may free the tree as it
+>>>>> is being used. For example if zswap_swapoff()->kfree(tree) happen
+>>>>> right before shrink_memcg_cb()->list_lru_isolate(l, item).
+>>>>>
+>>>>> Please tell me that I am being paranoid and that there is some
+>>>>> protection against zswap writeback racing with swapoff. It feels like
+>>>>> we are very careful with zswap entries refcounting, but not with the
+>>>>> zswap tree itself.
+>>>>
+>>>> Hm, I don't see how.
+>>>>
+>>>> Writeback operates on entries from the LRU. By the time
+>>>> zswap_swapoff() is called, try_to_unuse() -> zswap_invalidate() should
+>>>> will have emptied out the LRU and tree.
+>>>>
+>>>> Writeback could have gotten a refcount to the entry and dropped the
+>>>> tree->lock. But then it does __read_swap_cache_async(), and while
+>>>> holding the page lock checks the tree under lock once more; if that
+>>>> finds the entry valid, it means try_to_unuse() hasn't started on this
+>>>> page yet, and would be held up by the page lock/writeback state.
+>>>
+>>> Consider the following race:
+>>>
+>>> CPU 1                                 CPU 2
+>>> # In shrink_memcg_cb()     # In swap_off
+>>> list_lru_isolate()
+>>>                                             zswap_invalidate()
+>>>                                             ..
+>>>                                             zswap_swapoff() -> kfree(tree)
+>>> spin_lock(&tree->lock);
+>>>
+>>> Isn't this a UAF or am I missing something here?
+>>
+>> Oof. You're right, it looks like there is a bug. Digging through the
+>> history, I think this is actually quite old: the original backend
+>> shrinkers would pluck something off their LRU, drop all locks, then
+>> try to acquire tree->lock. There is no protection against swapoff.
+>>
+>> The lock that is supposed to protect this is the LRU lock. That's
+>> where reclaim and invalidation should synchronize. But it's not right:
+>>
+>> 1. We drop the LRU lock before acquiring the tree lock. We should
+>>    instead trylock the tree while still holding the LRU lock to make
+>>    sure the tree is safe against swapoff.
+>>
+>> 2. zswap_invalidate() acquires the LRU lock when refcount hits 0. But
+>>    it must always cycle the LRU lock before freeing the tree for that
+>>    synchronization to work.
+>>
+>> Once we're holding a refcount to the entry, it's safe to drop all
+>> locks for the next step because we'll then work against the swapcache
+>> and entry: __read_swap_cache_async() will try to pin and lock whatever
+>> swap entry is at that type+offset. This also pins the type's current
+>> tree. HOWEVER, if swapoff + swapon raced, this could be a different
+>> tree than what we had in @tree, so
+>>
+>> 3. we shouldn't pass @tree to zswap_writeback_entry(). It needs to
+>>    look up zswap_trees[] again after __read_swap_cache_async()
+>>    succeeded to validate the entry.
+>>
+>> Once it succeeded, we can validate the entry. The entry is valid due
+>> to our refcount. The zswap_trees[type] is valid due to the cache pin.
+>>
+>> However, if validation failed and we have a non-zero writeback_result,
+>> there is one last bug:
+>>
+>> 4. the original entry's tree is no longer valid for the entry put.
+>>
+>> The current scheme handles invalidation fine (which is good because
+>> that's quite common). But it's fundamentally unsynchronized against
+>> swapoff (which has probably gone undetected because that's rare).
+>>
+>> I can't think of an immediate solution to this, but I wanted to put my
+>> analysis out for comments.
+> 
+> 
+> Thanks for the great analysis, I missed the swapoff/swapon race myself :)
+> 
+> The first solution that came to mind for me was refcounting the zswap
+> tree with RCU with percpu-refcount, similar to how cgroup refs are
+> handled (init in zswap_swapon() and kill in zswap_swapoff()). I think
+> the percpu-refcount may be an overkill in terms of memory usage
+> though. I think we can still do our own refcounting with RCU, but it
+> may be more complicated.
+Hello,
+
+I also thought about this problem for some time, maybe something like below
+can be changed to fix it? It's likely I missed something, just some thoughts.
+
+IMHO, the problem is caused by the different way in which we use zswap entry
+in the writeback, that should be much like zswap_load().
+
+The zswap_load() comes in with the folio locked in swap cache, so it has
+stable zswap tree to search and lock... But in writeback case, we don't,
+shrink_memcg_cb() comes in with only a zswap entry with lru list lock held,
+then release lru lock to get tree lock, which maybe freed already.
+
+So we should change here, we read swpentry from entry with lru list lock held,
+then release lru lock, to try to lock corresponding folio in swap cache,
+if we success, the following things is much the same like zswap_load().
+We can get tree lock, to recheck the invalidate race, if no race happened,
+we can make sure the entry is still right and get refcount of it, then
+release the tree lock.
+
+The main differences between this writeback with zswap_load() is the handling
+of lru entry and the tree lifetime. The whole zswap_load() function has the
+stable reference of zswap tree, but it's not for shrink_memcg_cb() bottom half
+after __swap_writepage() since we unlock the folio after that. So we can't
+reference the tree after that.
+
+This problem is easy to fix, we can zswap_invalidate_entry(tree, entry) early
+in tree lock, since thereafter writeback can't fail. BTW, I think we should
+also zswap_invalidate_entry() early in zswap_load() and only support the
+zswap_exclusive_loads_enabled mode, but that's another topic.
+
+The second difference is the handling of lru entry, which is easy that we
+just zswap_lru_del() in tree lock.
+
+So no any path can reference the entry from tree or lru after we release
+the tree lock, so we can just zswap_free_entry() after writeback.
+
+Thanks!
+
+// lru list lock held
+shrink_memcg_cb()
+  swpentry = entry->swpentry
+  // Don't isolate entry from lru list here, just use list_lru_putback()
+  spin_unlock(lru list lock)
+
+  folio = __read_swap_cache_async(swpentry)
+  if (!folio)
+    return
+
+  if (!folio_was_allocated)
+    folio_put(folio)
+    return
+
+  // folio is locked, swapcache is secured against swapoff
+  tree = get tree from swpentry
+  spin_lock(&tree->lock)
+
+  // check invalidate race? No
+  if (entry == zswap_rb_search())
+
+  // so we can make sure this entry is still right
+  // zswap_invalidate_entry() since the below writeback can't fail
+  zswap_entry_get(entry)
+  zswap_invalidate_entry(tree, entry)
+
+  // remove from lru list
+  zswap_lru_del()
+
+  spin_unlock(&tree->lock)
+
+  __zswap_load()
+
+  __swap_writepage() // folio unlock
+  folio_put(folio)
+
+  // entry is safe to free, since it's removed from tree and lru above
+  zswap_free_entry(entry)
+
