@@ -1,36 +1,36 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93792137C40;
-	Wed, 24 Jan 2024 22:33:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E62B13666B;
+	Wed, 24 Jan 2024 22:33:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706135602; cv=none; b=um8BVYkxipYqP7i4x73y7zL66VnNOWp0gFAZt0amh/VtvAfGxzv+5HcFp8WYOX9Meb3VARqS9pQanAq2wZopYLJoDmnGtrHwR7hR7SywQBI123pU78fW/KY9GM6JSHrCSv2T/YoUs24OjNcsvX6jqXcsH50aCqyFh+3/bfZWSs4=
+	t=1706135600; cv=none; b=o2QNbmjVlLirQ9WVMyak0/W2HoTYDOMwM3Z+WkpJHbXZRzaGFvBmnfP8hg4u9X6Hr7tsZF+ZEXTBklhzJ9BweDcAtiubW4KHBU6HYrwkmrN09ghcGSpCkcYicM538ErEfcFPQEXzVYvRYupZOQI0VUWHLTr8vmungQS+Rd2NXyY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706135602; c=relaxed/simple;
-	bh=86IbXZg2D8dZ14CMAOHu2fJ9DPKToZGpqc5c/wgcbic=;
+	s=arc-20240116; t=1706135600; c=relaxed/simple;
+	bh=oTUeFEtg6tccmFigk3+uGgzU7tYf0ybllVSeTx5SFNo=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=C6rheg8hGFXG7I5rNc9WKN8b2tP5cBR0EHTyFikj1ZV1NKTF9mmXrdb1caAH9t9X3TTMfKCHptTDPf4U7jrYYoTx5XQLfrrT2X2rugzBZ2CeXi6OV3ejZthFes6TPl/cq+TUtcWyLTtfEFBQfvnWdZikE3W9ya2SsfvcGhZAGEI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=QrEmGNw4; arc=none smtp.client-ip=212.227.17.21
+	 MIME-Version; b=gK5GNtt/WPj7pV/qhzDGg3yaOy5QSFzBFQCcr/8g8gzmWwJMZuiJgxeRSLVmquyjPgJaR+SoibQXgem8YAq5NSMfzTB711w0tIbmnYe/Kg9P8G2BZ4wUyEfRmT2oNCpSySKua9ZWiPBCg4pRimJ9aeT8xHGgrSSr4ezrNNVwpVo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=GeM0OEty; arc=none smtp.client-ip=212.227.17.20
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="QrEmGNw4"
+	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="GeM0OEty"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-	s=s31663417; t=1706135563; x=1706740363; i=wahrenst@gmx.net;
-	bh=86IbXZg2D8dZ14CMAOHu2fJ9DPKToZGpqc5c/wgcbic=;
+	s=s31663417; t=1706135557; x=1706740357; i=wahrenst@gmx.net;
+	bh=oTUeFEtg6tccmFigk3+uGgzU7tYf0ybllVSeTx5SFNo=;
 	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:
 	 References;
-	b=QrEmGNw49fdFCnb9BqA7tcRfqzGBhuN9iZPjkVmzmBkuFNQLWTUSzBksGe0oQu6I
-	 pBmvYP6ZowcfwDE1MCSkxvSu7o7jlrYKaqK1V4MuvLhwUqpr82frU0fDw4b0sJOMd
-	 AKHw/t7XAl+rDz+5ml6Bzkj5l89YQfraWj5dFu2tNflIPbD5B2neCsJRqS4HgP220
-	 +NUgvRMSgo7KD8RfGdZi01xBnrHKJi0quQ21XUrBMxUWu1mLCgLN6TDdwLIxrIlMV
-	 5kEBVvqFeabFNJOGuiEuqOhN6SuOixN2G9pRSoRuO7MyXNuQ8HjOxuVeUHmO9Dilk
-	 gp+ZdIN7DqqViyOG8w==
+	b=GeM0OEty1WprvABKm6oFt6ei1Pa0ywWhkGTXRAnmY1cdp1YHsvrj2RcnSW9ibFSF
+	 /FXA9akbsLYe3HVPuGGt3GZMrL4jmNyTuFMnvIe5mddIlDkbYzShXinm1Akb4LO6/
+	 GuCqL7aLAgpQVG/InJ33TnJ+G/KiHL0OcSI4Mj7kJbVBfiCeSBp8jdXJQXiA7UDJ4
+	 zRzuJBK+cnLi6Qmrj7w6K2PHFE33cZ0g84zj1Up2U5wWceZZcoxApUtvKjjOaknj5
+	 hytPfUS9o/9/MomX+wqD/O0621Ru6Mbr/1VnYHJqhC3eJ1NtqTu36mUQUblMT4jsb
+	 bBVoUmmk9qRjBvJaZA==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from stefanw-SCHENKER ([37.4.248.43]) by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1N2E1G-1r6Ce5293W-013ecc; Wed, 24
- Jan 2024 23:32:43 +0100
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MKbkC-1rnkam3dNs-00L088; Wed, 24
+ Jan 2024 23:32:36 +0100
 From: Stefan Wahren <wahrenst@gmx.net>
 To: "David S. Miller" <davem@davemloft.net>,
 	Eric Dumazet <edumazet@google.com>,
@@ -41,9 +41,9 @@ Cc: Lino Sanfilippo <LinoSanfilippo@gmx.de>,
 	netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Stefan Wahren <wahrenst@gmx.net>
-Subject: [PATCH V3 14/14 next] MAINTAINERS: add entry for qca7k driver(s)
-Date: Wed, 24 Jan 2024 23:32:11 +0100
-Message-Id: <20240124223211.4687-15-wahrenst@gmx.net>
+Subject: [PATCH V3 01/14 next] qca_spi: Improve SPI thread creation
+Date: Wed, 24 Jan 2024 23:31:58 +0100
+Message-Id: <20240124223211.4687-2-wahrenst@gmx.net>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240124223211.4687-1-wahrenst@gmx.net>
 References: <20240124223211.4687-1-wahrenst@gmx.net>
@@ -54,54 +54,126 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:An8E5MmPXOy0Qfm6lQu1YYOOU2P8WzbmtkdufPdgrrGHAjI0V7G
- u5Wd1TrEMwb5QVMDWkLoL9WRYGmgy5VkmxYVKLwnK+f6DDAWijKkFED/8T2O7HUTjq+UTKC
- FG9eznhdJdjAxaGaFq6wnd473nFEmymuS+5Log5UJ7nbhRmqx3vLpohFXP157AyR4isI8T8
- y+O4pZERFrEwYsRJmmJCg==
+X-Provags-ID: V03:K1:qXB0zT9UcdmILQH3Ox0z6aqoMNMu6aDxj+AwPV4yoKpEJi8lN3K
+ w+AZ541wA92PBNpWcSbGSnfIJmI6kX1j9G3g6AniOlxi4c0cuHBIuplQNLlx4oBa2Tgj+cT
+ sb/ScNqvQ0el1HJHJcjxr6HCpWozpUR+5KO7NJBGRs30Jeb3HdZrHzuHo/8BXIXztSrSaMe
+ LLt5tLBpL//rfABNHY76w==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:jhNNaGn7XvM=;fMxvYjVDhqTxkoA8NMapSUXoR+x
- UFJsFxwwh18uQ/8whJreOnD+MkwmqfaI4m2mFm24K2k/mdq941hY7V4ezWkMdry4Zts4q1l+U
- jZafyJYMdFuR9kTfzkk6dofGRLGzam9DQffYVb1T9LBoJ5428ac/NFF+GAGNMLF1aZM33gNwm
- QX9J1crfBsYId0KIOLa1DQlXYekTzD4obok5mtmv8TezRwgAgEbqjr18Vs0xx7rJs1x7pVpi7
- QDYcq6YIZHh5dDWZFU9PEagnw002SKA1agoEA2RSjMeqJMzu0flW7NpRawC42tFmqeSqs3C5Z
- d2BQw/Hmti5AyJXGkN8QEV0u1eH+EYTrVAzaLj93mUn2u3kiH2ql1s4ZbM+icZU76d30DhJxK
- acsttIZhPOSiG7V1VPzdHCQZIq22nKMAPxvcvrLv5rhoW5cxOlos54WtiUzipLr/XrX6ufmVZ
- EeVJUMwXcx8KQqoDabDd9Q6dLKrNZ+tAjZT653PE8S3JASKOiPEWBVHm0O1tMDKFoE8XrvLnk
- i2a7B1S+oQhBY8RyEPBtfwQNACLhfhTtjSxa7UtUSgx955+zx3szdk9lSzVsOtRAJL3cWzo8O
- AW4gkND/F3KsJ0u16qGOvqD9bbgKNyyPD5FBsmBNaeIifVuvSzt4WOo0v9uq9NNrkhWaI2/LK
- OiVy+xHScJJY+vOs3+Os4BCPoPLcrIv4dyFaILKOG7eLFWr3173uYWmI8XZtC1mXqNGCQ5rKD
- FrHRUMzuD/LAXlcrcC9LKz6AFVRoruVyRmRJhPs60qdGvr4fh14JazA/uTG2k9sSZAnNQYkx8
- /lRcu+MpM6D6UYQO1ZksQBBPkA4/4v+fvICyChBgbeB0mhZwouTwD4qEPIeyMo0UCumbAjF0j
- n8iPqM1zuJGYTg3bOI7rQQiAuaYJEL7yBk70z8a5Pqk2OT2DqQnu/PtlJD29AecjkBpwVeCpW
- tE+3Wg==
+UI-OutboundReport: notjunk:1;M01:P0:qDhLsbAxpQM=;qo1pRUbvoR/eFgttBz6l/3EaWWn
+ 4JDI3wPNsR/ragy2ItG1UTC+Rtv6JYj0tuDr8b8gPD6ar8ittogMU4AQKNJg+7glG3jw0136L
+ T4qfd6SbSLwXIqrvHOwN/oDIw4D/oeRtzm7kwBijlkZvL5zwMbs72XORqhppkobflEEhO04Hr
+ vQGxi70lPdKaId9zaigP4qEs7OwZC/IKWnvO9m/xMtKbWYggchPgOT4eMIUd0RcotEX4SrD69
+ 850/itSQQWfUKxtSNfT5myRoKhXHfVOS6aKt8rEN4HVIzowgtkmKxGUWfzBz6wHOpg0Aj5jCP
+ vCY4Hacte72Ky+6hx8e+AThf9tcvDl1vMfOQ5UCvCWDP4gFS8O3LRF2JOAsBZdM+EEexZifRy
+ H15xrACsmJNy8hT+p2UcJlGZXNipiB/snezsee13Zm5iQk0i499KLslCERwwFU27JW6K01qgd
+ 7eu/OwyCV+9ROm+5i68/xCU0oGxBkecQ1ffCBaAjoUA6qCAGO6VMZoj0HIlCPTuDpp4nKVUak
+ li1xYruWJRQBCWW4bmAnyYiH+2flX1QFn7LOsZQQrfIWNu0SuQU8XMkhn2Yq2TjOCMqXcGHA0
+ NzVWJbyZWj+k+3j/DC1fbh1qfZuQmDAewnXEWqwWtbUclo9zu27GCK6cJorvDo2STan8+QmSZ
+ 2NmkxaRGZ58a3AkmP7zL121gqHbxX8T52PcRR12/3UHWq8+GNEIGDTk/uOrZwz0OPqQDiW1bC
+ Zw/dQ1DRa1LBCjz99vnvNobu8v6mlHlWrst2Sk7A8DB4+68FhqKiEqVlpxauGEg+WgUlm32EI
+ MLadV0YgC+x/dh1hZXyf/Eb2iBrFIn6KrtPzox53u8BzWUjj+wyfGBQ6b0jGZmDQee/tNtnbE
+ 9akalUJr2SG7d7EOlwoBmMRQF0NXJYGhJwNpva1yS8jXjEupMgPxIt2zypOZiQ501HUxYNKMC
+ +S9jr6ZNEQillpmcO6OlBSpJIvk=
 
-Since upstreaming i contributed a lot to this driver(s),
-so add myself as a maintainer.
+The qca_spi driver create/stop the SPI kernel thread in case
+of netdev_open/close. This isn't optimal because there is no
+need for such an expensive operation.
+
+So improve this by moving create/stop of the SPI kernel into
+the init/uninit ops. The open/close ops could just
+'park/unpark' the SPI kernel thread.
 
 Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
 =2D--
- MAINTAINERS | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/net/ethernet/qualcomm/qca_spi.c | 33 ++++++++++++++-----------
+ 1 file changed, 18 insertions(+), 15 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 8d1052fa6a69..5808f06b4ccf 100644
-=2D-- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -18009,6 +18009,13 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/=
-git/kvalo/ath.git
- F:	Documentation/devicetree/bindings/net/wireless/qca,ath9k.yaml
- F:	drivers/net/wireless/ath/ath9k/
+diff --git a/drivers/net/ethernet/qualcomm/qca_spi.c b/drivers/net/etherne=
+t/qualcomm/qca_spi.c
+index 5f3c11fb3fa2..fc272ca7bdca 100644
+=2D-- a/drivers/net/ethernet/qualcomm/qca_spi.c
++++ b/drivers/net/ethernet/qualcomm/qca_spi.c
+@@ -697,25 +697,17 @@ qcaspi_netdev_open(struct net_device *dev)
+ 	qca->sync =3D QCASPI_SYNC_UNKNOWN;
+ 	qcafrm_fsm_init_spi(&qca->frm_handle);
 
-+QUALCOMM ATHEROS QCA7K ETHERNET DRIVER
-+M:	Stefan Wahren <wahrenst@gmx.net>
-+L:	netdev@vger.kernel.org
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/net/qca,qca7000.txt
-+F:	drivers/net/ethernet/qualcomm/qca*
+-	qca->spi_thread =3D kthread_run((void *)qcaspi_spi_thread,
+-				      qca, "%s", dev->name);
+-
+-	if (IS_ERR(qca->spi_thread)) {
+-		netdev_err(dev, "%s: unable to start kernel thread.\n",
+-			   QCASPI_DRV_NAME);
+-		return PTR_ERR(qca->spi_thread);
+-	}
+-
+ 	ret =3D request_irq(qca->spi_dev->irq, qcaspi_intr_handler, 0,
+ 			  dev->name, qca);
+ 	if (ret) {
+ 		netdev_err(dev, "%s: unable to get IRQ %d (irqval=3D%d).\n",
+ 			   QCASPI_DRV_NAME, qca->spi_dev->irq, ret);
+-		kthread_stop(qca->spi_thread);
+ 		return ret;
+ 	}
+
+ 	/* SPI thread takes care of TX queue */
++	kthread_unpark(qca->spi_thread);
++	wake_up_process(qca->spi_thread);
+
+ 	return 0;
+ }
+@@ -725,15 +717,11 @@ qcaspi_netdev_close(struct net_device *dev)
+ {
+ 	struct qcaspi *qca =3D netdev_priv(dev);
+
+-	netif_stop_queue(dev);
++	kthread_park(qca->spi_thread);
+
+ 	qcaspi_write_register(qca, SPI_REG_INTR_ENABLE, 0, wr_verify);
+ 	free_irq(qca->spi_dev->irq, qca);
+
+-	kthread_stop(qca->spi_thread);
+-	qca->spi_thread =3D NULL;
+-	qcaspi_flush_tx_ring(qca);
+-
+ 	return 0;
+ }
+
+@@ -825,6 +813,7 @@ static int
+ qcaspi_netdev_init(struct net_device *dev)
+ {
+ 	struct qcaspi *qca =3D netdev_priv(dev);
++	struct task_struct *thread;
+
+ 	dev->mtu =3D QCAFRM_MAX_MTU;
+ 	dev->type =3D ARPHRD_ETHER;
+@@ -848,6 +837,15 @@ qcaspi_netdev_init(struct net_device *dev)
+ 		return -ENOBUFS;
+ 	}
+
++	thread =3D kthread_create(qcaspi_spi_thread, qca, "%s", dev->name);
++	if (IS_ERR(thread)) {
++		netdev_err(dev, "%s: unable to start kernel thread.\n",
++			   QCASPI_DRV_NAME);
++		return PTR_ERR(thread);
++	}
 +
- QUALCOMM BAM-DMUX WWAN NETWORK DRIVER
- M:	Stephan Gerhold <stephan@gerhold.net>
- L:	netdev@vger.kernel.org
++	qca->spi_thread =3D thread;
++
+ 	return 0;
+ }
+
+@@ -856,6 +854,11 @@ qcaspi_netdev_uninit(struct net_device *dev)
+ {
+ 	struct qcaspi *qca =3D netdev_priv(dev);
+
++	if (qca->spi_thread) {
++		kthread_stop(qca->spi_thread);
++		qca->spi_thread =3D NULL;
++	}
++
+ 	kfree(qca->rx_buffer);
+ 	qca->buffer_size =3D 0;
+ 	dev_kfree_skb(qca->rx_skb);
 =2D-
 2.34.1
 
