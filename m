@@ -1,180 +1,416 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05C8B629F5;
-	Wed, 24 Jan 2024 12:07:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BF7D60DE3;
+	Wed, 24 Jan 2024 12:08:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706098024; cv=none; b=WEVTvlnMpBnAt3OtftkbfBTPkqvD2vwsxJ20dy/RCfxHAssH/dgXDhAE9OFgHS9H0jDhlb9rwjhubOKurasYjElPMe9fQ4Ri9HRag5v06zI+ly8lfsvN0T279v3rQw6D64Q+R6fp1cAMkwmI4DVkp3HkMgLM+Ng8U9vlgT2ffm4=
+	t=1706098088; cv=none; b=CkeDuYNvmC4Ml4huxdwa6FEuzH7dxawfuG1HjHPFKDA5rEQGFYx2Y1/uEdCWD1ZKD9BtJ0Xl2X45dq0vaqGS4VAjki8zWu2h60xMzxNY8RaHFzEkah+i8+185UybXhiIn86mO37H1Ya4kllah1FOrEKXwDyZBMQuG5dNjtQ7sZo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706098024; c=relaxed/simple;
-	bh=EqGYeH3FYs27aZY1bDyzT4fuEU0UUgDfJZqY6tJdwA0=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jaAfJ7np9NkOe529vXM2WeZjIGo5erA3f5Iw1ovGM1gxCQsad+4Xz3UOjaqVJOeFIJ1ARjifWvAYLOCP5xTdrZrdmR0ipQpqLSy7lftKa2L3M/vaXu3vEFX+4NKzv4SDVLumb7vsCxUo/GEQmvUlB3rAye5UTgXTA+SffilNENg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YpnVD25K; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YpnVD25K"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-40e80046264so67587765e9.0;
-        Wed, 24 Jan 2024 04:07:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706098020; x=1706702820; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=yHQXrQZm7ePexKbK+DrR/AWby1OxOJCAQLEUzKUQttg=;
-        b=YpnVD25KBd4LorZ4IG0Dg03OPq3qnTARYcBwBBegqSuaOq61e8D/ABTnUxmS89ObBS
-         r6db+UG6nSpTmHM48XPZPJ2P1EZVCQtA/3CvXBqJMGASakxhl7JB8j3w/uz/iwJrKlXG
-         EhlSaxPBEEu4LNw4NBiECY7sb6fudH4dW4t54dwWU7wCKp1hn+pJpjWhyuuwiOVb/Nyg
-         GHBdp9Srk94MPCsShAwnwzWgBrkogzX1jdPfMi5vqhby4Y0Wwb3sR7Jvobso+LxPB9xt
-         C2qm+buWW8KThLbjPdlhm9ZixJxeC6r8W8T9DkWoN0WiYpXFaUY+7udMNEkKFF+t4s25
-         MwKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706098020; x=1706702820;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yHQXrQZm7ePexKbK+DrR/AWby1OxOJCAQLEUzKUQttg=;
-        b=sMEe1Rs2olEoIWJ/vP4VDMepSMm2LoiNU2zsItMRSSkwcsRDJ5wYqqVno+lZ/skLsO
-         /9x6m0x2MXJJwtNKzHSLl+AC4FPEgeAvwxfYl/GbKjvs+akPBhaLzdLR7O6izihHEwbv
-         csonH+t9kdmn287FBJjiId/8gRggN8mvHV9WbDfxH68qnpFVkle5+FKszW15Py+P6VQk
-         eREBjpDhYAHtHYWExd5ysgW8gfh8FF5FUbUMIDX+A53MTrJyvHlw1JM0weQIX5uwV1zG
-         sFgvpuQ/lBgfZ4uKBAjO9prTinF2KFIZQVeEz88FpmjIkOOVsA6y+F4mDG10k9tpurvb
-         mIVA==
-X-Gm-Message-State: AOJu0YyQ3uukPbBPN3LelSCGs3e8Xzwoumg1H6IKiu43JuqPQIgYNmwi
-	lsUx5azPQ43+MctDObBa0yJyD4R6SJk3f70/hb5NSM90QQiPkKYD
-X-Google-Smtp-Source: AGHT+IFkNvD40vJ0a1mrsGf7S5l+J9ij556hvdrCOjt5RYOPGErcAQgD0x471iQCkK6f4ZjjEVIRqQ==
-X-Received: by 2002:a05:600c:444:b0:40e:70fe:e179 with SMTP id s4-20020a05600c044400b0040e70fee179mr1149407wmb.182.1706098019848;
-        Wed, 24 Jan 2024 04:06:59 -0800 (PST)
-Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
-        by smtp.gmail.com with ESMTPSA id n4-20020adffe04000000b00339272c885csm11436040wrr.87.2024.01.24.04.06.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jan 2024 04:06:59 -0800 (PST)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Wed, 24 Jan 2024 13:06:57 +0100
-To: Ryan Roberts <ryan.roberts@arm.com>
-Cc: Jiri Olsa <olsajiri@gmail.com>, Sven Schnelle <svens@linux.ibm.com>,
-	David Hildenbrand <david@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Yin Fengwei <fengwei.yin@intel.com>, Yu Zhao <yuzhao@google.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	Yang Shi <shy828301@gmail.com>,
-	"Huang, Ying" <ying.huang@intel.com>, Zi Yan <ziy@nvidia.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Itaru Kitayama <itaru.kitayama@gmail.com>,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	John Hubbard <jhubbard@nvidia.com>,
-	David Rientjes <rientjes@google.com>,
-	Vlastimil Babka <vbabka@suse.cz>, Hugh Dickins <hughd@google.com>,
-	Kefeng Wang <wangkefeng.wang@huawei.com>,
-	Barry Song <21cnbao@gmail.com>,
-	Alistair Popple <apopple@nvidia.com>, linux-mm@kvack.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Barry Song <v-songbaohua@oppo.com>, linux-s390@vger.kernel.org
-Subject: Re: [PATCH v9 02/10] mm: Non-pmd-mappable, large folios for
- folio_add_new_anon_rmap()
-Message-ID: <ZbD9YdCmZ3_uTj_k@krava>
-References: <20231207161211.2374093-1-ryan.roberts@arm.com>
- <20231207161211.2374093-3-ryan.roberts@arm.com>
- <ZaMR2EWN-HvlCfUl@krava>
- <41dc7dff-1ea8-4894-a487-88d46ec2b2d8@redhat.com>
- <ZaRKMwKJIBmh8-lD@krava>
- <1188e67e-5c04-4bb5-b242-78d92c3fc85c@arm.com>
- <yt9d1qa7x9qv.fsf@linux.ibm.com>
- <ZbDyLzoIm0GdQzZA@krava>
- <6caaced7-a9d7-4fe4-823a-11b96be83e46@arm.com>
+	s=arc-20240116; t=1706098088; c=relaxed/simple;
+	bh=/gzNX6zX0VN2/j2mNPeHNLWLcI8EWSYdHVJJ3XbzabM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ug2YOefk7cTWFG4jd7vAOkzCY0cy/ALWua9q6FzY6oQ5IkdixlwWKk8GXEwmOvtZ482SS3uNtdeF2Nk1Jwo8WSAxEoerov2O7D9zXp5MB3/vLtmDcxvixv/HKx29yLr/XLQngHiYM04LWs/Qd0jSy+5l9pkqSyJG+TjLWWOAndg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 382D71FB;
+	Wed, 24 Jan 2024 04:08:50 -0800 (PST)
+Received: from [10.1.197.1] (ewhatever.cambridge.arm.com [10.1.197.1])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E9B463F5A1;
+	Wed, 24 Jan 2024 04:07:58 -0800 (PST)
+Message-ID: <519c187c-e362-4090-9706-6da4f44c6b36@arm.com>
+Date: Wed, 24 Jan 2024 12:07:57 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6caaced7-a9d7-4fe4-823a-11b96be83e46@arm.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 08/10] coresight-tpdm: Add timestamp control register
+ support for the CMB
+Content-Language: en-US
+To: Tao Zhang <quic_taozha@quicinc.com>,
+ Mathieu Poirier <mathieu.poirier@linaro.org>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Konrad Dybcio <konradybcio@gmail.com>, Mike Leach <mike.leach@linaro.org>,
+ Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+Cc: Jinlong Mao <quic_jinlmao@quicinc.com>, Leo Yan <leo.yan@linaro.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, coresight@lists.linaro.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, Tingwei Zhang <quic_tingweiz@quicinc.com>,
+ Yuanfang Zhang <quic_yuanfang@quicinc.com>,
+ Trilok Soni <quic_tsoni@quicinc.com>, Song Chai <quic_songchai@quicinc.com>,
+ linux-arm-msm@vger.kernel.org, andersson@kernel.org
+References: <1705634583-17631-1-git-send-email-quic_taozha@quicinc.com>
+ <1705634583-17631-9-git-send-email-quic_taozha@quicinc.com>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+In-Reply-To: <1705634583-17631-9-git-send-email-quic_taozha@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jan 24, 2024 at 12:02:53PM +0000, Ryan Roberts wrote:
-> On 24/01/2024 11:19, Jiri Olsa wrote:
-> > On Wed, Jan 24, 2024 at 12:15:52PM +0100, Sven Schnelle wrote:
-> >> Ryan Roberts <ryan.roberts@arm.com> writes:
-> >>
-> >>> On 14/01/2024 20:55, Jiri Olsa wrote:
-> >>>> On Sun, Jan 14, 2024 at 06:33:56PM +0100, David Hildenbrand wrote:
-> >>>>> On 13.01.24 23:42, Jiri Olsa wrote:
-> >>>>>> On Thu, Dec 07, 2023 at 04:12:03PM +0000, Ryan Roberts wrote:
-> >>>>>>> In preparation for supporting anonymous multi-size THP, improve
-> >>>>>>> folio_add_new_anon_rmap() to allow a non-pmd-mappable, large folio to be
-> >>>>>>> passed to it. In this case, all contained pages are accounted using the
-> >>>>>>> order-0 folio (or base page) scheme.
-> >>>>>>>
-> >>>>>>> Reviewed-by: Yu Zhao <yuzhao@google.com>
-> >>>>>>> Reviewed-by: Yin Fengwei <fengwei.yin@intel.com>
-> >>>>>>> Reviewed-by: David Hildenbrand <david@redhat.com>
-> >>>>>>> Reviewed-by: Barry Song <v-songbaohua@oppo.com>
-> >>>>>>> Tested-by: Kefeng Wang <wangkefeng.wang@huawei.com>
-> >>>>>>> Tested-by: John Hubbard <jhubbard@nvidia.com>
-> >>>>>>> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
-> >>>>>>> ---
-> >>>>>>>   mm/rmap.c | 28 ++++++++++++++++++++--------
-> >>>>>>>   1 file changed, 20 insertions(+), 8 deletions(-)
-> >>>>>>>
-> >>>>>>> diff --git a/mm/rmap.c b/mm/rmap.c
-> >>>>>>> index 2a1e45e6419f..846fc79f3ca9 100644
-> >>>>>>> --- a/mm/rmap.c
-> >>>>>>> +++ b/mm/rmap.c
-> >>>>>>> @@ -1335,32 +1335,44 @@ void page_add_anon_rmap(struct page *page, struct vm_area_struct *vma,
-> >>>>>>>    * This means the inc-and-test can be bypassed.
-> >>>>>>>    * The folio does not have to be locked.
-> >>>>>>>    *
-> >>>>>>> - * If the folio is large, it is accounted as a THP.  As the folio
-> >>>>>>> + * If the folio is pmd-mappable, it is accounted as a THP.  As the folio
-> >>>>>>>    * is new, it's assumed to be mapped exclusively by a single process.
-> >>>>>>>    */
-> >>>>>>>   void folio_add_new_anon_rmap(struct folio *folio, struct vm_area_struct *vma,
-> >>>>>>>   		unsigned long address)
-> >>>>>>>   {
-> >>>>>>> -	int nr;
-> >>>>>>> +	int nr = folio_nr_pages(folio);
-> >>>>>>> -	VM_BUG_ON_VMA(address < vma->vm_start || address >= vma->vm_end, vma);
-> >>>>>>> +	VM_BUG_ON_VMA(address < vma->vm_start ||
-> >>>>>>> +			address + (nr << PAGE_SHIFT) > vma->vm_end, vma);
-> >>>>>>
-> >>>>>> hi,
-> >>>>>> I'm hitting this bug (console output below) with adding uprobe
-> >>>>>> on simple program like:
-> >>>>>>
-> >>>>>>    $ cat up.c
-> >>>>>>    int main(void)
-> >>>>>>    {
-> >>>>>>       return 0;
-> >>>>>>    }
-> >>>>>>
-> >>>>>>    # bpftrace -e 'uprobe:/home/jolsa/up:_start {}'
-> >>>>>>
-> >>>>>>    $ ./up
-> >>>>>>
-> >>>>>> it's on top of current linus tree master:
-> >>>>>>    052d534373b7 Merge tag 'exfat-for-6.8-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/linkinjeon/exfat
-> >>>>>>
-> >>>>>> before this patch it seems to work, I can send my .config if needed
-> >>>
-> >>> Thanks for the bug report!
-> >>
-> >> I just hit the same bug in our CI, but can't find the fix in -next. Is
-> >> this in the queue somewhere?
-> > 
-> > we hit it as well, but I can see the fix in linux-next/master
-> > 
-> >   4c137bc28064 uprobes: use pagesize-aligned virtual address when replacing pages
+On 19/01/2024 03:23, Tao Zhang wrote:
+> CMB_TIER register is CMB subunit timestamp insertion enable register.
+> Bit 0 is PATT_TSENAB bit. Set this bit to 1 to request a timestamp
+> following a CMB interface pattern match. Bit 1 is XTRIG_TSENAB bit.
+> Set this bit to 1 to request a timestamp following a CMB CTI timestamp
+> request. Bit 2 is TS_ALL bit. Set this bit to 1 to request timestamp
+> for all packets.
 > 
-> Yes that's the one. Just to confirm: you are still hitting the VM_BUG_ON despite
-> having this change in your kernel? Could you please send over the full bug log?
+> Reviewed-by: James Clark <james.clark@arm.com>
+> Signed-off-by: Tao Zhang <quic_taozha@quicinc.com>
+> Signed-off-by: Jinlong Mao <quic_jinlmao@quicinc.com>
+> ---
+>   .../testing/sysfs-bus-coresight-devices-tpdm  |  35 +++++
+>   drivers/hwtracing/coresight/coresight-tpdm.c  | 123 +++++++++++++++++-
+>   drivers/hwtracing/coresight/coresight-tpdm.h  |  31 +++++
+>   3 files changed, 182 insertions(+), 7 deletions(-)
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-bus-coresight-devices-tpdm b/Documentation/ABI/testing/sysfs-bus-coresight-devices-tpdm
+> index 898aee81e20d..2199ea9d731e 100644
+> --- a/Documentation/ABI/testing/sysfs-bus-coresight-devices-tpdm
+> +++ b/Documentation/ABI/testing/sysfs-bus-coresight-devices-tpdm
+> @@ -214,3 +214,38 @@ KernelVersion	6.7
+>   Contact:	Jinlong Mao (QUIC) <quic_jinlmao@quicinc.com>, Tao Zhang (QUIC) <quic_taozha@quicinc.com>
+>   Description:
+>   		(RW) Set/Get the mask of the pattern for the CMB subunit TPDM.
+> +
+> +What:		/sys/bus/coresight/devices/<tpdm-name>/cmb_patt/enable_ts
+> +Date:		September 2023
+> +KernelVersion	6.7
 
-ah sorry.. I meant the change fixes the problem for us, it just did not
-yet propagate through the merge cycle into bpf trees.. but I can see it
-in linux-next tree, so it's probably just matter of time
+Date and version change, as in the previous patch.
 
-jirka
+> +Contact:	Jinlong Mao (QUIC) <quic_jinlmao@quicinc.com>, Tao Zhang (QUIC) <quic_taozha@quicinc.com>
+> +Description:
+> +		(Write) Set the pattern timestamp of CMB tpdm. Read
+> +		the pattern timestamp of CMB tpdm.
+> +
+> +		Accepts only one of the 2 values -  0 or 1.
+> +		0 : Disable CMB pattern timestamp.
+> +		1 : Enable CMB pattern timestamp.
+> +
+> +What:		/sys/bus/coresight/devices/<tpdm-name>/cmb_trig_ts
+> +Date:		September 2023
+> +KernelVersion	6.7
+> +Contact:	Jinlong Mao (QUIC) <quic_jinlmao@quicinc.com>, Tao Zhang (QUIC) <quic_taozha@quicinc.com>
+> +Description:
+> +		(RW) Set/Get the trigger timestamp of the CMB for tpdm.
+> +
+> +		Accepts only one of the 2 values -  0 or 1.
+> +		0 : Set the CMB trigger type to false
+> +		1 : Set the CMB trigger type to true
+> +
+> +What:		/sys/bus/coresight/devices/<tpdm-name>/cmb_ts_all
+> +Date:		September 2023
+> +KernelVersion	6.7
+> +Contact:	Jinlong Mao (QUIC) <quic_jinlmao@quicinc.com>, Tao Zhang (QUIC) <quic_taozha@quicinc.com>
+> +Description:
+> +		(RW) Read or write the status of timestamp upon all interface.
+> +		Only value 0 and 1  can be written to this node. Set this node to 1 to requeset
+> +		timestamp to all trace packet.
+> +		Accepts only one of the 2 values -  0 or 1.
+> +		0 : Disable the timestamp of all trace packets.
+> +		1 : Enable the timestamp of all trace packets.
+> diff --git a/drivers/hwtracing/coresight/coresight-tpdm.c b/drivers/hwtracing/coresight/coresight-tpdm.c
+> index 079c875ad667..184711c946f1 100644
+> --- a/drivers/hwtracing/coresight/coresight-tpdm.c
+> +++ b/drivers/hwtracing/coresight/coresight-tpdm.c
+> @@ -321,6 +321,31 @@ static void tpdm_enable_dsb(struct tpdm_drvdata *drvdata)
+>   	}
+>   }
+>   
+> +static void set_cmb_tier(struct tpdm_drvdata *drvdata)
+> +{
+> +	u32 val;
+> +
+> +	val = readl_relaxed(drvdata->base + TPDM_CMB_TIER);
+> +
+> +	/* Clear all relevant fields */
+> +	val &= ~(TPDM_CMB_TIER_PATT_TSENAB | TPDM_CMB_TIER_TS_ALL |
+> +		 TPDM_CMB_TIER_XTRIG_TSENAB);
+> +
+> +	/* Set pattern timestamp type and enablement */
+> +	if (drvdata->cmb->patt_ts)
+> +		val |= TPDM_CMB_TIER_PATT_TSENAB;
+> +
+> +	/* Set trigger timestamp */
+> +	if (drvdata->cmb->trig_ts)
+> +		val |= TPDM_CMB_TIER_XTRIG_TSENAB;
+> +
+> +	/* Set all timestamp enablement*/
+> +	if (drvdata->cmb->ts_all)
+> +		val |= TPDM_CMB_TIER_TS_ALL;
+> +
+> +	writel_relaxed(val, drvdata->base + TPDM_CMB_TIER);
+> +}
+> +
+>   static void tpdm_enable_cmb(struct tpdm_drvdata *drvdata)
+>   {
+>   	u32 val, i;
+> @@ -338,6 +363,8 @@ static void tpdm_enable_cmb(struct tpdm_drvdata *drvdata)
+>   				drvdata->base + TPDM_CMB_XPMR(i));
+>   		}
+>   
+> +		set_cmb_tier(drvdata);
+> +
+>   		val = readl_relaxed(drvdata->base + TPDM_CMB_CR);
+>   		/*
+>   		 * Set to 0 for continuous CMB collection mode,
+> @@ -687,9 +714,20 @@ static ssize_t enable_ts_show(struct device *dev,
+>   			      char *buf)
+>   {
+>   	struct tpdm_drvdata *drvdata = dev_get_drvdata(dev->parent);
+> +	struct tpdm_dataset_attribute *tpdm_attr =
+> +		container_of(attr, struct tpdm_dataset_attribute, attr);
+> +	ssize_t size = 0;
+
+super minor nit:
+
+	ssize_t size = -EINVAL;
+> +
+> +	if (tpdm_attr->mem == DSB_PATT)
+> +		size = sysfs_emit(buf, "%u\n",
+> +				  (unsigned int)drvdata->dsb->patt_ts);
+> +	else if (tpdm_attr->mem == CMB_PATT)
+> +		size = sysfs_emit(buf, "%u\n",
+> +				  (unsigned int)drvdata->cmb->patt_ts);
+
+  and drop the below.
+
+--- cut here ---
+
+> +	else
+> +		return -EINVAL;
+>   
+
+--- end ---
+
+> -	return sysfs_emit(buf, "%u\n",
+> -			 (unsigned int)drvdata->dsb->patt_ts);
+> +	return size;
+>   }
+>   
+>   /*
+> @@ -701,17 +739,23 @@ static ssize_t enable_ts_store(struct device *dev,
+>   			       size_t size)
+>   {
+>   	struct tpdm_drvdata *drvdata = dev_get_drvdata(dev->parent);
+> +	struct tpdm_dataset_attribute *tpdm_attr =
+> +		container_of(attr, struct tpdm_dataset_attribute, attr);
+>   	unsigned long val;
+>   
+>   	if ((kstrtoul(buf, 0, &val)) || (val & ~1UL))
+>   		return -EINVAL;
+>   
+> -	spin_lock(&drvdata->spinlock);
+> -	drvdata->dsb->patt_ts = !!val;
+> -	spin_unlock(&drvdata->spinlock);
+> +	guard(spinlock)(&drvdata->spinlock);
+> +	if (tpdm_attr->mem == DSB_PATT)
+> +		drvdata->dsb->patt_ts = !!val;
+> +	else if (tpdm_attr->mem == CMB_PATT)
+> +		drvdata->cmb->patt_ts = !!val;
+> +	else
+> +		return -EINVAL;
+> +
+>   	return size;
+>   }
+> -static DEVICE_ATTR_RW(enable_ts);
+>   
+>   static ssize_t set_type_show(struct device *dev,
+>   			     struct device_attribute *attr,
+> @@ -843,6 +887,68 @@ static ssize_t cmb_mode_store(struct device *dev,
+>   }
+>   static DEVICE_ATTR_RW(cmb_mode);
+>   
+> +static ssize_t cmb_ts_all_show(struct device *dev,
+> +			       struct device_attribute *attr,
+> +			       char *buf)
+> +{
+> +	struct tpdm_drvdata *drvdata = dev_get_drvdata(dev->parent);
+> +
+> +	return sysfs_emit(buf, "%u\n",
+> +			  (unsigned int)drvdata->cmb->ts_all);
+> +}
+> +
+> +static ssize_t cmb_ts_all_store(struct device *dev,
+> +				struct device_attribute *attr,
+> +				const char *buf,
+> +				size_t size)
+> +{
+> +	struct tpdm_drvdata *drvdata = dev_get_drvdata(dev->parent);
+> +	unsigned long val;
+> +
+> +	if ((kstrtoul(buf, 0, &val)) || (val & ~1UL))
+> +		return -EINVAL;
+> +
+> +	spin_lock(&drvdata->spinlock);
+> +	if (val)
+> +		drvdata->cmb->ts_all = true;
+> +	else
+> +		drvdata->cmb->ts_all = false;
+> +	spin_unlock(&drvdata->spinlock);
+
+minor nit: Use guard(spinlock) ?
+
+> +	return size;
+> +}
+> +static DEVICE_ATTR_RW(cmb_ts_all);
+> +
+> +static ssize_t cmb_trig_ts_show(struct device *dev,
+> +				struct device_attribute *attr,
+> +				char *buf)
+> +{
+> +	struct tpdm_drvdata *drvdata = dev_get_drvdata(dev->parent);
+> +
+> +	return sysfs_emit(buf, "%u\n",
+> +			  (unsigned int)drvdata->cmb->trig_ts);
+> +}
+> +
+> +static ssize_t cmb_trig_ts_store(struct device *dev,
+> +				 struct device_attribute *attr,
+> +				 const char *buf,
+> +				 size_t size)
+> +{
+> +	struct tpdm_drvdata *drvdata = dev_get_drvdata(dev->parent);
+> +	unsigned long val;
+> +
+> +	if ((kstrtoul(buf, 0, &val)) || (val & ~1UL))
+> +		return -EINVAL;
+> +
+> +	spin_lock(&drvdata->spinlock);
+> +	if (val)
+> +		drvdata->cmb->trig_ts = true;
+> +	else
+> +		drvdata->cmb->trig_ts = false;
+> +	spin_unlock(&drvdata->spinlock);
+
+minor nit: Use guard(spinlock) ?
+
+> +	return size;
+> +}
+> +static DEVICE_ATTR_RW(cmb_trig_ts);
+> +
+>   static struct attribute *tpdm_dsb_edge_attrs[] = {
+>   	&dev_attr_ctrl_idx.attr,
+>   	&dev_attr_ctrl_val.attr,
+> @@ -911,7 +1017,7 @@ static struct attribute *tpdm_dsb_patt_attrs[] = {
+>   	DSB_PATT_MASK_ATTR(5),
+>   	DSB_PATT_MASK_ATTR(6),
+>   	DSB_PATT_MASK_ATTR(7),
+> -	&dev_attr_enable_ts.attr,
+> +	DSB_PATT_ENABLE_TS,
+>   	&dev_attr_set_type.attr,
+>   	NULL,
+>   };
+> @@ -965,6 +1071,7 @@ static struct attribute *tpdm_cmb_patt_attrs[] = {
+>   	CMB_PATT_ATTR(1),
+>   	CMB_PATT_MASK_ATTR(0),
+>   	CMB_PATT_MASK_ATTR(1),
+> +	CMB_PATT_ENABLE_TS,
+>   	NULL,
+>   };
+>   
+> @@ -977,6 +1084,8 @@ static struct attribute *tpdm_dsb_attrs[] = {
+>   
+>   static struct attribute *tpdm_cmb_attrs[] = {
+>   	&dev_attr_cmb_mode.attr,
+> +	&dev_attr_cmb_ts_all.attr,
+> +	&dev_attr_cmb_trig_ts.attr,
+>   	NULL,
+>   };
+>   
+> diff --git a/drivers/hwtracing/coresight/coresight-tpdm.h b/drivers/hwtracing/coresight/coresight-tpdm.h
+> index 8cb8a9b35384..a49a4215ba63 100644
+> --- a/drivers/hwtracing/coresight/coresight-tpdm.h
+> +++ b/drivers/hwtracing/coresight/coresight-tpdm.h
+> @@ -11,6 +11,8 @@
+>   
+>   /* CMB Subunit Registers */
+>   #define TPDM_CMB_CR		(0xA00)
+> +/*CMB subunit timestamp insertion enable register*/
+> +#define TPDM_CMB_TIER		(0xA04)
+>   /*CMB subunit timestamp pattern registers*/
+>   #define TPDM_CMB_TPR(n)		(0xA08 + (n * 4))
+>   /*CMB subunit timestamp pattern mask registers*/
+> @@ -24,6 +26,12 @@
+>   #define TPDM_CMB_CR_ENA		BIT(0)
+>   /* Trace collection mode for CMB subunit */
+>   #define TPDM_CMB_CR_MODE	BIT(1)
+> +/* Timestamp control for pattern match */
+> +#define TPDM_CMB_TIER_PATT_TSENAB	BIT(0)
+> +/* CMB CTI timestamp request */
+> +#define TPDM_CMB_TIER_XTRIG_TSENAB	BIT(1)
+> +/* For timestamp fo all trace */
+> +#define TPDM_CMB_TIER_TS_ALL		BIT(2)
+>   
+>   /*Patten register number*/
+>   #define TPDM_CMB_MAX_PATT		2
+> @@ -134,6 +142,15 @@
+>   	   }								\
+>   	})[0].attr.attr)
+>   
+> +#define tpdm_patt_enable_ts_rw(name, mem)			\
+
+minor nit: you could drop _rw
+
+> +	(&((struct tpdm_dataset_attribute[]) {			\
+> +	   {							\
+> +		__ATTR(name, 0644, enable_ts_show,		\
+> +		enable_ts_store),		\
+> +		mem,						\
+> +	   }							\
+> +	})[0].attr.attr)
+> +
+>   #define DSB_EDGE_CTRL_ATTR(nr)					\
+>   		tpdm_simple_dataset_ro(edcr##nr,		\
+>   		DSB_EDGE_CTRL, nr)
+> @@ -158,6 +175,10 @@
+>   		tpdm_simple_dataset_rw(tpmr##nr,		\
+>   		DSB_PATT_MASK, nr)
+>   
+> +#define DSB_PATT_ENABLE_TS					\
+> +		tpdm_patt_enable_ts_rw(enable_ts,		\
+> +		DSB_PATT)
+> +
+>   #define DSB_MSR_ATTR(nr)					\
+>   		tpdm_simple_dataset_rw(msr##nr,			\
+>   		DSB_MSR, nr)
+> @@ -178,6 +199,10 @@
+>   		tpdm_simple_dataset_rw(tpmr##nr,		\
+>   		CMB_PATT_MASK, nr)
+>   
+> +#define CMB_PATT_ENABLE_TS					\
+> +		tpdm_patt_enable_ts_rw(enable_ts,		\
+> +		CMB_PATT)
+> +
+>   /**
+>    * struct dsb_dataset - specifics associated to dsb dataset
+>    * @mode:             DSB programming mode
+> @@ -217,6 +242,9 @@ struct dsb_dataset {
+>    * @patt_mask:        Save value for pattern mask
+>    * @trig_patt:        Save value for trigger pattern
+>    * @trig_patt_mask:   Save value for trigger pattern mask
+> + * @patt_ts:          Indicates if pattern match for timestamp is enabled.
+> + * @trig_ts:          Indicates if CTI trigger for timestamp is enabled.
+> + * @ts_all:           Indicates if timestamp is enabled for all packets.
+>    */
+>   struct cmb_dataset {
+>   	u32			trace_mode;
+> @@ -224,6 +252,9 @@ struct cmb_dataset {
+>   	u32			patt_mask[TPDM_CMB_MAX_PATT];
+>   	u32			trig_patt[TPDM_CMB_MAX_PATT];
+>   	u32			trig_patt_mask[TPDM_CMB_MAX_PATT];
+> +	bool			patt_ts;
+> +	bool			trig_ts;
+> +	bool			ts_all;
+>   };
+
+Rest looks fine to me
+
+Suzuki
+>   
+>   /**
+
