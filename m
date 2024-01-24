@@ -1,120 +1,116 @@
-Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com [209.85.167.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 699FBE541;
-	Wed, 24 Jan 2024 05:56:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38B05F9F8
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 05:56:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706075778; cv=none; b=rdh3NJUmXH5/D4XGRf5hbd9jylsiVpNpeSSJyAArVrQYeNhU1f7FJbs7JdPeVT/L/dVW9uraBVmPfnh18+S3IGtyPkQ6fdeOGBrzE2p3iUgN8wWsydHx5oQ0NNvtc4oZOZxkbtBos7OaRky9BaWU4AIViY0xUoHM4eAqziznq0o=
+	t=1706075784; cv=none; b=pgc5uM5EadHPkapGy2t+ih3h+QWa6mVXg+frz1rG+TSfn4E0tlCg81qxhr/6QmlT+d2OMiKJGLh+ZRiueivedx+AAeoqibRnCwL4VF170qCp6FuWtqKoLlmwfj1ij3ofuWfBKpd6cZSxlbXelh6jmE8vP/qEmtRjep3zIdSKe90=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706075778; c=relaxed/simple;
-	bh=Mtv9huBRB3XLSzYzkY5yNwfFSuBXgm9+U9XhIB4rkkw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=g6ei1Qb+b1Au4ZaGE+U07m+Z56gJMNiTWuNO7WfpIWdKKd0iXLqKVdy8NYHgAEym7BkaQmWCLjKABsHb7kXMz2ttwM9gCdWS3/Xx+8XWOWOkw+ps+/Ptbs4S6xMdRQxK4oQQ+3Ca1/5iGR995ouM/QvxRDHLWNz6w021tIpTPjA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=B5gNBuZd; arc=none smtp.client-ip=198.47.19.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1706075784; c=relaxed/simple;
+	bh=3n6qbepBC/quy189WMpUt5s0sJ7FlfcHVamtdO7egM8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lIRqxsizWD53iyFtGtqVW6fDNzikhhbERWwNhNKpTbJrTw0vA8JQRj0MfYI8rzJ4nGokPZW9Uphju3vOI+Wi2xj1yC+Rfn8cGCO7bgABQPlPQ4DB3YzaVsVXuxgEcBxVNZ7YkNN2chyT3XziXeKL8fvnqzC3sBZxwUIjnSnlSFE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=CQUPI0Gy; arc=none smtp.client-ip=209.85.167.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="B5gNBuZd"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 40O5u4M1010724;
-	Tue, 23 Jan 2024 23:56:04 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1706075764;
-	bh=gUkEY0JOHv9rnjrrLI9cNW4bj/5kjOFDACovw2GyPXE=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=B5gNBuZdRqNUBbhY5NO6JIke2EgW3FSs+B8zmvPXjDDyR8nu0k+HHaBz+8a3nbnSR
-	 z4AkkIfyLDYeRjQ0hd8/WgROgkuhiCNBqvDt3KmOqdX1hSm9/HnM1G+iKs3ytggTND
-	 rwndFTjPiBH1WeL8sgjyVgansZ0+Ie4j3mS/XfG4=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 40O5u4sx009517
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 23 Jan 2024 23:56:04 -0600
-Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 23
- Jan 2024 23:56:04 -0600
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 23 Jan 2024 23:56:04 -0600
-Received: from [172.24.227.112] (jayesh-hp-probook-440-g8-notebook-pc.dhcp.ti.com [172.24.227.112])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 40O5u02l019754;
-	Tue, 23 Jan 2024 23:56:01 -0600
-Message-ID: <0fcec921-0220-4251-afa4-44db5e80d2ef@ti.com>
-Date: Wed, 24 Jan 2024 11:26:00 +0530
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CQUPI0Gy"
+Received: by mail-oi1-f182.google.com with SMTP id 5614622812f47-3bd562d17dcso4074503b6e.3
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 21:56:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1706075782; x=1706680582; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=F7SahGLtspE/3Wi9Cd+JOw7KlfpX4OF2RIxiyIP7SV0=;
+        b=CQUPI0Gyf7iMVcA10t0J6r04j6YDF4Q6PiMRKcRAEg+WVj6KxdR5iSjMSH9izVJw1I
+         eWEctJIUL9aPKNRO8yJ0lyN7bSV/jDY1WG9r8EcyShbbGJe/c5xN79ViXN+JORHMajDY
+         3lVFKRVel0lAAFxssdot+ARQPurXeBX6M9tre1yECT9ZrE3S4aN4izbkIobsxqrD+gB2
+         PqqDggyVIjCgWAll2xtReuBmYA/XAr4VvzisMbLenDYR0AcUbxsn+W6KD51fBPCjDLml
+         IzviHy1wIPcxQkBILW8Wy4+qLFo6TwfpiR4yy3p0elIznif5BQuoB2TOGUB6aIO6pp1h
+         gYeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706075782; x=1706680582;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=F7SahGLtspE/3Wi9Cd+JOw7KlfpX4OF2RIxiyIP7SV0=;
+        b=LReo4Ez8c58EMtqe4ag0sJdsl+84i92cZeuFMPfidWfiBHpAk3Tul52V1mPrcx9mzZ
+         NtxCoEY1cZijdMKF3Xfo5/R7Lk62qbmu3Cc6rBUWGl50r/SGaHzfp1StEwneqk1xgpvH
+         Y3ifQ0woZXFojChXXwz4G8onQf8+EfcbMv/29+qjroRlBmytBrj4PBIfVFXiKFd0DKID
+         oPE5pBNQQ3FJYh5uicdt9ffUlAJnSOoQx3Lhi5VbGBKgqMIkjfpfB9sdfCyt2Fwub0li
+         mizP3Mpi3hPr7Yjs8HpiYNBR3EzAuwXxkYk8MFXDR/AQnEuLH91XU5JgnMjjKlA0aHc+
+         guCQ==
+X-Gm-Message-State: AOJu0YygpVsXBT0GNoTpxTqR32YKpunnFTmEZDsA+Ur86NUw7PEXCMd4
+	8Fbdf46Vc/XSFIlgkoSHVkUMmShZo4DvsPXNKP0TrQ1mlmi4af8AiNx4GknVhj0=
+X-Google-Smtp-Source: AGHT+IGiCI/sj/mAtB23fTMLULvqgI87+dSZUJXZCXN7hV/stz02CWQa7d9iE2R5I1NHRIlUItj1Gw==
+X-Received: by 2002:a05:6808:10c2:b0:3bd:a6ea:1c6c with SMTP id s2-20020a05680810c200b003bda6ea1c6cmr1180274ois.116.1706075782222;
+        Tue, 23 Jan 2024 21:56:22 -0800 (PST)
+Received: from localhost ([122.172.81.83])
+        by smtp.gmail.com with ESMTPSA id ko18-20020a056a00461200b006dab0d72cd0sm12721062pfb.214.2024.01.23.21.56.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Jan 2024 21:56:20 -0800 (PST)
+Date: Wed, 24 Jan 2024 11:26:18 +0530
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+	Banajit Goswami <bgoswami@quicinc.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Frank Rowand <frowand.list@gmail.com>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+	linux-arm-msm@vger.kernel.org, alsa-devel@alsa-project.org,
+	linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH v4 2/6] cpufreq: do not open-code of_phandle_args_equal()
+Message-ID: <20240124055618.5xppexdpvwnv6zng@vireshk-i7>
+References: <20240123141311.220505-1-krzysztof.kozlowski@linaro.org>
+ <20240123141311.220505-3-krzysztof.kozlowski@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64: dts: ti: k3-am62p-mcu/wakeup: Disable MCU and
- wakeup R5FSS nodes
-Content-Language: en-US
-To: Vaishnav Achath <vaishnav.a@ti.com>, <nm@ti.com>, <vigneshr@ti.com>,
-        <kristo@kernel.org>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>
-CC: <bb@ti.com>, <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <u-kumar1@ti.com>
-References: <20240121134017.374992-1-vaishnav.a@ti.com>
-From: Jayesh Choudhary <j-choudhary@ti.com>
-In-Reply-To: <20240121134017.374992-1-vaishnav.a@ti.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240123141311.220505-3-krzysztof.kozlowski@linaro.org>
 
-Hello Vaishnav,
-
-On 21/01/24 19:10, Vaishnav Achath wrote:
-> K3 Remoteproc R5 driver requires reserved memory carveouts and
-> mailbox configuration to instantiate the cores successfully.
-> Since this is a board level dependency, keep the R5 subsytem
-> disabled at SoC dtsi, otherwise it results in probe errors like
-> below during AM62P SK boot:
+On 23-01-24, 15:13, Krzysztof Kozlowski wrote:
+> Use newly added of_phandle_args_equal() helper to compare two
+> of_phandle_args.
 > 
-> r5fss@79000000: reserved memory init failed, ret = -22
-> r5fss@79000000: k3_r5_cluster_rproc_init failed, ret = -22
-> r5fss@78000000: reserved memory init failed, ret = -22
-> r5fss@78000000: k3_r5_cluster_rproc_init failed, ret = -22
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 > 
-> Fixes: b5080c7c1f7e ("arm64: dts: ti: k3-am62p: Add nodes for more IPs")
-> 
-> Signed-off-by: Vaishnav Achath <vaishnav.a@ti.com>
-
-Reviewed-by: Jayesh Choudhary <j-choudhary@ti.com>
-
 > ---
->   arch/arm64/boot/dts/ti/k3-am62p-mcu.dtsi    | 2 ++
->   arch/arm64/boot/dts/ti/k3-am62p-wakeup.dtsi | 1 +
->   2 files changed, 3 insertions(+)
 > 
-> diff --git a/arch/arm64/boot/dts/ti/k3-am62p-mcu.dtsi b/arch/arm64/boot/dts/ti/k3-am62p-mcu.dtsi
-> index c4b0b91d70cf..14eb9ba836d3 100644
-> --- a/arch/arm64/boot/dts/ti/k3-am62p-mcu.dtsi
-> +++ b/arch/arm64/boot/dts/ti/k3-am62p-mcu.dtsi
-> @@ -187,6 +187,8 @@ mcu_r5fss0: r5fss@79000000 {
->   		ranges = <0x79000000 0x00 0x79000000 0x8000>,
->   			 <0x79020000 0x00 0x79020000 0x8000>;
->   		power-domains = <&k3_pds 7 TI_SCI_PD_EXCLUSIVE>;
-> +		status = "disabled";
-> +
->   		mcu_r5fss0_core0: r5f@79000000 {
->   			compatible = "ti,am62-r5f";
->   			reg = <0x79000000 0x00008000>,
-> diff --git a/arch/arm64/boot/dts/ti/k3-am62p-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-am62p-wakeup.dtsi
-> index 19f42b39394e..10a7059b2d9b 100644
-> --- a/arch/arm64/boot/dts/ti/k3-am62p-wakeup.dtsi
-> +++ b/arch/arm64/boot/dts/ti/k3-am62p-wakeup.dtsi
-> @@ -78,6 +78,7 @@ wkup_r5fss0: r5fss@78000000 {
->   		ranges = <0x78000000 0x00 0x78000000 0x8000>,
->   			 <0x78100000 0x00 0x78100000 0x8000>;
->   		power-domains = <&k3_pds 119 TI_SCI_PD_EXCLUSIVE>;
-> +		status = "disabled";
->   
->   		wkup_r5fss0_core0: r5f@78000000 {
->   			compatible = "ti,am62-r5f";
+> Depends on previous of change.
+> ---
+>  include/linux/cpufreq.h | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/include/linux/cpufreq.h b/include/linux/cpufreq.h
+> index afda5f24d3dd..3cd06dafb04b 100644
+> --- a/include/linux/cpufreq.h
+> +++ b/include/linux/cpufreq.h
+> @@ -1149,8 +1149,7 @@ static inline int of_perf_domain_get_sharing_cpumask(int pcpu, const char *list_
+>  		if (ret < 0)
+>  			continue;
+>  
+> -		if (pargs->np == args.np && pargs->args_count == args.args_count &&
+> -		    !memcmp(pargs->args, args.args, sizeof(args.args[0]) * args.args_count))
+> +		if (of_phandle_args_equal(pargs, &args))
+>  			cpumask_set_cpu(cpu, cpumask);
+>  
+>  		of_node_put(args.np);
 
-Thanks.
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+
+-- 
+viresh
