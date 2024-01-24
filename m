@@ -1,80 +1,86 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB3EA17C62;
-	Wed, 24 Jan 2024 09:16:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BD0C17C65
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 09:16:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.111
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706087763; cv=none; b=aVxLQ58Qr8TyXpwzEBpP6Z4DHDsg0NYp11+RWKggxiSFBi2W5Z3RKGc28tEHevW19r27WJJoPhI+y1R7bGilnXikFIKzZFT4hf32tDoCTG2NbQGB+Loc+RV0xK92/7Y/khtol7VSRRPjnpYRdc00Kh2P2Y3wsj9QgaV4t+SBSQU=
+	t=1706087797; cv=none; b=DL5+FbH5rL3Z8X8aHOfmKs7OdtrkFfotx54uXrh/e/XV0QC2IEaf2zG6ldQ+IrQKhv+gYlhmblic39m709lZjpBW1/1AMqdZqdAfIeuBs8HfwLYD6Ng9BdEBl97lh6MV0WrUBp3l2d2sx44b1+XEgleo609+wt6CS6kpt1qddqY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706087763; c=relaxed/simple;
-	bh=u1YoV9dyStDKFJT8OsyND/CVnqRL02V+87XbdWXiaXs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ud3ylW13hwYdktyNqIl9X4kZq9zJ2RMRIms/45A40sJzrHHdMflBwN1vZvb5iTherTCmbxnpVTJ2wmDgm0pXzxBr0WXBBjkz52Nqa9t/546drol8ora/2cGp9qGMw0NaiEVTzRaIddqAn9rREmr5EvgxdtllDNdCZH+hYNYOrpI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dF3ueRT8; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dF3ueRT8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8B2BC433C7;
-	Wed, 24 Jan 2024 09:15:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706087763;
-	bh=u1YoV9dyStDKFJT8OsyND/CVnqRL02V+87XbdWXiaXs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dF3ueRT8kvAPOXcVLrXdR1DYyiF8NKjD2y87iKoQUH8a0DpKWv3IAVL9D21WDk3Lx
-	 /FHG0MakOEtFq7RmxSLysQkDD02jN//w7T9E5mDjgqsoRtO6URCdbMTPKM75yRIuJR
-	 fqouBzqAstojlXu49s8Oz1huBEU4eHzs39nIO+XgB5BnwJdC8xTuq+Tl+glMj8q3/z
-	 cTTL4jgSx8ADeaUGbpR4kvi4dNGwkpPRZkhJkqFS2Du7lLi1RVH9rj0uTcH2NQZHUM
-	 fsz7kVtut0Wb3oCDFaKp8nBXhUu6j6Rds8ujGOw68plXbYHvBL8wpPxLKIqatpRQYr
-	 dBQ+nL69i9wlQ==
-Date: Wed, 24 Jan 2024 09:15:57 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
-	jonathanh@nvidia.com, f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
-	allen.lkml@gmail.com
-Subject: Re: [PATCH 6.1 000/414] 6.1.75-rc2 review
-Message-ID: <20240124-gawk-precinct-70addd2c5286@spud>
-References: <20240123174510.372863442@linuxfoundation.org>
+	s=arc-20240116; t=1706087797; c=relaxed/simple;
+	bh=Gw027f+IjQyyQbAt7FOQ+4RHmj+3PaRU6TIsxKZu6kY=;
+	h=Message-ID:Subject:Date:From:To:Cc:References:In-Reply-To; b=DMQzyQRTFB46+Fd3ZeJOjJ1W/qzV9SBnlPqSFRsR5UsANUcwu3efXt5m7vWaY6VJ6ocThQE8SEwgLBt5uKSTExZdT3RosPjh1u8fYNQNqEzcQocR7hz/AxK7Xm6zqmbvIGAkh66PdMWshy6UHJR/HiWPYJMkoHRsoukrXQ62fsE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; arc=none smtp.client-ip=115.124.30.111
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R831e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045176;MF=xuanzhuo@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0W.G52BL_1706087790;
+Received: from localhost(mailfrom:xuanzhuo@linux.alibaba.com fp:SMTPD_---0W.G52BL_1706087790)
+          by smtp.aliyun-inc.com;
+          Wed, 24 Jan 2024 17:16:31 +0800
+Message-ID: <1706087654.2583706-2-xuanzhuo@linux.alibaba.com>
+Subject: Re: [PATCH v2 2/3] virtio_net: Add missing virtio header in skb for XDP_PASS
+Date: Wed, 24 Jan 2024 17:14:14 +0800
+From: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+To: Liang Chen <liangchen.linux@gmail.com>
+Cc: virtualization@lists.linux-foundation.org,
+ linux-kernel@vger.kernel.org,
+ liangchen.linux@gmail.com,
+ mst@redhat.com,
+ jasowang@redhat.com,
+ hengqi@linux.alibaba.com
+References: <20240124085721.54442-1-liangchen.linux@gmail.com>
+ <20240124085721.54442-3-liangchen.linux@gmail.com>
+In-Reply-To: <20240124085721.54442-3-liangchen.linux@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="J6riezYmzZEHjQTm"
-Content-Disposition: inline
-In-Reply-To: <20240123174510.372863442@linuxfoundation.org>
+
+On Wed, 24 Jan 2024 16:57:20 +0800, Liang Chen <liangchen.linux@gmail.com> wrote:
+> For the XDP_PASS scenario of the XDP path, the skb constructed with
+> xdp_buff does not include the virtio header. Adding the virtio header
+> information back when creating the skb.
+>
+> Signed-off-by: Liang Chen <liangchen.linux@gmail.com>
+> ---
+>  drivers/net/virtio_net.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+>
+> diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
+> index b56828804e5f..2de46eb4c661 100644
+> --- a/drivers/net/virtio_net.c
+> +++ b/drivers/net/virtio_net.c
+> @@ -1270,6 +1270,9 @@ static struct sk_buff *receive_small_xdp(struct net_device *dev,
+>  	if (unlikely(!skb))
+>  		goto err;
+>
+> +	/* Store the original virtio header for subsequent use by the driver. */
+> +	memcpy(skb_vnet_common_hdr(skb), &virtnet_xdp.hdr, vi->hdr_len);
+
+About this, a spec is waiting for voting.
+
+This may change the logic of the csum offset and so on.
+
+Please not do this.
+
+Thanks.
 
 
---J6riezYmzZEHjQTm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Tue, Jan 23, 2024 at 09:47:46AM -0800, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.1.75 release.
-> There are 414 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-
-Tested-by: Conor Dooley <conor.dooley@microchip.com>
-
-Cheers,
-Conor.
-
---J6riezYmzZEHjQTm
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZbDVTQAKCRB4tDGHoIJi
-0kT0AQCTo0CwghJnmWOVqxcVeqRV1QaioXaPqxVawMNxbpbVigD/VT3aNC8Iybaz
-T+tB3EiSbCDU3fisuhDQcXw0BPk/jgM=
-=G5o3
------END PGP SIGNATURE-----
-
---J6riezYmzZEHjQTm--
+> +
+>  	if (metasize)
+>  		skb_metadata_set(skb, metasize);
+>
+> @@ -1635,6 +1638,9 @@ static struct sk_buff *receive_mergeable_xdp(struct net_device *dev,
+>  		head_skb = build_skb_from_xdp_buff(dev, vi, xdp, xdp_frags_truesz);
+>  		if (unlikely(!head_skb))
+>  			break;
+> +		/* Store the original virtio header for subsequent use by the driver. */
+> +		memcpy(skb_vnet_common_hdr(head_skb), &virtnet_xdp.hdr, vi->hdr_len);
+> +
+>  		return head_skb;
+>
+>  	case XDP_TX:
+> --
+> 2.40.1
+>
