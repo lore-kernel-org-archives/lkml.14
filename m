@@ -1,82 +1,103 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D02851272B1
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 17:24:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51C8181AC8
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 17:24:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706117051; cv=none; b=e4g6RHI/row6YsIzuTJ7784y5+pEcqQLz+smbSYUp4V1jJdwXr9tt6i7lACOsV648GPQnY/18iQRxfOTERcts6fM9PI6OakW0fLcGhsG8Enhr79xlZ2yDyiBg9gj23hezrfq2JqIGkTq7bV5Bmbp/SzYUQX7lQmjHYMQPvrktHY=
+	t=1706117063; cv=none; b=WChaye3PubXlIWLoyS+PZK4fQEIHxF/zWTmGlk9whCTI9IEC45Visd2hOQDYJfspsy6+SeFmALU6fV0tL0iyJKPiSDUByVb8vftqyUVYuHE/VnBKl2720FvQgWfUSSm3FmOaqN9GnRWjr7Niw5pjDDZKG1396nqElFPWaC5IjPM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706117051; c=relaxed/simple;
-	bh=84hQubybZvoHS0mUrUXrKWieYpnepVChvkMJ3NXWaC8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=P2aW18ju50n6eDGS/iEZYwXZtfgQWWdRrDYWCOUsYvBwpcddMotP8gjWF9Vxf72DqaR7h+qZM9O5cmi4v2xZQdsjWwRaRO9poNNRhn94lq4Sb51PAxZDnr+cg3bRGMMZLrwxlGsvlZEJbxDANgrLS9W0MqJuPbV4Oz8drn2FOAU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=UsqQX4ks; arc=none smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1706117063; c=relaxed/simple;
+	bh=VSd/JJH1i3yh+OWX89PdOSwPlQ9HzM3SPMv/6AxAT9Y=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Hud0v2JEK2cGn4thZe9FTJkY2qFzZkcYNk7kO2Pz8NtP/1VcEWo9nQX4BJgpH7P+GlYNrroGQxxiGLachae/DhpRPQEJAcI3pxFn8TAqkzxuf8dAB29i1SBCqMrCg5hU+tZn2EAeex+qBW9tgcDsWOFlIhrv4ueavfdptz+FyxU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gzL4GAS9; arc=none smtp.client-ip=209.85.219.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UsqQX4ks"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3394b892691so760532f8f.1
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 09:24:08 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gzL4GAS9"
+Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-683cabd9763so34476046d6.3
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 09:24:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706117047; x=1706721847; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=84hQubybZvoHS0mUrUXrKWieYpnepVChvkMJ3NXWaC8=;
-        b=UsqQX4ksPZxr49qaJQov2WigdgSmZqUjvUVjaTXTjHSt/GOx9OHW48gRmpVJAXztWb
-         IPYK5LqpyPJZtdd3TO0sM0h6C0D4sIpKr9MsRBxNW8Gle+r5HLfM2hVj/xErg2sMWxzw
-         PZD1i7p7wESWuW8EEKzOzUeDX/ppuDOLk6L6dBreirKTbC5OALKKjn9SN8hekHnCOHpA
-         luEOA/EYVRnNJ2S3zRRJRUj6kUq6FowhzkEeHZr0b5DutUmjVddYHwvopP4Wx8MojXyO
-         deK0D0E5zzRCvfUy5q582mqwuWPdUww6lijmKMNJOCDyEauuBtuhmFbJhutJBTo0/V+h
-         BiOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706117047; x=1706721847;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1706117061; x=1706721861; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=84hQubybZvoHS0mUrUXrKWieYpnepVChvkMJ3NXWaC8=;
-        b=wR/H/ksWaxfmknSIKA7Kd/91TQD0VQpcuE7mNMDAvhMfWvjs4XPwhGRXvDGyHD00nu
-         P7KfKV95CDwtaUGYETOCGuGv1xaeczufszJ729WEStkHC6ighLWfKchqmulupigG9GuY
-         Ix8AvsjUbETMGm+Hz7V1vWuoZRZ3t+HpzMes6KqWKRpzfx2rDXnRD6EQSg1oaUY68dtC
-         AvSSITSDekdYen9PzJBq2dVT2noykhZcmnIB2Ns3bCu+owPyfH7kbkNd+ZS5h0UglcO3
-         sa6hOpkTRneZsVW/JAjDFGQ7ohgSnefdHSH8hLvLAVmusxm4EjdQT73mFHEpEIkCSibj
-         1jtA==
-X-Gm-Message-State: AOJu0Ywp32jJ/mObehG39GL0cPd2eV0o34avPBYRa10unr8mEg4LHgl0
-	b1pbbunHdoU1rd/5r3zPk2cXWujBMYHzB1OTlXUZdeEwRFZEbKCUR0mdzNQjUw0=
-X-Google-Smtp-Source: AGHT+IGy6q1uZqnQR6FI8b7VYbGDPfXt1pitVJGLsnDj4e3SXBqZHBNvvYPKioX8VWyL3ysKZeRqoQ==
-X-Received: by 2002:adf:f4cf:0:b0:337:d6c8:1af5 with SMTP id h15-20020adff4cf000000b00337d6c81af5mr735025wrp.53.1706117047102;
-        Wed, 24 Jan 2024 09:24:07 -0800 (PST)
-Received: from aspen.lan (aztw-34-b2-v4wan-166919-cust780.vm26.cable.virginm.net. [82.37.195.13])
-        by smtp.gmail.com with ESMTPSA id b13-20020a05600010cd00b003392c1f40acsm10493581wrx.28.2024.01.24.09.24.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jan 2024 09:24:06 -0800 (PST)
-Date: Wed, 24 Jan 2024 17:24:05 +0000
-From: Daniel Thompson <daniel.thompson@linaro.org>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Lee Jones <lee@kernel.org>,
-	Jingoo Han <jingoohan1@gmail.com>, Helge Deller <deller@gmx.de>
-Subject: Re: [PATCH v1 3/4] backlight: hx8357: Make use of dev_err_probe()
-Message-ID: <20240124172405.GA15881@aspen.lan>
-References: <20240114152759.1040563-1-andriy.shevchenko@linux.intel.com>
- <20240114152759.1040563-4-andriy.shevchenko@linux.intel.com>
+        bh=cSxEs95VFilTX9ZMn4g3/pmadRUIIAuhSiude60Z10U=;
+        b=gzL4GAS9Ith+xEiYE0K4E7S8gErUc0w3cph6BHS4m5LX5tFZxEnBlzYxO9ux1mzoYH
+         OEhXjeCK8Sgp8j5g79pB4Nof3rlRm3EscDsyYhl/8iy2lcAxU3kPzfUyXfT4MPZWx1He
+         j0pLuehyAPcP8TmVdnBE6sGDaclfzPsC7tfO7yvIalS4sBrtQGvTzEUsMeEAMhvtBdFl
+         3eecEnLRq5VB5OlnrCmnYA0viiKGwEoGDwvZWmw1pjmvELv0lC+gfSv56o08IV7JAO9Z
+         1CsqqmeHi7yh910yNfWEhGjN2igQXD7OAFCQIXe9ps5asa2TGhPCf2H4BBb0ByPQPVMi
+         S5kw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706117061; x=1706721861;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=cSxEs95VFilTX9ZMn4g3/pmadRUIIAuhSiude60Z10U=;
+        b=Q+Pucjw4fMntom2hUf/OF0o3ydZvWqh6KJsAS6JAAk70lcoot423+4MHLN+pPkyvtU
+         EZg17HO/oBs9iWd9fDvkrazzwjY1AnPyr8gCGFZI8VcCaGqTIr6AomLdf3LaIWAj9mEr
+         TEDMDX7UB9B3TDA7aXrrXCXN4GZ5CZH7L2YWRXzONJ7xxiXPTwbgjiWcbH0FoK640T6V
+         7ThUYBuhJ406dCKsT+V/0ZbTh8ujxkboJ9ztEGAY9D6sPR843C8pu7zRPTx/pRhkeQKo
+         GyjDepVIVLm/l/ikSaVZK752LLa2yrxqCQD6WGdlB+mBa3b1aKdikfeHN5W9HOI/hrjz
+         TGOQ==
+X-Gm-Message-State: AOJu0YwczqZGrtyNi6xGWzarV5CjUCpG1bebJ6cqbAwhWV6OfPHA62k+
+	aBbSbgWF/RIFmfl6n++kXa8uYkGHJ3LwzUwmnepGmKSO8bbq4zbRT91AIpxuz4hk6w8qz1llQEi
+	rMjPKVvn8cCbJP5Wm5rUXc1P4gyvH+DfGE7dz
+X-Google-Smtp-Source: AGHT+IGs4EAnLTqOrRz2UwlDg86+/nnU0Jr0Lj71LPz8P67AViTwza3MbkbNm73GbgmjRdC92VlVcmx1Xz9qVLmuwJQ=
+X-Received: by 2002:ad4:5dc8:0:b0:685:55d:18b5 with SMTP id
+ m8-20020ad45dc8000000b00685055d18b5mr3888783qvh.84.1706117061161; Wed, 24 Jan
+ 2024 09:24:21 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240114152759.1040563-4-andriy.shevchenko@linux.intel.com>
+References: <20240124164211.1141742-1-glider@google.com> <CANpmjNP-9hV_d3zEHhUSpdUYpM1BAFKmTTzWwe5o5ubtwTvQAQ@mail.gmail.com>
+In-Reply-To: <CANpmjNP-9hV_d3zEHhUSpdUYpM1BAFKmTTzWwe5o5ubtwTvQAQ@mail.gmail.com>
+From: Alexander Potapenko <glider@google.com>
+Date: Wed, 24 Jan 2024 18:23:39 +0100
+Message-ID: <CAG_fn=Uy_h6YnQYdncewoUeOd4TutsRVygbHK5-qwn+zQYCvPA@mail.gmail.com>
+Subject: Re: [PATCH] mm: kmsan: remove runtime checks from kmsan_unpoison_memory()
+To: Marco Elver <elver@google.com>
+Cc: akpm@linux-foundation.org, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, kasan-dev@googlegroups.com, 
+	Dmitry Vyukov <dvyukov@google.com>, Ilya Leoshkevich <iii@linux.ibm.com>, 
+	Nicholas Miehlbradt <nicholas@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, Jan 14, 2024 at 05:25:10PM +0200, Andy Shevchenko wrote:
-> Simplify the error handling in probe function by switching from
-> dev_err() to dev_err_probe().
+On Wed, Jan 24, 2024 at 6:15=E2=80=AFPM Marco Elver <elver@google.com> wrot=
+e:
 >
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> On Wed, 24 Jan 2024 at 17:42, 'Alexander Potapenko' via kasan-dev
+> <kasan-dev@googlegroups.com> wrote:
+> >
+> > Similarly to what's been done in commit ff444efbbb9be ("kmsan: allow
+> > using __msan_instrument_asm_store() inside runtime"), it should be safe
+> > to call kmsan_unpoison_memory() from within the runtime, as it does not
+> > allocate memory or take locks. Remove the redundant runtime checks.
+> >
+> > This should fix false positives seen with CONFIG_DEBUG_LIST=3Dy when
+> > the non-instrumented lib/stackdepot.c failed to unpoison the memory
+> > chunks later checked by the instrumented lib/list_debug.c
+> >
+> > Also replace the implementation of kmsan_unpoison_entry_regs() with
+> > a call to kmsan_unpoison_memory().
+> >
+> > Signed-off-by: Alexander Potapenko <glider@google.com>
+> > Cc: Marco Elver <elver@google.com>
+> > Cc: Dmitry Vyukov <dvyukov@google.com>
+> > Cc: Ilya Leoshkevich <iii@linux.ibm.com>
+> > Cc: Nicholas Miehlbradt <nicholas@linux.ibm.com>
+>
+> Tested-by: Marco Elver <elver@google.com>
+>
 
-Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+> missing ')', probably:
+>
+> +       kmsan_unpoison_memory((void *)regs, sizeof(*regs));
 
-
-Daniel.
+My bad - you are right. Thanks for catching!
