@@ -1,44 +1,44 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACAA718026;
-	Wed, 24 Jan 2024 02:42:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44997182A7;
+	Wed, 24 Jan 2024 02:42:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.120
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706064166; cv=none; b=s/THc3EdidnvTdX7pj4Tgtv5NqAgMTllrnAFafNdtpxSSLOYhvFASeue8RPGrD9np8gRl4pm/AftvxuJdyED7iTogXfST2ebbzk2uahSfLWfRYF0L9oF2B9Gmfkd+O8RNrioBaKgzzby0P344wa7N5blQ2K0lA78GYj2/Qd3PhU=
+	t=1706064166; cv=none; b=rlxPlHzrD4ZwAYcmtjFpqWwCnuCZUYo3wHPObpIprIvd4jvNcnwlqnCZ2h3DXth+h3Yb6efae4loGl7/xS17QRG/f5ASFFS/NAd78NXsum1sHmk4bawhd8dBgWYWzddfUD9vWC3JhgDc/+dflY+wQgh8k7D4hO0KFawC9Va9voA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1706064166; c=relaxed/simple;
-	bh=4OgIxio6Sgg6qCqmMI3dmUyrNdmCfi/Fz+DUsVjuAWg=;
+	bh=F9opDfCZwYUSpXz1rhkoPf6Q6E9dmRJye3dTlxS+ZDs=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=acokwRt8UeXMgx8SUtZSlDd9bA7L8/BeX1o6MEbqQ7GwrmgmRj/NkN3lF3zKDxaWWWfMulS2MvJtI6l4AagKh3DNhs0OrvxYPT2MULHzPIQh7PGPgiPyjdAWh2Qh2N3eLw6UFc7DGPXfUbUw2uCqU1AogJVAYRJ7LVOgTiilH00=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Do3HmADP; arc=none smtp.client-ip=192.55.52.120
+	 MIME-Version; b=IebQ9JGEWuStW2tHehNJ9SMqf4ljIO7KKxtAfzgnx0oZVkTT94kG4Edv95usw2iqHPKkAgz6el9JxsjGDA8Tzm+TkDhph0jBU4v5hjY1/VXogFrkN+4KNPQT4XWtEZQUcbO0gpdq0atd/Nku4Rl0J1TwEhTSsKPnPi+QMFABNR4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=J0+cL8v9; arc=none smtp.client-ip=192.55.52.120
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Do3HmADP"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="J0+cL8v9"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706064164; x=1737600164;
+  t=1706064165; x=1737600165;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=4OgIxio6Sgg6qCqmMI3dmUyrNdmCfi/Fz+DUsVjuAWg=;
-  b=Do3HmADPcfHmFvdJdeYnqTidAv/3Fl5FDqHA5gRVTW48wWVtNP64r5tz
-   jJoTKkW8yECaE3925vlfgMzv2iGMr/p6Eecr2bnsyRlOtN4Z9J2hDKzQ5
-   19tvgMkTPlYS+M0tzZHu5jfgzcszeXJWjXLp8I+lVzqPzfihKP7qb2JDg
-   dW580pBBSbtv2m9mCqRGpxOFTrF6YysQRrNTdTONk5AM0FFj8fKBwsgqY
-   RPy7Pu2Hqk0iCOTkZhuRyKqbRsaL1XtjwwvTgA+tSCWMmtA6km+RLlHlP
-   N7oGDwkINAdiWWOBPIT4y5NmfzhUjn1WLVDybYRFxlqqxl+qL5BWnu8lP
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="400586531"
+  bh=F9opDfCZwYUSpXz1rhkoPf6Q6E9dmRJye3dTlxS+ZDs=;
+  b=J0+cL8v9JTr26Zgfc2bvZRgmcsD2zWIn5Q4bnRewOwbziZv56MFZNfIX
+   Pi5swcMhU7NHMlKOdHWoA70aQo3bXNFQbdoML5S0Vgz71T8CjPdzvMYDq
+   Pe3Qp8EKEjK5EVzabcQlkwKkuOakqC4tOuW4/wfYxeQrpKHMzl/k7eQqu
+   U6nqRVDN4+UIVQaMUo/N2+dA7todLcLRWYLtA+d6WtWKwpOhVEGhpBt6d
+   /R1XA1JHPS0QjTwOfHQixpG5SiK/fM9FcCaCX0AZ7hUvZrdJfraLJX7hf
+   EdomgjASZyc6/6Qww4y+cLZpjVsK2RK4pmswKq+XMc6cZSU7ws6szQclt
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="400586543"
 X-IronPort-AV: E=Sophos;i="6.05,215,1701158400"; 
-   d="scan'208";a="400586531"
+   d="scan'208";a="400586543"
 Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2024 18:42:40 -0800
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2024 18:42:41 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.05,215,1701158400"; 
-   d="scan'208";a="1825890"
+   d="scan'208";a="1825899"
 Received: from 984fee00a5ca.jf.intel.com ([10.165.9.183])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2024 18:42:39 -0800
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2024 18:42:40 -0800
 From: Yang Weijiang <weijiang.yang@intel.com>
 To: seanjc@google.com,
 	pbonzini@redhat.com,
@@ -53,9 +53,9 @@ Cc: peterz@infradead.org,
 	mlevitsk@redhat.com,
 	john.allen@amd.com,
 	weijiang.yang@intel.com
-Subject: [PATCH v9 17/27] KVM: x86: Report KVM supported CET MSRs as to-be-saved
-Date: Tue, 23 Jan 2024 18:41:50 -0800
-Message-Id: <20240124024200.102792-18-weijiang.yang@intel.com>
+Subject: [PATCH v9 19/27] KVM: x86: Use KVM-governed feature framework to track "SHSTK/IBT enabled"
+Date: Tue, 23 Jan 2024 18:41:52 -0800
+Message-Id: <20240124024200.102792-20-weijiang.yang@intel.com>
 X-Mailer: git-send-email 2.39.3
 In-Reply-To: <20240124024200.102792-1-weijiang.yang@intel.com>
 References: <20240124024200.102792-1-weijiang.yang@intel.com>
@@ -67,90 +67,48 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add CET MSRs to the list of MSRs reported to userspace if the feature,
-i.e. IBT or SHSTK, associated with the MSRs is supported by KVM.
+Use the governed feature framework to track whether X86_FEATURE_SHSTK
+and X86_FEATURE_IBT features can be used by userspace and guest, i.e.,
+the features can be used iff both KVM and guest CPUID can support them.
 
-SSP can only be read via RDSSP. Writing even requires destructive and
-potentially faulting operations such as SAVEPREVSSP/RSTORSSP or
-SETSSBSY/CLRSSBSY. Let the host use a pseudo-MSR that is just a wrapper
-for the GUEST_SSP field of the VMCS.
+TODO: remove this patch once Sean's refactor to "KVM-governed" framework
+is upstreamed. See the work here [*].
 
-Suggested-by: Chao Gao <chao.gao@intel.com>
+[*]: https://lore.kernel.org/all/20231110235528.1561679-1-seanjc@google.com/
+
 Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
+Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
 ---
- arch/x86/include/uapi/asm/kvm_para.h |  1 +
- arch/x86/kvm/vmx/vmx.c               |  2 ++
- arch/x86/kvm/x86.c                   | 18 ++++++++++++++++++
- 3 files changed, 21 insertions(+)
+ arch/x86/kvm/governed_features.h | 2 ++
+ arch/x86/kvm/vmx/vmx.c           | 2 ++
+ 2 files changed, 4 insertions(+)
 
-diff --git a/arch/x86/include/uapi/asm/kvm_para.h b/arch/x86/include/uapi/asm/kvm_para.h
-index 6e64b27b2c1e..9864bbcf2470 100644
---- a/arch/x86/include/uapi/asm/kvm_para.h
-+++ b/arch/x86/include/uapi/asm/kvm_para.h
-@@ -58,6 +58,7 @@
- #define MSR_KVM_ASYNC_PF_INT	0x4b564d06
- #define MSR_KVM_ASYNC_PF_ACK	0x4b564d07
- #define MSR_KVM_MIGRATION_CONTROL	0x4b564d08
-+#define MSR_KVM_SSP	0x4b564d09
+diff --git a/arch/x86/kvm/governed_features.h b/arch/x86/kvm/governed_features.h
+index ad463b1ed4e4..daf0c0a3e29c 100644
+--- a/arch/x86/kvm/governed_features.h
++++ b/arch/x86/kvm/governed_features.h
+@@ -17,6 +17,8 @@ KVM_GOVERNED_X86_FEATURE(PFTHRESHOLD)
+ KVM_GOVERNED_X86_FEATURE(VGIF)
+ KVM_GOVERNED_X86_FEATURE(VNMI)
+ KVM_GOVERNED_X86_FEATURE(LAM)
++KVM_GOVERNED_X86_FEATURE(SHSTK)
++KVM_GOVERNED_X86_FEATURE(IBT)
  
- struct kvm_steal_time {
- 	__u64 steal;
+ #undef KVM_GOVERNED_X86_FEATURE
+ #undef KVM_GOVERNED_FEATURE
 diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index d21f55f323ea..b2f6bcf3bf9b 100644
+index b2f6bcf3bf9b..29a0fd3e83c5 100644
 --- a/arch/x86/kvm/vmx/vmx.c
 +++ b/arch/x86/kvm/vmx/vmx.c
-@@ -7007,6 +7007,8 @@ static bool vmx_has_emulated_msr(struct kvm *kvm, u32 index)
- 	case MSR_AMD64_TSC_RATIO:
- 		/* This is AMD only.  */
- 		return false;
-+	case MSR_KVM_SSP:
-+		return kvm_cpu_cap_has(X86_FEATURE_SHSTK);
- 	default:
- 		return true;
- 	}
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index b418e4f5277b..a7368adad6b8 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -1476,6 +1476,9 @@ static const u32 msrs_to_save_base[] = {
+@@ -7764,6 +7764,8 @@ static void vmx_vcpu_after_set_cpuid(struct kvm_vcpu *vcpu)
  
- 	MSR_IA32_XFD, MSR_IA32_XFD_ERR,
- 	MSR_IA32_XSS,
-+	MSR_IA32_U_CET, MSR_IA32_S_CET,
-+	MSR_IA32_PL0_SSP, MSR_IA32_PL1_SSP, MSR_IA32_PL2_SSP,
-+	MSR_IA32_PL3_SSP, MSR_IA32_INT_SSP_TAB,
- };
+ 	kvm_governed_feature_check_and_set(vcpu, X86_FEATURE_VMX);
+ 	kvm_governed_feature_check_and_set(vcpu, X86_FEATURE_LAM);
++	kvm_governed_feature_check_and_set(vcpu, X86_FEATURE_SHSTK);
++	kvm_governed_feature_check_and_set(vcpu, X86_FEATURE_IBT);
  
- static const u32 msrs_to_save_pmu[] = {
-@@ -1579,6 +1582,7 @@ static const u32 emulated_msrs_all[] = {
+ 	vmx_setup_uret_msrs(vmx);
  
- 	MSR_K7_HWCR,
- 	MSR_KVM_POLL_CONTROL,
-+	MSR_KVM_SSP,
- };
- 
- static u32 emulated_msrs[ARRAY_SIZE(emulated_msrs_all)];
-@@ -7428,6 +7432,20 @@ static void kvm_probe_msr_to_save(u32 msr_index)
- 		if (!kvm_caps.supported_xss)
- 			return;
- 		break;
-+	case MSR_IA32_U_CET:
-+	case MSR_IA32_S_CET:
-+		if (!kvm_cpu_cap_has(X86_FEATURE_SHSTK) &&
-+		    !kvm_cpu_cap_has(X86_FEATURE_IBT))
-+			return;
-+		break;
-+	case MSR_IA32_INT_SSP_TAB:
-+		if (!kvm_cpu_cap_has(X86_FEATURE_LM))
-+			return;
-+		fallthrough;
-+	case MSR_IA32_PL0_SSP ... MSR_IA32_PL3_SSP:
-+		if (!kvm_cpu_cap_has(X86_FEATURE_SHSTK))
-+			return;
-+		break;
- 	default:
- 		break;
- 	}
 -- 
 2.39.3
 
