@@ -1,56 +1,56 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09DC6171C1
-	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 07:45:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E8CA1799E
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 07:45:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706082341; cv=none; b=AI8kpYPC3gCaJ36OBIWQmiXvwQUajHjR1QwsCb8a3MDFK6tENejImnGfoJkM1m1UEBuQHTS0dVEwOTJJAqOv3o5hS4gYUQFo8XdND6A7Z3tNtbrf3BHSH25hIPcwduFFn/hpGJt9NwwWcobSUo0dhWrkwiDODfNhCj0pwjl5jRk=
+	t=1706082346; cv=none; b=DtG+vjw31e/hFNSiIfGrCux6/liZdSugnWg0jM+TSiMN83a+uICtHFAFm9xghlBaA/3ih2PhD+Z6OfL+msuh52jKDUbUqscZIfPjedV0RJLpLh1wpeXddhrIXWDR5KHPVt/gS3F1vXIOm/hxE+gr+mfGfR6OHkj20BqG2XATTiQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706082341; c=relaxed/simple;
-	bh=NVwcdnW8A7XQhpx5K/4jQMW8pILNh3MbaRAEeStWSEM=;
+	s=arc-20240116; t=1706082346; c=relaxed/simple;
+	bh=oMxlIYU8lOKLFt0TEL5h53mUDoaj/hO9QDpO+Y17nsg=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=VL0ItmkcR+4g7sR+GwauUWp/nGP7JRAMrpVePRCzo925vEm3eYm0Zv/QSyfdjRhkdqc4r/BZDkqNQtVYaUyMWz1IWXh2J4vgMydedTTrKNrug3sTtWpPqqvEqD+2y9TL27LRCmp1DrtjfgCJXq9JcDi1AqJuypExRKRsvPPuSsg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XMG1h4Ki; arc=none smtp.client-ip=209.85.208.48
+	 MIME-Version; b=P2upqmq2YFtA1lFaa+zsN4LGe+kKqQiEOYWCvEvq3k6PONlYBgLHM8yYbc9fyJrOTvbL0xfE9XUBbh7J2LA/qlj8I4RV4amyXXIuhUBa9ZdaX5g57yRIyOMHfj36JpdZUGF5xwgeYQ9f/CphR/IS8E179Vlame6763vJ/kOdWlw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RG9smOQd; arc=none smtp.client-ip=209.85.208.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XMG1h4Ki"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-55817a12ad8so5781227a12.2
-        for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 23:45:39 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RG9smOQd"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-55a354a65afso4468002a12.0
+        for <linux-kernel@vger.kernel.org>; Tue, 23 Jan 2024 23:45:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706082338; x=1706687138; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1706082343; x=1706687143; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=hZ+XlfeIIIA0X9gDeF4vw53ttOCM6tywn9BtgTzvNSE=;
-        b=XMG1h4KiyScDqO/k+Mjuh3zR8YCXzqVEB35ZpUSA/8biLsfTLVf7zO1ywmPjeIZgcu
-         qW+/OcYhc8/SsQ9ZCgmDtQzMKBRviNwRUFlW3sUlboLfWifr3wyGQye2LMPSokTNzJsh
-         u3FRuREmIGfM8zE2GTQ2E3tBJJ5F0+UyCR9CjRoMDKySPWxpu3FWhDjqCMfQkNciFzcl
-         vBqoiLyoxv97CTWdyQ+Xa+1Hd49RECKoHFx6LEaJuDKly+QJOopUJBbojehfH8i1EDXc
-         gcWP96mA68pFpuR4awur6uUlFWGho7Fz2tB7avlrCulqDtoCpx4L3SUyiCsYr1Ls8r8J
-         VYyA==
+        bh=qG0lQDgeayG/ZAaWGjl028iUARha7B2YZJgs2y6qJ/U=;
+        b=RG9smOQdM7OPnO+Gi/ba99FEng0dex79k6Z5uQqqOec/z1eMvh/QKdLkc2hG0gFXli
+         JIoA+lNHrs6G8isF8m4YYvMc6IjNaUrUzwagOOQlMHIV16NjjAgz5gtkxgAGEiBcJSdW
+         g+ahdJdZJzHX87AlLWt+SsPpgaFdoz3LUcQLrBbCs7RyKrywPRhuYxB+OSy9v84PiglK
+         NDTNLtdyzsNyYEdT1+F1ze+0uB7arFSX5GXyKlGFz7TqksQd+G4i2monnIUzfFv0XhPL
+         cs2E6t5qZN7h8ZP+A1bXaQS1r7882EKnqwkcGd43JnV68hBftK/g/6708Kf4zK1oDX2X
+         AE3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706082338; x=1706687138;
+        d=1e100.net; s=20230601; t=1706082343; x=1706687143;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=hZ+XlfeIIIA0X9gDeF4vw53ttOCM6tywn9BtgTzvNSE=;
-        b=JFrC8KlAL+OR0q4FmteUSbbICwjLDD3jYQwrvpARmtrauken+VMqbbzyMrjWhtvbD9
-         tE4sqMnUAXU7M9uo/C/6Kl5GI5kMHornQ4q//+EccnJdRVq582ZYJYFBrU+E3mDNwbSy
-         jXzKBWuM1nIKnXbCtg28LKqf+QqMORypfQxAoVYhB5umCjfPI1e+tGOt8H4DQsOTb/zL
-         +PlCIZTztfOemh57Zv9uYFA52Dp5k4pW3z24uCscf4Q+XVh7ZfqQl08rT6uO5f1XZzAk
-         HVGqcJBkMxYGHs1DSN+gJhIPRJnigd+4faDA1NAzYwWKCkDkYk7RhIXcpRN/HE+24sAY
-         xj4g==
-X-Gm-Message-State: AOJu0YwCLQcHzPONBKGx0bYhKI4N36/p8P5IDKeorwkaWvFlbP9gf8df
-	x+Plm1DdqXKPx9+Q359vjsXk+JJ+Na7+w1zaisMVIMlb4pcFj/cWQLpv4UJpVNs=
-X-Google-Smtp-Source: AGHT+IGZ3WZqu8E/kuNAqO+g4gJy1D8hCmt3gBVkyHQRj9iAqi9DfkcAKYGkOIdHJOz9P4YOCYeyvQ==
-X-Received: by 2002:aa7:c351:0:b0:55c:79db:1546 with SMTP id j17-20020aa7c351000000b0055c79db1546mr1235554edr.58.1706082338067;
-        Tue, 23 Jan 2024 23:45:38 -0800 (PST)
+        bh=qG0lQDgeayG/ZAaWGjl028iUARha7B2YZJgs2y6qJ/U=;
+        b=etIFHjINsBU+wq9DWoJw8OWM6Jz7XbK1Nl4FcHprLLiyLmT4idVEviS0cvVbz5L1SI
+         4UmQ1FGbtfjtcoRdG81QIvBZvZ8+sb6PPreccVCPjYLTLqi7y0eBL3eRC6THpKAStVtn
+         dKZ1aI7qO4dvYazneJKfiqJLlQqGF64phsYAWlTxtUjl6ysHh4YWPdORTICHtKAPqhqf
+         4tC5gsKdL0OvLOiG6/XQUCXR4tJEY8gkg45vQnh/Z+Rk+lBpCOTYSuPMWCnNr31gy0tQ
+         zsID/BNAjLRgyU4wQqgYYV99XGSIHzLJcVcjO4pSqAAaj4L5Q8X/I0DKIIOk3JXRxRa/
+         MKlw==
+X-Gm-Message-State: AOJu0YyviEkyfchbGpbxG4ZgPF0i9fTdH2mFjBDPM7cyXRKFqS3ToqoP
+	WJYqeJI5M88PAeL6RZXMscdBQjNQzOYK6PPdHRjPmog+bvlZg4JKnmFD75ZUP6M=
+X-Google-Smtp-Source: AGHT+IHjvR2GP5elLnS6zJWZVP9iOwh9lBECo8gB0qAFYYejK9jRMliygooQE5Cn4oU3IbvZ9gNFzw==
+X-Received: by 2002:a50:8e44:0:b0:55a:7cbf:a801 with SMTP id 4-20020a508e44000000b0055a7cbfa801mr1929863edx.79.1706082342872;
+        Tue, 23 Jan 2024 23:45:42 -0800 (PST)
 Received: from krzk-bin.. ([178.197.215.66])
-        by smtp.gmail.com with ESMTPSA id c4-20020a056402100400b0055c8a30152bsm1306951edu.83.2024.01.23.23.45.36
+        by smtp.gmail.com with ESMTPSA id c4-20020a056402100400b0055c8a30152bsm1306951edu.83.2024.01.23.23.45.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jan 2024 23:45:37 -0800 (PST)
+        Tue, 23 Jan 2024 23:45:42 -0800 (PST)
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
 	Banajit Goswami <bgoswami@quicinc.com>,
@@ -75,12 +75,11 @@ To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
 	linux-pm@vger.kernel.org
 Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
 	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Chris Packham <chris.packham@alliedtelesis.co.nz>,
 	Sean Anderson <sean.anderson@seco.com>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [PATCH v5 3/6] reset: gpio: Add GPIO-based reset controller
-Date: Wed, 24 Jan 2024 08:45:24 +0100
-Message-Id: <20240124074527.48869-4-krzysztof.kozlowski@linaro.org>
+	Rob Herring <robh@kernel.org>
+Subject: [PATCH v5 5/6] ASoC: dt-bindings: qcom,wsa8840: Add reset-gpios for shared line
+Date: Wed, 24 Jan 2024 08:45:26 +0100
+Message-Id: <20240124074527.48869-6-krzysztof.kozlowski@linaro.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240124074527.48869-1-krzysztof.kozlowski@linaro.org>
 References: <20240124074527.48869-1-krzysztof.kozlowski@linaro.org>
@@ -92,197 +91,57 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add a simple driver to control GPIO-based resets using the reset
-controller API for the cases when the GPIOs are shared and reset should
-be coordinated.  The driver is expected to be used by reset core
-framework for ad-hoc reset controllers.
+On newer Qualcomm platforms, like X1E80100-CRD, the WSA884x speakers
+share SD_N GPIOs between two speakers, thus a coordinated assertion is
+needed.  Linux supports handling shared GPIO lines through "reset-gpios"
+property, thus allow specifying either powerdown or reset GPIOs (these
+are the same).
 
 Cc: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Chris Packham <chris.packham@alliedtelesis.co.nz>
 Cc: Sean Anderson <sean.anderson@seco.com>
-Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Acked-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
- MAINTAINERS                |   5 ++
- drivers/reset/Kconfig      |   9 +++
- drivers/reset/Makefile     |   1 +
- drivers/reset/reset-gpio.c | 119 +++++++++++++++++++++++++++++++++++++
- 4 files changed, 134 insertions(+)
- create mode 100644 drivers/reset/reset-gpio.c
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index ddc5e1049921..91d45c6bade7 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8905,6 +8905,11 @@ F:	Documentation/i2c/muxes/i2c-mux-gpio.rst
- F:	drivers/i2c/muxes/i2c-mux-gpio.c
- F:	include/linux/platform_data/i2c-mux-gpio.h
+If previous patches are fine, then this commit is independent and could
+be taken via ASoC.
+---
+ .../devicetree/bindings/sound/qcom,wsa8840.yaml       | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/sound/qcom,wsa8840.yaml b/Documentation/devicetree/bindings/sound/qcom,wsa8840.yaml
+index d717017b0fdb..22798d22d981 100644
+--- a/Documentation/devicetree/bindings/sound/qcom,wsa8840.yaml
++++ b/Documentation/devicetree/bindings/sound/qcom,wsa8840.yaml
+@@ -28,6 +28,10 @@ properties:
+     description: Powerdown/Shutdown line to use (pin SD_N)
+     maxItems: 1
  
-+GENERIC GPIO RESET DRIVER
-+M:	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-+S:	Maintained
-+F:	drivers/reset/reset-gpio.c
++  reset-gpios:
++    description: Powerdown/Shutdown line to use (pin SD_N)
++    maxItems: 1
 +
- GENERIC HDLC (WAN) DRIVERS
- M:	Krzysztof Halasa <khc@pm.waw.pl>
- S:	Maintained
-diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
-index ccd59ddd7610..bb1b5a326eb7 100644
---- a/drivers/reset/Kconfig
-+++ b/drivers/reset/Kconfig
-@@ -66,6 +66,15 @@ config RESET_BRCMSTB_RESCAL
- 	  This enables the RESCAL reset controller for SATA, PCIe0, or PCIe1 on
- 	  BCM7216.
+   '#sound-dai-cells':
+     const: 0
  
-+config RESET_GPIO
-+	tristate "GPIO reset controller"
-+	help
-+	  This enables a generic reset controller for resets attached via
-+	  GPIOs.  Typically for OF platforms this driver expects "reset-gpios"
-+	  property.
+@@ -37,11 +41,16 @@ properties:
+ required:
+   - compatible
+   - reg
+-  - powerdown-gpios
+   - '#sound-dai-cells'
+   - vdd-1p8-supply
+   - vdd-io-supply
+ 
++oneOf:
++  - required:
++      - powerdown-gpios
++  - required:
++      - reset-gpios
 +
-+	  If compiled as module, it will be called reset-gpio.
-+
- config RESET_HSDK
- 	bool "Synopsys HSDK Reset Driver"
- 	depends on HAS_IOMEM
-diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
-index 8270da8a4baa..fd8b49fa46fc 100644
---- a/drivers/reset/Makefile
-+++ b/drivers/reset/Makefile
-@@ -11,6 +11,7 @@ obj-$(CONFIG_RESET_BCM6345) += reset-bcm6345.o
- obj-$(CONFIG_RESET_BERLIN) += reset-berlin.o
- obj-$(CONFIG_RESET_BRCMSTB) += reset-brcmstb.o
- obj-$(CONFIG_RESET_BRCMSTB_RESCAL) += reset-brcmstb-rescal.o
-+obj-$(CONFIG_RESET_GPIO) += reset-gpio.o
- obj-$(CONFIG_RESET_HSDK) += reset-hsdk.o
- obj-$(CONFIG_RESET_IMX7) += reset-imx7.o
- obj-$(CONFIG_RESET_INTEL_GW) += reset-intel-gw.o
-diff --git a/drivers/reset/reset-gpio.c b/drivers/reset/reset-gpio.c
-new file mode 100644
-index 000000000000..2290b25b6703
---- /dev/null
-+++ b/drivers/reset/reset-gpio.c
-@@ -0,0 +1,119 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#include <linux/gpio/consumer.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/reset-controller.h>
-+
-+struct reset_gpio_priv {
-+	struct reset_controller_dev rc;
-+	struct gpio_desc *reset;
-+};
-+
-+static inline struct reset_gpio_priv
-+*rc_to_reset_gpio(struct reset_controller_dev *rc)
-+{
-+	return container_of(rc, struct reset_gpio_priv, rc);
-+}
-+
-+static int reset_gpio_assert(struct reset_controller_dev *rc, unsigned long id)
-+{
-+	struct reset_gpio_priv *priv = rc_to_reset_gpio(rc);
-+
-+	gpiod_set_value_cansleep(priv->reset, 1);
-+
-+	return 0;
-+}
-+
-+static int reset_gpio_deassert(struct reset_controller_dev *rc,
-+			       unsigned long id)
-+{
-+	struct reset_gpio_priv *priv = rc_to_reset_gpio(rc);
-+
-+	gpiod_set_value_cansleep(priv->reset, 0);
-+
-+	return 0;
-+}
-+
-+static int reset_gpio_status(struct reset_controller_dev *rc, unsigned long id)
-+{
-+	struct reset_gpio_priv *priv = rc_to_reset_gpio(rc);
-+
-+	return gpiod_get_value_cansleep(priv->reset);
-+}
-+
-+static const struct reset_control_ops reset_gpio_ops = {
-+	.assert = reset_gpio_assert,
-+	.deassert = reset_gpio_deassert,
-+	.status = reset_gpio_status,
-+};
-+
-+static int reset_gpio_of_xlate(struct reset_controller_dev *rcdev,
-+			       const struct of_phandle_args *reset_spec)
-+{
-+	return reset_spec->args[0];
-+}
-+
-+static void reset_gpio_of_node_put(void *data)
-+{
-+	of_node_put(data);
-+}
-+
-+static int reset_gpio_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct of_phandle_args *platdata = dev_get_platdata(dev);
-+	struct reset_gpio_priv *priv;
-+	int ret;
-+
-+	if (!platdata)
-+		return -EINVAL;
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	platform_set_drvdata(pdev, &priv->rc);
-+
-+	priv->reset = devm_gpiod_get(dev, "reset", GPIOD_OUT_HIGH);
-+	if (IS_ERR(priv->reset))
-+		return dev_err_probe(dev, PTR_ERR(priv->reset),
-+				     "Could not get reset gpios\n");
-+
-+	priv->rc.ops = &reset_gpio_ops;
-+	priv->rc.owner = THIS_MODULE;
-+	priv->rc.dev = dev;
-+	priv->rc.of_args = platdata;
-+	ret = devm_add_action_or_reset(dev, reset_gpio_of_node_put,
-+				       priv->rc.of_node);
-+	if (ret)
-+		return ret;
-+
-+	/* Cells to match GPIO specifier, but it's not really used */
-+	priv->rc.of_reset_n_cells = 2;
-+	priv->rc.of_xlate = reset_gpio_of_xlate;
-+	priv->rc.nr_resets = 1;
-+
-+	return devm_reset_controller_register(dev, &priv->rc);
-+}
-+
-+static const struct platform_device_id reset_gpio_ids[] = {
-+	{ .name = "reset-gpio", },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(platform, reset_gpio_ids);
-+
-+static struct platform_driver reset_gpio_driver = {
-+	.probe		= reset_gpio_probe,
-+	.id_table	= reset_gpio_ids,
-+	.driver	= {
-+		.name = "reset-gpio",
-+	},
-+};
-+module_platform_driver(reset_gpio_driver);
-+
-+MODULE_AUTHOR("Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>");
-+MODULE_DESCRIPTION("Generic GPIO reset driver");
-+MODULE_LICENSE("GPL");
+ unevaluatedProperties: false
+ 
+ examples:
 -- 
 2.34.1
 
