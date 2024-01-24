@@ -1,211 +1,180 @@
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAE918613D;
-	Wed, 24 Jan 2024 18:52:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=134.134.136.31
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706122322; cv=fail; b=DREYhjrSNsBuSh7BRU06Ybujieh6oGW4w3y3ejwOmzIi6/hnyIJyNQfgfQmDjZMZa0iu0s1lFTQHq+mc+/U4wd1veNv/Q9+eeZ82zAi/YkoKPYZnj427nbpDW5bHQAS6GKGs07XXoYVgqZBPL6sJ+lAmB6n4iKVDXU2XPEP+n7M=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706122322; c=relaxed/simple;
-	bh=CoAVWSgrnEHPst9MDHm/yWLezVh2xCGvznloWwxjzhE=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=eumGJekj27toE2CEK6whmam/NVyUV+HH+SR0EPSPxjIPr5rafK78wzL6rODUFd7GxKKByTfo40tFRx+pHdTOipoJffb+MpuApu9YmdqrmvHYSsiY9FiYpj2o/4x/K2Kxf27QRhNQvExjG6QSTRncOisUNUaPIJJ3tNtbw0CZXCc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=V4iFrgCo; arc=fail smtp.client-ip=134.134.136.31
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA3F81292FC
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 18:52:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706122336; cv=none; b=P8NGOWST9RF5eHYobFpWyW21bfIjSWHEWLaFiu7FBEq6H1xgDvdDOma6XELGQlZADEJOY+Pj+2xH9x8G1w4QXY1z+wWuSovLClbDYueGjrPMF9vM5nUS69vh6koVAOmWnt93slff/Dt1D2X2xtfo6L50SOw7+UtoNeRpqJEe/pQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706122336; c=relaxed/simple;
+	bh=6TdjO5UfgWZZjNe38ds4eqkhex4saa37TCe+orCZRj4=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=u+NtTOOPkp7VUILU4LUEhF/hfOcBl6ZadtBdRBVYUTazZUC4+WbYY977CXqibSg9MFAf2U2T0vt1b+dwVYIVTdRKR9Tw/LCfdVu1DpGrxAtdkpEsCNiIXRAJl4gpp++Topmlqja9mEOIpPbyd649+zuXbnYjt9qvfRPNYGgwlnY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=q7+oXeBU; arc=none smtp.client-ip=209.85.219.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="V4iFrgCo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706122320; x=1737658320;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=CoAVWSgrnEHPst9MDHm/yWLezVh2xCGvznloWwxjzhE=;
-  b=V4iFrgCoDZsfYLCBXtCV4duI50EE6hLcNBX2R7TFD8/PXcAuK7sZworQ
-   AlCU1dHr3C7ORhg69PR0v93mN2OKsjwj/guJDDrf4hEPWlKSqZadZvFgz
-   CMIAue7kw9RzTzptOJYQNpFBMreSmHwhyFo/ts3NbTxir6Tvsxlc5P2/1
-   YxUqC2C0L8UhLIEApp0yKKddpizaySuZgQJonJhE4yGr61k/Dmg86NemS
-   CyyKWfBZVoQ+LU9U3Mus5hWN/hiR3Ly64NIswtMYeB6cvLouPMKpQx7gX
-   wowZ3aA0GYPOqdMA6NNA5VC5Fmrpc6yNsk0aic43EY/DKXM9IblgUyKQa
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="466217203"
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="466217203"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jan 2024 10:52:00 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="909749547"
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="909749547"
-Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
-  by orsmga004.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 24 Jan 2024 10:51:58 -0800
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Wed, 24 Jan 2024 10:51:58 -0800
-Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Wed, 24 Jan 2024 10:51:58 -0800
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.100)
- by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Wed, 24 Jan 2024 10:51:58 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hMKh92N7jLm3ZHUzahDAFk7jIE4qTkzWBazC1DmDvNBaUpIpfSt58/A9dCb2VUGdFos6VUZZVz//9iQxfqFXA77ZVoXmxDiGKvLwnn5a4CmMoDKtUZb+0x/Qn2qqIV2rPFRiZcl6NIvZlKjMQgeobNBGYy1y/89GimBMbKgYeauRzUxF7jiR45bRrAEiftUEq7snjtmepERMea0Vsuut3RCQSxQRwLC0MadbDnC2auSzd3Ko/WiE35095+9MFRx55Cl3WKebp3dk5cC1ypQlGM4uR4I3skC7NNjhL/GHXiMRpKjZ55uGzmyCqgIxvmb4xLLy2SyloRht6vbqHZrKRg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=A8hSe3nPxC0qAp1lfhQh0BZSNBiPG8zJrR+LncHMqmM=;
- b=n9DxYDg9UHT2UYcEkmTDcM2/B8zWBr0QwZaA9/YX5Fr+OsyjQ2S0i+wTQrSSGPd/7GPiw2TugZMu9gB7P9K22x2CEbDGmMJtHOqw4inEEFcLrLnSimP6QP3TcxlzP/KI/7ovvTSpQP0kBdCr5FSTBWDpwaYqN3t2lyLGgb66o+/d8FzEMmnNiLt16TPztioUxwhyaVROFz1dNeEOuUkZwk7ZeFEoGtX4DJEsQ73NIzDeEttqeLNE2N97PMH++tCfREwAg2yLedKCWHh1+JZe/aRiqO9i20l/0K5wdp8MD9DyjL+7Zjz7m4ptruzxlBxIZXdBMsOl30cP4GWHd6q8XQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SJ2PR11MB7573.namprd11.prod.outlook.com (2603:10b6:a03:4d2::10)
- by DM4PR11MB7397.namprd11.prod.outlook.com (2603:10b6:8:103::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7202.37; Wed, 24 Jan
- 2024 18:51:52 +0000
-Received: from SJ2PR11MB7573.namprd11.prod.outlook.com
- ([fe80::c903:6ee5:ed69:f4fa]) by SJ2PR11MB7573.namprd11.prod.outlook.com
- ([fe80::c903:6ee5:ed69:f4fa%7]) with mapi id 15.20.7202.034; Wed, 24 Jan 2024
- 18:51:52 +0000
-Message-ID: <e96df7ac-f0b4-4300-8546-7c1df836dea2@intel.com>
-Date: Wed, 24 Jan 2024 10:51:49 -0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] x86/resctrl: Fix unneeded variable warning reported by
- kernel test robot
-Content-Language: en-US
-To: Borislav Petkov <bp@alien8.de>
-CC: Babu Moger <babu.moger@amd.com>, <corbet@lwn.net>, <fenghua.yu@intel.com>,
-	<tglx@linutronix.de>, <mingo@redhat.com>, <dave.hansen@linux.intel.com>,
-	<x86@kernel.org>, <hpa@zytor.com>, <paulmck@kernel.org>,
-	<rdunlap@infradead.org>, <tj@kernel.org>, <peterz@infradead.org>,
-	<yanjiewtw@gmail.com>, <kim.phillips@amd.com>, <lukas.bulwahn@gmail.com>,
-	<seanjc@google.com>, <jmattson@google.com>, <leitao@debian.org>,
-	<jpoimboe@kernel.org>, <rick.p.edgecombe@intel.com>,
-	<kirill.shutemov@linux.intel.com>, <jithu.joseph@intel.com>,
-	<kai.huang@intel.com>, <kan.liang@linux.intel.com>,
-	<daniel.sneddon@linux.intel.com>, <pbonzini@redhat.com>,
-	<sandipan.das@amd.com>, <ilpo.jarvinen@linux.intel.com>,
-	<peternewman@google.com>, <maciej.wieczor-retman@intel.com>,
-	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<eranian@google.com>
-References: <202401241810.jbd8Ipa1-lkp@intel.com>
- <84128a3c83654493f637b8349153af10d69e2752.1706118776.git.babu.moger@amd.com>
- <39c4501e-4937-49de-b12b-742e6201df6f@intel.com>
- <20240124183153.GFZbFXmTKTLEpwZshW@fat_crate.local>
-From: Reinette Chatre <reinette.chatre@intel.com>
-In-Reply-To: <20240124183153.GFZbFXmTKTLEpwZshW@fat_crate.local>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MW4PR04CA0090.namprd04.prod.outlook.com
- (2603:10b6:303:6b::35) To SJ2PR11MB7573.namprd11.prod.outlook.com
- (2603:10b6:a03:4d2::10)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="q7+oXeBU"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dc3645c083aso5221129276.2
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 10:52:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1706122334; x=1706727134; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=DeJXI63JE4NpBTBWR+qtr9gFEncQ6Y/JV8zIyVI58iM=;
+        b=q7+oXeBU8qQTEM5vlvc6PjXdjLVmJC1sF0xIsI2Zy1xH4bF+FFku/H0v9MHpsFeDUp
+         LDsY6zKZOZR13YPdgHskId2eewbODH3SN7k1XAmg4T5YhUR57+Z633fion4BD3bR/ng/
+         E4SGJ8JRZV1RqyVhOe26wDC6GWKBtpletTZl/BhwkeataDFlzSWm6+rd9jFGYDuf7Dz+
+         n/JP4yTE8pMWEgmVBrXFCtGviPhS/f5MNs+/oH20uSZfNjcADbWIFD8trjx4lLYaZS9k
+         4nqMTlSjZc7O10nTo/wuxuOAJoy8oLcK4eLtJ03SjVnChgH99HLTXvHXL9Ll5EukVRAY
+         xikA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706122334; x=1706727134;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=DeJXI63JE4NpBTBWR+qtr9gFEncQ6Y/JV8zIyVI58iM=;
+        b=TL88IStQqV+6p1XBMxLVljVh/hAj70MZzfTuamNsP8xPMrs2Njvh59sEQEkbuV8ATR
+         c6MmEtrzwZzAU4aUS41bAvsT5EGMZoFeEmB88aQAEX01UD1e57FKz1059da2sPGEls90
+         3axJH7ql+EGZLsLFGTLF6xkxeZhNu5qkLmISjUl56728gHfJKUuOJd6fT1bbnUE0QgVj
+         w/bgCK5M7FBgfwg63xJ8c1U7PSwjHZMEvLmsflLONf488lwyexNzAMF65/Gb8z4q4d/p
+         VZSCsf7w7gLjMzsLa4rcuh/FVf/E3/jCZTo08mzsyFSXk6P1wqQEO5REhTBUzIHAWZu/
+         i6yg==
+X-Gm-Message-State: AOJu0YzK4tlDztwazpeDZ3OjwBp6ZIDUVn2ejy2iXFPQnPsM+Z7iyOHw
+	3X3ujz7GcbZW1XN53vZvYOaNWwA+6ENlnMfQhW0fHpba+jm4f+l7lXHJIHkypeKhYFErzRcvEeu
+	i+Q==
+X-Google-Smtp-Source: AGHT+IEAV+1+iqSEN/dEkDSeXdzloc8d7SaECvFvbanSnYtiz5oBCgilhNs0kNWqA3W+IGo3T6P9dYzHyV0=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a05:6902:e10:b0:dc2:45ad:de34 with SMTP id
+ df16-20020a0569020e1000b00dc245adde34mr573846ybb.11.1706122333987; Wed, 24
+ Jan 2024 10:52:13 -0800 (PST)
+Date: Wed, 24 Jan 2024 10:52:12 -0800
+In-Reply-To: <Zavj4U2LYeOsnXOh@yilunxu-OptiPlex-7050>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ2PR11MB7573:EE_|DM4PR11MB7397:EE_
-X-MS-Office365-Filtering-Correlation-Id: d440179a-06d4-4ed2-f6e0-08dc1d0d8777
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: MRs22VcIpJ86niiQPYtv09KkClvbyA7Z23DcYqpoFGHjHZpdBe2C4ynPucnVkuU9tTB6fet1eSx6daYpnqVjZMuyDSMhgIZyW4bPgx1ZtG2xcEv438HNUPOLFEPLBLwyXH1dI5DwzDLbZ6mXo4PPzWWFXcvQL3ezN2H7TGzcF6W6FgThR84xa2Q557uS+a48cFNTyWCtkuCmJOWRaKQhCWxTRmKC7Uoad6ZXlwcwfOX4MrjKPR3jrCyGXmQkUY5qLpNqynQ2QBKCaRL/SQKQH5ZioGP4Up6Unt6H34Qfzw4jqGNmdVPbwmVQyxtcODddh0seSpCSKjBOFdSP99nTW0pUFLYCgTlxs6dAeXp9GuOA/j6xZ7/Mn78a4uO67HaPYcO9MPRq2puerBsKjPSxzQPo9UwpwPm3UAEeNAoukgvNhjZb7jsovonMHKCl5vU4ausz9+7O+1948no/t4Ry3s/lvqoQA0irJbLhVzhfuLJqA4mf3FpVgy+cDh9FBzk0MA13BERyUseNRm57owSpG3DK6CY5xF1+QfSr1J/EZ8yyuj+uoHdkkubcDcyw/hz8AZlTNTX93YzkJCTXchivkHmpCyoVx7VlIXTS5FTCUmWV14LO++JLgLp9xKNDqVk03ZkvUoKHRmx8BZfb1GTwYKuIkeJpNpAZbhXhF+j906AuO4VWJoeAd0KNhwhLpNMO
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR11MB7573.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(346002)(366004)(136003)(39860400002)(396003)(230273577357003)(230173577357003)(230922051799003)(451199024)(1800799012)(64100799003)(186009)(83380400001)(2616005)(41300700001)(26005)(6512007)(38100700002)(8676002)(6666004)(4326008)(5660300002)(7416002)(8936002)(6486002)(66946007)(478600001)(6506007)(66476007)(66556008)(53546011)(44832011)(6916009)(316002)(2906002)(31696002)(86362001)(36756003)(82960400001)(31686004)(43740500002)(45980500001);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?MWF5dWF3bGxubDBneFVURnJmUkY3STkwU1Qxd2xGeXJpeWFIcWtyeDZMU1lq?=
- =?utf-8?B?MjlIanB5aGhQR0pRNVNHaEtLMW11TFIyMUJRR085RmtMVWtReXlXTDBaTlRY?=
- =?utf-8?B?OVhheTNnVkV0T2w1Q1hrUzkvUFZXM1gzNkZGRy94L3RCa2w5bVc2MXJHV3F3?=
- =?utf-8?B?TkFodnlnTnFMWWlTaHlMNjNXbWNaTDRBaUovRjRmMllMUTBsOUtJWkJraVpu?=
- =?utf-8?B?T1JLSUVkOHY0Q3BNeGk5ZkpQMWh1THdPeExjN2JGUHZKc0d0VWZuZGhQVjdt?=
- =?utf-8?B?aTFUZGdVVUdCRlhEMmVxTWtYY3lxVE5pVzFTbHo1SVh4eVorK29RUTVYWGt2?=
- =?utf-8?B?Y3RkdGxnR2hLUXU0NzRFWHo2Ri9iRWZaZ3FSeFo0V3pQUC9ZUHI5bmZJZkJI?=
- =?utf-8?B?bUozcWRYV2gzL1hRVy9SYjliaExxbStLdHNjVk9WbjY2UldnYnp0bkEzODBt?=
- =?utf-8?B?NGNILzhZSmRZK2xtQ1cvSmorcHY3QWRDcHlSekt0bDR4VEtJcmx0VnRFSU9X?=
- =?utf-8?B?RUlzMlZRNlIvajd3RjlDNGo1VGZMamVWNW1MQ1ZRczIvNDEvQmVvTk9yUkU3?=
- =?utf-8?B?ZXFZeng2aGVjK3pxTmZVUTE1cm9YaE9ISFhGSk5iZGk1SXdRQlVVMURpSkxt?=
- =?utf-8?B?QTBFcUtQbElKclpXUFBpVmZnV1RJMmgveTduQXJYallhU0dWbDl5LzJHUmwy?=
- =?utf-8?B?ZW5NU09qOVRCb3BFZGxmTjhGZGF2eU8wRDR1WE9RVnVBanpQbGU1VHBhanZJ?=
- =?utf-8?B?M09pMXhvb0c1anFuNHo0Slp1OVZ3UkdtbXJXTWJrQ0YyZURRU2EwMC9JNmhT?=
- =?utf-8?B?Zmg0aHprWHpFdVlwK2swTWRXYTdPQ0x6NXZsTnE3clI5MW94RW4zQ0N2bTBn?=
- =?utf-8?B?UmlVOUw3eDdsKzVDSFpVUlY0Zjl3dFVGQitudTljM00zb2oycFRFRGlQZSs5?=
- =?utf-8?B?SWF1dnZjaS9XSmhrMjdYdHJiTklyajRKR3daL3F4N0tTTk1lSlN0UlVzTENo?=
- =?utf-8?B?bldSLzgwN1NJZmpLUmlsWTd5RmRuS2Z5aVhYZUFwQ3RURmtWcE02TEhWTHBx?=
- =?utf-8?B?RlJqeVFPWGJMeXRDYm1ubWdoZmtoMVpOSXZDejhmM2JURkFDbDcwKzF2RDRx?=
- =?utf-8?B?YzdtS0VZby9kYTZwVis3Y0JMSDdxRUthVGZUOU5PVkNhK0tTeUlWZUhoaDhm?=
- =?utf-8?B?V3p5UVNPUkxrTnhTMWp1UGlhNFcwVnpCTWJ0eEZDbWE0NFdRREFaeFVYTi91?=
- =?utf-8?B?cTl1UDF1OEtPZGFhb1AveGtkdmFzeWd5SlVZNHJVWHNlYTdRS1VnbG15ZkpW?=
- =?utf-8?B?dWF6OXcwcWtlTjZHbnhBZStkNElUaktBaTNqZFVld2EwYVlOYzhYcU4vN1pr?=
- =?utf-8?B?bk5mRHJCZlJVMndvbzByeHgyUDRSQjhZcTB2eWkyaW1TVlVVU21PWnhEZTZ3?=
- =?utf-8?B?SzhjT3ZLTXRkYjArS1A1SFppODI1QnpoYnNPdE1KczhYZU5QZlFBUXRwdnJE?=
- =?utf-8?B?aE82Situcm9CQUk2dm5Fa3BVYXN3N09MTkZXVWhUc25ISFdnaWZHUXdUeFlE?=
- =?utf-8?B?RHU5bTN5Z2dIRHV6dG9aNytFdDQ4VnQzUGFEYTFHNEljQzZEOHVLeHdmZ2Zn?=
- =?utf-8?B?VmVhcEV3bTJITUxFVUNSdjl0SFlVYjNxZlpqdTdFV2ZQMDdIeHhXbjM1TUFX?=
- =?utf-8?B?TElVTmxUUktLUHR2OS9RR2RoVExnMXpHRTZuWk5UbGhObWV4eW53azlrNGZp?=
- =?utf-8?B?NXBGMkRON1kzVS9YT1pRQys4VGR5MEwzNDIwS0JyNFBnNlRFVENTV045alRK?=
- =?utf-8?B?eVJ0RXBBWklvL3dPVGlaNmlhT1d2R25LMEl4VGNUNlhXWE9LMFBLRWt4eGh4?=
- =?utf-8?B?Y3kraW56OGVhUmFlejUwSWNTSmNoNmhCRmpUVVJhazFaV3FFc0MxT0kxYjNH?=
- =?utf-8?B?UHQ0NmJxZTZKWDhiaGtWckFPWlErVmhDK3FpMVNmZ1VzUUZ4YWQ3RnVTT3Qz?=
- =?utf-8?B?U2VKT2lGMStLSzZGRXduNnZ2WWFUUGdaMUp0MGlFbDNMa1RZUUp0TWNFR0ZS?=
- =?utf-8?B?RENvd0t4WFZ5QWg0MmRxOXRzQ3lkWERQWFZBUEhqaWxSMkYreWNiaURUMTZo?=
- =?utf-8?B?L3ZpbWNPVmFOS3p1QmdvRE5Pa1JUdmZjUVF3UTdOT0RneVBTSFlVT0U0eE52?=
- =?utf-8?B?MHc9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: d440179a-06d4-4ed2-f6e0-08dc1d0d8777
-X-MS-Exchange-CrossTenant-AuthSource: SJ2PR11MB7573.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jan 2024 18:51:52.6133
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 33zj41ghIFrY2NtAehUP5h85H0y8j+4J4/Lcl2krSWqRf9nbXjU3t2GnSyhzyvd7ZmzYnjtKxUBqdT7qILo29g50Gp5cQYoTFvsjFDASWeY=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR11MB7397
-X-OriginatorOrg: intel.com
+Mime-Version: 1.0
+References: <20240110011533.503302-1-seanjc@google.com> <20240110011533.503302-4-seanjc@google.com>
+ <Zavj4U2LYeOsnXOh@yilunxu-OptiPlex-7050>
+Message-ID: <ZbFcXB5ctGOMEr22@google.com>
+Subject: Re: [PATCH 3/4] KVM: Get reference to VM's address space in the async
+ #PF worker
+From: Sean Christopherson <seanjc@google.com>
+To: Xu Yilun <yilun.xu@linux.intel.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	David Matlack <dmatlack@google.com>
+Content-Type: text/plain; charset="us-ascii"
 
-Hi Boris,
-
-On 1/24/2024 10:31 AM, Borislav Petkov wrote:
-> On Wed, Jan 24, 2024 at 10:25:17AM -0800, Reinette Chatre wrote:
->> This can be confusing since it implies that the patch you mention
->> introduces the issue but instead the variable has been unneeded since
->> the original:
->> 92bd5a139033 ("x86/resctrl: Add interface to write mbm_total_bytes_config")
+On Sat, Jan 20, 2024, Xu Yilun wrote:
+> On Tue, Jan 09, 2024 at 05:15:32PM -0800, Sean Christopherson wrote:
+> > Get a reference to the target VM's address space in async_pf_execute()
+> > instead of gifting a reference from kvm_setup_async_pf().  Keeping the
+> > address space alive just to service an async #PF is counter-productive,
+> > i.e. if the process is exiting and all vCPUs are dead, then NOT doing
+> > get_user_pages_remote() and freeing the address space asap is desirable.
+> > 
+> > Handling the mm reference entirely within async_pf_execute() also
+> > simplifies the async #PF flows as a whole, e.g. it's not immediately
+> > obvious when the worker task vs. the vCPU task is responsible for putting
+> > the gifted mm reference.
+> > 
+> > Signed-off-by: Sean Christopherson <seanjc@google.com>
+> > ---
+> >  include/linux/kvm_host.h |  1 -
+> >  virt/kvm/async_pf.c      | 32 ++++++++++++++++++--------------
+> >  2 files changed, 18 insertions(+), 15 deletions(-)
+> > 
+> > diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+> > index 7e7fd25b09b3..bbfefd7e612f 100644
+> > --- a/include/linux/kvm_host.h
+> > +++ b/include/linux/kvm_host.h
+> > @@ -238,7 +238,6 @@ struct kvm_async_pf {
+> >  	struct list_head link;
+> >  	struct list_head queue;
+> >  	struct kvm_vcpu *vcpu;
+> > -	struct mm_struct *mm;
+> >  	gpa_t cr2_or_gpa;
+> >  	unsigned long addr;
+> >  	struct kvm_arch_async_pf arch;
+> > diff --git a/virt/kvm/async_pf.c b/virt/kvm/async_pf.c
+> > index d5dc50318aa6..c3f4f351a2ae 100644
+> > --- a/virt/kvm/async_pf.c
+> > +++ b/virt/kvm/async_pf.c
+> > @@ -46,8 +46,8 @@ static void async_pf_execute(struct work_struct *work)
+> >  {
+> >  	struct kvm_async_pf *apf =
+> >  		container_of(work, struct kvm_async_pf, work);
+> > -	struct mm_struct *mm = apf->mm;
+> >  	struct kvm_vcpu *vcpu = apf->vcpu;
+> > +	struct mm_struct *mm = vcpu->kvm->mm;
+> >  	unsigned long addr = apf->addr;
+> >  	gpa_t cr2_or_gpa = apf->cr2_or_gpa;
+> >  	int locked = 1;
+> > @@ -56,16 +56,24 @@ static void async_pf_execute(struct work_struct *work)
+> >  	might_sleep();
+> >  
+> >  	/*
+> > -	 * This work is run asynchronously to the task which owns
+> > -	 * mm and might be done in another context, so we must
+> > -	 * access remotely.
+> > +	 * Attempt to pin the VM's host address space, and simply skip gup() if
+> > +	 * acquiring a pin fail, i.e. if the process is exiting.  Note, KVM
+> > +	 * holds a reference to its associated mm_struct until the very end of
+> > +	 * kvm_destroy_vm(), i.e. the struct itself won't be freed before this
+> > +	 * work item is fully processed.
+> >  	 */
+> > -	mmap_read_lock(mm);
+> > -	get_user_pages_remote(mm, addr, 1, FOLL_WRITE, NULL, &locked);
+> > -	if (locked)
+> > -		mmap_read_unlock(mm);
+> > -	mmput(mm);
+> > +	if (mmget_not_zero(mm)) {
+> > +		mmap_read_lock(mm);
+> > +		get_user_pages_remote(mm, addr, 1, FOLL_WRITE, NULL, &locked);
+> > +		if (locked)
+> > +			mmap_read_unlock(mm);
+> > +		mmput(mm);
+> > +	}
+> >  
+> > +	/*
+> > +	 * Notify and kick the vCPU even if faulting in the page failed, e.g.
 > 
-> What I said. :)
+> How about when the process is exiting? Could we just skip the following?
 
-Right from the start, yes.
+Maybe?  I'm not opposed to trimming this down even more, but I doubt it will make
+much of a difference.  The vCPU can't be running so async_pf.lock shouldn't be
+contended, no IPIs will be issued for kicks, etc.  So for this patch at least,
+I want to take the most conservative approach while still cleaning up the mm_struct
+usage.
 
-> 
->> To help clarify you can mention this order of events and also add an
->> appropriate "Fixes:" tag.
->>
->>> cocci warnings: (new ones prefixed by >>)
->>>>> arch/x86/kernel/cpu/resctrl/rdtgroup.c:1621:5-8: Unneeded variable: "ret". Return "  0" on line 1655
->>>
->>> Fix the warning by removing the variable "ret" and returning 0 directly.
->>
->> cocci warning was spot on*. This fix is not just a change to "make a
->> warning go away" but instead fixing an actual problem.
->> It can just be "Remove the unneeded variable and return 0 directly".
-> 
-> I'll fix all up before applying.
-
-Thank you very much. For what it is worth, I do agree with the actual fix
-and you can add:
-Acked-by: Reinette Chatre <reinette.chatre@intel.com>
-
-> 
->> * I'll add a private setup with the goal to catch these earlier.
-> 
-> Except that it doesn't fire with the patch that added the code. It looks
-> like the cocci script needs adjustment...
-
-Reinette
+> > +	 * so that the vCPU can retry the fault synchronously.
+> > +	 */
+> >  	if (IS_ENABLED(CONFIG_KVM_ASYNC_PF_SYNC))
+> >  		kvm_arch_async_page_present(vcpu, apf);
+> >  
+> > @@ -129,10 +137,8 @@ void kvm_clear_async_pf_completion_queue(struct kvm_vcpu *vcpu)
+> >  #ifdef CONFIG_KVM_ASYNC_PF_SYNC
+> >  		flush_work(&work->work);
+> >  #else
+> > -		if (cancel_work_sync(&work->work)) {
+> > -			mmput(work->mm);
+> > +		if (cancel_work_sync(&work->work))
+> >  			kmem_cache_free(async_pf_cache, work);
+> > -		}
+> >  #endif
+> >  		spin_lock(&vcpu->async_pf.lock);
+> >  	}
+> > @@ -211,8 +217,6 @@ bool kvm_setup_async_pf(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
+> >  	work->cr2_or_gpa = cr2_or_gpa;
+> >  	work->addr = hva;
+> >  	work->arch = *arch;
+> > -	work->mm = current->mm;
+> > -	mmget(work->mm);
+> >  
+> >  	INIT_WORK(&work->work, async_pf_execute);
+> >  
+> > -- 
+> > 2.43.0.472.g3155946c3a-goog
+> > 
