@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 077C915A5;
-	Wed, 24 Jan 2024 01:30:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5A791872;
+	Wed, 24 Jan 2024 01:30:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706059831; cv=none; b=iacp3vGOolruDwZ4Nx+7AvutIcsWa2NTaMfRpMP+BqKiqm9PGIroEmjrTjL0IDpno7ysgXu8hApwmNFQRwh3QekmFa+A1VZhyCeVcy1v2fxfYTuxeJI2AhNJQKHkSsXvmYlSYFXz7kRyjLZ8bePXATyq7zGoRgCqO8GTXSsWgy4=
+	t=1706059831; cv=none; b=ZV4a0pYGRjlFn697d+qC5tBlHY4079K4Z4iSBCZal0TQv+cdJMrG8iT9r6ARxRlDrnvWzSURvf2O2ZrPurN7bczCALrqDxR6cMAPWXVQFiE2o9mUOpqfVNPysAXjPMUSEoJWaUwxVlPcIkONf/zNt3VbpVrK8SHHGrLBz2nQoXI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1706059831; c=relaxed/simple;
-	bh=JTWzB95tQksa5MDrICl6BaP8CqbXJ+U4hsSFxWdgIA4=;
+	bh=3mHtlfZjEwIzA755NkkaOfCnUWWE2Q/12sL2IWiuegU=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=ir1mpOFXVszOR5Om2FhEMVjPwSB2KSnEo6T533gEGr6yHqtXAMTffeejpj4wVaw/wnHxWXbAlhKCe8yDfrVt1vm5r4zsCAniOEwc9HHjkkqP1IUh1RClNGF6TZ6TVIYELAV67ZJscUTnHB75+7JXqUAuS7MVckq/AT7rVpFMZc0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DbbP3Mqd; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=PT9Pxxp5dL2rR9q77OQzUr/qm7R6XyiuuSwg4IuK7u5+YrjtFkUtj7w9zdRWgvBzG+F5nxmtfRknQnihAoYHyLaRV4Fe/wqSQS1Qkq0TUMOyao/ho3Jq0uAmb3jlLMCWsEy59rcjpAFBRPW2PMHxV1xm5ksWISmde9JvY3k2Jjs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HCidxcvB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DbbP3Mqd"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 6C690C43390;
-	Wed, 24 Jan 2024 01:30:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HCidxcvB"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 4EBF6C433B1;
+	Wed, 24 Jan 2024 01:30:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706059830;
-	bh=JTWzB95tQksa5MDrICl6BaP8CqbXJ+U4hsSFxWdgIA4=;
+	s=k20201202; t=1706059831;
+	bh=3mHtlfZjEwIzA755NkkaOfCnUWWE2Q/12sL2IWiuegU=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=DbbP3MqdEZJFOzOklIithRbKpINxz+tksq4FB6ZpcGAjrkfEUEMduTLc/zy/YHo4P
-	 FBDDv/gMTZfas+dX+PIWiYWMUzsd2UjvRGw8F4WjqsO4ZEOSpUX2MRk36R91Vec5Jy
-	 uOqEEpQBBEN4ROSIlb8IcMsCglS3nfy2gwWydJH3BP3u/5l7P/tNsouJRvPez0oWu4
-	 ztyzBwDEZ7rv0caQ9/UyQHCW8g804b0MtHjxed2XwPfgQxAEzKzr2F/23rP8LFPnEM
-	 ba89sJdQCzufcWk/wssLYvjohfvXr5PPh25/5joIvIqb7kwMU8meB/w0LVAjORp7y/
-	 lewwCp7QkbNAQ==
+	b=HCidxcvBJS34/+aTwEBpJ68cVE92EZIEnAVqYvgvt5DM/Jwk70ud9We5acLAEzcOm
+	 9+bV7JMCB/VY7HzCNwqvLki/6ac79ZuThI9t5URQ8CG0sg7NPeUaHXlKiGeCHbKd//
+	 hOAosLri9oq5ogHVAq1YyLptAGoZXJ39Dg3JWxMZ/ry+hXNcp6IWVGZBbn8ZM6s34a
+	 EN5/+DDV4O9d4QOjaVhq2hBRVfZJHljS0Y8dNZwOOkk5aOlB+vMgZuu7olyaZWN/0n
+	 XQo1WseGH+h6nu62KAnTUVaOIxfo4lNIet936NWsvwIzHoZ4eDJuQgEahf4fEsvMoH
+	 rne4RxBC+Kw9Q==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 53536DFF767;
-	Wed, 24 Jan 2024 01:30:30 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 3DC63DFF760;
+	Wed, 24 Jan 2024 01:30:31 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -37,40 +37,36 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net 1/1] hv_netvsc: Calculate correct ring size when PAGE_SIZE
- is not 4 Kbytes
+Subject: Re: [PATCH] net: ethernet: qualcomm: Remove QDF24xx support
 From: patchwork-bot+netdevbpf@kernel.org
 Message-Id: 
- <170605983033.14933.2315449295954740333.git-patchwork-notify@kernel.org>
-Date: Wed, 24 Jan 2024 01:30:30 +0000
-References: <20240122162028.348885-1-mhklinux@outlook.com>
-In-Reply-To: <20240122162028.348885-1-mhklinux@outlook.com>
-To: Michael Kelley <mhkelley58@gmail.com>
-Cc: haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
- netdev@vger.kernel.org
+ <170605983124.14933.9916722082205803213.git-patchwork-notify@kernel.org>
+Date: Wed, 24 Jan 2024 01:30:31 +0000
+References: <20240122-topic-qdf_cleanup_net-v1-1-caf0d9c4408a@linaro.org>
+In-Reply-To: <20240122-topic-qdf_cleanup_net-v1-1-caf0d9c4408a@linaro.org>
+To: Konrad Dybcio <konrad.dybcio@linaro.org>
+Cc: timur@kernel.org, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, marijn.suijten@somainline.org,
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org
 
 Hello:
 
-This patch was applied to netdev/net.git (main)
+This patch was applied to netdev/net-next.git (main)
 by Jakub Kicinski <kuba@kernel.org>:
 
-On Mon, 22 Jan 2024 08:20:28 -0800 you wrote:
-> From: Michael Kelley <mhklinux@outlook.com>
+On Mon, 22 Jan 2024 13:02:22 +0100 you wrote:
+> This SoC family was destined for server use, featuring Qualcomm's very
+> interesting Kryo cores (before "Kryo" became a marketing term for Arm
+> cores with small modifications). It did however not leave the labs of
+> Qualcomm and presumably some partners, nor was it ever productized.
 > 
-> Current code in netvsc_drv_init() incorrectly assumes that PAGE_SIZE
-> is 4 Kbytes, which is wrong on ARM64 with 16K or 64K page size. As a
-> result, the default VMBus ring buffer size on ARM64 with 64K page size
-> is 8 Mbytes instead of the expected 512 Kbytes. While this doesn't break
-> anything, a typical VM with 8 vCPUs and 8 netvsc channels wastes 120
-> Mbytes (8 channels * 2 ring buffers/channel * 7.5 Mbytes/ring buffer).
+> Remove the related drivers, as they seem to be long obsolete.
 > 
 > [...]
 
 Here is the summary with links:
-  - [net,1/1] hv_netvsc: Calculate correct ring size when PAGE_SIZE is not 4 Kbytes
-    https://git.kernel.org/netdev/net/c/6941f67ad37d
+  - net: ethernet: qualcomm: Remove QDF24xx support
+    https://git.kernel.org/netdev/net-next/c/a2a7f98aeeec
 
 You are awesome, thank you!
 -- 
