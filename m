@@ -1,111 +1,158 @@
-Received: from mail-oi1-f175.google.com (mail-oi1-f175.google.com [209.85.167.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from TWMBX01.aspeed.com (211-20-114-70.hinet-ip.hinet.net [211.20.114.70])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29E05F513;
-	Wed, 24 Jan 2024 06:09:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 486E75253;
+	Wed, 24 Jan 2024 06:12:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.20.114.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706076580; cv=none; b=koC6wuEUBGeymEmRT2su1B+YGIBDYg1dTqlaYLi9Y+LH2JDYbUgb26Irr5vQEKyOeWMtEnP4xejMW5Rmn/GU0/4IoIpfvnbbhjlKmsdvixfrufmnE/wj7L5JmGuffbQoHtiYJiuC/GvX4LvQEOgSIKmN4bDM3/9S+nRuxvxhH8E=
+	t=1706076739; cv=none; b=sHCJ0FWhvm33ZXsZehZwRyIs2iEjwvGT9ifMGa7W4t30DL6H4qxNiQh/bvzU4LRETZZjgYBH00wXnittxh9n/wbRCm0QzcHKafyWDbMNrfBOkRd9Qpvu8dkphVaP5Ax5wTwdA8C2W2leM6RcLZhUjlNk3kyUMXUbnNGFah9hC+I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706076580; c=relaxed/simple;
-	bh=QPrzbMUSRppMUppd+9EXmi5fQQ+Uif6tDCZQPvztAlA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=exHv4z3jmIb8wJXtzwQ1K1yCxBD8XH58JBLUsRY+7ZkDRoZOWNEfgOuQrF5yypyshFv2N09UqLB890GZJLCRMZUiwADXNVaWz1lurF4+vdmLLB9TSWK3c+Hm5gcWOI1yWWyA7pTq2xSWy0p8huJwZ4hklkaArS3zfPe6QmF5goo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nZcjS5T7; arc=none smtp.client-ip=209.85.167.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nZcjS5T7"
-Received: by mail-oi1-f175.google.com with SMTP id 5614622812f47-3bd6581bc62so3575130b6e.2;
-        Tue, 23 Jan 2024 22:09:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706076578; x=1706681378; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ddFkrLYV49OOGsw3xBz4LEthLKO7WQPAAsxP1oQV98g=;
-        b=nZcjS5T75F2pIZtv14TAiAxgt8LsTkijIie7SxDMSIKRG5Q35ygMjhPskxIMHyC1V2
-         G/yBbE+IecHnlqBeWdrX1APRk2b01hS00HZsSCkXMBBt7wzTwTTxB11X1+xsxiYJN21d
-         oyeX9NPXy2U24BSvMbVLsWr0zLz4f1MnJy7SlQgCB1iqeVbqW7L11c+jsMhaCCEmQnST
-         VHEZosCriNBmYBeBb3PPS5aL1MbMJeBhgKPKshiKNfiQWqCOtNV9kpHI6+JeUugnve7k
-         IEnw0PoPZfOFqIbvmaNW4paLide7CK8F/qZ468N9zbHwcCWuuYBKW1N8hwfI1Xv5AcXX
-         TD/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706076578; x=1706681378;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ddFkrLYV49OOGsw3xBz4LEthLKO7WQPAAsxP1oQV98g=;
-        b=L+tmRD6Bc7YE2hUWHc3prhk9OXs3fyq1iMicDAJCDykR/8L3hSyqaG5nfBhLpufv7l
-         qu2bj4cIrG/1QIPgQeVlUyLi/I/q5EIVRVlwkDaz/D/kepzqH2o2bruKsEnogSaSqe7B
-         oVTBjLzUN+nl7XXYQzMkJyV4FUOTb2vUoYJeIZtS0ban5S1z/pRrRhYRNEo9C43zNLYI
-         YMQwjzY1UT4NQiMrQZ2r73GuwGSDUuHmYBIy8Wr2JHfy2iuhRfVHS49YWkw55jHWg++D
-         TUh9hheI885aebknXK+5z09Shz+a9VaAA0gv9AHuRZEgBu8d/KIXYPVg10/XVarR9xLo
-         PAJQ==
-X-Gm-Message-State: AOJu0YycLjE4Z8kT0eCqpkZ4EP0elvE+xBBMcesndAxOVgmJZkddzst+
-	7M7+308onxAAEU0wc9S91YSaVnMEUS2gahd13vVWqWV9ad7ZPhvv9uR7sLwaQh0=
-X-Google-Smtp-Source: AGHT+IHy206D+dXsznYMPRNs3sVxNuAF0r+/fh3ddUozvjmI9oIvn4prCQMnoeeRqTd/3iokULUUEw==
-X-Received: by 2002:a05:6808:1894:b0:3bd:cfd3:8607 with SMTP id bi20-20020a056808189400b003bdcfd38607mr660611oib.65.1706076578162;
-        Tue, 23 Jan 2024 22:09:38 -0800 (PST)
-Received: from archie.me ([103.131.18.64])
-        by smtp.gmail.com with ESMTPSA id fk19-20020a056a003a9300b006db87354a8fsm12657551pfb.119.2024.01.23.22.09.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jan 2024 22:09:37 -0800 (PST)
-Received: by archie.me (Postfix, from userid 1000)
-	id 041B0184EA861; Wed, 24 Jan 2024 13:09:33 +0700 (WIB)
-Date: Wed, 24 Jan 2024 13:09:33 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
-	torvalds@linux-foundation.org, akpm@linux-foundation.org,
-	linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-	lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
-	f.fainelli@gmail.com, sudipm.mukherjee@gmail.com,
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org,
-	allen.lkml@gmail.com
-Subject: Re: [PATCH 6.6 000/580] 6.6.14-rc2 review
-Message-ID: <ZbCpneBZPtJO2AQo@archie.me>
-References: <20240123174533.427864181@linuxfoundation.org>
+	s=arc-20240116; t=1706076739; c=relaxed/simple;
+	bh=EKadqfjFrcpeF9gHVxvLDm50o2Tj7f1KmuyGIxwz5JM=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=rIa48TuD3fzEMyy3qZLVNwpw32zSrZ/7DAGuzg7TjRJRojD8IZH8B3W6gygbec14O6j0kjmbKu4tu8TEuMzanBtcSWnr//KzGXaieVHl1DfwkjeoM8PVmw9yFBACNC3ONoDcOwfu8LgM/1LNLDwgRM/GNqr9KeT4aIkpI52OGsk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=aspeedtech.com; spf=fail smtp.mailfrom=aspeedtech.com; arc=none smtp.client-ip=211.20.114.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=aspeedtech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=aspeedtech.com
+Received: from TWMBX02.aspeed.com (192.168.0.24) by TWMBX01.aspeed.com
+ (192.168.0.124) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1258.12; Wed, 24 Jan
+ 2024 14:07:34 +0800
+Received: from twmbx02.aspeed.com (192.168.10.10) by TWMBX02.aspeed.com
+ (192.168.0.24) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 24 Jan 2024 14:07:07 +0800
+From: Billy Tsai <billy_tsai@aspeedtech.com>
+To: <jdelvare@suse.com>, <linux@roeck-us.net>, <robh+dt@kernel.org>,
+	<krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>, <joel@jms.id.au>,
+	<andrew@codeconstruct.com.au>, <corbet@lwn.net>,
+	<u.kleine-koenig@pengutronix.de>, <p.zabel@pengutronix.de>,
+	<billy_tsai@aspeedtech.com>, <naresh.solanki@9elements.com>,
+	<linux-hwmon@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-aspeed@lists.ozlabs.org>,
+	<linux-kernel@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+	<linux-pwm@vger.kernel.org>, <BMC-SW@aspeedtech.com>, <patrick@stwcx.xyz>
+Subject: [PATCH v13 1/3] dt-bindings: hwmon: fan: Add fan binding to schema
+Date: Wed, 24 Jan 2024 14:07:03 +0800
+Message-ID: <20240124060705.1342461-2-billy_tsai@aspeedtech.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240124060705.1342461-1-billy_tsai@aspeedtech.com>
+References: <20240124060705.1342461-1-billy_tsai@aspeedtech.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="EQAs6C5Lptua5lKA"
-Content-Disposition: inline
-In-Reply-To: <20240123174533.427864181@linuxfoundation.org>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
+From: Naresh Solanki <naresh.solanki@9elements.com>
 
---EQAs6C5Lptua5lKA
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Add common fan properties bindings to a schema.
 
-On Tue, Jan 23, 2024 at 09:47:11AM -0800, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.6.14 release.
-> There are 580 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->=20
+Bindings for fan controllers can reference the common schema for the
+fan
 
-Successfully compiled and installed the kernel on my computer (Acer
-Aspire E15, Intel Core i3 Haswell). No noticeable regressions.
+child nodes:
 
-Tested-by: Bagas Sanjaya <bagasdotme@gmail.com>
+  patternProperties:
+    "^fan@[0-2]":
+      type: object
+      $ref: fan-common.yaml#
+      unevaluatedProperties: false
 
---=20
-An old man doll... just what I always wanted! - Clara
+Signed-off-by: Naresh Solanki <naresh.solanki@9elements.com>
+Signed-off-by: Billy Tsai <billy_tsai@aspeedtech.com>
+---
+ .../devicetree/bindings/hwmon/fan-common.yaml | 79 +++++++++++++++++++
+ 1 file changed, 79 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/hwmon/fan-common.yaml
 
---EQAs6C5Lptua5lKA
-Content-Type: application/pgp-signature; name="signature.asc"
+diff --git a/Documentation/devicetree/bindings/hwmon/fan-common.yaml b/Documentation/devicetree/bindings/hwmon/fan-common.yaml
+new file mode 100644
+index 000000000000..0fb738081699
+--- /dev/null
++++ b/Documentation/devicetree/bindings/hwmon/fan-common.yaml
+@@ -0,0 +1,79 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/hwmon/fan-common.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Common Fan Properties
++
++maintainers:
++  - Naresh Solanki <naresh.solanki@9elements.com>
++  - Billy Tsai <billy_tsai@aspeedtech.com>
++
++properties:
++  max-rpm:
++    description:
++      Max RPM supported by fan.
++    $ref: /schemas/types.yaml#/definitions/uint32
++    maximum: 100000
++
++  min-rpm:
++    description:
++      Min RPM supported by fan.
++    $ref: /schemas/types.yaml#/definitions/uint32
++    maximum: 1000
++
++  pulses-per-revolution:
++    description:
++      The number of pulse from fan sensor per revolution.
++    $ref: /schemas/types.yaml#/definitions/uint32
++    maximum: 4
++
++  tach-div:
++    description:
++      Divisor for the tach sampling clock, which determines the sensitivity of the tach pin.
++    $ref: /schemas/types.yaml#/definitions/uint32
++
++  target-rpm:
++    description:
++      The default desired fan speed in RPM.
++    $ref: /schemas/types.yaml#/definitions/uint32
++
++  fan-driving-mode:
++    description:
++      Select the driving mode of the fan.(DC, PWM and so on)
++    $ref: /schemas/types.yaml#/definitions/string
++    enum: [ dc, pwm ]
++
++  pwms:
++    description:
++      PWM provider.
++    maxItems: 1
++
++  "#cooling-cells":
++    const: 2
++
++  cooling-levels:
++    description:
++      The control value which correspond to thermal cooling states.
++    $ref: /schemas/types.yaml#/definitions/uint32-array
++
++  tach-ch:
++    description:
++      The tach channel used for the fan.
++    $ref: /schemas/types.yaml#/definitions/uint8-array
++
++  label:
++    description:
++      Optional fan label
++
++  fan-supply:
++    description:
++      Power supply for fan.
++
++  reg:
++    maxItems: 1
++
++additionalProperties: true
++
++...
+-- 
+2.25.1
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZbCpkgAKCRD2uYlJVVFO
-o0KXAQCuyDhAAfWtcAEGKQ630SuIueR0MiuVhQRAwEnF4RU9jQD/Xw7Slc7k3hi/
-juirP4bpu6pgj3VimPnzm9+dNuSCpQU=
-=d8b6
------END PGP SIGNATURE-----
-
---EQAs6C5Lptua5lKA--
