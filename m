@@ -1,44 +1,44 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAC46171BC;
-	Wed, 24 Jan 2024 02:42:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B61D217559;
+	Wed, 24 Jan 2024 02:42:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.120
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706064161; cv=none; b=AhAZ8YpcKlUrH8BU8kq4v7E01JpX10M8otlCPOTYD1UsiKH6ixnXFgWJ4riH9UgOHtlqIKe32Ffxn1Ed5jBJ0alY0m7NvLkhNSDeQTG34ybRwyrdC6iY2VGTr6BicxtKMcIQU+ed5K/HROCJ0NiXkFEl5wVPDY2QyIgge4qC/hM=
+	t=1706064162; cv=none; b=b9O4pxN/1nQRZwTBdgmpWO42MWKdD9xx3cOs0Lzcxl9/SIQgELKRWGr27yR3C53Ztfm55movb+VfmrA21/QxCCbxB1HZWJFWrarVszM7HROdsgfZT8xraX/E8xDkjNoYzP4TctvmzikofX/tJUpKRJzSMDPGHDHFP215mUDKm/0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706064161; c=relaxed/simple;
-	bh=cxpPX3Wn0VREKtBeuHc/MZkj33xyM0sqH6UvdE/wBRo=;
+	s=arc-20240116; t=1706064162; c=relaxed/simple;
+	bh=T3X3fq7AuhPHM7WBbIb8WSrvU0kDaKc1Pze+7ySZgmo=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=T/bpQ2Oq51itYJDTgjul5LlKMC08SDBTmFcf9CWE1eJ02yX6DerK18H1yKipuwvIWoeFHhkudW2cmJ1nIvOflsvO6Xb0DpeOm3E6RspZZ3pyo6OapaERN2IuXJBPaKN73LOrCdrlhjbHfqX4nrKxBIAaFy1EWWYeIKkkJKMUjus=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jzIb/tY7; arc=none smtp.client-ip=192.55.52.120
+	 MIME-Version; b=q1Z8AEW9byAoxQidpxzFvYo7bxyP1diw7MJW4SEWjuPAaOx70HLNP/6NBbTHa2JhgykSQ196ogK3mkTA9libnqLEdDRxR8qwFLblgcsMEKtb7hLUiZer8R9jZXGn/1Yx99mJX0v5MlUq0QLXXuJHLEqMA2tSOelMBAywmcTJZLE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Kg3FblHW; arc=none smtp.client-ip=192.55.52.120
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jzIb/tY7"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Kg3FblHW"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706064159; x=1737600159;
+  t=1706064160; x=1737600160;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=cxpPX3Wn0VREKtBeuHc/MZkj33xyM0sqH6UvdE/wBRo=;
-  b=jzIb/tY7JY9v72xklDRzq6stw171yM3YJ5nXSAYV9G0enQNgUIvFBKtP
-   AyOtGxxbqekdBKOtVoxU4auKKNWpi/616w404wtiwnkaFanvy9I17BqGN
-   yBgHnRRUY4dwGDGcTuBIr55A2x8jRzNUZ01NtoRfN2206o9x4rhDJdtv5
-   fKfhjK5F+ir3wm/OgoGzwK1fdTyR9N6tQVwaTLinq2aPCc4+Aqvs6x00e
-   +uYeEhYiBPBVjWNd2H1ZNHCP66T8BBWF13ZEycWjJDHiU5mH0ScRepCWr
-   KCSpmqplOj6PzcDzFXcI5KJYbTm1FXYgsPLemNj8dilsPiayaNFTkRX8/
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="400586478"
+  bh=T3X3fq7AuhPHM7WBbIb8WSrvU0kDaKc1Pze+7ySZgmo=;
+  b=Kg3FblHWQpYERXvNPXmRkdkQ9Tw3fgEtYhtSc66+i/y3VJJoeWhBGyR0
+   c/MwoFWyHcCqMvRrlj9w+AfpSRkS5PqEQi/Od7Z1EH3TSkXPrXg70aISW
+   nhOJUjy5iRLjlVESwR59shHCCLu3BTSouvuOo60G0RcMimfIYNiQ6fxZx
+   MQZ5uc/1iRF12QPGIaofaVwVEkn2fqZhalj1sYOJQvFxJ4zRb79QGDfl2
+   4kyC70f6ncU0CmGG+4yljVJ1zNWnws96QmpvjDQ83Bod8BF7btenAlqKt
+   EfpVPQT5tnrwNlNNSDJILMgKUa/klMRjM/lDPiYC9MlSjHPl8V73K6Avu
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="400586493"
 X-IronPort-AV: E=Sophos;i="6.05,215,1701158400"; 
-   d="scan'208";a="400586478"
+   d="scan'208";a="400586493"
 Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2024 18:42:35 -0800
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2024 18:42:37 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.05,215,1701158400"; 
-   d="scan'208";a="1825855"
+   d="scan'208";a="1825861"
 Received: from 984fee00a5ca.jf.intel.com ([10.165.9.183])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2024 18:42:35 -0800
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2024 18:42:36 -0800
 From: Yang Weijiang <weijiang.yang@intel.com>
 To: seanjc@google.com,
 	pbonzini@redhat.com,
@@ -53,9 +53,9 @@ Cc: peterz@infradead.org,
 	mlevitsk@redhat.com,
 	john.allen@amd.com,
 	weijiang.yang@intel.com
-Subject: [PATCH v9 10/27] KVM: x86: Refine xsave-managed guest register/MSR reset handling
-Date: Tue, 23 Jan 2024 18:41:43 -0800
-Message-Id: <20240124024200.102792-11-weijiang.yang@intel.com>
+Subject: [PATCH v9 12/27] KVM: x86: Report XSS as to-be-saved if there are supported features
+Date: Tue, 23 Jan 2024 18:41:45 -0800
+Message-Id: <20240124024200.102792-13-weijiang.yang@intel.com>
 X-Mailer: git-send-email 2.39.3
 In-Reply-To: <20240124024200.102792-1-weijiang.yang@intel.com>
 References: <20240124024200.102792-1-weijiang.yang@intel.com>
@@ -67,57 +67,45 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Tweak the code a bit to facilitate resetting more xstate components in
-the future, e.g., adding CET's xstate-managed MSRs.
+From: Sean Christopherson <seanjc@google.com>
 
-No functional change intended.
+Add MSR_IA32_XSS to list of MSRs reported to userspace if supported_xss
+is non-zero, i.e. KVM supports at least one XSS based feature.
 
+Before enabling CET virtualization series, guest IA32_MSR_XSS is
+guaranteed to be 0, i.e., XSAVES/XRSTORS is executed in non-root mode
+with XSS == 0, which equals to the effect of XSAVE/XRSTOR.
+
+Signed-off-by: Sean Christopherson <seanjc@google.com>
 Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
 Reviewed-by: Maxim Levitsky <mlevitsk@redhat.com>
 ---
- arch/x86/kvm/x86.c | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+ arch/x86/kvm/x86.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
 diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 0e7dc3398293..3671f4868d1b 100644
+index 594c9e025f95..b3a39886e418 100644
 --- a/arch/x86/kvm/x86.c
 +++ b/arch/x86/kvm/x86.c
-@@ -12205,6 +12205,11 @@ void kvm_arch_vcpu_destroy(struct kvm_vcpu *vcpu)
- 		static_branch_dec(&kvm_has_noapic_vcpu);
- }
+@@ -1464,6 +1464,7 @@ static const u32 msrs_to_save_base[] = {
+ 	MSR_IA32_UMWAIT_CONTROL,
  
-+static inline bool is_xstate_reset_needed(void)
-+{
-+	return kvm_cpu_cap_has(X86_FEATURE_MPX);
-+}
-+
- void kvm_vcpu_reset(struct kvm_vcpu *vcpu, bool init_event)
- {
- 	struct kvm_cpuid_entry2 *cpuid_0x1;
-@@ -12262,7 +12267,7 @@ void kvm_vcpu_reset(struct kvm_vcpu *vcpu, bool init_event)
- 	kvm_async_pf_hash_reset(vcpu);
- 	vcpu->arch.apf.halted = false;
+ 	MSR_IA32_XFD, MSR_IA32_XFD_ERR,
++	MSR_IA32_XSS,
+ };
  
--	if (vcpu->arch.guest_fpu.fpstate && kvm_mpx_supported()) {
-+	if (vcpu->arch.guest_fpu.fpstate && is_xstate_reset_needed()) {
- 		struct fpstate *fpstate = vcpu->arch.guest_fpu.fpstate;
- 
- 		/*
-@@ -12272,8 +12277,12 @@ void kvm_vcpu_reset(struct kvm_vcpu *vcpu, bool init_event)
- 		if (init_event)
- 			kvm_put_guest_fpu(vcpu);
- 
--		fpstate_clear_xstate_component(fpstate, XFEATURE_BNDREGS);
--		fpstate_clear_xstate_component(fpstate, XFEATURE_BNDCSR);
-+		if (kvm_cpu_cap_has(X86_FEATURE_MPX)) {
-+			fpstate_clear_xstate_component(fpstate,
-+						       XFEATURE_BNDREGS);
-+			fpstate_clear_xstate_component(fpstate,
-+						       XFEATURE_BNDCSR);
-+		}
- 
- 		if (init_event)
- 			kvm_load_guest_fpu(vcpu);
+ static const u32 msrs_to_save_pmu[] = {
+@@ -7374,6 +7375,10 @@ static void kvm_probe_msr_to_save(u32 msr_index)
+ 		if (!(kvm_get_arch_capabilities() & ARCH_CAP_TSX_CTRL_MSR))
+ 			return;
+ 		break;
++	case MSR_IA32_XSS:
++		if (!kvm_caps.supported_xss)
++			return;
++		break;
+ 	default:
+ 		break;
+ 	}
 -- 
 2.39.3
 
