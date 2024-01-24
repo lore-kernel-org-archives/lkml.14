@@ -1,88 +1,86 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 488981AAD2;
-	Wed, 24 Jan 2024 11:02:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5CAA199B8
+	for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 11:04:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706094158; cv=none; b=fJoYOd3dXAjQ0J4/NhBpqwfQwFv/+p8mLha9hbhuKBchsliHqda0JEM9iLgaW1fV7sNrez4ycOZy0apf1PEYbMzZ3j4Pw/l0gn+ddfHfOc+ilGSr5udzZFcMKG19uyXW+e34tWriV72q3/f0gQ1/CqsoMbK9HWG4T/fPL3wfoSI=
+	t=1706094255; cv=none; b=nDM9k+xDUl+eAFUsJ6pYVSCS0cPvbVz9uIbVtQEzPFjzIUsDW5rk8LwaUQWcppAEmkvC+x6zBk6CXojSmsifiI7NazvmI5XrJrbXPYOZTK4cpAMrr38Qx0uQ8vWVjTIKEZ92SbQKSUxmz8LpWVq1ehmfA7Vkwn00LGGoR5c6FdQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706094158; c=relaxed/simple;
-	bh=tu7GFTZtwYK50NIjK2sN48Nx0wqpRW7rtLaLQmL8r6I=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=I4DTW8nBmDXeonPHhn8Tb2dWD5LOl5rdduNw/EO20sDkd2WqlBDIBRj2sEU2qKZ1IuUbVmsb37S7GifdYWVDGM5lynCSk+F7XMH7FuqDnrDhXZpl/XHxB3IZS1WQS8sc3nCn5kDRfVtDt79I7gbTVDQWrg288ZvXSqRr9IGyO0U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ixJuk2sR; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ixJuk2sR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706094158; x=1737630158;
-  h=from:to:cc:in-reply-to:references:subject:message-id:
-   date:mime-version:content-transfer-encoding;
-  bh=tu7GFTZtwYK50NIjK2sN48Nx0wqpRW7rtLaLQmL8r6I=;
-  b=ixJuk2sRe7ISydeoMatBmZiMWst+/pmw1eslBc8a7AkyW2DHD/ELiblR
-   5BwdGYCTN7GrEzHYzLIVk/p+lGtrlkaZ3lOaptDgl0ExJmsN9JRSmySfe
-   yLqt3syz/WKioTBR/RvgjHjsNGKx+krDI1JmVXwRlHnVMcdWzo9GVHqaz
-   MqC4CIsqiiZ1un0VwI5t7XLQwDc5AiNtvrNMYNVMmUpBSnEfuGpi0c3DE
-   y1u61EsH8yoAGcSu8zOmAKJfjOo7j7MecGBGdGZGDgDao6YTP6Eqvc9fs
-   MktN7RkI97CB/vQdYxDVprbD0xHEo02yxvnxHtugQLTvoa55z4d9Jz2cZ
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="8464565"
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="8464565"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jan 2024 03:02:37 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="786382057"
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="786382057"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.246.48.46])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jan 2024 03:02:33 -0800
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Mark Pearson <mpearson-lenovo@squebb.ca>
-Cc: corbet@lwn.net, hdegoede@redhat.com, 
- platform-driver-x86@vger.kernel.org, linux-doc@vger.kernel.org, 
- linux-kernel@vger.kernel.org
-In-Reply-To: <20240120232949.317337-1-mpearson-lenovo@squebb.ca>
-References: <mpearson-lenovo@squebb.ca>
- <20240120232949.317337-1-mpearson-lenovo@squebb.ca>
-Subject: Re: [PATCH] platform/x86: Support for mode FN key
-Message-Id: <170609414851.14220.467201747237298262.b4-ty@linux.intel.com>
-Date: Wed, 24 Jan 2024 13:02:28 +0200
+	s=arc-20240116; t=1706094255; c=relaxed/simple;
+	bh=RQj3sUXdtYHYvevvKwr5sdDtzYfqublH8XzC8qK0vO4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PG+ga/a3UINHjnz0lPER7NoitKR936+EQozFiJR8H6Qj+3XxqUA0pOWpHbbF7LOSaMJTxcT0mvsSCcTmMWYhIjTXWMTxyiB4k7hrFIQ57cmoNYX1xsSkzF9+vkjcgEoVaPnc7zqCbvOK3zYSIV+GlyvMvCq0d2aUbII3ZSdLxjQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; arc=none smtp.client-ip=115.124.30.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046050;MF=hengqi@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0W.GRcE5_1706094243;
+Received: from 30.221.149.132(mailfrom:hengqi@linux.alibaba.com fp:SMTPD_---0W.GRcE5_1706094243)
+          by smtp.aliyun-inc.com;
+          Wed, 24 Jan 2024 19:04:03 +0800
+Message-ID: <896749de-39b6-4081-91f3-1e316706a0e9@linux.alibaba.com>
+Date: Wed, 24 Jan 2024 19:04:02 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.12.3
-
-On Sat, 20 Jan 2024 18:29:34 -0500, Mark Pearson wrote:
-
-> New Thinkpads have added a 'Mode' Function key that on Windows allows
-> you to choose the active profile (low-power, balanced, performance)
-> 
-> Added suppoort for this hotkey (F8), and have it cycle through the
-> options available.
-> 
-> Tested on X1 Carbon G12.
-> 
-> [...]
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/3] virtio_net: Add missing virtio header in skb for
+ XDP_PASS
+To: Liang Chen <liangchen.linux@gmail.com>
+Cc: virtualization@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+ "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
+ Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+References: <20240124085721.54442-1-liangchen.linux@gmail.com>
+ <20240124085721.54442-3-liangchen.linux@gmail.com>
+From: Heng Qi <hengqi@linux.alibaba.com>
+In-Reply-To: <20240124085721.54442-3-liangchen.linux@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
 
-Thank you for your contribution, it has been applied to my local
-review-ilpo branch. Note it will show up in the public
-platform-drivers-x86/review-ilpo branch only once I've pushed my
-local branch there, which might take a while.
 
-The list of commits applied:
-[1/1] platform/x86: Support for mode FN key
-      commit: 0959afbafaf8791a9810fba2c55a64dfdcc3b66e
+在 2024/1/24 下午4:57, Liang Chen 写道:
+> For the XDP_PASS scenario of the XDP path, the skb constructed with
+> xdp_buff does not include the virtio header. Adding the virtio header
+> information back when creating the skb.
+>
+> Signed-off-by: Liang Chen <liangchen.linux@gmail.com>
+> ---
+>   drivers/net/virtio_net.c | 6 ++++++
+>   1 file changed, 6 insertions(+)
+>
+> diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
+> index b56828804e5f..2de46eb4c661 100644
+> --- a/drivers/net/virtio_net.c
+> +++ b/drivers/net/virtio_net.c
+> @@ -1270,6 +1270,9 @@ static struct sk_buff *receive_small_xdp(struct net_device *dev,
+>   	if (unlikely(!skb))
+>   		goto err;
+>   
+> +	/* Store the original virtio header for subsequent use by the driver. */
+> +	memcpy(skb_vnet_common_hdr(skb), &virtnet_xdp.hdr, vi->hdr_len);
 
---
- i.
+If xdp push or xdp pull modifies xdp_buff, will the original header 
+still apply to the modified data?
+
+Thanks,
+Heng
+
+> +
+>   	if (metasize)
+>   		skb_metadata_set(skb, metasize);
+>   
+> @@ -1635,6 +1638,9 @@ static struct sk_buff *receive_mergeable_xdp(struct net_device *dev,
+>   		head_skb = build_skb_from_xdp_buff(dev, vi, xdp, xdp_frags_truesz);
+>   		if (unlikely(!head_skb))
+>   			break;
+> +		/* Store the original virtio header for subsequent use by the driver. */
+> +		memcpy(skb_vnet_common_hdr(head_skb), &virtnet_xdp.hdr, vi->hdr_len);
+> +
+>   		return head_skb;
+>   
+>   	case XDP_TX:
 
