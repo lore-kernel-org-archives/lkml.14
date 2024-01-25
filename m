@@ -1,172 +1,96 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 935A117582
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 07:53:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C645217727;
+	Thu, 25 Jan 2024 07:54:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706169217; cv=none; b=srrviUlu4auLTsu1sMfBtFUB6GXwa1uRSjNdftiHqRi8D2gq9XQFgkO5mu7LUsSDrxIcAumvwNhDl0gJq5cEa7boSyy0+ILPcuCEqAGz9qK3sLfw+66P0f4BWOOqmlioCgQc/CNmvU/87NYmEBFomUYsZUxsnbU5pEZhxHjRjb8=
+	t=1706169273; cv=none; b=A6uRMVVBUhPOedCE3oFRkCGtyEYV+0DQ2b0+Gx/5++nEplAVX6tfLmNLx6KH5/9INBK960jlKR69IUV26C8QvnORqVPC6tGQaWwYGXCPPihybd3H4Y1C6XOFBGrSUOpesCUod+jcv/yaengSRr33Ve2AiiHvBxxXx2qnLSEDy4M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706169217; c=relaxed/simple;
-	bh=i9VNXGfaiN/l/XalCDfaFnHnjrYBtyPvkRxLcVqbWZ0=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=ooPTxS/S0xFYDMxxAHa1ZofiZSNlSdDf5A6ttSA0BHf6HAKd7DhzTUbxNHn95dr9QOUnf0Zo7BeEFPJ+gDKufB8jIbsOXtFiFoMiECFKCdAUFlD77NG/zBt/V9JSrly+t3AAdPC9L2jmqCWzMCTgwiY6VPtvN7GrGWlmeac1sOo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HFFXTkFF; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HFFXTkFF"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-33921b95dddso231306f8f.1
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 23:53:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706169214; x=1706774014; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=iYRx1TvAQfGyLvVsVin1GHvu8ITzf9xdpcm8DHtMUFo=;
-        b=HFFXTkFFkOX25WjmXD3B51PV7hOIZnj//7ZMB9dJLySLoiA8PBxwApVQso8KTZ+fPH
-         SlsX0qUeD1iYZYxHKnTEpLXo9zxynd38nAvNBgJyPUkXjrMVS2LdvG4T+uqoFY/Xh68P
-         u0g6uE5Gy/6O10pQ28XzKWhBZzuJK1N5UXiwFPy2c/dobyPCWIrsSPAtMRW9VahPeuHY
-         xHHE1KNiCTLoYFyKghr0jMAC5dRJgzzqOIFB6Gt7fn2hopwQ5mtKMfMKJqnW8Zgnu09K
-         Xe0TppN3Yh97cNUb1Q6gAqgDQnnsDlPiKDmj4gOy9v7UL+1By3rg+4rXpirgwFzIsvrX
-         NIiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706169214; x=1706774014;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=iYRx1TvAQfGyLvVsVin1GHvu8ITzf9xdpcm8DHtMUFo=;
-        b=B2EHtIF61YBBejjFIRnaVq2lVGIEgW6HPhZHvE8T6qL/GM9S8uJ6kXJ1Rtu/xOYViU
-         VaTBsWl1v9EtUji6K/FqipBYADZoUkG6cJAML8sZ6iYwmj1Jm3GYp9S5kPb7S7U/cxwu
-         TaHZ9dCZPCZELPRbwxEKvG1e34Hy8h4cEHhh0wBMPgdLJcA9md4hlpAouTKrfSjScvBb
-         Z53LKADqvOg4JtUb15qT5Haf5vK1W8HH4ZHaWz2fDT4wxXk3MP2iV9yMLroi+ufu2jy/
-         PyY4vPIDx4EwiH46oKKpL/OCelUXahFzOsvWJVogzGBGPF9Mn1Zie5YUyuXCF26ygUR3
-         dtKQ==
-X-Gm-Message-State: AOJu0YxI7h6pL0wi2zBFntSVVNwFvllFUNf8qAYsXyUHXZuKVONGftrt
-	srdWYZ8IlddEpSNv4aWHo00VP7/9JxQ6caCb0gquTLnDLk/buqw+U4hwaDW9L6k=
-X-Google-Smtp-Source: AGHT+IFB4sW0msAL+NpLgtyBr8Djuh672Yx0WUtzXlzM5hFUfy3/3/hI5lKiAwg9GeCdQZjd0yGcaw==
-X-Received: by 2002:a05:600c:220a:b0:40e:44bd:dc39 with SMTP id z10-20020a05600c220a00b0040e44bddc39mr259135wml.84.1706169213711;
-        Wed, 24 Jan 2024 23:53:33 -0800 (PST)
-Received: from ?IPV6:2a01:e0a:982:cbb0:1a7d:7b36:3842:9bc3? ([2a01:e0a:982:cbb0:1a7d:7b36:3842:9bc3])
-        by smtp.gmail.com with ESMTPSA id l1-20020a05600c4f0100b0040e549c77a1sm1599408wmq.32.2024.01.24.23.53.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 24 Jan 2024 23:53:33 -0800 (PST)
-Message-ID: <aa445a92-e640-4f1d-969c-20cafefcf44e@linaro.org>
-Date: Thu, 25 Jan 2024 08:53:32 +0100
+	s=arc-20240116; t=1706169273; c=relaxed/simple;
+	bh=UMDbxq3jf+9EqNgsfHnnGSI8sD1Rgib9GfvR7FCbXDk=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=nEL3qu66ESZ1f79y/mMIdc6knUsl+Mrw/8lwrWrJ/lvJAIOL7V1q4j1pe483ptEreHqMfz1t6T1zORhlJhITjDtp0Jp8mVLd8b5CwU69NjoD8eILefHJLet9gOhcBPMUTqBNzjNO7hOobb8W8aOZj7DjGT0ZX+Sp81HUP4jrV44=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4TLClM333vz4f3kjC;
+	Thu, 25 Jan 2024 15:54:23 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id 5E7601A027B;
+	Thu, 25 Jan 2024 15:54:27 +0800 (CST)
+Received: from [10.174.176.117] (unknown [10.174.176.117])
+	by APP1 (Coremail) with SMTP id cCh0CgBXJxCtE7JlzoysBw--.1154S2;
+	Thu, 25 Jan 2024 15:54:24 +0800 (CST)
+Subject: Re: [PATCH bpf 3/3] selftest/bpf: Test the read of vsyscall page
+ under x86-64
+To: Sohil Mehta <sohil.mehta@intel.com>, x86@kernel.org, bpf@vger.kernel.org
+Cc: Dave Hansen <dave.hansen@linux.intel.com>,
+ Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>,
+ linux-kernel@vger.kernel.org, xingwei lee <xrivendell7@gmail.com>,
+ Jann Horn <jannh@google.com>, houtao1@huawei.com
+References: <20240119073019.1528573-1-houtao@huaweicloud.com>
+ <20240119073019.1528573-4-houtao@huaweicloud.com>
+ <1c260ab1-d4c0-48e6-bf2b-df69bf083d27@intel.com>
+From: Hou Tao <houtao@huaweicloud.com>
+Message-ID: <01ce6947-8b46-9e27-6ce2-ce5763e3c5a9@huaweicloud.com>
+Date: Thu, 25 Jan 2024 15:54:21 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: neil.armstrong@linaro.org
-Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH 0/2] phy: qcom: qmp-pcie: Update PCIe PHY settings for
- SM8550
-To: Qiang Yu <quic_qianyu@quicinc.com>, agross@kernel.org,
- andersson@kernel.org, konrad.dybcio@linaro.org, vkoul@kernel.org,
- kishon@kernel.org
-Cc: linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
- linux-kernel@vger.kernel.org, quic_cang@quicinc.com, quic_mrana@quicinc.com
-References: <1703742157-69840-1-git-send-email-quic_qianyu@quicinc.com>
- <e6b8befb-82e8-4803-929c-32e86d1e825a@linaro.org>
- <0a3f486d-0135-454e-9da6-b888e516a39e@quicinc.com>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro Developer Services
-In-Reply-To: <0a3f486d-0135-454e-9da6-b888e516a39e@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1c260ab1-d4c0-48e6-bf2b-df69bf083d27@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-CM-TRANSID:cCh0CgBXJxCtE7JlzoysBw--.1154S2
+X-Coremail-Antispam: 1UD129KBjvdXoWrZF15KF4fCFy5KF1xXrW8WFg_yoWDXrX_u3
+	9IkFyDJw4xJw17AF43X345uFW2grWDCFy5J39rurW7tryrJasxJwsY9rWruF15GFWIgrs8
+	GF4Iqa1UKr1Y9jkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbIkYFVCjjxCrM7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E6xAIw20E
+	Y4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwV
+	A0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x02
+	67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
+	0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
+	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
+	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc7I2V7IY0VAS
+	07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c
+	02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_
+	GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7
+	CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6rWUJVWrZr1UMIIF0xvEx4A2jsIE
+	14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf
+	9x07UWE__UUUUU=
+X-CM-SenderInfo: xkrx3t3r6k3tpzhluzxrxghudrp/
 
-On 25/01/2024 03:59, Qiang Yu wrote:
-> 
-> On 1/24/2024 4:58 PM, neil.armstrong@linaro.org wrote:
->> On 28/12/2023 06:42, Qiang Yu wrote:
->>> Align PCIe0/PCIe1 PHY settings with SM8550 latest PCIe PHY Hardware
->>> Programming Guide.
->>>
->>> Can Guo (1):
->>>    phy: qcom: qmp-pcie: Update PCIe1 PHY settings for SM8550
->>>
->>> Qiang Yu (1):
->>>    phy: qcom: qmp-pcie: Update PCIe0 PHY settings for SM8550
->>>
->>>   drivers/phy/qualcomm/phy-qcom-qmp-pcie.c             | 20 ++++++++++++++------
->>>   drivers/phy/qualcomm/phy-qcom-qmp-pcs-pcie-v6.h      |  2 ++
->>>   drivers/phy/qualcomm/phy-qcom-qmp-pcs-pcie-v6_20.h   |  2 ++
->>>   drivers/phy/qualcomm/phy-qcom-qmp-pcs-v6_20.h        |  1 +
->>>   .../phy/qualcomm/phy-qcom-qmp-qserdes-txrx-v6_20.h   |  2 ++
->>>   5 files changed, 21 insertions(+), 6 deletions(-)
->>>
->>
->> - On SM8550-HDK:
->> # lspci
->> 0000:00:00.0 PCI bridge: Qualcomm Device 0113
->> 0000:01:00.0 Network controller: Qualcomm Device 1107 (rev 01)
->> 0001:00:00.0 PCI bridge: Qualcomm Device 0113
->> 0001:01:00.0 Non-Volatile memory controller: Phison Electronics Corporation E12 NVMe Controller (rev 01)
->>
->>
->> # lspci -nvv
->> 0000:00:00.0 0604: 17cb:0113 (prog-if 00 [Normal decode])
->>         LnkCap:    Port #0, Speed 8GT/s, Width x2, ASPM L0s L1, Exit Latency L0s <4us, L1 <8us
->>         LnkSta:    Speed 5GT/s, Width x2
->> 0001:00:00.0 0604: 17cb:0113 (prog-if 00 [Normal decode])
->>         LnkCap:    Port #0, Speed 16GT/s, Width x2, ASPM L0s L1, Exit Latency L0s <4us, L1 <8us
->>         LnkSta:    Speed 8GT/s, Width x2
->>
->> Tested-by: Neil Armstrong <neil.armstrong@linaro.org> # on SM8550-HDK
->>
->> - On SM8550-QRD:
->> # lspci
->> 00:00.0 PCI bridge: Qualcomm Device 0113
->> 01:00.0 Network controller: Qualcomm Device 1107 (rev 01)
->>
->> # lspci -nvv
->>         LnkCap:    Port #0, Speed 8GT/s, Width x2, ASPM L0s L1, Exit Latency L0s <4us, L1 <8us
->>         LnkSta:    Speed 5GT/s, Width x2
->>
->> Tested-by: Neil Armstrong <neil.armstrong@linaro.org> # on SM8550-QRD
->>
->> Thanks,
->> Neil
-> 
-> Hi Neil,
-> 
-> Thanks for testing this patch. I verified on aim300, did not see speed downgrade. Let me have a try on HDK8550.
 
-I haven't seen speed downgrade either on the HDK8550
 
-Neil
+On 1/23/2024 8:25 AM, Sohil Mehta wrote:
+> On 1/18/2024 11:30 PM, Hou Tao wrote:
+>
+>> vsyscall page could be disabled by CONFIG_LEGACY_VSYSCALL_NONE or
+>> vsyscall=none boot cmd-line, but it doesn't affect the reproduce of the
+>> problem and the returned error codes.
+>>
+> With vsyscall=emulate a direct read of the vsyscall address from
+> userspace is expected to go through. This is mode deprecated so maybe it
+> wouldn't matter much. Without the fix in patch 2/3, do you see the same
+> behavior with vsyscall=emulate set in the cmdline?
 
-> 
-> Thanks,
-> Qiang
-> 
+Er, I think it depends on whether or not SMAP [1] feature is available.
+When SMAP feature is enabled, even the vsyscall page is populated,
+reading the vsyscall page through bpf_read_kernel() will trigger a page
+fault and then oops. But when there is not SMAP, bpf_read_kernel() will
+succeed. So I think the test may need to be skipped if vsyscall_mode is
+emulate.
+
+[1]: https://en.wikipedia.org/wiki/Supervisor_Mode_Access_Prevention
+>
+> Sohil
 
