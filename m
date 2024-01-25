@@ -1,332 +1,193 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AE8A32182;
-	Thu, 25 Jan 2024 15:19:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DC3660269
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 15:21:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706195984; cv=none; b=aC4bZ+dc+YPnYDHx9Bcn9/y9dEDT+nZ6QSLCdI9PdOVqORzBqhZVukr9hk3BBvoWHyfJxwsS8iWILVXpfn9JTaP/BH9WjlmojIort9/0zQ+XoQ/RzQg6OrAgk8BagWxkDI99k/9X+sLdGvs2bjYwkTXTi/M0C0iCcDBlIvry1P0=
+	t=1706196099; cv=none; b=mIwNS+T13+JjbUXakzM7UkhNe9wk3Ds1FeJ6jIVwtMz5EQzJzi/CDxdn77hqdnUtWU0smjyDh2D4JvxSd5XC1yEQNt/oYQPbCAC2xAZWSBZyZ6NA5+VY7aICOokcj8UPKt38ihLqKw2172XIjQun/hgGukFQY34qYHwvpeZCbas=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706195984; c=relaxed/simple;
-	bh=CkYqsdSrAMaAjob6NoWgiSmG5+C0U4CurZGk4A5ajsU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Wu3boAkoGQZd2oFueKYyBIl1yKu2aUaS0FEigh3zgt5+XUyRISF7PRyGD8qSW0cS+p5+8P8g8lG6b2cPTD3dov2RDijDeOayVz1ZlBnKAUA9zKWjOfbh5WV7mai+BT/gF+w7m49vM5q7+It8C2kpzWQl3M3MsWt1YQTETdSAb2I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=qkG450TS; arc=none smtp.client-ip=212.227.15.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1706196099; c=relaxed/simple;
+	bh=kY9GKKnuCrw27cizO1MnwU9eRhLcfafdVWJgp39ohN8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=q6DJibNlv69wZwcILkWwbxpLxRc90ZiD8ZpazkJxqQiDzxKF3bXY/69kBq7Jd6cN2IEna57Br3cyYVOB4QnwBWpm/Akw+qcvrk4k2Sueg4E2NFMJhk8+X+zjDj0PJfnKlBAf9WLGEUeOmPc6sY7z+E/GuhkDtPO6qE2dMQiZfhI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=QIW/w/zc; arc=none smtp.client-ip=209.85.216.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="qkG450TS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
-	t=1706195947; x=1706800747; i=w_armin@gmx.de;
-	bh=CkYqsdSrAMaAjob6NoWgiSmG5+C0U4CurZGk4A5ajsU=;
-	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
-	 In-Reply-To;
-	b=qkG450TSy83zYVH+I6cmKBtuEJPvQn9acf38UbY02oJ5+249NyD8ip3VffG+WQRS
-	 K62itgxH5zoWR/j8Xk2hY5wYOuPDlMTqkZtoQpnTgC6rzbE0N94OrK5sPF7dtjugY
-	 v2/FQjXLF6UXVuL8DeaoXQ/ZoRw7mwaREWs/s3JSrwAyWC8Gvz7hCcfH1RBERFrs/
-	 G4US8osszJsnxYRqYLVih8Eb2FUorxrO79pETjDLfPV6meSuSzTKPAi4Rv1AyVk1R
-	 0gXnB8a3KobKKRS1baUJwppe1hCgP+2LwM1ch2yC7L7J0Y58hym4A4Olm5ixAAR/m
-	 2MakPtYme86W4udA1w==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.2.35] ([91.137.126.34]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1N63Vi-1r0Qtf2QJ6-016S0y; Thu, 25
- Jan 2024 16:19:07 +0100
-Message-ID: <34960bb8-fb85-4cca-8b84-d99596d046e4@gmx.de>
-Date: Thu, 25 Jan 2024 16:19:03 +0100
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="QIW/w/zc"
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-2901f9ea918so3804160a91.3
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 07:21:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1706196097; x=1706800897; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=0f0Rc0HyXcnVVRc0tUrEj6UJv/mWl0ixKFsRfK/E5xM=;
+        b=QIW/w/zcY0zfJn5GJi+EmvGkC3rgmtU70UDtZHcvJvHspXfr+Plj9sBiul44+4cMKq
+         46dUcSpNWxW6+X1x+TpYyk12KOjsZkzr+xPRqYHbR3MchgMaVI1KmKjz6gB549xcLFwV
+         Jb1eK6O3imiExAtG6WBbX9UE8W9QpbDkthyGA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706196097; x=1706800897;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=0f0Rc0HyXcnVVRc0tUrEj6UJv/mWl0ixKFsRfK/E5xM=;
+        b=lEvz9EAmoAnKFirKXujvekhYjZJ+pD+9mBNHjAoRbcPDL4KaoOo1sxo2ym0rEYD3Mz
+         U9RwBzPHVlhrE5G0X3wnZ2Nc9CIRHrfEonhe+9sR3Lky9kkt2+QrTHfFJnjq/dw3EnbF
+         5y/f6XUfzBJ54GAYUYg+4M05MBdWSk14Hy67wnbh3+0LfS3e0unDUgEYOYT3z5YttMq3
+         d24UzUbxUxiz5g6HxXHx570QbTYUTKoC0RGHv7lMJXY4zq6IvaY2GDmbm5a0Msm40ycI
+         ubaBkxgil9oMlTYcC+Gcvpxy/Fw8XlWGmccTuxbA607W4CtP2/XEBLXWpq4Yf+LiWJUX
+         W07A==
+X-Gm-Message-State: AOJu0Yyvtp/KB31bNUEK+5OkjBzPRrqefwEP3FyeklLaAHLrDzLPZCdB
+	Cggi6yz00r7UadnQ2JtHKtSMnMLy5U3x06KYYlvDOmei8hE2rt4kqDAOCsYOgmsQNi1ryP0OydG
+	Q/fwXdEpjsAWs/8ftZLVvdTQjIV+tYea1ceJv
+X-Google-Smtp-Source: AGHT+IGvfL3vvvLXYsGWUeUWHTy4eHJtkOq5ATcY+CugFMq1jdJyIIQ1Vj5ywnqttRswQh1RySvGP3O2Q/9KcqlDsCI=
+X-Received: by 2002:a17:90a:e614:b0:290:33f8:5c5d with SMTP id
+ j20-20020a17090ae61400b0029033f85c5dmr784337pjy.34.1706196097381; Thu, 25 Jan
+ 2024 07:21:37 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/2] hwmon: add fan speed monitoring driver for Surface
- devices
-To: Ivor Wanders <ivor@iwanders.net>, Jean Delvare <jdelvare@suse.com>,
- Guenter Roeck <linux@roeck-us.net>, Jonathan Corbet <corbet@lwn.net>,
- Maximilian Luz <luzmaximilian@gmail.com>, Hans de Goede
- <hdegoede@redhat.com>, Mark Gross <markgross@kernel.org>
-Cc: linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-References: <20240113183306.9566-1-ivor@iwanders.net>
- <20240113183306.9566-3-ivor@iwanders.net>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <20240113183306.9566-3-ivor@iwanders.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+References: <20240125134104.2045573-1-leitao@debian.org> <CALs4sv2U+3uu1Nz0Sf9_Ya6YKxK09WU=QH4VmO94FjC3iWX3rA@mail.gmail.com>
+ <ZbJ11qxfmOfRseJO@gmail.com>
+In-Reply-To: <ZbJ11qxfmOfRseJO@gmail.com>
+From: Pavan Chebbi <pavan.chebbi@broadcom.com>
+Date: Thu, 25 Jan 2024 20:51:25 +0530
+Message-ID: <CALs4sv3cpcy5G6d+3UL8dVSyN1vFbgiin8gLiVxKOfWUAAB0+Q@mail.gmail.com>
+Subject: Re: [PATCH net] bnxt_en: Make PTP timestamp HWRM more silent
+To: Breno Leitao <leitao@debian.org>
+Cc: Michael Chan <michael.chan@broadcom.com>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Richard Cochran <richardcochran@gmail.com>, gospo@broadcom.com, 
+	"open list:BROADCOM BNXT_EN 50 GIGABIT ETHERNET DRIVER" <netdev@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
+	boundary="000000000000530c29060fc6bc4b"
+
+--000000000000530c29060fc6bc4b
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:fOz4EBEugkIgALhAkTjG5E83mbP7bYE5uPTbJe+wXmU4hmygKV9
- KQ+K+UX0/03FijFfprwm6rgV32M9m69mNJttH95NQPjBgEudH0gOmTaX3krP2dVNBRYNDSa
- BXRd4sBU0Gmzt1dN/gG4Z1CEPogat0Xokru0g9br3gZLiGDgS63slF6qWBG29vYIfDibB+H
- y2SQtFmbHog2Qk52n3eBA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:Vu2tusABNWk=;vJ0xUT/w7LCzstHF+LQgwFqzfRf
- fy8GJ1Q9iEPXv34OKWNlVIGqgjahDhLgAbrDfzCMACm8UKYZg6Ddq7k1YfmEMIjzlDp2Enou5
- hm1FjVLUkGmwUaLIIgXtRompDbeSL47s9sguLSE7hueQIuOUwxltfxTEDF6yZXzjd+VIH3TrU
- OZv+sYSeUP8jnfwAfrryXmHXPjn3VdN/2x9qnA1zWclKPnGlPzlTctKI6pmGZBvZA1YSFWhpF
- zepe/fwKEkvWwvm01OWBC3GzEYNAF+HZuuvhnIvYIAPqR6FHrxfz6s/WL3/sWYEDH0HSlzc5H
- sFFyluHhd2hS3aG6JwXNBEztxkCDTPaaynV8+Nk3GxBncPtOoCwoRTJTnZsoawMy8owhBEam8
- 2sXbk4fRdnsXuRhoSDx8kcng0onoV8LOjeusUyKGfSTBmWVWRQXchSXJKapuEQ21do344+F6w
- TchsrZcFCF503Wew7y4430eQx2jjqrsMewdoNUGwMuZhmI724ZNzEl5u7biftlCtbVuQOiE0x
- 5cGhJDAh2wBxW1Sk4Ab6IDvZ+tusZa3CcObMx8zgMn2bLpgtLysojXfithktZCrSruJWPtfrV
- 583BbaK5tG/Vx+4qDgix4ifrKFhHMKHacC6HLmRZxSi/zVnoY3jPouC0/HMNHZSzJvaNDUA5B
- O0SDqtcbM1TzF5CSHATuJkNhM+ubEvyvK2Y24sc9mjYViBAdIAHLCi+2O0BkIbgT8ba48l5nP
- KJTMG8vIccfyzMfPYA5ihnvjgjvOe+MNHcbjNZ0XpleviFCNZKyBonnZrVI+10RXDqxQRVkUY
- TF32gOuLdRT5NgSuhKcofDWRzNaEfOvUSailIjU6DNLQjksIi5o3CXYh0xTzCmqMo/WJ/9SIf
- ckWj2fbvMeFL/Sd0TFEgHOXE4IgKRD+9EwywPx+ko6IhYOnjOMEkrlUClr8OjWZFXUVWDa8P+
- 7IpP/UMMZ77CsPA+Ad2TRdoMv40=
 
-Am 13.01.24 um 19:33 schrieb Ivor Wanders:
-
-> Adds a driver that provides read only access to the fan speed for Micros=
-oft
-> Surface Pro devices. The fan speed is always regulated by the EC and can=
-not
-> be influenced directly.
+On Thu, Jan 25, 2024 at 8:23=E2=80=AFPM Breno Leitao <leitao@debian.org> wr=
+ote:
 >
-> Signed-off-by: Ivor Wanders <ivor@iwanders.net>
-> Link: https://github.com/linux-surface/kernel/pull/144
-> ---
-> Changes in v3:
->    - Removed type and attr checks in read and is_visible.
->    - Removed assigning sdev to ssam_device drvdata.
->    - Propagate return from __ssam_fan_rpm_get.
->    - Renamed hwmon chip name from 'fan' to 'surface_fan'.
->    - Removed unnecessary platform_device header.
-> Changes in v2:
->    - Removed all sysfs attributes except fan1_input. Simplified code
->      and updated documentation accordingly.
-> ---
->   Documentation/hwmon/index.rst       |  1 +
->   Documentation/hwmon/surface_fan.rst | 25 ++++++++
->   MAINTAINERS                         |  8 +++
->   drivers/hwmon/Kconfig               | 13 ++++
->   drivers/hwmon/Makefile              |  1 +
->   drivers/hwmon/surface_fan.c         | 93 +++++++++++++++++++++++++++++
->   6 files changed, 141 insertions(+)
->   create mode 100644 Documentation/hwmon/surface_fan.rst
->   create mode 100644 drivers/hwmon/surface_fan.c
+> On Thu, Jan 25, 2024 at 08:03:18PM +0530, Pavan Chebbi wrote:
+> > On Thu, Jan 25, 2024 at 7:11=E2=80=AFPM Breno Leitao <leitao@debian.org=
+> wrote:
+> > >
+> > > commit 056bce63c469 ("bnxt_en: Make PTP TX timestamp HWRM query silen=
+t")
+> > > changed a netdev_err() to netdev_WARN_ONCE().
+> > >
+> > > netdev_WARN_ONCE() is it generates a kernel WARNING, which is bad, fo=
+r
+> > > the following reasons:
+> > >
+> > >  * You do not a kernel warning if the firmware queries are late
+> > >  * In busy networks, timestamp query failures fairly regularly
+> > >  * A WARNING message doesn't bring much value, since the code path
+> > > is clear.
+> > > (This was discussed in-depth in [1])
+> > >
+> > > Transform the netdev_WARN_ONCE() into a netdev_warn_once(), and print=
+ a
+> > > more well-behaved message, instead of a full WARN().
+> > >
+> > >         bnxt_en 0000:67:00.0 eth0: TS query for TX timer failed rc =
+=3D fffffff5
+> > >
+> > > [1] Link: https://lore.kernel.org/all/ZbDj%2FFI4EJezcfd1@gmail.com/
+> > > Signed-off-by: Breno Leitao <leitao@debian.org>
+> >
+> > LGTM, however, you may still need to add a proper fixes tag.
 >
-> diff --git a/Documentation/hwmon/index.rst b/Documentation/hwmon/index.r=
-st
-> index 042e1cf95..4dfb3b9bd 100644
-> --- a/Documentation/hwmon/index.rst
-> +++ b/Documentation/hwmon/index.rst
-> @@ -202,6 +202,7 @@ Hardware Monitoring Kernel Drivers
->      smsc47m1
->      sparx5-temp
->      stpddc60
-> +   surface_fan
->      sy7636a-hwmon
->      tc654
->      tc74
-> diff --git a/Documentation/hwmon/surface_fan.rst b/Documentation/hwmon/s=
-urface_fan.rst
-> new file mode 100644
-> index 000000000..07942574c
-> --- /dev/null
-> +++ b/Documentation/hwmon/surface_fan.rst
-> @@ -0,0 +1,25 @@
-> +.. SPDX-License-Identifier: GPL-2.0-or-later
-> +
-> +Kernel driver surface_fan
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D
-> +
-> +Supported Devices:
-> +
-> +  * Microsoft Surface Pro 9
-> +
-> +Author: Ivor Wanders <ivor@iwanders.net>
-> +
-> +Description
-> +-----------
-> +
-> +This provides monitoring of the fan found in some Microsoft Surface Pro=
- devices,
-> +like the Surface Pro 9. The fan is always controlled by the onboard con=
-troller.
-> +
-> +Sysfs interface
-> +---------------
-> +
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D =
-=3D=3D=3D=3D=3D=3D=3D =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +Name                    Perm    Description
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D =
-=3D=3D=3D=3D=3D=3D=3D =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +``fan1_input``          RO      Current fan speed in RPM.
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D =
-=3D=3D=3D=3D=3D=3D=3D =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 439cf523b..8e7870af3 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -14078,6 +14078,14 @@ F:	Documentation/driver-api/surface_aggregator/=
-clients/dtx.rst
->   F:	drivers/platform/surface/surface_dtx.c
->   F:	include/uapi/linux/surface_aggregator/dtx.h
->
-> +MICROSOFT SURFACE SENSOR FAN DRIVER
-> +M:	Maximilian Luz <luzmaximilian@gmail.com>
-> +M:	Ivor Wanders <ivor@iwanders.net>
-> +L:	linux-hwmon@vger.kernel.org
-> +S:	Maintained
-> +F:	Documentation/hwmon/surface_fan.rst
-> +F:	drivers/hwmon/surface_fan.c
-> +
->   MICROSOFT SURFACE GPE LID SUPPORT DRIVER
->   M:	Maximilian Luz <luzmaximilian@gmail.com>
->   L:	platform-driver-x86@vger.kernel.org
-> diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
-> index 307477b8a..4b4d999af 100644
-> --- a/drivers/hwmon/Kconfig
-> +++ b/drivers/hwmon/Kconfig
-> @@ -1965,6 +1965,19 @@ config SENSORS_SMM665
->   	  This driver can also be built as a module. If so, the module will
->   	  be called smm665.
->
-> +config SENSORS_SURFACE_FAN
-> +	tristate "Surface Fan Driver"
-> +	depends on SURFACE_AGGREGATOR
-> +	help
-> +	  Driver that provides monitoring of the fan on Surface Pro devices th=
-at
-> +	  have a fan, like the Surface Pro 9.
-> +
-> +	  This makes the fan's current speed accessible through the hwmon
-> +	  system. It does not provide control over the fan, the firmware is
-> +	  responsible for that, this driver merely provides monitoring.
-> +
-> +	  Select M or Y here, if you want to be able to read the fan's speed.
-> +
->   config SENSORS_ADC128D818
->   	tristate "Texas Instruments ADC128D818"
->   	depends on I2C
-> diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
-> index 3f4b0fda0..5ae214c06 100644
-> --- a/drivers/hwmon/Makefile
-> +++ b/drivers/hwmon/Makefile
-> @@ -198,6 +198,7 @@ obj-$(CONFIG_SENSORS_SMSC47M1)	+=3D smsc47m1.o
->   obj-$(CONFIG_SENSORS_SMSC47M192)+=3D smsc47m192.o
->   obj-$(CONFIG_SENSORS_SPARX5)	+=3D sparx5-temp.o
->   obj-$(CONFIG_SENSORS_STTS751)	+=3D stts751.o
-> +obj-$(CONFIG_SENSORS_SURFACE_FAN)+=3D surface_fan.o
->   obj-$(CONFIG_SENSORS_SY7636A)	+=3D sy7636a-hwmon.o
->   obj-$(CONFIG_SENSORS_AMC6821)	+=3D amc6821.o
->   obj-$(CONFIG_SENSORS_TC74)	+=3D tc74.o
-> diff --git a/drivers/hwmon/surface_fan.c b/drivers/hwmon/surface_fan.c
-> new file mode 100644
-> index 000000000..7c2e3ae3e
-> --- /dev/null
-> +++ b/drivers/hwmon/surface_fan.c
-> @@ -0,0 +1,93 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * Surface Fan driver for Surface System Aggregator Module. It provides=
- access
-> + * to the fan's rpm through the hwmon system.
-> + *
-> + * Copyright (C) 2023 Ivor Wanders <ivor@iwanders.net>
-> + */
-> +
-> +#include <linux/hwmon.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/surface_aggregator/device.h>
-> +#include <linux/types.h>
-> +
-> +// SSAM
-> +SSAM_DEFINE_SYNC_REQUEST_CL_R(__ssam_fan_rpm_get, __le16, {
-> +	.target_category =3D SSAM_SSH_TC_FAN,
-> +	.command_id      =3D 0x01,
-> +});
-> +
-> +// hwmon
-> +umode_t surface_fan_hwmon_is_visible(const void *drvdata,
-> +				     enum hwmon_sensor_types type, u32 attr,
-> +				     int channel)
-> +{
-> +	return 0444;
-> +}
-> +
-> +static int surface_fan_hwmon_read(struct device *dev,
-> +				  enum hwmon_sensor_types type, u32 attr,
-> +				  int channel, long *val)
-> +{
-> +	struct ssam_device *sdev =3D dev_get_drvdata(dev);
-> +	int ret;
-> +	__le16 value;
-> +
-> +	ret =3D __ssam_fan_rpm_get(sdev, &value);
-> +	if (ret)
-> +		return ret;
-> +
-> +	*val =3D le16_to_cpu(value);
-> +
-> +	return ret;
+> Thanks. I didn't include a fix tag because it is not a fix per se, but,
+> I can easily send a v2 if this is needed.
 
-Hello,
+You have a point. But then in that case it should go to net-next, I think.
+If you respin or otherwise,
+Reviewed-by: Pavan Chebbi <pavan.chebbi@broadcom.com>
 
-maybe you can just return 0 here.
+--000000000000530c29060fc6bc4b
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
 
-> +}
-> +
-> +static const struct hwmon_channel_info *const surface_fan_info[] =3D {
-> +	HWMON_CHANNEL_INFO(fan, HWMON_F_INPUT),
-> +	NULL
-> +};
-> +
-> +static const struct hwmon_ops surface_fan_hwmon_ops =3D {
-> +	.is_visible =3D surface_fan_hwmon_is_visible,
-> +	.read =3D surface_fan_hwmon_read,
-> +};
-> +
-> +static const struct hwmon_chip_info surface_fan_chip_info =3D {
-> +	.ops =3D &surface_fan_hwmon_ops,
-> +	.info =3D surface_fan_info,
-> +};
-> +
-> +static int surface_fan_probe(struct ssam_device *sdev)
-> +{
-> +	struct device *hdev;
-> +
-> +	hdev =3D devm_hwmon_device_register_with_info(&sdev->dev,
-> +						    "surface_fan", sdev,
-> +						    &surface_fan_chip_info,
-> +						    NULL);
-> +	if (IS_ERR(hdev))
-> +		return PTR_ERR(hdev);
-> +
-> +	return 0;
-
-Maybe use PTR_ERR_OR_ZERO() here?
-
-Other than those two small things:
-
-Reviewed-by: Armin Wolf <W_Armin@gmx.de>
-
-> +}
-> +
-> +static const struct ssam_device_id ssam_fan_match[] =3D {
-> +	{ SSAM_SDEV(FAN, SAM, 0x01, 0x01) },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(ssam, ssam_fan_match);
-> +
-> +static struct ssam_device_driver surface_fan =3D {
-> +	.probe =3D surface_fan_probe,
-> +	.match_table =3D ssam_fan_match,
-> +	.driver =3D {
-> +		.name =3D "surface_fan",
-> +		.probe_type =3D PROBE_PREFER_ASYNCHRONOUS,
-> +	},
-> +};
-> +module_ssam_device_driver(surface_fan);
-> +
-> +MODULE_AUTHOR("Ivor Wanders <ivor@iwanders.net>");
-> +MODULE_DESCRIPTION("Fan Driver for Surface System Aggregator Module");
-> +MODULE_LICENSE("GPL");
+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
+OltyqaGBuzv+bJTUL+bmV7E4QBLIqGt4jVr1R9hJdH6KxXwJdyfHZ9C6qXmoe2NQhiFUyBOJ0wgk
+dB9Z1IU7nCwvNKYg2JMoJs93tIgbhPJg/D7pqW8gabkCAwEAAaOCAdowggHWMA4GA1UdDwEB/wQE
+AwIFoDCBowYIKwYBBQUHAQEEgZYwgZMwTgYIKwYBBQUHMAKGQmh0dHA6Ly9zZWN1cmUuZ2xvYmFs
+c2lnbi5jb20vY2FjZXJ0L2dzZ2NjcjNwZXJzb25hbHNpZ24yY2EyMDIwLmNydDBBBggrBgEFBQcw
+AYY1aHR0cDovL29jc3AuZ2xvYmFsc2lnbi5jb20vZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAw
+TQYDVR0gBEYwRDBCBgorBgEEAaAyASgKMDQwMgYIKwYBBQUHAgEWJmh0dHBzOi8vd3d3Lmdsb2Jh
+bHNpZ24uY29tL3JlcG9zaXRvcnkvMAkGA1UdEwQCMAAwSQYDVR0fBEIwQDA+oDygOoY4aHR0cDov
+L2NybC5nbG9iYWxzaWduLmNvbS9nc2djY3IzcGVyc29uYWxzaWduMmNhMjAyMC5jcmwwJAYDVR0R
+BB0wG4EZcGF2YW4uY2hlYmJpQGJyb2FkY29tLmNvbTATBgNVHSUEDDAKBggrBgEFBQcDBDAfBgNV
+HSMEGDAWgBSWM9HmWBdbNHWKgVZk1b5I3qGPzzAdBgNVHQ4EFgQUEV6y/89alKPoFbKUaJXsvWu5
+fdowDQYJKoZIhvcNAQELBQADggEBAEHSIB6g652wVb+r2YCmfHW47Jo+5TuCBD99Hla8PYhaWGkd
+9HIyD3NPhb6Vb6vtMWJW4MFGQF42xYRrAS4LZj072DuMotr79rI09pbOiWg0FlRRFt6R9vgUgebu
+pWSH7kmwVXcPtY94XSMMak4b7RSKig2mKbHDpD4bC7eGlwl5RxzYkgrHtMNRmHmQor5Nvqe52cFJ
+25Azqtwvjt5nbrEd81iBmboNTEnLaKuxbbCtLaMEP8xKeDjAKnNOqHUMps0AsQT8c0EGq39YHpjp
+Wn1l67VU0rMShbEFsiUf9WYgE677oinpdm0t2mdCjxr35tryxptoTZXKHDxr/Yy6l6ExggJtMIIC
+aQIBATBrMFsxCzAJBgNVBAYTAkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMTEwLwYDVQQD
+EyhHbG9iYWxTaWduIEdDQyBSMyBQZXJzb25hbFNpZ24gMiBDQSAyMDIwAgwV/XkICjVscn4SNZMw
+DQYJYIZIAWUDBAIBBQCggdQwLwYJKoZIhvcNAQkEMSIEIBAZV6rmeJ20niekRrV5IP8+mHTogY1k
+YBnltxwq7MIMMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI0MDEy
+NTE1MjEzN1owaQYJKoZIhvcNAQkPMVwwWjALBglghkgBZQMEASowCwYJYIZIAWUDBAEWMAsGCWCG
+SAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG9w0BAQowCwYJKoZIhvcNAQEHMAsGCWCGSAFlAwQC
+ATANBgkqhkiG9w0BAQEFAASCAQBT4mEQuvAfD9ThnE9n2WXUsqPlcYwIPhDJ1oBXtEkgXwvbyiEN
+GXI13UQjyDw+tlBM5iMAs9MzLhBf/ZXVa+jVCcKRZKj0gH+jpFZprrCwus1T83j9tz3wyqIsjejB
+PddwlOdTQ0qMNz+LG/xUI2NBHIZOT0I1zpgM987uTYpVoLOS5b9mBySK4yFRsP8BHTCHcj1UJKoI
+6Ne76PJtJGp3rVX5CqTT0qxh0OMV7IDZIxJhhot8K9QzPaYQpuu3ImWkvI4quTvTD8ZgrnkOBZEJ
+BGnO+tiOh12lCgds0pcVXpz16nwlyLp+O/JZiSwqo/DVh2mOjaGGt/optBrZXWS+
+--000000000000530c29060fc6bc4b--
