@@ -1,218 +1,132 @@
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D230E538D
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 01:09:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB59F7E1;
+	Thu, 25 Jan 2024 01:18:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706144952; cv=none; b=lYIHhjFZnAS4NZ6ftULSoJtaLEeqOBdXKXGBGCPmPmgWLHPYqidhVHNL8d3CT/BM5qQAqwdsSyXkmqPsBE5imAohKOJGlBKtoxMzA3Ty59FV4BN9xMBH6SP3rPbAxOVM5oVKLbQRtvzb3n/B5cEcS0tz/MxG7Q3y6EVUjXu6WnU=
+	t=1706145530; cv=none; b=TEEnT/Zyl5apFFXFjQJr+vmskj21+i5FZ38K6LwApmAcJJp/gsVPGYKwLcc8UJUP5FinvgKghGvHhLyAuG1H8GUhb1DIaLZ02PDzm/yNjkek64Ttz7uglfM3D3EZTCnLKolmr0Z+EOpA7vXfwPM1xoiawNwOnOe8VOFGNOXgp/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706144952; c=relaxed/simple;
-	bh=XfnH0XnxBRxSw8s+Kmggue61fl8TjZsRhAk9ljaDQ/o=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ReWljtIC0A0S70W5a74R59BO3Y+tWEtUIB6/6fgqKsPSADWv/7SxrWxam5Zxz0eyRSJh3eRf30Kv+kluiPY0/7IaItdvtlPy/2kktwjJEFLSJ4/DB0WHWgNLnWQk2q2irMG8nNyffsM+YRT39JDFrePid0q1tSrmv2BqMn4Puhw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joelfernandes.org; spf=pass smtp.mailfrom=joelfernandes.org; dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b=M1limboU; arc=none smtp.client-ip=209.85.208.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=joelfernandes.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=joelfernandes.org
+	s=arc-20240116; t=1706145530; c=relaxed/simple;
+	bh=wbqMyu7oZpMxsXU0lkcnp8wE0Oln4aYOrHTkE3a28Io=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=tOwVWkz7a/x2qsLBpRFiGF1401iTHlNuUWBZauc9hape3m5oeKXn+7bUSjRq3r6cn6S7m56TdNddefvYmJMrPpRHqqTumpgJDmw6Ni2Jp0l01OTFUIdn2Mp7seMPDopFYmCKgxas8x9+ODOw+wu8CQ/rnR7PHZBsCeQa6PXmoSw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=QmUObi/E; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="M1limboU"
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2cf2a381b86so12919301fa.0
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 17:09:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google; t=1706144949; x=1706749749; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PiUW1kySFY5d/pkzoDzjFVz4adphI3+IFsUwCl7g0Cw=;
-        b=M1limboU6m+53976lC325ZeB0bSQMABBxqExECk6McTgXWGObUxu5ocGquLfaT2XQM
-         fR27aMpNBTLy3GJCLB0VkY/uXts/f3HLltthLAg/jH934I8QsGAxgJrwKVhu1z2x0VqP
-         p+CNS2aand+nHQpF5PpP1xt/K4MW5CoRpsyu0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706144949; x=1706749749;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PiUW1kySFY5d/pkzoDzjFVz4adphI3+IFsUwCl7g0Cw=;
-        b=g8wyzWwGu0UbOmDWz0REQHpKDdwP9l/urK4zZSOSW+tqXquLlsFiHQyNo2ew7CpxsS
-         NfIQiTSmYKciPeyZr+a+SKbo5TrJlFLhL+bees0DJc9K4c1AkPvA20gEVI/DC0v3JRFO
-         awRROiLnlyAXuU+8BqnckaQ40tjGUQA/HEEbZuVQwa0JDhvVWiB9YQgJ4rvx9dGgV+En
-         x3CwO8mAX8VoHMiBc98+cNE/tBG6JsAu05fxIjmO9e7RwvTGufUjffNxbx8kNgVtS3FD
-         kdah2oDHZXZPfHR52/YUZ1oxT7XRWHchkKdpLWUFeKvjQwYp6/EGuudvOBsoxJifJkDs
-         S+wA==
-X-Gm-Message-State: AOJu0Yw1DOMC6rBvALQonHOrbXlkbQHC+tt8u8TAqmaafkQsCNGn2B11
-	TbiBrimTRJ82nX5sq5MybIAuskA3rJOh5w817ThhypYnvCCsxNc1Pdj/lnAMA00RIifrbvbQ9GV
-	Ix2JaWAG/jnYLmii4PnsX7Se+s7p9r7Ju1X1KVA==
-X-Google-Smtp-Source: AGHT+IHJ7U3y7K16MAJwZ9L7zwf69BBYdFrG85RGACDOZ5s5lNNGtUA2ZLqUoinUEmFG3pgoJzQ6zATtiiWTOT6o3Fk=
-X-Received: by 2002:a2e:3a03:0:b0:2cf:1c74:9bcb with SMTP id
- h3-20020a2e3a03000000b002cf1c749bcbmr100829lja.106.1706144948656; Wed, 24 Jan
- 2024 17:09:08 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="QmUObi/E"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40P00VXD001043;
+	Thu, 25 Jan 2024 01:18:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=HULk81uGrHcbYZWqBcEZRPGhmCUUJzUvPIETw8bfYLY=; b=Qm
+	UObi/EiAuHIhT9iENN27QSuHtCG/f4oIP3ALU+71mKN+U+1u1XyGGcE/TP/8sPBf
+	/82MD+o2gOMl4R9rXK4ORJUMkixLXTPzJTF/5ioVMHh5SPJrKX8zR9yheswC9aRI
+	MEJDoy37JKvhTpt1WjnsychNe89nG+cnszlwrpEpgItI8S6QjBpDAgX6ohBZ+HPC
+	XiWGVRkLuEGj94lt5zVhOFquskoba0gVwA/D6OGi0B4NetxtDD4DJtSMXUvTwD78
+	49drJVJ8+rkGds5vMIX5S231RaqNV1KXIvkC8Szg1uSeFlegFLiJ0pHDTENIbcrc
+	I+0vDrldX6Rf5T8RQnPA==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vuavn8ac7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 25 Jan 2024 01:18:43 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 40P1Igfk031425
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 25 Jan 2024 01:18:42 GMT
+Received: from [10.239.132.204] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Wed, 24 Jan
+ 2024 17:18:36 -0800
+Message-ID: <67e17efa-df15-45f0-9a13-873cbd8f7507@quicinc.com>
+Date: Thu, 25 Jan 2024 09:18:34 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231214024727.3503870-1-vineeth@bitbyteword.org>
- <ZXsvl7mabUuNkWcY@google.com> <20231215181014.GB2853@maniforge>
- <6595bee6.e90a0220.57b35.76e9@mx.google.com> <20240104223410.GE303539@maniforge>
- <052b0521-2273-4b1f-bd94-a3decceb9b05@joelfernandes.org> <20240124170648.GA249939@maniforge>
-In-Reply-To: <20240124170648.GA249939@maniforge>
-From: Joel Fernandes <joel@joelfernandes.org>
-Date: Wed, 24 Jan 2024 20:08:56 -0500
-Message-ID: <CAEXW_YR5weKdRD3DfJCUPr4eyXtj=HgTqw0=oV_0Kh2VDVhDdg@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/8] Dynamic vcpu priority management in kvm
-To: David Vernet <void@manifault.com>
-Cc: Sean Christopherson <seanjc@google.com>, "Vineeth Pillai (Google)" <vineeth@bitbyteword.org>, 
-	Ben Segall <bsegall@google.com>, Borislav Petkov <bp@alien8.de>, 
-	Daniel Bristot de Oliveira <bristot@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	Dietmar Eggemann <dietmar.eggemann@arm.com>, "H . Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>, 
-	Juri Lelli <juri.lelli@redhat.com>, Mel Gorman <mgorman@suse.de>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Andy Lutomirski <luto@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Valentin Schneider <vschneid@redhat.com>, 
-	Vincent Guittot <vincent.guittot@linaro.org>, Vitaly Kuznetsov <vkuznets@redhat.com>, 
-	Wanpeng Li <wanpengli@tencent.com>, Suleiman Souhlal <suleiman@google.com>, 
-	Masami Hiramatsu <mhiramat@google.com>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	x86@kernel.org, Tejun Heo <tj@kernel.org>, Josh Don <joshdon@google.com>, 
-	Barret Rhoden <brho@google.com>, David Dunn <daviddunn@google.com>, julia.lawall@inria.fr, 
-	himadrispandya@gmail.com, jean-pierre.lozi@inria.fr, ast@kernel.org, 
-	paulmck@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: qcom: modify the wrong
+ compatible name
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+CC: <andersson@kernel.org>, <konrad.dybcio@linaro.org>,
+        <linus.walleij@linaro.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kernel@quicinc.com>
+References: <20240124023305.15755-1-quic_tengfan@quicinc.com>
+ <20240124023305.15755-2-quic_tengfan@quicinc.com>
+ <CAA8EJpqkDcqjn-8HrK7=rRe49ycDY6fbNDCKKQOeUpa_EDjFtw@mail.gmail.com>
+From: Tengfei Fan <quic_tengfan@quicinc.com>
+In-Reply-To: <CAA8EJpqkDcqjn-8HrK7=rRe49ycDY6fbNDCKKQOeUpa_EDjFtw@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: yC4lhn_mPc80TI_yf8zCcZLUopZk2TdI
+X-Proofpoint-ORIG-GUID: yC4lhn_mPc80TI_yf8zCcZLUopZk2TdI
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-01-24_12,2024-01-24_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ clxscore=1015 priorityscore=1501 mlxscore=0 bulkscore=0 malwarescore=0
+ mlxlogscore=906 impostorscore=0 phishscore=0 adultscore=0 suspectscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2401190000 definitions=main-2401250008
 
-Hi David,
 
-On Wed, Jan 24, 2024 at 12:06=E2=80=AFPM David Vernet <void@manifault.com> =
-wrote:
->
-[...]
-> > There might be a caveat to the unboosting path though needing a hyperca=
-ll and I
-> > need to check with Vineeth on his latest code whether it needs a hyperc=
-all, but
-> > we could probably figure that out. In the latest design, one thing I kn=
-ow is
-> > that we just have to force a VMEXIT for both boosting and unboosting. W=
-ell for
-> > boosting, the VMEXIT just happens automatically due to vCPU preemption,=
- but for
-> > unboosting it may not.
->
-> As mentioned above, I think we'd need to add UAPI for setting state from
-> the guest scheduler, even if we didn't use a hypercall to induce a
-> VMEXIT, right?
 
-I see what you mean now. I'll think more about it. The immediate
-thought is to load BPF programs to trigger at appropriate points in
-the guest. For instance, we already have tracepoints for preemption
-disabling. I added that upstream like 8 years ago or something. And
-sched_switch already knows when we switch to RT, which we could
-leverage in the guest. The BPF program would set some shared memory
-state in whatever format it desires, when it runs is what I'm
-envisioning.
+On 1/24/2024 11:33 AM, Dmitry Baryshkov wrote:
+> On Wed, 24 Jan 2024 at 04:33, Tengfei Fan <quic_tengfan@quicinc.com> wrote:
+>>
+>> Use right compatible name "qcom,sm4450-tlmm" instead of
+>> "qcom,sm4450-pinctrl".
+>>
+>> Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
+>> ---
+>>   Documentation/devicetree/bindings/pinctrl/qcom,sm4450-tlmm.yaml | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sm4450-tlmm.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,sm4450-tlmm.yaml
+>> index bb08ca5a1509..bb675c8ec220 100644
+>> --- a/Documentation/devicetree/bindings/pinctrl/qcom,sm4450-tlmm.yaml
+>> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,sm4450-tlmm.yaml
+>> @@ -17,7 +17,7 @@ allOf:
+>>
+>>   properties:
+>>     compatible:
+>> -    const: qcom,sm4450-pinctrl
+>> +    const: qcom,sm4450-tlmm
+> 
+> Fixes: 7bf8b78f86db ("dt-bindings: pinctrl: qcom: Add SM4450 pinctrl")
+> 
+> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
-By the way, one crazy idea about loading BPF programs into a guest..
-Maybe KVM can pass along the BPF programs to be loaded to the guest?
-The VMM can do that. The nice thing there is only the host would be
-the only responsible for the BPF programs. I am not sure if that makes
-sense, so please let me know what you think. I guess the VMM should
-also be passing additional metadata, like which tracepoints to hook
-to, in the guest, etc.
+Thanks Dmitry. I will inside this "Fixes" tage into commit message in 
+the next patch series.
 
-> > In any case, can we not just force a VMEXIT from relevant path within t=
-he guest,
-> > again using a BPF program? I don't know what the BPF prog to do that wo=
-uld look
-> > like, but I was envisioning we would call a BPF prog from within a gues=
-t if
-> > needed at relevant point (example, return to guest userspace).
->
-> I agree it would be useful to have a kfunc that could be used to force a
-> VMEXIT if we e.g. need to trigger a resched or something. In general
-> that seems like a pretty reasonable building block for something like
-> this. I expect there are use cases where doing everything async would be
-> useful as well. We'll have to see what works well in experimentation.
+> 
+> 
+>>
+>>     reg:
+>>       maxItems: 1
+>> --
+>> 2.17.1
+>>
+>>
+> 
+> 
+> --
+> With best wishes
+> Dmitry
 
-Sure.
-
-> > >> Still there is a lot of merit to sharing memory with BPF and let BPF=
- decide
-> > >> the format of the shared memory, than baking it into the kernel... s=
-o thanks
-> > >> for bringing this up! Lets talk more about it... Oh, and there's my =
-LSFMMBPF
-> > >> invitiation request ;-) ;-).
-> > >
-> > > Discussing this BPF feature at LSFMMBPF is a great idea -- I'll submi=
-t a
-> > > proposal for it and cc you. I looked and couldn't seem to find the
-> > > thread for your LSFMMBPF proposal. Would you mind please sending a li=
-nk?
-> >
-> > I actually have not even submitted one for LSFMM but my management is s=
-upportive
-> > of my visit. Do you want to go ahead and submit one with all of us incl=
-uded in
-> > the proposal? And I am again sorry for the late reply and hopefully we =
-did not
-> > miss any deadlines. Also on related note, there is interest in sched_ex=
-t for
->
-> I see that you submitted a proposal in [2] yesterday. Thanks for writing
-> it up, it looks great and I'll comment on that thread adding a +1 for
-> the discussion.
->
-> [2]: https://lore.kernel.org/all/653c2448-614e-48d6-af31-c5920d688f3e@joe=
-lfernandes.org/
->
-> No worries at all about the reply latency. Thank you for being so open
-> to discussing different approaches, and for driving the discussion. I
-> think this could be a very powerful feature for the kernel so I'm
-> pretty excited to further flesh out the design and figure out what makes
-> the most sense here.
-
-Great!
-
-> > As mentioned above, for boosting, there is no hypercall. The VMEXIT is =
-induced
-> > by host preemption.
->
-> I expect I am indeed missing something then, as mentioned above. VMEXIT
-> aside, we still need some UAPI for the shared structure between the
-> guest and host where the guest indicates its need for boosting, no?
-
-Yes you are right, it is more clear now what you were referring to
-with UAPI. I think we need figure that issue out. But if we can make
-the VMM load BPF programs, then the host can completely decide how to
-structure the shared memory.
-
-> > > 2. What is the cost we're imposing on users if we force paravirt to b=
-e
-> > >    done through BPF? Is this prohibitively high?
-> > >
-> > > There is certainly a nonzero cost. As you pointed out, right now Andr=
-oid
-> > > apparently doesn't use much BPF, and adding the requisite logic to us=
-e
-> > > and manage BPF programs is not insigificant.
-> > >
-> > > Is that cost prohibitively high? I would say no. BPF should be fully
-> > > supported on aarch64 at this point, so it's really a user space probl=
-em.
-> > > Managing the system is what user space does best, and many other
-> > > ecosystems have managed to integrate BPF to great effect. So while th=
-e
-> > > cost is cetainly nonzero, I think there's a reasonable argument to be
-> > > made that it's not prohibitively high.
-> >
-> > Yes, I think it is doable.
-> >
-> > Glad to be able to finally reply, and I shall prioritize this thread mo=
-re on my
-> > side moving forward.
->
-> Thanks for your detailed reply, and happy belated birthday :-)
-
-Thank you!!! :-)
-
- - Joel
+-- 
+Thx and BRs,
+Tengfei Fan
