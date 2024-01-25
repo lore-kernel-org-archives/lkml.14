@@ -1,58 +1,59 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E58A10976
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 08:54:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D1E31B954
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 08:57:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706172882; cv=none; b=mHUfDJQ4iFqPsbM3QLEr1NGzXUD+foEM89lMJfFfJQXaL6+CftzrmyZsBSiTyLL1acG8FRqOM7dHuDW+Dq/0hHVF1koCZ/dgGHhsrHl+UbmoU5r0ZDyHIS5bEUD6EkxQ5iDjPz5uHApInnw59yCUWRVmZ17kpNR+7p5RDEq6X/Q=
+	t=1706173074; cv=none; b=d35X5kM3gTPvJoiK4AtWELQlxK4b3e1ZUs6HXRyksqhs+fuWPWG3Q8NJahf4PcZ2LiGnleoAKk4dzsrsy4ketzV0qmQF/HeF2q1DcKuH+kutnVv2r55NFu835ap7SW+EvGjijsc+htCZUy5L9FwUzudzV3v4GcRTuMnlnigvEDE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706172882; c=relaxed/simple;
-	bh=IGBiPs1WuJSFqvW9MzDUHcqs1Dhqm/XYrWTO9agZg+Q=;
+	s=arc-20240116; t=1706173074; c=relaxed/simple;
+	bh=ASSAcrZC686QXcaT0VDsrrNCHgxrvYn7vN/gCgNrBk8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XLgIC0/x7zPkgowEHeL9qmGyqWwVBQ+Svn/kXxLruMLgbVNgIPhayrZVXESbLS1WUYAFPaHGyU4pjLVxGArdxKy7gerJ0zHP/ViWMHPAUhVwoHrSDOA01fysuAnKdO+ekUhpKYnx6Xvzf4woxlbJXQtRFmcj+h+RXoR03OWzQ/E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=Xg3fzsET; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	 In-Reply-To:Content-Type; b=IsSOWeYqnVL/qBgb/ATr0Q4v/IxTbWMIA4UFPgS+8gTpfLHXxaMeL3wsLtXGs5Qv7xRXEN85qPvBjMynT2yb+qo1SzQLlvvTRWoHlPUyuOvrR8o2KZ3iJ+rG5fsvCU68mRzUn26Ro9jvfM+h+rgdgDIhFvEynaydyzksvBaSPF0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=e325S8Q8; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="Xg3fzsET"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1d51ba18e1bso59091555ad.0
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 00:54:40 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="e325S8Q8"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-40e913e3f03so80785405e9.3
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 00:57:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1706172879; x=1706777679; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=xnkZERa8Q5xoGtJvJZat5iyOg0P3QANDIW4NDNOE4l0=;
-        b=Xg3fzsETyfzvGfHgHaA/ojohGMRS4lZkqYInln01Q/k2TF5l97uy8sne0GTQgELCL1
-         mnyegRW4N6dot/hJlHRU7Iko2CXZflm9xlz/118PpqRs1PIn2oRaAWo5WMeyil1UXgrQ
-         n39gkDURwM+EQk7G6A8gn6Icab7m6K9fvph1mmszTms3ilKkRq1d2YKFKPmO+f9aThMO
-         i9v0Mjcyc4ok2OUOxOCMB1dMJwZWogwQ9w/w+oy2niD9+oawxuMAiGlXa5mpCTn4p+TU
-         mv3wZuHP7OTmTtDv/3Y+9EXrwgqYGrobka008UgCBEg/yVMc4DXqiAPqBy9Xqme0jtFa
-         dQHA==
+        d=linaro.org; s=google; t=1706173071; x=1706777871; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=J7Fjy061af3WQwkrtjqs4ezbtKnwx+BKx0P5XcCzsUU=;
+        b=e325S8Q89BIDNrGXMUbTD+9zHwDroS1DIqV/Beb7+6mdUilUEfTd2GS8MUzm3m0ejo
+         WpswdzFhX/w5jNb7HdNgFwXzMw78CvwJcjY7pvoZqSsNM8/NtGotH1xYy9p2EqcRFn1Q
+         7Hq09aWlaV/ZgHd24JDVlpzVwU8rAqI5D1sqwdKwKYn+TitdqpTkZ1+L5/ZyUN4ESTkI
+         V9t8cdjc+uhOocXFfGdgdC5ENP4RRFsqmmATVVeY97kCIQWVImzK7kkNJY49kKtcHavF
+         APJAdK4TnxSsvrSs+errp+71+MFkJu+fD3RvKMmAfHt9qKQe9ghTxVBIEUjWfrN5Rc2b
+         JWew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706172879; x=1706777679;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xnkZERa8Q5xoGtJvJZat5iyOg0P3QANDIW4NDNOE4l0=;
-        b=LsCy7DLK8A4aCCEj+Z7FVHFLtjSfyaPFbRcHhVO6Z/wPR7YH6/is7IrGKBY+BiY8Jv
-         F8Gk4phzOJO+zWBNnLqZPZcXtRuD952mWoG1/n6pRq0eaA6ICXcx1vijilae69Zxc3ba
-         TMHzqxMyn4xcjEfE6EeOlzdzdIcb4nZSojlBKIyqBgNZqcfZBvViSNfDk4mtXni8Hn9K
-         5cmjQRmHtHulNKFlA2q3xbhepPP9wjpamqYIyGJCfLvVkriJ+rU0AvQY9Rs1LOJXf+Ai
-         BmqLYxpYRiC9GZh/CKpY+ujhjor4uPwmHd092siJy6kl6Rxem34VwEKvtjopqgegZWOI
-         p11A==
-X-Gm-Message-State: AOJu0Yzg60LL2xzRnzDQvK7JvaPeFO0LAevr67E1acopTAKVgylW1bXD
-	Ln0jVzrbXa9QheS9Ju06lFw39yzVtW4UMzEmJEe8Q8Q0zE0mWjICdc6dTI4VLbE=
-X-Google-Smtp-Source: AGHT+IHn4Y+4c7MEgANSirnXzcKFSWT7Z0qo6rSzruiuCcQx6zt1x0dPL/M9TCo9yaJ2tGgQaivEAg==
-X-Received: by 2002:a17:902:ed44:b0:1d7:199:cfb7 with SMTP id y4-20020a170902ed4400b001d70199cfb7mr715381plb.138.1706172879543;
-        Thu, 25 Jan 2024 00:54:39 -0800 (PST)
-Received: from [10.4.195.141] ([139.177.225.254])
-        by smtp.gmail.com with ESMTPSA id y2-20020a1709027c8200b001d7726c4a40sm3615519pll.277.2024.01.25.00.54.36
+        d=1e100.net; s=20230601; t=1706173071; x=1706777871;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=J7Fjy061af3WQwkrtjqs4ezbtKnwx+BKx0P5XcCzsUU=;
+        b=OzsaWQSIGqEdgkAJVQEvA2HZRQhd04baQ4O4rWYZZ+jfUJu1rPJ/sbHVeftYvQMwxC
+         2UO0HAFu/arCeKRDAuGBFrSD/H2PbWuB68a5QBrJi2gdqu+IlWJxG7sH91Co3Hn3ccDP
+         iO7MbF1az/cW5S4+awG/vt+9PyH6f08Y/Qg4eef+v7/+rWvkl1mWKy9juonyMoh3003f
+         QEsG3UIm/HK85qO8Oc3kT5HcqxQkUJzIeWo+ej8DgYSLF93vw3vRJD40gPcRFkDRxqUV
+         wvuCVZJo6jJKmr4Pbq+x/T6CrXQPtq89O4CNOiaDcZC3rjtruus13ssct7RTIlP2VitY
+         gR1g==
+X-Gm-Message-State: AOJu0YyK1Dw0Tvuk/7/3bU3qH0b5cRAaTGuNz75goocBaFcuaPPkCX5h
+	yfD5fMBhETWKgfSCxMLygfwfPaRuD+ayAeyHJjo9c8LwExaOTBqYQRQ4zh4gkf4=
+X-Google-Smtp-Source: AGHT+IG92mHalxw+oDjOcxLes1wcOSJEjV0q4XNAGx+NRSjZz3FTyKXHHopr6lgobIiqar2MGSEslQ==
+X-Received: by 2002:a05:600c:384e:b0:40e:c1a9:6829 with SMTP id s14-20020a05600c384e00b0040ec1a96829mr280733wmr.120.1706173070864;
+        Thu, 25 Jan 2024 00:57:50 -0800 (PST)
+Received: from [192.168.1.20] ([178.197.215.66])
+        by smtp.gmail.com with ESMTPSA id gv21-20020a170906f11500b00a28a66028bcsm794592ejb.91.2024.01.25.00.57.49
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 25 Jan 2024 00:54:39 -0800 (PST)
-Message-ID: <6f81161c-0280-48b6-a7af-038c676a02b3@bytedance.com>
-Date: Thu, 25 Jan 2024 16:54:33 +0800
+        Thu, 25 Jan 2024 00:57:50 -0800 (PST)
+Message-ID: <42a3038f-33b0-404d-b311-65426961c0c1@linaro.org>
+Date: Thu, 25 Jan 2024 09:57:48 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,56 +61,152 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mm: zswap: fix missing folio cleanup in writeback race
- path
+Subject: Re: [EXTERNAL] Re: [PATCH v1 4/4] ASoc: dt-bindings: Create yaml file
+ for pcm6240 codec driver
+To: "Ding, Shenghao" <shenghao-ding@ti.com>,
+ "broonie@kernel.org" <broonie@kernel.org>,
+ "conor+dt@kernel.org" <conor+dt@kernel.org>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>,
+ "andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>,
+ "Lu, Kevin" <kevin-lu@ti.com>, "Xu, Baojun" <baojun.xu@ti.com>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "perex@perex.cz"
+ <perex@perex.cz>,
+ "pierre-louis.bossart@linux.intel.com"
+ <pierre-louis.bossart@linux.intel.com>,
+ "13916275206@139.com" <13916275206@139.com>,
+ "linux-sound@vger.kernel.org" <linux-sound@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "liam.r.girdwood@intel.com" <liam.r.girdwood@intel.com>,
+ "soyer@irl.hu" <soyer@irl.hu>, "Huang, Jonathan" <jkhuang3@ti.com>,
+ "tiwai@suse.de" <tiwai@suse.de>, "Djuandi, Peter" <pdjuandi@ti.com>,
+ "McPherson, Jeff" <j-mcpherson@ti.com>,
+ "Navada Kanyana, Mukund" <navada@ti.com>
+References: <20240123111411.850-1-shenghao-ding@ti.com>
+ <20240123111411.850-4-shenghao-ding@ti.com>
+ <92c1a3f3-6b3b-47cb-a4bf-0d20e4af95e5@linaro.org>
+ <a6c6cad6efc647ba8f0c828ffdb3a54f@ti.com>
+ <d8f00ea9-3bb2-4b17-bbc7-48800516e408@linaro.org>
+ <c107a70e42eb4327802748cda89d292f@ti.com>
 Content-Language: en-US
-To: Yosry Ahmed <yosryahmed@google.com>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: Johannes Weiner <hannes@cmpxchg.org>, Nhat Pham <nphamcs@gmail.com>,
- Domenico Cerasuolo <cerasuolodomenico@gmail.com>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org
-References: <20240125085127.1327013-1-yosryahmed@google.com>
-From: Chengming Zhou <zhouchengming@bytedance.com>
-In-Reply-To: <20240125085127.1327013-1-yosryahmed@google.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <c107a70e42eb4327802748cda89d292f@ti.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 2024/1/25 16:51, Yosry Ahmed wrote:
-> In zswap_writeback_entry(), after we get a folio from
-> __read_swap_cache_async(), we grab the tree lock again to check that the
-> swap entry was not invalidated and recycled. If it was, we delete the
-> folio we just added to the swap cache and exit.
+On 25/01/2024 09:46, Ding, Shenghao wrote:
 > 
-> However, __read_swap_cache_async() returns the folio locked when it is
-> newly allocated, which is always true for this path, and the folio is
-> ref'd. Make sure to unlock and put the folio before returning.
 > 
-> This was discovered by code inspection, probably because this path
-> handles a race condition that should not happen often, and the bug would
-> not crash the system, it will only strand the folio indefinitely.
-> 
-> Fixes: 04fc7816089c ("mm: fix zswap writeback race condition")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Yosry Ahmed <yosryahmed@google.com>
+>> -----Original Message-----
+>> From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+>> Sent: Thursday, January 25, 2024 3:50 PM
+>> To: Ding, Shenghao <shenghao-ding@ti.com>; broonie@kernel.org;
+>> conor+dt@kernel.org
+>> Cc: robh+dt@kernel.org; andriy.shevchenko@linux.intel.com; Lu, Kevin
+>> <kevin-lu@ti.com>; Xu, Baojun <baojun.xu@ti.com>;
+>> devicetree@vger.kernel.org; lgirdwood@gmail.com; perex@perex.cz;
+>> pierre-louis.bossart@linux.intel.com; 13916275206@139.com; linux-
+>> sound@vger.kernel.org; linux-kernel@vger.kernel.org;
+>> liam.r.girdwood@intel.com; soyer@irl.hu; Huang, Jonathan
+>> <jkhuang3@ti.com>; tiwai@suse.de; Djuandi, Peter <pdjuandi@ti.com>;
+>> McPherson, Jeff <j-mcpherson@ti.com>; Navada Kanyana, Mukund
+>> <navada@ti.com>
+>> Subject: Re: [EXTERNAL] Re: [PATCH v1 4/4] ASoc: dt-bindings: Create yaml
+>> file for pcm6240 codec driver
+>>
+>> On 25/01/2024 08: 39, Ding, Shenghao wrote: >> >> Why do you repeat the
+>> reg constraints? This does not seem needed. >> >>> + interrupts: false >>>
+>> + >>> + - if: >>> + properties: >>> ZjQcmQRYFpfptBannerStart This message
+>> was sent from outside of Texas Instruments.
+>> Do not click links or open attachments unless you recognize the source of
+>> this email and know the content is safe.
+>>
+>> ZjQcmQRYFpfptBannerEnd
+>> On 25/01/2024 08:39, Ding, Shenghao wrote:
+>>>>
+>>>> Why do you repeat the reg constraints? This does not seem needed.
+>>>>
+>>>>> +        interrupts: false
+>>>>> +
+>>>>> +  - if:
+>>>>> +      properties:
+>>>>> +        compatible:
+>>>>> +          contains:
+>>>>> +            enum:
+>>>>> +              - ti,pcm3140
+>>>>> +              - ti,pcm5140
+>>>>> +              - ti,pcm6140
+>>>>> +              - ti,pcmd3180
+>>>>> +    then:
+>>>>> +      properties:
+>>>>> +        reg:
+>>>>> +          description:
+>>>>> +            I2C address, in multiple pcmdevices case, all the i2c address
+>>>>> +            aggregate as one Audio Device to support multiple audio slots.
+>>>>> +          maxItems: 4
+>>>>> +          minItems: 1
+>>>>
+>>
+>> You did not respond to any of other comments, therefore I assume you
+>> agree with them 100% and you will implement them fully.
+>>
+>>
+>>>> Drop entire if
+>>> How to convey ti,pcm1690 does not support interrupt, and others
+>>> support if I remove this if
+>>
+>> How? There is no pcm1690 here.
+> How can others know that pcm3140, pcm5140, pcm6140 and pcmd3180
+> Support i2c address from 0x4c to 0x4f, if this if branch was removed.
 
-LGTM, thanks!
+They do not need anything to support any specific I2C address... If ever
+wondering, open some recent bindings and take a look how it is done there.
 
-Reviewed-by: Chengming Zhou <zhouchengming@bytedance.com>
 
-> ---
->  mm/zswap.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/mm/zswap.c b/mm/zswap.c
-> index 8f4a7efc2bdae..00e90b9b5417d 100644
-> --- a/mm/zswap.c
-> +++ b/mm/zswap.c
-> @@ -1448,6 +1448,8 @@ static int zswap_writeback_entry(struct zswap_entry *entry,
->  	if (zswap_rb_search(&tree->rbroot, swp_offset(entry->swpentry)) != entry) {
->  		spin_unlock(&tree->lock);
->  		delete_from_swap_cache(folio);
-> +		folio_unlock(folio);
-> +		folio_put(folio);
->  		return -ENOMEM;
->  	}
->  	spin_unlock(&tree->lock);
+Best regards,
+Krzysztof
+
