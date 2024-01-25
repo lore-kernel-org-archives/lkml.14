@@ -1,101 +1,80 @@
-Received: from smtp-bc0d.mail.infomaniak.ch (smtp-bc0d.mail.infomaniak.ch [45.157.188.13])
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF907171A2
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 08:11:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.157.188.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEE1C17551;
+	Thu, 25 Jan 2024 08:12:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706170305; cv=none; b=ODEI0TxOCDXLbxKUZlWWPGmbDX1p72fWYWHL5hMuoA30jolh+ENZJ4esaMKsuFIUeTtR/OHnxnvonWkjnb/E7bBQeKrpLY1oVBp5WpDMQ86IIxzJGwqjrEHH0+dC6sgcQUQnIoJHftcjtcy6CLeCmeh+6JP6RaelKB6SaNd3/KA=
+	t=1706170334; cv=none; b=Zl3/tusXh2fLCXG+nyFiwzC2/j1i4U7EVxDrPgaFuiQwU/WUC3qmz/oar5LV3vX0CSUXSABRpWBubRIiHShVL7Wc4jOgVC17PcEd/aTN1GejLPmcvvL8oIdrFByGfLFOKBNYHBxtjcMUMGzcuP7vOGXPC9C0LWgUMdbXByM0V6o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706170305; c=relaxed/simple;
-	bh=Wwr/9VY0CuvcH7ywePcK0l0TShBy0NXgTb8eojUbKq0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=llXqT0+dBN5TXUxYonAsmSbcvGCgY9bm+wOx3e3Y/a30k5eHA9i6rCs/WtnTF4rRRr7vwX85E/PTZAqyOLsiJl8CLwE5tCMAo4UoXlMSNvWsXs2zC5eYMX65+iXRQkZ6zdgsyZ8iDdSXpcrFLnwzjkvFtjBmsH4aD01+MK6SaKw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=pschenker.ch; spf=pass smtp.mailfrom=pschenker.ch; dkim=pass (1024-bit key) header.d=pschenker.ch header.i=@pschenker.ch header.b=uVZvbgkF; arc=none smtp.client-ip=45.157.188.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=pschenker.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pschenker.ch
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=pschenker.ch header.i=@pschenker.ch header.b="uVZvbgkF"
-Received: from smtp-4-0001.mail.infomaniak.ch (smtp-4-0001.mail.infomaniak.ch [10.7.10.108])
-	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4TLD0R2qpqzVH7;
-	Thu, 25 Jan 2024 09:05:43 +0100 (CET)
-Received: from unknown by smtp-4-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4TLD0P73LMzny1;
-	Thu, 25 Jan 2024 09:05:41 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=pschenker.ch;
-	s=20220412; t=1706169943;
-	bh=Wwr/9VY0CuvcH7ywePcK0l0TShBy0NXgTb8eojUbKq0=;
-	h=From:To:Cc:Subject:Date:From;
-	b=uVZvbgkFPM2U+jrm09GDGJPALEzxJtSZhEup77eEx1CuQCjnL/ixkXrZyU+8t1SPU
-	 WMfh3qyG5ZUBsRRj86M/x63r/atchTEeOhMyuylJdeUhK1mYqStoq9Uk3t/pXIWFwN
-	 cut8XDiSo8CIE97PLUgXD8XH/ZSpgJD4mw5w+ilI=
-From: Philippe Schenker <dev@pschenker.ch>
-To: netdev@vger.kernel.org
-Cc: Conor Dooley <conor+dt@kernel.org>,
-	devicetree@vger.kernel.org,
-	Marek Vasut <marex@denx.de>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Jakub Kicinski <kuba@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	Rob Herring <robh+dt@kernel.org>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Woojung Huh <woojung.huh@microchip.com>,
-	UNGLinuxDriver@microchip.com,
-	Eric Dumazet <edumazet@google.com>,
-	stefan.portmann@impulsing.ch,
-	"David S . Miller" <davem@davemloft.net>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Philippe Schenker <philippe.schenker@impulsing.ch>,
-	Conor Dooley <conor.dooley@microchip.com>
-Subject: [PATCH net-next v2 1/2] dt-bindings: net: dsa: Add KSZ8567 switch support
-Date: Thu, 25 Jan 2024 09:05:03 +0100
-Message-Id: <20240125080504.62061-1-dev@pschenker.ch>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1706170334; c=relaxed/simple;
+	bh=I2fHAq42LqYmEoDLvPKCloJ+PeKaM0SJ2tT5lbcL5YM=;
+	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=Xmiy3Y86tx/o8LMa3WHf8u8poptSuTAR0QJxvaSzCnz4JPXVocn5KD8cJ/N7Y74BCoBiAtRDcr6oE7hgPcOqwwkFbE24QlX0FuSBXCFDyL729azdULS4ymmS3C7DAt/2SBOqAnwdagy+UvmUUcuxetQQ1MkdJDSalZuOm4toAmE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4TLD6p2YgGzNlXl;
+	Thu, 25 Jan 2024 16:11:14 +0800 (CST)
+Received: from kwepemm600005.china.huawei.com (unknown [7.193.23.191])
+	by mail.maildlp.com (Postfix) with ESMTPS id 29CAC18007D;
+	Thu, 25 Jan 2024 16:12:08 +0800 (CST)
+Received: from [10.67.121.110] (10.67.121.110) by
+ kwepemm600005.china.huawei.com (7.193.23.191) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Thu, 25 Jan 2024 16:12:07 +0800
+Subject: Re: [PATCH 0/3] add debugfs to hisilicon migration driver
+To: <alex.williamson@redhat.com>, <jgg@nvidia.com>,
+	<shameerali.kolothum.thodi@huawei.com>, <jonathan.cameron@huawei.com>
+CC: <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linuxarm@openeuler.org>
+References: <20240125075525.42168-1-liulongfang@huawei.com>
+From: liulongfang <liulongfang@huawei.com>
+Message-ID: <ca04c04f-7e5e-1365-5eeb-74f22dfe8793@huawei.com>
+Date: Thu, 25 Jan 2024 16:12:06 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Infomaniak-Routing: alpha
+In-Reply-To: <20240125075525.42168-1-liulongfang@huawei.com>
+Content-Type: text/plain; charset="gbk"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemm600005.china.huawei.com (7.193.23.191)
 
-From: Philippe Schenker <philippe.schenker@impulsing.ch>
+On 2024/1/25 15:55, Longfang Liu wrote:
+> Add a debugfs function to the hisilicon migration driver in VFIO to
+> provide intermediate state values and data during device migration.
+> 
+> When the execution of live migration fails, the user can view the
+> status and data during the migration process separately from the
+> source and the destination, which is convenient for users to analyze
+> and locate problems.
+> 
+> Longfang Liu (3):
+>   hisi_acc_vfio_pci: extract public functions for container_of
 
-This commit adds the dt-binding for KSZ8567, a robust 7-port
-Ethernet switch. The KSZ8567 features two RGMII/MII/RMII interfaces,
-each capable of gigabit speeds, complemented by five 10/100 Mbps
-MAC/PHYs.
 
-This binding is necessary to set specific capabilities for this switch
-chip that are necessary due to the ksz dsa driver only accepting
-specific chip ids.
-The KSZ8567 is very similar to KSZ9567 however only containing 100 Mbps
-phys on its downstream ports.
+This patch was previously reviewed and added Reviewed-by: Jason Gunthorpe.
 
-Signed-off-by: Philippe Schenker <philippe.schenker@impulsing.ch>
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
+As the first version of this set of patches, I removed it and sent it again.
 
----
+Thanks.
 
-Changes in v2:
-- Describe in commit message why this is necessary
+Longfang.
 
- Documentation/devicetree/bindings/net/dsa/microchip,ksz.yaml | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Documentation/devicetree/bindings/net/dsa/microchip,ksz.yaml b/Documentation/devicetree/bindings/net/dsa/microchip,ksz.yaml
-index c963dc09e8e1..52acc15ebcbf 100644
---- a/Documentation/devicetree/bindings/net/dsa/microchip,ksz.yaml
-+++ b/Documentation/devicetree/bindings/net/dsa/microchip,ksz.yaml
-@@ -31,6 +31,7 @@ properties:
-       - microchip,ksz9893
-       - microchip,ksz9563
-       - microchip,ksz8563
-+      - microchip,ksz8567
- 
-   reset-gpios:
-     description:
--- 
-2.34.1
-
+>   hisi_acc_vfio_pci: register debugfs for hisilicon migration driver
+>   Documentation: add debugfs description for hisi migration
+> 
+>  .../ABI/testing/debugfs-hisi-migration        |  34 +++
+>  MAINTAINERS                                   |   1 +
+>  .../vfio/pci/hisilicon/hisi_acc_vfio_pci.c    | 211 +++++++++++++++++-
+>  .../vfio/pci/hisilicon/hisi_acc_vfio_pci.h    |   5 +
+>  4 files changed, 241 insertions(+), 10 deletions(-)
+>  create mode 100644 Documentation/ABI/testing/debugfs-hisi-migration
+> 
