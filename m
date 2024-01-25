@@ -1,111 +1,153 @@
-Received: from mail-oa1-f42.google.com (mail-oa1-f42.google.com [209.85.160.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA488A3D
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 01:35:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FD89111AD;
+	Thu, 25 Jan 2024 01:36:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706146548; cv=none; b=DI6xe9kfFHFDLu9t+0f3kgA3vUcj63j6TF6ZsW+YOpBxm5TbD9+dUsDsj/18N10i6jJSvpuSy2NTuSk6bj1YDTbgRFbyeUNo3EejJprD5hmgeDoC9ckea+3/Cc7y0lB8XsieJJGI88EPH9YrhWaqXQia90NPYow3Ao2dKhaYWak=
+	t=1706146564; cv=none; b=S6qXEHFeS+IbXzsBJnIRwySBvrkl30D/je1D+4Nf58uxrxkyZbKpZq7dCxTX4idedsHCBcdzCLGQK46L81V5/RiOEiWCd4JtGyXR+Hj2LqJUCAhgGkkZ2FLmI9ZVs8N1Ps9FPZsxUxiulfCrycxjMi8oh3DlTsLy2xXgWwdZmco=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706146548; c=relaxed/simple;
-	bh=gvS9OR872hMLDwjbJt9LD4SXHkhJWBAYwtl2RkaXhw0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=lhHBu0svqUS1CRE0ciWAl/zJQH5xrG6SMmcSP1ra887aea8Er8pmsatiXWYzQs1T/Y05Oat28xRg/F2EBWGYjk51yu8L/hSmD2TGfWkr5xEdy7b7iCq4iU1LfQc/c+Gn9yJBPJoI0heM1rxaKDnEO+hD8waG1w9LTnHUZqAbYcM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DyVLwgf4; arc=none smtp.client-ip=209.85.160.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1706146564; c=relaxed/simple;
+	bh=mmwtViixHPyN0IeRkwXKJl9Ty56hou9fwhbuIGk8JK4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=i3cSk4DWJDE/uPgIa5mnCCgmOlSJNXAFXAvO/AxMjufj3l3D9zds8BJQNgdHy+4FSSCK3bP+GvXONcd95/fL8uXf2fvRGQ7pBtHCb9ksRgYgX1g4SdTPNw2EB6hUKR/2GZaB1qiZcVpRVUQy58Go/VOv0Wkle2D9V1LsNCcVNhw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Wus4cQzp; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DyVLwgf4"
-Received: by mail-oa1-f42.google.com with SMTP id 586e51a60fabf-210cc863229so3177291fac.0
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 17:35:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706146545; x=1706751345; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mrTPIRFEFJl4D6usMUg96I/YEqaZ4s0DmE7WQLKQltI=;
-        b=DyVLwgf4SMZKgX/HuWJm6AONwqK7BQUHZd2HZkW8dipo+ACRGZfRTofRCbttgFyJYF
-         sLDRl4HEXbFYlTxlmtDN1NpB0+vVGSxDTA7rpKX5xkuvnH8bBuK2zySvaH5IMKeJcofu
-         k2vvr8oThswxENpHeKvnyfRYVjUMzGi02/VCLMqHHCojSGOBeF7z/O5xD7Go9JmzGmbu
-         2s6HbwFUYkBgNvJ3DJNb3kD2ZDL2imgOMRtjNx9gmUR97Y39kpM9uasx7NXz7gdfZeI9
-         Zg6JNGN+faJAY11MveOtv+r4c0zZYieCE4JwwSJHQ+IZAqfP0ypeeNd31s0zJNPeMUii
-         WieA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706146545; x=1706751345;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mrTPIRFEFJl4D6usMUg96I/YEqaZ4s0DmE7WQLKQltI=;
-        b=wZmGNbXyfKi3d10UfFO3HvIOZKoFbE+U9RkvvermOi8LPyWVbdy3lYp4Owb5YxOkHN
-         mHplvlV7deVA8IRluSu+ALqVxkCmvToEBbI74BvejLSI3WfI8mzpkG2rYEibYCkPgc2q
-         cvHjNujF2Ep7XfOaiA1S0E6R63TsrFWK4XTyvHl89aIFyMpiwt0J8k2dv8ah264Awc7E
-         RzaF68JlmQUBRWJONuIXgMA/Nlk9G8P0+P04zatcpAuY98XQ6f3S9LAIJdAgx4ensezr
-         cxYslxtbknNGoEbe7iSrso/vS7C9TDMq/srTzyO3TF5LKOrgPUB35vP8tRjGA3bKOAYe
-         mgKw==
-X-Gm-Message-State: AOJu0Yxa/1TjbaNBB4F/0BO5K0uTd4NsArPLffFiMTKmsHngho3m7NnE
-	ONJnxWDp7Xd+sVUtPNtgFbpkEi39rqcv8E15XZ6rXLFWYTkcABxuEvxYY2tf65k=
-X-Google-Smtp-Source: AGHT+IF3NwE0mZ28Ss+0PVwv8nCKU3mV6Ff3m1ZDji1UuD5XHmoV+07SSc21F/vfqXbluZjjyIrAbA==
-X-Received: by 2002:a05:6870:817:b0:210:d5a5:7d37 with SMTP id fw23-20020a056870081700b00210d5a57d37mr190367oab.22.1706146545100;
-        Wed, 24 Jan 2024 17:35:45 -0800 (PST)
-Received: from localhost ([136.62.192.75])
-        by smtp.gmail.com with ESMTPSA id xa13-20020a0568707f0d00b00210d8274204sm2999081oab.23.2024.01.24.17.35.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jan 2024 17:35:44 -0800 (PST)
-From: Sam Protsenko <semen.protsenko@linaro.org>
-To: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: Tudor Ambarus <tudor.ambarus@linaro.org>,
-	Alim Akhtar <alim.akhtar@samsung.com>,
-	Sylwester Nawrocki <s.nawrocki@samsung.com>,
-	Tomasz Figa <tomasz.figa@gmail.com>,
-	Chanwoo Choi <cw00.choi@samsung.com>,
-	linux-samsung-soc@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-clk@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v2 1/2] spi: dt-bindings: samsung: Add Exynos850 SPI
-Date: Wed, 24 Jan 2024 19:35:42 -0600
-Message-Id: <20240125013543.31067-2-semen.protsenko@linaro.org>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240125013543.31067-1-semen.protsenko@linaro.org>
-References: <20240125013543.31067-1-semen.protsenko@linaro.org>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Wus4cQzp"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40P1XhJC013398;
+	Thu, 25 Jan 2024 01:35:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=D5cxF8vGv2q3m04Eh8Yk7meNcjCOLYUj1AOW87Wzu/I=; b=Wu
+	s4cQzpHH2ZVCjL+eemlkP8JTS3b3nsxdqLXriic3NGCbWTzmAlMSvs4OcnL5LuaA
+	1ro9dycornLMoFB/oCBe+U8NZon8eTUjtKgFbc0ZP35LXxM8AKtjlwx8SasfzgM9
+	PCphXtr6UtkXPdYBsYfzf2PmrnHzVGuQ/sKM2xkGOr2uD86gY80G2bUMDEdcdP4e
+	GKUPdIY01fy7dmD5Qj/epmZqai0J+VrCy5WjMA3NXnhvReN4kbkrhfBhUJqEZf9V
+	IpJjrCvy++aS7k5sNIXJOBlGwpza8f9dUBPF0g4q0+BL4tJKJ9vt/U3D4TjotRem
+	jk6CcUKQcuZCB3ld8YrQ==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vtykwa3p5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 25 Jan 2024 01:35:58 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 40P1ZwNf028039
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 25 Jan 2024 01:35:58 GMT
+Received: from [10.239.132.204] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Wed, 24 Jan
+ 2024 17:35:52 -0800
+Message-ID: <02b8c633-0e49-47a1-8e72-a4d988801d18@quicinc.com>
+Date: Thu, 25 Jan 2024 09:35:50 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: qcom: modify the wrong
+ compatible name
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+CC: <andersson@kernel.org>, <konrad.dybcio@linaro.org>,
+        <linus.walleij@linaro.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kernel@quicinc.com>
+References: <20240124023305.15755-1-quic_tengfan@quicinc.com>
+ <20240124023305.15755-2-quic_tengfan@quicinc.com>
+ <CAA8EJpqkDcqjn-8HrK7=rRe49ycDY6fbNDCKKQOeUpa_EDjFtw@mail.gmail.com>
+ <67e17efa-df15-45f0-9a13-873cbd8f7507@quicinc.com>
+ <CAA8EJprqPg_TJAwm4CyoJH9_uspueVJTgpwYZ-mPykPcrU8BBA@mail.gmail.com>
+From: Tengfei Fan <quic_tengfan@quicinc.com>
+In-Reply-To: <CAA8EJprqPg_TJAwm4CyoJH9_uspueVJTgpwYZ-mPykPcrU8BBA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: T-EouPyxdUBCnC4ZE1TGH4uwHPrkc8j8
+X-Proofpoint-ORIG-GUID: T-EouPyxdUBCnC4ZE1TGH4uwHPrkc8j8
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-01-24_12,2024-01-24_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ adultscore=0 bulkscore=0 phishscore=0 mlxscore=0 malwarescore=0
+ clxscore=1015 mlxlogscore=999 suspectscore=0 impostorscore=0
+ lowpriorityscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2401190000 definitions=main-2401250010
 
-Document samsung,exynos850-spi compatible which will be used on
-Exynos850 SoC. Exynos850 doesn't have ioclk, so only two clocks are
-needed (bus clock and functional SPI clock).
 
-Signed-off-by: Sam Protsenko <semen.protsenko@linaro.org>
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Reviewed-by: Tudor Ambarus <tudor.ambarus@linaro.org>
----
-Changes in v2:
-  - Collected R-b tags
-  - Changed bindings patch title to "spi: dt-bindings: ..."
 
- Documentation/devicetree/bindings/spi/samsung,spi.yaml | 1 +
- 1 file changed, 1 insertion(+)
+On 1/25/2024 9:20 AM, Dmitry Baryshkov wrote:
+> On Thu, 25 Jan 2024 at 03:18, Tengfei Fan <quic_tengfan@quicinc.com> wrote:
+>>
+>>
+>>
+>> On 1/24/2024 11:33 AM, Dmitry Baryshkov wrote:
+>>> On Wed, 24 Jan 2024 at 04:33, Tengfei Fan <quic_tengfan@quicinc.com> wrote:
+>>>>
+>>>> Use right compatible name "qcom,sm4450-tlmm" instead of
+>>>> "qcom,sm4450-pinctrl".
+>>>>
+>>>> Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
+>>>> ---
+>>>>    Documentation/devicetree/bindings/pinctrl/qcom,sm4450-tlmm.yaml | 2 +-
+>>>>    1 file changed, 1 insertion(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sm4450-tlmm.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,sm4450-tlmm.yaml
+>>>> index bb08ca5a1509..bb675c8ec220 100644
+>>>> --- a/Documentation/devicetree/bindings/pinctrl/qcom,sm4450-tlmm.yaml
+>>>> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,sm4450-tlmm.yaml
+>>>> @@ -17,7 +17,7 @@ allOf:
+>>>>
+>>>>    properties:
+>>>>      compatible:
+>>>> -    const: qcom,sm4450-pinctrl
+>>>> +    const: qcom,sm4450-tlmm
+>>>
+>>> Fixes: 7bf8b78f86db ("dt-bindings: pinctrl: qcom: Add SM4450 pinctrl")
+>>>
+>>> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+>>
+>> Thanks Dmitry. I will inside this "Fixes" tage into commit message in
+>> the next patch series.
+> 
+> No need to, unless there are other changes to the patches. Such
+> trailers are picked up automatically.
 
-diff --git a/Documentation/devicetree/bindings/spi/samsung,spi.yaml b/Documentation/devicetree/bindings/spi/samsung,spi.yaml
-index 79da99ca0e53..f71099852653 100644
---- a/Documentation/devicetree/bindings/spi/samsung,spi.yaml
-+++ b/Documentation/devicetree/bindings/spi/samsung,spi.yaml
-@@ -22,6 +22,7 @@ properties:
-           - samsung,s5pv210-spi # for S5PV210 and S5PC110
-           - samsung,exynos4210-spi
-           - samsung,exynos5433-spi
-+          - samsung,exynos850-spi
-           - samsung,exynosautov9-spi
-           - tesla,fsd-spi
-       - const: samsung,exynos7-spi
+Thank you for the heads-up.
+
+> 
+>>
+>>>
+>>>
+>>>>
+>>>>      reg:
+>>>>        maxItems: 1
+>>>> --
+>>>> 2.17.1
+>>>>
+>>>>
+>>>
+>>>
+>>> --
+>>> With best wishes
+>>> Dmitry
+>>
+>> --
+>> Thx and BRs,
+>> Tengfei Fan
+> 
+> 
+> 
+
 -- 
-2.39.2
-
+Thx and BRs,
+Tengfei Fan
