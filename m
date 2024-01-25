@@ -1,112 +1,199 @@
-Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com [209.85.221.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A672818638
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 08:36:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 892FA10A26;
+	Thu, 25 Jan 2024 08:39:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706171787; cv=none; b=kW4ed5vbtmMy+qc0fhabSMEED1Wa633nZiZ5lr1cYYGzvEWmv/rGav9i5CKjTIJZ78wiGN5XMjUAkw4423RXhIPVzGDxSqL8YvAp8xMfIyToQYYIaaorOP36Z505VuCyJk5BR9S+cLqBFg/W1IkVKHHUrmfnwVeeAOJVtAYK3v4=
+	t=1706171991; cv=none; b=WFtwsGur654Ez3HPL/EFDEPnXRhZWWKXDGCNH3yyS1oz1uFqUgY10EHldhfrYZRwi8xA1bgawgegsK9GLUg6BesozUzrL9YMLt09NjWhfujwE0j6uCjm498mLYi1dn2BNp2OGcTz24vYUCl6qyyZk4GvglHF0FyIu2nyuO6rMo8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706171787; c=relaxed/simple;
-	bh=qooEtGvBQ+blKW5h4z3pxUBP8ioX7XV+ZmoVKK10Hxo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=C/Au9sh8/q1EUhxApO0Pco6iw0HFqUwjSWBbuKao5APa2E7F7fdTgG1BPGtxm9FOGlz63uedqElexJXSofeR4HR5P556co3kiQpMkyWnXtV5A2HHnmr28ngSmaWnNaO26WZStlXSr+cXXcflunVm/VIjOiL6+ClGW1R7HEdMWdo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=P12TEnux; arc=none smtp.client-ip=209.85.221.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1706171991; c=relaxed/simple;
+	bh=RXkzfLL2N29dPptHVKrmwqbEGL7heXtbJrtQhxkKk0g=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ndY6KCGN1Nfyy6lU7E1ToAzA4heGBwvh8+q7mjxrt8RSb2ZrZv0VJ+AdcNLR0NL3ha2Qw5doA+ydHmuntZSUU4oIYaJDNf3T5U/p/42xOc0wD+x2ByhV7o2QRU5rq7lGTppOAtfaG/a6/AMGheo2XhCT+uGORObnqlN2yMg6X44=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UnCs+A+E; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="P12TEnux"
-Received: by mail-vk1-f175.google.com with SMTP id 71dfb90a1353d-4bd45397c17so538124e0c.2
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 00:36:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1706171784; x=1706776584; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Yfrj1tSmrxaEJmK1wFt8ZyU62zaatrSaUH2xIk0e35c=;
-        b=P12TEnuxcH1nAFTrJfddf97upD3yAMsK2NKhOWNgbNL3XvAH7vlnKD+SPYQy9kTk0F
-         fxfh92VBVw8MUiHQ+KAKBX79LCQZzPnFDFk4ugB+r6oyoXGm6OWhJRJogXSK4Fo55xnP
-         xLZwcfO981SITTNErLpBQrANOfBvIXpN9uibpgCIwUPopqzjnx93m1y57tcW2q2ony2m
-         4rqTaNkUXA1m+SaihTlVbMmb6KqsglaV34zxQqrz4vybOfn6Ush4z7us2IpDzYZL6QpF
-         5KxL0nPj+4UGUVlA60y3dX4GE8WZ2WD3NAqVXgVwoZzurxRVcGv4Kg1QSjZB/4O0MmrA
-         fNVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706171784; x=1706776584;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Yfrj1tSmrxaEJmK1wFt8ZyU62zaatrSaUH2xIk0e35c=;
-        b=IWdHtg6KgeVwFTjtvy+qJt+0BdST20rS2JN8R1OGwqppB2NrfA2NSlt9tn9SVqLKr5
-         YZ7NmRzaIgs8ejgF+TDd5n9mOx4KT6/S60yZu8kEnN/WNX5MeIMtvS+reCXXFg+UH726
-         QwIwmEK/PJPdGvvARhcaFBrgLDkVTncPuVdTf2H6AbJljaERYVhEBAin9btzBBq3G3Pp
-         UlppSdyZuflzvYDC9grkU5QPV1cJMUq6108tLLmI3ZHDX++P9TjZxInb52iMefpKabcl
-         rvJ6xndBlDUm7uNfos0nR+/1pP/XbDfREUTRyt9QR5ljE6l+j9ZC7qEP0BNLxk6eCffX
-         TDCA==
-X-Gm-Message-State: AOJu0Yx8jgImTpwhBxcYWmgbZgeOFZihhdM5OhrHFUfiy75g5nRQ4H5g
-	jThnvgYHwAwMQshDI6kvRR7L3UZSQrtlZOAuZFLblNk92uaZrStjFUWKYSBWrpvmB7hlkbBI98e
-	A8TQqE6GozoBORv90kqjnzZAedl+6NyVhYY3d+bboyXw7aOvl
-X-Google-Smtp-Source: AGHT+IGjDrSN9NH9Q8W6iSCVre2BCEXpLwCYGPA1USwtRfIaGkgUmdH12KfPvs9ADyh4WxKD9T9WUXSiryfPlu5NEsE=
-X-Received: by 2002:a05:6122:148e:b0:4bd:5edc:26c8 with SMTP id
- z14-20020a056122148e00b004bd5edc26c8mr290683vkp.32.1706171784583; Thu, 25 Jan
- 2024 00:36:24 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UnCs+A+E"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAC2BC433C7;
+	Thu, 25 Jan 2024 08:39:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706171991;
+	bh=RXkzfLL2N29dPptHVKrmwqbEGL7heXtbJrtQhxkKk0g=;
+	h=From:To:Cc:Subject:Date:From;
+	b=UnCs+A+EpFG9LpwtaYIUgkbVwmlBBkZcIrSEoSynknHHHhNVrw2zZ9nKGLEnieHJi
+	 /KXqOFBzs+OougVY0dzDqWU8hxGYOlH8Fb0ZTCgF0x2K1Jnib7dcp1ELeeQKtewM9Q
+	 Zkmv3gkxv4WMPF3oCUAVJoF3Hllm4b/RPlBVL6z5f54aIuhlrKEMoIsfZTbds70MNT
+	 OCyqxrpOfN4qWQi1IK1ewK3swEYqDtYZzoTgGeDal72PA7FGqgEN5bDlI+uz7d+bmC
+	 iWNK74Dh/uMjI2PKeVQbOKotojpwFrLaD8Zw+UGH98QLZT+toU0adIdLAHWX/nLJtD
+	 x2owy8+O+1i1A==
+From: Lee Jones <lee@kernel.org>
+To: lee@kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Petr Mladek <pmladek@suse.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Crutcher Dunnavant <crutcher+kernel@datastacks.com>,
+	Juergen Quade <quade@hsnr.de>
+Subject: [PATCH 1/1] lib/vsprintf: Implement ssprintf() to catch truncated strings
+Date: Thu, 25 Jan 2024 08:39:21 +0000
+Message-ID: <20240125083921.1312709-1-lee@kernel.org>
+X-Mailer: git-send-email 2.43.0.429.g432eaa2c6b-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240125081601.118051-1-krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20240125081601.118051-1-krzysztof.kozlowski@linaro.org>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Thu, 25 Jan 2024 09:36:13 +0100
-Message-ID: <CAMRc=MesG1nYSxx0osmQEEXCvs-6B4s4=TFYW5wD8pOXpV+OcQ@mail.gmail.com>
-Subject: Re: [PATCH 1/3] gpiolib: add gpiod_to_gpio_device() stub for !GPIOLIB
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Peter Rosin <peda@axentia.se>, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	stable@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jan 25, 2024 at 9:16=E2=80=AFAM Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
->
-> Add empty stub of gpiod_to_gpio_device() when GPIOLIB is not enabled.
->
-> Cc: <stable@vger.kernel.org>
-> Fixes: 370232d096e3 ("gpiolib: provide gpiod_to_gpio_device()")
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
->
-> ---
->
-> Cc: Philipp Zabel <p.zabel@pengutronix.de>
-> ---
->  include/linux/gpio/driver.h | 6 ++++++
->  1 file changed, 6 insertions(+)
->
-> diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
-> index 9a5c6c76e653..012797e7106d 100644
-> --- a/include/linux/gpio/driver.h
-> +++ b/include/linux/gpio/driver.h
-> @@ -819,6 +819,12 @@ static inline struct gpio_chip *gpiod_to_chip(const =
-struct gpio_desc *desc)
->         return ERR_PTR(-ENODEV);
->  }
->
-> +static inline struct gpio_device *gpiod_to_gpio_device(struct gpio_desc =
-*desc)
-> +{
-> +       WARN_ON(1);
-> +       return ERR_PTR(-ENODEV);
-> +}
-> +
->  static inline int gpiochip_lock_as_irq(struct gpio_chip *gc,
->                                        unsigned int offset)
->  {
-> --
-> 2.34.1
->
+There is an ongoing effort to replace the use of {v}snprintf() variants
+with safer alternatives - for a more in depth view, see Jon's write-up
+on LWN [0] and/or Alex's on the Kernel Self Protection Project [1].
 
-Why is this needed? Users of gpio/driver.h should select GPIOLIB.
+Whist executing the task, it quickly became apparent that the initial
+thought of simply s/snprintf/scnprintf/ wasn't going to be adequate for
+a number of cases.  Specifically ones where the caller needs to know
+whether the given string ends up being truncated.  This is where
+ssprintf() [based on similar semantics of strscpy()] comes in, since it
+takes the best parts of both of the aforementioned variants.  It has the
+testability of truncation of snprintf() and returns the number of Bytes
+*actually* written, similar to scnprintf(), making it a very programmer
+friendly alternative.
 
-Bart
+Here's some examples to show the differences:
+
+  Success: No truncation - all 9 Bytes successfully written to the buffer
+
+    ret = snprintf (buf, 10, "%s", "123456789");  // ret = 9
+    ret = scnprintf(buf, 10, "%s", "123456789");  // ret = 9
+    ret = ssprintf (buf, 10, "%s", "123456789");  // ret = 9
+
+  Failure: Truncation - only 9 of 10 Bytes written; '-' is truncated
+
+    ret = snprintf (buf, 10, "%s", "123456789-"); // ret = 10
+
+      Reports: "10 Bytes would have been written if buf was large enough"
+      Issue: Programmers need to know/remember to check ret against "10"
+
+    ret = scnprintf(buf, 10, "%s", "123456789-"); // ret = 9
+
+      Reports: "9 Bytes actually written"
+      Issue: Returns 9 on success AND failure (see above)
+
+    ret = ssprintf (buf, 10, "%s", "123456789-"); // ret = -E2BIG
+
+      Reports: "Data provided is too large to fit in the buffer"
+      Issue: No tangible impact: No way to tell how much data was lost
+
+[0] https://lwn.net/Articles/69419/
+[1] https://github.com/KSPP/linux/issues/105
+Signed-off-by: Lee Jones <lee@kernel.org>
+---
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Petr Mladek <pmladek@suse.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc: Sergey Senozhatsky <senozhatsky@chromium.org>
+Cc: Crutcher Dunnavant <crutcher+kernel@datastacks.com>
+Cc: Juergen Quade <quade@hsnr.de>
+
+ include/linux/sprintf.h |  2 ++
+ lib/vsprintf.c          | 58 +++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 60 insertions(+)
+
+diff --git a/include/linux/sprintf.h b/include/linux/sprintf.h
+index 33dcbec719254..2a3db6285492a 100644
+--- a/include/linux/sprintf.h
++++ b/include/linux/sprintf.h
+@@ -13,6 +13,8 @@ __printf(3, 4) int snprintf(char *buf, size_t size, const char *fmt, ...);
+ __printf(3, 0) int vsnprintf(char *buf, size_t size, const char *fmt, va_list args);
+ __printf(3, 4) int scnprintf(char *buf, size_t size, const char *fmt, ...);
+ __printf(3, 0) int vscnprintf(char *buf, size_t size, const char *fmt, va_list args);
++__printf(3, 4) int ssprintf(char *buf, size_t size, const char *fmt, ...);
++__printf(3, 0) int vssprintf(char *buf, size_t size, const char *fmt, va_list args);
+ __printf(2, 3) __malloc char *kasprintf(gfp_t gfp, const char *fmt, ...);
+ __printf(2, 0) __malloc char *kvasprintf(gfp_t gfp, const char *fmt, va_list args);
+ __printf(2, 0) const char *kvasprintf_const(gfp_t gfp, const char *fmt, va_list args);
+diff --git a/lib/vsprintf.c b/lib/vsprintf.c
+index 552738f14275a..01a1060ca0b0d 100644
+--- a/lib/vsprintf.c
++++ b/lib/vsprintf.c
+@@ -2936,6 +2936,40 @@ int vscnprintf(char *buf, size_t size, const char *fmt, va_list args)
+ }
+ EXPORT_SYMBOL(vscnprintf);
+ 
++/**
++ * vssprintf - Format a string and place it in a buffer
++ * @buf: The buffer to place the result into
++ * @size: The size of the buffer, including the trailing null space
++ * @fmt: The format string to use
++ * @args: Arguments for the format string
++ *
++ * The return value is the number of characters which have been written into
++ * the @buf not including the trailing '\0' or -E2BIG if the string was
++ * truncated. If @size is == 0 the function returns 0.
++ *
++ * If you're not already dealing with a va_list consider using ssprintf().
++ *
++ * See the vsnprintf() documentation for format string extensions over C99.
++ */
++int vssprintf(char *buf, size_t size, const char *fmt, va_list args)
++{
++	int i;
++
++	if (unlikely(!size))
++		return 0;
++
++	i = vsnprintf(buf, size, fmt, args);
++
++	if (unlikely(i >= size))
++		return -E2BIG;
++
++	if (likely(i < size))
++		return i;
++
++	return size - 1;
++}
++EXPORT_SYMBOL(vssprintf);
++
+ /**
+  * snprintf - Format a string and place it in a buffer
+  * @buf: The buffer to place the result into
+@@ -2987,6 +3021,30 @@ int scnprintf(char *buf, size_t size, const char *fmt, ...)
+ }
+ EXPORT_SYMBOL(scnprintf);
+ 
++/**
++ * ssprintf - Format a string and place it in a buffer
++ * @buf: The buffer to place the result into
++ * @size: The size of the buffer, including the trailing null space
++ * @fmt: The format string to use
++ * @...: Arguments for the format string
++ *
++ * The return value is the number of characters written into @buf not including
++ * the trailing '\0' or -E2BIG if the string was truncated. If @size is == 0
++ * the function returns 0.
++ */
++int ssprintf(char *buf, size_t size, const char *fmt, ...)
++{
++	va_list args;
++	int i;
++
++	va_start(args, fmt);
++	i = vssprintf(buf, size, fmt, args);
++	va_end(args);
++
++	return i;
++}
++EXPORT_SYMBOL(ssprintf);
++
+ /**
+  * vsprintf - Format a string and place it in a buffer
+  * @buf: The buffer to place the result into
+-- 
+2.43.0.429.g432eaa2c6b-goog
+
