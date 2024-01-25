@@ -1,155 +1,120 @@
-Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E7E06340E;
-	Thu, 25 Jan 2024 14:34:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0669A6E2D0;
+	Thu, 25 Jan 2024 14:34:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.115
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706193263; cv=none; b=WxAK+zfgQ9/7kUfb1UAiPxLR4L110H7X9Fyr6bB7cykK7DDYKFit4l5T4EpGS5HdIKldePBNfM7pG9nxrgo5d8xIjKeAqAGV/60Q2A+Yo0DAXBLJMHVpGw+gXPV7/3n80/UOW0tbuy7DA2e/o3kOtXnEd9XWjyvtUq7a3qbF8yM=
+	t=1706193267; cv=none; b=JZ9YUbgUxGe5MI9STRcHpC3R+TeQK1/weoykaWX04QWNawaACaxKk8S0Ge5ofvCsJM/rdRoe7Xy0M4rsdfP4NevmFLFgXHvrXnhCJjVjp7nUgvetH7zJCScebvT+rXUz3jzQ6cqO6P6HlHBbh961v02skTwXUvWqg1+75Mf4sIM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706193263; c=relaxed/simple;
-	bh=sjdoDcDKRSkLx4UDwlfMTbTX9nBFU/s/iUda1EdkDKI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=qJIJSZZUEJHZTY8VFpnEjAk5ckf87uk87Gjro66U01/dzO+ooA6SJuEE8F+sRaef1WiAf1SJBViT+n0SBygWbQ8tdEI1m9eee1u2PUaR4MCQ30kyPEFvHGO4uDpOsXuwy0UCTOywWfVlsLZt4D+AeZoxqN1c7cy54C7sGMkKgiw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=S3i9JLAF; arc=none smtp.client-ip=198.47.19.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1706193267; c=relaxed/simple;
+	bh=Vd0x1kY54QPZtj97cg5M3RjCoccZzQjOZTpbb5617AI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FAa+X+sUvKdhgwulp16miSqGoagGETelPa+XLWP/i+TxgMVHT8DQawpRDHn17mLpcPx+/hWG9x6Uxgz8VbEG5TfNF8SUDsS/5HVoLPykEZD/80LZn9D6/+XiSS5N5ZAngrN1fW1YOHSH1S+dk4vNVz97VRG99qI8BnIVpwOMTvw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VrhpNdaS; arc=none smtp.client-ip=192.55.52.115
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="S3i9JLAF"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 40PEXsZn003349;
-	Thu, 25 Jan 2024 08:33:54 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1706193234;
-	bh=D3et9L4RHHyPosS3VDVQzoYncrvITyHk1dVQbc6iud8=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=S3i9JLAFv/yOUIvqQltF0KZwma/RCvGqNExNYIpZXMRkFerkygu+XtgdcXNRAe/E+
-	 wMDR0ducWngXiGpABRGbxXH4nLQRLmbwhH60TRobQknis7fiOEVs5mHMh84B029fzV
-	 47V1e2KNcoFTOsmivniaScYuG/FFSc8Dt+hDFr9k=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 40PEXsPY129184
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 25 Jan 2024 08:33:54 -0600
-Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 25
- Jan 2024 08:33:54 -0600
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 25 Jan 2024 08:33:54 -0600
-Received: from [10.249.42.149] ([10.249.42.149])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 40PEXr4k008480;
-	Thu, 25 Jan 2024 08:33:53 -0600
-Message-ID: <9a5f017c-530c-482b-9cbf-a07281e92589@ti.com>
-Date: Thu, 25 Jan 2024 08:33:53 -0600
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VrhpNdaS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706193266; x=1737729266;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Vd0x1kY54QPZtj97cg5M3RjCoccZzQjOZTpbb5617AI=;
+  b=VrhpNdaSorJ8OHKvOJVZajF8hNHN/HM/2UDqEcSYEp7FsnaznTDXiFEG
+   Pqk5rFV2k3m52g8pq2Pgu6e2fC+MIiTgc/jg6cOecJCIdlBAK53BPJUyy
+   NzMBEwX2InpxHwlVTQV8ygLxMwoPoIcDqGZAf8dvjSPmf5l0WPuQLdiHb
+   R0U6aLLW3DKl0dCaGXxB0bIDkEWOvYhdhVRQ9T+GhqDHw8BVoVcgprVuv
+   9xgXYs1D+Cc6bOnq9HREwdkLepr/dLvcitNVd/TsxT2LEbXMuuPSRlIWl
+   EYnLdlFU5/hVQFUwT6Xu8v9wIWHSUwcspgMngyPEJOWEvheYQbi04s/zs
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="401827557"
+X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
+   d="scan'208";a="401827557"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2024 06:34:09 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
+   d="scan'208";a="2438122"
+Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
+  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2024 06:34:08 -0800
+Date: Thu, 25 Jan 2024 06:35:33 -0800
+From: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: x86@kernel.org, Andreas Herrmann <aherrmann@suse.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Chen Yu <yu.c.chen@intel.com>, Len Brown <len.brown@intel.com>,
+	Radu Rendec <rrendec@redhat.com>,
+	Pierre Gondois <Pierre.Gondois@arm.com>, Pu Wen <puwen@hygon.cn>,
+	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	Will Deacon <will@kernel.org>, Zhang Rui <rui.zhang@intel.com>,
+	Huang Ying <ying.huang@intel.com>,
+	"Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+	stable@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v4 1/4] cacheinfo: Check for null last-level cache info
+Message-ID: <20240125143533.GA16226@ranerica-svr.sc.intel.com>
+References: <20231212222519.12834-1-ricardo.neri-calderon@linux.intel.com>
+ <20231212222519.12834-2-ricardo.neri-calderon@linux.intel.com>
+ <20240125111544.xhiomitgeazxm7cw@bogus>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 04/17] dt-bindings: soc: mobileye: add EyeQ5 OLB system
- controller
-To: =?UTF-8?Q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>,
-        Krzysztof
- Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Rob Herring <robh@kernel.org>
-CC: Gregory CLEMENT <gregory.clement@bootlin.com>,
-        Michael Turquette
-	<mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Krzysztof
- Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Linus
- Walleij <linus.walleij@linaro.org>,
-        =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?=
-	<rafal@milecki.pl>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Vladimir
- Kondratiev <vladimir.kondratiev@mobileye.com>,
-        <linux-mips@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Thomas Petazzoni
-	<thomas.petazzoni@bootlin.com>,
-        Tawfik Bayouk <tawfik.bayouk@mobileye.com>,
-        <linux-gpio@vger.kernel.org>
-References: <20240123-mbly-clk-v3-0-392b010b8281@bootlin.com>
- <20240123-mbly-clk-v3-4-392b010b8281@bootlin.com>
- <20240124151405.GA930997-robh@kernel.org>
- <dd7e723d-3c4c-4edf-afc2-51db9a074efa@linaro.org>
- <CYNQHXOZ73YR.3QODFI2X08KC6@bootlin.com>
-Content-Language: en-US
-From: Andrew Davis <afd@ti.com>
-In-Reply-To: <CYNQHXOZ73YR.3QODFI2X08KC6@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240125111544.xhiomitgeazxm7cw@bogus>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 
-On 1/25/24 5:01 AM, Théo Lebrun wrote:
-> Hello,
+On Thu, Jan 25, 2024 at 11:15:44AM +0000, Sudeep Holla wrote:
+> On Tue, Dec 12, 2023 at 02:25:16PM -0800, Ricardo Neri wrote:
+> > Before determining the validity of the last-level cache info, ensure that
+> > it has been allocated. Simply checking for non-zero cache_leaves() is not
+> > sufficient, as some architectures (e.g., Intel processors) have non-zero
+> > cache_leaves() before allocation.
+> > 
+> > Dereferencing NULL cacheinfo can occur in update_per_cpu_data_slice_size().
+> > This function iterates over all online CPUs. However, a CPU may have come
+> > online recently, but its cacheinfo may not have been allocated yet.
+> > 
+> > Cc: Andreas Herrmann <aherrmann@suse.com>
+> > Cc: Catalin Marinas <catalin.marinas@arm.com>
+> > Cc: Chen Yu <yu.c.chen@intel.com>
+> > Cc: Huang Ying <ying.huang@intel.com>
+> > Cc: Len Brown <len.brown@intel.com>
+> > Cc: Radu Rendec <rrendec@redhat.com>
+> > Cc: Pierre Gondois <Pierre.Gondois@arm.com>
+> > Cc: Pu Wen <puwen@hygon.cn>
+> > Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+> > Cc: Sudeep Holla <sudeep.holla@arm.com>
 > 
-> On Thu Jan 25, 2024 at 8:51 AM CET, Krzysztof Kozlowski wrote:
->> On 24/01/2024 16:14, Rob Herring wrote:
->>>> +
->>>> +      pinctrl-b {
->>>> +        compatible = "mobileye,eyeq5-b-pinctrl";
->>>> +        #pinctrl-cells = <1>;
->>>> +      };
->>>> +    };
->>>
->>> This can all be simplified to:
->>>
->>> system-controller@e00000 {
->>>      compatible = "mobileye,eyeq5-olb", "syscon";
->>>      reg = <0xe00000 0x400>;
->>>      #reset-cells = <2>;
->>>      #clock-cells = <1>;
->>>      clocks = <&xtal>;
->>>      clock-names = "ref";
->>>
->>>      pins { ... };
->>> };
->>>
->>> There is no need for sub nodes unless you have reusable blocks or each
->>> block has its own resources in DT.
->>
->> Yes, however I believe there should be resources here: each subnode
->> should get its address space. This is a bit tied to implementation,
->> which currently assumes "everyone can fiddle with everything" in this block.
->>
->> Theo, can you draw memory map?
+> If you respin, you can address the below minor nit. I am fine as is as
+> well.
 > 
-> It would be a mess. I've counted things up. The first 147 registers are
-> used in this 0x400 block. There are 31 individual blocks, with 7
-> registers unused (holes to align next block).
-> 
-> Functions are reset, clocks, LBIST, MBIST, DDR control, GPIO,
-> accelerator control, CPU entrypoint, PDTrace, IRQs, chip info & ID
-> stuff, control registers for PCIe / eMMC / Eth / SGMII / DMA / etc.
-> 
-> Some will never get used from Linux, others might. Maybe a moderate
-> approach would be to create ressources for major blocks and make it
-> evolve organically, without imposing that all uses lead to a new
-> ressource creation.
-> 
+> Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
 
-That is usually how nodes are added to DT. If you modeled this
-system-controller space as a "simple-bus" instead of a "syscon"
-device, you could add nodes as you implement them. Rather than
-all at once as you have to by treating this space as one large
-blob device.
+Thank you for your review Sudeep!
 
-Andrew
+> 
+> [...]
+> 
+> > diff --git a/drivers/base/cacheinfo.c b/drivers/base/cacheinfo.c
+> > index f1e79263fe61..967c5cf3fb1d 100644
+> > --- a/drivers/base/cacheinfo.c
+> > +++ b/drivers/base/cacheinfo.c
+> > @@ -61,6 +61,9 @@ bool last_level_cache_is_valid(unsigned int cpu)
+> >  	if (!cache_leaves(cpu))
+> >  		return false;
+> >  
+> > +	if (!per_cpu_cacheinfo(cpu))
+> > +		return false;
+> > +
+> 
+> [nit] You can even combine this with above if condition.
 
-> Thanks,
-> 
-> --
-> Théo Lebrun, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
-> 
+Sure, I can take care of this if a new version is needed as per feedback
+from the x86 maintainers.
