@@ -1,161 +1,158 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f44.google.com (mail-oo1-f44.google.com [209.85.161.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A051717753;
-	Thu, 25 Jan 2024 08:30:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DB9EE54C
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 08:30:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706171415; cv=none; b=eVCZlTVO3cGg4hxpktIdrGqygsw8xQLj9zWCB8dRkmBMc2FMyCWdAPesS8ZZ78fmrc/V2MEA2aGwNOdo3J7xXv7yOcsulCa2eYoh78tz3uT3aO0B7gJztzEQz6ju38BcllYQGvWxZ62xoa0/YbVutiZaHBbGj9FjwLQIt3nEqNo=
+	t=1706171441; cv=none; b=m5yIsJp9/LIPt5G5cBHrUXItC+p6film3kK6rWTcYPIsRNtGdLoVQ7Ou+0n45i5eukxfwTNdrlmL1GNXric2D/lDF0pYbGp6ygVCUlY0/0feT1sLo7snMnA+3URRjr4mcfLKFjDp7uNBKShj6EwBjNeztelZ1rUKDREtUclln6Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706171415; c=relaxed/simple;
-	bh=3XBWo2N7vPeYYFH5hJHHJ4R4cDBYgvyARsugBQmHXL4=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=ak7Ag7TCsVNgioU/Q7C3smx3VIn3Ab3rOgE2k+CzFchRHuMohEmf6fhv3jw4LyBaIzToK8rTETZGLGbl+wEVwVLOzVGN/lPBnJZ5JWF3ZLADWoP5A+tCsAs4yfBNuLalIrs1ltsNExnR8AtqlXjEK7qR8LWf4LZLxG1oJKkKtKc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=dSXT5p3h; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1706171441; c=relaxed/simple;
+	bh=l44oJ0CyULOdaERxz736Gu+dFcSUOIqqwHFZRrU8ers=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hO6pcGC/Cx+iGxCv0s07x7+qw23K3A6i1Ck1qvI+T5yz2ZjEVe0VzydRIK7Ea5EzU+3fDQu7ODiaDX0KTi1vY6yYAHupb9AKF1jK15nMp5Q9okUIfqhud9n1qgSQ25xIHEm3+pbpczOV/4RZubXttjZJzegxkffrpA+GUrbu9pg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=SxjCDQqs; arc=none smtp.client-ip=209.85.161.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="dSXT5p3h"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 40P7Ws7f020363;
-	Thu, 25 Jan 2024 08:30:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- subject : to : cc : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=pp1;
- bh=jSTDG7pZUdM5R9gkBMPp9G3Ps4anJqutG/WR/2lOnuY=;
- b=dSXT5p3hpWogxlGVlcqhXejmTsB0A8TpuQr7Sc3QwCyPtqesJcJJe9ssK0KkYR1JwyA2
- l4MqVV9WxUYB/Lc0Yu6NU/njqocM9+XwRWg7kkrHl9IZ5MpaV4Uh/YAN6XM+5csSfKUz
- vnf3jJUEkoTBPAxHyEfPugyuAWYy8GHnpSYLqiF3uugJoZoQU/YqUVNKRmmYTESQXnuU
- 85LZnHcPtes4vCicYTM/EXRLMFOkuNik/AUPqGR9xzAXnfg4bBbi6cIMl4LXof+i0FA3
- DBsm0UPnU2c5Xja7UCIy0L1YHkTr5p4wPzDvo22HDuD1fNBqj63/boaFSZgRCl3Dh4Im DA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vukbj18ef-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 25 Jan 2024 08:30:07 +0000
-Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 40P85cuv022522;
-	Thu, 25 Jan 2024 08:30:06 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vukbj183q-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 25 Jan 2024 08:30:06 +0000
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 40P527pn010854;
-	Thu, 25 Jan 2024 08:27:03 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3vrrw03c88-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 25 Jan 2024 08:27:03 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 40P8R0G556754506
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 25 Jan 2024 08:27:00 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8897220043;
-	Thu, 25 Jan 2024 08:27:00 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0F95F20040;
-	Thu, 25 Jan 2024 08:27:00 +0000 (GMT)
-Received: from [9.152.224.38] (unknown [9.152.224.38])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 25 Jan 2024 08:27:00 +0000 (GMT)
-Message-ID: <8090bb34-1b70-43ea-ae13-df5d9a5eb761@linux.ibm.com>
-Date: Thu, 25 Jan 2024 09:26:59 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] v6.8 SMC-D issues
-To: Wen Gu <guwen@linux.alibaba.com>, wenjia@linux.ibm.com, hca@linux.ibm.com,
-        gor@linux.ibm.com, agordeev@linux.ibm.com, davem@davemloft.net,
-        edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-        jaka@linux.ibm.com, Matthew Rosato <mjrosato@linux.ibm.com>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
-        borntraeger@linux.ibm.com, svens@linux.ibm.com,
-        alibuda@linux.alibaba.com, tonylu@linux.alibaba.com,
-        raspl@linux.ibm.com, schnelle@linux.ibm.com,
-        guangguan.wang@linux.alibaba.com, linux-s390@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Halil Pasic <pasic@linux.ibm.com>
-References: <20231219142616.80697-1-guwen@linux.alibaba.com>
- <20231219142616.80697-8-guwen@linux.alibaba.com>
- <13579588-eb9d-4626-a063-c0b77ed80f11@linux.ibm.com>
- <530afe45-ba6b-4970-a71c-1f1255f5fca9@linux.alibaba.com>
-Content-Language: en-US
-From: Alexandra Winter <wintera@linux.ibm.com>
-In-Reply-To: <530afe45-ba6b-4970-a71c-1f1255f5fca9@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: hL-eyvXh5IfeJnQxS3WvRFG4GCoUuQvl
-X-Proofpoint-GUID: d9-pXlaTopAnnCB5pTPeUJJRJKxMjHfa
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="SxjCDQqs"
+Received: by mail-oo1-f44.google.com with SMTP id 006d021491bc7-5994e320086so3549409eaf.3
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 00:30:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1706171437; x=1706776237; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=LwxZ89BJlc+x6KjX9RIj+qjWv5VNKTF5oPpXEEUlSoI=;
+        b=SxjCDQqsEi8NxIHq9/RQFm1YT2xcrBd2H7MkkfY8UHrfmGDxVxVXs9USWRVPMbPlZW
+         1PQQfPeZS2i+UFyfdR8uOw+DINcIPb2mIrsAgIJxH8dbdPMmCykjkv/nhcspmGHZaKNG
+         WrVLfJDQBR/ka7VXzA1Y0iD0D7fiA8z37Psr4gCJe8MKcfRshvh7BQwiP0VwtJDCtVLp
+         eqfUBoIJDx3+vqnR/bTNFQ2iyRtd3Q+bXBrjUbvOQdS4tobP6qPOGc1hDtpyAWQ5gLNE
+         j/swaDO3IYz+59DNN4IOT4Qn0Vy3JvchvMtTMK89WXIGJ+hxJsu0JLmqxdoufpHu3i/b
+         +6dA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706171437; x=1706776237;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=LwxZ89BJlc+x6KjX9RIj+qjWv5VNKTF5oPpXEEUlSoI=;
+        b=gfxGzXccIMmnjlQZTwsgRIghWnyTxHrqx4Vz1XXeedobPLkNi/UeJRi8XSjD0BrZIc
+         149UbTkBu8le5Yt9pcI7h/dx2+fWtLceNQEytuTDyvixjuVOaontq41ZULh2rbK5WSWJ
+         oQzVVLzX/gJxpVJ7r8Ydkrya5YHxlNCbYjxqUt0RnWKgRWxJ+3AqpIL1qRvPPCLKAytd
+         YmXB4o5kT+3ZnwZIFKsT32mzgUHSbFMsxFuHE+sVzrTSW66ikUN6oVw5wKF2MTDUqfC5
+         HwLNd8I/CeOKR2uGas31GyAyXOeC6LVKfEXlXXJpMAU7J4z583gSjXsXqvlgf1Fj5eYO
+         xOtw==
+X-Gm-Message-State: AOJu0YyXv5QVwto99Zq84BUrMgz9tsz1skZAjNW6NekAx0L7vi3WuAc8
+	Q+zMwFEegT44FnyO2tfhCsVO8X9EfY6pzsOtHI1oni713NXxJ2vIi0ZoLfPKPew=
+X-Google-Smtp-Source: AGHT+IGk/ptGROJhqqMQq2ViqVW7xz+uINt3phL+/LVfUWQOsNEd1sf1i68ZEjnezYTXkBlml1Kp9A==
+X-Received: by 2002:a05:6358:2244:b0:170:17eb:b4c with SMTP id i4-20020a056358224400b0017017eb0b4cmr618258rwc.54.1706171437371;
+        Thu, 25 Jan 2024 00:30:37 -0800 (PST)
+Received: from [10.4.195.141] ([139.177.225.254])
+        by smtp.gmail.com with ESMTPSA id h4-20020a056a00000400b006ddcb9adda1sm919738pfk.163.2024.01.25.00.30.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 25 Jan 2024 00:30:37 -0800 (PST)
+Message-ID: <1496dce3-a4bb-4ccf-92d6-701a45b67da3@bytedance.com>
+Date: Thu, 25 Jan 2024 16:30:31 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-25_04,2024-01-24_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 adultscore=0
- spamscore=0 lowpriorityscore=0 mlxscore=0 malwarescore=0 phishscore=0
- impostorscore=0 clxscore=1015 priorityscore=1501 mlxlogscore=999
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2401250057
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] mm: zswap: remove unnecessary tree cleanups in
+ zswap_swapoff()
+Content-Language: en-US
+To: Yosry Ahmed <yosryahmed@google.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>,
+ Andrew Morton <akpm@linux-foundation.org>, Nhat Pham <nphamcs@gmail.com>,
+ Chris Li <chrisl@kernel.org>, Huang Ying <ying.huang@intel.com>,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <20240120024007.2850671-1-yosryahmed@google.com>
+ <20240120024007.2850671-3-yosryahmed@google.com>
+ <20240122201906.GA1567330@cmpxchg.org>
+ <CAJD7tkaATS48HVuBfbOmPM3EvRUoPFr66WhF64UC4FkyVH5exg@mail.gmail.com>
+ <20240123153851.GA1745986@cmpxchg.org>
+ <CAJD7tkasHsRnT_75-TXsEe58V9_OW6m3g6CF7Kmsvz8CKRG_EA@mail.gmail.com>
+ <20240123201234.GC1745986@cmpxchg.org>
+ <CAJD7tkZC6w2EaE=j2NEVWn1s7Lo2A7YZh8LiZ+w72jQzFFWLUQ@mail.gmail.com>
+ <f3fa799f-1815-4cfe-abc8-3ba929fcd1ba@bytedance.com>
+ <CAJD7tka6UuEuuP=df-1V3vwsi0T0QhLORTRDs6qDvA81iY6SGA@mail.gmail.com>
+From: Chengming Zhou <zhouchengming@bytedance.com>
+In-Reply-To: <CAJD7tka6UuEuuP=df-1V3vwsi0T0QhLORTRDs6qDvA81iY6SGA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-
-
-On 25.01.24 05:59, Wen Gu wrote:
-> After a while debug I found an elementary mistake of mine in
-> b40584d ("net/smc: compatible with 128-bits extended GID of virtual ISM device")..
+On 2024/1/25 15:53, Yosry Ahmed wrote:
+>> Hello,
+>>
+>> I also thought about this problem for some time, maybe something like below
+>> can be changed to fix it? It's likely I missed something, just some thoughts.
+>>
+>> IMHO, the problem is caused by the different way in which we use zswap entry
+>> in the writeback, that should be much like zswap_load().
+>>
+>> The zswap_load() comes in with the folio locked in swap cache, so it has
+>> stable zswap tree to search and lock... But in writeback case, we don't,
+>> shrink_memcg_cb() comes in with only a zswap entry with lru list lock held,
+>> then release lru lock to get tree lock, which maybe freed already.
+>>
+>> So we should change here, we read swpentry from entry with lru list lock held,
+>> then release lru lock, to try to lock corresponding folio in swap cache,
+>> if we success, the following things is much the same like zswap_load().
+>> We can get tree lock, to recheck the invalidate race, if no race happened,
+>> we can make sure the entry is still right and get refcount of it, then
+>> release the tree lock.
 > 
-> The operator order in smcd_lgr_match() is not as expected. It will always return
-> 'true' in remote-system case.
-> 
->  static bool smcd_lgr_match(struct smc_link_group *lgr,
-> -                          struct smcd_dev *smcismdev, u64 peer_gid)
-> +                          struct smcd_dev *smcismdev,
-> +                          struct smcd_gid *peer_gid)
->  {
-> -       return lgr->peer_gid == peer_gid && lgr->smcd == smcismdev;
-> +       return lgr->peer_gid.gid == peer_gid->gid && lgr->smcd == smcismdev &&
-> +               smc_ism_is_virtual(smcismdev) ?
-> +               (lgr->peer_gid.gid_ext == peer_gid->gid_ext) : 1;
->  }
-> 
-> Could you please try again with this patch? to see if this is the root cause.
-> Really sorry for the inconvenience.
-> 
-> diff --git a/net/smc/smc_core.c b/net/smc/smc_core.c
-> index da6a8d9c81ea..c6a6ba56c9e3 100644
-> --- a/net/smc/smc_core.c
-> +++ b/net/smc/smc_core.c
-> @@ -1896,8 +1896,8 @@ static bool smcd_lgr_match(struct smc_link_group *lgr,
->                            struct smcd_gid *peer_gid)
->  {
->         return lgr->peer_gid.gid == peer_gid->gid && lgr->smcd == smcismdev &&
-> -               smc_ism_is_virtual(smcismdev) ?
-> -               (lgr->peer_gid.gid_ext == peer_gid->gid_ext) : 1;
-> +               (smc_ism_is_virtual(smcismdev) ?
-> +                (lgr->peer_gid.gid_ext == peer_gid->gid_ext) : 1);
->  }
-> 
-> 
-> Thanks,
-> Wen Gu
+> Hmm I think you may be onto something here. Moving the swap cache
+> allocation ahead before referencing the tree should give us the same
+> guarantees as zswap_load() indeed. We can also consolidate the
+> invalidate race checks (right now we have one in shrink_memcg_cb() and
+> another one inside zswap_writeback_entry()).
 
-Hello Wen Gu,
+Right, if we successfully lock folio in the swap cache, we can get the
+tree lock and check the invalidate race, only once.
 
-thank you for the quick resposne and for finding this nasty bug.
-I can confirm that with your patch I do not see the issue anymore.
-Please send a fix to the mailing lists. See
-https://docs.kernel.org/process/handling-regressions.html
-for some tips.
+> 
+> We will have to be careful about the error handling path to make sure
+> we delete the folio from the swap cache only after we know the tree
+> won't be referenced anymore. Anyway, I think this can work.
 
-May I propose that instead of adding the brackets, you change this function 
-to an if-then-else sequence for readability and maintainability?
-I would still mention the missing brackets in the commit message, so
-readers can quickly understand the issue.
+Yes, we can't reference tree if we early return or after unlocking folio,
+since the reference of zswap entry can't protect the tree.
 
-Thanks again for the quick response.
-Sandy
+> 
+> On a separate note, I think there is a bug in zswap_writeback_entry()
+> when we delete a folio from the swap cache. I think we are missing a
+> folio_unlock() there.
 
+Ah, yes, and folio_put().
+
+> 
+>>
+>> The main differences between this writeback with zswap_load() is the handling
+>> of lru entry and the tree lifetime. The whole zswap_load() function has the
+>> stable reference of zswap tree, but it's not for shrink_memcg_cb() bottom half
+>> after __swap_writepage() since we unlock the folio after that. So we can't
+>> reference the tree after that.
+>>
+>> This problem is easy to fix, we can zswap_invalidate_entry(tree, entry) early
+>> in tree lock, since thereafter writeback can't fail. BTW, I think we should
+>> also zswap_invalidate_entry() early in zswap_load() and only support the
+>> zswap_exclusive_loads_enabled mode, but that's another topic.
+> 
+> zswap_invalidate_entry() actually doesn't seem to be using the tree at all.
+> 
+>>
+>> The second difference is the handling of lru entry, which is easy that we
+>> just zswap_lru_del() in tree lock.
+> 
+> Why do we need zswap_lru_del() at all? We should have already isolated
+> the entry at that point IIUC.
+
+I was thinking how to handle the "zswap_lru_putback()" if not writeback,
+in which case we can't use the entry actually since we haven't got reference
+of it. So we can don't isolate at the entry, and only zswap_lru_del() when
+we are going to writeback actually.
+
+Thanks!
