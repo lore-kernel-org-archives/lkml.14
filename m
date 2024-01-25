@@ -1,190 +1,195 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from out5-smtp.messagingengine.com (out5-smtp.messagingengine.com [66.111.4.29])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A30FB125AC;
-	Thu, 25 Jan 2024 07:18:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27FA811713;
+	Thu, 25 Jan 2024 07:19:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.111.4.29
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706167093; cv=none; b=robchwaiK2c9jojkAA4ZS+bExMv51Qv2/O596/Av1hmCDT78Xea0UAPFyD7IGqV8KLxnOOoZGwr9edKvOl3SC292a8zZ6Ja903rCgefz0tKX8qkOfOtQ2c0OZHLxlIBNU1JM/BDuFlydCsbDyY7iNJH5Faeo+TiT5xmv02/4MCw=
+	t=1706167198; cv=none; b=KYTwcoijXNddAZl/9QIcbG6sdbn+Zr1R7bVwVA79sjTLuPMeiRjZKCNT/PNMg042h7Ql0/7thAmGZjwBgYe6mo3bCce+LskunRSIVEfKvDXy/QvSlc507vPH4+DadDW0xAZwnSfxWNWq7jUScUcVAksC3xvyN4XW4lBy4wz9qNU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706167093; c=relaxed/simple;
-	bh=v9CmbAhgiwRyHdIyDJQME8LxQd+xB3pL3KsdDf+BcCw=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=XMfwQ+h0Q4RpVR9DhEr/UceYOc/M/j8GZY0G0ibTAA+3BMO69vGAWGmrcMgnojvqa/Lbh96UV2n/O8wo50dz7BC+JgaHGvMVenMaWP3vV9AvTgenK+p+9pj6npfe2kvEpCGI+Kg25MlQuJJz03lqTajAJ244tm44R7c4WQuDpe0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4TLBxS5mf5z4f3k6C;
-	Thu, 25 Jan 2024 15:18:04 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 2D4C91A0171;
-	Thu, 25 Jan 2024 15:18:07 +0800 (CST)
-Received: from [10.174.176.117] (unknown [10.174.176.117])
-	by APP4 (Coremail) with SMTP id gCh0CgBXXG4rC7JlVenABw--.25628S2;
-	Thu, 25 Jan 2024 15:18:06 +0800 (CST)
-Subject: Re: [PATCH bpf 2/3] x86/mm: Disallow vsyscall page read for
- copy_from_kernel_nofault()
-To: Sohil Mehta <sohil.mehta@intel.com>, x86@kernel.org, bpf@vger.kernel.org
-Cc: Dave Hansen <dave.hansen@linux.intel.com>,
- Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>,
- linux-kernel@vger.kernel.org, xingwei lee <xrivendell7@gmail.com>,
- Jann Horn <jannh@google.com>, houtao1@huawei.com
-References: <20240119073019.1528573-1-houtao@huaweicloud.com>
- <20240119073019.1528573-3-houtao@huaweicloud.com>
- <e83eb3e8-6d08-462b-9ffe-d843e439d7da@intel.com>
-From: Hou Tao <houtao@huaweicloud.com>
-Message-ID: <6f1aa71b-13f3-0972-3cb0-62f431de7e48@huaweicloud.com>
-Date: Thu, 25 Jan 2024 15:18:03 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.0
+	s=arc-20240116; t=1706167198; c=relaxed/simple;
+	bh=YKHitqv6MpNmX4Os52+BnwqHeGcQk+N0HbPe7Nk2SUI=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
+	 Subject:Content-Type; b=n1tOIWBstVR4uFHXONLBqE0yGuQCZbd+ryY72xWSvl74RDFNPh6aSc9svm+KVwMQRYI0XVA2eXYcDSeLE29jL64W5c7KyTbofkwfq3LfVeK0ba6BSp3lK2nKHAAstFA4pKbdZUbhHZRDYGcsD3pIoVA+oyFPnBp7afnmGp0IqM0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fastmail.com; spf=pass smtp.mailfrom=fastmail.com; dkim=pass (2048-bit key) header.d=fastmail.com header.i=@fastmail.com header.b=4e3TmKy0; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=nvInZ0jw; arc=none smtp.client-ip=66.111.4.29
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fastmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=fastmail.com header.i=@fastmail.com header.b="4e3TmKy0";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="nvInZ0jw"
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+	by mailout.nyi.internal (Postfix) with ESMTP id 142EB5C01D7;
+	Thu, 25 Jan 2024 02:19:55 -0500 (EST)
+Received: from imap50 ([10.202.2.100])
+  by compute3.internal (MEProxy); Thu, 25 Jan 2024 02:19:55 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fastmail.com; h=
+	cc:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm3; t=1706167195; x=1706253595; bh=vWNYCVEsyV
+	iu3nUft3Ms12HcBU6UW+6JtvbOuVw1J0c=; b=4e3TmKy05bp9HO9U1/VOfkypZ0
+	sWHC5b6bAA+mHGJ7Kq99ptNEilvV5dL2GTJucuUO+OtutUd3Q+KYy8c5gpF1gEtk
+	FYrYNcmd00RIucBB4IB0j3xmx9LIz/Sn7queXTSXQMthrEaMuA2NAJ70Ep6bXeyK
+	JK8vjj49qCB0qapQN9xcbVaO8NGaIPgGuuBn+AyOEARE4ONPJyihXfbHEaDWfSpX
+	Mz8FgCi26FYvdbSiDeKo4poEgASiec0X4uzr+DRUaOxL95C/O93Wfu246jSs7dc3
+	bcEQ1O+0l5lcKZGC9kkubTRJGNr7R+EpcMUgn6dvWAlfgvDetmUx2bnpPLVg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm3; t=1706167195; x=1706253595; bh=vWNYCVEsyViu3nUft3Ms12HcBU6U
+	W+6JtvbOuVw1J0c=; b=nvInZ0jw0ZHt3KvTD5qMeeY8vGm1AphVSTXW7jRdtGTA
+	UJiIw4rafvd7FNYJlsTpKPHrWQkMDjin485xVsVB5o+lFH2p7Fd9mCritpcWrwZB
+	lM4bLLr55oNE+y1JvW62Jz0wpBYKD5gR1oOMf+fw8L0YvVB3xowTvoffPjTz2VDZ
+	etkwnNkJW6yE3FwRzZFeU4soPheuhvN/OJIDXi1c5TyO3jW1fLxRwgpt+BpoyFF8
+	ZWsARpXIC9mEDBwQaH57gzN8+t5SOaOncX3dYAsUGFLqk3s4S2jfk0aU8XZzroGA
+	QB+e4NSrJTESaZTE0oTKMOn80P4U4S3gqcghdM1Qkg==
+X-ME-Sender: <xms:mAuyZe8iakB7Hq_2uvqh5DFaJjVied9xfvhmECV2s3_cWlQdq0_9xg>
+    <xme:mAuyZeu13YaGB1IJElSnR1iY8q90A6EyAml0W8UXkFCJthZlfL0S0qGO5T_up_euZ
+    i4-SBPMNzbyHObLsg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrvdelvddguddtfecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdfu
+    thgvfhgrnhcuqfdktfgvrghrfdcuoehsohhrvggrrhesfhgrshhtmhgrihhlrdgtohhmqe
+    enucggtffrrghtthgvrhhnpefhtefgffelieduudekgeevueegudegueefhfehhfffiefg
+    keffvedtuefggfehteenucffohhmrghinhepvghnthhrhidrshgspdhinhhfrhgruggvrg
+    gurdhorhhgnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhho
+    mhepshhorhgvrghrsehfrghsthhmrghilhdrtghomh
+X-ME-Proxy: <xmx:mAuyZUDv2xOV7UK4WzT3j8956Y_6g6wiayc7xcQZnX9XASPYpNnzhg>
+    <xmx:mAuyZWfKe2FTP2blU-_ACLLKvXRHejSZf5xrtf0NMrMujT9qSbB-DQ>
+    <xmx:mAuyZTN8xd4j8vKqNvcCgipMRoTmWaP8LbXUIh4NPoVSciouSae3AA>
+    <xmx:mwuyZalX7bXSREqZzMkGAApYYZ2zYrSF8WxOVg6DCvX09zhBiDVpiQ>
+Feedback-ID: i84414492:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id CBA0C1700093; Thu, 25 Jan 2024 02:19:52 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-119-ga8b98d1bd8-fm-20240108.001-ga8b98d1b
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <e83eb3e8-6d08-462b-9ffe-d843e439d7da@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-CM-TRANSID:gCh0CgBXXG4rC7JlVenABw--.25628S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxJw4rGr1ktw4DXFWkKw17ZFb_yoW7Jw45pw
-	18A3yUtFW8Ar1rAFsFq34qqFyrJ348Ja15Grn5tF1rZw1jgF1YqrWDWa4jgF17Jr4xKw1x
-	tw4UXr1qvw1UJaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvab4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7Mxk0xIA0c2IE
-	e2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxV
-	Aqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q
-	6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6x
-	kF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI42IY6I8E87Iv
-	67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyT
-	uYvjxUrR6zUUUUU
-X-CM-SenderInfo: xkrx3t3r6k3tpzhluzxrxghudrp/
+Message-Id: <23d023c0-27cf-44fa-be0a-000d1534ef86@app.fastmail.com>
+In-Reply-To: <20240125062739.1339782-3-debug@rivosinc.com>
+References: <20240125062739.1339782-1-debug@rivosinc.com>
+ <20240125062739.1339782-3-debug@rivosinc.com>
+Date: Thu, 25 Jan 2024 02:19:29 -0500
+From: "Stefan O'Rear" <sorear@fastmail.com>
+To: debug@rivosinc.com, rick.p.edgecombe@intel.com, broonie@kernel.org,
+ Szabolcs.Nagy@arm.com, "kito.cheng@sifive.com" <kito.cheng@sifive.com>,
+ "Kees Cook" <keescook@chromium.org>,
+ "Andrew Jones" <ajones@ventanamicro.com>, paul.walmsley@sifive.com,
+ "Palmer Dabbelt" <palmer@dabbelt.com>,
+ "Conor Dooley" <conor.dooley@microchip.com>, cleger@rivosinc.com,
+ "Atish Patra" <atishp@atishpatra.org>, "Alexandre Ghiti" <alex@ghiti.fr>,
+ =?UTF-8?Q?Bj=C3=B6rn_T=C3=B6pel?= <bjorn@rivosinc.com>,
+ "Alexandre Ghiti" <alexghiti@rivosinc.com>
+Cc: "Jonathan Corbet" <corbet@lwn.net>, "Albert Ou" <aou@eecs.berkeley.edu>,
+ oleg@redhat.com, akpm@linux-foundation.org, arnd@arndb.de,
+ "Eric W. Biederman" <ebiederm@xmission.com>, shuah@kernel.org,
+ "Christian Brauner" <brauner@kernel.org>, guoren <guoren@kernel.org>,
+ samitolvanen@google.com, "Evan Green" <evan@rivosinc.com>,
+ xiao.w.wang@intel.com, "Anup Patel" <apatel@ventanamicro.com>,
+ mchitale@ventanamicro.com, waylingii@gmail.com, greentime.hu@sifive.com,
+ "Heiko Stuebner" <heiko@sntech.de>, "Jisheng Zhang" <jszhang@kernel.org>,
+ shikemeng@huaweicloud.com, david@redhat.com,
+ "Charlie Jenkins" <charlie@rivosinc.com>, panqinglin2020@iscas.ac.cn,
+ willy@infradead.org, "Vincent Chen" <vincent.chen@sifive.com>,
+ "Andy Chiu" <andy.chiu@sifive.com>, "Greg Ungerer" <gerg@kernel.org>,
+ jeeheng.sia@starfivetech.com, mason.huo@starfivetech.com,
+ ancientmodern4@gmail.com, mathis.salmen@matsal.de,
+ cuiyunhui@bytedance.com, bhe@redhat.com, chenjiahao16@huawei.com,
+ ruscur@russell.cc, bgray@linux.ibm.com, alx@kernel.org,
+ baruch@tkos.co.il, zhangqing@loongson.cn,
+ "Catalin Marinas" <catalin.marinas@arm.com>, revest@chromium.org,
+ josh@joshtriplett.org, joey.gouly@arm.com, shr@devkernel.io,
+ omosnace@redhat.com, ojeda@kernel.org, jhubbard@nvidia.com,
+ linux-doc@vger.kernel.org, linux-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [RFC PATCH v1 02/28] riscv: envcfg save and restore on trap entry/exit
+Content-Type: text/plain
 
-Hi,
-
-On 1/23/2024 8:18 AM, Sohil Mehta wrote:
-> On 1/18/2024 11:30 PM, Hou Tao wrote:
->> From: Hou Tao <houtao1@huawei.com>
->>
->> When trying to use copy_from_kernel_nofault() to read vsyscall page
->> through a bpf program, the following oops was reported:
->>
->>   BUG: unable to handle page fault for address: ffffffffff600000
->>   #PF: supervisor read access in kernel mode
->>   #PF: error_code(0x0000) - not-present page
->>   PGD 3231067 P4D 3231067 PUD 3233067 PMD 3235067 PTE 0
->>   Oops: 0000 [#1] PREEMPT SMP PTI
->>   CPU: 1 PID: 20390 Comm: test_progs ...... 6.7.0+ #58
->>   Hardware name: QEMU Standard PC (i440FX + PIIX, 1996) ......
->>   RIP: 0010:copy_from_kernel_nofault+0x6f/0x110
->>   ......
->>   Call Trace:
->>    <TASK>
->>    ? copy_from_kernel_nofault+0x6f/0x110
->>    bpf_probe_read_kernel+0x1d/0x50
->>    bpf_prog_2061065e56845f08_do_probe_read+0x51/0x8d
->>    trace_call_bpf+0xc5/0x1c0
->>    perf_call_bpf_enter.isra.0+0x69/0xb0
->>    perf_syscall_enter+0x13e/0x200
->>    syscall_trace_enter+0x188/0x1c0
->>    do_syscall_64+0xb5/0xe0
->>    entry_SYSCALL_64_after_hwframe+0x6e/0x76
->>    </TASK>
->>   ......
->>   ---[ end trace 0000000000000000 ]---
->>
->> The oops happens as follows: A bpf program uses bpf_probe_read_kernel()
->> to read from vsyscall page, bpf_probe_read_kernel() invokes
->> copy_from_kernel_nofault() in turn and then invokes __get_user_asm(). A
->> page fault exception is triggered accordingly, but handle_page_fault()
->> considers the vsyscall page address as a userspace address instead of
->> a kernel space address, so the fix-up set-up by bpf isn't applied.
-> This comment and the one in the code below seem contradictory and
-> confusing. Do we want the vsyscall page address to be considered as a
-> userspace address or not?
-
-Now handle_page_fault() has already considered the vsyscall page as a
-userspace address, and in the patch we update copy_from_kernel_nofault()
-to consider vsyscall page as a userspapce address as well.
+On Thu, Jan 25, 2024, at 1:21 AM, debug@rivosinc.com wrote:
+> From: Deepak Gupta <debug@rivosinc.com>
 >
-> IIUC, the issue here is that the vsyscall page (in xonly mode) is not
-> really mapped and therefore running copy_from_kernel_nofault() on this
-> address is incorrect. This patch fixes this by making
-> copy_from_kernel_nofault() return an error for a vsyscall address.
+> envcfg CSR defines enabling bits for cache management instructions and soon
+> will control enabling for control flow integrity and pointer masking features.
 >
-
-Yes, but the issue may occur for vsyscall=none case as well. Because
-fault_in_kernel_space() invoked by handle_page_fault() will return
-false, so in do_user_addr_fault(), when smap feature is enabled, the
-invocation of copy_from_kernel_nofault() will trigger oops due to the
-following code snippet:
-
-        if (unlikely(cpu_feature_enabled(X86_FEATURE_SMAP) &&
-                     !(error_code & X86_PF_USER) &&
-                     !(regs->flags & X86_EFLAGS_AC))) {
-                /*
-                 * No extable entry here.  This was a kernel access to an
-                 * invalid pointer.  get_kernel_nofault() will not get here.
-                 */
-                page_fault_oops(regs, error_code, address);
-                return;
-        }
-
->> Because the exception happens in kernel space and page fault handling is
->> disabled, page_fault_oops() is invoked and an oops happens.
->>
->> Fix it by disallowing vsyscall page read for copy_from_kernel_nofault().
->>
-> [Maybe I have misunderstood the issue here and following questions are
-> not even relevant.]
+> Control flow integrity enabling for forward cfi and backward cfi is controlled
+> via envcfg and thus need to be enabled on per thread basis.
 >
-> But, what about vsyscall=emulate? In that mode the page is actually
-> mapped. Would we want the page read to go through then?
+> This patch creates a place holder for envcfg CSR in `thread_info` and adds
+> logic to save and restore on trap entry and exits.
 
-Er, Now the vsyscall page is considered as a userspace address, I think
-we should reject its read through copy_from_kernel_nofault() even it is
-mapped.
+Should only be "restore"?  I don't see saving.
 
 >
->> Originally-from: Thomas Gleixner <tglx@linutronix.de>
-> Documentation/process/maintainer-tip.rst says to use "Originally-by:"
+> Signed-off-by: Deepak Gupta <debug@rivosinc.com>
+> ---
+>  arch/riscv/include/asm/thread_info.h | 1 +
+>  arch/riscv/kernel/asm-offsets.c      | 1 +
+>  arch/riscv/kernel/entry.S            | 4 ++++
+>  3 files changed, 6 insertions(+)
+>
+> diff --git a/arch/riscv/include/asm/thread_info.h 
+> b/arch/riscv/include/asm/thread_info.h
+> index 574779900bfb..320bc899a63b 100644
+> --- a/arch/riscv/include/asm/thread_info.h
+> +++ b/arch/riscv/include/asm/thread_info.h
+> @@ -57,6 +57,7 @@ struct thread_info {
+>  	long			user_sp;	/* User stack pointer */
+>  	int			cpu;
+>  	unsigned long		syscall_work;	/* SYSCALL_WORK_ flags */
+> +	unsigned long envcfg;
+>  #ifdef CONFIG_SHADOW_CALL_STACK
+>  	void			*scs_base;
+>  	void			*scs_sp;
+> diff --git a/arch/riscv/kernel/asm-offsets.c 
+> b/arch/riscv/kernel/asm-offsets.c
+> index a03129f40c46..cdd8f095c30c 100644
+> --- a/arch/riscv/kernel/asm-offsets.c
+> +++ b/arch/riscv/kernel/asm-offsets.c
+> @@ -39,6 +39,7 @@ void asm_offsets(void)
+>  	OFFSET(TASK_TI_PREEMPT_COUNT, task_struct, thread_info.preempt_count);
+>  	OFFSET(TASK_TI_KERNEL_SP, task_struct, thread_info.kernel_sp);
+>  	OFFSET(TASK_TI_USER_SP, task_struct, thread_info.user_sp);
+> +	OFFSET(TASK_TI_ENVCFG, task_struct, thread_info.envcfg);
+>  #ifdef CONFIG_SHADOW_CALL_STACK
+>  	OFFSET(TASK_TI_SCS_SP, task_struct, thread_info.scs_sp);
+>  #endif
+> diff --git a/arch/riscv/kernel/entry.S b/arch/riscv/kernel/entry.S
+> index 54ca4564a926..63c3855ba80d 100644
+> --- a/arch/riscv/kernel/entry.S
+> +++ b/arch/riscv/kernel/entry.S
+> @@ -129,6 +129,10 @@ SYM_CODE_START_NOALIGN(ret_from_exception)
+>  	addi s0, sp, PT_SIZE_ON_STACK
+>  	REG_S s0, TASK_TI_KERNEL_SP(tp)
+> 
+> +	/* restore envcfg bits for current thread */
+> +	REG_L s0, TASK_TI_ENVCFG(tp)
+> +	csrw CSR_ENVCFG, s0
+> +
 
-Thanks for the tip. Will update.
->
->
->> diff --git a/arch/x86/mm/maccess.c b/arch/x86/mm/maccess.c
->> index 6993f026adec9..bb454e0abbfcf 100644
->> --- a/arch/x86/mm/maccess.c
->> +++ b/arch/x86/mm/maccess.c
->> @@ -3,6 +3,8 @@
->>  #include <linux/uaccess.h>
->>  #include <linux/kernel.h>
->>  
->> +#include "mm_internal.h"
->> +
->>  #ifdef CONFIG_X86_64
->>  bool copy_from_kernel_nofault_allowed(const void *unsafe_src, size_t size)
->>  {
->> @@ -15,6 +17,10 @@ bool copy_from_kernel_nofault_allowed(const void *unsafe_src, size_t size)
->>  	if (vaddr < TASK_SIZE_MAX + PAGE_SIZE)
->>  		return false;
->>  
->> +	/* vsyscall page is also considered as userspace address. */
-> A bit more explanation about why this should happen might be useful.
->
->> +	if (is_vsyscall_vaddr(vaddr))
->> +		return false;
->> +
->>  	/*
->>  	 * Allow everything during early boot before 'x86_virt_bits'
->>  	 * is initialized.  Needed for instruction decoding in early
+This is redundant if we're repeatedly processing interrupts or exceptions
+within a single task.  We should only be writing envcfg when switching
+between tasks or as part of the prctl.
 
+We need to use an ALTERNATIVE for this since the oldest supported hardware
+does not have envcfg csrs.
+
+-s
+
+>  	/* Save the kernel shadow call stack pointer */
+>  	scs_save_current
+> 
+> -- 
+> 2.43.0
+>
+>
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
