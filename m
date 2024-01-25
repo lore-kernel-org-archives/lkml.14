@@ -1,177 +1,184 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB0E14F611;
-	Thu, 25 Jan 2024 17:21:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FF9A6EB57;
+	Thu, 25 Jan 2024 17:23:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706203264; cv=none; b=WdDvekwji4jXJK5KEuW/RlmYEQvjNw0PR+c1bq+FibrsJpdEiX43ngDm6EVIsDzuDVirIF6WnHrP3VyC+0xuuX4qa4tjvNWxHa3m49dammpnceOorM2tQbXHavJABfResD06TqNVxf3WnhClmREKciAlz/0necex+QpTPaL1kDk=
+	t=1706203395; cv=none; b=UWhXM9NcN6FCeT3WFfBlUwZl9ylnxSTREwm6nvd3fzXI9LLp8Hjk/6dsUr1lGz/2O9D+x7aMFR+QAuaki0stjo0hEvPHxmsOe1OF9JjDeFpDvqvHP8OVbuNCCeXbui55XymrjmloIzl/t/+pdRQdiHSFnFd+lomyjFVDciWnY+k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706203264; c=relaxed/simple;
-	bh=qJy6aD69ChOOiKQIQ8IywuiR88JjYpmJGGBZxwAX/9I=;
+	s=arc-20240116; t=1706203395; c=relaxed/simple;
+	bh=MK+U2MEGE3SsUnEsjfwVCkC79N7AdgnSB76OtGlsmFs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=e8PpPVO0GmwFyuZDNcwdP3McxSyL/19ZVudzfoevctMQhJWkH5xatXbEhPBolfzyns+LFT5e5ZHmyFMM8nIH3cn+HPChV/CA4hX7me+UyWXQMYeE1gO0xnaooVGLE7IdDrn8I/y3SC0WNiODkO7NDBm0u/q7EPsJhkoZ1kuO/kE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S6J1Gi0D; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=mpdVeVZTBXJEXgg1YS06L4gcblQyb9w1IVvwTOEZPfk1G/YrWZJ9CuFcvzi416DwoU5EotUpSMhsETX3j92wXAunfmZ2ttQ4YOo1YEkOn6d4kulkE7PyoX5cznTv0JyXZ5x+wEQBbIUrE8jdw+tKO2ckAnPAJjOkP7sYpq1jXkA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bELAfsi4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S6J1Gi0D"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49BB6C433F1;
-	Thu, 25 Jan 2024 17:21:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bELAfsi4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E871C433C7;
+	Thu, 25 Jan 2024 17:23:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706203264;
-	bh=qJy6aD69ChOOiKQIQ8IywuiR88JjYpmJGGBZxwAX/9I=;
+	s=k20201202; t=1706203394;
+	bh=MK+U2MEGE3SsUnEsjfwVCkC79N7AdgnSB76OtGlsmFs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=S6J1Gi0Db2CKExachaEhFx0H826vwASbgafEzEYdAl8/lwrm1DMbWukjBnAwkSBRU
-	 XigEeGOjEeH1lpeb+xflyEys6WWb8w9y/ox6mGn0FZCkO+3/aRjJU860uG+DvrP9OJ
-	 XMVfQ7umWSnXKX1ed1gUy3JP6cCcaX/TsbfWTzjNZtIOKTrWU8fFvP+43jrHL8tfhE
-	 /FFU0xBRwASKxZ0hPu7qLnHmUT5TRJWwVfJmgb8gvgKj8Qphnf86w5l/GorvD2BtKN
-	 3wEAo1ZOKwLv0IYWWQTWK38/1y+nhvEn8Ae3fmyP196FVDy6Rt9Zum69d+PFE7Dkts
-	 tq2flJcOg7RrA==
-Date: Thu, 25 Jan 2024 17:20:59 +0000
-From: Conor Dooley <conor@kernel.org>
-To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-Cc: Jassi Brar <jassisinghbrar@gmail.com>, Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Dong Aisheng <aisheng.dong@nxp.com>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	NXP Linux Team <linux-imx@nxp.com>, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	Peng Fan <peng.fan@nxp.com>
-Subject: Re: [PATCH v4 1/4] dt-bindings: mailbox: fsl,mu: add i.MX95
- Generic/ELE/V2X MU compatible
-Message-ID: <20240125-prudishly-contort-274a48bbb33e@spud>
-References: <20240125-imx-mailbox-v4-0-800be5383c20@nxp.com>
- <20240125-imx-mailbox-v4-1-800be5383c20@nxp.com>
+	b=bELAfsi4o/o7nKz7GDBtHHe/SexgXEjtuTMfj5KVkhgPx2+poUhouIZiLvdQd86P4
+	 v9yiR8Witdo0BgZS9p69GEmMpB41cRlclRM7rU8VprFiAoagEDV4Bsod00TlmOJpLa
+	 ulTEPeTZx5+fpFVPlrbZUhrmrPLBni56tk4jP4OvN0QB/HNYLOzyouLHVgwjc/01zJ
+	 MpiC6wNZfqygP9y9QE5/23RBVC85CWc0ic11WfkJDE9vSjvNyzoJlnjJYStqcKU08Z
+	 yx1j7CgtlaFZZBaS0qypLoCHtkM0dPiKc7q33sccf1pRIBO4nK8PjkxqmBZ00Kd24i
+	 CiIjo+terGXoQ==
+Date: Thu, 25 Jan 2024 18:23:07 +0100
+From: Christian Brauner <brauner@kernel.org>
+To: David Howells <dhowells@redhat.com>
+Cc: Gao Xiang <xiang@kernel.org>, Jeff Layton <jlayton@kernel.org>, 
+	Matthew Wilcox <willy@infradead.org>, Eric Sandeen <esandeen@redhat.com>, v9fs@lists.linux.dev, 
+	linux-afs@lists.infradead.org, ceph-devel@vger.kernel.org, linux-cifs@vger.kernel.org, 
+	samba-technical@lists.samba.org, linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: Roadmap for netfslib and local caching (cachefiles)
+Message-ID: <20240125-eruption-holprig-1dea37c287a4@brauner>
+References: <520668.1706191347@warthog.procyon.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="gZWG52K1GgRCAoNi"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240125-imx-mailbox-v4-1-800be5383c20@nxp.com>
+In-Reply-To: <520668.1706191347@warthog.procyon.org.uk>
 
+On Thu, Jan 25, 2024 at 02:02:27PM +0000, David Howells wrote:
+> Here's a roadmap for the future development of netfslib and local caching
+> (e.g. cachefiles).
+> 
+> Netfslib
+> ========
+> 
+> [>] Current state:
+> 
+> The netfslib write helpers have gone upstream now and are in v6.8-rc1, with
+> both the 9p and afs filesystems using them.  This provides larger I/O size
+> support to 9p and write-streaming and DIO support to afs.
+> 
+> The helpers provide their own version of generic_perform_write() that:
+> 
+>  (1) doesn't use ->write_begin() and ->write_end() at all, completely taking
+>      over all of of the buffered I/O operations, including writeback.
+> 
+>  (2) can perform write-through caching, setting up one or more write
+>      operations and adding folios to them as we copy data into the pagecache
+>      and then starting them as we finish.  This is then used for O_SYNC and
+>      O_DSYNC and can be used with immediate-write caching modes in, say, cifs.
+> 
+> Filesystems using this then deal with iov_iters and ideally would not deal
+> pages or folios at all - except incidentally where a wrapper is necessary.
+> 
+> 
+> [>] Aims for the next merge window:
+> 
+> Convert cifs to use netfslib.  This is now in Steve French's for-next branch.
+> 
+> Implement content crypto and bounce buffering.  I have patches to do this, but
+> it would only be used by ceph (see below).
+> 
+> Make libceph and rbd use iov_iters rather than referring to pages and folios
+> as much as possible.  This is mostly done and rbd works - but there's one bit
+> in rbd that still needs doing.
+> 
+> Convert ceph to use netfslib.  This is about half done, but there are some
+> wibbly bits in the ceph RPCs that I'm not sure I fully grasp.  I'm not sure
+> I'll quite manage this and it might get bumped.
+> 
+> Finally, change netfslib so that it uses ->writepages() to write data to the
+> cache, even data on clean pages just read from the server.  I have a patch to
+> do this, but I need to move cifs and ceph over first.  This means that
+> netfslib, 9p, afs, cifs and ceph will no longer use PG_private_2 (aka
+> PG_fscache) and Willy can have it back - he just then has to wrest control
+> from NFS and btrfs.
+> 
+> 
+> [>] Aims for future merge windows:
+> 
+> Using a larger chunk size than PAGE_SIZE - for instance 256KiB - but that
+> might require fiddling with the VM readahead code to avoid read/read races.
+> 
+> Cache AFS directories - there are just files and currently are downloaded and
+> parsed locally for readdir and lookup.
+> 
+> Cache directories from other filesystems.
+> 
+> Cache inode metadata, xattrs.
 
---gZWG52K1GgRCAoNi
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Implications for permission checking might get interesting depending on
+how that's supposed to work for filesystems such as cephfs that support
+idmapped mounts. But I need to understand more details to say something
+less handwavy.
 
-On Thu, Jan 25, 2024 at 01:20:03PM +0800, Peng Fan (OSS) wrote:
-> From: Peng Fan <peng.fan@nxp.com>
->=20
-> Add i.MX95 Generic, Secure Enclave and V2X Message Unit compatible string.
-> And some MUs has internal RAMs for SCMI shared buffer usage.
+> 
+> Add support for fallocate().
+> 
+> Implement content crypto in other filesystems, such as cifs which has its own
+> non-fscrypt way of doing this.
+> 
+> Support for data transport compression.
+> 
+> Disconnected operation.
+> 
+> NFS.  NFS at the very least needs to be altered to give up the use of
+> PG_private_2.
+> 
+> 
+> Local Caching
+> =============
+> 
+> There are a number of things I want to look at with local caching:
+> 
+> [>] Although cachefiles has switched from using bmap to using SEEK_HOLE and
+> SEEK_DATA, this isn't sufficient as we cannot rely on the backing filesystem
+> optimising things and introducing both false positives and false negatives.
+> Cachefiles needs to track the presence/absence of data for itself.
+> 
+> I had a partially-implemented solution that stores a block bitmap in an xattr,
+> but that only worked up to files of 1G in size (with bits representing 256K
+> blocks in a 512-byte bitmap).
+> 
+> [>] An alternative cache format might prove more fruitful.  Various AFS
+> implementations use a 'tagged cache' format with an index file and a bunch of
+> small files each of which contains a single block (typically 256K in OpenAFS).
+> 
+> This would offer some advantages over the current approach:
+> 
+>  - it can handle entry reuse within the index
+>  - doesn't require an external culling process
+>  - doesn't need to truncate/reallocate when invalidating
+> 
+> There are some downsides, including:
+> 
+>  - each block is in a separate file
+>  - metadata coherency is more tricky - a powercut may require a cache wipe
+>  - the index key is highly variable in size if used for multiple filesystems
+> 
+> But OpenAFS has been using this for something like 30 years, so it's probably
+> worth a try.
+> 
+> [>] Need to work out some way to store xattrs, directory entries and inode
+> metadata efficiently.
+> 
+> [>] Using NVRAM as the cache rather than spinning rust.
+> 
+> [>] Support for disconnected operation to pin desirable data and keep
+> track of changes.
+> 
+> [>] A user API by which the cache for specific files or volumes can be
+> flushed.
+> 
+> 
+> Disconnected Operation
+> ======================
+> 
+> I'm working towards providing support for disconnected operation, so that,
+> provided you've got your working set pinned in the cache, you can continue to
+> work on your network-provided files when the network goes away and resync the
+> changes later.
 
-Please restrict the SRAM child none to whatever the "some MUs" are that
-actually have it.
-
-Thanks,
-Conor.
-
->=20
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> ---
->  .../devicetree/bindings/mailbox/fsl,mu.yaml        | 52 ++++++++++++++++=
-+++++-
->  1 file changed, 50 insertions(+), 2 deletions(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/mailbox/fsl,mu.yaml b/Docu=
-mentation/devicetree/bindings/mailbox/fsl,mu.yaml
-> index 12e7a7d536a3..86759831b24a 100644
-> --- a/Documentation/devicetree/bindings/mailbox/fsl,mu.yaml
-> +++ b/Documentation/devicetree/bindings/mailbox/fsl,mu.yaml
-> @@ -29,10 +29,14 @@ properties:
->        - const: fsl,imx8ulp-mu
->        - const: fsl,imx8-mu-scu
->        - const: fsl,imx8-mu-seco
-> -      - const: fsl,imx93-mu-s4
->        - const: fsl,imx8ulp-mu-s4
-> +      - const: fsl,imx93-mu-s4
-> +      - const: fsl,imx95-mu-ele
-> +      - const: fsl,imx95-mu-v2x
->        - items:
-> -          - const: fsl,imx93-mu
-> +          - enum:
-> +              - fsl,imx93-mu
-> +              - fsl,imx95-mu
->            - const: fsl,imx8ulp-mu
->        - items:
->            - enum:
-> @@ -95,6 +99,19 @@ properties:
->    power-domains:
->      maxItems: 1
-> =20
-> +  ranges: true
-> +
-> +  '#address-cells':
-> +    const: 1
-> +
-> +  '#size-cells':
-> +    const: 1
-> +
-> +patternProperties:
-> +  "^sram@[a-f0-9]+":
-> +    $ref: /schemas/sram/sram.yaml#
-> +    unevaluatedProperties: false
-> +
->  required:
->    - compatible
->    - reg
-> @@ -134,3 +151,34 @@ examples:
->          interrupts =3D <GIC_SPI 176 IRQ_TYPE_LEVEL_HIGH>;
->          #mbox-cells =3D <2>;
->      };
-> +
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +    mu2: mailbox@445b0000 {
-> +        compatible =3D "fsl,imx95-mu", "fsl,imx8ulp-mu";
-> +        reg =3D <0x445b0000 0x10000>;
-> +        ranges;
-> +        interrupts =3D <GIC_SPI 226 IRQ_TYPE_LEVEL_HIGH>;
-> +        #address-cells =3D <1>;
-> +        #size-cells =3D <1>;
-> +        #mbox-cells =3D <2>;
-> +
-> +        sram@445b1000 {
-> +            compatible =3D "mmio-sram";
-> +            reg =3D <0x445b1000 0x400>;
-> +            ranges =3D <0x0 0x445b1000 0x400>;
-> +            #address-cells =3D <1>;
-> +            #size-cells =3D <1>;
-> +
-> +            scmi_buf0: scmi-sram-section@0 {
-> +                compatible =3D "arm,scmi-shmem";
-> +                reg =3D <0x0 0x80>;
-> +            };
-> +
-> +            scmi_buf1: scmi-sram-section@80 {
-> +                compatible =3D "arm,scmi-shmem";
-> +                reg =3D <0x80 0x80>;
-> +            };
-> +        };
-> +    };
->=20
-> --=20
-> 2.37.1
->=20
-
---gZWG52K1GgRCAoNi
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZbKYegAKCRB4tDGHoIJi
-0uQkAP9DvCsBlILZzMc3awEyQXoCSoSWWB6nyUnmS7/lsZOxaAEArkQa8GnAv7FF
-vPfHkN1MKkWVPBG4ByV36ieeHXZ5OgA=
-=tP/N
------END PGP SIGNATURE-----
-
---gZWG52K1GgRCAoNi--
+As long as it doesn't involve upcalls... :)
