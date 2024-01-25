@@ -1,130 +1,105 @@
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 479B3179A7;
-	Thu, 25 Jan 2024 08:00:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABB56179AB;
+	Thu, 25 Jan 2024 08:00:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.134.136.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706169603; cv=none; b=dFGzTMIIBtMz/D5Gb8sh8a674DTTCSfa47egJqNbWuLrg0uHDyMLF536VxHpPDwgIa25ZUwnHnfbacA16RTS/Rip/QD7Wp/9sWuc8WMzT81srxszVqgtX/j06IbFGV9Rw5OBUP2sbjF9CBA7PiLdtRZXqaseJ229foEAdWwn+EI=
+	t=1706169604; cv=none; b=cgpsSUFYtllLSP1r7BYP9yOmvJPGoMaGIrlLb0I+DmdZ/d2C0DfoqjU1xLwMjjAbVX9EML9ybjvKY/4j9JFFBecX5Pe2avGP8hm3L2fh5lVe2UugHL0NRjd8AGwZb+NrZGr47ZzMXhrtTYOYbjPPlxYTXeNKpmXl/pxV4RD7HRU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706169603; c=relaxed/simple;
-	bh=6MBZvyvG0uylaHBZGJpIBIc5j4//nK/ODP3oENGdIwE=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=G0GZnO/EbO8VSngBoRWpQ1IthBDkQN8dmTBRN4gbpsuyU+1VU4RiIzKUp2VPqGINcPX/x636ubdAEiuu7pX+yuvJ4V+7gNmanH6n7Dq7htP6mvw5HkbG8kdM18JT7WeXyltOtjleYA/IM9V4P3O9NwEnA7y6NLOsSTQZTn1JXjg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.17])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4TLCqm6PP5z1gy3X;
-	Thu, 25 Jan 2024 15:58:12 +0800 (CST)
-Received: from kwepemm600005.china.huawei.com (unknown [7.193.23.191])
-	by mail.maildlp.com (Postfix) with ESMTPS id BB2C41A0172;
-	Thu, 25 Jan 2024 15:59:57 +0800 (CST)
-Received: from huawei.com (10.50.165.33) by kwepemm600005.china.huawei.com
- (7.193.23.191) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 25 Jan
- 2024 15:59:57 +0800
-From: Longfang Liu <liulongfang@huawei.com>
-To: <alex.williamson@redhat.com>, <jgg@nvidia.com>,
-	<shameerali.kolothum.thodi@huawei.com>, <jonathan.cameron@huawei.com>
-CC: <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linuxarm@openeuler.org>, <liulongfang@huawei.com>
-Subject: [PATCH 1/3] hisi_acc_vfio_pci: extract public functions for container_of
-Date: Thu, 25 Jan 2024 15:55:23 +0800
-Message-ID: <20240125075525.42168-2-liulongfang@huawei.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20240125075525.42168-1-liulongfang@huawei.com>
-References: <20240125075525.42168-1-liulongfang@huawei.com>
+	s=arc-20240116; t=1706169604; c=relaxed/simple;
+	bh=z+VAqBghFB7YwJJVRmjHIb/J1jBpR0/SN3VAkD9JHMA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=j4eK/IeBJIb4TWIpYq00wEociohm5GW6Hb7Jm1QbAS52EgrBEOYKnuNWxzXA7T0iZ2Qnh1olZttGp3CJ5CF+EUhU7PA2EXhhZziBoHetU9Qi2FfqwLCS1OEyk/TrQRrKMheBZWFEDi8lFRhmXa36ROAQO3y3jPvn+qLCXbU3io4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Svi2Txuq; arc=none smtp.client-ip=134.134.136.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Svi2Txuq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706169602; x=1737705602;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=z+VAqBghFB7YwJJVRmjHIb/J1jBpR0/SN3VAkD9JHMA=;
+  b=Svi2TxuqvyaboLK0avbQqYUpArqnY+B21wZmanEK7CNlX93KkdU+np7S
+   ntqxcC9CAAzm+AvzfCvrIxd8/szj55C1rbFXxGKh3jVtxIz9RTGgUm7G3
+   DYShK2tq0zDhZFyonEDVQaD/TFqfg1emZDwdSoqZyqKdgTIBtQV4pglBT
+   jr5IEsAi6+mYcfrhnFP+9C+UeJYvW+N/PR970GdxNqF2Rpnca3PskFFmK
+   esMeiTwKcPUfNGujRMgW/srHMSp8cOFoPY2MBMCBJww0eSFHYJ1I6Zcun
+   VBAt15tBp/0j4ug+vvbTx6kS/HI/Gw2fOHav6hkxykPGE7tc8tt4ILjCS
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="405838370"
+X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
+   d="scan'208";a="405838370"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2024 00:00:01 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
+   d="scan'208";a="28399670"
+Received: from sgruszka-mobl.ger.corp.intel.com (HELO localhost) ([10.252.58.119])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2024 00:00:00 -0800
+Date: Thu, 25 Jan 2024 08:59:57 +0100
+From: Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Linux PM <linux-pm@vger.kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH v1 08/12] PM: sleep: stats: Use locking in
+ dpm_save_failed_dev()
+Message-ID: <ZbIU/WbnXDO3pSAb@linux.intel.com>
+References: <5760158.DvuYhMxLoT@kreacher>
+ <3798847.kQq0lBPeGt@kreacher>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- kwepemm600005.china.huawei.com (7.193.23.191)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3798847.kQq0lBPeGt@kreacher>
 
-In the current driver, vdev is obtained from struct
-hisi_acc_vf_core_device through the container_of function.
-This method is used in many places in the driver. In order to
-reduce this repetitive operation, I extracted a public function
-to replace it.
+On Mon, Jan 22, 2024 at 12:33:53PM +0100, Rafael J. Wysocki wrote:
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> 
+> Because dpm_save_failed_dev() may be called simultaneously by multiple
+> failing device PM functions, the state of the suspend_stats fields
+> updated by it may become inconsistent.
+> 
+> Prevent that from happening by using a lock in dpm_save_failed_dev().
+> 
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Reviewed-by: Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>
 
-Signed-off-by: Longfang Liu <liulongfang@huawei.com>
-Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
----
- .../vfio/pci/hisilicon/hisi_acc_vfio_pci.c    | 21 ++++++++++---------
- 1 file changed, 11 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c b/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
-index f4b38a243aa7..5f6e01571a7b 100644
---- a/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
-+++ b/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
-@@ -641,6 +641,12 @@ static void hisi_acc_vf_disable_fds(struct hisi_acc_vf_core_device *hisi_acc_vde
- 	}
- }
- 
-+static struct hisi_acc_vf_core_device *hisi_acc_get_vf_dev(struct vfio_device *vdev)
-+{
-+	return container_of(vdev, struct hisi_acc_vf_core_device,
-+			    core_device.vdev);
-+}
-+
- /*
-  * This function is called in all state_mutex unlock cases to
-  * handle a 'deferred_reset' if exists.
-@@ -1064,8 +1070,7 @@ static struct file *
- hisi_acc_vfio_pci_set_device_state(struct vfio_device *vdev,
- 				   enum vfio_device_mig_state new_state)
- {
--	struct hisi_acc_vf_core_device *hisi_acc_vdev = container_of(vdev,
--			struct hisi_acc_vf_core_device, core_device.vdev);
-+	struct hisi_acc_vf_core_device *hisi_acc_vdev = hisi_acc_get_vf_dev(vdev);
- 	enum vfio_device_mig_state next_state;
- 	struct file *res = NULL;
- 	int ret;
-@@ -1106,8 +1111,7 @@ static int
- hisi_acc_vfio_pci_get_device_state(struct vfio_device *vdev,
- 				   enum vfio_device_mig_state *curr_state)
- {
--	struct hisi_acc_vf_core_device *hisi_acc_vdev = container_of(vdev,
--			struct hisi_acc_vf_core_device, core_device.vdev);
-+	struct hisi_acc_vf_core_device *hisi_acc_vdev = hisi_acc_get_vf_dev(vdev);
- 
- 	mutex_lock(&hisi_acc_vdev->state_mutex);
- 	*curr_state = hisi_acc_vdev->mig_state;
-@@ -1323,8 +1327,7 @@ static long hisi_acc_vfio_pci_ioctl(struct vfio_device *core_vdev, unsigned int
- 
- static int hisi_acc_vfio_pci_open_device(struct vfio_device *core_vdev)
- {
--	struct hisi_acc_vf_core_device *hisi_acc_vdev = container_of(core_vdev,
--			struct hisi_acc_vf_core_device, core_device.vdev);
-+	struct hisi_acc_vf_core_device *hisi_acc_vdev = hisi_acc_get_vf_dev(core_vdev);
- 	struct vfio_pci_core_device *vdev = &hisi_acc_vdev->core_device;
- 	int ret;
- 
-@@ -1347,8 +1350,7 @@ static int hisi_acc_vfio_pci_open_device(struct vfio_device *core_vdev)
- 
- static void hisi_acc_vfio_pci_close_device(struct vfio_device *core_vdev)
- {
--	struct hisi_acc_vf_core_device *hisi_acc_vdev = container_of(core_vdev,
--			struct hisi_acc_vf_core_device, core_device.vdev);
-+	struct hisi_acc_vf_core_device *hisi_acc_vdev = hisi_acc_get_vf_dev(core_vdev);
- 	struct hisi_qm *vf_qm = &hisi_acc_vdev->vf_qm;
- 
- 	iounmap(vf_qm->io_base);
-@@ -1363,8 +1365,7 @@ static const struct vfio_migration_ops hisi_acc_vfio_pci_migrn_state_ops = {
- 
- static int hisi_acc_vfio_pci_migrn_init_dev(struct vfio_device *core_vdev)
- {
--	struct hisi_acc_vf_core_device *hisi_acc_vdev = container_of(core_vdev,
--			struct hisi_acc_vf_core_device, core_device.vdev);
-+	struct hisi_acc_vf_core_device *hisi_acc_vdev = hisi_acc_get_vf_dev(core_vdev);
- 	struct pci_dev *pdev = to_pci_dev(core_vdev->dev);
- 	struct hisi_qm *pf_qm = hisi_acc_get_pf_qm(pdev);
- 
--- 
-2.24.0
-
+> ---
+>  kernel/power/main.c |    5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> Index: linux-pm/kernel/power/main.c
+> ===================================================================
+> --- linux-pm.orig/kernel/power/main.c
+> +++ linux-pm/kernel/power/main.c
+> @@ -323,13 +323,18 @@ struct suspend_stats {
+>  };
+>  
+>  static struct suspend_stats suspend_stats;
+> +static DEFINE_MUTEX(suspend_stats_lock);
+>  
+>  void dpm_save_failed_dev(const char *name)
+>  {
+> +	mutex_lock(&suspend_stats_lock);
+> +
+>  	strscpy(suspend_stats.failed_devs[suspend_stats.last_failed_dev],
+>  		name, sizeof(suspend_stats.failed_devs[0]));
+>  	suspend_stats.last_failed_dev++;
+>  	suspend_stats.last_failed_dev %= REC_FAILED_NUM;
+> +
+> +	mutex_unlock(&suspend_stats_lock);
+>  }
+>  
+>  void dpm_save_failed_step(enum suspend_stat_step step)
+> 
+> 
+> 
+> 
