@@ -1,175 +1,209 @@
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E9511C29F;
-	Thu, 25 Jan 2024 09:38:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7945E1C686
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 09:38:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706175484; cv=none; b=Bd2q1wt0N8m8RYM5ZHylQh8RcrNAa5oO59C8CLZe0eJ3y81BqTL93tnnJ5SWxcu9C4Mm7MfC9mE3M3fohhB65oNLFowbtWuMS4Wv4qdUPFhD1ZykOU29TkHA4mcz6KYYl+2+EFXh46kMt54NMgG0+WwNlI1fM0fzAVcsnZojP1k=
+	t=1706175486; cv=none; b=Rfn4XnRYFnbVdY5kWzhdLcobD/WabJ/0eBv5EBtTacF0H10zbwTh0TBGgzBKE9dxlMVxWhxrw7HbHrXzH2OqJVz57RP/KVVjCnrlQInrvL0qm/J3oXT9LD4FeXoDGKtlsxZVEby8Kv/+czVdhEjfgpz8tqytOXInWaTAwD+oiD0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706175484; c=relaxed/simple;
-	bh=s/htPPPH8Thz98T+Ps8fKRrjVJvL7gu+39qd5dyICkM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AQHKegydcucVa87QT9hgJNRwzs5rI/ikR11LBnVLCEjpFeq1CWRbHYwOS8VUtvPq4h7JLi6SlC7JFrGfxZkBVw1FowgDY4FNqBG0oGwGPt1oLyKOhqCrOwsQ1O66cnCfVR1S7ISO+jw+MfELedGIUu+YSvhmJ0wmQgeMrQVs9XA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UkRaez0G; arc=none smtp.client-ip=209.85.208.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1706175486; c=relaxed/simple;
+	bh=yG81cTllFEjaTu43SogQYuhthByCM+AVIe1A6soPGns=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OAcQtbZSRmfB1KCJVkUWxp6HQV4kIi5kYqWg+GjQdu2ZLR+AZwVh1pmu+K06BULvCJNCS8o6daV2UVDHOUTiMtzdwekmegQDBQBuHh2nTxPC1T712EVjtp3rl2mufAx0V5JpaiZW8MrmP5W7yv+/jfPuvjGXfhnWkIBpeRZIRHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Hxtb5kt/; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UkRaez0G"
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2cf1524cb17so31926631fa.2;
-        Thu, 25 Jan 2024 01:38:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706175480; x=1706780280; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=V+RkNqMrCMWSlr+Yh44U7hyKXYEqjphS14jY3zThSRg=;
-        b=UkRaez0GbCtvo+waidZgIOunT0UAHO+uxkl9mrw5oZAoPBWrcumYYF0YED2cDaeIlb
-         Wzizw+QoRoSTxUx1D4/63cTFXaoEyGRRj8WA/1/+U58K2M/4BSQEav8jFl+/+MlLaF1e
-         J4skvvWG/9RmQ5UnNorQoTkgukCgjc9y6KIdnLdZeD1MScDIYAkVaOZHvlNbzhAf5g3g
-         AS8jcKEguXEW01PWrsaF55mRM8dMyWlkROxKrEmSh+kW4GnxYFeLtn6kGqgozKWUPWoM
-         uSxOU+TN3ULjlBGz47IHSL/shemdGLZqQCEzXzX+2v3VjP5qEQjoGlTCAuRRyJ3pknwR
-         Crow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706175480; x=1706780280;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=V+RkNqMrCMWSlr+Yh44U7hyKXYEqjphS14jY3zThSRg=;
-        b=RGISwO3YTkayxKRyp+EILZiweJuwALggHuntGfFCHiO3ylj1SCYsOSXdFSIF4fuciD
-         DqX6YXgbjqW101XTRIfjnD+VQHaJdJNoPkozIl4odWuSirpCxTP5+fV05Eg1wHKHn7RF
-         smNza73u+aYGVGRQXsoanl3A9TaJ9E6emNkYqPh9JOVeD86v9ps8nQbmWw7i96AnGcXm
-         9JXc6HYnrwISaXqQbklFxWzkQuqj9gTWzxroO6Ggyru7jGLgD+fMzEVUbXEtxcIMN85T
-         OrYnap2/ZIur1GvqOSMv1vzeHwvLvN+ecfXQi4UYDzONC/adHjQqGnAk13tockgmWr1F
-         TYtA==
-X-Gm-Message-State: AOJu0YxZq42Y0gfS1+16sxoLrPlvMRKetlpuPFVJTrhkvgxWv3HBF08U
-	dF8Jly+64ELc8g4pkleTgNDQzVRFiZUoBHrcJsEeHQxtaCjziMzGWGrhg6b4+ZqFkt9PWIQlu3r
-	4RWDb0DOMsJEd5sojU6IyJZaKf9pPih/5G8M=
-X-Google-Smtp-Source: AGHT+IFQb9lHVoPdeNHadDfo2biHwzJySgJs7FG5T5F0tRJc/2lFbJsqxK/r3ISDkgkkVps3PuhohFcNDxKPVBnVh3o=
-X-Received: by 2002:a2e:81c3:0:b0:2ce:fbca:606a with SMTP id
- s3-20020a2e81c3000000b002cefbca606amr357473ljg.40.1706175480409; Thu, 25 Jan
- 2024 01:38:00 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Hxtb5kt/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706175484; x=1737711484;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=yG81cTllFEjaTu43SogQYuhthByCM+AVIe1A6soPGns=;
+  b=Hxtb5kt/gmHI0OU3rRwCyWoo9GYYmZy4ZSyGHqgGK2VB1EsqHyDs2e5X
+   G8bFaz8v2H5T9RsegBD1jEmCo/7RbUEnb11tdZUPe97yNBexAl1kEiGrG
+   r6CsRo/GcJEEyKRaf86B86q0iFiWLsGEGSG1db3GivbwsXSQVVITwUU3m
+   EwZfaAE6AFx7oodJQAli2hvCWv6D4ZGqVVOEeVr3/BkwWsubLY7Uk94yv
+   8hK0FYxC1/aSBX8NmYKk77MF5RuXZTaAizpAibOXMgnAcZ1G0h2g+dmyI
+   Kr7ClksOU7xH13eaZLvqM6EBYMBZB9Q6NpiUk2+ccHma+L/1bVyah9Rqi
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="2004932"
+X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
+   d="scan'208";a="2004932"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2024 01:38:04 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="905904562"
+X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
+   d="scan'208";a="905904562"
+Received: from zhaohaif-mobl.ccr.corp.intel.com (HELO [10.254.212.253]) ([10.254.212.253])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2024 01:38:01 -0800
+Message-ID: <a6e18e0a-2721-4126-aa8a-ae650fa86edb@linux.intel.com>
+Date: Thu, 25 Jan 2024 17:37:58 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240125071901.3223188-1-zhaoyang.huang@unisoc.com>
- <6b2d5694-f802-43a4-a0fd-1c8e34f8e69a@kernel.org> <CAGWkznHK5UPajY2PG24Jm7+A0c9q+tyQzrPdd=n3tp0dgX+T0w@mail.gmail.com>
- <95082224-a61d-4f4b-bc96-1beea8aa93a9@kernel.org> <CAGWkznGe+37K7_E34G_MZQXNxoLuM3E0mY=BZCGpyiq+TB_PoA@mail.gmail.com>
-In-Reply-To: <CAGWkznGe+37K7_E34G_MZQXNxoLuM3E0mY=BZCGpyiq+TB_PoA@mail.gmail.com>
-From: Zhaoyang Huang <huangzhaoyang@gmail.com>
-Date: Thu, 25 Jan 2024 17:37:49 +0800
-Message-ID: <CAGWkznGJejDMZsryPpS-11mb50wMhhQe-=sNoV4_iO5ogVLtLQ@mail.gmail.com>
-Subject: Re: [PATCHv3 1/1] block: introduce content activity based ioprio
-To: Damien Le Moal <dlemoal@kernel.org>
-Cc: "zhaoyang.huang" <zhaoyang.huang@unisoc.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Jens Axboe <axboe@kernel.dk>, Yu Zhao <yuzhao@google.com>, 
-	Niklas Cassel <niklas.cassel@wdc.com>, "Martin K . Petersen" <martin.petersen@oracle.com>, 
-	Hannes Reinecke <hare@suse.de>, Linus Walleij <linus.walleij@linaro.org>, linux-mm@kvack.org, 
-	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	steve.kang@unisoc.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: Dell XPS 13 9360: DMAR errors `DRHD: handling fault status reg 2`
+ and `[INTR-REMAP] Request device [f0:1f.0] fault index 0x0`
+To: "Christian A. Ehrhardt" <lk@c--e.de>, Baolu Lu <baolu.lu@linux.intel.com>
+Cc: Paul Menzel <pmenzel@molgen.mpg.de>, =?UTF-8?B?SsO2cmcgUsO2ZGVs?=
+ <joro@8bytes.org>, Will Deacon <will@kernel.org>, iommu@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+References: <9a24c335-8ec5-48c9-9bdd-b0dac5ecbca8@molgen.mpg.de>
+ <cb71c806-b100-4673-a131-faac77344002@linux.intel.com>
+ <Za5xYauQDe8xcVGr@cae.in-ulm.de>
+From: Ethan Zhao <haifeng.zhao@linux.intel.com>
+In-Reply-To: <Za5xYauQDe8xcVGr@cae.in-ulm.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jan 25, 2024 at 5:32=E2=80=AFPM Zhaoyang Huang <huangzhaoyang@gmail=
-.com> wrote:
->
-> On Thu, Jan 25, 2024 at 4:26=E2=80=AFPM Damien Le Moal <dlemoal@kernel.or=
-g> wrote:
-> >
-> > On 1/25/24 16:52, Zhaoyang Huang wrote:
-> > > On Thu, Jan 25, 2024 at 3:40=E2=80=AFPM Damien Le Moal <dlemoal@kerne=
-l.org> wrote:
-> > >>
-> > >> On 1/25/24 16:19, zhaoyang.huang wrote:
-> > >>> From: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
-> > >>>
-> > >>> Currently, request's ioprio are set via task's schedule priority(wh=
-en no
-> > >>> blkcg configured), which has high priority tasks possess the privil=
-ege on
-> > >>> both of CPU and IO scheduling.
-> > >>> This commit works as a hint of original policy by promoting the req=
-uest ioprio
-> > >>> based on the page/folio's activity. The original idea comes from LR=
-U_GEN
-> > >>> which provides more precised folio activity than before. This commi=
-t try
-> > >>> to adjust the request's ioprio when certain part of its folios are =
-hot,
-> > >>> which indicate that this request carry important contents and need =
-be
-> > >>> scheduled ealier.
-> > >>>
-> > >>> This commit is verified on a v6.6 6GB RAM android14 system via 4 te=
-st cases
-> > >>> by changing the bio_add_page/folio API in ext4 and f2fs.
-> > >>
-> > >> And as mentioned already by Chrisoph and Jens, why don't you just si=
-mply set
-> > >> bio->bi_ioprio to the value you want before calling submit_bio() in =
-these file
-> > >> systems ? Why all the hacking of the priority code for that ? That i=
-s not
-> > >> justified at all.
-> > >>
-> > >> Furthermore, the activity things reduces the ioprio hint bits to the=
- bare
-> > >> minimum 3 bits necessary for command duration limits. Not great. But=
- if you
-> > >> simply set the prio class based on your activity algorithm, you do n=
-ot need to
-> > >> change all that.
-> > > That is because bio->io_prio changes during bio grows with adding
-> > > different activity pages in. I have to wrap these into an API which
-> > > has both of fs and block be transparent to the process.
-> >
-> > Pages are not added to BIOs on the fly. The FS does bio_add_page() or s=
-imilar
-> > (it can be a get user pages for direct IOs) and then calls bio_submit()=
-. Between
-> > these 2, you can set your IO priority according to how many pages you h=
-ave.
-> Please correct me if I am wrong. So you suggest iterating the
-> request->bios->bvecs(pages) before final submit_bio? Is it too costly
-> and introduces too many modifications on each fs.
-> >
-> > You can even likely do all of this based on the iocb (and use iocb->ki_=
-ioprio to
-> > set the prio), so before one starts allocating and setting up BIOs to p=
-rocess
-> > the user IO.
-> Actually, the activity information comes from page's history (recorded
-> at page cache's slot) instead of user space in step(1) and can be
-> associate with bio in step(2) or iterate the bio in step(3)
->
-> page fault        \
-> (1)
->                               (2)                       (3)
->                           allocate_pages=3D=3D>add_page_to_page_cache(get
-> activity information)=3D=3D>xxx_readpage=3D=3D>bio_add_page=3D=3D>submit_=
-bio
-> vfs read/write  /
-The chart goes wrong again:(           change it to vertical mode
-Actually, the activity information comes from page's history (recorded
-at page cache's slot) instead of user space in step(1) and can be
-associate with bio in step(2) or iterate the bio in step(3)
-page fault(or vfs)(1)
-|
-alloc_pages
-|
-add_page_to_pagecache(get the page's activity information)
-|
-fs_readpage
-|
-bio_add_page(2)
-|
-submit_bio(3)
 
-> >
-> > --
-> > Damien Le Moal
-> > Western Digital Research
-> >
+On 1/22/2024 9:45 PM, Christian A. Ehrhardt wrote:
+> Hi,
+>
+> On Mon, Jan 22, 2024 at 08:53:43PM +0800, Baolu Lu wrote:
+>> On 2024/1/19 20:59, Paul Menzel wrote:
+>>> Dear Linux folks,
+>>>
+>>>
+>>> On a Dell XPS 13 9360 Linux 6.6.8, 6.6.11 and 6.7 (and earlier versions)
+>>> log the lines below when resuming from ACPI S3 (deep):
+>>>
+>>>       [    0.000000] Linux version 6.7-amd64
+>>> (debian-kernel@lists.debian.org) (x86_64-linux-gnu-gcc-13 (Debian
+>>> 13.2.0-9) 13.2.0, GNU ld (GNU Binutils for Debian) 2.41.50.20231227) #1
+>>> SMP PREEMPT_DYNAMIC Debian 6.7-1~exp1 (2024-01-08)
+>>>       [    0.000000] Command line: BOOT_IMAGE=/vmlinuz-6.7-amd64
+>>> root=UUID=32e29882-d94d-4a92-9ee4-4d03002bfa29 ro quiet pci=noaer
+>>> mem_sleep_default=deep log_buf_len=8M
+>>>       […]
+>>>       [    0.000000] DMI: Dell Inc. XPS 13 9360/0596KF, BIOS 2.21.0
+>>> 06/02/2022
+>>>       […]
+>>>       [   99.711230] PM: suspend entry (deep)
+>>>       […]
+>>>       [   99.722101] printk: Suspending console(s) (use
+>>> no_console_suspend to debug)
+>>>       [  100.285178] ACPI: EC: interrupt blocked
+>>>       [  100.319908] ACPI: PM: Preparing to enter system sleep state S3
+>>>       [  100.331793] ACPI: EC: event blocked
+>>>       [  100.331798] ACPI: EC: EC stopped
+>>>       [  100.331800] ACPI: PM: Saving platform NVS memory
+>>>       [  100.335224] Disabling non-boot CPUs ...
+>>>       [  100.337412] smpboot: CPU 1 is now offline
+>>>       [  100.341065] smpboot: CPU 2 is now offline
+>>>       [  100.346441] smpboot: CPU 3 is now offline
+>>>       [  100.353086] ACPI: PM: Low-level resume complete
+>>>       [  100.353129] ACPI: EC: EC started
+>>>       [  100.353129] ACPI: PM: Restoring platform NVS memory
+>>>       [  100.355219] Enabling non-boot CPUs ...
+>>>       [  100.355244] smpboot: Booting Node 0 Processor 1 APIC 0x2
+>>>       [  100.355954] CPU1 is up
+>>>       [  100.355972] smpboot: Booting Node 0 Processor 2 APIC 0x1
+>>>       [  100.356698] CPU2 is up
+>>>       [  100.356716] smpboot: Booting Node 0 Processor 3 APIC 0x3
+>>>       [  100.357371] CPU3 is up
+>>>       [  100.360217] ACPI: PM: Waking up from system sleep state S3
+>>>       [  100.668380] ACPI: EC: interrupt unblocked
+>>>       [  100.668598] pcieport 0000:00:1c.0: Intel SPT PCH root port ACS
+>>> workaround enabled
+>>>       [  100.668606] pcieport 0000:00:1c.4: Intel SPT PCH root port ACS
+>>> workaround enabled
+>>>       [  100.668643] pcieport 0000:00:1d.0: Intel SPT PCH root port ACS
+>>> workaround enabled
+>>>       [  100.690996] DMAR: DRHD: handling fault status reg 2
+>>>       [  100.691001] DMAR: [INTR-REMAP] Request device [f0:1f.0] fault
+>>> index 0x0 [fault reason 0x25] Blocked a compatibility format interrupt
+>>> request
+>>>
+>>> But I am unable to find the device f0:1f.0:
+>>>
+>>>       $ lspci -nn
+>>>       00:00.0 Host bridge [0600]: Intel Corporation Xeon E3-1200 v6/7th
+>>> Gen Core Processor Host Bridge/DRAM Registers [8086:5904] (rev 02)
+>>>       00:02.0 VGA compatible controller [0300]: Intel Corporation HD
+>>> Graphics 620 [8086:5916] (rev 02)
+>>>       00:04.0 Signal processing controller [1180]: Intel Corporation Xeon
+>>> E3-1200 v5/E3-1500 v5/6th Gen Core Processor Thermal Subsystem
+>>> [8086:1903] (rev 02)
+>>>       00:14.0 USB controller [0c03]: Intel Corporation Sunrise Point-LP
+>>> USB 3.0 xHCI Controller [8086:9d2f] (rev 21)
+>>>       00:14.2 Signal processing controller [1180]: Intel Corporation
+>>> Sunrise Point-LP Thermal subsystem [8086:9d31] (rev 21)
+>>>       00:15.0 Signal processing controller [1180]: Intel Corporation
+>>> Sunrise Point-LP Serial IO I2C Controller #0 [8086:9d60] (rev 21)
+>>>       00:15.1 Signal processing controller [1180]: Intel Corporation
+>>> Sunrise Point-LP Serial IO I2C Controller #1 [8086:9d61] (rev 21)
+>>>       00:16.0 Communication controller [0780]: Intel Corporation Sunrise
+>>> Point-LP CSME HECI #1 [8086:9d3a] (rev 21)
+>>>       00:1c.0 PCI bridge [0604]: Intel Corporation Sunrise Point-LP PCI
+>>> Express Root Port #1 [8086:9d10] (rev f1)
+>>>       00:1c.4 PCI bridge [0604]: Intel Corporation Sunrise Point-LP PCI
+>>> Express Root Port #5 [8086:9d14] (rev f1)
+>>>       00:1d.0 PCI bridge [0604]: Intel Corporation Sunrise Point-LP PCI
+>>> Express Root Port #9 [8086:9d18] (rev f1)
+>>>       00:1f.0 ISA bridge [0601]: Intel Corporation Sunrise Point-LP LPC
+>>> Controller [8086:9d58] (rev 21)
+>>>       00:1f.2 Memory controller [0580]: Intel Corporation Sunrise
+>>> Point-LP PMC [8086:9d21] (rev 21)
+>>>       00:1f.3 Audio device [0403]: Intel Corporation Sunrise Point-LP HD
+>>> Audio [8086:9d71] (rev 21)
+>>>       00:1f.4 SMBus [0c05]: Intel Corporation Sunrise Point-LP SMBus
+>>> [8086:9d23] (rev 21)
+>>>       01:00.0 PCI bridge [0604]: Intel Corporation DSL6340 Thunderbolt 3
+>>> Bridge [Alpine Ridge 2C 2015] [8086:1576]
+>>>       02:00.0 PCI bridge [0604]: Intel Corporation DSL6340 Thunderbolt 3
+>>> Bridge [Alpine Ridge 2C 2015] [8086:1576]
+>>>       02:01.0 PCI bridge [0604]: Intel Corporation DSL6340 Thunderbolt 3
+>>> Bridge [Alpine Ridge 2C 2015] [8086:1576]
+>>>       02:02.0 PCI bridge [0604]: Intel Corporation DSL6340 Thunderbolt 3
+>>> Bridge [Alpine Ridge 2C 2015] [8086:1576]
+>>>       39:00.0 USB controller [0c03]: Intel Corporation DSL6340 USB 3.1
+>>> Controller [Alpine Ridge] [8086:15b5]
+>>>       3a:00.0 Network controller [0280]: Qualcomm Atheros QCA6174
+>>> 802.11ac Wireless Network Adapter [168c:003e] (rev 32)
+>>>       3b:00.0 Non-Volatile memory controller [0108]: SK hynix PC300 NVMe
+>>> Solid State Drive 512GB [1c5c:1284]
+>>>
+>>> As this is logged as an error, can this be fixed somehow?
+>> This appears to be a platform problem. The hidden device (f0:1f.0) is
+>> not visible to the OS, so no driver can program the interrupt remapping
+>> table for the device's interrupts.
+> The hidden device has been identified as the IO-APIC. It is visible
+> and properly declared to use 0f:1f.0 in the DMAR table.
+
+Didn't see the warning
+
+          "Compatibility-format IRQs enabled despite intr remapping;\n"
+
+          "you are vulnerable to IRQ injection.\n");
+
+So assume the DMA_GSTS_CFIS bit of GSTS_REG shows the interrupt
+
+remapping was programmed to the right behaviour -- Compatibility
+
+format interrupts are blocked.
+
+But the device f0:1f.0 is still armed to inject compatible format interrupt
+
+that is dangerous mistake if not be blocked, so far no such exception
+
+that should be passed through, appears not iommu issue per my
+
+understanding.
+
+Thanks,
+
+Ethan
+
+
+>
+>       regards  Christian
+>
+>
