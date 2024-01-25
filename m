@@ -1,45 +1,46 @@
 Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98DEE1C69A;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 991891C6AB;
 	Thu, 25 Jan 2024 10:05:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706177156; cv=none; b=Smxdz06hFSBofUcVF7W9y0XQ2UICNKQPvUqmQhqsWrlW4Sz+MShGKtsQP2ar1Xo2IZFsq0jclXSoVMAn/tB93mLA7YX9ilLPIWM3G9hEUTXzAdadMk4gNPbR/ZMLVuN6FwiOtsAyr/0NGYe/ryLBeY3i2aGtJ2u/rDqM06s3hmA=
+	t=1706177156; cv=none; b=H/aQ5L2C1/t04js0flbg2ivLO5iBcNkI61RC2VsLMlh/AVxOFDNW4dYt8SB2cCa1WY/c3c8zYhJxMSIJle2kqqf+vW5ZYVimnEwTFrpiGVolBr8bLInqtmbSjxD0PEjHMMfo34d3MPHlo1kRnMKXkUvyPDmZuKouC6PVqFkhCrw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1706177156; c=relaxed/simple;
-	bh=1NjOq8QpYCQXV9SHSo6d3He/arkTV8LcnlAVkkf9pBU=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=SaPXLuDhGXNl8U14Zh1ybDwVuO/eQjPcxsNT1/MMIhCzo65CLC6hOvgfF49WkyAa1MFDOSMDoSATlcOYCz0B0xqq7nzJ8gGubyhK0NzR4K+o3zh5e4c41RiUrtL3eu+WEVBNDoOOXTYLEdYoFmZ4kgt46VJ3rUDBGj4/twTHkFI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=CPeHRxBX; arc=none smtp.client-ip=198.47.19.141
+	bh=c5GlTcVsIcPhCRJCpqIoAGFuw7rgWBqy6nAzdAEPXVU=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=TIZsBwmgekEUJfQ63htfQsYCBZxnNibJ66JjX/0qyvcTmOc+FHtcp1uLQhGl11UKYfLFg0lEaAfASAo2RTEg2hXgma6hx7Z4Aso53h2apEVcEdOcvmYustoGyqJTfhCY/DNkUfasRj8YLnCleKeFYA8OvDeGSHQNPUBk4WnBblQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=ZGZX7DLS; arc=none smtp.client-ip=198.47.19.141
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="CPeHRxBX"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 40PA5Dv8069387;
-	Thu, 25 Jan 2024 04:05:13 -0600
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ZGZX7DLS"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 40PA5LLb069411;
+	Thu, 25 Jan 2024 04:05:21 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1706177114;
-	bh=90Wx4wXz/bfBM2NhwoVGPDRkYZNOgi7Yeec6KpjN/Ls=;
-	h=From:To:CC:Subject:Date;
-	b=CPeHRxBXGTIzCLbb0ubbCteR0llpO8eSyEdrZpMhdZw2NYEhFwsCl+BSKqXe3wogU
-	 ANxhP0kex5cDRqHkPBPrdpkO2HMRun8lkKC2niysoj620HIxyh/dwmYpXioHMvUclR
-	 qj3NlhoJupU6h+34z7Q/IKCYIo+hSKwN7qZBf7uE=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 40PA5D3I025973
+	s=ti-com-17Q1; t=1706177121;
+	bh=GCYtRKqYRCQZAdxhPg4iYh8uQa4d3MRruLSrphd47nY=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=ZGZX7DLSGfLVifD+pwFol4XEM+pfn2stCGpE+ygYl5yOnNVLuOWjG7LBNoCVJ2bBN
+	 BeqTFzrs2/UKh6xvSMVj6l7JYGQsyxlY6MhtLI6KAJ8/E8n6mHv4DQZ7uIp6DsOkvc
+	 k1paaZI98snVDGG/tWcCv5nwIzjVdmM5yP9KlQaw=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 40PA5L0K045511
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 25 Jan 2024 04:05:13 -0600
-Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+	Thu, 25 Jan 2024 04:05:21 -0600
+Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 25
- Jan 2024 04:05:13 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ Jan 2024 04:05:21 -0600
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 25 Jan 2024 04:05:13 -0600
+ Frontend Transport; Thu, 25 Jan 2024 04:05:21 -0600
 Received: from localhost (chintan-thinkstation-p360-tower.dhcp.ti.com [172.24.227.220])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 40PA5C6p005006;
-	Thu, 25 Jan 2024 04:05:12 -0600
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 40PA5KZW056416;
+	Thu, 25 Jan 2024 04:05:20 -0600
 From: Chintan Vankar <c-vankar@ti.com>
 To: Andrew Davis <afd@ti.com>, Peter Rosin <peda@axentia.se>,
         Greg
@@ -57,10 +58,12 @@ CC: <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <s-vadapalli@ti.com>, <r-gunasekaran@ti.com>, <danishanwar@ti.com>,
         Chintan Vankar
 	<c-vankar@ti.com>
-Subject: [PATCH v3 0/5] Add CPSW2G and CPSW9G nodes for J784S4
-Date: Thu, 25 Jan 2024 15:34:56 +0530
-Message-ID: <20240125100501.4137977-1-c-vankar@ti.com>
+Subject: [PATCH v3 5/5] arm64: dts: ti: k3-j784s4: Add overlay for dual port USXGMII mode
+Date: Thu, 25 Jan 2024 15:35:01 +0530
+Message-ID: <20240125100501.4137977-6-c-vankar@ti.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240125100501.4137977-1-c-vankar@ti.com>
+References: <20240125100501.4137977-1-c-vankar@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,64 +74,134 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-This series adds device-tree nodes for CPSW2G and CPSW9G instance
-of the CPSW Ethernet Switch on TI's J784S4 SoC. Additionally,
-two device-tree overlays are also added:
-1. QSGMII mode with the CPSW9G instance via the ENET EXPANSION 1
-   connector.
-2. USXGMII mode with MAC Ports 1 and 2 of the CPSW9G instance via
-   ENET EXPANSION 1 and 2 connectors, configured in fixed-link
-   mode of operation at 5Gbps link speed.
+From: Siddharth Vadapalli <s-vadapalli@ti.com>
 
-Similar to Andrew Davis patch at:
-https://lore.kernel.org/r/20231117222930.228688-5-afd@ti.com/ for J721E,
-similar changes are also required for J784S4 to remove dependency on the
-parent node being a syscon node.
+The CPSW9G instance of the CPSW Ethernet Switch supports USXGMII mode
+with MAC Ports 1 and 2 of the instance, which are connected to ENET
+Expansion 1 and ENET Expansion 2 slots on the EVM respectively, through
+the Serdes2 instance of the SERDES.
 
-This series combines the v1 series at:
-https://lore.kernel.org/r/20230522092201.127598-1-s-vadapalli@ti.com/
-and the patch for Main CPSW2G node that is present in [PATCH v6 2/5] at:
-https://lore.kernel.org/r/20230721132029.123881-1-j-choudhary@ti.com/
-but dropped in it's next version at:
-https://lore.kernel.org/r/20231019054022.175163-1-j-choudhary@ti.com/
+Enable CPSW9G MAC Ports 1 and 2 in fixed-link configuration USXGMII mode
+at 5 Gbps each.
 
-Changes from v1 for J784S4 CPSW9G DT Support:
-1. Update serdes_ln_ctrl node in k3-j784s4-main.dtsi
-   to remove dependency on the parent node being a syscon node.
-2. The patch for Main CPSW2G node is combined.
-3. Update description in k3-j784s4-evm-quad-port-eth-exp1.dtso
-   QSGMII overlay file and add product link for QSGMII
-   daughtercard.
-4. Add a comment in k3-j784s4-evm-usxgmii-exp1-exp2.dtso
-   USXGMII overlay file for the serdes_wiz2 node since it uses
-   156.25 MHz clock for USXGMII.
-
-Changes from v6 for J784S4 Main CPSW2G node: 
-1. Rename node name in k3-j784s4-main.dtsi from
-   main_cpsw2g_pins_default to main_cpsw2g_default_pins,
-   main_cpsw2g_mdio_pins_default to main_cpsw2g_mdio_default_pins
-   and main_phy0 to main_cpsw1_phy0 based on Tony's suggestion at:
-   https://lore.kernel.org/all/20230724045032.GU5194@atomide.com/
-
-Chintan Vankar (1):
-  arm64: dts: ti: k3-j784s4-main: Fix mux-reg-masks in serdes_ln_ctrl
-
-Siddharth Vadapalli (4):
-  arm64: dts: ti: k3-j784s4-main: Add CPSW2G and CPSW9G nodes
-  arm64: dts: ti: k3-j784s4: Add Main CPSW2G node
-  arm64: dts: ti: k3-j784s4: Add overlay to enable QSGMII mode with
-    CPSW9G
-  arm64: dts: ti: k3-j784s4: Add overlay for dual port USXGMII mode
-
- arch/arm64/boot/dts/ti/Makefile               |  11 +-
- .../ti/k3-j784s4-evm-quad-port-eth-exp1.dtso  | 146 +++++++++++++
- .../ti/k3-j784s4-evm-usxgmii-exp1-exp2.dtso   |  73 +++++++
- arch/arm64/boot/dts/ti/k3-j784s4-evm.dts      |  47 +++++
- arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi    | 194 +++++++++++++++++-
- 5 files changed, 464 insertions(+), 7 deletions(-)
- create mode 100644 arch/arm64/boot/dts/ti/k3-j784s4-evm-quad-port-eth-exp1.dtso
+Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+Signed-off-by: Chintan Vankar <c-vankar@ti.com>
+---
+ arch/arm64/boot/dts/ti/Makefile               |  6 +-
+ .../ti/k3-j784s4-evm-usxgmii-exp1-exp2.dtso   | 73 +++++++++++++++++++
+ 2 files changed, 78 insertions(+), 1 deletion(-)
  create mode 100644 arch/arm64/boot/dts/ti/k3-j784s4-evm-usxgmii-exp1-exp2.dtso
 
+diff --git a/arch/arm64/boot/dts/ti/Makefile b/arch/arm64/boot/dts/ti/Makefile
+index 836bc197d932..97be325235dc 100644
+--- a/arch/arm64/boot/dts/ti/Makefile
++++ b/arch/arm64/boot/dts/ti/Makefile
+@@ -82,6 +82,7 @@ dtb-$(CONFIG_ARCH_K3) += k3-j721s2-evm-pcie1-ep.dtbo
+ dtb-$(CONFIG_ARCH_K3) += k3-am69-sk.dtb
+ dtb-$(CONFIG_ARCH_K3) += k3-j784s4-evm.dtb
+ dtb-$(CONFIG_ARCH_K3) += k3-j784s4-evm-quad-port-eth-exp1.dtbo
++dtb-$(CONFIG_ARCH_K3) += k3-j784s4-evm-usxgmii-exp1-exp2.dtbo
+ 
+ # Build time test only, enabled by CONFIG_OF_ALL_DTBS
+ k3-am625-beagleplay-csi2-ov5640-dtbs := k3-am625-beagleplay.dtb \
+@@ -112,6 +113,8 @@ k3-j721s2-evm-pcie1-ep-dtbs := k3-j721s2-common-proc-board.dtb \
+ 	k3-j721s2-evm-pcie1-ep.dtbo
+ k3-j784s4-evm-quad-port-eth-exp1-dtbs := k3-j784s4-evm.dtb \
+ 	k3-j784s4-evm-quad-port-eth-exp1.dtbo
++k3-j784s4-evm-usxgmii-exp1-exp2.dtbs := k3-j784s4-evm.dtb \
++	k3-j784s4-evm-usxgmii-exp1-exp2.dtbo
+ dtb- += k3-am625-beagleplay-csi2-ov5640.dtb \
+ 	k3-am625-beagleplay-csi2-tevi-ov5640.dtb \
+ 	k3-am625-sk-csi2-imx219.dtb \
+@@ -125,7 +128,8 @@ dtb- += k3-am625-beagleplay-csi2-ov5640.dtb \
+ 	k3-am642-tqma64xxl-mbax4xxl-wlan.dtb \
+ 	k3-j721e-evm-pcie0-ep.dtb \
+ 	k3-j721s2-evm-pcie1-ep.dtb \
+-	k3-j784s4-evm-quad-port-eth-exp1.dtb
++	k3-j784s4-evm-quad-port-eth-exp1.dtb \
++	k3-j784s4-evm-usxgmii-exp1-exp2.dtb
+ 
+ # Enable support for device-tree overlays
+ DTC_FLAGS_k3-am625-beagleplay += -@
+diff --git a/arch/arm64/boot/dts/ti/k3-j784s4-evm-usxgmii-exp1-exp2.dtso b/arch/arm64/boot/dts/ti/k3-j784s4-evm-usxgmii-exp1-exp2.dtso
+new file mode 100644
+index 000000000000..e51381f0a265
+--- /dev/null
++++ b/arch/arm64/boot/dts/ti/k3-j784s4-evm-usxgmii-exp1-exp2.dtso
+@@ -0,0 +1,73 @@
++/* SPDX-License-Identifier: GPL-2.0-only OR MIT */
++/**
++ * DT Overlay for CPSW9G in dual port fixed-link USXGMII mode using ENET-1
++ * and ENET-2 Expansion slots of J784S4 EVM.
++ *
++ * Copyright (C) 2024 Texas Instruments Incorporated - https://www.ti.com/
++ */
++
++/dts-v1/;
++/plugin/;
++
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/phy/phy-cadence.h>
++#include <dt-bindings/phy/phy.h>
++
++#include "k3-serdes.h"
++
++&main_cpsw0 {
++	status = "okay";
++	pinctrl-names = "default";
++};
++
++&main_cpsw0_port1 {
++	status = "okay";
++	phy-mode = "usxgmii";
++	mac-address = [00 00 00 00 00 00];
++	phys = <&cpsw0_phy_gmii_sel 1>, <&serdes2_usxgmii_link>;
++	phy-names = "mac", "serdes";
++	fixed-link {
++		speed = <5000>;
++		full-duplex;
++	};
++};
++
++&main_cpsw0_port2 {
++	status = "okay";
++	phy-mode = "usxgmii";
++	mac-address = [00 00 00 00 00 00];
++	phys = <&cpsw0_phy_gmii_sel 2>, <&serdes2_usxgmii_link>;
++	phy-names = "mac", "serdes";
++	fixed-link {
++		speed = <5000>;
++		full-duplex;
++	};
++};
++
++&serdes_wiz2 {
++	status = "okay";
++	assigned-clock-parents = <&k3_clks 406 9>; /* Use 156.25 MHz clock for USXGMII */
++};
++
++&serdes2 {
++	status = "okay";
++	#address-cells = <1>;
++	#size-cells = <0>;
++
++	serdes2_usxgmii_link: phy@2 {
++		reg = <2>;
++		cdns,num-lanes = <2>;
++		#phy-cells = <0>;
++		cdns,phy-type = <PHY_TYPE_USXGMII>;
++		resets = <&serdes_wiz2 3>, <&serdes_wiz2 4>;
++	};
++};
++
++&serdes_ln_ctrl {
++	idle-states = <J784S4_SERDES0_LANE0_PCIE1_LANE0>, <J784S4_SERDES0_LANE1_PCIE1_LANE1>,
++		      <J784S4_SERDES0_LANE2_IP3_UNUSED>, <J784S4_SERDES0_LANE3_USB>,
++		      <J784S4_SERDES1_LANE0_PCIE0_LANE0>, <J784S4_SERDES1_LANE1_PCIE0_LANE1>,
++		      <J784S4_SERDES1_LANE2_PCIE0_LANE2>, <J784S4_SERDES1_LANE3_PCIE0_LANE3>,
++		      <J784S4_SERDES2_LANE0_IP2_UNUSED>, <J784S4_SERDES2_LANE1_IP2_UNUSED>,
++		      <J784S4_SERDES2_LANE2_QSGMII_LANE1>, <J784S4_SERDES2_LANE3_QSGMII_LANE2>;
++};
 -- 
 2.34.1
 
