@@ -1,56 +1,56 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45E2B128383
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 14:50:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2045D12A15D
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 14:50:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706194239; cv=none; b=Wu6Lxz/VLHimK6Y97MAWXoWVHwBxlumA9Y+sBCaKdySS3Op8PMOSyXrIChgwbIysTw3dUvtRGCJTf8VUK2uymJnoJ6rUZ8zOrPVVSR3xXD9jYDitqHf78WSMwbwnYY3dsMvN6eySfrn0w5fyM38tAOvTl2YrVZEf5WyfWbW7W/Y=
+	t=1706194240; cv=none; b=HsD7zO3FEr+xpwlx08OL7Sa5znq3yN/5ELrfzFhO7NOUkZvyN3k8SbjDM9ITqfPxSGnpjyLFC5WIZ9SJxQErE7eguvzvncjL/MSLOTtJNm+TnxDcMuRWaXF/QJbpzpHCu83ILuJ2POIYJ+5DkETkLrs4gblHIfA8YvHUmiTv1R8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706194239; c=relaxed/simple;
-	bh=28hQgaFbSAW82OwCmSk1a75+xEJyszQNZJtVWvyEGuc=;
+	s=arc-20240116; t=1706194240; c=relaxed/simple;
+	bh=3Sscy4SIyyLUoLIoYgcWj2m0IaAGdXixvvR7f7b5ods=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=stTvKdSmoWFQooRgk+6K1mkJeDZ7ZwvoNXytNUxqwuM/eBr2t3tD8EE+LhSDtoa7XKTaOE3QOdyIvHig++cdIrEmRm8xPso+twG4cIO9jg8E3FdxiPiNR9MtfEJIkAthwI8rlluKGX9xALUaukZnNmh01OvpF6VZF/NBGHm9syc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vZHq/yQI; arc=none smtp.client-ip=209.85.128.42
+	 MIME-Version; b=A1KiL8ymzep/wsD/Zjx9+ZGWiZIbFXrFMAl7tXDJxH2IJ/hKL+lLKZfQBlMTuQ5vXU2IUk68JLZrz2AU35RSWoKFD+ZMy+Cyp73MRlvyjVrpMpTSEwqGdOC/CSA6kkmFFMrLHAYEvaC/O5wetcTz+SY4a6BvAWYK9/DJPZMq99E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rLLbpOF+; arc=none smtp.client-ip=209.85.128.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vZHq/yQI"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-40e76626170so75554495e9.2
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 06:50:36 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rLLbpOF+"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-40e7e2e04f0so74517195e9.1
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 06:50:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706194234; x=1706799034; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1706194236; x=1706799036; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ILSaztB6FcGB0AGX6yBD5eg2sH+uIPmbRLL9DGHOYeE=;
-        b=vZHq/yQIgu6r3/fOx1sm7uqJINFB8alxnoCsqCliZsE84wmtitwuI80fNiPl4IECpa
-         PCF+f35BrTWa6eQh6eV6JuxkBllzMkBzRoiHwhLnV/OvEHEGvAxxz0x8t5TXU1khlNu5
-         1xVwbKj21r29dh1IeumNsC4o6Ty6iHKeCpXzGQEITQSH8Anaus52ZxlweZ3hiDNLerzb
-         CrpedIQxHmOcTJqEufq+033PqBq1p461iAzr83CsDZ28prjaVNMaF6h8RAy4s+IrSwjs
-         0wvMTYsIkpPnZ8dcqcraf/yxViXLoRqqHIkeP2BifqPwPy5xngq7ot8r7+WbD9119RAm
-         +7hg==
+        bh=G4aDiYMz53oQSBvKn2Ur1bqI8j5m6Uz7Sia7O2YMwFw=;
+        b=rLLbpOF+ONoXE5ED77jjcufAhhoCz5wU2NmfsBgEHrC2evAxUjPHYWmN/cfOVJLMB7
+         4R3QBx79YgCeZtkBYEL+cH1HlP88RcV47hlnKTuOxLqz7KoGWiCTfVElkViDxvJGu81f
+         NwuTDJtdqUjnMMC9IBCR2mHqc1NDGXAxKr3UYR0gfy5ag8t991n2Q1C3r0lL1/XXgOcW
+         IoTqVnRqQVD3mYXNDpN3iywmXk/L+uubsVrqNkg/RGp5F/93ryDns/aWp3jQyNFDUd8n
+         jMbsNG9/eQvNSZE7kTMVo1Depdyh+gvpCWFiL3KbjJEt58sRlOOXH9maMpKx2bP442OM
+         NKZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706194234; x=1706799034;
+        d=1e100.net; s=20230601; t=1706194236; x=1706799036;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ILSaztB6FcGB0AGX6yBD5eg2sH+uIPmbRLL9DGHOYeE=;
-        b=K8i87ycE+KdbrwBLLswMpPPWvdqzRefVgF0JzLmTQOBXliNW1/TfZPKpSDq9hRgQfy
-         Vf4AnOEMsXo01supAYtTCvWtKxAjEGha36FD9pB2zwUmfM9c9b9wZWQ6lKqBOiLAy2XQ
-         GfH7+P7p9L7rv5InLjrGleFscyYLRyvSe3ep3vwythjlmpIlFtJi5SVXiPn18HsH8Nrp
-         kTcykFSkXawQZilRjdQhf8K9f54cCGGe/r+yQFY/eRoyQFaudF/Q9VNdoFYg2FTBV1Uz
-         3JF8GK9hLnkMVJ6oatDMgMyCKT7W9LDzHj65pE+HZuVGmaRpVABlrU1z4DwEm0MTfbeP
-         2uIA==
-X-Gm-Message-State: AOJu0YwsGhaAf57q4R+jM6h2chV8QYk/PYwmVNtgy52rOP+9Eqb8SMuv
-	lEtY4939Z/0AkklvmUcKC12AqX0pGMpvnSlLEX6y79fQ7pCQWagySe+lDDrRYvU=
-X-Google-Smtp-Source: AGHT+IEEFjYXZBt80LZEizQKLMuDRZIJ0xb27lsGtHr9gw6xNivRFK3y+AivGuvHVv+xDYMvvMwlMw==
-X-Received: by 2002:a05:600c:3d09:b0:40d:3b2d:99a0 with SMTP id bh9-20020a05600c3d0900b0040d3b2d99a0mr632998wmb.81.1706194234358;
-        Thu, 25 Jan 2024 06:50:34 -0800 (PST)
+        bh=G4aDiYMz53oQSBvKn2Ur1bqI8j5m6Uz7Sia7O2YMwFw=;
+        b=s58CXAatzqvictHcmOZppg1/BM96L8BGE3CKTmpvg/AjBO+wq/KhvnMouYydy0A61+
+         v6Lfn1ROsZwVrxxxoGzc8M2XlWda/eaY/gnA9h3h+YbBqSD4Qwr0potfv+v1SkZsvEo/
+         fDAaKBnnYCy2cgZ6mk+rI2of3JAjomEXfXpF/BBnBlnTTCCvu9bB3sYAE8s9PKFH7mf3
+         uewjybTVqXNHDdVYiYkN6s2bPmywe/h+2SFslfVPWGHf328ZnW+SOFjBg4L75xFTDC3E
+         Kq4X6R+N/tyUis6bCoqffC2Xp2Z0B+WWlRaIutgGZoTCwZ48rhAlG4i5RRDcae6ipEGD
+         GnCg==
+X-Gm-Message-State: AOJu0Yw+l9G2Mm4//+ZRN4vuOAqCAMQclFoOfs64Qy8hC32aTBwt44j2
+	iTczVP5/2LoFq3FqSm7X2BLn0hQJZSkCsLTucmhxzzg2DGHCB1hRarVLImblPVI=
+X-Google-Smtp-Source: AGHT+IE7/zbpGORnJLRqmbZzk50i5Tn1H9FBZ7QHo75PUDu0GzJbbvQE4kU1u7rK+rLs/4lIcENVtw==
+X-Received: by 2002:a05:600c:a45:b0:40e:c309:55d1 with SMTP id c5-20020a05600c0a4500b0040ec30955d1mr383831wmq.91.1706194236022;
+        Thu, 25 Jan 2024 06:50:36 -0800 (PST)
 Received: from ta2.c.googlers.com.com (88.140.78.34.bc.googleusercontent.com. [34.78.140.88])
-        by smtp.gmail.com with ESMTPSA id v17-20020a05600c471100b0040d91fa270fsm2875875wmo.36.2024.01.25.06.50.33
+        by smtp.gmail.com with ESMTPSA id v17-20020a05600c471100b0040d91fa270fsm2875875wmo.36.2024.01.25.06.50.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jan 2024 06:50:33 -0800 (PST)
+        Thu, 25 Jan 2024 06:50:35 -0800 (PST)
 From: Tudor Ambarus <tudor.ambarus@linaro.org>
 To: broonie@kernel.org,
 	andi.shyti@kernel.org,
@@ -71,9 +71,9 @@ Cc: robh+dt@kernel.org,
 	kernel-team@android.com,
 	willmcvicker@google.com,
 	Tudor Ambarus <tudor.ambarus@linaro.org>
-Subject: [PATCH v2 26/28] spi: s3c64xx: add iowrite{8,16}_32_rep accessors
-Date: Thu, 25 Jan 2024 14:50:04 +0000
-Message-ID: <20240125145007.748295-27-tudor.ambarus@linaro.org>
+Subject: [PATCH v2 28/28] MAINTAINERS: add Tudor Ambarus as R for the samsung SPI driver
+Date: Thu, 25 Jan 2024 14:50:06 +0000
+Message-ID: <20240125145007.748295-29-tudor.ambarus@linaro.org>
 X-Mailer: git-send-email 2.43.0.429.g432eaa2c6b-goog
 In-Reply-To: <20240125145007.748295-1-tudor.ambarus@linaro.org>
 References: <20240125145007.748295-1-tudor.ambarus@linaro.org>
@@ -85,94 +85,27 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-There are SoCs that allow just 32 bit register accesses otherwise they
-throw a SError interrupt if accessing the bus with 8 or 16 bits widths.
-Such an SoC is the google gs101. Allow such SoCs to use the
-iowrite{8,16}_32_rep accessors.
+I'm working with the samsung SPI driver and I'd like to review further
+patches on this driver. Add myself as reviewer.
 
+Reviewed-by: Sam Protsenko <semen.protsenko@linaro.org>
 Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
 ---
- drivers/spi/spi-s3c64xx.c | 46 +++++++++++++++++++++++++++------------
- 1 file changed, 32 insertions(+), 14 deletions(-)
+ MAINTAINERS | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/spi/spi-s3c64xx.c b/drivers/spi/spi-s3c64xx.c
-index fa70c6aab7c2..35a2d5554dfd 100644
---- a/drivers/spi/spi-s3c64xx.c
-+++ b/drivers/spi/spi-s3c64xx.c
-@@ -139,6 +139,7 @@ struct s3c64xx_spi_dma_data {
-  *	prescaler unit.
-  * @clk_ioclk: True if clock is present on this device
-  * @has_loopback: True if loopback mode can be supported
-+ * @use_32bit_io: True if the SoC allows just 32-bit register accesses.
-  *
-  * The Samsung s3c64xx SPI controller are used on various Samsung SoC's but
-  * differ in some aspects such as the size of the fifo and spi bus clock
-@@ -156,6 +157,7 @@ struct s3c64xx_spi_port_config {
- 	bool	clk_from_cmu;
- 	bool	clk_ioclk;
- 	bool	has_loopback;
-+	bool	use_32bit_io;
- };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 8d1052fa6a69..b9cde7ed8489 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -19404,6 +19404,7 @@ F:	include/linux/clk/samsung.h
  
- /**
-@@ -412,6 +414,35 @@ static bool s3c64xx_spi_can_dma(struct spi_controller *host,
- 	return false;
- }
- 
-+static void s3c64xx_iowrite_rep(const struct s3c64xx_spi_driver_data *sdd,
-+				struct spi_transfer *xfer)
-+{
-+	void __iomem *regs = sdd->regs;
-+
-+	switch (sdd->cur_bpw) {
-+	case 32:
-+		iowrite32_rep(regs + S3C64XX_SPI_TX_DATA,
-+			      xfer->tx_buf, xfer->len / 4);
-+		break;
-+	case 16:
-+		if (sdd->port_conf->use_32bit_io)
-+			iowrite16_32_rep(regs + S3C64XX_SPI_TX_DATA,
-+					 xfer->tx_buf, xfer->len / 2);
-+		else
-+			iowrite16_rep(regs + S3C64XX_SPI_TX_DATA,
-+				      xfer->tx_buf, xfer->len / 2);
-+		break;
-+	default:
-+		if (sdd->port_conf->use_32bit_io)
-+			iowrite8_32_rep(regs + S3C64XX_SPI_TX_DATA,
-+					xfer->tx_buf, xfer->len);
-+		else
-+			iowrite8_rep(regs + S3C64XX_SPI_TX_DATA,
-+				     xfer->tx_buf, xfer->len);
-+		break;
-+	}
-+}
-+
- static int s3c64xx_enable_datapath(struct s3c64xx_spi_driver_data *sdd,
- 				    struct spi_transfer *xfer, int dma_mode)
- {
-@@ -445,20 +476,7 @@ static int s3c64xx_enable_datapath(struct s3c64xx_spi_driver_data *sdd,
- 			modecfg |= S3C64XX_SPI_MODE_TXDMA_ON;
- 			ret = s3c64xx_prepare_dma(&sdd->tx_dma, &xfer->tx_sg);
- 		} else {
--			switch (sdd->cur_bpw) {
--			case 32:
--				iowrite32_rep(regs + S3C64XX_SPI_TX_DATA,
--					xfer->tx_buf, xfer->len / 4);
--				break;
--			case 16:
--				iowrite16_rep(regs + S3C64XX_SPI_TX_DATA,
--					xfer->tx_buf, xfer->len / 2);
--				break;
--			default:
--				iowrite8_rep(regs + S3C64XX_SPI_TX_DATA,
--					xfer->tx_buf, xfer->len);
--				break;
--			}
-+			s3c64xx_iowrite_rep(sdd, xfer);
- 		}
- 	}
- 
+ SAMSUNG SPI DRIVERS
+ M:	Andi Shyti <andi.shyti@kernel.org>
++R:	Tudor Ambarus <tudor.ambarus@linaro.org>
+ L:	linux-spi@vger.kernel.org
+ L:	linux-samsung-soc@vger.kernel.org
+ S:	Maintained
 -- 
 2.43.0.429.g432eaa2c6b-goog
 
