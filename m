@@ -1,248 +1,140 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84A3519472;
-	Thu, 25 Jan 2024 16:35:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90036129A73
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 16:36:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706200557; cv=none; b=R6+3fPR+RgSuBDfS3DCT2pIdvRFFbuoLYzufg5/mgcskcwKYpQXsL6jdx1hxF2oxPXmXDidS0XRCo/KZOrXYzle4wozMSLSIpMnF8cYlwBbQ56qGfHjacB21JPub53rMT80nWSTBC3XW2XyCIvi6VpPqJ9A5+NbxxhMfD/aGQ8E=
+	t=1706200573; cv=none; b=Ee0xdo2efyfC9SFcuXlh7KWqG3FayHH4byPspR/FmtJkiN0L4Z3ZXna8Mp4lG2ejFWzWiNfKtTLlIj7Nfv4npbB3jazGYZUP76YbFviC7y5QtT+gINcCmC86OxVIQh8le3VXORmxdcb+7HSp6VA9uEgvDBYzAa2qWF+NfnksX6s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706200557; c=relaxed/simple;
-	bh=9YTKm9bJOh7AgESo5uZMHfPE6MS+bUQJlQ0XWGia/i4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D279R2MXJWgXJ8bZmCKKKSoYD9N9TTjhWN2V9yNctVccTfzF/HcpDYaJptQa2SamY4zS492aIQ84kaXDivbkdf3m+hYyQdAxzr7j6SwbFzO0pKGiIbDiH9Tdc/pNzyca4GgUqTrmMaZUEnSI0oErDhDqI+2ZIdclcjIlytb2Rqs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=S/qUzuqs; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1706200573; c=relaxed/simple;
+	bh=lt40wahOJSZn/bRu/spTVg3+z5XWb676wGctXtgvtfw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kiCXntxBv0N98y39PO7vj1dAvhZpY/vS0QY2jpaRMMft2TlZtHCnjMZ5pg/524LiJ55+TjUkLue9TR29XQX1proJfFJxabyba8a3MT3uOKpAwBdOXeojhMqUGyBORMN/xrntO9GjZefIgVxVTVqLAtdOq5nuLUDidUCq3lxMKjQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=M+kSoDQ2; arc=none smtp.client-ip=209.85.167.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="S/qUzuqs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706200555; x=1737736555;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=9YTKm9bJOh7AgESo5uZMHfPE6MS+bUQJlQ0XWGia/i4=;
-  b=S/qUzuqsAb8M5mKYotCQtwwwt/9ttFb56MrZ3DXHUGAyiIUXqW+x9Q0t
-   YqbdUpOSHd1dSBQEqy7fvl9RWCcBI4PyQKvX89VAyvvWNF5/a+Io76e9W
-   BVc4inUZDQXS7kQBG3lJCzmKdwvD/f4nT9m2vPhW5a7Zyv6xgeiBu2gcl
-   f0aByUbW56WLHr/HCdh1BrQlP7/j0F+iUytBQNRbpVAMmbYUuDL3YMSUs
-   cpedQPOOyvMq2eQL7omAWf4daZvOyRs1ncBwooH9iC1psCp2ReO1HFgYE
-   T8TwPX7QlkmCgCaGxPw78/ygAIE8Y+SNvI2ehn9B3bvW3O+SLAcFGMlFm
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="9329623"
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="9329623"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2024 08:35:55 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="959894545"
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="959894545"
-Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2024 08:35:52 -0800
-Received: from kekkonen.localdomain (localhost [127.0.0.1])
-	by kekkonen.fi.intel.com (Postfix) with SMTP id C4E4B11FAD4;
-	Thu, 25 Jan 2024 18:19:17 +0200 (EET)
-Date: Thu, 25 Jan 2024 16:19:17 +0000
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-To: Umang Jain <umang.jain@ideasonboard.com>
-Cc: linux-media@vger.kernel.org,
-	Kieran Bingham <kieran.bingham@ideasonboard.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	Matthias Fend <matthias.fend@emfend.at>
-Subject: Re: [PATCH 4/4] media: i2c: imx335: Add support for test pattern
- generator
-Message-ID: <ZbKKBcf2PX8u3JGV@kekkonen.localdomain>
-References: <20240125154908.465191-1-umang.jain@ideasonboard.com>
- <20240125154908.465191-5-umang.jain@ideasonboard.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="M+kSoDQ2"
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-510221ab3ebso345742e87.1
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 08:36:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1706200569; x=1706805369; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=mOhc9njMffkxNYdD1egZdDRcjEt1wn9p6obVt9P775E=;
+        b=M+kSoDQ282YgxrHH4Vz1Qd+BmfDqAAf05avIFKL8CF+oE7vLHFKSde+NEuV7Cz126U
+         HsWqWTd7aj0H/mfQKbMaGyglxzv2a7qSsjxYkvflNZR9NHsS64Zgz7sIOF8wRvOty0vR
+         d84i056q3+ieFZDTcf4wFdqwlIPLgOQ9Y2B0xdns85bd4vTsHLaMf5GznNjhHbmg9D/p
+         gZXCJKUh6CzAXPWVQlomHv/9E2q3k6gSIuQDGesvCZihX3GvXfXf/+SxeV0VeJQv4jWV
+         dDNoIH5Or2sEcAbqUpAk8yrIHRZ6H+IZWj4tRU0PIqOn5zrlrRj4brJJ4OshvYr1m8JW
+         AMeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706200569; x=1706805369;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=mOhc9njMffkxNYdD1egZdDRcjEt1wn9p6obVt9P775E=;
+        b=jepe2ybGRfJlPiikn+IGtpXB74ZQx6yFINTd/Yrf0xG/kpxQNzogqjlK0SgdzJIc11
+         4p+UylPVqgaFsjA+1YveqgnoUpW9dg2hWBQRchMaQAEt9A3me/rxn5erZFDKiN+fsXCA
+         g8kmCnptjXiw5NnbntwjRsg/VCEIysybVtzvnKMOqPcTa1VLAdk7UoV6g8+cQMtgLeJU
+         f3erwRfY0l8HfOM43dPP5zm6V84jWaIQQ3p3s5ZLmDqPNpgKQWU4HWpcF0I2lbHp+KAR
+         fOwbr/ZwPuk85w5NIbP1zV2f6XgrzsMRTOcVGd0AHnQPjR2757hoWKiMk8Rv8KJJUVg1
+         BXnQ==
+X-Gm-Message-State: AOJu0YxwEdXirrDAfzOFXiX6LR42nl+hYJGgi6TZNrG0cIgNiGICxRdu
+	ApQqzsODitsAv1r4w+qVaBqP90DRsOXP6bX7bqVipqN+r513Cn4y77oZPUVg1fw=
+X-Google-Smtp-Source: AGHT+IFMO+xoeC65I4slZOzO2IxFMLHMXEpO8c2Ds1GdTTlBycdyA02BYh1cW1xcPHtk0iX3z7de2g==
+X-Received: by 2002:a05:6512:ba5:b0:510:135c:c060 with SMTP id b37-20020a0565120ba500b00510135cc060mr38059lfv.76.1706200569551;
+        Thu, 25 Jan 2024 08:36:09 -0800 (PST)
+Received: from [172.30.205.155] (UNUSED.212-182-62-129.lubman.net.pl. [212.182.62.129])
+        by smtp.gmail.com with ESMTPSA id b30-20020a056512025e00b0050e7f5cffa6sm2904066lfo.273.2024.01.25.08.36.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 25 Jan 2024 08:36:09 -0800 (PST)
+Message-ID: <0ba94f0f-3df5-4eaf-a88c-c63aebff4232@linaro.org>
+Date: Thu, 25 Jan 2024 17:36:06 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240125154908.465191-5-umang.jain@ideasonboard.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/3] phy: qcom: edp: Add support for DT phy mode
+ configuration
+Content-Language: en-US
+To: Abel Vesa <abel.vesa@linaro.org>
+Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+ Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
+ Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Johan Hovold <johan@kernel.org>,
+ linux-phy@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
+References: <20231219-x1e80100-phy-edp-compatible-refactor-v1-0-f9e77752953d@linaro.org>
+ <CAA8EJpr8rKMBzcm-=HGu7-C5hPkNMrnG1cA78O00UjgJVT7p6Q@mail.gmail.com>
+ <6179e3c7-f399-4b0f-abb0-aaf5e549d8d9@linaro.org>
+ <ZaUASV+0gc/Bufmw@linaro.org>
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+In-Reply-To: <ZaUASV+0gc/Bufmw@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Umang,
 
-On Thu, Jan 25, 2024 at 09:19:08PM +0530, Umang Jain wrote:
-> From: Matthias Fend <matthias.fend@emfend.at>
+
+On 1/15/24 10:52, Abel Vesa wrote:
+> On 24-01-03 14:42:49, Konrad Dybcio wrote:
+>> On 21.12.2023 17:27, Dmitry Baryshkov wrote:
+>>> On Tue, 19 Dec 2023 at 22:55, Abel Vesa <abel.vesa@linaro.org> wrote:
+>>>>
+>>>> Until now, all platform that supported both eDP and DP had different
+>>>> compatibles for each mode. Using different compatibles for basically
+>>>> the same IP block but for a different configuration is bad way all
+>>>> around. There is a new compute platform from Qualcomm that supports
+>>>> both eDP and DP with the same PHY. So instead of following the old
+>>>> method, we should allow the mode to be configured from devicetree.
+>>>>
+>>>> There has been an off-list discussion on what would be the right way
+>>>> to pass on the PHY mode information to the driver and it has been
+>>>> concluded that phy-cells is the way to go. This means that basically
+>>>> the controller will pass another value (that is, the PHY type) to
+>>>> its 'phys' DT property.
+>>>>
+>>>> For this, we need both the bindings value and the PHY mode value to be
+>>>> added as well.
+>>>>
+>>>> The controller part will follow shortly. But for now, lets see where
+>>>> this is going.
+>>>>
+>>>> There has been another attempt at this here:
+>>>> https://lore.kernel.org/all/20231122-phy-qualcomm-edp-x1e80100-v3-3-576fc4e9559d@linaro.org/
+>>>>
+>>>> Compared to that version, this one uses the phy-cells method and drops
+>>>> the X1E80100 support. The X1E80100 support will be a separate patchset.
+>>>
+>>> After several back and forth discussions, I think that this approach
+>>> is not correct and not that easy to extend. Instead I'd like to
+>>> suggest adding a property to the DP controller, which enables eDP
+>>> behaviour (and thus makes DP driver call phy_set_mode()). Something
+>>> like this:
+>>> dp: displayport-controller@ae0000 {
+>>>      compatible = "qcom,sm8000-dp";
+>>>      /* reg, interrupts, etc */
+>>>     edp-interface;
+>>>     /* or simpler */
+>>>     is-edp;
+>>> };
+>>>
+>>> What do you think?
+>>
+>> Please excuse my alzheimer, but why did we not go with phy-type after
+>> the last discussion?
 > 
-> Add support for the sensor's test pattern generator.
-> 
-> Signed-off-by: Matthias Fend <matthias.fend@emfend.at>
-> Signed-off-by: Kieran Bingham <kieran.bingham@ideasonboard.com>
-> Signed-off-by: Umang Jain <umang.jain@ideasonboard.com>
-> ---
->  drivers/media/i2c/imx335.c | 99 +++++++++++++++++++++++++++++++++++++-
->  1 file changed, 98 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/media/i2c/imx335.c b/drivers/media/i2c/imx335.c
-> index e64ee99cbae4..f9a2337a80c0 100644
-> --- a/drivers/media/i2c/imx335.c
-> +++ b/drivers/media/i2c/imx335.c
-> @@ -45,6 +45,21 @@
->  /* Group hold register */
->  #define IMX335_REG_HOLD		0x3001
->  
-> +/* Test pattern generator */
-> +#define IMX335_REG_TPG		0x329e
-> +#define IMX335_TPG_ALL_000	0
-> +#define IMX335_TPG_ALL_FFF	1
-> +#define IMX335_TPG_ALL_555	2
-> +#define IMX335_TPG_ALL_AAA	3
-> +#define IMX335_TPG_TOG_555_AAA	4
-> +#define IMX335_TPG_TOG_AAA_555	5
-> +#define IMX335_TPG_TOG_000_555	6
-> +#define IMX335_TPG_TOG_555_000	7
-> +#define IMX335_TPG_TOG_000_FFF	8
-> +#define IMX335_TPG_TOG_FFF_000	9
-> +#define IMX335_TPG_H_COLOR_BARS 10
-> +#define IMX335_TPG_V_COLOR_BARS 11
-> +
->  /* Input clock rate */
->  #define IMX335_INCLK_RATE	24000000
->  
-> @@ -162,6 +177,38 @@ struct imx335 {
->  };
->  
->  
-> +static const char * const imx335_tpg_menu[] = {
-> +	"Disabled",
-> +	"All 000h",
-> +	"All FFFh",
-> +	"All 555h",
-> +	"All AAAh",
-> +	"Toggle 555/AAAh",
-> +	"Toggle AAA/555h",
-> +	"Toggle 000/555h",
-> +	"Toggle 555/000h",
-> +	"Toggle 000/FFFh",
-> +	"Toggle FFF/000h",
-> +	"Horizontal color bars",
-> +	"Vertical color bars",
-> +};
-> +
-> +static const int imx335_tpg_val[] = {
-> +	IMX335_TPG_ALL_000,
-> +	IMX335_TPG_ALL_000,
-> +	IMX335_TPG_ALL_FFF,
-> +	IMX335_TPG_ALL_555,
-> +	IMX335_TPG_ALL_AAA,
-> +	IMX335_TPG_TOG_555_AAA,
-> +	IMX335_TPG_TOG_AAA_555,
-> +	IMX335_TPG_TOG_000_555,
-> +	IMX335_TPG_TOG_555_000,
-> +	IMX335_TPG_TOG_000_FFF,
-> +	IMX335_TPG_TOG_FFF_000,
-> +	IMX335_TPG_H_COLOR_BARS,
-> +	IMX335_TPG_V_COLOR_BARS,
-> +};
-> +
->  /* Sensor mode registers */
->  static const struct imx335_reg mode_2592x1940_regs[] = {
->  	{0x3000, 0x01},
-> @@ -505,6 +552,46 @@ static int imx335_update_exp_gain(struct imx335 *imx335, u32 exposure, u32 gain)
->  	return ret;
->  }
->  
-> +static int imx335_update_test_pattern(struct imx335 *imx335, u32 pattern_index)
-> +{
-> +	int ret;
-> +
-> +	if (pattern_index >= ARRAY_SIZE(imx335_tpg_val))
-> +		return -EINVAL;
+> phy-type would be a property of the phy. That way we would need pass
+> the mode to the controller. So it was concluded that passing that
+> information from the controller via phy_set_mode is more straightforward.
 
-This is unnecessary, the control framework ensures this already.
+Eeh, reluctantly, I'm gonna say yes. It's not the prettiest solution,
+but none of the ones I can think of seem much better.
 
-> +
-> +	if (pattern_index) {
-> +		const struct imx335_reg tpg_enable_regs[] = {
-> +			{ 0x3148, 0x10 },
-> +			{ 0x3280, 0x00 },
-> +			{ 0x329c, 0x01 },
-> +			{ 0x32a0, 0x11 },
-> +			{ 0x3302, 0x00 },
-> +			{ 0x3303, 0x00 },
-> +			{ 0x336c, 0x00 },
-> +		};
-> +
-> +		ret = imx335_write_reg(imx335, IMX335_REG_TPG, 1, imx335_tpg_val[pattern_index]);
-
-Can you do:
-
-	$ ./scripts/checkpatch.pl --strict --max-line-length=80
-
-on these?
-
-> +		if (ret)
-> +			return ret;
-> +
-> +		ret = imx335_write_regs(imx335, tpg_enable_regs, ARRAY_SIZE(tpg_enable_regs));
-
-Return already here.
-
-> +	} else {
-> +		const struct imx335_reg tpg_disable_regs[] = {
-> +			{ 0x3148, 0x00 },
-> +			{ 0x3280, 0x01 },
-> +			{ 0x329c, 0x00 },
-> +			{ 0x32a0, 0x10 },
-> +			{ 0x3302, 0x32 },
-> +			{ 0x3303, 0x00 },
-> +			{ 0x336c, 0x01 },
-> +		};
-> +
-> +		ret = imx335_write_regs(imx335, tpg_disable_regs, ARRAY_SIZE(tpg_disable_regs));
-
-And here.
-
-> +	}
-> +
-> +	return ret;
-> +}
-> +
->  /**
->   * imx335_set_ctrl() - Set subdevice control
->   * @ctrl: pointer to v4l2_ctrl structure
-> @@ -558,6 +645,10 @@ static int imx335_set_ctrl(struct v4l2_ctrl *ctrl)
->  
->  		ret = imx335_update_exp_gain(imx335, exposure, analog_gain);
->  
-> +		break;
-> +	case V4L2_CID_TEST_PATTERN:
-> +		ret = imx335_update_test_pattern(imx335, ctrl->val);
-> +
->  		break;
->  	default:
->  		dev_err(imx335->dev, "Invalid control %d\n", ctrl->id);
-> @@ -1122,7 +1213,7 @@ static int imx335_init_controls(struct imx335 *imx335)
->  	u32 lpfr;
->  	int ret;
->  
-> -	ret = v4l2_ctrl_handler_init(ctrl_hdlr, 6);
-> +	ret = v4l2_ctrl_handler_init(ctrl_hdlr, 7);
->  	if (ret)
->  		return ret;
->  
-> @@ -1156,6 +1247,12 @@ static int imx335_init_controls(struct imx335 *imx335)
->  						mode->vblank_max,
->  						1, mode->vblank);
->  
-> +	v4l2_ctrl_new_std_menu_items(ctrl_hdlr,
-> +				     &imx335_ctrl_ops,
-> +				     V4L2_CID_TEST_PATTERN,
-> +				     ARRAY_SIZE(imx335_tpg_menu) - 1,
-> +				     0, 0, imx335_tpg_menu);
-> +
->  	/* Read only controls */
->  	imx335->pclk_ctrl = v4l2_ctrl_new_std(ctrl_hdlr,
->  					      &imx335_ctrl_ops,
-
--- 
-Regards,
-
-Sakari Ailus
+Konrad
