@@ -1,231 +1,201 @@
-Received: from sender4-of-o50.zoho.com (sender4-of-o50.zoho.com [136.143.188.50])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB3C96FD1;
-	Thu, 25 Jan 2024 00:02:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24FC87F;
+	Thu, 25 Jan 2024 00:05:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.7
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706140927; cv=pass; b=g+sfY/tmIvXloOH2eXkohzrZGVJaosi223pdVvm893hg0nTG8XvXDoxR1559x2LumeTjndOjRoRzNj/qn1BTUp1KgyZcWVsKeBX3zrK0MnP+qe1h8v2KGWaYmXZUzPVxpR72JLzAEV4eE1lOfIcK7J368HKWqtWolyUPbkfBAto=
+	t=1706141153; cv=fail; b=uO7IJP8K1D/gOxPiz2snGsLfYqeGrYP9q3mcMgpW/j0FJYFOHbIe1OhINAk+rjHkk46i6UaGAyz0CItXctkAKiNnTk+EPyzFXg3OgHWXqRp2O7F0vcTGK0fATySXiPaLfY6c4vY9UrF+8SJle2RwDN2V5GP1YQU9tbbNOhvM9z4=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706140927; c=relaxed/simple;
-	bh=uMDDpxmjVsnsigiVrqzlpHUVeQjfY9aIaCC39DjTAV8=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=jVwVnxGW9jcMoyafVHhZpCGQgqWrOKAZyYJM1/ove5yOJZzUx1d5+Gdwkb2edY8+W4q2YcPqdRLmJeppNba0sSSEIJIVjhJkHFxIPFDI4Olg/bixIW23VOtqDCGjanPv12Oc5Dkuew5wzIhk2Kjkqqj4I/MAMLVezJ/rhgY6Diw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=apertussolutions.com; spf=pass smtp.mailfrom=apertussolutions.com; dkim=pass (1024-bit key) header.d=apertussolutions.com header.i=dpsmith@apertussolutions.com header.b=KUXguPHZ; arc=pass smtp.client-ip=136.143.188.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=apertussolutions.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=apertussolutions.com
+	s=arc-20240116; t=1706141153; c=relaxed/simple;
+	bh=pEIlIcnAs5/aONGRUanhL1Fw738xGCKOsR/W3OZvIE0=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=Yrl/tVk6xkjxCnREYxvwYl7VbZBcrlSIKSlXU11B6Pv3h/FkgFbAxFN85iQOePhsbDG1aGCo5w7GvNVYeIlcngWZLOOfFbqH/sFieZm47zFtBue3SZDT2WqfkhCl1zoRjwkZSEDU48HXtI7LvClKFoaP4ZMaEYG3Kpw5/PRN16c=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hFuVWx7P; arc=fail smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=apertussolutions.com header.i=dpsmith@apertussolutions.com header.b="KUXguPHZ"
-ARC-Seal: i=1; a=rsa-sha256; t=1706140910; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=iwL9YCZZUtsO0yNtbr4gZjJUPfFnyPFyzxAaDNq8AfcqBQx98WimbmnyHrWyMu6KKIVQp4cs2MHWhx1+Au621Sf3wmap1VM6s3EqVFeTe1Y8ye8s4LHsLfIFubj9o4t0lejHaek2qK/Z9l785SbT/3Lr5j7f1/1viD/t+IYv4hk=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1706140910; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=TAlDSRdUtGC7nHIV+Kwr1ufueHveWKv+yA8OX/R6oHY=; 
-	b=cWTS/bKcH+gGdd1HScGoaqylKjIDgwAvWxg6cs3W+VFocakN8goAlmhwV//JDf4eEi75Cgm4ErDNWhTBrXA8V98jsp71W2V0Lkn9tmxS5WuI4mrQAPJt1dkRBNP4Hsq3LVBXkgtzf9ueRiI1RIfEiD6uXlQ2JMK2Ll15ck+0W8M=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=apertussolutions.com;
-	spf=pass  smtp.mailfrom=dpsmith@apertussolutions.com;
-	dmarc=pass header.from=<dpsmith@apertussolutions.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1706140910;
-	s=zoho; d=apertussolutions.com; i=dpsmith@apertussolutions.com;
-	h=Message-ID:Date:Date:MIME-Version:From:From:Subject:Subject:To:To:Cc:Cc:References:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=TAlDSRdUtGC7nHIV+Kwr1ufueHveWKv+yA8OX/R6oHY=;
-	b=KUXguPHZwdUYkcyfsL9KO4lfaKLcxAsGVDv+1EFtmuqyQNQwnQf/ADRW87c0LQH8
-	tPHaLk9Vc3S3zQc0QicJ98U98H3I3lcqb+q2zfoZ2517w4BDpuQTUxjwyCs7qftteKT
-	RH2Y3c2DxXhB25Wm7zvyZwahyllGxGXt71c/W7p0=
-Received: from [10.10.1.126] (static-72-81-132-2.bltmmd.fios.verizon.net [72.81.132.2]) by mx.zohomail.com
-	with SMTPS id 1706140908343292.0698777804661; Wed, 24 Jan 2024 16:01:48 -0800 (PST)
-Message-ID: <d46abc40-5ad8-4d09-a6f8-f53c4b338142@apertussolutions.com>
-Date: Wed, 24 Jan 2024 19:01:46 -0500
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hFuVWx7P"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706141152; x=1737677152;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=pEIlIcnAs5/aONGRUanhL1Fw738xGCKOsR/W3OZvIE0=;
+  b=hFuVWx7P0BMEDnemC4/MUdC2LSEibmzDxQjNQYEyepT7ubL2HJFp+bQD
+   LHKR6uwIuTEUvzh77D2tYzwqTmKjrOeVk7OsQ21BsIZqo+bCgugwTnrUr
+   y9JBvS3Eu/ndOLnYDL4uL8aVdGTc6TUDM1s3RgXSJ2IDbjYhArb4rK7DA
+   CDtva2ONCbog+JeKhELtBbYhzFDFwPl6NXSB3sS7Y9Hupbm2ot9jLn1EZ
+   gr3L117rpbiM2IUX1TJbnPMSPa6slXM9tGKRfGDVxtXDRF0hq+yJjk+KW
+   5WrPrCs/KczfTvKljHYJpY2P5wcuh6JoEDt/yA0jfD/1uPheZx0TX15Wa
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="23473545"
+X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
+   d="scan'208";a="23473545"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jan 2024 16:05:51 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
+   d="scan'208";a="20879515"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by fmviesa002.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 24 Jan 2024 16:05:50 -0800
+Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Wed, 24 Jan 2024 16:05:49 -0800
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Wed, 24 Jan 2024 16:05:49 -0800
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Wed, 24 Jan 2024 16:05:49 -0800
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.101)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Wed, 24 Jan 2024 16:05:49 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hbI5mdTNNzlz22RM7nTiVb8KxXJwFz0YBwbVkRbWMV01mh/BLdqNRvIWYYExtyqTWSpTwzXbiBqK0j6WVTMBaJdzo3tL0R4E3zH6GPnUVbaRYMDwW7XpkTLixNp4SgG0V2Sp6lA5cAbCVCQ1RlDF0v0zW5yzNWxZWqWkqJwCL7bbzj8Bmz91aqcUZd2EaEJVApM7MHvdV3+yLdURAcjfUaTO30HnPBurJVuce9MhwlZHqcI0pYe6xn+QWVkMd+arZFEOb0BM38GmbwSaPt9w3/F703TMRErzDGNSKwMA0jjHguus4pxc700teZDDvd+lLv1r2ZUykIWUd2rMoDgLUg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=bmfTDSZPfwgwK7VfdG0CSjQKsk/IPGEdfmODFGqkSJA=;
+ b=XK+4sDcdm2k/tBMYAq0d0UfO2SaZEImWvIru6tkgA8EIdQDALffUhTGGkHotXynzGUpRUCnjBwzB2SB+p7nyuXMjcpJ3Crdq57bBb/WUQuOJqRMYVc5+nSpW0EcPbOzAcnx4dliPNARfhUz0QJ15kYJO5gNHKTo9ZmALApMB0TXOda7WwHBMCq+f9ofO2xrob+2OfvtI+e9OznIp5N1RyyXPXNwy0EJUr8R5CxLxMkXu6M1GdQDES1E2wiLgfT15d/cVPYIXjM5Wcdhf1cE5v6NG0iNtPylKwlxzfRCJNVv6dMfL+NZDuUWAu2FDLMlacDbWnJyvO2Ph+VunKSXzIQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH7PR11MB6522.namprd11.prod.outlook.com (2603:10b6:510:212::12)
+ by DS0PR11MB6376.namprd11.prod.outlook.com (2603:10b6:8:c8::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7202.37; Thu, 25 Jan
+ 2024 00:05:42 +0000
+Received: from PH7PR11MB6522.namprd11.prod.outlook.com
+ ([fe80::b9a8:8221:e4a1:4cda]) by PH7PR11MB6522.namprd11.prod.outlook.com
+ ([fe80::b9a8:8221:e4a1:4cda%4]) with mapi id 15.20.7202.035; Thu, 25 Jan 2024
+ 00:05:42 +0000
+Date: Thu, 25 Jan 2024 00:04:56 +0000
+From: Matthew Brost <matthew.brost@intel.com>
+To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+CC: Jani Nikula <jani.nikula@linux.intel.com>, Joonas Lahtinen
+	<joonas.lahtinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>, David Airlie
+	<airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+	<intel-gfx@lists.freedesktop.org>, <kernel-janitors@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <dri-devel@lists.freedesktop.org>
+Subject: Re: [PATCH] drm/i915/guc: Remove usage of the deprecated
+ ida_simple_xx() API
+Message-ID: <ZbGlqD6zyyp4DsmH@DUT025-TGLU.fm.intel.com>
+References: <7108c1871c6cb08d403c4fa6534bc7e6de4cb23d.1705245316.git.christophe.jaillet@wanadoo.fr>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <7108c1871c6cb08d403c4fa6534bc7e6de4cb23d.1705245316.git.christophe.jaillet@wanadoo.fr>
+X-ClientProxiedBy: SJ0PR05CA0053.namprd05.prod.outlook.com
+ (2603:10b6:a03:33f::28) To PH7PR11MB6522.namprd11.prod.outlook.com
+ (2603:10b6:510:212::12)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: "Daniel P. Smith" <dpsmith@apertussolutions.com>
-Subject: Re: [PATCH] tpm: make locality handling resilient
-To: Alexander Steffen <Alexander.Steffen@infineon.com>,
- Jason Gunthorpe <jgg@ziepe.ca>, Jarkko Sakkinen <jarkko@kernel.org>,
- Lino Sanfilippo <l.sanfilippo@kunbus.com>, Sasha Levin <sashal@kernel.org>,
- linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Ross Philipson <ross.philipson@oracle.com>,
- Kanth Ghatraju <kanth.ghatraju@oracle.com>, Peter Huewe <peterhuewe@gmx.de>
-References: <20240115011546.21193-1-dpsmith@apertussolutions.com>
- <711d659f-3f57-48e4-b5b3-efbc2fe236c8@infineon.com>
-Content-Language: en-US
-In-Reply-To: <711d659f-3f57-48e4-b5b3-efbc2fe236c8@infineon.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR11MB6522:EE_|DS0PR11MB6376:EE_
+X-MS-Office365-Filtering-Correlation-Id: abfc9c64-f38b-4b20-3e05-08dc1d395ea9
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: MuFEAWVdtIuRzaADNEWGBvlHQJrZcQ2aWRqwnG6eLTodANXaOpF+g1nWvdjjMRckGco3yqNSzn8lHGeOud4gwLAg0PoAcHK1t9Wunwc+01YjfqVXpOLKH8CZbNwTNf0JmsclcSP8ydiyzwTboxnaqPN3c7KB9HfiDBpRCNAHGgqu7PS+Ft5isMc7C9tsT5qPYtuPNReTMVO6gJhMK4reBq8Yz38CDsZTWq/ZoNMNpl1J5DRwY8B7392Ym4NPIVD9zuakai7HDvbk1/WfhFCt9kdv6PnquTYHfG54ldCBGzc1XWbm4PpZ9U+kdkLS8j7IF2HQZFhoPaMn9ouqkeoI3EOp80JEiHGOtueXi6okhD7/3ch1OQ/cRFx2tdjlUrVJLtm5y99bTec7ZXdIzMBK4wXgP0dNBh9B0+PIQA0lpfYsI25pL/0kkYdBNgi+2oXjPeytOUwOz3BYuSXiQhAKLHwZSevQ1uxe0v4Nwz/JKte6s3fSj7W2z/8YOYWLPAtDsQRDKPtSwD6G4DzcL7o951b+i3NhuEoJ6bj5DOBBVZz9o0H1RVT4etqbYpiMfcAI
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR11MB6522.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(136003)(346002)(376002)(366004)(39860400002)(230922051799003)(186009)(64100799003)(451199024)(1800799012)(8936002)(66946007)(5660300002)(86362001)(2906002)(44832011)(7416002)(54906003)(316002)(8676002)(6916009)(66556008)(4326008)(66476007)(478600001)(6486002)(6512007)(82960400001)(38100700002)(26005)(83380400001)(41300700001)(6666004)(6506007);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?xXxPdjGh/TcigKPw/fB8w+2xqnvm3EmbwUFSybdltINdD/pGaVjeZcgKBl1q?=
+ =?us-ascii?Q?A1iqHAehBtbhTo3hOj488bvkBUQyib9hhlPURNe2f+sNkup+Yiluz0e76roz?=
+ =?us-ascii?Q?R+UJyAWHHuJ8TLRcxJGLU2TekAS57RKUf4c3jLZXnNc1ewkB1lBe22Rmg+N7?=
+ =?us-ascii?Q?psaVXZmz0bKLKpltfABBTMrb+LGe0i1b4LwxTbM3ZT2VRtUnqLHvvLFBT0zU?=
+ =?us-ascii?Q?TfZm2KCiEeJjjwzM++XhzZoV28pKCnWIpKSgwH4RRJqlNv7ZlNm23WOzRwGt?=
+ =?us-ascii?Q?426XbGTFzDloq0DPYnAUp0vCIsT73LaXWA1j93yAfFJCmbBt1ejcJGFG0pRH?=
+ =?us-ascii?Q?rsox4agQZOH+FUKZy7IW90li/nvxYEnUSM4URxnMUvplaRrgwYneQBKJlAKt?=
+ =?us-ascii?Q?qdD6kyus6JxVmFPQ29lyec+NLccDXeeuLvruoTbC+VeB1sK7yP4STMdYHLg+?=
+ =?us-ascii?Q?pttu/5kmpnJ9mpPEDvOc5A6WMnaBFGkNeF0xyMogAX8E+ygQ6GiuqsDUGLVx?=
+ =?us-ascii?Q?DYHJRL19FTPZDFDZNlafainvYTWTMIYyDwtBDYR1L5iVKL12p669pO5FXHuC?=
+ =?us-ascii?Q?faVcCliskxeEm/Gh+bRTxhwDWvyRXxUMNzZDHjA6ftVSNjHyRxqioz20OMwa?=
+ =?us-ascii?Q?HQrQ2Uc1ADUL4zJhVgH/GKKatQ7dLRkhWNB6YdOBVN0ErT2jufNzOokHhN75?=
+ =?us-ascii?Q?f+9eabsDwzNrnskKCHjGIZSeCRkExfYxwdCUPYfztxZ0rpJ1zdwGTkLOGrK6?=
+ =?us-ascii?Q?zQAS5z6XAdoaTwxa/pP+f4Tjyg3Qt1K8ISmx0flm/zRO2ryFZVZ9HXzmDuWA?=
+ =?us-ascii?Q?iFHHQI4EzxbyseNfR1t8V7ap2RKzqDJgVFlEDePc/+LUup8ZOA6EYV0+zRWY?=
+ =?us-ascii?Q?jAYOMlr56JNolm9dQnju9/hfx1VePGuvzE/VgCz2+yuJcC6edDpr5zsvGCBW?=
+ =?us-ascii?Q?OObgThAvZEtScAAFgiYmjo55qI/EVadpFEJYPbY1IBxFWqkHI+tqZvu6XKww?=
+ =?us-ascii?Q?ObDIu2XlI33efh3mto9ROwH2j22I47aBJqikiV0UKnZOF5X8/L3tHMDsLXQh?=
+ =?us-ascii?Q?InsVttOIY8PTiJ2zowyaOZOhg2VRMoy5H4kMzhTQ7Z/W8/Ap5Nns5PiI+OBs?=
+ =?us-ascii?Q?iNkT5KybRgMKHyEuzITZyLKRF+9iIutIrNwwLJMbcIsYsnunPkvXRI2lNJPc?=
+ =?us-ascii?Q?g1AJMCFf+AESZO+uoT1A61Zqcu9JY7SjL3++N+6JUNwiVFwTG+XYsvpa1Ff9?=
+ =?us-ascii?Q?VOTRqKUPKDv3RgNR1ebkx/Oi8fvHClbVik5/WPmKk0jbBPy6c2BO3c3X6mcm?=
+ =?us-ascii?Q?/pXvCjljd4Kq4rukqfBee4pSgCli35qu5a1jkLtqYuGqyvQmiZfFt3dOON+E?=
+ =?us-ascii?Q?a2js/wkOkgOmCuV3nTp8oTuIVq+TJspbX/VKfo5HymDh/hiWsYBzDnMXVhbS?=
+ =?us-ascii?Q?imDy+sfTgA+E8wvQZbi8gsleGKNFvB+LA5OlFXPNLCGRKCGelGVxPJjBd8MB?=
+ =?us-ascii?Q?AxBpFAbMDA89rJ1P6L8Kkv349cvhVXo5KwrC34ABdJBOwZPaASiRZUGpHXQl?=
+ =?us-ascii?Q?wAzctrmayPh/u4k1EoDiZLGkqFDoNVMHX9GCz/3deH5Yy/Yck+mLID7gQzQX?=
+ =?us-ascii?Q?HA=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: abfc9c64-f38b-4b20-3e05-08dc1d395ea9
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR11MB6522.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Jan 2024 00:05:42.0127
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: AYxfe6licZEuBjP+0v3GvXpW60KmDiNtSpSf4dT3J/EFNKb5Gf2IUEhOtS9aV9ybUoM3vHM5spip6v9RhrUV5w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB6376
+X-OriginatorOrg: intel.com
 
-On 1/17/24 03:44, Alexander Steffen wrote:
-> On 15.01.2024 02:15, Daniel P. Smith wrote:
->> Commit 933bfc5ad213 introduced the use of a locality counter to 
->> control when
->> locality request was actually sent to the TPM. This locality counter 
->> created a
->> hard enforcement that the TPM had no active locality at the time of 
->> the driver
->> initialization. The reality is that this may not always be the case 
->> coupled
->> with the fact that the commit indiscriminately decremented the counter 
->> created
->> the condition for integer underflow of the counter. The underflow was 
->> triggered
->> by the first pair of request/relinquish calls made in 
->> tpm_tis_init_core and all
->> subsequent calls to request/relinquished calls would have the counter 
->> flipping
->> between the underflow value and 0. The result is that it appeared all 
->> calls to
->> request/relinquish were successful, but they were not. The end result 
->> is that
->> the locality that was active when the driver loaded would always 
->> remain active,
->> to include after the driver shutdown. This creates a significant issue 
->> when
->> using Intel TXT and Locality 2 is active at boot. After the GETSEC[SEXIT]
->> instruction is called, the PCH will close access to Locality 2 MMIO 
->> address
->> space, leaving the TPM locked in Locality 2 with no means to 
->> relinquish the
->> locality until system reset.
->>
->> The commit seeks to address this situation through three changes.
+On Sun, Jan 14, 2024 at 04:15:34PM +0100, Christophe JAILLET wrote:
+> ida_alloc() and ida_free() should be preferred to the deprecated
+> ida_simple_get() and ida_simple_remove().
 > 
-> Could you split this up into multiple patches then, so that they can be 
-> discussed separately?
-
-Gladly, but individually none of these fully address the situation.
-
->> The first is
->> to walk the localities during initialization and close any open 
->> localities to
->> ensure the TPM is in the assumed state. Next is to put guards around the
->> counter and the requested locality to ensure they remain within valid 
->> values.
->> The last change is to make the request locality functions be 
->> consistent in
->> their return values. The functions will either return the locality 
->> requested if
->> successful or a negative error code.
->>
->> Signed-off-by: Daniel P. Smith <dpsmith@apertussolutions.com>
->> Signed-off-by: Ross Philipson <ross.philipson@oracle.com>
->> Reported-by: Kanth Ghatraju <kanth.ghatraju@oracle.com>
->> Fixes: 933bfc5ad213 ("tpm, tpm: Implement usage counter for locality")
->> ---
->>   drivers/char/tpm/tpm-chip.c     |  2 +-
->>   drivers/char/tpm/tpm_tis_core.c | 20 +++++++++++++++-----
->>   include/linux/tpm.h             |  2 ++
->>   3 files changed, 18 insertions(+), 6 deletions(-)
->>
->> diff --git a/drivers/char/tpm/tpm-chip.c b/drivers/char/tpm/tpm-chip.c
->> index 42b1062e33cd..e7293f85335a 100644
->> --- a/drivers/char/tpm/tpm-chip.c
->> +++ b/drivers/char/tpm/tpm-chip.c
->> @@ -49,7 +49,7 @@ static int tpm_request_locality(struct tpm_chip *chip)
->>                  return rc;
->>
->>          chip->locality = rc;
->> -       return 0;
->> +       return chip->locality;
->>   }
->>
->>   static void tpm_relinquish_locality(struct tpm_chip *chip)
->> diff --git a/drivers/char/tpm/tpm_tis_core.c 
->> b/drivers/char/tpm/tpm_tis_core.c
->> index 1b350412d8a6..c8b9b0b199dc 100644
->> --- a/drivers/char/tpm/tpm_tis_core.c
->> +++ b/drivers/char/tpm/tpm_tis_core.c
->> @@ -180,7 +180,8 @@ static int tpm_tis_relinquish_locality(struct 
->> tpm_chip *chip, int l)
->>          struct tpm_tis_data *priv = dev_get_drvdata(&chip->dev);
->>
->>          mutex_lock(&priv->locality_count_mutex);
->> -       priv->locality_count--;
->> +       if (priv->locality_count > 0)
->> +               priv->locality_count--;
->>          if (priv->locality_count == 0)
->>                  __tpm_tis_relinquish_locality(priv, l);
->>          mutex_unlock(&priv->locality_count_mutex);
->> @@ -226,18 +227,21 @@ static int __tpm_tis_request_locality(struct 
->> tpm_chip *chip, int l)
->>                          tpm_msleep(TPM_TIMEOUT);
->>                  } while (time_before(jiffies, stop));
->>          }
->> -       return -1;
->> +       return -EBUSY;
->>   }
->>
->>   static int tpm_tis_request_locality(struct tpm_chip *chip, int l)
->>   {
->>          struct tpm_tis_data *priv = dev_get_drvdata(&chip->dev);
->> -       int ret = 0;
->> +       int ret = -EIO;
->> +
->> +       if (l > TPM_MAX_LOCALITY)
->> +               return -EINVAL;
->>
->>          mutex_lock(&priv->locality_count_mutex);
->>          if (priv->locality_count == 0)
->>                  ret = __tpm_tis_request_locality(chip, l);
->> -       if (!ret)
->> +       if (ret >= 0)
->>                  priv->locality_count++;
->>          mutex_unlock(&priv->locality_count_mutex);
->>          return ret;
+> Note that the upper limit of ida_simple_get() is exclusive, but the one of
+> ida_alloc_range() is inclusive. So a -1 has been added when needed.
 > 
-> This line seems to be the most important change, that fixes the 
-> locality_count handling for localities != 0. It could already be 
-> sufficient to fix your original problem. I'm not sure all the other 
-> changes are really necessary.
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-It do not believe this fully address the issue. It does stop the 
-underflow but locality still is not being properly tracked.
+Reviewed-by: Matthew Brost <matthew.brost@intel.com>
 
->> @@ -1108,7 +1112,7 @@ int tpm_tis_core_init(struct device *dev, struct 
->> tpm_tis_data *priv, int irq,
->>          u32 intmask;
->>          u32 clkrun_val;
->>          u8 rid;
->> -       int rc, probe;
->> +       int rc, probe, locality;
->>          struct tpm_chip *chip;
->>
->>          chip = tpmm_chip_alloc(dev, &tpm_tis);
->> @@ -1169,6 +1173,12 @@ int tpm_tis_core_init(struct device *dev, 
->> struct tpm_tis_data *priv, int irq,
->>                  goto out_err;
->>          }
->>
->> +       /* It is not safe to assume localities are closed on startup */
->> +       for (locality = 0; locality <= TPM_MAX_LOCALITY; locality++) {
->> +               if (check_locality(chip, locality))
->> +                       tpm_tis_relinquish_locality(chip, locality);
->> +       }
->> +
->>          /* Take control of the TPM's interrupt hardware and shut it 
->> off */
->>          rc = tpm_tis_read32(priv, TPM_INT_ENABLE(priv->locality), 
->> &intmask);
->>          if (rc < 0)
->> diff --git a/include/linux/tpm.h b/include/linux/tpm.h
->> index 4ee9d13749ad..f2651281f02e 100644
->> --- a/include/linux/tpm.h
->> +++ b/include/linux/tpm.h
->> @@ -116,6 +116,8 @@ struct tpm_chip_seqops {
->>          const struct seq_operations *seqops;
->>   };
->>
->> +#define TPM_MAX_LOCALITY               4
->> +
->>   struct tpm_chip {
->>          struct device dev;
->>          struct device devs;
->> -- 
->> 2.30.2
->>
+> ---
+>  drivers/gpu/drm/i915/gt/uc/intel_guc_submission.c | 13 ++++++-------
+>  1 file changed, 6 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/i915/gt/uc/intel_guc_submission.c b/drivers/gpu/drm/i915/gt/uc/intel_guc_submission.c
+> index a259f1118c5a..73ce21ddf682 100644
+> --- a/drivers/gpu/drm/i915/gt/uc/intel_guc_submission.c
+> +++ b/drivers/gpu/drm/i915/gt/uc/intel_guc_submission.c
+> @@ -2156,11 +2156,10 @@ static int new_guc_id(struct intel_guc *guc, struct intel_context *ce)
+>  					      order_base_2(ce->parallel.number_children
+>  							   + 1));
+>  	else
+> -		ret = ida_simple_get(&guc->submission_state.guc_ids,
+> -				     NUMBER_MULTI_LRC_GUC_ID(guc),
+> -				     guc->submission_state.num_guc_ids,
+> -				     GFP_KERNEL | __GFP_RETRY_MAYFAIL |
+> -				     __GFP_NOWARN);
+> +		ret = ida_alloc_range(&guc->submission_state.guc_ids,
+> +				      NUMBER_MULTI_LRC_GUC_ID(guc),
+> +				      guc->submission_state.num_guc_ids - 1,
+> +				      GFP_KERNEL | __GFP_RETRY_MAYFAIL | __GFP_NOWARN);
+>  	if (unlikely(ret < 0))
+>  		return ret;
+>  
+> @@ -2183,8 +2182,8 @@ static void __release_guc_id(struct intel_guc *guc, struct intel_context *ce)
+>  							   + 1));
+>  		} else {
+>  			--guc->submission_state.guc_ids_in_use;
+> -			ida_simple_remove(&guc->submission_state.guc_ids,
+> -					  ce->guc_id.id);
+> +			ida_free(&guc->submission_state.guc_ids,
+> +				 ce->guc_id.id);
+>  		}
+>  		clr_ctx_id_mapping(guc, ce->guc_id.id);
+>  		set_context_guc_id_invalid(ce);
+> -- 
+> 2.43.0
+> 
