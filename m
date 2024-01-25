@@ -1,95 +1,103 @@
-Received: from out-178.mta0.migadu.com (out-178.mta0.migadu.com [91.218.175.178])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A53E557301
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 13:35:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC6BA56B6B;
+	Thu, 25 Jan 2024 13:35:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706189705; cv=none; b=uOZpAZ/YqzKAWBZSHIt04XenUgZpH2sguhjoLe+TkR3dYU9Equng8pdVl0fHTOkiP61UjSqagXsUExxxtNeAMkSGbSTDMjv92d7b1RZ2mbovXIJpkJPrMAFThyycjddpSshToazoizDR8ZFe5zPcTWlaJqDhAA9m01f3Lh3gr2o=
+	t=1706189728; cv=none; b=obfSBng0cOwdtozF4BHiYL/bLaOYR8T+BbdbR6p5VbL97FrYt4rvmd3W2ip1UmMOjGIRDOu9p2emE6UN9mDgP0obgwTl8Pyh4SOAiQwKAWAQxTgiwOZUhdAXk9xs1Wo3hRDOGfjmEa1cNiQ5StZwkd4RYyPJC1vP4YcCIj7zfMk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706189705; c=relaxed/simple;
-	bh=4LsMWW45vLtQuo3XidYiPfZUbQT8FyYnDkVfk4oplzs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hjLMOe+DJ9xG9QeXmtMXn4vRsmoImmDAe/Enh5QPDLi94162RoDuDdd8RfOeRpZrMzev36qNolgsLNy8pV0eNOwLCGm56MnFzAgAQDLVwDVYnNd6HQGM627L+AWuDdWrCFzAqd1dq1EEIXWxkNHorE7VKVBEK9aHW0lUc924cxo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org; spf=pass smtp.mailfrom=cknow.org; dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b=AXEWAW6S; arc=none smtp.client-ip=91.218.175.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cknow.org
+	s=arc-20240116; t=1706189728; c=relaxed/simple;
+	bh=fvn+bMBhFq4DGQCYdmmItxFzpZ4dLpUiVSBLUvy+Xqw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Si0y0WkVvixUTCpvq3bV0NXZiwcSZkRbDQm4vGIr/BzOaDFk0Mqbs9ywGWPAnXuV6E8ywJKBV31WeO4afKQvqP/P9RuQdK69V6jyVUA77WPzdQs10AA38xlZwwx0xfYPqeHXguvnKpRm/KwJ9W+nId8y+2x5g+oy92OMieWevBY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=EveXoCaV; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=PQTGwAQR; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b="AXEWAW6S"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cknow.org; s=key1;
-	t=1706189701;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="EveXoCaV";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="PQTGwAQR"
+Date: Thu, 25 Jan 2024 14:35:23 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1706189725;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=51k3AHXGohIJoLoxDV00w5xStGGYYOVxEKd0gWSXjl4=;
-	b=AXEWAW6S4/kdZsZwyWh+CUsGYuDIYgb4amFUns0o+QYTTakww1DwkpcnsAN3Z5KmRXsr67
-	QBPNlEgkrY9lEZd6RsEnNACI2PYcQeDIEoJ7T8Twai7zniYI6pcBQXjBSAg8C3qU067Ttm
-	c9NXwyFXxrA7/eEo2islYV6bMurKDf/Y6fVt6KLPTHG1MIrer9PuBpvu3kOuBrDZg8Ua3b
-	IhSqVliB1rtwli0/xiSxtvVU1oZXsR9GpOvZgC34/escTgpfVkK9zlV3ml0Sa6/vqCGcv5
-	28qB28r5hidmQTxRa8PSVCH/hUKQoie22143UGpoHbwGW9Z6BLxYGW2KMrKGLA==
-From: Diederik de Haas <didi.debian@cknow.org>
-To: Alexey Charkov <alchark@gmail.com>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
- linux-rockchip@lists.infradead.org
-Cc: Dragan Simic <dsimic@manjaro.org>, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- linux-kernel@vger.kernel.org, Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject:
- Re: [PATCH 2/4] arm64: dts: rockchip: enable built-in thermal monitoring on
- rk3588
-Date: Thu, 25 Jan 2024 14:34:47 +0100
-Message-ID: <1824717.EqSB1tO5pr@bagend>
-Organization: Connecting Knowledge
-In-Reply-To: <245f5692-be30-4216-8b13-988092793732@linaro.org>
-References:
- <20240125-rk-dts-additions-v1-0-5879275db36f@gmail.com>
- <20240125-rk-dts-additions-v1-2-5879275db36f@gmail.com>
- <245f5692-be30-4216-8b13-988092793732@linaro.org>
+	bh=F9UO/TwyZdEj3iKgu2t8LOSQIGAMLuKX9wZHWL1TwD8=;
+	b=EveXoCaVPjB1/4K0mdWTh9NDiOdMTJleMucr6NgKSgbgC2399afEmy+ZEW40cCnhH51PdY
+	+QE+IsM91122AOyYOCtk8MYz6t+X5nfg7ILPP4DZkQquAWR1my5xaEvi0Vczkp+9eaq/4m
+	RKvfSoiff/CV/OSvBA+e4L4u+Q1sSIw7aaKapdsDiJ2287lOr2vtYF6WFtjnpF4XlmT/ZN
+	tbJle9lLFLfrDv3lj9KFHg+yQZDxYbchvOArQaZj3rdqULeNVQhBVHf79cRhcnMQzFsHVl
+	VGw4caYJZhzO9KJeMLVYzFzYxnFpba0JZY/Jo7kA0kVgeK4kfFEvsZtO2+SgXA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1706189725;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=F9UO/TwyZdEj3iKgu2t8LOSQIGAMLuKX9wZHWL1TwD8=;
+	b=PQTGwAQRZ+rmvGxCERiEX0EX037zJJjnB0weA+PXdhNzvdUHYsjjwae7uRf0zZ5h4Izbkj
+	ucUMPr/Mi82ZpMCg==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: "Chang, Junxiao" <junxiao.chang@intel.com>
+Cc: John Ogness <john.ogness@linutronix.de>,
+	"tglx@linutronix.de" <tglx@linutronix.de>,
+	"rostedt@goodmis.org" <rostedt@goodmis.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"Li, Hao3" <hao3.li@intel.com>, "Li, Lili" <lili.li@intel.com>,
+	"Gao, Jianfeng" <jianfeng.gao@intel.com>,
+	"linux-rt-users@vger.kernel.org" <linux-rt-users@vger.kernel.org>
+Subject: Re: RE: [PATCH 1/2] printk: nbcon: move locked_port flag to struct
+ uart_port
+Message-ID: <20240125133523.W7aDeBqt@linutronix.de>
+References: <BN9PR11MB5370AED9C562F9DA75093557EC742@BN9PR11MB5370.namprd11.prod.outlook.com>
+ <20240123054033.183114-1-junxiao.chang@intel.com>
+ <20240123054033.183114-2-junxiao.chang@intel.com>
+ <87le8f9i75.fsf@jogness.linutronix.de>
+ <20240124100524.ZyAPfPU5@linutronix.de>
+ <BN9PR11MB53701E5CF2737908FA9EB532EC7A2@BN9PR11MB5370.namprd11.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart4312370.MBFMXe44yd";
- micalg="pgp-sha256"; protocol="application/pgp-signature"
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <BN9PR11MB53701E5CF2737908FA9EB532EC7A2@BN9PR11MB5370.namprd11.prod.outlook.com>
 
---nextPart4312370.MBFMXe44yd
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"; protected-headers="v1"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Diederik de Haas <didi.debian@cknow.org>
-Date: Thu, 25 Jan 2024 14:34:47 +0100
-Message-ID: <1824717.EqSB1tO5pr@bagend>
-Organization: Connecting Knowledge
-In-Reply-To: <245f5692-be30-4216-8b13-988092793732@linaro.org>
-MIME-Version: 1.0
+On 2024-01-25 01:08:24 [+0000], Chang, Junxiao wrote:
+>=20
+> Issue could be reproduced with our hardware every time. My cmdline is:
+> BOOT_IMAGE=3D(hd0,gpt2)/boot/bzImage-linux-intel-iot-lts-rt-6.6-kernel
+> root=3DPARTLABEL=3Dprimary rootwait console=3DttyS0,115200 console=3Dtty0
+> init=3D/sbin/preinit-env console=3DttyS4,115200n8 console=3DttyS5,115200n8
+>=20
+> If you would like to try any debug patch with my ADL hardware, please fee=
+l free to let me know.
+>=20
+> For console pointer sharing issue, from code logic point of view, the cal=
+l chain looks like:
+> serial8250_register_8250_port -> uart_add_one_port -> serial_ctrl_registe=
+r_port -> serial_core_register_port -> serial_core_add_one_port
+>=20
+> In API serial_core_add_one_port, uart_port's console pointer is assigned =
+with driver's console pointer:
+> 	uport->cons =3D drv->cons;
+> Driver's console pointer points to static structure "univ8250_console" wh=
+ich is defined in 8250_core.c
+>=20
+> That is, all 8250 serial devices' console pointer are same, they point to=
+ univ8250_console.
 
-On Wednesday, 24 January 2024 22:56:21 CET Daniel Lezcano wrote:
-> > +                       cooling-maps {
-> > +                               map1 {
-> 
-> s/map1/mpa0/
+Okay, So that I see this and the unbalanced acquire/ release part with
+the attached patch. I leave it to John=E2=80=A6
+Btw. You don't see kernel log output on ttyS4 + ttyS5, right? Just a
+login prompt.
+=E2=80=A6
+> Thanks,
+> Junxiao
 
-FTR: that should be ``s/map1/map0/``
-(verified with Daniel Lezcano)
---nextPart4312370.MBFMXe44yd
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQT1sUPBYsyGmi4usy/XblvOeH7bbgUCZbJjdwAKCRDXblvOeH7b
-biA/APwNyu3DMP1k8u1Z1gxe5C8Vi6G43KSWumtPGN2v9paVbAEAtSdbFcND47gA
-MsiAV1fUxJbOATVo1LIngCtRbhbSkAs=
-=YVZI
------END PGP SIGNATURE-----
-
---nextPart4312370.MBFMXe44yd--
-
-
-
+Sebastian
