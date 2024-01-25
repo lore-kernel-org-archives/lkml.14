@@ -1,141 +1,226 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49BBC745F0;
-	Thu, 25 Jan 2024 15:45:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C393C7317A;
+	Thu, 25 Jan 2024 15:45:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706197542; cv=none; b=fnLPjUXl8njtE8D5shq6wgZehl/SF0LIycSEakcBilYNqYnaaW7ohG61JdsbbJ8DUWTJjxvG2buqwDm/QaGvkwWgjypoGiCQiKAuxG2fS5ehO55doL35Odw/YTHsFphIEn8QiEcCF7+bEDrcBfeAYW07CXitBqaodKRkhw8S4zA=
+	t=1706197552; cv=none; b=q+BpVTTcQLxWkUqJchbQFyir414KryNE4T3p/Cwh1iPW2ZglSntV3M208Si2h/9zK1LDnQMaSVyNlxUcwZe5jfJMPDvnlzzoyxAQCQTuwMLp3idiFT/pk9Yvc355ALUm2PVlXLvGNTMvBbBbpvTiVUCy9OCPolL8Ng6PZdKpBoY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706197542; c=relaxed/simple;
-	bh=LSd+p9tqQe9xvQ1Ck8fwwM0f59A6GB2VqQdcIDtb1Ro=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=V/hdSPR5ZmAwtUzLq5voaiA3wZpjQRINZ1Y3hOS85FDlHz/AtjSq+EkipTqZHVU4lqDCDSmj9vZfV0urBynAvsXmR/ufBoX09jGHah9F7BrXRHTicuup4kUijUydWZLjY3Ham0P6+ADiTwzFhS2B9MTPyS6MNi8azAtzN4Dnzbs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BgRkhNAK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706197552; c=relaxed/simple;
+	bh=McB6NIE61BwGjTvv9ED9Vb50EqOQdx98eH1ZoiQXBpQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=RbfTe+BSUyPVJgIBibC2SiY1u2Fak+lnS5//kdgiJrMvTopZFPpRfNsFgCxovW+Z6cgWnic1QRhRzQPllkYIQsDZM8M7CjsRJq30uhcRYxuXphAJvz4WHjHoiwgVuw3bu5ftmXGOOo/DqDEZetX+p4p7WbzJzP4/yXO/MjBPRRI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=lSiZzWYQ; arc=none smtp.client-ip=198.47.19.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BgRkhNAK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B20E3C43609;
-	Thu, 25 Jan 2024 15:45:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706197541;
-	bh=LSd+p9tqQe9xvQ1Ck8fwwM0f59A6GB2VqQdcIDtb1Ro=;
-	h=References:In-Reply-To:Reply-To:From:Date:Subject:To:Cc:From;
-	b=BgRkhNAKYFlwMND1yFknrfT0HtJYdi9oC6rkMg48B0VjthqMcgypt5Ky3bcgESdqh
-	 DWc3wb38X3OSDRlolG2YN1qdJvEejGkv1QrkBq7S61HqZ4Pky01kKskpk1BJ5otP70
-	 94nsWXGUn02RMSU2RWK6ThV/mLnziZtPyJtX+K84jxEqTD+/u77igSNiXzzgDhlGjd
-	 70U/Xo08VlWOaa9ZKhrMbaqtX9UpFUpcgYgtg8f7H+20FUtMqZ/yTz6qJg15Xxej7O
-	 z2xwp4eFVJ7WBM2Z8iX7mMrHE2jid9wznrc2Ein4gmi7/EaYF/bc4mEsoim9lbEZZl
-	 n+jZvZYnOwUyA==
-Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-5ce07cf1e5dso3884129a12.2;
-        Thu, 25 Jan 2024 07:45:41 -0800 (PST)
-X-Gm-Message-State: AOJu0Yz5HErKUbrEKk4by9ixmD2KvqFzuIar86/F5Kc9H5hE3oJXfoIl
-	pjEHL0ExtRq2VzqAxxFOfZOCaITtNOaLQBNfVkGCWyv4psbvtn9YCsTA1u1BUgf66KYdvCSN2eH
-	vx1kngwP/upzhHuHSvr5pCT2jv9I=
-X-Google-Smtp-Source: AGHT+IEDkFC2HvIRERexWpUkVEZ2RLrKEk1HlzpxIR1iwtBWwHcQLFIsNry8fLlluicNYpj+4ciYmw8MPcuj72MuR/g=
-X-Received: by 2002:a05:6a20:432b:b0:19a:fa18:c306 with SMTP id
- h43-20020a056a20432b00b0019afa18c306mr1213214pzk.6.1706197541181; Thu, 25 Jan
- 2024 07:45:41 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="lSiZzWYQ"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 40PFjeiO037894;
+	Thu, 25 Jan 2024 09:45:40 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1706197540;
+	bh=swdj5R8LjyDTSfvkm8i15amLpOZddgXK39R/tFg7qGM=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=lSiZzWYQnIylBlzW0Pp/f3AmCyQMnoUi//umQavH3biwszJWz0QjFvh0r/ovSeDIx
+	 URsHKDLm+pLR1eLytgiFW7rTkKaCicrDIZKhIhDe927gywuBnEmjGvXmHaKvB789BS
+	 S5PCbjnagCQyE8OXZ4Ah7CZzP7WVpzDATsgj7wZM=
+Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 40PFjeSu020562
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Thu, 25 Jan 2024 09:45:40 -0600
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 25
+ Jan 2024 09:45:39 -0600
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Thu, 25 Jan 2024 09:45:39 -0600
+Received: from [10.249.42.149] ([10.249.42.149])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 40PFjdK7110154;
+	Thu, 25 Jan 2024 09:45:39 -0600
+Message-ID: <7872f641-8a72-424f-b345-99c27403d7c6@ti.com>
+Date: Thu, 25 Jan 2024 09:45:39 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240122170518.3090814-1-wens@kernel.org> <20240122170518.3090814-5-wens@kernel.org>
- <20240123004010.59cac5ad@minigeek.lan> <CAGb2v66UmLuWyLvvULZeW6MKFauM-xAMPAO9W_TPAByXYqKCBg@mail.gmail.com>
- <20240125150942.2535a228@donnerap.manchester.arm.com>
-In-Reply-To: <20240125150942.2535a228@donnerap.manchester.arm.com>
-Reply-To: wens@kernel.org
-From: Chen-Yu Tsai <wens@kernel.org>
-Date: Thu, 25 Jan 2024 23:45:29 +0800
-X-Gmail-Original-Message-ID: <CAGb2v650reNd9n-epiCYs6dkbvaG9xARbyP6Rn9eDAKc-sS6+Q@mail.gmail.com>
-Message-ID: <CAGb2v650reNd9n-epiCYs6dkbvaG9xARbyP6Rn9eDAKc-sS6+Q@mail.gmail.com>
-Subject: Re: [PATCH 4/7] dt-bindings: dma: allwinner,sun50i-a64-dma: Add
- compatible for H616
-To: Andre Przywara <andre.przywara@arm.com>
-Cc: Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Vinod Koul <vkoul@kernel.org>, 
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-sunxi@lists.linux.dev, linux-sound@vger.kernel.org, 
-	dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/3] udmabuf: Sync buffer mappings for attached devices
+Content-Language: en-US
+To: "Kasireddy, Vivek" <vivek.kasireddy@intel.com>,
+        Gerd Hoffmann
+	<kraxel@redhat.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        Paul Cercueil
+	<paul@crapouillou.net>
+CC: "linaro-mm-sig@lists.linaro.org" <linaro-mm-sig@lists.linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>
+References: <20240123221227.868341-1-afd@ti.com>
+ <20240123221227.868341-2-afd@ti.com>
+ <IA0PR11MB7185DDD7A972ED546B4CEA10F87B2@IA0PR11MB7185.namprd11.prod.outlook.com>
+From: Andrew Davis <afd@ti.com>
+In-Reply-To: <IA0PR11MB7185DDD7A972ED546B4CEA10F87B2@IA0PR11MB7185.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-On Thu, Jan 25, 2024 at 11:09=E2=80=AFPM Andre Przywara <andre.przywara@arm=
-.com> wrote:
->
-> On Thu, 25 Jan 2024 22:37:34 +0800
-> Chen-Yu Tsai <wens@kernel.org> wrote:
->
-> Hi,
->
-> > On Tue, Jan 23, 2024 at 8:41=E2=80=AFAM Andre Przywara <andre.przywara@=
-arm.com> wrote:
-> > >
-> > > On Tue, 23 Jan 2024 01:05:15 +0800
-> > > Chen-Yu Tsai <wens@kernel.org> wrote:
-> > >
-> > > Hi,
-> > >
-> > > > From: Chen-Yu Tsai <wens@csie.org>
-> > > >
-> > > > The DMA controllers found on the H616 and H618 are the same as the =
-one
-> > > > found on the H6. The only difference is the DMA endpoint (DRQ) layo=
-ut.
-> > >
-> > > That does not seem to be entirely true: The H616 encodes the two lowe=
-st
-> > > bits in DMA_DESC_ADDR_REG differently: on the H6 they must be 0 (word
-> > > aligned), on the H616 these contain bits [33:32] of the address of th=
-e
-> > > DMA descriptor. The manual doesn't describe the descriptor format in
-> > > much detail, but ec31c5c59492 suggests that those two bits are put in
-> > > the "para" word of the descriptor.
-> >
-> > Good catch. So, same as the A100 I believe?
->
-> Yes, that's what I got as well.
->
-> > > The good thing it that this encoding is backwards compatible, so I
-> > > think the fallback string still holds: Any driver just implementing t=
-he
-> > > H6 encoding would be able to drive the H616.
-> > >
-> > > I think the A100 was mis-described, as mentioned here:
-> > > https://lore.kernel.org/linux-arm-kernel/29e575b6-14cb-73f1-512d-9f0f=
-934490ea@arm.com/
-> > > I think we should:
-> > > - make the A100 use: "allwinner,sun50i-a100-dma", "sun50i-h6-dma"
-> > > - make the H616 use: "allwinner,sun50i-h616-dma", "allwinner,sun50i-a=
-100-dma", "sun50i-h6-dma"
-> > >
-> > > Does that make sense?
-> >
-> > I wouldn't call that exactly backward compatible. Say the driver forgot=
- to
-> > clear the two bits. It would work fine on the H6, but the accessed addr=
-ess
-> > could be way off on the A100 and H616.
->
-> I don't know the exact boundaries of "compatible" here, but the H6 manual
-> pretty clearly states "The descriptor address must be word-aligned."
-> But since the A100 compatible is known and supported for a while, that
-> doesn't really matter, practically speaking, I guess.
+On 1/24/24 5:05 PM, Kasireddy, Vivek wrote:
+> Hi Andrew,
+> 
+>> Currently this driver creates a SGT table using the CPU as the
+>> target device, then performs the dma_sync operations against
+>> that SGT. This is backwards to how DMA-BUFs are supposed to behave.
+>> This may have worked for the case where these buffers were given
+>> only back to the same CPU that produced them as in the QEMU case.
+>> And only then because the original author had the dma_sync
+>> operations also backwards, syncing for the "device" on begin_cpu.
+>> This was noticed and "fixed" in this patch[0].
+>>
+>> That then meant we were sync'ing from the CPU to the CPU using
+>> a pseudo-device "miscdevice". Which then caused another issue
+>> due to the miscdevice not having a proper DMA mask (and why should
+>> it, the CPU is not a DMA device). The fix for that was an even
+>> more egregious hack[1] that declares the CPU is coherent with
+>> itself and can access its own memory space..
+>>
+>> Unwind all this and perform the correct action by doing the dma_sync
+>> operations for each device currently attached to the backing buffer.
+> Makes sense.
+> 
+>>
+>> [0] commit 1ffe09590121 ("udmabuf: fix dma-buf cpu access")
+>> [1] commit 9e9fa6a9198b ("udmabuf: Set the DMA mask for the udmabuf
+>> device (v2)")
+>>
+>> Signed-off-by: Andrew Davis <afd@ti.com>
+>> ---
+>>   drivers/dma-buf/udmabuf.c | 41 +++++++++++++++------------------------
+>>   1 file changed, 16 insertions(+), 25 deletions(-)
+>>
+>> diff --git a/drivers/dma-buf/udmabuf.c b/drivers/dma-buf/udmabuf.c
+>> index 3a23f0a7d112a..ab6764322523c 100644
+>> --- a/drivers/dma-buf/udmabuf.c
+>> +++ b/drivers/dma-buf/udmabuf.c
+>> @@ -26,8 +26,6 @@ MODULE_PARM_DESC(size_limit_mb, "Max size of a
+>> dmabuf, in megabytes. Default is
+>>   struct udmabuf {
+>>   	pgoff_t pagecount;
+>>   	struct page **pages;
+>> -	struct sg_table *sg;
+>> -	struct miscdevice *device;
+>>   	struct list_head attachments;
+>>   	struct mutex lock;
+>>   };
+>> @@ -169,12 +167,8 @@ static void unmap_udmabuf(struct
+>> dma_buf_attachment *at,
+>>   static void release_udmabuf(struct dma_buf *buf)
+>>   {
+>>   	struct udmabuf *ubuf = buf->priv;
+>> -	struct device *dev = ubuf->device->this_device;
+>>   	pgoff_t pg;
+>>
+>> -	if (ubuf->sg)
+>> -		put_sg_table(dev, ubuf->sg, DMA_BIDIRECTIONAL);
+> What happens if the last importer maps the dmabuf but erroneously
+> closes it immediately? Would unmap somehow get called in this case?
+> 
 
-I'd say that makes the descriptor address register backward compatible,
+Good question, had to scan the framework code a bit here. I thought
+closing a DMABUF handle would automatically unwind any current
+attachments/mappings, but it seems nothing in the framework does that.
 
-> One could check how the H6 DMA controller reacts to those bits not being
-> 0, not sure if I find the time, though.
+Looks like that is up to the importing drivers[0]:
 
-but no idea about the parameter field in the descriptor. So for now I
-think we should just be cautious. Since as you mentioned the A100 is alread=
-y
-supported and listed separately, lets just keep that for now.
+> Once a driver is done with a shared buffer it needs to call
+> dma_buf_detach() (after cleaning up any mappings) and then
+> release the reference acquired with dma_buf_get() by
+> calling dma_buf_put().
 
-ChenYu
+So closing a DMABUF after mapping without first unmapping it would
+be a bug in the importer, it is not the exporters problem to check
+for (although some more warnings in the framework checking for that
+might not be a bad idea..).
 
-[...]
+Andrew
+
+[0] https://www.kernel.org/doc/html/v6.7/driver-api/dma-buf.html
+
+> Thanks,
+> Vivek
+> 
+>> -
+>>   	for (pg = 0; pg < ubuf->pagecount; pg++)
+>>   		put_page(ubuf->pages[pg]);
+>>   	kfree(ubuf->pages);
+>> @@ -185,33 +179,31 @@ static int begin_cpu_udmabuf(struct dma_buf
+>> *buf,
+>>   			     enum dma_data_direction direction)
+>>   {
+>>   	struct udmabuf *ubuf = buf->priv;
+>> -	struct device *dev = ubuf->device->this_device;
+>> -	int ret = 0;
+>> -
+>> -	if (!ubuf->sg) {
+>> -		ubuf->sg = get_sg_table(dev, buf, direction);
+>> -		if (IS_ERR(ubuf->sg)) {
+>> -			ret = PTR_ERR(ubuf->sg);
+>> -			ubuf->sg = NULL;
+>> -		}
+>> -	} else {
+>> -		dma_sync_sg_for_cpu(dev, ubuf->sg->sgl, ubuf->sg->nents,
+>> -				    direction);
+>> -	}
+>> +	struct udmabuf_attachment *a;
+>>
+>> -	return ret;
+>> +	mutex_lock(&ubuf->lock);
+>> +
+>> +	list_for_each_entry(a, &ubuf->attachments, list)
+>> +		dma_sync_sgtable_for_cpu(a->dev, a->table, direction);
+>> +
+>> +	mutex_unlock(&ubuf->lock);
+>> +
+>> +	return 0;
+>>   }
+>>
+>>   static int end_cpu_udmabuf(struct dma_buf *buf,
+>>   			   enum dma_data_direction direction)
+>>   {
+>>   	struct udmabuf *ubuf = buf->priv;
+>> -	struct device *dev = ubuf->device->this_device;
+>> +	struct udmabuf_attachment *a;
+>>
+>> -	if (!ubuf->sg)
+>> -		return -EINVAL;
+>> +	mutex_lock(&ubuf->lock);
+>> +
+>> +	list_for_each_entry(a, &ubuf->attachments, list)
+>> +		dma_sync_sgtable_for_device(a->dev, a->table, direction);
+>> +
+>> +	mutex_unlock(&ubuf->lock);
+>>
+>> -	dma_sync_sg_for_device(dev, ubuf->sg->sgl, ubuf->sg->nents,
+>> direction);
+>>   	return 0;
+>>   }
+>>
+>> @@ -307,7 +299,6 @@ static long udmabuf_create(struct miscdevice
+>> *device,
+>>   	exp_info.priv = ubuf;
+>>   	exp_info.flags = O_RDWR;
+>>
+>> -	ubuf->device = device;
+>>   	buf = dma_buf_export(&exp_info);
+>>   	if (IS_ERR(buf)) {
+>>   		ret = PTR_ERR(buf);
+>> --
+>> 2.39.2
+> 
