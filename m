@@ -1,137 +1,143 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from winehq.org (winehq.org [4.4.81.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDAD91759D
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 07:57:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D6BB17727;
+	Thu, 25 Jan 2024 07:57:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=4.4.81.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706169438; cv=none; b=NV6X+GIbZ6K4rDN6wvzaQHyRUoI5KOsiVH/JeOULYvZnvrpL9SJge+LwNV7+fwoZFg+SumRPKqI2y3tLQKzoIGbN81N9CfBmD2jN9son/JI7h5VSKtwSNrd9shXsmmTUCr2J1W6HEIX4ipGbKXeE5CqEYi91G0c7bpTPM/YqATM=
+	t=1706169450; cv=none; b=Damsyt2RfCMlbXVQvA/mgoJIAPt9QC0cPefkD8ZI9sh3xOQQx0B+jMQ77geQ3S/tVKGk3saWklZCZxg1I4Mn9dZ4hSQFjhjAGFV6SN8jSl2XMirKkvrAa3+JtGZfiOp9CXBYu6Za+A+ynEElX5USevVExHG4jou93PvdrPmkMLQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706169438; c=relaxed/simple;
-	bh=MMovICcHBLOIBN+8/Tze8+7DdOVKhECE9b14WunCbyg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cBlD6089FuEuoVDdi/M6jE7J/VnN+XDnb8b23BPhNG0ruKlCKLJ+PoLBPxJYAuRTz36HMSqoqy4kXm0v1rRB4MR40N2MyCOKj3r/U07I5JOHpCjoUeSqSVfZauXNyyPOh3ZKfokb5gRnGU+yILFVzxBRo2rlhRT7iVxTbARQkc8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=l+xq+Gyn; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1706169450; c=relaxed/simple;
+	bh=BG4b1dwAC0O5niSsIyr5Wwdb38kT2Xjz5+5JU87Krng=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=ffMODFNrUH4VWmJDTpOqOc4vVzwfmySCtgiD1PO341pXAeSmdckkD0vv9RNMF6YcC6sVhT+FfV2WvvwWe5UxkEfIKGDF0UhfoINCSCsgIJwgnRG8WR1On2IfuwUkOE10RwQ7gyLsGy+/ih3OQyUXrI1N8oSYYivf438GNdWPppc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=winehq.org; spf=pass smtp.mailfrom=winehq.org; dkim=pass (2048-bit key) header.d=winehq.org header.i=@winehq.org header.b=rjA9eI3W; arc=none smtp.client-ip=4.4.81.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=winehq.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=winehq.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="l+xq+Gyn"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-40eb2f392f0so33240655e9.1
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 23:57:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706169434; x=1706774234; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=3VDiCwy8+9JrBnAMb9PIsv+1UoGhnw8+lWFqg1PNXVk=;
-        b=l+xq+GynsZckIH2EJPoaEhJlfCybzL4rATAEk15geeBd2Wr6m/7EpikpamkFWxO8rA
-         688jDNIx3uJjq5CDGQ91ZfSAbVN3ruINOTrw9HUiXX2oiGt781Bbxwr82sA4kZeBrN0C
-         2twUvJTxVrNGgINvaE84jTYnFTGxBrktyiJd0lQvtjU9i5L4T872ZGkSRDOAchLQyS9H
-         JZfEeXhZVrrQ/ZwhNlY1gP/kxAXuFciKn7ElkLQe9XKY+aWISw3ft42pHmvkp9/gwspG
-         MSBLow0867YveKczQY36oSgNvZdUfjYKFNAByIPG6D2X/EXg1y6+HWBVquFxXTMn+uA0
-         Cgug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706169434; x=1706774234;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3VDiCwy8+9JrBnAMb9PIsv+1UoGhnw8+lWFqg1PNXVk=;
-        b=JrU1+TiB2gSg5lOj0o6RkmhFM0ouRFFj7olU8PWtKHvr1xb9zb1o1YL9SpXOtvlFCB
-         dKf9l62Vv75QW19jrYF1vWoXzv/pO6rBUVfWoaeaeuStvir1GLCMHwc4Umv9wd2pX7Jd
-         S/vr9kOpC8MAqr2+v6fUbsuBV20gsgKbM4D4mqwV9+D1Xksi+K7pZPeByLQls5BuUMRT
-         Cf44eh9zMOm/1ELb4Ytj9HZ6WfRyY7yhRg8SVWK+rLrfZi0qYItlv+JF5KLRmhRyd8cu
-         DSzTF39OT4meYrXIfCPyhv/HjiKYJEkQrEqScPUzsy794eML0Cmy1K0lQ6l+m/+HwfW2
-         6syw==
-X-Gm-Message-State: AOJu0Yw7BCkUbQOVJOlfbh4a9OBwbJUuUkRc5o6yNYao/jH5hCyN0BqZ
-	Vl/JTaUTXL0rTuduHfmdRvW5zVSs1LQ3GMehm1l6C6OjIOLOW667xsEkLBmCIfPGaLnZHctGEvB
-	O
-X-Google-Smtp-Source: AGHT+IFIlA7GZzVy/7o9D6UPji4oRrqz8C/odkHa+kQJvEE0JUecqIJpNl9PoHbCCvwG/LESpPzR+g==
-X-Received: by 2002:a7b:c5c8:0:b0:40d:8459:480e with SMTP id n8-20020a7bc5c8000000b0040d8459480emr270548wmk.178.1706169434066;
-        Wed, 24 Jan 2024 23:57:14 -0800 (PST)
-Received: from [192.168.1.20] ([178.197.215.66])
-        by smtp.gmail.com with ESMTPSA id b1-20020a5d6341000000b0033930b9a2b1sm10354692wrw.26.2024.01.24.23.57.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 24 Jan 2024 23:57:13 -0800 (PST)
-Message-ID: <02919dac-cd22-4d3e-9d8c-d0572d91c3f7@linaro.org>
-Date: Thu, 25 Jan 2024 08:57:12 +0100
+	dkim=pass (2048-bit key) header.d=winehq.org header.i=@winehq.org header.b="rjA9eI3W"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=winehq.org;
+	s=s1; h=Message-ID:Date:Subject:Cc:To:From:Sender;
+	bh=Q4cMmITwA1uV9qSgRwQNyCfyNufbMRwq/yk11gxwcNs=; b=rjA9eI3WSXF89DvI/3xWF4yrxB
+	Z1p1KTHr71ogp+269uo0lbKOU51bN3EHBFNlIIBQEAP7dVhdDFnVEfuwgV0vVe0LRmB/Am0vOd2gc
+	TE0xVwlQMputrnXPbI4uDAUglmBINHZbGqPolV46KjJwK0TZqD771AKC5WlGRSvbwkzQMcxBElKDp
+	cJz7tWVHp/2cFFk+Fw63XS5wkq7LgG79azB9aU9AtAaxdSrNowW4hGpQHD6yepg5fBuhA9weDeGxY
+	vuG90pMtdHAFgVqdG14fDNvGiHpUoFnudxeJzYNkAzKsfz7MxB3X8ULv4eLqi2CmJ2nndZKifBTvy
+	L9joL4ZA==;
+Received: from xdsl-188-154-165-39.adslplus.ch ([188.154.165.39] helo=wine)
+	by winehq.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <julliard@winehq.org>)
+	id 1rSuMf-00A7IL-VV; Thu, 25 Jan 2024 01:41:35 -0600
+Received: from julliard by wine with local (Exim 4.97)
+	(envelope-from <julliard@winehq.org>)
+	id 1rSuMe-000000007Cb-0i9z;
+	Thu, 25 Jan 2024 08:41:32 +0100
+From: Alexandre Julliard <julliard@winehq.org>
+To: Elizabeth Figura <zfigura@codeweavers.com>
+Cc: Andy Lutomirski <luto@kernel.org>,  Arnd Bergmann <arnd@arndb.de>,  Greg
+ Kroah-Hartman <gregkh@linuxfoundation.org>,  linux-kernel@vger.kernel.org,
+  linux-api@vger.kernel.org,  wine-devel@winehq.org,  =?utf-8?Q?Andr=C3=A9?=
+ Almeida
+ <andrealmeid@igalia.com>,  Wolfram Sang <wsa@kernel.org>,  Arkadiusz Hiler
+ <ahiler@codeweavers.com>,  Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [RFC PATCH 1/9] ntsync: Introduce the ntsync driver and
+ character device.
+In-Reply-To: <5907233.BlLQTPImNI@camazotz> (Elizabeth Figura's message of
+	"Wed, 24 Jan 2024 16:56:23 -0600")
+References: <20240124004028.16826-1-zfigura@codeweavers.com>
+	<20240124004028.16826-2-zfigura@codeweavers.com>
+	<CALCETrU+Eb5CdkqfYK8JvOiPA7K-6Bfs4uEWiu-U9oH95XfvKw@mail.gmail.com>
+	<5907233.BlLQTPImNI@camazotz>
+Date: Thu, 25 Jan 2024 08:41:32 +0100
+Message-ID: <87mssthnbn.fsf@wine>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dt-bindings: ufs: samsung,exynos-ufs: Add size
- constraints on "samsung,sysreg"
-Content-Language: en-US
-To: Rob Herring <robh@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>,
- Avri Altman <avri.altman@wdc.com>, Bart Van Assche <bvanassche@acm.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-scsi@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240124190733.1554314-1-robh@kernel.org>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20240124190733.1554314-1-robh@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Score: -8.6
+X-Spam-Report: Action: no action
+ Symbol: FROM_HAS_DN(0.00)
+ Symbol: FROM_EQ_ENVFROM(0.00)
+ Symbol: RCVD_COUNT_TWO(0.00)
+ Symbol: BAYES_HAM(-3.00)
+ Symbol: TO_MATCH_ENVRCPT_ALL(0.00)
+ Symbol: RCVD_TLS_LAST(0.00)
+ Symbol: MID_RHS_NOT_FQDN(0.50)
+ Symbol: MIME_GOOD(-0.10)
+ Symbol: NEURAL_HAM(0.00)
+ Symbol: RCPT_COUNT_SEVEN(0.00)
+ Symbol: RCVD_VIA_SMTP_AUTH(0.00)
+ Symbol: WHITELIST_SENDER_DOMAIN(-6.00)
+ Symbol: ASN(0.00)
+ Symbol: ARC_NA(0.00)
+ Symbol: MIME_TRACE(0.00)
+ Symbol: TO_DN_SOME(0.00)
+ Message-ID: 87mssthnbn.fsf@wine
 
-On 24/01/2024 20:07, Rob Herring wrote:
-> The 'phandle-array' type is a bit ambiguous. It can be either just an
-> array of phandles or an array of phandles plus args. "samsung,sysreg" is
-> the latter and needs to be constrained to a single entry with a phandle and
-> offset.
-> 
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
+Elizabeth Figura <zfigura@codeweavers.com> writes:
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> On Wednesday, 24 January 2024 15:26:15 CST Andy Lutomirski wrote:
+>> On Tue, Jan 23, 2024 at 4:59=E2=80=AFPM Elizabeth Figura
+>> <zfigura@codeweavers.com> wrote:
+>> >
+>> > ntsync uses a misc device as the simplest and least intrusive uAPI int=
+erface.
+>> >
+>> > Each file description on the device represents an isolated NT instance=
+, intended
+>> > to correspond to a single NT virtual machine.
+>>=20
+>> If I understand this text right, and if I understood the code right,
+>> you're saying that each open instance of the device represents an
+>> entire universe of NT synchronization objects, and no security or
+>> isolation is possible between those objects.  For single-process use,
+>> this seems fine.  But fork() will be a bit odd (although NT doesn't
+>> really believe in fork, so maybe this is fine).
+>>=20
+>> Except that NT has *named* semaphores and such.  And I'm pretty sure
+>> I've written GUI programs that use named synchronization objects (IIRC
+>> they were events, and this was a *very* common pattern, regularly
+>> discussed in MSDN, usenet, etc) to detect whether another instance of
+>> the program is running.  And this all works on real Windows because
+>> sessions have sufficiently separated namespaces, and the security all
+>> works out about as any other security on Windows, etc.  But
+>> implementing *that* on top of this
+>> file-description-plus-integer-equals-object will be fundamentally
+>> quite subject to one buggy program completely clobbering someone
+>> else's state.
+>>=20
+>> Would it make sense and scale appropriately for an NT synchronization
+>> *object* to be a Linux open file description?  Then SCM_RIGHTS could
+>> pass them around, an RPC server could manage *named* objects, and
+>> they'd generally work just like other "Object Manager" objects like,
+>> say, files.
+>
+> It's a sensible concern. I think when I discussed this with Alexandre
+> Julliard (the Wine maintainer, CC'd) the conclusion was this wasn't
+> something we were concerned about.
+>
+> While the current model *does* allow for processes to arbitrarily mess
+> with each other, accidentally or not, I think we're not concerned with
+> the scope of that than we are about implementing a whole scheduler in
+> user space.
 
-Best regards,
-Krzysztof
+I may have misunderstood something in that dicussion then, because it
+would definitely be a concern. It's OK for a process to be able to mess
+up the state of any object that it has an NT handle to, but it shouldn't
+be possible to mess up the state of unrelated objects in other processes
+simply by passing the wrong integer id.
 
+The concern is not so much about a malicious process going out of its
+way to corrupt others, because it could do that through the NT API just
+as well. But if a wayward pointer corrupts the client-side handle cache,
+that shouldn't take down the entire session.
+
+--=20
+Alexandre Julliard
+julliard@winehq.org
