@@ -1,141 +1,146 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D4E613667A
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 18:44:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D54DB77F02
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 18:44:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706208255; cv=none; b=SrdLVl0fGNWfzk2OKbqA9KZHVGOil8ZvbDEOPaABrq8xohbpsj7vPRDaJrCkWEoorBkgcl61QkqAxF7PV43ibpaORvU/KMQ2kIvnhAqhofx+gJXoMCEjBz5ybPhEAcxtdDdy1m+zkXO4pbmzGq76o2tGJFzWoD95X3Jjztd72pc=
+	t=1706208277; cv=none; b=i7okOkGZBsOe6ZqOSlJ8gqSXZOFeb7ZlkQBuerq300q+wzCTWMiZPsarI1uXu4lKu2tErU7M4kw9Y8XBfcBDMeJMPnlvygiSRqkijb11C25hoLTX72fx7r/Wg74Y0/LEWNknZksL0FdM4qn/6Gtb3Zaz2o3d8jnoVWzRv9fvdPc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706208255; c=relaxed/simple;
-	bh=awSLOrEXP9rFT2y8LOhZ/9MdiMBuYZIY+MSqb9WthkE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RLL+3SUrSlNX6mnt5hhh78rG911QsLlt//Os49N+IdIM/xiq9NtV4cscBCmtFCy0186JmIUskJb6b+eqnqD31DK3PcixixaROUc1YXp+PBdb0YaEGDbi3LPb5/aOOLBwXkvhHHsBWy7q6lXr20m9b03UlI2f9wCqFVEDp2wDcJY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=l1olWlRk; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1706208277; c=relaxed/simple;
+	bh=/G7sXsTe7ri1HNrBLPbiY22GWstuhTL74efu7BfGoUg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=AjXa6fVXkq/Z9fmaRl4zTM6jHpVfD2BuiXZQsgLrcQn5wESzLmKDRMIZnK9O67+OviXI0jylzJHqDEDgibj9GEj8rE2nVGMAJ6mVjfJRdya5ymO4+rZ7wj8WOZs4gPe6ybp+L3eFdgrGJ6KeWu5J07QIqaxkAc4QbfMRE+8fOfs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KBnpZQtb; arc=none smtp.client-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="l1olWlRk"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-40e76626170so78400775e9.2
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 10:44:13 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KBnpZQtb"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-6ddc268ce2bso6799b3a.0
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 10:44:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706208251; x=1706813051; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=UrYJdLBwLw70S4ObciiJY9LJFq5pZvqC5Of2nJ/JVJM=;
-        b=l1olWlRk4TjO8OAIsZZryqaOk/GF9PstHdjIOXjr+HkBDWxypi/BYkIypXPBcWxDiy
-         cLhcvAunUVILJSecCliRaPKAzA/E7Vq82JX8UIHyHvHe4gZQ0+Y3NQOo4RBUMiFfVt0U
-         oWzz5EGlZBN/QnuXdxEuz1HF0LHovGxS17EwYfPdAkydnDk7bCG8DSH6njZZbpbqMmwl
-         AMGFsHRaWC8cOgJkzLguVKS9lpKS27X8RUHJKzbY7uNTPcAHo8d65dlcNEJm7Hfqoz1M
-         iSPp3NSv6XEr8Ot9yLDs6rKSYfuuZoXJTD/voGPF81fhd626RaJjFeOx0y2VmyvcVCgE
-         WK6w==
+        d=gmail.com; s=20230601; t=1706208275; x=1706813075; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=81jWFTTTYAtqoCJJ13OsSFtUzfIkGNBcYQalGJf/MDM=;
+        b=KBnpZQtbaY9Lss20rp9zxeRxW6uacDU4+B/ym0QGCZTF8ek2WiDRZ890PL5Lk9XZ8m
+         2sPpLDaYgJZpyngIH9V0EwOg6Iht+QhpgVDYo/vjDzTehLFXZz9Br7GTJT3leq4n8BHo
+         5tiAh07aJ3FtOr9NlhzBjuG8bU33vLJWummoEjz7sJX0bz1AvMWqK85OUIhdx5ctyW1v
+         ZiYyZwtXqzrx4zjOuWkDeWBsZ7yns3afkVHlcr6rD13MZRvftjIVCnuIoDjKyZBey93N
+         8euhmqOOctjaETNMc5gGSDDuI9uBXxhFHeCUc5FKPDDqTbcoe2C3IFZA4k0A1M7qyidw
+         26jQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706208251; x=1706813051;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=UrYJdLBwLw70S4ObciiJY9LJFq5pZvqC5Of2nJ/JVJM=;
-        b=LnLvpryrvdXoI7RTPiBE/7KBYLBNsvro/ycLB07asGaUYjRnz9hr5j9WIkCEI/FWS+
-         884BtDv4kUS8OtYCf/zuNWsxpOzKwXGmL5L+9vaf309tjAcUl7y5ZlBoS8BJ3oaity55
-         wbpk/cen2TSdH2abmSwTKnVokX9OL3rObOuMUrRdLa5Ilej1bv4QRNH22BYQ6Dy3HvYh
-         WwD9SON7bPmwaXzmTam03u+IgjsG4yvyCEFUqnC/mAx6PjRLVEjBNHoYwTp7f/OQpKFS
-         29gKrSq3+I6Dg6fTwQGbVdt/2nfy4LmcY+ReKF/ovI3OOa5gToza8AJ8KEVJNvz49Crb
-         e3eg==
-X-Gm-Message-State: AOJu0YwAH9CSF8DRbPqEhyug7yO/kTICheV0uVfyEba3auGQP9w/euQL
-	3PhlxRpvdAUtECPBnP8WFpdSghGwAOaVNGi1P90UE7uamcNbQYF5kPMynDMAKdg=
-X-Google-Smtp-Source: AGHT+IE+cIhZxK3kunbbIhBn/MOUJGzmsMnmINwXcGYl+d9le2UEsWFf+v6SdKU9oWvk60jPYq4SJg==
-X-Received: by 2002:a05:600c:365a:b0:40e:b174:8b0b with SMTP id y26-20020a05600c365a00b0040eb1748b0bmr120888wmq.40.1706208251067;
-        Thu, 25 Jan 2024 10:44:11 -0800 (PST)
-Received: from [192.168.2.107] ([79.115.63.202])
-        by smtp.gmail.com with ESMTPSA id k10-20020a05600c1c8a00b0040e451fd602sm3426678wms.33.2024.01.25.10.44.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 25 Jan 2024 10:44:10 -0800 (PST)
-Message-ID: <40ba9481-4aea-4a72-87bd-c2db319be069@linaro.org>
-Date: Thu, 25 Jan 2024 18:44:08 +0000
+        d=1e100.net; s=20230601; t=1706208275; x=1706813075;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=81jWFTTTYAtqoCJJ13OsSFtUzfIkGNBcYQalGJf/MDM=;
+        b=Ch310RcWbYaJWBO/B215STvmt75KnP+IJh13rwi7ApI99G7LEKjIwLhAVTIPHABJZM
+         3TkwHxB2EPtEMK+nlEdSWwRXm4m53kU+zu5A4Ka3f5Q6aoam2z1rDaFurCS0FUnzRZzf
+         /3gJ7ZLMUsE5ey6R2+EToXn4HaqiS0uy780gd/69g4EvDt64tZe5JZl2DqT7fuOrx2Li
+         Rh/Awnq2bmPUA1A95mFb0QWkJwMk+L4maAkWxrX5C3ZxXwJjsp5/nfWI48Zc6U92IM35
+         VP5eaZdSi9bxiE56nUyxyzF5vpfPH433mO8+rZXJbE0ZBYUGxHO7WC88K9LnQCnyr1ZU
+         3iqw==
+X-Gm-Message-State: AOJu0YwpWuj14FVNwMp0Fut6+JM1ZdMKI3Bi9/qKLl9Al+IBDkn6Q1NX
+	9IxIlEe/yzIvHnhrxKhemBh7S/kjKoieFRqSYT+dxv4rI6SASJBQjTbuV4ciJgsiBhSZnREYQzI
+	LnTH6g2Vy75mutDHbyEJ32O3uEak=
+X-Google-Smtp-Source: AGHT+IHMq8SnoE+FUdLwYAp07S1sZ1ZXNpW9iId/mZ5vizI584+m8d6ebM2DNj1atCj1i7xNKCmRa7+VvUSlymliGxA=
+X-Received: by 2002:a05:6a00:1ac6:b0:6db:de7c:53fe with SMTP id
+ f6-20020a056a001ac600b006dbde7c53femr1190523pfv.62.1706208274952; Thu, 25 Jan
+ 2024 10:44:34 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 21/28] spi: s3c64xx: infer fifosize from the compatible
-Content-Language: en-US
-To: Mark Brown <broonie@kernel.org>
-Cc: andi.shyti@kernel.org, arnd@arndb.de, robh+dt@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
- alim.akhtar@samsung.com, linux-spi@vger.kernel.org,
- linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-arch@vger.kernel.org, andre.draszik@linaro.org,
- peter.griffin@linaro.org, semen.protsenko@linaro.org,
- kernel-team@android.com, willmcvicker@google.com
-References: <20240125145007.748295-1-tudor.ambarus@linaro.org>
- <20240125145007.748295-22-tudor.ambarus@linaro.org>
- <2086b88e-45fc-4224-b00f-0840d446d042@sirena.org.uk>
-From: Tudor Ambarus <tudor.ambarus@linaro.org>
-In-Reply-To: <2086b88e-45fc-4224-b00f-0840d446d042@sirena.org.uk>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20231212033259.189718-1-aford173@gmail.com> <20231212033259.189718-2-aford173@gmail.com>
+In-Reply-To: <20231212033259.189718-2-aford173@gmail.com>
+From: Adam Ford <aford173@gmail.com>
+Date: Thu, 25 Jan 2024 12:44:23 -0600
+Message-ID: <CAHCN7xKKMzOtVaEXzgTgsO4yZF0JZ6=o+TFJOeTCza0fMGss2w@mail.gmail.com>
+Subject: Re: [PATCH 2/2] drm/bridge: samsung-dsim: Fix porch calcalcuation rounding
+To: dri-devel@lists.freedesktop.org
+Cc: aford@beaconembedded.com, Frieder Schrempf <frieder.schrempf@kontron.de>, 
+	Inki Dae <inki.dae@samsung.com>, Jagan Teki <jagan@amarulasolutions.com>, 
+	Marek Szyprowski <m.szyprowski@samsung.com>, Andrzej Hajda <andrzej.hajda@intel.com>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+	Michael Tretter <m.tretter@pengutronix.de>, Marco Felsch <m.felsch@pengutronix.de>, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Dec 11, 2023 at 9:33=E2=80=AFPM Adam Ford <aford173@gmail.com> wrot=
+e:
+>
+> When using video sync pulses, the HFP, HBP, and HSA are divided between
+> the available lanes if there is more than one lane.  For certain
+> timings and lane configurations, the HFP may not be evenly divisible.
+> If the HFP is rounded down, it ends up being too small which can cause
+> some monitors to not sync properly. In these instances, adjust htotal
+> and hsync to round the HFP up, and recalculate the htotal.
+>
+> Tested-by: Frieder Schrempf <frieder.schrempf@kontron.de> # Kontron BL i.=
+MX8MM with HDMI monitor
+> Signed-off-by: Adam Ford <aford173@gmail.com>
+
+Gentle nudge on this one.  Basically this fixes an issue with the 8MP,
+but it's still unknown why it doesn't work on 8MM or 8MN, but Frieder
+confirmed there are no regressions on 8MM or 8MN.
+
+adam
 
 
-
-On 1/25/24 17:18, Mark Brown wrote:
-> On Thu, Jan 25, 2024 at 02:49:59PM +0000, Tudor Ambarus wrote:
-> 
->> Infer the FIFO size from the compatible, where all the instances of the
->> SPI IP have the same FIFO size. This way we no longer depend on the SPI
->> alias from the device tree to select the FIFO size, thus we remove the
->> dependency of the driver on the SPI alias.
-> 
->>  static const struct s3c64xx_spi_port_config s3c2443_spi_port_config = {
->> -	.fifo_lvl_mask	= { 0x7f },
->> +	.fifosize	= 64,
->>  	.rx_lvl_offset	= 13,
->>  	.tx_st_done	= 21,
->>  	.clk_div	= 2,
-> 
-> I'm having real trouble associating the changelog with the change here.
-> This appears to be changing from specifying the mask for the FIFO level
-> register to specifying the size of the FIFO and unrelated to anything to
-> do with looking things up from the compatible?
-
-Let me try to explain everything.
-
-In the driver there is a weird dependency between the SPI of_alias ID,
-s3c64xx_spi_port_config.fifo_lvl_mask and the IP's FIFO depth.
-
-s3c64xx_spi_port_config.fifo_lvl_mask is not a 1:1 match with the
-SPI_STATUSn.{RX, TX}_FIFO_LVL register field. Those fields are defined
-in the datasheet as:
-+#define S3C64XX_SPI_ST_RX_FIFO_LVL		GENMASK(23, 15)
-+#define S3C64XX_SPI_ST_TX_FIFO_LVL		GENMASK(14, 6)
-
-Thus the register mask is on 9 bits, but the driver used either 0x1ff or
-0x7f, which was not reflecting the real register mask. Patch 10/28
-updates the driver to use the full register mask regardless of the FIFO
-depth configuration.
-
-Another problem with s3c64xx_spi_port_config.fifo_lvl_mask is that it
-was used as a way to determine the FIFO depth. The SPI of_alias ID was
-used as an index in this array to determine the FIFO depth with
-something like
-	fifo_depth = (fifo_lvl_mask[alias_id] >> 1) + 1
-For example, if one wanted to specify a 64 FIFO length (0x40), it would
-have configured the FIFO level to 127 (0x7f).
-
-The patch set breaks this weird dependencies. Obviously the FIFO depth
-must be tightly tied by the compatible and not by an alias. I tied the
-FIFO depth to the compatible in 2 ways:
-1/ For SoCs that have all the SPI nodes with the same FIFO depth, I
-chose to deduce the FIFO depth from the compatible. Instead of
-specifying "samsung,spi-fifosize" for all the gs101 SPI nodes in the
-device tree, I chose to infer it from the compatible. I know for sure
-that all the gs101 SPI nodes have 64 bytes FIFO depths, thus don't
-pollute the device tree with superfluous info. (patches 20/28 and 21/28)
-2/ For SoCs that have instances of the SPI IP with different FIFO
-depths, specify the node's FIFO depth via the "samsung,spi-fifosize" dt
-property. (patch 23/28)
-
-Hope this helps. Please tell if you want me to elaborate on something.
+>
+> diff --git a/drivers/gpu/drm/bridge/samsung-dsim.c b/drivers/gpu/drm/brid=
+ge/samsung-dsim.c
+> index 239d253a7d71..f5795da1d8bb 100644
+> --- a/drivers/gpu/drm/bridge/samsung-dsim.c
+> +++ b/drivers/gpu/drm/bridge/samsung-dsim.c
+> @@ -1628,6 +1628,27 @@ static int samsung_dsim_atomic_check(struct drm_br=
+idge *bridge,
+>                 adjusted_mode->flags |=3D (DRM_MODE_FLAG_PHSYNC | DRM_MOD=
+E_FLAG_PVSYNC);
+>         }
+>
+> +       /*
+> +        * When using video sync pulses, the HFP, HBP, and HSA are divide=
+d between
+> +        * the available lanes if there is more than one lane.  For certa=
+in
+> +        * timings and lane configurations, the HFP may not be evenly div=
+isible.
+> +        * If the HFP is rounded down, it ends up being too small which c=
+an cause
+> +        * some monitors to not sync properly. In these instances, adjust=
+ htotal
+> +        * and hsync to round the HFP up, and recalculate the htotal. Thr=
+ough trial
+> +        * and error, it appears that the HBP and HSA do not appearto nee=
+d the same
+> +        * correction that HFP does.
+> +        */
+> +       if (dsi->mode_flags & MIPI_DSI_MODE_VIDEO_SYNC_PULSE && dsi->lane=
+s > 1) {
+> +               int hfp =3D adjusted_mode->hsync_start - adjusted_mode->h=
+display;
+> +               int remainder =3D hfp % dsi->lanes;
+> +
+> +               if (remainder) {
+> +                       adjusted_mode->hsync_start +=3D remainder;
+> +                       adjusted_mode->hsync_end   +=3D remainder;
+> +                       adjusted_mode->htotal      +=3D remainder;
+> +               }
+> +       }
+> +
+>         return 0;
+>  }
+>
+> --
+> 2.40.1
+>
