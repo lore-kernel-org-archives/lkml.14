@@ -1,56 +1,56 @@
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 115271292F1
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 17:06:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3CE213667D
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 17:06:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706202394; cv=none; b=QzLMckkqA6VaKoFSvZmDH7zf/S0mbf8k1TGefq7extKbg+doesLdtmntboX38d//a27vKTnPXy/3O1bMBtI3TL90Pr+o850SE1iSznmq2KBdmq7oYoOYjGoISKslENmz2XtyF80dQHh+fx+w0yO/hhJafvLj6DEoeQ4t9hOuKU4=
+	t=1706202397; cv=none; b=oTCgfvmnkFRSBX0wBpbY6mjCV/esjamRAMB1/0YiLnoqzq2RvwTEuvIp3SNtnV3SZm+zkrgkd46yr9sOb11vhiBydXFInuG9C6r9O2WYSwYPsgcfJyRCAGLO5Lmc0ZRCEAPXAwHxEUdduUaOF63+l3G+UGdbRsbskslvnB++HTs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706202394; c=relaxed/simple;
-	bh=tHaCGiHYjjOvotqUAP75jtwPGcfMtkbUj+arO9XpAIg=;
+	s=arc-20240116; t=1706202397; c=relaxed/simple;
+	bh=M9m/Jy9Gw+jdj/vfc/MJd5VwxVDjgNlm5eObswq3By8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=A7PG/ifAFsNwsAPrCi1zmQAMB58JIfJ27xYIWkAAqrHGZ7YIj3bDOhNziepKEQTdEaZI1wWokF7t2WPdC/81R/SkTan37GJXjwFhmhY1PeZnDDADdkdAu6Hv8XRDxDEFvdJzQP+Hrab9xDpHCCxix5YSXRwOuQ7H8VEBB20aGyQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EAg5FnUq; arc=none smtp.client-ip=209.85.216.48
+	 MIME-Version; b=lYF17t+1U+LZzzMkY48cu3aJuaLrq/SXEHb0K1dqLDXJNnHmHlN1PBy6H6CfU+LA39Ux3ng/PRjVbnGqUcriRFR+YAy3+espyjyf2oBhzwre0v+DvXSf+ffQXisW3QMvLalVXKsjgOUU4hdO3RPpp8K0W/lJDun9eAjZpl83HHg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=K6FtVgb9; arc=none smtp.client-ip=209.85.210.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EAg5FnUq"
-Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-290b9f83037so743006a91.1
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 09:06:32 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K6FtVgb9"
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-6ddd19552e6so504689b3a.1
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 09:06:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706202392; x=1706807192; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1706202395; x=1706807195; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=+8aqxMtLvyQraeLHjZZtjq/H+09uA3xQxGGRy0QTkLU=;
-        b=EAg5FnUqPeb2eX1IkpQ87+L9T5BkeSEJc3yE9jR5oBVm+sCm91js3PtISUP+blpSK1
-         JFr1AG9VJN+ufSyRBaBOb0QX2QoEIvS3PdROM0Vlz9+KCZtWm2kHVlBY0V9fN1jULQJ1
-         i3ENSkDNO6++1uyoDW9KKzgQSCImyZF8QhIVMAMnYoiHv2NBNY5pMFgduObaf3nGRB7Z
-         vZUX0b6aenlgFkF1lt7H3U7JcAEhto0vqR3RmDvu9m3uls8JNtIU+2jWIucAx+nc5gdh
-         ZSGkYWLr0ftJFId0G0zq7gseY1MC2UbEwws6y7SUd774jYfbJ98nozEm7Pdot3M78ai7
-         dhcA==
+        bh=YOYkM/qLWTiwy9Fw63ezSNvZi7VG4jWrtKoEUh14gqg=;
+        b=K6FtVgb9Mh7uxqoCmHsYuEV5mQYiyjjKDHcoiJaSSAZ4S/ze29mQRaqHWxZOut8aK8
+         rkeoh8XZbPSed9J/GT33OcL8vQZhf0SzelT+ZbdFPl+mh8ctcToaJMgjoTp9KDCIpidD
+         se0P5wqNnuojxOeVxQGeMa39KD5mDeLdztYbaTULRlrLSTB0zZYtgTraJDtW+Dya5heH
+         n2W4pYx7UmSdCsaH7KC6J7r8Sg/00KntRaCQDUiME77/4iax7yVpq6mgPP/6u1/hh8Va
+         UP9qkMUog4i1DPggSYiVevwiUr+iBAuG010w4Q17/pB0aSbMvUBYiRVLDQAzDcrBYrY0
+         Kxog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706202392; x=1706807192;
+        d=1e100.net; s=20230601; t=1706202395; x=1706807195;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=+8aqxMtLvyQraeLHjZZtjq/H+09uA3xQxGGRy0QTkLU=;
-        b=q7kAnxeQLhiYO9OvNNM9MjSY9UqNR04opMWz9zCyGFbBhqF3n9msjRhb+rWfEhC7jJ
-         tE7PrPAEOBG5JqF1LsCDihHf2t21v41MOfhdR7fF6mcJbWi74dTfTPedrwFGIuHRZkaP
-         eOYCLprEDMjJWk8tl3KAEmtMQ9OAkK4n2yWJirhiL3sLwViVbuoacgT7EeY3w1aJBGWv
-         TojGFSNFTzHoL/fpPbnU2qJyeNE/Wmo9DlhyuO6nn3NMg3GuJ5AZHgJjCLhtYW5sZiCh
-         aBs3sor9PpXl7KuFCULAgvK14Z0zbI9Gl+YPn3TS8uR7RmrH9rWc1LcRLE1ks/9VIn4i
-         lyMQ==
-X-Gm-Message-State: AOJu0Yx/BI7kyMfzJCqo1FN12mzQowVqiObwQlFk0bSR2YYKXeZDc8GQ
-	lQVkKSmcMiQKgc/RtOdhDQ0kEBWASTvyxp6XHuwiQmqEwGBV9KfgPBtcBYZd
-X-Google-Smtp-Source: AGHT+IEmrTfJNbBiCJSPKNLjB/46yF85grX/KsTQpucODjQeGzXnOH+CAK2omi/GHLt2hetW+h6jqw==
-X-Received: by 2002:a17:90b:388b:b0:28e:79f9:b6c3 with SMTP id mu11-20020a17090b388b00b0028e79f9b6c3mr125245pjb.15.1706202392164;
-        Thu, 25 Jan 2024 09:06:32 -0800 (PST)
+        bh=YOYkM/qLWTiwy9Fw63ezSNvZi7VG4jWrtKoEUh14gqg=;
+        b=pY0jPVqplE56/jKTdVzKmAe3+rxMODWCqIHhqHnK38Y6PT6E66vC4BQ/k7aCJUm/t0
+         N50PqAToI/w6LQelTkka7wZFPg8FXZNMK6HoThb9oZgcdcfIe/jICfXqeRRTZUauRc+d
+         yW2ncP82QkBmdBHZGl0XtEaiBGGpT0Hcl4cN0l1G/B3rmFlZeRGRjq4o/ausswmbGndQ
+         9Qerv9wwNACd5Umcxx2GFJIcwqwNJdO4iDmQ4Dyzolx5BrORaptWvxqPoQ3hrLJlIud/
+         9T6JIzPov/nqbeHsGTEoTXDp03YdTNngv12GjUetIGjLDd64GGZcqsJPbWvQv4cvgBW0
+         UlOA==
+X-Gm-Message-State: AOJu0Yy3U8CWgJb17qN/WDfInaYiB9q6/e+KFcwWPLooLCWLqvqz92ny
+	9zzCfGnww0hb+PzVuu9nbAayrZ5U1uIxaTe6nExr6kd7cAGzhp9t
+X-Google-Smtp-Source: AGHT+IEwntHPTbrgS7Xj+gWyzBhxAfP8cO8ZGJBD/bnc0p6uVJizZl16B4OAcP6S8IFUAsVPB7h8kA==
+X-Received: by 2002:a17:902:e54e:b0:1d4:bcfa:2b0e with SMTP id n14-20020a170902e54e00b001d4bcfa2b0emr1264727plf.93.1706202395118;
+        Thu, 25 Jan 2024 09:06:35 -0800 (PST)
 Received: from localhost (dhcp-141-239-144-21.hawaiiantel.net. [141.239.144.21])
-        by smtp.gmail.com with ESMTPSA id ft8-20020a17090b0f8800b00290d2385af5sm1783239pjb.27.2024.01.25.09.06.31
+        by smtp.gmail.com with ESMTPSA id s17-20020a170903321100b001d738e94557sm8227996plh.4.2024.01.25.09.06.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jan 2024 09:06:31 -0800 (PST)
+        Thu, 25 Jan 2024 09:06:34 -0800 (PST)
 Sender: Tejun Heo <htejun@gmail.com>
 From: Tejun Heo <tj@kernel.org>
 To: jiangshanlai@gmail.com
@@ -58,9 +58,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Naohiro.Aota@wdc.com,
 	kernel-team@meta.com,
 	Tejun Heo <tj@kernel.org>
-Subject: [PATCH 01/10] workqueue: Move pwq->max_active to wq->max_active
-Date: Thu, 25 Jan 2024 07:05:54 -1000
-Message-ID: <20240125170628.2017784-2-tj@kernel.org>
+Subject: [PATCH 03/10] workqueue: Replace pwq_activate_inactive_work() with [__]pwq_activate_work()
+Date: Thu, 25 Jan 2024 07:05:56 -1000
+Message-ID: <20240125170628.2017784-4-tj@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240125170628.2017784-1-tj@kernel.org>
 References: <20240125170628.2017784-1-tj@kernel.org>
@@ -72,291 +72,83 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-max_active is a workqueue-wide setting and the configured value is stored in
-wq->saved_max_active; however, the effective value was stored in
-pwq->max_active. While this is harmless, it makes max_active update process
-more complicated and gets in the way of the planned max_active semantic
-updates for unbound workqueues.
+To prepare for unbound nr_active handling improvements, move work activation
+part of pwq_activate_inactive_work() into __pwq_activate_work() and add
+pwq_activate_work() which tests WORK_STRUCT_INACTIVE and updates nr_active.
 
-This patches moves pwq->max_active to wq->max_active. This simplifies the
-code and makes freezing and noop max_active updates cheaper too. No
-user-visible behavior change is intended.
-
-As wq->max_active is updated while holding wq mutex but read without any
-locking, it now uses WRITE/READ_ONCE(). A new locking locking rule WO is
-added for it.
-
-v2: wq->max_active now uses WRITE/READ_ONCE() as suggested by Lai.
+pwq_activate_first_inactive() and try_to_grab_pending() are updated to use
+pwq_activate_work(). The latter conversion is functionally identical. For
+the former, this conversion adds an unnecessary WORK_STRUCT_INACTIVE
+testing. This is temporary and will be removed by the next patch.
 
 Signed-off-by: Tejun Heo <tj@kernel.org>
-Cc: Lai Jiangshan <jiangshanlai@gmail.com>
 ---
- kernel/workqueue.c | 133 ++++++++++++++++++++++-----------------------
- 1 file changed, 66 insertions(+), 67 deletions(-)
+ kernel/workqueue.c | 31 +++++++++++++++++++++++++------
+ 1 file changed, 25 insertions(+), 6 deletions(-)
 
 diff --git a/kernel/workqueue.c b/kernel/workqueue.c
-index 8ca65665efe9..67d9ac1f0990 100644
+index 9e75535c4aeb..3a4c269204f3 100644
 --- a/kernel/workqueue.c
 +++ b/kernel/workqueue.c
-@@ -143,6 +143,9 @@ enum {
-  *
-  * WR: wq->mutex protected for writes.  RCU protected for reads.
-  *
-+ * WO: wq->mutex protected for writes. Updated with WRITE_ONCE() and can be read
-+ *     with READ_ONCE() without locking.
-+ *
-  * MD: wq_mayday_lock protected.
-  *
-  * WD: Used internally by the watchdog.
-@@ -250,7 +253,6 @@ struct pool_workqueue {
- 	 * is marked with WORK_STRUCT_INACTIVE iff it is in pwq->inactive_works.
- 	 */
- 	int			nr_active;	/* L: nr of active works */
--	int			max_active;	/* L: max active works */
- 	struct list_head	inactive_works;	/* L: inactive works */
- 	struct list_head	pwqs_node;	/* WR: node on wq->pwqs */
- 	struct list_head	mayday_node;	/* MD: node on wq->maydays */
-@@ -298,7 +300,8 @@ struct workqueue_struct {
- 	struct worker		*rescuer;	/* MD: rescue worker */
- 
- 	int			nr_drainers;	/* WQ: drain in progress */
--	int			saved_max_active; /* WQ: saved pwq max_active */
-+	int			max_active;	/* WO: max active works */
-+	int			saved_max_active; /* WQ: saved max_active */
- 
- 	struct workqueue_attrs	*unbound_attrs;	/* PW: only for unbound wqs */
- 	struct pool_workqueue	*dfl_pwq;	/* PW: only for unbound wqs */
-@@ -1492,7 +1495,7 @@ static void pwq_dec_nr_in_flight(struct pool_workqueue *pwq, unsigned long work_
- 		pwq->nr_active--;
- 		if (!list_empty(&pwq->inactive_works)) {
- 			/* one down, submit an inactive one */
--			if (pwq->nr_active < pwq->max_active)
-+			if (pwq->nr_active < READ_ONCE(pwq->wq->max_active))
- 				pwq_activate_first_inactive(pwq);
- 		}
- 	}
-@@ -1793,7 +1796,13 @@ static void __queue_work(int cpu, struct workqueue_struct *wq,
- 	pwq->nr_in_flight[pwq->work_color]++;
- 	work_flags = work_color_to_flags(pwq->work_color);
- 
--	if (likely(pwq->nr_active < pwq->max_active)) {
-+	/*
-+	 * Limit the number of concurrently active work items to max_active.
-+	 * @work must also queue behind existing inactive work items to maintain
-+	 * ordering when max_active changes. See wq_adjust_max_active().
-+	 */
-+	if (list_empty(&pwq->inactive_works) &&
-+	    pwq->nr_active < READ_ONCE(pwq->wq->max_active)) {
- 		if (list_empty(&pool->worklist))
- 			pool->watchdog_ts = jiffies;
- 
-@@ -4143,50 +4152,6 @@ static void pwq_release_workfn(struct kthread_work *work)
- 	}
+@@ -1461,16 +1461,36 @@ static bool pwq_is_empty(struct pool_workqueue *pwq)
+ 	return !pwq->nr_active && list_empty(&pwq->inactive_works);
  }
  
--/**
-- * pwq_adjust_max_active - update a pwq's max_active to the current setting
-- * @pwq: target pool_workqueue
-- *
-- * If @pwq isn't freezing, set @pwq->max_active to the associated
-- * workqueue's saved_max_active and activate inactive work items
-- * accordingly.  If @pwq is freezing, clear @pwq->max_active to zero.
-- */
--static void pwq_adjust_max_active(struct pool_workqueue *pwq)
--{
--	struct workqueue_struct *wq = pwq->wq;
--	bool freezable = wq->flags & WQ_FREEZABLE;
--	unsigned long flags;
+-static void pwq_activate_inactive_work(struct work_struct *work)
++static void __pwq_activate_work(struct pool_workqueue *pwq,
++				struct work_struct *work)
+ {
+-	struct pool_workqueue *pwq = get_work_pwq(work);
 -
--	/* for @wq->saved_max_active */
--	lockdep_assert_held(&wq->mutex);
--
--	/* fast exit for non-freezable wqs */
--	if (!freezable && pwq->max_active == wq->saved_max_active)
--		return;
--
--	/* this function can be called during early boot w/ irq disabled */
--	raw_spin_lock_irqsave(&pwq->pool->lock, flags);
--
--	/*
--	 * During [un]freezing, the caller is responsible for ensuring that
--	 * this function is called at least once after @workqueue_freezing
--	 * is updated and visible.
--	 */
--	if (!freezable || !workqueue_freezing) {
--		pwq->max_active = wq->saved_max_active;
--
--		while (!list_empty(&pwq->inactive_works) &&
--		       pwq->nr_active < pwq->max_active)
--			pwq_activate_first_inactive(pwq);
--
--		kick_pool(pwq->pool);
--	} else {
--		pwq->max_active = 0;
--	}
--
--	raw_spin_unlock_irqrestore(&pwq->pool->lock, flags);
--}
--
- /* initialize newly allocated @pwq which is associated with @wq and @pool */
- static void init_pwq(struct pool_workqueue *pwq, struct workqueue_struct *wq,
- 		     struct worker_pool *pool)
-@@ -4219,9 +4184,6 @@ static void link_pwq(struct pool_workqueue *pwq)
- 	/* set the matching work_color */
- 	pwq->work_color = wq->work_color;
- 
--	/* sync max_active to the current setting */
--	pwq_adjust_max_active(pwq);
--
- 	/* link in @pwq */
- 	list_add_rcu(&pwq->pwqs_node, &wq->pwqs);
- }
-@@ -4662,6 +4624,52 @@ static int init_rescuer(struct workqueue_struct *wq)
- 	return 0;
- }
- 
-+/**
-+ * wq_adjust_max_active - update a wq's max_active to the current setting
-+ * @wq: target workqueue
-+ *
-+ * If @wq isn't freezing, set @wq->max_active to the saved_max_active and
-+ * activate inactive work items accordingly. If @wq is freezing, clear
-+ * @wq->max_active to zero.
-+ */
-+static void wq_adjust_max_active(struct workqueue_struct *wq)
-+{
-+	struct pool_workqueue *pwq;
-+
-+	lockdep_assert_held(&wq->mutex);
-+
-+	if ((wq->flags & WQ_FREEZABLE) && workqueue_freezing) {
-+		WRITE_ONCE(wq->max_active, 0);
-+		return;
-+	}
-+
-+	if (wq->max_active == wq->saved_max_active)
-+		return;
-+
-+	/*
-+	 * Update @wq->max_active and then kick inactive work items if more
-+	 * active work items are allowed. This doesn't break work item ordering
-+	 * because new work items are always queued behind existing inactive
-+	 * work items if there are any.
-+	 */
-+	WRITE_ONCE(wq->max_active, wq->saved_max_active);
-+
-+	for_each_pwq(pwq, wq) {
-+		unsigned long flags;
-+
-+		/* this function can be called during early boot w/ irq disabled */
-+		raw_spin_lock_irqsave(&pwq->pool->lock, flags);
-+
-+		while (!list_empty(&pwq->inactive_works) &&
-+		       pwq->nr_active < wq->max_active)
-+			pwq_activate_first_inactive(pwq);
-+
-+		kick_pool(pwq->pool);
-+
-+		raw_spin_unlock_irqrestore(&pwq->pool->lock, flags);
-+	}
+ 	trace_workqueue_activate_work(work);
+ 	if (list_empty(&pwq->pool->worklist))
+ 		pwq->pool->watchdog_ts = jiffies;
+ 	move_linked_works(work, &pwq->pool->worklist, NULL);
+ 	__clear_bit(WORK_STRUCT_INACTIVE_BIT, work_data_bits(work));
 +}
 +
- __printf(1, 4)
- struct workqueue_struct *alloc_workqueue(const char *fmt,
- 					 unsigned int flags,
-@@ -4669,7 +4677,6 @@ struct workqueue_struct *alloc_workqueue(const char *fmt,
- {
- 	va_list args;
- 	struct workqueue_struct *wq;
--	struct pool_workqueue *pwq;
- 	int len;
- 
- 	/*
-@@ -4708,6 +4715,7 @@ struct workqueue_struct *alloc_workqueue(const char *fmt,
- 
- 	/* init wq */
- 	wq->flags = flags;
-+	wq->max_active = max_active;
- 	wq->saved_max_active = max_active;
- 	mutex_init(&wq->mutex);
- 	atomic_set(&wq->nr_pwqs_to_flush, 0);
-@@ -4736,8 +4744,7 @@ struct workqueue_struct *alloc_workqueue(const char *fmt,
- 	mutex_lock(&wq_pool_mutex);
- 
- 	mutex_lock(&wq->mutex);
--	for_each_pwq(pwq, wq)
--		pwq_adjust_max_active(pwq);
-+	wq_adjust_max_active(wq);
- 	mutex_unlock(&wq->mutex);
- 
- 	list_add_tail_rcu(&wq->list, &workqueues);
-@@ -4875,8 +4882,6 @@ EXPORT_SYMBOL_GPL(destroy_workqueue);
-  */
- void workqueue_set_max_active(struct workqueue_struct *wq, int max_active)
- {
--	struct pool_workqueue *pwq;
--
- 	/* disallow meddling with max_active for ordered workqueues */
- 	if (WARN_ON(wq->flags & __WQ_ORDERED_EXPLICIT))
- 		return;
-@@ -4887,9 +4892,7 @@ void workqueue_set_max_active(struct workqueue_struct *wq, int max_active)
- 
- 	wq->flags &= ~__WQ_ORDERED;
- 	wq->saved_max_active = max_active;
--
--	for_each_pwq(pwq, wq)
--		pwq_adjust_max_active(pwq);
-+	wq_adjust_max_active(wq);
- 
- 	mutex_unlock(&wq->mutex);
++/**
++ * pwq_activate_work - Activate a work item if inactive
++ * @pwq: pool_workqueue @work belongs to
++ * @work: work item to activate
++ *
++ * Returns %true if activated. %false if already active.
++ */
++static bool pwq_activate_work(struct pool_workqueue *pwq,
++			      struct work_struct *work)
++{
++	struct worker_pool *pool = pwq->pool;
++
++	lockdep_assert_held(&pool->lock);
++
++	if (!(*work_data_bits(work) & WORK_STRUCT_INACTIVE))
++		return false;
++
+ 	pwq->nr_active++;
++	__pwq_activate_work(pwq, work);
++	return true;
  }
-@@ -5136,8 +5139,8 @@ static void show_pwq(struct pool_workqueue *pwq)
- 	pr_info("  pwq %d:", pool->id);
- 	pr_cont_pool_info(pool);
  
--	pr_cont(" active=%d/%d refcnt=%d%s\n",
--		pwq->nr_active, pwq->max_active, pwq->refcnt,
-+	pr_cont(" active=%d refcnt=%d%s\n",
-+		pwq->nr_active, pwq->refcnt,
- 		!list_empty(&pwq->mayday_node) ? " MAYDAY" : "");
+ static void pwq_activate_first_inactive(struct pool_workqueue *pwq)
+@@ -1478,7 +1498,7 @@ static void pwq_activate_first_inactive(struct pool_workqueue *pwq)
+ 	struct work_struct *work = list_first_entry(&pwq->inactive_works,
+ 						    struct work_struct, entry);
  
- 	hash_for_each(pool->busy_hash, bkt, worker, hentry) {
-@@ -5685,7 +5688,6 @@ EXPORT_SYMBOL_GPL(work_on_cpu_safe_key);
- void freeze_workqueues_begin(void)
- {
- 	struct workqueue_struct *wq;
--	struct pool_workqueue *pwq;
+-	pwq_activate_inactive_work(work);
++	pwq_activate_work(pwq, work);
+ }
  
- 	mutex_lock(&wq_pool_mutex);
+ /**
+@@ -1616,8 +1636,7 @@ static int try_to_grab_pending(struct work_struct *work, bool is_dwork,
+ 		 * management later on and cause stall.  Make sure the work
+ 		 * item is activated before grabbing.
+ 		 */
+-		if (*work_data_bits(work) & WORK_STRUCT_INACTIVE)
+-			pwq_activate_inactive_work(work);
++		pwq_activate_work(pwq, work);
  
-@@ -5694,8 +5696,7 @@ void freeze_workqueues_begin(void)
- 
- 	list_for_each_entry(wq, &workqueues, list) {
- 		mutex_lock(&wq->mutex);
--		for_each_pwq(pwq, wq)
--			pwq_adjust_max_active(pwq);
-+		wq_adjust_max_active(wq);
- 		mutex_unlock(&wq->mutex);
- 	}
- 
-@@ -5760,7 +5761,6 @@ bool freeze_workqueues_busy(void)
- void thaw_workqueues(void)
- {
- 	struct workqueue_struct *wq;
--	struct pool_workqueue *pwq;
- 
- 	mutex_lock(&wq_pool_mutex);
- 
-@@ -5772,8 +5772,7 @@ void thaw_workqueues(void)
- 	/* restore max_active and repopulate worklist */
- 	list_for_each_entry(wq, &workqueues, list) {
- 		mutex_lock(&wq->mutex);
--		for_each_pwq(pwq, wq)
--			pwq_adjust_max_active(pwq);
-+		wq_adjust_max_active(wq);
- 		mutex_unlock(&wq->mutex);
- 	}
- 
+ 		list_del_init(&work->entry);
+ 		pwq_dec_nr_in_flight(pwq, *work_data_bits(work));
 -- 
 2.43.0
 
