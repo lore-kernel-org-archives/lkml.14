@@ -1,181 +1,144 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 635D617552
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 08:02:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D148413AE8
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 08:04:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706169774; cv=none; b=bZPoENUc4rDUD5YZzIbeAJnzXoYbrprDgfliOB39pP4ow0S+St6jq7rl3ITNdQPXX2Wc2smgJnmDr0sRw50AHE8o/+saTW3zNsxEF0Evx0UC4dDG8xlne+EmJuMcjnBVTzvK5QY+xc6UUZXIN8ksTX1L+n9+ZwtMsQc3o16xxhY=
+	t=1706169872; cv=none; b=MQcF8fHOUvqoDTXbh2OBrBgl9s9R3doxAnR0Qc75TXqnnmks7A+/7qr1JTV/oRsss1DyoOA3f493MPSzG5n/i2/f3apUoIkUCzhVE6+zgyQB42VdHqSOUhvL2YbEb64vjsjC17SG860u8YHd4oLzfqrQ5UuqZB4yv6cPdfKlbfg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706169774; c=relaxed/simple;
-	bh=rfTBHaMuDKxUbJ/3jkhJhQr4xkKdGdi9wi7gVnt5tu0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HzAM1noEGR8sym+7f7DvODxB0hwvcXYt7oBqPac2o4ZVaa6CXMHUMH81QW3j1Z/1USR6/gtkT7g9vwo6uxntBNjnQVsvzdXxUWpYSjrzlPYS40gS34oCB1NSITRUSADc4CARX0FHgQjnMCAQPmBB+7MFv/DrBOQ8iLjje+H2HGk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=At3Wa6VH; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1706169872; c=relaxed/simple;
+	bh=nbEIuFB5A5XX39UC0VCdyx+dlgGNaYXATJU8aqEkgfk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tlgdj5KKiDoOvVYSmYiHcj6L3wQ8OiFyrmrSe/B+5zPm0ZBaN8jWXhLTHvGzXD0bP94iFx/KtVTzYMLZVvvr6UdZh7w6VIZqLZDqlNPMGGMPcLk1/541WDDnZ7fLyLGERGwg24ELb7gpw26iWQGDUNfUZhIADzwyUxvBJO9GpBk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Ml85Uu8i; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="At3Wa6VH"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-33926ccbc80so4053641f8f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 00:02:51 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ml85Uu8i"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-55c2cf644f3so4311327a12.1
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 00:04:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706169770; x=1706774570; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=I/fwZ/1bgOfeqNeU+SPsYQCKFE1WDJ7q56mUox/vczU=;
-        b=At3Wa6VHIrcs4vEos7LZAWu+2eFYIZIVi1wTQhrgkryIJrBTweLmoNEPR2ihlmizId
-         0B2ADAwr8QX/jqt7snuQy4puoiu/5dwBnhqC9kMaKgHuBGLqEZLg4MC1GxvLSIzjM1oQ
-         3hVF8BXByzNTvN0xc0sECJG5a9uwOFt38xnsYeNy3NJwFK0+RFZphOGKp2b/+gZz34Eg
-         tqOXX+7554IGP+48qCrOr+1kqPg+Q4J7b9GohaCqq7lgFv4Fo2O9tRzcKKjpwqE8mOVK
-         ZnDJf6Nve8tiU4prBdOdSf13pIoJjw+fo36F+BrTfm2Vj5cdKS46hq6ZrHyrbTPzWuHc
-         REug==
+        d=google.com; s=20230601; t=1706169869; x=1706774669; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nbEIuFB5A5XX39UC0VCdyx+dlgGNaYXATJU8aqEkgfk=;
+        b=Ml85Uu8iRC6cz7FhDoFL4pO7iYyRF6CS9U+SxwKHpAIbIhNcSPVvJU4Tdho7a/340y
+         OBJTC5xiuqeUVWOfJ594DFUSlZp4jnGohNKlOVBwvym19OxGTOIhbagMu7SkFH0X6KhM
+         2ruKmZfp2nncrXh8kUYOaCJuUtNwUOLcTL0UlZpsmbLoVAwCYznu3YyGAblkPSRBVFsS
+         PVQUWTS8pYbPeCkWwF43hPyoNAHaSeUCdjLQkfodaRJRVI6UJChl92MER8JSZSI1wbJC
+         i1cubDyBCHwV/iyUtFdiKDT3yBUI47XqtZPp4MAE5w08ns8y23alrPnh/770jZuVCyqs
+         +nug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706169770; x=1706774570;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=I/fwZ/1bgOfeqNeU+SPsYQCKFE1WDJ7q56mUox/vczU=;
-        b=iN8r6tO2kj0cygDQuf52qR+6kmIa/dLziKbk7RpRkNDiocKE9h94iXrS4QoaN+/cQE
-         lO1NcY48Q7ooUgZYZs8fWLrg+jIv57yav0wAzP5AmAC5Br/TO2TGkxyt27OK8xQVB/mS
-         8FvLxHln91BP8P1btPPeWXT3uV1zo+ZXM/64wPTirEYJh9b1gplsziwGYrPshPufTw7q
-         StR4rg0KBGaqtLaZ8Rh89WtygUJXGHtszKBmo05sIEFNzQKZGl1gwxcOgG8j2po6jCiI
-         4EjOLjSdaQzvIDuAowiW+hTTMuArMH0s4u4EJgrANwZMCYORTiKu7MceoA7AjJZR69cF
-         8QXg==
-X-Gm-Message-State: AOJu0YwfEYfNAcTKtYWRz4fDfzJtboFWjj5SvQVlX33rUj/7PvNntt8K
-	PSd1Mg++p4jc9gEEGlmP8s6NJgMxWCqtqa1kp5cKBlSxVL0+/LUdysSVEaZlU6nqYl0Bb3iIUkA
-	y
-X-Google-Smtp-Source: AGHT+IHi0dZl7XsoYv+uT/EJDLZ98az7ajkXvHepJChugJLvg+ucFifjFieMMiQiuuTjNfQqoGskgQ==
-X-Received: by 2002:adf:ea0a:0:b0:339:37a2:7328 with SMTP id q10-20020adfea0a000000b0033937a27328mr348023wrm.15.1706169769682;
-        Thu, 25 Jan 2024 00:02:49 -0800 (PST)
-Received: from [192.168.1.20] ([178.197.215.66])
-        by smtp.gmail.com with ESMTPSA id u15-20020a05600c19cf00b0040e39cbf2a4sm1601240wmq.42.2024.01.25.00.02.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 25 Jan 2024 00:02:49 -0800 (PST)
-Message-ID: <cc9683c9-356c-4cd1-a838-4ca92ded612b@linaro.org>
-Date: Thu, 25 Jan 2024 09:02:46 +0100
+        d=1e100.net; s=20230601; t=1706169869; x=1706774669;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=nbEIuFB5A5XX39UC0VCdyx+dlgGNaYXATJU8aqEkgfk=;
+        b=ED5r/vr9N8TEvrZ42sz4t0AU2Gg3HYr2L/o+F4Orpdn3X1+riLcPoRP5N6tWhjrD46
+         uRqz1K8/VWQBwI4BrapOWSuA+cVGCwl/82i34qMUVGgBW24rl8whNPKhb/uBmvJ71EIa
+         ZheH1ZfGoZE/B9B6yStyjcXb5GJ6mgv+J9g6AoOLhRqNI3L38JjhMCgCnPich/wHu5Qc
+         iqZ9dx/fcWmlcXlzEb7aptWvq6ALR06TtgoHCFVAkJTK1Uc+4fqAQeyEQqudeMXLElxZ
+         e4etwrGL6G4uGGnSEz76/j5YdLqRthkeNyGezIWOzCFvDHXmikdUMV+o0xO93JxA9BDn
+         IJOg==
+X-Gm-Message-State: AOJu0YyTf8FcmWB0AzPRlhp8jiRkjl53awnu4UnGjKyB6zotWSJHTYHs
+	MUNDzAAbwQ2kczV1TCksOEXCZQxO4uT6OLsqiSHAGuurk89zWKXm0xEGunzlivWuvM4DK7OEh9C
+	7Q4Y4UNKrdAxmJG56md50sIw9RDW9gAZcs/0Y
+X-Google-Smtp-Source: AGHT+IGIW7mc7I7DA3/R/orIYvaRnOs6vYuyv9HmINqG5ofGjNKk3OYQW9skTMwEegGwIEruiRoZzoCb+htD1FzYTxE=
+X-Received: by 2002:a17:907:8743:b0:a31:7c5a:bf5b with SMTP id
+ qo3-20020a170907874300b00a317c5abf5bmr260977ejc.5.1706169868749; Thu, 25 Jan
+ 2024 00:04:28 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 4/6] reset: Instantiate reset GPIO controller for
- shared reset-gpios
-Content-Language: en-US
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
- Banajit Goswami <bgoswami@quicinc.com>,
- Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konrad.dybcio@linaro.org>, Liam Girdwood
- <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
- Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- Viresh Kumar <viresh.kumar@linaro.org>, Frank Rowand
- <frowand.list@gmail.com>, Jaroslav Kysela <perex@perex.cz>,
- Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
- linux-arm-msm@vger.kernel.org, linux-sound@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pm@vger.kernel.org
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>,
- Chris Packham <chris.packham@alliedtelesis.co.nz>,
- Sean Anderson <sean.anderson@seco.com>
-References: <20240124074527.48869-1-krzysztof.kozlowski@linaro.org>
- <20240124074527.48869-5-krzysztof.kozlowski@linaro.org>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20240124074527.48869-5-krzysztof.kozlowski@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20240120024007.2850671-1-yosryahmed@google.com>
+ <20240120024007.2850671-3-yosryahmed@google.com> <20240122201906.GA1567330@cmpxchg.org>
+ <CAJD7tkaATS48HVuBfbOmPM3EvRUoPFr66WhF64UC4FkyVH5exg@mail.gmail.com>
+ <20240123153851.GA1745986@cmpxchg.org> <CAJD7tkasHsRnT_75-TXsEe58V9_OW6m3g6CF7Kmsvz8CKRG_EA@mail.gmail.com>
+ <20240123201234.GC1745986@cmpxchg.org> <CAJD7tkZC6w2EaE=j2NEVWn1s7Lo2A7YZh8LiZ+w72jQzFFWLUQ@mail.gmail.com>
+ <f3fa799f-1815-4cfe-abc8-3ba929fcd1ba@bytedance.com> <CAJD7tka6UuEuuP=df-1V3vwsi0T0QhLORTRDs6qDvA81iY6SGA@mail.gmail.com>
+In-Reply-To: <CAJD7tka6UuEuuP=df-1V3vwsi0T0QhLORTRDs6qDvA81iY6SGA@mail.gmail.com>
+From: Yosry Ahmed <yosryahmed@google.com>
+Date: Thu, 25 Jan 2024 00:03:52 -0800
+Message-ID: <CAJD7tkZEJ1hzSoQ-8yG5-TYJBKUXCBNAW8Kdh=FSG3W0f_Dc4w@mail.gmail.com>
+Subject: Re: [PATCH 2/2] mm: zswap: remove unnecessary tree cleanups in zswap_swapoff()
+To: Chengming Zhou <zhouchengming@bytedance.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Nhat Pham <nphamcs@gmail.com>, Chris Li <chrisl@kernel.org>, Huang Ying <ying.huang@intel.com>, 
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 24/01/2024 08:45, Krzysztof Kozlowski wrote:
-> Devices sharing a reset GPIO could use the reset framework for
-> coordinated handling of that shared GPIO line.  We have several cases of
-> such needs, at least for Devicetree-based platforms.
-> 
-> If Devicetree-based device requests a reset line, while "resets"
-> Devicetree property is missing but there is a "reset-gpios" one,
-> instantiate a new "reset-gpio" platform device which will handle such
-> reset line.  This allows seamless handling of such shared reset-gpios
-> without need of changing Devicetree binding [1].
-> 
-> To avoid creating multiple "reset-gpio" platform devices, store the
-> Devicetree "reset-gpios" GPIO specifiers used for new devices on a
-> linked list.  Later such Devicetree GPIO specifier (phandle to GPIO
-> controller, GPIO number and GPIO flags) is used to check if reset
-> controller for given GPIO was already registered.
-> 
-> If two devices have conflicting "reset-gpios" property, e.g. with
-> different ACTIVE_xxx flags, this would allow to spawn two separate
-> "reset-gpio" devices, where the second would fail probing on busy GPIO
-> request.
-> 
-> Link: https://lore.kernel.org/all/YXi5CUCEi7YmNxXM@robh.at.kernel.org/ [1]
-> Cc: Bartosz Golaszewski <brgl@bgdev.pl>
-> Cc: Chris Packham <chris.packham@alliedtelesis.co.nz>
-> Cc: Sean Anderson <sean.anderson@seco.com>
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> 
-> ---
-> 
-> Depends on previous of change.
-> ---
->  drivers/reset/core.c             | 215 +++++++++++++++++++++++++++++--
->  include/linux/reset-controller.h |   4 +
->  2 files changed, 206 insertions(+), 13 deletions(-)
-> 
+On Wed, Jan 24, 2024 at 11:53=E2=80=AFPM Yosry Ahmed <yosryahmed@google.com=
+> wrote:
+>
+> > Hello,
+> >
+> > I also thought about this problem for some time, maybe something like b=
+elow
+> > can be changed to fix it? It's likely I missed something, just some tho=
+ughts.
+> >
+> > IMHO, the problem is caused by the different way in which we use zswap =
+entry
+> > in the writeback, that should be much like zswap_load().
+> >
+> > The zswap_load() comes in with the folio locked in swap cache, so it ha=
+s
+> > stable zswap tree to search and lock... But in writeback case, we don't=
+,
+> > shrink_memcg_cb() comes in with only a zswap entry with lru list lock h=
+eld,
+> > then release lru lock to get tree lock, which maybe freed already.
+> >
+> > So we should change here, we read swpentry from entry with lru list loc=
+k held,
+> > then release lru lock, to try to lock corresponding folio in swap cache=
+,
+> > if we success, the following things is much the same like zswap_load().
+> > We can get tree lock, to recheck the invalidate race, if no race happen=
+ed,
+> > we can make sure the entry is still right and get refcount of it, then
+> > release the tree lock.
+>
+> Hmm I think you may be onto something here. Moving the swap cache
+> allocation ahead before referencing the tree should give us the same
+> guarantees as zswap_load() indeed. We can also consolidate the
+> invalidate race checks (right now we have one in shrink_memcg_cb() and
+> another one inside zswap_writeback_entry()).
+>
+> We will have to be careful about the error handling path to make sure
+> we delete the folio from the swap cache only after we know the tree
+> won't be referenced anymore. Anyway, I think this can work.
+>
+> On a separate note, I think there is a bug in zswap_writeback_entry()
+> when we delete a folio from the swap cache. I think we are missing a
+> folio_unlock() there.
+>
+> >
+> > The main differences between this writeback with zswap_load() is the ha=
+ndling
+> > of lru entry and the tree lifetime. The whole zswap_load() function has=
+ the
+> > stable reference of zswap tree, but it's not for shrink_memcg_cb() bott=
+om half
+> > after __swap_writepage() since we unlock the folio after that. So we ca=
+n't
+> > reference the tree after that.
+> >
+> > This problem is easy to fix, we can zswap_invalidate_entry(tree, entry)=
+ early
+> > in tree lock, since thereafter writeback can't fail. BTW, I think we sh=
+ould
+> > also zswap_invalidate_entry() early in zswap_load() and only support th=
+e
+> > zswap_exclusive_loads_enabled mode, but that's another topic.
+>
+> zswap_invalidate_entry() actually doesn't seem to be using the tree at al=
+l.
 
-LKP reported issue when building !GPIOLIB:
-https://lore.kernel.org/oe-kbuild-all/202401250958.YksQmnWj-lkp@intel.com/
-
-but I intend to solve it providing the stubs. Therefore this patch will
-not change.
-
-Best regards,
-Krzysztof
-
+Never mind, I was looking at zswap_entry_put().
