@@ -1,291 +1,256 @@
-Received: from out4-smtp.messagingengine.com (out4-smtp.messagingengine.com [66.111.4.28])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F21206E2DB;
-	Thu, 25 Jan 2024 16:00:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.111.4.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1627873171
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 16:03:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706198409; cv=none; b=jK/usk1Cz8kAFZP8h1WhvyaONY1T3+UCf3Ci6ku5bU+QVdcbAfqxDqA9gMD4Rx5kpzlIqV+DTEr4LzIJtjg7ppKTNXF2YRsruL1yPNzByOByUM/pcJCSBTDqWmnhY9JxSDzK6t6mRTN6CXz1ZXGw2S++wmnvaG6WeQTrMeEwc9s=
+	t=1706198638; cv=none; b=j30AMRW19qsZMALBJC5J2FwbKETTvZL0aW/SgW7fRRvMB2hgzB2HtXahufV2/PluRqXs7CY1eDw953UTAJmT7a7+JTojk4uhqb/xyzDKpY8nAfq8rgkVLrubnbKFvtKzIoqMr0AXcpeZp7q2OYFGEoYG1aPdO39Xbn6sVlfdzJg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706198409; c=relaxed/simple;
-	bh=JhL7YQiPLcm8PQ76uhgv/Ri86FrIlG5VN2oDXHuMbk4=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=VZSmKuPIqrRS2E5dulAaDc75dx30tEOj4k5yi7Ou5xeKMll9c0fZmwGB8vFUkPZbpke4tM/UPKj8bDmbvLfZHDQTplGz9AzDKNp34Ej87mPR+QtzL6vkM0rbyAUOhQjbHPyeQdnmrN3xsJa113V9As2y+fDwR02Cfm96WPQCK7o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=hZUco6hT; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=kLFp17Yt; arc=none smtp.client-ip=66.111.4.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1706198638; c=relaxed/simple;
+	bh=sW6rzFbbih98ZLcPpgT7sLre+clXbHFB1iP8PpLpz+U=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TKFoWKH3hgY3f1lvz+ILNbwOPMQrcuggZOwy81HusjP7NueF82qZoyyLTarrxWXEqUQMZHig0eDdIydhgCpcI01g3Qfpqbl8hqcw8t51k+ABuTOCG/ctlXOIHSg0Gc4TXcxkqy0Bd/2TMDDgPWN9qFZWQ+EsALYwvcNrH0HFJJA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Gw15sIs4; arc=none smtp.client-ip=209.85.210.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="hZUco6hT";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="kLFp17Yt"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailout.nyi.internal (Postfix) with ESMTP id 005105C00DB;
-	Thu, 25 Jan 2024 11:00:06 -0500 (EST)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Thu, 25 Jan 2024 11:00:06 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1706198405;
-	 x=1706284805; bh=SqRtybdjact+f0QeQR9azdnQV/iHBEyjbNT4deqFxZo=; b=
-	hZUco6hTk7rOkCqcYBakCuKg7hmrOp10Kl7rKZgdg3AtevpRTSE1FNx35WvDHTR3
-	1C7FoNO4AoNwonAd2Chx/+UWKiyhmFU2eCeCnBslCiMYNOh/xTT/6M8hCTDPxsfz
-	89i84ehFOG8mwCbtzrBv12r4eSH1QZg8tTBBkeJHz1RPqzkzk1xjsOxfOl3oRnTU
-	sPr6vb5q46615EIDB1gJQAN8YA0J5/aOiEJZdQQaOAce8GGilRlQZyztp0ZwZTsc
-	pFM6+FXy3riyiKtPd0DiquSWJ6oRpJyFvfcZeM5uaBpdXOMGhik9K+cRR86Lxl9j
-	yiK2yA9KyAwtsZpPiGf+Nw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1706198405; x=
-	1706284805; bh=SqRtybdjact+f0QeQR9azdnQV/iHBEyjbNT4deqFxZo=; b=k
-	LFp17YtrpRi6UPiYMjCy1sSkRCu+4ovdGWJglYg38qH4EC9qgTEkBYuLaLEYguEu
-	e1XEM9HH3ivgr7ZJK9gNu7vf6g4WOJwlqkMdyt+wf9Wm1zSfCn8WTSbbV537JAtg
-	Zd6WuoyJTAhl94CQKpuZNFTyNESGF0Y8bolk8bSWVO3604SjANDQMOdxikiPhGCt
-	GG4VfwNqhjNrQam6m5b+aW7zQsOT6MnsQlRnal4Y9WN0hHW0ZVvRNE6SrI13KGaD
-	8azmTSTIlo/kQew6erQirnv72LdKvsDMb841+XjVkiHjaAmwa9dQKfuzjCHi/6tV
-	nFAlkE9/wgYcr80jMtazw==
-X-ME-Sender: <xms:hYWyZdMCnNNDyxgx9e38kTFRO4tfEujPrKnR2VkCPUqn88cu2N07FQ>
-    <xme:hYWyZf_hcCBLVbUvHV3e_KHJbCI-TfcDPRjP6gTsyE_SttJMCyPtBq1gvRgdqbZNL
-    N1epLMlzAuNUCW3X6k>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrvdelgedgheeiucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtgfesthhqredtreerjeenucfhrhhomhepfdet
-    rhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrg
-    htthgvrhhnpeegfeejhedvledvffeijeeijeeivddvhfeliedvleevheejleetgedukedt
-    gfejveenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
-    grrhhnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:hYWyZcSrj6tqxczRhaAAwS9PuouPD2R6FmvYUnShyGwwclXuM4DwAg>
-    <xmx:hYWyZZumEbZQfXLv_Ip1F35vHXrTUTB3_mZtrE2r-P9BV3bcAIASdg>
-    <xmx:hYWyZVf2Wp44LAJuU-i1pC_p-CdUKQrOUdepDtu0KOLGLRzPMQ6BPA>
-    <xmx:hYWyZb8_wzMTLbtbtdIu8WwuPiAC8-Q5bRy-LrLKrXjioeU23oqL7A>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 4DCDEB6008D; Thu, 25 Jan 2024 11:00:05 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-119-ga8b98d1bd8-fm-20240108.001-ga8b98d1b
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Gw15sIs4"
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-6ddc268ce2bso929723b3a.0
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 08:03:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1706198636; x=1706803436; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VrGdhy25Rn2oHABS6aENA0hptRat8XLHKlIr3dlLph0=;
+        b=Gw15sIs4wcFbif09jnX7wyeOfvbvVoVXriSTjQoojMEIg6dYp8zReFSUFu4a3UWGyg
+         Vt60f0EpzmxGsLVBdJPzEPCdzOgCG8rcNSOAG4PSxViwaxVeQTnsvMtSAKsbBngLvvrc
+         3YRNgcWkO3flkwKwDk3owu1vvL4cgbYW6Mlpc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706198636; x=1706803436;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=VrGdhy25Rn2oHABS6aENA0hptRat8XLHKlIr3dlLph0=;
+        b=gLaS42QnH6cQpGtXBy6YM+KFjpv9BSOj0jsh/7457MBLXzv97/iu59S1ucNJgIlACW
+         M2Uw5G4S5N7kpURi2BzdkDxA1PeL18tQPkT49mJX4KpiprpnbocKWXCu2QVfcHLPYmIH
+         FIxX3U03pgwxkO3UT0SO+E4boCdFJVZZ2X5IPg2FloeyuD43yMPI/uBl5DiZb3F9asMH
+         +aq66ETtAv5lXOQpmzUrk2aq1yVyi5uvEcIWyx5zp599sJS82lY0diaAyuuCt9tiN2iT
+         HgLC9uddCROpwYlxhtJJBpo3T/Xql0S2eKplQmVfVDWW2fz+d5vhqX0VGEPZcpDVBc7+
+         pFLA==
+X-Gm-Message-State: AOJu0YxmJ2d2bb/EAnA0oigtnxhscS4XpxocfP5+Q3XQObKIib2N3Djk
+	9lZ/iS9jA5COhGak2hCw7ay57lKkIduoa9U9QrfdCwZMqBuHCr2EkrEVFksFbBRddQPPsqUI+aX
+	H44suroBu+r3IxmnfzXaI1lrYl2MaMUiSziL/
+X-Google-Smtp-Source: AGHT+IEenS2rfwvLmHoKzdoeA9hwC6DsN4jJq3co/Ozs1wndeC2wqkYhWrAhjXodKyScQl5NYPZQs+lNSO/XkzbhhAg=
+X-Received: by 2002:a62:6306:0:b0:6dd:c0a6:4421 with SMTP id
+ x6-20020a626306000000b006ddc0a64421mr684803pfb.58.1706198636248; Thu, 25 Jan
+ 2024 08:03:56 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <e69f9b43-39cd-469d-94db-140504df0833@app.fastmail.com>
-In-Reply-To: 
- <CAH5fLgi8D18ufma0X49nWhXpnz47t-C=OAtM+wwnYu78hEnwhA@mail.gmail.com>
-References: <20240124-alice-mm-v1-0-d1abcec83c44@google.com>
- <20240124-alice-mm-v1-2-d1abcec83c44@google.com>
- <070574cb-8d7f-4fe7-9826-cec6110168ff@app.fastmail.com>
- <CAH5fLgi8D18ufma0X49nWhXpnz47t-C=OAtM+wwnYu78hEnwhA@mail.gmail.com>
-Date: Thu, 25 Jan 2024 16:59:42 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Alice Ryhl" <aliceryhl@google.com>
-Cc: "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>,
- "Wedson Almeida Filho" <wedsonaf@gmail.com>,
- "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
- =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- "Benno Lossin" <benno.lossin@proton.me>,
- "Andreas Hindborg" <a.hindborg@samsung.com>,
- "Kees Cook" <keescook@chromium.org>,
- "Alexander Viro" <viro@zeniv.linux.org.uk>,
- "Andrew Morton" <akpm@linux-foundation.org>,
- "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
- =?UTF-8?Q?Arve_Hj=C3=B8nnev=C3=A5g?= <arve@android.com>,
- "Todd Kjos" <tkjos@android.com>, "Martijn Coenen" <maco@android.com>,
- "Joel Fernandes" <joel@joelfernandes.org>,
- "Carlos Llamas" <cmllamas@google.com>,
- "Suren Baghdasaryan" <surenb@google.com>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
- "Christian Brauner" <brauner@kernel.org>
-Subject: Re: [PATCH 2/3] rust: add typed accessors for userspace pointers
-Content-Type: text/plain;charset=utf-8
+References: <20231202035511.487946-1-sjg@chromium.org> <20231202035511.487946-3-sjg@chromium.org>
+ <20231213121353.GA31326@willie-the-truck> <CAFLszTjfmSx1YMqzb2TsQf7sP4KrcQB=X7DY_HxRQp0J5HAppQ@mail.gmail.com>
+ <CAK7LNAQRCDC03e=TVO=k4FuD2a2RdTy7yLr3UptQjVCX7pM1CA@mail.gmail.com>
+ <20240109143349.GR1610741@bill-the-cat> <CAFLszTjwhy24UiT6kUJABMC1Xn0h9Q1q9fYpZZJg9DX8Vss9cA@mail.gmail.com>
+In-Reply-To: <CAFLszTjwhy24UiT6kUJABMC1Xn0h9Q1q9fYpZZJg9DX8Vss9cA@mail.gmail.com>
+From: Simon Glass <sjg@chromium.org>
+Date: Thu, 25 Jan 2024 09:03:44 -0700
+Message-ID: <CAFLszTjPAHd6RdO1mvatXC=yRS+h=sgJ_pMdyEnkROTx7yRpog@mail.gmail.com>
+Subject: Re: [PATCH v9 2/2] arm64: boot: Support Flat Image Tree
+To: Tom Rini <trini@konsulko.com>
+Cc: Masahiro Yamada <masahiroy@kernel.org>, Will Deacon <will@kernel.org>, 
+	linux-arm-kernel@lists.infradead.org, Ahmad Fatoum <a.fatoum@pengutronix.de>, 
+	U-Boot Mailing List <u-boot@lists.denx.de>, Nicolas Schier <nicolas@fjasle.eu>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Nathan Chancellor <nathan@kernel.org>, Nick Terrell <terrelln@fb.com>, linux-doc@vger.kernel.org, 
+	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	workflows@vger.kernel.org, Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jan 25, 2024, at 13:37, Alice Ryhl wrote:
-> On Thu, Jan 25, 2024 at 1:27=E2=80=AFPM Arnd Bergmann <arnd@arndb.de> =
-wrote:
->> On Wed, Jan 24, 2024, at 12:20, Alice Ryhl wrote:
+Hi,
 
->> > +EXPORT_SYMBOL_GPL(rust_helper_copy_to_user_unsafe_skip_check_objec=
-t_size);
->>
->> These functions are almost identical to the ones in
->> lib/usercopy.c for !defined(INLINE_COPY_TO_USER).
->>
->> That version has an extra memset() after a partial
->> copy_from_user(), and you probably want to have the
->> same thing here for consistency.
->>
->> I think ideally we should only have one out-of-line copy
->> of these two functions and have that one shared between
->> rust and architectures that want the C version out of line
->> as well.
+On Wed, 17 Jan 2024 at 06:14, Simon Glass <sjg@chromium.org> wrote:
 >
-> I had a bit of trouble figuring out all of the copy_[to/from]_user
-> methods that are available. I was hoping that a better solution would
-> be available, and it sounds like one is. Is _copy_from_user always
-> available as an exported symbol? If it's always available and skips
-> the check, then I can just use that. I don't think the memset matters
-> for my case.
-
-At the moment, it appears that it's available on the few architectures
-that don't #define INLINE_COPY_FROM_USER: alpha, csky, powerpc,
-riscv and x86. On the other architectures it is always an inline
-function.
-
-> Otherwise, I can add a helper in rust/helpers.c that wraps
-> _copy_from_user only when INLINE_COPY_FROM_USER is defined, and call
-> the helper in those cases, and otherwise call the exported symbol
-> directly. (I need an exported symbol to call into C from Rust.)
+> Hi Masahiro, Tom,
 >
-> Would that make sense?
+> On Tue, 9 Jan 2024 at 07:33, Tom Rini <trini@konsulko.com> wrote:
+> >
+> > On Tue, Jan 09, 2024 at 11:01:42PM +0900, Masahiro Yamada wrote:
+> > > Hi Simon,
+> > >
+> > >
+> > > On Wed, Jan 3, 2024 at 8:47=E2=80=AFAM Simon Glass <sjg@chromium.org>=
+ wrote:
+> > > >
+> > > > Hi Masahiro,
+> > > >
+> > > > On Wed, Dec 13, 2023 at 5:14=E2=80=AFAM Will Deacon <will@kernel.or=
+g> wrote:
+> > > > >
+> > > > > On Fri, Dec 01, 2023 at 08:54:42PM -0700, Simon Glass wrote:
+> > > > > > Add a script which produces a Flat Image Tree (FIT), a single f=
+ile
+> > > > > > containing the built kernel and associated devicetree files.
+> > > > > > Compression defaults to gzip which gives a good balance of size=
+ and
+> > > > > > performance.
+> > > > > >
+> > > > > > The files compress from about 86MB to 24MB using this approach.
+> > > > > >
+> > > > > > The FIT can be used by bootloaders which support it, such as U-=
+Boot
+> > > > > > and Linuxboot. It permits automatic selection of the correct
+> > > > > > devicetree, matching the compatible string of the running board=
+ with
+> > > > > > the closest compatible string in the FIT. There is no need for
+> > > > > > filenames or other workarounds.
+> > > > > >
+> > > > > > Add a 'make image.fit' build target for arm64, as well. Use
+> > > > > > FIT_COMPRESSION to select a different algorithm.
+> > > > > >
+> > > > > > The FIT can be examined using 'dumpimage -l'.
+> > > > > >
+> > > > > > This features requires pylibfdt (use 'pip install libfdt'). It =
+also
+> > > > > > requires compression utilities for the algorithm being used. Su=
+pported
+> > > > > > compression options are the same as the Image.xxx files. For no=
+w there
+> > > > > > is no way to change the compression other than by editing the r=
+ule for
+> > > > > > $(obj)/image.fit
+> > > > > >
+> > > > > > While FIT supports a ramdisk / initrd, no attempt is made to su=
+pport
+> > > > > > this here, since it must be built separately from the Linux bui=
+ld.
+> > > > > >
+> > > > > > Signed-off-by: Simon Glass <sjg@chromium.org>
+> > > > > > ---
+> > > > > >
+> > > > > > Changes in v9:
+> > > > > > - Move the compression control into Makefile.lib
+> > > > > >
+> > > > > > Changes in v8:
+> > > > > > - Drop compatible string in FDT node
+> > > > > > - Correct sorting of MAINTAINERS to before ARM64 PORT
+> > > > > > - Turn compress part of the make_fit.py comment in to a sentenc=
+e
+> > > > > > - Add two blank lines before parse_args() and setup_fit()
+> > > > > > - Use 'image.fit: dtbs' instead of BUILD_DTBS var
+> > > > > > - Use '$(<D)/dts' instead of '$(dir $<)dts'
+> > > > > > - Add 'mkimage' details Documentation/process/changes.rst
+> > > > > > - Allow changing the compression used
+> > > > > > - Tweak cover letter since there is only one clean-up patch
+> > > > > >
+> > > > > > Changes in v7:
+> > > > > > - Add Image as a dependency of image.fit
+> > > > > > - Drop kbuild tag
+> > > > > > - Add dependency on dtbs
+> > > > > > - Drop unnecessary path separator for dtbs
+> > > > > > - Rebase to -next
+> > > > > >
+> > > > > > Changes in v5:
+> > > > > > - Drop patch previously applied
+> > > > > > - Correct compression rule which was broken in v4
+> > > > > >
+> > > > > > Changes in v4:
+> > > > > > - Use single quotes for UIMAGE_NAME
+> > > > > >
+> > > > > > Changes in v3:
+> > > > > > - Drop temporary file image.itk
+> > > > > > - Drop patch 'Use double quotes for image name'
+> > > > > > - Drop double quotes in use of UIMAGE_NAME
+> > > > > > - Drop unnecessary CONFIG_EFI_ZBOOT condition for help
+> > > > > > - Avoid hard-coding "arm64" for the DT architecture
+> > > > > >
+> > > > > > Changes in v2:
+> > > > > > - Drop patch previously applied
+> > > > > > - Add .gitignore file
+> > > > > > - Move fit rule to Makefile.lib using an intermediate file
+> > > > > > - Drop dependency on CONFIG_EFI_ZBOOT
+> > > > > > - Pick up .dtb files separately from the kernel
+> > > > > > - Correct pylint too-many-args warning for write_kernel()
+> > > > > > - Include the kernel image in the file count
+> > > > > > - Add a pointer to the FIT spec and mention of its wide industr=
+y usage
+> > > > > > - Mention the kernel version in the FIT description
+> > > > > >
+> > > > > >  Documentation/process/changes.rst |   9 +
+> > > > > >  MAINTAINERS                       |   7 +
+> > > > > >  arch/arm64/Makefile               |   7 +-
+> > > > > >  arch/arm64/boot/.gitignore        |   1 +
+> > > > > >  arch/arm64/boot/Makefile          |   6 +-
+> > > > > >  scripts/Makefile.lib              |  16 ++
+> > > > > >  scripts/make_fit.py               | 291 ++++++++++++++++++++++=
+++++++++
+> > > > > >  7 files changed, 334 insertions(+), 3 deletions(-)
+> > > > > >  create mode 100755 scripts/make_fit.py
+> > > > >
+> > > > > I'll need Masahiro's Ack on the scripts/ changes before I can tak=
+e this
+> > > > > one.
+> > > >
+> > > > Any thoughts on this request, please?
+> > > >
+> > > > Regards,
+> > > > Simon
+> > > >
+> > >
+> > >
+> > >
+> > > As I mentioned before, I am concerned with having
+> > > the same "compatible" entries, with different contents,
+> > > as you use the "compatible" string as an ID to selecting
+> > > the target config node, right?
+> > >
+> > >
+> > >
+> > >
+> > >
+> > > $ fdtdump  arch/arm64/boot/image.fit
+> > >
+> > >         ...
+> > >
+> > >         conf-10 {
+> > >             compatible =3D "tq,am642-tqma6442l-mbax4xxl",
+> > > "tq,am642-tqma6442l", "ti,am642";
+> > >             description =3D "TQ-Systems TQMa64xxL SoM on MBax4xxL car=
+rier board";
+> > >             fdt =3D "fdt-10";
+> > >             kernel =3D "kernel";
+> > >         };
+> > >
+> > >         ...
+> > >
+> > >         conf-25 {
+> > >             compatible =3D "tq,am642-tqma6442l-mbax4xxl",
+> > > "tq,am642-tqma6442l", "ti,am642";
+> > >             description =3D "TQ-Systems TQMa64xxL SoM on MBax4xxL car=
+rier board";
+> > >             fdt =3D "fdt-25";
+> > >             kernel =3D "kernel";
+> > >         };
+> >
+> > I had asked Rob a while ago about if having the same compatible for two
+> > functionally different machines is a feature, or a bug, and I don't
+> > think either of us fully agreed either way. I'd be leaning towards
+> > saying the above example is a bug in the dts files, it's just not been =
+a
+> > bug people have worried about before due to (sadly) how little the
+> > top-level compatible has been used.
+>
+> Yes I believe this is a bug in the files.
+>
+> What should the script do in this case? Print a warning, perhaps?
 
-I don't think we can have a perfect abstraction here, but rather
-than putting knowledge of INLINE_COPY_FROM_USER into the rust
-wrapper, I would suggest putting a bit of information about
-rust into lib/usercopy.c.
+Is there anything I should do here? Would a warning be helpful, or
+just confusing?
 
-I've tried to come up with an idea below, see if that works
-for you.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-
-diff --git a/include/linux/uaccess.h b/include/linux/uaccess.h
-index 3064314f4832..835aa175d0ee 100644
---- a/include/linux/uaccess.h
-+++ b/include/linux/uaccess.h
-@@ -138,13 +138,18 @@ __copy_to_user(void __user *to, const void *from, =
-unsigned long n)
- 	return raw_copy_to_user(to, from, n);
- }
-=20
--#ifdef INLINE_COPY_FROM_USER
- static inline __must_check unsigned long
--_copy_from_user(void *to, const void __user *from, unsigned long n)
-+_inline_copy_from_user(void *to, const void __user *from, unsigned long=
- n)
- {
- 	unsigned long res =3D n;
- 	might_fault();
- 	if (!should_fail_usercopy() && likely(access_ok(from, n))) {
-+		/*
-+		 * Ensure that bad access_ok() speculation will not
-+		 * lead to nasty side effects *after* the copy is
-+		 * finished:
-+		 */
-+		barrier_nospec();
- 		instrument_copy_from_user_before(to, from, n);
- 		res =3D raw_copy_from_user(to, from, n);
- 		instrument_copy_from_user_after(to, from, n, res);
-@@ -153,14 +158,11 @@ _copy_from_user(void *to, const void __user *from,=
- unsigned long n)
- 		memset(to + (n - res), 0, res);
- 	return res;
- }
--#else
- extern __must_check unsigned long
- _copy_from_user(void *, const void __user *, unsigned long);
--#endif
-=20
--#ifdef INLINE_COPY_TO_USER
- static inline __must_check unsigned long
--_copy_to_user(void __user *to, const void *from, unsigned long n)
-+_inline_copy_to_user(void __user *to, const void *from, unsigned long n)
- {
- 	might_fault();
- 	if (should_fail_usercopy())
-@@ -171,25 +173,32 @@ _copy_to_user(void __user *to, const void *from, u=
-nsigned long n)
- 	}
- 	return n;
- }
--#else
- extern __must_check unsigned long
- _copy_to_user(void __user *, const void *, unsigned long);
--#endif
-=20
- static __always_inline unsigned long __must_check
- copy_from_user(void *to, const void __user *from, unsigned long n)
- {
--	if (check_copy_size(to, n, false))
--		n =3D _copy_from_user(to, from, n);
--	return n;
-+	if (!check_copy_size(to, n, false))
-+		return n;
-+#ifdef INLINE_COPY_FROM_USER
-+	return _inline_copy_from_user(to, from, n);
-+#else
-+	return _copy_from_user(to, from, n);
-+#endif
- }
-=20
- static __always_inline unsigned long __must_check
- copy_to_user(void __user *to, const void *from, unsigned long n)
- {
--	if (check_copy_size(from, n, true))
--		n =3D _copy_to_user(to, from, n);
--	return n;
-+	if (!check_copy_size(from, n, true))
-+		return n;
-+
-+#ifdef INLINE_COPY_TO_USER
-+	return _inline_copy_to_user(to, from, n);
-+#else
-+	return _copy_to_user(to, from, n);
-+#endif
- }
-=20
- #ifndef copy_mc_to_kernel
-diff --git a/lib/usercopy.c b/lib/usercopy.c
-index d29fe29c6849..503a064d79e2 100644
---- a/lib/usercopy.c
-+++ b/lib/usercopy.c
-@@ -7,40 +7,18 @@
-=20
- /* out-of-line parts */
-=20
--#ifndef INLINE_COPY_FROM_USER
-+#if !defined(INLINE_COPY_FROM_USER) || defined(CONFIG_RUST)
- unsigned long _copy_from_user(void *to, const void __user *from, unsign=
-ed long n)
- {
--	unsigned long res =3D n;
--	might_fault();
--	if (!should_fail_usercopy() && likely(access_ok(from, n))) {
--		/*
--		 * Ensure that bad access_ok() speculation will not
--		 * lead to nasty side effects *after* the copy is
--		 * finished:
--		 */
--		barrier_nospec();
--		instrument_copy_from_user_before(to, from, n);
--		res =3D raw_copy_from_user(to, from, n);
--		instrument_copy_from_user_after(to, from, n, res);
--	}
--	if (unlikely(res))
--		memset(to + (n - res), 0, res);
--	return res;
-+	return _inline_copy_from_user(to, from, n);
- }
- EXPORT_SYMBOL(_copy_from_user);
- #endif
-=20
--#ifndef INLINE_COPY_TO_USER
-+#if !defined(INLINE_COPY_TO_USER) || defined(CONFIG_RUST)
- unsigned long _copy_to_user(void __user *to, const void *from, unsigned=
- long n)
- {
--	might_fault();
--	if (should_fail_usercopy())
--		return n;
--	if (likely(access_ok(to, n))) {
--		instrument_copy_to_user(to, from, n);
--		n =3D raw_copy_to_user(to, from, n);
--	}
--	return n;
-+	return _inline_copy_to_user(to, from, n);
- }
- EXPORT_SYMBOL(_copy_to_user);
- #endif
+Regards,
+Simon
