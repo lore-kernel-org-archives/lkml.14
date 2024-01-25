@@ -1,93 +1,178 @@
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from www530.your-server.de (www530.your-server.de [188.40.30.78])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 509045EE60
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 13:56:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 125235F550;
+	Thu, 25 Jan 2024 13:56:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.40.30.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706190971; cv=none; b=CB3Q4XSukCRo4kC4HboeoCfRfJbNvD5mud3dZxqIXVi9ymu0MW09d8JcfjU9tcyTacKfNozr+K0/umm5DAgIg/odE7hG6BcdkLs7T6nFGRQeVZOwBvvfX9xIyUZE49/p27ypblf/tmOa4IAmhwGVUaDkI5gWXMu8XW6br7Gtfh0=
+	t=1706191011; cv=none; b=kxbxZDXFn0WsEeyiIkh273nFyVSfTug4t4+SVLXv8JvMk80kJ8ceIaVDnEhdXz4gQ1T49QGEagpXddFr2oh+gv9s1HWtsu/5/HsH0+GlIKHN1FUrr272Uwi8MXCy0W5EPnDxitrhfgoBmUqFCULY08n86xRZnoL5Vs6WYDEFU7g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706190971; c=relaxed/simple;
-	bh=1W9WzjA31f+QWbBJtAN4LPmsaACvO46+1VesrnmG9rE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WxnqPGBqOaev6F8LuaLyk7cnmxkRKgZQjd/xhNGs6DOkoWvSXTaKV+ITUszxGYMLqfLziVnj9599u32EorM4ljDkyuBPPXZWv18SQVSwSfF8vEQBOPOdnWLD7DzDHvBsvuvHsbDCCwBGuljk+f4+XWSfNgnYGR+ne3HYRQKDHWI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=UfH5Y4j+; arc=none smtp.client-ip=209.85.208.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1706191011; c=relaxed/simple;
+	bh=IWxzAboRtoqhPNg96zAmR2aFVe/sEUWlekCOypdoGZ8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=moItPQDhpP1cDLbaUe4vMNL9nnJYz4jmBsR13iGioXGRGD+U60UwCdcVlzgTg0OMrN6FUe3B4n1b4CQdVtabOQLd1EyzsPzw1PJxURV2dkGxW1RtEuZXgDYPCDFQNRI/my0DoQsm3Tpb/0QONMr+Nmak9bh0Uyvbl0WLw+c8yyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=geanix.com; spf=pass smtp.mailfrom=geanix.com; dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b=WxpbIOG2; arc=none smtp.client-ip=188.40.30.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=geanix.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=geanix.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UfH5Y4j+"
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2cf0390eddbso51259221fa.3
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 05:56:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1706190967; x=1706795767; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Gl7ci9bKGwzAV/Piftg1NztgrDQGV69BjHXq7xOdai4=;
-        b=UfH5Y4j+kuXggm336J3xoPKSIVwor79inW1F7FHtG0E2Kl9iC9jI0MWxMN7CgfmoAI
-         cGPZdyifhJHvBA8izyu8IXhTMvTpb57sEuamDvz0ub/BKe7J4s24ReAHBNK78eGgrnSU
-         DsziiWCXVAiFgFsHXByVPMd9IHV72JkvrtVFs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706190967; x=1706795767;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Gl7ci9bKGwzAV/Piftg1NztgrDQGV69BjHXq7xOdai4=;
-        b=A5zO68qBCbhfwcfJumQPxCKfeJrNzLdc33oBBViGmpznlBWDBpLEkseWRU9lr/wm8t
-         oJx//upq5Jv2W5rn7bZyPAMxUbLgyXdnMRG4et6FGNhpnQ3En4npEJUG2+cKc7xuObqQ
-         vI/5l496vNu4AErJYUgM3AMdfQJY6jlMpuo8H0DoNfw+LaR5LVfHkqfaaISqSdaSUv/7
-         ZRzIgs0CvLge5KA6b75W4QqUr6OtUp9sDbNMUMaHO8SX4UaoAv8IJ+XePIkRPELWO8/N
-         6R42wJjzk44dkSvrvnSsnsZaP9rB1FQ3SArmcc2yPQI0m0nENge/7pbFK1fohWHoBImM
-         qRzQ==
-X-Gm-Message-State: AOJu0YyELtszW4rQEjdHBzTW81XjEokK/fV3MWAiO2L2PcibSu1rMSi5
-	i297GdEb148j3pr/FouTlTfgjrFtXDWRi0bcbmaf5zk/P0kJqaL4ZkJgqKlePuIBagobj5W1dCE
-	FsPOJJDPsbQmE9zePHQOecE2nYa8g3YU1ksgX
-X-Google-Smtp-Source: AGHT+IHTL+gSOIeOXE6322kBzt5pebjRQ17maiu2CeRm/+cwYjTPWnzcXjMAr3OR6+BB3/cIFHz5oUrMSyVWo2pt2X8=
-X-Received: by 2002:a05:651c:201:b0:2cf:33b7:9050 with SMTP id
- y1-20020a05651c020100b002cf33b79050mr700956ljn.12.1706190967013; Thu, 25 Jan
- 2024 05:56:07 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="WxpbIOG2"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=geanix.com;
+	s=default2211; h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:
+	Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:In-Reply-To:References;
+	bh=BXTaDkjKbGZFujbFyojexlThA3BDT146mWz3iNiQZ8s=; b=WxpbIOG29WAmDI2K86rMX3Ng3v
+	/dc5W1rkYCrTsUhgML11N8bQPY1iN+nvMlyIy6elcuJwdr6HjctT6waGfWkWfvDPwZZIQ5BVNEJM2
+	O2iJElkelLO/CkC+zNdkAFvo8rlrXPaOszv+NjNohFSm9GWLx8FfjFz5uQOnZd54noEFuTsmwccRM
+	IS/L0HBarJAhXTh8lB2Rcz9z3nHHA8ArKIOkd1onDx1Hiwsftf/qPeDjBWVtGatDeivWbucnqWxDa
+	PLwx4jdUB+L0QiXVyYXzoUraX7vLsXCwF+7T8umEDYobf0sHveeSgAlhqoRilFC9DXV7CMr8D4kFv
+	RJN/1Qag==;
+Received: from sslproxy03.your-server.de ([88.198.220.132])
+	by www530.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <esben@geanix.com>)
+	id 1rT0De-000MN1-31; Thu, 25 Jan 2024 14:56:38 +0100
+Received: from [185.17.218.86] (helo=localhost)
+	by sslproxy03.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <esben@geanix.com>)
+	id 1rT0Dd-0001ma-9X; Thu, 25 Jan 2024 14:56:37 +0100
+From: Esben Haabendal <esben@geanix.com>
+To: linux-i2c@vger.kernel.org,
+	Gregor Herburger <gregor.herburger@ew.tq-group.com>,
+	Oleksij Rempel <o.rempel@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	NXP Linux Team <linux-imx@nxp.com>
+Cc: linux-kernel@vger.kernel.org,
+	Jinjie Ruan <ruanjinjie@huawei.com>,
+	Alexander Stein <alexander.stein@ew.tq-group.com>,
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH] i2c: imx: move to generic GPIO recovery
+Date: Thu, 25 Jan 2024 14:56:36 +0100
+Message-ID: <01abf8ccc0af74b4fb0124977ed6bdfb9d7107b6.1706190706.git.esben@geanix.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240119084328.3135503-1-lma@chromium.org> <20240119084328.3135503-4-lma@chromium.org>
- <170618986350.1469172.17149163593213396683.b4-ty@kernel.org>
-In-Reply-To: <170618986350.1469172.17149163593213396683.b4-ty@kernel.org>
-From: =?UTF-8?Q?=C5=81ukasz_Majczak?= <lma@chromium.org>
-Date: Thu, 25 Jan 2024 14:55:56 +0100
-Message-ID: <CAE5UKNp5oorZMJwor=8Z_2wtCSS23Q1-25_RNoDHNi1USx5_7Q@mail.gmail.com>
-Subject: Re: (subset) [PATCH v3 3/3] mfd: cros_ec: Register EC-based watchdog subdevice
-To: Lee Jones <lee@kernel.org>
-Cc: Gwendal Grignou <gwendal@chromium.org>, Tzung-Bi Shih <tzungbi@kernel.org>, 
-	Radoslaw Biernacki <biernacki@google.com>, Wim Van Sebroeck <wim@linux-watchdog.org>, 
-	Benson Leung <bleung@chromium.org>, Guenter Roeck <groeck@chromium.org>, 
-	Krzysztof Kozlowski <krzk@kernel.org>, linux-watchdog@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, chrome-platform@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Authenticated-Sender: esben@geanix.com
+X-Virus-Scanned: Clear (ClamAV 0.103.10/27165/Thu Jan 25 10:51:15 2024)
 
-On Thu, Jan 25, 2024 at 2:37=E2=80=AFPM Lee Jones <lee@kernel.org> wrote:
->
-> On Fri, 19 Jan 2024 08:43:27 +0000, Lukasz Majczak wrote:
-> > Add ChromeOS EC-based watchdog as EC subdevice.
-> >
-> >
->
-> Applied, thanks!
->
-> [3/3] mfd: cros_ec: Register EC-based watchdog subdevice
->       commit: a1958f84deb5cdba020af725fc5003a05af4819c
->
-> --
-> Lee Jones [=E6=9D=8E=E7=90=BC=E6=96=AF]
->
-Hi Lee,
+Starting with
+commit 75820314de26 ("i2c: core: add generic I2C GPIO recovery")
+GPIO bus recovery is supported by the I2C core, so we can remove the
+driver implementation and use that one instead.
 
-I will send V4 of the patchset to address Krzysztof suggestions, in
-that case I should skip adding V4 of this patch and have only patches
-1 and 2 in the V4 patchset?
+As a nice side-effect, pinctrl becomes optional, allowing bus recovery on
+LS1021A, which does not have such luxury, but can be wired up to use extra
+fixed GPIO pins.
 
-Best regards,
-Lukasz
+Note: The previous error messages about bus recovery not being supported is
+dropped with this change. Given that it is perfectly possible to have platforms
+where bus recovery works without pinctrl support, I happen to work on one such,
+both error messages does not really make sense in those cases. And I don't see
+how to know if this is the case or not.
+
+Signed-off-by: Esben Haabendal <esben@geanix.com>
+---
+ drivers/i2c/busses/i2c-imx.c | 62 +++---------------------------------
+ 1 file changed, 5 insertions(+), 57 deletions(-)
+
+diff --git a/drivers/i2c/busses/i2c-imx.c b/drivers/i2c/busses/i2c-imx.c
+index 88a053987403..d6ba93fc7fee 100644
+--- a/drivers/i2c/busses/i2c-imx.c
++++ b/drivers/i2c/busses/i2c-imx.c
+@@ -212,10 +212,6 @@ struct imx_i2c_struct {
+ 	const struct imx_i2c_hwdata	*hwdata;
+ 	struct i2c_bus_recovery_info rinfo;
+ 
+-	struct pinctrl *pinctrl;
+-	struct pinctrl_state *pinctrl_pins_default;
+-	struct pinctrl_state *pinctrl_pins_gpio;
+-
+ 	struct imx_i2c_dma	*dma;
+ 	struct i2c_client	*slave;
+ 	enum i2c_slave_event last_slave_event;
+@@ -1357,24 +1353,6 @@ static int i2c_imx_xfer_atomic(struct i2c_adapter *adapter,
+ 	return result;
+ }
+ 
+-static void i2c_imx_prepare_recovery(struct i2c_adapter *adap)
+-{
+-	struct imx_i2c_struct *i2c_imx;
+-
+-	i2c_imx = container_of(adap, struct imx_i2c_struct, adapter);
+-
+-	pinctrl_select_state(i2c_imx->pinctrl, i2c_imx->pinctrl_pins_gpio);
+-}
+-
+-static void i2c_imx_unprepare_recovery(struct i2c_adapter *adap)
+-{
+-	struct imx_i2c_struct *i2c_imx;
+-
+-	i2c_imx = container_of(adap, struct imx_i2c_struct, adapter);
+-
+-	pinctrl_select_state(i2c_imx->pinctrl, i2c_imx->pinctrl_pins_default);
+-}
+-
+ /*
+  * We switch SCL and SDA to their GPIO function and do some bitbanging
+  * for bus recovery. These alternative pinmux settings can be
+@@ -1385,43 +1363,13 @@ static void i2c_imx_unprepare_recovery(struct i2c_adapter *adap)
+ static int i2c_imx_init_recovery_info(struct imx_i2c_struct *i2c_imx,
+ 		struct platform_device *pdev)
+ {
+-	struct i2c_bus_recovery_info *rinfo = &i2c_imx->rinfo;
+-
+-	i2c_imx->pinctrl = devm_pinctrl_get(&pdev->dev);
+-	if (!i2c_imx->pinctrl) {
+-		dev_info(&pdev->dev, "pinctrl unavailable, bus recovery not supported\n");
+-		return 0;
+-	}
+-	if (IS_ERR(i2c_imx->pinctrl)) {
+-		dev_info(&pdev->dev, "can't get pinctrl, bus recovery not supported\n");
+-		return PTR_ERR(i2c_imx->pinctrl);
+-	}
+-
+-	i2c_imx->pinctrl_pins_default = pinctrl_lookup_state(i2c_imx->pinctrl,
+-			PINCTRL_STATE_DEFAULT);
+-	i2c_imx->pinctrl_pins_gpio = pinctrl_lookup_state(i2c_imx->pinctrl,
+-			"gpio");
+-	rinfo->sda_gpiod = devm_gpiod_get_optional(&pdev->dev, "sda", GPIOD_IN);
+-	rinfo->scl_gpiod = devm_gpiod_get(&pdev->dev, "scl", GPIOD_OUT_HIGH_OPEN_DRAIN);
+-
+-	if (PTR_ERR(rinfo->sda_gpiod) == -EPROBE_DEFER ||
+-	    PTR_ERR(rinfo->scl_gpiod) == -EPROBE_DEFER) {
+-		return -EPROBE_DEFER;
+-	} else if (IS_ERR(rinfo->sda_gpiod) ||
+-		   IS_ERR(rinfo->scl_gpiod) ||
+-		   IS_ERR(i2c_imx->pinctrl_pins_default) ||
+-		   IS_ERR(i2c_imx->pinctrl_pins_gpio)) {
+-		dev_dbg(&pdev->dev, "recovery information incomplete\n");
+-		return 0;
+-	}
++	struct i2c_bus_recovery_info *bri = &i2c_imx->rinfo;
+ 
+-	dev_dbg(&pdev->dev, "using scl%s for recovery\n",
+-		rinfo->sda_gpiod ? ",sda" : "");
++	bri->pinctrl = devm_pinctrl_get(&pdev->dev);
++	if (IS_ERR(bri->pinctrl))
++		return PTR_ERR(bri->pinctrl);
+ 
+-	rinfo->prepare_recovery = i2c_imx_prepare_recovery;
+-	rinfo->unprepare_recovery = i2c_imx_unprepare_recovery;
+-	rinfo->recover_bus = i2c_generic_scl_recovery;
+-	i2c_imx->adapter.bus_recovery_info = rinfo;
++	i2c_imx->adapter.bus_recovery_info = bri;
+ 
+ 	return 0;
+ }
+-- 
+2.43.0
+
