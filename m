@@ -1,100 +1,80 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D07713AA3C
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 21:56:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BDD31CA89;
+	Thu, 25 Jan 2024 22:00:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706219815; cv=none; b=C4PH7YzZXZYmRGcAKqvZaWMBkfi4iHuxhFmMYw/MGbJr8DwysbJoqOBYJz9EsjmxucW6OPOq/1SxKWiaynroH8WqGpIBrYazSJdsWAkBqEfAUzBMROs+VIpgLWc1sD2BEUU+b7DEzV0k24jXEfI+dW/hfibJQKSzZOavVJz1a94=
+	t=1706220017; cv=none; b=ZZo/aETtuoE3pOMbhFpdyMVhEK/x6+M3ZTTkFxU0TQLLG2u5nFp2VFrHdeeio5wUa9+UnqFTSK5vqXmeUNFaW/j0FxjOOsXz834Fv9hmpKWGAv+C/3rU7QhuMUNu8/fdYEp2L2/NDIfsozXbf+mcqYRZgGsWcNCNrn1yJxKZvuY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706219815; c=relaxed/simple;
-	bh=a8hfMqHEGvH+hPCINRceKqJZjJJ3zaZm6oEEjXubXRo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lwHfPxG2fJ1+xeLpc+cUgV1aId6Gz3JrIanSXdfMnNFFUI6zvvXIo3W3CkvYhYvm8GDbNIkULqRa9u6twpsxv2yN+cs6ibl9FFeZr6fWrEkfMig9Wv5yjxvMTC88k2CTpwkNDMwUfb4u3UOq1dYFGLmT0K37cMOfwwaWjkWlNtg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=39qnnPbd; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="39qnnPbd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1706219811;
-	bh=a8hfMqHEGvH+hPCINRceKqJZjJJ3zaZm6oEEjXubXRo=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=39qnnPbdvuaxnc0JNHB37AqfHZ2dDcwUCODaMGK3NDGhG3Z1pwywzkSb4/dk4w+RO
-	 oa2tf+XNJLuYgc+yPLAlmMzEyIupgjUqQGGLhAYl4pxNyXK2/+uVG8G+tjuRlSfjjs
-	 uar3dsg+Zi+i4HsOUXTDQoNS99T9wr/YXMH9g+jUxhHjrCzyr6SLyKcTY2HlvaL2pV
-	 RcC8tY53zLvW8a6WaYbhMc4y0aMSYDAk1X8IHSQT0G5sRdwSObfNvAJtvIpCrZcz0C
-	 0q+PBIp4FH4P4i+hpiD4Adr1/oVdXKBy1p5FEugk/ALABkPNqKqIB3kR14S2/DBpKY
-	 lpGTII6la0koQ==
-Received: from [100.109.49.129] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dmitry.osipenko)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 5803137813DA;
-	Thu, 25 Jan 2024 21:56:50 +0000 (UTC)
-Message-ID: <f4870543-e7f8-4ee6-924a-68ec7c25b293@collabora.com>
-Date: Fri, 26 Jan 2024 00:56:47 +0300
+	s=arc-20240116; t=1706220017; c=relaxed/simple;
+	bh=RItmqS9jqdMPP9X0BIiJ7ScnCDLQTWAEQYeO6/47XXI=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=B6xeIZFJIE9U9Y6bnkMfePrqfFllHCuyCwFtiw90SHV3VRo+oz2y5g4xxNpA9p/zFm5ra/N9Ckh9vPxbPaQlLTresEkksMPdbpe7mf15SCFGkonJc5mRUzOF79mNQ1GULBywIeY7eVPw0CQvuhnpA0WRmiESE7QP4QGIiZQ0vOE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=perches.com; spf=pass smtp.mailfrom=perches.com; arc=none smtp.client-ip=216.40.44.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=perches.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=perches.com
+Received: from omf14.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay06.hostedemail.com (Postfix) with ESMTP id 311EAA1AEA;
+	Thu, 25 Jan 2024 21:54:18 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf14.hostedemail.com (Postfix) with ESMTPA id 9578F2D;
+	Thu, 25 Jan 2024 21:54:06 +0000 (UTC)
+Message-ID: <443a7a529f6987eb53b8b399c0cf9375e05e993c.camel@perches.com>
+Subject: Re: [HID Patchsets for Samsung driver v4 2/6] HID: Samsung : Fix
+ the checkpatch complain. Rewritten code using memcmp where applicable.
+From: Joe Perches <joe@perches.com>
+To: Sandeep C S <sandeep.cs@samsung.com>, Jiri Kosina <jikos@kernel.org>, 
+	Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc: gaudium.lee@samsung.com, ih0923.kim@samsung.com,
+ suhyun_.kim@samsung.com,  jitender.s21@samsung.com, junwan.cho@samsung.com,
+ linux-input@vger.kernel.org,  linux-kernel@vger.kernel.org
+Date: Thu, 25 Jan 2024 13:54:04 -0800
+In-Reply-To: <20240125043630.4031634-3-sandeep.cs@samsung.com>
+References: <20240125043630.4031634-1-sandeep.cs@samsung.com>
+	 <CGME20240125043702epcas5p33d9ef989dc51276185972d4517ba80fd@epcas5p3.samsung.com>
+	 <20240125043630.4031634-3-sandeep.cs@samsung.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v19 22/30] drm/shmem-helper: Add common memory shrinker
-Content-Language: en-US
-To: Boris Brezillon <boris.brezillon@collabora.com>
-Cc: David Airlie <airlied@gmail.com>, Gerd Hoffmann <kraxel@redhat.com>,
- Gurchetan Singh <gurchetansingh@chromium.org>, Chia-I Wu
- <olvaffe@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- Qiang Yu <yuq825@gmail.com>, Steven Price <steven.price@arm.com>,
- Emma Anholt <emma@anholt.net>, Melissa Wen <mwen@igalia.com>,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- kernel@collabora.com, virtualization@lists.linux-foundation.org
-References: <20240105184624.508603-1-dmitry.osipenko@collabora.com>
- <20240105184624.508603-23-dmitry.osipenko@collabora.com>
- <20240125111946.797a1e1e@collabora.com>
-From: Dmitry Osipenko <dmitry.osipenko@collabora.com>
-In-Reply-To: <20240125111946.797a1e1e@collabora.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 9578F2D
+X-Stat-Signature: netg7ytrkhf5yn7g9ss3rqtp6edq4y1x
+X-Rspamd-Server: rspamout01
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-Session-ID: U2FsdGVkX1+/lgHE9tEIP3LCpllBaSnMinnSVYZnflU=
+X-HE-Tag: 1706219646-171183
+X-HE-Meta: U2FsdGVkX19q5nfWT/ncDEf0UGPqNDNT0bD1dD26L+l3U0BVk/FyRVy+8f9eZWqHq5bLV82zlpvR9tuWcE6/ER7oX3p5u99J8rt2u5JESFzHamwHXOJnDSTRwcS3ucnC8NgSxPnHj22qGi49gamdUVu5oXD1Di9q5/fzr8kK5Qsu01Nb3qY6NKjQNQ+g6pq7U61pQk4Tw0XMXPNln3gkICanL/V7CsIzRZcbJ62bhjUbql1GapkB1RBmYiNEh3fW0vX/0NCSTumAXQzOWwxxINQs6B6Teso/3uwuQIzDwauNnMtYjxfljCON+NJ31W3rj1DTFkV5AvPRAdAMHiaDvM4FqwJA+kfKA7QcI6BBP0WrorFc/UPE/p+KWNXaUNU1vaHPZ7OipTbmdNi6FummXm6skyHmOvrZ5MdBowO77hxNzc3b3FTx1TAzt4OiQ1c5
 
-On 1/25/24 13:19, Boris Brezillon wrote:
-> On Fri,  5 Jan 2024 21:46:16 +0300
-> Dmitry Osipenko <dmitry.osipenko@collabora.com> wrote:
-> 
->> +static bool drm_gem_shmem_is_evictable(struct drm_gem_shmem_object *shmem)
->> +{
->> +	return (shmem->madv >= 0) && shmem->base.funcs->evict &&
->> +		refcount_read(&shmem->pages_use_count) &&
->> +		!refcount_read(&shmem->pages_pin_count) &&
->> +		!shmem->base.dma_buf && !shmem->base.import_attach &&
->> +		!shmem->evicted;
-> 
-> Are we missing
-> 
->                 && dma_resv_test_signaled(shmem->base.resv,
-> 					  DMA_RESV_USAGE_BOOKKEEP)
-> 
-> to make sure the GPU is done using the BO?
-> The same applies to drm_gem_shmem_is_purgeable() BTW.
-> 
-> If you don't want to do this test here, we need a way to let drivers
-> provide a custom is_{evictable,purgeable}() test.
-> 
-> I guess we should also expose drm_gem_shmem_shrinker_update_lru_locked()
-> to let drivers move the GEMs that were used most recently (those
-> referenced by a GPU job) at the end of the evictable LRU.
+On Thu, 2024-01-25 at 10:06 +0530, Sandeep C S wrote:
+> Resolved warnings found by checkpatch.pl script.
+[]
+> diff --git a/drivers/hid/hid-samsung.c b/drivers/hid/hid-samsung.c
+> @@ -107,17 +99,39 @@ static int samsung_kbd_mouse_input_mapping(struct hi=
+d_device *hdev,
+> =20
+>  	switch (usage->hid & HID_USAGE) {
+>  	/* report 2 */
+> -	case 0x183: samsung_kbd_mouse_map_key_clear(KEY_MEDIA); break;
+> -	case 0x195: samsung_kbd_mouse_map_key_clear(KEY_EMAIL);	break;
+> -	case 0x196: samsung_kbd_mouse_map_key_clear(KEY_CALC); break;
+> -	case 0x197: samsung_kbd_mouse_map_key_clear(KEY_COMPUTER); break;
+> -	case 0x22b: samsung_kbd_mouse_map_key_clear(KEY_SEARCH); break;
+> -	case 0x22c: samsung_kbd_mouse_map_key_clear(KEY_WWW); break;
+> -	case 0x22d: samsung_kbd_mouse_map_key_clear(KEY_BACK); break;
+> -	case 0x22e: samsung_kbd_mouse_map_key_clear(KEY_FORWARD); break;
+> -	case 0x22f: samsung_kbd_mouse_map_key_clear(KEY_FAVORITES); break;
+> -	case 0x230: samsung_kbd_mouse_map_key_clear(KEY_REFRESH); break;
+> -	case 0x231: samsung_kbd_mouse_map_key_clear(KEY_STOP); break;
 
-We have the signaled-check in the common drm_gem_evict() helper:
 
-https://elixir.bootlin.com/linux/v6.8-rc1/source/drivers/gpu/drm/drm_gem.c#L1496
+It's rather smaller code to remove the call duplication and use
+a static const struct and for loop as suggested here:
 
--- 
-Best regards,
-Dmitry
+https://lore.kernel.org/lkml/10aeef4ddd523b85ab34327bf384119d0d4b6567.camel=
+@perches.com/
 
