@@ -1,59 +1,78 @@
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.115])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B024876908;
-	Thu, 25 Jan 2024 16:05:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.134.136.31
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A971745C8;
+	Thu, 25 Jan 2024 16:05:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.115
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706198724; cv=none; b=VTUTSrLs8yK6iSKALu6YAa7IIx7OPCDjj2ekC5GpjFIKIYSzYyMD75HUelg7pimyM77uGzVAfz2F0PcBFn/C8ZPD3EfiSPHfU6TpWTAioXjOsMuN1vwh6sVF+NdAQfVoqrDMq6hTNWlwn0XqDymIp9KXh3ONZYyoGoVLYMw7oyo=
+	t=1706198733; cv=none; b=GBa84+BIzZ5827oN+YfcX1IQmpXfQh0i7xCTRYNdJXSJiOm5sjv+nQKDkG6749irNf8JQumXAVTj7bz4UAmQT09V7rVKAgSrl/Gyyd90wdxLoAT0MwJx9mOpr2yui/YeSybE3XiHnUqpSK27B7ZcbmFZkxkS/XgLomwuSzsGXGo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706198724; c=relaxed/simple;
-	bh=TXVIXDCTKF6U5/eP+UDVBy27zgOIVAGO0MqhmuCJGV8=;
+	s=arc-20240116; t=1706198733; c=relaxed/simple;
+	bh=DNTN/lYZe7yjys99DYPQCerRcHwd8OfuFtEe4wkoNhQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mw6ppBsqsLhSR/fztGZees2ZyOHXoBtajqyx/a3syoPSJuDjaTocx2vWrrLo0C3GQAVphs5Pl07dhgPhh06L1242GezBlydJT02bj6JPfK/YnCrWC0GLQItHAcVfCyiqcx4XG4rmO6uaCUinL5bQQcVnLEMzD5bvcS/hY3FBzKs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BQweOO0N; arc=none smtp.client-ip=134.134.136.31
+	 Content-Type:Content-Disposition:In-Reply-To; b=c0gm4hnwHZcagkuetBPXWUsvCxAK2D3lyoXPsDVCSCwCyibGnzqCkv5S4WVC6HzX4ngeuLDcdKHYyXzja5sGUskEUv8+yyJF0YH3iQv1zEk0tYLMIHH0VP4hke+nJO+A1RnIUvZwmsWgoeQaxJ6uHSvnvgwS+xiCnO/y9RsTqVU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=COnc98BE; arc=none smtp.client-ip=192.55.52.115
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BQweOO0N"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="COnc98BE"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706198721; x=1737734721;
+  t=1706198731; x=1737734731;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=TXVIXDCTKF6U5/eP+UDVBy27zgOIVAGO0MqhmuCJGV8=;
-  b=BQweOO0NAp+3EgvVe7AZNepe+GYrxuHxcvCVU6EaEQoEOXnTOS2gwuz9
-   GbIFPmIp684Z0WV1mK21KrBp2QRdV4uBnNnyXFadSpZ/qUEutkrugY47x
-   wsYM4jC/VHYXrdoz/lRuSWw6jgBO+fRt7jnr2DX/tDpHXZlefYG66y23p
-   iTmwWxTP14UmT7I7412VoJXxuQTcGIoGFxfNtmfYLY17itEJAzTXbKnoC
-   1IX9bt2A1Llf7m9qBShbXCfoKAWeKnrKSc3eTfkiXh16NA25+ycrAr8Z6
-   1Iyx9QCgnFkwJBIlqH/f1RQlrPcSpihxW4Sr6LGUPs/1aiVFpr8NO860T
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="466485711"
+  bh=DNTN/lYZe7yjys99DYPQCerRcHwd8OfuFtEe4wkoNhQ=;
+  b=COnc98BE8m6CHh7X298kXojphwDApGBR8pJ++86mOq1RNRziBv3FC1gh
+   yJJt89bnG5FyhVwQtYXQ7OCUXei1IwiCZcX88MexlKg9zgwhgjXDWRtEb
+   1ILegw9DrWU30FL1/13JOAPrFEDi90CcXIvjhW01SbIzq1fX2CC9NVy3/
+   /XrTzqVLJBIUHWDMfPMYM919ERcTCCqyzjmVMu8b7UX8y/IKXYPJhuotM
+   EgrSjwpHkfrVJ0agZfES60uyodAqvyDPSyfd5g2WHDRlhsC/twriru5qv
+   H1RZfRSSIYmZMShPZ8sQgAHOkpQS3U9TjR4jHq1KIdHrnOMojXp5sgNyu
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="401855468"
 X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="466485711"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2024 08:05:20 -0800
+   d="scan'208";a="401855468"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2024 08:04:02 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="905997017"
+X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="820834834"
 X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="905997017"
+   d="scan'208";a="820834834"
 Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2024 08:05:20 -0800
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2024 08:03:13 -0800
 Received: from kekkonen.localdomain (localhost [127.0.0.1])
-	by kekkonen.fi.intel.com (Postfix) with SMTP id F09CE11FB9B;
-	Thu, 25 Jan 2024 18:05:17 +0200 (EET)
-Date: Thu, 25 Jan 2024 16:05:17 +0000
+	by kekkonen.fi.intel.com (Postfix) with SMTP id 1F56A11FB9B;
+	Thu, 25 Jan 2024 18:03:11 +0200 (EET)
+Date: Thu, 25 Jan 2024 16:03:11 +0000
 From: Sakari Ailus <sakari.ailus@linux.intel.com>
-To: Umang Jain <umang.jain@ideasonboard.com>
-Cc: linux-media@vger.kernel.org,
-	Kieran Bingham <kieran.bingham@ideasonboard.com>,
+To: Hans Verkuil <hverkuil@xs4all.nl>,
+	Alexandre TORGUE <alexandre.torgue@foss.st.com>
+Cc: Hugues Fruchet <hugues.fruchet@foss.st.com>,
+	Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
+	Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+	Benjamin Gaignard <benjamin.gaignard@collabora.com>,
+	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+	Daniel Almeida <daniel.almeida@collabora.com>,
+	Benjamin Mugnier <benjamin.mugnier@foss.st.com>,
+	Heiko Stuebner <heiko@sntech.de>,
 	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/4] media: i2c: imx335: Drop setting of 0x3a00 register
-Message-ID: <ZbKGvfoAwQTl0CvO@kekkonen.localdomain>
-References: <20240125154908.465191-1-umang.jain@ideasonboard.com>
- <20240125154908.465191-2-umang.jain@ideasonboard.com>
+	linux-media@vger.kernel.org,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	linux-stm32@st-md-mailman.stormreply.com,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-rockchip@lists.infradead.org,
+	Marco Felsch <m.felsch@pengutronix.de>,
+	Adam Ford <aford173@gmail.com>
+Subject: Re: [RESEND PATCH v6 0/5] Add support for video hardware codec of
+ STMicroelectronics STM32 SoC series
+Message-ID: <ZbKGPyDkunFgetYG@kekkonen.localdomain>
+References: <20240110104642.532011-1-hugues.fruchet@foss.st.com>
+ <f7f8344c-7a72-4450-81c7-8bff4569f044@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,18 +81,24 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240125154908.465191-2-umang.jain@ideasonboard.com>
+In-Reply-To: <f7f8344c-7a72-4450-81c7-8bff4569f044@foss.st.com>
 
-Hi Umang,
+Hi Alexandre,
 
-On Thu, Jan 25, 2024 at 09:19:05PM +0530, Umang Jain wrote:
-> Register 0x3a00 is a reserved field as per the IMX335 datasheet,
-> hence shouldn't be set by the driver.
+On Wed, Jan 24, 2024 at 01:36:02PM +0100, Alexandre TORGUE wrote:
+> > Hugues Fruchet (5):
+> >    dt-bindings: media: Document STM32MP25 VDEC & VENC video codecs
+> >    media: hantro: add support for STM32MP25 VDEC
+> >    media: hantro: add support for STM32MP25 VENC
+> >    arm64: dts: st: add video decoder support to stm32mp255
+> >    arm64: dts: st: add video encoder support to stm32mp255
+> > 
+> 
+> Sakari, Mauro, do you plan to take patches 1 to 3 on your next branch ?
+> I will take DT pacthes in mine but I would like to be sure that dt-binding
+> will be applied in a next branch (for the next v6.9 cycle);
 
-How have you checked this has no effect on the device's operation?
-
-It's not uncommon for sensor vendors to document some hush-hush registers
-as "reserved".
+This being a codec driver, I presume Hans would pick these.
 
 -- 
 Regards,
