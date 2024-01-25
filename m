@@ -1,164 +1,106 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F243D6E2D1;
-	Thu, 25 Jan 2024 15:09:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08A776E2D1
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 15:09:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706195396; cv=none; b=dQWJ7tyHLzNwS1QIleD3wc5rLf/HN5GqmHVS2G/WL8WZyz2G1ngwBqr7YuNxDSx7xMME9je/aWpPZASdyaAecs30O95ePg75PHCkTo/q0Vjh1QnQbeX9DjIIbyYrOjuOBPM0J70nHI5LIYSUtZoQm8W5IY77o98ygP+Sobtg8Vg=
+	t=1706195398; cv=none; b=Z/apkBS/yVLj8X/3HIb9mLq4/UttUPoBOS/SKTDu0j7ivE7mF5ZD1kuSghm3UdjOizAqahW/mXSg1hSpM3ROOvjSiyKiXwskQzV2YjJxbrxrU6/OZdD6t016oJxvDBy0KjeGZJubO8BeWWBcmrAOADbI/Po6UwpnrM00PBHJ9lY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706195396; c=relaxed/simple;
-	bh=xkj76bvYfywTRnt3r/48EHdmO24JgVecEXm2TtbqqNI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uYHt6UOlqfTmf0TiXq4mrHo+88KIwcy00wThnKXkipYPKom8OEigHYjQnQNBfI+t8fEA7dBPV+/YT7dvchf4mUXkbEtnZcBJM0l41Ixzb89oQmeG8S/FDffwGy40BYatN6ncRxHPm+Rv8Nr67UlmlJNPiBEj1GtPlb2ruQvkaAk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D12211FB;
-	Thu, 25 Jan 2024 07:10:35 -0800 (PST)
-Received: from donnerap.manchester.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2D0A73F5A1;
-	Thu, 25 Jan 2024 07:09:49 -0800 (PST)
-Date: Thu, 25 Jan 2024 15:09:42 +0000
-From: Andre Przywara <andre.przywara@arm.com>
-To: Chen-Yu Tsai <wens@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
- <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
- Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland
- <samuel@sholland.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown
- <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai
- <tiwai@suse.com>, Vinod Koul <vkoul@kernel.org>,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-sunxi@lists.linux.dev, linux-sound@vger.kernel.org,
- dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/7] dt-bindings: dma: allwinner,sun50i-a64-dma: Add
- compatible for H616
-Message-ID: <20240125150942.2535a228@donnerap.manchester.arm.com>
-In-Reply-To: <CAGb2v66UmLuWyLvvULZeW6MKFauM-xAMPAO9W_TPAByXYqKCBg@mail.gmail.com>
-References: <20240122170518.3090814-1-wens@kernel.org>
-	<20240122170518.3090814-5-wens@kernel.org>
-	<20240123004010.59cac5ad@minigeek.lan>
-	<CAGb2v66UmLuWyLvvULZeW6MKFauM-xAMPAO9W_TPAByXYqKCBg@mail.gmail.com>
-Organization: ARM
-X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
+	s=arc-20240116; t=1706195398; c=relaxed/simple;
+	bh=jGTeEqT3oFqBR8XDClyO1GAGfuARRlp1VqsQY6R1rZE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Mi4/shoWrHerSAXu2VL2ykYhhI+601YyeymaNFFJl+C+aVo0xxPDjeJUnzBPO71w+zRZjWpZ4wKftsmp1jWAt31Sx3dV5vfnYC8sn7vZwd/9qitVW5g+1GGqhaVW0e3DeNGKZYEG9bW75a8gGSj+xFA6D/nwp5Km/aa0Rug5a5g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uI9AdYXo; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uI9AdYXo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D064AC433F1;
+	Thu, 25 Jan 2024 15:09:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706195397;
+	bh=jGTeEqT3oFqBR8XDClyO1GAGfuARRlp1VqsQY6R1rZE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=uI9AdYXoCYAn5DBxuyyvDJKzDd81svW6+pDf8TyqdpmXSirs3iM9UeAu1/KDakzpV
+	 IsqSQZZyeebMygPcY5g00qnnK1S0gz/6X6kmK1YWDzmCMrCqpY7j22STrwxn7SsMpi
+	 QDEINiE6NdWlX0MeVJS4Yd3YR19GMSiS4ny5m9hMlWkUnaUAFIpg+3HTCgksRBRK8F
+	 Bhj9/CB/yxx+Rie9jLZn0MhbBGmsz1F/GRzXkvTd+X4K+jvpQGDQbzl6vDgahv6Dhs
+	 TpmiRDUvSyW/6S9BJ8kHywTlbsnN/ws880XQbUxLr8V8e5f2QVuFvCvDfuRSFVT8bg
+	 cEhhhy2eSrB3A==
+From: Jisheng Zhang <jszhang@kernel.org>
+To: Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>
+Cc: linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Alexandre Ghiti <alexghiti@rivosinc.com>
+Subject: [PATCH v3] riscv: select ARCH_HAS_FAST_MULTIPLIER
+Date: Thu, 25 Jan 2024 22:57:03 +0800
+Message-ID: <20240125145703.913-1-jszhang@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, 25 Jan 2024 22:37:34 +0800
-Chen-Yu Tsai <wens@kernel.org> wrote:
+Currently, riscv linux requires at least IMA, so all platforms have a
+multiplier. And I assume the 'mul' efficiency is comparable or better
+than a sequence of five or so register-dependent arithmetic
+instructions. Select ARCH_HAS_FAST_MULTIPLIER to get slightly nicer
+codegen. Refer to commit f9b4192923fa ("[PATCH] bitops: hweight()
+speedup") for more details.
 
-Hi,
+In a simple benchmark test calling hweight64() in a loop, it got:
+about 14% performance improvement on JH7110, tested on Milkv Mars.
 
-> On Tue, Jan 23, 2024 at 8:41=E2=80=AFAM Andre Przywara <andre.przywara@ar=
-m.com> wrote:
-> >
-> > On Tue, 23 Jan 2024 01:05:15 +0800
-> > Chen-Yu Tsai <wens@kernel.org> wrote:
-> >
-> > Hi,
-> > =20
-> > > From: Chen-Yu Tsai <wens@csie.org>
-> > >
-> > > The DMA controllers found on the H616 and H618 are the same as the one
-> > > found on the H6. The only difference is the DMA endpoint (DRQ) layout=
-. =20
-> >
-> > That does not seem to be entirely true: The H616 encodes the two lowest
-> > bits in DMA_DESC_ADDR_REG differently: on the H6 they must be 0 (word
-> > aligned), on the H616 these contain bits [33:32] of the address of the
-> > DMA descriptor. The manual doesn't describe the descriptor format in
-> > much detail, but ec31c5c59492 suggests that those two bits are put in
-> > the "para" word of the descriptor. =20
->=20
-> Good catch. So, same as the A100 I believe?
+about 23% performance improvement on TH1520 and SG2042, tested on
+Sipeed LPI4A and SG2042 platform.
 
-Yes, that's what I got as well.
+a slight performance drop on CV1800B, tested on milkv duo. Among all
+riscv platforms in my hands, this is the only one which sees a slight
+performance drop. It means the 'mul' isn't quick enough. However, the
+situation exists on x86 too, for example, P4 doesn't have fast
+integer multiplies as said in the above commit, x86 also selects
+ARCH_HAS_FAST_MULTIPLIER. So let's select ARCH_HAS_FAST_MULTIPLIER
+which can benefit almost riscv platforms.
 
-> > The good thing it that this encoding is backwards compatible, so I
-> > think the fallback string still holds: Any driver just implementing the
-> > H6 encoding would be able to drive the H616.
-> >
-> > I think the A100 was mis-described, as mentioned here:
-> > https://lore.kernel.org/linux-arm-kernel/29e575b6-14cb-73f1-512d-9f0f93=
-4490ea@arm.com/
-> > I think we should:
-> > - make the A100 use: "allwinner,sun50i-a100-dma", "sun50i-h6-dma"
-> > - make the H616 use: "allwinner,sun50i-h616-dma", "allwinner,sun50i-a10=
-0-dma", "sun50i-h6-dma"
-> >
-> > Does that make sense? =20
->=20
-> I wouldn't call that exactly backward compatible. Say the driver forgot to
-> clear the two bits. It would work fine on the H6, but the accessed address
-> could be way off on the A100 and H616.
+Samuel also provided some performance numbers:
+On Unmatched: 20% speedup for __sw_hweight32 and 30% speedup for
+__sw_hweight64.
+On D1: 8% speedup for __sw_hweight32 and 8% slowdown for
+__sw_hweight64.
 
-I don't know the exact boundaries of "compatible" here, but the H6 manual
-pretty clearly states "The descriptor address must be word-aligned."
-But since the A100 compatible is known and supported for a while, that
-doesn't really matter, practically speaking, I guess.
+Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
+Reviewed-by: Samuel Holland <samuel.holland@sifive.com>
+Tested-by: Samuel Holland <samuel.holland@sifive.com>
+Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+---
+since v2:
+ - rebase on v6.8-rc1
+ - collect Reviewed-by and Tested-by tag
 
-One could check how the H6 DMA controller reacts to those bits not being
-0, not sure if I find the time, though.
+since v1:
+ - fix typo in commit msg
+ - add some performance numbers provided by Samuel
+ - collect Reviewed-by and Tested-by tag
 
-Cheers,
-Andre.
+ arch/riscv/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-> > Cheers,
-> > Andre
-> > =20
-> > > Since the number of channels and endpoints are described with additio=
-nal
-> > > generic properties, just add a new H616-specific compatible string and
-> > > fallback to the H6 one.
-> > >
-> > > Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-> > > ---
-> > >  .../bindings/dma/allwinner,sun50i-a64-dma.yaml    | 15 +++++++++++--=
---
-> > >  1 file changed, 11 insertions(+), 4 deletions(-)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/dma/allwinner,sun50i-a=
-64-dma.yaml b/Documentation/devicetree/bindings/dma/allwinner,sun50i-a64-dm=
-a.yaml
-> > > index ec2d7a789ffe..e5693be378bd 100644
-> > > --- a/Documentation/devicetree/bindings/dma/allwinner,sun50i-a64-dma.=
-yaml
-> > > +++ b/Documentation/devicetree/bindings/dma/allwinner,sun50i-a64-dma.=
-yaml
-> > > @@ -28,6 +28,9 @@ properties:
-> > >        - items:
-> > >            - const: allwinner,sun8i-r40-dma
-> > >            - const: allwinner,sun50i-a64-dma
-> > > +      - items:
-> > > +          - const: allwinner,sun50i-h616-dma
-> > > +          - const: allwinner,sun50i-h6-dma
-> > >
-> > >    reg:
-> > >      maxItems: 1
-> > > @@ -59,10 +62,14 @@ required:
-> > >  if:
-> > >    properties:
-> > >      compatible:
-> > > -      enum:
-> > > -        - allwinner,sun20i-d1-dma
-> > > -        - allwinner,sun50i-a100-dma
-> > > -        - allwinner,sun50i-h6-dma
-> > > +      oneOf:
-> > > +        - enum:
-> > > +            - allwinner,sun20i-d1-dma
-> > > +            - allwinner,sun50i-a100-dma
-> > > +            - allwinner,sun50i-h6-dma
-> > > +        - items:
-> > > +            - const: allwinner,sun50i-h616-dma
-> > > +            - const: allwinner,sun50i-h6-dma
-> > >
-> > >  then:
-> > >    properties: =20
-> > =20
->=20
+diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+index bffbd869a068..fdd1a595ebd8 100644
+--- a/arch/riscv/Kconfig
++++ b/arch/riscv/Kconfig
+@@ -23,6 +23,7 @@ config RISCV
+ 	select ARCH_HAS_DEBUG_VIRTUAL if MMU
+ 	select ARCH_HAS_DEBUG_VM_PGTABLE
+ 	select ARCH_HAS_DEBUG_WX
++	select ARCH_HAS_FAST_MULTIPLIER
+ 	select ARCH_HAS_FORTIFY_SOURCE
+ 	select ARCH_HAS_GCOV_PROFILE_ALL
+ 	select ARCH_HAS_GIGANTIC_PAGE
+-- 
+2.43.0
 
