@@ -1,107 +1,69 @@
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6483156466
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 13:38:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.134.136.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A2D655C3A;
+	Thu, 25 Jan 2024 13:38:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706189921; cv=none; b=pdBprvAG6O+s336q+P9lctAmM0El/tdMvCI+31jIzV1CoGRYN2WGUz0wKBvRzPFghp3FeNssOLzPnYDOnP9e2KV5EJ4dHCPJB6hCcQWbF3iU+JlJUTcehgnfc0sU3BpEyCceLBFCh/Y6c1hS/loSWXRA9d5bpUkKAlJe1+2CSoA=
+	t=1706189938; cv=none; b=utOfNPFOKvTNyX1ttwm7gTwfAg91UQoUfaSfUi10QwPS6GZE0VeA9yv2AG938RFWiNZF7e/+QfhPh1rZrD7SFBB8i99AsXr0nU07c29VRxKYKqFsTJvEnD/L742WQ9k6N5EHA67IVRoIDA02lW5KuozhitcCKCDhU8vaYcNVnYg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706189921; c=relaxed/simple;
-	bh=0KkKS2Lpl5mRNSE1P7HynJ6+LBCmeeLRI2yzv2QtUl8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IT5YJaRXMVqvq3f34QQIJLYkHKOGh2zDWJVgBdaaFjm7RTib25LmXMKCODZ60kCIjqMZHqPAZ0OMGjO1vZMJ8QCNuXFXUJ7AGiB1DLd9WmJh1TdNvs2Tfad7KCWmyCTkItLBzzodJSUdYq9vRB9IMTgQCAIy6DdzLs76Yw7/nUs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=P1oWm1Og; arc=none smtp.client-ip=134.134.136.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1706189938; c=relaxed/simple;
+	bh=X4EhEnTx2yshyJvskE+TkZSnYGz9JoEdM3ONmeCjR6M=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=kdMUsUYvPKnklZ0e6pPy7zzRzINyJNolkWp4d/qm0NU/hMtA7FlQi1YLMTa+Wfniv7G+H5vBoWduAcAdC4gxsx6o6zUSQ24L6Lhj6vanNJyjpjk+07tMPaf2Lo4i49WYlz7iu0+wVkzklNzTOMUVLwXsqGKhZ6Tj8FrSmJBvOwQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iRXUQfJW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="P1oWm1Og"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706189920; x=1737725920;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=0KkKS2Lpl5mRNSE1P7HynJ6+LBCmeeLRI2yzv2QtUl8=;
-  b=P1oWm1OgZF0SdKkZMmx00SttafHJx5S4yUuvSaZU2q1hHn8qdJXaEIdO
-   D8gkHXSY2HsGdOPgIS5Fod1aNpqKZKkCMbMWm0FCoN9NGS4PAKa298ZMr
-   SB7nyiY8sFzAVHPLdcAbhiQ9bcsOpFXaxNj2zvBV6euVk1jWvRfxnSGap
-   0zmrSDL9ghMzDnRqqUGAf9wdmGxi0UYJ3FCOnb1F5zPW2e/7PFfHMxlZs
-   uQNjAZ6K2QQYxhDbN1sxdYcqA/JcPxpR3RPrgcjr15fiPDxfIqBgN4x0x
-   QXGXlXMQkvQD4mIFMsS0SUjP8IuhHvXc8aMo3qhHxH/26dgim94MUt/yG
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="405911361"
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="405911361"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2024 05:38:24 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="905962073"
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="905962073"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga002.fm.intel.com with ESMTP; 25 Jan 2024 05:38:21 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id 2BF4876A; Thu, 25 Jan 2024 13:44:54 +0200 (EET)
-Date: Thu, 25 Jan 2024 13:44:54 +0200
-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To: Andi Kleen <ak@linux.intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
-	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org, Kai Huang <kai.huang@intel.com>, 
-	Sean Christopherson <seanjc@google.com>
-Subject: Re: [PATCHv3, RESEND] x86/trampoline: Bypass compat mode in
- trampoline_start64() if not needed
-Message-ID: <wo4wcvuhvqsqissocu7nz2urg5yt7mx65s5dxkjxqimgnxv3ax@qsa3lqlfsaxi>
-References: <20240124131510.496803-1-kirill.shutemov@linux.intel.com>
- <ZbIwfp-jOOlPNb1z@tassilo>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iRXUQfJW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 690D7C433F1;
+	Thu, 25 Jan 2024 13:38:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706189938;
+	bh=X4EhEnTx2yshyJvskE+TkZSnYGz9JoEdM3ONmeCjR6M=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=iRXUQfJWBmOMFX3NTxCERxRsdQCI9n9efJjo9hDb/z8XJblrw+eoqZKTzhm5ksWI7
+	 P4dBsRagliJHZpUpuydxjLav9vPb1BFhmXqf2616sfiautODNvuCFat4iH/tw3BKYr
+	 bmhatN0FbUpBjt+cNBTiBMRHtWvUYIpiFwmLj455BjDZWbF/mHsbPvbzQnnIh3kuyt
+	 jqm/odzzwj38wP8hkmpH2YXkkBCc4CTK84drL3anSfkUBAOG0E+1gh/5Fzj0+1Vc4b
+	 mHug3zthaG1YXpXsdZRGlRWBXIR7lW7rFKQq+teCrhQQ9taPdvrlhpoMnEOLLt/B3d
+	 0ilj3SJOgq5XQ==
+From: Lee Jones <lee@kernel.org>
+To: Lee Jones <lee@kernel.org>, Simon Horman <horms@kernel.org>
+Cc: Nathan Chancellor <nathan@kernel.org>, 
+ Nick Desaulniers <ndesaulniers@google.com>, 
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
+ linux-kernel@vger.kernel.org, llvm@lists.linux.dev
+In-Reply-To: <20240123-rave-sp-comma-v1-1-84e9b15ba205@kernel.org>
+References: <20240123-rave-sp-comma-v1-1-84e9b15ba205@kernel.org>
+Subject: Re: (subset) [PATCH] mfd: rave-sp: Avoid unnecessary use of comma
+ operator
+Message-Id: <170618993615.1469954.11714590210797016268.b4-ty@kernel.org>
+Date: Thu, 25 Jan 2024 13:38:56 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZbIwfp-jOOlPNb1z@tassilo>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Mailer: b4 0.12.3
 
-On Thu, Jan 25, 2024 at 01:57:18AM -0800, Andi Kleen wrote:
-> > +	/* Paging mode is correct proceed in 64-bit mode */
-> > +
-> > +	LOCK_AND_LOAD_REALMODE_ESP lock_rip=1
-> > +
-> > +	movw	$__KERNEL_DS, %dx
-> > +	movl	%edx, %ss
-> > +	addl	$pa_real_mode_base, %esp
-> > +	movl	%edx, %ds
-> > +	movl	%edx, %es
-> > +	movl	%edx, %fs
-> > +	movl	%edx, %gs
-> > +
-> > +	movl	$pa_trampoline_pgd, %eax
-> > +	movq	%rax, %cr3
-> > +
-> > +	jmpq	*tr_start(%rip)
+On Tue, 23 Jan 2024 09:59:48 +0000, Simon Horman wrote:
+> Although it does not seem to have any untoward side-effects,
+> the use of ';' to separate to assignments seems more appropriate than ','.
 > 
-> Still think we should add a far jump here so that we run on a defined
-> code segment. It probably doesn't matter since there are likely no
-> IRETs before reloading anyways, but it seems cleaner.
+> Flagged by clang-17 -Wcomma
+> 
+> No functional change intended.
+> Compile tested only.
+> 
+> [...]
 
-I think it is cleaner to switch to IRET here. Does this work for you?
+Applied, thanks!
 
-diff --git a/arch/x86/realmode/rm/trampoline_64.S b/arch/x86/realmode/rm/trampoline_64.S
-index 608f108cba7d..14d9c7daf90f 100644
---- a/arch/x86/realmode/rm/trampoline_64.S
-+++ b/arch/x86/realmode/rm/trampoline_64.S
-@@ -243,7 +243,9 @@ SYM_CODE_START(trampoline_start64)
- 	movl	$pa_trampoline_pgd, %eax
- 	movq	%rax, %cr3
- 
--	jmpq	*tr_start(%rip)
-+	pushq	$__KERNEL_CS
-+	pushq	tr_start(%rip)
-+	lretq
- .L_switch_paging:
- 	/*
- 	 * To switch between 4- and 5-level paging modes, it is necessary
--- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+[1/1] mfd: rave-sp: Avoid unnecessary use of comma operator
+      commit: 67421634ade0979dafd3e3f21c9b63bc93ef4760
+
+--
+Lee Jones [李琼斯]
+
