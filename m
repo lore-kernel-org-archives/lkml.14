@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACFBA13A248
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 21:30:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACF6E1386AD;
+	Thu, 25 Jan 2024 21:30:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706218229; cv=none; b=VsKlJNjrp+Nxp886s8L/tSxk8UBNll7uxmFyd6+D03TBmcn/95uR8lnB2JpGEBRqxONuLBldMAEMQEa8vBe76OY3lvQ3TgFRJVdAc7SLozDmXrl5vMhbGuskg8N68I+SlJ1LjO8sjFKVKEZmqgD/TCHohw8XiszPmMO8xr8m+mo=
+	t=1706218229; cv=none; b=Ha0rb97tYvid02btQcwGW6DU5m27r0OfQBHgRnFt1Ux+s0kGYs4D/6DyUkLstL35ctVw2OBVSBPd52IA552hRB4z0eJZ8AdbHA0FIcJ9pYB8JV4vzzYgRH9Kb1WmShrRQQxTuTiuju30OsZeHok22FwqqSKtbBZLF5wuxdEoEgw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1706218229; c=relaxed/simple;
-	bh=+MxR9NaWaOppxz1CebUGCA3UGwUCCpm+2/tjFMQvNwY=;
+	bh=DU2aKLt1gDJPFPkXs014yUzizTB2XryAG05PwCdQcMU=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=UBVWAd96GS0ytDsNg4NvzNgFW71m/LDoQBFUw96YF+FR4PSfYBul0URzJ1PIxwchOoWASngg1Q/8MMd1E3oTbgbQoEkf2HjqW+m90jjhnwB4HNX8dVmNtQAKYsELj+yfx7ljnsYbsGT4fGi3ecjm/9Wa3QvIzNslMfDI3xvHWPQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fEmX87PL; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=df0DZLd4rAPZrvASAvEkA5FVVHzR3lJkoEy6SupX58YCyyjpZ0pzZkmzl1kVwSPwD83jxr2uGpaDujmt6PqaC+NTwHEfXxa3aTTIebUGQ0E6dohHylT2Wjmg2EdDxHKxEbIetyPJdB6J+vLWZMX+kp9km96al2i5JQ/871A6l+s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OCk0fJ1k; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fEmX87PL"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 4E8EDC43394;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OCk0fJ1k"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 567C0C433A6;
 	Thu, 25 Jan 2024 21:30:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1706218229;
-	bh=+MxR9NaWaOppxz1CebUGCA3UGwUCCpm+2/tjFMQvNwY=;
+	bh=DU2aKLt1gDJPFPkXs014yUzizTB2XryAG05PwCdQcMU=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=fEmX87PLzrdwWTQWwpSjg37S+uSvU5viqmA3eY4LAPTBEKTn8Vy5Xm6i+fPIO1+Uh
-	 698K8Ka5acpgEBwfIC7w2+8OWBKMWs1J2ck0ocGIMrQDiA73js8KC1HeezbpNt7q9W
-	 u7gN1weUog8LWrOEfMzYUYWvJFT2tKV3WxwK9lYofwX9hCpwXpjzPaSXEKuYEsKbcm
-	 zM5beLowdfluCqT2cPW34KIBG4e2OAih7VZarzFfBh/ZKt+NC0mKRGjxDUwGkKBgo4
-	 AO4wsAGtx9tP1nuVXiK9Zo4lTwmSmUf/GcXZGrrcNd4H/t9sX9zd3qTOrOVC0TO9LS
-	 dfyXIqSe5s+kg==
+	b=OCk0fJ1km2f4qcwwOqVN9rN3xFh6DvAwQwI+eiNur43sI9ERsQfnRTVxkqZiqz80e
+	 c1DQ4U4k/gQHMQm1bcp5Io+ugoJYCmX+t2awn2ujGQqUH6mBpDt1Qtp+8kvPGPwg54
+	 0jO/H0FCHxTW0Gh2mvBLEc6b06GfE4AxLtgvxsHrM4mBbmIwzKEmmNfw/WO2M21Tiu
+	 3mqQRRq371QDxIIO39ljhxj18xBGU6kMvYJxdTnomaEbr5EMIm2vILmoS4IKQqp6KO
+	 IWehxvkNo+aN5DwBIEfrd7ifICA9fLYX60LP5g6krKvpbONpvGetKosjHjIPzfmpE1
+	 1OyD1J5sDwOMw==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 36D8ED8C966;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 406E9D8C961;
 	Thu, 25 Jan 2024 21:30:29 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
@@ -37,37 +37,40 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] riscv: blacklist assembly symbols for kprobe
+Subject: Re: [PATCH] riscv: Avoid code duplication with generic bitops
+ implementation
 From: patchwork-bot+linux-riscv@kernel.org
 Message-Id: 
- <170621822922.6239.4505416696182414411.git-patchwork-notify@kernel.org>
+ <170621822925.6239.5198530018567200745.git-patchwork-notify@kernel.org>
 Date: Thu, 25 Jan 2024 21:30:29 +0000
-References: <20231004131009.409193-1-cleger@rivosinc.com>
-In-Reply-To: <20231004131009.409193-1-cleger@rivosinc.com>
-To: =?utf-8?b?Q2zDqW1lbnQgTMOpZ2VyIDxjbGVnZXJAcml2b3NpbmMuY29tPg==?=@ci.codeaurora.org
+References: <20231112094421.4014931-1-xiao.w.wang@intel.com>
+In-Reply-To: <20231112094421.4014931-1-xiao.w.wang@intel.com>
+To: Wang@ci.codeaurora.org, Xiao W <xiao.w.wang@intel.com>
 Cc: linux-riscv@lists.infradead.org, paul.walmsley@sifive.com,
- palmer@dabbelt.com, aou@eecs.berkeley.edu, linux-kernel@vger.kernel.org
+ palmer@dabbelt.com, aou@eecs.berkeley.edu, arnd@arndb.de,
+ geert@linux-m68k.org, haicheng.li@intel.com, linux-arch@vger.kernel.org,
+ linux-kernel@vger.kernel.org
 
 Hello:
 
 This patch was applied to riscv/linux.git (for-next)
 by Palmer Dabbelt <palmer@rivosinc.com>:
 
-On Wed,  4 Oct 2023 15:10:09 +0200 you wrote:
-> Adding kprobes on some assembly functions (mainly exception handling)
-> will result in crashes (either recursive trap or panic). To avoid such
-> errors, add ASM_NOKPROBE() macro which allow adding specific symbols
-> into the __kprobe_blacklist section and use to blacklist the following
-> symbols that showed to be problematic:
-> - handle_exception()
-> - ret_from_exception()
-> - handle_kernel_stack_overflow()
+On Sun, 12 Nov 2023 17:44:21 +0800 you wrote:
+> There's code duplication between the fallback implementation for bitops
+> __ffs/__fls/ffs/fls API and the generic C implementation in
+> include/asm-generic/bitops/. To avoid this duplication, this patch renames
+> the generic C implementation by adding a "generic_" prefix to them, then we
+> can use these generic APIs as fallback.
+> 
+> Suggested-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> Signed-off-by: Xiao Wang <xiao.w.wang@intel.com>
 > 
 > [...]
 
 Here is the summary with links:
-  - riscv: blacklist assembly symbols for kprobe
-    https://git.kernel.org/riscv/c/5014396af9bb
+  - riscv: Avoid code duplication with generic bitops implementation
+    https://git.kernel.org/riscv/c/cb4ede926134
 
 You are awesome, thank you!
 -- 
