@@ -1,146 +1,124 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8809060EE4;
-	Thu, 25 Jan 2024 10:44:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D282060EFE
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 10:44:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706179479; cv=none; b=Q+4cFnU15Ueo5Q8hFrdk0XB8JtYjI69Chr6ldFicnMn/dPv0hYOER/a4v98MOZw5LCK5VhqalVsx0nyNot13eTtN0/e6lbDVDXzRKAn7SXtzHrh9cJgiLeDQKbHQG83w17SIDI1MRATOJubeLK+SuSies9C2QTHrNySyfLsyAI4=
+	t=1706179481; cv=none; b=h/AAqgLAoyce33dKwNmzq3TAY6HuCQhrloeRsVo/8EMKlaj+iyPDQX+Ee1m5i1s3NH9WkJppmpPG4LTmjV0tchxSBDKzf1z26qXdPoXJ8dgsnDdPhtIkoFZEJEMdzIE0QOlPDiS7xnRKSTY9u9Zpkf6xS9buZQAfPrxzt8Ng85M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706179479; c=relaxed/simple;
-	bh=qjAY+Yc9t3KdmxLT7uCiNgjt2jj+CbSOO+1wisiSIS4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ppGHXJH7u6Hw+fRk+a1u4/Ty3qnATRwl3cKONLnZcU3VEWDc1uaAafBCgdx+jFPRu24cWIwJLTZ0TPq4uEw1eAz4M7rRsXI+lVVY/JfMxLborCrgGjrRivT3pqH8rNlG6eex3yxsX1f1d6iEe3F2zE6yYS28v5Qwz6WPoo0fX10=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e90pN0CC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706179481; c=relaxed/simple;
+	bh=yT1mRF6XNlXaTfuWIVMhLXVcISTzbXHuEXNJEvgnJqs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=e9TSFFR8CaOhzy94Krj5YZrDKZXrw4jLIdYLwaM41M+tu9I+zbp0uf8hPjhsWHqjMICeE4PYypSPSMy1i8UX0PjOiQhD0IeCtCY5tDmfaDhlw1focYTk6mfGNum/RBWPkR3yRzd+K8dImLfuMxe6VfySDoGKJx1ghqnx5abYnFw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=a9uTMdnc; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e90pN0CC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0FF3C43390;
-	Thu, 25 Jan 2024 10:44:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706179479;
-	bh=qjAY+Yc9t3KdmxLT7uCiNgjt2jj+CbSOO+1wisiSIS4=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=e90pN0CC4IliJTH8hSXxNKTr1haQzkPddgP/rDUr3TCsEP0H27psQ8vSGvx2ikmlK
-	 Eh8RdKHSBDxezQvvV8BGXbCvmllginf05KyS2KexZQfKOYgMyhhtgx/Hyd+qa5Sq05
-	 P+8mB+deuYCrNN/d5z4sNwMiL8ZHBRfNDwMsKIOh/1H/kqpX8TM7iVHdwRNIlD+OgG
-	 5k6afRT/Ib7kGmqYp3I+GFtRDuIHF9xCCmfNbORnKN49rlKTUdY7gWn/6exrHUyohg
-	 8DubepdX+BBl/Ff48gGsedki11MuERvUmD6FWL6YuumXl6/p930RpFwnjxbbefgeKd
-	 PUPb1v87kumUA==
-From: Jeff Layton <jlayton@kernel.org>
-Date: Thu, 25 Jan 2024 05:43:03 -0500
-Subject: [PATCH v2 22/41] filelock: clean up locks_delete_block internals
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="a9uTMdnc"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-559f92bf7b6so1239443a12.0
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 02:44:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1706179478; x=1706784278; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=DP1TkMGJCcP03wjm/2IvbB0Zl5zG12ipI2nSUEb0ViM=;
+        b=a9uTMdnc5HKWIM6ieliulr3BHXgwysfjW028gwnVeVZ2qZr/U9WbCRnWbjzVmumKHA
+         mwwl/6BtHFs8tJkhCDlVStk03+ffHCejCwK3uw1Eg4+C0n2LXJWDd5efWjsH9BzmGgKR
+         1j3C2xEmSDvDKxc0OeI1Nirkva/MTPpbIuXA2f+6741zGkWVYAoEjTyNSG3hLH5opRMe
+         PN42Gx3nqxXQ1ny6h2JHIFcR7AhF09r8rmXhE/l6LzNDJ18tOyYL3d/y/GNtIP6EHo5T
+         dMwmqiaxhT3DdU4LNdD08RMDtF9xwaBadNSxmAMY8jkWnTzxoIPojryIacOGZn2xwKHk
+         2wcg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706179478; x=1706784278;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DP1TkMGJCcP03wjm/2IvbB0Zl5zG12ipI2nSUEb0ViM=;
+        b=OQXubJIfDaeEituP3haAnTQ1XomfTHTMMFmC1xRqy+rjrSVYjKwd4sgLHLWEdt3dEn
+         ai5+fs5AF0GCTU/AIEok5Tv2eqxzLDkGdGxpn22C25Tbga7IZEgkohriHz6lcjCmQ0mz
+         XQkqIvHsrnQvNomNUcbZEqHRNH/wLV3KTlVsQItaxOoJc4CYy0fS0dcksJCVV2lx2p2z
+         u9oK73kt5H+J25usxTKIZ6R0NsTweFIiE9kiPrwdmdZ+9fMaZ/efWEPJUzg2Qp8u4duY
+         LJfOUq0aQrW2kOrSohGlP2k/ZcgbKK0gVSpJ+7+k2sXJV2b4BR6lLkbbLZXz4kUSM3M6
+         QGBw==
+X-Gm-Message-State: AOJu0YxWENCODbIqnzr4IWUnGaTEClm5Pu5gqHbcuPMdRPRO4d+/9fjE
+	9XKOyQ96JMz/XxYechhgJYjvbEHoyCSMHV65ixR2XWk6ZaQhzFiXhcU8bEA1R3o=
+X-Google-Smtp-Source: AGHT+IGG9jiccgy/B1Ja0Qj3GOeWRI+vkQ1p7kjIJbpZvMUF9eD/sku0Vq25Up2+hLJIJLvcnhGwEw==
+X-Received: by 2002:aa7:d857:0:b0:55c:feaa:aca4 with SMTP id f23-20020aa7d857000000b0055cfeaaaca4mr661597eds.9.1706179477838;
+        Thu, 25 Jan 2024 02:44:37 -0800 (PST)
+Received: from linaro.org ([79.115.23.25])
+        by smtp.gmail.com with ESMTPSA id ig1-20020a056402458100b0055ca5ce62ddsm1760685edb.12.2024.01.25.02.44.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 Jan 2024 02:44:37 -0800 (PST)
+Date: Thu, 25 Jan 2024 12:44:35 +0200
+From: Abel Vesa <abel.vesa@linaro.org>
+To: Konrad Dybcio <konrad.dybcio@linaro.org>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/5] clk: qcom: sm8[56]50: Drop the Disp AHB clock from
+ Display Clock Controller
+Message-ID: <ZbI7k+bDy+KSmncq@linaro.org>
+References: <20240125-dispcc-sm8550-sm8650-drop-disp-ahb-clk-v1-0-0f8d96156156@linaro.org>
+ <99817149-4a2e-49fc-aedc-fe298964a019@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240125-flsplit-v2-22-7485322b62c7@kernel.org>
-References: <20240125-flsplit-v2-0-7485322b62c7@kernel.org>
-In-Reply-To: <20240125-flsplit-v2-0-7485322b62c7@kernel.org>
-To: Christian Brauner <brauner@kernel.org>, 
- Alexander Viro <viro@zeniv.linux.org.uk>, 
- Eric Van Hensbergen <ericvh@kernel.org>, 
- Latchesar Ionkov <lucho@ionkov.net>, 
- Dominique Martinet <asmadeus@codewreck.org>, 
- Christian Schoenebeck <linux_oss@crudebyte.com>, 
- David Howells <dhowells@redhat.com>, Marc Dionne <marc.dionne@auristor.com>, 
- Xiubo Li <xiubli@redhat.com>, Ilya Dryomov <idryomov@gmail.com>, 
- Alexander Aring <aahringo@redhat.com>, David Teigland <teigland@redhat.com>, 
- Miklos Szeredi <miklos@szeredi.hu>, 
- Andreas Gruenbacher <agruenba@redhat.com>, 
- Trond Myklebust <trond.myklebust@hammerspace.com>, 
- Anna Schumaker <anna@kernel.org>, Chuck Lever <chuck.lever@oracle.com>, 
- Neil Brown <neilb@suse.de>, Olga Kornievskaia <kolga@netapp.com>, 
- Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, 
- Jan Kara <jack@suse.cz>, Mark Fasheh <mark@fasheh.com>, 
- Joel Becker <jlbec@evilplan.org>, Joseph Qi <joseph.qi@linux.alibaba.com>, 
- Steve French <sfrench@samba.org>, Paulo Alcantara <pc@manguebit.com>, 
- Shyam Prasad N <sprasad@microsoft.com>, Namjae Jeon <linkinjeon@kernel.org>, 
- Sergey Senozhatsky <senozhatsky@chromium.org>, 
- Steven Rostedt <rostedt@goodmis.org>, 
- Masami Hiramatsu <mhiramat@kernel.org>, 
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
- Ronnie Sahlberg <ronniesahlberg@gmail.com>
-Cc: linux-kernel@vger.kernel.org, v9fs@lists.linux.dev, 
- linux-afs@lists.infradead.org, ceph-devel@vger.kernel.org, 
- gfs2@lists.linux.dev, linux-fsdevel@vger.kernel.org, 
- linux-nfs@vger.kernel.org, ocfs2-devel@lists.linux.dev, 
- linux-cifs@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
- Jeff Layton <jlayton@kernel.org>
-X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1890; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=qjAY+Yc9t3KdmxLT7uCiNgjt2jj+CbSOO+1wisiSIS4=;
- b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBlsjs8FH6gMpwQdYKuh8876nJJ1THPHZ05tbz5o
- tfLDTtS/CmJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZbI7PAAKCRAADmhBGVaC
- FVrsEACf8eiJu8e08kxG39lXtQ9EakrO9CgjzZ9eYSy4JDzN2Qgd2oqyErKMqn7W7a38VZg9uMA
- g1TS6iwH5qK0My8cBGUcA1plbeytu66VkqeIA/axkQZrldkHeNTUwQuFac6vIByH9Wwo7mTf4hu
- wRsJTXtoyj6YU8IUjpoma6qXn0ehGIn4Km6HLTCFeHEp1bkjk+iFPDTSHwKS6MjlgQMc9K/ldKa
- nRCGieXTsyaxCcpX1ZkVHvXNJiPU/+2A+8pLWjd3LkUBIdiYhoij01/TIHaKW0dZpjmFj013iPA
- BAfl2DjfBV4QzhmNWdXOkLa1XY2A9NQc1YzSVKsR5UGBgCXsF+N/ZJjkaAdQ9Qirnt6mIYTq8W0
- ktNWdJy4/ITz4FbW65C1mUWXmg/eXjJcbDa4+BQ0/XbL/Yc1yMQyMyKnfgCDu/jj2CjFP8k2hti
- pdZl6eadMjXkw/SiNz+Ro2t/TRVRLVk1B/x7a2W5e7VWt0n3WkLd/nPXSOeqbkKPVOCLLbDJY3b
- t12MPh34CeLy0eF+WpBXoFhK9/1HBhrh/xbLWDEaeCDnIwu7bI48GQTS/9WY//18HYIl91xGzIe
- ufyQCWpH3gfKQIb8fLQD7LTASISerAOFOEAgWkiyrO0eTN+e0kYm2UYP2/l7WHDw78KJ/FmHJ9S
- +Vq3/Fh7XpN0LRg==
-X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
- fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <99817149-4a2e-49fc-aedc-fe298964a019@linaro.org>
 
-Rework the internals of locks_delete_block to use struct file_lock_core
-(mostly just for clarity's sake). The prototype is not changed.
+On 24-01-25 10:49:23, Konrad Dybcio wrote:
+> 
+> 
+> On 1/25/24 10:27, Abel Vesa wrote:
+> > The Disp AHB clock is provided by the GCC but never registered. It is
+> > instead enabled on probe as it is expected to be always-on. So it should
+> > be dropped from Disp CC entirely.
+> > 
+> > Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
+> > ---
+> 
+> Abel, you just raised some concerns over my series doing this and now
+> you're doing the same, plus breaking backwards compatibility for no
+> good reason, instead of solving the problem.
 
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
----
- fs/locks.c | 15 ++++++++-------
- 1 file changed, 8 insertions(+), 7 deletions(-)
+Sorry but, during the off-list discussion, you convinced me that it is OK to drop
+their registration as long as we enable them on probe.
 
-diff --git a/fs/locks.c b/fs/locks.c
-index 8e320c95c416..739af36d98df 100644
---- a/fs/locks.c
-+++ b/fs/locks.c
-@@ -697,9 +697,10 @@ static void __locks_wake_up_blocks(struct file_lock_core *blocker)
-  *
-  *	lockd/nfsd need to disconnect the lock while working on it.
-  */
--int locks_delete_block(struct file_lock *waiter)
-+int locks_delete_block(struct file_lock *waiter_fl)
- {
- 	int status = -ENOENT;
-+	struct file_lock_core *waiter = &waiter_fl->fl_core;
- 
- 	/*
- 	 * If fl_blocker is NULL, it won't be set again as this thread "owns"
-@@ -722,21 +723,21 @@ int locks_delete_block(struct file_lock *waiter)
- 	 * no new locks can be inserted into its fl_blocked_requests list, and
- 	 * can avoid doing anything further if the list is empty.
- 	 */
--	if (!smp_load_acquire(&waiter->fl_core.flc_blocker) &&
--	    list_empty(&waiter->fl_core.flc_blocked_requests))
-+	if (!smp_load_acquire(&waiter->flc_blocker) &&
-+	    list_empty(&waiter->flc_blocked_requests))
- 		return status;
- 
- 	spin_lock(&blocked_lock_lock);
--	if (waiter->fl_core.flc_blocker)
-+	if (waiter->flc_blocker)
- 		status = 0;
--	__locks_wake_up_blocks(&waiter->fl_core);
--	__locks_delete_block(&waiter->fl_core);
-+	__locks_wake_up_blocks(waiter);
-+	__locks_delete_block(waiter);
- 
- 	/*
- 	 * The setting of fl_blocker to NULL marks the "done" point in deleting
- 	 * a block. Paired with acquire at the top of this function.
- 	 */
--	smp_store_release(&waiter->fl_core.flc_blocker, NULL);
-+	smp_store_release(&waiter->flc_blocker, NULL);
- 	spin_unlock(&blocked_lock_lock);
- 	return status;
- }
+I've not seen the following reply in time before sending current series:
+https://lore.kernel.org/all/6aa58497-9727-4601-b6eb-264c478997c3@linaro.org/
 
--- 
-2.43.0
+Since this is blocking the patches for dispcc and dts for X1E80100, I
+thought I'd just drop the clock as required from DT point of view.
+But yeah, you're right, it breaks bindings ABI and that's wrong.
 
+> 
+> The correct solution here is to register the AHB clock with GCC and
+> pm_clk_add() it from dispcc's .probe (and enable runtime PM on dispcc
+> if it's already not the case). Then the AHB clock will be gated when
+> no display hardware (= no dispcc consumer) is in use.
+
+I agree.
+
+> 
+> 8[56]50 are in a good position for this, as they already have the
+> required DTS reference. Unfortunately, I still haven't fully dug
+> into this for platforms without one, but that's on me.
+
+Since I need to do this for the X1E80100, I'll probably do it for the
+other two as well.
+
+Sorry for the misunderstanding.
+
+> 
+> Konrad
