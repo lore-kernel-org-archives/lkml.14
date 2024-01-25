@@ -1,147 +1,84 @@
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4361B6E2C9;
-	Thu, 25 Jan 2024 14:50:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09B346EB58
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 14:50:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706194209; cv=none; b=MuC8fZn+9BSKARWZSFeJOLYN3hTD6+It8CzOWOBEThoiPe4Cl7dKSrCrqRAFH9GOgyIszeMtyIP+xFBHVPKYKlSqDfkWKmwlEw8/l5U7KM6HXUkN1HMKH1+b0Ue13J0IBGaAMbgl4sOqWoasy0mIGW2OKZvUFHBHT33jMxfzo88=
+	t=1706194211; cv=none; b=RgDrwH3cl4NHNzsFYcb8GsBykIfA0Fhu8+bRddX/lwzbK1BwR+d1EcyvFxWaJCKZ/a843WnZr8tZEGQtMkkBAmOIhWSL2ddmwcZk17q4ubMwNc9FXkXk6jEFNdtOKoVymYh0OY5e/aB0krn+M/CHvxWrNZABrdD+LViCW6dtsaA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706194209; c=relaxed/simple;
-	bh=ACVtmX3llcZ3tfvcSAXupWV1km9UBIPngejcwrfKSZw=;
-	h=Mime-Version:Content-Type:Date:Message-Id:From:Subject:Cc:To:
-	 References:In-Reply-To; b=F38cE/aH6we6VGVzyxxuIgTb01MDsSBM+kp1Nvsw5LudtNDwBRsopV4WBWv+Fu5RgRoF6z5CyXgGIrHRlqIvotOXgt/44sdkFs+jLrQQOfBnu5tIQCY/NvvXAm35b8s6O8M2ctXlGwDEyRWwuKckUw2gICCXQlQelEGXhIsmMxE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=U5Hu1h05; arc=none smtp.client-ip=217.70.183.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1706194211; c=relaxed/simple;
+	bh=vMiyI/wRBdkFwRPV4E9Wuo5tN9uCzX1dsDL3Ei771pA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pXaBV8o/Qea7Xxg1KQ7q2zXTzX9NjZNM0ye33esiHe/VOM3q10PJMvT0Wddtms3lwaq/t64jK8XM5r1jXZ/9OxNLavxcFF4XY9S7/7YgoGpsaamecrLzdEn55l5cGlQbv6DmvN2nl3u/s95sMNULL3l1CI2IFADob8JEj04+CV0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QvSn8rT8; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="U5Hu1h05"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 2AD8FC0012;
-	Thu, 25 Jan 2024 14:49:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1706194197;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ogOpwZQkYRG5dXU2wj0R+7adxXD9kVYWvL6LdD2YosI=;
-	b=U5Hu1h05YgVVy1e9XMnsulE1q6eJD310wXJhpRMNMwlLSol4EJtmHk20pcaA/6GXAy+cns
-	Ih+ju0KTLmRTBmbN/+GLZTEOThbUoBnz8FPEou7lEZWxSQ2WOBWO0ZN9hW6o9HwvxQ/S+H
-	lQ2hmT7xQRD+EyLadkeDKfs7XTlxpyRNFu+wdoez24nABWRm2QJxwjXncD64DBssybAfog
-	pDfudljBPu+vedfEYfsVkf1lvLfDWOIx+IVdPh6CunfyLZ57xp7wkOrvufRaEMCCg1FGjt
-	x/+tCF7sWN3l7+y6c0kQBANgFaVwAEPGat1sWGjelxiC5snpNzZ/+EhbM4IS3g==
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QvSn8rT8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706194210; x=1737730210;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=vMiyI/wRBdkFwRPV4E9Wuo5tN9uCzX1dsDL3Ei771pA=;
+  b=QvSn8rT8DHn632NHC+esWyMADAAcidMLei1IuahJjD3F5dT2HNvhbigD
+   oTTTl7eXmnNzhncT2ajjHspMX7kIZ9Kf24CoFv2cXBrWP8D2hAA+bG0UI
+   suVkU/9G1BbmsDX43Uum6BRKUPRP1pORCucEB5hNujPVGAo10LRILC1TV
+   E/ctTKJh9wiC9jiQvM8KOPGilht0nL+hTne5k8DXbHWeouu+zXy2cpt49
+   oucf9fa18+S7ETOxHWwQgcMBElzY7rVvwXV3oafhgonnpSIkRd/YzITPt
+   rJrKkQlNf1X3QIYlvBYL0DY6dskyxY8l0B+zpI1mVIm6JWUjTYVMl26Ak
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="2049593"
+X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
+   d="scan'208";a="2049593"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2024 06:50:09 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
+   d="scan'208";a="2380058"
+Received: from tassilo.jf.intel.com (HELO tassilo) ([10.54.38.190])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2024 06:50:08 -0800
+Date: Thu, 25 Jan 2024 06:50:07 -0800
+From: Andi Kleen <ak@linux.intel.com>
+To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
+	Kai Huang <kai.huang@intel.com>,
+	Sean Christopherson <seanjc@google.com>
+Subject: Re: [PATCHv3, RESEND] x86/trampoline: Bypass compat mode in
+ trampoline_start64() if not needed
+Message-ID: <ZbJ1H77MtNkko02P@tassilo>
+References: <20240124131510.496803-1-kirill.shutemov@linux.intel.com>
+ <ZbIwfp-jOOlPNb1z@tassilo>
+ <wo4wcvuhvqsqissocu7nz2urg5yt7mx65s5dxkjxqimgnxv3ax@qsa3lqlfsaxi>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 25 Jan 2024 15:49:55 +0100
-Message-Id: <CYNVD4U0M5OS.LQ2MAKOL0LAP@bootlin.com>
-From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
-Subject: Re: [PATCH v3 04/17] dt-bindings: soc: mobileye: add EyeQ5 OLB
- system controller
-Cc: "Gregory CLEMENT" <gregory.clement@bootlin.com>, "Michael Turquette"
- <mturquette@baylibre.com>, "Stephen Boyd" <sboyd@kernel.org>, "Krzysztof
- Kozlowski" <krzysztof.kozlowski+dt@linaro.org>, "Conor Dooley"
- <conor+dt@kernel.org>, "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>,
- "Linus Walleij" <linus.walleij@linaro.org>,
- =?utf-8?q?Rafa=C5=82_Mi=C5=82ecki?= <rafal@milecki.pl>, "Philipp Zabel"
- <p.zabel@pengutronix.de>, "Vladimir Kondratiev"
- <vladimir.kondratiev@mobileye.com>, <linux-mips@vger.kernel.org>,
- <linux-clk@vger.kernel.org>, <devicetree@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, "Thomas Petazzoni"
- <thomas.petazzoni@bootlin.com>, "Tawfik Bayouk"
- <tawfik.bayouk@mobileye.com>, <linux-gpio@vger.kernel.org>
-To: "Andrew Davis" <afd@ti.com>, "Krzysztof Kozlowski"
- <krzysztof.kozlowski@linaro.org>, "Rob Herring" <robh@kernel.org>
-X-Mailer: aerc 0.15.2
-References: <20240123-mbly-clk-v3-0-392b010b8281@bootlin.com>
- <20240123-mbly-clk-v3-4-392b010b8281@bootlin.com>
- <20240124151405.GA930997-robh@kernel.org>
- <dd7e723d-3c4c-4edf-afc2-51db9a074efa@linaro.org>
- <CYNQHXOZ73YR.3QODFI2X08KC6@bootlin.com>
- <9a5f017c-530c-482b-9cbf-a07281e92589@ti.com>
-In-Reply-To: <9a5f017c-530c-482b-9cbf-a07281e92589@ti.com>
-X-GND-Sasl: theo.lebrun@bootlin.com
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <wo4wcvuhvqsqissocu7nz2urg5yt7mx65s5dxkjxqimgnxv3ax@qsa3lqlfsaxi>
 
-Hello,
+> I think it is cleaner to switch to IRET here. Does this work for you?
+> 
+> diff --git a/arch/x86/realmode/rm/trampoline_64.S b/arch/x86/realmode/rm/trampoline_64.S
+> index 608f108cba7d..14d9c7daf90f 100644
+> --- a/arch/x86/realmode/rm/trampoline_64.S
+> +++ b/arch/x86/realmode/rm/trampoline_64.S
+> @@ -243,7 +243,9 @@ SYM_CODE_START(trampoline_start64)
+>  	movl	$pa_trampoline_pgd, %eax
+>  	movq	%rax, %cr3
+>  
+> -	jmpq	*tr_start(%rip)
+> +	pushq	$__KERNEL_CS
+> +	pushq	tr_start(%rip)
+> +	lretq
 
-On Thu Jan 25, 2024 at 3:33 PM CET, Andrew Davis wrote:
-> On 1/25/24 5:01 AM, Th=C3=A9o Lebrun wrote:
-> > Hello,
-> >=20
-> > On Thu Jan 25, 2024 at 8:51 AM CET, Krzysztof Kozlowski wrote:
-> >> On 24/01/2024 16:14, Rob Herring wrote:
-> >>>> +
-> >>>> +      pinctrl-b {
-> >>>> +        compatible =3D "mobileye,eyeq5-b-pinctrl";
-> >>>> +        #pinctrl-cells =3D <1>;
-> >>>> +      };
-> >>>> +    };
-> >>>
-> >>> This can all be simplified to:
-> >>>
-> >>> system-controller@e00000 {
-> >>>      compatible =3D "mobileye,eyeq5-olb", "syscon";
-> >>>      reg =3D <0xe00000 0x400>;
-> >>>      #reset-cells =3D <2>;
-> >>>      #clock-cells =3D <1>;
-> >>>      clocks =3D <&xtal>;
-> >>>      clock-names =3D "ref";
-> >>>
-> >>>      pins { ... };
-> >>> };
-> >>>
-> >>> There is no need for sub nodes unless you have reusable blocks or eac=
-h
-> >>> block has its own resources in DT.
-> >>
-> >> Yes, however I believe there should be resources here: each subnode
-> >> should get its address space. This is a bit tied to implementation,
-> >> which currently assumes "everyone can fiddle with everything" in this =
-block.
-> >>
-> >> Theo, can you draw memory map?
-> >=20
-> > It would be a mess. I've counted things up. The first 147 registers are
-> > used in this 0x400 block. There are 31 individual blocks, with 7
-> > registers unused (holes to align next block).
-> >=20
-> > Functions are reset, clocks, LBIST, MBIST, DDR control, GPIO,
-> > accelerator control, CPU entrypoint, PDTrace, IRQs, chip info & ID
-> > stuff, control registers for PCIe / eMMC / Eth / SGMII / DMA / etc.
-> >=20
-> > Some will never get used from Linux, others might. Maybe a moderate
-> > approach would be to create ressources for major blocks and make it
-> > evolve organically, without imposing that all uses lead to a new
-> > ressource creation.
-> >=20
->
-> That is usually how nodes are added to DT. If you modeled this
-> system-controller space as a "simple-bus" instead of a "syscon"
-> device, you could add nodes as you implement them. Rather than
-> all at once as you have to by treating this space as one large
-> blob device.
+Looks good. Thanks.
 
-I see where you are coming from, but in our case modeling our DT node as
-a simple-bus would be lying about the hardware behind. There is no such
-underlying bus. Let's try to keep the devicetree an abstraction
-describing the hardware.
-
-Also, we are having conflicts because multiple such child nodes are
-being added at the same time as the base node. Once this initial series
-is out (meaning dt-bindings for the OLB will exist) we'll be able to
-add new nodes or ressources on a whim.
-
-Have you got an opinion on the approach described in this email?
-https://lore.kernel.org/lkml/CYNRCGYA1PJ2.FYENLB4SRJWH@bootlin.com/
-
-Thanks,
-
---
-Th=C3=A9o Lebrun, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+-Andi
