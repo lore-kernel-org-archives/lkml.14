@@ -1,77 +1,109 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD8606E2D3;
-	Thu, 25 Jan 2024 16:47:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9261A1386AD;
+	Thu, 25 Jan 2024 16:47:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706201242; cv=none; b=nhvd/bouGlYicf3HBVzmCjpQiO4Rj9nVepg7HlxkQ5koglpTtb8GhV3nUhTCq7f3ntBLSUp53O0YS3D5jm+SA9pxZLPtkeTUxgTjRrIO24OBWDAXDzReyJJblbXlbIPOy4N34If55uA6Jkqa+H9F+Ow2dXOptNJ0+oqjYs4CuCo=
+	t=1706201246; cv=none; b=IDcHIjquQokO/eDeCz7DXVugTFIu85/GO6ntBcNg8Smj9V/WjmLwKpY/HSrouh7TC8EpIgR9gnKgP+gsYgNUl3aR97QbbNTSN6vL66YCiiV0/Nxttx4P0mrBJG9kGMO6tv4Dg6j9ivJm9yJ2mp8+ZeZbyjyg9SQBKlq2lX9kHmU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706201242; c=relaxed/simple;
-	bh=NFemxOI2cc8k2DxiN/A8WFDYbdWSFXDkfp8bKArUP94=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uQJvLsQmNnPSWqSIyNhAu0mlP4za7f9GKLg3IDTB30xM1A+RFDA4g3j+MxBRrYSvZNGL0PG7E6r7vmP/Rz7BryTixZseVr6JMAbjXC+f6CFRfUmwbFAZE8t/nsViX6uFyj89SeNsrTgVgynxhlGwEAmqYLiC3JUWrEQcskUaM6U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UOKGvZic; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706201246; c=relaxed/simple;
+	bh=YftANLU4vv1DKrmQ7rhoS3AB+ju9sPZ5HuQVKVso5tk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ez/HmvCcj20xBJrJGBtNq4z3ZmlUJLmzQnA/oM8HcYEc3RYtvUPvNLHks9SGjZAz8w9dNNojXHLmU0SIT5RurGsvyxnJtg3vhC2PP1aXjL1nl1+gIZABV+VXV83TwXuCFTgMaj1JRNShsUNFaphfv1hJxASk4lstKtI1IZA5d7k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s6rmiGnG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UOKGvZic"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB92DC433F1;
-	Thu, 25 Jan 2024 16:47:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s6rmiGnG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C0E2C41612;
+	Thu, 25 Jan 2024 16:47:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706201242;
-	bh=NFemxOI2cc8k2DxiN/A8WFDYbdWSFXDkfp8bKArUP94=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=UOKGvZic0F9wlxfEiQZx1MvA6Z2R0ChX9vrS41daTyv4CVEhlyBV2iZ7ulBaVmB5h
-	 t4+zmRul6ElXJa64qIgeal6xVShEY/9GwuJtmGLn7eXV81r1jKOP+pJ0IbzzhXOAc0
-	 E/jsqgjdwaDctR1yGrxELjQNmwf4fEIlZV1tmBd9EQWOMs7tDtcaX3HigPZY/s0REx
-	 wzVQvcHZrtaphHhfnStKa/CJRen1eVBs73FOVu2W8IQg8JwSBV18GLSkFXu/njGwge
-	 H/c0IYMQhBjUoRxCRtocqx6ZUc58FRb1HXnTUONyN0ccUl1ICPJ3RQsumgwBWZwwxV
-	 1GbkpZ4XmUsAA==
-From: Miguel Ojeda <ojeda@kernel.org>
-To: gregkh@linuxfoundation.org
-Cc: akpm@linux-foundation.org,
-	allen.lkml@gmail.com,
-	conor@kernel.org,
-	f.fainelli@gmail.com,
-	jonathanh@nvidia.com,
-	linux-kernel@vger.kernel.org,
-	linux@roeck-us.net,
-	lkft-triage@lists.linaro.org,
-	patches@kernelci.org,
-	patches@lists.linux.dev,
-	pavel@denx.de,
-	rwarsow@gmx.de,
-	shuah@kernel.org,
-	srw@sladewatkins.net,
-	stable@vger.kernel.org,
-	sudipm.mukherjee@gmail.com,
-	torvalds@linux-foundation.org,
-	Miguel Ojeda <ojeda@kernel.org>
-Subject: Re: [PATCH 6.1 000/414] 6.1.75-rc2 review
-Date: Thu, 25 Jan 2024 17:46:32 +0100
-Message-ID: <20240125164632.211911-1-ojeda@kernel.org>
-In-Reply-To: <20240123174510.372863442@linuxfoundation.org>
-References: <20240123174510.372863442@linuxfoundation.org>
+	s=k20201202; t=1706201246;
+	bh=YftANLU4vv1DKrmQ7rhoS3AB+ju9sPZ5HuQVKVso5tk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=s6rmiGnGS3StI/AkZtPr7HFJDisYiAw9Es1vYshMTNs8s4kf3gomFnnXQ3nSe//yE
+	 RPNgoSfEXQ+UTTvwIbRAR0afzOQLAWiJ5F7IGkQH0Rv/lKVFWnNbYJrQ+Drm35xfjW
+	 RjIoR/G0z3fpYqNmxKNdjSLBnV0+2Mo0lLGQxrOLdifjO1v5NLPgEpeDoMZ/3IMuFC
+	 WnU5u+GMRTgLReWdPjFyVO/Ri/dml7/68I+Y8qVLP+PcVyGfaOIB5NPpgv65eY5gIu
+	 oXN9+Ulnp+z1A0HXllKlrwjGwi2mYH9V+nZAw2tFVZc6lnuMqbzJzn1ouG6WLR2iMb
+	 9QOBBhaOKYvOw==
+Date: Thu, 25 Jan 2024 17:47:19 +0100
+From: Christian Brauner <brauner@kernel.org>
+To: Jens Axboe <axboe@kernel.dk>
+Cc: syzbot <syzbot+fb337a5ea8454f5f1e3f@syzkaller.appspotmail.com>, 
+	hdanton@sina.com, jack@suse.cz, jfs-discussion@lists.sourceforge.net, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, shaggy@kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [jfs?] INFO: task hung in path_mount (2)
+Message-ID: <20240125-addition-audienz-c955ab3c8435@brauner>
+References: <00000000000083513f060340d472@google.com>
+ <000000000000e5e71a060fc3e747@google.com>
+ <20240125-legten-zugleich-21a988d80b45@brauner>
+ <11868eb4-0528-4298-b8bc-2621fd1aac83@kernel.dk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <11868eb4-0528-4298-b8bc-2621fd1aac83@kernel.dk>
 
-On Tue, 23 Jan 2024 at 23:17, Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 6.1.75 release.
-> There are 414 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Thu, 25 Jan 2024 17:44:16 +0000.
-> Anything received after that time might be too late.
+On Thu, Jan 25, 2024 at 09:11:34AM -0700, Jens Axboe wrote:
+> On Thu, Jan 25, 2024 at 9:08?AM Christian Brauner <brauner@kernel.org> wrote:
+> >
+> > On Thu, Jan 25, 2024 at 03:59:03AM -0800, syzbot wrote:
+> > > syzbot suspects this issue was fixed by commit:
+> > >
+> > > commit 6f861765464f43a71462d52026fbddfc858239a5
+> > > Author: Jan Kara <jack@suse.cz>
+> > > Date:   Wed Nov 1 17:43:10 2023 +0000
+> > >
+> > >     fs: Block writes to mounted block devices
+> > >
+> > > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=13175a53e80000
+> > > start commit:   2ccdd1b13c59 Linux 6.5-rc6
+> > > git tree:       upstream
+> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=9c37cc0e4fcc5f8d
+> > > dashboard link: https://syzkaller.appspot.com/bug?extid=fb337a5ea8454f5f1e3f
+> > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17ba5d53a80000
+> > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14265373a80000
+> > >
+> > > If the result looks correct, please mark the issue as fixed by replying with:
+> >
+> > #syz fix: fs: Block writes to mounted block devices
+> 
+> Like Dave replied a few days ago, I'm kind of skeptical on all of these
+> bugs being closed by this change. I'm guessing that they are all
+> resolved now because a) the block writes while mounted option was set to
+> Y, and b) the actual bug is just masked by that.
+> 
+> Maybe this is fine, but it does seem a bit... sketchy? The bugs aren't
+> really fixed, and what happens if someone doesn't turn on that option?
+> If it's required, perhaps it should not be an option at all? Though
+> that'd seem to be likely to break some funky use cases, whether they are
+> valid or not.
 
-Built and QEMU-booted for Rust:
+We have no way of actually testing or verifying this stuff and a lot of
+these have been around for a long time. For example, this report here
+has a C reproducer but following the actual dashboard link that
+reproducer is striked-through which supposedly means that it isn't valid
+or reliable. And no other reproducer ever showed up.
 
-Tested-by: Miguel Ojeda <ojeda@kernel.org>
+As far as I can see we should just close reports such as. If this is a
+real bug that is separate from the ability to mount to writed block
+devices then one should hope that syzbot finds another reproducer that
+let's us really analyze the bug?
 
-Cheers,
-Miguel
+A separate issue is that syzbot keeps suggesting as all of these being
+closable because of this. So how serious can we take this and how much
+time can/should we spend given that we got ~20 or more of these mails in
+the last two weeks or so.
+
+I have no better answers than this tbh. And fwiw, apart from this one I
+haven't closed a single bug based on this.
+
+And yes, ideally the ability to write to mounted block devices should be
+turned off. But we'll have to let it trickle into the individual
+distributions first and make remaining userspace tools that rely on this
+move to alternate apis before we can make any serious effort.
