@@ -1,89 +1,179 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D17E50A71;
-	Thu, 25 Jan 2024 11:36:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C404A5731D;
+	Thu, 25 Jan 2024 11:36:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706182598; cv=none; b=R0cjBgUQNBxEkggRrJ38PK0QYR9FBYXNunBi0ZZUoJBZhLKWvrGIkOSaGMeZQw+qZs7BxpxnXqGXKqbV9x4JxrbIUWrUIub1/DO8prnwz3+bYii3Hob8YaWrIQqULJv3UY1xpZRJmM7C96olMJ6Gofyuh17vtJw6Eu104e3ghwk=
+	t=1706182614; cv=none; b=uL+vNXcJYbPyx26PUxc/enJgqIXNqXBv9DVyhcK3gIxghRVbnz8q9ZHdVbpA0a/9pGbcZGrnQr3OK7mp0sjUpqihYgF5qrDW/UUITydS2KTXAw6l374IlVnTwSFHrGbfbMW2kH/OZie9RYSZ+e5XkDrj7NVTJE/E1I+W4XmywmY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706182598; c=relaxed/simple;
-	bh=9Pp0MChtHiGPBguFlnpKDdRirlMpS329wHoa6Ctq9H8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=JrziSiA4CdI6ai/YKVGAJ9HrJkDUz2gHumO+dHZtHGhVoImgUqFwFHQmq3qmZCbolKtSTVE1GE9/riOtWYwBBdNsPKOIfQgKCwEgSYJi0tYZTBApLdQ2pQx9/KF6M1YflCk9Q/7c8FTuO6fiowxAByQyCFVFjAaOZ/XYWMckBXY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.5.213])
-	by gateway (Coremail) with SMTP id _____8Ax++i8R7Jl5pcFAA--.1232S3;
-	Thu, 25 Jan 2024 19:36:28 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.5.213])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxXs23R7Jl9W0ZAA--.41879S3;
-	Thu, 25 Jan 2024 19:36:27 +0800 (CST)
-From: Bibo Mao <maobibo@loongson.cn>
-To: Huacai Chen <chenhuacai@kernel.org>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-mips@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Sergey Shtylyov <s.shtylyov@omp.ru>,
-	lvjianmin@loongson.cn,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: [PATCH v4 1/3] irqchip/loongson-eiointc: Typo fix in function eiointc_domain_alloc
-Date: Thu, 25 Jan 2024 19:36:21 +0800
-Message-Id: <20240125113623.2043061-2-maobibo@loongson.cn>
-X-Mailer: git-send-email 2.39.3
-In-Reply-To: <20240125113623.2043061-1-maobibo@loongson.cn>
-References: <20240125113623.2043061-1-maobibo@loongson.cn>
+	s=arc-20240116; t=1706182614; c=relaxed/simple;
+	bh=9OP2AYCXD7CTzXDDBNhR6z28ox5cvhSWUThScGzrt+w=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bog0JRlwdCPUSVbuAXDdv39qB2Zu0Kc7gudh39RlLYC3h04vYNGGH7Ft8bAPobjNStoMmtMYWlkAw5EfhSEioESQCjyjjkp/kg+xun7iqFtdH/vcy8ojGsdwad/nRr06DhYNxAe0H/oFQDb7FMLoK1lXW2PY+pUozWFyvDOvI3E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PSqj+YfC; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PSqj+YfC"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-40ea5653f6bso68137195e9.3;
+        Thu, 25 Jan 2024 03:36:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1706182610; x=1706787410; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=DYXWEmKQIsLe7nv5ynnIoPrTMyRKUKUjaFaattLgh4Y=;
+        b=PSqj+YfC4dKUf3TITfNWqC9Y/OljlkLJ+hVYL0FhM/Dcot19NQxX5Bl20+5m+CbCZr
+         pkehB2n3JmKF1Orw3gmWgclhwkbtAP32k5jqNSZZR6LQzKHO+RzG2oij1r4OI9pilDge
+         3/A+HSO85uK/vA5IFoLokw6mDrRwoRZx8yeRheNPugJ2i9cKQ74vxLMQP1kyK7wnk3Zi
+         Aw3l1Ra0SMuAm09HX7g8FMpG57Wz4vuzU9g7MMQJ+tnajXF6loO0k/S72c3DwJSHRYxh
+         geu3YQVrUTWQ5ACxTXHsnpFhEORbR/uU+jkDboj1ZHfDf/HrSLMsla3QJXxatpEyoCYY
+         iBqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706182610; x=1706787410;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DYXWEmKQIsLe7nv5ynnIoPrTMyRKUKUjaFaattLgh4Y=;
+        b=Qqyfdg3L0749d8eo4FDiphObPWzp4qLABYAKRu25lmiTfi4N+A+z+HJXmSgQr11n5C
+         82Opv8eDtwOP7wCwXKtt6Y5XP3G9LLw1oqTxmNlwic7gA7uC2InwLJuaCcVn5XV1WCoD
+         X+5HYW4z4YYlik5/EVvof2bGk/f0kFPrYxzxKZ9TSHEdGtTALzSgt0lo4BEANaTgor+O
+         HNlH+Anpr0LHNRw17cPIVQrKuXkdnLuNacHFQOJyx22wVUY7O0pvqay/Vy+7yBHzrnBV
+         HF/h2sMX65LFgyBo8WToVLvO+Y9KKs2eevvz1jtP2L+ToaWxAlA/r2m48+gquvrjDbRG
+         z9Gw==
+X-Gm-Message-State: AOJu0YxEpIzX1bWFJU6caXg8FfRuo/Nw8R79LSsdyOSYk1ZNhh0DX+0F
+	vjHdFQgn38AwKs+hyCHRTo3Y84hVvAj2BPX1pLtIUiofILhmFb+6
+X-Google-Smtp-Source: AGHT+IH+/n86D85sKsgvGlpJ6zoWcRtr5Zg1ujyeXp+NnFo+8QR08EJvB11lYtfkWyctEvjXABh0bg==
+X-Received: by 2002:a05:600c:6a90:b0:40e:5aa4:44f8 with SMTP id jl16-20020a05600c6a9000b0040e5aa444f8mr405862wmb.216.1706182609563;
+        Thu, 25 Jan 2024 03:36:49 -0800 (PST)
+Received: from Ansuel-xps. (93-34-89-13.ip49.fastwebnet.it. [93.34.89.13])
+        by smtp.gmail.com with ESMTPSA id bl1-20020adfe241000000b0033935779a23sm10153265wrb.89.2024.01.25.03.36.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 Jan 2024 03:36:49 -0800 (PST)
+Message-ID: <65b247d1.df0a0220.12334.efd9@mx.google.com>
+X-Google-Original-Message-ID: <ZbJHzSCj8oGm-OJ3@Ansuel-xps.>
+Date: Thu, 25 Jan 2024 12:36:45 +0100
+From: Christian Marangi <ansuelsmth@gmail.com>
+To: Jie Luo <quic_luoj@quicinc.com>
+Cc: Andy Gross <agross@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Robert Marko <robert.marko@sartura.hr>,
+	linux-arm-msm@vger.kernel.org, netdev@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Sergey Ryazanov <ryazanov.s.a@gmail.com>
+Subject: Re: [net-next PATCH 0/3] net: mdio-ipq4019: fix wrong default MDC
+ rate
+References: <20240124213640.7582-1-ansuelsmth@gmail.com>
+ <53445feb-a02c-4859-a993-ccf957208115@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8BxXs23R7Jl9W0ZAA--.41879S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj9xXoWrKF47tr1DWFWfGFWUurW5CFX_yoWDurX_ur
-	12ywnrGryYqr17X3Z3Wr1avF9Fg3s8WFnY9F4j9F9xC34Utw18CrWavwnxJFs7Kr4rAFn3
-	CrZ8JrySyryIyosvyTuYvTs0mTUanT9S1TB71UUUUjUqnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUb3AYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4UJVWxJr1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
-	xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q
-	6rW5McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
-	vIr41l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_
-	Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1V
-	AY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAI
-	cVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42
-	IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIev
-	Ja73UjIFyTuYvjxU4miiDUUUU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <53445feb-a02c-4859-a993-ccf957208115@quicinc.com>
 
-There is small typo in function eiointc_domain_alloc, and there is no
-definition about struct eiointc, instead it should be struct eiointc_priv.
-It is strange that there is no warning with gcc compiler. This patch
-fixes the typo issue.
+On Thu, Jan 25, 2024 at 01:57:20PM +0800, Jie Luo wrote:
+> 
+> 
+> On 1/25/2024 5:36 AM, Christian Marangi wrote:
+> > This was a long journey to arrive and discover this problem.
+> > 
+> > To not waste too much char, there is a race problem with PHY and driver
+> > probe. This was observed with Aquantia PHY firmware loading.
+> > 
+> > With some hacks the race problem was workarounded but an interesting
+> > thing was notice. It took more than a minute for the firmware to load
+> > via MDIO.
+> > 
+> > This was strange as the same operation was done by UBoot in at max 5
+> > second and the same data was loaded.
+> > 
+> > A similar problem was observed on a mtk board that also had an
+> > Aquantia PHY where the load was very slow. It was notice that the cause
+> > was the MDIO bus running at a very low speed and the firmware
+> > was missing a property (present in mtk sdk) that set the right frequency
+> > to the MDIO bus.
+> > 
+> > It was fun to find that THE VERY SAME PROBLEM is present on IPQ in a
+> > different form. The MDIO apply internally a division to the feed clock
+> > resulting in the bus running at 390KHz instead of 6.25Mhz.
+> > 
+> > Searching around the web for some documentation and some include and
+> > analyzing the uboot codeflow resulted in the divider being set wrongly
+> > at /256 instead of /16 as the value was actually never set.
+> > Applying the value restore the original load time for the Aquantia PHY.
+> > 
+> > This series mainly handle this by adding support for the "clock-frequency"
+> > property.
+> > 
+> > Christian Marangi (3):
+> >    dt-bindings: net: ipq4019-mdio: document now supported clock-frequency
+> >    net: mdio: ipq4019: add support for clock-frequency property
+> >    arm64: dts: qcom: ipq8074: add clock-frequency to MDIO node
+> > 
+> >   .../bindings/net/qcom,ipq4019-mdio.yaml       | 10 +++
+> >   arch/arm64/boot/dts/qcom/ipq8074.dtsi         |  2 +
+> >   drivers/net/mdio/mdio-ipq4019.c               | 68 +++++++++++++++++--
+> >   3 files changed, 75 insertions(+), 5 deletions(-)
+> > 
+> 
+> Hi Christian,
+> Just a gentle reminder.
+>
 
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-Acked-by: Huacai Chen <chenhuacai@loongson.cn>
----
- drivers/irqchip/irq-loongson-eiointc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Hi Jie,
+hope you can understand my reason.
 
-diff --git a/drivers/irqchip/irq-loongson-eiointc.c b/drivers/irqchip/irq-loongson-eiointc.c
-index 1623cd779175..b3736bdd4b9f 100644
---- a/drivers/irqchip/irq-loongson-eiointc.c
-+++ b/drivers/irqchip/irq-loongson-eiointc.c
-@@ -241,7 +241,7 @@ static int eiointc_domain_alloc(struct irq_domain *domain, unsigned int virq,
- 	int ret;
- 	unsigned int i, type;
- 	unsigned long hwirq = 0;
--	struct eiointc *priv = domain->host_data;
-+	struct eiointc_priv *priv = domain->host_data;
- 
- 	ret = irq_domain_translate_onecell(domain, arg, &hwirq, &type);
- 	if (ret)
+> The MDIO frequency config is already added by the following patch series.
+> https://lore.kernel.org/netdev/28c8b31c-8dcb-4a19-9084-22c77a74b9a1@linaro.org/T/#m840cb8d269dca133c3ad3da3d112c63382ec2058
+> 
+
+Wasn't aware of this, as I said in the cover letter this all comes by a
+problem we notice in the Aquantia firmware load that was slow as hell
+and we just notice the misconfiguration of the divisor.
+
+The feature in this series is really a simple one and almost ready (I
+already have v2 ready for the request from Andrew to follow 802.3 spec)
+and we really need it ASAP as we are trying to move our ipq807x targets to
+upstream driver and finally start using the integrated firmware loading
+for Aquantia PHY.
+
+Also I can see some fundamental difference between the 2 patch, mainly
+in how the value is applied and setting a sane divisor by default
+instead of using 0xff. (probably Andrew would have pointed out the same
+thing in some later revision to your series)
+
+Looking at the linked series I notice there are still some thing to
+polish and to clarify with DT and driver and I think it's only
+beneficial if this feature is worked separately as it's not only needed
+for ipq50xx but affects every user of this (ipq40xx, ipq807x, ipq60xx)
+and it would be a pitty to wait the entire ipq50xx series to be handled
+just to fix a long lasting misconfiguration on various SoC family.
+
+Hope you can understand these reasons, it's all for the sake of making
+this driver more mature quicker.
+
+> This MDIO patch series will be updated to just keep the MDIO frequency
+> patch and DT document for this MDIO frequency property added.
+> 
+> For CMN PLL config will be moved to the CMN PLL clock driver and the UNIPHY
+> clock config will be moved the uniphy driver as suggested by
+> Sergey's suggestions.
+> 
+> Thanks.
+> 
+> 
+
 -- 
-2.39.3
-
+	Ansuel
