@@ -1,80 +1,97 @@
-Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BDD31CA89;
-	Thu, 25 Jan 2024 22:00:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D641613A272
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 22:04:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706220017; cv=none; b=ZZo/aETtuoE3pOMbhFpdyMVhEK/x6+M3ZTTkFxU0TQLLG2u5nFp2VFrHdeeio5wUa9+UnqFTSK5vqXmeUNFaW/j0FxjOOsXz834Fv9hmpKWGAv+C/3rU7QhuMUNu8/fdYEp2L2/NDIfsozXbf+mcqYRZgGsWcNCNrn1yJxKZvuY=
+	t=1706220284; cv=none; b=R66pQTqKdN5ePqs+P4Vo+mBfavNoF4u4+1tSXSzJNXTZenXWPba9FSweOmcBzbL4McZCA0+i/6I4+L7Q0WotjTn6R4cpx40qZGQq2qR2iEEUqP757OPaHlTiftGwHTixjoj5B56D/oIN78ad8bvFTuVMHoc58MZbZJDAqdDQET0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706220017; c=relaxed/simple;
-	bh=RItmqS9jqdMPP9X0BIiJ7ScnCDLQTWAEQYeO6/47XXI=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=B6xeIZFJIE9U9Y6bnkMfePrqfFllHCuyCwFtiw90SHV3VRo+oz2y5g4xxNpA9p/zFm5ra/N9Ckh9vPxbPaQlLTresEkksMPdbpe7mf15SCFGkonJc5mRUzOF79mNQ1GULBywIeY7eVPw0CQvuhnpA0WRmiESE7QP4QGIiZQ0vOE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=perches.com; spf=pass smtp.mailfrom=perches.com; arc=none smtp.client-ip=216.40.44.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=perches.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=perches.com
-Received: from omf14.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay06.hostedemail.com (Postfix) with ESMTP id 311EAA1AEA;
-	Thu, 25 Jan 2024 21:54:18 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf14.hostedemail.com (Postfix) with ESMTPA id 9578F2D;
-	Thu, 25 Jan 2024 21:54:06 +0000 (UTC)
-Message-ID: <443a7a529f6987eb53b8b399c0cf9375e05e993c.camel@perches.com>
-Subject: Re: [HID Patchsets for Samsung driver v4 2/6] HID: Samsung : Fix
- the checkpatch complain. Rewritten code using memcmp where applicable.
-From: Joe Perches <joe@perches.com>
-To: Sandeep C S <sandeep.cs@samsung.com>, Jiri Kosina <jikos@kernel.org>, 
-	Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc: gaudium.lee@samsung.com, ih0923.kim@samsung.com,
- suhyun_.kim@samsung.com,  jitender.s21@samsung.com, junwan.cho@samsung.com,
- linux-input@vger.kernel.org,  linux-kernel@vger.kernel.org
-Date: Thu, 25 Jan 2024 13:54:04 -0800
-In-Reply-To: <20240125043630.4031634-3-sandeep.cs@samsung.com>
-References: <20240125043630.4031634-1-sandeep.cs@samsung.com>
-	 <CGME20240125043702epcas5p33d9ef989dc51276185972d4517ba80fd@epcas5p3.samsung.com>
-	 <20240125043630.4031634-3-sandeep.cs@samsung.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
+	s=arc-20240116; t=1706220284; c=relaxed/simple;
+	bh=F6BdAOpGQ3/dhQX/Njz5YjMdVFa6pj6a+ARiS6t0Kn8=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=TkFTaUZP0274hT6i21jPvsdGz9EsTARuPyNPAIAtGXhcmPCgBhkbtazriiFWLVmZSQTmsJxTSR0CHQrffeRO7j+0wvzhGm1yi638NtyV1qF4WByNn6YzTc6huC91nG1cq57X27g0MY+2TgGiNLVx9VgCvsV2Ms+lNxqQEfMpTwE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=N5QSbJnZ; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N5QSbJnZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1706220281;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ND3gC5edxcaoPgStVxLJXgo22mQ2Z/46B7atIlzRitw=;
+	b=N5QSbJnZo8xJYHusA0Iq719tY4/oczu6Ejzd0Trg1GitA6wcIWmOZbVBExt340zw9DSIT1
+	Ges2Dkhdg88SXdCB2ZV/PVswVm1AAlwU/WqpbF6ElF+W5ZixVnwF/UckyS4m3vvWRipr4t
+	PxWc6ziI4Gz+rq2i51NR+0BAnwDhCpE=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-678-27xKG1s-PhSUfzCTcz0Ing-1; Thu,
+ 25 Jan 2024 17:04:36 -0500
+X-MC-Unique: 27xKG1s-PhSUfzCTcz0Ing-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 104993C13A8C;
+	Thu, 25 Jan 2024 22:04:36 +0000 (UTC)
+Received: from file1-rdu.file-001.prod.rdu2.dc.redhat.com (unknown [10.11.5.21])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id A21CE3C2E;
+	Thu, 25 Jan 2024 22:04:35 +0000 (UTC)
+Received: by file1-rdu.file-001.prod.rdu2.dc.redhat.com (Postfix, from userid 12668)
+	id 88DD030C72AB; Thu, 25 Jan 2024 22:04:35 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by file1-rdu.file-001.prod.rdu2.dc.redhat.com (Postfix) with ESMTP id 844DE3FB50;
+	Thu, 25 Jan 2024 23:04:35 +0100 (CET)
+Date: Thu, 25 Jan 2024 23:04:35 +0100 (CET)
+From: Mikulas Patocka <mpatocka@redhat.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+cc: Tejun Heo <tj@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
+    linux-kernel@vger.kernel.org, dm-devel@lists.linux.dev, 
+    Mike Snitzer <msnitzer@redhat.com>, Ignat Korchagin <ignat@cloudflare.com>, 
+    Damien Le Moal <damien.lemoal@wdc.com>, Hou Tao <houtao1@huawei.com>, 
+    Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>
+Subject: Re: [PATCH] softirq: fix memory corruption when freeing
+ tasklet_struct
+In-Reply-To: <CAHk-=wjDW53w4-YcSmgKC5RruiRLHmJ1sXeYdp_ZgVoBw=5byA@mail.gmail.com>
+Message-ID: <586ca4dd-f191-9ada-1bc3-e5672f17f7c@redhat.com>
+References: <82b964f0-c2c8-a2c6-5b1f-f3145dc2c8e5@redhat.com> <CAHk-=wjDW53w4-YcSmgKC5RruiRLHmJ1sXeYdp_ZgVoBw=5byA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Rspamd-Queue-Id: 9578F2D
-X-Stat-Signature: netg7ytrkhf5yn7g9ss3rqtp6edq4y1x
-X-Rspamd-Server: rspamout01
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-Session-ID: U2FsdGVkX1+/lgHE9tEIP3LCpllBaSnMinnSVYZnflU=
-X-HE-Tag: 1706219646-171183
-X-HE-Meta: U2FsdGVkX19q5nfWT/ncDEf0UGPqNDNT0bD1dD26L+l3U0BVk/FyRVy+8f9eZWqHq5bLV82zlpvR9tuWcE6/ER7oX3p5u99J8rt2u5JESFzHamwHXOJnDSTRwcS3ucnC8NgSxPnHj22qGi49gamdUVu5oXD1Di9q5/fzr8kK5Qsu01Nb3qY6NKjQNQ+g6pq7U61pQk4Tw0XMXPNln3gkICanL/V7CsIzRZcbJ62bhjUbql1GapkB1RBmYiNEh3fW0vX/0NCSTumAXQzOWwxxINQs6B6Teso/3uwuQIzDwauNnMtYjxfljCON+NJ31W3rj1DTFkV5AvPRAdAMHiaDvM4FqwJA+kfKA7QcI6BBP0WrorFc/UPE/p+KWNXaUNU1vaHPZ7OipTbmdNi6FummXm6skyHmOvrZ5MdBowO77hxNzc3b3FTx1TAzt4OiQ1c5
-
-On Thu, 2024-01-25 at 10:06 +0530, Sandeep C S wrote:
-> Resolved warnings found by checkpatch.pl script.
-[]
-> diff --git a/drivers/hid/hid-samsung.c b/drivers/hid/hid-samsung.c
-> @@ -107,17 +99,39 @@ static int samsung_kbd_mouse_input_mapping(struct hi=
-d_device *hdev,
-> =20
->  	switch (usage->hid & HID_USAGE) {
->  	/* report 2 */
-> -	case 0x183: samsung_kbd_mouse_map_key_clear(KEY_MEDIA); break;
-> -	case 0x195: samsung_kbd_mouse_map_key_clear(KEY_EMAIL);	break;
-> -	case 0x196: samsung_kbd_mouse_map_key_clear(KEY_CALC); break;
-> -	case 0x197: samsung_kbd_mouse_map_key_clear(KEY_COMPUTER); break;
-> -	case 0x22b: samsung_kbd_mouse_map_key_clear(KEY_SEARCH); break;
-> -	case 0x22c: samsung_kbd_mouse_map_key_clear(KEY_WWW); break;
-> -	case 0x22d: samsung_kbd_mouse_map_key_clear(KEY_BACK); break;
-> -	case 0x22e: samsung_kbd_mouse_map_key_clear(KEY_FORWARD); break;
-> -	case 0x22f: samsung_kbd_mouse_map_key_clear(KEY_FAVORITES); break;
-> -	case 0x230: samsung_kbd_mouse_map_key_clear(KEY_REFRESH); break;
-> -	case 0x231: samsung_kbd_mouse_map_key_clear(KEY_STOP); break;
+Content-Type: text/plain; charset=US-ASCII
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
 
 
-It's rather smaller code to remove the call duplication and use
-a static const struct and for loop as suggested here:
 
-https://lore.kernel.org/lkml/10aeef4ddd523b85ab34327bf384119d0d4b6567.camel=
-@perches.com/
+On Thu, 25 Jan 2024, Linus Torvalds wrote:
+
+> On Thu, 25 Jan 2024 at 10:30, Mikulas Patocka <mpatocka@redhat.com> wrote:
+> >
+> > There's a problem with the tasklet API - there is no reliable way how to
+> > free a structure that contains tasklet_struct. The problem is that the
+> > function tasklet_action_common calls task_unlock(t) after it called the
+> > callback. If the callback does something that frees tasklet_struct,
+> > task_unlock(t) would write into free memory.
+> 
+> Ugh.
+> 
+> I see what you're doing, but I have to say, I dislike this patch
+> immensely. It feels like a serious misdesign that is then papered over
+> with a hack.
+> 
+> I'd much rather see us trying to move away from tasklets entirely in
+> cases like this. Just say "you cannot do that".
+
+OK. I will delete tasklets from both dm-crypt and dm-verity - it will 
+simplify them quite a bit.
+
+BTW. Do you think that we should get rid of request-based device mapper as 
+well? (that's another thing that looks like code bloat to me)
+
+Mikulas
 
