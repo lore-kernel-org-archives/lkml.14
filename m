@@ -1,56 +1,56 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D99B7762E
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 14:50:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 025B37CF36
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 14:50:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706194226; cv=none; b=ih9H7orGE6NbVf8e612/OaTgShN/QxNYDZJB0ZgyVzHsiLPxKJ3QiN+rLxvHmK0nJP0iBuiIojwaWemNaX+FLU1gGFnjj7N02kO4WD8+E0w/WPImL04b3Owvl6UxbhCr/cSPxR7YvMw0O3IC3W79vGBfifodW5RMjiEn5Y+uySY=
+	t=1706194226; cv=none; b=X7oJ3SIgDSI+InHc1qP8Mvvvm7rLHzftDE8Nc71gNLqh+meK2MPcHZFU5uPhMZFVKFw3cfAmsq0+5hyL1NcfEK+avU9N7MQxhEaZ4zdZzrb2t9yS8IZSaXMGjiU+cqGOrstglWoeEJJPax5hQwSNT/Zph4UUYdD3mpuEavc5RZM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1706194226; c=relaxed/simple;
-	bh=eEybk3Jo0wZ9G9bdwxi2zNuwMUfX4DvNccSPl13enOE=;
+	bh=0hd5os3t/LKdK2NVB2IaIPXKDa42n9CplbFuM7q+HYw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QApSCAJnXeTebajKAxrCSZvZdnEKBgs0SOx/2FNs8EDcUP5bu5wjU7s/Pp7CJuDbVMwtfbZhJWmAA+4grEpFGpzLEP9NkrVCIgsCmE7Kbtxb+82xUfmov3toTcuBDcuYTGsDPkjOnmAYhhxJ2R11qXMVc2Y/PdG1C4bOzBCITpk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=j2xL2+b1; arc=none smtp.client-ip=209.85.128.46
+	 MIME-Version; b=cNN4VrXKn0xoru7l7Aqs49AVaKaOZDiFKrZF9YPSqnLVeCDiJnCnUvH75pp7uBvGCp0NVIaGeTa+ZezzXSkWcuglvVGliSbY+GofijZqIhWju/ogeI/GgctVV31RNNPxikmGiCkhKRQN7bqCUixYDfZtREnr+DTYSyhfy4s4AD0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=GSGQn1W3; arc=none smtp.client-ip=209.85.128.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="j2xL2+b1"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-40eacb6067dso54901695e9.1
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 06:50:21 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GSGQn1W3"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-40ed4690ee4so1792345e9.2
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 06:50:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706194220; x=1706799020; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1706194222; x=1706799022; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=hyD58l2q8nhDuUGflXpNsuJj2JpRaUrHNBwM4NRI1zM=;
-        b=j2xL2+b1fB2fM9Ulhs2CE7knLePucDBIZ3yWSXtG9WfPPttVGDHEL5CfCWYagHi7pr
-         YcDsq7sZc4To2rLl89mqq250uPaCcsfpSENQKPdTqy31SwmBMk2lehwveSOliB8aemJd
-         v3ASjSJOWKMJxqK9QnmgQDnsWkyT15+kA6/eGd2cCQbrVzl6fCLW2u74lSOlgJo47opS
-         Nw+tKAdF+c76rvOGz7ilf+MV21zrgYmzWEV1tYZrupM96EQWUu3HNkj5Y6M1BUf/+Epp
-         h+mhqjdmCLCxaG7SbB3H+kMtM7KA31PZ7JEAVjYkejn+7bspXw5xzKUIa8XAiwpH++Wo
-         /7bA==
+        bh=Uo5/6sMsEJXgYbE8BbPRJoYau3RC+fqPHaLcagZG9d0=;
+        b=GSGQn1W3wzLBRTPAdWO7t0YYBUJGXWZcw9ecHlXEH1kk3Y2qHMDgGCT6emMi+PI6MF
+         DpEzICWo/HaMXR9tCsEMijCl//cwT5lyLXJ33fawGWrGe/ozBvAf8ql3mM29HANAHOs7
+         7gi4G4xIsFpLKfPSrnJwzcbx8vrigRjdAxY2w1Srxc7X4d062ue7AF6YNwVmYVR1qXVs
+         foZ+Q//inmoiMmEfdHs4S5uVPIAdQsOcDBX7D1DyQ3cbgUInrOb5NfRu2JA1I5HtEH1d
+         Xbjx5/YUxdXibWMxCzql7WhnrPbFGhA7xiWsVIi+qEhYXuy0ZB7yJoaoipMj9s2mlQ7h
+         Brkg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706194220; x=1706799020;
+        d=1e100.net; s=20230601; t=1706194222; x=1706799022;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=hyD58l2q8nhDuUGflXpNsuJj2JpRaUrHNBwM4NRI1zM=;
-        b=T7v1xFzLj168mwUx+8B4CBG0Gja2ZttxJVO7ZIo0gkPbQ9lkDDTD9jVOlVwb6nnjJp
-         bqUi1y9jepr0LPLvS08H+/xgRHIAnO00x7pkQrs1GznMkpakWfNHEVjC128hs5ffXY8G
-         TgiRY7qgD97ER6Zh5bEioVBulb/KynEjniLmRvyq6vdXQjX64Euh7Aun/6eYRNag0FiC
-         5ExLTZnjk6laao46b+8ErbE2iEBIkH3752qSbnNq7mAAysJhKMulnmeW8+0e3g2LzoXM
-         oKrIiLxWjS4iNsalIDFeW6FrUvKY3cwFla6KlsmAVw2y6and0TuQi0TY1iBLzIqwSGj8
-         WKGg==
-X-Gm-Message-State: AOJu0YxpEjYl/+ld/0cPlRlKAS633UPtBJV6vgvyBouROVr4nQPJSllN
-	gMOeeLLiF/GPXPxibkTWwi9VyhvrDEayuDH+YJOFKdrqq++KF91lVgXUoIgyv1E=
-X-Google-Smtp-Source: AGHT+IFZ3UUBgZszn/1wxPMDahDYbmeO132hJ61mryKHgvR3GcuAuY7RIRfAUkP4M4TdvC1n34cQtw==
-X-Received: by 2002:a05:600c:2a4a:b0:40e:46d5:144f with SMTP id x10-20020a05600c2a4a00b0040e46d5144fmr290304wme.373.1706194220403;
-        Thu, 25 Jan 2024 06:50:20 -0800 (PST)
+        bh=Uo5/6sMsEJXgYbE8BbPRJoYau3RC+fqPHaLcagZG9d0=;
+        b=C7yVV71s36nFuNik0y7rwYycsWkQFRGCczn0M4qrNpWht+6lglPyKHOGARrftYwGyA
+         894VCvK9tPNaKSugw3NEz8rB2BtZBKLEcj9yVUaPfrDrOLndPLKIWbjULWiVJ02yAPNi
+         Cul0r55rjigcSvya1NsiqzXN/afPzLjhc5crrFutABErgMFLpqP+bhHKRVlR543Atvqm
+         GL6T6j2OSWln2O8bv0fz7aTiBDgb/Z1QWdzj2mXlC4aQ3nQJcv6vhdMUBDAY6HlCRhub
+         cDigmjosr1D3NQRiExDtH9WhUqLE658r83gBvXuwCRi+vsp3hgc4xl987Sbx7y7bFGSy
+         fuSA==
+X-Gm-Message-State: AOJu0Yzbnf6fDjBqXoM7A8d56KEDyegyXD/MaeCZWoiL7Zjp7zOYb7Gy
+	jicLyM5wNB2185xJkZcqfSEmf0KiHmYPtsb9ll/hiYvtsWQyCWp3Nt3BNQMQgJk=
+X-Google-Smtp-Source: AGHT+IHsYPm1PY8Cgk3AI9vhaP569ziBX3qB1QLXw/TjefWa12gW37HqQ58L1YMoxQHBrVjXHblYBg==
+X-Received: by 2002:a05:600c:511a:b0:40d:8914:cee3 with SMTP id o26-20020a05600c511a00b0040d8914cee3mr611949wms.108.1706194222303;
+        Thu, 25 Jan 2024 06:50:22 -0800 (PST)
 Received: from ta2.c.googlers.com.com (88.140.78.34.bc.googleusercontent.com. [34.78.140.88])
-        by smtp.gmail.com with ESMTPSA id v17-20020a05600c471100b0040d91fa270fsm2875875wmo.36.2024.01.25.06.50.19
+        by smtp.gmail.com with ESMTPSA id v17-20020a05600c471100b0040d91fa270fsm2875875wmo.36.2024.01.25.06.50.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jan 2024 06:50:19 -0800 (PST)
+        Thu, 25 Jan 2024 06:50:21 -0800 (PST)
 From: Tudor Ambarus <tudor.ambarus@linaro.org>
 To: broonie@kernel.org,
 	andi.shyti@kernel.org,
@@ -71,9 +71,9 @@ Cc: robh+dt@kernel.org,
 	kernel-team@android.com,
 	willmcvicker@google.com,
 	Tudor Ambarus <tudor.ambarus@linaro.org>
-Subject: [PATCH v2 11/28] spi: s3c64xx: move common code outside if else
-Date: Thu, 25 Jan 2024 14:49:49 +0000
-Message-ID: <20240125145007.748295-12-tudor.ambarus@linaro.org>
+Subject: [PATCH v2 13/28] spi: s3c64xx: propagate the dma_submit_error() error code
+Date: Thu, 25 Jan 2024 14:49:51 +0000
+Message-ID: <20240125145007.748295-14-tudor.ambarus@linaro.org>
 X-Mailer: git-send-email 2.43.0.429.g432eaa2c6b-goog
 In-Reply-To: <20240125145007.748295-1-tudor.ambarus@linaro.org>
 References: <20240125145007.748295-1-tudor.ambarus@linaro.org>
@@ -85,40 +85,26 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Move common code outside if else to avoid code duplication.
+Propagate the dma_submit_error() error code, don't overwrite it.
 
 Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
 ---
- drivers/spi/spi-s3c64xx.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ drivers/spi/spi-s3c64xx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/spi/spi-s3c64xx.c b/drivers/spi/spi-s3c64xx.c
-index b048e81e6207..107b4200ab00 100644
+index 48b87c5e2dd2..25d642f99278 100644
 --- a/drivers/spi/spi-s3c64xx.c
 +++ b/drivers/spi/spi-s3c64xx.c
-@@ -286,20 +286,18 @@ static int prepare_dma(struct s3c64xx_spi_dma_data *dma,
- 	if (dma->direction == DMA_DEV_TO_MEM) {
- 		sdd = container_of((void *)dma,
- 			struct s3c64xx_spi_driver_data, rx_dma);
--		config.direction = dma->direction;
- 		config.src_addr = sdd->sfr_start + S3C64XX_SPI_RX_DATA;
- 		config.src_addr_width = sdd->cur_bpw / 8;
- 		config.src_maxburst = 1;
--		dmaengine_slave_config(dma->ch, &config);
- 	} else {
- 		sdd = container_of((void *)dma,
- 			struct s3c64xx_spi_driver_data, tx_dma);
--		config.direction = dma->direction;
- 		config.dst_addr = sdd->sfr_start + S3C64XX_SPI_TX_DATA;
- 		config.dst_addr_width = sdd->cur_bpw / 8;
- 		config.dst_maxburst = 1;
--		dmaengine_slave_config(dma->ch, &config);
+@@ -316,7 +316,7 @@ static int prepare_dma(struct s3c64xx_spi_dma_data *dma,
+ 	ret = dma_submit_error(dma->cookie);
+ 	if (ret) {
+ 		dev_err(&sdd->pdev->dev, "DMA submission failed");
+-		return -EIO;
++		return ret;
  	}
-+	config.direction = dma->direction;
-+	dmaengine_slave_config(dma->ch, &config);
  
- 	desc = dmaengine_prep_slave_sg(dma->ch, sgt->sgl, sgt->nents,
- 				       dma->direction, DMA_PREP_INTERRUPT);
+ 	dma_async_issue_pending(dma->ch);
 -- 
 2.43.0.429.g432eaa2c6b-goog
 
