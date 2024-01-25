@@ -1,99 +1,229 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E61AF1C696;
-	Thu, 25 Jan 2024 10:01:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F28C71C686;
+	Thu, 25 Jan 2024 10:02:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706176872; cv=none; b=TqJFfdVQbGk7R3oHsDrfCkAQdyac/5Ttj4lfpkoRvRJVD0R4JGL5cVJwWWM7VYnCgybxvXBppGlJDDQqI5Eb8/UTYaLf/rYrOpC4g/pN0wK4BoZ2IXpsij/pdRDXZSWvaSFH9zI3Dm7tY6ZMtM3ONg3SY+ouHcERsslS1HKOSGo=
+	t=1706176949; cv=none; b=GcHimR7tXEasaTWUOxaJ5NUVLYQXqGOdpXDZ1J9Xeg466YDM12q8PYsGLzgT7aqLYLknuUJ9nekO/STpUfK78N+MUWyxzucHGq9bv/ILUibfLxtfTQSgo3xHzqLPe4upb55qr1oiT4F4bnSUsg0lB7+dhXsEAYGdf8XytJOSAoc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706176872; c=relaxed/simple;
-	bh=+s8uT2U1rJ0L9rQpMPQrQHHgk79B6+peobCM8mVFSHo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dsFI8FWuAL43tgmNCeEKOREz69qIXnrLFu7TyXHF3XxTyzuX8kp7dGxqgDjrh7P6wn716Yi+9N5HFR6fPh8TZymIjboeyaXD4xXbgjDIzUvv8tWYnB1wqhz9vttbn15p+Gr5T4nm1tQDy9+AY3QqXFyQTJNYQuAffo3SprfRdjc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-557dcb0f870so8022994a12.2;
-        Thu, 25 Jan 2024 02:01:10 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706176869; x=1706781669;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=UGv4xyNT9XM8KOh4SVQvuRvopYGtVSujqzpR+SSidcI=;
-        b=mj/v+nnOMcUNsEVCMeWenx4+mvbxS048dUxKapu87/U9cQFkPw6VpRCIFmt3V/TjE6
-         jDLtaDQclXnmxhicRQiidi5VEKUeDN6CZwr50IgTGKzLegY3nJH925iLaiYOo/AEDmpQ
-         1vpKsX32kZlGqSXtsWfqj2fvkojGGtTQK5RWe/R8dgZ3530NnkRxx5W2zfEjyMQZf9/L
-         Bv21bzX2K1rn10QiK3IC5qL9zly+Nag8DLdy1MnUdC0xwV007aNW7c+ZEGwJm56u5NcK
-         hqVMeZ20Qx4MZalRQFbMMw2Q+sKYxu0zOVU2DCrBh4zVnC2TvP2TmCEI+S7ciPpW1l9x
-         qNHQ==
-X-Gm-Message-State: AOJu0YwzIw5cWnEby+OCve4B3zKRuqlIGNHLmDNhn2YoPi7+YtPhaBX9
-	/efHQhbGwptMYgdHPORFFLrRXxyl/5jYdgVZJiiiww3RO1hUO6hHMnQbPAWb
-X-Google-Smtp-Source: AGHT+IGCUvY9IYqF17ayGlcWq3X/gd4k/ledT4kTug2vugo1hXLVNqcGIU8jCYLtIPFXNcmVqcZUnQ==
-X-Received: by 2002:a17:906:99c2:b0:a26:b86e:2b0f with SMTP id s2-20020a17090699c200b00a26b86e2b0fmr347032ejn.127.1706176868802;
-        Thu, 25 Jan 2024 02:01:08 -0800 (PST)
-Received: from gmail.com (fwdproxy-cln-015.fbsv.net. [2a03:2880:31ff:f::face:b00c])
-        by smtp.gmail.com with ESMTPSA id tl15-20020a170907c30f00b00a3186c2c254sm338950ejc.213.2024.01.25.02.01.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jan 2024 02:01:08 -0800 (PST)
-Date: Thu, 25 Jan 2024 02:01:06 -0800
-From: Breno Leitao <leitao@debian.org>
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: kuba@kernel.org, davem@davemloft.net, abeni@redhat.com,
-	edumazet@google.com, Alexander Aring <alex.aring@gmail.com>,
-	Stefan Schmidt <stefan@datenfreihafen.org>,
-	Paolo Abeni <pabeni@redhat.com>, dsahern@kernel.org,
-	weiwan@google.com,
-	"open list:IEEE 802.15.4 SUBSYSTEM" <linux-wpan@vger.kernel.org>,
-	"open list:NETWORKING [GENERAL]" <netdev@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next 02/22] net: fill in MODULE_DESCRIPTION()s for
- ieee802154
-Message-ID: <ZbIxYnEbFXi6NBMU@gmail.com>
-References: <20240122184543.2501493-1-leitao@debian.org>
- <20240122184543.2501493-3-leitao@debian.org>
- <20240124175158.7c8b9490@xps-13>
+	s=arc-20240116; t=1706176949; c=relaxed/simple;
+	bh=Tv1+9k+cs9ODrgYL0DhM6PbCDNkcFvwIQHm8qIIPFOw=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=pHqX3409f/4AvmVqyV8jipOnFkTOw2dP3nRRha7iAfzGXYV9x1RCZOmKQbb0ISUZ+hHlSC+0ivFF2bIVpLnaEBb5awGlGQyi8pLQf1gvsAio7bc6yB+hhkBozuhrTq1vN5OtrFoQtW7CTXS/JGLgUnnpQnuoRlVcx1kwheMX8cE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=VvEyrU92; arc=none smtp.client-ip=68.232.153.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="VvEyrU92"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1706176948; x=1737712948;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=Tv1+9k+cs9ODrgYL0DhM6PbCDNkcFvwIQHm8qIIPFOw=;
+  b=VvEyrU92g4QY0st1jN98VMuuShbvLKQy/YQAEsT6yP4XLhZ0pWBhQBJd
+   zhge5HH6Vac+PCMmOK1bxgyAJQN5vS7xM+G+kZz3oUIfP0YwtlmhPsSn7
+   lUVdckmnVfBX5VLPv2TQsoercLw6UxxmPAwtN8611ykrB/APVSM8GyFMs
+   3zTUQuvVhLMmyHccxWtxugkv7KsDo5pPxFyrqCj+7KQvLxxmWrX4/JFQl
+   7mTjuGbymJ31VJD9+lb31+xb90+WYmL9TAX3CXB3aKkdZjkHPDjnhtnMf
+   583N22J5dQTWClrELdQCjxx52X+FsFrAGBOzvPZFWdyQQlGrkCFVvlS7h
+   w==;
+X-CSE-ConnectionGUID: EcHPnxniQdWGuWl+Gd9iBA==
+X-CSE-MsgGUID: cPjp1T7gRbWSaY+EDV2BEQ==
+X-IronPort-AV: E=Sophos;i="6.05,216,1701154800"; 
+   d="scan'208";a="245997251"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 25 Jan 2024 03:02:21 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
+ chn-vm-ex02.mchp-main.com (10.10.87.72) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Thu, 25 Jan 2024 03:01:56 -0700
+Received: from che-dk-ungapp03lx.microchip.com (10.10.85.11) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
+ 15.1.2507.35 via Frontend Transport; Thu, 25 Jan 2024 03:01:53 -0700
+From: Rengarajan S <rengarajan.s@microchip.com>
+To: <kumaravel.thiagarajan@microchip.com>,
+	<tharunkumar.pasumarthi@microchip.com>, <gregkh@linuxfoundation.org>,
+	<jirislaby@kernel.org>, <linux-serial@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+CC: <UNGLinuxDriver@microchip.com>
+Subject: [PATCH v1 tty] 8250: microchip: pci1xxxx: Add Burst mode transmission support in uart driver for reading from FIFO
+Date: Thu, 25 Jan 2024 15:30:06 +0530
+Message-ID: <20240125100006.153342-1-rengarajan.s@microchip.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240124175158.7c8b9490@xps-13>
+Content-Type: text/plain
 
-Hello Miquèl,
+pci1xxxx_handle_irq reads the burst status and checks if the FIFO
+is empty and is ready to accept the incoming data. The handling is
+done in pci1xxxx_tx_burst where each transaction processes data in
+block of DWORDs, while any remaining bytes are processed individually,
+one byte at a time.
 
-On Wed, Jan 24, 2024 at 05:51:58PM +0100, Miquel Raynal wrote:
-> Hi Breno,
-> 
-> leitao@debian.org wrote on Mon, 22 Jan 2024 10:45:23 -0800:
-> 
-> > W=1 builds now warn if module is built without a MODULE_DESCRIPTION().
-> > Add descriptions to ieee802154 modules.
-> > 
-> > Signed-off-by: Breno Leitao <leitao@debian.org>
-> > Acked-by: Stefan Schmidt <stefan@datenfreihafen.org>
-> 
-> I just see the v2 now. Please use "v2" in your commit title using -v or
-> git-format-patch.
+Signed-off-by: Rengarajan S <rengarajan.s@microchip.com>
+---
+ drivers/tty/serial/8250/8250_pci1xxxx.c | 106 ++++++++++++++++++++++++
+ 1 file changed, 106 insertions(+)
 
-Sorry, I am not sure I followed what you meant.  I've sent the v2, which
-contains the 'v2' _tag_:
+diff --git a/drivers/tty/serial/8250/8250_pci1xxxx.c b/drivers/tty/serial/8250/8250_pci1xxxx.c
+index 558c4c7f3104..d53605bf908d 100644
+--- a/drivers/tty/serial/8250/8250_pci1xxxx.c
++++ b/drivers/tty/serial/8250/8250_pci1xxxx.c
+@@ -67,6 +67,7 @@
+ #define SYSLOCK_RETRY_CNT			1000
+ 
+ #define UART_RX_BYTE_FIFO			0x00
++#define UART_TX_BYTE_FIFO			0x00
+ #define UART_FIFO_CTL				0x02
+ 
+ #define UART_ACTV_REG				0x11
+@@ -100,6 +101,7 @@
+ #define UART_RESET_D3_RESET_DISABLE		BIT(16)
+ 
+ #define UART_BURST_STATUS_REG			0x9C
++#define UART_TX_BURST_FIFO			0xA0
+ #define UART_RX_BURST_FIFO			0xA4
+ 
+ #define MAX_PORTS				4
+@@ -109,6 +111,7 @@
+ #define UART_BURST_SIZE				4
+ 
+ #define UART_BST_STAT_RX_COUNT_MASK		0x00FF
++#define UART_BST_STAT_TX_COUNT_MASK		0xFF00
+ #define UART_BST_STAT_IIR_INT_PEND		0x100000
+ #define UART_LSR_OVERRUN_ERR_CLR		0x43
+ #define UART_BST_STAT_LSR_RX_MASK		0x9F000000
+@@ -116,6 +119,7 @@
+ #define UART_BST_STAT_LSR_OVERRUN_ERR		0x2000000
+ #define UART_BST_STAT_LSR_PARITY_ERR		0x4000000
+ #define UART_BST_STAT_LSR_FRAME_ERR		0x8000000
++#define UART_BST_STAT_LSR_THRE			0x20000000
+ 
+ struct pci1xxxx_8250 {
+ 	unsigned int nr;
+@@ -344,6 +348,105 @@ static void pci1xxxx_rx_burst(struct uart_port *port, u32 uart_status)
+ 	}
+ }
+ 
++static void pci1xxxx_process_write_data(struct uart_port *port,
++					struct circ_buf *xmit,
++					int *data_empty_count,
++					u32 *valid_byte_count)
++{
++	u32 valid_burst_count = *valid_byte_count / UART_BURST_SIZE;
++
++	/*
++	 * Each transaction transfers data in DWORDs. If there are less than
++	 * four remaining valid_byte_count to transfer or if the circular
++	 * buffer has insufficient space for a DWORD, the data is transferred
++	 * one byte at a time.
++	 */
++	while (valid_burst_count) {
++		if (*data_empty_count - UART_BURST_SIZE < 0)
++			break;
++		if (xmit->tail > (UART_XMIT_SIZE - UART_BURST_SIZE))
++			break;
++		writel(*(unsigned int *)&xmit->buf[xmit->tail],
++		       port->membase + UART_TX_BURST_FIFO);
++		*valid_byte_count -= UART_BURST_SIZE;
++		*data_empty_count -= UART_BURST_SIZE;
++		valid_burst_count -= UART_BYTE_SIZE;
++
++		xmit->tail = (xmit->tail + UART_BURST_SIZE) &
++			     (UART_XMIT_SIZE - 1);
++	}
++
++	while (*valid_byte_count) {
++		if (*data_empty_count - UART_BYTE_SIZE < 0)
++			break;
++		writeb(xmit->buf[xmit->tail], port->membase +
++		       UART_TX_BYTE_FIFO);
++		*data_empty_count -= UART_BYTE_SIZE;
++		*valid_byte_count -= UART_BYTE_SIZE;
++
++		/*
++		 * When the tail of the circular buffer is reached, the next
++		 * byte is transferred to the beginning of the buffer.
++		 */
++		xmit->tail = (xmit->tail + UART_BYTE_SIZE) &
++			     (UART_XMIT_SIZE - 1);
++
++		/*
++		 * If there are any pending burst count, data is handled by
++		 * transmitting DWORDs at a time.
++		 */
++		if (valid_burst_count && (xmit->tail <
++		   (UART_XMIT_SIZE - UART_BURST_SIZE)))
++			break;
++	}
++}
++
++static void pci1xxxx_tx_burst(struct uart_port *port, u32 uart_status)
++{
++	struct uart_8250_port *up = up_to_u8250p(port);
++	u32 valid_byte_count;
++	int data_empty_count;
++	struct circ_buf *xmit;
++
++	xmit = &port->state->xmit;
++
++	if (port->x_char) {
++		writeb(port->x_char, port->membase + UART_TX);
++		port->icount.tx++;
++		port->x_char = 0;
++		return;
++	}
++
++	if ((uart_tx_stopped(port)) || (uart_circ_empty(xmit))) {
++		port->ops->stop_tx(port);
++	} else {
++		data_empty_count = (pci1xxxx_read_burst_status(port) &
++				    UART_BST_STAT_TX_COUNT_MASK) >> 8;
++		do {
++			valid_byte_count = uart_circ_chars_pending(xmit);
++
++			pci1xxxx_process_write_data(port, xmit,
++						    &data_empty_count,
++						    &valid_byte_count);
++
++			port->icount.tx++;
++			if (uart_circ_empty(xmit))
++				break;
++		} while (data_empty_count && valid_byte_count);
++	}
++
++	if (uart_circ_chars_pending(xmit) < WAKEUP_CHARS)
++		uart_write_wakeup(port);
++
++	 /*
++	  * With RPM enabled, we have to wait until the FIFO is empty before
++	  * the HW can go idle. So we get here once again with empty FIFO and
++	  * disable the interrupt and RPM in __stop_tx()
++	  */
++	if (uart_circ_empty(xmit) && !(up->capabilities & UART_CAP_RPM))
++		port->ops->stop_tx(port);
++}
++
+ static int pci1xxxx_handle_irq(struct uart_port *port)
+ {
+ 	unsigned long flags;
+@@ -359,6 +462,9 @@ static int pci1xxxx_handle_irq(struct uart_port *port)
+ 	if (status & UART_BST_STAT_LSR_RX_MASK)
+ 		pci1xxxx_rx_burst(port, status);
+ 
++	if (status & UART_BST_STAT_LSR_THRE)
++		pci1xxxx_tx_burst(port, status);
++
+ 	spin_unlock_irqrestore(&port->lock, flags);
+ 
+ 	return 1;
+-- 
+2.25.1
 
-https://lore.kernel.org/all/20240123190332.677489-1-leitao@debian.org/
-
-I didn't include the ieee802154 fix because the maintainers asked me to
-split the patchset in a maximum of 10 patches[1], and I am doing it by
-area (net, wifi, ethernet, etc). That means that this patch was not send
-on the first batch, that is prioritizing Ethernet drivers (which is
-described in the cover letter of v2)[2].
-
-Anyway, let me know if I missed something here.
-
-Thanks!
-[1] https://lore.kernel.org/all/20240122105708.52d33fa0@kernel.org/
-[2] https://lore.kernel.org/all/20240123190332.677489-1-leitao@debian.org/
