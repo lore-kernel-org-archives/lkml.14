@@ -1,104 +1,96 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58DF64594D;
-	Thu, 25 Jan 2024 11:23:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B99122206D
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 11:29:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706181828; cv=none; b=Ze7rv4y/qhIvHAlvNxLMP0D00wCYEslPMeqSpWVwmIpv8/wrFIVSNUUEKzxsfsA7NBCNoB/gmn1imHS5nAxSY5OUPnlSApXSVgHJhWdD048LG2z3uuf+vi3RiIxnmNa9g03bs3mftGtBe5ewWEQ9wSB1dMtaw5CkI8Xg7agQF10=
+	t=1706182156; cv=none; b=KliUt5/TwZz0SNCEv5tDevMHCI6WPembwHTPaRd2l3AcV3QABv5Awc2FKJvcFLOGNykOQIiPtvC6S63ZMqIn0NTok3VLg99fPBffXdyLZFhWBH6yteFMIdVpFTEu+c8PBO/AJlZ63vQ2rez72FuTlVaty1256eVaYZUOtyTaSug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706181828; c=relaxed/simple;
-	bh=Uu+Kk+F3SFhkK+G9oXazlo4Q3fgVXLCk2hDT+fOsZgE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=W/PCd9FHzvRg+YHwAWnrDRSpMhHjCCDECH6b4HNDsOO9OREz2x8VI+2qpx2FxU4b1sqhdZHSAs6gYay+nfUXPn2rHMCUuiqyzSR8aTvIey9OmKINKnrCXh0Eu3WubbJNlVoSQOPUtymtWNVsJtv7F3mQaaebcgSiFfi57Vp8mgE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=tpfl3Nwk; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="tpfl3Nwk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1706181825;
-	bh=Uu+Kk+F3SFhkK+G9oXazlo4Q3fgVXLCk2hDT+fOsZgE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=tpfl3NwkDvB9rqHZp4zvSNJIQv4mPUBxpjbrijtRvWXAIrI16MWGKI7Jru0XlY3Mi
-	 Fifv4/F93ks/6Fph6jKfjK0d9lijIIa/Ipoa9mWSvKLN0qIaF2Q7NUTMcRLEoDBtPX
-	 ztVBB8R9PMfWwMS+5J12CVY7uEJwWvKjs8gDGruNTqfeN4T2+Dy+vTNVt8wRdXKxcR
-	 plGG4GFTnvxsWvPDTKpiKURYkKjAcf2Cy52nC9dmNOZjdmqkO9rR0JRhHchYgFXqKd
-	 LwxcBox227Gh/NJhnE9r2aLK6VIS5TzcQCZjxl3b4oWUJIRzJVvWpk/t7QVP9WfiKM
-	 BvWZkvLLT3IWA==
-Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 93EA23781182;
-	Thu, 25 Jan 2024 11:23:44 +0000 (UTC)
-Message-ID: <2452472f-72ab-4422-97a3-1fda7ca8c862@collabora.com>
-Date: Thu, 25 Jan 2024 12:23:43 +0100
+	s=arc-20240116; t=1706182156; c=relaxed/simple;
+	bh=Nw538rruL/XSyChWFyI5KX1BM2Qj4bt/rXvZNCB5Jxo=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=P0azz7fQT+K0Gt9QmrjuFOxskihmjGLJfuvdPz8DVvq/lWg7gGW1NmAgsIb5Klq5ogoyz86Jl+j1WlN6r2x4i8mEnAlrMVwScrtZcVovjUbAzcUC+kApYYPuQt9HQKuIg+bjL3Z1Q5R0YZeGAtW9afHnWs2+nzDh/Zyen10ANnA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from dude05.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::54])
+	by metis.whiteo.stw.pengutronix.de with esmtp (Exim 4.92)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1rSxuw-0001TG-WB; Thu, 25 Jan 2024 12:29:11 +0100
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Date: Thu, 25 Jan 2024 12:29:08 +0100
+Subject: [PATCH v2] usb: dwc3-of-simple: Stop using
+ of_reset_control_array_get() directly
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] cpufreq: mediatek-hw: Don't error out if supply is not
- found
-To: =?UTF-8?B?TsOtY29sYXMgRi4gUi4gQS4gUHJhZG8=?= <nfraprado@collabora.com>,
- Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, "Rafael J. Wysocki"
- <rafael@kernel.org>, Mark Brown <broonie@kernel.org>,
- Matthias Brugger <matthias.bgg@gmail.com>, kernel@collabora.com,
- linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- "kernelci.org bot" <bot@kernelci.org>
-References: <20240124-mtk-cpufreq-hw-regulator-enodev-fix-v1-1-6f9fb7275886@collabora.com>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <20240124-mtk-cpufreq-hw-regulator-enodev-fix-v1-1-6f9fb7275886@collabora.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240125-dwc3-of-simple-reset-control-array-fix-v2-1-1ab6b52cad21@pengutronix.de>
+X-B4-Tracking: v=1; b=H4sIAANGsmUC/5WNQQ6CMBBFr0K6dkxbWFRX3sOwIO0Ak2BLphUhh
+ Ls7cgOX7+f//3aVkQmzule7YlwoU4oC9lIpP3ZxQKAgrKy2jTa2gfDxNaQeMr3mCYExYwGfYuE
+ 0QcfcbdDTCtjgzVlZuRCUnM2MEp+iZys8Ui6Jt9O7mF/6t2IxYMBpZ5z1vu41PmaMw1takdZrQ
+ NUex/EFujhQZuEAAAA=
+To: Thinh Nguyen <Thinh.Nguyen@synopsys.com>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, Felipe Balbi <balbi@kernel.org>
+Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Philipp Zabel <p.zabel@pengutronix.de>
+X-Mailer: b4 0.13-dev-a684c
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:1101:1d::54
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Il 24/01/24 21:31, Nícolas F. R. A. Prado ha scritto:
-> devm_regulator_get_optional() returns -ENODEV if no supply can be found.
-> By introducing its usage, commit 788715b5f21c ("cpufreq: mediatek-hw:
-> Wait for CPU supplies before probing") caused the driver to fail probe
-> if no supply was present in any of the CPU DT nodes.
-> 
-> Use devm_regulator_get() instead since the CPUs do require supplies
-> even if not described in the DT. It will gracefully return a dummy
-> regulator if none is found in the DT node, allowing probe to succeed.
-> 
-> Fixes: 788715b5f21c ("cpufreq: mediatek-hw: Wait for CPU supplies before probing")
-> Reported-by: kernelci.org bot <bot@kernelci.org>
-> Closes: https://linux.kernelci.org/test/case/id/65b0b169710edea22852a3fa/
-> Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
+Use of_reset_control_array_get_optional_exclusive() instead, it is
+implemented as:
 
-Makes sense.
+  static inline struct reset_control *
+  of_reset_control_array_get_optional_exclusive(struct device_node *node)
+  {
+          return of_reset_control_array_get(node, false, true, true);
+  }
 
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+This makes the code easier to understand and removes the last remaining
+direct use of of_reset_control_array_get(). No functional changes.
 
-> ---
->   drivers/cpufreq/mediatek-cpufreq-hw.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/cpufreq/mediatek-cpufreq-hw.c b/drivers/cpufreq/mediatek-cpufreq-hw.c
-> index a1aa9385980a..8d097dcddda4 100644
-> --- a/drivers/cpufreq/mediatek-cpufreq-hw.c
-> +++ b/drivers/cpufreq/mediatek-cpufreq-hw.c
-> @@ -312,7 +312,7 @@ static int mtk_cpufreq_hw_driver_probe(struct platform_device *pdev)
->   			return dev_err_probe(&pdev->dev, -EPROBE_DEFER,
->   					     "Failed to get cpu%d device\n", cpu);
->   
-> -		cpu_reg = devm_regulator_get_optional(cpu_dev, "cpu");
-> +		cpu_reg = devm_regulator_get(cpu_dev, "cpu");
->   		if (IS_ERR(cpu_reg))
->   			return dev_err_probe(&pdev->dev, PTR_ERR(cpu_reg),
->   					     "CPU%d regulator get failed\n", cpu);
-> 
-> ---
-> base-commit: 9ac3ebaef3cc43ecd136911c44f1427286ee5a05
-> change-id: 20240124-mtk-cpufreq-hw-regulator-enodev-fix-f614019689d0
-> 
-> Best regards,
+This change was made possible by commit f4cc91ddd856 ("usb: dwc3:
+of-simple: remove Amlogic GXL and AXG compatibles"), which made the
+parameters passed to of_reset_control_array_get() constant.
+
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+---
+Changes in v2:
+- Drop Fixes tag, adapt commit message.
+- Link to v1: https://lore.kernel.org/r/20240124-dwc3-of-simple-reset-control-array-fix-v1-1-808182cc3f0e@pengutronix.de
+---
+ drivers/usb/dwc3/dwc3-of-simple.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/drivers/usb/dwc3/dwc3-of-simple.c b/drivers/usb/dwc3/dwc3-of-simple.c
+index d1539fc9eabd..9cf9ee1b637b 100644
+--- a/drivers/usb/dwc3/dwc3-of-simple.c
++++ b/drivers/usb/dwc3/dwc3-of-simple.c
+@@ -52,8 +52,7 @@ static int dwc3_of_simple_probe(struct platform_device *pdev)
+ 	if (of_device_is_compatible(np, "rockchip,rk3399-dwc3"))
+ 		simple->need_reset = true;
+ 
+-	simple->resets = of_reset_control_array_get(np, false, true,
+-						    true);
++	simple->resets = of_reset_control_array_get_optional_exclusive(np);
+ 	if (IS_ERR(simple->resets)) {
+ 		ret = PTR_ERR(simple->resets);
+ 		dev_err(dev, "failed to get device resets, err=%d\n", ret);
+
+---
+base-commit: 6613476e225e090cc9aad49be7fa504e290dd33d
+change-id: 20240124-dwc3-of-simple-reset-control-array-fix-e4e9822028dd
+
+Best regards,
+-- 
+Philipp Zabel <p.zabel@pengutronix.de>
 
