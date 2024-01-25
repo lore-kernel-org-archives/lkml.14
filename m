@@ -1,84 +1,140 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f182.google.com (mail-il1-f182.google.com [209.85.166.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B11551C686;
-	Thu, 25 Jan 2024 09:38:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DA091CD16
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 09:38:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706175497; cv=none; b=kolcaZdky0iKA4KioKielAjULW1L3egfq33h2UtRuxi0udZ632jhW12jV9XjasgCCe4ayjMhCpS1ncSEFyMeyH7KGHu+tuElYNNENJ5Fn1CTBlEGlQuLFbKGKEylV2u5Bme+FvPjDmSS2bKe1FkvmDYAOubCiJ95VwWtLKth6iw=
+	t=1706175510; cv=none; b=P7jE0Ck3q7RWDr0sO6+Q/9q++EOydrP+EsCEgVjFY0pGjaIoUPh71ttMIIAapQIWJGMA9ZH/TiZG/ML7lg8GLkIhzuU6gsVP7/K98Ajkg4KBla+AWM2458OtWPwUtkaFBQrDMDuOT5+vWXhiWkVUcf8YTV6WqZMUCuJSegElfjg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706175497; c=relaxed/simple;
-	bh=uPP+taTP7ZolS6r9LsAYX+LZFusJs4p/dtdN1utPMp4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m49Vd3TB1Zo6B/0fnCI1ykGFV9osPtkHqjiVy6WHa4fVhe1iYIFGc9vhxUYwFMoxpD2SFHTF/8UoSOg8ngFHo7V3KZbEtqZXpVLsOnfParBlKStv4PUyitjlrYpbPVk7XP3bFngr5l/hhz4qC+XXUAywEoKauH3UfniHrQzM8Ro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j7cXshX8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706175510; c=relaxed/simple;
+	bh=0sOcb8GBs2ftSAjMf8ketU17zizcRDHYVrBzO0rltrk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=J4XJYXczI5p8k83mvoyVYOx71JKM6VHdw/sD655NNF6ew5vXz7/40teeMkEVYQVbQiH3iWFCvoCMnI+vzS2KYveF/wMrJgIeiVzp4DDGfVyskgWkKNhQhm2FMhp5wY53vBusVguDeSVB66txKoYvG30/C0ireu3MbFSAXwH5EwM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=OuqMn9lr; arc=none smtp.client-ip=209.85.166.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j7cXshX8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DED44C433F1;
-	Thu, 25 Jan 2024 09:38:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706175497;
-	bh=uPP+taTP7ZolS6r9LsAYX+LZFusJs4p/dtdN1utPMp4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=j7cXshX8VvMZ6jy4uPpWWynFqF9KKNfsuTOE+lHocKux1Enp2X7ezkrdx2mEtZ1VQ
-	 LItqtzp2SW+2CD3snw+qSYfrsmDrEq0Dn4raou7eXyBJ2dtkI+P8orlt5xAokl5o8n
-	 L0cBeGTUN9cFzTsSa+L6AcTLagQF/Y5/LBUYrGsCJ8eTWL6c56NA4hpyHlORUbS/D8
-	 LOnSMKWCMSO8ZmNLQ4UMXAbKfv/Qz0N0UJkxikSraGGpia2d09HLaan9M226Qo2U9o
-	 xeM0WwgfCW15yfnLsHT9YlnVBBRQ/m6QJ0XvpwG7srrfyEL0qK5dkix11u+AICshRh
-	 JzCBBEhUijaXw==
-Date: Thu, 25 Jan 2024 11:37:49 +0200
-From: Mike Rapoport <rppt@kernel.org>
-To: Lokesh Gidra <lokeshgidra@google.com>
-Cc: akpm@linux-foundation.org, linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-	selinux@vger.kernel.org, surenb@google.com, kernel-team@android.com,
-	aarcange@redhat.com, peterx@redhat.com, david@redhat.com,
-	axelrasmussen@google.com, bgeffon@google.com, willy@infradead.org,
-	jannh@google.com, kaleshsingh@google.com, ngeoffray@google.com
-Subject: Re: [PATCH] userfaultfd: fix return error if mmap_changing is
- non-zero in MOVE ioctl
-Message-ID: <ZbIr7SMd1GJa6T7z@kernel.org>
-References: <20240117223922.1445327-1-lokeshgidra@google.com>
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="OuqMn9lr"
+Received: by mail-il1-f182.google.com with SMTP id e9e14a558f8ab-362a24b136fso1186335ab.3
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 01:38:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1706175507; x=1706780307; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=1KW4jHyEa7kFs7oT9yas8ifPzAyaH1yeBSUUUHJFfAc=;
+        b=OuqMn9lr6yb0cTQpXBfSijWWI9VNhxKjRjU2SgHnjQcn8bvCbhX/NjKoxkJV2bJaMn
+         74tp5XHuC4eHtxEblfieUCLKG/dQkJxzNDrWyT5iC6wCuSktLc81098NG5+Pe3xV5/9W
+         B7hwX4w9SSDFk5Q0zS2Ok9qdlLnPUiTtR+TtBywu6BSso1WRAnd/l1tzfb0DwN702cXb
+         c3wFskp3U4/kCGNGcdyF81EsgkwNs+IBd+rdtz5CpbwYryD0ynRCpKowVHpNEf5+ykE7
+         JO//vrkslwU5BILXXsE/i+7wxOvo9yJbFxcW7ka9GNxtAzEFQXpAw5cUeDlmYS5+qy6w
+         DRlQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706175507; x=1706780307;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=1KW4jHyEa7kFs7oT9yas8ifPzAyaH1yeBSUUUHJFfAc=;
+        b=wB5IiKDim7e3RnSEu776BvhNBMb+Ig2MLytpHb+m7pZVwHW+D5M7UejgrCGzVLt3NR
+         zhbyP4Z5SoQ3dhGeZ8SqtYLD02IxFr8h63DPxCm6fTxAMHooIyAfg8paHzzPQfkD+ZsE
+         g0j/cvZo3ixrNfrKEWTCH3piTuYqnPzz5gvP2ulaGlDE113wKe3FHIbH1p+AJglIfr/y
+         zglDljckenNAOyeaUP8qjGagfmNpWooM4QBYi+W21o13GfR+Hdst2lTZCtwYm2RjoLUx
+         yPx9lXTDwLDnPpttMJU5Rrcu9WRE3n4r88PTy5bBWpLC7XuMcHIFNyT60z3L86gXaF9s
+         SBWQ==
+X-Gm-Message-State: AOJu0YyMkGWS23d2SzdFV8sfz9+LsWVkpmGtnbGYR5BWFVwWB0gInM/5
+	tlYTTgWPS+JBjE2wqZtfcX/a77TA7agGvzFjGxqHxRGhQbOEZKTrLxdYYNwcBUM=
+X-Google-Smtp-Source: AGHT+IE0YcGyxn+lstZACLJCx7aiaPb2obv9RRNzDuZgcO5pg9nfVRo//pcffrCR8x+sc55LCaFcvA==
+X-Received: by 2002:a05:6e02:80e:b0:361:a91d:aaac with SMTP id u14-20020a056e02080e00b00361a91daaacmr915987ilm.63.1706175507515;
+        Thu, 25 Jan 2024 01:38:27 -0800 (PST)
+Received: from [10.4.195.141] ([139.177.225.254])
+        by smtp.gmail.com with ESMTPSA id k69-20020a633d48000000b005cf5bf78b74sm12849244pga.17.2024.01.25.01.38.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 25 Jan 2024 01:38:27 -0800 (PST)
+Message-ID: <68b7f87b-7f15-410c-9094-9fe9865b4bc4@bytedance.com>
+Date: Thu, 25 Jan 2024 17:38:21 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240117223922.1445327-1-lokeshgidra@google.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] mm: zswap: remove unnecessary tree cleanups in
+ zswap_swapoff()
+Content-Language: en-US
+To: Yosry Ahmed <yosryahmed@google.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>,
+ Andrew Morton <akpm@linux-foundation.org>, Nhat Pham <nphamcs@gmail.com>,
+ Chris Li <chrisl@kernel.org>, Huang Ying <ying.huang@intel.com>,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <20240120024007.2850671-1-yosryahmed@google.com>
+ <20240120024007.2850671-3-yosryahmed@google.com>
+ <20240122201906.GA1567330@cmpxchg.org>
+ <CAJD7tkaATS48HVuBfbOmPM3EvRUoPFr66WhF64UC4FkyVH5exg@mail.gmail.com>
+ <20240123153851.GA1745986@cmpxchg.org>
+ <CAJD7tkasHsRnT_75-TXsEe58V9_OW6m3g6CF7Kmsvz8CKRG_EA@mail.gmail.com>
+ <20240123201234.GC1745986@cmpxchg.org>
+ <CAJD7tkZC6w2EaE=j2NEVWn1s7Lo2A7YZh8LiZ+w72jQzFFWLUQ@mail.gmail.com>
+ <f3fa799f-1815-4cfe-abc8-3ba929fcd1ba@bytedance.com>
+ <CAJD7tka6UuEuuP=df-1V3vwsi0T0QhLORTRDs6qDvA81iY6SGA@mail.gmail.com>
+ <1496dce3-a4bb-4ccf-92d6-701a45b67da3@bytedance.com>
+ <CAJD7tkbrQw7FWx-EDKKCtH_E03xEd5Y+8BqRjE8d29JSOCGybg@mail.gmail.com>
+ <35c3b0e5-a5eb-44b2-aa7d-3167f4603c73@bytedance.com>
+ <CAJD7tkak+ZA8t+AVbYNXYWnrmVBBs=NfMTBQBsnHJQni2=gG2Q@mail.gmail.com>
+ <1a8a513f-fa84-41ca-b7f4-62726e78fd31@bytedance.com>
+ <CAJD7tkYBLkh82VQ6DmNQNXtnCxTVOY_7JRjARRtDrkKfKyTFSQ@mail.gmail.com>
+From: Chengming Zhou <zhouchengming@bytedance.com>
+In-Reply-To: <CAJD7tkYBLkh82VQ6DmNQNXtnCxTVOY_7JRjARRtDrkKfKyTFSQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jan 17, 2024 at 02:39:21PM -0800, Lokesh Gidra wrote:
-> To be consistent with other uffd ioctl's returning EAGAIN when
-> mmap_changing is detected, we should change UFFDIO_MOVE to do the same.
+On 2024/1/25 17:26, Yosry Ahmed wrote:
+> On Thu, Jan 25, 2024 at 1:22 AM Chengming Zhou
+> <zhouchengming@bytedance.com> wrote:
+>>
+>> On 2024/1/25 17:03, Yosry Ahmed wrote:
+>>>>>>>> The second difference is the handling of lru entry, which is easy that we
+>>>>>>>> just zswap_lru_del() in tree lock.
+>>>>>>>
+>>>>>>> Why do we need zswap_lru_del() at all? We should have already isolated
+>>>>>>> the entry at that point IIUC.
+>>>>>>
+>>>>>> I was thinking how to handle the "zswap_lru_putback()" if not writeback,
+>>>>>> in which case we can't use the entry actually since we haven't got reference
+>>>>>> of it. So we can don't isolate at the entry, and only zswap_lru_del() when
+>>>>>> we are going to writeback actually.
+>>>>>
+>>>>> Why not just call zswap_lru_putback() before we unlock the folio?
+>>>>
+>>>> When early return because __read_swap_cache_async() return NULL or !folio_was_allocated,
+>>>> we don't have a locked folio yet. The entry maybe invalidated and freed concurrently.
+>>>
+>>> Oh, that path, right.
+>>>
+>>> If we don't isolate the entry straightaway, concurrent reclaimers will
+>>> see the same entry, call __read_swap_cache_async(), find the folio
+>>> already in the swapcache and stop shrinking. This is because usually
+>>> this means we are racing with swapin and hitting the warmer part of
+>>> the zswap LRU.
+>>>
+>>> I am not sure if this would matter in practice, maybe Nhat knows
+>>> better. Perhaps we can rotate the entry in the LRU before calling
+>>> __read_swap_cache_async() to minimize the chances of such a race? Or
+>>> we can serialize the calls to __read_swap_cache_async() but this may
+>>> be an overkill.
+>>
+>> Also, not sure, rotate the entry maybe good IMHO since we will zswap_lru_del()
+>> once we checked the invalidate race.
 > 
-> Signed-off-by: Lokesh Gidra <lokeshgidra@google.com>
+> Not sure what you mean. If we rotate first, we won't have anything to
+> do in the failure case (if the folio is not locked). We will have to
+> do zswap_lru_del() if actually writeback, yes, but in this case no
+> synchronization is needed because the folio is locked, right?
 
-Acked-by: Mike Rapoport (IBM) <rppt@kernel.org>
+Right, sorry for my confusing expression. We rotate first in lru lock,
+and only zswap_lru_del() later if actually writeback.
 
-> ---
->  fs/userfaultfd.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
-> index 959551ff9a95..05c8e8a05427 100644
-> --- a/fs/userfaultfd.c
-> +++ b/fs/userfaultfd.c
-> @@ -2047,7 +2047,7 @@ static int userfaultfd_move(struct userfaultfd_ctx *ctx,
->  			ret = move_pages(ctx, mm, uffdio_move.dst, uffdio_move.src,
->  					 uffdio_move.len, uffdio_move.mode);
->  		else
-> -			ret = -EINVAL;
-> +			ret = -EAGAIN;
->  
->  		mmap_read_unlock(mm);
->  		mmput(mm);
-> -- 
-> 2.43.0.429.g432eaa2c6b-goog
-> 
-> 
-
--- 
-Sincerely yours,
-Mike.
+What I want to mean is that the possibility of seeing the entry on lru list
+by another reclaimer is very low, since we rotate and the timing between
+__read_swap_cache_async() and zswap_lru_del() should be short.
