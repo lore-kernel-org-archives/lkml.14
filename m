@@ -1,57 +1,62 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45727627EF
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 14:03:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 895BE627FE;
+	Thu, 25 Jan 2024 14:04:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706191390; cv=none; b=T5YgiccoVLCI9ccDOvl2IVBloTyPMzEcpNTT3wub+lii0BuPYhsvnrtFHystopnt3ImTl2sRT3LyJN7z/8K6r/U55vmnclvsZlAQOJPg3PpgtCuPuHDJ5Y8wCYbXVa4wCSu8dHMbYIo9xJo/9sMaNkfhcfQesqzgr0e5AV/UzPc=
+	t=1706191489; cv=none; b=qHMhGQotaeld2oVWKe2L2JAttdpK+0RNX+Ut5H55PPC16sxe09egKW1zmwF/K2dzD1Ux+oMzK/4tzjzHeRN4wbORy4A/VevOk6jg+ANL6l1tfU95WtqwA/HNlvr8uxTbnPPhFptXYJ8zKUjmVLPFMX3K3+b4yoibyoWEEoTTpsk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706191390; c=relaxed/simple;
-	bh=j2gtjhl3d1XNksVxYRJqASiqF1b665xOwflpYSXVsyQ=;
-	h=From:To:cc:Subject:MIME-Version:Content-Type:Date:Message-ID; b=dIgnb4f7cttCSLWVIYSeTxV+KRZ5qbxyop5IpaYCk7HL+ArAwzalQcH/L/rEXYmwt6P9rY2Mkq6JO08Om6sJVVFF51mWD8hti2+axVl18RIUWR2Zy3XjJzQCUv/qahvdXeMGyHcU9Q3sfTzN1w8mLLm8oi5tNhJH99xDAcCrHzo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DyklOWNG; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1706191489; c=relaxed/simple;
+	bh=IB+Wda9MOMHc0wdwn2N3+ileOMYk2feFsUX1tnPk9XE=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LRKpBAT9OHDDsF+pWukOTk6EhXl/KG9pQFob/0+lqXIithYXzYaAXP3QnT+b46YhaHT9Mh1wsAueKxnBXZeLlMMxKI6qRdqrVofhWYzL0niAIvWcnu45drUKQN7GoHTkD4pBiXlx4x7X2k/bWRu3qQeWmC2WP6M5fMa67STEXFY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Kl/zaH+S; arc=none smtp.client-ip=198.47.23.248
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DyklOWNG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1706191388;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-	bh=e12SznbgNVYlJuZvyyzaU+LAE5U/U9H1zetulJ+CfWs=;
-	b=DyklOWNGw/IDSN5Acp/N1Hz1zHwEXEfS9bOcPRFJGKQO6KHkrRBL5O3SqYS/nnvZYYiA4E
-	6k7AMUxtz3XsPiWlffpY6eKDwZof398X3ySsDd+WBRaq4ia/QgqYGlq7Ymho6TE2V5tpDS
-	0HZPmbxCWKTT/8Wz5L6wIbHhAbhaMUs=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-640-ak9liix9McKY6rZIJ6D-Rw-1; Thu,
- 25 Jan 2024 09:03:00 -0500
-X-MC-Unique: ak9liix9McKY6rZIJ6D-Rw-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 831452837815;
-	Thu, 25 Jan 2024 14:02:29 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.245])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id CC13951D5;
-	Thu, 25 Jan 2024 14:02:27 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-To: Gao Xiang <xiang@kernel.org>
-cc: dhowells@redhat.com, Jeff Layton <jlayton@kernel.org>,
-    Christian Brauner <brauner@kernel.org>,
-    Matthew Wilcox <willy@infradead.org>,
-    Eric Sandeen <esandeen@redhat.com>, v9fs@lists.linux.dev,
-    linux-afs@lists.infradead.org, ceph-devel@vger.kernel.org,
-    linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
-    linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-    linux-kernel@vger.kernel.org
-Subject: Roadmap for netfslib and local caching (cachefiles)
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Kl/zaH+S"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 40PE4cws004654;
+	Thu, 25 Jan 2024 08:04:38 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1706191478;
+	bh=qRsbD8WCY5mnHfKFptKalBRsw3deKt3m0bDDYt63AzY=;
+	h=Date:From:To:CC:Subject:References:In-Reply-To;
+	b=Kl/zaH+SmanGy58qmhqvfgC7OC68VwGeqZcOfWiTpe0oHXzJkoUDRRScj3k5eFaH5
+	 oSNfxA5Sc2SOBi7SfdZ2CVi+o+hJFYy1sQxqrmyMZjNhyLLlyWWhV7Qi8LnOzC6x2y
+	 dHfH5zqb52NL7pzidCWKKmD6SiliGwNbSZd9oz8I=
+Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 40PE4cTM005116
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Thu, 25 Jan 2024 08:04:38 -0600
+Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 25
+ Jan 2024 08:04:38 -0600
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Thu, 25 Jan 2024 08:04:38 -0600
+Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 40PE4cf2036883;
+	Thu, 25 Jan 2024 08:04:38 -0600
+Date: Thu, 25 Jan 2024 08:04:38 -0600
+From: Nishanth Menon <nm@ti.com>
+To: Vaishnav Achath <vaishnav.a@ti.com>
+CC: Jayesh Choudhary <j-choudhary@ti.com>, <vigneshr@ti.com>,
+        <kristo@kernel.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+        <bb@ti.com>, <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <u-kumar1@ti.com>
+Subject: Re: [PATCH] arm64: dts: ti: k3-am62p-mcu/wakeup: Disable MCU and
+ wakeup R5FSS nodes
+Message-ID: <20240125140438.lmjrjzxqoy5lgsir@corset>
+References: <20240121134017.374992-1-vaishnav.a@ti.com>
+ <0fcec921-0220-4251-afa4-44db5e80d2ef@ti.com>
+ <20240124172151.ngxaq6k5tnvsx4jr@proud>
+ <2291204f-97d5-4887-b68f-8789fe85f838@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -59,156 +64,81 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-ID: <520667.1706191347.1@warthog.procyon.org.uk>
-Date: Thu, 25 Jan 2024 14:02:27 +0000
-Message-ID: <520668.1706191347@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
+Content-Disposition: inline
+In-Reply-To: <2291204f-97d5-4887-b68f-8789fe85f838@ti.com>
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-Here's a roadmap for the future development of netfslib and local caching
-(e.g. cachefiles).
+On 11:17-20240125, Vaishnav Achath wrote:
+> Hi Nishanth,
+> 
+> On 24/01/24 22:51, Nishanth Menon wrote:
+> > On 11:26-20240124, Jayesh Choudhary wrote:
+> > > Hello Vaishnav,
+> > > 
+> > > On 21/01/24 19:10, Vaishnav Achath wrote:
+> > > > K3 Remoteproc R5 driver requires reserved memory carveouts and
+> > > > mailbox configuration to instantiate the cores successfully.
+> > > > Since this is a board level dependency, keep the R5 subsytem
+> > > > disabled at SoC dtsi, otherwise it results in probe errors like
+> > > > below during AM62P SK boot:
+> > > > 
+> > > > r5fss@79000000: reserved memory init failed, ret = -22
+> > > > r5fss@79000000: k3_r5_cluster_rproc_init failed, ret = -22
+> > > > r5fss@78000000: reserved memory init failed, ret = -22
+> > > > r5fss@78000000: k3_r5_cluster_rproc_init failed, ret = -22
+> > > > 
+> > > > Fixes: b5080c7c1f7e ("arm64: dts: ti: k3-am62p: Add nodes for more IPs")
+> > > > 
+> > > > Signed-off-by: Vaishnav Achath <vaishnav.a@ti.com>
+> > > 
+> > > Reviewed-by: Jayesh Choudhary <j-choudhary@ti.com>
+> > > 
+> > > > ---
+> > > >    arch/arm64/boot/dts/ti/k3-am62p-mcu.dtsi    | 2 ++
+> > > >    arch/arm64/boot/dts/ti/k3-am62p-wakeup.dtsi | 1 +
+> > > >    2 files changed, 3 insertions(+)
+> > > > 
+> > > > diff --git a/arch/arm64/boot/dts/ti/k3-am62p-mcu.dtsi b/arch/arm64/boot/dts/ti/k3-am62p-mcu.dtsi
+> > > > index c4b0b91d70cf..14eb9ba836d3 100644
+> > > > --- a/arch/arm64/boot/dts/ti/k3-am62p-mcu.dtsi
+> > > > +++ b/arch/arm64/boot/dts/ti/k3-am62p-mcu.dtsi
+> > > > @@ -187,6 +187,8 @@ mcu_r5fss0: r5fss@79000000 {
+> > > >    		ranges = <0x79000000 0x00 0x79000000 0x8000>,
+> > > >    			 <0x79020000 0x00 0x79020000 0x8000>;
+> > > >    		power-domains = <&k3_pds 7 TI_SCI_PD_EXCLUSIVE>;
+> > > > +		status = "disabled";
+> > > > +
+> > > >    		mcu_r5fss0_core0: r5f@79000000 {
+> > > >    			compatible = "ti,am62-r5f";
+> > > >    			reg = <0x79000000 0x00008000>,
+> > > > diff --git a/arch/arm64/boot/dts/ti/k3-am62p-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-am62p-wakeup.dtsi
+> > > > index 19f42b39394e..10a7059b2d9b 100644
+> > > > --- a/arch/arm64/boot/dts/ti/k3-am62p-wakeup.dtsi
+> > > > +++ b/arch/arm64/boot/dts/ti/k3-am62p-wakeup.dtsi
+> > > > @@ -78,6 +78,7 @@ wkup_r5fss0: r5fss@78000000 {
+> > > >    		ranges = <0x78000000 0x00 0x78000000 0x8000>,
+> > > >    			 <0x78100000 0x00 0x78100000 0x8000>;
+> > > >    		power-domains = <&k3_pds 119 TI_SCI_PD_EXCLUSIVE>;
+> > > > +		status = "disabled";
+> > 
+> > Is there a reason for difference in white space addition?
+> > 
+> 
+> For mcu_r5fss0_core0 child node there was no blank line as per the
+> recommended coding style : https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/dts-coding-style.rst#n124
+> 
+> So I added a newline there and wkup_r5fss0 already had it correct, since the
+> change was trivial it was not mentioned in commit message.
+> 
 
-Netfslib
-========
-
-[>] Current state:
-
-The netfslib write helpers have gone upstream now and are in v6.8-rc1, with
-both the 9p and afs filesystems using them.  This provides larger I/O size
-support to 9p and write-streaming and DIO support to afs.
-
-The helpers provide their own version of generic_perform_write() that:
-
- (1) doesn't use ->write_begin() and ->write_end() at all, completely taking
-     over all of of the buffered I/O operations, including writeback.
-
- (2) can perform write-through caching, setting up one or more write
-     operations and adding folios to them as we copy data into the pagecache
-     and then starting them as we finish.  This is then used for O_SYNC and
-     O_DSYNC and can be used with immediate-write caching modes in, say, cifs.
-
-Filesystems using this then deal with iov_iters and ideally would not deal
-pages or folios at all - except incidentally where a wrapper is necessary.
-
-
-[>] Aims for the next merge window:
-
-Convert cifs to use netfslib.  This is now in Steve French's for-next branch.
-
-Implement content crypto and bounce buffering.  I have patches to do this, but
-it would only be used by ceph (see below).
-
-Make libceph and rbd use iov_iters rather than referring to pages and folios
-as much as possible.  This is mostly done and rbd works - but there's one bit
-in rbd that still needs doing.
-
-Convert ceph to use netfslib.  This is about half done, but there are some
-wibbly bits in the ceph RPCs that I'm not sure I fully grasp.  I'm not sure
-I'll quite manage this and it might get bumped.
-
-Finally, change netfslib so that it uses ->writepages() to write data to the
-cache, even data on clean pages just read from the server.  I have a patch to
-do this, but I need to move cifs and ceph over first.  This means that
-netfslib, 9p, afs, cifs and ceph will no longer use PG_private_2 (aka
-PG_fscache) and Willy can have it back - he just then has to wrest control
-from NFS and btrfs.
-
-
-[>] Aims for future merge windows:
-
-Using a larger chunk size than PAGE_SIZE - for instance 256KiB - but that
-might require fiddling with the VM readahead code to avoid read/read races.
-
-Cache AFS directories - there are just files and currently are downloaded and
-parsed locally for readdir and lookup.
-
-Cache directories from other filesystems.
-
-Cache inode metadata, xattrs.
-
-Add support for fallocate().
-
-Implement content crypto in other filesystems, such as cifs which has its own
-non-fscrypt way of doing this.
-
-Support for data transport compression.
-
-Disconnected operation.
-
-NFS.  NFS at the very least needs to be altered to give up the use of
-PG_private_2.
+For some reason i was misled to think that the EoL spacing was messed
+up. Looking at
+https://lore.kernel.org/all/20240121134017.374992-1-vaishnav.a@ti.com/ i
+realise it is being fixed properly in the patch. Oops.. my bad.
 
 
-Local Caching
-=============
-
-There are a number of things I want to look at with local caching:
-
-[>] Although cachefiles has switched from using bmap to using SEEK_HOLE and
-SEEK_DATA, this isn't sufficient as we cannot rely on the backing filesystem
-optimising things and introducing both false positives and false negatives.
-Cachefiles needs to track the presence/absence of data for itself.
-
-I had a partially-implemented solution that stores a block bitmap in an xattr,
-but that only worked up to files of 1G in size (with bits representing 256K
-blocks in a 512-byte bitmap).
-
-[>] An alternative cache format might prove more fruitful.  Various AFS
-implementations use a 'tagged cache' format with an index file and a bunch of
-small files each of which contains a single block (typically 256K in OpenAFS).
-
-This would offer some advantages over the current approach:
-
- - it can handle entry reuse within the index
- - doesn't require an external culling process
- - doesn't need to truncate/reallocate when invalidating
-
-There are some downsides, including:
-
- - each block is in a separate file
- - metadata coherency is more tricky - a powercut may require a cache wipe
- - the index key is highly variable in size if used for multiple filesystems
-
-But OpenAFS has been using this for something like 30 years, so it's probably
-worth a try.
-
-[>] Need to work out some way to store xattrs, directory entries and inode
-metadata efficiently.
-
-[>] Using NVRAM as the cache rather than spinning rust.
-
-[>] Support for disconnected operation to pin desirable data and keep
-track of changes.
-
-[>] A user API by which the cache for specific files or volumes can be
-flushed.
-
-
-Disconnected Operation
-======================
-
-I'm working towards providing support for disconnected operation, so that,
-provided you've got your working set pinned in the cache, you can continue to
-work on your network-provided files when the network goes away and resync the
-changes later.
-
-This is going to require a number of things:
-
- (1) A user API by which files can be preloaded into the cache and pinned.
-
- (2) The ability to track changes in the cache.
-
- (3) A way to synchronise changes on reconnection.
-
- (4) A way to communicate to the user when there's a conflict with a third
-     party change on reconnect.  This might involve communicating via systemd
-     to the desktop environment to ask the user to indicate how they'd like
-     conflicts recolved.
-
- (5) A way to prompt the user to re-enter their authentication/crypto keys.
-
- (6) A way to ask the user how to handle a process that wants to access data
-     we don't have (error/wait) - and how to handle the DE getting stuck in
-     this fashion.
-
-David
-
+Reviewed-by: Nishanth Menon <nm@ti.com>
+-- 
+Regards,
+Nishanth Menon
+Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
