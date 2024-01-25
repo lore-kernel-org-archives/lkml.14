@@ -1,90 +1,151 @@
-Received: from ahti.lucaweiss.eu (ahti.lucaweiss.eu [128.199.32.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out5-smtp.messagingengine.com (out5-smtp.messagingengine.com [66.111.4.29])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11ABD13A262;
-	Thu, 25 Jan 2024 21:26:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=128.199.32.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A876F13A253;
+	Thu, 25 Jan 2024 21:26:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.111.4.29
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706217966; cv=none; b=soDdT7pqLRtKQZtD1Sfh5M90QoaUXna++xlhR6DaVo2g3MYt6mjvKJ+6MptAh+yJQpA+kA23USm7SaObll18GiiuMcG0yPA74pGvVn73NgJtmlEEBhYBZOmkYQBbctgDmfcOudoastu+S74ksThzaa+rKdjcL3+Nls9KRfP7r7w=
+	t=1706218001; cv=none; b=bybJKuIwNwrEDG1n4185puD/OIb4jODL8C9icDeLhNQn9eOWg9weJZIXHpfRc3yH/tMSBmKgpvRNGX89jo4DYX508959/VeOAF8LEMFCsNH6D04VREoUAKLoGtpBeivU/s6FF2ytQ3mZM6DGimzDT0lBmOga+l7mriPbqA8SYFA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706217966; c=relaxed/simple;
-	bh=kx9FeMTO9kz6c3Lety3dxdwU6n70e2EWE5IksjXF7fw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rEo3+RdkSTsUuCYx16XHvQTt/ebHT698wnJKues6Rfpx6gd+4Kl1zOLrgcajsS7hm1ZDRgEmg9i3mR7syiZWOo4BWwOPHPXuDuIygjxfUhRlfic9MCqZl+MvdHq/LTVbjCddf8sV+/AQ+3Y95ThO/H1TqFkcQPJktuU5L/1Ujyo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=z3ntu.xyz; spf=pass smtp.mailfrom=z3ntu.xyz; dkim=pass (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b=nmdQJrpj; arc=none smtp.client-ip=128.199.32.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=z3ntu.xyz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=z3ntu.xyz
+	s=arc-20240116; t=1706218001; c=relaxed/simple;
+	bh=B/g0KfVrN0Gqw2KKiCNZ2MwRrOUESPX1O0BAPrvSEjA=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
+	 Subject:Content-Type; b=k+8WGAXJCFvq/RzwmM11v3VLyUpoY955gpZSX9AQ0cwN9LCuZkuTGQTfJ+rNHBF8O82uGHti4gV7snCofjLYJ8bPtr04yS9GWH8B1j3wPkA/fDoj8QS1LZpKKQ/9PPNqcr5LUpuBoOH9uR7hPXZ0BGR839eI0FPb5oms62xGpvU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=QK8SP0Nn; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=C2sMW8cn; arc=none smtp.client-ip=66.111.4.29
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="nmdQJrpj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=z3ntu.xyz; s=s1;
-	t=1706217953; bh=kx9FeMTO9kz6c3Lety3dxdwU6n70e2EWE5IksjXF7fw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=nmdQJrpjwPNb9Uo1+W7e0ZLHvt8kwoGM6TTZ+z8WY9H/VB4fHN6Dx01K4HVk7C6ek
-	 8Xj61dSRqMRw6ZY0cbcX9X6x0vz7BgcEoI1/6ChHvQUr2bBGfFj+hlMYJLwJPUt4Gy
-	 lGLYDp6sUyciEEP2ANDqc8JUKrigpNO8bWDVFgfU=
-From: Luca Weiss <luca@z3ntu.xyz>
-To: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
- Bjorn Andersson <andersson@kernel.org>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>,
- Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- Vladimir Lypak <vladimir.lypak@gmail.com>
-Subject: Re: [PATCH 2/3] clk: qcom: gcc-msm8953: add MDSS_BCR reset
-Date: Thu, 25 Jan 2024 22:25:52 +0100
-Message-ID: <2714198.mvXUDI8C0e@z3ntu.xyz>
-In-Reply-To: <5192c3b1-46fd-455d-aa67-b05bf5c54e19@linaro.org>
-References:
- <20240123-msm8953-mdss-reset-v1-0-bb8c6d3ce897@z3ntu.xyz>
- <20240123-msm8953-mdss-reset-v1-2-bb8c6d3ce897@z3ntu.xyz>
- <5192c3b1-46fd-455d-aa67-b05bf5c54e19@linaro.org>
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="QK8SP0Nn";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="C2sMW8cn"
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+	by mailout.nyi.internal (Postfix) with ESMTP id A406D5C00F5;
+	Thu, 25 Jan 2024 16:26:38 -0500 (EST)
+Received: from imap51 ([10.202.2.101])
+  by compute1.internal (MEProxy); Thu, 25 Jan 2024 16:26:38 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm2; t=1706217998; x=1706304398; bh=qpZFUm5hoy
+	UFSrZ1IxH2YPgLg1vDc0KKMVjTRgl2rig=; b=QK8SP0Nnse0H+PKqzFqPep9Eaj
+	bFXXf5kjhp0BbqieJzJWYnxWIgyvg8HsOD39bYgIF+e4vTJn82B8CKgYZRf+AZdx
+	MTYOWvDeO/W0at49Yu1e9RV/9V6xpHDfYki020xa0B7C3WKM+hHAWqjMOoVeVZoA
+	fs7YZAhSMqi8XjJCMwenVuh6IYtQDvL9I5rINgrLsS/xdz+EI87khxKBiYY/XL+k
+	bEJHaTtn5y98n+YeyLf/k+3u1pyXLbYRlv1O3QLf5W4QiZAe9wqRvMBKOsM/IE6Q
+	au4QOp7IIsIBXMRZr6coDZsfVrGiMWfyyOLEsb4Ys/LzDvY0h5PfQoqsvLvQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm3; t=1706217998; x=1706304398; bh=qpZFUm5hoyUFSrZ1IxH2YPgLg1vD
+	c0KKMVjTRgl2rig=; b=C2sMW8cnE4/luDTxawebBPVlYXW16RsCLV4ctJZhaaYK
+	VDwwwJmoAoBFA7kPsEG9uy1yM5GxmsKIlNfwmbK3+gr9Z3EhVIy/dzietHPFUukm
+	pIj8YUTdaJdnJXj2zmSzmAI25Gyic96NSab/Td4xk3w83oRNo48TeQaW9WZAsfTM
+	ut3ql2yLcnJE+7olFwqRl7G+mKp2iFkyvGdORNrlenQcEJ7c8MDL1dnXJ8xB2WcG
+	rvV7YlC7F+OTjlspL/qbAQ5GoD+6zCvxw1QIp3AeekS/tiWmqOZlPD/Q9G7Bjff4
+	pgTbmS0C/38BPcuv8pPnZXpZKzjQkSUBE28NY6Gz4g==
+X-ME-Sender: <xms:DtKyZQdv4ugAirEr53Ddfnb5hEwiKXbAk4uKJ3WY5CvuL4Y6cUDA0w>
+    <xme:DtKyZZKkPau6TiEpRYxZWelLmygMXFMLznkMrTWpS4qd6ldyLuzHoR8eZxFF7BPif
+    0i0BwS0FjczD56yhpc>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrvdelhedgheeiucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
+    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
+    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
+    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
+    hrnhgusegrrhhnuggsrdguvg
+X-ME-Proxy: <xmx:DtKyZXKp1BlRrGpLl2j_wtnuVlGkXDDBhYgdoUQPH5q_Ew6voXwB5g>
+    <xmx:DtKyZbESVomnS7EoKFMzRddRPuksuKMe5MNEOy8SJSAIpmYcEVWG3w>
+    <xmx:DtKyZcnwwSgv-nFvLSPXv3uXKjSBpo36uKF6rnTTIlgYR4pckQfAzQ>
+    <xmx:DtKyZSsDdHfxXbC4wk5AtsFKsmbUhk6GJLkb9tbPnhVoX9d5GEZS7A>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id 22736B6008D; Thu, 25 Jan 2024 16:26:38 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-119-ga8b98d1bd8-fm-20240108.001-ga8b98d1b
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
+Message-Id: <01d24044-6cac-4034-a9de-5b69c2dab139@app.fastmail.com>
+In-Reply-To: <20240125145007.748295-26-tudor.ambarus@linaro.org>
+References: <20240125145007.748295-1-tudor.ambarus@linaro.org>
+ <20240125145007.748295-26-tudor.ambarus@linaro.org>
+Date: Thu, 25 Jan 2024 22:23:53 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Tudor Ambarus" <tudor.ambarus@linaro.org>,
+ "Mark Brown" <broonie@kernel.org>, "Andi Shyti" <andi.shyti@kernel.org>
+Cc: "Rob Herring" <robh+dt@kernel.org>, krzysztof.kozlowski+dt@linaro.org,
+ "Conor Dooley" <conor+dt@kernel.org>,
+ "Alim Akhtar" <alim.akhtar@samsung.com>, linux-spi@vger.kernel.org,
+ linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ Linux-Arch <linux-arch@vger.kernel.org>,
+ =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>,
+ "Peter Griffin" <peter.griffin@linaro.org>,
+ "Sam Protsenko" <semen.protsenko@linaro.org>, kernel-team@android.com,
+ "William McVicker" <willmcvicker@google.com>
+Subject: Re: [PATCH v2 25/28] asm-generic/io.h: add iowrite{8,16}_32 accessors
+Content-Type: text/plain
 
-On Mittwoch, 24. J=E4nner 2024 13:10:53 CET Konrad Dybcio wrote:
-> On 1/23/24 22:03, Luca Weiss wrote:
-> > From: Vladimir Lypak <vladimir.lypak@gmail.com>
-> >=20
-> > Add an entry in the gcc driver for the MDSS_BCR reset found on MSM8953.
-> >=20
-> > Signed-off-by: Vladimir Lypak <vladimir.lypak@gmail.com>
-> > [luca: expand commit message, move entry]
-> > Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
-> > ---
->=20
-> I found some more definitions in lk2nd
->=20
-> 88:#define  GCC_CRYPTO_BCR                    (CLK_CTL_BASE + 0x16000)
-> 106:#define SDCC1_BCR                          (CLK_CTL_BASE + 0x42000) /*
-> block reset*/ 125:#define SDCC2_BCR                          (CLK_CTL_BASE
-> + 0x43000) /* block reset */ 150:#define USB_HS_BCR                      =
- =20
-> (CLK_CTL_BASE + 0x41000) 155:#define GCC_QUSB2_PHY_BCR                =20
-> (CLK_CTL_BASE + 0x4103C) 168:#define USB_30_BCR                =20
-> (CLK_CTL_BASE + 0x3F070)
-> 189:#define USB3_PHY_BCR                (CLK_CTL_BASE + 0x3F034)
-> 190:#define USB3PHY_PHY_BCR                 (CLK_CTL_BASE + 0x3F03C)
->=20
-> Couldn't find this one though, did you confirm that MDSS goes off
-> when you assert it?
+On Thu, Jan 25, 2024, at 15:50, Tudor Ambarus wrote:
+> This will allow devices that require 32 bits register accesses to write
+> data in chunks of 8 or 16 bits.
+>
+> One SoC that requires 32 bit register accesses is the google gs101. A
+> typical use case is SPI, where the clients can request transfers in words
+> of 8 bits.
+>
+> Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
 
-That one's defined here:
-https://gerrit-public.fairphone.software/plugins/gitiles/kernel/msm-4.9/+/r=
-efs/heads/int/13/fp3/arch/arm64/boot/dts/qcom/msm8953-mdss-pll.dtsi#21
+My feeling is that this operation is rare enough that I'd prefer
+it to be open-coded in the driver than made generic here. Making
+it work for all corner cases is possible but probably not worth
+it.
 
-I'll add some of the others in v2.
+> +#ifndef writesb_l
+> +#define writesb_l writesb_l
+> +static inline void writesb_l(volatile void __iomem *addr, const void 
+> *buffer,
+> +			     unsigned int count)
+> +{
+> +	if (count) {
+> +		const u8 *buf = buffer;
+> +
+> +		do {
+> +			__raw_writel(*buf++, addr);
+> +		} while (--count);
+> +	}
+> +}
+> +#endif
 
->=20
-> Konrad
+There are architectures where writesb() requires an extra
+barrier before and/or after the loop. I think there are
+others that get the endianess wrong in the generic version
+you have here.
 
+> +#ifndef iowrite8_32_rep
+> +#define iowrite8_32_rep iowrite8_32_rep
+> +static inline void iowrite8_32_rep(volatile void __iomem *addr,
+> +				   const void *buffer,
+> +				   unsigned int count)
+> +{
+> +	writesb_l(addr, buffer, count);
+> +}
+> +#endif
 
+This one is wrong for architectures that have a custom inl()
+helper and need to multiplex between inl() and writel() in
+iowrite32(), notably x86.
 
+For completeness you would need to add the out-of-line version
+in lib/iomap.c for those, plus the corresponding insb_32()
+and possibly the respective big-endian versions of those.
 
+If you keep the helper in a driver that is only used on
+regular architectures like arm64, it will work reliably.
+
+      Arnd
