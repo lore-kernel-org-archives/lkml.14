@@ -1,977 +1,730 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5B3818B04;
-	Thu, 25 Jan 2024 23:57:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 374D81B278;
+	Thu, 25 Jan 2024 23:57:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706227053; cv=none; b=ZnS4uihOdR6qtPR2NvIF/y4hHXI2JW34Hr4pQtH27Z8pWm3fj9q+ewbavPcbOnojvKVbhVQIFxuEVc0Kz7u0CbGQDTLwqJmHgwDT2UIxZ5wXo3+YQzbOCHtvrHfPch0imCsbwrSAa+4ybXoOyEtBB1h81qzr/vSM1q8PCZagcOI=
+	t=1706227061; cv=none; b=syDwzh3Z813LQGR11+bBC6WcIhAvH7IdoUFtuD5XzqDf3TBsD5wWGF6TdDjqneOrVmdutcXzsxq5u5LpUyRrVE8TEktiavGsj7jdoxHeaI7FDo/BFTIMCIasKlqbBvzCUsi4yQzpnZFoQJvC5Fgq8TwB9zDaIMNEyKF0F8KhT1w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706227053; c=relaxed/simple;
-	bh=/92k1PvXqBZxnWUvCoAB28iLXESqqftpHVAAqN9wXlY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=pFBPDuQwhOISJYs8Vz7h5FWLYCDXgurqmkB3Bo/M6h9BT3A/d8dLZ9GGwivaidwSMdvM6KjXL/TWBkgcoXwhpKimvIatCojVDfl01gIbP4IePu1jTxsZ447erGyWq0TuUln8e5graK+4Ri+geMsG5SbtpbyxObW8wXjK+a6ChbE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=A+7omsIO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706227061; c=relaxed/simple;
+	bh=oXu8e8sl63m8R+FJnn7qQsxLgGdBr5LYwt69wUkKx08=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=u1uebOqPFa8klVmXiCv1CXGTbmbl/nbUTGntMmlL7ZWjWFmjjV4TqrlbG70+d7OfUJBua/X5y6Nv03VItdChOsOaKigOfoIFSpIGlNfw+k95FFNLshCZXaO4gt1Y3Se8amING67hxrgKDYrsPTAuQU7/I6TOq0JDZ6sHjyFigrg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=k+8V+tpH; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="A+7omsIO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 275EDC433C7;
-	Thu, 25 Jan 2024 23:57:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1706227053;
-	bh=/92k1PvXqBZxnWUvCoAB28iLXESqqftpHVAAqN9wXlY=;
-	h=From:To:Cc:Subject:Date:From;
-	b=A+7omsIOah81O2pzKOeZq4dQg10YxT1nqysHkSVlsy6/AC54wv7+vH1OSCCp/LoCK
-	 SY3XBNmN/Stgyh0Ew8p3knXWJZvSYUza2U3HCXJyDZ78hYdmwV6aaY/Yi5mQoRzlLL
-	 3c0aG15mKWPzO9yB44YQfXK2Hu+Nzil+Tcv2YrtY=
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: linux-kernel@vger.kernel.org,
-	akpm@linux-foundation.org,
-	torvalds@linux-foundation.org,
-	stable@vger.kernel.org
-Cc: lwn@lwn.net,
-	jslaby@suse.cz,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Linux 5.10.209
-Date: Thu, 25 Jan 2024 15:57:29 -0800
-Message-ID: <2024012529-overkill-wool-a60f@gregkh>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="k+8V+tpH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706227058; x=1737763058;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=oXu8e8sl63m8R+FJnn7qQsxLgGdBr5LYwt69wUkKx08=;
+  b=k+8V+tpH7qKY5HGUzKQ1cS59kvMSjgtGWdxXNgkk+WgJpIDsizyZNWWE
+   iJFD7VjbSeF6ggYz43I09HqqhNj6ejYUDTKJQYIs3zEN13mJpWYzB95MV
+   MBk2VN7gNWRQDvWS1RXOX/XTd+c++VHJhB2jcb3Ncsuk6HV8gF+lFZMNo
+   ds5PlSBUMrT+qVYDQEe09qK12aFX8ifxmF9J21NCCJKlsVPBu4aQeOqrL
+   XrTJPLqD+kFhvb2AFNsWHxwzpbs8ScA75b6T6tRKMentt6/324AAfEMqK
+   EXgJtARgYaTk7A2pv80RnBH90/47a4uwGHxmlr2kqfzT1zo8WVzsPrL/G
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="15867571"
+X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
+   d="scan'208";a="15867571"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2024 15:57:37 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="930191104"
+X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
+   d="scan'208";a="930191104"
+Received: from vcostago-mobl3.jf.intel.com ([10.24.14.99])
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2024 15:57:36 -0800
+From: Vinicius Costa Gomes <vinicius.gomes@intel.com>
+To: brauner@kernel.org,
+	amir73il@gmail.com,
+	hu1.chen@intel.com
+Cc: miklos@szeredi.hu,
+	malini.bhandaru@intel.com,
+	tim.c.chen@intel.com,
+	mikko.ylinen@intel.com,
+	lizhen.you@intel.com,
+	linux-unionfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Vinicius Costa Gomes <vinicius.gomes@intel.com>
+Subject: [RFC v2 3/4] overlayfs: Optimize credentials usage
+Date: Thu, 25 Jan 2024 15:57:22 -0800
+Message-ID: <20240125235723.39507-4-vinicius.gomes@intel.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240125235723.39507-1-vinicius.gomes@intel.com>
+References: <20240125235723.39507-1-vinicius.gomes@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-I'm announcing the release of the 5.10.209 kernel.
-
-All users of the 5.10 kernel series must upgrade.
-
-The updated 5.10.y git tree can be found at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux-5.10.y
-and can be browsed at the normal kernel.org git web browser:
-	https://git.kernel.org/?p=linux/kernel/git/stable/linux-stable.git;a=summary
-
-thanks,
-
-greg k-h
-
-------------
-
- Makefile                                                          |    2 
- arch/arc/kernel/signal.c                                          |    6 
- arch/arm/boot/dts/qcom-apq8064.dtsi                               |    2 
- arch/arm/mach-davinci/Kconfig                                     |    1 
- arch/arm/mach-sunxi/mc_smp.c                                      |    4 
- arch/arm64/boot/dts/marvell/armada-3720-turris-mox.dts            |    2 
- arch/arm64/boot/dts/qcom/qrb5165-rb5.dts                          |    2 
- arch/arm64/boot/dts/qcom/sdm845-db845c.dts                        |    2 
- arch/arm64/boot/dts/ti/k3-am65-main.dtsi                          |    2 
- arch/arm64/kvm/vgic/vgic-its.c                                    |    5 
- arch/arm64/kvm/vgic/vgic-mmio-v3.c                                |   27 
- arch/mips/alchemy/devboards/db1200.c                              |    2 
- arch/mips/alchemy/devboards/db1550.c                              |    2 
- arch/mips/include/asm/dmi.h                                       |    2 
- arch/mips/kernel/setup.c                                          |    4 
- arch/powerpc/include/asm/sections.h                               |    8 
- arch/powerpc/lib/Makefile                                         |    2 
- arch/powerpc/perf/imc-pmu.c                                       |    6 
- arch/powerpc/platforms/44x/Kconfig                                |    1 
- arch/powerpc/platforms/powernv/opal-irqchip.c                     |    2 
- arch/powerpc/platforms/powernv/opal-powercap.c                    |    6 
- arch/powerpc/platforms/powernv/opal-xscom.c                       |    5 
- arch/powerpc/platforms/pseries/hotplug-memory.c                   |   21 
- arch/s390/include/asm/pci_io.h                                    |   32 
- arch/s390/pci/pci_mmio.c                                          |   12 
- arch/x86/kernel/kvmclock.c                                        |   12 
- arch/x86/lib/misc.c                                               |    2 
- crypto/af_alg.c                                                   |   14 
- crypto/scompress.c                                                |    6 
- drivers/acpi/acpi_extlog.c                                        |    7 
- drivers/acpi/acpi_lpit.c                                          |    2 
- drivers/acpi/acpi_video.c                                         |   12 
- drivers/acpi/property.c                                           |    4 
- drivers/acpi/resource.c                                           |    7 
- drivers/android/binder.c                                          |    2 
- drivers/android/binder_alloc.c                                    |   32 
- drivers/base/swnode.c                                             |    3 
- drivers/bluetooth/btmtkuart.c                                     |   11 
- drivers/clk/clk-fixed-rate.c                                      |   28 
- drivers/clk/clk-si5341.c                                          |    4 
- drivers/clk/qcom/gpucc-sm8150.c                                   |    4 
- drivers/clk/qcom/videocc-sm8150.c                                 |    5 
- drivers/clk/rockchip/clk-rk3128.c                                 |    2 
- drivers/clk/zynqmp/clk-mux-zynqmp.c                               |    2 
- drivers/clk/zynqmp/divider.c                                      |   63 -
- drivers/cpufreq/cpufreq-dt-platdev.c                              |    2 
- drivers/cpufreq/imx-cpufreq-dt.c                                  |    2 
- drivers/cpufreq/imx6q-cpufreq.c                                   |    4 
- drivers/cpufreq/scmi-cpufreq.c                                    |    7 
- drivers/cpufreq/tegra20-cpufreq.c                                 |    2 
- drivers/crypto/ccp/ccp-ops.c                                      |    5 
- drivers/crypto/sa2ul.c                                            |    3 
- drivers/crypto/sahara.c                                           |  248 +---
- drivers/crypto/virtio/Kconfig                                     |    3 
- drivers/crypto/virtio/Makefile                                    |    1 
- drivers/crypto/virtio/virtio_crypto_akcipher_algs.c               |  591 ++++++++++
- drivers/crypto/virtio/virtio_crypto_algs.c                        |  143 +-
- drivers/crypto/virtio/virtio_crypto_common.h                      |   26 
- drivers/crypto/virtio/virtio_crypto_core.c                        |   82 +
- drivers/crypto/virtio/virtio_crypto_mgr.c                         |   11 
- drivers/edac/thunderx_edac.c                                      |   10 
- drivers/firmware/meson/meson_sm.c                                 |    5 
- drivers/firmware/ti_sci.c                                         |   10 
- drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c                       |   10 
- drivers/gpu/drm/amd/pm/powerplay/kv_dpm.c                         |    4 
- drivers/gpu/drm/amd/pm/powerplay/si_dpm.c                         |    5 
- drivers/gpu/drm/bridge/tc358767.c                                 |    2 
- drivers/gpu/drm/bridge/ti-tpd12s015.c                             |    4 
- drivers/gpu/drm/drm_crtc.c                                        |    8 
- drivers/gpu/drm/drm_drv.c                                         |   10 
- drivers/gpu/drm/exynos/exynos_drm_dma.c                           |    8 
- drivers/gpu/drm/exynos/exynos_hdmi.c                              |    2 
- drivers/gpu/drm/msm/disp/mdp4/mdp4_crtc.c                         |    9 
- drivers/gpu/drm/msm/dsi/phy/dsi_phy.c                             |    4 
- drivers/gpu/drm/nouveau/nv04_fence.c                              |    2 
- drivers/gpu/drm/nouveau/nvkm/subdev/mmu/vmmtu102.c                |    2 
- drivers/gpu/drm/panel/panel-elida-kd35t133.c                      |    2 
- drivers/gpu/drm/radeon/r100.c                                     |    4 
- drivers/gpu/drm/radeon/r600_cs.c                                  |    4 
- drivers/gpu/drm/radeon/radeon_display.c                           |    7 
- drivers/gpu/drm/radeon/radeon_vm.c                                |    8 
- drivers/gpu/drm/radeon/si.c                                       |    4 
- drivers/gpu/drm/radeon/sumo_dpm.c                                 |    4 
- drivers/gpu/drm/radeon/trinity_dpm.c                              |    4 
- drivers/hid/wacom_wac.c                                           |   32 
- drivers/hwtracing/coresight/coresight-etm4x.h                     |    2 
- drivers/i2c/busses/i2c-rk3x.c                                     |   13 
- drivers/i2c/busses/i2c-s3c2410.c                                  |   40 
- drivers/iio/adc/ad7091r-base.c                                    |    6 
- drivers/iio/adc/ad9467.c                                          |  114 +
- drivers/iio/adc/adi-axi-adc.c                                     |   74 -
- drivers/infiniband/hw/mthca/mthca_cmd.c                           |    4 
- drivers/infiniband/hw/mthca/mthca_main.c                          |    2 
- drivers/infiniband/ulp/iser/iscsi_iser.h                          |    2 
- drivers/infiniband/ulp/iser/iser_initiator.c                      |    5 
- drivers/infiniband/ulp/iser/iser_memory.c                         |    8 
- drivers/infiniband/ulp/iser/iser_verbs.c                          |    1 
- drivers/input/joystick/xpad.c                                     |    1 
- drivers/input/keyboard/atkbd.c                                    |   50 
- drivers/input/serio/i8042-acpipnpio.h                             |    8 
- drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c                        |    1 
- drivers/leds/Kconfig                                              |    1 
- drivers/media/dvb-core/dvbdev.c                                   |    2 
- drivers/media/dvb-frontends/m88ds3103.c                           |    7 
- drivers/media/usb/cx231xx/cx231xx-core.c                          |    2 
- drivers/media/usb/pvrusb2/pvrusb2-context.c                       |    3 
- drivers/mfd/syscon.c                                              |    4 
- drivers/mmc/host/Kconfig                                          |   10 
- drivers/mtd/mtd_blkdevs.c                                         |    4 
- drivers/mtd/nand/raw/fsl_ifc_nand.c                               |    2 
- drivers/net/dsa/vitesse-vsc73xx-core.c                            |    2 
- drivers/net/ethernet/broadcom/tg3.c                               |   11 
- drivers/net/ethernet/mediatek/mtk_eth_soc.c                       |    1 
- drivers/net/ethernet/mellanox/mlxsw/spectrum_acl_atcam.c          |    8 
- drivers/net/ethernet/mellanox/mlxsw/spectrum_acl_erp.c            |    8 
- drivers/net/ethernet/mellanox/mlxsw/spectrum_acl_tcam.c           |  131 +-
- drivers/net/ethernet/mellanox/mlxsw/spectrum_cnt.c                |    9 
- drivers/net/ethernet/mellanox/mlxsw/spectrum_switchdev.c          |   11 
- drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c                |    2 
- drivers/net/ethernet/renesas/ravb_main.c                          |    2 
- drivers/net/ethernet/ti/am65-cpsw-nuss.c                          |    5 
- drivers/net/phy/micrel.c                                          |    1 
- drivers/net/wireless/ath/ath11k/ahb.c                             |    4 
- drivers/net/wireless/marvell/libertas/Kconfig                     |    2 
- drivers/net/wireless/marvell/mwifiex/cfg80211.c                   |    2 
- drivers/net/wireless/marvell/mwifiex/fw.h                         |    1 
- drivers/net/wireless/marvell/mwifiex/ioctl.h                      |    1 
- drivers/net/wireless/marvell/mwifiex/uap_cmd.c                    |    8 
- drivers/net/wireless/realtek/rtlwifi/pci.c                        |   79 -
- drivers/net/wireless/realtek/rtlwifi/pci.h                        |    5 
- drivers/net/wireless/realtek/rtlwifi/rtl8188ee/phy.c              |   14 
- drivers/net/wireless/realtek/rtlwifi/rtl8192c/phy_common.c        |   12 
- drivers/net/wireless/realtek/rtlwifi/rtl8192c/phy_common.h        |    1 
- drivers/net/wireless/realtek/rtlwifi/rtl8192ce/phy.c              |    6 
- drivers/net/wireless/realtek/rtlwifi/rtl8192ce/phy.h              |    1 
- drivers/net/wireless/realtek/rtlwifi/rtl8192cu/phy.c              |    6 
- drivers/net/wireless/realtek/rtlwifi/rtl8192de/phy.c              |   61 -
- drivers/net/wireless/realtek/rtlwifi/rtl8192ee/phy.c              |   16 
- drivers/net/wireless/realtek/rtlwifi/rtl8192se/phy.c              |   15 
- drivers/net/wireless/realtek/rtlwifi/rtl8821ae/phy.c              |    5 
- drivers/net/wireless/realtek/rtlwifi/wifi.h                       |    7 
- drivers/net/wireless/realtek/rtw88/mac80211.c                     |    4 
- drivers/net/xen-netback/netback.c                                 |   44 
- drivers/nvme/host/core.c                                          |    5 
- drivers/nvme/host/nvme.h                                          |    5 
- drivers/nvme/target/tcp.c                                         |   20 
- drivers/of/base.c                                                 |    1 
- drivers/of/unittest-data/tests-phandle.dtsi                       |   10 
- drivers/of/unittest.c                                             |   74 -
- drivers/parport/parport_serial.c                                  |   64 +
- drivers/pci/controller/dwc/pci-keystone.c                         |    9 
- drivers/pci/quirks.c                                              |    8 
- drivers/pinctrl/cirrus/Kconfig                                    |    3 
- drivers/power/supply/cw2015_battery.c                             |    2 
- drivers/pwm/pwm-jz4740.c                                          |    7 
- drivers/pwm/pwm-stm32.c                                           |   63 -
- drivers/reset/hisilicon/hi6220_reset.c                            |    2 
- drivers/s390/block/scm_blk.c                                      |    7 
- drivers/scsi/fnic/fnic_debugfs.c                                  |    3 
- drivers/scsi/hisi_sas/hisi_sas_main.c                             |    4 
- drivers/scsi/hisi_sas/hisi_sas_v3_hw.c                            |    2 
- drivers/spi/Kconfig                                               |    3 
- drivers/spi/spi-sh-msiof.c                                        |   17 
- drivers/staging/media/rkisp1/rkisp1-dev.c                         |    3 
- drivers/tty/serial/8250/8250_omap.c                               |    2 
- drivers/tty/serial/imx.c                                          |   29 
- drivers/tty/tty.h                                                 |    2 
- drivers/tty/tty_io.c                                              |   35 
- drivers/tty/tty_ioctl.c                                           |    2 
- drivers/uio/uio.c                                                 |    7 
- drivers/usb/chipidea/core.c                                       |    7 
- drivers/usb/class/cdc-acm.c                                       |    3 
- drivers/usb/dwc3/core.c                                           |   39 
- drivers/usb/dwc3/ep0.c                                            |    5 
- drivers/usb/mon/mon_bin.c                                         |    7 
- drivers/usb/phy/phy-mxs-usb.c                                     |    3 
- drivers/usb/typec/class.c                                         |    4 
- drivers/video/fbdev/core/fb_defio.c                               |    6 
- drivers/watchdog/bcm2835_wdt.c                                    |    3 
- drivers/watchdog/hpwdt.c                                          |    2 
- drivers/watchdog/rti_wdt.c                                        |   13 
- drivers/watchdog/watchdog_dev.c                                   |    3 
- fs/debugfs/file.c                                                 |    8 
- fs/debugfs/inode.c                                                |   27 
- fs/debugfs/internal.h                                             |   10 
- fs/efivarfs/super.c                                               |   12 
- fs/f2fs/file.c                                                    |    7 
- fs/f2fs/namei.c                                                   |    2 
- fs/f2fs/xattr.c                                                   |    6 
- fs/gfs2/rgrp.c                                                    |   23 
- fs/jbd2/commit.c                                                  |    1 
- fs/jbd2/journal.c                                                 |    4 
- fs/namespace.c                                                    |   11 
- fs/nfs/blocklayout/blocklayout.c                                  |    2 
- fs/nfs/nfs4proc.c                                                 |    3 
- fs/pstore/ram_core.c                                              |    2 
- include/crypto/if_alg.h                                           |    3 
- include/drm/drm_bridge.h                                          |    2 
- include/dt-bindings/clock/qcom,videocc-sm8150.h                   |    4 
- include/linux/clk-provider.h                                      |   33 
- include/linux/dma-map-ops.h                                       |    3 
- include/linux/iio/adc/adi-axi-adc.h                               |    4 
- include/linux/of.h                                                |  291 ++--
- include/linux/rcupdate.h                                          |   14 
- include/net/bluetooth/hci_core.h                                  |    1 
- include/uapi/linux/bpf.h                                          |    3 
- include/uapi/linux/virtio_crypto.h                                |   82 +
- init/do_mounts.c                                                  |    9 
- io_uring/io_uring.c                                               |    9 
- kernel/bpf/lpm_trie.c                                             |    3 
- kernel/bpf/stackmap.c                                             |   11 
- kernel/bpf/verifier.c                                             |   16 
- kernel/debug/kdb/kdb_main.c                                       |    2 
- kernel/dma/coherent.c                                             |   12 
- kernel/kprobes.c                                                  |   23 
- kernel/time/tick-sched.c                                          |    5 
- kernel/trace/ring_buffer.c                                        |    6 
- kernel/trace/trace.c                                              |    6 
- kernel/trace/trace_output.c                                       |    6 
- lib/idr.c                                                         |    2 
- lib/test_ida.c                                                    |   40 
- net/bluetooth/hci_conn.c                                          |    8 
- net/bluetooth/hci_debugfs.c                                       |   12 
- net/bluetooth/hci_event.c                                         |   11 
- net/core/neighbour.c                                              |    9 
- net/dns_resolver/dns_key.c                                        |    2 
- net/ethtool/features.c                                            |    9 
- net/ipv6/ip6_tunnel.c                                             |   26 
- net/mptcp/options.c                                               |    1 
- net/ncsi/internal.h                                               |    9 
- net/ncsi/ncsi-netlink.c                                           |    4 
- net/ncsi/ncsi-pkt.h                                               |    7 
- net/ncsi/ncsi-rsp.c                                               |   26 
- net/netfilter/ipvs/ip_vs_xmit.c                                   |    4 
- net/netfilter/nf_tables_api.c                                     |   15 
- net/netlabel/netlabel_calipso.c                                   |   52 
- net/netlabel/netlabel_cipso_v4.c                                  |    4 
- net/netlabel/netlabel_mgmt.c                                      |    8 
- net/netlabel/netlabel_unlabeled.c                                 |   10 
- net/netlabel/netlabel_user.h                                      |    4 
- net/qrtr/ns.c                                                     |    4 
- net/vmw_vsock/virtio_transport_common.c                           |   13 
- security/apparmor/policy_unpack.c                                 |    4 
- security/selinux/hooks.c                                          |    7 
- sound/pci/hda/patch_realtek.c                                     |   11 
- sound/pci/oxygen/oxygen_mixer.c                                   |    2 
- sound/soc/atmel/sam9g20_wm8731.c                                  |   61 +
- sound/soc/codecs/cs35l33.c                                        |    4 
- sound/soc/codecs/cs35l34.c                                        |    4 
- sound/soc/codecs/cs43130.c                                        |    6 
- sound/soc/codecs/da7219-aad.c                                     |    2 
- sound/soc/codecs/nau8822.c                                        |    9 
- sound/soc/codecs/rt5645.c                                         |   10 
- sound/soc/codecs/wm8974.c                                         |    6 
- sound/soc/intel/skylake/skl-pcm.c                                 |    9 
- sound/soc/intel/skylake/skl-sst-ipc.c                             |    4 
- tools/include/uapi/linux/bpf.h                                    |    3 
- tools/lib/api/io.h                                                |    1 
- tools/perf/util/bpf-event.c                                       |    8 
- tools/perf/util/bpf-event.h                                       |   12 
- tools/perf/util/env.c                                             |   50 
- tools/perf/util/env.h                                             |    4 
- tools/perf/util/genelf.c                                          |    6 
- tools/perf/util/header.c                                          |    8 
- tools/testing/selftests/drivers/net/mlxsw/qos_pfc.sh              |   40 
- tools/testing/selftests/drivers/net/mlxsw/spectrum-2/tc_flower.sh |  106 +
- tools/testing/selftests/net/fib_nexthop_multiprefix.sh            |    4 
- tools/testing/selftests/powerpc/math/fpu_preempt.c                |    9 
- tools/testing/selftests/powerpc/math/vmx_preempt.c                |   10 
- 269 files changed, 2886 insertions(+), 1471 deletions(-)
-
-Abhinav Singh (1):
-      drm/nouveau/fence:: fix warning directly dereferencing a rcu pointer
-
-Alex Deucher (1):
-      drm/amdgpu/debugfs: fix error code when smc register accessors are NULL
-
-Alexandra Diupina (1):
-      cpufreq: scmi: process the result of devm_of_clk_add_hw_provider()
-
-Amit Cohen (2):
-      mlxsw: spectrum_acl_erp: Fix error flow of pool allocation failure
-      selftests: mlxsw: qos_pfc: Adjust the test to support 8 lanes
-
-Amit Kumar Mahapatra (1):
-      spi: spi-zynqmp-gqspi: fix driver kconfig dependencies
-
-Andreas Gruenbacher (2):
-      Revert "gfs2: Don't reject a supposedly full bitmap if we have blocks reserved"
-      gfs2: Also reflect single-block allocations in rgd->rd_extfail_pt
-
-Andrei Matei (1):
-      bpf: Fix verification of indirect var-off stack access
-
-Andrew Lunn (1):
-      net: netlabel: Fix kerneldoc warnings
-
-Andrii Nakryiko (1):
-      bpf: fix check for attempt to corrupt spilled pointer
-
-Arnaldo Carvalho de Melo (1):
-      libapi: Add missing linux/types.h header to get the __u64 type on io.h
-
-Arnd Bergmann (3):
-      EDAC/thunderx: Fix possible out-of-bounds string access
-      wifi: libertas: stop selecting wext
-      ARM: davinci: always select CONFIG_CPU_ARM926T
-
-Arseniy Krasnov (1):
-      virtio/vsock: fix logic which reduces credit update messages
-
-Artem Chernyshev (1):
-      scsi: fnic: Return error if vmalloc() failed
-
-Benjamin Coddington (1):
-      blocklayoutdriver: Fix reference leak of pnfs_device_node
-
-Bhaskar Chowdhury (1):
-      ncsi: internal.h: Fix a spello
-
-Cameron Williams (2):
-      parport: parport_serial: Add Brainboxes BAR details
-      parport: parport_serial: Add Brainboxes device IDs and geometry
-
-Carlos Llamas (7):
-      binder: use EPOLLERR from eventpoll.h
-      binder: fix trivial typo of binder_free_buf_locked()
-      binder: fix comment on binder_alloc_new_buf() return value
-      binder: fix async space check for 0-sized buffers
-      binder: fix unused alloc->free_async_space
-      binder: fix use-after-free in shinker's callback
-      binder: fix race between mmput() and do_exit()
-
-Chao Yu (3):
-      f2fs: fix to avoid dirent corruption
-      f2fs: fix to check compress file in f2fs_move_file_range()
-      f2fs: fix to update iostat correctly in f2fs_filemap_fault()
-
-Charles Keepax (2):
-      pinctrl: lochnagar: Don't build on MIPS
-      ASoC: wm8974: Correct boost mixer inputs
-
-Chen Ni (1):
-      crypto: sa2ul - Return crypto_aead_setkey to transfer the error
-
-Chengming Zhou (1):
-      crypto: scomp - fix req->dst buffer overflow
-
-Chih-Kang Chang (1):
-      wifi: rtw88: fix RX filter in FIF_ALLMULTI flag
-
-Chris Morgan (1):
-      drm/panel-elida-kd35t133: hold panel in reset for unprepare
-
-Christian A. Ehrhardt (1):
-      of: Fix double free in of_parse_phandle_with_args_map
-
-Christian Brauner (1):
-      fs: indicate request originates from old mount API
-
-Christoph Niedermaier (2):
-      serial: imx: Ensure that imx_uart_rs485_config() is called with enabled clock
-      serial: imx: Correct clock error message in function probe()
-
-Christophe JAILLET (6):
-      firmware: ti_sci: Fix an off-by-one in ti_sci_debugfs_create()
-      media: dvb-frontends: m88ds3103: Fix a memory leak in an error handling path of m88ds3103_probe()
-      MIPS: Alchemy: Fix an out-of-bound access in db1200_dev_setup()
-      MIPS: Alchemy: Fix an out-of-bound access in db1550_dev_setup()
-      kdb: Fix a potential buffer overflow in kdb_local()
-      mlxsw: spectrum: Use 'bitmap_zalloc()' when applicable
-
-Christophe Leroy (1):
-      powerpc: Remove in_kernel_text()
-
-Chukun Pan (1):
-      net: ethernet: mtk_eth_soc: remove duplicate if statements
-
-Claudiu Beznea (1):
-      net: phy: micrel: populate .soft_reset for KSZ9131
-
-Colin Ian King (2):
-      x86/lib: Fix overflow when counting digits
-      rtlwifi: rtl8192de: make arrays static const, makes object smaller
-
-Curtis Klein (1):
-      watchdog: set cdev owner before adding
-
-Dan Carpenter (1):
-      media: dvbdev: drop refcount on error path in dvb_device_open()
-
-Dang Huynh (1):
-      leds: aw2013: Select missing dependency REGMAP_I2C
-
-Dario Binacchi (1):
-      drm/bridge: Fix typo in post_disable() description
-
-Dave Airlie (1):
-      nouveau/tu102: flush all pdbs on vmm flush
-
-David Howells (1):
-      keys, dns: Fix size check of V1 server-list header
-
-David Lin (2):
-      ASoC: nau8822: Fix incorrect type in assignment and cast to restricted __be16
-      wifi: mwifiex: configure BSSID consistently when starting AP
-
-David Rau (1):
-      ASoC: da7219: Support low DC impedance headset
-
-Dinghao Liu (1):
-      crypto: ccp - fix memleak in ccp_init_dm_workarea
-
-Dmitry Baryshkov (4):
-      ARM: dts: qcom: apq8064: correct XOADC register address
-      drm/msm/mdp4: flush vblank event on disable
-      drm/drv: propagate errors from drm_modeset_register_all()
-      clk: fixed-rate: add devm_clk_hw_register_fixed_rate
-
-Dmitry Rokosov (1):
-      firmware: meson_sm: populate platform devices from sm device tree data
-
-Edward Adam Davis (1):
-      mptcp: fix uninit-value in mptcp_incoming_options
-
-Eric Biggers (1):
-      f2fs: explicitly null-terminate the xattr list
-
-Eric Dumazet (1):
-      ip6_tunnel: fix NEXTHDR_FRAGMENT handling in ip6_tnl_parse_tlv_enc_lim()
-
-Esther Shimanovich (1):
-      Input: i8042 - add nomux quirk for Acer P459-G2-M
-
-Fedor Pchelkin (2):
-      apparmor: avoid crash when parsed profile name is empty
-      ipvs: avoid stat macros calls from preemptible context
-
-Florian Lehner (1):
-      bpf, lpm: Fix check prefixlen before walking trie
-
-Florian Westphal (1):
-      netfilter: nf_tables: mark newset as dead on transaction abort
-
-Francesco Dolcini (1):
-      Bluetooth: btmtkuart: fix recv_buf() return value
-
-Gavrilov Ilia (1):
-      calipso: fix memory leak in netlbl_calipso_add_pass()
-
-Geert Uytterhoeven (1):
-      of: unittest: Fix of_count_phandle_with_args() expected value message
-
-Gonglei (Arei) (1):
-      crypto: virtio - Handle dataq logic with tasklet
-
-Greg Kroah-Hartman (2):
-      Revert "ASoC: atmel: Remove system clock tree configuration for at91sam9g20ek"
-      Linux 5.10.209
-
-Guanghui Feng (1):
-      uio: Fix use-after-free in uio_open
-
-Gui-Dong Han (2):
-      usb: mon: Fix atomicity violation in mon_bin_vma_fault
-      Bluetooth: Fix atomicity violation in {min,max}_key_size_set
-
-Hangbin Liu (1):
-      selftests/net: fix grep checking for fib_nexthop_multiprefix
-
-Hans de Goede (3):
-      Input: atkbd - skip ATKBD_CMD_GETID in translated mode
-      ACPI: resource: Add another DMI match for the TongFang GMxXGxx
-      Input: atkbd - use ab83 as id when skipping the getid command
-
-Heikki Krogerus (1):
-      Revert "usb: typec: class: fix typec_altmode_put_partner to put plugs"
-
-Heiko Carstens (1):
-      tick-sched: Fix idle and iowait sleeptime accounting vs CPU hotplug
-
-Herbert Xu (1):
-      crypto: af_alg - Disallow multiple in-flight AIO requests
-
-Ian Rogers (1):
-      perf env: Avoid recursively taking env->bpf_progs.lock
-
-Ido Schimmel (4):
-      mlxsw: spectrum_acl_tcam: Add missing mutex_destroy()
-      mlxsw: spectrum_acl_tcam: Make fini symmetric to init
-      mlxsw: spectrum_acl_tcam: Reorder functions to avoid forward declarations
-      mlxsw: spectrum_acl_tcam: Fix stack corruption
-
-Ilias Apalodimas (1):
-      efivarfs: force RO when remounting if SetVariable is not supported
-
-Ilpo Järvinen (2):
-      wifi: rtlwifi: Remove bogus and dangerous ASPM disable/enable code
-      wifi: rtlwifi: Convert LNKCTL change to PCIe cap RMW accessors
-
-Inki Dae (1):
-      drm/exynos: fix a wrong error checking
-
-James Clark (1):
-      coresight: etm4x: Fix width of CCITMIN field
-
-Jan Beulich (1):
-      xen-netback: don't produce zero-size SKB frags
-
-Jan Palus (1):
-      power: supply: cw2015: correct time_to_empty units in sysfs
-
-Jani Nikula (1):
-      drm/crtc: fix uninitialized variable use
-
-Jason Gerecke (1):
-      HID: wacom: Correct behavior when processing some confidence == false touches
-
-Jay Buddhabhatti (2):
-      drivers: clk: zynqmp: calculate closest mux rate
-      drivers: clk: zynqmp: update divider round rate logic
-
-Jens Axboe (1):
-      io_uring/rw: ensure io->bytes_done is always initialized
-
-Jensen Huang (1):
-      i2c: rk3x: fix potential spinlock recursion on poll
-
-Jerry Hoemann (1):
-      watchdog/hpwdt: Only claim UNKNOWN NMI if from iLO
-
-Jiri Slaby (SUSE) (4):
-      tty: change tty_write_lock()'s ndelay parameter to bool
-      tty: early return from send_break() on TTY_DRIVER_HARDWARE_BREAK
-      tty: don't check for signal_pending() in send_break()
-      tty: use 'if' in send_break() instead of 'goto'
-
-Joakim Zhang (1):
-      dma-mapping: clear dev->dma_mem to NULL after freeing it
-
-Johannes Berg (1):
-      debugfs: fix automount d_fsdata usage
-
-Jordan Rome (1):
-      bpf: Add crosstask check to __bpf_get_stack
-
-Judy Hsiao (1):
-      neighbour: Don't let neigh_forced_gc() disable preemption for long
-
-Kamil Duljas (2):
-      ASoC: Intel: Skylake: Fix mem leak in few functions
-      ASoC: Intel: Skylake: mem leak in skl register function
-
-Keith Busch (2):
-      nvme-core: check for too small lba shift
-      nvme: introduce helper function to get ctrl state
-
-Kirill A. Shutemov (1):
-      x86/kvm: Do not try to disable kvmclock if it was not enabled
-
-Konrad Dybcio (1):
-      drm/msm/dsi: Use pm_runtime_resume_and_get to prevent refcnt leaks
-
-Krzysztof Kozlowski (3):
-      reset: hisilicon: hi6220: fix Wvoid-pointer-to-enum-cast warning
-      arm64: dts: qcom: qrb5165-rb5: correct LED panic indicator
-      arm64: dts: qcom: sdm845-db845c: correct LED panic indicator
-
-Kunwu Chan (6):
-      powerpc/powernv: Add a null pointer check to scom_debug_init_one()
-      powerpc/powernv: Add a null pointer check in opal_event_init()
-      powerpc/powernv: Add a null pointer check in opal_powercap_init()
-      powerpc/imc-pmu: Add a null pointer check in update_events_in_group()
-      mfd: syscon: Fix null pointer dereference in of_syscon_register()
-      net: dsa: vsc73xx: Add null pointer check to vsc73xx_gpio_probe
-
-Laurent Dufour (1):
-      powerpc/pseries/memhotplug: Quieten some DLPAR operations
-
-Laurent Pinchart (1):
-      media: rkisp1: Disable runtime PM in probe error path
-
-LeoLiuoc (1):
-      PCI: Add ACS quirk for more Zhaoxin Root Ports
-
-Leon Romanovsky (1):
-      RDMA/usnic: Silence uninitialized symbol smatch warnings
-
-Lin Ma (1):
-      net: qualcomm: rmnet: fix global oob in rmnet_policy
-
-Linus Walleij (2):
-      ASoC: cs35l33: Fix GPIO name and drop legacy include
-      ASoC: cs35l34: Fix GPIO name and drop legacy include
-
-Lu Yao (1):
-      drm/amdgpu: Fix cat debugfs amdgpu_regs_didt causes kernel null pointer
-
-Luca Weiss (2):
-      Input: xpad - add Razer Wolverine V2 support
-      wifi: ath11k: Defer on rproc_get failure
-
-Ludvig Pärsson (1):
-      ethtool: netlink: Add missing ethnl_ops_begin/complete
-
-Luiz Augusto von Dentz (1):
-      Bluetooth: Fix bogus check for re-auth no supported with non-ssp
-
-Maciej Strozek (2):
-      ASoC: cs43130: Fix the position of const qualifier
-      ASoC: cs43130: Fix incorrect frame delay configuration
-
-Marc Zyngier (1):
-      KVM: arm64: vgic-v4: Restore pending state on host userspace write
-
-Marcelo Schmitt (1):
-      iio: adc: ad7091r: Pass iio_dev to event handler
-
-Marek Szyprowski (2):
-      i2c: s3c24xx: fix read transfers in polling mode
-      i2c: s3c24xx: fix transferring more than one message in polling mode
-
-Mark-PK Tsai (1):
-      dma-mapping: Add dma_release_coherent_memory to DMA API
-
-Masahiro Yamada (1):
-      powerpc: add crtsavres.o to always-y instead of extra-y
-
-Masami Hiramatsu (Google) (1):
-      kprobes: Fix to handle forcibly unoptimized kprobes on freeing_list
-
-Matthew Wilcox (Oracle) (1):
-      ida: Fix crash in ida_free when the bitmap is empty
-
-Maurizio Lombardi (3):
-      nvmet-tcp: Fix a kernel panic when host sends an invalid H2C PDU length
-      nvmet-tcp: fix a crash in nvmet_req_complete()
-      nvmet-tcp: Fix the H2C expected PDU len calculation
-
-Michael Ellerman (1):
-      selftests/powerpc: Fix error handling in FPU/VMX preemption tests
-
-Michael Walle (1):
-      of: property: define of_property_read_u{8,16,32,64}_array() unconditionally
-
-Mickaël Salaün (1):
-      selinux: Fix error priority for bind with AF_UNSPEC on PF_INET6 socket
-
-Nam Cao (1):
-      fbdev: flush deferred work in fb_deferred_io_fsync()
-
-Namhyung Kim (1):
-      perf genelf: Set ELF program header addresses properly
-
-Nathan Lynch (1):
-      powerpc/pseries/memhp: Fix access beyond end of drmem array
-
-Nikita Kiryushin (2):
-      ACPI: video: check for error while searching for backlight device parent
-      ACPI: LPIT: Avoid u32 multiplication overflow
-
-Nikita Yushchenko (1):
-      net: ravb: Fix dma_addr_t truncation in error case
-
-Nikita Zhandarovich (3):
-      drm/radeon/r600_cs: Fix possible int overflows in r600_cs_check_reg()
-      drm/radeon/r100: Fix integer overflow issues in r100_cs_track_check()
-      drm/radeon: check return value of radeon_ring_lock()
-
-Niklas Schnelle (1):
-      s390/pci: fix max size calculation in zpci_memcpy_toio()
-
-Nuno Sa (3):
-      iio: adc: ad9467: fix reset gpio handling
-      iio: adc: ad9467: don't ignore error codes
-      iio: adc: ad9467: fix scale setting
-
-Oliver Neukum (1):
-      usb: cdc-acm: return correct error code on unsupported break
-
-Oliver Upton (1):
-      KVM: arm64: vgic-its: Avoid potential UAF in LPI translation cache
-
-Osama Muhammad (1):
-      gfs2: Fix kernel NULL pointer dereference in gfs2_rgrp_dump
-
-Ovidiu Panait (12):
-      crypto: sahara - remove FLAGS_NEW_KEY logic
-      crypto: sahara - fix cbc selftest failure
-      crypto: sahara - fix ahash selftest failure
-      crypto: sahara - fix processing requests with cryptlen < sg->length
-      crypto: sahara - fix error handling in sahara_hw_descriptor_create()
-      crypto: sahara - avoid skcipher fallback code duplication
-      crypto: sahara - handle zero-length aes requests
-      crypto: sahara - fix ahash reqsize
-      crypto: sahara - fix wait_for_completion_timeout() error handling
-      crypto: sahara - improve error handling in sahara_sha_process()
-      crypto: sahara - fix processing hash requests with req->nbytes < sg->length
-      crypto: sahara - do not resize req->src when doing hash operations
-
-Pablo Neira Ayuso (3):
-      netfilter: nf_tables: do not allow mismatch field size and set key length
-      netfilter: nf_tables: skip dead set elements in netlink dump
-      netfilter: nf_tables: reject NFT_SET_CONCAT with not field length description
-
-Paul E. McKenney (1):
-      rcu: Create an unrcu_pointer() to remove __rcu from a pointer
-
-Paul Geurts (1):
-      serial: imx: fix tx statemachine deadlock
-
-Peter Delevoryas (1):
-      net/ncsi: Fix netlink major/minor version numbers
-
-Peter Robinson (2):
-      mmc: sdhci_am654: Fix TI SoC dependencies
-      mmc: sdhci_omap: Fix TI SoC dependencies
-
-Petr Machata (1):
-      selftests: mlxsw: qos_pfc: Convert to iproute2 dcb
-
-Philipp Zabel (2):
-      pwm: stm32: Use hweight32 in stm32_pwm_detect_channels
-      pwm: stm32: Fix enable count for clk in .probe()
-
-RD Babiera (1):
-      usb: typec: class: fix typec_altmode_put_partner to put plugs
-
-Randy Dunlap (1):
-      powerpc/44x: select I2C for CURRITUCK
-
-Ren Zhijie (1):
-      dma-mapping: Fix build error unused-value
-
-Ricardo B. Marliere (1):
-      media: pvrusb2: fix use after free on context disconnection
-
-Rob Clark (1):
-      iommu/arm-smmu-qcom: Add missing GMU entry to match table
-
-Rob Herring (2):
-      of: Add of_property_present() helper
-      cpufreq: Use of_property_present() for testing DT property presence
-
-Ronald Monthero (1):
-      mtd: rawnand: Increment IFC_TIMEOUT_MSECS for nand controller response
-
-Sakari Ailus (2):
-      acpi: property: Let args be NULL in __acpi_node_get_property_reference
-      software node: Let args be NULL in software_node_get_reference_args
-
-Sanjuán García, Jorge (1):
-      net: ethernet: ti: am65-cpsw: Fix max mtu to fit ethernet frames
-
-Sarannya S (1):
-      net: qrtr: ns: Return 0 if server port is not present
-
-Satya Priya Kakitapalli (4):
-      clk: qcom: gpucc-sm8150: Update the gpu_cc_pll1 config
-      dt-bindings: clock: Update the videocc resets for sm8150
-      clk: qcom: videocc-sm8150: Update the videocc resets
-      clk: qcom: videocc-sm8150: Add missing PLL config property
-
-Serge Semin (2):
-      mips: dmi: Fix early remap on MIPS32
-      mips: Fix incorrect max_low_pfn adjustment
-
-Sergey Gorenko (1):
-      IB/iser: Prevent invalidating wrong MR
-
-Sergey Shtylyov (1):
-      pstore: ram_core: fix possible overflow in persistent_ram_init_ecc()
-
-Shubhrajyoti Datta (2):
-      clk: zynqmp: make bestdiv unsigned
-      clk: zynqmp: Add a check for NULL pointer
-
-Shuming Fan (1):
-      ASoC: rt5650: add mutex to avoid the jack detection failure
-
-Siddharth Vadapalli (1):
-      PCI: keystone: Fix race condition when initializing PHYs
-
-Sjoerd Simons (1):
-      arm64: dts: armada-3720-turris-mox: set irq type for RTC
-
-Stefan Berger (1):
-      rootfs: Fix support for rootfstype= when root= is given
-
-Stefan Wahren (2):
-      ARM: sun9i: smp: fix return code check of of_property_match_string
-      watchdog: bcm2835_wdt: Fix WDIOC_SETTIMEOUT handling
-
-Steven Rostedt (Google) (3):
-      tracing: Have large events show up as '[LINE TOO BIG]' instead of nothing
-      tracing: Add size check when printing trace_marker output
-      ring-buffer: Do not record in NMI if the arch does not support cmpxchg in NMI
-
-Su Hui (10):
-      wifi: rtlwifi: rtl8821ae: phy: fix an undefined bitwise shift behavior
-      wifi: rtlwifi: add calculate_bit_shift()
-      wifi: rtlwifi: rtl8188ee: phy: using calculate_bit_shift()
-      wifi: rtlwifi: rtl8192c: using calculate_bit_shift()
-      wifi: rtlwifi: rtl8192cu: using calculate_bit_shift()
-      wifi: rtlwifi: rtl8192ce: using calculate_bit_shift()
-      wifi: rtlwifi: rtl8192de: using calculate_bit_shift()
-      wifi: rtlwifi: rtl8192ee: using calculate_bit_shift()
-      wifi: rtlwifi: rtl8192se: using calculate_bit_shift()
-      clk: si5341: fix an error code problem in si5341_output_clk_set_rate
-
-Takashi Iwai (1):
-      ALSA: oxygen: Fix right channel of capture volume mixer
-
-Thinh Nguyen (2):
-      Revert "usb: dwc3: Soft reset phy on probe for host"
-      Revert "usb: dwc3: don't reset device side if dwc3 was configured as host-only"
-
-Thinh Tran (1):
-      net/tg3: fix race condition in tg3_reset_task()
-
-Théo Lebrun (1):
-      clk: fixed-rate: fix clk_hw_register_fixed_rate_with_accuracy_parent_hw
-
-Tomi Valkeinen (2):
-      arm64: dts: ti: k3-am65-main: Fix DSS irq trigger type
-      drm/bridge: tc358767: Fix return value on error case
-
-Tony Luck (1):
-      ACPI: extlog: Clear Extended Error Log status when RAS_CEC handled the error
-
-Trond Myklebust (1):
-      NFSv4.1/pnfs: Ensure we handle the error NFS4ERR_RETURNCONFLICT
-
-Uttkarsh Aggarwal (1):
-      usb: dwc: ep0: Update request status in dwc3_ep0_stall_restart
-
-Uwe Kleine-König (5):
-      drm/bridge: tpd12s015: Drop buggy __exit annotation for remove function
-      pwm: stm32: Use regmap_clear_bits and regmap_set_bits where applicable
-      pwm: jz4740: Don't use dev_err_probe() in .request()
-      serial: 8250: omap: Don't skip resource freeing if pm_runtime_resume_and_get() failed
-      iio: adc: ad9467: Benefit from devm_clk_get_enabled() to simplify
-
-Vasiliy Kovalev (1):
-      ALSA: hda - Fix speaker and headset mic pin config for CHUWI CoreBook XPro
-
-Vignesh Raghavendra (1):
-      watchdog: rti_wdt: Drop runtime pm reference count when watchdog is unused
-
-Vineet Gupta (1):
-      ARC: fix spare error
-
-Vineeth Vijayan (1):
-      s390/scm: fix virtual vs physical address confusion
-
-Wei Yongjun (1):
-      virtio-crypto: fix memory leak in virtio_crypto_alg_skcipher_close_session()
-
-Weihao Li (1):
-      clk: rockchip: rk3128: Fix HCLK_OTG gate register
-
-Wolfram Sang (1):
-      spi: sh-msiof: Enforce fixed DTDL for R-Car H3
-
-Xiang Yang (1):
-      drm/exynos: fix a potential error pointer dereference
-
-Xu Yang (2):
-      usb: phy: mxs: remove CONFIG_USB_OTG condition for mxs_phy_is_otg_host()
-      usb: chipidea: wait controller resume finished for wakeup irq
-
-Yang Yingliang (1):
-      drm/radeon: check the alloc_workqueue return value in radeon_crtc_init()
-
-Ye Bin (1):
-      jbd2: fix soft lockup in journal_finish_inode_data_buffers()
-
-Yihang Li (1):
-      scsi: hisi_sas: Replace with standard error code return value
-
-Zhang Yi (1):
-      jbd2: correct the printing of write_flags in jbd2_write_superblock()
-
-ZhaoLong Wang (1):
-      mtd: Fix gluebi NULL pointer dereference caused by ftl notifier
-
-Zheng Yejian (1):
-      netlabel: remove unused parameter in netlbl_netlink_auditinfo()
-
-Zhipeng Lu (6):
-      drm/radeon/dpm: fix a memleak in sumo_parse_power_table
-      drm/radeon/trinity_dpm: fix a memleak in trinity_parse_power_table
-      media: cx231xx: fix a memleak in cx231xx_init_isoc
-      drm/amd/pm: fix a double-free in si_dpm_init
-      drivers/amd/pm: fix a use-after-free in kv_parse_power_table
-      gpu/drm/radeon: fix two memleaks in radeon_vm_init
-
-Ziqi Zhao (1):
-      drm/crtc: Fix uninit-value bug in drm_mode_setcrtc
-
-lei he (1):
-      virtio-crypto: fix memory-leak
-
-wangyangxin (1):
-      crypto: virtio - Wait for tasklet to complete on device remove
-
-zhenwei pi (6):
-      virtio_crypto: Introduce VIRTIO_CRYPTO_NOSPC
-      virtio-crypto: introduce akcipher service
-      virtio-crypto: implement RSA algorithm
-      virtio-crypto: change code style
-      virtio-crypto: use private buffer for control request
-      virtio-crypto: wait ctrl queue instead of busy polling
-
-Çağhan Demir (1):
-      ALSA: hda/relatek: Enable Mute LED on HP Laptop 15s-fq2xxx
+File operations in overlayfs also check against the credentials of the
+mounter task, stored in the superblock, this credentials will outlive
+most of the operations. For these cases, use the recently introduced
+guard statements to guarantee that override/revert_creds() are paired.
+
+Signed-off-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
+---
+ fs/overlayfs/copy_up.c |  4 +--
+ fs/overlayfs/dir.c     | 22 +++++++------
+ fs/overlayfs/file.c    | 70 ++++++++++++++++++++++--------------------
+ fs/overlayfs/inode.c   | 60 +++++++++++++++++++-----------------
+ fs/overlayfs/namei.c   | 21 ++++++-------
+ fs/overlayfs/readdir.c | 18 +++++------
+ fs/overlayfs/util.c    | 23 +++++++-------
+ fs/overlayfs/xattrs.c  | 34 ++++++++++----------
+ 8 files changed, 130 insertions(+), 122 deletions(-)
+
+diff --git a/fs/overlayfs/copy_up.c b/fs/overlayfs/copy_up.c
+index b8e25ca51016..55d1f2b60775 100644
+--- a/fs/overlayfs/copy_up.c
++++ b/fs/overlayfs/copy_up.c
+@@ -1202,7 +1202,8 @@ static int ovl_copy_up_flags(struct dentry *dentry, int flags)
+ 	if (err)
+ 		return err;
+ 
+-	old_cred = ovl_override_creds(dentry->d_sb);
++	old_cred = ovl_creds(dentry->d_sb);
++	guard(cred)(old_cred);
+ 	while (!err) {
+ 		struct dentry *next;
+ 		struct dentry *parent = NULL;
+@@ -1227,7 +1228,6 @@ static int ovl_copy_up_flags(struct dentry *dentry, int flags)
+ 		dput(parent);
+ 		dput(next);
+ 	}
+-	revert_creds(old_cred);
+ 
+ 	return err;
+ }
+diff --git a/fs/overlayfs/dir.c b/fs/overlayfs/dir.c
+index 0f8b4a719237..5aa43a3a7b3e 100644
+--- a/fs/overlayfs/dir.c
++++ b/fs/overlayfs/dir.c
+@@ -687,9 +687,9 @@ static int ovl_set_link_redirect(struct dentry *dentry)
+ 	const struct cred *old_cred;
+ 	int err;
+ 
+-	old_cred = ovl_override_creds(dentry->d_sb);
++	old_cred = ovl_creds(dentry->d_sb);
++	guard(cred)(old_cred);
+ 	err = ovl_set_redirect(dentry, false);
+-	revert_creds(old_cred);
+ 
+ 	return err;
+ }
+@@ -894,12 +894,13 @@ static int ovl_do_remove(struct dentry *dentry, bool is_dir)
+ 	if (err)
+ 		goto out;
+ 
+-	old_cred = ovl_override_creds(dentry->d_sb);
+-	if (!lower_positive)
+-		err = ovl_remove_upper(dentry, is_dir, &list);
+-	else
+-		err = ovl_remove_and_whiteout(dentry, &list);
+-	revert_creds(old_cred);
++	old_cred = ovl_creds(dentry->d_sb);
++	scoped_guard(cred, old_cred) {
++		if (!lower_positive)
++			err = ovl_remove_upper(dentry, is_dir, &list);
++		else
++			err = ovl_remove_and_whiteout(dentry, &list);
++	}
+ 	if (!err) {
+ 		if (is_dir)
+ 			clear_nlink(dentry->d_inode);
+@@ -1146,7 +1147,8 @@ static int ovl_rename(struct mnt_idmap *idmap, struct inode *olddir,
+ 			goto out;
+ 	}
+ 
+-	old_cred = ovl_override_creds(old->d_sb);
++	old_cred = ovl_creds(old->d_sb);
++	old_cred = override_creds_light(old_cred);
+ 
+ 	if (!list_empty(&list)) {
+ 		opaquedir = ovl_clear_empty(new, &list);
+@@ -1279,7 +1281,7 @@ static int ovl_rename(struct mnt_idmap *idmap, struct inode *olddir,
+ out_unlock:
+ 	unlock_rename(new_upperdir, old_upperdir);
+ out_revert_creds:
+-	revert_creds(old_cred);
++	revert_creds_light(old_cred);
+ 	if (update_nlink)
+ 		ovl_nlink_end(new);
+ 	else
+diff --git a/fs/overlayfs/file.c b/fs/overlayfs/file.c
+index 05536964d37f..482bf78555e2 100644
+--- a/fs/overlayfs/file.c
++++ b/fs/overlayfs/file.c
+@@ -42,7 +42,8 @@ static struct file *ovl_open_realfile(const struct file *file,
+ 	if (flags & O_APPEND)
+ 		acc_mode |= MAY_APPEND;
+ 
+-	old_cred = ovl_override_creds(inode->i_sb);
++	old_cred = ovl_creds(inode->i_sb);
++	guard(cred)(old_cred);
+ 	real_idmap = mnt_idmap(realpath->mnt);
+ 	err = inode_permission(real_idmap, realinode, MAY_OPEN | acc_mode);
+ 	if (err) {
+@@ -54,7 +55,6 @@ static struct file *ovl_open_realfile(const struct file *file,
+ 		realfile = backing_file_open(&file->f_path, flags, realpath,
+ 					     current_cred());
+ 	}
+-	revert_creds(old_cred);
+ 
+ 	pr_debug("open(%p[%pD2/%c], 0%o) -> (%p, 0%o)\n",
+ 		 file, file, ovl_whatisit(inode, realinode), file->f_flags,
+@@ -214,9 +214,9 @@ static loff_t ovl_llseek(struct file *file, loff_t offset, int whence)
+ 	ovl_inode_lock(inode);
+ 	real.file->f_pos = file->f_pos;
+ 
+-	old_cred = ovl_override_creds(inode->i_sb);
+-	ret = vfs_llseek(real.file, offset, whence);
+-	revert_creds(old_cred);
++	old_cred = ovl_creds(inode->i_sb);
++	scoped_guard(cred, old_cred)
++		ret = vfs_llseek(real.file, offset, whence);
+ 
+ 	file->f_pos = real.file->f_pos;
+ 	ovl_inode_unlock(inode);
+@@ -388,7 +388,6 @@ static ssize_t ovl_splice_write(struct pipe_inode_info *pipe, struct file *out,
+ static int ovl_fsync(struct file *file, loff_t start, loff_t end, int datasync)
+ {
+ 	struct fd real;
+-	const struct cred *old_cred;
+ 	int ret;
+ 
+ 	ret = ovl_sync_status(OVL_FS(file_inode(file)->i_sb));
+@@ -401,9 +400,11 @@ static int ovl_fsync(struct file *file, loff_t start, loff_t end, int datasync)
+ 
+ 	/* Don't sync lower file for fear of receiving EROFS error */
+ 	if (file_inode(real.file) == ovl_inode_upper(file_inode(file))) {
+-		old_cred = ovl_override_creds(file_inode(file)->i_sb);
++		const struct cred *old_cred;
++
++		old_cred = ovl_creds(file_inode(file)->i_sb);
++		guard(cred)(old_cred);
+ 		ret = vfs_fsync_range(real.file, start, end, datasync);
+-		revert_creds(old_cred);
+ 	}
+ 
+ 	fdput(real);
+@@ -441,9 +442,9 @@ static long ovl_fallocate(struct file *file, int mode, loff_t offset, loff_t len
+ 	if (ret)
+ 		goto out_unlock;
+ 
+-	old_cred = ovl_override_creds(file_inode(file)->i_sb);
+-	ret = vfs_fallocate(real.file, mode, offset, len);
+-	revert_creds(old_cred);
++	old_cred = ovl_creds(file_inode(file)->i_sb);
++	scoped_guard(cred, old_cred)
++		ret = vfs_fallocate(real.file, mode, offset, len);
+ 
+ 	/* Update size */
+ 	ovl_file_modified(file);
+@@ -466,9 +467,9 @@ static int ovl_fadvise(struct file *file, loff_t offset, loff_t len, int advice)
+ 	if (ret)
+ 		return ret;
+ 
+-	old_cred = ovl_override_creds(file_inode(file)->i_sb);
+-	ret = vfs_fadvise(real.file, offset, len, advice);
+-	revert_creds(old_cred);
++	old_cred = ovl_creds(file_inode(file)->i_sb);
++	scoped_guard(cred, old_cred)
++		ret = vfs_fadvise(real.file, offset, len, advice);
+ 
+ 	fdput(real);
+ 
+@@ -509,25 +510,25 @@ static loff_t ovl_copyfile(struct file *file_in, loff_t pos_in,
+ 		goto out_unlock;
+ 	}
+ 
+-	old_cred = ovl_override_creds(file_inode(file_out)->i_sb);
+-	switch (op) {
+-	case OVL_COPY:
+-		ret = vfs_copy_file_range(real_in.file, pos_in,
+-					  real_out.file, pos_out, len, flags);
+-		break;
++	old_cred = ovl_creds(file_inode(file_out)->i_sb);
++	scoped_guard(cred, old_cred)
++		switch (op) {
++		case OVL_COPY:
++			ret = vfs_copy_file_range(real_in.file, pos_in,
++						  real_out.file, pos_out, len, flags);
++			break;
+ 
+-	case OVL_CLONE:
+-		ret = vfs_clone_file_range(real_in.file, pos_in,
+-					   real_out.file, pos_out, len, flags);
+-		break;
++		case OVL_CLONE:
++			ret = vfs_clone_file_range(real_in.file, pos_in,
++						   real_out.file, pos_out, len, flags);
++			break;
+ 
+-	case OVL_DEDUPE:
+-		ret = vfs_dedupe_file_range_one(real_in.file, pos_in,
+-						real_out.file, pos_out, len,
+-						flags);
+-		break;
+-	}
+-	revert_creds(old_cred);
++		case OVL_DEDUPE:
++			ret = vfs_dedupe_file_range_one(real_in.file, pos_in,
++							real_out.file, pos_out, len,
++							flags);
++			break;
++		}
+ 
+ 	/* Update size */
+ 	ovl_file_modified(file_out);
+@@ -579,7 +580,6 @@ static loff_t ovl_remap_file_range(struct file *file_in, loff_t pos_in,
+ static int ovl_flush(struct file *file, fl_owner_t id)
+ {
+ 	struct fd real;
+-	const struct cred *old_cred;
+ 	int err;
+ 
+ 	err = ovl_real_fdget(file, &real);
+@@ -587,9 +587,11 @@ static int ovl_flush(struct file *file, fl_owner_t id)
+ 		return err;
+ 
+ 	if (real.file->f_op->flush) {
+-		old_cred = ovl_override_creds(file_inode(file)->i_sb);
++		const struct cred *old_cred;
++
++		old_cred = ovl_creds(file_inode(file)->i_sb);
++		guard(cred)(old_cred);
+ 		err = real.file->f_op->flush(real.file, id);
+-		revert_creds(old_cred);
+ 	}
+ 	fdput(real);
+ 
+diff --git a/fs/overlayfs/inode.c b/fs/overlayfs/inode.c
+index c63b31a460be..9047f245ba0b 100644
+--- a/fs/overlayfs/inode.c
++++ b/fs/overlayfs/inode.c
+@@ -79,9 +79,10 @@ int ovl_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
+ 			goto out_put_write;
+ 
+ 		inode_lock(upperdentry->d_inode);
+-		old_cred = ovl_override_creds(dentry->d_sb);
+-		err = ovl_do_notify_change(ofs, upperdentry, attr);
+-		revert_creds(old_cred);
++		old_cred = ovl_creds(dentry->d_sb);
++		scoped_guard(cred, old_cred)
++			err = ovl_do_notify_change(ofs, upperdentry, attr);
++
+ 		if (!err)
+ 			ovl_copyattr(dentry->d_inode);
+ 		inode_unlock(upperdentry->d_inode);
+@@ -170,7 +171,8 @@ int ovl_getattr(struct mnt_idmap *idmap, const struct path *path,
+ 	metacopy_blocks = ovl_is_metacopy_dentry(dentry);
+ 
+ 	type = ovl_path_real(dentry, &realpath);
+-	old_cred = ovl_override_creds(dentry->d_sb);
++	old_cred = ovl_creds(dentry->d_sb);
++	guard(cred)(old_cred);
+ 	err = ovl_do_getattr(&realpath, stat, request_mask, flags);
+ 	if (err)
+ 		goto out;
+@@ -281,8 +283,6 @@ int ovl_getattr(struct mnt_idmap *idmap, const struct path *path,
+ 		stat->nlink = dentry->d_inode->i_nlink;
+ 
+ out:
+-	revert_creds(old_cred);
+-
+ 	return err;
+ }
+ 
+@@ -310,7 +310,9 @@ int ovl_permission(struct mnt_idmap *idmap,
+ 	if (err)
+ 		return err;
+ 
+-	old_cred = ovl_override_creds(inode->i_sb);
++	old_cred = ovl_creds(inode->i_sb);
++	guard(cred)(old_cred);
++
+ 	if (!upperinode &&
+ 	    !special_file(realinode->i_mode) && mask & MAY_WRITE) {
+ 		mask &= ~(MAY_WRITE | MAY_APPEND);
+@@ -318,7 +320,6 @@ int ovl_permission(struct mnt_idmap *idmap,
+ 		mask |= MAY_READ;
+ 	}
+ 	err = inode_permission(mnt_idmap(realpath.mnt), realinode, mask);
+-	revert_creds(old_cred);
+ 
+ 	return err;
+ }
+@@ -333,9 +334,10 @@ static const char *ovl_get_link(struct dentry *dentry,
+ 	if (!dentry)
+ 		return ERR_PTR(-ECHILD);
+ 
+-	old_cred = ovl_override_creds(dentry->d_sb);
++	old_cred = ovl_creds(dentry->d_sb);
++	guard(cred)(old_cred);
+ 	p = vfs_get_link(ovl_dentry_real(dentry), done);
+-	revert_creds(old_cred);
++
+ 	return p;
+ }
+ 
+@@ -468,9 +470,9 @@ struct posix_acl *do_ovl_get_acl(struct mnt_idmap *idmap,
+ 	} else {
+ 		const struct cred *old_cred;
+ 
+-		old_cred = ovl_override_creds(inode->i_sb);
++		old_cred = ovl_creds(inode->i_sb);
++		guard(cred)(old_cred);
+ 		acl = ovl_get_acl_path(&realpath, posix_acl_xattr_name(type), noperm);
+-		revert_creds(old_cred);
+ 	}
+ 
+ 	return acl;
+@@ -496,10 +498,11 @@ static int ovl_set_or_remove_acl(struct dentry *dentry, struct inode *inode,
+ 		struct posix_acl *real_acl;
+ 
+ 		ovl_path_lower(dentry, &realpath);
+-		old_cred = ovl_override_creds(dentry->d_sb);
+-		real_acl = vfs_get_acl(mnt_idmap(realpath.mnt), realdentry,
+-				       acl_name);
+-		revert_creds(old_cred);
++		old_cred = ovl_creds(dentry->d_sb);
++		scoped_guard(cred, old_cred)
++			real_acl = vfs_get_acl(mnt_idmap(realpath.mnt), realdentry,
++					       acl_name);
++
+ 		if (IS_ERR(real_acl)) {
+ 			err = PTR_ERR(real_acl);
+ 			goto out;
+@@ -519,12 +522,13 @@ static int ovl_set_or_remove_acl(struct dentry *dentry, struct inode *inode,
+ 	if (err)
+ 		goto out;
+ 
+-	old_cred = ovl_override_creds(dentry->d_sb);
+-	if (acl)
+-		err = ovl_do_set_acl(ofs, realdentry, acl_name, acl);
+-	else
+-		err = ovl_do_remove_acl(ofs, realdentry, acl_name);
+-	revert_creds(old_cred);
++	old_cred = ovl_creds(dentry->d_sb);
++	scoped_guard(cred, old_cred) {
++		if (acl)
++			err = ovl_do_set_acl(ofs, realdentry, acl_name, acl);
++		else
++			err = ovl_do_remove_acl(ofs, realdentry, acl_name);
++	}
+ 	ovl_drop_write(dentry);
+ 
+ 	/* copy c/mtime */
+@@ -599,9 +603,9 @@ static int ovl_fiemap(struct inode *inode, struct fiemap_extent_info *fieinfo,
+ 	if (!realinode->i_op->fiemap)
+ 		return -EOPNOTSUPP;
+ 
+-	old_cred = ovl_override_creds(inode->i_sb);
++	old_cred = ovl_creds(inode->i_sb);
++	guard(cred)(old_cred);
+ 	err = realinode->i_op->fiemap(realinode, fieinfo, start, len);
+-	revert_creds(old_cred);
+ 
+ 	return err;
+ }
+@@ -661,7 +665,8 @@ int ovl_fileattr_set(struct mnt_idmap *idmap,
+ 		if (err)
+ 			goto out;
+ 
+-		old_cred = ovl_override_creds(inode->i_sb);
++		old_cred = ovl_creds(inode->i_sb);
++		guard(cred)(old_cred);
+ 		/*
+ 		 * Store immutable/append-only flags in xattr and clear them
+ 		 * in upper fileattr (in case they were set by older kernel)
+@@ -672,7 +677,6 @@ int ovl_fileattr_set(struct mnt_idmap *idmap,
+ 		err = ovl_set_protattr(inode, upperpath.dentry, fa);
+ 		if (!err)
+ 			err = ovl_real_fileattr_set(&upperpath, fa);
+-		revert_creds(old_cred);
+ 		ovl_drop_write(dentry);
+ 
+ 		/*
+@@ -731,10 +735,10 @@ int ovl_fileattr_get(struct dentry *dentry, struct fileattr *fa)
+ 
+ 	ovl_path_real(dentry, &realpath);
+ 
+-	old_cred = ovl_override_creds(inode->i_sb);
++	old_cred = ovl_creds(inode->i_sb);
++	guard(cred)(old_cred);
+ 	err = ovl_real_fileattr_get(&realpath, fa);
+ 	ovl_fileattr_prot_flags(inode, fa);
+-	revert_creds(old_cred);
+ 
+ 	return err;
+ }
+diff --git a/fs/overlayfs/namei.c b/fs/overlayfs/namei.c
+index 984ffdaeed6c..0b0258c582a0 100644
+--- a/fs/overlayfs/namei.c
++++ b/fs/overlayfs/namei.c
+@@ -946,13 +946,12 @@ static int ovl_maybe_validate_verity(struct dentry *dentry)
+ 	if (!ovl_test_flag(OVL_VERIFIED_DIGEST, inode)) {
+ 		const struct cred *old_cred;
+ 
+-		old_cred = ovl_override_creds(dentry->d_sb);
++		old_cred = ovl_creds(dentry->d_sb);
++		guard(cred)(old_cred);
+ 
+ 		err = ovl_validate_verity(ofs, &metapath, &datapath);
+ 		if (err == 0)
+ 			ovl_set_flag(OVL_VERIFIED_DIGEST, inode);
+-
+-		revert_creds(old_cred);
+ 	}
+ 
+ 	ovl_inode_unlock(inode);
+@@ -984,9 +983,10 @@ static int ovl_maybe_lookup_lowerdata(struct dentry *dentry)
+ 	if (ovl_dentry_lowerdata(dentry))
+ 		goto out;
+ 
+-	old_cred = ovl_override_creds(dentry->d_sb);
+-	err = ovl_lookup_data_layers(dentry, redirect, &datapath);
+-	revert_creds(old_cred);
++	old_cred = ovl_creds(dentry->d_sb);
++	scoped_guard(cred, old_cred)
++		err = ovl_lookup_data_layers(dentry, redirect, &datapath);
++
+ 	if (err)
+ 		goto out_err;
+ 
+@@ -1052,7 +1052,8 @@ struct dentry *ovl_lookup(struct inode *dir, struct dentry *dentry,
+ 	if (dentry->d_name.len > ofs->namelen)
+ 		return ERR_PTR(-ENAMETOOLONG);
+ 
+-	old_cred = ovl_override_creds(dentry->d_sb);
++	old_cred = ovl_creds(dentry->d_sb);
++	guard(cred)(old_cred);
+ 	upperdir = ovl_dentry_upper(dentry->d_parent);
+ 	if (upperdir) {
+ 		d.mnt = ovl_upper_mnt(ofs);
+@@ -1331,7 +1332,6 @@ struct dentry *ovl_lookup(struct inode *dir, struct dentry *dentry,
+ 
+ 	ovl_dentry_init_reval(dentry, upperdentry, OVL_I_E(inode));
+ 
+-	revert_creds(old_cred);
+ 	if (origin_path) {
+ 		dput(origin_path->dentry);
+ 		kfree(origin_path);
+@@ -1355,7 +1355,6 @@ struct dentry *ovl_lookup(struct inode *dir, struct dentry *dentry,
+ 	kfree(upperredirect);
+ out:
+ 	kfree(d.redirect);
+-	revert_creds(old_cred);
+ 	return ERR_PTR(err);
+ }
+ 
+@@ -1379,7 +1378,8 @@ bool ovl_lower_positive(struct dentry *dentry)
+ 	if (!ovl_dentry_upper(dentry))
+ 		return true;
+ 
+-	old_cred = ovl_override_creds(dentry->d_sb);
++	old_cred = ovl_creds(dentry->d_sb);
++	guard(cred)(old_cred);
+ 	/* Positive upper -> have to look up lower to see whether it exists */
+ 	for (i = 0; !done && !positive && i < ovl_numlower(poe); i++) {
+ 		struct dentry *this;
+@@ -1412,7 +1412,6 @@ bool ovl_lower_positive(struct dentry *dentry)
+ 			dput(this);
+ 		}
+ 	}
+-	revert_creds(old_cred);
+ 
+ 	return positive;
+ }
+diff --git a/fs/overlayfs/readdir.c b/fs/overlayfs/readdir.c
+index e71156baa7bc..58ea942921fc 100644
+--- a/fs/overlayfs/readdir.c
++++ b/fs/overlayfs/readdir.c
+@@ -275,7 +275,8 @@ static int ovl_check_whiteouts(const struct path *path, struct ovl_readdir_data
+ 	struct dentry *dentry, *dir = path->dentry;
+ 	const struct cred *old_cred;
+ 
+-	old_cred = ovl_override_creds(rdd->dentry->d_sb);
++	old_cred = ovl_creds(rdd->dentry->d_sb);
++	guard(cred)(old_cred);
+ 
+ 	err = down_write_killable(&dir->d_inode->i_rwsem);
+ 	if (!err) {
+@@ -290,7 +291,6 @@ static int ovl_check_whiteouts(const struct path *path, struct ovl_readdir_data
+ 		}
+ 		inode_unlock(dir->d_inode);
+ 	}
+-	revert_creds(old_cred);
+ 
+ 	return err;
+ }
+@@ -755,7 +755,8 @@ static int ovl_iterate(struct file *file, struct dir_context *ctx)
+ 	const struct cred *old_cred;
+ 	int err;
+ 
+-	old_cred = ovl_override_creds(dentry->d_sb);
++	old_cred = ovl_creds(dentry->d_sb);
++	guard(cred)(old_cred);
+ 	if (!ctx->pos)
+ 		ovl_dir_reset(file);
+ 
+@@ -807,7 +808,6 @@ static int ovl_iterate(struct file *file, struct dir_context *ctx)
+ 	}
+ 	err = 0;
+ out:
+-	revert_creds(old_cred);
+ 	return err;
+ }
+ 
+@@ -857,9 +857,9 @@ static struct file *ovl_dir_open_realfile(const struct file *file,
+ 	struct file *res;
+ 	const struct cred *old_cred;
+ 
+-	old_cred = ovl_override_creds(file_inode(file)->i_sb);
++	old_cred = ovl_creds(file_inode(file)->i_sb);
++	guard(cred)(old_cred);
+ 	res = ovl_path_open(realpath, O_RDONLY | (file->f_flags & O_LARGEFILE));
+-	revert_creds(old_cred);
+ 
+ 	return res;
+ }
+@@ -984,9 +984,9 @@ int ovl_check_empty_dir(struct dentry *dentry, struct list_head *list)
+ 	struct rb_root root = RB_ROOT;
+ 	const struct cred *old_cred;
+ 
+-	old_cred = ovl_override_creds(dentry->d_sb);
+-	err = ovl_dir_read_merged(dentry, list, &root);
+-	revert_creds(old_cred);
++	old_cred = ovl_creds(dentry->d_sb);
++	scoped_guard(cred, old_cred)
++		err = ovl_dir_read_merged(dentry, list, &root);
+ 	if (err)
+ 		return err;
+ 
+diff --git a/fs/overlayfs/util.c b/fs/overlayfs/util.c
+index 0217094c23ea..7ba8449d920e 100644
+--- a/fs/overlayfs/util.c
++++ b/fs/overlayfs/util.c
+@@ -1157,15 +1157,16 @@ int ovl_nlink_start(struct dentry *dentry)
+ 	if (d_is_dir(dentry) || !ovl_test_flag(OVL_INDEX, inode))
+ 		return 0;
+ 
+-	old_cred = ovl_override_creds(dentry->d_sb);
+-	/*
+-	 * The overlay inode nlink should be incremented/decremented IFF the
+-	 * upper operation succeeds, along with nlink change of upper inode.
+-	 * Therefore, before link/unlink/rename, we store the union nlink
+-	 * value relative to the upper inode nlink in an upper inode xattr.
+-	 */
+-	err = ovl_set_nlink_upper(dentry);
+-	revert_creds(old_cred);
++	old_cred = ovl_creds(dentry->d_sb);
++	scoped_guard(cred, old_cred) {
++		/*
++		 * The overlay inode nlink should be incremented/decremented IFF the
++		 * upper operation succeeds, along with nlink change of upper inode.
++		 * Therefore, before link/unlink/rename, we store the union nlink
++		 * value relative to the upper inode nlink in an upper inode xattr.
++		 */
++		err = ovl_set_nlink_upper(dentry);
++	}
+ 	if (err)
+ 		goto out_drop_write;
+ 
+@@ -1188,9 +1189,9 @@ void ovl_nlink_end(struct dentry *dentry)
+ 	if (ovl_test_flag(OVL_INDEX, inode) && inode->i_nlink == 0) {
+ 		const struct cred *old_cred;
+ 
+-		old_cred = ovl_override_creds(dentry->d_sb);
++		old_cred = ovl_creds(dentry->d_sb);
++		guard(cred)(old_cred);
+ 		ovl_cleanup_index(dentry);
+-		revert_creds(old_cred);
+ 	}
+ 
+ 	ovl_inode_unlock(inode);
+diff --git a/fs/overlayfs/xattrs.c b/fs/overlayfs/xattrs.c
+index 383978e4663c..921a7d086fa1 100644
+--- a/fs/overlayfs/xattrs.c
++++ b/fs/overlayfs/xattrs.c
+@@ -45,9 +45,9 @@ static int ovl_xattr_set(struct dentry *dentry, struct inode *inode, const char
+ 
+ 	if (!value && !upperdentry) {
+ 		ovl_path_lower(dentry, &realpath);
+-		old_cred = ovl_override_creds(dentry->d_sb);
+-		err = vfs_getxattr(mnt_idmap(realpath.mnt), realdentry, name, NULL, 0);
+-		revert_creds(old_cred);
++		old_cred = ovl_creds(dentry->d_sb);
++		scoped_guard(cred, old_cred)
++			err = vfs_getxattr(mnt_idmap(realpath.mnt), realdentry, name, NULL, 0);
+ 		if (err < 0)
+ 			goto out;
+ 	}
+@@ -64,15 +64,16 @@ static int ovl_xattr_set(struct dentry *dentry, struct inode *inode, const char
+ 	if (err)
+ 		goto out;
+ 
+-	old_cred = ovl_override_creds(dentry->d_sb);
+-	if (value) {
+-		err = ovl_do_setxattr(ofs, realdentry, name, value, size,
+-				      flags);
+-	} else {
+-		WARN_ON(flags != XATTR_REPLACE);
+-		err = ovl_do_removexattr(ofs, realdentry, name);
++	old_cred = ovl_creds(dentry->d_sb);
++	scoped_guard(cred, old_cred) {
++		if (value) {
++			err = ovl_do_setxattr(ofs, realdentry, name, value, size,
++					      flags);
++		} else {
++			WARN_ON(flags != XATTR_REPLACE);
++			err = ovl_do_removexattr(ofs, realdentry, name);
++		}
+ 	}
+-	revert_creds(old_cred);
+ 	ovl_drop_write(dentry);
+ 
+ 	/* copy c/mtime */
+@@ -89,9 +90,9 @@ static int ovl_xattr_get(struct dentry *dentry, struct inode *inode, const char
+ 	struct path realpath;
+ 
+ 	ovl_i_path_real(inode, &realpath);
+-	old_cred = ovl_override_creds(dentry->d_sb);
++	old_cred = ovl_creds(dentry->d_sb);
++	guard(cred)(old_cred);
+ 	res = vfs_getxattr(mnt_idmap(realpath.mnt), realpath.dentry, name, value, size);
+-	revert_creds(old_cred);
+ 	return res;
+ }
+ 
+@@ -119,9 +120,9 @@ ssize_t ovl_listxattr(struct dentry *dentry, char *list, size_t size)
+ 	const struct cred *old_cred;
+ 	size_t prefix_len, name_len;
+ 
+-	old_cred = ovl_override_creds(dentry->d_sb);
+-	res = vfs_listxattr(realdentry, list, size);
+-	revert_creds(old_cred);
++	old_cred = ovl_creds(dentry->d_sb);
++	scoped_guard(cred, old_cred)
++		res = vfs_listxattr(realdentry, list, size);
+ 	if (res <= 0 || size == 0)
+ 		return res;
+ 
+@@ -268,4 +269,3 @@ const struct xattr_handler * const *ovl_xattr_handlers(struct ovl_fs *ofs)
+ 	return ofs->config.userxattr ? ovl_user_xattr_handlers :
+ 		ovl_trusted_xattr_handlers;
+ }
+-
+-- 
+2.43.0
 
