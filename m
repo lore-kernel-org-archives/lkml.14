@@ -1,23 +1,23 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF71313BE98;
-	Thu, 25 Jan 2024 18:21:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F4B413BEB4;
+	Thu, 25 Jan 2024 18:21:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706206900; cv=none; b=V15cyOYxzsADhpbezQ9x2W5qGVshQLeCCyVAaTrzlOpazrellJVv4Hgt/Fb8qVBhJCmu+a9KP7JCNi/rTB02pLl0lfytj4vvQfO9ZbEPOeWuISSbbbFBl5yTxiZCYsnR/yJiLWrT5RizWE+zL499wbjNH/qpeipdi9dqIaveORk=
+	t=1706206900; cv=none; b=qUj5EdBULtE9mOKL4SxKPs21N7kG4zpy2r2I/3sQ0z2TUpRksWUtBlrUQgwXFd2C6yFh+tnFJESVbk4g3jJrkgGw6zGNDzghON5gzoj9eQ09iW39nfW2f5KFJ9sjYVVUp8kmK/yNN5OYxlkMS7bi6TlyWUlP8QfvL74KAKybOhk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1706206900; c=relaxed/simple;
-	bh=V9cSUwT+VGk+A6Ux1blRgQ4N12B0F9vHolcuscPdx/I=;
+	bh=0ukaSdLB7QrrDZhuoXZBBuAGXfiReFxv7PEmTV3Xlbc=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=KrrmQ8dHx5EU9Ois635td9UsjfFpTw/2Zk9JfyljjDXGpULKvVm5C37kitcNzLukwmy6QeeQGXUVwX8Bj4xJeXS5UWM9X9ZQEmi0jKtjfzsYCCOeBFrDCHZKsn0/V1eQtbh4IEEd/v9glSU1frPWyESPqochIHmPPiPkLMHnp9c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=PJNOljaJ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=wDK5TCeG; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=E9z5PyT+1KoQ4Su0gXkuf/aKT0XKF6LmTUqGboXHR+D03NCnMVDB7GrDQbVe512OdgsW4I4ZL8OnfFmV3JmUVFnV0eh4CO0TDuGuH/lmYM2yD23xdBEnyWE2EwZ+uPHwqd07mdlse0KctmKrma6TIUsqDoHWhyHdx7adJNqfm+A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=xZ6B29b5; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=y0o61jjK; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="PJNOljaJ";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="wDK5TCeG"
-Date: Thu, 25 Jan 2024 18:21:35 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xZ6B29b5";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="y0o61jjK"
+Date: Thu, 25 Jan 2024 18:21:36 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020; t=1706206896;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
@@ -25,12 +25,12 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=wHtsBYfUeADAj+UUq1y6wKXx5FxG+y3myG9XqCvyKoM=;
-	b=PJNOljaJw9BZ9DiMslfnhmvUlS4xiM++Tj5IegDGLa7ggQKDLsWyH0PbW5JnQLg/R1ll78
-	t5bh+i1WcYVijfqftLpHXezWzVUL/Yj6hD4WSlYOQF8zzycSM6FxNpUA5Vd/+clcWFSMXD
-	w63mpBCNOeGld9b6ZE9RiKp5nh7oMiiAarHMNGcfGrTqpbtEAyfbO7rzUmvfSlRIgtLZ5C
-	OxgVrGtHqCfYciF4F5rknp+p8fLkLc6vFkCrrT/e6Gj8nJCO2zVQuKt2nVZkE6+WRnbsWB
-	M6RRqGLmfofjwtJMOlP3QpScYamzewlVKZdI0Yd/AoLCXupcfxRMk8+e5u4RHQ==
+	bh=0BtMfiW5Jmaue+jLIiKXGH1dEvlk5SISeSvAE/4TjV4=;
+	b=xZ6B29b5UYNErTfXEPCqr9QRKtsFG30czeQ6rSvzHgNkVdVKDAgw+DsqZ3aBijI2+b+wJF
+	FdCF/Ct9wirLlTghVCZxHN3YFx0uBOGaz2QEd1mh/ggRpMHSTAqcfK1UDCf3x5fDoDIYP9
+	znM1JEl0wxl+jl19KiuR76nvhCu6V+aj9GyCb070QfWZ915mafF0PEdCbvdEjGBsYezCwS
+	vdhzTaCSsjRS2wZ7C7DQQYzCNTvnznDj7lghA+oqfiT1rIWvEy0AFs3MYhyw/ceMpHl/5Q
+	pt/twFVnT4tYvMx0/mnstAejDKtQMhS1Q3P9zwcLXQ5PPtd9RHHpOVI4kYCyaw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020e; t=1706206896;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
@@ -38,25 +38,27 @@ DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=wHtsBYfUeADAj+UUq1y6wKXx5FxG+y3myG9XqCvyKoM=;
-	b=wDK5TCeGFIeWlhiG1qlFs3JMMK6Jkrfk4QD5IKssIo2y29aPZud1OrydZSwgKf9mGtIQqB
-	t8TVqoyHqTWDgwDg==
-From: "tip-bot2 for Xin Li" <tip-bot2@linutronix.de>
+	bh=0BtMfiW5Jmaue+jLIiKXGH1dEvlk5SISeSvAE/4TjV4=;
+	b=y0o61jjKWGD4YLbr6GyihBK9pKn14LfTWoYuZqUCOP2hNIGj4tDYpCiIo3WIybaKHJ3UCb
+	gvVWbz7HUTZfPdAQ==
+From: "tip-bot2 for H. Peter Anvin (Intel)" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/fred] x86/fred: Disable FRED by default in its early stage
-Cc: Xin Li <xin3.li@intel.com>, Thomas Gleixner <tglx@linutronix.de>,
+Subject:
+ [tip: x86/fred] x86/fred: Disable FRED support if CONFIG_X86_FRED is disabled
+Cc: Megha Dey <megha.dey@intel.com>, "H. Peter Anvin (Intel)" <hpa@zytor.com>,
+ Xin Li <xin3.li@intel.com>, Thomas Gleixner <tglx@linutronix.de>,
  Shan Kang <shan.kang@intel.com>, x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20231205105030.8698-9-xin3.li@intel.com>
-References: <20231205105030.8698-9-xin3.li@intel.com>
+In-Reply-To: <20231205105030.8698-8-xin3.li@intel.com>
+References: <20231205105030.8698-8-xin3.li@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <170620689542.398.3437920556925908485.tip-bot2@tip-bot2>
+Message-ID: <170620689604.398.10401404045358407255.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -66,52 +68,79 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the x86/fred branch of tip:
 
-Commit-ID:     7a1d75084df087dcae703d70a49274a3982e3681
-Gitweb:        https://git.kernel.org/tip/7a1d75084df087dcae703d70a49274a3982e3681
-Author:        Xin Li <xin3.li@intel.com>
-AuthorDate:    Tue, 05 Dec 2023 02:49:57 -08:00
+Commit-ID:     e554a8ca49d6d6d782f546ae4d7f036946e7dd87
+Gitweb:        https://git.kernel.org/tip/e554a8ca49d6d6d782f546ae4d7f036946e7dd87
+Author:        H. Peter Anvin (Intel) <hpa@zytor.com>
+AuthorDate:    Tue, 05 Dec 2023 02:49:56 -08:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
 CommitterDate: Thu, 25 Jan 2024 19:10:30 +01:00
 
-x86/fred: Disable FRED by default in its early stage
+x86/fred: Disable FRED support if CONFIG_X86_FRED is disabled
 
-To enable FRED, a new kernel command line option "fred" needs to be added.
+Add CONFIG_X86_FRED to <asm/disabled-features.h> to make
+cpu_feature_enabled() work correctly with FRED.
 
+Originally-by: Megha Dey <megha.dey@intel.com>
+Signed-off-by: H. Peter Anvin (Intel) <hpa@zytor.com>
 Signed-off-by: Xin Li <xin3.li@intel.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Tested-by: Shan Kang <shan.kang@intel.com>
-Link: https://lore.kernel.org/r/20231205105030.8698-9-xin3.li@intel.com
+Link: https://lore.kernel.org/r/20231205105030.8698-8-xin3.li@intel.com
 
 ---
- Documentation/admin-guide/kernel-parameters.txt | 3 +++
- arch/x86/kernel/cpu/common.c                    | 3 +++
- 2 files changed, 6 insertions(+)
+ arch/x86/include/asm/disabled-features.h       | 8 +++++++-
+ tools/arch/x86/include/asm/disabled-features.h | 8 +++++++-
+ 2 files changed, 14 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 31b3a25..c6c1a2c 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -1539,6 +1539,9 @@
- 			Warning: use of this parameter will taint the kernel
- 			and may cause unknown problems.
+diff --git a/arch/x86/include/asm/disabled-features.h b/arch/x86/include/asm/disabled-features.h
+index 702d93f..f40b29d 100644
+--- a/arch/x86/include/asm/disabled-features.h
++++ b/arch/x86/include/asm/disabled-features.h
+@@ -117,6 +117,12 @@
+ #define DISABLE_IBT	(1 << (X86_FEATURE_IBT & 31))
+ #endif
  
-+	fred		[X86-64]
-+			Enable flexible return and event delivery
++#ifdef CONFIG_X86_FRED
++# define DISABLE_FRED	0
++#else
++# define DISABLE_FRED	(1 << (X86_FEATURE_FRED & 31))
++#endif
 +
- 	ftrace=[tracer]
- 			[FTRACE] will set and start the specified tracer
- 			as early as possible in order to facilitate early
-diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-index 0b97bcd..2121ec6 100644
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -1484,6 +1484,9 @@ static void __init cpu_parse_early_param(void)
- 	char *argptr = arg, *opt;
- 	int arglen, taint = 0;
+ /*
+  * Make sure to add features to the correct mask
+  */
+@@ -133,7 +139,7 @@
+ #define DISABLED_MASK10	0
+ #define DISABLED_MASK11	(DISABLE_RETPOLINE|DISABLE_RETHUNK|DISABLE_UNRET| \
+ 			 DISABLE_CALL_DEPTH_TRACKING|DISABLE_USER_SHSTK)
+-#define DISABLED_MASK12	(DISABLE_LAM)
++#define DISABLED_MASK12	(DISABLE_FRED|DISABLE_LAM)
+ #define DISABLED_MASK13	0
+ #define DISABLED_MASK14	0
+ #define DISABLED_MASK15	0
+diff --git a/tools/arch/x86/include/asm/disabled-features.h b/tools/arch/x86/include/asm/disabled-features.h
+index 702d93f..f40b29d 100644
+--- a/tools/arch/x86/include/asm/disabled-features.h
++++ b/tools/arch/x86/include/asm/disabled-features.h
+@@ -117,6 +117,12 @@
+ #define DISABLE_IBT	(1 << (X86_FEATURE_IBT & 31))
+ #endif
  
-+	if (!cmdline_find_option_bool(boot_command_line, "fred"))
-+		setup_clear_cpu_cap(X86_FEATURE_FRED);
++#ifdef CONFIG_X86_FRED
++# define DISABLE_FRED	0
++#else
++# define DISABLE_FRED	(1 << (X86_FEATURE_FRED & 31))
++#endif
 +
- #ifdef CONFIG_X86_32
- 	if (cmdline_find_option_bool(boot_command_line, "no387"))
- #ifdef CONFIG_MATH_EMULATION
+ /*
+  * Make sure to add features to the correct mask
+  */
+@@ -133,7 +139,7 @@
+ #define DISABLED_MASK10	0
+ #define DISABLED_MASK11	(DISABLE_RETPOLINE|DISABLE_RETHUNK|DISABLE_UNRET| \
+ 			 DISABLE_CALL_DEPTH_TRACKING|DISABLE_USER_SHSTK)
+-#define DISABLED_MASK12	(DISABLE_LAM)
++#define DISABLED_MASK12	(DISABLE_FRED|DISABLE_LAM)
+ #define DISABLED_MASK13	0
+ #define DISABLED_MASK14	0
+ #define DISABLED_MASK15	0
