@@ -1,41 +1,42 @@
 Received: from www530.your-server.de (www530.your-server.de [188.40.30.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0430481B9;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FA5F481BA;
 	Thu, 25 Jan 2024 12:34:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.40.30.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706186081; cv=none; b=CaVTsCNaphZAyAPd+iF+M0ipb9TMEGyaadvvqZ3paRux4fE2uQaYo67F9AF7Tjnq5Inxr2PL+y0TWzvc0Y4FoKbEt9+KxAdSZhVVJewKYcRCajwqUL/0OKe7LqPR32YmGoHGMeYpeqnCj4CVHMHtv2zj/M7qPLddrbjR1/3DCiE=
+	t=1706186082; cv=none; b=rXunSPnh6u+bpMpCdNNMcotQVOZams5BxYLJBn4PxDxs2n+1VU5b/qBgv2ABUVtcuBgNKOOvErfYQrCDpevP5q1D6kLBYHNAY1515myKdCZlQwvpgD1N24KIlQM6PLEyVdX7j5zaY27zXoQlCZWB/zVXTWf3QQTqeTNv2zi8cr8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706186081; c=relaxed/simple;
-	bh=uVcf0VNvF9r7eiInlL/b0K531ErmBBzf5AMiuPl0kog=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lutYZ74kEG4fpt3AkELnf3imsldciH8ErqP85kG/dloue+SZrueItRwceCtZOVHGyu8NeYedP5+Tlx97ucJgnelMJDfCbApdJpTCu9B4OI/NhTS9XLbxNKG9SvU7avh/fc9Lq4GE3iuXVvskz1Mntui3uNs9YJb8JM7tatyZ/14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=geanix.com; spf=pass smtp.mailfrom=geanix.com; dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b=C4uh51dX; arc=none smtp.client-ip=188.40.30.78
+	s=arc-20240116; t=1706186082; c=relaxed/simple;
+	bh=9hpKHMzKfhCYbcecGtWjsCp6NQXfEDCbwraey3X3VO0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=I6OCSWnoLAMXQRRktkv4ZG2hyCNvZfwhi7IXbJ+gSlmNRX1CD/AXPMXuqgaPNu2MuJaiK8cZzVHPkUThlS6G2YkK+lo1Smg+jpr3WW05GrRFVoNgHazp0HioAY28GMtbky2u1MQDCWGfLcqpSIf8lQ5obioYnsQ2bXadtPG9oGo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=geanix.com; spf=pass smtp.mailfrom=geanix.com; dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b=TJlznXiO; arc=none smtp.client-ip=188.40.30.78
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=geanix.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=geanix.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="C4uh51dX"
+	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="TJlznXiO"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=geanix.com;
-	s=default2211; h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:
-	Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:In-Reply-To:References;
-	bh=sqde1eKqHsDxcHA0c/L4ft5EXdAFyz1gweX/+ObrMwk=; b=C4uh51dX/XlieJ7zgcfHMe5mcN
-	D8vNmk2uDCQERTOxpyxoTZHeumltyyRkGjjR1sqbJRFuMD1DHu1xVFiHDeS6PgmREtdVdFqR/x1VO
-	NxRlLIBZSLzMBZM1e9ST8I+0fN3dQvMhKFsy7RBt3N3c6h+LuHfEZ9YqTb3Yj3okgSo4Hwnx4XzcM
-	ONKCH1hwNpVm8daIJEZ9i/u75L85PdldC+dxMyKofRdn4cUQWfwZqc/gkLLBWRX/aubRFbiFnnWzJ
-	BEJQejfpXwO7RTO6vJ52ilUe8WjJb4ag9PKC5sWFa/g7nU32tOWy7A3gC13/LtUohrfcQEz7IY1lF
-	k4bnULJA==;
+	s=default2211; h=Content-Transfer-Encoding:MIME-Version:References:
+	In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=RGm3cvG/FSHbu0unNfOng+T3r1yzerASsV1ePVGWH6w=; b=TJlznXiO0cIAK+jP6jbhWJsSJH
+	krsnIMdXoKbYVw14uv1Den1gJgJLs14y6VMBaxKujr0M0eaKtSRsrIcuf+0MsWDPxjlq8QUM3JcyE
+	18eNxt3LT/nftstmpvXEi7xKXHS3x/hkBZvRl3Q1hUfivyojoSwbKt5uw2Ra4+siT+xCmLrs06QYm
+	nO3RTqfaH/VU5MkBZyCevNv4dXJwKpuQzXUyuqwujYVMYQj4QbY5Mj+kIaxZipDnny+ishJKGxdFO
+	RHYryUL20/e/0gcHBDOQvq8IbnKTvMxf247BAnlBtrlNoF105KN8VajjacSzeIN2YIZxLJuGuB3d4
+	yg4Krd6g==;
 Received: from sslproxy02.your-server.de ([78.47.166.47])
 	by www530.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <esben@geanix.com>)
-	id 1rSywG-0007Pw-Hb; Thu, 25 Jan 2024 13:34:36 +0100
+	id 1rSywI-0007QC-2M; Thu, 25 Jan 2024 13:34:38 +0100
 Received: from [185.17.218.86] (helo=localhost)
 	by sslproxy02.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <esben@geanix.com>)
-	id 1rSywF-000258-JO; Thu, 25 Jan 2024 13:34:35 +0100
+	id 1rSywH-0002CN-04; Thu, 25 Jan 2024 13:34:37 +0100
 From: Esben Haabendal <esben@geanix.com>
 To: netdev@vger.kernel.org,
 	Alexandre Torgue <alexandre.torgue@foss.st.com>,
@@ -53,10 +54,12 @@ To: netdev@vger.kernel.org,
 Cc: linux-arm-kernel@lists.infradead.org,
 	linux-stm32@st-md-mailman.stormreply.com,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 0/2] net: stmmac: dwmac-imx: Time Based Scheduling support
-Date: Thu, 25 Jan 2024 13:34:32 +0100
-Message-ID: 
+Subject: [PATCH 2/2] net: stmmac: dwmac-imx: set TSO/TBS TX queues default settings
+Date: Thu, 25 Jan 2024 13:34:34 +0100
+Message-ID: <5606bb5f0b7566a20bb136b268dae89d22a48898.1706184304.git.esben@geanix.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <cover.1706184304.git.esben@geanix.com>
+References: <cover.1706184304.git.esben@geanix.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,26 +70,33 @@ Content-Transfer-Encoding: 8bit
 X-Authenticated-Sender: esben@geanix.com
 X-Virus-Scanned: Clear (ClamAV 0.103.10/27165/Thu Jan 25 10:51:15 2024)
 
-This small patch series allows using TBS support of the i.MX Ethernet QOS
-controller for etf qdisc offload.
+TSO and TBS cannot coexist. For now we set i.MX Ethernet QOS controller to use
+TX queue with TSO and the rest for TBS.
 
-It is a rework of
-https://lore.kernel.org/all/20240124-reptilian-icing-a95b20f123be@spud/T/
+TX queues with TBS can support etf qdisc hw offload.
 
-Changes since previous series:
+Signed-off-by: Esben Haabendal <esben@geanix.com>
+---
+ drivers/net/ethernet/stmicro/stmmac/dwmac-imx.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-- Changed from using a devicetree binding for configuring TBS support to enable
-  it for all TX queues on supported i.MX Ethernet QOS controller. Other stmmac
-  controllers with TBS support will need to be updated with similar changes.
-
-Esben Haabendal (2):
-  net: stmmac: do not clear TBS enable bit on link up/down
-  net: stmmac: dwmac-imx: set TSO/TBS TX queues default settings
-
- drivers/net/ethernet/stmicro/stmmac/dwmac-imx.c   | 6 ++++++
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 3 +++
- 2 files changed, 9 insertions(+)
-
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-imx.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-imx.c
+index 8f730ada71f9..c42e8f972833 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-imx.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-imx.c
+@@ -353,6 +353,12 @@ static int imx_dwmac_probe(struct platform_device *pdev)
+ 	if (data->flags & STMMAC_FLAG_HWTSTAMP_CORRECT_LATENCY)
+ 		plat_dat->flags |= STMMAC_FLAG_HWTSTAMP_CORRECT_LATENCY;
+ 
++        for (int i = 0; i < plat_dat->tx_queues_to_use; i++) {
++                /* Default TX Q0 to use TSO and rest TXQ for TBS */
++                if (i > 0)
++                        plat_dat->tx_queues_cfg[i].tbs_en = 1;
++        }
++
+ 	plat_dat->host_dma_width = dwmac->ops->addr_width;
+ 	plat_dat->init = imx_dwmac_init;
+ 	plat_dat->exit = imx_dwmac_exit;
 -- 
 2.43.0
 
