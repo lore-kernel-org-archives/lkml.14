@@ -1,132 +1,103 @@
-Received: from wout2-smtp.messagingengine.com (wout2-smtp.messagingengine.com [64.147.123.25])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85BE71D559;
-	Thu, 25 Jan 2024 09:29:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B018320B27;
+	Thu, 25 Jan 2024 09:29:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706174949; cv=none; b=TNaBxKyKHY4oTkR4wuSF9JLc3I3gF8sx2pKigPheSco5S91kdXAzqzYiw2euuTE/BVu2cZgyqTSE0f2aRX2eQ52PBHuTnjpCSC3Bsy98xzv5ueTfF/Qhd0F6yKfLA7aUDddAgkhdUyKW0Jy5kXDkCx24ZIY/uBvmngthcgy9VbA=
+	t=1706174955; cv=none; b=bG3nL2Sj0cbSVnZ2Yh3t2MoGHx8CATt0UWMRLTxoKyet7EoPqhJ+IimjiQZIoVetZ/Jmw8ZrFg4IpqB6WAvr7ZZx+fALXxDnD+IaQ/GhNHvSF4qvoVwH2U4sPxlG1PoIcmTIrvdLIhWZNV/aPSzBe0nU2jtWGmZc5D1fD3EEuRg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706174949; c=relaxed/simple;
-	bh=K/9JKflS9axsLrR15vQW/TMGMDqOa6Hya/B30Dusweg=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=ae5zcey6CG0xYH7+Kt3IZlb3cSqyJ1IefF+98+0sLn/rzVsnhepzQvsqfku+JoBdihrZsbTm0WTT5N2gNH9SpF4cwYQcdHX7FvNaRZdL9MbKHDRQqwIEiiXfEEl/T1HBrlyxLOwP2w/X88y6K8Jv2+SuPNjwgXo52GSJfii1B5o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=H6pVcBwO; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=TYyNxe/g; arc=none smtp.client-ip=64.147.123.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
+	s=arc-20240116; t=1706174955; c=relaxed/simple;
+	bh=f0WH8mYyehhGdFrch/FhoI1euWmA1llvn3BltzJk/c4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=R3x+zxAkBTVaTjVIEYBJljnSlPwZJDz4UTvVPCpbv42EIXY1fgstRi/u6kE6O3aDMs4jGp3VhydzJo4ttUCU9LwTctGmYjO/NZghbTlfwpo1DgRGF6gjOGglfDP7FAGJ9l1J6uhAc0huSCmimZZ1TRwOjntW/5gdbgqG7A1A+AA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VRVpUuTh; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="H6pVcBwO";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="TYyNxe/g"
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-	by mailout.west.internal (Postfix) with ESMTP id 9DB603200BB7;
-	Thu, 25 Jan 2024 04:29:04 -0500 (EST)
-Received: from imap44 ([10.202.2.94])
-  by compute3.internal (MEProxy); Thu, 25 Jan 2024 04:29:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
-	cc:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1706174944;
-	 x=1706261344; bh=i0i8PWJmZEIkk+qKWWCdcOgFw5jqjthhyPV0wFojKbQ=; b=
-	H6pVcBwO4ZLaGUzpBTECLQ40+Mm+pEnyKTDjgZdFJ8Y1TsT1ON1s2ELdQrlEH6BU
-	cgUO71RyLbCfAj5g86T3buVZnH0ROTXRAIicxrC3LqI6yaaWOOmNtaSd/kr1gwHL
-	OodId6jl3iSqNdPnTHT+Ax6vbN6ESIypN/+WEUQHvyo9C+Z9WHw6rUp88bJyiGXY
-	aoUdZP83FOfUvWsiAXLJtSKxljh6Pg0/5jEr1ub9yiw4R5uAmCIEu1WADbBCO0CJ
-	07q7VK5e9bPb9jgcT//yAEYR901RBjEgPYKFSYpJ4j+lkGkghysG/y89kodK9Wk7
-	rZ/kWLSH9OCP3D8gLZeDCg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1706174944; x=
-	1706261344; bh=i0i8PWJmZEIkk+qKWWCdcOgFw5jqjthhyPV0wFojKbQ=; b=T
-	YyNxe/gap3a1Ds7o35cEU4eoD2hL/lLjyRrQ8FcKoji7qh+TjeUeWJ5lGVgFLE1x
-	ZJCGjkVygP49mRc81E2QmexP2bxGbXrOctbw+Vy/bKGq8wTydaIJC1MmaFlBJXuk
-	DFcFYSqWMHu2yvIQri/nA32t0eTD79ru2Qzo8NZ/fKXPKXy7/BKSjiRC8bGOnmOU
-	DUI5rndTjp48GgQIPOHa3/3AyfaMX0i39eBEFkB3FrTC9fHwkljpBZ7Z8EBtmCEn
-	Lba2+kPJRAB8anHmy2Fv6AhaLPEOD7mA4B7UluGFJx4XvteVFIF6aProT+t7pzZX
-	Yz1F1vP7//Qhqq1kYfLaA==
-X-ME-Sender: <xms:3ymyZVs21U8ZqnsOuXOaazdG7GlnzqP9TsgXip3xB7VzwWRfAKiHIw>
-    <xme:3ymyZecCeNqV4wXeVIvmIxFUA_rUxbWDOwhCUFCXucHHy-KSkdahQ-VWTVFimWZAm
-    G2D9bonnlbDNb3RQ6s>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrvdelfedgtdegucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtgfesthhqredtreerjeenucfhrhhomhepfdfl
-    ihgrgihunhcujggrnhhgfdcuoehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtoh
-    hmqeenucggtffrrghtthgvrhhnpedufeegfeetudeghefftdehfefgveffleefgfehhfej
-    ueegveethfduuddvieehgfenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmh
-    grihhlfhhrohhmpehjihgrgihunhdrhigrnhhgsehflhihghhorghtrdgtohhm
-X-ME-Proxy: <xmx:3ymyZYweCc5AvRnJAGpEFU4N4LYF2pZai5DeZhNKmGt1aU5g8_OhIQ>
-    <xmx:3ymyZcM1R8HPm5mcwokD8eY6L7t3vbn8VRUoZh3SbpbCZerQqxwcKw>
-    <xmx:3ymyZV_apitg7LRwV1kIf6usBWUhq5LZLX6KR7Tg-iRwVoScGwunYA>
-    <xmx:4CmyZYkrjz7lcycg6O5LWtTHhKz6m4i46xXuqhYIEYJEXO1sjrZGvA>
-Feedback-ID: ifd894703:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 46B4136A0076; Thu, 25 Jan 2024 04:29:03 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-119-ga8b98d1bd8-fm-20240108.001-ga8b98d1b
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VRVpUuTh"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a3150c9568bso126109466b.1;
+        Thu, 25 Jan 2024 01:29:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1706174952; x=1706779752; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=ORIJE9f/z+ZprW7cvU+93rl1XYAcpcHTZAoKwb7UAN8=;
+        b=VRVpUuThNJrDjTYgKf6vO22YIyZi+oNs8Y/jqx0xQf96QSswiUub3hJG63p06DlX8v
+         EmvMHGvEB37jDTYF7PvQq+iikUD3QQw/DUltsUdnvu4cKBzPZ3gg6un1Lt7wvaqSegpA
+         1CXgzBHQppJQliXm7jFV6+mhH9iAITVDftAahi07l6IgrGYPNVCUcrRqXlUIp9RS7OnW
+         jcJ4GcXsxUMxJ2FhQxIv0MHQJ9g71D5HHHVo+IgsEM7+v2Pi13ctjhQbwqW8towHszzl
+         kcq0a01w+HmCucr6pgiSfXKsaj0PmOYiFRXW5A7n5nagU3hMhvTcL/VuNEC0qbY2JRq3
+         bNdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706174952; x=1706779752;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ORIJE9f/z+ZprW7cvU+93rl1XYAcpcHTZAoKwb7UAN8=;
+        b=k+OjBXCswDRZ1Izo2FcLf9TCeO5gItTmFkoWCl8phLhbnECukWFma0wsgbuhOnaMOu
+         88wNo0a0pyCPA1ZkNunXMxImx6YlWgunmQD13q5RnpzkNq56VDa7ooT/1O69NV/ti8nl
+         31XGvUq5i4E0mz6Q0oKUi6AErFgq7bN4UjG0Yf+3Q3fpYaP3qFs3JvenVziYNnaeihfE
+         aPl48C039RcrPoYR5TEKtfZiPKDXM5TvP4kXje6kQphlzMchQKWVfjuppC7v0ERbGpIy
+         II+7MkWjLexzbBBToqw0NJ5/uEW7vzUhXIpqsuyLPbqJe1YkaJOoxI08yYAnDQMJbc5l
+         Hfog==
+X-Gm-Message-State: AOJu0YxqbCz0I5nJJm3Xezv/UDhqFnp2EsrEPEXaynA934L3N+uFTeli
+	heoer0QctOz4SbOlxSt2qf0e7q0Tr3QbEfRQoKMvB5mMZmrjqOAl
+X-Google-Smtp-Source: AGHT+IExWFNGCj8bFUwy2D2zj58GEhzyTbrPM9rW1Uu9Oo1+KTW3AUkCmUyW46u3+HQvCsrrPWXfSQ==
+X-Received: by 2002:a17:907:9387:b0:a28:c8bd:fbfc with SMTP id cm7-20020a170907938700b00a28c8bdfbfcmr224236ejc.215.1706174951457;
+        Thu, 25 Jan 2024 01:29:11 -0800 (PST)
+Received: from skbuf ([188.25.255.36])
+        by smtp.gmail.com with ESMTPSA id k20-20020a17090646d400b00a30e0f7b4f3sm822210ejs.31.2024.01.25.01.29.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 Jan 2024 01:29:11 -0800 (PST)
+Date: Thu, 25 Jan 2024 11:29:09 +0200
+From: Vladimir Oltean <olteanv@gmail.com>
+To: =?utf-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	mithat.guner@xeront.com, erkin.bozoglu@xeront.com,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next] net: dsa: mt7530: select MEDIATEK_GE_PHY for
+ NET_DSA_MT7530_MDIO
+Message-ID: <20240125092909.exaisdjkkgmc5fue@skbuf>
+References: <20240122053451.8004-1-arinc.unal@arinc9.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <00d1b813-c55f-4365-8d81-d70258e10b16@app.fastmail.com>
-In-Reply-To: 
- <CAHk-=whkEXGOCEZFO2vAZ9rDd8uW8MJwFNYg9KXaC_vZVso6iA@mail.gmail.com>
-References: <75e9fd7b08562ad9b456a5bdaacb7cc220311cc9.camel@xry111.site>
- <mvmplxraqmd.fsf@suse.de>
- <9481b6d9d015aea25d8f2563bf7bd6f6462f758f.camel@xry111.site>
- <0be1203c9df55432548c92281c8392dfa2f7d6bf.camel@xry111.site>
- <e8583a3ab0522b4e75ba0ada47b6f093b186fa81.camel@xry111.site>
- <CAHk-=wgVrw+8P68Sy2krcc3QFbm_eu_DRs0-i7mct_0BDORZuA@mail.gmail.com>
- <CAHk-=whkEXGOCEZFO2vAZ9rDd8uW8MJwFNYg9KXaC_vZVso6iA@mail.gmail.com>
-Date: Thu, 25 Jan 2024 09:28:41 +0000
-From: "Jiaxun Yang" <jiaxun.yang@flygoat.com>
-To: "Linus Torvalds" <torvalds@linux-foundation.org>,
- "Xi Ruoyao" <xry111@xry111.site>, tsbogend@alpha.franken.de
-Cc: "Andreas Schwab" <schwab@suse.de>, "Ben Hutchings" <ben@decadent.org.uk>,
- "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
- linux-kernel@vger.kernel.org, libc-alpha@sourceware.org
-Subject: Re: Strange EFAULT on mips64el returned by syscall when another thread is
- forking
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240122053451.8004-1-arinc.unal@arinc9.com>
 
+On Mon, Jan 22, 2024 at 08:34:51AM +0300, Arınç ÜNAL wrote:
+> Quoting from commit 4223f8651287 ("net: dsa: mt7530: make NET_DSA_MT7530
+> select MEDIATEK_GE_PHY"):
+> 
+> Make MediaTek MT753x DSA driver enable MediaTek Gigabit PHYs driver to
+> properly control MT7530 and MT7531 switch PHYs.
+> 
+> A noticeable change is that the behaviour of switchport interfaces going
+> up-down-up-down is no longer there.
+> 
+> Now, the switch can be used without the PHYs but, at the moment, every
+> hardware design out there that I have seen uses them. For that, it would
+> make the most sense to force the selection of MEDIATEK_GE_PHY for the MDIO
+> interface which currently controls the MT7530 and MT7531 switches.
+> 
+> Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
+> ---
 
+I see MEDIATEK_GE_PHY only depends on NETDEVICES && PHYLIB, so it should
+have no problem being directly selected by a driver without breaking the
+build by causing unmet dependencies.
 
-=E5=9C=A82024=E5=B9=B41=E6=9C=8824=E6=97=A5=E4=B8=80=E6=9C=88 =E4=B8=8B=E5=
-=8D=8810:10=EF=BC=8CLinus Torvalds=E5=86=99=E9=81=93=EF=BC=9A
-[...]
->
-> Anyway, I'm pretty sure this is the bug, now some MIPS person just
-> needs to fix the MIPS version of "instruction_pointer()" to do what
-> "exception_epc()" already does.
+I also see there is precedent with CONFIG_TXGBE selecting
+MARVELL_10G_PHY, CONFIG_R8169 selecting REALTEK_PHY, and others.
 
-Hi folks,
-
-Kinda MIPS person here, I looked into the problem, and it's not that
-easy to fix.
-
-I inspected some existing usage of "instruction_pointer()", and some
-of them do want exception return address (which is always CP0_EPC).
-Others like this case they want the precise exception instruction
-pointer ("exception_epc()" for MIPS).
-
-I'm planning to make "instruction_pointer()" always point to exception
-instructions, and implemented a new function called "return_pc()"or
-whatever for "exception_epc()". Do you have a better name in mind?
-
-Besides isa16 stuff do require kernel to read user space fault
-instruction to determine delay slot size... I don't think it's always
-possible when "instruction_pointer()" is called. MIPS16/microMIPS
-is rarely used today though.
-
-Thanks
-
->
->               Linus
-
---=20
-- Jiaxun
+Reviewed-by: Vladimir Oltean <olteanv@gmail.com>
