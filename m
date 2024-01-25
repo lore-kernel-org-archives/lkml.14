@@ -1,156 +1,195 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D83423764
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 11:31:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5FF92C68D
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 11:32:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706182309; cv=none; b=AACuaT0DKJd/Xf01jrR3i++gK0Re7NNIN4Cmst/5rfLBuIbxp/jI9DXrZOJDBQIaec79fp8Ot/3tIskbEsAVD0gyB0cHWTxqHV96Ot5Lj/8wHz297Omy8QrsibRCkmH7deFvl98Op2m8GSjYTNnaAqUAFIOtniGLW/M7s2fjjOs=
+	t=1706182360; cv=none; b=G7Q/V8wwMkVU+xAlQc/kHMV1E1tMwY8kYwp2LpBqPNU3GnpTejJ/fpiTlVvv5ZJFoR1eYi4FewV54Ne7AXV3PgdCJBSr2AoNB8q2Zs+J6tuCzpXncNS0zkeFH4SpeB/d73AXoAQJHL05b2/4VpHOY7CWto2UVfWgR1Iag2aZbls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706182309; c=relaxed/simple;
-	bh=Gkox73kJQuPMe66Dq8WQy5T/1qpGqY8Q73OZXUdTLMg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ns9H8PtEcLUhYuEcvcuO3Ak7/8sUrSJOfGtklrFzYyeSsdBTLN0AM+LtfIQZ2ud+JGmuHHnkGAEVnIPuGsYgUTn1Rd0CA+mqdkkITVdzo3EFith3ypn5oqukDs5urGjyPyIhpue6HSrpM201deIk8/orAqsz5NosXkBXa0BVM3w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=opKgYAfZ; arc=none smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1706182360; c=relaxed/simple;
+	bh=M/dY1K/cDSitauuanlOcuux8g/eo1beeiaI7jh6JUqU=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=IF1XdsrtI+ElYGObEDEmBvT132/LZhnteSAnJLAK88+krmKC3gM1/1New3kCsvBWyYyMfX1WCizCjpvr9ZhkbDZNZAD+klbstw9AMAPRmRCw1azIcqapZ35uElzrC8V+G/fxYEgoxbRtgJTw/uQhyJMx2wF0qu/d0SOwo9HR3G0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YOIjiMl+; arc=none smtp.client-ip=209.85.128.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="opKgYAfZ"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-556c3f0d6c5so7924027a12.2
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 03:31:46 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YOIjiMl+"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-5fffb2798bfso72118237b3.2
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 03:32:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706182305; x=1706787105; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=kXUM1YzAYFxAt6CaSZMDshr9nnMeTjeJvJ3fZvy8u/s=;
-        b=opKgYAfZ5aaJt0W7P2JLzR805OtAPLvUkor0EjHZxh+D0O0xa9hAVxLF66ycScTY+a
-         RQIAZcIrOpj8g3AOdUKiADlJRn3XMFphf+VJ7+s+XcTXyE1KvirJy6YEKeKLkKmzuvfm
-         FEn9NyqaAiCLTtk3OJR08HCiA5V8UkMOIU4UerDF3YrCelmgnV5hNF8DnXhUDbUFBqWW
-         ynlC0sKRdiPkG/mFLwPXNC7Q2dfLKZWKRgiF5xZBuqxq2IiEGdiVRtqfMWE2cIrenNHw
-         RmysPCG4GUu8eRxRR39I0GhE+WxyjKvQpYhBJjREUF015NIFDVjGoyWqE9t6Ft3ZqAzd
-         5+KA==
+        d=google.com; s=20230601; t=1706182357; x=1706787157; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=zCvimkwa+N98VxwOiO1HtexFLHWLAuY9mMqDTRppF28=;
+        b=YOIjiMl+/gZ0habOflpsWv2zT4rjubtcMsmpILXFTpLUlJCWal51mM/7hXwRQzrfIE
+         gHzXxqIeP2jPPDEFPSy7xmoPmauFpKAwFrNN4xMxkKbVYUeDU1eO/LK/4zmQtVUX7XIh
+         VPusmUN0LpE1oz9rYB3OqetM6kC3316sA1uT4dgO3JbNB/pqwXRhBWVjFkdP1k+WgqV4
+         inHjXWkOmIyElOAXhExTrFptL8tEzwNaJPGvwa/mjQM37WPenKOVoL9KMTWsIJaP9n2y
+         wh55FS8ADHKAGiyZlMHNmk4I1L/LmX3pzETa4rmd6nUS+Oh3IEAISXi05HMH3CL40guB
+         nKgA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706182305; x=1706787105;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=kXUM1YzAYFxAt6CaSZMDshr9nnMeTjeJvJ3fZvy8u/s=;
-        b=SCfocjJ6c3OUS2cR52CquJisgnmdV7L/UbcCdMBjdUxl28PSlSZzlBzg9/a6JqWBGy
-         UoObEem9U71wENLfevg9mCV0lAvRBid4jz+qZbZ6+SUiQneI2dxkCDrE7q+fw0IVaqMa
-         yJeOm+6nNsg4mh0pGZerdTPcaoOfZT0GlZKCi/kdYFR1YJMTntDe9z4M8FNa8uXwsJN6
-         BqUZ2TcyAQMZzi2tB4tT84pI1pB8QHyUUTe6abEK/mNxF7NGYF5yHJJwD5dMQaOi5cSC
-         zhanv7K9xvAeI7wBzClYkULQG+tctovTbAUsGBHU7aIm/5aYz6tpfcbG70EqR+vrK9zu
-         0e4A==
-X-Gm-Message-State: AOJu0YznlHyVA8u624e7PYn0HUMTIaE18WDoq9n8Y7/lFMg2zp8Yr3xT
-	blKjXcveQzOLpCwhJorppXv/h+i2My7L3jFHaE10FYJNvkgE57mtR32C/8lBj8Q=
-X-Google-Smtp-Source: AGHT+IG+EI2F/oVESA9vZty2MHPPsg/wRRdsbAdTQn1xzmWa06cwSrT2Culo5UeVGzoI/+EGUXZ1hQ==
-X-Received: by 2002:a17:906:250c:b0:a2e:893f:7333 with SMTP id i12-20020a170906250c00b00a2e893f7333mr281802ejb.5.1706182304677;
-        Thu, 25 Jan 2024 03:31:44 -0800 (PST)
-Received: from [192.168.1.20] ([178.197.215.66])
-        by smtp.gmail.com with ESMTPSA id tk11-20020a170907c28b00b00a3040040011sm928081ejc.45.2024.01.25.03.31.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 25 Jan 2024 03:31:44 -0800 (PST)
-Message-ID: <986db909-144b-465a-8c46-273042a4fe5e@linaro.org>
-Date: Thu, 25 Jan 2024 12:31:42 +0100
+        d=1e100.net; s=20230601; t=1706182357; x=1706787157;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=zCvimkwa+N98VxwOiO1HtexFLHWLAuY9mMqDTRppF28=;
+        b=WBoUBCkHl1vdQYydy7SzJ7rbMAWhYM90Hxge9b/SlErFImSSLTIl3Vfxf+wO33a8of
+         o3t/aDT0jgPkADBTld3WcrAL4yJ6L/mCA7KDpjfSIVi+QO8HpDfhXPhEpqFdWD4D4HOV
+         O6vFNAANR/Bhm9D8GfKi8Q5QtewfAlceQ+LR1JFIcMfXVb+ZgiSneuAARRI0YXeafcx0
+         aVPljiaoCowObMQ49UzknkqPAB93WUyRs1JQAeuQMgLksQBtwOU7+Pn9Sc1BWkw84lY+
+         OFqyuZ1Vx3cCvLBZWgZn3xei8QJH0U4xLJyIBzV1fiM2+7hNtnqSyGXBds4gLxzrG066
+         3ftg==
+X-Gm-Message-State: AOJu0YzAyKJOKp3Nmi758+QLNnPhKv21eh0kmtB8z1lCOS5TZAcWW2D0
+	zfyaNsg2vdNL9bCDEOCdKA7qCYTvA4mSCvdpFvqgVe04D4/8gyl73LjiGDuk3cHovFPwbHbcw/E
+	m5NUzlyBXOodjueY0kI59ot4qLtSgNUb8rcNeEgZZoK7eeArdkqpYiyYZQknylabQF8G6a9Ri+O
+	gVnrugmDFOulGkLShciySipbrRmrEbVQ==
+X-Google-Smtp-Source: AGHT+IFQ0bbK3shwDJ7u/hzVC6q8D0IRa114izdEFDZY1s0bcxzImA0cErF4wDNJMJnPQbz7pw5YV1dp
+X-Received: from palermo.c.googlers.com ([fda3:e722:ac3:cc00:28:9cb1:c0a8:118a])
+ (user=ardb job=sendgmr) by 2002:a05:6902:108f:b0:dc2:23d8:722d with SMTP id
+ v15-20020a056902108f00b00dc223d8722dmr436354ybu.13.1706182357559; Thu, 25 Jan
+ 2024 03:32:37 -0800 (PST)
+Date: Thu, 25 Jan 2024 12:28:19 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm/arm64: samsung: Enable W=1 on dtbs by default
-Content-Language: en-US
-To: Rob Herring <robh@kernel.org>
-Cc: Alim Akhtar <alim.akhtar@samsung.com>, Conor Dooley
- <conor+dt@kernel.org>, linux-arm-kernel@lists.infradead.org,
- linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20231116211739.3228239-1-robh@kernel.org>
- <ee10e67b-6a2f-4ab5-91ef-e42d2f03a424@linaro.org>
- <CAL_JsqJ67tZOmhTHQ7KqEbFuDjK8sKHR1FFtAFAaGjZ4uYi9Uw@mail.gmail.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <CAL_JsqJ67tZOmhTHQ7KqEbFuDjK8sKHR1FFtAFAaGjZ4uYi9Uw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5573; i=ardb@kernel.org;
+ h=from:subject; bh=P2nWyKkk+bKmbsXSPUU8MaF5wQOLstUuyAYPvPpo/kA=;
+ b=owGbwMvMwCFmkMcZplerG8N4Wi2JIXWT62U+gwfimY9VPvwxuG679HpkXe/G1pzuJCbnifbPH
+ mhPir/QUcrCIMbBICumyCIw+++7nacnStU6z5KFmcPKBDKEgYtTACaito7hn7bhinxOHv/dXTuY
+ 90/6WZGSMuno+9z66QWPF4ussTz8oo/hf2Kr2/vuH4KOUw8y7u819/Wv2+bFtpBnxZyL3Txa/Vw eDAA=
+X-Mailer: git-send-email 2.43.0.429.g432eaa2c6b-goog
+Message-ID: <20240125112818.2016733-19-ardb+git@google.com>
+Subject: [PATCH v2 00/17] x86: Confine early 1:1 mapped startup code
+From: Ard Biesheuvel <ardb+git@google.com>
+To: linux-kernel@vger.kernel.org
+Cc: Ard Biesheuvel <ardb@kernel.org>, Kevin Loughlin <kevinloughlin@google.com>, 
+	Tom Lendacky <thomas.lendacky@amd.com>, Dionna Glaze <dionnaglaze@google.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, 
+	Arnd Bergmann <arnd@arndb.de>, Nathan Chancellor <nathan@kernel.org>, 
+	Nick Desaulniers <ndesaulniers@google.com>, Justin Stitt <justinstitt@google.com>, 
+	Brian Gerst <brgerst@gmail.com>, linux-arch@vger.kernel.org, llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-On 21/11/2023 15:58, Rob Herring wrote:
-> On Fri, Nov 17, 2023 at 3:19 AM Krzysztof Kozlowski
-> <krzysztof.kozlowski@linaro.org> wrote:
->>
->> On 16/11/2023 22:17, Rob Herring wrote:
->>> Samsung platforms are clean of W=1 dtc warnings, so enable the warnings
->>> by default. This way submitters don't have to remember to run a W=1
->>> build of the .dts files and the grumpiness of the maintainers can be
->>> reduced.
->>>
->>> Signed-off-by: Rob Herring <robh@kernel.org>
->>> ---
->>> Well, there's a couple of warnings on 32-bit, but they look fixable to
->>> me.
->>>
->>> There's a few other platforms we could do this to. Sadly, they are still
->>> the minority. Otherwise, we could change the default and add a flag to
->>> disable (I_STILL_HAVENT_FIXED_MY_PLATFORMS=1).
->>
->> 64-bit has still few warnings:
->> https://krzk.eu/#/builders/29/builds/3710/steps/26/logs/warnings__6_
-> 
-> I may move that graph check to W=2. There's some cases where port@1 is
-> optional and it doesn't really make sense to fix these.
-> 
-> Also, Conor wants to do this for all of riscv, but this solution is
-> per directory. So I need to rework it to use a different variable that
-> can be per directory or global.
+From: Ard Biesheuvel <ardb@kernel.org>
 
-Just to clarify, because I still have this patch in my inbox: I assume
-you are going to send a v2 of this, so I drop it.
+This is a follow-up to my RFC [0] that proposed to build the entire core
+kernel with -fPIC, to reduce the likelihood that code that runs
+extremely early from the 1:1 mapping of memory will misbehave.
 
-Best regards,
-Krzysztof
+This is needed to address reports that SEV boot on Clang built kernels
+is broken, due to the fact that this early code attempts to access
+virtual kernel address that are not mapped yet. Kevin has suggested some
+workarounds to this [1] but this is really something that requires a
+more rigorous approach, rather than addressing a couple of symptoms of
+the underlying defect.
+
+As it turns out, the use of fPIE for the entire kernel is neither
+necessary nor sufficient, and has its own set of problems, including the
+fact that the PIE small C code model uses FS rather than GS for the
+per-CPU register, and only recent GCC and Clang versions permit this to
+be overridden on the command line.
+
+But the real problem is that even position independent code is not
+guaranteed to execute correctly at any offset unless all statically
+initialized pointer variables use the same translation as the code.
+
+So instead, this v2 proposes another solution, taking the following
+approach:
+- clean up and refactor the startup code so that the primary startup
+  code executes from the 1:1 mapping but nothing else;
+- define a new text section type .pi.text and enforce that it can only
+  call into other .pi.text sections;
+- (tbd) require that objects containing .pi.text sections are built with
+  -fPIC, and disallow any absolute references from such objects.
+
+The latter point is not implemented yet in this v2, but this could be
+done rather straight-forwardly. (The EFI stub already does something
+similar across all architectures)
+
+Patch #13 in particular gives an overview of all the code that gets
+pulled into the early 1:1 startup code path due to the fact that memory
+encryption needs to be configured before we can even map the kernel.
+
+
+[0] https://lkml.kernel.org/r/20240122090851.851120-7-ardb%2Bgit%40google.com
+[1] https://lore.kernel.org/all/20240111223650.3502633-1-kevinloughlin@google.com/T/#u
+
+Cc: Kevin Loughlin <kevinloughlin@google.com>
+Cc: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: Dionna Glaze <dionnaglaze@google.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Nathan Chancellor <nathan@kernel.org>
+Cc: Nick Desaulniers <ndesaulniers@google.com>
+Cc: Justin Stitt <justinstitt@google.com>
+Cc: Brian Gerst <brgerst@gmail.com>
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-arch@vger.kernel.org
+Cc: llvm@lists.linux.dev
+
+Ard Biesheuvel (17):
+  x86/startup_64: Drop long return to initial_code pointer
+  x86/startup_64: Simplify calculation of initial page table address
+  x86/startup_64: Simplify CR4 handling in startup code
+  x86/startup_64: Drop global variables to keep track of LA57 state
+  x86/startup_64: Simplify virtual switch on primary boot
+  x86/head64: Replace pointer fixups with PIE codegen
+  x86/head64: Simplify GDT/IDT initialization code
+  asm-generic: Add special .pi.text section for position independent
+    code
+  x86: Move return_thunk to __pitext section
+  x86/head64: Move early startup code into __pitext
+  modpost: Warn about calls from __pitext into other text sections
+  x86/coco: Make cc_set_mask() static inline
+  x86/sev: Make all code reachable from 1:1 mapping __pitext
+  x86/sev: Avoid WARN() in early code
+  x86/sev: Use PIC codegen for early SEV startup code
+  x86/sev: Drop inline asm LEA instructions for RIP-relative references
+  x86/startup_64: Don't bother setting up GS before the kernel is mapped
+
+ arch/x86/Makefile                       |   5 +
+ arch/x86/boot/compressed/Makefile       |   2 +-
+ arch/x86/boot/compressed/pgtable_64.c   |   2 -
+ arch/x86/boot/compressed/sev.c          |   3 +
+ arch/x86/coco/core.c                    |   7 +-
+ arch/x86/include/asm/coco.h             |   8 +-
+ arch/x86/include/asm/mem_encrypt.h      |   8 +-
+ arch/x86/include/asm/pgtable.h          |   6 +-
+ arch/x86/include/asm/pgtable_64_types.h |  15 +-
+ arch/x86/include/asm/setup.h            |   4 +-
+ arch/x86/include/asm/sev.h              |   6 +-
+ arch/x86/kernel/Makefile                |   5 +
+ arch/x86/kernel/cpu/common.c            |   2 -
+ arch/x86/kernel/head64.c                | 188 ++++++--------------
+ arch/x86/kernel/head_64.S               | 156 ++++++----------
+ arch/x86/kernel/sev-shared.c            |  26 +--
+ arch/x86/kernel/sev.c                   |  27 ++-
+ arch/x86/kernel/vmlinux.lds.S           |   3 +-
+ arch/x86/lib/Makefile                   |   2 +-
+ arch/x86/lib/cmdline.c                  |   6 +-
+ arch/x86/lib/memcpy_64.S                |   3 +-
+ arch/x86/lib/memset_64.S                |   3 +-
+ arch/x86/lib/retpoline.S                |   2 +-
+ arch/x86/mm/Makefile                    |   3 +-
+ arch/x86/mm/kasan_init_64.c             |   3 -
+ arch/x86/mm/mem_encrypt_boot.S          |   3 +-
+ arch/x86/mm/mem_encrypt_identity.c      |  94 +++++-----
+ arch/x86/mm/pti.c                       |   2 +-
+ include/asm-generic/vmlinux.lds.h       |   3 +
+ include/linux/init.h                    |  12 ++
+ scripts/mod/modpost.c                   |  11 +-
+ tools/objtool/check.c                   |  26 ++-
+ 32 files changed, 262 insertions(+), 384 deletions(-)
+
+-- 
+2.43.0.429.g432eaa2c6b-goog
 
