@@ -1,226 +1,135 @@
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65E0C745C6
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 17:52:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E754413173D
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 17:52:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706205126; cv=none; b=iCVuYtEC+tCyE9GulPhRd14Ntb5SSu/MEKtU7V/jPPCr1ib9Fdp+TaHDq3Kt/3S3QwdNz/KJ3P+veAT1xdNn3d+ZG4eIJrYyRi6/8al1coNvdBk3rqHttndwqxBIjs31fkXahDAJgCNu9L+JHy8BYW6QL2PxIrr4b33wCUvKXnI=
+	t=1706205156; cv=none; b=Esh4zWwGrAmbrkojTvPIux9dhABkY6a4bYp7l+zBtFCGoy257Y4xSLklk9AUXn7/iXdvkh5c95STDymE8uAhWAgR/AKh4audfupDCNL47wrBQNEfuRGFnE6pCtMQ9kcUl3Bqk+6F/WRLJioRBs/sjPO+F1L7f82q4UmGT96pnpA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706205126; c=relaxed/simple;
-	bh=vr/AyOXBh/PfRIcVKSypP8o7xVRseNU4jwIKCJkd2Vg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=C1SvhVMJr43EXaWhvjZbyGhCyjEYuRMM2tLdilpilI47YN5mY/vTpOT+eXJ8T/nto326IQm4c5H+QRuJSYsWQIACfLTcnWMB5vOlq1gpDvpuIn+RRWiJZ0bARZxp2e6y0jJqv0bBcNiO3CGtLa8NdKCY1QGRZQvHhdDfQPu8ceM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GOdaBr8p; arc=none smtp.client-ip=209.85.208.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1706205156; c=relaxed/simple;
+	bh=Yy1GT2lp77XeMuurRLrfbVb7XC2c9zvSK8wdBd9j4ik=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BT5+QO8WFDmNWOY/Xs5yjwUnWYnQzEkRKw9cezJAFA1lsxvYPQgi4vuCNqNab2KVc4ujB0eRUMJNitI3UkpDoGzpcMYc0AUiB0hDFOfDmPR08qMAcT5nx+/QuMvJoALNNmTVLG+bwoOZUK5+HDNBGABZ0KOA72plRbLQ7vbI42E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=brdktsig; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GOdaBr8p"
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2cf205dc075so25418831fa.2
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 09:52:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706205122; x=1706809922; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=58AAw59QVEkmC52O5LxYTi+CX/9Jh0etyAUz49wdjuc=;
-        b=GOdaBr8pn9Cvvp48n+QQzlcK+1xC+KjSZtVQ9F91vBfbqCVFN99u8fWGUTYnfqCWSU
-         nRzNwGLYl43d2W+5gFDjcIs6HjiBLA/b1Nk45LBfsZtoMv8ok3wWx5JlAT981xLCxpFa
-         GvQB6oab+kocg3efoEIZpycrHY041xM7foYASjJ02fsCTkaRmRyA6IhPHeSLW5AyIDf4
-         zhkOW2JB40YJFiEbgHrLOCDjE8oMo0jGp6eQrEn5ARHi+VfFdPsVKM599M3bTvhQEj1j
-         AGzL59PlgzkD9sRW7oTQQhOSA7n+5emqBSNODUA/kF3j/uucH6Srxi4V4NadkegUv2Nr
-         2iSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706205122; x=1706809922;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=58AAw59QVEkmC52O5LxYTi+CX/9Jh0etyAUz49wdjuc=;
-        b=wNUrKtXRkLYaqe2IKyB1j5eioSfIqWixYtFC09SJ2MqCTsw8ulRBEtBHIvSZNsUwGs
-         NtxLZEgkeFMKosgAAbVmzxatA8xFqPVLvi5xKXOQk7PW3/aRnUbYrm6UWu8RwRSh5mYg
-         H59c0O9FHv99HcTIItzAo6II2q+4gRwQQr7S5RPDRGkrD1Roxtk4HEso0ORPk2RcPRIo
-         jBM1I9mD9WES9pvHdPX4YRS8pFbmWrffi0loeZSHbrbE+WKf9/uVKpO8zhKHlkAbECIS
-         FauYhwpZyryk8Ile4k4ip+PGcl2qciLxb+EguncG98ym0EaN3q3Pb5IVMw+Aaa/nYgJa
-         Aqrg==
-X-Gm-Message-State: AOJu0YxOglbKC6FJR8wrGg/U0MS8iTJ/jdLrwbHwqQFTdsYcfBdVnoF3
-	me1plQ46rCLknXsSynRw9NK87XmsBMo+t9KTo7hUNIqwOXNX2zis+sshGPGgCLVh0Vtusg/guy1
-	6yMcfziRcscxg+LECxTOOd69goBXCP7pgfVUkxQ==
-X-Google-Smtp-Source: AGHT+IFP7hSPNsDELqXhfc1DSi7wbXwIL00Bvghzh+3rAURSjCAW/OBnfRxEQ2loTtaioTmHEBnCcZGQf0VdPLQbOyM=
-X-Received: by 2002:a2e:9092:0:b0:2cf:433c:b3e with SMTP id
- l18-20020a2e9092000000b002cf433c0b3emr28412ljg.8.1706205121921; Thu, 25 Jan
- 2024 09:52:01 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="brdktsig"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1706205154;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=g5i6hZoO43ocf7ks9R4XVTZTyBaBFXg6GPxWhGdS98Y=;
+	b=brdktsigcE+5aUnJnkMJTzj++O9/FclPytV/zh/8uRWyqW2U9D7xGRQxG0UH5vbMPCxCJF
+	cyL07AERcnixy+puFvXGM75aT6oMN7b4yKUB/idONAVwMBy9GKuQ/BUxr+8YfRojD4DBCL
+	4ceQfvwy3VKvRe7heTUzfXM3c/ewDaI=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-691-i6VYpv1nNoqo5h8Snemz_Q-1; Thu, 25 Jan 2024 12:52:30 -0500
+X-MC-Unique: i6VYpv1nNoqo5h8Snemz_Q-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E98748489B1;
+	Thu, 25 Jan 2024 17:52:29 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.14])
+	by smtp.corp.redhat.com (Postfix) with SMTP id 49EC440C106C;
+	Thu, 25 Jan 2024 17:52:28 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Thu, 25 Jan 2024 18:51:16 +0100 (CET)
+Date: Thu, 25 Jan 2024 18:51:14 +0100
+From: Oleg Nesterov <oleg@redhat.com>
+To: Christian Brauner <brauner@kernel.org>
+Cc: Tycho Andersen <tycho@tycho.pizza>, linux-kernel@vger.kernel.org,
+	linux-api@vger.kernel.org, Tycho Andersen <tandersen@netflix.com>,
+	"Eric W. Biederman" <ebiederm@xmission.com>
+Subject: Re: [PATCH v3 1/3] pidfd: allow pidfd_open() on non-thread-group
+ leaders
+Message-ID: <20240125175113.GC5513@redhat.com>
+References: <20240123153452.170866-1-tycho@tycho.pizza>
+ <20240123153452.170866-2-tycho@tycho.pizza>
+ <20240123195608.GB9978@redhat.com>
+ <ZbArN3EYRfhrNs3o@tycho.pizza>
+ <20240125140830.GA5513@redhat.com>
+ <20240125-tricksen-baugrube-3f78c487a23a@brauner>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240123184552.59758-1-ryncsn@gmail.com> <20240123184552.59758-2-ryncsn@gmail.com>
- <CAF8kJuNZP-uvsSshVrEY0bPsYLB+5Oi-bQKsEQ3RV6yOW+RgNA@mail.gmail.com>
-In-Reply-To: <CAF8kJuNZP-uvsSshVrEY0bPsYLB+5Oi-bQKsEQ3RV6yOW+RgNA@mail.gmail.com>
-From: Kairui Song <ryncsn@gmail.com>
-Date: Fri, 26 Jan 2024 01:51:44 +0800
-Message-ID: <CAMgjq7CbxZQ2CmWNjsNjJajBEVkZ839_X5twwLfiiv0-ZgN32A@mail.gmail.com>
-Subject: Re: [PATCH v3 1/3] mm, lru_gen: try to prefetch next page when
- scanning LRU
-To: Chris Li <chrisl@kernel.org>
-Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>, 
-	Yu Zhao <yuzhao@google.com>, Wei Xu <weixugc@google.com>, 
-	Matthew Wilcox <willy@infradead.org>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240125-tricksen-baugrube-3f78c487a23a@brauner>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.2
 
-On Thu, Jan 25, 2024 at 3:33=E2=80=AFPM Chris Li <chrisl@kernel.org> wrote:
+On 01/25, Christian Brauner wrote:
 >
-> On Tue, Jan 23, 2024 at 10:46=E2=80=AFAM Kairui Song <ryncsn@gmail.com> w=
-rote:
+> > > When it is reaped is "mostly unrelated".
 > >
-> > From: Kairui Song <kasong@tencent.com>
+> > Then why pidfd_poll() can't simply check !task || task->exit_state ?
 > >
-> > Prefetch for inactive/active LRU have been long exiting, apply the same
-> > optimization for MGLRU.
-> >
-> > Test 1: Ramdisk fio ro test in a 4G memcg on a EPYC 7K62:
-> >   fio -name=3Dmglru --numjobs=3D16 --directory=3D/mnt --size=3D960m \
-> >     --buffered=3D1 --ioengine=3Dio_uring --iodepth=3D128 \
-> >     --iodepth_batch_submit=3D32 --iodepth_batch_complete=3D32 \
-> >     --rw=3Drandread --random_distribution=3Dzipf:0.5 --norandommap \
-> >     --time_based --ramp_time=3D1m --runtime=3D6m --group_reporting
-> >
-> > Before this patch:
-> > bw (  MiB/s): min=3D 7758, max=3D 9239, per=3D100.00%, avg=3D8747.59, s=
-tdev=3D16.51, samples=3D11488
-> > iops        : min=3D1986251, max=3D2365323, avg=3D2239380.87, stdev=3D4=
-225.93, samples=3D11488
-> >
-> > After this patch (+7.2%):
-> > bw (  MiB/s): min=3D 8360, max=3D 9771, per=3D100.00%, avg=3D9381.31, s=
-tdev=3D15.67, samples=3D11488
-> > iops        : min=3D2140296, max=3D2501385, avg=3D2401613.91, stdev=3D4=
-010.41, samples=3D11488
-> >
-> > Test 2: Ramdisk fio hybrid test for 30m in a 4G memcg on a EPYC 7K62 (3=
- times):
-> >   fio --buffered=3D1 --numjobs=3D8 --size=3D960m --directory=3D/mnt \
-> >     --time_based --ramp_time=3D1m --runtime=3D30m \
-> >     --ioengine=3Dio_uring --iodepth=3D128 --iodepth_batch_submit=3D32 \
-> >     --iodepth_batch_complete=3D32 --norandommap \
-> >     --name=3Dmglru-ro --rw=3Drandread --random_distribution=3Dzipf:0.7 =
-\
-> >     --name=3Dmglru-rw --rw=3Drandrw --random_distribution=3Dzipf:0.7
-> >
-> > Before this patch:
-> >  READ: 6622.0 MiB/s. Stdev: 22.090722
-> > WRITE: 1256.3 MiB/s. Stdev: 5.249339
-> >
-> > After this patch (+4.6%, +3.3%):
-> >  READ: 6926.6 MiB/s, Stdev: 37.950260
-> > WRITE: 1297.3 MiB/s, Stdev: 7.408704
-> >
-> > Test 3: 30m of MySQL test in 6G memcg (12 times):
-> >   echo 'set GLOBAL innodb_buffer_pool_size=3D16106127360;' | \
-> >     mysql -u USER -h localhost --password=3DPASS
-> >
-> >   sysbench /usr/share/sysbench/oltp_read_only.lua \
-> >     --mysql-user=3DUSER --mysql-password=3DPASS --mysql-db=3DDB \
-> >     --tables=3D48 --table-size=3D2000000 --threads=3D16 --time=3D1800 r=
-un
-> >
-> > Before this patch
-> > Avg: 134743.714545 qps. Stdev: 582.242189
-> >
-> > After this patch (+0.2%):
-> > Avg: 135005.779091 qps. Stdev: 295.299027
-> >
-> > Test 4: Build linux kernel in 2G memcg with make -j48 with SSD swap
-> >         (for memory stress, 18 times):
-> >
-> > Before this patch:
-> > Avg: 1456.768899 s. Stdev: 20.106973
-> >
-> > After this patch (+0.0%):
-> > Avg: 1455.659254 s. Stdev: 15.274481
-> >
-> > Test 5: Memtier test in a 4G cgroup using brd as swap (18 times):
-> >   memcached -u nobody -m 16384 -s /tmp/memcached.socket \
-> >     -a 0766 -t 16 -B binary &
-> >   memtier_benchmark -S /tmp/memcached.socket \
-> >     -P memcache_binary -n allkeys \
-> >     --key-minimum=3D1 --key-maximum=3D16000000 -d 1024 \
-> >     --ratio=3D1:0 --key-pattern=3DP:P -c 1 -t 16 --pipeline 8 -x 3
-> >
-> > Before this patch:
-> > Avg: 50317.984000 Ops/sec. Stdev: 2568.965458
-> >
-> > After this patch (-5.7%):
-> > Avg: 47691.343500 Ops/sec. Stdev: 3925.772473
-> >
-> > It seems prefetch is helpful in most cases, but the memtier test is
-> > either hitting a case where prefetch causes higher cache miss or it's
-> > just too noisy (high stdev).
-> >
-> > Signed-off-by: Kairui Song <kasong@tencent.com>
-> > ---
-> >  mm/vmscan.c | 30 ++++++++++++++++++++++++++----
-> >  1 file changed, 26 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/mm/vmscan.c b/mm/vmscan.c
-> > index 4f9c854ce6cc..03631cedb3ab 100644
-> > --- a/mm/vmscan.c
-> > +++ b/mm/vmscan.c
-> > @@ -3681,15 +3681,26 @@ static bool inc_min_seq(struct lruvec *lruvec, =
-int type, bool can_swap)
-> >         /* prevent cold/hot inversion if force_scan is true */
-> >         for (zone =3D 0; zone < MAX_NR_ZONES; zone++) {
-> >                 struct list_head *head =3D &lrugen->folios[old_gen][typ=
-e][zone];
-> > +               struct folio *prev =3D NULL;
-> >
-> > -               while (!list_empty(head)) {
-> > -                       struct folio *folio =3D lru_to_folio(head);
-> > +               if (!list_empty(head))
-> > +                       prev =3D lru_to_folio(head);
-> > +
-> > +               while (prev) {
-> > +                       struct folio *folio =3D prev;
-> >
-> >                         VM_WARN_ON_ONCE_FOLIO(folio_test_unevictable(fo=
-lio), folio);
-> >                         VM_WARN_ON_ONCE_FOLIO(folio_test_active(folio),=
- folio);
-> >                         VM_WARN_ON_ONCE_FOLIO(folio_is_file_lru(folio) =
-!=3D type, folio);
-> >                         VM_WARN_ON_ONCE_FOLIO(folio_zonenum(folio) !=3D=
- zone, folio);
-> >
-> > +                       if (unlikely(list_is_first(&folio->lru, head)))=
- {
-> > +                               prev =3D NULL;
-> > +                       } else {
-> > +                               prev =3D lru_to_folio(&folio->lru);
-> > +                               prefetchw(&prev->flags);
-> > +                       }
+> > Nevermind. So, currently pidfd_poll() succeeds when the leader can be
 >
-> This makes the code flow much harder to follow. Also for architecture
-> that does not support prefetch, this will be a net loss.
+> Hm, the comment right above mentions:
 >
-> Can you use refetchw_prev_lru_folio() instead? It will make the code
-> much easier to follow. It also turns into no-op when prefetch is not
-> supported.
->
-> Chris
->
+>         /*
+>          * Inform pollers only when the whole thread group exits.
+>          * If the thread group leader exits before all other threads in the
+>          * group, then poll(2) should block, similar to the wait(2) family.
+>          */
+> > reaped, iow the whole thread group has exited.
 
-Hi Chris,
+Yes, but the comment doesn't contradict with what I have said?
 
-Thanks for the suggestion.
 
-Yes, that's doable, I made it this way because in previous series (V1
-& V2) I applied the bulk move patch first which needed and introduced
-the `prev` variable here, so the prefetch logic just used it.
-For V3 I did a rebase and moved the prefetch commit to be the first
-one, since it seems to be the most effective one, and just kept the
-code style to avoid redundant change between patches.
+> > But even if you are the
+> > parent, you can't expect that wait(WNOHANG) must succeed, the leader
+> > can be traced. I guess it is too late to change this behaviour.
+>
+> Hm, why is that an issue though?
 
-I can update in V4 to make this individual patch better with your suggestio=
-n.
+Well, I didn't say this is a problem. I simply do not know how/why people
+use pidfd_poll().
+
+I mostly tried to explain why do I think that do_notify_pidfd() should
+be always called from exit_notify() path, not by release_task(), even
+if the task is not a leader.
+
+> Because a program would rely on WNOHANG to hang on
+> a ptraced leader? That seems esoteric imho.
+
+To me it would be usefule, but lets not discuss this now. The "patch"
+I sent doesn't change the current behaviour.
+
+> > What if we add the new PIDFD_THREAD flag? With this flag
+> >
+> > 	- sys_pidfd_open() doesn't require the must be a group leader
+>
+> Yes.
+>
+> >
+> > 	- pidfd_poll() succeeds when the task passes exit_notify() and
+> > 	  becomes a zombie, even if it is a leader and has other threads.
+>
+> Iiuc, if an existing user creates a pidfd for a thread-group leader and
+> then polls that pidfd they would currently only get notified if the
+> thread-group is empty and the leader has exited.
+>
+> If we now start notifying when the thread-group leader exits but the
+> thread-group isn't empty then this would be a fairly big api change
+
+Hmm... again, this patch doesn't (shouldn't) change the current behavior.
+
+Please note "with this flag" above. If sys_pidfd_open() was called
+without PIDFD_THREAD, then sys_pidfd_open() still requires that the
+target task must be a group leader, and pidfd_poll() won't succeed
+until the leader exits and thread_group_empty() is true.
+
+Oleg.
+
