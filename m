@@ -1,386 +1,210 @@
-Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0E1E1CA82;
-	Thu, 25 Jan 2024 10:15:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 440861C6BC;
+	Thu, 25 Jan 2024 10:17:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706177723; cv=none; b=pqdifFyt1HDFSiwmxU8lvUxj8nol6iuFuze1NXNahCYE6IvKIcsHc6cl2CW//0kNY+2rcrA1OQCqp97VF0SzZWhuIB85J9Umvc7TlWImyQSeUMd1kLEMR7gP07lrYIR237IODiGfYEH4p+NPdKd0nSkt6nyW2E1zd57zOdfkkZg=
+	t=1706177856; cv=none; b=UvHHzLSo6r9t+4ojjDEQlfnc6cpjM29KLfUIF1rT5Ohe8ImyduQuBsNvyTee19ubnR7i8adxuRcQJVUyPtpddrpjY6UpnbV2KhwydKBSIEvJlXY+v+mn6OeWupdZsQNZN1WlDlR1ZeKnLpE+Tion+xHx7+hMGEC8SZVpKTE5wgk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706177723; c=relaxed/simple;
-	bh=2YKlwuxt5pFQQByEYsCtj6hgzRCM6NAYTRVsp3Lkt00=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=QZNXnGaRXYGDtq74r33pkcnpFjm/SCsMXlvDg50iodWBLhNhHS3UOdxltEaAzudnmrRhEYcFje+fE42MAlVYH5GikFfLG138gPrTqSnHILq8bq0P7y14k7nHjGhcjjoSopjuZ0GW2LkYgSI9GQfKBFzYt7BU9SihWl8gj4oHQbg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=Ws7BK2nw; arc=none smtp.client-ip=217.194.8.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
+	s=arc-20240116; t=1706177856; c=relaxed/simple;
+	bh=QjDA9PkCJirHegUJ4lnB7pA7PyppfMkdD3Xdk3N02jQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=oOt9MczvSooVav2HC5NCSBJHt5wdn5WcErkr1i2htDX4jT6GDAZ+iyjlrqDwT4ZULFAh+vsBBOTpyJdu6hWX20i42MTzJ7iXmiJdZXYaArMRPdnu7WWRzc8nhvE1AyMT8LQPlGrEfgp7+wMUwYA1WeWc9unIQGB0EPXXq7R2ppg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fXq2igKD; arc=none smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="Ws7BK2nw"
-Received: from francesco-nb.pivistrello.it (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
-	by mail11.truemail.it (Postfix) with ESMTPA id B216D212DD;
-	Thu, 25 Jan 2024 11:15:11 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
-	s=default; t=1706177712;
-	bh=UtmBHmTXg6wIwBgiC3auLqWmDBFs+FPmlvjNDXy0OrU=; h=From:To:Subject;
-	b=Ws7BK2nw6+T7ORYo+EyPFpZW2i4zs5Klr/gyZb0jxug4YeMsnwLjDAnk1ESyFPHDY
-	 DobbMtnB/o+zTn79rcyjw571wrgdXGMVkI89F8l4mkqZY0H/lUVjnOMYSZ66A5U2Ob
-	 d3cDR0cSanUE5y1kAngZayXrduKlJsHeRNvdGM9lOfney/lEukmm9OSYrR1tbhEGpx
-	 fJlUQ77J6HTVvNKeZvLRSeOBjAATZoPK8C8VX8nSILNJ4yd14FM0Z42Cv3Q6t9FXnQ
-	 Xk/yZf0cA5UpF+DaDxROm+i30HshWeeoTrljVpiPRD8Wbc8faqrm9LeuJlgcA5wBgu
-	 RbkoRBbxMxcJw==
-From: Francesco Dolcini <francesco@dolcini.it>
-To: Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	NXP Linux Team <linux-imx@nxp.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: Joao Paulo Goncalves <joao.goncalves@toradex.com>,
-	linux-arm-kernel@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Francesco Dolcini <francesco.dolcini@toradex.com>
-Subject: [PATCH v1 2/2] arm64: dts: freescale: imx8qm: add apalis eval v1.2 carrier board
-Date: Thu, 25 Jan 2024 11:14:57 +0100
-Message-Id: <20240125101457.9873-3-francesco@dolcini.it>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240125101457.9873-1-francesco@dolcini.it>
-References: <20240125101457.9873-1-francesco@dolcini.it>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fXq2igKD"
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-55a349cf29cso7634674a12.0;
+        Thu, 25 Jan 2024 02:17:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1706177852; x=1706782652; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kHFPm70p9n02aaOjN2EKpORM1VcAf+spqQnNizZf5G8=;
+        b=fXq2igKDtQ/aQ12V2QLZiMXHwZckzO8cSOqcI5WxbJtvx5213eszy2h+o8Wq6PEF8H
+         dxLbwsCOBGcMOa8gNLjP4ZPo+flWyMMlbPiQmxykUTPOH6lGzHKPbgVy1B0r1emfLsr1
+         baJMgZzRrJ16CpAow6tyc8sm92vmEgP7MQec35FgUa1wENxPJlluWA3xItWUm+LGPdqc
+         YVGkrY7iMy+JfhUbW0cf7k3GWExus3KYkd9G+6E0AHTeomczmtg+akas0uYHl9Jk0xvE
+         AmrvuwXMNmU/gNgqC32i5mm4QDjCfcgWN/+cLxtS0LxzdL6E3IztxPqAVzPo9MUbvJwg
+         1/tA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706177852; x=1706782652;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=kHFPm70p9n02aaOjN2EKpORM1VcAf+spqQnNizZf5G8=;
+        b=hH1hiTVOUHFnJG6Nd2IGSpYOLpl14Ry2rM/H7ucRkECgsztYxlNi2wootcspZ4wAl8
+         S6ZcUl1MwKc72jb2HPYcthRKWgD382jj2BVRc2XZgU8kG5r7ocTAhB2YslCkcZjJBt9i
+         HU6DTTc1/+sbG3PcStLtAGsdKpMoh/0sDVzEPohZxGRznD01i5KsltDahFeMDTxtGKY7
+         s3V6dEIE/5/Bno/8X23DXgD6FByr9QKnfW/IIkMGzeDL9TD5ID6m2W9yCWtsBl5A44+2
+         FQyOYTQpow//zfWSK/mHRG0iwt5rSMje/CHMKajBuPeqacOg2YbcDJR6VUhtiGJDsEPo
+         Ig5Q==
+X-Gm-Message-State: AOJu0YzYMjKg36b0omaUkSGvMPNnnUUJlqPTHfLrzZuQ5j7mRDz7pVo6
+	VLB+gLItJPJEhhtB1yDJZZC7Gbxr1kzdQbekisBcBtaERd4vgZ9xrBibt+/OyHwmJBWT3bh261O
+	A/PwdKs3zuzRy0AvCEoJ2AGlVVrRhunQvhR79yQ==
+X-Google-Smtp-Source: AGHT+IEx+h5SBM2bgId1zr3Ii7PWy5ejzUKeLAKwDFAolLyZwSnTAs++pEfiZXhmeMzu/OZAN8qTpteBhMuGeCYaaRU=
+X-Received: by 2002:a17:906:11d6:b0:a2b:1fc1:b3b5 with SMTP id
+ o22-20020a17090611d600b00a2b1fc1b3b5mr394022eja.99.1706177852190; Thu, 25 Jan
+ 2024 02:17:32 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240125-rk-dts-additions-v1-0-5879275db36f@gmail.com>
+ <20240125-rk-dts-additions-v1-4-5879275db36f@gmail.com> <731aac66-f698-4a1e-b9ee-46a7f24ecae5@linaro.org>
+In-Reply-To: <731aac66-f698-4a1e-b9ee-46a7f24ecae5@linaro.org>
+From: Alexey Charkov <alchark@gmail.com>
+Date: Thu, 25 Jan 2024 14:17:21 +0400
+Message-ID: <CABjd4YzWJie91kcbHom_Zso=QQR9gPmAVvJb1vbqa0Qwu5egKg@mail.gmail.com>
+Subject: Re: [PATCH 4/4] arm64: dts: rockchip: Add OPP data for CPU cores on RK3588
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Heiko Stuebner <heiko@sntech.de>, Dragan Simic <dsimic@manjaro.org>, devicetree@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, Viresh Kumar <viresh.kumar@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Joao Paulo Goncalves <joao.goncalves@toradex.com>
+On Thu, Jan 25, 2024 at 1:30=E2=80=AFPM Daniel Lezcano
+<daniel.lezcano@linaro.org> wrote:
+>
+>
+> Hi Alexey,
+>
+> Adding Viresh
+>
+> On 24/01/2024 21:30, Alexey Charkov wrote:
+> > By default the CPUs on RK3588 start up in a conservative performance
+> > mode. Add frequency and voltage mappings to the device tree to enable
+> > dynamic scaling via cpufreq
+> >
+> > Signed-off-by: Alexey Charkov <alchark@gmail.com>
+> > ---
+> >   arch/arm64/boot/dts/rockchip/rk3588s.dtsi | 209 +++++++++++++++++++++=
++++++++++
+> >   1 file changed, 209 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/rockchip/rk3588s.dtsi b/arch/arm64/boo=
+t/dts/rockchip/rk3588s.dtsi
+> > index 131b9eb21398..e605be531a0f 100644
+> > --- a/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
+> > +++ b/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
+> > @@ -97,6 +97,7 @@ cpu_l0: cpu@0 {
+> >                       clocks =3D <&scmi_clk SCMI_CLK_CPUL>;
+> >                       assigned-clocks =3D <&scmi_clk SCMI_CLK_CPUL>;
+> >                       assigned-clock-rates =3D <816000000>;
+> > +                     operating-points-v2 =3D <&cluster0_opp_table>;
+> >                       cpu-idle-states =3D <&CPU_SLEEP>;
+> >                       i-cache-size =3D <32768>;
+> >                       i-cache-line-size =3D <64>;
+> > @@ -116,6 +117,7 @@ cpu_l1: cpu@100 {
+> >                       enable-method =3D "psci";
+> >                       capacity-dmips-mhz =3D <530>;
+> >                       clocks =3D <&scmi_clk SCMI_CLK_CPUL>;
+> > +                     operating-points-v2 =3D <&cluster0_opp_table>;
+> >                       cpu-idle-states =3D <&CPU_SLEEP>;
+> >                       i-cache-size =3D <32768>;
+> >                       i-cache-line-size =3D <64>;
+> > @@ -135,6 +137,7 @@ cpu_l2: cpu@200 {
+> >                       enable-method =3D "psci";
+> >                       capacity-dmips-mhz =3D <530>;
+> >                       clocks =3D <&scmi_clk SCMI_CLK_CPUL>;
+> > +                     operating-points-v2 =3D <&cluster0_opp_table>;
+> >                       cpu-idle-states =3D <&CPU_SLEEP>;
+> >                       i-cache-size =3D <32768>;
+> >                       i-cache-line-size =3D <64>;
+> > @@ -154,6 +157,7 @@ cpu_l3: cpu@300 {
+> >                       enable-method =3D "psci";
+> >                       capacity-dmips-mhz =3D <530>;
+> >                       clocks =3D <&scmi_clk SCMI_CLK_CPUL>;
+> > +                     operating-points-v2 =3D <&cluster0_opp_table>;
+> >                       cpu-idle-states =3D <&CPU_SLEEP>;
+> >                       i-cache-size =3D <32768>;
+> >                       i-cache-line-size =3D <64>;
+> > @@ -175,6 +179,7 @@ cpu_b0: cpu@400 {
+> >                       clocks =3D <&scmi_clk SCMI_CLK_CPUB01>;
+> >                       assigned-clocks =3D <&scmi_clk SCMI_CLK_CPUB01>;
+> >                       assigned-clock-rates =3D <816000000>;
+> > +                     operating-points-v2 =3D <&cluster1_opp_table>;
+> >                       cpu-idle-states =3D <&CPU_SLEEP>;
+> >                       i-cache-size =3D <65536>;
+> >                       i-cache-line-size =3D <64>;
+> > @@ -194,6 +199,7 @@ cpu_b1: cpu@500 {
+> >                       enable-method =3D "psci";
+> >                       capacity-dmips-mhz =3D <1024>;
+> >                       clocks =3D <&scmi_clk SCMI_CLK_CPUB01>;
+> > +                     operating-points-v2 =3D <&cluster1_opp_table>;
+> >                       cpu-idle-states =3D <&CPU_SLEEP>;
+> >                       i-cache-size =3D <65536>;
+> >                       i-cache-line-size =3D <64>;
+> > @@ -215,6 +221,7 @@ cpu_b2: cpu@600 {
+> >                       clocks =3D <&scmi_clk SCMI_CLK_CPUB23>;
+> >                       assigned-clocks =3D <&scmi_clk SCMI_CLK_CPUB23>;
+> >                       assigned-clock-rates =3D <816000000>;
+> > +                     operating-points-v2 =3D <&cluster2_opp_table>;
+> >                       cpu-idle-states =3D <&CPU_SLEEP>;
+> >                       i-cache-size =3D <65536>;
+> >                       i-cache-line-size =3D <64>;
+> > @@ -234,6 +241,7 @@ cpu_b3: cpu@700 {
+> >                       enable-method =3D "psci";
+> >                       capacity-dmips-mhz =3D <1024>;
+> >                       clocks =3D <&scmi_clk SCMI_CLK_CPUB23>;
+> > +                     operating-points-v2 =3D <&cluster2_opp_table>;
+> >                       cpu-idle-states =3D <&CPU_SLEEP>;
+> >                       i-cache-size =3D <65536>;
+> >                       i-cache-line-size =3D <64>;
+> > @@ -348,6 +356,207 @@ l3_cache: l3-cache {
+> >               };
+> >       };
+> >
+> > +     cluster0_opp_table: opp-table-cluster0 {
+> > +             compatible =3D "operating-points-v2";
+> > +             opp-shared;
+> > +
+> > +             opp-408000000 {
+> > +                     opp-hz =3D /bits/ 64 <408000000>;
+> > +                     opp-microvolt =3D <675000 675000 950000>;
+> > +                     clock-latency-ns =3D <40000>;
+> > +             };
+> > +             opp-600000000 {
+> > +                     opp-hz =3D /bits/ 64 <600000000>;
+> > +                     opp-microvolt =3D <675000 675000 950000>;
+> > +                     clock-latency-ns =3D <40000>;
+> > +             };
+> > +             opp-816000000 {
+> > +                     opp-hz =3D /bits/ 64 <816000000>;
+> > +                     opp-microvolt =3D <675000 675000 950000>;
+> > +                     clock-latency-ns =3D <40000>;
+> > +             };
+> > +             opp-1008000000 {
+> > +                     opp-hz =3D /bits/ 64 <1008000000>;
+> > +                     opp-microvolt =3D <675000 675000 950000>;
+> > +                     clock-latency-ns =3D <40000>;
+> > +             };
+>
+> It is not useful to introduce OPP with the same voltage. There is no
+> gain in terms of energy efficiency as the compute capacity is linearly
+> tied with power consumption (P=3DCxFxV=C2=B2) in this case.
+>
+> For example, opp-408 consumes 2 bogoWatts and opp-816 consumes 4
+> bogoWatts (because of the same voltage).
+>
+> For a workload, opp-408 takes 10 sec and opp-816 takes 5 sec because it
+> is twice faster.
+>
+> The energy consumption is:
+>
+> opp-408 =3D 10 x 2 =3D 20 BogoJoules
+> opp-816 =3D 5 x 4 =3D 20 BogoJoules
 
-Add support for the new version, v1.2, of Apalis Evaluation Board.
-Because only imx8-apalis-eval.dtsi was available and used as the only
-board configuration for board version v1.0 and v1.1, it was changed to
-be the common hardware configurations for all versions v1.0,
-v1.1 and v1.2. Also, two .dtsi board files were added to have the
-differences by board. The .dts were organized by SoM and board version.
+I see, thank you. Will drop all "lower frequency - same voltage"
+instances and resubmit in the next iteration.
 
-Board versions v1.0 and v1.1 are compatible with each other and should
-use imx8qm-apalis-eval.dts file or imx8qm-apalis-v1.1-eval.dts file
-depending on SoM version. Now for v1.2, organized by SoM version too, the
-files are imx8qm-apalis-eval-v1.2.dts and imx8qm-apalis-v1.1-eval-v1.2.dts.
-
-Signed-off-by: Joao Paulo Goncalves <joao.goncalves@toradex.com>
-Signed-off-by: Francesco Dolcini <francesco.dolcini@toradex.com>
----
- arch/arm64/boot/dts/freescale/Makefile        |   2 +
- .../dts/freescale/imx8-apalis-eval-v1.1.dtsi  |  26 ++++
- .../dts/freescale/imx8-apalis-eval-v1.2.dtsi  | 124 ++++++++++++++++++
- .../boot/dts/freescale/imx8-apalis-eval.dtsi  |  22 ----
- .../dts/freescale/imx8qm-apalis-eval-v1.2.dts |  16 +++
- .../boot/dts/freescale/imx8qm-apalis-eval.dts |   2 +-
- .../imx8qm-apalis-v1.1-eval-v1.2.dts          |  26 ++++
- .../dts/freescale/imx8qm-apalis-v1.1-eval.dts |   2 +-
- 8 files changed, 196 insertions(+), 24 deletions(-)
- create mode 100644 arch/arm64/boot/dts/freescale/imx8-apalis-eval-v1.1.dtsi
- create mode 100644 arch/arm64/boot/dts/freescale/imx8-apalis-eval-v1.2.dtsi
- create mode 100644 arch/arm64/boot/dts/freescale/imx8qm-apalis-eval-v1.2.dts
- create mode 100644 arch/arm64/boot/dts/freescale/imx8qm-apalis-v1.1-eval-v1.2.dts
-
-diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
-index 2e027675d7bb..91f3371982b5 100644
---- a/arch/arm64/boot/dts/freescale/Makefile
-+++ b/arch/arm64/boot/dts/freescale/Makefile
-@@ -188,8 +188,10 @@ imx8mq-tqma8mq-mba8mx-lvds-tm070jvhg33-dtbs += imx8mq-tqma8mq-mba8mx.dtb imx8mq-
- dtb-$(CONFIG_ARCH_MXC) += imx8mq-tqma8mq-mba8mx-lvds-tm070jvhg33.dtb
- 
- dtb-$(CONFIG_ARCH_MXC) += imx8qm-apalis-eval.dtb
-+dtb-$(CONFIG_ARCH_MXC) += imx8qm-apalis-eval-v1.2.dtb
- dtb-$(CONFIG_ARCH_MXC) += imx8qm-apalis-ixora-v1.1.dtb
- dtb-$(CONFIG_ARCH_MXC) += imx8qm-apalis-v1.1-eval.dtb
-+dtb-$(CONFIG_ARCH_MXC) += imx8qm-apalis-v1.1-eval-v1.2.dtb
- dtb-$(CONFIG_ARCH_MXC) += imx8qm-apalis-v1.1-ixora-v1.1.dtb
- dtb-$(CONFIG_ARCH_MXC) += imx8qm-apalis-v1.1-ixora-v1.2.dtb
- dtb-$(CONFIG_ARCH_MXC) += imx8qm-mek.dtb
-diff --git a/arch/arm64/boot/dts/freescale/imx8-apalis-eval-v1.1.dtsi b/arch/arm64/boot/dts/freescale/imx8-apalis-eval-v1.1.dtsi
-new file mode 100644
-index 000000000000..0f77f78f4d96
---- /dev/null
-+++ b/arch/arm64/boot/dts/freescale/imx8-apalis-eval-v1.1.dtsi
-@@ -0,0 +1,26 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
-+/*
-+ * Copyright 2024 Toradex
-+ */
-+
-+#include "imx8-apalis-eval.dtsi"
-+
-+/* Apalis CAN1 */
-+&flexcan1 {
-+	status = "okay";
-+};
-+
-+/* Apalis CAN2 */
-+&flexcan2 {
-+	status = "okay";
-+};
-+
-+/* Apalis MMC1 */
-+&usdhc2 {
-+	status = "okay";
-+};
-+
-+/* Apalis SD1 */
-+&usdhc3 {
-+	status = "okay";
-+};
-diff --git a/arch/arm64/boot/dts/freescale/imx8-apalis-eval-v1.2.dtsi b/arch/arm64/boot/dts/freescale/imx8-apalis-eval-v1.2.dtsi
-new file mode 100644
-index 000000000000..f5c6a0164f36
---- /dev/null
-+++ b/arch/arm64/boot/dts/freescale/imx8-apalis-eval-v1.2.dtsi
-@@ -0,0 +1,124 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
-+/*
-+ * Copyright 2024 Toradex
-+ */
-+
-+#include "imx8-apalis-eval.dtsi"
-+
-+/ {
-+	reg_3v3_mmc: regulator-3v3-mmc {
-+		compatible = "regulator-fixed";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_enable_3v3_mmc>;
-+		enable-active-high;
-+		gpio = <&lsio_gpio5 19 GPIO_ACTIVE_HIGH>;
-+		off-on-delay-us = <100000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-min-microvolt = <3300000>;
-+		regulator-name = "3.3V_MMC";
-+		startup-delay-us = <10000>;
-+	};
-+
-+	reg_3v3_sd: regulator-3v3-sd {
-+		compatible = "regulator-fixed";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_enable_3v3_sd>;
-+		enable-active-high;
-+		gpio = <&lsio_gpio5 20 GPIO_ACTIVE_HIGH>;
-+		off-on-delay-us = <100000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-min-microvolt = <3300000>;
-+		regulator-name = "3.3V_SD";
-+		startup-delay-us = <10000>;
-+	};
-+
-+	reg_can1: regulator-can1 {
-+		compatible = "regulator-fixed";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_enable_can1_power>;
-+		enable-active-high;
-+		gpio = <&lsio_gpio5 22 GPIO_ACTIVE_HIGH>;
-+		regulator-name = "5V_SW_CAN1";
-+		startup-delay-us = <10000>;
-+	};
-+
-+	reg_can2: regulator-can2 {
-+		compatible = "regulator-fixed";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_enable_can2_power>;
-+		enable-active-high;
-+		gpio = <&lsio_gpio5 21 GPIO_ACTIVE_HIGH>;
-+		regulator-name = "5V_SW_CAN2";
-+		startup-delay-us = <10000>;
-+	};
-+};
-+
-+/* Apalis CAN1 */
-+&flexcan1 {
-+	xceiver-supply = <&reg_can1>;
-+	status = "okay";
-+};
-+
-+/* Apalis CAN2 */
-+&flexcan2 {
-+	xceiver-supply = <&reg_can2>;
-+	status = "okay";
-+};
-+
-+/* Apalis I2C1 */
-+&i2c2 {
-+	status = "okay";
-+
-+	/* Power/Current Measurement Sensor */
-+	hwmon@40 {
-+		compatible = "ti,ina219";
-+		reg = <0x40>;
-+		shunt-resistor = <5000>;
-+	};
-+
-+	temperature-sensor@4f {
-+		compatible = "ti,tmp75c";
-+		reg = <0x4f>;
-+	};
-+
-+	eeprom@57 {
-+		compatible = "st,24c02", "atmel,24c02";
-+		reg = <0x57>;
-+	};
-+};
-+
-+/* Apalis MMC1 */
-+&usdhc2 {
-+	pinctrl-0 = <&pinctrl_usdhc2_4bit>, <&pinctrl_mmc1_cd>;
-+	pinctrl-1 = <&pinctrl_usdhc2_4bit_100mhz>, <&pinctrl_mmc1_cd>;
-+	pinctrl-2 = <&pinctrl_usdhc2_4bit_200mhz>, <&pinctrl_mmc1_cd>;
-+	pinctrl-3 = <&pinctrl_usdhc2_4bit_sleep>, <&pinctrl_mmc1_cd_sleep>;
-+	bus-width = <4>;
-+	vmmc-supply = <&reg_3v3_mmc>;
-+	status = "okay";
-+};
-+
-+/* Apalis SD1 */
-+&usdhc3 {
-+	vmmc-supply = <&reg_3v3_sd>;
-+	status = "okay";
-+};
-+
-+&iomuxc {
-+
-+	pinctrl_enable_3v3_mmc: enable3v3mmcgrp {
-+		fsl,pins = <IMX8QM_USDHC1_DATA4_LSIO_GPIO5_IO19	0x00000021>; /* MXM3_148 */
-+	};
-+
-+	pinctrl_enable_3v3_sd: enable3v3sdgrp {
-+		fsl,pins = <IMX8QM_USDHC1_DATA5_LSIO_GPIO5_IO20	0x00000021>; /* MXM3_152 */
-+	};
-+
-+	pinctrl_enable_can1_power: enablecan1powergrp {
-+		fsl,pins = <IMX8QM_USDHC1_DATA7_LSIO_GPIO5_IO22	0x00000021>; /* MXM3_158 */
-+	};
-+
-+	pinctrl_enable_can2_power: enablecan2powergrp {
-+		fsl,pins = <IMX8QM_USDHC1_DATA6_LSIO_GPIO5_IO21	0x00000021>; /* MXM3_156 */
-+	};
-+};
-diff --git a/arch/arm64/boot/dts/freescale/imx8-apalis-eval.dtsi b/arch/arm64/boot/dts/freescale/imx8-apalis-eval.dtsi
-index 685d4294f4f1..deecb96a1596 100644
---- a/arch/arm64/boot/dts/freescale/imx8-apalis-eval.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8-apalis-eval.dtsi
-@@ -35,18 +35,6 @@ &fec1 {
- 	status = "okay";
- };
- 
--/* Apalis CAN1 */
--&flexcan1 {
--	status = "okay";
--};
--
--/* Apalis CAN2 */
--&flexcan2 {
--	status = "okay";
--};
--
--/* TODO: GPU */
--
- /* Apalis I2C1 */
- &i2c2 {
- 	status = "okay";
-@@ -132,13 +120,3 @@ &usbotg1 {
- };
- 
- /* TODO: Apalis USBH4 SuperSpeed */
--
--/* Apalis MMC1 */
--&usdhc2 {
--	status = "okay";
--};
--
--/* Apalis SD1 */
--&usdhc3 {
--	status = "okay";
--};
-diff --git a/arch/arm64/boot/dts/freescale/imx8qm-apalis-eval-v1.2.dts b/arch/arm64/boot/dts/freescale/imx8qm-apalis-eval-v1.2.dts
-new file mode 100644
-index 000000000000..8466a8204ed0
---- /dev/null
-+++ b/arch/arm64/boot/dts/freescale/imx8qm-apalis-eval-v1.2.dts
-@@ -0,0 +1,16 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
-+/*
-+ * Copyright 2024 Toradex
-+ */
-+
-+/dts-v1/;
-+
-+#include "imx8qm-apalis.dtsi"
-+#include "imx8-apalis-eval-v1.2.dtsi"
-+
-+/ {
-+	model = "Toradex Apalis iMX8QM/QP on Apalis Evaluation Board V1.2";
-+	compatible = "toradex,apalis-imx8-eval-v1.2",
-+		     "toradex,apalis-imx8",
-+		     "fsl,imx8qm";
-+};
-diff --git a/arch/arm64/boot/dts/freescale/imx8qm-apalis-eval.dts b/arch/arm64/boot/dts/freescale/imx8qm-apalis-eval.dts
-index 5ab0921eb599..b0ebf6d05450 100644
---- a/arch/arm64/boot/dts/freescale/imx8qm-apalis-eval.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8qm-apalis-eval.dts
-@@ -6,7 +6,7 @@
- /dts-v1/;
- 
- #include "imx8qm-apalis.dtsi"
--#include "imx8-apalis-eval.dtsi"
-+#include "imx8-apalis-eval-v1.1.dtsi"
- 
- / {
- 	model = "Toradex Apalis iMX8QM/QP on Apalis Evaluation Board";
-diff --git a/arch/arm64/boot/dts/freescale/imx8qm-apalis-v1.1-eval-v1.2.dts b/arch/arm64/boot/dts/freescale/imx8qm-apalis-v1.1-eval-v1.2.dts
-new file mode 100644
-index 000000000000..92c0ae0c0337
---- /dev/null
-+++ b/arch/arm64/boot/dts/freescale/imx8qm-apalis-v1.1-eval-v1.2.dts
-@@ -0,0 +1,26 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
-+/*
-+ * Copyright 2024 Toradex
-+ */
-+
-+/dts-v1/;
-+
-+#include "imx8qm-apalis-v1.1.dtsi"
-+#include "imx8-apalis-eval-v1.2.dtsi"
-+
-+/ {
-+	model = "Toradex Apalis iMX8QM V1.1 on Apalis Evaluation Board V1.2";
-+	compatible = "toradex,apalis-imx8-v1.1-eval-v1.2",
-+		     "toradex,apalis-imx8-v1.1",
-+		     "fsl,imx8qm";
-+};
-+
-+/* Apalis MMC1 */
-+&usdhc2 {
-+	/delete-property/ no-1-8-v;
-+};
-+
-+/* Apalis SD1 */
-+&usdhc3 {
-+	/delete-property/ no-1-8-v;
-+};
-diff --git a/arch/arm64/boot/dts/freescale/imx8qm-apalis-v1.1-eval.dts b/arch/arm64/boot/dts/freescale/imx8qm-apalis-v1.1-eval.dts
-index c8ff75831556..c998e542f93c 100644
---- a/arch/arm64/boot/dts/freescale/imx8qm-apalis-v1.1-eval.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8qm-apalis-v1.1-eval.dts
-@@ -6,7 +6,7 @@
- /dts-v1/;
- 
- #include "imx8qm-apalis-v1.1.dtsi"
--#include "imx8-apalis-eval.dtsi"
-+#include "imx8-apalis-eval-v1.1.dtsi"
- 
- / {
- 	model = "Toradex Apalis iMX8QM V1.1 on Apalis Evaluation Board";
--- 
-2.39.2
-
+Best regards,
+Alexey
