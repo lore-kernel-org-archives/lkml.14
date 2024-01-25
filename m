@@ -1,121 +1,161 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66A1D6EB59
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 15:22:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EC39481CB;
+	Thu, 25 Jan 2024 15:22:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706196132; cv=none; b=BT5GRGTEFvdr+rp3l9uwqBaO8d5N1PhGD1hqR6H8pngsKe3SXXpF0Xyz3tSTCUDq8C38KgNZLeIxvuQGHXJ+YoWDfvb69TiEIG7f9CNmZveMLChYggp9E7BX0+DyqMLq3TevXxI9lWQaRj6s5vgnzPwwbrIUTf6i6q8aP1+j4po=
+	t=1706196168; cv=none; b=ccUyqRjtR8s4fUvODocN+3Cqiig38xrbdOkBPCKB9p/YJ5CdzGimoxS7tZSleDYxWskY4u30hkQpXKcZddtRTQrpTmC4+OoM8+hBow5Kzd73m4/rxBnpeHKyinjvKRaOT3LxIvqj7HYf75vBsH491rbWWX07hwJg+ZmeHN+yBko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706196132; c=relaxed/simple;
-	bh=su1Mgq4fZUUogYwZxT5HTLTDkgoOuBntb5pescN973g=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=YSQyEYfTVl/w4c3dj+abXoSrwME/gTsmFBCCb5ghrnI2hn04LSzEsd4xTiwjzHW7z8PoRb2Xk4sy1Z/g9FlL6bPghRrsWshZDY69Uzx/oyL5HbKM8MO8Jh8+f0DGtjYBHOw7acyh5S5Joa/LBLoF0wur9cWdXrV6IiCKvolH9XA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SuT/VHi5; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1706196168; c=relaxed/simple;
+	bh=QyKrKPi2OmBilyWipKm6g9LwaREY3/z/OwABiSANKQ4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mUqNa2gobMVN+678qo6lF170wbM/fFoR9+mmuKW7myUZn6v6TKzEuoXc3oP3XvtBsNfmFndP6iyuKH7/4p0p+U7x+RJS4w5OFEVGJlM7VYP7LQgQxdrYdaYloqup7PmFTf79lWFwb67an1yV0vwUuD+d7RJsKc+YhwpMX91CKzk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=ne5uFbaZ; arc=none smtp.client-ip=115.124.30.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SuT/VHi5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706196130; x=1737732130;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=su1Mgq4fZUUogYwZxT5HTLTDkgoOuBntb5pescN973g=;
-  b=SuT/VHi5ufGrmJ3IDyI/2V7qB4ULCFAqvcJuhQKe9xoJNIf7q+/bl4ZA
-   gXATkLBMoPxHPWUBt5FqRyAD1WE7Tx0zfxIwvfzC6QqTly05pY5u6tpc5
-   tbzC4iCIJeNPcAaPj8FQpWWh8jXGyymyg+FpbSGuo35B1vzO0YASSLstq
-   Yxi/8lE3XPO4V/JzWL7s3yZiSviaumm6kCqzNaAuDz5N2CAGOgAzmpSba
-   doDypl4/640BNEIBi/Yd2UKAi6kou58KZCR/SRIoYlVWd9J2ttPTazpor
-   n8JvE6+JKVD8v4FB7zO5a/2ALryjx1P62YWEQnCfejnXGoFLjLdGUqGqU
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="8843592"
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="8843592"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2024 07:21:59 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="2276941"
-Received: from lkp-server01.sh.intel.com (HELO 370188f8dc87) ([10.239.97.150])
-  by orviesa005.jf.intel.com with ESMTP; 25 Jan 2024 07:21:57 -0800
-Received: from kbuild by 370188f8dc87 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rT1YA-00008i-1P;
-	Thu, 25 Jan 2024 15:21:54 +0000
-Date: Thu, 25 Jan 2024 23:21:22 +0800
-From: kernel test robot <lkp@intel.com>
-To: Alexey Brodkin <abrodkin@synopsys.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	linux-snps-arc@lists.infradead.org,
-	Vineet Gupta <vgupta@synopsys.com>
-Subject: arch/arc/kernel/devtree.c:64:23: warning: variable 'dt_root' set but
- not used
-Message-ID: <202401252355.5NfsqG3G-lkp@intel.com>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="ne5uFbaZ"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1706196154; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=p3tSUpOimDMRg8zqfNouUpnGd0mSimHS2NTV/3U3wfY=;
+	b=ne5uFbaZ1l/WWvKBFAZRT8H197IFwj7/+RpECvDMhtmra6FNh/PBwIlt/q12REBu+wrmo5QpO3ZK0v0dX6QKhsuAK97ImrH85bdJSRiRHFk6B3PWjeMjd6oGdabsFAvTn0mVeDwtFMCUXu5ofUeSsGnJ9nK0iIi+X3g2nOApzcU=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R751e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046051;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0W.Kkdiy_1706196152;
+Received: from 192.168.71.114(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0W.Kkdiy_1706196152)
+          by smtp.aliyun-inc.com;
+          Thu, 25 Jan 2024 23:22:33 +0800
+Message-ID: <8ac3a2fd-1c41-493a-b6a0-a5f53afb49e1@linux.alibaba.com>
+Date: Thu, 25 Jan 2024 23:22:31 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: Roadmap for netfslib and local caching (cachefiles)
+To: David Howells <dhowells@redhat.com>
+Cc: Jeff Layton <jlayton@kernel.org>, Christian Brauner <brauner@kernel.org>,
+ Matthew Wilcox <willy@infradead.org>, Eric Sandeen <esandeen@redhat.com>,
+ v9fs@lists.linux.dev, linux-afs@lists.infradead.org,
+ ceph-devel@vger.kernel.org, linux-cifs@vger.kernel.org,
+ samba-technical@lists.samba.org, linux-nfs@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <520668.1706191347@warthog.procyon.org.uk>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <520668.1706191347@warthog.procyon.org.uk>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   6098d87eaf31f48153c984e2adadf14762520a87
-commit: 6e9318d1be83714e004a0ac795a936df4d2bed3e ARC: RIP arc_{get|set}_core_freq() clk API
-date:   8 years ago
-config: arc-allnoconfig (https://download.01.org/0day-ci/archive/20240125/202401252355.5NfsqG3G-lkp@intel.com/config)
-compiler: arc-elf-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240125/202401252355.5NfsqG3G-lkp@intel.com/reproduce)
+Hi David,
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202401252355.5NfsqG3G-lkp@intel.com/
+On 2024/1/25 22:02, David Howells wrote:
+> Here's a roadmap for the future development of netfslib and local caching
+> (e.g. cachefiles).
 
-All warnings (new ones prefixed by >>):
+Thanks for writing this detailed email.  And congrats to you work.
+I only comment the parts directly related to myself.
 
-   In file included from include/linux/kernel.h:11,
-                    from include/asm-generic/bug.h:13,
-                    from arch/arc/include/asm/bug.h:31,
-                    from include/linux/bug.h:4,
-                    from include/linux/thread_info.h:11,
-                    from include/asm-generic/current.h:4,
-                    from arch/arc/include/asm/current.h:23,
-                    from include/linux/mutex.h:13,
-                    from include/linux/notifier.h:13,
-                    from include/linux/reboot.h:5,
-                    from arch/arc/kernel/devtree.c:13:
-   include/linux/log2.h:22:1: warning: ignoring attribute 'noreturn' because it conflicts with attribute 'const' [-Wattributes]
-      22 | int ____ilog2_NaN(void);
-         | ^~~
-   arch/arc/kernel/devtree.c: In function 'setup_machine_fdt':
->> arch/arc/kernel/devtree.c:64:23: warning: variable 'dt_root' set but not used [-Wunused-but-set-variable]
-      64 |         unsigned long dt_root;
-         |                       ^~~~~~~
+> 
 
+...
 
-vim +/dt_root +64 arch/arc/kernel/devtree.c
+> 
+> 
+> Local Caching
+> =============
+> 
+> There are a number of things I want to look at with local caching:
+> 
+> [>] Although cachefiles has switched from using bmap to using SEEK_HOLE and
+> SEEK_DATA, this isn't sufficient as we cannot rely on the backing filesystem
+> optimising things and introducing both false positives and false negatives.
+> Cachefiles needs to track the presence/absence of data for itself.
 
-880beb8807814c Rob Herring  2013-08-27  53  
-999159a5381bff Vineet Gupta 2013-01-22  54  /**
-999159a5381bff Vineet Gupta 2013-01-22  55   * setup_machine_fdt - Machine setup when an dtb was passed to the kernel
-999159a5381bff Vineet Gupta 2013-01-22  56   * @dt:		virtual address pointer to dt blob
-999159a5381bff Vineet Gupta 2013-01-22  57   *
-999159a5381bff Vineet Gupta 2013-01-22  58   * If a dtb was passed to the kernel, then use it to choose the correct
-999159a5381bff Vineet Gupta 2013-01-22  59   * machine_desc and to setup the system.
-999159a5381bff Vineet Gupta 2013-01-22  60   */
-880beb8807814c Rob Herring  2013-08-27  61  const struct machine_desc * __init setup_machine_fdt(void *dt)
-999159a5381bff Vineet Gupta 2013-01-22  62  {
-880beb8807814c Rob Herring  2013-08-27  63  	const struct machine_desc *mdesc;
-999159a5381bff Vineet Gupta 2013-01-22 @64  	unsigned long dt_root;
+Yes, that is indeed an issue that needs to resolve and already discussed
+before.
 
-:::::: The code at line 64 was first introduced by commit
-:::::: 999159a5381bff3bd6f688c5d20fbec9d8789e53 ARC: [DeviceTree] Basic support
+> 
+> I had a partially-implemented solution that stores a block bitmap in an xattr,
+> but that only worked up to files of 1G in size (with bits representing 256K
+> blocks in a 512-byte bitmap).
 
-:::::: TO: Vineet Gupta <vgupta@synopsys.com>
-:::::: CC: Vineet Gupta <vgupta@synopsys.com>
+Jingbo once had an approach to use external bitmap files and
+extended-attribute pointers inside the cache files:
+https://listman.redhat.com/archives/linux-cachefs/2022-August/007050.html
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+I'm not quite sure the performance was but if it's worth trying or comparing,
+that might be useful though.
+
+> 
+> [>] An alternative cache format might prove more fruitful.  Various AFS
+> implementations use a 'tagged cache' format with an index file and a bunch of
+> small files each of which contains a single block (typically 256K in OpenAFS).
+> 
+> This would offer some advantages over the current approach:
+> 
+>   - it can handle entry reuse within the index
+>   - doesn't require an external culling process
+>   - doesn't need to truncate/reallocate when invalidating
+> 
+> There are some downsides, including:
+> 
+>   - each block is in a separate file
+
+Not quite sure, yet accessing too many small files might be another issue
+which is currently happening with AI training workloads.. but as you said,
+it's worth trying.
+
+>   - metadata coherency is more tricky - a powercut may require a cache wipe
+>   - the index key is highly variable in size if used for multiple filesystems
+> 
+> But OpenAFS has been using this for something like 30 years, so it's probably
+> worth a try.
+
+Yes, also configurable chunk sizes per blob are much helpful.
+
+Thanks,
+Gao Xiang
+
+> 
+> [>] Need to work out some way to store xattrs, directory entries and inode
+> metadata efficiently.
+> 
+> [>] Using NVRAM as the cache rather than spinning rust.
+> 
+> [>] Support for disconnected operation to pin desirable data and keep
+> track of changes.
+> 
+> [>] A user API by which the cache for specific files or volumes can be
+> flushed.
+> 
+> 
+> Disconnected Operation
+> ======================
+> 
+> I'm working towards providing support for disconnected operation, so that,
+> provided you've got your working set pinned in the cache, you can continue to
+> work on your network-provided files when the network goes away and resync the
+> changes later.
+> 
+> This is going to require a number of things:
+> 
+>   (1) A user API by which files can be preloaded into the cache and pinned.
+> 
+>   (2) The ability to track changes in the cache.
+> 
+>   (3) A way to synchronise changes on reconnection.
+> 
+>   (4) A way to communicate to the user when there's a conflict with a third
+>       party change on reconnect.  This might involve communicating via systemd
+>       to the desktop environment to ask the user to indicate how they'd like
+>       conflicts recolved.
+> 
+>   (5) A way to prompt the user to re-enter their authentication/crypto keys.
+> 
+>   (6) A way to ask the user how to handle a process that wants to access data
+>       we don't have (error/wait) - and how to handle the DE getting stuck in
+>       this fashion.
+> 
+> David
