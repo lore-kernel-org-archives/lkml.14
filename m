@@ -1,108 +1,75 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D81181292F0;
-	Thu, 25 Jan 2024 16:19:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD7BF745FC;
+	Thu, 25 Jan 2024 16:21:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706199554; cv=none; b=F0l/YkspZdH1/8vsXXHBIaAa9UyoxRyjPQX1O/LXq3W3uuHtOPNfERkHPyGKz/hww8QK5HI4WTcjt2S/lvKfpnHW3byZFLHX8v8aziWygEYu4H78BB3YJXsfVTJkjALQ66ZEO08zvnMPOcnfA9KstbZGRoZPEQsDqv1Q4hCz6fI=
+	t=1706199688; cv=none; b=HOtSieyrlNtzXbcE+ecPiGphONEOU7hry1Q/6PzUyYkXEryecRmWxjYatcU0qPuy2Vx911R0mGNtDSID+twtSko7nDcjVM8yQ7BsC5MyF1/z8WOImiFM6k66MM/aMUOMc+CqemJI+yOfrEXiHmrwhAx3rFQA6NTeQLftpTJSsCQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706199554; c=relaxed/simple;
-	bh=8tbd9J1L+yMyj8fzsk0GkL2j32nTCB7mGKmc36iSSsk=;
+	s=arc-20240116; t=1706199688; c=relaxed/simple;
+	bh=e2wzMafEiJ87zPqKUzajnoGGsBbwxCdh9NkGtzE9mUA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=US1oFLu0xH1WtyDNoTe2PaVwl1Ve6PtzGEl+MbZsEADSmFcjKWKwbxlCBMYJMhvbDTI1A8Va0eEQmb4vO7AIRxK0mxugF+RCnW5lJe4oCBccw3adyAKxq7cP7EXXrfTtOGrBISnxdKZmYnOYvsnbJ9xjuwKDOL6iU9yoZi9lKjU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uNadlyTj; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=cAsDNuCJLZk1eJdkwt6Y5E+q2nRyB6jn5S/TbD4jmyt8xBFvxnkmv6HmTQYJfVs9dA2Zt9gpi+5cksSBA52z6ngjH0AibyEmxT0DFALkQxWv+HoYIJ9TcJ4FbKm9dnJqEJFhkmK5liMuZhwyjwZ8Q6N5XJSXo91l92cqqgtdzOE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B62H1JSb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uNadlyTj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5980C433C7;
-	Thu, 25 Jan 2024 16:19:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B62H1JSb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8AAEC433F1;
+	Thu, 25 Jan 2024 16:21:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706199554;
-	bh=8tbd9J1L+yMyj8fzsk0GkL2j32nTCB7mGKmc36iSSsk=;
+	s=k20201202; t=1706199688;
+	bh=e2wzMafEiJ87zPqKUzajnoGGsBbwxCdh9NkGtzE9mUA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uNadlyTjUCr+4tVYMsG05OiK0H6qg7GIMgXkusq8IrSrHO7QOypAtfCWrcelD17HW
-	 /LPPMBR41J1doxkf+KXtEfpYnqFSVMGI/4Cwhw18sOgrQh+f8Y59SdXcs+4eIBWeUI
-	 MvrA+oI6NNi3GEMfh42coRULv1nTX560miNOMkgteLjfFMwJWTbIJ7cUntC6FPkYDi
-	 AfoLFQb8mn1Yq0jl3+VPSTR7A7UAhEgQHEOylD272yhUAuMBMYdIiwS4j6HL3r8rxs
-	 HVqT8AVE7DSlePmdT23/m753AyAStku/I2QE0Oni6A2SkTTz4ztZHH47UIuEfcdhYa
-	 X6OZd9MsSK46A==
-Date: Thu, 25 Jan 2024 17:19:07 +0100
-From: Niklas Cassel <cassel@kernel.org>
-To: Lennert Buytenhek <kernel@wantstofly.org>
-Cc: Damien Le Moal <dlemoal@kernel.org>, linux-ide@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>,
-	John Garry <john.g.garry@oracle.com>,
-	Joerg Roedel <jroedel@suse.de>
-Subject: Re: [PATCH v2] ahci: add 43-bit DMA address quirk for ASMedia
- ASM1061 controllers
-Message-ID: <ZbKJ++oBcTptpvlB@x1-carbon>
-References: <ZbJ4Yfexzea2mQw8@wantstofly.org>
+	b=B62H1JSblc++Zb4nnT22+0Ff4+RAP2mrxZICom1zGqCkWkBaA4Jur9TCQQ1U9FwdN
+	 gzZxUdpPx3aKgpXN5ACS/NN/NOYJJJQhxF544797+i8XzmIA31NIjjBRn7yBcNTXj9
+	 x+DRf4WzDPldpojnqacGAyoJwNAVowGZAXmBZCq0jOZQX1Orl7TAI20OXEgxlWedlp
+	 DCPsWaKPBgt/Y0JXGuhwB9JwKc/jdBioTC4wgMqiG3CDoMUjaUnsr3MMi4PC+jOjo2
+	 6d1WC+/w2263d/dyDLuvFD8pGkRWMBvDETnotSPck2hmxayrgwACdt1YnBmzdWiCZE
+	 AHzxeRYNx1wiQ==
+Date: Thu, 25 Jan 2024 17:21:22 +0100
+From: Christian Brauner <brauner@kernel.org>
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Baokun Li <libaokun1@huawei.com>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next Mailing List <linux-next@vger.kernel.org>
+Subject: Re: linux-next: build failure after merge of the vfs-brauner tree
+Message-ID: <20240125-mochten-lauftraining-9fa7ac4a3461@brauner>
+References: <20240123125227.0521c8d9@canb.auug.org.au>
+ <20240124122040.04cd2c8a@canb.auug.org.au>
+ <20240124-liquidieren-retten-8b3c65074c33@brauner>
+ <20240124223537.35433349@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <ZbJ4Yfexzea2mQw8@wantstofly.org>
+In-Reply-To: <20240124223537.35433349@canb.auug.org.au>
 
-On Thu, Jan 25, 2024 at 05:04:01PM +0200, Lennert Buytenhek wrote:
-> With one of the on-board ASM1061 AHCI controllers (1b21:0612) on an
-> ASUSTeK Pro WS WRX80E-SAGE SE WIFI mainboard, a controller hang was
-> observed that was immediately preceded by the following kernel
-> messages:
+On Wed, Jan 24, 2024 at 10:35:37PM +1100, Stephen Rothwell wrote:
+> Hi Christian,
 > 
-> [Thu Jan  4 23:12:54 2024] ahci 0000:28:00.0: Using 64-bit DMA addresses
-> [Thu Jan  4 23:12:54 2024] ahci 0000:28:00.0: AMD-Vi: Event logged [IO_PAGE_FAULT domain=0x0035 address=0x7fffff00000 flags=0x0000]
-> [Thu Jan  4 23:12:54 2024] ahci 0000:28:00.0: AMD-Vi: Event logged [IO_PAGE_FAULT domain=0x0035 address=0x7fffff00300 flags=0x0000]
-> [Thu Jan  4 23:12:54 2024] ahci 0000:28:00.0: AMD-Vi: Event logged [IO_PAGE_FAULT domain=0x0035 address=0x7fffff00380 flags=0x0000]
-> [Thu Jan  4 23:12:54 2024] ahci 0000:28:00.0: AMD-Vi: Event logged [IO_PAGE_FAULT domain=0x0035 address=0x7fffff00400 flags=0x0000]
-> [Thu Jan  4 23:12:54 2024] ahci 0000:28:00.0: AMD-Vi: Event logged [IO_PAGE_FAULT domain=0x0035 address=0x7fffff00680 flags=0x0000]
-> [Thu Jan  4 23:12:54 2024] ahci 0000:28:00.0: AMD-Vi: Event logged [IO_PAGE_FAULT domain=0x0035 address=0x7fffff00700 flags=0x0000]
+> On Wed, 24 Jan 2024 12:13:02 +0100 Christian Brauner <brauner@kernel.org> wrote:
+> >
+> > I had dropped both from vfs.misc yesterday night. Maybe it didn't make
+> > it in time.
 > 
-> The first message is produced by code in drivers/iommu/dma-iommu.c
-> which is accompanied by the following comment that seems to apply:
-> 
->         /*
->          * Try to use all the 32-bit PCI addresses first. The original SAC vs.
->          * DAC reasoning loses relevance with PCIe, but enough hardware and
->          * firmware bugs are still lurking out there that it's safest not to
->          * venture into the 64-bit space until necessary.
->          *
->          * If your device goes wrong after seeing the notice then likely either
->          * its driver is not setting DMA masks accurately, the hardware has
->          * some inherent bug in handling >32-bit addresses, or not all the
->          * expected address bits are wired up between the device and the IOMMU.
->          */
-> 
-> Asking the ASM1061 on a discrete PCIe card to DMA from I/O virtual
-> address 0xffffffff00000000 produces the following I/O page faults:
-> 
-> [Tue Jan 23 21:31:55 2024] vfio-pci 0000:07:00.0: AMD-Vi: Event logged [IO_PAGE_FAULT domain=0x0021 address=0x7ff00000000 flags=0x0010]
-> [Tue Jan 23 21:31:55 2024] vfio-pci 0000:07:00.0: AMD-Vi: Event logged [IO_PAGE_FAULT domain=0x0021 address=0x7ff00000500 flags=0x0010]
-> 
-> Note that the upper 21 bits of the logged DMA address are zero.  (When
-> asking a different PCIe device in the same PCIe slot to DMA to the
-> same I/O virtual address, we do see all the upper 32 bits of the DMA
-> address as 1, so this is not an issue with the chipset or IOMMU
-> configuration on the test system.)
-> 
-> Also, hacking libahci to always set the upper 21 bits of all DMA
-> addresses to 1 produces no discernible effect on the behavior of the
-> ASM1061, and mkfs/mount/scrub/etc work as without this hack.
-> 
-> This all strongly suggests that the ASM1061 has a 43 bit DMA address
-> limit, and this commit therefore adds a quirk to deal with this limit.
-> 
-> This issue probably applies to (some of) the other supported ASMedia
-> parts as well, but we limit it to the PCI IDs known to refer to
-> ASM1061 parts, as that's the only part we know for sure to be affected
-> by this issue at this point.
-> 
-> Link: https://lore.kernel.org/linux-ide/ZaZ2PIpEId-rl6jv@wantstofly.org/
-> Signed-off-by: Lennert Buytenhek <kernel@wantstofly.org>
-> ---
+> It still has not ... I only fetch your vfs.all branch.  Did you remerge
+> and push it out?
 
-Applied:
-https://git.kernel.org/pub/scm/linux/kernel/git/libata/linux.git/log/?h=for-6.8-fixes
+So vfs.all should be at:
+
+commit 8577a331532bb1d75f3536461739a0a8e15b219c
+Merge: 0c5c260545bd 06b8db3a7dde
+Author:     Christian Brauner <brauner@kernel.org>
+AuthorDate: Wed Jan 24 18:33:30 2024 +0100
+Commit:     Christian Brauner <brauner@kernel.org>
+CommitDate: Wed Jan 24 18:33:30 2024 +0100
+
+    Merge branch 'vfs.fs' into vfs.all
+
+    Signed-off-by: Christian Brauner <brauner@kernel.org>
+
+And that should've contain a merge of vfs.misc with all problematic
+patches dropped. Please yell if you still see an issue tomorrow!
