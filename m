@@ -1,108 +1,95 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84546481CB;
-	Thu, 25 Jan 2024 17:17:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C4D71339BD;
+	Thu, 25 Jan 2024 17:18:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706203079; cv=none; b=SE682JNk6V7BiLDy0K8Jcss2xrWL9NvSNVUHQ+EzOtTOAfc87Dsin7dfcu7Ldr7wtlWFUdNYvscb3cRrURBTvzg5bybs4adegPFTq3RCADyywjeEDCzK8iS2m9rRNyPBJCoc21n7ie865ekVlcj6IeAQUhhkDLyOTOnkUynOJyE=
+	t=1706203089; cv=none; b=n0VFn4TBY5a63Q0zfsSzCFqLZZnTRHpwkygdrs8uon2qU5UhxPO35stLlNNSg+fTWLGfyy8cCH3WAJvX9XzNkClsZfj6bpZSxlzBcYrU67CDPNLwk5riygQwM6iluPpSaa8zgyKDKXkAjbZ2x1ixKMbwORazKIUB9fIZOojWBb4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706203079; c=relaxed/simple;
-	bh=PGjwh8WrgD8mpDJNmLuY2zwV1TrvwjWGmGaOhxyBsGI=;
+	s=arc-20240116; t=1706203089; c=relaxed/simple;
+	bh=VmrqQGWyTbOGTNQ/vAkIp69HNVkARx3sDciLeid9ZvU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dvfMQDYIUIYUvgVzJ4ZGkCXQUUCWBzZv4jJmiWQTdT+AOH1lwjjT8VBE/GVb4j1sUMWHj8RFphW4TQ7+THU+aowOhXn3s8C+tyqbUVpZjdTxEwG8ZgRxuv5GW0Hx6aswqbTDRuAd5VBXkDDsoBM5AMR5493YgaoXFNwklYRiVTk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bU1YdkO+; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ypy2SR01OYXto7hxEStSowFDFkkbYbUJwlMLZckm0PnW2xb9ER0xLtQ4gsMJrMix4IijPbJEJOsbA0a/JeUF224+UAEeKXlHxbkRwpMN7HhPwOpPYyRcuF96KTorwdnxDEkRdgGiemLz2toO9YYrExAMM2DfsRalf0yCf+hUg3s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D2HkKulG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bU1YdkO+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1682C43390;
-	Thu, 25 Jan 2024 17:17:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D2HkKulG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FE2FC433C7;
+	Thu, 25 Jan 2024 17:18:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706203079;
-	bh=PGjwh8WrgD8mpDJNmLuY2zwV1TrvwjWGmGaOhxyBsGI=;
+	s=k20201202; t=1706203088;
+	bh=VmrqQGWyTbOGTNQ/vAkIp69HNVkARx3sDciLeid9ZvU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bU1YdkO+++AKRPkpGE4N7f61XbNLnIpJp00g3YmhwMWb1lvN1BmQbk4hvm8sx3kVs
-	 tDb2Q750OJWsa9QhxUfxXmFrLP8eE7wB0064lmD4ajne1TQw0M6r0F8u+ZkK/px3E6
-	 Mpzje3TuiI4sPCJ7TBufJzl/By9OhH+CDVENz1tsBuxsb4r5Z4FWfadgenhtNY+Sef
-	 ZdvRDeEn6BVqLKL1KhGczXHv9pIY3TvQZEi1rOaRV07APa8Lly+hU3cbo+KTDl6vRQ
-	 yLFYQB2fSNo2GtZVghsMdh48Db2DS5cpzMGIjtnGRyMd3Qo7CWStu/C3PxsWorKcbp
-	 bd8h7zsQRncGQ==
-Date: Thu, 25 Jan 2024 17:17:53 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Mantas Pucka <mantas@8devices.com>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Amit Kucheria <amitk@kernel.org>,
-	Thara Gopinath <thara.gopinath@gmail.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-pm@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] dt-bindings: thermal: qcom-tsens: add IPQ6018
- compatible
-Message-ID: <20240125-hazily-scorpion-7047dfd08f7c@spud>
-References: <1706173452-1017-1-git-send-email-mantas@8devices.com>
- <1706173452-1017-2-git-send-email-mantas@8devices.com>
+	b=D2HkKulGZOJDLv1CxUoUEePIPPC22jyGmMG6KiuneZXq0/pd1BpJlwCzUgSmTWrV/
+	 R/JO5+1/nhtk15gStc7jK5j/9Q1/XcQ6iFDjFueIIt/D6jmuYCmL6vLVX/2muZDFMY
+	 xVOY6UAULY0vUoG6goSp6+BmSxcBAeKDNAvryLnS/Bq4E9BVcHW9xdeDSIieHGdR2w
+	 Karj56jxx3FtkJNQRD6N3RkOQkt2vCvHkRNdwIR9yIDstmtGDj3vxAh+OJ27K7MQ58
+	 iUkTNtQLK31/1UpBmv2VfbCBk43VbMc+qMI3BrM732hVdA0PpV6KleWQh3uTjWT4zp
+	 kMvvZNesLB/fA==
+Date: Thu, 25 Jan 2024 17:18:01 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Tudor Ambarus <tudor.ambarus@linaro.org>
+Cc: andi.shyti@kernel.org, arnd@arndb.de, robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+	alim.akhtar@samsung.com, linux-spi@vger.kernel.org,
+	linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-arch@vger.kernel.org, andre.draszik@linaro.org,
+	peter.griffin@linaro.org, semen.protsenko@linaro.org,
+	kernel-team@android.com, willmcvicker@google.com
+Subject: Re: [PATCH v2 21/28] spi: s3c64xx: infer fifosize from the compatible
+Message-ID: <2086b88e-45fc-4224-b00f-0840d446d042@sirena.org.uk>
+References: <20240125145007.748295-1-tudor.ambarus@linaro.org>
+ <20240125145007.748295-22-tudor.ambarus@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="wn8f/nru8b2mI6oI"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="HgRtS/XEVb/749Yx"
 Content-Disposition: inline
-In-Reply-To: <1706173452-1017-2-git-send-email-mantas@8devices.com>
+In-Reply-To: <20240125145007.748295-22-tudor.ambarus@linaro.org>
+X-Cookie: Entropy isn't what it used to be.
 
 
---wn8f/nru8b2mI6oI
+--HgRtS/XEVb/749Yx
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jan 25, 2024 at 11:04:10AM +0200, Mantas Pucka wrote:
-> IPQ6018 has tsens HW block compatible with IPQ8074.
->=20
-> Signed-off-by: Mantas Pucka <mantas@8devices.com>
+On Thu, Jan 25, 2024 at 02:49:59PM +0000, Tudor Ambarus wrote:
 
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
+> Infer the FIFO size from the compatible, where all the instances of the
+> SPI IP have the same FIFO size. This way we no longer depend on the SPI
+> alias from the device tree to select the FIFO size, thus we remove the
+> dependency of the driver on the SPI alias.
 
-Cheers,
-Conor.
+>  static const struct s3c64xx_spi_port_config s3c2443_spi_port_config = {
+> -	.fifo_lvl_mask	= { 0x7f },
+> +	.fifosize	= 64,
+>  	.rx_lvl_offset	= 13,
+>  	.tx_st_done	= 21,
+>  	.clk_div	= 2,
 
-> ---
->  Documentation/devicetree/bindings/thermal/qcom-tsens.yaml | 1 +
->  1 file changed, 1 insertion(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml b/=
-Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
-> index 99d9c526c0b6..d6f333a7bcd1 100644
-> --- a/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
-> +++ b/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
-> @@ -76,6 +76,7 @@ properties:
->        - description: v2 of TSENS with combined interrupt
->          items:
->            - enum:
-> +              - qcom,ipq6018-tsens
->                - qcom,ipq9574-tsens
->            - const: qcom,ipq8074-tsens
-> =20
-> --=20
-> 2.7.4
->=20
+I'm having real trouble associating the changelog with the change here.
+This appears to be changing from specifying the mask for the FIFO level
+register to specifying the size of the FIFO and unrelated to anything to
+do with looking things up from the compatible?
 
---wn8f/nru8b2mI6oI
+--HgRtS/XEVb/749Yx
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZbKXwQAKCRB4tDGHoIJi
-0iOIAQCdQoZ/kwj/HEaWawVaxBFvf1repCb5Fn7Vs8hxvEsOowEAzwRGYfFjhkzl
-ZFTOTNvJfVytRXRnzi6g6l4Qm2V8bw0=
-=KlOy
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmWyl8gACgkQJNaLcl1U
+h9DTfwf9EPYILffoosYlL9u/einpypgWGHhqhCvASqvmgmec/OFieX6W9rE9756V
+qRQKkCsaD16mHJUSvJSqEf4qwoAXGf/57d03e5ShnK7nF8eUh+gsG2nz8b2mDmIr
+2M6foetkCRim5eV4rNmsqxW8Ce+6EWrJX4y9BqxJNbxaACxa9fO9fIHAF+jnUOdU
+/Bw/4aK99kPkW8PHMsg3vpuHxzbzak0aiYvMTHVZcp8Paan0hz3KYvI6xHLllNL0
+ukoQMrnHrpOKy3ftVmNDXeefDuE0sOHQinzQsIEuIXqiRE2XKyJ+yXII+RaZ2o1b
+v87fTDNtaYqs9bH0jweNhcv62vHu1A==
+=qAfe
 -----END PGP SIGNATURE-----
 
---wn8f/nru8b2mI6oI--
+--HgRtS/XEVb/749Yx--
