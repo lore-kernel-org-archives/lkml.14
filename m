@@ -1,150 +1,360 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f67.google.com (mail-wm1-f67.google.com [209.85.128.67])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C2DD4F21D;
-	Thu, 25 Jan 2024 13:13:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5E8C50A69;
+	Thu, 25 Jan 2024 13:14:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.67
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706188422; cv=none; b=rh3EOZ6SE+pF3ypScm1CdEem2p2UyPtO79So/kd/xVazFXK0py8DS30qb+fb7XZmYqGSX+qVbLXuGdgz6p3+PKzIFqBUywg43RYqEAfYDIxgwcWzDskxQoTxogBSp1+Jl1ddcQE/dxiQbuvKQNAX1dci+EBXZ+VWcSHb4kK99qE=
+	t=1706188482; cv=none; b=I7yH35otilebs/wSUDYELY4A5XUHHEr4oMhtUPsZc1A2OGti4xzdWXkw+IIOCIO/lz9/UyoqiFykf4qTAPo7MWdtCDNMZoR3cAJYMiTPGdie5jdp56SpkXED/g/QvJZGpzqvbdT+ic9xadgfnJO8Pdn1RgMLuNZImOMjpaVj9iA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706188422; c=relaxed/simple;
-	bh=TxuJPyUhqCMM8oE9c/YfYJXNjwat6HPusNObJpnlvvQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=saCFSAWECfQYW0lqv7yVPK1JCtzU6aSN1O3sLxmiBl4pfspHcsDwypW/cXUsthV8/aNHzIAle3VlXpIx4zc0KtOeoqI4O0Pbe6fVA2+Zbt6WWVBctieJXBsxh9RAW9xN0U3IkMPIhn725WEK7FWaEZ/eAmArEubpTDBPKk86jyQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eYzd4yMB; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1706188482; c=relaxed/simple;
+	bh=sS2wLsU7MluN9JmmNAzbFpTnr0xhf954jsxZIMM1KUc=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=tu/NRovulUctw6aMo9iTnl3FbT92l/LeBFfHvDH6ejFusY0MaG4+LKfb5VeGDNP5cIGor1WA6k9J3Lbww8isAVlmMZNkaVV8XAh+9zZ5usnItNF/XxVojZyr2tXc+eGmiHp/MkkC51noTSQE3FAcB9rMEwy5kWHXkTgjDgl2fEU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y+2DKi4R; arc=none smtp.client-ip=209.85.128.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eYzd4yMB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706188421; x=1737724421;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=TxuJPyUhqCMM8oE9c/YfYJXNjwat6HPusNObJpnlvvQ=;
-  b=eYzd4yMBbwS38aSY06xvkzFOFzh6E9WlShkeb3PqT5JmUf9XN5mMGvYx
-   YLot9gDwgvgsqTT7Z0za3CjDsR9vVBgGeplELH2vRmaShVGDdfs6MIRiI
-   ssmHlyL3bM9UAXiH3rxSfJFx5VjjRCzbOubq3g3aY2dtvBdh9QK7DEUyY
-   JmtV19hN9zOzl+Gt+CgUCEWlCGf+MkxnGrlh2x74i+Fv7HoUpnc/LkRdH
-   Ll4WCChRAoC3Yc9e35QGla3/QMWIZvVvBaPjTYC5Z9xRvmFEsUmr94T7b
-   Ks3iah9DNClcN7yETz6kMrK4OjzVgc8pbym9fHnA07CBJPJBhY659U8nJ
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="23619204"
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="23619204"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2024 05:13:40 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="2266864"
-Received: from lkp-server01.sh.intel.com (HELO 961aaaa5b03c) ([10.239.97.150])
-  by orviesa003.jf.intel.com with ESMTP; 25 Jan 2024 05:13:36 -0800
-Received: from kbuild by 961aaaa5b03c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rSzXx-000901-0u;
-	Thu, 25 Jan 2024 13:13:33 +0000
-Date: Thu, 25 Jan 2024 21:12:35 +0800
-From: kernel test robot <lkp@intel.com>
-To: Joe Damato <jdamato@fastly.com>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, chuck.lever@oracle.com,
-	jlayton@kernel.org, linux-api@vger.kernel.org, brauner@kernel.org,
-	edumazet@google.com, davem@davemloft.net, alexander.duyck@gmail.com,
-	sridhar.samudrala@intel.com, kuba@kernel.org, weiwan@google.com,
-	Joe Damato <jdamato@fastly.com>
-Subject: Re: [net-next v2 3/4] eventpoll: Add epoll ioctl for epoll_params
-Message-ID: <202401252141.eUlgsF08-lkp@intel.com>
-References: <20240125003014.43103-4-jdamato@fastly.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y+2DKi4R"
+Received: by mail-wm1-f67.google.com with SMTP id 5b1f17b1804b1-40e7e2e04f0so73314605e9.1;
+        Thu, 25 Jan 2024 05:14:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1706188479; x=1706793279; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:references:to:from
+         :content-language:subject:mime-version:date:message-id:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=X4b/eU4REuAaKDyVxKej17wr9BHDZJIws/FBz+hMoFo=;
+        b=Y+2DKi4Rip/duJhyOt8cg/aZuCPwibyQAycc4Q6OX9VG/VgYmH6JAPEP3H4ZWFPY47
+         0Sxr/dEwu8TDOLfCuylJKTgK32C6bsn0e/d3ovlqq4VmLK98ycwDL4tbRBa8Ra8/USGP
+         /GzC4F7gWiU2zYKg+zn4Ee9KJjqnv+zp70NeLyL+rs12u3HfkTCPvoA5sXpR7NOPykPX
+         tY9JmYPyBbqeyNFJcSKFI7vWaMc/Y5onNBoOJtp2eoQsd1zTK81cV1G1xjAkb1EIDxJj
+         PE63GfZWXV84ENr56LNdckLI1XYe7h3hUfLG7ucm49TtRrOnGWZCSJp5ofWMm+kCwUWp
+         vLoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706188479; x=1706793279;
+        h=content-transfer-encoding:in-reply-to:references:to:from
+         :content-language:subject:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=X4b/eU4REuAaKDyVxKej17wr9BHDZJIws/FBz+hMoFo=;
+        b=qesJ4FmzD8aZc42jZqrTyGzV9ceCytTPSaF1xdHObaeHlOlDlSw6kjP1pPM9muaxVR
+         AW3TEU3FHmAfLTaZqwSQgOH9eZ0dGH64m7kJ/VC5GYTDUHZ88tjp4woZbars3iuI0QMu
+         G6paAQmrl4dXABrAcxmL+zB+2lIYnrNH/PN87C+oC+IO23Pj/7t16hQF9YTcnJEvfFAq
+         iAaPXaUWT56pMn0edGWhsMjycYcHMkxLAAa0TZWHHZETYRbFWLHGwGElFQm/chXV/Y4h
+         65C98T/ml/dyITo81UWDjiwnuUWiC1kgf/RTNQdssxAKFg5+z4ubOdylsEx9/pBZLu13
+         MAXw==
+X-Gm-Message-State: AOJu0YzCFhRVxdx3auQo98Of1ZvbNAMv2R7lldj48aY4Ayj/rTbcGxGG
+	cNEWvqX2dNH66551TO2JIcmny0ao+/5aRqezi3GApukTmLx82VKg
+X-Google-Smtp-Source: AGHT+IFZM+bA6Vbhmp4GsZBZRYAaTAEY5Dg3tS8OUJ6Cr7i04jgv/HNt/ngjPmlbe2oq+Y51inDqqA==
+X-Received: by 2002:a05:600c:3d91:b0:40e:4556:5870 with SMTP id bi17-20020a05600c3d9100b0040e45565870mr319886wmb.120.1706188478718;
+        Thu, 25 Jan 2024 05:14:38 -0800 (PST)
+Received: from localhost ([45.130.85.2])
+        by smtp.gmail.com with ESMTPSA id l1-20020a05600c4f0100b0040e549c77a1sm2621155wmq.32.2024.01.25.05.14.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 25 Jan 2024 05:14:38 -0800 (PST)
+Message-ID: <547dd88c-f07d-4126-ae0b-bee126f23d73@gmail.com>
+Date: Thu, 25 Jan 2024 14:14:24 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240125003014.43103-4-jdamato@fastly.com>
+Subject: [RFC PATCH net-next v1 2/3] net: dst_cache: add input_dst_cache API
+Content-Language: en-US
+From: Leone Fernando <leone4fernando@gmail.com>
+To: dennis@kernel.org, tj@kernel.org, cl@linux.com, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, dsahern@kernel.org,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+References: <d951b371-4138-4bda-a1c5-7606a28c81f0@gmail.com>
+In-Reply-To: <d951b371-4138-4bda-a1c5-7606a28c81f0@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Joe,
+The input_dst_cache allows fast lookup of frequently encountered dsts.
 
-kernel test robot noticed the following build warnings:
+In order to provide stable results, I implemented a simple linear
+hashtable with each bucket containing a constant amount of
+entries (DST_CACHE_INPUT_BUCKET_SIZE).
 
-[auto build test WARNING on net-next/main]
+Similarly to how the route hint is used, I defined the hashtable key to
+contain the daddr and the tos of the IP header.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Joe-Damato/eventpoll-support-busy-poll-per-epoll-instance/20240125-083418
-base:   net-next/main
-patch link:    https://lore.kernel.org/r/20240125003014.43103-4-jdamato%40fastly.com
-patch subject: [net-next v2 3/4] eventpoll: Add epoll ioctl for epoll_params
-config: openrisc-allnoconfig (https://download.01.org/0day-ci/archive/20240125/202401252141.eUlgsF08-lkp@intel.com/config)
-compiler: or1k-linux-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240125/202401252141.eUlgsF08-lkp@intel.com/reproduce)
+Lookup is performed in a straightforward manner: start at the bucket head
+corresponding the hashed key and search the following
+DST_CACHE_INPUT_BUCKET_SIZE entries of the array for a matching key.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202401252141.eUlgsF08-lkp@intel.com/
+When inserting a new dst to the cache, if all the bucket entries are
+full, the oldest one is deleted to make room for the new dst.
 
-All warnings (new ones prefixed by >>):
+Signed-off-by: Leone Fernando <leone4fernando@gmail.com>
+---
+ include/linux/percpu.h  |   4 ++
+ include/net/dst_cache.h |  56 ++++++++++++++++
+ net/core/dst_cache.c    | 145 ++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 205 insertions(+)
 
-   fs/eventpoll.c: In function 'ep_eventpoll_ioctl':
->> fs/eventpoll.c:879:22: warning: unused variable 'uarg' [-Wunused-variable]
-     879 |         void __user *uarg = (void __user *) arg;
-         |                      ^~~~
->> fs/eventpoll.c:878:29: warning: unused variable 'epoll_params' [-Wunused-variable]
-     878 |         struct epoll_params epoll_params;
-         |                             ^~~~~~~~~~~~
-   fs/eventpoll.c:877:27: warning: variable 'ep' set but not used [-Wunused-but-set-variable]
-     877 |         struct eventpoll *ep;
-         |                           ^~
-
-
-vim +/uarg +879 fs/eventpoll.c
-
-   873	
-   874	static long ep_eventpoll_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
-   875	{
-   876		int ret;
-   877		struct eventpoll *ep;
- > 878		struct epoll_params epoll_params;
- > 879		void __user *uarg = (void __user *) arg;
-   880	
-   881		if (!is_file_epoll(file))
-   882			return -EINVAL;
-   883	
-   884		ep = file->private_data;
-   885	
-   886		switch (cmd) {
-   887	#ifdef CONFIG_NET_RX_BUSY_POLL
-   888		case EPIOCSPARAMS:
-   889			if (copy_from_user(&epoll_params, uarg, sizeof(epoll_params)))
-   890				return -EFAULT;
-   891	
-   892			if (epoll_params.busy_poll_budget > NAPI_POLL_WEIGHT)
-   893				pr_err("busy poll budget %u exceeds suggested maximum %u\n",
-   894						epoll_params.busy_poll_budget, NAPI_POLL_WEIGHT);
-   895	
-   896			ep->busy_poll_usecs = epoll_params.busy_poll_usecs;
-   897			ep->busy_poll_budget = epoll_params.busy_poll_budget;
-   898			return 0;
-   899	
-   900		case EPIOCGPARAMS:
-   901			memset(&epoll_params, 0, sizeof(epoll_params));
-   902			epoll_params.busy_poll_usecs = ep->busy_poll_usecs;
-   903			epoll_params.busy_poll_budget = ep->busy_poll_budget;
-   904			if (copy_to_user(uarg, &epoll_params, sizeof(epoll_params)))
-   905				return -EFAULT;
-   906	
-   907			return 0;
-   908	#endif
-   909		default:
-   910			ret = -EINVAL;
-   911			break;
-   912		}
-   913	
-   914		return ret;
-   915	}
-   916	
-
+diff --git a/include/linux/percpu.h b/include/linux/percpu.h
+index 8c677f185901..562d846b81fe 100644
+--- a/include/linux/percpu.h
++++ b/include/linux/percpu.h
+@@ -141,6 +141,10 @@ extern phys_addr_t per_cpu_ptr_to_phys(void *addr);
+ #define alloc_percpu_gfp(type, gfp)					\
+ 	(typeof(type) __percpu *)__alloc_percpu_gfp(sizeof(type),	\
+ 						__alignof__(type), gfp)
++#define alloc_percpu_array_gfp(type, size, gfp)				 \
++	((typeof(type) __percpu *)__alloc_percpu_gfp(sizeof(type[size]), \
++						__alignof__(type[size]), \
++						gfp))
+ #define alloc_percpu(type)						\
+ 	(typeof(type) __percpu *)__alloc_percpu(sizeof(type),		\
+ 						__alignof__(type))
+diff --git a/include/net/dst_cache.h b/include/net/dst_cache.h
+index df6622a5fe98..560e7aec9347 100644
+--- a/include/net/dst_cache.h
++++ b/include/net/dst_cache.h
+@@ -8,11 +8,38 @@
+ #include <net/ip6_fib.h>
+ #endif
+ 
++#define DST_CACHE_INPUT_SHIFT (9)
++#define DST_CACHE_INPUT_SIZE (1 << DST_CACHE_INPUT_SHIFT)
++#define DST_CACHE_INPUT_BUCKET_SIZE (4)
++#define DST_CACHE_INPUT_HASH_MASK (~(DST_CACHE_INPUT_BUCKET_SIZE - 1))
++#define INVALID_DST_CACHE_INPUT_KEY (~(u64)(0))
++
+ struct dst_cache {
+ 	struct dst_cache_pcpu __percpu *cache;
+ 	unsigned long reset_ts;
+ };
+ 
++extern unsigned int dst_cache_net_id __read_mostly;
++
++/**
++ * idst_for_each_in_bucket - iterate over a dst cache bucket
++ * @pos:	the type * to use as a loop cursor
++ * @head:	the head of the cpu dst cache.
++ * @hash:	the hash of the bucket
++ */
++#define idst_for_each_in_bucket(pos, head, hash)		\
++	for (pos = &head[hash];					\
++	     pos < &head[hash + DST_CACHE_INPUT_BUCKET_SIZE];	\
++	     pos++)
++
++/**
++ * idst_for_each_in_cache - iterate over the dst cache
++ * @pos:	the type * to use as a loop cursor
++ * @head:	the head of the cpu dst cache.
++ */
++#define idst_for_each_in_cache(pos, head)				\
++	for (pos = head; pos < head + DST_CACHE_INPUT_SIZE; pos++)
++
+ /**
+  *	dst_cache_get - perform cache lookup
+  *	@dst_cache: the cache
+@@ -106,4 +133,33 @@ int dst_cache_init(struct dst_cache *dst_cache, gfp_t gfp);
+  */
+ void dst_cache_destroy(struct dst_cache *dst_cache);
+ 
++/**
++ *	dst_cache_input_get_noref - perform lookup in the input cache,
++ *	return a noref dst
++ *	@dst_cache: the input cache
++ *	@skb: the packet according to which the dst entry will be searched
++ *	local BH must be disabled.
++ */
++struct dst_entry *dst_cache_input_get_noref(struct dst_cache *dst_cache,
++					    struct sk_buff *skb);
++
++/**
++ *	dst_cache_input_add - add the dst of the given skb to the input cache.
++ *
++ *	in case the cache bucket is full, the oldest entry will be deleted
++ *	and replaced with the new one.
++ *	@dst_cache: the input cache
++ *	@skb: The packet according to which the dst entry will be searched
++ *
++ *	local BH must be disabled.
++ */
++void dst_cache_input_add(struct dst_cache *dst_cache,
++			 const struct sk_buff *skb);
++
++/**
++ *	dst_cache_input_init - initialize the input cache,
++ *	allocating the required storage
++ */
++int __init dst_cache_input_init(void);
++
+ #endif
+diff --git a/net/core/dst_cache.c b/net/core/dst_cache.c
+index 0ccfd5fa5cb9..a635c0e52400 100644
+--- a/net/core/dst_cache.c
++++ b/net/core/dst_cache.c
+@@ -13,6 +13,7 @@
+ #include <net/ip6_fib.h>
+ #endif
+ #include <uapi/linux/in.h>
++#include <net/netns/generic.h>
+ 
+ struct dst_cache_pcpu {
+ 	unsigned long refresh_ts;
+@@ -21,9 +22,12 @@ struct dst_cache_pcpu {
+ 	union {
+ 		struct in_addr in_saddr;
+ 		struct in6_addr in6_saddr;
++		u64 key;
+ 	};
+ };
+ 
++unsigned int dst_cache_net_id __read_mostly;
++
+ static void dst_cache_per_cpu_dst_set(struct dst_cache_pcpu *dst_cache,
+ 				      struct dst_entry *dst, u32 cookie)
+ {
+@@ -181,3 +185,144 @@ void dst_cache_reset_now(struct dst_cache *dst_cache)
+ 	}
+ }
+ EXPORT_SYMBOL_GPL(dst_cache_reset_now);
++
++static void dst_cache_input_set(struct dst_cache_pcpu *idst,
++				struct dst_entry *dst, u64 key)
++{
++	dst_cache_per_cpu_dst_set(idst, dst, 0);
++	idst->key = key;
++	idst->refresh_ts = jiffies;
++}
++
++static struct dst_entry *__dst_cache_input_get_noref(struct dst_cache_pcpu *idst)
++{
++	struct dst_entry *dst = idst->dst;
++
++	if (unlikely(dst->obsolete && !dst->ops->check(dst, idst->cookie))) {
++		dst_cache_input_set(idst, NULL, INVALID_DST_CACHE_INPUT_KEY);
++		goto fail;
++	}
++
++	idst->refresh_ts = jiffies;
++	return dst;
++
++fail:
++	return NULL;
++}
++
++static inline u64 create_dst_cache_key_ip4(const struct sk_buff *skb)
++{
++	struct iphdr *iphdr = ip_hdr(skb);
++
++	return (((u64)iphdr->daddr) << 8) | iphdr->tos;
++}
++
++static inline u32 hash_dst_cache_key(u64 key)
++{
++	return hash_64(key, DST_CACHE_INPUT_SHIFT) & DST_CACHE_INPUT_HASH_MASK;
++}
++
++struct dst_entry *dst_cache_input_get_noref(struct dst_cache *dst_cache,
++					    struct sk_buff *skb)
++{
++	struct dst_entry *out_dst = NULL;
++	struct dst_cache_pcpu *pcpu_cache;
++	struct dst_cache_pcpu *idst;
++	u32 hash;
++	u64 key;
++
++	pcpu_cache = this_cpu_ptr(dst_cache->cache);
++	key = create_dst_cache_key_ip4(skb);
++	hash = hash_dst_cache_key(key);
++	idst_for_each_in_bucket(idst, pcpu_cache, hash) {
++		if (key == idst->key) {
++			out_dst = __dst_cache_input_get_noref(idst);
++			goto out;
++		}
++	}
++out:
++	return out_dst;
++}
++
++static void dst_cache_input_reset_now(struct dst_cache *dst_cache)
++{
++	struct dst_cache_pcpu *caches;
++	struct dst_cache_pcpu *idst;
++	struct dst_entry *dst;
++	int i;
++
++	for_each_possible_cpu(i) {
++		caches = per_cpu_ptr(dst_cache->cache, i);
++		idst_for_each_in_cache(idst, caches) {
++			idst->key = INVALID_DST_CACHE_INPUT_KEY;
++			dst = idst->dst;
++			if (dst)
++				dst_release(dst);
++		}
++	}
++}
++
++static int __net_init dst_cache_input_net_init(struct net *net)
++{
++	struct dst_cache *dst_cache = net_generic(net, dst_cache_net_id);
++
++	dst_cache->cache = alloc_percpu_array_gfp(struct dst_cache_pcpu,
++						  DST_CACHE_INPUT_SIZE,
++						  GFP_KERNEL | __GFP_ZERO);
++	if (!dst_cache->cache)
++		return -ENOMEM;
++
++	dst_cache_input_reset_now(dst_cache);
++	return 0;
++}
++
++static void __net_exit dst_cache_input_net_exit(struct net *net)
++{
++	struct dst_cache *dst_cache = net_generic(net, dst_cache_net_id);
++
++	dst_cache_input_reset_now(dst_cache);
++	free_percpu(dst_cache->cache);
++	dst_cache->cache = NULL;
++}
++
++static inline bool idst_empty(struct dst_cache_pcpu *idst)
++{
++	return idst->key == INVALID_DST_CACHE_INPUT_KEY;
++}
++
++void dst_cache_input_add(struct dst_cache *dst_cache, const struct sk_buff *skb)
++{
++	struct dst_cache_pcpu *entry = NULL;
++	struct dst_cache_pcpu *pcpu_cache;
++	struct dst_cache_pcpu *idst;
++	u32 hash;
++	u64 key;
++
++	pcpu_cache = this_cpu_ptr(dst_cache->cache);
++	key = create_dst_cache_key_ip4(skb);
++	hash = hash_dst_cache_key(key);
++	idst_for_each_in_bucket(idst, pcpu_cache, hash) {
++		if (idst_empty(idst)) {
++			entry = idst;
++			goto add_to_cache;
++		}
++		if (!entry || time_before(idst->refresh_ts, entry->refresh_ts))
++			entry = idst;
++	}
++
++add_to_cache:
++	dst_cache_input_set(entry, skb_dst(skb), key);
++}
++
++static struct pernet_operations dst_cache_input_ops __net_initdata = {
++	.init = dst_cache_input_net_init,
++	.exit = dst_cache_input_net_exit,
++	.id   = &dst_cache_net_id,
++	.size = sizeof(struct dst_cache),
++};
++
++int __init dst_cache_input_init(void)
++{
++	return register_pernet_subsys(&dst_cache_input_ops);
++}
++subsys_initcall(dst_cache_input_init);
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.34.1
+
