@@ -1,88 +1,75 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A87011BDC9
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 09:43:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B0FD1CD03
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 09:43:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706175813; cv=none; b=ZqMCBqvNMwInVIms9RAl1LsY5nkhWrfWhuDnQjG3IoYo7HnYaCJbCctbN3Q4W9hisQmsTq4S8wrED4kGnQQoD3QCKjdqbUTxmnlQYFZHA1i1yyHSdK9ZF5fIRvjo1+l7go1SKi8W4DCp99O6H9J0PS/c2XGltCsSQNSVCYDE3J8=
+	t=1706175825; cv=none; b=LpZpUPtt2IZxFdTetdNNxTKruGQxoJas8F6t1CZ68GxEpXjUKUTgq07X1jNhFHhV2FMgD5Rw+ka9L73JqG0Ir+SHPm1jr82Fr8KbZm9R0UBPN0ArdIXW/h894avgVJDUz/pZKuyRB97NFR0E9cf9m2HEcfjxiKZ2WxWKW8z90pc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706175813; c=relaxed/simple;
-	bh=NO+cYd0QNeHPKrWW+ljDppiytbZEHXhjbmaRFrtMguc=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=CGSWT3KT2Ki0I5vwtvK30mEyB5UGEVoOXC09IMWkPrUS7hAXl3ru1aayS95xmd9WGiv261WDTKFjNUoZfruFvZimmLgGYRuhpEixQmwFlBG/uVEKdhSprtBJ7y47SVPXOuw9QMJUoVuHjrlrVIIntquKm3oQowr0p6mzzAqP2w8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1rSwGI-0002Fp-20; Thu, 25 Jan 2024 10:43:06 +0100
-Received: from [2a0a:edc0:0:900:1d::4e] (helo=lupine)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1rSwGF-002Fm4-V4; Thu, 25 Jan 2024 10:43:03 +0100
-Received: from pza by lupine with local (Exim 4.96)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1rSwGF-0003hB-2q;
-	Thu, 25 Jan 2024 10:43:03 +0100
-Message-ID: <88b75ffea33078d092ffa15e3be235358f576c8d.camel@pengutronix.de>
-Subject: Re: [PATCH v5 1/6] of: Add of_phandle_args_equal() helper
-From: Philipp Zabel <p.zabel@pengutronix.de>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
-	 <krzysztof.kozlowski@linaro.org>
-Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Banajit Goswami
- <bgoswami@quicinc.com>, Bjorn Andersson <andersson@kernel.org>, Konrad
- Dybcio <konrad.dybcio@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>,
- Mark Brown <broonie@kernel.org>, Krzysztof Kozlowski
- <krzysztof.kozlowski+dt@linaro.org>,  Conor Dooley <conor+dt@kernel.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Viresh Kumar
- <viresh.kumar@linaro.org>, Frank Rowand <frowand.list@gmail.com>, Jaroslav
- Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
- alsa-devel@alsa-project.org,  linux-arm-msm@vger.kernel.org,
- linux-sound@vger.kernel.org,  devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org,  linux-pm@vger.kernel.org
-Date: Thu, 25 Jan 2024 10:43:03 +0100
-In-Reply-To: <20240124220716.GA2454626-robh@kernel.org>
-References: <20240124074527.48869-1-krzysztof.kozlowski@linaro.org>
-	 <20240124074527.48869-2-krzysztof.kozlowski@linaro.org>
-	 <20240124220716.GA2454626-robh@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+	s=arc-20240116; t=1706175825; c=relaxed/simple;
+	bh=Yr9dAi+HF3e8xeG38C7Z8bramYoSGYC5W2XMpzSL6QQ=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=FmpUs5BnSEiX9X1+JQNwhexwIKJQgXWPXModEJ7sabDiHmI+hTG+lllQ2Dte7LfVcg++TBsljd08D8p1QA2NQTtJHDbdndZiIia3Ke5aK8ytAL8o8Ni71C0aq607J/kW9Y2WpXBwccIQRyBj44crxn5NTEBT65y/7yp62yvJLrw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=oRweHhD2; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=GjeCDBB+; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="oRweHhD2";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="GjeCDBB+"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1706175822;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=aVKIZDXyohVuLgWytwkihjnuLVIZehHyrbXga6PEsN8=;
+	b=oRweHhD2DsD2ynBsTuWLLrL2xnsEgDv0/zU4UH1V0fH7P9/2BF+nJap/vC1ja3WVNEyOFp
+	4jESfd63bWktIYJHnZ3ydOsyUyDa0zhk4lKCvzTub/eUmOHJj8HJ9zbiHIGx2lbfWfl8aD
+	QOnHtnpt8zIg8QEsqnAdvHU44qb/nxJaGgjs7nOIQf255Dj+FF9CbvJajvISyRXG2FLKhQ
+	Hgjai+YV2nqvOA/x3gaUpz2b1TIS1EsDuH3MlIX3aYdUc2TrZVejYr9EPUJGykSpYyod8j
+	Ll6wI85D57jxP7n1MCIeEivtcQfINMxfUNqQg+W20MEg8ODlAJ2BnHFnrR8liA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1706175822;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=aVKIZDXyohVuLgWytwkihjnuLVIZehHyrbXga6PEsN8=;
+	b=GjeCDBB+jvltyKsxEDLAtPdFUaPcck6KzY43OGZnHe3aJf4P94Qp4OescV04qgjna1QINo
+	MdSMcgc4Am05T4Cw==
+To: Frederic Weisbecker <frederic@kernel.org>, LKML
+ <linux-kernel@vger.kernel.org>
+Cc: Frederic Weisbecker <frederic@kernel.org>, Ingo Molnar
+ <mingo@kernel.org>, Anna-Maria Behnsen <anna-maria@linutronix.de>, Peng
+ Liu <liupeng17@lenovo.com>, Joel Fernandes <joel@joelfernandes.org>
+Subject: Re: [PATCH 15/15] tick: Assume timekeeping is correctly handed over
+ upon last offline idle call
+In-Reply-To: <20240124170459.24850-16-frederic@kernel.org>
+References: <20240124170459.24850-1-frederic@kernel.org>
+ <20240124170459.24850-16-frederic@kernel.org>
+Date: Thu, 25 Jan 2024 10:43:42 +0100
+Message-ID: <87bk99iw8h.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain
 
-On Mi, 2024-01-24 at 16:07 -0600, Rob Herring wrote:
-> On Wed, Jan 24, 2024 at 08:45:22AM +0100, Krzysztof Kozlowski wrote:
-> > Add a helper comparing two "struct of_phandle_args" to avoid
-> > reinventing the wheel.
-> >=20
-> > Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
-> > Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> > ---
-> >=20
-> > Dependency of cpufreq and reset change.
-> > ---
-> >  include/linux/of.h | 16 ++++++++++++++++
-> >  1 file changed, 16 insertions(+)
->=20
-> Acked-by: Rob Herring <robh@kernel.org>
->=20
-> I've wanted to write this series for some time. Great work.
+On Wed, Jan 24 2024 at 18:04, Frederic Weisbecker wrote:
+> The timekeeping duty is handed over from the outgoing CPU on stop
+> machine, then the oneshot tick is stopped right after.  Therefore it's
+> guaranteed that the current CPU isn't the timekeeper upon its last call
+> to idle.
+>
+> Besides, calling tick_nohz_idle_stop_tick() while the dying CPU goes
+> into idle suggests that the tick is going to be stopped while it is
+> actually stopped already from the appropriate CPU hotplug state.
+>
+> Remove the confusing call and the obsolete case handling and convert it
+> to a sanity check that verifies the above assumption.
+>
+> Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
 
-How would you prefer this to be merged? Stable tag from the devicetree
-tree? Go through the reset tree as part of this series?
-
-regards
-Philipp
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
