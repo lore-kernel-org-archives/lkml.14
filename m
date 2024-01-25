@@ -1,179 +1,101 @@
-Received: from mail-oa1-f48.google.com (mail-oa1-f48.google.com [209.85.160.48])
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0D24605C8
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 15:02:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EA9163417;
+	Thu, 25 Jan 2024 15:03:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706194946; cv=none; b=aG7BAF4z6fgo3lEyww2kfOu/fZZtmg2cyr6qsSvo4hfM8+M+S9j7YBtPISd3uSS3Fp71dyfznhDpGnn0ISx6LQTjgYEsIvoNN3wp6xdlcO5OPbx1WT8OaH4U3Lxlh5O3mvRu3iCioaC7il1sz8hyxwBdCYw9s5ILpqQolwjHjOc=
+	t=1706195041; cv=none; b=TC7MXwlqwqgouKnFDuqqmADt0SHg129ABJ7MT92Qe4Wahkai396vxMLwK/ZESoA4wV0agvS0NA7gzgpu/yUxdmtA1kd/4wZQDXGVEslnFvlvgz37U47W9sN2BWwDqmp4gxKnqNyzUxzMaKyW13FbV1T0nfUiz/XEU8FLHNS85Wg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706194946; c=relaxed/simple;
-	bh=cAHbuBrAmhIHJA/sqaHUG4MiTnpiJIAwjM4exYUKT84=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KCjuVGkzlXLY0ZIZziDzW77h+sqHC5rWgM89JQcLZTuGFSY8ZtGpX9rlA8QG5Wr8o4TvRLlxyWuO9zN7363m9SdoLqpvkpKkJoCkWVKYbbJPlJ6rwdHk2bSAHlOGqwHK1BMCgQIoxcyaQEgrkNAozemrfE5JCzMD3e6T+jIUvv0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=eSjrt/Hn; arc=none smtp.client-ip=209.85.160.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1706195041; c=relaxed/simple;
+	bh=4VYWv2Sx+Bj+pNWhyYB4bNelSQ6tBkzliNyt2O6LlME=;
+	h=From:Message-ID:Date:MIME-Version:Subject:To:References:
+	 In-Reply-To:Content-Type; b=n4kmbsW53e7M9ZjRp68R+1aXcVHJZknyJY+UKNbsmIC2pApXVIcOpQYLVstA/k13i/AZMTQvzNy6sg9k4G6tRQqEEWibRYKIjfDjmWmzlKxPNPhR+qhyw6z25ge880y42j2WArcFKwPPlAtzfJbzJE4TtJtNosCnNmzdYPegAwk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ndtQg5nI; arc=none smtp.client-ip=209.85.208.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eSjrt/Hn"
-Received: by mail-oa1-f48.google.com with SMTP id 586e51a60fabf-214410e969cso415731fac.0
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 07:02:22 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ndtQg5nI"
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-2cf1288097aso33942081fa.0;
+        Thu, 25 Jan 2024 07:03:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706194942; x=1706799742; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XTHYIZzUxtAT+UZGnWW/PMLr3D1IxYvIdKjSA4oFUS4=;
-        b=eSjrt/HnV378FQfVZlwXIZaEUQ0PnKtvh4N/BIlI2BwU84iugMl+R2nIcbaQpGgIWp
-         kQFolbj8FzXh5LzszULCogrd4JLcPLB+tCrb02hzdjCXE9aFRlYEXuluSEO31eb2Pk68
-         sLX2f5zskwT1Mw0C2JbdNiqKQOjB/rG4mOzihAVUnDcTDGyY65ywzxp0dnZ1REcI0+iG
-         VTmw6UiN/PX/dnIaB2Xb7AFZW8x4OGoYxZdGNPg3PAqWkBOliHfjiV+rg6SIo3eSivnM
-         q4GIjpXmaCCFLloKSZBrO0WISMLc89ZAw2kXT2PcMNFgPBuxG5CS3Fi4804OgqT9S9Ye
-         IIVA==
+        d=gmail.com; s=20230601; t=1706195036; x=1706799836; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:references:to
+         :content-language:subject:reply-to:user-agent:mime-version:date
+         :message-id:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=+JpqUewR5ly7xx/0WdrZNITm60TbG3dfiLr/Mb15eVA=;
+        b=ndtQg5nIlVSxts8+ALmCMos72Y1hXAfdCxxxOYt0Nqoc5vHo4YUwQBI9dshKFJUe/0
+         MIIAP636MqnppV4kjbJjyspU/OPitslZKPpwaO0nhSxWB5u5QETMMVrJSM5HjOqbdT2b
+         xoj5XzNbtDthcovsczzr/kPjseUJLAoM5arzIpEVrT/vdF6mEsJEpj55kvZefP4mtXnZ
+         A14+XUQ0hvPMIDK3eqDtrxUj2rpSaq3XciUP7ZvjLwR8gc91pGGsBHv0/Dad86H3dtl3
+         X+j515SC9s+qCcLi3QqhPKq15ca5FI/bXZT18pCtrzvu94C0rxpfYCOqfr+oY+vToYWm
+         gYrg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706194942; x=1706799742;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XTHYIZzUxtAT+UZGnWW/PMLr3D1IxYvIdKjSA4oFUS4=;
-        b=pZlcMtfDUULxMvWAvTnVGZNtT48PWTCCcxQ2vG0HhyVWMbuPCDhSBtbU+3tcTglTmq
-         HgtHcPffUepyNyRRtM71md7BI5i6lNihVjQ2wIjGMHrKf9JA8alCIm9/mNkoH13Ft65H
-         XVK1rcQkLikop5s6gcokDKpELr5/pmKDmKtHzxCkNH6WmZBvtL4P6PYaIczcDBCHN7dp
-         sRRKVaj/jdspH6deXFuNsdjxKaIzG43t3Bf2Kp+41yLsJ9bRuvoQPIp6P7qrrmpccL7L
-         w2ioFxh+TecDa/wp1ERV8gI8M5JBn/lCiOICDmm6/RsXsQFzqP+E+e7Yxq4nwaGcNqFd
-         b/mg==
-X-Gm-Message-State: AOJu0YzbHyYvLhJJHzXRp/eTZCGtK7R7owdxMDa9P+wrvoB2lRbJoGR5
-	ZKnYEuKTH32g8EX/7c7OvaFt4qynTvmiYSzBMovfbp/A/kb8wMQMKvzUOr3Clro2/mdG8+23Dir
-	0k1S+cAR79NROsdYDuaHQZax+g/CroNr9qOPGGA==
-X-Google-Smtp-Source: AGHT+IH18fERkDlyVopUGZsEyzj2rkiDR7TmWSqJRbHrxYPyuZZATjZVn5OWkncC1o6/boI68kzvD+uz9/xOct5JPB4=
-X-Received: by 2002:a05:6870:9e9c:b0:214:d0c9:b8d9 with SMTP id
- pu28-20020a0568709e9c00b00214d0c9b8d9mr433312oab.1.1706194940332; Thu, 25 Jan
- 2024 07:02:20 -0800 (PST)
+        d=1e100.net; s=20230601; t=1706195036; x=1706799836;
+        h=content-transfer-encoding:in-reply-to:organization:references:to
+         :content-language:subject:reply-to:user-agent:mime-version:date
+         :message-id:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+JpqUewR5ly7xx/0WdrZNITm60TbG3dfiLr/Mb15eVA=;
+        b=jJAn0pqXHHnqac0/RZgnbuJxmFf4aZgIkfN+bKmUG+62qvVm28NXLQfwP37QMQLwCe
+         youNxsgk5OgH9dKFHIQXsyW/xEL15m5ck1VHRfN2vL9zVNJSlQB6KLtFHSifTRQfD7DC
+         fNET2KtWjEJRsfgOEkJ4ey5BKA54Eb9EwRlTnNniQRCpdIejNgeH6s3pnhc5ct0Z+JW9
+         Lx0OQLsCRaxYZ8Ym4Ubna0dtZ8/5Zo7V28Z9aIMMJFDbP79Ij+2vh3VLyC9Cj28w3gsE
+         bfNmSqypzXHkRyctg6Hker/LrImubnxGmsgseoGcerTLTR1XoLtnOidg5ubiuYfafmo8
+         fvrQ==
+X-Gm-Message-State: AOJu0Ywrww8FHV9yZmAoK0G2Vt39gj5+Ax3PjfQRKu7SUOCoae/jUeL6
+	d0pK8Rb1BquEsBMSeCizrz9s8NKRwOZ/64107Sf5J/gzshWg/hPm
+X-Google-Smtp-Source: AGHT+IEV9bU/1HezSvqZlnMJ5W09F5EZpnBqlNTyjnRmTSRX2hEV9eVCrpvUUcfa7KLh8a+ZzU7ItA==
+X-Received: by 2002:a2e:300d:0:b0:2cc:d4cd:18a3 with SMTP id w13-20020a2e300d000000b002ccd4cd18a3mr714289ljw.89.1706195036120;
+        Thu, 25 Jan 2024 07:03:56 -0800 (PST)
+Received: from [10.95.150.111] (54-240-197-225.amazon.com. [54.240.197.225])
+        by smtp.gmail.com with ESMTPSA id u7-20020a5d6da7000000b00337d735c193sm8119636wrs.49.2024.01.25.07.03.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 25 Jan 2024 07:03:55 -0800 (PST)
+From: Paul Durrant <xadimgnik@gmail.com>
+X-Google-Original-From: Paul Durrant <paul@xen.org>
+Message-ID: <2b4d020c-08ba-46ac-b004-cd9cb7256bd9@xen.org>
+Date: Thu, 25 Jan 2024 15:03:54 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240125052744.18866-1-gavin.liu@mediatek.com>
-In-Reply-To: <20240125052744.18866-1-gavin.liu@mediatek.com>
-From: Jens Wiklander <jens.wiklander@linaro.org>
-Date: Thu, 25 Jan 2024 16:02:08 +0100
-Message-ID: <CAHUa44EcGnOno8TQ-wPE8Q_ghG8t5J5uRLqnYduAnQXx6oRATg@mail.gmail.com>
-Subject: Re: [PATCH] optee: support wq_sleep_timeout
-To: "gavin.liu" <gavin.liu@mediatek.com>
-Cc: Sumit Garg <sumit.garg@linaro.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, op-tee@lists.trustedfirmware.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-mediatek@lists.infradead.org, 
-	Project_Global_Chrome_Upstream_Group@mediatek.com, 
-	Jerome Forissier <jerome.forissier@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Reply-To: paul@xen.org
+Subject: Re: [PATCH v12 00/20] KVM: xen: update shared_info and vcpu_info
+ handling
+Content-Language: en-US
+To: Paolo Bonzini <pbonzini@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
+ Sean Christopherson <seanjc@google.com>, Thomas Gleixner
+ <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+ David Woodhouse <dwmw2@infradead.org>, Shuah Khan <shuah@kernel.org>,
+ kvm@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+References: <20240115125707.1183-1-paul@xen.org>
+Organization: Xen Project
+In-Reply-To: <20240115125707.1183-1-paul@xen.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jan 25, 2024 at 6:28=E2=80=AFAM gavin.liu <gavin.liu@mediatek.com> =
-wrote:
->
-> From: Gavin Liu <gavin.liu@mediatek.com>
->
-> Add wq_sleep_timeout to support self waking when timeout for secure
-> driver usage.
->
-> Signed-off-by: Gavin Liu <gavin.liu@mediatek.com>
-> ---
->  drivers/tee/optee/notif.c         |  9 +++++++--
->  drivers/tee/optee/optee_private.h |  2 +-
->  drivers/tee/optee/rpc.c           | 10 ++++++++--
->  3 files changed, 16 insertions(+), 5 deletions(-)
+On 15/01/2024 12:56, Paul Durrant wrote:
+> From: Paul Durrant <pdurrant@amazon.com>
+> 
+> This series has one small fix to what was in v11 [1]:
+> 
+> * KVM: xen: re-initialize shared_info if guest (32/64-bit) mode is set
+> 
+> The v11 patch failed to set the return code of the ioctl if the mode
+> was not actually changed, leading to a spurious failure.
+> 
+> This version of the series also contains a new bug-fix to the pfncache
+> code from David Woodhouse.
+> 
+> [1] https://lore.kernel.org/kvm/20231219161109.1318-1-paul@xen.org/
+> 
 
-I'd like to see the corresponding secure world changes taking
-advantage of this ABI change before we take this any further.
+Ping?
 
-Thanks,
-Jens
-
->
-> diff --git a/drivers/tee/optee/notif.c b/drivers/tee/optee/notif.c
-> index 05212842b0a5..d5e5c0645609 100644
-> --- a/drivers/tee/optee/notif.c
-> +++ b/drivers/tee/optee/notif.c
-> @@ -29,7 +29,7 @@ static bool have_key(struct optee *optee, u_int key)
->         return false;
->  }
->
-> -int optee_notif_wait(struct optee *optee, u_int key)
-> +int optee_notif_wait(struct optee *optee, u_int key, u32 timeout)
->  {
->         unsigned long flags;
->         struct notif_entry *entry;
-> @@ -70,7 +70,12 @@ int optee_notif_wait(struct optee *optee, u_int key)
->          * Unlock temporarily and wait for completion.
->          */
->         spin_unlock_irqrestore(&optee->notif.lock, flags);
-> -       wait_for_completion(&entry->c);
-> +       if (timeout !=3D 0) {
-> +               if (!wait_for_completion_timeout(&entry->c, timeout))
-> +                       rc =3D -ETIMEDOUT;
-> +       } else {
-> +               wait_for_completion(&entry->c);
-> +       }
->         spin_lock_irqsave(&optee->notif.lock, flags);
->
->         list_del(&entry->link);
-> diff --git a/drivers/tee/optee/optee_private.h b/drivers/tee/optee/optee_=
-private.h
-> index 7a5243c78b55..da990c4016ec 100644
-> --- a/drivers/tee/optee/optee_private.h
-> +++ b/drivers/tee/optee/optee_private.h
-> @@ -252,7 +252,7 @@ struct optee_call_ctx {
->
->  int optee_notif_init(struct optee *optee, u_int max_key);
->  void optee_notif_uninit(struct optee *optee);
-> -int optee_notif_wait(struct optee *optee, u_int key);
-> +int optee_notif_wait(struct optee *optee, u_int key, u32 timeout);
->  int optee_notif_send(struct optee *optee, u_int key);
->
->  u32 optee_supp_thrd_req(struct tee_context *ctx, u32 func, size_t num_pa=
-rams,
-> diff --git a/drivers/tee/optee/rpc.c b/drivers/tee/optee/rpc.c
-> index e69bc6380683..14e6246aaf05 100644
-> --- a/drivers/tee/optee/rpc.c
-> +++ b/drivers/tee/optee/rpc.c
-> @@ -130,6 +130,8 @@ static void handle_rpc_func_cmd_i2c_transfer(struct t=
-ee_context *ctx,
->  static void handle_rpc_func_cmd_wq(struct optee *optee,
->                                    struct optee_msg_arg *arg)
->  {
-> +       int rc =3D 0;
-> +
->         if (arg->num_params !=3D 1)
->                 goto bad;
->
-> @@ -139,7 +141,8 @@ static void handle_rpc_func_cmd_wq(struct optee *opte=
-e,
->
->         switch (arg->params[0].u.value.a) {
->         case OPTEE_RPC_NOTIFICATION_WAIT:
-> -               if (optee_notif_wait(optee, arg->params[0].u.value.b))
-> +               rc =3D optee_notif_wait(optee, arg->params[0].u.value.b, =
-arg->params[0].u.value.c);
-> +               if (rc)
->                         goto bad;
->                 break;
->         case OPTEE_RPC_NOTIFICATION_SEND:
-> @@ -153,7 +156,10 @@ static void handle_rpc_func_cmd_wq(struct optee *opt=
-ee,
->         arg->ret =3D TEEC_SUCCESS;
->         return;
->  bad:
-> -       arg->ret =3D TEEC_ERROR_BAD_PARAMETERS;
-> +       if (rc =3D=3D -ETIMEDOUT)
-> +               arg->ret =3D TEEC_ERROR_BUSY;
-> +       else
-> +               arg->ret =3D TEEC_ERROR_BAD_PARAMETERS;
->  }
->
->  static void handle_rpc_func_cmd_wait(struct optee_msg_arg *arg)
-> --
-> 2.18.0
->
