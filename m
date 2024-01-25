@@ -1,105 +1,92 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 043628F77;
-	Fri, 26 Jan 2024 03:02:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3D9BBA50;
+	Fri, 26 Jan 2024 03:02:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706238136; cv=none; b=rbTqdNbDboKykWGpK/I9vcgPZyXqMdx28w4uOzL4BmcRjdXrT8+AhQA6wn2AY2hqLa/Y7wz5tzaNoA7SuQZOyWpwTMKO5vlYqqrW94Ypl8b8OXBxc7hn9OYjagleTSKNMbq4k7HOxZ1JFY9C6hibBtfkf5yImmyra+n4Pc1IykE=
+	t=1706238138; cv=none; b=lEQaxwaBWrgsAsyDda/i5Cbnl0STzIxNTbEQupeEEcYOSr0kmmD2DCBe6IyncYVjoMT2r9FwGE3A/2J7r5jVDZ6CeFj4eIertuhkoKNdsf1ZCE8+iJoOQS6B9d0fUFWQM0r05bJmFkVesbuYPrL49higfKdla5knBAaHV8cPH8I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706238136; c=relaxed/simple;
-	bh=GJ7CkH9DB4f6yRUN3yKrBTO9cZaC2If9JB2hPEvgamI=;
-	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
-	 Message-Id:Subject; b=oEZJ+rh1rs2vT0d0W5zJj9SsN5oOuB0C0c8z0mupnhXynfe+UEh2KBdGhfyTBs5l3IK97l1ghHDVEby/sNwnAD7p3P1FmcacvAEivt235cuwDHx+RrwyZ3LzWskEBMIYr71O8SNKrAh/TF3Hh6QmdYAXTLspjWwunRiv9JI5WS4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nZzlezDa; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706238138; c=relaxed/simple;
+	bh=y4t6+bKbc+c5WN0p8b8GZauAdDFYaN0tlfAeOmI40wM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HrSHEeMrpPvhfHEJyPqRxFx06PQpaWeEJJbWE6h8upZf8EGhnx9h4aG4C2zTjJiYHv9JwOmeGf4CiC+Qj4QLr5pltPDxW5EWNffO0/uuZLm5Dt63t9EhwndGs9FSI+AJHcjWFPa92RNbBBPYkyrQWFKuuXPZ9P92F3ecuCQDeQg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nwh+7oDE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nZzlezDa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18393C433F1;
-	Fri, 26 Jan 2024 03:02:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nwh+7oDE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CD21C43399;
+	Fri, 26 Jan 2024 03:02:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706238135;
-	bh=GJ7CkH9DB4f6yRUN3yKrBTO9cZaC2If9JB2hPEvgamI=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=nZzlezDaaMQOd65G0n3/0b1XsyY/gxUNwjTF53/nLwWnRaTLL9X01V8bs/FmW8T8s
-	 3iO915tzSuO8FAkhWUfLHfrb13vEX+ILVW7LpvZLAk6HTLe7W5O50H+sBqvjwuUpBH
-	 8EbKqO/Tw3/5/MCZuW1SoxmamgCfCspm5vmkJxusAhMELsQt2UlQ3hZBj6IP1E1Qq0
-	 Wtbxg/d0CxGdzy4ypCiPWHf/pPESyjms6/5kkWaYoWy3lLOx7dOwgv2RFmCsK7G6we
-	 W9A4LMOdXRGwDF4uayDaSl7pW0SvVbpfc7CylnoaxOHGLLtFZYGNhdNdZy+y5tepEm
-	 NGvgSUQqXgJLg==
-Date: Thu, 25 Jan 2024 21:02:13 -0600
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=k20201202; t=1706238138;
+	bh=y4t6+bKbc+c5WN0p8b8GZauAdDFYaN0tlfAeOmI40wM=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Nwh+7oDEPxFsa42ieelkaA9P+XLa6XRgRdqkDsONfOSnKo5yzBeciCzdE0GfPHEwK
+	 B3fkLv31PHNgyhZ0XY57YxzpBhHyZExgBkyFU4ydUQCB3RexKHtRlFpznTrIqcaCyW
+	 L139+5DeEASso+1IIq0PF6SJyKXg9Q8O2ACuHcPg0ihzY23BwN4flvnbNpCvNDYNjU
+	 TFwwlHD507NBjo/Uit3MNyYiT/gCYQywkFMmWAU1AbsrsIFf0Bzft7WXZAQn4aeRV6
+	 hZ3iPhR+CS/hzRUB3MLdYu8YjDWAsmORXSntPxFr9dGlSyvXhuTBhwJk2XnNrkydep
+	 Qvuze+G9sa0Tg==
+From: Rob Herring <robh@kernel.org>
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	=?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>
+Cc: devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] nvmem: fixed-cell: Simplify nested if/then schema
+Date: Thu, 25 Jan 2024 07:46:44 -0600
+Message-ID: <20240125134645.2549051-1-robh@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Rob Herring <robh@kernel.org>
-To: Chen-Yu Tsai <wenst@chromium.org>
-Cc: Sean Wang <sean.wang@mediatek.com>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- devicetree@vger.kernel.org, Matthias Brugger <matthias.bgg@gmail.com>, 
- Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
- Marcel Holtmann <marcel@holtmann.org>, netdev@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
- linux-kernel@vger.kernel.org, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- Rob Herring <robh+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
- linux-bluetooth@vger.kernel.org
-In-Reply-To: <20240125095240.2308340-2-wenst@chromium.org>
-References: <20240125095240.2308340-1-wenst@chromium.org>
- <20240125095240.2308340-2-wenst@chromium.org>
-Message-Id: <170623813065.6681.12186645553031730572.robh@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: net: bluetooth: Add MediaTek MT7921S
- SDIO Bluetooth
+Content-Transfer-Encoding: 8bit
 
+There's no reason to have a nested if/then schema as checking for compatible
+being present and containing 'mac-base' can all be done in one 'if' schema.
 
-On Thu, 25 Jan 2024 17:52:37 +0800, Chen-Yu Tsai wrote:
-> The MediaTek MT7921S is a WiFi/Bluetooth combo chip that works over
-> SDIO. While the Bluetooth function is fully discoverable, the chip
-> has a pin that can reset just the Bluetooth side, as opposed to the
-> full chip. This needs to be described in the device tree.
-> 
-> Add a device tree binding for MT7921S Bluetooth over SDIO specifically
-> ot document the reset line.
-> 
-> Cc: Sean Wang <sean.wang@mediatek.com>
-> Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
-> ---
->  .../bluetooth/mediatek,mt7921s-bluetooth.yaml | 49 +++++++++++++++++++
->  MAINTAINERS                                   |  1 +
->  2 files changed, 50 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/bluetooth/mediatek,mt7921s-bluetooth.yaml
-> 
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+ .../bindings/nvmem/layouts/fixed-cell.yaml    | 22 +++++++++----------
+ 1 file changed, 10 insertions(+), 12 deletions(-)
 
-My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-on your patch (DT_CHECKER_FLAGS is new in v5.13):
-
-yamllint warnings/errors:
-
-dtschema/dtc warnings/errors:
-Error: Documentation/devicetree/bindings/net/bluetooth/mediatek,mt7921s-bluetooth.example.dts:25.39-40 syntax error
-FATAL ERROR: Unable to parse input tree
-make[2]: *** [scripts/Makefile.lib:419: Documentation/devicetree/bindings/net/bluetooth/mediatek,mt7921s-bluetooth.example.dtb] Error 1
-make[2]: *** Waiting for unfinished jobs....
-make[1]: *** [/builds/robherring/dt-review-ci/linux/Makefile:1428: dt_binding_check] Error 2
-make: *** [Makefile:240: __sub-make] Error 2
-
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240125095240.2308340-2-wenst@chromium.org
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
+diff --git a/Documentation/devicetree/bindings/nvmem/layouts/fixed-cell.yaml b/Documentation/devicetree/bindings/nvmem/layouts/fixed-cell.yaml
+index ac2381e66027..8b3826243ddd 100644
+--- a/Documentation/devicetree/bindings/nvmem/layouts/fixed-cell.yaml
++++ b/Documentation/devicetree/bindings/nvmem/layouts/fixed-cell.yaml
+@@ -36,20 +36,18 @@ properties:
+ 
+ allOf:
+   - if:
++      properties:
++        compatible:
++          contains:
++            const: mac-base
+       required: [ compatible ]
+     then:
+-      if:
+-        properties:
+-          compatible:
+-            contains:
+-              const: mac-base
+-      then:
+-        properties:
+-          "#nvmem-cell-cells":
+-            description: The first argument is a MAC address offset.
+-            const: 1
+-        required:
+-          - "#nvmem-cell-cells"
++      properties:
++        "#nvmem-cell-cells":
++          description: The first argument is a MAC address offset.
++          const: 1
++      required:
++        - "#nvmem-cell-cells"
+ 
+ required:
+   - reg
+-- 
+2.43.0
 
