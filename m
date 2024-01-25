@@ -1,109 +1,136 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AB3224B52;
-	Thu, 25 Jan 2024 10:46:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD4FC45C0D
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 10:47:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706179573; cv=none; b=IID5BxqVCqN8KUACmsBef6HNVA7I51igiG4rqB6tm+RnXDXBBwyE8qKBlY7LXAONG/LY0Artdj9uSpSS1Pf4fIM+JqVSpHZBk1wFBs3rNuSIqXAdC7koasc3GWenp/0v3BT9NCZ8jaZCqOu7V85tjnTDd6H657ZCDDY+DcwXB68=
+	t=1706179628; cv=none; b=mBQyaceOtjbTk1iCt/Y1+DcOJMHEjAfLsUFNZlkIj5eaETsVaxKS4e5up0mQ9tWzpKX0Z9cCpIuICVwAusQm/7b+5+pYpnYqYxgKrAuplQ4g7ZSR6DoqAbx5UZBbjgEFx5CDH5oCSiSLpyy6oWkS97N839h3AE+u7LK0u4NdyJo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706179573; c=relaxed/simple;
-	bh=T4KbaGa4I3/ArUbnVuhotCp6UuXKBebXUkOu4YXAWTs=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=GdyYGkkYXYZzKW4VDalLGggwpsBdtvI7ZITqT7bQ1YA8oY/rgqtVjZRHVv71v5HgG5V6EwP0v7ZAFICQkNSTfKNMIBxFfy0pfKOO6RQkFEez3lCyYmlU5FOp8IsiGJ7OW+2wieNy4xau6dbN4NHg92RZQrwGE65uRE22nTiq8q0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Pp3rJLDC; arc=none smtp.client-ip=209.85.218.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1706179628; c=relaxed/simple;
+	bh=3LsMPKKHFyqK92xTj0v6geKf3RLh1/ofpb3gzz0Lnt4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kGUemvlaZnO+JwpOA/DHrq0lCkFJ0H/BsVqVxz+mKTdC0j1K7LvnNg0n3swP6U0Uok/xYN5KgtD3JnBBfT+k6+XuDRIn5Fi3uALDHgzhbJ0xEYDnud/9PUoKzmACUyQYAXmtIP/7Tt8rja9V1aRpAQWX0eUH/pqw7USyxxThpbw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=NbPKmRN4; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pp3rJLDC"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a30ed6dbdadso235604866b.1;
-        Thu, 25 Jan 2024 02:46:12 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NbPKmRN4"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-559f92bf7b6so1245013a12.0
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 02:47:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706179570; x=1706784370; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=GjMvfTbRqWbP5YBJ9OcGAqttPOoukFPvsBKHDlQzSEg=;
-        b=Pp3rJLDCz4tcHPiPbd660Fo4jShICMShJShfVlQz+8LlplFSTjiMQi3taYimIqpjPf
-         qK8jcwNH1qir6BaQhTw7H5m1hFOND1x4rAhKsMJIC6i4CXgMW2qEF7ezMTnJjo0Awp0b
-         23eNNTUwVbFmjytJNJVO/wrBB+2il0d0lihwhep30z/iBiENu5Wc3DHIU1m4DAXZPokZ
-         8750oQ/dOSmpsqDnqcg/g932VgR71+ZhQNIvb7liY41p+Rj83FZv6ERi2hGQB5wlIYSh
-         eg9mtF0x6lwnY7EspR6lHUM/hd0JQ1YGBJHsLqTx3nZiebCwukcx03TVCl0kDUQi2Ahp
-         jA6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706179570; x=1706784370;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+        d=linaro.org; s=google; t=1706179625; x=1706784425; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=GjMvfTbRqWbP5YBJ9OcGAqttPOoukFPvsBKHDlQzSEg=;
-        b=HNpXK2fzMdPjeOWHvTL5H6vzTfX6Zqk8BnX2iJ65bkPd6yJohu3aSyvMd0R36WFESb
-         xQX2jR5V5NnD5posK6L7Td/D+edOBUGtcT8i84ry4UVLWA7XnVTtfb7jJjKNXk0L5yfs
-         VbhEW69DT1/9vUbEtfW8KNLbsHcpFqHJxGXVTLH6UTEs/EHMu95AZvUg9nHxRrZZIhPq
-         9D4M5vVZQrFFj/DsclzZGmLZXpsUHot8P0X/o0VGgqzBzjnQp9Z0mgGSzZiFvBcd3v1e
-         e9sNvE8DyC4+7JNeQ97L8E9w/JqFeaGxe1kYE9Cq7ufOH4/IQ3NeNZ+arHM16ytSb/zh
-         7+VA==
-X-Gm-Message-State: AOJu0YxdZrYW7bcJ6FduIJSW2g6iSr0pApo94YGJvhEgR4D9if2HtMvC
-	AVxkPey+Vwv0LywM6oZVC4xTRSbNMSQtRudoHnGTdAQ+ecVrocDE
-X-Google-Smtp-Source: AGHT+IHsWSNyjDObd8W5fW6CkFUp4Chj6qYaZ1I1bunPgAEg7W36Q2pk60KYgFTt9nedMS/QRVowmA==
-X-Received: by 2002:a17:906:2797:b0:a30:cbc3:f46 with SMTP id j23-20020a170906279700b00a30cbc30f46mr409836ejc.56.1706179570242;
-        Thu, 25 Jan 2024 02:46:10 -0800 (PST)
-Received: from ?IPv6:2003:f6:ef1b:2000:15d4:fc17:481e:8afe? (p200300f6ef1b200015d4fc17481e8afe.dip0.t-ipconnect.de. [2003:f6:ef1b:2000:15d4:fc17:481e:8afe])
-        by smtp.gmail.com with ESMTPSA id a21-20020a1709062b1500b00a2dbc664e2asm888960ejg.89.2024.01.25.02.46.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jan 2024 02:46:09 -0800 (PST)
-Message-ID: <0a98e54735cc2a97f393eef6b1cdaf27c946d10e.camel@gmail.com>
-Subject: Re: [PATCH] iio: humidity: hdc3020: fix temperature offset
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: Dimitri Fedrau <dima.fedrau@gmail.com>
-Cc: Javier Carrasco <javier.carrasco.cruz@gmail.com>, Li peiyu
- <579lpy@gmail.com>, Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen
- <lars@metafoo.de>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Thu, 25 Jan 2024 11:49:25 +0100
-In-Reply-To: <20240125102641.3850938-1-dima.fedrau@gmail.com>
-References: <20240125102641.3850938-1-dima.fedrau@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.3 
+        bh=P57fZWY1sQkih8XnkVavIoQwU+LGJXJMtJjwWFrbJdM=;
+        b=NbPKmRN4pXMmMJPS+GFg5gC4Z3rjVnvF9PHF/kNUvV3pIZjmyhHvTe6Vc639+O2IA6
+         V0Fp3AwGfmxlHa4eSH4B+58W1cc+2vY3bb0Vvr4PQp2FVLuJnJvcpp4njZxhFSajRiZf
+         VendMBUsl7Zf+Pp4pvm1PcLQbJXxCLUGdHpiQzCTR2sjia1r/kHFJm9LGjf/f6X1mWdB
+         GoUc2T5gjZuCJ73LYg44HZNdbsPdmaZC4N2dwkqcf1wkDF45p8IiEzqqQPO7GVS0iR32
+         wfKTT7pfF17wgkLRnZHIiUuajRuNmdWjcAzI1ma0+uUqSiw96ixmt2PZjLte+sGw6dL/
+         XSWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706179625; x=1706784425;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=P57fZWY1sQkih8XnkVavIoQwU+LGJXJMtJjwWFrbJdM=;
+        b=kQCO0Z99dHSm20Z9EGW+JorftqTd9ugcWgoyOK0eD6g2y5l+WC+5Sd3t5UhCDqYL3P
+         Ab2W5UrhdQaoE681uDQ257wkEw+4DyyUDIWkBIATiIxaSlhGcFe2ojER+mSpvEdPis0n
+         TK7+kRj9pSQRtjLxm89Ot848O+vNGvO8lOLc1xlc8jqeJX1Yzo8UYMf61dml1xYR3COM
+         oWOqfoT7UK58df6Q895TNG/okcVG09Q9f46OmZzaBvI18PrCp8VOdg8/iAAlZs7fNsSN
+         oAlKDtIjGjd7esKELNLA7D5JgJq3559/yTX3r4aBMEUr1CAuesRrsi1Oj+DCA7q33mXV
+         z6LQ==
+X-Gm-Message-State: AOJu0YxkHiBAGT7QQ7dI78/MaC5Xq+xtk/a3Z1ShiO1SRJ1ps8rk0t8L
+	cbLk88liFHInGnonX8r0dvHvywvwKUqkQ84l7fPwcykPLed0n8hZSulZgPHf7wI=
+X-Google-Smtp-Source: AGHT+IHNZmOeYOcVtz1eWP2UX/0T0VogLnG7NpMga3Qc4Uh1CWmGcPR7wZzjvhDvFK/pRhyZJDK2Qg==
+X-Received: by 2002:a50:8e4f:0:b0:55c:c40a:c180 with SMTP id 15-20020a508e4f000000b0055cc40ac180mr846408edx.26.1706179624974;
+        Thu, 25 Jan 2024 02:47:04 -0800 (PST)
+Received: from [172.30.205.155] (UNUSED.212-182-62-129.lubman.net.pl. [212.182.62.129])
+        by smtp.gmail.com with ESMTPSA id ez15-20020a056402450f00b0055a82fe01cdsm6389475edb.67.2024.01.25.02.47.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 25 Jan 2024 02:47:04 -0800 (PST)
+Message-ID: <803e9ddf-44eb-4aa2-9a15-833109d2248b@linaro.org>
+Date: Thu, 25 Jan 2024 11:47:00 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/5] clk: qcom: sm8[56]50: Drop the Disp AHB clock from
+ Display Clock Controller
+To: Abel Vesa <abel.vesa@linaro.org>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Neil Armstrong <neil.armstrong@linaro.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240125-dispcc-sm8550-sm8650-drop-disp-ahb-clk-v1-0-0f8d96156156@linaro.org>
+ <99817149-4a2e-49fc-aedc-fe298964a019@linaro.org>
+ <ZbI7k+bDy+KSmncq@linaro.org>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+In-Reply-To: <ZbI7k+bDy+KSmncq@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Dimitri,
 
-On Thu, 2024-01-25 at 11:26 +0100, Dimitri Fedrau wrote:
-> The temperature offset should be negative according to the datasheet.
-> Adding a minus to the existing offset results in correct temperature
-> calculations.
->=20
-> Signed-off-by: Dimitri Fedrau <dima.fedrau@gmail.com>
-> ---
 
-This is a fix. You're missing a Fixes: tag in your commit message.
-git log --grep=3D"Fixes:" should give you some examples...
+On 1/25/24 11:44, Abel Vesa wrote:
+> On 24-01-25 10:49:23, Konrad Dybcio wrote:
+>>
+>>
+>> On 1/25/24 10:27, Abel Vesa wrote:
+>>> The Disp AHB clock is provided by the GCC but never registered. It is
+>>> instead enabled on probe as it is expected to be always-on. So it should
+>>> be dropped from Disp CC entirely.
+>>>
+>>> Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
+>>> ---
+>>
+>> Abel, you just raised some concerns over my series doing this and now
+>> you're doing the same, plus breaking backwards compatibility for no
+>> good reason, instead of solving the problem.
+> 
+> Sorry but, during the off-list discussion, you convinced me that it is OK to drop
+> their registration as long as we enable them on probe.
+> 
+> I've not seen the following reply in time before sending current series:
+> https://lore.kernel.org/all/6aa58497-9727-4601-b6eb-264c478997c3@linaro.org/
+> 
+> Since this is blocking the patches for dispcc and dts for X1E80100, I
+> thought I'd just drop the clock as required from DT point of view.
+> But yeah, you're right, it breaks bindings ABI and that's wrong.
+> 
+>>
+>> The correct solution here is to register the AHB clock with GCC and
+>> pm_clk_add() it from dispcc's .probe (and enable runtime PM on dispcc
+>> if it's already not the case). Then the AHB clock will be gated when
+>> no display hardware (= no dispcc consumer) is in use.
+> 
+> I agree.
+> 
+>>
+>> 8[56]50 are in a good position for this, as they already have the
+>> required DTS reference. Unfortunately, I still haven't fully dug
+>> into this for platforms without one, but that's on me.
+> 
+> Since I need to do this for the X1E80100, I'll probably do it for the
+> other two as well.
 
-With that, feel free to add:
+Thanks!
 
-Reviewed-by: Nuno Sa <nuno.sa@analog.com>
+> 
+> Sorry for the misunderstanding.
 
-> =C2=A0drivers/iio/humidity/hdc3020.c | 2 +-
-> =C2=A01 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/iio/humidity/hdc3020.c b/drivers/iio/humidity/hdc302=
-0.c
-> index 4e3311170725..ed70415512f6 100644
-> --- a/drivers/iio/humidity/hdc3020.c
-> +++ b/drivers/iio/humidity/hdc3020.c
-> @@ -322,7 +322,7 @@ static int hdc3020_read_raw(struct iio_dev *indio_dev=
-,
-> =C2=A0		if (chan->type !=3D IIO_TEMP)
-> =C2=A0			return -EINVAL;
-> =C2=A0
-> -		*val =3D 16852;
-> +		*val =3D -16852;
-> =C2=A0		return IIO_VAL_INT;
-> =C2=A0
-> =C2=A0	default:
+The story is confusing as per usual, perhaps I could have explained
+it better in the first place..
 
+Konrad
