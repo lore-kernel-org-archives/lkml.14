@@ -1,150 +1,169 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9703C13A272
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 21:47:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17BAC634E8;
+	Thu, 25 Jan 2024 21:48:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706219245; cv=none; b=CvXCx29PfCxRgo2Dcgw3hxs/FAN9bS+KkyXvZiC6pQoF0LgfTlm4Sk7xdIzPvOx5iWoEeA7Q/NWhyuN1DoJeiMlzhl+XuZXLwJMKDPuLTTwNWVG7+vXZ1uvA+7hA3Ibj/n5NGCLx4ly4rJdk3AJ3Mm8KIhxroyino9dTyTpkshM=
+	t=1706219301; cv=none; b=C3hWt4FJEumGECB5TYGh5NOWm1NanGBO5lkSOvGM8JepFFmF+xknI1/NlVSa6+bhYm3lm+9H/Q+8ldafgoqwLqiSz0UjSjA3sLKZ2rZcXHxRzLdsTRD9yJhaoD6TF+KMe/ji2TvSTWQshJu2dclLsamPGoINpxuBYax9D6cHSBs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706219245; c=relaxed/simple;
-	bh=NcaE8S5NwQHT5Tq0RlWwGiOlHY6ORi1hFNchO5th4hc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type:Content-Disposition; b=DIr1Yr/NwgC+J/XyPUrHlTxICYnKSwjPuExQKPwPq9+3lDNTa+QweihaTVgsAKnqYE6LoXH2CKPxT0nX6DAXSist5f8AJDbF6WxXspV8TxDJgby78nE2iirFMGwjT52QHZrjDzSTC+qOgE4+rSc+bYgEdkv7uCQGHFFFN2kfDXk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QcXiMWJZ; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1706219301; c=relaxed/simple;
+	bh=gxD6wLjO9/201y2Y9XhzXJidT9LORX6jQWUUbKfoiZs=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=pB8RP9jmsm49J+nFNaBAsFtqp9ZBnnDbhFA2b/7McinOGP/55EDjz7k3EkCkBVqlsK9KOiIqWyCn50Z7Gbdo1eMJLvOQCZ5xZXSbRD7LspsTvdDnJ/77A5ewxRTbB0JRKUljeLX4RvCYG7iTTzeTHd1YEJkxFr+5erCJPsQTlUE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kmzzfGms; arc=none smtp.client-ip=209.85.167.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QcXiMWJZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1706219241;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=f6m+zu3oNEJHiwD8qfoMPQzECOUmp8yU0Qm9W6z7sE4=;
-	b=QcXiMWJZu+AGOKu6W5kpKqtiYsQCS5z+HAq2DRQ99WAvlJLcuUtk66UTd8OQM/C+I3TWlL
-	YYXNOW43HPAX8hTqweQYUVVitA5vvg4TY5ERKnKqjTNrhUr78U6FyaOxiHP4tGnIluNqeQ
-	e9UUtxC0X3sccvJRgCIGTJ1RhmKis9Q=
-Received: from mail-pg1-f198.google.com (mail-pg1-f198.google.com
- [209.85.215.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-553-sDAaEQhtPkOmeEQU79Up1Q-1; Thu, 25 Jan 2024 16:47:20 -0500
-X-MC-Unique: sDAaEQhtPkOmeEQU79Up1Q-1
-Received: by mail-pg1-f198.google.com with SMTP id 41be03b00d2f7-5cfda2f4716so2452475a12.3
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 13:47:19 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kmzzfGms"
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-5101d38e9b1so204168e87.1;
+        Thu, 25 Jan 2024 13:48:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1706219298; x=1706824098; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qrKeQewcWwFL5vL1nGiLtWlm7WkCmJpd3uurZ4CeExQ=;
+        b=kmzzfGmskvdMeYpRtp/dEwBUJapWWr+8abKZC7Kk+qM3VhUktmekKn5rGvMgMFyiZu
+         /SVdqEvFDZCiFSHXApKfSTbKfqwttKQXFW8cj0MsMulJtquIpXIJJcqbhNVFEufalnwA
+         29fkRQ2VwnCBRdFLd0/KwT7OyGePLBl1F0jzAHGoLYjHLcfknxs++GSwKaQjRz+unrb4
+         6AE9fBvr+mklHQSpP4/9eJjCp+HeAYqWePljIEGSEeFoYbgVKbIN/95QaR5ENGd0USJ1
+         XT4jEjifZGWHflOrzMYNnxf9XK3zNbNHo/gz1Y0tOwLYwRXNMk0YpcU1xsHZEaHzcx0N
+         53TA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706219239; x=1706824039;
-        h=content-transfer-encoding:content-disposition:mime-version
-         :references:in-reply-to:message-id:date:subject:cc:to:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=f6m+zu3oNEJHiwD8qfoMPQzECOUmp8yU0Qm9W6z7sE4=;
-        b=xQn3+8V1UpN/YHnpCf5kj57zqimGZY1cRuQ4vAQCxMxnEmfTpS7WPwMsB2FBYntvwG
-         HlRAsVuT1K0QcXGe15sEc5jTBH0cdmXgzYSLb88PQueToTmlmyAaJBHUXWIeqrU7StSQ
-         AVQr00zyAIl/u549wS5d4djSKQpbks+XeUV4oMtuVG/ynPWnSJe2qJ5cPnclPv/ywujI
-         piIdUP9jnRxwcm6akxyZpfg7a/wQNC9KM57oNW59AzZ1tsr55AlBaI8sDPUkuyaf2jio
-         GfubikiQsA3ZAzOTvo0pL7i3qQMEIn12uceY5nxNxy67quaFpNtSnqpLVAGkGjMsrdKf
-         +l6g==
-X-Gm-Message-State: AOJu0YzFoypPQI9QYtaWKcQOTsozg1bHPHTfOPmseHKssORyFaJ/VxJ4
-	K4qQc2p4JSIKVU1vnlY9OfilhiuUFM1e83yXM5WxCE5k2IcN33excHFNCnQPyX/YYfM6fJMOB3J
-	p250Ec8MOkmx89nnLaXCll+3s/sXosZgcBbsUNDGhpM0yEOdUmd79GF069tYupw==
-X-Received: by 2002:a17:902:c942:b0:1d7:8cd6:63d with SMTP id i2-20020a170902c94200b001d78cd6063dmr428542pla.106.1706219238867;
-        Thu, 25 Jan 2024 13:47:18 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEWJC5YTpRbaoh14bsl5ibY91uvk6x3YL/0dEVyxqwYJypzaQhTZ2Llob8V9gb1yptW7SOgSA==
-X-Received: by 2002:a17:902:c942:b0:1d7:8cd6:63d with SMTP id i2-20020a170902c94200b001d78cd6063dmr428530pla.106.1706219238486;
-        Thu, 25 Jan 2024 13:47:18 -0800 (PST)
-Received: from localhost.localdomain ([2804:1b3:a803:96a5:ba81:becc:80f3:6a79])
-        by smtp.gmail.com with ESMTPSA id mm14-20020a1709030a0e00b001d7222d8caasm10460079plb.50.2024.01.25.13.47.16
+        d=1e100.net; s=20230601; t=1706219298; x=1706824098;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qrKeQewcWwFL5vL1nGiLtWlm7WkCmJpd3uurZ4CeExQ=;
+        b=qpK7tjR+DBlCOXOvjLJp7AieCDXfLhhpLJBQoLi7z5BCZr3w4ex7sv/2kUYV/6fmtI
+         q7Gxle+Gb9Fq4zM7IyP0pMsb4wCbrIKrLaFGlxRH0F3YOT1ZQ+Al25CksD4p4qjOHYdb
+         3WC/4OGt7GoEhaIUr+dGVss9pP2SUZOPV2B56ZTDh0fVkxEs9qxar/vUzRLGPU2eDhb9
+         izNTez18nFS7bTB3zLl6T6cowKxu3hscadlglkow0KaKz0qX862xKI1qntEb0avqMrUX
+         aDq1zViWRgQe08qwXWNtcVNvjyyKE6MV3d2S2SlqodgiiK4gBo+oFt11F7Fk86+XRCYJ
+         0kug==
+X-Gm-Message-State: AOJu0Ywx25YvHfQLh9Nn45J68PjmcKw79h2Upabjv5BIMparLhYvgu44
+	9g/4G7Grs0QxRh+iMUonzY3o1Mc0JdQgZof+pHLNs64fnI9mxUZq
+X-Google-Smtp-Source: AGHT+IFkzs0/quHfA3kUyUVwzlPbepDoGXYlGjDLUf8IXT9q1mUX4cF6lZ2nyJU3cs/sXFZTNpT1rQ==
+X-Received: by 2002:a19:4f07:0:b0:50e:84f9:22dc with SMTP id d7-20020a194f07000000b0050e84f922dcmr575332lfb.2.1706219297770;
+        Thu, 25 Jan 2024 13:48:17 -0800 (PST)
+Received: from localhost (88-115-161-74.elisa-laajakaista.fi. [88.115.161.74])
+        by smtp.gmail.com with ESMTPSA id q16-20020ac24a70000000b0051018c2f199sm351375lfp.206.2024.01.25.13.48.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jan 2024 13:47:17 -0800 (PST)
-From: Leonardo Bras <leobras@redhat.com>
-To: Tejun Heo <tj@kernel.org>
-Cc: Leonardo Bras <leobras@redhat.com>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Marcelo Tosatti <mtosatti@redhat.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v1 1/1] wq: Avoid using isolated cpus' timers on unbounded queue_delayed_work
-Date: Thu, 25 Jan 2024 18:46:33 -0300
-Message-ID: <ZbLWubUjuzFUKD5R@LeoBras>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <ZbKqoeC7JVcJULdI@slm.duckdns.org>
-References: <20240124082938.2527697-2-leobras@redhat.com> <ZbGFce8ixJKb6umE@slm.duckdns.org> <ZbG9TjHAMJYIvwsg@LeoBras> <ZbKqoeC7JVcJULdI@slm.duckdns.org>
+        Thu, 25 Jan 2024 13:48:17 -0800 (PST)
+Date: Thu, 25 Jan 2024 23:48:13 +0200
+From: Zhi Wang <zhi.wang.linux@gmail.com>
+To: Longfang Liu <liulongfang@huawei.com>
+Cc: <alex.williamson@redhat.com>, <jgg@nvidia.com>,
+ <shameerali.kolothum.thodi@huawei.com>, <jonathan.cameron@huawei.com>,
+ <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linuxarm@openeuler.org>
+Subject: Re: [PATCH 1/3] hisi_acc_vfio_pci: extract public functions for
+ container_of
+Message-ID: <20240125234813.00005f5d.zhi.wang.linux@gmail.com>
+In-Reply-To: <20240125081031.48707-2-liulongfang@huawei.com>
+References: <20240125081031.48707-1-liulongfang@huawei.com>
+	<20240125081031.48707-2-liulongfang@huawei.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.34; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jan 25, 2024 at 08:38:25AM -1000, Tejun Heo wrote:
-> Hello,
-> 
-> On Wed, Jan 24, 2024 at 10:45:50PM -0300, Leonardo Bras wrote:
-> > That's a good suggestion, but looking at workqueue_init_early() I see that, 
-> > in short:
-> > wq_unbound_cpumask = 	cpu_possible_mask & 
-> > 			housekeeping_cpumask(HK_TYPE_WQ) & 
-> > 			housekeeping_cpumask(HK_TYPE_DOMAIN) &
-> > 			wq_cmdline_cpumask
-> > 
-> > So wq_unbound_cpumask relates to domain and workqueue cpu isolation.
-> > 
-> > In our case, we are using this to choose in which cpu is the timer we want 
-> > to use, so it makes sense to use timer-related cpu isolation, instead.
-> 
-> - In the proposed code, when cpu == WORK_CPU_UNBOUND, it's always setting
->   cpu to housekeeping_any_cpu(HK_TYPE_TIMER). This may unnecessarily move
->   the timer and task away from local CPU. Preferring the local CPU would
->   likely make sense.
-> 
-> - If HK_TYPE_TIMER and workqueue masks may not agree, setting dwork->cpu to
->   the one returned from HK_TYPE_TIMER is likely problematic. That would
->   force __queue_work() to use that CPU instead of picking one from
->   wq_unbound_cpumask.
-> 
-> > As of today, your suggestion would work the same, as the only way to enable 
-> > WQ cpu isolation is to use nohz_full, which also enables TIMER cpu 
-> > isolation. But since that can change in the future, for any reason, I would 
-> > suggest that we stick to using the HK_TYPE_TIMER cpumask.
-> > 
-> > I can now notice that this can end up introducing an issue: possibly 
-> > running on a workqueue on a cpu outside of a valid wq_cmdline_cpumask.
-> 
-> Yeap.
-> 
-> > I would suggest fixing this in a couple ways:
-> > 1 - We introduce a new cpumask which is basically 
-> >     housekeeping_cpumask(HK_TYPE_DOMAIN) & wq_cmdline_cpumask, allowing us 
-> >     to keep the timer interrupt in the same cpu as the scheduled function,
-> > 2- We use the resulting cpu only to pick the right timer.
-> > 
-> > What are your thouhts on that?
-> 
-> How about something like the following instead?
-> 
-> - If current CPU is in HK_TYPE_TIMER, pick that CPU.
-> 
-> - If not, pick a CPU from HK_TYPE_TIMER.
-> 
-> - Do add_timer_on() on the selected CPU but leave dwork->cpu as
->   WORK_CPU_UNBOUND and leave that part to __queue_work().
-> 
-> Thanks.
+On Thu, 25 Jan 2024 16:10:29 +0800
+Longfang Liu <liulongfang@huawei.com> wrote:
 
-It looks like a good idea to me.
-
-It's basicaly (2) with "keep the timer in this cpu if it's not isolated", 
-which seems the right thing to do.
-
-Thanks!
-Leo
-
-
+> In the current driver, vdev is obtained from struct
+> hisi_acc_vf_core_device through the container_of function.
+> This method is used in many places in the driver. In order to
+> reduce this repetitive operation, I extracted a public function
+> to replace it.
 > 
-> -- 
-> tejun
+It is better to use the passive voice in the patch comment.
+> Signed-off-by: Longfang Liu <liulongfang@huawei.com>
+> ---
+>  .../vfio/pci/hisilicon/hisi_acc_vfio_pci.c    | 21
+> ++++++++++--------- 1 file changed, 11 insertions(+), 10 deletions(-)
 > 
+> diff --git a/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
+> b/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c index
+> f4b38a243aa7..5f6e01571a7b 100644 ---
+> a/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c +++
+> b/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c @@ -641,6 +641,12 @@
+> static void hisi_acc_vf_disable_fds(struct hisi_acc_vf_core_device
+> *hisi_acc_vde } }
+>  
+> +static struct hisi_acc_vf_core_device *hisi_acc_get_vf_dev(struct
+> vfio_device *vdev) +{
+> +	return container_of(vdev, struct hisi_acc_vf_core_device,
+> +			    core_device.vdev);
+> +}
+> +
+>  /*
+>   * This function is called in all state_mutex unlock cases to
+>   * handle a 'deferred_reset' if exists.
+> @@ -1064,8 +1070,7 @@ static struct file *
+>  hisi_acc_vfio_pci_set_device_state(struct vfio_device *vdev,
+>  				   enum vfio_device_mig_state
+> new_state) {
+> -	struct hisi_acc_vf_core_device *hisi_acc_vdev =
+> container_of(vdev,
+> -			struct hisi_acc_vf_core_device,
+> core_device.vdev);
+> +	struct hisi_acc_vf_core_device *hisi_acc_vdev =
+> hisi_acc_get_vf_dev(vdev); enum vfio_device_mig_state next_state;
+>  	struct file *res = NULL;
+>  	int ret;
+> @@ -1106,8 +1111,7 @@ static int
+>  hisi_acc_vfio_pci_get_device_state(struct vfio_device *vdev,
+>  				   enum vfio_device_mig_state
+> *curr_state) {
+> -	struct hisi_acc_vf_core_device *hisi_acc_vdev =
+> container_of(vdev,
+> -			struct hisi_acc_vf_core_device,
+> core_device.vdev);
+> +	struct hisi_acc_vf_core_device *hisi_acc_vdev =
+> hisi_acc_get_vf_dev(vdev); 
+>  	mutex_lock(&hisi_acc_vdev->state_mutex);
+>  	*curr_state = hisi_acc_vdev->mig_state;
+> @@ -1323,8 +1327,7 @@ static long hisi_acc_vfio_pci_ioctl(struct
+> vfio_device *core_vdev, unsigned int 
+>  static int hisi_acc_vfio_pci_open_device(struct vfio_device
+> *core_vdev) {
+> -	struct hisi_acc_vf_core_device *hisi_acc_vdev =
+> container_of(core_vdev,
+> -			struct hisi_acc_vf_core_device,
+> core_device.vdev);
+> +	struct hisi_acc_vf_core_device *hisi_acc_vdev =
+> hisi_acc_get_vf_dev(core_vdev); struct vfio_pci_core_device *vdev =
+> &hisi_acc_vdev->core_device; int ret;
+>  
+> @@ -1347,8 +1350,7 @@ static int hisi_acc_vfio_pci_open_device(struct
+> vfio_device *core_vdev) 
+>  static void hisi_acc_vfio_pci_close_device(struct vfio_device
+> *core_vdev) {
+> -	struct hisi_acc_vf_core_device *hisi_acc_vdev =
+> container_of(core_vdev,
+> -			struct hisi_acc_vf_core_device,
+> core_device.vdev);
+> +	struct hisi_acc_vf_core_device *hisi_acc_vdev =
+> hisi_acc_get_vf_dev(core_vdev); struct hisi_qm *vf_qm =
+> &hisi_acc_vdev->vf_qm; 
+>  	iounmap(vf_qm->io_base);
+> @@ -1363,8 +1365,7 @@ static const struct vfio_migration_ops
+> hisi_acc_vfio_pci_migrn_state_ops = { 
+>  static int hisi_acc_vfio_pci_migrn_init_dev(struct vfio_device
+> *core_vdev) {
+> -	struct hisi_acc_vf_core_device *hisi_acc_vdev =
+> container_of(core_vdev,
+> -			struct hisi_acc_vf_core_device,
+> core_device.vdev);
+> +	struct hisi_acc_vf_core_device *hisi_acc_vdev =
+> hisi_acc_get_vf_dev(core_vdev); struct pci_dev *pdev =
+> to_pci_dev(core_vdev->dev); struct hisi_qm *pf_qm =
+> hisi_acc_get_pf_qm(pdev); 
 
