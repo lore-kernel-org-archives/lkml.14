@@ -1,162 +1,117 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 631B3134A3
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 23:36:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.120
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 358EB134A3;
+	Thu, 25 Jan 2024 23:37:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706225788; cv=none; b=iWzngGzASZO73Bc3qaJfq+XmJtSBx4wMOXiBiyl5GD3hjWQZ0s8GYZYXrNEw6T+I0Sf/nVwJ2QLNQc4U1b999Y4UhTQ2RTvVqDnLUiUeIfDVFlPlmH0T/JFGmdxgMfiyt144jLcvD2d8AAv9yK06Sy3n8Oty/UvCh9t3k7rUz7U=
+	t=1706225846; cv=none; b=b0x3KvVNKmkjWx4nGZUZ0xWJWI7TXVWiw2ZwNpwwGb/AjQy4lCzBkBgZTv/qSq+34LcEI+zRkVQCex/vLH/z2gqNaRCYXWmMAU+nt4Ug8OUNi3uju2aX4IBtGCdPqRgXC+gxshBtCHoOrCZeRQxx+9Eaioa4TEaB2Pv3g5LDj00=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706225788; c=relaxed/simple;
-	bh=q4W321ySrb+jOS4SfKoVM1MQ1cDlBcfDRaE1iqTCqzc=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=EkKoi8UIMVy3qoMJO9lDU0piivGW5ip+4qFQlyf6L5bt1uMThAMID8Yk34DZF/lmoIhmGW0hrGwM6vwtq1ChfIlbeGqyz9uRXQO84gehhZY+Dv7kqvA4JNf5CyOmRY44Ho6GNYwW8O7kUhAR0zIWFTvhV+vqWH1ySH4aTI7reiI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XfyUzzF7; arc=none smtp.client-ip=192.55.52.120
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1706225846; c=relaxed/simple;
+	bh=5fg1PyjF1qY+gL8AMkkGVfAPj1wrcLCzNxUgqTuKi+8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=sN7EfKgxJQ4MrjDhOtchR1t3iHfC2m4nDXoSF2imXsRzpGJXCjjYfdADNL6Xicag/SDHk81M8bKqAFAQcDePoPGttyc13H7TiAdBMCFTvlcjF6zkMZKSDYOcpn0HGcumLkK+XGWyBkpvLiJ3aZNToFyqa9LVrFVlt/dNrkGr0Ec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gfn7Cm28; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XfyUzzF7"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gfn7Cm28"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706225786; x=1737761786;
-  h=date:from:to:cc:subject:message-id;
-  bh=q4W321ySrb+jOS4SfKoVM1MQ1cDlBcfDRaE1iqTCqzc=;
-  b=XfyUzzF7kdJYNgVWaQVf2lQV4tJZQNl1Kl+FiMnZubpJ6wQBNhj78Ba6
-   jB513IbEDmX0H7wHP+d6o7Kad3MYMolcCLW4dLKcpPg1UABsuW567XIug
-   czO+Hz81yfIp0giO6obTbi10DXznISGij6wWnesLCLrewRIqhkA4h7oro
-   Gv1dYtGrMDOEn/jN9Wo0enlKDWILWYtY4IJ+Df4v+6pysFmCYf0ED7zzz
-   IYmNc4DanhOQI4uBb7fhbA+u+u1HimGdL3g6ZHn/rCpDnVS5xbrg09YCL
-   Y3oPAHdSRWPi8jdeF8RWArCJ6EaOvtbbLKcq//lrBSSoXicqpHRW1H+MF
+  t=1706225844; x=1737761844;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=5fg1PyjF1qY+gL8AMkkGVfAPj1wrcLCzNxUgqTuKi+8=;
+  b=gfn7Cm28IkprGcCl2EFC+lIY+Mhbsx4UtgISI+EoF8usHXTLA65tTT1c
+   v/Y5BUolCSP29Sg3qrTIeRxJAnULWQbywg0+WieMDSukJQJ4R8M8EU+X7
+   b609I9WN6wQW9P1CVJJ5eTw+KZ8npzkv8aqSuJph6pPjUCyvUZuzxQ05/
+   G1JKYBf73YJ1TSPkwJ5oyag7P0gU84RbjaktTBPP6kthu6qxg6KJMEsWA
+   /9cfo/eeexb2MJ1dls7PX4EbTgPZAnGxzI1pf2DZa/frxh2/PWULD8OKn
+   ln8d38iDwNDlOTLL5zrk4wvIM4StZHEH60dNepMosgVeR9T0TrhXEdv95
    A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="401182237"
+X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="9452709"
 X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="401182237"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2024 15:36:25 -0800
+   d="scan'208";a="9452709"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2024 15:37:23 -0800
 X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="877210628"
 X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="28642578"
-Received: from lkp-server01.sh.intel.com (HELO 370188f8dc87) ([10.239.97.150])
-  by orviesa002.jf.intel.com with ESMTP; 25 Jan 2024 15:36:25 -0800
-Received: from kbuild by 370188f8dc87 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rT9Gg-0000Uw-0S;
-	Thu, 25 Jan 2024 23:36:22 +0000
-Date: Fri, 26 Jan 2024 07:35:50 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:irq/core] BUILD SUCCESS
- 22653244a9fed06f2f864b44808a85bf5c4e3ef2
-Message-ID: <202401260748.6jSialA0-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+   d="scan'208";a="877210628"
+Received: from sj-2308-osc3.sj.intel.com ([10.233.115.64])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2024 15:37:22 -0800
+From: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+To: hao.wu@intel.com,
+	trix@redhat.com,
+	mdf@kernel.org,
+	yilun.xu@intel.com,
+	linux-fpga@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+Subject: [PATCH v2] fpga: dfl: afu: support Rev 2 of DFL Port feature
+Date: Thu, 25 Jan 2024 15:37:15 -0800
+Message-Id: <20240125233715.861883-1-matthew.gerlach@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git irq/core
-branch HEAD: 22653244a9fed06f2f864b44808a85bf5c4e3ef2  genirq: Deduplicate interrupt descriptor initialization
+Revision 2 of the Device Feature List (DFL) Port feature
+adds support for connecting the contents of the port to
+multiple PCIe Physical Functions (PF).
 
-elapsed time: 1747m
+This new functionality requires changing the port reset
+behavior during FPGA and software initialization from
+revision 1 of the port feature. With revision 1, the initial
+state of the logic inside the port was not guaranteed to
+be valid until a port reset was performed by software during
+driver initialization. With revision 2, the initial state
+of the logic inside the port is guaranteed to be valid,
+and a port reset is not required during driver initialization.
 
-configs tested: 89
-configs skipped: 1
+This change in port reset behavior avoids a potential race
+condition during PCI enumeration when a port is connected to
+multiple PFs. Problems can occur if the driver attached to
+the PF managing the port asserts reset in its probe function
+when a driver attached to another PF accesses the port in its
+own probe function. The potential problems include failed or hung
+transaction layer packet (TLP) transactions and invalid data
+being returned.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
 
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                               defconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                                 defconfig   gcc  
-arc                   randconfig-001-20240126   gcc  
-arc                   randconfig-002-20240126   gcc  
-arm                               allnoconfig   gcc  
-arm                                 defconfig   clang
-arm                   randconfig-001-20240126   clang
-arm                   randconfig-002-20240126   clang
-arm                   randconfig-003-20240126   clang
-arm                   randconfig-004-20240126   clang
-arm64                             allnoconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                 randconfig-001-20240126   clang
-arm64                 randconfig-002-20240126   clang
-arm64                 randconfig-003-20240126   clang
-arm64                 randconfig-004-20240126   clang
-csky                              allnoconfig   gcc  
-csky                                defconfig   gcc  
-csky                  randconfig-001-20240126   gcc  
-csky                  randconfig-002-20240126   gcc  
-hexagon               randconfig-001-20240126   clang
-hexagon               randconfig-002-20240126   clang
-i386                             allmodconfig   clang
-i386                              allnoconfig   clang
-i386                             allyesconfig   clang
-i386         buildonly-randconfig-001-20240125   gcc  
-i386         buildonly-randconfig-002-20240125   gcc  
-i386         buildonly-randconfig-003-20240125   gcc  
-i386         buildonly-randconfig-004-20240125   gcc  
-i386         buildonly-randconfig-005-20240125   gcc  
-i386         buildonly-randconfig-006-20240125   gcc  
-i386                                defconfig   gcc  
-i386                  randconfig-001-20240125   gcc  
-i386                  randconfig-002-20240125   gcc  
-i386                  randconfig-003-20240125   gcc  
-i386                  randconfig-004-20240125   gcc  
-i386                  randconfig-005-20240125   gcc  
-i386                  randconfig-006-20240125   gcc  
-i386                  randconfig-011-20240125   clang
-i386                  randconfig-012-20240125   clang
-i386                  randconfig-013-20240125   clang
-i386                  randconfig-014-20240125   clang
-i386                  randconfig-015-20240125   clang
-i386                  randconfig-016-20240125   clang
-loongarch             randconfig-001-20240126   gcc  
-loongarch             randconfig-002-20240126   gcc  
-nios2                 randconfig-001-20240126   gcc  
-nios2                 randconfig-002-20240126   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                            defconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                              defconfig   gcc  
-parisc                randconfig-001-20240126   gcc  
-parisc64                            defconfig   gcc  
-powerpc                           allnoconfig   gcc  
-riscv                             allnoconfig   clang
-riscv                               defconfig   gcc  
-s390                              allnoconfig   gcc  
-s390                                defconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                                  defconfig   gcc  
-sparc                             allnoconfig   gcc  
-sparc                               defconfig   gcc  
-sparc64                             defconfig   gcc  
-um                                allnoconfig   clang
-um                                  defconfig   gcc  
-um                             i386_defconfig   gcc  
-um                           x86_64_defconfig   gcc  
-x86_64                            allnoconfig   gcc  
-x86_64                           allyesconfig   clang
-x86_64       buildonly-randconfig-001-20240126   clang
-x86_64       buildonly-randconfig-002-20240126   clang
-x86_64       buildonly-randconfig-003-20240126   clang
-x86_64       buildonly-randconfig-004-20240126   clang
-x86_64       buildonly-randconfig-005-20240126   clang
-x86_64       buildonly-randconfig-006-20240126   clang
-x86_64                              defconfig   gcc  
-x86_64                randconfig-001-20240126   gcc  
-x86_64                randconfig-002-20240126   gcc  
-x86_64                randconfig-003-20240126   gcc  
-x86_64                randconfig-004-20240126   gcc  
-x86_64                randconfig-005-20240126   gcc  
-x86_64                randconfig-006-20240126   gcc  
-x86_64                randconfig-011-20240126   clang
-x86_64                randconfig-012-20240126   clang
-x86_64                          rhel-8.3-rust   clang
-xtensa                            allnoconfig   gcc  
+---
+v2:
+- Update commit message for clarity
+- Remove potentially confusing dev_info message.
+---
+ drivers/fpga/dfl-afu-main.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/fpga/dfl-afu-main.c b/drivers/fpga/dfl-afu-main.c
+index c0a75ca360d6..42fe27660ab7 100644
+--- a/drivers/fpga/dfl-afu-main.c
++++ b/drivers/fpga/dfl-afu-main.c
+@@ -417,7 +417,15 @@ static const struct attribute_group port_hdr_group = {
+ static int port_hdr_init(struct platform_device *pdev,
+ 			 struct dfl_feature *feature)
+ {
+-	port_reset(pdev);
++	void __iomem *base;
++	u8 rev;
++
++	base = dfl_get_feature_ioaddr_by_id(&pdev->dev, PORT_FEATURE_ID_HEADER);
++
++	rev = dfl_feature_revision(base);
++
++	if (rev < 2)
++		port_reset(pdev);
+ 
+ 	return 0;
+ }
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.34.1
+
