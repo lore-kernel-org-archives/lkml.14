@@ -1,84 +1,116 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09B346EB58
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 14:50:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C4D36EB7D
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 14:50:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706194211; cv=none; b=RgDrwH3cl4NHNzsFYcb8GsBykIfA0Fhu8+bRddX/lwzbK1BwR+d1EcyvFxWaJCKZ/a843WnZr8tZEGQtMkkBAmOIhWSL2ddmwcZk17q4ubMwNc9FXkXk6jEFNdtOKoVymYh0OY5e/aB0krn+M/CHvxWrNZABrdD+LViCW6dtsaA=
+	t=1706194215; cv=none; b=HabjexTGym8L+XRi5+LRuL3Gcs2B5+SoHP3puTo2xD77mYw2qrAoxw61WfiN/80j26gpR3eeOYJtw+7qWJPCu7wkFoBffler69ifTHkswP5eIYeRJIpcNVX0sQINZpw41+T2qdhFxrkzJ8P5UHn35xc9EJu3aP4poWPOTJNXEVg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706194211; c=relaxed/simple;
-	bh=vMiyI/wRBdkFwRPV4E9Wuo5tN9uCzX1dsDL3Ei771pA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pXaBV8o/Qea7Xxg1KQ7q2zXTzX9NjZNM0ye33esiHe/VOM3q10PJMvT0Wddtms3lwaq/t64jK8XM5r1jXZ/9OxNLavxcFF4XY9S7/7YgoGpsaamecrLzdEn55l5cGlQbv6DmvN2nl3u/s95sMNULL3l1CI2IFADob8JEj04+CV0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QvSn8rT8; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1706194215; c=relaxed/simple;
+	bh=ESbWEf4Jl9fYqrFI7JEFHOnujDBpgh6Ob+8gu7+WPuc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=H9AlJLT1yzklcYRjfFjQLzq8omAaXno3nShrVpICXJfdjMcQT89niJkVXO4BywRZjDYwlCuqMP+ADvgdCeRgkKDONipirBGYvE4ri0SpXtJN8DB5q6pLZ5lLv8JMfoVW/4gbU9/cr/HbgQ85SM7I2E+z4NO4DdmrAL6bK8g4qUQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WStO+iGr; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QvSn8rT8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706194210; x=1737730210;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=vMiyI/wRBdkFwRPV4E9Wuo5tN9uCzX1dsDL3Ei771pA=;
-  b=QvSn8rT8DHn632NHC+esWyMADAAcidMLei1IuahJjD3F5dT2HNvhbigD
-   oTTTl7eXmnNzhncT2ajjHspMX7kIZ9Kf24CoFv2cXBrWP8D2hAA+bG0UI
-   suVkU/9G1BbmsDX43Uum6BRKUPRP1pORCucEB5hNujPVGAo10LRILC1TV
-   E/ctTKJh9wiC9jiQvM8KOPGilht0nL+hTne5k8DXbHWeouu+zXy2cpt49
-   oucf9fa18+S7ETOxHWwQgcMBElzY7rVvwXV3oafhgonnpSIkRd/YzITPt
-   rJrKkQlNf1X3QIYlvBYL0DY6dskyxY8l0B+zpI1mVIm6JWUjTYVMl26Ak
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="2049593"
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="2049593"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2024 06:50:09 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="2380058"
-Received: from tassilo.jf.intel.com (HELO tassilo) ([10.54.38.190])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2024 06:50:08 -0800
-Date: Thu, 25 Jan 2024 06:50:07 -0800
-From: Andi Kleen <ak@linux.intel.com>
-To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
-	Kai Huang <kai.huang@intel.com>,
-	Sean Christopherson <seanjc@google.com>
-Subject: Re: [PATCHv3, RESEND] x86/trampoline: Bypass compat mode in
- trampoline_start64() if not needed
-Message-ID: <ZbJ1H77MtNkko02P@tassilo>
-References: <20240124131510.496803-1-kirill.shutemov@linux.intel.com>
- <ZbIwfp-jOOlPNb1z@tassilo>
- <wo4wcvuhvqsqissocu7nz2urg5yt7mx65s5dxkjxqimgnxv3ax@qsa3lqlfsaxi>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WStO+iGr"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-40e913e3f03so85540445e9.3
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 06:50:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1706194211; x=1706799011; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=600VwywIwYkKhIBCMOdOgBJMPRHlSjpGBD3EGORG+P4=;
+        b=WStO+iGr/5wpfdSt1NLmo9yZqJuzerEHKe3BT1t0HU60Jnb3MwGdoFrVyRFxvyFUWH
+         9/hVv4pwCrXXSbjmosye2fC2WQyKkNRLjjNPZpvI78Uq2tBfXVskeNOaLfepRyW/hVka
+         JDdTtaSXdD26U6rMMU9djs9U4MSPeNn9rwmWXF52VYZ6nR/4YWl2a1JwOTMvuFTHHHx+
+         YEvN11g0bPSZ9pLkIEQh9zc6lmwGSfF2b5iaAhO3CzFbfFMjxCIbZibXYQHip/fN5Nqb
+         gyfGh42gauoE5QEq1gVjhKOV0JzfujuuZ/qZW6ZpQJnGARhQA/qxKLRYrXwyKTo0Jndu
+         kKeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706194211; x=1706799011;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=600VwywIwYkKhIBCMOdOgBJMPRHlSjpGBD3EGORG+P4=;
+        b=INpqBJFOPCp75x303P37DjgNwxt6OVR3o/BpnaV4RxQnTA5Q9iTP3WaxQlFs2GUdFt
+         Et3Y5iSh5BkdgAA42dXc0PtHY5+QzhQPsYfYtpUM1WWyR/fQ849hXiti41B+vocbZ7a5
+         1Cr2Zty22bc1rhYmxfjZuiYBlPz5nDwjpwOktab9qfdbuQxkicG0LGYaIzWIUMGvzMcp
+         qRQ1NBT9/tTPBQIN3mBWuTgxX2T0yZFMBKfscYhMmNBX/8bxlcmFnxtNauzt+wa/F+LF
+         Vq6snjOgIj8IfmkV6Fg7vdvw3wdPyW+GXZQ2vQKjUZX3OlAe/PbJbc4dCxVbIeU8R+oZ
+         P71Q==
+X-Gm-Message-State: AOJu0Yyc3xv4sK+m0lEKJb3th26uZgMP6cbHM0xuQwA4/9OeY1vGSZti
+	q48tB3lC0HEFnDWK6dBRUluKitqf5zbp2HxOxGyicwIvl9zRGMwCBFHrBLuNuRI=
+X-Google-Smtp-Source: AGHT+IEaYzPIhvI7nM66SS0HQQAjOEL9yTE6fWlerWtlckq2lzwAF+Fj0dxMxnPO6we+g9RXHphCpQ==
+X-Received: by 2002:a05:600c:44c9:b0:40e:50e7:db2c with SMTP id f9-20020a05600c44c900b0040e50e7db2cmr564908wmo.177.1706194211539;
+        Thu, 25 Jan 2024 06:50:11 -0800 (PST)
+Received: from ta2.c.googlers.com.com (88.140.78.34.bc.googleusercontent.com. [34.78.140.88])
+        by smtp.gmail.com with ESMTPSA id v17-20020a05600c471100b0040d91fa270fsm2875875wmo.36.2024.01.25.06.50.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 Jan 2024 06:50:11 -0800 (PST)
+From: Tudor Ambarus <tudor.ambarus@linaro.org>
+To: broonie@kernel.org,
+	andi.shyti@kernel.org,
+	arnd@arndb.de
+Cc: robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	alim.akhtar@samsung.com,
+	linux-spi@vger.kernel.org,
+	linux-samsung-soc@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-arch@vger.kernel.org,
+	andre.draszik@linaro.org,
+	peter.griffin@linaro.org,
+	semen.protsenko@linaro.org,
+	kernel-team@android.com,
+	willmcvicker@google.com,
+	Tudor Ambarus <tudor.ambarus@linaro.org>
+Subject: [PATCH v2 01/28] spi: s3c64xx: explicitly include <linux/io.h>
+Date: Thu, 25 Jan 2024 14:49:39 +0000
+Message-ID: <20240125145007.748295-2-tudor.ambarus@linaro.org>
+X-Mailer: git-send-email 2.43.0.429.g432eaa2c6b-goog
+In-Reply-To: <20240125145007.748295-1-tudor.ambarus@linaro.org>
+References: <20240125145007.748295-1-tudor.ambarus@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <wo4wcvuhvqsqissocu7nz2urg5yt7mx65s5dxkjxqimgnxv3ax@qsa3lqlfsaxi>
+Content-Transfer-Encoding: 8bit
 
-> I think it is cleaner to switch to IRET here. Does this work for you?
-> 
-> diff --git a/arch/x86/realmode/rm/trampoline_64.S b/arch/x86/realmode/rm/trampoline_64.S
-> index 608f108cba7d..14d9c7daf90f 100644
-> --- a/arch/x86/realmode/rm/trampoline_64.S
-> +++ b/arch/x86/realmode/rm/trampoline_64.S
-> @@ -243,7 +243,9 @@ SYM_CODE_START(trampoline_start64)
->  	movl	$pa_trampoline_pgd, %eax
->  	movq	%rax, %cr3
->  
-> -	jmpq	*tr_start(%rip)
-> +	pushq	$__KERNEL_CS
-> +	pushq	tr_start(%rip)
-> +	lretq
+The driver uses readl() but does not include <linux/io.h>.
 
-Looks good. Thanks.
+It is good practice to directly include all headers used, it avoids
+implicit dependencies and spurious breakage if someone rearranges
+headers and causes the implicit include to vanish.
 
--Andi
+Include the missing header.
+
+Fixes: 230d42d422e7 ("spi: Add s3c64xx SPI Controller driver")
+Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
+---
+ drivers/spi/spi-s3c64xx.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/spi/spi-s3c64xx.c b/drivers/spi/spi-s3c64xx.c
+index 7f7eb8f742e4..c1cbc4780a3b 100644
+--- a/drivers/spi/spi-s3c64xx.c
++++ b/drivers/spi/spi-s3c64xx.c
+@@ -10,6 +10,7 @@
+ #include <linux/clk.h>
+ #include <linux/dma-mapping.h>
+ #include <linux/dmaengine.h>
++#include <linux/io.h>
+ #include <linux/platform_device.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/spi/spi.h>
+-- 
+2.43.0.429.g432eaa2c6b-goog
+
