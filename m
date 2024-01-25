@@ -1,112 +1,108 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD42C17BD4
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 08:35:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 414AA12E4A;
+	Thu, 25 Jan 2024 08:36:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706171715; cv=none; b=MCKmBxdbPOiNXNi7AkV4tdn2L5+lWqlWLGYF9aUzMf57X7gwFHXQ/STCG767vDEi0nmT71CDtPG2u2QuESgLG4oJatIrTuPPHkpkJgRCx+0dO3VpPA/r8wr7DM2QFp9t2kfexC8dnOfuZ82S2Ir1AVQKbb8utNJ2i6YnWmNxzmA=
+	t=1706171786; cv=none; b=B40SPXY2rNUqRMC8QClxFtI6x/M7ci1yhVCUxq1d4uUlNOYTsb1DYfma+tXZSl7kSD/qlWNUPDRmNk+B+XGwLDhQHZRQ9NpYsFtUVGAH7HcyJEraBezRtPT9HNfYg99YsLbAB4F+qw5ON8A95bW1ieX6C7aeWn1GYbJadMoccCA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706171715; c=relaxed/simple;
-	bh=yi/4Czfks9LIWr5CkZUzmlQI1+oB5EfuKTiOSgTBaH4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=e2rmsTQhVN/bBZUzZQWqRilp3mtJLNoskyTfFIUuEuQAtHWLvwoLY+lJQE4cm8gi1rlWUIu/Dr+5URKG7de4HcyY3R5aM5janOA3Fa9HVEu7jeKT0Fx/fxwLWOJZC99wmj07/PpiF3FbodZVxO8tNPgTYl+RwW3fOT7zeH3DqpA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=wivu03eQ; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="wivu03eQ"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-40e60e135a7so63255015e9.0
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 00:35:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1706171710; x=1706776510; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=r7cb1ndwKgmJR9epTnoZNNIKyvDAN1904iU4WrDFcng=;
-        b=wivu03eQIK/7YqSYXj04yMQptdU1+igmE3F0+A7hBlTceyGJyEcA7Wkgml7Q64cEYK
-         F8mERcOIY/EIJBpPFmnxEeZwj5P+CbokimNJ04YTW/5Iga9joBwGcJE3uCL8bFyncJW0
-         JAaYgzn+ua8G8qPuOnFOnMIgLjwQYRWclQZ2sZufZYAYO0eZ4pS602pwmHE4Khzi6cYu
-         WgqJr7eiD020lCF/xkkM6/kJfT8jOwbAzzO7JIL+E4k0VUYeCZdpP7HjaMP2b79Mywlm
-         qRdSLhffMW1VMKbbvGAoFRKBgr4QnHR7v+ypEp4hyD0lUl19ldfTaTODDJXJt7rt4/TB
-         SQAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706171710; x=1706776510;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=r7cb1ndwKgmJR9epTnoZNNIKyvDAN1904iU4WrDFcng=;
-        b=Ood271E3vDOSWQ/+5zKUsUSzMOL/cbRltKHernSoa9rJh+J0PhPdSrQOWGsCBFRKFH
-         oGh5hKd8okqMnvmA2nOv8ck9RuuAMXfJBGg/vxfkmXW+F8l1NMBINtg8D2flYVIBOWl/
-         JcmEyTCBwbfhyLxyUCxNKuweS2mqBLQZhSxwLgfq4C6MrOcoeuNDg+MB1649vVhC6s8I
-         s5b9HJSdP2399NsMnMwIV25SiKxs9xGCO6vKII6TSxFhRQj2rxwb7fuysNS/5e8IMbVM
-         faejut5mLZ2JZ32lnZVqBYv9tWkVnBvlF1Ko2M0vOjh+bpMKUBDFsiGrWAr5TEEGj2zH
-         tmAw==
-X-Gm-Message-State: AOJu0YzbPBhI/qjgG7oZHJLXgpVhvX330aYo07bS74f2G/A108jm9DH7
-	okVdDDRKIAFB1iv3K0zXE0mJMdFpYEgsFhq3LmuZ9XLlEGhlFmFXx8k5NWBHfrY=
-X-Google-Smtp-Source: AGHT+IEhTd+knmYT5ge0F8Dk7Hl9LXxICTxlv+/zSYtcEvZDA79lZLulIp9/0fBqOZ39iDPOfMhYWg==
-X-Received: by 2002:a05:600c:511d:b0:40e:50ac:d24e with SMTP id o29-20020a05600c511d00b0040e50acd24emr402802wms.13.1706171710048;
-        Thu, 25 Jan 2024 00:35:10 -0800 (PST)
-Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:5c05:1552:a486:c7ef])
-        by smtp.gmail.com with ESMTPSA id w15-20020adfec4f000000b00338a3325331sm15435858wrn.69.2024.01.25.00.35.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jan 2024 00:35:09 -0800 (PST)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Kent Gibson <warthog618@gmail.com>
-Cc: linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	=?UTF-8?q?Jos=C3=A9=20Guilherme=20de=20Castro=20Rodrigues?= <joseguilhermebh@hotmail.com>
-Subject: [PATCH v2] gpio: improve the API contract for setting direction
-Date: Thu, 25 Jan 2024 09:35:07 +0100
-Message-Id: <20240125083507.25213-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.40.1
+	s=arc-20240116; t=1706171786; c=relaxed/simple;
+	bh=OBgQP1LWDaesd2nRxTRT92PCCumz7hyFXJpJ6nvMyMg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=j24VFFBOXL7BPyBMAzRHWpYHY8d9ywk1nP4skjv1ZAmK9H2QJP2/1Ht6B+o8t/Kzr3RuFD3bEEZE/EbKR86Gb/wRz6wk4/p4WIzQFL3gVcKrFoJAD86UFHJyZq+n4aWakg6kCJLlIKO8dnIVQrPt1gnDQdtXlMTpakAfUsiLhqE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 0b9114c47c944f3395e17bb8743a5543-20240125
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.35,REQID:70a3d77d-bc90-44e0-b09b-26ae8d961c29,IP:10,
+	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTI
+	ON:release,TS:-5
+X-CID-INFO: VERSION:1.1.35,REQID:70a3d77d-bc90-44e0-b09b-26ae8d961c29,IP:10,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:-5
+X-CID-META: VersionHash:5d391d7,CLOUDID:f443a58e-e2c0-40b0-a8fe-7c7e47299109,B
+	ulkID:240124210134Y4FPAFV7,BulkQuantity:5,Recheck:0,SF:66|38|24|17|19|44|6
+	4|102,TC:nil,Content:0,EDM:-3,IP:-2,URL:1,File:nil,Bulk:40,QS:nil,BEC:nil,
+	COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_FSI,TF_CID_SPAM_ULS,TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,
+	TF_CID_SPAM_FSD
+X-UUID: 0b9114c47c944f3395e17bb8743a5543-20240125
+Received: from mail.kylinos.cn [(39.156.73.10)] by mailgw
+	(envelope-from <chentao@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 392365939; Thu, 25 Jan 2024 16:36:17 +0800
+Received: from mail.kylinos.cn (localhost [127.0.0.1])
+	by mail.kylinos.cn (NSMail) with SMTP id 96B42E000EB9;
+	Thu, 25 Jan 2024 16:36:17 +0800 (CST)
+X-ns-mid: postfix-65B21D81-548321494
+Received: from [172.20.15.234] (unknown [172.20.15.234])
+	by mail.kylinos.cn (NSMail) with ESMTPA id 080AFE000EBA;
+	Thu, 25 Jan 2024 16:36:16 +0800 (CST)
+Message-ID: <fa62f595-6e83-4084-b6ae-b776f3cc504b@kylinos.cn>
+Date: Thu, 25 Jan 2024 16:36:16 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] KVM: PPC: code cleanup for kvmppc_book3s_irqprio_deliver
+Content-Language: en-US
+To: Christophe Leroy <christophe.leroy@csgroup.eu>,
+ "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
+ "npiggin@gmail.com" <npiggin@gmail.com>,
+ "aneesh.kumar@kernel.org" <aneesh.kumar@kernel.org>,
+ "naveen.n.rao@linux.ibm.com" <naveen.n.rao@linux.ibm.com>
+Cc: "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+ "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20240124093647.479176-1-chentao@kylinos.cn>
+ <91bfb613-222b-41ea-a049-d4252b655176@csgroup.eu>
+From: Kunwu Chan <chentao@kylinos.cn>
+In-Reply-To: <91bfb613-222b-41ea-a049-d4252b655176@csgroup.eu>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-
-If a GPIO driver returns a positive integer from one of the direction
-setter callbacks, we'll end up propagating it to user-space. Whether we
-should sanitize the values returned by callbacks is a different question
-but let's first improve the documentation and fortify the contract with
-GPIO providers.
-
-Reported-by: José Guilherme de Castro Rodrigues <joseguilhermebh@hotmail.com>
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
-v1 -> v2:
-- add a mention of 0 being return on success
-
- include/linux/gpio/driver.h | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
-
-diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
-index 9a5c6c76e653..90cd57796b36 100644
---- a/include/linux/gpio/driver.h
-+++ b/include/linux/gpio/driver.h
-@@ -335,10 +335,12 @@ struct gpio_irq_chip {
-  *	(same as GPIO_LINE_DIRECTION_OUT / GPIO_LINE_DIRECTION_IN),
-  *	or negative error. It is recommended to always implement this
-  *	function, even on input-only or output-only gpio chips.
-- * @direction_input: configures signal "offset" as input, or returns error
-- *	This can be omitted on input-only or output-only gpio chips.
-- * @direction_output: configures signal "offset" as output, or returns error
-- *	This can be omitted on input-only or output-only gpio chips.
-+ * @direction_input: configures signal "offset" as input, returns 0 on success
-+ *	or a negative error number. This can be omitted on input-only or
-+ *	output-only gpio chips.
-+ * @direction_output: configures signal "offset" as output, returns 0 on
-+ *	success or a negative error number. This can be omitted on input-only
-+ *	or output-only gpio chips.
-  * @get: returns value for signal "offset", 0=low, 1=high, or negative error
-  * @get_multiple: reads values for multiple signals defined by "mask" and
-  *	stores them in "bits", returns 0 on success or negative error
--- 
-2.40.1
+On 2024/1/24 21:01, Christophe Leroy wrote:
+>=20
+>=20
+> Le 24/01/2024 =C3=A0 10:36, Kunwu Chan a =C3=A9crit=C2=A0:
+>> This part was commented from commit 2f4cf5e42d13 ("Add book3s.c")
+>> in about 14 years before.
+>> If there are no plans to enable this part code in the future,
+>> we can remove this dead code.
+>>
+>> Signed-off-by: Kunwu Chan <chentao@kylinos.cn>
+>> ---
+>>    arch/powerpc/kvm/book3s.c | 3 ---
+>>    1 file changed, 3 deletions(-)
+>>
+>> diff --git a/arch/powerpc/kvm/book3s.c b/arch/powerpc/kvm/book3s.c
+>> index 8acec144120e..c2f50e04eec8 100644
+>> --- a/arch/powerpc/kvm/book3s.c
+>> +++ b/arch/powerpc/kvm/book3s.c
+>> @@ -360,9 +360,6 @@ static int kvmppc_book3s_irqprio_deliver(struct kv=
+m_vcpu *vcpu,
+>>    		break;
+>>    	}
+>>   =20
+>> -#if 0
+>> -	printk(KERN_INFO "Deliver interrupt 0x%x? %x\n", vec, deliver);
+>> -#endif
+>=20
+> Please also remove one of the two blank lines.
+Thanks for your reply. I've send the v2 patch:
+https://lore.kernel.org/all/20240125082637.532826-1-chentao@kylinos.cn/
+https://lore.kernel.org/all/20240125083348.533883-1-chentao@kylinos.cn/
+>>   =20
+>>    	if (deliver)
+>>    		kvmppc_inject_interrupt(vcpu, vec, 0);
+--=20
+Thanks,
+   Kunwu
 
