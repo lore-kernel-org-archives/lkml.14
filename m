@@ -1,122 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f54.google.com (mail-oo1-f54.google.com [209.85.161.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75C906EB43
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 15:11:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4364E6EB59;
+	Thu, 25 Jan 2024 15:11:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706195480; cv=none; b=q9z/Ply/I9g6bAbsJtILm8UZd+3GK3zjka5waVM1u+s5QE9ybV/DfMxFo2wro6Y8dnNIhPK/cXB8y9Tk6sOilidoqTCDTKdZNEI/kPqlAw6f7Ipaqafuiqtxvj5Vc9E8q/0iPefR4YCofVVmSH96ljrYL0q9vtgE05Ed6BA7U60=
+	t=1706195482; cv=none; b=NbGILkq/gjZ+oeTV/6A/YE5dUJPYgyC1cdjFAzfsIfE7NltiPe+y4litDpzBymICodEMvMEsqlSAGsrZJXuu9OJjpYAXWw2fvOy05S0tZYzYLaR+MeO8HRw0Gt9CaVsWu9zY95gzgj+IBsvy/QZ9Ku+NiXGvz4KNgPOmiQHChhA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706195480; c=relaxed/simple;
-	bh=VdSMPHq9c7sR9UiOhE5GzJdCBp/tPQFpSJmR+kQEo9Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WteScnS9go6TnHWSf5Dol+aefMi/4lFFZdNYa+TpMl4x1HpGr0g/LeaVC+/UKM/4osGSQZFSime3i+iZ78ElXy3TUIHmCe9vm17ZRAC9nxo69jd1dPI7A2XQLAkCIAEeZxWt5INuKVDmEn9uRJSJwuuSli0defas5jqvtmwJMA4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Lq5ExDP+; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Lq5ExDP+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72034C433C7;
-	Thu, 25 Jan 2024 15:11:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706195480;
-	bh=VdSMPHq9c7sR9UiOhE5GzJdCBp/tPQFpSJmR+kQEo9Y=;
-	h=From:To:Cc:Subject:Date:From;
-	b=Lq5ExDP+hnvKvAN5e33VVvQPicB2+YzePhlbp/M7p2hCzMHivadA/0gUlfi6N81OM
-	 ijFt55wI5xvg4wl2ClkhJsmbcg/LmN++brzAPZ9zhYCqGehQVqPoM1Po8BjENfHo25
-	 lHnSWb5LZL8pmHwCvErL4WQWyzCW3c84XuifN2MXDN+L4YlxtT9uJ4iSWjMV6G4+GZ
-	 IZNXxvmEC95Af2vY6MEPYmpqoOYD1UKBS4w8MApj18YmRUaGvMV6Ty7OUD9N2ay1mL
-	 NR6O4VJgcg1XJmz8AFRPvF0Ty131J/z3mYXYLexREcQQHoQvIsXbRGeW2kvDLuR0rK
-	 /UhSMiuzyY2ew==
-From: Jisheng Zhang <jszhang@kernel.org>
-To: Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>
-Cc: linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Alexandre Ghiti <alexghiti@rivosinc.com>
-Subject: [PATCH v3] riscv: mm: still create swiotlb buffer for kmalloc() bouncing if required
-Date: Thu, 25 Jan 2024 22:58:31 +0800
-Message-ID: <20240125145831.947-1-jszhang@kernel.org>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1706195482; c=relaxed/simple;
+	bh=0kkgr3pPY27+XCQwPxnwYA69zulXjzszjvKCaDByQFs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QE9Wqj2nOtoj2kWz+XvIU3YRRATGs9PnUwRhvHQB7i52EJ8ZFbzXM4GJBtPRriYnCs9IdBdUsy69e/BniRCDSfOOoGHdoSFZmPRDcR8JMPBF0cx6t7p55DRDSIAUrU6sK5reTrcsRrwk8RFplXc3Y2gc77tODNqtVnFHwWmshBQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.161.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oo1-f54.google.com with SMTP id 006d021491bc7-5958b9cda7aso1097093eaf.0;
+        Thu, 25 Jan 2024 07:11:21 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706195480; x=1706800280;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lvr+07Kx8YQ93M5HqGI7hgcDB/+oVfIIQJlNttHWZyw=;
+        b=pismat2h7aSg6w+gFLjuBYpI3dbdTYDgJ5gi7/6bnO5H+ior0xhOI7dGg+uV41LRbw
+         rPaCQU9JCGpU+HHJiSu2CouNQzn+0X9ad5wl/R00o4TeIlMUgI5lOz7kuT9KIJqCDajq
+         ZVkhTXW/ayU3t0XUlhaxKYs55bQ1doJGZp2Vgh1cy5n9LfiPDnUwRV+5jgolWNF+8DeY
+         JI/2l2++pmLt8R+LZOV+UEx82QMmEg30kj4MuNXmKJSK9dM56N+BRRuHqGnPUPRCirec
+         eBd5K8rwwkviuutDVvK6eF/1Xc3CbLKCpvMa5W3AvCYyqes98aSkAuCOCiHEAnT3HstI
+         7CIg==
+X-Gm-Message-State: AOJu0YxFvg7gVLJJGyHBXPl4SdNTcSK6GXfvk+KQxddfwdYqHCw7AVoT
+	0RnlfQgnszYJcWUL3ex+AGaTaEOmGePAwTTCuwa9TmzDsi/bEeUygQWL72cwM/XqbcMVdTvS17K
+	9YLa+55arcAYsCdeHKbPEPz/CLWROHWPG
+X-Google-Smtp-Source: AGHT+IHtr2eKkgKX7pv+5pTOmjiDTsrPRzSkHXOo8wiwYWkBNBHfG4u/wc9sFOXfkcxnnnIoR7dIE82F+U+dZeaW4iI=
+X-Received: by 2002:a05:6820:807:b0:599:6d16:353c with SMTP id
+ bg7-20020a056820080700b005996d16353cmr2721741oob.1.1706195480331; Thu, 25 Jan
+ 2024 07:11:20 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <5760158.DvuYhMxLoT@kreacher> <3290637.44csPzL39Z@kreacher> <ZbITTlBwu390dwT5@linux.intel.com>
+In-Reply-To: <ZbITTlBwu390dwT5@linux.intel.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Thu, 25 Jan 2024 16:11:08 +0100
+Message-ID: <CAJZ5v0iNEuZ3ebpWdETC12Jeq3pTnaTzG-gfQTwLQDGtwvphdQ@mail.gmail.com>
+Subject: Re: [PATCH v1 05/12] PM: sleep: stats: Use step_failures[0] as a
+ counter of successful cycles
+To: Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux PM <linux-pm@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-After commit f51f7a0fc2f4 ("riscv: enable DMA_BOUNCE_UNALIGNED_KMALLOC
-for !dma_coherent"), for non-coherent platforms with less than 4GB
-memory, we rely on users to pass "swiotlb=mmnn,force" kernel parameters
-to enable DMA bouncing for unaligned kmalloc() buffers. Now let's go
-further: If no bouncing needed for ZONE_DMA, let kernel automatically
-allocate 1MB swiotlb buffer per 1GB of RAM for kmalloc() bouncing on
-non-coherent platforms, so that no need to pass "swiotlb=mmnn,force"
-any more.
+On Thu, Jan 25, 2024 at 8:52=E2=80=AFAM Stanislaw Gruszka
+<stanislaw.gruszka@linux.intel.com> wrote:
+>
+> On Mon, Jan 22, 2024 at 12:29:11PM +0100, Rafael J. Wysocki wrote:
+> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> >
+> > The first (index 0) cell of the step_failures[] array in struct
+> > suspend_stats introduced previously can be used as a counter of
+> > successful suspend-resume cycles instead of the separate "success"
+> > field in it, so do that.
+> >
+> > While at it, change the type of the "fail" field in struct
+> > suspend_stats to unsigned int, because it cannot be negative.
+> >
+> > No intentional functional impact.
+> >
+> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > ---
+> >  include/linux/suspend.h |    3 +--
+> >  kernel/power/main.c     |    9 +++++----
+> >  kernel/power/suspend.c  |    2 +-
+> >  3 files changed, 7 insertions(+), 7 deletions(-)
+> >
+> > Index: linux-pm/include/linux/suspend.h
+> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > --- linux-pm.orig/include/linux/suspend.h
+> > +++ linux-pm/include/linux/suspend.h
+> > @@ -55,8 +55,7 @@ enum suspend_stat_step {
+> >
+> >  struct suspend_stats {
+> >       unsigned int step_failures[SUSPEND_NR_STEPS];
+> > -     int     success;
+> <snip>
+> > -                suspend_stats.success, suspend_stats.fail);
+> > +     seq_printf(s, "success: %u\nfail: %u\n",
+> > +                suspend_stats.step_failures[SUSPEND_NONE],
+> > +                suspend_stats.fail);
+> >
+> >       for (step =3D SUSPEND_FREEZE; step < SUSPEND_NR_STEPS; step++)
+> >               seq_printf(s, "failed_%s: %u\n", suspend_step_names[step]=
+,
+> > Index: linux-pm/kernel/power/suspend.c
+> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > --- linux-pm.orig/kernel/power/suspend.c
+> > +++ linux-pm/kernel/power/suspend.c
+> > @@ -620,7 +620,7 @@ int pm_suspend(suspend_state_t state)
+> >               suspend_stats.fail++;
+> >               dpm_save_failed_errno(error);
+> >       } else {
+> > -             suspend_stats.success++;
+> > +             suspend_stats.step_failures[SUSPEND_NONE]++;
+>
+> This looks confusing for me. I think would be better keep
+> success field and just remove SUSPEND_NONE from the
+> suspend_stat_step and suspend_stat_names. Actually do
+> not introduce it, SUSPEND_NONE does not seems to be necessary
+> (SUSPEND_FREEZE can be 0).
 
-The math of "1MB swiotlb buffer per 1GB of RAM for kmalloc() bouncing"
-is taken from arm64. Users can still force smaller swiotlb buffer by
-passing "swiotlb=mmnn".
+OK
 
-Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
-Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
----
+I'll need to rearrange the series for that somewhat except for the
+first two patches.
 
-since v2:
- - rebase on v6.8-rc1
- - collect Reviewed-by tag
+I guess it's OK to retain the R-by tags?
 
-since v1
- - fix build error if CONFIG_RISCV_DMA_NONCOHERENT=n
-
- arch/riscv/include/asm/cache.h |  2 +-
- arch/riscv/mm/init.c           | 16 +++++++++++++++-
- 2 files changed, 16 insertions(+), 2 deletions(-)
-
-diff --git a/arch/riscv/include/asm/cache.h b/arch/riscv/include/asm/cache.h
-index 2174fe7bac9a..570e9d8acad1 100644
---- a/arch/riscv/include/asm/cache.h
-+++ b/arch/riscv/include/asm/cache.h
-@@ -26,8 +26,8 @@
- 
- #ifndef __ASSEMBLY__
- 
--#ifdef CONFIG_RISCV_DMA_NONCOHERENT
- extern int dma_cache_alignment;
-+#ifdef CONFIG_RISCV_DMA_NONCOHERENT
- #define dma_get_cache_alignment dma_get_cache_alignment
- static inline int dma_get_cache_alignment(void)
- {
-diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-index 32cad6a65ccd..3359472df9a5 100644
---- a/arch/riscv/mm/init.c
-+++ b/arch/riscv/mm/init.c
-@@ -162,11 +162,25 @@ static void print_vm_layout(void) { }
- 
- void __init mem_init(void)
- {
-+	bool swiotlb = max_pfn > PFN_DOWN(dma32_phys_limit);
- #ifdef CONFIG_FLATMEM
- 	BUG_ON(!mem_map);
- #endif /* CONFIG_FLATMEM */
- 
--	swiotlb_init(max_pfn > PFN_DOWN(dma32_phys_limit), SWIOTLB_VERBOSE);
-+	if (IS_ENABLED(CONFIG_DMA_BOUNCE_UNALIGNED_KMALLOC) && !swiotlb &&
-+	    dma_cache_alignment != 1) {
-+		/*
-+		 * If no bouncing needed for ZONE_DMA, allocate 1MB swiotlb
-+		 * buffer per 1GB of RAM for kmalloc() bouncing on
-+		 * non-coherent platforms.
-+		 */
-+		unsigned long size =
-+			DIV_ROUND_UP(memblock_phys_mem_size(), 1024);
-+		swiotlb_adjust_size(min(swiotlb_size_or_default(), size));
-+		swiotlb = true;
-+	}
-+
-+	swiotlb_init(swiotlb, SWIOTLB_VERBOSE);
- 	memblock_free_all();
- 
- 	print_vm_layout();
--- 
-2.43.0
-
+Thanks for all of the reviews!
