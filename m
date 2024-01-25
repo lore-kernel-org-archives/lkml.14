@@ -1,216 +1,133 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD58F10A21
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 22:34:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 924621118E
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 22:35:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706222079; cv=none; b=VZYKw9Ijy6seo0ZFp6mCBgxQ618hvLUWMFIn899jOpJ1QPrp4lGMOMlQs+hSv6XIcfcLi/KNgeteu/xnnPCG/4qn+utIBJTsmvk/DOITTq1joHVI+MSp3W+vHUeJQoY8X8PtBgoN1GeWv2OPItjlJDQU4kFfcPvkjAbSDKmaG4s=
+	t=1706222103; cv=none; b=AnLca/0nbzmkL4bknKF2NNK0lCwTtv++34OSVTQwCe+CmaJMiMr3WziNn/nSusraRaaNTqJvBViJvUy6mMESl2waWxePXI1BZPWaxJhv/Yb+q8fgtObH05aCs8mIFk3xVyjMQZfrzUxukT5D63FD3ZPZQLtvXq4KRz016PUqDR4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706222079; c=relaxed/simple;
-	bh=gVzLJGDKvGhrU3J75QOG4g6tXbzBbEYInRPGGsXCH3I=;
+	s=arc-20240116; t=1706222103; c=relaxed/simple;
+	bh=PWubl/XtYBpas/AdivCCWYMQQNqPtjT7WZPtVgnZW+E=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=A3+EhmvRwShFXCV+3hToOadAqrEKIHZk7N15u9JIwNjpNajVBAIf/7sVsVtio4tPz2ie1aZDKf4Hiz2ZTzmtky9Y1dY/1rPfKRSCkb3rm3iLbdu/FhMCtsNqkeZf7eoXbsafNByc3FVyfD1hZXl0CBR8VrudD0MYgztU2QyQsu8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1cQihnCk; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=s4cKE/1d7EW8QhOKtB8x+yYC2zmqsthtTcmvq+KAapH5Yy4WwbIZZr2AG77Tp2dKThltleFpFO39Rz1tf+YCn9rn23h4cThYoDn1hfYUxUrJNeP9l1XzSQ3L01kGsItIlI2Bg72M8DcG6agtz5Nr3WZWtbyj6dFjXNUfhqTwvng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VO+BhBcB; arc=none smtp.client-ip=209.85.210.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1cQihnCk"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a312a8e6732so10511566b.0
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 14:34:37 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VO+BhBcB"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-6da9c834646so26692b3a.3
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 14:35:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1706222076; x=1706826876; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1706222101; x=1706826901; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=v7quTyiowyLH4rAwhkxhJ6Ex8ZBRUXT3RRycWcoogYY=;
-        b=1cQihnCkJ0wu3j5GPG13j0oNGN0UBPd86CrHZNmS3Cn0doOheufCEBqN52rDLzy+nR
-         SBhW7sBHn77lHQoxODSudvwwPfpth6iSUFeoVRO+bjn97Lns6aw14LWb1Jxt4+O6hROq
-         qXMOfaWwPUQ9+oj8Rs7ZAf6ka5CD0K1mpRvLfLjMv5lx/BLuKOlh8ozZ/dAs63i+QelD
-         wobYpSEueJEjjSULZe0NPYCc1SINM/EqKl961v/p4v59cerjJR/c4hmWAErEHjiOj0oq
-         L6cZpq02goUCrTykYdZeQbq08jDgsNa++AojifIW7BI3xz3BSlqUrw1uMQALMHXo50h4
-         dsXA==
+        bh=+Eb0c3haY7NyGtB+8UjAu5Wtfyd5HZxv9SnvbZwJOFM=;
+        b=VO+BhBcBfOPmcG1cPgDAU5nnE9lVBnxh4uTePyfceSP+NDbNp+77ub6+WkdDe2IWGh
+         //oOTFgFYLmVobOMyrt3vO+Fp9VefZ7ZC/Y07TKGM+0vDiL05geJOKM0DtKiOlzcq97q
+         ig1UYrbMCjq3bDQCUt6bTIgqmidkKMkzVvb8wMvNd+52YMdTDhRBJLB66eygo9dZJnZy
+         1pHmHEsshFa1TViFRsy+va8Qi8aAKLFoER0dYXy85NZpYa4zvdmRTykZNxtxNCX/Tf6D
+         oPpxwPMmQEsEWrhoPphPT+zmUd27avLnH+OnK8HJGY4uANbt3drRJkNwK1qnzwtxZGvN
+         UBfg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706222076; x=1706826876;
+        d=1e100.net; s=20230601; t=1706222101; x=1706826901;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=v7quTyiowyLH4rAwhkxhJ6Ex8ZBRUXT3RRycWcoogYY=;
-        b=LrNE/ddVWBOZGt2vyKHxKBplHaeEyn4p90fpB86Sf7k9GKJakxZ/8LbVe96laNj4sB
-         LC9otJZA9Mwq7Bsly7fasJv4glZ8QGwqBKBBmx1lg2iWg7fbU+h5U6Izg3SdLf2PHDeZ
-         unVaC3z4n8Iz8HyNWk/EAt4kxRkZPJz8nvi/B2gMo9lOcqp+iJiXfuYLJjXQzs5OZKM+
-         fpJtytkyKTnzcnKhwIhkyXA4MZHg5rsBG2v83b6u03TmArJGpAKo50eM9W1uIWBukBPZ
-         9m6gcrLsdhupyCsEtOgazQHZ226jUHzPcYp+AvqH45q3laM4DjisVd4toPJgPKPOBUOr
-         xwEg==
-X-Gm-Message-State: AOJu0YztmMFmLyOjq7FabQcLlQGyYat+GhYeMd1KdsCvaJPds4H4WhLU
-	A/LyiKx5zKnanKuHLGxYD4MlAQV5OTQIkl6ORa2yrl4b+NiWUA+X2wxLXCjh7zIr6OG7H7hqeRz
-	eUV3HSHPSbSAoGjf/wJaRcpiQQBJkVguWTYh3
-X-Google-Smtp-Source: AGHT+IHDx4eVmCszSnPI5vueY6lO8sQyfGQ5S10G/lvIfYfp6AaE15SXKvWQe2dBNI2bUaBxZkumtNp40MBBMOqI1go=
-X-Received: by 2002:a17:906:6d4a:b0:a31:2028:8c6 with SMTP id
- a10-20020a1709066d4a00b00a31202808c6mr124453ejt.104.1706222075615; Thu, 25
- Jan 2024 14:34:35 -0800 (PST)
+        bh=+Eb0c3haY7NyGtB+8UjAu5Wtfyd5HZxv9SnvbZwJOFM=;
+        b=SU2J4J+WpcvV97/WeXhT4YHjL1LJrY0+fs45oZnQKKWlm9EhhK/JXxewbTz2P/F6T/
+         CXtz+6BPnK2G50TTzPgViDLyxis2Rp7nqbQa2e/xldhdSAjYupOxAlxjThi7v9HnwFxn
+         rzVfExKpn/vQuQ+trjV2n25pJl7rtd/cFiUDxr2JjDtTxDWRWj3OtLb/GDAAMbu2q1Bx
+         MxXlMnoA9JoxPd7RYi3qnFLmBwP7DDJ1nJkHhLOPygFYWnnxTHcOXSEmyQZv1B1cgAUV
+         dVMSzJBZH6lN3VzyAI3RraXkuzV1maAD9YKpGeWSSsw9imMUQPpcw5aXlHmHLTZyL0Qn
+         tWKQ==
+X-Gm-Message-State: AOJu0YwgjiCa27R/3LGw8V86xZubY/RE6RIGue75E7R2EUzGjlMS0qqy
+	9p9fFRkbg3T8vcqWSHSTVATPtUiIwsOv5JocG70pGDm6OfHBwS3yO4g0HRwe9wIwGb17POAjr1s
+	141yFC1i2WAAlMpuGXNDSJIl7fHeNVI9HNtXI8w==
+X-Google-Smtp-Source: AGHT+IHK8NjbfVjiOJVvhHwvTy+ErZQG3JChXcCNJ9tq7pj1tBuCcj9cSgMmIm2WuK9z6omDkmihzA64FOxWzj9qVZk=
+X-Received: by 2002:a05:6a20:2453:b0:19a:66a4:7966 with SMTP id
+ t19-20020a056a20245300b0019a66a47966mr509176pzc.55.1706222100868; Thu, 25 Jan
+ 2024 14:35:00 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240120024007.2850671-1-yosryahmed@google.com>
- <20240120024007.2850671-3-yosryahmed@google.com> <20240122201906.GA1567330@cmpxchg.org>
- <CAJD7tkaATS48HVuBfbOmPM3EvRUoPFr66WhF64UC4FkyVH5exg@mail.gmail.com>
- <20240123153851.GA1745986@cmpxchg.org> <CAJD7tkasHsRnT_75-TXsEe58V9_OW6m3g6CF7Kmsvz8CKRG_EA@mail.gmail.com>
- <20240123201234.GC1745986@cmpxchg.org> <CAJD7tkZC6w2EaE=j2NEVWn1s7Lo2A7YZh8LiZ+w72jQzFFWLUQ@mail.gmail.com>
- <CAJD7tkaVdJ9B_UDQs+o1nLdbs62CeKgbCyEXbMdezaBgOruEWw@mail.gmail.com>
- <CAF8kJuNkwGNw=Nnu1MVOewKiqT0ahj5DkKV_Z4VDqSpu+v=vmw@mail.gmail.com>
- <CAJD7tkZViJot2+vFr_yAyRsRf7jTRPsb8wchqkf4R1tSsvLG+A@mail.gmail.com>
- <CAF8kJuPHrf_-xr8mz5r_TWOWw-Zv+1izFNU=1yKV9EAdC=bGDg@mail.gmail.com>
- <CAJD7tkaG5epZkp4N4wOmbAp-mKV60rR63kppSfKtZPsu2vTDdg@mail.gmail.com> <CAF8kJuOFbRYZiFmtrAAqh7KBxWNaYtK10e7Ych4VxDKOocRKEQ@mail.gmail.com>
-In-Reply-To: <CAF8kJuOFbRYZiFmtrAAqh7KBxWNaYtK10e7Ych4VxDKOocRKEQ@mail.gmail.com>
-From: Yosry Ahmed <yosryahmed@google.com>
-Date: Thu, 25 Jan 2024 14:33:59 -0800
-Message-ID: <CAJD7tkYFX98TZGiiBwXRtiJM_zEphzLq-vNXNyrzun8gTRLuGw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] mm: zswap: remove unnecessary tree cleanups in zswap_swapoff()
-To: Chris Li <chrisl@kernel.org>
-Cc: Johannes Weiner <hannes@cmpxchg.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	Nhat Pham <nphamcs@gmail.com>, Chengming Zhou <zhouchengming@bytedance.com>, 
-	Huang Ying <ying.huang@intel.com>, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <20240123153421.715951-1-tudor.ambarus@linaro.org>
+ <e233f4ff-9ed9-42bd-8ffb-17b66bcf2b5b@sirena.org.uk> <7c998d34-919b-46e7-8942-75da94d5ac21@linaro.org>
+ <zbxkm5jbngci5dp3oxcjccnltpht7wsyrvvekozwcsfv5ly3r4@ms3c3bzxgqqx>
+In-Reply-To: <zbxkm5jbngci5dp3oxcjccnltpht7wsyrvvekozwcsfv5ly3r4@ms3c3bzxgqqx>
+From: Sam Protsenko <semen.protsenko@linaro.org>
+Date: Thu, 25 Jan 2024 16:34:49 -0600
+Message-ID: <CAPLW+4m_AAnsXdpcwrDL2dJNq6+2sRg0fv4nB1tpF3ufMX=TNA@mail.gmail.com>
+Subject: Re: [PATCH 00/21] spi: s3c64xx: winter cleanup and gs101 support
+To: Tudor Ambarus <tudor.ambarus@linaro.org>
+Cc: Mark Brown <broonie@kernel.org>, arnd@arndb.de, robh+dt@kernel.org, 
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
+	alim.akhtar@samsung.com, linux-spi@vger.kernel.org, 
+	linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-arch@vger.kernel.org, andre.draszik@linaro.org, 
+	peter.griffin@linaro.org, kernel-team@android.com, willmcvicker@google.com, 
+	Andi Shyti <andi.shyti@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jan 25, 2024 at 2:31=E2=80=AFPM Chris Li <chrisl@kernel.org> wrote:
+On Thu, Jan 25, 2024 at 4:25=E2=80=AFPM Andi Shyti <andi.shyti@kernel.org> =
+wrote:
 >
-> Hi Yosry,
+> Hi Tudor,
 >
-> On Thu, Jan 25, 2024 at 12:58=E2=80=AFPM Yosry Ahmed <yosryahmed@google.c=
-om> wrote:
+> > >> The patch set cleans a bit the driver and adds support for gs101 SPI=
+.
+> > >>
+> > >> Apart of the SPI patches, I added support for iowrite{8,16}_32 acces=
+sors
+> > >> in asm-generic/io.h. This will allow devices that require 32 bits
+> > >> register accesses to write data in chunks of 8 or 16 bits (a typical=
+ use
+> > >> case is SPI, where clients can request transfers in words of 8 bits =
+for
+> > >> example). GS101 only allows 32bit register accesses otherwise it rai=
+sses
+> > >> a Serror Interrupt and hangs the system, thus the accessors are need=
+ed
+> > >> here. If the accessors are fine, I expect they'll be queued either t=
+o
+> > >> the SPI tree or to the ASM header files tree, but by providing an
+> > >> immutable tag, so that the other tree can merge them too.
+> > >>
+> > >> The SPI patches were tested with the spi-loopback-test on the gs101
+> > >> controller.
+> > >
+> > > The reformatting in this series will conflict with the SPI changes in=
+:
+> > >
+> > >    https://lore.kernel.org/r/20240120012948.8836-1-semen.protsenko@li=
+naro.org
+> > >
+> > > Can you please pull those into this series or otherwise coordinate?
 > >
-> > On Thu, Jan 25, 2024 at 10:55=E2=80=AFAM Chris Li <chrisl@kernel.org> w=
-rote:
-> > >
-> > > Hi Yosry,
-> > >
-> > > On Wed, Jan 24, 2024 at 11:59=E2=80=AFPM Yosry Ahmed <yosryahmed@goog=
-le.com> wrote:
-> > > >
-> > > > On Wed, Jan 24, 2024 at 9:29=E2=80=AFPM Chris Li <chriscli@google.c=
-om> wrote:
-> > > > >
-> > > > > Hi Yosry,
-> > > > >
-> > > > > On Tue, Jan 23, 2024 at 10:58=E2=80=AFPM Yosry Ahmed <yosryahmed@=
-google.com> wrote:
-> > > > > >
-> > > > >
-> > > > > > >
-> > > > > > > Thanks for the great analysis, I missed the swapoff/swapon ra=
-ce myself :)
-> > > > > > >
-> > > > > > > The first solution that came to mind for me was refcounting t=
-he zswap
-> > > > > > > tree with RCU with percpu-refcount, similar to how cgroup ref=
-s are
-> > > > > > > handled (init in zswap_swapon() and kill in zswap_swapoff()).=
- I think
-> > > > > > > the percpu-refcount may be an overkill in terms of memory usa=
-ge
-> > > > > > > though. I think we can still do our own refcounting with RCU,=
- but it
-> > > > > > > may be more complicated.
-> > > > > >
-> > > > > > FWIW, I was able to reproduce the problem in a vm with the foll=
-owing
-> > > > > > kernel diff:
-> > > > >
-> > > > > Thanks for the great find.
-> > > > >
-> > > > > I was worry about the usage after free situation in this email:
-> > > > >
-> > > > > https://lore.kernel.org/lkml/CAF8kJuOvOmn7wmKxoqpqSEk4gk63NtQG1Wc=
-+Q0e9FZ9OFiUG6g@mail.gmail.com/
-> > > > >
-> > > > > Glad you are able to find a reproducible case. That is one of the
-> > > > > reasons I change the free to invalidate entries in my xarray patc=
-h.
-> > > > >
-> > > > > I think the swap_off code should remove the entry from the tree, =
-just
-> > > > > wait for each zswap entry to drop to zero.  Then free it.
-> > > >
-> > > > This doesn't really help. The swapoff code is already removing all =
-the
-> > > > entries from the trees before zswap_swapoff() is called through
-> > > > zswap_invalidate(). The race I described occurs because the writeba=
-ck
-> > > > code is accessing the entries through the LRU, not the tree. The
-> > >
-> > > Why?
-> > > Entry not in the tree is fine. What you describe is that, swap_off
-> > > code will not see the entry because it is already not in the tree.
-> > > The last one holding the reference count would free it.
-> > >
-> > > > writeback code could have isolated a zswap entry from the LRU befor=
-e
-> > > > swapoff, then tried to access it after swapoff. Although the zswap
-> > >
-> > > The writeback should have a reference count to the zswap entry it
-> > > holds. The entry will not be free until the LRU is done and drop the
-> > > reference count to zero.
-> > >
-> > > > entry itself is referenced and safe to use, accessing the tree to g=
-rab
-> > > > the tree lock and check if the entry is still in the tree is the
-> > > > problem.
-> > >
-> > > The swap off should wait until all the LRU list from that tree has
-> > > been consumed before destroying the tree.
-> > > In swap off, it walks all the process MM anyway, walking all the memc=
-g
-> > > and finding all the zswap entries in zswap LRU should solve that
-> > > problem.
-> >
-> > At that point, the entry is isolated from the zswap LRU list as well.
-> > So even if swap off iterates the zswap LRUs, it cannot find it to wait
+> > ah, I haven't noticed Sam's updates. I'll rebase on top of his set and
+> > adapt if necessary. I'll review that set in a sec.
 >
-> It just means that we need to defer removing the entry from LRU, only
-> remove it after most of the write back is complete to some critical
-> steps.
+> it's a long series, please give it a few days before resending
+> it.
 >
-> > for it. Take a closer look at the race condition I described. The
->
-> I take a closer look at the sequence Chengming describe, it has the
-> element of delay removing entry from the LRU as well.
->
-> > problem is that after the entry is isolated from the zswap LRU, we
-> > need to grab the tree lock to make sure it's still there and get a
-> > ref, and just trying to lock the tree may be a UAF if we race with
-> > swapoff.
->
-> I feel it is very wrong to have the tree freed while having
-> outstanding entry allocationed from the tree pending.
-> I would want to avoid that situation if possible.
 
-This should be the case with Chengming's solution.
+Also, I recommend splitting it up in a way I suggested before:
 
->
-> >
-> > > Anyway, I think it is easier to reason about the behavior that way.
-> > > Swap off will take the extra hit, but not the normal access of the
-> > > tree.
-> >
-> > I think this adds a lot of unnecessary complexity tbh. I think the
-> > operations reordering that Chengming described may be the way to go
-> > here. It does not include adding more logic or synchronization
->
-> Does not require adding the tree reference count right?
+  1. First add gs101 support with minimal amount of patches (without
+.fifosize introduction, etc)
+  2. Then do all those cleanups and reworks on top of that
 
-No, just reordering of operations in the writeback path.
+The reason why I think it's better than doing that vice-versa is that
+I feel (2) can take a lot of time/review rounds to get polished and
+accepted. So this way you can make sure gs101 support gets applied
+sooner. It'll also make it easier to do the backporting work later, if
+that's ever needed.
 
->
-> > primitives, just reordering operations to be closer to what we do in
-> > zswap_load() and leverage existing synchronization.
->
-> The complexity is mostly for avoiding the tree reference count. If we
-> don't add the tree refcount and we don't need the extra complexity in
-> the tree waiting for LRU, that sounds great to me.
-
-I think that's what Chengming's proposal provides.
+> Thanks,
+> Andi
