@@ -1,60 +1,62 @@
-Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
+Received: from www530.your-server.de (www530.your-server.de [188.40.30.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77F5E481BA;
-	Thu, 25 Jan 2024 12:33:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.149.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D03FE481A8;
+	Thu, 25 Jan 2024 12:34:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.40.30.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706186008; cv=none; b=ZkoLw5m9ze2KrTz9tT8St08nzkUCxk4s2bftzvM7IMOMg3P27mowbgXVUWYi+vPgCJsrm0ShlO9MN/pR7lG/0WDNNH1uikhrGnbDXmEkPm1FwH4c3a80bKFRSzGUOt6CuQm49wcGn4bLBY+gXNyTWrYdoW2eewM1rkJzwuP62P0=
+	t=1706186081; cv=none; b=n7VGdUBZD47o3R5qibxZ+8F71JFyVhkJb7jn7q8ult73MlHyMEWJLZaCuTd1fvtHYBPrX3kaYDduWAsn68qRmHsO8Zgul4Hjkeeb21GYQNUZbXuVApzah5a2S44LcNQixwmNu6MOfYkL62lVtcMSzZJhy+2NFXo+MOOl92iy4kk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706186008; c=relaxed/simple;
-	bh=ibjJImIn88zs1YjIKt/2dvNQBau6ZoNe8tzjCHPrGx8=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=UKJXVgMz6BLtuWZFH5ILpewgm1mPvWBprEE9jomSQbip/wts4STJcESCC1XJKG8E5oMKH/uQCqnT97LQIb5jBJ9QZaGgK9F8uz1Us5uvVKe7Wcu31hQcJUwMD6CwpwC8BAgHps6L82PQYQoMcRpQ0y7ve+VRRizpV76joovTsVo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=UHMpZcqz; arc=none smtp.client-ip=67.231.149.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
+	s=arc-20240116; t=1706186081; c=relaxed/simple;
+	bh=iqbcOpTlEh5SlO47biheNN9vN+dMs8WVH0huJV/6Kbw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=BnbWn70+8LBPTDmmHirkh3P7BFk5/gKJvjx11Pmr85QP4At+nixW8xzrV5bV2WEo/ZxhNDyF0oDBf8Ac2itzbB2uYffqSyAuxMeI0U+SNYpDpb+PnccZd4O1NwLspnxGR3GGK8Ty7Ueyz/Xr9191TIK+0Mfhh0bM1XAG7Ztui44=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=geanix.com; spf=pass smtp.mailfrom=geanix.com; dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b=sGzqxBb7; arc=none smtp.client-ip=188.40.30.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=geanix.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=geanix.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="UHMpZcqz"
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-	by mx0a-001ae601.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40P5Ph4a014771;
-	Thu, 25 Jan 2024 06:33:04 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=
-	from:to:cc:subject:date:message-id:mime-version
-	:content-transfer-encoding:content-type; s=PODMain02222019; bh=v
-	2Ut9bvfDLcV174M2sjh0LDuIb84AqNcxzdKd+no5Yc=; b=UHMpZcqz2HOVHxaVU
-	eYXwPsCDu8xsUliJ7Atcts1rLweaRaaUhwC9Rb2ZTBBq+y8xFFpXHz33DfbNER7W
-	F3adtZgQ5+r7g68JaBLdTNzFv1waw3/Zl/I4FOrTGwY03UnzhSIYEHuDlS4lAzMg
-	vETmZ3T+0NJCuucxUbzYy93ckVNNNCcVc64wqZdSKFmweNx7/SmfFtKGS7V04kiU
-	RvogChtTMta458tQBne8pG5WPQGQExF498u3ZoxoQ9ePfPomZxbSb+jicC/fPSqj
-	yE2/mBfgLwJ3J+34KAzfW8u7r7MvGQ0UjG0KdFIcFH+zdbNVNWQDBkXIIKILxDDd
-	G8+Cw==
-Received: from ediex02.ad.cirrus.com ([84.19.233.68])
-	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 3vtmfhj7s5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 25 Jan 2024 06:33:04 -0600 (CST)
-Received: from ediex01.ad.cirrus.com (198.61.84.80) by ediex02.ad.cirrus.com
- (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Thu, 25 Jan
- 2024 12:33:01 +0000
-Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
- ediex01.ad.cirrus.com (198.61.84.80) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40 via Frontend Transport; Thu, 25 Jan 2024 12:33:01 +0000
-Received: from ediswws06.ad.cirrus.com (ediswws06.ad.cirrus.com [198.90.251.117])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id 52682820246;
-	Thu, 25 Jan 2024 12:33:01 +0000 (UTC)
-From: Richard Fitzgerald <rf@opensource.cirrus.com>
-To: <tiwai@suse.com>
-CC: <perex@perex.cz>, <linux-kernel@vger.kernel.org>,
-        <linux-sound@vger.kernel.org>, <alsa-devel@alsa-project.org>,
-        <patches@opensource.cirrus.com>,
-        Simon Trimmer
-	<simont@opensource.cirrus.com>,
-        Richard Fitzgerald <rf@opensource.cirrus.com>
-Subject: [PATCH] ALSA: hda/realtek: Add quirks for HP G11 Laptops using CS35L56
-Date: Thu, 25 Jan 2024 12:33:01 +0000
-Message-ID: <20240125123301.41692-1-rf@opensource.cirrus.com>
-X-Mailer: git-send-email 2.30.2
+	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="sGzqxBb7"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=geanix.com;
+	s=default2211; h=Content-Transfer-Encoding:MIME-Version:References:
+	In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=O99d2OhA5yD9439wbiGDNw8gbQ6j47VNjuChaGpSepE=; b=sGzqxBb73IUlg1OF5UY4xH9Z5F
+	AysdrkIa0xJpoLD8gMXgkc/z5ha1KwdVV70NGn5p3Dh+kUkcO77WgN+qRvnRcxFoMfOXPTHxuSBQH
+	uVZVmh4+4NRKVv4XnENVG4mX0vp7nORlguxiznDauOvXjdY8I5wpV9o5+zwSaA5DBWAqdvHQdX/6E
+	DzlIA7SjLnFbKzdxDh4LfscplRPCKXcbCl6sHBWda0fjBDge9cS4Po29celBW83U+Vy5Dth535GqM
+	c60paXmj8wDQd5j4JcPSLw6by9EabOYS24CdkV3ildwunOpoQvv1rL4gKLgBNoXiSQu3e7SMPI8Je
+	miA9LTbw==;
+Received: from sslproxy02.your-server.de ([78.47.166.47])
+	by www530.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <esben@geanix.com>)
+	id 1rSywH-0007Q2-4N; Thu, 25 Jan 2024 13:34:37 +0100
+Received: from [185.17.218.86] (helo=localhost)
+	by sslproxy02.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <esben@geanix.com>)
+	id 1rSywG-00028s-9l; Thu, 25 Jan 2024 13:34:36 +0100
+From: Esben Haabendal <esben@geanix.com>
+To: netdev@vger.kernel.org,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Jose Abreu <joabreu@synopsys.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Christian Marangi <ansuelsmth@gmail.com>
+Cc: stable@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] net: stmmac: do not clear TBS enable bit on link up/down
+Date: Thu, 25 Jan 2024 13:34:33 +0100
+Message-ID: <a1d6f5ca9aad795dfc8e0bbb9bb06d8bb7b46649.1706184304.git.esben@geanix.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <cover.1706184304.git.esben@geanix.com>
+References: <cover.1706184304.git.esben@geanix.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,71 +64,36 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: Aera9NZcpbFVW9IWzhFtkvefyTwhzX4C
-X-Proofpoint-GUID: Aera9NZcpbFVW9IWzhFtkvefyTwhzX4C
-X-Proofpoint-Spam-Reason: safe
+X-Authenticated-Sender: esben@geanix.com
+X-Virus-Scanned: Clear (ClamAV 0.103.10/27165/Thu Jan 25 10:51:15 2024)
 
-From: Simon Trimmer <simont@opensource.cirrus.com>
+With the dma conf being reallocated on each call to stmmac_open(), any
+information in there is lost, unless we specifically handle it.
 
-Add quirks for two HP G11 laptops that use a Realtek HDA codec combined
-with four CS35L56 amplifiers using SPI.
+The STMMAC_TBS_EN bit is set when adding an etf qdisc, and the etf qdisc
+therefore would stop working when link was set down and then back up.
 
-The CS35L56 driver uses the component binding interface, so uses the same
-setup code as the CS35L41 quirks.
-
-Signed-off-by: Simon Trimmer <simont@opensource.cirrus.com>
-Signed-off-by: Richard Fitzgerald <rf@opensource.cirrus.com>
+Fixes: ba39b344e924 ("net: ethernet: stmicro: stmmac: generate stmmac dma conf before open")
+Cc: stable@vger.kernel.org
+Signed-off-by: Esben Haabendal <esben@geanix.com>
 ---
- sound/pci/hda/patch_realtek.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index 42ee37af24bc..b2b289626323 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -6819,6 +6819,11 @@ static void alc287_fixup_legion_16ithg6_speakers(struct hda_codec *cdc, const st
- 	comp_generic_fixup(cdc, action, "i2c", "CLSA0101", "-%s:00-cs35l41-hda.%d", 2);
- }
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index b334eb16da23..25519952f754 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -3932,6 +3932,9 @@ static int __stmmac_open(struct net_device *dev,
+ 	priv->rx_copybreak = STMMAC_RX_COPYBREAK;
  
-+static void cs35l56_fixup_spi_four(struct hda_codec *cdc, const struct hda_fixup *fix, int action)
-+{
-+	comp_generic_fixup(cdc, action, "spi", "CSC3556", "-%s:00-cs35l56-hda.%d", 4);
-+}
-+
- static void tas2781_fixup_i2c(struct hda_codec *cdc,
- 	const struct hda_fixup *fix, int action)
- {
-@@ -7310,6 +7315,7 @@ enum {
- 	ALC2XX_FIXUP_HEADSET_MIC,
- 	ALC289_FIXUP_DELL_CS35L41_SPI_2,
- 	ALC294_FIXUP_CS35L41_I2C_2,
-+	ALC245_FIXUP_CS35L56_SPI_4_HP_GPIO_LED,
- };
+ 	buf_sz = dma_conf->dma_buf_sz;
++	for (int i = 0; i < MTL_MAX_TX_QUEUES; i++)
++		if (priv->dma_conf.tx_queue[i].tbs & STMMAC_TBS_EN)
++			dma_conf->tx_queue[i].tbs = priv->dma_conf.tx_queue[i].tbs;
+ 	memcpy(&priv->dma_conf, dma_conf, sizeof(*dma_conf));
  
- /* A special fixup for Lenovo C940 and Yoga Duet 7;
-@@ -9461,6 +9467,12 @@ static const struct hda_fixup alc269_fixups[] = {
- 		.type = HDA_FIXUP_FUNC,
- 		.v.func = cs35l41_fixup_i2c_two,
- 	},
-+	[ALC245_FIXUP_CS35L56_SPI_4_HP_GPIO_LED] = {
-+		.type = HDA_FIXUP_FUNC,
-+		.v.func = cs35l56_fixup_spi_four,
-+		.chained = true,
-+		.chain_id = ALC285_FIXUP_HP_GPIO_LED,
-+	},
- };
- 
- static const struct snd_pci_quirk alc269_fixup_tbl[] = {
-@@ -9789,6 +9801,8 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
- 	SND_PCI_QUIRK(0x103c, 0x8c47, "HP EliteBook 840 G11", ALC245_FIXUP_CS35L41_SPI_2_HP_GPIO_LED),
- 	SND_PCI_QUIRK(0x103c, 0x8c48, "HP EliteBook 860 G11", ALC245_FIXUP_CS35L41_SPI_2_HP_GPIO_LED),
- 	SND_PCI_QUIRK(0x103c, 0x8c49, "HP Elite x360 830 2-in-1 G11", ALC245_FIXUP_CS35L41_SPI_2_HP_GPIO_LED),
-+	SND_PCI_QUIRK(0x103c, 0x8c52, "HP EliteBook 1040 G11", ALC245_FIXUP_CS35L56_SPI_4_HP_GPIO_LED),
-+	SND_PCI_QUIRK(0x103c, 0x8c53, "HP Elite x360 1040 2-in-1 G11", ALC245_FIXUP_CS35L56_SPI_4_HP_GPIO_LED),
- 	SND_PCI_QUIRK(0x103c, 0x8c70, "HP EliteBook 835 G11", ALC287_FIXUP_CS35L41_I2C_2_HP_GPIO_LED),
- 	SND_PCI_QUIRK(0x103c, 0x8c71, "HP EliteBook 845 G11", ALC287_FIXUP_CS35L41_I2C_2_HP_GPIO_LED),
- 	SND_PCI_QUIRK(0x103c, 0x8c72, "HP EliteBook 865 G11", ALC287_FIXUP_CS35L41_I2C_2_HP_GPIO_LED),
+ 	stmmac_reset_queues_param(priv);
 -- 
-2.30.2
+2.43.0
 
