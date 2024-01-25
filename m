@@ -1,122 +1,144 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97D181CD00
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 09:28:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 262B31BF27;
+	Thu, 25 Jan 2024 09:28:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706174892; cv=none; b=pWqGL1rU2GYbjjc9sFwDkq/2DkJ7PONe8ujQ0zhLjhspmroj+yQLdomInwbOKn8ler49+7dK/cCS7J37c2ULUKGbKa+VPbbOF/nHTIcYWd0A0vcbhfCfSIGjxi4Uohp++mnxyr4+0FvKmig2tVLjZnN9a5R9zHCJ3fgXwZjDDQU=
+	t=1706174936; cv=none; b=Zf1Akv7mbTTGODF5U1IdeCRtP0qqVDWoVWvnRTJBI4EuI/I2rcuIjiERYfQqq6f70JOh6LRuFIBg0pASGeMfuJE3kNDpuCaFLXdmGo4w0A0HX/VROcGoUkRVc/iuZwmxJftYgIEFr6vaUVJ7edn3kkx7wqftjZ6uDqtO9tSmYqA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706174892; c=relaxed/simple;
-	bh=4FhzQMyuNRu9cVH4Ij85n7GCnfVD5xm77q2Ax+afBBk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=iYW9PosMDlRMGcr0yTPvs97L+LTE411a+5IjnaAWKdB19OE4ld+gz09zoe3i7nKP4zXajHhxs3ktJcd47MdweaoRRSpD+MR5W3pPmjczi0ajyj6rD2sU0RRKINLGKZbh+M1iLQuDui2MIJ7y/xuMf0wfxIUt0BiOlkRzGOSK9O0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=coRIzuKu; arc=none smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="coRIzuKu"
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-55c1ac8d2f2so5602498a12.2
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 01:28:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706174889; x=1706779689; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=JLNRnzxe4/p0rMB0AsJl/Ri8TUeEmBjJpE+eIe/tTYA=;
-        b=coRIzuKuOqIEM+LyOBo1js6mdCEXlkaoOnr2ooeVDFveVHAfyHgfoMC0ltSa3bwLrN
-         laA4YoDrkvJNGh+xkaGYFKdaiivNALfXPaSRmLNz4yWdIBfHYp+oEKj2fo4I/gjDDHuc
-         piAgusGkJOVxEskVui+yGGxrSooR89YlNlrM1VQYgbA/hfK5+PFtvr1vKS5ZCiW14AuA
-         wUJSDCXbJLtw91BRQicjQxWwp4nXakLEnLaaaM1njgl1+Im0W+VOIXmMSUlI4T0fZgOG
-         xPKRAZmuUbGIQ1YQOxXy9iGm10PSasjaGkjhBgFOdl+xlBJfmgERpPb9e2xAh8bCR3gX
-         5mKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706174889; x=1706779689;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JLNRnzxe4/p0rMB0AsJl/Ri8TUeEmBjJpE+eIe/tTYA=;
-        b=GkZumJCmhU8C6Y6xU6xlQ1NGGe35cu2rR99shlFg2UqneHfgiq/SI99YwAVqpjczfS
-         RH7WZoMJXsD4W0bzEFF5v0BCWZVIoTVSK3Is1JPSHDVXUjAZAKltS/8Wv17vhzdsmzdR
-         w9I73/lU1x8G41xr+RFx4fBarVHVefsz8JGTYNaqX5Pw9US6q/rXXJ4Cs+0OkFWnGjdS
-         tUAqKn0DZBTINOTFciAfRdN30B6kz0QZTIrty6ZOWyWm+l1WT4ElYpFKfyKIIqQtuN2y
-         kchpUrxqy5kOl/Ivo/SWaHJF0V2RfvtNJKltaIAYlp6ewHazlh/Y8iqJDn5cOaUlkfo4
-         jdZA==
-X-Gm-Message-State: AOJu0YycpOGVJ/Q0C+cogUcHKssRtnDEUq7cGIFcKMIZn8XEDBa9JuQf
-	rAgZhR+Hg2x7rjRBXS0H3IeBCPbjTRbe1c6I9mJjeTFBqN6ySVQBHJjGhS07zY4=
-X-Google-Smtp-Source: AGHT+IGF5HE4900Esq4LG85HNYrVZua2xMqt9RXVRLh3ifbkx5FX+VjRG/Dgu3rYNjdwZlS4bfnKWQ==
-X-Received: by 2002:a05:6402:714:b0:55c:8cdc:b2c6 with SMTP id w20-20020a056402071400b0055c8cdcb2c6mr381105edx.10.1706174888969;
-        Thu, 25 Jan 2024 01:28:08 -0800 (PST)
-Received: from [127.0.1.1] ([79.115.23.25])
-        by smtp.gmail.com with ESMTPSA id f19-20020a056402005300b00554af5ec62asm17356391edu.8.2024.01.25.01.28.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jan 2024 01:28:08 -0800 (PST)
-From: Abel Vesa <abel.vesa@linaro.org>
-Date: Thu, 25 Jan 2024 11:27:49 +0200
-Subject: [PATCH 5/5] clk: qcom: dispcc-sm8650: Drop the Disp AHB DT
- provided clock
+	s=arc-20240116; t=1706174936; c=relaxed/simple;
+	bh=4oi/mDvJ66W3EHJcJkd6l/BObOrE9wC8bVqVRycPZXw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Vd0aQ9L3dDL95q88bABdBJfvQp6407F3UedP2glwDYuwTQkYPG51WOmkMI+2pQOp6a9ulvOHB6IsTY7okbeaHUuiCpC8NuPI5wGfDFpcqZ2AP9FHWcc+w/LHqwzqCe21RFnalBDzLp+55HwEZdZ/lgg+Rg5HXSWd28p2ZnXx7AY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; arc=none smtp.client-ip=115.124.30.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045168;MF=guwen@linux.alibaba.com;NM=1;PH=DS;RN=23;SR=0;TI=SMTPD_---0W.JurKr_1706174923;
+Received: from 30.221.129.223(mailfrom:guwen@linux.alibaba.com fp:SMTPD_---0W.JurKr_1706174923)
+          by smtp.aliyun-inc.com;
+          Thu, 25 Jan 2024 17:28:44 +0800
+Message-ID: <d93bdf89-d724-4f2a-a3fc-f3a46e54202c@linux.alibaba.com>
+Date: Thu, 25 Jan 2024 17:28:43 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240125-dispcc-sm8550-sm8650-drop-disp-ahb-clk-v1-5-0f8d96156156@linaro.org>
-References: <20240125-dispcc-sm8550-sm8650-drop-disp-ahb-clk-v1-0-0f8d96156156@linaro.org>
-In-Reply-To: <20240125-dispcc-sm8550-sm8650-drop-disp-ahb-clk-v1-0-0f8d96156156@linaro.org>
-To: Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konrad.dybcio@linaro.org>, 
- Michael Turquette <mturquette@baylibre.com>, 
- Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Neil Armstrong <neil.armstrong@linaro.org>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
- linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Abel Vesa <abel.vesa@linaro.org>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=699; i=abel.vesa@linaro.org;
- h=from:subject:message-id; bh=4FhzQMyuNRu9cVH4Ij85n7GCnfVD5xm77q2Ax+afBBk=;
- b=owEBbQKS/ZANAwAKARtfRMkAlRVWAcsmYgBlsimf+b1kIT9CRygBqdcl6OsrWJwKtA+IS6Mus
- 59bM1COowaJAjMEAAEKAB0WIQRO8+4RTnqPKsqn0bgbX0TJAJUVVgUCZbIpnwAKCRAbX0TJAJUV
- VlNhD/4j69Ljrfvn/PVcSUIvyHNmnIqC/mxKxo6qN/NK0EfeFzzFY2G28aABZxuSQtAZLCxu0+B
- UV9Xb8QZ2l0Ka9aCnVP4TF+Ax1UmVfnqX5WQOWlKbqQ9eqoeqyknMjjTgNjyqsxHUZ0xdFZN+/g
- LhzweFk6FmQwvNfKusPau6VTHufo9+p9eo5q5RAt1vgs5GYLmDcdp38ecMp7eaPUcNhss+TTjeh
- Mk++gwVLfuY8cpV2R3wsLLoWjb1hyiSvkZrghWIfJYPRsUGFCAmM2CKqz9Ej9znvNhDk4+DANVt
- FtB6NXyAMkc7JVOYBzHzA/969k1biyHNdbt9Gj3mxiZZlcfylpTV5+wtUMX5pz12zMz2UchLbJY
- dDxZVqFZB5Lpptalv295B6C+eOVZ1N0a9h9HdmHRVUWgMky6iMqLKN+toGvS/rRkiSJ5Ph4HOVv
- 7xWTKWGsmrmfnaj2we4MakE5Z7RBX/t2eroX5EqdChrob8YjXFSAtK6RAGyoF7ZmrC0efqFbQjV
- 8zctck7/adbJY5iaGtMeXvBVoJBrIysiV4mOoYRCH13Sl3lhEyebf8ZniBJ6n6s65EUnJbuYcEk
- gEnDmU2gOgyRAkC9W5QibH6CVlw9giEVR+lnNFO1S+t2SFwogomzfN5utkvGqUFFUXExwaWMUdu
- /ppzcrqQc93R5Yw==
-X-Developer-Key: i=abel.vesa@linaro.org; a=openpgp;
- fpr=6AFF162D57F4223A8770EF5AF7BF214136F41FAE
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] v6.8 SMC-D issues
+To: Alexandra Winter <wintera@linux.ibm.com>, wenjia@linux.ibm.com,
+ hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, jaka@linux.ibm.com,
+ Matthew Rosato <mjrosato@linux.ibm.com>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
+ borntraeger@linux.ibm.com, svens@linux.ibm.com, alibuda@linux.alibaba.com,
+ tonylu@linux.alibaba.com, raspl@linux.ibm.com, schnelle@linux.ibm.com,
+ guangguan.wang@linux.alibaba.com, linux-s390@vger.kernel.org,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Halil Pasic <pasic@linux.ibm.com>
+References: <20231219142616.80697-1-guwen@linux.alibaba.com>
+ <20231219142616.80697-8-guwen@linux.alibaba.com>
+ <13579588-eb9d-4626-a063-c0b77ed80f11@linux.ibm.com>
+ <530afe45-ba6b-4970-a71c-1f1255f5fca9@linux.alibaba.com>
+ <8090bb34-1b70-43ea-ae13-df5d9a5eb761@linux.ibm.com>
+From: Wen Gu <guwen@linux.alibaba.com>
+In-Reply-To: <8090bb34-1b70-43ea-ae13-df5d9a5eb761@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-The GCC doesn't even register the Disp AHB clock. It enables it
-on probe though. So drop it from the list of DT provided clocks as well.
 
-Fixes: 9e939f008338 ("clk: qcom: add the SM8650 Display Clock Controller driver")
-Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
----
- drivers/clk/qcom/dispcc-sm8650.c | 1 -
- 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/clk/qcom/dispcc-sm8650.c b/drivers/clk/qcom/dispcc-sm8650.c
-index f3b1d9d16bae..382ebc1866b9 100644
---- a/drivers/clk/qcom/dispcc-sm8650.c
-+++ b/drivers/clk/qcom/dispcc-sm8650.c
-@@ -29,7 +29,6 @@
- enum {
- 	DT_BI_TCXO,
- 	DT_BI_TCXO_AO,
--	DT_AHB_CLK,
- 	DT_SLEEP_CLK,
- 
- 	DT_DSI0_PHY_PLL_OUT_BYTECLK,
+On 2024/1/25 16:26, Alexandra Winter wrote:
+> 
+> 
+> On 25.01.24 05:59, Wen Gu wrote:
+>> After a while debug I found an elementary mistake of mine in
+>> b40584d ("net/smc: compatible with 128-bits extended GID of virtual ISM device")..
+>>
+>> The operator order in smcd_lgr_match() is not as expected. It will always return
+>> 'true' in remote-system case.
+>>
+>>   static bool smcd_lgr_match(struct smc_link_group *lgr,
+>> -                          struct smcd_dev *smcismdev, u64 peer_gid)
+>> +                          struct smcd_dev *smcismdev,
+>> +                          struct smcd_gid *peer_gid)
+>>   {
+>> -       return lgr->peer_gid == peer_gid && lgr->smcd == smcismdev;
+>> +       return lgr->peer_gid.gid == peer_gid->gid && lgr->smcd == smcismdev &&
+>> +               smc_ism_is_virtual(smcismdev) ?
+>> +               (lgr->peer_gid.gid_ext == peer_gid->gid_ext) : 1;
+>>   }
+>>
+>> Could you please try again with this patch? to see if this is the root cause.
+>> Really sorry for the inconvenience.
+>>
+>> diff --git a/net/smc/smc_core.c b/net/smc/smc_core.c
+>> index da6a8d9c81ea..c6a6ba56c9e3 100644
+>> --- a/net/smc/smc_core.c
+>> +++ b/net/smc/smc_core.c
+>> @@ -1896,8 +1896,8 @@ static bool smcd_lgr_match(struct smc_link_group *lgr,
+>>                             struct smcd_gid *peer_gid)
+>>   {
+>>          return lgr->peer_gid.gid == peer_gid->gid && lgr->smcd == smcismdev &&
+>> -               smc_ism_is_virtual(smcismdev) ?
+>> -               (lgr->peer_gid.gid_ext == peer_gid->gid_ext) : 1;
+>> +               (smc_ism_is_virtual(smcismdev) ?
+>> +                (lgr->peer_gid.gid_ext == peer_gid->gid_ext) : 1);
+>>   }
+>>
+>>
+>> Thanks,
+>> Wen Gu
+> 
+> Hello Wen Gu,
+> 
+> thank you for the quick resposne and for finding this nasty bug.
+> I can confirm that with your patch I do not see the issue anymore.
 
--- 
-2.34.1
+Thank you very much for your confirmation, Alexandra.
 
+> Please send a fix to the mailing lists. See
+> https://docs.kernel.org/process/handling-regressions.html
+> for some tips.
+> 
+
+Thank you. Will do.
+
+> May I propose that instead of adding the brackets, you change this function
+> to an if-then-else sequence for readability and maintainability?
+> I would still mention the missing brackets in the commit message, so
+> readers can quickly understand the issue.
+
+I agree. if-then-else will make it clearer. I will fix it like this:
+
+diff --git a/net/smc/smc_core.c b/net/smc/smc_core.c
+index da6a8d9c81ea..1d5bce82d4d8 100644
+--- a/net/smc/smc_core.c
++++ b/net/smc/smc_core.c
+@@ -1895,9 +1895,15 @@ static bool smcd_lgr_match(struct smc_link_group *lgr,
+                            struct smcd_dev *smcismdev,
+                            struct smcd_gid *peer_gid)
+  {
+-       return lgr->peer_gid.gid == peer_gid->gid && lgr->smcd == smcismdev &&
+-               smc_ism_is_virtual(smcismdev) ?
+-               (lgr->peer_gid.gid_ext == peer_gid->gid_ext) : 1;
++       if (lgr->peer_gid.gid != peer_gid->gid ||
++           lgr->smcd != smcismdev)
++               return false;
++
++       if (smc_ism_is_virtual(smcismdev) &&
++           lgr->peer_gid.gid_ext != peer_gid->gid_ext)
++               return false;
++
++       return true;
+  }
+
+Thanks again,
+Wen Gu
+
+> 
+> Thanks again for the quick response.
+> Sandy
