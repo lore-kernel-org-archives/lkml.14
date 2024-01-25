@@ -1,107 +1,99 @@
-Received: from www530.your-server.de (www530.your-server.de [188.40.30.78])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 012851339A3;
-	Thu, 25 Jan 2024 18:31:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.40.30.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D00F43AAD
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 18:32:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706207498; cv=none; b=eK93LR4UPiBfvSJYFQFNSPdvVT0x2sQWmwbcew1y8+bG0y012bbg+nlQynRc0d1ifQ0V5CEGWZxdiF/SZrVQbZbzKfPHTy/U0774DVe9FxqVRP8cMNHOm89RddofMbcuLB72MZK5xboOpjT/A3Mb72/bqFWKlfDxgqBjJQ0krE4=
+	t=1706207527; cv=none; b=mxs7rcWU+huVclWYPZ2tHf/swo/4FwT/ABwfiXQKWSKNoqaVTc7srKQREUlb2LAdmu4PEDLIzYKYAbFzhHjlg+oGxYNJdj21ZUqmQI2rRG8IsfWMf/MnS4CXaj/qYiW60n8WamKtkT+6Tvm4Xz3kqO/TepPVE/xK2fAzEH7r/a4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706207498; c=relaxed/simple;
-	bh=5T100LdEWzfnw+YYm0h1x8aoonY4rriPdSCNHs5edGY=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Xot/M6gQgqR70347GUqWhwN/RDfpYJ5arZXyPRYlj7AR9DO36wk4zRk1mVHKROhvTk6xLbJIx3HcwudWK1Zg8GtEC4NpDrMJrnIGZ1xypWxj3+sk4iGRXg6QQeQVKBEsor2xkgP3Rpfm97GJvSnLk5f/scWgtgWF7iw6awf6TFw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=geanix.com; spf=pass smtp.mailfrom=geanix.com; dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b=KmE9Igl9; arc=none smtp.client-ip=188.40.30.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=geanix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=geanix.com
+	s=arc-20240116; t=1706207527; c=relaxed/simple;
+	bh=qVpO9CdhZ+/Blppno9DzCMyzFeIDYzlJsoZrKsdL070=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZTQ+sc7Bs5x1Q4uDgsF6bxX/eaOOgK2RDfiOcO8fOEOVSvjrCNPm9y7z+i23pSMHiIsnVJGdNShBJo8rIT+CzzDTicXIIgcFNumQEFbjxVjrfgrr5xUL7ZkD9RVYkv7D5dZHNgCG9inz9dXxAJsNDU0YGMwOoNQLxuP3iyInXg8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KnQ021dh; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="KmE9Igl9"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=geanix.com;
-	s=default2211; h=Content-Type:MIME-Version:Message-ID:Date:References:
-	In-Reply-To:Subject:Cc:To:From:Sender:Reply-To:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=u4CrcfRRouAam+gtwWUyS4EOA4ggi0EQiB/dLp0zrqw=; b=KmE9Igl9ur6EuxOtRm2zlEbgot
-	Y3bbkrUZdnL/BP0h0RHhCuVPNs9nTvysVgfO0bX2GNuxI3GMZS6s3f+tlXgiqKHFl0wHuTZdleNOg
-	Zn/wl1s8aIxd58g+gI554jVLQU9PI6wOiA+lV8BbIS13TkGk6mjzHib13aXNiRejZyyhDRN0ZKMQL
-	eIrq0PqKa9pwDyImfXu9u34AkYjzIQWSWVrEqHNKeynYDvCr7DfpzFrMKVxHXUfDKz+QHLKHgps7t
-	PRDHafOVZfJv+3yeDApsXSPN85ErAK5hBp/Hf2WmniPNX+LkZUZx6fKOhdgvxYHYxqZCYxAiQ5uH2
-	CQCWwqPA==;
-Received: from sslproxy02.your-server.de ([78.47.166.47])
-	by www530.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <esben@geanix.com>)
-	id 1rT4VY-000EIW-R1; Thu, 25 Jan 2024 19:31:24 +0100
-Received: from [87.49.43.79] (helo=localhost)
-	by sslproxy02.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <esben@geanix.com>)
-	id 1rT4VX-000QQV-PI; Thu, 25 Jan 2024 19:31:23 +0100
-From: Esben Haabendal <esben@geanix.com>
-To: Vadim Fedorenko <vadim.fedorenko@linux.dev>
-Cc: netdev@vger.kernel.org,  Alexandre Torgue
- <alexandre.torgue@foss.st.com>,  Jose Abreu <joabreu@synopsys.com>,
-  "David S. Miller" <davem@davemloft.net>,  Eric Dumazet
- <edumazet@google.com>,  Jakub Kicinski <kuba@kernel.org>,  Paolo Abeni
- <pabeni@redhat.com>,  Maxime Coquelin <mcoquelin.stm32@gmail.com>,  Shawn
- Guo <shawnguo@kernel.org>,  Sascha Hauer <s.hauer@pengutronix.de>,
-  Pengutronix Kernel Team <kernel@pengutronix.de>,  Fabio Estevam
- <festevam@gmail.com>,  NXP Linux Team <linux-imx@nxp.com>,
-  linux-arm-kernel@lists.infradead.org,
-  linux-stm32@st-md-mailman.stormreply.com,  linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] net: stmmac: dwmac-imx: set TSO/TBS TX queues
- default settings
-In-Reply-To: <081af630-ab5d-4502-a29a-a8577d414809@linux.dev> (Vadim
-	Fedorenko's message of "Thu, 25 Jan 2024 17:11:08 +0000")
-References: <cover.1706184304.git.esben@geanix.com>
-	<5606bb5f0b7566a20bb136b268dae89d22a48898.1706184304.git.esben@geanix.com>
-	<081af630-ab5d-4502-a29a-a8577d414809@linux.dev>
-Date: Thu, 25 Jan 2024 19:31:23 +0100
-Message-ID: <875xzh6z9g.fsf@geanix.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KnQ021dh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1706207525;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qVpO9CdhZ+/Blppno9DzCMyzFeIDYzlJsoZrKsdL070=;
+	b=KnQ021dhwM3X7e3dMVRYTMTAXVtHB2xFVrR3hrIu4DqakrCnen1sc9HADAq3iYwyO9II/Y
+	nRN8rJUiKDKxPXe3rYVWhvry4alGy6/tm6aOjvdhF4luAYmn5hr6SgcoXSa+dxrR0qSwXg
+	Tnh9oDt0dzyKIUn3oDaFbGKZ40UJ9TQ=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-517-CipC-XTpPZCiw0QCLv3ACw-1; Thu,
+ 25 Jan 2024 13:32:02 -0500
+X-MC-Unique: CipC-XTpPZCiw0QCLv3ACw-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 26C0E3C1E9CF;
+	Thu, 25 Jan 2024 18:32:02 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.14])
+	by smtp.corp.redhat.com (Postfix) with SMTP id 7BD1A1C060AF;
+	Thu, 25 Jan 2024 18:32:00 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Thu, 25 Jan 2024 19:30:48 +0100 (CET)
+Date: Thu, 25 Jan 2024 19:30:46 +0100
+From: Oleg Nesterov <oleg@redhat.com>
+To: Tycho Andersen <tycho@tycho.pizza>
+Cc: Christian Brauner <brauner@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-api@vger.kernel.org, Tycho Andersen <tandersen@netflix.com>,
+	"Eric W. Biederman" <ebiederm@xmission.com>
+Subject: Re: [PATCH v3 1/3] pidfd: allow pidfd_open() on non-thread-group
+ leaders
+Message-ID: <20240125183045.GE5513@redhat.com>
+References: <20240123153452.170866-1-tycho@tycho.pizza>
+ <20240123153452.170866-2-tycho@tycho.pizza>
+ <20240123195608.GB9978@redhat.com>
+ <ZbArN3EYRfhrNs3o@tycho.pizza>
+ <20240125140830.GA5513@redhat.com>
+ <20240125-tricksen-baugrube-3f78c487a23a@brauner>
+ <20240125175113.GC5513@redhat.com>
+ <ZbKigMNQM0Yklc/5@tycho.pizza>
+ <20240125182505.GD5513@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Authenticated-Sender: esben@geanix.com
-X-Virus-Scanned: Clear (ClamAV 0.103.10/27165/Thu Jan 25 10:51:15 2024)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240125182505.GD5513@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.7
 
-Vadim Fedorenko <vadim.fedorenko@linux.dev> writes:
-
-> On 25/01/2024 12:34, Esben Haabendal wrote:
->> TSO and TBS cannot coexist. For now we set i.MX Ethernet QOS controller to use
->> TX queue with TSO and the rest for TBS.
->> TX queues with TBS can support etf qdisc hw offload.
->> Signed-off-by: Esben Haabendal <esben@geanix.com>
->> ---
->>   drivers/net/ethernet/stmicro/stmmac/dwmac-imx.c | 6 ++++++
->>   1 file changed, 6 insertions(+)
->> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-imx.c
->> b/drivers/net/ethernet/stmicro/stmmac/dwmac-imx.c
->> index 8f730ada71f9..c42e8f972833 100644
->> --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-imx.c
->> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-imx.c
->> @@ -353,6 +353,12 @@ static int imx_dwmac_probe(struct platform_device *pdev)
->>   	if (data->flags & STMMAC_FLAG_HWTSTAMP_CORRECT_LATENCY)
->>   		plat_dat->flags |= STMMAC_FLAG_HWTSTAMP_CORRECT_LATENCY;
->>   +        for (int i = 0; i < plat_dat->tx_queues_to_use; i++) {
->> +                /* Default TX Q0 to use TSO and rest TXQ for TBS */
->> +                if (i > 0)
->> +                        plat_dat->tx_queues_cfg[i].tbs_en = 1;
->> +        }
->> +
+On 01/25, Oleg Nesterov wrote:
 >
-> Just wonder why don't you start with i = 1 and remove 'if' completely?
-> Keeping comment in place will make it understandable.
-
-No good reason for now. Later on, we might have some setup in the same
-lop that also applies to Q0. But the init value can be changed at that
-point.
-
+> On 01/25, Tycho Andersen wrote:
+> >
+> > One of the things I don't like about PIDFD_THREAD is that it's hard to
+> > tell whether an arbitrary thread is a leader or not. Right now we do
+> > it by parsing /proc/pid/status, which shows all the stuff from
+> > do_task_stat() that we don't care about but which is quite expensive
+> > to compute. (Maybe there's a better way?)
+> >
+> > With PIDFD_THREAD we could could do it twice, once with the flag, get
+> > EINVAL, and then do it again. But ideally we wouldn't have to.
 >
->>   	plat_dat->host_dma_width = dwmac->ops->addr_width;
->>   	plat_dat->init = imx_dwmac_init;
->>   	plat_dat->exit = imx_dwmac_exit;
+> Too late for me, most probably I misunderstood.
+>
+> If you want the PIDFD_THREAD behaviour, you can always use this flag
+> without any check...
+>
+> Could you spell?
+
+Just in case, we can even add PIDFD_AUTO (modulo naming) which acts as
+PIDFD_THREAD if the target task is not a leader or 0 (current behaviour)
+otherwise. Trivial.
+
+Oleg.
+
