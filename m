@@ -1,100 +1,104 @@
-Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com [209.85.217.48])
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B48E1C69E
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 09:59:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC79B1C69A;
+	Thu, 25 Jan 2024 10:00:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706176794; cv=none; b=h/CDQ4IDTd7a6GOcdYKZaYra7xBAh2yMigLYvdayKiZqo1JekdNAAu7ysqvyjut2G48qRopOtgv+ETI3DeSB92wR7qODF2ZN23VIF7ziqMkegqab1chEleBkP3O2sC+S3e7/DsjQI6TBgOe93YSXhHDrEkJh6Laji/+OFDIRScY=
+	t=1706176853; cv=none; b=XfMQe9KF1DW4aZjYQ6jdbtCCFw/JuI2cjLRFjZ0K3dyvt6jdRo6xClBFGx3S6vN58t3YPOcAX3prwpYN61kM25gM8hlNxkWOl+YJ/P3I0eT2r2tuiyVjPuNfW5zxMfMV7jSUsbrc/96xZ48/Z6tXBaDFACiY3ImgLOkfe/Pj8XM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706176794; c=relaxed/simple;
-	bh=ApUQmlkxa81ceXyof4WusvA21E0Fg32BgwslQHx9PRw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FMrbs1T6DCmIwy8o0+I6z7DAlGn3WW/8yBD1B0G+Sfyeu+1w8TDvWMK8TGljbvdRvgeoqgScC+LCsvqgIK591u5b+V4Knc3cN55S/mRwejwuiHnvIuFB4MQDkp88suFLPHsxA3vWiW9lS/lkMiwJ1J5wihbgHP7Xq/a5/tFZVZg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qTRTDKBo; arc=none smtp.client-ip=209.85.217.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qTRTDKBo"
-Received: by mail-vs1-f48.google.com with SMTP id ada2fe7eead31-46afb6536d1so829338137.1
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 01:59:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706176791; x=1706781591; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ejpu0N1U5cHhvf5maKcL218cl9a8A4V67n7tDOsobsg=;
-        b=qTRTDKBoYEnBJVmGeAriqheOMCFgxFbGYja3wAvgRE5HN8iuDw8iMUAZAFgk1THjY8
-         v8mseMujNwe4eKVXEMjrvoQ739+R0eooTNGGKDH3FViaoFRohnqL9iUif7FG5XaiVL0k
-         hun1E7xOdKoUVkHnVKBeCV9KxqYVSQTLe3jGzBRCHM5mqifbTS5YestLbj4T5nKFufYy
-         gadrWmmzpvSLjC8DeI7D9ZpcLwYmSUhpY2hSjZud5wUvLDCXDby9tX5oACrifV07jyBt
-         C4S8ildnTdqMAVAaMHlA/mI4HMollFf0aClTVjxgkmei6GeCIamHJz0NQGOpmORq9ihD
-         spXg==
+	s=arc-20240116; t=1706176853; c=relaxed/simple;
+	bh=CGbHSIy071zY/1LZ1hb5hUgREb+h6t2K1eNPkQDWDMU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JHgJ89qMcMiJd2nJ7I5C1Amb+xoWMuHlJ39upfM9LlkWL9kUBG0+D9Th86ktjvAck/26q9tSARZ24822sivrF2JeO43H+vtcpCpM8M3QkYjQtyFxkak+shxDAosPRld7pQ3UZF66J8HtWBrAakj7A3SGiEi5FLwFJib1UdRCysU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.167.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-5100cb64e7dso2886936e87.0;
+        Thu, 25 Jan 2024 02:00:51 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706176791; x=1706781591;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1706176850; x=1706781650;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ejpu0N1U5cHhvf5maKcL218cl9a8A4V67n7tDOsobsg=;
-        b=FQEy3TlnQkeP765xsB3XxU12DlJzK4Xedif7C8SJi9ZINgi6+pQaIM0hxNw7IiAK7r
-         GOOsxd6Hi5n70l97IThoFw3v5SKXX4C1The+a9WbYZ9TBwrzQ9lZVpGUAPTw1qLw7Zom
-         RvUkvqZhC8gDx3zMS9PzGGV+jF3bBw2QWq2RA2x4cJpx4efytJODKvFakbD8d4SY7U82
-         zfXiOJo1uMURKoePAReMPxIkAHrjRBC6HW/v/j5+xR8FYhWR3M5dg0nSzTGJl6u0fKCB
-         M2eEzDvTPfQDre07OakyVbiJBj2WWqPXZTxSqmVnLh41q/as5DiM6q0g7mQDCFiX+lz1
-         +hIA==
-X-Gm-Message-State: AOJu0YzMZBJTfjMrngb1IvSHrD9BZ0hvE6ttSSaiy69+6uDlJ++4iHlf
-	ia3eu2ILq2VqCpOT/csv9c/72nI3qavgdoZFVSspmhESmf414Bh/ml4os/dlGN0=
-X-Google-Smtp-Source: AGHT+IGcTSAtyt5YyT/kCBTYuBr4kS+3tQLcpFk3BxLBOchKz3KQftdbjqQ7cAMcDL/VuYKBY/YQQQ==
-X-Received: by 2002:a05:6102:3c96:b0:46b:1013:16d7 with SMTP id c22-20020a0561023c9600b0046b101316d7mr607038vsv.12.1706176791010;
-        Thu, 25 Jan 2024 01:59:51 -0800 (PST)
-Received: from [172.30.205.155] (UNUSED.212-182-62-129.lubman.net.pl. [212.182.62.129])
-        by smtp.gmail.com with ESMTPSA id qm17-20020a056214569100b006879b82e6f0sm375625qvb.38.2024.01.25.01.59.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 25 Jan 2024 01:59:50 -0800 (PST)
-Message-ID: <d1cde782-c223-4400-a129-18e63a10a415@linaro.org>
-Date: Thu, 25 Jan 2024 10:59:48 +0100
+        bh=tIe6Br5ZKFh1Sn5GNQpAVH37kfCPS835GRt3i3xglEw=;
+        b=EAhhImPV79h73+MaO0ZPLnlAy1ayMJcAQuaHlTX9nkzhsTkudYK1Qk9jxclQvNk71C
+         J9cCmjy1ZINRNHvgmUoVGrcp4TP4STRE582anURo1sRlPDpqOp3v25llRHhc5B5sVfhD
+         GusEJ9avDB9Lmrz7gc0Ty9AXHgfAN2T14WeScBBrOg5OvXCjW8IA1MvwHtlH//TN02TC
+         k7n9MykYuApxecs9i0BX9hmYvfcSPVK+bCSGyadvlaIKIgkwPViDOmmmqndvFOAqiA6E
+         42MZ9ttC3/n7wSbaHL8cVacZXYFX8z7pEZRI2uPEMHiwm+jO6UxhDhXHbeEwl/AJDI0H
+         6HoA==
+X-Gm-Message-State: AOJu0Yxhdq3JMO6stAy6R5xti3kS1CYriWUVN0eSH5E9u+HuXYItBt4t
+	IFDBDzSL6AkNf8xsEPwfxp38SfdNHwbzCFY2SHtq63Vo4mVnfYaS
+X-Google-Smtp-Source: AGHT+IFwSfVo1AJFrmB/o+ycNXmm5veZY78/OMODtOeGl0vmLCuMZwo4PaCV4KdREkZNrm0kt1OawQ==
+X-Received: by 2002:a05:6512:3ba1:b0:50e:62b1:f67b with SMTP id g33-20020a0565123ba100b0050e62b1f67bmr246350lfv.134.1706176849890;
+        Thu, 25 Jan 2024 02:00:49 -0800 (PST)
+Received: from gmail.com (fwdproxy-cln-119.fbsv.net. [2a03:2880:31ff:77::face:b00c])
+        by smtp.gmail.com with ESMTPSA id rf22-20020a1709076a1600b00a2fb9c0337esm834121ejc.112.2024.01.25.02.00.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 Jan 2024 02:00:49 -0800 (PST)
+Date: Thu, 25 Jan 2024 02:00:47 -0800
+From: Breno Leitao <leitao@debian.org>
+To: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: Stefan Schmidt <stefan@datenfreihafen.org>, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	Alexander Aring <alex.aring@gmail.com>, netdev@vger.kernel.org,
+	"open list:IEEE 802.15.4 SUBSYSTEM" <linux-wpan@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net-next 06/10] net: fill in MODULE_DESCRIPTION()s for
+ ieee802154
+Message-ID: <ZbIxT54XYLzVWx/i@gmail.com>
+References: <20240108181610.2697017-1-leitao@debian.org>
+ <20240108181610.2697017-7-leitao@debian.org>
+ <45711bec-e0f3-43c2-b8f2-b9a55654710b@datenfreihafen.org>
+ <20240124174802.0b5910a5@xps-13>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/4] arm64: dts: qcom: sm8550-mtp: correct WCD9385 TX port
- mapping
-Content-Language: en-US
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- Andy Gross <agross@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
- Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: stable@vger.kernel.org
-References: <20240124164505.293202-1-krzysztof.kozlowski@linaro.org>
- <20240124164505.293202-2-krzysztof.kozlowski@linaro.org>
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
-In-Reply-To: <20240124164505.293202-2-krzysztof.kozlowski@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240124174802.0b5910a5@xps-13>
 
+Hello Miquèl,
 
-
-On 1/24/24 17:45, Krzysztof Kozlowski wrote:
-> WCD9385 audio codec TX port mapping was copied form HDK8450, but in fact
-> it is offset by one.  Correct it to fix recording via analogue
-> microphones.
+On Wed, Jan 24, 2024 at 05:48:02PM +0100, Miquel Raynal wrote:
+> Hi,
 > 
-> The change is based on QRD8550 and should be correct here as well, but
-> was not tested on MTP8550.
-
-Would this not be codec-and-not-board-specific, anyway?
-
+> stefan@datenfreihafen.org wrote on Tue, 9 Jan 2024 08:25:21 +0100:
 > 
-> Cc: <stable@vger.kernel.org>
-> Fixes: a541667c86a9 ("arm64: dts: qcom: sm8550-mtp: add WCD9385 audio-codec")
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> ---
+> > Hello.
+> > 
+> > On 08.01.24 19:16, Breno Leitao wrote:
+> > > W=1 builds now warn if module is built without a MODULE_DESCRIPTION().
+> > > Add descriptions to ieee802154 modules.
+> > > 
+> > > Signed-off-by: Breno Leitao <leitao@debian.org>
+> > > ---
+> > >   net/ieee802154/6lowpan/core.c | 1 +
+> > >   net/ieee802154/socket.c       | 1 +
+> > >   2 files changed, 2 insertions(+)
+> > > 
+> > > diff --git a/net/ieee802154/6lowpan/core.c b/net/ieee802154/6lowpan/core.c
+> > > index 2c087b7f17c5..b88f6a96d961 100644
+> > > --- a/net/ieee802154/6lowpan/core.c
+> > > +++ b/net/ieee802154/6lowpan/core.c
+> > > @@ -280,5 +280,6 @@ static void __exit lowpan_cleanup_module(void)  
+> > >   >   module_init(lowpan_init_module);  
+> > >   module_exit(lowpan_cleanup_module);
+> > > +MODULE_DESCRIPTION("IPv6 over Low power Wireless Personal Area Network IEEE802154.4 core");  
+> > 
+> > If we want to nitpick you could write it as IEEE 802.15.4.
+> 
+> Also agreed, can you please post an update?
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+Sure. I will send it soon, since I am splitting the patches in a set of
+10. According to the maintainer's request:
+https://lore.kernel.org/all/20240122105708.52d33fa0@kernel.org/
 
-Konrad
+For now, I am focusing on Ethernet drivers.
+
+Thanks!
