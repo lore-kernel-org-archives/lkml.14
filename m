@@ -1,91 +1,90 @@
-Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from www530.your-server.de (www530.your-server.de [188.40.30.78])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5FFA33CD4
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 11:58:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CD6B45950;
+	Thu, 25 Jan 2024 11:58:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.40.30.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706183922; cv=none; b=a98SrCMWW8EF6sqVjKztwMPE0SKpcxQDIBNhWRRky2XrAHHnF7vhf6wYubUJEJnWKmDharfNucmhiy7sC2r/t68DG6HrSm2xIeP1uoIlI9EUizmlJtviYSRyV9JeHqfQ5S71jFs64N5vedwQ4kcknFWNdUWd2pxVafp2k0XwC/U=
+	t=1706183938; cv=none; b=pSXh1mv93iQUajJBz0XWQjvuOXlsdR09eNUOCiDpVINzlVNOCWCR5gCVFQtfpDA5RhTwr/mAfVnZls2mPGYas+ibDqyfnW2/cjmckbfEx8vhCj/j1NFvx63m5Ir7fLrXXde+Pl2gPRWibqhmGSY13mr5k/5IcVDb2fkrJoCbyqs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706183922; c=relaxed/simple;
-	bh=c1MXNU8fBQIq7CZAvmDVQrraCezkC83dzdTmFADzH6c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=NKvBBhBpY8KXf3i8Pf14fif7Npd9MIu0DiTBW6eY/MFnzjdwfmv/lHDPXSg6UPgL4CfEK6gm9+85KsKYZWCE1+iVS5nr8fgXknCZUC6PiIUx+GEHp2pnsYt0oMad3gi390Crz78RRcQHDME8gtJbLqR6BdgCZVn5TLJ8aQFarLo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=9elements.com; spf=pass smtp.mailfrom=9elements.com; dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b=KjTozkX3; arc=none smtp.client-ip=209.85.215.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=9elements.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=9elements.com
+	s=arc-20240116; t=1706183938; c=relaxed/simple;
+	bh=kkF3b7McPBdvVoiztKPiGvKZ6z3mXMy71vLk9BtpZeA=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=nu16tEy1Vi3PTnkmehSICITaB4UIh/WYTP6lwvEd8ECY4bQGsQ4KbujMlPLwOgAJ/gYU2k5o5dlEIblWRCs4RqOjXuxDQSa3aggUbG1PzpKB0iQS1XxXsiD/62XT4b6Dc4cvD9ygSKHHJt5c9mixeRofzGaez/b0TcvmP7hKieQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=geanix.com; spf=pass smtp.mailfrom=geanix.com; dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b=wg+onJv7; arc=none smtp.client-ip=188.40.30.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=geanix.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=geanix.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b="KjTozkX3"
-Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-5cdbc4334edso3252473a12.3
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 03:58:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=9elements.com; s=google; t=1706183920; x=1706788720; darn=vger.kernel.org;
-        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=c1MXNU8fBQIq7CZAvmDVQrraCezkC83dzdTmFADzH6c=;
-        b=KjTozkX3byEp4c7Cm9xbyivUYjZgNidkhHhNTgnASbYgx7RfDW47rOxGp9sm2SUFsR
-         0btAmWE8iK8yKT1UbrZv3CwN/Ut4n3CKY8EyVEIImjzFWK5IJ+cRoMXNuVrwR1C9TECC
-         2kqe/4FW9+U4yKb8uT659zR2V4ignmtJnaOd4dx38v5mFMc+7/vVysYYyfx3zfZYW28Q
-         NFQC7wAoFyz7xo8uBz+l7q2RBDHKWrUHg/i9CHBfkzH6uVKpeAbm205xOWXpQIZv4FaV
-         h/c8z/02x2SkNOPBkVRaGtyMFQWrHLKjEOnhlyelNb82F+AWomQLZYPgNtK91LF6J0Db
-         3MMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706183920; x=1706788720;
-        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=c1MXNU8fBQIq7CZAvmDVQrraCezkC83dzdTmFADzH6c=;
-        b=XEuHAJnhvOcsymJkeTOVFzxuFLfE/TJ5WLqA8mnXD+iVB6M/75e3PWlp8asmTlvWzh
-         8IFkfb8G3CHFT2dasKEOE0iIdIUhp3WD0xBKwna+mf613MaCHbrZfR97ssG2FDl3SFEW
-         e4LCHQpBjTcWXl7j8Lz60BYjm6orhTL2J8pILkiZgFJCqVm2sM/BKsTUDjW842B9cu1W
-         P1gq/NrUHOiA0Aw38Ft7SOtYUXizjRhgBNEuXjCPrKHPehIO8SG24ipiDZZpjHlwNbEa
-         yCRONVNIAhetWXt9NEtc41OSONi1uatPz7Wx9iSD3eRyDbz92DXNaFxLBAqIOeFtBnhE
-         D7tg==
-X-Gm-Message-State: AOJu0YyyTI1juv1HQIckWU5M/Pe1xXkBfzbgudli1uFFkeUpDpO5gViE
-	Sjw45MNcH1vev7sTvFWSnZr3Z2YvERB1i/P9Fsvu1FIb4fxuK4hTD/cX81ocBNxedasPg9NGt2N
-	UphX/USvTVXp9oPPW2WLdrX9pAyDWyftSOa1Tcg==
-X-Google-Smtp-Source: AGHT+IGVGqvZTn0517bIq0KM9GtuUE40zBP+m/ZFjGMQb49WTfSmNYb/qaIO9kLZQYy7D4bbUFW9PXU6IfiojJjRAd0=
-X-Received: by 2002:a05:6a20:b809:b0:19c:5e76:d81f with SMTP id
- fi9-20020a056a20b80900b0019c5e76d81fmr628988pzb.66.1706183920112; Thu, 25 Jan
- 2024 03:58:40 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="wg+onJv7"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=geanix.com;
+	s=default2211; h=Content-Type:MIME-Version:Message-ID:Date:References:
+	In-Reply-To:Subject:Cc:To:From:Sender:Reply-To:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=Hf6tipOHSadECgsUIyxzcnBsKwPZNts6tZDoPvTRG2c=; b=wg+onJv7knX2ZGhToWqlNLRkF5
+	RIWOo89gho7iVAXbECltAjM2vUXLPMFwFn+2CgWvDqrxcPmmLQ+oo2Hzo9apD46BvH6qtd9MpMTHy
+	h/rNj0wGZvoM/6FF0OO64NKQrE5vMrGZXa2AtfGyWsEfdsCupeyYsRL78NJX+Pq8WIDEp3fAXI7mC
+	qYYC6034h+Eu6HuI3Z3TIt+xyuU0I57snSnPhe7rkZCz/OOSc/g4Gnc1ItJOsYwVvmdlOJRtColw5
+	uG4P8lJV88alDM6NiFA0szTjOtaAjpeAtWAgb9qjyTk/KL+pyVh+UY2AlJz1VAoZ9mrYSUV+e0Me2
+	vpiN5dCg==;
+Received: from sslproxy03.your-server.de ([88.198.220.132])
+	by www530.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <esben@geanix.com>)
+	id 1rSyNh-0000nH-18; Thu, 25 Jan 2024 12:58:53 +0100
+Received: from [185.17.218.86] (helo=localhost)
+	by sslproxy03.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <esben@geanix.com>)
+	id 1rSyNg-000K8S-Bp; Thu, 25 Jan 2024 12:58:52 +0100
+From: esben@geanix.com
+To: Kurt Kanzenbach <kurt.kanzenbach@linutronix.de>
+Cc: netdev@vger.kernel.org,  Alexandre Torgue
+ <alexandre.torgue@foss.st.com>,  Jose Abreu <joabreu@synopsys.com>,
+  "David S. Miller" <davem@davemloft.net>,  Eric Dumazet
+ <edumazet@google.com>,  Jakub Kicinski <kuba@kernel.org>,  Paolo Abeni
+ <pabeni@redhat.com>,  Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+  linux-stm32@st-md-mailman.stormreply.com,
+  linux-arm-kernel@lists.infradead.org,  linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/3] net: stmmac: Time Based Scheduling support for OF
+ platforms
+In-Reply-To: <8734ulekuj.fsf@kurt.kurt.home> (Kurt Kanzenbach's message of
+	"Thu, 25 Jan 2024 12:03:16 +0100")
+References: <b365dc6f756a3fad4dfaa2675c98f4078aba8a55.1706105494.git.esben@geanix.com>
+	<b807c2a70dba9711376b265b6da5fb5ff14589aa.1706105494.git.esben@geanix.com>
+	<8734ulekuj.fsf@kurt.kurt.home>
+Date: Thu, 25 Jan 2024 12:58:52 +0100
+Message-ID: <8734ulhber.fsf@geanix.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231220082803.345153-1-naresh.solanki@9elements.com>
- <ZYNTfKLFGrLq8qGY@shikoro> <497e6eda-a416-415a-b468-fe764c14a8aa@linaro.org> <ZYVmZXpwgHJhS8Nf@shikoro>
-In-Reply-To: <ZYVmZXpwgHJhS8Nf@shikoro>
-From: Naresh Solanki <naresh.solanki@9elements.com>
-Date: Thu, 25 Jan 2024 17:28:31 +0530
-Message-ID: <CABqG17jucw00M3PxjAUrmTUuHajFT4qBjNMx5BsN59bsRrDEXQ@mail.gmail.com>
-Subject: Re: [RESEND PATCH v5 1/2] dt-bindings: i2c: pca954x: Add custom
- properties for MAX7357
-To: Wolfram Sang <wsa@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
-	Naresh Solanki <naresh.solanki@9elements.com>, Rob Herring <robh+dt@kernel.org>, 
-	Peter Rosin <peda@axentia.se>, Andi Shyti <andi.shyti@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
-	Patrick Rudolph <patrick.rudolph@9elements.com>, Rob Herring <robh@kernel.org>, 
-	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Authenticated-Sender: esben@geanix.com
+X-Virus-Scanned: Clear (ClamAV 0.103.10/27165/Thu Jan 25 10:51:15 2024)
 
-Hi Wolfram,
+Kurt Kanzenbach <kurt.kanzenbach@linutronix.de> writes:
 
-On Fri, 22 Dec 2023 at 16:05, Wolfram Sang <wsa@kernel.org> wrote:
+> Hi,
 >
+> On Wed Jan 24 2024, Esben Haabendal wrote:
+>> This allows enabling TBS for TX queues by adding the
+>> snps,time-based-scheduling property. You should check for support for this
+>> on your particular controller before enabling. Typically, TX queue 0 does
+>> not support TBS.
 >
-> > Some explanation was provided here:
-> > https://lore.kernel.org/all/CABqG17g8QOgU7cObe=4EMLbEC1PeZWxdPXt7zzFs35JGqpRbfg@mail.gmail.com/
-> >
-> > AFAIU, these properties are board-design choice.
->
-> Hey, thanks for the heads up. I agree that these options should not be
-> "on" by default. I am still not fully convinced they serve as hardware
-> description, though. Need to think about it some more...
-Any update on this ? Let me know if I can help with additional information.
+> More a general question: Do i see that correctly that Launch Time does
+> not work for OF platforms (such as an imx93) at the moment, because the
+> tbs_en property is not configured? Or why are these patches necessary?
 
-Regards,
-Naresh
->
+Correct.  You cannot use etf qdisc with "offload" on for OF platforms,
+including imx93.
+Doing that will end with "return -EINVAL" in tc_setup_etf().
+
+I am working with imx98mp, but there should not be any difference for
+imx93.
+
+/Esben
