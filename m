@@ -1,107 +1,59 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A060717753;
-	Thu, 25 Jan 2024 08:10:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 186981756B;
+	Thu, 25 Jan 2024 08:10:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706170226; cv=none; b=HIw65tNWOKU7yAx2LjpZ2XDRm6MV8lDNZLNbcdQA+oBzpEJh3vqPjTE4pVFhOHLSlDqe119uwREnHBTro2FE7jGD/aHnMl9rtQCGrQw94QrLxfyoupxPhtLfIEVzJboA0WqU40zEDPxZQRnBpjD+vDN7G4W76WSYJDxHjAgMec0=
+	t=1706170257; cv=none; b=Tf7KUKiYU7LdSjdv+BxcOQw6kHqcEPueK3ThDfO+mj77Crt2aawUk5/J5zuMbIUhrKVCJG4Ws6ZJNk1J8XsBMor1hBpnkMheYaTwY9h+a+7Ho/9Z6pJ3AeJ65n5rsa7h1b7VaXyLiONoW1n5iVkRtXPRpOKtEIl0M+tp0pV7k8Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706170226; c=relaxed/simple;
-	bh=xX6dfMVAAl26JdXVEmOv1Zgk1LFWe/cS2pQ7+3/KTmI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=rIgCHs+eg9Y8CxDRHMCv0RoOYlIIvli7aJs7dyNbUW57V//9dcGDap3FF1XUZmEzdss+g1hiLqX70+wgXQhHrEfmJD0BKItKeMzzSues5AKDoY2YUKkxLeqGnm/2knPpT8HDXeQk8/3fRQl2gN2apJI7GlFc9qK1pcDJq74I5qE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=fY1i3K6J; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="fY1i3K6J"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40P6RwgH009598;
-	Thu, 25 Jan 2024 08:10:20 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=82RcTBntBxCMTFQR0KeZzqWngRbmEZfz5tqmRVi5d8I=; b=fY
-	1i3K6J/tgZ+C1J2XhaDrMR5KmOIvh0q74NgCj/O8nvmXW9zOFfNFM11K3ayjzQVy
-	PttmnCyY1VRJHOFzSbAYACRNgi6SPTkoQCn45hHX/8LlHfXmasEk2RiXvmq2ZO0N
-	XFaQWWNdaQ5APt/RQpkwjF0MTZO5MJMfkMrRGNkQ3PUAeOZDMvLSR2QMYIc0qMpl
-	pLYdogWXAllaJrHlGHlN8Kjbvm3VJM+6YqfpM2taBRSrXjBh4PvX2EHq9Xrk7/r2
-	NvoF/EAaWjyvdOKPLvbOZUvY+p5ZDE9fQCFxpqY+SzEMDbBRNzCEYtRsHxfItAAL
-	c0OQBwW+HySs6wCHXfjw==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vu1ccjk5n-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 25 Jan 2024 08:10:20 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 40P8AJP0021848
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 25 Jan 2024 08:10:19 GMT
-Received: from [10.218.5.40] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Thu, 25 Jan
- 2024 00:10:15 -0800
-Message-ID: <735575f5-ee46-4c91-b0bd-e9c6fb97361c@quicinc.com>
-Date: Thu, 25 Jan 2024 13:40:11 +0530
+	s=arc-20240116; t=1706170257; c=relaxed/simple;
+	bh=cIdPxH2vkyKy+0ZVR3QifIcpYvOOFuiDKYqG8t4FD7M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Zl3VCUcA3RHLApiQUSxBbOB8JUFudJNQrPLnVNyIY45e62PoTnJr/pkDZ2tCgJea4SKkWNN5iTRPywfVOwtYd8LD7hHYPoOu9DIo/UQ6M5B+DYIBd7eB05s9/0UMopGOusAyM62coOTWGuKmuJv4Dl9ufEsPPya3kXNN7qJEPlk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id E75D667373; Thu, 25 Jan 2024 09:10:50 +0100 (CET)
+Date: Thu, 25 Jan 2024 09:10:50 +0100
+From: Christoph Hellwig <hch@lst.de>
+To: Jens Axboe <axboe@kernel.dk>
+Cc: Christoph Hellwig <hch@lst.de>, linux-block@vger.kernel.org,
+	tj@kernel.org, jiangshanlai@gmail.com, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org
+Subject: Re: [PATCH, RFC] block: set noio context in
+ submit_bio_noacct_nocheck
+Message-ID: <20240125081050.GA21006@lst.de>
+References: <20240124093941.2259199-1-hch@lst.de> <be690355-03c6-42e2-a13f-b593ad1c0edd@kernel.dk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RESEND] arm64: dts: qcom: qcm6490-idp: Add support for
- PM7250B PMIC
-Content-Language: en-US
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-CC: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konrad.dybcio@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "Krzysztof
- Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Kamal Wadhwa
-	<quic_kamalw@quicinc.com>
-References: <20240123102817.2414155-1-quic_uchheda@quicinc.com>
- <CAA8EJppwboaEbKFFACr3LO0OHg4iOJPapKRqoH2EGEYcjV6HfA@mail.gmail.com>
-From: Umang Chheda <quic_uchheda@quicinc.com>
-In-Reply-To: <CAA8EJppwboaEbKFFACr3LO0OHg4iOJPapKRqoH2EGEYcjV6HfA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: PEOyn16eRRCZQsONcqP-fwK7-WekyvX7
-X-Proofpoint-GUID: PEOyn16eRRCZQsONcqP-fwK7-WekyvX7
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-25_04,2024-01-24_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxlogscore=509
- clxscore=1011 malwarescore=0 adultscore=0 suspectscore=0
- priorityscore=1501 mlxscore=0 lowpriorityscore=0 impostorscore=0
- spamscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2401190000 definitions=main-2401250054
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <be690355-03c6-42e2-a13f-b593ad1c0edd@kernel.dk>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-Hi Dmitry,
-
-On 1/23/2024 5:48 PM, Dmitry Baryshkov wrote:
-> On Tue, 23 Jan 2024 at 12:28, Umang Chheda <quic_uchheda@quicinc.com> wrote:
->>
->> qcm6490-idp platform supports PM7250B PMIC as well.
->> Add support for the same.
+On Wed, Jan 24, 2024 at 08:40:28AM -0700, Jens Axboe wrote:
+> On 1/24/24 2:39 AM, Christoph Hellwig wrote:
+> > Make sure all in-line block layer submission runs in noio reclaim
+> > context.  This is a big step towards allowing GFP_NOIO, the other
+> > one would be to have noio (and nofs for that matter) workqueues for
+> > kblockd and driver internal workqueues.
 > 
-> The platform can not "support" PMIC. Please fix the commit message.
-Shall I change the commit message as below in the next patch ? 
-"Add PM7250B PMIC support for qcm6490-idp"
+> I really don't like adding this for no good reason. Who's doing non NOIO
+> allocations down from this path?
 
-Thanks,
-Umang
+If there is a non-NOIO allocation right now that would be a bug,
+although I would not be surprised if we had a few of them.
 
-> 
->>
->> Signed-off-by: Umang Chheda <quic_uchheda@quicinc.com>
->> ---
+The reason to add this is a different one:  The MM folks want to
+get rid of GFP_NOIO and GFP_NOFS and replace them by these context.
+
+And doing this in the submission path and kblockd will cover almost
+all of the noio context, with the rest probably covered by other
+workqueues.  And this feels a lot less error prone than requiring
+every driver to annotate the context in their submission routines.
