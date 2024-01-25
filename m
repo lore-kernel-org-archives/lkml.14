@@ -1,31 +1,31 @@
 Received: from mail.hugovil.com (mail.hugovil.com [162.243.120.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B732B130E28;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B72C512FF99;
 	Thu, 25 Jan 2024 17:00:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.243.120.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706202004; cv=none; b=Hu7NH/QVk3LZwa4xw0FzVy3c+860ER80TcjkbtPI/HUkTaYGea/Gix732bb+V+QiHCRM3UzX7GJyKJd5LgsEMka6z+lXQJ5JiJ1qq9iRpqmVt3i3xzBiLzS5Sj3JmFzXa925+rSiI2gePAAjEzeBuvfCupxl31TeVQhjQaUBlLA=
+	t=1706202004; cv=none; b=DEv2jWbAjobvIp6wJRXMZQGqDs5qbbk+z7DXQAP5cDRzOv7aAjTXYhZgJ5iDMWEZogXLSiUBnqNid+90kQvHWaRJbD2ezyS2rgNr1nLHFlsUpvyVHRoXpmiRi39xK7XnN5ZiGrG1S5LsET+D5HYjwXBrBrKcS8Ledzfie+89AVk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1706202004; c=relaxed/simple;
-	bh=8XCa7Qh9OppTXI92mefwhx8itAPRWOoF6MKaoDejCM4=;
+	bh=uUvP/Xg9uFs1E8+6CwafLn9B4SkKPLlMbH3oAgssuCA=;
 	h=From:To:Cc:Date:Message-Id:In-Reply-To:References:MIME-Version:
-	 Subject; b=Dxhwwsb8nKMJ87rPKVOyBcs+d4t7peByH+SGMarW5S6s2Oz5ocViLvDJynXYA41T1b11Swccd4xPvkCfehBKef3mUL0bE//894lUUMrNesIz2OZYSicrcd1Tn4pXq3YdmvC/3EgFu65qhA9FTEnGMoziS7X8UobB2TCZDshIA3w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hugovil.com; spf=pass smtp.mailfrom=hugovil.com; dkim=pass (1024-bit key) header.d=hugovil.com header.i=@hugovil.com header.b=tE0xOKud; arc=none smtp.client-ip=162.243.120.170
+	 Subject; b=G9nyt/le6ORnde5+Ihd9vlNSET02yhhv/tpt2daquFhPnGOhuMLWDyAXryAGbsZ9Ziwgs0kUQJXWDgB4OWw+ZQKu5dyFmhO+ysFcDTHhotarxBjtUxP+E1PqLuOqLcD2+9oosrtgxzid9AQp5BxQ87399j3pCZvZG98+GU1BOgk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hugovil.com; spf=pass smtp.mailfrom=hugovil.com; dkim=pass (1024-bit key) header.d=hugovil.com header.i=@hugovil.com header.b=RABzovkS; arc=none smtp.client-ip=162.243.120.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hugovil.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hugovil.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=hugovil.com header.i=@hugovil.com header.b="tE0xOKud"
+	dkim=pass (1024-bit key) header.d=hugovil.com header.i=@hugovil.com header.b="RABzovkS"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hugovil.com
 	; s=x; h=Subject:Content-Transfer-Encoding:MIME-Version:Message-Id:Date:Cc:To
 	:From:subject:date:message-id:reply-to;
-	bh=bcHtdL0Jpkz0Bv6AwoLFCG1COeuQZJ/X6BxmGnNOwU8=; b=tE0xOKudeZv0bi7Prm6BPSatcw
-	YwqE7PQZBczLVR8+7gXt3MVzR3+M7Sb3SiYHd8PcF4HKurkDyZyIQXVXa02dykonl5K+XReb8EQiD
-	wlC/+gs3HW4uefHDQvle5N9QDXeVxPWAGBIfOW3eTIxeA2Q2iZgEid+TrCB62hjbgAkc=;
+	bh=/6ue+7JJseCL6n+4HhRQMzcrnbbEUcvQpDog+ZL8f7w=; b=RABzovkSNGxMhdGthvMz9RPZYb
+	oKzpYmRjbvWSc6zLtPPKsR/LjTvjGjOd5uW4aaVr3O0ihPrHqwSoKGjXDZuuYsUq9KjnfB9gtgnr+
+	XK1UvR93iBm8wHyO3Cc2u16a17JExerToek2o92WG0UvcIeCsdwNhcIpDUpHC/GbV3ns=;
 Received: from modemcable168.174-80-70.mc.videotron.ca ([70.80.174.168]:48112 helo=pettiford.lan)
 	by mail.hugovil.com with esmtpa (Exim 4.92)
 	(envelope-from <hugo@hugovil.com>)
-	id 1rT34q-0001qz-2l; Thu, 25 Jan 2024 11:59:44 -0500
+	id 1rT34r-0001qz-8V; Thu, 25 Jan 2024 11:59:45 -0500
 From: Hugo Villeneuve <hugo@hugovil.com>
 To: robh+dt@kernel.org,
 	krzysztof.kozlowski+dt@linaro.org,
@@ -43,8 +43,8 @@ Cc: krzysztof.kozlowski@linaro.org,
 	linux-arm-kernel@lists.infradead.org,
 	hugo@hugovil.com,
 	andy.shevchenko@gmail.com
-Date: Thu, 25 Jan 2024 11:59:34 -0500
-Message-Id: <20240125165935.886992-2-hugo@hugovil.com>
+Date: Thu, 25 Jan 2024 11:59:35 -0500
+Message-Id: <20240125165935.886992-3-hugo@hugovil.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240125165935.886992-1-hugo@hugovil.com>
 References: <20240125165935.886992-1-hugo@hugovil.com>
@@ -61,7 +61,7 @@ X-Spam-Level:
 X-Spam-Report: 
 	* -1.0 ALL_TRUSTED Passed through trusted hosts only via SMTP
 	* -0.0 T_SCC_BODY_TEXT_LINE No description available.
-Subject: [PATCH v3 1/2] dt-bindings: arm: fsl: remove redundant company name
+Subject: [PATCH v3 2/2] arm64: dts: imx8mn-rve-gateway: remove redundant company name
 X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
 X-SA-Exim-Scanned: Yes (on mail.hugovil.com)
 
@@ -73,25 +73,25 @@ helpful, so remove it from product name.
 The board is a prototype developed by my company and we are still at the
 prototype stage, so there is zero ABI impact.
 
-Fixes: bb405e8b5336 ("dt-bindings: arm: fsl: add RVE gateway board")
+Fixes: 67275c2f3d9b ("arm64: dts: freescale: introduce rve-gateway board")
 Signed-off-by: Hugo Villeneuve <hvilleneuve@dimonoff.com>
 ---
- Documentation/devicetree/bindings/arm/fsl.yaml | 2 +-
+ arch/arm64/boot/dts/freescale/imx8mn-rve-gateway.dts | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
-index 228dcc5c7d6f..f455c0172c84 100644
---- a/Documentation/devicetree/bindings/arm/fsl.yaml
-+++ b/Documentation/devicetree/bindings/arm/fsl.yaml
-@@ -1026,7 +1026,7 @@ properties:
-         items:
-           - enum:
-               - dimonoff,gateway-evk # i.MX8MN Dimonoff Gateway EVK Board
--              - rve,rve-gateway # i.MX8MN RVE Gateway Board
-+              - rve,gateway # i.MX8MN RVE Gateway Board
-               - variscite,var-som-mx8mn-symphony
-           - const: variscite,var-som-mx8mn
-           - const: fsl,imx8mn
+diff --git a/arch/arm64/boot/dts/freescale/imx8mn-rve-gateway.dts b/arch/arm64/boot/dts/freescale/imx8mn-rve-gateway.dts
+index 1b633bd1ebb6..ea1855171fb0 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mn-rve-gateway.dts
++++ b/arch/arm64/boot/dts/freescale/imx8mn-rve-gateway.dts
+@@ -10,7 +10,7 @@
+ 
+ / {
+ 	model = "RVE gateway";
+-	compatible = "rve,rve-gateway", "variscite,var-som-mx8mn", "fsl,imx8mn";
++	compatible = "rve,gateway", "variscite,var-som-mx8mn", "fsl,imx8mn";
+ 
+ 	crystal_duart_24m: crystal-duart-24m {
+ 		compatible = "fixed-clock";
 -- 
 2.39.2
 
