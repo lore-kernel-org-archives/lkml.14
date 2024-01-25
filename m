@@ -1,159 +1,108 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D317131E2B;
-	Thu, 25 Jan 2024 16:43:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4221F1386C9;
+	Thu, 25 Jan 2024 16:43:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706201021; cv=none; b=C0yoaRa0H1339R/aPED0mm/oyJKurxZ9pchf3vU5q4gLh6CKUKccOiUSt7vj9w6btmpdFNAlD6LFg/ldvNW+BX3IHYByBGLp8HzR1oyLPyWdP0PN5Ds68QJ4T06T2MaWq0zrq8rdb3FeR8ERjbfcuTMpPQCAMgvOCAft9Sw1Kcc=
+	t=1706201022; cv=none; b=rObEg3jA2j6Fu6xPILfKrGPnDA582yhABgn8TzFzR9QPkkoKJ+uTv0a9Vq/5RmCMkGR3JPrIOq8mkl6xwUG4IJsGKAL+/d+ec1LNADAGTh7hmelh/YvF6oIH4wtjdNeUlqfKPfs1Y0jNrSsF9CDYtYDt3UIJHrVnH4e0M4cp6V8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706201021; c=relaxed/simple;
-	bh=0Lk/yDB2pP/0+WtYhi+H4wfG8MVkHK9WQcQ93Hxoqag=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=n3IDr38LYq1jh04i3f3SzQgZiAeDdbACFnUV1qK+ahpo2ziK0P3FUUVo8bBrKSlv8PfwYjV6u6wi1Pz6GqSgB/n8dreAc2voTcvAz007alxDQlL6jAwZ23CRNA5LWD5206SX8i5uAx/VWsCu0+JMLsXX7ALsPOVm2nCCyoWzTGw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7CBA5153B;
-	Thu, 25 Jan 2024 08:44:23 -0800 (PST)
-Received: from e121798.cable.virginm.net (unknown [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8DF503F5A1;
-	Thu, 25 Jan 2024 08:43:33 -0800 (PST)
-From: Alexandru Elisei <alexandru.elisei@arm.com>
-To: catalin.marinas@arm.com,
-	will@kernel.org,
-	oliver.upton@linux.dev,
-	maz@kernel.org,
-	james.morse@arm.com,
-	suzuki.poulose@arm.com,
-	yuzenghui@huawei.com,
-	arnd@arndb.de,
-	akpm@linux-foundation.org,
-	mingo@redhat.com,
-	peterz@infradead.org,
-	juri.lelli@redhat.com,
-	vincent.guittot@linaro.org,
-	dietmar.eggemann@arm.com,
-	rostedt@goodmis.org,
-	bsegall@google.com,
-	mgorman@suse.de,
-	bristot@redhat.com,
-	vschneid@redhat.com,
-	mhiramat@kernel.org,
-	rppt@kernel.org,
-	hughd@google.com
-Cc: pcc@google.com,
-	steven.price@arm.com,
-	anshuman.khandual@arm.com,
-	vincenzo.frascino@arm.com,
-	david@redhat.com,
-	eugenis@google.com,
-	kcc@google.com,
-	hyesoo.yu@samsung.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	kvmarm@lists.linux.dev,
-	linux-fsdevel@vger.kernel.org,
-	linux-arch@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH RFC v3 09/35] mm: cma: Introduce cma_remove_mem()
-Date: Thu, 25 Jan 2024 16:42:30 +0000
-Message-Id: <20240125164256.4147-10-alexandru.elisei@arm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240125164256.4147-1-alexandru.elisei@arm.com>
-References: <20240125164256.4147-1-alexandru.elisei@arm.com>
+	s=arc-20240116; t=1706201022; c=relaxed/simple;
+	bh=qlZenJyIstVYdWiJcRf04ZXU4wRC9pZX/QYgGL3c40s=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=Tc7EKb8Tsw8go/y50X+KoaNL14quOlpb5Fux+Sdh2cUrKE8sxeW+l128IM4irSFylkOVqOJ/4Bt+015WH0R0spfxiJ2LvIaPPlcjfQ0rcakebZTV5gN8DLdJ0rw7w5RZCEHNfE+1hegwK4kcMZi81fbF7ILY6dq3XFU8ZWJCywE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=iUkcoNPZ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=BAKL2yrv; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="iUkcoNPZ";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="BAKL2yrv"
+Date: Thu, 25 Jan 2024 16:43:37 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1706201018;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/9alz6IhoFeSBeq+RLDCT53ipn+PBG+CbCy5oS/MiWY=;
+	b=iUkcoNPZdZW6zaapgJmGPJ5/7NO5k0g7nklK/z6nyl/fymgi+O4kWTC0xDzIUWFHE1lLNl
+	n3EDLrBeycJ25IZ0A/pAJ0pu490FPo4lHMR2UFm6Gp8uOoIIm4M50m8A+MYkv465oA9ZAV
+	VkHxVy4MWsRKTfe52HLXRgwqKhdSPO8XR1JFEyEIR3QoM0XUBEngYHxO8kILXquZEHWUn8
+	dcMNbsiteT5kX9J8htlj+EhOWBX1skQd83kvZ+bswnwpgdzw+7Hh1VowjXas/yBt3wTc4R
+	gwIcrm61wlXS5ebN4i7Ec9TXzXNPh4/rOmQ+jUwGM0L6N1ZUUJ8rzjsAJTYmkA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1706201018;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/9alz6IhoFeSBeq+RLDCT53ipn+PBG+CbCy5oS/MiWY=;
+	b=BAKL2yrvb8IMgsso1FevVA91cagHzwlhEKA193ldPCDd7zaCjlsKUniYQkgUmusU+qL1cy
+	CWs2HFdsn6/yt1Cg==
+From: "tip-bot2 for Borislav Petkov (AMD)" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/misc] Documentation/maintainer-tip: Add Closes tag
+Cc: "Borislav Petkov (AMD)" <bp@alien8.de>,
+ Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20240124205442.GAZbF5EmOB8LpKqlSc@fat_crate.local>
+References: <20240124205442.GAZbF5EmOB8LpKqlSc@fat_crate.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Message-ID: <170620101796.398.15398694905540241969.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-Memory is added to CMA with cma_declare_contiguous_nid() and
-cma_init_reserved_mem(). This memory is then put on the MIGRATE_CMA list in
-cma_init_reserved_areas(), where the page allocator can make use of it.
+The following commit has been merged into the x86/misc branch of tip:
 
-If a device manages multiple CMA areas, and there's an error when one of
-the areas is added to CMA, there is no mechanism for the device to prevent
-the rest of the areas, which were added before the error occured, from
-being later added to the MIGRATE_CMA list.
+Commit-ID:     b37bf5ef177a1aae937451f2e272943a9333dd5c
+Gitweb:        https://git.kernel.org/tip/b37bf5ef177a1aae937451f2e272943a9333dd5c
+Author:        Borislav Petkov (AMD) <bp@alien8.de>
+AuthorDate:    Wed, 24 Jan 2024 21:51:50 +01:00
+Committer:     Borislav Petkov (AMD) <bp@alien8.de>
+CommitterDate: Thu, 25 Jan 2024 17:31:17 +01:00
 
-Add cma_remove_mem() which allows a previously reserved CMA area to be
-removed and thus it cannot be used by the page allocator.
+Documentation/maintainer-tip: Add Closes tag
 
-Signed-off-by: Alexandru Elisei <alexandru.elisei@arm.com>
+Document where Closes: lands in the tag ordering.
+
+Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
+Acked-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lore.kernel.org/r/20240124205442.GAZbF5EmOB8LpKqlSc@fat_crate.local
 ---
+ Documentation/process/maintainer-tip.rst | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Changes since rfc v2:
-
-* New patch.
-
- include/linux/cma.h |  1 +
- mm/cma.c            | 30 +++++++++++++++++++++++++++++-
- 2 files changed, 30 insertions(+), 1 deletion(-)
-
-diff --git a/include/linux/cma.h b/include/linux/cma.h
-index e32559da6942..787cbec1702e 100644
---- a/include/linux/cma.h
-+++ b/include/linux/cma.h
-@@ -48,6 +48,7 @@ extern int cma_init_reserved_mem(phys_addr_t base, phys_addr_t size,
- 					unsigned int order_per_bit,
- 					const char *name,
- 					struct cma **res_cma);
-+extern void cma_remove_mem(struct cma **res_cma);
- extern struct page *cma_alloc(struct cma *cma, unsigned long count, unsigned int align,
- 			      bool no_warn);
- extern int cma_alloc_range(struct cma *cma, unsigned long start, unsigned long count,
-diff --git a/mm/cma.c b/mm/cma.c
-index 4a0f68b9443b..2881bab12b01 100644
---- a/mm/cma.c
-+++ b/mm/cma.c
-@@ -147,8 +147,12 @@ static int __init cma_init_reserved_areas(void)
- {
- 	int i;
+diff --git a/Documentation/process/maintainer-tip.rst b/Documentation/process/maintainer-tip.rst
+index 08dd0f8..7993592 100644
+--- a/Documentation/process/maintainer-tip.rst
++++ b/Documentation/process/maintainer-tip.rst
+@@ -304,13 +304,15 @@ following tag ordering scheme:
  
--	for (i = 0; i < cma_area_count; i++)
-+	for (i = 0; i < cma_area_count; i++) {
-+		/* Region was removed. */
-+		if (!cma_areas[i].count)
-+			continue;
- 		cma_activate_area(&cma_areas[i]);
-+	}
+  - Reported-by: ``Reporter <reporter@mail>``
  
- 	return 0;
- }
-@@ -216,6 +220,30 @@ int __init cma_init_reserved_mem(phys_addr_t base, phys_addr_t size,
- 	return 0;
- }
++ - Closes: ``URL or Message-ID of the bug report this is fixing``
++
+  - Originally-by: ``Original author <original-author@mail>``
  
-+/**
-+ * cma_remove_mem() - remove cma area
-+ * @res_cma: Pointer to the cma region.
-+ *
-+ * This function removes a cma region created with cma_init_reserved_mem(). The
-+ * ->count is set to 0.
-+ */
-+void __init cma_remove_mem(struct cma **res_cma)
-+{
-+	struct cma *cma;
-+
-+	if (WARN_ON_ONCE(!res_cma || !(*res_cma)))
-+		return;
-+
-+	cma = *res_cma;
-+	if (WARN_ON_ONCE(!cma->count))
-+		return;
-+
-+	totalcma_pages -= cma->count;
-+	cma->count = 0;
-+
-+	*res_cma = NULL;
-+}
-+
- /**
-  * cma_declare_contiguous_nid() - reserve custom contiguous area
-  * @base: Base address of the reserved area optional, use 0 for any
--- 
-2.43.0
-
+  - Suggested-by: ``Suggester <suggester@mail>``
+ 
+  - Co-developed-by: ``Co-author <co-author@mail>``
+ 
+-   Signed-off: ``Co-author <co-author@mail>``
++   Signed-off-by: ``Co-author <co-author@mail>``
+ 
+    Note, that Co-developed-by and Signed-off-by of the co-author(s) must
+    come in pairs.
