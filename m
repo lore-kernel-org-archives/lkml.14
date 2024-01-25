@@ -1,65 +1,72 @@
-Received: from mail.toke.dk (mail.toke.dk [45.145.95.4])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85BEF5A7B1;
-	Thu, 25 Jan 2024 13:48:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.145.95.4
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 88A265B1FF;
+	Thu, 25 Jan 2024 13:49:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706190516; cv=none; b=ZV5/BPtlifG2m+m4KFSaxKlGdpSCIxyd850nKd5AfRoOAo9ZhxzkhIWhM4cRCFIayRYXumc6Mwl6JmkRBNO3cAIeZVBYWJNxwDzcamItpHZjqCwdabC3BSAQmOL2v2xjnvbduI7ejbT5V/OH4b1lFlFI4eNirNlo1BhDHbV1f0M=
+	t=1706190586; cv=none; b=PkDfi5z8KSpVhoMfMFbXXRbyZqIQMn8i4itjBato38EkZXek271zPWEjRW1T/KOCHmXrzSg7bnvr8rpundTre/g2u6ePWGlf28oQMA5cMwQXWBFYHXjK/BgrPZAKanAVhrWHUG2p8MqQ7zCQFN7QYaKUwbf93Sk2BCBUCIDVUaY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706190516; c=relaxed/simple;
-	bh=tSkZ8dfl1rFw812ykxPPPM1f5phy5tOyipZeedPwgBA=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=jAdD4GzFd2DWmpH867xH+7Ww/XjfMQV4EHLjbPoJg6BNOVceRpOAx/ghpN+6HffXE24ytxfcS8jCGxHbdVuWGO02PJ/PO4NWh0gdGPdiaIKqKHMm1sO8arFwGNpi9CgWklcpWU+EcoibfYWf717ZQcjEQ3rdkePyp0WKJDZasPw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=toke.dk; spf=pass smtp.mailfrom=toke.dk; dkim=pass (2048-bit key) header.d=toke.dk header.i=@toke.dk header.b=oUgoM4ty; arc=none smtp.client-ip=45.145.95.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=toke.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=toke.dk
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toke.dk header.i=@toke.dk header.b="oUgoM4ty"
-From: Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@toke.dk>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=toke.dk; s=20161023;
-	t=1706190507; bh=tSkZ8dfl1rFw812ykxPPPM1f5phy5tOyipZeedPwgBA=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=oUgoM4ty0scNYphlQQTkycgj2bPHA6Ud9h+Fb/OMJs4zxeZvJH1wqTmoF7f8ebRlM
-	 Zm9w7P5jmiJq0lJ+Tm3TsgfMjSe0h707S2v7cz9LFl5NyotSDVj/6OlF7mqiS5aEUI
-	 bZtWujGpGJeY0Ez96VoshLE7vJiVFfPTcbrpVNJc9swnOEejELn4vjn/R4vjnWthWa
-	 ugRkbYyvMY4S9mGvJQkBeoUmMoTd4CL3IDlYLI0t+AAVn88DhLXtEoRP3Gmc2FSkEx
-	 tpVocBOk24RdLkoI+B2CLKHhKM1aq6//ZPfLSzZNxhmjfXUFYZrTvVLPWrem7rDkE3
-	 98/xWeBMOmDlQ==
-To: Ubisectech Sirius <bugreport@ubisectech.com>, linux-trace-kernel
- <linux-trace-kernel@vger.kernel.org>, linux-kernel
- <linux-kernel@vger.kernel.org>
-Cc: johannes <johannes@sipsolutions.net>, kvalo <kvalo@kernel.org>
-Subject: Re: =?utf-8?B?5Zue5aSN77yaZ2VuZXJhbA==?= protection fault in
- ath9k_wmi_event_tasklet
-In-Reply-To: <fb3ea26f-f9b6-4107-bb03-ca4893f0495f.bugreport@ubisectech.com>
-References: <ed1d2c66-1193-4c81-9542-d514c29ba8b8.bugreport@ubisectech.com>
- <878r4e4q69.fsf@toke.dk>
- <fb3ea26f-f9b6-4107-bb03-ca4893f0495f.bugreport@ubisectech.com>
-Date: Thu, 25 Jan 2024 14:48:26 +0100
-X-Clacks-Overhead: GNU Terry Pratchett
-Message-ID: <87wmrx34np.fsf@toke.dk>
+	s=arc-20240116; t=1706190586; c=relaxed/simple;
+	bh=6iy/6WiekLaKinGKMQjSK9tWQ4cBT+O71xHlgaPxvqI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VXL3lHg0pNZUDD4uBeY6dhueAt4rI4RAX+a096N59SDpbENuLn/uSHSmcV8xTQczQ+K8xPqDG84Ri2/hPjuVkki9yu6StN0+Zxx6Q81OfTWiBpixJrrn/4cSaog9k/M6kptk/OIzCFHk8cbOd7uGazQLgyrD8cTz6FSDwOTTPmQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8A58CFEC;
+	Thu, 25 Jan 2024 05:50:28 -0800 (PST)
+Received: from e133380.arm.com (e133380.arm.com [10.1.197.58])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 01F9C3F5A1;
+	Thu, 25 Jan 2024 05:49:42 -0800 (PST)
+Date: Thu, 25 Jan 2024 13:49:40 +0000
+From: Dave Martin <Dave.Martin@arm.com>
+To: Mark Brown <broonie@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+	linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Edmund Grimley-Evans <edmund.grimley-evans@arm.com>
+Subject: Re: [PATCH v2 2/4] arm64/sme: Fix cut'n'paste in ABI document
+Message-ID: <ZbJm9J0QuE6Rx9ba@e133380.arm.com>
+References: <20240124-arm64-sve-sme-doc-v2-0-fe3964fb3c19@kernel.org>
+ <20240124-arm64-sve-sme-doc-v2-2-fe3964fb3c19@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240124-arm64-sve-sme-doc-v2-2-fe3964fb3c19@kernel.org>
 
-"Ubisectech Sirius" <bugreport@ubisectech.com> writes:
+On Wed, Jan 24, 2024 at 06:12:36PM +0000, Mark Brown wrote:
+> The ABI for SME is very like that for SVE so bits of the ABI were copied
+> but not adequately search and replaced, fix that.
+> 
+> Reported-by: Edmund Grimley-Evans <edmund.grimley-evans@arm.com>
+> Signed-off-by: Mark Brown <broonie@kernel.org>
+> ---
+>  Documentation/arch/arm64/sme.rst | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/arch/arm64/sme.rst b/Documentation/arch/arm64/sme.rst
+> index 3d0e53ecac4f..3133d0e91b48 100644
+> --- a/Documentation/arch/arm64/sme.rst
+> +++ b/Documentation/arch/arm64/sme.rst
+> @@ -238,12 +238,12 @@ prctl(PR_SME_SET_VL, unsigned long arg)
+>        bits of Z0..Z31 except for Z0 bits [127:0] .. Z31 bits [127:0] to become
+>        unspecified, including both streaming and non-streaming SVE state.
+>        Calling PR_SME_SET_VL with vl equal to the thread's current vector
+> -      length, or calling PR_SME_SET_VL with the PR_SVE_SET_VL_ONEXEC flag,
+> +      length, or calling PR_SME_SET_VL with the PR_SME_SET_VL_ONEXEC flag,
+>        does not constitute a change to the vector length for this purpose.
+>  
+>      * Changing the vector length causes PSTATE.ZA and PSTATE.SM to be cleared.
+>        Calling PR_SME_SET_VL with vl equal to the thread's current vector
+> -      length, or calling PR_SME_SET_VL with the PR_SVE_SET_VL_ONEXEC flag,
+> +      length, or calling PR_SME_SET_VL with the PR_SME_SET_VL_ONEXEC flag,
+>        does not constitute a change to the vector length for this purpose.
 
->>Hmm, so from eyeballing the code in question, this looks like it is
->>another initialisation race along the lines of the one fixed in commit:
->>8b3046abc99e ("ath9k_htc: fix NULL pointer dereference at ath9k_htc_tx_get_packet()")
->>Could you please test the patch below and see if you can still reproduce
->>this issue with that applied?
-> Hello.
->  I can not reproduce the issue on the Linux with the patch applied
-> Ubisectech Sirius Team
+Reviewed-by: Dave Martin <Dave.Martin@arm.com>
 
-Great, thank you for testing! I'll send a proper patch. How would you
-like to be credited with reporting? Just as 'Ubisectech Sirius
-<bugreport@ubisectech.com>' ?
-
--Toke
