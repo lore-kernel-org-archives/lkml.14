@@ -1,114 +1,93 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9477817BAE
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 07:55:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8C6F13AC4;
+	Thu, 25 Jan 2024 07:56:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706169310; cv=none; b=S6iJVhUxjjs8VkUSjMUtZFbNLXEp/hIc3XA8Knr7GuMhebtXNbyBfmHUWFNn7zGF7/DY2Srj0HQ26jcmS0n6Vb3eMM7XDni8bnMM68L04NxQ7ItZYyPR6FCwPqk9KAvA6X818fDdiMZYoEEMibE7Y90PGMEYT2qvIyfbx58/m8U=
+	t=1706169370; cv=none; b=DHiRmaVSXxbA3ywH7G0tTlD7ir46o/LDUkYDKwgz3Z9lY9sVX1CPG6NNUayAseAYmvN+8rfLcJoKTbR4XJqasAk4k+c/QpKUiEg3bszouR9uyEBPJZuQFwBA6nvcQZrR6o37d0QjFESdD53sxK0xI/vrUiO/Ey8UhvVwqosFEqE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706169310; c=relaxed/simple;
-	bh=pyMEcKtVJxb7T/GxClE/3Bz1lwTzPFpnniWDjB5Fa5o=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WmdWud0fqJycTyqKgLPUglPU6PnhEtJf/Mbl5G+VEQZMEBlhznv3G7AUE2V3csCoCMX2gTY51bUhBz42QMJZ/7spnA9BIcR2ptrUChhfW6y3nRwjDjhIlD3YYetRkWDChiQKNhdKIJHIZROmK1B50f02rR8kWflMXakhsHIGcyw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=zBWcBxnJ; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1706169370; c=relaxed/simple;
+	bh=oGEnZLNs2ln1J2d3RRX097XSFJtdFzD/XrDgWH8hjdQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uvkUL8J/zJwUToOSP8Ra9SPG0UVgR6SUKZNlDg3POb8ogopRG9mRf3CPQvifTO01zldOv0jppfWCyyQI4bh4E0MRf9T9IPNawtcsnDNbHUqbSllqKzHXHOAQ7Yx9cOW4hPMpzEJv4SyuH2ZivsA1MGt3eX515LTmloBX8MnoLdg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=thOYhABM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="zBWcBxnJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1706169305;
-	bh=pyMEcKtVJxb7T/GxClE/3Bz1lwTzPFpnniWDjB5Fa5o=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=zBWcBxnJsGwrfch37UMhqu8LOsolJ/KVQkSJosUgJJGDb13zcIFPsx6HODmWPyU8f
-	 9Snas5pyoGFXvJxIG8IDHGvtHbNhq2E9pcEdcrwauBNR10UF4BXpcmcBpKtl8eA10W
-	 eGtHePMNgsNf/tLNUwustb7V3WUku1kt6gubqx1HQu4eIFXO1tl0DZhkvxuOPpbKb5
-	 F8LZNWLndzD6mX7VsvSNG8t8zZ721d38yKCLaiDKcTqkijAeVgOqfnf6TR3ryfd7S7
-	 7lOI/jnhRkZwApt5Q7OsiAfZ01w21/IPJZ1uUhRowWTgHeQo8Rrl00L40pUw4slIu+
-	 0Raekb75VHLsQ==
-Received: from localhost (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bbrezillon)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 460243781FC7;
-	Thu, 25 Jan 2024 07:55:04 +0000 (UTC)
-Date: Thu, 25 Jan 2024 08:55:02 +0100
-From: Boris Brezillon <boris.brezillon@collabora.com>
-To: Dmitry Osipenko <dmitry.osipenko@collabora.com>
-Cc: David Airlie <airlied@gmail.com>, Gerd Hoffmann <kraxel@redhat.com>,
- Gurchetan Singh <gurchetansingh@chromium.org>, Chia-I Wu
- <olvaffe@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
- Thomas Zimmermann <tzimmermann@suse.de>, Christian =?UTF-8?B?S8O2bmln?=
- <christian.koenig@amd.com>, Qiang Yu <yuq825@gmail.com>, Steven Price
- <steven.price@arm.com>, Emma Anholt <emma@anholt.net>, Melissa Wen
- <mwen@igalia.com>, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, kernel@collabora.com,
- virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH v19 03/30] drm/gem: Document locking rule of vmap and
- evict callbacks
-Message-ID: <20240125085502.3207ee29@collabora.com>
-In-Reply-To: <20240105184624.508603-4-dmitry.osipenko@collabora.com>
-References: <20240105184624.508603-1-dmitry.osipenko@collabora.com>
-	<20240105184624.508603-4-dmitry.osipenko@collabora.com>
-Organization: Collabora
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.38; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="thOYhABM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38ABEC433F1;
+	Thu, 25 Jan 2024 07:56:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706169370;
+	bh=oGEnZLNs2ln1J2d3RRX097XSFJtdFzD/XrDgWH8hjdQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=thOYhABMOeY+9IP7f2oUSgkMLUYNSAl+xPZqTZtkEiMlDnqabS/2mNNZKNzSpr3i4
+	 akQpx8sDx2/gkp2Fayhc0KNISBf0voNvqAy71rpYfxTYzekkPyL9yb3uyUn5e4/HwR
+	 V4LNNzDK+FxSXaejQIc5CSJTM4T9Q+Vwg/J+MpuQsKP+AOh86SE5FPAU4dtbxdsG6b
+	 bjwzxqOT/jvKofSgqp0OEHr4qMU2UAPz1HkSQPKJVtZQ/fehZfGQXoDC1YESZ4c/+p
+	 k1qOJ61RXzTMegtvSNNl3QtJ28zPkxe7kscJmBOmXfztNlVIDW1RInYCa7nk2JCbqj
+	 us+TfKVlu9ekQ==
+Date: Thu, 25 Jan 2024 08:56:01 +0100
+From: Niklas Cassel <cassel@kernel.org>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Jingoo Han <jingoohan1@gmail.com>,
+	Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH v4 2/2] PCI: dwc: Cleanup in dw_pcie_ep_raise_msi_irq()
+Message-ID: <ZbIUEaqrpH6jAMiO@x1-carbon>
+References: <888c23ff-1ee4-4795-8c24-7631c6c37da6@moroto.mountain>
+ <64ef42f0-5618-40fd-b715-0d412121045c@moroto.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <64ef42f0-5618-40fd-b715-0d412121045c@moroto.mountain>
 
-On Fri,  5 Jan 2024 21:45:57 +0300
-Dmitry Osipenko <dmitry.osipenko@collabora.com> wrote:
-
-> The vmap/vunmap/evict GEM callbacks are always invoked with a held GEM's
-> reservation lock. Document this locking rule for clarity.
+On Wed, Jan 24, 2024 at 06:03:51PM +0300, Dan Carpenter wrote:
+> I recently changed the alignment code in dw_pcie_ep_raise_msix_irq().
+> The code in dw_pcie_ep_raise_msi_irq() is similar so update it to match
+> as well, just for consistency.  (No effect on runtime, just a cleanup).
 > 
-> Signed-off-by: Dmitry Osipenko <dmitry.osipenko@collabora.com>
-
-Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
-
+> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
 > ---
->  include/drm/drm_gem.h | 9 ++++++---
->  1 file changed, 6 insertions(+), 3 deletions(-)
+> v4: style improvements
+> v3: use ALIGN_DOWN()
+> v2: new patch
 > 
-> diff --git a/include/drm/drm_gem.h b/include/drm/drm_gem.h
-> index f835fdee6a5e..021f64371056 100644
-> --- a/include/drm/drm_gem.h
-> +++ b/include/drm/drm_gem.h
-> @@ -156,7 +156,8 @@ struct drm_gem_object_funcs {
->  	 * @vmap:
->  	 *
->  	 * Returns a virtual address for the buffer. Used by the
-> -	 * drm_gem_dmabuf_vmap() helper.
-> +	 * drm_gem_dmabuf_vmap() helper. Called with a held GEM reservation
-> +	 * lock.
->  	 *
->  	 * This callback is optional.
->  	 */
-> @@ -166,7 +167,8 @@ struct drm_gem_object_funcs {
->  	 * @vunmap:
->  	 *
->  	 * Releases the address previously returned by @vmap. Used by the
-> -	 * drm_gem_dmabuf_vunmap() helper.
-> +	 * drm_gem_dmabuf_vunmap() helper. Called with a held GEM reservation
-> +	 * lock.
->  	 *
->  	 * This callback is optional.
->  	 */
-> @@ -189,7 +191,8 @@ struct drm_gem_object_funcs {
->  	 * @evict:
->  	 *
->  	 * Evicts gem object out from memory. Used by the drm_gem_object_evict()
-> -	 * helper. Returns 0 on success, -errno otherwise.
-> +	 * helper. Returns 0 on success, -errno otherwise. Called with a held
-> +	 * GEM reservation lock.
->  	 *
->  	 * This callback is optional.
->  	 */
+>  drivers/pci/controller/dwc/pcie-designware-ep.c | 7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> index 51679c6702cf..d2de41f02a77 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> @@ -482,9 +482,10 @@ int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
+>  		reg = ep_func->msi_cap + PCI_MSI_DATA_32;
+>  		msg_data = dw_pcie_ep_readw_dbi(ep, func_no, reg);
+>  	}
+> -	aligned_offset = msg_addr_lower & (epc->mem->window.page_size - 1);
+> -	msg_addr = ((u64)msg_addr_upper) << 32 |
+> -			(msg_addr_lower & ~aligned_offset);
+> +	msg_addr = ((u64)msg_addr_upper) << 32 | msg_addr_lower;
+> +
+> +	aligned_offset = msg_addr & (epc->mem->window.page_size - 1);
+> +	msg_addr = ALIGN_DOWN(msg_addr, epc->mem->window.page_size);
+>  	ret = dw_pcie_ep_map_addr(epc, func_no, 0, ep->msi_mem_phys, msg_addr,
+>  				  epc->mem->window.page_size);
+>  	if (ret)
+> -- 
+> 2.43.0
+> 
 
+Reviewed-by: Niklas Cassel <cassel@kernel.org>
+
+(Feel free to keep my R-b tags even if you send out a new version with the
+#include requested by Ilpo.)
