@@ -1,130 +1,111 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 270B81C696
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 09:56:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D6571C6A1
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 09:56:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706176571; cv=none; b=SMh323I+G9DxLcFQcepYBPUicLpXzQejfTr9fUXvaHIEEv6OHkpTGbi8FJqnD4dSDgcCXBOWgwjgpiuB0j0OX9yh0y4YmWk7HkP23+MqvDWDND5pU/f+WlHEr2A1GiOwWzoltDlXnWy5+5GfNNtfSEVCs4QAMgSaIx3aYvrh/A4=
+	t=1706176572; cv=none; b=uX726LkWYJWf1V2z199Xki5WK2u7Ef4tfzmvauhPX0Vt/NuOSUBqeduBU10JlMFSWRfvLpcxnk8Mf2fVSKR3AyVx/eP7Bv0e5myx2Nk3NgdtXvpMR/9IIEm8AES7kNeqBxUjXWrIRHugMmG93ocMzEqlHjRFCdftmhmCRHgfZzk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706176571; c=relaxed/simple;
-	bh=GxwRbE55YIwDHZtfx76YzVpE3RzFJjrHMcE6Kj92Rps=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=S/e/koer+ZWmIs4Vs1KC/Yg1BP5ZJ1I1l8gL1SpUxDh0By9RX55viXNLjvxV1grVIn5bsIWg+vm/rdtnlf/evDiks0m2evgoQ7+6EVUQofhCXarMWe+vu/QSGRXw0sss5DC9ijXSUjWX9HldsuGrWf1jCZkU9sqytHjijlVEhdU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eLLEMHa5; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1706176572; c=relaxed/simple;
+	bh=0FglvjcoV5T/4Go2FaGM3w5PY2/YxleqKSSdfl2SFkk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lh49AXZEotDRbXXXD1xe0XiOGzAWh+/siAOxX0NwGNNVX1yGWSPaLt/3C70h6lgyg5dMRF/dHy68VMjMJN29CAiJC+KM+wUPERwGrUdikFTqp1ecp7Foy+q5Z+KObccPOO9C5P+A5Zndlg8pYwHLwo6W9HiCPUkvXz6WSjBaXZ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JC97NJBj; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eLLEMHa5"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JC97NJBj"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706176569; x=1737712569;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version:content-transfer-encoding;
-  bh=GxwRbE55YIwDHZtfx76YzVpE3RzFJjrHMcE6Kj92Rps=;
-  b=eLLEMHa5l9foFnKJqxnQBAX8Xjvez0u2bQcWX0B4uDL/bYlufuWNjKax
-   gpNojaC7pCd/FPrf/6WXQqqPaXthGP5G175UVQHKbmIV0RfgTUF3LG02H
-   TSKGNpxrlhAaDbJD8i6BovARojJ0pQRXNq9xumT8shnjWG54nAaRWwnNi
-   yC8lPVTFM0ROIhO7pw6STJQnzQYGy2146HBHMNCow9Q/yBI5/keDHmYaw
-   D7G4uWFuDDIXvclNIHeC2SNTaDe4VRtVz22ChpX66JFQyXonZeq2f00k1
-   Cy/Yv1r+VysgzYkMqmz+/w//aQzOMWwyLHMpXSxCtRhZOEK5D/brIpaQG
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="23578976"
+  t=1706176571; x=1737712571;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=0FglvjcoV5T/4Go2FaGM3w5PY2/YxleqKSSdfl2SFkk=;
+  b=JC97NJBjVLhiHPRCLa5OEt+Sh9ZTmUZAHXFvlDnnItl9JqM3DNYvWtGQ
+   bhfhoWhete0xSPGmp3QKj5Syt6fblUbcbao7jS95dSVIERCddGaOfl2lh
+   ZEKVG75PWrBVR49rZOVWv0o1Gc0MTFG97UZ5T2vata45yXxa2T4LB8Knd
+   UuQloHrqbkgTh5+HmyLrmnBMIfnnFEjpmwkTveVa/K6ABcoO5U94ZPrQN
+   9Uwk6WxRucJYIUbVoVNu+si5dPbVOOnMziRiwiYvoXo4QKgJqvm03qeEN
+   HFOq6Oxa2tNSGURndMUsX32qs0xTnzuYfHiPBbgcQMhZEPlEUD+SFb2Qj
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="1991541"
 X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="23578976"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2024 01:56:08 -0800
+   d="scan'208";a="1991541"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2024 01:56:09 -0800
 X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="857016534"
 X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="2188240"
-Received: from cyrillet-mobl.ger.corp.intel.com (HELO localhost) ([10.252.58.252])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2024 01:56:05 -0800
-From: Jani Nikula <jani.nikula@intel.com>
-To: Gustavo Sousa <gustavo.sousa@intel.com>, Lucas De Marchi
- <lucas.demarchi@intel.com>, Yury Norov <yury.norov@gmail.com>
-Cc: intel-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- dri-devel@lists.freedesktop.org, Andy Shevchenko
- <andriy.shevchenko@linux.intel.com>, intel-xe@lists.freedesktop.org
-Subject: Re: Re: [PATCH 1/3] bits: introduce fixed-type genmasks
-In-Reply-To: <170611134445.31262.2799581830173501277@gjsousa-mobl2>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20240124050205.3646390-1-lucas.demarchi@intel.com>
- <20240124050205.3646390-2-lucas.demarchi@intel.com>
- <87v87jkvrx.fsf@intel.com>
- <gvkvihpcc45275idrfukjqbvgem767evrux5sx5lnh5hofqemk@ppbkcauitvwb>
- <ZbEsfl0tGLY+xJl0@yury-ThinkPad>
- <170611134445.31262.2799581830173501277@gjsousa-mobl2>
-Date: Thu, 25 Jan 2024 11:56:01 +0200
-Message-ID: <878r4dlosu.fsf@intel.com>
+   d="scan'208";a="857016534"
+Received: from araj-dh-work.jf.intel.com ([10.165.157.158])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2024 01:56:08 -0800
+Date: Thu, 25 Jan 2024 01:53:14 -0800
+From: Ashok Raj <ashok_raj@linux.intel.com>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	Andrew Cooper <andrew.cooper3@citrix.com>,
+	Arjan van de Ven <arjan@linux.intel.com>,
+	Huang Rui <ray.huang@amd.com>, Juergen Gross <jgross@suse.com>,
+	Dimitri Sivanich <dimitri.sivanich@hpe.com>,
+	Sohil Mehta <sohil.mehta@intel.com>,
+	K Prateek Nayak <kprateek.nayak@amd.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Zhang Rui <rui.zhang@intel.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Feng Tang <feng.tang@intel.com>,
+	Andy Shevchenko <andy@infradead.org>,
+	Michael Kelley <mhklinux@outlook.com>,
+	"Peter Zijlstra (Intel)" <peterz@infradead.org>,
+	Andy Shevchenko <andy.shevchenko@gmail.com>,
+	Wei Liu <wei.liu@kernel.org>, Ashok Raj <ashok.raj@intel.com>
+Subject: Re: [patch V2 01/22] x86/cpu/topology: Make the APIC mismatch
+ warnings complete
+Message-ID: <ZbIvis3zHeQLZerL@araj-dh-work.jf.intel.com>
+References: <20240117124704.044462658@linutronix.de>
+ <20240117124902.403342409@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240117124902.403342409@linutronix.de>
 
-On Wed, 24 Jan 2024, Gustavo Sousa <gustavo.sousa@intel.com> wrote:
-> Quoting Yury Norov (2024-01-24 12:27:58-03:00)
->>On Wed, Jan 24, 2024 at 08:03:53AM -0600, Lucas De Marchi wrote:
->>> On Wed, Jan 24, 2024 at 09:58:26AM +0200, Jani Nikula wrote:
->>> > On Tue, 23 Jan 2024, Lucas De Marchi <lucas.demarchi@intel.com> wrote:
->>> > > From: Yury Norov <yury.norov@gmail.com>
->>> > >=20
->>> > > Generalize __GENMASK() to support different types, and implement
->>> > > fixed-types versions of GENMASK() based on it. The fixed-type versi=
-on
->>> > > allows more strict checks to the min/max values accepted, which is
->>> > > useful for defining registers like implemented by i915 and xe drive=
-rs
->>> > > with their REG_GENMASK*() macros.
->>> >=20
->>> > Mmh, the commit message says the fixed-type version allows more strict
->>> > checks, but none are actually added. GENMASK_INPUT_CHECK() remains the
->>> > same.
->>> >=20
->>> > Compared to the i915 and xe versions, this is more lax now. You could
->>> > specify GENMASK_U32(63,32) without complaints.
->>>=20
->>> Doing this on top of the this series:
->>>=20
->>> -#define   XELPDP_PORT_M2P_COMMAND_TYPE_MASK            REG_GENMASK(30,=
- 27)
->>> +#define   XELPDP_PORT_M2P_COMMAND_TYPE_MASK            REG_GENMASK(62,=
- 32)
->>>=20
->>> and I do get a build failure:
->>>=20
->>> ../drivers/gpu/drm/i915/display/intel_cx0_phy.c: In function =E2=80=98_=
-_intel_cx0_read_once=E2=80=99:
->>> ../include/linux/bits.h:41:31: error: left shift count >=3D width of ty=
-pe [-Werror=3Dshift-count-overflow]
->>>    41 |          (((t)~0ULL - ((t)(1) << (l)) + 1) & \
->>>       |                               ^~
+On Tue, Jan 23, 2024 at 02:10:04PM +0100, Thomas Gleixner wrote:
+> From: Thomas Gleixner <tglx@linutronix.de>
+> 
+> Detect all possible combinations of mismatch right in the CPUID evaluation
+> code.
+> 
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> 
+> ---
+>  arch/x86/include/asm/apic.h           |    5 ++---
+>  arch/x86/kernel/cpu/common.c          |   15 ++-------------
+>  arch/x86/kernel/cpu/topology_common.c |   12 ++++++++++++
+>  3 files changed, 16 insertions(+), 16 deletions(-)
 
-I stand corrected.
+[snip]
 
->>
->>I would better include this in commit message to avoid people's
->>confusion. If it comes to v2, can you please do it and mention that
->>this trick relies on shift-count-overflow compiler check?
->
-> Wouldn't it be better to have explicit check that l and h are not out of =
-bounds
-> based on BITS_PER_TYPE() than relying on a compiler flag that could be tu=
-rned
-> off (maybe for some questionable reason, but even so)?
+> --- a/arch/x86/kernel/cpu/topology_common.c
+> +++ b/arch/x86/kernel/cpu/topology_common.c
+> @@ -177,6 +177,18 @@ void cpu_parse_topology(struct cpuinfo_x
+>  
+>  	parse_topology(&tscan, false);
+>  
+> +	if (IS_ENABLED(CONFIG_X86_LOCAL_APIC)) {
+> +		if (c->topo.initial_apicid != c->topo.apicid) {
+> +			pr_err(FW_BUG "CPU%4u: APIC ID mismatch. CPUID: 0x%04x APIC: 0x%04x\n",
+> +			       cpu, c->topo.initial_apicid, c->topo.apicid);
+> +		}
+> +
+> +		if (c->topo.apicid != cpuid_to_apicid[cpu]) {
+> +			pr_err(FW_BUG "CPU%4u: APIC ID mismatch. Firmware: 0x%04x APIC: 0x%04x\n",
+> +			       cpu, cpuid_to_apicid[cpu], c->topo.apicid);
+> +		}
 
-My preference would be the explicit check, a comment in code, or an
-explanation in the commit message, in this order. Because honestly, none
-of this is obvious, and a future refactoring of GENMASK might just
-inadvertently thwart the whole check.
-
-Regardless, my main concern was moot, on the series,
-
-Acked-by: Jani Nikula <jani.nikula@intel.com>
-
-
---=20
-Jani Nikula, Intel
+Should we consider tainting the kernel when there is any mismatch?
