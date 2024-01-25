@@ -1,189 +1,201 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2068.outbound.protection.outlook.com [40.107.20.68])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E695D1A71F;
-	Thu, 25 Jan 2024 06:37:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706164675; cv=none; b=WI7YHHjSq5Jlf4bbNDT1YOYM5/7wGLtIfMt7KgBMgx3FogIhCg5AMWrBCVI/DOnXraYwuduZKRnSjlJV0xakEMbDW6jShBhwaTJkQ9niz+bEqB0P+BfsRq5Qc9tbjkO79PI+w4QMv43eGaeAZW5ZUkt8d2KUnBiX4DUW6KHLxfk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706164675; c=relaxed/simple;
-	bh=UvN2JNG3WB4C5D3XZIh/oWXGBGhfctOhs/FEXZHIj2w=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=FWBRC1Zfjrv4vFWFsGGSowgiY/zSizxFT1XX8msRkJB3XiyI9YiL1dDaIXhodbuJmozed3KiefPBIADFu/6Ia/pYAzO0EiW/jZNEJiOGWV/EReE9j/WvqheKpqpXTYIrBWBDrJX4rt78XopsITgMgQvBv7NQ8qm25j/R03a9bqg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4TLB2y5hS2z4f3jYM;
-	Thu, 25 Jan 2024 14:37:46 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.75])
-	by mail.maildlp.com (Postfix) with ESMTP id B9D711A017A;
-	Thu, 25 Jan 2024 14:37:50 +0800 (CST)
-Received: from [10.174.176.117] (unknown [10.174.176.117])
-	by APP2 (Coremail) with SMTP id Syh0CgAXOg29AbJlpavFBw--.21614S2;
-	Thu, 25 Jan 2024 14:37:50 +0800 (CST)
-Subject: Re: [PATCH bpf 3/3] selftest/bpf: Test the read of vsyscall page
- under x86-64
-To: Yonghong Song <yonghong.song@linux.dev>, x86@kernel.org,
- bpf@vger.kernel.org
-Cc: Dave Hansen <dave.hansen@linux.intel.com>,
- Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>,
- linux-kernel@vger.kernel.org, xingwei lee <xrivendell7@gmail.com>,
- Jann Horn <jannh@google.com>, houtao1@huawei.com
-References: <20240119073019.1528573-1-houtao@huaweicloud.com>
- <20240119073019.1528573-4-houtao@huaweicloud.com>
- <f227d88b-963a-4df0-a6bc-ad3b12abe6dd@linux.dev>
-From: Hou Tao <houtao@huaweicloud.com>
-Message-ID: <f83cd515-1492-229a-913a-aa542ecd1d74@huaweicloud.com>
-Date: Thu, 25 Jan 2024 14:37:10 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D574610A05;
+	Thu, 25 Jan 2024 06:40:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.68
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706164815; cv=fail; b=RGL1Tt42SYg54QKJJheGQhLh9ewCDx5rnu+wXIsZR5w5EtUDimvCC07Aj6m2kkdLw3lcRrGDk60uPu+v4+KfoJ+dOUT+nKnY4phUCmUYbcMxmNR0Gb2dSExGRcHih43/SdSoCvp5ac0udtQuhX1k8u6yZcawESJAlCzoJgekYkU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706164815; c=relaxed/simple;
+	bh=STe1zyKkOhWtMBk412IJ7sbcdLzlILOZ32EnJSoJl7A=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=WryKfa+1fDnTO8aLt/uFnYTGAzrrX4lNtngrw8DEyaOReYtLf3KFI6VqxNfGtkr9wZZp+JDuqEcCLlMPl8/VKD2EkNk5S12ibBLsVydyuJt67/KqiMWTVfU/ZcPdcZv0Rx07v17tTFXjngCvvVk3SkXcwUKP3+lq1cXD8DlDw6Y=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=PRu1+rnH; arc=fail smtp.client-ip=40.107.20.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="PRu1+rnH"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mgx5kRBRHbsCgEy7AwXA5fjCNZ2KYgMWpMxU7Ge9cdHxXlP3r2GE08dsaypav4oERJpnVPrlU8Kt81Z7y4QX6S9bXLOJXnF66GY7UKOCI0MTvjTCYE3kscHWLgiVyw4FRACQMBcELqInBw1Dx/a6T48A64N7QZ1YPzwNwdeORCUP3FwgriwVrM8MPGH1bCPBZP43Mc6Sdf84aGwqMUXjaajH3v/F30Xvy22VVJoz+EILHibEvc6ygkx0VJEBMUQHPGifZha2rKWQljLOsLnpIyirYBcRJewCGe3NKleJuv20bmXugHEPcPIyQhqEIzgSmRtek+W8ddHPdaQSgeoxHw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=00OaK2bq1ZMI6b68LEWaHw2m1PvE4QbmJ8057FbOGNs=;
+ b=Cu71lavENhhVHQgFU4Etu2WUT7egRj191uznuVJy18Abo36xzMJqn3evr++OhiBewg8ShDcN3OiQTevMaMdRspag78n5zci8BTf0sBGRqQxiSOnwt0CY0RaWKCI18hFdqAAJtZvSPo2imMZjAqYScsay/5qPx+x5NmAH3Roo5pyNgG4MoDOYRfcCQpL5prbIDgl/MrDUFpSOayZsZMz+arMxFbEbqGCcuX/gPMxNrLeIQS2ZI3u/aVh+2A+ta+QBFc0Q/Z66kcZwuYqzlRUg9T9eY3pljCiC55naAhzluivDyBWMHPGM5dDEs3JT6mAqkeuq7Dp2aY1zTJ1pb7QLEQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector2-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=00OaK2bq1ZMI6b68LEWaHw2m1PvE4QbmJ8057FbOGNs=;
+ b=PRu1+rnHu+sJNCTJqZDMMP6ydMM2qqivGDWVwoLMu3EyXExLbQ3XR1DISFEKy7bolEpjz0xV82HBVbI1Xl17kkaHYS4F/Q5BBC8cgb2//lAVIezm5p//5XIIMOX35Ny/DqPgPmrMdypuh1SEAq9p7J3vkc0NpitR8Xc/H5sANkY=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=oss.nxp.com;
+Received: from DU0PR04MB9417.eurprd04.prod.outlook.com (2603:10a6:10:358::11)
+ by VI1PR04MB6783.eurprd04.prod.outlook.com (2603:10a6:803:130::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.22; Thu, 25 Jan
+ 2024 06:40:09 +0000
+Received: from DU0PR04MB9417.eurprd04.prod.outlook.com
+ ([fe80::c499:8cef:9bb1:ced6]) by DU0PR04MB9417.eurprd04.prod.outlook.com
+ ([fe80::c499:8cef:9bb1:ced6%3]) with mapi id 15.20.7228.022; Thu, 25 Jan 2024
+ 06:40:08 +0000
+From: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+To: groeck7@gmail.com,
+	sudeep.holla@arm.com,
+	cristian.marussi@arm.com,
+	jdelvare@suse.com,
+	linux@roeck-us.net
+Cc: linux-hwmon@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Peng Fan <peng.fan@nxp.com>
+Subject: [PATCH V3] hwmon: scmi-hwmon: implement change_mode for thermal zones
+Date: Thu, 25 Jan 2024 14:44:22 +0800
+Message-Id: <20240125064422.347002-1-peng.fan@oss.nxp.com>
+X-Mailer: git-send-email 2.37.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SGAP274CA0002.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:b6::14)
+ To DU0PR04MB9417.eurprd04.prod.outlook.com (2603:10a6:10:358::11)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <f227d88b-963a-4df0-a6bc-ad3b12abe6dd@linux.dev>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-CM-TRANSID:Syh0CgAXOg29AbJlpavFBw--.21614S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxJw47XryUCw1UCFy7CrWDtwb_yoWrCF48p3
-	WkAay5KrWfJwnayr17XrZ8uFyrAF1kGa15tr1FqF15Zr47Zr9YgryagFyqgr1fJrsY9w45
-	Zr10g3s3ur1UJFDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvIb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7Mxk0xIA0c2IE
-	e2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxV
-	Aqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q
-	6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6x
-	kF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE
-	14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf
-	9x07UQzVbUUUUU=
-X-CM-SenderInfo: xkrx3t3r6k3tpzhluzxrxghudrp/
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DU0PR04MB9417:EE_|VI1PR04MB6783:EE_
+X-MS-Office365-Filtering-Correlation-Id: 270879a0-c2f5-4cd0-8431-08dc1d70793a
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	6NvQUM58TC+O8z+tH55VLPMiB0+ewCKWA9x9YT2fd30qIJNWGlVFUEY3udIV72dEds7SvhOkpMjTjoAiOaNrJ2Ik0JYuesENbEMPCsQypBn1/y1g7RStrQciLHoKjBLQa75nGp+JQ6TVFQePl9CHxnTZp8wGsbXSc9xgcpwGAtPT8/npzKaU47EYLOHFS7D/hm/XGWhW5RoOmCzDlUyPuVXN2/sL74Inq1aneNPXgoyhuR+OQadb2gtI3mQBEBfzqf7e136GeCPxRlH2Ju+0aZNK4bri3CbL3nVcWntKcc+L4kTBkjNAoTaQbiN+y1oWujznjtapQrxm0ktCKGyrdAkseY3Zu/91xw20k4nheC11uomUQO/BLE1dvRdhWqLVbf0SkzsrA2Vwj+VZTdWjD4sxfm28qOx+/pmoTO48K2Ic1MnYNKIBrY8+sXAy7lAHPykaKFgmuUkXth+s9a2PWTXExLEGEQdzgv8ZTKqF00ax8MHyisHVgCkcZgnKsDDYlKTF3CarcmhRIMOI16ZrYPdk/8kpoQKP1DQ6eaurdUlxeph0sPC21KHIl7ICaDV/NHPNBeaG8jWS8Qm3kbFzzGwpiAJviTwv+HONQHS37FgwP7bWmH7zp+exjt+etqUR
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU0PR04MB9417.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(376002)(346002)(39860400002)(136003)(396003)(230922051799003)(451199024)(64100799003)(1800799012)(186009)(4326008)(6512007)(6506007)(8676002)(8936002)(83380400001)(26005)(5660300002)(38100700002)(2906002)(66946007)(316002)(66556008)(66476007)(52116002)(6486002)(2616005)(41300700001)(478600001)(86362001)(6666004)(1076003)(38350700005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?B+f1gx3nOXmkDM6VN3WIUUtaa3tLXPMNNNMJ3EO6lHALcCQ5NIXoF43wccjA?=
+ =?us-ascii?Q?E7q4cwEhcjUiUbf0JGmi/rrAN66Afmrb/kIEGlZxnI/UnvBUkP/btR6VKw+m?=
+ =?us-ascii?Q?pYXaE4YaPPYEnqelv038ckjPF/5tF5aqJ2scyab6QC8oW9Zq9cPe2vqZ83UV?=
+ =?us-ascii?Q?tZ9tvthCbuFCVHuFWx/mt9QK8Zj2kMFKXEI+bcsQXT8QEi5nQBmPIx2Ww/Dm?=
+ =?us-ascii?Q?UeH+d+h4wGYZRz0SF4yBEsuWd0CuD7uSX3ikwgMteKhFt10l5iayKa/SEpXB?=
+ =?us-ascii?Q?MoVzuHjGRU8Cepg3nPOdAY28nHerT/UjRiDOI2VSjaIaktK3jQzk9mnVktwT?=
+ =?us-ascii?Q?9OlfeEiAIPSfk7+2NEBfpuLj4KIYtupenRbCCYW2dwU+EiDtcWwBZeds/lda?=
+ =?us-ascii?Q?ECHPJN7gSk704o+wYie/b7vIAmBaYhE2s1Up7tox3Hms6rzI3BsOXgKz4SM9?=
+ =?us-ascii?Q?+hzsNZfgly7/SmxshPrxmfuPNPKfI7E+qXwgT4llrnUzXyNGWKb/t40dLJov?=
+ =?us-ascii?Q?nUKxLj5r9wYCvAfDdC0RRE3Fc7MOQw9XLNsoqJVvGns9BVGdjEkp0toP05Sa?=
+ =?us-ascii?Q?dsZIzUX5oFIjx0b/U+0U5SiKGQKclie1WMdKjQ6x233cTnVHyVVnbUwkalN7?=
+ =?us-ascii?Q?EE6qZ7SnI1gQGwdZyqRerSFqX/g94XUvA5d3Lepc6YHKJYWP8qk9z0oMMweZ?=
+ =?us-ascii?Q?rB0RFEmUMyuB3A8yMNl+YB53KYwK8KZVzG8tnGB04LatviddgmH/+QTzS0ZJ?=
+ =?us-ascii?Q?Arr+uYhKdSubExWL2BkV4kcr/OO9rh2Se/xZI4cuWY6BEuxV5WUIg0FrO75a?=
+ =?us-ascii?Q?7NBE8w9jJAPCTpOCRsPiC62OxQWwdd5oUJOl2PP65+BLJ/I79x8U1KG5e997?=
+ =?us-ascii?Q?S7ARui5sqDfc+Q0fX8mS1dENhh6safk8kkscjlvFD1sacbLNt0MyQwBuZ9Wl?=
+ =?us-ascii?Q?r73ShrEhlj8wIGOHF+lDddVokJV+KdxWnwS8OWuQqHgnZvcZiirLfZb5dnct?=
+ =?us-ascii?Q?PkUL3+Zv1AtX4CzcUGfy1OfKP9yYr5IGNFn/KS+vXX5kes3jCAEUfdXldIOb?=
+ =?us-ascii?Q?IQUVyCrcw49fXOAMuezDVstrYO9NW03Ew93k2pYBLcvUTUXmWKxosA3X4pGx?=
+ =?us-ascii?Q?F6ErV5Yc0doyfX7XIgrdNQyAvRuTSip4kd7qXR0D7LkNLrhxstUq99EJ0y46?=
+ =?us-ascii?Q?y3kVtk5cYb0L+jD1HdAVgRuQJHUMJOR8GUqF16l5yXbm+aV7SYa+Byd4ywcW?=
+ =?us-ascii?Q?dWBXSEw9qe4Mnc1BCkz8Zvi678ea5BtQOYlFnnrCkJlGJ4Qo1UYUoVM2ywOZ?=
+ =?us-ascii?Q?y1psZcjPlZm63RVxesi4xnuU1gOYUqZdr6NukpPcjiHksjfqNhgD5CO/mR2q?=
+ =?us-ascii?Q?47SDd6GWfRecd8xTvf/YNyJgsTFR1H1eNzg84+OAci08ibMcVTg4oghsPfWD?=
+ =?us-ascii?Q?7uEt7NdzLALXXQ9spz69/dj8YaXzHTlIPAe6PKhUrLWU41cSARmq3auQcQD8?=
+ =?us-ascii?Q?nnE3T+0RFPBvhH4ouaKgtdKDliVtXo1cCDj04bWVD0Mo/+S3DcMdRNH99bmk?=
+ =?us-ascii?Q?u2556Mp9wBma6LapITBSdv5vMUoy8R1YYD4VJ5Ut?=
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 270879a0-c2f5-4cd0-8431-08dc1d70793a
+X-MS-Exchange-CrossTenant-AuthSource: DU0PR04MB9417.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Jan 2024 06:40:08.9276
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: FPEyyimkaWkk3SM4l4xgA6hC20SLBeF36ZFFjaTpBsv1VGaCkuOAGv+azwCdRNwjkEkGnugvk900TE4uT3yHpA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB6783
 
-Hi,
+From: Peng Fan <peng.fan@nxp.com>
 
-On 1/22/2024 2:30 PM, Yonghong Song wrote:
->
-> On 1/18/24 11:30 PM, Hou Tao wrote:
->> From: Hou Tao <houtao1@huawei.com>
->>
->> Using bpf_probe_read_kernel{_str}() or bpf_probe_read{_str}() to read
->> from vsyscall page under x86-64 will trigger oops, so add one test case
->> to ensure that the problem is fixed.
->>
->> Beside those four bpf helpers mentioned above, testing the read of
->> vsyscall page by using bpf_probe_read_user{_str} and
->> bpf_copy_from_user{_task}() as well.
->>
->> vsyscall page could be disabled by CONFIG_LEGACY_VSYSCALL_NONE or
->> vsyscall=none boot cmd-line, but it doesn't affect the reproduce of the
->> problem and the returned error codes.
->>
->> Signed-off-by: Hou Tao <houtao1@huawei.com>
->> ---
->>   .../selftests/bpf/prog_tests/read_vsyscall.c  | 61 +++++++++++++++++++
->>   .../selftests/bpf/progs/read_vsyscall.c       | 45 ++++++++++++++
->>   2 files changed, 106 insertions(+)
->>   create mode 100644
->> tools/testing/selftests/bpf/prog_tests/read_vsyscall.c
->>   create mode 100644 tools/testing/selftests/bpf/progs/read_vsyscall.c
->>
->> diff --git a/tools/testing/selftests/bpf/prog_tests/read_vsyscall.c
->> b/tools/testing/selftests/bpf/prog_tests/read_vsyscall.c
->> new file mode 100644
->> index 0000000000000..d9247cc89cf3e
->> --- /dev/null
->> +++ b/tools/testing/selftests/bpf/prog_tests/read_vsyscall.c
->> @@ -0,0 +1,61 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/* Copyright (C) 2024. Huawei Technologies Co., Ltd */
->> +#include "test_progs.h"
->> +#include "read_vsyscall.skel.h"
->> +
->> +#if defined(__x86_64__)
->> +/* For VSYSCALL_ADDR */
->> +#include <asm/vsyscall.h>
->> +#else
->> +/* To prevent build failure on non-x86 arch */
->> +#define VSYSCALL_ADDR 0UL
->> +#endif
->> +
->> +struct read_ret_desc {
->> +    const char *name;
->> +    int ret;
->> +} all_read[] = {
->> +    { .name = "probe_read_kernel", .ret = -ERANGE },
->> +    { .name = "probe_read_kernel_str", .ret = -ERANGE },
->> +    { .name = "probe_read", .ret = -ERANGE },
->> +    { .name = "probe_read_str", .ret = -ERANGE },
->> +    /* __access_ok() will fail */
->> +    { .name = "probe_read_user", .ret = -EFAULT },
->> +    /* __access_ok() will fail */
->> +    { .name = "probe_read_user_str", .ret = -EFAULT },
->> +    /* access_ok() will fail */
->> +    { .name = "copy_from_user", .ret = -EFAULT },
->> +    /* both vma_lookup() and expand_stack() will fail */
->> +    { .name = "copy_from_user_task", .ret = -EFAULT },
->
-> The above comments are not clear enough. For example,
-> '__access_ok() will fail', user will need to
-> check the source code where __access_ok() is and
-> this could be hard e.g., for probe_read_user_str().
-> Another example, 'both vma_lookup() and expand_stack() will fail',
-> where is vma_lookup()/expand_stack()? User needs to further
-> check to make sense.
+The thermal sensors maybe disabled before kernel boot, so add change_mode
+for thermal zones to support configuring the thermal sensor to enabled
+state. If reading the temperature when the sensor is disabled, there will
+be error reported.
 
-Yes. These comment are highly coupled with the implementation.
->
-> I suggest remove the above comments and add more
-> detailed explanation in commit messages with callstack
-> indicating where the fail/error return happens.
+The cost is an extra config_get all to SCMI firmware to get the status
+of the thermal sensor. No function level impact.
 
-Will do in v2. Thanks for the suggestions.
->
->> +};
->> +
->> +void test_read_vsyscall(void)
->> +{
->> +    struct read_vsyscall *skel;
->> +    unsigned int i;
->> +    int err;
->> +
->> +#if !defined(__x86_64__)
->> +    test__skip();
->> +    return;
->> +#endif
->> +    skel = read_vsyscall__open_and_load();
->> +    if (!ASSERT_OK_PTR(skel, "read_vsyscall open_load"))
->> +        return;
->> +
->> +    skel->bss->target_pid = getpid();
->> +    err = read_vsyscall__attach(skel);
->> +    if (!ASSERT_EQ(err, 0, "read_vsyscall attach"))
->> +        goto out;
->> +
->> +    /* userspace may don't have vsyscall page due to
->> LEGACY_VSYSCALL_NONE,
->> +     * but it doesn't affect the returned error codes.
->> +     */
->> +    skel->bss->user_ptr = (void *)VSYSCALL_ADDR;
->> +    usleep(1);
->> +
->> +    for (i = 0; i < ARRAY_SIZE(all_read); i++)
->> +        ASSERT_EQ(skel->bss->read_ret[i], all_read[i].ret,
->> all_read[i].name);
->> +out:
->> +    read_vsyscall__destroy(skel);
->> +}
-> [...]
+Reviewed-by: Cristian Marussi <cristian.marussi@arm.com>
+Signed-off-by: Peng Fan <peng.fan@nxp.com>
+---
+
+V3:
+ Update commit log to show it only applys to thermal
+ Add comments in code
+ Add R-b from Cristian
+
+ Guenter, I Cced linux@roeck-us.net when sending V1/V2 
+ Let me Cc Guenter Roeck <groeck7@gmail.com> in V3, hope you not mind
+
+V2:
+ Use SCMI_SENS_CFG_IS_ENABLED & clear BIT[31:9] before update config(Thanks Cristian)
+
+ drivers/hwmon/scmi-hwmon.c | 39 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 39 insertions(+)
+
+diff --git a/drivers/hwmon/scmi-hwmon.c b/drivers/hwmon/scmi-hwmon.c
+index 364199b332c0..af2267fea5f0 100644
+--- a/drivers/hwmon/scmi-hwmon.c
++++ b/drivers/hwmon/scmi-hwmon.c
+@@ -151,7 +151,46 @@ static int scmi_hwmon_thermal_get_temp(struct thermal_zone_device *tz,
+ 	return ret;
+ }
+ 
++static int scmi_hwmon_thermal_change_mode(struct thermal_zone_device *tz,
++					  enum thermal_device_mode new_mode)
++{
++	int ret;
++	u32 config;
++	enum thermal_device_mode cur_mode = THERMAL_DEVICE_DISABLED;
++	struct scmi_thermal_sensor *th_sensor = thermal_zone_device_priv(tz);
++
++	ret = sensor_ops->config_get(th_sensor->ph, th_sensor->info->id,
++				     &config);
++	if (ret)
++		return ret;
++
++	if (SCMI_SENS_CFG_IS_ENABLED(config))
++		cur_mode = THERMAL_DEVICE_ENABLED;
++
++	if (cur_mode == new_mode)
++		return 0;
++
++	/*
++	 * Per SENSOR_CONFIG_SET sensor_config description:
++	 * BIT[31:11] should be set to 0 if the sensor update interval does
++	 * not need to be updated, so clear them.
++	 * And SENSOR_CONFIG_GET does not return round up/down, so also clear
++	 * BIT[10:9] round up/down.
++	 */
++	config &= ~(SCMI_SENS_CFG_UPDATE_SECS_MASK |
++		    SCMI_SENS_CFG_UPDATE_EXP_MASK |
++		    SCMI_SENS_CFG_ROUND_MASK);
++	if (new_mode == THERMAL_DEVICE_ENABLED)
++		config |= SCMI_SENS_CFG_SENSOR_ENABLED_MASK;
++	else
++		config &= ~SCMI_SENS_CFG_SENSOR_ENABLED_MASK;
++
++	return sensor_ops->config_set(th_sensor->ph, th_sensor->info->id,
++				      config);
++}
++
+ static const struct thermal_zone_device_ops scmi_hwmon_thermal_ops = {
++	.change_mode = scmi_hwmon_thermal_change_mode,
+ 	.get_temp = scmi_hwmon_thermal_get_temp,
+ };
+ 
+-- 
+2.37.1
 
