@@ -1,86 +1,130 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A90412B6E;
-	Thu, 25 Jan 2024 06:29:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 185231AACD
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 06:29:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706164193; cv=none; b=t/ekeA2aY02KbcrB8V30gVdoOre+mVtzBRyK4QtgnmU9cVa504ivq95wAEKnzzAETE4fzZLCGsACHc60bJuNAIiUugvur2Ep2zFyhs45XuuhGBBYTQs4nZvXkc0FDRWPRYJjAUjE2K6tqiiw4hiuAZMT8S257Tt4AtP4TvIyli0=
+	t=1706164194; cv=none; b=NdZEm1gzKl33hjF+JgMB2dXkfvwvGc9QDfS3FR705WeQsYzvfARQpR7qY4toRyhBIO4jKVrIZNaTfhJYo3zmfEIN5qIt5X0pWhd0y9LqSZm8LFka5aG0/zEehWTCTm40386oj0POqAK3TC4Dspmw2dnrMORrb88R5FelPY9iSRU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706164193; c=relaxed/simple;
-	bh=x32LOme0VCi24BOXE0bhRSdLzmkLr19AHRZy9FC+YGQ=;
+	s=arc-20240116; t=1706164194; c=relaxed/simple;
+	bh=7JK+V6JPNZ2v8RShHgQu8PnlcNSkr3EnoD4AbOkSp74=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=k/jLyuIqsCG6KkgGEbDbIAk96orftdB86kbrPUpF/6RCn1hYHCxDk7avFAgf/FQiTvQwh2KJFoiHPahhcjYUmuIwhgILzCLOqVz85b1rJVawSUKF0TnIZEXUjnzbuzsoA/uSTlNXpipxwEpi3M+YGKgFdX8hWk5q7EYO2epiPYI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CIxU5pXy; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 MIME-Version; b=nGroXx1cxM/gtHcQYiJqQYYmpoCUnsujA+DirKcL/Th8wwOi+KTOfx/blaEIpwLf4buHx4tiTGCZYseX4HIUfzhkBBrtzo3FMZg01ZCwW7Q/RJ7F+1ixeTyVyhc1xlJC8i6D7SBiZjL/Hl28zM+IY91lultBK6+jKMCVpBHuAzE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=gr9PwrMW; arc=none smtp.client-ip=209.85.210.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CIxU5pXy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706164191; x=1737700191;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=x32LOme0VCi24BOXE0bhRSdLzmkLr19AHRZy9FC+YGQ=;
-  b=CIxU5pXy8hoGyw+0r/UeLVYxkSZFTw1/OtpLmEb/weyahrYi3Fxt4o95
-   k6gv36b+ckzBi+TfMe4dEw9L/cRdPosYg6eEDur0tR9uieFGrmREe29QY
-   rXx2yPG95luUzUjaHvOK1gN4F9A6r+4Mleuv5InxY/kl0XSKLPF8TjMaW
-   qyUB9ElEcIEmrFGtFKagoZ+SiP4lb6PuCV5ugzAWhic43Y69J7E7ThPkF
-   jBsAo5huO4BMjQb9AnzE33D/7BbJ0P9wnvfstO2nbt6QY1HCyAk4ySNJW
-   U2+63s27aSWlwWsczRsr0mPzLZC7QoLTkdfE/Rt/ieg8iLau/ZxFZBM74
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="976651"
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="976651"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jan 2024 22:29:45 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="28658999"
-Received: from linchen5-mobl.ccr.corp.intel.com (HELO localhost) ([10.254.209.209])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jan 2024 22:29:38 -0800
-From: "Wang, Qingshun" <qingshun.wang@linux.intel.com>
-To: linux-pci@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-acpi@vger.kernel.org
-Cc: chao.p.peng@linux.intel.com,
-	erwin.tsaur@intel.com,
-	feiting.wanyan@intel.com,
-	qingshun.wang@intel.com,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>,
-	James Morse <james.morse@arm.com>,
-	Tony Luck <tony.luck@intel.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Bjorn Helgaas <helgaas@kernel.org>,
-	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-	"Oliver O'Halloran" <oohall@gmail.com>,
-	Miaohe Lin <linmiaohe@huawei.com>,
-	Shiju Jose <shiju.jose@huawei.com>,
-	Adam Preble <adam.c.preble@intel.com>,
-	Li Yang <leoyang.li@nxp.com>,
-	Lukas Wunner <lukas@wunner.de>,
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>,
-	Robert Richter <rrichter@amd.com>,
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="gr9PwrMW"
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-6ddc0c02593so782015b3a.3
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 22:29:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1706164192; x=1706768992; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=t1B3LjRC8FPiusELMKgJyB91QjKz3YM9voAFk/nY+UE=;
+        b=gr9PwrMWKRBjZZbg+P7gvP/YWNf8eia6KAf7JWHHUNFnwRzHGNHuEwnGZZKxHs5QLw
+         bWNKZ97IcqcWu0ZW0Sob68cbwnrVXOWS0MIEtd0vI5gY2N9iJO2jQJex2fKzh/284ywF
+         X2619yleiFs6BNg76ER1MTlMd4oqQ23Pts6vDAhzpXL41exoBvj6ZfR4qDeETP3xe85j
+         eXnVlWvyh9ASXXbzOfJNDE9qB/pU5lkilwNKB3VTXEc12HTX+GM9aI5e81Bmbo/MrV6e
+         1KmClIh5nQtC/8Xezw84PuJBVcWQ0Xf2SH3pU0Kp3Xx9Vobi1TyzSSJYpqkXhXym/tsU
+         +J7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706164192; x=1706768992;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=t1B3LjRC8FPiusELMKgJyB91QjKz3YM9voAFk/nY+UE=;
+        b=v3wK6V8AH4ncPZFc0FxCC+ahC5fsmqNf9q4o7TLor6qDX5CehI0uVQa9xov75tpzAC
+         iLf0ld+lJOgONvl8wySd/nsxkxP1To3X5/4XDfzzz7Tvo6MGz+9P1ZUY/sII6ZGN6/kk
+         Wp6gIFsiiZQFeZvClXuWsxbsrKMqGksp8FIbXjZ67Pygb/0OuJRP/FnzNzfjkOnGrtMm
+         uy/lbWC05NZoFlX1hq7j6DkfyBgTys+h5ghkiF8JL1z5Pr6dle2gCdfxrFyOQrlr+iLh
+         AJU+uY1zkDEhZaA9EC4ZTsRaRctPB3Qencb4ChslvgADV1CT/gd296RGXwrozrjjCLAx
+         TX0g==
+X-Gm-Message-State: AOJu0YydJ3vLsIxwh4LQ7rqtDoq9c0FSloo1AecqcpjxvtR3WdyWKmEJ
+	Rj1LY2q6VNfD3x3MdsJMs4gQ9Zjjwcn2ZlRIDm4cFE9iC/y5e3ViOENPEXxJYXc=
+X-Google-Smtp-Source: AGHT+IFe3XrkFPRdJ2UiIXYbbLc9t81EIm21drknEbRwnjfGJo5iR2n8OKkxXCB/AeScwGUu+RiNSA==
+X-Received: by 2002:aa7:99cd:0:b0:6dd:c3fd:45fb with SMTP id v13-20020aa799cd000000b006ddc3fd45fbmr215232pfi.24.1706164192388;
+        Wed, 24 Jan 2024 22:29:52 -0800 (PST)
+Received: from debug.ba.rivosinc.com ([64.71.180.162])
+        by smtp.gmail.com with ESMTPSA id t19-20020a056a00139300b006dd870b51b8sm3201139pfg.126.2024.01.24.22.29.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Jan 2024 22:29:52 -0800 (PST)
+From: debug@rivosinc.com
+To: rick.p.edgecombe@intel.com,
+	broonie@kernel.org,
+	Szabolcs.Nagy@arm.com,
+	kito.cheng@sifive.com,
+	keescook@chromium.org,
+	ajones@ventanamicro.com,
+	paul.walmsley@sifive.com,
+	palmer@dabbelt.com,
+	conor.dooley@microchip.com,
+	cleger@rivosinc.com,
+	atishp@atishpatra.org,
+	alex@ghiti.fr,
+	bjorn@rivosinc.com,
+	alexghiti@rivosinc.com
+Cc: corbet@lwn.net,
+	aou@eecs.berkeley.edu,
+	oleg@redhat.com,
+	akpm@linux-foundation.org,
+	arnd@arndb.de,
+	ebiederm@xmission.com,
+	shuah@kernel.org,
+	brauner@kernel.org,
+	debug@rivosinc.com,
+	guoren@kernel.org,
+	samitolvanen@google.com,
+	evan@rivosinc.com,
+	xiao.w.wang@intel.com,
+	apatel@ventanamicro.com,
+	mchitale@ventanamicro.com,
+	waylingii@gmail.com,
+	greentime.hu@sifive.com,
+	heiko@sntech.de,
+	jszhang@kernel.org,
+	shikemeng@huaweicloud.com,
+	david@redhat.com,
+	charlie@rivosinc.com,
+	panqinglin2020@iscas.ac.cn,
+	willy@infradead.org,
+	vincent.chen@sifive.com,
+	andy.chiu@sifive.com,
+	gerg@kernel.org,
+	jeeheng.sia@starfivetech.com,
+	mason.huo@starfivetech.com,
+	ancientmodern4@gmail.com,
+	mathis.salmen@matsal.de,
+	cuiyunhui@bytedance.com,
+	bhe@redhat.com,
+	chenjiahao16@huawei.com,
+	ruscur@russell.cc,
+	bgray@linux.ibm.com,
+	alx@kernel.org,
+	baruch@tkos.co.il,
+	zhangqing@loongson.cn,
+	catalin.marinas@arm.com,
+	revest@chromium.org,
+	josh@joshtriplett.org,
+	joey.gouly@arm.com,
+	shr@devkernel.io,
+	omosnace@redhat.com,
+	ojeda@kernel.org,
+	jhubbard@nvidia.com,
+	linux-doc@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org,
-	linux-edac@vger.kernel.org,
-	"Wang, Qingshun" <qingshun.wang@linux.intel.com>
-Subject: [PATCH v2 4/4] RAS: Trace more information in aer_event
-Date: Thu, 25 Jan 2024 14:28:02 +0800
-Message-ID: <20240125062802.50819-5-qingshun.wang@linux.intel.com>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20240125062802.50819-1-qingshun.wang@linux.intel.com>
-References: <20240125062802.50819-1-qingshun.wang@linux.intel.com>
+	linux-mm@kvack.org,
+	linux-arch@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: [RFC PATCH v1 15/28] riscv/mm: Implement map_shadow_stack() syscall
+Date: Wed, 24 Jan 2024 22:21:40 -0800
+Message-ID: <20240125062739.1339782-16-debug@rivosinc.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240125062739.1339782-1-debug@rivosinc.com>
+References: <20240125062739.1339782-1-debug@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -89,177 +133,206 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add following fields in aer_event to better understand Advisory
-Non-Fatal and other errors for external observation:
+From: Deepak Gupta <debug@rivosinc.com>
 
-  - cor_status		(Correctable Error Status)
-  - cor_mask		(Correctable Error Mask)
-  - uncor_status	(Uncorrectable Error Status)
-  - uncor_severity	(Uncorrectable Error Severity)
-  - uncor_mask		(Uncorrectable Error Mask)
-  - aer_cap_ctrl	(AER Capabilities and Control)
-  - link_status		(Link Status)
-  - device_status	(Device Status)
-  - device_control_2	(Device Control 2)
+As discussed extensively in the changelog for the addition of this
+syscall on x86 ("x86/shstk: Introduce map_shadow_stack syscall") the
+existing mmap() and madvise() syscalls do not map entirely well onto the
+security requirements for guarded control stacks since they lead to
+windows where memory is allocated but not yet protected or stacks which
+are not properly and safely initialised. Instead a new syscall
+map_shadow_stack() has been defined which allocates and initialises a
+shadow stack page.
 
-In addition to the raw register value, value of following fields are
-extracted and logged for better observability:
+This patch implements this syscall for riscv. riscv doesn't require token
+to be setup by kernel because user mode can do that by itself. However to
+provide compatiblity and portability with other architectues, user mode can
+specify token set flag.
 
-  - "First Error Pointer" and "Completion Timeout Prefix/Header Log
-    Capable" from "AER Capabilities and Control"
-  - "Completion Timeout Value" and "Completion Timeout Disable"
-    from "Device Control 2"
-
-Signed-off-by: "Wang, Qingshun" <qingshun.wang@linux.intel.com>
+Signed-off-by: Deepak Gupta <debug@rivosinc.com>
 ---
- drivers/pci/pcie/aer.c        | 17 +++++++++++--
- include/ras/ras_event.h       | 48 ++++++++++++++++++++++++++++++++---
- include/uapi/linux/pci_regs.h |  1 +
- 3 files changed, 60 insertions(+), 6 deletions(-)
+ arch/riscv/kernel/Makefile      |   2 +
+ arch/riscv/kernel/usercfi.c     | 150 ++++++++++++++++++++++++++++++++
+ include/uapi/asm-generic/mman.h |   1 +
+ 3 files changed, 153 insertions(+)
+ create mode 100644 arch/riscv/kernel/usercfi.c
 
-diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-index eec3406f727a..2f5639f6c40f 100644
---- a/drivers/pci/pcie/aer.c
-+++ b/drivers/pci/pcie/aer.c
-@@ -757,6 +757,7 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
- 	int layer, agent;
- 	int id = pci_dev_id(dev);
- 	const char *level;
-+	struct aer_capability_regs aer_caps;
+diff --git a/arch/riscv/kernel/Makefile b/arch/riscv/kernel/Makefile
+index fee22a3d1b53..8c668269e886 100644
+--- a/arch/riscv/kernel/Makefile
++++ b/arch/riscv/kernel/Makefile
+@@ -102,3 +102,5 @@ obj-$(CONFIG_COMPAT)		+= compat_vdso/
  
- 	if (info->severity == AER_CORRECTABLE) {
- 		status = info->cor_status;
-@@ -793,8 +794,18 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
- 	if (info->id && info->error_dev_num > 1 && info->id == id)
- 		pci_err(dev, "  Error of this Agent is reported first\n");
+ obj-$(CONFIG_64BIT)		+= pi/
+ obj-$(CONFIG_ACPI)		+= acpi.o
++
++obj-$(CONFIG_RISCV_USER_CFI) += usercfi.o
+diff --git a/arch/riscv/kernel/usercfi.c b/arch/riscv/kernel/usercfi.c
+new file mode 100644
+index 000000000000..35ede2cbc05b
+--- /dev/null
++++ b/arch/riscv/kernel/usercfi.c
+@@ -0,0 +1,150 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2023 Rivos, Inc.
++ * Deepak Gupta <debug@rivosinc.com>
++ */
++
++#include <linux/sched.h>
++#include <linux/bitops.h>
++#include <linux/types.h>
++#include <linux/mm.h>
++#include <linux/mman.h>
++#include <linux/uaccess.h>
++#include <linux/sizes.h>
++#include <linux/user.h>
++#include <linux/syscalls.h>
++#include <linux/prctl.h>
++#include <asm/csr.h>
++#include <asm/usercfi.h>
++
++#define SHSTK_ENTRY_SIZE sizeof(void *)
++
++/*
++ * Writes on shadow stack can either be `sspush` or `ssamoswap`. `sspush` can happen
++ * implicitly on current shadow stack pointed to by CSR_SSP. `ssamoswap` takes pointer to
++ * shadow stack. To keep it simple, we plan to use `ssamoswap` to perform writes on shadow
++ * stack.
++ */
++static noinline unsigned long amo_user_shstk(unsigned long *addr, unsigned long val)
++{
++	/*
++	 * In case ssamoswap faults, return -1.
++	 * Never expect -1 on shadow stack. Expect return addresses and zero
++	 */
++	unsigned long swap = -1;
++
++	__enable_user_access();
++	asm_volatile_goto(
++				".option push\n"
++				".option arch, +zicfiss\n"
++#ifdef CONFIG_64BIT
++				"1: ssamoswap.d %0, %2, %1\n"
++#else
++				"1: ssamoswap.w %0, %2, %1\n"
++#endif
++				_ASM_EXTABLE(1b, %l[fault])
++				RISCV_ACQUIRE_BARRIER
++				".option pop\n"
++				: "=r" (swap), "+A" (*addr)
++				: "r" (val)
++				: "memory"
++				: fault
++			);
++	__disable_user_access();
++	return swap;
++fault:
++	__disable_user_access();
++	return -1;
++}
++
++/*
++ * Create a restore token on the shadow stack.  A token is always XLEN wide
++ * and aligned to XLEN.
++ */
++static int create_rstor_token(unsigned long ssp, unsigned long *token_addr)
++{
++	unsigned long addr;
++
++	/* Token must be aligned */
++	if (!IS_ALIGNED(ssp, SHSTK_ENTRY_SIZE))
++		return -EINVAL;
++
++	/* On RISC-V we're constructing token to be function of address itself */
++	addr = ssp - SHSTK_ENTRY_SIZE;
++
++	if (amo_user_shstk((unsigned long __user *)addr, (unsigned long) ssp) == -1)
++		return -EFAULT;
++
++	if (token_addr)
++		*token_addr = addr;
++
++	return 0;
++}
++
++static unsigned long allocate_shadow_stack(unsigned long addr, unsigned long size,
++				unsigned long token_offset,
++				bool set_tok)
++{
++	int flags = MAP_ANONYMOUS | MAP_PRIVATE;
++	struct mm_struct *mm = current->mm;
++	unsigned long populate, tok_loc = 0;
++
++	if (addr)
++		flags |= MAP_FIXED_NOREPLACE;
++
++	mmap_write_lock(mm);
++	addr = do_mmap(NULL, addr, size, PROT_SHADOWSTACK, flags,
++				VM_SHADOW_STACK, 0, &populate, NULL);
++	mmap_write_unlock(mm);
++
++	if (!set_tok || IS_ERR_VALUE(addr))
++		goto out;
++
++	if (create_rstor_token(addr + token_offset, &tok_loc)) {
++		vm_munmap(addr, size);
++		return -EINVAL;
++	}
++
++	addr = tok_loc;
++
++out:
++	return addr;
++}
++
++SYSCALL_DEFINE3(map_shadow_stack, unsigned long, addr, unsigned long, size, unsigned int, flags)
++{
++	bool set_tok = flags & SHADOW_STACK_SET_TOKEN;
++	unsigned long aligned_size = 0;
++
++	if (!cpu_supports_shadow_stack())
++		return -EOPNOTSUPP;
++
++	/* Anything other than set token should result in invalid param */
++	if (flags & ~SHADOW_STACK_SET_TOKEN)
++		return -EINVAL;
++
++	/*
++	 * Unlike other architectures, on RISC-V, SSP pointer is held in CSR_SSP and is available
++	 * CSR in all modes. CSR accesses are performed using 12bit index programmed in instruction
++	 * itself. This provides static property on register programming and writes to CSR can't
++	 * be unintentional from programmer's perspective. As long as programmer has guarded areas
++	 * which perform writes to CSR_SSP properly, shadow stack pivoting is not possible. Since
++	 * CSR_SSP is writeable by user mode, it itself can setup a shadow stack token subsequent
++	 * to allocation. Although in order to provide portablity with other architecture (because
++	 * `map_shadow_stack` is arch agnostic syscall), RISC-V will follow expectation of a token
++	 * flag in flags and if provided in flags, setup a token at the base.
++	 */
++
++	/* If there isn't space for a token */
++	if (set_tok && size < SHSTK_ENTRY_SIZE)
++		return -ENOSPC;
++
++	if (addr && (addr % PAGE_SIZE))
++		return -EINVAL;
++
++	aligned_size = PAGE_ALIGN(size);
++	if (aligned_size < size)
++		return -EOVERFLOW;
++
++	return allocate_shadow_stack(addr, aligned_size, size, set_tok);
++}
+diff --git a/include/uapi/asm-generic/mman.h b/include/uapi/asm-generic/mman.h
+index 57e8195d0b53..0c0ac6214de6 100644
+--- a/include/uapi/asm-generic/mman.h
++++ b/include/uapi/asm-generic/mman.h
+@@ -19,4 +19,5 @@
+ #define MCL_FUTURE	2		/* lock all future mappings */
+ #define MCL_ONFAULT	4		/* lock all pages that are faulted in */
  
-+	aer_caps = (struct aer_capability_regs) {
-+	  .cor_status = info->cor_status,
-+	  .cor_mask = info->cor_mask,
-+	  .uncor_status = info->uncor_status,
-+	  .uncor_severity = info->uncor_severity,
-+	  .uncor_mask = info->uncor_mask,
-+	  .cap_control = info->aer_cap_ctrl
-+	};
- 	trace_aer_event(dev_name(&dev->dev), (status & ~mask),
--			info->severity, info->tlp_header_valid, &info->tlp);
-+			info->severity, info->tlp_header_valid, &info->tlp,
-+			&aer_caps, info->link_status,
-+			info->device_status, info->device_control_2);
- }
- 
- static void aer_print_port_info(struct pci_dev *dev, struct aer_err_info *info)
-@@ -870,7 +881,9 @@ void pci_print_aer(struct pci_dev *dev, int aer_severity,
- 		__print_tlp_header(dev, &aer->header_log);
- 
- 	trace_aer_event(dev_name(&dev->dev), (status & ~mask),
--			aer_severity, tlp_header_valid, &aer->header_log);
-+			aer_severity, tlp_header_valid, &aer->header_log,
-+			aer, info.link_status,
-+			info.device_status, info.device_control_2);
- }
- EXPORT_SYMBOL_NS_GPL(pci_print_aer, CXL);
- 
-diff --git a/include/ras/ras_event.h b/include/ras/ras_event.h
-index cbd3ddd7c33d..a94997073d90 100644
---- a/include/ras/ras_event.h
-+++ b/include/ras/ras_event.h
-@@ -300,9 +300,14 @@ TRACE_EVENT(aer_event,
- 		 const u32 status,
- 		 const u8 severity,
- 		 const u8 tlp_header_valid,
--		 struct aer_header_log_regs *tlp),
-+		 struct aer_header_log_regs *tlp,
-+		 struct aer_capability_regs *aer_caps,
-+		 const u16 link_status,
-+		 const u16 device_status,
-+		 const u16 device_control_2),
- 
--	TP_ARGS(dev_name, status, severity, tlp_header_valid, tlp),
-+	TP_ARGS(dev_name, status, severity, tlp_header_valid, tlp,
-+		aer_caps, link_status, device_status, device_control_2),
- 
- 	TP_STRUCT__entry(
- 		__string(	dev_name,	dev_name	)
-@@ -310,6 +315,10 @@ TRACE_EVENT(aer_event,
- 		__field(	u8,		severity	)
- 		__field(	u8, 		tlp_header_valid)
- 		__array(	u32, 		tlp_header, 4	)
-+		__field_struct(struct aer_capability_regs, aer_caps)
-+		__field(	u16,		link_status	)
-+		__field(	u16,		device_status	)
-+		__field(	u16,		device_control_2)
- 	),
- 
- 	TP_fast_assign(
-@@ -317,6 +326,10 @@ TRACE_EVENT(aer_event,
- 		__entry->status		= status;
- 		__entry->severity	= severity;
- 		__entry->tlp_header_valid = tlp_header_valid;
-+		__entry->aer_caps	= *aer_caps;
-+		__entry->link_status	= link_status;
-+		__entry->device_status	= device_status;
-+		__entry->device_control_2 = device_control_2;
- 		if (tlp_header_valid) {
- 			__entry->tlp_header[0] = tlp->dw0;
- 			__entry->tlp_header[1] = tlp->dw1;
-@@ -325,7 +338,20 @@ TRACE_EVENT(aer_event,
- 		}
- 	),
- 
--	TP_printk("%s PCIe Bus Error: severity=%s, %s, TLP Header=%s\n",
-+	TP_printk("%s PCIe Bus Error: severity=%s, %s, TLP Header=%s, "
-+		  "Correctable Error Status=0x%08x, "
-+		  "Correctable Error Mask=0x%08x, "
-+		  "Uncorrectable Error Status=0x%08x, "
-+		  "Uncorrectable Error Severity=0x%08x, "
-+		  "Uncorrectable Error Mask=0x%08x, "
-+		  "AER Capability and Control=0x%08x, "
-+		  "First Error Pointer=0x%x, "
-+		  "Completion Timeout Prefix/Header Log Capable=%s, "
-+		  "Link Status=0x%04x, "
-+		  "Device Status=0x%04x, "
-+		  "Device Control 2=0x%04x, "
-+		  "Completion Timeout Value=0x%x, "
-+		  "Completion Timeout Disable=%sn",
- 		__get_str(dev_name),
- 		__entry->severity == AER_CORRECTABLE ? "Corrected" :
- 			__entry->severity == AER_FATAL ?
-@@ -335,7 +361,21 @@ TRACE_EVENT(aer_event,
- 		__print_flags(__entry->status, "|", aer_uncorrectable_errors),
- 		__entry->tlp_header_valid ?
- 			__print_array(__entry->tlp_header, 4, 4) :
--			"Not available")
-+			"Not available",
-+		__entry->aer_caps.cor_status,
-+		__entry->aer_caps.cor_mask,
-+		__entry->aer_caps.uncor_status,
-+		__entry->aer_caps.uncor_severity,
-+		__entry->aer_caps.uncor_mask,
-+		__entry->aer_caps.cap_control,
-+		PCI_ERR_CAP_FEP(__entry->aer_caps.cap_control),
-+		__entry->aer_caps.cap_control & PCI_ERR_CAP_CTO_LOGC ? "True" : "False",
-+		__entry->link_status,
-+		__entry->device_status,
-+		__entry->device_control_2,
-+		__entry->device_control_2 & PCI_EXP_DEVCTL2_COMP_TIMEOUT,
-+		__entry->device_control_2 & PCI_EXP_DEVCTL2_COMP_TMOUT_DIS ?
-+					    "True" : "False")
- );
- 
- /*
-diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-index a39193213ff2..54160ed2a8c9 100644
---- a/include/uapi/linux/pci_regs.h
-+++ b/include/uapi/linux/pci_regs.h
-@@ -787,6 +787,7 @@
- #define  PCI_ERR_CAP_ECRC_GENE	0x00000040	/* ECRC Generation Enable */
- #define  PCI_ERR_CAP_ECRC_CHKC	0x00000080	/* ECRC Check Capable */
- #define  PCI_ERR_CAP_ECRC_CHKE	0x00000100	/* ECRC Check Enable */
-+#define  PCI_ERR_CAP_CTO_LOGC	0x00001000	/* Completion Timeout Prefix/Header Log Capable */
- #define PCI_ERR_HEADER_LOG	0x1c	/* Header Log Register (16 bytes) */
- #define PCI_ERR_ROOT_COMMAND	0x2c	/* Root Error Command */
- #define  PCI_ERR_ROOT_CMD_COR_EN	0x00000001 /* Correctable Err Reporting Enable */
++#define SHADOW_STACK_SET_TOKEN (1ULL << 0)     /* Set up a restore token in the shadow stack */
+ #endif /* __ASM_GENERIC_MMAN_H */
 -- 
-2.42.0
+2.43.0
 
