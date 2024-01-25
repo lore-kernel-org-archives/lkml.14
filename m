@@ -1,127 +1,130 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D7861758B
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 07:54:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED5EC17727
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 07:55:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706169277; cv=none; b=OhqR1Xo3/n9ysWDV7NPhHr4HHjRa24YptszZfhsYTEOQQuNKOmBd++Ce6gAd9P/gACLeVPbR3ZaB23CPD37kKpBxHJMuvNYgU8uITVV7GW5pHuv2io5jCL4pugbCHJ5Glg97iTdc0Udz0BfkrHLDRtUCPl5zVr8DsNLZkBrhcBA=
+	t=1706169302; cv=none; b=hEiAVgce7muCSqrS+XPLY8cZmzc3LX1qqtyZkcZjTUwWoyNMLOCLm2Wft7odyX9i9d8Cf7URIE/YJJal9nRqsdOPxIPh5ZR2IzmaCFx5l4H5Nu8Yp2QdzyDy7lUYV8CYaC/srcSGDWtDXkZN5i0eJae97WErgXFciJdNXfOMNa4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706169277; c=relaxed/simple;
-	bh=OTlI1L9zjwJc4w+ZT/ak5VEN8mlf08a8t/2VQhZgzlU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=luu+qy/4mV1bKA0cnX+1Ahm6XBD2BMFB1N69q8krkTtev2MfvRiHR/xB8244n1kb9SQkC5tQ/q/FdmDnSx3SRnaV2dekKXKBuIoJMm0cAon6axORfDWiBIelbpfWwimVhRkLGoxGkT0B3/G5gJXWfl9YH6keRnejDA4ZPL2RESY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ojo9RQ+N; arc=none smtp.client-ip=209.85.208.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1706169302; c=relaxed/simple;
+	bh=gTC2c9jN7tUYX1r6K+w1+v29WYz2GaNbGcR4mUy+84s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fvyYHFuskLP1MJ9jMeuZNATKkeJvNEIsp94aafues3ln+2LTBOheu2hUcpyWSBK+7DCKm+K/QdxO755UODHgNFvqpr4NYVi9DbSOxEqd4qBdtRa1yooPAgf55dnL9oB75Cx9ImcOm0y/bRVF3QSkzJL/HFjKlIaLTM5VCfN17fM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=shopee.com; spf=pass smtp.mailfrom=shopee.com; dkim=pass (2048-bit key) header.d=shopee.com header.i=@shopee.com header.b=WK3Apdcn; arc=none smtp.client-ip=209.85.210.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=shopee.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shopee.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ojo9RQ+N"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-55a5e7fa471so5781309a12.1
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 23:54:35 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=shopee.com header.i=@shopee.com header.b="WK3Apdcn"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-6ddc5faeb7fso630427b3a.3
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 23:55:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1706169274; x=1706774074; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=OTlI1L9zjwJc4w+ZT/ak5VEN8mlf08a8t/2VQhZgzlU=;
-        b=ojo9RQ+N4tcKw89uoTZqx6BLb8xHhejHSTaaSOLhKI6idqdw9xxxb3rVDRKpovxZRD
-         lq+h0qn/RnDST2HI/3EQiQxOtJpHIDltIGTRLaL+sUAND4lzBar1UGBIhWXcBT65uX8H
-         U4IfxmRnYTDLnBENMJPq2w3cUV4ztG7LI9eQwUwCDZLAsK7CXbrG35eM6gHvUQRedkZk
-         XM9M0YWouV3N3sKfAvMtvBdmjEtKMeo1z2VRdJcHHjEGTpyQTyOP/thXXI2wHAmirUgc
-         E7BV8IKyt6fLz0k7RM0VqgREgXBrEu/7Q3yJUfSlNXGX+VcUPRZy/cTtm1GSoKXfwuRX
-         Xlnw==
+        d=shopee.com; s=shopee.com; t=1706169300; x=1706774100; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5OROYfvMkNNHoS7DwRqESXxsnw6XTxOyVsoUr8hVxqY=;
+        b=WK3ApdcndW0lj0k/QzwPGa252QUBzBy5KpEGg2w4cFuvi2aTu1jSoBgSC62rEgfOSf
+         pttJtmcuS6WZHhCDO1k/qltbihv+5bFMJC46szepc0ucPNHtU/TmOYfbTtqdi4g1i9Hi
+         9lCAVIS41VCM1xNA8T7N5TunGhOU3z7i5stn/rSXKfjtsFLgHNZzC4jEcwoLferRDb6L
+         Y04Q/Y//nW4R4GKY3Z7D7GavC5H981mrNY+QjcIln0GLdTmQfEyWIFAqWcJjOJw5n+FI
+         KCc3mht6+f8mxQzSeMFphCCoopl2J0EQMnIqS0tmvHllD5+W9y6YbEAVaHZw9IP5NO5S
+         Haeg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706169274; x=1706774074;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=OTlI1L9zjwJc4w+ZT/ak5VEN8mlf08a8t/2VQhZgzlU=;
-        b=FRCmbzOtkOVq2D8msp9mUUVyuQ4J70aKkewh1AFU7mlImdzY1Ah7yhI9sJmIUV/+vz
-         G0V0m1hOKNctAc37dnt9GbNg3gU6NiZWSk5iEuwOY8jZyCaNXy7UpaNwP0PiAhBCp9ah
-         wDFAdSGZ3rWHNlizK+pJZ3uJES3JYMZGtBtpQO9tW4gihJvtldwJ25WNWstnDo7SN2MO
-         xhYTMO0PECtFo5aAcRTLa5QmpLizODfJ0DyPiGN1idqvRmsuxbXhNfW+TdWZvWJnguuG
-         oq3T4aOoMBQcpQ4UclFraW1cAexG6uqsDiM/3l40iA69MRmGsC00zKSQ4p9iSCU/YJyX
-         frDg==
-X-Gm-Message-State: AOJu0Yz6RlbK91IfS2DzffLaFrk7hR/sy1C5Lb9NSbQSBiL0GJo0rI0s
-	eF24NESO2CoWo8IbjS9GkOXhDXNGbdj5B2BppolSIiS2sFd1SjWWWPaJJHA/79p27+KGpOBHzLe
-	Y3I1Sz7AToxAcz4v4H5shskl94Mg/6kFQ2AFf
-X-Google-Smtp-Source: AGHT+IHGsYUG/xmrj077kIPkVc4N006GE5jLsMFSZAJ8/OVovj5aS5vWBD1f/drx/kDCcyfmmYtVKT26uupvFMAYejo=
-X-Received: by 2002:a17:907:c28b:b0:a31:1cf8:404f with SMTP id
- tk11-20020a170907c28b00b00a311cf8404fmr281591ejc.94.1706169274045; Wed, 24
- Jan 2024 23:54:34 -0800 (PST)
+        d=1e100.net; s=20230601; t=1706169300; x=1706774100;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=5OROYfvMkNNHoS7DwRqESXxsnw6XTxOyVsoUr8hVxqY=;
+        b=d+l8fVPIqaAHq2tEPATVUkhKNBHOlliFKb8q8HxaGffn5bOUCMThZiqi5WOYTUr5dl
+         cUO7XFgoU4JCAjPhK2EkK5zxxKym3uvMNUOI27h22ztYbx9qb6gEeBH6PCOfbL/SeSIy
+         uvQX8j4pQof2oXixKF4RpZkJbZc7YUGR0rLCKAM5iRE7t78iKJhQecYRrT9GLTcFnD1u
+         gFwVZ2NgxMJ5mDVrN3tJDnuV0nUUORhe3uFiJGs6dAwxGfbax0x4FrnkAL47SEL1QFZI
+         oma1voW2x0WueiSBxi33UNGxFm5CEmumfAu+HMzJpbQUf/PrkasQtHeErHSH+LIlQxbh
+         XPBg==
+X-Gm-Message-State: AOJu0Yz40vfuD8H070lezKDIoZhs4Q9UozLWkCSaq3bpqJehERqNYo6q
+	tI9Y9Ku56SnU2BtDZu6vZCn+0NZx4/AVHPksl3D1q3PgrW5iPcmla2RBCCaOzu4=
+X-Google-Smtp-Source: AGHT+IHPj34+BjxeQU5RJ5hi0SAajOGsqZbqfp1sq3sB3OlcUAa1sEKHnRxffsrFMyH2FoKX03G36w==
+X-Received: by 2002:a05:6a20:7350:b0:199:3b3f:25d8 with SMTP id v16-20020a056a20735000b001993b3f25d8mr772619pzc.61.1706169300307;
+        Wed, 24 Jan 2024 23:55:00 -0800 (PST)
+Received: from [10.54.24.52] (static-ip-148-99-134-202.rev.dyxnet.com. [202.134.99.148])
+        by smtp.gmail.com with ESMTPSA id u6-20020a056a00124600b006dbc5569599sm11436690pfi.10.2024.01.24.23.54.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 24 Jan 2024 23:54:59 -0800 (PST)
+Message-ID: <fcbf3eec-e67b-4377-a888-a59b2583ab5f@shopee.com>
+Date: Thu, 25 Jan 2024 15:54:55 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240120024007.2850671-1-yosryahmed@google.com>
- <20240120024007.2850671-3-yosryahmed@google.com> <20240122201906.GA1567330@cmpxchg.org>
- <CAJD7tkaATS48HVuBfbOmPM3EvRUoPFr66WhF64UC4FkyVH5exg@mail.gmail.com>
- <20240123153851.GA1745986@cmpxchg.org> <CAJD7tkasHsRnT_75-TXsEe58V9_OW6m3g6CF7Kmsvz8CKRG_EA@mail.gmail.com>
- <20240123201234.GC1745986@cmpxchg.org> <CAJD7tkZC6w2EaE=j2NEVWn1s7Lo2A7YZh8LiZ+w72jQzFFWLUQ@mail.gmail.com>
- <f3fa799f-1815-4cfe-abc8-3ba929fcd1ba@bytedance.com>
-In-Reply-To: <f3fa799f-1815-4cfe-abc8-3ba929fcd1ba@bytedance.com>
-From: Yosry Ahmed <yosryahmed@google.com>
-Date: Wed, 24 Jan 2024 23:53:55 -0800
-Message-ID: <CAJD7tka6UuEuuP=df-1V3vwsi0T0QhLORTRDs6qDvA81iY6SGA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] mm: zswap: remove unnecessary tree cleanups in zswap_swapoff()
-To: Chengming Zhou <zhouchengming@bytedance.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	Nhat Pham <nphamcs@gmail.com>, Chris Li <chrisl@kernel.org>, Huang Ying <ying.huang@intel.com>, 
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/3] x86/resctrl: Display cache occupancy of busy RMIDs
+To: Reinette Chatre <reinette.chatre@intel.com>
+Cc: fenghua.yu@intel.com, babu.moger@amd.com, peternewman@google.com,
+ x86@kernel.org, linux-kernel@vger.kernel.org,
+ James Morse <james.morse@arm.com>
+References: <20240123092024.1271882-3-haifeng.xu@shopee.com>
+ <8abb0237-90e3-484e-a549-d74f540d4045@intel.com>
+From: Haifeng Xu <haifeng.xu@shopee.com>
+In-Reply-To: <8abb0237-90e3-484e-a549-d74f540d4045@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-> Hello,
->
-> I also thought about this problem for some time, maybe something like below
-> can be changed to fix it? It's likely I missed something, just some thoughts.
->
-> IMHO, the problem is caused by the different way in which we use zswap entry
-> in the writeback, that should be much like zswap_load().
->
-> The zswap_load() comes in with the folio locked in swap cache, so it has
-> stable zswap tree to search and lock... But in writeback case, we don't,
-> shrink_memcg_cb() comes in with only a zswap entry with lru list lock held,
-> then release lru lock to get tree lock, which maybe freed already.
->
-> So we should change here, we read swpentry from entry with lru list lock held,
-> then release lru lock, to try to lock corresponding folio in swap cache,
-> if we success, the following things is much the same like zswap_load().
-> We can get tree lock, to recheck the invalidate race, if no race happened,
-> we can make sure the entry is still right and get refcount of it, then
-> release the tree lock.
 
-Hmm I think you may be onto something here. Moving the swap cache
-allocation ahead before referencing the tree should give us the same
-guarantees as zswap_load() indeed. We can also consolidate the
-invalidate race checks (right now we have one in shrink_memcg_cb() and
-another one inside zswap_writeback_entry()).
 
-We will have to be careful about the error handling path to make sure
-we delete the folio from the swap cache only after we know the tree
-won't be referenced anymore. Anyway, I think this can work.
+On 2024/1/25 06:25, Reinette Chatre wrote:
+> (+James)
+> 
+> Hi Haifeng,
+> 
+> On 1/23/2024 1:20 AM, Haifeng Xu wrote:
+>> If llc_occupany is enabled, the RMID may not be freed immediately unless
+>> its llc_occupany is less than the resctrl_rmid_realloc_threshold.
+>>
+>> In our production environment, those unused RMIDs get stuck in the limbo
+>> list forever because their llc_occupancy are larger than the threshold.
+>> After turning it up , we can successfully free unused RMIDs and create
+>> new monitor groups. In order to accquire the llc_occupancy of RMIDs in
+>> each rdt domain, we use perf tool to track and filter the log manually.
+>>
+>> It's not efficient enough. Therefore, we can add a RFTYPE_TOP_INFO file
+>> 'busy_rmids_info' that tells users the llc_occupancy of busy RMIDs. It
+>> can also help to guide users how much the resctrl_rmid_realloc_threshold
+>> should be.
+> 
+> I am addressing both patch 2/3 and patch 3/3 here.
+> 
+> First, please note that resctrl is obtaining support for Arm's Memory 
+> System Resource Partitioning and Monitoring (MPAM) and MPAM's monitoring
+> is done with a monitoring group that is dependent on the control group,
+> not independent as Intel and AMD. Please see [1] for more details.
+> 
+> resctrl is the generic interface that will be used to interact with RDT
+> on Intel, PQoS on AMD, and also MPAM on Arm. We thus need to ensure that
+> the interface is appropriate for all. Specifically, for Arm there is
+> no global "free RMID list", on Arm the free RMIDs (PMG in Arm language,
+> but rmid is the term that made it into resctrl) are per control group.
+> 
+> Second, this addition seems to be purely a debugging aid. I thus don't see
+> this as something that users may want/need all the time, yet when users do
+> want/need it, accurate data is preferred. To that end, the limbo
+> code already walks the busy list once per second. What if there is a
+> new tracepoint within the limbo code that shares the exact data used during
+> limbo list management?
 
-On a separate note, I think there is a bug in zswap_writeback_entry()
-when we delete a folio from the swap cache. I think we are missing a
-folio_unlock() there.
+OK, I'll try this way.
 
->
-> The main differences between this writeback with zswap_load() is the handling
-> of lru entry and the tree lifetime. The whole zswap_load() function has the
-> stable reference of zswap tree, but it's not for shrink_memcg_cb() bottom half
-> after __swap_writepage() since we unlock the folio after that. So we can't
-> reference the tree after that.
->
-> This problem is easy to fix, we can zswap_invalidate_entry(tree, entry) early
-> in tree lock, since thereafter writeback can't fail. BTW, I think we should
-> also zswap_invalidate_entry() early in zswap_load() and only support the
-> zswap_exclusive_loads_enabled mode, but that's another topic.
+ From what I can tell, this data, combined with the
+> per-monitor-group "mon_hw_id", should give user space sufficient data to
+> debug the scenarios mentioned in these patches.
+> 
+> I did add James to this discussion to make him aware of your requirements.
+> Please do include him in future submissions.
+> 
+> Reinette
+> 
+> [1] https://urldefense.proofpoint.com/v2/url?u=https-3A__lore.kernel.org_all_20231215174343.13872-2D1-2Djames.morse-40arm.com_&d=DwICaQ&c=R1GFtfTqKXCFH-lgEPXWwic6stQkW4U7uVq33mt-crw&r=3uoFsejk1jN2oga47MZfph01lLGODc93n4Zqe7b0NRk&m=-XE6uI2GOyk-qzRRAWvuDzQ9NgM2-QK-KLArnJEYmu02heN9gOh6VMbPeF1iZUZe&s=FySup-TxYl6c-jaA7Q8OFIVwbMdsMxZ3ChQ6Sj0HaLA&e= 
 
-zswap_invalidate_entry() actually doesn't seem to be using the tree at all.
-
->
-> The second difference is the handling of lru entry, which is easy that we
-> just zswap_lru_del() in tree lock.
-
-Why do we need zswap_lru_del() at all? We should have already isolated
-the entry at that point IIUC.
+Thanks.
