@@ -1,69 +1,60 @@
-Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 362AB1CD27;
-	Thu, 25 Jan 2024 10:05:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E33F91C6AB;
+	Thu, 25 Jan 2024 10:08:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706177159; cv=none; b=e6guST804MrInKjWwr4al1hPEra1bd/E9umB3KduyhA4+7y5eGxJOycNvfHtYMLCG1246jVnbTbMVL969SQVGN5uyTRGR8KtURCVKL9VXRBt0K0635o/ZocjRQIlBDjQOtBo2UJYHQJTrs83fYngRSLL0YW/YQe3Mda+DKLHl3o=
+	t=1706177303; cv=none; b=oiZkTw5k1I4E/7/oRJp5fUc6STAkqGb7Qp3lZAmtwNQpTSMNUPZU3Qu32AAiA8stlqoC8TGjxXcKn687CP6mzJetChCM3xrwIkZ4BI5xgOGk1wuPCLcJ3LlWp3TGENPdg56ra24wdkMyA9krJNsmnnYSMGthdh0xoZ1zr5R2GbE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706177159; c=relaxed/simple;
-	bh=Bq9b/P2luDiSgUsP1d3rlxlmGymEHYkNFxSwABBXjjA=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RR0EM2it+GcoN6c4dOrUSqh53Y4bcx71migaUf7xAN1Eagg9Hg7NegGwUD72YoioBAKKb5g5ScH3uaV+spCmq8X+J92SeedFFkelQaGqJr82vIrGehutPFe0sOX3OsKOdRK0wLT+yBhGqfYoByLtBatJatjOXnf1rTZMJU4aFU8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Xl9t/3rc; arc=none smtp.client-ip=198.47.19.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1706177303; c=relaxed/simple;
+	bh=X0qq5ZaVDzahs2+lbQaAYhW2wnzFrplz3eF7XvHPfSY=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=J7XKhqgpwpMlZl9OgwwxEEf3MAJ/1BRQ8fCbSsA1PNAZCpl/yvqlgaReMTRUJ1/X2rIdKtX8j39ilPUIstsCmCSnxPVGMdJLA2YknH655NuQqYFYKXMLS12v6oQbMzwuP2ZN2QBhWkP6Dt8FPvkcAMNc0AE7kdI/uiMjMRwlvaY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=gu4ok8ca; arc=none smtp.client-ip=68.232.154.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Xl9t/3rc"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 40PA5TtL069428;
-	Thu, 25 Jan 2024 04:05:29 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1706177129;
-	bh=fS4/HlXCpVTUdnTk9aVSmh6qwcCOXQQ3h664y3ufGqY=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=Xl9t/3rcPKo59vd9Fsi4Q1ZcP1XrW4LmkSLWBUdg6ICxMi+1kVusRow+aFYIAN9Bw
-	 CEFq9nTobFAEWKf12+Las+IlizGuNRt9Pl1t5pD0SS2YR3uRM4tyieCSczzwTnd9eh
-	 VD6Darzze59QydmlhSoSZkuC2pXB8bmnDiHX+WUs=
-Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 40PA5TKq007256
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 25 Jan 2024 04:05:29 -0600
-Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 25
- Jan 2024 04:05:28 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 25 Jan 2024 04:05:15 -0600
-Received: from localhost (chintan-thinkstation-p360-tower.dhcp.ti.com [172.24.227.220])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 40PA5E0p005058;
-	Thu, 25 Jan 2024 04:05:14 -0600
-From: Chintan Vankar <c-vankar@ti.com>
-To: Andrew Davis <afd@ti.com>, Peter Rosin <peda@axentia.se>,
-        Greg
- Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, Tero
- Kristo <kristo@kernel.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>, Nishanth
- Menon <nm@ti.com>
-CC: <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <srk@ti.com>,
-        <s-vadapalli@ti.com>, <r-gunasekaran@ti.com>, <danishanwar@ti.com>,
-        Chintan Vankar
-	<c-vankar@ti.com>
-Subject: [PATCH v3 1/5] arm64: dts: ti: k3-j784s4-main: Fix mux-reg-masks in serdes_ln_ctrl
-Date: Thu, 25 Jan 2024 15:34:57 +0530
-Message-ID: <20240125100501.4137977-2-c-vankar@ti.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240125100501.4137977-1-c-vankar@ti.com>
-References: <20240125100501.4137977-1-c-vankar@ti.com>
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="gu4ok8ca"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1706177300; x=1737713300;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=X0qq5ZaVDzahs2+lbQaAYhW2wnzFrplz3eF7XvHPfSY=;
+  b=gu4ok8cavgX9ltu43twFi+e+CPjnFtDFHQRJhrePzLK3g4uPWThpYR4Z
+   oRYEGmhsLkaK4SF1V3naRyZ3AlmWjRp3VjYr7ITBsQyocQXVrtFUGwjjR
+   A25hD9+nXNQuyLAoM4SuVAqk+0b7alkEtzNeNtbJm1awyuedu0r7aksWz
+   yqJ45T8C1GAsVC0wYKNucfZqH6qw0UcHe6nAk0H2sds7wY4iLyv0ZrLy+
+   5ga/aQpywqoxonP8AEyhbXSs2hksKqvw/9Tbe4DX0XVAZ8PMyKldc1QWs
+   Mta/wEron2KwmOl+wm2brLZU80I9ynJ3fGc2N5AQaMOViSOZmolF3I3ej
+   g==;
+X-CSE-ConnectionGUID: XzFUEa+2R8WssLIbT7r3rw==
+X-CSE-MsgGUID: /WxQOswXQBeea8jiQrnz6g==
+X-IronPort-AV: E=Sophos;i="6.05,216,1701154800"; 
+   d="scan'208";a="182516535"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 25 Jan 2024 03:08:14 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Thu, 25 Jan 2024 03:08:14 -0700
+Received: from che-dk-ungapp03lx.microchip.com (10.10.85.11) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
+ 15.1.2507.35 via Frontend Transport; Thu, 25 Jan 2024 03:08:09 -0700
+From: Rengarajan S <rengarajan.s@microchip.com>
+To: <kumaravel.thiagarajan@microchip.com>,
+	<tharunkumar.pasumarthi@microchip.com>, <gregkh@linuxfoundation.org>,
+	<jirislaby@kernel.org>, <ilpo.jarvinen@linux.intel.com>,
+	<andriy.shevchenko@linux.intel.com>, <f.fainelli@gmail.com>,
+	<john.ogness@linutronix.de>, <tony@atomide.com>, <tglx@linutronix.de>,
+	<jiaqing.zhao@linux.intel.com>, <linux-serial@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+CC: <UNGLinuxDriver@microchip.com>
+Subject: [PATCH v1 tty] 8250: microchip: Add 4 Mbps support in PCI1XXXX UART
+Date: Thu, 25 Jan 2024 15:36:19 +0530
+Message-ID: <20240125100619.154873-1-rengarajan.s@microchip.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -72,40 +63,132 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-Change offset in mux-reg-masks property for serdes_ln_ctrl node
-since reg-mux property is used in compatible.
+The current clock input is set to 62.5 MHz for supporting fractional
+divider, which enables generation of an acceptable baud rate from any
+frequency. With the current clock input the baud rate range is limited
+to 3.9 Mbps. Hence, the current range is extended to support 4 Mbps
+with Burst mode operation. Divisor calculation for a given baud rate is
+updated as the sampling rate is reduced from 16 to 8 for 4 Mbps.
 
-Fixes: 2765149273f4 ("mux: mmio: use reg property when parent device is not a syscon")
-Signed-off-by: Chintan Vankar <c-vankar@ti.com>
+Signed-off-by: Rengarajan S <rengarajan.s@microchip.com>
 ---
- arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/tty/serial/8250/8250_pci1xxxx.c | 34 +++++++++++++++++++++----
+ drivers/tty/serial/8250/8250_port.c     |  7 +++++
+ 2 files changed, 36 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi b/arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi
-index f2b720ed1e4f..56c8eaad6324 100644
---- a/arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi
-@@ -52,12 +52,12 @@ serdes_ln_ctrl: mux-controller@4080 {
- 			compatible = "reg-mux";
- 			reg = <0x00004080 0x30>;
- 			#mux-control-cells = <1>;
--			mux-reg-masks = <0x4080 0x3>, <0x4084 0x3>, /* SERDES0 lane0/1 select */
--					<0x4088 0x3>, <0x408c 0x3>, /* SERDES0 lane2/3 select */
--					<0x4090 0x3>, <0x4094 0x3>, /* SERDES1 lane0/1 select */
--					<0x4098 0x3>, <0x409c 0x3>, /* SERDES1 lane2/3 select */
--					<0x40a0 0x3>, <0x40a4 0x3>, /* SERDES2 lane0/1 select */
--					<0x40a8 0x3>, <0x40ac 0x3>; /* SERDES2 lane2/3 select */
-+			mux-reg-masks = <0x0 0x3>, <0x4 0x3>, /* SERDES0 lane0/1 select */
-+					<0x8 0x3>, <0xc 0x3>, /* SERDES0 lane2/3 select */
-+					<0x10 0x3>, <0x14 0x3>, /* SERDES1 lane0/1 select */
-+					<0x18 0x3>, <0x1c 0x3>, /* SERDES1 lane2/3 select */
-+					<0x20 0x3>, <0x24 0x3>, /* SERDES2 lane0/1 select */
-+					<0x28 0x3>, <0x2c 0x3>; /* SERDES2 lane2/3 select */
- 			idle-states = <J784S4_SERDES0_LANE0_PCIE1_LANE0>,
- 				      <J784S4_SERDES0_LANE1_PCIE1_LANE1>,
- 				      <J784S4_SERDES0_LANE2_IP3_UNUSED>,
+diff --git a/drivers/tty/serial/8250/8250_pci1xxxx.c b/drivers/tty/serial/8250/8250_pci1xxxx.c
+index d53605bf908d..6cfeba058dba 100644
+--- a/drivers/tty/serial/8250/8250_pci1xxxx.c
++++ b/drivers/tty/serial/8250/8250_pci1xxxx.c
+@@ -82,7 +82,8 @@
+ #define ADCL_CFG_PIN_SEL			BIT(1)
+ #define ADCL_CFG_EN				BIT(0)
+ 
+-#define UART_BIT_SAMPLE_CNT			16
++#define UART_BIT_SAMPLE_CNT_8			8
++#define UART_BIT_SAMPLE_CNT_16			16
+ #define BAUD_CLOCK_DIV_INT_MSK			GENMASK(31, 8)
+ #define ADCL_CFG_RTS_DELAY_MASK			GENMASK(11, 8)
+ #define UART_CLOCK_DEFAULT			(62500 * HZ_PER_KHZ)
+@@ -96,6 +97,7 @@
+ 	(UART_WAKE_N_PIN | UART_WAKE_NCTS | UART_WAKE_INT)
+ 
+ #define UART_BAUD_CLK_DIVISOR_REG		0x54
++#define FRAC_DIV_CFG_REG			0x58
+ 
+ #define UART_RESET_REG				0x94
+ #define UART_RESET_D3_RESET_DISABLE		BIT(16)
+@@ -104,6 +106,10 @@
+ #define UART_TX_BURST_FIFO			0xA0
+ #define UART_RX_BURST_FIFO			0xA4
+ 
++#define UART_BIT_DIVISOR_8			0x26731000
++#define UART_BIT_DIVISOR_16			0x6ef71000
++#define UART_BAUD_4MBPS				4000000
++
+ #define MAX_PORTS				4
+ #define PORT_OFFSET				0x100
+ #define RX_BUF_SIZE				512
+@@ -210,15 +216,24 @@ static int pci1xxxx_get_num_ports(struct pci_dev *dev)
+ static unsigned int pci1xxxx_get_divisor(struct uart_port *port,
+ 					 unsigned int baud, unsigned int *frac)
+ {
++	unsigned int uart_sample_cnt;
+ 	unsigned int quot;
+ 
++	if (baud >= UART_BAUD_4MBPS) {
++		uart_sample_cnt = UART_BIT_SAMPLE_CNT_8;
++		writel(UART_BIT_DIVISOR_8, (port->membase + FRAC_DIV_CFG_REG));
++	} else {
++		uart_sample_cnt = UART_BIT_SAMPLE_CNT_16;
++		writel(UART_BIT_DIVISOR_16, (port->membase + FRAC_DIV_CFG_REG));
++	}
++
+ 	/*
+ 	 * Calculate baud rate sampling period in nanoseconds.
+ 	 * Fractional part x denotes x/255 parts of a nanosecond.
+ 	 */
+-	quot = NSEC_PER_SEC / (baud * UART_BIT_SAMPLE_CNT);
+-	*frac = (NSEC_PER_SEC - quot * baud * UART_BIT_SAMPLE_CNT) *
+-		  255 / UART_BIT_SAMPLE_CNT / baud;
++	quot = NSEC_PER_SEC / (baud * uart_sample_cnt);
++	*frac = (NSEC_PER_SEC - quot * baud * uart_sample_cnt) *
++		  255 / uart_sample_cnt / baud;
+ 
+ 	return quot;
+ }
+@@ -237,7 +252,16 @@ static int pci1xxxx_rs485_config(struct uart_port *port,
+ 	u32 delay_in_baud_periods;
+ 	u32 baud_period_in_ns;
+ 	u32 mode_cfg = 0;
++	u32 sample_cnt;
+ 	u32 clock_div;
++	u32 frac_div;
++
++	frac_div = readl(port->membase + FRAC_DIV_CFG_REG);
++
++	if (frac_div == UART_BIT_DIVISOR_16)
++		sample_cnt = UART_BIT_SAMPLE_CNT_16;
++	else
++		sample_cnt = UART_BIT_SAMPLE_CNT_8;
+ 
+ 	/*
+ 	 * pci1xxxx's uart hardware supports only RTS delay after
+@@ -253,7 +277,7 @@ static int pci1xxxx_rs485_config(struct uart_port *port,
+ 			clock_div = readl(port->membase + UART_BAUD_CLK_DIVISOR_REG);
+ 			baud_period_in_ns =
+ 				FIELD_GET(BAUD_CLOCK_DIV_INT_MSK, clock_div) *
+-				UART_BIT_SAMPLE_CNT;
++				sample_cnt;
+ 			delay_in_baud_periods =
+ 				rs485->delay_rts_after_send * NSEC_PER_MSEC /
+ 				baud_period_in_ns;
+diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8250/8250_port.c
+index 925ee1d61afb..2a85bc9475f9 100644
+--- a/drivers/tty/serial/8250/8250_port.c
++++ b/drivers/tty/serial/8250/8250_port.c
+@@ -2688,6 +2688,7 @@ static unsigned int serial8250_get_baud_rate(struct uart_port *port,
+ 					     struct ktermios *termios,
+ 					     const struct ktermios *old)
+ {
++	struct uart_8250_port *up = up_to_u8250p(port);
+ 	unsigned int tolerance = port->uartclk / 100;
+ 	unsigned int min;
+ 	unsigned int max;
+@@ -2705,6 +2706,12 @@ static unsigned int serial8250_get_baud_rate(struct uart_port *port,
+ 		max = (port->uartclk + tolerance) / 16;
+ 	}
+ 
++	/*
++	 * Microchip PCI1XXXX UART supports maximum baud rate up to 4 Mbps
++	 */
++	if (up->port.type == PORT_MCHP16550A)
++		max = 4000000;
++
+ 	/*
+ 	 * Ask the core to calculate the divisor for us.
+ 	 * Allow 1% tolerance at the upper limit so uart clks marginally
 -- 
-2.34.1
+2.25.1
 
