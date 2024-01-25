@@ -1,143 +1,194 @@
-Received: from winehq.org (winehq.org [4.4.81.124])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D6BB17727;
-	Thu, 25 Jan 2024 07:57:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=4.4.81.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CDCC1798E;
+	Thu, 25 Jan 2024 07:57:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706169450; cv=none; b=Damsyt2RfCMlbXVQvA/mgoJIAPt9QC0cPefkD8ZI9sh3xOQQx0B+jMQ77geQ3S/tVKGk3saWklZCZxg1I4Mn9dZ4hSQFjhjAGFV6SN8jSl2XMirKkvrAa3+JtGZfiOp9CXBYu6Za+A+ynEElX5USevVExHG4jou93PvdrPmkMLQ=
+	t=1706169478; cv=none; b=bzNodbKQoC8/kn/XGuUD5nq/+yJ3C9c7nD9Wuz+TdXIaUSUEdt4ORLEhVpLNaTMrJemwxktgOI53FWgf+4hDyr7rxd1D3jR8HmOBXy62JWYh8pBRHztecEwmYaZT/XM2Q1LLfGxzuVbwX2YTrR7YgXIsrtt+XsSYVoeBx9uoG9o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706169450; c=relaxed/simple;
-	bh=BG4b1dwAC0O5niSsIyr5Wwdb38kT2Xjz5+5JU87Krng=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=ffMODFNrUH4VWmJDTpOqOc4vVzwfmySCtgiD1PO341pXAeSmdckkD0vv9RNMF6YcC6sVhT+FfV2WvvwWe5UxkEfIKGDF0UhfoINCSCsgIJwgnRG8WR1On2IfuwUkOE10RwQ7gyLsGy+/ih3OQyUXrI1N8oSYYivf438GNdWPppc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=winehq.org; spf=pass smtp.mailfrom=winehq.org; dkim=pass (2048-bit key) header.d=winehq.org header.i=@winehq.org header.b=rjA9eI3W; arc=none smtp.client-ip=4.4.81.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=winehq.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=winehq.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=winehq.org header.i=@winehq.org header.b="rjA9eI3W"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=winehq.org;
-	s=s1; h=Message-ID:Date:Subject:Cc:To:From:Sender;
-	bh=Q4cMmITwA1uV9qSgRwQNyCfyNufbMRwq/yk11gxwcNs=; b=rjA9eI3WSXF89DvI/3xWF4yrxB
-	Z1p1KTHr71ogp+269uo0lbKOU51bN3EHBFNlIIBQEAP7dVhdDFnVEfuwgV0vVe0LRmB/Am0vOd2gc
-	TE0xVwlQMputrnXPbI4uDAUglmBINHZbGqPolV46KjJwK0TZqD771AKC5WlGRSvbwkzQMcxBElKDp
-	cJz7tWVHp/2cFFk+Fw63XS5wkq7LgG79azB9aU9AtAaxdSrNowW4hGpQHD6yepg5fBuhA9weDeGxY
-	vuG90pMtdHAFgVqdG14fDNvGiHpUoFnudxeJzYNkAzKsfz7MxB3X8ULv4eLqi2CmJ2nndZKifBTvy
-	L9joL4ZA==;
-Received: from xdsl-188-154-165-39.adslplus.ch ([188.154.165.39] helo=wine)
-	by winehq.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <julliard@winehq.org>)
-	id 1rSuMf-00A7IL-VV; Thu, 25 Jan 2024 01:41:35 -0600
-Received: from julliard by wine with local (Exim 4.97)
-	(envelope-from <julliard@winehq.org>)
-	id 1rSuMe-000000007Cb-0i9z;
-	Thu, 25 Jan 2024 08:41:32 +0100
-From: Alexandre Julliard <julliard@winehq.org>
-To: Elizabeth Figura <zfigura@codeweavers.com>
-Cc: Andy Lutomirski <luto@kernel.org>,  Arnd Bergmann <arnd@arndb.de>,  Greg
- Kroah-Hartman <gregkh@linuxfoundation.org>,  linux-kernel@vger.kernel.org,
-  linux-api@vger.kernel.org,  wine-devel@winehq.org,  =?utf-8?Q?Andr=C3=A9?=
- Almeida
- <andrealmeid@igalia.com>,  Wolfram Sang <wsa@kernel.org>,  Arkadiusz Hiler
- <ahiler@codeweavers.com>,  Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [RFC PATCH 1/9] ntsync: Introduce the ntsync driver and
- character device.
-In-Reply-To: <5907233.BlLQTPImNI@camazotz> (Elizabeth Figura's message of
-	"Wed, 24 Jan 2024 16:56:23 -0600")
-References: <20240124004028.16826-1-zfigura@codeweavers.com>
-	<20240124004028.16826-2-zfigura@codeweavers.com>
-	<CALCETrU+Eb5CdkqfYK8JvOiPA7K-6Bfs4uEWiu-U9oH95XfvKw@mail.gmail.com>
-	<5907233.BlLQTPImNI@camazotz>
-Date: Thu, 25 Jan 2024 08:41:32 +0100
-Message-ID: <87mssthnbn.fsf@wine>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	s=arc-20240116; t=1706169478; c=relaxed/simple;
+	bh=BS7mby3uI4AgQEdXF3cuczOSH/qGPB30Opbg7BnGykA=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=akDK4hGXZ7QErMZLel6WTkvT1Z2NjweaIoqG9k7ueBi6UcQ8i0pgiUwsLbiqMWsmq8W0zLtWAgSjqTCC+baCngHG2qItQzX6LFK4HDO26Dtf3eCkov19ZiNu1q/lmTuP9T/llb3r1p6uT1QQUVn5JwGgomflq+KvPAPpQm/KY10=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4TLCqF4TWCz4f3mHT;
+	Thu, 25 Jan 2024 15:57:45 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id E848E1A017A;
+	Thu, 25 Jan 2024 15:57:51 +0800 (CST)
+Received: from [10.174.176.73] (unknown [10.174.176.73])
+	by APP1 (Coremail) with SMTP id cCh0CgCXaBF9FLJltc6sBw--.4241S3;
+	Thu, 25 Jan 2024 15:57:51 +0800 (CST)
+Subject: Re: [PATCH v2 05/11] md: export helpers to stop sync_thread
+To: Xiao Ni <xni@redhat.com>
+Cc: agk@redhat.com, snitzer@kernel.org, mpatocka@redhat.com,
+ dm-devel@lists.linux.dev, song@kernel.org, jbrassow@f14.redhat.com,
+ neilb@suse.de, heinzm@redhat.com, shli@fb.com, akpm@osdl.org,
+ linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
+ yukuai1@huaweicloud.com, yi.zhang@huawei.com, yangerkun@huawei.com,
+ "yukuai (C)" <yukuai3@huawei.com>
+References: <20240124091421.1261579-1-yukuai3@huawei.com>
+ <20240124091421.1261579-6-yukuai3@huawei.com>
+ <CALTww2_hG2_YL1v-d0=uv2=bVzJ2wwpSJyQdBBGMCBx79bot-Q@mail.gmail.com>
+From: Yu Kuai <yukuai1@huaweicloud.com>
+Message-ID: <85eeb8e4-d526-aa20-c50d-7e755ca6c776@huaweicloud.com>
+Date: Thu, 25 Jan 2024 15:57:49 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Score: -8.6
-X-Spam-Report: Action: no action
- Symbol: FROM_HAS_DN(0.00)
- Symbol: FROM_EQ_ENVFROM(0.00)
- Symbol: RCVD_COUNT_TWO(0.00)
- Symbol: BAYES_HAM(-3.00)
- Symbol: TO_MATCH_ENVRCPT_ALL(0.00)
- Symbol: RCVD_TLS_LAST(0.00)
- Symbol: MID_RHS_NOT_FQDN(0.50)
- Symbol: MIME_GOOD(-0.10)
- Symbol: NEURAL_HAM(0.00)
- Symbol: RCPT_COUNT_SEVEN(0.00)
- Symbol: RCVD_VIA_SMTP_AUTH(0.00)
- Symbol: WHITELIST_SENDER_DOMAIN(-6.00)
- Symbol: ASN(0.00)
- Symbol: ARC_NA(0.00)
- Symbol: MIME_TRACE(0.00)
- Symbol: TO_DN_SOME(0.00)
- Message-ID: 87mssthnbn.fsf@wine
+In-Reply-To: <CALTww2_hG2_YL1v-d0=uv2=bVzJ2wwpSJyQdBBGMCBx79bot-Q@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:cCh0CgCXaBF9FLJltc6sBw--.4241S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxXr1rKr4kWr47AF43GrWrGrg_yoWrXF4fp3
+	yktFs5Ar4YyrZxXry2qa4DuayFqwn2gFyqyrWfCa4fJas2krZrKF1Y93WUCFykCa48Gr1D
+	ta1jqFsxuFy8WrJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9F14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka
+	0xkIwI1lc7I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7x
+	kEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E
+	67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCw
+	CI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E
+	3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcS
+	sGvfC2KfnxnUUI43ZEXa7VUbQVy7UUUUU==
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-Elizabeth Figura <zfigura@codeweavers.com> writes:
+Hi,
 
-> On Wednesday, 24 January 2024 15:26:15 CST Andy Lutomirski wrote:
->> On Tue, Jan 23, 2024 at 4:59=E2=80=AFPM Elizabeth Figura
->> <zfigura@codeweavers.com> wrote:
->> >
->> > ntsync uses a misc device as the simplest and least intrusive uAPI int=
-erface.
->> >
->> > Each file description on the device represents an isolated NT instance=
-, intended
->> > to correspond to a single NT virtual machine.
->>=20
->> If I understand this text right, and if I understood the code right,
->> you're saying that each open instance of the device represents an
->> entire universe of NT synchronization objects, and no security or
->> isolation is possible between those objects.  For single-process use,
->> this seems fine.  But fork() will be a bit odd (although NT doesn't
->> really believe in fork, so maybe this is fine).
->>=20
->> Except that NT has *named* semaphores and such.  And I'm pretty sure
->> I've written GUI programs that use named synchronization objects (IIRC
->> they were events, and this was a *very* common pattern, regularly
->> discussed in MSDN, usenet, etc) to detect whether another instance of
->> the program is running.  And this all works on real Windows because
->> sessions have sufficiently separated namespaces, and the security all
->> works out about as any other security on Windows, etc.  But
->> implementing *that* on top of this
->> file-description-plus-integer-equals-object will be fundamentally
->> quite subject to one buggy program completely clobbering someone
->> else's state.
->>=20
->> Would it make sense and scale appropriately for an NT synchronization
->> *object* to be a Linux open file description?  Then SCM_RIGHTS could
->> pass them around, an RPC server could manage *named* objects, and
->> they'd generally work just like other "Object Manager" objects like,
->> say, files.
->
-> It's a sensible concern. I think when I discussed this with Alexandre
-> Julliard (the Wine maintainer, CC'd) the conclusion was this wasn't
-> something we were concerned about.
->
-> While the current model *does* allow for processes to arbitrarily mess
-> with each other, accidentally or not, I think we're not concerned with
-> the scope of that than we are about implementing a whole scheduler in
-> user space.
+在 2024/01/25 15:51, Xiao Ni 写道:
+> On Wed, Jan 24, 2024 at 5:19 PM Yu Kuai <yukuai3@huawei.com> wrote:
+>>
+>> The new heleprs will be used in dm-raid in later patches to fix
+>> regressions and prevent calling md_reap_sync_thread() directly.
+>>
+>> Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+>> ---
+>>   drivers/md/md.c | 41 +++++++++++++++++++++++++++++++++++++----
+>>   drivers/md/md.h |  3 +++
+>>   2 files changed, 40 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/md/md.c b/drivers/md/md.c
+>> index 6c5d0a372927..90cf31b53804 100644
+>> --- a/drivers/md/md.c
+>> +++ b/drivers/md/md.c
+>> @@ -4915,30 +4915,63 @@ static void stop_sync_thread(struct mddev *mddev, bool locked, bool check_seq)
+>>                  mddev_lock_nointr(mddev);
+>>   }
+>>
+>> -static void idle_sync_thread(struct mddev *mddev)
+>> +void md_idle_sync_thread(struct mddev *mddev)
+>>   {
+>> +       lockdep_assert_held(mddev->reconfig_mutex);
+>> +
+> 
+> Hi Kuai
+> 
+> There is a building error. It should give a pointer to
+> lockdep_assert_held. And same with the other two places in this patch.
 
-I may have misunderstood something in that dicussion then, because it
-would definitely be a concern. It's OK for a process to be able to mess
-up the state of any object that it has an NT handle to, but it shouldn't
-be possible to mess up the state of unrelated objects in other processes
-simply by passing the wrong integer id.
+Yes, I forgot that I disabled all the debug config in order to let tests
+finish quickly.
 
-The concern is not so much about a malicious process going out of its
-way to corrupt others, because it could do that through the NT API just
-as well. But if a wayward pointer corrupts the client-side handle cache,
-that shouldn't take down the entire session.
+Thanks for the notince, will fix this in v3.
 
---=20
-Alexandre Julliard
-julliard@winehq.org
+Thanks,
+Kuai
+
+> 
+> Regards
+> Xiao
+> 
+>>          mutex_lock(&mddev->sync_mutex);
+>>          clear_bit(MD_RECOVERY_FROZEN, &mddev->recovery);
+>> +       stop_sync_thread(mddev, true, true);
+>> +       mutex_unlock(&mddev->sync_mutex);
+>> +}
+>> +EXPORT_SYMBOL_GPL(md_idle_sync_thread);
+>> +
+>> +void md_frozen_sync_thread(struct mddev *mddev)
+>> +{
+>> +       lockdep_assert_held(mddev->reconfig_mutex);
+>> +
+>> +       mutex_lock(&mddev->sync_mutex);
+>> +       set_bit(MD_RECOVERY_FROZEN, &mddev->recovery);
+>> +       stop_sync_thread(mddev, true, false);
+>> +       mutex_unlock(&mddev->sync_mutex);
+>> +}
+>> +EXPORT_SYMBOL_GPL(md_frozen_sync_thread);
+>>
+>> +void md_unfrozen_sync_thread(struct mddev *mddev)
+>> +{
+>> +       lockdep_assert_held(mddev->reconfig_mutex);
+>> +
+>> +       mutex_lock(&mddev->sync_mutex);
+>> +       clear_bit(MD_RECOVERY_FROZEN, &mddev->recovery);
+>> +       set_bit(MD_RECOVERY_NEEDED, &mddev->recovery);
+>> +       md_wakeup_thread(mddev->thread);
+>> +       sysfs_notify_dirent_safe(mddev->sysfs_action);
+>> +       mutex_unlock(&mddev->sync_mutex);
+>> +}
+>> +EXPORT_SYMBOL_GPL(md_unfrozen_sync_thread);
+>> +
+>> +static void idle_sync_thread(struct mddev *mddev)
+>> +{
+>>          if (mddev_lock(mddev)) {
+>>                  mutex_unlock(&mddev->sync_mutex);
+>>                  return;
+>>          }
+>>
+>> +       mutex_lock(&mddev->sync_mutex);
+>> +       clear_bit(MD_RECOVERY_FROZEN, &mddev->recovery);
+>>          stop_sync_thread(mddev, false, true);
+>>          mutex_unlock(&mddev->sync_mutex);
+>>   }
+>>
+>>   static void frozen_sync_thread(struct mddev *mddev)
+>>   {
+>> -       mutex_lock(&mddev->sync_mutex);
+>> -       set_bit(MD_RECOVERY_FROZEN, &mddev->recovery);
+>> -
+>>          if (mddev_lock(mddev)) {
+>>                  mutex_unlock(&mddev->sync_mutex);
+>>                  return;
+>>          }
+>>
+>> +       mutex_lock(&mddev->sync_mutex);
+>> +       set_bit(MD_RECOVERY_FROZEN, &mddev->recovery);
+>>          stop_sync_thread(mddev, false, false);
+>>          mutex_unlock(&mddev->sync_mutex);
+>>   }
+>> diff --git a/drivers/md/md.h b/drivers/md/md.h
+>> index 8d881cc59799..437ab70ce79b 100644
+>> --- a/drivers/md/md.h
+>> +++ b/drivers/md/md.h
+>> @@ -781,6 +781,9 @@ extern void md_rdev_clear(struct md_rdev *rdev);
+>>   extern void md_handle_request(struct mddev *mddev, struct bio *bio);
+>>   extern int mddev_suspend(struct mddev *mddev, bool interruptible);
+>>   extern void mddev_resume(struct mddev *mddev);
+>> +extern void md_idle_sync_thread(struct mddev *mddev);
+>> +extern void md_frozen_sync_thread(struct mddev *mddev);
+>> +extern void md_unfrozen_sync_thread(struct mddev *mddev);
+>>
+>>   extern void md_reload_sb(struct mddev *mddev, int raid_disk);
+>>   extern void md_update_sb(struct mddev *mddev, int force);
+>> --
+>> 2.39.2
+>>
+> 
+> .
+> 
+
