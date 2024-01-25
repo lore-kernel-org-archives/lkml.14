@@ -1,72 +1,70 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C96361CA80;
-	Thu, 25 Jan 2024 10:04:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98E4B1C6A6;
+	Thu, 25 Jan 2024 10:05:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706177049; cv=none; b=m4rdu9ykWaFPZ9Aq5hbCqjf9fJjsmGBHJ6B65N31wzsnr7vuB1i3ESHRHIFnL1xdZPj6t2lS5j40jYVXrIZpizPOS+xQXUJm8OLHDB0gKLmu+xhrGtLhQjruzW+QS2bwWFyS06wHCq2unxm64SS8aYfyCTuIl9xC2XfiJ8E5Ymo=
+	t=1706177155; cv=none; b=ojrQTFlSVXc2wrKFuaaGkBaf56TAZdanTaymtrb3fVJADkf67FWhIdBzsFpVYii2m0JUUsWyQUwvKryZW3Y9NyiTNV3NdCANEq/jEIcOfTIkRT9BFBLKJnyYf4VhbTQ0qGTRuaJF1ERUzPbJ9DSyigFBpnH2lAuSt0InjjYy3KM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706177049; c=relaxed/simple;
-	bh=7lJZvMAj51BkqXLUovg3jYW19XUo9wOqZUP/JCL4edQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=KQXd0BThldChRYaLigwtvaB4yE9GW3R3NfYGX40Xki4uX58Rm4ZGaRqzeGrzQYHBejAGgq70owaAc6Kpl5BgckgLsVw5nwgg1axnqu4CyRTgt/qbp5/Tex3mnEwfmjkMCknRrva6A+ViP21SXpCi0V1YvgojZX9FkEhA8qYe+Bs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=H2zNI/fl; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1706177155; c=relaxed/simple;
+	bh=aP7f1nn3Kh9rIKkbV5mEyololFpymu3hYpL4pXfPJJ0=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=QKfpWbLWzS+wbJc2qC4lptlrHuy11Pwz0Xxp9+hUSHJyvZkJvnLI8tn2LXi7+aMk4mxQNo/CSnGFe1YAmuIWjIdPK53R6iZubQRswAaz3h56QWGzsUYzzKxzl39pTBdgPeDdQMWSChK3ZzN0iKEN+kFO93AR/MZeAcZUEssAU/k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=wErkwyaQ; arc=none smtp.client-ip=198.47.19.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="H2zNI/fl"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 40P87glc011509;
-	Thu, 25 Jan 2024 10:04:04 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-transfer-encoding; s=pp1;
- bh=l11VXT8hic+ZuAE/Hw1KQJD9GYpo1tnGYt9Nny3oBB8=;
- b=H2zNI/flARliMyN2bYeK3raO5CzXAviz5DHLtmzlzK5ELqns8blJJl3N9DxOYZhOO2XA
- LAdye91ripcjB4DeN5DsPRs5x4IKi+zr1MbAx5q8rvGxnfbYvz5Ks57mz8sQvo4vbY1k
- Dgv7wJDi1wl7bhC9DrQlB8oTTC0TlU2+V+2qolli3xujf6f4GioKIkStvkamTWsVOhLr
- sBDtdMI589KuGm3ncvA4XV7VSnKfkck16cg06JabX6wybRJVQnMnJ+UPHsL3WJo8X7tD
- xV0Fks8u6tlLVX2LuDe9H57Q585cJJSoLX55gbfmdYNqOUJ4A6/hYOiAsA0IRVUU1Ksr Iw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vukuuapp3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 25 Jan 2024 10:04:04 +0000
-Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 40PA1pDX028048;
-	Thu, 25 Jan 2024 10:04:03 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vukuuapnc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 25 Jan 2024 10:04:03 +0000
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 40P8DVV2010850;
-	Thu, 25 Jan 2024 10:04:02 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3vrrw03stu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 25 Jan 2024 10:04:02 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 40PA3xqN32702798
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 25 Jan 2024 10:03:59 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 150B12004E;
-	Thu, 25 Jan 2024 10:03:59 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id CB7A92004D;
-	Thu, 25 Jan 2024 10:03:58 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 25 Jan 2024 10:03:58 +0000 (GMT)
-From: Thomas Richter <tmricht@linux.ibm.com>
-To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org, namhyung@kernel.org
-Cc: svens@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
-        hca@linux.ibm.com, Thomas Richter <tmricht@linux.ibm.com>,
-        Ian Rogers <irogers@google.com>
-Subject: [PING PATCH v2] perf test: Fix test case perf script tests on s390
-Date: Thu, 25 Jan 2024 11:03:51 +0100
-Message-Id: <20240125100351.936262-1-tmricht@linux.ibm.com>
-X-Mailer: git-send-email 2.40.1
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="wErkwyaQ"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 40PA5IRo069399;
+	Thu, 25 Jan 2024 04:05:18 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1706177118;
+	bh=9UaJ4D/hI7ZVi19yrTkZXR0TSsp0sF7OcqZmcKiLyMw=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=wErkwyaQ5nU1imFrMqHZOkBJ37wiVD8X9bRBIKtVumUGs5MEDdTG+OiA4yoc9xLEG
+	 qJEvHfNIxOET9Jm/1JZKbhTuVgcPPgS1w7iaIqG6OBolgYH7wnSXmgl6HzXlkWFG0S
+	 pmTrtfte08ubdtmXifHBhGssIfP5hAN8VTI1idx0=
+Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 40PA5IL3122744
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Thu, 25 Jan 2024 04:05:18 -0600
+Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 25
+ Jan 2024 04:05:18 -0600
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Thu, 25 Jan 2024 04:05:18 -0600
+Received: from localhost (chintan-thinkstation-p360-tower.dhcp.ti.com [172.24.227.220])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 40PA5H4H005109;
+	Thu, 25 Jan 2024 04:05:17 -0600
+From: Chintan Vankar <c-vankar@ti.com>
+To: Andrew Davis <afd@ti.com>, Peter Rosin <peda@axentia.se>,
+        Greg
+ Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>, Tero
+ Kristo <kristo@kernel.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>, Nishanth
+ Menon <nm@ti.com>
+CC: <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <srk@ti.com>,
+        <s-vadapalli@ti.com>, <r-gunasekaran@ti.com>, <danishanwar@ti.com>,
+        Jayesh Choudhary
+	<j-choudhary@ti.com>,
+        Chintan Vankar <c-vankar@ti.com>
+Subject: [PATCH v3 3/5] arm64: dts: ti: k3-j784s4: Add Main CPSW2G node
+Date: Thu, 25 Jan 2024 15:34:59 +0530
+Message-ID: <20240125100501.4137977-4-c-vankar@ti.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240125100501.4137977-1-c-vankar@ti.com>
+References: <20240125100501.4137977-1-c-vankar@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,62 +72,85 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: x4NZDRyOUgZ8vxVhtOO7WKRLNcHIuIE5
-X-Proofpoint-GUID: 9EEcyfGOR0vkQQNC3UD39JsX-Flqmc1b
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-25_05,2024-01-24_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 mlxscore=0
- mlxlogscore=999 impostorscore=0 malwarescore=0 adultscore=0 phishscore=0
- bulkscore=0 spamscore=0 lowpriorityscore=0 priorityscore=1501
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2401250069
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-In linux next repo, test case 'perf script tests' fails on s390.
-The root case is a command line invocation of perf record with
-call-graph information. On s390 only dwarf formatted call-graphs
-are supported and only on software events.
+From: Siddharth Vadapalli <s-vadapalli@ti.com>
 
-Change the command line parameters fors s390.
+Add the device-tree nodes for the Main CPSW2G instance and enable it.
 
-Output before:
- # perf test 89
- 89: perf script tests              : FAILED!
- #
-
-Output after:
- # perf test 89
- 89: perf script tests              : Ok
- #
-
-Fixes: 0dd5041c9a0e ("perf addr_location: Add init/exit/copy functions")
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Reviewed-by: Ian Rogers <irogers@google.com>
+Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
+Signed-off-by: Chintan Vankar <c-vankar@ti.com>
 ---
- tools/perf/tests/shell/script.sh | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/ti/k3-j784s4-evm.dts | 47 ++++++++++++++++++++++++
+ 1 file changed, 47 insertions(+)
 
-diff --git a/tools/perf/tests/shell/script.sh b/tools/perf/tests/shell/script.sh
-index 5ae7bd0031a8..2973adab445d 100755
---- a/tools/perf/tests/shell/script.sh
-+++ b/tools/perf/tests/shell/script.sh
-@@ -54,7 +54,14 @@ def sample_table(*args):
- def call_path_table(*args):
-     print(f'call_path_table({args}')
- _end_of_file_
--	perf record -g -o "${perfdatafile}" true
-+	case $(uname -m)
-+	in s390x)
-+		cmd_flags="--call-graph dwarf -e cpu-clock";;
-+	*)
-+		cmd_flags="-g";;
-+	esac
+diff --git a/arch/arm64/boot/dts/ti/k3-j784s4-evm.dts b/arch/arm64/boot/dts/ti/k3-j784s4-evm.dts
+index f34b92acc56d..826367ffa3f2 100644
+--- a/arch/arm64/boot/dts/ti/k3-j784s4-evm.dts
++++ b/arch/arm64/boot/dts/ti/k3-j784s4-evm.dts
+@@ -279,6 +279,29 @@ &wkup_gpio0 {
+ 
+ &main_pmx0 {
+ 	bootph-all;
++	main_cpsw2g_default_pins: main-cpsw2g-default-pins {
++		pinctrl-single,pins = <
++			J784S4_IOPAD(0x0b8, PIN_INPUT, 6) /* (AC34) MCASP1_ACLKX.RGMII1_RD0 */
++			J784S4_IOPAD(0x0a0, PIN_INPUT, 6) /* (AD34) MCASP0_AXR12.RGMII1_RD1 */
++			J784S4_IOPAD(0x0a4, PIN_INPUT, 6) /* (AJ36) MCASP0_AXR13.RGMII1_RD2 */
++			J784S4_IOPAD(0x0a8, PIN_INPUT, 6) /* (AF34) MCASP0_AXR14.RGMII1_RD3 */
++			J784S4_IOPAD(0x0b0, PIN_INPUT, 6) /* (AL33) MCASP1_AXR3.RGMII1_RXC */
++			J784S4_IOPAD(0x0ac, PIN_INPUT, 6) /* (AE34) MCASP0_AXR15.RGMII1_RX_CTL */
++			J784S4_IOPAD(0x08c, PIN_INPUT, 6) /* (AE35) MCASP0_AXR7.RGMII1_TD0 */
++			J784S4_IOPAD(0x090, PIN_INPUT, 6) /* (AC35) MCASP0_AXR8.RGMII1_TD1 */
++			J784S4_IOPAD(0x094, PIN_INPUT, 6) /* (AG35) MCASP0_AXR9.RGMII1_TD2 */
++			J784S4_IOPAD(0x098, PIN_INPUT, 6) /* (AH36) MCASP0_AXR10.RGMII1_TD3 */
++			J784S4_IOPAD(0x0b4, PIN_INPUT, 6) /* (AL34) MCASP1_AXR4.RGMII1_TXC */
++			J784S4_IOPAD(0x09c, PIN_INPUT, 6) /* (AF35) MCASP0_AXR11.RGMII1_TX_CTL */
++		>;
++	};
 +
-+	perf record $cmd_flags -o "${perfdatafile}" true
- 	perf script -i "${perfdatafile}" -s "${db_test}"
- 	echo "DB test [Success]"
- }
++	main_cpsw2g_mdio_default_pins: main-cpsw2g-mdio-default-pins {
++		pinctrl-single,pins = <
++			J784S4_IOPAD(0x0c0, PIN_INPUT, 6) /* (AD38) MCASP1_AXR0.MDIO0_MDC */
++			J784S4_IOPAD(0x0bc, PIN_INPUT, 6) /* (AD33) MCASP1_AFSX.MDIO0_MDIO */
++		>;
++	};
+ 	main_uart8_pins_default: main-uart8-default-pins {
+ 		bootph-all;
+ 		pinctrl-single,pins = <
+@@ -808,6 +831,30 @@ &mcu_cpsw_port1 {
+ 	phy-handle = <&mcu_phy0>;
+ };
+ 
++&main_cpsw1 {
++	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&main_cpsw2g_default_pins>;
++};
++
++&main_cpsw1_mdio {
++	pinctrl-names = "default";
++	pinctrl-0 = <&main_cpsw2g_mdio_default_pins>;
++
++	main_cpsw1_phy0: ethernet-phy@0 {
++		reg = <0>;
++		ti,rx-internal-delay = <DP83867_RGMIIDCTL_2_00_NS>;
++		ti,fifo-depth = <DP83867_PHYCR_FIFO_DEPTH_4_B_NIB>;
++		ti,min-output-impedance;
++	};
++};
++
++&main_cpsw1_port1 {
++	status = "okay";
++	phy-mode = "rgmii-rxid";
++	phy-handle = <&main_cpsw1_phy0>;
++};
++
+ &mailbox0_cluster0 {
+ 	status = "okay";
+ 	interrupts = <436>;
 -- 
-2.43.0
+2.34.1
 
