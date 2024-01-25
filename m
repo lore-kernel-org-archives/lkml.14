@@ -1,53 +1,53 @@
-Received: from mail-il1-f173.google.com (mail-il1-f173.google.com [209.85.166.173])
+Received: from mail-oa1-f51.google.com (mail-oa1-f51.google.com [209.85.160.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B310A3D
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 00:30:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07DC267C45
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 00:30:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706142626; cv=none; b=GeMWGzMkdkYvnva9lqimrBrjJFgpYZG6+9N7+pjO1jCMbq0y/Vf8mjH0pTQ2PMaf5cFpn1N2bJHp870bAc0kyIT0pB7bjPAbCUtjYd7ffCbN2HUdKn9OpnS4L4Q0TtbovdmC3JlX1Jq4f40GfkpHU8LiP6clhmlKohIQ8kmPl1Y=
+	t=1706142627; cv=none; b=u+SIN0/FLBSzaqQXfbGh1JtYXrsD73lILJWpbULpBrTeyokxP2jUcrZPFZ4la/DMiqXK46CHEMtAvr+7qNSDkhekYu7kJSF+RyCxaE2KovDAPqbs6m0qg8i0SVUfv6ByUXcuxF8OjsBMlQ/jXcks3on2ykBh3ffg6ie73KFLmVA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706142626; c=relaxed/simple;
-	bh=qkngexUKlfn+hMPunN78J4XlCpnaY0JzFvOY2CvOwFw=;
+	s=arc-20240116; t=1706142627; c=relaxed/simple;
+	bh=WtXmg5IZU3NCkx951uq8x5TaAckhdrLYZZQD0cemNCU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=dNooLMln2mIiQIRwZ2DFzKoRd+EMBrOEkRcBL/FAHJmu8nio+EMrCrj2kfI6p8nJsbtQqt50yb5jsgB6PeAvPwQaxsKC+yTfXxAi6d1opEZNa1lGaRQiV0xea5YeudbPWEm1yr7DtqEkDc7yCySJUoccIJ0RCHPfPuWOM03cfiQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=RrRYhH/i; arc=none smtp.client-ip=209.85.166.173
+	 MIME-Version; b=Ky6j8psij8np0a6Qqa4k0xnO8YBC+Odejlja8Ygbg2ECPP+Blz53OAP1wnCkH4vVLQh3EKKwTBoGyJR4riR8KrmKRv97LFZIR3bWx8Y2YJXaQ8L9WXAH7heXdIvGpCE1b7NslM0iwJgFKvro8Ce7VMEIbnUaCTlI4mXsJiQGcT0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=Q4QliVc8; arc=none smtp.client-ip=209.85.160.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="RrRYhH/i"
-Received: by mail-il1-f173.google.com with SMTP id e9e14a558f8ab-3627e9f1b40so18328715ab.1
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 16:30:23 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="Q4QliVc8"
+Received: by mail-oa1-f51.google.com with SMTP id 586e51a60fabf-21433afcc53so2536924fac.3
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 16:30:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fastly.com; s=google; t=1706142622; x=1706747422; darn=vger.kernel.org;
+        d=fastly.com; s=google; t=1706142625; x=1706747425; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=VV39OAkRpCVAHLKUI3lU3BvBDLbvOa7qJKwdNWq/qLo=;
-        b=RrRYhH/iEsRHUmKTquV2y95C9aRsKyCGxgflWpj0V8QQpjBruF+BKUVz0LDlNsI313
-         8aI4+U3ixR45wYg8g3NTlExvkD//EWmymdG7TeA4zAT0wedY0BX8zsZUlPWuKfQoeszg
-         uTrztf7SZyKmfaLyL7opJRTMLitGJKRVxeNEs=
+        bh=mfXKcx732lyegT0JnbCBFxum6PCwYsIbQ8eg5Ffi0GI=;
+        b=Q4QliVc8V5fIHZX0bf1XoosmwpMW41Gj409Sbv/gkf84IutJJTxOSzp9D4rFZmps3c
+         JIhAvzZMlQqXfzrB+hRycD2WqbPyMVWBnI5VZIk/sY+z9VOATkB73oiaeiMwv3wbgX+6
+         TPb12iW5ju/yoII31ld99vsa7Y1Od43ZxJmc4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706142622; x=1706747422;
+        d=1e100.net; s=20230601; t=1706142625; x=1706747425;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=VV39OAkRpCVAHLKUI3lU3BvBDLbvOa7qJKwdNWq/qLo=;
-        b=ObL84/esDSLVDZalGJ5g1RIVRBxhZpZpDig+dQqroJnCSawCbsXaeioF6QRhp6/EmF
-         ks4ogfmL1egb+J1GWY7m57OhLdx8sORfPmaIbNtcHVPO0oquz5Dp4npEilan4DlO0lc8
-         k/fmviaG50igEI0520rvbHODQ6c5QoLDkWT7rLDMi0s+HYjfnR9HHTPAOMyzNQdL+vam
-         iy5cEu/dJMt9gyU7farEcOQL9hZdX6BFubSxw8tzCzqe3qGCqV0sk7Y4SJuEhXtA7kU7
-         z8UYnRj4InlGzBhKKMbJQe6gx0EX4F7anTRaxMuzZbW4oE5qlqaHo3SDZCmZfnjvgP0+
-         p0Gg==
-X-Gm-Message-State: AOJu0YzbuaaH0iOWeBp5ZE2D/bgVQEV2OU0bSmyZv+KOxGDfd5JUh0ft
-	RsC0jOkPtJl1j3qQww8VmXCUecoCfjeE9S85EiBgxVXhOxQZ6Arnsdvrk3QTSUk=
-X-Google-Smtp-Source: AGHT+IGnYPOifsV33or2bBeZeQG6+k6OkdXKBZqmsoPyQU14DL3OI0VG4LUd5evkY/JboI23hyOIDQ==
-X-Received: by 2002:a92:cec9:0:b0:361:ac44:150a with SMTP id z9-20020a92cec9000000b00361ac44150amr285943ilq.57.1706142622585;
-        Wed, 24 Jan 2024 16:30:22 -0800 (PST)
+        bh=mfXKcx732lyegT0JnbCBFxum6PCwYsIbQ8eg5Ffi0GI=;
+        b=GdPLpeMoxET2+roPfWXZ1Bad81HM5RyshkKfQxY5dyPgXjXe0lrCPkTR936lYxSgdi
+         gmLt+61Pyow2CAsbwPLjO/qsVbAzNFb+Nk4WZvchQf/4KgTnVyK5u1Hk6Rvi7TBzR7Ci
+         WeNywIIf+qFW0mp36aVEomMfr/5Q5SI5b/7OVrTFf4bYlMMtoz1zcy7bolx4U42bjQy1
+         jNwVeiV4I0mQkI5U3HtIP8KLMfvZwTPCfEamuj+8IAwUjZJSlwGwID7wIVppOi45ww/K
+         J6r4CI6nWXl1EIpEOBjWouSru8GRiD1XFT1tRzYyZnSmv1K6QeyHnC+5g4z7fzqlAjij
+         2vOA==
+X-Gm-Message-State: AOJu0YzOEeR4Ytm3oVyj5NmAYhxpsgLGOT20vgsVCEexq/pnm8pk7aAS
+	WQ1Sg9HxsCugSdE5OK/DXFyUmEYgPnWH3lsQ3t4K273Wl+rCXE6NFAXdkxWyBT0=
+X-Google-Smtp-Source: AGHT+IGG8+mwEQupJBz/pjzOQSEbpI7FI6UmNFYMgH3X7dDvRH8BfBty9RDrCNA7UOvUqbHUql4CMA==
+X-Received: by 2002:a05:6871:8191:b0:205:9fe9:67de with SMTP id so17-20020a056871819100b002059fe967demr134665oab.39.1706142625168;
+        Wed, 24 Jan 2024 16:30:25 -0800 (PST)
 Received: from localhost.localdomain ([2620:11a:c018:0:ea8:be91:8d1:f59b])
-        by smtp.gmail.com with ESMTPSA id w10-20020a63d74a000000b005cd945c0399sm12550486pgi.80.2024.01.24.16.30.21
+        by smtp.gmail.com with ESMTPSA id w10-20020a63d74a000000b005cd945c0399sm12550486pgi.80.2024.01.24.16.30.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jan 2024 16:30:21 -0800 (PST)
+        Wed, 24 Jan 2024 16:30:24 -0800 (PST)
 From: Joe Damato <jdamato@fastly.com>
 To: netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org
@@ -62,9 +62,9 @@ Cc: chuck.lever@oracle.com,
 	kuba@kernel.org,
 	weiwan@google.com,
 	Joe Damato <jdamato@fastly.com>
-Subject: [net-next v2 1/4] eventpoll: support busy poll per epoll instance
-Date: Thu, 25 Jan 2024 00:30:11 +0000
-Message-Id: <20240125003014.43103-2-jdamato@fastly.com>
+Subject: [net-next v2 3/4] eventpoll: Add epoll ioctl for epoll_params
+Date: Thu, 25 Jan 2024 00:30:13 +0000
+Message-Id: <20240125003014.43103-4-jdamato@fastly.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240125003014.43103-1-jdamato@fastly.com>
 References: <20240125003014.43103-1-jdamato@fastly.com>
@@ -76,126 +76,122 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Allow busy polling on a per-epoll context basis. The per-epoll context
-usec timeout value is preferred, but the pre-existing system wide sysctl
-value is still supported if it specified.
-
-Note that this change uses an xor: either per epoll instance busy polling
-is enabled on the epoll instance or system wide epoll is enabled. Enabling
-both is disallowed.
+Add an ioctl for getting and setting epoll_params. User programs can use
+this ioctl to get and set the busy poll usec time or packet budget
+params for a specific epoll context.
 
 Signed-off-by: Joe Damato <jdamato@fastly.com>
 ---
- fs/eventpoll.c | 49 +++++++++++++++++++++++++++++++++++++++++++++----
- 1 file changed, 45 insertions(+), 4 deletions(-)
+ .../userspace-api/ioctl/ioctl-number.rst      |  1 +
+ fs/eventpoll.c                                | 47 +++++++++++++++++++
+ include/uapi/linux/eventpoll.h                | 12 +++++
+ 3 files changed, 60 insertions(+)
 
+diff --git a/Documentation/userspace-api/ioctl/ioctl-number.rst b/Documentation/userspace-api/ioctl/ioctl-number.rst
+index 457e16f06e04..b33918232f78 100644
+--- a/Documentation/userspace-api/ioctl/ioctl-number.rst
++++ b/Documentation/userspace-api/ioctl/ioctl-number.rst
+@@ -309,6 +309,7 @@ Code  Seq#    Include File                                           Comments
+ 0x89  0B-DF  linux/sockios.h
+ 0x89  E0-EF  linux/sockios.h                                         SIOCPROTOPRIVATE range
+ 0x89  F0-FF  linux/sockios.h                                         SIOCDEVPRIVATE range
++0x8A  00-1F  linux/eventpoll.h
+ 0x8B  all    linux/wireless.h
+ 0x8C  00-3F                                                          WiNRADiO driver
+                                                                      <http://www.winradio.com.au/>
 diff --git a/fs/eventpoll.c b/fs/eventpoll.c
-index 3534d36a1474..4503fec01278 100644
+index 40bd97477b91..c1ee0fe01da1 100644
 --- a/fs/eventpoll.c
 +++ b/fs/eventpoll.c
-@@ -227,6 +227,8 @@ struct eventpoll {
- #ifdef CONFIG_NET_RX_BUSY_POLL
- 	/* used to track busy poll napi_id */
- 	unsigned int napi_id;
-+	/* busy poll timeout */
-+	u64 busy_poll_usecs;
- #endif
+@@ -6,6 +6,8 @@
+  *  Davide Libenzi <davidel@xmailserver.org>
+  */
  
- #ifdef CONFIG_DEBUG_LOCK_ALLOC
-@@ -386,12 +388,44 @@ static inline int ep_events_available(struct eventpoll *ep)
- 		READ_ONCE(ep->ovflist) != EP_UNACTIVE_PTR;
++#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
++
+ #include <linux/init.h>
+ #include <linux/kernel.h>
+ #include <linux/sched/signal.h>
+@@ -869,6 +871,49 @@ static void ep_clear_and_put(struct eventpoll *ep)
+ 		ep_free(ep);
  }
  
-+/**
-+ * busy_loop_ep_timeout - check if busy poll has timed out. The timeout value
-+ * from the epoll instance ep is preferred, but if it is not set fallback to
-+ * the system-wide global via busy_loop_timeout.
-+ *
-+ * @start_time: The start time used to compute the remaining time until timeout.
-+ * @ep: Pointer to the eventpoll context.
-+ *
-+ * Return: true if the timeout has expired, false otherwise.
-+ */
-+static inline bool busy_loop_ep_timeout(unsigned long start_time, struct eventpoll *ep)
++static long ep_eventpoll_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 +{
++	int ret;
++	struct eventpoll *ep;
++	struct epoll_params epoll_params;
++	void __user *uarg = (void __user *) arg;
++
++	if (!is_file_epoll(file))
++		return -EINVAL;
++
++	ep = file->private_data;
++
++	switch (cmd) {
 +#ifdef CONFIG_NET_RX_BUSY_POLL
-+	unsigned long bp_usec = READ_ONCE(ep->busy_poll_usecs);
++	case EPIOCSPARAMS:
++		if (copy_from_user(&epoll_params, uarg, sizeof(epoll_params)))
++			return -EFAULT;
 +
-+	if (bp_usec) {
-+		unsigned long end_time = start_time + bp_usec;
-+		unsigned long now = busy_loop_current_time();
++		if (epoll_params.busy_poll_budget > NAPI_POLL_WEIGHT)
++			pr_err("busy poll budget %u exceeds suggested maximum %u\n",
++					epoll_params.busy_poll_budget, NAPI_POLL_WEIGHT);
 +
-+		return time_after(now, end_time);
-+	} else {
-+		return busy_loop_timeout(start_time);
++		ep->busy_poll_usecs = epoll_params.busy_poll_usecs;
++		ep->busy_poll_budget = epoll_params.busy_poll_budget;
++		return 0;
++
++	case EPIOCGPARAMS:
++		memset(&epoll_params, 0, sizeof(epoll_params));
++		epoll_params.busy_poll_usecs = ep->busy_poll_usecs;
++		epoll_params.busy_poll_budget = ep->busy_poll_budget;
++		if (copy_to_user(uarg, &epoll_params, sizeof(epoll_params)))
++			return -EFAULT;
++
++		return 0;
++#endif
++	default:
++		ret = -EINVAL;
++		break;
 +	}
-+#endif
-+	return true;
++
++	return ret;
 +}
 +
- #ifdef CONFIG_NET_RX_BUSY_POLL
-+static bool ep_busy_loop_on(struct eventpoll *ep)
-+{
-+	return !!ep->busy_poll_usecs ^ net_busy_loop_on();
-+}
+ static int ep_eventpoll_release(struct inode *inode, struct file *file)
+ {
+ 	struct eventpoll *ep = file->private_data;
+@@ -975,6 +1020,8 @@ static const struct file_operations eventpoll_fops = {
+ 	.release	= ep_eventpoll_release,
+ 	.poll		= ep_eventpoll_poll,
+ 	.llseek		= noop_llseek,
++	.unlocked_ioctl	= ep_eventpoll_ioctl,
++	.compat_ioctl   = compat_ptr_ioctl,
+ };
+ 
+ /*
+diff --git a/include/uapi/linux/eventpoll.h b/include/uapi/linux/eventpoll.h
+index cfbcc4cc49ac..8eb0fdbce995 100644
+--- a/include/uapi/linux/eventpoll.h
++++ b/include/uapi/linux/eventpoll.h
+@@ -85,4 +85,16 @@ struct epoll_event {
+ 	__u64 data;
+ } EPOLL_PACKED;
+ 
++struct epoll_params {
++	u64 busy_poll_usecs;
++	u16 busy_poll_budget;
 +
- static bool ep_busy_loop_end(void *p, unsigned long start_time)
- {
- 	struct eventpoll *ep = p;
- 
--	return ep_events_available(ep) || busy_loop_timeout(start_time);
-+	return ep_events_available(ep) || busy_loop_ep_timeout(start_time, ep);
- }
- 
- /*
-@@ -404,7 +438,7 @@ static bool ep_busy_loop(struct eventpoll *ep, int nonblock)
- {
- 	unsigned int napi_id = READ_ONCE(ep->napi_id);
- 
--	if ((napi_id >= MIN_NAPI_ID) && net_busy_loop_on()) {
-+	if ((napi_id >= MIN_NAPI_ID) && ep_busy_loop_on(ep)) {
- 		napi_busy_loop(napi_id, nonblock ? NULL : ep_busy_loop_end, ep, false,
- 			       BUSY_POLL_BUDGET);
- 		if (ep_events_available(ep))
-@@ -430,7 +464,8 @@ static inline void ep_set_busy_poll_napi_id(struct epitem *epi)
- 	struct socket *sock;
- 	struct sock *sk;
- 
--	if (!net_busy_loop_on())
-+	ep = epi->ep;
-+	if (!ep_busy_loop_on(ep))
- 		return;
- 
- 	sock = sock_from_file(epi->ffd.file);
-@@ -442,7 +477,6 @@ static inline void ep_set_busy_poll_napi_id(struct epitem *epi)
- 		return;
- 
- 	napi_id = READ_ONCE(sk->sk_napi_id);
--	ep = epi->ep;
- 
- 	/* Non-NAPI IDs can be rejected
- 	 *	or
-@@ -466,6 +500,10 @@ static inline void ep_set_busy_poll_napi_id(struct epitem *epi)
- {
- }
- 
-+static inline bool ep_busy_loop_on(struct eventpoll *ep)
-+{
-+	return false;
-+}
- #endif /* CONFIG_NET_RX_BUSY_POLL */
- 
- /*
-@@ -2058,6 +2096,9 @@ static int do_epoll_create(int flags)
- 		error = PTR_ERR(file);
- 		goto out_free_fd;
- 	}
-+#ifdef CONFIG_NET_RX_BUSY_POLL
-+	ep->busy_poll_usecs = 0;
-+#endif
- 	ep->file = file;
- 	fd_install(fd, file);
- 	return fd;
++	/* for future fields */
++	u8 data[118];
++} EPOLL_PACKED;
++
++#define EPOLL_IOC_TYPE 0x8A
++#define EPIOCSPARAMS _IOW(EPOLL_IOC_TYPE, 0x01, struct epoll_params)
++#define EPIOCGPARAMS _IOR(EPOLL_IOC_TYPE, 0x02, struct epoll_params)
++
+ #endif /* _UAPI_LINUX_EVENTPOLL_H */
 -- 
 2.25.1
 
