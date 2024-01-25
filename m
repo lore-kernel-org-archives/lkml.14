@@ -1,95 +1,91 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from SHSQR01.spreadtrum.com (mx1.unisoc.com [222.66.158.135])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6460D79E2;
-	Thu, 25 Jan 2024 03:06:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 562B71FB2
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 03:08:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=222.66.158.135
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706152001; cv=none; b=aaREJBaKn8viLN1h8kM9zZo/v9EVd0DQzc6eWXTAGhL16a+uiFOKLWHlt+fRuOWeIt7lF0xY2pQcwFaK4Qoof2Y/ex8IG7QVLftS3vFWAGlvKuFURK94Z+UijHyMiTtsaTOv9rPRtcgPhPsioDHBP1JWNDuDVZyU0vCKHWgKG2w=
+	t=1706152137; cv=none; b=WpcJYqsvmDoMCcZDSFUDz3BipdneWnQ8xzOaEa4h6f8QN+Kat72PnocH/YvJEcSi+lzNKPxCgBQHZ2Xkv1ipfK5v7qUSquSkEAqhNvhz72B6Sy3/N5FUEoV+6QxIq272CQ+fav2mVlHQOjZw+GVSo30hb23ZGpuJ6VIN7CRsGF0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706152001; c=relaxed/simple;
-	bh=ow7IMVspmCcE3TE1IhnzZv0vHhmCk8Hrv8HbR587cVk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Faqum17Wa9EqPsmtIOoI/unqhC7+yAGxqbOnAxHYUJS+c/YDZnB6o8V9rLK3iHf385u/xXZ52mQPMktUvXFLgpEc0TY01C7xQ/S5EZjk+ovz5/dVORQZ3Ix5TsUzFG9OaYoxiVOSbSJvTouofVGBebGhqKJUJLVt0naIVz5oVdI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 99479cd41a2149baa6630577220df5a3-20240125
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.35,REQID:b5f2e5c8-8590-4e7f-b06c-b09c9f7db4fa,IP:20,
-	URL:0,TC:0,Content:-20,EDM:0,RT:0,SF:-3,FILE:0,BULK:0,RULE:Release_Ham,ACT
-	ION:release,TS:-3
-X-CID-INFO: VERSION:1.1.35,REQID:b5f2e5c8-8590-4e7f-b06c-b09c9f7db4fa,IP:20,UR
-	L:0,TC:0,Content:-20,EDM:0,RT:0,SF:-3,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
-	N:release,TS:-3
-X-CID-META: VersionHash:5d391d7,CLOUDID:35c43a83-8d4f-477b-89d2-1e3bdbef96d1,B
-	ulkID:240125110630WOUVYAVM,BulkQuantity:0,Recheck:0,SF:19|44|101|66|38|24|
-	100|17|102,TC:nil,Content:1,EDM:-3,IP:-2,URL:0,File:nil,Bulk:nil,QS:nil,BE
-	C:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI
-X-UUID: 99479cd41a2149baa6630577220df5a3-20240125
-Received: from mail.kylinos.cn [(39.156.73.10)] by mailgw
-	(envelope-from <chentao@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 599201392; Thu, 25 Jan 2024 11:06:29 +0800
-Received: from mail.kylinos.cn (localhost [127.0.0.1])
-	by mail.kylinos.cn (NSMail) with SMTP id C92E2E000EB9;
-	Thu, 25 Jan 2024 11:06:28 +0800 (CST)
-X-ns-mid: postfix-65B1D034-617628425
-Received: from kernel.. (unknown [172.20.15.234])
-	by mail.kylinos.cn (NSMail) with ESMTPA id DD215E000EB9;
-	Thu, 25 Jan 2024 11:06:24 +0800 (CST)
-From: Kunwu Chan <chentao@kylinos.cn>
-To: bhelgaas@google.com,
-	tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org,
-	hpa@zytor.com
-Cc: linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Kunwu Chan <chentao@kylinos.cn>
-Subject: [PATCH] x86: Code cleanup for ehci_hdr
-Date: Thu, 25 Jan 2024 11:06:23 +0800
-Message-Id: <20240125030623.513902-1-chentao@kylinos.cn>
-X-Mailer: git-send-email 2.39.2
+	s=arc-20240116; t=1706152137; c=relaxed/simple;
+	bh=n/DGsSIprR6XGAQ6RgUSyszmBIaUb47hbAeYspfQ4mg=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=mQVJrk17Sm2QFuD+U75AhLYq+oI1NZWTTXtJOAXf3APKCAG5qRYHOuP6wHyA2h44kG3yA68MijjdD1+b3fzJI3eaIRnLiRzUJpM9aTS5i7GflEpu6Jfnwk1kIduYxwzQTQ1fWgpbyzx61EOuG3iGJS6Ra35DKP1xWRkc7fGTZ5I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com; spf=pass smtp.mailfrom=unisoc.com; arc=none smtp.client-ip=222.66.158.135
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unisoc.com
+Received: from dlp.unisoc.com ([10.29.3.86])
+	by SHSQR01.spreadtrum.com with ESMTP id 40P38asi061327;
+	Thu, 25 Jan 2024 11:08:36 +0800 (+08)
+	(envelope-from Wenhua.Lin@unisoc.com)
+Received: from SHDLP.spreadtrum.com (shmbx06.spreadtrum.com [10.0.1.11])
+	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4TL5F31L4pz2Rq2lq;
+	Thu, 25 Jan 2024 11:01:11 +0800 (CST)
+Received: from xm9614pcu.spreadtrum.com (10.13.2.29) by shmbx06.spreadtrum.com
+ (10.0.1.11) with Microsoft SMTP Server (TLS) id 15.0.1497.23; Thu, 25 Jan
+ 2024 11:08:34 +0800
+From: Wenhua Lin <Wenhua.Lin@unisoc.com>
+To: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+        Rob
+ Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>
+CC: Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang
+	<baolin.wang@linux.alibaba.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>, <linux-pwm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        wenhua lin <wenhua.lin1994@gmail.com>,
+        Wenhua
+ Lin <Wenhua.Lin@unisoc.com>,
+        Xiongpeng Wu <xiongpeng.wu@unisoc.com>,
+        zhaochen
+ su <zhaochen.su29@gmail.com>,
+        Zhaochen Su <Zhaochen.Su@unisoc.com>,
+        Xiaolong
+ Wang <Xiaolong.Wang@unisoc.com>
+Subject: [PATCH V2 0/6] pwm: sprd: Modification of UNISOC Platform PWM Driver
+Date: Thu, 25 Jan 2024 10:55:27 +0800
+Message-ID: <20240125025533.10315-1-Wenhua.Lin@unisoc.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-ClientProxiedBy: SHCAS03.spreadtrum.com (10.0.1.207) To
+ shmbx06.spreadtrum.com (10.0.1.11)
+X-MAIL:SHSQR01.spreadtrum.com 40P38asi061327
 
-This part was commented from commit 3ef0e1f8cad0
-("x86: olpc: add One Laptop Per Child architecture support")
-in about 16 years before.
+Due to new usage scenarios, some upgrades are made to unisoc's pwm driver.
+Patch 1 supports the change of channel offset on UMS9620.
+Patch 2 supports more brightness levels (duty cycle) for backlight control.
+Patch 3 optimizes the calculation method of duty.
+Patch 4 converts dt-binding file from txt to yaml
+Patch 5-6 update pwm-sprd.yaml according to patch 1 and patch 2.
 
-If there are no plans to enable this part code in the future,
-we can remove this dead code.
+Change in V2:
 
-Signed-off-by: Kunwu Chan <chentao@kylinos.cn>
----
- arch/x86/pci/olpc.c | 3 ---
- 1 file changed, 3 deletions(-)
+-Change dev_err to dev_info in PATCH 2/6.
+-Add maintainer to gitconfig.
 
-diff --git a/arch/x86/pci/olpc.c b/arch/x86/pci/olpc.c
-index f3aab76e357a..4b18c6404363 100644
---- a/arch/x86/pci/olpc.c
-+++ b/arch/x86/pci/olpc.c
-@@ -154,9 +154,6 @@ static const uint32_t ehci_hdr[] =3D {  /* dev f func=
-tion 4 - devfn =3D 7d */
- 	0x0,	0x40,	0x0,	0x40a,			/* CapPtr INT-D, IRQA */
- 	0xc8020001, 0x0, 0x0,	0x0,	/* Capabilities - 40 is R/O, 44 is
- 					   mask 8103 (power control) */
--#if 0
--	0x1,	0x40080000, 0x0, 0x0,	/* EECP - see EHCI spec section 2.1.7 */
--#endif
- 	0x01000001, 0x0, 0x0,	0x0,	/* EECP - see EHCI spec section 2.1.7 */
- 	0x2020,	0x0,	0x0,	0x0,	/* (EHCI page 8) 60 SBRN (R/O),
- 					   61 FLADJ (R/W), PORTWAKECAP  */
---=20
-2.39.2
+Wenhua Lin (6):
+  pwm: sprd: Add support for UMS9620
+  pwm: sprd: Improve the pwm backlight control function
+  pwm: sprd: Optimize the calculation method of duty
+  dt-bindings: pwm: sprd: Convert to YAML
+  pwm: sprd: Add sprd,ums9620-pwm compatible
+  dt-bindings: pwm: sprd: Add sprd,mod attribute
+
+ .../devicetree/bindings/pwm/pwm-sprd.txt      |  40 -------
+ .../devicetree/bindings/pwm/pwm-sprd.yaml     | 106 ++++++++++++++++++
+ drivers/pwm/pwm-sprd.c                        |  71 ++++++++++--
+ 3 files changed, 165 insertions(+), 52 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/pwm/pwm-sprd.txt
+ create mode 100644 Documentation/devicetree/bindings/pwm/pwm-sprd.yaml
+
+-- 
+2.17.1
 
