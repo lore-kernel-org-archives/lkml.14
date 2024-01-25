@@ -1,30 +1,30 @@
 Received: from ahti.lucaweiss.eu (ahti.lucaweiss.eu [128.199.32.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25AF4131E4F;
-	Thu, 25 Jan 2024 21:56:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F4FF13A25D;
+	Thu, 25 Jan 2024 21:56:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=128.199.32.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706219793; cv=none; b=IJKtUxhSAQNYBnpM3mQJhvMo9YjcKge17AIZkl4pLz93nisxxIO/GRl4TH+AgOIlDYf7TsmIdbnH/9JbbK5IlPLP6S0Gkr9VFO4Rhe0xArpP8zDrxOfVvx1ZtntCAU720Ghj5KwCu1xNMZyYuG4/L+JJq7zmiJw2aKEmdXY/rAI=
+	t=1706219793; cv=none; b=QidKAh3n2dKRfaD9y0ksEcErzLT3LaCzEqA9hyga4mtbh41S2vEkXoaTHyjPgjWDFtpnwPBdygI4CsuW7GBgZsOuKdbu4h+gKg549SfquIavWJ0FGxXdwz/sw66y/+2WfZ0zovRK+HbAZypMIR+DkSBooaAb8oYkyveyRUuBtdQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1706219793; c=relaxed/simple;
-	bh=b7Y6SDBxaY7d2ufdRgw40VrIGg/JPSikCPGoPt4otcU=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=cZknTNSD1uopJqvhqSWanTBX52zvcXqXCT7iN9RJwXoHlIuCP59+fhRxavaKnjAAZdKYZ2/74P5Dy5YmKt5OnAkdQBtzxBukMpDFTcFt4lmPRxqVXY9321n/O8uu0Hk6t4akxfM4PuwurvJJ4gW2Ly7VVdtCw1Wcl6jKBp8kjlo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=z3ntu.xyz; spf=pass smtp.mailfrom=z3ntu.xyz; dkim=pass (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b=gLTXPjoG; arc=none smtp.client-ip=128.199.32.197
+	bh=Oqyozkp+3yIVzn78FJIm4wo9l8cFnDnRA86nkZK/rME=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=mGpa3X9eP8NOkawquJtSVSbOdbdGnSUaqRPfJWu5GEwX4dX2qVCgiSFVB0JmDDIP555uswQDgW0/+7rVoSqhn7EFKWkETuIwl9H4RZMGVwg8rTs+4cOHJhukP2bee9JxuZY+7WZKhgFOj0ghmZtlrnO+ZkFVU1BwN429Y0sJhkg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=z3ntu.xyz; spf=pass smtp.mailfrom=z3ntu.xyz; dkim=pass (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b=FWqk6gH4; arc=none smtp.client-ip=128.199.32.197
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=z3ntu.xyz
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=z3ntu.xyz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="gLTXPjoG"
+	dkim=pass (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="FWqk6gH4"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=z3ntu.xyz; s=s1;
-	t=1706219789; bh=b7Y6SDBxaY7d2ufdRgw40VrIGg/JPSikCPGoPt4otcU=;
-	h=From:Subject:Date:To:Cc;
-	b=gLTXPjoG2oB1f5FyD097277HHw1LhrAzecH/DRwqdnznSFUYLB/jWXlCs+9tyFxP6
-	 c8KLTyK0Em76VnvEOCHMF9VPQ505ynf9hHHUIu3X5zp4tyZtVN44o5mpTWZRUIGRcc
-	 SXeJY70LFYKXJRMOnsqo/KrAd87ySr6+82+zxVns=
+	t=1706219789; bh=Oqyozkp+3yIVzn78FJIm4wo9l8cFnDnRA86nkZK/rME=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc;
+	b=FWqk6gH4SXpC2psEycIdHU/CVfUyW4vur7C0aJS36GTNhjIxuWiR8IBAXm4rq1Wkv
+	 oq02yrBUliIW/ZInetRbZAtE4n7ebdy5p5leoKifisJ9lX1wJlm48DpgEvkbArc8mE
+	 x7l49g5ey8AtsnUuaYUQSpHqZzvyZtYBE0kStd6U=
 From: Luca Weiss <luca@z3ntu.xyz>
-Subject: [PATCH RFC 0/2] Add GPU support to MSM8953 SoC
-Date: Thu, 25 Jan 2024 22:56:24 +0100
-Message-Id: <20240125-msm8953-gpu-v1-0-f6493a5951f3@z3ntu.xyz>
+Date: Thu, 25 Jan 2024 22:56:26 +0100
+Subject: [PATCH RFC 2/2] arm64: dts: qcom: msm8953: Add GPU
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -33,9 +33,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAAjZsmUC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI2NDI0Mj3dziXAtLU2Pd9IJSXZNkAwtTYzPTNFNLEyWgjoKi1LTMCrBp0Up
- Bbs5KsbW1AFPUyvJiAAAA
+Message-Id: <20240125-msm8953-gpu-v1-2-f6493a5951f3@z3ntu.xyz>
+References: <20240125-msm8953-gpu-v1-0-f6493a5951f3@z3ntu.xyz>
+In-Reply-To: <20240125-msm8953-gpu-v1-0-f6493a5951f3@z3ntu.xyz>
 To: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
  Bjorn Andersson <andersson@kernel.org>, 
  Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh+dt@kernel.org>, 
@@ -45,78 +45,226 @@ To: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
 Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
  linux-kernel@vger.kernel.org, Luca Weiss <luca@z3ntu.xyz>
 X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2377; i=luca@z3ntu.xyz;
- h=from:subject:message-id; bh=b7Y6SDBxaY7d2ufdRgw40VrIGg/JPSikCPGoPt4otcU=;
- b=owEBbQKS/ZANAwAIAXLYQ7idTddWAcsmYgBlstkJfc3l2laEi7sRN3lqVds6XpkA0MzjRBHOf
- nwFNvAq0lmJAjMEAAEIAB0WIQQ5utIvCCzakboVj/py2EO4nU3XVgUCZbLZCQAKCRBy2EO4nU3X
- VhAsEADDLcuQHxd9v+Kxexh0y3s9hvictSjNkBDZ5R/NiVYX6qa9VHKiAGjVfPKAyvipzhz1N5e
- pbko36jzoRLC4VFPzxVZLxidssu8v40pxBK37fqPph5SVAyNQKKelKoTl8ZKYk+P3drW1TJzc/y
- BjOg3TGhC5JIXrOUTHuwSrxb7NODZ+l+lUxc0+JC//VwbU8hCXCQAFrDRidFROPUlCwhZ+MKzEs
- cjJcnc/483dv3e8wgTHL8zgwZXKs62tmvKH68ptkw5iIZC2rwsDTjh+OU7+EjArzJwPZ84O5l54
- A5ZOLTCy6qXqKT6TdGe1f1LzTw+7DEoFcZa7aOJpWBM5LbduUvyWQIwN1AXWbwEPigNaLcj/QsX
- IQS/6RS/tkoCzoGwzQl5w5aA1EyHq+pETY/46nx71sY0tagjDG5dbyeIkzJcItPwDTTFCExptmC
- 9w/q2Y1vRBUcphG8OpdRtZ94g/h2R6n+W2l+MRxmCYat0diWxN/ty4o6ttA4sctEBVf7euz1key
- Kvq+8pS6sUWIXqQTqpnDdCFfpWPaiavbbECTbXKTVk4xkZan9E9bcON4hVaS0x7tW2rBy39Rvj9
- fX0mXT1NHsZLE/hqP/TTt14vU86R6QPgTsbuzX2HlNc06dcPXDQdA4afgqP+61MXILJs/nHH9Qk
- B8q1CsiS9LtX9iA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5530; i=luca@z3ntu.xyz;
+ h=from:subject:message-id; bh=uxlKtlyhduTvOfdocjjZ8QA65zmTpmpXVNCWTg8SbYg=;
+ b=owEBbQKS/ZANAwAIAXLYQ7idTddWAcsmYgBlstkLT23pPvklj9ZVYTuNZCeUf+xI5SlD7A/Pi
+ NF34HTMp4SJAjMEAAEIAB0WIQQ5utIvCCzakboVj/py2EO4nU3XVgUCZbLZCwAKCRBy2EO4nU3X
+ VmSeD/9GZ5NSNz0lBhI9KRyrbfH5Zm43r2g8/U70M2nZlrcHIVT1+/3d/1QcX2KOLpobK3lqx4z
+ EnnyYuK74Qh+dqOdcepbvrNDs7uV3hUOGYSDOk2ULexLoS1JAU8b4Pb3LkQPQOJTtuqXhtjY95h
+ mRaBGQLrFiOrEQbJbF5GLoXkhkhh96ezMqB74otxvdMSSBxKzGQtljh1GdXvSSwSwsvSR0XSs1/
+ beQIlsZr4+FnffcySH3fom6BO87IEop3O8HpUPUJc64x5lKC4O7b5Bx/F7D0WOb8AK2Q+ass52i
+ BtM3k/iQaKkGl+7uNJdP4uePPhQZWQPG5ANc4OPAbj/GFfapYeY+4n90wCjVBnYMl1mOYeNJhKL
+ kKZtQTVBHFoWkWTHNLrTtD3S48czekxbDJ8yhuWjP0wy9i2YBD9eSOOme0Fcat9bb6W4YE1xEcx
+ wPRuzPlQ7n4xgyL01OwTbclzjitaw2U3D7KMfdbR+Orin/Nmgh1Swq65A/XmahDu5A6WZqkwXRj
+ dLbRs7sKaWG3H6leXONwKFN/I7fovRZDah3NzhU3dMeecrAWXhmEOMg8R6j295L/Ae1bLKSG7tF
+ SmjuD86vTn1wJFLYgWohjGQ8TlpvmehEPzUEWKXYdvssX1zf5ktTnV1W3GRcei3cjqTrtnWJpeT
+ YO8kPGWAPjO6KSg==
 X-Developer-Key: i=luca@z3ntu.xyz; a=openpgp;
  fpr=BD04DA24C971B8D587B2B8D7FAF69CF6CD2D02CD
 
-Add the GPU IOMMU and GPU nodes to the msm8953 dtsi so GPU can work.
+From: Vladimir Lypak <vladimir.lypak@gmail.com>
 
-First of all, functionally this series looks fine, tested on
-sdm632-fairphone-fp3.
+Add the GPU node for the Adreno 506 found on this family of SoCs. The
+clock speeds are a bit different per SoC variant, SDM450 maxes out at
+600MHz while MSM8953 (= SDM625) goes up to 650MHz and SDM632 goes up to
+725MHz.
 
-Secondly and the reason this is marked RFC for now is basically just dt
-bindings check fail, and some questions regarding IOMMU compatible.
+To achieve this, create a new sdm450.dtsi to hold the 600MHz OPP and
+use the new dtsi for sdm450-motorola-ali.
 
-Basically I'm unsure what compatible (or even driver) IOMMU should use.
-qcom,msm-iommu-v2 is now in the patchset which seems to be okay, and
-also should handle the gfx3d_secure secure context correctly. Apart from
-some special handling there qcom,msm-iommu-v1 compatible is equivalent
-on the driver side.
-
-Currently the dt bindings say qcom,msm8953-iommu should be followed by
-qcom,msm-iommu-v1 which is the case for apps_iommu. But if we use
-qcom,msm-iommu-v2 for gpu_iommu then we can't re-use the same
-qcom,msm8953-iommu I think.
-
-Possible solutions:
-1. Switch apps_iommu to use qcom,msm-iommu-v2 in dts & bindings? Since
-   there's basically no special handling for either in the driver I
-   don't forsee any problems. Then we can also use -v2 for gpu_iommu no
-   problem.
-2. Use qcom,msm-iommu-v1 for gpu_iommu? From some testing it also seems
-   to work, I guess because the secure context is never used?
-3. Use arm_smmu driver for gpu_iommu? Vladimir Lypak has suggested that,
-   but that would at least need some more patching to work on msm8953.
-   I probably don't have the motivation to take this on myself. Also
-   what benefit would it bring?
-
-Hope I haven't rambled too long here and it's somewhat understandable.
-
-Please let me know what you think, which direction we can take to
-resolve this.
-
-(Also GPU clock-names dt-schema check fails but that seems to be the
- case on more a5xx GPUs also)
-
+Signed-off-by: Vladimir Lypak <vladimir.lypak@gmail.com>
+Co-developed-by: Luca Weiss <luca@z3ntu.xyz>
 Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
 ---
-Vladimir Lypak (2):
-      arm64: dts: qcom: msm8953: Add GPU IOMMU
-      arm64: dts: qcom: msm8953: Add GPU
-
- arch/arm64/boot/dts/qcom/msm8953.dtsi            | 146 +++++++++++++++++++++++
+ arch/arm64/boot/dts/qcom/msm8953.dtsi            | 115 +++++++++++++++++++++++
  arch/arm64/boot/dts/qcom/sdm450-motorola-ali.dts |   2 +-
  arch/arm64/boot/dts/qcom/sdm450.dtsi             |  14 +++
  arch/arm64/boot/dts/qcom/sdm632.dtsi             |   8 ++
- 4 files changed, 169 insertions(+), 1 deletion(-)
----
-base-commit: 0e21aa976976d5fba8cd1f8f64bcce49beb5f895
-change-id: 20231212-msm8953-gpu-4c085365f594
+ 4 files changed, 138 insertions(+), 1 deletion(-)
 
-Best regards,
+diff --git a/arch/arm64/boot/dts/qcom/msm8953.dtsi b/arch/arm64/boot/dts/qcom/msm8953.dtsi
+index 91d083871ab0..1fe0c0c4fd15 100644
+--- a/arch/arm64/boot/dts/qcom/msm8953.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8953.dtsi
+@@ -1046,6 +1046,94 @@ mdss_dsi1_phy: phy@1a96400 {
+ 			};
+ 		};
+ 
++		gpu: gpu@1c00000 {
++			compatible = "qcom,adreno-506.0", "qcom,adreno";
++			reg = <0x01c00000 0x40000>;
++			reg-names = "kgsl_3d0_reg_memory";
++			interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
++
++			clocks = <&gcc GCC_OXILI_GFX3D_CLK>,
++				 <&gcc GCC_OXILI_AHB_CLK>,
++				 <&gcc GCC_BIMC_GFX_CLK>,
++				 <&gcc GCC_BIMC_GPU_CLK>,
++				 <&gcc GCC_OXILI_TIMER_CLK>,
++				 <&gcc GCC_OXILI_AON_CLK>;
++			clock-names = "core",
++				      "iface",
++				      "mem_iface",
++				      "alt_mem_iface",
++				      "rbbmtimer",
++				      "alwayson";
++			power-domains = <&gcc OXILI_GX_GDSC>;
++
++			iommus = <&gpu_iommu 0>;
++			operating-points-v2 = <&gpu_opp_table>;
++
++			#cooling-cells = <2>;
++
++			status = "disabled";
++
++			zap-shader {
++				memory-region = <&zap_shader_region>;
++			};
++
++			gpu_opp_table: opp-table {
++				compatible = "operating-points-v2";
++
++				opp-19200000 {
++					opp-hz = /bits/ 64 <19200000>;
++					opp-supported-hw = <0xff>;
++					required-opps = <&rpmpd_opp_min_svs>;
++				};
++
++				opp-133300000 {
++					opp-hz = /bits/ 64 <133300000>;
++					opp-supported-hw = <0xff>;
++					required-opps = <&rpmpd_opp_min_svs>;
++				};
++
++				opp-216000000 {
++					opp-hz = /bits/ 64 <216000000>;
++					opp-supported-hw = <0xff>;
++					required-opps = <&rpmpd_opp_low_svs>;
++				};
++
++				opp-320000000 {
++					opp-hz = /bits/ 64 <320000000>;
++					opp-supported-hw = <0xff>;
++					required-opps = <&rpmpd_opp_svs>;
++				};
++
++				opp-400000000 {
++					opp-hz = /bits/ 64 <400000000>;
++					opp-supported-hw = <0xff>;
++					required-opps = <&rpmpd_opp_svs_plus>;
++				};
++
++				opp-510000000 {
++					opp-hz = /bits/ 64 <510000000>;
++					opp-supported-hw = <0xff>;
++					required-opps = <&rpmpd_opp_nom>;
++				};
++
++				opp-560000000 {
++					opp-hz = /bits/ 64 <560000000>;
++					opp-supported-hw = <0xff>;
++					required-opps = <&rpmpd_opp_nom_plus>;
++				};
++
++				/*
++				 * This opp is only available on msm8953 and
++				 * sdm632, the max for sdm450 is 600MHz.
++				 */
++				opp-650000000 {
++					opp-hz = /bits/ 64 <650000000>;
++					opp-supported-hw = <0xff>;
++					required-opps = <&rpmpd_opp_turbo>;
++				};
++			};
++		};
++
+ 		gpu_iommu: iommu@1c48000 {
+ 			compatible = "qcom,msm8953-iommu", "qcom,msm-iommu-v2";
+ 			ranges = <0 0x01c48000 0x8000>;
+@@ -2045,6 +2133,33 @@ map0 {
+ 				};
+ 			};
+ 		};
++
++		gpu-thermal {
++			polling-delay-passive = <250>;
++			polling-delay = <1000>;
++			thermal-sensors = <&tsens0 15>;
++
++			trips {
++				gpu_alert: trip-point0 {
++					temperature = <70000>;
++					hysteresis = <2000>;
++					type = "passive";
++				};
++
++				gpu_crit: crit {
++					temperature = <90000>;
++					hysteresis = <2000>;
++					type = "critical";
++				};
++			};
++
++			cooling-maps {
++				map0 {
++					trip = <&gpu_alert>;
++					cooling-device = <&gpu THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++				};
++			};
++		};
+ 	};
+ 
+ 	timer {
+diff --git a/arch/arm64/boot/dts/qcom/sdm450-motorola-ali.dts b/arch/arm64/boot/dts/qcom/sdm450-motorola-ali.dts
+index 362be5719dd2..e27f3c5d5bba 100644
+--- a/arch/arm64/boot/dts/qcom/sdm450-motorola-ali.dts
++++ b/arch/arm64/boot/dts/qcom/sdm450-motorola-ali.dts
+@@ -4,7 +4,7 @@
+  */
+ /dts-v1/;
+ 
+-#include "msm8953.dtsi"
++#include "sdm450.dtsi"
+ #include "pm8953.dtsi"
+ #include "pmi8950.dtsi"
+ 
+diff --git a/arch/arm64/boot/dts/qcom/sdm450.dtsi b/arch/arm64/boot/dts/qcom/sdm450.dtsi
+new file mode 100644
+index 000000000000..b222aeb459a3
+--- /dev/null
++++ b/arch/arm64/boot/dts/qcom/sdm450.dtsi
+@@ -0,0 +1,14 @@
++// SPDX-License-Identifier: BSD-3-Clause
++/* Copyright (c) 2023, Luca Weiss <luca@z3ntu.xyz> */
++
++#include "msm8953.dtsi"
++
++&gpu_opp_table {
++	/delete-node/ opp-650000000;
++
++	opp-600000000 {
++		opp-hz = /bits/ 64 <600000000>;
++		opp-supported-hw = <0xff>;
++		required-opps = <&rpmpd_opp_turbo>;
++	};
++};
+diff --git a/arch/arm64/boot/dts/qcom/sdm632.dtsi b/arch/arm64/boot/dts/qcom/sdm632.dtsi
+index 645b9f6a801f..95b025ea260b 100644
+--- a/arch/arm64/boot/dts/qcom/sdm632.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm632.dtsi
+@@ -79,3 +79,11 @@ &CPU7 {
+ 	compatible = "qcom,kryo250";
+ 	capacity-dmips-mhz = <1980>;
+ };
++
++&gpu_opp_table {
++	opp-725000000 {
++		opp-hz = /bits/ 64 <725000000>;
++		opp-supported-hw = <0xff>;
++		required-opps = <&rpmpd_opp_turbo>;
++	};
++};
+
 -- 
-Luca Weiss <luca@z3ntu.xyz>
+2.43.0
 
