@@ -1,53 +1,56 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84566745F9;
-	Thu, 25 Jan 2024 20:37:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 704D11386C4;
+	Thu, 25 Jan 2024 20:37:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706215042; cv=none; b=WVh73Mrwl/e32oTyj/46psdwFws0A2bvT0e6EGhl4WUSOJSU73zLWv37cstbYij6BGZ/1r5v7052WkEd58Q5vXGGPN71muovFAMRhhG22AIMQsCN4iFS/e/vsnbheqz1KBp0LinWwA/p+cd/EOcXvosJ7Tuh3nSVLGTz8n0SwsU=
+	t=1706215045; cv=none; b=qqmmIRkIPdUOavm/VyBZDSc4FVMYJYQyCWvc3xHMYH4NMtNcHkr+ev/3+X5g3vscuFe4bL8R+2DUkwklpPNozxxj2kESjnIqHCmYlaFfR85DvFpPJ5HtxgrfFUUYHygBTcjB6l0Q+a3LBG5VBORBSG2W2/JnVgUigd9wvzkhg34=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706215042; c=relaxed/simple;
-	bh=XbNKlhxL9eBHsnZrFANg4aSuKdkPlXeOFguiGbZWtSI=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version; b=cxH9e3ZKFhfkeIlRVVnqrnsXVFhaiF3lqiqqQ1KWmBWsdLXZTxGBv7/laXyVNJJOdYWd8UYfNTRaxZm6Rx+WfIp5a/Qz8GtXcR2Jk2FVRBfU8O41I5dJwdpIXHbrFJsQRRObsGLa1C8yNTXpHRUhkZR9kYvMVuSswzGm4jmnU6k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F3ynXEbt; arc=none smtp.client-ip=209.85.128.50
+	s=arc-20240116; t=1706215045; c=relaxed/simple;
+	bh=iUsyVrZ4GJ5Klbm0Khe7vDzT24Z5RgHckASsUAvK0vk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Ysz1oxl+EzanIU6EiKTtbk/L4yaXBcdy0r4qtvudyKsABfSfiva8wJKJctWzn6y2Qg1Ka9XzSMcCIIWGcVvIRAZSE6NPbnViCY5QgDPKtgWSyKu4z3xN9XttXyUXcX7IfvP6kk6BE7OCMLgefjf0odr+ruSNETrPZeO+0aU7Pl0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AKNgm6fS; arc=none smtp.client-ip=209.85.128.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F3ynXEbt"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-40eacb6067dso59109625e9.1;
-        Thu, 25 Jan 2024 12:37:20 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AKNgm6fS"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-40ececef212so12614875e9.1;
+        Thu, 25 Jan 2024 12:37:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706215039; x=1706819839; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=usoxiC3FDcTPSibyEkVXiYsO2Tz+iJfHrI4jPy9mSt0=;
-        b=F3ynXEbtppf2wbpdrgnvbYSIGbUepZp2SI8HftIHNAiuuJ95L/5XKP0QO0erXq1n4k
-         GW1etYrd/z6pNQ12BA+YiRRez+wdZqrWoUQxbNAEVU3is0y5bwhI2LeG/Jm1aKmSDDoe
-         cOMC5c/m4O74dDza0Si+vWbezRTkuWTeG79+6mM8Xf6LPGLvd+7kPgPKbrBOjjSW+BBT
-         QYFLW6mmv97ixHT47Q/TbN2qA8hnXzNkkwZiztOmdmTd4ysh1tDn8dV9zeJb81naAW7K
-         cLmj3Gv7WEPtR5xrI0cP10f86I0BV/SI4YmlUaVUwixX1AzhapJikVi00Pdosz71BLSE
-         bFCQ==
+        d=gmail.com; s=20230601; t=1706215042; x=1706819842; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DdqsoEdNiWCYgQOHXWofWt/j3+GwbBKp3oAusyj+aKk=;
+        b=AKNgm6fS0o39AfNP2ZHEvr7N6XjlZia4gOVL8foEDbIu1ETimzygBYJTqANqGPrQYG
+         PYtPFMjvxPUmwvqveoRzsc/2K5EqUM5ZENfpU43k2qjaoIf8bwdg19yk/rGb7qv+V+7w
+         8g50fYRo2XTQGigbJYbwaRX+Tavrs8bpLGONjMFnZZcF13pGIRYV+v/wsQpQw5Ys8ily
+         7tM3w6rEz5loyGS1Z0aW/xA9hNGK99IOt5zkrvTqnctm1RHhtDqQsBFlWU/WL6AMm1D4
+         MLfBDNoen7F/V5NzNiDLrmtROsDL4BE7lBRcepMeYwN8oEp37sZ1BFaWrp7At6ZVspaP
+         2Y4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706215039; x=1706819839;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=usoxiC3FDcTPSibyEkVXiYsO2Tz+iJfHrI4jPy9mSt0=;
-        b=Iena3xHOjJAAex2DNkAEPmlxNhzsa6g28EC7Oq4XoZrsK139vi1noN+ZpAbPZfuNLd
-         691SO4sf6f8sBQMjBQqsdHulsEfAO2YIInlHXAcToN8eUziku2HsKNE3UKUzzbPWW1mV
-         RaxhE+SJRRz+pmlMNcFaz39OrQ5xnmWWrnO3XC/JUkFK/+8GVkTXI0G9VBdbWz9MTkBI
-         n0Z8pqh4eMiGKi8Dz26tk9BOY/uh7y8gKprJ9cBNIxCq4RB1OHpa3L1NA1uOJIHyYBiY
-         K+eoB7pPJLB28AjAvSx9gzvNYlDbZ3Rp42Uo/EcbQfSXylWyTNiZ+w93HaagQ5foH07Z
-         rS9w==
-X-Gm-Message-State: AOJu0YwfWCh/MNdwap1pCk0V4vC790TkILIbezmE8UP+Z3h/Dk03vf9i
-	tvrP8CmMHJaO2TTrggs5EtGGaTMX/dfXbxrb+j2JegyQtmBj4dIh
-X-Google-Smtp-Source: AGHT+IGQqGQu3vY9rJ2Gp7SnjSyos2lXwwvM5FpsVkTmbrG4S5+mPRRKo4ksKFkuuCTkYfWdDYeTjw==
-X-Received: by 2002:a05:600c:16d3:b0:40e:ccf5:b647 with SMTP id l19-20020a05600c16d300b0040eccf5b647mr95609wmn.370.1706215038444;
-        Thu, 25 Jan 2024 12:37:18 -0800 (PST)
+        d=1e100.net; s=20230601; t=1706215042; x=1706819842;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DdqsoEdNiWCYgQOHXWofWt/j3+GwbBKp3oAusyj+aKk=;
+        b=W/rZomPnlUClF6eCxb9/Ti5wXBXcs3K1UBiDcYScL6q4cy/WQVzmndm5m9Q+1AdnoU
+         AnQG5EogOli9ZynspNEcGdCZer+737o+s3hPptc/cwx5lHp7eklTj2Gj95TCILDYm3WJ
+         b32hO/8DqbKyWmRm4nztngRu0AtAUBv3LEfAMTGhIwX3pmpbUJ4ODRfN1FxTlMdozgEM
+         rFLBq3mjzMjLQ4jZjd63/B0nHVQf65wJzbzmGO6IBJABt5qEcyyXrpcbU0aOcLqpFDWG
+         fkVW2a7Xe0wi7z34XndDA/QXg7JXRoOeP/3ijItFQ5JHKNwz9b6BjlA0VsZfWSf6ORgM
+         xXnA==
+X-Gm-Message-State: AOJu0YwtyHmntcjXDeWh68MawN4m6rBUWogiu0TVWa98IDKdv+sJAD7t
+	K2Vr7+zCNZAGxoeygXheJJKrEr1bo2Ip/zeBZ/vFilp/t9SKVKEt
+X-Google-Smtp-Source: AGHT+IHhFgLNNSTjFD514m1PHP93teE8cgPHHoYOOmXZIYY8+ymSxt9skwZFAjunslVwGF3tLzVadA==
+X-Received: by 2002:a05:600c:540c:b0:40e:ce97:444c with SMTP id he12-20020a05600c540c00b0040ece97444cmr183159wmb.58.1706215041381;
+        Thu, 25 Jan 2024 12:37:21 -0800 (PST)
 Received: from localhost.localdomain (93-34-89-13.ip49.fastwebnet.it. [93.34.89.13])
-        by smtp.googlemail.com with ESMTPSA id j32-20020a05600c1c2000b0040e813f1f31sm3817700wms.25.2024.01.25.12.37.16
+        by smtp.googlemail.com with ESMTPSA id j32-20020a05600c1c2000b0040e813f1f31sm3817700wms.25.2024.01.25.12.37.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jan 2024 12:37:17 -0800 (PST)
+        Thu, 25 Jan 2024 12:37:21 -0800 (PST)
 From: Christian Marangi <ansuelsmth@gmail.com>
 To: Pavel Machek <pavel@ucw.cz>,
 	Lee Jones <lee@kernel.org>,
@@ -76,10 +79,13 @@ To: Pavel Machek <pavel@ucw.cz>,
 	linux-kernel@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	netdev@vger.kernel.org
-Subject: [net-next PATCH v10 0/5] net: phy: generic polarity + LED support for qca808x
-Date: Thu, 25 Jan 2024 21:36:56 +0100
-Message-ID: <20240125203702.4552-1-ansuelsmth@gmail.com>
+Cc: Rob Herring <robh@kernel.org>
+Subject: [net-next PATCH v10 2/5] dt-bindings: net: phy: Document LED inactive high impedance mode
+Date: Thu, 25 Jan 2024 21:36:58 +0100
+Message-ID: <20240125203702.4552-3-ansuelsmth@gmail.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240125203702.4552-1-ansuelsmth@gmail.com>
+References: <20240125203702.4552-1-ansuelsmth@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -88,44 +94,39 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This small series add LEDs support for qca808x.
+Document LED inactive high impedance mode to set the LED to require high
+impedance configuration to be turned OFF.
 
-QCA808x apply on PHY reset a strange polarity settings and require
-some tweak to apply a more common configuration found on devices.
-On adding support for it, it was pointed out that a similar
-feature is also being implemented for a marvell PHY where
-LED polarity is set per LED (and not global) and also have
-a special mode where the LED is tristated.
+Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Acked-by: Lee Jones <lee@kernel.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+Changes v10:
+- Add Review and Ack tags
+Changes v5:
+- Add this patch
 
-The first 3 patch are to generalize this as we expect more PHY
-in the future to have a similar configuration.
+ Documentation/devicetree/bindings/leds/common.yaml | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-The implementation is extensible to support additional special
-mode in the future with minimal changes and don't create regression
-on already implemented PHY drivers.
-
-(changelog present in single patch)
-
-Christian Marangi (5):
-  dt-bindings: net: phy: Make LED active-low property common
-  dt-bindings: net: phy: Document LED inactive high impedance mode
-  net: phy: add support for PHY LEDs polarity modes
-  dt-bindings: net: Document QCA808x PHYs
-  net: phy: at803x: add LED support for qca808x
-
- .../devicetree/bindings/leds/common.yaml      |  12 +
- .../bindings/leds/leds-bcm63138.yaml          |   4 -
- .../bindings/leds/leds-bcm6328.yaml           |   4 -
- .../devicetree/bindings/leds/leds-bcm6358.txt |   2 -
- .../bindings/leds/leds-pwm-multicolor.yaml    |   4 -
- .../devicetree/bindings/leds/leds-pwm.yaml    |   5 -
- .../devicetree/bindings/net/qca,qca808x.yaml  |  54 +++
- drivers/net/phy/at803x.c                      | 327 ++++++++++++++++++
- drivers/net/phy/phy_device.c                  |  16 +
- include/linux/phy.h                           |  22 ++
- 10 files changed, 431 insertions(+), 19 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/net/qca,qca808x.yaml
-
+diff --git a/Documentation/devicetree/bindings/leds/common.yaml b/Documentation/devicetree/bindings/leds/common.yaml
+index 5633e0aa6bdf..8a3c2398b10c 100644
+--- a/Documentation/devicetree/bindings/leds/common.yaml
++++ b/Documentation/devicetree/bindings/leds/common.yaml
+@@ -206,6 +206,12 @@ properties:
+       Makes LED active low. To turn the LED ON, line needs to be
+       set to low voltage instead of high.
+ 
++  inactive-high-impedance:
++    type: boolean
++    description:
++      Set LED to high-impedance mode to turn the LED OFF. LED might also
++      describe this mode as tristate.
++
+   # Required properties for flash LED child nodes:
+   flash-max-microamp:
+     description:
 -- 
 2.43.0
 
