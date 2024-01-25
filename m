@@ -1,81 +1,54 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10BE71BDD6
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 19:34:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B8491350CA;
+	Thu, 25 Jan 2024 19:34:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706211255; cv=none; b=qeOagHX81QiU2w/99+otZ45MGXt43wuqVwWll9jwUBZa6AxTRl0VND4PEzqt8ojUbGXCY22J/NJ+tqvVQ/3LbJuih/O5jBlF4WQimU/db7HmoeXNTrYTUA0N8gBmvUnigmn4M7QU88Gvn+g3cbWtCmCfVoJVege2TudFj+yVxkc=
+	t=1706211299; cv=none; b=vA+VxcztDwzDEPRM30RozXLl4gBwRMXH+S6zqThV9mV23N0hd3INeJMxZsWca62GzdwKLghDhmNsDZ9tfYTdHszZhrjiAcRdHZTvjhYyfyTmxsMvdxO0kLZ80BJIqQcoSKa8zX+wabiCG66XGEGc2Osj92YqKsFaEb7U53tnCGA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706211255; c=relaxed/simple;
-	bh=4cYymkG9KsVxjaisu5Ld/3ORj0xUsZxfWz80CfiD0cU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uvPklaUJ/Wk6f1bAyf2SiXVrCb8AzjVuykXldRQPgp4FHcLfxWsWaeQrDA9vyUqWy3nLUMYZLeGIUgGvfuftY2FMEoOMxtRO48/Um1UIeK2J0VEyIkmTSMjAiWXjTZI9H65f3OStpjEILH+KttVE1Yl0pOMonIivpOEDR4Rx0ec=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FmtB/Rx0; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FmtB/Rx0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1706211253;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KHoljgu5TCYuagRFnizBrkwj14eAAX8FKS7MlgFMZ5g=;
-	b=FmtB/Rx0RCJ00LD2jUG+W9fkz++Qgipmtde0+NyhLlgnFRK1wSa+uQkkUnnxW++0KBtOxo
-	1aYKa/q+DZMhvuI0lgqQn4WrFkQxXK1P6gymi+DZi+qsaAXCzfcINBpIJSvubPMekNqBjc
-	ccsX85+eCJUkttNaoT4JXAu6EufQ7No=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-403-CrPk6FszOsesuz_bqE2sxg-1; Thu, 25 Jan 2024 14:34:06 -0500
-X-MC-Unique: CrPk6FszOsesuz_bqE2sxg-1
-Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 88F408432A2;
-	Thu, 25 Jan 2024 19:34:05 +0000 (UTC)
-Received: from t14s.redhat.com (unknown [10.39.193.154])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 3B6DA492BC6;
-	Thu, 25 Jan 2024 19:34:00 +0000 (UTC)
-From: David Hildenbrand <david@redhat.com>
-To: linux-kernel@vger.kernel.org
-Cc: linux-mm@kvack.org,
-	David Hildenbrand <david@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Dinh Nguyen <dinguyen@kernel.org>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	linux-arm-kernel@lists.infradead.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-riscv@lists.infradead.org,
-	linux-s390@vger.kernel.org,
-	sparclinux@vger.kernel.org
-Subject: [PATCH v2 15/15] mm/memory: ignore writable bit in folio_pte_batch()
-Date: Thu, 25 Jan 2024 20:32:27 +0100
-Message-ID: <20240125193227.444072-16-david@redhat.com>
-In-Reply-To: <20240125193227.444072-1-david@redhat.com>
-References: <20240125193227.444072-1-david@redhat.com>
+	s=arc-20240116; t=1706211299; c=relaxed/simple;
+	bh=5utNw2RYEYsgkz2vA0EeA60wZxBqgOMXKDswub+R5gU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=T5qEAfnyQh4/RBFAdvpOBg8TgRC12ms7/rGLfmP7RIdVvdGKXEdw9PfkMbzeT/wE6iFNBgwx3J0BQHnIMuuBLxnWGiXAvmwL2HVMS/pcWj1I+y97mSLBEPwko1fi5NTr3rCQqB7oovKOTtfoiWrH5IbEyt2MwoDacFo/d7TmlI0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a30ed6dbdadso295521166b.1;
+        Thu, 25 Jan 2024 11:34:57 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706211295; x=1706816095;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=fqFdf8bspE2iTq4jgRiumJZgBb3Hpu0OZ0DjvWP2T2Q=;
+        b=J8e2uu02324kJ4JZ332+W03LzYEdMZHKMxl4+fFl5zRN6/lEBQPYuy6m3648IjZkHf
+         T5zjafYzPV8BgV2UB9h75s8xuJeXmwjRgsC2kgcCfIrjFLAjE1nWaBV+RPa9vhQv3a6l
+         U2hYqVjJMHnYWPxkpfN4+9kvv7FPMZ9lJGPmEaCsU37X0xmKi2SM3NXU438QzKIFylzb
+         +C91RKu0dh6EZ9D0tsaN+Vdpvw0AQDHFev9yfRBzkdnr2v+cr6Px4ThyVg8W7iiEtDbb
+         lLhYFoMOEaHrB6o7B2mqbCtOme+fUue49Rj409yhsRtDQEyNEILdLkqTdJY3dzPTvTLa
+         Ytbw==
+X-Gm-Message-State: AOJu0YwWtN81JlksBxsoPaylrloe3iTTOnIa38lnCUTS2VDtsVawgUn/
+	mhoyMyANwImD6vP3qsugVJPhLLXsPqzNgG5Qogd2aFvpvzkT78yU
+X-Google-Smtp-Source: AGHT+IGMt3s/t1MTKagDBVORYjVaz0hCiMX8dPZYSknICXP6AG023mMwDTc7+0EUlFbiibacgGyNag==
+X-Received: by 2002:a17:906:3405:b0:a23:5411:1c59 with SMTP id c5-20020a170906340500b00a2354111c59mr52569ejb.35.1706211295386;
+        Thu, 25 Jan 2024 11:34:55 -0800 (PST)
+Received: from localhost (fwdproxy-lla-009.fbsv.net. [2a03:2880:30ff:9::face:b00c])
+        by smtp.gmail.com with ESMTPSA id o11-20020a17090611cb00b00a3472da6696sm285372eja.159.2024.01.25.11.34.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 Jan 2024 11:34:55 -0800 (PST)
+From: Breno Leitao <leitao@debian.org>
+To: kuba@kernel.org,
+	davem@davemloft.net,
+	pabeni@redhat.com,
+	edumazet@google.com
+Cc: dsahern@kernel.org,
+	weiwan@google.com,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH net 00/10] Fix MODULE_DESCRIPTION() for net (p3)
+Date: Thu, 25 Jan 2024 11:34:10 -0800
+Message-Id: <20240125193420.533604-1-leitao@debian.org>
+X-Mailer: git-send-email 2.39.3
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -83,106 +56,47 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.9
 
-... and conditionally return to the caller if any PTE except the first one
-is writable. fork() has to make sure to properly write-protect in case any
-PTE is writable. Other users (e.g., page unmaping) are expected to not
-care.
+There are hundreds of network modules that misses MODULE_DESCRIPTION(),
+causing a warning when compiling with W=1. Example:
 
-Reviewed-by: Ryan Roberts <ryan.roberts@arm.com>
-Signed-off-by: David Hildenbrand <david@redhat.com>
----
- mm/memory.c | 30 ++++++++++++++++++++++++------
- 1 file changed, 24 insertions(+), 6 deletions(-)
+        WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/net/arcnet/com90io.o
+        WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/net/arcnet/arc-rimi.o
+        WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/net/arcnet/com20020.o
 
-diff --git a/mm/memory.c b/mm/memory.c
-index b3f035fe54c8d..64442da3df6d4 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -968,7 +968,7 @@ static inline pte_t __pte_batch_clear_ignored(pte_t pte, fpb_t flags)
- 		pte = pte_mkclean(pte);
- 	if (likely(flags & FPB_IGNORE_SOFT_DIRTY))
- 		pte = pte_clear_soft_dirty(pte);
--	return pte_mkold(pte);
-+	return pte_wrprotect(pte_mkold(pte));
- }
- 
- /*
-@@ -976,21 +976,32 @@ static inline pte_t __pte_batch_clear_ignored(pte_t pte, fpb_t flags)
-  * pages of the same folio.
-  *
-  * All PTEs inside a PTE batch have the same PTE bits set, excluding the PFN,
-- * the accessed bit, dirty bit (with FPB_IGNORE_DIRTY) and soft-dirty bit
-- * (with FPB_IGNORE_SOFT_DIRTY).
-+ * the accessed bit, writable bit, dirty bit (with FPB_IGNORE_DIRTY) and
-+ * soft-dirty bit (with FPB_IGNORE_SOFT_DIRTY).
-+ *
-+ * If "any_writable" is set, it will indicate if any other PTE besides the
-+ * first (given) PTE is writable.
-  */
- static inline int folio_pte_batch(struct folio *folio, unsigned long addr,
--		pte_t *start_ptep, pte_t pte, int max_nr, fpb_t flags)
-+		pte_t *start_ptep, pte_t pte, int max_nr, fpb_t flags,
-+		bool *any_writable)
- {
- 	unsigned long folio_end_pfn = folio_pfn(folio) + folio_nr_pages(folio);
- 	const pte_t *end_ptep = start_ptep + max_nr;
- 	pte_t expected_pte = __pte_batch_clear_ignored(pte_next_pfn(pte), flags);
- 	pte_t *ptep = start_ptep + 1;
-+	bool writable;
-+
-+	if (any_writable)
-+		*any_writable = false;
- 
- 	VM_WARN_ON_FOLIO(!pte_present(pte), folio);
- 
- 	while (ptep != end_ptep) {
--		pte = __pte_batch_clear_ignored(ptep_get(ptep), flags);
-+		pte = ptep_get(ptep);
-+		if (any_writable)
-+			writable = !!pte_write(pte);
-+		pte = __pte_batch_clear_ignored(pte, flags);
- 
- 		if (!pte_same(pte, expected_pte))
- 			break;
-@@ -1003,6 +1014,9 @@ static inline int folio_pte_batch(struct folio *folio, unsigned long addr,
- 		if (pte_pfn(pte) == folio_end_pfn)
- 			break;
- 
-+		if (any_writable)
-+			*any_writable |= writable;
-+
- 		expected_pte = pte_next_pfn(expected_pte);
- 		ptep++;
- 	}
-@@ -1024,6 +1038,7 @@ copy_present_ptes(struct vm_area_struct *dst_vma, struct vm_area_struct *src_vma
- {
- 	struct page *page;
- 	struct folio *folio;
-+	bool any_writable;
- 	fpb_t flags = 0;
- 	int err, nr;
- 
-@@ -1044,7 +1059,8 @@ copy_present_ptes(struct vm_area_struct *dst_vma, struct vm_area_struct *src_vma
- 		if (!vma_soft_dirty_enabled(src_vma))
- 			flags |= FPB_IGNORE_SOFT_DIRTY;
- 
--		nr = folio_pte_batch(folio, addr, src_pte, pte, max_nr, flags);
-+		nr = folio_pte_batch(folio, addr, src_pte, pte, max_nr, flags,
-+				     &any_writable);
- 		folio_ref_add(folio, nr);
- 		if (folio_test_anon(folio)) {
- 			if (unlikely(folio_try_dup_anon_rmap_ptes(folio, page,
-@@ -1058,6 +1074,8 @@ copy_present_ptes(struct vm_area_struct *dst_vma, struct vm_area_struct *src_vma
- 			folio_dup_file_rmap_ptes(folio, page, nr);
- 			rss[mm_counter_file(page)] += nr;
- 		}
-+		if (any_writable)
-+			pte = pte_mkwrite(pte, src_vma);
- 		__copy_present_ptes(dst_vma, src_vma, dst_pte, src_pte, pte,
- 				    addr, nr);
- 		return nr;
+This part3 of the patchset focus on the missing ethernet drivers, which
+is now warning free. This also fixes net/pcs and ieee802154.
+
+Breno Leitao (10):
+  net: fill in MODULE_DESCRIPTION()s for encx24j600
+  net: fill in MODULE_DESCRIPTION()s for ocelot
+  net: fill in MODULE_DESCRIPTION()s for SMSC drivers
+  net: fill in MODULE_DESCRIPTION()s for Qualcom drivers
+  net: fill in MODULE_DESCRIPTION()s for dwmac-socfpga
+  net: fill in MODULE_DESCRIPTION()s for cpsw-common
+  net: fill in MODULE_DESCRIPTION()s for ec_bhf
+  net: fill in MODULE_DESCRIPTION()s for PCS drivers
+  net: fill in MODULE_DESCRIPTION()s for ieee802154
+  net: fill in MODULE_DESCRIPTION()s for arcnet
+
+ drivers/net/arcnet/arcnet.c                         | 1 +
+ drivers/net/ethernet/ec_bhf.c                       | 1 +
+ drivers/net/ethernet/microchip/encx24j600-regmap.c  | 1 +
+ drivers/net/ethernet/mscc/ocelot.c                  | 1 +
+ drivers/net/ethernet/qualcomm/emac/emac.c           | 1 +
+ drivers/net/ethernet/qualcomm/rmnet/rmnet_config.c  | 1 +
+ drivers/net/ethernet/smsc/smc91x.c                  | 1 +
+ drivers/net/ethernet/smsc/smsc911x.c                | 1 +
+ drivers/net/ethernet/smsc/smsc9420.c                | 1 +
+ drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c | 1 +
+ drivers/net/ethernet/ti/cpsw-common.c               | 1 +
+ drivers/net/pcs/pcs-lynx.c                          | 1 +
+ drivers/net/pcs/pcs-mtk-lynxi.c                     | 1 +
+ drivers/net/pcs/pcs-xpcs.c                          | 1 +
+ net/ieee802154/6lowpan/core.c                       | 1 +
+ net/ieee802154/socket.c                             | 1 +
+ 16 files changed, 16 insertions(+)
+
 -- 
-2.43.0
+2.39.3
 
