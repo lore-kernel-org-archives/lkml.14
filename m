@@ -1,101 +1,87 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C25E79C6
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 04:50:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6435979C6
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 04:54:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706158242; cv=none; b=UpHpXj75FvTTjwdK9ZqN4wIwTCXTnNVcOWs4XvjMKF4VUDCO/gzTnbNSBB2yCXMT4XjNMycENPOgU0WWV7jleAGoY0l6bDTGi+6QkGnBdaOEF6pWlx/u8N1eDt6GraxEpcpyC35PUyww5U+K70kPm7/chNwD+yCvUoCJ4CNLmWU=
+	t=1706158466; cv=none; b=b58Fozk1XlHzgJGQTEW50k8x2VUz+w3lLfFWp8yJ92cHw+Tv/yDBDTcBM35wzA1oSgH6IjhCyv1C6ldHqtBPWRHmDkOBhrSw+JWFw/8Wz37wmJcciFnolxqF42rRsxnh9wZ8eFQBbRgB1EbrBaPGGU1FQduELCvKOZEvsBG2+SQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706158242; c=relaxed/simple;
-	bh=2RWN9M36qX+9GZm4Tq3aYzHlPiLa+w1ufmGXtNpU1A8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Cw9tpv5K5jqctLJS90EEWqColovUXSDdb7W792KwrhrVyFwkaEsY+NKCZF7PYOpNaD2yls+XEHaRPv8USu4Z/t1OECCH3U1KefuP175THHUsbsNn51vgH/aqHc2tbBGZ2HhK0hbvQ/2GP2sJAiugT15Revro8GGIfoGc5XkC8qM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=G+IdD3WA; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1706158466; c=relaxed/simple;
+	bh=RY0YpxLJVnkyOM+U4EyavUoYESYenKBNJ/vaR1IY6cM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kbWyLqNhH4uIf5xlPTUL1W3eqZMi4qZ0cPLTCxshJKkwwzokb421DLBQO2okq07Hw1zUu9se740a2u20CDdR7GcaVaI4k/vd29SNP5ON367lMGEkt1YvQTlYPmGSRodXt5ikJB3UJLt/5f9P0sT2i2wOlCCn5yV9afA7w93rnTA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KYBslUBh; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="G+IdD3WA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1706158239;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=G6eOL3R6irziHLXuND4grbP4rQI+ngEPSNB6hi5Up78=;
-	b=G+IdD3WA1yrcgdJsB03bB2s9bBpjEc2RknbD+FhqNMFQKDz1jDgarHApdG25E96/9w5tcp
-	wWL9fZR27K1doTps08offnl9evngyVtPKog7XmsJ+FjDSGwNJwt153HdIWEjJv2Dxlpqee
-	E4ad0dyCfpu/ptIf5CbMaFjvg8Folmw=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-206-7r5lIxgdMr2uRCoLCWVw7g-1; Wed, 24 Jan 2024 23:50:34 -0500
-X-MC-Unique: 7r5lIxgdMr2uRCoLCWVw7g-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 090658828C3;
-	Thu, 25 Jan 2024 04:50:34 +0000 (UTC)
-Received: from li-a71a4dcc-35d1-11b2-a85c-951838863c8d.ibm.com.com (unknown [10.72.112.211])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 9CAE93C2E;
-	Thu, 25 Jan 2024 04:50:29 +0000 (UTC)
-From: xiubli@redhat.com
-To: linux-fscrypt@vger.kernel.org
-Cc: ebiggers@kernel.org,
-	tytso@mit.edu,
-	jaegeuk@kernel.org,
-	linux-kernel@vger.kernel.org,
-	idryomov@gmail.com,
-	ceph-devel@vger.kernel.org,
-	jlayton@kernel.org,
-	vshankar@redhat.com,
-	Xiubo Li <xiubli@redhat.com>
-Subject: [PATCH] fscrypt: to make sure the inode->i_blkbits is correctly set
-Date: Thu, 25 Jan 2024 12:48:25 +0800
-Message-ID: <20240125044826.1294268-1-xiubli@redhat.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KYBslUBh"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1d76f1e3e85so90155ad.0
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 20:54:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1706158465; x=1706763265; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RY0YpxLJVnkyOM+U4EyavUoYESYenKBNJ/vaR1IY6cM=;
+        b=KYBslUBhHYnRbtEOssPRg1sIKHjI8Lo0tAolcbPFTk7Zz1yslplDzC1rXa2wBilOhm
+         zxPgKBBm3R/ZuM872QgdRU1RFvMN8AC0BH21pnHLDRn8oKpzTwlXu11WzJNNw9GqZBCn
+         eObwDyj14Va/2mzeQSBxazZBdQZgafH8Yw77xqr+Re/D6HKTvl4z8hvwqJNlb+c1Ucm6
+         Ip4//zYBB9FEXFvO1tWKYyTZyKd5jkzrKm1KxJdKoozrHoH6iXFKQazF2VPu4S3eit1C
+         XGe+H1zWts/U7p8MSSq3+TesHQvyOsEaeQGabkGicLmlCrRIIWPiM+3nUEZKbR9a+Bh3
+         3D9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706158465; x=1706763265;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=RY0YpxLJVnkyOM+U4EyavUoYESYenKBNJ/vaR1IY6cM=;
+        b=XElG1oJrSDgiEpKj2/uQGUwATatCzhep9CxoOgy21T4cCcdOqYoDu7aLTIhtQSFWk2
+         3NDa/V6L57J79HWIEYSEBM7CqLRYGNQM3ufmC8AZt8HNUYGrOn9KOw/eBIowtaDBd38G
+         lle1DGRwelXrV3TRPhxdfIPY41T+18ApKiC9MrpADXjacExKsGY98AlhGKHlRfWhU43Y
+         S0tSU5d0lP8+vv/XIH5zMCXb2ejePLjDyHquQIQag2fNHcQFr/H7lXNTIVFkjeEx7En1
+         KQS0wHgoUfI9yvkqcsPnrLqJtW1j818jx6uK6uWZC6hR+tbv3MA3Z/NsdJfIjBBn092c
+         Actg==
+X-Gm-Message-State: AOJu0Yz8Ytv8zhG2uIHA6AACRiLG9yo6bqIiD7eUHNBQnVe31t6o3pl0
+	ICny5d1uturI6aiYxLHoQixdU6StOl9VDqQQ9ywQFDIBZ7FSoTSj2z0/H4WKpyTdGgzZa2cbHjg
+	cSvtouYUBSwVZc1foGPHnxYVYmM0yKdFi4VS9
+X-Google-Smtp-Source: AGHT+IGmwUyV7ad6tGGpwYKy06i1bLqX3aP6rnMCqtrP6eCDM/dw9PI9hnQa4rcswaKttl2+4JOZaCJ4y/v8gXKio/0=
+X-Received: by 2002:a17:903:22c8:b0:1d7:37f5:5619 with SMTP id
+ y8-20020a17090322c800b001d737f55619mr104642plg.25.1706158464470; Wed, 24 Jan
+ 2024 20:54:24 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
+References: <20231212230224.1473300-1-weilin.wang@intel.com> <20231212230224.1473300-8-weilin.wang@intel.com>
+In-Reply-To: <20231212230224.1473300-8-weilin.wang@intel.com>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 24 Jan 2024 20:54:12 -0800
+Message-ID: <CAP-5=fXDWbp90cQ62tjEahy68DF+YGiWWhXxjMLNfLq_Ce98-A@mail.gmail.com>
+Subject: Re: [RFC PATCH v3 06/18] perf pmu-events: Add event counter data for Icelakex
+To: weilin.wang@intel.com
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Perry Taylor <perry.taylor@intel.com>, Samantha Alt <samantha.alt@intel.com>, 
+	Caleb Biggers <caleb.biggers@intel.com>, Mark Rutland <mark.rutland@arm.com>, 
+	Yang Jihong <yangjihong1@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Xiubo Li <xiubli@redhat.com>
+On Tue, Dec 12, 2023 at 3:03=E2=80=AFPM <weilin.wang@intel.com> wrote:
+>
+> From: Weilin Wang <weilin.wang@intel.com>
+>
+> The added new fields are required in this new grouping method. Currently,
+> the format of added fields are temporary for experiments.
 
-The inode->i_blkbits should be already set before calling
-fscrypt_get_encryption_info() and it will be used this to setup the
-ci_data_unit_bits.
+It'd be nice in the commit message to state which fields are added.
+I'm somewhat confused about the meaning of TakenAlone on an event.
 
-Signed-off-by: Xiubo Li <xiubli@redhat.com>
----
- fs/crypto/keysetup.c | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/fs/crypto/keysetup.c b/fs/crypto/keysetup.c
-index d71f7c799e79..909187e52bae 100644
---- a/fs/crypto/keysetup.c
-+++ b/fs/crypto/keysetup.c
-@@ -702,6 +702,9 @@ int fscrypt_get_encryption_info(struct inode *inode, bool allow_unsupported)
-  * This doesn't persist the new inode's encryption context.  That still needs to
-  * be done later by calling fscrypt_set_context().
-  *
-+ * Please note that the inode->i_blkbits should be already set before calling
-+ * this and later it will be used to setup the ci_data_unit_bits.
-+ *
-  * Return: 0 on success, -ENOKEY if the encryption key is missing, or another
-  *	   -errno code
-  */
-@@ -717,6 +720,9 @@ int fscrypt_prepare_new_inode(struct inode *dir, struct inode *inode,
- 	if (IS_ERR(policy))
- 		return PTR_ERR(policy);
- 
-+	if (WARN_ON_ONCE(inode->i_blkbits == 0))
-+		return -EINVAL;
-+
- 	if (WARN_ON_ONCE(inode->i_mode == 0))
- 		return -EINVAL;
- 
--- 
-2.43.0
-
+Thanks,
+Ian
