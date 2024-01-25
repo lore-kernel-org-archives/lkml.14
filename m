@@ -1,92 +1,104 @@
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BCFA1BF43;
-	Thu, 25 Jan 2024 09:03:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D38181C6A7
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 09:03:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706173428; cv=none; b=cdfX4289wj/GyfiAYgCrx8bwFOWz20mVnAOwdXY5anSZ8XjjaD86ZoFsgONIUalhEf/Ue6cvbxRQvO0hEWg/RT2C5pgXoSCWM58lnRhx9KboNyknmAn/kCaaToJfHbYjAyXL22TO4LTyjk6MH1QrtGr30E3H0mBq9UGiDX0fjqk=
+	t=1706173439; cv=none; b=QIUPSiIJ4vij2RytXJaAEk6pCmuInJ4tqrkpNNRUzE0vAWP9EO8chdY3HQEGxMka2jN8ehgcZi9alM3t4KtSUqQPnkO7RnSC1UnfyVbQYj4o4shwPB0y/84rwXuDcylAQlKiyNjE76s1bzecwupez5vtLLHcMPvfHUhVM5uW/Tk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706173428; c=relaxed/simple;
-	bh=3Ta5jPPhKqYXus4RlVQYchqTN+T7KUFRVFd6guY0QRk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=toB6UNr4wXa3MPjZ6Sy/BQMHtQAk+Ihsaay3MliD+S+8ujQZwJfCJoKkVTFr3aDvmSyjn7l8THwXwEoLkziJkwKTFG0C7j4Rmpx5uW7OOc8uUNJbF1yKnaReXfIYu5CZ4Xq0vsdhZOck98F6lIBu7qUHhozhuoLmwitN7jCpzS0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nfyL9dtI; arc=none smtp.client-ip=209.85.208.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1706173439; c=relaxed/simple;
+	bh=lCpLs7E421WcMGulhvf0KfE1pIEkKe5LczYASKz1w1A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=S9v/VRag9wvGYN4rHtpWi5ffm7JbsYQmPT5DH43fVKwSjdw89jLJlu8ftu0PxNNxL0cI9KnnU9bRVnVw7TJirBPdlwnwLTUmizo72AOdGdYdzzAbcC6w71p0kJlZK9xW3AgITWXWCJOVJwIc5SLsHvjSyMxWImNNO65kzDBynSA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tgeOmCN7; arc=none smtp.client-ip=209.85.167.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nfyL9dtI"
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-55cd798b394so962322a12.0;
-        Thu, 25 Jan 2024 01:03:46 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tgeOmCN7"
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-510133ed214so2109504e87.1
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 01:03:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706173424; x=1706778224; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=REcRr9U0F+uAhsIG75MoYjc4CaoIuwNexNXpisfICY0=;
-        b=nfyL9dtIOf+3yBmfj1+Gat9Is/yVkOXl1j49JKvQcIpb5fAbRBwKHbKbZSYucXJx1X
-         8C2DgP4yTcXTEwSPn9t6CXG8SCu7c6pN2tMttdkerIghVdOZRcReiSOuMfJ3r9NWAz8U
-         JlE8JomoY6Pcc9kGGoTfA/UMr1roNG5epTBb0ev6nBd9eRpLV5aDcnqp9zM9ImW+8PV1
-         naVvPfiFOXxwlc+rsuC0T/Nuhz5GgP+SWbSxXZPSrQM9Z38dDYJ9eqb/9c8NR2n2J++E
-         VBNCg9Jl5nh7wR1EVXecJT23aAWVS8zQ0N3mOiwvE1R0UXtkxdQyRfD5HkG2u0/sd0W/
-         WVLg==
+        d=google.com; s=20230601; t=1706173436; x=1706778236; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=lCpLs7E421WcMGulhvf0KfE1pIEkKe5LczYASKz1w1A=;
+        b=tgeOmCN7XGsKVc9o6W5x6z0mVhOh4xjxqKAijP3LQPNVrjfXQPwre+yfMtjSbPAd25
+         3ABwAyD28v8y5Q4ra+tBK191TssYvnT7nyBDdmrPeWxsDudBTJ0CuqwuAB0BjrCOJJox
+         qmhfRl7fT5HCv9Tb2wGz7sY8XKZIen4ZOKDBTjN39LXNrvMLgS5u1SI1Ge3MsHbukQNY
+         /PnTodLoM0M2koONZ/+PmvuNJDca4HFkFF5KdI+FTyOrxXZWLtUk0kYOJ4B8q+b70uOC
+         JOHuWA6zglEfmknyyC/0R6J9XkGTv5G0Ldj1ofOMryLllOe8aqzCJR6tqq8FxcAHhvRS
+         s0Uw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706173424; x=1706778224;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=REcRr9U0F+uAhsIG75MoYjc4CaoIuwNexNXpisfICY0=;
-        b=NBVr4THF3eB1mqLyZ6zHLH5xy1D0LfO5cwDRDGl4H1PEoRM09WBrX4CK2DSMbspFnK
-         xI9adVRc+CTbtzwe54B563tiHTUrSPr9XjTO65Jot89QO5Gqg4F6EyfSRD3gH/ZCwIns
-         ueMGSTOb0wXxwRgB/LB4S9ZEPCPn8hyMSKfDEC/O69agZnQobYPQTJAr/iB8cuAgMOIK
-         7uixd9MJbWiw+KDToQuLUT/PQT7WDqpntWiZLC80+Q8yKACd1/v2Ha6W+ReCBS2qIGlP
-         mHvnP6ptqu5Lm3/U3AqDT9h0cb5fVvKkQPati/RZlayc48nNvjlJIJajPaly5oiHeIPp
-         s1UA==
-X-Gm-Message-State: AOJu0YxjE7egoyT5FuN5erohesvCfm0JHIK79uQaYSoKgTnupVNDkoNc
-	5zkjRwDMWNFAGNz6muC+56Gfe+S2swxyYsouMyOni3tjOhob/4b2
-X-Google-Smtp-Source: AGHT+IEvLD0YPmKsAENgPb4yCsXotokzbjkbwCO0DMdsJYZJ84GO6F8LKt67QIb0MyH/EPrjVVqW1A==
-X-Received: by 2002:a17:907:bb8f:b0:a28:b34d:8694 with SMTP id xo15-20020a170907bb8f00b00a28b34d8694mr631558ejc.62.1706173424308;
-        Thu, 25 Jan 2024 01:03:44 -0800 (PST)
-Received: from skbuf ([188.25.255.36])
-        by smtp.gmail.com with ESMTPSA id wh22-20020a170906fd1600b00a30fc529f25sm797099ejb.199.2024.01.25.01.03.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jan 2024 01:03:44 -0800 (PST)
-Date: Thu, 25 Jan 2024 11:03:41 +0200
-From: Vladimir Oltean <olteanv@gmail.com>
-To: Daniel Golle <daniel@makrotopia.org>
-Cc: =?utf-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>,
-	DENG Qingfang <dqfext@gmail.com>,
-	Sean Wang <sean.wang@mediatek.com>, Andrew Lunn <andrew@lunn.ch>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org, John Crispin <john@phrozen.org>
-Subject: Re: [PATCH net] net: dsa: mt7530: fix 10M/100M speed on MT7988 switch
-Message-ID: <20240125090341.jl2qadhrd2y5yqiv@skbuf>
-References: <a5b04dfa8256d8302f402545a51ac4c626fdba25.1706071272.git.daniel@makrotopia.org>
- <a5b04dfa8256d8302f402545a51ac4c626fdba25.1706071272.git.daniel@makrotopia.org>
+        d=1e100.net; s=20230601; t=1706173436; x=1706778236;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=lCpLs7E421WcMGulhvf0KfE1pIEkKe5LczYASKz1w1A=;
+        b=dC+QeyGSKcswq5ir3AxUvJc6HwByJLk/WkobffvucgbNHGJWdhg176SYP5pp+DfWaZ
+         DX2pEJE+p4r3W92kc8VrzP2KCvS/yhbNKvYBT6/5ZGZjX/QhSAeDQlkz7msGMAo4jizV
+         esruiAZ+C2C2fhQX1ke1H+hBsiBvkoWi7O1gTQzgkK0j4Zysd3vHfYWdc8PktATEyQEy
+         bztFZ2vzJZ0aJ/O6Zp3oF+c+OIKfgzgiPmVgSxI7iT04QSqGKL1MZH7j2jJ/44HkXgFv
+         NTg774gPOqk0pkPXVNbs/KgXETBjAyQr3TN5nnlDTxs+M9YSGewu+XT2N6r6Ed7f7RiP
+         TI4w==
+X-Gm-Message-State: AOJu0Ywx1Wd2/bcryctHt8xvPL0V9Gxy/X38IH/p658MgT928j27g8xI
+	P1GarKsoU8Nm27M7wvBojS+d4BnknVPPJ6sJFsgN6Cwbrf7QwWVjapnFQMSp+D5lHGyUaJ8ekFW
+	qgy9uEYryrR03LEMcwBw/D+B5JOIHn/4KNgLXGZ5BfqbVW//SQnkj
+X-Google-Smtp-Source: AGHT+IGaUFMupZ0OqkZ2M2weP4tIoXXZ5zWfJsaAb+DzoczkyGqeGdhCslJXaL4xjEDOPQj4Zgv36x+m1y+7Wb9zKFQ=
+X-Received: by 2002:a05:6512:3caa:b0:50e:3fbc:7c12 with SMTP id
+ h42-20020a0565123caa00b0050e3fbc7c12mr315562lfv.126.1706173435656; Thu, 25
+ Jan 2024 01:03:55 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a5b04dfa8256d8302f402545a51ac4c626fdba25.1706071272.git.daniel@makrotopia.org>
- <a5b04dfa8256d8302f402545a51ac4c626fdba25.1706071272.git.daniel@makrotopia.org>
+References: <20240120024007.2850671-1-yosryahmed@google.com>
+ <20240120024007.2850671-3-yosryahmed@google.com> <20240122201906.GA1567330@cmpxchg.org>
+ <CAJD7tkaATS48HVuBfbOmPM3EvRUoPFr66WhF64UC4FkyVH5exg@mail.gmail.com>
+ <20240123153851.GA1745986@cmpxchg.org> <CAJD7tkasHsRnT_75-TXsEe58V9_OW6m3g6CF7Kmsvz8CKRG_EA@mail.gmail.com>
+ <20240123201234.GC1745986@cmpxchg.org> <CAJD7tkZC6w2EaE=j2NEVWn1s7Lo2A7YZh8LiZ+w72jQzFFWLUQ@mail.gmail.com>
+ <f3fa799f-1815-4cfe-abc8-3ba929fcd1ba@bytedance.com> <CAJD7tka6UuEuuP=df-1V3vwsi0T0QhLORTRDs6qDvA81iY6SGA@mail.gmail.com>
+ <1496dce3-a4bb-4ccf-92d6-701a45b67da3@bytedance.com> <CAJD7tkbrQw7FWx-EDKKCtH_E03xEd5Y+8BqRjE8d29JSOCGybg@mail.gmail.com>
+ <35c3b0e5-a5eb-44b2-aa7d-3167f4603c73@bytedance.com>
+In-Reply-To: <35c3b0e5-a5eb-44b2-aa7d-3167f4603c73@bytedance.com>
+From: Yosry Ahmed <yosryahmed@google.com>
+Date: Thu, 25 Jan 2024 01:03:19 -0800
+Message-ID: <CAJD7tkak+ZA8t+AVbYNXYWnrmVBBs=NfMTBQBsnHJQni2=gG2Q@mail.gmail.com>
+Subject: Re: [PATCH 2/2] mm: zswap: remove unnecessary tree cleanups in zswap_swapoff()
+To: Chengming Zhou <zhouchengming@bytedance.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Nhat Pham <nphamcs@gmail.com>, Chris Li <chrisl@kernel.org>, Huang Ying <ying.huang@intel.com>, 
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Jan 24, 2024 at 05:17:25AM +0000, Daniel Golle wrote:
-> Setup PMCR port register for actual speed and duplex on internally
-> connected PHYs of the MT7988 built-in switch. This fixes links with
-> speeds other than 1000M.
-> 
-> Fixes: ("110c18bfed414 net: dsa: mt7530: introduce driver for MT7988 built-in switch")
-> Signed-off-by: Daniel Golle <daniel@makrotopia.org>
-> ---
+> >>>> The second difference is the handling of lru entry, which is easy that we
+> >>>> just zswap_lru_del() in tree lock.
+> >>>
+> >>> Why do we need zswap_lru_del() at all? We should have already isolated
+> >>> the entry at that point IIUC.
+> >>
+> >> I was thinking how to handle the "zswap_lru_putback()" if not writeback,
+> >> in which case we can't use the entry actually since we haven't got reference
+> >> of it. So we can don't isolate at the entry, and only zswap_lru_del() when
+> >> we are going to writeback actually.
+> >
+> > Why not just call zswap_lru_putback() before we unlock the folio?
+>
+> When early return because __read_swap_cache_async() return NULL or !folio_was_allocated,
+> we don't have a locked folio yet. The entry maybe invalidated and freed concurrently.
 
-Reviewed-by: Vladimir Oltean <olteanv@gmail.com>
+Oh, that path, right.
+
+If we don't isolate the entry straightaway, concurrent reclaimers will
+see the same entry, call __read_swap_cache_async(), find the folio
+already in the swapcache and stop shrinking. This is because usually
+this means we are racing with swapin and hitting the warmer part of
+the zswap LRU.
+
+I am not sure if this would matter in practice, maybe Nhat knows
+better. Perhaps we can rotate the entry in the LRU before calling
+__read_swap_cache_async() to minimize the chances of such a race? Or
+we can serialize the calls to __read_swap_cache_async() but this may
+be an overkill.
