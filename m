@@ -1,237 +1,279 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F30B1CD28;
-	Thu, 25 Jan 2024 10:17:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 398771CA80
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 10:19:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706177879; cv=none; b=rcKYsZpsh13SqCH8gfGAhwXjdzVU6LPCc+ShtNS9Cr3iyIDzcCXLcOW8+Bhtw+P+Y2Sz/9018Ztw8T7NH7WSAx9BcWaLVoNHz3gMNF5w+0rM2zMJfJjF76UbYGrzHfaIn8C+ffJsIUVxlVHLxopNR8AoaPPPQo23MiGV+Cgz+q4=
+	t=1706177967; cv=none; b=slUPYhox+YskJhmZ8c+wjIAU7ta0xp6DCMHN2dfbvAiXK9nJj/gf0DVkyKSjlpzUlxXTaQfiEq+smIUbboFTc7HtfRTeNy4bdEaDKTndjcHWQpC4mrOnQBwLNSxVCKXO51sO04hDJvMYl9JUhaPYHS+ufea5WSn+UUs5SImAH7k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706177879; c=relaxed/simple;
-	bh=bB50DiLiSI/AjIntQtj8OLZXA1hJ46f8ucE5lxaMffA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=UUE4xgTp7VG7z6pf9l/L2oEXesdKgql2cfsbH6I8PvGh+NzeiCbSmKimeQOdMNTma4YcZOBAmZLZ1dETdgGjbxSE/pZOMlw80mDxSdiOHFhEzSaq+u+7mWg33FcGVuaHko25f6ggQccVsvMPsExNaHAdLXPVH6zMtZ6H41uK6AI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=LzKrfYYm; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1706177967; c=relaxed/simple;
+	bh=hE5xFIUQ4PHRjUDMHfJgA1f0UCIs24/GjLNsgi3xbLs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=dZb0nksNCtlIljLWZggxqjexXd8vYBTSmKaA2FpuWjk7jKUYB/bOUyalcHCosXUMBLGab04o07DYQpoc1ExQ8798hmcC0oSJ/4Pf4giW+y69NfB/+Pl4jbGAOtkM/vrv8IQ3wBiO5AV32x20IPgR14YY4WeqElOSQK1pTE0JQEk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ioOa/ID1; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="LzKrfYYm"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40P9No7G004502;
-	Thu, 25 Jan 2024 10:17:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=aLqFVE/DSS8tNOS7Nmf+NZKIYYQc3O4Zzw7wicUI/U4=; b=Lz
-	KrfYYmbpHacI5W6qAuMxvWyccrsj21DdiMjPjSFLDaYlRjZ3SuxQqgzFikZbvt+1
-	BSwhrCR98T633mgNag568JuaF6lyxDUAQKsMsE2F4nVrB9p2JZokRoxNyMK3VCJs
-	e+ncUTFNMePKjr6e36wrCFZo8PqQPhxvxRtIgj3AXHebVD2csxceQOFcehMrGVml
-	qnJbQAOrZ0TtKNOy3+lV6kvIfChw+CWLlzSHvu4sUjyYNmzvLzF23fnqWQR04bLF
-	MyUeheHkl+qNAog3zgetM8AH0gKfiVCTtJM/RXp2XCnyRq43ZDp9R31u3HZghG6k
-	xAS2EXftmZ5V5NCuug8A==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vumyng3dp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 25 Jan 2024 10:17:48 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 40PAHlfK003926
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 25 Jan 2024 10:17:47 GMT
-Received: from [10.218.0.85] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Thu, 25 Jan
- 2024 02:17:42 -0800
-Message-ID: <d4a14fb9-849c-4236-9ec1-538f2944fb02@quicinc.com>
-Date: Thu, 25 Jan 2024 15:46:33 +0530
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ioOa/ID1"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1d7858a469aso10618555ad.2
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 02:19:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1706177965; x=1706782765; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=XfoTf/pNUqDMOG+odoDF+tGW4cWN9ShhMkF37xIQK6o=;
+        b=ioOa/ID1WrG0PmWWuCZiRAFMZxw1WuEjRn5kg+fId1ozmmQKJUQToC75TzcL/4TGim
+         us4FxVbbtBkSnsEWvCrIcIfJdVEq3XLzqRndV/YfL7aLL2LkOFfmVBICYm4BGEIj1MX0
+         Uvt40VUhwGXjmu3OUuyrBqGNvkMUPgpFfYwe6DzBlOnwuqG72J3vGmP14uni15M9JYvD
+         zcLyDQdNS6ATiIZIlhZvGsRBNvDUeVF4uBUyFyKvbd78BQ4wdEwQHdzB9XiiZDJjS3yZ
+         JtEyGN1JE7zbqXledCE1HCFrnX/FCyBdQI3FSnzJMeKpVUX1iSuI6mg2roZwvsy0zRKV
+         we1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706177965; x=1706782765;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=XfoTf/pNUqDMOG+odoDF+tGW4cWN9ShhMkF37xIQK6o=;
+        b=TlJASqRblO4qCF8kIqR/gYXfED3oTvAX1DA3wCA5lOy+7kk8xbLd5uodOtIUjGtK/D
+         HVQTitEm5lu+4qTuAFV+Z9OzbcQIO8rJiqKJp7/flT8E40Hm3ne4txtG5ceJYHULMkAS
+         CxkyAdnqwIU6P2WuW2asn+yXUPRztv5DZoNv/0k+1ykELQBCOc4TicXsCJ6tKdrhj+kP
+         4SrZ2a2NqXqIn8h0+NpML87wypZ4BiJFaEeSHTK7DTTItUcR2YMCxY9Y1EmHVYcUCwo3
+         sNr45yDC8wZJ18r9i1BX4r1hT8hDsCYPdlXeXhrJvQTNK0wI5rEwICOpykE44ly4/ZWo
+         QrZg==
+X-Gm-Message-State: AOJu0YxfmAF+I48BAw5ATi9liwX9MW7Dbfl06JTdxwUTjU7tYvJmtgVr
+	rS5h8iM9rPU/7FY2cmD+JaRNh7X1tLij28IVR21cJTtIpJXWW5gN
+X-Google-Smtp-Source: AGHT+IHk0njQQrZP5z7OFk5FXN3BHZ0SZ2HvfxrSC+RKWKm/c3czuPnQFrVhrTZkEEqUW3PaHIvTzw==
+X-Received: by 2002:a17:902:e80c:b0:1d5:bc48:c0fa with SMTP id u12-20020a170902e80c00b001d5bc48c0famr763320plg.0.1706177965344;
+        Thu, 25 Jan 2024 02:19:25 -0800 (PST)
+Received: from localhost.localdomain ([45.58.187.66])
+        by smtp.googlemail.com with ESMTPSA id 12-20020a170902c24c00b001d770328a05sm3904913plg.36.2024.01.25.02.19.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 Jan 2024 02:19:24 -0800 (PST)
+From: Liang Chen <liangchen.linux@gmail.com>
+To: mst@redhat.com,
+	jasowang@redhat.com,
+	hengqi@linux.alibaba.com,
+	xuanzhuo@linux.alibaba.com
+Cc: virtualization@lists.linux-foundation.org,
+	linux-kernel@vger.kernel.org,
+	liangchen.linux@gmail.com
+Subject: [PATCH v3] virtio_net: Support RX hash XDP hint
+Date: Thu, 25 Jan 2024 18:19:12 +0800
+Message-Id: <20240125101912.60346-1-liangchen.linux@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 00/12] Unregister critical branch clocks + some RPM
-Content-Language: en-US
-To: Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Bjorn Andersson
-	<andersson@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Michael Turquette
-	<mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, Rob Herring
-	<robh+dt@kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>
-CC: Marijn Suijten <marijn.suijten@somainline.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        Johan Hovold
-	<johan+linaro@kernel.org>,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-References: <20230717-topic-branch_aon_cleanup-v6-0-46d136a4e8d0@linaro.org>
-From: Taniya Das <quic_tdas@quicinc.com>
-In-Reply-To: <20230717-topic-branch_aon_cleanup-v6-0-46d136a4e8d0@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: _VS6zcPvV0xrC47TQ77j3pSQdlfwOUgY
-X-Proofpoint-ORIG-GUID: _VS6zcPvV0xrC47TQ77j3pSQdlfwOUgY
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-25_05,2024-01-25_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- mlxlogscore=948 adultscore=0 spamscore=0 lowpriorityscore=0 clxscore=1011
- impostorscore=0 priorityscore=1501 suspectscore=0 bulkscore=0 mlxscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2401190000 definitions=main-2401250070
+Content-Transfer-Encoding: 8bit
 
-Hi Konrad,
+The RSS hash report is a feature that's part of the virtio specification.
+Currently, virtio backends like qemu, vdpa (mlx5), and potentially vhost
+(still a work in progress as per [1]) support this feature. While the
+capability to obtain the RSS hash has been enabled in the normal path,
+it's currently missing in the XDP path. Therefore, we are introducing
+XDP hints through kfuncs to allow XDP programs to access the RSS hash.
 
-Thanks for your patch.
+1.
+https://lore.kernel.org/all/20231015141644.260646-1-akihiko.odaki@daynix.com/#r
 
-On 1/13/2024 8:20 PM, Konrad Dybcio wrote:
-> On Qualcomm SoCs, certain branch clocks either need to be always-on, or
-> should be if you're interested in touching some part of the hardware.
-> 
-> Using CLK_IS_CRITICAL for this purpose sounds like a genius idea,
-> however that messes with the runtime pm handling - if a clock is
-> marked as such, the clock controller device will never enter the
-> "suspended" state, leaving the associated resources online, which in
-> turn breaks SoC-wide suspend.
+Signed-off-by: Liang Chen <liangchen.linux@gmail.com>
+---
+ drivers/net/virtio_net.c | 98 +++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 86 insertions(+), 12 deletions(-)
 
-I am really curious to know a little more about the SoC-Wide Suspend not 
-happening on these targets. Could you add more details here ?
-
-The Resource Power Manager (RPM) is the main aggregator on these targets 
-where the active & sleep votes on XO, shared rails (CX/MX) decide the 
-SoC wide suspend. The High Level OS on our internal platforms never had 
-any suspend issues due to clocks(GCC/GPUCC) or shared rails being kept 
-enabled from the consumers.
-
-> 
-> This series aims to solve that on a couple SoCs that I could test the
-> changes on and it sprinkles some runtime pm enablement atop these drivers.
-> 
-
-As CX is a shared resource/rail on these specific targets we definitely 
-do not achieve any power saving with the runtime pm attached to these 
-clock controllers, but I see a little more SW overhead. Though you could 
-please add your observations/comments.
-
-Removing the CLK_IS_CRITICAL is a good cleanup and moving them to probe 
-is a good way to handle the always-on clocks.
-
-
-> Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
-> ---
-> Changes in v6:
-> - Rebase (next-20240112)
-> - Reorder qcom_branch_set_clk_en calls by register in "*: Unregister
->    critical clocks" (Johan)
-> - Pick up tags
-> - Link to v5: https://lore.kernel.org/r/20230717-topic-branch_aon_cleanup-v5-0-99942e6bf1ba@linaro.org
-> 
-> Changes in v5:
-> - Change the "Keep the critical clocks always-on" comment to "Keep
->    some clocks always-on"
-> - Add the same comment to commits unregistering clocks on 6115/6375/2290
-> - Link to v4: https://lore.kernel.org/r/20230717-topic-branch_aon_cleanup-v4-0-32c293ded915@linaro.org
-> 
-> Changes in v4:
-> - Add and unify the "/* Keep the critical clocks always-on */" comment
-> - Rebase (next-20231222), also include 8650, X1E and 8280camcc drivers
-> - Drop enabling runtime PM on GCC
-> - Improve the commit message of "clk: qcom: gpucc-sm6115: Add runtime PM"
-> - Link to v3: https://lore.kernel.org/r/20230717-topic-branch_aon_cleanup-v3-0-3e31bce9c626@linaro.org
-> 
-> Changes in v3:
-> - Rebase (next-20231219)
-> - Fix up a copypaste mistake in "gcc-sm6375: Unregister critical clocks" (bod)
-> - Pick up tags
-> - Link to v2: https://lore.kernel.org/r/20230717-topic-branch_aon_cleanup-v2-0-2a583460ef26@linaro.org
-> 
-> Changes in v2:
-> - Rebase
-> - Pick up tags
-> - Fix up missing pm_runtime_put in SM6375 GCC (Johan)
-> - Clarify the commit message of "Add runtime PM" commits (Johan)
-> - "GPU_CCC" -> "GPU_CC" (oops)
-> - Rebase atop next-20231129
->    - Also fix up camcc-sm8550 & gcc-sm4450
->    - Unify and clean up the comment style
->    - Fix missing comments in gcc-sc7180..
->    - Drop Johan's ack from "clk: qcom: Use qcom_branch_set_clk_en()"
-> - Improve 6115 dt patch commit message (Bjorn)
-> - Link to v1: https://lore.kernel.org/r/20230717-topic-branch_aon_cleanup-v1-0-27784d27a4f4@linaro.org
-> 
-> ---
-> Konrad Dybcio (12):
->        clk: qcom: branch: Add a helper for setting the enable bit
->        clk: qcom: Use qcom_branch_set_clk_en()
->        clk: qcom: gcc-sm6375: Unregister critical clocks
->        clk: qcom: gpucc-sm6375: Unregister critical clocks
->        clk: qcom: gpucc-sm6115: Unregister critical clocks
->        clk: qcom: gpucc-sm6115: Add runtime PM
->        clk: qcom: gcc-sm6115: Unregister critical clocks
->        clk: qcom: gcc-qcm2290: Unregister critical clocks
->        arm64: dts: qcom: sm6375: Add VDD_CX to GCC
->        arm64: dts: qcom: qcm2290: Add VDD_CX to GCC
->        arm64: dts: qcom: sm6115: Add VDD_CX to GCC
->        arm64: dts: qcom: sm6115: Add VDD_CX to GPU_CC
->  >   arch/arm64/boot/dts/qcom/qcm2290.dtsi |   1 +
->   arch/arm64/boot/dts/qcom/sm6115.dtsi  |   3 +
->   arch/arm64/boot/dts/qcom/sm6375.dtsi  |   1 +
->   drivers/clk/qcom/camcc-sc8280xp.c     |   6 +-
->   drivers/clk/qcom/camcc-sm8550.c       |  10 +--
->   drivers/clk/qcom/clk-branch.h         |   7 ++
->   drivers/clk/qcom/dispcc-qcm2290.c     |   4 +-
->   drivers/clk/qcom/dispcc-sc7280.c      |   7 +-
->   drivers/clk/qcom/dispcc-sc8280xp.c    |   4 +-
->   drivers/clk/qcom/dispcc-sm6115.c      |   4 +-
->   drivers/clk/qcom/dispcc-sm8250.c      |   4 +-
->   drivers/clk/qcom/dispcc-sm8450.c      |   7 +-
->   drivers/clk/qcom/dispcc-sm8550.c      |   7 +-
->   drivers/clk/qcom/dispcc-sm8650.c      |   4 +-
->   drivers/clk/qcom/gcc-qcm2290.c        | 106 +++--------------------------
->   drivers/clk/qcom/gcc-sa8775p.c        |  25 +++----
->   drivers/clk/qcom/gcc-sc7180.c         |  22 +++---
->   drivers/clk/qcom/gcc-sc7280.c         |  20 +++---
->   drivers/clk/qcom/gcc-sc8180x.c        |  28 +++-----
->   drivers/clk/qcom/gcc-sc8280xp.c       |  25 +++----
->   drivers/clk/qcom/gcc-sdx55.c          |  12 ++--
->   drivers/clk/qcom/gcc-sdx65.c          |  13 ++--
->   drivers/clk/qcom/gcc-sdx75.c          |  10 +--
->   drivers/clk/qcom/gcc-sm4450.c         |  28 +++-----
->   drivers/clk/qcom/gcc-sm6115.c         | 124 +++-------------------------------
->   drivers/clk/qcom/gcc-sm6375.c         | 105 +++-------------------------
->   drivers/clk/qcom/gcc-sm7150.c         |  23 +++----
->   drivers/clk/qcom/gcc-sm8250.c         |  19 ++----
->   drivers/clk/qcom/gcc-sm8350.c         |  20 +++---
->   drivers/clk/qcom/gcc-sm8450.c         |  21 +++---
->   drivers/clk/qcom/gcc-sm8550.c         |  21 +++---
->   drivers/clk/qcom/gcc-sm8650.c         |  16 ++---
->   drivers/clk/qcom/gcc-x1e80100.c       |  16 ++---
->   drivers/clk/qcom/gpucc-sc7280.c       |   9 +--
->   drivers/clk/qcom/gpucc-sc8280xp.c     |   9 +--
->   drivers/clk/qcom/gpucc-sm6115.c       |  53 ++++++---------
->   drivers/clk/qcom/gpucc-sm6375.c       |  34 ++--------
->   drivers/clk/qcom/gpucc-sm8550.c       |  10 +--
->   drivers/clk/qcom/lpasscorecc-sc7180.c |   7 +-
->   drivers/clk/qcom/videocc-sm8250.c     |   6 +-
->   drivers/clk/qcom/videocc-sm8350.c     |  10 +--
->   drivers/clk/qcom/videocc-sm8450.c     |  13 ++--
->   drivers/clk/qcom/videocc-sm8550.c     |  13 ++--
->   43 files changed, 234 insertions(+), 653 deletions(-)
-> ---
-> base-commit: 8d04a7e2ee3fd6aabb8096b00c64db0d735bc874
-> change-id: 20230717-topic-branch_aon_cleanup-6976c13fe71c
-> 
-> Best regards,
-
+diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
+index d7ce4a1011ea..0c845f2223da 100644
+--- a/drivers/net/virtio_net.c
++++ b/drivers/net/virtio_net.c
+@@ -349,6 +349,12 @@ struct virtio_net_common_hdr {
+ 	};
+ };
+ 
++struct virtnet_xdp_buff {
++	struct xdp_buff xdp;
++	u32 hash_value;
++	u16 hash_report;
++};
++
+ static void virtnet_sq_free_unused_buf(struct virtqueue *vq, void *buf);
+ 
+ static bool is_xdp_frame(void *ptr)
+@@ -1033,6 +1039,16 @@ static void put_xdp_frags(struct xdp_buff *xdp)
+ 	}
+ }
+ 
++static void virtnet_xdp_save_rx_hash(struct virtnet_xdp_buff *virtnet_xdp,
++				     struct net_device *dev,
++				     struct virtio_net_hdr_v1_hash *hdr_hash)
++{
++	if (dev->features & NETIF_F_RXHASH) {
++		virtnet_xdp->hash_value = __le32_to_cpu(hdr_hash->hash_value);
++		virtnet_xdp->hash_report = __le16_to_cpu(hdr_hash->hash_report);
++	}
++}
++
+ static int virtnet_xdp_handler(struct bpf_prog *xdp_prog, struct xdp_buff *xdp,
+ 			       struct net_device *dev,
+ 			       unsigned int *xdp_xmit,
+@@ -1199,9 +1215,10 @@ static struct sk_buff *receive_small_xdp(struct net_device *dev,
+ 	unsigned int headroom = vi->hdr_len + header_offset;
+ 	struct virtio_net_hdr_mrg_rxbuf *hdr = buf + header_offset;
+ 	struct page *page = virt_to_head_page(buf);
++	struct virtnet_xdp_buff virtnet_xdp;
+ 	struct page *xdp_page;
++	struct xdp_buff *xdp;
+ 	unsigned int buflen;
+-	struct xdp_buff xdp;
+ 	struct sk_buff *skb;
+ 	unsigned int metasize = 0;
+ 	u32 act;
+@@ -1233,17 +1250,20 @@ static struct sk_buff *receive_small_xdp(struct net_device *dev,
+ 		page = xdp_page;
+ 	}
+ 
+-	xdp_init_buff(&xdp, buflen, &rq->xdp_rxq);
+-	xdp_prepare_buff(&xdp, buf + VIRTNET_RX_PAD + vi->hdr_len,
++	xdp = &virtnet_xdp.xdp;
++	xdp_init_buff(xdp, buflen, &rq->xdp_rxq);
++	xdp_prepare_buff(xdp, buf + VIRTNET_RX_PAD + vi->hdr_len,
+ 			 xdp_headroom, len, true);
+ 
+-	act = virtnet_xdp_handler(xdp_prog, &xdp, dev, xdp_xmit, stats);
++	virtnet_xdp_save_rx_hash(&virtnet_xdp, dev, (void *)hdr);
++
++	act = virtnet_xdp_handler(xdp_prog, xdp, dev, xdp_xmit, stats);
+ 
+ 	switch (act) {
+ 	case XDP_PASS:
+ 		/* Recalculate length in case bpf program changed it */
+-		len = xdp.data_end - xdp.data;
+-		metasize = xdp.data - xdp.data_meta;
++		len = xdp->data_end - xdp->data;
++		metasize = xdp->data - xdp->data_meta;
+ 		break;
+ 
+ 	case XDP_TX:
+@@ -1254,7 +1274,7 @@ static struct sk_buff *receive_small_xdp(struct net_device *dev,
+ 		goto err_xdp;
+ 	}
+ 
+-	skb = virtnet_build_skb(buf, buflen, xdp.data - buf, len);
++	skb = virtnet_build_skb(buf, buflen, xdp->data - buf, len);
+ 	if (unlikely(!skb))
+ 		goto err;
+ 
+@@ -1591,10 +1611,11 @@ static struct sk_buff *receive_mergeable_xdp(struct net_device *dev,
+ 	int num_buf = virtio16_to_cpu(vi->vdev, hdr->num_buffers);
+ 	struct page *page = virt_to_head_page(buf);
+ 	int offset = buf - page_address(page);
++	struct virtnet_xdp_buff virtnet_xdp;
+ 	unsigned int xdp_frags_truesz = 0;
+ 	struct sk_buff *head_skb;
+ 	unsigned int frame_sz;
+-	struct xdp_buff xdp;
++	struct xdp_buff *xdp;
+ 	void *data;
+ 	u32 act;
+ 	int err;
+@@ -1604,16 +1625,19 @@ static struct sk_buff *receive_mergeable_xdp(struct net_device *dev,
+ 	if (unlikely(!data))
+ 		goto err_xdp;
+ 
+-	err = virtnet_build_xdp_buff_mrg(dev, vi, rq, &xdp, data, len, frame_sz,
++	xdp = &virtnet_xdp.xdp;
++	err = virtnet_build_xdp_buff_mrg(dev, vi, rq, xdp, data, len, frame_sz,
+ 					 &num_buf, &xdp_frags_truesz, stats);
+ 	if (unlikely(err))
+ 		goto err_xdp;
+ 
+-	act = virtnet_xdp_handler(xdp_prog, &xdp, dev, xdp_xmit, stats);
++	virtnet_xdp_save_rx_hash(&virtnet_xdp, dev, (void *)hdr);
++
++	act = virtnet_xdp_handler(xdp_prog, xdp, dev, xdp_xmit, stats);
+ 
+ 	switch (act) {
+ 	case XDP_PASS:
+-		head_skb = build_skb_from_xdp_buff(dev, vi, &xdp, xdp_frags_truesz);
++		head_skb = build_skb_from_xdp_buff(dev, vi, xdp, xdp_frags_truesz);
+ 		if (unlikely(!head_skb))
+ 			break;
+ 		return head_skb;
+@@ -1626,7 +1650,7 @@ static struct sk_buff *receive_mergeable_xdp(struct net_device *dev,
+ 		break;
+ 	}
+ 
+-	put_xdp_frags(&xdp);
++	put_xdp_frags(xdp);
+ 
+ err_xdp:
+ 	put_page(page);
+@@ -4579,6 +4603,55 @@ static void virtnet_set_big_packets(struct virtnet_info *vi, const int mtu)
+ 	}
+ }
+ 
++static int virtnet_xdp_rx_hash(const struct xdp_md *_ctx, u32 *hash,
++			       enum xdp_rss_hash_type *rss_type)
++{
++	const struct virtnet_xdp_buff *virtnet_xdp = (void *)_ctx;
++
++	if (!(virtnet_xdp->xdp.rxq->dev->features & NETIF_F_RXHASH))
++		return -ENODATA;
++
++	switch (virtnet_xdp->hash_report) {
++	case VIRTIO_NET_HASH_REPORT_TCPv4:
++		*rss_type = XDP_RSS_TYPE_L4_IPV4_TCP;
++		break;
++	case VIRTIO_NET_HASH_REPORT_UDPv4:
++		*rss_type = XDP_RSS_TYPE_L4_IPV4_UDP;
++		break;
++	case VIRTIO_NET_HASH_REPORT_TCPv6:
++		*rss_type = XDP_RSS_TYPE_L4_IPV6_TCP;
++		break;
++	case VIRTIO_NET_HASH_REPORT_UDPv6:
++		*rss_type = XDP_RSS_TYPE_L4_IPV6_UDP;
++		break;
++	case VIRTIO_NET_HASH_REPORT_TCPv6_EX:
++		*rss_type = XDP_RSS_TYPE_L4_IPV6_TCP_EX;
++		break;
++	case VIRTIO_NET_HASH_REPORT_UDPv6_EX:
++		*rss_type = XDP_RSS_TYPE_L4_IPV6_UDP_EX;
++		break;
++	case VIRTIO_NET_HASH_REPORT_IPv4:
++		*rss_type = XDP_RSS_TYPE_L3_IPV4;
++		break;
++	case VIRTIO_NET_HASH_REPORT_IPv6:
++		*rss_type = XDP_RSS_TYPE_L3_IPV6;
++		break;
++	case VIRTIO_NET_HASH_REPORT_IPv6_EX:
++		*rss_type = XDP_RSS_TYPE_L3_IPV6_EX;
++		break;
++	case VIRTIO_NET_HASH_REPORT_NONE:
++	default:
++		*rss_type = XDP_RSS_TYPE_NONE;
++	}
++
++	*hash = virtnet_xdp->hash_value;
++	return 0;
++}
++
++static const struct xdp_metadata_ops virtnet_xdp_metadata_ops = {
++	.xmo_rx_hash			= virtnet_xdp_rx_hash,
++};
++
+ static int virtnet_probe(struct virtio_device *vdev)
+ {
+ 	int i, err = -ENOMEM;
+@@ -4704,6 +4777,7 @@ static int virtnet_probe(struct virtio_device *vdev)
+ 				  VIRTIO_NET_RSS_HASH_TYPE_UDP_EX);
+ 
+ 		dev->hw_features |= NETIF_F_RXHASH;
++		dev->xdp_metadata_ops = &virtnet_xdp_metadata_ops;
+ 	}
+ 
+ 	if (vi->has_rss_hash_report)
 -- 
-Thanks & Regards,
-Taniya Das.
+2.40.1
+
