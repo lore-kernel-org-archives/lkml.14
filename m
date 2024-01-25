@@ -1,118 +1,68 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71D4917588
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 08:14:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD04F179AB;
+	Thu, 25 Jan 2024 08:14:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706170467; cv=none; b=OW+51UK6tKpm5ppEVjvR0R9i/tNewwR64yjIOTErRr8WkuTzcjEkHkkhk0PlSDPjfARYMkZDQH925rwDX797In40xJ3BqciOcxHWf3ozBod8X2bOYYdrS6wNkubGirkPnpJwYj6cNwlFpI1geJJHTgVcAeSYUyaNfqoqcg1Eqdc=
+	t=1706170492; cv=none; b=Dxf/ajFt8ply7I1Webq1ZF/uf0P0eGuUKtTBjqz/paKGqHP+Telz0lVrh+FHseEufo4Fnhefxf72y8IQLUyf9fB4+BNBhHfUUP0+z+Adit92R7+PDkubughgyX37oLVpUZWU1pLR39o67tccRWNVup7ACojihY6YT+DcrLNwOFw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706170467; c=relaxed/simple;
-	bh=JaR4jvVKPHNgoMUjvN9Fx0qi2/jFA8uL0LDZS34O6wg=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=EnOtt8qmBrxfX0mVeRpeXp8hGZfuMHtQDm302LBXLJmPX+wUodIYC1CSZrZSdk2Xm0aGyAw0XbcFd4REm0bqREe9dEvCEzfApqRLPRxFzIuFRe3PYKkoj2TkiZS7g2/Jy6ox31VUKkKehKMoDKoJjRqLLeDc45pBSv5U/VnuZ3I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--yosryahmed.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jM5+VJCW; arc=none smtp.client-ip=209.85.219.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--yosryahmed.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jM5+VJCW"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dbdb46770d7so9482256276.1
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 00:14:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1706170465; x=1706775265; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=TTmwN8C5xYYKtz8HRfXOUdRFW/9rByTcl8wDVg46w14=;
-        b=jM5+VJCW1Rq81Cu5tQR1mCKGkl76sVvWnla8eBTnCQ8D5U69C8Ps009ItF/Uqajr2T
-         BKfmbtNVg+MiQ6FqEWi2itmk+cz2/sVSxLQ9TGOUaRgByXASzdKApjchG+QeHVddC8IP
-         pzhC/sQeqf4xApxHBAW6Yk2zPXxtwhuJOtRCBKJhmaESuhY0dc6LJIfc5emSwCOQIcva
-         BNJtybGKbQ2PyA6ogssHy4wmjE2fJoiEjyfm3V74hUPPWgmIOQ+s4S++xTQ1Yt67qKK5
-         mKWaLhJ8BM5GNUExJZ08TeNciT5ml98AFRBX/O3vMhHnpP6q5mO1NuoxAwmzDrRGnaGc
-         x6xA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706170465; x=1706775265;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=TTmwN8C5xYYKtz8HRfXOUdRFW/9rByTcl8wDVg46w14=;
-        b=h+kR+ClpI6BjDHi+woIQPqk+HCjA60TcXFyLGhFZjdQgD04MRSBFLcHIcHPfetCOr5
-         1jJ/JKux7FF/NevbeuXEJI37PGfvt3PSW7vM5UgZRb2bMvPirqply3SHBR56EZo0IdDR
-         30cnGAPgjP6oBWOxY7RuwWEyBDKxjMTSBac6VggL52NVbLMQU1621DVfqefGhttbMZPt
-         C0qooexs80UOwkIWQkHPQl3i9wVhTJQmJ4+EbjnW80sT2OY7zbfZkqWF45yyFtpg6e5K
-         IJgXz7QanzwMsJ/Z3rBJ44z+y/7MLbZ6D7QeWqOnS8pC1PI3Jp6EyWAElMOTMH22MZq5
-         oxiw==
-X-Gm-Message-State: AOJu0YzZbzlw1uJfTCmpKn/cWSyjYdpsJU1a2pAzV5I1fOPgk0blOsdp
-	60nprKbOvbF2Bx0Aa9ftDicoXZWXOoEBFOZril8jhmQ08/oHyKfIMpV2u+0LG923rp404fiZ6mF
-	gxTT+r0zHJpOYGn+1Jw==
-X-Google-Smtp-Source: AGHT+IEmIZ/mL85IsFYjAaDuaM20Cii+U62blSXhK4wu6TlhAr0VTMyS7xVgS4ve41dEQ7SZA/MZwxeZ8ONws8RI
-X-Received: from yosry.c.googlers.com ([fda3:e722:ac3:cc00:20:ed76:c0a8:29b4])
- (user=yosryahmed job=sendgmr) by 2002:a05:6902:2303:b0:dc2:1f3b:abdd with
- SMTP id do3-20020a056902230300b00dc21f3babddmr340427ybb.5.1706170465455; Thu,
- 25 Jan 2024 00:14:25 -0800 (PST)
-Date: Thu, 25 Jan 2024 08:14:23 +0000
+	s=arc-20240116; t=1706170492; c=relaxed/simple;
+	bh=eVkxV/i3yWPBEbBpzYDTdGKfRQo1+og3/EJd45UlmLs=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=QDQOhgHcKxDUA6xvND7fUw6/A0z0Ho8OOBVoEtB8FwrmJw0ivEUXw+sQjFCfEHHbdXi1hMIVOicXCOjNh/nJYkJqEUpv3jWHB956o10JfazSgi2xlT0xbknxf+ZQHfQZMycLY4yIXdqpy8qWoBB3jDKbUR1CiQRWgGJyzGV2sCY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.214])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4TLD8t1p7sz1gy3V;
+	Thu, 25 Jan 2024 16:13:02 +0800 (CST)
+Received: from kwepemm600005.china.huawei.com (unknown [7.193.23.191])
+	by mail.maildlp.com (Postfix) with ESMTPS id 20B6F1A016C;
+	Thu, 25 Jan 2024 16:14:32 +0800 (CST)
+Received: from huawei.com (10.50.165.33) by kwepemm600005.china.huawei.com
+ (7.193.23.191) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 25 Jan
+ 2024 16:14:31 +0800
+From: Longfang Liu <liulongfang@huawei.com>
+To: <alex.williamson@redhat.com>, <jgg@nvidia.com>,
+	<shameerali.kolothum.thodi@huawei.com>, <jonathan.cameron@huawei.com>
+CC: <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linuxarm@openeuler.org>, <liulongfang@huawei.com>
+Subject: [PATCH 0/3] add debugfs to hisilicon migration driver
+Date: Thu, 25 Jan 2024 16:10:28 +0800
+Message-ID: <20240125081031.48707-1-liulongfang@huawei.com>
+X-Mailer: git-send-email 2.24.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.43.0.429.g432eaa2c6b-goog
-Message-ID: <20240125081423.1200336-1-yosryahmed@google.com>
-Subject: [PATCH] mm: zswap: remove unused tree argument in zswap_entry_put()
-From: Yosry Ahmed <yosryahmed@google.com>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Johannes Weiner <hannes@cmpxchg.org>, Nhat Pham <nphamcs@gmail.com>, 
-	Chengming Zhou <zhouchengming@bytedance.com>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, Yosry Ahmed <yosryahmed@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemm600005.china.huawei.com (7.193.23.191)
 
-Commit 7310895779624 ("mm: zswap: tighten up entry invalidation")
-removed the usage of tree argument, delete it.
+Add a debugfs function to the hisilicon migration driver in VFIO to
+provide intermediate state values and data during device migration.
 
-Signed-off-by: Yosry Ahmed <yosryahmed@google.com>
----
- mm/zswap.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+When the execution of live migration fails, the user can view the
+status and data during the migration process separately from the
+source and the destination, which is convenient for users to analyze
+and locate problems.
 
-diff --git a/mm/zswap.c b/mm/zswap.c
-index 78df16d307aa8..8f4a7efc2bdae 100644
---- a/mm/zswap.c
-+++ b/mm/zswap.c
-@@ -569,8 +569,7 @@ static void zswap_entry_get(struct zswap_entry *entry)
- /* caller must hold the tree lock
- * remove from the tree and free it, if nobody reference the entry
- */
--static void zswap_entry_put(struct zswap_tree *tree,
--			struct zswap_entry *entry)
-+static void zswap_entry_put(struct zswap_entry *entry)
- {
- 	int refcount = --entry->refcount;
- 
-@@ -853,7 +852,7 @@ static void zswap_invalidate_entry(struct zswap_tree *tree,
- 				   struct zswap_entry *entry)
- {
- 	if (zswap_rb_erase(&tree->rbroot, entry))
--		zswap_entry_put(tree, entry);
-+		zswap_entry_put(entry);
- }
- 
- static enum lru_status shrink_memcg_cb(struct list_head *item, struct list_lru_one *l,
-@@ -924,7 +923,7 @@ static enum lru_status shrink_memcg_cb(struct list_head *item, struct list_lru_o
- 
- put_unlock:
- 	/* Drop local reference */
--	zswap_entry_put(tree, entry);
-+	zswap_entry_put(entry);
- unlock:
- 	spin_unlock(&tree->lock);
- 	spin_lock(lock);
-@@ -1754,7 +1753,7 @@ bool zswap_load(struct folio *folio)
- 		zswap_lru_del(&entry->pool->list_lru, entry);
- 		zswap_lru_add(&entry->pool->list_lru, entry);
- 	}
--	zswap_entry_put(tree, entry);
-+	zswap_entry_put(entry);
- 	spin_unlock(&tree->lock);
- 
- 	return true;
+Longfang Liu (3):
+  hisi_acc_vfio_pci: extract public functions for container_of
+  hisi_acc_vfio_pci: register debugfs for hisilicon migration driver
+  Documentation: add debugfs description for hisi migration
+
+ .../ABI/testing/debugfs-hisi-migration        |  34 +++
+ MAINTAINERS                                   |   1 +
+ .../vfio/pci/hisilicon/hisi_acc_vfio_pci.c    | 211 +++++++++++++++++-
+ .../vfio/pci/hisilicon/hisi_acc_vfio_pci.h    |   5 +
+ 4 files changed, 241 insertions(+), 10 deletions(-)
+ create mode 100644 Documentation/ABI/testing/debugfs-hisi-migration
+
 -- 
-2.43.0.429.g432eaa2c6b-goog
+2.24.0
 
