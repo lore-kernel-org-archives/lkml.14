@@ -1,171 +1,161 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8445175B4;
-	Thu, 25 Jan 2024 08:28:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A051717753;
+	Thu, 25 Jan 2024 08:30:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706171322; cv=none; b=YQkwZsXZKoF7xwGrWqR6ApF/N6CLldorKyK556qbFOg/j7EntcRXPw7UKCJmuysNzSwPSzZbsRELWxYC14p2aNnEaMW3nrCacG9q9YRzE2qUCgmCXjIPiB0abZcyDStYKw3EcmmdJN6G9St2ZJyIE5nFbl9qey6KWPHvz4BB8oc=
+	t=1706171415; cv=none; b=eVCZlTVO3cGg4hxpktIdrGqygsw8xQLj9zWCB8dRkmBMc2FMyCWdAPesS8ZZ78fmrc/V2MEA2aGwNOdo3J7xXv7yOcsulCa2eYoh78tz3uT3aO0B7gJztzEQz6ju38BcllYQGvWxZ62xoa0/YbVutiZaHBbGj9FjwLQIt3nEqNo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706171322; c=relaxed/simple;
-	bh=0o18t8f3/iC5wQSPwN+S8bs8VJQ/VDGiBZsmcwU/bDw=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=guWQ21QytdC0/xR0H3QoIQ+6YjmEVKZcPF5D1f1e+c3vjqjYlVxhDi+mX8ORMIJMd+YS4LGInnfjvsmjexndOVGmEaBikfoQINOKvNd9sVR/yD7dIYnwE2eRjrC5T5ivwFgDHmyxFYnru0F4zqJO50L4eMtc+45O1PdbKBQRVhM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=t5h14y6l; arc=none smtp.client-ip=68.232.153.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1706171415; c=relaxed/simple;
+	bh=3XBWo2N7vPeYYFH5hJHHJ4R4cDBYgvyARsugBQmHXL4=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=ak7Ag7TCsVNgioU/Q7C3smx3VIn3Ab3rOgE2k+CzFchRHuMohEmf6fhv3jw4LyBaIzToK8rTETZGLGbl+wEVwVLOzVGN/lPBnJZ5JWF3ZLADWoP5A+tCsAs4yfBNuLalIrs1ltsNExnR8AtqlXjEK7qR8LWf4LZLxG1oJKkKtKc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=dSXT5p3h; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="t5h14y6l"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1706171320; x=1737707320;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=0o18t8f3/iC5wQSPwN+S8bs8VJQ/VDGiBZsmcwU/bDw=;
-  b=t5h14y6lHFOYRbzFgZXIcxelOhEUWdmsz/gfdVmr8gnEk6MKHcwwP5aL
-   dEFbwGz00l2O6jzVEyUsb12wsSImVS06oSCWEu2erARSUFxSux8yFllZv
-   htrkJG0eFuU1iC887mXWI+m6hL1GOL+HSVn7FR02GVtffm8ruthlqf08Z
-   onxDTDQTcHci/+5Q/bjkoIXkSwaPLJxPKtz8R2TGZDeqi2R5a4eru9Jsp
-   L6IrIClV2CPVg3RToiy8C/1/hoSYR7gGia8wanS+i7IRCAtK6PoKzuv2Z
-   FX39Q6W4wyXywj81Irr/FamKyQ0fx3QTKhh2GCGxgrllPLIkPwqEAgdNe
-   w==;
-X-CSE-ConnectionGUID: yWKH6XeGSSC8CBa5MkUWWA==
-X-CSE-MsgGUID: /2Vw4AgiQCK4jHQhEACeAA==
-X-IronPort-AV: E=Sophos;i="6.05,216,1701154800"; 
-   d="asc'?scan'208";a="15276256"
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 25 Jan 2024 01:28:38 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Thu, 25 Jan 2024 01:28:36 -0700
-Received: from wendy (10.10.85.11) by chn-vm-ex04.mchp-main.com (10.10.85.152)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35 via Frontend
- Transport; Thu, 25 Jan 2024 01:28:32 -0700
-Date: Thu, 25 Jan 2024 08:27:55 +0000
-From: Conor Dooley <conor.dooley@microchip.com>
-To: <Dharma.B@microchip.com>
-CC: <conor@kernel.org>, <sam@ravnborg.org>, <bbrezillon@kernel.org>,
-	<maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
-	<tzimmermann@suse.de>, <airlied@gmail.com>, <daniel@ffwll.ch>,
-	<robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
-	<conor+dt@kernel.org>, <Nicolas.Ferre@microchip.com>,
-	<alexandre.belloni@bootlin.com>, <claudiu.beznea@tuxon.dev>,
-	<dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<lee@kernel.org>, <thierry.reding@gmail.com>,
-	<u.kleine-koenig@pengutronix.de>, <linux-pwm@vger.kernel.org>,
-	<Linux4Microchip@microchip.com>
-Subject: Re: [PATCH v3 3/3] dt-bindings: mfd: atmel,hlcdc: Convert to DT
- schema format
-Message-ID: <20240125-proved-passage-7fa128f828db@wendy>
-References: <20240118092612.117491-1-dharma.b@microchip.com>
- <20240118092612.117491-4-dharma.b@microchip.com>
- <20240118-recent-glorified-fd35d72e006e@spud>
- <c33868c8-dc42-4800-885c-5e5f24c2044e@microchip.com>
- <20240119-character-mardi-43571d7fe7d5@wendy>
- <da60f9f3-f955-4a87-a020-5710185953c0@microchip.com>
- <20240122-stark-duress-2f59294dcf27@spud>
- <4906b7e2-0ddb-4d3c-a48b-e16278f2d649@microchip.com>
- <20240124-lend-emerald-1028fe65cc39@spud>
- <c3c30bf2-e7c2-4861-bfdf-519a7afde476@microchip.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="dSXT5p3h"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 40P7Ws7f020363;
+	Thu, 25 Jan 2024 08:30:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ subject : to : cc : references : from : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=pp1;
+ bh=jSTDG7pZUdM5R9gkBMPp9G3Ps4anJqutG/WR/2lOnuY=;
+ b=dSXT5p3hpWogxlGVlcqhXejmTsB0A8TpuQr7Sc3QwCyPtqesJcJJe9ssK0KkYR1JwyA2
+ l4MqVV9WxUYB/Lc0Yu6NU/njqocM9+XwRWg7kkrHl9IZ5MpaV4Uh/YAN6XM+5csSfKUz
+ vnf3jJUEkoTBPAxHyEfPugyuAWYy8GHnpSYLqiF3uugJoZoQU/YqUVNKRmmYTESQXnuU
+ 85LZnHcPtes4vCicYTM/EXRLMFOkuNik/AUPqGR9xzAXnfg4bBbi6cIMl4LXof+i0FA3
+ DBsm0UPnU2c5Xja7UCIy0L1YHkTr5p4wPzDvo22HDuD1fNBqj63/boaFSZgRCl3Dh4Im DA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vukbj18ef-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 25 Jan 2024 08:30:07 +0000
+Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 40P85cuv022522;
+	Thu, 25 Jan 2024 08:30:06 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vukbj183q-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 25 Jan 2024 08:30:06 +0000
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 40P527pn010854;
+	Thu, 25 Jan 2024 08:27:03 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3vrrw03c88-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 25 Jan 2024 08:27:03 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 40P8R0G556754506
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 25 Jan 2024 08:27:00 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8897220043;
+	Thu, 25 Jan 2024 08:27:00 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 0F95F20040;
+	Thu, 25 Jan 2024 08:27:00 +0000 (GMT)
+Received: from [9.152.224.38] (unknown [9.152.224.38])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 25 Jan 2024 08:27:00 +0000 (GMT)
+Message-ID: <8090bb34-1b70-43ea-ae13-df5d9a5eb761@linux.ibm.com>
+Date: Thu, 25 Jan 2024 09:26:59 +0100
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] v6.8 SMC-D issues
+To: Wen Gu <guwen@linux.alibaba.com>, wenjia@linux.ibm.com, hca@linux.ibm.com,
+        gor@linux.ibm.com, agordeev@linux.ibm.com, davem@davemloft.net,
+        edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+        jaka@linux.ibm.com, Matthew Rosato <mjrosato@linux.ibm.com>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
+        borntraeger@linux.ibm.com, svens@linux.ibm.com,
+        alibuda@linux.alibaba.com, tonylu@linux.alibaba.com,
+        raspl@linux.ibm.com, schnelle@linux.ibm.com,
+        guangguan.wang@linux.alibaba.com, linux-s390@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Halil Pasic <pasic@linux.ibm.com>
+References: <20231219142616.80697-1-guwen@linux.alibaba.com>
+ <20231219142616.80697-8-guwen@linux.alibaba.com>
+ <13579588-eb9d-4626-a063-c0b77ed80f11@linux.ibm.com>
+ <530afe45-ba6b-4970-a71c-1f1255f5fca9@linux.alibaba.com>
+Content-Language: en-US
+From: Alexandra Winter <wintera@linux.ibm.com>
+In-Reply-To: <530afe45-ba6b-4970-a71c-1f1255f5fca9@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: hL-eyvXh5IfeJnQxS3WvRFG4GCoUuQvl
+X-Proofpoint-GUID: d9-pXlaTopAnnCB5pTPeUJJRJKxMjHfa
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="KV2dTBGvLz55uW11"
-Content-Disposition: inline
-In-Reply-To: <c3c30bf2-e7c2-4861-bfdf-519a7afde476@microchip.com>
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-01-25_04,2024-01-24_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 adultscore=0
+ spamscore=0 lowpriorityscore=0 mlxscore=0 malwarescore=0 phishscore=0
+ impostorscore=0 clxscore=1015 priorityscore=1501 mlxlogscore=999
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2401250057
 
---KV2dTBGvLz55uW11
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
 
-> > If the lvds pll is an input to the hlcdc, you need to add it here.
-> >  From your description earlier it does sound like it is an input to
-> > the hlcdc, but now you are claiming that it is not.
->=20
-> The LVDS PLL serves as an input to both the LCDC and LVDSC
+On 25.01.24 05:59, Wen Gu wrote:
+> After a while debug I found an elementary mistake of mine in
+> b40584d ("net/smc: compatible with 128-bits extended GID of virtual ISM device")..
+> 
+> The operator order in smcd_lgr_match() is not as expected. It will always return
+> 'true' in remote-system case.
+> 
+>  static bool smcd_lgr_match(struct smc_link_group *lgr,
+> -                          struct smcd_dev *smcismdev, u64 peer_gid)
+> +                          struct smcd_dev *smcismdev,
+> +                          struct smcd_gid *peer_gid)
+>  {
+> -       return lgr->peer_gid == peer_gid && lgr->smcd == smcismdev;
+> +       return lgr->peer_gid.gid == peer_gid->gid && lgr->smcd == smcismdev &&
+> +               smc_ism_is_virtual(smcismdev) ?
+> +               (lgr->peer_gid.gid_ext == peer_gid->gid_ext) : 1;
+>  }
+> 
+> Could you please try again with this patch? to see if this is the root cause.
+> Really sorry for the inconvenience.
+> 
+> diff --git a/net/smc/smc_core.c b/net/smc/smc_core.c
+> index da6a8d9c81ea..c6a6ba56c9e3 100644
+> --- a/net/smc/smc_core.c
+> +++ b/net/smc/smc_core.c
+> @@ -1896,8 +1896,8 @@ static bool smcd_lgr_match(struct smc_link_group *lgr,
+>                            struct smcd_gid *peer_gid)
+>  {
+>         return lgr->peer_gid.gid == peer_gid->gid && lgr->smcd == smcismdev &&
+> -               smc_ism_is_virtual(smcismdev) ?
+> -               (lgr->peer_gid.gid_ext == peer_gid->gid_ext) : 1;
+> +               (smc_ism_is_virtual(smcismdev) ?
+> +                (lgr->peer_gid.gid_ext == peer_gid->gid_ext) : 1);
+>  }
+> 
+> 
+> Thanks,
+> Wen Gu
 
-Then it should be an input to both the LCDC and LVDSC in the devicetree.
+Hello Wen Gu,
 
-> with the=20
-> LVDS_PLL multiplied by 7 for the Pixel clock to the LVDS PHY, and=20
+thank you for the quick resposne and for finding this nasty bug.
+I can confirm that with your patch I do not see the issue anymore.
+Please send a fix to the mailing lists. See
+https://docs.kernel.org/process/handling-regressions.html
+for some tips.
 
-Are you sure? The diagram doesn't show a multiplier, the 7x comment
-there seems to be showing relations?
+May I propose that instead of adding the brackets, you change this function 
+to an if-then-else sequence for readability and maintainability?
+I would still mention the missing brackets in the commit message, so
+readers can quickly understand the issue.
 
-> LVDS_PLL divided by 7 for the Pixel clock to the LCDC.
+Thanks again for the quick response.
+Sandy
 
-> I am inclined to believe that appropriately configuring and enabling it=
-=20
-> in the LVDS driver would be the appropriate course of action.
-
-We're talking about bindings here, not drivers, but I would imagine that
-if two peripherals are using the same clock then both of them should be
-getting a reference to and enabling that clock so that the clock
-framework can correctly track the users.
-
-> > I don't know your hardware, so I have no idea which of the two is
-> > correct, but it sounds like the former. Without digging into how this
-> > works my assumption about the hardware here looks like is that the lvds
-> > controller is a clock provider,
->=20
-> It's a PLL clock from PMC.
->=20
-> > and that the lvds controller's clock is
-> > an optional input for the hlcdc.
->=20
-> Again it's a PLL clock from PMC.
->=20
-> Please refer Section 39.3=20
-> https://ww1.microchip.com/downloads/aemDocuments/documents/MPU32/ProductD=
-ocuments/DataSheets/SAM9X7-Series-Data-Sheet-DS60001813.pdf
-
-It is not the same exact clock as you pointed out above though, so the
-by 7 divider should be modelled.
-
-> > Can you please explain what provides the lvds pll clock and show an
-> > example of how you think the devictree would look with "the lvds pll in
-> > the lvds dt node"?
->=20
-> Sure, Please see the below example
->=20
-> The typical lvds node will look like
->=20
->                  lvds_controller: lvds-controller@f8060000 {
->                          compatible =3D "microchip,sam9x7-lvds";
->                          reg =3D <0xf8060000 0x100>;
->                          interrupts =3D <56 IRQ_TYPE_LEVEL_HIGH 0>;
->                          clocks =3D <&pmc PMC_TYPE_PERIPHERAL 56>, <&pmc=
-=20
-> PMC_TYPE_CORE PMC_LVDSPLL>;
->                          clock-names =3D "pclk", "lvds_pll_clk";
->                          status =3D "disabled";
->                  };
-
-In isolation, this looks fine.
-
-Cheers,
-Conor.
-
---KV2dTBGvLz55uW11
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZbIbiwAKCRB4tDGHoIJi
-0h+8AQCpYI71+drl2FDrbEGThmMOFS/iz1jS+CPJczvYePVUqwD/ZilClwywAcjj
-BSSdZJ4KLwpHGZIe4dxZJbifZWhXPAY=
-=rMTy
------END PGP SIGNATURE-----
-
---KV2dTBGvLz55uW11--
