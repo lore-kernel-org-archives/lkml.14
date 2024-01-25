@@ -1,54 +1,42 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB1451292F6
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 16:18:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D81181292F0;
+	Thu, 25 Jan 2024 16:19:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706199537; cv=none; b=V2Sr1HxUmfsa6KcfA6kN2yjsgc7ghbBo+vkMiEhfC+PT8u0sVlbcLhuaLsWOxTjcq3vJhXtpnK8Rqf82+SreGJKQ9ZFyOWplIfEM3vUTIxttycgJT/IskRED1wmE86wVi/5CGysQf2FRAzdfd+Q7yOPEurEWLcBqWPVxXQk/aHQ=
+	t=1706199554; cv=none; b=F0l/YkspZdH1/8vsXXHBIaAa9UyoxRyjPQX1O/LXq3W3uuHtOPNfERkHPyGKz/hww8QK5HI4WTcjt2S/lvKfpnHW3byZFLHX8v8aziWygEYu4H78BB3YJXsfVTJkjALQ66ZEO08zvnMPOcnfA9KstbZGRoZPEQsDqv1Q4hCz6fI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706199537; c=relaxed/simple;
-	bh=ZFIAD3SghRMr8naQG+00l/0n4qp68W6rM0zHBdsQstM=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=juceEaM4wC9R0e/KRw7Ket1sqlRv/lof31vk5fXgR849KXNEKaEF3zHOOnofi5IJxgHBzIB6kdph4IAFGBbHS2iKAlgoTPAg+pjbtjn5dLZks92YWIAPUY/dO/hqW/1cCPS1ci8zn2A69QA/Xo9UVXONK5AeBG17BGGsYDcnf7E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Jb7pXFVP; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1706199554; c=relaxed/simple;
+	bh=8tbd9J1L+yMyj8fzsk0GkL2j32nTCB7mGKmc36iSSsk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=US1oFLu0xH1WtyDNoTe2PaVwl1Ve6PtzGEl+MbZsEADSmFcjKWKwbxlCBMYJMhvbDTI1A8Va0eEQmb4vO7AIRxK0mxugF+RCnW5lJe4oCBccw3adyAKxq7cP7EXXrfTtOGrBISnxdKZmYnOYvsnbJ9xjuwKDOL6iU9yoZi9lKjU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uNadlyTj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Jb7pXFVP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1706199534;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-	bh=OD7tTZxtOA5L7DY6QZCt4p2wPvXLqRQRKZ25ORgLsbA=;
-	b=Jb7pXFVPJ0I1e9idHv+RPXwedutdiBXeD/1CniyxMD8n9G7n9QtCltFeMN/nnUvKLEZ9GA
-	hTRukgj/9mqwCx+euKBecfGajPcBedbDqKiNxYxlI4s1BTSb75fgpjGY4Uqg+EnoituqEy
-	g+IkvKpEmg09FaDG+B6Cl/INQa33OEc=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-99-V9s2GPlzMP6ScWDQD43MYA-1; Thu, 25 Jan 2024 11:18:51 -0500
-X-MC-Unique: V9s2GPlzMP6ScWDQD43MYA-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id B4C9C83B86C;
-	Thu, 25 Jan 2024 16:18:50 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.14])
-	by smtp.corp.redhat.com (Postfix) with SMTP id 21126200A7B4;
-	Thu, 25 Jan 2024 16:18:48 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Thu, 25 Jan 2024 17:17:37 +0100 (CET)
-Date: Thu, 25 Jan 2024 17:17:34 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Christian Brauner <brauner@kernel.org>,
-	"Eric W. Biederman" <ebiederm@xmission.com>,
-	Tycho Andersen <tandersen@netflix.com>,
-	Tycho Andersen <tycho@tycho.pizza>, linux-kernel@vger.kernel.org
-Subject: [PATCH] pidfd: cleanup the usage of __pidfd_prepare's flags
-Message-ID: <20240125161734.GA778@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uNadlyTj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5980C433C7;
+	Thu, 25 Jan 2024 16:19:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706199554;
+	bh=8tbd9J1L+yMyj8fzsk0GkL2j32nTCB7mGKmc36iSSsk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=uNadlyTjUCr+4tVYMsG05OiK0H6qg7GIMgXkusq8IrSrHO7QOypAtfCWrcelD17HW
+	 /LPPMBR41J1doxkf+KXtEfpYnqFSVMGI/4Cwhw18sOgrQh+f8Y59SdXcs+4eIBWeUI
+	 MvrA+oI6NNi3GEMfh42coRULv1nTX560miNOMkgteLjfFMwJWTbIJ7cUntC6FPkYDi
+	 AfoLFQb8mn1Yq0jl3+VPSTR7A7UAhEgQHEOylD272yhUAuMBMYdIiwS4j6HL3r8rxs
+	 HVqT8AVE7DSlePmdT23/m753AyAStku/I2QE0Oni6A2SkTTz4ztZHH47UIuEfcdhYa
+	 X6OZd9MsSK46A==
+Date: Thu, 25 Jan 2024 17:19:07 +0100
+From: Niklas Cassel <cassel@kernel.org>
+To: Lennert Buytenhek <kernel@wantstofly.org>
+Cc: Damien Le Moal <dlemoal@kernel.org>, linux-ide@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>,
+	John Garry <john.g.garry@oracle.com>,
+	Joerg Roedel <jroedel@suse.de>
+Subject: Re: [PATCH v2] ahci: add 43-bit DMA address quirk for ASMedia
+ ASM1061 controllers
+Message-ID: <ZbKJ++oBcTptpvlB@x1-carbon>
+References: <ZbJ4Yfexzea2mQw8@wantstofly.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -57,90 +45,64 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.4
+In-Reply-To: <ZbJ4Yfexzea2mQw8@wantstofly.org>
 
-- make pidfd_create() static.
+On Thu, Jan 25, 2024 at 05:04:01PM +0200, Lennert Buytenhek wrote:
+> With one of the on-board ASM1061 AHCI controllers (1b21:0612) on an
+> ASUSTeK Pro WS WRX80E-SAGE SE WIFI mainboard, a controller hang was
+> observed that was immediately preceded by the following kernel
+> messages:
+> 
+> [Thu Jan  4 23:12:54 2024] ahci 0000:28:00.0: Using 64-bit DMA addresses
+> [Thu Jan  4 23:12:54 2024] ahci 0000:28:00.0: AMD-Vi: Event logged [IO_PAGE_FAULT domain=0x0035 address=0x7fffff00000 flags=0x0000]
+> [Thu Jan  4 23:12:54 2024] ahci 0000:28:00.0: AMD-Vi: Event logged [IO_PAGE_FAULT domain=0x0035 address=0x7fffff00300 flags=0x0000]
+> [Thu Jan  4 23:12:54 2024] ahci 0000:28:00.0: AMD-Vi: Event logged [IO_PAGE_FAULT domain=0x0035 address=0x7fffff00380 flags=0x0000]
+> [Thu Jan  4 23:12:54 2024] ahci 0000:28:00.0: AMD-Vi: Event logged [IO_PAGE_FAULT domain=0x0035 address=0x7fffff00400 flags=0x0000]
+> [Thu Jan  4 23:12:54 2024] ahci 0000:28:00.0: AMD-Vi: Event logged [IO_PAGE_FAULT domain=0x0035 address=0x7fffff00680 flags=0x0000]
+> [Thu Jan  4 23:12:54 2024] ahci 0000:28:00.0: AMD-Vi: Event logged [IO_PAGE_FAULT domain=0x0035 address=0x7fffff00700 flags=0x0000]
+> 
+> The first message is produced by code in drivers/iommu/dma-iommu.c
+> which is accompanied by the following comment that seems to apply:
+> 
+>         /*
+>          * Try to use all the 32-bit PCI addresses first. The original SAC vs.
+>          * DAC reasoning loses relevance with PCIe, but enough hardware and
+>          * firmware bugs are still lurking out there that it's safest not to
+>          * venture into the 64-bit space until necessary.
+>          *
+>          * If your device goes wrong after seeing the notice then likely either
+>          * its driver is not setting DMA masks accurately, the hardware has
+>          * some inherent bug in handling >32-bit addresses, or not all the
+>          * expected address bits are wired up between the device and the IOMMU.
+>          */
+> 
+> Asking the ASM1061 on a discrete PCIe card to DMA from I/O virtual
+> address 0xffffffff00000000 produces the following I/O page faults:
+> 
+> [Tue Jan 23 21:31:55 2024] vfio-pci 0000:07:00.0: AMD-Vi: Event logged [IO_PAGE_FAULT domain=0x0021 address=0x7ff00000000 flags=0x0010]
+> [Tue Jan 23 21:31:55 2024] vfio-pci 0000:07:00.0: AMD-Vi: Event logged [IO_PAGE_FAULT domain=0x0021 address=0x7ff00000500 flags=0x0010]
+> 
+> Note that the upper 21 bits of the logged DMA address are zero.  (When
+> asking a different PCIe device in the same PCIe slot to DMA to the
+> same I/O virtual address, we do see all the upper 32 bits of the DMA
+> address as 1, so this is not an issue with the chipset or IOMMU
+> configuration on the test system.)
+> 
+> Also, hacking libahci to always set the upper 21 bits of all DMA
+> addresses to 1 produces no discernible effect on the behavior of the
+> ASM1061, and mkfs/mount/scrub/etc work as without this hack.
+> 
+> This all strongly suggests that the ASM1061 has a 43 bit DMA address
+> limit, and this commit therefore adds a quirk to deal with this limit.
+> 
+> This issue probably applies to (some of) the other supported ASMedia
+> parts as well, but we limit it to the PCI IDs known to refer to
+> ASM1061 parts, as that's the only part we know for sure to be affected
+> by this issue at this point.
+> 
+> Link: https://lore.kernel.org/linux-ide/ZaZ2PIpEId-rl6jv@wantstofly.org/
+> Signed-off-by: Lennert Buytenhek <kernel@wantstofly.org>
+> ---
 
-- Don't pass O_RDWR | O_CLOEXEC to __pidfd_prepare() in copy_process(),
-  __pidfd_prepare() adds these flags unconditionally.
-
-- Kill the flags check in __pidfd_prepare(). sys_pidfd_open() checks the
-  flags itself, all other users of pidfd_prepare() pass flags = 0.
-
-  If we need a sanity check for those other in kernel users then
-  WARN_ON_ONCE(flags & ~PIDFD_NONBLOCK) makes more sense.
-
-- Don't pass O_RDWR to get_unused_fd_flags(), it ignores everything except
-  O_CLOEXEC.
-
-- Don't pass O_CLOEXEC to anon_inode_getfile(), it ignores everything except
-  O_ACCMODE | O_NONBLOCK.
-
-Signed-off-by: Oleg Nesterov <oleg@redhat.com>
----
- include/linux/pid.h | 1 -
- kernel/fork.c       | 9 +++------
- kernel/pid.c        | 2 +-
- 3 files changed, 4 insertions(+), 8 deletions(-)
-
-diff --git a/include/linux/pid.h b/include/linux/pid.h
-index 395cacce1179..e6a041cb8bac 100644
---- a/include/linux/pid.h
-+++ b/include/linux/pid.h
-@@ -73,7 +73,6 @@ struct file;
- extern struct pid *pidfd_pid(const struct file *file);
- struct pid *pidfd_get_pid(unsigned int fd, unsigned int *flags);
- struct task_struct *pidfd_get_task(int pidfd, unsigned int *flags);
--int pidfd_create(struct pid *pid, unsigned int flags);
- int pidfd_prepare(struct pid *pid, unsigned int flags, struct file **ret);
- 
- static inline struct pid *get_pid(struct pid *pid)
-diff --git a/kernel/fork.c b/kernel/fork.c
-index c981fa6171c1..347641398f9d 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -2130,15 +2130,12 @@ static int __pidfd_prepare(struct pid *pid, unsigned int flags, struct file **re
- 	int pidfd;
- 	struct file *pidfd_file;
- 
--	if (flags & ~(O_NONBLOCK | O_RDWR | O_CLOEXEC))
--		return -EINVAL;
--
--	pidfd = get_unused_fd_flags(O_RDWR | O_CLOEXEC);
-+	pidfd = get_unused_fd_flags(O_CLOEXEC);
- 	if (pidfd < 0)
- 		return pidfd;
- 
- 	pidfd_file = anon_inode_getfile("[pidfd]", &pidfd_fops, pid,
--					flags | O_RDWR | O_CLOEXEC);
-+					flags | O_RDWR);
- 	if (IS_ERR(pidfd_file)) {
- 		put_unused_fd(pidfd);
- 		return PTR_ERR(pidfd_file);
-@@ -2524,7 +2521,7 @@ __latent_entropy struct task_struct *copy_process(
- 	 */
- 	if (clone_flags & CLONE_PIDFD) {
- 		/* Note that no task has been attached to @pid yet. */
--		retval = __pidfd_prepare(pid, O_RDWR | O_CLOEXEC, &pidfile);
-+		retval = __pidfd_prepare(pid, 0, &pidfile);
- 		if (retval < 0)
- 			goto bad_fork_free_pid;
- 		pidfd = retval;
-diff --git a/kernel/pid.c b/kernel/pid.c
-index b52b10865454..c7a3e359f8f5 100644
---- a/kernel/pid.c
-+++ b/kernel/pid.c
-@@ -595,7 +595,7 @@ struct task_struct *pidfd_get_task(int pidfd, unsigned int *flags)
-  * Return: On success, a cloexec pidfd is returned.
-  *         On error, a negative errno number will be returned.
-  */
--int pidfd_create(struct pid *pid, unsigned int flags)
-+static int pidfd_create(struct pid *pid, unsigned int flags)
- {
- 	int pidfd;
- 	struct file *pidfd_file;
--- 
-2.25.1.362.g51ebf55
-
-
+Applied:
+https://git.kernel.org/pub/scm/linux/kernel/git/libata/linux.git/log/?h=for-6.8-fixes
