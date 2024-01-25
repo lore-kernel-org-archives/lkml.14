@@ -1,75 +1,100 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD28413BEAB;
-	Thu, 25 Jan 2024 21:12:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66D961386D5
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 21:13:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706217158; cv=none; b=pTJ0hk4qv2UE2n6d1FuSvi8IUPIza4bWoDxtUG/lhokmYx0it/4Pj0ibi7vzgACrCsLi4TpYqvc1FqHqZ4VefOarhZzajGVpvzyLJjq14ehIUQSRJOL+6THYGvRvOum3ccCzP3mJ6qeeID7z0/kzKbjm7dKmEdQJr8ayWDKMGRM=
+	t=1706217227; cv=none; b=igQRBtE1sk/+OafHmsVqIVR4jXbFMEv0Vgz1XhiRlnpJRAtUMs7wBCCOePlUmm0yiv1uS+BG2l52GNarwao1RqnkI2Anin1zZprrP+BBFEXgkutQDy92OMkSw5QTahbIOjAjX9sEKluxQV+Yer0QU7oLlFF1S4FI4AjEztK6cMg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706217158; c=relaxed/simple;
-	bh=vd6/DXjKhlsGcZeIq12IfQ0wreBg6NM9pi0RXu+VKEE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gYla5NC+rhKLtc7cCiG8eUySV51tKF5pGvOBCR1ac0Ebl9GPD1Lhui1UzzrzVMy+T3iGIqF4be90roVaXUiagmrlPixDP8SvzmmAtMwvkW9kOof/p3F1wMGUpCMVsaWQsAx28iJLyouhYv5VfOkBTHA0EdJhotUYB/NuYR3M81I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
-Received: from [194.95.143.137] (helo=phil.dip.tu-dresden.de)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	s=arc-20240116; t=1706217227; c=relaxed/simple;
+	bh=XfTpl7ZCji0713DaXc5kyRqYgTqhfhPAce0nC47R2Wg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IOtiCjVunpRXFa56BiZb5M76swnAjYhLrTm+UUQ6+MNMDtTRSwP8iSQ1ms8nMd+pHNtDXByBbo+c3Szc500vDN5L0B6AssaIdkMwFC9qckLfwlkyvWnaPu6xTMmxmTpp1Jy8YD9MNDzm0RyNM2WII05kYDPC4ONeUHJCVUzplWc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rT72W-0002Y5-4f; Thu, 25 Jan 2024 22:13:36 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1rT71L-0002EX-AC; Thu, 25 Jan 2024 22:12:23 +0100
-From: Heiko Stuebner <heiko@sntech.de>
-To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Sandy Huang <hjc@rock-chips.com>,
-	Alex Bee <knaerzche@gmail.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: Heiko Stuebner <heiko@sntech.de>,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	Daniel Vetter <daniel@ffwll.ch>,
-	linux-rockchip@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	David Airlie <airlied@gmail.com>
-Subject: Re: (subset) [PATCH v4 00/29] Add HDMI support for RK3128
-Date: Thu, 25 Jan 2024 22:12:12 +0100
-Message-Id: <170621707729.1872080.13318760381519094242.b4-ty@sntech.de>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20231222174220.55249-1-knaerzche@gmail.com>
-References: <20231222174220.55249-1-knaerzche@gmail.com>
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rT72U-002N34-VD; Thu, 25 Jan 2024 22:13:34 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rT72U-00893Q-2o;
+	Thu, 25 Jan 2024 22:13:34 +0100
+Date: Thu, 25 Jan 2024 22:13:34 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: Wenhua Lin <Wenhua.Lin@unisoc.com>
+Cc: Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Orson Zhai <orsonzhai@gmail.com>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
+	Chunyan Zhang <zhang.lyra@gmail.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, wenhua lin <wenhua.lin1994@gmail.com>, 
+	Xiongpeng Wu <xiongpeng.wu@unisoc.com>, zhaochen su <zhaochen.su29@gmail.com>, 
+	Zhaochen Su <Zhaochen.Su@unisoc.com>, Xiaolong Wang <Xiaolong.Wang@unisoc.com>
+Subject: Re: [PATCH V2 2/6] pwm: sprd: Improve the pwm backlight control
+ function
+Message-ID: <tbtq2rtixo2dkfeuainsjzhymehkym3zvrjuh6hrpg6znnbyzg@ppl4ztw2t2bh>
+References: <20240125025533.10315-1-Wenhua.Lin@unisoc.com>
+ <20240125025533.10315-3-Wenhua.Lin@unisoc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="d3eufueza5633f7n"
+Content-Disposition: inline
+In-Reply-To: <20240125025533.10315-3-Wenhua.Lin@unisoc.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On Fri, 22 Dec 2023 18:41:51 +0100, Alex Bee wrote:
-> This is version 4 of my series that aims to add support for the display
-> controller (VOP) and the HDMI controller block of RK3128 (which is very
-> similar to the one found in RK3036). The original intention of this series
-> was to add support for this slightly different integration but is by now,
-> driven by maintainer's feedback, exploded to be a rework of inno-hdmi
-> driver in large parts. It is, however, a change for the better.
-> 
-> [...]
 
-Applied, thanks!
+--d3eufueza5633f7n
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-[27/29] ARM: dts: rockchip: Add display subsystem for RK3128
-        commit: 695b9b57443d88a1c8e0567c88a79d1a4532c75e
-[28/29] ARM: dts: rockchip: Add HDMI node for RK3128
-        commit: 3fd6e33f8fde16869d4cd9cef71ca964b2b0789b
-[29/29] ARM: dts: rockchip: Enable HDMI output for XPI-3128
-        commit: 5aab66e319df2a6fc4ab06bcb4bd974c1ac4927e
+Hello,
 
-Best regards,
--- 
-Heiko Stuebner <heiko@sntech.de>
+On Thu, Jan 25, 2024 at 10:55:29AM +0800, Wenhua Lin wrote:
+> The pwm-sprd driver support only 8-bit linear control of backlight. Now,
+> new requests of supporting 9-bit, 10-bit, 11-bit and 12-bit linear
+> control of backlight are proposed.
+
+I would expect that you can determine a sensible value for mod at
+runtime. Also adding this to the device tree isn't hardware description,
+is it?
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--d3eufueza5633f7n
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmWyzv0ACgkQj4D7WH0S
+/k7Azgf/dUHAPnyIf/XXxctd065kx6rEUD/YFEWzCK3lpm00SgG6+Ed/IGxfJp9x
+y3xeE2QT+vmt1LR2ZppdkUgtiSX3NcSmRTY7cK9zX45KJetARln7vBIuK0kLZE4k
+nK6cr+09OoQNXpWXRygk+DeLzpds5yK8o2uviAin4R2OLfzpalzofVg2zHXKeTfN
+hkNWCftPeSpBuK4/AO4SpBzbI40ZB689Ge13KxTnWsfNVvJvprWD4mQMrnYYz9S0
+pDTYwcyfKH/e7yv7u4taoEmH0DK6qkNHaPvYC4T1TaJ1ifPSsw1MtlGBEndm6arT
+ASx7tzFbkJQyb/CC9p9lcYa8KO0YYA==
+=uuTL
+-----END PGP SIGNATURE-----
+
+--d3eufueza5633f7n--
