@@ -1,96 +1,86 @@
-Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED11D6EB60;
-	Thu, 25 Jan 2024 14:55:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCE57768F8
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 14:59:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706194544; cv=none; b=TfHbjxJpzCMs1W4rnb/n9QJjsZIcM+dxCSYVf6nuH4n/dN5RLSJgM2u5RM94Yyr7EvQHN22yK3efh5hP7ziQIbhHQXEwT2i8ywy/u21yH/nbVBtuiCF/4rWiWd7q7EWZDkL43mLOSNE1HvH4vBKkAsTXFOGZEQoNro+DSE57UAY=
+	t=1706194769; cv=none; b=VwsNrc3x21v65ymrp98fw6hE2e9Q0Bo3WkWVyJ8+ntoRFOKg3U/i8U2NWs5rJuLdwi1l3X0POzXaeYg9RWnWb7yad1ENC2TW9XsMdw6mbEoAt7eh5h+ymH8JcKUH4+g1SevFMjqCNZ4jSaYFuavtGQDGDoRbuF6IFkCAUSiVrnY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706194544; c=relaxed/simple;
-	bh=JEbWPGJoVxXkCPlY2N2gRaepeDuuUIkTKLF49tTQ8bA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EhxmKCHqao9oEdaq2f3HCTswZaBHwZOo/XbScoKZsLnnVVDdNdH8nRYPZhHDvQ+gsXuypbJTnPnQR3dBIgKxVrW70x83xodBnOVBcZZVjqaakARFz8pkVx7JDk/JVTMsrxasmRJUUyXnd9MbTAFOciOFL8rVeifbB/9LXOQZH6Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=EpvjCKwl; arc=none smtp.client-ip=217.70.183.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1706194769; c=relaxed/simple;
+	bh=MIK+QxFxsRFVsK0JI7umRqsFHJP1cu+AgJYKYupHzD8=;
+	h=Date:Message-ID:MIME-Version:Content-Type:Content-Disposition:
+	 From:To:Cc:Subject:References:In-Reply-To; b=XKXR836lgnHJjUASHSS9sJYD8L6ueS9IJJKyuNNWksS6QRwK4fY5MsPmiyyi/NpS4uEB5TqDvQCaLftRcpyi1P5kHw+5DieeOvpa+rYI6j3jjL4T4vyyaQMg9ralOnBz3KzgRwOyaz4VPPRiEvAtKIpdz94+Cu6tT8kqkrRju6E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=EJGUEt5E; arc=none smtp.client-ip=209.85.222.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="EpvjCKwl"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 5B7C81C0005;
-	Thu, 25 Jan 2024 14:55:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1706194534;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rOXw2F4HOX1jsfGrMOQ0fTfoQB2N+gMMyWWg0nyWkCQ=;
-	b=EpvjCKwl7Q8SwvFI8zqihspTA1z2XjgIEciir2R84jedLntJeaIpPrAtGz/Qr274VvwOod
-	2hl4aMaOEpCVsNDuXE+xLf3FxiZyrWMZ18QR87NYWQSz8+OBjqg1BJ7vDA4es8EMu5CXXN
-	WiukllJA6xWqE/MV9Td1Zg7jYkRDc6iPjLtQ7c+7K6x1esNzmgS1zpTuN7LfG/jWRcqNl+
-	y16ujo1TA+dxaSrFhodt39POku+0thavXYL6jAd91LzY2k+xHOX/E+f9r1rn5kBgC72BMA
-	QOugQRVz26gFWhGiGPVyeBn7a1VqGAjHLndluNhFI3S5c+0rGPVGS1pLA44tGw==
-Date: Thu, 25 Jan 2024 15:55:32 +0100
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-To: Breno Leitao <leitao@debian.org>
-Cc: kuba@kernel.org, davem@davemloft.net, abeni@redhat.com,
- edumazet@google.com, Alexander Aring <alex.aring@gmail.com>, Stefan Schmidt
- <stefan@datenfreihafen.org>, Paolo Abeni <pabeni@redhat.com>,
- dsahern@kernel.org, weiwan@google.com, "open list:IEEE 802.15.4 SUBSYSTEM"
- <linux-wpan@vger.kernel.org>, "open list:NETWORKING [GENERAL]"
- <netdev@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next 02/22] net: fill in MODULE_DESCRIPTION()s for
- ieee802154
-Message-ID: <20240125155532.285a2bbd@xps-13>
-In-Reply-To: <ZbIxYnEbFXi6NBMU@gmail.com>
-References: <20240122184543.2501493-1-leitao@debian.org>
-	<20240122184543.2501493-3-leitao@debian.org>
-	<20240124175158.7c8b9490@xps-13>
-	<ZbIxYnEbFXi6NBMU@gmail.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="EJGUEt5E"
+Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-78315243c11so438388685a.3
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 06:59:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore.com; s=google; t=1706194766; x=1706799566; darn=vger.kernel.org;
+        h=in-reply-to:references:subject:cc:to:from:content-transfer-encoding
+         :content-disposition:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=QokRh4sTQUfkR5bLB823ppJrMrKDL4nb6Ul8jfaanJ8=;
+        b=EJGUEt5EzcW0W2TEafctDGLnax7Gem1JWD/XRvyaYBOuqyf3xhZh9VPrXOOR6A8gK0
+         Oom9s78uRXj40iODYRe5+frCC310Np2YkZhIN8JVHY8sedULs2XHuiQ9IkCccwMt0f4L
+         72piT+jImKhWVdpAxvs0KlIWjtL6f2KW+oFaH9/dJeWL7NLeu/dMd/kYfCf2DLHwbKdH
+         LDBrABMqhRlWHS7JbdAy8pdZFkYnCvKTbFNdjmsUal70Cn9V/ZjTwcOuoDdRy0pj+LrR
+         qcvx52HgvlqYJND3n8dqUJbxpVkFzbAR5izYXpnauj6BQl6TWxXc+RFW/burEgPSB1MZ
+         QZYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706194766; x=1706799566;
+        h=in-reply-to:references:subject:cc:to:from:content-transfer-encoding
+         :content-disposition:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=QokRh4sTQUfkR5bLB823ppJrMrKDL4nb6Ul8jfaanJ8=;
+        b=Ktoe31GEZ1aHQpYFb29OLX1wCfeLWkXkry2+4K4JkcqPji4cbrq36J15QJsLy3Og8g
+         vnFyvjna2IGnIrdkPN0FjDVN6q8NvHtV5WS/u2/2JOjma4JQJq1Rki+2KmdjlCI+eoLC
+         GUPgHz9+i3ArHn51VVlUvODFJkddOTKro/V8s0/wInO4WLMQUropnoli2KdT0hog9bqM
+         639dHFZvKLpN+kR4FMfxZ9XVYaOBW7x/QmTrCc/TrUnngwXN2HVZWtuA8y0QB91BgL+s
+         piiRDTHrdYuDpEUlUUP4oZh/ItdDjfu9lYP1//VSOTaAP10GxzXSt1aKV5j4enmQDqc9
+         or/w==
+X-Gm-Message-State: AOJu0YwXED42LHUwIkpzluv00HvQ1NKB9UCmbfcj8WV8Osj+qlRl/iww
+	B/8upvbxnKteD2ZtAXrP/CD3IjdCACk0Jml1S4B/G6YAeTbPLRfd+j+g1bNLQabQHnWUsz/BNtQ
+	=
+X-Google-Smtp-Source: AGHT+IF1Hke1j7fCAq2l/nqw+mSJkIzr6GHG9KukUEeDR56kC+lW1t7KmwvMNfBY5TVqXw/h82D19w==
+X-Received: by 2002:a05:620a:4483:b0:783:2516:58c8 with SMTP id x3-20020a05620a448300b00783251658c8mr1406385qkp.19.1706194766644;
+        Thu, 25 Jan 2024 06:59:26 -0800 (PST)
+Received: from localhost ([70.22.175.108])
+        by smtp.gmail.com with ESMTPSA id t8-20020a05620a034800b00783a206381csm3472154qkm.37.2024.01.25.06.59.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 Jan 2024 06:59:26 -0800 (PST)
+Date: Thu, 25 Jan 2024 09:59:25 -0500
+Message-ID: <736295ee70e12c5e1ba8a19b9a832b5f@paul-moore.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-Sasl: miquel.raynal@bootlin.com
+MIME-Version: 1.0 
+Content-Type: text/plain; charset=utf-8 
+Content-Disposition: inline 
+Content-Transfer-Encoding: 8bit
+From: Paul Moore <paul@paul-moore.com>
+To: Li zeming <zeming@nfschina.com>, eparis@redhat.com
+Cc: audit@vger.kernel.org, linux-kernel@vger.kernel.org, Li zeming <zeming@nfschina.com>
+Subject: Re: [PATCH] kernel: auditfilter: Remove unnecessary ‘0’ values from  ret
+References: <20231228025600.9796-1-zeming@nfschina.com>
+In-Reply-To: <20231228025600.9796-1-zeming@nfschina.com>
 
-Hi Breno,
+On Dec 27, 2023 Li zeming <zeming@nfschina.com> wrote:
+> 
+> The ret variable is assigned when it does not need to be defined, as it
+> has already been assigned before use.
+> 
+> Signed-off-by: Li zeming <zeming@nfschina.com>
+> ---
+>  kernel/auditfilter.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-leitao@debian.org wrote on Thu, 25 Jan 2024 02:01:06 -0800:
+Merged into audit/dev, thanks.
 
-> Hello Miqu=C3=A8l,
->=20
-> On Wed, Jan 24, 2024 at 05:51:58PM +0100, Miquel Raynal wrote:
-> > Hi Breno,
-> >=20
-> > leitao@debian.org wrote on Mon, 22 Jan 2024 10:45:23 -0800:
-> >  =20
-> > > W=3D1 builds now warn if module is built without a MODULE_DESCRIPTION=
-().
-> > > Add descriptions to ieee802154 modules.
-> > >=20
-> > > Signed-off-by: Breno Leitao <leitao@debian.org>
-> > > Acked-by: Stefan Schmidt <stefan@datenfreihafen.org> =20
-> >=20
-> > I just see the v2 now. Please use "v2" in your commit title using -v or
-> > git-format-patch. =20
->=20
-> Sorry, I am not sure I followed what you meant.  I've sent the v2, which
-> contains the 'v2' _tag_:
-
-I believe *this* is a v2 because you fixed your initial patch,
-following Stefan's suggestion.
-
-Anyway, it's fine for me to merge this patch through net directly (I
-don't know if net maintainers want W=3D1 fixes to go through net or
-net-next) so:
-
-Acked-by: Miquel Raynal <miquel.raynal@bootlin.com>
-
-Thanks,
-Miqu=C3=A8l
+--
+paul-moore.com
