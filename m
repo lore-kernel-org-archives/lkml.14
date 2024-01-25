@@ -1,155 +1,97 @@
-Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com [209.85.222.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9193D321AF
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 12:40:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A74145BF4;
+	Thu, 25 Jan 2024 12:40:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706186438; cv=none; b=C85syoozS6Q1dKI7wM60OmRkCAb1Un9zl/W6VYCKSZcmYJ9/58rIjz2K0Mvff5Jk4M2NAj2MAq56T64Efe4X2O9vvJW4Earyk18SzJgHGKvGIPNHR9aXLVtrDSxRi+YGbVI/nV2jNjFo/IM/F6yk+kA3R9gYGzlGcHuba5Jvwko=
+	t=1706186441; cv=none; b=PiDCjurGl88dJyv904MusFzZiM95gECmfjWrXoSZkxYNU1WX9Pw9rcDxF9dBaWohpvhyhWf5EJP7aHNfD/DYYK/S37MgL+61lrrg5mz9VMWyYpHszJak7n9BWOyJzIRm4nFGjYIXLp6Wjmui+2fo6N03nKLxu+fgJjWwfvqVCdA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706186438; c=relaxed/simple;
-	bh=hM2iHfDe3tq4q5QhAuG5llL9QvEutMz9ZFyDgZKy5J0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DeDedp9HGbMxpTZb2xUIoRql4GRGEyd2c3V1Tm4gzBpZyQzB9fIFEicN2YJTrlLHrevjjFCYzSTpAEdXMrZvjZU5nvOiqN0b/b+yUQR79daMvGagAj7SzirNrwuZaeIjATPLds32MnOGXNDAmglljyFCqumsd4Ez6mNj/EZjjPg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tSwDac9F; arc=none smtp.client-ip=209.85.222.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1706186441; c=relaxed/simple;
+	bh=EdkMDFFWUiyjvHdtXKbhibX6ICrroCB3+YkEYJGcC3A=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=TpSOsyiFS9AGiLrMFd2RNvAZ/awmrVgnQafpkWD6todr9AYRq23+FZ/7WQktcwHlrzbUhsWD1qKWPM/LokuplYqP+jO+V6zxz9TqauLGTM6cHcx6m6uYJFi6eWGtosN7IcTkaX3RMHu/yfsTzzsknLfeYWDnvdrtXlku8AhEMA4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=EY5cKp1/; arc=none smtp.client-ip=115.124.30.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tSwDac9F"
-Received: by mail-ua1-f48.google.com with SMTP id a1e0cc1a2514c-7d2e1832d4dso1535379241.2
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 04:40:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1706186435; x=1706791235; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZNi4MiQOUNCak4EWaCvvPwFzUIE3TXQJ5X1CGwYGEDU=;
-        b=tSwDac9F+Gq39agFJa7n4+dKGJ+3I5KVCjk23tNLJug/yMgk2yAfngenoG1KSddIjE
-         Q2k2ozYntrI0wxqrdpc2qHazuP/spOIrv14zBe9P9VTDfUCwuLjTrd36rigrqKzK8/Kk
-         kW3DfBU+oBb5VpCpM4go7nFE3eYhYLWC4Ug+H13I6eMsD5ql3Dzp3L7jJvZsFSlTK9hf
-         //anbCbNcdjKmQ03lmv1vne2w/5Ev4PsS2lPbgu79ayvZ2zDyw9JqV5OKEZE38cv6OBs
-         hYw2R95rtsaXLwGOJvoG11uBOWdBGfodK71LePGHQZUWZ+lYX41E+QpsiLqtyYkcrdWB
-         DjYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706186435; x=1706791235;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZNi4MiQOUNCak4EWaCvvPwFzUIE3TXQJ5X1CGwYGEDU=;
-        b=hTnqU9t6L6EnQAOjH5SsD+RxwpY29CKlEXiQaKqSqvP3dqcCr3XjKcBQyeeGKTI+te
-         yEO4E2US1JhXXrBA6z4Ww8rBqRbbNxWSZ1S2ZvJaJehNiB5/MTsDiJAYUvqeBY6C30lH
-         GkAV/o7NBCod9W32BFrtz3YgMNYXinsD72nr4JM5xctGEJb2k0ZhBTV+JCtbGBWtsrgG
-         EA6g+5wn4sqCpoyiQng2USy+fQsSjYIc0j24tfsZb6vmbWSrOpKVRZEz12zxffMu6gi2
-         lzTFHWAi4qsI2k37kzRWAuS1fTB0uuKtPxSYef1BFu4YOm7si5raDno9fM7zFZ0a+HM0
-         /bkQ==
-X-Gm-Message-State: AOJu0Yxc6D3d2Zmr5pWmXZMV2PLNOYP684d8Fx3q2LMc2H6Qw/w/9bEV
-	3lujXL/liUO2TfPagPavjfkLv0QbRgkfhro+kRM1ygaNN4P2dRW8SQVLglGtu4gs76b6/HCXy+m
-	ZUgu+f569bIjtnbaIRImcFIgYQWS/dgz8l0Tv
-X-Google-Smtp-Source: AGHT+IH1C55pZ2RrYSAI4VVBDqlGGHUKM5ynO7yFHVq9bA/uLjts2Z1tsbUOhk0J8KAoOccE1G3W7HnpyeekB5BCP+Q=
-X-Received: by 2002:a1f:c344:0:b0:4bd:3433:aac with SMTP id
- t65-20020a1fc344000000b004bd34330aacmr271077vkf.15.1706186435236; Thu, 25 Jan
- 2024 04:40:35 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="EY5cKp1/"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1706186434; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=Fst97h1pLSmFiX0qcjI14XwdvbW5bSFhMUKZrfvSZcQ=;
+	b=EY5cKp1/o5QGE/e2eePOnD5fPpDRFwjX2NrlTz+MmwzYn6Pkt6sfCCeKd6qkLw2unFfdYGhrrwls08aC3Y/60AkICpwbiM8C7+xFZit71TYHv7CIsRwtapnJV4q2/uQ9ChPv259JpUt2dcAY52mlTdDlphkHrE0BH3343XgJfE8=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=guwen@linux.alibaba.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---0W.KUl5s_1706186356;
+Received: from localhost(mailfrom:guwen@linux.alibaba.com fp:SMTPD_---0W.KUl5s_1706186356)
+          by smtp.aliyun-inc.com;
+          Thu, 25 Jan 2024 20:40:34 +0800
+From: Wen Gu <guwen@linux.alibaba.com>
+To: wintera@linux.ibm.com,
+	mjrosato@linux.ibm.com,
+	wenjia@linux.ibm.com,
+	jaka@linux.ibm.com,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com
+Cc: alibuda@linux.alibaba.com,
+	tonylu@linux.alibaba.com,
+	guwen@linux.alibaba.com,
+	linux-s390@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH net] net/smc: fix incorrect SMC-D link group matching logic
+Date: Thu, 25 Jan 2024 20:39:16 +0800
+Message-Id: <20240125123916.77928-1-guwen@linux.alibaba.com>
+X-Mailer: git-send-email 2.32.0.3.g01195cf9f
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240124-alice-mm-v1-2-d1abcec83c44@google.com> <20240124234626.6435-1-kernel@valentinobst.de>
-In-Reply-To: <20240124234626.6435-1-kernel@valentinobst.de>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Thu, 25 Jan 2024 13:40:24 +0100
-Message-ID: <CAH5fLggBH4POm501a_-Yivvnu0A-rFw8nw87iwUQw2361=pq4A@mail.gmail.com>
-Subject: Re: [PATCH 2/3] rust: add typed accessors for userspace pointers
-To: Valentin Obst <kernel@valentinobst.de>
-Cc: a.hindborg@samsung.com, akpm@linux-foundation.org, alex.gaynor@gmail.com, 
-	arnd@arndb.de, arve@android.com, benno.lossin@proton.me, 
-	bjorn3_gh@protonmail.com, boqun.feng@gmail.com, brauner@kernel.org, 
-	cmllamas@google.com, gary@garyguo.net, gregkh@linuxfoundation.org, 
-	joel@joelfernandes.org, keescook@chromium.org, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, maco@android.com, ojeda@kernel.org, 
-	rust-for-linux@vger.kernel.org, surenb@google.com, tkjos@android.com, 
-	viro@zeniv.linux.org.uk, wedsonaf@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jan 25, 2024 at 12:47=E2=80=AFAM Valentin Obst <kernel@valentinobst=
-.de> wrote:
->
-> > +/*
->
-> nit: this would be the first comment in the kernel crate to use this
-> style, not sure if there is a rule about that though. Maybe still
-> preferable to keep it consistent.
->
-> > + * These methods skip the `check_object_size` check that `copy_[to|fro=
-m]_user`
-> > + * normally performs.
->
-> nit: They skip the (stronger, and also present without usercopy
-> hardening) `check_copy_size` wrapping that one.
+The logic to determine if SMC-D link group matches is incorrect. The
+correct logic should be that it only returns true when the GID is the
+same, and the SMC-D device is the same and the extended GID is the same
+(in the case of virtual ISM).
 
-The only difference between check_object_size and check_copy_size is
-the extra check with __builtin_object_size, but that doesn't work
-across the C/Rust boundary, and Rust doesn't have a direct equivalent.
+It can be fixed by adding brackets around the conditional (or ternary)
+operator expression. But for better readability and maintainability, it
+has been changed to an if-else statement.
 
-> >                        In C, these checks are skipped whenever the leng=
-th is a
-> > + * compile-time constant, since when that is the case, the kernel poin=
-ter
-> > + * usually points at a local variable that is being initialized
->
-> Question: I thought that this exemption is about dynamic size
-> calculations being more susceptible to bugs than hard-coded ones. Does
-> someone recall the original rationale for that?
->
-> >                                                                  and th=
-e kernel
-> > + * pointer is trivially non-dangling.
->
-> As far as I know the hardened usercopy checks are not meant to catch
-> UAFs but rather about OOB accesses (and some info leaks). For example,
-> if the object is on the heap they check if the copy size exceeds the
-> allocation size, or, if the object is on the stack, they verify the copy
-> size does not leave the stack frame.
+Reported-by: Matthew Rosato <mjrosato@linux.ibm.com>
+Closes: https://lore.kernel.org/r/13579588-eb9d-4626-a063-c0b77ed80f11@linux.ibm.com
+Fixes: b40584d14570 ("net/smc: compatible with 128-bits extended GID of virtual ISM device")
+Link: https://lore.kernel.org/r/13579588-eb9d-4626-a063-c0b77ed80f11@linux.ibm.com
+Signed-off-by: Wen Gu <guwen@linux.alibaba.com>
+---
+ net/smc/smc_core.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-Right, I can reword to say OOB instead of UAF.
+diff --git a/net/smc/smc_core.c b/net/smc/smc_core.c
+index 95cc95458e2d..e4c858411207 100644
+--- a/net/smc/smc_core.c
++++ b/net/smc/smc_core.c
+@@ -1877,9 +1877,15 @@ static bool smcd_lgr_match(struct smc_link_group *lgr,
+ 			   struct smcd_dev *smcismdev,
+ 			   struct smcd_gid *peer_gid)
+ {
+-	return lgr->peer_gid.gid == peer_gid->gid && lgr->smcd == smcismdev &&
+-		smc_ism_is_virtual(smcismdev) ?
+-		(lgr->peer_gid.gid_ext == peer_gid->gid_ext) : 1;
++	if (lgr->peer_gid.gid != peer_gid->gid ||
++	    lgr->smcd != smcismdev)
++		return false;
++
++	if (smc_ism_is_virtual(smcismdev) &&
++	    lgr->peer_gid.gid_ext != peer_gid->gid_ext)
++		return false;
++
++	return true;
+ }
+ 
+ /* create a new SMC connection (and a new link group if necessary) */
+-- 
+2.32.0.3.g01195cf9f
 
-> > + *
-> > + * These helpers serve the same purpose in Rust. Whenever the length i=
-s known at
-> > + * compile-time, we call this helper to skip the check.
-> > + */
-> > +unsigned long rust_helper_copy_from_user_unsafe_skip_check_object_size=
-(void *to, const void __user *from, unsigned long n)
-> > +{
-> > +     unsigned long res;
-> > +
-> > +     might_fault();
-> > +     instrument_copy_from_user_before(to, from, n);
-> > +     if (should_fail_usercopy())
-> > +             return n;
-> > +     res =3D raw_copy_from_user(to, from, n);
-> > +     instrument_copy_from_user_after(to, from, n, res);
-> > +     return res;
-> > +}
-> > +EXPORT_SYMBOL_GPL(rust_helper_copy_from_user_unsafe_skip_check_object_=
-size);
-> > +
-> > +unsigned long rust_helper_copy_to_user_unsafe_skip_check_object_size(v=
-oid __user *to, const void *from, unsigned long n)
-> > +{
-> > +     might_fault();
-> > +     if (should_fail_usercopy())
-> > +             return n;
-> > +     instrument_copy_to_user(to, from, n);
-> > +     return raw_copy_to_user(to, from, n);
-> > +}
-> > +EXPORT_SYMBOL_GPL(rust_helper_copy_to_user_unsafe_skip_check_object_si=
-ze);
->
-> Could those be wrapping `_copy_[to|from]_user` instead?
-
-Yeah maybe, see the other thread with Arnd Bergmann.
-
-Alice
