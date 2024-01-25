@@ -1,82 +1,77 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B4681F947;
-	Thu, 25 Jan 2024 09:42:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCBAA200AE
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 09:42:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706175737; cv=none; b=Zitu6Lsh92NKosWhhmSguSTx7rhD9CZc144UAqK/3aAfCC12qb5iaHTY9Uri4gjd5QbiGNbZpUpRac5ovAm9CkOJwKgEJuIHhra5U56JwMyA1J1hLWQp4rdnco7ZI/ZVPbURsFM0w/CxwJX7fzHbdkZpfTv77eh9MSimgzak47w=
+	t=1706175737; cv=none; b=CRzDPCThjSNfS3Kd8vf/YykbrYRQ/2ylS7eDplqzk9sTAJ7DafMMamL8rzGKQ3LaVKcvOevggyfn94QI82OJN6mBi8N64c0pUqk1MEhqJrNvvujJxnSKlGfaBZg/PGeQGyAkoUxNpf18UnGYPPsTYk+XPYl/dhrFAE2gVPAbJBc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1706175737; c=relaxed/simple;
-	bh=qOOH+9Hm9oB6Pl9slmBg92oE0d/kfGAl6EWMtpIF2+o=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=e5wniEJnVH5wbBeLKsHJcFLBudl/WDh4R4eIFN5i8hEgT4PyLSceyGAP/OLDr7UKnMpyxeTwj6A9rM5EFORHe8znl0IZ+O0pUz+pLEpqI99eFv2kbhvlCOjTgEyrjjP22OCJv1cFS99y0yxlJ8khOG/iN831ckVLflRnhyVy35E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BBA99152B;
-	Thu, 25 Jan 2024 01:42:58 -0800 (PST)
-Received: from a077893.arm.com (unknown [10.163.40.116])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id ACA5B3F73F;
-	Thu, 25 Jan 2024 01:42:09 -0800 (PST)
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-To: linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	will@kernel.org,
-	catalin.marinas@arm.com,
-	mark.rutland@arm.com
-Cc: Anshuman Khandual <anshuman.khandual@arm.com>,
-	Mark Brown <broonie@kernel.org>,
-	James Clark <james.clark@arm.com>,
-	Rob Herring <robh@kernel.org>,
-	Marc Zyngier <maz@kernel.org>,
-	Suzuki Poulose <suzuki.poulose@arm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH V16 7/8] perf: test: Remove empty lines from branch filter test output
-Date: Thu, 25 Jan 2024 15:11:18 +0530
-Message-Id: <20240125094119.2542332-8-anshuman.khandual@arm.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240125094119.2542332-1-anshuman.khandual@arm.com>
-References: <20240125094119.2542332-1-anshuman.khandual@arm.com>
+	bh=NEumvqjxHP8WbO9/8fl6y31V1m91vIhF+/ycAMyh6NY=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=YI03N6S2DSamIrR+qlMqo98j9TfowsjwfXEqrLs0HdSTo3ny7wkSQrMv+4f2Al0A5ghfpxoMNcceyEx1X2/d0+ht55ct9vJEQacay7mhLW0OEAF44x1D2DmB9TWnA3kX9FbIdAsDQCdqX2zwHetdJqU1kL+5Ser/LRfk5mkV+6I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=bcfQFFgA; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=11gTAjYI; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="bcfQFFgA";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="11gTAjYI"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1706175733;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NEumvqjxHP8WbO9/8fl6y31V1m91vIhF+/ycAMyh6NY=;
+	b=bcfQFFgAWTjag9qaPshXPXNlxhTDo/v8EwXv7/hxqWR6azO9RkiEjrbfnzSQenCFe5yUT5
+	LAdCicqYA9+cf2VCRVjmRlqcDsGZUbHioZJK2/ozABzhr0DFq9pxE+0gMDUbv0IcYqUgbA
+	MSJu1BPtIUIBao834GxSNtzpn4KJNV5ayDkxl7VeWPJ4xnhrqYGnyKRsHT6bKSC7Z1oAfW
+	Kxwzy/T8/ZKO7D7NTiYnjd4U4PaDc2iUAW5nEzX47JlinrH9I6Qhc7SejVTeTKk8e/E26d
+	4W/IhSqU8IaFAXBzMzk3RC94SHENVBJsr8SuigqgD6wBslFHxr340N7ThS/njQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1706175733;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NEumvqjxHP8WbO9/8fl6y31V1m91vIhF+/ycAMyh6NY=;
+	b=11gTAjYI3wYRvsY05ioKbPnXKwLq0hwIVN+NAZ/AMc2A1Zx0UVKsfCYLjQwEliFVaBKM40
+	mpjYpjJAxvlL16DA==
+To: Frederic Weisbecker <frederic@kernel.org>, LKML
+ <linux-kernel@vger.kernel.org>
+Cc: Frederic Weisbecker <frederic@kernel.org>, Ingo Molnar
+ <mingo@kernel.org>, Anna-Maria Behnsen <anna-maria@linutronix.de>, Peng
+ Liu <liupeng17@lenovo.com>, Joel Fernandes <joel@joelfernandes.org>
+Subject: Re: [PATCH 13/15] tick: Split nohz and highres features from nohz_mode
+In-Reply-To: <20240124170459.24850-14-frederic@kernel.org>
+References: <20240124170459.24850-1-frederic@kernel.org>
+ <20240124170459.24850-14-frederic@kernel.org>
+Date: Thu, 25 Jan 2024 10:42:13 +0100
+Message-ID: <87h6j1iway.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-From: James Clark <james.clark@arm.com>
+On Wed, Jan 24 2024 at 18:04, Frederic Weisbecker wrote:
 
-In the perf script command, spaces are turned into newlines. But when
-there is a double space this results in empty lines which fail the
-following inverse grep test, so strip the empty lines.
+> The nohz mode field tells about low resolution nohz mode or high
+> resolution nohz mode but it doesn't tell about high resolution non-nohz
+> mode.
+>
+> In order to retrieve the latter state, tick_cancel_sched_timer() must
+> fiddle with struct hrtimer's internals to guess if the tick has been
+> initialized in high resolution.
+>
+> Move instead the nohz mode field information into the tick flags and
+> provide two new bits: one to know if the tick is in nohz mode and
+> another one to know if the tick is in high resolution. The combination
+> of those two flags provides all the needed informations to determine
+> which of the three tick modes is running.
+>
+> Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
 
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: linux-perf-users@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: James Clark <james.clark@arm.com>
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
----
- tools/perf/tests/shell/test_brstack.sh | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/perf/tests/shell/test_brstack.sh b/tools/perf/tests/shell/test_brstack.sh
-index 5ea64d0c4a6f..928790f35747 100755
---- a/tools/perf/tests/shell/test_brstack.sh
-+++ b/tools/perf/tests/shell/test_brstack.sh
-@@ -68,7 +68,7 @@ test_filter() {
- 	echo "Testing branch stack filtering permutation ($test_filter_filter,$test_filter_expect)"
- 
- 	perf record -o $TMPDIR/perf.data --branch-filter $test_filter_filter,save_type,u -- ${TESTPROG} > /dev/null 2>&1
--	perf script -i $TMPDIR/perf.data --fields brstack | tr ' ' '\n' > $TMPDIR/perf.script
-+	perf script -i $TMPDIR/perf.data --fields brstack | tr ' ' '\n' | sed '/^[[:space:]]*$/d' > $TMPDIR/perf.script
- 
- 	# fail if we find any branch type that doesn't match any of the expected ones
- 	# also consider UNKNOWN branch types (-)
--- 
-2.25.1
-
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
