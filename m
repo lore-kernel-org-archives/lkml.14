@@ -1,165 +1,179 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2080.outbound.protection.outlook.com [40.107.243.80])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9018135A5E
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 19:51:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706212310; cv=none; b=flLygI1Y49YXu8XC/uWlGy2AnQGMOtfAmMXH1AFNQxyg8cW2IpEGzqEaDlcxtyl7aghyCCuoLbhQ7QjK+JA/JchwOrT/GWyVKXpYh00hC5WWSR7OliUMHRWl08GPhEj3O9oZ2Jz7WX+IUrkMPtjvipP6uTS6Bt78NXZNjjdIC44=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706212310; c=relaxed/simple;
-	bh=pbKdTDXTH8qIfvsvKPqheQLoN3wH8pNE8FMLGEpj3M0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XxMWZ8WkPbmtN+4H1wnyHEA+zWpbbZe3ZA57mR+ZZ8mlCnDWMpa7XnRyX0ZOvyt+hFjLBFEitSMIO6UxdjLYTPai7Wc+yd9UmXz3FTFaTlywinKgXXk2N5u0qEA6qaSbxeynTNfMEoqzmO6p4aFv8K4zRaNx0oQy2u1i0lJ0JiI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=KuHYFhrT; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60CF11350D7
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 19:56:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.80
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706212575; cv=fail; b=gFJnICm1F/2eoK4QoQGC1Dgm2LIMIEy1JwQ+3UkPFZXuzo+R7fWVmWqhXLA8qEQ/KF8hfhdp2MG6rAgbPmGuNuVA+bqHXZqpYmkrk7CYh4QI1DcENzMBquuR1o2W7WynTQvTdAp0OLLAcWaDnyw6d4dTD97nh7Vdc4iOD7zC68k=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706212575; c=relaxed/simple;
+	bh=i9Xbpbv1o4XLQwaCshHFd2p15g2bOMtqgmQmjqLG/U4=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iogH7aQ9r0IBwKO1rAp4YZs8z5qR6LBGzk73StHTV/ryhaMwXXGECs5fz4a+XurTBSM09IeRTWLiJU71mTIO+hOq/q1IU+0gI4EX/v+15CwezXOnVdSXqB9+oxHVaN4Qv2guK0GskMJoTN9Gvan2NBfxpFNldhvWJGJZoSQLmJ8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=uaFbojnD; arc=fail smtp.client-ip=40.107.243.80
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="KuHYFhrT"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-40eacb4bfa0so52404455e9.1
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 11:51:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1706212307; x=1706817107; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=tE7eACK6kxfwaRTLe0GNK8zp8igHDm0V06Q+Q7zAa1w=;
-        b=KuHYFhrTWERrIXNdyA5IG+jD25H57JCShkcNa1Smz7gMYyvEkZULiIrJQW3rzCJY8B
-         7UG/oXBWK4MHdF+kpqW0TAogCfs08I/rYtpAzGU43Fon8WzadVGJ+i5uUqwgPtisO3h5
-         tABhaGN9fAWeWeE4juuJk54t0NMRyrjs9jX9I=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706212307; x=1706817107;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=tE7eACK6kxfwaRTLe0GNK8zp8igHDm0V06Q+Q7zAa1w=;
-        b=tpySIUrWtGZsWGuHrRp29ZExkMKKVBlB3ZFkENq55oIeGF7rSikgK6lkFbqwld2QGB
-         71/3ji8ljtYotAl3FCxmnclsazrfLfPyvbgK/F7PrDy9aFD9L7FjGezLATKgj/aLj2X1
-         Ijte9rDOJjZ9Yo2XHbiRxVpw9+YY5jJjKugaSKvbQmagiLkhOOkj7gWQuxjztOrXB5Ly
-         1D7Y245+bssJQJRjf9p5nAypgmlwEH5056EcA7CdNPRAv/wzBsqxxHcukoecjabYFPeT
-         f0ujg7HZlk8IYiPLkZIKE9ykxwyzlExJK7hcnk6y/8BnY2RHS9k+8PbxZRDNjel37nrz
-         R0zA==
-X-Gm-Message-State: AOJu0YwxMCiNaTyfWi/2nvHVmuvRA1xqacCGXhxfwhJK2BmSZmVV024O
-	D5XBWdJOgMRZz/UPPnyyJ0m7YdVzhydcaqmTxitPneNv+EVbLskNOxsq9DAqtQG3ShHpN8Blniy
-	YLvzU4g==
-X-Google-Smtp-Source: AGHT+IFkH+XwKTQLnwBvwi8uVXymVg2JUL27UDepzOX/pEOgcGWiQjmyH0pP2fc1e5T1TzPT/3KhVQ==
-X-Received: by 2002:a05:600c:4e93:b0:40e:b106:3ca5 with SMTP id f19-20020a05600c4e9300b0040eb1063ca5mr152735wmq.98.1706212306717;
-        Thu, 25 Jan 2024 11:51:46 -0800 (PST)
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com. [209.85.208.50])
-        by smtp.gmail.com with ESMTPSA id c4-20020a056402100400b0055c8a30152bsm2918368edu.83.2024.01.25.11.51.45
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 25 Jan 2024 11:51:46 -0800 (PST)
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-55a349cf29cso8360327a12.0
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 11:51:45 -0800 (PST)
-X-Received: by 2002:aa7:d3c5:0:b0:55a:4959:a2e4 with SMTP id
- o5-20020aa7d3c5000000b0055a4959a2e4mr81533edr.52.1706212305649; Thu, 25 Jan
- 2024 11:51:45 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="uaFbojnD"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=bIYPZR7FQhqz/aW2wpNXnQPoXENQNXbTFz6UbuH7EJ0XMdVdKcthzL8ko3Sfc93ROiG6B7eVANVgvgScK/KsZWYTKSBlLvt4kWPbiJAL19HMn7flZ1wIcoQYqR8JbmxP68QYSuwlp0M5U2zmkk8snJP4f5J9MqR8TBfLOj+wfFOEEdJ7fX/tIQeQcVvHEJF1TEZFvXED5Uan8vwGG+a5Z5ONHDqdmUVPuWfVN9VzZP5LfFbSWulACpAQC0WV1/167tlZO+woj1Ufd2n3X3AfkuuN8ENejnJFgBL5CfpHuJs0mNFi2wAfJurzKol8VKGZ3+3XTu2fbr14cZuPEdHN2g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=KhZqUncc1hO7qGO0tinPjv4U9XLEdukstuowcIhOXho=;
+ b=YYQBJiWBXkLzlzA2e2Lq9uuo21eYy5MEhCQQgjTc/ln4NU5CfKQ5QygU4+EUPAkb0MkHE7K0ZQZ517Cf9uzV1dVhMpPv9H4w6+0FfmBSUnf2BgMQxMDiyTGiXjzuFQiTQt6j3sFCgAsvaSQsqbWueMdckKkB5B4kDOZMM6lKEhhI7SuU9pyv4LsioIDwnxiPPDIp/vvpudNGcou4hy/pax01lhLofWGQcOYkReZ3hVP1bzUj/Gq/La03WpBNboalq+tC35n0ObDkZolCOKb9UOWPUTCDEGvlZmEDWH7FFTnAwcRy3QZHkM3r3zZ1pUjMXoPgx4+QMbekzWwWE7Q5tg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.160) smtp.rcpttodomain=kernel.org smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KhZqUncc1hO7qGO0tinPjv4U9XLEdukstuowcIhOXho=;
+ b=uaFbojnD+JxfGL5svBY538vwvw6KOKbJRgQwx4GFCZnUk5Jzx4+NZx8pBrX3OqtehniuZFWSz1wzdeoV3erkRjvXbpGQh8Hc68TpfY9V1gvliPg3ti9fW0IMFZ8OueSlExTYzeukIYDlT4LaQRzZgEY7Zhs+h8LVmi7r6DrXapiRpS0obshwQdtNQ8crRpW9szm4Ua1MyU3UTB/ogX8DxF6kklCtk/JMR/bY9PBe8NibBIqKcwVB2y6DkCOWqA9Yv4xSfHIXBAedVvgE3hmMA4IaQOm6WTsSUXv2INIPJpBchzrsQ1sjW/hYFsxhON95DEgLoY7GpFSwRWfGcWPU2w==
+Received: from MN2PR16CA0064.namprd16.prod.outlook.com (2603:10b6:208:234::33)
+ by IA0PR12MB8837.namprd12.prod.outlook.com (2603:10b6:208:491::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.27; Thu, 25 Jan
+ 2024 19:56:11 +0000
+Received: from BL6PEPF0001AB52.namprd02.prod.outlook.com
+ (2603:10b6:208:234:cafe::d6) by MN2PR16CA0064.outlook.office365.com
+ (2603:10b6:208:234::33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.27 via Frontend
+ Transport; Thu, 25 Jan 2024 19:56:11 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.160) by
+ BL6PEPF0001AB52.mail.protection.outlook.com (10.167.241.4) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7181.14 via Frontend Transport; Thu, 25 Jan 2024 19:56:11 +0000
+Received: from rnnvmail205.nvidia.com (10.129.68.10) by mail.nvidia.com
+ (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Thu, 25 Jan
+ 2024 11:55:54 -0800
+Received: from rnnvmail204.nvidia.com (10.129.68.6) by rnnvmail205.nvidia.com
+ (10.129.68.10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Thu, 25 Jan
+ 2024 11:55:53 -0800
+Received: from Asurada-Nvidia (10.127.8.9) by mail.nvidia.com (10.129.68.6)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41 via Frontend
+ Transport; Thu, 25 Jan 2024 11:55:53 -0800
+Date: Thu, 25 Jan 2024 11:55:51 -0800
+From: Nicolin Chen <nicolinc@nvidia.com>
+To: Jason Gunthorpe <jgg@nvidia.com>
+CC: "will@kernel.org" <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+	"joro@8bytes.org" <joro@8bytes.org>, "jean-philippe@linaro.org"
+	<jean-philippe@linaro.org>, Alistair Popple <apopple@nvidia.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "iommu@lists.linux.dev"
+	<iommu@lists.linux.dev>
+Subject: Re: [PATCH 1/3] iommu/io-pgtable-arm: Add nents_per_pgtable in
+ struct io_pgtable_cfg
+Message-ID: <ZbK8xxdfeuJ7NQ8E@Asurada-Nvidia>
+References: <ZO5R5i4n2WI2GnKQ@Asurada-Nvidia>
+ <d234fa8d-d945-3f7f-1110-fe55bea88587@arm.com>
+ <ZawmMd6BVqQpfbB5@Asurada-Nvidia>
+ <20240122130152.GP734935@nvidia.com>
+ <Za6kuE4KUPuwk7+j@Asurada-Nvidia>
+ <20240122175700.GB1455070@nvidia.com>
+ <Za63HOMZE2fuJKQ4@Asurada-Nvidia>
+ <20240125135537.GP1455070@nvidia.com>
+ <ZbKY9BmXZiHPiEOk@Asurada-Nvidia>
+ <20240125174728.GR1455070@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <82b964f0-c2c8-a2c6-5b1f-f3145dc2c8e5@redhat.com>
-In-Reply-To: <82b964f0-c2c8-a2c6-5b1f-f3145dc2c8e5@redhat.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Thu, 25 Jan 2024 11:51:28 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wjDW53w4-YcSmgKC5RruiRLHmJ1sXeYdp_ZgVoBw=5byA@mail.gmail.com>
-Message-ID: <CAHk-=wjDW53w4-YcSmgKC5RruiRLHmJ1sXeYdp_ZgVoBw=5byA@mail.gmail.com>
-Subject: Re: [PATCH] softirq: fix memory corruption when freeing tasklet_struct
-To: Mikulas Patocka <mpatocka@redhat.com>, Tejun Heo <tj@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org, 
-	dm-devel@lists.linux.dev, Mike Snitzer <msnitzer@redhat.com>, 
-	Ignat Korchagin <ignat@cloudflare.com>, Damien Le Moal <damien.lemoal@wdc.com>, 
-	Bob Liu <bob.liu@oracle.com>, Hou Tao <houtao1@huawei.com>, 
-	Nathan Huckleberry <nhuck@google.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@elte.hu>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20240125174728.GR1455070@nvidia.com>
+X-NV-OnPremToCloud: ExternallySecured
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL6PEPF0001AB52:EE_|IA0PR12MB8837:EE_
+X-MS-Office365-Filtering-Correlation-Id: ff578901-742e-4b87-fcb6-08dc1ddfae1a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	w07oHQ/T6ovrx05gMbFdQqCwrIgV8PfmBmK6rQxhtBbbASrtD2ZWG2NWXK2jriUeK9sgBXIDHO1qbDYtDF7qux6Ww3IuzI5gWbgt0QnRXwTni2QuOwo5oBb8+4s0LABCxwhXXqfEOTLT5fMtJR4NOuMsM1p+DIV/cNk6nNo1Ys/1I762YUBGD2qFG/wT29AxbnPhMw/FW09XNPflnd0Ui7Z+GWLTAClCDjlQA5ZJxcQMIf4NfhYQw+kc+eZcPAkNscgl5kKXtj2wTOoPeSHNJLAsoUhOp8ixJsMrx+eQQR7yWYRbK2QeS/PfkTi5OZgMxZBA1+un2bvSAUQ2hqAAmuza+aTt2ukWXLT0wOzqTjRBoGpB1Rie+YRUdCvwuGXBZ+YNbi2LDKVObX7Kh7lCQAYmmeVoAIcn5xeYkxYv586a8GN+gvZWGLrKm23dpEKZiib/T/OvZOFc2SsqNdE5q0M9qj2h+GW0sFgpkiy7nRy6HgKUXso235BmeN9HyD6gNDRvYL7gOy8NaBxthKgd77f8Bi+lqsiyVSEPwHtjJEy3ieZSgFbaGhbt0YvW9mI56Z9D/BfQeuA+Tcsswt3cL8MMEAhLWJzYb2J7fWOBexLurBKAy1l5eCDo/HXx017Kto+129RBgY2+xDzjyNbqUxmeT1JtsIXeiGWV2ASYa4ETJa1iljka+NtJy0EF6amL+eqdxcuJGyfun9dKoLVRYKUE04JVzg0wMq0k7Cl8t723SitMFPuBicw59CqDrw0j
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230031)(4636009)(396003)(136003)(376002)(39860400002)(346002)(230922051799003)(186009)(64100799003)(82310400011)(451199024)(1800799012)(36840700001)(46966006)(40470700004)(8676002)(6862004)(4326008)(8936002)(316002)(70586007)(2906002)(5660300002)(86362001)(70206006)(6636002)(36860700001)(47076005)(7636003)(356005)(54906003)(82740400003)(9686003)(478600001)(83380400001)(26005)(426003)(336012)(41300700001)(33716001)(40480700001)(40460700003)(55016003);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Jan 2024 19:56:11.3653
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: ff578901-742e-4b87-fcb6-08dc1ddfae1a
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BL6PEPF0001AB52.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB8837
 
-On Thu, 25 Jan 2024 at 10:30, Mikulas Patocka <mpatocka@redhat.com> wrote:
->
-> There's a problem with the tasklet API - there is no reliable way how to
-> free a structure that contains tasklet_struct. The problem is that the
-> function tasklet_action_common calls task_unlock(t) after it called the
-> callback. If the callback does something that frees tasklet_struct,
-> task_unlock(t) would write into free memory.
+On Thu, Jan 25, 2024 at 01:47:28PM -0400, Jason Gunthorpe wrote:
+> On Thu, Jan 25, 2024 at 09:23:00AM -0800, Nicolin Chen wrote:
+> > > When the soft lockup issue is solved you can consider if a tunable is
+> > > still interesting..
+> > 
+> > Yea, it would be on top of the soft lockup fix. I assume we are
+> > still going with your change: arm_smmu_inv_range_too_big, though
+> > I wonder if we should apply before your rework series to make it
+> > a bug fix..
+> 
+> It depends what change you settle on..
 
-Ugh.
+I mean your arm_smmu_inv_range_too_big patch. Should it be a bug
+fix CCing the stable tree? My previous SVA fix was, by the way.
 
-I see what you're doing, but I have to say, I dislike this patch
-immensely. It feels like a serious misdesign that is then papered over
-with a hack.
+> > > > > Maybe it is really just a simple thing - compute how many invalidation
+> > > > > commands are needed, if they don't all fit in the current queue space,
+> > > > > then do an invalidate all instead?
+> > > > 
+> > > > The queue could actually have a large space. But one large-size
+> > > > invalidation would be divided into batches that have to execute
+> > > > back-to-back. And the batch size is 64 commands in 64-bit case,
+> > > > which might be too small as a cap.
+> > > 
+> > > Yes, some notable code reorganizing would be needed to implement
+> > > something like this
+> > > 
+> > > Broadly I'd sketch sort of:
+> > > 
+> > >  - Figure out how fast the HW can execute a lot of commands
+> > >  - The above should drive some XX maximum number of commands, maybe we
+> > >    need to measure at boot, IDK
+> > >  - Strongly time bound SVA invalidation:
+> > >    * No more than XX commands, if more needed then push invalidate
+> > >      all
+> > >    * All commands must fit in the available queue space, if more
+> > >      needed then push invalidate all
+> > >  - The total queue depth must not be larger than YY based on the
+> > >    retire rate so that even a full queue will complete invalidation
+> > >    below the target time.
+> > > 
+> > > A tunable indicating what the SVA time bound target should be might be
+> > > appropriate..
+> > 
+> > Thanks for listing it out. I will draft something with that, and
+> > should we just confine it to SVA or non DMA callers in general?
+> 
+> Also, how much of this SVA issue is multithreaded? Will multiple
+> command queues improve anything?
 
-I'd much rather see us trying to move away from tasklets entirely in
-cases like this. Just say "you cannot do that".
+The bottleneck from measurement is mostly at SMMU consuming the
+commands with a single CMDQ HW, so multithreading unlikely helps.
+And VCMDQ only provides a multi-queue interface/wrapper for VM
+isolations.
 
-In fact, of the two cases that want this new functionality, at least
-dm-verity already makes tasklets a conditional feature that isn't even
-enabled by default, and that was only introduced in the last couple of
-years.
-
-So I think dm-verity would be better off just removing tasklet use,
-and we should check whether there are better models for handling the
-latency issue.
-
-The dm-crypt.c case looks different, but similar. I'm not sure why it
-doesn't just use the workqueue for the "in interrupt" case. Like
-dm-verity, it already does have a workqueue option, and it's a
-setup-time option to say "don't use the workqueue for reads / writes".
-But it feels like the code should just say "tough luck, in interrupt
-context we *will* use workqueues".
-
-So honestly, both of the cases you bring up seem to be just BUGGY. The
-fix is not to extend tasklets to a new thing, the fix is to say "those
-two uses of tasklets were broken, and should go away".
-
-End result: I would suggest:
-
- - just get rid of the actively buggy use of tasklets. It's not
-necessary in either case.
-
- - look at introducing a "low-latency atomic workqueue" that looks
-*exactly* like a regular workqueue, but has the rule that it's per-cpu
-and functions on it cannot sleep
-
-because I think one common issue with workqueues - which are better
-designed than tasklets - is that scheduling latency.
-
-I think if we introduced a workqueue that worked more like a tasklet -
-in that it's run in softirq context - but doesn't have the interface
-mistakes of tasklets, a number of existing workqueue users might
-decide that that is exactly what they want.
-
-So we could have a per-cpu 'atomic_wq' that things can be scheduled
-on, and that runs from softirqs just like tasklets, and shares the
-workqueue queueing infrastructure but doesn't use the workqueue
-threads.
-
-Yes, the traditional use of workqueues is to be able to sleep and do
-things in process context, so that sounds a bit odd, but let's face
-it, we
-
- (a) already have multiple classes of workqueues
-
- (b) avoiding deep - and possibly recursive - stack depths is another
-reason people use workqueues
-
- (c) avoiding interrupt context is a real concern, even if you don't
-want to sleep
-
-and I really *really* would like to get rid of tasklets entirely.
-
-They started as this very specific hardcoded softirq thing used by
-some drivers, and then the notion was generalized.
-
-And I think it was generalized badly, as shown by this example.
-
-I have added Tejun to the cc, so that he can throw his hands up in
-horror and say "Linus, you're crazy, your drug-fueled idea would be
-horrid because of Xyz".
-
-But *maybe* Tejun has been taking the same drugs I have, and goes
-"yeah, that would fit well".
-
-Tejun? Please tell me I'm not on some bad crack..
-
-               Linus
+Thanks
+Nic
