@@ -1,83 +1,130 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F8AF125BC;
-	Thu, 25 Jan 2024 06:28:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D81512E4A
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 06:28:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706164121; cv=none; b=RRfKDwm+iDWJc872fQHHgayM6tsd8cbEuhA1Kb9J63wovxVq0ZCfpD9bK6XqPSfAXMcGb3Q42q+jp0emnOiU0siqSCEYmoolNJ55DTZx9HOCes+fczHCqoag4NQDsoonVRORw67wUR0aazwAu2Vkyp85V4Ujkpcd4lQ+yTTcHq8=
+	t=1706164129; cv=none; b=d1zXE8PruCuEZChQYsGYa8VSSwqZQs5SVV6ECsENLcGLY5+rUhuKPMxBL+w73CnPHEyRjGEgcRte9FSRSR6GU7LXD4G2KC28sKo1/hKynWHgKJAYon24LsLdt8e5AVE0E7FGBJOY4v3oor3sbKAwvUnaSV61YlZAYF5iiSDLZpk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706164121; c=relaxed/simple;
-	bh=pvMMZU0mlB2eFcvOm/oK0NtOQG6HPvn9mMao1fi7Zqc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GAi90WQsC2bhrGBFGU+IG5g5Vce+OXeV0RWUdS1lV+xTyv9NzpTDdysGiaGx3SoG8WFUzGjrNhnT5YSr86BwaBySiFAg9FbheW9RaTH6MCSzSo5tjZkWaETK3yzhnUg9Kx5daPZ5b6Z8caREOd505hxOsYpcksz9IpKEExORuao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VgNY+BzZ; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1706164129; c=relaxed/simple;
+	bh=5IIzPP0RItrtggjbTzPQCLuAoBzRra5iE382y3BQm5Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=to6lgKYUT7gxiinTO+bnYoV9xH9AfHxFK+ebjzVaYfjN3aNCzKbkEWu80IgFP4I/XdIBaDCRY/yXQeuCjF+6umzyvXcdmd0ajy+/eC1Onze81E2gPwz6eW4yEYmDo3IoMi2BEh2Rl/gH6aU611HNA9HGBHVsoCvQg1/hKzoZjQY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=T5viQhnF; arc=none smtp.client-ip=209.85.210.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VgNY+BzZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706164118; x=1737700118;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=pvMMZU0mlB2eFcvOm/oK0NtOQG6HPvn9mMao1fi7Zqc=;
-  b=VgNY+BzZO7tu02szbM5sY3egj0u72h+5cGdBc7pVVT5NVRIFtJueAD1x
-   bd2sMU86AYMm8EbyyAqsRL3O/l2x7DRmFigeiiFfWzh52sZJhYDRhUEUU
-   JAWs1TVccFwpydr/jmyd9qQU+wPA6UY3migkeskci8EpT2WgDoT0lLc7e
-   VWT80yR138Kk1Rj18d0Vu/AKK9dPvTgYDoJXgzZciCkwGxpEdPQOb/s+V
-   FOy/qrdAI3VdEDlR6sjyYiq0CRo2BZQ5jnO4gMhyl/CaA3n+o3eVdm2qF
-   W5gMYhL1ITWXTqTXOKMZ8hj53oaZctzAd3W2DoIY5wdBRmY/RkTZjMMRL
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="9456724"
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="9456724"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jan 2024 22:28:35 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="2122533"
-Received: from linchen5-mobl.ccr.corp.intel.com (HELO localhost) ([10.254.209.209])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jan 2024 22:28:27 -0800
-From: "Wang, Qingshun" <qingshun.wang@linux.intel.com>
-To: linux-pci@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-acpi@vger.kernel.org
-Cc: chao.p.peng@linux.intel.com,
-	erwin.tsaur@intel.com,
-	feiting.wanyan@intel.com,
-	qingshun.wang@intel.com,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>,
-	James Morse <james.morse@arm.com>,
-	Tony Luck <tony.luck@intel.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Bjorn Helgaas <helgaas@kernel.org>,
-	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-	"Oliver O'Halloran" <oohall@gmail.com>,
-	Miaohe Lin <linmiaohe@huawei.com>,
-	Shiju Jose <shiju.jose@huawei.com>,
-	Adam Preble <adam.c.preble@intel.com>,
-	Li Yang <leoyang.li@nxp.com>,
-	Lukas Wunner <lukas@wunner.de>,
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>,
-	Robert Richter <rrichter@amd.com>,
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="T5viQhnF"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-6da9c834646so6323779b3a.3
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 22:28:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1706164127; x=1706768927; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dAejTXU0ubiQ5glx+ACfMnILZ3BSyMGr/22gR94zPLU=;
+        b=T5viQhnFGDyyoxUR2/AZJoMcQq40nvirqempLroRZaSbGb5ZkzBcoaMySPY12FI0xk
+         W14m3k2xyaAX+xBHMSVMED42S8yfZsvyGsirKa00j2G4PTybJgoeg02BC83hCnzJawbS
+         Z5YvysVsuRaHKr/ckfTMpVfhmMcGr+GmbX6jGgcNWr+ItD6X5+awGKNAOOo9tV3JiMlI
+         QSpMO3oht3dXSNxQggTp1C66oqBywbSdTa0r0JmEDFZGfXaw8Q7jYnKbPYlAn2VHHgqu
+         RThP6tMKwZW1xnZ1yW6xBuBc/BkuHX1MZVnO9L+f20WxRggy9Q/jLAs0nH3UMnkiPp8b
+         fDhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706164127; x=1706768927;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dAejTXU0ubiQ5glx+ACfMnILZ3BSyMGr/22gR94zPLU=;
+        b=P1E/hDvyzX3mbd+VUClpIo/kGysP+Qge6RL+iHWWRG/fjTvdTefcDlIZUsOucNHOuz
+         rgrMpiAIuxBRiTNcNj7KKQc8JWMD+En7/h5MQHNR5sk8HXsZXSGj+CfSxX532hjsixlw
+         mMDuRIs75GwrHFzBEpfJ7l91FolM7wM0zvegTHAK+yDHWxda/6orJT0ELuHE4FkaoKWK
+         nMfzxgGhrSXFfoFZLAjw9S8/HrZgt5O70yeW8wIoXPgPyFCYZ6WumqJ3oBYSpkYXjTkg
+         zglLWwZRvbzHsbB/Wrv2Zww3X6jkM+OrFYQiQ0Q4wxwjOztmh2dH1hXBZgBWDO3jMkYn
+         KMJA==
+X-Gm-Message-State: AOJu0YzOM2k4HDs4vxDK/PLqbD7yjyF6Nj30CapvQw6dn0pE7TTphRTK
+	9CrfEqML+tgSkUerjqRSJmxPvaY8yLjesB6e89Q4xaHI6I+bbEdXMFuJohjOooY=
+X-Google-Smtp-Source: AGHT+IFqFfG67XTDjoNiouy/3B041dutuvZL3hrVwMOIb2sdzt40BlsHHzBmvSINS1AroXPOL+Y8dw==
+X-Received: by 2002:a05:6a20:1447:b0:19a:2e13:667a with SMTP id a7-20020a056a20144700b0019a2e13667amr750598pzi.5.1706164127531;
+        Wed, 24 Jan 2024 22:28:47 -0800 (PST)
+Received: from debug.ba.rivosinc.com ([64.71.180.162])
+        by smtp.gmail.com with ESMTPSA id t19-20020a056a00139300b006dd870b51b8sm3201139pfg.126.2024.01.24.22.28.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Jan 2024 22:28:47 -0800 (PST)
+From: debug@rivosinc.com
+To: rick.p.edgecombe@intel.com,
+	broonie@kernel.org,
+	Szabolcs.Nagy@arm.com,
+	kito.cheng@sifive.com,
+	keescook@chromium.org,
+	ajones@ventanamicro.com,
+	paul.walmsley@sifive.com,
+	palmer@dabbelt.com,
+	conor.dooley@microchip.com,
+	cleger@rivosinc.com,
+	atishp@atishpatra.org,
+	alex@ghiti.fr,
+	bjorn@rivosinc.com,
+	alexghiti@rivosinc.com
+Cc: corbet@lwn.net,
+	aou@eecs.berkeley.edu,
+	oleg@redhat.com,
+	akpm@linux-foundation.org,
+	arnd@arndb.de,
+	ebiederm@xmission.com,
+	shuah@kernel.org,
+	brauner@kernel.org,
+	debug@rivosinc.com,
+	guoren@kernel.org,
+	samitolvanen@google.com,
+	evan@rivosinc.com,
+	xiao.w.wang@intel.com,
+	apatel@ventanamicro.com,
+	mchitale@ventanamicro.com,
+	waylingii@gmail.com,
+	greentime.hu@sifive.com,
+	heiko@sntech.de,
+	jszhang@kernel.org,
+	shikemeng@huaweicloud.com,
+	david@redhat.com,
+	charlie@rivosinc.com,
+	panqinglin2020@iscas.ac.cn,
+	willy@infradead.org,
+	vincent.chen@sifive.com,
+	andy.chiu@sifive.com,
+	gerg@kernel.org,
+	jeeheng.sia@starfivetech.com,
+	mason.huo@starfivetech.com,
+	ancientmodern4@gmail.com,
+	mathis.salmen@matsal.de,
+	cuiyunhui@bytedance.com,
+	bhe@redhat.com,
+	chenjiahao16@huawei.com,
+	ruscur@russell.cc,
+	bgray@linux.ibm.com,
+	alx@kernel.org,
+	baruch@tkos.co.il,
+	zhangqing@loongson.cn,
+	catalin.marinas@arm.com,
+	revest@chromium.org,
+	josh@joshtriplett.org,
+	joey.gouly@arm.com,
+	shr@devkernel.io,
+	omosnace@redhat.com,
+	ojeda@kernel.org,
+	jhubbard@nvidia.com,
+	linux-doc@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org,
-	linux-edac@vger.kernel.org,
-	"Wang, Qingshun" <qingshun.wang@linux.intel.com>
-Subject: [PATCH v2 0/4] PCI/AER: Handle Advisory Non-Fatal properly
-Date: Thu, 25 Jan 2024 14:27:58 +0800
-Message-ID: <20240125062802.50819-1-qingshun.wang@linux.intel.com>
-X-Mailer: git-send-email 2.42.0
+	linux-mm@kvack.org,
+	linux-arch@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: [RFC PATCH v1 05/28] riscv: zicfiss/zicfilp enumeration
+Date: Wed, 24 Jan 2024 22:21:30 -0800
+Message-ID: <20240125062739.1339782-6-debug@rivosinc.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240125062739.1339782-1-debug@rivosinc.com>
+References: <20240125062739.1339782-1-debug@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -86,99 +133,90 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-According to PCIe Base Specification Revision 6.1, Sections 6.2.3.4
-and 6.2.4.3, certain uncorrectable errors will signal ERR_COR instead
-of ERR_NONFATAL, logged as Advisory Non-Fatal Error, and set bits in
-both Correctable Error Status register and Uncorrectable Error Status
-register. Currently, when handling AER events the kernel will only look
-at CE status or UE status, but never both. In the Advisory
-Non-Fatal Error case, bits set in the UE status register will not be
-reported and cleared until the next Fatal/Non-Fatal error arrives.
+From: Deepak Gupta <debug@rivosinc.com>
 
-For instance, previously, when the kernel receives an ANFE with Poisoned
-TLP in OS native AER mode, only the status of CE will be reported and
-cleared:
+This patch adds support for detecting zicfiss and zicfilp. zicfiss and zicfilp
+stands for unprivleged integer spec extension for shadow stack and branch
+tracking on indirect branches, respectively.
 
-  AER: Corrected error received: 0000:b7:02.0
-  PCIe Bus Error: severity=Corrected, type=Transaction Layer, (Receiver ID)
-    device [8086:0db0] error status/mask=00002000/00000000
-     [13] NonFatalErr           
+This patch looks for zicfiss and zicfilp in device tree and accordinlgy lights
+up bit in cpu feature bitmap. Furthermore this patch adds detection utility
+functions to return whether shadow stack or landing pads are supported by
+cpu.
 
-If the kernel receives a Malformed TLP after that, two UE will be
-reported, which is unexpected. The Malformed TLP Header was lost since
-the previous ANFE gated the TLP header logs:
+Signed-off-by: Deepak Gupta <debug@rivosinc.com>
+---
+ arch/riscv/include/asm/cpufeature.h | 18 ++++++++++++++++++
+ arch/riscv/include/asm/hwcap.h      |  2 ++
+ arch/riscv/include/asm/processor.h  |  1 +
+ arch/riscv/kernel/cpufeature.c      |  2 ++
+ 4 files changed, 23 insertions(+)
 
-  PCIe Bus Error: severity=Uncorrected (Fatal), type=Transaction Layer, (Receiver ID)
-    device [8086:0db0] error status/mask=00041000/00180020
-     [12] TLP                    (First)
-     [18] MalfTLP       
-
-To handle this case properly, add additional fields in aer_err_info to
-track both CE and UE status/mask, UE severity, and Device Status.
-Use this information to determine the status bits that need to be cleared.
-
-Now, in the previous scenario, both CE status and related UE status will
-be reported and cleared after ANFE:
-
-  AER: Corrected error received: 0000:b7:02.0
-  PCIe Bus Error: severity=Corrected, type=Transaction Layer, (Receiver ID)
-    device [8086:0db0] error status/mask=00002000/00000000
-     [13] NonFatalErr           
-    Uncorrectable errors that may cause Advisory Non-Fatal:
-     [18] TLP
-
-Additionally, add more data to aer_event tracepoint, which would help
-to better understand ANFE and other errors for external observation.
-
-Note:
-checkpatch.pl will produce following errors and warnings on PATCH 4:
-
-  ERROR: space prohibited after that open parenthesis '('
-  #103: FILE: include/ras/ras_event.h:319:
-  +		__field(	u16,		link_status	)
-
-  ...similar errors omitted...
-
-  WARNING: quoted string split across lines
-  #126: FILE: include/ras/ras_event.h:342:
-  +	TP_printk("%s PCIe Bus Error: severity=%s, %s, TLP Header=%s, "
-  +		 "Correctable Error Status=0x%08x, "
-
-  ...similar warnings omitted...
-
-For readability reasons, these errors and warnings are not fixed,
-following the code style of existing examples in the kernel source tree.
-
-Change log:
-v2:
-  - Reference to the latest PCIe Specification in both commit messages
-    and comments, as suggested by Bjorn Helgaas.
-  - Describe the reason for storing additional information in
-    aer_err_info in the commit message of PATCH 1, as suggested by Bjorn
-    Helgaas.
-  - Add more details of behavior changes in the commit message of PATCH
-    2, as suggested by Bjorn Helgaas.
-
-v1: https://lore.kernel.org/linux-pci/20240111073227.31488-1-qingshun.wang@linux.intel.com/
-
-Wang, Qingshun (4):
-  PCI/AER: Store more information in aer_err_info
-  PCI/AER: Handle Advisory Non-Fatal properly
-  PCI/AER: Fetch information for FTrace
-  RAS: Trace more information in aer_event
-
- drivers/acpi/apei/ghes.c      |  16 ++-
- drivers/cxl/core/pci.c        |  15 ++-
- drivers/pci/pci.h             |  12 ++-
- drivers/pci/pcie/aer.c        | 191 +++++++++++++++++++++++++++-------
- include/linux/aer.h           |   6 +-
- include/linux/pci.h           |  27 +++++
- include/ras/ras_event.h       |  48 ++++++++-
- include/uapi/linux/pci_regs.h |   1 +
- 8 files changed, 269 insertions(+), 47 deletions(-)
-
-
-base-commit: 6613476e225e090cc9aad49be7fa504e290dd33d
+diff --git a/arch/riscv/include/asm/cpufeature.h b/arch/riscv/include/asm/cpufeature.h
+index a418c3112cd6..216190731c55 100644
+--- a/arch/riscv/include/asm/cpufeature.h
++++ b/arch/riscv/include/asm/cpufeature.h
+@@ -133,4 +133,22 @@ static __always_inline bool riscv_cpu_has_extension_unlikely(int cpu, const unsi
+ 	return __riscv_isa_extension_available(hart_isa[cpu].isa, ext);
+ }
+ 
++static inline bool cpu_supports_shadow_stack(void)
++{
++#ifdef CONFIG_RISCV_USER_CFI
++	return riscv_isa_extension_available(NULL, ZICFISS);
++#else
++	return false;
++#endif
++}
++
++static inline bool cpu_supports_indirect_br_lp_instr(void)
++{
++#ifdef CONFIG_RISCV_USER_CFI
++	return riscv_isa_extension_available(NULL, ZICFILP);
++#else
++	return false;
++#endif
++}
++
+ #endif
+diff --git a/arch/riscv/include/asm/hwcap.h b/arch/riscv/include/asm/hwcap.h
+index 06d30526ef3b..918165cfb4fa 100644
+--- a/arch/riscv/include/asm/hwcap.h
++++ b/arch/riscv/include/asm/hwcap.h
+@@ -57,6 +57,8 @@
+ #define RISCV_ISA_EXT_ZIHPM		42
+ #define RISCV_ISA_EXT_SMSTATEEN		43
+ #define RISCV_ISA_EXT_ZICOND		44
++#define RISCV_ISA_EXT_ZICFISS	45
++#define RISCV_ISA_EXT_ZICFILP	46
+ 
+ #define RISCV_ISA_EXT_MAX		64
+ 
+diff --git a/arch/riscv/include/asm/processor.h b/arch/riscv/include/asm/processor.h
+index f19f861cda54..ee2f51787ff8 100644
+--- a/arch/riscv/include/asm/processor.h
++++ b/arch/riscv/include/asm/processor.h
+@@ -13,6 +13,7 @@
+ #include <vdso/processor.h>
+ 
+ #include <asm/ptrace.h>
++#include <asm/hwcap.h>
+ 
+ #ifdef CONFIG_64BIT
+ #define DEFAULT_MAP_WINDOW	(UL(1) << (MMAP_VA_BITS - 1))
+diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeature.c
+index 98623393fd1f..16624bc9a46b 100644
+--- a/arch/riscv/kernel/cpufeature.c
++++ b/arch/riscv/kernel/cpufeature.c
+@@ -185,6 +185,8 @@ const struct riscv_isa_ext_data riscv_isa_ext[] = {
+ 	__RISCV_ISA_EXT_DATA(svinval, RISCV_ISA_EXT_SVINVAL),
+ 	__RISCV_ISA_EXT_DATA(svnapot, RISCV_ISA_EXT_SVNAPOT),
+ 	__RISCV_ISA_EXT_DATA(svpbmt, RISCV_ISA_EXT_SVPBMT),
++	__RISCV_ISA_EXT_DATA(zicfiss, RISCV_ISA_EXT_ZICFISS),
++	__RISCV_ISA_EXT_DATA(zicfilp, RISCV_ISA_EXT_ZICFILP),
+ };
+ 
+ const size_t riscv_isa_ext_count = ARRAY_SIZE(riscv_isa_ext);
 -- 
-2.42.0
+2.43.0
 
