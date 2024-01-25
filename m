@@ -1,40 +1,68 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BC4D179AF;
-	Thu, 25 Jan 2024 08:16:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06F3F179BE
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 08:16:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706170569; cv=none; b=ubtF4kP/z96XeWYcSTN5YXIJtJa42WvC1DUCvi9wWhHW2uG/SWnOfSafr4c9YOHEXDDGoOo+UYDRT2GHWYP5T7ultrqGbrQnWvsi/pQMGxEJf4Y1CTjMK3pVdCxx5IDUmWXkb7XSfoJ3nuo8tAdqrZI3rUDp7CIbb+j1oSTIQQ4=
+	t=1706170568; cv=none; b=tXVH76hVVvlAIWdDyMf6AxZ7hIHwlYG4Y0THwVEFkiwmz00L8PqWAyaTgvB7GgkWsGylIG/H1OPtwBuMNxZ9fQmzmb11bghmpzO7xMRsmOE2ftDxxv3tS32XSOWALgoUZvPUlqmHPBsQiF9ZAnZf2mZOPdxU2iVUEbva8lyHlyc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706170569; c=relaxed/simple;
-	bh=Xl0TmeJ+mRn2vWcKVhHEFlceOfHZO+RIPMQACXTlSFw=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HueivX/aQAa/lyPTduVtDU3P4RPSmCiB0iUKlSlx+A9deG3LAQiowneVgyvc1vvCZGpT/KHHwfTH8QkGzAGf5qgIHZLKLVOs2wn/TXcRchahZEkj7IZG3CaYtkjnNP7y4cwUe8R0fipHCRRti3cerRJHQnjcSYxOxjknlbJS3qo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.194])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4TLDBb64V4zhZPy;
-	Thu, 25 Jan 2024 16:14:31 +0800 (CST)
-Received: from kwepemm600005.china.huawei.com (unknown [7.193.23.191])
-	by mail.maildlp.com (Postfix) with ESMTPS id 0C13A1400E3;
-	Thu, 25 Jan 2024 16:16:05 +0800 (CST)
-Received: from huawei.com (10.50.165.33) by kwepemm600005.china.huawei.com
- (7.193.23.191) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 25 Jan
- 2024 16:16:04 +0800
-From: Longfang Liu <liulongfang@huawei.com>
-To: <alex.williamson@redhat.com>, <jgg@nvidia.com>,
-	<shameerali.kolothum.thodi@huawei.com>, <jonathan.cameron@huawei.com>
-CC: <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linuxarm@openeuler.org>, <liulongfang@huawei.com>
-Subject: [PATCH 3/3] Documentation: add debugfs description for hisi migration
-Date: Thu, 25 Jan 2024 16:10:31 +0800
-Message-ID: <20240125081031.48707-4-liulongfang@huawei.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20240125081031.48707-1-liulongfang@huawei.com>
-References: <20240125081031.48707-1-liulongfang@huawei.com>
+	s=arc-20240116; t=1706170568; c=relaxed/simple;
+	bh=/wTQRLlgn+pDWkE/ztwTjnWGbogoKDM8d6qhGORGwR0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=qLMTw22mACxQluF8JhshwN4vxOavMnXoAzreo2I/cJEtM9VrqIEKI4HgvWEMPKe/QzYHr6+bNeZGxY/kh8N6CLWis54Tz6v8kksEm3YIMVooudh7SDMAf3YMVNq4h7nVSM+3P35O+SUSd6VFypitoUScdbChAtQf89ErZvYm1L4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=T4C8+O7R; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="T4C8+O7R"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-55a684acf92so7288891a12.0
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 00:16:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1706170565; x=1706775365; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=VMWJsQKBSlZi8pCKLBY5EvRH/GHYaBZd2IsEfoSOud8=;
+        b=T4C8+O7RIWKOO6839HSz0Emp+Y4W/GQcE68NIAA0z3f2/M2SqFVDjzr6K5G4ffa93m
+         Dg86t1FPu1cKwA373tMEfz8U5Vloi9zZYvqBlHhkcCvfhtwhdWwHWu2I+rM3vNaPhdeh
+         VhOmpFoMTL3goKvM+PlHfj/32x4psOUNzcx3uSaPd22Wgw9o/2OA2YOJIJSQuSyGRDdP
+         +4GJHzZZK/Fcbz8Z0Tabtt416c8EysvQ4h6ifysz25hHk1fqau2UJ/cQ/ItrVFXybOUZ
+         rqHk8r15cbzAOrysBloE/OB+Gp8+PjD9Qtfgy6zdCWEmGS1rBWJiddPR2pqAEFz0Cfqj
+         ZAuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706170565; x=1706775365;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=VMWJsQKBSlZi8pCKLBY5EvRH/GHYaBZd2IsEfoSOud8=;
+        b=lkSA/rzVGoMTwkO+51P5Ypfs5PUOH4S/8kRDm+w9gCmeC4+dZLum7ojLq0QKuIQkWW
+         bJTtnCTPDGHQd1y+jePORzVJIcuYRzx7Unqp0GXEkbrlESTvSIdH83EEWtfMk6yE5ZzW
+         WEZ3MzMsqjDZuSpGKoHs//0SY4Gizg4vyvrSiaOFOTVpApgWAsStLYkPIjQIMHXcSjgo
+         2iOH0pUbHEiLWMEZGay6gTWjoRM9ih8PUa9eB8m5YFhy6NHynzqlIAvSBs161B5INLCm
+         8MecSKY2cjt2VFtU2olO+aQECQCztMNRXsc2OFrlVwNkrzhkx3lo1hMPS3dx9DB3cmg+
+         Ci/Q==
+X-Gm-Message-State: AOJu0Yyhi5rCmCO+TxTu03MH4ysN6xoXt8oZUqBpq0oK8UgkioHytBql
+	GqsPScP12bB4nOPx0th90Hhuu1pKLRN1yrh3lmx6Cx40ORuYoW0laKugsiOdSTdew6xp8yO2q17
+	L
+X-Google-Smtp-Source: AGHT+IF2XZjfMkUE+zrC/X1j9wgoA8vQcAacVhS0gEX8bTbt73QDcbuwnfLhm6QbipfACJCruff5vw==
+X-Received: by 2002:a05:6402:5169:b0:55c:ff50:e2c6 with SMTP id d9-20020a056402516900b0055cff50e2c6mr154062ede.60.1706170565208;
+        Thu, 25 Jan 2024 00:16:05 -0800 (PST)
+Received: from krzk-bin.. ([178.197.215.66])
+        by smtp.gmail.com with ESMTPSA id f21-20020a056402195500b0055c63205052sm3410210edz.37.2024.01.25.00.16.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 Jan 2024 00:16:04 -0800 (PST)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Peter Rosin <peda@axentia.se>,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	stable@vger.kernel.org,
+	Philipp Zabel <p.zabel@pengutronix.de>
+Subject: [PATCH 1/3] gpiolib: add gpiod_to_gpio_device() stub for !GPIOLIB
+Date: Thu, 25 Jan 2024 09:15:59 +0100
+Message-Id: <20240125081601.118051-1-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,75 +70,37 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- kwepemm600005.china.huawei.com (7.193.23.191)
 
-Add a debugfs document description file to help users understand
-how to use the hisilicon accelerator live migration driver's
-debugfs.
+Add empty stub of gpiod_to_gpio_device() when GPIOLIB is not enabled.
 
-Update the file paths that need to be maintained in MAINTAINERS
+Cc: <stable@vger.kernel.org>
+Fixes: 370232d096e3 ("gpiolib: provide gpiod_to_gpio_device()")
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Signed-off-by: Longfang Liu <liulongfang@huawei.com>
 ---
- .../ABI/testing/debugfs-hisi-migration        | 34 +++++++++++++++++++
- MAINTAINERS                                   |  1 +
- 2 files changed, 35 insertions(+)
- create mode 100644 Documentation/ABI/testing/debugfs-hisi-migration
 
-diff --git a/Documentation/ABI/testing/debugfs-hisi-migration b/Documentation/ABI/testing/debugfs-hisi-migration
-new file mode 100644
-index 000000000000..d61255c3bcd9
---- /dev/null
-+++ b/Documentation/ABI/testing/debugfs-hisi-migration
-@@ -0,0 +1,34 @@
-+What:		/sys/kernel/debug/vfio/<device>/migration/hisi_acc/data
-+Date:		JAN 2024
-+KernelVersion:  6.8
-+Contact:	Longfang Liu <liulongfang@huawei.com>
-+Description:	Read the live migration data of the vfio device.
-+		These data include device status data, queue configuration
-+		data and some task configuration data.
-+		The output format of the data is defined by the live
-+		migration driver.
-+
-+What:		/sys/kernel/debug/vfio/<device>/migration/hisi_acc/attr
-+Date:		JAN 2024
-+KernelVersion:  6.8
-+Contact:	Longfang Liu <liulongfang@huawei.com>
-+Description:	Read the live migration attributes of the vfio device.
-+		it include device status attributes and data length attributes
-+		The output format of the attributes is defined by the live
-+		migration driver.
-+
-+What:		/sys/kernel/debug/vfio/<device>/migration/hisi_acc/cmd_state
-+Date:		JAN 2024
-+KernelVersion:  6.8
-+Contact:	Longfang Liu <liulongfang@huawei.com>
-+Description:	Used to obtain the device command sending and receiving
-+		channel status. If successful, returns the command value.
-+		If failed, return error log.
-+
-+What:		/sys/kernel/debug/vfio/<device>/migration/hisi_acc/save
-+Date:		JAN 2024
-+KernelVersion:  6.8
-+Contact:	Longfang Liu <liulongfang@huawei.com>
-+Description:	Trigger the Hisilicon accelerator device to perform
-+		the state saving operation of live migration through the read
-+		operation, and output the operation log results.
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 20f8e9872deb..115d43d307e8 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -22856,6 +22856,7 @@ M:	Longfang Liu <liulongfang@huawei.com>
- M:	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
- L:	kvm@vger.kernel.org
- S:	Maintained
-+F:	Documentation/ABI/testing/debugfs-hisi-migration
- F:	drivers/vfio/pci/hisilicon/
+Cc: Philipp Zabel <p.zabel@pengutronix.de>
+---
+ include/linux/gpio/driver.h | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
+index 9a5c6c76e653..012797e7106d 100644
+--- a/include/linux/gpio/driver.h
++++ b/include/linux/gpio/driver.h
+@@ -819,6 +819,12 @@ static inline struct gpio_chip *gpiod_to_chip(const struct gpio_desc *desc)
+ 	return ERR_PTR(-ENODEV);
+ }
  
- VFIO MEDIATED DEVICE DRIVERS
++static inline struct gpio_device *gpiod_to_gpio_device(struct gpio_desc *desc)
++{
++	WARN_ON(1);
++	return ERR_PTR(-ENODEV);
++}
++
+ static inline int gpiochip_lock_as_irq(struct gpio_chip *gc,
+ 				       unsigned int offset)
+ {
 -- 
-2.24.0
+2.34.1
 
