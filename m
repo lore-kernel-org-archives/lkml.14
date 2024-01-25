@@ -1,76 +1,68 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F36CD1BC5B
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 09:41:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7402D1C687;
+	Thu, 25 Jan 2024 09:41:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706175674; cv=none; b=WC63o7xbBxyNiVG6JLInV0LEMYpDbYNYlV/nIeSmmWHsN1RWGPpXz6tzE8vTYntnRPALZBrfw61gFCaJkXeu+fyY++BmH2d92Ux8amd0hpXuGNJFQS4ls+3l2Z5vn2TiX0OcsQBukcTPkzn4Pj0tZpYnfPSpe9LIFyqayIXDxC8=
+	t=1706175694; cv=none; b=kPvEctm6H5jajlaG0msDcFHmaN5ffNrlZkkin/sShcJubElAYPEM5AIvkCoK3ykSG1VAjU8QxWakC7xZoC+0MYE+nWSGc0qM0T+/V/WTUouT/Ya1SZjR7ryL8EI1cIWnaMRTXBCTGbeLH5cwmzZQZWNuUra/2GCa37lQLNHRS8Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706175674; c=relaxed/simple;
-	bh=2w9Bvvn+jurd2Cj78WVPbW2DOqLlbhDiK+4nrxZRPHk=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=nbUVx4iHDwsin5Hjks5fc0IwXJSQiR+z0/IjKMl/NFzndKm7WGDFZShGT82RHUH8togqlWNehLvwu4MtZXSMPp068vT8izSUcitnitMw60tNDRZR2fiF2AORSFsVj/ZFrpAaIx1EK8jn9G9Wl3o8KZVfS/BKv3dy6ls2QtuMuHo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=d7jQDHte; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=tbeuouD8; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="d7jQDHte";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="tbeuouD8"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1706175671;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2w9Bvvn+jurd2Cj78WVPbW2DOqLlbhDiK+4nrxZRPHk=;
-	b=d7jQDHtektlYZ9+1z1ZFXgkAqms7QgMiiBBZAsTWlc3zU2pmWoVpysOX/ktDsrZXl1p92r
-	X9q3ccEyC2t3UTVe8K0IeFVCsbg2NovjGiTpwG8ymriMSb8dQtI669LAtaLxqzBBx9OKFU
-	TlH/shS0o6SNzJATGrYgmH+EeDajGlyD2o3Q7aEwxVg933ElMj9wz+VULK+ofKKpJ55rug
-	S/04H27N+3+GLio1BH21a/7dc90IDoPO62Yq+ayJwrtwvW3Wahh+0gzlI84vN97hQbQ9d5
-	GikkZeFZQvRX8SQD+TkiaV2kLaLP/sErHEpkMVdvSBiD2QqOmn8gPbfS5jlLoQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1706175671;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2w9Bvvn+jurd2Cj78WVPbW2DOqLlbhDiK+4nrxZRPHk=;
-	b=tbeuouD8d2F/1HynGk/QbDnc3UrrZ8R9cUNyBzH13Baq+Z33SZkEDK7pVzwm1immEetIsf
-	xHRelxR4FcE3ZiCw==
-To: Frederic Weisbecker <frederic@kernel.org>, LKML
- <linux-kernel@vger.kernel.org>
-Cc: Frederic Weisbecker <frederic@kernel.org>, Ingo Molnar
- <mingo@kernel.org>, Anna-Maria Behnsen <anna-maria@linutronix.de>, Peng
- Liu <liupeng17@lenovo.com>, Joel Fernandes <joel@joelfernandes.org>
-Subject: Re: [PATCH 12/15] tick: Move individual bit features to debuggable
- mask accesses
-In-Reply-To: <20240124170459.24850-13-frederic@kernel.org>
-References: <20240124170459.24850-1-frederic@kernel.org>
- <20240124170459.24850-13-frederic@kernel.org>
-Date: Thu, 25 Jan 2024 10:41:10 +0100
-Message-ID: <87le8diwcp.ffs@tglx>
+	s=arc-20240116; t=1706175694; c=relaxed/simple;
+	bh=a1uRqjaQU/0jst93xo19fk3EChLuryXiTmd5Hs2DoLM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OLAR7rYeRBvexSsXvqbckJnAGld1ERkIXm1v8VF/rfvlSNnbSEQ9rxLvny2dJFdku9n1YSy0v+tk6gLol2MQruoj4m8VzMT8C/E5AezDcQgplV6OSF4lSllmGEWsrULtg6y5OTi8wXxUTF+SLEHrcoLuxbVsenZVmOWUBRL6N+0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.94.2 #2 (Debian))
+	id 1rSwEG-005sPE-AZ; Thu, 25 Jan 2024 17:41:01 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Thu, 25 Jan 2024 17:41:12 +0800
+Date: Thu, 25 Jan 2024 17:41:12 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Barry Song <21cnbao@gmail.com>
+Cc: davem@davemloft.net, akpm@linux-foundation.org, chriscli@google.com,
+	chrisl@kernel.org, ddstreet@ieee.org, hannes@cmpxchg.org,
+	linux-mm@kvack.org, nphamcs@gmail.com, sjenning@redhat.com,
+	vitaly.wool@konsulko.com, yosryahmed@google.com,
+	zhouchengming@bytedance.com, linux-kernel@vger.kernel.org,
+	linux-crypto@vger.kernel.org
+Subject: Re: [PATCH v4 2/6] mm/zswap: reuse dstmem when decompress
+Message-ID: <ZbIsuN+bpHNX7CnL@gondor.apana.org.au>
+References: <ZY1EnEefZsRTGYnP@gondor.apana.org.au>
+ <20240103025759.523120-1-21cnbao@gmail.com>
+ <20240103025759.523120-3-21cnbao@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240103025759.523120-3-21cnbao@gmail.com>
 
-On Wed, Jan 24 2024 at 18:04, Frederic Weisbecker wrote:
-> The individual bitfields of struct tick_sched must be modified from
-> IRQs disabled places, otherwise local modifications can race due to them
-> sharing the same memory storage.
+On Wed, Jan 03, 2024 at 03:57:59PM +1300, Barry Song wrote:
 >
-> The recent move of the "got_idle_tick" bitfield to its own storage shows
-> that the use of these bitfields, as pretty as they look, can be as much
-> error prone.
->
-> In order to avoid future issues of the like and make sure that those
-> bitfields are safely accessed, move those flags to an explicit mask
-> along with a mutator function performing the basic IRQs disabled sanity
-> check.
->
-> Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
+> > We could certainly do that.  But I wonder if it might actually be
+> > better for you to allocate a second sync-only algorithm for such
+> > cases.  I'd like to see some real numbers.
+> 
+> some hardware might want to use an accelerator to help offload CPU's
+> work. their drivers are working in async mode, for example, hisilicon
+> and intel.
+> 
+> I don't have the exact number we can save by removing the redundant
+> memcpy, nor do i have a proper hardware to test and get the number.
+> As Chengming is actually working in zswap, i wonder if you can test
+> my patches and post some data?
 
-Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+I don't have the hardware to test this.  Since you're proposing
+the change, please test it to ensure that we're not adding cruft
+to the API that's actually detrimental to performance.
+
+Thanks,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
