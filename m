@@ -1,167 +1,127 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 110FE1CAA2;
-	Thu, 25 Jan 2024 09:41:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED1C21CAA1
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 09:41:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706175709; cv=none; b=URvc6qph13jSqoY90D6+AOJ2PnmucbvPS/lA4U8TK/ZKctPQWHdgnUHefBAjO8GSBN5b17wmEyP/TXHZYdsItxCCv+p9D1fIVP71KWUKLK8xTxLSOiF1K4A9HLtBz6A1XlKWcMC/KqFW1Owx/JRL4i1Z/OfZkvjpgJNVIZs/Gz8=
+	t=1706175710; cv=none; b=IqTuilKYxnpVpEE/SBfLDrbZ7RsXlRiDy8u7CutHO5BKuwMD6cx4ht5gZH/loFpOZt+LueLUhO7wryOsNFu33uKHRojqwZAsXq4/uzfZgFETbPhbgzeCzCdLnvMCpBl7tL2J/hHrIo6LW0O9sQEr9kFqZmdi1zVVctTR69HKtHE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706175709; c=relaxed/simple;
-	bh=QQgmZAAScA+7Wj2GCosakYmLL9i8rFDmVgjo+VnJ/AA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=hwXydg7WTqvPwm7pQdhPvNmplb50+TV1Wtkeg5boxctxh5WNjHv75V4Y9cv6g1sRu805a/KYiZigsPPLKVil3beSjm2grhCgmEUfMVX+KEm6AtrmeNTcXuGW1M/w4CVwCHFAjhYgll8EccZ8Iw2oiYUcXf0a7TveesU5UXYuj3Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 138C61480;
-	Thu, 25 Jan 2024 01:42:31 -0800 (PST)
-Received: from a077893.arm.com (unknown [10.163.40.116])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 08AC23F73F;
-	Thu, 25 Jan 2024 01:41:40 -0800 (PST)
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-To: linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	will@kernel.org,
-	catalin.marinas@arm.com,
-	mark.rutland@arm.com
-Cc: Anshuman Khandual <anshuman.khandual@arm.com>,
-	Mark Brown <broonie@kernel.org>,
-	James Clark <james.clark@arm.com>,
-	Rob Herring <robh@kernel.org>,
-	Marc Zyngier <maz@kernel.org>,
-	Suzuki Poulose <suzuki.poulose@arm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Oliver Upton <oliver.upton@linux.dev>,
-	James Morse <james.morse@arm.com>,
-	kvmarm@lists.linux.dev
-Subject: [PATCH V16 2/8] KVM: arm64: Prevent guest accesses into BRBE system registers/instructions
-Date: Thu, 25 Jan 2024 15:11:13 +0530
-Message-Id: <20240125094119.2542332-3-anshuman.khandual@arm.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240125094119.2542332-1-anshuman.khandual@arm.com>
-References: <20240125094119.2542332-1-anshuman.khandual@arm.com>
+	s=arc-20240116; t=1706175710; c=relaxed/simple;
+	bh=WeBZw7CQQ/b0Kuc3VgepmfjtbEo4oCwHmiOwv7/FBic=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=GOB59X6CztC9LkZOn5lqkJtYw7BbL7Hdyp9Ut5CsRqnK36TR9v9QE7hp6rgpV5wih6FQF+Cu1lnZzFMWfGsRcS5PyS64TUpbyiMiFWt045tCvXJkVHMoe2QUcsPFynC3tD9RxnwlSuIhfFSSvvAiEGgixwQ0eVXIsByA9+wAWBY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bgAzILgj; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bgAzILgj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706175709; x=1737711709;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=WeBZw7CQQ/b0Kuc3VgepmfjtbEo4oCwHmiOwv7/FBic=;
+  b=bgAzILgjHtU/QDu5b6EHx7oVirh9vfHb5CCh4r3VTJCcQDr+X51Xky2v
+   6SBgdZyM9CIy/6matOWw2+F5IDzaKIZdjBVZKHN+0/y1zynE6mwrR0vm7
+   JcOTMOuZI3t0lB/YvrEgYozlEUCp8Mp/yxVoI0H8q/wRu3RHMzY2Nr5Zg
+   I4rcf4AiUc4Al2gRvpQqdyOcQ1/uifai+tG9zw0IjE5t8S9+J4BW8FGjz
+   ACYMUdLXLWyWv3kuQdzN5bbaI5p22noQauqFsD+WViF60onpppus60stJ
+   KYjMJcf8SI47JEUwdX8+kIUsEGpXW2VDIvcGZRe99JYP3WI/0cNJODpn3
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="20662385"
+X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
+   d="scan'208";a="20662385"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2024 01:41:48 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="959789568"
+X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
+   d="scan'208";a="959789568"
+Received: from cyrillet-mobl.ger.corp.intel.com (HELO localhost) ([10.252.58.252])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2024 01:41:43 -0800
+From: Jani Nikula <jani.nikula@linux.intel.com>
+To: wangxiaoming321 <xiaoming.wang@intel.com>, lucas.demarchi@intel.com,
+ ogabbay@kernel.org, thomas.hellstrom@linux.intel.com,
+ maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+ tzimmermann@suse.de, airlied@gmail.com, daniel@ffwll.ch,
+ intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org
+Cc: wangxiaoming321 <xiaoming.wang@intel.com>
+Subject: Re: [PATCH] drm/xe/display: Fix memleak in display initialization
+In-Reply-To: <20240125063633.989944-1-xiaoming.wang@intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20240125063633.989944-1-xiaoming.wang@intel.com>
+Date: Thu, 25 Jan 2024 11:41:40 +0200
+Message-ID: <87bk99lpgr.fsf@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-Currently BRBE feature is not supported in a guest environment. This hides
-BRBE feature availability via masking ID_AA64DFR0_EL1.BRBE field. This also
-blocks guest accesses into BRBE system registers and instructions as if the
-underlying hardware never implemented FEAT_BRBE feature.
+On Thu, 25 Jan 2024, wangxiaoming321 <xiaoming.wang@intel.com> wrote:
+> In the call stack xe_device_probe ->  xe_display_init_nommio -> intel_power_domains_init
+> Power_domains  hasn't been cleaned up if return error,
+> which has do the clean in i915_driver_late_release call from i915_driver_probe.
 
-Cc: Marc Zyngier <maz@kernel.org>
-Cc: Oliver Upton <oliver.upton@linux.dev>
-Cc: James Morse <james.morse@arm.com>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: kvmarm@lists.linux.dev
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
----
-Changes in V16:
+This has nothing to do with i915_*.
 
-- Added BRB_INF_SRC_TGT_EL1 macro for corresponding BRB_[INF|SRC|TGT] expansion
+If intel_power_domains_init() returns an error, it should have cleaned
+up after itself, not force its caller to do that. If there's an issue,
+please fix it in intel_power_domains_init().
 
- arch/arm64/kvm/sys_regs.c | 56 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 56 insertions(+)
+BR,
+Jani.
 
-diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
-index 30253bd19917..6a06dc2f0c06 100644
---- a/arch/arm64/kvm/sys_regs.c
-+++ b/arch/arm64/kvm/sys_regs.c
-@@ -1304,6 +1304,11 @@ static int set_pmcr(struct kvm_vcpu *vcpu, const struct sys_reg_desc *r,
- 	return 0;
- }
- 
-+#define BRB_INF_SRC_TGT_EL1(n)					\
-+	{ SYS_DESC(SYS_BRBINF##n##_EL1), undef_access },	\
-+	{ SYS_DESC(SYS_BRBSRC##n##_EL1), undef_access },	\
-+	{ SYS_DESC(SYS_BRBTGT##n##_EL1), undef_access }		\
-+
- /* Silly macro to expand the DBG{BCR,BVR,WVR,WCR}n_EL1 registers in one go */
- #define DBG_BCR_BVR_WCR_WVR_EL1(n)					\
- 	{ SYS_DESC(SYS_DBGBVRn_EL1(n)),					\
-@@ -1707,6 +1712,9 @@ static u64 read_sanitised_id_aa64dfr0_el1(struct kvm_vcpu *vcpu,
- 	/* Hide SPE from guests */
- 	val &= ~ID_AA64DFR0_EL1_PMSVer_MASK;
- 
-+	/* Hide BRBE from guests */
-+	val &= ~ID_AA64DFR0_EL1_BRBE_MASK;
-+
- 	return val;
- }
- 
-@@ -2195,6 +2203,8 @@ static const struct sys_reg_desc sys_reg_descs[] = {
- 	{ SYS_DESC(SYS_DC_CISW), access_dcsw },
- 	{ SYS_DESC(SYS_DC_CIGSW), access_dcgsw },
- 	{ SYS_DESC(SYS_DC_CIGDSW), access_dcgsw },
-+	{ SYS_DESC(OP_BRB_IALL), undef_access },
-+	{ SYS_DESC(OP_BRB_INJ), undef_access },
- 
- 	DBG_BCR_BVR_WCR_WVR_EL1(0),
- 	DBG_BCR_BVR_WCR_WVR_EL1(1),
-@@ -2225,6 +2235,52 @@ static const struct sys_reg_desc sys_reg_descs[] = {
- 	{ SYS_DESC(SYS_DBGCLAIMCLR_EL1), trap_raz_wi },
- 	{ SYS_DESC(SYS_DBGAUTHSTATUS_EL1), trap_dbgauthstatus_el1 },
- 
-+	/*
-+	 * BRBE branch record sysreg address space is interleaved between
-+	 * corresponding BRBINF<N>_EL1, BRBSRC<N>_EL1, and BRBTGT<N>_EL1.
-+	 */
-+	BRB_INF_SRC_TGT_EL1(0),
-+	BRB_INF_SRC_TGT_EL1(16),
-+	BRB_INF_SRC_TGT_EL1(1),
-+	BRB_INF_SRC_TGT_EL1(17),
-+	BRB_INF_SRC_TGT_EL1(2),
-+	BRB_INF_SRC_TGT_EL1(18),
-+	BRB_INF_SRC_TGT_EL1(3),
-+	BRB_INF_SRC_TGT_EL1(19),
-+	BRB_INF_SRC_TGT_EL1(4),
-+	BRB_INF_SRC_TGT_EL1(20),
-+	BRB_INF_SRC_TGT_EL1(5),
-+	BRB_INF_SRC_TGT_EL1(21),
-+	BRB_INF_SRC_TGT_EL1(6),
-+	BRB_INF_SRC_TGT_EL1(22),
-+	BRB_INF_SRC_TGT_EL1(7),
-+	BRB_INF_SRC_TGT_EL1(23),
-+	BRB_INF_SRC_TGT_EL1(8),
-+	BRB_INF_SRC_TGT_EL1(24),
-+	BRB_INF_SRC_TGT_EL1(9),
-+	BRB_INF_SRC_TGT_EL1(25),
-+	BRB_INF_SRC_TGT_EL1(10),
-+	BRB_INF_SRC_TGT_EL1(26),
-+	BRB_INF_SRC_TGT_EL1(11),
-+	BRB_INF_SRC_TGT_EL1(27),
-+	BRB_INF_SRC_TGT_EL1(12),
-+	BRB_INF_SRC_TGT_EL1(28),
-+	BRB_INF_SRC_TGT_EL1(13),
-+	BRB_INF_SRC_TGT_EL1(29),
-+	BRB_INF_SRC_TGT_EL1(14),
-+	BRB_INF_SRC_TGT_EL1(30),
-+	BRB_INF_SRC_TGT_EL1(15),
-+	BRB_INF_SRC_TGT_EL1(31),
-+
-+	/* Remaining BRBE sysreg addresses space */
-+	{ SYS_DESC(SYS_BRBCR_EL1), undef_access },
-+	{ SYS_DESC(SYS_BRBFCR_EL1), undef_access },
-+	{ SYS_DESC(SYS_BRBTS_EL1), undef_access },
-+	{ SYS_DESC(SYS_BRBINFINJ_EL1), undef_access },
-+	{ SYS_DESC(SYS_BRBSRCINJ_EL1), undef_access },
-+	{ SYS_DESC(SYS_BRBTGTINJ_EL1), undef_access },
-+	{ SYS_DESC(SYS_BRBIDR0_EL1), undef_access },
-+
- 	{ SYS_DESC(SYS_MDCCSR_EL0), trap_raz_wi },
- 	{ SYS_DESC(SYS_DBGDTR_EL0), trap_raz_wi },
- 	// DBGDTR[TR]X_EL0 share the same encoding
+
+>
+> unreferenced object 0xffff88811150ee00 (size 512):
+>   comm "systemd-udevd", pid 506, jiffies 4294674198 (age 3605.560s)
+>   hex dump (first 32 bytes):
+>     10 b4 9d a0 ff ff ff ff ff ff ff ff ff ff ff ff  ................
+>     ff ff ff ff ff ff ff ff 00 00 00 00 00 00 00 00  ................
+>   backtrace:
+>     [<ffffffff8134b901>] __kmem_cache_alloc_node+0x1c1/0x2b0
+>     [<ffffffff812c98b2>] __kmalloc+0x52/0x150
+>     [<ffffffffa08b0033>] __set_power_wells+0xc3/0x360 [xe]
+>     [<ffffffffa08562fc>] xe_display_init_nommio+0x4c/0x70 [xe]
+>     [<ffffffffa07f0d1c>] xe_device_probe+0x3c/0x5a0 [xe]
+>     [<ffffffffa082e48f>] xe_pci_probe+0x33f/0x5a0 [xe]
+>     [<ffffffff817f2187>] local_pci_probe+0x47/0xa0
+>     [<ffffffff817f3db3>] pci_device_probe+0xc3/0x1f0
+>     [<ffffffff8192f2a2>] really_probe+0x1a2/0x410
+>     [<ffffffff8192f598>] __driver_probe_device+0x78/0x160
+>     [<ffffffff8192f6ae>] driver_probe_device+0x1e/0x90
+>     [<ffffffff8192f92a>] __driver_attach+0xda/0x1d0
+>     [<ffffffff8192c95c>] bus_for_each_dev+0x7c/0xd0
+>     [<ffffffff8192e159>] bus_add_driver+0x119/0x220
+>     [<ffffffff81930d00>] driver_register+0x60/0x120
+>     [<ffffffffa05e50a0>] 0xffffffffa05e50a0
+>
+> Signed-off-by: wangxiaoming321 <xiaoming.wang@intel.com>
+> ---
+>  drivers/gpu/drm/xe/xe_display.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpu/drm/xe/xe_display.c b/drivers/gpu/drm/xe/xe_display.c
+> index 74391d9b11ae..2725afba4afb 100644
+> --- a/drivers/gpu/drm/xe/xe_display.c
+> +++ b/drivers/gpu/drm/xe/xe_display.c
+> @@ -146,8 +146,10 @@ int xe_display_init_nommio(struct xe_device *xe)
+>  	intel_detect_pch(xe);
+>  
+>  	err = intel_power_domains_init(xe);
+> -	if (err)
+> +	if (err) {
+> +		intel_power_domains_cleanup(xe);
+>  		return err;
+> +	}
+>  
+>  	return drmm_add_action_or_reset(&xe->drm, xe_display_fini_nommio, xe);
+>  }
+
 -- 
-2.25.1
-
+Jani Nikula, Intel
