@@ -1,104 +1,106 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 182AF73170;
-	Thu, 25 Jan 2024 15:36:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB19C6E2C9
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 15:45:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706196978; cv=none; b=BDuxp8kcmTonmdI7PKIFpC3O/Sa5NBOqnNzu5nw0uqLQweQ40gZJsAagyJK5BKOR4jvT/zCrISFWkj2lJdhoHbn+YCE7Tpi5vPY8UxP9TUpas/sO+YXvozi43iVLLiu5qgVjKNjQFxRT8UlN1Ifqm4yedjQ5RQ9jEFc4/jO4Gzo=
+	t=1706197538; cv=none; b=BAHBUS2vuNRQIPAgHa5NIGj5vRkXMEq60p5gwp+ndt5HIc9WQrr+Oe23ozIAVUake0pQVqz7opVL8V8nZizUgUU6LiTnCXAnL3Wk8phkcJEel3f37kB7qIB72+/0DTGdB5aLt0ruQGHecxn5Pa1kJI/lPZlj8KYI1nAhPoIIhHY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706196978; c=relaxed/simple;
-	bh=Fxq6kkiG+dJZ/VNJkEc06gi+jmyZF2rGKm1JWnpOm5c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Rp7n9F4Wq9Lfycs/8GCvmGoEXkh0gj1aMW9OQMhoYOnuL/j+cSLXao4+lY1T4lYEc8H0sCXQ2GvouvgVFKLik3TaN+vHptoPJlI1rEZl/glL9osuzAsTlIcpcuisSoZZ0sLus/zwXb4f5dW1LTvc03yDmYfmQd0dyKGa+wveqzA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a2dc7827a97so769416266b.2;
-        Thu, 25 Jan 2024 07:36:15 -0800 (PST)
+	s=arc-20240116; t=1706197538; c=relaxed/simple;
+	bh=q1qkIXtslpnOwyKogLlXnCMaPNppQH6HlI4rFEyb7Bg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=M0Qdg+vm7NKUOT449WMdJmfrE5KppypYmKTAaE6lqR+ptNjp44Wmnxd84IjWAMmmWxqzoWqR8zx/f5LugY5LJEkzL6bB2aQNF+4wuKfrZTI8JX1RGFgk2aKGx5fFGUmnMLyaJkbRL+dk+KVj7PL4wT58kqRg9mZPJBsxzcG5dO0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FkZxV+zU; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FkZxV+zU"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-40e8fec0968so88320375e9.1
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 07:45:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1706197535; x=1706802335; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=/ZKp3uqQYAmq1YVDENjbc/8chIdFJnXVp5TeqqADjso=;
+        b=FkZxV+zUVnyuTCuXiMSYx561hRcu9OrmwxksFuutHP6M8iqftS86fp5FkFT5NhmdHE
+         FE6EoOTZiQkfyCYR63rNZEM7pVp2N3L58vGawFBw/WetCS1CB3i1YkAP11FKBm5zPOER
+         EoSAxE8dgrEm7LujSJ6DcASMPSZqWfkYnBcWEQmruyuTUVAx0MuOgkbPezstfPRkcQ1C
+         MsYZ8yEr23jIZX+6O2+V9ccgkCZVAVEWYY80Yq4fHWnQ2MPJYRVZsgFYb/bVyBb//zB6
+         bW4pBis+2V0P3TvfQYzNHi0ZF5vwzB0bqd9eZTz8FFNAMws3zcJQrp+/w1Y8zelAk5eK
+         t45g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706196972; x=1706801772;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XpAh/AgeLA3yAZ+8/BxWrNJnaxhn5Tb3BytJoAv2i+I=;
-        b=Tke0OwVeOdw6hoyjXGF9hSnCp2sNa/ij4ivJZ6nBk325bxPTbRPHepAkUtwa/mTRfm
-         SNg9MHAvMGHERBgwsLED3+l3Ej9x7vAF+DZrRWLvO3nMZgfnxAnwVUKwl0RousstugyF
-         NsZmfaOm03oiuz/qcigdqJOLTJSQI1BA3QQHglBOT+VA5g4rZJq5eQRC0FxYxXvCsNDS
-         GwoT10pGPxf0kcb8fxAtCBhw441eubP5+zBkg5nBn0v+T5v09Vltf4XFuTvaQXIqakxo
-         ilEPNCfNv+uLJQL3BtBqlWgtSbvMDAq3ZpTguVbjHYGs3PdiAJHcdUFqaU+Deq++B9KT
-         4Acw==
-X-Gm-Message-State: AOJu0YwPYPDBU6IevzdW4WkmlaQK7yPiOb86m53NIH/0o37lWlztHjzm
-	rm40tMuziTT6YcVYJahnMgUbf0i9mXwTBqJ0zwFR7jLY6rqHKRlx
-X-Google-Smtp-Source: AGHT+IGIRMS6s46BQQttwTEKXx/01hU23t7uTsm4HcMNUcNWqctF9c1iZDS50ehb/W0/fsXPZZQcEQ==
-X-Received: by 2002:a17:906:b7c3:b0:a31:b59:9cec with SMTP id fy3-20020a170906b7c300b00a310b599cecmr690538ejb.16.1706196972374;
-        Thu, 25 Jan 2024 07:36:12 -0800 (PST)
-Received: from gmail.com (fwdproxy-cln-116.fbsv.net. [2a03:2880:31ff:74::face:b00c])
-        by smtp.gmail.com with ESMTPSA id ep21-20020a1709069b5500b00a2ae7fb3fc6sm1161842ejc.93.2024.01.25.07.36.11
+        d=1e100.net; s=20230601; t=1706197535; x=1706802335;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/ZKp3uqQYAmq1YVDENjbc/8chIdFJnXVp5TeqqADjso=;
+        b=QSDf1nB3yOg3fu40JOmvyzH5c1kkAoivRVnGPZmUhrZoBi/IzBfnoiErj3fJ3LDkr4
+         wVdDpPTHZ3z2FaTabJPCMN9x1U3x8FwbJTNJfbCM5gyPnDfp2a9p5f5YMQmneAYVGLmy
+         gq3dgK1IMSSaJTIiOcwV4dGKFPrqsG8SL31WVdJFrpzz9Key0Ubst9RbtPaJooVwCNWr
+         JBY8QTKow/tMPtzkubiiGVEtlykEoiWexZFcAJ6IQocoxlb+SPZZiHmLh0m0MFn7+2mh
+         eFNwgKgy4JwjyAflD2OT5LIo4q3Y6pewJmw2F7MZhZw6dFVN4R9XuXa1FK+Pop1aW1QO
+         /bzA==
+X-Gm-Message-State: AOJu0YwHvj/3m7OxVwAcGcgDSl0BObNqJEeU1gzYxFGqRVwhZA8JUjP/
+	G0SngBVt1w6UHHFUTyLZ14Tro9haVCUHEFvIt7c8onLMVNCtp2vIlHyceHSEuYE=
+X-Google-Smtp-Source: AGHT+IHuoNdaRTPK5NXqlIvnrcXgXqBejZK0Hmr6tF0tLG1/F4avGqmk5r5MmRqsRsj/fcgf5Ba8Jw==
+X-Received: by 2002:a05:600c:4e88:b0:40e:b95b:e482 with SMTP id f8-20020a05600c4e8800b0040eb95be482mr672975wmq.115.1706197534905;
+        Thu, 25 Jan 2024 07:45:34 -0800 (PST)
+Received: from krzk-bin.. ([178.197.215.66])
+        by smtp.gmail.com with ESMTPSA id v17-20020a05600c471100b0040ec7fcaea6sm2986552wmo.37.2024.01.25.07.45.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jan 2024 07:36:12 -0800 (PST)
-Date: Thu, 25 Jan 2024 07:36:10 -0800
-From: Breno Leitao <leitao@debian.org>
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: kuba@kernel.org, davem@davemloft.net, abeni@redhat.com,
-	edumazet@google.com, Alexander Aring <alex.aring@gmail.com>,
-	Stefan Schmidt <stefan@datenfreihafen.org>,
-	Paolo Abeni <pabeni@redhat.com>, dsahern@kernel.org,
-	weiwan@google.com,
-	"open list:IEEE 802.15.4 SUBSYSTEM" <linux-wpan@vger.kernel.org>,
-	"open list:NETWORKING [GENERAL]" <netdev@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next 02/22] net: fill in MODULE_DESCRIPTION()s for
- ieee802154
-Message-ID: <ZbJ/6saj5Rn20x1N@gmail.com>
-References: <20240122184543.2501493-1-leitao@debian.org>
- <20240122184543.2501493-3-leitao@debian.org>
- <20240124175158.7c8b9490@xps-13>
- <ZbIxYnEbFXi6NBMU@gmail.com>
- <20240125155532.285a2bbd@xps-13>
+        Thu, 25 Jan 2024 07:45:34 -0800 (PST)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH] arm64: dts: qcom: sc8280xp-x13s: correct analogue microphone route
+Date: Thu, 25 Jan 2024 16:45:31 +0100
+Message-Id: <20240125154531.417098-1-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240125155532.285a2bbd@xps-13>
 
-On Thu, Jan 25, 2024 at 03:55:32PM +0100, Miquel Raynal wrote:
-> Hi Breno,
-> 
-> leitao@debian.org wrote on Thu, 25 Jan 2024 02:01:06 -0800:
-> 
-> > Hello Miquèl,
-> > 
-> > On Wed, Jan 24, 2024 at 05:51:58PM +0100, Miquel Raynal wrote:
-> > > Hi Breno,
-> > > 
-> > > leitao@debian.org wrote on Mon, 22 Jan 2024 10:45:23 -0800:
-> > >   
-> > > > W=1 builds now warn if module is built without a MODULE_DESCRIPTION().
-> > > > Add descriptions to ieee802154 modules.
-> > > > 
-> > > > Signed-off-by: Breno Leitao <leitao@debian.org>
-> > > > Acked-by: Stefan Schmidt <stefan@datenfreihafen.org>  
-> > > 
-> > > I just see the v2 now. Please use "v2" in your commit title using -v or
-> > > git-format-patch.  
-> > 
-> > Sorry, I am not sure I followed what you meant.  I've sent the v2, which
-> > contains the 'v2' _tag_:
-> 
-> I believe *this* is a v2 because you fixed your initial patch,
-> following Stefan's suggestion.
-> 
-> Anyway, it's fine for me to merge this patch through net directly (I
-> don't know if net maintainers want W=1 fixes to go through net or
-> net-next) so:
+Starting with Qualcomm SM8350 SoC, so Low Power Audio SubSystem (LPASS)
+block version v9.2, the register responsible for TX SMIC MUXn muxes is
+different.  The LPASS TX macro codec driver is being fixed to handle
+that difference, so the DTS must be updated as well for new widget name.
 
-Thanks Miquèl. Jakub convinced Paolo that these fixes should go through
-net, that is why I am targeting `net`.
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-https://lore.kernel.org/all/20240122105708.52d33fa0@kernel.org/
+---
+
+This unfortunately depends on:
+https://lore.kernel.org/alsa-devel/20240125153110.410295-1-krzysztof.kozlowski@linaro.org/T/#m62da29e6b80fa419e6339d3c27439894cb04cecb
+
+and my tries to make it backwards compatible failed.
+---
+ arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts b/arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts
+index def3976bd5bb..0165492e4e11 100644
+--- a/arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts
++++ b/arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts
+@@ -986,7 +986,7 @@ &sound {
+ 		"VA DMIC0", "VA MIC BIAS1",
+ 		"VA DMIC1", "VA MIC BIAS1",
+ 		"VA DMIC2", "VA MIC BIAS3",
+-		"TX SWR_ADC1", "ADC2_OUTPUT";
++		"TX SWR_INPUT1", "ADC2_OUTPUT";
+ 
+ 	wcd-playback-dai-link {
+ 		link-name = "WCD Playback";
+-- 
+2.34.1
+
