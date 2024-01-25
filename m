@@ -1,96 +1,147 @@
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9435A6E2BF
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 14:49:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4361B6E2C9;
+	Thu, 25 Jan 2024 14:50:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706194197; cv=none; b=XGkapEev3pqx+KHVNDN5rSGD+OBwnF3KcIW0xuDuu+uBykBsMzc33VIScYd4UUym+r46DWqhhKdcwai0lB8oUDpHj+Mo7N+jLCMUnQgxhDtKZan6D6snrnefvEXt87Zjxmtzb09dLJVn4BvLNo2X6vVe+vhiTJBDLMuQmjY2Zes=
+	t=1706194209; cv=none; b=MuC8fZn+9BSKARWZSFeJOLYN3hTD6+It8CzOWOBEThoiPe4Cl7dKSrCrqRAFH9GOgyIszeMtyIP+xFBHVPKYKlSqDfkWKmwlEw8/l5U7KM6HXUkN1HMKH1+b0Ue13J0IBGaAMbgl4sOqWoasy0mIGW2OKZvUFHBHT33jMxfzo88=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706194197; c=relaxed/simple;
-	bh=5utcNi5EbwXGXKE6XBUr2p3B+QtNTPUv/WMImZ3KMxQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=krBXgIqxoj67nRXx0sFvPIcHxr6j9AAM2eYXloB9l+n9lXDGy+TjloAKODOsRIc4zRd+P88ZD9Tx+vqDTr18ZcmrE0YZ92ncbd3LowazjyfuCshfC6ROyKIqfHFW60KU5sgv5iikArsfDJoIvSe4Vua57YWPd5flDMiOLpt9sn4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=zsNaadqF; arc=none smtp.client-ip=209.85.160.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
+	s=arc-20240116; t=1706194209; c=relaxed/simple;
+	bh=ACVtmX3llcZ3tfvcSAXupWV1km9UBIPngejcwrfKSZw=;
+	h=Mime-Version:Content-Type:Date:Message-Id:From:Subject:Cc:To:
+	 References:In-Reply-To; b=F38cE/aH6we6VGVzyxxuIgTb01MDsSBM+kp1Nvsw5LudtNDwBRsopV4WBWv+Fu5RgRoF6z5CyXgGIrHRlqIvotOXgt/44sdkFs+jLrQQOfBnu5tIQCY/NvvXAm35b8s6O8M2ctXlGwDEyRWwuKckUw2gICCXQlQelEGXhIsmMxE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=U5Hu1h05; arc=none smtp.client-ip=217.70.183.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="zsNaadqF"
-Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-4298b23abffso38718961cf.0
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 06:49:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1706194194; x=1706798994; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=e1Jufmt29FN+BCLayi+KSCZM2a2FaZk0tkZi2gIXjUg=;
-        b=zsNaadqF097doUCGMvDwAc4kbpCdddtucOLm97wr3wzsZwI8cAkIvcg8T2SSbpxiq7
-         3jLnmw1BPUM5ha4zIIrBS5HxnO3F3nA5e1Fl41G0N4ScqMb3iDzwsPdcx5c+hZOl4RHZ
-         FIGijc2nzjaOwGWjiSWvOYwuvQEjEn4E13OIl+7tg4TjdFOkYMceUiFMa8mj9LfvSZFc
-         XHbBRhHoasA8eeCR0Z4V1XiH3/Ejp23zaFyeOtOd9pDZNyw1cKNeP7IPnEn9Cr1ONy8k
-         eqdL5Suo/zJ+41NKIGILR9jkZWOLeQogGQaXb6H0dKwJfotrJbE8fTHjAxBkbZm79fzJ
-         xdeQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706194194; x=1706798994;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=e1Jufmt29FN+BCLayi+KSCZM2a2FaZk0tkZi2gIXjUg=;
-        b=Qat1BaUMxCrOOp2vLHBUmNOIK2XxSHL8PIffx9plqpNIDSzbGCvotY2sXCSG32m3EK
-         L3boK5ssMkOexAEI3xnuUCOsQlEYiM5qiJRa9lQiPZx1QnQYJzRyigvU9MxwrJyt/8s9
-         CMkE6auB3z1am5PTFC2Czlc7ZtHur8VcXb/+nDvKcZf/qsHi8MQzdg0XvKYJM3JcmMNU
-         oDyvu+4URFOuPAsiJm7ZTNR90D64CpaZy6eFFDTGbTVK84YMIil2zodo5RGtb+cT61Cw
-         uRLqZwrk4Zco9phsghqoSiwy4StZFQK2ksdMwdasxDqT12YU4ZiAtjlMr1q0eElsUI6n
-         WVVQ==
-X-Gm-Message-State: AOJu0YyYJZlgMWjwsm3gRv4IjStqptEO6JRwmqYh9wbPo0NcdFQIytmo
-	iDyI7DbIswh9raextkc0aJIaWtyLEzAgTrcDjWkXheQdQ1eJ3YaSujmBF5oMd+c=
-X-Google-Smtp-Source: AGHT+IFMyIXKi0ksURve7d4Kvfnuupv44sbMBvOfwALrt+vAce7BUIIrP25e6L2zwFgSedr4IQ6wGA==
-X-Received: by 2002:a05:622a:10d:b0:42a:3195:e8be with SMTP id u13-20020a05622a010d00b0042a3195e8bemr1205799qtw.51.1706194194446;
-        Thu, 25 Jan 2024 06:49:54 -0800 (PST)
-Received: from localhost (2603-7000-0c01-2716-da5e-d3ff-fee7-26e7.res6.spectrum.com. [2603:7000:c01:2716:da5e:d3ff:fee7:26e7])
-        by smtp.gmail.com with ESMTPSA id en11-20020a05622a540b00b003f6ac526568sm5420997qtb.39.2024.01.25.06.49.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jan 2024 06:49:54 -0800 (PST)
-Date: Thu, 25 Jan 2024 09:49:52 -0500
-From: Johannes Weiner <hannes@cmpxchg.org>
-To: Yosry Ahmed <yosryahmed@google.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Nhat Pham <nphamcs@gmail.com>,
-	Chengming Zhou <zhouchengming@bytedance.com>,
-	Domenico Cerasuolo <cerasuolodomenico@gmail.com>,
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: Re: [PATCH] mm: zswap: fix missing folio cleanup in writeback race
- path
-Message-ID: <20240125144952.GE1567330@cmpxchg.org>
-References: <20240125085127.1327013-1-yosryahmed@google.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="U5Hu1h05"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 2AD8FC0012;
+	Thu, 25 Jan 2024 14:49:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1706194197;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ogOpwZQkYRG5dXU2wj0R+7adxXD9kVYWvL6LdD2YosI=;
+	b=U5Hu1h05YgVVy1e9XMnsulE1q6eJD310wXJhpRMNMwlLSol4EJtmHk20pcaA/6GXAy+cns
+	Ih+ju0KTLmRTBmbN/+GLZTEOThbUoBnz8FPEou7lEZWxSQ2WOBWO0ZN9hW6o9HwvxQ/S+H
+	lQ2hmT7xQRD+EyLadkeDKfs7XTlxpyRNFu+wdoez24nABWRm2QJxwjXncD64DBssybAfog
+	pDfudljBPu+vedfEYfsVkf1lvLfDWOIx+IVdPh6CunfyLZ57xp7wkOrvufRaEMCCg1FGjt
+	x/+tCF7sWN3l7+y6c0kQBANgFaVwAEPGat1sWGjelxiC5snpNzZ/+EhbM4IS3g==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240125085127.1327013-1-yosryahmed@google.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 25 Jan 2024 15:49:55 +0100
+Message-Id: <CYNVD4U0M5OS.LQ2MAKOL0LAP@bootlin.com>
+From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
+Subject: Re: [PATCH v3 04/17] dt-bindings: soc: mobileye: add EyeQ5 OLB
+ system controller
+Cc: "Gregory CLEMENT" <gregory.clement@bootlin.com>, "Michael Turquette"
+ <mturquette@baylibre.com>, "Stephen Boyd" <sboyd@kernel.org>, "Krzysztof
+ Kozlowski" <krzysztof.kozlowski+dt@linaro.org>, "Conor Dooley"
+ <conor+dt@kernel.org>, "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>,
+ "Linus Walleij" <linus.walleij@linaro.org>,
+ =?utf-8?q?Rafa=C5=82_Mi=C5=82ecki?= <rafal@milecki.pl>, "Philipp Zabel"
+ <p.zabel@pengutronix.de>, "Vladimir Kondratiev"
+ <vladimir.kondratiev@mobileye.com>, <linux-mips@vger.kernel.org>,
+ <linux-clk@vger.kernel.org>, <devicetree@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, "Thomas Petazzoni"
+ <thomas.petazzoni@bootlin.com>, "Tawfik Bayouk"
+ <tawfik.bayouk@mobileye.com>, <linux-gpio@vger.kernel.org>
+To: "Andrew Davis" <afd@ti.com>, "Krzysztof Kozlowski"
+ <krzysztof.kozlowski@linaro.org>, "Rob Herring" <robh@kernel.org>
+X-Mailer: aerc 0.15.2
+References: <20240123-mbly-clk-v3-0-392b010b8281@bootlin.com>
+ <20240123-mbly-clk-v3-4-392b010b8281@bootlin.com>
+ <20240124151405.GA930997-robh@kernel.org>
+ <dd7e723d-3c4c-4edf-afc2-51db9a074efa@linaro.org>
+ <CYNQHXOZ73YR.3QODFI2X08KC6@bootlin.com>
+ <9a5f017c-530c-482b-9cbf-a07281e92589@ti.com>
+In-Reply-To: <9a5f017c-530c-482b-9cbf-a07281e92589@ti.com>
+X-GND-Sasl: theo.lebrun@bootlin.com
 
-On Thu, Jan 25, 2024 at 08:51:27AM +0000, Yosry Ahmed wrote:
-> In zswap_writeback_entry(), after we get a folio from
-> __read_swap_cache_async(), we grab the tree lock again to check that the
-> swap entry was not invalidated and recycled. If it was, we delete the
-> folio we just added to the swap cache and exit.
-> 
-> However, __read_swap_cache_async() returns the folio locked when it is
-> newly allocated, which is always true for this path, and the folio is
-> ref'd. Make sure to unlock and put the folio before returning.
-> 
-> This was discovered by code inspection, probably because this path
-> handles a race condition that should not happen often, and the bug would
-> not crash the system, it will only strand the folio indefinitely.
-> 
-> Fixes: 04fc7816089c ("mm: fix zswap writeback race condition")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Yosry Ahmed <yosryahmed@google.com>
+Hello,
 
-Ouch, good catch.
+On Thu Jan 25, 2024 at 3:33 PM CET, Andrew Davis wrote:
+> On 1/25/24 5:01 AM, Th=C3=A9o Lebrun wrote:
+> > Hello,
+> >=20
+> > On Thu Jan 25, 2024 at 8:51 AM CET, Krzysztof Kozlowski wrote:
+> >> On 24/01/2024 16:14, Rob Herring wrote:
+> >>>> +
+> >>>> +      pinctrl-b {
+> >>>> +        compatible =3D "mobileye,eyeq5-b-pinctrl";
+> >>>> +        #pinctrl-cells =3D <1>;
+> >>>> +      };
+> >>>> +    };
+> >>>
+> >>> This can all be simplified to:
+> >>>
+> >>> system-controller@e00000 {
+> >>>      compatible =3D "mobileye,eyeq5-olb", "syscon";
+> >>>      reg =3D <0xe00000 0x400>;
+> >>>      #reset-cells =3D <2>;
+> >>>      #clock-cells =3D <1>;
+> >>>      clocks =3D <&xtal>;
+> >>>      clock-names =3D "ref";
+> >>>
+> >>>      pins { ... };
+> >>> };
+> >>>
+> >>> There is no need for sub nodes unless you have reusable blocks or eac=
+h
+> >>> block has its own resources in DT.
+> >>
+> >> Yes, however I believe there should be resources here: each subnode
+> >> should get its address space. This is a bit tied to implementation,
+> >> which currently assumes "everyone can fiddle with everything" in this =
+block.
+> >>
+> >> Theo, can you draw memory map?
+> >=20
+> > It would be a mess. I've counted things up. The first 147 registers are
+> > used in this 0x400 block. There are 31 individual blocks, with 7
+> > registers unused (holes to align next block).
+> >=20
+> > Functions are reset, clocks, LBIST, MBIST, DDR control, GPIO,
+> > accelerator control, CPU entrypoint, PDTrace, IRQs, chip info & ID
+> > stuff, control registers for PCIe / eMMC / Eth / SGMII / DMA / etc.
+> >=20
+> > Some will never get used from Linux, others might. Maybe a moderate
+> > approach would be to create ressources for major blocks and make it
+> > evolve organically, without imposing that all uses lead to a new
+> > ressource creation.
+> >=20
+>
+> That is usually how nodes are added to DT. If you modeled this
+> system-controller space as a "simple-bus" instead of a "syscon"
+> device, you could add nodes as you implement them. Rather than
+> all at once as you have to by treating this space as one large
+> blob device.
 
-Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+I see where you are coming from, but in our case modeling our DT node as
+a simple-bus would be lying about the hardware behind. There is no such
+underlying bus. Let's try to keep the devicetree an abstraction
+describing the hardware.
+
+Also, we are having conflicts because multiple such child nodes are
+being added at the same time as the base node. Once this initial series
+is out (meaning dt-bindings for the OLB will exist) we'll be able to
+add new nodes or ressources on a whim.
+
+Have you got an opinion on the approach described in this email?
+https://lore.kernel.org/lkml/CYNRCGYA1PJ2.FYENLB4SRJWH@bootlin.com/
+
+Thanks,
+
+--
+Th=C3=A9o Lebrun, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
