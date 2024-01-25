@@ -1,87 +1,130 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D6071803E;
-	Thu, 25 Jan 2024 06:29:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A85BE18EB0
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 06:29:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706164172; cv=none; b=H8AFXeus3jYffhPqX72PiKdAB3xYtLSnzjAeLe7Rkzg8ZpGDiY7lN1r+kjyVacZjJFcgE+PcZcHHG0kSQyl56MsP1rINv6kT6WVYxPSKYp0whwIN0ha5SJxLBuewvFmc16pIAtRZsFn4Xst+m0Ht8CJYjy/Vs8cs6jtYNG0aioU=
+	t=1706164177; cv=none; b=icB76Fg7VDDSzsFFkWWe8r2uYoIkw9P2k3hu9DTzqOYQVddxqn80lpqCb6SjTcf3p0oHHJ2VLmmXs9x23z7csBPBEnHplAxo9hT7eW/0Xk7celg8IEdToktux6hehTJdBZ8ib2HrnFWkuv8DfUW6bOjfDU99Jovo3EtUE+hTHbQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706164172; c=relaxed/simple;
-	bh=+O6GABKRQ2LNWvey5j+xqRNX728ozxBB63IJoOeS85o=;
+	s=arc-20240116; t=1706164177; c=relaxed/simple;
+	bh=XO448NH1Np7X5WlCzLn7L6Ma91lQbrB8oFTc1FKnHTM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=AFlKRPqGKqjRtXPnWAKqLkgORXkg6/98DOmJcsjpL5fqvI16nTMLlgSxnhBXne8b7hx5OyZKDhyLaM771VWZbvCcrgQakDA1JVkPzGug0x4e/wy9DyVBpc4JR6ZYB/NkuxO3YS0VkyJOvxOgX+zzVeC+Hi6nzdXkULJeFFEZQwg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PbOT3i8m; arc=none smtp.client-ip=192.55.52.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 MIME-Version; b=Ld2cKmtgfD2Lf0A94ztat3MhE41mRz9e0X5EYoGq6Nctq4DdYVKHG2UykjtDsGh11MNDUKZFi2H1p+t6wEMAft0Ha9wubXlJLLS4BS7/vl1x72kQ1DuUnUwGZ5pODYsj7T2ahfNAozFPEq+MeIvjDDOVsdB1VnuivQa4n1MpJic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=KvDEW+yH; arc=none smtp.client-ip=209.85.215.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PbOT3i8m"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706164170; x=1737700170;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=+O6GABKRQ2LNWvey5j+xqRNX728ozxBB63IJoOeS85o=;
-  b=PbOT3i8mShybGTzljbi/OFOBP9/IxUyRSMfhv8h1PAAiCViY6l1FFzE3
-   QZE+GlbnG7sYCx3zUbRaOiJOgTuniyHmGYO2hBNEiPQyzUnMVNPmSqMbb
-   1jVmYIDVXvwEy7vTvNBmPjzA98NtHbmmaBvEB5tCKUdK3XPihfKMuPOcL
-   uNhZNzzWfSqMgtfP3RTp45nDEjrIluOwbHtKx+i+IAO7RoxxRgmeuWeFV
-   kH7bxLvXA60IUy5QGIa1+vM2+Pu8lqZGeYY6/eJF0g164MW7pgtiYp77K
-   E/1Rvhs3JDX2242cvZloRRXOmhz8rgpDxy2ZiyGiwfLqr78Ovds0ZASOh
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="399233699"
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="399233699"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jan 2024 22:29:29 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="959760224"
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="959760224"
-Received: from linchen5-mobl.ccr.corp.intel.com (HELO localhost) ([10.254.209.209])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jan 2024 22:29:20 -0800
-From: "Wang, Qingshun" <qingshun.wang@linux.intel.com>
-To: linux-pci@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-acpi@vger.kernel.org
-Cc: chao.p.peng@linux.intel.com,
-	erwin.tsaur@intel.com,
-	feiting.wanyan@intel.com,
-	qingshun.wang@intel.com,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>,
-	James Morse <james.morse@arm.com>,
-	Tony Luck <tony.luck@intel.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Bjorn Helgaas <helgaas@kernel.org>,
-	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-	"Oliver O'Halloran" <oohall@gmail.com>,
-	Miaohe Lin <linmiaohe@huawei.com>,
-	Shiju Jose <shiju.jose@huawei.com>,
-	Adam Preble <adam.c.preble@intel.com>,
-	Li Yang <leoyang.li@nxp.com>,
-	Lukas Wunner <lukas@wunner.de>,
-	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
-	Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>,
-	Robert Richter <rrichter@amd.com>,
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="KvDEW+yH"
+Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-5d46a378f74so1520821a12.0
+        for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 22:29:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1706164175; x=1706768975; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hEK0nLeeUyyEqPsucfbvDxvRRfgyRHV2ZwAZ0YdFTFk=;
+        b=KvDEW+yHm6BpWt3goytVpONsPZNtA+7TV24pJwDF+m+PkRYwOeyY6RGgRtJF74kWWR
+         9X2jmf21eGjElTZRiOsatB35F+1/nab5saLh3xgC+YliGXGHGXgxJg9IF+zpST7K8Vok
+         ckY0tCDwJ8AYQwthspNmkseCm1/qjFFgNNB/uQ76yo3Pd+AxcFzYwBD6WTC39kvy9pyu
+         97PQvrUdob8d8sdoU6PKq6E6cRqyDGAa26PU9aj8m8K/LelN8jwH3WdJ2Zpahy6fiuID
+         mcwR6Hv315vPqhEqR9P0GfcvanABwJyewch0jF2GSuLArRkv2J//lCSLY8KG5Aa8hvTr
+         CjMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706164175; x=1706768975;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hEK0nLeeUyyEqPsucfbvDxvRRfgyRHV2ZwAZ0YdFTFk=;
+        b=DnwuBT+EIiIdcqHrhfcojMKTkbmxz3E/Z5ZRg52xognUnKC7guheH97MZkZN1ZNGuU
+         WokIhHIQTWOlmOSckvcZDYNVoOXh3fdmzV6ImhSDv8Iv4krNbt+zEVyzX57y3Kka1y4g
+         wd7LAMg6k05jb6yo54DE6sWlCHn0DYHTM1L5kSt5WPRIX5f/O+y8h/h7YsBveJiso67d
+         fM3Oul162tDUAP0Tbr9RlKEgos2e3dIjLZTgjSD/PEYqPbWpzXtn3WReeW33jWDrzHCu
+         yTHUSeZLhHQX8+j+zmDOUGLj44I5bUcasqG5BK77t3b7dF6b4kmXU5M5E/gIJg+6LP6B
+         wO3Q==
+X-Gm-Message-State: AOJu0YyV0CaRS/+2y/7pmQJ2iOv0wCu/xqYqP6AuR4IOTc3gY5cvPPq0
+	zX7uOsxb9TI/lYVNKzALgxtrz5qDNCFdlfC8Ahq84EktZxXhpQLQp0WbBMgGmvE=
+X-Google-Smtp-Source: AGHT+IEuES+Nqzdr2BEz6j/Kl5wHqawKSI3UsPoKeKJE5bEvHyihgNT2hQgxZpIvSEF4VhLoqkQkuQ==
+X-Received: by 2002:a05:6a20:2d25:b0:199:a43f:db4 with SMTP id g37-20020a056a202d2500b00199a43f0db4mr942290pzl.80.1706164175121;
+        Wed, 24 Jan 2024 22:29:35 -0800 (PST)
+Received: from debug.ba.rivosinc.com ([64.71.180.162])
+        by smtp.gmail.com with ESMTPSA id t19-20020a056a00139300b006dd870b51b8sm3201139pfg.126.2024.01.24.22.29.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Jan 2024 22:29:34 -0800 (PST)
+From: debug@rivosinc.com
+To: rick.p.edgecombe@intel.com,
+	broonie@kernel.org,
+	Szabolcs.Nagy@arm.com,
+	kito.cheng@sifive.com,
+	keescook@chromium.org,
+	ajones@ventanamicro.com,
+	paul.walmsley@sifive.com,
+	palmer@dabbelt.com,
+	conor.dooley@microchip.com,
+	cleger@rivosinc.com,
+	atishp@atishpatra.org,
+	alex@ghiti.fr,
+	bjorn@rivosinc.com,
+	alexghiti@rivosinc.com
+Cc: corbet@lwn.net,
+	aou@eecs.berkeley.edu,
+	oleg@redhat.com,
+	akpm@linux-foundation.org,
+	arnd@arndb.de,
+	ebiederm@xmission.com,
+	shuah@kernel.org,
+	brauner@kernel.org,
+	debug@rivosinc.com,
+	guoren@kernel.org,
+	samitolvanen@google.com,
+	evan@rivosinc.com,
+	xiao.w.wang@intel.com,
+	apatel@ventanamicro.com,
+	mchitale@ventanamicro.com,
+	waylingii@gmail.com,
+	greentime.hu@sifive.com,
+	heiko@sntech.de,
+	jszhang@kernel.org,
+	shikemeng@huaweicloud.com,
+	david@redhat.com,
+	charlie@rivosinc.com,
+	panqinglin2020@iscas.ac.cn,
+	willy@infradead.org,
+	vincent.chen@sifive.com,
+	andy.chiu@sifive.com,
+	gerg@kernel.org,
+	jeeheng.sia@starfivetech.com,
+	mason.huo@starfivetech.com,
+	ancientmodern4@gmail.com,
+	mathis.salmen@matsal.de,
+	cuiyunhui@bytedance.com,
+	bhe@redhat.com,
+	chenjiahao16@huawei.com,
+	ruscur@russell.cc,
+	bgray@linux.ibm.com,
+	alx@kernel.org,
+	baruch@tkos.co.il,
+	zhangqing@loongson.cn,
+	catalin.marinas@arm.com,
+	revest@chromium.org,
+	josh@joshtriplett.org,
+	joey.gouly@arm.com,
+	shr@devkernel.io,
+	omosnace@redhat.com,
+	ojeda@kernel.org,
+	jhubbard@nvidia.com,
+	linux-doc@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org,
-	linux-edac@vger.kernel.org,
-	"Wang, Qingshun" <qingshun.wang@linux.intel.com>
-Subject: [PATCH v2 3/4] PCI/AER: Fetch information for FTrace
-Date: Thu, 25 Jan 2024 14:28:01 +0800
-Message-ID: <20240125062802.50819-4-qingshun.wang@linux.intel.com>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20240125062802.50819-1-qingshun.wang@linux.intel.com>
-References: <20240125062802.50819-1-qingshun.wang@linux.intel.com>
+	linux-mm@kvack.org,
+	linux-arch@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: [RFC PATCH v1 11/28] riscv: Implementing "PROT_SHADOWSTACK" on riscv
+Date: Wed, 24 Jan 2024 22:21:36 -0800
+Message-ID: <20240125062739.1339782-12-debug@rivosinc.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240125062739.1339782-1-debug@rivosinc.com>
+References: <20240125062739.1339782-1-debug@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -90,219 +133,128 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Fetch and store the data of 3 more registers: "Link Status", "Device
-Control 2", and "Advanced Error Capabilities and Control". This data is
-needed for external observation to better understand ANFE.
+From: Deepak Gupta <debug@rivosinc.com>
 
-Signed-off-by: "Wang, Qingshun" <qingshun.wang@linux.intel.com>
+This patch implements new risc-v specific protection flag
+`PROT_SHADOWSTACK` (only for kernel) on riscv.
+
+`PROT_SHADOWSTACK` protection flag is only limited to kernel and not exposed
+to userspace. Shadow stack is a security construct to prevent against ROP attacks.
+`map_shadow_stack` is a new syscall to manufacture shadow stack. In order to avoid
+multiple methods to create shadow stack, `PROT_SHADOWSTACK` is not allowed for user
+space `mmap` call. `mprotect` wouldn't allow because `arch_validate_prot` already
+takes care of this for risc-v.
+
+`arch_calc_vm_prot_bits` is implemented on risc-v to return VM_SHADOW_STACK (alias
+for VM_WRITE) if PROT_SHADOWSTACK is supplied (such as call to `do_mmap` will) and
+underlying CPU supports shadow stack. `PROT_WRITE` will be converted to `VM_READ |
+`VM_WRITE` so that existing case where `PROT_WRITE` is specified keep working but
+don't collide with `VM_WRITE` only encoding which now denotes a shadow stack.
+
+risc-v `mmap` wrapper enforces if PROT_WRITE is specified and PROT_READ is left out
+then PROT_READ is enforced.
+
+Earlier `protection_map[VM_WRITE]` used to pick read-write (and copy on write) PTE
+encodings. Now all non-shadow stack writeable mappings will pick `protection_map[VM_WRITE
+| VM_READ] PTE encodings. `protection[VM_WRITE]` are programmed to pick PAGE_SHADOWSTACK
+PTE encordings.
+
+Signed-off-by: Deepak Gupta <debug@rivosinc.com>
 ---
- drivers/acpi/apei/ghes.c |  8 +++++++-
- drivers/cxl/core/pci.c   | 11 ++++++++++-
- drivers/pci/pci.h        |  4 ++++
- drivers/pci/pcie/aer.c   | 26 ++++++++++++++++++++------
- include/linux/aer.h      |  6 ++++--
- 5 files changed, 45 insertions(+), 10 deletions(-)
+ arch/riscv/include/asm/mman.h    | 17 +++++++++++++++++
+ arch/riscv/include/asm/pgtable.h |  1 +
+ arch/riscv/kernel/sys_riscv.c    | 19 +++++++++++++++++++
+ arch/riscv/mm/init.c             |  2 +-
+ 4 files changed, 38 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
-index 6034039d5cff..047cc01be68c 100644
---- a/drivers/acpi/apei/ghes.c
-+++ b/drivers/acpi/apei/ghes.c
-@@ -594,7 +594,9 @@ static void ghes_handle_aer(struct acpi_hest_generic_data *gdata)
- 	if (pcie_err->validation_bits & CPER_PCIE_VALID_DEVICE_ID &&
- 	    pcie_err->validation_bits & CPER_PCIE_VALID_AER_INFO) {
- 		struct pcie_capability_regs *pcie_caps;
-+		u16 device_control_2 = 0;
- 		u16 device_status = 0;
-+		u16 link_status = 0;
- 		unsigned int devfn;
- 		int aer_severity;
- 		u8 *aer_info;
-@@ -619,7 +621,9 @@ static void ghes_handle_aer(struct acpi_hest_generic_data *gdata)
+diff --git a/arch/riscv/include/asm/mman.h b/arch/riscv/include/asm/mman.h
+index 4902d837e93c..bc09a9c0e81f 100644
+--- a/arch/riscv/include/asm/mman.h
++++ b/arch/riscv/include/asm/mman.h
+@@ -22,4 +22,21 @@
+  */
+ #define PROT_SHADOWSTACK	0x40
  
- 		if (pcie_err->validation_bits & CPER_PCIE_VALID_CAPABILITY) {
- 			pcie_caps = (struct pcie_capability_regs *)pcie_err->capability;
-+			device_control_2 = pcie_caps->device_control_2;
- 			device_status = pcie_caps->device_status;
-+			link_status = pcie_caps->link_status;
- 		}
++static inline unsigned long arch_calc_vm_prot_bits(unsigned long prot,
++	unsigned long pkey __always_unused)
++{
++	unsigned long ret = 0;
++
++	if (cpu_supports_shadow_stack())
++		ret = (prot & PROT_SHADOWSTACK) ? VM_SHADOW_STACK : 0;
++	/*
++	 * If PROT_WRITE was specified, force it to VM_READ | VM_WRITE.
++	 * Only VM_WRITE means shadow stack.
++	 */
++	if (prot & PROT_WRITE)
++		ret = (VM_READ | VM_WRITE);
++	return ret;
++}
++#define arch_calc_vm_prot_bits(prot, pkey) arch_calc_vm_prot_bits(prot, pkey)
++
+ #endif /* ! __ASM_MMAN_H__ */
+diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
+index 294044429e8e..54a8dde29504 100644
+--- a/arch/riscv/include/asm/pgtable.h
++++ b/arch/riscv/include/asm/pgtable.h
+@@ -184,6 +184,7 @@ extern struct pt_alloc_ops pt_ops __initdata;
+ #define PAGE_READ_EXEC		__pgprot(_PAGE_BASE | _PAGE_READ | _PAGE_EXEC)
+ #define PAGE_WRITE_EXEC		__pgprot(_PAGE_BASE | _PAGE_READ |	\
+ 					 _PAGE_EXEC | _PAGE_WRITE)
++#define PAGE_SHADOWSTACK       __pgprot(_PAGE_BASE | _PAGE_WRITE)
  
- 		aer_recover_queue(pcie_err->device_id.segment,
-@@ -627,7 +631,9 @@ static void ghes_handle_aer(struct acpi_hest_generic_data *gdata)
- 				  devfn, aer_severity,
- 				  (struct aer_capability_regs *)
- 				  aer_info,
--				  device_status);
-+				  device_status,
-+				  link_status,
-+				  device_control_2);
- 	}
- #endif
+ #define PAGE_COPY		PAGE_READ
+ #define PAGE_COPY_EXEC		PAGE_READ_EXEC
+diff --git a/arch/riscv/kernel/sys_riscv.c b/arch/riscv/kernel/sys_riscv.c
+index a2ca5b7756a5..2a7cf28a6fe0 100644
+--- a/arch/riscv/kernel/sys_riscv.c
++++ b/arch/riscv/kernel/sys_riscv.c
+@@ -16,6 +16,7 @@
+ #include <asm/unistd.h>
+ #include <asm-generic/mman-common.h>
+ #include <vdso/vsyscall.h>
++#include <asm/mman.h>
+ 
+ static long riscv_sys_mmap(unsigned long addr, unsigned long len,
+ 			   unsigned long prot, unsigned long flags,
+@@ -25,6 +26,24 @@ static long riscv_sys_mmap(unsigned long addr, unsigned long len,
+ 	if (unlikely(offset & (~PAGE_MASK >> page_shift_offset)))
+ 		return -EINVAL;
+ 
++	/*
++	 * If only PROT_WRITE is specified then extend that to PROT_READ
++	 * protection_map[VM_WRITE] is now going to select shadow stack encodings.
++	 * So specifying PROT_WRITE actually should select protection_map [VM_WRITE | VM_READ]
++	 * If user wants to create shadow stack then they should use `map_shadow_stack` syscall.
++	 */
++	if (unlikely((prot & PROT_WRITE) && !(prot & PROT_READ)))
++		prot |= PROT_READ;
++
++	/*
++	 * PROT_SHADOWSTACK is a kernel only protection flag on risc-v.
++	 * mmap doesn't expect PROT_SHADOWSTACK to be set by user space.
++	 * User space can rely on `map_shadow_stack` syscall to create
++	 * shadow stack pages.
++	 */
++	if (unlikely(prot & PROT_SHADOWSTACK))
++		return -EINVAL;
++
+ 	return ksys_mmap_pgoff(addr, len, prot, flags, fd,
+ 			       offset >> (PAGE_SHIFT - page_shift_offset));
  }
-diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-index 9111a4415a63..3aa57fe8db42 100644
---- a/drivers/cxl/core/pci.c
-+++ b/drivers/cxl/core/pci.c
-@@ -903,7 +903,9 @@ static void cxl_handle_rdport_errors(struct cxl_dev_state *cxlds)
- 	struct aer_capability_regs aer_regs;
- 	struct cxl_dport *dport;
- 	struct cxl_port *port;
-+	u16 device_control_2;
- 	u16 device_status;
-+	u16 link_status;
- 	int severity;
- 
- 	port = cxl_pci_find_port(pdev, &dport);
-@@ -918,10 +920,17 @@ static void cxl_handle_rdport_errors(struct cxl_dev_state *cxlds)
- 	if (!cxl_rch_get_aer_severity(&aer_regs, &severity))
- 		return;
- 
-+	if (pcie_capability_read_word(pdev, PCI_EXP_DEVCTL2, &device_control_2))
-+		return;
-+
- 	if (pcie_capability_read_word(pdev, PCI_EXP_DEVSTA, &device_status))
- 		return;
- 
--	pci_print_aer(pdev, severity, &aer_regs, device_status);
-+	if (pcie_capability_read_word(pdev, PCI_EXP_LNKSTA, &link_status))
-+		return;
-+
-+	pci_print_aer(pdev, severity, &aer_regs, device_status,
-+		      link_status, device_control_2);
- 
- 	if (severity == AER_CORRECTABLE)
- 		cxl_handle_rdport_cor_ras(cxlds, dport);
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index f881a1b42f14..5788a94b4e95 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -412,7 +412,11 @@ struct aer_err_info {
- 	u32 uncor_mask;		/* UNCOR Error Mask */
- 	u32 uncor_status;	/* UNCOR Error Status */
- 	u32 uncor_severity;	/* UNCOR Error Severity */
-+
-+	u16 link_status;
-+	u32 aer_cap_ctrl;	/* AER Capabilities and Control */
- 	u16 device_status;
-+	u16 device_control_2;
- 	struct aer_header_log_regs tlp;	/* TLP Header */
- };
- 
-diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-index 713cbf625d3f..eec3406f727a 100644
---- a/drivers/pci/pcie/aer.c
-+++ b/drivers/pci/pcie/aer.c
-@@ -825,7 +825,8 @@ EXPORT_SYMBOL_GPL(cper_severity_to_aer);
- #endif
- 
- void pci_print_aer(struct pci_dev *dev, int aer_severity,
--		   struct aer_capability_regs *aer, u16 device_status)
-+		   struct aer_capability_regs *aer, u16 device_status,
-+		   u16 link_status, u16 device_control_2)
- {
- 	int layer, agent, tlp_header_valid = 0;
- 	u32 status, mask;
-@@ -850,7 +851,10 @@ void pci_print_aer(struct pci_dev *dev, int aer_severity,
- 	info.uncor_status = aer->uncor_status;
- 	info.uncor_severity = aer->uncor_severity;
- 	info.uncor_mask = aer->uncor_mask;
-+	info.link_status = link_status;
-+	info.aer_cap_ctrl = aer->cap_control;
- 	info.device_status = device_status;
-+	info.device_control_2 = device_control_2;
- 	info.first_error = PCI_ERR_CAP_FEP(aer->cap_control);
- 
- 	pci_err(dev, "aer_status: 0x%08x, aer_mask: 0x%08x\n", status, mask);
-@@ -1205,7 +1209,9 @@ struct aer_recover_entry {
- 	u8	devfn;
- 	u16	domain;
- 	int	severity;
-+	u16	link_status;
- 	u16	device_status;
-+	u16	device_control_2;
- 	struct aer_capability_regs *regs;
- };
- 
-@@ -1226,7 +1232,8 @@ static void aer_recover_work_func(struct work_struct *work)
- 			       PCI_SLOT(entry.devfn), PCI_FUNC(entry.devfn));
- 			continue;
- 		}
--		pci_print_aer(pdev, entry.severity, entry.regs, entry.device_status);
-+		pci_print_aer(pdev, entry.severity, entry.regs, entry.device_status,
-+			      entry.link_status, entry.device_control_2);
- 		/*
- 		 * Memory for aer_capability_regs(entry.regs) is being allocated from the
- 		 * ghes_estatus_pool to protect it from overwriting when multiple sections
-@@ -1255,7 +1262,8 @@ static DEFINE_SPINLOCK(aer_recover_ring_lock);
- static DECLARE_WORK(aer_recover_work, aer_recover_work_func);
- 
- void aer_recover_queue(int domain, unsigned int bus, unsigned int devfn,
--		       int severity, struct aer_capability_regs *aer_regs, u16 device_status)
-+		       int severity, struct aer_capability_regs *aer_regs, u16 device_status,
-+		       u16 link_status, u16 device_control_2)
- {
- 	struct aer_recover_entry entry = {
- 		.bus		= bus,
-@@ -1263,7 +1271,9 @@ void aer_recover_queue(int domain, unsigned int bus, unsigned int devfn,
- 		.domain		= domain,
- 		.severity	= severity,
- 		.regs		= aer_regs,
-+		.link_status	= link_status,
- 		.device_status	= device_status,
-+		.device_control_2 = device_control_2,
- 	};
- 
- 	if (kfifo_in_spinlocked(&aer_recover_ring, &entry, 1,
-@@ -1289,7 +1299,6 @@ int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info)
- {
- 	int type = pci_pcie_type(dev);
- 	int aer = dev->aer_cap;
--	int temp;
- 
- 	/* Must reset in this function */
- 	info->cor_status = 0;
-@@ -1317,8 +1326,14 @@ int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info)
- 				      &info->uncor_severity);
- 		pci_read_config_dword(dev, aer + PCI_ERR_UNCOR_MASK,
- 				      &info->uncor_mask);
-+		pci_read_config_dword(dev, aer + PCI_ERR_CAP,
-+				      &info->aer_cap_ctrl);
-+		pcie_capability_read_word(dev, PCI_EXP_LNKSTA,
-+					  &info->link_status);
- 		pcie_capability_read_word(dev, PCI_EXP_DEVSTA,
- 					  &info->device_status);
-+		pcie_capability_read_word(dev, PCI_EXP_DEVCTL2,
-+					  &info->device_control_2);
- 	} else {
- 		return 1;
- 	}
-@@ -1331,8 +1346,7 @@ int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info)
- 			return 0;
- 
- 		/* Get First Error Pointer */
--		pci_read_config_dword(dev, aer + PCI_ERR_CAP, &temp);
--		info->first_error = PCI_ERR_CAP_FEP(temp);
-+		info->first_error = PCI_ERR_CAP_FEP(info->aer_cap_ctrl);
- 
- 		if (info->uncor_status & AER_LOG_TLP_MASKS) {
- 			info->tlp_header_valid = 1;
-diff --git a/include/linux/aer.h b/include/linux/aer.h
-index 38ac802250ac..327ebec1e4b3 100644
---- a/include/linux/aer.h
-+++ b/include/linux/aer.h
-@@ -52,9 +52,11 @@ static inline int pcie_aer_is_native(struct pci_dev *dev) { return 0; }
- #endif
- 
- void pci_print_aer(struct pci_dev *dev, int aer_severity,
--		    struct aer_capability_regs *aer, u16 device_status);
-+		    struct aer_capability_regs *aer, u16 device_status,
-+		    u16 link_status, u16 device_control_2);
- int cper_severity_to_aer(int cper_severity);
- void aer_recover_queue(int domain, unsigned int bus, unsigned int devfn,
--		       int severity, struct aer_capability_regs *aer_regs, u16 device_status);
-+		       int severity, struct aer_capability_regs *aer_regs, u16 device_status,
-+		       u16 link_status, u16 device_control_2);
- #endif //_AER_H_
- 
+diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
+index 2e011cbddf3a..f71c2d2c6cbf 100644
+--- a/arch/riscv/mm/init.c
++++ b/arch/riscv/mm/init.c
+@@ -296,7 +296,7 @@ pgd_t early_pg_dir[PTRS_PER_PGD] __initdata __aligned(PAGE_SIZE);
+ static const pgprot_t protection_map[16] = {
+ 	[VM_NONE]					= PAGE_NONE,
+ 	[VM_READ]					= PAGE_READ,
+-	[VM_WRITE]					= PAGE_COPY,
++	[VM_WRITE]					= PAGE_SHADOWSTACK,
+ 	[VM_WRITE | VM_READ]				= PAGE_COPY,
+ 	[VM_EXEC]					= PAGE_EXEC,
+ 	[VM_EXEC | VM_READ]				= PAGE_READ_EXEC,
 -- 
-2.42.0
+2.43.0
 
