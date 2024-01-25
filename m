@@ -1,130 +1,86 @@
-Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E63F31B5B2
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 06:29:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A90412B6E;
+	Thu, 25 Jan 2024 06:29:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706164192; cv=none; b=nHLTvsOs8aazsmg18lncKMqC43MPV9YwgGzUXEMAGAFzCWZ0GPzvwAfeTG0vXPWsYrchgT90JCJw28ytMJ02V+M/kgs9U7QqVbcEeRHwfYYFI2hTdA7Ao2Jy4BK8aC+VdRc18AO5pqWD7UjS+Zt1NoSOuoB9xTY2TndOxRynXhg=
+	t=1706164193; cv=none; b=t/ekeA2aY02KbcrB8V30gVdoOre+mVtzBRyK4QtgnmU9cVa504ivq95wAEKnzzAETE4fzZLCGsACHc60bJuNAIiUugvur2Ep2zFyhs45XuuhGBBYTQs4nZvXkc0FDRWPRYJjAUjE2K6tqiiw4hiuAZMT8S257Tt4AtP4TvIyli0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706164192; c=relaxed/simple;
-	bh=b7csYQ90Z6oxnGYgcETNSZcrDyRQTBIZ6wMjGUl4d3s=;
+	s=arc-20240116; t=1706164193; c=relaxed/simple;
+	bh=x32LOme0VCi24BOXE0bhRSdLzmkLr19AHRZy9FC+YGQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hQEKvYysN8R+1O0P14S/4FthAUB8WAN1DnwSKFY2ANgmjomwXKYe+TIJFPv2mIYzASaGMv+UJLLFWXe7dH1XleCLJFUEjaGqZnl8I7wTa14EaVgkFILlzdW2EFQorOAiq2YXkz6sCxTsLgSznVH+tADGvM3btWHnk1idf8v6hH4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=xuxqjw0i; arc=none smtp.client-ip=209.85.210.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	 MIME-Version; b=k/jLyuIqsCG6KkgGEbDbIAk96orftdB86kbrPUpF/6RCn1hYHCxDk7avFAgf/FQiTvQwh2KJFoiHPahhcjYUmuIwhgILzCLOqVz85b1rJVawSUKF0TnIZEXUjnzbuzsoA/uSTlNXpipxwEpi3M+YGKgFdX8hWk5q7EYO2epiPYI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CIxU5pXy; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="xuxqjw0i"
-Received: by mail-ot1-f54.google.com with SMTP id 46e09a7af769-6e0df9aa43dso4890443a34.0
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 22:29:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1706164189; x=1706768989; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kRzF2SZSpJKrBhoESLsApoQWcpLzxI/TelseFUZAskk=;
-        b=xuxqjw0iQnVHKByG+iRb+j4XMO8FMJxJviiQe4ZgKYYf1g10WBQXqFRqO62Y1PfMnU
-         +x1DMxAsCdTHKhAg2JmaykCmOBPCSGoNUzYac7Vt8C3sbeOL0/7vptaqV8OU1PvdcYj+
-         Hso1QXBs/kf4a7TDGM+RJ2ymLCyw6B7YYguWqzDF0fgrITqaXGKiM99dcUSk5OpSMtCu
-         xc920ps+vmTtLnXAmdfA3eVCtZ79G7XGObuavJJvB5J3VJ9FT5n2l89WHIRszo/MqwGG
-         Z8nU7zyubzAJn7aE7iCdShKCWf6V7q89HirufQdcZ2RBk74J3yJXEPANsYBSYiMlGpnF
-         JfJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706164189; x=1706768989;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kRzF2SZSpJKrBhoESLsApoQWcpLzxI/TelseFUZAskk=;
-        b=pFObbXEpVkZM8GNj+0bc48ssnKRsc64+E35wCS83Uq2dOUFbvRcC9kCt5GS/MNznol
-         3iZWmtnOb2NSvOuhrwQUVorLbRYVBHu1+cWQdgvhInhUQWeVSyRrYE4VA78jkpY9wre8
-         R/nl74Av9C01YNxZ8uh8HUxmINnln6hiOTCDdV9I1D6kt9fMnnDJMGIi6gICSXuDqky4
-         z02uu1/5MFvWjcnItVFMar5eOrkWqpUeNfZRMCuE4B3wVxGHjseZtBgDrM+zgK4K4Q6u
-         zav2o+tYlRL82HyRJ2RTUPDB8T60A7jELfd/MoyhDtqHbuqgH9HzBEzZCOmTTcICAw3q
-         2wOA==
-X-Gm-Message-State: AOJu0YwkSavz+naHlgx2/CNiBY/IXj/fGHtKMEIMZcPD4hy/z5R5kFZi
-	XQtfuopR6PCzOeJMfn2uBpAVm9BQThH6DFfa8cGmk9Pj09Xn5WB/3DBzZhP92Bc=
-X-Google-Smtp-Source: AGHT+IErjNQJ/wKFk47rmBKTBBYuOvQY9ZOcxL+k+OB28eXMUoqPg8zllrGghQsiXCVST38v7+Fe9g==
-X-Received: by 2002:aca:181a:0:b0:3bd:cc3b:a894 with SMTP id h26-20020aca181a000000b003bdcc3ba894mr464457oih.93.1706164189075;
-        Wed, 24 Jan 2024 22:29:49 -0800 (PST)
-Received: from debug.ba.rivosinc.com ([64.71.180.162])
-        by smtp.gmail.com with ESMTPSA id t19-20020a056a00139300b006dd870b51b8sm3201139pfg.126.2024.01.24.22.29.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jan 2024 22:29:48 -0800 (PST)
-From: debug@rivosinc.com
-To: rick.p.edgecombe@intel.com,
-	broonie@kernel.org,
-	Szabolcs.Nagy@arm.com,
-	kito.cheng@sifive.com,
-	keescook@chromium.org,
-	ajones@ventanamicro.com,
-	paul.walmsley@sifive.com,
-	palmer@dabbelt.com,
-	conor.dooley@microchip.com,
-	cleger@rivosinc.com,
-	atishp@atishpatra.org,
-	alex@ghiti.fr,
-	bjorn@rivosinc.com,
-	alexghiti@rivosinc.com
-Cc: corbet@lwn.net,
-	aou@eecs.berkeley.edu,
-	oleg@redhat.com,
-	akpm@linux-foundation.org,
-	arnd@arndb.de,
-	ebiederm@xmission.com,
-	shuah@kernel.org,
-	brauner@kernel.org,
-	debug@rivosinc.com,
-	guoren@kernel.org,
-	samitolvanen@google.com,
-	evan@rivosinc.com,
-	xiao.w.wang@intel.com,
-	apatel@ventanamicro.com,
-	mchitale@ventanamicro.com,
-	waylingii@gmail.com,
-	greentime.hu@sifive.com,
-	heiko@sntech.de,
-	jszhang@kernel.org,
-	shikemeng@huaweicloud.com,
-	david@redhat.com,
-	charlie@rivosinc.com,
-	panqinglin2020@iscas.ac.cn,
-	willy@infradead.org,
-	vincent.chen@sifive.com,
-	andy.chiu@sifive.com,
-	gerg@kernel.org,
-	jeeheng.sia@starfivetech.com,
-	mason.huo@starfivetech.com,
-	ancientmodern4@gmail.com,
-	mathis.salmen@matsal.de,
-	cuiyunhui@bytedance.com,
-	bhe@redhat.com,
-	chenjiahao16@huawei.com,
-	ruscur@russell.cc,
-	bgray@linux.ibm.com,
-	alx@kernel.org,
-	baruch@tkos.co.il,
-	zhangqing@loongson.cn,
-	catalin.marinas@arm.com,
-	revest@chromium.org,
-	josh@joshtriplett.org,
-	joey.gouly@arm.com,
-	shr@devkernel.io,
-	omosnace@redhat.com,
-	ojeda@kernel.org,
-	jhubbard@nvidia.com,
-	linux-doc@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CIxU5pXy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706164191; x=1737700191;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=x32LOme0VCi24BOXE0bhRSdLzmkLr19AHRZy9FC+YGQ=;
+  b=CIxU5pXy8hoGyw+0r/UeLVYxkSZFTw1/OtpLmEb/weyahrYi3Fxt4o95
+   k6gv36b+ckzBi+TfMe4dEw9L/cRdPosYg6eEDur0tR9uieFGrmREe29QY
+   rXx2yPG95luUzUjaHvOK1gN4F9A6r+4Mleuv5InxY/kl0XSKLPF8TjMaW
+   qyUB9ElEcIEmrFGtFKagoZ+SiP4lb6PuCV5ugzAWhic43Y69J7E7ThPkF
+   jBsAo5huO4BMjQb9AnzE33D/7BbJ0P9wnvfstO2nbt6QY1HCyAk4ySNJW
+   U2+63s27aSWlwWsczRsr0mPzLZC7QoLTkdfE/Rt/ieg8iLau/ZxFZBM74
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="976651"
+X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
+   d="scan'208";a="976651"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jan 2024 22:29:45 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
+   d="scan'208";a="28658999"
+Received: from linchen5-mobl.ccr.corp.intel.com (HELO localhost) ([10.254.209.209])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jan 2024 22:29:38 -0800
+From: "Wang, Qingshun" <qingshun.wang@linux.intel.com>
+To: linux-pci@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-acpi@vger.kernel.org
+Cc: chao.p.peng@linux.intel.com,
+	erwin.tsaur@intel.com,
+	feiting.wanyan@intel.com,
+	qingshun.wang@intel.com,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>,
+	James Morse <james.morse@arm.com>,
+	Tony Luck <tony.luck@intel.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Bjorn Helgaas <helgaas@kernel.org>,
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	"Oliver O'Halloran" <oohall@gmail.com>,
+	Miaohe Lin <linmiaohe@huawei.com>,
+	Shiju Jose <shiju.jose@huawei.com>,
+	Adam Preble <adam.c.preble@intel.com>,
+	Li Yang <leoyang.li@nxp.com>,
+	Lukas Wunner <lukas@wunner.de>,
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>,
+	Robert Richter <rrichter@amd.com>,
 	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-arch@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: [RFC PATCH v1 14/28] riscv mmu: write protect and shadow stack
-Date: Wed, 24 Jan 2024 22:21:39 -0800
-Message-ID: <20240125062739.1339782-15-debug@rivosinc.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240125062739.1339782-1-debug@rivosinc.com>
-References: <20240125062739.1339782-1-debug@rivosinc.com>
+	linux-cxl@vger.kernel.org,
+	linux-edac@vger.kernel.org,
+	"Wang, Qingshun" <qingshun.wang@linux.intel.com>
+Subject: [PATCH v2 4/4] RAS: Trace more information in aer_event
+Date: Thu, 25 Jan 2024 14:28:02 +0800
+Message-ID: <20240125062802.50819-5-qingshun.wang@linux.intel.com>
+X-Mailer: git-send-email 2.42.0
+In-Reply-To: <20240125062802.50819-1-qingshun.wang@linux.intel.com>
+References: <20240125062802.50819-1-qingshun.wang@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -133,61 +89,177 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Deepak Gupta <debug@rivosinc.com>
+Add following fields in aer_event to better understand Advisory
+Non-Fatal and other errors for external observation:
 
-`fork` implements copy on write (COW) by making pages readonly in child
-and parent both.
+  - cor_status		(Correctable Error Status)
+  - cor_mask		(Correctable Error Mask)
+  - uncor_status	(Uncorrectable Error Status)
+  - uncor_severity	(Uncorrectable Error Severity)
+  - uncor_mask		(Uncorrectable Error Mask)
+  - aer_cap_ctrl	(AER Capabilities and Control)
+  - link_status		(Link Status)
+  - device_status	(Device Status)
+  - device_control_2	(Device Control 2)
 
-ptep_set_wrprotect and pte_wrprotect clears _PAGE_WRITE in PTE.
-Assumption is that page is readable and on fault copy on write happens.
+In addition to the raw register value, value of following fields are
+extracted and logged for better observability:
 
-To implement COW on such pages, clearing up W bit makes them XWR = 000.
-This will result in wrong PTE setting which says no perms but V=1 and PFN
-field pointing to final page. Instead desired behavior is to turn it into
-a readable page, take an access (load/store) fault on sspush/sspop
-(shadow stack) and then perform COW on such pages. This way regular reads
-would still be allowed and not lead to COW maintaining current behavior
-of COW on non-shadow stack but writeable memory.
+  - "First Error Pointer" and "Completion Timeout Prefix/Header Log
+    Capable" from "AER Capabilities and Control"
+  - "Completion Timeout Value" and "Completion Timeout Disable"
+    from "Device Control 2"
 
-On the other hand it doesn't interfere with existing COW for read-write
-memory. Assumption is always that _PAGE_READ must have been set and thus
-setting _PAGE_READ is harmless.
-
-Signed-off-by: Deepak Gupta <debug@rivosinc.com>
+Signed-off-by: "Wang, Qingshun" <qingshun.wang@linux.intel.com>
 ---
- arch/riscv/include/asm/pgtable.h | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ drivers/pci/pcie/aer.c        | 17 +++++++++++--
+ include/ras/ras_event.h       | 48 ++++++++++++++++++++++++++++++++---
+ include/uapi/linux/pci_regs.h |  1 +
+ 3 files changed, 60 insertions(+), 6 deletions(-)
 
-diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
-index 9477108e727d..9802e8d48616 100644
---- a/arch/riscv/include/asm/pgtable.h
-+++ b/arch/riscv/include/asm/pgtable.h
-@@ -398,7 +398,7 @@ static inline int pte_special(pte_t pte)
+diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+index eec3406f727a..2f5639f6c40f 100644
+--- a/drivers/pci/pcie/aer.c
++++ b/drivers/pci/pcie/aer.c
+@@ -757,6 +757,7 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
+ 	int layer, agent;
+ 	int id = pci_dev_id(dev);
+ 	const char *level;
++	struct aer_capability_regs aer_caps;
  
- static inline pte_t pte_wrprotect(pte_t pte)
- {
--	return __pte(pte_val(pte) & ~(_PAGE_WRITE));
-+	return __pte((pte_val(pte) & ~(_PAGE_WRITE)) | (_PAGE_READ));
+ 	if (info->severity == AER_CORRECTABLE) {
+ 		status = info->cor_status;
+@@ -793,8 +794,18 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
+ 	if (info->id && info->error_dev_num > 1 && info->id == id)
+ 		pci_err(dev, "  Error of this Agent is reported first\n");
+ 
++	aer_caps = (struct aer_capability_regs) {
++	  .cor_status = info->cor_status,
++	  .cor_mask = info->cor_mask,
++	  .uncor_status = info->uncor_status,
++	  .uncor_severity = info->uncor_severity,
++	  .uncor_mask = info->uncor_mask,
++	  .cap_control = info->aer_cap_ctrl
++	};
+ 	trace_aer_event(dev_name(&dev->dev), (status & ~mask),
+-			info->severity, info->tlp_header_valid, &info->tlp);
++			info->severity, info->tlp_header_valid, &info->tlp,
++			&aer_caps, info->link_status,
++			info->device_status, info->device_control_2);
  }
  
- /* static inline pte_t pte_mkread(pte_t pte) */
-@@ -594,7 +594,15 @@ static inline int ptep_test_and_clear_young(struct vm_area_struct *vma,
- static inline void ptep_set_wrprotect(struct mm_struct *mm,
- 				      unsigned long address, pte_t *ptep)
- {
--	atomic_long_and(~(unsigned long)_PAGE_WRITE, (atomic_long_t *)ptep);
-+	volatile pte_t read_pte = *ptep;
-+	/*
-+	 * ptep_set_wrprotect can be called for shadow stack ranges too.
-+	 * shadow stack memory is XWR = 010 and thus clearing _PAGE_WRITE will lead to
-+	 * encoding 000b which is wrong encoding with V = 1. This should lead to page fault
-+	 * but we dont want this wrong configuration to be set in page tables.
-+	 */
-+	atomic_long_set((atomic_long_t *)ptep,
-+			((pte_val(read_pte) & ~(unsigned long)_PAGE_WRITE) | _PAGE_READ));
- }
+ static void aer_print_port_info(struct pci_dev *dev, struct aer_err_info *info)
+@@ -870,7 +881,9 @@ void pci_print_aer(struct pci_dev *dev, int aer_severity,
+ 		__print_tlp_header(dev, &aer->header_log);
  
- #define __HAVE_ARCH_PTEP_CLEAR_YOUNG_FLUSH
+ 	trace_aer_event(dev_name(&dev->dev), (status & ~mask),
+-			aer_severity, tlp_header_valid, &aer->header_log);
++			aer_severity, tlp_header_valid, &aer->header_log,
++			aer, info.link_status,
++			info.device_status, info.device_control_2);
+ }
+ EXPORT_SYMBOL_NS_GPL(pci_print_aer, CXL);
+ 
+diff --git a/include/ras/ras_event.h b/include/ras/ras_event.h
+index cbd3ddd7c33d..a94997073d90 100644
+--- a/include/ras/ras_event.h
++++ b/include/ras/ras_event.h
+@@ -300,9 +300,14 @@ TRACE_EVENT(aer_event,
+ 		 const u32 status,
+ 		 const u8 severity,
+ 		 const u8 tlp_header_valid,
+-		 struct aer_header_log_regs *tlp),
++		 struct aer_header_log_regs *tlp,
++		 struct aer_capability_regs *aer_caps,
++		 const u16 link_status,
++		 const u16 device_status,
++		 const u16 device_control_2),
+ 
+-	TP_ARGS(dev_name, status, severity, tlp_header_valid, tlp),
++	TP_ARGS(dev_name, status, severity, tlp_header_valid, tlp,
++		aer_caps, link_status, device_status, device_control_2),
+ 
+ 	TP_STRUCT__entry(
+ 		__string(	dev_name,	dev_name	)
+@@ -310,6 +315,10 @@ TRACE_EVENT(aer_event,
+ 		__field(	u8,		severity	)
+ 		__field(	u8, 		tlp_header_valid)
+ 		__array(	u32, 		tlp_header, 4	)
++		__field_struct(struct aer_capability_regs, aer_caps)
++		__field(	u16,		link_status	)
++		__field(	u16,		device_status	)
++		__field(	u16,		device_control_2)
+ 	),
+ 
+ 	TP_fast_assign(
+@@ -317,6 +326,10 @@ TRACE_EVENT(aer_event,
+ 		__entry->status		= status;
+ 		__entry->severity	= severity;
+ 		__entry->tlp_header_valid = tlp_header_valid;
++		__entry->aer_caps	= *aer_caps;
++		__entry->link_status	= link_status;
++		__entry->device_status	= device_status;
++		__entry->device_control_2 = device_control_2;
+ 		if (tlp_header_valid) {
+ 			__entry->tlp_header[0] = tlp->dw0;
+ 			__entry->tlp_header[1] = tlp->dw1;
+@@ -325,7 +338,20 @@ TRACE_EVENT(aer_event,
+ 		}
+ 	),
+ 
+-	TP_printk("%s PCIe Bus Error: severity=%s, %s, TLP Header=%s\n",
++	TP_printk("%s PCIe Bus Error: severity=%s, %s, TLP Header=%s, "
++		  "Correctable Error Status=0x%08x, "
++		  "Correctable Error Mask=0x%08x, "
++		  "Uncorrectable Error Status=0x%08x, "
++		  "Uncorrectable Error Severity=0x%08x, "
++		  "Uncorrectable Error Mask=0x%08x, "
++		  "AER Capability and Control=0x%08x, "
++		  "First Error Pointer=0x%x, "
++		  "Completion Timeout Prefix/Header Log Capable=%s, "
++		  "Link Status=0x%04x, "
++		  "Device Status=0x%04x, "
++		  "Device Control 2=0x%04x, "
++		  "Completion Timeout Value=0x%x, "
++		  "Completion Timeout Disable=%sn",
+ 		__get_str(dev_name),
+ 		__entry->severity == AER_CORRECTABLE ? "Corrected" :
+ 			__entry->severity == AER_FATAL ?
+@@ -335,7 +361,21 @@ TRACE_EVENT(aer_event,
+ 		__print_flags(__entry->status, "|", aer_uncorrectable_errors),
+ 		__entry->tlp_header_valid ?
+ 			__print_array(__entry->tlp_header, 4, 4) :
+-			"Not available")
++			"Not available",
++		__entry->aer_caps.cor_status,
++		__entry->aer_caps.cor_mask,
++		__entry->aer_caps.uncor_status,
++		__entry->aer_caps.uncor_severity,
++		__entry->aer_caps.uncor_mask,
++		__entry->aer_caps.cap_control,
++		PCI_ERR_CAP_FEP(__entry->aer_caps.cap_control),
++		__entry->aer_caps.cap_control & PCI_ERR_CAP_CTO_LOGC ? "True" : "False",
++		__entry->link_status,
++		__entry->device_status,
++		__entry->device_control_2,
++		__entry->device_control_2 & PCI_EXP_DEVCTL2_COMP_TIMEOUT,
++		__entry->device_control_2 & PCI_EXP_DEVCTL2_COMP_TMOUT_DIS ?
++					    "True" : "False")
+ );
+ 
+ /*
+diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+index a39193213ff2..54160ed2a8c9 100644
+--- a/include/uapi/linux/pci_regs.h
++++ b/include/uapi/linux/pci_regs.h
+@@ -787,6 +787,7 @@
+ #define  PCI_ERR_CAP_ECRC_GENE	0x00000040	/* ECRC Generation Enable */
+ #define  PCI_ERR_CAP_ECRC_CHKC	0x00000080	/* ECRC Check Capable */
+ #define  PCI_ERR_CAP_ECRC_CHKE	0x00000100	/* ECRC Check Enable */
++#define  PCI_ERR_CAP_CTO_LOGC	0x00001000	/* Completion Timeout Prefix/Header Log Capable */
+ #define PCI_ERR_HEADER_LOG	0x1c	/* Header Log Register (16 bytes) */
+ #define PCI_ERR_ROOT_COMMAND	0x2c	/* Root Error Command */
+ #define  PCI_ERR_ROOT_CMD_COR_EN	0x00000001 /* Correctable Err Reporting Enable */
 -- 
-2.43.0
+2.42.0
 
