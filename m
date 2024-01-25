@@ -1,154 +1,102 @@
-Received: from pidgin.makrotopia.org (pidgin.makrotopia.org [185.142.180.65])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B53818C38;
-	Thu, 25 Jan 2024 23:57:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.142.180.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8590175A1;
+	Thu, 25 Jan 2024 23:57:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706227056; cv=none; b=KKWPfYuLYtEj/0rvnSEVrqYHfF1WzujPQY8L8J9BsmAzF4qr7zPbiBjkSnPB88EKPDoMtv3CyPyr98ha+TrasUPw8tkDGoMzGRChykd16obPiER0sK2D4hXSsxvs4uvrEHu9xMKqTR2yoK6VGGHO67c9gLOJ0zkBj0zCXw8CYUc=
+	t=1706227058; cv=none; b=J4ouqNL1UeZ9T71jh3ph9t2+lLvf4rVGTFYft0gvVNxV6DX0tbLZNdfHlXFa8HVRdiomtLU1V9mwUmVTt+c2nhMkHajoqRz+rWWr3DS/gl/85NY9D+nM/z1fq8Jd97G3p7x51nvkvdyYqdd1gFqgOLHYcTSuEf/ZeUrdb+jMrYw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706227056; c=relaxed/simple;
-	bh=HVwNsG4ex09BIiqCIlusj2ZhDSWkoJndoDRFh/vuS4Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H/qsBRoe31+4qgrRPXCNDhYpj7V7/NDt7DSpvupOQDv2e/vHKUHDYNXrleT0iAV8oL5XRs5VjJ120EoRgYdtGggWhepKmRTl3qoHtnxBgis8dEQMTyKCf3rPkyx/gIY/KaJBseRg7TJ8tdLOV9RW3W19wQh3AL8k7mx4+s7GmwA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org; spf=pass smtp.mailfrom=makrotopia.org; arc=none smtp.client-ip=185.142.180.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=makrotopia.org
-Received: from local
-	by pidgin.makrotopia.org with esmtpsa (TLS1.3:TLS_AES_256_GCM_SHA384:256)
-	 (Exim 4.96.2)
-	(envelope-from <daniel@makrotopia.org>)
-	id 1rT9ax-0005RZ-26;
-	Thu, 25 Jan 2024 23:57:19 +0000
-Date: Thu, 25 Jan 2024 23:57:08 +0000
-From: Daniel Golle <daniel@makrotopia.org>
-To: =?utf-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
-Cc: DENG Qingfang <dqfext@gmail.com>, Sean Wang <sean.wang@mediatek.com>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org, John Crispin <john@phrozen.org>
-Subject: Re: [PATCH net] net: dsa: mt7530: fix 10M/100M speed on MT7988 switch
-Message-ID: <ZbL1VEcH3RgHZKsq@makrotopia.org>
-References: <a5b04dfa8256d8302f402545a51ac4c626fdba25.1706071272.git.daniel@makrotopia.org>
- <accda24c-9f12-4cfe-b532-a9c60ec97fca@arinc9.com>
- <ZbKJv84vGXInRIo1@makrotopia.org>
- <99a038f3-18d2-44ca-8135-1faf7a37892a@arinc9.com>
+	s=arc-20240116; t=1706227058; c=relaxed/simple;
+	bh=yZBuOVK56XcD+IZGWPAQUigedfDATjZAltUsMaV/oCg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=r0Cb6Q18M/7N8d41M04swciBYTGuNJ9DHTIAfN94cqVYtliLkLeKJi4aBf18UCcATxj/MEDiwzTp8mJP/Q/1akCmdqrvc8Sjb6L9OBCrv8QNGMzlxbdTYgvjQ3dsCcaAtdyZ1j8M9fOkJz8Z+0g7gGKAD+ZyZ4aHSC6E6AAdCYc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AsXN9eHn; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AsXN9eHn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706227057; x=1737763057;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=yZBuOVK56XcD+IZGWPAQUigedfDATjZAltUsMaV/oCg=;
+  b=AsXN9eHnOETaFKprBaa7HPHK0s94neoXJrTN+3vH99Sk9bxO707483Hp
+   Qkhufllppwk+HZi7/QRnG3b6Y8/icnD/Kpp0RFDLNxN8EkyQtfcv2mt6I
+   Z7SnN9ZW1p1QXVoBhNMbyZE4Lp84XuCbcDz4IQTFMSzjIeyqaP7hc+Srb
+   ZYzATNSaVvp6CGg8tugSfpu4PkWHY53ZvqNEVWrTQo9PPF8s5mUkHT09z
+   yzgClk6rO8oj+0A8OgVr5YGXYAexbbWxatDX9TbPF/ycmfHGMwmMfvBEy
+   Es7U8iYzSmdaDODftDzaO7d5sRVTIdgJaSzTzb9ppPWn2JKwhz3DYwU2E
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="15867562"
+X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
+   d="scan'208";a="15867562"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2024 15:57:35 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="930191098"
+X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
+   d="scan'208";a="930191098"
+Received: from vcostago-mobl3.jf.intel.com ([10.24.14.99])
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2024 15:57:34 -0800
+From: Vinicius Costa Gomes <vinicius.gomes@intel.com>
+To: brauner@kernel.org,
+	amir73il@gmail.com,
+	hu1.chen@intel.com
+Cc: miklos@szeredi.hu,
+	malini.bhandaru@intel.com,
+	tim.c.chen@intel.com,
+	mikko.ylinen@intel.com,
+	lizhen.you@intel.com,
+	linux-unionfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Vinicius Costa Gomes <vinicius.gomes@intel.com>
+Subject: [RFC v2 1/4] cleanup: Fix discarded const warning when defining guards
+Date: Thu, 25 Jan 2024 15:57:20 -0800
+Message-ID: <20240125235723.39507-2-vinicius.gomes@intel.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240125235723.39507-1-vinicius.gomes@intel.com>
+References: <20240125235723.39507-1-vinicius.gomes@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <99a038f3-18d2-44ca-8135-1faf7a37892a@arinc9.com>
 
-On Fri, Jan 26, 2024 at 01:44:57AM +0300, Arınç ÜNAL wrote:
-> On 25.01.2024 19:18, Daniel Golle wrote:
-> > On Thu, Jan 25, 2024 at 12:49:19PM +0300, Arınç ÜNAL wrote:
-> > > On 24/01/2024 08:17, Daniel Golle wrote:
-> > > > Setup PMCR port register for actual speed and duplex on internally
-> > > > connected PHYs of the MT7988 built-in switch. This fixes links with
-> > > > speeds other than 1000M.
-> > > > 
-> > > > Fixes: ("110c18bfed414 net: dsa: mt7530: introduce driver for MT7988 built-in switch")
-> > > > Signed-off-by: Daniel Golle <daniel@makrotopia.org>
-> > > 
-> > > Acked-by: Arınç ÜNAL <arinc.unal@arinc9.com>
-> > > 
-> > > I'm wondering why we manually set speed and duplex for these interface
-> > > modes in the first place. I don't how it works for
-> > > PHY_INTERFACE_MODE_INTERNAL but, at least for PHY_INTERFACE_MODE_TRGMII and
-> > > 802.3z interfaces, phylink should already supply proper speed and duplex.
-> > 
-> > It's true that duplex should always be set to full-duplex already by
-> > phylink. However, speed could be 2500MBit/s (2500Base-X) or 2000MBit/s
-> > (?, TRGMII) and we yet need to program the PCR like if it was
-> > 1000MBit/s.
-> > 
-> > Regarding the INTERNAL case: it was added by mistake. In case of
-> > MT7988, all ports of the switch are connected via INTERNAL links,
-> > however, the PHYs still need adjustment of the PCR register just like
-> > on all other MT753x switches and the CPU port is setup elsewhere
-> > anyway.
-> 
-> It's not necessarily PHYs needing adjustment of the port MAC control
-> register.
+When defining guards for const types the void* return implicitly
+discards the const modifier. Be explicit about it.
 
-It's not the PHYs which need adjustment but the MAC PMCR register which
-does.
+Compiler warning (gcc 13.2.1):
 
-> After reset, speed, duplex mode, etc. will be determined by polling
-> the PHY connected to the switch MAC.
+./include/linux/cleanup.h:154:18: warning: return discards ‘const’ qualifier from pointer target type [-Wdiscarded-qualifiers]
+  154 |         { return *_T; }
+      |                  ^~~
+./include/linux/cred.h:193:1: note: in expansion of macro ‘DEFINE_GUARD’
+  193 | DEFINE_GUARD(cred, const struct cred *, _T = override_creds_light(_T),
+      | ^~~~~~~~~~~~
 
-Yes, but as it is a DSA driver we don't use **hardware** PHY polling
-and keep that off. Instead, PHY interrupts or software PHY polling is
-used to have Linux determine the link properties.
-We're then forcing these properties on the MAC port of the switch.
+Signed-off-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
+---
+ include/linux/cleanup.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> on the PMCR because we're also configuring switch MACs that are not
-> connected to PHYs, meaning the switch cannot determine these properties by
-> polling a PHY.
+diff --git a/include/linux/cleanup.h b/include/linux/cleanup.h
+index c2d09bc4f976..ac521c4521cd 100644
+--- a/include/linux/cleanup.h
++++ b/include/linux/cleanup.h
+@@ -151,7 +151,7 @@ static inline class_##_name##_t class_##_name##ext##_constructor(_init_args) \
+ #define DEFINE_GUARD(_name, _type, _lock, _unlock) \
+ 	DEFINE_CLASS(_name, _type, if (_T) { _unlock; }, ({ _lock; _T; }), _type _T); \
+ 	static inline void * class_##_name##_lock_ptr(class_##_name##_t *_T) \
+-	{ return *_T; }
++	{ return (void *)*_T; }
+ 
+ #define DEFINE_GUARD_COND(_name, _ext, _condlock) \
+ 	EXTEND_CLASS(_name, _ext, \
+-- 
+2.43.0
 
-The switch **never** determines these properties itself when using the
-DSA driver. It has a facility to do so, and yes, when accessing
-Ethernet in U-Boot or when using the 'swconfig'-based driver then this
-facility is used. But, I repeat, when using DSA we do not use hardware
-PHY polling. We poll (or rather: react to interrupts) in software
-instead.
-
-> 
-> From what I understand, this code block is for overriding the speed and
-> duplex variables to make the operations on the PMCR below work. It seems
-> that this is actually only useful for PHY_INTERFACE_MODE_2500BASEX.
-> PHY_INTERFACE_MODE_TRGMII is given SPEED_1000 by
-> drivers/net/phy/phylink.c:phylink_interface_max_speed().
-> PHY_INTERFACE_MODE_2500BASEX is given SPEED_2500. Overriding the duplex
-> variable looks unnecessary.
-> 
-> Your patch here doesn't affect CPU ports because MT7531 and MT7988 PMCRs
-
-This patch does not intend to affect the CPU port. As I've already
-said in my previous reply "[...] the CPU port is setup elsewhere
-anyway."
-
-Maybe it wasn't clear, but I meant that the CPU port settings are
-intentionally unaffected by this patch.
-
-It is intended to affect user ports which with phy-mode = "internal";
-set in DTS -- here we **do** need to set PMCR according the external
-link speed and duplex.
-
-
-> are configured with cpu_port_config before mt753x_phylink_mac_link_up(),
-> and PHY_INTERFACE_MODE_INTERNAL is not used for MT7530 which, for MT7530,
-> PMCRs will be set only on mt753x_phylink_mac_link_up().
-> 
-> PMCR_FORCE_SPEED_1000 is set on cpu_port_config. If someone were to get rid
-> of cpu_port_config because of its utter uselessness, PMCR_FORCE_SPEED_1000
-> would not be set, causing the link between port 6 MAC and SoC MAC to break.
-> 
-> In conclusion, I will add "case SPEED_10000:" to the operations where the
-> speed and EEE bits are set on my patch for getting rid of cpu_port_config.
-
-PMCR needs to be set according to actual link speed for built-in TP
-PHYs. This is true for all mt7530 variants including MT7988.
-
-Maybe the confusion here is that on MT7988 we use 'internal' phy-mode
-for both, the switch CPU port's link to mtk_eth_soc gmac0 as well as
-the links to the 4 built-in 1GE switch PHYs.
-
-The latter were affected by wrongly overriding speed and duplex in
-case phy-mode is set to "internal", which should not have been put
-there (by me) in first place.
-
-Let's just remove it, ok?
