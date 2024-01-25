@@ -1,72 +1,114 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 88A265B1FF;
-	Thu, 25 Jan 2024 13:49:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F7A95B1FE
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 13:50:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706190586; cv=none; b=PkDfi5z8KSpVhoMfMFbXXRbyZqIQMn8i4itjBato38EkZXek271zPWEjRW1T/KOCHmXrzSg7bnvr8rpundTre/g2u6ePWGlf28oQMA5cMwQXWBFYHXjK/BgrPZAKanAVhrWHUG2p8MqQ7zCQFN7QYaKUwbf93Sk2BCBUCIDVUaY=
+	t=1706190614; cv=none; b=d9oBPZBmboYfoFkdcCTOgn9INalDZ/woiFySh5C1mLm7j3oaNP2YdhvRrFb/sNsc5/LGYSL+V7u0wboslAes3vWfxEBLm0ouT94mcZLt6W3GDNbJKU1cSNtLyFfrtSTz9UJx5sPpdRl33EoaicyG6aTpFW1ZnU5SCA+8lO1swjg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706190586; c=relaxed/simple;
-	bh=6iy/6WiekLaKinGKMQjSK9tWQ4cBT+O71xHlgaPxvqI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VXL3lHg0pNZUDD4uBeY6dhueAt4rI4RAX+a096N59SDpbENuLn/uSHSmcV8xTQczQ+K8xPqDG84Ri2/hPjuVkki9yu6StN0+Zxx6Q81OfTWiBpixJrrn/4cSaog9k/M6kptk/OIzCFHk8cbOd7uGazQLgyrD8cTz6FSDwOTTPmQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8A58CFEC;
-	Thu, 25 Jan 2024 05:50:28 -0800 (PST)
-Received: from e133380.arm.com (e133380.arm.com [10.1.197.58])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 01F9C3F5A1;
-	Thu, 25 Jan 2024 05:49:42 -0800 (PST)
-Date: Thu, 25 Jan 2024 13:49:40 +0000
-From: Dave Martin <Dave.Martin@arm.com>
-To: Mark Brown <broonie@kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-	linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Edmund Grimley-Evans <edmund.grimley-evans@arm.com>
-Subject: Re: [PATCH v2 2/4] arm64/sme: Fix cut'n'paste in ABI document
-Message-ID: <ZbJm9J0QuE6Rx9ba@e133380.arm.com>
-References: <20240124-arm64-sve-sme-doc-v2-0-fe3964fb3c19@kernel.org>
- <20240124-arm64-sve-sme-doc-v2-2-fe3964fb3c19@kernel.org>
+	s=arc-20240116; t=1706190614; c=relaxed/simple;
+	bh=5ZOPXDAbVb3JfPcHPZt/6K1rMwGtKeHJlzvDwGJqlN4=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=E0LpNAIvbxEBOPIQOLIquQEnPKTS+oiqirKcOjG9fj1YxisJH4XOeNbuMGalqzljxyYsD/UDtKh347DiKeWulo8Y6Jx57jbIlN1k6906v6z0YyWS6kRndTCgGyBVgWC+V+7FcOPOhCPz4AjGT2KH7isjXfmSu9MNCmivyyr24dI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.48])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4TLMdN3cwmzbcCh;
+	Thu, 25 Jan 2024 21:49:44 +0800 (CST)
+Received: from dggpemd100004.china.huawei.com (unknown [7.185.36.20])
+	by mail.maildlp.com (Postfix) with ESMTPS id 158EB18007A;
+	Thu, 25 Jan 2024 21:50:08 +0800 (CST)
+Received: from huawei.com (10.67.174.76) by dggpemd100004.china.huawei.com
+ (7.185.36.20) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.2.1258.28; Thu, 25 Jan
+ 2024 21:50:07 +0800
+From: Yuntao Liu <liuyuntao12@huawei.com>
+To: <will@kernel.org>
+CC: <catalin.marinas@arm.com>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>, <wangkefeng.wang@huawei.com>
+Subject: Re: [PATCH] arm64: enable dead code elimination
+Date: Thu, 25 Jan 2024 13:45:32 +0000
+Message-ID: <20240125134532.3717157-1-liuyuntao12@huawei.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20230717092439.GB7868@willie-the-truck>
+References: <20230717092439.GB7868@willie-the-truck>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240124-arm64-sve-sme-doc-v2-2-fe3964fb3c19@kernel.org>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ dggpemd100004.china.huawei.com (7.185.36.20)
 
-On Wed, Jan 24, 2024 at 06:12:36PM +0000, Mark Brown wrote:
-> The ABI for SME is very like that for SVE so bits of the ABI were copied
-> but not adequately search and replaced, fix that.
+On 2023/7/17 17:24, Will Deacon wrote:
+> On Mon, Jul 17, 2023 at 04:07:39PM +0800, Kefeng Wang wrote:
+>> Select CONFIG_HAVE_LD_DEAD_CODE_DATA_ELIMINATION for arm64, allowing the
+>> user to enable dead code elimination. In order for this to work, ensure
+>> that we keep the necessary tables by annotating them with KEEP, also it
+>> requires further changes to linker script to KEEP some tables and wildcard
+>> compiler generated sections into the right place.
+>>
+>> The following comparison is based 6.5-rc2 with defconfig,
+>>
+>> $ ./scripts/bloat-o-meter vmlinux-base vmlinux-new
+>> add/remove: 3/1106 grow/shrink: 4102/6964 up/down: 35704/-99980 (-64276)
+>> Function                                     old     new   delta
+>> ...
+>> Total: Before=17888959, After=17824683, chg -0.36%
+>>
+>> add/remove: 0/1 grow/shrink: 0/1 up/down: 0/-44 (-44)
+>> Data                                         old     new   delta
+>> ...
+>> Total: Before=4820808, After=4820764, chg -0.00%
+>>
+>> add/remove: 0/1 grow/shrink: 0/1 up/down: 0/-1096 (-1096)
+>> RO Data                                      old     new   delta
+>> ...
+>> Total: Before=5179123, After=5178027, chg -0.02%
+>>
+>> $ size vmlinux-base vmlinux
+>>     text	   data	     bss      dec       hex	filename
+>> 25433734  15385766  630656  41450156  2787aac	vmlinux-base
+>> 24756738  15360870  629888  40747496  26dc1e8	vmlinux-new
+>>
+>> Memory available after booting, saving 704k on qemu,
+>> base: 8084532K/8388608K
+>> new:  8085236K/8388608K
 > 
-> Reported-by: Edmund Grimley-Evans <edmund.grimley-evans@arm.com>
-> Signed-off-by: Mark Brown <broonie@kernel.org>
-> ---
->  Documentation/arch/arm64/sme.rst | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> Is that a 0.009% improvement? Is it really worth the hassle?
 > 
-> diff --git a/Documentation/arch/arm64/sme.rst b/Documentation/arch/arm64/sme.rst
-> index 3d0e53ecac4f..3133d0e91b48 100644
-> --- a/Documentation/arch/arm64/sme.rst
-> +++ b/Documentation/arch/arm64/sme.rst
-> @@ -238,12 +238,12 @@ prctl(PR_SME_SET_VL, unsigned long arg)
->        bits of Z0..Z31 except for Z0 bits [127:0] .. Z31 bits [127:0] to become
->        unspecified, including both streaming and non-streaming SVE state.
->        Calling PR_SME_SET_VL with vl equal to the thread's current vector
-> -      length, or calling PR_SME_SET_VL with the PR_SVE_SET_VL_ONEXEC flag,
-> +      length, or calling PR_SME_SET_VL with the PR_SME_SET_VL_ONEXEC flag,
->        does not constitute a change to the vector length for this purpose.
->  
->      * Changing the vector length causes PSTATE.ZA and PSTATE.SM to be cleared.
->        Calling PR_SME_SET_VL with vl equal to the thread's current vector
-> -      length, or calling PR_SME_SET_VL with the PR_SVE_SET_VL_ONEXEC flag,
-> +      length, or calling PR_SME_SET_VL with the PR_SME_SET_VL_ONEXEC flag,
->        does not constitute a change to the vector length for this purpose.
+> x86 doesn't select this and risc-v had to turn it off for LLD, so it feels
+> like we're just creating a rod for our own back by selecting it.
 
-Reviewed-by: Dave Martin <Dave.Martin@arm.com>
+I tested this patch and found that, the smaller the config file,the more 
+significant the reduction in file size of the builds. This may be useful
+in scenarios such as embedded systems where size is particularly critical.
 
+Just like Select CONFIG_HAVE_LD_DEAD_CODE_DATA_ELIMINATION for RISC-V,
+this boots well on qemu, with defconfig, it shrinks their builds by ~1.6%,
+and with tinyconfig it shrinks their builds by ~18.7%.
+
+defconfig:
+    text        data       bss         dec        hex
+26839348    16695234    629456    44164038    2a1e3c6    before
+26140556    16667058    628880    43436494    296c9ce    after
+
+tinyconfig:
+    text        data       bss         dec        hex
+ 1259568      272100    104312     1635980     18f68c    before
+  967056      258716    103824     1329596     1449bc    after
+
+          | tinyconfig             | defconfig
+  --------|------------------------|---------------------
+   No DCE | 1635980                | 44164038
+      DCE | 1329596                | 43436494
+   Shrink |  306384 (~18.7%)       |   727544 (~1.6%)
+
+> 
+> Will
+> 
