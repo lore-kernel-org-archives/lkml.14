@@ -1,195 +1,206 @@
-Received: from out5-smtp.messagingengine.com (out5-smtp.messagingengine.com [66.111.4.29])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com [209.85.210.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27FA811713;
-	Thu, 25 Jan 2024 07:19:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.111.4.29
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E7E311713;
+	Thu, 25 Jan 2024 07:20:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706167198; cv=none; b=KYTwcoijXNddAZl/9QIcbG6sdbn+Zr1R7bVwVA79sjTLuPMeiRjZKCNT/PNMg042h7Ql0/7thAmGZjwBgYe6mo3bCce+LskunRSIVEfKvDXy/QvSlc507vPH4+DadDW0xAZwnSfxWNWq7jUScUcVAksC3xvyN4XW4lBy4wz9qNU=
+	t=1706167243; cv=none; b=gI5bSOred/fB14LybWxpaJP7/1r786wg0IngoekiuKP6+ZGl4v/MueHpH2x2gLC3U0N/dM1Lfb6ecDf7sIGy3htWGSCHZkCEDElGoA78H0kFgYviJQy7DGl5d3AQTWLlnBRqrUvjds2nuOWMlBa4UiRAGkEp+Ti2aeKgwp1EzM0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706167198; c=relaxed/simple;
-	bh=YKHitqv6MpNmX4Os52+BnwqHeGcQk+N0HbPe7Nk2SUI=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=n1tOIWBstVR4uFHXONLBqE0yGuQCZbd+ryY72xWSvl74RDFNPh6aSc9svm+KVwMQRYI0XVA2eXYcDSeLE29jL64W5c7KyTbofkwfq3LfVeK0ba6BSp3lK2nKHAAstFA4pKbdZUbhHZRDYGcsD3pIoVA+oyFPnBp7afnmGp0IqM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fastmail.com; spf=pass smtp.mailfrom=fastmail.com; dkim=pass (2048-bit key) header.d=fastmail.com header.i=@fastmail.com header.b=4e3TmKy0; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=nvInZ0jw; arc=none smtp.client-ip=66.111.4.29
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fastmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastmail.com
+	s=arc-20240116; t=1706167243; c=relaxed/simple;
+	bh=ihulYfjCfEWVoZz/Z/GfoBK+jSFE4nHTh23lsVfj3aY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=F9LHtjiQn78064W5d1qubhThVqSErfT4LOb1oV2mQ43w0FyxmWmNebRLtbK264oIUbw81g/FWTmlKDPGftinl7jvqzQnHFI+hMCDJgjxHi8RMy8Uz3H+furmwHx1Z+LI8929FMsISqD360CdSYbjaAOcCwMixA6Q3THGT1usskk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Tdlwibwj; arc=none smtp.client-ip=209.85.210.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fastmail.com header.i=@fastmail.com header.b="4e3TmKy0";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="nvInZ0jw"
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-	by mailout.nyi.internal (Postfix) with ESMTP id 142EB5C01D7;
-	Thu, 25 Jan 2024 02:19:55 -0500 (EST)
-Received: from imap50 ([10.202.2.100])
-  by compute3.internal (MEProxy); Thu, 25 Jan 2024 02:19:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fastmail.com; h=
-	cc:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm3; t=1706167195; x=1706253595; bh=vWNYCVEsyV
-	iu3nUft3Ms12HcBU6UW+6JtvbOuVw1J0c=; b=4e3TmKy05bp9HO9U1/VOfkypZ0
-	sWHC5b6bAA+mHGJ7Kq99ptNEilvV5dL2GTJucuUO+OtutUd3Q+KYy8c5gpF1gEtk
-	FYrYNcmd00RIucBB4IB0j3xmx9LIz/Sn7queXTSXQMthrEaMuA2NAJ70Ep6bXeyK
-	JK8vjj49qCB0qapQN9xcbVaO8NGaIPgGuuBn+AyOEARE4ONPJyihXfbHEaDWfSpX
-	Mz8FgCi26FYvdbSiDeKo4poEgASiec0X4uzr+DRUaOxL95C/O93Wfu246jSs7dc3
-	bcEQ1O+0l5lcKZGC9kkubTRJGNr7R+EpcMUgn6dvWAlfgvDetmUx2bnpPLVg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm3; t=1706167195; x=1706253595; bh=vWNYCVEsyViu3nUft3Ms12HcBU6U
-	W+6JtvbOuVw1J0c=; b=nvInZ0jw0ZHt3KvTD5qMeeY8vGm1AphVSTXW7jRdtGTA
-	UJiIw4rafvd7FNYJlsTpKPHrWQkMDjin485xVsVB5o+lFH2p7Fd9mCritpcWrwZB
-	lM4bLLr55oNE+y1JvW62Jz0wpBYKD5gR1oOMf+fw8L0YvVB3xowTvoffPjTz2VDZ
-	etkwnNkJW6yE3FwRzZFeU4soPheuhvN/OJIDXi1c5TyO3jW1fLxRwgpt+BpoyFF8
-	ZWsARpXIC9mEDBwQaH57gzN8+t5SOaOncX3dYAsUGFLqk3s4S2jfk0aU8XZzroGA
-	QB+e4NSrJTESaZTE0oTKMOn80P4U4S3gqcghdM1Qkg==
-X-ME-Sender: <xms:mAuyZe8iakB7Hq_2uvqh5DFaJjVied9xfvhmECV2s3_cWlQdq0_9xg>
-    <xme:mAuyZeu13YaGB1IJElSnR1iY8q90A6EyAml0W8UXkFCJthZlfL0S0qGO5T_up_euZ
-    i4-SBPMNzbyHObLsg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrvdelvddguddtfecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdfu
-    thgvfhgrnhcuqfdktfgvrghrfdcuoehsohhrvggrrhesfhgrshhtmhgrihhlrdgtohhmqe
-    enucggtffrrghtthgvrhhnpefhtefgffelieduudekgeevueegudegueefhfehhfffiefg
-    keffvedtuefggfehteenucffohhmrghinhepvghnthhrhidrshgspdhinhhfrhgruggvrg
-    gurdhorhhgnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhho
-    mhepshhorhgvrghrsehfrghsthhmrghilhdrtghomh
-X-ME-Proxy: <xmx:mAuyZUDv2xOV7UK4WzT3j8956Y_6g6wiayc7xcQZnX9XASPYpNnzhg>
-    <xmx:mAuyZWfKe2FTP2blU-_ACLLKvXRHejSZf5xrtf0NMrMujT9qSbB-DQ>
-    <xmx:mAuyZTN8xd4j8vKqNvcCgipMRoTmWaP8LbXUIh4NPoVSciouSae3AA>
-    <xmx:mwuyZalX7bXSREqZzMkGAApYYZ2zYrSF8WxOVg6DCvX09zhBiDVpiQ>
-Feedback-ID: i84414492:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id CBA0C1700093; Thu, 25 Jan 2024 02:19:52 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-119-ga8b98d1bd8-fm-20240108.001-ga8b98d1b
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tdlwibwj"
+Received: by mail-ot1-f52.google.com with SMTP id 46e09a7af769-6e0e08c70f7so3330911a34.2;
+        Wed, 24 Jan 2024 23:20:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1706167241; x=1706772041; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=3pofvpEUvE2DG0LQ8xo53uhzJmM6FRGjdvVMnUevHNs=;
+        b=TdlwibwjuaL5grg5vfElJsN2G0tCeqXaDf0MKJJ4fY7DHupQ6Yz8mDaKEvZbvXW6UJ
+         u21SaK15Dd4YXTo+UylKMRwrj61lAhZjhEkYNh5yP9QoHNCnTmPUpWg27vsaN+Fhhb6z
+         e5uCSoZ5K2ctJJhLsyS2/Nbpzc7k9l3I5XgQM1CETONVO4EIpq5PLQDNX2f5a9u118Na
+         1Jh6JXzZd0KlGBGexDVTh0dB6+ATBSj7femGlZ3JVbV96Zr0EvKHVAGClaBLqS516LI9
+         +8xRLXfR9QgVS4Mmc6qXMH1ExF0zzGVbze31mQcq3tvHM6Q9ABKgDC/WMCYEOP2itUDY
+         mixA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706167241; x=1706772041;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3pofvpEUvE2DG0LQ8xo53uhzJmM6FRGjdvVMnUevHNs=;
+        b=It0B0ib8DAndCSfIwPgs5ZeEblYq0jDsPIlnSHm/eqdS0zm4ZyghBdIqd3SUvJHOaG
+         jvuAo9tQ1sJwYbr+rg2o5oihSZYkkJDfH0I6TBpa0MB3ptDaM7obsGEd0RRMEiCQZ6DM
+         OzJp97TahYwPk5achun2KWCK6Irw123+865TJ8qTceqt4zOeN/3FFK3fNRPv62NYzjAf
+         PrSic8B561F17/bh3rj7mY/kxcjH3TtId3t/VCpcupMqL1vLWxNqSz93R3nVTLild0Ad
+         H69C1kCYEJ7PwL62Y1zVIUI3nozyjd7f8euRVrw7+yoHQLUYkqDrqZM8jwxO1dS7g7mG
+         wK9w==
+X-Gm-Message-State: AOJu0YwIeFyn5gvGU1/Mq55sTw3YRLFgbCyQnxAOlEeai9990Lw0CkTj
+	RohFxqB2u7hDpesYr8J6cxoQwkUL8JJSz9Q805sOluGFQuWW8GZQPudYiRCbSHyXae0tgKkyLxd
+	BA5M38IGppZoMdveJ1Rdh4AV/5yA=
+X-Google-Smtp-Source: AGHT+IEvvRZvW1Z6yIqBkAu9YjlW5ApPGFtR6jRbJbnK1TME2cQlVfAOReWvV/ty4FhATo9HE+mlqFjqa3Ij2GopCgM=
+X-Received: by 2002:a05:6871:7994:b0:210:aec0:e8ed with SMTP id
+ pb20-20020a056871799400b00210aec0e8edmr523829oac.73.1706167241216; Wed, 24
+ Jan 2024 23:20:41 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <23d023c0-27cf-44fa-be0a-000d1534ef86@app.fastmail.com>
-In-Reply-To: <20240125062739.1339782-3-debug@rivosinc.com>
-References: <20240125062739.1339782-1-debug@rivosinc.com>
- <20240125062739.1339782-3-debug@rivosinc.com>
-Date: Thu, 25 Jan 2024 02:19:29 -0500
-From: "Stefan O'Rear" <sorear@fastmail.com>
-To: debug@rivosinc.com, rick.p.edgecombe@intel.com, broonie@kernel.org,
- Szabolcs.Nagy@arm.com, "kito.cheng@sifive.com" <kito.cheng@sifive.com>,
- "Kees Cook" <keescook@chromium.org>,
- "Andrew Jones" <ajones@ventanamicro.com>, paul.walmsley@sifive.com,
- "Palmer Dabbelt" <palmer@dabbelt.com>,
- "Conor Dooley" <conor.dooley@microchip.com>, cleger@rivosinc.com,
- "Atish Patra" <atishp@atishpatra.org>, "Alexandre Ghiti" <alex@ghiti.fr>,
- =?UTF-8?Q?Bj=C3=B6rn_T=C3=B6pel?= <bjorn@rivosinc.com>,
- "Alexandre Ghiti" <alexghiti@rivosinc.com>
-Cc: "Jonathan Corbet" <corbet@lwn.net>, "Albert Ou" <aou@eecs.berkeley.edu>,
- oleg@redhat.com, akpm@linux-foundation.org, arnd@arndb.de,
- "Eric W. Biederman" <ebiederm@xmission.com>, shuah@kernel.org,
- "Christian Brauner" <brauner@kernel.org>, guoren <guoren@kernel.org>,
- samitolvanen@google.com, "Evan Green" <evan@rivosinc.com>,
- xiao.w.wang@intel.com, "Anup Patel" <apatel@ventanamicro.com>,
- mchitale@ventanamicro.com, waylingii@gmail.com, greentime.hu@sifive.com,
- "Heiko Stuebner" <heiko@sntech.de>, "Jisheng Zhang" <jszhang@kernel.org>,
- shikemeng@huaweicloud.com, david@redhat.com,
- "Charlie Jenkins" <charlie@rivosinc.com>, panqinglin2020@iscas.ac.cn,
- willy@infradead.org, "Vincent Chen" <vincent.chen@sifive.com>,
- "Andy Chiu" <andy.chiu@sifive.com>, "Greg Ungerer" <gerg@kernel.org>,
- jeeheng.sia@starfivetech.com, mason.huo@starfivetech.com,
- ancientmodern4@gmail.com, mathis.salmen@matsal.de,
- cuiyunhui@bytedance.com, bhe@redhat.com, chenjiahao16@huawei.com,
- ruscur@russell.cc, bgray@linux.ibm.com, alx@kernel.org,
- baruch@tkos.co.il, zhangqing@loongson.cn,
- "Catalin Marinas" <catalin.marinas@arm.com>, revest@chromium.org,
- josh@joshtriplett.org, joey.gouly@arm.com, shr@devkernel.io,
- omosnace@redhat.com, ojeda@kernel.org, jhubbard@nvidia.com,
- linux-doc@vger.kernel.org, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [RFC PATCH v1 02/28] riscv: envcfg save and restore on trap entry/exit
-Content-Type: text/plain
+References: <20240125025533.10315-1-Wenhua.Lin@unisoc.com> <20240125025533.10315-3-Wenhua.Lin@unisoc.com>
+In-Reply-To: <20240125025533.10315-3-Wenhua.Lin@unisoc.com>
+From: Chunyan Zhang <zhang.lyra@gmail.com>
+Date: Thu, 25 Jan 2024 15:20:04 +0800
+Message-ID: <CAAfSe-t68Jq+mKaSdzz5P2tPetxup7w1UoMsk+Z__3YWtV6EhQ@mail.gmail.com>
+Subject: Re: [PATCH V2 2/6] pwm: sprd: Improve the pwm backlight control function
+To: Wenhua Lin <Wenhua.Lin@unisoc.com>
+Cc: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
+	Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Orson Zhai <orsonzhai@gmail.com>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
+	linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, wenhua lin <wenhua.lin1994@gmail.com>, 
+	Xiongpeng Wu <xiongpeng.wu@unisoc.com>, zhaochen su <zhaochen.su29@gmail.com>, 
+	Zhaochen Su <Zhaochen.Su@unisoc.com>, Xiaolong Wang <Xiaolong.Wang@unisoc.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Jan 25, 2024, at 1:21 AM, debug@rivosinc.com wrote:
-> From: Deepak Gupta <debug@rivosinc.com>
+On Thu, 25 Jan 2024 at 11:09, Wenhua Lin <Wenhua.Lin@unisoc.com> wrote:
 >
-> envcfg CSR defines enabling bits for cache management instructions and soon
-> will control enabling for control flow integrity and pointer masking features.
+> The pwm-sprd driver support only 8-bit linear control of backlight. Now,
+> new requests of supporting 9-bit, 10-bit, 11-bit and 12-bit linear
+> control of backlight are proposed. Besides, different channels of pwm
+> could be configured into different linear control of backlight. Thus,
+> sprd,mod attribute is introduced into dts for every channel of pwm
+> device. This attribute would determine the value of MOD and eventually
+> realize the new requirements.
 >
-> Control flow integrity enabling for forward cfi and backward cfi is controlled
-> via envcfg and thus need to be enabled on per thread basis.
->
-> This patch creates a place holder for envcfg CSR in `thread_info` and adds
-> logic to save and restore on trap entry and exits.
-
-Should only be "restore"?  I don't see saving.
-
->
-> Signed-off-by: Deepak Gupta <debug@rivosinc.com>
+> Signed-off-by: Wenhua Lin <Wenhua.Lin@unisoc.com>
 > ---
->  arch/riscv/include/asm/thread_info.h | 1 +
->  arch/riscv/kernel/asm-offsets.c      | 1 +
->  arch/riscv/kernel/entry.S            | 4 ++++
->  3 files changed, 6 insertions(+)
+>  drivers/pwm/pwm-sprd.c | 42 ++++++++++++++++++++++++++++++++++--------
+>  1 file changed, 34 insertions(+), 8 deletions(-)
 >
-> diff --git a/arch/riscv/include/asm/thread_info.h 
-> b/arch/riscv/include/asm/thread_info.h
-> index 574779900bfb..320bc899a63b 100644
-> --- a/arch/riscv/include/asm/thread_info.h
-> +++ b/arch/riscv/include/asm/thread_info.h
-> @@ -57,6 +57,7 @@ struct thread_info {
->  	long			user_sp;	/* User stack pointer */
->  	int			cpu;
->  	unsigned long		syscall_work;	/* SYSCALL_WORK_ flags */
-> +	unsigned long envcfg;
->  #ifdef CONFIG_SHADOW_CALL_STACK
->  	void			*scs_base;
->  	void			*scs_sp;
-> diff --git a/arch/riscv/kernel/asm-offsets.c 
-> b/arch/riscv/kernel/asm-offsets.c
-> index a03129f40c46..cdd8f095c30c 100644
-> --- a/arch/riscv/kernel/asm-offsets.c
-> +++ b/arch/riscv/kernel/asm-offsets.c
-> @@ -39,6 +39,7 @@ void asm_offsets(void)
->  	OFFSET(TASK_TI_PREEMPT_COUNT, task_struct, thread_info.preempt_count);
->  	OFFSET(TASK_TI_KERNEL_SP, task_struct, thread_info.kernel_sp);
->  	OFFSET(TASK_TI_USER_SP, task_struct, thread_info.user_sp);
-> +	OFFSET(TASK_TI_ENVCFG, task_struct, thread_info.envcfg);
->  #ifdef CONFIG_SHADOW_CALL_STACK
->  	OFFSET(TASK_TI_SCS_SP, task_struct, thread_info.scs_sp);
->  #endif
-> diff --git a/arch/riscv/kernel/entry.S b/arch/riscv/kernel/entry.S
-> index 54ca4564a926..63c3855ba80d 100644
-> --- a/arch/riscv/kernel/entry.S
-> +++ b/arch/riscv/kernel/entry.S
-> @@ -129,6 +129,10 @@ SYM_CODE_START_NOALIGN(ret_from_exception)
->  	addi s0, sp, PT_SIZE_ON_STACK
->  	REG_S s0, TASK_TI_KERNEL_SP(tp)
-> 
-> +	/* restore envcfg bits for current thread */
-> +	REG_L s0, TASK_TI_ENVCFG(tp)
-> +	csrw CSR_ENVCFG, s0
+> diff --git a/drivers/pwm/pwm-sprd.c b/drivers/pwm/pwm-sprd.c
+> index bc1e3ed13528..cc54aa77c7e6 100644
+> --- a/drivers/pwm/pwm-sprd.c
+> +++ b/drivers/pwm/pwm-sprd.c
+> @@ -18,7 +18,8 @@
+>  #define SPRD_PWM_DUTY          0x8
+>  #define SPRD_PWM_ENABLE                0x18
+>
+> -#define SPRD_PWM_MOD_MAX       GENMASK(7, 0)
+> +#define SPRD_PWM_MOD_MAX       GENMASK(15, 0)
+> +#define SPRD_PWM_MOD_DEFAULT   GENMASK(9, 0)
+>  #define SPRD_PWM_DUTY_MSK      GENMASK(15, 0)
+>  #define SPRD_PWM_PRESCALE_MSK  GENMASK(7, 0)
+>  #define SPRD_PWM_ENABLE_BIT    BIT(0)
+> @@ -43,6 +44,7 @@ struct sprd_pwm_chip {
+>         const struct sprd_pwm_data *pdata;
+>         int num_pwms;
+>         struct sprd_pwm_chn chn[SPRD_PWM_CHN_NUM];
+> +       u32 mod[SPRD_PWM_CHN_NUM];
+>  };
+>
+>  static const struct sprd_pwm_data ums512_data = {
+> @@ -120,7 +122,7 @@ static int sprd_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+>          */
+>         val = sprd_pwm_read(spc, pwm->hwpwm, SPRD_PWM_PRESCALE);
+>         prescale = val & SPRD_PWM_PRESCALE_MSK;
+> -       tmp = (prescale + 1) * NSEC_PER_SEC * SPRD_PWM_MOD_MAX;
+> +       tmp = (prescale + 1) * NSEC_PER_SEC * spc->mod[pwm->hwpwm];
+>         state->period = DIV_ROUND_CLOSEST_ULL(tmp, chn->clk_rate);
+>
+>         val = sprd_pwm_read(spc, pwm->hwpwm, SPRD_PWM_DUTY);
+> @@ -140,7 +142,7 @@ static int sprd_pwm_config(struct sprd_pwm_chip *spc, struct pwm_device *pwm,
+>                            int duty_ns, int period_ns)
+>  {
+>         struct sprd_pwm_chn *chn = &spc->chn[pwm->hwpwm];
+> -       u32 prescale, duty;
+> +       u32 prescale, duty, mod;
+>         u64 tmp;
+>
+>         /*
+> @@ -148,16 +150,21 @@ static int sprd_pwm_config(struct sprd_pwm_chip *spc, struct pwm_device *pwm,
+>          * The period length is (PRESCALE + 1) * MOD counter steps.
+>          * The duty cycle length is (PRESCALE + 1) * DUTY counter steps.
+>          *
+> -        * To keep the maths simple we're always using MOD = SPRD_PWM_MOD_MAX.
+> +        * The value for MOD is obtained from dts.
+>          * The value for PRESCALE is selected such that the resulting period
+>          * gets the maximal length not bigger than the requested one with the
+> -        * given settings (MOD = SPRD_PWM_MOD_MAX and input clock).
+> +        * given settings (MOD and input clock).
+>          */
+> -       duty = duty_ns * SPRD_PWM_MOD_MAX / period_ns;
+> +       mod = spc->mod[pwm->hwpwm];
+> +       duty = duty_ns * mod / period_ns;
+>
+>         tmp = (u64)chn->clk_rate * period_ns;
+>         do_div(tmp, NSEC_PER_SEC);
+> -       prescale = DIV_ROUND_CLOSEST_ULL(tmp, SPRD_PWM_MOD_MAX) - 1;
+> +       prescale = DIV_ROUND_CLOSEST_ULL(tmp, mod);
+> +       if (prescale < 1)
+> +               prescale = 1;
+> +       prescale--;
 > +
-
-This is redundant if we're repeatedly processing interrupts or exceptions
-within a single task.  We should only be writing envcfg when switching
-between tasks or as part of the prctl.
-
-We need to use an ALTERNATIVE for this since the oldest supported hardware
-does not have envcfg csrs.
-
--s
-
->  	/* Save the kernel shadow call stack pointer */
->  	scs_save_current
-> 
-> -- 
-> 2.43.0
+>         if (prescale > SPRD_PWM_PRESCALE_MSK)
+>                 prescale = SPRD_PWM_PRESCALE_MSK;
 >
+> @@ -170,7 +177,7 @@ static int sprd_pwm_config(struct sprd_pwm_chip *spc, struct pwm_device *pwm,
+>          * before changing a new configuration to avoid mixed settings.
+>          */
+>         sprd_pwm_write(spc, pwm->hwpwm, SPRD_PWM_PRESCALE, prescale);
+> -       sprd_pwm_write(spc, pwm->hwpwm, SPRD_PWM_MOD, SPRD_PWM_MOD_MAX);
+> +       sprd_pwm_write(spc, pwm->hwpwm, SPRD_PWM_MOD, mod);
+>         sprd_pwm_write(spc, pwm->hwpwm, SPRD_PWM_DUTY, duty);
 >
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
+>         return 0;
+> @@ -263,6 +270,21 @@ static int sprd_pwm_clk_init(struct sprd_pwm_chip *spc)
+>         return 0;
+>  }
+>
+> +static int sprd_pwm_get_mod(struct platform_device *pdev)
+> +{
+> +       int i, ret;
+> +       struct sprd_pwm_chip *spc = platform_get_drvdata(pdev);
+
+Before using platform_get_drvdata(), you have to call
+platform_set_drvdata, otherwise spc is NULL here and it will cause a
+crash.
+
+> +
+> +       ret = of_property_read_u32_array(pdev->dev.of_node,
+> +                                        "sprd,mod", spc->mod, spc->num_pwms);
+> +       if (ret) {
+
+
+> +               for (i = 0; i < spc->num_pwms; i++)
+> +                       spc->mod[i] = SPRD_PWM_MOD_DEFAULT;
+> +       }
+> +
+> +       return ret;
+> +}
+> +
+>  static int sprd_pwm_probe(struct platform_device *pdev)
+>  {
+>         struct sprd_pwm_chip *spc;
+> @@ -288,6 +310,10 @@ static int sprd_pwm_probe(struct platform_device *pdev)
+>         if (ret)
+>                 return ret;
+>
+> +       ret = sprd_pwm_get_mod(pdev);
+> +       if (ret)
+> +               dev_info(&pdev->dev, "get pwm mod failed! Use default setting\n");
+> +
+>         spc->chip.dev = &pdev->dev;
+>         spc->chip.ops = &sprd_pwm_ops;
+>         spc->chip.npwm = spc->num_pwms;
+> --
+> 2.17.1
+>
