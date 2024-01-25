@@ -1,126 +1,81 @@
-Received: from mail-oo1-f54.google.com (mail-oo1-f54.google.com [209.85.161.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4364E6EB59;
-	Thu, 25 Jan 2024 15:11:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 254FB6EB55
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 15:11:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706195482; cv=none; b=NbGILkq/gjZ+oeTV/6A/YE5dUJPYgyC1cdjFAzfsIfE7NltiPe+y4litDpzBymICodEMvMEsqlSAGsrZJXuu9OJjpYAXWw2fvOy05S0tZYzYLaR+MeO8HRw0Gt9CaVsWu9zY95gzgj+IBsvy/QZ9Ku+NiXGvz4KNgPOmiQHChhA=
+	t=1706195517; cv=none; b=WhqFdIu4mS/W1SZI+XjVuVucDY9TxPFU7L2inqw+c7Oh3MbRCnYtyBHmWujjLfxgoE/i0LeLuaKCsPC+BXDxbe2wacqJNvFqA/iA3VomO7fPX8nd9ZRLTObio9fWlWan0hx3zRYXUeJeNBx6qZHlN9/zsp1nj3Jxmgk4y4U8CiA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706195482; c=relaxed/simple;
-	bh=0kkgr3pPY27+XCQwPxnwYA69zulXjzszjvKCaDByQFs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QE9Wqj2nOtoj2kWz+XvIU3YRRATGs9PnUwRhvHQB7i52EJ8ZFbzXM4GJBtPRriYnCs9IdBdUsy69e/BniRCDSfOOoGHdoSFZmPRDcR8JMPBF0cx6t7p55DRDSIAUrU6sK5reTrcsRrwk8RFplXc3Y2gc77tODNqtVnFHwWmshBQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.161.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oo1-f54.google.com with SMTP id 006d021491bc7-5958b9cda7aso1097093eaf.0;
-        Thu, 25 Jan 2024 07:11:21 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706195480; x=1706800280;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lvr+07Kx8YQ93M5HqGI7hgcDB/+oVfIIQJlNttHWZyw=;
-        b=pismat2h7aSg6w+gFLjuBYpI3dbdTYDgJ5gi7/6bnO5H+ior0xhOI7dGg+uV41LRbw
-         rPaCQU9JCGpU+HHJiSu2CouNQzn+0X9ad5wl/R00o4TeIlMUgI5lOz7kuT9KIJqCDajq
-         ZVkhTXW/ayU3t0XUlhaxKYs55bQ1doJGZp2Vgh1cy5n9LfiPDnUwRV+5jgolWNF+8DeY
-         JI/2l2++pmLt8R+LZOV+UEx82QMmEg30kj4MuNXmKJSK9dM56N+BRRuHqGnPUPRCirec
-         eBd5K8rwwkviuutDVvK6eF/1Xc3CbLKCpvMa5W3AvCYyqes98aSkAuCOCiHEAnT3HstI
-         7CIg==
-X-Gm-Message-State: AOJu0YxFvg7gVLJJGyHBXPl4SdNTcSK6GXfvk+KQxddfwdYqHCw7AVoT
-	0RnlfQgnszYJcWUL3ex+AGaTaEOmGePAwTTCuwa9TmzDsi/bEeUygQWL72cwM/XqbcMVdTvS17K
-	9YLa+55arcAYsCdeHKbPEPz/CLWROHWPG
-X-Google-Smtp-Source: AGHT+IHtr2eKkgKX7pv+5pTOmjiDTsrPRzSkHXOo8wiwYWkBNBHfG4u/wc9sFOXfkcxnnnIoR7dIE82F+U+dZeaW4iI=
-X-Received: by 2002:a05:6820:807:b0:599:6d16:353c with SMTP id
- bg7-20020a056820080700b005996d16353cmr2721741oob.1.1706195480331; Thu, 25 Jan
- 2024 07:11:20 -0800 (PST)
+	s=arc-20240116; t=1706195517; c=relaxed/simple;
+	bh=qqT5s5v8kHRYnSn/7vdNCIRU1OWwV2sCCtz6w1JM1Uc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RosvTBAcgjTlCIWnr+Y7esN83kbQnidY2mpsiGg11ZRxXfenK8Ik4A8z4xOXhp8MW/ApjZFszC5xJzO9OpoU8A75Y5oyM+qG8SK5OK7vMTlaM7aDEoTUmkEtu1Pm2XmQ1S0o4GE6h1Ni29IiatKCSGLHUGLO9LkRqsPqgF5rSMw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tue9wRNh; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tue9wRNh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4302C433B1;
+	Thu, 25 Jan 2024 15:11:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706195516;
+	bh=qqT5s5v8kHRYnSn/7vdNCIRU1OWwV2sCCtz6w1JM1Uc=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Tue9wRNhjMqZFzK9146TlHqSh0uS3ptUAk+FbgZLPMoo5orbTE+F/5izGNNkfxOnL
+	 cSpfL9FJ7/q3eNwQhDZTh4C7UzTy5Rz2tGw84k3NlUHq0VtjAYRNS9NwXMWGgy6cBA
+	 8Mv4z7gyOxW46+SAVZYb41ehlqkVFEqWK0AFEJLuq2QgX4+kDMfe45s5i9yfEa4dIF
+	 6asoOd75OLoQXMMJQOhKt0DuCwVCycuNQgR2CaArJsLts1byjJ9bfGhbD+XTnLs5Ui
+	 zUJ8G/U2/VczZsQR+2qtSouhJn5K68Wty5B84vIVtkJbwdGsPq2SSkHIZvCWZgWfax
+	 PMXyVsmyAsroA==
+From: Jisheng Zhang <jszhang@kernel.org>
+To: Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>
+Cc: linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/2] riscv: enable lockless lockref implementation
+Date: Thu, 25 Jan 2024 22:59:05 +0800
+Message-ID: <20240125145908.968-1-jszhang@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <5760158.DvuYhMxLoT@kreacher> <3290637.44csPzL39Z@kreacher> <ZbITTlBwu390dwT5@linux.intel.com>
-In-Reply-To: <ZbITTlBwu390dwT5@linux.intel.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Thu, 25 Jan 2024 16:11:08 +0100
-Message-ID: <CAJZ5v0iNEuZ3ebpWdETC12Jeq3pTnaTzG-gfQTwLQDGtwvphdQ@mail.gmail.com>
-Subject: Re: [PATCH v1 05/12] PM: sleep: stats: Use step_failures[0] as a
- counter of successful cycles
-To: Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux PM <linux-pm@vger.kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jan 25, 2024 at 8:52=E2=80=AFAM Stanislaw Gruszka
-<stanislaw.gruszka@linux.intel.com> wrote:
->
-> On Mon, Jan 22, 2024 at 12:29:11PM +0100, Rafael J. Wysocki wrote:
-> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> >
-> > The first (index 0) cell of the step_failures[] array in struct
-> > suspend_stats introduced previously can be used as a counter of
-> > successful suspend-resume cycles instead of the separate "success"
-> > field in it, so do that.
-> >
-> > While at it, change the type of the "fail" field in struct
-> > suspend_stats to unsigned int, because it cannot be negative.
-> >
-> > No intentional functional impact.
-> >
-> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > ---
-> >  include/linux/suspend.h |    3 +--
-> >  kernel/power/main.c     |    9 +++++----
-> >  kernel/power/suspend.c  |    2 +-
-> >  3 files changed, 7 insertions(+), 7 deletions(-)
-> >
-> > Index: linux-pm/include/linux/suspend.h
-> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > --- linux-pm.orig/include/linux/suspend.h
-> > +++ linux-pm/include/linux/suspend.h
-> > @@ -55,8 +55,7 @@ enum suspend_stat_step {
-> >
-> >  struct suspend_stats {
-> >       unsigned int step_failures[SUSPEND_NR_STEPS];
-> > -     int     success;
-> <snip>
-> > -                suspend_stats.success, suspend_stats.fail);
-> > +     seq_printf(s, "success: %u\nfail: %u\n",
-> > +                suspend_stats.step_failures[SUSPEND_NONE],
-> > +                suspend_stats.fail);
-> >
-> >       for (step =3D SUSPEND_FREEZE; step < SUSPEND_NR_STEPS; step++)
-> >               seq_printf(s, "failed_%s: %u\n", suspend_step_names[step]=
-,
-> > Index: linux-pm/kernel/power/suspend.c
-> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > --- linux-pm.orig/kernel/power/suspend.c
-> > +++ linux-pm/kernel/power/suspend.c
-> > @@ -620,7 +620,7 @@ int pm_suspend(suspend_state_t state)
-> >               suspend_stats.fail++;
-> >               dpm_save_failed_errno(error);
-> >       } else {
-> > -             suspend_stats.success++;
-> > +             suspend_stats.step_failures[SUSPEND_NONE]++;
->
-> This looks confusing for me. I think would be better keep
-> success field and just remove SUSPEND_NONE from the
-> suspend_stat_step and suspend_stat_names. Actually do
-> not introduce it, SUSPEND_NONE does not seems to be necessary
-> (SUSPEND_FREEZE can be 0).
+This series selects ARCH_USE_CMPXCHG_LOCKREF to enable the
+cmpxchg-based lockless lockref implementation for riscv. Then,
+implement arch_cmpxchg64_{relaxed|acquire|release}.
 
-OK
+After patch1:
+Using Linus' test case[1] on TH1520 platform, I see a 11.2% improvement.
+On JH7110 platform, I see 12.0% improvement.
 
-I'll need to rearrange the series for that somewhat except for the
-first two patches.
+After patch2:
+on both TH1520 and JH7110 platforms, I didn't see obvious
+performance improvement with Linus' test case [1]. IMHO, this may
+be related with the fence and lr.d/sc.d hw implementations. In theory,
+lr/sc without fence could give performance improvement over lr/sc plus
+fence, so add the code here to leave performance improvement room on
+newer HW platforms.
 
-I guess it's OK to retain the R-by tags?
+Link: http://marc.info/?l=linux-fsdevel&m=137782380714721&w=4 [1]
 
-Thanks for all of the reviews!
+Since v2:
+  - rebase on v6.8-rc1
+  - collect Reviewed-by tag
+
+Since v1:
+  - only select ARCH_USE_CMPXCHG_LOCKREF if 64BIT
+
+Jisheng Zhang (2):
+  riscv: select ARCH_USE_CMPXCHG_LOCKREF
+  riscv: cmpxchg: implement arch_cmpxchg64_{relaxed|acquire|release}
+
+ arch/riscv/Kconfig               |  1 +
+ arch/riscv/include/asm/cmpxchg.h | 18 ++++++++++++++++++
+ 2 files changed, 19 insertions(+)
+
+-- 
+2.43.0
+
