@@ -1,54 +1,55 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D974958214
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 13:34:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FF1C55C07;
+	Thu, 25 Jan 2024 13:34:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706189650; cv=none; b=gc1l5qxr/0kHRxt4oc5lvYN9W8L5C+KRHtuVreT9bUNkay3YXh1RYlZ4TtL7BNoagce6f11qBcrbf1hBWGjqQ+H83JaQ31ICKdgLIWyFJBwPPF8B7cZKqH5+XVQKZaQQavD4w4zNejD/T3qkWWzfqHoBqmdvusbUTCHTKg70zdQ=
+	t=1706189691; cv=none; b=iZWrAwnh8JFS8ksoOB1LNYKAccCv02lEF0eqQsVv669lGUnVLEJxzrgjyC1KfLTVOIM4iOAdTvSdFXO5XA5wDM3/p8EJwUysryCGNqQhIJc8F7CKapW1jaJ2JIPG8gpEcaDxtz/tuq9xOOBcrxo1JxYsuhR5oyQgBDEeFY0t2FQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706189650; c=relaxed/simple;
-	bh=WFLSxR41qxI01BTnGbZrDFaFl3SEY/bnaqmjWh3tbes=;
+	s=arc-20240116; t=1706189691; c=relaxed/simple;
+	bh=fodR/wINVlR/J76ojNUVdVoAQKjYqindKu3aLYvmAQE=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=d4SC8QHxoD0jPueQaioJXgNp6LTKtLmm/J8mDWG/TOBLBX+EMYeCZN67peYdWh72qU/vJgZz0tA++1ASeSRgH83XNLL9mTmgIShwIl+eAkJQgaN9mGu547tsdCAnT2rl0vczlpEqPimke3rpRu+r6cQwJjkmXTGL/7xYP6tVRc0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=f20jIc0g; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=mVvRVXEn; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version:Content-Type; b=KkNHgoRWrLNnkFbwrbMhbMO8ONgHnjNvChq9l7u/80KKfo3wTUJCcXwKE6uTaTvHCPdlkBJdRwR12fJkimtR3fwDafXryX8r0UVFT7EcWFwD3U6nFU8zU2446m4oS9iPuaLiXEj8A7kjAxbsWUdfbC4dWx8Y0N8TUHH6PjMeKGU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=KU6f/2uy; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=jV7+hHCL; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="f20jIc0g";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="mVvRVXEn"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="KU6f/2uy";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="jV7+hHCL"
 From: Thomas Gleixner <tglx@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1706189647;
+	s=2020; t=1706189688;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Ai6q29s+US5Xx9sEBiO5CtLGzgW8po0CI21s/P9UkFs=;
-	b=f20jIc0gIMcE1pW6MwjjeFcFv7RDnmw0NDhat0wSyYGRkCJ3RpuS361QogkHSjWkZkaqI3
-	aHOGGmkUWcjWpcC3GCgH3jOnDPlb/kUfAMLezDWYTlGS71+qYsbSmsj8XcP2blbdGs3WDB
-	PPxzH2oC1SFNvEC350Jo46Z2MW0rm1Gu+SIiBZEtqRw6/UZxX7o2TDyyt30Ynb53wcGXbB
-	YKu/Smdmgx1z5BCUDsqWUEOe0U892blM7Qou5p5XR73q2hFSR7n42KxeJP9OqtTskvMZLa
-	3RTfY6nPEygwjVwMPq2KsciPyLsJ6zzFeqO5YBQLQMr4lbaCt4y9b0DFczAPhA==
+	bh=fodR/wINVlR/J76ojNUVdVoAQKjYqindKu3aLYvmAQE=;
+	b=KU6f/2uyUXAUz+h3s3pzDn1XEn+eXpn90a2OkdCm80BAy9R8NZbDulD0vKUYbpAawnZroV
+	YS8Ft2RGpcCqI1+9kZniuiWa03AXNVG/aaxTZREMeK20fvuBjwiogZDQrTADUVRh8664ex
+	qOYV5F2Xl2OTl0DBE7WNHmdy0T6/7r77jtaqSNRqrEDBVQQ1ZHO/ai9+zYr4EHppUXd56D
+	eBQe2VTUlgesOW4puavhdVuHjAtabWAwSVOITklvHsp67ovn31h1xfGCun1gw0oWTCo4FI
+	YhF4o/jYOQXl09tb1q3heof8RN07k3Ff53x1GIB2fWaPtKaAKJ/XiAb5ZO/leQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1706189647;
+	s=2020e; t=1706189688;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Ai6q29s+US5Xx9sEBiO5CtLGzgW8po0CI21s/P9UkFs=;
-	b=mVvRVXEnWBND3RUw4JqgrG3ahfCVznJbr22FiE91+uf+Gx9xFqlYSSufsMuOGbRMS90LNO
-	pvYFuQ+UWUDUuLCg==
-To: Frederic Weisbecker <frederic@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Peng Liu <liupeng17@lenovo.com>,
- Ingo Molnar <mingo@kernel.org>, Anna-Maria Behnsen
- <anna-maria@linutronix.de>, Joel Fernandes <joel@joelfernandes.org>
-Subject: Re: [PATCH 01/15] tick/nohz: Remove duplicate between
- tick_nohz_switch_to_nohz() and tick_setup_sched_timer()
-In-Reply-To: <ZbJMkautxpj1sQEJ@lothringen>
-References: <20240124170459.24850-1-frederic@kernel.org>
- <20240124170459.24850-2-frederic@kernel.org> <87h6j1kc97.ffs@tglx>
- <ZbJMkautxpj1sQEJ@lothringen>
-Date: Thu, 25 Jan 2024 14:34:06 +0100
-Message-ID: <87zfwth701.ffs@tglx>
+	bh=fodR/wINVlR/J76ojNUVdVoAQKjYqindKu3aLYvmAQE=;
+	b=jV7+hHCLc99hIZ63WCMbdZMBFzVMNrTFbamWq4pZfZesYTsw0CyCHk0jXsLit6VG+ZNFPH
+	K59kafS6CNlQA/DA==
+To: Anna-Maria Behnsen <anna-maria@linutronix.de>, linux-kernel@vger.kernel.org
+Cc: Frederic Weisbecker <frederic@kernel.org>, Ingo Molnar
+ <mingo@kernel.org>, John Stultz <jstultz@google.com>, Stephen Boyd
+ <sboyd@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Clemens Ladisch
+ <clemens@ladisch.de>, linux-doc@vger.kernel.org
+Subject: Re: [PATCH 1/8] include/hrtimers: Move hrtimer base related
+ definitions into hrtimer_defs
+In-Reply-To: <87h6j1d2ol.fsf@somnus>
+References: <20240123164702.55612-1-anna-maria@linutronix.de>
+ <20240123164702.55612-2-anna-maria@linutronix.de> <87plxpkesh.ffs@tglx>
+ <87h6j1d2ol.fsf@somnus>
+Date: Thu, 25 Jan 2024 14:34:47 +0100
+Message-ID: <87wmrxh6yw.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -57,29 +58,21 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain
 
-On Thu, Jan 25 2024 at 12:57, Frederic Weisbecker wrote:
-> On Thu, Jan 25, 2024 at 10:12:20AM +0100, Thomas Gleixner wrote:
->> Adding
->> 
->> #define tick_nohz_highres_handler NULL
->> 
->> for CONFIG_HIGH_RES_TIMERS=n somewhere allows you to write that as:
->> 
->> 	if (IS_ENABLED(CONFIG_HIGH_RES_TIMERS) && mode == NOHZ_MODE_HIGHRES)
->> 		ts->sched_timer.function = tick_nohz_highres_handler;
+On Thu, Jan 25 2024 at 13:20, Anna-Maria Behnsen wrote:
+> Thomas Gleixner <tglx@linutronix.de> writes:
 >
-> So the next patch does:
+>> On Tue, Jan 23 2024 at 17:46, Anna-Maria Behnsen wrote:
+>>> hrtimer base related struct definitions are part of hrtimers.h as it is
+>>> required there. With this, also the struct documentation which is for core
+>>> code internal use, is exposed into the general api. To prevent this, all
+>>> core internal definitions and the related includes are moved into
+>>> hrtimer_defs header file.
+>>
+>> Shouldn't this simply move to kernel/time/... ? Nothing outside of it
+>> needs hrtimer_base
 >
-> if (mode == NOHZ_MODE_HIGHRES)
->     ts->sched_timer.function = tick_nohz_highres_handler;
->
-> Because that condition only happens in CONFIG_HIGH_RES_TIMERS anyway
-> and the function field exists in any case.
+> hrtimer_expires_remaining() which is defined in include/hrtimer.h
+> dereferences hrtimer_clock_base; hrtimer_is_hres_active() also defined
+> in include/hrtimer.h needs hrtimer_base.
 
-Right, but the function does not exist for HRES=n, so you need the
-#define ... NULL. The IS_ENABLED() allows the compiler to eliminate the
-code for HRES=n completely.
-
-Thanks,
-
-        tglx
+Duh, yes.
