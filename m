@@ -1,106 +1,155 @@
-Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E62A1292E7
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 16:09:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD30986143;
+	Thu, 25 Jan 2024 16:11:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.88
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706198989; cv=none; b=ckdEGrVXhlzVCZzaPXL/yt4b8S/naGnK3Tm2X65ROKSixF/8zcbrqOYbcbHK/w/Vv7oCvMRkcZDP4vMH+pX6cawt6sn4gbTQGvDB3gPhwAnxhYjm5gO1sVtNNSa0rTEbg3EK044rA4mB7Bhp8znjnVuaUaj+tfsr4S9Q/7nycAo=
+	t=1706199062; cv=none; b=vANzayhpyFTxyuGImUFE6TGnt64N6T6qMra2eHh53jfwW+jgSJ4Vgmh52rElOuR6UPV0h8ijvjzjjWEhhJgsVgNactvjIwrfmAiWX+WBr/V6PJs4Tg95s9Jqi0Hl59B5TNrQ3Ppk9HAK5HXl5gTy13fMWA/tXBnLhQhA0Kj8xIk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706198989; c=relaxed/simple;
-	bh=tbH3ZcfEZi1hTyHe1rC+rgg4mr+vvSHAw05EM4mwVZQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jePLq2CErweWt4FSgtQHwcse9oCbUljQ4evGSeFIV/+rgNQxp9NkTYpJDocxsNdna/LMxKt2dPCGBwax+PMNdnQfDbGT81R4Kjz2SQ/xATkstOqOM/4w+9XRwR5Vv6FiRZntp91qzatvq//3OcWwLZPNdBL8XOJsio6U3ylMsYQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=PSBvhXYp; arc=none smtp.client-ip=209.85.166.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1706199062; c=relaxed/simple;
+	bh=erA6r6+8c+fMm7TjsfyuG2K4tmIEaj6481Pqbo/gIRU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eg61iM8gqKsw+CTvF5lHoLHfXibH18Zr7aoS7WUeo6eDJfnqjdN0hIWfFD7tglBpje6P/sbWKzdWrRZAmhtXgbAbW/CHx8Xip8/2XgHr9d7ZQN9W5xGy2eI3PNj05rLgE2f7dubEROXozwV0mkKFJQ/cvEPgfCImWvmVnSRuXk0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UGsjEBlW; arc=none smtp.client-ip=192.55.52.88
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="PSBvhXYp"
-Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-361a8f20e22so633175ab.0
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 08:09:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1706198985; x=1706803785; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=WyHxjKtVXGSwGC6zU0Wll0qpN4a6mMfynNab9F2/w+A=;
-        b=PSBvhXYpNkFCyR7iGOAemGEYqQ5+s1kqmfy9SH7e7fCf9TnRN6c3qDxJhmkyoAmMJz
-         bP/h1TcjdcHjG5sW0L/BubkqzKkUzpvs7Zh2lXOlVB3Q0e1R/UP+IEqNnBYY3jSrXu0L
-         /KkJGWfhBDxuCfzQxl4AoCqu1HBNjZtFgEF1mRCMhnsD8SlvxMSH8s8VT+3zl+oIEaKo
-         mSjJPEcHD8ug9QiZhwJ+k2BQPyEEjlhxxtEuW3+ugm/lU26OXNAgpoyf4+A43vaI5VKV
-         rMkA+hsexEbhk2NnV746wgMAqllVMzCIe86CIFvsZYZs2246yxWpROQ5qpdIb81pIlBt
-         vmoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706198985; x=1706803785;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=WyHxjKtVXGSwGC6zU0Wll0qpN4a6mMfynNab9F2/w+A=;
-        b=rYDU/TPqLWpfALpyH3eiDMRnkV2jdbOmjqhhPXVVlmPo5hGsI+5NKocY1FBIbE4R3B
-         uafbBCQGiwN0u5bvA2VMZzOMBeMxSyxGnkHLBOxlhNcW/93iE9bspBMca2BJBU7f/Ted
-         M/XzyJ6vJ+n8jNPnf0uO5XX4mmt1qKcU4mLaeqWZbybR75HTNfrYaf7VRBFquoA/oodT
-         782yEXcO6wniil+oITSyxQtHqHfitvHILCqw/0VOx+pfz8gqA90TR1ltHf0sq3UBqy3V
-         3z2Nmek4xqQkjlW9zwoyWoUZHvZ8GeNec5CJQCIeA+a4AR7QdeXQaAl3cVymibNXaKnG
-         gTuA==
-X-Gm-Message-State: AOJu0YzVOPU0Kj4rkoCaf8iUh4oYUFymjTLoUn4XjBwX1tihZ4grSUKn
-	7w6p5pAiXMZc6zWVnDuiQiKMY3sbz74dkrsIx2J//64pYz26QXfNxauIFoEZbdg=
-X-Google-Smtp-Source: AGHT+IFCFF1erf4MT7gNzcrY0j99+IrW8aynC/2V1tHd5SfWQOYOTsc0TDco8BBXVgJlZq753TCFpQ==
-X-Received: by 2002:a92:cd83:0:b0:361:9667:9390 with SMTP id r3-20020a92cd83000000b0036196679390mr2721223ilb.1.1706198985222;
-        Thu, 25 Jan 2024 08:09:45 -0800 (PST)
-Received: from [192.168.1.116] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id s2-20020a02c502000000b0046df6e19b9csm4572238jam.34.2024.01.25.08.09.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 25 Jan 2024 08:09:44 -0800 (PST)
-Message-ID: <07de550c-2048-4b2f-8127-e20de352ffde@kernel.dk>
-Date: Thu, 25 Jan 2024 09:09:44 -0700
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UGsjEBlW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706199061; x=1737735061;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=erA6r6+8c+fMm7TjsfyuG2K4tmIEaj6481Pqbo/gIRU=;
+  b=UGsjEBlWD4hml9v1xNgHY6As2IYorXSB3+lIQR3W+kRa11R4pd1DJ5vf
+   MipegmtzJOh3uIqxEF0o5vDms+Mfq9yr6ndFMtpBIuqRMuWfmRB5a4hbo
+   kuarqa/3HqtLOlQqu9UBAsw2CGJwpaiP42IEumBt5ZDvdZBiUnjzj1AgY
+   Hrnkp7l/f8rYABkRBeUJSfbU13kFSTtuCNwRsdQuwc6/BZ5A+9aN4dxKT
+   qzGykkX2Mmp6REN9ErBTWgDtVT51GkLdgdgfhFipHL1bQNBxYo8L5O2z9
+   TV7gLxoyuUoMkNPy7wM+srX0bKPzNd7fk8ptabyMzAB56MEdGV/3cyJq/
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="433358619"
+X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
+   d="scan'208";a="433358619"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2024 08:10:59 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="736372656"
+X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
+   d="scan'208";a="736372656"
+Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2024 08:10:52 -0800
+Received: from kekkonen.localdomain (localhost [127.0.0.1])
+	by kekkonen.fi.intel.com (Postfix) with ESMTP id 775ED11FAD4;
+	Thu, 25 Jan 2024 18:01:16 +0200 (EET)
+Date: Thu, 25 Jan 2024 16:01:16 +0000
+From: "sakari.ailus@linux.intel.com" <sakari.ailus@linux.intel.com>
+To: Zhi Mao =?utf-8?B?KOavm+aZuik=?= <zhi.mao@mediatek.com>
+Cc: "heiko@sntech.de" <heiko@sntech.de>,
+	"gerald.loacker@wolfvision.net" <gerald.loacker@wolfvision.net>,
+	"robh+dt@kernel.org" <robh+dt@kernel.org>,
+	"yunkec@chromium.org" <yunkec@chromium.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"dan.scally@ideasonboard.com" <dan.scally@ideasonboard.com>,
+	"linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+	Shengnan Wang =?utf-8?B?KOeOi+Wco+eUtyk=?= <shengnan.wang@mediatek.com>,
+	"hdegoede@redhat.com" <hdegoede@redhat.com>,
+	"linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+	"andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>,
+	Yaya Chang =?utf-8?B?KOW8tembhea4hSk=?= <Yaya.Chang@mediatek.com>,
+	"mchehab@kernel.org" <mchehab@kernel.org>,
+	"jacopo.mondi@ideasonboard.com" <jacopo.mondi@ideasonboard.com>,
+	"jernej.skrabec@gmail.com" <jernej.skrabec@gmail.com>,
+	"linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
+	"bingbu.cao@intel.com" <bingbu.cao@intel.com>,
+	Project_Global_Chrome_Upstream_Group <Project_Global_Chrome_Upstream_Group@mediatek.com>,
+	"conor+dt@kernel.org" <conor+dt@kernel.org>,
+	"10572168@qq.com" <10572168@qq.com>,
+	"hverkuil-cisco@xs4all.nl" <hverkuil-cisco@xs4all.nl>,
+	"tomi.valkeinen@ideasonboard.com" <tomi.valkeinen@ideasonboard.com>,
+	"krzysztof.kozlowski+dt@linaro.org" <krzysztof.kozlowski+dt@linaro.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
+	"laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"angelogioacchino.delregno@collabora.com" <angelogioacchino.delregno@collabora.com>,
+	"macromorgan@hotmail.com" <macromorgan@hotmail.com>
+Subject: Re: [PATCH v3 2/2] media: i2c: Add GC08A3 image sensor driver
+Message-ID: <ZbKFzGxXhU0TABHZ@kekkonen.localdomain>
+References: <20240109022715.30278-1-zhi.mao@mediatek.com>
+ <20240109022715.30278-3-zhi.mao@mediatek.com>
+ <ZZ0dcTEqxjYCohac@kekkonen.localdomain>
+ <42cf05ea80a2413aae588b762e67c3418b9514d4.camel@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH, RFC] block: set noio context in submit_bio_noacct_nocheck
-Content-Language: en-US
-To: Christoph Hellwig <hch@lst.de>
-Cc: linux-block@vger.kernel.org, tj@kernel.org, jiangshanlai@gmail.com,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org
-References: <20240124093941.2259199-1-hch@lst.de>
- <be690355-03c6-42e2-a13f-b593ad1c0edd@kernel.dk>
- <20240125081050.GA21006@lst.de>
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <20240125081050.GA21006@lst.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <42cf05ea80a2413aae588b762e67c3418b9514d4.camel@mediatek.com>
 
-On 1/25/24 1:10 AM, Christoph Hellwig wrote:
-> On Wed, Jan 24, 2024 at 08:40:28AM -0700, Jens Axboe wrote:
->> On 1/24/24 2:39 AM, Christoph Hellwig wrote:
->>> Make sure all in-line block layer submission runs in noio reclaim
->>> context.  This is a big step towards allowing GFP_NOIO, the other
->>> one would be to have noio (and nofs for that matter) workqueues for
->>> kblockd and driver internal workqueues.
->>
->> I really don't like adding this for no good reason. Who's doing non NOIO
->> allocations down from this path?
-> 
-> If there is a non-NOIO allocation right now that would be a bug,
-> although I would not be surprised if we had a few of them.
-> 
-> The reason to add this is a different one:  The MM folks want to
-> get rid of GFP_NOIO and GFP_NOFS and replace them by these context.
-> 
-> And doing this in the submission path and kblockd will cover almost
-> all of the noio context, with the rest probably covered by other
-> workqueues.  And this feels a lot less error prone than requiring
-> every driver to annotate the context in their submission routines.
+Hi Zhi,
 
-I think it'd be much better to add a DEBUG protected aid that checks for
-violating allocations. Nothing that isn't buggy should trigger this,
-right now, and then we could catch problems if there are any. If we do
-the save/restore there and call it good, then we're going to be stuck
-with that forever. Regardless of whether it's actually needed or not.
+On Thu, Jan 25, 2024 at 02:24:52AM +0000, Zhi Mao (毛智) wrote:
+> Hi Sakari
+> 
+> Thanks for your review code and comments.
+> 
+> On Tue, 2024-01-09 at 10:18 +0000, Sakari Ailus wrote:
+> >  	 
+> > External email : Please do not click links or open attachments until
+> > you have verified the sender or the content.
+> >  Hi Zhi,
+> > 
+> > Thanks for the update.
+> > 
+> > On Tue, Jan 09, 2024 at 10:27:15AM +0800, Zhi Mao wrote:
+> > > Add a V4L2 sub-device driver for Galaxycore GC08A3 image sensor.
+> > > 
+> > > Signed-off-by: Zhi Mao <zhi.mao@mediatek.com>
+> > > ---
+> > >  drivers/media/i2c/Kconfig  |   10 +
+> > >  drivers/media/i2c/Makefile |    1 +
+> > >  drivers/media/i2c/gc08a3.c | 1467
+> > ++++++++++++++++++++++++++++++++++++
+> > >  3 files changed, 1478 insertions(+)
+> > >  create mode 100644 drivers/media/i2c/gc08a3.c
+> > > 
+> > > +for (i = 0; i < ARRAY_SIZE(link_freq_menu_items); i++) {
+> > > +for (j = 0; j < bus_cfg.nr_of_link_frequencies; j++) {
+> > > +if (link_freq_menu_items[i] ==
+> > > +    bus_cfg.link_frequencies[j])
+> > > +break;
+> > > +}
+> > > +
+> > > +if (j == bus_cfg.nr_of_link_frequencies) {
+> > > +dev_err(dev,
+> > > +"no link frequency %lld supported, please check DT",
+> > > +link_freq_menu_items[i]);
+> > > +ret = -EINVAL;
+> > > +goto done;
+> > > +}
+> > > +}
+> > 
+> > Please use v4l2_link_freq_to_bitmap() available here
+> > <URL:
+> > https://lore.kernel.org/linux-media/20240108151805.55584-2-sakari.ailus@linux.intel.com/T/#u>
+> > ;.
+> > We'll then merge both at the same time.
+> > 
+> 
+> After got the latest linux kernel code base(tag: next-20240124), there
+> seems to be not new API:v4l2_link_freq_to_bitmap() still.
+> 
+> Would you please let me know, how about the status about this API?
+
+The patches are in my linuxtv.org tree's master branch now:
+
+	https://git.linuxtv.org/sailus/media_tree.git/
 
 -- 
-Jens Axboe
-
+Sakari Ailus
