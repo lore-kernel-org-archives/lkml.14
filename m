@@ -1,155 +1,114 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f47.google.com (mail-io1-f47.google.com [209.85.166.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD30986143;
-	Thu, 25 Jan 2024 16:11:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.88
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EB6986143
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 16:11:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706199062; cv=none; b=vANzayhpyFTxyuGImUFE6TGnt64N6T6qMra2eHh53jfwW+jgSJ4Vgmh52rElOuR6UPV0h8ijvjzjjWEhhJgsVgNactvjIwrfmAiWX+WBr/V6PJs4Tg95s9Jqi0Hl59B5TNrQ3Ppk9HAK5HXl5gTy13fMWA/tXBnLhQhA0Kj8xIk=
+	t=1706199098; cv=none; b=EukUrt0ERMOg3Tg3jLytCirqFo6vsFzmKfkMVu4pvRnhNz5xmkVu5f0pHdqyqb6ZBi+msNlUxPyL7AJjcrQNhDVMdgpeM2DphEPIK+WyomelD12Y5B3ubntjvMCyAV+GadLW0NeC/OH3U6F05t1vNZQwaw34mBTSHEgfEqYf26c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706199062; c=relaxed/simple;
-	bh=erA6r6+8c+fMm7TjsfyuG2K4tmIEaj6481Pqbo/gIRU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eg61iM8gqKsw+CTvF5lHoLHfXibH18Zr7aoS7WUeo6eDJfnqjdN0hIWfFD7tglBpje6P/sbWKzdWrRZAmhtXgbAbW/CHx8Xip8/2XgHr9d7ZQN9W5xGy2eI3PNj05rLgE2f7dubEROXozwV0mkKFJQ/cvEPgfCImWvmVnSRuXk0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UGsjEBlW; arc=none smtp.client-ip=192.55.52.88
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1706199098; c=relaxed/simple;
+	bh=sJvQIDfKJSXmACGVyDxOuvYeKXaNLXeOpOjnvIPcb60=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=foKx5hg53cdCdvxEczt505yXs/WCI8V1dNpDXoetE6BXBX9KIk9zhG4FhPO0iO4t7r/8Ccjd/689Xte+s3kzpJHyQZ/mD/5Q24uBEzw6kJRPzdY+DUb5/HErlX4ZSsPoRMIEe/pwwAmd5+CVMFPJ97Fhvj/wjQdIq/XGbwrk4b8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=WpSZFiJC; arc=none smtp.client-ip=209.85.166.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UGsjEBlW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706199061; x=1737735061;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=erA6r6+8c+fMm7TjsfyuG2K4tmIEaj6481Pqbo/gIRU=;
-  b=UGsjEBlWD4hml9v1xNgHY6As2IYorXSB3+lIQR3W+kRa11R4pd1DJ5vf
-   MipegmtzJOh3uIqxEF0o5vDms+Mfq9yr6ndFMtpBIuqRMuWfmRB5a4hbo
-   kuarqa/3HqtLOlQqu9UBAsw2CGJwpaiP42IEumBt5ZDvdZBiUnjzj1AgY
-   Hrnkp7l/f8rYABkRBeUJSfbU13kFSTtuCNwRsdQuwc6/BZ5A+9aN4dxKT
-   qzGykkX2Mmp6REN9ErBTWgDtVT51GkLdgdgfhFipHL1bQNBxYo8L5O2z9
-   TV7gLxoyuUoMkNPy7wM+srX0bKPzNd7fk8ptabyMzAB56MEdGV/3cyJq/
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="433358619"
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="433358619"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2024 08:10:59 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="736372656"
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="736372656"
-Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2024 08:10:52 -0800
-Received: from kekkonen.localdomain (localhost [127.0.0.1])
-	by kekkonen.fi.intel.com (Postfix) with ESMTP id 775ED11FAD4;
-	Thu, 25 Jan 2024 18:01:16 +0200 (EET)
-Date: Thu, 25 Jan 2024 16:01:16 +0000
-From: "sakari.ailus@linux.intel.com" <sakari.ailus@linux.intel.com>
-To: Zhi Mao =?utf-8?B?KOavm+aZuik=?= <zhi.mao@mediatek.com>
-Cc: "heiko@sntech.de" <heiko@sntech.de>,
-	"gerald.loacker@wolfvision.net" <gerald.loacker@wolfvision.net>,
-	"robh+dt@kernel.org" <robh+dt@kernel.org>,
-	"yunkec@chromium.org" <yunkec@chromium.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"dan.scally@ideasonboard.com" <dan.scally@ideasonboard.com>,
-	"linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-	Shengnan Wang =?utf-8?B?KOeOi+Wco+eUtyk=?= <shengnan.wang@mediatek.com>,
-	"hdegoede@redhat.com" <hdegoede@redhat.com>,
-	"linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-	"andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>,
-	Yaya Chang =?utf-8?B?KOW8tembhea4hSk=?= <Yaya.Chang@mediatek.com>,
-	"mchehab@kernel.org" <mchehab@kernel.org>,
-	"jacopo.mondi@ideasonboard.com" <jacopo.mondi@ideasonboard.com>,
-	"jernej.skrabec@gmail.com" <jernej.skrabec@gmail.com>,
-	"linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
-	"bingbu.cao@intel.com" <bingbu.cao@intel.com>,
-	Project_Global_Chrome_Upstream_Group <Project_Global_Chrome_Upstream_Group@mediatek.com>,
-	"conor+dt@kernel.org" <conor+dt@kernel.org>,
-	"10572168@qq.com" <10572168@qq.com>,
-	"hverkuil-cisco@xs4all.nl" <hverkuil-cisco@xs4all.nl>,
-	"tomi.valkeinen@ideasonboard.com" <tomi.valkeinen@ideasonboard.com>,
-	"krzysztof.kozlowski+dt@linaro.org" <krzysztof.kozlowski+dt@linaro.org>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
-	"laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"angelogioacchino.delregno@collabora.com" <angelogioacchino.delregno@collabora.com>,
-	"macromorgan@hotmail.com" <macromorgan@hotmail.com>
-Subject: Re: [PATCH v3 2/2] media: i2c: Add GC08A3 image sensor driver
-Message-ID: <ZbKFzGxXhU0TABHZ@kekkonen.localdomain>
-References: <20240109022715.30278-1-zhi.mao@mediatek.com>
- <20240109022715.30278-3-zhi.mao@mediatek.com>
- <ZZ0dcTEqxjYCohac@kekkonen.localdomain>
- <42cf05ea80a2413aae588b762e67c3418b9514d4.camel@mediatek.com>
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="WpSZFiJC"
+Received: by mail-io1-f47.google.com with SMTP id ca18e2360f4ac-7bbdd28a52aso86958839f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 08:11:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1706199096; x=1706803896; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:from:user-agent:mime-version:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=oXHpAvGT0l+OrcMVhCzIisM9di93nFyOAmu8umEvyYc=;
+        b=WpSZFiJC+gCkaTAxVghL+0TziKvTsW3cXquxSB2MDTRybISiN/VP7Ez5bVYU06ZP9/
+         TtFdqwmte6uhom2hQRBG7O+XasO47sVCGNXdKmFJzEaRQpIZmJVQm/B5KZO7mckPynIl
+         pS9U7LAvO+P0kFe6dFEJu1UQMEYFqDP1sSCq6kyhBsqJ+dzD9KpQez5pWC6n73ClE7RQ
+         8dG7YRBNKQABMDWVZKi+jY22+T90d4d41lkkHwz/S0Qg5QGEpMgP4yXE1SbXaj9Q/Nfo
+         yeOSJW3b/QugMVgTs8FWYWBCQ/PhmsPb+VKByWydTbLncZshx1pkDtwKeodXldxBh10E
+         Ct8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706199096; x=1706803896;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:from:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=oXHpAvGT0l+OrcMVhCzIisM9di93nFyOAmu8umEvyYc=;
+        b=qr1savO8M38HXZCdJGsHmai+BfAjyLQ2SbdtaT9VC8sZjhkKOgN177/FQxFg9F7uah
+         OztOXVubNxNJM8xgAXVjtbxb7yhiIPLbHshHTs7xT0hBBtUJmrjWaikPDnFsroRjfnfp
+         kRwjVyUDoBwZ15vPwGiRRIyO/a/VS9teVileVgUev3gCC8ckou5claeDScdcJzUmCEIa
+         4VhyWDVJXb5UFfZR2scQjpbpl3P4V0KGnpPvAAv8s3EN6eK4h9dDUROckygrcjE56F6n
+         RJcdyiiDnNTKDdOKvgUFpf0YSSCTUAlmxQ+sXAJeXkW2X43bQeiwuFXIXIFbOR2aGw4g
+         QKyw==
+X-Gm-Message-State: AOJu0YxI/mTlgt1m/HMW1YVfs530gRrTHEBkBy6P7SlvWppqyU8v5y3f
+	uD68baqPuWUmc6yxfsoOKCVwnCaw3/wqXrZpRWXkdMkRpLXRpLJ8gk2osgT3jEg=
+X-Google-Smtp-Source: AGHT+IEK/ThZ75X0mSLf5JYVYvXq2E1lW6GL1EM0E56z9MRc0RzZ+JHgPgmxc0oiVIA9uU/EKwDlBA==
+X-Received: by 2002:a5e:9205:0:b0:7bc:207d:5178 with SMTP id y5-20020a5e9205000000b007bc207d5178mr2457404iop.2.1706199095804;
+        Thu, 25 Jan 2024 08:11:35 -0800 (PST)
+Received: from [192.168.1.116] ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id b18-20020a0566380b9200b0046cf80c799fsm4619524jad.120.2024.01.25.08.11.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 25 Jan 2024 08:11:35 -0800 (PST)
+Message-ID: <11868eb4-0528-4298-b8bc-2621fd1aac83@kernel.dk>
+Date: Thu, 25 Jan 2024 09:11:34 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <42cf05ea80a2413aae588b762e67c3418b9514d4.camel@mediatek.com>
+User-Agent: Mozilla Thunderbird
+From: Jens Axboe <axboe@kernel.dk>
+Subject: Re: [syzbot] [jfs?] INFO: task hung in path_mount (2)
+To: Christian Brauner <brauner@kernel.org>
+Cc: syzbot <syzbot+fb337a5ea8454f5f1e3f@syzkaller.appspotmail.com>,
+ hdanton@sina.com, jack@suse.cz, jfs-discussion@lists.sourceforge.net,
+ linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ shaggy@kernel.org, syzkaller-bugs@googlegroups.com
+References: <00000000000083513f060340d472@google.com>
+ <000000000000e5e71a060fc3e747@google.com>
+ <20240125-legten-zugleich-21a988d80b45@brauner>
+Content-Language: en-US
+In-Reply-To: <20240125-legten-zugleich-21a988d80b45@brauner>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Zhi,
+On Thu, Jan 25, 2024 at 9:08?AM Christian Brauner <brauner@kernel.org> wrote:
+>
+> On Thu, Jan 25, 2024 at 03:59:03AM -0800, syzbot wrote:
+> > syzbot suspects this issue was fixed by commit:
+> >
+> > commit 6f861765464f43a71462d52026fbddfc858239a5
+> > Author: Jan Kara <jack@suse.cz>
+> > Date:   Wed Nov 1 17:43:10 2023 +0000
+> >
+> >     fs: Block writes to mounted block devices
+> >
+> > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=13175a53e80000
+> > start commit:   2ccdd1b13c59 Linux 6.5-rc6
+> > git tree:       upstream
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=9c37cc0e4fcc5f8d
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=fb337a5ea8454f5f1e3f
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17ba5d53a80000
+> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14265373a80000
+> >
+> > If the result looks correct, please mark the issue as fixed by replying with:
+>
+> #syz fix: fs: Block writes to mounted block devices
 
-On Thu, Jan 25, 2024 at 02:24:52AM +0000, Zhi Mao (毛智) wrote:
-> Hi Sakari
-> 
-> Thanks for your review code and comments.
-> 
-> On Tue, 2024-01-09 at 10:18 +0000, Sakari Ailus wrote:
-> >  	 
-> > External email : Please do not click links or open attachments until
-> > you have verified the sender or the content.
-> >  Hi Zhi,
-> > 
-> > Thanks for the update.
-> > 
-> > On Tue, Jan 09, 2024 at 10:27:15AM +0800, Zhi Mao wrote:
-> > > Add a V4L2 sub-device driver for Galaxycore GC08A3 image sensor.
-> > > 
-> > > Signed-off-by: Zhi Mao <zhi.mao@mediatek.com>
-> > > ---
-> > >  drivers/media/i2c/Kconfig  |   10 +
-> > >  drivers/media/i2c/Makefile |    1 +
-> > >  drivers/media/i2c/gc08a3.c | 1467
-> > ++++++++++++++++++++++++++++++++++++
-> > >  3 files changed, 1478 insertions(+)
-> > >  create mode 100644 drivers/media/i2c/gc08a3.c
-> > > 
-> > > +for (i = 0; i < ARRAY_SIZE(link_freq_menu_items); i++) {
-> > > +for (j = 0; j < bus_cfg.nr_of_link_frequencies; j++) {
-> > > +if (link_freq_menu_items[i] ==
-> > > +    bus_cfg.link_frequencies[j])
-> > > +break;
-> > > +}
-> > > +
-> > > +if (j == bus_cfg.nr_of_link_frequencies) {
-> > > +dev_err(dev,
-> > > +"no link frequency %lld supported, please check DT",
-> > > +link_freq_menu_items[i]);
-> > > +ret = -EINVAL;
-> > > +goto done;
-> > > +}
-> > > +}
-> > 
-> > Please use v4l2_link_freq_to_bitmap() available here
-> > <URL:
-> > https://lore.kernel.org/linux-media/20240108151805.55584-2-sakari.ailus@linux.intel.com/T/#u>
-> > ;.
-> > We'll then merge both at the same time.
-> > 
-> 
-> After got the latest linux kernel code base(tag: next-20240124), there
-> seems to be not new API:v4l2_link_freq_to_bitmap() still.
-> 
-> Would you please let me know, how about the status about this API?
+Like Dave replied a few days ago, I'm kind of skeptical on all of these
+bugs being closed by this change. I'm guessing that they are all
+resolved now because a) the block writes while mounted option was set to
+Y, and b) the actual bug is just masked by that.
 
-The patches are in my linuxtv.org tree's master branch now:
-
-	https://git.linuxtv.org/sailus/media_tree.git/
+Maybe this is fine, but it does seem a bit... sketchy? The bugs aren't
+really fixed, and what happens if someone doesn't turn on that option?
+If it's required, perhaps it should not be an option at all? Though
+that'd seem to be likely to break some funky use cases, whether they are
+valid or not.
 
 -- 
-Sakari Ailus
+Jens Axboe
+
