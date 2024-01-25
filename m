@@ -1,130 +1,86 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5D71171C9
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 06:29:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22991134C0;
+	Thu, 25 Jan 2024 06:29:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.88
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706164152; cv=none; b=j1x2sF+DN9FDfybUQsTr3LkvMsTfkd2Q4XFgtln6KNL4b3kTK9/ItaSvKcu/i6SVPcuVxNC1YQyQrh/2MKZAeU6rNyL+/v63x7hfiqDNoU3YGEVzYSgzFCm4cx1LYEQdTKBydRJBFPHt31YjLfI3qtgYdsOTf7gPBpqN61vWLjs=
+	t=1706164155; cv=none; b=rigZq5P+pU8pg3H22Or1153hpfb2Ytota/po54ImSRW7HW61A67zwbPwS9YYafbUrrN2xNrkAwhBaPZU2+pav6+aZOg3oTTall39BNh9h6FIOBTVMU7CjH6KQ9BjBs5De3tRpDfbEnsHlnHZGwASEhhHlLm4dD0Si8yWAS/jElw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706164152; c=relaxed/simple;
-	bh=YOP4K+DKiAnz0Jji3XIKk9AXAI7kwxzmy/xw9j2XMaE=;
+	s=arc-20240116; t=1706164155; c=relaxed/simple;
+	bh=g/eRLBA9JTOcnlfR0mRp9q/UKYK4eIgcF5N2CtD/gIg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=t3awepzETPuXz5n0CDZTQG3+UN/RfM7duHobcexHqJen6WdRcl34cxpQ4qOI9/O+6g2SxSmE4aIgmSU3FoUkT/ObZyeTC/Tty20WTyv+jUGk+NSDt5XAEABQDgK6FKlDQgkHo00X1fSqMRMUsLB/CdRJhJmzJaopV6Ljc/7tWuU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=MlBNrdFr; arc=none smtp.client-ip=209.85.210.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	 MIME-Version; b=AkaKZ3xj34OxrgMsS5RZC6lXTPpNpNfWCbGS/XrVzwjTHXtUyscg2ogZsJ5V73MahkosWrZGDf4HKNYJ1cu0Edbbc7ep7BxgLljhufI31bIU6pYuyndN4kjrIi7x/ikS1/l6UaTvchu2mCTqGZePoyimkww6V+WQYjt5s7XzBF0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FhP5Hbzn; arc=none smtp.client-ip=192.55.52.88
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="MlBNrdFr"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-6db9e52bbccso4043838b3a.3
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 22:29:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1706164149; x=1706768949; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uqhJyw4qKw6ttxWAjpEt4kkwqgUPwpH+MlNDa4SEbVQ=;
-        b=MlBNrdFr+fR3YH8tCDcoaZrtlQXY2vJ/kp93E6iPWe+2KHu2cw6AbUhU7ZxfTmkTkd
-         ygtOZp9C9ROUq4wfplrV66IEj2MmW1wRuLCNEhKUvmqeOi6sOBlBgz9V8thCzMsqCHZe
-         03wx8KwQwC/Wc+S0d/Sj/zMwq++jCO/yHFFSx8ywUIzgnUQxB2VlF+89d630ChOZgPme
-         gAz0W+7Ma/Jqf+pqW3bmvezEh3TYLiTNc5smiCuvvZaIwFWsdjfDNJp4Ge7q83V2km0t
-         FwyluvEBgzx3n9RSa3JgngAe1kUyWhtLMZeezz2bAIDIeQJ5b04m7yNdxR3EMpQV4Agu
-         5VGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706164149; x=1706768949;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=uqhJyw4qKw6ttxWAjpEt4kkwqgUPwpH+MlNDa4SEbVQ=;
-        b=IKCanJ/RvNxkdvP368XfwegKjkmz4AOEMrr5cJyrX1E0nWNue9aTiUY/ZBVVm6USry
-         1+LQtXMYKUMYZlQ3DrnDW5Hf2pXDPzxR3zMv6Tj36AolvE1njJr81UL0VK6KWbaYtm0K
-         4jz2qjNuJON8uA81KDot/d6ZAy8516h2lGkLtPrHZXK+6J1H/UYoCRkmdZFBgRtAdb8x
-         1FW2+fTjauvSkLl1NLHZA16J1w5T+1s42Mx5hph7mFMaiTrnZ1P5PPX6bhoo4GtJvtT8
-         IMNkqm9Ee9vqyfhZ2sMkEIvqbK454AZqDkkxv/PgjSNIzNFhdHPGhlxRAPVSLSjOBZoV
-         xV/A==
-X-Gm-Message-State: AOJu0YzPFBp41N6UWXcYQHa9kQ4RhK67yB8YviFsrndYzJjeq67Pa0Wk
-	DYzwhN33ujR9wqmxW/WMncmZcm53MUWbp6zxGg9GBtFcLykv/+SxwH7xQCCJzIk=
-X-Google-Smtp-Source: AGHT+IEl63VLMXT2mHqAciM7L/Xopf+jIyT34V6he9kHeUuUlxwxwREqJzJ6MMes7H6nQTQcNzI7AA==
-X-Received: by 2002:a05:6a00:2194:b0:6dd:c69f:1e31 with SMTP id h20-20020a056a00219400b006ddc69f1e31mr202939pfi.51.1706164147768;
-        Wed, 24 Jan 2024 22:29:07 -0800 (PST)
-Received: from debug.ba.rivosinc.com ([64.71.180.162])
-        by smtp.gmail.com with ESMTPSA id t19-20020a056a00139300b006dd870b51b8sm3201139pfg.126.2024.01.24.22.29.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jan 2024 22:29:07 -0800 (PST)
-From: debug@rivosinc.com
-To: rick.p.edgecombe@intel.com,
-	broonie@kernel.org,
-	Szabolcs.Nagy@arm.com,
-	kito.cheng@sifive.com,
-	keescook@chromium.org,
-	ajones@ventanamicro.com,
-	paul.walmsley@sifive.com,
-	palmer@dabbelt.com,
-	conor.dooley@microchip.com,
-	cleger@rivosinc.com,
-	atishp@atishpatra.org,
-	alex@ghiti.fr,
-	bjorn@rivosinc.com,
-	alexghiti@rivosinc.com
-Cc: corbet@lwn.net,
-	aou@eecs.berkeley.edu,
-	oleg@redhat.com,
-	akpm@linux-foundation.org,
-	arnd@arndb.de,
-	ebiederm@xmission.com,
-	shuah@kernel.org,
-	brauner@kernel.org,
-	debug@rivosinc.com,
-	guoren@kernel.org,
-	samitolvanen@google.com,
-	evan@rivosinc.com,
-	xiao.w.wang@intel.com,
-	apatel@ventanamicro.com,
-	mchitale@ventanamicro.com,
-	waylingii@gmail.com,
-	greentime.hu@sifive.com,
-	heiko@sntech.de,
-	jszhang@kernel.org,
-	shikemeng@huaweicloud.com,
-	david@redhat.com,
-	charlie@rivosinc.com,
-	panqinglin2020@iscas.ac.cn,
-	willy@infradead.org,
-	vincent.chen@sifive.com,
-	andy.chiu@sifive.com,
-	gerg@kernel.org,
-	jeeheng.sia@starfivetech.com,
-	mason.huo@starfivetech.com,
-	ancientmodern4@gmail.com,
-	mathis.salmen@matsal.de,
-	cuiyunhui@bytedance.com,
-	bhe@redhat.com,
-	chenjiahao16@huawei.com,
-	ruscur@russell.cc,
-	bgray@linux.ibm.com,
-	alx@kernel.org,
-	baruch@tkos.co.il,
-	zhangqing@loongson.cn,
-	catalin.marinas@arm.com,
-	revest@chromium.org,
-	josh@joshtriplett.org,
-	joey.gouly@arm.com,
-	shr@devkernel.io,
-	omosnace@redhat.com,
-	ojeda@kernel.org,
-	jhubbard@nvidia.com,
-	linux-doc@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FhP5Hbzn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706164153; x=1737700153;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=g/eRLBA9JTOcnlfR0mRp9q/UKYK4eIgcF5N2CtD/gIg=;
+  b=FhP5HbznD8ipexCnTwjACtNqpvyFv68LvpMFLwSxxvLZ2a4mQHr92zav
+   /107nDKkete+YGIWuFYlAmt53lzbFkwFzD7qvCs94g9WsppuOfx8i+++c
+   xdxbG8KKdhMfR4KAx11hSDDmXR6I4qcPUICoPCEWCDfJum/2jEwXNTxAa
+   vBey9RTmIDqZxTYT2yyXSUy2+NwCB7GtzdXEBgzlWXN58BFUN/t4pxaxQ
+   EOpYpt7wd7O+4yjcQfIwzq2kpc/ijePNyY2DTSeH97uRwnASgPg3n7VcD
+   S+9mt/MVC4CFZ5+FatEGsq+ZtveSzWdRUpsZDgXGF2O4rr9+CnDwT0ogQ
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="433227498"
+X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
+   d="scan'208";a="433227498"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jan 2024 22:29:11 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
+   d="scan'208";a="20957073"
+Received: from linchen5-mobl.ccr.corp.intel.com (HELO localhost) ([10.254.209.209])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jan 2024 22:29:04 -0800
+From: "Wang, Qingshun" <qingshun.wang@linux.intel.com>
+To: linux-pci@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-acpi@vger.kernel.org
+Cc: chao.p.peng@linux.intel.com,
+	erwin.tsaur@intel.com,
+	feiting.wanyan@intel.com,
+	qingshun.wang@intel.com,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>,
+	James Morse <james.morse@arm.com>,
+	Tony Luck <tony.luck@intel.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Bjorn Helgaas <helgaas@kernel.org>,
+	Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+	"Oliver O'Halloran" <oohall@gmail.com>,
+	Miaohe Lin <linmiaohe@huawei.com>,
+	Shiju Jose <shiju.jose@huawei.com>,
+	Adam Preble <adam.c.preble@intel.com>,
+	Li Yang <leoyang.li@nxp.com>,
+	Lukas Wunner <lukas@wunner.de>,
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>,
+	Robert Richter <rrichter@amd.com>,
 	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-arch@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: [RFC PATCH v1 08/28] mm: Define VM_SHADOW_STACK for RISC-V
-Date: Wed, 24 Jan 2024 22:21:33 -0800
-Message-ID: <20240125062739.1339782-9-debug@rivosinc.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240125062739.1339782-1-debug@rivosinc.com>
-References: <20240125062739.1339782-1-debug@rivosinc.com>
+	linux-cxl@vger.kernel.org,
+	linux-edac@vger.kernel.org,
+	"Wang, Qingshun" <qingshun.wang@linux.intel.com>
+Subject: [PATCH v2 2/4] PCI/AER: Handle Advisory Non-Fatal properly
+Date: Thu, 25 Jan 2024 14:28:00 +0800
+Message-ID: <20240125062802.50819-3-qingshun.wang@linux.intel.com>
+X-Mailer: git-send-email 2.42.0
+In-Reply-To: <20240125062802.50819-1-qingshun.wang@linux.intel.com>
+References: <20240125062802.50819-1-qingshun.wang@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -133,50 +89,160 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Deepak Gupta <debug@rivosinc.com>
+When processing an Advisory Non-Fatal error, ideally both correctable
+error status and uncorrectable error status should be cleared. However,
+there is no way to fully identify the UE associated with ANFE. Even
+worse, a Fatal/Non-Fatal error may set the same UE status bit as ANFE.
+Assuming an ANFE is FE/NFE is kind of bad, but assuming a FE/NFE is an
+ANFE is usually unacceptable. To avoid clearing UEs that are not ANFE by
+accident, the most conservative route is taken here: If any of the
+Fatal/Non-Fatal Error Detected bits is set in Device Status, do not
+touch UE status, they should be cleared later by the UE handler.
+Otherwise, a specific set of UEs that may be raised as ANFE according to
+the PCIe specification will be cleared if their corresponding severity
+is non-fatal. Additionally, log UEs that will be cleared.
 
-VM_SHADOW_STACK is defined by x86 as vm flag to mark a shadow stack vma.
+For instance, previously when kernel receives an ANFE with Poisoned TLP
+in OS native AER mode, only status of CE will be reported and cleared:
 
-x86 uses VM_HIGH_ARCH_5 bit but that limits shadow stack vma to 64bit only.
-arm64 follows same path
-https://lore.kernel.org/lkml/20231009-arm64-gcs-v6-12-78e55deaa4dd@kernel.org/#r
+  AER: Corrected error received: 0000:b7:02.0
+  PCIe Bus Error: severity=Corrected, type=Transaction Layer, (Receiver ID)
+    device [8086:0db0] error status/mask=00002000/00000000
+     [13] NonFatalErr
 
-On RISC-V, write-only page table encodings are shadow stack pages. This patch
-re-defines VM_WRITE only to be VM_SHADOW_STACK.
+If the kernel receives a Malformed TLP after that, two UE will be
+reported, which is unexpected. Malformed TLP Header was lost since
+the previous ANF gated the TLP header logs:
 
-Next set of patches will set guard rail that no other mm flow can set VM_WRITE
-only in vma except when specifically creating shadow stack.
+  PCIe Bus Error: severity=Uncorrected (Fatal), type=Transaction Layer, (Receiver ID)
+    device [8086:0db0] error status/mask=00041000/00180020
+     [12] TLP                    (First)
+     [18] MalfTLP
 
-Signed-off-by: Deepak Gupta <debug@rivosinc.com>
+Now, in the same scenario, both CE status and related UE status will be
+reported and cleared after ANFE:
+
+  AER: Corrected error received: 0000:b7:02.0
+  PCIe Bus Error: severity=Corrected, type=Transaction Layer, (Receiver ID)
+    device [8086:0db0] error status/mask=00002000/00000000
+     [13] NonFatalErr
+    Uncorrectable errors that may cause Advisory Non-Fatal:
+     [18] TLP
+
+Signed-off-by: "Wang, Qingshun" <qingshun.wang@linux.intel.com>
 ---
- include/linux/mm.h | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
+ drivers/pci/pcie/aer.c | 61 +++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 60 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 418d26608ece..dfe0e8118669 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -352,7 +352,19 @@ extern unsigned int kobjsize(const void *objp);
-  * for more details on the guard size.
-  */
- # define VM_SHADOW_STACK	VM_HIGH_ARCH_5
--#else
-+#endif
+diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+index 6583dcf50977..713cbf625d3f 100644
+--- a/drivers/pci/pcie/aer.c
++++ b/drivers/pci/pcie/aer.c
+@@ -107,6 +107,12 @@ struct aer_stats {
+ 					PCI_ERR_ROOT_MULTI_COR_RCV |	\
+ 					PCI_ERR_ROOT_MULTI_UNCOR_RCV)
+ 
++#define AER_ERR_ANFE_UNC_MASK		(PCI_ERR_UNC_POISON_TLP |	\
++					PCI_ERR_UNC_COMP_TIME |		\
++					PCI_ERR_UNC_COMP_ABORT |	\
++					PCI_ERR_UNC_UNX_COMP |		\
++					PCI_ERR_UNC_UNSUP)
 +
-+#ifdef CONFIG_RISCV_USER_CFI
-+/*
-+ * On RISC-V pte encodings for shadow stack is R=0, W=1, X=0 and thus RISCV
-+ * choosing to use similar mechanism on vm_flags where VM_WRITE only means
-+ * VM_SHADOW_STACK. RISCV as well doesn't support VM_SHADOW_STACK to be set
-+ * with VM_SHARED.
-+ */
-+#define VM_SHADOW_STACK	VM_WRITE
-+#endif
+ static int pcie_aer_disable;
+ static pci_ers_result_t aer_root_reset(struct pci_dev *dev);
+ 
+@@ -612,6 +618,32 @@ const struct attribute_group aer_stats_attr_group = {
+ 	.is_visible = aer_stats_attrs_are_visible,
+ };
+ 
++static int anfe_get_related_err(struct aer_err_info *info)
++{
++	/*
++	 * Take the most conservative route here. If there are
++	 * Non-Fatal/Fatal errors detected, do not assume any
++	 * bit in uncor_status is set by ANFE.
++	 */
++	if (info->device_status & (PCI_EXP_DEVSTA_NFED | PCI_EXP_DEVSTA_FED))
++		return 0;
++	/*
++	 * According to PCIe Base Specification Revision 6.1,
++	 * Section 6.2.3.2.4, if an UNCOR error is rasied as
++	 * Advisory Non-Fatal error, it will match the following
++	 * conditions:
++	 *	a. The severity of the error is Non-Fatal.
++	 *	b. The error is one of the following:
++	 *		1. Poisoned TLP
++	 *		2. Completion Timeout
++	 *		3. Completer Abort
++	 *		4. Unexpected Completion
++	 *		5. Unsupported Request
++	 */
++	return info->uncor_status & ~info->uncor_mask
++		& AER_ERR_ANFE_UNC_MASK & ~info->severity;
++}
 +
-+#ifndef VM_SHADOW_STACK
- # define VM_SHADOW_STACK	VM_NONE
+ static void pci_dev_aer_stats_incr(struct pci_dev *pdev,
+ 				   struct aer_err_info *info)
+ {
+@@ -678,6 +710,7 @@ static void __aer_print_error(struct pci_dev *dev,
+ 			      struct aer_err_info *info)
+ {
+ 	unsigned long status;
++	unsigned long anfe_status;
+ 	const char **strings;
+ 	const char *level, *errmsg;
+ 	int i;
+@@ -700,6 +733,21 @@ static void __aer_print_error(struct pci_dev *dev,
+ 		pci_printk(level, dev, "   [%2d] %-22s%s\n", i, errmsg,
+ 				info->first_error == i ? " (First)" : "");
+ 	}
++
++	if (info->severity == AER_CORRECTABLE && (status & PCI_ERR_COR_ADV_NFAT)) {
++		anfe_status = anfe_get_related_err(info);
++		if (anfe_status) {
++			pci_printk(level, dev, "Uncorrectable errors that may cause Advisory Non-Fatal:");
++			for_each_set_bit(i, &anfe_status, 32) {
++				errmsg = aer_uncorrectable_error_string[i];
++				if (!errmsg)
++					errmsg = "Unknown Error Bit";
++
++				pci_printk(level, dev, "   [%2d] %-22s\n", i, errmsg);
++			}
++		}
++	}
++
+ 	pci_dev_aer_stats_incr(dev, info);
+ }
+ 
+@@ -1097,6 +1145,14 @@ static inline void cxl_rch_handle_error(struct pci_dev *dev,
+ 					struct aer_err_info *info) { }
  #endif
  
++static void handle_advisory_nonfatal(struct pci_dev *dev, struct aer_err_info *info)
++{
++	int aer = dev->aer_cap;
++
++	pci_write_config_dword(dev, aer + PCI_ERR_UNCOR_STATUS,
++			       anfe_get_related_err(info));
++}
++
+ /**
+  * pci_aer_handle_error - handle logging error into an event log
+  * @dev: pointer to pci_dev data structure of error source device
+@@ -1113,9 +1169,12 @@ static void pci_aer_handle_error(struct pci_dev *dev, struct aer_err_info *info)
+ 		 * Correctable error does not need software intervention.
+ 		 * No need to go through error recovery process.
+ 		 */
+-		if (aer)
++		if (aer) {
+ 			pci_write_config_dword(dev, aer + PCI_ERR_COR_STATUS,
+ 					info->cor_status);
++			if (info->cor_status & PCI_ERR_COR_ADV_NFAT)
++				handle_advisory_nonfatal(dev, info);
++		}
+ 		if (pcie_aer_is_native(dev)) {
+ 			struct pci_driver *pdrv = dev->driver;
+ 
 -- 
-2.43.0
+2.42.0
 
