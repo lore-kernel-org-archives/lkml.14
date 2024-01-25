@@ -1,139 +1,130 @@
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8248131735
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 16:42:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15A1A1339AC;
+	Thu, 25 Jan 2024 16:42:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706200977; cv=none; b=XG63c002jvD+F1WLjn9xxmktC2m7FNIn4/pf2QgGsm4lbX/d45vf3BgNU79Zvxa06hpnR/75S+nMJBa2qMirSm4V/1o0XI7hvFdfId8JM0bMwAYbn4UA55IFdE4UgkgKr/QSTmkJHzFMoe1AwH1LAz+7BDRKmS5juOel0B7jPRg=
+	t=1706200981; cv=none; b=SXtRzpllnD8mw+uO3eGpPy+HL3zfTwz++zLkr5Fl89uxhNyWc0jfnqIk55P8Mcbql0dUwAuI+77knEoCBgUYxbdbinsYuAHWCbDobKOUvUIOh3TFzB/L33Zr1FgBKdVmtgxA/mfKenXZnReSbgCa/NyvbiK53NbBtiGYODC2FiU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706200977; c=relaxed/simple;
-	bh=8FlUAYV0p0Hs9/yKUI+wz2YaT+GWCAARd/3llgD8Z0o=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=C6A0xbHh/OUuTY2omlXcw4hVtiK+inc2um8iYYtHPIHWfih4CKQAjmVBR3SiudFyjFQyd3jKeLNanOHaFS7Tn2M4H7GfVRH6X1qoE5GaL9SASufC9eUG+uNNJMn6og3TXzs3kFejm9GP1NuljIBbs6onrztSMz1GbrWwlO7yaP0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=kwi/yQ9/; arc=none smtp.client-ip=209.85.216.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kwi/yQ9/"
-Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-29036dc3a63so3160115a91.3
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 08:42:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706200975; x=1706805775; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=HW8KVIWPvb9RNP/RwAD0mzXVj1bYagG9oDeU8ueoS0E=;
-        b=kwi/yQ9/L8SgSnHwxDc+YmQNQPdODnFpmx1/xmp3QxHkClICh1xcwwwhN1i3y1UvWd
-         8uP882kGXUEboR3us8+EUU7ElUmrwp4U1qiUfLAglLqQlFoMEyxYkIsuoRN7EJb19aat
-         cnZPv+gZVzStQHlJMBAAOrdZebTKcSf1yBd1RptJMrtlr2vwH28nDNF/ISzSDxCLKPrI
-         hXji+etH1vgraTKAP9It026sOldV760ytphOxbezhsssW+9p5sTtEmnUsRuXk+XpMgl7
-         9ZJzfkU3ZgEfdPisFDLYVjLZy4AFS0oBa0gghIKXNtGkARajpIX3BzbY23pDXCQiM1cm
-         +3Yg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706200975; x=1706805775;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HW8KVIWPvb9RNP/RwAD0mzXVj1bYagG9oDeU8ueoS0E=;
-        b=Bfwt0hlmhfKFVoYgcj/i3nEt4u80O91z2hvRe9KjdFuStqjHIhL9fheyUGsWlyIWkJ
-         mMQTzpIVsST5FlzScLDRgQnt0T7WWuL0f7yskrOzsj6Pt4QHpSJse/MinhjonBRaT4sE
-         jat/KCB5mcQJJy3OQ+BIlc/9ccGER7Dl57KPmfddbhvz0iq9h9omQscA9WgQt7mfMZ6a
-         hTKUf1mBtapOuS+rZqhJ/hJMuhumaYjw2oI0WCuojgj2RpLSLfELEFUn05NN3vEAvSHt
-         2Mm0eTgfZyF3BPVYrIBql5PHAx5GN/gu9aR7yURcb90Eang4xG4kxtr2nWWvdOiiCnWl
-         fqRA==
-X-Gm-Message-State: AOJu0Yz/30pHwUf/WoY1MgnyeZbxbDLOgFqeSWTdh8b5ed97OQkxcLPq
-	sdrArXq9MGxzJlwOVSMJhUHtPTBr2PwCSdU6QvyGeChhAIM3QCeB4bhk9uXzsEE=
-X-Google-Smtp-Source: AGHT+IGv+bm0MrgPVzsYpMj5FuNOOYvH6ACHIPweMQLlA7IaqFyVTMiqNs34Q8k7JE+cNROnK1gOmg==
-X-Received: by 2002:a17:90a:de96:b0:290:44c7:96e8 with SMTP id n22-20020a17090ade9600b0029044c796e8mr1052303pjv.93.1706200975096;
-        Thu, 25 Jan 2024 08:42:55 -0800 (PST)
-Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:52eb:f6ff:feb3:451a])
-        by smtp.gmail.com with ESMTPSA id u15-20020a17090ac88f00b0028c89122f8asm1769170pjt.6.2024.01.25.08.42.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jan 2024 08:42:54 -0800 (PST)
-From: Neil Armstrong <neil.armstrong@linaro.org>
-Date: Thu, 25 Jan 2024 17:42:42 +0100
-Subject: [PATCH 2/3] arm64: dts: qcom: sm8650-mtp: add Audio sound card
- node
+	s=arc-20240116; t=1706200981; c=relaxed/simple;
+	bh=AU78t+xYF5XPueOYyl2tCt7NLi6rgnb5IFhCKQ+TQ2M=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=HIGLgaXK8qCEmJ6liyXSufAY1y6Y2yWlvjp6LRpvIFMfT2WFdiMC0xHazHcD/SEobjpbLahoSHqGumrjhp6AWljLtTpu91i7ykU0NWyz5JHSbfWVcIgwcXIdKUew22EXg+XQ/DpDP2saIQJNaKc/hQS/oL08+TR9jLUkFU14ozk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 13EB31476;
+	Thu, 25 Jan 2024 08:43:43 -0800 (PST)
+Received: from e121798.cable.virginm.net (unknown [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 219223F5A1;
+	Thu, 25 Jan 2024 08:42:52 -0800 (PST)
+From: Alexandru Elisei <alexandru.elisei@arm.com>
+To: catalin.marinas@arm.com,
+	will@kernel.org,
+	oliver.upton@linux.dev,
+	maz@kernel.org,
+	james.morse@arm.com,
+	suzuki.poulose@arm.com,
+	yuzenghui@huawei.com,
+	arnd@arndb.de,
+	akpm@linux-foundation.org,
+	mingo@redhat.com,
+	peterz@infradead.org,
+	juri.lelli@redhat.com,
+	vincent.guittot@linaro.org,
+	dietmar.eggemann@arm.com,
+	rostedt@goodmis.org,
+	bsegall@google.com,
+	mgorman@suse.de,
+	bristot@redhat.com,
+	vschneid@redhat.com,
+	mhiramat@kernel.org,
+	rppt@kernel.org,
+	hughd@google.com
+Cc: pcc@google.com,
+	steven.price@arm.com,
+	anshuman.khandual@arm.com,
+	vincenzo.frascino@arm.com,
+	david@redhat.com,
+	eugenis@google.com,
+	kcc@google.com,
+	hyesoo.yu@samsung.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	kvmarm@lists.linux.dev,
+	linux-fsdevel@vger.kernel.org,
+	linux-arch@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH RFC v3 02/35] mm: page_alloc: Add an arch hook early in free_pages_prepare()
+Date: Thu, 25 Jan 2024 16:42:23 +0000
+Message-Id: <20240125164256.4147-3-alexandru.elisei@arm.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240125164256.4147-1-alexandru.elisei@arm.com>
+References: <20240125164256.4147-1-alexandru.elisei@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240125-topic-sm8650-upstream-audio-dt-v1-2-c24d23ae5763@linaro.org>
-References: <20240125-topic-sm8650-upstream-audio-dt-v1-0-c24d23ae5763@linaro.org>
-In-Reply-To: <20240125-topic-sm8650-upstream-audio-dt-v1-0-c24d23ae5763@linaro.org>
-To: Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh+dt@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- Neil Armstrong <neil.armstrong@linaro.org>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1119;
- i=neil.armstrong@linaro.org; h=from:subject:message-id;
- bh=8FlUAYV0p0Hs9/yKUI+wz2YaT+GWCAARd/3llgD8Z0o=;
- b=owEBbQKS/ZANAwAKAXfc29rIyEnRAcsmYgBlso+FxBZdlhNgMVaTGjGaEisz1j+jr9VFtXIyARuh
- 8OBDTE2JAjMEAAEKAB0WIQQ9U8YmyFYF/h30LIt33NvayMhJ0QUCZbKPhQAKCRB33NvayMhJ0fnkD/
- 9/Jm1GOPyM73Qp9AzGkEha2x1ZU9pmvKPvwz+B0cU2UQkQI5MH7O0XxMA/mlHCzsbFWcY9Zg7GqK0P
- Tw7nOzbg6Vo+S5JmWj9g+YoJiwX5Uxvi5OsH4q8L5sF1WGOlAiNVUIWu/UP2uVA1OV6oL8EVfyGWSB
- OBEkJ25ICDg1WxzHZw7kDk3Q1S9zOnSS+CiizOnHDqsa5SWzToR/Bh5K1aRAsXaxHZJfO2fVHOty1I
- s/DopaeH4BwXW3hQSn4B/C8ONzylaoyAGXTwlK99Ks8xztErSq21NFZenz7zPnIYJQzpvJIsxK7raK
- gltBjG0cmVMx6krGd8weNSxT2NWYHAXQvAXqIl0VTCZZZpUhk59LSVUa2BTlq8OmSxvaf6i1+agfzx
- vpnuiMu10q2nwTxAf0eIJVwli1RpgFow17xtwOefAfVM4rSlnbpjeWmFzCPjA3oE9/JEUJKsOE/sIZ
- M7VleI00zWIm9d0eoYf6hNJBCVvnGvsbEQs9T7aVSyUGmMfRlQHTGDzEtqTDD3NEOD1zVI2A3Pyn3d
- 5Yta+5nciyX7Z0DzpOFBJ5HplZTNIWaooeEqU3kwEQ9nN4FJ00nwEnQP7CQLDW0xX2HaAH8FnKhHEL
- 1uVVuxuMEg2UrMmjl+YkUXK2u8oJJoPS6JzEcL3+Gx/wyAVqkxT2u8dmgAVQ==
-X-Developer-Key: i=neil.armstrong@linaro.org; a=openpgp;
- fpr=89EC3D058446217450F22848169AB7B1A4CFF8AE
+Content-Transfer-Encoding: 8bit
 
-Add the sound card of SM8650-MTP board with the routing for Speakers.
+The arm64 MTE code uses the PG_arch_2 page flag, which it renames to
+PG_mte_tagged, to track if a page has been mapped with tagging enabled.
+That flag is cleared by free_pages_prepare() by doing:
 
-Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+	page->flags &= ~PAGE_FLAGS_CHECK_AT_PREP;
+
+When tag storage management is added, tag storage will be reserved for a
+page if and only if the page is mapped as tagged (the page flag
+PG_mte_tagged is set). When a page is freed, likewise, the code will have
+to look at the the page flags to determine if the page has tag storage
+reserved, which should also be freed.
+
+For this purpose, add an arch_free_pages_prepare() hook that is called
+before that page flags are cleared. The function arch_free_page() has also
+been considered for this purpose, but it is called after the flags are
+cleared.
+
+Signed-off-by: Alexandru Elisei <alexandru.elisei@arm.com>
 ---
- arch/arm64/boot/dts/qcom/sm8650-mtp.dts | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/sm8650-mtp.dts b/arch/arm64/boot/dts/qcom/sm8650-mtp.dts
-index be133a3d5cbe..d2ec0cfecba9 100644
---- a/arch/arm64/boot/dts/qcom/sm8650-mtp.dts
-+++ b/arch/arm64/boot/dts/qcom/sm8650-mtp.dts
-@@ -66,6 +66,29 @@ pmic_glink_ss_in: endpoint {
- 		};
- 	};
- 
-+	sound {
-+		compatible = "qcom,sm8650-sndcard", "qcom,sm8450-sndcard";
-+		model = "SM8650-MTP";
-+		audio-routing = "SpkrLeft IN", "WSA_SPK1 OUT",
-+				"SpkrRight IN", "WSA_SPK2 OUT";
-+
-+		wsa-dai-link {
-+			link-name = "WSA Playback";
-+
-+			cpu {
-+				sound-dai = <&q6apmbedai WSA_CODEC_DMA_RX_0>;
-+			};
-+
-+			codec {
-+				sound-dai = <&left_spkr>, <&right_spkr>, <&swr0 0>, <&lpass_wsamacro 0>;
-+			};
-+
-+			platform {
-+				sound-dai = <&q6apm>;
-+			};
-+		};
-+	};
-+
- 	vph_pwr: vph-pwr-regulator {
- 		compatible = "regulator-fixed";
- 
+Changes since rfc v2:
 
+* Expanded commit message (David Hildenbrand).
+
+ include/linux/pgtable.h | 4 ++++
+ mm/page_alloc.c         | 1 +
+ 2 files changed, 5 insertions(+)
+
+diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
+index f6d0e3513948..6d98d5fdd697 100644
+--- a/include/linux/pgtable.h
++++ b/include/linux/pgtable.h
+@@ -901,6 +901,10 @@ static inline void arch_do_swap_page(struct mm_struct *mm,
+ }
+ #endif
+ 
++#ifndef __HAVE_ARCH_FREE_PAGES_PREPARE
++static inline void arch_free_pages_prepare(struct page *page, int order) { }
++#endif
++
+ #ifndef __HAVE_ARCH_UNMAP_ONE
+ /*
+  * Some architectures support metadata associated with a page. When a
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 2c140abe5ee6..27282a1c82fe 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -1092,6 +1092,7 @@ static __always_inline bool free_pages_prepare(struct page *page,
+ 
+ 	trace_mm_page_free(page, order);
+ 	kmsan_free_page(page, order);
++	arch_free_pages_prepare(page, order);
+ 
+ 	if (memcg_kmem_online() && PageMemcgKmem(page))
+ 		__memcg_kmem_uncharge_page(page, order);
 -- 
-2.34.1
+2.43.0
 
