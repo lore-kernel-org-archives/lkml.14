@@ -1,115 +1,55 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8EA51C6AD;
-	Thu, 25 Jan 2024 09:37:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C3E31CA8B;
+	Thu, 25 Jan 2024 09:37:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706175420; cv=none; b=LrEswRdT8IiqGwiNYOAaA/agmAxxJgpd8bF38RvlMQZh745Ex6N0ElPg/puuHeqCI2L5cD7QTN3Ff8AK3jHkUIwuCZw667aBGTuyli2q4p35zlaQbzjWMEho3PMVW2uGWxoraqrAJ0EiRUPKaafkhV1aW1CiCJR7H6dzuxO1gr4=
+	t=1706175437; cv=none; b=kp/ysHLP7f6fDHjFQJvRFOoIv8KNyBgKGZDywrYfjUqClCBKk6NXd9g1uOk3XzVtMqzR6VmNFqVgbpFuSg+oUkckF6W++Onn4Fqk5nBKu1gcBqIaSP6E3WaiRqZhKm1N8f6vm3v/c4Yk7KwQ2vgKMxxEwSMhrgXk4QJmPfM8CBw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706175420; c=relaxed/simple;
-	bh=gr94+56P2kzJDDYJRH88M8lUAPhvUUKPfiyNI1RdoIA=;
+	s=arc-20240116; t=1706175437; c=relaxed/simple;
+	bh=pANF+oLZHBkHSuW3uOERdFLcUTwaM+ZLvBfpRyEnK4k=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MP/sdbi1cEO1HfYZS0GiH9A1z6YlOW/iSwqZi6spSAoXwNEbvwDVueEz4y9IhuyRcmToJMZ9WgVcS+IRIcT+qPFd4+Ts+PaxTw/xXJU55MStAiFJfFwieK4kK1Xqb3wDEWXll7TK0E096mysDtJk+E08vthH/q4TB9oW/EL4CCM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nwpki+gc; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nwpki+gc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2154C433C7;
-	Thu, 25 Jan 2024 09:36:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706175420;
-	bh=gr94+56P2kzJDDYJRH88M8lUAPhvUUKPfiyNI1RdoIA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nwpki+gcKqJKaqfmZgMJ7UFiFnVP1doqvD1NAyxkVsTKDmQLRRQarzW/fEuRkdAvi
-	 7NfCPwsIyhG1oOwHUUAU0c/faUk7GdbyfFPTU+VmUvyts+VhsCzV97cCgEFFN2cc8F
-	 iQY/oCgkaWWxZVSrXsD8JqUOdHEUAFXGCpS+21U5jD//uVrK4KNg6IhoAW8r/Sj1Fv
-	 8Ghl/QpvvIuLu6Hii4QqaN3dJ+95yJ2H+aggMBYLiE/5F7axNinkm6kiPiJn1ouHCa
-	 T8NPJchz0ua0P0SFQWufV2Cn5XDZ9AQaehvdJvrMdqoNU/bgeG7TjafSaLtZXbvdPa
-	 +B/iVsYKghDgQ==
-Date: Thu, 25 Jan 2024 11:36:32 +0200
-From: Mike Rapoport <rppt@kernel.org>
-To: Axel Rasmussen <axelrasmussen@google.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Lokesh Gidra <lokeshgidra@google.com>,
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, selinux@vger.kernel.org,
-	surenb@google.com, kernel-team@android.com, aarcange@redhat.com,
-	peterx@redhat.com, david@redhat.com, bgeffon@google.com,
-	willy@infradead.org, jannh@google.com, kaleshsingh@google.com,
-	ngeoffray@google.com
-Subject: Re: [PATCH] userfaultfd: fix mmap_changing checking in
- mfill_atomic_hugetlb
-Message-ID: <ZbIroGI1kADrOTUB@kernel.org>
-References: <20240117223729.1444522-1-lokeshgidra@google.com>
- <20240118135941.c7795d52881f486aa21aeea8@linux-foundation.org>
- <CAJHvVcgTk3Cf2i-ONx=jH_-dz9GktVMv1Sdqv3cCk6nP2k++iA@mail.gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=kgVD6kq3DWi0j1bgEkQvOdosl8yxcT5twcWIqpVflxaJvXEzhINkzMMtOgZUWMnlmBEJXMUhkZ6fMclShZQoDAltWDORl8saiujFwh9Od1E0C0vciGFSaCYTGJMy7Q+aXdSgds0cTufnJXq6mhZXz2uWeazbRXHNRyakXxhPA44=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.94.2 #2 (Debian))
+	id 1rSwAQ-005sJt-Kl; Thu, 25 Jan 2024 17:37:03 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Thu, 25 Jan 2024 17:37:15 +0800
+Date: Thu, 25 Jan 2024 17:37:15 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Qi Tao <taoqi10@huawei.com>
+Cc: davem@davemloft.net, liulongfang@huawei.com,
+	linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org
+Subject: Re: [PATCH 3/4] crypto: hisilicon/sec2 - fix some cleanup issues
+Message-ID: <ZbIry8M6yFUAr5oL@gondor.apana.org.au>
+References: <20231229064421.16981-1-taoqi10@huawei.com>
+ <20231229064421.16981-4-taoqi10@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJHvVcgTk3Cf2i-ONx=jH_-dz9GktVMv1Sdqv3cCk6nP2k++iA@mail.gmail.com>
+In-Reply-To: <20231229064421.16981-4-taoqi10@huawei.com>
 
-On Thu, Jan 18, 2024 at 03:17:14PM -0800, Axel Rasmussen wrote:
-> 
-> On Thu, Jan 18, 2024 at 1:59 PM Andrew Morton <akpm@linux-foundation.org>
-> wrote:
-> 
->     On Wed, 17 Jan 2024 14:37:29 -0800 Lokesh Gidra <lokeshgidra@google.com>
->     wrote:
-> 
->     > In mfill_atomic_hugetlb(), mmap_changing isn't being checked
->     > again if we drop mmap_lock and reacquire it. When the lock is not held,
->     > mmap_changing could have been incremented. This is also inconsistent
->     > with the behavior in mfill_atomic().
-> 
-> 
-> The change looks reasonable to me. I'm not sure I can conclusively say there
-> isn't some other mechanism specific to hugetlbfs which means this isn't needed,
-> though.
-  
-There's nothing specific to hugetlb, if a non-cooperative uffdio_copy races
-with mremap/fork etc, the vma under it may change
- 
->     Thanks. Could you and reviewers please consider
-> 
->     - what might be the userspace-visible runtime effects?
+On Fri, Dec 29, 2023 at 02:44:20PM +0800, Qi Tao wrote:
+>
+> @@ -1371,7 +1371,7 @@ static int sec_skcipher_bd_fill_v3(struct sec_ctx *ctx, struct sec_req *req)
+>  	sec_sqe3->bd_param = cpu_to_le32(bd_param);
+>  
+>  	sec_sqe3->c_len_ivin |= cpu_to_le32(c_req->c_len);
+> -	sec_sqe3->tag = cpu_to_le64(req);
+> +	sec_sqe3->tag = cpu_to_le64((unsigned long)(uintptr_t)req);
 
-For users of non-cooperative uffd with hugetlb, this would fix crashes
-caused by races between uffd operations that update memory and the
-operations that change the VM layout. Pretty much the same fix as
-df2cc96e77011 ("userfaultfd: prevent non-cooperative events vs mcopy_atomic
-races") for !hugetlb memory.
+Please explain why you're casting twice.
 
-I doubt such users exist, though...
- 
->     - Should the fix be backported into earlier kernels?
->     - A suitable Fixes: target?
-> 
-> Hmm, 60d4d2d2b40e4 added __mcopy_atomic_hugetlb without this. But, at that
-> point in history, none of the other functions had mmap_changing either.
-> 
-> So, I think the right Fixes: target is df2cc96e77011 ("userfaultfd: prevent
-> non-cooperative events vs mcopy_atomic races") ? It seems to have missed the
-> hugetlb path. This was introduced in 4.18.
-> 
-> Based on that commit's message, essentially what can happen if the race
-> "succeeds" is, memory can be accessed without userfaultfd being notified of
-> this fact. Depending on what userfaultfd is being used for, from
-> userspace's perspective this can appear like memory corruption for example. So,
-> based on that it seems to me reasonable to backport this to stable kernels
-> (4.19+).
-
-I agree with Axel, 
-
-Fixes: df2cc96e77011 ("userfaultfd: prevent non-cooperative events vs mcopy_atomic races")
-
-seems appropriate.
-
+Thanks,
 -- 
-Sincerely yours,
-Mike.
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
