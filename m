@@ -1,54 +1,46 @@
-Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0A221FB2
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 03:02:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20EF46FA7;
+	Thu, 25 Jan 2024 03:06:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706151731; cv=none; b=WGvQFzUGTFRcPq4jg/DL8kxbtzh9oNnEYk9OffFzvVA6dZbJ/vyKAN6popslqy88QZQowTrHubUboke1xsrC1kvjFjZBVMcgiqFk9LAcHQBq5FflEQKUWMt7ocgjliA+8uxVD94bLKj6cB2FMVOFd2PATGQLUB2rHnlsSseDbpg=
+	t=1706151992; cv=none; b=czXtHBf2XN+dUHxGFxPBGKFSY03YkVICxXph2IhfLqNX6WCVarSgnI9gAZx6UzxVqsl6MLumrtXBtAP+uYbWPJPMkMwt0QvAURVrd/aicHGyIZbGwcMO1faQ/x84Y6I6dLF7zxtym+mclI/XW3Pn5I4+upqnEXNsXKF/+GAw5lg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706151731; c=relaxed/simple;
-	bh=LLvgLTa2AqMr0PhDmOnJLMQMSVL26JSHi+qJtEccwvw=;
+	s=arc-20240116; t=1706151992; c=relaxed/simple;
+	bh=3rJULeyM9xYbVpyP/NnT3ukU2TEBtC8bBU7bswXKk0E=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=b7Pc0PSXsA6znr+KfPr1/jqwxclhrpcnZDEEXsKgNxBy85zmrWuQzl1dBGtTEDvubnjh8oatIjhDHRnqQyqcgfeQ09xP0h8DqbC/jDlKZg8hz8zk1XabymvZTehcmxpr7saoy7xU8VKlLLnWbkuY6jM3YkDPmxUdsogPOxPSewQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=gUh2Ma0w; arc=none smtp.client-ip=209.85.219.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	 In-Reply-To:Content-Type; b=GdUULNeyB6b/+khdr1l9vczar9BvDU7UCtxjTKLCSwO1jzsPBGzrE8OUS19uQbWi+3ImJeS1d7anjWuVJF5JjeUca1f4+r24gziaF2upPD+Z1Xp4Zar3RaP2pBjOm54vALYg6LZBVeilczzel9g5tcrDcWpSELR92UPAbQVykbE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lqJLYM9Q; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="gUh2Ma0w"
-Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6818d263cb3so44446916d6.2
-        for <linux-kernel@vger.kernel.org>; Wed, 24 Jan 2024 19:02:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1706151728; x=1706756528; darn=vger.kernel.org;
-        h=in-reply-to:from:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=X4IiaUyl6DVYZ9iB0MHdm4Cn0mOQ8Q7USb0qzHeOIDY=;
-        b=gUh2Ma0wVtIzTAbYaFPAtxvpWPDbk1AAOWgwBlV+NfHgGxuygsVIVcf9SbimuAi26F
-         BIl2siB7s3aqlsdRP8FNpVf15hE6QnHcvSbta9Bmzeba/71w5Fu0xz40ZsxehbSv6n2a
-         wlqKpwRwtRjd5URer/H7fRVi2hwQLKYz3i6qg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706151728; x=1706756528;
-        h=in-reply-to:from:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=X4IiaUyl6DVYZ9iB0MHdm4Cn0mOQ8Q7USb0qzHeOIDY=;
-        b=n8pPR2MIBejDEwQE4HXcOeCTiDrnHZP2ur5j6zBoB2E3rhjHNhwty4L2PqROCKOAtM
-         9gdmoHwQmh59OYd8R+DXNC9S+s6uhZwBseeoe/bCQJfcp+++s3LtHJooakTdvnBrfxrd
-         RVeot0mhk1HZryxKqgdV70q8lwVBxAtSAI2z7urhcQc4t/36qa8Juyx+0xdj+IMcM6vA
-         L6rI2ZFYx9s/77TVvW02Nf4pGCSlFUwLO3y+mrC7Ka7VrjM90tgW8GNPYd0y4CBgXDR+
-         w0LEwZO87vdOfyU0auV+68jmzi4D+fMAsS1nt6P1sdGke3cXXs4uW+WXbINxGU6JeOGU
-         +4HA==
-X-Gm-Message-State: AOJu0YwH+L9HQkHNyUTVYCP4CP4k2Bix0RNeiQ0fTqslzUEZ2cNtIAEZ
-	Yv64lq3zLUWLun8MRHn6cASnpXNR1RPsMNu3Agzh7c2pputufLl86edS4moZgw==
-X-Google-Smtp-Source: AGHT+IFM9/WUpi7NzYroD589gO2NuP9uFi2Gr3eQGo2NViG5q5M7NNGLZPwDs5vnfc6ywAGdzU9Sdw==
-X-Received: by 2002:a05:6214:c2e:b0:686:ad81:2517 with SMTP id a14-20020a0562140c2e00b00686ad812517mr315827qvd.87.1706151728161;
-        Wed, 24 Jan 2024 19:02:08 -0800 (PST)
-Received: from [192.168.52.129] ([192.19.222.250])
-        by smtp.gmail.com with ESMTPSA id h7-20020ac846c7000000b00429f883c347sm4912457qto.96.2024.01.24.19.02.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 24 Jan 2024 19:02:06 -0800 (PST)
-Message-ID: <451151f3-33df-4de8-ab62-a683ad4b7cb1@broadcom.com>
-Date: Wed, 24 Jan 2024 19:01:48 -0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lqJLYM9Q"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706151990; x=1737687990;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=3rJULeyM9xYbVpyP/NnT3ukU2TEBtC8bBU7bswXKk0E=;
+  b=lqJLYM9QC4bhGjd0y5znqUIeT1AYn7SW0Mv9bmQcuHRLJagpqOGNWIdk
+   Z3pOG8X0kt+F3nJQV9SMD/7672Nj8UxcMhka3LmLTY2mkfC0qG9XIppLt
+   T12Fd39itBq+R0mYtOiDVR0t4aQ3ZsVSbkAnJPFuIcMKV6gE3F+bg5gBN
+   3S7m/h2PNMq/NgKrxKuslVXp7yJbZMReOJB6b3N2IGLj2cdmqttkKBmeY
+   cc7sv1yH3JwgxnWqjNJdHrdFUWxlGanFEvABLocxkHjE/5dCMdI7YNTpU
+   0hwpnUCPTM6rNBCacBQBIfKCSD7N4vzmCrSF2+h1RiqpzfcuKlEnEXv0Q
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="1884870"
+X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
+   d="scan'208";a="1884870"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jan 2024 19:06:29 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
+   d="scan'208";a="2269262"
+Received: from binbinwu-mobl.ccr.corp.intel.com (HELO [10.238.10.49]) ([10.238.10.49])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jan 2024 19:06:25 -0800
+Message-ID: <49f044a1-e5ab-4a3d-8d73-67fa913e2948@linux.intel.com>
+Date: Thu, 25 Jan 2024 11:06:22 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -56,342 +48,224 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 01/10] dt-bindings: mtd: brcmnand: Updates for bcmbca
- SoCs
-To: Conor Dooley <conor@kernel.org>, David Regan <dregan@broadcom.com>
-Cc: dregan@mail.com, miquel.raynal@bootlin.com, richard@nod.at,
- vigneshr@ti.com, robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
- conor+dt@kernel.org, computersforpeace@gmail.com, kdasu.kdev@gmail.com,
- linux-mtd@lists.infradead.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, joel.peshkin@broadcom.com,
- tomer.yacoby@broadcom.com, dan.beygelman@broadcom.com,
- anand.gore@broadcom.com, kursad.oney@broadcom.com,
- florian.fainelli@broadcom.com, rafal@milecki.pl,
- bcm-kernel-feedback-list@broadcom.com, andre.przywara@arm.com,
- baruch@tkos.co.il, linux-arm-kernel@lists.infradead.org,
- dan.carpenter@linaro.org
-References: <20240124030458.98408-1-dregan@broadcom.com>
- <20240124030458.98408-2-dregan@broadcom.com>
- <20240124-direness-outpost-bbc22550a161@spud>
-From: William Zhang <william.zhang@broadcom.com>
-In-Reply-To: <20240124-direness-outpost-bbc22550a161@spud>
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="000000000000b5ebd4060fbc6707"
-
---000000000000b5ebd4060fbc6707
-Content-Language: en-US
+Subject: Re: [PATCH v18 029/121] KVM: TDX: create/free TDX vcpu structure
+To: isaku.yamahata@intel.com
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ isaku.yamahata@gmail.com, Paolo Bonzini <pbonzini@redhat.com>,
+ erdemaktas@google.com, Sean Christopherson <seanjc@google.com>,
+ Sagi Shahar <sagis@google.com>, Kai Huang <kai.huang@intel.com>,
+ chen.bo@intel.com, hang.yuan@intel.com, tina.zhang@intel.com
+References: <cover.1705965634.git.isaku.yamahata@intel.com>
+ <f857ba01c0b2ffbcc310727fd7a61599221c4f21.1705965635.git.isaku.yamahata@intel.com>
+From: Binbin Wu <binbin.wu@linux.intel.com>
+In-Reply-To: <f857ba01c0b2ffbcc310727fd7a61599221c4f21.1705965635.git.isaku.yamahata@intel.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-Hi Conor,
-
-On 1/24/24 09:24, Conor Dooley wrote:
-> Hey,
-> 
-> On Tue, Jan 23, 2024 at 07:04:49PM -0800, David Regan wrote:
->> From: William Zhang <william.zhang@broadcom.com>
->>
->> Update the descriptions to reflect different families of broadband SoC and
->> use the general name bcmbca for ARM based SoC.
->>
->> Add brcm,nand-use-wp property to have an option for disabling this
->> feature on broadband board design that does not use write protection.
->>
->> Add brcm,nand-ecc-use-strap to get ecc setting from board boot strap for
->> broadband board designs because they do not specify ecc setting in dts
->> but rather using the strap setting.
->>
->> Remove the requirement of interrupts property to reflect the driver
->> code. Also add myself to the list of maintainers.
->>
->> Signed-off-by: William Zhang <william.zhang@broadcom.com>
->> Reviewed-by: David Regan <dregan@broadcom.com>
->> ---
->> Changes in v3:
->> - Update brcm,nand-use-wp description
->> - Revert the description change to BCM63168 SoC-specific NAND controller
->> ---
->> Changes in v2:
->> - Revert the new compatible string nand-bcmbca
->> - Drop the BCM63168 compatible fix to avoid any potential ABI
->> incompatibility issue
->> - Simplify the explanation for brcm,nand-use-wp
->> - Keep the interrupt name requirement when interrupt number is specified
->> ---
->>   .../bindings/mtd/brcm,brcmnand.yaml           | 37 ++++++++++++++++---
->>   1 file changed, 32 insertions(+), 5 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.yaml b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.yaml
->> index f57e96374e67..752c6ee98a7d 100644
->> --- a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.yaml
->> +++ b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.yaml
->> @@ -9,6 +9,7 @@ title: Broadcom STB NAND Controller
->>   maintainers:
->>     - Brian Norris <computersforpeace@gmail.com>
->>     - Kamal Dasu <kdasu.kdev@gmail.com>
->> +  - William Zhang <william.zhang@broadcom.com>
->>   
->>   description: |
->>     The Broadcom Set-Top Box NAND controller supports low-level access to raw NAND
->> @@ -18,9 +19,10 @@ description: |
->>     supports basic PROGRAM and READ functions, among other features.
->>   
->>     This controller was originally designed for STB SoCs (BCM7xxx) but is now
->> -  available on a variety of Broadcom SoCs, including some BCM3xxx, BCM63xx, and
->> -  iProc/Cygnus. Its history includes several similar (but not fully register
->> -  compatible) versions.
->> +  available on a variety of Broadcom SoCs, including some BCM3xxx, MIPS based
->> +  Broadband SoC (BCM63xx), ARM based Broadband SoC (BCMBCA) and iProc/Cygnus.
->> +  Its history includes several similar (but not fully register compatible)
->> +  versions.
->>   
->>     -- Additional SoC-specific NAND controller properties --
->>   
->> @@ -53,7 +55,7 @@ properties:
->>                 - brcm,brcmnand-v7.2
->>                 - brcm,brcmnand-v7.3
->>             - const: brcm,brcmnand
->> -      - description: BCM63138 SoC-specific NAND controller
->> +      - description: BCMBCA SoC-specific NAND controller
->>           items:
->>             - const: brcm,nand-bcm63138
->>             - enum:
->> @@ -111,6 +113,20 @@ properties:
->>         earlier versions of this core that include WP
->>       type: boolean
->>   
->> +  brcm,nand-use-wp:
->> +    description:
->> +      Use this property to indicate if board design uses
->> +      controller's write protection feature and connects its
->> +      NAND_WPb pin to nand chip's WP_L pin.
-> 
->> By default the driver
->> +      uses a module parameter with default value set to enable to
->> +      control this feature for all boards. Use this dts property to
->> +      override the default behavior and enable/disable this feature
->> +      through board dts on a per board basis.
-> 
-> None of this information about module parameters is relevant in the
-> binding, as it should be independent of the implementation of one
-> particular operating system.
-> 
-Agree this is OS related stuff. I was trying to make it more clean by 
-explaining how it is implemented in linux. And if we were to implement 
-the driver for another OS, there will be at least a default value for 
-wp_on. I will remove any mention of module parameter from this doc.
-
-> If the module parameter is not provided, what does the driver do?
-> If "wp_on" is the module parameter, then the default is to enable the
-> write protection feature. If that's correct, it seems to me that the
-> property should be called something like "brcm,no-wp". This property
-> would be a boolean that indicates that the NAND_WPb and WP_L pins are
-> not connected & nothing more. Clearly if the module param tries to
-> enable WP and the DT property indicates that it is not supported you
-> can decline to enable the feature, but that is up to the drivers in
-> the OS to decide.
-> 
-If I were to implement this from day one, I certainly will choose the 
-same approach as you suggested here.  But there is existing 
-brcm,nand-has-wp property for other purpose and now if we have 
-brcm,no-wp, it will be more confusing with that property IMHO. I prefer 
-to keep use the "has" for feature availability and "use" for feature 
-being used or not.
-
-And the reason I keep it as int is because there could be a potential 
-value of 2 for another mode that the current driver could set the wp_on 
-to. I don't see it is being used in BCMBCA product but I am not sure 
-about other SoC family. So I don't want to completely close the door 
-here just in case.
-
-> 
->> +      Set to 0 if WP pins are not connected and feature is not
->> +      used. Set to 1 if WP pins are connected and feature is used.
-> 
-> As it stands, this property is firmly in the "software policy" side
-> of things, as it is being used as an override for a module parameter,
-> particularly given you have properties for each direction. Whether or
-> not the feature is to be used by the operating system is not relevant to
-> the binding.
-> 
-I don't understand why this is a software policy.  This is the board 
-design choice although it does override the driver default value. But it 
-is still board or device setting and describe the hardware. OS has to 
-follow this hardware configuration and set up accordingly.
-
->> +    $ref: /schemas/types.yaml#/definitions/uint32
->> +    enum: [0, 1]
->> +
->>   patternProperties:
->>     "^nand@[a-f0-9]$":
->>       type: object
->> @@ -137,6 +153,16 @@ patternProperties:
->>             layout.
->>           $ref: /schemas/types.yaml#/definitions/uint32
->>   
->> +      brcm,nand-ecc-use-strap:
->> +        description:
->> +          This flag is used by the driver to get the ecc strength and
->> +          spare area size from the SoC NAND boot strap setting. This
->> +          is commonly used by the BCMBCA SoC board design.
-> 
-> Quoting from v1, as I didn't get to it in time:
-> 
-> | > This property I'm not all that sure about either. If the specific
-> | > properties that you mention here are not set in the DT what happens at
-> | > the moment?
-> | >
-> | In that case, the ecc strength and oob size come from ONFI or nand id
-> | decoding.  But that is usually the minimum requirement and user can
-> | choose to use stronger ecc as long as there is enough oob spare area in
-> | the nand chip.
-> |
-> | > I suppose what I am getting at is why are the bootstrap settings not
-> | > always used in the absence of specific values provided in the DT?
-> | >
-> | This is because the STB, iProc and other chip and their board design may
-> | not have or use the strap setting. But for BCMBCA SoC and board
-> | reference design, we always use the strap setting.
-> 
-> My main question here I suppose is why would you need this property at
-> all? If the specific properties are provided (nand-ecc-strength etc)
-> then use them, and if they are not use the strap settings?If nand-ecc-strength does not exist, the current driver implementation 
-use the auto detected ecc strength from the NAND chip ONFI parameter 
-which is okay. But for BCABCM SoC and our reference board design, we 
-don't use nand-ecc-strength and don't want to use the auto detected 
-value(as they are typically minimum requirement) but rather use strap 
-setting so I need a third choice.
-
-> If there's no properties and no strap settings, the this property does
-> not help. If there's properties and strap settings, but properties are
-> wrong, then you just have some devicetrees that incorrectly describe the
-> hardware and need to be fixed.
-> 
-True but manually setting nand-ecc-strength can be error prone like 
-copy/paste error. The hardware strap setting does not involve such edit 
-in the dts file so no error can happen.
-
->> If ecc
->> +          strength and spare area size are set by nand-ecc-strength
->> +          and brcm,nand-oob-sector-size in the dts, these settings
->> +          have precedence and override this flag.
-> 
-> Again, IMO, this is not for the binding to decide. That is a decision
-> for the operating system to make.
-> 
-Again this is just for historic reason and BCMBCA as late player does 
-not want to break any existing dts setting.  So I thought it is useful 
-to explain here.  I can remove this text if you don't think it should be 
-in the binding document.
 
 
-> I am confused!
-> 
-> 
->> +        $ref: /schemas/types.yaml#/definitions/flag
->> +
->>       unevaluatedProperties: false
->>   
->>   allOf:
->> @@ -177,6 +203,8 @@ allOf:
->>               - const: iproc-idm
->>               - const: iproc-ext
->>     - if:
->> +      required:
->> +        - interrupts
->>         properties:
->>           interrupts:
->>             minItems: 2
->> @@ -189,7 +217,6 @@ unevaluatedProperties: false
->>   required:
->>     - reg
->>     - reg-names
->> -  - interrupts
->>   
->>   examples:
->>     - |
->> -- 
->> 2.37.3
->>
+On 1/23/2024 7:53 AM, isaku.yamahata@intel.com wrote:
+> From: Isaku Yamahata <isaku.yamahata@intel.com>
+>
+> The next step of TDX guest creation is to create vcpu.  Create TDX vcpu
+> structures, initialize it that doesn't require TDX SEAMCALL.  TDX specific
+> vcpu initialization will be implemented as independent KVM_TDX_INIT_VCPU
+> so that when error occurs it's easy to determine which component has the
+> issue, KVM or TDX.
+>
+> Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
+> ---
+> v18:
+> - update commit log to use create instead of allocate because the patch
+>    doesn't newly allocate memory for TDX vcpu.
+>
+> v15 -> v16:
+> - Add AMX support as the KVM upstream supports it.
+> ---
+>   arch/x86/kvm/vmx/main.c    | 44 ++++++++++++++++++++++++++++++----
+>   arch/x86/kvm/vmx/tdx.c     | 49 ++++++++++++++++++++++++++++++++++++++
+>   arch/x86/kvm/vmx/x86_ops.h | 10 ++++++++
+>   arch/x86/kvm/x86.c         |  2 ++
+>   4 files changed, 101 insertions(+), 4 deletions(-)
+>
+> diff --git a/arch/x86/kvm/vmx/main.c b/arch/x86/kvm/vmx/main.c
+> index 50a1f50c0fc5..c2f1dc2000c5 100644
+> --- a/arch/x86/kvm/vmx/main.c
+> +++ b/arch/x86/kvm/vmx/main.c
+> @@ -102,6 +102,42 @@ static void vt_vm_free(struct kvm *kvm)
+>   		tdx_vm_free(kvm);
+>   }
+>   
+> +static int vt_vcpu_precreate(struct kvm *kvm)
+> +{
+> +	if (is_td(kvm))
+> +		return 0;
+> +
+> +	return vmx_vcpu_precreate(kvm);
+> +}
+> +
+> +static int vt_vcpu_create(struct kvm_vcpu *vcpu)
+> +{
+> +	if (is_td_vcpu(vcpu))
+> +		return tdx_vcpu_create(vcpu);
+> +
+> +	return vmx_vcpu_create(vcpu);
+> +}
+> +
+> +static void vt_vcpu_free(struct kvm_vcpu *vcpu)
+> +{
+> +	if (is_td_vcpu(vcpu)) {
+> +		tdx_vcpu_free(vcpu);
+> +		return;
+> +	}
+> +
+> +	vmx_vcpu_free(vcpu);
+> +}
+> +
+> +static void vt_vcpu_reset(struct kvm_vcpu *vcpu, bool init_event)
+> +{
+> +	if (is_td_vcpu(vcpu)) {
+> +		tdx_vcpu_reset(vcpu, init_event);
+> +		return;
+> +	}
+> +
+> +	vmx_vcpu_reset(vcpu, init_event);
+> +}
+> +
+>   static int vt_mem_enc_ioctl(struct kvm *kvm, void __user *argp)
+>   {
+>   	if (!is_td(kvm))
+> @@ -140,10 +176,10 @@ struct kvm_x86_ops vt_x86_ops __initdata = {
+>   	.vm_destroy = vt_vm_destroy,
+>   	.vm_free = vt_vm_free,
+>   
+> -	.vcpu_precreate = vmx_vcpu_precreate,
+> -	.vcpu_create = vmx_vcpu_create,
+> -	.vcpu_free = vmx_vcpu_free,
+> -	.vcpu_reset = vmx_vcpu_reset,
+> +	.vcpu_precreate = vt_vcpu_precreate,
+> +	.vcpu_create = vt_vcpu_create,
+> +	.vcpu_free = vt_vcpu_free,
+> +	.vcpu_reset = vt_vcpu_reset,
+>   
+>   	.prepare_switch_to_guest = vmx_prepare_switch_to_guest,
+>   	.vcpu_load = vmx_vcpu_load,
+> diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
+> index 1c6541789c39..8330f448ab8e 100644
+> --- a/arch/x86/kvm/vmx/tdx.c
+> +++ b/arch/x86/kvm/vmx/tdx.c
+> @@ -411,6 +411,55 @@ int tdx_vm_init(struct kvm *kvm)
+>   	return 0;
+>   }
+>   
+> +int tdx_vcpu_create(struct kvm_vcpu *vcpu)
+> +{
+> +	struct kvm_tdx *kvm_tdx = to_kvm_tdx(vcpu->kvm);
+> +
+> +	/*
+> +	 * On cpu creation, cpuid entry is blank.  Forcibly enable
+> +	 * X2APIC feature to allow X2APIC.
 
---000000000000b5ebd4060fbc6707
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
+This comment is a bit confusing.
+Do you mean force x2apic here or elsewhere?
+So far, in this patch, x2apic is not forced yet.
 
-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
-YDZuuBJwnyCzevMoPtVYPharioL5H3BRnQi8YoTXH7/uRo33dewYFm474yFjwwnt82TFtveVZkVq
-6h4WIQ4wTcwFfET8zMkELnGzS5SHCl8sPD+lNxxJ1JDZYwIDAQABo4IB2zCCAdcwDgYDVR0PAQH/
-BAQDAgWgMIGjBggrBgEFBQcBAQSBljCBkzBOBggrBgEFBQcwAoZCaHR0cDovL3NlY3VyZS5nbG9i
-YWxzaWduLmNvbS9jYWNlcnQvZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAuY3J0MEEGCCsGAQUF
-BzABhjVodHRwOi8vb2NzcC5nbG9iYWxzaWduLmNvbS9nc2djY3IzcGVyc29uYWxzaWduMmNhMjAy
-MDBNBgNVHSAERjBEMEIGCisGAQQBoDIBKAowNDAyBggrBgEFBQcCARYmaHR0cHM6Ly93d3cuZ2xv
-YmFsc2lnbi5jb20vcmVwb3NpdG9yeS8wCQYDVR0TBAIwADBJBgNVHR8EQjBAMD6gPKA6hjhodHRw
-Oi8vY3JsLmdsb2JhbHNpZ24uY29tL2dzZ2NjcjNwZXJzb25hbHNpZ24yY2EyMDIwLmNybDAlBgNV
-HREEHjAcgRp3aWxsaWFtLnpoYW5nQGJyb2FkY29tLmNvbTATBgNVHSUEDDAKBggrBgEFBQcDBDAf
-BgNVHSMEGDAWgBSWM9HmWBdbNHWKgVZk1b5I3qGPzzAdBgNVHQ4EFgQUq65GzwZxydFHjjYEU/9h
-xHhPWlwwDQYJKoZIhvcNAQELBQADggEBAA2hGG3JPAdGPH0ZdohGUCIVjKz+U+EFuIDbS6A/5jqX
-VhYAxZlzj7tSjUIM7G7IhyfqPC46GKJ/4x+Amz1Z6YxNGy71L68kYD6hIbBcA5AM42QBUufly6Oa
-/ppSz3WoflVyFFQ5YXniZ+eU+2/cdnYZg4aVUnFjimOF5o3NfMLzOkhQNxbaDjFUfUYD8hKmU6v4
-0vUBj8KZ9Gi1LIagLKUREn8jku0lcLsRbnJ5Ey5ScajC/FESPyYWasOW8j8/1EoJksmhbYGKNS6C
-urb/KlmDGfVrIRYDbL0ckhGQIP5c6L+kSQZ2sHnQK0e0WgIaZYxaPYeY5u0GLCOze+3vyRMxggJt
-MIICaQIBATBrMFsxCzAJBgNVBAYTAkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMTEwLwYD
-VQQDEyhHbG9iYWxTaWduIEdDQyBSMyBQZXJzb25hbFNpZ24gMiBDQSAyMDIwAgwxuh2XG3FXRL1W
-JOEwDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZIhvcNAQkEMSIEINFAH0aQHqKTmIzfNoI5grYxxlw5
-ZqH4DAQoxbPS3PDpMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI0
-MDEyNTAzMDIwOFowaQYJKoZIhvcNAQkPMVwwWjALBglghkgBZQMEASowCwYJYIZIAWUDBAEWMAsG
-CWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG9w0BAQowCwYJKoZIhvcNAQEHMAsGCWCGSAFl
-AwQCATANBgkqhkiG9w0BAQEFAASCAQCVrvEgIm7pDeYxXUqrAleJ6QnsQEZhiCAcKzWs4S0BGV/w
-1mSU2xxAGoGNdXl8eP0L6cPUg5ebsGy90QWkzXd/54eWDIoEgxlXj0hcT8nhuEBH0s+9RV54VT57
-SFXO957LP4P2AUzhOmtqM74naATXbfiNn9VgGedcJZg5fiQSCDXIYQtRuHUPOsm3Vjh9A880iOxf
-cbaAOuv/8YXEz+ttmgmIDkPxLUx49xwAuUede3J80Iam+CuLb8ep/tPy7wRxuUHStclYZRpjE6wI
-67rr4xm2vLkl/S0aCAcXLv9pBFBqT7Rl8x/OJea7jasZq2yguHvh5LI6ZqVrIAfD+PES
---000000000000b5ebd4060fbc6707--
+> +	 * Because vcpu_reset() can't return error, allocation is done here.
+
+What do you mean "allocation" here?
+
+> +	 */
+> +	WARN_ON_ONCE(vcpu->arch.cpuid_entries);
+> +	WARN_ON_ONCE(vcpu->arch.cpuid_nent);
+> +
+> +	/* TDX only supports x2APIC, which requires an in-kernel local APIC. */
+> +	if (!vcpu->arch.apic)
+> +		return -EINVAL;
+> +
+> +	fpstate_set_confidential(&vcpu->arch.guest_fpu);
+> +
+> +	vcpu->arch.efer = EFER_SCE | EFER_LME | EFER_LMA | EFER_NX;
+> +
+> +	vcpu->arch.cr0_guest_owned_bits = -1ul;
+> +	vcpu->arch.cr4_guest_owned_bits = -1ul;
+> +
+> +	vcpu->arch.tsc_offset = to_kvm_tdx(vcpu->kvm)->tsc_offset;
+> +	vcpu->arch.l1_tsc_offset = vcpu->arch.tsc_offset;
+> +	vcpu->arch.guest_state_protected =
+> +		!(to_kvm_tdx(vcpu->kvm)->attributes & TDX_TD_ATTRIBUTE_DEBUG);
+> +
+> +	if ((kvm_tdx->xfam & XFEATURE_MASK_XTILE) == XFEATURE_MASK_XTILE)
+> +		vcpu->arch.xfd_no_write_intercept = true;
+> +
+> +	return 0;
+> +}
+> +
+> +void tdx_vcpu_free(struct kvm_vcpu *vcpu)
+> +{
+> +	/* This is stub for now.  More logic will come. */
+> +}
+> +
+> +void tdx_vcpu_reset(struct kvm_vcpu *vcpu, bool init_event)
+> +{
+> +
+> +	/* Ignore INIT silently because TDX doesn't support INIT event. */
+> +	if (init_event)
+> +		return;
+> +
+> +	/* This is stub for now. More logic will come here. */
+> +}
+> +
+>   static int tdx_get_capabilities(struct kvm_tdx_cmd *cmd)
+>   {
+>   	struct kvm_tdx_capabilities __user *user_caps;
+> diff --git a/arch/x86/kvm/vmx/x86_ops.h b/arch/x86/kvm/vmx/x86_ops.h
+> index 645688081561..1ea532dfaf2a 100644
+> --- a/arch/x86/kvm/vmx/x86_ops.h
+> +++ b/arch/x86/kvm/vmx/x86_ops.h
+> @@ -144,7 +144,12 @@ int tdx_vm_enable_cap(struct kvm *kvm, struct kvm_enable_cap *cap);
+>   int tdx_vm_init(struct kvm *kvm);
+>   void tdx_mmu_release_hkid(struct kvm *kvm);
+>   void tdx_vm_free(struct kvm *kvm);
+> +
+>   int tdx_vm_ioctl(struct kvm *kvm, void __user *argp);
+> +
+> +int tdx_vcpu_create(struct kvm_vcpu *vcpu);
+> +void tdx_vcpu_free(struct kvm_vcpu *vcpu);
+> +void tdx_vcpu_reset(struct kvm_vcpu *vcpu, bool init_event);
+>   #else
+>   static inline int tdx_hardware_setup(struct kvm_x86_ops *x86_ops) { return -EOPNOTSUPP; }
+>   static inline void tdx_hardware_unsetup(void) {}
+> @@ -158,7 +163,12 @@ static inline int tdx_vm_enable_cap(struct kvm *kvm, struct kvm_enable_cap *cap)
+>   static inline int tdx_vm_init(struct kvm *kvm) { return -EOPNOTSUPP; }
+>   static inline void tdx_mmu_release_hkid(struct kvm *kvm) {}
+>   static inline void tdx_vm_free(struct kvm *kvm) {}
+> +
+>   static inline int tdx_vm_ioctl(struct kvm *kvm, void __user *argp) { return -EOPNOTSUPP; }
+> +
+> +static inline int tdx_vcpu_create(struct kvm_vcpu *vcpu) { return -EOPNOTSUPP; }
+> +static inline void tdx_vcpu_free(struct kvm_vcpu *vcpu) {}
+> +static inline void tdx_vcpu_reset(struct kvm_vcpu *vcpu, bool init_event) {}
+>   #endif
+>   
+>   #endif /* __KVM_X86_VMX_X86_OPS_H */
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index c5b66b493f1d..e0027134454c 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -502,6 +502,7 @@ int kvm_set_apic_base(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+>   	kvm_recalculate_apic_map(vcpu->kvm);
+>   	return 0;
+>   }
+> +EXPORT_SYMBOL_GPL(kvm_set_apic_base);
+>   
+>   /*
+>    * Handle a fault on a hardware virtualization (VMX or SVM) instruction.
+> @@ -12488,6 +12489,7 @@ bool kvm_vcpu_is_reset_bsp(struct kvm_vcpu *vcpu)
+>   {
+>   	return vcpu->kvm->arch.bsp_vcpu_id == vcpu->vcpu_id;
+>   }
+> +EXPORT_SYMBOL_GPL(kvm_vcpu_is_reset_bsp);
+>   
+>   bool kvm_vcpu_is_bsp(struct kvm_vcpu *vcpu)
+>   {
+
