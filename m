@@ -1,104 +1,95 @@
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E357604CC
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 14:01:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AD5760EC4;
+	Thu, 25 Jan 2024 14:02:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706191307; cv=none; b=rUG2SsF6G4iHVKgd9K+gVTApBKMpk84XYgRjB8eujgFxd2hfi4AlQ2wkzNqkKyG4A2Au7VUKUm0mrJgxnRY/CmfahvHxMjb6qc25Ufk6bSZlW8n8NA+u+wfG/tc9yoh+O8qkOTDAYGhV0puhKf4M4BKyifcSVpWPOFwqbT+CiLI=
+	t=1706191367; cv=none; b=tQtgjJsWWavrThbH5mH3p8suC/q4PgHJRxPziaJg6u7TTJPXkkk50l1cho17HHOSdW+mDRDlhBBE6sEVLyANjdjHSoW6DFRtJ5mgIVOq+diS1g83VX5hLeyAHrKxMHAdV4d23rIaWtEXUgNPBU+wE/8lfSDE/CTltqCyDskdfgc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706191307; c=relaxed/simple;
-	bh=lfXymCih8K4E3VCnUTnLCvDgmUDS6aPwTshK7FgaqVY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=LMWyg5f7D71bCvulEpB12UwXs3dYsyOoJSrIQ25vGeGB86aESa4SBwlo9zCVuPsoDxrQVqY8HHzyCD1Ezuo3KyTN08l64gM+54a91Ud1/NSRTJZpjR3LaWqGDINRBXjGBofyC1IkH/J/zJNzWvw76lyEijZaLEsgFTGXu3I/CbQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=AdOI+uXN; arc=none smtp.client-ip=209.85.167.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1706191367; c=relaxed/simple;
+	bh=hW+7KwLKI/bBlcGNcAWmmmbt2DqB5Fpalsq0UAOigPM=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=pFuPFm2ctjmDIMrZf98R7N+OgkKNVB0A+hgwMPAmTl6Zp5ugjv+H+jwurY+U+8yPKSxmx0RmQfrCCGBwqBP7WmxWmU5BgxjQN/JcRVK7aud9gYXvr4Nd/haK+rPnurYgP+RxmvwOmsE9980hJrBbGQcJHwfxS5eLypJO2r+iNIY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N4TkpIWN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AdOI+uXN"
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-51005675963so4839929e87.0
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 06:01:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706191302; x=1706796102; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=1KvKCRCBN449rio/DKI464Fncv3o1DnaiUByEc969UA=;
-        b=AdOI+uXNDQzJmfGTNRyUm1GtkUx/EyKhwcoQI1G1bOA8mNRIT98F/1IdAmE462hrBk
-         0KwTAez614+dlJaAwNrimmsnQLYIkzyWQBTGO652Ayhd1Ca3B2ykxw8Qy7pUjsxfCe/m
-         Guq7rdlEEap5Q9DXiHiuh/xmWdVXJPibikkJjNDSDbb30HU9rT0+SMmE5bL6yWuoK9Fi
-         uH9KTRAsqFOzl5/7i4Sg+aTkWDC7WnrTeV/PHqXapNERjlmCKaQY0ZfD+cXECSbGcEcP
-         HUrQdfw/oYB5eekHkw3jYShtzrtIv6+iL9KwShIfvsC6R2fZc9bc+Djz0bkWREPE7TyC
-         Djgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706191302; x=1706796102;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=1KvKCRCBN449rio/DKI464Fncv3o1DnaiUByEc969UA=;
-        b=jxrBWrUjIpqUHsBOQClx8/tIrnizaOJyNbvnnYcjn0ekK8rdirU/VWY2UcsbuLi5M6
-         vqcfcEXErOmSmzne+EuugbpbZjiQu5C6lhHVK1QL/6DHWoFVGP1ODHFH8S5UpH8hdmCW
-         qeSetljxn7E34a4A2pD9WFYhdxX8OBJyy3AFjKHu9nf7Cr/GOTCdIENGxBVWuxM/nfQX
-         TrgzBMszBaQm7VzlZn7+T47e8/1F7a56aXWXYNkUI7OmowrdwpO+fuXCUdbbhsANuyzw
-         x02Ci6ecKbsMi4ZNcRYQ/dBgfXOFVYdVaven3Xg1ZXHB804uUSEpLuWgztWXV135+rGD
-         gSsg==
-X-Gm-Message-State: AOJu0YyKtCSUlbuTxGaVqUQDm9+8+Hpxp1BWpqYoGQSA6wd8eWHMxqRC
-	fnAgdErI/qoGIMfBHHz6q6nhDlMBaE+acMA504bkPW6N9KTT7TRLMCIHKSVazdndx/2Th7XGBY5
-	pReoJEQ==
-X-Google-Smtp-Source: AGHT+IEUSuckZSbp7+7LJ/KMKFB8cmOCZlQnHH9oeU4dOPU6vGxMnuPXXl5wbqmBe4kz+uw5KVF/4g==
-X-Received: by 2002:ac2:5e66:0:b0:510:bbd:6de1 with SMTP id a6-20020ac25e66000000b005100bbd6de1mr329846lfr.204.1706191302478;
-        Thu, 25 Jan 2024 06:01:42 -0800 (PST)
-Received: from puffmais.c.googlers.com.com (229.112.91.34.bc.googleusercontent.com. [34.91.112.229])
-        by smtp.gmail.com with ESMTPSA id r17-20020a1709067fd100b00a2c7d34157asm1048170ejs.180.2024.01.25.06.01.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jan 2024 06:01:41 -0800 (PST)
-From: =?UTF-8?q?Andr=C3=A9=20Draszik?= <andre.draszik@linaro.org>
-To: linux-kernel@vger.kernel.org,
-	robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	alim.akhtar@samsung.com,
-	peter.griffin@linaro.org
-Cc: kernel-team@android.com,
-	tudor.ambarus@linaro.org,
-	willmcvicker@google.com,
-	daniel.lezcano@linaro.org,
-	tglx@linutronix.de,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-samsung-soc@vger.kernel.org
-Subject: [PATCH 1/2] dt-bindings: samsung: exynos-sysreg: gs101-peric0 requires a clock
-Date: Thu, 25 Jan 2024 14:01:38 +0000
-Message-ID: <20240125140139.3616119-1-andre.draszik@linaro.org>
-X-Mailer: git-send-email 2.43.0.429.g432eaa2c6b-goog
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N4TkpIWN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26D06C433C7;
+	Thu, 25 Jan 2024 14:02:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706191367;
+	bh=hW+7KwLKI/bBlcGNcAWmmmbt2DqB5Fpalsq0UAOigPM=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=N4TkpIWNTxnqtSfosttOzWNDmPZ2ZYsvTxL0myI5GpDkNU9ZvpFOO2zmmsD7czfzA
+	 HDwNl5P6IFmNpXBKtreSRDRglECxaHo+sV8ahx6TKXDuHlQiuyZ5NDZ20qNNDVvPaA
+	 RPKOQWpxH8OlCF9Iz7Pms/LiE4Q+D6clzU7pzVNfH1uC+tDNTbq/wF6tDhRHOUxn2H
+	 xNuZKDM63XZOHrB2b/iwB2fsGX8FU1ZU1JNtUspUYIGx7SfH/VQ4LsUgXEfJws/Z6a
+	 KEBGdRxpUt+ui/69T85DafdBLm+8nuHzlWygg6IZtGmw1i4iwcdUKNBRb0glA88Q9x
+	 e0Agwd3NHwKfw==
+From: Mark Brown <broonie@kernel.org>
+To: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Andi Shyti <andi.shyti@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Sam Protsenko <semen.protsenko@linaro.org>
+Cc: Alim Akhtar <alim.akhtar@samsung.com>, 
+ Sylwester Nawrocki <s.nawrocki@samsung.com>, 
+ Tomasz Figa <tomasz.figa@gmail.com>, Chanwoo Choi <cw00.choi@samsung.com>, 
+ linux-spi@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
+In-Reply-To: <20240120012948.8836-1-semen.protsenko@linaro.org>
+References: <20240120012948.8836-1-semen.protsenko@linaro.org>
+Subject: Re: (subset) [PATCH 0/7] arm64: exynos: Enable SPI for Exynos850
+Message-Id: <170619136385.38074.4377918274781683592.b4-ty@kernel.org>
+Date: Thu, 25 Jan 2024 14:02:43 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13-dev-a684c
 
-... otherwise it won't be accessible.
+On Fri, 19 Jan 2024 19:29:41 -0600, Sam Protsenko wrote:
+> This series enables SPI for Exynos850 SoC. The summary:
+> 
+>   1. Enable PDMA, it's needed for SPI (dts, clk)
+>   2. Propagate SPI src clock rate change up to DIV clocks, to make it
+>      possible to change SPI frequency (clk driver)
+>   3. Add Exynos850 support in SPI driver
+>   4. Add SPI nodes to Exynos850 SoC dtsi
+> 
+> [...]
 
-Update the schema to make this obvious.
+Applied to
 
-Signed-off-by: André Draszik <andre.draszik@linaro.org>
----
- .../devicetree/bindings/soc/samsung/samsung,exynos-sysreg.yaml   | 1 +
- 1 file changed, 1 insertion(+)
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
 
-diff --git a/Documentation/devicetree/bindings/soc/samsung/samsung,exynos-sysreg.yaml b/Documentation/devicetree/bindings/soc/samsung/samsung,exynos-sysreg.yaml
-index 1794e3799f21..33d837ae4f45 100644
---- a/Documentation/devicetree/bindings/soc/samsung/samsung,exynos-sysreg.yaml
-+++ b/Documentation/devicetree/bindings/soc/samsung/samsung,exynos-sysreg.yaml
-@@ -72,6 +72,7 @@ allOf:
-         compatible:
-           contains:
-             enum:
-+              - google,gs101-peric0-sysreg
-               - samsung,exynos850-cmgp-sysreg
-               - samsung,exynos850-peri-sysreg
-               - samsung,exynos850-sysreg
--- 
-2.43.0.429.g432eaa2c6b-goog
+Thanks!
+
+[2/7] dt-bindings: spi: samsung: Add Exynos850 SPI
+      commit: 737cf74b38007fd5d5d2f15d4d4bc16e5f1cbfed
+[5/7] spi: s3c64xx: Add Exynos850 support
+      commit: 0229278bf33ea69cc1bba12c287f173e9b18c1f8
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
 
