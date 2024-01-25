@@ -1,205 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A230E55C3A;
-	Thu, 25 Jan 2024 10:43:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B6DD58114
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 10:43:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706179429; cv=none; b=ofFA9CPuiP2yeCUmCJ0jJM3+9hhFR31zA9wLmn9TmEjE5SVIquuWG5Hg3gLSHYKzdgsSB8GXliFOBVW1chBIuMO6Rwtba7MFzdQSynO2qyX3v14NLHJibGUuw3/XMfqPfx6salQxblw0qEjFz99C8aAkU1pWXgVM0zkF5SD+3WE=
+	t=1706179436; cv=none; b=McwaySR7R5Xf+SS43Rcqi7uMccOmLRG1ID5iahwVj00sB0DjFPJxAgvsEo74NxeuLmw5k1iyNkGbLzzdaLFRIO2cgtBzB/NZLKhgSQwBs3QtS1Zg4am4U/PXFkyJb2Or4Q6fT3Ca9xNfWYJcwPKh2SbodagltkWpwWlYMu2EUpc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706179429; c=relaxed/simple;
-	bh=Ie5p6oqmpFNZUgXEHLRq4W1RdiFIAqz5JNsDHAErZ1M=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Ga1vBd4puHzSQxrY2Dbq/RvHeBYR2zXwzNDjSMyeOroZtg0hQjuQSToW4kQ+ZYBy/LQqRzgsj4mnUV8sGxTcWQPSvoOHmb8ouzdgE5QIAFddTeBeK7YnQz3ECK0zL8PACGFWIivCGIcEE5+HsR7F7NTNKT9GYjUR9HU6trTxreM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m+bHBjlN; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m+bHBjlN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC091C43609;
-	Thu, 25 Jan 2024 10:43:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706179429;
-	bh=Ie5p6oqmpFNZUgXEHLRq4W1RdiFIAqz5JNsDHAErZ1M=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=m+bHBjlNlfdirhOZjDJ7TyKBL24R/sb+xPVkIlvknO5FCv6+2ywDiZPjndCU2rXxE
-	 ra+DRB/VjHyWgJNwVsMzMS2mWmczJiVuLN9RTvqtBtXACM3usg4oYpMn0xcTL526fX
-	 CrDaGT+dG8GoSQUTmZ+y7j/ZU7bUcLTXCMDwthaXK//+kSH1mmTKk7an856p3CwYGt
-	 zTebnliilHGxiM6dWWKDpy0DMkHuqLKbiTBuFvfM884Eyox1OicJ2x0Z6JaOIxV01U
-	 f2BqwRF0DgmztCZ+1irPNcHaGa1QNC8oi1iN+0SRIGlG+SwsmcHaBEaMA0NKTVaJAz
-	 6AcccnLv5JyOQ==
-From: Jeff Layton <jlayton@kernel.org>
-Date: Thu, 25 Jan 2024 05:42:50 -0500
-Subject: [PATCH v2 09/41] filelock: drop the IS_* macros
+	s=arc-20240116; t=1706179436; c=relaxed/simple;
+	bh=Pq2HycWL5UZIeTfQdGCMuXNRVUInCqTunQ8KIofIoyU=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=XpJYDNXgoPsStjU6r+hPLcumctNkPlQWgDwpy5V6pS7JlArq++sspZhTVm77fQDBx6+wBBnWmD2nxojaXdt+CRRMyqLOzJEhrmiKd02RrlAvy2AU6l3BvSVusIPwPu9AOd1cgJuZ73ekKoCzJS1Q+vWaEmUzJ4dyHdmZur0b4qk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1rSxD3-0006Mj-Pz; Thu, 25 Jan 2024 11:43:49 +0100
+Received: from [2a0a:edc0:0:900:1d::4e] (helo=lupine)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1rSxCz-002GMP-RI; Thu, 25 Jan 2024 11:43:45 +0100
+Received: from pza by lupine with local (Exim 4.96)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1rSxCz-0005of-2V;
+	Thu, 25 Jan 2024 11:43:45 +0100
+Message-ID: <bf30a97b4c39e5c606583783058ea12520c1146b.camel@pengutronix.de>
+Subject: Re: [PATCH v2 2/4] reset: sophgo: add SG2042 reset generator driver
+From: Philipp Zabel <p.zabel@pengutronix.de>
+To: Chen Wang <unicornxw@gmail.com>, aou@eecs.berkeley.edu,
+ chao.wei@sophgo.com,  conor@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+ palmer@dabbelt.com,  paul.walmsley@sifive.com, robh+dt@kernel.org,
+ devicetree@vger.kernel.org,  linux-kernel@vger.kernel.org,
+ linux-riscv@lists.infradead.org,  haijiao.liu@sophgo.com,
+ xiaoguang.xing@sophgo.com, guoren@kernel.org,  jszhang@kernel.org,
+ inochiama@outlook.com
+Cc: Chen Wang <unicorn_wang@outlook.com>
+Date: Thu, 25 Jan 2024 11:43:45 +0100
+In-Reply-To: <34650036ea5f1c500da54c67c3a67b91c4419399.1706161530.git.unicorn_wang@outlook.com>
+References: <cover.1706161530.git.unicorn_wang@outlook.com>
+	 <34650036ea5f1c500da54c67c3a67b91c4419399.1706161530.git.unicorn_wang@outlook.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240125-flsplit-v2-9-7485322b62c7@kernel.org>
-References: <20240125-flsplit-v2-0-7485322b62c7@kernel.org>
-In-Reply-To: <20240125-flsplit-v2-0-7485322b62c7@kernel.org>
-To: Christian Brauner <brauner@kernel.org>, 
- Alexander Viro <viro@zeniv.linux.org.uk>, 
- Eric Van Hensbergen <ericvh@kernel.org>, 
- Latchesar Ionkov <lucho@ionkov.net>, 
- Dominique Martinet <asmadeus@codewreck.org>, 
- Christian Schoenebeck <linux_oss@crudebyte.com>, 
- David Howells <dhowells@redhat.com>, Marc Dionne <marc.dionne@auristor.com>, 
- Xiubo Li <xiubli@redhat.com>, Ilya Dryomov <idryomov@gmail.com>, 
- Alexander Aring <aahringo@redhat.com>, David Teigland <teigland@redhat.com>, 
- Miklos Szeredi <miklos@szeredi.hu>, 
- Andreas Gruenbacher <agruenba@redhat.com>, 
- Trond Myklebust <trond.myklebust@hammerspace.com>, 
- Anna Schumaker <anna@kernel.org>, Chuck Lever <chuck.lever@oracle.com>, 
- Neil Brown <neilb@suse.de>, Olga Kornievskaia <kolga@netapp.com>, 
- Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, 
- Jan Kara <jack@suse.cz>, Mark Fasheh <mark@fasheh.com>, 
- Joel Becker <jlbec@evilplan.org>, Joseph Qi <joseph.qi@linux.alibaba.com>, 
- Steve French <sfrench@samba.org>, Paulo Alcantara <pc@manguebit.com>, 
- Shyam Prasad N <sprasad@microsoft.com>, Namjae Jeon <linkinjeon@kernel.org>, 
- Sergey Senozhatsky <senozhatsky@chromium.org>, 
- Steven Rostedt <rostedt@goodmis.org>, 
- Masami Hiramatsu <mhiramat@kernel.org>, 
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
- Ronnie Sahlberg <ronniesahlberg@gmail.com>
-Cc: linux-kernel@vger.kernel.org, v9fs@lists.linux.dev, 
- linux-afs@lists.infradead.org, ceph-devel@vger.kernel.org, 
- gfs2@lists.linux.dev, linux-fsdevel@vger.kernel.org, 
- linux-nfs@vger.kernel.org, ocfs2-devel@lists.linux.dev, 
- linux-cifs@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
- Jeff Layton <jlayton@kernel.org>
-X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3882; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=Ie5p6oqmpFNZUgXEHLRq4W1RdiFIAqz5JNsDHAErZ1M=;
- b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBlsjs7Y1gVzezg9FUKDvD/HvS9VuYz3hiMoSnaH
- dR/9lKIk3WJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZbI7OwAKCRAADmhBGVaC
- FdwSEACc87JFuNmCK+jCub4XqNO93qhEtp9+fbbmrtMA1m5mbpH7I4XRLaLv/HGnbycVzTDZtUq
- L/ICfyXuuAewtz0Yz+sFBHLvwwstnBha2u8aMN1P8PuI4YV352iOtrJAtMT2ZWocKZ6kg0F/5t1
- UUD6WvDWVQ7Fn2fCHuowQOA9GufJMsK1IKuzy2wJl4SNV04yZ5Ja+8queToadwoEiV/CCCNo0AM
- vcA+fcvnrFcmu0V4VkMZsVOiBUulEGpVAeOwaUSXtrz1qL6MfHf1BUUvyqZzeYLOHuRGy/JKJL5
- f5Y/gJ7DqESSxNbJSO4BaFYWnLX90E0W7Mq0DPEzAkCc1Zl7L6HLwxitEXVsHNxcWeRjoR4nKSX
- tpXq6iwqBCdCcASVZCyZL+4bhhXCwRQ5DyVHtyUAN27gBWt/p//hW3TPymvnz9k8u/6lnbmTmFm
- r7h06Op4cDcDiwqqGlg9wEQYAnk10grHBlt7RTH/4vofeVLRjT6Ft8jS+FEiuibotGJPCvDCXdu
- fN6x1V4EHKK98xh0rTIdqZbpwHr78WKHSti1GFS/3g6s187txgSWX389tuets1UyJt37nJTT4lU
- Uu7T1zM6yKsvPhrNYr6Z5qqzPEi1sG+GzEBSfuSV+x298GQ0JI/cIIOTQc4ea4Jo3LWvHiifjsJ
- P7dl9XwNhMcWVEw==
-X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
- fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-These don't add a lot of value over just open-coding the flag check.
+On Do, 2024-01-25 at 14:11 +0800, Chen Wang wrote:
+> From: Chen Wang <unicorn_wang@outlook.com>
+>=20
+> Reuse reset-simple driver for the Sophgo SG2042 reset generator.
 
-Suggested-by: NeilBrown <neilb@suse.de>
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
----
- fs/locks.c | 32 +++++++++++++++-----------------
- 1 file changed, 15 insertions(+), 17 deletions(-)
+Subject prefix should be "reset: simple: "
 
-diff --git a/fs/locks.c b/fs/locks.c
-index 1eceaa56e47f..87212f86eca9 100644
---- a/fs/locks.c
-+++ b/fs/locks.c
-@@ -70,12 +70,6 @@
- 
- #include <linux/uaccess.h>
- 
--#define IS_POSIX(fl)	(fl->fl_flags & FL_POSIX)
--#define IS_FLOCK(fl)	(fl->fl_flags & FL_FLOCK)
--#define IS_LEASE(fl)	(fl->fl_flags & (FL_LEASE|FL_DELEG|FL_LAYOUT))
--#define IS_OFDLCK(fl)	(fl->fl_flags & FL_OFDLCK)
--#define IS_REMOTELCK(fl)	(fl->fl_pid <= 0)
--
- static bool lease_breaking(struct file_lock *fl)
- {
- 	return fl->fl_flags & (FL_UNLOCK_PENDING | FL_DOWNGRADE_PENDING);
-@@ -767,7 +761,7 @@ static void __locks_insert_block(struct file_lock *blocker,
- 		}
- 	waiter->fl_blocker = blocker;
- 	list_add_tail(&waiter->fl_blocked_member, &blocker->fl_blocked_requests);
--	if (IS_POSIX(blocker) && !IS_OFDLCK(blocker))
-+	if ((blocker->fl_flags & (FL_POSIX|FL_OFDLCK)) == FL_POSIX)
- 		locks_insert_global_blocked(waiter);
- 
- 	/* The requests in waiter->fl_blocked are known to conflict with
-@@ -999,7 +993,7 @@ static int posix_locks_deadlock(struct file_lock *caller_fl,
- 	 * This deadlock detector can't reasonably detect deadlocks with
- 	 * FL_OFDLCK locks, since they aren't owned by a process, per-se.
- 	 */
--	if (IS_OFDLCK(caller_fl))
-+	if (caller_fl->fl_flags & FL_OFDLCK)
- 		return 0;
- 
- 	while ((block_fl = what_owner_is_waiting_for(block_fl))) {
-@@ -2150,10 +2144,13 @@ static pid_t locks_translate_pid(struct file_lock *fl, struct pid_namespace *ns)
- 	pid_t vnr;
- 	struct pid *pid;
- 
--	if (IS_OFDLCK(fl))
-+	if (fl->fl_flags & FL_OFDLCK)
- 		return -1;
--	if (IS_REMOTELCK(fl))
-+
-+	/* Remote locks report a negative pid value */
-+	if (fl->fl_pid <= 0)
- 		return fl->fl_pid;
-+
- 	/*
- 	 * If the flock owner process is dead and its pid has been already
- 	 * freed, the translation below won't work, but we still want to show
-@@ -2697,7 +2694,7 @@ static void lock_get_status(struct seq_file *f, struct file_lock *fl,
- 	struct inode *inode = NULL;
- 	unsigned int pid;
- 	struct pid_namespace *proc_pidns = proc_pid_ns(file_inode(f->file)->i_sb);
--	int type;
-+	int type = fl->fl_type;
- 
- 	pid = locks_translate_pid(fl, proc_pidns);
- 	/*
-@@ -2714,19 +2711,21 @@ static void lock_get_status(struct seq_file *f, struct file_lock *fl,
- 	if (repeat)
- 		seq_printf(f, "%*s", repeat - 1 + (int)strlen(pfx), pfx);
- 
--	if (IS_POSIX(fl)) {
-+	if (fl->fl_flags & FL_POSIX) {
- 		if (fl->fl_flags & FL_ACCESS)
- 			seq_puts(f, "ACCESS");
--		else if (IS_OFDLCK(fl))
-+		else if (fl->fl_flags & FL_OFDLCK)
- 			seq_puts(f, "OFDLCK");
- 		else
- 			seq_puts(f, "POSIX ");
- 
- 		seq_printf(f, " %s ",
- 			     (inode == NULL) ? "*NOINODE*" : "ADVISORY ");
--	} else if (IS_FLOCK(fl)) {
-+	} else if (fl->fl_flags & FL_FLOCK) {
- 		seq_puts(f, "FLOCK  ADVISORY  ");
--	} else if (IS_LEASE(fl)) {
-+	} else if (fl->fl_flags & (FL_LEASE|FL_DELEG|FL_LAYOUT)) {
-+		type = target_leasetype(fl);
-+
- 		if (fl->fl_flags & FL_DELEG)
- 			seq_puts(f, "DELEG  ");
- 		else
-@@ -2741,7 +2740,6 @@ static void lock_get_status(struct seq_file *f, struct file_lock *fl,
- 	} else {
- 		seq_puts(f, "UNKNOWN UNKNOWN  ");
- 	}
--	type = IS_LEASE(fl) ? target_leasetype(fl) : fl->fl_type;
- 
- 	seq_printf(f, "%s ", (type == F_WRLCK) ? "WRITE" :
- 			     (type == F_RDLCK) ? "READ" : "UNLCK");
-@@ -2753,7 +2751,7 @@ static void lock_get_status(struct seq_file *f, struct file_lock *fl,
- 	} else {
- 		seq_printf(f, "%d <none>:0 ", pid);
- 	}
--	if (IS_POSIX(fl)) {
-+	if (fl->fl_flags & FL_POSIX) {
- 		if (fl->fl_end == OFFSET_MAX)
- 			seq_printf(f, "%Ld EOF\n", fl->fl_start);
- 		else
+> Signed-off-by: Chen Wang <unicorn_wang@outlook.com>
+> ---
+>  drivers/reset/Kconfig        |  1 +
+>  drivers/reset/reset-simple.c |  2 ++
+>  drivers/reset/sophgo/Kconfig | 10 ++++++++++
+>  3 files changed, 13 insertions(+)
+>  create mode 100644 drivers/reset/sophgo/Kconfig
+>=20
+[...]
+> diff --git a/drivers/reset/sophgo/Kconfig b/drivers/reset/sophgo/Kconfig
+> new file mode 100644
+> index 000000000000..9ad96e49e1dd
+> --- /dev/null
+> +++ b/drivers/reset/sophgo/Kconfig
+> @@ -0,0 +1,10 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +
+> +config RESET_SOPHGO_SG2042
+> +	bool "Sophgo SG2042 Reset Driver"
+> +	depends on ARCH_SOPHGO || COMPILE_TEST
+> +	select RESET_SIMPLE
+> +	default ARCH_SOPHGO
+> +	help
+> +	  This enables the reset controller driver for the Sophgo SG2042 SoC.
+> +
 
--- 
-2.43.0
+Drop the Kconfig, just add a default y if ARCH_SOPHGO to RESET_SIMPLE.
 
+regards
+Philipp
