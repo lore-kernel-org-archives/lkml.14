@@ -1,170 +1,119 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from ahti.lucaweiss.eu (ahti.lucaweiss.eu [128.199.32.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D86C513A256
-	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 21:54:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25B2A13A256;
+	Thu, 25 Jan 2024 21:56:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=128.199.32.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706219700; cv=none; b=Bl3/8cJdpsnQt9/ZCn0c/5jIm3wSzGtiiw5Hd5ShEg3fLVpIX6A8zliHcMoyl+hsQDSHBaw+S1wH/JfchA5EKhOA/yRkYy2RyRvfBOKpIQxL4enxh9xqgUonHc+bQviB1p6jro/30uBw62CXw014ASwrShRK9/cI3oq6Kw8drOc=
+	t=1706219792; cv=none; b=EJkP39tHJICqdcIb89NHensw7MKg50Dp71Fbnauc+pAw/EFn/ePN3g0TWs5VnJW0OxpuHYopGBJBgZprJ7E/iWJ/ifyd7qJpKWF6sznQ8xnd/q/ezMw80OVQHYBybn1KTr9jl6pS1L0g4clQtdBGc3knvE1SXgJOx9m84iVOg/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706219700; c=relaxed/simple;
-	bh=AGl4mfuEIRIb97234E65SCb6I5D/9ie2c/A/vPwWkZo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=art1m0oKoJ/RPoQ0LWJxOE7QRCnbm7rVpJyqsSWGSuD5crhl2V9AElgU3YCJNo4+e35Jl3uA4TRcMdgQGO5Am7uCCtWAd+2glE8qGNsSTJYFOcTUPClc9GcyCvlTpc0rkUd6+kbPzliX9un5+yCtc00zBtOQmzPbfRN0IhDj+00=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eGGeCt8E; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1706219792; c=relaxed/simple;
+	bh=iVJuRxgL5kv4O2Iy1LSObxXiPhy/9uSVuR7pRJgvKG0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=Txa33zAdfAS0cDW3hNxoAP+gLIGWLa2gqLhdfgeinZCQwPyvYX/zp+rwFcVSgsCK0VlWggY3nR8NUtNYO572FOXDFautxd6/e3WXaCwA537X/xS3paSNFmGCAQzsqT1W9/g2pEoPbHG9TzlaCXFbJCgUywJYpk4E78AGicCFiR8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=z3ntu.xyz; spf=pass smtp.mailfrom=z3ntu.xyz; dkim=pass (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b=RODS774o; arc=none smtp.client-ip=128.199.32.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=z3ntu.xyz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=z3ntu.xyz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eGGeCt8E"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706219699; x=1737755699;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=AGl4mfuEIRIb97234E65SCb6I5D/9ie2c/A/vPwWkZo=;
-  b=eGGeCt8ERJ1Vg1ZB4fHHDQY3tIT+G7koMCzuPqki0Dd6kcsvyP80jiVC
-   kVgp+i/c3YqkSdOrRDDy3vsqo1cpKYIHQcqo35WPmBGp70Qqut5RmJT8U
-   pEmESRQcxXTmBzcZr5xq0bmvitVCh63TpUEE6GfpGEAdWnKvkQLvwznbM
-   s1BwcBApp2l5ezjnstbSkRG83WkoIgEAli4Cb5hHZW9u+B4cgzXmC5O2r
-   PLvnyD43SDxhwwnfZgshJVtZvnHBXNEpt+XeYt2ESet7LWgxeI10wkeWh
-   T5Qtmbfvy9H6WQiPlGWxaq7q7SGqzA5+hLAfzSQ8mQ6zXx9Zt750KuBWd
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="1233844"
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="1233844"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2024 13:54:57 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="930160806"
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="930160806"
-Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
-  by fmsmga001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2024 13:54:56 -0800
-Date: Thu, 25 Jan 2024 13:56:22 -0800
-From: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-To: alexs@kernel.org
-Cc: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Daniel Bristot de Oliveira <bristot@redhat.com>,
-	Valentin Schneider <vschneid@redhat.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/5] sched/fair: add a func _sched_asym
-Message-ID: <20240125215622.GA17237@ranerica-svr.sc.intel.com>
-References: <20240117085715.2614671-1-alexs@kernel.org>
- <20240117085715.2614671-4-alexs@kernel.org>
+	dkim=pass (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="RODS774o"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=z3ntu.xyz; s=s1;
+	t=1706219789; bh=iVJuRxgL5kv4O2Iy1LSObxXiPhy/9uSVuR7pRJgvKG0=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc;
+	b=RODS774onD7Q2Ed1k0w52jLNPH5kgjmsAPo8dyaXPmtrgNXB0MT+kRc8oP3pC3de9
+	 vOvaU3gjzTMCU/ihlARbPVQoE8j1bZ4B4lbtPYMuBhEaYBTdQ3B2vH2sI67f3yf40w
+	 FD+ZpieSyTQiRs8meTzZimPgi63lKq/35lZrHDD0=
+From: Luca Weiss <luca@z3ntu.xyz>
+Date: Thu, 25 Jan 2024 22:56:25 +0100
+Subject: [PATCH RFC 1/2] arm64: dts: qcom: msm8953: Add GPU IOMMU
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240117085715.2614671-4-alexs@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240125-msm8953-gpu-v1-1-f6493a5951f3@z3ntu.xyz>
+References: <20240125-msm8953-gpu-v1-0-f6493a5951f3@z3ntu.xyz>
+In-Reply-To: <20240125-msm8953-gpu-v1-0-f6493a5951f3@z3ntu.xyz>
+To: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
+ Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Vladimir Lypak <vladimir.lypak@gmail.com>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Luca Weiss <luca@z3ntu.xyz>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1436; i=luca@z3ntu.xyz;
+ h=from:subject:message-id; bh=83PN5aUeRY5s9kLZimJpYkdeYsnG6XOaZnR2lKrM23o=;
+ b=owEBbQKS/ZANAwAIAXLYQ7idTddWAcsmYgBlstkKsY20NOQhBoGTOoVsRqfQlTkjRCUrQIEq4
+ U383JLKFYeJAjMEAAEIAB0WIQQ5utIvCCzakboVj/py2EO4nU3XVgUCZbLZCgAKCRBy2EO4nU3X
+ VrXYEACkjZWciMksryIKVAtyt0jvUPgZIYSQpLKi4gVk8qhDi1cN0OHbIWyvjjYtlwCEue3IlDc
+ 5K4Fb1Y0tqpmfwhzYaSNv0FCIME0SjvE+badDBP6U92mdLvIavqIm5Eu41PuGiipYchgo2AnQm5
+ apANVErzBIvldi0g5Whm3LVaJUNukjusGZQK+2wyrH1VmSyrDID49nB2DUEgfxQeoD4DMi/jWW+
+ 7W3zjYJoFcW0HMZANgRn1GoVcRyiOUaicxrkDuYuAUAE5GLiBIbKiRGXtCQbgJ/Dfo313sRSbG1
+ fxicXg8oXzyvsYAmiPTOwBFKLjA4iRDrwdp2Q//xc1d6KIILIKqVbc1iCxy0Ss6ibCyg/1+u2Qt
+ keDhkRaVhbL9m5aIc7TRSSahL07U1SatRnWOLVG3Ic1NUVItCLMy2OkX6OpslkddeD3EsXy7x3k
+ zjL8o6ACgbQQIYl8BHEggqgew8fbWzJs77pvM7N+CgqywwZfZzKMbF8pPzgSrEzy5Tpvj1xrKwt
+ TTf/ryqKLbZe6Aib238naxwwxUq6OritW6xvtRIWuQiWhO337RIFf825HrcBSPX9ijmTkYb/Okn
+ bvWdO+3tNjtN2sXacfn2uE60DEZQPcT6UDbhwm2aVJ01ZsuR1PLkOi9WxFlV1XLqRmxz7qt0S1A
+ aVFJ2z/em6bx17A==
+X-Developer-Key: i=luca@z3ntu.xyz; a=openpgp;
+ fpr=BD04DA24C971B8D587B2B8D7FAF69CF6CD2D02CD
 
-On Wed, Jan 17, 2024 at 04:57:14PM +0800, alexs@kernel.org wrote:
-> From: Alex Shi <alexs@kernel.org>
-> 
-> Use this func in sched_asym and other path to simply code.
-> No function change.
-> 
-> Signed-off-by: Alex Shi <alexs@kernel.org>
-> To: Valentin Schneider <vschneid@redhat.com>
-> To: Vincent Guittot <vincent.guittot@linaro.org>
-> To: Peter Zijlstra <peterz@infradead.org>
-> To: Ingo Molnar <mingo@redhat.com>
-> ---
->  kernel/sched/fair.c | 27 +++++++++++++--------------
->  1 file changed, 13 insertions(+), 14 deletions(-)
-> 
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index ebd659af2d78..96163ab69ae0 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -9745,6 +9745,14 @@ static bool sched_use_asym_prio(struct sched_domain *sd, int cpu)
->  		(sd->flags & SD_SHARE_CPUCAPACITY) || is_core_idle(cpu);
->  }
->  
-> +static inline bool _sched_asym(struct sched_domain *sd,
-> +			int dst_cpu, int repl_cpu)
+From: Vladimir Lypak <vladimir.lypak@gmail.com>
 
-What does repl_cpu mean? Maybe renaming to src_cpu?
+Add the IOMMU used for the GPU on MSM8953.
 
-> +{
-> +	/* Ensure that the whole local core is idle, if applicable. */
-> +	return sched_use_asym_prio(sd, dst_cpu) &&
-> +			sched_asym_prefer(dst_cpu, repl_cpu);
+Signed-off-by: Vladimir Lypak <vladimir.lypak@gmail.com>
+---
+ arch/arm64/boot/dts/qcom/msm8953.dtsi | 31 +++++++++++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
 
-The comment no longer applies to the whole expression. Perhaps rewording is
-in order. First we check for the whole idle core if applicable (i.e., when
-not balancing among SMT siblings). Then we check priorities.
+diff --git a/arch/arm64/boot/dts/qcom/msm8953.dtsi b/arch/arm64/boot/dts/qcom/msm8953.dtsi
+index dcb5c98b793c..91d083871ab0 100644
+--- a/arch/arm64/boot/dts/qcom/msm8953.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8953.dtsi
+@@ -1046,6 +1046,37 @@ mdss_dsi1_phy: phy@1a96400 {
+ 			};
+ 		};
+ 
++		gpu_iommu: iommu@1c48000 {
++			compatible = "qcom,msm8953-iommu", "qcom,msm-iommu-v2";
++			ranges = <0 0x01c48000 0x8000>;
++
++			clocks = <&gcc GCC_OXILI_AHB_CLK>,
++				 <&gcc GCC_BIMC_GFX_CLK>;
++			clock-names = "iface", "bus";
++
++			power-domains = <&gcc OXILI_CX_GDSC>;
++
++			qcom,iommu-secure-id = <18>;
++
++			#address-cells = <1>;
++			#iommu-cells = <1>;
++			#size-cells = <1>;
++
++			/* gfx3d_user */
++			iommu-ctx@0 {
++				compatible = "qcom,msm-iommu-v2-ns";
++				reg = <0x0000 0x1000>;
++				interrupts = <GIC_SPI 225 IRQ_TYPE_LEVEL_HIGH>;
++			};
++
++			/* gfx3d_secure */
++			iommu-ctx@2000 {
++				compatible = "qcom,msm-iommu-v2-sec";
++				reg = <0x2000 0x1000>;
++				interrupts = <GIC_SPI 233 IRQ_TYPE_LEVEL_HIGH>;
++			};
++		};
++
+ 		apps_iommu: iommu@1e20000 {
+ 			compatible = "qcom,msm8953-iommu", "qcom,msm-iommu-v1";
+ 			ranges = <0 0x01e20000 0x20000>;
 
-Also, indentation should be aligned with `return`, IMO.
+-- 
+2.43.0
 
-> +}
-> +
->  /**
->   * sched_asym - Check if the destination CPU can do asym_packing load balance
->   * @env:	The load balancing environment
-> @@ -9768,20 +9776,13 @@ static bool sched_use_asym_prio(struct sched_domain *sd, int cpu)
->  static inline bool
->  sched_asym(struct lb_env *env, struct sg_lb_stats *sgs, struct sched_group *group)
->  {
-> -	/* Ensure that the whole local core is idle, if applicable. */
-> -	if (!sched_use_asym_prio(env->sd, env->dst_cpu))
-> -		return false;
-> -
->  	/*
->  	 * CPU priorities does not make sense for SMT cores with more than one
->  	 * busy sibling.
-
-While here, it might be good to fix a syntax error above: s/does/do/.
-
->  	 */
-> -	if (group->flags & SD_SHARE_CPUCAPACITY) {
-> -		if (sgs->group_weight - sgs->idle_cpus != 1)
-> -			return false;
-> -	}
-> -
-> -	return sched_asym_prefer(env->dst_cpu, group->asym_prefer_cpu);
-> +	return !(group->flags & SD_SHARE_CPUCAPACITY &&
-> +			sgs->group_weight - sgs->idle_cpus != 1) &&
-> +		_sched_asym(env->sd, env->dst_cpu, group->asym_prefer_cpu);
-
-Perhaps we can come up with a better name than _sched_asym(). After this
-patch the difference between sched_asym() and _sched_asym() is that the
-former considers the stats of the source group. Maybe sched_asym() can be
-renamed as sched_group_asym(); it is only used in update_sg_lb_stats().
-Your _sched_asym() can become sched_asym().
-
->  }
->  
->  /* One group has more than one SMT CPU while the other group does not */
-> @@ -11036,8 +11037,7 @@ static struct rq *find_busiest_queue(struct lb_env *env,
->  		 * SMT cores with more than one busy sibling.
->  		 */
->  		if ((env->sd->flags & SD_ASYM_PACKING) &&
-> -		    sched_use_asym_prio(env->sd, i) &&
-> -		    sched_asym_prefer(i, env->dst_cpu) &&
-> +		    _sched_asym(env->sd, i, env->dst_cpu) &&
->  		    nr_running == 1)
->  			continue;
->  
-> @@ -11907,8 +11907,7 @@ static void nohz_balancer_kick(struct rq *rq)
->  		 * preferred CPU must be idle.
->  		 */
->  		for_each_cpu_and(i, sched_domain_span(sd), nohz.idle_cpus_mask) {
-> -			if (sched_use_asym_prio(sd, i) &&
-> -			    sched_asym_prefer(i, cpu)) {
-> +			if (_sched_asym(sd, i, cpu)) {
->  				flags = NOHZ_STATS_KICK | NOHZ_BALANCE_KICK;
->  				goto unlock;
->  			}
-> -- 
-> 2.43.0
-> 
