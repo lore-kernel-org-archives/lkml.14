@@ -1,88 +1,109 @@
-Received: from forward100a.mail.yandex.net (forward100a.mail.yandex.net [178.154.239.83])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52C89135A57;
-	Thu, 25 Jan 2024 18:45:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.83
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFC45131723;
+	Thu, 25 Jan 2024 18:46:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706208311; cv=none; b=n8CzeZ5sJOKmGwelz/4IWdH9OZCB7biw8t2wU0eHZQoyMLMkg498NBSGmV5Ozge+zBgoi41YtyPhl2MJ3LHHJafBDB406jOIc65TumgaJW6g9Sae78ogFSyqk0iKbWwUQrWzSw1ovxW3isHyySTmVfaG0Vb5jWocTWB3oxBwaP0=
+	t=1706208376; cv=none; b=JQ4UaRQrWHHusqmej2hQ74D9Kp0j1hVyndIT7oET060YPrhKC/Wwc4jvL9t9y67LhSasSChGfKQufpOE8WaklF14lXmDH+Pt34bwNAvJQobDlOj4bDWy7t9prCEgv0fcf/RqtQInMCjkonuiTqYRIlgNJTTCaUvKFAVN5ubq5vE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706208311; c=relaxed/simple;
-	bh=sknFg9YjLUkGOi+bdNa/wlBuPFMCgxZuVS5giXLTTSM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=M+k+Lm3LRQIVy6OGuFl5rhutWoCfioorXl2PwRKe7+DT4Tc3/BeEpbChvW3XSONIoCSS5F7dIKlaGuRIbjrRawJPT4Edtp1uVhe7jjBdSLkoVRiQJWy7pAQpohfTFmaAyRasRNST+T4Sa3h+Ax+9VD+uEAYV3ZrSKcZMeGjjVwE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=awooo.ru; spf=pass smtp.mailfrom=awooo.ru; dkim=pass (1024-bit key) header.d=awooo.ru header.i=@awooo.ru header.b=etKWKqNC; arc=none smtp.client-ip=178.154.239.83
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=awooo.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=awooo.ru
+	s=arc-20240116; t=1706208376; c=relaxed/simple;
+	bh=BiLkqVgI1Un5YIaI3ap285wntHUZokIzCeY02xoir/E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DOXAGP12lmIuKfsxYdSREa896a+CH8N1/BoYGOoSE7Tm4BkWVW6UQ50bLVaUa7mwbNHkCcstp45jYkKvmZ5hDeHuSIQBSTaVAkg0oEKp2uCppi4yyWbFgOdMcco952Gu95iDFvbeGRSyT+kCjqsyoo0szYtVZcUnU7euK8H/aYs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qu1G0Hi7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=awooo.ru header.i=@awooo.ru header.b="etKWKqNC"
-Received: from mail-nwsmtp-smtp-production-main-67.vla.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-67.vla.yp-c.yandex.net [IPv6:2a02:6b8:c15:2c95:0:640:f90:0])
-	by forward100a.mail.yandex.net (Yandex) with ESMTPS id 1320046C82;
-	Thu, 25 Jan 2024 21:44:58 +0300 (MSK)
-Received: by mail-nwsmtp-smtp-production-main-67.vla.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id siZhwt2CbeA0-zVloaVIl;
-	Thu, 25 Jan 2024 21:44:57 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=awooo.ru; s=mail;
-	t=1706208297; bh=mBLIg9GlT5gPcbCunKgcUcrc/pkQPGEuGacL3O8h1U4=;
-	h=Cc:To:Message-Id:Date:Subject:From;
-	b=etKWKqNCciYFq48C5RCbkV8Nqurj2lGteP1xEwvnIaqRDx4JCF/fPL1w9hKX0Mtxx
-	 G33cW4BLK/dPKWPco46uu481BCr4DAmXvPS97xtIUBb0ypJcnU/Y5wnaiqpvSCoOer
-	 JLEjE/XbDmwGavdzGx+DzReviIlN17BZ/kBnb3R4=
-Authentication-Results: mail-nwsmtp-smtp-production-main-67.vla.yp-c.yandex.net; dkim=pass header.i=@awooo.ru
-From: kotborealis@awooo.ru
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Evgeny Pistun <kotborealis@awooo.ru>,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] perf data convert: Output empty string for null pointer
-Date: Thu, 25 Jan 2024 12:44:11 -0600
-Message-Id: <20240125184411.30757-1-kotborealis@awooo.ru>
-X-Mailer: git-send-email 2.20.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qu1G0Hi7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01409C433C7;
+	Thu, 25 Jan 2024 18:46:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706208376;
+	bh=BiLkqVgI1Un5YIaI3ap285wntHUZokIzCeY02xoir/E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Qu1G0Hi7rmFnF+2ZLbGGHHrSoG0BLvlZZP/xRzg1RH8ly9Rik3Su3lLqWik9BRe9d
+	 c8QQDzcNXgWo+xKG+XVOWFviek68G9nTzBz5zol8I+bU6vlBWsypD93BcIYPYY5+ot
+	 bij6bGl2icUbFUNTN966sOVcgZ5Ts9d36t3yXFTYV+OFkSdP5izT8mvowTKb97rlq2
+	 C/QxWqQtvyIF1hZzL0kCrOdXKD7S2IB9af0ylNwFJZ20ghHmI/G5/zCILhMjJvvCkQ
+	 J2DfEijCKdn86fx55+lMnY1k9qowdjr14vOrLCQJJqmdk9nxOJ7mj4zaxwjNxiOKHp
+	 NajAyPjJIqGlw==
+Date: Thu, 25 Jan 2024 18:46:01 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Deepak Gupta <debug@rivosinc.com>
+Cc: rick.p.edgecombe@intel.com, broonie@kernel.org, Szabolcs.Nagy@arm.com,
+	kito.cheng@sifive.com, keescook@chromium.org,
+	ajones@ventanamicro.com, paul.walmsley@sifive.com,
+	palmer@dabbelt.com, conor.dooley@microchip.com, cleger@rivosinc.com,
+	atishp@atishpatra.org, alex@ghiti.fr, bjorn@rivosinc.com,
+	alexghiti@rivosinc.com, corbet@lwn.net, aou@eecs.berkeley.edu,
+	oleg@redhat.com, akpm@linux-foundation.org, arnd@arndb.de,
+	ebiederm@xmission.com, shuah@kernel.org, brauner@kernel.org,
+	guoren@kernel.org, samitolvanen@google.com, evan@rivosinc.com,
+	xiao.w.wang@intel.com, apatel@ventanamicro.com,
+	mchitale@ventanamicro.com, waylingii@gmail.com,
+	greentime.hu@sifive.com, heiko@sntech.de, jszhang@kernel.org,
+	shikemeng@huaweicloud.com, david@redhat.com, charlie@rivosinc.com,
+	panqinglin2020@iscas.ac.cn, willy@infradead.org,
+	vincent.chen@sifive.com, andy.chiu@sifive.com, gerg@kernel.org,
+	jeeheng.sia@starfivetech.com, mason.huo@starfivetech.com,
+	ancientmodern4@gmail.com, mathis.salmen@matsal.de,
+	cuiyunhui@bytedance.com, bhe@redhat.com, ruscur@russell.cc,
+	bgray@linux.ibm.com, alx@kernel.org, baruch@tkos.co.il,
+	zhangqing@loongson.cn, catalin.marinas@arm.com, revest@chromium.org,
+	josh@joshtriplett.org, joey.gouly@arm.com, shr@devkernel.io,
+	omosnace@redhat.com, ojeda@kernel.org, jhubbard@nvidia.com,
+	linux-doc@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [RFC PATCH v1 05/28] riscv: zicfiss/zicfilp enumeration
+Message-ID: <20240125-ambulance-tingle-d72bf0e744d9@spud>
+References: <20240125062739.1339782-1-debug@rivosinc.com>
+ <20240125062739.1339782-6-debug@rivosinc.com>
+ <20240125-unscathed-coeditor-31f04e811489@spud>
+ <ZbKny7ZAG5FWHwwF@debug.ba.rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="dL0t2IReIcmPOkC/"
+Content-Disposition: inline
+In-Reply-To: <ZbKny7ZAG5FWHwwF@debug.ba.rivosinc.com>
 
-From: Evgeny Pistun <kotborealis@awooo.ru>
 
-Providing ill-formed input to `perf data conver --to-json`
-causes it to crash with segmentaton fault. There's a bug in
-`output_json_string` functon: input string is not validated.
-This could be reproduced by crafting input that does not specify
-hostname/os-release/etc, which are written to 'headers' section of
-outputted json.
+--dL0t2IReIcmPOkC/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This patch adds a null pointer check. If `output_json_string` is
-called with a null pointer, it should output empty string (`""`).
+On Thu, Jan 25, 2024 at 10:26:19AM -0800, Deepak Gupta wrote:
 
-Signed-off-by: Evgeny Pistun <kotborealis@awooo.ru>
----
- tools/perf/util/data-convert-json.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> > Anything you add to this array, you need to document in a dt-binding.
+>=20
+> You mean Documentation/devicetree/bindings/riscv/extensions.yaml
+> (or possibly any other yaml if needed?)
 
-diff --git a/tools/perf/util/data-convert-json.c b/tools/perf/util/data-convert-json.c
-index 5bb3c2ba9..f8fd22bd7 100644
---- a/tools/perf/util/data-convert-json.c
-+++ b/tools/perf/util/data-convert-json.c
-@@ -42,7 +42,7 @@ struct convert_json {
- static void output_json_string(FILE *out, const char *s)
- {
- 	fputc('"', out);
--	while (*s) {
-+	while (s != NULL && *s) {
- 		switch (*s) {
- 
- 		// required escapes with special forms as per RFC 8259
--- 
-2.25.1
+That one alone should be okay.
 
+> > Also, you added these in the wrong place. There's a massive comment
+> > before the array describing the order entries must be in, please take a
+> > look.
+>=20
+> I see the comment.
+> In my defense, looks like I missed it when I was rebasing.
+
+No worries.
+
+--dL0t2IReIcmPOkC/
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZbKsaQAKCRB4tDGHoIJi
+0ikfAP98dLdRxWlp+Lhv6tFH9mw3Wm2hF//67S6BSZcJA+SbXQD/ZkpLxUZiV2vE
+Hp0XM2ITtrvVej0ZmzRxbvJUoyE6cw8=
+=roj8
+-----END PGP SIGNATURE-----
+
+--dL0t2IReIcmPOkC/--
