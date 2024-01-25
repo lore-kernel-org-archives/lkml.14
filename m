@@ -1,72 +1,100 @@
-Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
+Received: from mx.skole.hr (mx1.hosting.skole.hr [161.53.165.185])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 453F11BDD6;
-	Thu, 25 Jan 2024 18:40:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B87951350CE;
+	Thu, 25 Jan 2024 18:40:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=161.53.165.185
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706208012; cv=none; b=fdohhGciMGH/iFwPkFA+NUIf7erkVjLhTn6OMnOdxD0Mo8+R6iEil7NbEGt5oSG/lWjeP4lEiYkusegYGE5qUpSKEMZvRi1kQpAzK+hA4Qc4bMUdoxvJNtAGQeZxF+u0/kCxWyZBQLgBe6ojN4zyyjmMPJ6RHe2gp76nVFaLiw0=
+	t=1706208032; cv=none; b=C5DldOBQoBSdN4/H8Gi5JNga3vxUn79g7TXOULBDzhZah6JUDjkQCZrkRB3btuYWI1rLgF0bRtYW4PKa6+esPpqnhgk9bH0idqlPc69LF7WGgDL4JQsnLJ/hjiI48KIT7dVnSUxhc3RC6rDOTpIQ1SpMi8MVm65pSeIsedex2wc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706208012; c=relaxed/simple;
-	bh=gPo85dRXsQng8Kc2yz5uMF26Tfq8l5cUAj+CcLKGQZM=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=QCnBBxoHI6wTyCHRsUsLNeIUcL9t8s3f4wW1ygskiLpks78Au9oR8icUptf2zyyuuU1FO/T2CjYoRPTqgPpHLMM5zc/HtcxCkMVhBCnJBMAk5tKm3H6plEGVf9QH9E+x1kE4HN8qPIUU+aARJPJjBcBHUSwHLsdHDG/vHW7/Tpg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=hfPIS3KF; arc=none smtp.client-ip=168.119.38.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="hfPIS3KF"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:To:From:Subject:Message-ID:Sender:
-	Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-	Resent-Cc:Resent-Message-ID; bh=gPo85dRXsQng8Kc2yz5uMF26Tfq8l5cUAj+CcLKGQZM=;
-	t=1706208010; x=1707417610; b=hfPIS3KFkiZUT6fwHEAiuWt+vuojHboyy34m3+TCnngS5qF
-	NqjFxky9pnTXnj1XLt2QYhr7akZZEKhsY/PPgqLHZiIj4C6ijqt4WgQmA+voWsww4fNUc8/ajkUvH
-	QOHdfKGeHyUntUHTKiCuIuKIqGdeUhsEWWccErN5gcn2azkUgxeh9wHjQFue/7x5J1sTD3037cBBm
-	idCU8VUuhT9Mb4lAePC1yc9Ogx/gXW3FTZ+Jb6E8Bo/BrcVlBD2QhwaZKCzXSCAlTilVyn1nARude
-	uZQEvFEap7Ul3XmhZ32fLV/UNUMcF7GiRQSo8QmrBL2iu04uGf1kQJPwxN6i9uVQ==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.97)
-	(envelope-from <johannes@sipsolutions.net>)
-	id 1rT4dr-0000000028p-3cQ3;
-	Thu, 25 Jan 2024 19:40:00 +0100
-Message-ID: <008b0c43d963276453f4913da0fb95fb29e5d4ff.camel@sipsolutions.net>
-Subject: Re: [PATCH wireless v2] nl80211/cfg80211: add nla_policy for S1G
- band
-From: Johannes Berg <johannes@sipsolutions.net>
-To: Jeff Johnson <quic_jjohnson@quicinc.com>, Lin Ma <linma@zju.edu.cn>, 
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- pabeni@redhat.com,  linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-  linux-kernel@vger.kernel.org, kvalo@kernel.org
-Date: Thu, 25 Jan 2024 19:39:58 +0100
-In-Reply-To: <d49f69f4-7f5c-498f-bb17-a636256d3245@quicinc.com>
-References: <20240119151201.8670-1-linma@zju.edu.cn>
-	 <9e1db7f3-fd18-4b3b-a912-3cf6efd96fed@quicinc.com>
-	 <590fe2823d934af997c515640733eb8889b0560f.camel@sipsolutions.net>
-	 <d80ae6ae-e1f2-48ef-b18a-29b5ca62e64c@quicinc.com>
-	 <d49f69f4-7f5c-498f-bb17-a636256d3245@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.3 (3.50.3-1.fc39) 
+	s=arc-20240116; t=1706208032; c=relaxed/simple;
+	bh=TMBpSWKLpMjMxzPR+dvTvMo8w9FIUm4RDCY7BDGWaho=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=HyeTZHuN5x2amuM8WZq785n2Zjp+CmAHqTV1MULZNd764iirhp/zp7VJ5VnuFyGzl9Gi0R5Em97PYWVGHO20ckyLC1pLmzbqO8T7AMCUD1hi2M3fCqpHUp+x8PHzTOJiivzYRS/t59y/fVljuxCCXP7aIVKBiGxzsIn50xvaods=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=skole.hr; spf=pass smtp.mailfrom=skole.hr; arc=none smtp.client-ip=161.53.165.185
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=skole.hr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=skole.hr
+Received: from mx1.hosting.skole.hr (localhost.localdomain [127.0.0.1])
+	by mx.skole.hr (mx.skole.hr) with ESMTP id 3772082A1E;
+	Thu, 25 Jan 2024 19:40:26 +0100 (CET)
+From: =?utf-8?q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
+Date: Thu, 25 Jan 2024 19:39:32 +0100
+Subject: [PATCH RESEND v2] arm: marvell: Fix maxium->maxim typo in
+ brownstone dts
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-malware-bazaar: not-scanned
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20240125-brownstone-typo-fix-v2-1-45bc48a0c81c@skole.hr>
+To: Lubomir Rintel <lkundrak@v3.sk>, Rob Herring <robh+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Haojian Zhuang <haojian.zhuang@gmail.com>, 
+ Samuel Ortiz <sameo@linux.intel.com>, Qing Xu <qingx@marvell.com>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
+ =?utf-8?q?Duje_Mihanovi=C4=87?= <duje.mihanovic@skole.hr>
+X-Mailer: b4 0.12.4
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1310;
+ i=duje.mihanovic@skole.hr; h=from:subject:message-id;
+ bh=TMBpSWKLpMjMxzPR+dvTvMo8w9FIUm4RDCY7BDGWaho=;
+ b=owEBbQKS/ZANAwAIAZoRnrBCLZbhAcsmYgBlsqryADFPoaisPm55ib5yqSTOpCPdo3KP/Bp1a
+ cWHoXnSZPWJAjMEAAEIAB0WIQRT351NnD/hEPs2LXiaEZ6wQi2W4QUCZbKq8gAKCRCaEZ6wQi2W
+ 4XbSD/9zCdTtb1DryZeTTWB9tBEpXMftM9QSS9SFq+MDQfAuluPCT9hKXxEx/b88JAS1foNMF6v
+ yXsXr+jcovJnXS0udSjdasQ9YKii2bZO2kTp2/DV3xGMgVDoPKq9l1df5f+WIAuarNcoomSCO/S
+ bNo3ukBqnJrjpyi0GSHm6eSxvH/68Y8PzmdhHhqbItCMhXgiwNat8ehaQxibmXlnvmZd1PRb/Ag
+ VhU05L2uUMfZZS3W+hSQL72BstAXRL9/iNCEDYvqpAq5icwTScbFIbl12soeOiSaN1WdXMmFc3k
+ Uk//JcwnLthKhi/Ii1MudzFnvFrlGsglX+HdowKhWNRcvt2b53PNTu5omsAc0pagXMtTBvvXvt5
+ jTbkH6GzAyA9f8uqz8ubpYnSVlFk++gkfdooV9RnSYHD3EdW3VRIU3gq0F0tBmbkZ1qq0X4Aytv
+ T0KP44u7aa3gOEjtIkGH9TNIP0SIDxnZndXKMecq5fN+tCCEV+9O23aViDEvAiCsiNWBbSkYRKz
+ eWy+YLYTLKnS4kc07a5MfisYB+huJxDfm+Rqg30ZLFjxKVB79H327rr+i/m/MiwSUGJDILdDKd8
+ D4Jih2BWZuuOgdGkebn6eWGglh1/5C5fWKOTbatqNK6Xvwe7k5dHsNSsTZ/FD5YrrDiTbkakrLC
+ WX9zUc6HYlqmH7Q==
+X-Developer-Key: i=duje.mihanovic@skole.hr; a=openpgp;
+ fpr=53DF9D4D9C3FE110FB362D789A119EB0422D96E1
 
-On Thu, 2024-01-25 at 10:32 -0800, Jeff Johnson wrote:
->=20
-> OK, I have investigated this and based upon the investigation this can
-> be removed (except for keeping the now obsolete uapi bits). This was
-> done in preparation for supporting a new Android interface in the
-> out-of-tree Android driver, but that interface was subsequently
-> withdrawn by Google.
->=20
-> Johannes, do you want to handle this? Or should I?
+Fix an obvious spelling error in the PMIC compatible in the MMP2
+Brownstone DTS file.
 
-Would be great if you could send a patch, thanks!
+Without this, the PMIC would never probe.
 
-johannes
+Fixes: 58f1193e6210 ("mfd: max8925: Add dts")
+Cc:  <stable@vger.kernel.org>
+Signed-off-by: Duje Mihanović <duje.mihanovic@skole.hr>
+---
+Changes in v2:
+- Address maintainer comments:
+  - Add Fixes: and Cc: tags
+- Change "for" to "in" in subject
+- Emphasize PMIC's inability to probe without patch
+- Link to v1: https://lore.kernel.org/r/20230804-brownstone-typo-fix-v1-1-4832d84c0509@skole.hr
+---
+ arch/arm/boot/dts/marvell/mmp2-brownstone.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/marvell/mmp2-brownstone.dts b/arch/arm/boot/dts/marvell/mmp2-brownstone.dts
+index 04f1ae1382e7..bc64348b8218 100644
+--- a/arch/arm/boot/dts/marvell/mmp2-brownstone.dts
++++ b/arch/arm/boot/dts/marvell/mmp2-brownstone.dts
+@@ -28,7 +28,7 @@ &uart3 {
+ &twsi1 {
+ 	status = "okay";
+ 	pmic: max8925@3c {
+-		compatible = "maxium,max8925";
++		compatible = "maxim,max8925";
+ 		reg = <0x3c>;
+ 		interrupts = <1>;
+ 		interrupt-parent = <&intcmux4>;
+
+---
+base-commit: 2ccdd1b13c591d306f0401d98dedc4bdcd02b421
+change-id: 20230804-brownstone-typo-fix-f5b16c47d865
+
+Best regards,
+-- 
+Duje Mihanović <duje.mihanovic@skole.hr>
+
+
