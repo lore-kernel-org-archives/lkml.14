@@ -1,175 +1,186 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACC75129A9C;
-	Thu, 25 Jan 2024 16:26:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.9
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706199997; cv=fail; b=ApMitXeBCZt/v7ZlWcMdCmf/3UP8Pp4mmR/SXTGZCTl5plDXM7NDGaBBkC9MgrA8SOWMoor0RS4wVRDA1834aM82LkVyhysiPiEdUoKfNNtFMyKBliXnmEZ+eP8haRy8nCz3h5prABnKoeq4PGVkxnepfy3SJSGYh0nPltGBJl8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706199997; c=relaxed/simple;
-	bh=QFjOFSC0vp2Ff0zDkP5YNEAMkVjrSjlACMSNU+6F25o=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=oowuilPv7H8pvwNnUBGtA4gIVRT9ySTHXwOkoTMDPg+0Wrk9TxCNc4JugZv6W59XnqiKezxx9nDpBbvaYGdOkvV9CXF76lg1UliEd/p7zz9SM2osLg8Ez2502wN2cwHvwk89YJSL723M8jy17J57GpczPEL0LwbZ4wqVzgBMHd8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=oKo4oQKV; arc=fail smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D025374E06
+	for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 16:27:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706200035; cv=none; b=Gj09WAppKnE8MUpzpoiYUvu2syrRyWC9ysmqugNJV2nQ1zTsa8CWijIaXujlI8JkttQPOzMHnfnSkwzfVRrANtD3Ca3EwNCCTsxQNsxxu01umWdjZ0JyqU2JIk2w3FppJEXQwOgZIERhrtgW5KDpKIdhKi7Y35xozYFYKtntuFI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706200035; c=relaxed/simple;
+	bh=+GAO5YWuL7EqUjWOl2U03X6ovBfiXH4yE91ok6yjcAI=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=PRei5zVau7Swyh08biQdZwVLGgdsUUoxCysruoEnhUQZShxGbQt9U3VVwwRvT8WH9o67E49F2l8uUi3nbK2XirI8NRhnxQNcu27L1UjofLXPsPK8f834h1O4a68ERKpNCEvAYLhQjG61XpJihmfnbgF2KdEWKzR0gLaHhV5HzCI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca; spf=none smtp.mailfrom=ndufresne.ca; dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b=h3bIBrka; arc=none smtp.client-ip=209.85.160.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ndufresne.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="oKo4oQKV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706199995; x=1737735995;
-  h=date:from:to:cc:subject:message-id:references:
-   content-transfer-encoding:in-reply-to:mime-version;
-  bh=QFjOFSC0vp2Ff0zDkP5YNEAMkVjrSjlACMSNU+6F25o=;
-  b=oKo4oQKVkov3hTHwalvbY4WbO69MmXhpAPhW/iS9FF2PsJUu2KK4/7aj
-   unzSWNtl9jXkK/pUFUkThyAdzRT+q+GhBYD2AkTnOhaXxmD9UE7mqWmaZ
-   0nA70HYqT3NTg5dFobKpLdBKElSrU+zO8oGKxIt9EdPyIzSpdsCU5MN0J
-   7PbH/4+9aNGeyAYq6APkW3wDRHfJs/EHMD0BKNwrTiciyuAK6eG5hZ4TA
-   l+90vXn9sqLyB7AXVriJ03T6B6ErLN+O3x4u9i/ZfI44a0H/oAPk/PdH+
-   ivC2hlk4f13vbUX4keiPoF5iY313xLyC2rlkavDIQoYpwSfXeeKdmPt/g
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="8966888"
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="8966888"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2024 08:26:24 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="1117994901"
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="1117994901"
-Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
-  by fmsmga005.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 25 Jan 2024 08:26:24 -0800
-Received: from fmsmsx603.amr.corp.intel.com (10.18.126.83) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Thu, 25 Jan 2024 08:26:23 -0800
-Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Thu, 25 Jan 2024 08:26:23 -0800
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (104.47.73.40) by
- edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Thu, 25 Jan 2024 08:26:23 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Qyjibt0WT497qAnDH4lSOfOQxPMtqzcOgQGRyhTY1wGNznLrL43FiXgs+IOpnaiIrRx439nOcI5ZaP0lYgn/aUo98SL1/YruhIDO0AoatJ1rER+PU9j66gBy+XsConAP/3z26KLNiZIG0NTBGRC08ogxrq86da8eiG9NKhG2qv03RGm5oYn7EWJFmltoSL788oZGQ9L8L19QJxqCdSQhnHjSvyYKBRbnv78Rek0XSnb2I3xOYCMgf4g832VMO/dQGUWrFWrDxhK6bzvE/miUTXPPVDJwHRqSSz/cG1Ch5JVXc2eL7SnbYuXudzAYaIv0u6N9dmvwOlbLYUTUAlyTQA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=3FPAf4oAptTsHurMu84oNnRVo2errBlkaQASL14sWNo=;
- b=KMwvMtCUINiKRZl4AmvEc+0gygH9jhEstrGqs3Mc0m1XRJqMW+ajbflTkE5GQ0KhRrfTB6hwqABcfwg7/Z0/ZhWGGbOcphgfGMzifFRoA1ojklze7Jv23wgrSTEttO1rwzi/QU/WPp1otmLrKAQWE+FCAdcCCX1/Kz8ZdwBf4c1u1ImmsBLjEhrU0giDa0wk+DFsuIYDW3sDCNbAb/g3UnXTaPZxB8t0NTQnGVidyeM+BBqRIGuXxTmLQ8IIKgH9gPOrJXjZBK3bNSNnowWe44ALl1GSpEKkBR8egaFmmdTJO92M2UExgko58XocsQjw0QPnGZE/qSU3LZ57w48yeA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SJ1PR11MB6201.namprd11.prod.outlook.com (2603:10b6:a03:45c::14)
- by MN6PR11MB8196.namprd11.prod.outlook.com (2603:10b6:208:47b::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.22; Thu, 25 Jan
- 2024 16:26:21 +0000
-Received: from SJ1PR11MB6201.namprd11.prod.outlook.com
- ([fe80::42b3:9892:db7f:5563]) by SJ1PR11MB6201.namprd11.prod.outlook.com
- ([fe80::42b3:9892:db7f:5563%3]) with mapi id 15.20.7228.022; Thu, 25 Jan 2024
- 16:26:21 +0000
-Date: Thu, 25 Jan 2024 08:26:18 -0800
-From: Ashok Raj <ashok.raj@intel.com>
-To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-CC: Jithu Joseph <jithu.joseph@intel.com>, Tony Luck <tony.luck@intel.com>,
-	Hans de Goede <hdegoede@redhat.com>, <platform-driver-x86@vger.kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>, Ashok Raj <ashok.raj@intel.com>
-Subject: Re: [PATCH 1/1] platform/x86/intel/ifs: Remove unnecessary ret init
-Message-ID: <ZbKLqgte4rVx8yGx@a4bf019067fa.jf.intel.com>
-References: <20240125130328.11253-1-ilpo.jarvinen@linux.intel.com>
- <ZbJ8gp47CWDDqCb4@a4bf019067fa.jf.intel.com>
- <b9368410-e084-8d4e-1c81-55c4e6a22434@linux.intel.com>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <b9368410-e084-8d4e-1c81-55c4e6a22434@linux.intel.com>
-X-ClientProxiedBy: MW4PR04CA0350.namprd04.prod.outlook.com
- (2603:10b6:303:8a::25) To SJ1PR11MB6201.namprd11.prod.outlook.com
- (2603:10b6:a03:45c::14)
+	dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b="h3bIBrka"
+Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-429be992974so38670071cf.2
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 08:27:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ndufresne-ca.20230601.gappssmtp.com; s=20230601; t=1706200033; x=1706804833; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:cc:to:from:subject:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=0kuRjuJnX7Sn5l28ZUPlWUHDNHmw5kV8n1Gjblo8C3g=;
+        b=h3bIBrkaG5iAUhBtcu6/WlLzQW+v9gajshc3yWCN191Bgjl2NYPM8HkBRsjd38AYU8
+         AtxTdNI6v+uohLB37hsiGw1yOgCBoHVdUTLaAL2K8RJRVE73sG10xo27Mr0MRtrlELrH
+         iUVeb+NItcm5kbROKFNjDkBUjKQ7WzDxZS2id4GCX8HA/1FxqSuOyabzcXU4Mcg5Jexb
+         moFNuAMk8w9iKDIASPNnOSTYa3y1oTyJ6sajA/50tuKlC0YHvCjbd23S+UHxVGgXCcJo
+         8AFRAXoBZniGU6meZhcfIL42IzoJQDBf1uvl9xXuE5ftmuP/8kLO9Qn0RrDdo797IsrE
+         zAoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706200033; x=1706804833;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:cc:to:from:subject:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=0kuRjuJnX7Sn5l28ZUPlWUHDNHmw5kV8n1Gjblo8C3g=;
+        b=AQVKXZrhn10nPU3d8O6yGGmk4Eu9IJpprquJTCqznPDMnJl2HybOGvef9PCZ9GENEi
+         rYfQpV+KbWIgJPNPYlF99vsDwWKmALH5BLyj4ZOXkMSyCxFRkNwhxinaJslZ/0annZTt
+         QL9gGpvbDlHVy/znKznLjTt1rDSddpGDK4TpMrl6CRrn1kkY/Tlfbv0AVLY6ArpOhmBS
+         VpfAgENYpKK+VWToSTFtew5sqPnrm+WFV5HFQrJimekTu3V0uS+W/2YdAB24awck99gS
+         Vt6jAE9F+D2apAL8Sdc1e/8p/4UFqWTiWa+NgXzmdEgaiH8tx9supzaXDXVra2y4JWej
+         92eQ==
+X-Gm-Message-State: AOJu0Yw7mr7o0Yw6yaC/YWLO6tFrgEl41T1NquQOgg8nmJY+dz4jX64X
+	FDuN7JgIDZsUla5M97pLovLO8Z610qlMCMlOHd1yqRzAu2N864u0Kup/InkuDAU=
+X-Google-Smtp-Source: AGHT+IEfSHEzRRwCKfyojQNEbFEjLJQDcya+Vj7sVhdUOrj/IlMpqvmeK52ZursW0PGkcPCVI0027g==
+X-Received: by 2002:a05:6214:19ea:b0:686:ae8f:3ed3 with SMTP id q10-20020a05621419ea00b00686ae8f3ed3mr1500167qvc.66.1706200032714;
+        Thu, 25 Jan 2024 08:27:12 -0800 (PST)
+Received: from nicolas-tpx395.localdomain ([2606:6d00:11:3354::580])
+        by smtp.gmail.com with ESMTPSA id mv9-20020a056214338900b006869e0eed00sm3018044qvb.26.2024.01.25.08.27.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 Jan 2024 08:27:12 -0800 (PST)
+Message-ID: <7b7170ced40d8fce4456282a87c5f70b66606d9c.camel@ndufresne.ca>
+Subject: Re: [PATCH v17 8/8] media: verisilicon: Support deleting buffers on
+ capture queue
+From: Nicolas Dufresne <nicolas@ndufresne.ca>
+To: Benjamin Gaignard <benjamin.gaignard@collabora.com>, Hans Verkuil
+	 <hverkuil@xs4all.nl>, mchehab@kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
+	kernel@collabora.com
+Date: Thu, 25 Jan 2024 11:27:10 -0500
+In-Reply-To: <1cd7c504-c384-4c9c-bedd-79cd8aed8484@collabora.com>
+References: <20240119094944.26763-1-benjamin.gaignard@collabora.com>
+	 <20240119094944.26763-9-benjamin.gaignard@collabora.com>
+	 <56c1410e-7a4c-4913-823d-83b8bc0ac002@xs4all.nl>
+	 <1cd7c504-c384-4c9c-bedd-79cd8aed8484@collabora.com>
+Autocrypt: addr=nicolas@ndufresne.ca; prefer-encrypt=mutual; keydata=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
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.3 (3.50.3-1.fc39) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PR11MB6201:EE_|MN6PR11MB8196:EE_
-X-MS-Office365-Filtering-Correlation-Id: 573e0898-5ec7-43bc-d800-08dc1dc25da1
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: cbXdelYX1YaJqnTN/sWj8KAq5k5UZwKg8pVYea29sqD/ewyrI7cX3GUaipb34kjSZ1aAgMVMjE8aLhtdsXI9AUxfP8lhi6rPyOZwILHNcsaThcO6VYC0TkMAOPR1HpxWDni4050DedxmE384Mhheobi++IKnf+7pvcUPdzrxJqJULyrOHy4pWj3xnxHjAmtE6XbLb5ITz0FCdBhGNoD2c0tM3XeglDIS4CDgB5gF9Gd0YLuLHgJNxG5yZ3xELyACS5ceywxJ0VSYc28+3Kc0RZ7XXA0aQNx3Sc4RX4KWVp5Od3MrWmZPoVigLSWSikzyOETqhNArred612kwaynhntgdKjUPlLkKpq90dGlJD/ZN7z2jDhE9GR+sZs734zed9V9dUjQ61WIoSXfrcbLOrM22tngOTpqPb8iExU8CMGSkEcciBfbXnWpE4H3vzNJ4qjjxjgieKCH4mYFfzsRPJ8gcW1FzNckSNv6srts9UZdRpT5cWaR5AVdqmOp63sTzt4U+TE2VqYPDOTIJfTZSZOiwj2qYeOHeQYcK/SdI8fy0oo2UNuLoRxm00GdgQ1F5
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ1PR11MB6201.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(366004)(346002)(136003)(39860400002)(396003)(230922051799003)(186009)(451199024)(64100799003)(1800799012)(54906003)(6916009)(316002)(66946007)(66476007)(66556008)(83380400001)(38100700002)(8936002)(5660300002)(82960400001)(4744005)(2906002)(86362001)(44832011)(41300700001)(4326008)(8676002)(26005)(478600001)(6486002)(6666004)(66574015)(6506007)(6512007);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?iso-8859-1?Q?n94cc4cptq8OAktqCqo9W4HXR97W5VyiwlbxKvdKeX6GDdNGMcRId1DUZ2?=
- =?iso-8859-1?Q?CSfgsroG64uJeQDvUH51G9yMLDmL4DTaXjdy9NTcDG14vGJNbIaXur/IxN?=
- =?iso-8859-1?Q?1i5Rr/xJHqt2PIsZN/pEvfNIe+BXCySxXW5az5Zr3rjtDD7//WkU2QLOzS?=
- =?iso-8859-1?Q?Gm/9g7BDqZ4s70YxR3vYByZutyhWEU9mclTFg9Vi/DU5fFR4Fr4Ru6/wnD?=
- =?iso-8859-1?Q?G/UncAn8vV11enpZv3bw0D1wNxSvWzCkUBAyXzNhRetLgUQmU1cBMTCwOM?=
- =?iso-8859-1?Q?xehz0i30MtGy+lpBOYtRtqQsl6miC2NpIrM3xCU4dNZ2de99Di4pva87VJ?=
- =?iso-8859-1?Q?Nskjwn1xW90gENOvXwjJFLbg52qBEcO2JfgKQrctqcoJMb3Glnvzz6kxvk?=
- =?iso-8859-1?Q?ydDGoFA3ZTDeOcpiBgFQlOWiPocsYVSnSkHVV1WwV8lrcKCBlz/qU0TXgL?=
- =?iso-8859-1?Q?/lwqm12T0u2croESnvgoHnVSiMjrX/lnpwZYqPlB0DsNMpNIVYHzBWJ5Wn?=
- =?iso-8859-1?Q?Glw8lVtzGRVYn6eRkK8xT/oG7xY/RTWsHn0O6TmT8wuv8FyYI9iC9jltxk?=
- =?iso-8859-1?Q?CfZfRnXA2vELxqWP+E9M7osaspKOU5Ec3YPYFTcAXF3+Um0fQR7qmgrBR8?=
- =?iso-8859-1?Q?sDAmI1osOjmZ5HtDN+kP3eUnEHJfr4mPVRKCyzyDJP04AWEky/045Hjv6F?=
- =?iso-8859-1?Q?Wp44bj8AxkK9/l+2OMj4l1QUQQSf/jp4T+gafa/XOGamN4OhJwCgDMYoYP?=
- =?iso-8859-1?Q?Q+EAGZ6G44oC91Nab1uL7G2ixySiEnFDg7Fc8wEZ5CBIwWwsI6K5KVywKW?=
- =?iso-8859-1?Q?JjfZfYajvvMldCEWXzRoPmj1gcVND+eqnHkFH4pRW0p592RgbT4Nar3sFI?=
- =?iso-8859-1?Q?4/7yxYU9Rvm/KI13jBrMJFpi985KDnPdNsJDjpdjlr6IXZIigPOevdaJUr?=
- =?iso-8859-1?Q?1dzjuT6ij39TpFXstLCwOGX1MiSRPJ1u8UVe5C7QnHP9GQW76TMdf+2Vi+?=
- =?iso-8859-1?Q?2zYAYAej1S0v2aAXfyQbNTWKg5W1iRLhxbMlDFQTWpOEdMmpMLWBVIXd3V?=
- =?iso-8859-1?Q?EWqkFtOVUSD6McYwW9BDYNzq8/kwmBLCKk6gA72DorHhXTaXhJuvXUIJOn?=
- =?iso-8859-1?Q?AyYB9itgt+rjHuGiNcquJ9ZpP/39TvnQBS75qit94HaEc/Zzeqv/gs2aAJ?=
- =?iso-8859-1?Q?j4JBl1QBagSgTjNxncL3BB9z0/eBAaXSOrAdF7xAjgxCALObK0Ie7dKxrM?=
- =?iso-8859-1?Q?IPNW4rPgDxtIyJ9UX9OeUnM8/baNjMGcfsBNkG++Y/XLApJK/RWUcoxPl9?=
- =?iso-8859-1?Q?0wa7wb3IxdlvKVzp8GMNIMWSti9QqqwJzfVyzvNKHlkyQPu3vO6mgkGtOu?=
- =?iso-8859-1?Q?wR/GDeK+2l7DS0vc5zsOXgt3YjQd1s3fgDv9EHB259+O8zep/bCqSlzyZv?=
- =?iso-8859-1?Q?1QnYNvnWi0FoF5GFBYzxthdJc70NDuHj2BVIzDQ3c23xIQ2Lx2Ua/im4a6?=
- =?iso-8859-1?Q?1ZFBUMsKlTcaS7AXcTsFzRF+tCM+XmfyLvSbHH2G1XkMnfwwVA2dnf4j30?=
- =?iso-8859-1?Q?ibwskEr6tjh7an+hVw3sBoPFqTBb+514c3Anfu3sISbfhJ/KnnE+EsI73F?=
- =?iso-8859-1?Q?dbxBxO+uvfwOpR/LNJa65r1t4w4UO05wvl?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 573e0898-5ec7-43bc-d800-08dc1dc25da1
-X-MS-Exchange-CrossTenant-AuthSource: SJ1PR11MB6201.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Jan 2024 16:26:21.2706
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: hJm1inkJNtIsz8qZn6UXNPXcvfAGp5t4GCYaTlNj+eVe2gYvIO/xmFyLUs39UpMIjTF9wr4hSvGrlXFVbHvFDg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN6PR11MB8196
-X-OriginatorOrg: intel.com
 
-On Thu, Jan 25, 2024 at 06:12:00PM +0200, Ilpo Järvinen wrote:
-> On Thu, 25 Jan 2024, Ashok Raj wrote:
-> 
+Hi,
 
-[snip]
+Le mercredi 24 janvier 2024 =C3=A0 16:35 +0100, Benjamin Gaignard a =C3=A9c=
+rit=C2=A0:
+> Le 24/01/2024 =C3=A0 13:52, Hans Verkuil a =C3=A9crit=C2=A0:
+> > On 19/01/2024 10:49, Benjamin Gaignard wrote:
+> > > Allow to delete buffers on capture queue because it the one which
+> > > own the decoded buffers. After a dynamic resolution change lot of
+> > > them could remain allocated but won't be used anymore so deleting
+> > > them save memory.
+> > > Do not add this feature on output queue because the buffers are
+> > > smaller, fewer and always recycled even after a dynamic resolution
+> > > change.
+> > >=20
+> > > Signed-off-by: Benjamin Gaignard <benjamin.gaignard@collabora.com>
+> > > ---
+> > >   drivers/media/platform/verisilicon/hantro_drv.c  | 1 +
+> > >   drivers/media/platform/verisilicon/hantro_v4l2.c | 1 +
+> > >   2 files changed, 2 insertions(+)
+> > >=20
+> > > diff --git a/drivers/media/platform/verisilicon/hantro_drv.c b/driver=
+s/media/platform/verisilicon/hantro_drv.c
+> > > index db3df6cc4513..f6b0a676a740 100644
+> > > --- a/drivers/media/platform/verisilicon/hantro_drv.c
+> > > +++ b/drivers/media/platform/verisilicon/hantro_drv.c
+> > > @@ -248,6 +248,7 @@ queue_init(void *priv, struct vb2_queue *src_vq, =
+struct vb2_queue *dst_vq)
+> > >   	dst_vq->timestamp_flags =3D V4L2_BUF_FLAG_TIMESTAMP_COPY;
+> > >   	dst_vq->lock =3D &ctx->dev->vpu_mutex;
+> > >   	dst_vq->dev =3D ctx->dev->v4l2_dev.dev;
+> > > +	src_vq->supports_delete_bufs =3D true;
+> > As I mentioned, I remain unconvinced by this. It is just making the API=
+ inconsistent
+> > since if you support delete_bufs, then why support it for one queue onl=
+y and not both?
+>=20
+> Because the both queues don't handle the same type of data.
+> For example for a stateless decoder, for me, it makes sense to allow dele=
+te decoded frames
+> if they won't be used anymore but that won't makes sense for bitstream bu=
+ffers.
 
-> 
-> Hi,
-> 
-> I was thinking of merging it myself into pdx86 review-ilpo -> next after 
-> allowing it sit on the queue a day or two. IMO, doesn't need to be more 
-> complicated than the usual process kernel process with patches, it would 
-> just take extra time from all the more there are middlemens handling the 
-> patch (after all this is just a trivial cleanup which I noticed while 
-> reviewing the patches you sent and since it didn't conflict the series, 
-> I just sent the obvious cleanup).
-> 
-> But that's assuming you don't have anything conflicting beyond those 
-> patches which you sent? If that's the case, it would be better for you to 
-> take care of it so just let me and I won't merge it myself until it comes 
-> back.
+I personally think that for stateless and stateful decoder bitstream queue =
+this
+can be useful. We currently guess the size we need, and there is no way to
+allocate bigger ones without the driver forgetting about reference frames.
 
-I don't have anything beyond this that conflicts with this change.
+In stateful, some drivers allow to split the bitstream (I tested wave5 nota=
+bly),
+but I was told this is not always the case. A bit of a gray zone in that AP=
+I,
+with lack of capabilities to describe it. On stateless, the entire bitstrea=
+m
+slice must be in one buffer.
 
-Feel free to add 
+Though, for the asymmetry, most stateful decoders won't allow delete bufs o=
+n
+capture, because the buffers are registered in the firmware ahead of time. =
+wave5
+can't even implement create_bufs on capture. We had an argument about havin=
+g
+create_bufs on only one queue for that specific driver, as we wanted someth=
+ing
+upstream, we flex to removing create bufs completely. I think the all or no=
+thing
+rule on per queue create/delete_bufs is not aligned with the reality.
 
-Reviewed-by: Ashok Raj <ashok.raj@intel.com>
+Nicolas
+>=20
+> >=20
+> > >  =20
+> > >   	return vb2_queue_init(dst_vq);
+> > >   }
+> > > diff --git a/drivers/media/platform/verisilicon/hantro_v4l2.c b/drive=
+rs/media/platform/verisilicon/hantro_v4l2.c
+> > > index 941fa23c211a..34eab90e8a42 100644
+> > > --- a/drivers/media/platform/verisilicon/hantro_v4l2.c
+> > > +++ b/drivers/media/platform/verisilicon/hantro_v4l2.c
+> > > @@ -756,6 +756,7 @@ const struct v4l2_ioctl_ops hantro_ioctl_ops =3D =
+{
+> > >   	.vidioc_dqbuf =3D v4l2_m2m_ioctl_dqbuf,
+> > >   	.vidioc_prepare_buf =3D v4l2_m2m_ioctl_prepare_buf,
+> > >   	.vidioc_create_bufs =3D v4l2_m2m_ioctl_create_bufs,
+> > > +	.vidioc_delete_bufs =3D v4l2_m2m_ioctl_delete_bufs,
+> > >   	.vidioc_expbuf =3D v4l2_m2m_ioctl_expbuf,
+> > >  =20
+> > >   	.vidioc_subscribe_event =3D v4l2_ctrl_subscribe_event,
+> > In my view setting vidioc_delete_bufs should enable this feature, and i=
+f
+> > for some strange reason only one queue support it, then make a wrapper
+> > callback that returns an error when used with the wrong queue.
+> >=20
+> > Also note that patch 6/8 never checks for q->supports_delete_bufs in
+> > vb2_core_delete_bufs(), which is wrong!
+>=20
+> I will fix that in next version.
+> Regards,
+> Benjamin
+>=20
+> >=20
+> > Regards,
+> >=20
+> > 	Hans
+> >=20
+>=20
+
