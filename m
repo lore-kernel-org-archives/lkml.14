@@ -1,86 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4A3C250EB;
-	Fri, 26 Jan 2024 21:01:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9583D2374C;
+	Fri, 26 Jan 2024 21:02:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706302905; cv=none; b=nLdBmqynZJzxSLkMqFCVIpkUapG38mMnJCVZ6Vki++s+54VFVKTpAfutG59m1/D2jFcYOtnP28GYDl+UhrgGSNotAs1sZA7WgLqT1VhJ7QiCXBfYxRPve4plNNj7LdGGVATGHP9BvvSaOGStpwsXjcOTr4v/ZtmS1XFON9dT6go=
+	t=1706302929; cv=none; b=XpKs77LKRxwlK+9RGtnfxjHp+m+/iBSfKl86ywM4Qw6qEaGDDP3JERmO1TKBAOHbsxh9J0aYHptcSwH7BFRKNoh7f4el1ti9IytmMUcNNdPohk9pRAB4ZO77F1LjzSTOhaV/AARsFZb+QsOAkLjFPewU3HSCKslvGHCHsGMJ5/g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706302905; c=relaxed/simple;
-	bh=RO+RzcVefXpbLKxJEas0gVSK2qzAcIkqMzHPX6hX3zQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CQPgxzxlMOAieKy99vUBowOBxV1LtqGnznBSAM+doHvD/zh5BYU51gxjyPu2OKRv0QHuRKm/N3jzye5s1cszjDJjjUn6Anu0v6h4zo/HmW+dqvskr5o0SWyjZNNFQL0iwhqgnY9pxdkiZJlTxiAsEeimzAc54lt3LIF9Xh8U/wI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NV5uPXbQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706302929; c=relaxed/simple;
+	bh=mn39oHpKfrn31dhBf6OIk09Xa6Qf/ZTs2k7yrfk5adA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=A60iBnePNS86HPL3VdGrKJ7MubGXYqvSgcV0z/H/Y0/W6HfgzCAi9hHkUDoPE+jW7FL/JfEmrHMMOHNTUB0KkcN+A9O5ec9sApAKdU+xcOg5G3x9dJzVvzvf2u6HZK5tIEwtfOqrqv+QPkV60/ytK1b6iV+gPwZsvJTRAyoRFNw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=U3CR9W38; arc=none smtp.client-ip=89.208.246.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NV5uPXbQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B0CDC433F1;
-	Fri, 26 Jan 2024 21:01:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706302905;
-	bh=RO+RzcVefXpbLKxJEas0gVSK2qzAcIkqMzHPX6hX3zQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NV5uPXbQFU0HYto3E0oiQJVegdBKQiXhJKx/T7pioy7VkaJwoiTNTDRNo+7NWOEGq
-	 E7TYdXVo7Oi/QMEzV43WHfXZ3/e7aF8Ih1C2zFAURSkN/fKkggHsTE54H8Tn7GeZpW
-	 JDwE9CW6uduTmzdkqZZp0G78FvzVQc2k6uLqn2ZBChuLpwR5Dmye8y46SJX73mExwW
-	 cG7lBWkQ8EcX5HaSpGjScz/1mdvvqKezrg6WD865iP8LVnpPPnhS7K9oIwAMdsVA72
-	 wBQqyzF0O11gZCMUeuxQIP6xcMcHWppqF5cA5yP8lm0X3LLzGWInktWZ6RtEiyJi+b
-	 QkY2M/cd/Ranw==
-Date: Fri, 26 Jan 2024 21:01:39 +0000
-From: Simon Horman <horms@kernel.org>
-To: Brett Creeley <bcreeley@amd.com>
-Cc: Ratheesh Kannoth <rkannoth@marvell.com>,
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	Sunil Kovvuri Goutham <sgoutham@marvell.com>,
-	"davem@davemloft.net" <davem@davemloft.net>,
-	"edumazet@google.com" <edumazet@google.com>,
-	"kuba@kernel.org" <kuba@kernel.org>,
-	"pabeni@redhat.com" <pabeni@redhat.com>,
-	Subbaraya Sundeep Bhatta <sbhatta@marvell.com>,
-	Geethasowjanya Akula <gakula@marvell.com>,
-	Hariprasad Kelam <hkelam@marvell.com>
-Subject: Re: [EXT] Re: [PATCH net] octeontx2-af: Initialize bitmap arrays.
-Message-ID: <20240126210139.GD401354@kernel.org>
-References: <20240123051245.3801246-1-rkannoth@marvell.com>
- <cf035125-d7fb-4423-8f64-a5be7505243d@amd.com>
- <MWHPR1801MB1918035FC2D71BD916DE716ED37A2@MWHPR1801MB1918.namprd18.prod.outlook.com>
- <05156615-8dcc-41ec-aa6a-aa41c515d25b@amd.com>
+	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="U3CR9W38"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
+	s=default; t=1706302923;
+	bh=mn39oHpKfrn31dhBf6OIk09Xa6Qf/ZTs2k7yrfk5adA=;
+	h=From:To:Cc:Subject:Date:From;
+	b=U3CR9W38GcKEHTnb5MkhwcafV1zLklKgHN8srBonMiiLOgJBLd43aKdrY8oYvZ4nj
+	 5RSct1lbhRLPK69gRBaey0Zl9kJNiPMXfP2vJxkiEJfp7CDxyHVfE4WYGDwXtqY6CB
+	 70FVtUnT7uAopEpSWiOQm07xsbjC6ekCHIGhlNOo=
+Received: from stargazer.. (unknown [IPv6:240e:358:1181:9d00:dc73:854d:832e:3])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-384) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id BFBFD66A22;
+	Fri, 26 Jan 2024 16:01:58 -0500 (EST)
+From: Xi Ruoyao <xry111@xry111.site>
+To: Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	linux-mips@vger.kernel.org
+Cc: Ralf Baechle <ralf@linux-mips.org>,
+	"Maciej W. Rozycki" <macro@orcam.me.uk>,
+	YunQiang Su <wzssyqa@gmail.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	linux-kernel@vger.kernel.org,
+	Xi Ruoyao <xry111@xry111.site>,
+	stable@vger.linux.org
+Subject: [PATCH] mips: Call lose_fpu(0) before initializing fcr31 in mips_set_personality_nan
+Date: Sat, 27 Jan 2024 04:59:22 +0800
+Message-ID: <20240126205920.11487-3-xry111@xry111.site>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <05156615-8dcc-41ec-aa6a-aa41c515d25b@amd.com>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jan 25, 2024 at 07:56:22AM -0800, Brett Creeley wrote:
-> 
-> 
-> On 1/24/2024 9:06 PM, Ratheesh Kannoth wrote:
-> > Caution: This message originated from an External Source. Use proper caution when opening attachments, clicking links, or responding.
-> > 
-> > 
-> > > From: Brett Creeley <bcreeley@amd.com>
-> > > Subject: [EXT] Re: [PATCH net] octeontx2-af: Initialize bitmap arrays.
-> > > Is there any reason to not use:
-> > > 
-> > > bitmap_zalloc() and bitmap_free()?
-> > Will follow simon's suggestion to keep patch diff minimal. As bitmap_zalloc() does not give any advantage over the other.
-> 
-> It does make some sense because in multiple places you are open coding
-> bitmap_zalloc()->bitmap_alloc() in multiple places.
-> 
-> For example:
-> 
->         mcam->bmap = kmalloc_array(BITS_TO_LONGS(mcam->bmap_entries),
-> +                                  sizeof(long), GFP_KERNEL | __GFP_ZERO);
-> 
-> This is exactly what bitmap_zalloc()->bitmap_alloc() are doing.
+If we still own the FPU after initializing fcr31, when we are preempted
+the dirty value in the FPU will be read out and stored into fcr31,
+clobbering our setting.  This can cause an improper floating-point
+environment after execve().  For example:
 
-Yes, I agree and I should have suggested using
-bitmap_zalloc() and bitmap_free().
+    zsh% cat measure.c
+    #include <fenv.h>
+    int main() { return fetestexcept(FE_INEXACT); }
+    zsh% cc measure.c -o measure -lm
+    zsh% echo $((1.0/3)) # raising FE_INEXACT
+    0.33333333333333331
+    zsh% while ./measure; do ; done
+    (stopped in seconds)
 
+Call lose_fpu(0) before setting fcr31 to prevent this.
+
+Closes: https://lore.kernel.org/linux-mips/7a6aa1bbdbbe2e63ae96ff163fab0349f58f1b9e.camel@xry111.site/
+Fixes: 9b26616c8d9d ("MIPS: Respect the ISA level in FCSR handling")
+Cc: stable@vger.linux.org
+Signed-off-by: Xi Ruoyao <xry111@xry111.site>
+---
+ arch/mips/kernel/elf.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/arch/mips/kernel/elf.c b/arch/mips/kernel/elf.c
+index 5582a4ca1e9e..7aa2c2360ff6 100644
+--- a/arch/mips/kernel/elf.c
++++ b/arch/mips/kernel/elf.c
+@@ -11,6 +11,7 @@
+ 
+ #include <asm/cpu-features.h>
+ #include <asm/cpu-info.h>
++#include <asm/fpu.h>
+ 
+ #ifdef CONFIG_MIPS_FP_SUPPORT
+ 
+@@ -309,6 +310,11 @@ void mips_set_personality_nan(struct arch_elf_state *state)
+ 	struct cpuinfo_mips *c = &boot_cpu_data;
+ 	struct task_struct *t = current;
+ 
++	/* Do this early so t->thread.fpu.fcr31 won't be clobbered in case
++	 * we are preempted before the lose_fpu(0) in start_thread.
++	 */
++	lose_fpu(0);
++
+ 	t->thread.fpu.fcr31 = c->fpu_csr31;
+ 	switch (state->nan_2008) {
+ 	case 0:
+-- 
+2.43.0
 
