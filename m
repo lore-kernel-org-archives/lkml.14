@@ -1,75 +1,75 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA16759178;
-	Fri, 26 Jan 2024 07:39:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43B1D11C84
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 07:40:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706254791; cv=none; b=YhegbTBQAdT3uylY2/bq+rzXOK3ACAmhl7FjrMBnqI2rROeqFKb8/Ia9sqf1bYB9T+U3tt5LQNOYZrNyVnL/cyfUCCYLmR3fhLinwMGj/spFNC8et98fUv4VPfMthmFKbfKRmUj7RpOld6qbR5e5Sy4H6LjzMl91PEiPi07xbWg=
+	t=1706254854; cv=none; b=ObeavfzYGqWHdqa+7na11mxV4ceGXJ+DDux655VGv8+q6/NlXLJKZYrwizQkg7gaTK0+VY10Qt5Dbri9RgmdRKZIM+WZoxSwsCAlCFfdJ8UyulWp6B/MATwa+ajQezC4COAygxqGpWtcYdpxHYMs+pGoCKgsR17ejHmWT5s4qCU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706254791; c=relaxed/simple;
-	bh=/5nfxaGJlWyx/ZQwtNE2vSIVj6OswyRL9cg0CrI3JNA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=RXFo3DzTtcQeT9URk8tESXd82Q1+NMUV0NfYA4tcp7fvoOU4o0XTmVFtRnm2bhKkL7sSjj+hJumecRs+vlxJ3jcoqR9q+E6if2C857IpZVrQVFCe5rBGT62+JUTGbK0MtAJYgfyFu3m3RgxlUFS9zCdCHB+yCgb90zMlDqZko38=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RqQ2AlIB; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1706254854; c=relaxed/simple;
+	bh=boIgaWCredgLlW/yGXwuYNqv1x3W6y+UFxuNq1JRMz0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ei2RhV9j55OvMPJwiPdrO5QAMdxLV/XR6MMBj5WCq2BipM8u3EYh6JQXvM/kIokOEI3l3M6OE8+30by4Zrnwh1hY3MA+f6DAOFHE9CerdzjF2ao0egE70y1ouhUT2LSqqp5wvrO7vosLZC07y77mN58t0ZoCBrPL2BNlp1vf5nI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=TDHak4eq; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RqQ2AlIB"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1d70a98c189so451025ad.1;
-        Thu, 25 Jan 2024 23:39:49 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="TDHak4eq"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1d71e184695so339585ad.3
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 23:40:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706254789; x=1706859589; darn=vger.kernel.org;
+        d=sifive.com; s=google; t=1706254852; x=1706859652; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=sIHoB0tO6UnT+9FCYFnrGjYBTfQtZYcWxPgffZVZp6I=;
-        b=RqQ2AlIBmTlEUKIs2ot5Gzyc+2tuOSzNngNAowUL8ZSY8YjFMn716lWlianjMQae0Q
-         GxAfMBgfDplDw6Otn62MBvXbglRhDbN8yQKAEaaND6mTXuud0ex2J3JwioFMMAD5f1bJ
-         vBpgNdo4eIvsmExgWIbmzPeP7ELoY1tI7uoQF8pnM3gaz2PmxN5VMeCunn9tJfDGGBob
-         jr7yt4/LBAhSfJNpJQGf+zOFpWNgKt3oxTEihDRaclRztLcdBgSAc6IkfLyyXepjvK8n
-         OF0ZVk7HFuN3xJ2Opb7KniqChBqf4P83ZohNdC2dPbRsr+XweYm1NpUDZM8mVJeZnG2z
-         jt8w==
+        bh=Xx1YP8E0gDhv13e5xrfsDSvsYylKfZXINIzQWoz/9aM=;
+        b=TDHak4eqQBJfAP2gI7mPvqcCH3XW4ySy5BtnT2C9E+qAp+/rguEALAxUnaAy6BnCOz
+         HcTxzMO8Ao88+hkws6oALTxELLnfqVgN8/0wIA5IHKmCgTrTbT/dNM6o+4HuiH19RtFW
+         FQvLrCxatCP41TrbeAJpVTuPyC8G8a0yur20mIDnu4uGPuKsGw7CoFavij/8YenfuS5i
+         /Bo4WzlGLEr46ewjVg721Q19qxCrINjOnBqkeM07LmCzZBGZwlB7sal9B2E+09cHBQw/
+         JJihmftQekjxjL+Pd5q5DNHVzSWKYI3u6UU+SdHQ4jf0EaAf2fD3sr2qypnucGPQBqzA
+         mWEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706254789; x=1706859589;
+        d=1e100.net; s=20230601; t=1706254852; x=1706859652;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=sIHoB0tO6UnT+9FCYFnrGjYBTfQtZYcWxPgffZVZp6I=;
-        b=cMKEy8C6OccHVcXUf7Yt+bUTuSkoQNxcvzDjr9l8ogDq1SaCveZofLNtdQ45DJwMsI
-         AFnI6OhFyxk2vv5KuvhAdafGdWXxBUDtkETF/v5lXcbD35ITGFmmgyscwW9Wa32WuvhJ
-         qKOx8EJKMac2TXMtWh5PuD2bIYxX+o1MZVFfkACsTeWOhT4BKBl49ZB/EBghR/E5pDCg
-         QFkoKXrOguRTRJHWU10LTwOrC1D3d/JfWduSkiLc/B/9dIgSsV3Y6j2WJ3+DLfr7E+cN
-         zv/fSGgzK9U3IG4tEXg79LjCVziIuh6Jl9EadS1np7AVSocNj8XJrx8HfmljuRYy+smF
-         hROQ==
-X-Gm-Message-State: AOJu0YxOCd2764EFbKIzfrulXdI1Qr9UtVDlecokpG4dkzlhyYVSUK6E
-	dH8c5jtxB71gLyOtGnhkkHWUbJp3tbyuRbiNGq5dWwYrGZY9dWa7
-X-Google-Smtp-Source: AGHT+IHjlEqKGmmtT+3QzRgVac/hlL+gl23FhxzHcH0blJDYziwkYlCGKfkVtNCBJe2PhOWcClN/lw==
-X-Received: by 2002:a05:6a20:1594:b0:19c:7690:12ec with SMTP id h20-20020a056a20159400b0019c769012ecmr885727pzj.5.1706254789065;
-        Thu, 25 Jan 2024 23:39:49 -0800 (PST)
-Received: from localhost.localdomain ([129.146.253.192])
-        by smtp.googlemail.com with ESMTPSA id sw12-20020a17090b2c8c00b0029105d49b2dsm605619pjb.20.2024.01.25.23.39.38
+        bh=Xx1YP8E0gDhv13e5xrfsDSvsYylKfZXINIzQWoz/9aM=;
+        b=hA6j5vWv0Z2txyuhOZagQuMtvobf2vi3N97PgfTIo2YtJk7XpDdtWp/Op6s1hCoQJv
+         KmTMtbI3yb55GWW1Ttk2sa1zoNUIsLBIOZpkVqRB3ILmyBkA5xz8SzGeFSfDrMZe3VbJ
+         4/HYXzZe1Wdvp3XJ5dSS8gR76kb1WYSfH7Ux50vfffWcSQTJmObJSbIdzpf3Q9YaTI8+
+         MlRMxqKOn77gIwvU4MKnqFrql1Tq4HVLl9FdVVqLUbx8qKA8kiPz9JkWtZ8+ZR5yS7uG
+         9HiPMnZi7hds1FrKdNslgfGJTyfXryZqru0THlqkMkgIB4ssHPVB0zr6ZahFBuIdbWfC
+         sFSg==
+X-Gm-Message-State: AOJu0YwWaYXFz2JHPCdX8Qatqq6nTjxHhoErYdIzg0xo9vlK9Or0SGD8
+	tGGKxn3AyBe5RXMH6cuhkJUmveMfeliUdNjqSigesOgSp0L4ahzfH/SH3Qfp6O4=
+X-Google-Smtp-Source: AGHT+IHP5PFE9yGmJvScZYLZjep7uFpEEjPgLkYQvtNEeX3TGPGSglkGBAttrdjpcX/oTgscOsZZKQ==
+X-Received: by 2002:a17:902:e809:b0:1d7:51b5:1f76 with SMTP id u9-20020a170902e80900b001d751b51f76mr1414966plg.95.1706254852369;
+        Thu, 25 Jan 2024 23:40:52 -0800 (PST)
+Received: from hsinchu15.internal.sifive.com (59-124-168-89.hinet-ip.hinet.net. [59.124.168.89])
+        by smtp.gmail.com with ESMTPSA id n3-20020a170902e54300b001d4816958c2sm521066plf.166.2024.01.25.23.40.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jan 2024 23:39:48 -0800 (PST)
-From: Furong Xu <0x1207@gmail.com>
-To: "David S. Miller" <davem@davemloft.net>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Jose Abreu <joabreu@synopsys.com>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Joao Pinto <jpinto@synopsys.com>,
-	Simon Horman <horms@kernel.org>
-Cc: netdev@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org,
+        Thu, 25 Jan 2024 23:40:51 -0800 (PST)
+From: Nylon Chen <nylon.chen@sifive.com>
+To: linux-riscv@lists.infradead.org,
+	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	xfr@outlook.com,
-	rock.xu@nio.com,
-	Furong Xu <0x1207@gmail.com>
-Subject: [PATCH net v2] net: stmmac: xgmac: fix handling of DPP safety error for DMA channels
-Date: Fri, 26 Jan 2024 15:39:28 +0800
-Message-Id: <20240126073928.1070729-1-0x1207@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	linux-pwm@vger.kernel.org,
+	conor@kernel.org,
+	robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	palmer@dabbelt.com,
+	paul.walmsley@sifive.com,
+	aou@eecs.berkeley.edu,
+	thierry.reding@gmail.com,
+	u.kleine-koenig@pengutronix.de
+Cc: vincent.chen@sifive.com,
+	zong.li@sifive.com,
+	nylon.chen@sifive.com,
+	nylon7717@gmail.com
+Subject: [PATCH v8 0/3] Change PWM-controlled LED pin active mode and algorithm
+Date: Fri, 26 Jan 2024 15:40:42 +0800
+Message-ID: <20240126074045.20159-1-nylon.chen@sifive.com>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -78,155 +78,73 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Commit 56e58d6c8a56 ("net: stmmac: Implement Safety Features in
-XGMAC core") checks and reports safety errors, but leaves the
-Data Path Parity Errors for each channel in DMA unhandled at all, lead to
-a storm of interrupt.
-Fix it by checking and clearing the DMA_DPP_Interrupt_Status register.
+According to the circuit diagram of User LEDs - RGB described in the
+manual hifive-unleashed-a00.pdf[0] and hifive-unmatched-schematics-v3.pdf[1].
 
-Fixes: 56e58d6c8a56 ("net: stmmac: Implement Safety Features in XGMAC core")
-Signed-off-by: Furong Xu <0x1207@gmail.com>
----
-Changes in v2:
-  - explicit enable Data Path Parity Protection
-  - add new counters to stmmac_safety_stats
-  - add detailed log
----
- drivers/net/ethernet/stmicro/stmmac/common.h  |  1 +
- .../net/ethernet/stmicro/stmmac/dwxgmac2.h    |  3 +
- .../ethernet/stmicro/stmmac/dwxgmac2_core.c   | 58 ++++++++++++++++++-
- 3 files changed, 61 insertions(+), 1 deletion(-)
+The behavior of PWM is acitve-high.
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/common.h b/drivers/net/ethernet/stmicro/stmmac/common.h
-index 721c1f8e892f..b4f60ab078d6 100644
---- a/drivers/net/ethernet/stmicro/stmmac/common.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/common.h
-@@ -216,6 +216,7 @@ struct stmmac_safety_stats {
- 	unsigned long mac_errors[32];
- 	unsigned long mtl_errors[32];
- 	unsigned long dma_errors[32];
-+	unsigned long dma_dpp_errors[32];
- };
- 
- /* Number of fields in Safety Stats */
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
-index 207ff1799f2c..5c67a3f89f08 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
-@@ -303,6 +303,8 @@
- #define XGMAC_RXCEIE			BIT(4)
- #define XGMAC_TXCEIE			BIT(0)
- #define XGMAC_MTL_ECC_INT_STATUS	0x000010cc
-+#define XGMAC_MTL_DPP_CONTROL		0x000010e0
-+#define XGMAC_DDPP_DISABLE		BIT(0)
- #define XGMAC_MTL_TXQ_OPMODE(x)		(0x00001100 + (0x80 * (x)))
- #define XGMAC_TQS			GENMASK(25, 16)
- #define XGMAC_TQS_SHIFT			16
-@@ -385,6 +387,7 @@
- #define XGMAC_DCEIE			BIT(1)
- #define XGMAC_TCEIE			BIT(0)
- #define XGMAC_DMA_ECC_INT_STATUS	0x0000306c
-+#define XGMAC_DMA_DPP_INT_STATUS	0x00003074
- #define XGMAC_DMA_CH_CONTROL(x)		(0x00003100 + (0x80 * (x)))
- #define XGMAC_SPH			BIT(24)
- #define XGMAC_PBLx8			BIT(16)
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
-index eb48211d9b0e..bcd7daba53af 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
-@@ -830,6 +830,43 @@ static const struct dwxgmac3_error_desc dwxgmac3_dma_errors[32]= {
- 	{ false, "UNKNOWN", "Unknown Error" }, /* 31 */
- };
- 
-+static const char * const dpp_rx_err = "Read Rx Descriptor Parity checker Error";
-+static const char * const dpp_tx_err = "Read Tx Descriptor Parity checker Error";
-+static const struct dwxgmac3_error_desc dwxgmac3_dma_dpp_errors[32] = {
-+	{ true, "TDPES0", dpp_tx_err },
-+	{ true, "TDPES1", dpp_tx_err },
-+	{ true, "TDPES2", dpp_tx_err },
-+	{ true, "TDPES3", dpp_tx_err },
-+	{ true, "TDPES4", dpp_tx_err },
-+	{ true, "TDPES5", dpp_tx_err },
-+	{ true, "TDPES6", dpp_tx_err },
-+	{ true, "TDPES7", dpp_tx_err },
-+	{ true, "TDPES8", dpp_tx_err },
-+	{ true, "TDPES9", dpp_tx_err },
-+	{ true, "TDPES10", dpp_tx_err },
-+	{ true, "TDPES11", dpp_tx_err },
-+	{ true, "TDPES12", dpp_tx_err },
-+	{ true, "TDPES13", dpp_tx_err },
-+	{ true, "TDPES14", dpp_tx_err },
-+	{ true, "TDPES15", dpp_tx_err },
-+	{ true, "RDPES0", dpp_rx_err },
-+	{ true, "RDPES1", dpp_rx_err },
-+	{ true, "RDPES2", dpp_rx_err },
-+	{ true, "RDPES3", dpp_rx_err },
-+	{ true, "RDPES4", dpp_rx_err },
-+	{ true, "RDPES5", dpp_rx_err },
-+	{ true, "RDPES6", dpp_rx_err },
-+	{ true, "RDPES7", dpp_rx_err },
-+	{ true, "RDPES8", dpp_rx_err },
-+	{ true, "RDPES9", dpp_rx_err },
-+	{ true, "RDPES10", dpp_rx_err },
-+	{ true, "RDPES11", dpp_rx_err },
-+	{ true, "RDPES12", dpp_rx_err },
-+	{ true, "RDPES13", dpp_rx_err },
-+	{ true, "RDPES14", dpp_rx_err },
-+	{ true, "RDPES15", dpp_rx_err },
-+};
-+
- static void dwxgmac3_handle_dma_err(struct net_device *ndev,
- 				    void __iomem *ioaddr, bool correctable,
- 				    struct stmmac_safety_stats *stats)
-@@ -841,6 +878,13 @@ static void dwxgmac3_handle_dma_err(struct net_device *ndev,
- 
- 	dwxgmac3_log_error(ndev, value, correctable, "DMA",
- 			   dwxgmac3_dma_errors, STAT_OFF(dma_errors), stats);
-+
-+	value = readl(ioaddr + XGMAC_DMA_DPP_INT_STATUS);
-+	writel(value, ioaddr + XGMAC_DMA_DPP_INT_STATUS);
-+
-+	dwxgmac3_log_error(ndev, value, false, "DMA_DPP",
-+			   dwxgmac3_dma_dpp_errors,
-+			   STAT_OFF(dma_dpp_errors), stats);
- }
- 
- static int
-@@ -881,6 +925,12 @@ dwxgmac3_safety_feat_config(void __iomem *ioaddr, unsigned int asp,
- 	value |= XGMAC_TMOUTEN; /* FSM Timeout Feature */
- 	writel(value, ioaddr + XGMAC_MAC_FSM_CONTROL);
- 
-+	/* 5. Enable Data Path Parity Protection */
-+	value = readl(ioaddr + XGMAC_MTL_DPP_CONTROL);
-+	/* already enabled by default, explicit enable it again */
-+	value &= ~XGMAC_DDPP_DISABLE;
-+	writel(value, ioaddr + XGMAC_MTL_DPP_CONTROL);
-+
- 	return 0;
- }
- 
-@@ -914,7 +964,12 @@ static int dwxgmac3_safety_feat_irq_status(struct net_device *ndev,
- 		ret |= !corr;
- 	}
- 
--	err = dma & (XGMAC_DEUIS | XGMAC_DECIS);
-+	/* DMA_DPP_Interrupt_Status is indicated by MCSIS bit in
-+	 * DMA_Safety_Interrupt_Status, so we handle DMA Data Path
-+	 * Parity Errors here
-+	 */
-+	err = (dma & (XGMAC_DEUIS | XGMAC_DECIS)) ||
-+	      (dma & XGMAC_MCSIS);
- 	corr = dma & XGMAC_DECIS;
- 	if (err) {
- 		dwxgmac3_handle_dma_err(ndev, ioaddr, corr, stats);
-@@ -930,6 +985,7 @@ static const struct dwxgmac3_error {
- 	{ dwxgmac3_mac_errors },
- 	{ dwxgmac3_mtl_errors },
- 	{ dwxgmac3_dma_errors },
-+	{ dwxgmac3_dma_dpp_errors },
- };
- 
- static int dwxgmac3_safety_feat_dump(struct stmmac_safety_stats *stats,
+According to the descriptionof PWM for pwmcmp in SiFive FU740-C000 Manual[2].
+
+The pwm algorithm is (PW) pulse active time  = (D) duty * (T) period.
+The `frac` variable is pulse "inactive" time so we need to invert it.
+
+So this patchset removes active-low in DTS and adds reverse logic to the driver.
+
+Updated patches: 3
+New patches: 0
+Unchanged patches: 0
+
+Links:
+- [0]: https://sifive.cdn.prismic.io/sifive/c52a8e32-05ce-4aaf-95c8-7bf8453f8698_hifive-unleashed-a00-schematics-1.pdf
+- [1]: https://sifive.cdn.prismic.io/sifive/6a06d6c0-6e66-49b5-8e9e-e68ce76f4192_hifive-unmatched-schematics-v3.pdf
+- [2]: https://sifive.cdn.prismic.io/sifive/1a82e600-1f93-4f41-b2d8-86ed8b16acba_fu740-c000-manual-v1p6.pdf
+
+Changed in v8:
+ - Fix Signed-off-by and Co-developed-by typo.
+
+Changed in v7:
+ - Remove active-low strings from hifive-unleashed-a00.dts file.
+
+Changed in v6:
+ - Separate the idempotent test bug fixes into a new patch.
+ - Move the reversing the duty before the line checking
+   state->enabled.
+ - Fix the algorithm and change it to take the minimum value first and
+   then reverse it.
+
+Changed in v5:
+ - Add the updates to the PWM algorithm based on version 2 back in.
+ - Replace div64_ul with DIV_ROUND_UP_ULL to correct the error in the
+   period value of the idempotent test in pwm_apply_state_debug.
+
+Changed in v4:
+ - Remove previous updates to the PWM algorithm.
+
+Changed in v3:
+ - Convert the reference link to standard link.
+ - Move the inverted function before taking the minimum value.
+ - Change polarity check condition(high and low).
+ - Pick the biggest period length possible that is not bigger than the
+   requested period.
+
+Changed in v2:
+ - Convert the reference link to standard link.
+ - Fix typo: s/sifive unmatched:/sifive: unmatched:/.
+ - Remove active-low from hifive-unleashed-a00.dts.
+ - Include this reference link in the dts and pwm commit messages.
+
+Nylon Chen (3):
+  riscv: dts: sifive: unleashed/unmatched: Remove PWM controlled LED's
+    active-low properties
+  pwm: sifive: change the PWM controlled LED algorithm
+  pwm: sifive: Fix the error in the idempotent test within the
+    pwm_apply_state_debug function
+
+ arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts | 12 ++++--------
+ arch/riscv/boot/dts/sifive/hifive-unmatched-a00.dts | 12 ++++--------
+ drivers/pwm/pwm-sifive.c                            |  9 +++++----
+ 3 files changed, 13 insertions(+), 20 deletions(-)
+
 -- 
-2.34.1
+2.42.0
 
