@@ -1,107 +1,118 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F76C11712
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 06:07:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9834411C88
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 06:07:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706249258; cv=none; b=CEQAJBJJYpR8uabZaALbn6ZjcQAn9AA8k8+ZPLrleXPecG/+wNSrqxum6mCf3b6ADzPIN+CI7z+YWivkHq9whMYRuUPeB4Uw88PLQPnoNV3ri5aK2StaLEd5WlEOTOS1eieCuYxXw1NU1O0UfmUsruq5mNP7H1P6aJDRdvDSkTQ=
+	t=1706249259; cv=none; b=A1pAW2D24LdHbDKn02cZJ7z4kADz+Sxg05ofZzuFsomJk+YhQQl4TmsngOeKHGa6lZa3FOw2m+SCHH3Plt+Wl40BZWRJpv1r2Fckq0QCL6MFhH74Z/+EhuU54yAQVWdxsD8NtUQsv/sXcuxD+rdcV5se0OM8FVw3RmQBywLd4XY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706249258; c=relaxed/simple;
-	bh=HuHGp3d4m9h+723TGTSdEUd9edN48dSr2KiqSS8JsYU=;
+	s=arc-20240116; t=1706249259; c=relaxed/simple;
+	bh=DAbJ/11kkWV3NfOW/ZZ47OvYR00ddrGOrBip2EkiS9w=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RUTljOKS3Kn/JvIO26XDYFAVsjccoPyH1cS9NFEfEre4wU8N0x3tNWMyiZkfWjbzCn/BVS21FzDZVW2TJNQV3SNCDxyAnVCM7Bptux0ikWnHv+jeEpEiblaiVDh72JFiu/h+egJcEoHtCE5W08aoIvjjeYI+bNW0KPrEJD8oCD4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ore@pengutronix.de>)
-	id 1rTFN5-0006cg-5S; Fri, 26 Jan 2024 07:07:23 +0100
-Received: from [2a0a:edc0:2:b01:1d::c0] (helo=ptx.whiteo.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ore@pengutronix.de>)
-	id 1rTFN1-002S0p-Ly; Fri, 26 Jan 2024 07:07:19 +0100
-Received: from ore by ptx.whiteo.stw.pengutronix.de with local (Exim 4.92)
-	(envelope-from <ore@pengutronix.de>)
-	id 1rTFN1-001rth-IN; Fri, 26 Jan 2024 07:07:19 +0100
-Date: Fri, 26 Jan 2024 07:07:19 +0100
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-To: Esben Haabendal <esben@geanix.com>
-Cc: linux-i2c@vger.kernel.org,
-	Gregor Herburger <gregor.herburger@ew.tq-group.com>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Andi Shyti <andi.shyti@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	NXP Linux Team <linux-imx@nxp.com>, linux-kernel@vger.kernel.org,
-	Jinjie Ruan <ruanjinjie@huawei.com>,
-	Alexander Stein <alexander.stein@ew.tq-group.com>,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] i2c: imx: move to generic GPIO recovery
-Message-ID: <20240126060719.GD381737@pengutronix.de>
-References: <01abf8ccc0af74b4fb0124977ed6bdfb9d7107b6.1706190706.git.esben@geanix.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=qxXGADP/KvdlyTJDuRnBqxT2SaWbsifVHI8Xy60AcUDcO1iKChKkEGdL1PxmU3v/UKBbjP/zDseA5zcjK5zmcqZ3pLFMAx58KdVpI45Bf8vLR0okYMP2PxXIMIlA6Y3Nmg7N0ufe+exyWqcUwWfApbxzOkfZg3Qo6buC9KNASkc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DU0CFc04; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DU0CFc04"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1706249256;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=z72p/1NCFMOucyopgj4TN6714b15v6kjfWKT6hd64FE=;
+	b=DU0CFc04VHmtu8ZLll/iRJhhcriw3TXzpgiHxUwNFZXgkEa/mfy5OAChi7EKfUUi+w95KP
+	ikpU+H8JLdMAelFyRmPNPXx41hFnFywhnkJkxSb1u8lmdVsBWJZfC7JSPl5JEaXu1pOC9t
+	lh7KL7c6hbYjIVfvjybBUjFre5sqaew=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-551-Dvx_BaF4N36KKDvV0yy-Nw-1; Fri, 26 Jan 2024 01:07:33 -0500
+X-MC-Unique: Dvx_BaF4N36KKDvV0yy-Nw-1
+Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 19D621013664;
+	Fri, 26 Jan 2024 06:07:32 +0000 (UTC)
+Received: from localhost (unknown [10.72.116.117])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 925AD492BC6;
+	Fri, 26 Jan 2024 06:07:30 +0000 (UTC)
+Date: Fri, 26 Jan 2024 14:07:27 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: linux-kernel@vger.kernel.org, kexec@lists.infradead.org, x86@kernel.org,
+	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+	linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+	linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org,
+	loongarch@lists.linux.dev, akpm@linux-foundation.org,
+	ebiederm@xmission.com, hbathini@linux.ibm.com, piliu@redhat.com,
+	viro@zeniv.linux.org.uk
+Subject: Re: [PATCH linux-next v3 00/14] Split crash out from kexec and clean
+ up related config items
+Message-ID: <ZbNMHwVhWxMyvKH/@MiWiFi-R3L-srv>
+References: <20240124051254.67105-1-bhe@redhat.com>
+ <20240126045551.GA126645@dev-arch.thelio-3990X>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <01abf8ccc0af74b4fb0124977ed6bdfb9d7107b6.1706190706.git.esben@geanix.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL: http://www.pengutronix.de/
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20240126045551.GA126645@dev-arch.thelio-3990X>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.9
 
-Hi,
+On 01/25/24 at 09:55pm, Nathan Chancellor wrote:
+...... 
+> I am seeing a few build failures in my test matrix on next-20240125 that
+> appear to be caused by this series although I have not bisected. Some
+> reproduction steps:
 
-On Thu, Jan 25, 2024 at 02:56:36PM +0100, Esben Haabendal wrote:
-> Starting with
-> commit 75820314de26 ("i2c: core: add generic I2C GPIO recovery")
-> GPIO bus recovery is supported by the I2C core, so we can remove the
-> driver implementation and use that one instead.
+Thanks for trying this, I have reproduced the linking failure on arm,
+will work out a way to fix it.
+
+It's weird, I remember I have built these and passed.
+
 > 
-> As a nice side-effect, pinctrl becomes optional, allowing bus recovery on
-> LS1021A, which does not have such luxury, but can be wired up to use extra
-> fixed GPIO pins.
+> $ curl -LSso .config https://git.alpinelinux.org/aports/plain/community/linux-edge/config-edge.armv7
+> $ make -skj"$(nproc)" ARCH=arm CROSS_COMPILE=arm-linux-gnueabi- olddefconfig all
+> ...
+> arm-linux-gnueabi-ld: arch/arm/kernel/machine_kexec.o: in function `arch_crash_save_vmcoreinfo':
+> machine_kexec.c:(.text+0x488): undefined reference to `vmcoreinfo_append_str'
+> ...
 > 
-> Note: The previous error messages about bus recovery not being supported is
-> dropped with this change. Given that it is perfectly possible to have platforms
-> where bus recovery works without pinctrl support, I happen to work on one such,
-> both error messages does not really make sense in those cases. And I don't see
-> how to know if this is the case or not.
+> $ curl -LSso .config https://github.com/archlinuxarm/PKGBUILDs/raw/master/core/linux-aarch64/config
+> $ make -skj"$(nproc)" ARCH=arm64 CROSS_COMPILE=aarch64-linux- olddefconfig all
+> ...
+> aarch64-linux-ld: kernel/kexec_file.o: in function `kexec_walk_memblock.constprop.0':
+> kexec_file.c:(.text+0x314): undefined reference to `crashk_res'
+> aarch64-linux-ld: kernel/kexec_file.o: relocation R_AARCH64_ADR_PREL_PG_HI21 against symbol `crashk_res' which may bind externally can not be used when making a shared object; recompile with -fPIC
+> kexec_file.c:(.text+0x314): dangerous relocation: unsupported relocation
+> aarch64-linux-ld: kexec_file.c:(.text+0x318): undefined reference to `crashk_res'
+> aarch64-linux-ld: drivers/of/kexec.o: in function `of_kexec_alloc_and_setup_fdt':
+> kexec.c:(.text+0x580): undefined reference to `crashk_res'
+> aarch64-linux-ld: drivers/of/kexec.o: relocation R_AARCH64_ADR_PREL_PG_HI21 against symbol `crashk_res' which may bind externally can not be used when making a shared object; recompile with -fPIC
+> kexec.c:(.text+0x580): dangerous relocation: unsupported relocation
+> aarch64-linux-ld: kexec.c:(.text+0x584): undefined reference to `crashk_res'
+> aarch64-linux-ld: kexec.c:(.text+0x590): undefined reference to `crashk_res'
+> aarch64-linux-ld: kexec.c:(.text+0x5b0): undefined reference to `crashk_low_res'
+> aarch64-linux-ld: drivers/of/kexec.o: relocation R_AARCH64_ADR_PREL_PG_HI21 against symbol `crashk_low_res' which may bind externally can not be used when making a shared object; recompile with -fPIC
+> kexec.c:(.text+0x5b0): dangerous relocation: unsupported relocation
+> aarch64-linux-ld: kexec.c:(.text+0x5b4): undefined reference to `crashk_low_res'
+> aarch64-linux-ld: kexec.c:(.text+0x5c0): undefined reference to `crashk_low_res'
+> ...
 > 
-> Signed-off-by: Esben Haabendal <esben@geanix.com>
+> $ curl -LSso .config https://git.alpinelinux.org/aports/plain/community/linux-edge/config-edge.x86_64
+> $ make -skj"$(nproc)" ARCH=x86_64 CROSS_COMPILE=x86_64-linux- olddefconfig all
+> ...
+> x86_64-linux-ld: arch/x86/xen/mmu_pv.o: in function `paddr_vmcoreinfo_note':
+> mmu_pv.c:(.text+0x3af3): undefined reference to `vmcoreinfo_note'
+> ...
+> 
+> Cheers,
+> Nathan
+> 
 
-Thank you for your work.
-
-> ---
-....
-> +	struct i2c_bus_recovery_info *bri = &i2c_imx->rinfo;
->  
-> -	dev_dbg(&pdev->dev, "using scl%s for recovery\n",
-> -		rinfo->sda_gpiod ? ",sda" : "");
-> +	bri->pinctrl = devm_pinctrl_get(&pdev->dev);
-> +	if (IS_ERR(bri->pinctrl))
-> +		return PTR_ERR(bri->pinctrl);
-
-According to the commit message - "pinctrl becomes optional", but this
-code stops probe if pinctrl will fail for one or another reason. I do
-not see any place returning NULL on fail. Do I'm missing something?
-
-Regards,
-Oleksij
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
