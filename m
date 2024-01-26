@@ -1,86 +1,63 @@
-Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7352051033;
-	Fri, 26 Jan 2024 23:21:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.255.230.98
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EC815FDB4;
+	Fri, 26 Jan 2024 23:22:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706311319; cv=none; b=FzJjFCogp2H2/ne5ZMk4xpjtF4FYvj3nETDLSd/0gBSpU1Fg2EcGcgqdMmEYQc494+W3uRQ1d3XAv+aXcusStuWRvDcrYUwsVC4m6aThyfUUFLewCjpzst2+hJIK8VQ/PoX/pvwwJJ6Y2xK2JTsHLzHsGqudYac17p5DNgAyAPk=
+	t=1706311328; cv=none; b=ClzBkJzFXBRQjns49NWr4EKjOcUWfHkGWEji0+NPvpSTHPaALrHMdegov0qGhBqausGT6+LwVCuOAkwhKgcQVKawOJ4IaeJGhsMn1WvQoF/cFJHPcrf/3+R53TGZDWM6YfKLaQV6vf0iZ0k6WDypYPgmf5MDin12G867nsww3I0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706311319; c=relaxed/simple;
-	bh=3LcrOLtYCxr/GTKWLKz03ve3ssDHsY2b8TJXl7Am82s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IifKrO+LcKI+hDV7720iK4NpWMwsJK0+oJKDI7GvACqSNIr2u0myWoJhB2k1SiSPNltnfgpBqyAb+4eGtvgkBLOeHnXPb2lKd0it0DKSUa9GJE18mlIIZzLABDrh4pghDbiQCJCjAJ82UCm85jSomUjQNW5qBWrT6APe1m7ov44=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz; spf=pass smtp.mailfrom=ucw.cz; dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b=fP4yEtVo; arc=none smtp.client-ip=46.255.230.98
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ucw.cz
+	s=arc-20240116; t=1706311328; c=relaxed/simple;
+	bh=fzEwPeQ+uXU980SE/kgv/K/Sbg2qcTyrv6njKtqJrUU=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=qvX4PRJZw50rodE4hjf05ZXi3RLqXULKK9uMdSerinac7m1hqqUL5bMRBEtzPDpxjIv0xnZv+0uu2cEhOmu3UoDQOKMOZJRkXv9t20rZdMwcUwUbtRymytMW0W/W8ldCZ3ljMBk6HC2Vg5v+bhmCouTCeNNncq7zn/GXyMn0IoE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dK1ra5ih; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b="fP4yEtVo"
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-	id 0040B1C0050; Sat, 27 Jan 2024 00:21:48 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ucw.cz; s=gen1;
-	t=1706311309;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=k4M+57OyzmopiBIibRxQExCs1rF4Qqo0urnMF24rcgA=;
-	b=fP4yEtVoWFjetgmkNwG6bgTmXr4f5heLhJ+SAoItwacPFkw+NpmRgcrwojJZd49ZiXOpCc
-	QGO7Q4gnNjvX6wretNhfRvs2ddmGykrBbu3jlcCg1yXqpWAbldspd9S+hTO5D9vHVcW87m
-	ulH1g/j2xyl2VtCzm10jDyZmxGDtD2M=
-Date: Sat, 27 Jan 2024 00:21:48 +0100
-From: Pavel Machek <pavel@ucw.cz>
-To: Lee Jones <lee@kernel.org>
-Cc: Martin Kurbanov <mmkurbanov@salutedevices.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Andy Shevchenko <andy.shevchenko@gmail.com>,
-	linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-doc@vger.kernel.org,
-	kernel@salutedevices.com,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v1 1/2] leds: aw200xx: support for hw pattern controllers
-Message-ID: <ZbQ-jKD_zhonHOCa@ucw.cz>
-References: <20231207125938.175119-1-mmkurbanov@salutedevices.com>
- <20231207125938.175119-2-mmkurbanov@salutedevices.com>
- <20231221161011.GO10102@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dK1ra5ih"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 663DDC43609;
+	Fri, 26 Jan 2024 23:22:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706311328;
+	bh=fzEwPeQ+uXU980SE/kgv/K/Sbg2qcTyrv6njKtqJrUU=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=dK1ra5ihp49visJEt+In4SyFaIWhCr03zDh2GZNNMthb1OWMLuFl2OoMt2YLaeD0w
+	 RQOLHc8wv4h06Zp/Cc2cZ/mySkgl3r0nOPgPxyKkCaQt4wy3D2dbkA3QDjF+2G1Rpn
+	 PUQ5TGbSWPSFpf5VYmRdxkmN3iN6nsTaRhBCD6pFtsDlBvZ5ckshOnBrURHiMmgjKZ
+	 tuoZ85jLi4JNZOhq7d/7NNqPUSNAGhzMBID3KPZLwawS+DzKYJhvuD35mJhdltKDLa
+	 XeFQmKlTS/lKguu3YsGEdw/UR84pyafVJ9Fr1RskhAv1rDmd+YYeVZCsBNQ6nqNqZ/
+	 SwgHg/yqXu1eA==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 54C4EDFF760;
+	Fri, 26 Jan 2024 23:22:08 +0000 (UTC)
+Subject: Re: [GIT PULL] Documentation fixes
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <87il3g6py4.fsf@meer.lwn.net>
+References: <87il3g6py4.fsf@meer.lwn.net>
+X-PR-Tracked-List-Id: <linux-doc.vger.kernel.org>
+X-PR-Tracked-Message-Id: <87il3g6py4.fsf@meer.lwn.net>
+X-PR-Tracked-Remote: git://git.lwn.net/linux.git tags/docs-6.8-fixes
+X-PR-Tracked-Commit-Id: d546978e0c07b6333fdbcbd81b2f2e058d4560b5
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 70da22eb63f73a1ce41c7d106a5a417c352089f8
+Message-Id: <170631132833.4030.17191682570282070293.pr-tracker-bot@kernel.org>
+Date: Fri, 26 Jan 2024 23:22:08 +0000
+To: Jonathan Corbet <corbet@lwn.net>
+Cc: Linus Torvalds <torvalds@linuxfoundation.org>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231221161011.GO10102@google.com>
 
-Hi!
+The pull request you sent on Fri, 26 Jan 2024 09:04:51 -0700:
 
-> > This led-controller supports 3 pattern controllers for auto breathing or
-> > group dimming control. Each pattern controller can work in auto
-> > breathing or manual control mode. All breathing parameters including
-> > rising/falling slope, on/off time, repeat times, min/max brightness
-> > and so on are configurable.
-> > 
-> > Signed-off-by: Martin Kurbanov <mmkurbanov@salutedevices.com>
-> > ---
-> >  .../testing/sysfs-class-led-driver-aw200xx    | 108 +++
-> >  Documentation/leds/leds-aw200xx.rst           | 274 ++++++++
-> >  drivers/leds/leds-aw200xx.c                   | 649 ++++++++++++++++++
-> >  3 files changed, 1031 insertions(+)
-> >  create mode 100644 Documentation/leds/leds-aw200xx.rst
-> 
-> This interface is bananas.  Exposing an entire register interface to
-> sysfs does not sit will with me at all.  When we add support to a sysfs
-> class, we usually require it to be generic and work across all devices.
-> Adding device specific interfaces is generally decried and to be
-> avoided.  Don't forget, once we commit something to sysfs, it becomes
-> ABI and we have to support it forever.
+> git://git.lwn.net/linux.git tags/docs-6.8-fixes
 
-If you do git grep hw_pattern, you should get pointers to qcom-lpg
-driver that solves similar problem, with interface that should be
-acceptable.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/70da22eb63f73a1ce41c7d106a5a417c352089f8
 
-Best regards,
-								Pavel
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
