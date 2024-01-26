@@ -1,102 +1,177 @@
-Received: from sgoci-sdnproxy-4.icoremail.net (sgoci-sdnproxy-4.icoremail.net [129.150.39.64])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4BF4F12E6F;
-	Fri, 26 Jan 2024 07:51:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.150.39.64
+Received: from frasgout13.his.huawei.com (frasgout13.his.huawei.com [14.137.139.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7991911702;
+	Fri, 26 Jan 2024 07:53:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.137.139.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706255515; cv=none; b=o1COZYTElVuKZO4cNJWbUklt4k6b3e0hyOTw4kUXjxCvAY7tLcK++NXKNffd5Z5vrvdj6ZaKuG/+fVzplmrNqFQuJ5BteL5hN9PKvzNx4ous0XsRmGUsQ+zXXPKWLE4HZss4YdoD0NGqbwR5nqR6qlIcUzN7iC4Obgcez2DYdIU=
+	t=1706255635; cv=none; b=bT2HHyM4Cqx7QomrBXJYrD1Wv4yryuufRzTW4Bv8k1FbmebgWxMrY0bUMX3+lBnyQZYm45aFLZFn9HSqel3WcJFkqDDvO72O1+/h61hBT7E1ufAFgYsWiWoFw0EafhvdB3W+raXwG3zrsnvbpsMRu48hZeE9yAlOxJPLMnZjtvg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706255515; c=relaxed/simple;
-	bh=9DBU9Gswb97RBzmM1XvhxENDBjdiwrvxJeYFm2Gdu+Y=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=C5NE/G96H6CaLbLHR7dkOFTu6w54OsrQ4ow5ff3a6XzmRx0rpIjU0GJ3f1XjqIeSaZO2zbeO53AuNPXWIUYdTMP27hdVVMDAYQMhLSnEbTtm5DxFjMima57dJfg5pIYMuYyJmxjvRdTxvnhM+7GMVyNKhVlcqZ3cm50QAlwWaR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn; spf=pass smtp.mailfrom=zju.edu.cn; arc=none smtp.client-ip=129.150.39.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zju.edu.cn
-Received: from luzhipeng.223.5.5.5 (unknown [115.200.227.226])
-	by mail-app2 (Coremail) with SMTP id by_KCgDnKKiGZLNlK1TZAA--.20140S2;
-	Fri, 26 Jan 2024 15:51:35 +0800 (CST)
-From: Zhipeng Lu <alexious@zju.edu.cn>
-To: alexious@zju.edu.cn
-Cc: "David S. Miller" <davem@davemloft.net>,
-	David Ahern <dsahern@kernel.org>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] net: ipv4: fix a memleak in ip_setup_cork
-Date: Fri, 26 Jan 2024 15:51:27 +0800
-Message-Id: <20240126075127.2825068-1-alexious@zju.edu.cn>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1706255635; c=relaxed/simple;
+	bh=HwCuA5QJ87i2SeLnr2LrU9plUlNo/os+AAfWy2cvjUw=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=AZkeHjPGFI/aJ9ZLfEQYnM3n7jqdYOPQQCK/X4UwDuBoh67o8wW9+XpJBfQJSdMWjxGrzJsm5ani9woeNZcuyOGzyyQxgfIZSlkByoUgtS7+cy41P0xG8znjfFrP5oT6+mqM0PC3dGC5F4X7Q27eaChgbhW3JnaQzb7gR+ESLZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=14.137.139.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.18.186.29])
+	by frasgout13.his.huawei.com (SkyGuard) with ESMTP id 4TLqLz39jGz9yJjM;
+	Fri, 26 Jan 2024 15:38:51 +0800 (CST)
+Received: from mail02.huawei.com (unknown [7.182.16.47])
+	by mail.maildlp.com (Postfix) with ESMTP id 0BC9D14066A;
+	Fri, 26 Jan 2024 15:53:38 +0800 (CST)
+Received: from [127.0.0.1] (unknown [10.204.63.22])
+	by APP1 (Coremail) with SMTP id LxC2BwCXjhf6ZLNl_+hHAQ--.46242S2;
+	Fri, 26 Jan 2024 08:53:37 +0100 (CET)
+Message-ID: <3e1ebbbeea1db01183bac0a7d0fa9063cb862f81.camel@huaweicloud.com>
+Subject: Re: [PATCH v3 5/5] ramfs: Initialize security of in-memory inodes
+From: Roberto Sassu <roberto.sassu@huaweicloud.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: casey@schaufler-ca.com, paul@paul-moore.com, jmorris@namei.org, 
+ serge@hallyn.com, linux-kernel@vger.kernel.org, 
+ linux-security-module@vger.kernel.org, Roberto Sassu
+ <roberto.sassu@huawei.com>,  Hugh Dickins <hughd@google.com>
+Date: Fri, 26 Jan 2024 08:53:27 +0100
+In-Reply-To: <20240125170858.1ce723a57c7fd2b9bfb5d28d@linux-foundation.org>
+References: <20231116090125.187209-1-roberto.sassu@huaweicloud.com>
+	 <20231116090125.187209-6-roberto.sassu@huaweicloud.com>
+	 <20240125170858.1ce723a57c7fd2b9bfb5d28d@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4-0ubuntu2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:by_KCgDnKKiGZLNlK1TZAA--.20140S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7Ww1fGF1xJr13Zw4DCw1DGFg_yoW8GFW7pF
-	n0ga45JrW8Xr12gFnrtFWrZF1fKw1vyFy8urWaya4ay3Wktry5tF18KrWa9Fya9Fs7Cw1f
-	Aa4ft345ur48ZFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUkl14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26rxl
-	6s0DM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
-	0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
-	jxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr
-	1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkF7I0En4kS14v26r12
-	6r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI
-	0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y
-	0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxV
-	WUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1l
-	IxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbSfO7UUUU
-	U==
-X-CM-SenderInfo: qrsrjiarszq6lmxovvfxof0/
+X-CM-TRANSID:LxC2BwCXjhf6ZLNl_+hHAQ--.46242S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxWw4xZr1kAF4rZw18KF1UAwb_yoW5WFy8pr
+	W0q3WDG3ZYqFy7Wr10qF4Duw1SqayfKr4DCw4kX3WxA3Z7Cr1ktF1rKr13CF1rCrW8Cw4F
+	qw4j9r13uw1UJrJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUgmb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWUJVW8JwA2z4x0Y4vEx4A2jsIEc7CjxV
+	AFwI0_Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
+	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
+	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_
+	Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1V
+	AY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAI
+	cVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMI
+	IF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2
+	KfnxnUUI43ZEXa7IU1zuWJUUUUU==
+X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAgAOBF1jj5T2HAAAsH
 
-When inetdev_valid_mtu fails, cork->opt should be freed if it is
-allocated in ip_setup_cork. Otherwise there could be a memleak.
+On Thu, 2024-01-25 at 17:08 -0800, Andrew Morton wrote:
+> On Thu, 16 Nov 2023 10:01:25 +0100 Roberto Sassu <roberto.sassu@huaweiclo=
+ud.com> wrote:
+>=20
+> > From: Roberto Sassu <roberto.sassu@huawei.com>
+> >=20
+> > Add a call security_inode_init_security() after ramfs_get_inode(), to l=
+et
+> > LSMs initialize the inode security field. Skip ramfs_fill_super(), as t=
+he
+> > initialization is done through the sb_set_mnt_opts hook.
+> >=20
+> > Calling security_inode_init_security() call inside ramfs_get_inode() is
+> > not possible since, for CONFIG_SHMEM=3Dn, tmpfs also calls the former a=
+fter
+> > the latter.
+> >=20
+> > Pass NULL as initxattrs() callback to security_inode_init_security(), s=
+ince
+> > the purpose of the call is only to initialize the in-memory inodes.
+> >=20
+>=20
+> fwiw,
+>=20
+> Acked-by: Andrew Morton <akpm@linux-foundation.org>
+>=20
+> Please include this in the relevant security tree.
 
-Fixes: 501a90c94510 ("inet: protect against too small mtu values.")
-Signed-off-by: Zhipeng Lu <alexious@zju.edu.cn>
----
- net/ipv4/ip_output.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+Thanks a lot!
 
-diff --git a/net/ipv4/ip_output.c b/net/ipv4/ip_output.c
-index b06f678b03a1..3215ea07d398 100644
---- a/net/ipv4/ip_output.c
-+++ b/net/ipv4/ip_output.c
-@@ -1282,6 +1282,7 @@ static int ip_setup_cork(struct sock *sk, struct inet_cork *cork,
- {
- 	struct ip_options_rcu *opt;
- 	struct rtable *rt;
-+	int free_opt = 0;
- 
- 	rt = *rtp;
- 	if (unlikely(!rt))
-@@ -1297,6 +1298,7 @@ static int ip_setup_cork(struct sock *sk, struct inet_cork *cork,
- 					    sk->sk_allocation);
- 			if (unlikely(!cork->opt))
- 				return -ENOBUFS;
-+			free_opt = 1;
- 		}
- 		memcpy(cork->opt, &opt->opt, sizeof(struct ip_options) + opt->opt.optlen);
- 		cork->flags |= IPCORK_OPT;
-@@ -1306,8 +1308,13 @@ static int ip_setup_cork(struct sock *sk, struct inet_cork *cork,
- 	cork->fragsize = ip_sk_use_pmtu(sk) ?
- 			 dst_mtu(&rt->dst) : READ_ONCE(rt->dst.dev->mtu);
- 
--	if (!inetdev_valid_mtu(cork->fragsize))
-+	if (!inetdev_valid_mtu(cork->fragsize)) {
-+		if (opt && free_opt) {
-+			kfree(cork->opt);
-+			cork->opt = NULL;
-+		}
- 		return -ENETUNREACH;
-+	}
- 
- 	cork->gso_size = ipc->gso_size;
- 
--- 
-2.34.1
+Roberto
+
+> > diff --git a/fs/ramfs/inode.c b/fs/ramfs/inode.c
+> > index 4ac05a9e25bc..8006faaaf0ec 100644
+> > --- a/fs/ramfs/inode.c
+> > +++ b/fs/ramfs/inode.c
+> > @@ -102,11 +102,20 @@ ramfs_mknod(struct mnt_idmap *idmap, struct inode=
+ *dir,
+> >  	int error =3D -ENOSPC;
+> > =20
+> >  	if (inode) {
+> > +		error =3D security_inode_init_security(inode, dir,
+> > +						     &dentry->d_name, NULL,
+> > +						     NULL);
+> > +		if (error) {
+> > +			iput(inode);
+> > +			goto out;
+> > +		}
+> > +
+> >  		d_instantiate(dentry, inode);
+> >  		dget(dentry);	/* Extra count - pin the dentry in core */
+> >  		error =3D 0;
+> >  		inode_set_mtime_to_ts(dir, inode_set_ctime_current(dir));
+> >  	}
+> > +out:
+> >  	return error;
+> >  }
+> > =20
+> > @@ -134,6 +143,15 @@ static int ramfs_symlink(struct mnt_idmap *idmap, =
+struct inode *dir,
+> >  	inode =3D ramfs_get_inode(dir->i_sb, dir, S_IFLNK|S_IRWXUGO, 0);
+> >  	if (inode) {
+> >  		int l =3D strlen(symname)+1;
+> > +
+> > +		error =3D security_inode_init_security(inode, dir,
+> > +						     &dentry->d_name, NULL,
+> > +						     NULL);
+> > +		if (error) {
+> > +			iput(inode);
+> > +			goto out;
+> > +		}
+> > +
+> >  		error =3D page_symlink(inode, symname, l);
+> >  		if (!error) {
+> >  			d_instantiate(dentry, inode);
+> > @@ -143,6 +161,7 @@ static int ramfs_symlink(struct mnt_idmap *idmap, s=
+truct inode *dir,
+> >  		} else
+> >  			iput(inode);
+> >  	}
+> > +out:
+> >  	return error;
+> >  }
+> > =20
+> > @@ -150,12 +169,23 @@ static int ramfs_tmpfile(struct mnt_idmap *idmap,
+> >  			 struct inode *dir, struct file *file, umode_t mode)
+> >  {
+> >  	struct inode *inode;
+> > +	int error;
+> > =20
+> >  	inode =3D ramfs_get_inode(dir->i_sb, dir, mode, 0);
+> >  	if (!inode)
+> >  		return -ENOSPC;
+> > +
+> > +	error =3D security_inode_init_security(inode, dir,
+> > +					     &file_dentry(file)->d_name, NULL,
+> > +					     NULL);
+> > +	if (error) {
+> > +		iput(inode);
+> > +		goto out;
+> > +	}
+> > +
+> >  	d_tmpfile(file, inode);
+> > -	return finish_open_simple(file, 0);
+> > +out:
+> > +	return finish_open_simple(file, error);
+> >  }
+> > =20
+> >  static const struct inode_operations ramfs_dir_inode_operations =3D {
+> > --=20
+> > 2.34.1
 
