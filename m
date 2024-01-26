@@ -1,119 +1,73 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33FCF208A0;
-	Fri, 26 Jan 2024 08:54:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A44B020B14;
+	Fri, 26 Jan 2024 08:54:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706259280; cv=none; b=jJdAcHEYaOvLdba96MQgUUa2hoO4Wn6qeyB+qdLPBcP/ESwgQpcwUG+biJGW2/HiBp6LrHQKegrV880i01pTVvyIULarm450R5CyD5dyYxomgXczI4xDfy93/UbHlpsKFNc2F0+QsHcgqWWzvdv9vXXI4OY2D5ick4GXFgo79yg=
+	t=1706259291; cv=none; b=oY3wRH+X76uazoxb3UpUfrCvd1zhghGd1d8DJP5WrImR/QKnXOxOI/GxEH4cJU72u4TRcdSD0JUkuHxIK5QOO/ru5DbXn1on3XXwjDubX9qlJYchRxE4YoIaylaVTkaM/lNbjSa3s+2jja03eqcSCSMb7Ui0k4VZ8BDRqu/b3oE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706259280; c=relaxed/simple;
-	bh=Nco0gGCevkj+Z/D7Efv6Mu6IcwBISDdRJFLmz1/fUAw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AXHmZvEyLZsEqaTHhSXnajxNF/BzCun/a2MelKmLT84goO0qb7O7bJdFBK5TXUpthQTXBRreWdgpMx6bzgcLmgvX8hUWqDXKMV1s42iqOcRMyJqDcZJE0y2xaZqgx/6iZp3Jph1BtABX14LxaiRsG17/l3lLdInGDbr+VWpVEQE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OHecq1xJ; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OHecq1xJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C846C433C7;
-	Fri, 26 Jan 2024 08:54:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706259279;
-	bh=Nco0gGCevkj+Z/D7Efv6Mu6IcwBISDdRJFLmz1/fUAw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OHecq1xJGmyd9yHQrt6uZSsjIEc8vx46L2qMiRCvpsb/pZd94WTS7RmcxpAEvkLRU
-	 8NHNawzrU0SRUFlz3V3eMzdfBMngS8sfoukQTUhJDXbhMFMZSjlW1HcSX8OkAuuBQm
-	 9OdHdWmt06gKKVgFnhBTTmFxBqrAOuxuxJ6RPOcehbx1DXr+p/AlSN57Kqek6V8EZV
-	 TatdPVNulhyp5x4ivTh1KCKFDt6xGLzSCJDrlixyJ6rUcEHEIxSXQzHCdIxE3sXQy/
-	 0kLclXE6aEYRc0xWSZbVg5rB3XNTKPY5jEQHEwJ/+aWws0+fykcynA5HYq8mx+ljF9
-	 ULrImWI/cChOA==
-Date: Fri, 26 Jan 2024 09:54:36 +0100
-From: Wolfram Sang <wsa@kernel.org>
-To: Andi Shyti <andi.shyti@kernel.org>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Peter Rosin <peda@axentia.se>,
-	linux-i2c <linux-i2c@vger.kernel.org>,
-	lkml <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] MAINTAINERS: Update i2c host drivers repository
-Message-ID: <ZbNzTKCFxBx9Bz6Y@ninjato>
-Mail-Followup-To: Wolfram Sang <wsa@kernel.org>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Peter Rosin <peda@axentia.se>,
-	linux-i2c <linux-i2c@vger.kernel.org>,
-	lkml <linux-kernel@vger.kernel.org>
-References: <20240124225031.3152667-1-andi.shyti@kernel.org>
+	s=arc-20240116; t=1706259291; c=relaxed/simple;
+	bh=UaRre/FakXrgK4o/iIKNgZyz3bmMRWSu1KsXcDAgIaE=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=tzDInq0VQ3QtObFNMB57funLCEPIaL/rhLXtARaaWWYbdioeov2zdR2Er1wcKqrP4vj64ULbrlyVGgHlIxdNcZe5GZfLVFvt3jOcguiZninFXK4GJbiL0mxZmbiLnPczoQ5BhAEEZi83n6VV74r7t0vKA0A7cJq+RoZCrFZ11E4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.174])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4TLs0l2mzczvTs9;
+	Fri, 26 Jan 2024 16:53:11 +0800 (CST)
+Received: from dggpeml500021.china.huawei.com (unknown [7.185.36.21])
+	by mail.maildlp.com (Postfix) with ESMTPS id ABC541404FC;
+	Fri, 26 Jan 2024 16:54:45 +0800 (CST)
+Received: from huawei.com (10.175.127.227) by dggpeml500021.china.huawei.com
+ (7.185.36.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Fri, 26 Jan
+ 2024 16:54:45 +0800
+From: Baokun Li <libaokun1@huawei.com>
+To: <linux-ext4@vger.kernel.org>
+CC: <tytso@mit.edu>, <adilger.kernel@dilger.ca>, <jack@suse.cz>,
+	<ritesh.list@gmail.com>, <linux-kernel@vger.kernel.org>,
+	<yi.zhang@huawei.com>, <yangerkun@huawei.com>, <chengzhihao1@huawei.com>,
+	<yukuai3@huawei.com>, <libaokun1@huawei.com>
+Subject: [PATCH 0/7] ext4: avoid sysfs variables overflow causing BUG_ON/SOOB
+Date: Fri, 26 Jan 2024 16:57:09 +0800
+Message-ID: <20240126085716.1363019-1-libaokun1@huawei.com>
+X-Mailer: git-send-email 2.31.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="9Zj7cecOgPW9eitE"
-Content-Disposition: inline
-In-Reply-To: <20240124225031.3152667-1-andi.shyti@kernel.org>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ dggpeml500021.china.huawei.com (7.185.36.21)
 
+Hello everyone,
 
---9Zj7cecOgPW9eitE
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This patchset is intended to avoid variables that can be modified via sysfs
+from overflowing when stored or used and thus causing various problems.
 
-On Wed, Jan 24, 2024 at 11:50:31PM +0100, Andi Shyti wrote:
-> The i2c host patches are now set to be merged into the following
-> repository:
->=20
-> git://git.kernel.org/pub/scm/linux/kernel/git/andi.shyti/linux.git
->=20
-> Signed-off-by: Andi Shyti <andi.shyti@kernel.org>
-> Cc: Wolfram Sang <wsa@kernel.org>
+"kvm-xfstests -c ext4/all -g auto" has been executed with no new failures.
 
-Acked-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Baokun Li (7):
+  ext4: avoid overflow when setting values via sysfs
+  ext4: refactor out ext4_generic_attr_store()
+  ext4: refactor out ext4_generic_attr_show()
+  ext4: add positive int attr pointer to avoid sysfs variables overflow
+  ext4: fix slab-out-of-bounds in
+    ext4_mb_find_good_group_avg_frag_lists()
+  ext4: set type of ac_groups_linear_remaining to __u32 to avoid
+    overflow
+  ext4: set the type of max_zeroout to unsigned int to avoid overflow
 
-Andi did a great job with the host controller drivers, and we concluded
-that it will be easier for all if he maintains his own branches. I will
-normally pull them into my I2C tree. If I am out-of-service for some
-reason, he can simply move to Greg instead. Thanks, Andi!
+ fs/ext4/extents.c |   6 +-
+ fs/ext4/mballoc.c |   2 +
+ fs/ext4/mballoc.h |   2 +-
+ fs/ext4/sysfs.c   | 159 +++++++++++++++++++++++++---------------------
+ 4 files changed, 92 insertions(+), 77 deletions(-)
 
-> ---
->  MAINTAINERS | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 39219b144c239..ec0ffff6ded40 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -10091,7 +10091,7 @@ L:	linux-i2c@vger.kernel.org
->  S:	Maintained
->  W:	https://i2c.wiki.kernel.org/
->  Q:	https://patchwork.ozlabs.org/project/linux-i2c/list/
-> -T:	git git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git
-> +T:	git git://git.kernel.org/pub/scm/linux/kernel/git/andi.shyti/linux.git
->  F:	Documentation/devicetree/bindings/i2c/
->  F:	drivers/i2c/algos/
->  F:	drivers/i2c/busses/
-> --=20
-> 2.43.0
->=20
+-- 
+2.31.1
 
---9Zj7cecOgPW9eitE
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmWzc0wACgkQFA3kzBSg
-KbaEKA/+LyN0BMyKrNSUO3DpZm4cP+TYl/8atdYDPiPT68yOSvpFLCPKWug2EY1W
-bXtmvAd0PXeWuJicSoZUmsWFWctDG4CTPC65+TeNTXRgqFEF2wTJRCT99VcYxVR8
-6qsfUyx296C4FfCwk6ftWl4OMEX98O61h74wms3UvQKDE4diInjN4uyeejCo9zVJ
-dZsOGXDQzMrgzuA7Ft5DuSu8SDCQK3eth4XL+W5DXKd/33fPBa8Uev7zKlcG3gQe
-f2KG9jQftrBYtnWoXkOcA6URhmEXzMmcFdkMQuiNxd5hbB+QDkay6dfWsHQpRhKx
-4yoMKLGgNnkb3R+pC0WGHvHgcOuaFgvxEKG5TVaUQkjE7O5/I6uVh1AllUOKtkcA
-5ns32gs6nVF1+Z126F+YJAbeJ+jzPZGucI9pQVaoJ7tjqOp4xHwreO3okEwe1Hf0
-2dCZFYqaqvvQs9i+dO+lXDsIsWlgjGLivtWwpfPomkxiArco08ckI5js8VmZk4Vd
-z3FQIkLWmtArkKDifs89kmLvpRQGqFGq1m1Aeto29+MeuG9cb1Mp+RSjLWHLTwxO
-BtLTKzaUQjtOeJqISQLjb9grgCDh63Pj+oMXIoGZjvPbldrqsvz33f774ijFawno
-u7bljlEM3B44WRXt8Tkbnn7+Qyk49eUMIVBaX1odS6+PbWTG1tM=
-=Td7Z
------END PGP SIGNATURE-----
-
---9Zj7cecOgPW9eitE--
