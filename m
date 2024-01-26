@@ -1,38 +1,38 @@
 Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FB16134B4;
-	Fri, 26 Jan 2024 11:01:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B37E313AEC;
+	Fri, 26 Jan 2024 11:01:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706266911; cv=none; b=uviSBpzHJA+4e8TNKVvgn1oxOuJBMI0D9QfSDOeShts1tBOxrkGSpPy6k/+kpDSmqkJeqwhgCA4lNyApf6LMIqAiybrqBzXCpsoncdtkgxeYAXJe1newEctSw8L30M+GDRM3a18GLnqtlJQ2cfzsTCjjfQDqHDT0rqIh0QRJXyk=
+	t=1706266912; cv=none; b=fxuht9Mk/X0J6ezYj0ntB3LO3iF/Vo0tEsyzDqll/O8yAjiTrV0QNX2in+4nWRSBr0DADqOW2Xp856wB+60N+U18XAdc1Z6h7wgtWBWZyGe9uxHguGwt11BMg0Tz32bWf9T45um6oAkU+bx+xF90U8IOqAeleZuXz54mNWzbTyQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706266911; c=relaxed/simple;
-	bh=rxonFy/xXtVsAa0j3VVLg0HDonl2D7ONJZ+FYLpKkqo=;
+	s=arc-20240116; t=1706266912; c=relaxed/simple;
+	bh=43p8p/DG5K2SsYzvP6oHFn1qGILWOgD1JX4pVxapidw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ATOi/fTY8k2P6tFWVb9O6emmsa5VGMMC2+NvEmE25Pn1bfje3HXCQC2q6fbXH9+OgsJerbry2Em6Io9Hy6GV6O24Wq2pfdhBYR4cAG3xJrE8V9bU25cBJ4H76r14TFzqfnkUCmilLFLDtan+GpIhd/c+zNL2pDHLYAxDB8K6IOQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=1A/chmW/; arc=none smtp.client-ip=46.235.227.194
+	 MIME-Version; b=isbJBzudZrMI+DZKMB7b+9EYUEf3FcJ8z1kCDaRUuWzoGM8Sos/QyPQHpwv73I/Z9M/etbxJyyEz9jNOl4ECxXMKNvLEWAklTWid5fw+HrojQOIeVagH+m/2kCyltN7nlz5gMHBFfMfYemZnBewmrG9qsKOONbcnBaVbdVBV5Y4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=N63pLaIx; arc=none smtp.client-ip=46.235.227.194
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="1A/chmW/"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="N63pLaIx"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1706266908;
-	bh=rxonFy/xXtVsAa0j3VVLg0HDonl2D7ONJZ+FYLpKkqo=;
+	s=mail; t=1706266909;
+	bh=43p8p/DG5K2SsYzvP6oHFn1qGILWOgD1JX4pVxapidw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=1A/chmW/4RbUhi7naBQWJJ9z9kf8G/PqQytw1fXdWw7Gme2LwMaYHKpnMYo6cuLvM
-	 1Mq61ZLvvwGcmaTJ4bCTlSGXRJbjtM4OWIIbccauRghXxEbtKmZJWVLKGpOJjAr9p1
-	 /EEo04eJFagZHT6K2CB7OzsMEac2tAHnSxRfsXlEtYiwcRj/jaO0fN/HXhcxqcRPSW
-	 VuxSWsVIUhGR05Q5JXGO0SOQwUBG2OGSfGOnWcAFulM5IAivg2VGeKC/usEOu4Fmxb
-	 CvRyUBVmmcQNfcmMEnKwlvn+h4oNYzM2Cv41NH0QlqyPEHBy0og5fhSJUNc7Q+2z+D
-	 HeozAedOiTKPw==
+	b=N63pLaIxPkb0HNhYTdX/KRrBWDLyJzIbVNuLMdsYRRCJwmBc3T1IxMjCWir+yZu4y
+	 cs9rGBrHArZoPxW3SqhbzdsLtjcXHlchGVanUDmpi/KTK9FgclAD7BamTQ29IW31rw
+	 x45CeTVbD5HePjG4BUYjYB1LYTuc/GFhzlHrqFmV6qgkPXtAgCxloRpg9U7B4ER+Yp
+	 pEP+9+H4BmJAAMn1fsv4AZsUMukvlNuOsAcPsCEt2NskLCMJLgA+avHLIG3YWL77aZ
+	 rOZ5lFbgDM29jQT9ekSGrziVR1wYmTKHsYaLhjDnjkQ3ulln8+hrBb1ODYTdBdPSrT
+	 9mhBbdm3sWibw==
 Received: from benjamin-XPS-13-9310.. (cola.collaboradmins.com [195.201.22.229])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: benjamin.gaignard)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 976843782076;
-	Fri, 26 Jan 2024 11:01:47 +0000 (UTC)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id A90AA3782081;
+	Fri, 26 Jan 2024 11:01:48 +0000 (UTC)
 From: Benjamin Gaignard <benjamin.gaignard@collabora.com>
 To: hverkuil@xs4all.nl,
 	mchehab@kernel.org
@@ -40,9 +40,9 @@ Cc: linux-kernel@vger.kernel.org,
 	linux-media@vger.kernel.org,
 	kernel@collabora.com,
 	Benjamin Gaignard <benjamin.gaignard@collabora.com>
-Subject: [PATCH v18 2/9] videobuf2: Add min_reqbufs_allocation field to vb2_queue structure
-Date: Fri, 26 Jan 2024 12:01:34 +0100
-Message-Id: <20240126110141.135896-3-benjamin.gaignard@collabora.com>
+Subject: [PATCH v18 4/9] media: core: Rework how create_buf index returned value is computed
+Date: Fri, 26 Jan 2024 12:01:36 +0100
+Message-Id: <20240126110141.135896-5-benjamin.gaignard@collabora.com>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20240126110141.135896-1-benjamin.gaignard@collabora.com>
 References: <20240126110141.135896-1-benjamin.gaignard@collabora.com>
@@ -54,147 +54,140 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add 'min_reqbufs_allocation' field in the vb2_queue structure so drivers
-can specify the minimum number of buffers to allocate when calling
-VIDIOC_REQBUFS.
-When initializing the queue, v4l2 core makes sure that the following
-constraints are respected:
-- the minimum number of buffers to allocate must be at least 2 because
-one buffer is used by the hardware while the other is being processed
-by userspace.
--if the driver needs 'min_queued_buffers' in the queue before calling
-start_streaming(), then the minimum requirement is 'min_queued_buffers + 1'
-to keep at least one buffer available for userspace.
-
-Simplify __vb2_init_fileio() by using 'min_reqbufs_allocation' directly
-to avoid duplicating the minimum number of buffers to allocate computation.
+When DELETE_BUFS will be introduced holes could created in bufs array.
+To be able to reuse these unused indices reworking how create->index
+is set is mandatory.
+Let __vb2_queue_alloc() decide which first index is correct and
+forward this to the caller.
 
 Signed-off-by: Benjamin Gaignard <benjamin.gaignard@collabora.com>
 ---
- .../media/common/videobuf2/videobuf2-core.c   | 38 +++++++++++--------
- include/media/videobuf2-core.h                | 15 +++++++-
- 2 files changed, 37 insertions(+), 16 deletions(-)
+version 18:
+- fix __vb2_queue_alloc() parameters descriptions.
+
+ .../media/common/videobuf2/videobuf2-core.c    | 18 +++++++++++++-----
+ .../media/common/videobuf2/videobuf2-v4l2.c    | 14 +++++++++-----
+ include/media/videobuf2-core.h                 |  5 ++++-
+ 3 files changed, 26 insertions(+), 11 deletions(-)
 
 diff --git a/drivers/media/common/videobuf2/videobuf2-core.c b/drivers/media/common/videobuf2/videobuf2-core.c
-index 8aa6057df581..85a56b7fcd4a 100644
+index 85a56b7fcd4a..4114df79f8ad 100644
 --- a/drivers/media/common/videobuf2/videobuf2-core.c
 +++ b/drivers/media/common/videobuf2/videobuf2-core.c
-@@ -867,7 +867,7 @@ int vb2_core_reqbufs(struct vb2_queue *q, enum vb2_memory memory,
- 	/*
- 	 * Make sure the requested values and current defaults are sane.
- 	 */
--	num_buffers = max_t(unsigned int, *count, q->min_queued_buffers);
-+	num_buffers = max_t(unsigned int, *count, q->min_reqbufs_allocation);
- 	num_buffers = min_t(unsigned int, num_buffers, q->max_num_buffers);
- 	memset(q->alloc_devs, 0, sizeof(q->alloc_devs));
- 	/*
-@@ -919,7 +919,7 @@ int vb2_core_reqbufs(struct vb2_queue *q, enum vb2_memory memory,
- 	 * There is no point in continuing if we can't allocate the minimum
- 	 * number of buffers needed by this vb2_queue.
- 	 */
--	if (allocated_buffers < q->min_queued_buffers)
-+	if (allocated_buffers < q->min_reqbufs_allocation)
+@@ -442,12 +442,15 @@ static void vb2_queue_remove_buffer(struct vb2_buffer *vb)
+  * __vb2_queue_alloc() - allocate vb2 buffer structures and (for MMAP type)
+  * video buffer memory for all buffers/planes on the queue and initializes the
+  * queue
++ * @first_index: index of the first created buffer, all newly allocated buffers
++ *		 have indices in the range [first_index..first_index+count-1]
+  *
+  * Returns the number of buffers successfully allocated.
+  */
+ static int __vb2_queue_alloc(struct vb2_queue *q, enum vb2_memory memory,
+ 			     unsigned int num_buffers, unsigned int num_planes,
+-			     const unsigned plane_sizes[VB2_MAX_PLANES])
++			     const unsigned int plane_sizes[VB2_MAX_PLANES],
++			     unsigned int *first_index)
+ {
+ 	unsigned int q_num_buffers = vb2_get_num_buffers(q);
+ 	unsigned int buffer, plane;
+@@ -461,6 +464,8 @@ static int __vb2_queue_alloc(struct vb2_queue *q, enum vb2_memory memory,
+ 	num_buffers = min_t(unsigned int, num_buffers,
+ 			    q->max_num_buffers - q_num_buffers);
+ 
++	*first_index = q_num_buffers;
++
+ 	for (buffer = 0; buffer < num_buffers; ++buffer) {
+ 		/* Allocate vb2 buffer structures */
+ 		vb = kzalloc(q->buf_struct_size, GFP_KERNEL);
+@@ -820,7 +825,7 @@ int vb2_core_reqbufs(struct vb2_queue *q, enum vb2_memory memory,
+ 	unsigned int q_num_bufs = vb2_get_num_buffers(q);
+ 	unsigned plane_sizes[VB2_MAX_PLANES] = { };
+ 	bool non_coherent_mem = flags & V4L2_MEMORY_FLAG_NON_COHERENT;
+-	unsigned int i;
++	unsigned int i, first_index;
+ 	int ret = 0;
+ 
+ 	if (q->streaming) {
+@@ -908,8 +913,10 @@ int vb2_core_reqbufs(struct vb2_queue *q, enum vb2_memory memory,
+ 
+ 	/* Finally, allocate buffers and video memory */
+ 	allocated_buffers =
+-		__vb2_queue_alloc(q, memory, num_buffers, num_planes, plane_sizes);
++		__vb2_queue_alloc(q, memory, num_buffers, num_planes, plane_sizes, &first_index);
+ 	if (allocated_buffers == 0) {
++		/* There shouldn't be any buffers allocated, so first_index == 0 */
++		WARN_ON(first_index);
+ 		dprintk(q, 1, "memory allocation failed\n");
  		ret = -ENOMEM;
+ 		goto error;
+@@ -983,7 +990,8 @@ EXPORT_SYMBOL_GPL(vb2_core_reqbufs);
+ int vb2_core_create_bufs(struct vb2_queue *q, enum vb2_memory memory,
+ 			 unsigned int flags, unsigned int *count,
+ 			 unsigned int requested_planes,
+-			 const unsigned int requested_sizes[])
++			 const unsigned int requested_sizes[],
++			 unsigned int *first_index)
+ {
+ 	unsigned int num_planes = 0, num_buffers, allocated_buffers;
+ 	unsigned plane_sizes[VB2_MAX_PLANES] = { };
+@@ -1045,7 +1053,7 @@ int vb2_core_create_bufs(struct vb2_queue *q, enum vb2_memory memory,
  
- 	/*
-@@ -2525,6 +2525,25 @@ int vb2_core_queue_init(struct vb2_queue *q)
- 	if (WARN_ON(q->supports_requests && q->min_queued_buffers))
- 		return -EINVAL;
- 
-+	/*
-+	 * The minimum requirement is 2: one buffer is used
-+	 * by the hardware while the other is being processed by userspace.
-+	 */
-+	if (q->min_reqbufs_allocation < 2)
-+		q->min_reqbufs_allocation = 2;
+ 	/* Finally, allocate buffers and video memory */
+ 	allocated_buffers = __vb2_queue_alloc(q, memory, num_buffers,
+-				num_planes, plane_sizes);
++				num_planes, plane_sizes, first_index);
+ 	if (allocated_buffers == 0) {
+ 		dprintk(q, 1, "memory allocation failed\n");
+ 		ret = -ENOMEM;
+diff --git a/drivers/media/common/videobuf2/videobuf2-v4l2.c b/drivers/media/common/videobuf2/videobuf2-v4l2.c
+index c575198e8354..03e8080a68a8 100644
+--- a/drivers/media/common/videobuf2/videobuf2-v4l2.c
++++ b/drivers/media/common/videobuf2/videobuf2-v4l2.c
+@@ -795,11 +795,15 @@ int vb2_create_bufs(struct vb2_queue *q, struct v4l2_create_buffers *create)
+ 	for (i = 0; i < requested_planes; i++)
+ 		if (requested_sizes[i] == 0)
+ 			return -EINVAL;
+-	return ret ? ret : vb2_core_create_bufs(q, create->memory,
+-						create->flags,
+-						&create->count,
+-						requested_planes,
+-						requested_sizes);
++	if (ret)
++		return ret;
 +
-+	/*
-+	 * If the driver needs 'min_queued_buffers' in the queue before
-+	 * calling start_streaming() then the minimum requirement is
-+	 * 'min_queued_buffers + 1' to keep at least one buffer available
-+	 * for userspace.
-+	 */
-+	if (q->min_reqbufs_allocation < q->min_queued_buffers + 1)
-+		q->min_reqbufs_allocation = q->min_queued_buffers + 1;
-+
-+	if (WARN_ON(q->min_reqbufs_allocation > q->max_num_buffers))
-+		return -EINVAL;
-+
- 	INIT_LIST_HEAD(&q->queued_list);
- 	INIT_LIST_HEAD(&q->done_list);
- 	spin_lock_init(&q->done_lock);
-@@ -2717,7 +2736,6 @@ static int __vb2_init_fileio(struct vb2_queue *q, int read)
- 	struct vb2_fileio_data *fileio;
- 	struct vb2_buffer *vb;
- 	int i, ret;
--	unsigned int count = 0;
++	return vb2_core_create_bufs(q, create->memory,
++				    create->flags,
++				    &create->count,
++				    requested_planes,
++				    requested_sizes,
++				    &create->index);
+ }
+ EXPORT_SYMBOL_GPL(vb2_create_bufs);
  
- 	/*
- 	 * Sanity check
-@@ -2738,18 +2756,8 @@ static int __vb2_init_fileio(struct vb2_queue *q, int read)
- 	if (q->streaming || vb2_get_num_buffers(q) > 0)
- 		return -EBUSY;
- 
--	/*
--	 * Start with q->min_queued_buffers + 1, driver can increase it in
--	 * queue_setup()
--	 *
--	 * 'min_queued_buffers' buffers need to be queued up before you
--	 * can start streaming, plus 1 for userspace (or in this case,
--	 * kernelspace) processing.
--	 */
--	count = max(2, q->min_queued_buffers + 1);
--
- 	dprintk(q, 3, "setting up file io: mode %s, count %d, read_once %d, write_immediately %d\n",
--		(read) ? "read" : "write", count, q->fileio_read_once,
-+		(read) ? "read" : "write", q->min_reqbufs_allocation, q->fileio_read_once,
- 		q->fileio_write_immediately);
- 
- 	fileio = kzalloc(sizeof(*fileio), GFP_KERNEL);
-@@ -2763,7 +2771,7 @@ static int __vb2_init_fileio(struct vb2_queue *q, int read)
- 	 * Request buffers and use MMAP type to force driver
- 	 * to allocate buffers by itself.
- 	 */
--	fileio->count = count;
-+	fileio->count = q->min_reqbufs_allocation;
- 	fileio->memory = VB2_MEMORY_MMAP;
- 	fileio->type = q->type;
- 	q->fileio = fileio;
 diff --git a/include/media/videobuf2-core.h b/include/media/videobuf2-core.h
-index b317286a7b08..ef5500d14c09 100644
+index ef5500d14c09..2a9ca70e99c7 100644
 --- a/include/media/videobuf2-core.h
 +++ b/include/media/videobuf2-core.h
-@@ -550,9 +550,21 @@ struct vb2_buf_ops {
-  *		@start_streaming can be called. Used when a DMA engine
-  *		cannot be started unless at least this number of buffers
-  *		have been queued into the driver.
-- *		VIDIOC_REQBUFS will ensure at least @min_queued_buffers
-+ *		VIDIOC_REQBUFS will ensure at least @min_queued_buffers + 1
-  *		buffers will be allocated. Note that VIDIOC_CREATE_BUFS will not
-  *		modify the requested buffer count.
-+ * @min_reqbufs_allocation: the minimum number of buffers to be allocated when
-+ *		calling VIDIOC_REQBUFS. Note that VIDIOC_CREATE_BUFS will *not*
-+ *		modify the requested buffer count and does not use this field.
-+ *		Drivers can set this if there has to be a certain number of
-+ *		buffers available for the hardware to work effectively.
-+ *		This allows calling VIDIOC_REQBUFS with a buffer count of 1 and
-+ *		it will be automatically adjusted to a workable	buffer count.
-+ *		If set, then @min_reqbufs_allocation must be larger than
-+ *		@min_queued_buffers + 1.
-+ *		If this field is > 3, then it is highly recommended that the
-+ *		driver implements the V4L2_CID_MIN_BUFFERS_FOR_CAPTURE/OUTPUT
-+ *		control.
-  */
- /*
-  * Private elements (won't appear at the uAPI book):
-@@ -619,6 +631,7 @@ struct vb2_queue {
- 	u32				timestamp_flags;
- 	gfp_t				gfp_flags;
- 	u32				min_queued_buffers;
-+	u32				min_reqbufs_allocation;
+@@ -823,6 +823,8 @@ int vb2_core_reqbufs(struct vb2_queue *q, enum vb2_memory memory,
+  * @count: requested buffer count.
+  * @requested_planes: number of planes requested.
+  * @requested_sizes: array with the size of the planes.
++ * @first_index: index of the first created buffer, all allocated buffers have
++ *		 indices in the range [first_index..first_index+count-1]
+  *
+  * Videobuf2 core helper to implement VIDIOC_CREATE_BUFS() operation. It is
+  * called internally by VB2 by an API-specific handler, like
+@@ -839,7 +841,8 @@ int vb2_core_reqbufs(struct vb2_queue *q, enum vb2_memory memory,
+ int vb2_core_create_bufs(struct vb2_queue *q, enum vb2_memory memory,
+ 			 unsigned int flags, unsigned int *count,
+ 			 unsigned int requested_planes,
+-			 const unsigned int requested_sizes[]);
++			 const unsigned int requested_sizes[],
++			 unsigned int *first_index);
  
- 	struct device			*alloc_devs[VB2_MAX_PLANES];
- 
+ /**
+  * vb2_core_prepare_buf() - Pass ownership of a buffer from userspace
 -- 
 2.40.1
 
