@@ -1,145 +1,107 @@
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7604C1D53E;
-	Fri, 26 Jan 2024 16:17:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 087F31CFB6;
+	Fri, 26 Jan 2024 16:19:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706285847; cv=none; b=TVXFVkAmSoAKley3bTdyEdcE41oEO7WKsIaHR/nYyNfzYwPJlNS1E5zEz3gcLoSQc2Zh34qMY9RNiM+2dRJWQVczNdE9WnzMDqPOB/cNESF++4zYiswAk0FrxPtICeOZFihgzNHeyHvSVRejvEIFfp/qttRZUtdcnV8SnGlYOYY=
+	t=1706285956; cv=none; b=SSBlLKXpa9Bthj9GuIL88nu5R/4VgrLlmXrHIPri0JyITS/2WGB4yoFNigpzAnLW/ZWZiNHT2PUV2fUrl3cGKsr/vXZe+mj+nYQePndDFJdwIpMNReyjTOSbBEDSP2l/T9nLOOyGIy6OSm89/nDWOC+ehppLpBRzO/FaJM3hle8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706285847; c=relaxed/simple;
-	bh=DYWVrLkbvnVV9kxczQSiMqM4FDXcGI57c3LQ06PvT+g=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=CGT4o1xn0E9p3kFe2sVzdYVtdQ5pwmx14Mq5uhoHH6pKsCcPvc5YnYw4O5mp7tv7tiQuWZWVZg5g/nTmuQPYyHwbavWn9zoOhCs5yOvFi17RVh3klMjKbQ82bhBml8WXFk6v05E9uMctOQ/l5vP7Z1Z6wnBuKeD1SEp+YTdrdzE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lMo5XXVV; arc=none smtp.client-ip=209.85.216.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lMo5XXVV"
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-29036dc3a63so319768a91.3;
-        Fri, 26 Jan 2024 08:17:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706285846; x=1706890646; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=IH0Z6gqEjq9Etqgb5EuNK3/R5ZZnLBR/umD5N+ZaEUM=;
-        b=lMo5XXVVzcm6tZg3nXslkb+mw2cq051wDBQ+XRSuI8vy6kg0OzVtCpO5+IOuR5Fp1C
-         BdwQCR8bGl7NHeboRGoKBskMk+UzoQE9sEjNQZxKk1yxL7uit9HqmlD8k6efu6JqNRhA
-         rUcv5HGfmxH9dQZhWmRrW3WP05xrMZV2f3H/dLi7oL6oPq2Vq14HLDNzs1bvCzekSrNn
-         Kn0RTA3Sp50ARHW93GlFU8DLGFgZrDj8Ih0JWn9vHAem9Kn7A8Rsb25qmYMbK/c0VX7L
-         BXp92GGb9S693IBQ9nq9/ycRcWx2nSpBN7nd/Q4WMPMCEOz1hWNJB7Q533uAttFQ195D
-         rz7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706285846; x=1706890646;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=IH0Z6gqEjq9Etqgb5EuNK3/R5ZZnLBR/umD5N+ZaEUM=;
-        b=GEj1u5Ajh2EICJp8HCYaHik2UlgPo+Y82D7QifGhsa/cXo+s0I7yD3xO6Pl6gS7E/p
-         IVx5dAeIJGTiwKsdlHEZsHEAsV4aSd1DNlicVlk7wkepg4GnYVld48709avM2hyxgbH/
-         tW7EHBvT4bznC/rqKvaw3D76Owu9UOSSYhAe441gr41P2F3QJdRA4aOUOeN0T14aDuJ0
-         9fhNU/+5p+s/JE/rFdjRxw7fe68c3sbVW9VZ2RYZf1xs6AbwCyesv8tuEtf8S16BZzSo
-         m03BAOFZxzGJ+SXHALMLaVDUVyZzprEpg8AvbAqMSNtSmvdfrmcg5IyQyXw+V3opOEIT
-         y1+Q==
-X-Gm-Message-State: AOJu0YyiyqvhOS31pzxeMnWGH/nKB1yj6io4gmT8uOnQ1nLtP5NM5kij
-	wAWh82B4eSuK6t9+mwLdfQni7SQC7pd3XLMV9qlSNG/MY0Ur2+8h
-X-Google-Smtp-Source: AGHT+IFg2reFZ61M4UuBoF52IdIYH7ZP+oGCvisAptiOGkJhoHxr/m/SK2qnztDSC2/etm5B9DcnGw==
-X-Received: by 2002:a17:90a:d14f:b0:28f:fe38:aa59 with SMTP id t15-20020a17090ad14f00b0028ffe38aa59mr123012pjw.24.1706285845631;
-        Fri, 26 Jan 2024 08:17:25 -0800 (PST)
-Received: from wuhaoyu-Nitro-AN515-57.lan ([125.41.201.75])
-        by smtp.gmail.com with ESMTPSA id px12-20020a17090b270c00b0028c8a2a9c73sm1346096pjb.25.2024.01.26.08.16.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Jan 2024 08:17:09 -0800 (PST)
-From: Haoyu Wu <haoyuwu254@gmail.com>
-To: seanjc@google.com
-Cc: pbonzini@redhat.com,
-	tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org,
-	hpa@zytor.com,
-	kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	zheyuma97@gmail.com,
-	Haoyu Wu <haoyuwu254@gmail.com>
-Subject: [PATCH] KVM: Fix LDR inconsistency warning caused by APIC_ID format error
-Date: Sat, 27 Jan 2024 00:16:33 +0800
-Message-Id: <20240126161633.62529-1-haoyuwu254@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1706285956; c=relaxed/simple;
+	bh=cMrZ22JKhN5As6X/c/pxqBYrRoRyHlZ4SenKY2BEadk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZmusW7AQu616cv6KrQrrWlW2fMAEYqEo7AbPIp2IbwCB5pJIWnhqr6Mnqvwx/KGy1EYd5upICtSaT5b6OYaP128i3Hlz5gTVtWRcji12iMYOgFiiVCK1K2mCMN0PtwWR5AsLMMI5FkeFrMBooK25D9hGARgbXjGIKR5fmC9uOmU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1rTOv9-0007sh-2w; Fri, 26 Jan 2024 17:19:11 +0100
+Message-ID: <0fd03c79-5e86-4cf8-99ae-944d73d5515a@leemhuis.info>
+Date: Fri, 26 Jan 2024 17:19:10 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Re: [PATCH] pinctrl: amd: Add IRQF_ONESHOT to the interrupt request
+Content-Language: en-US, de-DE
+To: Mario Limonciello <mario.limonciello@amd.com>,
+ Linus Walleij <linus.walleij@linaro.org>
+Cc: Basavaraj Natikar <Basavaraj.Natikar@amd.com>,
+ Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+ "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+ "open list:PIN CONTROL SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+ open list <linux-kernel@vger.kernel.org>,
+ "Rafael J . Wysocki" <rafael@kernel.org>,
+ Christian Heusel <christian@heusel.eu>,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <20240123180818.3994-1-mario.limonciello@amd.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+In-Reply-To: <20240123180818.3994-1-mario.limonciello@amd.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1706285954;49fa5952;
+X-HE-SMSGID: 1rTOv9-0007sh-2w
 
-Syzkaller detected a warning in the kvm_recalculate_logical_map()
-function. This function employs VCPU_ID as the current x2APIC_ID
-following the apic_x2apic_mode() check. However, the LDR value,
-as computed using the current x2APIC_ID,  fails to align with the LDR
-value that is actually set.
+On 23.01.24 19:08, Mario Limonciello wrote:
+> On some systems the interrupt is shared between GPIO controller
+> and ACPI SCI. When the interrupt is shared with the ACPI SCI the
+> flags need to be identical.
+> 
+> This should fix the GPIO controller failing to work after commit
+> 7a36b901a6eb ("ACPI: OSL: Use a threaded interrupt handler for SCI").
+> ```
+> [    0.417335] genirq: Flags mismatch irq 9. 00000088 (pinctrl_amd) vs. 00002080 (acpi)
+> [    0.420073] amd_gpio: probe of AMDI0030:00 failed with error -16
+> ```
+> 
+> Cc: Rafael J. Wysocki <rafael@kernel.org>
+> Reported-by: Christian Heusel <christian@heusel.eu>
+> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=218407
+> Fixes: 7a36b901a6eb ("ACPI: OSL: Use a threaded interrupt handler for SCI")
 
-Syzkaller scenario:
-1) Set up VCPU's
-2) Set the APIC_BASE to 0xd00
-3) Set the APIC status for a specific state
+I'm affected by this regression myself on my Thinkpad T14s Gen1 AMD
+(power button does not work, but I guess there might be more). Haven't
+tested this patch yet, seemed like this was pretty clear case and
+Christian already tested it. But if it makes anyone happy I can do that.
 
-The issue arises within kvm_apic_state_fixup, a function responsible
-for adjusting and correcting the APIC state. Initially, it verifies
-whether the current vcpu operates in x2APIC mode by examining the
-vcpu's mode. Subsequently, the function evaluates
-vcpu->kvm->arch.x2apic_format to ascertain if the preceding kvm version
-supports x2APIC mode. In cases where kvm is compatible with x2APIC mode,
-the function compares APIC_ID and VCPU_ID for equality. If they are not
-equal, it processes APIC_ID according to the set value. The error
-manifests when vcpu->kvm->arch.x2apic_format is false; under these
-circumstances, kvm_apic_state_fixup converts APIC_ID to the xAPIC format
-and invokes kvm_apic_calc_x2apic_ldr to compute the LDR. This leads to by
-passing consistency checks between VCPU_ID and APIC_ID and results in
-calling incorrect functions for LDR calculation.
+> Link: https://lore.kernel.org/linux-acpi/CAJZ5v0iRqUXeuKmC_+dAJtDBLWQ3x15n4gRH48y7MEaLoXF+UA@mail.gmail.com/T/#mc5506014141b61e472b24e095889535a04458083
 
-Obviously, the crux of the issue hinges on the transition of the APIC
-state and the associated operations for transitioning APIC_ID. In the
-current kernel design, APIC_ID defaults to VCPU_ID in x2APIC mode, a
-specification not required in xAPIC mode. kvm_apic_state_fixup initiates
-by assessing the current status of both VCPU and KVM to identify their
-respective APIC modes. However, subsequent evaluations focus solely on
-the APIC mode of VCPU. To address this, a feasible minor modification
-involves advancing the comparison between APIC_ID and VCPU_ID,
-positioning it prior to the evaluation of vcpu→kvm→arch.x2apic_format.
+Side note: might be wise to change that to something slightly shorter:
 
-Signed-off-by: Haoyu Wu <haoyuwu254@gmail.com>
----
- arch/x86/kvm/lapic.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Link:
+https://lore.kernel.org/linux-acpi/kvoclxvyhmdmrfpfgwfjr33bdltej3upw5qcnazc4xakwdgg2b@krewjw2uk42k/
 
-diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-index 3242f3da2..16c97d57d 100644
---- a/arch/x86/kvm/lapic.c
-+++ b/arch/x86/kvm/lapic.c
-@@ -2933,16 +2933,16 @@ static int kvm_apic_state_fixup(struct kvm_vcpu *vcpu,
- 		u32 *ldr = (u32 *)(s->regs + APIC_LDR);
- 		u64 icr;
- 
--		if (vcpu->kvm->arch.x2apic_format) {
--			if (*id != vcpu->vcpu_id)
--				return -EINVAL;
--		} else {
-+		if (*id != vcpu->vcpu_id)
-+			return -EINVAL;
-+		if (!vcpu->kvm->arch.x2apic_format) {
- 			if (set)
- 				*id >>= 24;
- 			else
- 				*id <<= 24;
- 		}
- 
-+
- 		/*
- 		 * In x2APIC mode, the LDR is fixed and based on the id.  And
- 		 * ICR is internally a single 64-bit register, but needs to be
--- 
-2.34.1
+Ciao, Thorsten
 
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> ---
+>  drivers/pinctrl/pinctrl-amd.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pinctrl/pinctrl-amd.c b/drivers/pinctrl/pinctrl-amd.c
+> index ca4a247c2cd1..6a33b584976c 100644
+> --- a/drivers/pinctrl/pinctrl-amd.c
+> +++ b/drivers/pinctrl/pinctrl-amd.c
+> @@ -1162,7 +1162,7 @@ static int amd_gpio_probe(struct platform_device *pdev)
+>  	}
+>  
+>  	ret = devm_request_irq(&pdev->dev, gpio_dev->irq, amd_gpio_irq_handler,
+> -			       IRQF_SHARED, KBUILD_MODNAME, gpio_dev);
+> +			       IRQF_SHARED | IRQF_ONESHOT, KBUILD_MODNAME, gpio_dev);
+>  	if (ret)
+>  		goto out2;
+>  
+
+P.S.: Let me add this to the tracking while at it:
+
+#regzbot introduced 7a36b901a6eb ^
+https://bugzilla.kernel.org/show_bug.cgi?id=218407
+#regzbot title ACPI: OSL:/pinctrl: GPIO controller failing to work
+#regzbot fix pinctrl: amd: Add IRQF_ONESHOT to the interrupt request
+#regzbot ignore-activity
