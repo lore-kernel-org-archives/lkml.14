@@ -1,144 +1,139 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83EC01A29C;
-	Fri, 26 Jan 2024 09:27:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0572B1F5E4;
+	Fri, 26 Jan 2024 09:28:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706261224; cv=none; b=J+Ark5dg6Cmnp7f4ygfTWdlBKlot5WYTZMbxpwFvXUe1X13xregTGJo8tNZV7NtY0tx/HcBQ+7Yjr/FNbLJC2FzgL833F3QHWRb/7fbXN3hpmUMyT0U5vkYfHDsZwn2jqPXtq+GEUGGqmd/w/LPHaGn/lmuOaTxtcgr/kzffwNY=
+	t=1706261334; cv=none; b=Uu5CsBN3wF5CtUkl9E46TEhJfjL6L7p2EaFZ52wbmesj8UAij6G0f0e1kY6WminSYZfN5nM/6rGto21hH7IBd3WiP5Ov1urtNsLXbW+9SLApVsiG9RWKS5wMjrbXN3hs0CL2Z/1u9mfW/KH+yXL1xFRICM8LM+j+KkMbu0UmSs4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706261224; c=relaxed/simple;
-	bh=kir+NFI9Hc5LZ5fsAA20JMPLyqKzJwdYV2OkBR2+Mi8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=tE1wm+mUCH0H+GEiiaCJDGPHjDBUqjJEj7kDWKgDr3mpfGzHCx1ntAD3gJqOW1YNAJoLwhS9tuzDh0ItpzgEsUuc5tg5q1bsOR6LWp/mwJisLE4yjq3tLle/oscs50JPrKTQBwUQVBWZIdMEMffq6POG5ryXEJEpfufL118JxY0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4TLsld2NPvz4f3mHQ;
-	Fri, 26 Jan 2024 17:26:53 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id A763D1A0232;
-	Fri, 26 Jan 2024 17:26:59 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP1 (Coremail) with SMTP id cCh0CgCXaBHferNlLsUdCA--.25360S8;
-	Fri, 26 Jan 2024 17:26:59 +0800 (CST)
-From: linan666@huaweicloud.com
-To: song@kernel.org,
-	neilb@suse.com,
-	shli@fb.com,
-	mariusz.tkaczyk@linux.intel.com
-Cc: linux-raid@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linan666@huaweicloud.com,
-	yukuai3@huawei.com,
-	yi.zhang@huawei.com,
-	houtao1@huawei.com,
-	yangerkun@huawei.com
-Subject: [PATCH v4 4/4] md: check mddev->pers before calling md_set_readonly()
-Date: Fri, 26 Jan 2024 17:22:54 +0800
-Message-Id: <20240126092254.1314908-5-linan666@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240126092254.1314908-1-linan666@huaweicloud.com>
-References: <20240126092254.1314908-1-linan666@huaweicloud.com>
+	s=arc-20240116; t=1706261334; c=relaxed/simple;
+	bh=wGO52oyeTkXKOb5JwngA3efCMaB6GRi1DOXpxN9TR6w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=l5CX8ODemr91Sua1c0NO9ailWdf5kE560HlTkMp4FwuxIVT5YTfcwfGYmlnUDPFKOVyQJ2hDTjeRilOMBZv5fvqNEVyICT3EYyoobi9UCKD5zRIpOyPlBRZN4Rf3u6gsOfI60dNoD2Dz4VIdeqGCoPmGw4HqL16Qga5jeUVL2k0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T6alyyyx; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T6alyyyx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28614C433F1;
+	Fri, 26 Jan 2024 09:28:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706261333;
+	bh=wGO52oyeTkXKOb5JwngA3efCMaB6GRi1DOXpxN9TR6w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=T6alyyyxzl7eMrv3u5oVM5ZRImB72L+US1+QQ/YREwjFcum7MuoFI4ENoW6XxjaqP
+	 OnrSryPio5bFBBn515HKi9fW0fZOQmMGjwr4AUCdr9Cm0Ih0Pz1rqrPFKOQ/tpfeg2
+	 +w/r1I2c7iE+9g0HfYz7Gy4gcPyYtXpAPqt4lrEWwI6KTwjNeN+RLPvvelw8lkjMsi
+	 AA+t8yZ+ed1refFaxA6JcnTUFZjiPnTfcjr5buZ3N5AlDtfxPWAagGRJ/s0udkkOKv
+	 cc3MaUeRDyAzXsbmtdMVju4qweLmqJwVqwPwUUx+k2LWDkRH7AhBn41lMjFLVr8X2c
+	 bGs5hf2gPSd/w==
+Date: Fri, 26 Jan 2024 10:28:48 +0100
+From: Christian Brauner <brauner@kernel.org>
+To: Aleksandr Nogikh <nogikh@google.com>
+Cc: Jens Axboe <axboe@kernel.dk>, 
+	syzbot <syzbot+fb337a5ea8454f5f1e3f@syzkaller.appspotmail.com>, hdanton@sina.com, jack@suse.cz, 
+	jfs-discussion@lists.sourceforge.net, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	shaggy@kernel.org, syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [jfs?] INFO: task hung in path_mount (2)
+Message-ID: <20240126-ferkel-verkraften-c13bc68f6c88@brauner>
+References: <00000000000083513f060340d472@google.com>
+ <000000000000e5e71a060fc3e747@google.com>
+ <20240125-legten-zugleich-21a988d80b45@brauner>
+ <11868eb4-0528-4298-b8bc-2621fd1aac83@kernel.dk>
+ <20240125-addition-audienz-c955ab3c8435@brauner>
+ <CANp29Y69y5Ctmcrf4SFFrMAD1hzsx+GYriDaa9q=3aexRspaxw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgCXaBHferNlLsUdCA--.25360S8
-X-Coremail-Antispam: 1UD129KBjvJXoW7tF15CFyUKryfXF4rZrWfGrg_yoW8ur15p3
-	ySqF98Gr1UXryavr4Ut3WkZa45Xw1xta4ktry7u3yrZF1fJrs8WrWSgF18ArWvgas7Aay5
-	Xa1UJrW7uFy2g3JanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUQY14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
-	kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
-	z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F
-	4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq
-	3wAac4AC62xK8xCEY4vEwIxC4wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0V
-	AKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1l
-	Ox8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErc
-	IFxwACI402YVCY1x02628vn2kIc2xKxwAKzVCY07xG64k0F24l42xK82IYc2Ij64vIr41l
-	4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67
-	AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8I
-	cVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwCI42IY6xAIw20EY4
-	v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AK
-	xVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbxR67UUUUU==
-X-CM-SenderInfo: polqt0awwwqx5xdzvxpfor3voofrz/
+In-Reply-To: <CANp29Y69y5Ctmcrf4SFFrMAD1hzsx+GYriDaa9q=3aexRspaxw@mail.gmail.com>
 
-From: Li Nan <linan122@huawei.com>
+On Thu, Jan 25, 2024 at 07:24:01PM +0100, Aleksandr Nogikh wrote:
+> On Thu, Jan 25, 2024 at 5:47 PM Christian Brauner <brauner@kernel.org> wrote:
+> >
+> > On Thu, Jan 25, 2024 at 09:11:34AM -0700, Jens Axboe wrote:
+> > > On Thu, Jan 25, 2024 at 9:08?AM Christian Brauner <brauner@kernel.org> wrote:
+> > > >
+> > > > On Thu, Jan 25, 2024 at 03:59:03AM -0800, syzbot wrote:
+> > > > > syzbot suspects this issue was fixed by commit:
+> > > > >
+> > > > > commit 6f861765464f43a71462d52026fbddfc858239a5
+> > > > > Author: Jan Kara <jack@suse.cz>
+> > > > > Date:   Wed Nov 1 17:43:10 2023 +0000
+> > > > >
+> > > > >     fs: Block writes to mounted block devices
+> > > > >
+> > > > > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=13175a53e80000
+> > > > > start commit:   2ccdd1b13c59 Linux 6.5-rc6
+> > > > > git tree:       upstream
+> > > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=9c37cc0e4fcc5f8d
+> > > > > dashboard link: https://syzkaller.appspot.com/bug?extid=fb337a5ea8454f5f1e3f
+> > > > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17ba5d53a80000
+> > > > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14265373a80000
+> > > > >
+> > > > > If the result looks correct, please mark the issue as fixed by replying with:
+> > > >
+> > > > #syz fix: fs: Block writes to mounted block devices
+> > >
+> > > Like Dave replied a few days ago, I'm kind of skeptical on all of these
+> > > bugs being closed by this change. I'm guessing that they are all
+> > > resolved now because a) the block writes while mounted option was set to
+> > > Y, and b) the actual bug is just masked by that.
+> 
+> Yes, that's true. For a) there are also two sub-reasons:
+> 1) The bug itself is indeed no longer reproducible because of this new
+> kernel option.
+> 2) The bug is not reproducible because the change broke the way
+> syzkaller did the mounts -- we used to hold an fd to the loop device
+> while doing the mount. That was fixed[1] soon after the commit reached
+> torvalds, but for bisections syzbot has to build syzkaller exactly at
+> the revision when the reproducer was found (otherwise it may parse the
+> syz reproducer incorrectly). So this kernel commit becomes exactly the
+> point where the reproducer stops working.
+> 
+> For most of the recently closed fs bugs (2) should not be the primary
+> reason though -- these fix bisections are done only when syzbot
+> stopped seeing crashes with the corresponding titles, which was very
+> likely caused by (1) in the first place.
+> 
+> [1] https://github.com/google/syzkaller/commit/551587c192ecb4df26fcdab775ed145ee69c07d4
+> 
+> > >
+> > > Maybe this is fine, but it does seem a bit... sketchy? The bugs aren't
+> > > really fixed, and what happens if someone doesn't turn on that option?
+> > > If it's required, perhaps it should not be an option at all? Though
+> > > that'd seem to be likely to break some funky use cases, whether they are
+> > > valid or not.
+> >
+> > We have no way of actually testing or verifying this stuff and a lot of
+> > these have been around for a long time. For example, this report here
+> > has a C reproducer but following the actual dashboard link that
+> > reproducer is striked-through which supposedly means that it isn't valid
+> > or reliable. And no other reproducer ever showed up.
+> >
+> > As far as I can see we should just close reports such as. If this is a
+> > real bug that is separate from the ability to mount to writed block
+> > devices then one should hope that syzbot finds another reproducer that
+> > let's us really analyze the bug?
+> 
+> Yes, if the ability to write to the block device is not really
+> necessary to trigger the bug, syzbot should find it again in some
+> time.
+> 
+> >
+> > A separate issue is that syzbot keeps suggesting as all of these being
+> > closable because of this. So how serious can we take this and how much
+> > time can/should we spend given that we got ~20 or more of these mails in
+> > the last two weeks or so.
+> 
+> I can add the "fs: Block writes to mounted block devices" commit to
+> the black list for syzbot bisections -- it will stop sending such
+> emails then.
 
-If 'mddev->pers' is NULL, there is nothing to do in md_set_readonly().
-To simplify the code, move the check of 'mddev->pers' to the caller of
-md_set_readonly().
-
-Signed-off-by: Li Nan <linan122@huawei.com>
----
- drivers/md/md.c | 25 ++++++++++++-------------
- 1 file changed, 12 insertions(+), 13 deletions(-)
-
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index 24e33b65c6ff..ece6eddb2748 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -6412,6 +6412,7 @@ void md_stop(struct mddev *mddev)
- 
- EXPORT_SYMBOL_GPL(md_stop);
- 
-+/* ensure 'mddev->pers' exist before calling md_set_readonly() */
- static int md_set_readonly(struct mddev *mddev, struct block_device *bdev)
- {
- 	int err = 0;
-@@ -6432,28 +6433,25 @@ static int md_set_readonly(struct mddev *mddev, struct block_device *bdev)
- 	mddev_lock_nointr(mddev);
- 
- 	mutex_lock(&mddev->open_mutex);
--	if ((mddev->pers && atomic_read(&mddev->openers) > !!bdev) ||
--	    mddev->sync_thread ||
-+	if (atomic_read(&mddev->openers) > !!bdev || mddev->sync_thread ||
- 	    test_bit(MD_RECOVERY_RUNNING, &mddev->recovery)) {
- 		pr_warn("md: %s still in use.\n",mdname(mddev));
- 		err = -EBUSY;
- 		goto out;
- 	}
- 
--	if (mddev->pers) {
--		__md_stop_writes(mddev);
--
--		if (mddev->ro == MD_RDONLY) {
--			err  = -ENXIO;
--			goto out;
--		}
-+	__md_stop_writes(mddev);
- 
--		mddev->ro = MD_RDONLY;
--		set_disk_ro(mddev->gendisk, 1);
-+	if (mddev->ro == MD_RDONLY) {
-+		err  = -ENXIO;
-+		goto out;
- 	}
- 
-+	mddev->ro = MD_RDONLY;
-+	set_disk_ro(mddev->gendisk, 1);
-+
- out:
--	if ((mddev->pers && !err) || did_freeze) {
-+	if (!err || did_freeze) {
- 		clear_bit(MD_RECOVERY_FROZEN, &mddev->recovery);
- 		set_bit(MD_RECOVERY_NEEDED, &mddev->recovery);
- 		md_wakeup_thread(mddev->thread);
-@@ -7772,7 +7770,8 @@ static int md_ioctl(struct block_device *bdev, blk_mode_t mode,
- 		goto unlock;
- 
- 	case STOP_ARRAY_RO:
--		err = md_set_readonly(mddev, bdev);
-+		if (mddev->pers)
-+			err = md_set_readonly(mddev, bdev);
- 		goto unlock;
- 
- 	case HOT_REMOVE_DISK:
--- 
-2.39.2
-
+No, I think it's helpful. I was just saying that we can't be expected to
+spend hours per report to check whether this makes sense or not. I
+wasn't complaining about this per se.
