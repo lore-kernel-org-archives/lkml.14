@@ -1,174 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9767D55E57
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 23:08:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EC8A55E57;
+	Fri, 26 Jan 2024 23:10:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706310496; cv=none; b=tG/pJzn9eQjc8Fh3vS7UgGHNYskTyGDOBe4qzSpIZT8qkDP18gDIBpaDGKXJ6Q3pM3BFi1JKNkW5JAzk0/ILKl2pv036KAFm5+vevVH+qUJg2Iv/rjMdMDrEzf2sNq1A71sWhKQ7TryCS+rGXjhDW6eTrqG/0eEUT9TNvWeRnDM=
+	t=1706310645; cv=none; b=siqpfCtFMk5YQp7qUJAkHIdXn7MnWavzRvwd1ZmNndZRD+dWhUB/2A+H/PwSQQSBDMjEcwPDw/lezNgdQyiFhG6a8WaE98kbNXCRUWFeaj+rfW1MkLYZs7pia9bN1dPxUKQKrrQWJwLMAr/jKRK6sBAjRNCqDWlQdtNR2WpYgi0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706310496; c=relaxed/simple;
-	bh=gtDQI+hKL0TQ2S0fIwbLd2/StC1wd1X9UG/XGhPc+u0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IRD3iAthW34cl56YMpt050S7mshbOss4tNgCJzG3Fe8xqKVyc5OIgejXXplnpf65+emOhf7kJn5XvaiQfwMM2xwIWP2S6UZUoExMPasKzNY12aXHhaHG7BHorhP0TXetz+CTa8gb99OTFkN8iYypu2j8DYdE2tiIMUx2tpoI+Vc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OXelBLKM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706310645; c=relaxed/simple;
+	bh=4s5rwQWKuNmfTZ8yy2P8juM8S9siTPP4iA3k+/YAqpw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=AtoPPHQRBAyYor96N2ano/fXhfpaQgFe5ywV4yGZhdkXlZlbvXWHGCp46Z9PACh6GzBTgVaEQO8HzwaoC4w/XGbGFWC2Duwm8/B9KclJ6wBOlEsqDPhrNGYew5k8WA93FPj4XV0QsmSlBrhmuJLIv3tXZ3J6uvraKd1hYSh5lok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CgKbVv5N; arc=none smtp.client-ip=209.85.215.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OXelBLKM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DE71C433F1;
-	Fri, 26 Jan 2024 23:08:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706310496;
-	bh=gtDQI+hKL0TQ2S0fIwbLd2/StC1wd1X9UG/XGhPc+u0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OXelBLKMoeU91iMzptcxcM+mQaJSEpgO+jrwD6fwJBA2GkYx+erSHvnEqaEecJ7ys
-	 L9UR+moDECJyZTNAQStBJ1gqSu5Jo3jJb361fwbSboiVHV/p0YUsN9tkSs+y6gLuMd
-	 RM4TB7dkNB+Sq2ezTxik+577gPYickgUpAX0Pl2B1ezh1CV1XENFR1r4dA2nhp9qJ/
-	 0haeFt1yoLgoBcVaL0dkDQoPqPRIihKVZA//P8H+bBkf0INz8Fq1lEqopVaqZRfjpy
-	 Hz6QN8dXokICkd7xEjTGsy5qLKgFWycDOoof+b/7THMJ43wRjTyrsiamf/DlywMiWR
-	 YFNnxDfWK+faA==
-Date: Fri, 26 Jan 2024 15:08:14 -0800
-From: Jaegeuk Kim <jaegeuk@kernel.org>
-To: Wenjie <qwjhust@gmail.com>
-Cc: chao@kernel.org, guoweichao@oppo.com,
-	linux-f2fs-devel@lists.sourceforge.net,
-	linux-kernel@vger.kernel.org, hustqwj@hust.edu.cn
-Subject: Re: [PATCH v2] f2fs: fix max open zone constraints
-Message-ID: <ZbQ7XmFpAMSXslkU@google.com>
-References: <20240109035804.642-1-qwjhust@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CgKbVv5N"
+Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-5ceb3fe708eso560425a12.3;
+        Fri, 26 Jan 2024 15:10:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1706310644; x=1706915444; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EZFzREQcy01BZIUxaGbT3ihF9K354LZydl6TIjgS5Zc=;
+        b=CgKbVv5N3QCzUUIvpR3UXcmGIuHDlB3ixpV7oyyOu4/RfG5VqLRF6H/fIGcAFCNTWB
+         ad6wPX/7H45KrSER0k3hP6IhMuIyAF/pxsSj5AmOwbHmbFB9ujAMQV4ncibrSFMIGvzw
+         SZx7AMcJzAzg7dEy13OlF6bNbyOVGTVAAg97TPnj+zR0dWOEi5U6/IJHnFcbOa7+6Itn
+         /l8gCCShJxqjifRG3YSby8egWipTYBbxwFYMDHJ48ZqkUlUQQRfJXIdr64ZSYGlLQWq7
+         yXbPNRgwvrsZ/Org17yLcATNS1NTQYuGBV1GNdp+G0bXeF3zIG6E1GVeFRUnlfEK/iG9
+         dZkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706310644; x=1706915444;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=EZFzREQcy01BZIUxaGbT3ihF9K354LZydl6TIjgS5Zc=;
+        b=J0c87/f7bKY9FEOXRe0NefwI8xdY6fE5Zh11axzBVT167FZwmr1oFLrqFaYjJZCGDF
+         V/jH9vMkPidOSOEcK4MIJAAG4RLnzwRxIHJYwmbyshGJjPs2ADBk5h8F/J120QCoqFbq
+         MD2NfUrrozO9vwJFVQ3VxtbUqcLOsSkHav8x6vTgK/6VUWSEQiu1JSwd4W7dVYlUkM2a
+         5AJvBQuuci4+DFcLl7WjMzeipyXHrmyO3UWFSwESUBraGVc10foEhvka8bKhSeQx0Q36
+         LotD9i4322LzRDBzfPQPTTIxDkiCi9hseHPgwDO8IRo1xIAG5cTMCdRJ+NXe72s8+O7x
+         lmeg==
+X-Gm-Message-State: AOJu0YxloxQqv8yHYQ00HbQPPgEnVO+V8uHKz1HHs6hL2i7mRPDaR/Uh
+	cjsZat9qbwHL0G164p9nHvF17iYH3OFMoUTFZR2H4IHJsX59v3h7cxwj3QlLgot9oeVLt7iW6Gb
+	2sAcka8JCgot4ExanfqdKP+ST8X0=
+X-Google-Smtp-Source: AGHT+IGd7ggcaBb4WHmLbM7WO0m4GsPjD8aXb+dDgLUUC+lgNwa2zahlij40bgEF4XgxghreabZ37VO9upZ9Lp3WSt4=
+X-Received: by 2002:a17:902:b10d:b0:1d5:e9bd:7834 with SMTP id
+ q13-20020a170902b10d00b001d5e9bd7834mr701837plr.33.1706310643614; Fri, 26 Jan
+ 2024 15:10:43 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240109035804.642-1-qwjhust@gmail.com>
+References: <20240125160502.1512422-1-bjorn@kernel.org>
+In-Reply-To: <20240125160502.1512422-1-bjorn@kernel.org>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Fri, 26 Jan 2024 15:10:31 -0800
+Message-ID: <CAEf4BzaewwHQn7xBgiuckH3xbRHGc6GxvAq6rXf6Ep+KDWDEFg@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v2] selftests/bpf: Include runner extras for
+ install target
+To: =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>
+Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Mykola Lysenko <mykolal@fb.com>, bpf@vger.kernel.org, 
+	netdev@vger.kernel.org, =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@rivosinc.com>, 
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 01/09, Wenjie wrote:
-> From: Wenjie Qi <qwjhust@gmail.com>
-> 
-> 1. If the max active zones of zoned devices are less than
-> the active logs of F2FS, the device may error due to
-> insufficient zone resources when multiple active logs are
-> being written at the same time.
-> 
-> 2. We can get the number of remaining available zone
-> resources by subtracting the number of active logs from
-> the number of max active zones of zoned devices.  We can
-> use these available zone resources to reduce the number
-> of pending bio when switching zones.
-> 
-> 3. The original code for determining zone end was
-> after "out":, which would have missed some fio's
-> where is_end_zone_blkaddr(sbi, fio->new_blkaddr)
-> was true. I've moved this code before "skip:" to
-> make sure it's done for each fio.
-
-Could you please keep #3 as a separate patch?
-
-> 
-> Signed-off-by: Wenjie Qi <qwjhust@gmail.com>
+On Thu, Jan 25, 2024 at 8:05=E2=80=AFAM Bj=C3=B6rn T=C3=B6pel <bjorn@kernel=
+.org> wrote:
+>
+> From: Bj=C3=B6rn T=C3=B6pel <bjorn@rivosinc.com>
+>
+> When using the "install" or targets depending on install, e.g.
+> "gen_tar", the "runner extras" weren't included for the BPF machine
+> flavors.
+>
+> Make sure the necessary helper scripts/tools are added to
+> corresponding BPF machine flavor.
+>
+> Signed-off-by: Bj=C3=B6rn T=C3=B6pel <bjorn@rivosinc.com>
 > ---
->  fs/f2fs/data.c  | 38 ++++++++++++++++++++++++++++----------
->  fs/f2fs/f2fs.h  |  2 ++
->  fs/f2fs/super.c |  9 +++++++++
->  3 files changed, 39 insertions(+), 10 deletions(-)
-> 
-> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-> index dce8defdf4c7..6b11364e94b8 100644
-> --- a/fs/f2fs/data.c
-> +++ b/fs/f2fs/data.c
-> @@ -392,6 +392,19 @@ static void f2fs_zone_write_end_io(struct bio *bio)
->  	complete(&io->zone_wait);
->  	f2fs_write_end_io(bio);
->  }
-> +
-> +static void f2fs_zone_write_end_io_nowait(struct bio *bio)
-> +{
-> +#ifdef CONFIG_F2FS_IOSTAT
-> +	struct bio_iostat_ctx *iostat_ctx = bio->bi_private;
-> +	struct f2fs_sb_info *sbi = iostat_ctx->sbi;
-> +#else
-> +	struct f2fs_sb_info *sbi = (struct f2fs_sb_info *)bio->bi_private;
-> +#endif
-> +
-> +	atomic_inc(&sbi->available_active_zones);
-> +	f2fs_write_end_io(bio);
-> +}
->  #endif
->  
->  struct block_device *f2fs_target_device(struct f2fs_sb_info *sbi,
-> @@ -1080,22 +1093,27 @@ void f2fs_submit_page_write(struct f2fs_io_info *fio)
->  	io->last_block_in_bio = fio->new_blkaddr;
->  
->  	trace_f2fs_submit_page_write(fio->page, fio);
-> -skip:
-> -	if (fio->in_list)
-> -		goto next;
-> -out:
->  #ifdef CONFIG_BLK_DEV_ZONED
->  	if (f2fs_sb_has_blkzoned(sbi) && btype < META &&
->  			is_end_zone_blkaddr(sbi, fio->new_blkaddr)) {
-> -		bio_get(io->bio);
-> -		reinit_completion(&io->zone_wait);
-> -		io->bi_private = io->bio->bi_private;
-> -		io->bio->bi_private = io;
-> -		io->bio->bi_end_io = f2fs_zone_write_end_io;
-> -		io->zone_pending_bio = io->bio;
-> +		if (!atomic_add_negative(-1, &sbi->available_active_zones)) {
-> +			io->bio->bi_end_io = f2fs_zone_write_end_io_nowait;
-> +		} else {
-> +			atomic_inc(&sbi->available_active_zones);
-> +			bio_get(io->bio);
-> +			reinit_completion(&io->zone_wait);
-> +			io->bi_private = io->bio->bi_private;
-> +			io->bio->bi_private = io;
-> +			io->bio->bi_end_io = f2fs_zone_write_end_io;
-> +			io->zone_pending_bio = io->bio;
-> +		}
->  		__submit_merged_bio(io);
->  	}
->  #endif
-> +skip:
-> +	if (fio->in_list)
-> +		goto next;
-> +out:
->  	if (is_sbi_flag_set(sbi, SBI_IS_SHUTDOWN) ||
->  				!f2fs_is_checkpoint_ready(sbi))
->  		__submit_merged_bio(io);
-> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-> index 65294e3b0bef..1b1833e1d10e 100644
-> --- a/fs/f2fs/f2fs.h
-> +++ b/fs/f2fs/f2fs.h
-> @@ -1551,6 +1551,8 @@ struct f2fs_sb_info {
->  
->  #ifdef CONFIG_BLK_DEV_ZONED
->  	unsigned int blocks_per_blkz;		/* F2FS blocks per zone */
-> +	unsigned int max_active_zones;		/* max zone resources of the zoned device */
-> +	atomic_t available_active_zones;		/* remaining zone resources */
->  #endif
->  
->  	/* for node-related operations */
-> diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-> index 206d03c82d96..c79919425d63 100644
-> --- a/fs/f2fs/super.c
-> +++ b/fs/f2fs/super.c
-> @@ -3932,6 +3932,15 @@ static int init_blkz_info(struct f2fs_sb_info *sbi, int devi)
->  	if (!f2fs_sb_has_blkzoned(sbi))
->  		return 0;
->  
-> +	sbi->max_active_zones = bdev_max_active_zones(bdev);
-> +	if (sbi->max_active_zones && (sbi->max_active_zones < F2FS_OPTION(sbi).active_logs)) {
-> +		f2fs_err(sbi,
-> +			"zoned: max active zones %u is too small, need at least %u active zones",
-> +				 sbi->max_active_zones, F2FS_OPTION(sbi).active_logs);
-> +		return -EINVAL;
-> +	}
-> +	atomic_set(&sbi->available_active_zones, sbi->max_active_zones - F2FS_OPTION(sbi).active_logs);
-> +
->  	zone_sectors = bdev_zone_sectors(bdev);
->  	if (!is_power_of_2(zone_sectors)) {
->  		f2fs_err(sbi, "F2FS does not support non power of 2 zone sizes\n");
-> -- 
-> 2.34.1
+> v2: Added btf_dump_test_case files
+> ---
+> tools/testing/selftests/bpf/Makefile | 18 +++++++++++++++---
+>  1 file changed, 15 insertions(+), 3 deletions(-)
+>
+> diff --git a/tools/testing/selftests/bpf/Makefile b/tools/testing/selftes=
+ts/bpf/Makefile
+> index fd15017ed3b1..d5cff32997b3 100644
+> --- a/tools/testing/selftests/bpf/Makefile
+> +++ b/tools/testing/selftests/bpf/Makefile
+> @@ -744,8 +744,20 @@ EXTRA_CLEAN :=3D $(TEST_CUSTOM_PROGS) $(SCRATCH_DIR)=
+ $(HOST_SCRATCH_DIR)     \
+>  DEFAULT_INSTALL_RULE :=3D $(INSTALL_RULE)
+>  override define INSTALL_RULE
+>         $(DEFAULT_INSTALL_RULE)
+> -       @for DIR in $(TEST_INST_SUBDIRS); do              \
+> -               mkdir -p $(INSTALL_PATH)/$$DIR;   \
+> -               rsync -a $(OUTPUT)/$$DIR/*.bpf.o $(INSTALL_PATH)/$$DIR;\
+> +       @for DIR in $(TEST_INST_SUBDIRS); do                    \
+> +               mkdir -p $(INSTALL_PATH)/$$DIR;                 \
+> +               rsync -a --copy-unsafe-links                    \
+> +                       $(OUTPUT)/$$DIR/bpf_testmod.ko          \
+> +                       $(OUTPUT)/$$DIR/bpftool                 \
+> +                       $(OUTPUT)/$$DIR/ima_setup.sh            \
+> +                       $(OUTPUT)/$$DIR/liburandom_read.so      \
+> +                       $(OUTPUT)/$$DIR/sign-file               \
+> +                       $(OUTPUT)/$$DIR/uprobe_multi            \
+> +                       $(OUTPUT)/$$DIR/urandom_read            \
+> +                       $(OUTPUT)/$$DIR/verify_sig_setup.sh     \
+> +                       $(OUTPUT)/$$DIR/xdp_synproxy            \
+> +                       $(OUTPUT)/$$DIR/btf_dump_test_case_*.c  \
+> +                       $(OUTPUT)/$$DIR/*.bpf.o                 \
+> +                       $(INSTALL_PATH)/$$DIR;                  \
+
+My concern is that this will get out of sync and will go unnoticed
+next time we add another "extra" file. We have TRUNNER_EXTRA_FILES,
+should we use that list to keep these extras in fewer places?
+
+>         done
+>  endef
+>
+> base-commit: c8632acf193beac64bbdaebef013368c480bf74f
+> --
+> 2.40.1
+>
