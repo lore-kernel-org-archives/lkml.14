@@ -1,83 +1,96 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 690141EA71;
-	Fri, 26 Jan 2024 16:39:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2A071DFE1
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 16:39:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706287147; cv=none; b=jaTSnfMjxgU5fACmw06yBGnXO9LuxI6OVch+K2aikmWy60aO+H6b7PZ4T3VKMHoMhLyOJLWZRD00zJZAAWeZseewFTxARLXjm+WxMC5MJVoV8QHG7fVy9UXszN+8QCB+61CD8JMGVg2uqS56I3ZwzZhC9qYMJKeFpcNoFUHDT3M=
+	t=1706287164; cv=none; b=QfvNobf3aXMUZYgU7if4LY4XMVHQRDe0UOx6yJVJYzWr6md+CdBlXr9KtkXLy8ovbWXk4PeXz3iZ+/OrVtB1mkzVVkvcwCsOnFNSnhD9WRhmnsle6IpXv09VQRc5u9JPGFyPc+HOxoErzUAgS+puOxdZkdVIppMCXqaT///b8x0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706287147; c=relaxed/simple;
-	bh=W6zuI3waGCTeb1d5uZ/dpw3FaWqNORW14aFUWEAngEE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BbDU8NBfFZFzgQHVqlhAKKhxpaQkefHJT1aVjLPl6sDj9U/Wcc1AB/SQNKjK45ke9SUC35btaoQnDhVMuMZbyTz1mj/0c0tZSVN1mobD5yVPMUQChjWV665ccF07r/tZasqQbPCCcheexeTCnJeSsW9Sc2SJkr4qbqQKXLjP7fk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=suoHG8Yj; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=g9ay6JgM; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1706287164; c=relaxed/simple;
+	bh=y9OvmThwjw+K3nfMBDe1SkN9D4kRML05OGlUopManuQ=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=ulobnu/cbv2OVtTjU5tCHHD0xwlPMZSmUU3kEyaGFbV8a5kQhDJAd4Vc+q18gx7Q1POxtsJHJ9Qa/vGLHrAZ8tCqwELJZa4t/vbRWm3l/KhX4d1kzqLv0m447bw0Gdh0zbIw9UfF9UHCbtFpb4hpz75TH+UdHlwAhaC3ys3wJVw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NuOarXt1; arc=none smtp.client-ip=209.85.128.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="suoHG8Yj";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="g9ay6JgM"
-Date: Fri, 26 Jan 2024 17:39:02 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1706287144;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=INxBiFoIM0vVgBRcOPAgwcpiyMf5guNzuz9/BtuX01s=;
-	b=suoHG8Yjrsnyy9fKG2eNlHJPI/WDfVqi3DUPuoIesdsa6HzYh4vh6jVU8Tt5wnHaBWoL3N
-	o94wJ+lPdUFpA+ZYlt38LURzyFHZwS5DmimXkZqADr3Y1pWbe3A1sThjDMnaFf/k0QRQ9S
-	oWeZe5EyK5E4FLK6ORrSo1iy0yeIdfZ6iSJHkhcEbcAliO5MS0yUlZZg6N1sDRj1opqNkR
-	g5johSYKqObBKShbUNkt99xrHwHNK9N+zM+eKRpJAqgvPuRbe9P29gNG00X7pFV7m50O4l
-	zuaYPfSVyhD19MC2ty8VFy1m7P+nv3eLFGEBUfjD8odkTAtL4IV5Nl9q8Z1lyA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1706287144;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=INxBiFoIM0vVgBRcOPAgwcpiyMf5guNzuz9/BtuX01s=;
-	b=g9ay6JgMiiczzoQX1jwdqetoycDOd41Kr0ZPLAr75ixLUTcCMw0bpbGv5eEs49Sln7xj1/
-	W4snYgg6zIXtgqCA==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: John Ogness <john.ogness@linutronix.de>
-Cc: "Chang, Junxiao" <junxiao.chang@intel.com>,
-	"tglx@linutronix.de" <tglx@linutronix.de>,
-	"rostedt@goodmis.org" <rostedt@goodmis.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"Li, Hao3" <hao3.li@intel.com>, "Li, Lili" <lili.li@intel.com>,
-	"Gao, Jianfeng" <jianfeng.gao@intel.com>,
-	"linux-rt-users@vger.kernel.org" <linux-rt-users@vger.kernel.org>
-Subject: Re: [PATCH 1/2] printk: nbcon: move locked_port flag to struct
- uart_port
-Message-ID: <20240126163902.d3SiJco8@linutronix.de>
-References: <BN9PR11MB5370AED9C562F9DA75093557EC742@BN9PR11MB5370.namprd11.prod.outlook.com>
- <20240123054033.183114-1-junxiao.chang@intel.com>
- <20240123054033.183114-2-junxiao.chang@intel.com>
- <87le8f9i75.fsf@jogness.linutronix.de>
- <20240124100524.ZyAPfPU5@linutronix.de>
- <BN9PR11MB53701E5CF2737908FA9EB532EC7A2@BN9PR11MB5370.namprd11.prod.outlook.com>
- <20240125133523.W7aDeBqt@linutronix.de>
- <87il3gv845.fsf@jogness.linutronix.de>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NuOarXt1"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-602d22a54caso6702157b3.3
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 08:39:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1706287161; x=1706891961; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=2ZpNenkMM62G0MLKLgK9Oo0SvrSlKfpzY/Gj9FXzciw=;
+        b=NuOarXt1qCmZYwnOBUaQZOME0Dbqw5BZyG/4NHElLgV0/IGmROUVu7xP84pqX48Lzl
+         XQCQ4UB6PKLeb2Y5WFjJPWwD+a43tsQdQPc9OJ9oFeCHmgr9vW2VRcwfqMJCwHs0odg2
+         WmqR5o+2C9x8HBkHnD2agwlNiavrCQ5vdHSdmnEz9IwVBSNJXnlHqssztx8v+CFv0uh+
+         2TMjF/Tx+3BQnX4WvcghlOedVKnxDDJ7RHPJT/BSh/nQRC125Q10g1ZJp7bDJStXeLj1
+         i0pAa7mf2l2Me0JZmEhRBOJPo3h2LaM1Xg3Q/5Pe37O1RIsLJFNR+QZNNxpQ/rIeDoA7
+         c4FQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706287161; x=1706891961;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=2ZpNenkMM62G0MLKLgK9Oo0SvrSlKfpzY/Gj9FXzciw=;
+        b=OtxhRiCKKoj+YbkIdqyhUEMKCsH8wA0bvsO4LyqnJH1MGEvH3J1DLaDNONS/HgVcc+
+         L0prgT1+bqObmaz2y80Y2CgMLzHYwwYQJBUnvLNOp45o3S9cktE3lN6uZDLTX+GcYWTt
+         67/brMN0xXbeH2IixyNAcvocr/H53oYfdRYqTQSKM/J3ouG5xaX4rjcJJphAeX33jPVC
+         X7rzbyFQ1DYNMaN6oIKwRElDnV1IFiSdauw989TIngHHcWR8FZv9wqz1bmQ+G3Eobh/u
+         RPxsNw9+KG/LErTe5Xo+QEfCMwU2V2ObfBRPq0pcdBtNlphRIpBIiGPvEATOGtq7UDhA
+         2ZRw==
+X-Gm-Message-State: AOJu0YzhNwOs/sFUEP1HTFxvECuWFLbUdW6+aj5u2eOK9q2mYeh8Mpdq
+	11Nbib2TAkrVt8td0qY/McbuvYiLvwsNkKwPj+M/8gOyVvP66WVjUpBn/LchWRH84g/efClFJ93
+	kfw==
+X-Google-Smtp-Source: AGHT+IEt7KBEKXH2oAkDokQwrod7W0W187JMIOZ3zmqTpHmMwlN026yzXyWb2j7q385wSlIt7moUe9rr8Tk=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a81:4cd3:0:b0:5ff:9698:729c with SMTP id
+ z202-20020a814cd3000000b005ff9698729cmr6889ywa.3.1706287161724; Fri, 26 Jan
+ 2024 08:39:21 -0800 (PST)
+Date: Fri, 26 Jan 2024 08:39:20 -0800
+In-Reply-To: <87sf2k83qb.fsf@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <87il3gv845.fsf@jogness.linutronix.de>
+Mime-Version: 1.0
+References: <20240110011533.503302-1-seanjc@google.com> <20240110011533.503302-4-seanjc@google.com>
+ <87sf2k83qb.fsf@redhat.com>
+Message-ID: <ZbPgOLVk4armOGDi@google.com>
+Subject: Re: [PATCH 3/4] KVM: Get reference to VM's address space in the async
+ #PF worker
+From: Sean Christopherson <seanjc@google.com>
+To: Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	David Matlack <dmatlack@google.com>, Xu Yilun <yilun.xu@linux.intel.com>
+Content-Type: text/plain; charset="us-ascii"
 
-On 2024-01-26 09:04:34 [+0106], John Ogness wrote:
-> Hi Sebastian,
-Hi,
-
-> Please add this one patch to the 6.6-rt and later queues. The 2nd patch
-> in this series is not needed.
-Okay. I just dropped a v6.8-RT with this included and I am going to poke
-Clark regarding v6.6 next week.
-
-> Thanks.
+On Fri, Jan 26, 2024, Vitaly Kuznetsov wrote:
+> Sean Christopherson <seanjc@google.com> writes:
 > 
-> John
+> > Get a reference to the target VM's address space in async_pf_execute()
+> > instead of gifting a reference from kvm_setup_async_pf().  Keeping the
+> > address space alive just to service an async #PF is counter-productive,
+> > i.e. if the process is exiting and all vCPUs are dead, then NOT doing
+> > get_user_pages_remote() and freeing the address space asap is
+> > desirable.
+> 
+> It took me a while to realize why all vCPU fds are managed by the same
+> mm which did KVM_CREATE_VM as (AFAIU) fds can be passed around. Turns
+> out, we explicitly forbid this in kvm_vcpu_ioctl():
+> 
+>         if (vcpu->kvm->mm != current->mm || vcpu->kvm->vm_dead)
+>                 return -EIO;
+> 
+> so this indeed means that grabbing current->mm in kvm_setup_async_pf()
+> can be avoided. I'm not sure whether it's just me or a "all vCPUs are
+> quired to be managed by the same mm" comment somewhere would be helpful.
 
-Sebastian
+It's definitely not just you.  Documentation/virt/kvm/* could use thorough
+documentation of what all in KVM relies on vCPUs, and all meaningful ioctls(),
+to be executed in the same mm_struct (address space).  Because that requirement
+is pervasive throughout KVM.  E.g. sharing KVM page tables across vCPUs is safe
+iff all vCPUs are in the same address space, otherwise the hva=>pfn translations
+through the memslot would diverge, mmu_notifiers would be all kinds of broken, etc.
