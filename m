@@ -1,150 +1,104 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2044EBE62;
-	Fri, 26 Jan 2024 08:09:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4463A63A;
+	Fri, 26 Jan 2024 08:10:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706256583; cv=none; b=EFYdNIPSx13qHMFu9I+rOBBddsk4q6CyIS8kv7871BFO4EyNmA8WIN3cvmdNCD2sQh2XJ77vlUw5J9f9DKzvkSqaNpSz4pGsPKpGpjitV9UNPMQJC0nf9vmp/nHEvUSP7sGGESJM9jcwQq5gtLTqayv+007E/XzgFrP+BAZAwNs=
+	t=1706256635; cv=none; b=UjfjldnexlZGyU7j55jPx3WGpDGC8bucxcf439gVPeOSo6XCg2AztVaWX0PDkQ/RwgD1fIvxqh9+3wJNrmAXOKs9fUj68b90XAyZhzwtfA0qqgP+pkjzB2GHyVQ6i2vm2HX9WN/F7aqjTRFUYGL7843pezuet22XstZ3a/Y2qQ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706256583; c=relaxed/simple;
-	bh=0szE48INaKewwpjGWxapSAC8Tr8Em99nueDTOh87npY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VmiBNeQlnb+qmNzSWyVDtCw6ycrHwZ7iByZG7dsl+ezjI3EH33HxjuPBsBOw2n4xWhxXIIKvccwvymINmP/+ebFrievVA9Sszd6cfNyuCObxkKfaBLaLd4gUkzqAYd7QFr0xWpmZmtd49+pZfp88YC9jJ+1qhNB5vASny4k/MvA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=E1Xxd/8d; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1706256635; c=relaxed/simple;
+	bh=2k8JQREzbKJEsbJpI95q160VXYyJ08a0uiksUeW2oZ8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nzsqL1gREWwNUp68yw/Va31OR0sryg7nvtCkkP5qR+exGESeDnnMZHFKqwDpywEV/Pvr3fB7q8z7/aEg6eI/GBXohrjSFSfrWXWagzPYgwH4nkH2bVIVMsWfCWMqK/QHeHKOi+pY7Ni078hu39mn3ROtI1HW+fLLnk+25erT2ZM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=e+dUfNQK; arc=none smtp.client-ip=209.85.210.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="E1Xxd/8d"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706256581; x=1737792581;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=0szE48INaKewwpjGWxapSAC8Tr8Em99nueDTOh87npY=;
-  b=E1Xxd/8dtEcR2mNI9sPst2xe/Ce2fWa9xiHrYb7UcutKAGL8jPtwehZN
-   gaciwQ2JGuuiAFL82MWeZe/ZwezESUsfIwUVT8oFjFgTNZiOFfQVdvelA
-   GBe3T+zPLjhO8Utsih95srwVabOurNtNpI94aVNhFfb1QuPMIBLeMGJmR
-   IWPaDFSaWOLqXv8VJclSJy3kqLBIu1sTeSIg41pHTrdUdGEjGzom/XvoU
-   g9Fb1bhXBNTYrCcQGVuMWAEa3I/Kq/NuZ/XKwU7JDHbhcvHXBOjfu4Seb
-   xemxPCgBuj3Wl7zsprEO8fl/5q07ULiNAJyTK4dIRr76kdFpRvp4kW7LN
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="9095971"
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="9095971"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2024 00:09:40 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="960143071"
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="960143071"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by orsmga005.jf.intel.com with ESMTP; 26 Jan 2024 00:09:37 -0800
-Date: Fri, 26 Jan 2024 16:06:17 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, David Matlack <dmatlack@google.com>
-Subject: Re: [PATCH 3/4] KVM: Get reference to VM's address space in the
- async #PF worker
-Message-ID: <ZbNn+Z8TzOcgJZJg@yilunxu-OptiPlex-7050>
-References: <20240110011533.503302-1-seanjc@google.com>
- <20240110011533.503302-4-seanjc@google.com>
- <Zavj4U2LYeOsnXOh@yilunxu-OptiPlex-7050>
- <ZbFcXB5ctGOMEr22@google.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e+dUfNQK"
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-6dddc5e34e2so79648b3a.0;
+        Fri, 26 Jan 2024 00:10:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1706256633; x=1706861433; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=nELBdfPl4AQ5uJ/P9USF4aInhb1zNUypDMneqWNj1G0=;
+        b=e+dUfNQKmE+FbzArhJefZoCJ03K8/ttSqGD1YFtNz9h/uGAL0ElFeUpxoHiz0SDd4X
+         SLKFUFnnC5reoeaidzswroZGATt9f6WukMoFoAHETqEDcIWAL1fTwZhEzO9fvA/qW85C
+         lwsLN13BI138QdATMtmeNLTWsM1RelWdDRfZMJyYVz9pchTOX21dFB98Q0RgveQsOHlT
+         yBiz8RPwuy4NoO0Hh1BozBEhLdF2NigU0cqsEOVbr0qMbsh4mthE5uzoGUxjo/gMUdJg
+         ZeFXl2h8SnOoFLL7rXY2RpJq1UPHsbbBkPkXn7ICGW4cKNpR228wsynCkFJUGUuIb77V
+         zLBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706256633; x=1706861433;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=nELBdfPl4AQ5uJ/P9USF4aInhb1zNUypDMneqWNj1G0=;
+        b=rcHsAmZcXT30qWxbnEkdu4Hfx2IA6k4TqVLslVSbCsa/m6EWwviYX6d8BL7vWypZHx
+         3H1OSSaPAU61WbeGHN9PULk/DgpE3Y96laaTw8bdImBKtQGrOEpGjLY4rBow4W5dP1gI
+         AzcbZfDNnEepZ0QswuqseEZFs8O7pxUqpeYyYYRcEZ2KzoVIDTb1rzjsfmHxTqHhUIR0
+         bo6bDv65PXKejCWDNC91HC2xVL/T8Xg4tIUkuQ0/1DaTT3gTR2cm7uz+4gZtwGlN5Hh9
+         0I7EbY2V6bEdhXR5bG7k+HIVX24Ilu24B5TIiI+Jx6s7qQxdNridc2NCz0muFCL0fuct
+         w5+g==
+X-Gm-Message-State: AOJu0Yxx0KF4gwrKsl2f16PQ22l2MSqWZqi+fFz7O6H2TwBYPwDnJgMz
+	IUZYaGLjQQN4jPgWbR+azNoPT/f07ev8OudvHswX7jQOMS6epAYN
+X-Google-Smtp-Source: AGHT+IHGE4d3r5oPSndwRCufRq2TEcmfDoEFq+Uu0uhZPgljgZJDpVKhMZNkV1x5Mf0sWyGONMJnxQ==
+X-Received: by 2002:a05:6a00:c92:b0:6dd:c0a5:3f2e with SMTP id a18-20020a056a000c9200b006ddc0a53f2emr783610pfv.25.1706256633452;
+        Fri, 26 Jan 2024 00:10:33 -0800 (PST)
+Received: from localhost.localdomain ([51.79.240.130])
+        by smtp.gmail.com with ESMTPSA id f14-20020a056a00228e00b006dde27853afsm626942pfe.113.2024.01.26.00.10.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 26 Jan 2024 00:10:33 -0800 (PST)
+From: Chhayly Leang <clw.leang@gmail.com>
+To: Stefan Binding <sbinding@opensource.cirrus.com>,
+	Takashi Iwai <tiwai@suse.com>,
+	patches@opensource.cirrus.com
+Cc: James Schulman <james.schulman@cirrus.com>,
+	David Rhodes <david.rhodes@cirrus.com>,
+	Richard Fitzgerald <rf@opensource.cirrus.com>,
+	Jaroslav Kysela <perex@perex.cz>,
+	linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Chhayly Leang <clw.leang@gmail.com>
+Subject: [PATCH] ALSA: hda: cs35l41: Support ASUS Zenbook UM3402YAR
+Date: Fri, 26 Jan 2024 15:09:12 +0700
+Message-ID: <20240126080912.87422-1-clw.leang@gmail.com>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZbFcXB5ctGOMEr22@google.com>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jan 24, 2024 at 10:52:12AM -0800, Sean Christopherson wrote:
-> On Sat, Jan 20, 2024, Xu Yilun wrote:
-> > On Tue, Jan 09, 2024 at 05:15:32PM -0800, Sean Christopherson wrote:
-> > > Get a reference to the target VM's address space in async_pf_execute()
-> > > instead of gifting a reference from kvm_setup_async_pf().  Keeping the
-> > > address space alive just to service an async #PF is counter-productive,
-> > > i.e. if the process is exiting and all vCPUs are dead, then NOT doing
-> > > get_user_pages_remote() and freeing the address space asap is desirable.
-> > > 
-> > > Handling the mm reference entirely within async_pf_execute() also
-> > > simplifies the async #PF flows as a whole, e.g. it's not immediately
-> > > obvious when the worker task vs. the vCPU task is responsible for putting
-> > > the gifted mm reference.
-> > > 
-> > > Signed-off-by: Sean Christopherson <seanjc@google.com>
-> > > ---
-> > >  include/linux/kvm_host.h |  1 -
-> > >  virt/kvm/async_pf.c      | 32 ++++++++++++++++++--------------
-> > >  2 files changed, 18 insertions(+), 15 deletions(-)
-> > > 
-> > > diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-> > > index 7e7fd25b09b3..bbfefd7e612f 100644
-> > > --- a/include/linux/kvm_host.h
-> > > +++ b/include/linux/kvm_host.h
-> > > @@ -238,7 +238,6 @@ struct kvm_async_pf {
-> > >  	struct list_head link;
-> > >  	struct list_head queue;
-> > >  	struct kvm_vcpu *vcpu;
-> > > -	struct mm_struct *mm;
-> > >  	gpa_t cr2_or_gpa;
-> > >  	unsigned long addr;
-> > >  	struct kvm_arch_async_pf arch;
-> > > diff --git a/virt/kvm/async_pf.c b/virt/kvm/async_pf.c
-> > > index d5dc50318aa6..c3f4f351a2ae 100644
-> > > --- a/virt/kvm/async_pf.c
-> > > +++ b/virt/kvm/async_pf.c
-> > > @@ -46,8 +46,8 @@ static void async_pf_execute(struct work_struct *work)
-> > >  {
-> > >  	struct kvm_async_pf *apf =
-> > >  		container_of(work, struct kvm_async_pf, work);
-> > > -	struct mm_struct *mm = apf->mm;
-> > >  	struct kvm_vcpu *vcpu = apf->vcpu;
-> > > +	struct mm_struct *mm = vcpu->kvm->mm;
-> > >  	unsigned long addr = apf->addr;
-> > >  	gpa_t cr2_or_gpa = apf->cr2_or_gpa;
-> > >  	int locked = 1;
-> > > @@ -56,16 +56,24 @@ static void async_pf_execute(struct work_struct *work)
-> > >  	might_sleep();
-> > >  
-> > >  	/*
-> > > -	 * This work is run asynchronously to the task which owns
-> > > -	 * mm and might be done in another context, so we must
-> > > -	 * access remotely.
-> > > +	 * Attempt to pin the VM's host address space, and simply skip gup() if
-> > > +	 * acquiring a pin fail, i.e. if the process is exiting.  Note, KVM
-> > > +	 * holds a reference to its associated mm_struct until the very end of
-> > > +	 * kvm_destroy_vm(), i.e. the struct itself won't be freed before this
-> > > +	 * work item is fully processed.
-> > >  	 */
-> > > -	mmap_read_lock(mm);
-> > > -	get_user_pages_remote(mm, addr, 1, FOLL_WRITE, NULL, &locked);
-> > > -	if (locked)
-> > > -		mmap_read_unlock(mm);
-> > > -	mmput(mm);
-> > > +	if (mmget_not_zero(mm)) {
-> > > +		mmap_read_lock(mm);
-> > > +		get_user_pages_remote(mm, addr, 1, FOLL_WRITE, NULL, &locked);
-> > > +		if (locked)
-> > > +			mmap_read_unlock(mm);
-> > > +		mmput(mm);
-> > > +	}
-> > >  
-> > > +	/*
-> > > +	 * Notify and kick the vCPU even if faulting in the page failed, e.g.
-> > 
-> > How about when the process is exiting? Could we just skip the following?
-> 
-> Maybe?  I'm not opposed to trimming this down even more, but I doubt it will make
-> much of a difference.  The vCPU can't be running so async_pf.lock shouldn't be
-> contended, no IPIs will be issued for kicks, etc.  So for this patch at least,
-> I want to take the most conservative approach while still cleaning up the mm_struct
-> usage.
+Adds sound support for ASUS Zenbook UM3402YAR with missing DSD
 
-It's good to me.
+Signed-off-by: Chhayly Leang <clw.leang@gmail.com>
+---
+ sound/pci/hda/cs35l41_hda_property.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Reviewed-by: Xu Yilun <yilun.xu@intel.com>
+diff --git a/sound/pci/hda/cs35l41_hda_property.c b/sound/pci/hda/cs35l41_hda_property.c
+index 35277ce890a..2af083183d8 100644
+--- a/sound/pci/hda/cs35l41_hda_property.c
++++ b/sound/pci/hda/cs35l41_hda_property.c
+@@ -76,6 +76,7 @@ static const struct cs35l41_config cs35l41_config_table[] = {
+ 	{ "10431533", 2, INTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 0, 1, -1, 1000, 4500, 24 },
+ 	{ "10431573", 2, INTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 1, 2, 0, 1000, 4500, 24 },
+ 	{ "10431663", 2, INTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 1, -1, 0, 1000, 4500, 24 },
++	{ "10431683", 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 0, 1, -1, 0, 0, 0 },
+ 	{ "104316D3", 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 1, 2, 0, 0, 0, 0 },
+ 	{ "104316F3", 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 1, 2, 0, 0, 0, 0 },
+ 	{ "104317F3", 2, INTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 0, 1, -1, 1000, 4500, 24 },
+@@ -410,6 +411,7 @@ static const struct cs35l41_prop_model cs35l41_prop_model_table[] = {
+ 	{ "CSC3551", "10431533", generic_dsd_config },
+ 	{ "CSC3551", "10431573", generic_dsd_config },
+ 	{ "CSC3551", "10431663", generic_dsd_config },
++	{ "CSC3551", "10431683", generic_dsd_config },
+ 	{ "CSC3551", "104316D3", generic_dsd_config },
+ 	{ "CSC3551", "104316F3", generic_dsd_config },
+ 	{ "CSC3551", "104317F3", generic_dsd_config },
+-- 
+2.42.0
+
