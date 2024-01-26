@@ -1,195 +1,113 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 321D41DDC9
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 16:21:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35A231CD3F;
+	Fri, 26 Jan 2024 16:23:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706286117; cv=none; b=Xbs+g94A1CeusD11sKcy/r4QQEMiUFx9SQ6imnm8wu0F1c+texp4K0BT138wzYuvIbqNXp1CeQ+HG/1RIM/L6sSG39DQZY0qh4a1jn9E1xMal1gJe0hviEBBnjLEJml8utgtSiQfzbbRZzC/m9T8F9McxwTSCKm1w5IVxQT7KbE=
+	t=1706286199; cv=none; b=fkpxCt6ZMbMfdTfQBW6ORKApV4y9LnkLq+p2JQ0xV7Z8RWaSg0Q/Hrt76rcge7Gh4RzSlp1SavikUVH3j7vPXyPwETml8Fnjf8PsBa6e62ZUgxyjr7Eus3L3qpk8ia/CyfEJxDvKMRt0i+9EK274nbzfUtW3VBYHefzDxMunJuk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706286117; c=relaxed/simple;
-	bh=U4RlufN+2/ttlS2ZzVyaGaxSUuXUT23VnoozMGXxZKw=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=bRaZtrVwZcPHVQPH6exoDvBflVD5QNfly8Sc+omIawlogSiMkXHLyzDJvXDeAMSS/bAIrr8O0a23b7xxSBT1uFY77wGakTSuMBoq3eoE128vkucLF1hEMWIurkK6Xkz6MKKaMv72m5R2c50V+tJnktmx88bvRHTcBZ70YB2gtk8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=amtlISvr; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1706286199; c=relaxed/simple;
+	bh=2JCXgq32qIglC6mO72WRbjPvok3iIvPLQe2ZqDXoq+4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ACJ4xEDku3bvSGTSw2JZKg6ICFGNRqGXbXlqj0sw14WqDgvT6lr7qE8kUzM4oZA96by1+Nn55tgOhpoUky2FEso6GWIB71FT/CZB/A70Mg2NKinkTCN0NAJvEOLABOLXlzls/oKTBM86zzCFh9R1CPz4UhI8Chu+1Ik/8edcD/k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fEkTsWGm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="amtlISvr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1706286115;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/DKHWYNIQ8pDBSd77D6euq+SK1mGoY9FE9L6w6bXw+I=;
-	b=amtlISvrcFuUjLhl/7F81L9EvSAhT26qP6VsQHoNlANap/e3h29k5sCJbe4NVR+ND0hEFp
-	3n/7p9tmlU3xM36f8q2JO8TcHX+DJe8G+McZt1UD2u3spBJJsq91bwVXcLDFjYBBtg4IeN
-	ykccxs9KLmf0gPsAJ966szLp28CBUo8=
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
- [209.85.160.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-563-mWGw8AEbMzK8Kbq4kJxH9A-1; Fri, 26 Jan 2024 11:21:52 -0500
-X-MC-Unique: mWGw8AEbMzK8Kbq4kJxH9A-1
-Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-42987be5d14so6696431cf.1
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 08:21:52 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706286112; x=1706890912;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/DKHWYNIQ8pDBSd77D6euq+SK1mGoY9FE9L6w6bXw+I=;
-        b=tZ1iwOgK7jN0Z9zxXWtmxR89oL0LmQAUm1oMIRp15qty9RtMbt1FslBKh3lMOCMU8T
-         FqjpCc0PLLUGzcHJIOymF5+M6SOG2mA1iScmPQkDZdTRrEZtjPXKTJuRIVzacqEoyUNf
-         ln2RYz/AX0kmdsNimgy+WjT+HNbDYwOpX78ZhSIj6ZxSxBMyaR4va/yS8lo0uA0MlOzF
-         LpF1P/aI7vKr+jsE+jWdQGPjwHffn9DGvDdODFnpDVZiLYhaCrH/KV0I6Vs/hKqdPEsP
-         t8yEAIG3rOTg8fDsdLRbMN47FyQ0ipvftiuQOpBHCFYByzd/At8zpDepslGA/BPHbiYt
-         V5nA==
-X-Gm-Message-State: AOJu0YwribQ9XM8xUs09Zhxb63f6YStTOUGOOJcqYLPS5vFRIlNRZXoS
-	oTsz99H5oUlEdaPESdS9DkdkW1guvBG+P0IS6EyxwQ2M9pXDhy23zwc2vNbXTqJUOibqa1h6Bo7
-	9C74C+PmcZKUTgOBidJpsmZ4yucnYMuboT8E70UteQdr3cAVq0+WO2qZQZLLVyA==
-X-Received: by 2002:a05:622a:14c9:b0:42a:8571:a2cb with SMTP id u9-20020a05622a14c900b0042a8571a2cbmr86554qtx.84.1706286111976;
-        Fri, 26 Jan 2024 08:21:51 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFivbhhWcR3ymCn6eXUjLbh0aQaVUngXs/Pq/CRsCJDMlAq7L5AHlbxId9Ivo6Fqj4oVb+1tg==
-X-Received: by 2002:a05:622a:14c9:b0:42a:8571:a2cb with SMTP id u9-20020a05622a14c900b0042a8571a2cbmr86543qtx.84.1706286111691;
-        Fri, 26 Jan 2024 08:21:51 -0800 (PST)
-Received: from fedora (g2.ign.cz. [91.219.240.8])
-        by smtp.gmail.com with ESMTPSA id hj1-20020a05622a620100b00429aba4a360sm637903qtb.81.2024.01.26.08.21.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Jan 2024 08:21:51 -0800 (PST)
-From: Vitaly Kuznetsov <vkuznets@redhat.com>
-To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini
- <pbonzini@redhat.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, David Matlack
- <dmatlack@google.com>, Xu Yilun <yilun.xu@linux.intel.com>, Sean
- Christopherson <seanjc@google.com>
-Subject: Re: [PATCH 3/4] KVM: Get reference to VM's address space in the
- async #PF worker
-In-Reply-To: <20240110011533.503302-4-seanjc@google.com>
-References: <20240110011533.503302-1-seanjc@google.com>
- <20240110011533.503302-4-seanjc@google.com>
-Date: Fri, 26 Jan 2024 17:21:48 +0100
-Message-ID: <87sf2k83qb.fsf@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fEkTsWGm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A10D0C433F1;
+	Fri, 26 Jan 2024 16:23:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706286198;
+	bh=2JCXgq32qIglC6mO72WRbjPvok3iIvPLQe2ZqDXoq+4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fEkTsWGm+pTv3JpEFsZcSKKxEWVnImncAwsQyoI3Ld7l8SqlSPkkztT/6mu8pqEam
+	 vpLLbGXpWSpvxubuMPdi5uAwFg5PAsQpDJ2RYnDpXQb18Lkdozxrjscnx2eqEOnHm8
+	 N3YGwkvhkqmRoM4YyAG0hwlgvuEX6Cw1xuO9WWStHUSB+R76n524qZSpZ52mqSDMbt
+	 qAmd1GVQf7jgU3LVhcwQgru0P+PSyZS1HKGCkz9QcV41zFIh+g6izksdFp3d+SIS53
+	 oB319QBS/gebFb4F/ER1A13hzFoCVoHbdFA3lczGeOkC/6HOiU0ADFoxFjTG9zgJ8u
+	 8cbQygMkAxiWg==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1rTOzK-000000007rm-46Kw;
+	Fri, 26 Jan 2024 17:23:31 +0100
+Date: Fri, 26 Jan 2024 17:23:30 +0100
+From: Johan Hovold <johan@kernel.org>
+To: Bjorn Andersson <quic_bjorande@quicinc.com>
+Cc: Daniel Thompson <daniel.thompson@linaro.org>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+	Jiri Kosina <jikos@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Johan Hovold <johan+linaro@kernel.org>,
+	linux-arm-msm@vger.kernel.org, linux-input@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Konrad Dybcio <konrad.dybcio@somainline.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH 2/2] arm64: dts: qcom: sc8280xp-x13s: Fix/enable
+ touchscreen
+Message-ID: <ZbPcgqr9gBByqV7Q@hovoldconsulting.com>
+References: <20240125-x13s-touchscreen-v1-0-ab8c882def9c@quicinc.com>
+ <20240125-x13s-touchscreen-v1-2-ab8c882def9c@quicinc.com>
+ <ZbNpdaSyFS9tYrkd@hovoldconsulting.com>
+ <20240126130232.GA5506@aspen.lan>
+ <ZbPCJv7HW8OQzPMT@hovoldconsulting.com>
+ <20240126145346.GN2936378@hu-bjorande-lv.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240126145346.GN2936378@hu-bjorande-lv.qualcomm.com>
 
-Sean Christopherson <seanjc@google.com> writes:
+On Fri, Jan 26, 2024 at 06:53:46AM -0800, Bjorn Andersson wrote:
+> On Fri, Jan 26, 2024 at 03:31:02PM +0100, Johan Hovold wrote:
+> > On Fri, Jan 26, 2024 at 01:02:32PM +0000, Daniel Thompson wrote:
 
-> Get a reference to the target VM's address space in async_pf_execute()
-> instead of gifting a reference from kvm_setup_async_pf().  Keeping the
-> address space alive just to service an async #PF is counter-productive,
-> i.e. if the process is exiting and all vCPUs are dead, then NOT doing
-> get_user_pages_remote() and freeing the address space asap is
-> desirable.
+> > > In short it looks like the delays make the difference and, even a short
+> > > delay, can fix the problem.
+> > 
+> > Right, but since the suppliers are left enabled by the bootloader (and
+> > never disabled by the kernel), that only begs the question of why this
+> > makes a difference.
+> 
+> You're right, the supply is kept on by other things, so this isn't the
+> problem.
+> 
+> > Without the delay, the other HID devices are probing (successfully)
+> > slightly before, but essentially in parallel with the touchscreen while
+> > using the same resources. Is that causing trouble somehow?
+> 
+> The difference to those other HID devices is GPIO 99 - the reset pin,
+> which is configured pull down input from boot - i.e. the chip is held in
+> reset.
+> 
+> When the HID device is being probed, pinctrl applies &ts0_default starts
+> driving it high, bringing the device out of reset. But insufficient time
+> is given for the chip to come up so the I2C read fails.
 
-It took me a while to realize why all vCPU fds are managed by the same
-mm which did KVM_CREATE_VM as (AFAIU) fds can be passed around. Turns
-out, we explicitly forbid this in kvm_vcpu_ioctl():
+Ah, that's it.
 
-        if (vcpu->kvm->mm != current->mm || vcpu->kvm->vm_dead)
-                return -EIO;
+You should drop that 'output-high' from the pin config as part of this
+patch to avoid toggling the reset line twice at boot.
 
-so this indeed means that grabbing current->mm in kvm_setup_async_pf()
-can be avoided. I'm not sure whether it's just me or a "all vCPUs are
-quired to be managed by the same mm" comment somewhere would be helpful.
+Looks like we have the same problem on the CRD as well. There the
+touchscreen still works, possibly because it has been enabled by the
+boot firmware or simply because that touchscreen can handle a shorter
+delay.
 
->
-> Handling the mm reference entirely within async_pf_execute() also
-> simplifies the async #PF flows as a whole, e.g. it's not immediately
-> obvious when the worker task vs. the vCPU task is responsible for putting
-> the gifted mm reference.
->
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
-> ---
->  include/linux/kvm_host.h |  1 -
->  virt/kvm/async_pf.c      | 32 ++++++++++++++++++--------------
->  2 files changed, 18 insertions(+), 15 deletions(-)
->
-> diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-> index 7e7fd25b09b3..bbfefd7e612f 100644
-> --- a/include/linux/kvm_host.h
-> +++ b/include/linux/kvm_host.h
-> @@ -238,7 +238,6 @@ struct kvm_async_pf {
->  	struct list_head link;
->  	struct list_head queue;
->  	struct kvm_vcpu *vcpu;
-> -	struct mm_struct *mm;
->  	gpa_t cr2_or_gpa;
->  	unsigned long addr;
->  	struct kvm_arch_async_pf arch;
-> diff --git a/virt/kvm/async_pf.c b/virt/kvm/async_pf.c
-> index d5dc50318aa6..c3f4f351a2ae 100644
-> --- a/virt/kvm/async_pf.c
-> +++ b/virt/kvm/async_pf.c
-> @@ -46,8 +46,8 @@ static void async_pf_execute(struct work_struct *work)
->  {
->  	struct kvm_async_pf *apf =
->  		container_of(work, struct kvm_async_pf, work);
-> -	struct mm_struct *mm = apf->mm;
->  	struct kvm_vcpu *vcpu = apf->vcpu;
-> +	struct mm_struct *mm = vcpu->kvm->mm;
->  	unsigned long addr = apf->addr;
->  	gpa_t cr2_or_gpa = apf->cr2_or_gpa;
->  	int locked = 1;
-> @@ -56,16 +56,24 @@ static void async_pf_execute(struct work_struct *work)
->  	might_sleep();
->  
->  	/*
-> -	 * This work is run asynchronously to the task which owns
-> -	 * mm and might be done in another context, so we must
-> -	 * access remotely.
-> +	 * Attempt to pin the VM's host address space, and simply skip gup() if
-> +	 * acquiring a pin fail, i.e. if the process is exiting.  Note, KVM
-> +	 * holds a reference to its associated mm_struct until the very end of
-> +	 * kvm_destroy_vm(), i.e. the struct itself won't be freed before this
-> +	 * work item is fully processed.
->  	 */
-> -	mmap_read_lock(mm);
-> -	get_user_pages_remote(mm, addr, 1, FOLL_WRITE, NULL, &locked);
-> -	if (locked)
-> -		mmap_read_unlock(mm);
-> -	mmput(mm);
-> +	if (mmget_not_zero(mm)) {
-> +		mmap_read_lock(mm);
-> +		get_user_pages_remote(mm, addr, 1, FOLL_WRITE, NULL, &locked);
-> +		if (locked)
-> +			mmap_read_unlock(mm);
-> +		mmput(mm);
-> +	}
->  
-> +	/*
-> +	 * Notify and kick the vCPU even if faulting in the page failed, e.g.
-> +	 * so that the vCPU can retry the fault synchronously.
-> +	 */
->  	if (IS_ENABLED(CONFIG_KVM_ASYNC_PF_SYNC))
->  		kvm_arch_async_page_present(vcpu, apf);
->  
-> @@ -129,10 +137,8 @@ void kvm_clear_async_pf_completion_queue(struct kvm_vcpu *vcpu)
->  #ifdef CONFIG_KVM_ASYNC_PF_SYNC
->  		flush_work(&work->work);
->  #else
-> -		if (cancel_work_sync(&work->work)) {
-> -			mmput(work->mm);
-> +		if (cancel_work_sync(&work->work))
->  			kmem_cache_free(async_pf_cache, work);
-> -		}
->  #endif
->  		spin_lock(&vcpu->async_pf.lock);
->  	}
-> @@ -211,8 +217,6 @@ bool kvm_setup_async_pf(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
->  	work->cr2_or_gpa = cr2_or_gpa;
->  	work->addr = hva;
->  	work->arch = *arch;
-> -	work->mm = current->mm;
-> -	mmget(work->mm);
->  
->  	INIT_WORK(&work->work, async_pf_execute);
+Where exactly did you find those delay values in the ACPI tables? I
+couldn't seem to find anything in the decompiled DSDT.
 
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> If you later try to probe again, 200ms has elapsed since the reset was
+> deasserted (driven high).
 
--- 
-Vitaly
+Right.
 
+Johan
