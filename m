@@ -1,142 +1,150 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2079.outbound.protection.outlook.com [40.107.237.79])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F396A6A024;
-	Fri, 26 Jan 2024 08:09:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.79
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706256551; cv=fail; b=spYcFKwkdAD35+LSlGlYOCUjbAKYH4PtmhcGCBZABsOLgg6puAo3+d2OUqfyCyi72sdhZQnyJIeB8nukYY4BvVsnH/Sjg0mmct5LZuHcE0O0VKWFvazWaeTvVpm7hG2Hi0YnSrMIWYjMZCDjj4BAegO5zDN3vmd6u1oNIwEYTrQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706256551; c=relaxed/simple;
-	bh=Rca+pkGTOn1V8qBOTuTa2KS/EBSLBggibKR/oeICyDI=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hInWy166YIWXzXGXM/fYjc5KRqr4elPGCbgFFeR/BkuXsWSjLjWSXRF6ILAsU19tObPhj3jzs7nx++2hTGUahKxpvVLDbgrTideD1Ecm5gWeHN8onI+WcyDPcJGQDZy/pCOdlzBjl9JlWDGLl6xux7YUDzOf3hYBC0SxvF/+ivQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=PjqguNqE; arc=fail smtp.client-ip=40.107.237.79
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2044EBE62;
+	Fri, 26 Jan 2024 08:09:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706256583; cv=none; b=EFYdNIPSx13qHMFu9I+rOBBddsk4q6CyIS8kv7871BFO4EyNmA8WIN3cvmdNCD2sQh2XJ77vlUw5J9f9DKzvkSqaNpSz4pGsPKpGpjitV9UNPMQJC0nf9vmp/nHEvUSP7sGGESJM9jcwQq5gtLTqayv+007E/XzgFrP+BAZAwNs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706256583; c=relaxed/simple;
+	bh=0szE48INaKewwpjGWxapSAC8Tr8Em99nueDTOh87npY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VmiBNeQlnb+qmNzSWyVDtCw6ycrHwZ7iByZG7dsl+ezjI3EH33HxjuPBsBOw2n4xWhxXIIKvccwvymINmP/+ebFrievVA9Sszd6cfNyuCObxkKfaBLaLd4gUkzqAYd7QFr0xWpmZmtd49+pZfp88YC9jJ+1qhNB5vASny4k/MvA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=E1Xxd/8d; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="PjqguNqE"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=SNxag8Ou7dztMbTVSuTmivMR/7UG8OZPWcTARx4Ut47qO+ZQlyi+yN4JC78nNAVbOA8G5za7FKB1+xLfiqHshQ7O37+o9XmElZzkjvtKegpYcjyQxOqtuFURIEfezRSeOCiI4PQ3P0uutvoBQtyQYbl3ECHMIGOrqlF6T9wTrShjRle+3sAjd6EtLgutHnnTP615wIEcuEYFxME4pFKFl6M7xlV4wLP/iP+jeHabmIXvmoMKMpNUUIxFQO5dFVm1im4ZpqUgwA7l5Z6loR1DCZkJTFnd8rFfFZ/f+LZYwJozXWnfq1uWkPDtKWXeRinxfY4LEwyFIP7HdQPpm59Vng==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=pW9y79Sp5ovfASU9Wv/i0zw9lUzkOy2sk54Ik1mgXx4=;
- b=f2/GgHkYCYz2g9+t8GBKQ9GwpAVth77MtO3vYqAAdtZ98zBSppU6vmfxx8uWAJ+0FqP0bpq54CJbHAlZ2DskYTJd+b+G6e8tT8pOugfkxc2yNC17ZoOUFSTmHXRe89505q3nzlLmXLd55tRdwxXASUPEUkYOPyf1imPWjDhT7DEckuvmPROh+NLjrpAETYQEdVWT0iVhsbEgsDJlz0g4h0bS5MUFT+SuQ6PKle84/dI6eQqmpSBsKY/YLwbjv+3FVpKiocFsnwyoDGg92DutkXzEa24aBcIxMyhrQV0pZ56l/iJJtHR84vHE8M5wsVBHcZLnkkTe9j1xyakD+B1YFg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pW9y79Sp5ovfASU9Wv/i0zw9lUzkOy2sk54Ik1mgXx4=;
- b=PjqguNqEtrpAmHSR9RjlXUPLVqOdC7uZzNnChBwR1SHaO/UqtFrBbTsq0QC/RKPBnzd6LBumUVsSTreIJl6EXB/H6GdcOr0ZvO+6p5mgIDJmNypBH2TFMTeRxoj+vY1Lg7q/0n4yRb/6sn9CwmM+f9FKalMbXTFg/tMpWalb/ew=
-Received: from SJ0PR13CA0142.namprd13.prod.outlook.com (2603:10b6:a03:2c6::27)
- by DM3PR12MB9391.namprd12.prod.outlook.com (2603:10b6:0:3d::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.27; Fri, 26 Jan
- 2024 08:09:05 +0000
-Received: from CO1PEPF000044F2.namprd05.prod.outlook.com
- (2603:10b6:a03:2c6:cafe::46) by SJ0PR13CA0142.outlook.office365.com
- (2603:10b6:a03:2c6::27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.21 via Frontend
- Transport; Fri, 26 Jan 2024 08:09:05 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CO1PEPF000044F2.mail.protection.outlook.com (10.167.241.72) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7228.16 via Frontend Transport; Fri, 26 Jan 2024 08:09:05 +0000
-Received: from pyuan-Chachani-VN.amd.com (10.180.168.240) by
- SATLEXMB04.amd.com (10.181.40.145) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.34; Fri, 26 Jan 2024 02:09:01 -0600
-From: Perry Yuan <perry.yuan@amd.com>
-To: <rafael.j.wysocki@intel.com>, <Mario.Limonciello@amd.com>,
-	<viresh.kumar@linaro.org>, <Ray.Huang@amd.com>, <gautham.shenoy@amd.com>,
-	<Borislav.Petkov@amd.com>
-CC: <Alexander.Deucher@amd.com>, <Xinmei.Huang@amd.com>,
-	<Xiaojian.Du@amd.com>, <Li.Meng@amd.com>, <linux-pm@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: [PATCH 7/7] Documentation: cpufreq: amd-pstate: introduce the new cpu boost control method
-Date: Fri, 26 Jan 2024 16:08:10 +0800
-Message-ID: <1be9c97cafb1406a607184ea48dcdae883dc4cd0.1706255676.git.perry.yuan@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <cover.1706255676.git.perry.yuan@amd.com>
-References: <cover.1706255676.git.perry.yuan@amd.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="E1Xxd/8d"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706256581; x=1737792581;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=0szE48INaKewwpjGWxapSAC8Tr8Em99nueDTOh87npY=;
+  b=E1Xxd/8dtEcR2mNI9sPst2xe/Ce2fWa9xiHrYb7UcutKAGL8jPtwehZN
+   gaciwQ2JGuuiAFL82MWeZe/ZwezESUsfIwUVT8oFjFgTNZiOFfQVdvelA
+   GBe3T+zPLjhO8Utsih95srwVabOurNtNpI94aVNhFfb1QuPMIBLeMGJmR
+   IWPaDFSaWOLqXv8VJclSJy3kqLBIu1sTeSIg41pHTrdUdGEjGzom/XvoU
+   g9Fb1bhXBNTYrCcQGVuMWAEa3I/Kq/NuZ/XKwU7JDHbhcvHXBOjfu4Seb
+   xemxPCgBuj3Wl7zsprEO8fl/5q07ULiNAJyTK4dIRr76kdFpRvp4kW7LN
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="9095971"
+X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
+   d="scan'208";a="9095971"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2024 00:09:40 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="960143071"
+X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
+   d="scan'208";a="960143071"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by orsmga005.jf.intel.com with ESMTP; 26 Jan 2024 00:09:37 -0800
+Date: Fri, 26 Jan 2024 16:06:17 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, David Matlack <dmatlack@google.com>
+Subject: Re: [PATCH 3/4] KVM: Get reference to VM's address space in the
+ async #PF worker
+Message-ID: <ZbNn+Z8TzOcgJZJg@yilunxu-OptiPlex-7050>
+References: <20240110011533.503302-1-seanjc@google.com>
+ <20240110011533.503302-4-seanjc@google.com>
+ <Zavj4U2LYeOsnXOh@yilunxu-OptiPlex-7050>
+ <ZbFcXB5ctGOMEr22@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1PEPF000044F2:EE_|DM3PR12MB9391:EE_
-X-MS-Office365-Filtering-Correlation-Id: adc8cd7d-251d-4dc8-04fd-08dc1e461066
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	ox3Dx9HW05YyWO/SQhki4+sYjq7r2yUYypGA9BZ3sNe15iJzGmopSGMIRYxIbF16i/u+p3N77PB5WAOcg2UyMjgAdfGKoqdWbEIttS0kn/YNZxmnambHI9gsWOJFQ7mQr6XVR5udHQjwGN6U3DU5ZM67yRkI5o7W9ia4g9IujYY1VoHoLUwxzxm0Q7JMHcEdUxe+aoJNqoOEpSvmXAVk5VTuTNN6UOx/BcmYhnTAUdojwD/VUfw6N4aHbM+URDa3pBmYncotBcnvshYbXmwO8gTw3n+WhFNzL3kBSNBZraymBm+gX1XnpuT75XHJ7+rAOlxRZe9TUoUtvFYpzG/Yj8fIPn34OTXC4qdkmJMqqkGb+UZpV5elGdFyp/3MYFa73pDEn4cd4D0JKgQfqVNZJYq727TUXofxgC5sqzeamXRS9vEmNr4+gI0a+xgCmHc8Q/V6BzJm9KvUY8nPOFq0iCZUg9c0oDN6rEip3+IM5XZoUSKAvN9AFNNYPOYYHNY0ZPiPF7YUyoFCQ3umWtQS+fnX087n8WABjOLKNpLfn9sBZFLRY0Bga0P9bNY7NBm3eLrn5HUuQoHZV4Yke4DI0Rv4yVEqQIX6SKW4aDYqWq8f5ofbvwodsrxrhNOdXWkib54jII9SbqYEx/FtYxO5dJEnwi61/ahq9hieHXqd7PD6ycf/bNfUHXPG3+ZthP8aEMjl6ZcvBTysGcXqYYeVwkMOWH9JjQ8Bz+e2bqF4FRxcXc0h4EYTpJhN3dZ77feGpK1IDRPXhJPo2te/nyFBjA==
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(376002)(39860400002)(136003)(396003)(346002)(230922051799003)(186009)(1800799012)(64100799003)(82310400011)(451199024)(46966006)(40470700004)(36840700001)(83380400001)(41300700001)(47076005)(426003)(2616005)(16526019)(26005)(336012)(81166007)(36860700001)(4326008)(5660300002)(44832011)(8676002)(8936002)(478600001)(6666004)(2906002)(7696005)(54906003)(70206006)(316002)(70586007)(6636002)(110136005)(82740400003)(356005)(86362001)(36756003)(40480700001)(40460700003)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jan 2024 08:09:05.0026
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: adc8cd7d-251d-4dc8-04fd-08dc1e461066
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CO1PEPF000044F2.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM3PR12MB9391
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZbFcXB5ctGOMEr22@google.com>
 
-From: Perry Yuan <Perry.Yuan@amd.com>
+On Wed, Jan 24, 2024 at 10:52:12AM -0800, Sean Christopherson wrote:
+> On Sat, Jan 20, 2024, Xu Yilun wrote:
+> > On Tue, Jan 09, 2024 at 05:15:32PM -0800, Sean Christopherson wrote:
+> > > Get a reference to the target VM's address space in async_pf_execute()
+> > > instead of gifting a reference from kvm_setup_async_pf().  Keeping the
+> > > address space alive just to service an async #PF is counter-productive,
+> > > i.e. if the process is exiting and all vCPUs are dead, then NOT doing
+> > > get_user_pages_remote() and freeing the address space asap is desirable.
+> > > 
+> > > Handling the mm reference entirely within async_pf_execute() also
+> > > simplifies the async #PF flows as a whole, e.g. it's not immediately
+> > > obvious when the worker task vs. the vCPU task is responsible for putting
+> > > the gifted mm reference.
+> > > 
+> > > Signed-off-by: Sean Christopherson <seanjc@google.com>
+> > > ---
+> > >  include/linux/kvm_host.h |  1 -
+> > >  virt/kvm/async_pf.c      | 32 ++++++++++++++++++--------------
+> > >  2 files changed, 18 insertions(+), 15 deletions(-)
+> > > 
+> > > diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+> > > index 7e7fd25b09b3..bbfefd7e612f 100644
+> > > --- a/include/linux/kvm_host.h
+> > > +++ b/include/linux/kvm_host.h
+> > > @@ -238,7 +238,6 @@ struct kvm_async_pf {
+> > >  	struct list_head link;
+> > >  	struct list_head queue;
+> > >  	struct kvm_vcpu *vcpu;
+> > > -	struct mm_struct *mm;
+> > >  	gpa_t cr2_or_gpa;
+> > >  	unsigned long addr;
+> > >  	struct kvm_arch_async_pf arch;
+> > > diff --git a/virt/kvm/async_pf.c b/virt/kvm/async_pf.c
+> > > index d5dc50318aa6..c3f4f351a2ae 100644
+> > > --- a/virt/kvm/async_pf.c
+> > > +++ b/virt/kvm/async_pf.c
+> > > @@ -46,8 +46,8 @@ static void async_pf_execute(struct work_struct *work)
+> > >  {
+> > >  	struct kvm_async_pf *apf =
+> > >  		container_of(work, struct kvm_async_pf, work);
+> > > -	struct mm_struct *mm = apf->mm;
+> > >  	struct kvm_vcpu *vcpu = apf->vcpu;
+> > > +	struct mm_struct *mm = vcpu->kvm->mm;
+> > >  	unsigned long addr = apf->addr;
+> > >  	gpa_t cr2_or_gpa = apf->cr2_or_gpa;
+> > >  	int locked = 1;
+> > > @@ -56,16 +56,24 @@ static void async_pf_execute(struct work_struct *work)
+> > >  	might_sleep();
+> > >  
+> > >  	/*
+> > > -	 * This work is run asynchronously to the task which owns
+> > > -	 * mm and might be done in another context, so we must
+> > > -	 * access remotely.
+> > > +	 * Attempt to pin the VM's host address space, and simply skip gup() if
+> > > +	 * acquiring a pin fail, i.e. if the process is exiting.  Note, KVM
+> > > +	 * holds a reference to its associated mm_struct until the very end of
+> > > +	 * kvm_destroy_vm(), i.e. the struct itself won't be freed before this
+> > > +	 * work item is fully processed.
+> > >  	 */
+> > > -	mmap_read_lock(mm);
+> > > -	get_user_pages_remote(mm, addr, 1, FOLL_WRITE, NULL, &locked);
+> > > -	if (locked)
+> > > -		mmap_read_unlock(mm);
+> > > -	mmput(mm);
+> > > +	if (mmget_not_zero(mm)) {
+> > > +		mmap_read_lock(mm);
+> > > +		get_user_pages_remote(mm, addr, 1, FOLL_WRITE, NULL, &locked);
+> > > +		if (locked)
+> > > +			mmap_read_unlock(mm);
+> > > +		mmput(mm);
+> > > +	}
+> > >  
+> > > +	/*
+> > > +	 * Notify and kick the vCPU even if faulting in the page failed, e.g.
+> > 
+> > How about when the process is exiting? Could we just skip the following?
+> 
+> Maybe?  I'm not opposed to trimming this down even more, but I doubt it will make
+> much of a difference.  The vCPU can't be running so async_pf.lock shouldn't be
+> contended, no IPIs will be issued for kicks, etc.  So for this patch at least,
+> I want to take the most conservative approach while still cleaning up the mm_struct
+> usage.
 
-Introduce AMD CPU frequency boosting control sysfs entry which userd for
-switching boost on and boost off.
+It's good to me.
 
-If core performance boost is disabled while a core is in a boosted P-state,
-the core automatically transitions to the highest performance non-boosted P-state
-The highest perf and frequency will be limited by the setting value.
-
-Signed-off-by: Perry Yuan <Perry.Yuan@amd.com>
----
- Documentation/admin-guide/pm/amd-pstate.rst | 11 +++++++++++
- 1 file changed, 11 insertions(+)
-
-diff --git a/Documentation/admin-guide/pm/amd-pstate.rst b/Documentation/admin-guide/pm/amd-pstate.rst
-index 1cf40f69278c..d72dc407c4db 100644
---- a/Documentation/admin-guide/pm/amd-pstate.rst
-+++ b/Documentation/admin-guide/pm/amd-pstate.rst
-@@ -385,6 +385,17 @@ control its functionality at the system level.  They are located in the
-         to the operation mode represented by that string - or to be
-         unregistered in the "disable" case.
- 
-+``cpb_boost``
-+        Specifies whether core performance boost is requested to be enabled or disabled
-+        If core performance boost is disabled while a core is in a boosted P-state, the
-+        core automatically transitions to the highest performance non-boosted P-state.
-+        AMD Core Performance Boost(CPB) is controlled by this new attribute file which
-+        allow user to change all cores frequency boosting state. It supports both
-+        ``active mode`` and ``passive mode`` control with below value write to it.
-+
-+        "0" Disable Core performance Boosting
-+        "1" Enable  Core performance Boosting
-+
- ``cpupower`` tool support for ``amd-pstate``
- ===============================================
- 
--- 
-2.34.1
-
+Reviewed-by: Xu Yilun <yilun.xu@intel.com>
