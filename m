@@ -1,144 +1,144 @@
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD3AA24A09;
-	Fri, 26 Jan 2024 20:59:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C265622F0E;
+	Fri, 26 Jan 2024 21:00:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706302766; cv=none; b=WircJq/7Bi9EbEhW25crsiIwGVnjRV1uUySJTRXb0W3NXl96MA+adW75n//YWoUIBFd/4/r+MlJb4iq2nCLPtc5q0PGDMsod8ZgZA8/0huhXIOZCy1qZyXmwfcCLAwhdIPYEeBqKllE41vwrNVqFTnhe2JrePC4jls3zrU0wKmM=
+	t=1706302816; cv=none; b=Y2X4Iv1FPoMexZtoS5htsia+eSDFR6300Splx287GP3bVL7we3ooXpDkLMhQkCobwKhpEJBwvmZDbYy4hbBCqVJeEJTkYkWHDhTVOQF56ZfMf12nK1CbMeOugHdarDkjzgtQ8msOS8MZ1TG2OTkidSzk5XbJAPJJQH2K2kIo49c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706302766; c=relaxed/simple;
-	bh=d5lnbFB1kRhdfOGtL24zlryF/VXTIqx8E+zK0Lfx4ts=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=QSSLF/lW5QjFD58/vKsiHoBW9v6c55EpDMLjzxIiPLiw7+DVqB5ldtCYhQ6O2IZGMfpMHdMUEvm/Mwkwa9Je2pCIbmE+K22xuRD/jJNV3S79FnY3GlJaYM65kw9YjZfQHcXZDKfg/jlCWnHhAMRd4OMCCNwlkOkqeDLmv3JAxG4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=e1IDWxdp; arc=none smtp.client-ip=209.85.208.179
+	s=arc-20240116; t=1706302816; c=relaxed/simple;
+	bh=R94U1LlE76uq+NvyE4ngyd9FxAhVaSUa06WGeHuHhIU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=LuQEp0ZOt4BuJgOtlTsNvl6LeRXeKMZY2VzKfw35aSFc5C33ri7ImYDCXUMXkO+voeWDgS3/N3y8sva8ilLh/1Qj0L5GQzvn+PH/Qmw7dcoqY+0kwHVF1+V9DVbg7KmLxBTEIPtvSNyCV5ZSD4Uj7v0aDLZUMmdZw0EEhgs1xQA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D0daU0s4; arc=none smtp.client-ip=209.85.128.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e1IDWxdp"
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2cf4a845a76so9609651fa.3;
-        Fri, 26 Jan 2024 12:59:24 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D0daU0s4"
+Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-602cab8d7c9so10094707b3.0;
+        Fri, 26 Jan 2024 13:00:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706302762; x=1706907562; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=HgUr7JNxvuTwGjQqxQ6rYpOlzqBbvDPhSHnCMKxoYXc=;
-        b=e1IDWxdp3LY1beDv4Ja//6Oj0zLWzFG6A6e5Pfa5dLEZdnTYu3epyuyYO/SOE1hjZg
-         CcBVOzZFJFvMHmk0HHS9spfLSC4cR4WeE8ic0AKwf+WV+UKkx1i/dT7y2Td2eakVC6H1
-         QDn4ViakVpmEdHu7QMrFhomMJBGO0lr1OS6ApDGKShH7nqympNH0gVnEuR5mt5V316EX
-         MbNBxuvApyUc7XN1qsPdTg0at5uSTNOQ3AH5zWvHJhUdopDT5xiSaBHNZjNh7sgUQG8U
-         Msvp+h2bEIJPzRn4U9C/RgbC7VUv4zG94CG/AKhmLiw/fnbIt5HomUjbOJ9eYEPwNZWD
-         wt3Q==
+        d=gmail.com; s=20230601; t=1706302814; x=1706907614; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=R94U1LlE76uq+NvyE4ngyd9FxAhVaSUa06WGeHuHhIU=;
+        b=D0daU0s42q1pUtpKW3b0J9EtDz6IHAZMom0Ca6zSyYLIa3C2rPnOgreEkkV2EUlD1s
+         kUXU4SDQlmx4qtJOi7Kd9eOjz24bNBCVVf2KDzck4U8d8O/4xT3iXBLF/VH8Bjs4ZwcO
+         ekTAcb2gCKQeERGLRHLN5hwgmv/1X5tYqTSWWUjDEsXYM4P6VkdQaTXr6KxX37LLhF14
+         0ETuvPEvJKrbxLrnS8jRo3yriLJZY5Y4SgyMuc0NfcK42GX9CdWnZuHWDUoLL7LIWTf0
+         k3/ZZkLkqDW+rTh5jbqvKyw/77YdKL82kp4AKS+q8rffqKPK7BJuiiwasLqs5mi8LNuX
+         E8eg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706302762; x=1706907562;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=HgUr7JNxvuTwGjQqxQ6rYpOlzqBbvDPhSHnCMKxoYXc=;
-        b=BG4kJb9Musp+obgoja5r5TnSYn/56XNs2+9nG/mnL/vKPlGCgZlWBIKOcJ5veiM/pl
-         L11vRryl398VjPGRmiYszvXERZwSxtZ2z7LCxK+Jobi1NeG6xFJOvegbG3716p4SHZBK
-         S0goFwQlRgVQcvL41z1DT4NYuGd+GWJpqvTkzhS8IoxSmMwIAHqLik5XPbDhkZ3y/RlH
-         18ZaJ/TM0mBwK6wisBPsvpw0HajUOrwOTiKWjpMS8pSxewfodd7z7bI4YMJT33lnHC1c
-         meqBuU/BOrwodFAapDTyjt+SDKkySW8mNO7eiYugMoRvs1R+Jv06GuCaVknDT/MyI8JR
-         ECbA==
-X-Gm-Message-State: AOJu0Yx7YE/N80atn/m0TJhaG1Nvj7YZqxdI1600j4r9TC4fufudMVO5
-	xr8brZOdIm5kDWmge3DkV/vfdy8t1VKShvlqK4hoSFm9kmM1EdJk
-X-Google-Smtp-Source: AGHT+IEZpV6MYS9liQqd1foY1cgs3BraQYTyZ1tQHkG/Lp8ebm3EwJzgjtDOYMCvSVAC09NOYo5W6g==
-X-Received: by 2002:a05:651c:2007:b0:2cc:e51c:4d0c with SMTP id s7-20020a05651c200700b002cce51c4d0cmr251569ljo.66.1706302762311;
-        Fri, 26 Jan 2024 12:59:22 -0800 (PST)
-Received: from localhost.localdomain (broadband-46-242-13-133.ip.moscow.rt.ru. [46.242.13.133])
-        by smtp.googlemail.com with ESMTPSA id d9-20020a2eb049000000b002cd187bb0f1sm259458ljl.49.2024.01.26.12.59.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Jan 2024 12:59:22 -0800 (PST)
-From: Konstantin Aladyshev <aladyshev22@gmail.com>
-To: 
-Cc: Konstantin Aladyshev <aladyshev22@gmail.com>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Jean Delvare <jdelvare@suse.com>,
-	Naresh Solanki <Naresh.Solanki@9elements.com>,
-	Patrick Rudolph <patrick.rudolph@9elements.com>,
-	linux-hwmon@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3] hwmon: (pmbus/mp2975) Fix driver initialization for MP2975 device
-Date: Fri, 26 Jan 2024 23:57:14 +0300
-Message-Id: <20240126205714.2363-1-aladyshev22@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        d=1e100.net; s=20230601; t=1706302814; x=1706907614;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=R94U1LlE76uq+NvyE4ngyd9FxAhVaSUa06WGeHuHhIU=;
+        b=Lqg1i6ps4Qp18wnBG7mNRh83LhSWHh9bKC5dyK4a4BvR+qMFugeMwbDYqOIT9zTL9j
+         Vnab/rFNlDz4jXXT4z1jppLdcd2ZHJ6vTswfzSqzWyEM/+Heq6/0hIIISdAldWmvUnBE
+         lRVaBS1Zrxy3Q1RH2/VjVRxdQhSNKtpExfish8f4qEkV1mx6ndL0j+0ItnWn3YCmPkUh
+         S9v4whaHMRLCQxeuUwZI+ZoaGi3NNQx6UFI+ruASBNFKPx/8eXFjebQLO/LfbvXrC5y5
+         B5YK4bnav09+trbotxzj4k49dyqcHtue7UC2clGTymM6C1an/+Quii3NLdL6mcf1X1Lj
+         CL7Q==
+X-Gm-Message-State: AOJu0YyyH9lobYuhGkml3FmYmyMAxoSG9MBXE5b8ObBbyigDIwUw6hYf
+	/Kt761qu7C1VOYE0tbKd89t5+KJ+dMDW+Hy5j098aFUObxl/8PHHtAZvKumzx6SVc50XPSxNCOa
+	Jo8g3dtVxoIZo2wNx+rDRNWCxl08=
+X-Google-Smtp-Source: AGHT+IHGZFwCjim0Tth1g39N/v/n0KJf4BjgENizS8dPUFq5HPMaf0iymy6drZ65jUMDqf5c20SiR8drFVpMUdT6duo=
+X-Received: by 2002:a81:de05:0:b0:5d7:1941:2c18 with SMTP id
+ k5-20020a81de05000000b005d719412c18mr410434ywj.69.1706302813724; Fri, 26 Jan
+ 2024 13:00:13 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20230307102441.94417-1-conor.dooley@microchip.com>
+ <20230608-dispatch-sneer-aa09bd7b2eb8@wendy> <CANiq72nnph7LS1fLRtHz8NJ91PWXPaUnm0EuoV3wrbvK398AnA@mail.gmail.com>
+ <20230608-spiritism-gonad-5f5aff4c3a24@wendy> <20240117-swiftly-parasail-618d62972d6e@spud>
+ <CANiq72mVKCOAuK4Qe+8AHmpkFwyJsVfx8AqB7ccGi3DYpSSWcw@mail.gmail.com>
+ <20240118-implode-delirium-eefdd86e170e@spud> <CANiq72nx1s_nyvPW86jL7eiOxROr18LfOJqNtw8L42CP+gkhRg@mail.gmail.com>
+ <20240125-bucked-payroll-47f82077b262@wendy> <CANiq72k7n0aZrifRRU08N8qLkNe+2EZwijZy5sM7M56n2xYHgQ@mail.gmail.com>
+ <20240125-lazy-thrower-744aacc6632a@wendy>
+In-Reply-To: <20240125-lazy-thrower-744aacc6632a@wendy>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Fri, 26 Jan 2024 22:00:02 +0100
+Message-ID: <CANiq72kb+_utZrYHtoKZQtQazikmkjpVUHpTBcaANizduMF5QQ@mail.gmail.com>
+Subject: Re: [PATCH v1 0/2] RISC-V: enable rust
+To: Conor Dooley <conor.dooley@microchip.com>
+Cc: Conor Dooley <conor@kernel.org>, linux-riscv@lists.infradead.org, 
+	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Nathan Chancellor <nathan@kernel.org>, 
+	Nick Desaulniers <ndesaulniers@google.com>, Tom Rix <trix@redhat.com>, 
+	rust-for-linux@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev, 
+	Matthew Maurer <mmaurer@google.com>, Ramon de C Valle <rcvalle@google.com>, 
+	Sami Tolvanen <samitolvanen@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The commit 1feb31e810b0 ("hwmon: (pmbus/mp2975) Simplify VOUT code")
-has introduced a bug that makes it impossible to initialize MP2975
-device:
-"""
-mp2975 5-0020: Failed to identify chip capabilities
-i2c i2c-5: new_device: Instantiated device mp2975 at 0x20
-i2c i2c-5: delete_device: Deleting device mp2975 at 0x20
-"""
-Since the 'read_byte_data' function was removed from the
-'pmbus_driver_info ' structure the driver no longer reports correctly
-that VOUT mode is direct. Therefore 'pmbus_identify_common' fails
-with error, making it impossible to initialize the device.
+On Thu, Jan 25, 2024 at 2:46=E2=80=AFPM Conor Dooley <conor.dooley@microchi=
+p.com> wrote:
+>
+> Ah, thanks for the direct link :)
 
-Restore 'read_byte_data' function to fix the issue.
+My pleasure!
 
-Tested:
-- before: it is not possible to initialize MP2975 device with the
-'mp2975' driver,
-- after: 'mp2975' correctly initializes MP2975 device and all sensor
-data is correct.
+> Actually, thinking about it for a moment - if only a single compiler
+> version is supported (the minimum, right?) then you could just add the
 
-Fixes: 1feb31e810b0 ("hwmon: (pmbus/mp2975) Simplify VOUT code")
+Yeah, the minimum listed in `scripts/min-tool-version.sh` and in
+`Documentation/process/changes.rst`. It also happens to be the maximum
+too, until we can relax that.
 
-Signed-off-by: Konstantin Aladyshev <aladyshev22@gmail.com>
----
-Changes in v3:
- - Drop accidentally added file from patch
+> -Zsanitizer=3Dkcfi flag whenever CFI_CLANG and RUST are both set.
 
-Changes in v2:
- - Fix indentation issues
+Since the flag goes to the Rust compiler, `RUST` would be always
+enabled, so the flag would only need to be added when `CFI_CLANG=3Dy`,
+no? Or what do you mean?
 
- drivers/hwmon/pmbus/mp2975.c | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+> I'm not sure if that is a better option though. It's a choice between
+> CFI_CLANG being disabled if the check is not updated when the toolchain
+> is bumped versus being enabled for C and not for RUST. I think I prefer
+> the former though, tracking down the cause of the latter I would rather
+> not wish on a user.
+>
+> I vote for having the check, even if it can only ever be true at the
+> moment.
 
-diff --git a/drivers/hwmon/pmbus/mp2975.c b/drivers/hwmon/pmbus/mp2975.c
-index b9bb469e2d8f..5bbfdacb61a7 100644
---- a/drivers/hwmon/pmbus/mp2975.c
-+++ b/drivers/hwmon/pmbus/mp2975.c
-@@ -126,6 +126,22 @@ static const struct regulator_desc __maybe_unused mp2975_reg_desc[] = {
- 
- #define to_mp2975_data(x)  container_of(x, struct mp2975_data, info)
- 
-+static int mp2975_read_byte_data(struct i2c_client *client, int page, int reg)
-+{
-+	switch (reg) {
-+	case PMBUS_VOUT_MODE:
-+		/*
-+		 * Enforce VOUT direct format, since device allows to set the
-+		 * different formats for the different rails. Conversion from
-+		 * VID to direct provided by driver internally, in case it is
-+		 * necessary.
-+		 */
-+		return PB_VOUT_MODE_DIRECT;
-+	default:
-+		return -ENODATA;
-+	}
-+}
-+
- static int
- mp2975_read_word_helper(struct i2c_client *client, int page, int phase, u8 reg,
- 			u16 mask)
-@@ -869,6 +885,7 @@ static struct pmbus_driver_info mp2975_info = {
- 		PMBUS_HAVE_IIN | PMBUS_HAVE_IOUT | PMBUS_HAVE_STATUS_IOUT |
- 		PMBUS_HAVE_TEMP | PMBUS_HAVE_STATUS_TEMP | PMBUS_HAVE_POUT |
- 		PMBUS_HAVE_PIN | PMBUS_HAVE_STATUS_INPUT | PMBUS_PHASE_VIRTUAL,
-+	.read_byte_data = mp2975_read_byte_data,
- 	.read_word_data = mp2975_read_word_data,
- #if IS_ENABLED(CONFIG_SENSORS_MP2975_REGULATOR)
- 	.num_regulators = 1,
--- 
-2.34.1
+Since we only support a single version, we don't need `rc-option`
+tests until we start supporting several versions (which is why other
+tests like that do not exist so far).
 
+In my previous message I thought you meant using the flag to test for
+arch/target support or similar. That would be fine, but we can also do
+the usual `ARCH_SUPPORTS_CFI_RUST` here, I would assume.
+
+Now, during the version bump to a stable flag, if we happen to forget
+to update the flag name, it would be a build error, so it should be
+easily spotted and fixed. And if we did use an `rc-option` for the
+arch/target support idea, it would be the first case you mention, so
+it is all good.
+
+What we may want to add, though, to avoid the confusion you mention
+meanwhile, is just a `depends on !CFI_CLANG` for `RUST`, like for the
+other requirements we have there (which are things that should
+eventually go away). Then they can remove that when the `-Z` flag is
+deemed ready to be used. But perhaps let's see what Ramon et al. say.
+
+In other words, the flag was added back in 1.68.0 to `rustc`, but it
+was not ready, so we need to store the "ready" bit in our side
+meanwhile, i.e. we can't know that just by testing the flag itself.
+
+By the way, concerning the tracking issue, since you mentioned it: it
+has a list of PRs, but not fixes, there is a "known issues" link
+there. On top of that, we are "shifted in time" w.r.t. the latest
+status in the compiler, since we use stable versions of the compiler.
+
+Cheers,
+Miguel
