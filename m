@@ -1,113 +1,124 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63C0733CC5;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9E9E2C6A0;
 	Fri, 26 Jan 2024 22:38:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706308729; cv=none; b=SMpR7miA2wd+XyvxitJoj+yG/DT2+55hCdoB8b6OpkZtjhwUqngTnZ405E7kDsMBbs3rXkpVI1CBi6zNvdnD63js79Okj2zbzoZdmMiUx0HeOOmYI8DnjQDoeHfkZ/C1BwLvUP5oTlmtoLLbYuB6LUbZONC70N5zzqdqkMm2nP4=
+	t=1706308730; cv=none; b=OsGy/km+b8B80MjqRWbz9/I1bJUughvRqZ4s2N39GyMNY6OPSkWsZS9MzBy7jhEB9hCx/cr82UwqxRDK1G1+oPv1aazNR1rYqVJkpGfJ0gQ5dAi2OEANGZFIi7vQTJW2hFkodgLvbJwBYczYY+2PNQN4tupxwuT5REfpphF/iqs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706308729; c=relaxed/simple;
-	bh=7lOWwXH/WRFuWZZ/p5u1Sz60O9F39LLJNZyVUA3JD44=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=CA537AMFbV4ty21maE4QrerW9+rlxIwn7w54GdjsvtbjzNvJO5gVKfK1OAOheD9rHm5mTYqNlrACKLpaecgYkZcIrH523YwTLH4oQw0SxMI31QuqlTZnrkj/EBAVf7Re5iDlKY1AHpeQYsjj4DzeqLxMSQE4lkSm/XmcvHBv+o8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=1sr8VWzT; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=l9Kmcghk; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1706308730; c=relaxed/simple;
+	bh=Hp6f/GZsgmHvqRxAvmLEAtm19UpuDpvz8X+HdHnCBV0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=PoRicdQH+N4bXI9byzocHEb3uHe30XvmUjy74June7vMkC9t1qI6+aDiOFoBQmyHW4Zpd8xXC6SPSabzzSHdU/yXJE120vHbHrgFZSYUU2JePu8EdXahd3P68Iqbancrs+B0b10irQDvuEo+qIbv4Exsy0U+2f4Hw9Kp55cNcBs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Va6kkDTa; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="1sr8VWzT";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="l9Kmcghk"
-From: Nam Cao <namcao@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1706308724;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=OSY4AA+ERuahWut+3rNr0L68f8wAh2tNR3brI8MYRrg=;
-	b=1sr8VWzT31KeAk/uxoLKrfRKmZYe7u1SQ2lRSdKhorNCv8KuQb2ac+WiA+rU640ICqiHVz
-	MT9Guulw72qEjtqkIj59AMaBGQI3SNlz7QEBWSWIv3MsVB/uZgEixpj5wGfIBF6lsizh48
-	NJFxBLhROuxlA1jdLxcZlBc7rXEVGRPvNtly5Hr6RgPkWNHRrSi8+kEXGSUBQ1sOqIh/l2
-	w3/Kb+RaT0mf+FDBy4Rnm46U5iU1oQEcq+nwi1uwciWbwpNn9jY23/roTwmGvri8BbQzCE
-	zNW1CK278k3vLEQsES8FSF97ayjNN0JdBKBZ48ZOiSQQzfm3xZIhDSrP1PqlNQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1706308724;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=OSY4AA+ERuahWut+3rNr0L68f8wAh2tNR3brI8MYRrg=;
-	b=l9KmcghkgmsXMiSYrpdPPTa025ZNvFZoX4I8GVfWpFJMzjE0wzCv9aH+u7puAYNVVVNjAU
-	JqC+GlJvjpaRqvCA==
-To: Thomas Gleixner <tglx@linutronix.de>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Samuel Holland <samuel@sholland.org>,
-	Marc Zyngier <maz@kernel.org>,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Va6kkDTa"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706308727; x=1737844727;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=Hp6f/GZsgmHvqRxAvmLEAtm19UpuDpvz8X+HdHnCBV0=;
+  b=Va6kkDTalY/i4I3PAXqGbNhqyITuo3ywhwzH9EIzlLDLhC9rEg857OET
+   zzzQGp/5D+Xch6ZNSRpydOzF+keQxLVr0t7MDaVCPl17VK5r1ELWooDfS
+   +GJQZlfNYnT/9bVdL7iuNqdHbXFTUSsCAhVnikiBYgO0aNtsixK+UDGhr
+   04KdPRgELq17PEr8UiPW+f9X+MiVfbwdFGgoF+RjX4if+TFsk7wa1K09U
+   +ZZjfAmAv3UcuEbvRoeXDH12NX4yFiTORC1EZ3Ajv9oaCaLHFDzxo8Jp7
+   dHA3eXQkuHz5htFIxWOH6Ni4FdjO5aeOBRo9ALdsxPUsApaWO5ZvsG6Av
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="9707634"
+X-IronPort-AV: E=Sophos;i="6.05,220,1701158400"; 
+   d="scan'208";a="9707634"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2024 14:38:46 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,220,1701158400"; 
+   d="scan'208";a="35560245"
+Received: from agluck-desk3.sc.intel.com ([172.25.222.74])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2024 14:38:46 -0800
+From: Tony Luck <tony.luck@intel.com>
+To: Borislav Petkov <bp@alien8.de>
+Cc: Fenghua Yu <fenghua.yu@intel.com>,
+	Reinette Chatre <reinette.chatre@intel.com>,
+	Peter Newman <peternewman@google.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Shaopeng Tan <tan.shaopeng@fujitsu.com>,
+	James Morse <james.morse@arm.com>,
+	Jamie Iles <quic_jiles@quicinc.com>,
+	Babu Moger <babu.moger@amd.com>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	x86@kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	Guo Ren <guoren@kernel.org>
-Cc: Nam Cao <namcao@linutronix.de>,
-	stable@vger.kernel.org
-Subject: [PATCH] irqchip/sifive-plic: enable interrupt if needed before EOI
-Date: Fri, 26 Jan 2024 23:38:36 +0100
-Message-Id: <20240126223836.202321-1-namcao@linutronix.de>
+	linux-doc@vger.kernel.org,
+	patches@lists.linux.dev,
+	Tony Luck <tony.luck@intel.com>
+Subject: [PATCH v14 0/8] Add support for Sub-NUMA cluster (SNC) systems
+Date: Fri, 26 Jan 2024 14:38:29 -0800
+Message-ID: <20240126223837.21835-1-tony.luck@intel.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20231204185357.120501-1-tony.luck@intel.com>
+References: <20231204185357.120501-1-tony.luck@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-RISC-V PLIC cannot EOI disabled interrupts, as explained in the
-description of Interrupt Completion in the PLIC spec:
+The Sub-NUMA cluster feature on some Intel processors partitions the CPUs
+that share an L3 cache into two or more sets. This plays havoc with the
+Resource Director Technology (RDT) monitoring features.  Prior to this
+patch Intel has advised that SNC and RDT are incompatible.
 
-"The PLIC signals it has completed executing an interrupt handler by
-writing the interrupt ID it received from the claim to the claim/complete
-register. The PLIC does not check whether the completion ID is the same
-as the last claim ID for that target. If the completion ID does not match
-an interrupt source that *is currently enabled* for the target, the
-completion is silently ignored."
+Some of these CPU support an MSR that can partition the RMID counters in
+the same way. This allows monitoring features to be used. With the caveat
+that users must be aware that Linux may migrate tasks more frequently
+between SNC nodes than between "regular" NUMA nodes, so reading counters
+from all SNC nodes may be needed to get a complete picture of activity
+for tasks.
 
-Commit 69ea463021be ("irqchip/sifive-plic: Fixup EOI failed when masked")
-ensured that by enabling the interrupt if needed before EOI.
+Cache and memory bandwidth allocation features continue to operate at
+the scope of the L3 cache.
 
-Commit a1706a1c5062 ("irqchip/sifive-plic: Separate the enable and mask
-operations") removed the interrupt enabling code from the previous
-commit, because it assumes that interrupt should be enabled at the point
-of EOI. However, this is incorrect: there is a small window after a hart
-claiming an interrupt and before irq_desc->lock getting acquired,
-interrupt can be disabled during this window. Thus, EOI can be invoked
-while the interrupt is disabled, effectively nullify this EOI.
+Signed-off-by: Tony Luck <tony.luck@intel.com>
 
-Make sure that interrupt is really enabled before EOI.
-
-Fixes: a1706a1c5062 ("irqchip/sifive-plic: Separate the enable and mask ope=
-rations")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Nam Cao <namcao@linutronix.de>
 ---
- drivers/irqchip/irq-sifive-plic.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+Changes since v13:
 
-diff --git a/drivers/irqchip/irq-sifive-plic.c b/drivers/irqchip/irq-sifive=
--plic.c
-index 5b7bc4fd9517..0857a516c35b 100644
---- a/drivers/irqchip/irq-sifive-plic.c
-+++ b/drivers/irqchip/irq-sifive-plic.c
-@@ -148,7 +148,13 @@ static void plic_irq_eoi(struct irq_data *d)
- {
- 	struct plic_handler *handler =3D this_cpu_ptr(&plic_handlers);
-=20
--	writel(d->hwirq, handler->hart_base + CONTEXT_CLAIM);
-+	if (irqd_irq_disabled(d)) {
-+		plic_toggle(handler, d->hwirq, 1);
-+		writel(d->hwirq, handler->hart_base + CONTEXT_CLAIM);
-+		plic_toggle(handler, d->hwirq, 0);
-+	} else {
-+		writel(d->hwirq, handler->hart_base + CONTEXT_CLAIM);
-+	}
- }
-=20
- #ifdef CONFIG_SMP
---=20
-2.39.2
+Rebase to tip x86/cache
+	fc747eebef73 ("x86/resctrl: Remove redundant variable in mbm_config_write_domain()")
+
+Applied all Reviewed and Tested tags
+
+Tony Luck (8):
+  x86/resctrl: Prepare for new domain scope
+  x86/resctrl: Prepare to split rdt_domain structure
+  x86/resctrl: Prepare for different scope for control/monitor
+    operations
+  x86/resctrl: Split the rdt_domain and rdt_hw_domain structures
+  x86/resctrl: Add node-scope to the options for feature scope
+  x86/resctrl: Introduce snc_nodes_per_l3_cache
+  x86/resctrl: Sub NUMA Cluster detection and enable
+  x86/resctrl: Update documentation with Sub-NUMA cluster changes
+
+ Documentation/arch/x86/resctrl.rst        |  25 +-
+ include/linux/resctrl.h                   |  85 +++--
+ arch/x86/include/asm/msr-index.h          |   1 +
+ arch/x86/kernel/cpu/resctrl/internal.h    |  66 ++--
+ arch/x86/kernel/cpu/resctrl/core.c        | 433 +++++++++++++++++-----
+ arch/x86/kernel/cpu/resctrl/ctrlmondata.c |  58 +--
+ arch/x86/kernel/cpu/resctrl/monitor.c     |  68 ++--
+ arch/x86/kernel/cpu/resctrl/pseudo_lock.c |  26 +-
+ arch/x86/kernel/cpu/resctrl/rdtgroup.c    | 149 ++++----
+ 9 files changed, 629 insertions(+), 282 deletions(-)
+
+
+base-commit: fc747eebef734563cf68a512f57937c8f231834a
+-- 
+2.43.0
 
