@@ -1,408 +1,187 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34B5417BB4;
-	Fri, 26 Jan 2024 11:01:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87CC4134BD
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 11:03:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706266914; cv=none; b=Ofjg1beQo9lfGXg1G/OI9JWt7d8JiUfADAvzpsaODi0NrQ+ntwo017+hOymYCsrtssyob0RFZZAJA9WZSSKachQQLAFlmteWSfT1JVqbUA6GQzvER/FswkNbtU4/i28+evvjYJVmqgSdwB1AZVv2S395Qhc8WM3nVQbdr/pQLr0=
+	t=1706267011; cv=none; b=r/z1MiZcBSF93DWzarxQ02lHgtCaPqsuGzWQK5+PKjAHfaI4wpZ3B6Ql27iqJ0HeJ4eHucp3y0uTU5PwLD9TBa4FLlOrN7VV5QoEJwSDP6kyLK1+CqPgjF2aeB488McMVhXOpJX1S4JJrJ4d3EUeP6D8qVWAB3ecyHzM7p4Otb8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706266914; c=relaxed/simple;
-	bh=4frvU+zmUCiBox6ik4+vgmfmWCxqUPhBmZYJovKZKl0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Z78vbenMv2l/bXA24jP3rEMp2pWwC19u2jbRz3U7ZSi41sxKdHkz+i1LRD4Z41Y3Eoh9KGaoSx0WGHWrFyGXImpbpIIfHgvE5amZJ29HbEVlOgn7bcrVlx9J2OKz3lF9RIIfotj1fBGenydCZxlC/MsJBhoq88XlejF0hq4a4Ww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=lHo8yHIo; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1706267011; c=relaxed/simple;
+	bh=TA+ntvp3JdYQPvJsnk42CXmY67EVNq9+cY9GQU3HUPE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=T/YcSwxo/DmaJuqH7J8WJ5Tds3VZR4dGCfIJaPOcL3qIxKntcw/+x91fHWrSiT6QzOFfh+AK2v5/ULftlXCJnWO0JdT8wnQPzWtjoP6jKKTmitSkGysrnALAI4P683267XSFnQQXK+QXAf55l31ytuFyAosR7qHDnazLXnn+78o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VjIADlhn; arc=none smtp.client-ip=209.85.167.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="lHo8yHIo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1706266910;
-	bh=4frvU+zmUCiBox6ik4+vgmfmWCxqUPhBmZYJovKZKl0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=lHo8yHIogyHlbDwdrkE0GG7SvanDM+cJZLKSRWfrpcZYFY3GTNyyhUMw39iGGLdMf
-	 EF/Dit1onUbzEh3Jehs5HgexBIYCzQF5a9VrnN0FGD2bKa+2m/cNSmMkgvmqGFfQpc
-	 OeUFNs+sCZDu4Pe4LMEWBOwYcA0MQqXwUVjfKJH1aCcUB5hmantldiNWFlZDjeW19T
-	 ELkzNjRC6HXEK4ioLkl2mfKEEstlQ2Vx6Urm+ZwVb1OOUDy0OpHqEjglaobp0G7jga
-	 ++5UzAFR5iRcorJFEczQL17npraOmfthfpueHTlryr5KeHGlQlMgMCLEOcl3mmAfcS
-	 YboK0WosXHAGw==
-Received: from benjamin-XPS-13-9310.. (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: benjamin.gaignard)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 36F2C3782080;
-	Fri, 26 Jan 2024 11:01:50 +0000 (UTC)
-From: Benjamin Gaignard <benjamin.gaignard@collabora.com>
-To: hverkuil@xs4all.nl,
-	mchehab@kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org,
-	kernel@collabora.com,
-	Benjamin Gaignard <benjamin.gaignard@collabora.com>
-Subject: [PATCH v18 7/9] media: v4l2: Add DELETE_BUFS ioctl
-Date: Fri, 26 Jan 2024 12:01:39 +0100
-Message-Id: <20240126110141.135896-8-benjamin.gaignard@collabora.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20240126110141.135896-1-benjamin.gaignard@collabora.com>
-References: <20240126110141.135896-1-benjamin.gaignard@collabora.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VjIADlhn"
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-51020e061b5so256563e87.1
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 03:03:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1706267007; x=1706871807; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=dshtbFxRCnFVER93fqS4xoshF/3Vm7dUsgixiL+seOM=;
+        b=VjIADlhn7I12XdVvaNFjJAdNY3TfTNkCILTRw1fj8keLiqbuz9I4sQA+ay463VXPNK
+         Wo+OWzCV0uAEoADhJ2ZT1sI+hU71gmrrI7xc3VDjGHKWY8TRo2QgrY7TFG8Xo7PZvWye
+         tAtDWsI5cXRES921/pbox8UqhKYZuesqxy6Dmnoz3zAQw52FemUu2FTTCijnJeK3hQKr
+         UPWPANvfE5Fye61D7T4DRNH6iBHpUWWX3KDgpJswHRJyHMIwDJWRe+ZHt/WBADH0bC9+
+         JC3mkxGLbKIcTfHI/psCUtFS7f8zpegJ9Z0lF7B02XwB/n/0siTmS/xwUDrT/O4S5eMk
+         XwgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706267007; x=1706871807;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=dshtbFxRCnFVER93fqS4xoshF/3Vm7dUsgixiL+seOM=;
+        b=oXrFvc/KDslz/3VQsR4icGRef87Hngn6H1ewHBBMREQ8yzczXPmAIkI4+dP1+CnUO0
+         zrXAaaWKa/DMwGg3N3T1jvS6uSXqlYDHqZcAd/jKvWdGU44DDBGeXVr9wjMQ/AzT1gDx
+         wvXZb8nq1qEUw/BS2LDomlgT8+GmKQvoFJXzqBcD/uDw1kFb3wLsFy3dA2uQ3TaBoizw
+         rxHyZbN+POmv5zuax0NSxpulb3bid87H7CX3w1fcVgessgd13kBtU/+/kp8yFN/Zkxer
+         L3ibXzofPutHx6hmyI6IczoFbc/vcueVZ2UezQ6GLdsQpgn3y7nVNL3D2yQosCF+wMSx
+         dmBQ==
+X-Gm-Message-State: AOJu0Yy8BNfye5wGPzQaLahelyNdwR9BFQI66st9hU42LexyjlkQQhvZ
+	mI9IO7LqSChnrFUB5bSVkyEq/w5dxE1XoOwg9hM8n6hRQseUTcMHNBNuv2fGHlM=
+X-Google-Smtp-Source: AGHT+IGmbXoLMnbdwIu3jJtMWI5gr7pjzGugSnO08Z+8kO0pEr9RforRNAwKapCq8mTMs3uXrFY7xw==
+X-Received: by 2002:a05:6512:3e07:b0:510:1b46:7f6e with SMTP id i7-20020a0565123e0700b005101b467f6emr821365lfv.120.1706267007468;
+        Fri, 26 Jan 2024 03:03:27 -0800 (PST)
+Received: from [192.168.1.20] ([178.197.215.66])
+        by smtp.gmail.com with ESMTPSA id vk2-20020a170907cbc200b00a31c211fa71sm505575ejc.107.2024.01.26.03.03.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 26 Jan 2024 03:03:27 -0800 (PST)
+Message-ID: <75429209-8f30-4880-8f92-ecb3cf90ae33@linaro.org>
+Date: Fri, 26 Jan 2024 12:03:25 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/4] dt-bindings: remoteproc: Add compatibility for TEE
+ support
+Content-Language: en-US
+To: Arnaud Pouliquen <arnaud.pouliquen@foss.st.com>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Mathieu Poirier <mathieu.poirier@linaro.org>,
+ Jens Wiklander <jens.wiklander@linaro.org>, Rob Herring
+ <robh+dt@kernel.org>, Krzysztof Kozlowski
+ <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>
+Cc: linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org, linux-remoteproc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, op-tee@lists.trustedfirmware.org,
+ devicetree@vger.kernel.org
+References: <20240118100433.3984196-1-arnaud.pouliquen@foss.st.com>
+ <20240118100433.3984196-3-arnaud.pouliquen@foss.st.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20240118100433.3984196-3-arnaud.pouliquen@foss.st.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-VIDIOC_DELETE_BUFS ioctl allows to delete buffers from a queue.
-The number of buffers to delete in given by count field of
-struct v4l2_delete_buffers and the range start at the index
-specified in the same structure.
+On 18/01/2024 11:04, Arnaud Pouliquen wrote:
+> The "st,stm32mp1-m4-tee" compatible is utilized in a system configuration
+> where the Cortex-M4 firmware is loaded by the Trusted execution Environment
+> (TEE).
+> For instance, this compatible is used in both the Linux and OP-TEE
+> device-tree:
+> - In OP-TEE, a node is defined in the device tree with the
+>   st,stm32mp1-m4-tee to support signed remoteproc firmware.
+>   Based on DT properties, OP-TEE authenticates, loads, starts, and stops
+>   the firmware.
+> - On Linux, when the compatibility is set, the Cortex-M resets should not
+>   be declared in the device tree.
+> 
+> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@foss.st.com>
+> ---
+> V1 to V2 updates
+> - update "st,stm32mp1-m4" compatible description to generalize
+> - remove the 'reset-names' requirement in one conditional branch, as the
+>   property is already part of the condition test.
+> ---
+>  .../bindings/remoteproc/st,stm32-rproc.yaml   | 52 +++++++++++++++----
+>  1 file changed, 43 insertions(+), 9 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/remoteproc/st,stm32-rproc.yaml b/Documentation/devicetree/bindings/remoteproc/st,stm32-rproc.yaml
+> index 370af61d8f28..6af821b15736 100644
+> --- a/Documentation/devicetree/bindings/remoteproc/st,stm32-rproc.yaml
+> +++ b/Documentation/devicetree/bindings/remoteproc/st,stm32-rproc.yaml
+> @@ -16,7 +16,12 @@ maintainers:
+>  
+>  properties:
+>    compatible:
+> -    const: st,stm32mp1-m4
+> +    enum:
+> +      - st,stm32mp1-m4
+> +      - st,stm32mp1-m4-tee
 
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@collabora.com>
----
-version 18:
-- remove per queue capability flag.
-- rework v4l_delete_bufs() to check if VIDIOC_CREATE_BUFS is enabled
-  and if vidioc_delete_bufs pointer is valid.
-- update documentation.
+The patch looks good to me, but I wonder about this choice of two
+compatibles.
 
- .../userspace-api/media/v4l/user-func.rst     |  1 +
- .../media/v4l/vidioc-delete-bufs.rst          | 78 +++++++++++++++++++
- .../media/common/videobuf2/videobuf2-core.c   | 38 +++++++++
- .../media/common/videobuf2/videobuf2-v4l2.c   | 12 +++
- drivers/media/v4l2-core/v4l2-dev.c            |  1 +
- drivers/media/v4l2-core/v4l2-ioctl.c          | 28 +++++++
- include/media/v4l2-ioctl.h                    |  4 +
- include/media/videobuf2-core.h                | 10 +++
- include/media/videobuf2-v4l2.h                |  2 +
- include/uapi/linux/videodev2.h                | 16 ++++
- 10 files changed, 190 insertions(+)
- create mode 100644 Documentation/userspace-api/media/v4l/vidioc-delete-bufs.rst
+Basically this is the same hardware with the same interface, but two
+compatibles to differentiate a bit different firmware setup. We have
+already such cases for Qualcomm [1] [2] and new ones will be coming. [3]
 
-diff --git a/Documentation/userspace-api/media/v4l/user-func.rst b/Documentation/userspace-api/media/v4l/user-func.rst
-index 15ff0bf7bbe6..3fd567695477 100644
---- a/Documentation/userspace-api/media/v4l/user-func.rst
-+++ b/Documentation/userspace-api/media/v4l/user-func.rst
-@@ -17,6 +17,7 @@ Function Reference
-     vidioc-dbg-g-chip-info
-     vidioc-dbg-g-register
-     vidioc-decoder-cmd
-+    vidioc-delete-bufs
-     vidioc-dqevent
-     vidioc-dv-timings-cap
-     vidioc-encoder-cmd
-diff --git a/Documentation/userspace-api/media/v4l/vidioc-delete-bufs.rst b/Documentation/userspace-api/media/v4l/vidioc-delete-bufs.rst
-new file mode 100644
-index 000000000000..eb235d1750c8
---- /dev/null
-+++ b/Documentation/userspace-api/media/v4l/vidioc-delete-bufs.rst
-@@ -0,0 +1,78 @@
-+.. SPDX-License-Identifier: GFDL-1.1-no-invariants-or-later
-+.. c:namespace:: V4L
-+
-+.. _VIDIOC_DELETE_BUFS:
-+
-+************************
-+ioctl VIDIOC_DELETE_BUFS
-+************************
-+
-+Name
-+====
-+
-+VIDIOC_DELETE_BUFS - Deletes buffers from a queue
-+
-+Synopsis
-+========
-+
-+.. c:macro:: VIDIOC_DELETE_BUFs
-+
-+``int ioctl(int fd, VIDIOC_DELETE_BUFs, struct v4l2_delete_buffers *argp)``
-+
-+Arguments
-+=========
-+
-+``fd``
-+    File descriptor returned by :c:func:`open()`.
-+
-+``argp``
-+    Pointer to struct :c:type:`v4l2_delete_buffers`.
-+
-+Description
-+===========
-+
-+Applications can optionally call the :ref:`VIDIOC_DELETE_BUFS` ioctl to
-+delete buffers from a queue.
-+:ref:`VIDIOC_CREATE_BUFS` ioctl support is mandatory to enable :ref:`VIDIOC_DELETE_BUFS`.
-+
-+.. c:type:: v4l2_delete_buffers
-+
-+.. tabularcolumns:: |p{4.4cm}|p{4.4cm}|p{8.5cm}|
-+
-+.. flat-table:: struct v4l2_delete_buffers
-+    :header-rows:  0
-+    :stub-columns: 0
-+    :widths:       1 1 2
-+
-+    * - __u32
-+      - ``index``
-+      - The starting buffer index to delete.
-+    * - __u32
-+      - ``count``
-+      - The number of buffers to be deleted with indices 'index' until 'index + count - 1'.
-+        All buffers in this range must be valid and in DEQUEUED state.
-+        If count is set to 0 :ref:`VIDIOC_DELETE_BUFS` will do nothing and return 0.
-+    * - __u32
-+      - ``type``
-+      - Type of the stream or buffers, this is the same as the struct
-+	:c:type:`v4l2_format` ``type`` field. See
-+	:c:type:`v4l2_buf_type` for valid values.
-+    * - __u32
-+      - ``reserved``\ [13]
-+      - A place holder for future extensions. Drivers and applications
-+	must set the array to zero.
-+
-+Return Value
-+============
-+
-+On success 0 is returned, on error -1 and the ``errno`` variable is set
-+appropriately. The generic error codes are described at the
-+:ref:`Generic Error Codes <gen-errors>` chapter.
-+
-+EBUSY
-+    File I/O is in progress.
-+    Any buffer in range ``index`` to ``index + count - 1`` is not in
-+    DEQUEUED state.
-+
-+EINVAL
-+    Any buffer in range ``index`` to ``index + count - 1`` doesn't exist in the queue.
-diff --git a/drivers/media/common/videobuf2/videobuf2-core.c b/drivers/media/common/videobuf2/videobuf2-core.c
-index 8486a2f2c09d..6ca0e949dc27 100644
---- a/drivers/media/common/videobuf2/videobuf2-core.c
-+++ b/drivers/media/common/videobuf2/videobuf2-core.c
-@@ -1692,6 +1692,44 @@ int vb2_core_prepare_buf(struct vb2_queue *q, struct vb2_buffer *vb, void *pb)
- }
- EXPORT_SYMBOL_GPL(vb2_core_prepare_buf);
- 
-+int vb2_core_delete_bufs(struct vb2_queue *q, unsigned int start, unsigned int count)
-+{
-+	unsigned int i, ret = 0;
-+	unsigned int q_num_bufs = vb2_get_num_buffers(q);
-+
-+	if (count == 0)
-+		return 0;
-+
-+	if (count > q_num_bufs)
-+		return -EINVAL;
-+
-+	if (start > q->max_num_buffers - count)
-+		return -EINVAL;
-+
-+	mutex_lock(&q->mmap_lock);
-+
-+	/* Check that all buffers in the range exist */
-+	for (i = start; i < start + count; i++) {
-+		struct vb2_buffer *vb = vb2_get_buffer(q, i);
-+
-+		if (!vb) {
-+			ret = -EINVAL;
-+			goto unlock;
-+		}
-+		if (vb->state != VB2_BUF_STATE_DEQUEUED) {
-+			ret = -EBUSY;
-+			goto unlock;
-+		}
-+	}
-+	__vb2_queue_free(q, start, count);
-+	dprintk(q, 2, "%u buffers deleted\n", count);
-+
-+unlock:
-+	mutex_unlock(&q->mmap_lock);
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(vb2_core_delete_bufs);
-+
- /*
-  * vb2_start_streaming() - Attempt to start streaming.
-  * @q:		videobuf2 queue
-diff --git a/drivers/media/common/videobuf2/videobuf2-v4l2.c b/drivers/media/common/videobuf2/videobuf2-v4l2.c
-index 03e8080a68a8..8e437104f9c1 100644
---- a/drivers/media/common/videobuf2/videobuf2-v4l2.c
-+++ b/drivers/media/common/videobuf2/videobuf2-v4l2.c
-@@ -1001,6 +1001,18 @@ EXPORT_SYMBOL_GPL(vb2_poll);
- 
- /* vb2 ioctl helpers */
- 
-+int vb2_ioctl_delete_bufs(struct file *file, void *priv,
-+			  struct v4l2_delete_buffers *d)
-+{
-+	struct video_device *vdev = video_devdata(file);
-+
-+	if (vb2_queue_is_busy(vdev->queue, file))
-+		return -EBUSY;
-+
-+	return vb2_core_delete_bufs(vdev->queue, d->index, d->count);
-+}
-+EXPORT_SYMBOL_GPL(vb2_ioctl_delete_bufs);
-+
- int vb2_ioctl_reqbufs(struct file *file, void *priv,
- 			  struct v4l2_requestbuffers *p)
- {
-diff --git a/drivers/media/v4l2-core/v4l2-dev.c b/drivers/media/v4l2-core/v4l2-dev.c
-index d13954bd31fd..e764af2e29ff 100644
---- a/drivers/media/v4l2-core/v4l2-dev.c
-+++ b/drivers/media/v4l2-core/v4l2-dev.c
-@@ -722,6 +722,7 @@ static void determine_valid_ioctls(struct video_device *vdev)
- 		SET_VALID_IOCTL(ops, VIDIOC_PREPARE_BUF, vidioc_prepare_buf);
- 		SET_VALID_IOCTL(ops, VIDIOC_STREAMON, vidioc_streamon);
- 		SET_VALID_IOCTL(ops, VIDIOC_STREAMOFF, vidioc_streamoff);
-+		SET_VALID_IOCTL(ops, VIDIOC_DELETE_BUFS, vidioc_delete_bufs);
- 	}
- 
- 	if (is_vid || is_vbi || is_meta) {
-diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2-core/v4l2-ioctl.c
-index 33076af4dfdb..2162de908afa 100644
---- a/drivers/media/v4l2-core/v4l2-ioctl.c
-+++ b/drivers/media/v4l2-core/v4l2-ioctl.c
-@@ -489,6 +489,14 @@ static void v4l_print_create_buffers(const void *arg, bool write_only)
- 	v4l_print_format(&p->format, write_only);
- }
- 
-+static void v4l_print_delete_buffers(const void *arg, bool write_only)
-+{
-+	const struct v4l2_delete_buffers *p = arg;
-+
-+	pr_cont("type=%s, index=%u, count=%u\n",
-+		prt_names(p->type, v4l2_type_names), p->index, p->count);
-+}
-+
- static void v4l_print_streamparm(const void *arg, bool write_only)
- {
- 	const struct v4l2_streamparm *p = arg;
-@@ -2161,6 +2169,25 @@ static int v4l_prepare_buf(const struct v4l2_ioctl_ops *ops,
- 	return ret ? ret : ops->vidioc_prepare_buf(file, fh, b);
- }
- 
-+static int v4l_delete_bufs(const struct v4l2_ioctl_ops *ops,
-+			   struct file *file, void *fh, void *arg)
-+{
-+	struct v4l2_delete_buffers *delete = arg;
-+	int ret = check_fmt(file, delete->type);
-+
-+	if (ret)
-+		return ret;
-+
-+	/* VIDIOC_CREATE_BUFS support is mandatory */
-+	if (!ops->vidioc_create_bufs)
-+		return -ENOTTY;
-+
-+	if (ops->vidioc_delete_bufs)
-+		return ops->vidioc_delete_bufs(file, fh, delete);
-+
-+	return -ENOTTY;
-+}
-+
- static int v4l_g_parm(const struct v4l2_ioctl_ops *ops,
- 				struct file *file, void *fh, void *arg)
- {
-@@ -2910,6 +2937,7 @@ static const struct v4l2_ioctl_info v4l2_ioctls[] = {
- 	IOCTL_INFO(VIDIOC_ENUM_FREQ_BANDS, v4l_enum_freq_bands, v4l_print_freq_band, 0),
- 	IOCTL_INFO(VIDIOC_DBG_G_CHIP_INFO, v4l_dbg_g_chip_info, v4l_print_dbg_chip_info, INFO_FL_CLEAR(v4l2_dbg_chip_info, match)),
- 	IOCTL_INFO(VIDIOC_QUERY_EXT_CTRL, v4l_query_ext_ctrl, v4l_print_query_ext_ctrl, INFO_FL_CTRL | INFO_FL_CLEAR(v4l2_query_ext_ctrl, id)),
-+	IOCTL_INFO(VIDIOC_DELETE_BUFS, v4l_delete_bufs, v4l_print_delete_buffers, INFO_FL_PRIO | INFO_FL_QUEUE | INFO_FL_CLEAR(v4l2_delete_buffers, type)),
- };
- #define V4L2_IOCTLS ARRAY_SIZE(v4l2_ioctls)
- 
-diff --git a/include/media/v4l2-ioctl.h b/include/media/v4l2-ioctl.h
-index edb733f21604..55afbde54211 100644
---- a/include/media/v4l2-ioctl.h
-+++ b/include/media/v4l2-ioctl.h
-@@ -163,6 +163,8 @@ struct v4l2_fh;
-  *	:ref:`VIDIOC_CREATE_BUFS <vidioc_create_bufs>` ioctl
-  * @vidioc_prepare_buf: pointer to the function that implements
-  *	:ref:`VIDIOC_PREPARE_BUF <vidioc_prepare_buf>` ioctl
-+ * @vidioc_delete_bufs: pointer to the function that implements
-+ *	:ref:`VIDIOC_DELETE_BUFS <vidioc_delete_bufs>` ioctl
-  * @vidioc_overlay: pointer to the function that implements
-  *	:ref:`VIDIOC_OVERLAY <vidioc_overlay>` ioctl
-  * @vidioc_g_fbuf: pointer to the function that implements
-@@ -422,6 +424,8 @@ struct v4l2_ioctl_ops {
- 				  struct v4l2_create_buffers *b);
- 	int (*vidioc_prepare_buf)(struct file *file, void *fh,
- 				  struct v4l2_buffer *b);
-+	int (*vidioc_delete_bufs)(struct file *file, void *fh,
-+				  struct v4l2_delete_buffers *d);
- 
- 	int (*vidioc_overlay)(struct file *file, void *fh, unsigned int i);
- 	int (*vidioc_g_fbuf)(struct file *file, void *fh,
-diff --git a/include/media/videobuf2-core.h b/include/media/videobuf2-core.h
-index 88e35a3b7730..0d17e5605c09 100644
---- a/include/media/videobuf2-core.h
-+++ b/include/media/videobuf2-core.h
-@@ -867,6 +867,16 @@ int vb2_core_create_bufs(struct vb2_queue *q, enum vb2_memory memory,
-  */
- int vb2_core_prepare_buf(struct vb2_queue *q, struct vb2_buffer *vb, void *pb);
- 
-+/**
-+ * vb2_core_delete_bufs() -
-+ * @q:		pointer to &struct vb2_queue with videobuf2 queue.
-+ * @start:	first index of the range of buffers to delete.
-+ * @count:	number of buffers to delete.
-+ *
-+ *  Return: returns zero on success; an error code otherwise.
-+ */
-+int vb2_core_delete_bufs(struct vb2_queue *q, unsigned int start, unsigned int count);
-+
- /**
-  * vb2_core_qbuf() - Queue a buffer from userspace
-  *
-diff --git a/include/media/videobuf2-v4l2.h b/include/media/videobuf2-v4l2.h
-index 5a845887850b..ddc08623606c 100644
---- a/include/media/videobuf2-v4l2.h
-+++ b/include/media/videobuf2-v4l2.h
-@@ -334,6 +334,8 @@ int vb2_ioctl_streamon(struct file *file, void *priv, enum v4l2_buf_type i);
- int vb2_ioctl_streamoff(struct file *file, void *priv, enum v4l2_buf_type i);
- int vb2_ioctl_expbuf(struct file *file, void *priv,
- 	struct v4l2_exportbuffer *p);
-+int vb2_ioctl_delete_bufs(struct file *file, void *priv,
-+			  struct v4l2_delete_buffers *p);
- 
- /* struct v4l2_file_operations helpers */
- 
-diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
-index 68e7ac178cc2..47fdd17babbb 100644
---- a/include/uapi/linux/videodev2.h
-+++ b/include/uapi/linux/videodev2.h
-@@ -2624,6 +2624,20 @@ struct v4l2_create_buffers {
- 	__u32			reserved[5];
- };
- 
-+/**
-+ * struct v4l2_delete_buffers - VIDIOC_DELETE_BUFS argument
-+ * @index:	the first buffer to be deleted
-+ * @count:	number of buffers to delete
-+ * @type:	enum v4l2_buf_type
-+ * @reserved:	future extensions
-+ */
-+struct v4l2_delete_buffers {
-+	__u32			index;
-+	__u32			count;
-+	__u32			type;
-+	__u32			reserved[13];
-+};
-+
- /*
-  *	I O C T L   C O D E S   F O R   V I D E O   D E V I C E S
-  *
-@@ -2723,6 +2737,8 @@ struct v4l2_create_buffers {
- #define VIDIOC_DBG_G_CHIP_INFO  _IOWR('V', 102, struct v4l2_dbg_chip_info)
- 
- #define VIDIOC_QUERY_EXT_CTRL	_IOWR('V', 103, struct v4l2_query_ext_ctrl)
-+#define VIDIOC_DELETE_BUFS	_IOWR('V', 104, struct v4l2_delete_buffers)
-+
- 
- /* Reminder: when adding new ioctls please add support for them to
-    drivers/media/v4l2-core/v4l2-compat-ioctl32.c as well! */
--- 
-2.40.1
+I wonder whether this should be rather the same compatible with
+additional property, e.g. "st,tee-control" or "remote-control".
+
+[1]
+https://elixir.bootlin.com/linux/v6.7.1/source/Documentation/devicetree/bindings/dma/qcom,bam-dma.yaml#L54
+
+[2]
+https://elixir.bootlin.com/linux/v6.7.1/source/Documentation/devicetree/bindings/net/qcom,ipa.yaml#L129
+(that's a bit different)
+
+[3] https://lore.kernel.org/linux-devicetree/20240124103623.GJ4906@thinkpad/
+
+@Rob,
+Any general guidance for this and Qualcomm?
+
+Best regards,
+Krzysztof
 
