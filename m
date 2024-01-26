@@ -1,195 +1,110 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2040.outbound.protection.outlook.com [40.107.236.40])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f48.google.com (mail-oo1-f48.google.com [209.85.161.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9773B25543
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 22:23:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.40
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706307823; cv=fail; b=a/gj2EmY2aJqFxoR1cv1+2PyF4vJyaCCXsvOVYx0WGDQyy5PM+1d4uXnauuNLOYuXD7kOy2AuTpkB2R7iFFmxlRAeVKHcM3kdOKB9q/cVZtPp4YnZOpco8KcXZ9+fz/7mcVG+aadciYhaBAWFoCMKTBa1Na8vgnbo1Z7qhK1MQY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706307823; c=relaxed/simple;
-	bh=xipLFz/mBIzKMTBombF9VLJp3jxyUyieHFTClrj6mcg=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=HH9aIOmF/OYoNZQTAr8uLHpMpKaBL1kyM5iT8zMCn4bc0NevZc5vaV9g9fdTvc0dWwJXljk1yLmo7zIHLE39jhxrU3H3qJxlrc5Ui1I3haBUNbeeNI7CIRadDr6dUq+liaId6WNdenSpUuow8rHp+XK6C0/PWwVBUmTqEwxrTso=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=h3Q7XqjI; arc=fail smtp.client-ip=40.107.236.40
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE9CC2511A
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 22:24:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.48
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706307849; cv=none; b=KOEBqpdohgfKn3XSU16EchBh7H5tJd/KqR319PWZQ6886mIYHI1qqQtIDEf7TxWOwm5HveiyBsj/1lL08u8CRQsa3+RvHWbpvlWL8UttM8lG4LSkrvTyVlI6Q7c5sMpdFDut0P+h7I2EiP1APWhXoGsnPjr3wBN6UGVT6mkaIck=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706307849; c=relaxed/simple;
+	bh=SsDgh1/qxxOxnOUHCoY8liFdv/cFob22r3vkkHPCNeU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZdR/8aEj14a6rPB5lE/5KAdueKqJwdebFyD6WXfXlgsG1LvumVorUZqOG2VWtxJu5p8DAr8eZAI/Yad2xizAR9XX4sPQhxhYDm+4e0wLse6rwbYJ+xoHEvNs2rraWjxfmbAcsAejHjXljpD02zmFwKgEM57fitc27qzYt9nwhmA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Kt96DcjK; arc=none smtp.client-ip=209.85.161.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="h3Q7XqjI"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=D6TE9IyJVsNS3DaL++GS6F63OLmvr2WpqvwSklW5qkmken27iXRzHy9Rciscpf4om0v+mEYN+w1goSvRNtU6QRmudidmZ2g4WBtWu10NDWnU6/cCO2fzAQ+CztxEnRkVY+HhwPw7JOctwaEmVr5pUJTUBD/jlQoJYtCEkFRMhbE7h/MHK9cKtPNue0a3Uk6QdzH4VOaG5x0/NE5d6VhLLaKlBDDXNQZG+MnwZPDSumg74PQF/2W7viMhxRoItpbFH/eIbWueLbSItoEQj8bsxdTnkkef6LIzdRuL7JF6BzOMDhagutnuElo93JUGa2yF1/Rt2R+yO7JvTq/JkL366w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=XS+ME5l2Zm5TR02mkR9IVUrIF0kwVsGTzppFYJKVZ0s=;
- b=Zso0xBizZdITLhMTcDws/H+ly3Zp/STXqV6xG9d7Ue/86awwLvcA41/ifPHhwc1sW/d2zU4YHmniczm88QGaTanaHV+6OJQhpKLKyEC3naK+tKFXsvSoN9kHE+lc4OROgs5ArIKIaA15azKlawDJOoIYHIOs5bxTSrapA+n7pJGO/UuABO8l+eYY3jdTbuUMm35zG8TO0kfXs5XcHcrMEcDGaCyFJAjwdRAdVikUJEiRaaJs8mvrnJ4jY+YH7i9JtavzJQgfJLEJUy3IsnBkfvI+0Xoz+5BOIGNGtTw0Fmyu8voFU6wbhS0D4RSRoHh4ecWCX7aGjNpTms+zIKZZOg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=lists.freedesktop.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XS+ME5l2Zm5TR02mkR9IVUrIF0kwVsGTzppFYJKVZ0s=;
- b=h3Q7XqjIBimpinU+C2V1tPE6JR444pFrGCzraiWTGY3NwHIa+FvJdx2GJMzKbP3gJxVqY3xIKyPUgfgV6ViBNAmfGK43GG8M8aqT9FbIfObIbXXihkpioI7WGsyPUTXpMh9L/Rg8b+jy7BpGvArr4CXv12c/ZrwDyIlRKivnlo4=
-Received: from BL1PR13CA0233.namprd13.prod.outlook.com (2603:10b6:208:2bf::28)
- by PH7PR12MB6785.namprd12.prod.outlook.com (2603:10b6:510:1ab::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.27; Fri, 26 Jan
- 2024 22:23:36 +0000
-Received: from BL6PEPF0001AB57.namprd02.prod.outlook.com
- (2603:10b6:208:2bf:cafe::ef) by BL1PR13CA0233.outlook.office365.com
- (2603:10b6:208:2bf::28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.22 via Frontend
- Transport; Fri, 26 Jan 2024 22:23:36 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BL6PEPF0001AB57.mail.protection.outlook.com (10.167.241.9) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7181.14 via Frontend Transport; Fri, 26 Jan 2024 22:23:35 +0000
-Received: from hamza-pc.localhost (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.34; Fri, 26 Jan
- 2024 16:23:34 -0600
-From: Hamza Mahfooz <hamza.mahfooz@amd.com>
-To: <amd-gfx@lists.freedesktop.org>
-CC: Hamza Mahfooz <hamza.mahfooz@amd.com>, Mario Limonciello
-	<mario.limonciello@amd.com>, Harry Wentland <harry.wentland@amd.com>, Leo Li
-	<sunpeng.li@amd.com>, Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>, "Alex
- Deucher" <alexander.deucher@amd.com>, =?UTF-8?q?Christian=20K=C3=B6nig?=
-	<christian.koenig@amd.com>, "Pan, Xinhui" <Xinhui.Pan@amd.com>, David Airlie
-	<airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, Alex Hung
-	<alex.hung@amd.com>, Srinivasan Shanmugam <srinivasan.shanmugam@amd.com>,
-	Wayne Lin <wayne.lin@amd.com>, <dri-devel@lists.freedesktop.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: [PATCH] drm/amd/display: add panel_power_savings sysfs entry to eDP connectors
-Date: Fri, 26 Jan 2024 17:22:58 -0500
-Message-ID: <20240126222300.119292-1-hamza.mahfooz@amd.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Kt96DcjK"
+Received: by mail-oo1-f48.google.com with SMTP id 006d021491bc7-59a1948acf1so165192eaf.0
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 14:24:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1706307847; x=1706912647; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=YNjTDm/3nOOc9T42E39x/f5ugwNL2q1NFWZyO0YlL50=;
+        b=Kt96DcjK3cfx8NVJMZSKaS2+OmVa3OLMqxLSpQPJXFc5+eG5lbFEHgHJRH5OIX5hYg
+         hhVTCs4Tn7K51YboRGX+6cdlTc3zAnfcoPK44BSQ9C/hyy3T5VZjBhmAI2mD3ShAuyFq
+         ebT29hesbCSJnfbJy0Ii5IJIfroKF04a6oTRM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706307847; x=1706912647;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YNjTDm/3nOOc9T42E39x/f5ugwNL2q1NFWZyO0YlL50=;
+        b=mxiZdqc8rHQ9zRciq0Umjv4sd4VkdPQOuco2lIk3oiRjnqM0AL+L95I1Y3344S84xp
+         WExhoIWW1LLeCvGWeWaHOMXmscfSTVH2DwYgvioneqqyYLz8PPhal06uR2jVQaLHB+Mr
+         P7x6xHzXFtHh6d5HjxpprB+kUdICENVM1viYBIxUDg1aK+GPR3hvePa0hlM45zDe20Bq
+         kGMF9VkvuKch7Rl31gB3bcnxM1WszBOsGu9ObJtWS5NaPe/IGnPpkXMevoNi6T/pYcjJ
+         cRSrK+mKgc5GQMRZBxDJH2/t5gmoNcxJV1h/yKkHqGAJRdF4Vw9AzIu7CiM7ucAcz0rP
+         yz8A==
+X-Gm-Message-State: AOJu0YzLAeluEydgIBOPtyppgyRAcymHXdJ8O95d5VJ7F8uH6nqGtPTW
+	dVu0kmmluBkcBwjxL1J2e0dKUxhq4TZHWxC5HnsXGKCUEkMJtLV76ZNGMiSXjQ==
+X-Google-Smtp-Source: AGHT+IGEnDcQTS7SnNR20li28GjLAf5EqupkVycmod63G3cSQkdng4abOodjIVFtLG7ZlpnwuWu1PQ==
+X-Received: by 2002:a05:6358:52c9:b0:176:cdb1:4414 with SMTP id z9-20020a05635852c900b00176cdb14414mr453949rwz.18.1706307846694;
+        Fri, 26 Jan 2024 14:24:06 -0800 (PST)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id p17-20020a056a0026d100b006d9accac5c4sm1602142pfw.35.2024.01.26.14.24.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 26 Jan 2024 14:24:06 -0800 (PST)
+Date: Fri, 26 Jan 2024 14:24:05 -0800
+From: Kees Cook <keescook@chromium.org>
+To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [GIT PULL] Enable -Wstringop-overflow globally
+Message-ID: <202401261423.7AF702239@keescook>
+References: <Za6JwRpknVIlfhPF@work>
+ <CAHk-=wjG4jdE19-vWWhAX3ByfbNr4DJS-pwiN9oY38WkhMZ57g@mail.gmail.com>
+ <4907a7a3-8533-480a-bc3c-488573e18e66@embeddedor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL6PEPF0001AB57:EE_|PH7PR12MB6785:EE_
-X-MS-Office365-Filtering-Correlation-Id: b224326f-b454-4cb5-ac72-08dc1ebd703b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	qwOlCMXqusNZkiLa0ijWPvUGdjCLhBG5TSFjaqgj1aQw/VuLxQTaTpYrHWuS7pOxzvo2F46So/sUql5eQv5KKvEIcgtE1gbRbm6dHkIEnEJj/WTADTWjBKoxduMgb0kTb0vTZX+cIsqcvwchq2jslZGbPV3bYjr4vOa554uj7j566q99Tl8Nkpo/KOebQ+B2WAnQuio8H1kHfOHea4cMib95bY804xIlOWdDX8AUNZV1LreXVaD3oBJnF124S/QRRHhi0RKU7Xdx6iAnxR2QYNfsxvantmfEjhRzv/70vaKT0I88he0+UVO5Wa5SB1AfTcD23qJR47bDlXdDs0y7kbID40lTJAWBiCkeXIDiEQiSYqNYUVQ7vVoN/4eYOL+03iqeWK6dApjIf/eHDz98GNZh8jvbNs4rI/I9qpfhVZv2lDH1V75GrKCbGU+922YUF3YP6Pj6m3OJvy7cietT4oqoFhFgnvRs/xeZUhJuDOM08SBIWqhDbi1uYaoGB3KkMZuisynKHAzEvyvWiKumQTTYNUuGgfkZ1TGEn0KOWmbEIp7+4I3zK4MSX806V/VnBJZrgxbMLmBXhkL1xMA9RAPIDJ/ITvD5WeiW2pNHZ8GSArp9xnKE/6RTIZC1c4mpbBQMcVKrCuXoZ3o4mGn5++G/5yyxcTDGObtv7V1XDmSiT/SWbMiT/f6wY+HUHj2T4r/au1OMkLEBgc11zQnyPTITL6fQD0RA9gl8lG7Gt+BOF50QdsvP6crInZ6o2uUCrVIRdTgs2COaMyKZR8l7+jQW4lAtx5Kqt4PZ5V84oSLmnJ+QHaJwT8g/gGDy+I4Q
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(39860400002)(136003)(346002)(396003)(376002)(230922051799003)(186009)(82310400011)(64100799003)(1800799012)(451199024)(40470700004)(46966006)(36840700001)(40460700003)(40480700001)(83380400001)(47076005)(36756003)(81166007)(356005)(86362001)(44832011)(36860700001)(4326008)(426003)(8676002)(8936002)(5660300002)(16526019)(336012)(26005)(2616005)(1076003)(82740400003)(316002)(6916009)(70586007)(70206006)(54906003)(2906002)(41300700001)(478600001)(6666004)(36900700001)(16060500005);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jan 2024 22:23:35.9910
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: b224326f-b454-4cb5-ac72-08dc1ebd703b
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BL6PEPF0001AB57.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB6785
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4907a7a3-8533-480a-bc3c-488573e18e66@embeddedor.com>
 
-We want programs besides the compositor to be able to enable or disable
-panel power saving features. However, since they are currently only
-configurable through DRM properties, that isn't possible. So, to remedy
-that issue introduce a new "panel_power_savings" sysfs attribute.
+On Fri, Jan 26, 2024 at 03:30:20PM -0600, Gustavo A. R. Silva wrote:
+> 
+> 
+> On 1/26/24 15:22, Linus Torvalds wrote:
+> > On Mon, 22 Jan 2024 at 07:29, Gustavo A. R. Silva <gustavoars@kernel.org> wrote:
+> > > 
+> > > Enable -Wstringop-overflow globally
+> > 
+> > I suspect I'll have to revert this.
+> > 
+> > On arm64, I get a "writing 16 bytes into a region of size 0" in the Xe driver
+> > 
+> >     drivers/gpu/drm/xe/xe_gt_pagefault.c:340
+> > 
+> > but I haven't looked into it much yet.
+> > 
+> > It's not some gcc-11 issue, though, this is with gcc version 13.2.1
+> > 
+> > It looks like the kernel test robot reported this too (for s390), at
+> > 
+> >      https://lore.kernel.org/all/202401161031.hjGJHMiJ-lkp@intel.com/T/
+> > 
+> > and in that case it was gcc-13.2.0.
+> > 
+> > So I don't think the issue is about gcc-11 at all, but about other
+> > random details.
+> 
+> Let me take a look.
 
-Cc: Mario Limonciello <mario.limonciello@amd.com>
-Signed-off-by: Hamza Mahfooz <hamza.mahfooz@amd.com>
----
- .../gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 59 +++++++++++++++++++
- 1 file changed, 59 insertions(+)
+I think xe has some other weird problems too. This may be related (under
+allocating):
 
-diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-index cd98b3565178..b3fcd833015d 100644
---- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-+++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-@@ -6534,6 +6534,58 @@ amdgpu_dm_connector_atomic_duplicate_state(struct drm_connector *connector)
- 	return &new_state->base;
- }
- 
-+static ssize_t panel_power_savings_show(struct device *device,
-+					struct device_attribute *attr,
-+					char *buf)
-+{
-+	struct drm_connector *connector = dev_get_drvdata(device);
-+	struct drm_device *dev = connector->dev;
-+	ssize_t val;
-+
-+	drm_modeset_lock(&dev->mode_config.connection_mutex, NULL);
-+	val = to_dm_connector_state(connector->state)->abm_level;
-+	drm_modeset_unlock(&dev->mode_config.connection_mutex);
-+
-+	return sysfs_emit(buf, "%lu\n", val);
-+}
-+
-+static ssize_t panel_power_savings_store(struct device *device,
-+					 struct device_attribute *attr,
-+					 const char *buf, size_t count)
-+{
-+	struct drm_connector *connector = dev_get_drvdata(device);
-+	struct drm_device *dev = connector->dev;
-+	long val;
-+	int ret;
-+
-+	ret = kstrtol(buf, 0, &val);
-+
-+	if (ret)
-+		return ret;
-+
-+	if (val < 0 || val > 4)
-+		return -EINVAL;
-+
-+	drm_modeset_lock(&dev->mode_config.connection_mutex, NULL);
-+	to_dm_connector_state(connector->state)->abm_level = val ?:
-+		ABM_LEVEL_IMMEDIATE_DISABLE;
-+	drm_modeset_unlock(&dev->mode_config.connection_mutex);
-+
-+	return count;
-+}
-+
-+static DEVICE_ATTR_RW(panel_power_savings);
-+
-+static struct attribute *amdgpu_attrs[] = {
-+	&dev_attr_panel_power_savings.attr,
-+	NULL
-+};
-+
-+static const struct attribute_group amdgpu_group = {
-+	.name = "amdgpu",
-+	.attrs = amdgpu_attrs
-+};
-+
- static int
- amdgpu_dm_connector_late_register(struct drm_connector *connector)
- {
-@@ -6541,6 +6593,13 @@ amdgpu_dm_connector_late_register(struct drm_connector *connector)
- 		to_amdgpu_dm_connector(connector);
- 	int r;
- 
-+	if (connector->connector_type == DRM_MODE_CONNECTOR_eDP) {
-+		r = sysfs_create_group(&connector->kdev->kobj,
-+				       &amdgpu_group);
-+		if (r)
-+			return r;
-+	}
-+
- 	amdgpu_dm_register_backlight_device(amdgpu_dm_connector);
- 
- 	if ((connector->connector_type == DRM_MODE_CONNECTOR_DisplayPort) ||
+../drivers/gpu/drm/xe/xe_vm.c: In function 'xe_vma_create':
+../drivers/gpu/drm/xe/xe_vm.c:806:21: warning: allocation of insufficient size '224' for type 'struct xe_vma' with size '368' [-Walloc-size]
+  806 |                 vma = kzalloc(sizeof(*vma) - sizeof(struct xe_userptr),
+      |                     ^
+
+
 -- 
-2.43.0
-
+Kees Cook
