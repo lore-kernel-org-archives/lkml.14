@@ -1,60 +1,85 @@
-Received: from hoggar.fisica.ufpr.br (hoggar.fisica.ufpr.br [200.238.171.242])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4A6CAD27;
-	Fri, 26 Jan 2024 03:40:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=200.238.171.242
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7568E9479
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 03:41:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706240424; cv=none; b=kd5FjaraJbu0KHH1yqdCp0H204IpPLbLk1IY0Ej7wzdWdD421Lv7oXgA9H2jTsmHbASNrCa90TpyEM8U2N6kJ1RQi2h70XHFnChLJNk7Gl33GDqUkhSKPyJ+u0IpTkM7lKrCCb+eBFn9Hury2Fj9fIys7UQ2DHWVReq7w+sOhtY=
+	t=1706240473; cv=none; b=ocIifLpMo38mSkNGjDTHIhg1gA7S3IIu/9hjjp4BVWygTAB8R4HRyhYH4x1qvyCvj5pnyNg3uQ6kccpclaSkCXKo1fxip45x/GHllkjuhJvypLJbp9hN5I4XtN6qzMpgKqjge4iRW0TDcdqrqmzIG7XUXN7YcEGpwpUnkuLvtao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706240424; c=relaxed/simple;
-	bh=dHyfVG6TbOGkccm1sKx4Jajh2CRdhy3ae2G7u64QOdc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YMK9bHqiQmMUcI0AevU8ZI4bBsY2gWXJiiWs47ExQG9qUOuB6DSS9hZRLoYlL9p8Oeqg06S0Xk4KoAElpoNxQuyPavRkrJIUI4zElQnogRX8l7SNpE8sV6iNJH4+GocuF1cHRSz7XU0+8AdXYOTvDJZqJ7MtdkbC/0zEzJwoUZo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fisica.ufpr.br; spf=pass smtp.mailfrom=fisica.ufpr.br; dkim=pass (2048-bit key) header.d=fisica.ufpr.br header.i=@fisica.ufpr.br header.b=XJgU9qQR; arc=none smtp.client-ip=200.238.171.242
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fisica.ufpr.br
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fisica.ufpr.br
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fisica.ufpr.br header.i=@fisica.ufpr.br header.b="XJgU9qQR"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=fisica.ufpr.br;
-	s=201705; t=1706239847;
-	bh=dHyfVG6TbOGkccm1sKx4Jajh2CRdhy3ae2G7u64QOdc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XJgU9qQRu5n9FGjXoZbOtNDHtRGNNEHCc+/qwq0OSLgAkAKQu2JYYIsKoS4lSVEEo
-	 Vps9bkmtz03MtGWCD2zkuB2ey9/IWVNnzhpR+k1XIx70mVD8U8CCuzr9bOpnrHzrS8
-	 QSqSArVhXcYA76ezYcFbWnt1doigKynIUwPXUBGibrwS9zXT8yB8plvObbNXgYJDag
-	 G31e7JUJYUwimSXPfheTrzUzndoOUGkY5KbgbxQV1anKCmLEt+1Jr+GonU7Yf815pP
-	 e5yirFTOlAuPW7nMc23uDpx3SIrl0klUxXbYs8uYTYFZBD47XMQElvrM8LMQgoTgUj
-	 1ThVsEcd4knjQ==
-Received: by hoggar.fisica.ufpr.br (Postfix, from userid 577)
-	id 0778F9A0B4A40; Fri, 26 Jan 2024 00:30:46 -0300 (-03)
-Date: Fri, 26 Jan 2024 00:30:46 -0300
-From: Carlos Carvalho <carlos@fisica.ufpr.br>
-To: Dan Moulding <dan@danm.net>
-Cc: junxiao.bi@oracle.com, gregkh@linuxfoundation.org,
-	linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
-	regressions@lists.linux.dev, song@kernel.org,
-	stable@vger.kernel.org, yukuai1@huaweicloud.com
-Subject: Re: [REGRESSION] 6.7.1: md: raid5 hang and unresponsive system;
- successfully bisected
-Message-ID: <ZbMnZnvyIyoWeIro@fisica.ufpr.br>
-References: <2ef7d741-3df8-402a-967f-53ec77c73e2c@oracle.com>
- <20240125203130.28187-1-dan@danm.net>
+	s=arc-20240116; t=1706240473; c=relaxed/simple;
+	bh=DC68Fan9U1mDvvm9HS7/KL5cq/tCfXtYDl7pvERFoFo=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=b1k8ChIQSVq8a3qTtsjwi3DQ0uEgVEtKYpb8eCqhxnXQ7QCEBdzEtIhl3KHghvPvcdTJKDz3ePz67HmfgsUgn4xLuuSjRK9rN/tf1Asz+Z8Sa9ntEriQZbOL+gDGhKung5q/i6VJYcUoXdxxl35EZcDuRZgiSkK0MPx5T714Now=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3618e013ec7so83426495ab.1
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 19:41:12 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706240471; x=1706845271;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=DC68Fan9U1mDvvm9HS7/KL5cq/tCfXtYDl7pvERFoFo=;
+        b=HSxYlFcjLxa5dxPRY3kwo3LywVCVlTjkQ3jjcZA/AtjGrBY9w/JKNZ6XjftbqS1l42
+         ezNbh4Sx2oOgELe13aQZ5TvnuARMuG4EfKCKvuMqYZ4TRgtEPF5SJV1F78tYmZggd4O0
+         633nN3iUOA5x3EhYgpMBtzcfUMCpp3z2FttvVE3PLY3ACr4Cm8TzpUNXzn7omSX/FFo/
+         Do9VZYp6faLDHFsKk8aAs4o9TrWxMejE6zcUJKQS7QG09lcenFR03xLFwR0mlb2tZg46
+         CTeVmSkBo2tV91a/BI9zE+Tj66tDzhAlfGqC+upOv/6GxLKNY/BMfwJNUPktsOCDFrH9
+         1Yhg==
+X-Gm-Message-State: AOJu0YzeOLiKJ5sQYVfkdfuGLJYpOIE+y6sISz1/BP0RvYgiU4wr4Xlf
+	YIU84XbSvfKLo8FDRN0AQ5HUlNw7145RGnVQG6BRVc4UXRzzrQoj673CcAm3AdHdwXnnEnL4gwO
+	DghIIT4V99XXZOwnNWsLmkCEYgje4Y1N/g1bDPS1m3W5IJwTZc6p2Y+c=
+X-Google-Smtp-Source: AGHT+IFz0qxmvUVhvPOqgIrXUDDVpxna4jQPfuOBVEfPvyygebPqZl5fDHsA4+R5BZ5kDHAvmukq1PwEVID+8OKOegIa7MVTh2wE
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240125203130.28187-1-dan@danm.net>
+X-Received: by 2002:a05:6e02:144b:b0:35f:a338:44ae with SMTP id
+ p11-20020a056e02144b00b0035fa33844aemr106434ilo.3.1706240471688; Thu, 25 Jan
+ 2024 19:41:11 -0800 (PST)
+Date: Thu, 25 Jan 2024 19:41:11 -0800
+In-Reply-To: <000000000000dfd6a105f71001d7@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000376be5060fd11135@google.com>
+Subject: Re: [syzbot] kernel BUG in ext4_write_inline_data
+From: syzbot <syzbot+f4582777a19ec422b517@syzkaller.appspotmail.com>
+To: adilger.kernel@dilger.ca, eadavis@qq.com, linux-ext4@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	nogikh@google.com, syzkaller-bugs@googlegroups.com, tytso@mit.edu
+Content-Type: text/plain; charset="UTF-8"
 
-Dan Moulding (dan@danm.net) wrote on Thu, Jan 25, 2024 at 05:31:30PM -03:
-> I then created an ext4 file system on the "data" volume, mounted it, and used
-> "dd" to copy 1MiB blocks from /dev/urandom to a file on the "data" file
-> system, and just let it run. Eventually "dd" hangs and top shows that
-> md0_raid5 is using 100% CPU.
+This bug is marked as fixed by commit:
+ext4: fix race condition between buffer write and page_mkwrite
 
-It's known that ext4 has these symptoms with parity raid. To make sure it's a
-raid problem you should try another filesystem or remount it with stripe=0.
+But I can't find it in the tested trees[1] for more than 90 days.
+Is it a correct commit? Please update it by replying:
+
+#syz fix: exact-commit-title
+
+Until then the bug is still considered open and new crashes with
+the same signature are ignored.
+
+Kernel: Linux
+Dashboard link: https://syzkaller.appspot.com/bug?extid=f4582777a19ec422b517
+
+---
+[1] I expect the commit to be present in:
+
+1. for-kernelci branch of
+git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git
+
+2. master branch of
+git://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git
+
+3. master branch of
+git://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf.git
+
+4. main branch of
+git://git.kernel.org/pub/scm/linux/kernel/git/davem/net-next.git
+
+The full list of 9 trees can be found at
+https://syzkaller.appspot.com/upstream/repos
