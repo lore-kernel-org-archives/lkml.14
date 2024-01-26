@@ -1,45 +1,45 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA81460871;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C471060876;
 	Fri, 26 Jan 2024 23:56:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706313365; cv=none; b=phTDzF4BuJ7iXJsyAqcCl1IIRzGD2B0J2s9RNERD6j38et12PLAXIrLMwahaAgjpq5QwIyR5YzcQfsqEZT7tuezs+cT+989HSQj1OgaBf231t7ytIVLtBMpqwnfi1KWTfKsBin7Ago1LaEgz8To9+a82P85rS23wP+T6nlFjkvc=
+	t=1706313365; cv=none; b=d+862qxFmC9fRVw/wf4+GGXIqvgJCtRUIGnb0DNu87e4wa/fhV787YNLxkdv3L9EYK7E4/pJV5knVYBf1fc3EDr7NQcTDSjDaZPt50bkOB7pzPvuPiSztFpM6kkDURt/ysRRgFY9Fs2cdvMBJJuEqHbsLkhBfkHN5qKQZm3cC8M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1706313365; c=relaxed/simple;
-	bh=Q2lvlvdCAKdHkBs5TNo2Bo66/5y6fheUCHhBLb/qygU=;
+	bh=6T2WTb6El6HviQWBUPe5bY/jkQH9KN1dRogKYtmuuwk=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Asl9AsUsDsRdsJ7snLg4b6oIzNxszzDkLZDRDe9B6pX9iEaQVjOmOxb0xmKcTUhAqBA448b0hHaveb0+HXN39RWwFev9Haq+CaWGGx12LabEIbe+q7bAn6Wy5R6ZO2pjFk0BnT13e0nKi6gtFlKPta6eoPksK8jabF74SZ+hPRY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=W9g8gxYm; arc=none smtp.client-ip=205.220.180.131
+	 MIME-Version:Content-Type; b=YU6H97QEYQnqZe1Ci82eRXaIe2uVD2i72+Sn3Ri5rZXvLnG3ekWrVYGMddFPQVeQPv3SLXdIE9CPP20GDZXIe4YjL8/8OehtoYgWDSi2/s5UA7jU+C7FFLz9AeznU7E/g0PXqZpz2gTVIzF89z6y7TZvCTrRa0aQaDXVy+YJWUo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=hieDGjJE; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="W9g8gxYm"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40QNtChX020800;
-	Fri, 26 Jan 2024 23:55:32 GMT
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="hieDGjJE"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40QMNT1w023758;
+	Fri, 26 Jan 2024 23:55:23 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-type; s=qcppdkim1; bh=JHAwrxllOSXe9Lncc3Bw
-	hW25fiD1hVsmdl5djzDx1Po=; b=W9g8gxYmcUjfRRE6D7smqhpnYf1XFu9a0rab
-	qj9zbi6u5RdwTgtP/KKz7oRqfVlHAI+pQ863D7LZqd9cHAZG03yWTMCUO6ZmATqG
-	eXM9zgh4aGGKEoKNMGyQApsuRknC92CZKHMKlzJyBX+aLfqA3rvvkuPSM4z8OUEb
-	/I7dzKX79V7LDlQhPTXHgj1LVFm3M5lpSZqn/uLlYcw7a4aqQxa/zp2Rz4119ns5
-	Qhdtcs3OxNCREH4Km/oAjk0LcQ9RkdyK7HYUEAKC6dCqY3hI+6fb1WHfZallaD6Y
-	ik0QO44xTaUP6ZAWabC1wA8sv/tobkT2d0qyH3ymYfy8F4fHxA==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vvgy8gq02-1
+	:mime-version:content-type; s=qcppdkim1; bh=TQbxaUradiVsQAjmlk+e
+	lqhTc/xEHMy4mH289Ds/6RY=; b=hieDGjJEIJ4KYvgxtpXww114lPvQuyPPwhqK
+	Pa7vEvRIxH0Qw7sIubTcUXm3jsqqR4l1fZbbOc24cC9dlIgE53IU6yBLFt4yzjjC
+	k27ffZcZw4h01AEGxpWUFv6lzfAW1XMkNZLuC2KLAld7CPfzAqPwxk8a3CrNLqZH
+	uvD5hKcrlY+aBk11uJt+ge7todLie0qsNrCeHsWixzMjH8u7pWJmSJQ3c8pYymUV
+	YZajBZPudI07T/rpQ/6lPY3ccxQ4+c8Rwhm1npPn/U8z+daaJo69gwAvJeHbiiLe
+	4b25/h9libYHFHakDkNUMPf0HS/77JYIhumU3MCMrMV5B5/OsA==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vvmmmg7w8-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 26 Jan 2024 23:55:32 +0000 (GMT)
+	Fri, 26 Jan 2024 23:55:23 +0000 (GMT)
 Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 40QNtUwh018645
+	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 40QNtMRT009460
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 26 Jan 2024 23:55:31 GMT
+	Fri, 26 Jan 2024 23:55:22 GMT
 Received: from hu-obabatun-lv.qualcomm.com (10.49.16.6) by
  nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Fri, 26 Jan 2024 15:55:15 -0800
+ 15.2.1118.40; Fri, 26 Jan 2024 15:55:07 -0800
 From: Oreoluwa Babatunde <quic_obabatun@quicinc.com>
 To: <catalin.marinas@arm.com>, <will@kernel.org>, <robh+dt@kernel.org>,
         <frowand.list@gmail.com>, <vgupta@kernel.org>, <arnd@arndb.de>,
@@ -55,9 +55,9 @@ To: <catalin.marinas@arm.com>, <will@kernel.org>, <robh+dt@kernel.org>,
 CC: <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
         <kernel@quicinc.com>, Oreoluwa Babatunde <quic_obabatun@quicinc.com>
-Subject: [PATCH 37/46] microblaze: reserved_mem: Switch fdt_init_reserved_mem to dt_init_reserved_mem
-Date: Fri, 26 Jan 2024 15:54:16 -0800
-Message-ID: <20240126235425.12233-38-quic_obabatun@quicinc.com>
+Subject: [PATCH 23/46] microblaze: resrved_mem: Move fdt_init_reserved_mem() below unflatten_device_tree()
+Date: Fri, 26 Jan 2024 15:54:02 -0800
+Message-ID: <20240126235425.12233-24-quic_obabatun@quicinc.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20240126235425.12233-1-quic_obabatun@quicinc.com>
 References: <20240126235425.12233-1-quic_obabatun@quicinc.com>
@@ -72,39 +72,52 @@ X-ClientProxiedBy: nalasex01b.na.qualcomm.com (10.47.209.197) To
  nalasex01b.na.qualcomm.com (10.47.209.197)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: WGiY7kIbvTjv0FKjDvTQTDg0e-SPCZFX
-X-Proofpoint-ORIG-GUID: WGiY7kIbvTjv0FKjDvTQTDg0e-SPCZFX
+X-Proofpoint-GUID: 1YFft0XNdhKnvYvkmrY4qIB5N9zsQ1B-
+X-Proofpoint-ORIG-GUID: 1YFft0XNdhKnvYvkmrY4qIB5N9zsQ1B-
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2024-01-25_14,2024-01-25_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=543
- priorityscore=1501 lowpriorityscore=0 clxscore=1015 impostorscore=0
- mlxscore=0 phishscore=0 spamscore=0 adultscore=0 suspectscore=0
- malwarescore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 impostorscore=0
+ mlxscore=0 phishscore=0 adultscore=0 spamscore=0 mlxlogscore=863
+ priorityscore=1501 malwarescore=0 lowpriorityscore=0 clxscore=1015
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.19.0-2401190000 definitions=main-2401260176
 
-Switch from using fdt_init_reserved_mem() to dt_init_reserved_mem() to
-reflect the use of the unflatten devicetree APIs to process the
-reserved memory regions.
+The unflattened devicetree structure is available to be used not long
+after the page tables have been set up on most architectures, and is
+available even before that on other architectures.
+
+Hence, move the call to fdt_init_reserved_mem() to after
+unflatten_device_tree() is called so that the reserved memory nodes can
+be accessed using the unflattened device tree APIs.
+
+Using the unflattened devicetree APIs is more efficient than using the
+flattened devicetree APIs.
 
 Signed-off-by: Oreoluwa Babatunde <quic_obabatun@quicinc.com>
 ---
- arch/microblaze/kernel/setup.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/microblaze/kernel/setup.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/arch/microblaze/kernel/setup.c b/arch/microblaze/kernel/setup.c
-index d999ad774a44..112a05572d8c 100644
+index 631faa4613ec..d999ad774a44 100644
 --- a/arch/microblaze/kernel/setup.c
 +++ b/arch/microblaze/kernel/setup.c
-@@ -59,7 +59,7 @@ void __init setup_arch(char **cmdline_p)
+@@ -55,12 +55,12 @@ void __init setup_arch(char **cmdline_p)
+ 
+ 	setup_memory();
+ 
+-	fdt_init_reserved_mem();
+-
+ 	console_verbose();
  
  	unflatten_device_tree();
  
--	fdt_init_reserved_mem();
-+	dt_init_reserved_mem();
- 
++	fdt_init_reserved_mem();
++
  	setup_cpuinfo();
  
+ 	microblaze_cache_init();
 -- 
 2.17.1
 
