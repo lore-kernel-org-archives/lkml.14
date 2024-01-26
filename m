@@ -1,78 +1,129 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C755915146A;
-	Fri, 26 Jan 2024 08:58:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D64145C1F;
+	Fri, 26 Jan 2024 08:58:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706259531; cv=none; b=bjm2IYTR1+ny92THo1r5E6Fb52Yb0Up2bQQ3S3vyk1Ecnv1KyxTbDpVUTNJSI4jnkOOkw9lLDNyVjTJ/claxSKXAVMYt4Px1q404yg5llUcEh65tva9tRZ+ZqneHsgKfFSwZ5yKYFp7NIyOYK6i/ST4EXFwb3u+WPVdpQeug4a8=
+	t=1706259531; cv=none; b=Otexncu2M/LOj3YmQG9mL2LKZfCN+mz/WkXjN/g/NjL7GJVOHtlZrFFWYDyZpEmQD2/L6idCRENjInGXXQ6+1Wz5sa1bK6DQFV+XOA7MMJv++n/EW9eg8EMwwv7v23QG31zePAH09UNSn/BT2I64em9FtQqZiLcg0Ou5HBCnN5I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1706259531; c=relaxed/simple;
-	bh=f2Ea4tnTpi+RhTPJlVTJ67qgqs8LtHYD3YVA7bfKOpE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Wv13k/xi6wkurdwHiiuIJj6m3M5QsbvtoVb4k4aR50zHwqCKFZeaoqYt29ZSDdgc4hk8GQPnVlROB4AXuP/T8PdQ9z9/QcwqsxSQraFEHe2HBGiBL7aWmHZQv3qxaCnFkjtKMVBziBz9PAY1EMpvWoa3R5mkP3/IHlt44HJjd1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.94.2 #2 (Debian))
-	id 1rTI2k-006EZY-27; Fri, 26 Jan 2024 16:58:35 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Fri, 26 Jan 2024 16:58:46 +0800
-Date: Fri, 26 Jan 2024 16:58:46 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Damian Muszynski <damian.muszynski@intel.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Tom Zanussi <tom.zanussi@linux.intel.com>,
-	Jie Wang <jie.wang@intel.com>, qat-linux@intel.com,
-	linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] crypto: qat - avoid memcpy() overflow warning
-Message-ID: <ZbN0RkMLJ2NBKQ5v@gondor.apana.org.au>
-References: <20240103162608.987145-1-arnd@kernel.org>
+	bh=p9S5KED8WuoSV/G4Ddkqt0eIdsqyB+al3BlwWfdDgS4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=djgL9uzKijQOo2IdQ4BLZKU2oQJ2fPtwNiFNlNJInzI5p7brX1cyuZWKeRHMp+OgYFOECJGfNC8PsHfZNQ4YkOGeNvRdX86YCdfsuxWpFSOAfUkhuPrjxwKbROdc+41KQh2p03L/xMgaae9cSj1/UjJhkmeb19iPzkl+XVZZ/0k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=K4PbeDQ3; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K4PbeDQ3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706259530; x=1737795530;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=p9S5KED8WuoSV/G4Ddkqt0eIdsqyB+al3BlwWfdDgS4=;
+  b=K4PbeDQ3AelyQe/fQT9GVtXNW1i1lDeJ1pw0Bt/7RR49bBzwIelSMf//
+   1BOawB0WKKGSU9RjAokFgDdWpVwySfkbkh83DMdxqN7Ku1qgXo1/mR4T5
+   viokzlSqaIec8h3A1uLIqjQq0xGj5iaiTETTqbxu148fSZwIDrOaqu5DO
+   GhffTbL0mME1jdri3YaPiFIJ61RbhYkH3kiOwnWXwYg5GiJSADZ2AQCfk
+   WVHu2X+K4WVeTKYtJHc0MhLtqJqPFnpzqj0XY6ayyOLubMta5nMcDudqj
+   w5TUUKrPZmANna/udJ90/F4AjiCGqb2BLaiEfirTh6wTuaJQcvl82UVDg
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="9793069"
+X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
+   d="scan'208";a="9793069"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2024 00:58:50 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="930310492"
+X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
+   d="scan'208";a="930310492"
+Received: from yanli3-mobl.ccr.corp.intel.com (HELO xiongzha-desk1.ccr.corp.intel.com) ([10.254.213.178])
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2024 00:58:44 -0800
+From: Xiong Zhang <xiong.y.zhang@linux.intel.com>
+To: seanjc@google.com,
+	pbonzini@redhat.com,
+	peterz@infradead.org,
+	mizhang@google.com,
+	kan.liang@intel.com,
+	zhenyuw@linux.intel.com,
+	dapeng1.mi@linux.intel.com,
+	jmattson@google.com
+Cc: kvm@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	zhiyuan.lv@intel.com,
+	eranian@google.com,
+	irogers@google.com,
+	samantha.alt@intel.com,
+	like.xu.linux@gmail.com,
+	chao.gao@intel.com,
+	xiong.y.zhang@linux.intel.com
+Subject: [RFC PATCH 38/41] KVM: x86/pmu: Introduce PMU helper to increment counter
+Date: Fri, 26 Jan 2024 16:54:41 +0800
+Message-Id: <20240126085444.324918-39-xiong.y.zhang@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240126085444.324918-1-xiong.y.zhang@linux.intel.com>
+References: <20240126085444.324918-1-xiong.y.zhang@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240103162608.987145-1-arnd@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jan 03, 2024 at 05:26:02PM +0100, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
-> 
-> The use of array_size() leads gcc to assume the memcpy() can have a larger
-> limit than actually possible, which triggers a string fortification warning:
-> 
-> In file included from include/linux/string.h:296,
->                  from include/linux/bitmap.h:12,
->                  from include/linux/cpumask.h:12,
->                  from include/linux/sched.h:16,
->                  from include/linux/delay.h:23,
->                  from include/linux/iopoll.h:12,
->                  from drivers/crypto/intel/qat/qat_common/adf_gen4_hw_data.c:3:
-> In function 'fortify_memcpy_chk',
->     inlined from 'adf_gen4_init_thd2arb_map' at drivers/crypto/intel/qat/qat_common/adf_gen4_hw_data.c:401:3:
-> include/linux/fortify-string.h:579:4: error: call to '__write_overflow_field' declared with attribute warning: detected write beyond size of field (1st parameter); maybe use struct_group()? [-Werror=attribute-warning]
->   579 |    __write_overflow_field(p_size_field, size);
->       |    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> include/linux/fortify-string.h:588:4: error: call to '__read_overflow2_field' declared with attribute warning: detected read beyond size of field (2nd parameter); maybe use struct_group()? [-Werror=attribute-warning]
->   588 |    __read_overflow2_field(q_size_field, size);
->       |    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> 
-> Add an explicit range check to avoid this.
-> 
-> Fixes: 5da6a2d5353e ("crypto: qat - generate dynamically arbiter mappings")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  drivers/crypto/intel/qat/qat_common/adf_gen4_hw_data.c | 3 +++
->  1 file changed, 3 insertions(+)
+From: Mingwei Zhang <mizhang@google.com>
 
-Patch applied.  Thanks.
+Introduce PMU helper to increment counter for passthrough PMU because it is
+able to conveniently return the overflow condition instead of deferring the
+overflow check to KVM_REQ_PMU in original implementation. In addition, this
+helper function can hide architecture details.
+
+Signed-off-by: Mingwei Zhang <mizhang@google.com>
+---
+ arch/x86/include/asm/kvm_host.h |  1 +
+ arch/x86/kvm/pmu.c              | 15 +++++++++++++++
+ 2 files changed, 16 insertions(+)
+
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index b02688ed74f7..869de0d81055 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -501,6 +501,7 @@ struct kvm_pmc {
+ 	bool is_paused;
+ 	bool intr;
+ 	u64 counter;
++	u64 emulated_counter;
+ 	u64 prev_counter;
+ 	u64 eventsel;
+ 	u64 eventsel_hw;
+diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
+index e7ad97734705..7b0bac1ac4bf 100644
+--- a/arch/x86/kvm/pmu.c
++++ b/arch/x86/kvm/pmu.c
+@@ -434,6 +434,21 @@ static void reprogram_counter(struct kvm_pmc *pmc)
+ 	pmc->prev_counter = 0;
+ }
+ 
++static bool kvm_passthrough_pmu_incr_counter(struct kvm_pmc *pmc)
++{
++	if (!pmc->emulated_counter)
++		return false;
++
++	pmc->counter += pmc->emulated_counter;
++	pmc->emulated_counter = 0;
++	pmc->counter &= pmc_bitmask(pmc);
++
++	if (!pmc->counter)
++		return true;
++
++	return false;
++}
++
+ void kvm_pmu_handle_event(struct kvm_vcpu *vcpu)
+ {
+ 	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+2.34.1
+
