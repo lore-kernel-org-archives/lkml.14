@@ -1,147 +1,143 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1CE4362
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 00:47:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABF5464C
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 00:49:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.88
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706230049; cv=none; b=NieQCrqYg7hqaj0CSKKgMVlm9c5/E65ZzEacdnTXMlcj+fZNGYeYA4YuaoQcgvZtP3bRJ7zgrwkeULvMpWlRpsVmDOmHZ2JoNeT6IaUjYlj3FtMwsFO7Aur959uN7b2wzCIRs/yU+8XvKiCJSg7VQtRuwf1x439yWy3L1bSZPCQ=
+	t=1706230172; cv=none; b=SRXxvwmYf1TA9Pj3o66/NeV5KUKi1sB9mSFbgEpH5QfA5ucc8CodObKORotE7ehSHutE0OnT8H9272fEm+ilKEJhIWdEt0QSv5QqkWRs2v8yJrO8Sr3KOjCL/BXvyFfYYhk+wJmsseBDGljDyHepDwiWI5pEcjQZ1InunW52a2M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706230049; c=relaxed/simple;
-	bh=SGviMvdgb3/1Uvw6JtHD5Jao+VL+YcLXORRKDs6cUnw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=t3txEgF45SbNQnZ8iQgINJY1IT64vckWcFlgQfEPYrZPOXbR1+LawnZ36GOCw/7gYHuAqknxehj4ppsC0LGFHCwPDKDZm54NtHBlaFfEBQjDMx2tE4ADS1e1VaWUJ6ekS0zbtqDWc0VBG2wk6b9sX6Hw7fZoRzuWvZWPE3L94NI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io; spf=pass smtp.mailfrom=layalina.io; dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b=FohybPB5; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=layalina.io
+	s=arc-20240116; t=1706230172; c=relaxed/simple;
+	bh=w2kdtJZ783fLiPG5vvC94hf/FSswyEok6jaDZlu5C8U=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=SKdpDgYgq9jeCtneFUiQfK1uH9VEekMEnCenh6ODUdffUXNhZByMGPv4BiUVwwxEgaGnUqvkcRi1S7Ir03+tYCUkKc4wzVFBv7bpxgY8bnrMut65D1QtIH0QRuA87izOrHdPSwKyZWofo/vWbSsGuShu4DPVBlZz+RbttNF6tjM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=d3qDekIx; arc=none smtp.client-ip=192.55.52.88
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b="FohybPB5"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-40e7e2e04f0so80487395e9.1
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 16:47:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=layalina-io.20230601.gappssmtp.com; s=20230601; t=1706230046; x=1706834846; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=xEjwaKYVRS0yCuV6oj4h3+sux9ZfnXZ8sxYQfgg8Q8Y=;
-        b=FohybPB5URHfNqzWUZo2MRb63ANbf+fHhV5LNrJiEDVJ/ebjzPQ0jMvAeALHgxbNAP
-         gh/ZAqmV4qVgoNELQZOq5bqSEH21SVKY9qSSd+2SMB5WMMK3bLyEvvxy9GKPU/xKqo/h
-         MMjjGa9jZLkpHOc+Gkz2iOWFQpoFVQoDReImkjLjLuKqHSDHPOsKzCIX/JTJDuLXTDQ7
-         KnpCAWCUglRIsaJ8ehpgQtvDZgUJsrp43l6Yjj849gqTAxHV71XIhfUbZzc+Z4X6disf
-         METa9LmmEGj2IF/mRbubdnPFh0yfV9368gzVG1jBQsvtb3c1kZZ4Q8JZwjFpX58xwvD7
-         ygfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706230046; x=1706834846;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xEjwaKYVRS0yCuV6oj4h3+sux9ZfnXZ8sxYQfgg8Q8Y=;
-        b=eg+xS7B8CQ2/jxzw0DW9tpz3WKRam/czKwsikZK2EWW61AYq7LQb5nYozdNVxpGboR
-         TKHPygGQohmw3cGo788d/PVjlglslxtIhRHGAcni21EjtcaSRvts+xlATMy0UxtgS9JG
-         SPlO0noIh0jPMDIVwfITMXaZFOVQtv83DbjyxxNOIbuzJqkypZUsVZBrGxw8OJ0vWtve
-         njHGj9lIW9DLNm8QuX//n3zR5KiPBau1zGMQiG221KOG6xcTI6kkhoLbTeyhxdk05iie
-         S9ueF17KHMHqEWSPMOJr9aaW9pgOIk0mJxvBEr9GYSEPm+nXDjcR9pOXvnmvQZP9laRk
-         tN7g==
-X-Gm-Message-State: AOJu0YwQLKKA+FUYXu5DVQOJgOO47E+yVy+xFDWjQzCgItQ71AXzIgXJ
-	QY0ncGozP4R++opT3tI/Eq+rY/1jrge7c7eg4nBLCNQndL/krLNRJJwVKxWHVos=
-X-Google-Smtp-Source: AGHT+IEXjZxnREADIGIe11Lt/UjTEvS70RDiEwR5Iy0q8Pd3ETF3eDUai7IamLWaIEk4QU4BAXGhvw==
-X-Received: by 2002:a05:600c:5756:b0:40e:c69d:94f3 with SMTP id jw22-20020a05600c575600b0040ec69d94f3mr328255wmb.185.1706230046000;
-        Thu, 25 Jan 2024 16:47:26 -0800 (PST)
-Received: from airbuntu ([213.122.231.14])
-        by smtp.gmail.com with ESMTPSA id s9-20020a05600c45c900b0040ed2b76263sm309429wmo.18.2024.01.25.16.47.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jan 2024 16:47:25 -0800 (PST)
-Date: Fri, 26 Jan 2024 00:47:24 +0000
-From: Qais Yousef <qyousef@layalina.io>
-To: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc: Ingo Molnar <mingo@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	linux-kernel@vger.kernel.org,
-	Pierre Gondois <Pierre.Gondois@arm.com>
-Subject: Re: [PATCH v4 1/2] sched/fair: Check a task has a fitting cpu when
- updating misfit
-Message-ID: <20240126004724.tuh7ahpoysm3hw3x@airbuntu>
-References: <20240105222014.1025040-1-qyousef@layalina.io>
- <20240105222014.1025040-2-qyousef@layalina.io>
- <213f94df-cc36-4281-805d-9f56cbfef796@arm.com>
- <20240122180212.67csjrnsbs7vq57i@airbuntu>
- <ece7ce3f-17f3-42a5-90d7-d0410235059d@arm.com>
- <20240124224321.vn4tuwj53wfk6iyk@airbuntu>
- <08334d9d-8a0a-468f-a1db-ce6c19e491f7@arm.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="d3qDekIx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706230170; x=1737766170;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=w2kdtJZ783fLiPG5vvC94hf/FSswyEok6jaDZlu5C8U=;
+  b=d3qDekIxUhwf7aeQ37w3eF6dk8fE0vV1XlWAtazHlkQU9dCmR+hvHL2O
+   8I2m52D7iYXnYTUryc1b1xqZ230ATE7KkvsJRkK+lUN3NmGkTqb/kbB16
+   1qtw8Yy0FfSBzmCNYwHX9Nllc5uMssYv0QXx0jW/PVKcq3TQy9cRfS5Oe
+   IjNEBQft0dT0xnOMJvidMApoP1xmDZxB9N4oFdDHUWt9yHH0FPWtaYf6f
+   /c8DsGsv6LlHxNpiSLZi8U+yRN4hM2NbRQjRKW5UNFRA22dMPct1OZxWd
+   5vYkxiTTr9oFHYXe69d69ZVcUtUUMI9ujT6wPpxLC+U/CE/cFcVgVheh5
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="433503446"
+X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
+   d="scan'208";a="433503446"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2024 16:49:28 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
+   d="scan'208";a="2523691"
+Received: from lkp-server01.sh.intel.com (HELO 370188f8dc87) ([10.239.97.150])
+  by fmviesa003.fm.intel.com with ESMTP; 25 Jan 2024 16:49:26 -0800
+Received: from kbuild by 370188f8dc87 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rTAPL-0000X6-32;
+	Fri, 26 Jan 2024 00:49:23 +0000
+Date: Fri, 26 Jan 2024 08:48:43 +0800
+From: kernel test robot <lkp@intel.com>
+To: Daniel Axtens <dja@axtens.net>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Francis Laniel <laniel_francis@privacyrequired.com>,
+	Kees Cook <keescook@chromium.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Linux Memory Management List <linux-mm@kvack.org>
+Subject: drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c:154:19: warning:
+ '%s' directive output may be truncated writing up to 19 bytes into a region
+ of size between 13 and 24
+Message-ID: <202401260858.jZN6vD1k-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <08334d9d-8a0a-468f-a1db-ce6c19e491f7@arm.com>
 
-On 01/25/24 10:35, Dietmar Eggemann wrote:
-> On 24/01/2024 22:43, Qais Yousef wrote:
-> > On 01/23/24 18:07, Dietmar Eggemann wrote:
-> >> On 22/01/2024 19:02, Qais Yousef wrote:
-> >>> On 01/22/24 09:59, Dietmar Eggemann wrote:
-> >>>> On 05/01/2024 23:20, Qais Yousef wrote:
-> >>>>> From: Qais Yousef <qais.yousef@arm.com>
-> 
-> [...]
-> 
-> >>>> What happen when we hotplug out all CPUs of one CPU capacity value?
-> >>>> IMHO, we don't call asym_cpu_capacity_scan() with !new_topology
-> >>>> (partition_sched_domains_locked()).
-> >>>
-> >>> Right. I missed that. We can add another intersection check against
-> >>> cpu_active_mask.
-> >>>
-> >>> I am assuming the skipping was done by design, not a bug that needs fixing?
-> >>> I see for suspend (cpuhp_tasks_frozen) the domains are rebuilt, but not for
-> >>> hotplug.
-> >>
-> >> IMHO, it's by design. We setup asym_cap_list only when new_topology is
-> >> set (update_topology_flags_workfn() from init_cpu_capacity_callback() or
-> >> topology_init_cpu_capacity_cppc()). I.e. when the (max) CPU capacity can
-> >> change.
-> >> In all the other !new_topology cases we check `has_asym |= sd->flags &
-> >> SD_ASYM_CPUCAPACITY` and set sched_asym_cpucapacity accordingly in
-> >> build_sched_domains(). Before we always reset sched_asym_cpucapacity in
-> >> detach_destroy_domains().
-> >> But now we would have to keep asym_cap_list in sync with the active CPUs
-> >> I guess.
-> > 
-> > Okay, so you suggest we need to update the code to keep it in sync. Let's see
-> > first if Vincent is satisfied with this list traversal or we need to go another
-> > way :-)
-> 
-> Yes, if preventing the 'increase of balance_interval' will cure this
-> issue as well, then this will be definitely the less invasive fix.
-> 
-> Can you not easily do a 'perf bench sched messaging -g X -l Y' test on
-> you M1 to get some numbers behind this additional list traversal in
-> pick_next_task_fair()?
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   ecb1b8288dc7ccbdcb3b9df005fa1c0e0c0388a7
+commit: 6a39e62abbafd1d58d1722f40c7d26ef379c6a2f lib: string.h: detect intra-object overflow in fortified string functions
+date:   3 years, 1 month ago
+config: x86_64-randconfig-012-20240106 (https://download.01.org/0day-ci/archive/20240126/202401260858.jZN6vD1k-lkp@intel.com/config)
+compiler: gcc-9 (Debian 9.3.0-22) 9.3.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240126/202401260858.jZN6vD1k-lkp@intel.com/reproduce)
 
-I can do. But I noticed sometimes there're unexplainable variation in numbers
-when moving kernels that I am not 100% sure is due to random unrelated changes
-in caching behavior or due to something I've done. ie: they get better or worse
-in unexpected ways.  I run `perf sched bench pipe`, which is similar enough
-I guess? I don't know how to fill these -g and -l numbers sensibly.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202401260858.jZN6vD1k-lkp@intel.com/
 
-I had issues when running perf to collect stats. But maybe I wasn't specifying
-the right options. I will try again.
+All warnings (new ones prefixed by >>):
 
-> 
-> > I think it is worth having this asym_capacity list available. It seemed several
-> > times we needed it and just a little work is required to make it available for
-> > potential future users. Even if we don't merge immediately.
-> 
-> I agree. It would give us this ordered (by max CPU capacity) list of
-> CPUs to iterate over.
-
-Okay. I need to figure out how to fix this hotplug issue to keep the list in
-sync.
+   drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c: In function 'bnx2x_fill_fw_str':
+>> drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c:154:19: warning: '%s' directive output may be truncated writing up to 19 bytes into a region of size between 13 and 24 [-Wformat-truncation=]
+     154 |     "bc %d.%d.%d%s%s",
+         |                   ^~
+   ......
+     158 |     ((phy_fw_ver[0] != '\0') ? " phy " : ""), phy_fw_ver);
+         |                                               ~~~~~~~~~~
+   drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c:153:3: note: 'snprintf' output between 9 and 39 bytes into a destination of size 32
+     153 |   snprintf(buf + strlen(bp->fw_ver), 32 - strlen(bp->fw_ver),
+         |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     154 |     "bc %d.%d.%d%s%s",
+         |     ~~~~~~~~~~~~~~~~~~
+     155 |     (bp->common.bc_ver & 0xff0000) >> 16,
+         |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     156 |     (bp->common.bc_ver & 0xff00) >> 8,
+         |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     157 |     (bp->common.bc_ver & 0xff),
+         |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     158 |     ((phy_fw_ver[0] != '\0') ? " phy " : ""), phy_fw_ver);
+         |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
-Thanks
+vim +154 drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c
 
---
-Qais Yousef
+b3b83c3f3c640b drivers/net/bnx2x/bnx2x_cmn.c                   Dmitry Kravkov 2011-05-04  135  
+8ca5e17e58c953 drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c Ariel Elior    2013-01-01  136  /**
+8ca5e17e58c953 drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c Ariel Elior    2013-01-01  137   * bnx2x_fill_fw_str - Fill buffer with FW version string.
+8ca5e17e58c953 drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c Ariel Elior    2013-01-01  138   *
+8ca5e17e58c953 drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c Ariel Elior    2013-01-01  139   * @bp:        driver handle
+8ca5e17e58c953 drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c Ariel Elior    2013-01-01  140   * @buf:       character buffer to fill with the fw name
+8ca5e17e58c953 drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c Ariel Elior    2013-01-01  141   * @buf_len:   length of the above buffer
+8ca5e17e58c953 drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c Ariel Elior    2013-01-01  142   *
+8ca5e17e58c953 drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c Ariel Elior    2013-01-01  143   */
+8ca5e17e58c953 drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c Ariel Elior    2013-01-01  144  void bnx2x_fill_fw_str(struct bnx2x *bp, char *buf, size_t buf_len)
+8ca5e17e58c953 drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c Ariel Elior    2013-01-01  145  {
+8ca5e17e58c953 drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c Ariel Elior    2013-01-01  146  	if (IS_PF(bp)) {
+8ca5e17e58c953 drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c Ariel Elior    2013-01-01  147  		u8 phy_fw_ver[PHY_FW_VER_LEN];
+8ca5e17e58c953 drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c Ariel Elior    2013-01-01  148  
+8ca5e17e58c953 drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c Ariel Elior    2013-01-01  149  		phy_fw_ver[0] = '\0';
+8ca5e17e58c953 drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c Ariel Elior    2013-01-01  150  		bnx2x_get_ext_phy_fw_version(&bp->link_params,
+8ca5e17e58c953 drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c Ariel Elior    2013-01-01  151  					     phy_fw_ver, PHY_FW_VER_LEN);
+8ca5e17e58c953 drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c Ariel Elior    2013-01-01  152  		strlcpy(buf, bp->fw_ver, buf_len);
+8ca5e17e58c953 drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c Ariel Elior    2013-01-01  153  		snprintf(buf + strlen(bp->fw_ver), 32 - strlen(bp->fw_ver),
+8ca5e17e58c953 drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c Ariel Elior    2013-01-01 @154  			 "bc %d.%d.%d%s%s",
+8ca5e17e58c953 drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c Ariel Elior    2013-01-01  155  			 (bp->common.bc_ver & 0xff0000) >> 16,
+8ca5e17e58c953 drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c Ariel Elior    2013-01-01  156  			 (bp->common.bc_ver & 0xff00) >> 8,
+8ca5e17e58c953 drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c Ariel Elior    2013-01-01  157  			 (bp->common.bc_ver & 0xff),
+8ca5e17e58c953 drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c Ariel Elior    2013-01-01  158  			 ((phy_fw_ver[0] != '\0') ? " phy " : ""), phy_fw_ver);
+8ca5e17e58c953 drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c Ariel Elior    2013-01-01  159  	} else {
+6411280ac94db9 drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c Ariel Elior    2013-01-07  160  		bnx2x_vf_fill_fw_str(bp, buf, buf_len);
+8ca5e17e58c953 drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c Ariel Elior    2013-01-01  161  	}
+8ca5e17e58c953 drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c Ariel Elior    2013-01-01  162  }
+8ca5e17e58c953 drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c Ariel Elior    2013-01-01  163  
+
+:::::: The code at line 154 was first introduced by commit
+:::::: 8ca5e17e58c953b9a9dbd4974c554b25c6d70b1a bnx2x: Support of PF driver of a VF acquire request
+
+:::::: TO: Ariel Elior <ariele@broadcom.com>
+:::::: CC: David S. Miller <davem@davemloft.net>
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
