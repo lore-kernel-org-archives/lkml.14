@@ -1,218 +1,162 @@
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2045.outbound.protection.outlook.com [40.107.244.45])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DFAC1DDEA;
-	Fri, 26 Jan 2024 19:47:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.45
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706298431; cv=fail; b=GEdKL0ljedNgSls7g5dtgrk+mgX34LDNy96UA8cUqLTobkU8hPUhVmKNX5Jivd3Y7WRIt7jRZC3VkuONSPG956GSdqgeqp1wzV4eTcdIjsENDg9Bm3Lnz2PwLoI0NBRQQ8wD7MPm3gNWnd5Zcq6/UUlbhd6Fd0I9emK709Uequs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706298431; c=relaxed/simple;
-	bh=YTiSJnFShliZOoNVASfe5bIqOtBznZxnfJpJ6rCtpKY=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=SYD54WodpRx0J77Vzag8iZ0mhSvrVZ7Xsh21Z6BjaMxk2yAI0ieB1IyKCooni0thQHhoVmc2a8zm9qip0lvl66LYx7HCamEAs+/PbM/IZ1SftZgRn3A+iDz1lBw95H3Gt8RDo2kMntk0671tgvELFlB8RDMm6xvqxO6H1VDqZ5k=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=4gpouSMf; arc=fail smtp.client-ip=40.107.244.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC290225AC;
+	Fri, 26 Jan 2024 19:47:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706298447; cv=none; b=bV1llpwcGA9sISpmebVzGoAz9tXm3PqvMnnhdG6CiEHfIiklIOV9IIWjGCQ3lbPoIu2tIeNoaFAEPh+CtmmgMl+DvVe/JHL2Pt8xg3BCdDYQDk6kiHJQVFcNRAgPiswqr0eAF6D5eYPGOUVjzvmYqcdrffbKfga5iv2gr11/eU4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706298447; c=relaxed/simple;
+	bh=mpaehXT92oEyt7WvFKlN6cee4Uxho3u/Xaiy2EFAXr4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dXSigL4z1pGn32G7sfTk34IkO4f0NqV2JwXRkKbQKmzi5EnYowIrTmk3jIMjpE1ZZHF3hUIiSy1BKfXeFghePi3z3XybQpNqZtbWSzqNzJ5lo3MCWMA05MyvN3XHYMyzMTR00iKjcdpG8V6KOQYAOy2F4oKjnaOUPu1ZB8AVrPg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=B9F2mmXk; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="4gpouSMf"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KOWWkBgvJ8YFKC5Mha44tDDpKxLrq3Ahi7fP7att177ZauOUtlXOqcwqnnpLUrC7wUpzmM7nFIx9iNKGHlOmcT5LaPbIIf8ox7jdu9WJpfz++jPoLqnucx4pI35dSii9QWqpovjJRcjVPy4P7HbMnfUb2nnGwhT6zcRZkcIPUmw4k3SvfgVxbj50K1FwSGaBNiIJ30fu/7cXg7E4Dmh6jCyzpvoPtz3+jFTr+m+BX3TVeoroyJLiJNdYyg5qrWVWOru9WnINJcK7TWDtmdLGPhfHF5Uxy9kUX3yOsb/NT6rC69U/J86tuloMWfViDXfZcUUG9/Ub50+qUwTfrUnIEw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=+qaea1QFZTl2g5ENZZljnSqyxHH1bB3iasJjFUGnolo=;
- b=NNMQAvBaF0CF2r4Gy5qkGCXMowWpS4HKfa/8Vm9JUrKwZmwEmthfMKwjN+dbY9qp2mAlAKBNQqaQWAX3A36MuCDgqXgC5XkxcpOfg7sZhrY6ovb3lbxebvmt5y+Q3l1EnGIzxBBPSdcfBvWYH1ktR2H9hHe6vr3w1+hHsIJb0RdzWqbeIUReWHugzQaD89wO8GwFYTsGVGUvNFiQ6apLANF8qI9/Y4VdfPtXpjAydKfpf7JuFIGVcjWQ2IcYi1XkMyaKVxZ/tEs3xr4u2DCUh5g/LiVFkdVR0vsuZ3imUl609961tWDEFXJf5eAJcXGP+Vw1Ow7E7gv9avyLjLc/iw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+qaea1QFZTl2g5ENZZljnSqyxHH1bB3iasJjFUGnolo=;
- b=4gpouSMfBOcrsrpYZ7SsETe0CxRcmLaGnxld03UNedetNSrskVJEvfY/lLi39LYFc7CXOFILEUByBcmL5G0TANTJhY1KkOYNamwKWYC+AtJG81Km3NL1K3oKi2T2cHySMEbZBswFYLJj7s1KmAPlc3I0GGVe2Aq8aEqOUDzWVqc=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by BL3PR12MB6596.namprd12.prod.outlook.com (2603:10b6:208:38f::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.27; Fri, 26 Jan
- 2024 19:47:07 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::c30:614f:1cbd:3c64]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::c30:614f:1cbd:3c64%4]) with mapi id 15.20.7228.027; Fri, 26 Jan 2024
- 19:47:07 +0000
-Message-ID: <167f6083-4a79-4527-a0c3-3df74ae5d15d@amd.com>
-Date: Fri, 26 Jan 2024 13:47:03 -0600
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] x86/pci: Stop requiring ECAM to be declared in E820,
- ACPI or EFI
-Content-Language: en-US
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
- "Rafael J . Wysocki" <rjw@rjwysocki.net>, linux-pci@vger.kernel.org,
- linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240126192937.GA448790@bhelgaas>
-From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <20240126192937.GA448790@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BY5PR17CA0043.namprd17.prod.outlook.com
- (2603:10b6:a03:167::20) To MN0PR12MB6101.namprd12.prod.outlook.com
- (2603:10b6:208:3cb::10)
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="B9F2mmXk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1706298443;
+	bh=mpaehXT92oEyt7WvFKlN6cee4Uxho3u/Xaiy2EFAXr4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=B9F2mmXkx+PFEFu5mWIP8bluZ6K7yEz+4debiEWRLDhzgM+haHQ+58AMt0kU9LO+C
+	 zGLowxhe0OlYY5LK7DcPNfoR9W+gZjAfD9LERc5xAro5FQrMfhuKr9f4f2pmzml62L
+	 Fk0bwEift428nbXwp40Zszo42RgdQNEcFOkwCviXZ+Go9BqA+5/vxTifHCaFYRWiuk
+	 IgsZ2MNjSeso1B20yB5TeSKLsMSwmR7Mxlx+n+Ki9311lETDnAFmc14rNQCeucAcSi
+	 RCUOm3ghgskmXAEqnIjHgnlsKwPvhe3b8i5aOaXyciHoYq3kV7nt+PEcDa3miPJvQC
+	 adyqg3vJkrcnA==
+Received: from [100.95.196.182] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: andrzej.p)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 3D0963780629;
+	Fri, 26 Jan 2024 19:47:23 +0000 (UTC)
+Message-ID: <80c4e788-65df-4a82-8453-74683289abcb@collabora.com>
+Date: Fri, 26 Jan 2024 20:47:22 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|BL3PR12MB6596:EE_
-X-MS-Office365-Filtering-Correlation-Id: b8229b0f-b5bb-4e4f-768f-08dc1ea793e6
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	axcrlN9i1W2ljUpixE4r72jwXOsjnsFV7XOSiPTuVIhFk3F0B4293Un5VBObEXsfY0NFdezl9SyJJ9i8gj2YJLb7HpP0yIgaM7Nj3ao5ZdnGxGDHuSWX5dWE3bmKPaTG9r4AZlZrhKEHSya1/pGLMpBpOICTP2WOGh8uWnTKpqAafTDDuH/E0iMpimauJ1t5ZJH6QDbKs2OQ+uYZZs9gNgUm0CjO6M3ySQv+3ntCxPV+zCFUIX4Z6f3GInw4v+LAC7H8/bDr+fLurXP4vwQ7RpGP1lGht90+g/jxWPYdShcZFe6FleowLFXhDSZP4roYxl4zYZsOm2Le0GGApD5pPW9uT0qbU70bO8fVpCnqVLm9UndVQXZzn7RhnFmTwBA9NS97hy1tujnc6/YnKYRvGcX6wMPALk/IW6rMrlthjLTYBfVCf1UJReW21GqUW6ea/avW7sFnw1S/NUaRQfUs0ez7VMiENf2DaAZnErtgruZXAlFzR25uLHhFTfxUy+n60uAOrg0fo9Cedp0UqKpP03PYgCFP2o0xRTwZOFw9jTrlUD9+blMEneEeFFgiJnN1Tnk0e9GHPWYJuxc60Tl4b/d+OIKwdqrd+93+d55gvUDCFabWdY2iz9EAQ/TJkIAzhryKJUipKzsqoUIIoa92DTB3Z6NUdd4iXmsx4mRb3Zy2LI6STWN6IsHYqnNA9r8J
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(376002)(39860400002)(366004)(396003)(346002)(230273577357003)(230922051799003)(230173577357003)(64100799003)(186009)(1800799012)(451199024)(2906002)(38100700002)(36756003)(6666004)(31696002)(86362001)(41300700001)(53546011)(6916009)(54906003)(6506007)(66946007)(478600001)(6512007)(6486002)(316002)(44832011)(66476007)(966005)(5660300002)(83380400001)(2616005)(8676002)(4326008)(26005)(66556008)(8936002)(31686004)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?R3lKOEZMTEQ2eE9UVFNHZmtwUm9FVCtNNGcwTzIrYXk3VlVOeVZYRDU4RWhw?=
- =?utf-8?B?d2Jzb3JBYUxIa25LTXFEWjFuMGRFY08zV3UycXZvb2ZvNmV1ZEZyNVExT2ky?=
- =?utf-8?B?bFI1WXBxNmZ5c2pUanZEc3A5STcyRWF5UHBLcG1sRFdTV1BBUjhxVjlCQnB4?=
- =?utf-8?B?VFhUeGVEczJ0cTE5YUk4QkcwYXpzVnM2TW51a3l4aE4rMzQySWhwMzFQSFBj?=
- =?utf-8?B?RHdHYTFVak05WnBLOTVodDg3TnZYVzdNTXZndUF0cVVaVUNhZS9iRG43M21E?=
- =?utf-8?B?d0xuelNOcXQyL1FoT2xpbGVRQnQxd1FzditiOWNBbVpWWG5oZldzQU5tZ3ht?=
- =?utf-8?B?L21jVkVOVnFrV1MzSDFEV2J5ZXZISUpBZnNpdjJ0dWo3RUk2aE1YaTZSd3lm?=
- =?utf-8?B?cTNqblVWclV1a1NlYkJpWWZXeGYyc0ZtcFhUTUNEWEJsRkkyVktGVXdiN0R3?=
- =?utf-8?B?WGlqR0pNbWx0WXM3ZWtJQ2RLUlhKSkcrVzhPQXlGYW1wT2t5b3Z2V0Y4T01B?=
- =?utf-8?B?ajVKR2d3YTNROHZNTEIvSmI1bVpva2thVGRTUTlTK1ZEMFlRZXkzMGhsbndy?=
- =?utf-8?B?dndPbEpTRTZWNG1Rcnd0UnByTWtsYzdJMDZwUU96bUpKVUdjZ0lhaTJTOWpU?=
- =?utf-8?B?VlB4aS9XUFpUa3FHVThMVXVKQXBPUURHSjNBVHNEZ2t1SDl6NjVyY0tKSktx?=
- =?utf-8?B?N29Nc1JEUWVoNzhHL3lhbzJFR2ZSUDFTVnNjV1cvcnVLMGxybVVhSVB2ZDlq?=
- =?utf-8?B?T3NwUWpkbUlHZU1CdnNOSUxPaDlodWRXYnV3cXNTWFVtSXYwc1UybTFNK1Mz?=
- =?utf-8?B?c1NGZDhaM21GVEF3OWd2dThScC9wV3pveTNYV1pjZUNsTnMzRWF3a3gzd3h1?=
- =?utf-8?B?ZFVjcUxLVDdUN0lxL0JwYTM2U3lTTUZCYllYSVVySXJhbFloSUhEYXo0VFo3?=
- =?utf-8?B?WDJ5RmlaZW9hZFVyRnh4WUlFbG9NakJERStPMFpGWHYyb3NGNlgzVE1xa0Zh?=
- =?utf-8?B?WTBxUHQ2eExtM2p4MjlVYUF5ZjZYbDJOS0gwYjR2T2Y2TlorTWt4ZVpHNC80?=
- =?utf-8?B?bGxJUVpGVGQwMzZCQ2JhOVB4L0pOcnNybmVNdHY3bS8vQkQ1c09yVkttWXNC?=
- =?utf-8?B?NHYveGxBZVUwenRpaTZYWWlkZk1CQ3VQN3dyZzVtbFNOVmIvSW9mUXdDQThN?=
- =?utf-8?B?dXZjZ0crbDlzU25MQXc3UjZ6Z1k1TWRvcVJQczU2NFJCQ2hFRmJHMDFjaW5E?=
- =?utf-8?B?dVNac05WVlBPREtQYW0za1MxcUV4Mk52THBVWkFWWGc4dlhhc3JBUTlxVFFG?=
- =?utf-8?B?RTVPQUNTZ0FxbkRRcysrZGFyT2pBVTNIY2FrSThQbE56SmRBQzU5YUhpZGdC?=
- =?utf-8?B?QnVjY0h5dWtBOUIvcXBReEJweFBIa080VTRRalI2SmtHcHpFLzU3dlBXU1cy?=
- =?utf-8?B?Y1ZmTENHYS9nYXF3L3gydktiTnB1aVZKUDVFcENicEVTd2RZWEgzNTBHY0hU?=
- =?utf-8?B?Y3pFWkx1dTd6QmZtNjBRaHZ3RHEvcU8yRnY5eGUyZ3hKbzRPM2lycFNadzVR?=
- =?utf-8?B?Q2tFVStaNjZtNW9naFdaYy9adjZOWDQ2WHdDeEFEcGc2Nmh2clBGYmQ1elpL?=
- =?utf-8?B?WGhSdUt2bFU0TnV0TDlxNWtVbWVoME9oYXlDWTJuc2xDNWJQT0JNTFp1MEta?=
- =?utf-8?B?THNxb3BuZEZkTHFBODhzcDhBaStldm1Ma0JxQ3QyUGlEVXF5T0o1cFJJd3Bj?=
- =?utf-8?B?Qll2OTkvNE9zKzN3SlRhWVZ3a1VtNUxTNW9OTlR4emdRNXZlL1BZRmN5WFkz?=
- =?utf-8?B?VU9iaE1DRlB2UDBLTDdwbU5peDJIUklIQ1ZNbDZ0bXhlMHJWNHhIRThsdWcv?=
- =?utf-8?B?SEs2Qlg1QVZNTXl5cTJCeVlYcStPNnpuSWYvaU5kL1VldlgyOVFCekJ6ckxn?=
- =?utf-8?B?YU84YUZvMmk4OU8wV21JVHlvcktXTjdsUlEzUzFDTHM4aVBJL0lnSGtjcHFH?=
- =?utf-8?B?S3dVRnV2cHZjOWk0VG0zUVVRc0VqUmhrbHJXMVBxS1prcTM1MnkvdEd2YTVZ?=
- =?utf-8?B?Vm5LamhQMEMvbThNVHU4Sk5YOFUzUUVNcDZrWndTdFMxRWx5dkNveDIrdDlx?=
- =?utf-8?Q?u7w4RAyV35fQlG8+j3l0BY17f?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b8229b0f-b5bb-4e4f-768f-08dc1ea793e6
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jan 2024 19:47:07.1851
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: iuADRtTg9wezhOMHPfgoi7/zS1mpg0zIdU/sSDYlrFtB8uDIQvxLRw2nA3XM1+91/ywXCN9GrShHLsiAnKNFVQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL3PR12MB6596
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/3] usb: gadget: 9pfs transport
+To: Dominique Martinet <asmadeus@codewreck.org>,
+ =?UTF-8?Q?Jan_L=C3=BCbbe?= <jlu@pengutronix.de>
+Cc: Michael Grzeschik <m.grzeschik@pengutronix.de>,
+ Latchesar Ionkov <lucho@ionkov.net>, linux-usb@vger.kernel.org,
+ Jonathan Corbet <corbet@lwn.net>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, v9fs@lists.linux.dev,
+ Christian Schoenebeck <linux_oss@crudebyte.com>, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, kernel@pengutronix.de,
+ Eric Van Hensbergen <ericvh@kernel.org>
+References: <20240116-ml-topic-u9p-v1-0-ad8c306f9a4e@pengutronix.de>
+ <ZaZsUQUhSlMPLJg0@codewreck.org>
+ <0aba51a8be0fb165b44ec956bec7a9698a9518a2.camel@pengutronix.de>
+ <Zaex_fkKcui7QZd7@codewreck.org>
+Content-Language: en-US
+From: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+In-Reply-To: <Zaex_fkKcui7QZd7@codewreck.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 1/26/2024 13:29, Bjorn Helgaas wrote:
-> On Fri, Jan 26, 2024 at 12:32:34PM -0600, Mario Limonciello wrote:
->> On 1/25/2024 18:35, Bjorn Helgaas wrote:
->>> On Wed, Jan 17, 2024 at 11:53:50AM -0600, Mario Limonciello wrote:
->>>> On 12/15/2023 16:03, Mario Limonciello wrote:
->>>>> commit 7752d5cfe3d1 ("x86: validate against acpi motherboard resources")
->>>>> introduced checks for ensuring that MCFG table also has memory region
->>>>> reservations to ensure no conflicts were introduced from a buggy BIOS.
->> ...
-> 
->>>> Any thoughts on this version since our last conversation on V1?
->>>
->>> Just to let you know that I'm not ignoring this, and I'm trying to
->>> formulate a useful response.
+Hi,
+
+W dniu 17.01.2024 o 11:54, Dominique Martinet pisze:
+> Jan Lübbe wrote on Tue, Jan 16, 2024 at 04:51:41PM +0100:
+>>> So I didn't have time to look at everything through, just want to make
+>>> sure, this series allows sharing data from an usb gadget (e.g. some
+>>> device with storage) over 9p as an alternative to things like MTP ?
 >>
->> Thanks, I had been wondering.
+>> It's the other way around. :) The USB host exports a filesystem, while the
+>> gadget on the USB device side makes it mountable. Our main use-case is to use it
+>> as an alternative to NFS root booting during the development of embedded Linux
+>> devices. NFS root works in many cases, but has some downsides, which make it
+>> cumbersome to use in more and more cases.
+> 
+> Oh!
+> Okay, this makes a lot more sense. And that'll need a bit more
+> explanations in the commits & Documentation/ as you've concluded :)
+> 
+> 
+>> NFS root needs correctly configured Ethernet interfaces on both the development
+>> host and the target device. On the target, this can interfere with the network
+>> configuration that is used for the normal device operation (DHCP client, ...).
+>> For the host, configuring a NFS (and perhaps DHCP) server can be an obstacle.
 >>
->> FYI - we've also added another place to make noise about this ECAM
->> issue in AMDGPU.  This warning should go into 6.9:
+>> For target devices which don't have a real Ethernet interface, NFS root would
+>> also work with the USB Ethernet gadget, but this increases the complexity
+>> further.
 >>
->> https://lore.kernel.org/amd-gfx/20240110101319.695169-1-Jun.Ma2@amd.com/
-> 
-> Looks similar to the PCI core warning here:
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/probe.c?id=v6.7#n1134
-> 
-> The comment says it doesn't work for devices on the root bus, though.
-> Maybe it could be made to work there as well?
-
-IMO it's not loud enough either.
-
-I think it's better to keep the both, here's my logic:
-
-If someone has this problem that prompted this series the first thing 
-they notice is problems "with the GPU".  They'll probably start looking 
-at the kernel log for ERR and WARN related to the GPU.
-
-> 
->>> mmconfig-shared.c has grown into an
->>> extremely complicated mess and is a continual source of problems, so
->>> I'd really like to untangle it a tiny bit if we can.
->>>
->>> One thing is that per spec, ACPI motherboard resources are the ONLY
->>> way to reserve ECAM space.  I'd like to reclaim a little clarity about
->>> that and separate out the E820 and EFI stuff as secondary hacks.  But
->>> there's an insane amount of history that got us here.
+>> As many embedded boards have a USB device port anyway, which is used during
+>> development for uploading the boot-loader and to flash filesystem images (i.e.
+>> via the fastboot protocol), we want to just reuse that single data cable to
+>> allow access to the root filesystem as well.
 >>
->> I guess you know better than anyone here.  But if my idea is
->> actually viable then the E820 and EFI stuff turn into "information
->> only".
+>> Compared to flashing images, using a network filesystem like NFS and 9P reduces
+>> the time between compiling on the host and running the binary on the target, as
+>> no flash and reboot cycle is needed. That can get rid of many minutes of waiting
+>> over a day. :)
 > 
-> That would definitely be a good thing.  I would like it if that were
-> more obvious from reading the code because I spend waaay too much time
-> staring at that labyrinth.
+> My other hat is on embedded development (dayjob at Atmark Techno[1], the
+> only english page linked is about 4 years out of date but I guess it's
+> better than no page at all), so I can understand where you're coming
+> from -- thanks for the background.
 > 
->>> The problem we have to avoid is assigning a BAR that overlaps ECAM.
->>> We assign BARs for lots of reasons.  dGPU and resizable BARs are
->>> examples but there are others, like hotplug and SR-IOV.  The fact that
->>> Windows works is a red herring because it allocates BARs differently.
+> [1] https://www.atmark-techno.com/english
+> 
+> That means I'll actually want to test this, but kind of always busy so
+> it might take a few weeks...
+> Or better, do you happen to know if qemu can create a USB controller
+> that supports OTG so it'll be easy to test for folks with no such
+> hardware?
+
+Maybe dummy_hcd is what you want?
+
+Regards,
+
+Andrzej
+
+
+> We've got enough 9p protocols that aren't actually tested on a regular
+> basis, it'd be great if we could have something that can run anywhere.
+> 
+> 
+>> diod (9pfs server) and the forwarder are on the development host, where the root
+>> filesystem is actually stored. The gadget is initialized during boot (or later)
+>> on the embedded board. Then the forwarder will find it on the USB bus and start
+>> forwarding requests.
 >>
->> Have we actually observed a case that assigning the BAR overlaps
->> ECAM region thus far or it's hypothetical?
+>> It may seem a bit unusual that in this case the requests come from the device
+>> and are handled by the host. The reason is that USB device ports are normally
+>> not available on PCs, so a connection in the other direction would not work.
 > 
-> Yes, it has happened.  There's an example in the commit log here:
-> https://git.kernel.org/linus/070909e56a7d ("x86/pci: Reserve ECAM if
-> BIOS didn't include it in PNP0C02 _CRS")
-
-But so in this case; if there was a full ECAM reservation made from 
-MMCFG instead then Linux wouldn't have tried to put it on top of that space.
-
+> Right, most host PCs won't have OTG available...
+> I was also perplexed by the linux foundation (0x1d6b):0x0109 id, that
+> might be clearer once it's properly documented -- I'll let someone from
+> the usb side chime on this as I have no idea what's appropriate.
 > 
->>> And of course, if there's any way to solve this safely without
->>> adding yet another kernel parameter, that would be vastly
->>> preferable.
->>
->> The kernel isn't static though; something we could do is keep the
->> parameter around a year or two to get the bug feedback loop of
->> people testing it and then rip it out if nothing comes up.
 > 
-> Yeah.  It's pretty hard to remove those options though.  For example,
-> "pci=routeirq" was added in the pre-git era and probably isn't
-> necessary, but how do we know nobody uses it?
+>> In the future, the functionality of the forwarder could be integrated into the
+>> 9pfs server. Alternatively, an improved forwarder could also react to udev
+>> events of gadgets showing up and forward them to different 9PFS server over the
+>> network (when you have multiple target devices connected to one USB host).
+> 
+> Plenty of potential work ahead :)
+> Frankly at this stage I don't think it's much simpler than e.g. CDC
+> ethernet gadget and mounting nfs over tcp, but with further improvements
+> it can definitely get simpler.
+> 
+> 
+>> Perhaps, the inverse setup (9PFS server on the USB gadget side, mounted on a PC)
+>> also would be useful in the future and could share some of this code. Then,
+>> you'd have an alternative to MTP.
+> 
+> (Yeah, I'm not actively looking for that -- was just asking because MTP
+> has been kind of dead lately and I'm not aware of any potential
+> alternative, but I didn't go looking for them either -- let's leave that
+> to later)
+> 
 
-Detect it's in use and drop a notice() or higher into the logs like this:
-
-"pci=irq has been deprecated and is planned to be removed from the 
-kernel on YY/ZZZZ.  If you need this for your system to work, please
-raise an email to linux-pci@vger.kernel.org"
-
-If you give it ~2 years, that gives enough time to get through about
-2 LTS kernels.  People who need it by then but chose not to report it
-still have several LTS kernels to fall back on.
