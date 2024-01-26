@@ -1,117 +1,89 @@
-Received: from mail.subdimension.ro (skycaves.subdimension.ro [172.104.132.142])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89952EAE6;
-	Fri, 26 Jan 2024 10:58:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=172.104.132.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00C7F14273
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 10:59:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706266729; cv=none; b=U06S47q4xAhizQhzf+Ry1JJUueZLGL7mvPMRafC2v4qKQaT6TdyIrVj84YTvmlytl4aClHmtzRw3dTO3o1YoKINAZfx87k8OgSyXZbktzn1x72GVDV4tuTte0wORtqFV2994eP8n/xlU5N6v6NG7PXPyc8wwkB0pnFPUJGEesFs=
+	t=1706266766; cv=none; b=W2yTlIbpQa9/CR6IolOwWJSHaxXc1UxIJWJiTOiOIcnwEMPsqxC+mRvYgi/yYSy2f62mwEhf9VvdngUMIA/UEpraFZPgNCI9zlM4LDpJCnzTKfwd0eGbcbZck9lpua3NWsfsPpy1/G9aBa1wbe1GVthQ7eAOCRwHwlrI5PFNwBE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706266729; c=relaxed/simple;
-	bh=3aiLAmH0RdcOP4o9+Z28MUU6iwYGmfnBmv49RlTdb8g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sA3e3C8gDO2kJ8cFoGp2ceKhN+NUP6EsNnS1yKgwbFOE2MqT41u/c4pUlCm29YiFmt3nNWEKcjPcz7pQLkKYtUrSkMEvKnodzrqPmYjNNRW8vEay8PQKGPwb6N/WzejvT1Oti1xeUNvf9BCm1meGEq6u8uaCFJV+WhONil1X9c4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=subdimension.ro; spf=pass smtp.mailfrom=subdimension.ro; dkim=pass (1024-bit key) header.d=subdimension.ro header.i=@subdimension.ro header.b=Qqb/A1Sp; arc=none smtp.client-ip=172.104.132.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=subdimension.ro
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=subdimension.ro
+	s=arc-20240116; t=1706266766; c=relaxed/simple;
+	bh=Wl5UNtFVk8ZXZ4K+eceGuSpgE0BVMziZ4gm24eGRtS0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Hqwpcn+sspWdhG+UGPACLfMH0hDqBVbcnMkWAfTozjSt3Rz1YC6Iv5iUIIrlqWO6q6oFIF7FRNUk4Dmrg15PgSr2ErcbF3jtU1eHLo0/K8la0Xkgs3xu8x0X2udUJnOz3svzQRKkZ7cBbSWvT3XvM/62m3szXUrewRMfhERKBxw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FcJK4Y4e; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=subdimension.ro header.i=@subdimension.ro header.b="Qqb/A1Sp"
-Received: from sunspire (unknown [188.24.80.170])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.subdimension.ro (Postfix) with ESMTPSA id 0761C28B531;
-	Fri, 26 Jan 2024 10:58:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=subdimension.ro;
-	s=skycaves; t=1706266725;
-	bh=3aiLAmH0RdcOP4o9+Z28MUU6iwYGmfnBmv49RlTdb8g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=Qqb/A1Sp80ZO8Bj8vxbUHbeuypI8nzGATy11DJ5pmorbutNHtwlDj7cCzLEemsF+6
-	 8x50Z9Z25MR6BCCoa8xxWue1yTEnmXGhC+Jlzxc/GY0ZUj+ZQ4R9rnphobBGjXBCnp
-	 +wxwbHbTZujc3WoWmG0df3SDcIR01BQfbZctXWng=
-Date: Fri, 26 Jan 2024 12:58:43 +0200
-From: Petre Rodan <petre.rodan@subdimension.ro>
-To: marius.cristea@microchip.com
-Cc: jic23@kernel.org, lars@metafoo.de, robh+dt@kernel.org,
-	jdelvare@suse.com, linux@roeck-us.net, linux-hwmon@vger.kernel.org,
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 2/2] iio: adc: adding support for PAC193x
-Message-ID: <ZbOQY3cs5emASvzs@sunspire>
-References: <20240122084712.11507-1-marius.cristea@microchip.com>
- <20240122084712.11507-3-marius.cristea@microchip.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FcJK4Y4e"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706266755; x=1737802755;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=Wl5UNtFVk8ZXZ4K+eceGuSpgE0BVMziZ4gm24eGRtS0=;
+  b=FcJK4Y4eqGYRvbuIzCea3g2dO86nxfMT7gD1VGBZekE2n82eQtqn2FuW
+   pPecwkZVgkRHiqXkVSkKjYJrjW7qPRPrp9ur5Ar9VjvGFy1oZd6TqtmNN
+   TEvuknhZLKCSOvZabtyOEjQ8ADmS+DMbWW2leraHDTlWCXXCYrGJmehBl
+   /2JL37zKFK7c6goK3WrohT7LLoqRfcTfB6NaK7oKJoE3KBMJbKZoEcbfK
+   KiNB6D+xEkVxLY/mnS+CJVIM+RBNEIO31N7sXQhFYQG+rSnltxvZsW3lw
+   6nwSN9X9cpXK4ahGCgSkWFsrauyqU7fnbEevT0RiwaHoA0JzpNT5sK9th
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="9123351"
+X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
+   d="scan'208";a="9123351"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2024 02:59:14 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="857367824"
+X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
+   d="scan'208";a="857367824"
+Received: from allen-box.sh.intel.com ([10.239.159.127])
+  by fmsmga004.fm.intel.com with ESMTP; 26 Jan 2024 02:59:12 -0800
+From: Lu Baolu <baolu.lu@linux.intel.com>
+To: Jason Gunthorpe <jgg@ziepe.ca>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>
+Cc: iommu@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Lu Baolu <baolu.lu@linux.intel.com>
+Subject: [PATCH v2 0/2] Use right iommu_ops for mock device
+Date: Fri, 26 Jan 2024 18:53:39 +0800
+Message-Id: <20240126105341.78086-1-baolu.lu@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="j6hFgdCDz3A6ajHc"
-Content-Disposition: inline
-In-Reply-To: <20240122084712.11507-3-marius.cristea@microchip.com>
+Content-Transfer-Encoding: 8bit
 
+In the iommu probe device path, __iommu_probe_device() gets the iommu_ops
+for the device from dev->iommu->fwspec if this field has been initialized
+before probing. Otherwise, it will lookup the global iommu device list
+and use the iommu_ops of the first iommu device which has no
+dev->iommu->fwspec. This causes the wrong iommu_ops to be used for the mock
+device on x86 platforms where dev->iommu->fwspec is not used.
 
---j6hFgdCDz3A6ajHc
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Probe the right iommu_ops for device by iterating over all the global
+drivers and calling their probe function to find a match.
 
+Change log:
+v2:
+ - Iterate over all the global iommu drivers and calling their probe
+   function to find a match.
 
-Hello Marius,
+v1: https://lore.kernel.org/linux-iommu/20240111073213.180020-1-baolu.lu@linux.intel.com/
 
-a quick static scan reported the following
+Lu Baolu (2):
+  iommu: Use mutex instead of spinlock for iommu_device_list
+  iommu: Probe right iommu_ops for device
 
-On Mon, Jan 22, 2024 at 10:47:12AM +0200, marius.cristea@microchip.com wrot=
-e:
-> From: Marius Cristea <marius.cristea@microchip.com>
->=20
-> This is the iio driver for Microchip
-> PAC193X series of Power Monitor with Accumulator chip family.
+ drivers/iommu/iommu.c | 98 ++++++++++++++++++++++++++-----------------
+ 1 file changed, 59 insertions(+), 39 deletions(-)
 
-[..]
-> +	mutex_init(&info->lock);
-> +	ret =3D devm_add_action_or_reset(&client->dev, pac1934_mutex_destroy,
-> +				       &info->lock);
-> +
-> +	/*
-> +	 * do now any chip specific initialization (e.g. read/write
-> +	 * some registers), enable/disable certain channels, change the sampling
-> +	 * rate to the requested value
-> +	 */
-> +	ret =3D pac1934_chip_configure(info);
-> +	if (ret < 0)
-> +		return ret;
+-- 
+2.34.1
 
-the previous assignation of ret is never used, so either dead code or you m=
-ight
-have wanted to return early based on it's value.
-
-cheers,
-peter
-
---=20
-petre rodan
-
---j6hFgdCDz3A6ajHc
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE2Ap/wXYVGTXsPl+pzyaZmYROfzAFAmWzkGMACgkQzyaZmYRO
-fzA8lQ/7BqVyUd2MTfT1Q7WdU8tEr0IO04T/8q8O4rLv4qn/euVY8f8zodmd916M
-aszgIBKbFQSRQgDeKDgV/k1mdozZjY650e70htkS+xyPfw4IK6GCEBkjSDDH4TDS
-f0csnQFL/CIUmriUxAA5BsEvtK1MFfOmOb3A326/rtFfM+B0dmcRTlTYFvrCp3EO
-NhO1C7UMfMclLbb6nHWs8Q+xPnjzH70JejXqL6QwOGHWvHiI/iJkT55mYuvBUdiE
-12zjuD9L8uqUWPCPAd7mpyFuKI3ilb6fwVx1nABwn+wi/m+snu4425wUDpACqofb
-Vk+MTtro82m9LjuElDYcDhRITVgj5CiRWI2X78n4h1ZfIbICVMXkNxSynce+56+X
-d6UpAKlpjoZWyBflcoudN9gEDYzc20rcZnQ/qQ5GbfoVyeM9+cOB1ymlAGR5zhWc
-wSiTnlzNEiFd4TzwXOO2aDXzwI6VJGnsXPFyyNWujn2zwFJrCK2ihZsb73jVjON6
-KYjJEtq2ZQ2qzkzESdY2AQrsnXGJBokPIJc50wMo7vzPRbEe+kancgNG1xgCeLdo
-rceiUmqOYGFVprkXw10Kh7IWZhFpSyQcAxj0gHikeYrIZkRgQf62hXjmBNieWCz5
-ZqqB4jLxNSV2FEMOKp7Bc1ONhqV8HNhjqaXewY3xya1ngPOZvYU=
-=lZiH
------END PGP SIGNATURE-----
-
---j6hFgdCDz3A6ajHc--
