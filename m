@@ -1,80 +1,65 @@
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72B52567D
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 00:04:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C1026FB9
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 00:04:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.134.136.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706227447; cv=none; b=LxBw0+zy27hg1hU6y5kS29IfwZe/8+L4Na6hOaCPzMKp22ZpyDLU4saimsnFySv1GqE9yQEhF5O1RXfrtDvoE1we8qyOW/3yA+EMB+GoSoIjKcZ8XwD70wWqMNBTIXYTEi0zeHcGTZCb3Mp8x95aVbXfwt/nPCIO+xuWLjCptik=
+	t=1706227486; cv=none; b=MqslI8RQPI5uY8hUbm4QIO9Hg6ktt1YUHughF8ef0Id2iArJ0CJw9HOc0NNE73mX8r4TUzUiw5tneF2dW6vnr/MM7tSNAu5bNlx57cgXWJRtiMNtC/meZUYhDHjaS6oQN1gvf/6vo3ixUJR10czMIy4rAglHJ6Q+mmTTC/X9t0U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706227447; c=relaxed/simple;
-	bh=7zbZOXeSYfrXL3UfSHshupsYWCGYDeTqXmv5Fpw29Yo=;
+	s=arc-20240116; t=1706227486; c=relaxed/simple;
+	bh=dYusNM9jhJDBfpnY/3YlKg1imfsMgzwcEiV1q0lYqF4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=coq7j2TcOFCuNn0NhDrR0g1lNlV5nkv5nWctA+/rYQNTQcKcWr4LlbB6k98lNh6FNLYj2skDZ2Rki4ebVz5j0IcCTSBUGHCsjSaCibcq8ZavBZV2GAfgxOFOaPcz4iTNdr9FZ4vtECV5iqT36mCUaX2onUiXnazbRYxR+8v2yJ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=hzSBIy+T; arc=none smtp.client-ip=209.85.216.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=QvG9ebGTuySwCAoOLsO3b1CsLJTL789t/78PPEWU+S20QteX9kCNUYeQISRf12euo1w+gzZimow2aN0/u2SvHR7H0B5D8ySUXV+1L4y6+OYMN4OCJZKEpiFUJkwyqbild/ux+EH898bdmgvqlnL801HI1F8dgzkraMjTRMjKIEg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YedCk2CE; arc=none smtp.client-ip=134.134.136.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="hzSBIy+T"
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-29036dc3a63so3412022a91.3
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 16:04:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fastly.com; s=google; t=1706227446; x=1706832246; darn=vger.kernel.org;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nt+zkT8dWPbaYHm7q/7qevYBv8gGAY6mW3zJ10wq1SE=;
-        b=hzSBIy+TjaTBgKhxctcHd2aCx2964mTXstQY0xCxO9GCw4t6HYehBs2z3M10ZNSPiO
-         JTS5VUBNp7WHh2g+faO7IIqTjUsQkO8ZYXL8T2CbCHbaA7ZtuXAXSJW1GUAOTV2y/S/1
-         FZoM9jnyAg3XbLgP4eI6waClnJ6djymJiehBg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706227446; x=1706832246;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nt+zkT8dWPbaYHm7q/7qevYBv8gGAY6mW3zJ10wq1SE=;
-        b=Yc77rim6R6xN381RRj5u8K5InUnS5hTsI1UARFIkP5U3/aiky+QrX//2xext4TzfnM
-         3blP8O1BLz2auljtmgG7Hzv9w2n1J9v31/jdcWLa7wXgeUOakAYNlJjWT1b1CHfifKWl
-         xTOp9Av0sPHkEyVQ0tOLpW7p9XCj8KreN2cPDTzYIdjJ2raDVcaKDnNn02aN5S52dN2z
-         IypwlMkn5EEG3i4p4sx8ceCe0G0+PkWPAr9leqtirBBgqgl/WEqIHPlIHcYVL3JN+13y
-         +KCU7MQSobvlr9kdksgdvh4YeO4FR2p2At+jmzbVLnQKlqkXwA9pR8PIYaRi6T74sc3j
-         CnmA==
-X-Gm-Message-State: AOJu0Ywv6czClpEWnfRj9fWqZU7AJsvYBdcS9hrJbL2VQNGMyYm23O76
-	R1w2o1/Sc+cJ+rLZXmt5gsgjaAwA0Ap+bctoyi7MfSzFLe29+aRWMngrmBdVeKA=
-X-Google-Smtp-Source: AGHT+IH3PGEaEJ5fzY45STg6LjF8IDS5JBxY9N4KvoaAPzzvAAbyyjdFOLiivTEHCXcPoP38TqXmVg==
-X-Received: by 2002:a17:90b:d0b:b0:290:5ae2:f2a8 with SMTP id n11-20020a17090b0d0b00b002905ae2f2a8mr532493pjz.33.1706227445731;
-        Thu, 25 Jan 2024 16:04:05 -0800 (PST)
-Received: from fastly.com (c-24-6-151-244.hsd1.ca.comcast.net. [24.6.151.244])
-        by smtp.gmail.com with ESMTPSA id sw12-20020a17090b2c8c00b0029105d49b2dsm96322pjb.20.2024.01.25.16.04.03
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 25 Jan 2024 16:04:05 -0800 (PST)
-Date: Thu, 25 Jan 2024 16:04:01 -0800
-From: Joe Damato <jdamato@fastly.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	chuck.lever@oracle.com, jlayton@kernel.org,
-	linux-api@vger.kernel.org, brauner@kernel.org, edumazet@google.com,
-	davem@davemloft.net, alexander.duyck@gmail.com,
-	sridhar.samudrala@intel.com, kuba@kernel.org,
-	willemdebruijn.kernel@gmail.com, weiwan@google.com,
-	Jonathan Corbet <corbet@lwn.net>,
-	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nathan Lynch <nathanl@linux.ibm.com>,
-	Steve French <stfrench@microsoft.com>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Julien Panis <jpanis@baylibre.com>, Arnd Bergmann <arnd@arndb.de>,
-	Andrew Waterman <waterman@eecs.berkeley.edu>,
-	Thomas Huth <thuth@redhat.com>, Palmer Dabbelt <palmer@dabbelt.com>,
-	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-	"open list:FILESYSTEMS (VFS and infrastructure)" <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH net-next v3 3/3] eventpoll: Add epoll ioctl for
- epoll_params
-Message-ID: <20240126000400.GA1987@fastly.com>
-References: <20240125225704.12781-1-jdamato@fastly.com>
- <20240125225704.12781-4-jdamato@fastly.com>
- <2024012559-appraiser-coerce-b32f@gregkh>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YedCk2CE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706227485; x=1737763485;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=dYusNM9jhJDBfpnY/3YlKg1imfsMgzwcEiV1q0lYqF4=;
+  b=YedCk2CENwn5f/b7Lx7wWbcNSFXxonbDqZwDFJlod/wceI4pM0QgJBgn
+   SowtAwz786oCDZEAJ1G92JX3s7YsH4+R0C0duK30+cffqsJNmJxs5pE9J
+   SkGFe3SiPfgGNyo5UUW4VpbI1kNaObgsmijux6rH+ksWKPbDNyiqi31qT
+   16oiUU6ArhrJ19f3nGh005l+bHakrXf2YJBOdcT0p5y+Sx66ICWt8zDty
+   2thr+5oNjDvo41U1HyGrDjhk7iqQxtW+EU1WaLEENdrKgOl3GJUOOOlVO
+   vlYcCqO2MYHP+vzJm81TnHNkBNanXfUgNe6WXdoHoAXXbw2HJXElSRnda
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="392771491"
+X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
+   d="scan'208";a="392771491"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2024 16:04:44 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
+   d="scan'208";a="2598604"
+Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
+  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2024 16:04:45 -0800
+Date: Thu, 25 Jan 2024 16:06:09 -0800
+From: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+To: kuiliang Shi <seakeel@gmail.com>
+Cc: Shrikanth Hegde <sshegde@linux.ibm.com>, alexs@kernel.org,
+	Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Daniel Bristot de Oliveira <bristot@redhat.com>,
+	Valentin Schneider <vschneid@redhat.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 5/5] sched/fair: narrow the sched_use_asym_prio checking
+ scenario
+Message-ID: <20240126000609.GC17237@ranerica-svr.sc.intel.com>
+References: <20240117085715.2614671-1-alexs@kernel.org>
+ <20240117085715.2614671-5-alexs@kernel.org>
+ <dd4e5498-3e21-4ac1-b65a-fd132c2a7206@linux.ibm.com>
+ <e5b4eb14-c8e4-4888-b555-4b959cda8efe@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -83,22 +68,57 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2024012559-appraiser-coerce-b32f@gregkh>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <e5b4eb14-c8e4-4888-b555-4b959cda8efe@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 
-On Thu, Jan 25, 2024 at 03:20:37PM -0800, Greg Kroah-Hartman wrote:
-> On Thu, Jan 25, 2024 at 10:56:59PM +0000, Joe Damato wrote:
-> > --- a/fs/eventpoll.c
-> > +++ b/fs/eventpoll.c
-> > @@ -6,6 +6,8 @@
-> >   *  Davide Libenzi <davidel@xmailserver.org>
-> >   */
-> >  
-> > +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-> > +
+On Thu, Jan 25, 2024 at 05:35:32PM +0800, kuiliang Shi wrote:
 > 
-> Why this addition?  You do not add any pr_*() calls in this patch at all
-> that I can see.
+> 
+> On 1/23/24 4:47 PM, Shrikanth Hegde wrote:
+> > 
+> > 
+> > On 1/17/24 2:27 PM, alexs@kernel.org wrote:
+> >> From: Alex Shi <alexs@kernel.org>
+> >>
+> >> Current function doesn't match it's comments, in fact, core_idle
+> >> checking is only meaningful with non-SMT.
+> >> So make the function right.
+> >>
+> >> Signed-off-by: Alex Shi <alexs@kernel.org>
+> >> To: Valentin Schneider <vschneid@redhat.com>
+> >> To: Vincent Guittot <vincent.guittot@linaro.org>
+> >> To: Peter Zijlstra <peterz@infradead.org>
+> >> To: Ingo Molnar <mingo@redhat.com>
+> >> ---
+> >>  kernel/sched/fair.c | 4 ++--
+> >>  1 file changed, 2 insertions(+), 2 deletions(-)
+> >>
+> >> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> >> index 96163ab69ae0..0a321f639c79 100644
+> >> --- a/kernel/sched/fair.c
+> >> +++ b/kernel/sched/fair.c
+> >> @@ -9741,8 +9741,8 @@ group_type group_classify(unsigned int imbalance_pct,
+> >>   */
+> >>  static bool sched_use_asym_prio(struct sched_domain *sd, int cpu)
+> >>  {
+> >> -	return (!sched_smt_active()) ||
+> >> -		(sd->flags & SD_SHARE_CPUCAPACITY) || is_core_idle(cpu);
+> >> +	return	(sd->flags & SD_SHARE_CPUCAPACITY) ||
+> >> +		(!sched_smt_active() && is_core_idle(cpu));
+> >>  }
+> > 
+> > This seems wrong. This would always return false for higher than SMT domains 
+> > if smt is active. 
+> > 
+> 
+> yes, thanks for point out.
+> 
+> > Was this meant to be sched_smt_active() && is_core_idle(cpu)? 
+> 
+> In theory, yes, it should like this. But I have no ASYM device to test. :(
 
-Thanks, I've removed this for the next version. It was a remnant from a
-previous version.
+This would not work with !SMT and asym_packing.
+
+I can test your patches on asym_packing + SMT systems if you post a new
+version.
+
