@@ -1,157 +1,180 @@
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A45C1BDF8
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 14:44:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 905911C2AE
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 14:44:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706280261; cv=none; b=azjVs8ZnE7EAEzenBArdjHdkqCDASVLBIllnO4ewuftxdl70uslc6gYKJxhg3cxx/DN9YLJsgqyj1qeRHzYpyiJpekQZqqW879GSS+geFIXx4EeHNJKWNYhJz1gk8xrHkmA1lER5xklVy2n2v9BR/TzM5vG0681AnSGbvUfIDG4=
+	t=1706280283; cv=none; b=ON0j+IboTtebKw66GBQBkzfDJtzGn7iMbIf233JANr1DLZtfWNQoGDxvJfCAfkxf/y7DJYa/o7RNNilgi7wv3bDV3ivitNKXwAiefVuXhmbJXf1Nz7kMnYFuQ/s+nMF3iL+pgSS9X06IHKJYDJUPbeZK8ddq8St8rslP1R+LScw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706280261; c=relaxed/simple;
-	bh=hHQdoIZ7VlUib1GYkkvTIRWDHU7nvqtsSBGy7EHWP4I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=nOsvsR3VKXCg1AKJOInj7JtBRJzGSS3KHCt4GI+EFwM5BYQwc3oTtvx6s0hP6eL93cTe7UmnHxGtzhtDPTRbDrpaMO+X60p9p5XOhncBR6f5yshTGBGyWvGKpekJ3SMUNj5/AmoSL8mslLGy2YQYhM5venSd4/1XOTlMHMLWx1Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MIYqPVOw; arc=none smtp.client-ip=209.85.167.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1706280283; c=relaxed/simple;
+	bh=S/etbdxpdJbEcvSqL3E9/1O3DiFS9pqHuIWHhwxiDJI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eHMjiABpFGS+g21/MwyH5VvigUBdTT510QphQOhh7lxTsqKu4BY8n6keMTNYCVJUpOWPya22QTCTyPe3aBZ0ZFcEuh7KCb4lAuUD16TGz1IsR1X7J1Aeh4h2vXA5d+5VZPv6KrCQDFlXmFJxnfxi2F7Lz304WGKt5/7l5MTUfp4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sjDAQtvm; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MIYqPVOw"
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-5100cb238bcso822157e87.3
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 06:44:19 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sjDAQtvm"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-33926ccbc80so346676f8f.0
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 06:44:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706280258; x=1706885058; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Yhxsc3ZvfErMuA2OU77vZ9+Nmhmoa72VnFOALwS5xI8=;
-        b=MIYqPVOwBOfw6wGCF1WQ/Uhf5DNW4twWxGKUU1ujUdHpxZm0COTqz2vq/WyptmRSQl
-         fBX2WmuVaZ14qLCpfUc8/mdtc0Ax4GcMcW3sAiIoqu9iYNRouR8ejLCukEaJNhtFquh5
-         8fdswamMmtg2ye8qOsYVzEZ5KwCPapvgIWVAjauJcFNqqCUEo2BkvexhK0ZOZaVBivjU
-         de5M28j2cEt1+mC1WRscBFR2mZb3gHt1FNKEtrOtacU9zkf+Tr8eCrVFVimirayzyW4y
-         vws1D5iolv1qTSfJmiBi+NL5MOhBVkKcTCq4IIfxLkwK6RbJm5T9LE2LdOvs+jhcaP2x
-         eehA==
+        d=google.com; s=20230601; t=1706280280; x=1706885080; darn=vger.kernel.org;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=i5B+fHMvjnJUN3quASTzUIwtKvGYeHenqNIe0ucdsRE=;
+        b=sjDAQtvmxvznRV37dI/wMPUPtubbdaFZphZHfQlsgQ1lClAyR4VgxstdnVdoli1Ejv
+         rOpWTt3vYQcE6bfxBFP+0hCq3qvWlEq4zMls1GEz9/yqghL/Pg/xEKYU9Yxy8P+wrGLj
+         67/Jgx3hebNy803u4AbK2t0BjByOozdrxSbd13nLCW8dMvnOVtQCK1Nu/nWQ7KZDzC89
+         /KxCniXX6kIEnzlEyJeqsZtOVR9SIFZGtOh6GJx0MVkK3DF0aWJoenK/Z1eLEV1/d5VJ
+         J6wHUHu46JPgLidY8GwfpklC37H2vvW0giRebfTc98qT8CvbndOoq8ttoNMVJBrk57zP
+         k16g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706280258; x=1706885058;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Yhxsc3ZvfErMuA2OU77vZ9+Nmhmoa72VnFOALwS5xI8=;
-        b=tk9kiVPw0l/MPnHXoPbeQh4MGjt8Q8QcCLZ/a6VohcMViHrd/Ce6hDSfmhbFSkIkx8
-         9Ik6kqpDW3tTJlUb1hzfg2ezFXh/j3cJaJ3aWQiLYuNEo5aRP9TitMh7hdCdDdfPUV09
-         nj1xG89AI1fEphNTWuHxfdpZqZ5QEwdy9ZOGom+VAzSUFHfV2lD+guSfFoNN7JwSlVDd
-         EkFNRiCZ8W8EgLCJu7mwIu7JlR16hiiEYRb2YCbgOI26jWGrsZt92R+sA+mzoTq7+jQk
-         7AneAyE+osSjpOOXs2tvPna9S4oTd5sNpX61+BFpfkeCcXMYTiHO5V3HwCuvfYL+ylPx
-         d4ow==
-X-Gm-Message-State: AOJu0YySn5e9EuIjDBU2+NQtZqmsvfQgchx5I7W8a0gxlvy5JXW7Eya7
-	3FeBG9wDd3HyrVyCSKRaZ30uO2k8ryUkm5llWBZiZp6Ze4hAdH0eaUntOdhr/1w=
-X-Google-Smtp-Source: AGHT+IFKqrHw6xFuQbufj1vF3RjQN0vds2se+NOi9nrQ7pyJBHf0QPpUwAwiLCzgQvx848vZALQBsg==
-X-Received: by 2002:a05:651c:2107:b0:2cf:348c:776b with SMTP id a7-20020a05651c210700b002cf348c776bmr1005696ljq.67.1706280258073;
-        Fri, 26 Jan 2024 06:44:18 -0800 (PST)
-Received: from [192.168.1.20] ([178.197.215.66])
-        by smtp.gmail.com with ESMTPSA id t23-20020a056402241700b00558b0c513e0sm659888eda.61.2024.01.26.06.44.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 26 Jan 2024 06:44:17 -0800 (PST)
-Message-ID: <33e2fdb7-0de3-4840-988a-59d3d46810bc@linaro.org>
-Date: Fri, 26 Jan 2024 15:44:15 +0100
+        d=1e100.net; s=20230601; t=1706280280; x=1706885080;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=i5B+fHMvjnJUN3quASTzUIwtKvGYeHenqNIe0ucdsRE=;
+        b=HUlutKpCo1YZcm89omzlh+pGL3q/ZOBroIg8yRWMp5qFq8bnI3CgENBUG5qbOmyDzb
+         qdYCEZ/COYhnRK5wf5ij+JXcQjHWlljxhgeCIOXu086W15i3/O6YA9PPOk4+u3y/BztH
+         mcpFx3Gqp3XizZLlb6Of1moxbIy23wWisYhoUTT35pp4rfg7hJnyxPVUSyrcbx6ydvzp
+         IulxWDeLoPRD4yW/a4jh0FDVoxkstt9zzoeoxaZp8iG2El+dCex6wS8f+GGj2tpUeEmV
+         69CeZIKrlQY7OyfQQzFrfZ4nAejhaQHvOXcnvKtHNvNl1DuTzV8bFxrM3FNjEagyy/HI
+         zoHw==
+X-Gm-Message-State: AOJu0YzC6gh1YoDhH7fIQB8YojSOTVMmml4de8tXdwVL4SB4WkXOXcCH
+	UOEt8LgCojowacMGwtAozU+PJ+YX9wPnGAWHDX/TTbm0lMLMEvjDvhc2E9+AXQ==
+X-Google-Smtp-Source: AGHT+IERvL8VWBU0pIT6Hmg6/b0+n3elHgZZdlfzUMyAnnic5sMEMijkPnCj31BtoZQBu1KA6TJrWA==
+X-Received: by 2002:adf:f10e:0:b0:337:9d3b:c180 with SMTP id r14-20020adff10e000000b003379d3bc180mr1855231wro.4.1706280279513;
+        Fri, 26 Jan 2024 06:44:39 -0800 (PST)
+Received: from elver.google.com ([2a00:79e0:9c:201:3837:e733:e624:7fe2])
+        by smtp.gmail.com with ESMTPSA id f15-20020a056000036f00b00337d84efaf7sm1415718wrf.74.2024.01.26.06.44.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 26 Jan 2024 06:44:38 -0800 (PST)
+Date: Fri, 26 Jan 2024 15:44:33 +0100
+From: Marco Elver <elver@google.com>
+To: Andrey Konovalov <andreyknvl@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Alexander Potapenko <glider@google.com>,
+	Dmitry Vyukov <dvyukov@google.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+	Vincenzo Frascino <vincenzo.frascino@arm.com>,
+	linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
+	linux-mm@kvack.org
+Subject: Re: [PATCH 2/2] kasan: revert eviction of stack traces in generic
+ mode
+Message-ID: <ZbPFUXNeENyuwync@elver.google.com>
+References: <20240125094815.2041933-1-elver@google.com>
+ <20240125094815.2041933-2-elver@google.com>
+ <CA+fCnZc6L3t3AdQS1rjFCT0s6RpT+q4Z4GmctOveeaDJW0tBow@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/2] ASoC: codecs: tx-macro: correct TX SMIC MUXn
- widgets on SM8350+
-Content-Language: en-US
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
- Banajit Goswami <bgoswami@quicinc.com>, linux-sound@vger.kernel.org,
- linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org
-References: <20240125153110.410295-1-krzysztof.kozlowski@linaro.org>
- <4d377c8e-8cef-4da3-9b25-fc91a7dc3d49@linaro.org>
- <518642ba-56e1-4648-a253-2a841a787ee0@linaro.org>
- <62b6b3d1-d54a-46ab-8400-c1f48238b1db@linaro.org>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <62b6b3d1-d54a-46ab-8400-c1f48238b1db@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+fCnZc6L3t3AdQS1rjFCT0s6RpT+q4Z4GmctOveeaDJW0tBow@mail.gmail.com>
+User-Agent: Mutt/2.2.12 (2023-09-09)
 
-On 26/01/2024 15:42, Srinivas Kandagatla wrote:
+On Thu, Jan 25, 2024 at 11:36PM +0100, Andrey Konovalov wrote:
+[...]
 > 
+> Reviewed-by: Andrey Konovalov <andreyknvl@gmail.com>
 > 
-> On 26/01/2024 13:23, Krzysztof Kozlowski wrote:
->> On 26/01/2024 14:21, Srinivas Kandagatla wrote:
->>>
->>>
->>> On 25/01/2024 15:31, Krzysztof Kozlowski wrote:
->>>> Hi,
->>>>
->>>> Changelog in individual patches.
->>>>
->>>> v1:
->>>> https://lore.kernel.org/all/20230717140138.201745-1-krzysztof.kozlowski@linaro.org/
->>>>
->>>
->>> Unfortunately this is breaking mic on X13s.
->>
->> Did you update also your mixer? I was asking last time about this as well...
+> But I'm wondering if we should also stop resetting metadata when the
+> object is fully freed (from quarantine or bypassing quarantine).
 > 
-> Updating to new mixer setting fixes the issue.
+> With stack_depot_put, I had to put the stack handles on free, as
+> otherwise we would leak the stack depot references. And I also chose
+> to memset meta at that point, as its gets invalid anyway. But without
+> stack_depot_put, this is not required.
 > 
-> This is going to be a issue with the existing ucm which becomes broken 
-> with this new patches.
+> Before the stack depot-related changes, the code was inconsistent in
+> this regard AFAICS: for quarantine, free meta was marked as invalid
+> via KASAN_SLAB_FREE but alloc meta was kept; for no quarantine, both
+> alloc and free meta were kept.
 > 
-> Are you going to send patches to fix the ucm too?
+> So perhaps we can just keep both metas on full free. I.e. drop both
+> kasan_release_object_meta calls. This will go back to the old behavior
+> + keeping free meta for the quarantine case (I think there's no harm
+> in that). This will give better reporting for uaf-before-realloc bugs.
+> 
+> WDYT?
 
-I could, but we should really think whether affecting sc8280xp is worth.
-AFAIK, the microphones work there, so we do not need to fix them even
-though fix is correct. It's the other platforms which need the fix.
+Yes, that makes sense.
 
-Best regards,
-Krzysztof
+You mean this on top?
 
+diff --git a/mm/kasan/common.c b/mm/kasan/common.c
+index ad32803e34e9..0577db1d2c62 100644
+--- a/mm/kasan/common.c
++++ b/mm/kasan/common.c
+@@ -264,12 +264,6 @@ bool __kasan_slab_free(struct kmem_cache *cache, void *object,
+ 	if (kasan_quarantine_put(cache, object))
+ 		return true;
+ 
+-	/*
+-	 * If the object is not put into quarantine, it will likely be quickly
+-	 * reallocated. Thus, release its metadata now.
+-	 */
+-	kasan_release_object_meta(cache, object);
+-
+ 	/* Let slab put the object onto the freelist. */
+ 	return false;
+ }
+diff --git a/mm/kasan/generic.c b/mm/kasan/generic.c
+index 8bfb52b28c22..fc9cf1860efb 100644
+--- a/mm/kasan/generic.c
++++ b/mm/kasan/generic.c
+@@ -510,20 +510,6 @@ static void release_free_meta(const void *object, struct kasan_free_meta *meta)
+ 	*(u8 *)kasan_mem_to_shadow(object) = KASAN_SLAB_FREE;
+ }
+ 
+-void kasan_release_object_meta(struct kmem_cache *cache, const void *object)
+-{
+-	struct kasan_alloc_meta *alloc_meta;
+-	struct kasan_free_meta *free_meta;
+-
+-	alloc_meta = kasan_get_alloc_meta(cache, object);
+-	if (alloc_meta)
+-		release_alloc_meta(alloc_meta);
+-
+-	free_meta = kasan_get_free_meta(cache, object);
+-	if (free_meta)
+-		release_free_meta(object, free_meta);
+-}
+-
+ size_t kasan_metadata_size(struct kmem_cache *cache, bool in_object)
+ {
+ 	struct kasan_cache *info = &cache->kasan_info;
+diff --git a/mm/kasan/kasan.h b/mm/kasan/kasan.h
+index 216ae0ef1e4b..fb2b9ac0659a 100644
+--- a/mm/kasan/kasan.h
++++ b/mm/kasan/kasan.h
+@@ -390,10 +390,8 @@ struct kasan_alloc_meta *kasan_get_alloc_meta(struct kmem_cache *cache,
+ struct kasan_free_meta *kasan_get_free_meta(struct kmem_cache *cache,
+ 						const void *object);
+ void kasan_init_object_meta(struct kmem_cache *cache, const void *object);
+-void kasan_release_object_meta(struct kmem_cache *cache, const void *object);
+ #else
+ static inline void kasan_init_object_meta(struct kmem_cache *cache, const void *object) { }
+-static inline void kasan_release_object_meta(struct kmem_cache *cache, const void *object) { }
+ #endif
+ 
+ depot_stack_handle_t kasan_save_stack(gfp_t flags, depot_flags_t depot_flags);
+diff --git a/mm/kasan/quarantine.c b/mm/kasan/quarantine.c
+index 3ba02efb952a..a758c2e10703 100644
+--- a/mm/kasan/quarantine.c
++++ b/mm/kasan/quarantine.c
+@@ -145,8 +145,6 @@ static void qlink_free(struct qlist_node *qlink, struct kmem_cache *cache)
+ 	void *object = qlink_to_object(qlink, cache);
+ 	struct kasan_free_meta *free_meta = kasan_get_free_meta(cache, object);
+ 
+-	kasan_release_object_meta(cache, object);
+-
+ 	/*
+ 	 * If init_on_free is enabled and KASAN's free metadata is stored in
+ 	 * the object, zero the metadata. Otherwise, the object's memory will
