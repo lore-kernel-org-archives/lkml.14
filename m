@@ -1,162 +1,162 @@
-Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81A4E134B0
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 08:04:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C759664B0
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 08:06:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706256299; cv=none; b=bL4raiDgt7WVOPbOraIdRJp6+C9/khGjE7yUbjdlVfLYgLDGfnHiI6oAxAYO/Bz74266+gqHQqE2Ba4XGDdMKlgEGnybt0Iqc3sdgHRFCl63gp71keaGLhvfMrWz1Gl3xAvI+Q7dya4ftTwRhsnFWSc/0gRuK67zSMOByu1N1wk=
+	t=1706256410; cv=none; b=FuFi52Z1VMuQk/Z8K2S9GrkXLNxn8T6t+lcRnVcR0uxijMR+GA2KLFwRoJTwsudAJPd5fZZnfzc8K1zoviPG+yCcyyIFTRHJ3e37NmS+0xJkKZ77g1V8fyN69oqUiYTmiV0LLJSkIfrciZCUbItyk04cG7WClUZZ81fGvMwU7PM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706256299; c=relaxed/simple;
-	bh=vBWqTUqUZtCh3EPJLAcL8wR/fYdkX3CFgMZPjKfyz1o=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To; b=YsiWXLPa/81gU1LZXBx25YsxPRSRyAxUQz43xkgfQ+rN6x912nkNYKBQCO5Sb0qbcvm19uMsSXNec1/r1Nd2uwrK2Eq09WHJQZfH4C6ACe5lpfjVUtxxXkgYXTN4mdim68Qtl356CITc8+Zb2Ez6XeYza5dJoKr5a6keSVuO7Kw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QR1r+KWA; arc=none smtp.client-ip=209.85.215.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1706256410; c=relaxed/simple;
+	bh=f5YIcX20Bh0LYJB3yql1WUvlZJIPSskbM4xvKEI0BGA=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=pCHr/1wSvR3P6zbLcmwG6qErXyOnU1sZRVBqh48DWhFtBCiSvGfQv9zJzdWK9SKtxu2bxxjOdgB5DmZGn4tp72hkXTPkb9mCQStOUGQ15bnJ4S4MqOQduJWzJJfiGEuDOxOcT5VC9WJiYNkldrQlJLOUOkUsjnxyZRknFSYZb9c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--yosryahmed.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Bk+TCGZZ; arc=none smtp.client-ip=209.85.128.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--yosryahmed.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QR1r+KWA"
-Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-5cddc5455aeso138349a12.1
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 00:04:58 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Bk+TCGZZ"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-602d22a54caso449407b3.3
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 00:06:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706256298; x=1706861098; darn=vger.kernel.org;
-        h=in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
+        d=google.com; s=20230601; t=1706256407; x=1706861207; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=PQZqXjnfMiJnpMoo1+KQWc+QVfHQsa7SqRJloMMoGq0=;
-        b=QR1r+KWA6OU/OhXw1Wxobh9VCpCci8jDlRSBIN0JFD1/BxMOJkkRZDiEd6j6esLs2U
-         R7TZ+TAgohGWSrKfj11MXXHg7AXc9NwKmvxMGS1VNn3R4h5I20ZGH38X+VbtBUwJQAOo
-         ItP+9ljnAS7pPCs5nzFNUBi3fYtgkzfXFIiKwZLKZTaeHOK4I3+nxCileCavD/9eNQOH
-         j8gef/Bo+lNfzAorQ8xC8TcE6Hf5dLYC4nXjcpBDXjRWBivRV6vdL8LJ44SvSNyPiNF4
-         Z5bpjpUvPCkJZVyvpGs19V/mtY59JNxqsY2wICu+f38XG84ym1GBY91QHTxtT0gbN+ZI
-         YJZA==
+        bh=Q+MkK7elkwozxtf29PmL54XsONOmn3SLZnF2nfqAuzw=;
+        b=Bk+TCGZZcIKiUI6L21LTRdWZ3Y8J0MSUHlKP0394Z/Zm32xvdKtoeOdALe+NaM8/rw
+         LENwrS8WOq/fkYwbQPODKRcZW+YHrVp5AClattn4Lz6nlc6TJroxDx22TMwu6saTGuE0
+         LE4FQR8vuM/ojC8etjnMxwnk4oYyWyTd6kyg5hAhaXw9Pat2MFFHiidZcYKFe+X0CbOC
+         6sVfryMv9fUhiR6l13fpWGedN6WrEOxG/iV1Mm25LJGXv1Ukv44N0PaSXnD7a84EX5C2
+         4lm4/G6gwoc/GBTabmyd3SEHw9nS5Fumo/2KLLwKOrAcj7bq2Odkr8Y2Qlf5MG2a1YF/
+         SqAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706256298; x=1706861098;
-        h=in-reply-to:message-id:date:subject:cc:to:from:x-gm-message-state
+        d=1e100.net; s=20230601; t=1706256407; x=1706861207;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=PQZqXjnfMiJnpMoo1+KQWc+QVfHQsa7SqRJloMMoGq0=;
-        b=uKjKvetFqKBKRoKRML2BIWcoEDUl+7gGz/nUEKvfTz3k1Np4CR51CY6EZXhdpvYgU8
-         tyexdyrz8dWyyGBuSjM1YUgrlNo90Wjd3evte2r6FQm556GtKrRaqGL767Qf4KJyHGLo
-         l35shcwBNegQiEpflWSzR3O0dQvSH93Y4rlZy84Z2tQ2mC6/j+Zq8bWrxGAxP4hqKXsX
-         aA+pqhQETaBhtXP4YXcLhDK4aZChUOI5yHHyaFfOvem4a/fz/eQiQee5OyrOsWk9GS3b
-         btFzhwVvHN3A2KMiE/45LZbpCoKctyc5tmcL1SRQYK8iarRaE0se4r4B0Zp+LZJJTlOZ
-         nxKA==
-X-Gm-Message-State: AOJu0Yzr946Ovta2dxJSDwqYydt+fvTYdG6QXTn7oQHBdNeQhzUvVfhK
-	5OsXIhNSnpd0+Q8+jAVAOm1GCv+qe5fRZofDSS2n3kLntvRoUt8L
-X-Google-Smtp-Source: AGHT+IGfmbZKkJqn5DYHsnUB/HlbsSD4b7U+wcFk2saImSWOh/tYsOuUy6DJa89k+5XYyr7wqpmGTA==
-X-Received: by 2002:a17:90a:6fe2:b0:290:b29a:5258 with SMTP id e89-20020a17090a6fe200b00290b29a5258mr526348pjk.29.1706256297570;
-        Fri, 26 Jan 2024 00:04:57 -0800 (PST)
-Received: from localhost.localdomain ([216.243.7.87])
-        by smtp.gmail.com with ESMTPSA id sk8-20020a17090b2dc800b00290701c8623sm669927pjb.28.2024.01.26.00.04.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Jan 2024 00:04:56 -0800 (PST)
-From: SeongJae Park <sj38.park@gmail.com>
-X-Google-Original-From: SeongJae Park <sj@kernel.org>
-To: cuiyangpei <cuiyangpei@gmail.com>
-Cc: SeongJae Park <sj@kernel.org>,
-	akpm@linux-foundation.org,
-	damon@lists.linux.dev,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	xiongping1@xiaom.com
-Subject: Re: [PATCH 1/2] mm/damon/sysfs: Implement recording feature
-Date: Fri, 26 Jan 2024 00:04:54 -0800
-Message-Id: <20240126080454.15649-1-sj@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20240126065706.GA16652@cuiyangpei>
+        bh=Q+MkK7elkwozxtf29PmL54XsONOmn3SLZnF2nfqAuzw=;
+        b=PoYz7m7sRuu00Qz7conO7YenN+G+naDtpQpROYXK88QAnnL8xgY2s+utbGjXKmdlJC
+         WRfFthN84Dyl955DaRDNFFdgtc9RZKGtZUudYy9vDDJL5I+pKwP0iLXax68XxFYTrzb3
+         14L4M/v2RNOk5m6+JRyO1ckE7lETDRL/HdhuE5IJY0mBH8L+/VVs/D2tP5BunPN7UgzW
+         Ivd9I+Fbs4UVSzoLGA6lfJkqrqGDJUTG4mVfgC/wsKtqn0MK+gmyo4uHSrIwm2NTmONk
+         lqmnFxd9y+BoQtOvMkjZaXZvYshpsgXrLObO9rQ54hubAHH+U1E0LIxWyUoIefq9uOL9
+         31Ww==
+X-Gm-Message-State: AOJu0YzTkh66ODFyQORedsODTDJB86xebgGF6M9pKcl8i1yyV5yy3Nxw
+	paHajU0pjFa1L/zC/5TSgU6fawyFWyb0qNm3dH10ue5F9C+2bYuzeAtB8Owa6phI4HyC8eZugaX
+	CLtRjA6keE6STpwISXQ==
+X-Google-Smtp-Source: AGHT+IGU5QcjnbH97KOXGogNkkBb9OokhEIyAYw9IuZL/21fWEaWMGFuIPPbGaaXup7UnihTrxa26iMXfIYaPd+W
+X-Received: from yosry.c.googlers.com ([fda3:e722:ac3:cc00:20:ed76:c0a8:29b4])
+ (user=yosryahmed job=sendgmr) by 2002:a81:99cc:0:b0:5e7:12cc:a60f with SMTP
+ id q195-20020a8199cc000000b005e712cca60fmr380957ywg.6.1706256407325; Fri, 26
+ Jan 2024 00:06:47 -0800 (PST)
+Date: Fri, 26 Jan 2024 08:06:43 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.43.0.429.g432eaa2c6b-goog
+Message-ID: <20240126080644.1714297-1-yosryahmed@google.com>
+Subject: [PATCH 1/2] x86/mm: delete unused cpu argument to leave_mm()
+From: Yosry Ahmed <yosryahmed@google.com>
+To: Ingo Molnar <mingo@redhat.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org, 
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	Yosry Ahmed <yosryahmed@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, 26 Jan 2024 14:57:06 +0800 cuiyangpei <cuiyangpei@gmail.com> wrote:
+The argument is unused since commit 3d28ebceaffa ("x86/mm: Rework lazy
+TLB to track the actual loaded mm"), delete it.
 
-> On Mon, Jan 22, 2024 at 09:56:11AM -0800, SeongJae Park wrote:
-> > Hi cuiyangpei,
-> > 
-> > On Mon, 22 Jan 2024 13:46:31 +0800 cuiyangpei <cuiyangpei@gmail.com> wrote:
-> > 
-> > > On Sun, Dec 03, 2023 at 07:37:45PM +0000, SeongJae Park wrote:
-> > > > On 2023-12-03T13:43:13+08:00 cuiyangpei <cuiyangpei@gmail.com> wrote:
-> > > > 
-> > > > > On Fri, Dec 01, 2023 at 05:31:12PM +0000, SeongJae Park wrote:
-> > > > > > Hi Cuiyangpei,
-> > > > > > 
-> > > > > > On Fri, 1 Dec 2023 20:25:07 +0800 cuiyangpei <cuiyangpei@gmail.com> wrote:
-> > > > > > 
-> > > > > > > On Thu, Nov 30, 2023 at 07:44:20PM +0000, SeongJae Park wrote:
-> > > > > > > > Hi Cuiyangpei,
-> > > > > > > > 
-> > > > > > > > On Thu, 30 Nov 2023 17:14:26 +0800 cuiyangpei <cuiyangpei@gmail.com> wrote:
-[...]
-> > > Is there any way to catch sampling result immediately after setting the
-> > > "update_schemes_tried_regions" state?
-> > 
-> > There is no way for exactly doing this.  You would need to proactively collect
-> > snapshots while the app is foreground, and use the latest one that collected
-> > before the app goes background, like recording-based approach would do.
-> > 
-> > I think recent DAMON changes might make an alternative approach available,
-> > though.  From v6.7, DAMON provides pseudo-moving-average monitoring result in
-> > sampling interval granualrity, since patchset "mm/damon: provide pseudo-moving
-> > sum based access rate".  And a followup patchset, namely "mm/damon: implement
-> > DAMOS apply intervals", has made DAMOS works in the sampling interval
-> > granualrity.  Both patchsets are merged into v6.7-rc1.
-> > 
-> > Hence, I think you could use 'update_schemes_tried_regions' after you noticed
-> > the app's state transition, with DAMOS apply interval of one sampling interval.
-> > Then you will get the monitoring results after one sampling interval.  Of
-> > course, the snapshot may contain some of background access pattern, but
-> > wouldn't made it changed significantly, unless you set aggregation interval too
-> > short.
-> 
-> All other actions will apply at one sampling interval except for the
-> `stat` action.
-> 
-> We use 'update_schemes_tried_regions' after switch to the background. The 
-> before_damos_apply callback function will only be set when the next aggregation
-> interval arrives. The `tried_regions` will only be updated after setting the 
-> callback function. 
-> 
-> DAMON is still sampling during setting 'update_schemes_tried_regions' to the next
-> aggregation time, which is not what we expected. The pseudo-moving-average
-> monitoring result can reduce nr_accesees inaccuracy, but age is still being modified
-> during this time, so it can't improve this issue.
-> 
-> Please let me know if my understanding is incorrect. Thank you.
+Signed-off-by: Yosry Ahmed <yosryahmed@google.com>
+---
+ arch/x86/include/asm/mmu.h    | 2 +-
+ arch/x86/kernel/alternative.c | 2 +-
+ arch/x86/mm/tlb.c             | 2 +-
+ arch/x86/xen/mmu_pv.c         | 2 +-
+ drivers/cpuidle/cpuidle.c     | 2 +-
+ include/linux/mmu_context.h   | 2 +-
+ 6 files changed, 6 insertions(+), 6 deletions(-)
 
-So, 'update_schemes_tried_regions' command is firstly handled by
-'damon_sysfs_cmd_request_callback()', which is registered as
-after_wmarks_check() and after_aggregation() callback.  Hence
-'update_schemes_tried_regions' command is still effectively working in
-aggregation interval granularity.  I think this is what you found, right?
+diff --git a/arch/x86/include/asm/mmu.h b/arch/x86/include/asm/mmu.h
+index 0da5c227f490c..ce4677b8b7356 100644
+--- a/arch/x86/include/asm/mmu.h
++++ b/arch/x86/include/asm/mmu.h
+@@ -75,7 +75,7 @@ typedef struct {
+ 		.lock = __MUTEX_INITIALIZER(mm.context.lock),		\
+ 	}
+ 
+-void leave_mm(int cpu);
++void leave_mm(void);
+ #define leave_mm leave_mm
+ 
+ #endif /* _ASM_X86_MMU_H */
+diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
+index cc130b57542ac..66bd265c7a587 100644
+--- a/arch/x86/kernel/alternative.c
++++ b/arch/x86/kernel/alternative.c
+@@ -1805,7 +1805,7 @@ static inline temp_mm_state_t use_temporary_mm(struct mm_struct *mm)
+ 	 * restoring the previous mm.
+ 	 */
+ 	if (this_cpu_read(cpu_tlbstate_shared.is_lazy))
+-		leave_mm(smp_processor_id());
++		leave_mm();
+ 
+ 	temp_state.mm = this_cpu_read(cpu_tlbstate.loaded_mm);
+ 	switch_mm_irqs_off(NULL, mm, current);
+diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
+index 5768d386efab6..80b0caa82a91b 100644
+--- a/arch/x86/mm/tlb.c
++++ b/arch/x86/mm/tlb.c
+@@ -299,7 +299,7 @@ static void load_new_mm_cr3(pgd_t *pgdir, u16 new_asid, unsigned long lam,
+ 	write_cr3(new_mm_cr3);
+ }
+ 
+-void leave_mm(int cpu)
++void leave_mm(void)
+ {
+ 	struct mm_struct *loaded_mm = this_cpu_read(cpu_tlbstate.loaded_mm);
+ 
+diff --git a/arch/x86/xen/mmu_pv.c b/arch/x86/xen/mmu_pv.c
+index 72af496a160c8..218773cfb009f 100644
+--- a/arch/x86/xen/mmu_pv.c
++++ b/arch/x86/xen/mmu_pv.c
+@@ -913,7 +913,7 @@ static void drop_mm_ref_this_cpu(void *info)
+ 	struct mm_struct *mm = info;
+ 
+ 	if (this_cpu_read(cpu_tlbstate.loaded_mm) == mm)
+-		leave_mm(smp_processor_id());
++		leave_mm();
+ 
+ 	/*
+ 	 * If this cpu still has a stale cr3 reference, then make sure
+diff --git a/drivers/cpuidle/cpuidle.c b/drivers/cpuidle/cpuidle.c
+index 737a026ef58a3..02e40fd7d948c 100644
+--- a/drivers/cpuidle/cpuidle.c
++++ b/drivers/cpuidle/cpuidle.c
+@@ -237,7 +237,7 @@ noinstr int cpuidle_enter_state(struct cpuidle_device *dev,
+ 	}
+ 
+ 	if (target_state->flags & CPUIDLE_FLAG_TLB_FLUSHED)
+-		leave_mm(dev->cpu);
++		leave_mm();
+ 
+ 	/* Take note of the planned idle state. */
+ 	sched_idle_set_state(target_state);
+diff --git a/include/linux/mmu_context.h b/include/linux/mmu_context.h
+index f2b7a3f040999..bbaec80c78c50 100644
+--- a/include/linux/mmu_context.h
++++ b/include/linux/mmu_context.h
+@@ -11,7 +11,7 @@
+ #endif
+ 
+ #ifndef leave_mm
+-static inline void leave_mm(int cpu) { }
++static inline void leave_mm(void) { }
+ #endif
+ 
+ /*
+-- 
+2.43.0.429.g432eaa2c6b-goog
 
-If I'm not wrongly understanding your point, I think the concern is valid.  I
-think we should make it works in sampling interval granularity.  I will try to
-make so.  Would that work for your use case?
-
-> > 
-> > > Alternatively, can it return the "last_nr_accesses" and "last_age" values in
-> > > tried_regions/<N> directory?
-> > 
-> > This could also be a good alternative in my think.  Nice idea.  But, because
-> > the previously mentioned alternative is already available while this require a
-> > bit small but additional changes, could we check if the previously one make
-> > sense and works first?  We could revisit this idea if it turns out the previous
-> > alternative is not suffice in my opinion.
-> > 
-> Can you consider adding "last_nr_accesses" and "last_age"  two files in
-> 'tried_regions/<N>' directory?
-
-Actually we don't have 'last_age' field, right?  And in case of
-'last_nr_accesses', it is a hidden private field, since it is intended to be
-accessed by only DAMON core code.  Making it exposed to user means exposing
-implementation details, and the mechanism that coupled with an exposed
-interface is hard to be changed, so be unflexible.  Hence I'd prefer making
-'update_schemes_tried_regions' works in sampling interval granularity, more
-than exposing the two information if it works for your use case.
-
-
-Thanks,
-SJ
-
-[...]
