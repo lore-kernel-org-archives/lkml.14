@@ -1,168 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FD3225565;
-	Fri, 26 Jan 2024 22:01:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C13124B29
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 22:02:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706306462; cv=none; b=kK8USXuXYRB5sklUffIEAsciGU77LLlhrDCW4UMwoq+Arld4YtyImrtrxvYi5HweXvx0D0OoYzHWKcf4qZ0bQMK4lwm57S9p4xeyRtdvE+XKADH8Fg8HekQw7PR2w+apaFwNZim0JW8gkMiD9xXfRH1/Avj6sIrUh0QgKD+qbAg=
+	t=1706306571; cv=none; b=P11tXHgYfMIke/E+3E/+jM/VQg/SSP7pH7/be3xLqszXECodX1E7LCVQdiDKMtrmI1JNxgPnj8wAw7NBfJF3TNox842wb6RQC2JVDZ1j+Wu+lOH6AqFBKUar0bi1f72U6hMYt2N5/ogGB8o9vmc6Z/whXIH/SEXIjYDuivI3gtI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706306462; c=relaxed/simple;
-	bh=riut/XdpDrQsrASptwkcJlb0by07DshnWcYF/bs/29E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=L3aRVzdcIlxFobGlhmajK4zM2nPsrIk+k2rr+RQiQPi+hrhJJRMMG21Q/0U6OiNx5fn9oc5y/0jYWc2b2pmG8YJvljvYlrTxdBUHD5y3ARE5OQZfwjiRznUXSsPaOhoSCxa8BICYdqk2aIpPkL6Kk1h24jsYEA339cLIIATEqCs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OlPwJWfo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706306571; c=relaxed/simple;
+	bh=VRUIw7uC6cqt3OzoHQtSD0pyn1Xety3jUHglg9LCNCY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hrDF6+jdjgoGhAZVI73pymBNVk+FZepPIHy8KMN2hE65iOTu1js1z1DYQ2vwChMpMVQl2NC/j7Wp735Sh+ev4+t1lWKjIscv4yYxzXiUPKWhtp577nCN3dIrGlu+gOt2IpnuQtyqqluI12GlxKUaC8Z4bT6zkms5ZlRd0oTTar8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=f/w9skPW; arc=none smtp.client-ip=209.85.167.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OlPwJWfo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A277C433F1;
-	Fri, 26 Jan 2024 22:00:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706306461;
-	bh=riut/XdpDrQsrASptwkcJlb0by07DshnWcYF/bs/29E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OlPwJWfoQ84jFCtOj2ECYPqtGlVcOuXS54UDiCUCWepQHkwb5HGmWUV/Ub+2dO/fp
-	 y+jta1jG5WkFNa2JWgNBsRLG5ckfkgjYx2R74XPMNjzICsSq+PFWZa2mdaNXOgFvSU
-	 c85/qaqET/+epqfZKhSqfsmsuJpSThFPdO4cXU+TPvpN5yodPcjGQch8oG9sPS4uK/
-	 ZRyy7ypuVoD4l3gNX87Hif2mtnSOhNm4BTcHDg/2DG1uV/vwTCZMKkTpMSfoNpGYPb
-	 xTYXppk54qRxer6vaAQ2EGumfgjJIJeVpm7H1jkwivnBVY99YBEGid3YrSi65wWgoB
-	 oDvdwrsn3nW6w==
-Date: Fri, 26 Jan 2024 22:00:55 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc: Conor Dooley <conor.dooley@microchip.com>,
-	linux-riscv@lists.infradead.org, Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Wedson Almeida Filho <wedsonaf@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Tom Rix <trix@redhat.com>, rust-for-linux@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev, Matthew Maurer <mmaurer@google.com>,
-	Ramon de C Valle <rcvalle@google.com>,
-	Sami Tolvanen <samitolvanen@google.com>
-Subject: Re: [PATCH v1 0/2] RISC-V: enable rust
-Message-ID: <20240126-eccentric-jaywalker-3560e2151a92@spud>
-References: <CANiq72nnph7LS1fLRtHz8NJ91PWXPaUnm0EuoV3wrbvK398AnA@mail.gmail.com>
- <20230608-spiritism-gonad-5f5aff4c3a24@wendy>
- <20240117-swiftly-parasail-618d62972d6e@spud>
- <CANiq72mVKCOAuK4Qe+8AHmpkFwyJsVfx8AqB7ccGi3DYpSSWcw@mail.gmail.com>
- <20240118-implode-delirium-eefdd86e170e@spud>
- <CANiq72nx1s_nyvPW86jL7eiOxROr18LfOJqNtw8L42CP+gkhRg@mail.gmail.com>
- <20240125-bucked-payroll-47f82077b262@wendy>
- <CANiq72k7n0aZrifRRU08N8qLkNe+2EZwijZy5sM7M56n2xYHgQ@mail.gmail.com>
- <20240125-lazy-thrower-744aacc6632a@wendy>
- <CANiq72kb+_utZrYHtoKZQtQazikmkjpVUHpTBcaANizduMF5QQ@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="f/w9skPW"
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-5100cb238bcso1511550e87.3
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 14:02:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1706306567; x=1706911367; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=LZbBryar9KtG8ez0HuKdIzGYRXSfuC+F7NhfNZW+cM0=;
+        b=f/w9skPW05v46xigv3yeeXmegPZRIgGANgsY8NcxLgAjzRke9bl+aRF6iUiPl9asVo
+         Umfia9sRoTQhJfPeM2DJaK/Q0rzblh26Wem0VefO/YWGjSHs5Vyn9XzblKEoH6LsNNsU
+         pD1A4ocQVeprOjj/SsWXo8xBs1H2GUF3HC594=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706306567; x=1706911367;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=LZbBryar9KtG8ez0HuKdIzGYRXSfuC+F7NhfNZW+cM0=;
+        b=M1sKo6RAJ1wBzIJm8Ddj6kKExk169obKXvwIDNmsrSNYR93cUbUANs27wHG+ptzsNg
+         H7jh0mfUTbbaYkkveDnx6CsSaoE63034DMi+tzdYe2c63NDjLmAI1Xoykh0VfLe3UYGg
+         poIwNlEXlWSTk9SFxdNRy8Vuzt6rIwPCalFyXcA4ILT0TtdAnax/tKPYIx84urAbJMpC
+         8qX6wCVti8DiUouL7V+9nItjXwGjCxnK+7aEgQD32QYvxGcP89roOXrih3+FAcwdKyIt
+         XlL6rAnBTnMv1ASMtSWk2neKLwhPqrYehtXbnEmuDl1nvtimHg+IBXCz78IGVdHcK52Q
+         CTzQ==
+X-Gm-Message-State: AOJu0YxpjVnLhjA0kzT8FPw508M74etlShi3S7swkn0267TBzYCTWcRd
+	9hDmgtRfHmTNtwHJ/+AUcwF9LFNacCxr5sFziC0QSR0EAcRYfwjox8pWKtCCyx9GinOv9JfV0/c
+	fmbiHrw==
+X-Google-Smtp-Source: AGHT+IGvO5/5oi5WgoM3ylfS7fvfnU2STGwq5+Fih2pc+36ooA+zJxxBNAr72255imy6XY8vvuZ8Pw==
+X-Received: by 2002:a05:6512:358c:b0:50d:1c9d:59e4 with SMTP id m12-20020a056512358c00b0050d1c9d59e4mr208775lfr.47.1706306567270;
+        Fri, 26 Jan 2024 14:02:47 -0800 (PST)
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com. [209.85.208.52])
+        by smtp.gmail.com with ESMTPSA id gg25-20020a170906e29900b00a33608fbf6csm1055911ejb.62.2024.01.26.14.02.46
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 26 Jan 2024 14:02:46 -0800 (PST)
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-55a50649ff6so581850a12.3
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 14:02:46 -0800 (PST)
+X-Received: by 2002:a05:6402:430b:b0:55c:7ab7:d349 with SMTP id
+ m11-20020a056402430b00b0055c7ab7d349mr267672edc.3.1706306566363; Fri, 26 Jan
+ 2024 14:02:46 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="VpYZYsPh7ooFZbB5"
-Content-Disposition: inline
-In-Reply-To: <CANiq72kb+_utZrYHtoKZQtQazikmkjpVUHpTBcaANizduMF5QQ@mail.gmail.com>
+References: <cover.1705946889.git.dsterba@suse.com> <CAHk-=whNdMaN9ntZ47XRKP6DBes2E5w7fi-0U3H2+PS18p+Pzw@mail.gmail.com>
+ <20240126200008.GT31555@twin.jikos.cz> <8b2c6d1f-2e14-43a0-b48a-512a3d4a811d@suse.com>
+ <CAHk-=wjhtqo_FEqZkPuOVUNZzsGhjftdcN9aQpA3f3WD0qS1pA@mail.gmail.com> <7c4bc81e-51b4-4b93-8cae-f16663b1c820@suse.com>
+In-Reply-To: <7c4bc81e-51b4-4b93-8cae-f16663b1c820@suse.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Fri, 26 Jan 2024 14:02:30 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wj1h8GhhEuqmiCMZW7iBu3k7hn3mJSO9kTm7P31BCZExA@mail.gmail.com>
+Message-ID: <CAHk-=wj1h8GhhEuqmiCMZW7iBu3k7hn3mJSO9kTm7P31BCZExA@mail.gmail.com>
+Subject: Re: [GIT PULL] Btrfs fixes for 6.8-rc2
+To: Qu Wenruo <wqu@suse.com>
+Cc: dsterba@suse.cz, David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-
---VpYZYsPh7ooFZbB5
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, Jan 26, 2024 at 10:00:02PM +0100, Miguel Ojeda wrote:
-> On Thu, Jan 25, 2024 at 2:46=E2=80=AFPM Conor Dooley <conor.dooley@microc=
-hip.com> wrote:
+On Fri, 26 Jan 2024 at 13:56, Qu Wenruo <wqu@suse.com> wrote:
+>
+> On 2024/1/27 08:21, Linus Torvalds wrote:
 > >
-> > Ah, thanks for the direct link :)
->=20
-> My pleasure!
->=20
-> > Actually, thinking about it for a moment - if only a single compiler
-> > version is supported (the minimum, right?) then you could just add the
->=20
-> Yeah, the minimum listed in `scripts/min-tool-version.sh` and in
-> `Documentation/process/changes.rst`. It also happens to be the maximum
-> too, until we can relax that.
->=20
-> > -Zsanitizer=3Dkcfi flag whenever CFI_CLANG and RUST are both set.
->=20
-> Since the flag goes to the Rust compiler, `RUST` would be always
-> enabled, so the flag would only need to be added when `CFI_CLANG=3Dy`,
-> no?
+> > Allocation lifetime problems?
+>
+> Could be, thus it may be better to output the flags of the first page
+> for tree-checker.
 
-Sure.
+Note that the fact that it magically went away certainly implies that
+it never "really" existed, and that something was using a pointer or
+similar.
 
-> Or what do you mean?
+IOW, this is not some IO that got scribbled over, or a cache that got
+corrupted. If it had been real corruption, I would have expected that
+it would have stayed around in memory.
 
-Oh I was probably just getting myself mixed up between what the Kconfig
-and Makefile stuff would look like. dw :)
-
-> > I'm not sure if that is a better option though. It's a choice between
-> > CFI_CLANG being disabled if the check is not updated when the toolchain
-> > is bumped versus being enabled for C and not for RUST. I think I prefer
-> > the former though, tracking down the cause of the latter I would rather
-> > not wish on a user.
-> >
-> > I vote for having the check, even if it can only ever be true at the
-> > moment.
->=20
-> Since we only support a single version, we don't need `rc-option`
-> tests until we start supporting several versions (which is why other
-> tests like that do not exist so far).
->=20
-> In my previous message I thought you meant using the flag to test for
-> arch/target support or similar. That would be fine, but we can also do
-> the usual `ARCH_SUPPORTS_CFI_RUST` here, I would assume.
-
-Is that even needed? We already have ARCH_SUPPORTS_CFI_CLANG and AFAIU
-rust supports it if clang does, so a second option is superfluous?
-
-> Now, during the version bump to a stable flag, if we happen to forget
-> to update the flag name, it would be a build error, so it should be
-> easily spotted and fixed.
-
-I'm reading back what I wrote, and I must have been trying to get out
-the door or something because none of it really makes that much sense.
-Of course an unknown option should be detectable at build time and not
-be a silent breakage. Maybe I should have written the patch for this
-before sending the mail rather than writing the mail based on what was
-in my head.
-
-> What we may want to add, though, to avoid the confusion you mention
-> meanwhile, is just a `depends on !CFI_CLANG` for `RUST`, like for the
-> other requirements we have there (which are things that should
-> eventually go away). Then they can remove that when the `-Z` flag is
-> deemed ready to be used. But perhaps let's see what Ramon et al. say.
-
-I don't really mind either way. Whatever of the two that you guys want
-that prevents broken kernels works for me!
-
-> By the way, concerning the tracking issue, since you mentioned it: it
-> has a list of PRs, but not fixes, there is a "known issues" link
-> there. On top of that, we are "shifted in time" w.r.t. the latest
-> status in the compiler, since we use stable versions of the compiler.
-
-Yah, I was linking it to point out that the stuff is unlikely to be
-usable any time soon, since it is not complete in the most recent
-toolchain.
-
-Cheers,
-Conor.
-
---VpYZYsPh7ooFZbB5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZbQrlwAKCRB4tDGHoIJi
-0meeAP9z4Z4UXLa6YN4nCic4/a2cKXvc99l+GFebDHGuZJIHpwD/W1lM4CxjLlBg
-W60C8W8UTeABvw1N16NPnnOeE8KteQI=
-=jaxq
------END PGP SIGNATURE-----
-
---VpYZYsPh7ooFZbB5--
+                 Linus
