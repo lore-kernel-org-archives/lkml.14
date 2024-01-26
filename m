@@ -1,94 +1,159 @@
-Received: from out-180.mta1.migadu.com (out-180.mta1.migadu.com [95.215.58.180])
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7503960B9F;
-	Fri, 26 Jan 2024 23:24:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A35F756473;
+	Fri, 26 Jan 2024 23:25:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.88
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706311446; cv=none; b=Dss4VCd3whUC4p99PkWIG0P80tsIlZ536bGVPv9bHwXJh7ppDDTutpTziScfyoNNx28Ua9/jzMcL/V9P781sQRM+PUhFqmTnHwdf5OUFirH38sOWn9QObiqVSmmkueU98H06wEqHD2YyMec0WHbGV3D+teJcMXsKYSJ5rob0a28=
+	t=1706311531; cv=none; b=WqMLGZD2ai380SCqmbYmG3IIeSZEBq5g9RcB/zpEimH5gxxgBsAJDotjiPF/49NzvwbQv7N2yxc8wUiSnn5afrrCIcLsMOfJSTmQRPzEeWx6+5xo+GkO1BRLIt+CgH5qpQ27XDu1aGGhr3XhsAyLzpPt6D8w3Xx2Ac8pxbB6jm8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706311446; c=relaxed/simple;
-	bh=9k0+0MRRScrtJmXZnrTBg0SOltDF/bYgIYtRGEDzy3g=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=BEdXKmM5wBqDp/7PYp/8UV+zwLJlIiZkR2EluGga28FS8VUWgLu0Sl5B0D2jze2yhGAvZSKkzrpBUdM6HQgMYjcAPRLJC09PtLCPIaWz8FRh35pNY4dfHGpmZutPiXmcEY7fltoYzx+2/AYszJ5/zSuFVFy8ME24jXBXEleCJo4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=neuwBrnZ; arc=none smtp.client-ip=95.215.58.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1706311531; c=relaxed/simple;
+	bh=kMFx64NyVo89pOPt8/Nbt5gcEmGFIJLK+tf/jeK7Gjw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=GE1BoQM7fCTHbuLvEStGeHug6CCtNktACwiQ5GqnLNE2w76ZvIKgGv/1+gKuiINQaCuz+ecnl5zxc5wX9Dp0MXFER3J9FY3yP6q3P4QV3jlKaTzlGRJouEc19olNJI+/cyaqx1wDOGxjoJP66fqUPASWGKcDDyQ0sK+520QSamE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cIDa0FZb; arc=none smtp.client-ip=192.55.52.88
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="neuwBrnZ"
-Date: Fri, 26 Jan 2024 18:23:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1706311440;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-	bh=3IVct3oI0LRYRN4Y8WqiNTFlsssxyg4vCK9ZmvlVxXM=;
-	b=neuwBrnZEJIB+yNMzfBSGZNpOSIQlBIWIazfFK84rDJdeS1n4Bzc9j+Q0Ox7r4FiEWhg+f
-	MBt26b0cGUU1Ef4aIV9zPhf2tTIBXn5oTO5Z1tDigJatLwhxK1x7U5yzWSi2wjm/cXMgEm
-	H/1xYS1l6DSpmEaw7p8Tw/Z69vhBjbQ=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: [GIT PULL] bcachefs fixes for 6.8-rc2
-Message-ID: <5refsn7ruuo654gyiou74x2xdisjuulkqpnaj34xnncwyq2wos@etq73tlxpcyq>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cIDa0FZb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706311529; x=1737847529;
+  h=date:from:to:cc:subject:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=kMFx64NyVo89pOPt8/Nbt5gcEmGFIJLK+tf/jeK7Gjw=;
+  b=cIDa0FZbbRqIAejkd8C5NhI+Nqc2IqNR2jPZ0WV0xdumvH4HShgfJfNw
+   xOhealDOGLReky3lKvcN5oW/LA9ZcoQiYWyRDgWh2l6j98KofTduT1vnw
+   3b4U7YKIrl5+EldFlszL5jwoFiteqnMEQs0a5zZdjsG0AhmBqoC4CYsOt
+   PmghdwHj/AQCFYIKikJ2O55DoHnEBSny1jN6VaAdxpOwth4tq/dLaFNlJ
+   VUWHfxfDwFmLExmqMuhPdRnOw8VeYh9XnZRduhHOihMwmsUIKxwKpwOKe
+   aRImZgpm8PdtKIdr7gwHMNHLrKAGFGNO3t0ZiiaQdH1yLniElTsgboSw/
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="433757807"
+X-IronPort-AV: E=Sophos;i="6.05,220,1701158400"; 
+   d="scan'208";a="433757807"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2024 15:25:28 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="910489711"
+X-IronPort-AV: E=Sophos;i="6.05,220,1701158400"; 
+   d="scan'208";a="910489711"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.24.100.114])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2024 15:25:28 -0800
+Date: Fri, 26 Jan 2024 15:30:47 -0800
+From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: LKML <linux-kernel@vger.kernel.org>, X86 Kernel <x86@kernel.org>,
+ iommu@lists.linux.dev, Lu Baolu <baolu.lu@linux.intel.com>,
+ kvm@vger.kernel.org, Dave Hansen <dave.hansen@intel.com>, Joerg Roedel
+ <joro@8bytes.org>, "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov
+ <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>, Raj Ashok
+ <ashok.raj@intel.com>, "Tian, Kevin" <kevin.tian@intel.com>,
+ maz@kernel.org, peterz@infradead.org, seanjc@google.com, Robin Murphy
+ <robin.murphy@arm.com>, jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH RFC 12/13] iommu/vt-d: Add a helper to retrieve PID
+ address
+Message-ID: <20240126153047.5e42e5d0@jacob-builder>
+In-Reply-To: <874jgvuls0.ffs@tglx>
+References: <20231112041643.2868316-1-jacob.jun.pan@linux.intel.com>
+ <20231112041643.2868316-13-jacob.jun.pan@linux.intel.com>
+ <874jgvuls0.ffs@tglx>
+Organization: OTC
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi Linus, couple bcachefs fixes for you
+Hi Thomas,
 
-Cheers,
-Kent
+On Wed, 06 Dec 2023 21:19:11 +0100, Thomas Gleixner <tglx@linutronix.de>
+wrote:
 
-The following changes since commit 6613476e225e090cc9aad49be7fa504e290dd33d:
+> On Sat, Nov 11 2023 at 20:16, Jacob Pan wrote:
+> > From: Thomas Gleixner <tglx@linutronix.de>
+> >
+> > When programming IRTE for posted mode, we need to retrieve the
+> > physical  
+> 
+> we need .... I surely did not write this changelog.
+> 
+Will delete this.
 
-  Linux 6.8-rc1 (2024-01-21 14:11:32 -0800)
+> > address of the posted interrupt descriptor (PID) that belongs to it's
+> > target CPU.
+> >
+> > This per CPU PID has already been set up during cpu_init().  
+> 
+> This information is useful because?
+ditto.
 
-are available in the Git repository at:
+> > +static u64 get_pi_desc_addr(struct irq_data *irqd)
+> > +{
+> > +	int cpu =
+> > cpumask_first(irq_data_get_effective_affinity_mask(irqd));  
+> 
+> The effective affinity mask is magically correct when this is called?
+> 
+My understanding is that remappable device MSIs have the following
+hierarchy,e.g.
 
-  https://evilpiepirate.org/git/bcachefs.git tags/bcachefs-2024-01-26
+parent:                              
+    domain:  INTEL-IR-5-13            
+     hwirq:   0x20000                 
+     chip:    INTEL-IR-POST           
+      flags:   0x0                    
+     parent:                          
+        domain:  VECTOR            
+         hwirq:   0x3c             
+         chip:    APIC         
 
-for you to fetch changes up to d2fda304bb739b97c1a3e46e39700eb49f07a62c:
+When irqs are allocated and activated, parents domain op is always called
+first. Effective affinity mask is set up by the parent domain, i.e. VECTOR.
+Example call stack for alloc:
+	irq_data_update_effective_affinity
+	apic_update_irq_cfg
+	x86_vector_alloc_irqs
+	intel_irq_remapping_alloc
+	msi_domain_alloc
 
-  bcachefs: __lookup_dirent() works in snapshot, not subvol (2024-01-25 20:02:11 -0500)
+x86_vector_activate also changes the effective affinity mask before calling
+intel_irq_remapping_activate() where a posted interrupt is configured for
+its destination CPU.
 
-----------------------------------------------------------------
-bcachefs fixes for v6.8-rc2
+At runtime, when IRQ affinity is changed by userspace Intel interrupt
+remapping code also calls parent data/chip to update the effective affinity
+map before changing IRTE.
 
- - fix for REQ_OP_FLUSH usage; this fixes filesystems going read only
-   with -EOPNOTSUPP from the block layer.
+intel_ir_set_affinity(struct irq_data *data, const struct cpumask *mask,
+		      bool force)
+{
+	ret = parent->chip->irq_set_affinity(parent, mask, force);
 
-   (this really should have gone in with the block layer patch causing
-   the -EOPNOTSUPP, or should have gone in before).
- - fix an allocation in non-sleepable context
- - fix one source of srcu lock latency, on devices with terrible discard
-   latency
- - fix a reattach_inode() issue in fsck
+...
+}
+Here the parent APIC chip does apic_set_affinity() which will set up
+effective mask before posted MSI affinity change.
 
-----------------------------------------------------------------
-Christoph Hellwig (1):
-      bcachefs: fix incorrect usage of REQ_OP_FLUSH
+Maybe I missed some cases?
 
-Kent Overstreet (3):
-      bcachefs: Add gfp flags param to bch2_prt_task_backtrace()
-      bcachefs: discard path uses unlock_long()
-      bcachefs: __lookup_dirent() works in snapshot, not subvol
+I will also add a check if the effective affinity mask is not set up.
 
- fs/bcachefs/alloc_background.c |  2 +-
- fs/bcachefs/btree_locking.c    |  4 ++--
- fs/bcachefs/debug.c            |  2 +-
- fs/bcachefs/fs-io.c            |  2 +-
- fs/bcachefs/fsck.c             | 23 ++++++++++++-----------
- fs/bcachefs/journal.c          |  2 +-
- fs/bcachefs/journal_io.c       |  3 ++-
- fs/bcachefs/str_hash.h         | 22 +++++++++++++++-------
- fs/bcachefs/util.c             | 10 +++++-----
- fs/bcachefs/util.h             |  4 ++--
- 10 files changed, 42 insertions(+), 32 deletions(-)
+static phys_addr_t get_pi_desc_addr(struct irq_data *irqd)
+{
+	int cpu = cpumask_first(irq_data_get_effective_affinity_mask(irqd));
+
+	if (WARN_ON(cpu >= nr_cpu_ids))
+		return 0;
+
+	return __pa(per_cpu_ptr(&posted_interrupt_desc, cpu));
+}
+
+
+Thanks,
+
+Jacob
