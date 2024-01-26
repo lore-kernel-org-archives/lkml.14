@@ -1,127 +1,271 @@
-Received: from mail-m12752.qiye.163.com (mail-m12752.qiye.163.com [115.236.127.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.manjaro.org (mail.manjaro.org [116.203.91.91])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F15E21A14
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 07:11:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.236.127.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3D562511E;
+	Fri, 26 Jan 2024 07:12:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.91.91
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706253118; cv=none; b=ABXpsitL7WjogXVvNM+EHd3DzqHSZ8J/N53r2vqTeR3cWywTVBwcle5w7YJCKOAWSVRWSpicN+sRpvM/JSIljbhQU6Et1nR4g5oHb8tDqm6EgNDIf5h2ko7w9Cw4GPenYK6PEKbHdCr0GNUZMGGSywMTDHDQW4j09pTWUTutxss=
+	t=1706253147; cv=none; b=G3tMatfKvmOn/EMhGXXojEkZboGldX+gfiXjo5rJnREpajQN+gXv8qIiuBzpMdUoIxDAz1RFNuqXWKxzTvfg20goF3pCEWr0iYhx2DmnS/rqB66MnqK4Na6VH9r7gOVxwEuCQLYebjdgWOg/E08t0GzFzYU71+ANDjDIssSyvV8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706253118; c=relaxed/simple;
-	bh=dcIAeG3Ad3qzRg2oAb5j/Ir8olPhDHQEiDDtXnwU9Bg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TH1q+iGKGeSqwYFttR1rDrp4km0pt7uDPm1Lq/g5pxDo2ug1MO1/xofCMIl+pjOYHMy+MVZHDfDreL6aqYrQtiEOhQD+suIctAGkuEvN5hkwLGFnjWTM/hrgFCvN1ocOOGFAI5nfH2POywvq58zj/08SdI6KrVJnCkC22IUnzT4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=YFOPswdg; arc=none smtp.client-ip=115.236.127.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+	s=arc-20240116; t=1706253147; c=relaxed/simple;
+	bh=DecTU/CPqldmkZPTl/pP28a7SisONJrJ6hc7jiBLGfA=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=AabcDuCBwvUToqL+622uIuiIzdNN77Ba2qLbV+wItXW+az4lV0uu342yJoali6nhQuMGBYpNlRtfDd+QTnGs/5ynix+uKbQuzlmeCIOtlFYOOj1favTQtm4hzs3VfaRg6PyUBMC1iGpnhYRu8+8zdCzpZP/SUBqz8IZfnCuVS4U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org; spf=pass smtp.mailfrom=manjaro.org; dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b=r7Ki8r/v; arc=none smtp.client-ip=116.203.91.91
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manjaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="YFOPswdg"
-DKIM-Signature: a=rsa-sha256;
-	b=YFOPswdg7rBxtjGvY8CH7u++ZspuDmBVGAFE0YiKDY6Kpz3ROhPkZhHAbsg7udKDRdxOgI31dRT9zqciiqi7d9qiL0UZ5WSReqjhjDiZWASQCHHWqMPzOHfxZbgDNZxwIDXbHEsVn5ZdQ5XmhVxbxeJ7th/i5iQYAZ79079zH1U=;
-	c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
-	bh=o0t+MfDqVm3X5Nqibb28Ci/mN20IReJ02S0VvZJURXU=;
-	h=date:mime-version:subject:message-id:from;
-Received: from [192.168.60.65] (unknown [103.29.142.67])
-	by smtp.qiye.163.com (Hmail) with ESMTPA id 683D79001AB;
-	Fri, 26 Jan 2024 10:56:46 +0800 (CST)
-Message-ID: <ffb77494-e452-4fdf-be18-bb0dccfe1404@rock-chips.com>
-Date: Fri, 26 Jan 2024 10:56:42 +0800
+	dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b="r7Ki8r/v"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] soc: rockchip: grf: Fix SDMMC not working on RK3588 with
- bus-width > 1
-Content-Language: en-US
-To: =?UTF-8?Q?Ond=C5=99ej_Jirman?= <megi@xff.cz>,
- linux-rockchip@lists.infradead.org
-Cc: Heiko Stuebner <heiko@sntech.de>,
- "moderated list:ARM/Rockchip SoC support"
- <linux-arm-kernel@lists.infradead.org>,
- open list <linux-kernel@vger.kernel.org>
-References: <20230619011002.2249960-1-megi@xff.cz>
-From: Kever Yang <kever.yang@rock-chips.com>
-In-Reply-To: <20230619011002.2249960-1-megi@xff.cz>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manjaro.org; s=2021;
+	t=1706252699;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bjCHdJ0a2lNlVO12egQaAeCkKHH1kCrzRFTDescXGXk=;
+	b=r7Ki8r/v8mApvwBcSjH+f7oN6Ek6MNlPHhCruhod24mqvf95HZ2rXFdSi8tUfXOBJFevlb
+	PnqjVs6KKrhBpCmOA3xVKamzxKvj4HxeSSLPKShZ7CmZoDqxxWqrf8fYYUxeLvxR2h9Utr
+	ziW+zDLAaRs4lZCg43lZlLtMOAfpIGXSSdfYu4mJQFD1BvBJQas5HNDynN6ocXZBO0oHtx
+	vjbnf3s1iKxptjN4Q4hT+y4v7VRjfu39GKe4T3Dr+IjZ7xc8TmkDmC+DSRgQnEdt82UIdI
+	JTK+/pDlcDSzcm5c7+JwVe23N7kZ9ljL8blm55Zvv2Po0aGeC990VaGDggV9iA==
+Date: Fri, 26 Jan 2024 08:04:59 +0100
+From: Dragan Simic <dsimic@manjaro.org>
+To: Alexey Charkov <alchark@gmail.com>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring
+ <robh+dt@kernel.org>, Krzysztof Kozlowski
+ <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
+ Heiko Stuebner <heiko@sntech.de>, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
+ linux-kernel@vger.kernel.org, Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH 4/4] arm64: dts: rockchip: Add OPP data for CPU cores on
+ RK3588
+In-Reply-To: <CABjd4YxSTLZjrnSCn0fh81US682-uhZ16-cgydzz97shhCpq4w@mail.gmail.com>
+References: <20240125-rk-dts-additions-v1-0-5879275db36f@gmail.com>
+ <20240125-rk-dts-additions-v1-4-5879275db36f@gmail.com>
+ <731aac66-f698-4a1e-b9ee-46a7f24ecae5@linaro.org>
+ <ccc004cfae513195351ce0a79e12f6af@manjaro.org>
+ <CABjd4YxSTLZjrnSCn0fh81US682-uhZ16-cgydzz97shhCpq4w@mail.gmail.com>
+Message-ID: <1f0608831cfb95c80edf16cd751eee76@manjaro.org>
+X-Sender: dsimic@manjaro.org
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
 Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlCGEpMVh8aTx8eTBkYTklJTFUTARMWGhIXJBQOD1
-	lXWRgSC1lBWUpLSFVJQlVKT0lVTUxZV1kWGg8SFR0UWUFZT0tIVUpNT0lOSFVKS0tVSkJLS1kG
-X-HM-Tid: 0a8d43b2c95a03a9kunm683d79001ab
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6PC46PTo*TDMJDA9OFgsPEU4q
-	SUwwCkpVSlVKTEtNSUhMQ0tMSE1CVTMWGhIXVRAeDR4JVQIaFRw7CRQYEFYYExILCFUYFBZFWVdZ
-	EgtZQVlKS0hVSUJVSk9JVU1MWVdZCAFZQUhMQks3Bg++
+Authentication-Results: ORIGINATING;
+	auth=pass smtp.auth=dsimic@manjaro.org smtp.mailfrom=dsimic@manjaro.org
 
-Hi Ondrej,
+Hello Alexey,
 
-On 2023/6/19 09:09, Ondřej Jirman wrote:
-> From: Ondrej Jirman <megi@xff.cz>
->
-> RK3588 has the same issue as other earlier RK SoCs. JTAG
-> functionality muxed to some SDMMC data pins causes issues with SDMMC
-> interface. Without this patch, I can only use SDMMC inteface
-> with bus-width = <1>. (JTAG is muxed to data pins D2 and D3)
-Which board did you met this issue?
+On 2024-01-26 07:44, Alexey Charkov wrote:
+> On Fri, Jan 26, 2024 at 10:32 AM Dragan Simic <dsimic@manjaro.org> 
+> wrote:
+>> On 2024-01-25 10:30, Daniel Lezcano wrote:
+>> > On 24/01/2024 21:30, Alexey Charkov wrote:
+>> >> By default the CPUs on RK3588 start up in a conservative performance
+>> >> mode. Add frequency and voltage mappings to the device tree to enable
+>> >> dynamic scaling via cpufreq
+>> >>
+>> >> Signed-off-by: Alexey Charkov <alchark@gmail.com>
+>> >> ---
+>> >>   arch/arm64/boot/dts/rockchip/rk3588s.dtsi | 209
+>> >> ++++++++++++++++++++++++++++++
+>> >>   1 file changed, 209 insertions(+)
+>> >>
+>> >> diff --git a/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
+>> >> b/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
+>> >> index 131b9eb21398..e605be531a0f 100644
+>> >> --- a/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
+>> >> +++ b/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
+>> >> @@ -97,6 +97,7 @@ cpu_l0: cpu@0 {
+>> >>                      clocks = <&scmi_clk SCMI_CLK_CPUL>;
+>> >>                      assigned-clocks = <&scmi_clk SCMI_CLK_CPUL>;
+>> >>                      assigned-clock-rates = <816000000>;
+>> >> +                    operating-points-v2 = <&cluster0_opp_table>;
+>> >>                      cpu-idle-states = <&CPU_SLEEP>;
+>> >>                      i-cache-size = <32768>;
+>> >>                      i-cache-line-size = <64>;
+>> >> @@ -116,6 +117,7 @@ cpu_l1: cpu@100 {
+>> >>                      enable-method = "psci";
+>> >>                      capacity-dmips-mhz = <530>;
+>> >>                      clocks = <&scmi_clk SCMI_CLK_CPUL>;
+>> >> +                    operating-points-v2 = <&cluster0_opp_table>;
+>> >>                      cpu-idle-states = <&CPU_SLEEP>;
+>> >>                      i-cache-size = <32768>;
+>> >>                      i-cache-line-size = <64>;
+>> >> @@ -135,6 +137,7 @@ cpu_l2: cpu@200 {
+>> >>                      enable-method = "psci";
+>> >>                      capacity-dmips-mhz = <530>;
+>> >>                      clocks = <&scmi_clk SCMI_CLK_CPUL>;
+>> >> +                    operating-points-v2 = <&cluster0_opp_table>;
+>> >>                      cpu-idle-states = <&CPU_SLEEP>;
+>> >>                      i-cache-size = <32768>;
+>> >>                      i-cache-line-size = <64>;
+>> >> @@ -154,6 +157,7 @@ cpu_l3: cpu@300 {
+>> >>                      enable-method = "psci";
+>> >>                      capacity-dmips-mhz = <530>;
+>> >>                      clocks = <&scmi_clk SCMI_CLK_CPUL>;
+>> >> +                    operating-points-v2 = <&cluster0_opp_table>;
+>> >>                      cpu-idle-states = <&CPU_SLEEP>;
+>> >>                      i-cache-size = <32768>;
+>> >>                      i-cache-line-size = <64>;
+>> >> @@ -175,6 +179,7 @@ cpu_b0: cpu@400 {
+>> >>                      clocks = <&scmi_clk SCMI_CLK_CPUB01>;
+>> >>                      assigned-clocks = <&scmi_clk SCMI_CLK_CPUB01>;
+>> >>                      assigned-clock-rates = <816000000>;
+>> >> +                    operating-points-v2 = <&cluster1_opp_table>;
+>> >>                      cpu-idle-states = <&CPU_SLEEP>;
+>> >>                      i-cache-size = <65536>;
+>> >>                      i-cache-line-size = <64>;
+>> >> @@ -194,6 +199,7 @@ cpu_b1: cpu@500 {
+>> >>                      enable-method = "psci";
+>> >>                      capacity-dmips-mhz = <1024>;
+>> >>                      clocks = <&scmi_clk SCMI_CLK_CPUB01>;
+>> >> +                    operating-points-v2 = <&cluster1_opp_table>;
+>> >>                      cpu-idle-states = <&CPU_SLEEP>;
+>> >>                      i-cache-size = <65536>;
+>> >>                      i-cache-line-size = <64>;
+>> >> @@ -215,6 +221,7 @@ cpu_b2: cpu@600 {
+>> >>                      clocks = <&scmi_clk SCMI_CLK_CPUB23>;
+>> >>                      assigned-clocks = <&scmi_clk SCMI_CLK_CPUB23>;
+>> >>                      assigned-clock-rates = <816000000>;
+>> >> +                    operating-points-v2 = <&cluster2_opp_table>;
+>> >>                      cpu-idle-states = <&CPU_SLEEP>;
+>> >>                      i-cache-size = <65536>;
+>> >>                      i-cache-line-size = <64>;
+>> >> @@ -234,6 +241,7 @@ cpu_b3: cpu@700 {
+>> >>                      enable-method = "psci";
+>> >>                      capacity-dmips-mhz = <1024>;
+>> >>                      clocks = <&scmi_clk SCMI_CLK_CPUB23>;
+>> >> +                    operating-points-v2 = <&cluster2_opp_table>;
+>> >>                      cpu-idle-states = <&CPU_SLEEP>;
+>> >>                      i-cache-size = <65536>;
+>> >>                      i-cache-line-size = <64>;
+>> >> @@ -348,6 +356,207 @@ l3_cache: l3-cache {
+>> >>              };
+>> >>      };
+>> >>   +  cluster0_opp_table: opp-table-cluster0 {
+>> >> +            compatible = "operating-points-v2";
+>> >> +            opp-shared;
+>> >> +
+>> >> +            opp-408000000 {
+>> >> +                    opp-hz = /bits/ 64 <408000000>;
+>> >> +                    opp-microvolt = <675000 675000 950000>;
+>> >> +                    clock-latency-ns = <40000>;
+>> >> +            };
+>> >> +            opp-600000000 {
+>> >> +                    opp-hz = /bits/ 64 <600000000>;
+>> >> +                    opp-microvolt = <675000 675000 950000>;
+>> >> +                    clock-latency-ns = <40000>;
+>> >> +            };
+>> >> +            opp-816000000 {
+>> >> +                    opp-hz = /bits/ 64 <816000000>;
+>> >> +                    opp-microvolt = <675000 675000 950000>;
+>> >> +                    clock-latency-ns = <40000>;
+>> >> +            };
+>> >> +            opp-1008000000 {
+>> >> +                    opp-hz = /bits/ 64 <1008000000>;
+>> >> +                    opp-microvolt = <675000 675000 950000>;
+>> >> +                    clock-latency-ns = <40000>;
+>> >> +            };
+>> >
+>> > It is not useful to introduce OPP with the same voltage. There is no
+>> > gain in terms of energy efficiency as the compute capacity is linearly
+>> > tied with power consumption (P=CxFxV²) in this case.
+>> >
+>> > For example, opp-408 consumes 2 bogoWatts and opp-816 consumes 4
+>> > bogoWatts (because of the same voltage).
+>> >
+>> > For a workload, opp-408 takes 10 sec and opp-816 takes 5 sec because
+>> > it is twice faster.
+>> >
+>> > The energy consumption is:
+>> >
+>> > opp-408 = 10 x 2 = 20 BogoJoules
+>> > opp-816 = 5 x 4 = 20 BogoJoules
+>> 
+>> I'd respectfully disagree that including multiple OPPs with the same
+>> voltage
+>> but different frequencies isn't useful.  Please allow me to explain.
+>> 
+>> See, the total amount of consumed energy is, in general, the same for
+>> such
+>> OPPs and the same CPU task(s), if we ignore the static leakage current
+>> and
+>> such stuff, which isn't important here.  Though, the emphasis here is 
+>> on
+>> "total", i.e. without taking into account the actual amount of time
+>> required
+>> for the exemplified CPU task(s) to complete.  If the total amount of
+>> time
+>> is quite short, we aren't going to heat up the package and the board
+>> enough
+>> to hit the CPU thermal throttling;  this approach is also sometimes
+>> referred
+>> to as "race to idle", which is actually quite effective for
+>> battery-powered
+>> mobile devices that tend to load their CPU cores in bursts, while
+>> remaining
+>> kind of inactive for the remaining time.
+>> 
+>> However, if the CPU task(s) last long enough to actually saturate the
+>> thermal
+>> capacities of the package and the board or the device, we're getting
+>> into the
+>> CPU throttling territory, in which running the CPU cores slower, but
+>> still as
+>> fast as possible, may actually be beneficial for the overall CPU
+>> performance.
+>> By running the CPU cores slower, we're lowering the power and
+>> "spreading" the
+>> total energy consumption over time, i.e. we're making some time to 
+>> allow
+>> the
+>> generated heat to dissipate into the surroundings.  As we know, having
+>> more
+>> energy consumed by the SoC means more heat generated by the SoC, but 
+>> the
+>> resulting temperature of the SoC depends on how fast the energy is
+>> consumed,
+>> which equals to how fast the CPUs run;  of course, all that is valid
+>> under
+>> the reasonable assumption that the entire cooling setup, including the
+>> board
+>> surroundings, remains unchanged all the time.
+> 
+> On the other hand, convective heat dissipation is approximately
+> proportional to the temperature differential, therefore heating up the
+> core to a higher temperature over a shorter period of time would let
+> it dissipate the same joule amount faster. Given that total joules
 
-The force jtag function should be work if all the iomux and hardware 
-setting is corret:
-     All the IO for SDMMC signal including SDMMC_DET, should set the 
-iomux/pinctrl to mmc function
-instead of GPIO function.
+Let me point out that the emphasis is again on "shorter period". :)
+Yes, when the CPU load is bursty, having multiple same-voltage OPPs
+almost surely won't help us at all, as I already noted.  However,
+the things will surely change when the CPU cores are loaded for
+longer amounts of time and, as a result, the defined thermal trips
+are reached, because the cooling system gets saturated.
 
-Seems like you are working on rk3588-quartzpro64, when I check its dts, 
-I found below setting in sdmmc node:
-cd-gpios = <&gpio0 RK_PA4 GPIO_ACTIVE_LOW>;
-Since quartzpro64 is using the correct IO and there is already a 
-&sdmmc_det in sdmmc node,
-you don't need to overwrite it with "cd-gpios".
+> generated for a particular load are approximately the same for
+> different frequencies as long as voltage remains the same (as Daniel
+> pointed out), higher frequency seems to lead to better heat transfer
+> to the environment for the same load. And also the task completes
+> sooner, which is probably always good, ceteris paribus.
+> 
+> Not sure how that all changes when throttling enters the game though :)
 
-Could you help to revert this patch and remove "cd-gpios" in dts sdmmc, 
-and test sdmmc function again?
-It should work with SD card 4 line mode and force jtag available when 
-people need it.
+As I already noted above, the things are quite different when the CPU
+load isn't bursty.  Once the cooling setup is saturated, the heat no
+longer gets transferred effectively to the surroundings, while the CPU
+cores keep producing the heat, which cannot continue indefinitely.  As
+a result, the CPU cores need to run slower and "spread" the total amount
+of joules over time, but they still should run as fast as possible.
+Another option is to introduce active cooling, which also comes with
+its own set of limits, but the initial assumption is that the cooling
+setup remains unchanged.
 
-Thanks,
-- Kever
->
-> Signed-off-by: Ondrej Jirman <megi@xff.cz>
-> ---
->   drivers/soc/rockchip/grf.c | 14 ++++++++++++++
->   1 file changed, 14 insertions(+)
->
-> diff --git a/drivers/soc/rockchip/grf.c b/drivers/soc/rockchip/grf.c
-> index 15a3970e3509..d768c5a70174 100644
-> --- a/drivers/soc/rockchip/grf.c
-> +++ b/drivers/soc/rockchip/grf.c
-> @@ -121,6 +121,17 @@ static const struct rockchip_grf_info rk3566_pipegrf __initconst = {
->   	.num_values = ARRAY_SIZE(rk3566_defaults),
->   };
->   
-> +#define RK3588_GRF_SOC_CON6		0x0318
-> +
-> +static const struct rockchip_grf_value rk3588_defaults[] __initconst = {
-> +	{ "jtag switching", RK3588_GRF_SOC_CON6, HIWORD_UPDATE(0, 1, 14) },
-> +};
-> +
-> +static const struct rockchip_grf_info rk3588_sysgrf __initconst = {
-> +	.values = rk3588_defaults,
-> +	.num_values = ARRAY_SIZE(rk3588_defaults),
-> +};
-> +
->   
->   static const struct of_device_id rockchip_grf_dt_match[] __initconst = {
->   	{
-> @@ -147,6 +158,9 @@ static const struct of_device_id rockchip_grf_dt_match[] __initconst = {
->   	}, {
->   		.compatible = "rockchip,rk3566-pipe-grf",
->   		.data = (void *)&rk3566_pipegrf,
-> +	}, {
-> +		.compatible = "rockchip,rk3588-sys-grf",
-> +		.data = (void *)&rk3588_sysgrf,
->   	},
->   	{ /* sentinel */ },
->   };
+In the end, if all that weren't the case, we wouldn't need CPU thermal
+throttling at all, or not as much. :)
