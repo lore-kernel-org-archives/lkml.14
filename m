@@ -1,58 +1,36 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B99C91BC34
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 09:21:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.120
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C32C1BF3E;
+	Fri, 26 Jan 2024 09:22:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706260885; cv=none; b=cxjv02lbD5cqgPULHx/nLqEStXWstyxaAnhBGcHCAg7IsFYXYJA1Ot/zAS+6edhxgTV+rrsRulSuZIee5khLAl6rimHBfMvCRoXjtRKCIV9rBwRDz9SRndZxLPMhTCmj4EfQTFT0cQ/Ya4n5qvxyq7OMXsJq4GeY34aWbMvyYXk=
+	t=1706260935; cv=none; b=A35zR7prgneunyZqrYFLPZIt/Ryiscj+1mdakc/pArb/PzFgCpNxSUS7ABCiLif/a9rIIlXdfxd72b+M/gUZ784PRaNeCRthEYYZWgmSvv6N8jYXhedtcK/qhuo2Af4WQfq2/iYRCe9mmeYXTY6iFnFF64GV2S9ZBxyVUrJJzVc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706260885; c=relaxed/simple;
-	bh=6mV7VNYt7HwWXFfXqjQflzG59MR/XQAJ7cn2D6yJLfs=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=hhp3s3sGjHDLDXObWIf9V6q88cQW1WiY2DRjYdcfe00/AyxKVEuBtkCzlUK/+9dBh8cDBNvVIEHDDYhLAx1hbj4V1XwHQJX20NYhTVo0CmBS+oLWgDDERzi5ygzwqFGuRHRn/rgYH2zoESmBoX+YC4wnVZlGL05OyJ8JFAHVeuU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Xuut1Wzs; arc=none smtp.client-ip=192.55.52.120
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Xuut1Wzs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706260883; x=1737796883;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=6mV7VNYt7HwWXFfXqjQflzG59MR/XQAJ7cn2D6yJLfs=;
-  b=Xuut1Wzs8V+OSZhANLhR1xRFeXyPNv069YvHd3sFyeoXS8GCv1xZxjfl
-   A/1UeKxroVoZpf4EX7p+wS5ICZz9EdnjKBGpX/Ubfk7xqdCd45jzxUhRL
-   hSLf+WWhZJg66j8emnE5eAysym4V7vvJlzhzzsPyzLBDJ1b5EPIw7qHRo
-   tijhnwfilCA1PhPhFzp6spKJaUXF1h2w46FYtid7C6odMRlRc/NJMm8dW
-   qgOc3noozfUMY5NQeCVQ0/9agkCpJwjnFHxAt221J9xD6VSv6s+8rYR4g
-   Wq0q+tCdVVDnPmIhuZ6rIMYD4qQBDNSF9TOaJ/GH4oAXstA/FUw1SqMBj
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="401279180"
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="401279180"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2024 01:21:22 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="906261352"
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="906261352"
-Received: from feng-clx.sh.intel.com ([10.239.159.50])
-  by fmsmga002.fm.intel.com with ESMTP; 26 Jan 2024 01:21:20 -0800
-From: Feng Tang <feng.tang@intel.com>
-To: John Stultz <jstultz@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Stephen Boyd <sboyd@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	paulmck@kernel.org,
-	Peter Zijlstra <peterz@infradead.org>,
-	Waiman Long <longman@redhat.com>
-Cc: Feng Tang <feng.tang@intel.com>,
-	Jin Wang <jin1.wang@intel.com>
-Subject: [PATCH] clocksource: Scale the max retry number of watchdog read according to CPU numbers
-Date: Fri, 26 Jan 2024 17:12:50 +0800
-Message-Id: <20240126091250.79985-1-feng.tang@intel.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1706260935; c=relaxed/simple;
+	bh=Lf3encN/F8/HuCIppMQ0kCZkOPYn0JSFA0SPxEOdeLA=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=PULD+ZE8PQjoymMkI2a2quNFekwprutzk/d6rppROzvvOBmqHQnOZeJEK2QTcjHPW9Ik94Lq4cEzf+PwFGX+ZEPUoIGhA3uKfJiYSn6ciTSXSW7xMp5hXDP3LItlXUmWZBoXMmx9YqSuOKqY/w6G1jfu3fYNnyyz3X+bPPKy0nQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.44])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4TLsc86slsz29kgF;
+	Fri, 26 Jan 2024 17:20:24 +0800 (CST)
+Received: from dggpeml500001.china.huawei.com (unknown [7.185.36.227])
+	by mail.maildlp.com (Postfix) with ESMTPS id ED1A8140416;
+	Fri, 26 Jan 2024 17:22:10 +0800 (CST)
+Received: from huawei.com (10.69.192.56) by dggpeml500001.china.huawei.com
+ (7.185.36.227) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Fri, 26 Jan
+ 2024 17:22:10 +0800
+From: Qi Tao <taoqi10@huawei.com>
+To: <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
+	<liulongfang@huawei.com>
+CC: <linux-kernel@vger.kernel.org>, <linux-crypto@vger.kernel.org>
+Subject: [PATCH v2 0/4] some updates and cleanups for hisilicon/sec2.
+Date: Fri, 26 Jan 2024 17:21:20 +0800
+Message-ID: <20240126092124.14055-1-taoqi10@huawei.com>
+X-Mailer: git-send-email 2.33.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,61 +38,32 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ dggpeml500001.china.huawei.com (7.185.36.227)
 
-There was a bug on one 8-socket server that the TSC is wrongly marked as
-'unstable' and disabled during boot time. (reproduce rate is every 120
-rounds of reboot tests), with log:
+This seires patch mainly add some RAS registers to enhance the 
+DFX positioning function and fix some cleanup issues.
 
-    clocksource: timekeeping watchdog on CPU227: wd-tsc-wd excessive read-back delay of 153560ns vs. limit of 125000ns,
-    wd-wd read-back delay only 11440ns, attempt 3, marking tsc unstable
-    tsc: Marking TSC unstable due to clocksource watchdog
-    TSC found unstable after boot, most likely due to broken BIOS. Use 'tsc=unstable'.
-    sched_clock: Marking unstable (119294969739, 159204297)<-(125446229205, -5992055152)
-    clocksource: Checking clocksource tsc synchronization from CPU 319 to CPUs 0,99,136,180,210,542,601,896.
-    clocksource: Switched to clocksource hpet
+[PATCH v1 3/4] -> [PATCH v2 3/4]
+	sec_sqe3->c_len_ivin |= cpu_to_le32(c_req->c_len);
+-	sec_sqe3->tag = cpu_to_le64((unsigned long)(uintptr_t)req);
++	sec_sqe3->tag = cpu_to_le64((unsigned long)req);
 
-The reason is for platform with lots of CPU, there are sporadic big or huge
-read latency of read watchog/clocksource during boot or when system is under
-stress work load, and the frequency and maximum value of the latency goes up
-with the increasing of CPU numbers. Current code already has logic to detect
-and filter such high latency case by reading 3 times of watchdog, and check
-the 2 deltas. Due to the randomness of the latency, there is a low possibility
-situation that the first delta (latency) is big, but the second delta is small
-and looks valid, which can escape from the check, and there is a
-'max_cswd_read_retries' for retrying that check covering this case, whose
-default value is only 2 and may be not enough for machines with huge number
-of CPUs.
+Other patches are not modified.
 
-So scale and enlarge the max retry number according to CPU number to better
-filter those latency noise on large system, which has been verified fine in
-4 days and 670 rounds of reboot test on the 8-socket machine.
+Qi Tao (3):
+  crypto: hisilicon/sec2 - updates the sec DFX function register
+  crypto: hisilicon/sec2 - modify nested macro call
+  crypto: hisilicon/sec2 - fix some cleanup issues
 
-Tested-by: Jin Wang <jin1.wang@intel.com>
-Signed-off-by: Feng Tang <feng.tang@intel.com>
----
- kernel/time/clocksource.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+Wenkai Lin (1):
+  crypto: hisilicon/sec - remove unused parameter
 
-diff --git a/kernel/time/clocksource.c b/kernel/time/clocksource.c
-index c108ed8a9804..f15283101906 100644
---- a/kernel/time/clocksource.c
-+++ b/kernel/time/clocksource.c
-@@ -226,6 +226,15 @@ static enum wd_read_status cs_watchdog_read(struct clocksource *cs, u64 *csnow,
- 	u64 wd_end, wd_end2, wd_delta;
- 	int64_t wd_delay, wd_seq_delay;
- 
-+	/*
-+	 * If no user changes the default value, scale the retry threshold
-+	 * according to CPU numbers. As per test, the more CPU a platform has,
-+	 * the bigger read latency is found during boot time or under stress
-+	 * work load. Increase the try nubmer to reduce false alarms.
-+ 	 */
-+	if (max_cswd_read_retries == 2)
-+		max_cswd_read_retries = max(2, ilog2(num_online_cpus()));
-+
- 	for (nretries = 0; nretries <= max_cswd_read_retries; nretries++) {
- 		local_irq_disable();
- 		*wdnow = watchdog->read(watchdog);
+  drivers/crypto/hisilicon/sec2/sec_crypto.c | 33 ++++++++--------------
+  drivers/crypto/hisilicon/sec2/sec_main.c   |  5 ++++
+  2 files changed, 17 insertions(+), 21 deletions(-)
+
 -- 
-2.34.1
+2.33.0
 
