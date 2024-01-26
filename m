@@ -1,127 +1,219 @@
-Received: from mail115-118.sinamail.sina.com.cn (mail115-118.sinamail.sina.com.cn [218.30.115.118])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9F4E18040
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 12:43:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=218.30.115.118
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5987B19452
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 12:45:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706273012; cv=none; b=D6TGTB7j7KcvtTBaVa6vLdq6YYaYgISg1MfTNdu18UW4icCnQNtNruZcyJD45s7NK3vswwfg3wrCVZKnuguy5/wJkD5+Yya0sJeDcD6To2gwIA1trXlIrVwsMSX6GD0rom4jBQy72oA9iX7OkissUb0WaxRsucQfP3oDSyDmW30=
+	t=1706273118; cv=none; b=Pr0q3RZwe0KtbXxOerfChHLxVOEn3YNGE66d4cFcfBHSLR7fsuM/3C+fuS1dWagMpA9+N5nf8MsyrXev+C7EEdKf5kaOp+djqVTRGMvftS8xicqqadnVJ98h9OIkEZdNrsGjydqaMx6BzvEiDuaKv88Tk0Gd3defAPVLXBTlfI0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706273012; c=relaxed/simple;
-	bh=YEvuQE0egY0EGa0GmaZ/uR8m+fkDJrKEvI3b3UJKoy8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=EVAFjTvTjaP4k7597kXRFqiXa1FiKl2x4Ivx1APgNxtWe7CRg0Rpof4djgL4dsjVKyVktRt46E6JzWs7xYLwgTgyDnVVLOoD2yf0BCezU5gk0kesJRdYzLC8G64W1JrH9VMpj9004jRDhcmaUA7kNKwXGkm95W7sjvM9Bu7ANlE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=218.30.115.118
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
-X-SMAIL-HELO: localhost.localdomain
-Received: from unknown (HELO localhost.localdomain)([113.88.48.210])
-	by sina.com (172.16.235.25) with ESMTP
-	id 65B3A40E0000063A; Fri, 26 Jan 2024 20:22:40 +0800 (CST)
-X-Sender: hdanton@sina.com
-X-Auth-ID: hdanton@sina.com
-Authentication-Results: sina.com;
-	 spf=none smtp.mailfrom=hdanton@sina.com;
-	 dkim=none header.i=none;
-	 dmarc=none action=none header.from=hdanton@sina.com
-X-SMAIL-MID: 84450634210253
-X-SMAIL-UIID: 117540BEF18F4E7CAE5F98929E674A80-20240126-202240-1
-From: Hillf Danton <hdanton@sina.com>
-To: Benjamin Segall <bsegall@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Will Deacon <will@kernel.org>,
-	Waiman Long <longman@redhat.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] locking/percpu-rwsem: do not do lock handoff in percpu_up_write
-Date: Fri, 26 Jan 2024 20:22:30 +0800
-Message-Id: <20240126122230.838-1-hdanton@sina.com>
-In-Reply-To: <xm267cjxf7f1.fsf@bsegall-linux.svl.corp.google.com>
-References: <xm26zfwx7z5p.fsf@google.com> <20240123150541.1508-1-hdanton@sina.com> <20240125110456.783-1-hdanton@sina.com>
+	s=arc-20240116; t=1706273118; c=relaxed/simple;
+	bh=XIAfNN2TnesbiltFdat/ZR5k0/YSTED9WyPg9/4Ukc8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YafiO3GmlblcPhyFmxqyYL+UR4hnXZ6ALgWdhuLBe88pQJN7FFO9J0G1OTlguv+KV8aBIcx1OHfBMGRkmQn1RNE5EVo7sW8Jgi9DR1sLNiIj7oueWGDHGvsxLkQaOuOQWnFNQRhps/SdG4wBr4CjR1KJEH+h7XZmaoIRTr8MBLg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HjENpqed; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HjENpqed"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 927C8C433C7;
+	Fri, 26 Jan 2024 12:45:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706273117;
+	bh=XIAfNN2TnesbiltFdat/ZR5k0/YSTED9WyPg9/4Ukc8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=HjENpqedemo2G0vGWINC6AuDVKw5FbZCLaoR+ix/1vANsdYKjcXoB8Mb5NUnSYP88
+	 Q6TqJar6Jg15K5mRmDFUvF1jXrlz3MPlfaFmNpBih4c1xXL44s5/ghPbmOPsf7NieU
+	 haWKbLYdVz1P7TXfnaN03AUSQtJ3qBlnVB0UcDR858s2P8SU4qqkEiGGpDOf0K2PYS
+	 qwLEjXQismRMMffKcZvXtdr1QVwAeXxa9ir2Apfw7BLh8VXcMSKCz5xb0rnTbmDMjX
+	 Cwvbr8LAWHFRCpOXgE9tQV7Gg+M4bFqqLvi4yQyBjClmCiHdtDktpwtujg+LyYJ9KT
+	 wsgP4ZEFRSjfQ==
+Date: Fri, 26 Jan 2024 13:45:15 +0100
+From: Maxime Ripard <mripard@kernel.org>
+To: Abhinav Kumar <quic_abhinavk@quicinc.com>
+Cc: Jani Nikula <jani.nikula@linux.intel.com>, 
+	Jessica Zhang <quic_jesszhan@quicinc.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, Sam Ravnborg <sam@ravnborg.org>, dri-devel@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org, Daniel Vetter <daniel@ffwll.ch>, 
+	David Airlie <airlied@gmail.com>, Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
+	Rob Clark <robdclark@gmail.com>
+Subject: Re: Re: [PATCH RFC 0/4] Support for Simulated Panels
+Message-ID: <hhmbghooegclx3jbsx2neryligk3mj77lq7gns5xegags5ltoz@acdu6hssqwlw>
+References: <20240116-jz-test-sim-panel-v1-0-f9511f46c9c7@quicinc.com>
+ <x6wi5xnihnbpqsujjfjfw3ft6njncruta5l3xa44pds5oxmdkw@mmvv4bciy65s>
+ <87cyu0qn81.fsf@intel.com>
+ <e1f10583-1d5b-fdac-24bf-098a0ba06241@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="ttyvot3alawck5nq"
+Content-Disposition: inline
+In-Reply-To: <e1f10583-1d5b-fdac-24bf-098a0ba06241@quicinc.com>
 
-On Thu, 25 Jan 2024 13:08:02 -0800 Benjamin Segall <bsegall@google.com>
-> Hillf Danton <hdanton@sina.com> writes:
-> > On Wed, 24 Jan 2024 14:10:43 -0800 Benjamin Segall <bsegall@google.com>
-> >> Hillf Danton <hdanton@sina.com> writes:
-> >> > On Mon, 22 Jan 2024 14:59:14 -0800 Benjamin Segall <bsegall@google.com>
-> >> >> So the actual problem we saw was that one job had severe slowdowns
-> >> >> during startup with certain other jobs on the machine, and the slowdowns
-> >> >> turned out to be some cgroup moves it did during startup. The antagonist
-> >> >> jobs were spawning huge numbers of threads and some other internal bugs
-> >> >> were exacerbating their contention. The lock handoff meant that a batch
-> >> >> of antagonist threads would receive the read lock of
-> >> >> cgroup_threadgroup_rwsem and at least some of those threads would take a
-> >> >> long time to be scheduled.
-> >> >
-> >> > If you want to avoid starved lock waiter, take a look at RWSEM_FLAG_HANDOFF
-> >> > in rwsem_down_read_slowpath().
-> >> 
-> >> rwsem's HANDOFF flag is the exact opposite of what this patch is doing.
-> >
-> > You and I are not on the same page.
-> >
-> >> Percpu-rwsem's current code has perfect handoff for read->write, and a very
-> >> short window for write->read (or write->write) to be beaten by a new writer.
-> >
-> > Given no chance left for spin on owner who is legal to take a ten-minute nap,
-> > the right thing known to do on behalf of starved waiters is to add the HANDOFF
-> > mechanism without any heuristic like you proposed for instance, in order to
-> > force lock acquirers to go the slow path.
-> >
-> > Only for thoughts.
-> 
-> This is not the type of slowdown that is the problem my patch is trying
-> to address. (And due to the way percpu-rwsem works sem->ww is nearly
-> entirely redundant with sem->block - the first waiting writer is instead
-> waiting on rcuwait and holds sem->block while doing so)
-> 
-> The problem that my patch addresses is:
-> 
-> Writer is done: percpu_up_write
->   atomic_set_release(&sem->block, 0);  // #1
->   wake a batch of readers:
->     percpu_rwsem_wake_function -> __percpu_rwsem_trylock(reader) // #2
->   wake a single writer
->     percpu_rwsem_wake_function -> __percpu_rwsem_trylock(writer) // #3
-> new writer wakes up (holding sem->block from #3)
->   sees the readers holding the lock from #2, now sleeps on rcuwait
-> time passes // #4
-> readers finally get to run, run quickly and release the lock
-> now the writer gets to run
-> 
-> Currently the only source of unfairness/optimistic locking is the window
-> between #1 and #2, which occur in quick succession, on the same thread,
-> and with no SPIN_ON_OWNER to make this window more likely than it
-> otherwise would be.
 
-The sem->ww introduced closes the window between #1 and #2 by define
-as it is derived from rwsem's HANDOFF.
-> 
-> My patch makes the entire #4 available to writers (or new readers), so
-> that the woken writer will instead get to run immediately. This is
+--ttyvot3alawck5nq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Victims rise in case the woken readers at #2 have been waiting more
-than a minute while the woken writer less than 20ms.
+On Wed, Jan 17, 2024 at 09:36:20AM -0800, Abhinav Kumar wrote:
+> Hi Jani and Maxime
+>=20
+> On 1/17/2024 2:16 AM, Jani Nikula wrote:
+> > On Wed, 17 Jan 2024, Maxime Ripard <mripard@kernel.org> wrote:
+> > > Hi,
+> > >=20
+> > > On Tue, Jan 16, 2024 at 02:22:03PM -0800, Jessica Zhang wrote:
+> > > > This series introduces a simulated MIPI DSI panel.
+> > > >=20
+> > > > Currently, the only way to validate DSI connectors is with a physic=
+al
+> > > > panel. Since obtaining physical panels for all possible DSI configu=
+rations
+> > > > is logistically infeasible, introduce a way for DSI drivers to simu=
+late a
+> > > > panel.
+> > > >=20
+> > > > This will be helpful in catching DSI misconfiguration bugs and catc=
+hing
+> > > > performance issues for high FPS panels that might not be easily
+> > > > obtainable.
+> > > >=20
+> > > > For now, the simulated panel driver only supports setting customized
+> > > > modes via the panel_simlation.mode modparam. Eventually, we would l=
+ike
+> > > > to add more customizations (such as configuring DSC, dual DSI, etc.=
+).
+> > >=20
+> > > I think that it's more complicated than it needs to be.
+> >=20
+> > Both too complicated and not complicated enough! :p
+>
+> The end goal is to have a framework to be able to validate the display
+> pipeline with MIPI panels of any resolution , DSC/non-DSC, different MIPI
+> flags etc.
+>=20
+> Historically, QC has been having an in-house framework to validate the
+> panels in a simulated way as its logistically not possible to procure eve=
+ry
+> panel from every vendor. This has been working pretty well but its not
+> upstream yet. So we would like to work with the community to work on a mo=
+del
+> which works for everyone and this RFC was initiated with that in mind.
 
-> obviously much less fair, but provides much better throughput (ideally
-> it might have some sort of delay, so that in more normal circumstances
-> readers don't have to win the wakeup race by luck and being woken
-> slightly sooner, but I don't have that).
-> 
-> This is also only useful because of the assumption that readers will
-> almost always not actually block (among other required assumptions) - if
+I think the goal was pretty clear. My point was more that there's no
+reason it should be driver specific, and having a second path for it
+doesn't really exert the actual panel path in the driver. I think a
+separate driver would be better.
 
-Like heuristic, any assumption makes the locking game more complex than
-thought without real win.
+> There is simulation infrastructure in place in upstream for HDMI/DP in the
+> form of chamelium based testing in IGT but no such fwk exists for DSI
+> displays.
+>=20
+> Different MIPI panels and resolutions test out not only the DSI controller
+> but the entire display pipeline as based on resolution, compression and M=
+IPI
+> mode flags different parts of the pipeline can get exercised.
+>=20
+> > > Why do we need to support (and switch to) both the actual and
+> > > "simulated" panel?
+> > >=20
+>=20
+> As per my discussion on IRC with the panel/bridge maintainers and DT
+> maintainers, a simulation panel does not qualify for its own devicetree as
+> its not a real hardware so we needed to come up with a way to have a modu=
+le
+> which can be attached to the encoder without its own bindings and
+> devicetree. Thats what led to this RFC.
 
-> they regularly sleep while holding the lock, then saving writers from
-> that first wakeup latency of readers isn't particularly helpful anymore,
-> because they'll still be delayed by the other wakeup latencies.
+I still think it's worth trying, there's plenty of virtual drivers in
+the DT already. But even then, DT policies shouldn't dictate general
+framework design decisions: we have other ways to probe panels than
+using the DT (by loading overlays, registering devices by hand, etc.). I
+still think it would be a good idea to try though.
+
+> > > Wouldn't it be simpler if we had a vkms-like panel that we could eith=
+er
+> > > configure from DT or from debugfs that would just be registered the
+> > > usual way and would be the only panel we register?
+> >=20
+>=20
+> No, we need to have validate actual hardware pipeline with the simulated
+> panel. With vkms, actual display pipeline will not be validated. With
+> incorrect display pipeline misconfigurations arising from different panel
+> combinations, this can easily be caught with any existing IGT CRC testing.
+> In addition, all performance related bugs can also be easily caught by
+> simulating high resolution displays.
+
+That's not what I meant. What I meant was that something like a
+user-configurable, generic, panel driver would be a good idea. Just like
+vkms (with the debugfs patches) is for a full blown KMS device.
+
+> > I get the idea of trying to test DSI code without panels, and looking at
+> > the goals above, I think your vkms suggestion is going to fall short of
+> > those goals.
+> >=20
+> > However, my gut feeling is that creating a simulated panel to catch DSI
+> > misconfiguration etc. is going to be insanely complicated, and this
+> > series doesn't even scratch the surface.
+> >=20
+> > I guess my questions are, what's the scope here really, are those goals
+> > realistic, does more code already exist beyond this skeleton?
+> >=20
+>=20
+>=20
+> This series is only a starting RFC to be able to validate any display mod=
+e.
+> This would have to be extended to be able to customize different pieces of
+> the panel. Lets talk about the customizable pieces:
+>=20
+> 1) Display resolution with timings (drm_display_mode)
+> 2) Compression/non-compression
+> 3) Command mode/Video mode
+> 4) MIPI mode flags
+> 5) DCS commands for panel enable/disable and other panel sequences
+> 6) Power-up/Power-down sequence for the panel
+>=20
+> Without a physical panel, yes its hard to validate if anything is wrong w=
+ith
+> (4) OR (5), the display might not come up at all visually. But from our
+> experience, thats only a small portion and the real benefit of this
+> framework will actually be from the validation failures we will catch from
+> (1) to (4).
+>=20
+> This RFC only provides a way to customize (1) at the moment as we wanted =
+to
+> get some feedback from the community about the best way which will work f=
+or
+> everyone to customize all these parameters.
+>=20
+> We are willing to expand this series based on the generic way we agree on=
+ to
+> customize other params.
+>=20
+> Yes, debugfs is an option too. But typically MIPI displays need some
+> parameters configured to attach the panel to the encoder. So perhaps we c=
+an
+> boot the simulation panel with a default resolution passed through command
+> line and then across a modeset switch (1) to (4).
+
+I think Jani's feeling was that it was going to be super complicated
+fairly fast so supporting more features would definitely help to get an
+idea of where this is going.
+
+Maxime
+
+--ttyvot3alawck5nq
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCZbOpWgAKCRDj7w1vZxhR
+xW4KAQDTi1qXKjvMAV4J1VrSDEPWrm4HSLnPu0Mj7t4U/P/9MwEA/wS1UZ4TlVVL
++nQ2ajQM6K66yUUIOLdzvskj3RYQ1A8=
+=kTxm
+-----END PGP SIGNATURE-----
+
+--ttyvot3alawck5nq--
