@@ -1,140 +1,86 @@
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 326BF5D747
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 09:05:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAE025FB84;
+	Fri, 26 Jan 2024 09:05:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706259916; cv=none; b=fAnk8NH3E8U0uFPBtU1KwTHL4A9TITxf2bKpnSjLyRjILcO+OieskTkKUe1akALkbEYKU2ePOLBQRakA+H79XEibG1yCzGn+lUbVRUkyXz4p6FUOg3ahROVN94gupaZbZsGJxxrcVCKMjlirde833Hae6iiBqDzoIuoEco6iKto=
+	t=1706259926; cv=none; b=jhm13Fg72ld1nBZRQhXcyitG2vYxhfVSxaD4/YIh/CezyxiVUJ/o8FUPG7N+8jm9INyAXNL9n8O4SsAub2dQ17aD+yR3ic+uYftIqt/0X+O7Xzgn5uljPcJER6owKwcDm2lWtbrBpyxDhH/Hgv8EqY9M0gTvTAs96ER0MMZganI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706259916; c=relaxed/simple;
-	bh=ufIEFyYW5t9gixZPBQoZWxYq3Cyp5gU+k+fMvIimQxc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Pw83qn6QGvf5UmqKKyzJppxWO1fKZPeG570snIZPLAPZWvXeglII55krtwjy+wyg2bwP5m4J0hch+j96k9ncb41UbnTSFWflo7/2TP2pbP8460X8/S+Lc6TET2ezrVKJGvhBkyTPkXD53x5dPUY0xsj59XRqzb8B8WpAVYnfDm0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=sFPmoKHr; arc=none smtp.client-ip=209.85.208.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sFPmoKHr"
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2cf4a22e10dso1278081fa.3
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 01:05:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706259912; x=1706864712; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=N/dreIlst6Eo+Y4KVZHn9lXrpuENSa0tyCyj3uRGbik=;
-        b=sFPmoKHrNhWBxaL+dxYYIbpI2OAJIOcsJ0rS/N7ZSzAc+U7x7fD/hdAnDxBbOg5FnE
-         5tGTTTRlDwVWMp4MqZGemrnruFEsORPGQbqyk/jmKvaQvgawFZ5BMCs8rrbyoE7QGzZ3
-         /ubA900cq2s/FomNrADB/rYCWakcdQjDLYxrfAC04rdVd4LtblzLskFFVXacOwcG3eDH
-         LdUeoeO9AZAwRVL/85DwbXPRGN+c9YlWMMnjgwT5FlxXHqL7S5ruR2xJt4VdqLMNFHDz
-         mVGkdi5l9LGjG9I+FmmjUd6FD09AlR/EhJa3U4kb7llrpVp4Cg1AvJ9elQIO4X6uLU5n
-         7/AQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706259912; x=1706864712;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=N/dreIlst6Eo+Y4KVZHn9lXrpuENSa0tyCyj3uRGbik=;
-        b=EQwHcgR5MhFZdyQtNJSOZKKmKM7T4IM2S6b6cs00D5HzfSCTy8NX/JKw2lX1j9q8vp
-         40gvmo+NNB1l4oSFtNKQ0tgLoEYSryyPwJHOo1xdloExBJ7PWPQbmqKRYDYumcq+iiRM
-         S3STr+NdaTEdRMr5T+/L0OfDTWBleQXIVTUQvLjKH7axOOuS2fgCMYsK/lwXO91hUwY4
-         Jgk/bTqcd5pBIEBcZhd5XAJrD8ACBTyHt+MKya1Ry001UEkwBKm4fVoOJ1Z+5qNMuiJ9
-         v86Up0GbwgdkLvpqfb9lBu5G8cX1dV1/Ryo8fPoNAVQ4r+/c7+J3XdchKjfz7RUptGhD
-         h8vQ==
-X-Gm-Message-State: AOJu0YysWSaskaAeBv9z8EyOPnUlJlHkhzHg+i5mEZzHBq58c/0Zlmug
-	wf/Fh0L2rE91fi7nwYb0ePGe5oGY+8C1R6bSaB8vcLGFuE1YluTvPxdBKy9MBZE=
-X-Google-Smtp-Source: AGHT+IEMgBDqkn8F5J5RUcrGMf484RQvGBVMlqsxtL0MGeQw8BXbJRz2pbtb5dGeILrtXo4oGWa7nA==
-X-Received: by 2002:a2e:a496:0:b0:2cd:217:45fc with SMTP id h22-20020a2ea496000000b002cd021745fcmr324392lji.13.1706259912228;
-        Fri, 26 Jan 2024 01:05:12 -0800 (PST)
-Received: from [192.168.1.20] ([178.197.215.66])
-        by smtp.gmail.com with ESMTPSA id z34-20020a509e25000000b00559dd0a5146sm390490ede.44.2024.01.26.01.05.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 26 Jan 2024 01:05:11 -0800 (PST)
-Message-ID: <a5cc3d05-4f6d-4d80-8f4b-20b69f7c3cb6@linaro.org>
-Date: Fri, 26 Jan 2024 10:05:10 +0100
+	s=arc-20240116; t=1706259926; c=relaxed/simple;
+	bh=9fFOopVdKAjV1by1QMH5ucZbA1hAWe+Zz5PTAY9LHIo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Q1VYkabOOI+pvDhSAG5zo7Hgtx6qHu3Ung5oLgy/nda6Ptk+TxQ/502Uss3mPZ5n11oqjCX8DNCRT+v6HSEUZrxoBDmlZc+tVMhovXfXIbkCgBltoAtH7VJjQx6TILGPpcJK33No5kLPervnxWpEd96zMymIlNKJhhOu5+HX28E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.94.2 #2 (Debian))
+	id 1rTI9G-006Es7-Vz; Fri, 26 Jan 2024 17:05:20 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Fri, 26 Jan 2024 17:05:31 +0800
+Date: Fri, 26 Jan 2024 17:05:31 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Wenkai Lin <linwenkai6@hisilicon.com>
+Cc: linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
+	liulongfang@huawei.com, fanghao11@huawei.com, acc@openeuler.org
+Subject: Re: [PATCH] crypto: hisilicon - Fix smp_processor_id() warnings
+Message-ID: <ZbN128cDR4qisFha@gondor.apana.org.au>
+References: <20240119081107.5306-1-linwenkai6@hisilicon.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/2] arm64: dts: imx8mn-rve-gateway: remove redundant
- company name
-Content-Language: en-US
-To: Hugo Villeneuve <hugo@hugovil.com>, robh+dt@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, shawnguo@kernel.org,
- s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
- linux-imx@nxp.com, leoyang.li@nxp.com, hvilleneuve@dimonoff.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, andy.shevchenko@gmail.com
-References: <20240125165935.886992-1-hugo@hugovil.com>
- <20240125165935.886992-3-hugo@hugovil.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
- cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
- JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
- gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
- J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
- NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
- BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
- vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
- Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
- TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzTRLcnp5c3p0b2Yg
- S296bG93c2tpIDxrcnp5c3p0b2Yua296bG93c2tpQGxpbmFyby5vcmc+wsGUBBMBCgA+FiEE
- m9B+DgxR+NWWd7dUG5NDfTtBYpsFAmI+BxMCGwMFCRRfreEFCwkIBwIGFQoJCAsCBBYCAwEC
- HgECF4AACgkQG5NDfTtBYptgbhAAjAGunRoOTduBeC7V6GGOQMYIT5n3OuDSzG1oZyM4kyvO
- XeodvvYv49/ng473E8ZFhXfrre+c1olbr1A8pnz9vKVQs9JGVa6wwr/6ddH7/yvcaCQnHRPK
- mnXyP2BViBlyDWQ71UC3N12YCoHE2cVmfrn4JeyK/gHCvcW3hUW4i5rMd5M5WZAeiJj3rvYh
- v8WMKDJOtZFXxwaYGbvFJNDdvdTHc2x2fGaWwmXMJn2xs1ZyFAeHQvrp49mS6PBQZzcx0XL5
- cU9ZjhzOZDn6Apv45/C/lUJvPc3lo/pr5cmlOvPq1AsP6/xRXsEFX/SdvdxJ8w9KtGaxdJuf
- rpzLQ8Ht+H0lY2On1duYhmro8WglOypHy+TusYrDEry2qDNlc/bApQKtd9uqyDZ+rx8bGxyY
- qBP6bvsQx5YACI4p8R0J43tSqWwJTP/R5oPRQW2O1Ye1DEcdeyzZfifrQz58aoZrVQq+innR
- aDwu8qDB5UgmMQ7cjDSeAQABdghq7pqrA4P8lkA7qTG+aw8Z21OoAyZdUNm8NWJoQy8m4nUP
- gmeeQPRc0vjp5JkYPgTqwf08cluqO6vQuYL2YmwVBIbO7cE7LNGkPDA3RYMu+zPY9UUi/ln5
- dcKuEStFZ5eqVyqVoZ9eu3RTCGIXAHe1NcfcMT9HT0DPp3+ieTxFx6RjY3kYTGLOwU0EVUNc
- NAEQAM2StBhJERQvgPcbCzjokShn0cRA4q2SvCOvOXD+0KapXMRFE+/PZeDyfv4dEKuCqeh0
- hihSHlaxTzg3TcqUu54w2xYskG8Fq5tg3gm4kh1Gvh1LijIXX99ABA8eHxOGmLPRIBkXHqJY
- oHtCvPc6sYKNM9xbp6I4yF56xVLmHGJ61KaWKf5KKWYgA9kfHufbja7qR0c6H79LIsiYqf92
- H1HNq1WlQpu/fh4/XAAaV1axHFt/dY/2kU05tLMj8GjeQDz1fHas7augL4argt4e+jum3Nwt
- yupodQBxncKAUbzwKcDrPqUFmfRbJ7ARw8491xQHZDsP82JRj4cOJX32sBg8nO2N5OsFJOcd
- 5IE9v6qfllkZDAh1Rb1h6DFYq9dcdPAHl4zOj9EHq99/CpyccOh7SrtWDNFFknCmLpowhct9
- 5ZnlavBrDbOV0W47gO33WkXMFI4il4y1+Bv89979rVYn8aBohEgET41SpyQz7fMkcaZU+ok/
- +HYjC/qfDxT7tjKXqBQEscVODaFicsUkjheOD4BfWEcVUqa+XdUEciwG/SgNyxBZepj41oVq
- FPSVE+Ni2tNrW/e16b8mgXNngHSnbsr6pAIXZH3qFW+4TKPMGZ2rZ6zITrMip+12jgw4mGjy
- 5y06JZvA02rZT2k9aa7i9dUUFggaanI09jNGbRA/ABEBAAHCwXwEGAEKACYCGwwWIQSb0H4O
- DFH41ZZ3t1Qbk0N9O0FimwUCYDzvagUJFF+UtgAKCRAbk0N9O0Fim9JzD/0auoGtUu4mgnna
- oEEpQEOjgT7l9TVuO3Qa/SeH+E0m55y5Fjpp6ZToc481za3xAcxK/BtIX5Wn1mQ6+szfrJQ6
- 59y2io437BeuWIRjQniSxHz1kgtFECiV30yHRgOoQlzUea7FgsnuWdstgfWi6LxstswEzxLZ
- Sj1EqpXYZE4uLjh6dW292sO+j4LEqPYr53hyV4I2LPmptPE9Rb9yCTAbSUlzgjiyyjuXhcwM
- qf3lzsm02y7Ooq+ERVKiJzlvLd9tSe4jRx6Z6LMXhB21fa5DGs/tHAcUF35hSJrvMJzPT/+u
- /oVmYDFZkbLlqs2XpWaVCo2jv8+iHxZZ9FL7F6AHFzqEFdqGnJQqmEApiRqH6b4jRBOgJ+cY
- qc+rJggwMQcJL9F+oDm3wX47nr6jIsEB5ZftdybIzpMZ5V9v45lUwmdnMrSzZVgC4jRGXzsU
- EViBQt2CopXtHtYfPAO5nAkIvKSNp3jmGxZw4aTc5xoAZBLo0OV+Ezo71pg3AYvq0a3/oGRG
- KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
- fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20240125165935.886992-3-hugo@hugovil.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240119081107.5306-1-linwenkai6@hisilicon.com>
 
-On 25/01/2024 17:59, Hugo Villeneuve wrote:
-> From: Hugo Villeneuve <hvilleneuve@dimonoff.com>
+On Fri, Jan 19, 2024 at 04:11:07PM +0800, Wenkai Lin wrote:
+> Switch to raw_smp_processor_id() to prevent a number of
+> warnings from kernel debugging. We do not care about
+> preemption here, as the CPU number is only used as a
+> poor mans load balancing or device selection. If preemption
+> happens during an encrypt/decrypt operation a small performance
+> hit will occur but everything will continue to work, so just
+> ignore it. This commit is similar to e7a9b05ca4
+> ("crypto: cavium - Fix smp_processor_id() warnings").
 > 
-> Company name in compatible description appears twice, which is not really
-> helpful, so remove it from product name.
+> [ 7538.874350] BUG: using smp_processor_id() in preemptible [00000000] code: af_alg06/8438
+> [ 7538.874368] caller is debug_smp_processor_id+0x1c/0x28
+> [ 7538.874373] CPU: 50 PID: 8438 Comm: af_alg06 Kdump: loaded Not tainted 5.10.0.pc+ #18
+> [ 7538.874377] Call trace:
+> [ 7538.874387]  dump_backtrace+0x0/0x210
+> [ 7538.874389]  show_stack+0x2c/0x38
+> [ 7538.874392]  dump_stack+0x110/0x164
+> [ 7538.874394]  check_preemption_disabled+0xf4/0x108
+> [ 7538.874396]  debug_smp_processor_id+0x1c/0x28
+> [ 7538.874406]  sec_create_qps+0x24/0xe8 [hisi_sec2]
+> [ 7538.874408]  sec_ctx_base_init+0x20/0x4d8 [hisi_sec2]
+> [ 7538.874411]  sec_aead_ctx_init+0x68/0x180 [hisi_sec2]
+> [ 7538.874413]  sec_aead_sha256_ctx_init+0x28/0x38 [hisi_sec2]
+> [ 7538.874421]  crypto_aead_init_tfm+0x54/0x68
+> [ 7538.874423]  crypto_create_tfm_node+0x6c/0x110
+> [ 7538.874424]  crypto_alloc_tfm_node+0x74/0x288
+> [ 7538.874426]  crypto_alloc_aead+0x40/0x50
+> [ 7538.874431]  aead_bind+0x50/0xd0
+> [ 7538.874433]  alg_bind+0x94/0x148
+> [ 7538.874439]  __sys_bind+0x98/0x118
+> [ 7538.874441]  __arm64_sys_bind+0x28/0x38
+> [ 7538.874445]  do_el0_svc+0x88/0x258
+> [ 7538.874447]  el0_svc+0x1c/0x28
+> [ 7538.874449]  el0_sync_handler+0x8c/0xb8
+> [ 7538.874452]  el0_sync+0x148/0x180
 > 
-> The board is a prototype developed by my company and we are still at the
-> prototype stage, so there is zero ABI impact.
-> 
-> Fixes: 67275c2f3d9b ("arm64: dts: freescale: introduce rve-gateway board")
-> Signed-off-by: Hugo Villeneuve <hvilleneuve@dimonoff.com>
+> Signed-off-by: Wenkai Lin <linwenkai6@hisilicon.com>
 > ---
+>  drivers/crypto/hisilicon/hpre/hpre_main.c | 2 +-
+>  drivers/crypto/hisilicon/sec2/sec_main.c  | 2 +-
+>  drivers/crypto/hisilicon/zip/zip_main.c   | 2 +-
+>  3 files changed, 3 insertions(+), 3 deletions(-)
 
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-
-Best regards,
-Krzysztof
-
+Patch applied.  Thanks.
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
