@@ -1,168 +1,94 @@
-Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDC2923750
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 20:30:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F26A225DE
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 20:32:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706301012; cv=none; b=CrAIljSZ2v91aGwRnscza1bcyQLYQ/iX2S9f3U1qp7hv7Z7OrPOu2dQica+Sl3PvZaHNaV4tdok+W30SWsiLHeMDFuS7Uc0xPVfClOFumxEpgAFqD5E6XOaIAZXUPQhOldgoLf8rTvxhSvocYxTUnZaUOvM3T8TkGMsdqGLCEKQ=
+	t=1706301142; cv=none; b=apgrtuWcYHjCqoQcKIiCw58SBSvkgSFBs7XPjpxzRBlDhwdcoyabrQ4tmfRAzDegrNj4K1YeDm45zv6hOOJuNTtTiUT7qJ/0uyeiZeYe2OQ/UtKSG11wqLIv15KAin9TQ7/F/KiY9DeDN8E9jCmQ1yVNTBDdUa0sC9zuoJjkPUI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706301012; c=relaxed/simple;
-	bh=AZL2DiPws0S6+MBaKLJGGRKAIx0Xr+661L82JlgRYPs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=u7ursbGAzYxJhSpVbwxzjcA0jE35LA4/w8EicpawOYFlWeah0nsgukmq3l8Gy1yKhR9LmSGN7gR4q+e2BAALdop0SfTIdnPI+4clW9cDdmH1Pbkx6FaM2bOjkFoKhC796phHb/0jEXyPYFuvl4Zc4ZQWReAoHqw1bRpGhwraVQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=v+N2oFYi; arc=none smtp.client-ip=209.85.219.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1706301142; c=relaxed/simple;
+	bh=SFib0KiekjrLD8wcJY8L7d4ExRDyCFVGTi65Fe3iBQo=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=mbZ9CM1wveQF/tDTCsEYAL/fyHCLFQom3RHJBUHUAPQeR7g1WrBSPhQrYTuFErHFc/45jnBhpdIm8pWiudSlQs8t1u/iFm9aT/oSeBwMXhaU12vkMtsfXe7Ipd2QH/ILm6f6uUaNoWqWsaaaSk7Wd+HQq2/0LDZ0mLUCpBYTxaY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LmguHJry; arc=none smtp.client-ip=209.85.215.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="v+N2oFYi"
-Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-dbed0710c74so796994276.1
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 12:30:10 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LmguHJry"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-5c66a69ec8eso706469a12.3
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 12:32:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706301010; x=1706905810; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=kZTd/qK4fjgGkjgEEZAEvtUcKpHSu6w+GQ9nB6HrsPo=;
-        b=v+N2oFYi5I5DFNj/ijZx0suvviAhzj2S3+K+88E97pCNWWmYCEyB2G9LS9rw5xruhs
-         YoU7u4lEFqgzTD+V1lg/6wPic/UoMfQbouNlNWfjKbaO2sttkefcuMF0WZd1mFiBW3Rh
-         x0NQVbzOtlh5jIJ+4McKUXwyxYwnfE06L4Rc6mld7TYY/mnirFPgewMadXzPONE37qpB
-         vQ/zGDAkj7NXguVvK9QZrVf93GR+uvHLF+eE0xW0WH3IfvAKGssboYYSomy0AGircQzc
-         PuUXB6Hjkbezu3ajlbKwk6QeZpoIMAKBTzNydun0IWywbBg2R44x0mdAzatoW6x8FsFU
-         Cmdw==
+        d=google.com; s=20230601; t=1706301140; x=1706905940; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=khTRnTM9rQ9XNgg2MeAsdPMur24bOv6XznsHlkn8x0g=;
+        b=LmguHJrykGozB+Rm8hqImcDxTucI0eh7FcEbBMB/vtD5dEn/Eyq3o3hMhIPt21Fjfu
+         h5Z6e12lp/7OPjwlMgo4NwF0hTiR0rMXC3OblJLjphoLl1Bzv5u7E7tdz3rgxwyflrQK
+         cOt/3QPQhHpWds8LNlz7LIH6Kc2As1LK4d52FiUWqH5Ba18EqqWRTorrQASBFsCVfX9i
+         JvqsV0tJe2gwoP0zNTabAjKbQEwkg8/4ISMgaJWtwYN3TBu1SfC11Qlj4kfILQaLpTDK
+         T6eqJYTOmQbun4o7mNHqDa1jvmgOJ05hRcYlW3iAfSqA6ajtNfl8YzMG1UoRZ21I8KGB
+         TiXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706301010; x=1706905810;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=kZTd/qK4fjgGkjgEEZAEvtUcKpHSu6w+GQ9nB6HrsPo=;
-        b=qJiHiIKovognDCUk/N9OrJ2+wZ90vx4FrWvC3w3AmAtqM3SORq0UR7ccvY00BcSV8F
-         Wq3gUZ5rK7eXuNyMo8itL096NdUCEKQ1hkdRmpLzM/Mx4FYXOvdMNzagyXXKwb2eGajj
-         3DGcM6e0Mxn/VqRi1bRSMDoBRTsW4X94l4Mj+JZ3zCRWf/U5PYZqVk98bOA1f+D8Dwca
-         HXQKVGArvO0OYFLfXna+BkTR/f9G28ShSOznvIpyIhDTtU4VTwl7bVs25XI2LX+tkdTc
-         AKubUNSviPuD5dKTOtshwdIVWlH/b/Pj/ekyYfp+NYVt1HAkDAsbODdkGKWOwP0lK8Ba
-         9sdg==
-X-Gm-Message-State: AOJu0YyeYezwYZwjZ5kmsxfwvl/erajWhnpB0So1IhyWYiAJrRw8cjAm
-	NInYYI3qLxxBPMPZYFvc4mckK0H4nTBwBgMBfID8DSArf6uHQmEu7KnS2107YJIoC0igW9jqmfF
-	LzPAw5BC8A1W1Y9NKkAWjkYFgWmAhNZwKHBStkg==
-X-Google-Smtp-Source: AGHT+IFRFALlNQJrY0JCp8H/TgJzhu2cMZX+uZJkl0AdOae8gvAP2suk/MGyKDXEOw7FfiRM8ExjaxYpUup11X6q9Ug=
-X-Received: by 2002:a25:9948:0:b0:dc1:f71f:a1e8 with SMTP id
- n8-20020a259948000000b00dc1f71fa1e8mr473812ybo.128.1706301009942; Fri, 26 Jan
- 2024 12:30:09 -0800 (PST)
+        d=1e100.net; s=20230601; t=1706301140; x=1706905940;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=khTRnTM9rQ9XNgg2MeAsdPMur24bOv6XznsHlkn8x0g=;
+        b=B7KsvrKj0dvU+quaWDO8SA0g9amJbSbv7BgMfE7D0X3XxLGx1X+ptNNLS3GDfG7L6q
+         Q89WUXGVH5wsceMhc3Fp4CV1/zFI8BDgak13WcP3/OpKy6U593cno6A1uTrNHLR1UMre
+         saXwx4lxjAXnOzdNPDjMPTXbUVRKlnJyOK9YGGnjhMUrzbs0clnwY4m5qbJ6T9w4kbAD
+         GUhu9jgGdzW8GPTaUgRZVBFPQCZgAED+XRxswdzhHfztx9IIgf1sNQBa7cHLsLaTGbZz
+         wKTLd2zt/IaSWcJFSJWiE2t+BCN0aVjAWG7d9DYhUowF9JXB12SWzxlbPsgRIxQ7qgMp
+         6hvg==
+X-Gm-Message-State: AOJu0Yxmn9U+DMSrrsNWZJV2Oy0LUh3AoajxR662H0FtxLJLfrH51ymh
+	1jCZtdTpAzJ5Oq56AiHBr8AjnuQDaqe1hzCjWrFl9vf3bkfekTCOz/qaYBmwnO10BbmAQziAoIz
+	Dig==
+X-Google-Smtp-Source: AGHT+IHD5o9pq2Tm1Yf56JTr5JwG33a2+qbUQ+STfhE1ewZfpJUWm5UZX9iC3wjEL7rnY42xPcJH7AdNIcM=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a65:6648:0:b0:5d7:d631:202d with SMTP id
+ z8-20020a656648000000b005d7d631202dmr1912pgv.4.1706301140652; Fri, 26 Jan
+ 2024 12:32:20 -0800 (PST)
+Date: Fri, 26 Jan 2024 12:32:19 -0800
+In-Reply-To: <20240125015420.1960090-1-maobibo@loongson.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <cover.1706296015.git.quic_uchalich@quicinc.com> <12bfdd23772c49530b8b0993cc82bc89b3eb4ada.1706296015.git.quic_uchalich@quicinc.com>
-In-Reply-To: <12bfdd23772c49530b8b0993cc82bc89b3eb4ada.1706296015.git.quic_uchalich@quicinc.com>
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Fri, 26 Jan 2024 22:29:59 +0200
-Message-ID: <CAA8EJppapW5nOFphBWove1ni8nbkA=xHON9D13NYeYHhyqL1Fg@mail.gmail.com>
-Subject: Re: [PATCH 5/5] soc: qcom: llcc: Add regmap for Broadcast_AND region
-To: Unnathi Chalicheemala <quic_uchalich@quicinc.com>
-Cc: Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>, 
-	Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, kernel@quicinc.com
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+References: <20240125015420.1960090-1-maobibo@loongson.cn>
+Message-ID: <ZbQW0yfI08qwXcfQ@google.com>
+Subject: Re: [PATCH v6 0/4] VM: selftests: Add LoongArch support
+From: Sean Christopherson <seanjc@google.com>
+To: Bibo Mao <maobibo@loongson.cn>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, Shuah Khan <shuah@kernel.org>, 
+	Tianrui Zhao <zhaotianrui@loongson.cn>, linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
 
-On Fri, 26 Jan 2024 at 21:48, Unnathi Chalicheemala
-<quic_uchalich@quicinc.com> wrote:
->
-> To support CSR programming, a broadcast interface is used to program
-> all channels in a single command. Until SM8450 there was only one
-> broadcast region (Broadcast_OR) used to broadcast write and check
-> for status bit 0. From SM8450 onwards another broadcast region
-> (Broadcast_AND) has been added which checks for status bit 1.
->
-> Update llcc_drv_data structure with new regmap for Broadcast_AND
-> region and initialize regmap for Broadcast_AND region when HW block
-> version is greater than 4.1 for backwards compatibility.
->
-> Switch from broadcast_OR to broadcast_AND region for checking
-> status bit 1 as Broadcast_OR region checks only for bit 0.
-
-This breaks backwards compatibility with the existing DT files, doesn't it?
-
-> While at it, also check return value after reading Broadcast_OR
-> region in llcc_update_act_ctrl().
-
-Separate patch, Fixes tag.
-
->
-> Signed-off-by: Unnathi Chalicheemala <quic_uchalich@quicinc.com>
+On Thu, Jan 25, 2024, Bibo Mao wrote:
 > ---
->  drivers/soc/qcom/llcc-qcom.c       | 12 +++++++++++-
->  include/linux/soc/qcom/llcc-qcom.h |  4 +++-
->  2 files changed, 14 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/soc/qcom/llcc-qcom.c b/drivers/soc/qcom/llcc-qcom.c
-> index 4ca88eaebf06..5a2dac2d4772 100644
-> --- a/drivers/soc/qcom/llcc-qcom.c
-> +++ b/drivers/soc/qcom/llcc-qcom.c
-> @@ -849,7 +849,7 @@ static int llcc_update_act_ctrl(u32 sid,
->                 return ret;
->
->         if (drv_data->version >= LLCC_VERSION_4_1_0_0) {
-> -               ret = regmap_read_poll_timeout(drv_data->bcast_regmap, status_reg,
-> +               ret = regmap_read_poll_timeout(drv_data->bcast_and_regmap, status_reg,
->                                       slice_status, (slice_status & ACT_COMPLETE),
->                                       0, LLCC_STATUS_READ_DELAY);
->                 if (ret)
-> @@ -859,6 +859,8 @@ static int llcc_update_act_ctrl(u32 sid,
->         ret = regmap_read_poll_timeout(drv_data->bcast_regmap, status_reg,
->                                       slice_status, !(slice_status & status),
->                                       0, LLCC_STATUS_READ_DELAY);
-> +       if (ret)
-> +               return ret;
->
->         if (drv_data->version >= LLCC_VERSION_4_1_0_0)
->                 ret = regmap_write(drv_data->bcast_regmap, act_clear_reg,
-> @@ -1282,6 +1284,14 @@ static int qcom_llcc_probe(struct platform_device *pdev)
->
->         drv_data->version = version;
->
-> +       if (drv_data->version >= LLCC_VERSION_4_1_0_0) {
-> +               drv_data->bcast_and_regmap = qcom_llcc_init_mmio(pdev, i + 1, "llcc_broadcast_and_base");
-> +               if (IS_ERR(drv_data->bcast_and_regmap)) {
-> +                       ret = PTR_ERR(drv_data->bcast_and_regmap);
-> +                       goto err;
-> +               }
-> +       }
-> +
->         llcc_cfg = cfg->sct_data;
->         sz = cfg->size;
->
-> diff --git a/include/linux/soc/qcom/llcc-qcom.h b/include/linux/soc/qcom/llcc-qcom.h
-> index 1a886666bbb6..9e9f528b1370 100644
-> --- a/include/linux/soc/qcom/llcc-qcom.h
-> +++ b/include/linux/soc/qcom/llcc-qcom.h
-> @@ -115,7 +115,8 @@ struct llcc_edac_reg_offset {
->  /**
->   * struct llcc_drv_data - Data associated with the llcc driver
->   * @regmaps: regmaps associated with the llcc device
-> - * @bcast_regmap: regmap associated with llcc broadcast offset
-> + * @bcast_regmap: regmap associated with llcc broadcast OR offset
-> + * @bcast_and_regmap: regmap associated with llcc broadcast AND offset
->   * @cfg: pointer to the data structure for slice configuration
->   * @edac_reg_offset: Offset of the LLCC EDAC registers
->   * @lock: mutex associated with each slice
-> @@ -129,6 +130,7 @@ struct llcc_edac_reg_offset {
->  struct llcc_drv_data {
->         struct regmap **regmaps;
->         struct regmap *bcast_regmap;
-> +       struct regmap *bcast_and_regmap;
->         const struct llcc_slice_config *cfg;
->         const struct llcc_edac_reg_offset *edac_reg_offset;
->         struct mutex lock;
-> --
-> 2.25.1
->
->
+> Tianrui Zhao (4):
+>   KVM: selftests: Add KVM selftests header files for LoongArch
+>   KVM: selftests: Add core KVM selftests support for LoongArch
+>   KVM: selftests: Add ucall test support for LoongArch
+>   KVM: selftests: Add test cases for LoongArch
+> 
+>  tools/testing/selftests/kvm/Makefile          |  16 +
+>  .../selftests/kvm/include/kvm_util_base.h     |   5 +
+>  .../kvm/include/loongarch/processor.h         | 133 +++++++
+>  .../selftests/kvm/include/loongarch/ucall.h   |  20 ++
+>  .../selftests/kvm/lib/loongarch/exception.S   |  59 ++++
+>  .../selftests/kvm/lib/loongarch/processor.c   | 332 ++++++++++++++++++
+>  .../selftests/kvm/lib/loongarch/ucall.c       |  38 ++
+>  .../selftests/kvm/set_memory_region_test.c    |   2 +-
+>  8 files changed, 604 insertions(+), 1 deletion(-)
+>  create mode 100644 tools/testing/selftests/kvm/include/loongarch/processor.h
+>  create mode 100644 tools/testing/selftests/kvm/include/loongarch/ucall.h
+>  create mode 100644 tools/testing/selftests/kvm/lib/loongarch/exception.S
+>  create mode 100644 tools/testing/selftests/kvm/lib/loongarch/processor.c
+>  create mode 100644 tools/testing/selftests/kvm/lib/loongarch/ucall.c
 
-
--- 
-With best wishes
-Dmitry
+I did a *very* quick read through and didn't see anything egregious.  I really
+hope that someday we can deduplicate much of the ARM/RISC-V/LoongArch code, but
+that's no reason to hold up getting selftests support merged.
