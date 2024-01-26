@@ -1,275 +1,133 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0A351EB29
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 16:51:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A98821EB2B;
+	Fri, 26 Jan 2024 16:52:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706287909; cv=none; b=GlbhGFUcO3ng1jmtcB4v17CMMBWotTgs294VsScFhLbmOjY/ZGZRA8MfGxq97BD/zxhNXIDQoPxfDvHtlKREXQc+3vanw+ZaxCg2hEgRhuAPyM5a+jnkNP8zY0peuQTJ7Z5KLBAtf/gktosteMwIBtAPfIS4ojBvvtF7MlTCFuA=
+	t=1706287920; cv=none; b=gj0T4SxdXcxHtSxdIPr82RrybfRxgyIO3H3c6LXvAtgjLDSp+s53sakxAS3sSSw/zdydt1a81czgW09M9Gf3ZDO+1vndlJJgq3E+8B1SXNIfnsmiPO9IPwtQb2e62YzvKbXnXz6CrxeBYRAXtutOPHMqAPGbvdMedKX5YmJ+vXQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706287909; c=relaxed/simple;
-	bh=Lce3KRLdGmV39F9gD7N09r8cWhr6hgl/GS49GQljtIg=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=D88YVOTmnYTkaBSrMgaxcjMoDXpmxzTVshSO3zAly0eTSwTce4WNOf5PuBFp3jGkjhkjvulo5cHygOT5WHzsSclz11mfHSkEeUPRM1qx8O1i6EECEhxylJNozqeiIJjDs4+eVYqSTFDmEoYYvc/XZgvVHMRRwR0JlwZtS45ZpWE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SM9d2cmb; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1706287920; c=relaxed/simple;
+	bh=GWEG1pvrI+MwWb68hTru7MaLpFsvtOWJhlMETqjxkGk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tIzaV3vynA0FI/SCfW1YkkLGsSyhpO+NhFiNV/lWaiECHevi1Z23r6ns2QFWdB0z3kJ5mIOxn3CYy6+xmLMHAY4bCgc9fbKR9uu7laxR0MMELXxcChc8qVV3T2vaNgosv6K836x7yz0LOHbicSoEWnGxuq2udDfqSPbm1PXeFQo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZV36HO8n; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SM9d2cmb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1706287906;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yOpLdaQ89xfs5/J8JNU9a4jsFk4JGMWg+LyrMFItTsw=;
-	b=SM9d2cmb30p73pKSm9rJFgjVmeRKwAIKS3pOW3MYpWstL3gqKZJYzo+vuly63mPo4lDOPt
-	+d9xinsAPRth4lx8mj6Ne5KN2FI5N4gAqJ/0XN5BetPczUmzHK5qolrA5h3Tintx1m/6Sc
-	6iOVJPnrauYO32SSOVKF31XO+VX16XA=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-15-5SanN_peNiev-Nhc8_hJAg-1; Fri, 26 Jan 2024 11:51:44 -0500
-X-MC-Unique: 5SanN_peNiev-Nhc8_hJAg-1
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-40e4caa37f5so9467045e9.0
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 08:51:44 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706287903; x=1706892703;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=yOpLdaQ89xfs5/J8JNU9a4jsFk4JGMWg+LyrMFItTsw=;
-        b=ozJ3MZxlLuApQ+2PEZJA1s3GtlofmVa98UDp+3wjd3O2AAYxSCS92fu4aRJXjj0PE4
-         JsrZnwCw5wW6tn6ecRia5MArCZ6uCCmVqsjPgFXOqWvVU7grTxSMaeogdnC0kei3Pq+F
-         LiDRFsAcg3gMR1MBU056oluWyij1n0dFlhC0SOnaNuXGtxYCR1l7QsoF8oiy9q+k2Vr9
-         knhAWGqk7tmY/3cVWbub3DaCd3Lora72nUv3jPVY/HRMwBsoXAhPU5BQZQ5zUxgvhPnQ
-         dyxOu++aMI653iwriPSUyQtZ5G2QCzc2QlFbMCw+guJBKbHEZdgHU09VBZdtYHHKuZeO
-         1Sww==
-X-Gm-Message-State: AOJu0YyZ5prnvTSERNu5Juac85TZB/Uis3zUIkw6a4tbZWYKuoEwTR1M
-	PsvABkB4GkqBImyIafsaKb0yQgI/5YBtEAZzVVkxIuAaCC680bXBXO9cmP0ApKvQu86vPgkNIwk
-	T5CEMr9Nw/jdF9E/sc1mvPeCQswVIsmBwmGNHq1w5+Rk37tD/OxwJ/cgdwbh/7Q==
-X-Received: by 2002:a05:600c:214d:b0:40e:cede:3e95 with SMTP id v13-20020a05600c214d00b0040ecede3e95mr62177wml.59.1706287903458;
-        Fri, 26 Jan 2024 08:51:43 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IHlJLRKk+LooyZLJaRI7SmOKPQdWB16LOLnscxV88UXqN3bCKwtGN/A3dYC8NBbHTjmSNMiSQ==
-X-Received: by 2002:a05:600c:214d:b0:40e:cede:3e95 with SMTP id v13-20020a05600c214d00b0040ecede3e95mr62169wml.59.1706287903090;
-        Fri, 26 Jan 2024 08:51:43 -0800 (PST)
-Received: from fedora (g2.ign.cz. [91.219.240.8])
-        by smtp.gmail.com with ESMTPSA id bk7-20020a0560001d8700b0033addbf2d2csm1026920wrb.9.2024.01.26.08.51.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Jan 2024 08:51:42 -0800 (PST)
-From: Vitaly Kuznetsov <vkuznets@redhat.com>
-To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini
- <pbonzini@redhat.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, David Matlack
- <dmatlack@google.com>, Xu Yilun <yilun.xu@linux.intel.com>, Sean
- Christopherson <seanjc@google.com>
-Subject: Re: [PATCH 1/4] KVM: Always flush async #PF workqueue when vCPU is
- being destroyed
-In-Reply-To: <20240110011533.503302-2-seanjc@google.com>
-References: <20240110011533.503302-1-seanjc@google.com>
- <20240110011533.503302-2-seanjc@google.com>
-Date: Fri, 26 Jan 2024 17:51:41 +0100
-Message-ID: <87le8c82ci.fsf@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZV36HO8n"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE48AC43394;
+	Fri, 26 Jan 2024 16:51:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706287920;
+	bh=GWEG1pvrI+MwWb68hTru7MaLpFsvtOWJhlMETqjxkGk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ZV36HO8nEh0sbpEE+al90RlqRlqtNBjdBQt/DDP/URQGyscFpkKHhNYr/DDNCjYTt
+	 EvOFMtK0d4SA1Jl7evOdoLVrCjoWdjESWjc8iSS7RDJ58otXkaLdt5TW31Isj3WKwb
+	 oh9SWfeZjDC+yMZz62dT/8afYb3ZGwRSAgx5is0m0S82rcRjKL/KthEpXSK1kNSisq
+	 pSp1HX7ABHP5/ckiR0+SEh+Yso2BTc5bruYhEzw/yeNqlqixSRMVx9HAfTi26NEHn1
+	 A03bEISaAnviWidcqxfjvEq6AGLeUCqeh3R57f4j1LhG7iRpfZ2OtcnqQ3T+jLHk2B
+	 Jq3MLWPoBoeiQ==
+Date: Fri, 26 Jan 2024 16:51:55 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Naresh Solanki <naresh.solanki@9elements.com>
+Cc: Peter Rosin <peda@axentia.se>, Jonathan Cameron <jic23@kernel.org>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, mazziesaccount@gmail.com,
+	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: iio: afe: voltage-divider: Add
+ io-channel-cells
+Message-ID: <20240126-scale-serrated-33686467d91b@spud>
+References: <20240126115509.1459425-1-naresh.solanki@9elements.com>
+ <20240126-cinnamon-flatware-e042b5773f17@spud>
+ <CABqG17hzZf2mme0v7hALhpd6-N3ZHqxdH-AhFg5eF9sbLSC2gw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="N6MGnwo5iGnJRjKO"
+Content-Disposition: inline
+In-Reply-To: <CABqG17hzZf2mme0v7hALhpd6-N3ZHqxdH-AhFg5eF9sbLSC2gw@mail.gmail.com>
 
-Sean Christopherson <seanjc@google.com> writes:
 
-> Always flush the per-vCPU async #PF workqueue when a vCPU is clearing its
-> completion queue, e.g. when a VM and all its vCPUs is being destroyed.
-> KVM must ensure that none of its workqueue callbacks is running when the
-> last reference to the KVM _module_ is put.  Gifting a reference to the
-> associated VM prevents the workqueue callback from dereferencing freed
-> vCPU/VM memory, but does not prevent the KVM module from being unloaded
-> before the callback completes.
->
-> Drop the misguided VM refcount gifting, as calling kvm_put_kvm() from
-> async_pf_execute() if kvm_put_kvm() flushes the async #PF workqueue will
-> result in deadlock.  async_pf_execute() can't return until kvm_put_kvm()
-> finishes, and kvm_put_kvm() can't return until async_pf_execute() finishes:
->
->  WARNING: CPU: 8 PID: 251 at virt/kvm/kvm_main.c:1435 kvm_put_kvm+0x2d/0x320 [kvm]
->  Modules linked in: vhost_net vhost vhost_iotlb tap kvm_intel kvm irqbypass
->  CPU: 8 PID: 251 Comm: kworker/8:1 Tainted: G        W          6.6.0-rc1-e7af8d17224a-x86/gmem-vm #119
->  Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 0.0.0 02/06/2015
->  Workqueue: events async_pf_execute [kvm]
->  RIP: 0010:kvm_put_kvm+0x2d/0x320 [kvm]
->  Call Trace:
->   <TASK>
->   async_pf_execute+0x198/0x260 [kvm]
->   process_one_work+0x145/0x2d0
->   worker_thread+0x27e/0x3a0
->   kthread+0xba/0xe0
->   ret_from_fork+0x2d/0x50
->   ret_from_fork_asm+0x11/0x20
->   </TASK>
->  ---[ end trace 0000000000000000 ]---
->  INFO: task kworker/8:1:251 blocked for more than 120 seconds.
->        Tainted: G        W          6.6.0-rc1-e7af8d17224a-x86/gmem-vm #119
->  "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
->  task:kworker/8:1     state:D stack:0     pid:251   ppid:2      flags:0x00004000
->  Workqueue: events async_pf_execute [kvm]
->  Call Trace:
->   <TASK>
->   __schedule+0x33f/0xa40
->   schedule+0x53/0xc0
->   schedule_timeout+0x12a/0x140
->   __wait_for_common+0x8d/0x1d0
->   __flush_work.isra.0+0x19f/0x2c0
->   kvm_clear_async_pf_completion_queue+0x129/0x190 [kvm]
->   kvm_arch_destroy_vm+0x78/0x1b0 [kvm]
->   kvm_put_kvm+0x1c1/0x320 [kvm]
->   async_pf_execute+0x198/0x260 [kvm]
->   process_one_work+0x145/0x2d0
->   worker_thread+0x27e/0x3a0
->   kthread+0xba/0xe0
->   ret_from_fork+0x2d/0x50
->   ret_from_fork_asm+0x11/0x20
->   </TASK>
->
-> If kvm_clear_async_pf_completion_queue() actually flushes the workqueue,
-> then there's no need to gift async_pf_execute() a reference because all
-> invocations of async_pf_execute() will be forced to complete before the
-> vCPU and its VM are destroyed/freed.  And that in turn fixes the module
-> unloading bug as __fput() won't do module_put() on the last vCPU reference
-> until the vCPU has been freed, e.g. if closing the vCPU file also puts the
-> last reference to the KVM module.
->
-> Note that kvm_check_async_pf_completion() may also take the work item off
-> the completion queue and so also needs to flush the work queue, as the
-> work will not be seen by kvm_clear_async_pf_completion_queue().  Waiting
-> on the workqueue could theoretically delay a vCPU due to waiting for the
-> work to complete, but that's a very, very small chance, and likely a very
-> small delay.  kvm_arch_async_page_present_queued() unconditionally makes a
-> new request, i.e. will effectively delay entering the guest, so the
-> remaining work is really just:
->
->         trace_kvm_async_pf_completed(addr, cr2_or_gpa);
->
->         __kvm_vcpu_wake_up(vcpu);
->
->         mmput(mm);
->
-> and mmput() can't drop the last reference to the page tables if the vCPU is
-> still alive, i.e. the vCPU won't get stuck tearing down page tables.
->
-> Add a helper to do the flushing, specifically to deal with "wakeup all"
-> work items, as they aren't actually work items, i.e. are never placed in a
-> workqueue.  Trying to flush a bogus workqueue entry rightly makes
-> __flush_work() complain (kudos to whoever added that sanity check).
->
-> Note, commit 5f6de5cbebee ("KVM: Prevent module exit until all VMs are
-> freed") *tried* to fix the module refcounting issue by having VMs grab a
-> reference to the module, but that only made the bug slightly harder to hit
-> as it gave async_pf_execute() a bit more time to complete before the KVM
-> module could be unloaded.
->
-> Fixes: af585b921e5d ("KVM: Halt vcpu if page it tries to access is swapped out")
-> Cc: stable@vger.kernel.org
-> Cc: David Matlack <dmatlack@google.com>
-> Cc: Xu Yilun <yilun.xu@linux.intel.com>
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
-> ---
->  virt/kvm/async_pf.c | 37 ++++++++++++++++++++++++++++++++-----
->  1 file changed, 32 insertions(+), 5 deletions(-)
->
-> diff --git a/virt/kvm/async_pf.c b/virt/kvm/async_pf.c
-> index e033c79d528e..876927a558ad 100644
-> --- a/virt/kvm/async_pf.c
-> +++ b/virt/kvm/async_pf.c
-> @@ -87,7 +87,25 @@ static void async_pf_execute(struct work_struct *work)
->  	__kvm_vcpu_wake_up(vcpu);
->  
->  	mmput(mm);
-> -	kvm_put_kvm(vcpu->kvm);
-> +}
-> +
-> +static void kvm_flush_and_free_async_pf_work(struct kvm_async_pf *work)
-> +{
-> +	/*
-> +	 * The async #PF is "done", but KVM must wait for the work item itself,
-> +	 * i.e. async_pf_execute(), to run to completion.  If KVM is a module,
-> +	 * KVM must ensure *no* code owned by the KVM (the module) can be run
-> +	 * after the last call to module_put(), i.e. after the last reference
-> +	 * to the last vCPU's file is put.
-> +	 *
+--N6MGnwo5iGnJRjKO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Do I understand correctly that the problem is also present on the
-"normal" path, i.e.:
+On Fri, Jan 26, 2024 at 09:55:20PM +0530, Naresh Solanki wrote:
+> On Fri, 26 Jan 2024 at 21:47, Conor Dooley <conor@kernel.org> wrote:
+> > On Fri, Jan 26, 2024 at 05:25:08PM +0530, Naresh Solanki wrote:
+> > > Signed-off-by: Naresh Solanki <naresh.solanki@9elements.com>
+> > > ---
+> > >  Documentation/devicetree/bindings/iio/afe/voltage-divider.yaml | 3 +++
+> > >  1 file changed, 3 insertions(+)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/iio/afe/voltage-divider.yaml b/Documentation/devicetree/bindings/iio/afe/voltage-divider.yaml
+> > > index dddf97b50549..b4b5489ad98e 100644
+> > > --- a/Documentation/devicetree/bindings/iio/afe/voltage-divider.yaml
+> > > +++ b/Documentation/devicetree/bindings/iio/afe/voltage-divider.yaml
+> > > @@ -39,6 +39,9 @@ properties:
+> > >      description: |
+> > >        Channel node of a voltage io-channel.
+> > >
+> > > +  '#io-channel-cells':
+> > > +    const: 1
+> >
+> > The example in this binding looks like the voltage-divider is intended
+> > to be an "IIO consumer" but "#io-channels-cells" is an "IIO provider"
+> > property.
+> >
+> > Are you sure this is correct?
+> I'm not aware that #io-channels-cells is only for IIO provider.
 
-  KVM_REQ_APF_READY
-     kvm_check_async_pf_completion()
-         kmem_cache_free(,work)
+#foo-cells properties are always for resource providers
 
-on one CPU can actually finish _before_ work is fully flushed on the
-other (async_pf_execute() has already added an item to 'done' list but
-hasn't completed)? Is it just the fact that the window of opportunity
-to get the freed item re-purposed is so short that no real issue was
-ever noticed? In that case I'd suggest we emphasize that in the comment
-as currently it sounds like kvm_arch_destroy_vm() is the only
-probemmatic path.
+> But I do get some kernel message as mention in commit messages
+> if this is specified in DT.
 
-> +	 * Wake all events skip the queue and go straight done, i.e. don't
-> +	 * need to be flushed (but sanity check that the work wasn't queued).
-> +	 */
-> +	if (work->wakeup_all)
-> +		WARN_ON_ONCE(work->work.func);
-> +	else
-> +		flush_work(&work->work);
-> +	kmem_cache_free(async_pf_cache, work);
->  }
->  
->  void kvm_clear_async_pf_completion_queue(struct kvm_vcpu *vcpu)
-> @@ -114,7 +132,6 @@ void kvm_clear_async_pf_completion_queue(struct kvm_vcpu *vcpu)
->  #else
->  		if (cancel_work_sync(&work->work)) {
->  			mmput(work->mm);
-> -			kvm_put_kvm(vcpu->kvm); /* == work->vcpu->kvm */
->  			kmem_cache_free(async_pf_cache, work);
->  		}
->  #endif
-> @@ -126,7 +143,18 @@ void kvm_clear_async_pf_completion_queue(struct kvm_vcpu *vcpu)
->  			list_first_entry(&vcpu->async_pf.done,
->  					 typeof(*work), link);
->  		list_del(&work->link);
-> -		kmem_cache_free(async_pf_cache, work);
-> +
-> +		spin_unlock(&vcpu->async_pf.lock);
-> +
-> +		/*
-> +		 * The async #PF is "done", but KVM must wait for the work item
-> +		 * itself, i.e. async_pf_execute(), to run to completion.  If
-> +		 * KVM is a module, KVM must ensure *no* code owned by the KVM
-> +		 * (the module) can be run after the last call to module_put(),
-> +		 * i.e. after the last reference to the last vCPU's file is put.
-> +		 */
-> +		kvm_flush_and_free_async_pf_work(work);
-> +		spin_lock(&vcpu->async_pf.lock);
->  	}
->  	spin_unlock(&vcpu->async_pf.lock);
->  
-> @@ -151,7 +179,7 @@ void kvm_check_async_pf_completion(struct kvm_vcpu *vcpu)
->  
->  		list_del(&work->queue);
->  		vcpu->async_pf.queued--;
-> -		kmem_cache_free(async_pf_cache, work);
-> +		kvm_flush_and_free_async_pf_work(work);
->  	}
->  }
->  
-> @@ -186,7 +214,6 @@ bool kvm_setup_async_pf(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
->  	work->arch = *arch;
->  	work->mm = current->mm;
->  	mmget(work->mm);
-> -	kvm_get_kvm(work->vcpu->kvm);
->  
->  	INIT_WORK(&work->work, async_pf_execute);
+Can you please share the DT in question? Or at least, the section that
+describes the IIO provider and consumer?
 
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+It should look like the example:
 
--- 
-Vitaly
+    spi {
+        #address-cells = <1>;
+        #size-cells = <0>;
+        adc@0 {
+            compatible = "maxim,max1027";
+            reg = <0>;
+            #io-channel-cells = <1>;
+            interrupt-parent = <&gpio5>;
+            interrupts = <15 IRQ_TYPE_EDGE_RISING>;
+            spi-max-frequency = <1000000>;
+        };
+    };
 
+    sysv {
+        compatible = "voltage-divider";
+        io-channels = <&maxadc 1>;
+
+        /* Scale the system voltage by 22/222 to fit the ADC range. */
+        output-ohms = <22>;
+        full-ohms = <222>; /* 200 + 22 */
+    };
+
+Thanks,
+Conor.
+
+--N6MGnwo5iGnJRjKO
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZbPjKwAKCRB4tDGHoIJi
+0nY1AP44EPKrD/YVhzhSSSGxDT1gAA+j8QE5xfM8BbQHmjVH5wD/dC2/py8OFaCJ
+D665p0DJMTkjUQnUjZlxzYNEoTJAUAk=
+=YaJ5
+-----END PGP SIGNATURE-----
+
+--N6MGnwo5iGnJRjKO--
