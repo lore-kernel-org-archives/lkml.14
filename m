@@ -1,180 +1,104 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70E0B1DFEA;
-	Fri, 26 Jan 2024 16:37:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0ECA1D559
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 16:38:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706287051; cv=none; b=BXw4abH4GJTrdBQzzUji+Cg0JwvTAEOHBYJJBNfyNqVggm7ddFfpcLnHPDK08+tCs+Lp1M4HYONHpihaQbo3HcE2esOYyx+gimUBaZCfJd9Q0R7uu+QgdR82W/ASCeZLc662LrqnIWbQi2POFHNU5GYAImlvu+dDFzAsNZF+CYY=
+	t=1706287097; cv=none; b=t0R3KDga+Tl5pZhCmulkTWIgeoi8eAw0EVz5Ohixcrxr4R4KGbe/DOkjjFOcYSozR1ZU0sdMnHkKfquoVh1WLzsNu24HWRWXyc+xgDpzXpzMtjZoFz0TxKA4ODUNflgNYg+LVRw8lCt97x7mpDZalgzfpgRXtJ2hYDtn1tOrZGM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706287051; c=relaxed/simple;
-	bh=+Xme+ikfMEKMTsKLOA+gQptcLYSTs2t0fjbp0qPxyW8=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=f3ovrXtg7JsW1eIOH1Iz/GK2Z/4YQghxkIQLl1est7YxzIkl+RYAKfqDRA2bHYkYA1cEX7mG3JB3CHotpHHCVdat4pmdOY44A/GEeL73PifmKdDkitpKOwncv6F5ljtvNepB/+CgDU1nlc8kuZOHA3saRqvZ9if0z5tfRGeLVoM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Jcz5+gQl; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=6ZpWjxSA; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1706287097; c=relaxed/simple;
+	bh=/FfErPD7fPuY6n+IL4H7hJhZx3N0+Izam7zb+o4a8ac=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TAtC27O3dA6X/iHsd5zSEF6y1kpC0M5eksHhTS8WEGpLTRtUa0imXcZwpt+urJmypQmGTlsIrMy3KxyECnGdZIZuh9PDV3cBJ18UfYOLAZ6vyNdVcwjFiOFt6Ped8+jSWEN7/ayI84jNqsua+m762kV7c9biApREhDGGRPVeUGY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=XwDKVD2R; arc=none smtp.client-ip=209.85.167.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Jcz5+gQl";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="6ZpWjxSA"
-Date: Fri, 26 Jan 2024 17:37:25 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1706287047;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-	bh=ESlukLMkM/rsc2x1VVf3cll5G9fPHn1HY7uNw+yziRs=;
-	b=Jcz5+gQl+Sc+KwAviV8VDgCniva/xd5/TrQ591Hlz6VHEZYZ38FM4a9o4aT5WuUTUbe6Yi
-	63KKIk0xmDcbXnerYCz9exDoAoCPdKDoWR5Ojte9Az1tcP8IyLevXMz6DbTi6W4zzJsSmZ
-	2hjYbGDtanhLWaV3EHAUsTtzmLS2NZ2V2GwfpmSpd0Jwm3SFfsxEvzYJFlhZok/LxN5wne
-	yacvYkk0xB66ZXmhLxltmHrEpOqmv2Qd6cCsOcg+012ve+73fbH9bOZlccc6Isu3y25jpP
-	Gr+UXBs4SOLD/Krjrq4PoS4nTdAeUQdIMmA0H+4BFt6b3MuUvjXLkPic4BkJrA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1706287047;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-	bh=ESlukLMkM/rsc2x1VVf3cll5G9fPHn1HY7uNw+yziRs=;
-	b=6ZpWjxSAwE7n7UO/l8Sb7qAy+zJcvA2Qok2jbwkuQBu5wninAJOUtFx0lcDA880YkgOImI
-	Xg8ojX4aKZJwxtAg==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: LKML <linux-kernel@vger.kernel.org>, linux-rt-users@vger.kernel.org,
-	Steven Rostedt <rostedt@goodmis.org>
-Subject: [ANNOUNCE] v6.8-rc1-rt2
-Message-ID: <20240126163725.kQgJktTk@linutronix.de>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="XwDKVD2R"
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-50ea9daac4cso588764e87.3
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 08:38:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1706287093; x=1706891893; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=yIxa+CX1/TJs1SziOesxW18rUtHS0l1URIjIkyBIsA8=;
+        b=XwDKVD2RLd1CZDfeeMEsBkWMS2jUFIsglljV6SKUUpnli4HJJuW2lf6H4R3ndVcBEF
+         /IGT4Mt6B/olhQvxoqkE9YPjbaRvWAnacgmBn6lgZZ31J7ytw9mzqp67ifkSCWw5NmYH
+         nzKxbeyCYLjesvcbGWnnP6aM92m1I2ylFLxh9vxCqwLUg4daJZsx8THaTnt6TTlDD89Q
+         ZQuAqzqRCcZUp4TPKH+nC6CP9zXb6x1VdAIvgsN2CtqTK4IbgFPxF9uK9S/razHH4FWT
+         FjsEspWwDMr+lMvDu329Vnit8qkf8tYWKIKCbs72DOFaio5V/+4QyMIEO1h5CKzBS0uU
+         1+PA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706287093; x=1706891893;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=yIxa+CX1/TJs1SziOesxW18rUtHS0l1URIjIkyBIsA8=;
+        b=b49VrPD2lO6To3CzaBY71TWVrjpraBNmOeP8eckFtqvPbyfFoc9SLRbF5fnGh23ECX
+         fX6P2JamjETR7wvvNS0HIsGsff0YsbXc75/qr4hRHycb6zW7lPVBSmt9NcidMwhgsQGO
+         /Y+lXg07MqSVusil+hJnrv55rdYMPUwDG8eK5WhXZxQqC9icW3vfsdZ+o2vQiRK9L6St
+         i76ZLJQWmdBoZOqxb4jf2hpNzUvsd1lUOSp5nuSik2XQOAcgSnsobpArG1kxqS+ieEsS
+         rZ9GynlS+ev45vf2Dojg6R8C9rt9GFRApvVBV6bmhsET0MvU6gSBPdHQR7elfKiMjZKs
+         JtDQ==
+X-Gm-Message-State: AOJu0Yzy89zUDg3h9z0j/q0HxE+wq/iMjSVJodr/+wC8vaEk0nl2Jkpt
+	bKWE3h3aDCGxpXQ6N4PtnaBzbfD3i3YksLhRQTv4JOcwciDZc4sTbCQLo+hfn4U=
+X-Google-Smtp-Source: AGHT+IE8xcb1wWSISj/bWqhgPC2j6HpUh+TnOucjqd3fNKnHetPqYqz6sgdZkACsOKi6NIy3PvfbbA==
+X-Received: by 2002:ac2:5a51:0:b0:510:1777:9559 with SMTP id r17-20020ac25a51000000b0051017779559mr821159lfn.86.1706287092847;
+        Fri, 26 Jan 2024 08:38:12 -0800 (PST)
+Received: from ?IPV6:2a10:bac0:b000:7589:7285:c2ff:fedd:7e3a? ([2a10:bac0:b000:7589:7285:c2ff:fedd:7e3a])
+        by smtp.gmail.com with ESMTPSA id c9-20020ac25f69000000b005101772e298sm220688lfc.19.2024.01.26.08.36.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 26 Jan 2024 08:36:41 -0800 (PST)
+Message-ID: <4f717166-863e-4145-8b8b-37e09415e855@suse.com>
+Date: Fri, 26 Jan 2024 18:35:59 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC] Randomness on confidential computing platforms
+Content-Language: en-US
+To: =?UTF-8?Q?Daniel_P=2E_Berrang=C3=A9?= <berrange@redhat.com>,
+ "Reshetova, Elena" <elena.reshetova@intel.com>
+Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H. Peter Anvin" <hpa@zytor.com>, "x86@kernel.org" <x86@kernel.org>,
+ Theodore Ts'o <tytso@mit.edu>, "Jason A. Donenfeld" <Jason@zx2c4.com>,
+ Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+ "Nakajima, Jun" <jun.nakajima@intel.com>,
+ Tom Lendacky <thomas.lendacky@amd.com>, "Kalra, Ashish"
+ <ashish.kalra@amd.com>, Sean Christopherson <seanjc@google.com>,
+ "linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20240126134230.1166943-1-kirill.shutemov@linux.intel.com>
+ <6afe76be-90a7-4cf7-8c6c-23e6a14f8116@suse.com>
+ <DM8PR11MB5750C6641F0951928E95439BE7792@DM8PR11MB5750.namprd11.prod.outlook.com>
+ <ZbPWht37uWZGhp4m@redhat.com>
+From: Nikolay Borisov <nik.borisov@suse.com>
+In-Reply-To: <ZbPWht37uWZGhp4m@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Dear RT folks!
 
-I'm pleased to announce the v6.8-rc1-rt2 patch set. 
 
-Changes since v6.8-rc1-rt1:
+On 26.01.24 г. 17:57 ч., Daniel P. Berrangé wrote:
+> If the CPU performance counters could report RDRAND exhaustion directly,
+> then the host admin could trust that information and monitor it, but the
+> host shouldn't rely on the (hostile) guest software to tell it about
 
-  - Junxiao Chang reported an unbalanced invocation of the acquire/
-    release functions for the non-BLK console. Only the 8250 serial
-    driver is affected if more than one ttyS console is passed as boot
-    argument to console=. Patch by Junxiao Chang.
+I guess it really depends on the POV - from the POV of an encrypted 
+guest the VMM is hostile so we ideally don't like to divulge more 
+information than is absolutely necessary.
 
-  - On ARM with HIGHMEM, HIGHPTE and LPAE enabled a sleeping while
-    atomic warning can be triggered from the FUTEX code (and other
-    users).
+OTOH, from the POV of the VMM we could say that the guest could be 
+running anything and so a facility like that could cause some confusion 
+on the VMM site.
 
-Known issues
-     Pierre Gondois reported crashes on ARM64 together with "rtla timerlat
-     hist" as trigger. It is not yet understood. The report is at
-	https://lore.kernel.org/70c08728-3d4f-47a6-8a3e-114e4877d120@arm.com
+I think it would be very hard to reconcile the 2 views.
 
-The delta patch against v6.8-rc1-rt1 is appended below and can be found here:
- 
-     https://cdn.kernel.org/pub/linux/kernel/projects/rt/6.8/incr/patch-6.8-rc1-rt1-rt2.patch.xz
-
-You can get this release via the git tree at:
-
-    https://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-rt-devel.git v6.8-rc1-rt2
-
-The RT patch against v6.8-rc1 can be found here:
-
-    https://cdn.kernel.org/pub/linux/kernel/projects/rt/6.8/older/patch-6.8-rc1-rt2.patch.xz
-
-The split quilt queue is available at:
-
-    https://cdn.kernel.org/pub/linux/kernel/projects/rt/6.8/older/patches-6.8-rc1-rt2.tar.xz
-
-Sebastian
-
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index 24709aee69ee0..25424a7468d95 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -99,7 +99,7 @@ config ARM
- 	select HAVE_DYNAMIC_FTRACE_WITH_REGS if HAVE_DYNAMIC_FTRACE
- 	select HAVE_EFFICIENT_UNALIGNED_ACCESS if (CPU_V6 || CPU_V6K || CPU_V7) && MMU
- 	select HAVE_EXIT_THREAD
--	select HAVE_FAST_GUP if ARM_LPAE
-+	select HAVE_FAST_GUP if ARM_LPAE && !(PREEMPT_RT && HIGHPTE)
- 	select HAVE_FTRACE_MCOUNT_RECORD if !XIP_KERNEL
- 	select HAVE_FUNCTION_ERROR_INJECTION
- 	select HAVE_FUNCTION_GRAPH_TRACER
-diff --git a/include/linux/console.h b/include/linux/console.h
-index 79ef2fd2bd155..467dee94f73a5 100644
---- a/include/linux/console.h
-+++ b/include/linux/console.h
-@@ -311,7 +311,6 @@ struct nbcon_write_context {
-  * @nbcon_state:	State for nbcon consoles
-  * @nbcon_seq:		Sequence number of the next record for nbcon to print
-  * @pbufs:		Pointer to nbcon private buffer
-- * @locked_port:	True, if the port lock is locked by nbcon
-  * @kthread:		Printer kthread for this console
-  * @rcuwait:		RCU-safe wait object for @kthread waking
-  * @irq_work:		Defer @kthread waking to IRQ work context
-@@ -345,7 +344,6 @@ struct console {
- 	atomic_t		__private nbcon_state;
- 	atomic_long_t		__private nbcon_seq;
- 	struct printk_buffers	*pbufs;
--	bool			locked_port;
- 	struct task_struct	*kthread;
- 	struct rcuwait		rcuwait;
- 	struct irq_work		irq_work;
-diff --git a/include/linux/serial_core.h b/include/linux/serial_core.h
-index 04e9b12d22002..4d45b8f9ec9ee 100644
---- a/include/linux/serial_core.h
-+++ b/include/linux/serial_core.h
-@@ -488,6 +488,7 @@ struct uart_port {
- 	struct uart_icount	icount;			/* statistics */
- 
- 	struct console		*cons;			/* struct console, if any */
-+	bool			nbcon_locked_port;	/* True, if the port is locked by nbcon */
- 	/* flags must be updated while holding port mutex */
- 	upf_t			flags;
- 
-diff --git a/kernel/printk/nbcon.c b/kernel/printk/nbcon.c
-index 1b1b585b1675b..b53d93585ee71 100644
---- a/kernel/printk/nbcon.c
-+++ b/kernel/printk/nbcon.c
-@@ -1586,7 +1586,7 @@ void nbcon_acquire(struct uart_port *up)
- 	if (!uart_is_nbcon(up))
- 		return;
- 
--	WARN_ON_ONCE(con->locked_port);
-+	WARN_ON_ONCE(up->nbcon_locked_port);
- 
- 	do {
- 		do {
-@@ -1597,7 +1597,7 @@ void nbcon_acquire(struct uart_port *up)
- 
- 	} while (!nbcon_context_enter_unsafe(&ctxt));
- 
--	con->locked_port = true;
-+	up->nbcon_locked_port = true;
- }
- EXPORT_SYMBOL_GPL(nbcon_acquire);
- 
-@@ -1623,13 +1623,13 @@ void nbcon_release(struct uart_port *up)
- 		.prio		= NBCON_PRIO_NORMAL,
- 	};
- 
--	if (!con->locked_port)
-+	if (!up->nbcon_locked_port)
- 		return;
- 
- 	if (nbcon_context_exit_unsafe(&ctxt))
- 		nbcon_context_release(&ctxt);
- 
--	con->locked_port = false;
-+	up->nbcon_locked_port = false;
- }
- EXPORT_SYMBOL_GPL(nbcon_release);
- 
-diff --git a/localversion-rt b/localversion-rt
-index 6f206be67cd28..c3054d08a1129 100644
---- a/localversion-rt
-+++ b/localversion-rt
-@@ -1 +1 @@
---rt1
-+-rt2
+> exhaustion.
