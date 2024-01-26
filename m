@@ -1,75 +1,46 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 174B65467D
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 18:39:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49B7E5788E;
+	Fri, 26 Jan 2024 18:39:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.149.199.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706294383; cv=none; b=SYfv1spTB0gIXex72cMrQZEUApmISa72oqFKcR5NK72aP8JR7gliaQTnMl1umDUKpUUPlksi6qIVGPhDBYKFNU5X+qiVXW4apgN21pJrgqD/7AWyFt50Q9LOK/UCbqQk27MxW60lrYFRVearuYmyMrKSyufADqNS4nt24Ix0HVQ=
+	t=1706294391; cv=none; b=a3ivfu5+cHqCIhH/bHycQ+XCAKx8TNa3ZfXa7v/cKDPjhCTp0HUYvQ20P9eIkdZd/EN7MEr4XtPgB/EOOZ9UKO6CuL9UR7VYijPZFDXkjb52LzMA0YV9gDU7nMav/B1/V9mXdC/3Kj2PB9Ki7POcCAPwdc5t+iGzxJui4gl5khI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706294383; c=relaxed/simple;
-	bh=qQ20mYMsYljxRmFVBXSfi1rqbWNANcAPCdD/+60IY8U=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=eGl4SVjKyJitnTA+5ZqtfCvq0PotQheLX4+HQFmSpSwmpIvQgS/sEMJ+xecETJRQFhZyVzdPMzdhdhwAyfcTjkwQXFN8NdzQrpcuroJtO1E8DATE/8QtYhWbQ2GPrIL5r/lDnot2lQ8zBROSREJfyBJdtTDyz/BthAaEofV7f7c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=GM59ius0; arc=none smtp.client-ip=209.85.210.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1706294391; c=relaxed/simple;
+	bh=eauj58OBoo8xZvl2rPD9VNk7G7uSuwhiIRJeInveqVs=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=ToYPsFqCsPiJAyaiUGNSHW1qFXKkq5rSMMoTHqmyUQZIUZ5H197epqQitpWw849DL7BKKQY7Vfs4kzGUQmqkSy+klIya0oi1ZB1bvOOvWoJRjMvmM4I00/oWgmZWXKfPQWx3Eep5Pyia1CgEspV1niJG8RUADp8ghyuaBMp0OpQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru; spf=pass smtp.mailfrom=ispras.ru; dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b=rHbfKoiP; arc=none smtp.client-ip=83.149.199.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ispras.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GM59ius0"
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-6de0ba30994so220334b3a.1
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 10:39:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1706294381; x=1706899181; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2QQrn5zdRS2vcBUSW5uiCOjM9d8+vCQMueTf6c01I2Q=;
-        b=GM59ius04vzCGUnLQqoAZYoXawSxOLreTdynV8WlIX6u/2ngpd+RqUUfnCbNs31OAd
-         ubXnSzMA8bAH1LcXFnq8oSRnw1vOxgEyA9KOnAx3+zMiZLZVYurhiB/5Gj/7gil9iRii
-         leZ/yVFHuScREQQ7O1MM8j1RyuQlTsB8UyJPE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706294381; x=1706899181;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2QQrn5zdRS2vcBUSW5uiCOjM9d8+vCQMueTf6c01I2Q=;
-        b=Q3fogOmdzpsHC+2l+YsGpRVFT3//SUS5lzMO1MC5viZyd/uIJfmcpeT81ETluw8eTo
-         gIa5xO0UJkmQjENadhNKErlCKiQOtxhJx2w3H+3+F9D+My5JLJU8z3Hm8H0BuqCl77hQ
-         jcmZ8vqgwJPF6ltEcJJLH1kqMoly79lXJJs1Vfd6s+XwzefLX6J47JjHEBOfNbznrLlV
-         6pK6+kwVcTdhut+ZHuIV079GVqzvQ3bGwOofSCAW3I7JbZEBX1G+4pf2dAZN1DOzjLm/
-         FKwUx4hSEdsob9vy4fNcc/ISNrdw/IVkHLbB7c9Qkstip0L5+ephbc5S9D8sPqX17Qlx
-         kLxw==
-X-Gm-Message-State: AOJu0YzFUEmjaojYUxpStzm4zfYQ9/id0bOICv1K+QrGeudJlgVkSZOK
-	Ta+cqhBbcLoeOCLD/dSGWsBToFVz8E7NX/0+aeTYkQapDCZJev1lGKlJJS5Axw==
-X-Google-Smtp-Source: AGHT+IGuK34NiLpOOMCCCv9sSURoiq/Fovr+GwFX0Ab0ow/PfAf2KIPLV7lCTMqtiQuamaiiyJaafQ==
-X-Received: by 2002:aa7:8b97:0:b0:6da:af47:95f0 with SMTP id r23-20020aa78b97000000b006daaf4795f0mr272875pfd.27.1706294380577;
-        Fri, 26 Jan 2024 10:39:40 -0800 (PST)
-Received: from localhost (209.148.168.34.bc.googleusercontent.com. [34.168.148.209])
-        by smtp.gmail.com with UTF8SMTPSA id r25-20020aa78b99000000b006dbda9a4e6bsm1410678pfd.44.2024.01.26.10.39.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 26 Jan 2024 10:39:40 -0800 (PST)
-From: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-To: Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	linux-usb@vger.kernel.org
-Cc: pmalani@chromium.org,
-	jthies@google.com,
-	Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Fabrice Gasnier <fabrice.gasnier@foss.st.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Rajaram Regupathy <rajaram.regupathy@intel.com>,
-	Saranya Gopal <saranya.gopal@intel.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 3/3] usb: typec: ucsi: Get PD revision for partner
-Date: Fri, 26 Jan 2024 10:39:09 -0800
-Message-ID: <20240126103859.v3.3.Idf7d373c3cbb54058403cb951d644f1f09973d15@changeid>
-X-Mailer: git-send-email 2.43.0.429.g432eaa2c6b-goog
-In-Reply-To: <20240126183930.1170845-1-abhishekpandit@chromium.org>
-References: <20240126183930.1170845-1-abhishekpandit@chromium.org>
+	dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b="rHbfKoiP"
+Received: from localhost.localdomain (unknown [109.252.166.233])
+	by mail.ispras.ru (Postfix) with ESMTPSA id E20BF40F1DF0;
+	Fri, 26 Jan 2024 18:39:37 +0000 (UTC)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru E20BF40F1DF0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ispras.ru;
+	s=default; t=1706294378;
+	bh=78dGZXUBaq73+RyFvDkx3Qmk9Enz29Z8QRzceyGVnSg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=rHbfKoiPtBUj9RX0e6g7eyvQnUJR6LiVQXkiE6qOSgZDDLGIQBjjA7eB8kD3toNKR
+	 f+MnrndJnalJOSwZ7EUJfNz994HPwIIjc5VgAvgHLPoR0J0p3vZqjDvcH4yg58LBGb
+	 cETAVhLPe1r1ONrTyDIU8W8l9Rtto/KMjbHrfiEM=
+From: Vadim Marchenko <v.marchenko@ispras.ru>
+To: HighPoint Linux Team <linux@highpoint-tech.com>
+Cc: Vadim Marchenko <v.marchenko@ispras.ru>,
+	"James E.J. Bottomley" <jejb@linux.ibm.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	linux-scsi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	lvc-project@linuxtesting.org
+Subject: [PATCH] scsi: hptiop: Fix buffer overflow of hba->reqs[]
+Date: Fri, 26 Jan 2024 19:50:59 +0300
+Message-Id: <20240126165059.8175-1-v.marchenko@ispras.ru>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20231006204653.4677-1-jakosvadim@gmail.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -78,87 +49,132 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-PD major revision for the port partner is described in
-GET_CONNECTOR_CAPABILITY and is only valid on UCSI 2.0 and newer. Update
-the pd_revision on the partner if the UCSI version is 2.0 or newer.
+Buffer overflow when accessing an hba->reqs[tag]. Since the tag value is
+read from the device with readl(), it can be greater than 
+HPTIOP_MAX_REQUESTS, which is the maximum size of reqs[].
+struct hptiop_hba { ... struct hptiop_request reqs[HPTIOP_MAX_REQUESTS]; ... }
 
-Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+For example, if tag is 0x80000101, then in hptiop.c:79 we will pass tag equal
+to (tag & ~IOPMU_QUEUE_ADDR_HOST_BIT) = (0x80000101 & 0x7fffffff) = 0x101 = 257
+and get a buffer overflow in hptiop_host_request_callback_itl().
+
+To fix it, we need to get the last 8 bits of the tag before accessing the
+hba->reqs[tag]. We can do this by calculating bitwise and of tag with macros
+IOPMU_QUEUE_REQUEST_INDEX_BITS which is equal to 0xff.
+By the way, array access that prevents overflow was in commit 286aa031664b
+("[SCSI] hptiop: Support HighPoint RR4520/RR4522 HBA") in function
+hptiop_request_callback_mvfrey(), and this fix extends it to all other cases.
+
+Found by Linux Verification Center (linuxtesting.org) with KLEVER.
+
+Signed-off-by: Vadim Marchenko <v.marchenko@ispras.ru>
 ---
-$ cat /sys/class/typec/port2-partner/usb_power_delivery_revision
-3.0
+ drivers/scsi/hptiop.c | 22 +++++++++++++++-------
+ drivers/scsi/hptiop.h |  1 +
+ 2 files changed, 16 insertions(+), 7 deletions(-)
 
-(no changes since v2)
-
-Changes in v2:
-  - Formatting changes and update macro to use brackets.
-  - Fix incorrect guard condition when checking connector capability.
-
- drivers/usb/typec/ucsi/ucsi.c | 23 +++++++++++++++++++++++
- drivers/usb/typec/ucsi/ucsi.h |  3 +++
- 2 files changed, 26 insertions(+)
-
-diff --git a/drivers/usb/typec/ucsi/ucsi.c b/drivers/usb/typec/ucsi/ucsi.c
-index a35056ee3e96..2b7983d2fdae 100644
---- a/drivers/usb/typec/ucsi/ucsi.c
-+++ b/drivers/usb/typec/ucsi/ucsi.c
-@@ -782,6 +782,7 @@ static int ucsi_register_partner(struct ucsi_connector *con)
- 	}
+diff --git a/drivers/scsi/hptiop.c b/drivers/scsi/hptiop.c
+index f5334ccbf2ca..174a350c4f58 100644
+--- a/drivers/scsi/hptiop.c
++++ b/drivers/scsi/hptiop.c
+@@ -176,6 +176,7 @@ static void hptiop_request_callback_mv(struct hptiop_hba *hba, u64 tag)
+ {
+ 	u32 req_type = (tag >> 5) & 0x7;
+ 	struct hpt_iop_request_scsi_command *req;
++	u32 req_idx;
  
- 	desc.usb_pd = pwr_opmode == UCSI_CONSTAT_PWR_OPMODE_PD;
-+	desc.pd_revision = UCSI_CONCAP_FLAG_PARTNER_PD_MAJOR_REV_AS_BCD(con->cap.flags);
+ 	dprintk("hptiop_request_callback_mv: tag=%llx\n", tag);
  
- 	partner = typec_register_partner(con->port, &desc);
- 	if (IS_ERR(partner)) {
-@@ -856,6 +857,27 @@ static void ucsi_partner_change(struct ucsi_connector *con)
- 			con->num, u_role);
+@@ -188,7 +189,8 @@ static void hptiop_request_callback_mv(struct hptiop_hba *hba, u64 tag)
+ 		break;
+ 
+ 	case IOP_REQUEST_TYPE_SCSI_COMMAND:
+-		req = hba->reqs[tag >> 8].req_virt;
++		req_idx = (tag >> 8) & IOPMU_QUEUE_REQUEST_INDEX_BITS;
++		req = hba->reqs[req_idx].req_virt;
+ 		if (likely(tag & MVIOP_MU_QUEUE_REQUEST_RESULT_BIT))
+ 			req->header.result = cpu_to_le32(IOP_RESULT_SUCCESS);
+ 
+@@ -231,6 +233,7 @@ static void hptiop_request_callback_mvfrey(struct hptiop_hba *hba, u32 _tag)
+ {
+ 	u32 req_type = _tag & 0xf;
+ 	struct hpt_iop_request_scsi_command *req;
++	u32 req_idx;
+ 
+ 	switch (req_type) {
+ 	case IOP_REQUEST_TYPE_GET_CONFIG:
+@@ -239,10 +242,11 @@ static void hptiop_request_callback_mvfrey(struct hptiop_hba *hba, u32 _tag)
+ 		break;
+ 
+ 	case IOP_REQUEST_TYPE_SCSI_COMMAND:
+-		req = hba->reqs[(_tag >> 4) & 0xff].req_virt;
++		req_idx = (_tag >> 4) & IOPMU_QUEUE_REQUEST_INDEX_BITS;
++		req = hba->reqs[req_idx].req_virt;
+ 		if (likely(_tag & IOPMU_QUEUE_REQUEST_RESULT_BIT))
+ 			req->header.result = IOP_RESULT_SUCCESS;
+-		hptiop_finish_scsi_req(hba, (_tag >> 4) & 0xff, req);
++		hptiop_finish_scsi_req(hba, req_idx, req);
+ 		break;
+ 
+ 	default:
+@@ -717,6 +721,7 @@ static void hptiop_finish_scsi_req(struct hptiop_hba *hba, u32 tag,
+ 				struct hpt_iop_request_scsi_command *req)
+ {
+ 	struct scsi_cmnd *scp;
++	u32 req_idx = tag & IOPMU_QUEUE_REQUEST_INDEX_BITS;
+ 
+ 	dprintk("hptiop_finish_scsi_req: req=%p, type=%d, "
+ 			"result=%d, context=0x%x tag=%d\n",
+@@ -726,7 +731,7 @@ static void hptiop_finish_scsi_req(struct hptiop_hba *hba, u32 tag,
+ 	BUG_ON(!req->header.result);
+ 	BUG_ON(req->header.type != cpu_to_le32(IOP_REQUEST_TYPE_SCSI_COMMAND));
+ 
+-	scp = hba->reqs[tag].scp;
++	scp = hba->reqs[req_idx].scp;
+ 
+ 	if (HPT_SCP(scp)->mapped)
+ 		scsi_dma_unmap(scp);
+@@ -770,22 +775,25 @@ static void hptiop_finish_scsi_req(struct hptiop_hba *hba, u32 tag,
+ skip_resid:
+ 	dprintk("scsi_done(%p)\n", scp);
+ 	scsi_done(scp);
+-	free_req(hba, &hba->reqs[tag]);
++	free_req(hba, &hba->reqs[req_idx]);
  }
  
-+static int ucsi_check_connector_capability(struct ucsi_connector *con)
-+{
-+	u64 command;
-+	int ret;
-+
-+	if (!con->partner || !IS_MIN_VERSION_2_0(con->ucsi))
-+		return 0;
-+
-+	command = UCSI_GET_CONNECTOR_CAPABILITY | UCSI_CONNECTOR_NUMBER(con->num);
-+	ret = ucsi_send_command(con->ucsi, command, &con->cap, sizeof(con->cap));
-+	if (ret < 0) {
-+		dev_err(con->ucsi->dev, "GET_CONNECTOR_CAPABILITY failed (%d)\n", ret);
-+		return ret;
-+	}
-+
-+	typec_partner_set_pd_revision(con->partner,
-+		UCSI_CONCAP_FLAG_PARTNER_PD_MAJOR_REV_AS_BCD(con->cap.flags));
-+
-+	return ret;
-+}
-+
- static int ucsi_check_connection(struct ucsi_connector *con)
+ static void hptiop_host_request_callback_itl(struct hptiop_hba *hba, u32 _tag)
  {
- 	u8 prev_flags = con->status.flags;
-@@ -925,6 +947,7 @@ static void ucsi_handle_connector_change(struct work_struct *work)
- 		if (con->status.flags & UCSI_CONSTAT_CONNECTED) {
- 			ucsi_register_partner(con);
- 			ucsi_partner_task(con, ucsi_check_connection, 1, HZ);
-+			ucsi_partner_task(con, ucsi_check_connector_capability, 1, HZ);
+ 	struct hpt_iop_request_scsi_command *req;
+ 	u32 tag;
++	u32 req_idx;
  
- 			if (UCSI_CONSTAT_PWR_OPMODE(con->status.flags) ==
- 			    UCSI_CONSTAT_PWR_OPMODE_PD)
-diff --git a/drivers/usb/typec/ucsi/ucsi.h b/drivers/usb/typec/ucsi/ucsi.h
-index 1bae4cf8ecdc..d1d0e11b0704 100644
---- a/drivers/usb/typec/ucsi/ucsi.h
-+++ b/drivers/usb/typec/ucsi/ucsi.h
-@@ -36,6 +36,9 @@ struct dentry;
- #define UCSI_BCD_GET_MINOR(_v_)		(((_v_) >> 4) & 0x0F)
- #define UCSI_BCD_GET_SUBMINOR(_v_)	((_v_) & 0x0F)
+ 	if (hba->iopintf_v2) {
+ 		tag = _tag & ~IOPMU_QUEUE_REQUEST_RESULT_BIT;
+-		req = hba->reqs[tag].req_virt;
++		req_idx = tag & IOPMU_QUEUE_REQUEST_INDEX_BITS;
++		req = hba->reqs[req_idx].req_virt;
+ 		if (likely(_tag & IOPMU_QUEUE_REQUEST_RESULT_BIT))
+ 			req->header.result = cpu_to_le32(IOP_RESULT_SUCCESS);
+ 	} else {
+ 		tag = _tag;
+-		req = hba->reqs[tag].req_virt;
++		req_idx = tag & IOPMU_QUEUE_REQUEST_INDEX_BITS;
++		req = hba->reqs[req_idx].req_virt;
+ 	}
  
-+#define IS_MIN_VERSION(ucsi, min_ver)	((ucsi)->version >= (min_ver))
-+#define IS_MIN_VERSION_2_0(ucsi)	IS_MIN_VERSION(ucsi, UCSI_VERSION_2_0)
-+
- /* Command Status and Connector Change Indication (CCI) bits */
- #define UCSI_CCI_CONNECTOR(_c_)		(((_c_) & GENMASK(7, 1)) >> 1)
- #define UCSI_CCI_LENGTH(_c_)		(((_c_) & GENMASK(15, 8)) >> 8)
+ 	hptiop_finish_scsi_req(hba, tag, req);
+diff --git a/drivers/scsi/hptiop.h b/drivers/scsi/hptiop.h
+index 394ef6aa469e..742ce87ab56d 100644
+--- a/drivers/scsi/hptiop.h
++++ b/drivers/scsi/hptiop.h
+@@ -32,6 +32,7 @@ struct hpt_iopmu_itl {
+ #define IOPMU_QUEUE_ADDR_HOST_BIT    0x80000000
+ #define IOPMU_QUEUE_REQUEST_SIZE_BIT    0x40000000
+ #define IOPMU_QUEUE_REQUEST_RESULT_BIT   0x40000000
++#define IOPMU_QUEUE_REQUEST_INDEX_BITS   0xff
+ 
+ #define IOPMU_OUTBOUND_INT_MSG0      1
+ #define IOPMU_OUTBOUND_INT_MSG1      2
 -- 
-2.43.0.429.g432eaa2c6b-goog
+2.39.2
 
