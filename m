@@ -1,41 +1,42 @@
-Received: from out-185.mta1.migadu.com (out-185.mta1.migadu.com [95.215.58.185])
+Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F4EB41C8A
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 22:07:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.185
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5803941C93
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 22:07:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706306828; cv=none; b=coehUym5sa3GVBF7+ikuBByeGvbBxRKJ++typ+bIdlXSpRuY5mkh0fENVn9RyHrhKnFcQOLPBktjlLcYypLBzyFycif836TLypABDjUWrcvXODlWyi5QLtapTohczVc75/0rI5UtJ+KJlR4ESVQww+YjfytEcX810eT/e9F2pVI=
+	t=1706306831; cv=none; b=lLUKW+Nprcv4LWWcul/QQQcXEOKxKUvMOQM8VpqtLq7BQnEcGrqwu9hqoTNIfWWd4l03cQqfT8Uj9YnN/VMYw1WZVVEAey9Ceeq9F7KQOVJ+Wb7sbvLViTKYb+qGpMpm408F/x8C8hWBcg7BewOZn5UvMOL5pPS3MLxF7eXv/LM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706306828; c=relaxed/simple;
-	bh=3iCfr68jMbi52uveXBTHGF5XpWrJ2RmPB5uVaQpyoos=;
+	s=arc-20240116; t=1706306831; c=relaxed/simple;
+	bh=8CnJaY7BjvsEKERI3WiIcsrr0Xz+2a3GTassLSHl/Vw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cbVurHBvF95/Ictf8z0PJdvwt+MTuLkxMRfFB7JcgnyLjxWGWH4nHqkxR4fIGxGxA3a8C6hkFIl/N4T+dVd1yGK4gcw4l9ZZqZcNEjVDm9W+QQXuluiJ8+dNRhZZuLYeihqt/gz0Iq9J/XeRjZkLONmkDn7NDoiOiRIXKci2c8Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ZVjEoRvx; arc=none smtp.client-ip=95.215.58.185
+	 MIME-Version; b=Qx4iRZ332gAOV+7dAenlskZBJX8bziMBomXnklsS8o2AqY8hU4wqDzRBPC1XvSptKKhBDSfhGP6IlGgbXvMvLV7Exu0qCc3aNavdsvLODFj/PfoQNtt/5G70/3nKh6Crb05xdH1anndULc7uWCb4A6THquvuEKlswvF40zfO0RQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=KNBVfLCk; arc=none smtp.client-ip=95.215.58.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ZVjEoRvx"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="KNBVfLCk"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1706306823;
+	t=1706306826;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=OjHVq87doDd992hNB7+kP4O7NuR5v9YaoQfFLxLTrqA=;
-	b=ZVjEoRvxqGIupQjKzFmvYbIk8B2wcOCHwSMMhn45BP3F/yzNTpxAUKlKcjyTbey4SiLPuJ
-	PjBgvxHdLCALthC7p0ESI378nCTybpHxJJm8GSBAwj/KhSu55GzkFtRYR96Tv8nWlR74AN
-	RhhtI32jXBpMW82rfDmYi14rI1ab9LM=
+	bh=K4UUd+8rwXKk/VwhFBzqzE6Fq2sLZQhFm6oGMqd8OBs=;
+	b=KNBVfLCkHC9WC19MLNw07wmaOS/YFHtBQJuFGhLAp54HRh7Z6Dwk0eNqx1LNNbNeLcYza0
+	pz8fk9MdKdUOtgfeCCwrn8tBX03nuOJtqOZm4tg0KvJwtzKYG/cvj7ixKOA9u5xHXfMGdx
+	X7lWgCgZH9fG1w+YNH4KZ9BDXGEVMhY=
 From: Kent Overstreet <kent.overstreet@linux.dev>
 To: linux-kernel@vger.kernel.org,
 	linux-fsdevel@vger.kernel.org,
 	linux-bcache@vger.kernel.org,
 	linux-bcachefs@vger.kernel.org
-Cc: Kent Overstreet <kent.overstreet@linux.dev>
-Subject: [PATCH 2/5] eytzinger: Promote to include/linux/
-Date: Fri, 26 Jan 2024 17:06:52 -0500
-Message-ID: <20240126220655.395093-2-kent.overstreet@linux.dev>
+Cc: Kent Overstreet <kent.overstreet@linux.dev>,
+	Coly Li <colyli@suse.de>
+Subject: [PATCH 5/5] bcache: Convert to lib/time_stats
+Date: Fri, 26 Jan 2024 17:06:55 -0500
+Message-ID: <20240126220655.395093-5-kent.overstreet@linux.dev>
 In-Reply-To: <20240126220655.395093-1-kent.overstreet@linux.dev>
 References: <20240126220655.395093-1-kent.overstreet@linux.dev>
 Precedence: bulk
@@ -47,572 +48,341 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-eytzinger trees are a faster alternative to binary search. They're a bit
-more expensive to setup, but lookups perform much better assuming the
-tree isn't entirely in cache.
+delete bcache's time stats code, convert to newer version from bcachefs.
 
-Binary search is a worst case scenario for branch prediction and
-prefetching, but eytzinger trees have children adjacent in memory and
-thus we can prefetch before knowing the result of a comparison.
+example output:
 
-An eytzinger tree is a binary tree laid out in an array, with the same
-geometry as the usual binary heap construction, but used as a search
-tree instead.
+root@moria-kvm:/sys/fs/bcache/bdaedb8c-4554-4dd2-87e4-276e51eb47cc# cat internal/btree_sort_times
+count: 6414
+                       since mount        recent
+duration of events
+  min:                          440 ns
+  max:                         1102 us
+  total:                        674 ms
+  mean:                         105 us     102 us
+  stddev:                       101 us      88 us
+time between events
+  min:                          881 ns
+  max:                            3 s
+  mean:                           7 ms       6 ms
+  stddev:                        52 ms       6 ms
 
+Cc: Coly Li <colyli@suse.de>
+Cc: linux-bcache@vger.kernel.org
 Signed-off-by: Kent Overstreet <kent.overstreet@linux.dev>
 ---
- fs/bcachefs/bset.c                         |   2 +-
- fs/bcachefs/journal_seq_blacklist.c        |   6 +-
- fs/bcachefs/replicas.c                     |  17 ++-
- fs/bcachefs/replicas.h                     |   3 +-
- fs/bcachefs/super-io.h                     |   2 +-
- fs/bcachefs/util.c                         | 145 +--------------------
- fs/bcachefs/util.h                         |   4 -
- {fs/bcachefs => include/linux}/eytzinger.h |  56 ++++----
- lib/sort.c                                 |  85 ++++++++++++
- 9 files changed, 136 insertions(+), 184 deletions(-)
- rename {fs/bcachefs => include/linux}/eytzinger.h (78%)
+ drivers/md/bcache/Kconfig  |  1 +
+ drivers/md/bcache/bcache.h |  1 +
+ drivers/md/bcache/bset.c   |  6 +++--
+ drivers/md/bcache/bset.h   |  1 +
+ drivers/md/bcache/btree.c  |  6 ++---
+ drivers/md/bcache/super.c  |  7 +++++
+ drivers/md/bcache/sysfs.c  | 25 +++++++++---------
+ drivers/md/bcache/util.c   | 30 ----------------------
+ drivers/md/bcache/util.h   | 52 +++++---------------------------------
+ 9 files changed, 37 insertions(+), 92 deletions(-)
 
-diff --git a/fs/bcachefs/bset.c b/fs/bcachefs/bset.c
-index 3fd1085b6c61..1d77aa55d641 100644
---- a/fs/bcachefs/bset.c
-+++ b/fs/bcachefs/bset.c
-@@ -9,12 +9,12 @@
- #include "bcachefs.h"
- #include "btree_cache.h"
- #include "bset.h"
--#include "eytzinger.h"
- #include "trace.h"
- #include "util.h"
- 
- #include <asm/unaligned.h>
- #include <linux/console.h>
-+#include <linux/eytzinger.h>
- #include <linux/random.h>
- #include <linux/prefetch.h>
- 
-diff --git a/fs/bcachefs/journal_seq_blacklist.c b/fs/bcachefs/journal_seq_blacklist.c
-index 0200e299cfbb..024c9b1b323f 100644
---- a/fs/bcachefs/journal_seq_blacklist.c
-+++ b/fs/bcachefs/journal_seq_blacklist.c
-@@ -2,10 +2,11 @@
- 
- #include "bcachefs.h"
- #include "btree_iter.h"
--#include "eytzinger.h"
- #include "journal_seq_blacklist.h"
- #include "super-io.h"
- 
-+#include <linux/eytzinger.h>
-+
- /*
-  * journal_seq_blacklist machinery:
-  *
-@@ -119,8 +120,7 @@ int bch2_journal_seq_blacklist_add(struct bch_fs *c, u64 start, u64 end)
- 	return ret ?: bch2_blacklist_table_initialize(c);
- }
- 
--static int journal_seq_blacklist_table_cmp(const void *_l,
--					   const void *_r, size_t size)
-+static int journal_seq_blacklist_table_cmp(const void *_l, const void *_r)
- {
- 	const struct journal_seq_blacklist_table_entry *l = _l;
- 	const struct journal_seq_blacklist_table_entry *r = _r;
-diff --git a/fs/bcachefs/replicas.c b/fs/bcachefs/replicas.c
-index cc2672c12031..75fdce373f76 100644
---- a/fs/bcachefs/replicas.c
-+++ b/fs/bcachefs/replicas.c
-@@ -6,12 +6,15 @@
- #include "replicas.h"
- #include "super-io.h"
- 
-+#include <linux/sort.h>
-+
- static int bch2_cpu_replicas_to_sb_replicas(struct bch_fs *,
- 					    struct bch_replicas_cpu *);
- 
- /* Some (buggy!) compilers don't allow memcmp to be passed as a pointer */
--static int bch2_memcmp(const void *l, const void *r, size_t size)
-+static int bch2_memcmp(const void *l, const void *r,  const void *priv)
- {
-+	size_t size = (size_t) priv;
- 	return memcmp(l, r, size);
- }
- 
-@@ -39,7 +42,8 @@ void bch2_replicas_entry_sort(struct bch_replicas_entry_v1 *e)
- 
- static void bch2_cpu_replicas_sort(struct bch_replicas_cpu *r)
- {
--	eytzinger0_sort(r->entries, r->nr, r->entry_size, bch2_memcmp, NULL);
-+	eytzinger0_sort_r(r->entries, r->nr, r->entry_size,
-+			  bch2_memcmp, NULL, (void *)(size_t)r->entry_size);
- }
- 
- static void bch2_replicas_entry_v0_to_text(struct printbuf *out,
-@@ -824,10 +828,11 @@ static int bch2_cpu_replicas_validate(struct bch_replicas_cpu *cpu_r,
- {
- 	unsigned i;
- 
--	sort_cmp_size(cpu_r->entries,
--		      cpu_r->nr,
--		      cpu_r->entry_size,
--		      bch2_memcmp, NULL);
-+	sort_r(cpu_r->entries,
-+	       cpu_r->nr,
-+	       cpu_r->entry_size,
-+	       bch2_memcmp, NULL,
-+	       (void *)(size_t)cpu_r->entry_size);
- 
- 	for (i = 0; i < cpu_r->nr; i++) {
- 		struct bch_replicas_entry_v1 *e =
-diff --git a/fs/bcachefs/replicas.h b/fs/bcachefs/replicas.h
-index 654a4b26d3a3..983cce782ac2 100644
---- a/fs/bcachefs/replicas.h
-+++ b/fs/bcachefs/replicas.h
-@@ -3,9 +3,10 @@
- #define _BCACHEFS_REPLICAS_H
- 
- #include "bkey.h"
--#include "eytzinger.h"
- #include "replicas_types.h"
- 
-+#include <linux/eytzinger.h>
-+
- void bch2_replicas_entry_sort(struct bch_replicas_entry_v1 *);
- void bch2_replicas_entry_to_text(struct printbuf *,
- 				 struct bch_replicas_entry_v1 *);
-diff --git a/fs/bcachefs/super-io.h b/fs/bcachefs/super-io.h
-index 95e80e06316b..f37620919e11 100644
---- a/fs/bcachefs/super-io.h
-+++ b/fs/bcachefs/super-io.h
-@@ -3,12 +3,12 @@
- #define _BCACHEFS_SUPER_IO_H
- 
- #include "extents.h"
--#include "eytzinger.h"
- #include "super_types.h"
- #include "super.h"
- #include "sb-members.h"
- 
- #include <asm/byteorder.h>
-+#include <linux/eytzinger.h>
- 
- static inline bool bch2_version_compatible(u16 version)
- {
-diff --git a/fs/bcachefs/util.c b/fs/bcachefs/util.c
-index d7ea95abb9df..c7cf9c6fcf9a 100644
---- a/fs/bcachefs/util.c
-+++ b/fs/bcachefs/util.c
-@@ -11,6 +11,7 @@
- #include <linux/console.h>
- #include <linux/ctype.h>
- #include <linux/debugfs.h>
-+#include <linux/eytzinger.h>
- #include <linux/freezer.h>
+diff --git a/drivers/md/bcache/Kconfig b/drivers/md/bcache/Kconfig
+index b2d10063d35f..7ea057983d3d 100644
+--- a/drivers/md/bcache/Kconfig
++++ b/drivers/md/bcache/Kconfig
+@@ -5,6 +5,7 @@ config BCACHE
+ 	select BLOCK_HOLDER_DEPRECATED if SYSFS
+ 	select CRC64
+ 	select CLOSURES
++	select TIME_STATS
+ 	help
+ 	Allows a block device to be used as cache for other devices; uses
+ 	a btree for indexing and the layout is optimized for SSDs.
+diff --git a/drivers/md/bcache/bcache.h b/drivers/md/bcache/bcache.h
+index 6ae2329052c9..76e7b494c394 100644
+--- a/drivers/md/bcache/bcache.h
++++ b/drivers/md/bcache/bcache.h
+@@ -186,6 +186,7 @@
+ #include <linux/rbtree.h>
+ #include <linux/rwsem.h>
+ #include <linux/refcount.h>
++#include <linux/time_stats.h>
+ #include <linux/types.h>
+ #include <linux/workqueue.h>
  #include <linux/kthread.h>
- #include <linux/log2.h>
-@@ -24,7 +25,6 @@
+diff --git a/drivers/md/bcache/bset.c b/drivers/md/bcache/bset.c
+index 2bba4d6aaaa2..31c08d4ab83b 100644
+--- a/drivers/md/bcache/bset.c
++++ b/drivers/md/bcache/bset.c
+@@ -1177,6 +1177,7 @@ struct bkey *bch_btree_iter_next_filter(struct btree_iter *iter,
+ 
+ void bch_bset_sort_state_free(struct bset_sort_state *state)
+ {
++	time_stats_exit(&state->time);
+ 	mempool_exit(&state->pool);
+ }
+ 
+@@ -1184,6 +1185,7 @@ int bch_bset_sort_state_init(struct bset_sort_state *state,
+ 			     unsigned int page_order)
+ {
+ 	spin_lock_init(&state->time.lock);
++	time_stats_init(&state->time);
+ 
+ 	state->page_order = page_order;
+ 	state->crit_factor = int_sqrt(1 << page_order);
+@@ -1286,7 +1288,7 @@ static void __btree_sort(struct btree_keys *b, struct btree_iter *iter,
+ 	bch_bset_build_written_tree(b);
+ 
+ 	if (!start)
+-		bch_time_stats_update(&state->time, start_time);
++		time_stats_update(&state->time, start_time);
+ }
+ 
+ void bch_btree_sort_partial(struct btree_keys *b, unsigned int start,
+@@ -1329,7 +1331,7 @@ void bch_btree_sort_into(struct btree_keys *b, struct btree_keys *new,
+ 
+ 	btree_mergesort(b, new->set->data, &iter, false, true);
+ 
+-	bch_time_stats_update(&state->time, start_time);
++	time_stats_update(&state->time, start_time);
+ 
+ 	new->set->size = 0; // XXX: why?
+ }
+diff --git a/drivers/md/bcache/bset.h b/drivers/md/bcache/bset.h
+index d795c84246b0..13e524ad7783 100644
+--- a/drivers/md/bcache/bset.h
++++ b/drivers/md/bcache/bset.h
+@@ -3,6 +3,7 @@
+ #define _BCACHE_BSET_H
+ 
+ #include <linux/kernel.h>
++#include <linux/time_stats.h>
+ #include <linux/types.h>
+ 
+ #include "bcache_ondisk.h"
+diff --git a/drivers/md/bcache/btree.c b/drivers/md/bcache/btree.c
+index 196cdacce38f..0ed337c5f0dc 100644
+--- a/drivers/md/bcache/btree.c
++++ b/drivers/md/bcache/btree.c
+@@ -270,7 +270,7 @@ static void bch_btree_node_read(struct btree *b)
+ 		goto err;
+ 
+ 	bch_btree_node_read_done(b);
+-	bch_time_stats_update(&b->c->btree_read_time, start_time);
++	time_stats_update(&b->c->btree_read_time, start_time);
+ 
+ 	return;
+ err:
+@@ -1852,7 +1852,7 @@ static void bch_btree_gc(struct cache_set *c)
+ 	bch_btree_gc_finish(c);
+ 	wake_up_allocators(c);
+ 
+-	bch_time_stats_update(&c->btree_gc_time, start_time);
++	time_stats_update(&c->btree_gc_time, start_time);
+ 
+ 	stats.key_bytes *= sizeof(uint64_t);
+ 	stats.data	<<= 9;
+@@ -2343,7 +2343,7 @@ static int btree_split(struct btree *b, struct btree_op *op,
+ 	btree_node_free(b);
+ 	rw_unlock(true, n1);
+ 
+-	bch_time_stats_update(&b->c->btree_split_time, start_time);
++	time_stats_update(&b->c->btree_split_time, start_time);
+ 
+ 	return 0;
+ err_free2:
+diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
+index dc3f50f69714..625e4883299c 100644
+--- a/drivers/md/bcache/super.c
++++ b/drivers/md/bcache/super.c
+@@ -1676,6 +1676,9 @@ static CLOSURE_CALLBACK(cache_set_free)
+ 
+ 	debugfs_remove(c->debug);
+ 
++	time_stats_exit(&c->btree_read_time);
++	time_stats_exit(&c->btree_split_time);
++	time_stats_exit(&c->btree_gc_time);
+ 	bch_open_buckets_free(c);
+ 	bch_btree_cache_free(c);
+ 	bch_journal_free(c);
+@@ -1913,6 +1916,10 @@ struct cache_set *bch_cache_set_alloc(struct cache_sb *sb)
+ 	INIT_LIST_HEAD(&c->btree_cache_freed);
+ 	INIT_LIST_HEAD(&c->data_buckets);
+ 
++	time_stats_init(&c->btree_gc_time);
++	time_stats_init(&c->btree_split_time);
++	time_stats_init(&c->btree_read_time);
++
+ 	iter_size = ((meta_bucket_pages(sb) * PAGE_SECTORS) / sb->block_size + 1) *
+ 		sizeof(struct btree_iter_set);
+ 
+diff --git a/drivers/md/bcache/sysfs.c b/drivers/md/bcache/sysfs.c
+index a438efb66069..01cc5c632f08 100644
+--- a/drivers/md/bcache/sysfs.c
++++ b/drivers/md/bcache/sysfs.c
+@@ -14,6 +14,7 @@
+ #include "features.h"
+ 
+ #include <linux/blkdev.h>
++#include <linux/seq_buf.h>
+ #include <linux/sort.h>
  #include <linux/sched/clock.h>
- #include <linux/mean_and_variance.h>
  
--#include "eytzinger.h"
- #include "util.h"
+@@ -79,10 +80,10 @@ read_attribute(active_journal_entries);
+ read_attribute(backing_dev_name);
+ read_attribute(backing_dev_uuid);
  
- static const char si_units[] = "?kMGTPEZY";
-@@ -863,149 +863,6 @@ void memcpy_from_bio(void *dst, struct bio *src, struct bvec_iter src_iter)
- 	}
+-sysfs_time_stats_attribute(btree_gc,	sec, ms);
+-sysfs_time_stats_attribute(btree_split, sec, us);
+-sysfs_time_stats_attribute(btree_sort,	ms,  us);
+-sysfs_time_stats_attribute(btree_read,	ms,  us);
++read_attribute(btree_gc_times);
++read_attribute(btree_split_times);
++read_attribute(btree_sort_times);
++read_attribute(btree_read_times);
+ 
+ read_attribute(btree_nodes);
+ read_attribute(btree_used_percent);
+@@ -743,10 +744,10 @@ SHOW(__bch_cache_set)
+ 	sysfs_print(btree_cache_max_chain,	bch_cache_max_chain(c));
+ 	sysfs_print(cache_available_percent,	100 - c->gc_stats.in_use);
+ 
+-	sysfs_print_time_stats(&c->btree_gc_time,	btree_gc, sec, ms);
+-	sysfs_print_time_stats(&c->btree_split_time,	btree_split, sec, us);
+-	sysfs_print_time_stats(&c->sort.time,		btree_sort, ms, us);
+-	sysfs_print_time_stats(&c->btree_read_time,	btree_read, ms, us);
++	sysfs_print_time_stats(&c->btree_gc_time,	btree_gc_times);
++	sysfs_print_time_stats(&c->btree_split_time,	btree_split_times);
++	sysfs_print_time_stats(&c->sort.time,		btree_sort_times);
++	sysfs_print_time_stats(&c->btree_read_time,	btree_read_times);
+ 
+ 	sysfs_print(btree_used_percent,	bch_btree_used(c));
+ 	sysfs_print(btree_nodes,	c->gc_stats.nodes);
+@@ -989,10 +990,10 @@ KTYPE(bch_cache_set);
+ static struct attribute *bch_cache_set_internal_attrs[] = {
+ 	&sysfs_active_journal_entries,
+ 
+-	sysfs_time_stats_attribute_list(btree_gc, sec, ms)
+-	sysfs_time_stats_attribute_list(btree_split, sec, us)
+-	sysfs_time_stats_attribute_list(btree_sort, ms, us)
+-	sysfs_time_stats_attribute_list(btree_read, ms, us)
++	&sysfs_btree_gc_times,
++	&sysfs_btree_split_times,
++	&sysfs_btree_sort_times,
++	&sysfs_btree_read_times,
+ 
+ 	&sysfs_btree_nodes,
+ 	&sysfs_btree_used_percent,
+diff --git a/drivers/md/bcache/util.c b/drivers/md/bcache/util.c
+index ae380bc3992e..95282bf0f9a7 100644
+--- a/drivers/md/bcache/util.c
++++ b/drivers/md/bcache/util.c
+@@ -160,36 +160,6 @@ int bch_parse_uuid(const char *s, char *uuid)
+ 	return i;
  }
  
--static int alignment_ok(const void *base, size_t align)
+-void bch_time_stats_update(struct time_stats *stats, uint64_t start_time)
 -{
--	return IS_ENABLED(CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS) ||
--		((unsigned long)base & (align - 1)) == 0;
--}
+-	uint64_t now, duration, last;
 -
--static void u32_swap(void *a, void *b, size_t size)
--{
--	u32 t = *(u32 *)a;
--	*(u32 *)a = *(u32 *)b;
--	*(u32 *)b = t;
--}
+-	spin_lock(&stats->lock);
 -
--static void u64_swap(void *a, void *b, size_t size)
--{
--	u64 t = *(u64 *)a;
--	*(u64 *)a = *(u64 *)b;
--	*(u64 *)b = t;
--}
+-	now		= local_clock();
+-	duration	= time_after64(now, start_time)
+-		? now - start_time : 0;
+-	last		= time_after64(now, stats->last)
+-		? now - stats->last : 0;
 -
--static void generic_swap(void *a, void *b, size_t size)
--{
--	char t;
+-	stats->max_duration = max(stats->max_duration, duration);
 -
--	do {
--		t = *(char *)a;
--		*(char *)a++ = *(char *)b;
--		*(char *)b++ = t;
--	} while (--size > 0);
--}
+-	if (stats->last) {
+-		ewma_add(stats->average_duration, duration, 8, 8);
 -
--static inline int do_cmp(void *base, size_t n, size_t size,
--			 int (*cmp_func)(const void *, const void *, size_t),
--			 size_t l, size_t r)
--{
--	return cmp_func(base + inorder_to_eytzinger0(l, n) * size,
--			base + inorder_to_eytzinger0(r, n) * size,
--			size);
--}
--
--static inline void do_swap(void *base, size_t n, size_t size,
--			   void (*swap_func)(void *, void *, size_t),
--			   size_t l, size_t r)
--{
--	swap_func(base + inorder_to_eytzinger0(l, n) * size,
--		  base + inorder_to_eytzinger0(r, n) * size,
--		  size);
--}
--
--void eytzinger0_sort(void *base, size_t n, size_t size,
--		     int (*cmp_func)(const void *, const void *, size_t),
--		     void (*swap_func)(void *, void *, size_t))
--{
--	int i, c, r;
--
--	if (!swap_func) {
--		if (size == 4 && alignment_ok(base, 4))
--			swap_func = u32_swap;
--		else if (size == 8 && alignment_ok(base, 8))
--			swap_func = u64_swap;
+-		if (stats->average_frequency)
+-			ewma_add(stats->average_frequency, last, 8, 8);
 -		else
--			swap_func = generic_swap;
+-			stats->average_frequency  = last << 8;
+-	} else {
+-		stats->average_duration  = duration << 8;
 -	}
 -
--	/* heapify */
--	for (i = n / 2 - 1; i >= 0; --i) {
--		for (r = i; r * 2 + 1 < n; r = c) {
--			c = r * 2 + 1;
+-	stats->last = now ?: 1;
 -
--			if (c + 1 < n &&
--			    do_cmp(base, n, size, cmp_func, c, c + 1) < 0)
--				c++;
--
--			if (do_cmp(base, n, size, cmp_func, r, c) >= 0)
--				break;
--
--			do_swap(base, n, size, swap_func, r, c);
--		}
--	}
--
--	/* sort */
--	for (i = n - 1; i > 0; --i) {
--		do_swap(base, n, size, swap_func, 0, i);
--
--		for (r = 0; r * 2 + 1 < i; r = c) {
--			c = r * 2 + 1;
--
--			if (c + 1 < i &&
--			    do_cmp(base, n, size, cmp_func, c, c + 1) < 0)
--				c++;
--
--			if (do_cmp(base, n, size, cmp_func, r, c) >= 0)
--				break;
--
--			do_swap(base, n, size, swap_func, r, c);
--		}
--	}
+-	spin_unlock(&stats->lock);
 -}
 -
--void sort_cmp_size(void *base, size_t num, size_t size,
--	  int (*cmp_func)(const void *, const void *, size_t),
--	  void (*swap_func)(void *, void *, size_t size))
--{
--	/* pre-scale counters for performance */
--	int i = (num/2 - 1) * size, n = num * size, c, r;
+ /**
+  * bch_next_delay() - update ratelimiting statistics and calculate next delay
+  * @d: the struct bch_ratelimit to update
+diff --git a/drivers/md/bcache/util.h b/drivers/md/bcache/util.h
+index f61ab1bada6c..6fcb9db4f50d 100644
+--- a/drivers/md/bcache/util.h
++++ b/drivers/md/bcache/util.h
+@@ -344,20 +344,6 @@ ssize_t bch_hprint(char *buf, int64_t v);
+ bool bch_is_zero(const char *p, size_t n);
+ int bch_parse_uuid(const char *s, char *uuid);
+ 
+-struct time_stats {
+-	spinlock_t	lock;
+-	/*
+-	 * all fields are in nanoseconds, averages are ewmas stored left shifted
+-	 * by 8
+-	 */
+-	uint64_t	max_duration;
+-	uint64_t	average_duration;
+-	uint64_t	average_frequency;
+-	uint64_t	last;
+-};
 -
--	if (!swap_func) {
--		if (size == 4 && alignment_ok(base, 4))
--			swap_func = u32_swap;
--		else if (size == 8 && alignment_ok(base, 8))
--			swap_func = u64_swap;
--		else
--			swap_func = generic_swap;
--	}
+-void bch_time_stats_update(struct time_stats *stats, uint64_t time);
 -
--	/* heapify */
--	for ( ; i >= 0; i -= size) {
--		for (r = i; r * 2 + size < n; r  = c) {
--			c = r * 2 + size;
--			if (c < n - size &&
--			    cmp_func(base + c, base + c + size, size) < 0)
--				c += size;
--			if (cmp_func(base + r, base + c, size) >= 0)
--				break;
--			swap_func(base + r, base + c, size);
--		}
--	}
--
--	/* sort */
--	for (i = n - size; i > 0; i -= size) {
--		swap_func(base, base + i, size);
--		for (r = 0; r * 2 + size < i; r = c) {
--			c = r * 2 + size;
--			if (c < i - size &&
--			    cmp_func(base + c, base + c + size, size) < 0)
--				c += size;
--			if (cmp_func(base + r, base + c, size) >= 0)
--				break;
--			swap_func(base + r, base + c, size);
--		}
--	}
--}
--
- static void mempool_free_vp(void *element, void *pool_data)
+ static inline unsigned int local_clock_us(void)
  {
- 	size_t size = (size_t) pool_data;
-diff --git a/fs/bcachefs/util.h b/fs/bcachefs/util.h
-index 0059481995ef..c3b11c3d24ea 100644
---- a/fs/bcachefs/util.h
-+++ b/fs/bcachefs/util.h
-@@ -737,10 +737,6 @@ static inline void memset_u64s_tail(void *s, int c, unsigned bytes)
- 	memset(s + bytes, c, rem);
- }
+ 	return local_clock() >> 10;
+@@ -372,40 +358,16 @@ static inline unsigned int local_clock_us(void)
+ 	sysfs_print(name ## _ ## stat ## _ ## units,			\
+ 		    div_u64((stats)->stat >> 8, NSEC_PER_ ## units))
  
--void sort_cmp_size(void *base, size_t num, size_t size,
--	  int (*cmp_func)(const void *, const void *, size_t),
--	  void (*swap_func)(void *, void *, size_t));
+-#define sysfs_print_time_stats(stats, name,				\
+-			       frequency_units,				\
+-			       duration_units)				\
++#define sysfs_print_time_stats(stats, name)				\
+ do {									\
+-	__print_time_stat(stats, name,					\
+-			  average_frequency,	frequency_units);	\
+-	__print_time_stat(stats, name,					\
+-			  average_duration,	duration_units);	\
+-	sysfs_print(name ## _ ##max_duration ## _ ## duration_units,	\
+-			div_u64((stats)->max_duration,			\
+-				NSEC_PER_ ## duration_units));		\
+-									\
+-	sysfs_print(name ## _last_ ## frequency_units, (stats)->last	\
+-		    ? div_s64(local_clock() - (stats)->last,		\
+-			      NSEC_PER_ ## frequency_units)		\
+-		    : -1LL);						\
++	if (attr == &sysfs_##name) {					\
++		struct seq_buf seq;					\
++		seq_buf_init(&seq, buf, PAGE_SIZE);			\
++		time_stats_to_seq_buf(&seq, stats);			\
++		return seq.len;						\
++	}								\
+ } while (0)
+ 
+-#define sysfs_time_stats_attribute(name,				\
+-				   frequency_units,			\
+-				   duration_units)			\
+-read_attribute(name ## _average_frequency_ ## frequency_units);		\
+-read_attribute(name ## _average_duration_ ## duration_units);		\
+-read_attribute(name ## _max_duration_ ## duration_units);		\
+-read_attribute(name ## _last_ ## frequency_units)
 -
- /* just the memmove, doesn't update @_nr */
- #define __array_insert_item(_array, _nr, _pos)				\
- 	memmove(&(_array)[(_pos) + 1],					\
-diff --git a/fs/bcachefs/eytzinger.h b/include/linux/eytzinger.h
-similarity index 78%
-rename from fs/bcachefs/eytzinger.h
-rename to include/linux/eytzinger.h
-index b04750dbf870..9565a5c26cd5 100644
---- a/fs/bcachefs/eytzinger.h
-+++ b/include/linux/eytzinger.h
-@@ -1,27 +1,37 @@
- /* SPDX-License-Identifier: GPL-2.0 */
--#ifndef _EYTZINGER_H
--#define _EYTZINGER_H
-+#ifndef _LINUX_EYTZINGER_H
-+#define _LINUX_EYTZINGER_H
- 
- #include <linux/bitops.h>
- #include <linux/log2.h>
- 
--#include "util.h"
-+#ifdef EYTZINGER_DEBUG
-+#define EYTZINGER_BUG_ON(cond)		BUG_ON(cond)
-+#else
-+#define EYTZINGER_BUG_ON(cond)
-+#endif
- 
- /*
-  * Traversal for trees in eytzinger layout - a full binary tree layed out in an
-- * array
-- */
+-#define sysfs_time_stats_attribute_list(name,				\
+-					frequency_units,		\
+-					duration_units)			\
+-&sysfs_ ## name ## _average_frequency_ ## frequency_units,		\
+-&sysfs_ ## name ## _average_duration_ ## duration_units,		\
+-&sysfs_ ## name ## _max_duration_ ## duration_units,			\
+-&sysfs_ ## name ## _last_ ## frequency_units,
 -
--/*
-- * One based indexing version:
-+ * array.
-  *
-- * With one based indexing each level of the tree starts at a power of two -
-- * good for cacheline alignment:
-+ * Consider using an eytzinger tree any time you would otherwise be doing binary
-+ * search over an array. Binary search is a worst case scenario for branch
-+ * prediction and prefetching, but in an eytzinger tree every node's children
-+ * are adjacent in memory, thus we can prefetch children before knowing the
-+ * result of the comparison, assuming multiple nodes fit on a cacheline.
-+ *
-+ * Two variants are provided, for one based indexing and zero based indexing.
-+ *
-+ * Zero based indexing is more convenient, but one based indexing has better
-+ * alignment and thus better performance because each new level of the tree
-+ * starts at a power of two, and thus if element 0 was cacheline aligned, each
-+ * new level will be as well.
-  */
- 
- static inline unsigned eytzinger1_child(unsigned i, unsigned child)
- {
--	EBUG_ON(child > 1);
-+	EYTZINGER_BUG_ON(child > 1);
- 
- 	return (i << 1) + child;
- }
-@@ -58,7 +68,7 @@ static inline unsigned eytzinger1_last(unsigned size)
- 
- static inline unsigned eytzinger1_next(unsigned i, unsigned size)
- {
--	EBUG_ON(i > size);
-+	EYTZINGER_BUG_ON(i > size);
- 
- 	if (eytzinger1_right_child(i) <= size) {
- 		i = eytzinger1_right_child(i);
-@@ -74,7 +84,7 @@ static inline unsigned eytzinger1_next(unsigned i, unsigned size)
- 
- static inline unsigned eytzinger1_prev(unsigned i, unsigned size)
- {
--	EBUG_ON(i > size);
-+	EYTZINGER_BUG_ON(i > size);
- 
- 	if (eytzinger1_left_child(i) <= size) {
- 		i = eytzinger1_left_child(i) + 1;
-@@ -101,7 +111,7 @@ static inline unsigned __eytzinger1_to_inorder(unsigned i, unsigned size,
- 	unsigned shift = __fls(size) - b;
- 	int s;
- 
--	EBUG_ON(!i || i > size);
-+	EYTZINGER_BUG_ON(!i || i > size);
- 
- 	i  ^= 1U << b;
- 	i <<= 1;
-@@ -126,7 +136,7 @@ static inline unsigned __inorder_to_eytzinger1(unsigned i, unsigned size,
- 	unsigned shift;
- 	int s;
- 
--	EBUG_ON(!i || i > size);
-+	EYTZINGER_BUG_ON(!i || i > size);
- 
- 	/*
- 	 * sign bit trick:
-@@ -164,7 +174,7 @@ static inline unsigned inorder_to_eytzinger1(unsigned i, unsigned size)
- 
- static inline unsigned eytzinger0_child(unsigned i, unsigned child)
- {
--	EBUG_ON(child > 1);
-+	EYTZINGER_BUG_ON(child > 1);
- 
- 	return (i << 1) + 1 + child;
- }
-@@ -231,11 +241,9 @@ static inline unsigned inorder_to_eytzinger0(unsigned i, unsigned size)
- 	     (_i) != -1;				\
- 	     (_i) = eytzinger0_next((_i), (_size)))
- 
--typedef int (*eytzinger_cmp_fn)(const void *l, const void *r, size_t size);
--
- /* return greatest node <= @search, or -1 if not found */
- static inline ssize_t eytzinger0_find_le(void *base, size_t nr, size_t size,
--					 eytzinger_cmp_fn cmp, const void *search)
-+					 cmp_func_t cmp, const void *search)
- {
- 	unsigned i, n = 0;
- 
-@@ -244,7 +252,7 @@ static inline ssize_t eytzinger0_find_le(void *base, size_t nr, size_t size,
- 
- 	do {
- 		i = n;
--		n = eytzinger0_child(i, cmp(search, base + i * size, size) >= 0);
-+		n = eytzinger0_child(i, cmp(search, base + i * size) >= 0);
- 	} while (n < nr);
- 
- 	if (n & 1) {
-@@ -274,8 +282,8 @@ static inline ssize_t eytzinger0_find_le(void *base, size_t nr, size_t size,
- 	_i;								\
- })
- 
--void eytzinger0_sort(void *, size_t, size_t,
--		    int (*cmp_func)(const void *, const void *, size_t),
--		    void (*swap_func)(void *, void *, size_t));
-+void eytzinger0_sort_r(void *, size_t, size_t,
-+		       cmp_r_func_t, swap_r_func_t, const void *);
-+void eytzinger0_sort(void *, size_t, size_t, cmp_func_t, swap_func_t);
- 
--#endif /* _EYTZINGER_H */
-+#endif /* _LINUX_EYTZINGER_H */
-diff --git a/lib/sort.c b/lib/sort.c
-index b399bf10d675..3dfa83d86bbb 100644
---- a/lib/sort.c
-+++ b/lib/sort.c
-@@ -290,3 +290,88 @@ void sort(void *base, size_t num, size_t size,
- 	return sort_r(base, num, size, _CMP_WRAPPER, SWAP_WRAPPER, &w);
- }
- EXPORT_SYMBOL(sort);
-+
-+#include <linux/eytzinger.h>
-+
-+static inline int eytzinger0_do_cmp(void *base, size_t n, size_t size,
-+			 cmp_r_func_t cmp_func, const void *priv,
-+			 size_t l, size_t r)
-+{
-+	return do_cmp(base + inorder_to_eytzinger0(l, n) * size,
-+		      base + inorder_to_eytzinger0(r, n) * size,
-+		      cmp_func, priv);
-+}
-+
-+static inline void eytzinger0_do_swap(void *base, size_t n, size_t size,
-+			   swap_r_func_t swap_func, const void *priv,
-+			   size_t l, size_t r)
-+{
-+	do_swap(base + inorder_to_eytzinger0(l, n) * size,
-+		base + inorder_to_eytzinger0(r, n) * size,
-+		size, swap_func, priv);
-+}
-+
-+void eytzinger0_sort_r(void *base, size_t n, size_t size,
-+		       cmp_r_func_t cmp_func,
-+		       swap_r_func_t swap_func,
-+		       const void *priv)
-+{
-+	int i, c, r;
-+
-+	if (!swap_func) {
-+		if (is_aligned(base, size, 8))
-+			swap_func = SWAP_WORDS_64;
-+		else if (is_aligned(base, size, 4))
-+			swap_func = SWAP_WORDS_32;
-+		else
-+			swap_func = SWAP_BYTES;
-+	}
-+
-+	/* heapify */
-+	for (i = n / 2 - 1; i >= 0; --i) {
-+		for (r = i; r * 2 + 1 < n; r = c) {
-+			c = r * 2 + 1;
-+
-+			if (c + 1 < n &&
-+			    eytzinger0_do_cmp(base, n, size, cmp_func, priv, c, c + 1) < 0)
-+				c++;
-+
-+			if (eytzinger0_do_cmp(base, n, size, cmp_func, priv, r, c) >= 0)
-+				break;
-+
-+			eytzinger0_do_swap(base, n, size, swap_func, priv, r, c);
-+		}
-+	}
-+
-+	/* sort */
-+	for (i = n - 1; i > 0; --i) {
-+		eytzinger0_do_swap(base, n, size, swap_func, priv, 0, i);
-+
-+		for (r = 0; r * 2 + 1 < i; r = c) {
-+			c = r * 2 + 1;
-+
-+			if (c + 1 < i &&
-+			    eytzinger0_do_cmp(base, n, size, cmp_func, priv, c, c + 1) < 0)
-+				c++;
-+
-+			if (eytzinger0_do_cmp(base, n, size, cmp_func, priv, r, c) >= 0)
-+				break;
-+
-+			eytzinger0_do_swap(base, n, size, swap_func, priv, r, c);
-+		}
-+	}
-+}
-+EXPORT_SYMBOL_GPL(eytzinger0_sort_r);
-+
-+void eytzinger0_sort(void *base, size_t n, size_t size,
-+		     cmp_func_t cmp_func,
-+		     swap_func_t swap_func)
-+{
-+	struct wrapper w = {
-+		.cmp  = cmp_func,
-+		.swap = swap_func,
-+	};
-+
-+	return eytzinger0_sort_r(base, n, size, _CMP_WRAPPER, SWAP_WRAPPER, &w);
-+}
-+EXPORT_SYMBOL_GPL(eytzinger0_sort);
+ #define ewma_add(ewma, val, weight, factor)				\
+ ({									\
+ 	(ewma) *= (weight) - 1;						\
 -- 
 2.43.0
 
