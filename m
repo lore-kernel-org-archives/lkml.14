@@ -1,32 +1,37 @@
-Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE5B311184;
-	Fri, 26 Jan 2024 06:29:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6349A67C47;
+	Fri, 26 Jan 2024 06:31:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706250566; cv=none; b=lmsrsc7rm5a9p7kptHpN1Nsgfz7KfbpbSOWxu1hCpfwGf+ez1nclXmJEcmkMl/50aO8TAiaRnwk84zIAtW59aSCcDo2eOvvibWAjI5FwkBPJFmU4YZuVh+6qDQlr8OLpdzmtNzdu7LUGd+W+ieDXI/4DWAW7OfZ5UMFXv89UNmY=
+	t=1706250668; cv=none; b=a9fjhJoyeCerm4OGHY+UEJobHyuVwrJIF7SRBTTXkjg5rN+nUCdHWlt6V2CzQwPzayrx6jCBx1+og0eynFJ12KY6FG4Fd3guNBQVJ26oX9VkBY/PZ7EPrXLHhcF70+A1uBognbtVf/R5xe8hbVOR19DURtM9Ha5/GU8pyH8bzHQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706250566; c=relaxed/simple;
-	bh=1oKgDqQmkrliWI/8sRTPCwLf90bKib+H0y0+WavBNMo=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=KuKHBXJuzmaakf18QWFVMD87+HhxlbqcatO1G6JHMOocYW+h/nAv4dtxtCQJ9oyPu/o8xskzP9G4fRGUPKOCrHgvAXnEZfaymoBAsAMUYT1uNGzjf6DFBjPJ3NtRFQz2mcwHkCzTx/MqkNZaOaffX5kMSp4hISZN0aBrt766w8w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=KI4HUP2Y; arc=none smtp.client-ip=115.124.30.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1706250668; c=relaxed/simple;
+	bh=uUGsIKVzyW06bLNQLY3dnO4VesNXnc6i+sIePN24WDA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bHDYZKMWnvPC1qYxbgjlK30Mkw9DbtGfiqBf+ilfoOskpGM3o1gRM06TG4AUw99uUYE4pkIaRh1ccuAsUCffwHKsJhfnvgv9k5oUPRtiPNG1BcwJwD3s/VSwC/ugXvpizUbPKe23UaXgK4JMH5tYGH5iPe2dtz0y5Zg19E5eCPQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arinc9.com; spf=pass smtp.mailfrom=arinc9.com; dkim=pass (2048-bit key) header.d=arinc9.com header.i=@arinc9.com header.b=fP3egsGb; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arinc9.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arinc9.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="KI4HUP2Y"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1706250553; h=Message-ID:Date:MIME-Version:Subject:From:To:Content-Type;
-	bh=NT8hdE7ND84hHJW5HWIw/4V07Z4gRS7n8kgPyH9udd8=;
-	b=KI4HUP2Y80uIOGY/aCB3L7VHV2S45yx2GiRULjXq+gtD0GL7xsarI+dKI3HETPGN1lPzudqIvjzimRCM1UXjS3oGA6atD3q002qIwUZTs/YVp5o3Q87dtrPSzEw+P5sy6vHDskIKelV5HlaB+/DXRqAiy/Docqvq1DXO7ahPE8E=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R691e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046051;MF=jefflexu@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0W.Moqkw_1706250552;
-Received: from 30.221.147.50(mailfrom:jefflexu@linux.alibaba.com fp:SMTPD_---0W.Moqkw_1706250552)
-          by smtp.aliyun-inc.com;
-          Fri, 26 Jan 2024 14:29:13 +0800
-Message-ID: <b4e6b930-ed06-4e0d-b17d-61d05381ac92@linux.alibaba.com>
-Date: Fri, 26 Jan 2024 14:29:09 +0800
+	dkim=pass (2048-bit key) header.d=arinc9.com header.i=@arinc9.com header.b="fP3egsGb"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 2DBE940007;
+	Fri, 26 Jan 2024 06:30:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arinc9.com; s=gm1;
+	t=1706250660;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0DUdyEK0UfNN06dDURtYyunSegOPRRffSVvE4FBPvac=;
+	b=fP3egsGbl3q0y3kh8MvF+ob8MH/ijtiiuqXHeGQg/B/YPbBIv7SQsn74frUO2IqWp7dnhS
+	ZIgU0ZCgUmwxUsZpWrvyJj97gvIh6/HNmMZtTIvvVIP6K7865dIWH8AZ99I4u4RAXpI+GT
+	UhwE6MvKd55q81LLBznsKteQF07jba4c7sJn315n/uq68K8hFwmehUvnVS9bqUP5084xFC
+	POEYeiy5qoFN9mJp5nhoa3bzbD5EuTAj6gSsGRlkSgbK62ydzq6+u7lO5A5cy0uj1mloq2
+	3+zqVzexhBZ2RGaDhD0d9O8JoojXQtLj460K/yyPtO/t8HhoShKP2xPTg1+MXw==
+Message-ID: <c7d87124-4351-4996-8095-e8b95cc15f27@arinc9.com>
+Date: Fri, 26 Jan 2024 09:30:54 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -34,126 +39,135 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] fuse: increase FUSE_MAX_MAX_PAGES limit
+Subject: Re: [PATCH net] net: dsa: mt7530: fix 10M/100M speed on MT7988 switch
 Content-Language: en-US
-From: Jingbo Xu <jefflexu@linux.alibaba.com>
-To: Miklos Szeredi <miklos@szeredi.hu>
-Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
- zhangjiachen.jaycee@bytedance.com
-References: <20240124070512.52207-1-jefflexu@linux.alibaba.com>
- <CAJfpegs10SdtzNXJfj3=vxoAZMhksT5A1u5W5L6nKL-P2UOuLQ@mail.gmail.com>
- <6e6bef3d-dd26-45ce-bc4a-c04a960dfb9c@linux.alibaba.com>
-In-Reply-To: <6e6bef3d-dd26-45ce-bc4a-c04a960dfb9c@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+To: Daniel Golle <daniel@makrotopia.org>
+Cc: DENG Qingfang <dqfext@gmail.com>, Sean Wang <sean.wang@mediatek.com>,
+ Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>,
+ Vladimir Oltean <olteanv@gmail.com>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ John Crispin <john@phrozen.org>
+References: <a5b04dfa8256d8302f402545a51ac4c626fdba25.1706071272.git.daniel@makrotopia.org>
+ <accda24c-9f12-4cfe-b532-a9c60ec97fca@arinc9.com>
+ <ZbKJv84vGXInRIo1@makrotopia.org>
+ <99a038f3-18d2-44ca-8135-1faf7a37892a@arinc9.com>
+ <ZbL1VEcH3RgHZKsq@makrotopia.org>
+From: =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
+In-Reply-To: <ZbL1VEcH3RgHZKsq@makrotopia.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-GND-Sasl: arinc.unal@arinc9.com
 
-
-
-On 1/24/24 8:47 PM, Jingbo Xu wrote:
-> 
-> 
-> On 1/24/24 8:23 PM, Miklos Szeredi wrote:
->> On Wed, 24 Jan 2024 at 08:05, Jingbo Xu <jefflexu@linux.alibaba.com> wrote:
+On 26.01.2024 02:57, Daniel Golle wrote:
+> On Fri, Jan 26, 2024 at 01:44:57AM +0300, Arınç ÜNAL wrote:
+>> On 25.01.2024 19:18, Daniel Golle wrote:
+>>> On Thu, Jan 25, 2024 at 12:49:19PM +0300, Arınç ÜNAL wrote:
+>>>> On 24/01/2024 08:17, Daniel Golle wrote:
+>>>>> Setup PMCR port register for actual speed and duplex on internally
+>>>>> connected PHYs of the MT7988 built-in switch. This fixes links with
+>>>>> speeds other than 1000M.
+>>>>>
+>>>>> Fixes: ("110c18bfed414 net: dsa: mt7530: introduce driver for MT7988 built-in switch")
+>>>>> Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+>>>>
+>>>> Acked-by: Arınç ÜNAL <arinc.unal@arinc9.com>
+>>>>
+>>>> I'm wondering why we manually set speed and duplex for these interface
+>>>> modes in the first place. I don't how it works for
+>>>> PHY_INTERFACE_MODE_INTERNAL but, at least for PHY_INTERFACE_MODE_TRGMII and
+>>>> 802.3z interfaces, phylink should already supply proper speed and duplex.
 >>>
->>> From: Xu Ji <laoji.jx@alibaba-inc.com>
+>>> It's true that duplex should always be set to full-duplex already by
+>>> phylink. However, speed could be 2500MBit/s (2500Base-X) or 2000MBit/s
+>>> (?, TRGMII) and we yet need to program the PCR like if it was
+>>> 1000MBit/s.
 >>>
->>> Increase FUSE_MAX_MAX_PAGES limit, so that the maximum data size of a
->>> single request is increased.
+>>> Regarding the INTERNAL case: it was added by mistake. In case of
+>>> MT7988, all ports of the switch are connected via INTERNAL links,
+>>> however, the PHYs still need adjustment of the PCR register just like
+>>> on all other MT753x switches and the CPU port is setup elsewhere
+>>> anyway.
 >>
->> The only worry is about where this memory is getting accounted to.
->> This needs to be thought through, since the we are increasing the
->> possible memory that an unprivileged user is allowed to pin.
-
-Apart from the request size, the maximum number of background requests,
-i.e. max_background (12 by default, and configurable by the fuse
-daemon), also limits the size of the memory that an unprivileged user
-can pin.  But yes, it indeed increases the number proportionally by
-increasing the maximum request size.
-
-
+>> It's not necessarily PHYs needing adjustment of the port MAC control
+>> register.
+> 
+> It's not the PHYs which need adjustment but the MAC PMCR register which
+> does.
+> 
+>> After reset, speed, duplex mode, etc. will be determined by polling
+>> the PHY connected to the switch MAC.
+> 
+> Yes, but as it is a DSA driver we don't use **hardware** PHY polling
+> and keep that off. Instead, PHY interrupts or software PHY polling is
+> used to have Linux determine the link properties.
+> We're then forcing these properties on the MAC port of the switch.
+> 
+>> on the PMCR because we're also configuring switch MACs that are not
+>> connected to PHYs, meaning the switch cannot determine these properties by
+>> polling a PHY.
+> 
+> The switch **never** determines these properties itself when using the
+> DSA driver. It has a facility to do so, and yes, when accessing
+> Ethernet in U-Boot or when using the 'swconfig'-based driver then this
+> facility is used. But, I repeat, when using DSA we do not use hardware
+> PHY polling. We poll (or rather: react to interrupts) in software
+> instead.
 > 
 >>
+>>  From what I understand, this code block is for overriding the speed and
+>> duplex variables to make the operations on the PMCR below work. It seems
+>> that this is actually only useful for PHY_INTERFACE_MODE_2500BASEX.
+>> PHY_INTERFACE_MODE_TRGMII is given SPEED_1000 by
+>> drivers/net/phy/phylink.c:phylink_interface_max_speed().
+>> PHY_INTERFACE_MODE_2500BASEX is given SPEED_2500. Overriding the duplex
+>> variable looks unnecessary.
 >>
+>> Your patch here doesn't affect CPU ports because MT7531 and MT7988 PMCRs
+> 
+> This patch does not intend to affect the CPU port. As I've already
+> said in my previous reply "[...] the CPU port is setup elsewhere
+> anyway."
+> 
+> Maybe it wasn't clear, but I meant that the CPU port settings are
+> intentionally unaffected by this patch.
+> 
+> It is intended to affect user ports which with phy-mode = "internal";
+> set in DTS -- here we **do** need to set PMCR according the external
+> link speed and duplex.
+> 
+> 
+>> are configured with cpu_port_config before mt753x_phylink_mac_link_up(),
+>> and PHY_INTERFACE_MODE_INTERNAL is not used for MT7530 which, for MT7530,
+>> PMCRs will be set only on mt753x_phylink_mac_link_up().
 >>
->>>
->>> This optimizes the write performance especially when the optimal IO size
->>> of the backend store at the fuse daemon side is greater than the original
->>> maximum request size (i.e. 1MB with 256 FUSE_MAX_MAX_PAGES and
->>> 4096 PAGE_SIZE).
->>>
->>> Be noted that this only increases the upper limit of the maximum request
->>> size, while the real maximum request size relies on the FUSE_INIT
->>> negotiation with the fuse daemon.
->>>
->>> Signed-off-by: Xu Ji <laoji.jx@alibaba-inc.com>
->>> Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
->>> ---
->>> I'm not sure if 1024 is adequate for FUSE_MAX_MAX_PAGES, as the
->>> Bytedance floks seems to had increased the maximum request size to 8M
->>> and saw a ~20% performance boost.
+>> PMCR_FORCE_SPEED_1000 is set on cpu_port_config. If someone were to get rid
+>> of cpu_port_config because of its utter uselessness, PMCR_FORCE_SPEED_1000
+>> would not be set, causing the link between port 6 MAC and SoC MAC to break.
 >>
->> The 20% is against the 256 pages, I guess. 
+>> In conclusion, I will add "case SPEED_10000:" to the operations where the
+>> speed and EEE bits are set on my patch for getting rid of cpu_port_config.
 > 
-> Yeah I guess so.
+> PMCR needs to be set according to actual link speed for built-in TP
+> PHYs. This is true for all mt7530 variants including MT7988.
 > 
+> Maybe the confusion here is that on MT7988 we use 'internal' phy-mode
+> for both, the switch CPU port's link to mtk_eth_soc gmac0 as well as
+> the links to the 4 built-in 1GE switch PHYs.
 > 
->> It would be interesting to
->> see the how the number of pages per request affects performance and
->> why.
+> The latter were affected by wrongly overriding speed and duplex in
+> case phy-mode is set to "internal", which should not have been put
+> there (by me) in first place.
 > 
-> To be honest, I'm not sure the root cause of the performance boost in
-> bytedance's case.
-> 
-> While in our internal use scenario, the optimal IO size of the backend
-> store at the fuse server side is, e.g. 4MB, and thus if the maximum
-> throughput can not be achieved with current 256 pages per request. IOW
-> the backend store, e.g. a distributed parallel filesystem, get optimal
-> performance when the data is aligned at 4MB boundary.  I can ask my folk
-> who implements the fuse server to give more background info and the
-> exact performance statistics.
+> Let's just remove it, ok?
 
-Here are more details about our internal use case:
+I don't see anything I disagree with on your reply. I've made my response
+to explain what I understand and how I will adapt my future changes
+accordingly with this patch so as to prevent introducing another issue.
+I've already acknowledged this patch!
 
-We have a fuse server used in our internal cloud scenarios, while the
-backend store is actually a distributed filesystem.  That is, the fuse
-server actually plays as the client of the remote distributed
-filesystem.  The fuse server forwards the fuse requests to the remote
-backing store through network, while the remote distributed filesystem
-handles the IO requests, e.g. process the data from/to the persistent store.
-
-Then it comes the details of the remote distributed filesystem when it
-process the requested data with the persistent store.
-
-[1] The remote distributed filesystem uses, e.g. a 8+3 mode, EC
-(ErasureCode), where each fixed sized user data is split and stored as 8
-data blocks plus 3 extra parity blocks. For example, with 512 bytes
-block size, for each 4MB user data, it's split and stored as 8 (512
-bytes) data blocks with 3 (512 bytes) parity blocks.
-
-It also utilize the stripe technology to boost the performance, for
-example, there are 8 data disks and 3 parity disks in the above 8+3 mode
-example, in which each stripe consists of 8 data blocks and 3 parity
-blocks.
-
-[2] To avoid data corruption on power off, the remote distributed
-filesystem commit a O_SYNC write right away once a write (fuse) request
-received.  Since the EC described above, when the write fuse request is
-not aligned on 4MB (the stripe size) boundary, say it's 1MB in size, the
-other 3MB is read from the persistent store first, then compute the
-extra 3 parity blocks with the complete 4MB stripe, and finally write
-the 8 data blocks and 3 parity blocks down.
-
-
-Thus the write amplification is un-neglectable and is the performance
-bottleneck when the fuse request size is less than the stripe size.
-
-Here are some simple performance statistics with varying request size.
-With 4MB stripe size, there's ~3x bandwidth improvement when the maximum
-request size is increased from 256KB to 3.9MB, and another ~20%
-improvement when the request size is increased to 4MB from 3.9MB.
-
-
-
--- 
-Thanks,
-Jingbo
+Arınç
