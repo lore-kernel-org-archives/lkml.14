@@ -1,106 +1,95 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9583D2374C;
-	Fri, 26 Jan 2024 21:02:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B89B249EA
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 21:02:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706302929; cv=none; b=XpKs77LKRxwlK+9RGtnfxjHp+m+/iBSfKl86ywM4Qw6qEaGDDP3JERmO1TKBAOHbsxh9J0aYHptcSwH7BFRKNoh7f4el1ti9IytmMUcNNdPohk9pRAB4ZO77F1LjzSTOhaV/AARsFZb+QsOAkLjFPewU3HSCKslvGHCHsGMJ5/g=
+	t=1706302956; cv=none; b=tMlfp/stmklGhnjs4Hc0diwxe1a4zhJCeVn2MlKfzedcjl9S3k3Th8SNs53EVAn7i48vo97RJ0ahH4kH8ohibF0SF03dnxIYeMq1VAsdcbFlx4N7th8CbegnVotEAml7CfYhc1U+8cTfLplrtOfcqXGGPYrIVVgcHp8JnVSEqbQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706302929; c=relaxed/simple;
-	bh=mn39oHpKfrn31dhBf6OIk09Xa6Qf/ZTs2k7yrfk5adA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=A60iBnePNS86HPL3VdGrKJ7MubGXYqvSgcV0z/H/Y0/W6HfgzCAi9hHkUDoPE+jW7FL/JfEmrHMMOHNTUB0KkcN+A9O5ec9sApAKdU+xcOg5G3x9dJzVvzvf2u6HZK5tIEwtfOqrqv+QPkV60/ytK1b6iV+gPwZsvJTRAyoRFNw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=U3CR9W38; arc=none smtp.client-ip=89.208.246.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
+	s=arc-20240116; t=1706302956; c=relaxed/simple;
+	bh=NhbVdYdf9iXK0nhJbVHWyWMtXRTj04J6yLcrgUAT+JA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Zk6QTbfxEWNlvuRvdLPSXobfemeq8au9wjXYrZ+6X7NjYxlJcGy6lMQnI9xW5D8SSbhIemdERuoDS4hQGE7tLnaTLHxXgM+rD5+Xlnma3RnbDO3zgnvv34A3G0EUUUgku0DVru5wvxhTwghOCSWzXLJGOEqdfwqZhnTkiXLj9+A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BlL8imhS; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="U3CR9W38"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1706302923;
-	bh=mn39oHpKfrn31dhBf6OIk09Xa6Qf/ZTs2k7yrfk5adA=;
-	h=From:To:Cc:Subject:Date:From;
-	b=U3CR9W38GcKEHTnb5MkhwcafV1zLklKgHN8srBonMiiLOgJBLd43aKdrY8oYvZ4nj
-	 5RSct1lbhRLPK69gRBaey0Zl9kJNiPMXfP2vJxkiEJfp7CDxyHVfE4WYGDwXtqY6CB
-	 70FVtUnT7uAopEpSWiOQm07xsbjC6ekCHIGhlNOo=
-Received: from stargazer.. (unknown [IPv6:240e:358:1181:9d00:dc73:854d:832e:3])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-384) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id BFBFD66A22;
-	Fri, 26 Jan 2024 16:01:58 -0500 (EST)
-From: Xi Ruoyao <xry111@xry111.site>
-To: Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	linux-mips@vger.kernel.org
-Cc: Ralf Baechle <ralf@linux-mips.org>,
-	"Maciej W. Rozycki" <macro@orcam.me.uk>,
-	YunQiang Su <wzssyqa@gmail.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	linux-kernel@vger.kernel.org,
-	Xi Ruoyao <xry111@xry111.site>,
-	stable@vger.linux.org
-Subject: [PATCH] mips: Call lose_fpu(0) before initializing fcr31 in mips_set_personality_nan
-Date: Sat, 27 Jan 2024 04:59:22 +0800
-Message-ID: <20240126205920.11487-3-xry111@xry111.site>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BlL8imhS"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1d5ce88b51cso41795ad.0
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 13:02:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1706302955; x=1706907755; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NhbVdYdf9iXK0nhJbVHWyWMtXRTj04J6yLcrgUAT+JA=;
+        b=BlL8imhStvGLGGjFAbA3iU/YdGZ7TgalIHKFwL7nRIJONUyeocsxI1yilh2/Ie78J9
+         mqxxAF0UXl0cr4tRza1rPI746IWo2LcBruq+WfoAGlAA3Kf3vrn2jVTetVLQyy1DHA1f
+         9DUB3ZNp6DyvaQ0w1UlhPuk4Ro4JlnozpgDX7RZCaqp+0TscT/Q/yWVpIlDNN4Z9jcQC
+         EGPO0jOMR9ODPzBSLSnOggr01DhrEJ0wQAniSyhnA0C9Da58duHR0d4rhBr8YO947/76
+         VZTB/pEhusHa6oy9fgMOXECWfCf55y4+sRclAue6Db0D5OzXBu2kQkHCeECe4iW6ksVw
+         bc/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706302955; x=1706907755;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=NhbVdYdf9iXK0nhJbVHWyWMtXRTj04J6yLcrgUAT+JA=;
+        b=mm8V6NrGQn1iroCCHzwffZ/sqfx0zHj+vzRfQq6puZjLc//aLLR6850L9sZ2K1YmkZ
+         XDN664E0OH0VbusE0XbhKlrTRW89fLo3sCtgjEc5QVYyp+1/k61NzyKt2p9K3WGNYQzq
+         bhD1FgBJ428Ew/OiFWHMYXiHnYaxu7Xgh7xjjm3YT2sChN6O9vWEKcpGuiw0kXIGuDTF
+         mHzrGHFVjVMzOkGfg5X/5JkZi/U/ruhgtkAr+FJUd4Eh5FAn/fAsYk0qWS1x846wpmUh
+         pbZEBOtrL2HKsGswoQEyP1SR/A8+pDpB7E9kE9Zq7gOmgTkZoq+LW9ymios5Ejiz93Nt
+         YU9Q==
+X-Gm-Message-State: AOJu0YwsNaBQPxFPV1dfqtIJJ8nDW/ZjXiF3mviOtzIDBg1rezq9nLeu
+	+/YUA5xBNn4Pi7kZ1cMFWLQhCQx/ssXqT+zCGnZmwlCjaqbfGjMdUa1sLqtnLb0ovvb6fjr17h6
+	+OYrh1G2yqny3OYWGuT3roUr5qajlBhiafubS
+X-Google-Smtp-Source: AGHT+IEHXifKfydOBlCtNuN8Oq2e9oDoysKPEPKuvtnmdtJeP83zNTX6sEG9mhcN/FZmToVFalnIx8RawAX1m1VVAv0=
+X-Received: by 2002:a17:902:d485:b0:1d7:3ad7:f23e with SMTP id
+ c5-20020a170902d48500b001d73ad7f23emr294723plg.4.1706302954390; Fri, 26 Jan
+ 2024 13:02:34 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240126203353.1163059-1-tjmercier@google.com>
+In-Reply-To: <20240126203353.1163059-1-tjmercier@google.com>
+From: Shakeel Butt <shakeelb@google.com>
+Date: Fri, 26 Jan 2024 13:02:22 -0800
+Message-ID: <CALvZod5_vZJFc0i0nGuEj3xt=9p9Jny682LRyb5oQpHvVk_ewg@mail.gmail.com>
+Subject: Re: [PATCH] mm: memcg: Don't periodically flush stats when memcg is disabled
+To: "T.J. Mercier" <tjmercier@google.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, 
+	Roman Gushchin <roman.gushchin@linux.dev>, Muchun Song <muchun.song@linux.dev>, 
+	Andrew Morton <akpm@linux-foundation.org>, android-mm@google.com, 
+	Minchan Kim <minchan@google.com>, cgroups@vger.kernel.org, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-If we still own the FPU after initializing fcr31, when we are preempted
-the dirty value in the FPU will be read out and stored into fcr31,
-clobbering our setting.  This can cause an improper floating-point
-environment after execve().  For example:
+On Fri, Jan 26, 2024 at 12:34=E2=80=AFPM T.J. Mercier <tjmercier@google.com=
+> wrote:
+>
+> The root memcg is onlined even when memcg is disabled. When it's onlined
+> a 2 second periodic stat flush is started, but no stat flushing is
+> required when memcg is disabled because there can be no child memcgs.
+> Most calls to flush memcg stats are avoided when memcg is disabled as a
+> result of the mem_cgroup_disabled check [1] added in [2], but the
 
-    zsh% cat measure.c
-    #include <fenv.h>
-    int main() { return fetestexcept(FE_INEXACT); }
-    zsh% cc measure.c -o measure -lm
-    zsh% echo $((1.0/3)) # raising FE_INEXACT
-    0.33333333333333331
-    zsh% while ./measure; do ; done
-    (stopped in seconds)
+Remove [1] reference and instead of [2] add the actual commit reference.
 
-Call lose_fpu(0) before setting fcr31 to prevent this.
+> periodic flushing started in mem_cgroup_css_online is not. Skip it.
+>
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tr=
+ee/mm/memcontrol.c?h=3Dv6.8-rc1#n753
+> [2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/co=
+mmit/?id=3D7d7ef0a4686abe43cd76a141b340a348f45ecdf2
+>
+> Fixes: aa48e47e3906 ("memcg: infrastructure to flush memcg stats")
+> Reported-by: Minchan Kim <minchan@google.com>
+> Signed-off-by: T.J. Mercier <tjmercier@google.com>
 
-Closes: https://lore.kernel.org/linux-mips/7a6aa1bbdbbe2e63ae96ff163fab0349f58f1b9e.camel@xry111.site/
-Fixes: 9b26616c8d9d ("MIPS: Respect the ISA level in FCSR handling")
-Cc: stable@vger.linux.org
-Signed-off-by: Xi Ruoyao <xry111@xry111.site>
----
- arch/mips/kernel/elf.c | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/arch/mips/kernel/elf.c b/arch/mips/kernel/elf.c
-index 5582a4ca1e9e..7aa2c2360ff6 100644
---- a/arch/mips/kernel/elf.c
-+++ b/arch/mips/kernel/elf.c
-@@ -11,6 +11,7 @@
- 
- #include <asm/cpu-features.h>
- #include <asm/cpu-info.h>
-+#include <asm/fpu.h>
- 
- #ifdef CONFIG_MIPS_FP_SUPPORT
- 
-@@ -309,6 +310,11 @@ void mips_set_personality_nan(struct arch_elf_state *state)
- 	struct cpuinfo_mips *c = &boot_cpu_data;
- 	struct task_struct *t = current;
- 
-+	/* Do this early so t->thread.fpu.fcr31 won't be clobbered in case
-+	 * we are preempted before the lose_fpu(0) in start_thread.
-+	 */
-+	lose_fpu(0);
-+
- 	t->thread.fpu.fcr31 = c->fpu_csr31;
- 	switch (state->nan_2008) {
- 	case 0:
--- 
-2.43.0
-
+Acked-by: Shakeel Butt <shakeelb@google.com>
