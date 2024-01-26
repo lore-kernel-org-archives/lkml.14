@@ -1,185 +1,148 @@
-Received: from mail.aperture-lab.de (mail.aperture-lab.de [116.203.183.178])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 820911CF8B;
-	Fri, 26 Jan 2024 14:44:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.183.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C2571CFBB
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 14:44:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706280300; cv=none; b=FKFmztut/kZ18CV6ETVyaEC34FaYvUQoK6TrdzwIg91aN3PiyuUrd5XuaMEZH6ZIuhieilQh8HWVbGxh5hQ1PenZHr1y6UGJdcx3MatZkemB/KeD6BbRBPJcTOEH80p43llWZ7bk3Q77GXvTuf34Lo1jyaYo/QQUGy3rh2RcGdQ=
+	t=1706280300; cv=none; b=MU7JlGaE9h6ZhZ2iLuKTqHB0avdmPbx02AhE3LnvpcVQTg/ovUGVqf9Cdn7NbXox3HYg6W/MGO3fOXfDtJyjBqf/3Zmm64kZH+e9Ini+lEeOrSzvqJcV5d6XF6eG/xgQ0jX3fU7Plh1xz2UnXF4coMsGu7cBAuY1xxS2QgRBgWo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1706280300; c=relaxed/simple;
-	bh=uHtepOo8gbOXT2LRNekmrAe1Ci4v1SSIgleK9lZ3iak=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Yd/wNtyr2sjnkD/29L34Udsqmw/M2hRvIVJtTJdKpTiA3foPe01to4lT4NgkaciDvf/aHCC3XiEkgC0hYBeSiO/Hn7UeuNdui71WIRoPqxUpkMwk+kFkRv7ljasVmWRcPDyvk/VXFHqorPkCzcnmPBGi04CXGFhk4uVeQiq+/vE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=c0d3.blue; spf=pass smtp.mailfrom=c0d3.blue; arc=none smtp.client-ip=116.203.183.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=c0d3.blue
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=c0d3.blue
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 25D5040B8F;
-	Fri, 26 Jan 2024 15:36:37 +0100 (CET)
-From: =?UTF-8?q?Linus=20L=C3=BCssing?= <linus.luessing@c0d3.blue>
-To: netdev@vger.kernel.org
-Cc: bridge@lists.linux.dev,
-	b.a.t.m.a.n@lists.open-mesh.org,
-	linux-kernel@vger.kernel.org,
-	Roopa Prabhu <roopa@nvidia.com>,
-	Nikolay Aleksandrov <razor@blackwall.org>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	=?UTF-8?q?Linus=20L=C3=BCssing?= <linus.luessing@c0d3.blue>
-Subject: [PATCH net] bridge: mcast: fix disabled snooping after long uptime
-Date: Fri, 26 Jan 2024 15:36:07 +0100
-Message-ID: <20240126143607.5649-1-linus.luessing@c0d3.blue>
-X-Mailer: git-send-email 2.42.0
+	bh=bym/ajJOjcQl8LKnRUAO/z1T8s/laBYaWYjbSMZv0tE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ETb59M4Cw176o3dQvvZaXmZPTNX2JR6uRMlCGy4kr6U0rBqgulBu9zLLKais/ZwCrKs8Sl7QSUnSLO5a1VcUEAn2/nKOtVjOxobFw8rRT/eLmTs8or4iHXh2npCdosilZXztuNHhu7Tn/55PPrNQh+BA8Hjg2rTz+wrCY8xGzjA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nQKmbnMh; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nQKmbnMh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706280299; x=1737816299;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=bym/ajJOjcQl8LKnRUAO/z1T8s/laBYaWYjbSMZv0tE=;
+  b=nQKmbnMhRtA1aq2I7/9AyObPl03r8xvWETYYcABh72eR9oOvJQ6P4Ndk
+   FqpD7ody29G2dAGuBM6X/S2Xh5/7JcYxKQBZ35Xm+vKIdg5AzSFlPEzgC
+   5XeKoFQ/EKBLW2VT0JSjVJK2J2V+lAh/fz4PiUV5aqmJ9bAVgkEzOA0uu
+   OkDavpDnJeZKtM50MBhiwFbMkxEJYi5F/AfHG8Nb3zpRHhrNLMnnFfjHh
+   XZufoliYz8gI1VSwb40Iyvlvo/LM/NdxAkJS4R0SEUXDM2Pw0UhU7jOVQ
+   hv8iHsTF4nJZj/f5KsfoivaMqNsJjImtKAovpZ1/VxSbej545orywFciY
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="2371526"
+X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
+   d="scan'208";a="2371526"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2024 06:44:58 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="821159831"
+X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
+   d="scan'208";a="821159831"
+Received: from stinkpipe.fi.intel.com (HELO stinkbox) ([10.237.72.74])
+  by orsmga001.jf.intel.com with SMTP; 26 Jan 2024 06:44:54 -0800
+Received: by stinkbox (sSMTP sendmail emulation); Fri, 26 Jan 2024 16:44:53 +0200
+Date: Fri, 26 Jan 2024 16:44:53 +0200
+From: Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
+To: wangxiaoming321 <xiaoming.wang@intel.com>
+Cc: lucas.demarchi@intel.com, ogabbay@kernel.org,
+	thomas.hellstrom@linux.intel.com, maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com,
+	daniel@ffwll.ch, intel-xe@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drm/xe/display: Fix memleak in display initialization
+Message-ID: <ZbPFZVdToW389mj_@intel.com>
+References: <20240125063633.989944-1-xiaoming.wang@intel.com>
+ <20240126143433.997078-1-xiaoming.wang@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
+In-Reply-To: <20240126143433.997078-1-xiaoming.wang@intel.com>
+X-Patchwork-Hint: comment
 
-The original idea of the delay_time check was to not apply multicast
-snooping too early when an MLD querier appears. And to instead wait at
-least for MLD reports to arrive before switching from flooding to group
-based, MLD snooped forwarding, to avoid temporary packet loss.
+On Fri, Jan 26, 2024 at 10:34:33PM +0800, wangxiaoming321 wrote:
+> intel_power_domains_init has been called twice in xe_device_probe:
+> xe_device_probe -> xe_display_init_nommio -> intel_power_domains_init(xe)
+> xe_device_probe -> xe_display_init_noirq -> intel_display_driver_probe_noirq
+> -> intel_power_domains_init(i915)
 
-However in a batman-adv mesh network it was noticed that after 248 days of
-uptime 32bit MIPS based devices would start to signal that they had
-stopped applying multicast snooping due to missing queriers - even though
-they were the elected querier and still sending MLD queries themselves.
+Why are you calling it twice?
 
-While time_is_before_jiffies() generally is safe against jiffies
-wrap-arounds, like the code comments in jiffies.h explain, it won't
-be able to track a difference larger than ULONG_MAX/2. With a 32bit
-large jiffies and one jiffies tick every 10ms (CONFIG_HZ=100) on these MIPS
-devices running OpenWrt this would result in a difference larger than
-ULONG_MAX/2 after 248 (= 2^32/100/60/60/24/2) days and
-time_is_before_jiffies() would then start to return false instead of
-true. Leading to multicast snooping not being applied to multicast
-packets anymore.
+> 
+> It needs add a flag to avoid power_domains->power_wells double malloc.
+> 
+> unreferenced object 0xffff88811150ee00 (size 512):
+>   comm "systemd-udevd", pid 506, jiffies 4294674198 (age 3605.560s)
+>   hex dump (first 32 bytes):
+>     10 b4 9d a0 ff ff ff ff ff ff ff ff ff ff ff ff  ................
+>     ff ff ff ff ff ff ff ff 00 00 00 00 00 00 00 00  ................
+>   backtrace:
+>     [<ffffffff8134b901>] __kmem_cache_alloc_node+0x1c1/0x2b0
+>     [<ffffffff812c98b2>] __kmalloc+0x52/0x150
+>     [<ffffffffa08b0033>] __set_power_wells+0xc3/0x360 [xe]
+>     [<ffffffffa08562fc>] xe_display_init_nommio+0x4c/0x70 [xe]
+>     [<ffffffffa07f0d1c>] xe_device_probe+0x3c/0x5a0 [xe]
+>     [<ffffffffa082e48f>] xe_pci_probe+0x33f/0x5a0 [xe]
+>     [<ffffffff817f2187>] local_pci_probe+0x47/0xa0
+>     [<ffffffff817f3db3>] pci_device_probe+0xc3/0x1f0
+>     [<ffffffff8192f2a2>] really_probe+0x1a2/0x410
+>     [<ffffffff8192f598>] __driver_probe_device+0x78/0x160
+>     [<ffffffff8192f6ae>] driver_probe_device+0x1e/0x90
+>     [<ffffffff8192f92a>] __driver_attach+0xda/0x1d0
+>     [<ffffffff8192c95c>] bus_for_each_dev+0x7c/0xd0
+>     [<ffffffff8192e159>] bus_add_driver+0x119/0x220
+>     [<ffffffff81930d00>] driver_register+0x60/0x120
+>     [<ffffffffa05e50a0>] 0xffffffffa05e50a0
+> 
+> Signed-off-by: wangxiaoming321 <xiaoming.wang@intel.com>
+> ---
+>  drivers/gpu/drm/i915/display/intel_display_power.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/i915/display/intel_display_power.c b/drivers/gpu/drm/i915/display/intel_display_power.c
+> index bf9685acf75a..3b48a1cb7c54 100644
+> --- a/drivers/gpu/drm/i915/display/intel_display_power.c
+> +++ b/drivers/gpu/drm/i915/display/intel_display_power.c
+> @@ -36,6 +36,8 @@
+>  	for_each_power_well_reverse(__dev_priv, __power_well)		        \
+>  		for_each_if(test_bit((__domain), (__power_well)->domains.bits))
+>  
+> +static int intel_power_domains_init_flag = 0;
+> +
+>  const char *
+>  intel_display_power_domain_str(enum intel_display_power_domain domain)
+>  {
+> @@ -1016,6 +1018,11 @@ int intel_power_domains_init(struct drm_i915_private *dev_priv)
+>  {
+>  	struct i915_power_domains *power_domains = &dev_priv->display.power.domains;
+>  
+> +	if(intel_power_domains_init_flag == 1)
+> +		return 0;
+> +
+> +	intel_power_domains_init_flag++;
 
-Fix this issue by using a proper timer_list object which won't have this
-ULONG_MAX/2 difference limitation.
+Consider what happens when you have multiple Intel GPUs in the system...
 
-Fixes: b00589af3b04 ("bridge: disable snooping if there is no querier")
-Signed-off-by: Linus LÃ¼ssing <linus.luessing@c0d3.blue>
----
- net/bridge/br_multicast.c | 20 +++++++++++++++-----
- net/bridge/br_private.h   |  4 ++--
- 2 files changed, 17 insertions(+), 7 deletions(-)
+> +
+>  	dev_priv->display.params.disable_power_well =
+>  		sanitize_disable_power_well_option(dev_priv,
+>  						   dev_priv->display.params.disable_power_well);
+> @@ -1041,6 +1048,7 @@ int intel_power_domains_init(struct drm_i915_private *dev_priv)
+>   */
+>  void intel_power_domains_cleanup(struct drm_i915_private *dev_priv)
+>  {
+> +	intel_power_domains_init_flag = 0;
+>  	intel_display_power_map_cleanup(&dev_priv->display.power.domains);
+>  }
+>  
+> -- 
+> 2.25.1
 
-diff --git a/net/bridge/br_multicast.c b/net/bridge/br_multicast.c
-index d7d021af1029..df14ee36ea20 100644
---- a/net/bridge/br_multicast.c
-+++ b/net/bridge/br_multicast.c
-@@ -1762,6 +1762,10 @@ static void br_ip6_multicast_querier_expired(struct timer_list *t)
- }
- #endif
- 
-+static inline void br_multicast_query_delay_expired(struct timer_list *t)
-+{
-+}
-+
- static void br_multicast_select_own_querier(struct net_bridge_mcast *brmctx,
- 					    struct br_ip *ip,
- 					    struct sk_buff *skb)
-@@ -3198,7 +3202,7 @@ br_multicast_update_query_timer(struct net_bridge_mcast *brmctx,
- 				unsigned long max_delay)
- {
- 	if (!timer_pending(&query->timer))
--		query->delay_time = jiffies + max_delay;
-+		mod_timer(&query->delay_timer, jiffies + max_delay);
- 
- 	mod_timer(&query->timer, jiffies + brmctx->multicast_querier_interval);
- }
-@@ -4041,13 +4045,11 @@ void br_multicast_ctx_init(struct net_bridge *br,
- 	brmctx->multicast_querier_interval = 255 * HZ;
- 	brmctx->multicast_membership_interval = 260 * HZ;
- 
--	brmctx->ip4_other_query.delay_time = 0;
- 	brmctx->ip4_querier.port_ifidx = 0;
- 	seqcount_spinlock_init(&brmctx->ip4_querier.seq, &br->multicast_lock);
- 	brmctx->multicast_igmp_version = 2;
- #if IS_ENABLED(CONFIG_IPV6)
- 	brmctx->multicast_mld_version = 1;
--	brmctx->ip6_other_query.delay_time = 0;
- 	brmctx->ip6_querier.port_ifidx = 0;
- 	seqcount_spinlock_init(&brmctx->ip6_querier.seq, &br->multicast_lock);
- #endif
-@@ -4056,6 +4058,8 @@ void br_multicast_ctx_init(struct net_bridge *br,
- 		    br_ip4_multicast_local_router_expired, 0);
- 	timer_setup(&brmctx->ip4_other_query.timer,
- 		    br_ip4_multicast_querier_expired, 0);
-+	timer_setup(&brmctx->ip4_other_query.delay_timer,
-+		    br_multicast_query_delay_expired, 0);
- 	timer_setup(&brmctx->ip4_own_query.timer,
- 		    br_ip4_multicast_query_expired, 0);
- #if IS_ENABLED(CONFIG_IPV6)
-@@ -4063,6 +4067,8 @@ void br_multicast_ctx_init(struct net_bridge *br,
- 		    br_ip6_multicast_local_router_expired, 0);
- 	timer_setup(&brmctx->ip6_other_query.timer,
- 		    br_ip6_multicast_querier_expired, 0);
-+	timer_setup(&brmctx->ip6_other_query.delay_timer,
-+		    br_multicast_query_delay_expired, 0);
- 	timer_setup(&brmctx->ip6_own_query.timer,
- 		    br_ip6_multicast_query_expired, 0);
- #endif
-@@ -4197,10 +4203,12 @@ static void __br_multicast_stop(struct net_bridge_mcast *brmctx)
- {
- 	del_timer_sync(&brmctx->ip4_mc_router_timer);
- 	del_timer_sync(&brmctx->ip4_other_query.timer);
-+	del_timer_sync(&brmctx->ip4_other_query.delay_timer);
- 	del_timer_sync(&brmctx->ip4_own_query.timer);
- #if IS_ENABLED(CONFIG_IPV6)
- 	del_timer_sync(&brmctx->ip6_mc_router_timer);
- 	del_timer_sync(&brmctx->ip6_other_query.timer);
-+	del_timer_sync(&brmctx->ip6_other_query.delay_timer);
- 	del_timer_sync(&brmctx->ip6_own_query.timer);
- #endif
- }
-@@ -4643,13 +4651,15 @@ int br_multicast_set_querier(struct net_bridge_mcast *brmctx, unsigned long val)
- 	max_delay = brmctx->multicast_query_response_interval;
- 
- 	if (!timer_pending(&brmctx->ip4_other_query.timer))
--		brmctx->ip4_other_query.delay_time = jiffies + max_delay;
-+		mod_timer(&brmctx->ip4_other_query.delay_timer,
-+			  jiffies + max_delay);
- 
- 	br_multicast_start_querier(brmctx, &brmctx->ip4_own_query);
- 
- #if IS_ENABLED(CONFIG_IPV6)
- 	if (!timer_pending(&brmctx->ip6_other_query.timer))
--		brmctx->ip6_other_query.delay_time = jiffies + max_delay;
-+		mod_timer(&brmctx->ip6_other_query.delay_timer,
-+			  jiffies + max_delay);
- 
- 	br_multicast_start_querier(brmctx, &brmctx->ip6_own_query);
- #endif
-diff --git a/net/bridge/br_private.h b/net/bridge/br_private.h
-index b0a92c344722..86ea5e6689b5 100644
---- a/net/bridge/br_private.h
-+++ b/net/bridge/br_private.h
-@@ -78,7 +78,7 @@ struct bridge_mcast_own_query {
- /* other querier */
- struct bridge_mcast_other_query {
- 	struct timer_list		timer;
--	unsigned long			delay_time;
-+	struct timer_list		delay_timer;
- };
- 
- /* selected querier */
-@@ -1159,7 +1159,7 @@ __br_multicast_querier_exists(struct net_bridge_mcast *brmctx,
- 		own_querier_enabled = false;
- 	}
- 
--	return time_is_before_jiffies(querier->delay_time) &&
-+	return !timer_pending(&querier->delay_timer) &&
- 	       (own_querier_enabled || timer_pending(&querier->timer));
- }
- 
 -- 
-2.43.0
-
+Ville Syrjälä
+Intel
