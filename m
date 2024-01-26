@@ -1,207 +1,76 @@
-Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 021B560253
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 09:05:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 555A810A28;
+	Fri, 26 Jan 2024 09:06:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706259930; cv=none; b=QX0x9zyQLW0iFwWQhunCYm2e+xMejOrPQNxB60nSMgZCWKxd7HIlTnDO+4HuUPHq83gV8+3gjNyjPFHXVDXhX1tQZHJwHZaC9se49x4eSiF952zBemK6xZ+Wl5gPo3hp8qdfxFGWEpKCURp2D/NAIbuoxNI7lkSGSnjvJCl3Uys=
+	t=1706259970; cv=none; b=ZCRU+t+yk5/pa/2TyQx4DPY5HVGw8CjsXkiSReAimiuEf6oqXSZ77zSnR5UOi+NG69kjoMHR472ll8/CqRNHq7mquaHpVqtsI/rrFi4luKL5GCNJsPCisB6DVbwXXcNTsm9E1WsQ+cIqhzb3+ivHkcc3sNLQJLl+9ZjxuQOsEEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706259930; c=relaxed/simple;
-	bh=cvXAVg/QUHe1nP3xRlWWfO6myo8tRa+Jwh37Gu5r3NQ=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=Wrj50MQBVLRUU+q/cH06pwkgy9LLkGH7JivarE4STR2ZN4+1zbKaPaxi6CPxT2H/C5Lw3nE5Dhbx1E7wKfhbmCkxM34zyCIajGYmaRJ0t6XgUnQPT5Dv5btwWlCRScI5UvKW/J+iHbITMd6AoQ10+/T+XVKwqqtRpgbeqAuK7pU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-7bf0305ded5so68934439f.1
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 01:05:28 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706259928; x=1706864728;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=8LXXRWhnVpg5s10wa8N0l8GPBmu/g4QOuL8LUz3mdrk=;
-        b=BH2Rlskl4xmEtCuVwJg6FMEsJDYdDyOwIy85B5FbI8Xcec10/GuoAqMJ7WKBDEUp5z
-         LCeHGPkI7oEOyd+tPoX2vpalznaSWHa/b7VG+eD3wTs2ZhdQxAYIeBrhP5w+/fEAJ2fH
-         Z+yvDpBG4SsJtIwdZ0Sv6A4u3CQtwiSaWa5YwfQ0WbjoVc2tKpY+l4i+3LSmczgXwyya
-         W+RYFhLohRjFO7wHP//JQyVjRkbcK5r4zOUkZxrdwQTXS8znHLLLXblXYX6ec/akH4h0
-         JpEQPyrV6tSOwIJOug0MRbysXsoU7XkjG/NfI3FR7Z68Q1MxK11kgpso3vtdFOQ0GfIc
-         kTZw==
-X-Gm-Message-State: AOJu0YyoDFy41ydZqn9a7puTyjFn94dIc/vnwU69wYNBuY9OIT2cN97J
-	G21NP6McDn5XsTNsZTozn+x8D90PnmpDZQZmH6HpITymVvkKL8yevzqFPm9gZSeFN2dQzVgMe7u
-	+Y7eVNJn3Xa2Nx0FRqZ4JW8t1dARkKUYWnKaWtRFNLfI46oQEJ778PjU=
-X-Google-Smtp-Source: AGHT+IH1X+V4lAg0wlyhUZG76oDSzE4znywKlY8zf/gqHdqnP01hi4XluIcTXTFWC49pjGgRv1As2c8MxB6M+4dVQiGIRcF26KK0
+	s=arc-20240116; t=1706259970; c=relaxed/simple;
+	bh=JMGTsyBAlUGTZ2JRMVHxhfJbZK/iVzioQcU+MUzCCZE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UXMd8AFhhjlDW1oJog7k9kUjCLRay6zAeB0rSCqiBB1Mv5PuENpgHTPvu9OVtaEeukSQSu0osgKVzTh6JqVvLBVL/TQefSnaBFBdeOditonexV8IupuaXkwqXAkodspGKBrY0+TKgkOaswP2zMmiSeE50I+S0+XrJrOTA8EKoVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rpu6YZFm; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rpu6YZFm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 725C7C433F1;
+	Fri, 26 Jan 2024 09:06:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706259969;
+	bh=JMGTsyBAlUGTZ2JRMVHxhfJbZK/iVzioQcU+MUzCCZE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=rpu6YZFmZe59WukwEoxOOd1HDKLHl+/ISjtUwftIdHSb7EgQuBRTHV6kqfmMIkB+9
+	 kqCPTYxvg8Sq5F0inVyHgQxfGpfQM3QsSmOXqMA4bBhtV+/2xF/Gz+gqSf8x+JzERx
+	 TFmzoO1uFHWGhFM3do2vyPF1WT/pPZmuMsn00gtOfXXxUFyuntbgWe9c+xU4x3HO/d
+	 HR70NXwDyrwtCXOFjiD46FzSiqewTTWosFjWC8GfvCr3B7s7pXAtR4lrDbhyQuS+wU
+	 1kifBhd1D0wVRjW2J7m5AlNJ5dejx/ckOo6XVTYgEV1ntvao8Hltl6X2rwzj1SXuNI
+	 E66qXzXG5zydQ==
+Date: Fri, 26 Jan 2024 09:06:05 +0000
+From: Lee Jones <lee@kernel.org>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Charles Keepax <ckeepax@opensource.cirrus.com>, broonie@kernel.org,
+	patches@opensource.cirrus.com, linux-kernel@vger.kernel.org,
+	linux-spi@vger.kernel.org
+Subject: Re: [PATCH v3 2/6] mfd: cs42l43: Tidy up header includes
+Message-ID: <20240126090605.GO74950@google.com>
+References: <20240125102555.2621736-1-ckeepax@opensource.cirrus.com>
+ <20240125102555.2621736-2-ckeepax@opensource.cirrus.com>
+ <20240125135509.GL74950@google.com>
+ <CAHp75Vc4jiz3Wjg_1DKs=X=Q8oxMmEASx2VB-BZsawSDa2cwRQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1aa1:b0:361:9320:5b3d with SMTP id
- l1-20020a056e021aa100b0036193205b3dmr89644ilv.2.1706259928153; Fri, 26 Jan
- 2024 01:05:28 -0800 (PST)
-Date: Fri, 26 Jan 2024 01:05:28 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000e98460060fd59831@google.com>
-Subject: [syzbot] [ext4?] general protection fault in jbd2__journal_start
-From: syzbot <syzbot+cdee56dbcdf0096ef605@syzkaller.appspotmail.com>
-To: adilger.kernel@dilger.ca, jack@suse.com, linux-ext4@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com, tytso@mit.edu
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHp75Vc4jiz3Wjg_1DKs=X=Q8oxMmEASx2VB-BZsawSDa2cwRQ@mail.gmail.com>
 
-Hello,
+On Thu, 25 Jan 2024, Andy Shevchenko wrote:
 
-syzbot found the following issue on:
+> On Thu, Jan 25, 2024 at 3:55 PM Lee Jones <lee@kernel.org> wrote:
+> > On Thu, 25 Jan 2024, Charles Keepax wrote:
+> >
+> > > Use more forward declarations, move header guards to cover other
+> > > includes, and rely less on including headers through other headers.
+> > >
+> > > Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> >
+> > Patches look okay to me, but seeing as Andy suggested the changes, it
+> > would be good to get a R-by from him.
+> 
+> I'm worried now only about missing a commit message in one patch and
+> (with less severity) the v2 of this one which appears not to be
+> necessary (i.e. v1 is fully okay). If you consider the commit message
+> absence is okay, feel free to apply v2, otherwise with that addressed
+> v3 can go in my opinion.
 
-HEAD commit:    7a396820222d Merge tag 'v6.8-rc-part2-smb-client' of git:/..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=15fca78fe80000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=7059b09d0488022
-dashboard link: https://syzkaller.appspot.com/bug?extid=cdee56dbcdf0096ef605
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+Please fix-up and submit a v4 with Andy's R-bs.
 
-Unfortunately, I don't have any reproducer for this issue yet.
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/da73c2c8f5fe/disk-7a396820.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/10d2d2be8831/vmlinux-7a396820.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/939406fd4919/bzImage-7a396820.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+cdee56dbcdf0096ef605@syzkaller.appspotmail.com
-
-general protection fault, probably for non-canonical address 0xdffffc000a8a4829: 0000 [#1] PREEMPT SMP KASAN
-KASAN: probably user-memory-access in range [0x0000000054524148-0x000000005452414f]
-CPU: 0 PID: 3394 Comm: syz-executor.5 Not tainted 6.7.0-syzkaller-12991-g7a396820222d #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 11/17/2023
-RIP: 0010:jbd2__journal_start+0x87/0x5d0 fs/jbd2/transaction.c:496
-Code: 74 63 48 8b 1b 48 85 db 74 79 48 89 d8 48 c1 e8 03 42 80 3c 28 00 74 08 48 89 df e8 23 46 8f ff 48 8b 2b 48 89 e8 48 c1 e8 03 <42> 80 3c 28 00 74 08 48 89 ef e8 0a 46 8f ff 4c 39 65 00 0f 85 1a
-RSP: 0018:ffffc900154d65c8 EFLAGS: 00010203
-RAX: 000000000a8a4829 RBX: ffff8880234e7618 RCX: 0000000000040000
-RDX: ffffc9000a3a1000 RSI: 000000000000195c RDI: 000000000000195d
-RBP: 000000005452414e R08: 0000000000000c40 R09: 0000000000000001
-R10: dffffc0000000000 R11: ffffed1005541071 R12: ffff88802aa0a000
-R13: dffffc0000000000 R14: 0000000000000c40 R15: 0000000000000002
-FS:  00007fbf47a2a6c0(0000) GS:ffff8880b9800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000020020000 CR3: 0000000030c1a000 CR4: 00000000003506f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- __ext4_journal_start_sb+0x215/0x5b0 fs/ext4/ext4_jbd2.c:112
- __ext4_journal_start fs/ext4/ext4_jbd2.h:326 [inline]
- ext4_dirty_inode+0x92/0x110 fs/ext4/inode.c:5969
- __mark_inode_dirty+0x305/0xda0 fs/fs-writeback.c:2452
- generic_update_time fs/inode.c:1905 [inline]
- inode_update_time fs/inode.c:1918 [inline]
- __file_update_time fs/inode.c:2106 [inline]
- file_update_time+0x39b/0x3e0 fs/inode.c:2136
- ext4_page_mkwrite+0x207/0xdf0 fs/ext4/inode.c:6090
- do_page_mkwrite+0x197/0x470 mm/memory.c:2966
- wp_page_shared mm/memory.c:3353 [inline]
- do_wp_page+0x20e3/0x4c80 mm/memory.c:3493
- handle_pte_fault mm/memory.c:5160 [inline]
- __handle_mm_fault+0x26a3/0x72b0 mm/memory.c:5285
- handle_mm_fault+0x27e/0x770 mm/memory.c:5450
- do_user_addr_fault arch/x86/mm/fault.c:1415 [inline]
- handle_page_fault arch/x86/mm/fault.c:1507 [inline]
- exc_page_fault+0x2ad/0x870 arch/x86/mm/fault.c:1563
- asm_exc_page_fault+0x26/0x30 arch/x86/include/asm/idtentry.h:570
-RIP: 0010:rep_movs_alternative+0x4a/0x70 arch/x86/lib/copy_user_64.S:71
-Code: 75 f1 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 8b 06 48 89 07 48 83 c6 08 48 83 c7 08 83 e9 08 74 df 83 f9 08 73 e8 eb c9 <f3> a4 c3 48 89 c8 48 c1 e9 03 83 e0 07 f3 48 a5 89 c1 85 c9 75 b3
-RSP: 0018:ffffc900154d70f8 EFLAGS: 00050202
-RAX: ffffffff848bfd01 RBX: 0000000020020040 RCX: 0000000000000040
-RDX: 0000000000000000 RSI: ffff88802cded190 RDI: 0000000020020000
-RBP: 1ffff92002a9af26 R08: ffff88802cded1cf R09: 1ffff110059bda39
-R10: dffffc0000000000 R11: ffffed10059bda3a R12: 00000000000000c0
-R13: dffffc0000000000 R14: 000000002001ff80 R15: ffff88802cded110
- copy_user_generic arch/x86/include/asm/uaccess_64.h:112 [inline]
- raw_copy_to_user arch/x86/include/asm/uaccess_64.h:133 [inline]
- _copy_to_user+0x86/0xa0 lib/usercopy.c:41
- copy_to_user include/linux/uaccess.h:191 [inline]
- xfs_bulkstat_fmt+0x4f/0x120 fs/xfs/xfs_ioctl.c:744
- xfs_bulkstat_one_int+0xd8b/0x12e0 fs/xfs/xfs_itable.c:161
- xfs_bulkstat_iwalk+0x72/0xb0 fs/xfs/xfs_itable.c:239
- xfs_iwalk_ag_recs+0x4c3/0x820 fs/xfs/xfs_iwalk.c:220
- xfs_iwalk_run_callbacks+0x25b/0x490 fs/xfs/xfs_iwalk.c:376
- xfs_iwalk_ag+0xad6/0xbd0 fs/xfs/xfs_iwalk.c:482
- xfs_iwalk+0x360/0x6f0 fs/xfs/xfs_iwalk.c:584
- xfs_bulkstat+0x4f8/0x6c0 fs/xfs/xfs_itable.c:308
- xfs_ioc_bulkstat+0x3d0/0x450 fs/xfs/xfs_ioctl.c:867
- xfs_file_ioctl+0x6a5/0x1980 fs/xfs/xfs_ioctl.c:1994
- vfs_ioctl fs/ioctl.c:51 [inline]
- __do_sys_ioctl fs/ioctl.c:871 [inline]
- __se_sys_ioctl+0xf8/0x170 fs/ioctl.c:857
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xf5/0x230 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x63/0x6b
-RIP: 0033:0x7fbf46c7cda9
-Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 e1 20 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007fbf47a2a0c8 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 00007fbf46dabf80 RCX: 00007fbf46c7cda9
-RDX: 000000002001fc40 RSI: 000000008040587f RDI: 0000000000000006
-RBP: 00007fbf46cc947a R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 000000000000000b R14: 00007fbf46dabf80 R15: 00007ffee39fcd08
- </TASK>
-Modules linked in:
----[ end trace 0000000000000000 ]---
-RIP: 0010:jbd2__journal_start+0x87/0x5d0 fs/jbd2/transaction.c:496
-Code: 74 63 48 8b 1b 48 85 db 74 79 48 89 d8 48 c1 e8 03 42 80 3c 28 00 74 08 48 89 df e8 23 46 8f ff 48 8b 2b 48 89 e8 48 c1 e8 03 <42> 80 3c 28 00 74 08 48 89 ef e8 0a 46 8f ff 4c 39 65 00 0f 85 1a
-RSP: 0018:ffffc900154d65c8 EFLAGS: 00010203
-RAX: 000000000a8a4829 RBX: ffff8880234e7618 RCX: 0000000000040000
-RDX: ffffc9000a3a1000 RSI: 000000000000195c RDI: 000000000000195d
-RBP: 000000005452414e R08: 0000000000000c40 R09: 0000000000000001
-R10: dffffc0000000000 R11: ffffed1005541071 R12: ffff88802aa0a000
-R13: dffffc0000000000 R14: 0000000000000c40 R15: 0000000000000002
-FS:  00007fbf47a2a6c0(0000) GS:ffff8880b9800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000020020000 CR3: 0000000030c1a000 CR4: 00000000003506f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-----------------
-Code disassembly (best guess):
-   0:	74 63                	je     0x65
-   2:	48 8b 1b             	mov    (%rbx),%rbx
-   5:	48 85 db             	test   %rbx,%rbx
-   8:	74 79                	je     0x83
-   a:	48 89 d8             	mov    %rbx,%rax
-   d:	48 c1 e8 03          	shr    $0x3,%rax
-  11:	42 80 3c 28 00       	cmpb   $0x0,(%rax,%r13,1)
-  16:	74 08                	je     0x20
-  18:	48 89 df             	mov    %rbx,%rdi
-  1b:	e8 23 46 8f ff       	call   0xff8f4643
-  20:	48 8b 2b             	mov    (%rbx),%rbp
-  23:	48 89 e8             	mov    %rbp,%rax
-  26:	48 c1 e8 03          	shr    $0x3,%rax
-* 2a:	42 80 3c 28 00       	cmpb   $0x0,(%rax,%r13,1) <-- trapping instruction
-  2f:	74 08                	je     0x39
-  31:	48 89 ef             	mov    %rbp,%rdi
-  34:	e8 0a 46 8f ff       	call   0xff8f4643
-  39:	4c 39 65 00          	cmp    %r12,0x0(%rbp)
-  3d:	0f                   	.byte 0xf
-  3e:	85 1a                	test   %ebx,(%rdx)
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+-- 
+Lee Jones [李琼斯]
