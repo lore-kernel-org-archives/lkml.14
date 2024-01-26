@@ -1,235 +1,153 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 711445B5A2;
-	Fri, 26 Jan 2024 23:26:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 238C05B5A2
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 23:27:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706311605; cv=none; b=JnZ0meAsY/APqGpQvyiZUkcD2fwKJ3O6xfSKFotkdLsFSx0tzExSyP1tik84P2dIizhu7tOV3UL8lFVqOiIPmCpJVNeuz/y9DLzMIpppLCZpLQgpVsAU98qfbxtytDoMbGG503e11H59yynuj9XOP/2AwjzWt3xXzCkgUnpLebw=
+	t=1706311633; cv=none; b=RuSWDEih3hPrBE6ZrOj5MNQeM5ROmdZDuC65gZLF0FYEXBe9uDwB5/pxVMF7djcUoIurCS8X3RTBfL6ONIeI1ot54We2xg21cOdP9XbtGy/9hJ7Suxk+0g+1UX8tZKBLPwRZR8E2tMtVhTtuIPiOvETFvR8AuGFTP0pDD1nted0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706311605; c=relaxed/simple;
-	bh=4kglTVeS+XJa2Xp52prmK0+CovRPk+1iqNVnduvL7Lo=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JPHmyKgiGJqkCWS8IxxBbik5LN15T630xVSgOxT1cQ2S2xQF+ncP2YvSNUPyOib8FqfQsSv1rLLSWymUyH5oYMKfUfbOD6IpnZDI8tGQN4nqNDAHBmOLNAW2XEG9+Hnuq9J6GvCvI2PXbmOg1cdicn+i4ngIld7d9z4c7QRl1PQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Dgi7QXBT; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1706311633; c=relaxed/simple;
+	bh=7EM22NdD/R1gavpoQkCkmyle3YA/s2Xcz1M+2yhhH/I=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Xo1+2/1WRNCCzzZzbjLlpNQJvo56RgR5wDR6mvSaXJ0mHyUIs0TWvjbQnYI3FhAwI3Fkwe9A7D5vb/tTejMp0xzgn32Yn6Ww19vIhBKxE91uAGVvDvjYc5GBRKEx0vwCxo7clpywcTfBTye7xB/WyKFPLL0+4TvBl1TflK+uLbk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=PjnGmr0N; arc=none smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Dgi7QXBT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706311604; x=1737847604;
-  h=date:from:to:cc:subject:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=4kglTVeS+XJa2Xp52prmK0+CovRPk+1iqNVnduvL7Lo=;
-  b=Dgi7QXBT9VPzqo7y/UBB+1oy3OifjHlkHOaG0CJDZuit+12pNnFC+cw8
-   RgTXCGYAIfrw7UkAgtWHJqeNCY551X0p8nzVoZ0ItH1rPwJEx9u4EHGmR
-   aH4aTw7JWiZBK1iZQf8d8akgvyq29+cxu9rhKWgUXVx8bp7lE1E9M5RFe
-   M1bwm3NfHgC7JqRfUe/yfotxNzXzEWObuhKjzezffa7+aJ+U8j9Q+Qv9H
-   MtzEcfRErJyjgbUL8/o1mHZM2MQasrvhq3KmeGGdJCSMJsFt1tcQR5Ver
-   ik8ZKv/bbJuQHPPQr7sHc9oCKEuzynD9OdE6xnRYvZz7iGquIl4Sna6TM
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="2477208"
-X-IronPort-AV: E=Sophos;i="6.05,220,1701158400"; 
-   d="scan'208";a="2477208"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2024 15:26:44 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="906457771"
-X-IronPort-AV: E=Sophos;i="6.05,220,1701158400"; 
-   d="scan'208";a="906457771"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.24.100.114])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2024 15:26:41 -0800
-Date: Fri, 26 Jan 2024 15:32:00 -0800
-From: Jacob Pan <jacob.jun.pan@linux.intel.com>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Peter Zijlstra <peterz@infradead.org>, LKML
- <linux-kernel@vger.kernel.org>, X86 Kernel <x86@kernel.org>,
- iommu@lists.linux.dev, Lu Baolu <baolu.lu@linux.intel.com>,
- kvm@vger.kernel.org, Dave Hansen <dave.hansen@intel.com>, Joerg Roedel
- <joro@8bytes.org>, "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov
- <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>, Raj Ashok
- <ashok.raj@intel.com>, "Tian, Kevin" <kevin.tian@intel.com>,
- maz@kernel.org, seanjc@google.com, Robin Murphy <robin.murphy@arm.com>,
- jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH RFC 09/13] x86/irq: Install posted MSI notification
- handler
-Message-ID: <20240126153200.720883db@jacob-builder>
-In-Reply-To: <87zfyksyge.ffs@tglx>
-References: <20231112041643.2868316-1-jacob.jun.pan@linux.intel.com>
- <20231112041643.2868316-10-jacob.jun.pan@linux.intel.com>
- <20231115125624.GF3818@noisy.programming.kicks-ass.net>
- <87cyvjun3z.ffs@tglx>
- <20231207204607.2d2a3b72@jacob-builder>
- <87zfyksyge.ffs@tglx>
-Organization: OTC
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PjnGmr0N"
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-55c89dbef80so1258a12.1
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 15:27:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1706311630; x=1706916430; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7EM22NdD/R1gavpoQkCkmyle3YA/s2Xcz1M+2yhhH/I=;
+        b=PjnGmr0NqsrVvBO8j5RswZzn5txIyL2gnwtHof1jUZAPJQ5HTY+VobPciXVzhs4qWY
+         GFaw5wA8DsUP61Ui8qKD1mZ0i+KCO0G55y47+MEQ8sFaw+hKn5iLvq95Cmf/Dd1B27yK
+         SRslEW1uuMExqHnxJPJiJY8k5zz7tUpHBAO7Qrqwn7/6DvUQ7cKa5j6+MsDFgPdFw+3S
+         gJBAeEywqgeOuZD9aKtCj1KHm1u0Hm79mmK1e5KcFuYC1nGRj1DjCyStelFi6gzTJrAi
+         3vKlQVvxSba54qzrm4dvVqUSi4efUdqwBXvyHlyw5kcl4feTW6fUbH/n/64JsNx0yzX6
+         Qt5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706311630; x=1706916430;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7EM22NdD/R1gavpoQkCkmyle3YA/s2Xcz1M+2yhhH/I=;
+        b=RpqWSxqwoik8J8Einqe2qYYPEkGeCnVq3NxEcEU2p05JCVcq9e86BVEXy35FI3WE/o
+         Ct/uZBj5AwlHmpmZ43AdDRbcwmH2qExfkeH8wWqTPMfBkkkgJmniUbdWTktRvAV/IQVC
+         m4byoaWV9oyFbGsNLm3eyBYCTPtc4Htcgu7P9NEXSUlyp83SqE21dEutyvmnybYpLzGh
+         Sf8KgAbB+sXV3sI/td3tEcI08kgBoqtmQ7/QPZoUrLP7w9ByPxRcyXtLWmuI52YfewCa
+         sgQbdOJC2CSaPZzSKaUptiCWKKgVHsdAuopDcZ0NKTowmslcCqs2UsA1iRPIqwIPowIo
+         Ua2A==
+X-Gm-Message-State: AOJu0YwrnZksXZklqT5UayWZGP2cUvnHY6454xRcRmiLdNVfsf0nA0h5
+	liQOHxBg24oxKewhxtJZH/y+NWweTwfJCaZqYBrnPOdbqRNKxMaA2TyYVvmhOA788d2CdOGzBMu
+	UFZCs2pmsVMUXxZnEyGcQNaqlEEhr2GNq6bHf
+X-Google-Smtp-Source: AGHT+IEytN94Tw4OAfhLp8QPfVkL5LpSpNvojpumHJ23Z4yh5ep8lAuk/NNUIwncbmQt6kFpEx1hzb/liCn+dCwP4tA=
+X-Received: by 2002:a05:6402:5d86:b0:55d:4375:c39c with SMTP id
+ if6-20020a0564025d8600b0055d4375c39cmr166144edb.0.1706311630220; Fri, 26 Jan
+ 2024 15:27:10 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20240118120347.61817-1-ioworker0@gmail.com> <ZakqQyL9t2ffNUIf@tiehlicka>
+ <CAK1f24k+=Sskotbct+yGxpDKNv=qyXPkww5i2kaqfzwaUVO_GQ@mail.gmail.com>
+ <ZapwWuVTIDeI3W8A@tiehlicka> <CAK1f24m9oxciHsAht4-cCWo_NT7x+bkoXUO2HOwgMCr0OnwpcA@mail.gmail.com>
+ <Za5yvjZWVyYjgyfh@tiehlicka> <CAK1f24n+pTw=7atKGAbgBh8qKOTBPq-BEV7ZkLcgN3P0n3h3ug@mail.gmail.com>
+ <CAK1f24=7fKU-+xRSOhrJrZ56=YoVfnkONZwNOJRS4yY4SzhANA@mail.gmail.com>
+In-Reply-To: <CAK1f24=7fKU-+xRSOhrJrZ56=YoVfnkONZwNOJRS4yY4SzhANA@mail.gmail.com>
+From: "Zach O'Keefe" <zokeefe@google.com>
+Date: Fri, 26 Jan 2024 15:26:32 -0800
+Message-ID: <CAAa6QmRLfwhyh66bVVakp__Rkzpkt3zq2kAe9F-KN5sdFdqLAg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/1] mm/madvise: add MADV_F_COLLAPSE_LIGHT to process_madvise()
+To: Lance Yang <ioworker0@gmail.com>
+Cc: Michal Hocko <mhocko@suse.com>, akpm@linux-foundation.org, david@redhat.com, 
+	songmuchun@bytedance.com, shy828301@gmail.com, peterx@redhat.com, 
+	mknyszek@google.com, minchan@kernel.org, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, linux-api@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Thomas,
+On Mon, Jan 22, 2024 at 6:35=E2=80=AFAM Lance Yang <ioworker0@gmail.com> wr=
+ote:
+>
+> Hey Zach,
+>
+> What do you think about the semantic?
 
-On Fri, 08 Dec 2023 12:52:49 +0100, Thomas Gleixner <tglx@linutronix.de>
+Hey Lance,
+
+Sorry for the late reply.
+
+I can see both sides of the argument; though I would argue that
+"non-blocking" is equally as vague in this context. E.g. we'll "block" on
+acquiring a number of different locks along the collapse path.
+
+If you really want to talk about not entering direct reclaim /
+compaction, then keeping with the sys/kernel/vm/thp notion of "defrag"
+would be better, IMO. I don't feel that strongly about it though.
+
+But I see you've provided some more use cases in another mail, so let
+me pick up my thoughts over there.
+
+Best,
+Zach
+
+
+
+> Thanks,
+> Lance
+>
+> On Mon, Jan 22, 2024 at 10:14=E2=80=AFPM Lance Yang <ioworker0@gmail.com>=
+ wrote:
+> >
+> > On Mon, Jan 22, 2024 at 9:50=E2=80=AFPM Michal Hocko <mhocko@suse.com> =
 wrote:
-
-> > Without PIR copy:
+> > >
+> > > On Sat 20-01-24 10:09:32, Lance Yang wrote:
+> > > [...]
+> > > > Hey Michal,
+> > > >
+> > > > Thanks for your suggestion!
+> > > >
+> > > > It seems that the implementation should try but not too hard aligns=
+ well
+> > > > with my desired behavior.
+> > >
+> > > The problem I have with this semantic is that it is really hard to
+> > > define and then stick with. Our implementation might change over time
+> > > and what somebody considers good ATM might turn int "trying harder th=
+an
+> > > I wanted" later on.
+> > >
+> > > > Non-blocking in general is also a great idea.
+> > > > Perhaps in the future, we can add a MADV_F_COLLAPSE_NOBLOCK
+> > > > flag for scenarios where latency is extremely critical.
+> > >
+> > > Non blocking semantic is much easier to define and maintain. The actu=
+al
+> > > allocation/compaction implementation might change as well over time b=
+ut
+> > > the userspace at least knows that the request will not block waiting =
+for
+> > > any required resources.
 > >
-> > DMA memfill bandwidth: 4.944 Gbps
-> > Performance counter stats for './run_intr.sh 512 30':
-> > 
-> >     77,313,298,506      L1-dcache-loads
-> >               (79.98%) 8,279,458      L1-dcache-load-misses     #
-> > 0.01% of all L1-dcache accesses  (80.03%) 41,654,221,245
-> > L1-dcache-stores                                              (80.01%)
-> > 10,476      LLC-load-misses           #    0.31% of all LL-cache
-> > accesses  (79.99%) 3,332,748      LLC-loads
-> >                         (80.00%) 30.212055434 seconds time elapsed
-> > 
-> >        0.002149000 seconds user
-> > 30.183292000 seconds sys
-> >                         
+> > I appreciate your insights!
 > >
-> > With PIR copy:
-> > DMA memfill bandwidth: 5.029 Gbps
-> > Performance counter stats for './run_intr.sh 512 30':
+> > It makes sense that a non-blocking semantic is easier to define and mai=
+ntain,
+> > providing userspace with the certainty that requests won=E2=80=99t be b=
+locked.
 > >
-> >     78,327,247,423      L1-dcache-loads
-> >               (80.01%) 7,762,311      L1-dcache-load-misses     #
-> > 0.01% of all L1-dcache accesses  (80.01%) 42,203,221,466
-> > L1-dcache-stores                                              (79.99%)
-> > 23,691      LLC-load-misses           #    0.67% of all LL-cache
-> > accesses  (80.01%) 3,561,890      LLC-loads
-> >                         (80.00%)
+> > Thanks,
+> > Lance
 > >
-> >       30.201065706 seconds time elapsed
-> >
-> >        0.005950000 seconds user
-> >       30.167885000 seconds sys  
-> 
-> Interesting, though I'm not really convinced that this DMA memfill
-> microbenchmark resembles real work loads.
-> 
-> Did you test with something realistic, e.g. storage or networking, too?
-I have done the following FIO test on NVME drives and not seeing any
-meaningful differences in IOPS between the two implementations.
-
-Here is my setup and results on 4 NVME drives connected to a x16 PCIe slot:
-
- +-[0000:62]-
- |           +-01.0-[63]----00.0  Samsung Electronics Co Ltd NVMe SSD Controller PM174X
- |           +-03.0-[64]----00.0  Samsung Electronics Co Ltd NVMe SSD Controller PM174X
- |           +-05.0-[65]----00.0  Samsung Electronics Co Ltd NVMe SSD Controller PM174X
- |           \-07.0-[66]----00.0  Samsung Electronics Co Ltd NVMe SSD Controller PM174X
-
-
-libaio, no PIR_COPY
-======================================
-fio-3.35                                                                                                           
-Starting 512 processes                                                                                             
-Jobs: 512 (f=512): [r(512)][100.0%][r=32.2GiB/s][r=8445k IOPS][eta 00m:00s]                                        
-disk_nvme6n1_thread_1: (groupid=0, jobs=512): err= 0: pid=31559: Mon Jan  8 21:49:22 2024                          
-  read: IOPS=8419k, BW=32.1GiB/s (34.5GB/s)(964GiB/30006msec)                                                      
-    slat (nsec): min=1325, max=115807k, avg=42368.34, stdev=1517031.57                                             
-    clat (usec): min=2, max=499085, avg=15139.97, stdev=25682.25                                                   
-     lat (usec): min=68, max=499089, avg=15182.33, stdev=25709.81                                                  
-    clat percentiles (usec):                                                                                       
-     |  1.00th=[   734],  5.00th=[   783], 10.00th=[   816], 20.00th=[   857],                                     
-     | 30.00th=[   906], 40.00th=[   971], 50.00th=[  1074], 60.00th=[  1369],                                     
-     | 70.00th=[ 13042], 80.00th=[ 19792], 90.00th=[ 76022], 95.00th=[ 76022],                                     
-     | 99.00th=[ 77071], 99.50th=[ 81265], 99.90th=[ 85459], 99.95th=[ 91751],                                     
-     | 99.99th=[200279]                                                                                            
-   bw (  MiB/s): min=18109, max=51859, per=100.00%, avg=32965.98, stdev=16.88, samples=14839                       
-   iops        : min=4633413, max=13281470, avg=8439278.47, stdev=4324.70, samples=14839                           
-  lat (usec)   : 4=0.01%, 10=0.01%, 20=0.01%, 50=0.01%, 100=0.01%                                                  
-  lat (usec)   : 250=0.01%, 500=0.01%, 750=1.84%, 1000=41.96%                                                      
-  lat (msec)   : 2=18.37%, 4=0.20%, 10=3.88%, 20=13.95%, 50=5.42%                                                  
-  lat (msec)   : 100=14.33%, 250=0.02%, 500=0.01%                                                                  
-  cpu          : usr=1.16%, sys=3.54%, ctx=4932752, majf=0, minf=192764                                            
-  IO depths    : 1=0.1%, 2=0.1%, 4=0.1%, 8=0.1%, 16=0.1%, 32=0.1%, >=64=100.0%                                     
-     submit    : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%, >=64=0.0%                                    
-     complete  : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%, >=64=0.1%                                    
-     issued rwts: total=252616589,0,0,0 short=0,0,0,0 dropped=0,0,0,0                                              
-     latency   : target=0, window=0, percentile=100.00%, depth=256                                                 
-                                                                                                                   
-Run status group 0 (all jobs):                                                                                     
-   READ: bw=32.1GiB/s (34.5GB/s), 32.1GiB/s-32.1GiB/s (34.5GB/s-34.5GB/s), io=964GiB (1035GB), run=30006-30006msec 
-                                                                                                                   
-Disk stats (read/write):                                                                                           
-  nvme6n1: ios=0/0, merge=0/0, ticks=0/0, in_queue=0, util=96.31%                                                  
-  nvme5n1: ios=0/0, merge=0/0, ticks=0/0, in_queue=0, util=97.15%                                                  
-  nvme4n1: ios=0/0, merge=0/0, ticks=0/0, in_queue=0, util=98.06%                                                  
-  nvme3n1: ios=0/0, merge=0/0, ticks=0/0, in_queue=0, util=98.94%                                                  
-                                                                                                                   
- Performance counter stats for 'system wide':                                                                      
-                                                                                                                   
-    22,985,903,515      L1-dcache-load-misses                                                   (42.86%)           
-    22,989,992,126      L1-dcache-load-misses                                                   (57.14%)           
-   751,228,710,993      L1-dcache-stores                                                        (57.14%)           
-       465,033,820      LLC-load-misses                  #   18.27% of all LL-cache accesses    (57.15%)           
-     2,545,570,669      LLC-loads                                                               (57.14%)           
-     1,058,582,881      LLC-stores                                                              (28.57%)           
-       326,135,823      LLC-store-misses                                                        (28.57%)           
-                                                                                                                   
-      32.045718194 seconds time elapsed                                                                       
--------------------------------------------
-libaio with PIR_COPY
--------------------------------------------
-fio-3.35                                                                                                           
-Starting 512 processes                                                                                             
-Jobs: 512 (f=512): [r(512)][100.0%][r=32.2GiB/s][r=8445k IOPS][eta 00m:00s]                                        
-disk_nvme6n1_thread_1: (groupid=0, jobs=512): err= 0: pid=5103: Mon Jan  8 23:12:12 2024                           
-  read: IOPS=8420k, BW=32.1GiB/s (34.5GB/s)(964GiB/30011msec)                                                      
-    slat (nsec): min=1339, max=97021k, avg=42447.84, stdev=1442726.09                                              
-    clat (usec): min=2, max=369410, avg=14820.01, stdev=24112.59                                                   
-     lat (usec): min=69, max=369412, avg=14862.46, stdev=24139.33                                                  
-    clat percentiles (usec):                                                                                       
-     |  1.00th=[   717],  5.00th=[   783], 10.00th=[   824], 20.00th=[   873],                                     
-     | 30.00th=[   930], 40.00th=[  1012], 50.00th=[  1172], 60.00th=[  8094],                                     
-     | 70.00th=[ 14222], 80.00th=[ 18744], 90.00th=[ 76022], 95.00th=[ 76022],                                     
-     | 99.00th=[ 76022], 99.50th=[ 78119], 99.90th=[ 81265], 99.95th=[ 81265],                                     
-     | 99.99th=[135267]                                                                                            
-   bw (  MiB/s): min=19552, max=62819, per=100.00%, avg=33774.56, stdev=31.02, samples=14540                       
-   iops        : min=5005807, max=16089892, avg=8646500.17, stdev=7944.42, samples=14540                           
-  lat (usec)   : 4=0.01%, 10=0.01%, 20=0.01%, 50=0.01%, 100=0.01%                                                  
-  lat (usec)   : 250=0.01%, 500=0.01%, 750=2.50%, 1000=36.41%                                                      
-  lat (msec)   : 2=17.39%, 4=0.27%, 10=5.83%, 20=18.94%, 50=5.59%                                                  
-  lat (msec)   : 100=13.06%, 250=0.01%, 500=0.01%                                                                  
-  cpu          : usr=1.20%, sys=3.74%, ctx=6758326, majf=0, minf=193128                                            
-  IO depths    : 1=0.1%, 2=0.1%, 4=0.1%, 8=0.1%, 16=0.1%, 32=0.1%, >=64=100.0%                                     
-     submit    : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%, >=64=0.0%                                    
-     complete  : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%, >=64=0.1%                                    
-     issued rwts: total=252677827,0,0,0 short=0,0,0,0 dropped=0,0,0,0                                              
-     latency   : target=0, window=0, percentile=100.00%, depth=256                                                 
-                                                                                                                   
-Run status group 0 (all jobs):                                                                                     
-   READ: bw=32.1GiB/s (34.5GB/s), 32.1GiB/s-32.1GiB/s (34.5GB/s-34.5GB/s), io=964GiB (1035GB), run=30011-30011msec 
-                                                                                                                   
-Disk stats (read/write):                                                                                           
-  nvme6n1: ios=0/0, merge=0/0, ticks=0/0, in_queue=0, util=96.36%                                                  
-  nvme5n1: ios=0/0, merge=0/0, ticks=0/0, in_queue=0, util=97.18%                                                  
-  nvme4n1: ios=0/0, merge=0/0, ticks=0/0, in_queue=0, util=98.08%                                                  
-  nvme3n1: ios=0/0, merge=0/0, ticks=0/0, in_queue=0, util=98.96%                                                  
-                                                                                                                   
- Performance counter stats for 'system wide':                                                                      
-                                                                                                                   
-    24,762,800,042      L1-dcache-load-misses                                                   (42.86%)           
-    24,764,415,765      L1-dcache-load-misses                                                   (57.14%)           
-   756,096,467,595      L1-dcache-stores                                                        (57.14%)           
-       483,611,270      LLC-load-misses                  #   16.21% of all LL-cache accesses    (57.14%)           
-     2,982,610,898      LLC-loads                                                               (57.14%)           
-     1,283,077,818      LLC-stores                                                              (28.57%)           
-       313,253,711      LLC-store-misses                                                        (28.57%)           
-                                                                                                                   
-      32.059810215 seconds time elapsed
-                                       
-
-
-Thanks,
-
-Jacob
+> > >
+> > > --
+> > > Michal Hocko
+> > > SUSE Labs
