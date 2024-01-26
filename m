@@ -1,98 +1,90 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CC8D25543;
-	Fri, 26 Jan 2024 21:51:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C04F52556B
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 21:51:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706305878; cv=none; b=WlLIxGH9TPixzt3t4ZB6BhZA6vJkyvZfWcIhD1sjwl+E8DwFZkPFYVGCWFG5NGg7k5X3CTfd95JYnUOTvUcvpMV3mOufSiFmCGzFkAZEG8JRPFB6cpw83la7ETw7hi8a2QIQUZAnkijbXLuqykU9iQVqcifjxTW+VkgE1FbQmng=
+	t=1706305890; cv=none; b=lewUpVczqmT+PaJCTOnJ9iE4ihXSDYge8okI5rtaIvtd62ZCLKtjyQVU3Mu9E0IQx1+zsHTzGc7pI1+JbJ7H6EZ2YnezAc4Dw5GHxZ59vihdfbMYLmWcFtzXP3KIvwD0riVUs9Oy7w1tMXi6LtT+az1udA1L+zepLOtfrAK2+ZM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706305878; c=relaxed/simple;
-	bh=nU5tZ1CIDmmbmzI91JFYK+ueqcuUhEsjxhiirrJ792Y=;
+	s=arc-20240116; t=1706305890; c=relaxed/simple;
+	bh=04D3xXJMPnckdiNNY8fguQ6tU0HevW+YvL65Y5Kj82U=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qai7OzQny3PLkWh2uTw7vDAsykYsqITEqz4WVw8fOgCPbMpQ16V2jmLz7dU/q/YQ63gZBw6VbyzciQpRMho3pkHjKAiGzQHylgsESMz87y67IgY4fO0o1Hqs41blu+2nVOOj3Ddd9d5TjwFR83wbnQFkyoGn0jx77TT5I1TcWd0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E7gDM1+q; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=qiKsdUqdTOLhjM7B7lXeI4+j0ENWL2+PKlTRXz47L7DKPqZTJhbM1U7clv0a3QbTR/FcJw76AWD5hZN4+y5SYNa4G1PlN6K+OO5mzZVE08FVqeUbkjD6ao1K1qroq0efVQK06NRHZZsKya47+PKqm7vA3xR6ncRCDcqLJXpNhbg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=ELvwkOfN; arc=none smtp.client-ip=209.85.208.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E7gDM1+q"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a3528746f57so19447866b.0;
-        Fri, 26 Jan 2024 13:51:16 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="ELvwkOfN"
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2cf3a04ea1cso11115541fa.2
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 13:51:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706305875; x=1706910675; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YPXH5dNeVfIUenTMK/gwVMJ0/0KNORIs3DkEAIv1Sig=;
-        b=E7gDM1+q3bk7vt2g27YbU6H/IangsmZzroCPX97acsN1kTbtJ1jgsTtXNqOcOZw4U8
-         GngdWNpXnr1DbE5D5NL39PwjUc0gp+UX9SwX5adUHc3BqCcDtyejoP8XzrcWZq2dGCAk
-         z98iTyR/9lsMa1ErAYlIoCddzi0n85ikiTUO5wiGUzixuUd3qk3r7L8SoyVg6J5wtSvr
-         Mmmfo6iOaO8xzS+ULcdZ3Gfm74kb6kMCi4kEzdEwVtVFZJxLA6TOIFMWRasktgI3mDNb
-         9zNMkUkClnL2r0wVViBQpDMiYecSfreJj/keqpf9EvpkK6zT6fFTNa2y3/wQQ1bu2KPz
-         zYbA==
+        d=linux-foundation.org; s=google; t=1706305887; x=1706910687; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=MqrpniylWfWC1VCZp5L8n3yVakZrt949RVza9zF/u5c=;
+        b=ELvwkOfNep7nKdDz0agyUKM3tysasFoSOuxg5dg5gTpmdDRU91A59mUDbT/wzXxzkF
+         3fmM1rTpJAPFiDQQJiT0RIiPk2OPHAIXrI3Zro40mNQ66Ct1/FuMXM9MFTVkKYYdVXZy
+         g38c+XiKAXwjI46MwPMsZlqSLRqiUG+ZtFCW8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706305875; x=1706910675;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YPXH5dNeVfIUenTMK/gwVMJ0/0KNORIs3DkEAIv1Sig=;
-        b=KvwsCBsMWwwrPok55xhEpP5x4NbRqcLj73//JGPpWxkW6Ax/9BhwUfVb49hcbZ4exX
-         fqKCMtHCBLO7UwgDmWrGz7nXV0rUUphNmecR+S4EZL5Os792S7vqp/oxvYGXkApNrT9N
-         3m4RnnRUMkdgyl9wE75m5CfZ9faz8aDaoytaLStVxW60jhLee+6mmw9caW5/xFDYZiJU
-         nGIXba0ckjEGvGUorCqigKLrdR5uGCJ38j2XwC1igx5orLCLVWmmFCeREFSM7R+4ZCG2
-         KTXn1GQosTolVtRml1qsgabwyFV2jLGFY+Ncxwij1Q/0A07yE8szJb9J4ho+QejD0UbH
-         2mgw==
-X-Gm-Message-State: AOJu0Yyth0De59I6pRqHLIs0NvsTyHDjfPDEjWe3BaLTC/R2i9vqVH7I
-	yOzca5JU+r/p82/8LfTk0miM06hNPh3nVCnw8wV7vq1tyOQb78y0oTQdm6GZrjxXclD+y+hr1fY
-	cSJ/wf2jwnKtgj9WlL93gHx6bCSE=
-X-Google-Smtp-Source: AGHT+IFI7f8zRnUFHL//+7Q91/XGXBBaPplGw9xgtWCKwMk1l/Cp5jaXJJoZ2ImepjESxtuomso0X+FvryVl+x8j934=
-X-Received: by 2002:a17:906:190f:b0:a31:24ba:1f73 with SMTP id
- a15-20020a170906190f00b00a3124ba1f73mr191929eje.45.1706305875256; Fri, 26 Jan
- 2024 13:51:15 -0800 (PST)
+        d=1e100.net; s=20230601; t=1706305887; x=1706910687;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=MqrpniylWfWC1VCZp5L8n3yVakZrt949RVza9zF/u5c=;
+        b=PW2B3RxWawRakwmNFtdX0aiqTZIPExAXEsbbH3NSCkfQ+1qP4ccuDs3adUkMpT/b/r
+         /6oRp0KLDdB72Xca7KZfc2wEgiLZZB9+GUMdDF5pXekmohMRpDyXghqBtv6KE6keDVWE
+         4x8ZoMGtup1b3toj30CAYesyLe1teIZUSvyYns6gD0sxCCJ5t/6tMgmpTr65SOSk8/oe
+         Qa5PZiKboFPR6xiYRoZI73PFzydfknL9Ej8rKdpmQ8FzRep4apsGsqGOzI1thPrf31Yb
+         r4I6pTVEEPgqKYe+HBNI+77noR5gl5L+UZ15XLyckipjTfQBM1CGRjBfAxVOfLq40xMs
+         aGjw==
+X-Gm-Message-State: AOJu0YwMrUCFRWjzFB5TdIDA0x/qgVATnC8SCh3uKe3RdHmBa03eMkSf
+	SQtWMBnaG6KTzMLFWXBP7/bS24IJcPoIvcCwjKstZhxvHh5Z11Nler+ITsSnSIQ27BvHbHnS2Ze
+	niPMUKg==
+X-Google-Smtp-Source: AGHT+IGijJqVFcmc6Pou6CF8BH5L0nxTTjISjx6tvsU10Sd5zPOElK71Sz3FKLfSjgtBKeZrmIVGvQ==
+X-Received: by 2002:a05:651c:1423:b0:2cd:8f26:a1e9 with SMTP id u35-20020a05651c142300b002cd8f26a1e9mr240093lje.37.1706305886756;
+        Fri, 26 Jan 2024 13:51:26 -0800 (PST)
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com. [209.85.128.45])
+        by smtp.gmail.com with ESMTPSA id if17-20020a0564025d9100b0055c741533e4sm997679edb.55.2024.01.26.13.51.25
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 26 Jan 2024 13:51:26 -0800 (PST)
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-40eb033c1b0so13572555e9.2
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 13:51:25 -0800 (PST)
+X-Received: by 2002:a05:600c:548b:b0:40e:7d24:cc15 with SMTP id
+ iv11-20020a05600c548b00b0040e7d24cc15mr344687wmb.34.1706305885604; Fri, 26
+ Jan 2024 13:51:25 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240102-j7200-pcie-s2r-v2-13-8e4f7d228ec2@bootlin.com> <20240126214336.GA453589@bhelgaas>
-In-Reply-To: <20240126214336.GA453589@bhelgaas>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Fri, 26 Jan 2024 23:50:39 +0200
-Message-ID: <CAHp75VcR_K-QYrkd1j_pW8_F3wjJx6s8a1DAT5gNci1P7_pkPA@mail.gmail.com>
-Subject: Re: [PATCH v2 13/15] PCI: cadence: add resume support to cdns_pcie_host_setup()
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Thomas Richard <thomas.richard@bootlin.com>, Linus Walleij <linus.walleij@linaro.org>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>, Tony Lindgren <tony@atomide.com>, 
-	Haojian Zhuang <haojian.zhuang@linaro.org>, Vignesh R <vigneshr@ti.com>, 
-	Aaro Koskinen <aaro.koskinen@iki.fi>, Janusz Krzysztofik <jmkrzyszt@gmail.com>, 
-	Andi Shyti <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>, Vinod Koul <vkoul@kernel.org>, 
-	Kishon Vijay Abraham I <kishon@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
-	Tom Joseph <tjoseph@cadence.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-omap@vger.kernel.org, linux-i2c@vger.kernel.org, 
-	linux-phy@lists.infradead.org, linux-pci@vger.kernel.org, 
-	gregory.clement@bootlin.com, theo.lebrun@bootlin.com, 
-	thomas.petazzoni@bootlin.com, u-kumar1@ti.com
+References: <cover.1705946889.git.dsterba@suse.com> <CAHk-=whNdMaN9ntZ47XRKP6DBes2E5w7fi-0U3H2+PS18p+Pzw@mail.gmail.com>
+ <20240126200008.GT31555@twin.jikos.cz> <8b2c6d1f-2e14-43a0-b48a-512a3d4a811d@suse.com>
+In-Reply-To: <8b2c6d1f-2e14-43a0-b48a-512a3d4a811d@suse.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Fri, 26 Jan 2024 13:51:09 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wjhtqo_FEqZkPuOVUNZzsGhjftdcN9aQpA3f3WD0qS1pA@mail.gmail.com>
+Message-ID: <CAHk-=wjhtqo_FEqZkPuOVUNZzsGhjftdcN9aQpA3f3WD0qS1pA@mail.gmail.com>
+Subject: Re: [GIT PULL] Btrfs fixes for 6.8-rc2
+To: Qu Wenruo <wqu@suse.com>
+Cc: dsterba@suse.cz, David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jan 26, 2024 at 11:43=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.org>=
- wrote:
-> On Fri, Jan 26, 2024 at 03:36:55PM +0100, Thomas Richard wrote:
+On Fri, 26 Jan 2024 at 13:39, Qu Wenruo <wqu@suse.com> wrote:
+>
+> Oh, I forgot the most obvious problem.
+>
+> This means the extent buffer is full of garbage.
 
-...
+Allocation lifetime problems?
 
-> It'd be super nice to have them the same.  Passing in a "probe" flag
-> works but seems a little harder to read in cdns_pcie_host_setup() and
-> you have to keep track of what it means in the callers.
+> What's the page size of the system? 4K or 16K or 64K?
 
-FWIW, in another patch with a similar approach I found it (the
-approach) a bit ugly and unmaintainable. I would suggest properly
-refactoring to create 2+ functions and use as needed.
+This is a bog-standard x86-64 system. With 32 cores (and 64 threads),
+but there's nothing remotely odd about it, except for the fact that
+it's running a very recent kernel...
 
---=20
-With Best Regards,
-Andy Shevchenko
+             Linus
