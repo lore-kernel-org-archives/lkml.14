@@ -1,70 +1,85 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE5C860B90;
-	Fri, 26 Jan 2024 09:06:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25A371428E;
+	Fri, 26 Jan 2024 09:07:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706260008; cv=none; b=nCJFaBYTpAiLqsiKsk5rjoLI0d92wMhbx7Q+EWG9WZ7GarBSWgmWZMfSK7ehyos2sBMPppcNavSI9Aze6yLT0ss7fiITDIB1DfkwLqncaQce3MnjuSMyz1BQVFeZibnpZTBcvXN2DIFvvK66N4AJQd4Ay7UFozu2wylcZ5nEiG8=
+	t=1706260058; cv=none; b=e3FBPlxHgb9ICTpjMknEFrtdm7E9AUxp/EyydM0ligi7qJXd6DP6LOdZxQn1HuinyAWbXtANU33v8zsmA1nJpEQJxXRuUHfm04SmMAyiigtohSWUa4CX+ZmRe4uqMGEYafg955PB5BX8BDhPaN4V9tjuxKqkiCQmFtVE+8wahyc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706260008; c=relaxed/simple;
-	bh=FmZ7L70FxZzdqagdRT1MctQ8VKv5y9VO6LoUIfjlsTQ=;
+	s=arc-20240116; t=1706260058; c=relaxed/simple;
+	bh=oebNiettGESaAJQHOpi1TBvd5lz5JYV/8vgPP+Wae1U=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pT8I4HVCc8fBIywDamug1+mM3G5z8OfnRizdbNOx2FX0ydsh5RPxHpqBNY25FyF1y1r527gzwHmq5oQEaKW6j2MKF9crICKrkXNdUv4e3pxW6wnkdsQlLBLkWO6S/nxV9J0m+wSI+ocupGaQ3h0fKp2i1oGi5KPXJX1VhXg5dNw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.94.2 #2 (Debian))
-	id 1rTIAG-006Eu5-Mh; Fri, 26 Jan 2024 17:06:21 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Fri, 26 Jan 2024 17:06:33 +0800
-Date: Fri, 26 Jan 2024 17:06:33 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Erick Archer <erick.archer@gmx.com>
-Cc: Corentin Labbe <clabbe.montjoie@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] crypto: sun8i-ce - Use kcalloc() instead of kzalloc()
-Message-ID: <ZbN2GfKU18pVEprw@gondor.apana.org.au>
-References: <20240121153407.8348-1-erick.archer@gmx.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZYiD0fJwUqNhC7gWyNhtMwwuC1D9XpifsCa3C1iyAqITCXauqtk6gEPlK/LPe2MTQFy1TeClqOzUNO05swc1/SsN2g/TnKZVa9eBnF6DxRpz+uWPKgi+WRSbTJehfxpZUlelCxt4pCykKNygB0+9k9RrgQQbWoclv4Puh1/hoJc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DP4gaoBr; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DP4gaoBr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DEB06C433C7;
+	Fri, 26 Jan 2024 09:07:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706260057;
+	bh=oebNiettGESaAJQHOpi1TBvd5lz5JYV/8vgPP+Wae1U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DP4gaoBruqekm9lG7/v4GzhWqKcrBslGTXHkPsfOrj5f4FZ4SZRGrvBXjPmy32L72
+	 SGbQmqMuyCeTySeVSLglKkKlwY27DCPP0csJWQgleQpFC/Zlr8LQ7ibJOhX5UfiWbi
+	 DMIOabubA1aSFLvknmwsZWqRTJKBrWi48Eoq+fjQ0g9o85pva6vZDTxxZIPc77s6UU
+	 glX9IXTcXG+CLZz/TfeXoLIrYzRavgUkfKxSwTnT66lfnzEuKmPo4R3qan79jrOaaX
+	 XlMYSqhEvnrIgtQQxKBtI3TPlO39ox0Wq2XXFQtXB6+n9O8GIcK/vIs7yI4NgliRgF
+	 NTx/BQhq9/q3A==
+Date: Fri, 26 Jan 2024 09:07:31 +0000
+From: Lee Jones <lee@kernel.org>
+To: =?utf-8?Q?=C5=81ukasz?= Majczak <lma@chromium.org>
+Cc: Gwendal Grignou <gwendal@chromium.org>,
+	Tzung-Bi Shih <tzungbi@kernel.org>,
+	Radoslaw Biernacki <biernacki@google.com>,
+	Wim Van Sebroeck <wim@linux-watchdog.org>,
+	Benson Leung <bleung@chromium.org>,
+	Guenter Roeck <groeck@chromium.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
+	chrome-platform@lists.linux.dev
+Subject: Re: (subset) [PATCH v3 3/3] mfd: cros_ec: Register EC-based watchdog
+ subdevice
+Message-ID: <20240126090731.GP74950@google.com>
+References: <20240119084328.3135503-1-lma@chromium.org>
+ <20240119084328.3135503-4-lma@chromium.org>
+ <170618986350.1469172.17149163593213396683.b4-ty@kernel.org>
+ <CAE5UKNp5oorZMJwor=8Z_2wtCSS23Q1-25_RNoDHNi1USx5_7Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240121153407.8348-1-erick.archer@gmx.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAE5UKNp5oorZMJwor=8Z_2wtCSS23Q1-25_RNoDHNi1USx5_7Q@mail.gmail.com>
 
-On Sun, Jan 21, 2024 at 04:34:07PM +0100, Erick Archer wrote:
-> As noted in the "Deprecated Interfaces, Language Features, Attributes,
-> and Conventions" documentation [1], size calculations (especially
-> multiplication) should not be performed in memory allocator (or similar)
-> function arguments due to the risk of them overflowing. This could lead
-> to values wrapping around and a smaller allocation being made than the
-> caller was expecting. Using those allocations could lead to linear
-> overflows of heap memory and other misbehaviors.
-> 
-> So, use the purpose specific kcalloc() function instead of the argument
-> size * count in the kzalloc() function.
-> 
-> Link: https://www.kernel.org/doc/html/next/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments [1]
-> Link: https://github.com/KSPP/linux/issues/162
-> Signed-off-by: Erick Archer <erick.archer@gmx.com>
-> ---
->  drivers/crypto/allwinner/sun8i-ce/sun8i-ce-hash.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+On Thu, 25 Jan 2024, Łukasz Majczak wrote:
 
-Patch applied.  Thanks.
+> On Thu, Jan 25, 2024 at 2:37 PM Lee Jones <lee@kernel.org> wrote:
+> >
+> > On Fri, 19 Jan 2024 08:43:27 +0000, Lukasz Majczak wrote:
+> > > Add ChromeOS EC-based watchdog as EC subdevice.
+> > >
+> > >
+> >
+> > Applied, thanks!
+> >
+> > [3/3] mfd: cros_ec: Register EC-based watchdog subdevice
+> >       commit: a1958f84deb5cdba020af725fc5003a05af4819c
+> >
+> > --
+> > Lee Jones [李琼斯]
+> >
+> Hi Lee,
+> 
+> I will send V4 of the patchset to address Krzysztof suggestions, in
+> that case I should skip adding V4 of this patch and have only patches
+> 1 and 2 in the V4 patchset?
+
+Yes please.  No need to resend patches which have already been merged.
+
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Lee Jones [李琼斯]
