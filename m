@@ -1,99 +1,98 @@
-Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF64B24B24
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 21:21:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A780B23770
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 21:23:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706304063; cv=none; b=DB035YguoeslzixnkbvlqOz7PeA9qVEn7cISgLRI4/gn2o6jprZjjNB/d0uD8Bn1kSj8FR7ktDidV/U9EkgZlpD73yIsMguVzDV0YprCtznhfZA1vfDEIcMvdi/YqfPWSYpXgIZCx/zg3Wm6w17XIE5i1n1VIz2vfzMRImblN+o=
+	t=1706304185; cv=none; b=F8Jbk0cO//u4Tc1lI0GVTS7OVXYqm8KknnaAZVVGIOQXBOvVSQaMTCJnM8ZFzNJiA8uu0nZu+z249/z0XMdQHtQHj/8/7zjyHQcphHHgtMHPQFI0yRjQFQ6UseFVbd7BuY2UbJTcj/86zWI5Vxre3hEW06lSy86pTaaWn+pvWw4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706304063; c=relaxed/simple;
-	bh=jqSQ6/JqtbJ7/Z4GvmSnpd6osmjgOZaJXviYh+bhU2c=;
+	s=arc-20240116; t=1706304185; c=relaxed/simple;
+	bh=OHfGdigSiNuQI05LLiv9w76Mce3WFxHYfN3o31XlRzA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RkVO9J0I7a2WrBYcQwNDgC8f8VuJuLSlEKYpHLbYGt3Y72FFujet9EZNM75wkooUQGz08/z0c19+FZdwKQDMKA6uI/jViaeHCWjIwbZDYOQtO1WwASeCDnH0q7CMyq5CO9HXVWA8oCCBvs4h15XRVO4cgO5tN3ZSirl7VU0eZcE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kSbqh9Wd; arc=none smtp.client-ip=209.85.128.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=Ik1TnsW8zTWXAYHL0cCEbbBPxzT453++4rJDQJCbD5YWKI6ouKR2POum0enoevlR/KAWBZ2efuBSLQvAWN0rPLeB+L2nYmG7aZZ37WsDL65cfVy2m/Chbq2La+qG0XxFthC34CR+JrjhtUOD18eg7H3MuzXVvjqcJdH4VXbV2dM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=JKJQguYs; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kSbqh9Wd"
-Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-602a0a45dd6so7447857b3.1
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 13:21:01 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="JKJQguYs"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-40e80046264so17900025e9.0
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 13:23:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1706304061; x=1706908861; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jqSQ6/JqtbJ7/Z4GvmSnpd6osmjgOZaJXviYh+bhU2c=;
-        b=kSbqh9WdjGyT1UGrfEzwGQc8VI/hk3+HrnAM61tz+aUJq0sRga23uPUefTE6HEtWKB
-         148wRpWZ0WUpPPee25txZoKouZJYjxeOCLAMJxu/w9cGdsJ+1bNi3FwNoGVoXRh+O3eW
-         59gZSzYfSa+RfJ2mamEaowm3nJH8zZgsMM9okKNqOEC00MiJoHKrgxrsDC9Brh4aBwvj
-         b9yLQcgu0l8OSdv2ew/IAodBzAgVCC6vc9gLoTk4LPhkecNoNPxSGWecDGyitN6WQbIu
-         AEHdD9Q65kN4R1PE9zZz6kUX6W5L0crbpE2FuN21EnPBsk+Up5vTw0X7w1XKhFzYUwPQ
-         rSfQ==
+        d=linux-foundation.org; s=google; t=1706304180; x=1706908980; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=VzYJT0Ks7UjMwY3R/pERVBkgLI/CNkWYntnCR1F4u48=;
+        b=JKJQguYsfLoW56IFUPSUXWW9/uayect2U5qYbZRNQjr/nCaWH2Lg72PH90TFnPmu0O
+         Rmkxg70qkzmGercDV40W5CbOOFJYKB7iYCY9K+G0cFeRoTJN/HiEE29xZOgIWt0aDs0W
+         3VIoF34c5zZNvFzfx6bFW6sEJwhc5sAYkChpo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706304061; x=1706908861;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jqSQ6/JqtbJ7/Z4GvmSnpd6osmjgOZaJXviYh+bhU2c=;
-        b=avdQEliS1Zh7l82/FRwArhBS8CuRiXx3kJ2ELIX2ZVV0Cbg7OH3UEnzXJi1e8dxhTh
-         4vWQDjS/0NBvkq5uGauZWE59hZD99tTFeIC35gdmKUjAm6kKQQxwVLo7+W3CKzQJIVqt
-         j9/+alDSD/pIn7JUnAvwhjRXqrRRx8tZVwyVSUPDN97Hvq+QYtsrkETgc2nV5Q8jQH2C
-         QiySCPCR/j8UpLYDSjJT6d/j+6uGkvrKMR4ylESGKU4qAvOiaT7WVU6JHG7efXaShL5N
-         vRzJ9mCRZ5pxUBJKm2cKwA5uCWJtWDXr6Mxll6C0EFhuMZvdBOIGsh5O0MTSpBBOtUN3
-         C8og==
-X-Gm-Message-State: AOJu0YzEj4HvjwgnRaeHfjdqrOOEYrZ66aDuG6hj8EFmm9k5FLvsSYtV
-	9yLyUEjmznGi0bteFiB0DycdmJyzVFDu4ZxhElD1c3ynmeL/WP6+/WUCxy9fYvYItEI4rx3v1OS
-	GpfDvuAkPEHWYoRNfodZSDoM5aTs0ThW1nKBw
-X-Google-Smtp-Source: AGHT+IEInO9IEFlzJRr6meAiSq4E2PgTyFNhUdgistQTybmuwE3VxXUiMiP/g5jRNnh4t1nO1wKJjTxi1oFnyckHOss=
-X-Received: by 2002:a05:690c:f8d:b0:5eb:3851:2bba with SMTP id
- df13-20020a05690c0f8d00b005eb38512bbamr522536ywb.41.1706304059761; Fri, 26
- Jan 2024 13:20:59 -0800 (PST)
+        d=1e100.net; s=20230601; t=1706304180; x=1706908980;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=VzYJT0Ks7UjMwY3R/pERVBkgLI/CNkWYntnCR1F4u48=;
+        b=pL0bpEj58Zf28k4MSSTdE6ponAWwmbjf3WgK1krYqiBSgEI2Y0TgUr0lPCDq/3wtKw
+         B1h55hdm8zvc2v5epJsLHzRSk6eeg2ImVPuVFdTLVX9RCJak2mlyjJcV95zFaQflIEm+
+         2ozq9x9IJMBI0qyU95HvZsTJj8SOPDt+dTtLnE7luBW5z+MKVi0Ej3A/eRHCilVi77Kl
+         eFbXESzbbIN6359oWLSxaRbyepjo18hvBwMTDfpULAjyP28+glEjDn5h1zUHHqz3abWL
+         fXsEYHtSfKuOq+kp/hMX/jEwu/l8+mPcpGbMftLL1xuyMf3PXGTLcJUDXG4FGwJIK6N2
+         rndA==
+X-Gm-Message-State: AOJu0YwL+dz70Nv+QdfbjotGLFxqfpblDWpzstnkP84lBpltlU5zG1WN
+	e//C+XFZpZW69EgR8Rdjqisle678upV5/ZOFh5SwxoS54xS5mz+18iBoMjT1LMynkbHFpwO8pcZ
+	thuxO3Q==
+X-Google-Smtp-Source: AGHT+IHtkDxvmJu+aJK6N/JqX6goY8XKI6V/w8CYdfo6yjmMZlR4UjPetO70pNxHA0RLSGPB8FLcSw==
+X-Received: by 2002:a7b:c38b:0:b0:40e:ce97:443a with SMTP id s11-20020a7bc38b000000b0040ece97443amr317307wmj.42.1706304180640;
+        Fri, 26 Jan 2024 13:23:00 -0800 (PST)
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com. [209.85.221.42])
+        by smtp.gmail.com with ESMTPSA id q7-20020a056402248700b0055c83efc9b5sm981094eda.62.2024.01.26.13.22.59
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 26 Jan 2024 13:23:00 -0800 (PST)
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-339261a6ec2so1030532f8f.0
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 13:22:59 -0800 (PST)
+X-Received: by 2002:a05:600c:5352:b0:40e:4179:d060 with SMTP id
+ hi18-20020a05600c535200b0040e4179d060mr323434wmb.65.1706304179586; Fri, 26
+ Jan 2024 13:22:59 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240126203353.1163059-1-tjmercier@google.com> <20240126210642.GK1567330@cmpxchg.org>
-In-Reply-To: <20240126210642.GK1567330@cmpxchg.org>
-From: "T.J. Mercier" <tjmercier@google.com>
-Date: Fri, 26 Jan 2024 13:20:48 -0800
-Message-ID: <CABdmKX2mZwVHSvJekT8UNt2a0WiiNnTTW-ZV=ZHvx0D1PoJuhQ@mail.gmail.com>
-Subject: Re: [PATCH] mm: memcg: Don't periodically flush stats when memcg is disabled
-To: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Michal Hocko <mhocko@kernel.org>, Roman Gushchin <roman.gushchin@linux.dev>, 
-	Shakeel Butt <shakeelb@google.com>, Muchun Song <muchun.song@linux.dev>, 
-	Andrew Morton <akpm@linux-foundation.org>, android-mm@google.com, 
-	Minchan Kim <minchan@google.com>, cgroups@vger.kernel.org, linux-mm@kvack.org, 
+References: <Za6JwRpknVIlfhPF@work>
+In-Reply-To: <Za6JwRpknVIlfhPF@work>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Fri, 26 Jan 2024 13:22:42 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wjG4jdE19-vWWhAX3ByfbNr4DJS-pwiN9oY38WkhMZ57g@mail.gmail.com>
+Message-ID: <CAHk-=wjG4jdE19-vWWhAX3ByfbNr4DJS-pwiN9oY38WkhMZ57g@mail.gmail.com>
+Subject: Re: [GIT PULL] Enable -Wstringop-overflow globally
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>, linux-hardening@vger.kernel.org, 
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jan 26, 2024 at 1:06=E2=80=AFPM Johannes Weiner <hannes@cmpxchg.org=
-> wrote:
+On Mon, 22 Jan 2024 at 07:29, Gustavo A. R. Silva <gustavoars@kernel.org> wrote:
 >
-> On Fri, Jan 26, 2024 at 08:33:52PM +0000, T.J. Mercier wrote:
-> > The root memcg is onlined even when memcg is disabled. When it's online=
-d
-> > a 2 second periodic stat flush is started, but no stat flushing is
-> > required when memcg is disabled because there can be no child memcgs.
-> > Most calls to flush memcg stats are avoided when memcg is disabled as a
-> > result of the mem_cgroup_disabled check [1] added in [2], but the
-> > periodic flushing started in mem_cgroup_css_online is not. Skip it.
-> >
-> > [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/=
-tree/mm/memcontrol.c?h=3Dv6.8-rc1#n753
-> > [2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/=
-commit/?id=3D7d7ef0a4686abe43cd76a141b340a348f45ecdf2
-> >
-> > Fixes: aa48e47e3906 ("memcg: infrastructure to flush memcg stats")
-> > Reported-by: Minchan Kim <minchan@google.com>
-> > Signed-off-by: T.J. Mercier <tjmercier@google.com>
->
-> With what Shakeel pointed out resolved:
->
-> Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+> Enable -Wstringop-overflow globally
 
-Thanks Shakeel and Johannes. v2 is here, hopefully fixed up correctly:
-https://lore.kernel.org/all/20240126211927.1171338-1-tjmercier@google.com/
+I suspect I'll have to revert this.
+
+On arm64, I get a "writing 16 bytes into a region of size 0" in the Xe driver
+
+   drivers/gpu/drm/xe/xe_gt_pagefault.c:340
+
+but I haven't looked into it much yet.
+
+It's not some gcc-11 issue, though, this is with gcc version 13.2.1
+
+It looks like the kernel test robot reported this too (for s390), at
+
+    https://lore.kernel.org/all/202401161031.hjGJHMiJ-lkp@intel.com/T/
+
+and in that case it was gcc-13.2.0.
+
+So I don't think the issue is about gcc-11 at all, but about other
+random details.
+
+             Linus
