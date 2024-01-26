@@ -1,113 +1,101 @@
-Received: from mickerik.phytec.de (mickerik.phytec.de [91.26.50.163])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F50C1482F3
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 08:57:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.26.50.163
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF61B148319;
+	Fri, 26 Jan 2024 08:57:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706259462; cv=none; b=kg9qoFAvJFfQEeuyEihlhTQQUDjqlJsCuIDbh4OjBimychZOCmP/JAfuS8y4cHKBaH6lRNwi+S5opfnC+IrLlK3q4fzx2+f23XEg3LdTcFP8LNGguIMXTmke/7F5yFGFdee1IbGHVJUDzBV6FkQT2We51Id+yciy75IPtALyxeA=
+	t=1706259464; cv=none; b=Qf8VfxcDWResXfhVOpPzsMHvAMTM6QEfn9ULsY5Hc0nhGKgMwIkb3yIspVayd8BUDUQzU5PlR8C8DN8+vWQ70PfcpDiV46+okqt7sFngaXF+FUzuF0tEmnt32rTtQOSzS0F0Z0UoeOq3MaYLWs1MTjURMHqenORowf8yiOXfQkk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706259462; c=relaxed/simple;
-	bh=44w1Eo7RhlW6nXS4kAM9bhh18vbkIhL0x13ZWpwygyQ=;
-	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=bG8Cp6mccmbAUvoTFdgOMjugyIGdTscMDGFB0ozyq4ouFU6U2ez3Nh0Jfsy06VegB1CONX6klanCRNJSLCtZOskcXVrMsCXN8dFYNQme/f8PwN3cgQ4N9dZ0o/ngjmofecsUqTl29C4Wb165tBkQs+PT9FKeI54giOLPb3xhWDo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytec.de; spf=pass smtp.mailfrom=phytec.de; dkim=pass (1024-bit key) header.d=phytec.de header.i=@phytec.de header.b=LFfwpKA9; arc=none smtp.client-ip=91.26.50.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=phytec.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytec.de
+	s=arc-20240116; t=1706259464; c=relaxed/simple;
+	bh=VmVupQ0f4JlKloBwqRwVJNycDk88RDOb6fGszV69574=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=ZU20AUg8I2q08xvJPsWUBNoJDYhMc1hAfTVc+nN6DV7YHhuiYOVlx6/mS8q3TWezfr3PaIlr1wcYCvCyLuqbWa3RpA+LRIf3NUx9Hkf1c9MZYY6Bj4D24LCO50ES4/szngFRCH5FuFCeeHSBKctDS7Ur5TzblKzcod31esc8MMU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hNFNdqg+; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=phytec.de header.i=@phytec.de header.b="LFfwpKA9"
-DKIM-Signature: v=1; a=rsa-sha256; d=phytec.de; s=a4; c=relaxed/simple;
-	q=dns/txt; i=@phytec.de; t=1706259456; x=1708851456;
-	h=From:Sender:Reply-To:Subject:Date:Message-ID:To:CC:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=44w1Eo7RhlW6nXS4kAM9bhh18vbkIhL0x13ZWpwygyQ=;
-	b=LFfwpKA9SmBgFuFZshgLaYZpbu3cL0WgOGget8JdV4wT3XvJn+7ZQfZcHJI+wVJ1
-	eEjzo3DsrX6QtGABRUdGgjU7YlJeZBzQims94kD+XpsfPgTROsSrJdPNLSBxUvrc
-	mvVb4+bOobmeQcYa8+9mjQv/h211vFOk4QLWw4Wxh04=;
-X-AuditID: ac14000a-fadff7000000290d-b9-65b374007dc9
-Received: from berlix.phytec.de (Unknown_Domain [172.25.0.12])
-	(using TLS with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(Client did not present a certificate)
-	by mickerik.phytec.de (PHYTEC Mail Gateway) with SMTP id A0.F9.10509.00473B56; Fri, 26 Jan 2024 09:57:36 +0100 (CET)
-Received: from lws-moog.phytec.de (172.25.0.11) by Berlix.phytec.de
- (172.25.0.12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.6; Fri, 26 Jan
- 2024 09:57:36 +0100
-From: Yannic Moog <y.moog@phytec.de>
-Subject: [PATCH RFC for upstream 0/4] Add support for ETML1010G3DRA LVDS
- display on phyBOARD-Pollux
-Date: Fri, 26 Jan 2024 09:57:22 +0100
-Message-ID: <20240126-wip-y-moog-phytec-de-upstream-pollux-lvds-v1-0-8ec5b48eec05@phytec.de>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hNFNdqg+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706259463; x=1737795463;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=VmVupQ0f4JlKloBwqRwVJNycDk88RDOb6fGszV69574=;
+  b=hNFNdqg+EgsVlllK8rvGNe5zfXotTth8rEMLH/j8yJSOuL5DqMajS4+4
+   1L7s7CGVptD56H9XwsbIaF0RLVMWS4ahWrp4dr17MnXOLRlUzPXbEdOC6
+   mG8N4kh29C5F3/DtEI8B8u298QbKlvwd1NJfvlgYjABhGYG75WaYcsxfZ
+   kfeIFtnz96YIi0QMh3Tf6yO6uj7+VHaN8CfM4n5FTeAZ1bD9QJWiIDAqC
+   OQbcIBFnEVwlVJt9VgJ4QoSXSMu37JlRySt5X2ERMwDSePrUiim7m5G1O
+   rLR3PDzBGZIXOlw2fhTAU+rzZZVY9UT0Dw1ZCarumnorsdrivWCgZbtqu
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="9792708"
+X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
+   d="scan'208";a="9792708"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2024 00:57:42 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="930310216"
+X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
+   d="scan'208";a="930310216"
+Received: from yanli3-mobl.ccr.corp.intel.com (HELO xiongzha-desk1.ccr.corp.intel.com) ([10.254.213.178])
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2024 00:57:37 -0800
+From: Xiong Zhang <xiong.y.zhang@linux.intel.com>
+To: seanjc@google.com,
+	pbonzini@redhat.com,
+	peterz@infradead.org,
+	mizhang@google.com,
+	kan.liang@intel.com,
+	zhenyuw@linux.intel.com,
+	dapeng1.mi@linux.intel.com,
+	jmattson@google.com
+Cc: kvm@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	zhiyuan.lv@intel.com,
+	eranian@google.com,
+	irogers@google.com,
+	samantha.alt@intel.com,
+	like.xu.linux@gmail.com,
+	chao.gao@intel.com,
+	xiong.y.zhang@linux.intel.com
+Subject: [RFC PATCH 25/41] KVM: x86/pmu: Introduce macro PMU_CAP_PERF_METRICS
+Date: Fri, 26 Jan 2024 16:54:28 +0800
+Message-Id: <20240126085444.324918-26-xiong.y.zhang@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240126085444.324918-1-xiong.y.zhang@linux.intel.com>
+References: <20240126085444.324918-1-xiong.y.zhang@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAPJzs2UC/52OwQrCMBBEf0VydiUbY1s8CYIf4FU8hO7WBqoJS
- Y0W6b8bK4JXPS2zzLyZh4gcLEexnj1E4GSjdZcscD4TdWsuJwZLWQsllZaIFdyshwHOzp3At0P
- PNRDD1cc+sDmDd113vUOXKEJZLJtCaqKKKpF5PnBj71PXQex329evceF1PnlxzKK1sXdhmCYln
- Nx/tCcECVoh1QZlXrLavAML4qklqS+y0r+QVSaXWBaNxpUxVHyTx3F8AslXSwtUAQAA
-To: Neil Armstrong <neil.armstrong@linaro.org>, Jessica Zhang
-	<quic_jesszhan@quicinc.com>, Sam Ravnborg <sam@ravnborg.org>, David Airlie
-	<airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, Maarten Lankhorst
-	<maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
-	<conor+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Shawn Guo
-	<shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix
- Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP
- Linux Team <linux-imx@nxp.com>, Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>
-CC: Primoz Fiser <primoz.fiser@norik.com>, <dri-devel@lists.freedesktop.org>,
-	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <upstream@lists.phytec.de>, Yannic
- Moog <y.moog@phytec.de>
-X-Mailer: b4 0.12.3
-X-ClientProxiedBy: Berlix.phytec.de (172.25.0.12) To Berlix.phytec.de
- (172.25.0.12)
-X-Brightmail-Tracker: H4sIAAAAAAAAA02SbyzUcRzH7/v7dz+3tJ9j83VNliWxhTbXvm1lPev7QMmMWbW48Ru3u5zO
-	qdTWmaQc+dOGuTiHsroTOXSINLMwxZpoCe3ogXYihahM+7m1PHt93p/3Pq8nH5aUzlAyVpmm
-	47VpCrU/I6EafUS7Dol0rXzYzIIXGnxfR6ClhkKAGntGCLT1rJRENf0jNHq3usQgx3gUspR1
-	Uqho3kEi29wEjQy/HpNorKuKQbXL7RTKy2+g0VLnJECDBgeNcu5VkOhWT78YbdptFHq00Q7Q
-	fJs32ugyUahtoZRGBYuBKHdKfsIHN5oaAe5ZM1O40zgtxjZLPoOnJroZbBqKxp8KBgjc+kCP
-	iwtyafxz9SmNWxY7CFy8GYZLu2/gB+XjDG4dvo5/2Pae4c5KjiXzauVlXhsakShJnXwxDdKd
-	4qsrTVY6G1QzBsCykAuHuc1yA5CwUq6egBWz9wnX4ACwt/cLMAA3luH2w7n5GVpgT46Hs5sb
-	YoEpLgA+dBq3O+7ceTj1vFvsYg84VPmZEgQkFwSbu0KFmOT8oP1rFSnch5yVgNWF9m2ZF2dg
-	oNP2hnG1VgCsswcIDDlPeLtukhBYyvnC+dG7YlfuB8tHnKSLY2H7ip0oAR7GHW7jf7dxh9sM
-	SAuQXlQmqXitUhWSnpql45NCknkbEH7ASyTpAEVVuA8QLOgDkCX9vdzD5S281D1ZkXWN12oS
-	tJlqPqMP7GEpf293650YXsqlKHS8iufTee2/LcG6ybJBzuvqhPqOo3FrwVuRau5KgF4xbLZw
-	8cedojKd78k/L32jj2TvC1yKqP+YeGq45IM6Il5l/SZf+75YFrhcazYN+MWNHVzUaBQxFeV+
-	CxcCSlfKC/WnQUqUftRZfy5cdun3292ZmobK2snIJ7JX1vX2GvN60Lip6WanOPZACfTO86cy
-	UhWHg0lthuIv5lOKUvECAAA=
+Content-Transfer-Encoding: 8bit
 
-This series adds the LVDS panel support in simple-panel, introduces
-device tree support for the LVDS panel on the phyBOARD-Pollux and
-enables the FSL_LDB config option needed for the driver for the imx8mp
-ldb bridge.
+From: Dapeng Mi <dapeng1.mi@linux.intel.com>
 
+Define macro PMU_CAP_PERF_METRICS to represent bit[15] of
+MSR_IA32_PERF_CAPABILITIES MSR. This bit is used to represent whether
+perf metrics feature is enabled.
+
+Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 ---
-Primoz Fiser (1):
-      drm/panel: simple: Add EDT ETML1010G3DRA panel
+ arch/x86/kvm/vmx/capabilities.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-Yannic Moog (3):
-      dt-bindings: display: panel-simple: add ETML1010G3DRA
-      arm64: dts: imx8mp-phyboard-pollux-rdk: add etml panel support
-      arm64: defconfig: enable i.MX8MP ldb bridge
-
- .../bindings/display/panel/panel-simple.yaml       |  2 +
- .../dts/freescale/imx8mp-phyboard-pollux-rdk.dts   | 74 ++++++++++++++++++++++
- arch/arm64/configs/defconfig                       |  1 +
- drivers/gpu/drm/panel/panel-simple.c               | 30 +++++++++
- 4 files changed, 107 insertions(+)
----
-base-commit: de927f6c0b07d9e698416c5b287c521b07694cac
-change-id: 20240118-wip-y-moog-phytec-de-upstream-pollux-lvds-763f604dd8d8
-
-Best regards,
+diff --git a/arch/x86/kvm/vmx/capabilities.h b/arch/x86/kvm/vmx/capabilities.h
+index 41a4533f9989..d8317552b634 100644
+--- a/arch/x86/kvm/vmx/capabilities.h
++++ b/arch/x86/kvm/vmx/capabilities.h
+@@ -22,6 +22,7 @@ extern int __read_mostly pt_mode;
+ #define PT_MODE_HOST_GUEST	1
+ 
+ #define PMU_CAP_FW_WRITES	(1ULL << 13)
++#define PMU_CAP_PERF_METRICS	BIT_ULL(15)
+ #define PMU_CAP_LBR_FMT		0x3f
+ 
+ struct nested_vmx_msrs {
 -- 
-Yannic Moog <y.moog@phytec.de>
+2.34.1
 
