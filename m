@@ -1,72 +1,47 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B50A71427E
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 08:18:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BB9B1BF29
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 08:18:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706257127; cv=none; b=Mg8uOLlHlHbwcvJMPSWN+W0KuBMEinvjmKGEXnJlyrZ+ayujH0/ZOoRMR75weAus8hQyXDKWMKdw8Nfl7z0F+nBU3lVJpLUALNKBKiWjZn5aYKzlwJdN+yiiy33VXgrKDR1FkvZQ2i/7KmTXF/vERn8gpucmSkn0Ou8qey7UsG8=
+	t=1706257134; cv=none; b=qVixFf54ts4p3E23aOSpVGOLiKvaf/YM1+mDz7dCjac/c5YQ9JzuwJTko1w8KXqk6MbQ/wlUK5CiHkxHKIiBrapoPBhwkOHIKSLamKCJx4mzxO2BlXb4yO/1M1E6C7MX51RpOc4wyZm4vEUn62/YtqphQx698NcvqnLEDq5Jmds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706257127; c=relaxed/simple;
-	bh=1v1p0jrAJR50Kueh7YF9CPLO/I/oXE+euJsb8wrKQ+M=;
+	s=arc-20240116; t=1706257134; c=relaxed/simple;
+	bh=0cBNOD+N57fuoS2i/Us0tGku1g2RRfTv8uymhAwQcwE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=a8W//ZMov3IXShrJHXlPI93PxnNtj4Ovcn6Alg/JA4OWhBaBpcW+FXgvfN5JfFwYta4eTrsNrzj8kAn3P0YdDskbK7tdXvB81JL83iF4iWJehIFxMhL0S0Xn755HN5B5PzcSq4Z2gZdy+pAYUi6XxFmBTe0wPjgqObRvbzphSXs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=H+JeTIhF; arc=none smtp.client-ip=209.85.208.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=pHly7XDY0+6QPJ2D3G3cxlod80eKfCLuU0j6Od0i8FegofzaiycY2/WvA2SjTXCpLnl/iuLK7RUrZOxDqX5IpuHkBudYlgpbEbevdrhqbps8NUBDJRlbjK8Rc4SC0IYwxqvUErkP9yGUqe6rV56m2dHVN0HMhNAsp5RSGKEKgSU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JIIJkC6i; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="H+JeTIhF"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-55a90b2b554so113931a12.1
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 00:18:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706257124; x=1706861924; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=3eKbQ9dPSaynT5h1DWbytWa8cizVUJhYOPdgPpMBlYw=;
-        b=H+JeTIhFKdgDE97RUL23Y7vt9Hab569XLsLp7NT00I2ZZ74HeOAnxqIgK9P//DwNIG
-         iengf9mXTH1kjZpDsMV97EfQMnViFr+2XiOieFlOKYEm37MRjy3bgOuJf6d+4LmHx+Hw
-         QSR3yZCf3Xzj4LbZmJCYc54l63C/qrRMqqppr+nfT5a+mXSYQR/klx/C6og0iacysYVw
-         q5QYVXfazGNnbgmsK7E8w5pezGWsHdGaJbv6NoMapvfzJNKuR4zWTo+jvraxBOiC9uGr
-         1ONZj/FMDRb/dREzmF0rpo0ywp/nYHT7XfSsbyiVvGPaFfO1vwCnWO6aPOIZL4eQFXPn
-         de+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706257124; x=1706861924;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3eKbQ9dPSaynT5h1DWbytWa8cizVUJhYOPdgPpMBlYw=;
-        b=XKHLh+JCeDeWk7Q9JRlgLtpLlK8+lmRCVeaQFTEKT06l4ybDg6RuF9CvQHYewcKxgR
-         JU6iv2hiAFmnTZwFL746Odk18LNiBb11mg+sLskFp4Iih5sWGuaQDfU4c+FDDj23g8n1
-         BBTen3YskWMFWrqyoG+VuxnYtZltm1asIBr0m+XDHxlHf5QiG60RpSxQVwKqK8NFzwTy
-         7fXC4Pm9QyBqHerhBFOhkfZunjKYuc0lo7o+Q8Z0kOR4ipjlAtf5WkeB81guVhUvyOlj
-         4gpesjXmKEQ7DxjPf7+9j80Nc4lYZ3y6/Ql77k1ITcpVPXHZlIcbVo5B33T884p8eh2D
-         +jrg==
-X-Gm-Message-State: AOJu0YyF3vcTExqdhlxftjB6KOsxNn2Yizo+mtqexl7jYWhMfGctMlvF
-	6dOLKOKR9rx5kc1kaIj/aJ7qV+1wnSq7ocAg6cuhyORkr2s4oDY5SKczEZ5z+jBrYVkbo13Y+EB
-	a
-X-Google-Smtp-Source: AGHT+IGAHjYbYuhhbEn3hJ2jgzKambyOC27Tkan/Yq9Qzl1vlpSHYnZRuSY3GbgR8HYC+EhmgrcwyQ==
-X-Received: by 2002:a17:907:1751:b0:a30:ec79:25f3 with SMTP id lf17-20020a170907175100b00a30ec7925f3mr893519ejc.42.1706257123688;
-        Fri, 26 Jan 2024 00:18:43 -0800 (PST)
-Received: from linaro.org ([79.115.23.25])
-        by smtp.gmail.com with ESMTPSA id ck5-20020a170906c44500b00a31930ffa7esm358242ejb.153.2024.01.26.00.18.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Jan 2024 00:18:43 -0800 (PST)
-Date: Fri, 26 Jan 2024 10:18:41 +0200
-From: Abel Vesa <abel.vesa@linaro.org>
-To: Konrad Dybcio <konrad.dybcio@linaro.org>
-Cc: Andy Gross <agross@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Sibi Sankar <quic_sibis@quicinc.com>,
-	Rajendra Nayak <quic_rjendra@quicinc.com>,
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 05/11] arm64: dts: qcom: x1e80100: Add TCSR node
-Message-ID: <ZbNq4b813348ZiV8@linaro.org>
-References: <20240123-x1e80100-dts-missing-nodes-v4-0-072dc2f5c153@linaro.org>
- <20240123-x1e80100-dts-missing-nodes-v4-5-072dc2f5c153@linaro.org>
- <b0f4236a-c87e-4d50-b1a0-42ed5b015b86@linaro.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JIIJkC6i"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07228C433C7;
+	Fri, 26 Jan 2024 08:18:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706257134;
+	bh=0cBNOD+N57fuoS2i/Us0tGku1g2RRfTv8uymhAwQcwE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JIIJkC6igqbtk5IK1szVD/znFbk0Rlxyh2X18O/mbq4ElwmMqcv9KvQbqE6jq4eTQ
+	 F0JI/w7lev2EtxW7pna5IbUXKMAbdAl4HHEhoZIS1aSkOt4WWqNKLBCziYz9PL2NBl
+	 zS+5FMHfyR1Y/iWcrixFOO4V/x4uZiOPe9ucGRlZYdcngpTvWjjGTSdxDa2md/9QL4
+	 K3bplki90blzV5vCouu9QXSKs//W4iwMKSj+Jqsr/7bVnckS66OFi3mT8kI14300PK
+	 0VdWWz4tGL5zz9M+VwbTQIEF6TO8w1Ohuv9TvKW+Y0HnJgudNe4DioR3IKqj4rwC9S
+	 6rxaXLCXlumNQ==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1rTHQU-000000002rv-48Qc;
+	Fri, 26 Jan 2024 09:19:03 +0100
+Date: Fri, 26 Jan 2024 09:19:02 +0100
+From: Johan Hovold <johan@kernel.org>
+To: Vamshi Gajjela <vamshigajjela@google.com>
+Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Johan Hovold <johan+linaro@kernel.org>,
+	Caleb Connolly <caleb.connolly@linaro.org>,
+	linux-kernel@vger.kernel.org, manugautam@google.com
+Subject: Re: [PATCH v1 RESEND] spmi: hisi-spmi-controller: Fix kernel panic
+ on rmmod
+Message-ID: <ZbNq9q5mM6kRq7c3@hovoldconsulting.com>
+References: <20240126061153.2883199-1-vamshigajjela@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,47 +50,54 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <b0f4236a-c87e-4d50-b1a0-42ed5b015b86@linaro.org>
+In-Reply-To: <20240126061153.2883199-1-vamshigajjela@google.com>
 
-On 24-01-23 19:09:37, Konrad Dybcio wrote:
+On Fri, Jan 26, 2024 at 11:41:53AM +0530, Vamshi Gajjela wrote:
+> Ensure consistency in spmi_controller pointers between
+> spmi_controller_remove/put and driver spmi_del_controller functions.
+> The former requires a pointer to struct spmi_controller, while the
+> latter passes a pointer of struct spmi_controller_dev, leading to a
+> "Null pointer exception".
 > 
-> 
-> On 1/23/24 12:01, Abel Vesa wrote:
-> > Add the TCSR clock controller and halt register space node.
-> > 
-> > Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
-> > ---
-> 
-> The former - yes, the latter - ?
+> 'nr' member of struct spmi_controller, which serves as an identifier
+> for the controller/bus. This value is assigned a dynamic ID in
+> spmi_controller_alloc, and overriding it from the driver results in an
+> ida_free error "ida_free called for id=xx which is not allocated".
 
-Hm, so halt register space is at 0x1f60000. That would be in the mutex
-region. But the mutex region is 0x20000 short, even on SM8650 and
-SM8550. Need to see why is that, historically.
+No Fixes tag?
 
-Either way, the tcsr node region still contains the regs needed by the
-SCM driver to enable download mode. So I will rephrase this accordingly.
-
+> Signed-off-by: Vamshi Gajjela <vamshigajjela@google.com>
+> ---
+>  drivers/spmi/hisi-spmi-controller.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> Konrad
-> >   arch/arm64/boot/dts/qcom/x1e80100.dtsi | 8 ++++++++
-> >   1 file changed, 8 insertions(+)
-> > 
-> > diff --git a/arch/arm64/boot/dts/qcom/x1e80100.dtsi b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
-> > index be69e71b7f53..2b6c55a486b2 100644
-> > --- a/arch/arm64/boot/dts/qcom/x1e80100.dtsi
-> > +++ b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
-> > @@ -2606,6 +2606,14 @@ tcsr_mutex: hwlock@1f40000 {
-> >   			#hwlock-cells = <1>;
-> >   		};
-> > +		tcsr: clock-controller@1fc0000 {
-> > +			compatible = "qcom,x1e80100-tcsr", "syscon";
-> > +			reg = <0 0x01fc0000 0 0x30000>;
-> > +			clocks = <&rpmhcc RPMH_CXO_CLK>;
-> > +			#clock-cells = <1>;
-> > +			#reset-cells = <1>;
-> > +		};
-> > +
-> >   		gem_noc: interconnect@26400000 {
-> >   			compatible = "qcom,x1e80100-gem-noc";
-> >   			reg = <0 0x26400000 0 0x311200>;
-> > 
+> diff --git a/drivers/spmi/hisi-spmi-controller.c b/drivers/spmi/hisi-spmi-controller.c
+> index 9cbd473487cb..af51ffe24072 100644
+> --- a/drivers/spmi/hisi-spmi-controller.c
+> +++ b/drivers/spmi/hisi-spmi-controller.c
+> @@ -303,7 +303,6 @@ static int spmi_controller_probe(struct platform_device *pdev)
+>  
+>  	spin_lock_init(&spmi_controller->lock);
+>  
+> -	ctrl->nr = spmi_controller->channel;
+>  	ctrl->dev.parent = pdev->dev.parent;
+>  	ctrl->dev.of_node = of_node_get(pdev->dev.of_node);
+>  
+> @@ -326,7 +325,8 @@ static int spmi_controller_probe(struct platform_device *pdev)
+>  
+>  static void spmi_del_controller(struct platform_device *pdev)
+
+This function does not exist in mainline so presumably this is some bug
+you've introduced in your downstream driver that you're trying to fix.
+
+So this patch looks all bogus.
+
+>  {
+> -	struct spmi_controller *ctrl = platform_get_drvdata(pdev);
+> +	struct spmi_controller_dev *spmi_controller = platform_get_drvdata(pdev);
+> +	struct spmi_controller *ctrl = spmi_controller->controller;
+>  
+>  	spmi_controller_remove(ctrl);
+>  	spmi_controller_put(ctrl);
+
+Johan
