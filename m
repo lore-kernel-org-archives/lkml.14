@@ -1,48 +1,63 @@
-Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A73DF1D55F
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 15:25:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DE931EA71
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 15:26:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706282750; cv=none; b=Ss5iokE7sHK8BmsARIOHM0YlWtY/MokLW3PoYiYBYiNBquuHclaMXw7sVlCf//tciHKo3NaB7+fOPo4hOq0F2YC5oQq93jc+AO3Gt/ejGcJ2LcWzduFEJygCqbVE5ZD84gA10oP0hZ3B3MyHudmScWhfVfXepWenXT50smbOh6A=
+	t=1706282766; cv=none; b=scMpos41myJxWOT6+w5us4U1E69Uou8QfBBDUKSs/A+A8pClCZ4G2jKGjUCXJy07IVOn99cl9YQuffQ4M/WcFrOX8eLvYetUdjCbm1BmKlLMP4HUtpm1i0mE7htOcqxjmcUkIab7FruYdeZT8x84FRAfq54IrCKjCfME0sHZ2n4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706282750; c=relaxed/simple;
-	bh=c2eGy8j5jjUuuogbCux3HCSCTf68lnabsdin1Kloo8E=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=aGHeOHZB3lOEiUegydXOiZgm5PRGeGnViaOyPIkYjZRt1gk7iyiMgVuwJ19D/mAz5J1IUCukz33V9FzxDaKir+3CAOiVhioTgmGEb6uqmyMns33T3fxPs4cVzcpli8erQHlWHhx0gzhnPaQb87+syqFx0ic/vATrUoAsOQvYwUU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=dYyUEugy; arc=none smtp.client-ip=95.215.58.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1706282766; c=relaxed/simple;
+	bh=BRhWTo+/NPWNxQJuyEqZDTWB1pcTfonuimTvflg1itU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jam5j29kEzpvu1W2+9/wmN2ifGrNRBZX2xJg6rbITP1GUak5Mn0MrRq2FdK4QOzxJ0SqvW6t/ICSfHk0WU6jzHpNOqAYLnvDVwtsF+JY8ktpGWB4L9Z2yYBfJuvTVa0lBtzonKrJqp9ZZGSleITJUrDzZpWgx2zMInT0tGQzwds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kb9/bTBx; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="dYyUEugy"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1706282746;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0iArgVEROeDskUb/co444WxwcA+iCGyxYPbAZNymH1g=;
-	b=dYyUEugy+xtDscuDVSmLIJChMKlpJo7hUQlBy8G4LmvOhGPDib/TUY2KXKt7cRInLKAa1I
-	b1QrLCFOaKrSbCu0c2Y3x47nwNUIIzTHzZvBCbhCbYQlzL25YqVImvkO36hN0p1LqAbwUF
-	8bvuvbI8HTBoL2mr29vGEt4GJQlLJPQ=
-From: Gang Li <gang.li@linux.dev>
-To: David Hildenbrand <david@redhat.com>,
-	David Rientjes <rientjes@google.com>,
-	Mike Kravetz <mike.kravetz@oracle.com>,
-	Muchun Song <muchun.song@linux.dev>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Tim Chen <tim.c.chen@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kb9/bTBx"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3394dc2ae23so734621f8f.2
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 07:26:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1706282762; x=1706887562; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=d7qX8odXPP3RV5R94dRW7ALCQ1ih+UkRr3f07aHV/1A=;
+        b=kb9/bTBxLYZgcsMhxkW+GNNxUyo5T1By7UH9gd2VW6GmWz8J0poEW2sSeXJo2mK9LU
+         gJecFM2fNJQ32BeJGZta976IFCACusHJkEfRJfHLz4UjTOU893ZAC+z3uHD3Du6fAMcx
+         s9bqJHs7Lqy/967ZU7g0oA43DzJN7vhjZNkh/I/zZwXEIh0rz6KlIuPjcExxqua/U5z0
+         wJHpFw6+RAiAL67yBXi7oDrHR2gElOY1mn0udMsbxUBw3y2v15B5TvCL1JAxPeabR85n
+         MzHP052UUCUM5kU0BjvV7wSYb4JB11Pu6LxVsw2qykBUYmBiQg2OiI/GuyNnkbwjiP0n
+         sH1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706282762; x=1706887562;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=d7qX8odXPP3RV5R94dRW7ALCQ1ih+UkRr3f07aHV/1A=;
+        b=Chqz4UAVWlA+uWl8Pu3LomnM/3ddjq7xYBXjoycU10a4rJwDhJO1PdZufuMRn4rwRE
+         zOzJd0k4lVm41mEyyHK68SH/aWl+16Kb1wOsR9vUpN4VbjARIlvs5S9/3Z1fJcaV5Tki
+         yRh/oz/8JsUoYWZ+rx1yB/wG22vKZPvt1JAty/raov7afh+C1MxWFFGpq6fDqrBjdkOU
+         2dJ8rxz1TKHodLTOYRuD3MvUnTdnbZaZbDvqKQivmTyZT5B+Al7hOT0tetmUnkz8nrR+
+         eTHQ3eo48FqJYm6J+ScNo+JjB2a+i2XBr3U3D9feWskVKzeNwW6ikWAkPmbRyQl2eS3Q
+         xUSA==
+X-Gm-Message-State: AOJu0YwVy4NPWw61lkvMPFO+Z0KkfT5htz42QTEF1WDVJqnjssVpvOGN
+	XeHqcwo6wX+jxHhfQedSxDB74rL1BpYol7dhc9z9xx13OKZGhyx+
+X-Google-Smtp-Source: AGHT+IGUd1ntIzSSZOM958nbaw+cl7tvaX1PK3J+Jvy4OZyxW2iZYeDSUSu/KLNxUg1/+Gayc9eBGQ==
+X-Received: by 2002:adf:ce09:0:b0:337:cf68:c06 with SMTP id p9-20020adfce09000000b00337cf680c06mr791836wrn.77.1706282762096;
+        Fri, 26 Jan 2024 07:26:02 -0800 (PST)
+Received: from localhost.localdomain ([212.187.182.162])
+        by smtp.gmail.com with ESMTPSA id r14-20020a5d498e000000b003392bbeeed3sm1477098wrq.47.2024.01.26.07.26.01
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Fri, 26 Jan 2024 07:26:01 -0800 (PST)
+From: Levi Yun <ppbuk5246@gmail.com>
+To: akpm@linux-foundation.org
 Cc: linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org,
-	ligang.bdlg@bytedance.com,
-	Gang Li <gang.li@linux.dev>
-Subject: [PATCH v5 7/7] hugetlb: parallelize 1G hugetlb initialization
-Date: Fri, 26 Jan 2024 23:24:11 +0800
-Message-Id: <20240126152411.1238072-8-gang.li@linux.dev>
-In-Reply-To: <20240126152411.1238072-1-gang.li@linux.dev>
-References: <20240126152411.1238072-1-gang.li@linux.dev>
+	Levi Yun <ppbuk5246@gmail.com>
+Subject: [PATCH] kswapd: Replace try_to_freeze to kthread_freezable_should_stop.
+Date: Fri, 26 Jan 2024 15:25:54 +0000
+Message-ID: <20240126152556.58791-1-ppbuk5246@gmail.com>
+X-Mailer: git-send-email 2.41.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,175 +65,66 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
-Optimizing the initialization speed of 1G huge pages through
-parallelization.
+Instead of using try_to_freeze, use kthread_freezable_should_stop in
+kswapd.
+By this, we can avoid unnecessary freezing when kswapd should stop.
 
-1G hugetlbs are allocated from bootmem, a process that is already
-very fast and does not currently require optimization. Therefore,
-we focus on parallelizing only the initialization phase in
-`gather_bootmem_prealloc`.
-
-Here are some test results:
-      test case       no patch(ms)   patched(ms)   saved
- ------------------- -------------- ------------- --------
-  256c2T(4 node) 1G           4745          2024   57.34%
-  128c1T(2 node) 1G           3358          1712   49.02%
-     12T         1G          77000         18300   76.23%
-
-Signed-off-by: Gang Li <ligang.bdlg@bytedance.com>
-Tested-by: David Rientjes <rientjes@google.com>
+Signed-off-by: Levi Yun <ppbuk5246@gmail.com>
 ---
- arch/powerpc/mm/hugetlbpage.c |  2 +-
- include/linux/hugetlb.h       |  2 +-
- mm/hugetlb.c                  | 44 ++++++++++++++++++++++++++++-------
- 3 files changed, 38 insertions(+), 10 deletions(-)
+ mm/vmscan.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/arch/powerpc/mm/hugetlbpage.c b/arch/powerpc/mm/hugetlbpage.c
-index 0a540b37aab62..a1651d5471862 100644
---- a/arch/powerpc/mm/hugetlbpage.c
-+++ b/arch/powerpc/mm/hugetlbpage.c
-@@ -226,7 +226,7 @@ static int __init pseries_alloc_bootmem_huge_page(struct hstate *hstate)
- 		return 0;
- 	m = phys_to_virt(gpage_freearray[--nr_gpages]);
- 	gpage_freearray[nr_gpages] = 0;
--	list_add(&m->list, &huge_boot_pages);
-+	list_add(&m->list, &huge_boot_pages[0]);
- 	m->hstate = hstate;
- 	return 1;
- }
-diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
-index c1ee640d87b11..77b30a8c6076b 100644
---- a/include/linux/hugetlb.h
-+++ b/include/linux/hugetlb.h
-@@ -178,7 +178,7 @@ pte_t *huge_pmd_share(struct mm_struct *mm, struct vm_area_struct *vma,
- struct address_space *hugetlb_page_mapping_lock_write(struct page *hpage);
- 
- extern int sysctl_hugetlb_shm_group;
--extern struct list_head huge_boot_pages;
-+extern struct list_head huge_boot_pages[MAX_NUMNODES];
- 
- /* arch callbacks */
- 
-diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index 385840397bce5..eee0c456f6571 100644
---- a/mm/hugetlb.c
-+++ b/mm/hugetlb.c
-@@ -69,7 +69,7 @@ static bool hugetlb_cma_folio(struct folio *folio, unsigned int order)
- #endif
- static unsigned long hugetlb_cma_size __initdata;
- 
--__initdata LIST_HEAD(huge_boot_pages);
-+__initdata struct list_head huge_boot_pages[MAX_NUMNODES];
- 
- /* for command line parsing */
- static struct hstate * __initdata parsed_hstate;
-@@ -3301,7 +3301,7 @@ int alloc_bootmem_huge_page(struct hstate *h, int nid)
- int __alloc_bootmem_huge_page(struct hstate *h, int nid)
- {
- 	struct huge_bootmem_page *m = NULL; /* initialize for clang */
--	int nr_nodes, node;
-+	int nr_nodes, node = nid;
- 
- 	/* do node specific alloc */
- 	if (nid != NUMA_NO_NODE) {
-@@ -3339,7 +3339,7 @@ int __alloc_bootmem_huge_page(struct hstate *h, int nid)
- 		huge_page_size(h) - PAGE_SIZE);
- 	/* Put them into a private list first because mem_map is not up yet */
- 	INIT_LIST_HEAD(&m->list);
--	list_add(&m->list, &huge_boot_pages);
-+	list_add(&m->list, &huge_boot_pages[node]);
- 	m->hstate = h;
- 	return 1;
- }
-@@ -3390,8 +3390,6 @@ static void __init prep_and_add_bootmem_folios(struct hstate *h,
- 	/* Send list for bulk vmemmap optimization processing */
- 	hugetlb_vmemmap_optimize_folios(h, folio_list);
- 
--	/* Add all new pool pages to free lists in one lock cycle */
--	spin_lock_irqsave(&hugetlb_lock, flags);
- 	list_for_each_entry_safe(folio, tmp_f, folio_list, lru) {
- 		if (!folio_test_hugetlb_vmemmap_optimized(folio)) {
- 			/*
-@@ -3404,23 +3402,27 @@ static void __init prep_and_add_bootmem_folios(struct hstate *h,
- 					HUGETLB_VMEMMAP_RESERVE_PAGES,
- 					pages_per_huge_page(h));
- 		}
-+		/* Subdivide locks to achieve better parallel performance */
-+		spin_lock_irqsave(&hugetlb_lock, flags);
- 		__prep_account_new_huge_page(h, folio_nid(folio));
- 		enqueue_hugetlb_folio(h, folio);
-+		spin_unlock_irqrestore(&hugetlb_lock, flags);
- 	}
--	spin_unlock_irqrestore(&hugetlb_lock, flags);
- }
- 
- /*
-  * Put bootmem huge pages into the standard lists after mem_map is up.
-  * Note: This only applies to gigantic (order > MAX_PAGE_ORDER) pages.
-  */
--static void __init gather_bootmem_prealloc(void)
-+static void __init gather_bootmem_prealloc_node(unsigned long start, unsigned long end, void *arg)
-+
- {
-+	int nid = start;
- 	LIST_HEAD(folio_list);
- 	struct huge_bootmem_page *m;
- 	struct hstate *h = NULL, *prev_h = NULL;
- 
--	list_for_each_entry(m, &huge_boot_pages, list) {
-+	list_for_each_entry(m, &huge_boot_pages[nid], list) {
- 		struct page *page = virt_to_page(m);
- 		struct folio *folio = (void *)page;
- 
-@@ -3453,6 +3455,22 @@ static void __init gather_bootmem_prealloc(void)
- 	prep_and_add_bootmem_folios(h, &folio_list);
- }
- 
-+static void __init gather_bootmem_prealloc(void)
-+{
-+	struct padata_mt_job job = {
-+		.thread_fn	= gather_bootmem_prealloc_node,
-+		.fn_arg		= NULL,
-+		.start		= 0,
-+		.size		= num_node_state(N_MEMORY),
-+		.align		= 1,
-+		.min_chunk	= 1,
-+		.max_threads	= num_node_state(N_MEMORY),
-+		.numa_aware	= true,
-+	};
-+
-+	padata_do_multithreaded(&job);
-+}
-+
- static void __init hugetlb_hstate_alloc_pages_onenode(struct hstate *h, int nid)
- {
- 	unsigned long i;
-@@ -3600,6 +3618,7 @@ static unsigned long __init hugetlb_pages_alloc_boot(struct hstate *h)
- static void __init hugetlb_hstate_alloc_pages(struct hstate *h)
- {
- 	unsigned long allocated;
-+	static bool initialied __initdata;
- 
- 	/* skip gigantic hugepages allocation if hugetlb_cma enabled */
- 	if (hstate_is_gigantic(h) && hugetlb_cma_size) {
-@@ -3607,6 +3626,15 @@ static void __init hugetlb_hstate_alloc_pages(struct hstate *h)
- 		return;
- 	}
- 
-+	/* hugetlb_hstate_alloc_pages will be called many times, initialize huge_boot_pages once */
-+	if (!initialied) {
-+		int i = 0;
-+
-+		for (i = 0; i < MAX_NUMNODES; i++)
-+			INIT_LIST_HEAD(&huge_boot_pages[i]);
-+		initialied = true;
-+	}
-+
- 	/* do node specific alloc */
- 	if (hugetlb_hstate_alloc_pages_specific_nodes(h))
- 		return;
--- 
-2.20.1
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index 4f9c854ce6cc..1f139830b26f 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -6796,6 +6796,7 @@ static int balance_pgdat(pg_data_t *pgdat, int order, int highest_zoneidx)
+ 		bool raise_priority = true;
+ 		bool balanced;
+ 		bool ret;
++		bool was_frozen;
 
+ 		sc.reclaim_idx = highest_zoneidx;
+
+@@ -6894,9 +6895,9 @@ static int balance_pgdat(pg_data_t *pgdat, int order, int highest_zoneidx)
+
+ 		/* Check if kswapd should be suspending */
+ 		__fs_reclaim_release(_THIS_IP_);
+-		ret = try_to_freeze();
++		ret = kthread_freezable_should_stop(&was_frozen);
+ 		__fs_reclaim_acquire(_THIS_IP_);
+-		if (ret || kthread_should_stop())
++		if (was_frozen || ret)
+ 			break;
+
+ 		/*
+@@ -7102,7 +7103,7 @@ static int kswapd(void *p)
+ 	WRITE_ONCE(pgdat->kswapd_highest_zoneidx, MAX_NR_ZONES);
+ 	atomic_set(&pgdat->nr_writeback_throttled, 0);
+ 	for ( ; ; ) {
+-		bool ret;
++		bool was_frozen;
+
+ 		alloc_order = reclaim_order = READ_ONCE(pgdat->kswapd_order);
+ 		highest_zoneidx = kswapd_highest_zoneidx(pgdat,
+@@ -7119,15 +7120,14 @@ static int kswapd(void *p)
+ 		WRITE_ONCE(pgdat->kswapd_order, 0);
+ 		WRITE_ONCE(pgdat->kswapd_highest_zoneidx, MAX_NR_ZONES);
+
+-		ret = try_to_freeze();
+-		if (kthread_should_stop())
++		if (kthread_freezable_should_stop(&was_frozen))
+ 			break;
+
+ 		/*
+ 		 * We can speed up thawing tasks if we don't call balance_pgdat
+ 		 * after returning from the refrigerator
+ 		 */
+-		if (ret)
++		if (was_frozen)
+ 			continue;
+
+ 		/*
+--
+2.39.2
