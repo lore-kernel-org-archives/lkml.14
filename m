@@ -1,127 +1,192 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BB1F200D4
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 16:52:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 339881E874
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 16:52:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706287932; cv=none; b=uQwp2orvrFS9Nzmv3M3l/reVMHw6qSjMQDtwO8ngSej56xpnb/n7+N3Xlz+W8YBGfhIt5ouQJ5psjB1t/96EV+hg5ZXOOG+JjbIsaeAqvTjevkd8rcgi8QRN9jW9cSyKpYz0yCapeKFFUQbm7RBYg1txt7w8TL8Vs08GsKDFUm0=
+	t=1706287944; cv=none; b=ucCIi4yArjuvxpUGJOHlwSfoTwBoiHeI1SYFuMN0cr6JhcsjTRhhy2ClQxHdnVrlbW59KkJP1IfQu+S38s3UgIIKWO6pgdLN89olIaqO1Iq3ZaimvzRRzwxeqREkc405OCTteMIRjx1L4wn/zGOaCaySHKUccfWctpatflY8Kpo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706287932; c=relaxed/simple;
-	bh=W2rg+Qlv7l5DQXS9S0LSqEVQ2IDHN1Raczz6L69DN6U=;
+	s=arc-20240116; t=1706287944; c=relaxed/simple;
+	bh=Dnv9cSVt3mJm2zXgTEcexEXzzt81rjMJ6iELIuEksY4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bvEiH1HFS3HecaJp5PTh/XOlpGI4YjoV3DiFl/PqHU36RvsWRVAg03AVPCU4wU0gHYSB+3qhp3ygUXXNY4J2Ln7UXljqy6XucGV3SpI0YRVjKc8NDatZUOde7dvRQnW0MS8CDVxYjlf2rPUCP+fcH4/CsvB60v/PJA8R+myfKXs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ore@pengutronix.de>)
-	id 1rTPQo-00021k-Um; Fri, 26 Jan 2024 17:51:54 +0100
-Received: from [2a0a:edc0:2:b01:1d::c0] (helo=ptx.whiteo.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ore@pengutronix.de>)
-	id 1rTPQn-002YB1-O1; Fri, 26 Jan 2024 17:51:53 +0100
-Received: from ore by ptx.whiteo.stw.pengutronix.de with local (Exim 4.92)
-	(envelope-from <ore@pengutronix.de>)
-	id 1rTPQn-001yTx-Kl; Fri, 26 Jan 2024 17:51:53 +0100
-Date: Fri, 26 Jan 2024 17:51:53 +0100
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: devicetree@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Sebastian Reichel <sre@kernel.org>, linux-kernel@vger.kernel.org,
-	=?utf-8?B?U8O4cmVu?= Andersen <san@skov.dk>,
-	Rob Herring <robh+dt@kernel.org>,
-	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-	kernel@pengutronix.de, linux-pm@vger.kernel.org,
-	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>
-Subject: Re: [PATCH v2 4/8] dt-bindings: power: reset: add bindings for NVMEM
- hardware storing PSCR Data
-Message-ID: <20240126165153.GA468528@pengutronix.de>
-References: <20240124122204.730370-1-o.rempel@pengutronix.de>
- <20240124122204.730370-5-o.rempel@pengutronix.de>
- <4e14b7c7-7f0a-437b-aa84-20fdc30a2361@linaro.org>
- <20240125171146.GC381737@pengutronix.de>
- <58d24ddc-4e8f-4932-ac37-c9a699d36425@linaro.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=qSetxIrOAfOZqREGMgRDT5k0k1ElUrji12S+xw3xb81JHhn2M5RGP2EsOkiHD02wdcw/SRgpHP3/oCRBOupvB1dmQxE3FHL+a2q6+oscnX41sVFQKFFHF3m7k7WE9Pf3kSrJx7SgJZ8dIdR6VkD7bY+uf8GTpADVt4EREJrNXiY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=ILll+VHl; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="ILll+VHl"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1d720c7fc04so4399455ad.2
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 08:52:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fastly.com; s=google; t=1706287942; x=1706892742; darn=vger.kernel.org;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dkzp/MtILUxvbC4PPb3TNi915LSTtGzwh5axhWkAsDw=;
+        b=ILll+VHl3e8nHt32s8rcphibTE8zcCxNrcaWCDeW/t1IwajhFIp9teHBG9iwFVgV4+
+         zqVhmpkybIHRQ0Lk6RIX9WC/TfVQ7nvFyTzeVMq9tmBvHo6N+YXvJ5+AwPBa4S8MR+LH
+         fWgi5qbLVwstWMAz9PSpTQLoReQcvDccgkPnc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706287942; x=1706892742;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dkzp/MtILUxvbC4PPb3TNi915LSTtGzwh5axhWkAsDw=;
+        b=E3OJ4UP7vlga85SpQBk36HxK1gJztJQG1A7sgQwUlx4nxZu0Z1AWJKmQrA9bPkUPLn
+         tnWanbnyqf8Mr4gtePnGHbP5nLHt8YmkTFQLz+ZLM9VW5J0ZpdBtlC+bkH+shHELqrig
+         CBrQp7kxIk7m5IPtWgaHlExn91RmHNvwsNSJo8C0M+X+wxzjZhnYTDICkEaUFfzRdsws
+         Fv7g9DMwWTA2gz5zBpPv//KKAwGQHGJcLk8OQmEUdg744FYNFDwFcPbOttNeUmWMi4nA
+         mlpvpzuHvGKJwgDzJsiNHvdpeNQdQtRyI84xmMpWh4svL8z5aSoep0pBltPLLWwhdYMC
+         2FiA==
+X-Gm-Message-State: AOJu0Yx6DwHyVWTtmPc5tWyBZoE9hWhaFGaSXZ+1DAj7DgKbrZVXXaOE
+	V7g08DreArB5/FVlazOn8qpLpDtK6WrhikvvZF7Zskc7Z6b0tI1O+EtZvL7qePc=
+X-Google-Smtp-Source: AGHT+IHgj/pRnInI6b+fMAlPmGcScOkEnr7055JlkDCNg5VW+RV4Jaw8m+wCe/hCGF7ydceuuPjpSg==
+X-Received: by 2002:a17:902:6b01:b0:1d8:8b23:c6db with SMTP id o1-20020a1709026b0100b001d88b23c6dbmr32679plk.5.1706287942618;
+        Fri, 26 Jan 2024 08:52:22 -0800 (PST)
+Received: from fastly.com (c-24-6-151-244.hsd1.ca.comcast.net. [24.6.151.244])
+        by smtp.gmail.com with ESMTPSA id z5-20020a1709028f8500b001d7222d8caasm1151944plo.50.2024.01.26.08.52.20
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 26 Jan 2024 08:52:22 -0800 (PST)
+Date: Fri, 26 Jan 2024 08:52:18 -0800
+From: Joe Damato <jdamato@fastly.com>
+To: Christian Brauner <brauner@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	chuck.lever@oracle.com, jlayton@kernel.org,
+	linux-api@vger.kernel.org, edumazet@google.com, davem@davemloft.net,
+	alexander.duyck@gmail.com, sridhar.samudrala@intel.com,
+	kuba@kernel.org, willemdebruijn.kernel@gmail.com, weiwan@google.com,
+	Jonathan Corbet <corbet@lwn.net>,
+	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nathan Lynch <nathanl@linux.ibm.com>,
+	Steve French <stfrench@microsoft.com>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Julien Panis <jpanis@baylibre.com>, Arnd Bergmann <arnd@arndb.de>,
+	Andrew Waterman <waterman@eecs.berkeley.edu>,
+	Thomas Huth <thuth@redhat.com>, Palmer Dabbelt <palmer@dabbelt.com>,
+	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+	"open list:FILESYSTEMS (VFS and infrastructure)" <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH net-next v3 3/3] eventpoll: Add epoll ioctl for
+ epoll_params
+Message-ID: <20240126165217.GA1463@fastly.com>
+References: <20240125225704.12781-1-jdamato@fastly.com>
+ <20240125225704.12781-4-jdamato@fastly.com>
+ <2024012551-anyone-demeaning-867b@gregkh>
+ <20240126001128.GC1987@fastly.com>
+ <2024012525-outdoors-district-2660@gregkh>
+ <20240126023630.GA1235@fastly.com>
+ <20240126-kribbeln-sonnabend-35dcb3d1fc48@brauner>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <58d24ddc-4e8f-4932-ac37-c9a699d36425@linaro.org>
-X-Sent-From: Pengutronix Hildesheim
-X-URL: http://www.pengutronix.de/
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20240126-kribbeln-sonnabend-35dcb3d1fc48@brauner>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 
-On Fri, Jan 26, 2024 at 10:03:51AM +0100, Krzysztof Kozlowski wrote:
-> On 25/01/2024 18:11, Oleksij Rempel wrote:
-> > On Thu, Jan 25, 2024 at 11:57:18AM +0100, Krzysztof Kozlowski wrote:
-> >> On 24/01/2024 13:22, Oleksij Rempel wrote:
-> >>> Add device tree bindings that describe hardware implementations of
-> >>> Non-Volatile Memory (NVMEM) used for storing Power State Change Reasons
-> >>> (PSCR).
-> >>> +  that stores Power State Change Reasons (PSCR).
-> >>> +
-> >>> +allOf:
-> >>> +  - $ref: pscrr.yaml#
-> >>> +
-> >>> +properties:
-> >>> +  compatible:
-> >>> +    const: pscrr-nvmem
-> >>> +
-> >>
-> >> So that's a driver :/. Maybe Rob will like it, but it's a no from me.
-> >> Please come up with something really suiting DEVICES, not DRIVERS.
+On Fri, Jan 26, 2024 at 11:07:36AM +0100, Christian Brauner wrote:
+> On Thu, Jan 25, 2024 at 06:36:30PM -0800, Joe Damato wrote:
+> > On Thu, Jan 25, 2024 at 04:23:58PM -0800, Greg Kroah-Hartman wrote:
+> > > On Thu, Jan 25, 2024 at 04:11:28PM -0800, Joe Damato wrote:
+> > > > On Thu, Jan 25, 2024 at 03:21:46PM -0800, Greg Kroah-Hartman wrote:
+> > > > > On Thu, Jan 25, 2024 at 10:56:59PM +0000, Joe Damato wrote:
+> > > > > > +struct epoll_params {
+> > > > > > +	u64 busy_poll_usecs;
+> > > > > > +	u16 busy_poll_budget;
+> > > > > > +
+> > > > > > +	/* for future fields */
+> > > > > > +	u8 data[118];
+> > > > > > +} EPOLL_PACKED;
+> > > > > 
+> > > > > variables that cross the user/kernel boundry need to be __u64, __u16,
+> > > > > and __u8 here.
+> > > > 
+> > > > I'll make that change for the next version, thank you.
+> > > > 
+> > > > > And why 118?
+> > > > 
+> > > > I chose this arbitrarily. I figured that a 128 byte struct would support 16
+> > > > u64s in the event that other fields needed to be added in the future. 118
+> > > > is what was left after the existing fields. There's almost certainly a
+> > > > better way to do this - or perhaps it is unnecessary as per your other
+> > > > message.
+> > > > 
+> > > > I am not sure if leaving extra space in the struct is a recommended
+> > > > practice for ioctls or not - I thought I noticed some code that did and
+> > > > some that didn't in the kernel so I err'd on the side of leaving the space
+> > > > and probably did it in the worst way possible.
+> > > 
+> > > It's not really a good idea unless you know exactly what you are going
+> > > to do with it.  Why not just have a new ioctl if you need new
+> > > information in the future?  That's simpler, right?
 > > 
-> > If I understand your distinction between 'DEVICES' and 'DRIVERS'
-> > correctly, 'DEVICES' in the device tree context are meant to represent
-> > physical hardware components, while 'DRIVERS' refer to software
+> > Sure, that makes sense to me. I'll remove it in the v4 alongside the other
+> > changes you've requested.
 > 
-> Yes.
+> Fwiw, we do support extensible ioctls since they encode the size. Take a
+> look at kernel/seccomp.c. It's a clean extensible interface built on top
+> of the copy_struct_from_user() pattern we added for system calls
+> (openat(), clone3() etc.):
 > 
-> > abstractions of these components. However, there are numerous device
-> > tree instances, like software-based implementations for SPI, I2C, or
-> > GPIO, which could also be interpreted as 'DRIVERS' in the context of
+> static long seccomp_notify_ioctl(struct file *file, unsigned int cmd,
+>                                  unsigned long arg)
+> {
+>         struct seccomp_filter *filter = file->private_data;
+>         void __user *buf = (void __user *)arg;
 > 
-> True. Yet they are still for physical interfaces. There is no DTS having
-> some virtual I2C for a board which does not have I2C.
+>         /* Fixed-size ioctls */
+>         switch (cmd) {
+>         case SECCOMP_IOCTL_NOTIF_RECV:
+>                 return seccomp_notify_recv(filter, buf);
+>         case SECCOMP_IOCTL_NOTIF_SEND:
+>                 return seccomp_notify_send(filter, buf);
+>         case SECCOMP_IOCTL_NOTIF_ID_VALID_WRONG_DIR:
+>         case SECCOMP_IOCTL_NOTIF_ID_VALID:
+>                 return seccomp_notify_id_valid(filter, buf);
+>         case SECCOMP_IOCTL_NOTIF_SET_FLAGS:
+>                 return seccomp_notify_set_flags(filter, arg);
+>         }
 > 
-> > your email. Similarly, the binding for PSCRR represents functionality not
-> > fully implemented in hardware but supported by the hardware component of
-> > NVMEM, akin to how ramoops or other functionalities are represented.
+>         /* Extensible Argument ioctls */
+> #define EA_IOCTL(cmd)   ((cmd) & ~(IOC_INOUT | IOCSIZE_MASK))
+>         switch (EA_IOCTL(cmd)) {
+>         case EA_IOCTL(SECCOMP_IOCTL_NOTIF_ADDFD):
+>                 return seccomp_notify_addfd(filter, buf, _IOC_SIZE(cmd));
+>         default:
+>                 return -EINVAL;
+>         }
+> }
 > 
-> You don't need a binding for your case. Instantiate it whatever you wish
-> - modprobe for example - and configure through approved kernel
-> interfaces - sysfs for example.
+> static long seccomp_notify_addfd(struct seccomp_filter *filter,
+>                                  struct seccomp_notif_addfd __user *uaddfd,
+>                                  unsigned int size)
+> {
+>         struct seccomp_notif_addfd addfd;
+>         struct seccomp_knotif *knotif;
+>         struct seccomp_kaddfd kaddfd;
+>         int ret;
+> 
+>         BUILD_BUG_ON(sizeof(addfd) < SECCOMP_NOTIFY_ADDFD_SIZE_VER0);
+>         BUILD_BUG_ON(sizeof(addfd) != SECCOMP_NOTIFY_ADDFD_SIZE_LATEST);
+> 
+>         if (size < SECCOMP_NOTIFY_ADDFD_SIZE_VER0 || size >= PAGE_SIZE)
+>                 return -EINVAL;
+> 
+>         ret = copy_struct_from_user(&addfd, sizeof(addfd), uaddfd, size);
+>         if (ret)
+>                 return ret;
 
-About using sysfs for the NVMEM cell, it won't work for my needs because
-I have to know about reboot events before the filesystem is ready. So,
-I'm thinking of using a boot parameter for the kernel. It would look
-like this: pscrr-nvmem.nvmem_cell_alias=nvmem-cell0. This way, I can set
-up the NVMEM cell right at the system's start. I'll need to use stable
-NVMEM cell names for this. Is it ok to introduce NVMEM cell aliases in
-the devicetree?
+Thanks; that's a really helpful note and example.
 
-Best Regards,
-Oleksij
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+I'm inclined to believe that new fields probably won't be needed for a
+while, but if they are: an extensible ioctl could be added in the future
+to deal with that problem at that point.
+
+Thanks,
+Joe
