@@ -1,58 +1,58 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5CDC1DA20
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 10:17:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11CC81DFD5
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 10:17:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706264242; cv=none; b=msK4dXQWDOyVs0Xnj0kLdBBB9XuhxDAJ255z5DJlJLqQwu08A16KGtTagIr46oa9dDz5HR5XVxxtVX5RwKatdtkmy91+61vmu8yKVyb4Rnz2yzUtRZ7Zxd0Z20KItf+aniamyUxPxNOMVozIwEX7GtbdSGY6m9Wa06iI+/hkJz0=
+	t=1706264278; cv=none; b=Nwe8O7RDcTOtQ6dXctGmMXBW2Uix42hGIzgtZXPeXDV8+hpsN2a/iu0p6kFiDiY52lQ5tMMgEt5426J2s6TiOOymK5lAy+amGunol1nyAsICBfvvUk05wgLMXZ/NjHgVHRhmmNni3Wz10tVCjGvqEeMZqq4aWlPjhYOYP4Vm2rs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706264242; c=relaxed/simple;
-	bh=avP/XbqnV88bcO6fMUOCilFbUFjeFbVehgs7GWAEhcs=;
+	s=arc-20240116; t=1706264278; c=relaxed/simple;
+	bh=4jJqGGPJbfMvtztx4S0uxq8dIdW6STXxCfC5ler3T84=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lHbqwwmfp8BgMke5ySCyvbsN4Juu01mamZ+MZZinKkcYXZsJFcKT49tHL4jNIDuKR3NavxWZi3dOnUaoAY9kCtyjfAG6d1CxiOIyH00fxKcb5sIpoAKp/AYU8yCjhJfEC0JJkt+74tO5VeOqAMk63M5yS4ZXfBuAn9Ax7PLsv2k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=t1BrjcRx; arc=none smtp.client-ip=209.85.128.46
+	 In-Reply-To:Content-Type; b=nI5VngMfPzW9XyClu7p9AsX1c/FYRyEdfMTutPxoV1mANT0L3DGv3gUTNcEibpzrBgXeN3m/wUIpN9nsIdDay8nUcMCrOYbbebhwarCQ5F+OGgMXAA3XJFL6V/w/vfkhtmqyu6m0Pb5otpfdlgDOUiKvixsv6LAWTiMA/bvPtXE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=CjvMLQyW; arc=none smtp.client-ip=209.85.128.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="t1BrjcRx"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-40e7065b692so2682895e9.3
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 02:17:20 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CjvMLQyW"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-40e76109cdeso6805865e9.0
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 02:17:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706264239; x=1706869039; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1706264275; x=1706869075; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=4Ii87Q/qzyCftqvFYpicM4K/S83guym+V7i/OJWrxv4=;
-        b=t1BrjcRxnh13Ckwg7L8xPp5lnZ4LWXjxtwecsS0U2ktz/L6+ZwS1Ws+2IWnH+EDcaD
-         XN+tde77+pqoiCLR7G+8oR7qyEE1pPOGMqxDAre50QL2Pj8j2Ucw/SoelQdTRayzv4yS
-         WIEG5IKMf8ZnI8gQ1llQUBsStTyzRGJdOvr9JOkt6jFEc0MREWXrLYkpTW7joxHcZ0+k
-         LBJ21uQ2LG9D7rkNNYTGCz9+3EOooV84lAPKtO7Ub/LlLsUuom2s7ZLi4oyvvq9kTgwc
-         BhrGESYQ+8r9S5TEdDqk7MnNhJApjcnj7BwgOxkfpuu0jMmmhybGH2kDA5AT3cMfln3M
-         RrBQ==
+        bh=T857b/etgaF/KAiYXMdbA60+kHAKMMPfudXqiCa57oM=;
+        b=CjvMLQyWlUAO2Gxye7lDRRYIuRnbHjPoAaRsZTOSTCNawTGmWPxzYPN0bhNNuLm7Ha
+         muxwUF3RKmMdVkp4j1t9j+Ucx1oyb7kmZ13NyAhJkSYFYlJKjld9ri87BGW0Yeqluxfl
+         kPY1zJoKkTicPCmDP3fl61p+CsIB/p2HAx9GEgRs5OHqgIL9wj9DNVVKoDkAG8U8R3ch
+         gFIWJ1awWywgSCsWd+5daagF1Ficgd43CBPwiiTXkbNqI6+mZRUEoe8P7msf3dAZXPuN
+         Iccwbz7pJt3CGGD9JtLpZTjLRp8Yqe8iNqYeSV++d3dsJlSaDEjaR8WYTZf7Q832foo+
+         167Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706264239; x=1706869039;
+        d=1e100.net; s=20230601; t=1706264275; x=1706869075;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4Ii87Q/qzyCftqvFYpicM4K/S83guym+V7i/OJWrxv4=;
-        b=BcfPgbm6FndBn1VfbUiLjGII8cA4hcwEWgUam5nWLEgp+AfDKoH4MGtMPyMT0iaPvc
-         R7D86XnA8bM01Mp13iN+3QidCq4hJbgkGZk0JFlMLWYf1zbC5AGbrbR4zL+vVz1Qewsl
-         6PirY6tenqzFYFpdp7d10uKxRxjEmBEPSgNcvVkrrRBEVE0qKugmBliMTuFiqj6DkV2I
-         LkIw+tCU/aMqxcY7FMvfeFQv5urteMHjFbBUdouAs1vUbIxM/jt1fjDvh4p2FsMQSSDx
-         +x78ESckxD8g5JyyrOq880jRw1vERmbeZ9+MbwWpOODi8dfm7nY4Xp1cAYXQ1xhP1pJK
-         g9LA==
-X-Gm-Message-State: AOJu0YwEXrQZ+Jhed9BAWYuwRj1it5fb9YFOdj4+zSornJ3Qr0khL76V
-	fDAdbF2SI5r8l3tiX3jRVYtD+85xu5XdK6W34kDrRrr7zDwpJ7jspMGWYHGQQNs=
-X-Google-Smtp-Source: AGHT+IEXQNuDnO+k4eeiL3CGCUxsZj/6lSMuqV0c9/bRFbaH1AZlVdFUnYW2wJcU7K4Jqfz8CGrd6A==
-X-Received: by 2002:a05:600c:2e11:b0:40e:d2fa:fbdd with SMTP id o17-20020a05600c2e1100b0040ed2fafbddmr711292wmf.172.1706264239166;
-        Fri, 26 Jan 2024 02:17:19 -0800 (PST)
+        bh=T857b/etgaF/KAiYXMdbA60+kHAKMMPfudXqiCa57oM=;
+        b=s4tm7yj8k5CpZa+rWBTgiSu/I641yp1ZgobS2u+GJugjfjdVx3w2/nK28s4Gp4VgAw
+         gXpV2EneFj8HxvE32OlGgsynQyEsAEmBoRbo1+8tqcSm1rgyI/WRvwXsIBmXfQ1oZVjQ
+         kP0Anlbk5Onc4A3YWnbBEUuAV6povp9cuwk7dV7j7I8SZb04MF1qqBfucqZ/ZfLThSmB
+         LMUP2vvOoMrbAvBiaSq6jkEI6diR9UwwLA8kb8n06khZQJLJbdQ0AqXpC3wq8V7g4wrO
+         x15Q7eAqaYgDbZ5aqcHGUVr0ze8kvRTzBr5FZU3dOCOGhdtGTIkk1CwFjEqgHkhR+8HL
+         2Oxw==
+X-Gm-Message-State: AOJu0Yzl1bqrT0Oqn1UJxHl4CHq/Sj1EY40XsAoVu8UaleK2OZbbRZ0G
+	iEdQ4+ANGltuY69Yh2fD4DioqAtQdcZvbGQ0ULDnXyxrqI9u+DamIiDy4JxT5bA=
+X-Google-Smtp-Source: AGHT+IHMc9lvIQx2RfTG6pDytc3R4Xb7hjNn+yiZttzfjzr9gNaaKsK5u4EspsReh/NxdKJEoqQkWg==
+X-Received: by 2002:a05:600c:4fd3:b0:40e:c664:718c with SMTP id o19-20020a05600c4fd300b0040ec664718cmr735264wmq.103.1706264275290;
+        Fri, 26 Jan 2024 02:17:55 -0800 (PST)
 Received: from [192.168.1.20] ([178.197.215.66])
-        by smtp.gmail.com with ESMTPSA id sn24-20020a170906629800b00a3040040011sm462787ejc.45.2024.01.26.02.17.17
+        by smtp.gmail.com with ESMTPSA id sn24-20020a170906629800b00a3040040011sm462787ejc.45.2024.01.26.02.17.53
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 26 Jan 2024 02:17:18 -0800 (PST)
-Message-ID: <25e0a1c6-70dd-409b-927b-ef113e6a4cc4@linaro.org>
-Date: Fri, 26 Jan 2024 11:17:17 +0100
+        Fri, 26 Jan 2024 02:17:54 -0800 (PST)
+Message-ID: <5db1075c-a7af-4938-90e4-5e2b61598aee@linaro.org>
+Date: Fri, 26 Jan 2024 11:17:52 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,23 +60,22 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dt-bindings: display: bridge: it6505: Add
- #sound-dai-cells
+Subject: Re: [PATCH v3 1/3] dt-bindings: timer: nxp,sysctr-timer: support
+ i.MX95
 Content-Language: en-US
-To: Chen-Yu Tsai <wenst@chromium.org>, Andrzej Hajda
- <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>,
- Robert Foss <rfoss@kernel.org>,
- Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
- Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- Rob Herring <robh+dt@kernel.org>,
+To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>,
+ Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>,
  Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Allen Chen <allen.chen@ite.com.tw>
-Cc: David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
- dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240126073511.2708574-1-wenst@chromium.org>
+ Conor Dooley <conor+dt@kernel.org>, Bai Ping <ping.bai@nxp.com>,
+ Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>,
+ Marco Felsch <m.felsch@pengutronix.de>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, Peng Fan <peng.fan@nxp.com>
+References: <20240126-imx-sysctr-v3-0-33fe801d5f31@nxp.com>
+ <20240126-imx-sysctr-v3-1-33fe801d5f31@nxp.com>
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
@@ -122,39 +121,20 @@ Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
  fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
  D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20240126073511.2708574-1-wenst@chromium.org>
+In-Reply-To: <20240126-imx-sysctr-v3-1-33fe801d5f31@nxp.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 26/01/2024 08:35, Chen-Yu Tsai wrote:
-> The ITE IT6505 display bridge can take one I2S input and transmit it
-> over the DisplayPort link.
+On 26/01/2024 08:09, Peng Fan (OSS) wrote:
+> From: Peng Fan <peng.fan@nxp.com>
 > 
-> Add #sound-dai-cells (= 0) to the binding for it.
+> Add i.MX95 System counter module compatible string, the SCMI
+> firmware blocks access to control register, so should not
+> add "nxp,sysctr-timer" as fallback.
 > 
-> Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
-> ---
-> The driver side changes [1] are still being worked on, but given the
-> hardware is very simple, it would be nice if we could land the binding
-> first and be able to introduct device trees that have this.
-> 
-> [1] https://lore.kernel.org/linux-arm-kernel/20230730180803.22570-4-jiaxin.yu@mediatek.com/
-> 
->  .../devicetree/bindings/display/bridge/ite,it6505.yaml         | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/display/bridge/ite,it6505.yaml b/Documentation/devicetree/bindings/display/bridge/ite,it6505.yaml
-> index 348b02f26041..7ec4decc9c21 100644
-> --- a/Documentation/devicetree/bindings/display/bridge/ite,it6505.yaml
-> +++ b/Documentation/devicetree/bindings/display/bridge/ite,it6505.yaml
-> @@ -52,6 +52,9 @@ properties:
->      maxItems: 1
->      description: extcon specifier for the Power Delivery
->  
-> +  "#sound-dai-cells":
-> +    const: 0
 
-In such case you also want to $ref /schemas/sound/dai-common.yaml.
+
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
 Best regards,
 Krzysztof
