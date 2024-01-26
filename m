@@ -1,140 +1,158 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 352601CD1B
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 14:34:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BEB514A8F
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 14:34:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706279686; cv=none; b=pa2cvpTvhaJitxxn2Lx+2e8tT5ZbTCAyW4v0PBD6XHORfMZLwy29uPlncVkH448+37QgvGMxZ+DAXDn0HZpJ6PXO+EQGuxi0Yl7xRbfH+vsOV4Mz2/kbObp1gp+Oy5k64GkomBQucuouULvbCzRivithSJfhMnUM9ZZ5NXgogEk=
+	t=1706279691; cv=none; b=rmCrAP/EokGqjoywgqG48LJJc7anjwVUA0v5jgSh1OGVc3yDpl2vbILfdJpHP/cIHPIe3ksnWTLaf7heUkfDYNaA5egwK0MHL0TbmI0Y877PuNvirdVjsquZLp6j/ze8rVZiLGKzr6UgdGjrP0uK+r6fML3/Boyc7rhXtyt7PWA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706279686; c=relaxed/simple;
-	bh=m9PT2Y6MD4xV1VmnnGIAd5vfJa/7eZ8Onp2JUOf3Gts=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=OEXTvDxlo5dX3a4UjWgbBYBJ07zAVviMx5EGZb8Y2ZtWdiOXUBln3KLQjYHy7OkvZBrWf+KSBlMsOO6m7OGsQ31Te8luP+r7cxsPqWgp8sO6vnFI4CJPkkF55CSI9dZ6bgd7Xb1XvepSl/FhFAYodkf7kxJbu4kCgTyJzpB4Q3Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nMMN5vKw; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1706279691; c=relaxed/simple;
+	bh=O6w5GtbETgqNvB2B4amLXS691CrcakgId1zH5rYgGV0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=std0qW2Xr7mwWfgRaElldvXOmZ8GnPiWIB339RVAt9XG+XKSeJkqEzvp5afGrFQqTp2Q7YRHjz/tC/whTBs2WUIoQfSCojuVfhPp/yachuEVBEPKdxyq+hAfWR1roSKVsIjmVtLA00mGQEdOJAN07hzfbUd3iesDkS6+pNRehaM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fqGNxspG; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nMMN5vKw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706279684; x=1737815684;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=m9PT2Y6MD4xV1VmnnGIAd5vfJa/7eZ8Onp2JUOf3Gts=;
-  b=nMMN5vKwJHEEJqI9JbO9z35IYk6CdfvlhU/02rTn3fZwP7Muba6v9BAS
-   Wji+iFlPqIDMlQRnf5lwqPD+Ka4rQJLITL8Ferhb2tmcwry/KYYazz4wL
-   gONCfgTs9zKoOcWRGVJf23MnsihXIQNDSjlhN+pJvYb+hxs81o4x2DXG3
-   bP9y1POAfykt6ZpZY5qoif8PuwKb5IYXHbd7OHBulLLtwUSS6+Z6oApHc
-   JE8S8ygq1fFCCC2NvV7TOTUYczj/PL/e3ZgLUJ+oTfvL9tEFQl4dCxxfK
-   kyqgAOllUuluuDhfahMfgjBTurA2agW+9USIlZo3Wx4E0ziLYO4yzBcos
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="9139832"
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="9139832"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2024 06:34:40 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="906320961"
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="906320961"
-Received: from tgl-lenovo-03.sh.intel.com ([10.239.87.93])
-  by fmsmga002.fm.intel.com with ESMTP; 26 Jan 2024 06:34:36 -0800
-From: wangxiaoming321 <xiaoming.wang@intel.com>
-To: lucas.demarchi@intel.com,
-	ogabbay@kernel.org,
-	thomas.hellstrom@linux.intel.com,
-	maarten.lankhorst@linux.intel.com,
-	mripard@kernel.org,
-	tzimmermann@suse.de,
-	airlied@gmail.com,
-	daniel@ffwll.ch,
-	intel-xe@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Cc: wangxiaoming321 <xiaoming.wang@intel.com>
-Subject: [PATCH] drm/xe/display: Fix memleak in display initialization
-Date: Fri, 26 Jan 2024 22:34:33 +0800
-Message-Id: <20240126143433.997078-1-xiaoming.wang@intel.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240125063633.989944-1-xiaoming.wang@intel.com>
-References: <20240125063633.989944-1-xiaoming.wang@intel.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fqGNxspG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1706279689;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jFn6EmRIbEx/AjhXTO5Xmd6giDPhExwD2qGwPUgkau4=;
+	b=fqGNxspGs9ryLxndqdSVdZXj8xZ1XzsuEhiF/bYnIS+iDa8VTFVviKrpJJCtkTccuXzOAG
+	NGfR/CeA77ZrzjI6oIzLDGF+Xl3L4jVnDLzQNudXehvMehje8+q/VFf3F2r+Bo23mNNqqg
+	uQVAsWVboAGtcVDyzNLDtp3JwOnBBJs=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-653-c-Dmt-ZFP1yuGrm51Z23CQ-1; Fri, 26 Jan 2024 09:34:43 -0500
+X-MC-Unique: c-Dmt-ZFP1yuGrm51Z23CQ-1
+Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 53F7A85A58F;
+	Fri, 26 Jan 2024 14:34:43 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.164])
+	by smtp.corp.redhat.com (Postfix) with SMTP id 78EB8492BFA;
+	Fri, 26 Jan 2024 14:34:41 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Fri, 26 Jan 2024 15:33:29 +0100 (CET)
+Date: Fri, 26 Jan 2024 15:33:27 +0100
+From: Oleg Nesterov <oleg@redhat.com>
+To: Christian Brauner <brauner@kernel.org>
+Cc: Tycho Andersen <tycho@tycho.pizza>, linux-kernel@vger.kernel.org,
+	linux-api@vger.kernel.org, Tycho Andersen <tandersen@netflix.com>,
+	"Eric W. Biederman" <ebiederm@xmission.com>
+Subject: Re: [PATCH v3 1/3] pidfd: allow pidfd_open() on non-thread-group
+ leaders
+Message-ID: <20240126143326.GC7386@redhat.com>
+References: <20240123153452.170866-1-tycho@tycho.pizza>
+ <20240123153452.170866-2-tycho@tycho.pizza>
+ <20240123195608.GB9978@redhat.com>
+ <ZbArN3EYRfhrNs3o@tycho.pizza>
+ <20240125140830.GA5513@redhat.com>
+ <20240125-tricksen-baugrube-3f78c487a23a@brauner>
+ <20240125175113.GC5513@redhat.com>
+ <20240126-lokal-aktualisieren-fef41d9bce9f@brauner>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240126-lokal-aktualisieren-fef41d9bce9f@brauner>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.10
 
-intel_power_domains_init has been called twice in xe_device_probe:
-xe_device_probe -> xe_display_init_nommio -> intel_power_domains_init(xe)
-xe_device_probe -> xe_display_init_noirq -> intel_display_driver_probe_noirq
--> intel_power_domains_init(i915)
+On 01/26, Christian Brauner wrote:
+>
+> No, it doesn't. I'm trying to understand what you are suggesting though.
+> Are you saying !task || tas->exit_state is enough
 
-It needs add a flag to avoid power_domains->power_wells double malloc.
+If PIDFD_THREAD then I think it is enough. Otherwise we still need
+!task || (exit_state && thread_group_empty)
 
-unreferenced object 0xffff88811150ee00 (size 512):
-  comm "systemd-udevd", pid 506, jiffies 4294674198 (age 3605.560s)
-  hex dump (first 32 bytes):
-    10 b4 9d a0 ff ff ff ff ff ff ff ff ff ff ff ff  ................
-    ff ff ff ff ff ff ff ff 00 00 00 00 00 00 00 00  ................
-  backtrace:
-    [<ffffffff8134b901>] __kmem_cache_alloc_node+0x1c1/0x2b0
-    [<ffffffff812c98b2>] __kmalloc+0x52/0x150
-    [<ffffffffa08b0033>] __set_power_wells+0xc3/0x360 [xe]
-    [<ffffffffa08562fc>] xe_display_init_nommio+0x4c/0x70 [xe]
-    [<ffffffffa07f0d1c>] xe_device_probe+0x3c/0x5a0 [xe]
-    [<ffffffffa082e48f>] xe_pci_probe+0x33f/0x5a0 [xe]
-    [<ffffffff817f2187>] local_pci_probe+0x47/0xa0
-    [<ffffffff817f3db3>] pci_device_probe+0xc3/0x1f0
-    [<ffffffff8192f2a2>] really_probe+0x1a2/0x410
-    [<ffffffff8192f598>] __driver_probe_device+0x78/0x160
-    [<ffffffff8192f6ae>] driver_probe_device+0x1e/0x90
-    [<ffffffff8192f92a>] __driver_attach+0xda/0x1d0
-    [<ffffffff8192c95c>] bus_for_each_dev+0x7c/0xd0
-    [<ffffffff8192e159>] bus_add_driver+0x119/0x220
-    [<ffffffff81930d00>] driver_register+0x60/0x120
-    [<ffffffffa05e50a0>] 0xffffffffa05e50a0
+> and we shouldn't use
+> the helper that was added in commit 38fd525a4c61 ("exit: Factor
+> thread_group_exited out of pidfd_poll"). If so what does that buy us
+> open-coding the check instead of using that helper? Is there an actual
+> bug here?
 
-Signed-off-by: wangxiaoming321 <xiaoming.wang@intel.com>
----
- drivers/gpu/drm/i915/display/intel_display_power.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+The patch adds the new xxx_exited(task, excl) helper which checks
 
-diff --git a/drivers/gpu/drm/i915/display/intel_display_power.c b/drivers/gpu/drm/i915/display/intel_display_power.c
-index bf9685acf75a..3b48a1cb7c54 100644
---- a/drivers/gpu/drm/i915/display/intel_display_power.c
-+++ b/drivers/gpu/drm/i915/display/intel_display_power.c
-@@ -36,6 +36,8 @@
- 	for_each_power_well_reverse(__dev_priv, __power_well)		        \
- 		for_each_if(test_bit((__domain), (__power_well)->domains.bits))
- 
-+static int intel_power_domains_init_flag = 0;
-+
- const char *
- intel_display_power_domain_str(enum intel_display_power_domain domain)
- {
-@@ -1016,6 +1018,11 @@ int intel_power_domains_init(struct drm_i915_private *dev_priv)
- {
- 	struct i915_power_domains *power_domains = &dev_priv->display.power.domains;
- 
-+	if(intel_power_domains_init_flag == 1)
-+		return 0;
-+
-+	intel_power_domains_init_flag++;
-+
- 	dev_priv->display.params.disable_power_well =
- 		sanitize_disable_power_well_option(dev_priv,
- 						   dev_priv->display.params.disable_power_well);
-@@ -1041,6 +1048,7 @@ int intel_power_domains_init(struct drm_i915_private *dev_priv)
-  */
- void intel_power_domains_cleanup(struct drm_i915_private *dev_priv)
- {
-+	intel_power_domains_init_flag = 0;
- 	intel_display_power_map_cleanup(&dev_priv->display.power.domains);
- }
- 
--- 
-2.25.1
+	!task || (exit_state && (excl || thread_group_empty))
+
+yes, the naming is not good.
+
+> > Well, I didn't say this is a problem. I simply do not know how/why people
+> > use pidfd_poll().
+>
+> Sorry, I just have a hard time understanding what you wanted then. :)
+>
+> "I guess it is too late to change this behavior." made it sound like a)
+> there's a problem and b) that you would prefer to change behavior. Thus,
+> it seems that wait(WNOHANG) hanging when a traced leader of an empty
+> thread-group has exited is a problem in your eyes.
+
+Again, I mostly tried to argue with do_notify_pidfd() called by realese_task().
+
+I think that with PIDFD_THREAD set pidfd_poll() should succeed right
+after the exiting thread becomes a zombie (passes exit_notify), whether
+it is a leader or not.
+
+Let me quote part of my reply to Tycho's patch
+
+	> +	/*
+	> +	 * If we're not the leader, notify any waiters on our pidfds. Note that
+	> +	 * we don't want to notify the leader until /everyone/ in the thread
+	> +	 * group is dead, viz. the condition below.
+	> +	 *
+	> +	 * We have to do this here, since __exit_signal() will
+	> +	 * __unhash_processes(), and break do_notify_pidfd()'s lookup.
+	> +	 */
+	> +	if (!thread_group_leader(p))
+	> +		do_notify_pidfd(p);
+
+	This doesn't look consistent.
+
+	If the task is a group leader do_notify_pidfd() is called by exit_notify()
+	when it becomes a zombie (if no other threads), before it is reaped by its
+	parent (unless autoreap).
+
+	If it is a sub-thread, it is called by release_task() above. Note that a
+	sub-thread can become a zombie too if it is traced.
+
+Not to mention that this is racy.
+
+I would not mind if we simply move do_notify_pidfd() from exit_notify() to
+release_task() and do it regardless of thread_group_leader(). And in some
+sense this looks more logical to me.
+
+But as I said:
+
+	- I do not know how/why people actually use poll(pidfd)
+
+	- it is too late to change the current behaviour
+
+Sorry for confusion.
+
+> I'm not sure whether you remember that but when we originally did the
+> pidfd work you and I discussed thread support and already decided back
+> then that having a flag like PIDFD_THREAD would likely be the way to go.
+
+All I can recall is that, yes, we had some discussions about pidfd in
+the past ;)
+
+> The PIDFD_THREAD flag would be would be interesting because we could
+> make pidfd_send_signal() support this flag
+
+Agreed,
+
+Oleg.
 
