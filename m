@@ -1,64 +1,44 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail115-118.sinamail.sina.com.cn (mail115-118.sinamail.sina.com.cn [218.30.115.118])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C35DF1B802
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 12:34:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9F4E18040
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 12:43:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=218.30.115.118
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706272454; cv=none; b=ldPFFBPL4iDv6/5U8WiggKneDkVEQcm7N89ZkDXpHXbgJ5JrpyNS3xez6l6ZeiSlWPmbL5F/lQMctZ3BUo4QlcBz43C2IdD90H+TdwhPjkZ0Pu1BYS5ryNk4x97nD8ymgTRt62LlFp4JqKs756ZT6MYEjhgluWOgxPie/2oPzP4=
+	t=1706273012; cv=none; b=D6TGTB7j7KcvtTBaVa6vLdq6YYaYgISg1MfTNdu18UW4icCnQNtNruZcyJD45s7NK3vswwfg3wrCVZKnuguy5/wJkD5+Yya0sJeDcD6To2gwIA1trXlIrVwsMSX6GD0rom4jBQy72oA9iX7OkissUb0WaxRsucQfP3oDSyDmW30=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706272454; c=relaxed/simple;
-	bh=3IjwAENZiSvBgm1+TCTIKPp17huEQPjULECpXRVLdSc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=cgSyi6ePigfZ3JMHYOdxPZyuPsodEugNWHhlOpEkT7GNWs/+8gCH5kk3ruhGxOedTXdLbThkmRswNdMx2Nc3m0CqmZhezVlVvnOf2ev0R6+ZaYAwN9cE39PV8Fi8ZRXM44VPo+hhPobj9E28RyTi8zkhU7c9PqqKZSedKZVAqXs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=eiFrHeEP; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="eiFrHeEP"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-40eac352733so7495755e9.0
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 04:34:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1706272449; x=1706877249; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=0soW0v5yVfsW4Bsvs0S98TR5cuZkvArabmQNCI3ohqs=;
-        b=eiFrHeEPeB4U5+ny/rkEvtJM4LBFbqLfOC5LuaxQfuNi5v2QKZGv0Xy4SWM/r9BnYw
-         gv94sH9edUypjJ+f9jW4+jas4cIq+Qx/Z18z+eh+HctXP139WjkJ0uLeFIabetQ9yMU6
-         HEDWHEE3afiV9+oqZGjXTHPOyGqcopnHewgSlTldjdvsBbJzlm1QJXp+xsm/lJRUwLbA
-         v+a/IfkOmSbI/zr816qFmu6dDn/9n6XKapBcbyIV8j2TQ+w0vv40FqgFQM7PTMsQKQmG
-         qlsMwHx8E1r4rL8HqB2DPB989vLx+ckRxJ2P3pTTg7LMVOjn62Ut6j0b843yCoORwVZ2
-         nihw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706272449; x=1706877249;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=0soW0v5yVfsW4Bsvs0S98TR5cuZkvArabmQNCI3ohqs=;
-        b=s2aeVNckxidR4cPycZI0h8D0RZbPzyGJmU3lI49Q5S+c67ZgbfBAbQz6OchkZ22JKh
-         Iyig4l/kDhMavGiP9BoDoSmLoRpVv0pgN0hbwdEnEi1KvKoBteOihMorQNRokbpvMtJr
-         PVM8kJJLDgi8lDyszaMGIxSdjzpxjsildjqVWHLH5smUWDKI5RkbtSIV7y7bfn5HPLyb
-         01nomLEzf1w/kEPai+Y6wZ/Li4dTfgAmJqG740qecqnj9Y5Zlqy/g1SVsooa5fvXJoL7
-         lWFiNiywcHMr/nn2KyaXMAMiOFUpCVIBVm6+4k5psIIjla93Scz/BthjXpaDX2jZJjib
-         Gtaw==
-X-Gm-Message-State: AOJu0YzA86S+Aouu2PexztgAh1WTAHBgBcgl6fjgRJi0cGdYqsUy0AvR
-	Pg/BJNtuKTg6BXIrRJRG3vLAF+EWueEzUzeoFHgFJVYNAoeZX4gTlSNaueYOTbc=
-X-Google-Smtp-Source: AGHT+IGSi+euc5CvULgroSe+CYz/TOquvGv3zNUeHmiSkBBOJFVWHUdT7kDMryUMGp6vjyPeh2/Qxw==
-X-Received: by 2002:a05:600c:3d18:b0:40e:e66e:956c with SMTP id bh24-20020a05600c3d1800b0040ee66e956cmr243328wmb.159.1706272448465;
-        Fri, 26 Jan 2024 04:34:08 -0800 (PST)
-Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:5168:e401:d707:9e79])
-        by smtp.gmail.com with ESMTPSA id t18-20020adfe112000000b0033ade19da41sm426985wrz.76.2024.01.26.04.34.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Jan 2024 04:34:08 -0800 (PST)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [GIT PULL] gpio: fixes for v6.8-rc2
-Date: Fri, 26 Jan 2024 13:34:05 +0100
-Message-Id: <20240126123405.35367-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.40.1
+	s=arc-20240116; t=1706273012; c=relaxed/simple;
+	bh=YEvuQE0egY0EGa0GmaZ/uR8m+fkDJrKEvI3b3UJKoy8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=EVAFjTvTjaP4k7597kXRFqiXa1FiKl2x4Ivx1APgNxtWe7CRg0Rpof4djgL4dsjVKyVktRt46E6JzWs7xYLwgTgyDnVVLOoD2yf0BCezU5gk0kesJRdYzLC8G64W1JrH9VMpj9004jRDhcmaUA7kNKwXGkm95W7sjvM9Bu7ANlE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=218.30.115.118
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
+X-SMAIL-HELO: localhost.localdomain
+Received: from unknown (HELO localhost.localdomain)([113.88.48.210])
+	by sina.com (172.16.235.25) with ESMTP
+	id 65B3A40E0000063A; Fri, 26 Jan 2024 20:22:40 +0800 (CST)
+X-Sender: hdanton@sina.com
+X-Auth-ID: hdanton@sina.com
+Authentication-Results: sina.com;
+	 spf=none smtp.mailfrom=hdanton@sina.com;
+	 dkim=none header.i=none;
+	 dmarc=none action=none header.from=hdanton@sina.com
+X-SMAIL-MID: 84450634210253
+X-SMAIL-UIID: 117540BEF18F4E7CAE5F98929E674A80-20240126-202240-1
+From: Hillf Danton <hdanton@sina.com>
+To: Benjamin Segall <bsegall@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Will Deacon <will@kernel.org>,
+	Waiman Long <longman@redhat.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH] locking/percpu-rwsem: do not do lock handoff in percpu_up_write
+Date: Fri, 26 Jan 2024 20:22:30 +0800
+Message-Id: <20240126122230.838-1-hdanton@sina.com>
+In-Reply-To: <xm267cjxf7f1.fsf@bsegall-linux.svl.corp.google.com>
+References: <xm26zfwx7z5p.fsf@google.com> <20240123150541.1508-1-hdanton@sina.com> <20240125110456.783-1-hdanton@sina.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,42 +47,81 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Thu, 25 Jan 2024 13:08:02 -0800 Benjamin Segall <bsegall@google.com>
+> Hillf Danton <hdanton@sina.com> writes:
+> > On Wed, 24 Jan 2024 14:10:43 -0800 Benjamin Segall <bsegall@google.com>
+> >> Hillf Danton <hdanton@sina.com> writes:
+> >> > On Mon, 22 Jan 2024 14:59:14 -0800 Benjamin Segall <bsegall@google.com>
+> >> >> So the actual problem we saw was that one job had severe slowdowns
+> >> >> during startup with certain other jobs on the machine, and the slowdowns
+> >> >> turned out to be some cgroup moves it did during startup. The antagonist
+> >> >> jobs were spawning huge numbers of threads and some other internal bugs
+> >> >> were exacerbating their contention. The lock handoff meant that a batch
+> >> >> of antagonist threads would receive the read lock of
+> >> >> cgroup_threadgroup_rwsem and at least some of those threads would take a
+> >> >> long time to be scheduled.
+> >> >
+> >> > If you want to avoid starved lock waiter, take a look at RWSEM_FLAG_HANDOFF
+> >> > in rwsem_down_read_slowpath().
+> >> 
+> >> rwsem's HANDOFF flag is the exact opposite of what this patch is doing.
+> >
+> > You and I are not on the same page.
+> >
+> >> Percpu-rwsem's current code has perfect handoff for read->write, and a very
+> >> short window for write->read (or write->write) to be beaten by a new writer.
+> >
+> > Given no chance left for spin on owner who is legal to take a ten-minute nap,
+> > the right thing known to do on behalf of starved waiters is to add the HANDOFF
+> > mechanism without any heuristic like you proposed for instance, in order to
+> > force lock acquirers to go the slow path.
+> >
+> > Only for thoughts.
+> 
+> This is not the type of slowdown that is the problem my patch is trying
+> to address. (And due to the way percpu-rwsem works sem->ww is nearly
+> entirely redundant with sem->block - the first waiting writer is instead
+> waiting on rcuwait and holds sem->block while doing so)
+> 
+> The problem that my patch addresses is:
+> 
+> Writer is done: percpu_up_write
+>   atomic_set_release(&sem->block, 0);  // #1
+>   wake a batch of readers:
+>     percpu_rwsem_wake_function -> __percpu_rwsem_trylock(reader) // #2
+>   wake a single writer
+>     percpu_rwsem_wake_function -> __percpu_rwsem_trylock(writer) // #3
+> new writer wakes up (holding sem->block from #3)
+>   sees the readers holding the lock from #2, now sleeps on rcuwait
+> time passes // #4
+> readers finally get to run, run quickly and release the lock
+> now the writer gets to run
+> 
+> Currently the only source of unfairness/optimistic locking is the window
+> between #1 and #2, which occur in quick succession, on the same thread,
+> and with no SPIN_ON_OWNER to make this window more likely than it
+> otherwise would be.
 
-Linus,
+The sem->ww introduced closes the window between #1 and #2 by define
+as it is derived from rwsem's HANDOFF.
+> 
+> My patch makes the entire #4 available to writers (or new readers), so
+> that the woken writer will instead get to run immediately. This is
 
-Please pull the following GPIO driver fixes for the next RC.
+Victims rise in case the woken readers at #2 have been waiting more
+than a minute while the woken writer less than 20ms.
 
-Thanks,
-Bartosz
+> obviously much less fair, but provides much better throughput (ideally
+> it might have some sort of delay, so that in more normal circumstances
+> readers don't have to win the wakeup race by luck and being woken
+> slightly sooner, but I don't have that).
+> 
+> This is also only useful because of the assumption that readers will
+> almost always not actually block (among other required assumptions) - if
 
-The following changes since commit 6613476e225e090cc9aad49be7fa504e290dd33d:
+Like heuristic, any assumption makes the locking game more complex than
+thought without real win.
 
-  Linux 6.8-rc1 (2024-01-21 14:11:32 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.8-rc2
-
-for you to fetch changes up to 84aef4ed59705585d629e81d633a83b7d416f5fb:
-
-  gpio: eic-sprd: Clear interrupt after set the interrupt type (2024-01-22 11:38:08 +0100)
-
-----------------------------------------------------------------
-gpio fixes for v6.8-rc2
-
-- add a quirk to GPIO ACPI handling to ignore touchpad wakeups
-  on GPD G1619-04
-- clear interrupt status bits (that may have been set before enabling
-  the interrupts) after setting the interrupt type in gpio-eic-sprd
-
-----------------------------------------------------------------
-Mario Limonciello (1):
-      gpiolib: acpi: Ignore touchpad wakeup on GPD G1619-04
-
-Wenhua Lin (1):
-      gpio: eic-sprd: Clear interrupt after set the interrupt type
-
- drivers/gpio/gpio-eic-sprd.c | 32 ++++++++++++++++++++++++++++----
- drivers/gpio/gpiolib-acpi.c  | 14 ++++++++++++++
- 2 files changed, 42 insertions(+), 4 deletions(-)
+> they regularly sleep while holding the lock, then saving writers from
+> that first wakeup latency of readers isn't particularly helpful anymore,
+> because they'll still be delayed by the other wakeup latencies.
