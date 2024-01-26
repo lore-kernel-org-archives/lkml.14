@@ -1,92 +1,100 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3D9BBA50;
-	Fri, 26 Jan 2024 03:02:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CE08CA47;
+	Fri, 26 Jan 2024 03:02:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706238138; cv=none; b=lEQaxwaBWrgsAsyDda/i5Cbnl0STzIxNTbEQupeEEcYOSr0kmmD2DCBe6IyncYVjoMT2r9FwGE3A/2J7r5jVDZ6CeFj4eIertuhkoKNdsf1ZCE8+iJoOQS6B9d0fUFWQM0r05bJmFkVesbuYPrL49higfKdla5knBAaHV8cPH8I=
+	t=1706238141; cv=none; b=et98Fc9BvCeqO0/UnP/fqLrz2Y9d+ws8fPtpzhaQutMqL0zlilFDQljJ7JQgeYfJWsP04ma0koAWsTGuUvnHUSR556x69Kx/qTKI5kO8ATUcfl8wmGGfnv8191am2Ft3Th7Y6A44ams1sMwrdYAz5XRdegPBNyOQX+yLjcwxdrA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706238138; c=relaxed/simple;
-	bh=y4t6+bKbc+c5WN0p8b8GZauAdDFYaN0tlfAeOmI40wM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HrSHEeMrpPvhfHEJyPqRxFx06PQpaWeEJJbWE6h8upZf8EGhnx9h4aG4C2zTjJiYHv9JwOmeGf4CiC+Qj4QLr5pltPDxW5EWNffO0/uuZLm5Dt63t9EhwndGs9FSI+AJHcjWFPa92RNbBBPYkyrQWFKuuXPZ9P92F3ecuCQDeQg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nwh+7oDE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706238141; c=relaxed/simple;
+	bh=r9G4OZgWE+kQAAnHVLTuQu4pUWRCO754y65LPOoZ4ZA=;
+	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
+	 Message-Id:Subject; b=cOKACpDRODs4o5hBrdQk1vxbx0NnBOsxPyt52gQJ4PA+FQ4AX+Prk5DrpD955FPjrBN6Q0G1rwtOSteaCWMXWy+weAoofiiAN6krSY16letxeeBpbijQebz1ixaMHHYZRA6E1JNJBH8DswCFsk9s8proPVtWJpNGDSL3ETNyeAo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rMDCEg4a; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nwh+7oDE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CD21C43399;
-	Fri, 26 Jan 2024 03:02:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rMDCEg4a"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0AC0C433C7;
+	Fri, 26 Jan 2024 03:02:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706238138;
-	bh=y4t6+bKbc+c5WN0p8b8GZauAdDFYaN0tlfAeOmI40wM=;
-	h=From:To:Cc:Subject:Date:From;
-	b=Nwh+7oDEPxFsa42ieelkaA9P+XLa6XRgRdqkDsONfOSnKo5yzBeciCzdE0GfPHEwK
-	 B3fkLv31PHNgyhZ0XY57YxzpBhHyZExgBkyFU4ydUQCB3RexKHtRlFpznTrIqcaCyW
-	 L139+5DeEASso+1IIq0PF6SJyKXg9Q8O2ACuHcPg0ihzY23BwN4flvnbNpCvNDYNjU
-	 TFwwlHD507NBjo/Uit3MNyYiT/gCYQywkFMmWAU1AbsrsIFf0Bzft7WXZAQn4aeRV6
-	 hZ3iPhR+CS/hzRUB3MLdYu8YjDWAsmORXSntPxFr9dGlSyvXhuTBhwJk2XnNrkydep
-	 Qvuze+G9sa0Tg==
-From: Rob Herring <robh@kernel.org>
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	=?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>
-Cc: devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] nvmem: fixed-cell: Simplify nested if/then schema
-Date: Thu, 25 Jan 2024 07:46:44 -0600
-Message-ID: <20240125134645.2549051-1-robh@kernel.org>
-X-Mailer: git-send-email 2.43.0
+	s=k20201202; t=1706238141;
+	bh=r9G4OZgWE+kQAAnHVLTuQu4pUWRCO754y65LPOoZ4ZA=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=rMDCEg4a0T5ikq4vs10UbosLswFsGBZVAPtEQiFCByn2lKVPohK+KBrEj2j7LrgT9
+	 rb/W8jL9N284WcB206GsNjrvJA0nPbLgXNrEyqvFxF/gmSZZzuaD5U1MaYn16ElSo/
+	 kjfllcvZ6v+9ArYm+g32UrVpC/eXeqyr/w5HzsRNKbGPC49Fx73e/Fcs59C+Cq+5YC
+	 ph80YBjwLFF1MEeF6oT0LIZF3QXjXGCEIGlQdK8CHMb5ed/4sFiSMKbifIOVT4A20P
+	 nxbuDuXb7JjbHc7bUkXi9fGX+LTciyHz7cvzmJMpB+mMiCey8P2kv52wX0IBHPXoz+
+	 eBfn5RE8Yvamg==
+Date: Thu, 25 Jan 2024 21:02:19 -0600
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: Rob Herring <robh@kernel.org>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Bjorn Andersson <andersson@kernel.org>, 
+ Manivannan Sadhasivam <mani@kernel.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+ devicetree@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, linux-arm-msm@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ linux-pci@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+In-Reply-To: <20240125-dt-bindings-pci-qcom-split-v2-2-6b58efd91a7a@linaro.org>
+References: <20240125-dt-bindings-pci-qcom-split-v2-0-6b58efd91a7a@linaro.org>
+ <20240125-dt-bindings-pci-qcom-split-v2-2-6b58efd91a7a@linaro.org>
+Message-Id: <170623813219.6729.5150130088127136653.robh@kernel.org>
+Subject: Re: [PATCH v2 2/6] dt-bindings: PCI: qcom,pcie-sm8450: move SM8450
+ to dedicated schema
 
-There's no reason to have a nested if/then schema as checking for compatible
-being present and containing 'mac-base' can all be done in one 'if' schema.
 
-Signed-off-by: Rob Herring <robh@kernel.org>
----
- .../bindings/nvmem/layouts/fixed-cell.yaml    | 22 +++++++++----------
- 1 file changed, 10 insertions(+), 12 deletions(-)
+On Thu, 25 Jan 2024 14:03:25 +0100, Krzysztof Kozlowski wrote:
+> Move SM8450 PCIe devices from qcom,pcie.yaml binding to a dedicated file
+> to make reviewing easier.
+> 
+> This creates equivalent schema file, except:
+>  - Missing required compatible which is actually redundant.
+>  - Expecting eight MSI interrupts, instead of only one, which was
+>    incomplete hardware description.
+> 
+> Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> ---
+>  .../devicetree/bindings/pci/qcom,pcie-sm8450.yaml  | 175 +++++++++++++++++++++
+>  .../devicetree/bindings/pci/qcom,pcie.yaml         |  67 --------
+>  2 files changed, 175 insertions(+), 67 deletions(-)
+> 
 
-diff --git a/Documentation/devicetree/bindings/nvmem/layouts/fixed-cell.yaml b/Documentation/devicetree/bindings/nvmem/layouts/fixed-cell.yaml
-index ac2381e66027..8b3826243ddd 100644
---- a/Documentation/devicetree/bindings/nvmem/layouts/fixed-cell.yaml
-+++ b/Documentation/devicetree/bindings/nvmem/layouts/fixed-cell.yaml
-@@ -36,20 +36,18 @@ properties:
- 
- allOf:
-   - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: mac-base
-       required: [ compatible ]
-     then:
--      if:
--        properties:
--          compatible:
--            contains:
--              const: mac-base
--      then:
--        properties:
--          "#nvmem-cell-cells":
--            description: The first argument is a MAC address offset.
--            const: 1
--        required:
--          - "#nvmem-cell-cells"
-+      properties:
-+        "#nvmem-cell-cells":
-+          description: The first argument is a MAC address offset.
-+          const: 1
-+      required:
-+        - "#nvmem-cell-cells"
- 
- required:
-   - reg
--- 
-2.43.0
+My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+on your patch (DT_CHECKER_FLAGS is new in v5.13):
+
+yamllint warnings/errors:
+
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pci/qcom,pcie-sm8450.example.dtb: pcie@1c00000: Unevaluated properties are not allowed ('#address-cells', '#interrupt-cells', '#size-cells', 'bus-range', 'device_type', 'interrupt-map', 'interrupt-map-mask', 'iommu-map', 'linux,pci-domain', 'max-link-speed', 'msi-map', 'msi-map-mask', 'num-lanes', 'perst-gpios', 'phy-names', 'phys', 'power-domains', 'ranges', 'wake-gpios' were unexpected)
+	from schema $id: http://devicetree.org/schemas/pci/qcom,pcie-sm8450.yaml#
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240125-dt-bindings-pci-qcom-split-v2-2-6b58efd91a7a@linaro.org
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
 
