@@ -1,192 +1,158 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-002e3701.pphosted.com (mx0a-002e3701.pphosted.com [148.163.147.86])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 339881E874
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 16:52:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75A5C1CA8E
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 16:53:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.147.86
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706287944; cv=none; b=ucCIi4yArjuvxpUGJOHlwSfoTwBoiHeI1SYFuMN0cr6JhcsjTRhhy2ClQxHdnVrlbW59KkJP1IfQu+S38s3UgIIKWO6pgdLN89olIaqO1Iq3ZaimvzRRzwxeqREkc405OCTteMIRjx1L4wn/zGOaCaySHKUccfWctpatflY8Kpo=
+	t=1706288019; cv=none; b=jQey9WJUqiuCTD9r59SJ3uHP8ulhGt6oRLAllQBvrpQSPcbdQvVIPxod2LQudyh2XE/jkk7u0gfwM41RKqHaEoYX7jNr69VwF4F38dxB5EDL9vTE7lM0Beb7K8vCProDhXXVK24RJnCjeK84G+QNS8caoDMyyFSpLSLPnuEKpLs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706287944; c=relaxed/simple;
-	bh=Dnv9cSVt3mJm2zXgTEcexEXzzt81rjMJ6iELIuEksY4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qSetxIrOAfOZqREGMgRDT5k0k1ElUrji12S+xw3xb81JHhn2M5RGP2EsOkiHD02wdcw/SRgpHP3/oCRBOupvB1dmQxE3FHL+a2q6+oscnX41sVFQKFFHF3m7k7WE9Pf3kSrJx7SgJZ8dIdR6VkD7bY+uf8GTpADVt4EREJrNXiY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=ILll+VHl; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
+	s=arc-20240116; t=1706288019; c=relaxed/simple;
+	bh=GLHoAgN0WDNzZ/aExhvKQtnU54vP0hiTaSSU+vncRR0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ZsOnGRF0Z4wRc9CpA5qu1/Eb+lbGzHfNGp3mCPlXJIIMmUhOLIhjO240e4qsW7dvBY7fr4r1fXrjxuScpbUl8ME1Vbd+MiCYiBrCWJKYm14a3yLsoWJ7XfAVhgecMBvs0WtdY6Crh7Zqn845qGaHpJNUrxfJZr982P/nVlh+NVM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hpe.com; spf=pass smtp.mailfrom=hpe.com; dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b=JPsc2EQN; arc=none smtp.client-ip=148.163.147.86
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hpe.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hpe.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="ILll+VHl"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1d720c7fc04so4399455ad.2
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 08:52:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fastly.com; s=google; t=1706287942; x=1706892742; darn=vger.kernel.org;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dkzp/MtILUxvbC4PPb3TNi915LSTtGzwh5axhWkAsDw=;
-        b=ILll+VHl3e8nHt32s8rcphibTE8zcCxNrcaWCDeW/t1IwajhFIp9teHBG9iwFVgV4+
-         zqVhmpkybIHRQ0Lk6RIX9WC/TfVQ7nvFyTzeVMq9tmBvHo6N+YXvJ5+AwPBa4S8MR+LH
-         fWgi5qbLVwstWMAz9PSpTQLoReQcvDccgkPnc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706287942; x=1706892742;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dkzp/MtILUxvbC4PPb3TNi915LSTtGzwh5axhWkAsDw=;
-        b=E3OJ4UP7vlga85SpQBk36HxK1gJztJQG1A7sgQwUlx4nxZu0Z1AWJKmQrA9bPkUPLn
-         tnWanbnyqf8Mr4gtePnGHbP5nLHt8YmkTFQLz+ZLM9VW5J0ZpdBtlC+bkH+shHELqrig
-         CBrQp7kxIk7m5IPtWgaHlExn91RmHNvwsNSJo8C0M+X+wxzjZhnYTDICkEaUFfzRdsws
-         Fv7g9DMwWTA2gz5zBpPv//KKAwGQHGJcLk8OQmEUdg744FYNFDwFcPbOttNeUmWMi4nA
-         mlpvpzuHvGKJwgDzJsiNHvdpeNQdQtRyI84xmMpWh4svL8z5aSoep0pBltPLLWwhdYMC
-         2FiA==
-X-Gm-Message-State: AOJu0Yx6DwHyVWTtmPc5tWyBZoE9hWhaFGaSXZ+1DAj7DgKbrZVXXaOE
-	V7g08DreArB5/FVlazOn8qpLpDtK6WrhikvvZF7Zskc7Z6b0tI1O+EtZvL7qePc=
-X-Google-Smtp-Source: AGHT+IHgj/pRnInI6b+fMAlPmGcScOkEnr7055JlkDCNg5VW+RV4Jaw8m+wCe/hCGF7ydceuuPjpSg==
-X-Received: by 2002:a17:902:6b01:b0:1d8:8b23:c6db with SMTP id o1-20020a1709026b0100b001d88b23c6dbmr32679plk.5.1706287942618;
-        Fri, 26 Jan 2024 08:52:22 -0800 (PST)
-Received: from fastly.com (c-24-6-151-244.hsd1.ca.comcast.net. [24.6.151.244])
-        by smtp.gmail.com with ESMTPSA id z5-20020a1709028f8500b001d7222d8caasm1151944plo.50.2024.01.26.08.52.20
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 26 Jan 2024 08:52:22 -0800 (PST)
-Date: Fri, 26 Jan 2024 08:52:18 -0800
-From: Joe Damato <jdamato@fastly.com>
-To: Christian Brauner <brauner@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	chuck.lever@oracle.com, jlayton@kernel.org,
-	linux-api@vger.kernel.org, edumazet@google.com, davem@davemloft.net,
-	alexander.duyck@gmail.com, sridhar.samudrala@intel.com,
-	kuba@kernel.org, willemdebruijn.kernel@gmail.com, weiwan@google.com,
-	Jonathan Corbet <corbet@lwn.net>,
-	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nathan Lynch <nathanl@linux.ibm.com>,
-	Steve French <stfrench@microsoft.com>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Julien Panis <jpanis@baylibre.com>, Arnd Bergmann <arnd@arndb.de>,
-	Andrew Waterman <waterman@eecs.berkeley.edu>,
-	Thomas Huth <thuth@redhat.com>, Palmer Dabbelt <palmer@dabbelt.com>,
-	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-	"open list:FILESYSTEMS (VFS and infrastructure)" <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH net-next v3 3/3] eventpoll: Add epoll ioctl for
- epoll_params
-Message-ID: <20240126165217.GA1463@fastly.com>
-References: <20240125225704.12781-1-jdamato@fastly.com>
- <20240125225704.12781-4-jdamato@fastly.com>
- <2024012551-anyone-demeaning-867b@gregkh>
- <20240126001128.GC1987@fastly.com>
- <2024012525-outdoors-district-2660@gregkh>
- <20240126023630.GA1235@fastly.com>
- <20240126-kribbeln-sonnabend-35dcb3d1fc48@brauner>
+	dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b="JPsc2EQN"
+Received: from pps.filterd (m0134420.ppops.net [127.0.0.1])
+	by mx0b-002e3701.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 40QGhZKq019589;
+	Fri, 26 Jan 2024 16:48:46 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pps0720;
+ bh=9d5EG/UjfL0XrZpLrWZ9ABGs28w9fdnvwVF09Y3xcg0=;
+ b=JPsc2EQNUmi5icUht4pY1NYKpI/7le0rATYkr9B7knj9wKHJLs9ND+4pWRQY68uJ/FtN
+ Gy/NLvaFeyhG7l5ff6Tq679t7zCuZJ+V6NCp8JxXzsFn1RhsS7ik/uWCSANQ5Y/1FF7u
+ /SIgzkXXR3dHh2VV9umrurEIup/Vla9mu29OvXlnbNOCLPFwq+Ts3aoyOI/GRCdXPPrI
+ yw6ERdX4q5CSZmW1fUNBjGZcSWLHXxSsuADRO33gEmcJNgTDHam6bjaerQm9yLbVIeGB
+ 3pSXPdhHGg3BGueEr1O5f1rVc/KjnoxHhx1B5+ASg8jTjiBU+KigPvzvitDaexxR49vP sA== 
+Received: from p1lg14880.it.hpe.com ([16.230.97.201])
+	by mx0b-002e3701.pphosted.com (PPS) with ESMTPS id 3vv5ddwa0x-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 26 Jan 2024 16:48:45 +0000
+Received: from p1lg14885.dc01.its.hpecorp.net (unknown [10.119.18.236])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by p1lg14880.it.hpe.com (Postfix) with ESMTPS id 9A60A80039D;
+	Fri, 26 Jan 2024 16:48:44 +0000 (UTC)
+Received: from dog.eag.rdlabs.hpecorp.net (unknown [16.231.227.36])
+	by p1lg14885.dc01.its.hpecorp.net (Postfix) with ESMTP id 75DB7800EF9;
+	Fri, 26 Jan 2024 16:48:42 +0000 (UTC)
+Received: by dog.eag.rdlabs.hpecorp.net (Postfix, from userid 200934)
+	id C222E3000059C; Fri, 26 Jan 2024 10:48:41 -0600 (CST)
+From: Steve Wahl <steve.wahl@hpe.com>
+To: Steve Wahl <steve.wahl@hpe.com>, Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org
+Cc: Russ Anderson <rja@hpe.com>, Dimitri Sivanich <sivanich@hpe.com>
+Subject: [PATCH v3] x86/mm/ident_map: Use gbpages only where full GB page should be mapped.
+Date: Fri, 26 Jan 2024 10:48:41 -0600
+Message-Id: <20240126164841.170866-1-steve.wahl@hpe.com>
+X-Mailer: git-send-email 2.26.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240126-kribbeln-sonnabend-35dcb3d1fc48@brauner>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-ORIG-GUID: lM1FwtgBsOfyjYjl2AfyZFj_O0Fc5pEn
+X-Proofpoint-GUID: lM1FwtgBsOfyjYjl2AfyZFj_O0Fc5pEn
+X-HPE-SCL: -1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-01-25_14,2024-01-25_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 phishscore=0
+ malwarescore=0 lowpriorityscore=0 spamscore=0 mlxlogscore=999 adultscore=0
+ priorityscore=1501 clxscore=1015 mlxscore=0 suspectscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
+ definitions=main-2401260124
 
-On Fri, Jan 26, 2024 at 11:07:36AM +0100, Christian Brauner wrote:
-> On Thu, Jan 25, 2024 at 06:36:30PM -0800, Joe Damato wrote:
-> > On Thu, Jan 25, 2024 at 04:23:58PM -0800, Greg Kroah-Hartman wrote:
-> > > On Thu, Jan 25, 2024 at 04:11:28PM -0800, Joe Damato wrote:
-> > > > On Thu, Jan 25, 2024 at 03:21:46PM -0800, Greg Kroah-Hartman wrote:
-> > > > > On Thu, Jan 25, 2024 at 10:56:59PM +0000, Joe Damato wrote:
-> > > > > > +struct epoll_params {
-> > > > > > +	u64 busy_poll_usecs;
-> > > > > > +	u16 busy_poll_budget;
-> > > > > > +
-> > > > > > +	/* for future fields */
-> > > > > > +	u8 data[118];
-> > > > > > +} EPOLL_PACKED;
-> > > > > 
-> > > > > variables that cross the user/kernel boundry need to be __u64, __u16,
-> > > > > and __u8 here.
-> > > > 
-> > > > I'll make that change for the next version, thank you.
-> > > > 
-> > > > > And why 118?
-> > > > 
-> > > > I chose this arbitrarily. I figured that a 128 byte struct would support 16
-> > > > u64s in the event that other fields needed to be added in the future. 118
-> > > > is what was left after the existing fields. There's almost certainly a
-> > > > better way to do this - or perhaps it is unnecessary as per your other
-> > > > message.
-> > > > 
-> > > > I am not sure if leaving extra space in the struct is a recommended
-> > > > practice for ioctls or not - I thought I noticed some code that did and
-> > > > some that didn't in the kernel so I err'd on the side of leaving the space
-> > > > and probably did it in the worst way possible.
-> > > 
-> > > It's not really a good idea unless you know exactly what you are going
-> > > to do with it.  Why not just have a new ioctl if you need new
-> > > information in the future?  That's simpler, right?
-> > 
-> > Sure, that makes sense to me. I'll remove it in the v4 alongside the other
-> > changes you've requested.
-> 
-> Fwiw, we do support extensible ioctls since they encode the size. Take a
-> look at kernel/seccomp.c. It's a clean extensible interface built on top
-> of the copy_struct_from_user() pattern we added for system calls
-> (openat(), clone3() etc.):
-> 
-> static long seccomp_notify_ioctl(struct file *file, unsigned int cmd,
->                                  unsigned long arg)
-> {
->         struct seccomp_filter *filter = file->private_data;
->         void __user *buf = (void __user *)arg;
-> 
->         /* Fixed-size ioctls */
->         switch (cmd) {
->         case SECCOMP_IOCTL_NOTIF_RECV:
->                 return seccomp_notify_recv(filter, buf);
->         case SECCOMP_IOCTL_NOTIF_SEND:
->                 return seccomp_notify_send(filter, buf);
->         case SECCOMP_IOCTL_NOTIF_ID_VALID_WRONG_DIR:
->         case SECCOMP_IOCTL_NOTIF_ID_VALID:
->                 return seccomp_notify_id_valid(filter, buf);
->         case SECCOMP_IOCTL_NOTIF_SET_FLAGS:
->                 return seccomp_notify_set_flags(filter, arg);
->         }
-> 
->         /* Extensible Argument ioctls */
-> #define EA_IOCTL(cmd)   ((cmd) & ~(IOC_INOUT | IOCSIZE_MASK))
->         switch (EA_IOCTL(cmd)) {
->         case EA_IOCTL(SECCOMP_IOCTL_NOTIF_ADDFD):
->                 return seccomp_notify_addfd(filter, buf, _IOC_SIZE(cmd));
->         default:
->                 return -EINVAL;
->         }
-> }
-> 
-> static long seccomp_notify_addfd(struct seccomp_filter *filter,
->                                  struct seccomp_notif_addfd __user *uaddfd,
->                                  unsigned int size)
-> {
->         struct seccomp_notif_addfd addfd;
->         struct seccomp_knotif *knotif;
->         struct seccomp_kaddfd kaddfd;
->         int ret;
-> 
->         BUILD_BUG_ON(sizeof(addfd) < SECCOMP_NOTIFY_ADDFD_SIZE_VER0);
->         BUILD_BUG_ON(sizeof(addfd) != SECCOMP_NOTIFY_ADDFD_SIZE_LATEST);
-> 
->         if (size < SECCOMP_NOTIFY_ADDFD_SIZE_VER0 || size >= PAGE_SIZE)
->                 return -EINVAL;
-> 
->         ret = copy_struct_from_user(&addfd, sizeof(addfd), uaddfd, size);
->         if (ret)
->                 return ret;
+When ident_pud_init() uses only gbpages to create identity maps, large
+ranges of addresses not actually requested can be included in the
+resulting table; a 4K request will map a full GB.  On UV systems, this
+ends up including regions that will cause hardware to halt the system
+if accessed (these are marked "reserved" by BIOS).  Even though code
+does not actually make references to these addresses, including them
+in an active map allows processor speculation into this region, which
+is enough to trigger the system halt.
 
-Thanks; that's a really helpful note and example.
+Instead of using gbpages for all memory regions, which can include
+vast areas outside what's actually been requested, use them only when
+map creation requests include the full GB page of space; descend to
+using smaller 2M pages when only portions of a GB page are included in
+the request.
 
-I'm inclined to believe that new fields probably won't be needed for a
-while, but if they are: an extensible ioctl could be added in the future
-to deal with that problem at that point.
+No attempt is made to coalesce mapping requests. If a request requires
+a map entry at the 2M (pmd) level, subsequent mapping requests within
+the same 1G region will also be at the pmd level, even if adjacent or
+overlapping such requests could have been combined to map a full
+gbpage.  Existing usage starts with larger regions and then adds
+smaller regions, so this should not have any great consequence.
 
-Thanks,
-Joe
+The existing kernel option "nogbpages" would disallow use of
+gbpages entirely and avoid this problem, but uses a lot of extra
+memory for page tables that are not really needed.
+
+Signed-off-by: Steve Wahl <steve.wahl@hpe.com>
+---
+
+v3: per Dave Hansen review, re-arrange changelog info,
+    refactor code to use bool variable and split out conditions.
+
+v2: per Dave Hansen review: Additional changelog info,
+    moved pud_large() check earlier in the code, and
+    improved the comment describing the conditions
+    that restrict gbpage usage.
+   
+ arch/x86/mm/ident_map.c | 23 ++++++++++++++++++-----
+ 1 file changed, 18 insertions(+), 5 deletions(-)
+
+diff --git a/arch/x86/mm/ident_map.c b/arch/x86/mm/ident_map.c
+index 968d7005f4a7..f50cc210a981 100644
+--- a/arch/x86/mm/ident_map.c
++++ b/arch/x86/mm/ident_map.c
+@@ -26,18 +26,31 @@ static int ident_pud_init(struct x86_mapping_info *info, pud_t *pud_page,
+ 	for (; addr < end; addr = next) {
+ 		pud_t *pud = pud_page + pud_index(addr);
+ 		pmd_t *pmd;
++		bool use_gbpage;
+ 
+ 		next = (addr & PUD_MASK) + PUD_SIZE;
+ 		if (next > end)
+ 			next = end;
+ 
+-		if (info->direct_gbpages) {
+-			pud_t pudval;
++		/* if this is already a gbpage, this portion is already mapped */
++		if (pud_large(*pud))
++			continue;
++
++		/* Is using a gbpage allowed? */
++		use_gbpage = info->direct_gbpages;
+ 
+-			if (pud_present(*pud))
+-				continue;
++		/* Don't use gbpage if it maps more than the requested region. */
++		/* at the begining: */
++		use_gbpage &= ((addr & ~PUD_MASK) == 0);
++		/* ... or at the end: */
++		use_gbpage &= ((next & ~PUD_MASK) == 0);
++
++		/* Never overwrite existing mappings */
++		use_gbpage &= !pud_present(*pud);
++
++		if (use_gbpage) {
++			pud_t pudval;
+ 
+-			addr &= PUD_MASK;
+ 			pudval = __pud((addr - info->offset) | info->page_flag);
+ 			set_pud(pud, pudval);
+ 			continue;
+-- 
+2.26.2
+
