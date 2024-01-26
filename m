@@ -1,130 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78C23250EC;
-	Fri, 26 Jan 2024 20:34:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mecka.net (mecka.net [159.69.159.214])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9AA5422EF4;
+	Fri, 26 Jan 2024 20:36:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.159.214
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706301279; cv=none; b=MvOXiSj+eMCmzZifKWA4wr7bJIdxVbD3ENu1UOo8bEme/XwJfF1vbtrI7YVIwVsB6+tmTSYpwvShkhM2aqLJt+YGQBRx79Y8vmbAKF1c30tHGZo6W8fpU9+lbu5YFFV5yuD8rdZm/fTWNW/mf3Opvgx1PFVeM2VpoQCSpCvxNVQ=
+	t=1706301392; cv=none; b=HC5GGeKW93B4wtsTzMMLsyV7OUrCcr+1iu0wwS+BRwcceljfOGKIWZppqIcAFlrAjU6hGmw7B3NdaaFQj8d2JqGv4tHQVO3I+TJpfqTb3Mmy96uVlYV4iG3REvhRWLGn5pVwNyqP2L8oPZiu0Mev3ytdAa1jvjaxox3dT9XHsIQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706301279; c=relaxed/simple;
-	bh=fKXandC+5QOPgaaNNK48snxQs+rXCoRJZv+oHcWZwXc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rtzmubQwGuDpppc/WY4xlsJzvpp1BxH3nQXicd8ENIdkUbtbqTfzE+EzDFJhaJU73NiAx3w0xLXZXfB4KltIGWXF6xcdA7u6DBVs8XrPuhGLs3k3scEAzbyIM4dsgCEy5KoNqBEq5k7+iSWmws5qTLBEsORqcf149On+6gPol5s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cBHALqoS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706301392; c=relaxed/simple;
+	bh=bS0tHXldnDP7fP1hTCX/Dobr7gSKMxZIXrqw5AcghSc=;
+	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fDqV2YXgYDVe7BuvVuzTKwqmwhCVZrZSnPcf903307HLtIvUKVcRwNPlx6Jmd05vvoasP+KUfbYdaZ61seoclFdi1KoskG69eHQZgkI+iZMjD9aVyReeZ3bZ0KF8WlLAjleVvRcjqwFAQlPpnNOignyK+a8umNROoDGQySlRSeY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mecka.net; spf=pass smtp.mailfrom=mecka.net; dkim=fail (0-bit key) header.d=mecka.net header.i=@mecka.net header.b=cC5EMOIy reason="key not found in DNS"; arc=none smtp.client-ip=159.69.159.214
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mecka.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mecka.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cBHALqoS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0674C433C7;
-	Fri, 26 Jan 2024 20:34:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706301278;
-	bh=fKXandC+5QOPgaaNNK48snxQs+rXCoRJZv+oHcWZwXc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cBHALqoSmF/TAHePeBhX/syG9ctKGwupCxyx8jKndDgbJpbm7EWnsgjvjT7Vrx2DY
-	 2Hj3E2tlWwXS00a+C4+TdFMfIVO3SnoY9yZpS67owsD6d6mZHp1suJb4GVWVRg2R8b
-	 k6XY4XmoYuyiaSlucogkXWHktINh5FIwfXn4i52Po2ZoWMM0rk9H3uDXofwGsPZ8Dg
-	 xij+uHtg0x5OISKjzS24Cl/kW4q1ygl0Ja9uPMFNu0bqZOuRFaNIGARh/Xkz6rFNuz
-	 mQBjnQzkiOfUqwhjDs15QLxiAMAsYCMJbj1LL5UYNyEn/LD6B+42yYsmzGK8KcWYqP
-	 cGu2VWgCtdVyQ==
-Date: Fri, 26 Jan 2024 13:34:36 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org,
-	patches@lists.linux.dev, linux-kernel@vger.kernel.org,
-	torvalds@linux-foundation.org, akpm@linux-foundation.org,
-	shuah@kernel.org, patches@kernelci.org,
-	lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
-	f.fainelli@gmail.com, sudipm.mukherjee@gmail.com,
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org,
-	allen.lkml@gmail.com, llvm@lists.linux.dev, keescook@chromium.org
-Subject: Re: [PATCH 5.10 000/286] 5.10.209-rc1 review
-Message-ID: <20240126203436.GA913905@dev-arch.thelio-3990X>
-References: <20240122235732.009174833@linuxfoundation.org>
- <6b563537-b62f-428e-96d1-2a228da99077@roeck-us.net>
- <2024012636-clubbed-radial-1997@gregkh>
- <2f342268-8517-4c06-8785-96a588d20c63@roeck-us.net>
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mecka.net header.i=@mecka.net header.b="cC5EMOIy"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=mecka.net; s=2016.11;
+	t=1706301020; bh=bS0tHXldnDP7fP1hTCX/Dobr7gSKMxZIXrqw5AcghSc=;
+	h=Date:From:To:Subject:References:In-Reply-To:From;
+	b=cC5EMOIy3hGOaPaCp40VoGhD5wRmepADo9Sbans8FHbyxXIaD3Q5dVXYhZfj9eJl/
+	 AIoAKjkp9uMqM78/RAeaUZsBJVFREknowDoPzrSCT7/1UB/WmIsOD/QXgxt8cWmWw2
+	 Eji+gCm8xZ9MGRSItCu24/ELJUT1shgjLwMGC257hAEA88z2h/NK+DwykNNaPhw+YB
+	 f/U5TY4llR8Q0kNJoTVmZ2x8aFzQJ6McVmc8R+BRyy3ppEKx4ESSQ1GZyg0zoTwh9l
+	 ZOkeJ8i02kjKcxbBUs/WZMFjA1wADIp/3dmurR5t37ZzVmzeM9aa5ggKUsvSY6Sesf
+	 fJnapb/MbfYGw==
+Received: from mecka.net (unknown [185.147.11.134])
+	by mecka.net (Postfix) with ESMTPSA id B135B3B4E7E;
+	Fri, 26 Jan 2024 21:30:19 +0100 (CET)
+Date: Fri, 26 Jan 2024 21:30:18 +0100
+From: Manuel Traut <manut@mecka.net>
+To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Jessica Zhang <quic_jesszhan@quicinc.com>,
+	Sam Ravnborg <sam@ravnborg.org>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Heiko Stuebner <heiko@sntech.de>, Sandy Huang <hjc@rock-chips.com>,
+	Mark Yao <markyao0591@gmail.com>,
+	Diederik de Haas <didi.debian@cknow.org>,
+	Segfault <awarnecke002@hotmail.com>,
+	Arnaud Ferraris <aferraris@debian.org>,
+	Danct12 <danct12@riseup.net>, dri-devel@lists.freedesktop.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH v3 4/4] arm64: dts: rockchip: Add devicetree for Pine64
+ PineTab2
+Message-ID: <ZbQWWp3nmorbEVFl@mecka.net>
+References: <20240102-pinetab2-v3-0-cb1aa69f8c30@mecka.net>
+ <20240102-pinetab2-v3-4-cb1aa69f8c30@mecka.net>
+ <vj3elmkt6czisvwqouv2hhvut2va5jw6bbj5kjyxawvrnrdfwm@tlpo3dp3qcyb>
+ <ZZgqF5hLO8UThPep@mecka.net>
+ <elumjkchw5m6rcb73l4ouemjgk7nsgkeu576ybbkc5nbvcpiyi@txkepy7wqops>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <2f342268-8517-4c06-8785-96a588d20c63@roeck-us.net>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <elumjkchw5m6rcb73l4ouemjgk7nsgkeu576ybbkc5nbvcpiyi@txkepy7wqops>
 
-On Fri, Jan 26, 2024 at 10:17:23AM -0800, Guenter Roeck wrote:
-> On 1/26/24 09:51, Greg Kroah-Hartman wrote:
-> > On Fri, Jan 26, 2024 at 08:46:42AM -0800, Guenter Roeck wrote:
-> > > On 1/22/24 15:55, Greg Kroah-Hartman wrote:
-> > > > This is the start of the stable review cycle for the 5.10.209 release.
-> > > > There are 286 patches in this series, all will be posted as a response
-> > > > to this one.  If anyone has any issues with these being applied, please
-> > > > let me know.
-> > > > 
-> > > > Responses should be made by Wed, 24 Jan 2024 23:56:49 +0000.
-> > > > Anything received after that time might be too late.
-> > > > 
-> > > [ ... ]
+Hello Ondřej,
+
+On Fri, Jan 05, 2024 at 05:48:46PM +0100, Ondřej Jirman wrote:
+> On Fri, Jan 05, 2024 at 05:11:03PM +0100, Manuel Traut wrote:
+> > On Wed, Jan 03, 2024 at 10:42:54AM +0100, Ondřej Jirman wrote:
+> > > Hello Manuel,
 > > > 
-> > > > zhenwei pi <pizhenwei@bytedance.com>
-> > > >       virtio-crypto: implement RSA algorithm
-> > > > 
+> > > a few more things I noticed:
 > > > 
-> > > Curious: Why was this (and its subsequent fixes) backported to v5.10.y ?
-> > > It is quite beyond a bug fix. Also, unless I am really missing something,
-> > > the series (or at least this patch) was not applied to v5.15.y, so we now
-> > > have functionality in v5.10.y which is not in v5.15.y.
+> > > On Tue, Jan 02, 2024 at 05:15:47PM +0100, Manuel Traut wrote:
+> > > > From: Alexander Warnecke <awarnecke002@hotmail.com>
+> > > > 
+> > > > +	leds {
+> > > > +		compatible = "gpio-leds";
+> > > > +
+> > > > +		pinctrl-names = "default";
+> > > > +		pinctrl-0 = <&flash_led_en_h>;
+> > > > +
+> > > > +		led-0 {
+> > > > +			gpios = <&gpio4 RK_PA5 GPIO_ACTIVE_HIGH>;
+> > > > +			color = <LED_COLOR_ID_WHITE>;
+> > > > +			function = LED_FUNCTION_FLASH;
+> > > > +		};
+> > > 
+> > > This LED is supplied by VCC5V_MIDU, so maybe this should be a regulator-led
+> > > supplied by gpio (FLASH_LED_EN_H) controlled regulator-fixed named f_led which
+> > > is in turn supplied by VCC5V_MIDU.
+> > > 
+> > > https://megous.com/dl/tmp/9bf0d85d78946b5e.png
 > > 
-> > See the commit text, it was a dependency of a later fix and documented
-> > as such.
-> > 
-> > Having it in 5.10 and not 5.15 is a bit odd, I agree, so patches are
-> > gladly accepted :)
-> > 
+> > regulator-leds are controlled by turning on or off the regulator. However
+> > VCC5V_MIDU is also used by other devices (USB, HDMI, ..) so I guess this is
+> > not what we want. I would keep it as is.
 > 
-> We reverted the entire series from the merge because it results in a build
-> failure for us.
+> It's used by the LED. gpio-leds will not ensure it's on when you enable the LED.
 > 
-> In file included from /home/groeck/src/linux-chromeos/drivers/crypto/virtio/virtio_crypto_akcipher_algs.c:10:
-> In file included from /home/groeck/src/linux-chromeos/include/linux/mpi.h:21:
-> In file included from /home/groeck/src/linux-chromeos/include/linux/scatterlist.h:5:
-> In file included from /home/groeck/src/linux-chromeos/include/linux/string.h:293:
-> /home/groeck/src/linux-chromeos/include/linux/fortify-string.h:512:4: error: call to __read_overflow2_field declared with 'warning' attribute: detected read beyond size of field (2nd parameter); maybe use struct_group()? [-Werror,-Wattribute-warning]
->                         __read_overflow2_field(q_size_field, size);
+> In practice this may only come up if someone tries to save power by unloading
+> dwc3 USB driver, when using PT2 outside of the keyboard case. Otherwise
+> VCC5V_MIDU will be enabled by DWC3 driver's use of PHY API.
+> 
+> In any case, I'm not saying you should use VCC5V_MIDU directly in regulator-led,
+> but as a vin-supply to a new regulator-fixed node (which would be describing
+> this "fixed voltage regulator" https://megous.com/dl/tmp/cc65ec81ab9af163.png ).
 
-For what it's worth, this is likely self inflicted for chromeos-5.10,
-which carries a revert of commit eaafc590053b ("fortify: Explicitly
-disable Clang support") as commit c19861d34c003 ("CHROMIUM: Revert
-"fortify: Explicitly disable Clang support""). I don't see the series
-that added proper support for clang to fortify in 5.18 that ended with
-commit 281d0c962752 ("fortify: Add Clang support") in that ChromeOS
-branch, so this seems somewhat expected.
+Sorry for the late response, I was busy with other things in the last weeks.
 
-> I also see that upstream (starting with 6.1) when trying to build it with clang,
-> so I guess it is one of those bug-for-bug compatibility things. I really have
-> no idea what causes it, or why we don't see the problem when building
-> chromeos-6.1 or chromeos-6.6, but (so far) only with chromeos-5.10 after
-> merging 5.10.209 into it. Making things worse, the problem isn't _always_
-> seen. Sometimes I can compile the file in 6.1.y without error, sometimes not.
-> I have no idea what triggers the problem.
-
-Have a .config that reproduces it on upstream? I have not personally
-seen this warning in my build matrix nor has our continuous-integration
-matrix (I don't see it in the warning output at the bottom but that
-could have missed something for some reason) in 6.1:
-
-https://github.com/ClangBuiltLinux/continuous-integration2/actions/runs/7662499796
-https://github.com/ClangBuiltLinux/continuous-integration2/actions/runs/7662534888
-
-Reverting this series from 5.10 seems reasonable given your other
-comments but if there is still something to sort out upstream, I
-definitely want to.
-
-> Of course, on top of all that, the error message is completely useless.
-
-Indeed, outstanding papercut unfortunately:
-https://github.com/ClangBuiltLinux/linux/issues/1571
-
-Cheers,
-Nathan
+I changed it to be a regulator led and will post a v4 soon.
