@@ -1,140 +1,145 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7596E387
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 01:03:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 143D8387;
+	Fri, 26 Jan 2024 01:09:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706231027; cv=none; b=OeU5R2ftb2qqau0jFJ47E2YswlHoQ6oZ/BOQW5rgv+X0KUHR4qtnbyQwkgIBa6r7J/+7M4g12XE2kPPd1CR6hC20bh9RV86NNseSfIMBUTuXkUvww3rbMfG6hECIjPdGOe78+6+8JJdXzh8770cNjrJDRxiPL94gDePELDxSjJk=
+	t=1706231346; cv=none; b=dZHa8B3Ge4h9AzJ7dqjGKxrFdji7IOnrO60vTVGcmOm1pNFGY1WapKkoWMdGDnNlRHMUmu8sEYMBU0IhpOU68QSWqmyxYEYF4WX/VWz6GWSxc4hZBYYlTktb3UrBvYkhJGk8xNbZAz/F9wRvfA7uJIG9Yj8EHI0Y21eD3AlijnQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706231027; c=relaxed/simple;
-	bh=x/Fy+vSOe5K6cda9CrIqHXqxQHyuV4PgLwTLhmMnB/o=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hwtyQxQmiqhCmPXNSOadfjow+5nuAN5aiz/NF76bJc3avTSPfP0XusCBfVI2xvt7jD54Qnenko2Ojx7sLqko3Aax6Hnt/5f60Ka2JTV7yh89QRnfgQsMXLFJETVSs2LFltU29CZG/lKvIpZys0BYvNhWYvLWbsIh7AXbqL/8/34=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Z18Yng7v; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1706231346; c=relaxed/simple;
+	bh=ZcNBosLvwzHAld72+LuB55jLJ9C0jyjKAALEGkHTKFM=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=nKLdDST573B76tIl7a8+ep2MsbO5kPNt7U+/jQ9PHzOHHkC3kWC1MjQvDvthvtcSSxIPpouw1IWhG+6FIQSgGTUDNPfu5uUqwZOqLeKqYzWnPRAsU4+CIYBwz01wH86bOqPDqJg1wCbxV01xbb7TZLBCLQk9MQ5mxuAZv/br2dY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=UJoqfeqe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Z18Yng7v"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1706231024;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=ZcInKXV7VZ3Z31/jYrVlsMNVE9JbQ5TlQGqxeiZxuGM=;
-	b=Z18Yng7v6n0IE70D8bMLBy826YUL7r7Z5gacF7H8fPNkwCH31f8Xu2dnSGY5Voyy4zpIYv
-	Du4hXP8ro3/560LNnDQlJwukzdhTmHQBMtEWpU1pdLEXrARL7sz7F7YWJbu1W/QJ1weOWX
-	izKKo+c/nmPz8GAB6QkZYubtzSio66U=
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
- [209.85.219.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-193-RQA6yt7JPiyRJ1S7ZPKHzg-1; Thu, 25 Jan 2024 20:03:42 -0500
-X-MC-Unique: RQA6yt7JPiyRJ1S7ZPKHzg-1
-Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-6805a03aeaeso1681936d6.0
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 17:03:42 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706231022; x=1706835822;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ZcInKXV7VZ3Z31/jYrVlsMNVE9JbQ5TlQGqxeiZxuGM=;
-        b=WfkAFSg01p1AtKdfBPUqF6mBtIU/fFMJkzShfHbi+aOxY+Ty89Ik9JcTMXwRllDOEc
-         0WBE+zFQzwiCAsceMXpiJILu/BBVK5fA14z0Q/GSrULHWKUlfU2hBic2Uu84S9hra1XF
-         ZY3pnTzMHW64qUmvK4sCniU+MIG3yj9vqysmXJRoPLQ2z+L7HJoW3kGCzGGHIn+qbzql
-         f8Jl4Cni73t9z0utAglICQfGR23wHKDEGADzYrsCKmZ36egcAOcZiC6CtFosrzeJHSAH
-         mXlkeWa8VVcDY/+lU5E9ZWbvv4CjeiSF9tneOwXROpL1fHTJCYbCcgwQDV/K/LvpNThi
-         JnoQ==
-X-Gm-Message-State: AOJu0YzTcio4E/MGDvFkMCtn+gu4fz6Uz9/Tug5eRQ/JcXeASxJXcAY3
-	MEQPg1QWFES6tSrp1ZJHY0xhHiaDs6Y5Wo87HzWd+OlfkTJFIcKFtQ/jNUAXQ0pxNE9Zt3GmRGz
-	W96vEzNbUzy9hBH7vp+Z239vZBHIbM5HNsj7nR2j1ix55UwKCh/cjySk8Lz/opw==
-X-Received: by 2002:a05:6214:1bca:b0:681:7d2f:cdb5 with SMTP id m10-20020a0562141bca00b006817d2fcdb5mr653699qvc.127.1706231022300;
-        Thu, 25 Jan 2024 17:03:42 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGcvKD57NT81CBh6p/oYysWYTDBnODoEmvSM3GI2USlRKkh0Whptov9w01cen3pCzg/zCoQzA==
-X-Received: by 2002:a05:6214:1bca:b0:681:7d2f:cdb5 with SMTP id m10-20020a0562141bca00b006817d2fcdb5mr653687qvc.127.1706231022058;
-        Thu, 25 Jan 2024 17:03:42 -0800 (PST)
-Received: from LeoBras.redhat.com ([2804:1b3:a803:96a5:ba81:becc:80f3:6a79])
-        by smtp.gmail.com with ESMTPSA id kv2-20020a056214534200b00684d2729709sm59553qvb.85.2024.01.25.17.03.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jan 2024 17:03:41 -0800 (PST)
-From: Leonardo Bras <leobras@redhat.com>
-To: Tejun Heo <tj@kernel.org>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Marcelo Tosatti <mtosatti@redhat.com>
-Cc: Leonardo Bras <leobras@redhat.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v1 1/1] wq: Avoid using isolated cpus' timers on unbounded queue_delayed_work
-Date: Thu, 25 Jan 2024 22:03:20 -0300
-Message-ID: <20240126010321.2550286-1-leobras@redhat.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="UJoqfeqe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45CBBC433F1;
+	Fri, 26 Jan 2024 01:09:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1706231345;
+	bh=ZcNBosLvwzHAld72+LuB55jLJ9C0jyjKAALEGkHTKFM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=UJoqfeqeIy/4MNN+brvu8oK2me7WSipoIos2XaP5hv0zYuiIKPWyMK5YLGSiOgMlp
+	 Olif5eyyzRLcw+B5NLyI8Ly0QNOV+oAfNYp9QEdHn1NnYpdwKsWNQdfiSVqWmpuSFT
+	 gtSew4R/pju2PGTBvhAj4vpekWnNDxxuq9ptwmWU=
+Date: Thu, 25 Jan 2024 17:08:58 -0800
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Roberto Sassu <roberto.sassu@huaweicloud.com>
+Cc: casey@schaufler-ca.com, paul@paul-moore.com, jmorris@namei.org,
+ serge@hallyn.com, linux-kernel@vger.kernel.org,
+ linux-security-module@vger.kernel.org, Roberto Sassu
+ <roberto.sassu@huawei.com>, Hugh Dickins <hughd@google.com>
+Subject: Re: [PATCH v3 5/5] ramfs: Initialize security of in-memory inodes
+Message-Id: <20240125170858.1ce723a57c7fd2b9bfb5d28d@linux-foundation.org>
+In-Reply-To: <20231116090125.187209-6-roberto.sassu@huaweicloud.com>
+References: <20231116090125.187209-1-roberto.sassu@huaweicloud.com>
+	<20231116090125.187209-6-roberto.sassu@huaweicloud.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-When __queue_delayed_work() is called with WORK_CPU_UNBOUND, it means any
-cpu is able to run the work, as well as any cpu timer is able to be used.
+On Thu, 16 Nov 2023 10:01:25 +0100 Roberto Sassu <roberto.sassu@huaweicloud.com> wrote:
 
-This is not good if a system does use CPU isolation, because it can take
-away some valuable cpu time to:
-1 - deal with the timer interrupt,
-2 - schedule-out the desired task,
-3 - queue work on a random workqueue, and
-4 - schedule the desired task back to the cpu.
+> From: Roberto Sassu <roberto.sassu@huawei.com>
+> 
+> Add a call security_inode_init_security() after ramfs_get_inode(), to let
+> LSMs initialize the inode security field. Skip ramfs_fill_super(), as the
+> initialization is done through the sb_set_mnt_opts hook.
+> 
+> Calling security_inode_init_security() call inside ramfs_get_inode() is
+> not possible since, for CONFIG_SHMEM=n, tmpfs also calls the former after
+> the latter.
+> 
+> Pass NULL as initxattrs() callback to security_inode_init_security(), since
+> the purpose of the call is only to initialize the in-memory inodes.
+> 
 
-So to fix this, during __queue_delayed_work(), if both:
-- Work is not cpu-bounded,
-- CPU isolation is in place,
-then pick a random non-isolated cpu to use both the timer and the
-system per-cpu workqueue.
+fwiw,
 
-AS an optimization, if the current cpu is not isolated, use it's timer
-instead of looking for another candidate.
+Acked-by: Andrew Morton <akpm@linux-foundation.org>
 
-Signed-off-by: Leonardo Bras <leobras@redhat.com>
----
-Changes since RFC:
-- Do not use the same cpu from the timer for queueing the work.
-- If the current cpu is not isolated, use it's timer instead of
-  looking for another candidate.
+Please include this in the relevant security tree.
 
- kernel/workqueue.c | 22 ++++++++++++++++++----
- 1 file changed, 18 insertions(+), 4 deletions(-)
-
-diff --git a/kernel/workqueue.c b/kernel/workqueue.c
-index 76e60faed8923..0a85b00bbe52d 100644
---- a/kernel/workqueue.c
-+++ b/kernel/workqueue.c
-@@ -1958,10 +1958,24 @@ static void __queue_delayed_work(int cpu, struct workqueue_struct *wq,
- 	dwork->cpu = cpu;
- 	timer->expires = jiffies + delay;
- 
--	if (unlikely(cpu != WORK_CPU_UNBOUND))
--		add_timer_on(timer, cpu);
--	else
--		add_timer(timer);
-+	if (likely(cpu == WORK_CPU_UNBOUND)) {
-+		if (!housekeeping_enabled(HK_TYPE_TIMER)) {
-+			/* Reuse the same timer */
-+			add_timer(timer);
-+			return;
-+		}
-+
-+		/*
-+		 * If the work is cpu-unbound, and cpu isolation is in place,
-+		 * only use timers from housekeeping cpus.
-+		 * If the current cpu is a housekeeping cpu, use it instead.
-+		 */
-+		cpu = smp_processor_id();
-+		if (!housekeeping_test_cpu(cpu, HK_TYPE_TIMER))
-+			cpu = housekeeping_any_cpu(HK_TYPE_TIMER);
-+	}
-+
-+	add_timer_on(timer, cpu);
- }
- 
- /**
--- 
-2.43.0
-
+> diff --git a/fs/ramfs/inode.c b/fs/ramfs/inode.c
+> index 4ac05a9e25bc..8006faaaf0ec 100644
+> --- a/fs/ramfs/inode.c
+> +++ b/fs/ramfs/inode.c
+> @@ -102,11 +102,20 @@ ramfs_mknod(struct mnt_idmap *idmap, struct inode *dir,
+>  	int error = -ENOSPC;
+>  
+>  	if (inode) {
+> +		error = security_inode_init_security(inode, dir,
+> +						     &dentry->d_name, NULL,
+> +						     NULL);
+> +		if (error) {
+> +			iput(inode);
+> +			goto out;
+> +		}
+> +
+>  		d_instantiate(dentry, inode);
+>  		dget(dentry);	/* Extra count - pin the dentry in core */
+>  		error = 0;
+>  		inode_set_mtime_to_ts(dir, inode_set_ctime_current(dir));
+>  	}
+> +out:
+>  	return error;
+>  }
+>  
+> @@ -134,6 +143,15 @@ static int ramfs_symlink(struct mnt_idmap *idmap, struct inode *dir,
+>  	inode = ramfs_get_inode(dir->i_sb, dir, S_IFLNK|S_IRWXUGO, 0);
+>  	if (inode) {
+>  		int l = strlen(symname)+1;
+> +
+> +		error = security_inode_init_security(inode, dir,
+> +						     &dentry->d_name, NULL,
+> +						     NULL);
+> +		if (error) {
+> +			iput(inode);
+> +			goto out;
+> +		}
+> +
+>  		error = page_symlink(inode, symname, l);
+>  		if (!error) {
+>  			d_instantiate(dentry, inode);
+> @@ -143,6 +161,7 @@ static int ramfs_symlink(struct mnt_idmap *idmap, struct inode *dir,
+>  		} else
+>  			iput(inode);
+>  	}
+> +out:
+>  	return error;
+>  }
+>  
+> @@ -150,12 +169,23 @@ static int ramfs_tmpfile(struct mnt_idmap *idmap,
+>  			 struct inode *dir, struct file *file, umode_t mode)
+>  {
+>  	struct inode *inode;
+> +	int error;
+>  
+>  	inode = ramfs_get_inode(dir->i_sb, dir, mode, 0);
+>  	if (!inode)
+>  		return -ENOSPC;
+> +
+> +	error = security_inode_init_security(inode, dir,
+> +					     &file_dentry(file)->d_name, NULL,
+> +					     NULL);
+> +	if (error) {
+> +		iput(inode);
+> +		goto out;
+> +	}
+> +
+>  	d_tmpfile(file, inode);
+> -	return finish_open_simple(file, 0);
+> +out:
+> +	return finish_open_simple(file, error);
+>  }
+>  
+>  static const struct inode_operations ramfs_dir_inode_operations = {
+> -- 
+> 2.34.1
