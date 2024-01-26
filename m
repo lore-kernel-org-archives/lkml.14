@@ -1,119 +1,186 @@
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0776208BE
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 20:25:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E67C322EF6
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 20:25:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706300727; cv=none; b=sRwlgY5ZJeWXwJ3i4ikQTaApAW+eSTZjXxG5tURid+Z+ke6G6aJ+UYu4Kc9M6PjmrL9oYDGxL/81DRHH5Gsq/+l3Pgd/uqy245V1RIhAyY7w/IWgJdUUi3wRTBC6p/EOpZyAs3cDaGO862HakYu7e/jRAA4cFyDuTuU4jSFGNdw=
+	t=1706300745; cv=none; b=Fi5LG1o5sGXNu2vD1b5fGkWagSeiPykE55pY4SqVyKkEZxwHKtsh7sf6HQZyX/8S4mAtIp1VpIOs6OHvLQU9yzaQA6dj5XHiEq65uwmi2H9/LLfDwg8GkUYQdT9OM3nOiw68kHAWeukK9QDu5isNrfqGeP8Df5iQf21yA16/IDY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706300727; c=relaxed/simple;
-	bh=9+OPO3V3SP3LRuHvDOl2Rmxreo2UCuuZVrw9wtlT3Qg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GhUXvZqIP4s5EM70BU16hhcYDNHVDXcT3w6dzsaVLzaCdsBEm8YIFRZBlk8ZVqBY22xUiF4sm/b+7RvLhZY0jBTI8GtC7w2s+M0OZpqRm9ZT5+PNv+p1hYPgAZSDYuYWSEdly1ujvnSrQvqSpHi97k+sKhzSoil6J2CI6LGdJiA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=JAlkxanp; arc=none smtp.client-ip=209.85.208.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1706300745; c=relaxed/simple;
+	bh=3cIgTjRr4HktkHh94CWSDggXBSkYHF5KchgT06kgK8E=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=R3PY4ZDb8ed0CZbS+FnasSef6eW4sf28pCvKYJHyDsDkJ/s1hTLph8/LVAwT32y7FeJ7OXu39mYR098J4fErtBLy7FfOm6Y8zbCBPQHyC7R5NtFM/YELidZlTLPMe9kOB5SdX+azlIGdeiKukHGwIyRCx7MfzaX8gRUYeweZyzw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mbrIcWtj; arc=none smtp.client-ip=209.85.215.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="JAlkxanp"
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2cf1fd1cc5bso9024181fa.3
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 12:25:25 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mbrIcWtj"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-5ce632b2adfso908141a12.0
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 12:25:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1706300723; x=1706905523; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=ANDDmreLZfT1WX/HwjJ1bWT4NTPKcyNOAiea0NIAPr0=;
-        b=JAlkxanpoLQwav1GPCk1OY/JE/f2A0UcBuMd5FJMTGjZufCYqLY0kgTKrRextqe8Px
-         1lExEqpaL6Y1zKiS/teMgBHCkft+atkQX6mvQu0YVwOfkPEvl6H82IBIwNR2vq+Eyozz
-         79IDKYQSnFSYGAZDKcoJOPEG13nU1hxIbJrXE=
+        d=google.com; s=20230601; t=1706300743; x=1706905543; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Oz9w/MGSJCfVJoFxXdjwOXlp0YlOCXLVVNfaqF8/1eE=;
+        b=mbrIcWtjdN77LO/573eRyQAH0VvCYfhC2nHyg6CIIcd69DwESQE6AUgI/tdyWfm7Px
+         kAEYrjAlkdSeoAhVh80jS2goOcyWynSzTQ5sao0qHBnC/M3joZhi4oyYVifix4NM9VAW
+         Q0EnPDSVUZCo8r1scxBMJZ+CBSt7Oh678NZhExGxOf2YeI3dgh71xr35XdrEWYunCKCy
+         P9f0NOHtbkEWyyXnoPwpkZ/WfJhJbWVTjbS/0k8rwa8v/u5vMXn66EVsFtM0A4f1UVrP
+         GVo2lx6TdiQ1FeWl+lU1blCBMyMrg9UDs/HZZjzFJd+7WV+ZC3gQ5Ozi5FrJ41/+x8U1
+         tEsg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706300723; x=1706905523;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ANDDmreLZfT1WX/HwjJ1bWT4NTPKcyNOAiea0NIAPr0=;
-        b=q9Tc7B+NJsojoFBzE1C+e2xnEuRU2lv3nMdiZ5aNvRwhVbAWLm/R4c3TL4aqfTNrXp
-         NnDnGhA1OdH54MkQR1LpoMixQKA7yLevTf3LY45gevYVuPSFTPY1cLJXnbH+8+HdLaZD
-         rFXze7plV9T7c58vuC/j9/00BNTBqesQoTBnJRiT27e3Or3SZeGsfaCpd/+OcBLdPHn5
-         utavCeejaaUwH8eynIglRJ750D+ya7CA+t8DiU97eV90Vs3Xp3IkHkaWZRReeBvSNjc5
-         nOxRu5n9eDjwnEsN9BJM/nxPZF13V19g0inSzlCuOedyDtrf+tI4mJ9Q9XHiFbN6YRMQ
-         E6yw==
-X-Gm-Message-State: AOJu0YzoDAJrvVQjLnoCAC2ACWFSgLRhLrAMfS5QdbrePLR+rxmXFxtz
-	qBcIL72LX6CiGvc8Q91BcNjytQHD3eOE6QTg078H5ZKe4jknxakrvz0LedtoT5SJMUb58djL2Se
-	96EWCKQ==
-X-Google-Smtp-Source: AGHT+IEkF6YCqFRZft+fFb50qCDD/sjbDF90Mu/stpW9swdSOwg1qlK5kwXGgo8J5TgehM7CziAp0A==
-X-Received: by 2002:a2e:a984:0:b0:2cf:1920:97 with SMTP id x4-20020a2ea984000000b002cf19200097mr582608ljq.12.1706300723271;
-        Fri, 26 Jan 2024 12:25:23 -0800 (PST)
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com. [209.85.208.174])
-        by smtp.gmail.com with ESMTPSA id z14-20020a2e964e000000b002cd35d8b018sm251139ljh.113.2024.01.26.12.25.22
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 26 Jan 2024 12:25:22 -0800 (PST)
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2cf161b5eadso8126981fa.2
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 12:25:22 -0800 (PST)
-X-Received: by 2002:a05:651c:107b:b0:2cf:4170:d181 with SMTP id
- y27-20020a05651c107b00b002cf4170d181mr392047ljm.7.1706300722280; Fri, 26 Jan
- 2024 12:25:22 -0800 (PST)
+        d=1e100.net; s=20230601; t=1706300743; x=1706905543;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Oz9w/MGSJCfVJoFxXdjwOXlp0YlOCXLVVNfaqF8/1eE=;
+        b=ttoYy8o7q7OxhW99mc6jcjCDdyGVEFyUgFMJPhW46B/1eNKuYVD9NVLe7BWlG45Jl8
+         0xvmz36FvhG6PGHnGd27BA27FFcKEztrlmEzkE8fVY1lW2Cej0EVE+Z1t1twhMA2IDe1
+         ILpndSmqjRzHBBJgTL1A0e+CuQgpk5+x1tntRMydEs7KaZ9bm7dXWtwRFkXU88jd55KH
+         o22xBNZQU1hBptxELz5L79zGQDSREThJbmBFpXzKjg8PwAxjXWHkcu4RCI916m2oNO1x
+         wrfOT0KS7Y9wqw7B3qdBpuImjBY7BS44Oiw/LMnKUfYr8ZjYWOBE9E3jbxN9NeSPiDi8
+         jNuQ==
+X-Gm-Message-State: AOJu0Yx3PxSl9v3vNeyQvzENQiUkBGxfE0EdT13L++G+2eoyq7EFK0WO
+	O6/L27cT7XzuAeyzATJsk3JKcICzkQgok/WctnMbSiMPfqqJsr9QOk29/j5p1nN9DAS0M0tuAF2
+	O3A==
+X-Google-Smtp-Source: AGHT+IF3uGps9y8JiME3Q7HhNRDpz9fB3O2K5T+wbXcJt2yNTs/tyQVPf6ztalhofyaP4n1VGV7ie9wiTj0=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a05:6a02:78a:b0:5d7:97b9:3084 with SMTP id
+ cd10-20020a056a02078a00b005d797b93084mr2394pgb.0.1706300742964; Fri, 26 Jan
+ 2024 12:25:42 -0800 (PST)
+Date: Fri, 26 Jan 2024 12:25:41 -0800
+In-Reply-To: <20231117052210.26396-1-shahuang@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240126150209.367ff402@gandalf.local.home>
-In-Reply-To: <20240126150209.367ff402@gandalf.local.home>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Fri, 26 Jan 2024 12:25:05 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wgZEHwFRgp2Q8_-OtpCtobbuFPBmPTZ68qN3MitU-ub=Q@mail.gmail.com>
-Message-ID: <CAHk-=wgZEHwFRgp2Q8_-OtpCtobbuFPBmPTZ68qN3MitU-ub=Q@mail.gmail.com>
-Subject: Re: [PATCH] eventfs: Have inodes have unique inode numbers
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, 
-	Linux Trace Devel <linux-trace-devel@vger.kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Christian Brauner <brauner@kernel.org>, 
-	Ajay Kaher <ajay.kaher@broadcom.com>, Geert Uytterhoeven <geert@linux-m68k.org>, 
-	linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+References: <20231117052210.26396-1-shahuang@redhat.com>
+Message-ID: <ZbQVRX3V1P-ZE2Wf@google.com>
+Subject: Re: [PATCH v2] KVM: selftests: Fix the dirty_log_test semaphore imbalance
+From: Sean Christopherson <seanjc@google.com>
+To: Shaoqin Huang <shahuang@redhat.com>
+Cc: kvm@vger.kernel.org, kvmarm@lists.linux.dev, 
+	Paolo Bonzini <pbonzini@redhat.com>, Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Peter Xu <peterx@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
 
-Steven,
- stop making things more complicated than they need to be.
++Peter
 
-And dammit, STOP COPYING VFS LAYER FUNCTIONS.
+On Fri, Nov 17, 2023, Shaoqin Huang wrote:
+> When execute the dirty_log_test on some aarch64 machine, it sometimes
+> trigger the ASSERT:
+> 
+> ==== Test Assertion Failure ====
+>   dirty_log_test.c:384: dirty_ring_vcpu_ring_full
+>   pid=14854 tid=14854 errno=22 - Invalid argument
+>      1  0x00000000004033eb: dirty_ring_collect_dirty_pages at dirty_log_test.c:384
+>      2  0x0000000000402d27: log_mode_collect_dirty_pages at dirty_log_test.c:505
+>      3   (inlined by) run_test at dirty_log_test.c:802
+>      4  0x0000000000403dc7: for_each_guest_mode at guest_modes.c:100
+>      5  0x0000000000401dff: main at dirty_log_test.c:941 (discriminator 3)
+>      6  0x0000ffff9be173c7: ?? ??:0
+>      7  0x0000ffff9be1749f: ?? ??:0
+>      8  0x000000000040206f: _start at ??:?
+>   Didn't continue vcpu even without ring full
+> 
+> The dirty_log_test fails when execute the dirty-ring test, this is
+> because the sem_vcpu_cont and the sem_vcpu_stop is non-zero value when
+> execute the dirty_ring_collect_dirty_pages() function. When those two
+> sem_t variables are non-zero, the dirty_ring_wait_vcpu() at the
+> beginning of the dirty_ring_collect_dirty_pages() will not wait for the
+> vcpu to stop, but continue to execute the following code. In this case,
+> before vcpu stop, if the dirty_ring_vcpu_ring_full is true, and the
+> dirty_ring_collect_dirty_pages() has passed the check for the
+> dirty_ring_vcpu_ring_full but hasn't execute the check for the
+> continued_vcpu, the vcpu stop, and set the dirty_ring_vcpu_ring_full to
+> false. Then dirty_ring_collect_dirty_pages() will trigger the ASSERT.
+> 
+> Why sem_vcpu_cont and sem_vcpu_stop can be non-zero value? It's because
+> the dirty_ring_before_vcpu_join() execute the sem_post(&sem_vcpu_cont)
+> at the end of each dirty-ring test. It can cause two cases:
+> 
+> 1. sem_vcpu_cont be non-zero. When we set the host_quit to be true,
+>    the vcpu_worker directly see the host_quit to be true, it quit. So
+>    the log_mode_before_vcpu_join() function will set the sem_vcpu_cont
+>    to 1, since the vcpu_worker has quit, it won't consume it.
+> 2. sem_vcpu_stop be non-zero. When we set the host_quit to be true,
+>    the vcpu_worker has entered the guest state, the next time it exit
+>    from guest state, it will set the sem_vcpu_stop to 1, and then see
+>    the host_quit, no one will consume the sem_vcpu_stop.
+> 
+> When execute more and more dirty-ring tests, the sem_vcpu_cont and
+> sem_vcpu_stop can be larger and larger, which makes many code paths
+> don't wait for the sem_t. Thus finally cause the problem.
+> 
+> To fix this problem, we can wait a while before set the host_quit to
+> true, which gives the vcpu time to enter the guest state, so it will
+> exit again. Then we can wait the vcpu to exit, and let it continue
+> again, then the vcpu will see the host_quit. Thus the sem_vcpu_cont and
+> sem_vcpu_stop will be both zero when test finished.
+> 
+> Signed-off-by: Shaoqin Huang <shahuang@redhat.com>
+> ---
+> v1->v2:
+>   - Fix the real logic bug, not just fresh the context.
+> 
+> v1: https://lore.kernel.org/all/20231116093536.22256-1-shahuang@redhat.com/
+> ---
+>  tools/testing/selftests/kvm/dirty_log_test.c | 16 +++++++++++++++-
+>  1 file changed, 15 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/testing/selftests/kvm/dirty_log_test.c b/tools/testing/selftests/kvm/dirty_log_test.c
+> index 936f3a8d1b83..a6e0ff46a07c 100644
+> --- a/tools/testing/selftests/kvm/dirty_log_test.c
+> +++ b/tools/testing/selftests/kvm/dirty_log_test.c
+> @@ -417,7 +417,8 @@ static void dirty_ring_after_vcpu_run(struct kvm_vcpu *vcpu, int ret, int err)
+>  
+>  static void dirty_ring_before_vcpu_join(void)
+>  {
+> -	/* Kick another round of vcpu just to make sure it will quit */
+> +	/* Wait vcpu exit, and let it continue to see the host_quit. */
+> +	dirty_ring_wait_vcpu();
+>  	sem_post(&sem_vcpu_cont);
+>  }
+>  
+> @@ -719,6 +720,7 @@ static void run_test(enum vm_guest_mode mode, void *arg)
+>  	struct kvm_vm *vm;
+>  	unsigned long *bmap;
+>  	uint32_t ring_buf_idx = 0;
+> +	int sem_val;
+>  
+>  	if (!log_mode_supported()) {
+>  		print_skip("Log mode '%s' not supported",
+> @@ -726,6 +728,11 @@ static void run_test(enum vm_guest_mode mode, void *arg)
+>  		return;
+>  	}
+>  
+> +	sem_getvalue(&sem_vcpu_stop, &sem_val);
+> +	assert(sem_val == 0);
+> +	sem_getvalue(&sem_vcpu_cont, &sem_val);
+> +	assert(sem_val == 0);
 
-It was a bad idea last time, it's a horribly bad idea this time too.
+Never use bare assert() in selftests, they'll either get compiled out or IIRC,
+will cause the test to silently exit if they fail.  Either do nothing, or use
+TEST_ASSERT().
 
-I'm not taking this kind of crap.
+> +
+>  	/*
+>  	 * We reserve page table for 2 times of extra dirty mem which
+>  	 * will definitely cover the original (1G+) test range.  Here
+> @@ -825,6 +832,13 @@ static void run_test(enum vm_guest_mode mode, void *arg)
+>  		sync_global_to_guest(vm, iteration);
+>  	}
+>  
+> +	/*
+> +	 *
+> +	 * Before we set the host_quit, let the vcpu has time to run, to make
+> +	 * sure we consume the sem_vcpu_stop and the vcpu consume the
+> +	 * sem_vcpu_cont, to keep the semaphore balance.
+> +	 */
+> +	usleep(p->interval * 1000);
 
-The whole "get_next_ino()" should be "atomic64_add_return()". End of story.
-
-You arent' special. If the VFS functions don't work for you, you don't
-use them, but dammit, you also don't then steal them without
-understanding what they do, and why they were necessary.
-
-The reason get_next_ino() is critical is because it's used by things
-like pipes and sockets etc that get created at high rates, the the
-inode numbers most definitely do not get cached.
-
-You copied that function without understanding why it does what it
-does, and as a result your code IS GARBAGE.
-
-AGAIN.
-
-Honestly, kill this thing with fire. It was a bad idea. I'm putting my
-foot down, and you are *NOT* doing unique regular file inode numbers
-uintil somebody points to a real problem.
-
-Because this whole "I make up problems, and then I write overly
-complicated crap code to solve them" has to stop,.
-
-No more. This stops here.
-
-I don't want to see a single eventfs patch that doesn't have a real
-bug report associated with it. And the next time I see you copying VFS
-functions (or any other core functions) without udnerstanding what the
-f*ck they do, and why they do it, I'm going to put you in my
-spam-filter for a week.
-
-I'm done. I'm really *really* tired of having to look at eventfs garbage.
-
-              Linus
+Please no.  "Wait for a while" is never a complete solution for fixing races.
+In rare cases, adding a delay might be the only sane workaround, but I doubt that's
+the case here.
