@@ -1,204 +1,175 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com [209.85.210.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 159511CA8D;
-	Fri, 26 Jan 2024 14:33:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE2B61C683;
+	Fri, 26 Jan 2024 14:34:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706279603; cv=none; b=gvYZLITpUfGo6EAt3UzyMZLmZoAMnWmnSnCKj+lEesVzqVzjZ7VklEG0kSDPrG9j6tpn9BkBTFNyY7VOBDglLBV6av3pzO5ZaFoGQ/lVlvfG9IqL3RE3Fbc6R/UI93wpV9m7Jd3+XlI3GmJYt2fAFg7lsAzq06tFHfHl50/8Cyg=
+	t=1706279674; cv=none; b=FOH3YORLcQEgjD01LsOsNxPEKZygrHlcm3yE+XLqZ0Jt3vwQ3Y5Oy283yNtYeW5/C0JiV4dc62Gb8Pu9DnJEZFRB2STQVUZQYk26FoTIQiS69QhgAgcZTXsbeePje9JXC0BT8WD2ZDNb0iVHnKhoHVMr/e6aSqSx/xvBKDOkZDE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706279603; c=relaxed/simple;
-	bh=toHPWrukG5ZJdg4r3h3ugd+zNwZSP1onspiF6e+jS4Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Il8cvhOkfHF2CNbVSzurF/vzdZj9ECRUJOlOVSLh2nk/Q9kLv0kkt59EtmzIU7B9HEjN8Yt0tMtRTGoWBQfAHOxEzdNF0v6raZ7Y+agQ77NZxIZVGMug3l9Vxf9EWJaH2uL7I9ZNB2RnaNoJt5Q4QWhuZEDMdKILFvpEe7j18/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YhFaRahL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706279674; c=relaxed/simple;
+	bh=VlHEm8CiSi592wojj3UsutYwrubNjD27MWN2kaDZJdc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VFjgmSz1x1I9+gPGi1u15c0MLSDQXdL47PvUIj+Jz0FnYMUYnK2ExtRXilZVnsloaVpTQanToHAnuoBCC5OzlhCYtwc3fovxeKvRNNeoJ/gULeWBXjZGCbH2njTinfPqOT5Bh3XNu4Ue10TSfmhYG4zAka4N7qrSjJtD3/6BZUw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NmoiS7im; arc=none smtp.client-ip=209.85.210.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YhFaRahL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 194BBC433F1;
-	Fri, 26 Jan 2024 14:33:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706279602;
-	bh=toHPWrukG5ZJdg4r3h3ugd+zNwZSP1onspiF6e+jS4Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YhFaRahL9Dr/6ZCzpQy0FfOc9+vbwzEbVoH9SDzoA+gHW8uI0BQ0bYXQuDH6G+0N1
-	 fPc+9HJv+rXimvjgGTzaIZsW91g3xYA9pHihjIi6FcKQZ0iMDxxDgvzxZLLosriFE4
-	 S6KCaEhR5Pje3ZlyEBsA/xoboa2KYY19h7bIztvSnux+0E+aM9vJ1oxE5GoBbWt8ch
-	 hq+056fZsfZKzBzm2X8vhf/1HdYacxIwBivjPKB5FaM5ApOO5GmBEXRPtkdE/3gfBi
-	 H80FH4MxmUF9sdDcRJztINay9si+hPerUcnWdb5PEl7q0QXi4WJIH4pckVc0WVubJt
-	 zxy7ZkODckUAw==
-Date: Fri, 26 Jan 2024 14:33:14 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Shenghao Ding <shenghao-ding@ti.com>
-Cc: conor+dt@kernel.org, krzysztof.kozlowski@linaro.org, robh+dt@kernel.org,
-	andriy.shevchenko@linux.intel.com, kevin-lu@ti.com,
-	baojun.xu@ti.com, devicetree@vger.kernel.org, v-po@ti.com,
-	lgirdwood@gmail.com, perex@perex.cz,
-	pierre-louis.bossart@linux.intel.com, 13916275206@139.com,
-	mohit.chawla@ti.com, linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org, liam.r.girdwood@intel.com,
-	soyer@irl.hu, jkhuang3@ti.com, tiwai@suse.de, pdjuandi@ti.com,
-	j-mcpherson@ti.com, navada@ti.com
-Subject: Re: [PATCH v2 1/4] ASoc: PCM6240: Create PCM6240 Family driver code
-Message-ID: <6c1d04be-c558-4aa4-96a3-ac21ae36bfae@sirena.org.uk>
-References: <20240126035855.1785-1-shenghao-ding@ti.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NmoiS7im"
+Received: by mail-ot1-f49.google.com with SMTP id 46e09a7af769-6de424cef01so229260a34.2;
+        Fri, 26 Jan 2024 06:34:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1706279672; x=1706884472; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=emTp1NUA7NOW6whRrPCnnRtv6Gl2tOXIM2ZOxRmunDs=;
+        b=NmoiS7imJiUtRUi5c4YdV5gWnq1RBF+J7v5gncs243EgcIHrX8hFnoMSuHdL5+dokC
+         zJZKNvFZYVW1XzPVAK/dyAxlrPDYPgQ5HYZqEByrLUOBV7st2W3Ioq+nV/ByUKj0qEOl
+         cTrFbQD7EhmOIqEf9V+l1dDON53/XRhfVPm7V8vxi+/pHSrcXD9OEd5rP3uWZhPOVSqz
+         Wk2OecxIzmtxDxIy7CD8jt0tSpXKVVgvdWsNxRXpRXToRAHPHaJSIghvGwSpKVjzrElZ
+         ri2f5Wcwl7mf1EogrNqgjLO7jutY+vr5ujtc4Dy9227RjsJtRs0cvSeYqPZYZLXXvuzs
+         01mQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706279672; x=1706884472;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=emTp1NUA7NOW6whRrPCnnRtv6Gl2tOXIM2ZOxRmunDs=;
+        b=LERoHmJw2yHEtw2179d4ATivuyVBUJjvdvcoGA35f5HRtbuKeYgLjl3/KLrYzjhu+A
+         pqmNs+umsrCrzzUqWEC6cgVQuRfNrQhUZs7SDp8zsmelicRXc+5gul1abvd4lpk1REey
+         /xFp9U+GXyoG3XKq1wTHZ9SXrYbBKkTFHd48BbUzr0SnwvPT2AG0hgg/3OJIfpiesCVE
+         a38/znwdCIfzSQdEIRoPQXGLl3F96pu16in6KoCYCuFNJNUEP1Tc04LYza2MUoSDJOJW
+         Yi2nYDem2NoMJY5P+Mm2lcMS6Ql8AjTyl/IHsCS2IQ+gBz2vakLh4T4gTNq/UAL97RbM
+         z1FQ==
+X-Gm-Message-State: AOJu0YxvYtQMrpF/TQP6uBvw3wRd2ng7XljyM3pMNYFiSRs6y9RD7qbZ
+	nkbjBE/B+WsjkwkWm17kd0CRq7eF0C7nlicPtJZxjl2FOyrgOIiH/fwZeoS4lMxUhV+yaDXwIeY
+	Wi2oNVi+qTwORWSt3L0oa9hj7z4s=
+X-Google-Smtp-Source: AGHT+IGIJkLlZ+UTplYO6j9R8JlnlWzWhYP6rN8VJcdVk46vCMIHJg3EEg4FExa5Jc1uBoaE0JhsxxNQUoUWczOIZNo=
+X-Received: by 2002:a05:6830:33fc:b0:6e1:3a1:3358 with SMTP id
+ i28-20020a05683033fc00b006e103a13358mr1343858otu.52.1706279671719; Fri, 26
+ Jan 2024 06:34:31 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="zICUD1iSPynTqKb5"
-Content-Disposition: inline
-In-Reply-To: <20240126035855.1785-1-shenghao-ding@ti.com>
-X-Cookie: Excellent day to have a rotten day.
+References: <20240125235723.39507-1-vinicius.gomes@intel.com> <20240125235723.39507-3-vinicius.gomes@intel.com>
+In-Reply-To: <20240125235723.39507-3-vinicius.gomes@intel.com>
+From: Amir Goldstein <amir73il@gmail.com>
+Date: Fri, 26 Jan 2024 16:34:20 +0200
+Message-ID: <CAOQ4uxgZG487EMwDsxH-KkMeDExGPEFQP3zQVKk8BaKkWuZwDQ@mail.gmail.com>
+Subject: Re: [RFC v2 2/4] cred: Add a light version of override/revert_creds()
+To: Vinicius Costa Gomes <vinicius.gomes@intel.com>
+Cc: brauner@kernel.org, hu1.chen@intel.com, miklos@szeredi.hu, 
+	malini.bhandaru@intel.com, tim.c.chen@intel.com, mikko.ylinen@intel.com, 
+	lizhen.you@intel.com, linux-unionfs@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Fri, Jan 26, 2024 at 1:57=E2=80=AFAM Vinicius Costa Gomes
+<vinicius.gomes@intel.com> wrote:
+>
+> Add a light version of override/revert_creds(), this should only be
+> used when the credentials in question will outlive the critical
+> section and the critical section doesn't change the ->usage of the
+> credentials.
+>
+> To make their usage less error prone, introduce cleanup guards asto be
+> used like this:
+>
+>      guard(cred)(credentials_to_override_and_restore);
+>
+> or this:
+>
+>      scoped_guard(cred, credentials_to_override_and_restore) {
+>              /* with credentials overridden */
+>      }
+>
+> Signed-off-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
 
---zICUD1iSPynTqKb5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+You may add:
+Reviewed-by: Amir Goldstein <amir73il@gmail.com>
 
-On Fri, Jan 26, 2024 at 11:58:51AM +0800, Shenghao Ding wrote:
+I would also add:
+Suggested-by: Christian Brauner <brauner@kernel.org>
 
-This looks mostly good - I've got a few comments that are mainly
-stylistic or otherwise very minor, there's one issue with validation of
-profile IDs that does look like it's important to fix though.
+Thanks,
+Amir.
 
-> +static int pcmdev_dev_read(struct pcmdevice_priv *pcm_dev,
-> +	unsigned int dev_no, unsigned int reg, unsigned int *val)
+> ---
+>  include/linux/cred.h | 21 +++++++++++++++++++++
+>  kernel/cred.c        |  6 +++---
+>  2 files changed, 24 insertions(+), 3 deletions(-)
+>
+> diff --git a/include/linux/cred.h b/include/linux/cred.h
+> index 2976f534a7a3..e9f2237e4bf8 100644
+> --- a/include/linux/cred.h
+> +++ b/include/linux/cred.h
+> @@ -172,6 +172,27 @@ static inline bool cap_ambient_invariant_ok(const st=
+ruct cred *cred)
+>                                           cred->cap_inheritable));
+>  }
+>
+> +/*
+> + * Override creds without bumping reference count. Caller must ensure
+> + * reference remains valid or has taken reference. Almost always not the
+> + * interface you want. Use override_creds()/revert_creds() instead.
+> + */
+> +static inline const struct cred *override_creds_light(const struct cred =
+*override_cred)
 > +{
-> +	int ret = -EINVAL;
+> +       const struct cred *old =3D current->cred;
 > +
-> +	if (dev_no < pcm_dev->ndev) {
-
-You could write all these functions a bit more simply if you rewrote
-these error checks to return immediately on error, that way there's less
-indentation and fewer paths later on.
-
-	if (dev_no >= pcm_dev->ndev)
-		return -EINVAL;
-
-and so on.  For the ones dealing with locking it can help to have a
-single exit path but functions like this don't deal directly with the
-locks.
-
-> +
-> +		ret = regmap_read(map, reg, val);
-> +		if (ret < 0)
-> +			dev_err(pcm_dev->dev, "%s, E=%d\n", __func__, ret);
-> +	} else
-> +		dev_err(pcm_dev->dev, "%s, no such channel(%d)\n", __func__,
-> +			dev_no);
-> +
-
-The kernel coding style is that if one side of an if/else has { } both
-should.
-
-> +static int pcmdevice_set_profile_id(
-> +	struct snd_kcontrol *kcontrol,
-> +	struct snd_ctl_elem_value *ucontrol)
-> +{
-> +	struct snd_soc_component *codec
-> +		= snd_soc_kcontrol_component(kcontrol);
-> +	struct pcmdevice_priv *pcm_dev =
-> +		snd_soc_component_get_drvdata(codec);
-> +	int ret = 0;
-> +
-> +	if (pcm_dev->cur_conf != ucontrol->value.integer.value[0]) {
-> +		pcm_dev->cur_conf = ucontrol->value.integer.value[0];
-> +		ret = 1;
-> +	}
-> +
-> +	return ret;
+> +       rcu_assign_pointer(current->cred, override_cred);
+> +       return old;
 > +}
-
-This will accept any configuration number, shouldn't there be some
-validation here?  The put functions doing regmap_update_bits() have
-some limiting of values in the regmap_update_bits() but this just stores
-the value directly.
-
-> +static int pcmdevice_get_volsw(struct snd_kcontrol *kcontrol,
-> +	struct snd_ctl_elem_value *ucontrol)
-> +{
-
-> +	mutex_lock(&pcm_dev->codec_lock);
-> +	rc = pcmdev_dev_read(pcm_dev, dev_no, reg, &val);
-> +	if (rc) {
-> +		dev_err(pcm_dev->dev, "%s:read, ERROR, E=%d\n",
-> +			__func__, rc);
-> +		goto out;
-> +	}
-
-It would be kind of nice if the device switching could be hidden inside
-a custom regmap and we didn't have all this code duplication but I'm not
-thinking of a way of doing that which doesn't just create complications
-so probably this is fine.
-
-> +	val = (val >> shift) & mask;
-> +	val = (val > max) ? max : val;
-> +	val = mc->invert ? max - val : val;
-> +	ucontrol->value.integer.value[0] = val;
-
-There's the FIELD_GET() macro (and FIELD_SET() for writing values) - the
-core predates them and hence doesn't use them, we might want to update
-some time.
-
-> +static int pcmdevice_codec_probe(struct snd_soc_component *codec)
-> +{
-
-> +	ret = request_firmware_nowait(THIS_MODULE, FW_ACTION_UEVENT,
-> +		pcm_dev->regbin_name, pcm_dev->dev, GFP_KERNEL, pcm_dev,
-> +		pcmdev_regbin_ready);
-> +	if (ret) {
-> +		dev_err(pcm_dev->dev, "load %s error = %d\n",
-> +			pcm_dev->regbin_name, ret);
-> +		goto out;
-> +	}
-
-It might be better to request the firmware in the I2C probe rather than
-in the ASoC level probe, that way there's more time for the firmware to
-be loaded before we actually need it.  That does mean you can't register
-the controls immediately though so it may be more trouble than it's
-worth.
-
-Similarly for the reset, if we reset as early as possible that seems
-better.
-
-> +static int pcmdevice_startup(struct snd_pcm_substream *substream,
-> +	struct snd_soc_dai *dai)
-> +{
-> +	struct snd_soc_component *codec = dai->component;
-> +	struct pcmdevice_priv *pcm_priv = snd_soc_component_get_drvdata(codec);
-> +	int ret = 0;
 > +
-> +	if (pcm_priv->fw_state != PCMDEVICE_FW_LOAD_OK) {
-> +		dev_err(pcm_priv->dev, "DSP bin file not loaded\n");
-> +		ret = -EINVAL;
-> +	}
-
-Perhaps -EBUSY instead?  What the user is doing is valid.
-
-> +static const struct regmap_config pcmdevice_i2c_regmap = {
-> +	.reg_bits = 8,
-> +	.val_bits = 8,
-> +	.cache_type = REGCACHE_RBTREE,
-
-Use _MAPLE for new devices, it's a more modern design with tradeoffs
-that work better for most current systems.
-
---zICUD1iSPynTqKb5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmWzwqoACgkQJNaLcl1U
-h9BCzwf+L41HbR0BgZxeKdyUNHfjw//dNQQiokt5X33hzy2MfX0cEw4MOf8k9xyv
-x7kjEUSTwhyF6hxi1Ov9iApcnot6U5L1aoxrAS19xBs3zCqO5dEDtDQz8B6jHXF3
-hR6dT0dwXyKQxOx57BhEPbF16MY0ZpJuE3Od6i4s54zt/rqJw2hUH9xoZNA7BgRH
-8w2OMYMbbY+FL9QyLrDBxMJCgxDDnblMbeBp4yIS35A20M7d2MnxgedAmCmDWZth
-Zkhut1zLOwqZydXjkXrJQAB3izplMzHYS1lxmBOqdAjC+cwTrVIxr0O8GwmYc8bI
-P4rWI9yDw6TygfQlYVCQd3jyHNiuSA==
-=OLs3
------END PGP SIGNATURE-----
-
---zICUD1iSPynTqKb5--
+> +static inline void revert_creds_light(const struct cred *revert_cred)
+> +{
+> +       rcu_assign_pointer(current->cred, revert_cred);
+> +}
+> +
+> +DEFINE_GUARD(cred, const struct cred *, _T =3D override_creds_light(_T),
+> +            revert_creds_light(_T));
+> +
+>  /**
+>   * get_new_cred_many - Get references on a new set of credentials
+>   * @cred: The new credentials to reference
+> diff --git a/kernel/cred.c b/kernel/cred.c
+> index c033a201c808..f95f71e3ac1d 100644
+> --- a/kernel/cred.c
+> +++ b/kernel/cred.c
+> @@ -485,7 +485,7 @@ EXPORT_SYMBOL(abort_creds);
+>   */
+>  const struct cred *override_creds(const struct cred *new)
+>  {
+> -       const struct cred *old =3D current->cred;
+> +       const struct cred *old;
+>
+>         kdebug("override_creds(%p{%ld})", new,
+>                atomic_long_read(&new->usage));
+> @@ -499,7 +499,7 @@ const struct cred *override_creds(const struct cred *=
+new)
+>          * visible to other threads under RCU.
+>          */
+>         get_new_cred((struct cred *)new);
+> -       rcu_assign_pointer(current->cred, new);
+> +       old =3D override_creds_light(new);
+>
+>         kdebug("override_creds() =3D %p{%ld}", old,
+>                atomic_long_read(&old->usage));
+> @@ -521,7 +521,7 @@ void revert_creds(const struct cred *old)
+>         kdebug("revert_creds(%p{%ld})", old,
+>                atomic_long_read(&old->usage));
+>
+> -       rcu_assign_pointer(current->cred, old);
+> +       revert_creds_light(old);
+>         put_cred(override);
+>  }
+>  EXPORT_SYMBOL(revert_creds);
+> --
+> 2.43.0
+>
