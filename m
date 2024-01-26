@@ -1,252 +1,194 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBD1B1EA76
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 08:51:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706259093; cv=none; b=LVXQ7uKY0ncI7Baa1jpdq32r1DS9PtNBaq3Bkja50d4qm6sYGBqsxZAsS6zbLx0aqyWLqFDJyhDOt6Hh0A82pP0VCNbKaZx1RKWzdllvBQwNwqF23I2+5QkSkZLV56pYtDPwClKiNxxA1lJ6XpVSvg7CEyJ+ovPjcZPoYmzw1mw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706259093; c=relaxed/simple;
-	bh=pprwQeE7XcdoVLzqAGFTtrwLSXJiUSUwBVQMMXGwiaA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MMluEjXOT3EXhO+ZtCAp61JWBAyca4XKdnL0UeD9XYWUa9ezuz+wJ51LRIjb50VxmJUmf84jpDjrDyuYT3M1t7MxTOAC55NJdQcgKj4qeULf81JnWPdfJGQMxe42TMR0xy7pCSAkrgAm6h5/eNrp77A8/TE16MSuNax3dYLA5x0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=f3FZBtAf; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B0FFBA53;
+	Fri, 26 Jan 2024 08:53:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.11
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706259197; cv=fail; b=sUdZdTy2/NJE0rkCET1POblf9QjIPhXdMuLr++FGZOiSz1Qbram58bFd/soZAB8M2Gj8j2DKwTN4S8Oye2T8oXVTqZ8bQEh09UoaM1cg+YsJHJvGOSnvpxVxJlyuG0adMReA2QRwCBsAWp2W0FGbOO1yenG2v84hFjWDEGYndaw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706259197; c=relaxed/simple;
+	bh=mB6nd6IOO7O5oMDObzA9YBmsh3E1NpT3rgm5i6QY6gU=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=XqCVYi3iTv9jDfPz7OkqNOyej+LUhsDYzq13qeEhjiOX8FP5npTylwFME9HQZlF9jlHpdXrecUBwRI674K6D09FJj1bQcgL2B2V05mVhTuKQsBQV6SsPu73HZy2bE8qs4ZQn2jQwACtsAKttxfWumU5fgKKdDVz63dKmV671P0I=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FGlKkciv; arc=fail smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="f3FZBtAf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1706259090;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5KKf6EWmgBy5sHid0BIM6PUxOBJIEnPe2IydxsmIfcw=;
-	b=f3FZBtAfyGFONONQd0BfzDRlSa210DHa3ctZ5W2NaxOa9/drVgTcztrrfZCDfM66EudexA
-	SJ08tHkjKJAss98XrYFRHA4jVEuEvb4HEeAIov1zKl7Ysj+nqSkfhfBI+49A35bLhuKLiF
-	VmI2wYV3PMlxQylgOmQiRgKn3T+wztY=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-583-Oene1Fx_M6OXKLJ6f2-ZIQ-1; Fri, 26 Jan 2024 03:51:28 -0500
-X-MC-Unique: Oene1Fx_M6OXKLJ6f2-ZIQ-1
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-a2f71c9f5d2so5257166b.2
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 00:51:28 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706259087; x=1706863887;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5KKf6EWmgBy5sHid0BIM6PUxOBJIEnPe2IydxsmIfcw=;
-        b=kFhFpMnyrfiNMNLj2IRxFoVb5U7NdDTvU9OGM94xRYpLLB/tOWl3d8TFYq9xqxeJdk
-         SKDpnGhxRtZrQYbDjnqARlTRJDuxOOQwPvpbOgAdPKF1HsFMQBG8bjxObBV8qJ8HAEON
-         RR0QtErjJjOjpFAdo8BNjliSajpvHywlvtCCOqgl1WSd+2mP4ovgOyRP0JLnZwjF0EjW
-         Th/sK5CZZDAb29gj/IKD2cYeMHretf8Spk8IWinPV/XMRYPgCvO1tWbpXBU5X13Gha6s
-         1o9tBcp8qd5fcgQTb788Bm+wgExukfE8/ks0non9ohiGaFFHYlGgwwRIi1SKkSNSdRsX
-         1C2g==
-X-Gm-Message-State: AOJu0YxlDLnQ20o3v7veMSOK5MYghImRqCs0aVgUyIhUvgNg7jqdFK8F
-	fgpSg8x7LuFZKrz6s5gpAgPRaUqV51fqFG4DmoOUJ2KndB0oLmPl/eeWLsaD/ut6qY9n9BBaj11
-	6S/wk8TBKNQ0g4RIMLAh+gcrYVImugfjIR3MDdPvg3F2dGN9MDcArx9ylLuPRti1uSy5h6Ox3pK
-	0ZHcZ2D0rQ0/Mlnai71w0iu+17g3BWITfjTdZ0
-X-Received: by 2002:a17:906:d7ac:b0:a2f:1575:c80c with SMTP id pk12-20020a170906d7ac00b00a2f1575c80cmr490112ejb.7.1706259087571;
-        Fri, 26 Jan 2024 00:51:27 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IG9oo/LCRdvPJXxxBEwEoCRvH/zKsQWc51yiYv/+/06+IKO9WHrS3EsnECmxKCM2YJvHB/svoV5vEpSf8kt7aU=
-X-Received: by 2002:a17:906:d7ac:b0:a2f:1575:c80c with SMTP id
- pk12-20020a170906d7ac00b00a2f1575c80cmr490099ejb.7.1706259087196; Fri, 26 Jan
- 2024 00:51:27 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FGlKkciv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706259195; x=1737795195;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=mB6nd6IOO7O5oMDObzA9YBmsh3E1NpT3rgm5i6QY6gU=;
+  b=FGlKkciv67CxOjf24UdNw2zMvnR9tzhmS+Jz1DUIfsl52CApo7goe1Vq
+   NsRZL+FldlOzkAmrtyxWgY2Of5WFobQrbK02Cz6pxOWQMhUo2bl/ADyip
+   Q2RnYOei1p+oIEQ7izTFNWL+8CFKQ+NxxvPQOUe9ni9carbAoMGx5ebwx
+   xYVHzhWSl9Bj2kIume2cO6n0YhtPA588IACnSyb+kii6Ez9awLfAuwnzm
+   3cCauKvAVUs+M456PtkpEJfU09DXv2PYTmTG8pBCxHCBXLgBuABQtQ3Mn
+   r1zHBFuzjQO5orSV+XYzzElwo7pAWb3HlP+/a8qRwAXeQc5KtDORx+yKh
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="9081319"
+X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
+   d="scan'208";a="9081319"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2024 00:53:15 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
+   d="scan'208";a="28775413"
+Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
+  by orviesa002.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 26 Jan 2024 00:53:14 -0800
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Fri, 26 Jan 2024 00:53:14 -0800
+Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Fri, 26 Jan 2024 00:53:14 -0800
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.169)
+ by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Fri, 26 Jan 2024 00:53:13 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hNTrD1ESLp0O4D13UlVzhPeGExtbm/0AhcF46nRe5ZkFtdVBe9U2yDG3eKKErJ2MO7rBOWwXti/qWqpMlAiynSJeO83WLVJkKzdjWIV8aio4YsDMBaiEbCZpsjwnRSB/sa5jj9OAu1lZOYC/I84feNPjzqRGA4NVhH94EVTdaqtZOBQRBz4g/KoI2pEhFDUwg4xiNPJ/djSLyVNe+V2u2qLXKBTZYl+Kig//jlNd95s6/Ei9fs33TQMHUG61dFVFZLJx3Sd+CPnvbfnsKG6TB8mll+oW+Q1S+U+uGqcjfnOqwAU+8AaUU9ppC+MW874xGzkjMgeN+Kvcbu6hCIn5SA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Di7meIPl9U8Z5iL0vTY04z8FnjnyaGJiB7Y5n6hZEg0=;
+ b=QAc76vRkWzjuAr+g57M/3QSpggg6v5A22cXacWoZPTe4zLT3OS3pmLDELvSdffQ1xpiK76eaj8ZOzVdbJlWlan/JymYLF88cRkwMDKh3d+zkA6EefuvCpnMumAQAoZtrcOcptUPoWy0SFoUnbjnDqjfv9BUWHsCribOr+xNciaKzLoJJBsguZLFpoRXXm/Vqq+hBUa4HBHw5FWon97/2gmzXwwOzBvWHRC+VyHdTm8JwB8TbepA5IXlTG9vtb0V4amO3GwDwUgYt7DJveIualzTkj+Ms7zL25QZqRO9Esean2wIjZRO75eFX2GE99Fu0f/AIx9+vxzqgflgi+xb7aw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from CH3PR11MB8660.namprd11.prod.outlook.com (2603:10b6:610:1ce::13)
+ by PH7PR11MB8009.namprd11.prod.outlook.com (2603:10b6:510:248::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7202.37; Fri, 26 Jan
+ 2024 08:53:10 +0000
+Received: from CH3PR11MB8660.namprd11.prod.outlook.com
+ ([fe80::2903:9163:549:3b0d]) by CH3PR11MB8660.namprd11.prod.outlook.com
+ ([fe80::2903:9163:549:3b0d%6]) with mapi id 15.20.7228.027; Fri, 26 Jan 2024
+ 08:53:09 +0000
+Date: Fri, 26 Jan 2024 16:53:01 +0800
+From: Chao Gao <chao.gao@intel.com>
+To: Yang Weijiang <weijiang.yang@intel.com>
+CC: <seanjc@google.com>, <pbonzini@redhat.com>, <dave.hansen@intel.com>,
+	<kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>, <x86@kernel.org>,
+	<yuan.yao@linux.intel.com>, <peterz@infradead.org>,
+	<rick.p.edgecombe@intel.com>, <mlevitsk@redhat.com>, <john.allen@amd.com>
+Subject: Re: [PATCH v9 27/27] KVM: x86: Stop emulating for CET protected
+ branch instructions
+Message-ID: <ZbNy7TVq62JurQRc@chao-email>
+References: <20240124024200.102792-1-weijiang.yang@intel.com>
+ <20240124024200.102792-28-weijiang.yang@intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20240124024200.102792-28-weijiang.yang@intel.com>
+X-ClientProxiedBy: SI2PR01CA0027.apcprd01.prod.exchangelabs.com
+ (2603:1096:4:192::7) To CH3PR11MB8660.namprd11.prod.outlook.com
+ (2603:10b6:610:1ce::13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <7258a4cc-da16-5c34-a042-2a23ee396d56@redhat.com> <IA0PR11MB7185B400DD4A4FD65FD51437F87B2@IA0PR11MB7185.namprd11.prod.outlook.com>
-In-Reply-To: <IA0PR11MB7185B400DD4A4FD65FD51437F87B2@IA0PR11MB7185.namprd11.prod.outlook.com>
-From: Zhenyu Zhang <zhenyzha@redhat.com>
-Date: Fri, 26 Jan 2024 16:50:50 +0800
-Message-ID: <CAJFLiBJ5K_WbiNmrgaKD9_UAs4HQRv_xGyQcwBy6a9XusUTeew@mail.gmail.com>
-Subject: Re: [PATCH RESEND] drm/virtio: set segment size for virtio_gpu device
-To: Sebastian Ott <seott@redhat.com>
-Cc: "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, 
-	"virtualization@lists.linux.dev" <virtualization@lists.linux.dev>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, David Airlie <airlied@redhat.com>, 
-	Gerd Hoffmann <kraxel@redhat.com>, Daniel Vetter <daniel@ffwll.ch>, 
-	"Kasireddy, Vivek" <vivek.kasireddy@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR11MB8660:EE_|PH7PR11MB8009:EE_
+X-MS-Office365-Filtering-Correlation-Id: 66926643-4aef-493f-c10c-08dc1e4c3890
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 4teuHsn/3IvzFmJHTUNUSHanqT1uxc56supGOEm8ivk0T1xPYCeBoZNle1idmNQ3D8tbm3FV6PL4Z7JTc7If3fkUg6iL8rZYT/J4gK66nwwqxf+OApnnqn1sUg9MVgEcJ42U13Z2Voom6IcqyhE32NBZIeWoFoA0WlUuDVuBKH9tw2Dpf7VmsrkvOUQFuw6UfceIiK/EMl94diPaSlNXzHlhF1c62Z6j5NtQgZp1BFrsrKzH+0OtwRCL1RF0e3/1nbooqXuLdvyhjpfNDpiHYzaHrOG2fADwQ5LWv95e+Q1EhJfYMCFsmqHVwuaVhyXXPTeHm4lJsYm9S1JxAqBvFTGlo3z91G2Mn6Pcq4vPH2n6P5EiBoUDKWdjNsjS/+hCU5VSWQNS7+yNi3TD5lI1uddbbOoi7JLMHvWgamKAXq3UG+Kmdwi/QSPWkUktmNQ1iv0RKvobqOWzmrTd9lv9om1FddojIVShO8uR8qRowZqzaZXFiVcJozAA65euqloTPR2cUhAi4jDfVLulcXsWpHkgKG5xpPnK/3x2vvUZ5VrXLQrTT+yB1inThgF3o6J0
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR11MB8660.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7916004)(366004)(346002)(376002)(136003)(39860400002)(396003)(230922051799003)(451199024)(186009)(64100799003)(1800799012)(83380400001)(26005)(4326008)(44832011)(86362001)(6862004)(82960400001)(8676002)(66946007)(5660300002)(316002)(6486002)(6636002)(66476007)(66556008)(38100700002)(478600001)(2906002)(33716001)(9686003)(6512007)(8936002)(41300700001)(6666004)(6506007);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?rjPezKbgehuh8ecXpH/eV9rn1r6wqFBQjKQoUKDa866R42E5zobKFyLeHawg?=
+ =?us-ascii?Q?Yk//wFP1Ibq3lD2Z6e5iXJIfCx2oVRwGRnokfpp+WKJPUlJmPU9fHyzo0g/b?=
+ =?us-ascii?Q?iRrsVHKIbVvmW1zPvmrW3lbz2epZgifuv7SwakhYesn/xdGO5pHwyILNruQc?=
+ =?us-ascii?Q?Qy/ZaqQ4Nl/fldEWbSrlVxXKQHFk1lUZENobG6MBtpNYN0EBk4n/4wsavR1P?=
+ =?us-ascii?Q?MKxom+FqxeGbyuZTqPatkU40RY7rB+5iPUPulYyFjvo5Iljm5575LZo5srkN?=
+ =?us-ascii?Q?G8cdqOSwoYuSOJvj6RBF/LKTrpqi4YEzTC1qHwuJpr6BJyR+D3LOYR7i32x7?=
+ =?us-ascii?Q?9CtOFLNjZd8AjOdeAEorf3HarRlTqlaglcHvNBeudSyLLrn+wjOdprHzkEQB?=
+ =?us-ascii?Q?6/m6PDPjlP7HznQu49ztIFWDxWYxbbseG6J2jErv1nPnbKTHbLtbab0d94nb?=
+ =?us-ascii?Q?47bYOk+dUSRFNKpYIN++IdE2e+JpHqPXiL7r07T6k436nT3deG+nfpJwt/D8?=
+ =?us-ascii?Q?wfx7yKzbN2HT+8bkOdxT8Zp09n6AYm2HUcErd9e/q4E5dIz7cBYl8o1VHnz3?=
+ =?us-ascii?Q?MaubFoCZplYeqrtL44YoeChS2eauE4qM830SEm+vP01NBfdTIqUxJrG685n/?=
+ =?us-ascii?Q?Zl/XXAx7hwfaR/Jcy8Hs56RFmkK8WooRilRreFKZp41VMTt9ZF4yRmcFmPz4?=
+ =?us-ascii?Q?Ge4chh+18yZVBJCOpj2mp6DbnOiFhILi8CtQGs3cuY7xkCknVa0N29rn/Pgl?=
+ =?us-ascii?Q?LOQpadi36zY/bIb2BSSmGN0FGAlcoM8BpxOeVjyaSYTpBTV2Ny3rVIapyMBn?=
+ =?us-ascii?Q?QONnbd5So592dLsn+9PLR1oaQKDiSMbb7k+QxdzBXnVk/f5ry1EFJ+7nuXeh?=
+ =?us-ascii?Q?jouQhvZpFeaaxn6lji0jX/ghjr8IZRoYAHdYdDbjLfNSkoy/rHetUf035Bvl?=
+ =?us-ascii?Q?cpBIiPudpwtgaDS72fjuRhi8adHImUSWkdbjBD64QZe16+3NzeCPSgMNJ5hd?=
+ =?us-ascii?Q?+JIlHGNgBfeBR1InoFdfllfBsPaadAsAevHM2jy0vqP5p1O/fdQERcwnsh9a?=
+ =?us-ascii?Q?i1C/g3jWOyuR+AWE+wxstJGwlj0hULHMm2Od9z2N6OvtwUq4eyx/TrTmoFzv?=
+ =?us-ascii?Q?QVqKz009PJklQZrz5Q72+sKaNUmvVuux48AEDI33GT5pRbEV8XzaRaGRLhGo?=
+ =?us-ascii?Q?757K0zBDqd+SEtEqjFIIyMLtbdoMSId7L00XKvO+Ecj6lbdh/hHicvx0etYu?=
+ =?us-ascii?Q?TE8/fzHkd4sPQcniWLr53qd0LFNeDBwuc5om6uSFycgBOvJuiATmzVGnFfo1?=
+ =?us-ascii?Q?C+ZLgDDKM7L/nhxyAittbJyPH7Lr1Sc/JMtEH6dcDek2itOcDlWvUJFWkHCe?=
+ =?us-ascii?Q?8fHlPYIfPpJHrxLwq6Vr3duqXYsuDKuLnh7XECPtKp7jKHGJlH9FSgX07p4z?=
+ =?us-ascii?Q?c7hN7BuGU+dG57byRedJ7qyOWrsVCfdym5ZoG0ccpqlGYICRnX55R4719Lhd?=
+ =?us-ascii?Q?TOb5mFuKtAObHIDsXxWM9lzjCef9iRXfZtNNAbm/r4IbaiY9c7ogwvJVPJpD?=
+ =?us-ascii?Q?BC44dJuiJ5Z+oQN8mCq8sGN7NsqenaCgGZqb1nnM?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 66926643-4aef-493f-c10c-08dc1e4c3890
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR11MB8660.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jan 2024 08:53:09.6308
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 2oXdVllGdkRQ6DIazObD4N6FL+BrJiHTKO6CdAF9/S2iwKXWGvxkz3MIysSYmSOpZJv1lFhim//lxoMstvf60w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB8009
+X-OriginatorOrg: intel.com
 
-[PATCH RESEND] drm/virtio: set segment size for virtio_gpu device
-
-Test on 64k basic page size aarch64(6.8.0-rc1-zhenyzha+)
-During the boot process, the call trace no longer appears.
-The test results are as expected.
-
-Tested-by: Zhenyu Zhang <zhenyzha@redhat.com>
-
-On Thu, Jan 25, 2024 at 5:24=E2=80=AFAM Kasireddy, Vivek
-<vivek.kasireddy@intel.com> wrote:
+On Tue, Jan 23, 2024 at 06:42:00PM -0800, Yang Weijiang wrote:
+>Don't emulate the branch instructions, e.g., CALL/RET/JMP etc., when CET
+>is active in guest, return KVM_INTERNAL_ERROR_EMULATION to userspace to
+>handle it.
 >
-> > Hej,
-> >
-> > debug dma code is not happy with virtio gpu (arm64 VM):
-> >
-> > [  305.881733] ------------[ cut here ]------------
-> > [  305.883117] DMA-API: virtio-pci 0000:07:00.0: mapping sg segment lon=
-ger
-> > than device claims to support [len=3D262144] [max=3D65536]
-> > [  305.885976] WARNING: CPU: 8 PID: 2002 at kernel/dma/debug.c:1177
-> > check_sg_segment+0x2d0/0x420
-> > [  305.888038] Modules linked in: crct10dif_ce(+) polyval_ce polyval_ge=
-neric
-> > ghash_ce virtio_gpu(+) virtio_net net_failover virtio_blk(+) virtio_dma=
-_buf
-> > virtio_console failover virtio_mmio scsi_dh_r dac scsi_dh_emc scsi_dh_a=
-lua
-> > dm_multipath qemu_fw_cfg
-> > [  305.893496] CPU: 8 PID: 2002 Comm: (udev-worker) Not tainted 6.7.0 #=
-1
-> > [  305.895070] Hardware name: QEMU KVM Virtual Machine, BIOS edk2-
-> > 20230524-3.fc37 05/24/2023
-> > [  305.897112] pstate: 60400005 (nZCv daif +PAN -UAO -TCO -DIT -SSBS
-> > BTYPE=3D--)
-> > [  305.897129] pc : check_sg_segment+0x2d0/0x420
-> > [  305.897139] lr : check_sg_segment+0x2d0/0x420
-> > [  305.897145] sp : ffff80008ffc69d0
-> > [  305.897149] x29: ffff80008ffc69d0 x28: dfff800000000000 x27:
-> > ffffb0232879e578
-> > [  305.897167] x26: ffffffff00000000 x25: ffffb0232778c060 x24:
-> > ffff19ee9b2060c0
-> > [  305.897181] x23: 00000000ffffffff x22: ffffb0232ab9ce10 x21:
-> > ffff19eece5c64ac
-> > [  305.906942] x20: 0000000000010000 x19: ffff19eece5c64a0 x18:
-> > ffff19eec36fc304
-> > [  305.908633] x17: 6e61687420726567 x16: 6e6f6c20746e656d x15:
-> > 6765732067732067
-> > [  305.910352] x14: 00000000f1f1f1f1 x13: 0000000000000001 x12:
-> > ffff700011ff8cc3
-> > [  305.912044] x11: 1ffff00011ff8cc2 x10: ffff700011ff8cc2 x9 :
-> > ffffb02324a70e54
-> > [  305.913751] x8 : 00008fffee00733e x7 : ffff80008ffc6617 x6 :
-> > 0000000000000001
-> > [  305.915451] x5 : ffff80008ffc6610 x4 : 1fffe33e70564622 x3 :
-> > dfff800000000000
-> > [  305.917158] x2 : 0000000000000000 x1 : 0000000000000000 x0 :
-> > ffff19f382b23100
-> > [  305.918864] Call trace:
-> > [  305.919474]  check_sg_segment+0x2d0/0x420
-> > [  305.920443]  debug_dma_map_sg+0x2a0/0x428
-> > [  305.921402]  __dma_map_sg_attrs+0xf4/0x1a8
-> > [  305.922388]  dma_map_sgtable+0x7c/0x100
-> > [  305.923318]  drm_gem_shmem_get_pages_sgt+0x15c/0x328
-> > [  305.924500]
-> > virtio_gpu_object_shmem_init.constprop.0.isra.0+0x50/0x628 [virtio_gpu]
-> > [  305.926390]  virtio_gpu_object_create+0x198/0x478 [virtio_gpu]
-> > [  305.927802]  virtio_gpu_mode_dumb_create+0x2a0/0x4c8 [virtio_gpu]
-> > [  305.929272]  drm_mode_create_dumb+0x1c0/0x280
-> > [  305.930327]  drm_client_framebuffer_create+0x140/0x328
-> > [  305.931555]  drm_fbdev_generic_helper_fb_probe+0x1bc/0x5c0
-> > [  305.932871]  __drm_fb_helper_initial_config_and_unlock+0x1e0/0x630
-> > [  305.934372]  drm_fb_helper_initial_config+0x50/0x68
-> > [  305.935540]  drm_fbdev_generic_client_hotplug+0x148/0x200
-> > [  305.936819]  drm_client_register+0x130/0x200
-> > [  305.937856]  drm_fbdev_generic_setup+0xe8/0x320
-> > [  305.938932]  virtio_gpu_probe+0x13c/0x2d0 [virtio_gpu]
-> > [  305.940190]  virtio_dev_probe+0x38c/0x600
-> > [  305.941153]  really_probe+0x334/0x9c8
-> > [  305.942047]  __driver_probe_device+0x164/0x3d8
-> > [  305.943102]  driver_probe_device+0x64/0x180
-> > [  305.944094]  __driver_attach+0x1d4/0x488
-> > [  305.945045]  bus_for_each_dev+0x104/0x198
-> > [  305.946008]  driver_attach+0x44/0x68
-> > [  305.946892]  bus_add_driver+0x23c/0x4a8
-> > [  305.947838]  driver_register+0xf8/0x3d0
-> > [  305.948770]  register_virtio_driver+0x74/0xc8
-> > [  305.949836]  virtio_gpu_driver_init+0x20/0xff8 [virtio_gpu]
-> > [  305.951237]  do_one_initcall+0x17c/0x8c0
-> > [  305.952182]  do_init_module+0x1dc/0x630
-> > [  305.953106]  load_module+0x10c0/0x1638
-> > [  305.954012]  init_module_from_file+0xe0/0x140
-> > [  305.955058]  idempotent_init_module+0x2c0/0x590
-> > [  305.956174]  __arm64_sys_finit_module+0xb4/0x140
-> > [  305.957282]  invoke_syscall+0xd8/0x258
-> > [  305.958187]  el0_svc_common.constprop.0+0x16c/0x240
-> > [  305.959526]  do_el0_svc+0x48/0x68
-> > [  305.960456]  el0_svc+0x58/0x118
-> > [  305.961310]  el0t_64_sync_handler+0x120/0x130
-> > [  305.962510]  el0t_64_sync+0x194/0x198
-> > [  305.963509] irq event stamp: 37944
-> > [  305.964412] hardirqs last  enabled at (37943): [<ffffb02324a7439c>]
-> > console_unlock+0x1a4/0x1c8
-> > [  305.966602] hardirqs last disabled at (37944): [<ffffb023276724e4>]
-> > el1_dbg+0x24/0xa0
-> > [  305.968535] softirqs last  enabled at (37930): [<ffffb0232475114c>]
-> > __do_softirq+0x8e4/0xe1c
-> > [  305.970781] softirqs last disabled at (37925): [<ffffb0232475a9b0>]
-> > ____do_softirq+0x18/0x30
-> > [  305.972937] ---[ end trace 0000000000000000 ]---
-> >
-> > The 64K max_segment size of the device seems to be inherited by PCIs
-> > default.
-> > The sg list is crated via this drm helper:
-> >
-> > struct sg_table *drm_prime_pages_to_sg(struct drm_device *dev,
-> >                                      struct page **pages, unsigned int
-> > nr_pages)
-> > {
-> > ...
-> >       if (dev)
-> >               max_segment =3D dma_max_mapping_size(dev->dev);
-> >       if (max_segment =3D=3D 0)
-> >               max_segment =3D UINT_MAX;
-> >       err =3D sg_alloc_table_from_pages_segment(sg, pages, nr_pages, 0,
-> >                                               nr_pages << PAGE_SHIFT,
-> >                                               max_segment, GFP_KERNEL);
-> > ...
-> > }
-> >
-> > I'm a bit puzzled why this uses dma_max_mapping_size() and not
-> > dma_get_max_seg_size(). But since this is used by a lot of drivers
-> > I'm not really keen to touch this code that works like this for ages.
-> >
-> > So let's just make debug dma code aware of the actual segment size
-> > that's used by the device:
-> >
-> > --->8
-> > drm/virtio: set segment size for virtio_gpu device
-> >
-> > Set the segment size of the virtio_gpu device to the value
-> > used by the drm helpers when allocating sg lists to fix the
-> > following complaint from DMA_API debug code:
-> > DMA-API: virtio-pci 0000:07:00.0: mapping sg segment longer than device
-> > claims to support [len=3D262144] [max=3D65536]
-> >
-> > Signed-off-by: Sebastian Ott <sebott@redhat.com>
-> > ---
-> >    drivers/gpu/drm/virtio/virtgpu_drv.c | 1 +
-> >    1 file changed, 1 insertion(+)
-> >
-> > diff --git a/drivers/gpu/drm/virtio/virtgpu_drv.c
-> > b/drivers/gpu/drm/virtio/virtgpu_drv.c
-> > index 4334c7608408..74b2cb3295af 100644
-> > --- a/drivers/gpu/drm/virtio/virtgpu_drv.c
-> > +++ b/drivers/gpu/drm/virtio/virtgpu_drv.c
-> > @@ -94,6 +94,7 @@ static int virtio_gpu_probe(struct virtio_device *vde=
-v)
-> >                       goto err_free;
-> >       }
-> >
-> > +     dma_set_max_seg_size(dev->dev, dma_max_mapping_size(dev-
-> > >dev) ? : UINT_MAX);
-> Acked-by: Vivek Kasireddy <vivek.kasireddy@intel.com>
+>KVM doesn't emulate CPU behaviors to check CET protected stuffs while
+>emulating guest instructions, instead it stops emulation on detecting
+>the instructions in process are CET protected. By doing so, it can avoid
+>generating bogus #CP in guest and preventing CET protected execution flow
+>subversion from guest side.
 >
-> >       ret =3D virtio_gpu_init(vdev, dev);
-> >       if (ret)
-> >               goto err_free;
-> > --
-> > 2.43.0
-> >
-> >
+>Suggested-by: Chao Gao <chao.gao@intel.com>
+>Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
+>---
+> arch/x86/kvm/emulate.c | 27 ++++++++++++++++-----------
+> 1 file changed, 16 insertions(+), 11 deletions(-)
 >
->
+>diff --git a/arch/x86/kvm/emulate.c b/arch/x86/kvm/emulate.c
+>index e223043ef5b2..ad15ce055a1d 100644
+>--- a/arch/x86/kvm/emulate.c
+>+++ b/arch/x86/kvm/emulate.c
+>@@ -178,6 +178,7 @@
+> #define IncSP       ((u64)1 << 54)  /* SP is incremented before ModRM calc */
+> #define TwoMemOp    ((u64)1 << 55)  /* Instruction has two memory operand */
+> #define IsBranch    ((u64)1 << 56)  /* Instruction is considered a branch. */
+>+#define IsProtected ((u64)1 << 57)  /* Instruction is protected by CET. */
 
+the name IsProtected doesn't seem clear to me. Its meaning isn't obvious from
+the name and may be confused with protected mode. Maybe we can add two flags:
+"IndirectBranch" and "ShadowStack".
+
+> 
+> #define DstXacc     (DstAccLo | SrcAccHi | SrcWrite)
+> 
+>@@ -4098,9 +4099,9 @@ static const struct opcode group4[] = {
+> static const struct opcode group5[] = {
+> 	F(DstMem | SrcNone | Lock,		em_inc),
+> 	F(DstMem | SrcNone | Lock,		em_dec),
+>-	I(SrcMem | NearBranch | IsBranch,       em_call_near_abs),
+>-	I(SrcMemFAddr | ImplicitOps | IsBranch, em_call_far),
+>-	I(SrcMem | NearBranch | IsBranch,       em_jmp_abs),
+>+	I(SrcMem | NearBranch | IsBranch | IsProtected, em_call_near_abs),
+>+	I(SrcMemFAddr | ImplicitOps | IsBranch | IsProtected, em_call_far),
+>+	I(SrcMem | NearBranch | IsBranch | IsProtected, em_jmp_abs),
+
+In SDM, I don't see a list of instructions that are affected by CET. how do you
+get the list.
