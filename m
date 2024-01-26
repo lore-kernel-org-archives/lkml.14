@@ -1,117 +1,237 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mx1.sberdevices.ru (mx1.sberdevices.ru [37.18.73.165])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D028122EF9
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 20:22:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DF33225CD
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 20:23:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.18.73.165
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706300572; cv=none; b=R4XLLL4V+JpPvbltnFwSF63WLeUpKZQBQTNZp37BgG+DTkgTox9FYGA2D7LDzEyLXFnXUZAYzYGg+5ehMhC6OrGPbp275qBoZuEWmAuBI/D8jW2L3u5FhL8yENnCoojFs06MDvd04zxtqH9C3QLtD3kZ+RgZDWZNJX8JSFGrG5o=
+	t=1706300610; cv=none; b=Z4hG50JwN6s7U3p2BJyOyBH29oDYPUklkhCPeSnhlsxJh+l6oe9czwDX6qWYvkCPkV4gxk7jJy6Ow4xXC0LcMBaMEchD7HBjZNdeoX4QoP9Cd6U0PjqD5YPTd02cxgrZxd8U3gOCmlLOTO5OUDXfG/MRshmHBmnFtolqOfdiDys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706300572; c=relaxed/simple;
-	bh=tBU/Xb/2SvjwvzmqrK39MOJLLy+M/EBTekaRKFEliwo=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=KFma2gC6Thm4ql/TnFRkMny69p7dsAgzmbN+14kMnP0kGT4tGmo568S+xq1IPqqjH2SWg6mfy/r/viQ6CqSJAqPBrTRc1qVnYMnaOedmBVIpex2qKVaGm3StWCXR+Wgz8rmvKMWLrKbfhfY1YubcwTCVDxV64BgWsocwnNQhVpg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=oStABYS2; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=e/Sdjn69; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1706300610; c=relaxed/simple;
+	bh=ZXBxdNVcmkcTYjXC/0G39DDqx4LYDazQ5Vm4ydRHxXg=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=TYHgoi/sr+ithxXy+BwGchFy8UNfu14IH+eVjFXlRLzmJYSjD/zf4uoJDNjZdD7anqPkX9v8rRLm8ySUMidDomaxLaInGeLSg6srElgTpSNHNIkH4fdFcnm7L0WATeaWJVlWR63jX50HfLFTbyhlT1S0Ssk90sYBjlDVK7pY+cM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=sberdevices.ru; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=afVUdK9M; arc=none smtp.client-ip=37.18.73.165
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=salutedevices.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sberdevices.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="oStABYS2";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="e/Sdjn69"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1706300568;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=841xmotN080Gj8mdI3q/cuaEGS+WUt6XWaaj98SJfC0=;
-	b=oStABYS2G2zTv+ODpU8P2xgVD0mZAmsxS4qF+kxGGJjfABa9k0xyZzjsZkuUiqISWJAS6F
-	BGKw6BV2kfvKA85ploNHoWYE5F3gLoWtSFtLaZmJXKum1elDqQIJRKcPqeNBdDWYGjyrGu
-	XgxCJS69C3D2AG9f2npYQ5Hn9TlxlEC5hFvPyrU4DsD36XD8DWX9kmJv8AQ3NrK2qo4I4p
-	rchfG2EN3e8uTpNrwifBcXzZnhTDB+P3ijLqivtm1KX5RkDXopt+dxmwlzIALDHAm02IH+
-	7dE6mqum2XDZ60UApKFMcvROvw6zmu7JO/nIbCvu24UxhWZ6sblAUS1APAcPww==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1706300568;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=841xmotN080Gj8mdI3q/cuaEGS+WUt6XWaaj98SJfC0=;
-	b=e/Sdjn69Gp/hEaJQ2kx627HStGPFxqq/vH2MJX8/rj8yPCZ2BblOJqJ49Oax65On4CCyTX
-	Cs9s/ns5acKe1GDw==
-To: "Zhang, Rui" <rui.zhang@intel.com>, "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>
-Cc: "Raj, Ashok" <ashok.raj@intel.com>, "mhklinux@outlook.com"
- <mhklinux@outlook.com>, "arjan@linux.intel.com" <arjan@linux.intel.com>,
- "ray.huang@amd.com" <ray.huang@amd.com>, "thomas.lendacky@amd.com"
- <thomas.lendacky@amd.com>, "andrew.cooper3@citrix.com"
- <andrew.cooper3@citrix.com>, "Sivanich, Dimitri"
- <dimitri.sivanich@hpe.com>, "Tang, Feng" <feng.tang@intel.com>,
- "kan.liang@linux.intel.com" <kan.liang@linux.intel.com>, "Mehta, Sohil"
- <sohil.mehta@intel.com>, "peterz@infradead.org" <peterz@infradead.org>,
- "paulmck@kernel.org" <paulmck@kernel.org>, "kprateek.nayak@amd.com"
- <kprateek.nayak@amd.com>, "jgross@suse.com" <jgross@suse.com>,
- "andy@infradead.org" <andy@infradead.org>, "x86@kernel.org"
- <x86@kernel.org>
-Subject: Re: [patch v2 21/30] x86/cpu/topology: Use topology bitmaps for sizing
-In-Reply-To: <7c8874d971c69fb4c22c1b771983f8d5109a9387.camel@intel.com>
-References: <20240118123127.055361964@linutronix.de>
- <20240118123649.739960607@linutronix.de>
- <7c8874d971c69fb4c22c1b771983f8d5109a9387.camel@intel.com>
-Date: Fri, 26 Jan 2024 21:22:47 +0100
-Message-ID: <87fryjhmjs.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="afVUdK9M"
+Received: from p-infra-ksmg-sc-msk01 (localhost [127.0.0.1])
+	by mx1.sberdevices.ru (Postfix) with ESMTP id E22D0100005;
+	Fri, 26 Jan 2024 23:09:23 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru E22D0100005
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
+	s=mail; t=1706299763;
+	bh=Fp/qhJPJ8j0f/d0J1CVPjhGQk511RNu42rI5IGIpC9w=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
+	b=afVUdK9MA9DndX1nkQgJxZhfijeQMLhvRIBOzGkkA2EJZVyhwkcK0TCuBRdCoWirD
+	 qPFtJvYb1EJ6Z19/+gNO6D2zsC2xeDJleMkCUo0f2CZNGkp379oXoapmx/RBM/f8f1
+	 aLlqLdjzOAUK7d6sSrcATw7AwGyGriTNmUq8C2qNx4/pNFj8QhV9PoSZyqmP7pEvfO
+	 JjaLCd5BGQQUUsK1ZSQG1hpG4g6DBv9aYAzfUp1Yn5C4Tusnv2e+bEVcZ+EBqY/+Kt
+	 xk63WcVzFlP+oEM+HiDPBnH9uEOMV5Zj/IyuP6IsSHF2mOI6JBynlmf3RAQcCAY3+r
+	 t11Q90MNQHP6A==
+Received: from smtp.sberdevices.ru (p-i-exch-sc-m01.sberdevices.ru [172.16.192.107])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mx1.sberdevices.ru (Postfix) with ESMTPS;
+	Fri, 26 Jan 2024 23:09:16 +0300 (MSK)
+Received: from CAB-WSD-0003115.sberdevices.ru (100.64.160.123) by
+ p-i-exch-sc-m01.sberdevices.ru (172.16.192.107) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Fri, 26 Jan 2024 23:09:08 +0300
+From: Jan Dakinevich <jan.dakinevich@salutedevices.com>
+To: Mark Brown <broonie@kernel.org>, Greg Kroah-Hartman
+	<gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
+	<linux-kernel@vger.kernel.org>
+CC: <kernel@salutedevices.com>, Jan Dakinevich
+	<jan.dakinevich@salutedevices.com>
+Subject: [RFC] regmap: rework ->max_register handling
+Date: Fri, 26 Jan 2024 23:08:36 +0300
+Message-ID: <20240126200836.1829995-1-jan.dakinevich@salutedevices.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: p-i-exch-sc-m01.sberdevices.ru (172.16.192.107) To
+ p-i-exch-sc-m01.sberdevices.ru (172.16.192.107)
+X-KSMG-Rule-ID: 10
+X-KSMG-Message-Action: clean
+X-KSMG-AntiSpam-Lua-Profiles: 182973 [Jan 26 2024]
+X-KSMG-AntiSpam-Version: 6.1.0.3
+X-KSMG-AntiSpam-Envelope-From: YVDakinevich@sberdevices.ru
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Auth: dkim=none
+X-KSMG-AntiSpam-Info: LuaCore: 7 0.3.7 6d6bf5bd8eea7373134f756a2fd73e9456bb7d1a, {Tracking_smtp_not_equal_from}, {Tracking_from_domain_doesnt_match_to}, smtp.sberdevices.ru:7.1.1,5.0.1;salutedevices.com:7.1.1;127.0.0.199:7.1.2;sberdevices.ru:7.1.1,5.0.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;100.64.160.123:7.1.2, FromAlignment: n, {Tracking_smtp_domain_mismatch}, {Tracking_smtp_domain_2level_mismatch}, {Tracking_white_helo}, ApMailHostAddress: 100.64.160.123
+X-MS-Exchange-Organization-SCL: -1
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiPhishing: Clean
+X-KSMG-LinksScanning: Clean
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/01/26 14:25:00 #23442014
+X-KSMG-AntiVirus-Status: Clean, skipped
 
-On Fri, Jan 26 2024 at 07:07, Zhang, Rui wrote:
->> > =C2=A0
->> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0cnta =3D domain_weight(TOPO=
-_PKG_DOMAIN);
->> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0cntb =3D domain_weight(TOPO=
-_DIE_DOMAIN);
->> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0__max_logical_packages =3D =
-cnta;
->> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0__max_dies_per_package =3D =
-1U << (get_count_order(cntb) - >
->> > get_count_order(cnta));
->> > +
->> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0pr_info("Max. logical packa=
-ges: %3u\n", cnta);
->> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0pr_info("Max. logical dies:=
-=C2=A0=C2=A0=C2=A0=C2=A0 %3u\n", cntb);
->> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0pr_info("Max. dies per pack=
-age: %3u\n", >
->> > __max_dies_per_package);
->> > +
->> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0cnta =3D domain_weight(TOPO=
-_CORE_DOMAIN);
->> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0cntb =3D domain_weight(TOPO=
-_SMT_DOMAIN);
->> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0smp_num_siblings =3D 1U << =
-(get_count_order(cntb) - >
->> > get_count_order(cnta));
->> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0pr_info("Max. threads per c=
-ore: %3u\n", smp_num_siblings);
->> > +
->
-> I missed this but Ashok catches it.
->
-> Say, on my Adlerlake platform, which has 4 Pcores with HT + 8 Ecores,
-> cnta is 12, cntb is 16, and smp_num_siblings is set to 1 erroneously.
->
-> I think we should use
-> 	smp_num_siblings =3D DIV_ROUND_UP(cntb, cnta);
-> here.
+---- >8 ----
+Indeed, it is an ugly workaround, but we need to pass an extra
+information to regmap. Another approach I'm thinking about is to
+introduce special macro for ->max_register initialization:
 
-Indeed. That's more than obvious.
+    #define REGMAP_MAX_REGISTER_IS_0 UINT_MAX
+    #define REGMAP_MAX_REGISTER(_max) ((_max) ?: REGMAP_MAX_REGISTER_IS_0)
 
-> Or even check each core to get the maximum value (in case there are
-> more than 2 siblings in a core some day).
+and initialize regmap_config in the following way:
 
-We want to get rid of HT not make it worse.
+    struct regmap_config config = {
+        ...
+        .max_register = REGMAP_MAX_REGISTER(...),
+    };
+
+This will eliminate the need for an extra flag in the config. But this
+approach has another disadvantage, it imposes an extra requirement,
+that is not satisfied by existing code.
+---- >8 ----
+
+When regmap consists of single register, 'regmap' subsystem is unable to
+understand whether ->max_register is set or not, because in both cases it
+is equal to zero. It leads to that the logic based on value of
+->max_register doesn't work. For example using of REGCACHE_FLAT fails.
+
+This patch introduces an extra parameter to regmap config, indicating
+that zero value in ->max_register is authentic.
+
+Signed-off-by: Jan Dakinevich <jan.dakinevich@salutedevices.com>
+---
+ drivers/base/regmap/internal.h      |  1 +
+ drivers/base/regmap/regcache-flat.c |  2 +-
+ drivers/base/regmap/regcache.c      |  4 +++-
+ drivers/base/regmap/regmap.c        | 10 ++++++----
+ include/linux/regmap.h              |  5 +++++
+ 5 files changed, 16 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/base/regmap/internal.h b/drivers/base/regmap/internal.h
+index 583dd5d7d46b..bcdb25bec77c 100644
+--- a/drivers/base/regmap/internal.h
++++ b/drivers/base/regmap/internal.h
+@@ -93,6 +93,7 @@ struct regmap {
+ #endif
+ 
+ 	unsigned int max_register;
++	bool max_register_is_set;
+ 	bool (*writeable_reg)(struct device *dev, unsigned int reg);
+ 	bool (*readable_reg)(struct device *dev, unsigned int reg);
+ 	bool (*volatile_reg)(struct device *dev, unsigned int reg);
+diff --git a/drivers/base/regmap/regcache-flat.c b/drivers/base/regmap/regcache-flat.c
+index b7e4b2464102..9b17c77dec9d 100644
+--- a/drivers/base/regmap/regcache-flat.c
++++ b/drivers/base/regmap/regcache-flat.c
+@@ -23,7 +23,7 @@ static int regcache_flat_init(struct regmap *map)
+ 	int i;
+ 	unsigned int *cache;
+ 
+-	if (!map || map->reg_stride_order < 0 || !map->max_register)
++	if (!map || map->reg_stride_order < 0 || !map->max_register_is_set)
+ 		return -EINVAL;
+ 
+ 	map->cache = kcalloc(regcache_flat_get_index(map, map->max_register)
+diff --git a/drivers/base/regmap/regcache.c b/drivers/base/regmap/regcache.c
+index ac63a73ccdaa..2e41cb12b8e2 100644
+--- a/drivers/base/regmap/regcache.c
++++ b/drivers/base/regmap/regcache.c
+@@ -187,8 +187,10 @@ int regcache_init(struct regmap *map, const struct regmap_config *config)
+ 			return 0;
+ 	}
+ 
+-	if (!map->max_register && map->num_reg_defaults_raw)
++	if (!map->max_register_is_set && map->num_reg_defaults_raw) {
+ 		map->max_register = (map->num_reg_defaults_raw  - 1) * map->reg_stride;
++		map->max_register_is_set = true;
++	}
+ 
+ 	if (map->cache_ops->init) {
+ 		dev_dbg(map->dev, "Initializing %s cache\n",
+diff --git a/drivers/base/regmap/regmap.c b/drivers/base/regmap/regmap.c
+index 6db77d8e45f9..5cb425f6f02d 100644
+--- a/drivers/base/regmap/regmap.c
++++ b/drivers/base/regmap/regmap.c
+@@ -89,7 +89,7 @@ EXPORT_SYMBOL_GPL(regmap_check_range_table);
+ 
+ bool regmap_writeable(struct regmap *map, unsigned int reg)
+ {
+-	if (map->max_register && reg > map->max_register)
++	if (map->max_register_is_set && reg > map->max_register)
+ 		return false;
+ 
+ 	if (map->writeable_reg)
+@@ -112,7 +112,7 @@ bool regmap_cached(struct regmap *map, unsigned int reg)
+ 	if (!map->cache_ops)
+ 		return false;
+ 
+-	if (map->max_register && reg > map->max_register)
++	if (map->max_register_is_set && reg > map->max_register)
+ 		return false;
+ 
+ 	map->lock(map->lock_arg);
+@@ -129,7 +129,7 @@ bool regmap_readable(struct regmap *map, unsigned int reg)
+ 	if (!map->reg_read)
+ 		return false;
+ 
+-	if (map->max_register && reg > map->max_register)
++	if (map->max_register_is_set && reg > map->max_register)
+ 		return false;
+ 
+ 	if (map->format.format_write)
+@@ -787,6 +787,7 @@ struct regmap *__regmap_init(struct device *dev,
+ 	map->bus = bus;
+ 	map->bus_context = bus_context;
+ 	map->max_register = config->max_register;
++	map->max_register_is_set = map->max_register ?: config->max_register_is_0;
+ 	map->wr_table = config->wr_table;
+ 	map->rd_table = config->rd_table;
+ 	map->volatile_table = config->volatile_table;
+@@ -1412,6 +1413,7 @@ int regmap_reinit_cache(struct regmap *map, const struct regmap_config *config)
+ 	regmap_debugfs_exit(map);
+ 
+ 	map->max_register = config->max_register;
++	map->max_register_is_set = map->max_register ?: config->max_register_is_0;
+ 	map->writeable_reg = config->writeable_reg;
+ 	map->readable_reg = config->readable_reg;
+ 	map->volatile_reg = config->volatile_reg;
+@@ -3383,7 +3385,7 @@ EXPORT_SYMBOL_GPL(regmap_get_val_bytes);
+  */
+ int regmap_get_max_register(struct regmap *map)
+ {
+-	return map->max_register ? map->max_register : -EINVAL;
++	return map->max_register_is_set ? map->max_register : -EINVAL;
+ }
+ EXPORT_SYMBOL_GPL(regmap_get_max_register);
+ 
+diff --git a/include/linux/regmap.h b/include/linux/regmap.h
+index c9182a47736e..b743241cfb7c 100644
+--- a/include/linux/regmap.h
++++ b/include/linux/regmap.h
+@@ -332,6 +332,10 @@ typedef void (*regmap_unlock)(void *);
+  * @io_port:	  Support IO port accessors. Makes sense only when MMIO vs. IO port
+  *		  access can be distinguished.
+  * @max_register: Optional, specifies the maximum valid register address.
++ * @max_register_is_0: Optional, specifies that zero value in @max_register
++ *                     should be taken into account. This is a workaround to
++ *                     apply handling of @max_register for regmap that contains
++ *                     only one register.
+  * @wr_table:     Optional, points to a struct regmap_access_table specifying
+  *                valid ranges for write access.
+  * @rd_table:     As above, for read access.
+@@ -422,6 +426,7 @@ struct regmap_config {
+ 	bool io_port;
+ 
+ 	unsigned int max_register;
++	bool max_register_is_0;
+ 	const struct regmap_access_table *wr_table;
+ 	const struct regmap_access_table *rd_table;
+ 	const struct regmap_access_table *volatile_table;
+-- 
+2.34.1
+
