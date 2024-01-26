@@ -1,111 +1,216 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B61A50A97
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 07:30:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BC1F10A30;
+	Fri, 26 Jan 2024 07:33:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706254262; cv=none; b=qFu9VBATtl4BZYm6DyzkI0QFRpU0S2jEIk09lxlJePsp6wlRd9+5DvXo1PCMG1kIgDfdnAFekl3EOmTCnehcbq/T7bnBACkeJKLdJG7+acaG1xb2yaj2NaM72ZV1lxvx4RyK0jTUsjcQOYMTNC7ZUAGWbkm5ROsARqccygvv60Q=
+	t=1706254441; cv=none; b=ortqlQnZURUezD6bbdacWQTYK2cC9kpSa5PZNeULrPf7eLpydhsPp+3/TpmtJd1JlW68s7HVQ80goraJ2Oyh12rqdbij1ivJtLkRkf+wuWF0seQfd2Y7IwEmHxB94yLI12plrqFbbp8nqRXbIY5qgJq6JtSQXi9bB8XTDzehnx0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706254262; c=relaxed/simple;
-	bh=AdHSgCHXz4t9LFcMc7HD0XQaTLFaT8m5meLQIXeDfIM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=K68DKp7hcXsRJAxp/fTBCy9F6Z49TGsNHNQVcsMX7s+AXew9A4rMzlauUM9MgNkSzCRlvjEkbkmHObbE8AfbV55Bf4MrklV78zvSnVjQahKb0HLzMwPr3bL1fFOurX8jNGuFqfRit1Wqz1eW/5qiDfc9SLHkbplpEnSyT94UbF4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rTGfo-0000uf-Uv; Fri, 26 Jan 2024 08:30:48 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rTGfi-002SbC-QR; Fri, 26 Jan 2024 08:30:42 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rTGfi-008SgD-2J;
-	Fri, 26 Jan 2024 08:30:42 +0100
-Date: Fri, 26 Jan 2024 08:30:39 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Wenhua Lin <Wenhua.Lin@unisoc.com>
-Cc: Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Orson Zhai <orsonzhai@gmail.com>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
-	Chunyan Zhang <zhang.lyra@gmail.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, wenhua lin <wenhua.lin1994@gmail.com>, 
-	Xiongpeng Wu <xiongpeng.wu@unisoc.com>, zhaochen su <zhaochen.su29@gmail.com>, 
-	Zhaochen Su <Zhaochen.Su@unisoc.com>, Xiaolong Wang <Xiaolong.Wang@unisoc.com>
-Subject: Re: [PATCH V2 3/6] pwm: sprd: Optimize the calculation method of duty
-Message-ID: <mdrr6ko2zqsf2osdkecjac6ollnuvlv4irkkiyn4ihkq5fioxx@nm6677kkih4h>
-References: <20240125025533.10315-1-Wenhua.Lin@unisoc.com>
- <20240125025533.10315-4-Wenhua.Lin@unisoc.com>
+	s=arc-20240116; t=1706254441; c=relaxed/simple;
+	bh=pr8CavKcrMTZ6oQHBG9sL1u5dseQXpJbyT5ePj2mAHM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UncRacIqoAa5YEjZ/tLVMOL4HE2QSW0gxZuJz3Rs+2SxS1c68FdR+HJUrfyAN0l1q2IwfK5EMNu+yDeL4AWEw2SgFTJ7YHU1JqRmeEpbJomMt/EBmzDE1btLbHmQW5e+XRZCj68aaNZWHJA6QlvJXkwU/sGKsvB0NsZJvepVErg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WsPtnk5q; arc=none smtp.client-ip=209.85.222.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WsPtnk5q"
+Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-783b7ec94d4so10613285a.1;
+        Thu, 25 Jan 2024 23:33:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1706254438; x=1706859238; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7OxKeIsphvMqTV/5X66+kHexwoOkDjhg0ICPhwJGIqg=;
+        b=WsPtnk5qHcGYc9rbzivEju6G8pU+01PcsWWmP0RIqqYIK8NhWvzKDj+3HLePe3w4nV
+         HDPyXvO8b5tvIbJjSzhd5f7c5Z4y1w4Jc4f/ZfBxQaD+zJkfIw+wI5tyUV8ra37KxyNp
+         3BCdXKao01RwPSe6alYchHkwm9/Eq9CojAfmx2dBq0unnQEaOKD7azR8521ldFH23HTp
+         Xjmad1cXZKBkIoQ+5OeySIHHjvjusY1ldG/2YXn5DzHhFh//I5gmlv9r18lW6ChmikXw
+         aATmtFspubjm89Gzr1+tfFl7n/nrAdsyW+yS2DxbSvYBEn81AennN1DpdF2FcFuRwzeE
+         CdHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706254438; x=1706859238;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7OxKeIsphvMqTV/5X66+kHexwoOkDjhg0ICPhwJGIqg=;
+        b=trFKNe6re9WamYvd4M3o0vZfdZdWrSbwLpUMs0PmPASwqBl4UXp21tdIHxbnrboDrP
+         OUaZMeKOWiL4sLzKXDQFXbFuxPJzrHUrPPrIR+Kp2u75KZz79xQt/zqyWPVVwP/qWevl
+         d4U0tKzK5nBir94s+do+2U0cW1rAj2skLZblsnKekLWCRg/3cpg/xgsmO1dmHEAQd/Lr
+         FK0EyUIbTOorEZADxPgMGsEZtM1qoU9HbuK/FwttJ146Eb+VnmDysBfMN53CHIMdV/NV
+         wPApGcXhKq7KoWABeFfEN16KGnosrj5+y3M2e+dRNdK1wo3GrRuHZrTrNPWS8tSNObrV
+         3v1w==
+X-Gm-Message-State: AOJu0YzUF9P5vDUl3bpdAT3Xb0Wzq5ReydXIVyzbedGCOjNgU7OEfpTK
+	zOlVGjR03Hg7+9gYd5MMZq8Kie2vv4/zZ6wEOzRKz1npFqp9O8fR2m35twp0TEvq5gloz6Oq7Ot
+	70DYlSoNSXUIx+9m2heEeF6P7dFknRr15RuY=
+X-Google-Smtp-Source: AGHT+IF9/NXdXtHKzHSeskLIz03AzeCORyxWBJv8kcluJdLvqQL+mJ4Cyg2Sf6UkG3cqnSWnX725nQcicvjZtIcoUJw=
+X-Received: by 2002:ad4:5e8a:0:b0:685:f9a6:1db6 with SMTP id
+ jl10-20020ad45e8a000000b00685f9a61db6mr1163644qvb.9.1706254438264; Thu, 25
+ Jan 2024 23:33:58 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="nbxfrdzexmsdijcq"
-Content-Disposition: inline
-In-Reply-To: <20240125025533.10315-4-Wenhua.Lin@unisoc.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
-
-
---nbxfrdzexmsdijcq
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+References: <20240126072120.71867-1-jefflexu@linux.alibaba.com>
+In-Reply-To: <20240126072120.71867-1-jefflexu@linux.alibaba.com>
+From: Amir Goldstein <amir73il@gmail.com>
+Date: Fri, 26 Jan 2024 09:33:47 +0200
+Message-ID: <CAOQ4uxh2C_mh2Zgr=s8jXh0pk=UGWJxLijTWBGEL5cZfyFUzbQ@mail.gmail.com>
+Subject: Re: [PATCH v2] fuse: add support for explicit export disabling
+To: Jingbo Xu <jefflexu@linux.alibaba.com>
+Cc: miklos@szeredi.hu, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Fri, Jan 26, 2024 at 9:21=E2=80=AFAM Jingbo Xu <jefflexu@linux.alibaba.c=
+om> wrote:
+>
+> open_by_handle_at(2) can fail with -ESTALE with a valid handle returned
+> by a previous name_to_handle_at(2) for evicted fuse inodes, which is
+> especially common when entry_valid_timeout is 0, e.g. when the fuse
+> daemon is in "cache=3Dnone" mode.
+>
+> The time sequence is like:
+>
+>         name_to_handle_at(2)    # succeed
+>         evict fuse inode
+>         open_by_handle_at(2)    # fail
+>
+> The root cause is that, with 0 entry_valid_timeout, the dput() called in
+> name_to_handle_at(2) will trigger iput -> evict(), which will send
+> FUSE_FORGET to the daemon.  The following open_by_handle_at(2) will send
+> a new FUSE_LOOKUP request upon inode cache miss since the previous inode
+> eviction.  Then the fuse daemon may fail the FUSE_LOOKUP request with
+> -ENOENT as the cached metadata of the requested inode has already been
+> cleaned up during the previous FUSE_FORGET.  The returned -ENOENT is
+> treated as -ESTALE when open_by_handle_at(2) returns.
+>
+> This confuses the application somehow, as open_by_handle_at(2) fails
+> when the previous name_to_handle_at(2) succeeds.  The returned errno is
+> also confusing as the requested file is not deleted and already there.
+> It is reasonable to fail name_to_handle_at(2) early in this case, after
+> which the application can fallback to open(2) to access files.
+>
+> Since this issue typically appears when entry_valid_timeout is 0 which
+> is configured by the fuse daemon, the fuse daemon is the right person to
+> explicitly disable the export when required.
+>
+> Also considering FUSE_EXPORT_SUPPORT actually indicates the support for
+> lookups of "." and "..", and there are existing fuse daemons supporting
+> export without FUSE_EXPORT_SUPPORT set, for compatibility, we add a new
+> INIT flag for such purpose.
+>
+> Signed-off-by: Jingbo Xu <jefflexu@linux.alibaba.com>
 
-On Thu, Jan 25, 2024 at 10:55:30AM +0800, Wenhua Lin wrote:
-> diff --git a/drivers/pwm/pwm-sprd.c b/drivers/pwm/pwm-sprd.c
-> index cc54aa77c7e6..8de3f9e154ce 100644
-> --- a/drivers/pwm/pwm-sprd.c
-> +++ b/drivers/pwm/pwm-sprd.c
-> @@ -156,7 +156,8 @@ static int sprd_pwm_config(struct sprd_pwm_chip *spc,=
- struct pwm_device *pwm,
->  	 * given settings (MOD and input clock).
->  	 */
->  	mod =3D spc->mod[pwm->hwpwm];
-> -	duty =3D duty_ns * mod / period_ns;
-> +	tmp =3D (u64)duty_ns * mod;
-> +	duty =3D DIV_ROUND_CLOSEST_ULL(tmp, period_ns);
+Reviewed-by: Amir Goldstein <amir73il@gmail.com>
 
-Please stick to rounding down in .apply() (and so sprd_pwm_config()).
-Given that duty_ns is an u64 in .apply(), you're loosing precision
-anyhow. Look at how the microchip-core driver uses mul_u64_u64_div_u64()
-for how to do that properly.
-
-You tested your patch with CONFIG_PWM_DEBUG enabled, right?
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---nbxfrdzexmsdijcq
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmWzX54ACgkQj4D7WH0S
-/k4qqQf8CaMZ4GC23NL6d3gan0EFqQgyw5XxVJwmfjLIEtA+dS0X9v7addb+u/zB
-4tvbIX1ODa40SNWJsg/rF2NbYrEhyzHOYuj5ByjCZWuQnYFaefEfqcU9OoBTtiL9
-3RNRKYwkWO/h1+oWV+7B7ZRBY5y5r+dPhGCE7Xda8RbgELeBtZ6cKERyjsAR1tDw
-yIBTwPp71RNxnPiAbPR/OqNRFuafy5LVXV3yuk+1yqj7O8midCQAwDPZGi0ZZwf1
-7BMtWQZH7pDaml9UfjainioEZKLH4RvbZvRf2PobuqJlE6I3jfR4flsHmp3fvZsB
-gMK6THLg/QmGriqtkEgsKcldcB8PBA==
-=wH2f
------END PGP SIGNATURE-----
-
---nbxfrdzexmsdijcq--
+> ---
+> v2:
+> - rename to "fuse_export_fid_operations"
+> - bump FUSE_KERNEL_MINOR_VERSION
+>
+> v1: https://lore.kernel.org/linux-fsdevel/20240124113042.44300-1-jefflexu=
+@linux.alibaba.com/
+> RFC: https://lore.kernel.org/all/20240123093701.94166-1-jefflexu@linux.al=
+ibaba.com/
+> ---
+>  fs/fuse/inode.c           | 11 ++++++++++-
+>  include/uapi/linux/fuse.h |  7 ++++++-
+>  2 files changed, 16 insertions(+), 2 deletions(-)
+>
+> diff --git a/fs/fuse/inode.c b/fs/fuse/inode.c
+> index 2a6d44f91729..eee200308482 100644
+> --- a/fs/fuse/inode.c
+> +++ b/fs/fuse/inode.c
+> @@ -1110,6 +1110,11 @@ static struct dentry *fuse_get_parent(struct dentr=
+y *child)
+>         return parent;
+>  }
+>
+> +/* only for fid encoding; no support for file handle */
+> +static const struct export_operations fuse_export_fid_operations =3D {
+> +       .encode_fh      =3D fuse_encode_fh,
+> +};
+> +
+>  static const struct export_operations fuse_export_operations =3D {
+>         .fh_to_dentry   =3D fuse_fh_to_dentry,
+>         .fh_to_parent   =3D fuse_fh_to_parent,
+> @@ -1284,6 +1289,8 @@ static void process_init_reply(struct fuse_mount *f=
+m, struct fuse_args *args,
+>                                 fc->create_supp_group =3D 1;
+>                         if (flags & FUSE_DIRECT_IO_ALLOW_MMAP)
+>                                 fc->direct_io_allow_mmap =3D 1;
+> +                       if (flags & FUSE_NO_EXPORT_SUPPORT)
+> +                               fm->sb->s_export_op =3D &fuse_export_fid_=
+operations;
+>                 } else {
+>                         ra_pages =3D fc->max_read / PAGE_SIZE;
+>                         fc->no_lock =3D 1;
+> @@ -1330,7 +1337,8 @@ void fuse_send_init(struct fuse_mount *fm)
+>                 FUSE_NO_OPENDIR_SUPPORT | FUSE_EXPLICIT_INVAL_DATA |
+>                 FUSE_HANDLE_KILLPRIV_V2 | FUSE_SETXATTR_EXT | FUSE_INIT_E=
+XT |
+>                 FUSE_SECURITY_CTX | FUSE_CREATE_SUPP_GROUP |
+> -               FUSE_HAS_EXPIRE_ONLY | FUSE_DIRECT_IO_ALLOW_MMAP;
+> +               FUSE_HAS_EXPIRE_ONLY | FUSE_DIRECT_IO_ALLOW_MMAP |
+> +               FUSE_NO_EXPORT_SUPPORT;
+>  #ifdef CONFIG_FUSE_DAX
+>         if (fm->fc->dax)
+>                 flags |=3D FUSE_MAP_ALIGNMENT;
+> @@ -1527,6 +1535,7 @@ static int fuse_fill_super_submount(struct super_bl=
+ock *sb,
+>         sb->s_bdi =3D bdi_get(parent_sb->s_bdi);
+>
+>         sb->s_xattr =3D parent_sb->s_xattr;
+> +       sb->s_export_op =3D parent_sb->s_export_op;
+>         sb->s_time_gran =3D parent_sb->s_time_gran;
+>         sb->s_blocksize =3D parent_sb->s_blocksize;
+>         sb->s_blocksize_bits =3D parent_sb->s_blocksize_bits;
+> diff --git a/include/uapi/linux/fuse.h b/include/uapi/linux/fuse.h
+> index e7418d15fe39..38d9f285a599 100644
+> --- a/include/uapi/linux/fuse.h
+> +++ b/include/uapi/linux/fuse.h
+> @@ -211,6 +211,9 @@
+>   *  7.39
+>   *  - add FUSE_DIRECT_IO_ALLOW_MMAP
+>   *  - add FUSE_STATX and related structures
+> + *
+> + *  7.40
+> + *  - add FUSE_NO_EXPORT_SUPPORT
+>   */
+>
+>  #ifndef _LINUX_FUSE_H
+> @@ -246,7 +249,7 @@
+>  #define FUSE_KERNEL_VERSION 7
+>
+>  /** Minor version number of this interface */
+> -#define FUSE_KERNEL_MINOR_VERSION 39
+> +#define FUSE_KERNEL_MINOR_VERSION 40
+>
+>  /** The node ID of the root inode */
+>  #define FUSE_ROOT_ID 1
+> @@ -410,6 +413,7 @@ struct fuse_file_lock {
+>   *                     symlink and mknod (single group that matches pare=
+nt)
+>   * FUSE_HAS_EXPIRE_ONLY: kernel supports expiry-only entry invalidation
+>   * FUSE_DIRECT_IO_ALLOW_MMAP: allow shared mmap in FOPEN_DIRECT_IO mode.
+> + * FUSE_NO_EXPORT_SUPPORT: explicitly disable export support
+>   */
+>  #define FUSE_ASYNC_READ                (1 << 0)
+>  #define FUSE_POSIX_LOCKS       (1 << 1)
+> @@ -449,6 +453,7 @@ struct fuse_file_lock {
+>  #define FUSE_CREATE_SUPP_GROUP (1ULL << 34)
+>  #define FUSE_HAS_EXPIRE_ONLY   (1ULL << 35)
+>  #define FUSE_DIRECT_IO_ALLOW_MMAP (1ULL << 36)
+> +#define FUSE_NO_EXPORT_SUPPORT (1ULL << 37)
+>
+>  /* Obsolete alias for FUSE_DIRECT_IO_ALLOW_MMAP */
+>  #define FUSE_DIRECT_IO_RELAX   FUSE_DIRECT_IO_ALLOW_MMAP
+> --
+> 2.19.1.6.gb485710b
+>
