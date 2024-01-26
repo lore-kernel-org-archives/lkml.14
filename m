@@ -1,214 +1,138 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D38581CF83
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 15:18:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A96B1CD34;
+	Fri, 26 Jan 2024 15:19:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706282309; cv=none; b=TdqinmDNdySa8fVflpK9bNPvUpIWjp8OfMvmuFhiP30t9bOhImxihWhBSzArvbwTyAsqMdVic7GIORpWigkLTthH9aR2Hah2pviyYRHBEsj97cB0SschOCXghPmwATuixy4aiSvAql15xtJyEkvHZOs99Xz/H3dJnbb7iJR3vxY=
+	t=1706282373; cv=none; b=DighApd7kkOli+NJHK4D8dSEbk3T8JQO54VqnTpsSVaQUxa7Bjn1OmcpIVet0XTz/IA9oUckMI4Ta4XYjOHQ3WhVyyRq3fUe5UuoREBY0iWF9TXhCeYMTadWcMzY9Lsf68U5SUAbINIcvEzHn13UwKF0T+ebaz20waVl1EHx5ls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706282309; c=relaxed/simple;
-	bh=cgWM7DcDj7rsTPS70SdmpjpwkbO21DeTFURwfMQpIhc=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=DMu48rcYonsKwrahalsGi3tZKAK1+0NLQJ3azWlz6d8CtrNjTUiFCK7OBRijDULgMwA0M5bdKTGFYy23xpIsRoPzP6xC1XPgdHVTeRrxyco73nH4/cxd988AyMxuXJIemLrwlsHfkzZJa6F5q/HYDtNt+XFUmul2PdpXcIMbo1E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=f315VzSK; arc=none smtp.client-ip=192.55.52.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1706282373; c=relaxed/simple;
+	bh=hYiazrEbt565yABrCeDAbioOA2B0ovx/3njE6OTcBxs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=WHdv/+instTti9uVAH3vb307pmu9AkFvozLqNIz7oKPxaNj16pnmolH5QXxjZmhq+ymlxM1/adq5VEN11c4ikB77t65vd2e8qE5IoFiO1donmOjlw9KDsYNtJeeuWvnL8YjRslR7/zPzCV30bT3RnfMEBdeKBeD6AorEEWXzg8M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MQImG3ab; arc=none smtp.client-ip=209.85.167.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f315VzSK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706282307; x=1737818307;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=cgWM7DcDj7rsTPS70SdmpjpwkbO21DeTFURwfMQpIhc=;
-  b=f315VzSKi0NUwWd2SZwYtLz5nlOMywdg+3zQYVnFu9FCaj2PA6MMvTgQ
-   jJbtuGlTcYw8dcF5B4r7ZrQMRavdVpX42RgDgBgb1iAhPvpfvQ+FpWmaP
-   5Wzf7xDO/JxkERqMALh5jat0OYQCWUfRSnMeCefvLTjtq8d5BLhd8UDiD
-   Ot0niyaYeIkfY0KnbOJPNENkdSbN7MIXjrTyNrXUuz6XuHJYoSLozjns/
-   RmVXjzEmhtw3eO9AaGjh1b4Q7x/gqwlwZqQK0s5vPsZuBKrPqkQzob7gF
-   d99i4mCV5zQb8XSwNF19N5ApEuh/QIJo2a3twX/DhL0ghUJbvO3Y415DA
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="399652781"
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="399652781"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2024 07:18:27 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="1118282384"
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="1118282384"
-Received: from lkp-server01.sh.intel.com (HELO 370188f8dc87) ([10.239.97.150])
-  by fmsmga005.fm.intel.com with ESMTP; 26 Jan 2024 07:18:25 -0800
-Received: from kbuild by 370188f8dc87 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rTNyJ-00018S-2b;
-	Fri, 26 Jan 2024 15:18:23 +0000
-Date: Fri, 26 Jan 2024 23:17:34 +0800
-From: kernel test robot <lkp@intel.com>
-To: Appana Durga Kedareswara rao <appana.durga.rao@xilinx.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Michal Simek <monstr@monstr.eu>
-Subject: arch/microblaze/kernel/entry.S:945: Error: unknown opcode "suspend"
-Message-ID: <202401262320.cBtYOWUA-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MQImG3ab"
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-5100c2f7a16so434874e87.1;
+        Fri, 26 Jan 2024 07:19:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1706282370; x=1706887170; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=L3O5ltxOMjNOT3zVkrFdSHnL7bx4JRmZ0jGii/eg5aM=;
+        b=MQImG3abZ/PCjj2ABDAzs92mx6w0W4Da6CXDAvjG3tbDHjqdMrYHvjuXuwpJn65gIx
+         srlziuU3JfthD1WDmiPbS/4iQNSU1w5Oa/aNTIDQdPqdQfbhEhkDAamWLouOVY7IUr/m
+         IONbs56JKySDHBLdj2O7Yyje2Q+BMCfph/eOBMp71Kf71oAhUBsjpy/w9QDJlGXJai76
+         Xz2c74/a5ULKwPaeEERILV1/z/VNPll4vkE9s6/wEfzcE1zY0AoLLbRS62UrRF+YAJF2
+         c31ARDPQjsbxbOD4a5P5bFfPdzDSH9t9z8OibwaVIB8raZt44FAEzd7ISCPRMjUdbvhm
+         HF8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706282370; x=1706887170;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=L3O5ltxOMjNOT3zVkrFdSHnL7bx4JRmZ0jGii/eg5aM=;
+        b=rnNquadKaOEjeh8YLwnGUYpgT92f16NxQRB/ZGty6Zly6FXOjPIrRl/XWioqFpoV1r
+         Z84jmNcxK6RSHFfltzIlHKnqZVw/cLRC8oWJZD23Zzo8jmR07EeGbouV524CnhykaDl7
+         XntaOw+FFH0Exdc3wAR7EVtF8GjFvcb4Im4EvtgDpeYCwexdh6F63Bxp1rpDvRTIJrE3
+         PgO+KoUvrKH5pMOhhc+k2XVOmmk6I3bYWZhxonrfhSm2Ro4FrpFvR57ETQJm6O84TcRH
+         eqYYyDQLTQMVGVTosHD7U9yKj43qFHCYUmbG5G/Gdxa+wCNMKxwegutMr3drLVz7pZjq
+         iYkg==
+X-Gm-Message-State: AOJu0Yx/duE0h49HU5zIYbNF7qnWe8m7Ab46HMv2D4XXPmS6CKAtJCQb
+	JFB/hFeRuu+hIiEVJLC1v5ZHc84c3VN4v6e2lmmDPgPbaJrQgVYZ
+X-Google-Smtp-Source: AGHT+IEJ4N5LA2V09QWkMAaPosg1hrxhS92nNtqvQ/QYpz6Q5L4iwwV8CpEPgeMvZhqe6Lcn12a9DQ==
+X-Received: by 2002:a19:8c03:0:b0:510:1590:a193 with SMTP id o3-20020a198c03000000b005101590a193mr737956lfd.30.1706282369753;
+        Fri, 26 Jan 2024 07:19:29 -0800 (PST)
+Received: from PC10319.67 ([82.97.198.254])
+        by smtp.googlemail.com with ESMTPSA id j2-20020a2e8242000000b002cf46aa24e0sm186264ljh.10.2024.01.26.07.19.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 26 Jan 2024 07:19:29 -0800 (PST)
+From: Konstantin Aladyshev <aladyshev22@gmail.com>
+To: 
+Cc: aladyshev22@gmail.com,
+	Guenter Roeck <linux@roeck-us.net>,
+	Jean Delvare <jdelvare@suse.com>,
+	Naresh Solanki <Naresh.Solanki@9elements.com>,
+	Patrick Rudolph <patrick.rudolph@9elements.com>,
+	linux-hwmon@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] hwmon: (pmbus/mp2975) Fix driver initialization for MP2975 device
+Date: Fri, 26 Jan 2024 18:19:19 +0300
+Message-Id: <20240126151920.288-1-aladyshev22@gmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-Hi Appana,
+The commit 1feb31e810b0 ("hwmon: (pmbus/mp2975) Simplify VOUT code")
+has introduced a bug that makes it impossible to initialize MP2975
+device:
+"""
+mp2975 5-0020: Failed to identify chip capabilities
+i2c i2c-5: new_device: Instantiated device mp2975 at 0x20
+i2c i2c-5: delete_device: Deleting device mp2975 at 0x20
+"""
+Since the 'read_byte_data' function was removed from the
+'pmbus_driver_info ' structure the driver no longer reports correctly
+that VOUT mode is direct. Therefore 'pmbus_identify_common' fails
+with error, making it impossible to initialize the device.
 
-FYI, the error/warning still remains.
+Restore 'read_byte_data' function to fix the issue.
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   ecb1b8288dc7ccbdcb3b9df005fa1c0e0c0388a7
-commit: 88707ebe77e23e856981e597f322cabbf6415662 microblaze: Add custom break vector handler for mb manager
-date:   1 year, 4 months ago
-config: microblaze-allmodconfig (https://download.01.org/0day-ci/archive/20240126/202401262320.cBtYOWUA-lkp@intel.com/config)
-compiler: microblaze-linux-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240126/202401262320.cBtYOWUA-lkp@intel.com/reproduce)
+Tested:
+- before: it is not possible to initialize MP2975 device with the
+'mp2975' driver,
+- after: 'mp2975' correctly initializes MP2975 device and all sensor
+data is correct.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202401262320.cBtYOWUA-lkp@intel.com/
+Fixes: 1feb31e810b0 ("hwmon: (pmbus/mp2975) Simplify VOUT code")
 
-All errors (new ones prefixed by >>):
+Signed-off-by: Konstantin Aladyshev <aladyshev22@gmail.com>
+---
+ drivers/hwmon/pmbus/mp2975.c | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-   arch/microblaze/kernel/entry.S: Assembler messages:
->> arch/microblaze/kernel/entry.S:945: Error: unknown opcode "suspend"
-
-
-vim +/suspend +945 arch/microblaze/kernel/entry.S
-
-   825	
-   826		/* restore all the tlb's */
-   827		addik	r3, r0, TOPHYS(tlb_skip)
-   828		addik	r6, r0, PT_TLBL0
-   829		addik	r7, r0, PT_TLBH0
-   830	restore_tlb:
-   831		add	r6, r6, r1
-   832		add	r7, r7, r1
-   833		lwi	r2, r6, 0
-   834		mts 	rtlblo, r2
-   835		lwi	r2, r7, 0
-   836		mts	rtlbhi, r2
-   837		addik	r6, r6, 4
-   838		addik	r7, r7, 4
-   839		bgtid	r3, restore_tlb
-   840		addik	r3, r3, -1
-   841	
-   842		lwi  	r5, r0, TOPHYS(xmb_manager_dev)
-   843		lwi	r8, r0, TOPHYS(xmb_manager_reset_callback)
-   844		set_vms
-   845		/* return from reset need -8 to adjust for rtsd r15, 8 */
-   846		addik   r15, r0, ret_from_reset - 8
-   847		rtbd	r8, 0
-   848		nop
-   849	
-   850	ret_from_reset:
-   851		set_bip /* Ints masked for state restore */
-   852		VM_OFF
-   853		/* MS: Restore all regs */
-   854		RESTORE_REGS
-   855		lwi	r14, r1, PT_R14
-   856		lwi	r16, r1, PT_PC
-   857		addik	r1, r1, PT_SIZE + 36
-   858		rtbd	r16, 0
-   859		nop
-   860	
-   861	/*
-   862	 * Break handler for MB Manager. Enter to _xmb_manager_break by
-   863	 * injecting fault in one of the TMR Microblaze core.
-   864	 * FIXME: This break handler supports getting
-   865	 * called from kernel space only.
-   866	 */
-   867	C_ENTRY(_xmb_manager_break):
-   868		/*
-   869		 * Reserve memory in the stack for context store/restore
-   870		 * (which includes memory for storing tlbs (max two tlbs))
-   871		 */
-   872		addik	r1, r1, -PT_SIZE - 36
-   873		swi	r1, r0, xmb_manager_stackpointer
-   874		SAVE_REGS
-   875		swi	r14, r1, PT_R14	/* rewrite saved R14 value */
-   876		swi	r16, r1, PT_PC; /* PC and r16 are the same */
-   877	
-   878		lwi	r6, r0, TOPHYS(xmb_manager_baseaddr)
-   879		lwi	r7, r0, TOPHYS(xmb_manager_crval)
-   880		/*
-   881		 * When the break vector gets asserted because of error injection,
-   882		 * the break signal must be blocked before exiting from the
-   883		 * break handler, below code configures the tmr manager
-   884		 * control register to block break signal.
-   885		 */
-   886		swi	r7, r6, 0
-   887	
-   888		/* Save the special purpose registers  */
-   889		mfs	r2, rpid
-   890		swi	r2, r1, PT_PID
-   891	
-   892		mfs	r2, rtlbx
-   893		swi	r2, r1, PT_TLBI
-   894	
-   895		mfs	r2, rzpr
-   896		swi	r2, r1, PT_ZPR
-   897	
-   898	#if CONFIG_XILINX_MICROBLAZE0_USE_FPU
-   899		mfs	r2, rfsr
-   900		swi	r2, r1, PT_FSR
-   901	#endif
-   902		mfs	r2, rmsr
-   903		swi	r2, r1, PT_MSR
-   904	
-   905		/* Save all the tlb's */
-   906		addik	r3, r0, TOPHYS(tlb_skip)
-   907		addik	r6, r0, PT_TLBL0
-   908		addik	r7, r0, PT_TLBH0
-   909	save_tlb:
-   910		add	r6, r6, r1
-   911		add	r7, r7, r1
-   912		mfs	r2, rtlblo
-   913		swi	r2, r6, 0
-   914		mfs	r2, rtlbhi
-   915		swi	r2, r7, 0
-   916		addik	r6, r6, 4
-   917		addik	r7, r7, 4
-   918		bgtid	r3, save_tlb
-   919		addik	r3, r3, -1
-   920	
-   921		lwi  	r5, r0, TOPHYS(xmb_manager_dev)
-   922		lwi	r8, r0, TOPHYS(xmb_manager_callback)
-   923		/* return from break need -8 to adjust for rtsd r15, 8 */
-   924		addik   r15, r0, ret_from_break - 8
-   925		rtbd	r8, 0
-   926		nop
-   927	
-   928	ret_from_break:
-   929		/* flush the d-cache */
-   930		bralid	r15, mb_flush_dcache
-   931		nop
-   932	
-   933		/*
-   934		 * To make sure microblaze i-cache is in a proper state
-   935		 * invalidate the i-cache.
-   936		 */
-   937		bralid	r15, mb_invalidate_icache
-   938		nop
-   939	
-   940		set_bip; /* Ints masked for state restore */
-   941		VM_OFF;
-   942		mbar	1
-   943		mbar	2
-   944		bri	4
- > 945		suspend
-   946		nop
-   947	#endif
-   948	
-
+diff --git a/drivers/hwmon/pmbus/mp2975.c b/drivers/hwmon/pmbus/mp2975.c
+index b9bb469e2d8f..1052282427f7 100644
+--- a/drivers/hwmon/pmbus/mp2975.c
++++ b/drivers/hwmon/pmbus/mp2975.c
+@@ -126,6 +126,22 @@ static const struct regulator_desc __maybe_unused mp2975_reg_desc[] = {
+ 
+ #define to_mp2975_data(x)  container_of(x, struct mp2975_data, info)
+ 
++static int mp2975_read_byte_data(struct i2c_client *client, int page, int reg)
++{
++      switch (reg) {
++      case PMBUS_VOUT_MODE:
++              /*
++               * Enforce VOUT direct format, since device allows to set the
++               * different formats for the different rails. Conversion from
++               * VID to direct provided by driver internally, in case it is
++               * necessary.
++               */
++              return PB_VOUT_MODE_DIRECT;
++      default:
++              return -ENODATA;
++      }
++}
++
+ static int
+ mp2975_read_word_helper(struct i2c_client *client, int page, int phase, u8 reg,
+ 			u16 mask)
+@@ -869,6 +885,7 @@ static struct pmbus_driver_info mp2975_info = {
+ 		PMBUS_HAVE_IIN | PMBUS_HAVE_IOUT | PMBUS_HAVE_STATUS_IOUT |
+ 		PMBUS_HAVE_TEMP | PMBUS_HAVE_STATUS_TEMP | PMBUS_HAVE_POUT |
+ 		PMBUS_HAVE_PIN | PMBUS_HAVE_STATUS_INPUT | PMBUS_PHASE_VIRTUAL,
++	.read_byte_data = mp2975_read_byte_data,
+ 	.read_word_data = mp2975_read_word_data,
+ #if IS_ENABLED(CONFIG_SENSORS_MP2975_REGULATOR)
+ 	.num_regulators = 1,
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.25.1
+
