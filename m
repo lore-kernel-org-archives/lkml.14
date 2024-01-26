@@ -1,109 +1,85 @@
-Received: from mail5.25mail.st (mail5.25mail.st [74.50.62.9])
+Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BB06612FA;
-	Fri, 26 Jan 2024 07:55:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.50.62.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B06BC125DB;
+	Fri, 26 Jan 2024 07:55:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706255706; cv=none; b=pFP4LKTllEEl9xf3uKOphEy7O9nnD5Z132Xs4vyXPqeRKez9DApPnHpKDwTvhaYoaL9tK6zTIzdeLymywzPGwvMTc1wwROg2qbsbGV3YRFMWHD7ONbNtU5MHKSme+xmY3MdJ3Hw2t4wcaMM0wF3JSqICgG3V4yv00q5FVlrqQFI=
+	t=1706255707; cv=none; b=iy4IH1EPpBVFodZxMQ39Gmf9HI5dXjQGHueAh/QIQuxdntzEtL6XF0fvX7EDMkuVdToiiB4ZKTq3Qx1AA6tfiNAgeQR5XG2Agio64DObg/p2dZ/cawT8ptLzq1EFmNhJKyE/Ww8FivIUwRjlnzPYAf2cmUorGeo9xB09/u2hp2M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706255706; c=relaxed/simple;
-	bh=8um7kgRcb4+h5B+usK409ZVcM+9iTowtfffiEtyuFbU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D4uKWVkIAbm/9wNBCjs0EDDq2Fx3ooEUdSF89dMJpBHCm6WtvUVhv7apWkfqE1KKlxpphZIEhtEMwpFqL/PhO8ZoRRcEsjnUNwJhfxYzQo67JUcBAoOnvYUGf+2myVu2HJ2mFlf9/BHpZOJF+y9I6+k6ScecDxtZK3ocFMQP7hI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomide.com; spf=fail smtp.mailfrom=atomide.com; dkim=pass (2048-bit key) header.d=atomide.com header.i=@atomide.com header.b=JtJ7/piH; arc=none smtp.client-ip=74.50.62.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomide.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=atomide.com
+	s=arc-20240116; t=1706255707; c=relaxed/simple;
+	bh=PLcDYGc3A3KbkeSJVUSvsPSMylDJVowTLRFbic23reM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=M3085clUgDLVWZRmu+GrdZqG0KrdLvSHqRglFRKzQQA/Rf6Llq26jmFGL6PXh/qAZl4NLZQ+JoQ6zG+YweFoTe3poGPaz90H95qVs+oZda4l0EYJWgCLqw2QRcskA2y8ptiYeoeEXFxbooqPH53lvwDPFIBQoVjINxckXPeE5fc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=f7tQ/Z9t; arc=none smtp.client-ip=115.124.30.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=atomide.com header.i=@atomide.com header.b="JtJ7/piH"
-Received: from localhost (91-158-86-216.elisa-laajakaista.fi [91.158.86.216])
-	by mail5.25mail.st (Postfix) with ESMTPSA id B0F1D603CF;
-	Fri, 26 Jan 2024 07:45:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=atomide.com;
-	s=25mailst; t=1706255202;
-	bh=8um7kgRcb4+h5B+usK409ZVcM+9iTowtfffiEtyuFbU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JtJ7/piHUW7w/OVJCn29e2d2rEtLeVaOlov0zjBd4GqjORjulnAzkfm81/oQzmZk1
-	 j6xBHePTSisRqweNOX99GF13HoBrDKZt3M3FEm+pqWIYwc79de+//TyrHnJ9U9EOqe
-	 tg4spfaNgHPO2SrEKND9EDfqrJeRITH4r90Dsd0YaLFoWXNsu44vFqxtM6bmDCF8xZ
-	 q8AbETzoLNZBW4g0gaa1xpveZk8WqCVR32N7uAqUyzV/DHuDLLdflpLjkse2IS/IKh
-	 kf7sQAEwt18oj3FLSAOArYc8w/JeDK204z24tczY7J+Y3Xxk3bJIUv198MVWlnb8bt
-	 c0jmXOYqHSWqw==
-Date: Fri, 26 Jan 2024 09:45:43 +0200
-From: Tony Lindgren <tony@atomide.com>
-To: Andrew Davis <afd@ti.com>
-Cc: Frank Binns <frank.binns@imgtec.com>,
-	Matt Coster <matt.coster@imgtec.com>,
-	"H . Nikolaus Schaller" <hns@goldelico.com>,
-	Adam Ford <aford173@gmail.com>,
-	Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>,
-	=?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
-	Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
-	Tero Kristo <kristo@kernel.org>,
-	Paul Cercueil <paul@crapouillou.net>,
-	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-sunxi@lists.linux.dev, linux-omap@vger.kernel.org,
-	linux-mips@vger.kernel.org
-Subject: Re: [PATCH 08/11] ARM: dts: DRA7xx: Add device tree entry for SGX GPU
-Message-ID: <20240126074543.GS5185@atomide.com>
-References: <20240109171950.31010-1-afd@ti.com>
- <20240109171950.31010-9-afd@ti.com>
- <20240110082924.GA5185@atomide.com>
- <55efd488-c6a0-4dca-baea-1fa93d13dd17@ti.com>
- <20240118085551.GQ5185@atomide.com>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="f7tQ/Z9t"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1706255695; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=MNOY8Q5NDwaHI6XaoJ0LQ9C0/crVlCsDYm9O0vJ51+M=;
+	b=f7tQ/Z9t9WKGeoWCxIPSBXoRZNDIwd6ZCDolGCz3ixx4fPdm6o+iBQ7QBfkNn2VPNYd4eyXWIhw1gJmo+eGkc2jWLAb6jMsx7ZVk9RRNV0SDZh1ELhtMvzw4Z5W201q/HSh6NygWV6W4uhiRP9njtSc2ECSCyHM0YoxmWv465Pc=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046051;MF=jiapeng.chong@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0W.MzF4n_1706255688;
+Received: from localhost(mailfrom:jiapeng.chong@linux.alibaba.com fp:SMTPD_---0W.MzF4n_1706255688)
+          by smtp.aliyun-inc.com;
+          Fri, 26 Jan 2024 15:54:54 +0800
+From: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+To: djogorchock@gmail.com
+Cc: jikos@kernel.org,
+	benjamin.tissoires@redhat.com,
+	linux-input@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
+	Abaci Robot <abaci@linux.alibaba.com>
+Subject: [PATCH] HID: nintendo: Remove some unused functions
+Date: Fri, 26 Jan 2024 15:54:45 +0800
+Message-Id: <20240126075445.15495-1-jiapeng.chong@linux.alibaba.com>
+X-Mailer: git-send-email 2.20.1.7.g153144c
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240118085551.GQ5185@atomide.com>
+Content-Transfer-Encoding: 8bit
 
-* Tony Lindgren <tony@atomide.com> [240118 08:57]:
-> * Andrew Davis <afd@ti.com> [240117 15:52]:
-> > On 1/10/24 2:29 AM, Tony Lindgren wrote:
-> > > * Andrew Davis <afd@ti.com> [240109 17:20]:
-> > > > --- a/arch/arm/boot/dts/ti/omap/dra7.dtsi
-> > > > +++ b/arch/arm/boot/dts/ti/omap/dra7.dtsi
-> > > > @@ -850,12 +850,19 @@ target-module@56000000 {
-> > > >   					<SYSC_IDLE_SMART>;
-> > > >   			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-> > > >   					<SYSC_IDLE_NO>,
-> > > > -					<SYSC_IDLE_SMART>;
-> > > > +					<SYSC_IDLE_SMART>,
-> > > > +					<SYSC_IDLE_SMART_WKUP>;
-> > > 
-> > > You probably checked this already.. But just in case, can you please
-> > > confirm this is intentional. The documentation lists the smart wakeup
-> > > capability bit as reserved for dra7, maybe the documentation is wrong.
-> > > 
-> > 
-> > It was an intentional change, although I'm not sure it is correct :)
-> > 
-> > This is how we had it in our "evil vendor tree" for years (back when it
-> > was hwmod based), so when converting these nodes to use "ti,sysc" I noticed
-> > this bit was set, but as you point out the documentation disagrees.
-> > 
-> > I'd rather go with what has worked before, but it doesn't seem to
-> > break anything either way, so we could also break this change out into
-> > its own patch if you would prefer.
-> 
-> I agree it's best to stick what is known to work. How about let's add
-> the related information to the patch description?
+These functions are defined in the hid-nintendo.c file, but not called
+elsewhere, so delete these unused functions.
 
-I'll update the commit message for it and apply these, no need to repost.
+drivers/hid/hid-nintendo.c:757:20: warning: unused function 'joycon_type_has_left_controls'.
+drivers/hid/hid-nintendo.c:763:20: warning: unused function 'joycon_type_has_right_controls'.
 
-Regards,
+Reported-by: Abaci Robot <abaci@linux.alibaba.com>
+Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=8060
+Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+---
+ drivers/hid/hid-nintendo.c | 12 ------------
+ 1 file changed, 12 deletions(-)
 
-Tony
+diff --git a/drivers/hid/hid-nintendo.c b/drivers/hid/hid-nintendo.c
+index 7ce6be0a8dee..ab5953fc2436 100644
+--- a/drivers/hid/hid-nintendo.c
++++ b/drivers/hid/hid-nintendo.c
+@@ -754,18 +754,6 @@ static inline bool joycon_type_is_right_nescon(struct joycon_ctlr *ctlr)
+ 	return ctlr->ctlr_type == JOYCON_CTLR_TYPE_NESR;
+ }
+ 
+-static inline bool joycon_type_has_left_controls(struct joycon_ctlr *ctlr)
+-{
+-	return joycon_type_is_left_joycon(ctlr) ||
+-	       joycon_type_is_procon(ctlr);
+-}
+-
+-static inline bool joycon_type_has_right_controls(struct joycon_ctlr *ctlr)
+-{
+-	return joycon_type_is_right_joycon(ctlr) ||
+-	       joycon_type_is_procon(ctlr);
+-}
+-
+ static inline bool joycon_type_is_any_joycon(struct joycon_ctlr *ctlr)
+ {
+ 	return joycon_type_is_left_joycon(ctlr) ||
+-- 
+2.20.1.7.g153144c
+
