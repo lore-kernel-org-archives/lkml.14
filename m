@@ -1,67 +1,41 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0722E20312;
-	Fri, 26 Jan 2024 17:27:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 435B61EB5C;
+	Fri, 26 Jan 2024 17:28:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706290033; cv=none; b=SUOy1rt9yNeyZRUKTrdk5lYYxI87mJoTy0sckqynzzMnZQOLu3RDEliNVvNh+LvN5+gJFRk4DBEeyl5BNeKebdoV2tBeyk5lusU/Xo4gY1oOrBkXZz+PkPwVT8A7yT4Yw9snx3LfT0fmyn/U7a0KaeuEKkbE4uR5fac+uKRAm0I=
+	t=1706290121; cv=none; b=hdH3OsG7eYdEiocAAOcO2yRBmCQz3uutr1hVo9J7hJ7jzVGvy9ik9vS3ROBzNy+4buEMK/mI4eHVgAwlCk85D+2ju6XENzycCuzGek+pAUs/jwzUAzWlLajEDJYyqkrJo7tywChWvzEQZf/DWYyezgqt/8flMaNUQgTyewdDFaA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706290033; c=relaxed/simple;
-	bh=ExosIx/Tv+HMtpYZXXx/Nr7K+HPt5okvEH3K8cRZO8M=;
+	s=arc-20240116; t=1706290121; c=relaxed/simple;
+	bh=yvFNWEbhdJcYieMLRciY5V8W+w9c/qsqKUENofx8bB4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=j/E53RH2zcq1oDQ4lRx3PS2K2OHXJL35OJ2kd91VpK8xyF9RPOGVx2lPOf+x/CS0NbTtAlsmcQxUjdfQFR+1wEqnk0E4DRDBkq4/H7z2tfVnxfEGuBV5oTUutsK5sjO11sxTHa7kmiGuyemhHhlCTeEQpg4NnVtPg5F3KWPadBM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fgsaCKwE; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=VyzZhcTBmGt9GlFMWS4F8Gelfw3ChMah8WF8T+FY+odSIqUMbw8jUZC5LDyCNr1fPPFlqcZGaj70XSbGaErcYQWLs+gBx6cjpgf7FpNI9Fidij9J6IrNu9xVSFWoZvQ6jlcevpH5mFyVE+jiRzLuIKipd3Djcq2hzjw3+Z0SLZ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PkjUO1wI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fgsaCKwE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706290030; x=1737826030;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=ExosIx/Tv+HMtpYZXXx/Nr7K+HPt5okvEH3K8cRZO8M=;
-  b=fgsaCKwEBtdt4hmubdpzvo99h8ndm7j0lT2SER30rNvFK6YN5qWL4HRw
-   CdBIVkXe//2Y9ADbuJe6YMGBuCKBaVPpw/alzLTGNA0LolIK96Maupk2B
-   pbdgsya/v3T08pgiSzs/3BR2JTyfZBfwDdKApK3Jk6uXxGrSgKZ3a8ggi
-   6vMMVXfZZsLPM4h5yOyLV5JB4hXBqo8FWLZXX+euMuz6BrLym7YSMA+yS
-   RVeLhmeceHxV+o5VZkqq4M581Gx6ifhXXgbCPgMj80x4opTCA/grjL44G
-   d95B2e7JpncSM9ymuG27HIDtMYFHOd0I5pI3gk5ZHQwIOopRnQPdTsUzj
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="23989055"
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="23989055"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2024 09:27:09 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="787172240"
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="787172240"
-Received: from lkp-server01.sh.intel.com (HELO 370188f8dc87) ([10.239.97.150])
-  by orsmga002.jf.intel.com with ESMTP; 26 Jan 2024 09:27:04 -0800
-Received: from kbuild by 370188f8dc87 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rTPyo-0001Ew-1L;
-	Fri, 26 Jan 2024 17:27:02 +0000
-Date: Sat, 27 Jan 2024 01:26:21 +0800
-From: kernel test robot <lkp@intel.com>
-To: Peter Griffin <peter.griffin@linaro.org>, arnd@arndb.de,
-	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-	linux@roeck-us.net, wim@linux-watchdog.org, conor+dt@kernel.org,
-	alim.akhtar@samsung.com, jaewon02.kim@samsung.com,
-	chanho61.park@samsung.com, semen.protsenko@linaro.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	kernel-team@android.com, peter.griffin@linaro.org,
-	tudor.ambarus@linaro.org, andre.draszik@linaro.org,
-	saravanak@google.com, willmcvicker@google.com, linux-fsd@tesla.com,
-	linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-samsung-soc@vger.kernel.org
-Subject: Re: [PATCH 2/9] soc: samsung: exynos-pmu: Add
- exynos_pmu_update/read/write APIs and SoC quirks
-Message-ID: <202401270110.YlAvkNYL-lkp@intel.com>
-References: <20240122225710.1952066-3-peter.griffin@linaro.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PkjUO1wI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69DEBC43390;
+	Fri, 26 Jan 2024 17:28:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706290120;
+	bh=yvFNWEbhdJcYieMLRciY5V8W+w9c/qsqKUENofx8bB4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PkjUO1wIgXb7IyEIcrXnYoa7pMzPaRB7gDKLWuLUO9CyNj93ZsqmLwpg9su2kJRYX
+	 xd3QoEAsTRT3ANfcYY/4WW1sK9P2SAQFUBIEd21uS/ysswm3NnS+ob63co2mwKtcVM
+	 xLi698RbtWMMtHM1ZSd3TpQnQwEvQE40rhasPZBJA5IR4+g6qb6dGB7WSN5Qwj6aD7
+	 6TGu20o5yRJmqsDL902uqw1xQsouwe2Sgx5hkjJkO0dwb5jM8tXBtG0i7tVR9XQhlo
+	 oFe8MHFPPAkrPFNqKy2gtU7Nxw7GLP0+J5JSg/dR9EcVKAh2g2kyXPOvFRan/6rQw4
+	 Bhz2mWnBZtsfA==
+Date: Fri, 26 Jan 2024 09:33:27 -0800
+From: Bjorn Andersson <andersson@kernel.org>
+To: Tanmay Shah <tanmay.shah@amd.com>
+Cc: mathieu.poirier@linaro.org, linux-remoteproc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Ben Levinsky <ben.levinsky@xilinx.com>
+Subject: Re: [PATCH v4 1/2] remoteproc: Make rproc_get_by_phandle() work for
+ clusters
+Message-ID: <4zq5hvxmvwzk6opqggennih5zq7rsznm2omdrrow3zsy2n6rzi@yqxtogh6jz3u>
+References: <20240103221124.3063683-1-tanmay.shah@amd.com>
+ <20240103221124.3063683-2-tanmay.shah@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,42 +44,117 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240122225710.1952066-3-peter.griffin@linaro.org>
+In-Reply-To: <20240103221124.3063683-2-tanmay.shah@amd.com>
 
-Hi Peter,
+On Wed, Jan 03, 2024 at 02:11:24PM -0800, Tanmay Shah wrote:
+> From: Mathieu Poirier <mathieu.poirier@linaro.org>
+> 
+> Multi-cluster remoteproc designs typically have the following DT
+> declaration:
+> 
+> 	remoteproc_cluster {
+> 		compatible = "soc,remoteproc-cluster";
+> 
+>                 core0: core0 {
+> 			compatible = "soc,remoteproc-core"
+>                         memory-region;
+>                         sram;
+>                 };
+> 
+>                 core1: core1 {
+> 			compatible = "soc,remoteproc-core"
+>                         memory-region;
+>                         sram;
+>                 }
+>         };
 
-kernel test robot noticed the following build errors:
+The indention of this snippet looks weird in my client, because it
+contains a mixture of tabs and spaces. Please clean that up, and while
+at it, '_' is not a valid character in DT node names...
 
-[auto build test ERROR on krzk/for-next]
-[also build test ERROR on robh/for-next soc/for-next linus/master v6.8-rc1 next-20240125]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> 
+> A driver exists for the cluster rather than the individual cores
+> themselves so that operation mode and HW specific configurations
+> applicable to the cluster can be made.
+> 
+> Because the driver exists at the cluster level and not the individual
+> core level, function rproc_get_by_phandle() fails to return the
+> remoteproc associated with the phandled it is called for.
+> 
+> This patch enhances rproc_get_by_phandle() by looking for the cluster's
+> driver when the driver for the immediate remoteproc's parent is not
+> found.
+> 
+> Reported-by: Ben Levinsky <ben.levinsky@xilinx.com>
+> Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Peter-Griffin/dt-bindings-watchdog-samsung-wdt-deprecate-samsung-syscon-phandle/20240123-070052
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux.git for-next
-patch link:    https://lore.kernel.org/r/20240122225710.1952066-3-peter.griffin%40linaro.org
-patch subject: [PATCH 2/9] soc: samsung: exynos-pmu: Add exynos_pmu_update/read/write APIs and SoC quirks
-config: arm-defconfig (https://download.01.org/0day-ci/archive/20240127/202401270110.YlAvkNYL-lkp@intel.com/config)
-compiler: clang version 14.0.6 (https://github.com/llvm/llvm-project.git f28c006a5895fc0e329fe15fead81e37457cb1d1)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240127/202401270110.YlAvkNYL-lkp@intel.com/reproduce)
+The s-o-b is used to certify the origin of the patch, Mathieu provided
+his signature here, then as you handle the patch you need to append your
+s-o-b to provide the same certification.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202401270110.YlAvkNYL-lkp@intel.com/
+The for appropriate tracking of reality, Mathieu should append his s-o-b
+when/if he applies the patch.
 
-All errors (new ones prefixed by >>):
+TL;DR please add your S-o-b after Mathieu's.
 
->> ld.lld: error: undefined symbol: pmu_base_addr
-   >>> referenced by exynos.c
-   >>>               arch/arm/mach-exynos/exynos.o:(exynos_set_delayed_reset_assertion) in archive vmlinux.a
-   >>> referenced by exynos.c
-   >>>               arch/arm/mach-exynos/exynos.o:(exynos_set_delayed_reset_assertion) in archive vmlinux.a
-   >>> referenced by exynos.c
-   >>>               arch/arm/mach-exynos/exynos.o:(exynos_init_irq) in archive vmlinux.a
-   >>> referenced 75 more times
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Change itself looks good to me.
+
+Regards,
+Bjorn
+
+> ---
+>  drivers/remoteproc/remoteproc_core.c | 23 ++++++++++++++++++++++-
+>  1 file changed, 22 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
+> index 695cce218e8c..0b3b34085e2f 100644
+> --- a/drivers/remoteproc/remoteproc_core.c
+> +++ b/drivers/remoteproc/remoteproc_core.c
+> @@ -33,6 +33,7 @@
+>  #include <linux/idr.h>
+>  #include <linux/elf.h>
+>  #include <linux/crc32.h>
+> +#include <linux/of_platform.h>
+>  #include <linux/of_reserved_mem.h>
+>  #include <linux/virtio_ids.h>
+>  #include <linux/virtio_ring.h>
+> @@ -2112,6 +2113,7 @@ EXPORT_SYMBOL(rproc_detach);
+>  struct rproc *rproc_get_by_phandle(phandle phandle)
+>  {
+>  	struct rproc *rproc = NULL, *r;
+> +	struct device_driver *driver;
+>  	struct device_node *np;
+>  
+>  	np = of_find_node_by_phandle(phandle);
+> @@ -2122,7 +2124,26 @@ struct rproc *rproc_get_by_phandle(phandle phandle)
+>  	list_for_each_entry_rcu(r, &rproc_list, node) {
+>  		if (r->dev.parent && device_match_of_node(r->dev.parent, np)) {
+>  			/* prevent underlying implementation from being removed */
+> -			if (!try_module_get(r->dev.parent->driver->owner)) {
+> +
+> +			/*
+> +			 * If the remoteproc's parent has a driver, the
+> +			 * remoteproc is not part of a cluster and we can use
+> +			 * that driver.
+> +			 */
+> +			driver = r->dev.parent->driver;
+> +
+> +			/*
+> +			 * If the remoteproc's parent does not have a driver,
+> +			 * look for the driver associated with the cluster.
+> +			 */
+> +			if (!driver) {
+> +				if (r->dev.parent->parent)
+> +					driver = r->dev.parent->parent->driver;
+> +				if (!driver)
+> +					break;
+> +			}
+> +
+> +			if (!try_module_get(driver->owner)) {
+>  				dev_err(&r->dev, "can't get owner\n");
+>  				break;
+>  			}
+> -- 
+> 2.25.1
+> 
