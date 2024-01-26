@@ -1,98 +1,93 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36FB612B92;
-	Fri, 26 Jan 2024 10:01:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3F441427F;
+	Fri, 26 Jan 2024 10:03:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706263274; cv=none; b=Yz3BAfFAWMQTGZRkZX4ojv58JLSCTxAYMkaubqH7ZSCMFyFdNtjt/XVhykmW8tmaMQ6Kme+ZfXWhmv5GTMQH8UZhoszHlwZR/wA/eeWi/Xchmu7/XsdGR1bhmWLc9HPCF0/vGr8ziaL+joxzXDlkmDXz0Ni07+gtL3cLQvKbOPk=
+	t=1706263424; cv=none; b=Xo9WN1oI/1AaqhlW0RHvclQO69jyNx1Hp7jLr9MqiyYjEGKeCdlu/XSrXFu1+3Eu5kQ5wawVdh5gHBqGnynios3026TDX9dr1DIhJTFJNuegwk3mU2p2EqqdICVoiAiBwQ7gQNo81dAAtjm5NiWpOHVgw0bZjCg11PfBfZ0wXTs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706263274; c=relaxed/simple;
-	bh=eECiJReyNwvw/rXT1QSmi5UWyyWO8uENzGjBer4GzuQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=t/NADbQyihaN4vwaW+EDLHJWeenyqj6RspwX0zFxDtQv6v8fJg1wvt355qqizA5OXonE81abrcYwbmdV8KEY1tpNJGDGX22qslZzt23G7cVgu8oMxNeJyB+xw/9HdI+m+YSXOfhFm/aLSkiQO3miXiMn2lUVf8UkK57bUqEj/QM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=b4fW+oHU; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1706263424; c=relaxed/simple;
+	bh=6nM2zIopIoKUNJDEU+EOLVsurv60/XzN/SwLNO2V8WA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=WqpUY40yPfwpW1sfuXU41LwjI7VOdLWusBOQ7qRxQ85m7qDN+WLwn9CM6v5lwoVZddfMgsU2pggoLbfzl9pz0bo61ZFNt4sKqvDjuQvACPkUNQMtC8U0ICl5yx2VySKvG0bOSIFVkdfUVcWGAs8LI/fN9jSPUG8T0JwDCB0ChOA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XiwJDXGu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="b4fW+oHU"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 39B3B40E01BB;
-	Fri, 26 Jan 2024 10:01:08 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id eTt1M-NrNSY1; Fri, 26 Jan 2024 10:01:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1706263265; bh=Hj9EgFz52qo2AnW945Th7wBHJu1vxTENf6ob5caQoc4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=b4fW+oHUAd+zOJPLNRrv3SaUoakkduIucAMrU5NKfUCvweQt9A9yZRB/4zioVY/6o
-	 MeYg+dD4Eu4uhK+ua1URvNgaJe/p5JjBL25wq4vlysTjlca1meCB9E/9TX0/yxMY2t
-	 N5G2Tld+W4QaBVFU9WGlnOIh+T2uQMFud6XfLt1zfIhiOV+Vy4Y2VSvTSdWYi8BHxz
-	 pTNhqXo/FqbNgDMb8titja9gvv2ATHyK9+JMVKJQxkabGGM5sUU4O0S9T/FOil21tU
-	 557BG/MO4BJV7jSDdhJSed5HKN38eEQGrNlxWC07+tkhO1lovbzUK44jVH7JYLhJYE
-	 jIuujPfK+mQSlb+X+WQ+vGbiXX0/ho4drWuFHYqg7P2V2Hg0K+VpiT+ancq3P6qtpq
-	 6ErAzZhPBLb/E1DBJvhgKw5FtOkgGlBCC9yqeXOYe64rTZ8A4tJX0W12S714BgMNpG
-	 HncIG5snKwRBywYZv/c+eKHY+V93k4n4wVGyWer9WokT5s+tqBXByWEA5gUdeffngA
-	 O+M1ov3sRxMnookvuYR0pTZCJ10eZlpe1bGSqcHY2Ee1WNC7FG5fHQ/GqlXPiKhkJh
-	 BqNL8Vchi5NDQFL6+LpB946AZflDkLAQZnfRGhrLuIoCKoxE5Uu9ZIESWanCcNGAaV
-	 7PXkI1+/fdJHg9Albkyre3Ao=
-Received: from zn.tnic (pd953033e.dip0.t-ipconnect.de [217.83.3.62])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id E897740E01AE;
-	Fri, 26 Jan 2024 10:00:56 +0000 (UTC)
-Date: Fri, 26 Jan 2024 11:00:50 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: "H. Peter Anvin (Intel)" <hpa@zytor.com>
-Cc: linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Megha Dey <megha.dey@intel.com>, Xin Li <xin3.li@intel.com>,
-	Shan Kang <shan.kang@intel.com>, x86@kernel.org
-Subject: Re: [tip: x86/fred] x86/fred: FRED entry/exit and dispatch code
-Message-ID: <20240126100050.GAZbOC0g3Rlr6otZcT@fat_crate.local>
-References: <20231209214214.2932-1-xin3.li@intel.com>
- <170620688145.398.5328359433342649832.tip-bot2@tip-bot2>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XiwJDXGu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40958C433F1;
+	Fri, 26 Jan 2024 10:03:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706263423;
+	bh=6nM2zIopIoKUNJDEU+EOLVsurv60/XzN/SwLNO2V8WA=;
+	h=Date:From:To:Cc:Subject:From;
+	b=XiwJDXGui8uSslzAC48a4X/5Va/0hntMeTYXhLnJekT3z2uhG6HYH/0TkB6FvXNB/
+	 v5iy7HvGdKeYzl0FE2G6k3hLRhxK6OOQmIkH5aFopSp7Q6H0CUsXLgm/mFovthR8DO
+	 uMMLNV8vZqdBpE8ssIkVmd4EuZ7f+h61TP6RfNzBRYzWSCKyIW2fpmtP3cuzoMX8RT
+	 a/R0G2a5tz79B2GL9yWDZhwk+MKudVHVjdyjHsZsYMz7Bmr8y5jEl5a16gNTKSagsN
+	 v7W1DILGZ9tZIiHnn4quwWi4zkBlI2p0MHIPM5adR8Am10P+vv3hGLcd+eIseFkLNq
+	 RaAhB3zCeexSw==
+Date: Fri, 26 Jan 2024 11:03:38 +0100
+From: Mauro Carvalho Chehab <mchehab@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Linux Media Mailing List
+ <linux-media@vger.kernel.org>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL for v6.8-rc2] media fixes
+Message-ID: <20240126110338.2d1063f4@coco.lan>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.39; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <170620688145.398.5328359433342649832.tip-bot2@tip-bot2>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jan 25, 2024 at 06:21:21PM -0000, tip-bot2 for H. Peter Anvin (Intel) wrote:
-> +SYM_CODE_START_NOALIGN(asm_fred_entrypoint_user)
-> +	FRED_ENTER
-> +	call	fred_entry_from_user
-> +	FRED_EXIT
-> +	ERETU
-> +SYM_CODE_END(asm_fred_entrypoint_user)
-> +
-> +.fill asm_fred_entrypoint_kernel - ., 1, 0xcc
+Hi Linus,
 
-me compiler no likey:
+Please pull from:
 
-/tmp/entry_64_fred-de6f10.s:896:7: error: expected assembly-time absolute expression
-.fill asm_fred_entrypoint_kernel - ., 1, 0xcc
-      ^
-make[4]: *** [scripts/Makefile.build:361: arch/x86/entry/entry_64_fred.o] Error 1
-make[4]: *** Waiting for unfinished jobs....
-make[3]: *** [scripts/Makefile.build:481: arch/x86/entry] Error 2
-make[3]: *** Waiting for unfinished jobs....
+  git://git.kernel.org/pub/scm/linux/kernel/git/mchehab/linux-media tags/media/v6.8-3
 
-config is x86_64 allmodconfig, compiler is
 
-$ clang --version
-Ubuntu clang version 14.0.0-1ubuntu1.1
+For:
+- removal of K3 DT prefix from wave5;
+- vb2 core: fix missing caps on VIDIO_CREATE_BUFS under certain circumstances;
+- videobuf2: Stop direct calls to queue num_buffers field
 
--- 
-Regards/Gruss,
-    Boris.
+Regards,
+Mauro
 
-https://people.kernel.org/tglx/notes-about-netiquette
+The following changes since commit 6613476e225e090cc9aad49be7fa504e290dd33d:
+
+  Linux 6.8-rc1 (2024-01-21 14:11:32 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/mchehab/linux-media tags/media/v6.8-3
+
+for you to fetch changes up to b32431b753217d8d45b018443b1a7aac215921fb:
+
+  media: vb2: refactor setting flags and caps, fix missing cap (2024-01-24 17:27:51 +0100)
+
+----------------------------------------------------------------
+media fixes for v6.8-rc2
+
+----------------------------------------------------------------
+Benjamin Gaignard (1):
+      media: media videobuf2: Stop direct calls to queue num_buffers field
+
+Brandon Brnich (2):
+      dt-bindings: media: Remove K3 Family Prefix from Compatible
+      media: chips-media: wave5: Remove K3 References
+
+Hans Verkuil (1):
+      media: vb2: refactor setting flags and caps, fix missing cap
+
+ .../devicetree/bindings/media/cnm,wave521c.yaml    |  4 +-
+ drivers/media/common/videobuf2/videobuf2-core.c    |  2 +-
+ drivers/media/common/videobuf2/videobuf2-v4l2.c    | 55 ++++++++++------------
+ .../media/platform/chips-media/wave5/wave5-vpu.c   |  2 +-
+ 4 files changed, 30 insertions(+), 33 deletions(-)
+
