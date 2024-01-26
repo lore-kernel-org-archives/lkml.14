@@ -1,88 +1,151 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 961B21D52C
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 15:24:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C9BD1D526;
+	Fri, 26 Jan 2024 15:24:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706282656; cv=none; b=d/AGS2fbrM1W7MT/Q0p8UvL3/9lAIeyMui0NoeMB9FcxGke1QFkgT6SP7tgo6PFVDtIcsDf9r3LjJDdy1Rq6swIT+bKE14PKHKdnBRDHz5avbViyRlwmwDb186Cf39rVEm9momP2Vr1metCt0ocFsNhKWrFRTmBFdrk5uEO/4K0=
+	t=1706282661; cv=none; b=fuQCAqedJZAoJ8rdaDIKjiKrs651ilD/MZPUyMv9G2cM9w8MC6Ama7Pjg4yM6+AtpATwMDavCxJEMRANAQOstcpTvQGIXsQfyaarUdlD6u7WScJ9c5YIiPF47c8uYjSn/GUPBhFjA7lqY3MO26v1ObmCfAR6VSiAKIVS+l1hJnk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706282656; c=relaxed/simple;
-	bh=lhfvdd0CQ97+F2PLgTG9KuevanbLcfk73SxBk1IuAQc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Ifv+sPFbfB5tcq3w9k0UmaIO4Df64YfDBPM0Ew66Izo2s6mZ0nGjqKXaG+oExi1jihY51ThfAl6ANiW2KBbhpqNdS+DAWvoK742jm0I/axS1niSk9fV8EwaeD+el30rK2Iqi1VGKVpgO9KXOqkLhbRqlkqucLa70NLEme0B7Q4w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TP/gAuUa; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706282661; c=relaxed/simple;
+	bh=bgOxmLLVYSKMNC9czTxSMRA8wJQdkCUFghdAMXJg18U=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=EUGIyUQjSRMsYoHF6AsY2vYNsyUopPoZrenq00OJtT1ZXcZJcf9/VyfFLwm4INvc04pG6JGo+rmZ+A/Yn74WrRgGeIFVZdc3VC1+oB3y/basYIAKCgEzK/oj5hxQ4JyF0CSKx6FZql0zPp2/yn63+9yzIKDAZ6PhQPNc5VulqGg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uOrmoKKP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TP/gAuUa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3396C433F1;
-	Fri, 26 Jan 2024 15:24:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uOrmoKKP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9A36C433C7;
+	Fri, 26 Jan 2024 15:24:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706282656;
-	bh=lhfvdd0CQ97+F2PLgTG9KuevanbLcfk73SxBk1IuAQc=;
-	h=From:To:Cc:Subject:Date:From;
-	b=TP/gAuUaUu7icEys+fJSftia5Z2bBywBvzDtxCrryqHpAd9V259yshOGhMVtg4BDR
-	 aY9Ru6nX6qbLRwxHyHLWTh4rECc7wgBRSPLBaG9f8HbHMlmvlzOmGuxdSxJURsFp0d
-	 WSIBDAYsampsbf3sdJmmRG7uetx/NuQCIQUjYAYV8hNZYpzjeyM3rzUFVSZz3L+2MC
-	 TNPN4NjrWbZPXaKAxMrmoYmZdrHrqcByle4gAEtUY+RliW9Rq1rEbesLkjwyVYMOJe
-	 1YCnSnX8lrhbCzVkgzzIjgFl3/CRNKJrPziHRCeHpqxWTdzXV4JvsrFLzZPQnybX8L
-	 ai8dLo7R1QALA==
-From: Will Deacon <will@kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: kernel-team@android.com,
-	Will Deacon <will@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	David Brazdil <dbrazdil@google.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH] misc: open-dice: Fix spurious lockdep warning
-Date: Fri, 26 Jan 2024 15:24:10 +0000
-Message-Id: <20240126152410.10148-1-will@kernel.org>
-X-Mailer: git-send-email 2.20.1
+	s=k20201202; t=1706282660;
+	bh=bgOxmLLVYSKMNC9czTxSMRA8wJQdkCUFghdAMXJg18U=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=uOrmoKKPHgHwqifQmN5xAl63YrrtrfhDpY3l3HmG5+V2gz9iqF2sng9TY4+w07UF0
+	 aPrZxn4W67F5MLikBia+9nmbJQ55880qxg7hnp07lYN5Sg8NMCFd6azVnBYpBeYDU3
+	 wAwc90yVhWeDZ5s2Y+/712MFSLf6qSfFsOkaEB+/50ztHgl6q+ci7OQ93BMa/O0WSH
+	 /9JFWLRLNyokDN80MjA2nPC5lIMyNAPR/EVriEgDaGqq2mhp5TajJzePAN2qyVEGus
+	 5j12xQLpgqcxB8wxV/Y6J6Sh4Sd9JAu3VPO1Kca1/1vltz3vP27bbdkN5yW0XxPSvX
+	 a+NkEuLuQoXFQ==
+Date: Sat, 27 Jan 2024 00:24:14 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Jiri Olsa <olsajiri@gmail.com>
+Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Steven Rostedt
+ <rostedt@goodmis.org>, Florent Revest <revest@chromium.org>,
+ linux-trace-kernel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+ Martin KaFai Lau <martin.lau@linux.dev>, bpf <bpf@vger.kernel.org>, Sven
+ Schnelle <svens@linux.ibm.com>, Alexei Starovoitov <ast@kernel.org>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>, Daniel Borkmann
+ <daniel@iogearbox.net>, Alan Maguire <alan.maguire@oracle.com>, Mark
+ Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>,
+ Thomas Gleixner <tglx@linutronix.de>, Guo Ren <guoren@kernel.org>
+Subject: Re: [PATCH v6 32/36] fprobe: Rewrite fprobe on function-graph
+ tracer
+Message-Id: <20240127002414.660f2e477d210bc54ca4df89@kernel.org>
+In-Reply-To: <ZbJ6NxkjWEP5adru@krava>
+References: <170505424954.459169.10630626365737237288.stgit@devnote2>
+	<170505462606.459169.1375700979988728260.stgit@devnote2>
+	<ZbJ6NxkjWEP5adru@krava>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-When probing the open-dice driver with PROVE_LOCKING=y, lockdep
-complains that the mutex in 'drvdata->lock' has a non-static key:
+On Thu, 25 Jan 2024 16:11:51 +0100
+Jiri Olsa <olsajiri@gmail.com> wrote:
 
- | INFO: trying to register non-static key.
- | The code is fine but needs lockdep annotation, or maybe
- | you didn't initialize this object before use?
- | turning off the locking correctness validator.
+> On Fri, Jan 12, 2024 at 07:17:06PM +0900, Masami Hiramatsu (Google) wrote:
+> 
+> SNIP
+> 
+> >   * Register @fp to ftrace for enabling the probe on the address given by @addrs.
+> > @@ -298,23 +547,27 @@ EXPORT_SYMBOL_GPL(register_fprobe);
+> >   */
+> >  int register_fprobe_ips(struct fprobe *fp, unsigned long *addrs, int num)
+> >  {
+> > -	int ret;
+> > -
+> > -	if (!fp || !addrs || num <= 0)
+> > -		return -EINVAL;
+> > -
+> > -	fprobe_init(fp);
+> > +	struct fprobe_hlist *hlist_array;
+> > +	int ret, i;
+> >  
+> > -	ret = ftrace_set_filter_ips(&fp->ops, addrs, num, 0, 0);
+> > +	ret = fprobe_init(fp, addrs, num);
+> >  	if (ret)
+> >  		return ret;
+> >  
+> > -	ret = fprobe_init_rethook(fp, num);
+> > -	if (!ret)
+> > -		ret = register_ftrace_function(&fp->ops);
+> > +	mutex_lock(&fprobe_mutex);
+> > +
+> > +	hlist_array = fp->hlist_array;
+> > +	ret = fprobe_graph_add_ips(addrs, num);
+> 
+> so fprobe_graph_add_ips registers the ftrace_ops and actually starts
+> the tracing.. and in the code below we prepare fprobe data that is
+> checked in the ftrace_ops callback.. should we do this this earlier
+> before calling fprobe_graph_add_ips/register_ftrace_graph?
 
-Fix the problem by initialising the mutex memory with mutex_init()
-instead of __MUTEX_INITIALIZER().
+Good catch! but I think this is safe because fprobe_entry() checks
+the fprobe_ip_table[] (insert_fprobe_node updates it) at first.
+Thus until the hash table is updated, fprobe_entry() handler will
+return soon.
 
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: David Brazdil <dbrazdil@google.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Will Deacon <will@kernel.org>
----
- drivers/misc/open-dice.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+----
+static int fprobe_entry(unsigned long func, unsigned long ret_ip,
+                        struct ftrace_regs *fregs, struct fgraph_ops *gops)
+{
+        struct fprobe_hlist_node *node, *first;
+        unsigned long *fgraph_data = NULL;
+        unsigned long header;
+        int reserved_words;
+        struct fprobe *fp;
+        int used, ret;
 
-diff --git a/drivers/misc/open-dice.c b/drivers/misc/open-dice.c
-index 8aea2d070a40..d279a4f195e2 100644
---- a/drivers/misc/open-dice.c
-+++ b/drivers/misc/open-dice.c
-@@ -140,7 +140,6 @@ static int __init open_dice_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 
- 	*drvdata = (struct open_dice_drvdata){
--		.lock = __MUTEX_INITIALIZER(drvdata->lock),
- 		.rmem = rmem,
- 		.misc = (struct miscdevice){
- 			.parent	= dev,
-@@ -150,6 +149,7 @@ static int __init open_dice_probe(struct platform_device *pdev)
- 			.mode	= 0600,
- 		},
- 	};
-+	mutex_init(&drvdata->lock);
- 
- 	/* Index overflow check not needed, misc_register() will fail. */
- 	snprintf(drvdata->name, sizeof(drvdata->name), DRIVER_NAME"%u", dev_idx++);
+        if (WARN_ON_ONCE(!fregs))
+                return 0;
+
+        first = node = find_first_fprobe_node(func);
+        if (unlikely(!first))
+                return 0;
+----
+
+The fprobe_table (add_fprobe_hash updates it) is used for return handler,
+that will be used by fprobe_return().
+
+So I think it should be safe too. Or I might missed something?
+
+Thank you,
+
+
+> 
+> jirka
+> 
+> > +	if (!ret) {
+> > +		add_fprobe_hash(fp);
+> > +		for (i = 0; i < hlist_array->size; i++)
+> > +			insert_fprobe_node(&hlist_array->array[i]);
+> > +	}
+> > +	mutex_unlock(&fprobe_mutex);
+> >  
+> >  	if (ret)
+> >  		fprobe_fail_cleanup(fp);
+> > +
+> >  	return ret;
+> >  }
+> >  EXPORT_SYMBOL_GPL(register_fprobe_ips);
+> > @@ -352,14 +605,13 @@ EXPORT_SYMBOL_GPL(register_fprobe_syms);
+> 
+> SNIP
+
+
 -- 
-2.43.0.429.g432eaa2c6b-goog
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
