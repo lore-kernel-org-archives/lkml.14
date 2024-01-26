@@ -1,426 +1,188 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E7B81C291;
-	Fri, 26 Jan 2024 14:36:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DB0F81CA8D;
+	Fri, 26 Jan 2024 14:36:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706279771; cv=none; b=u+z13hEUttcblMJ1Hx8f4cr9L7mQ9xsFSq16fk/ZgLK5bYjfEiPbNtBwWtI3+pIJyVL7smO3R4Bc6SxjuJ8REmbhwQJ+JzK0xA3ELVLAJQ4KRU4xq5AQr+Fu6mkTGgN0K+SKfUBbfz70kI0MTJmtKm+oigEWPDEdTiEdybTTXKk=
+	t=1706279791; cv=none; b=k0HXItufyKCIytnlYDMQWoe0syQsMZ5vJZFIkHrOnhMMhQz4NWKHicAkxgDJabihZEtZgj9JDMPycJZZ4nZoYf8qAG0vd3/3wLwb5MFu8airB7yKT9C8ow1nygpsi2iKi99CYkjEa/4y4bPtyz0S4J8FHyj9BwyOr59P6wW2E4Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706279771; c=relaxed/simple;
-	bh=JfmPStXRRuk+e/C6LsDVMx3sKK3BV8TqGCQNeAqR3rg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TjP3S5t8uz8QwADCzfspyJ/CdUGppbEou7kdK4zFhE9YowaANltO6oJoUZgW53yyCUWOxkBDgUkcQ7aOT8T6UYa0uz6N//vL68eAW47oqm2evi0LxDDFhQ5RonVS/O5MhtMqIel6QrY3AmMHWTSG7XQ+PtYrIo8g19MheoA6on4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=IMAcA0KE; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="IMAcA0KE"
-Received: from pps.filterd (m0353726.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 40QDNiXp009094;
-	Fri, 26 Jan 2024 14:36:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=8KQwGGE1OoEUuwhYZNpCz1AaEgoGOn7O9IUjthmazM0=;
- b=IMAcA0KEPhXc7qTBqVTMmjDOC+hGaEKRRLbHQMCP98wqgeOjn2rewyM4Rb7oMO+ECtHM
- m9rUWarhdtlLLS6AVYlEtAxC95keHirSX0vDbY9pYQy+V6gux+4mA6kvXJio4DWX+n4p
- ES4pYQ/nbyK9IeY0BVZpslXRV34PTppab4gEOEQg7NWuDnsHCAB6Ydl5yDzV7KsGxyFC
- 4ppSj6aVpoD2f22EfeahWx6WkfeRG8I22bT2GxR2ClBAhs6YdX7worCSJdAZme5log9D
- QHRUsdJPMz8VmbsSlCyifSL/qrk2tLbQI7mAK39aeP+/N3s+sbn0+gnijEoKxxx28YNm NQ== 
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vvbxumcua-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 26 Jan 2024 14:36:07 +0000
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 40QDJKRt028225;
-	Fri, 26 Jan 2024 14:35:37 GMT
-Received: from smtprelay04.wdc07v.mail.ibm.com ([172.16.1.71])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3vru732ssc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 26 Jan 2024 14:35:37 +0000
-Received: from smtpav04.dal12v.mail.ibm.com (smtpav04.dal12v.mail.ibm.com [10.241.53.103])
-	by smtprelay04.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 40QEZZac32375476
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 26 Jan 2024 14:35:35 GMT
-Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 5FDAC58063;
-	Fri, 26 Jan 2024 14:35:35 +0000 (GMT)
-Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0797F58062;
-	Fri, 26 Jan 2024 14:35:35 +0000 (GMT)
-Received: from li-4795344c-3451-11b2-a85c-ab40c30bcc43.ibm.com (unknown [9.61.37.129])
-	by smtpav04.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 26 Jan 2024 14:35:34 +0000 (GMT)
-From: "Jason J. Herne" <jjherne@linux.ibm.com>
-To: linux-s390@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, pasic@linux.ibm.com, akrowiak@linux.ibm.com
-Subject: [PATCH 3/3] s390/vfio-ap: Add write support to sysfs attr ap_config
-Date: Fri, 26 Jan 2024 09:35:33 -0500
-Message-ID: <20240126143533.14043-4-jjherne@linux.ibm.com>
-X-Mailer: git-send-email 2.41.0
-In-Reply-To: <20240126143533.14043-1-jjherne@linux.ibm.com>
-References: <20240126143533.14043-1-jjherne@linux.ibm.com>
+	s=arc-20240116; t=1706279791; c=relaxed/simple;
+	bh=fCnJQJroZAwwsS6L657G3W7qNfWzolJI1ZIvcLI9x44=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HRDid4+Z1CcComGw9QW++fifrD217EhqQ/BVmcB8/XLa9pKFuGgsLl840utJXasOU20AWIEbi4SBH+ZHKreyFUN4gl52d1sh292ZlxP63mZsyeUb6t+nO44T9uoJM87i8x+PhZUk9Dm+KQu3JVPvDvE5pZ0Jachi8FzYo722PFI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4205D1FB;
+	Fri, 26 Jan 2024 06:37:12 -0800 (PST)
+Received: from FVFF77S0Q05N (unknown [10.57.47.163])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 644823F73F;
+	Fri, 26 Jan 2024 06:36:25 -0800 (PST)
+Date: Fri, 26 Jan 2024 14:36:16 +0000
+From: Mark Rutland <mark.rutland@arm.com>
+To: Marc Zyngier <maz@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Hector Martin <marcan@marcan.st>,
+	Ian Rogers <irogers@google.com>, acme@redhat.com,
+	james.clark@arm.com, john.g.garry@oracle.com, leo.yan@linaro.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org, mike.leach@linaro.org,
+	namhyung@kernel.org, suzuki.poulose@arm.com, tmricht@linux.ibm.com,
+	will@kernel.org
+Subject: Re: [PATCH] perf print-events: make is_event_supported() more robust
+Message-ID: <ZbPDYG2Bd2H7C_Es@FVFF77S0Q05N>
+References: <20240116170348.463479-1-mark.rutland@arm.com>
+ <8734uwxrca.wl-maz@kernel.org>
+ <ZafEFU7kwf6W0_Qx@FVFF77S0Q05N.cambridge.arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: hj_KC82IzEPCJTd51iI75CP7Zfb9NZRD
-X-Proofpoint-ORIG-GUID: hj_KC82IzEPCJTd51iI75CP7Zfb9NZRD
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-25_14,2024-01-25_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
- lowpriorityscore=0 priorityscore=1501 bulkscore=0 adultscore=0
- mlxlogscore=999 impostorscore=0 mlxscore=0 suspectscore=0 clxscore=1015
- malwarescore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2401260107
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZafEFU7kwf6W0_Qx@FVFF77S0Q05N.cambridge.arm.com>
 
-Allow writing a complete set of masks to ap_config. Doing so will
-cause the vfio-ap driver to replace the vfio-ap mediated device's entire
-state with the given set of masks. If the given state cannot be set, then
-no changes are made to the vfio-ap mediated device.
+On Wed, Jan 17, 2024 at 12:12:05PM +0000, Mark Rutland wrote:
+> On Wed, Jan 17, 2024 at 09:05:25AM +0000, Marc Zyngier wrote:
+> > However, I'm seeing some slightly odd behaviours:
 
-The format of the data written to ap_config is as follows:
-{amask},{dmask},{cmask}\n
+I believe that this is a separate issue; info dump below.
+> > $ sudo ./perf stat -e cycles:k ~/hackbench 100 process 1000
+> > Running with 100*40 (== 4000) tasks.
+> > Time: 3.313
+> > 
+> >  Performance counter stats for '/home/maz/hackbench 100 process 1000':
+> > 
+> >    <not supported>      apple_firestorm_pmu/cycles:k/                                         
+> >    <not supported>      apple_icestorm_pmu/cycles:k/                                          
+> > 
+> >        3.467568841 seconds time elapsed
+> > 
+> >       13.080111000 seconds user
+> >       53.162099000 seconds sys
+> > 
+> > I would have expected it to count, but it didn't. For that to work, I
+> > have to add the 'H' modifier:
 
-\n is a newline character.
+I gave that a spin with the aforementioned hacked-up PMUv3 driver, and I see
+the same:
 
-amask, dmask, and cmask are masks identifying which adapters, domains,
-and control domains should be assigned to the mediated device.
+| # ./perf-after stat -e cycles true
+| 
+|  Performance counter stats for 'true':
+| 
+|      <not counted>      armv8_pmuv3_0/cycles/                                                   (0.00%)
+|            1375271      armv8_pmuv3_1/cycles/                                                 
+| 
+|        0.001153070 seconds time elapsed
+| 
+|        0.001204000 seconds user
+|        0.000000000 seconds sys
+| 
+| 
+| # ./perf-after stat -e cycles:k true
+| 
+|  Performance counter stats for 'true':
+| 
+|    <not supported>      armv8_pmuv3_0/cycles:k/                                               
+|    <not supported>      armv8_pmuv3_1/cycles:k/                                               
+| 
+|        0.000983130 seconds time elapsed
+| 
+|        0.001037000 seconds user
+|        0.000000000 seconds sys
+| 
+| 
+| # ./perf-after stat -e cycles:kH true
+| 
+|  Performance counter stats for 'true':
+| 
+|      <not counted>      armv8_pmuv3_0/cycles:kH/                                                (0.00%)
+|             932067      armv8_pmuv3_1/cycles:kH/                                              
+| 
+|        0.001090100 seconds time elapsed
+| 
+|        0.001125000 seconds user
+|        0.000000000 seconds sys
 
-The format of a mask is	as follows:
-0xNN..NN
+... though interestingly 'cycles:u' works:
 
-Where NN..NN is 64 hexadecimal characters representing a 256-bit value.
-The leftmost (highest order) bit represents adapter/domain 0.
+| # ./perf-after stat -e cycles:u true
+| 
+|  Performance counter stats for 'true':
+| 
+|             369753      armv8_pmuv3_0/cycles:u/                                               
+|      <not counted>      armv8_pmuv3_1/cycles:u/                                                 (0.00%)
+| 
+|        0.001171980 seconds time elapsed
+| 
+|        0.001245000 seconds user
+|        0.000000000 seconds sys
 
-For an example set of masks that represent your mdev's current
-configuration, simply cat ap_config.
+Looking at the output with '-vvv' the perf tool implicitly sets exclude_guest
+for 'cycles', 'cycles:u', and 'cycles:kH', but does not set exclude_guest for
+'cycles:k'.
 
-This attribute is intended to be used by an mdevctl callout script
-supporting the mdev type vfio_ap-passthrough to atomically update a
-vfio-ap mediated device's state.
+It looks like that's consistent with the behaviour of opening separate events
+prior to this patch:
 
-Signed-off-by: Jason J. Herne <jjherne@linux.ibm.com>
----
- Documentation/arch/s390/vfio-ap.rst   |  27 ++++
- drivers/s390/crypto/vfio_ap_ops.c     | 188 +++++++++++++++++++++++---
- drivers/s390/crypto/vfio_ap_private.h |   6 +-
- 3 files changed, 197 insertions(+), 24 deletions(-)
+| # ./perf-before stat -e armv8_pmuv3_0/cycles/ -e armv8_pmuv3_1/cycles/ true
+| 
+|  Performance counter stats for 'true':
+| 
+|            1407624      armv8_pmuv3_0/cycles/                                                 
+|      <not counted>      armv8_pmuv3_1/cycles/                                                   (0.00%)
+| 
+|        0.001179205 seconds time elapsed
+| 
+|        0.001217000 seconds user
+|        0.000000000 seconds sys
+| 
+| 
+| # ./perf-before stat -e armv8_pmuv3_0/cycles/u -e armv8_pmuv3_1/cycles/u true
+| 
+|  Performance counter stats for 'true':
+| 
+|             329212      armv8_pmuv3_0/cycles/u                                                
+|      <not counted>      armv8_pmuv3_1/cycles/u                                                  (0.00%)
+| 
+|        0.001050550 seconds time elapsed
+| 
+|        0.001081000 seconds user
+|        0.000000000 seconds sys
+| 
+| 
+| # ./perf-before stat -e armv8_pmuv3_0/cycles/k -e armv8_pmuv3_1/cycles/k true
+| 
+|  Performance counter stats for 'true':
+| 
+|    <not supported>      armv8_pmuv3_0/cycles/k                                                
+|    <not supported>      armv8_pmuv3_1/cycles/k                                                
+| 
+|        0.000944285 seconds time elapsed
+| 
+|        0.000985000 seconds user
+|        0.000000000 seconds sys
+| 
+| 
+| # ./perf-before stat -e armv8_pmuv3_0/cycles/kH -e armv8_pmuv3_1/cycles/kH true
+| 
+|  Performance counter stats for 'true':
+| 
+|            1016160      armv8_pmuv3_0/cycles/kH                                               
+|      <not counted>      armv8_pmuv3_1/cycles/kH                                                 (0.00%)
+| 
+|        0.001179220 seconds time elapsed
+| 
+|        0.001239000 seconds user
+|        0.000000000 seconds sys
 
-diff --git a/Documentation/arch/s390/vfio-ap.rst b/Documentation/arch/s390/vfio-ap.rst
-index 929ee1c1c940..a94f13916dea 100644
---- a/Documentation/arch/s390/vfio-ap.rst
-+++ b/Documentation/arch/s390/vfio-ap.rst
-@@ -380,6 +380,33 @@ matrix device.
-     control_domains:
-       A read-only file for displaying the control domain numbers assigned to the
-       vfio_ap mediated device.
-+    ap_config:
-+      A read/write file that, when written to, allows the entire vfio_ap mediated
-+      device's ap configuration to be replaced in one shot. Three masks are given,
-+      one for adapters, one for domains, and one for control domains. If the
-+      given state cannot be set, then no changes are made to the vfio-ap
-+      mediated device.
-+
-+      The format of the data written to ap_config is as follows:
-+      {amask},{dmask},{cmask}\n
-+
-+      \n is a newline character.
-+
-+      amask, dmask, and cmask are masks identifying which adapters, domains,
-+      and control domains should be assigned to the mediated device.
-+
-+      The format of a mask is as follows:
-+      0xNN..NN
-+
-+      Where NN..NN is 64 hexadecimal characters representing a 256-bit value.
-+      The leftmost (highest order) bit represents adapter/domain 0.
-+
-+      For an example set of masks that represent your mdev's current
-+      configuration, simply cat ap_config.
-+
-+      This attribute is intended to be used by automation. End users would be
-+      better served using the respective assign/unassign attributes for adapters
-+      and domains.
- 
- * functions:
- 
-diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
-index 96293683b939..5ad134c1d5e6 100644
---- a/drivers/s390/crypto/vfio_ap_ops.c
-+++ b/drivers/s390/crypto/vfio_ap_ops.c
-@@ -764,10 +764,11 @@ static int vfio_ap_mdev_probe(struct mdev_device *mdev)
- static void vfio_ap_mdev_link_queue(struct ap_matrix_mdev *matrix_mdev,
- 				    struct vfio_ap_queue *q)
- {
--	if (q) {
--		q->matrix_mdev = matrix_mdev;
--		hash_add(matrix_mdev->qtable.queues, &q->mdev_qnode, q->apqn);
--	}
-+	if (!q || vfio_ap_mdev_get_queue(matrix_mdev, q->apqn))
-+		return;
-+
-+	q->matrix_mdev = matrix_mdev;
-+	hash_add(matrix_mdev->qtable.queues, &q->mdev_qnode, q->apqn);
- }
- 
- static void vfio_ap_mdev_link_apqn(struct ap_matrix_mdev *matrix_mdev, int apqn)
-@@ -1048,21 +1049,25 @@ static void vfio_ap_mdev_unlink_adapter(struct ap_matrix_mdev *matrix_mdev,
- 	}
- }
- 
--static void vfio_ap_mdev_hot_unplug_adapter(struct ap_matrix_mdev *matrix_mdev,
--					    unsigned long apid)
-+static void vfio_ap_mdev_hot_unplug_adapters(struct ap_matrix_mdev *matrix_mdev,
-+					    unsigned long *apids)
- {
--	int loop_cursor;
--	struct vfio_ap_queue *q;
- 	struct ap_queue_table *qtable = kzalloc(sizeof(*qtable), GFP_KERNEL);
-+	struct vfio_ap_queue *q;
-+	unsigned long apid;
-+	int loop_cursor;
- 
- 	hash_init(qtable->queues);
--	vfio_ap_mdev_unlink_adapter(matrix_mdev, apid, qtable);
- 
--	if (test_bit_inv(apid, matrix_mdev->shadow_apcb.apm)) {
--		clear_bit_inv(apid, matrix_mdev->shadow_apcb.apm);
--		vfio_ap_mdev_update_guest_apcb(matrix_mdev);
-+	for_each_set_bit_inv(apid, apids, AP_DEVICES) {
-+		vfio_ap_mdev_unlink_adapter(matrix_mdev, apid, qtable);
-+
-+		if (test_bit_inv(apid, matrix_mdev->shadow_apcb.apm))
-+			clear_bit_inv(apid, matrix_mdev->shadow_apcb.apm);
- 	}
- 
-+	vfio_ap_mdev_update_guest_apcb(matrix_mdev);
-+
- 	vfio_ap_mdev_reset_queues(qtable);
- 
- 	hash_for_each(qtable->queues, loop_cursor, q, mdev_qnode) {
-@@ -1073,6 +1078,15 @@ static void vfio_ap_mdev_hot_unplug_adapter(struct ap_matrix_mdev *matrix_mdev,
- 	kfree(qtable);
- }
- 
-+static void vfio_ap_mdev_hot_unplug_adapter(struct ap_matrix_mdev *matrix_mdev,
-+					    unsigned long apid)
-+{
-+	DECLARE_BITMAP(apids, AP_DEVICES);
-+
-+	set_bit_inv(apid, apids);
-+	vfio_ap_mdev_hot_unplug_adapters(matrix_mdev, apids);
-+}
-+
- /**
-  * unassign_adapter_store - parses the APID from @buf and clears the
-  * corresponding bit in the mediated matrix device's APM
-@@ -1235,21 +1249,24 @@ static void vfio_ap_mdev_unlink_domain(struct ap_matrix_mdev *matrix_mdev,
- 	}
- }
- 
--static void vfio_ap_mdev_hot_unplug_domain(struct ap_matrix_mdev *matrix_mdev,
--					   unsigned long apqi)
-+static void vfio_ap_mdev_hot_unplug_domains(struct ap_matrix_mdev *matrix_mdev,
-+					   unsigned long *apqis)
- {
--	int loop_cursor;
--	struct vfio_ap_queue *q;
- 	struct ap_queue_table *qtable = kzalloc(sizeof(*qtable), GFP_KERNEL);
-+	struct vfio_ap_queue *q;
-+	unsigned long apqi;
-+	int loop_cursor;
- 
- 	hash_init(qtable->queues);
--	vfio_ap_mdev_unlink_domain(matrix_mdev, apqi, qtable);
- 
--	if (test_bit_inv(apqi, matrix_mdev->shadow_apcb.aqm)) {
--		clear_bit_inv(apqi, matrix_mdev->shadow_apcb.aqm);
--		vfio_ap_mdev_update_guest_apcb(matrix_mdev);
-+	for_each_set_bit_inv(apqi, apqis, AP_DOMAINS) {
-+		vfio_ap_mdev_unlink_domain(matrix_mdev, apqi, qtable);
-+
-+		if (test_bit_inv(apqi, matrix_mdev->shadow_apcb.aqm))
-+			clear_bit_inv(apqi, matrix_mdev->shadow_apcb.aqm);
- 	}
- 
-+	vfio_ap_mdev_update_guest_apcb(matrix_mdev);
- 	vfio_ap_mdev_reset_queues(qtable);
- 
- 	hash_for_each(qtable->queues, loop_cursor, q, mdev_qnode) {
-@@ -1260,6 +1277,15 @@ static void vfio_ap_mdev_hot_unplug_domain(struct ap_matrix_mdev *matrix_mdev,
- 	kfree(qtable);
- }
- 
-+static void vfio_ap_mdev_hot_unplug_domain(struct ap_matrix_mdev *matrix_mdev,
-+					   unsigned long apqi)
-+{
-+	DECLARE_BITMAP(apqis, AP_DOMAINS);
-+
-+	set_bit_inv(apqi, apqis);
-+	vfio_ap_mdev_hot_unplug_domains(matrix_mdev, apqis);
-+}
-+
- /**
-  * unassign_domain_store - parses the APQI from @buf and clears the
-  * corresponding bit in the mediated matrix device's AQM
-@@ -1527,10 +1553,130 @@ static ssize_t ap_config_show(struct device *dev, struct device_attribute *attr,
- 	return idx;
- }
- 
-+/* Number of characters needed for a complete hex mask representing the bits in ..  */
-+#define AP_DEVICES_STRLEN	(AP_DEVICES/4 + 3)
-+#define AP_DOMAINS_STRLEN	(AP_DOMAINS/4 + 3)
-+#define AP_CONFIG_STRLEN	(AP_DEVICES_STRLEN + 2 * AP_DOMAINS_STRLEN)
-+
-+static int parse_bitmap(char **strbufptr, unsigned long *bitmap, int nbits)
-+{
-+	char *curmask;
-+
-+	curmask = strsep(strbufptr, ",\n");
-+	if (!curmask)
-+		return -EINVAL;
-+
-+	bitmap_clear(bitmap, 0, nbits);
-+	return ap_hex2bitmap(curmask, bitmap, nbits);
-+}
-+
-+static int ap_matrix_length_check(struct ap_matrix_mdev *matrix_mdev)
-+{
-+	unsigned long bit;
-+
-+	for_each_set_bit_inv(bit, matrix_mdev->matrix.apm, AP_DEVICES) {
-+		if (bit > matrix_mdev->matrix.apm_max)
-+			return -ENODEV;
-+	}
-+
-+	for_each_set_bit_inv(bit, matrix_mdev->matrix.aqm, AP_DOMAINS) {
-+		if (bit > matrix_mdev->matrix.aqm_max)
-+			return -ENODEV;
-+	}
-+
-+	for_each_set_bit_inv(bit, matrix_mdev->matrix.adm, AP_DOMAINS) {
-+		if (bit > matrix_mdev->matrix.adm_max)
-+			return -ENODEV;
-+	}
-+
-+	return 0;
-+}
-+
-+static void ap_matrix_copy(struct ap_matrix *dst, struct ap_matrix *src)
-+{
-+	bitmap_copy(dst->apm, src->apm, AP_DEVICES);
-+	bitmap_copy(dst->aqm, src->aqm, AP_DOMAINS);
-+	bitmap_copy(dst->adm, src->adm, AP_DOMAINS);
-+}
-+
- static ssize_t ap_config_store(struct device *dev, struct device_attribute *attr,
- 			       const char *buf, size_t count)
- {
--	return count;
-+	struct ap_matrix_mdev *matrix_mdev = dev_get_drvdata(dev);
-+	struct ap_matrix m_new, m_old, m_added, m_removed;
-+	unsigned long newbit;
-+	char *newbuf, *rest;
-+	int rc = count;
-+	bool do_update;
-+
-+	newbuf = rest = kstrndup(buf, AP_CONFIG_STRLEN, GFP_KERNEL);
-+	if (!newbuf)
-+		return -ENOMEM;
-+
-+	mutex_lock(&ap_perms_mutex);
-+	get_update_locks_for_mdev(matrix_mdev);
-+
-+	/* Save old state */
-+	ap_matrix_copy(&m_old, &matrix_mdev->matrix);
-+
-+	if (parse_bitmap(&rest, m_new.apm, AP_DEVICES) ||
-+	    parse_bitmap(&rest, m_new.aqm, AP_DOMAINS) ||
-+		parse_bitmap(&rest, m_new.adm, AP_DOMAINS)) {
-+		rc = -EINVAL;
-+		goto out;
-+	}
-+
-+	bitmap_andnot(m_removed.apm, m_old.apm, m_new.apm, AP_DEVICES);
-+	bitmap_andnot(m_removed.aqm, m_old.aqm, m_new.aqm, AP_DOMAINS);
-+	bitmap_andnot(m_added.apm, m_new.apm, m_old.apm, AP_DEVICES);
-+	bitmap_andnot(m_added.aqm, m_new.aqm, m_old.aqm, AP_DOMAINS);
-+
-+	/* Need new bitmaps in matrix_mdev for validation */
-+	ap_matrix_copy(&matrix_mdev->matrix, &m_new);
-+
-+	/* Ensure new state is valid, else undo new state */
-+	rc = vfio_ap_mdev_validate_masks(matrix_mdev);
-+	if (rc) {
-+		ap_matrix_copy(&matrix_mdev->matrix, &m_old);
-+		goto out;
-+	}
-+	rc = ap_matrix_length_check(matrix_mdev);
-+	if (rc) {
-+		ap_matrix_copy(&matrix_mdev->matrix, &m_old);
-+		goto out;
-+	}
-+	rc = count;
-+
-+	/* Need old bitmaps in matrix_mdev for unplug/unlink */
-+	ap_matrix_copy(&matrix_mdev->matrix, &m_old);
-+
-+	/* Unlink removed adapters/domains */
-+	vfio_ap_mdev_hot_unplug_adapters(matrix_mdev, m_removed.apm);
-+	vfio_ap_mdev_hot_unplug_domains(matrix_mdev, m_removed.aqm);
-+
-+	/* Need new bitmaps in matrix_mdev for linking new adapters/domains */
-+	ap_matrix_copy(&matrix_mdev->matrix, &m_new);
-+
-+	/* Link newly added adapters */
-+	for_each_set_bit_inv(newbit, m_added.apm, AP_DEVICES)
-+		vfio_ap_mdev_link_adapter(matrix_mdev, newbit);
-+
-+	for_each_set_bit_inv(newbit, m_added.aqm, AP_DOMAINS)
-+		vfio_ap_mdev_link_domain(matrix_mdev, newbit);
-+
-+	/* filter resources not bound to vfio-ap */
-+	do_update = vfio_ap_mdev_filter_matrix(matrix_mdev->matrix.apm,
-+				matrix_mdev->matrix.aqm, matrix_mdev);
-+	do_update |= vfio_ap_mdev_filter_cdoms(matrix_mdev);
-+
-+	/* Apply changes to shadow apbc if things changed */
-+	if (do_update)
-+		vfio_ap_mdev_update_guest_apcb(matrix_mdev);
-+out:
-+	release_update_locks_for_mdev(matrix_mdev);
-+	mutex_unlock(&ap_perms_mutex);
-+	kfree(newbuf);
-+	return rc;
- }
- static DEVICE_ATTR_RW(ap_config);
- 
-diff --git a/drivers/s390/crypto/vfio_ap_private.h b/drivers/s390/crypto/vfio_ap_private.h
-index 88aff8b81f2f..e2cf07c184bf 100644
---- a/drivers/s390/crypto/vfio_ap_private.h
-+++ b/drivers/s390/crypto/vfio_ap_private.h
-@@ -75,11 +75,11 @@ extern struct ap_matrix_dev *matrix_dev;
-  */
- struct ap_matrix {
- 	unsigned long apm_max;
--	DECLARE_BITMAP(apm, 256);
-+	DECLARE_BITMAP(apm, AP_DEVICES);
- 	unsigned long aqm_max;
--	DECLARE_BITMAP(aqm, 256);
-+	DECLARE_BITMAP(aqm, AP_DOMAINS);
- 	unsigned long adm_max;
--	DECLARE_BITMAP(adm, 256);
-+	DECLARE_BITMAP(adm, AP_DOMAINS);
- };
- 
- /**
--- 
-2.41.0
+... and per '-vvv', exclude_guest is set in the same cases.
 
+I agree it's a bit weird that the tool sets exclude_guest for unfilted and ':u'
+events, but not ':k' events, but it looks like that's separate from the way
+events get expanded.
+
+Thanks,
+Mark.
