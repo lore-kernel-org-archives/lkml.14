@@ -1,79 +1,83 @@
-Received: from xry111.site (xry111.site [89.208.246.23])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37A5D1B5B2;
-	Fri, 26 Jan 2024 12:58:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3EBE1B7E8;
+	Fri, 26 Jan 2024 13:00:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706273912; cv=none; b=sUvWX+PHReL8/gUKZ1kAKxlnkf4y+EWCatS73SxmjF1UeDa7X+DA29USWR9KYon3KYIp1WPf3XeCet+xUBpvGiFhR5AF2ZOadzFfwR0qh4m+kfwrpcednxgGRRdRGn/vc3AnnYdy9d2yvIAXUbCiaM3yUy0AuO8g6Bn0g70+I8o=
+	t=1706274001; cv=none; b=N3Yoq1vT7LY71gyhaMo8gCjmZp65Gbfgk/OYy3fZRPQto4eo6weoktp8w0Ae4dJr6UtAViZNAkvOsiluu4K5QbllOM2mkWY5B0QqOeehSOEFuQOT2D2bQVmCULIuRODaucRX0qph1XC1F3DJuseqtn8AAfp3iHqEnPNma5+awYA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706273912; c=relaxed/simple;
-	bh=eiX/XU3X7izRhpQ8i5uryQdr0UqEctOorWGygOsy5UI=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=HEGcu9gMIVkmycLRZ60Zg+7XovAThmg/vT91L3eG8F9NohFLsNobxG77rmziOQ3xkU6DkND/QOM7+eVSPuktouV5ccV3JI+epdtx50AYik1bc6kfhSE+2LO/G2WtqEp3oS5OGeQLLUHtr+CILmXAm2l7+swcFE7G0nePcu6Mi/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=D4WfYUJx; arc=none smtp.client-ip=89.208.246.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
+	s=arc-20240116; t=1706274001; c=relaxed/simple;
+	bh=eh/r7bLiG2ewx2BxWDgtR/LX/zo08ToBq3IPFhfP/kI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=tUd9ALzwPKXgV0UFgLGmzAdzeqR/zZrwpfyHZ2A2k8fv6kwBzPPnU1eSUwLnhJJsVz4jijlCvQthGz+dCsrhyuapwsWeOexeKsJ1CWXBDRIEV5zLHdup2pQ2bij7wRfJ+96tBhLBE7HNf89BZIK1nXbdWa/meoVLxZA0c+0brrA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S4yc541M; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="D4WfYUJx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
-	s=default; t=1706273902;
-	bh=eiX/XU3X7izRhpQ8i5uryQdr0UqEctOorWGygOsy5UI=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=D4WfYUJxkj8nZVD4yhBt2yM509Q7H7i3L4lt2HkzVsFXGjr7Ym6NyVpBpxWbUIzUc
-	 Lf9+rphGsCNs2TLwLbd4L9qrK9iYA/ywuvShsS1ljItoMjcaRslcj6h6v0SVE4i3AL
-	 Ne8o4mxQzY0WmlS1J9gC3nuoiVBONKUzUufqgg0I=
-Received: from [127.0.0.1] (unknown [IPv6:2001:470:683e::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
-	(Client did not present a certificate)
-	(Authenticated sender: xry111@xry111.site)
-	by xry111.site (Postfix) with ESMTPSA id 7C67F6690B;
-	Fri, 26 Jan 2024 07:58:18 -0500 (EST)
-Message-ID: <1e1ec730efc58f17ecf008a4600321e3d200ebda.camel@xry111.site>
-Subject: Re: Strange EFAULT on mips64el returned by syscall when another
- thread is forking
-From: Xi Ruoyao <xry111@xry111.site>
-To: Jiaxun Yang <jiaxun.yang@flygoat.com>, "linux-mips@vger.kernel.org"
-	 <linux-mips@vger.kernel.org>
-Cc: linux-kernel@vger.kernel.org, Thomas Bogendoerfer
-	 <tsbogend@alpha.franken.de>, libc-alpha@sourceware.org, 
-	regressions@lists.linux.dev
-Date: Fri, 26 Jan 2024 20:58:16 +0800
-In-Reply-To: <4b715c9f-6a9e-4496-8810-670080cb715a@app.fastmail.com>
-References: <75e9fd7b08562ad9b456a5bdaacb7cc220311cc9.camel@xry111.site>
-	 <4b715c9f-6a9e-4496-8810-670080cb715a@app.fastmail.com>
-Autocrypt: addr=xry111@xry111.site; prefer-encrypt=mutual;
- keydata=mDMEYnkdPhYJKwYBBAHaRw8BAQdAsY+HvJs3EVKpwIu2gN89cQT/pnrbQtlvd6Yfq7egugi0HlhpIFJ1b3lhbyA8eHJ5MTExQHhyeTExMS5zaXRlPoiTBBMWCgA7FiEEkdD1djAfkk197dzorKrSDhnnEOMFAmJ5HT4CGwMFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgkQrKrSDhnnEOPHFgD8D9vUToTd1MF5bng9uPJq5y3DfpcxDp+LD3joA3U2TmwA/jZtN9xLH7CGDHeClKZK/ZYELotWfJsqRcthOIGjsdAPuDgEYnkdPhIKKwYBBAGXVQEFAQEHQG+HnNiPZseiBkzYBHwq/nN638o0NPwgYwH70wlKMZhRAwEIB4h4BBgWCgAgFiEEkdD1djAfkk197dzorKrSDhnnEOMFAmJ5HT4CGwwACgkQrKrSDhnnEOPjXgD/euD64cxwqDIqckUaisT3VCst11RcnO5iRHm6meNIwj0BALLmWplyi7beKrOlqKfuZtCLbiAPywGfCNg8LOTt4iMD
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.3 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S4yc541M"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4179AC433F1;
+	Fri, 26 Jan 2024 12:59:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706274001;
+	bh=eh/r7bLiG2ewx2BxWDgtR/LX/zo08ToBq3IPFhfP/kI=;
+	h=From:To:Cc:Subject:Date:From;
+	b=S4yc541MawbI5TGCpoh8k6vWLuBkddYAYxUA58A+xazhwK7/EN3TRUsWOiQcDyExN
+	 tJJbZWb/X8LSL/DZAz1kLGSU7qUvgNxHHMAzOGhzwxyx2lZWNxvMaXoQNTIOoW+8bV
+	 Ov9nxsfZ0dppG09hWQkkBRreTP/Worbh0V6UwAgqNroDMMjtDuUkuNeC9gerfIGlji
+	 8ok6ln1ZudgHq90uyaw39JtdG3m7ley2ULwcvpPL9LckUJbGxxatMvxn0mkJ11IjAk
+	 0HNU7PUsGxxtTV+F+F3x760wY8dthVurcc9SOTL2QvT5wjjdRnuFdmA3D7rFkhj6FX
+	 WZJuIygur4Vpg==
+From: Roger Quadros <rogerq@kernel.org>
+To: nm@ti.com,
+	vigneshr@ti.com
+Cc: afd@ti.com,
+	kristo@kernel.org,
+	robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	srk@ti.com,
+	linux-arm-kernel@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Roger Quadros <rogerq@kernel.org>
+Subject: [PATCH 0/2] arm64: dts: ti: am62: Add USB support for k3-am62p
+Date: Fri, 26 Jan 2024 14:59:49 +0200
+Message-Id: <20240126125951.18585-1-rogerq@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Fri, 2024-01-26 at 12:33 +0000, Jiaxun Yang wrote:
->=20
->=20
-> =E5=9C=A82024=E5=B9=B41=E6=9C=8824=E6=97=A5=E4=B8=80=E6=9C=88 =E4=B8=8A=
-=E5=8D=8810:42=EF=BC=8CXi Ruoyao=E5=86=99=E9=81=93=EF=BC=9A
-> > Hi,
-> >=20
-> > When I'm testing Glibc master branch for upcoming 2.39 release, I
-> > noticed an alarming test failure on mips64el:
->=20
-> So apparently it should be tracked as a regression.
->=20
-> #regzbot ^introduced 4bce37a68ff884e821a02a731897a8119e0c37b7
->=20
-> Should we revert it for now?
+Hi,
 
-I'd say "yes" if we cannot easily patch instruction_pointer() to handle
-delay slot.  Anyway the reversion will be a MIPS-only change.
+This series first adds device nodes for USB0_PHY_CTRL and USB1_PHY_CTRL
+in the wkup_conf node and fixus up the USB nodes to use the newly
+added nodes.
 
---=20
-Xi Ruoyao <xry111@xry111.site>
-School of Aerospace Science and Technology, Xidian University
+Then it adds USB support for AM62P5-SK board.
+
+cheers,
+-roger
+
+Roger Quadros (1):
+  arm64: dts: ti: k3-am62/a/p: use sub-node for USB_PHY_CTRL registers
+
+Vignesh Raghavendra (1):
+  arm64: dts: ti: k3-am62p: add the USB sub-system
+
+ arch/arm64/boot/dts/ti/k3-am62-main.dtsi    |  4 +-
+ arch/arm64/boot/dts/ti/k3-am62-wakeup.dtsi  | 10 +++
+ arch/arm64/boot/dts/ti/k3-am62a-main.dtsi   |  4 +-
+ arch/arm64/boot/dts/ti/k3-am62a-wakeup.dtsi | 10 +++
+ arch/arm64/boot/dts/ti/k3-am62p-main.dtsi   | 46 ++++++++++++++
+ arch/arm64/boot/dts/ti/k3-am62p-wakeup.dtsi | 10 +++
+ arch/arm64/boot/dts/ti/k3-am62p5-sk.dts     | 67 +++++++++++++++++++++
+ 7 files changed, 147 insertions(+), 4 deletions(-)
+
+
+base-commit: 6613476e225e090cc9aad49be7fa504e290dd33d
+-- 
+2.34.1
+
