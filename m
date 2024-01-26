@@ -1,113 +1,90 @@
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from www530.your-server.de (www530.your-server.de [188.40.30.78])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2394D134AD
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 07:35:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF67C11700;
+	Fri, 26 Jan 2024 07:38:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.40.30.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706254521; cv=none; b=kKQ/AJHq5GxHlSorgardBfrJ2OtwFqtEThZQZn3U9Ct9owvFtq0v9sfDp66uyQGd2NcEB/Vf/1qse/28AtXgm34uZfp55ntE+Q1WLG0LHvHxShu4qMn3BD/7d0qf6tj4W0WaVgdu5tFUxgYacSfGaH/adSzXV8Z1taK3OCjD590=
+	t=1706254775; cv=none; b=N1SCIEMGlq4JhFSzOc0l2MAxSNQbFnJlvze4QOv08YHEXa23XUzeIGLrTALXKIGQ9UZySWJj7pzOFIDkpk/SdW0k6qLPfu1qoLKDtOY2qXr92NXsrtJZYT7Lm3wIXZAeduvn+5UU8JX0H/OI2RWINEiHfdcP+JHvSHRrkkL1Rvw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706254521; c=relaxed/simple;
-	bh=CN7eRsF2RUuCp59wm9aMwYGQrieE8Tt4W8JYrmNcByo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MFT0a9hETZqIlE5xNzVqVnoRKKJfTzOnZnYkqp/wJ5dmezyaJWpFXc3Yr86aVvCTAU7mFMpe5ddfvAo4F1pDbDGdBgOFD9roULAV4GtrUyBx46xqn3Up6BfJcV0JtsjRgT6tu8NsT3mNrmznm8zJRVuVJFZHIPgHhFc9H9BBecQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=TzqOmKfl; arc=none smtp.client-ip=209.85.210.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1706254775; c=relaxed/simple;
+	bh=y0iGSnvyjhTRSIeQajhDHn3zQJ55cRwhkmfcVDXPfZY=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=krh4zRxKCzmKDt3/6jB+5IU4pEdcVn+qjC65cQFZGgJ+XDEise4cIr83rQH1Jr8wwv5PazyZ1EbyOtZzRHY1qjr8NgDGR9YyDvv68ErOQLTPT3GDLRRShvh6E+s7cwR8+bJZOGzIWUpaStp2vRgKZgfofpYusewuyxv7bxRs2Bw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=geanix.com; spf=pass smtp.mailfrom=geanix.com; dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b=zLo4dWgC; arc=none smtp.client-ip=188.40.30.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=geanix.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=geanix.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TzqOmKfl"
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-6ddd1fc67d2so30053b3a.2
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 23:35:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1706254519; x=1706859319; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=LLBtLu4wKX94/+P/QqcYo4A1h3dyVmhkosY/sUXTdjA=;
-        b=TzqOmKflUa7Sqo9Csqa0VrjO+jLyz54pxux/BouGU2vDno94pOCQ3cqDnW4P7m740q
-         0E92DCq45ZboYuak8HxOeWDCVHsD4Cl6F2VpO9HqeDShl3xyeI6CNLpXoUMknxq0mnmo
-         h1R2ZpcJXU/csw2hUlXhmc8WTVJa+YAUtIdkY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706254519; x=1706859319;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=LLBtLu4wKX94/+P/QqcYo4A1h3dyVmhkosY/sUXTdjA=;
-        b=piLEiLgdfbUjj9af5TNDuAT7GCsB0G7M13NNc0WtwAwZdw62NT5j1kaQIt2M9xkK3j
-         qPrjgWnA5FaIQVbDSVjM4SYc+uSMBuEdSu1zyi42kVX8fe7uHNz1J0Qi1wSIpvbHXsOs
-         fXu/fthK89TCgJcTplrKOptZN6/Wx/wzdFpfJ3Bz2RADjCTTv6Jxch24bZuz8IWMhPAG
-         FrZ5gB4JJ1dMFc4YcFNU3vaGYJcm7kzhT2XTv06KJcy8lQirJX8CXsRifYgCojUB2Ozg
-         E23bj4cjn+tO9JnW7jEZqUGouE2f7ySLpWFAqLv2y8ADfSu/fqwCSipmVGigyvqFFuSC
-         0jTQ==
-X-Gm-Message-State: AOJu0Yx1W9rrFkPw7SgXvpsn7v8GnrUhn9PVyF0fJfFM73qLAxkS5YGY
-	IcNYrqetnlpakROaD49GW1Oz2kPQt+qr+3TMYs6FsVyb2a2wbcOwvObiZNW3OQ==
-X-Google-Smtp-Source: AGHT+IHCfZg7myP94HWqLShb7FnZKGeEWhG1lB4m6nfTYh97Z4qNJy4ySGIQ0mSBgidZ/Z3eT7G7RA==
-X-Received: by 2002:a05:6a20:7b19:b0:199:f708:207a with SMTP id s25-20020a056a207b1900b00199f708207amr591065pzh.116.1706254519486;
-        Thu, 25 Jan 2024 23:35:19 -0800 (PST)
-Received: from wenstp920.tpe.corp.google.com ([2401:fa00:1:10:2614:bbbd:8db2:1f54])
-        by smtp.gmail.com with ESMTPSA id l5-20020a170902eb0500b001d58ed4c591sm516983plb.105.2024.01.25.23.35.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jan 2024 23:35:19 -0800 (PST)
-From: Chen-Yu Tsai <wenst@chromium.org>
-To: Andrzej Hajda <andrzej.hajda@intel.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Robert Foss <rfoss@kernel.org>,
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-	Jonas Karlman <jonas@kwiboo.se>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Allen Chen <allen.chen@ite.com.tw>
-Cc: Chen-Yu Tsai <wenst@chromium.org>,
-	David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	dri-devel@lists.freedesktop.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: display: bridge: it6505: Add #sound-dai-cells
-Date: Fri, 26 Jan 2024 15:35:10 +0800
-Message-ID: <20240126073511.2708574-1-wenst@chromium.org>
-X-Mailer: git-send-email 2.43.0.429.g432eaa2c6b-goog
+	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="zLo4dWgC"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=geanix.com;
+	s=default2211; h=Content-Type:MIME-Version:Message-ID:Date:References:
+	In-Reply-To:Subject:Cc:To:From:Sender:Reply-To:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=twh0SmkJpVHTiPqxYhT2V5fgzxZvyCL2qrzAwbznik0=; b=zLo4dWgCzNQPAt2B9C1CXkQPpA
+	mmToX2NNjs2i2gs5AgHScZVeGZHase5YhlcA1itUVn5DdGbw/G84Grw3j+XSmJZrVqtY1dV5enM8G
+	YURjru8FDnib+K+N1YKmUzLZzvxJvk0+xWNl4ldOvoqItTT+y31EuPOlmb0ghbD1j0xZ2Pg9yomkV
+	Lu/VclOy2I4ang4w97q6C2MGbZYLVMu3po7Svq5ATRKuYapa1ZFE/WEQ3yYZydZwEQvIB7k8i69JZ
+	3YHvMeStvdajqJkPPBmJ2vAtR9jWVSbIyWpqJGlexaoojm9ZDznXYwKxo8gM5Zv6avjCHn1tMY8mZ
+	pn3TgfUg==;
+Received: from sslproxy04.your-server.de ([78.46.152.42])
+	by www530.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <esben@geanix.com>)
+	id 1rTGmv-0001xk-TZ; Fri, 26 Jan 2024 08:38:09 +0100
+Received: from [87.49.42.9] (helo=localhost)
+	by sslproxy04.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <esben@geanix.com>)
+	id 1rTGmu-000L87-Uk; Fri, 26 Jan 2024 08:38:09 +0100
+From: Esben Haabendal <esben@geanix.com>
+To: Oleksij Rempel <o.rempel@pengutronix.de>
+Cc: linux-i2c@vger.kernel.org,  Gregor Herburger
+ <gregor.herburger@ew.tq-group.com>,  Pengutronix Kernel Team
+ <kernel@pengutronix.de>,  Andi Shyti <andi.shyti@kernel.org>,  Shawn Guo
+ <shawnguo@kernel.org>,  Sascha Hauer <s.hauer@pengutronix.de>,  Fabio
+ Estevam <festevam@gmail.com>,  NXP Linux Team <linux-imx@nxp.com>,
+  linux-kernel@vger.kernel.org,  Jinjie Ruan <ruanjinjie@huawei.com>,
+  Alexander Stein <alexander.stein@ew.tq-group.com>,
+  linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] i2c: imx: move to generic GPIO recovery
+In-Reply-To: <20240126060719.GD381737@pengutronix.de> (Oleksij Rempel's
+	message of "Fri, 26 Jan 2024 07:07:19 +0100")
+References: <01abf8ccc0af74b4fb0124977ed6bdfb9d7107b6.1706190706.git.esben@geanix.com>
+	<20240126060719.GD381737@pengutronix.de>
+Date: Fri, 26 Jan 2024 08:38:08 +0100
+Message-ID: <875xzgh7dr.fsf@geanix.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Authenticated-Sender: esben@geanix.com
+X-Virus-Scanned: Clear (ClamAV 0.103.10/27165/Thu Jan 25 10:51:15 2024)
 
-The ITE IT6505 display bridge can take one I2S input and transmit it
-over the DisplayPort link.
+Oleksij Rempel <o.rempel@pengutronix.de> writes:
 
-Add #sound-dai-cells (= 0) to the binding for it.
+> ....
+>> +	struct i2c_bus_recovery_info *bri = &i2c_imx->rinfo;
+>>  
+>> -	dev_dbg(&pdev->dev, "using scl%s for recovery\n",
+>> -		rinfo->sda_gpiod ? ",sda" : "");
+>> +	bri->pinctrl = devm_pinctrl_get(&pdev->dev);
+>> +	if (IS_ERR(bri->pinctrl))
+>> +		return PTR_ERR(bri->pinctrl);
+>
+> According to the commit message - "pinctrl becomes optional", but this
+> code stops probe if pinctrl will fail for one or another reason. I do
+> not see any place returning NULL on fail. Do I'm missing something?
 
-Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
----
-The driver side changes [1] are still being worked on, but given the
-hardware is very simple, it would be nice if we could land the binding
-first and be able to introduct device trees that have this.
+The caller, i2c_imx_probe(), does only check for -EPROBE_DEFER, and
+simply ignores any other error codes.
 
-[1] https://lore.kernel.org/linux-arm-kernel/20230730180803.22570-4-jiaxin.yu@mediatek.com/
+I assume it is on purpose, so any problems with initializing i2c
+recovery does not cause complete failure of the i2c controller, which
+seems sane to me.
 
- .../devicetree/bindings/display/bridge/ite,it6505.yaml         | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/display/bridge/ite,it6505.yaml b/Documentation/devicetree/bindings/display/bridge/ite,it6505.yaml
-index 348b02f26041..7ec4decc9c21 100644
---- a/Documentation/devicetree/bindings/display/bridge/ite,it6505.yaml
-+++ b/Documentation/devicetree/bindings/display/bridge/ite,it6505.yaml
-@@ -52,6 +52,9 @@ properties:
-     maxItems: 1
-     description: extcon specifier for the Power Delivery
- 
-+  "#sound-dai-cells":
-+    const: 0
-+
-   ports:
-     $ref: /schemas/graph.yaml#/properties/ports
- 
--- 
-2.43.0.429.g432eaa2c6b-goog
-
+/Esben
