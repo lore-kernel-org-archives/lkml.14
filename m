@@ -1,152 +1,145 @@
-Received: from esa12.hc1455-7.c3s2.iphmx.com (esa12.hc1455-7.c3s2.iphmx.com [139.138.37.100])
+Received: from out4-smtp.messagingengine.com (out4-smtp.messagingengine.com [66.111.4.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF57A17BBB
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 06:14:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=139.138.37.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB550C8E0;
+	Fri, 26 Jan 2024 06:16:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.111.4.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706249690; cv=none; b=Qsp5UeQ0TdVsCXMpqbZEeYoPtxzailvHXHDfnUsJ2IJmxdKGf0GsP2EeVwV8SK3Wsjhp/eAGack1oooXl2gW01aFJhRNBAPPxu1Veas+8Tk7nYvall/uAaHCWpRUE52HN5LIGa5OPlgXL2+rPZeqRfo94yReZ7A2HxTtt4mLovA=
+	t=1706249814; cv=none; b=HacFVSYpeV+uCZoDxnucS3zqZb6hCahARQgyf6LzDHOUMEhJgVl6udd64MpK12g3+DLYOQuYTAfcfidKLVVzYuH/kM5+ewNfjUmn4xakFKqsQkJzGVyrUwflcrEk5pLQ2JEJ9V+UZGW1N2SW9DoA3PCmD9/P5TFHRQb2g+ftp0U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706249690; c=relaxed/simple;
-	bh=OdV3/VXkvGAeWdnhK/tcT92mxKx/qVq5LJz/V81cuTo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=LinfXuHlntebpQ4cKMkHVfHeOQqcVCLsHm+mNs9Bd+tsBpZNN8hlrsvD3g7RPn5/skHt9ZlbroKcB5baVIZZZE5loczUtfNXn9dtB7NEMg37S7us7qHqKznXfwdf+ctteCQbLDnm0IpOjlSyi8wiudZQQWJT5GiENNwiL2OnofY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=GSJAzkR5; arc=none smtp.client-ip=139.138.37.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fujitsu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
+	s=arc-20240116; t=1706249814; c=relaxed/simple;
+	bh=UCN1lRs2vRBEnt1CbTI+f6sZAAmHopJNCxiLao/UQMI=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
+	 Subject:Content-Type; b=R5CiVlS5xGP3MxaDQRXYfvweUxuEvTmU/S7pO0CIN/bsU+qDVeCT5kZIU7QwrH9HZGDsEp49wvnQhepzZgV6uA+YUnfUuca7hEzXDHl0+1U8O0RS51cgrhKvZuiT1+0/eTU+yF2Xxkwm8FtR2LecxtCnzfGgc5HhwvjvwgCcwww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=ePfzeFk3; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=IvOGos/q; arc=none smtp.client-ip=66.111.4.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="GSJAzkR5"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
-  t=1706249688; x=1737785688;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=OdV3/VXkvGAeWdnhK/tcT92mxKx/qVq5LJz/V81cuTo=;
-  b=GSJAzkR5tyG4ZJgTnxOuf6oRq51E54ZWizo8GguqiShSCeuyTXxXymSG
-   TILpdMEWbIyFIisip2/Yy3fijXpJT75RgEcJMxL+m1HXnmtFrvP7UGmvf
-   KXlr0kHAE+m0D3NN7EaejnlDnU3rqstbN7MXqHFgRpJZsCB5jEkYS4Wb6
-   lk43DNApuasGLkTFuTZtHXPzuLsclfBf6PXntCezmj5hDFJ2AMb5Nb2ZE
-   b7qCiED/npK5MJUORaf+f2XboqiGLOQcUY4C/ckLPB0TZGepHFAd+/93H
-   ffPV2mRIEj+EMxfDUwXL9FsETh9optZVUq3Swv99t4JG38BaLaw+AgjG2
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="126657158"
-X-IronPort-AV: E=Sophos;i="6.05,216,1701097200"; 
-   d="scan'208";a="126657158"
-Received: from unknown (HELO oym-r4.gw.nic.fujitsu.com) ([210.162.30.92])
-  by esa12.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2024 15:13:36 +0900
-Received: from oym-m3.gw.nic.fujitsu.com (oym-nat-oym-m3.gw.nic.fujitsu.com [192.168.87.60])
-	by oym-r4.gw.nic.fujitsu.com (Postfix) with ESMTP id A27AED9D92
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 15:13:32 +0900 (JST)
-Received: from kws-ab3.gw.nic.fujitsu.com (kws-ab3.gw.nic.fujitsu.com [192.51.206.21])
-	by oym-m3.gw.nic.fujitsu.com (Postfix) with ESMTP id C8839E9E5A
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 15:13:31 +0900 (JST)
-Received: from edo.cn.fujitsu.com (edo.cn.fujitsu.com [10.167.33.5])
-	by kws-ab3.gw.nic.fujitsu.com (Postfix) with ESMTP id 6549A200A7EC8
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 15:13:31 +0900 (JST)
-Received: from localhost.localdomain (unknown [10.167.226.45])
-	by edo.cn.fujitsu.com (Postfix) with ESMTP id C55FB1A006A;
-	Fri, 26 Jan 2024 14:13:29 +0800 (CST)
-From: Li Zhijian <lizhijian@fujitsu.com>
-To: linux-kernel@vger.kernel.org
-Cc: Li Zhijian <lizhijian@fujitsu.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>
-Subject: [PATCH v2 1/4] arch/x86/events/amd: Convert snprintf/sprintf to sysfs_emit
-Date: Fri, 26 Jan 2024 14:13:16 +0800
-Message-Id: <20240126061319.245901-1-lizhijian@fujitsu.com>
-X-Mailer: git-send-email 2.31.1
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="ePfzeFk3";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="IvOGos/q"
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailout.nyi.internal (Postfix) with ESMTP id E8B565C0154;
+	Fri, 26 Jan 2024 01:16:51 -0500 (EST)
+Received: from imap51 ([10.202.2.101])
+  by compute5.internal (MEProxy); Fri, 26 Jan 2024 01:16:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm2; t=1706249811; x=1706336211; bh=8lgdoSvIDi
+	CRr6hQ1g1iPHkPUjc4Fdr/FoYIzZbtZC8=; b=ePfzeFk3bfvNIDY3cdNxgVlKB/
+	Lx7zmBsYKYiBfzuz3dN3XN5LFcp/peY05lJbnFF9f894gJWVcLGYcgDfuwAHXKEd
+	mbCtNBjfdmUVW+tfntX2fc/qdF64CxSqYFtjH+Sk0X4j7N3gfPcp+zC27YHro4ei
+	Wx5U92unsndmymme9SyFYwXjm2Jc8Ogq5tIs8bjasCNJClWgWHe5k9ecLBj4Rjw9
+	6/520Hut0cnxKzcBGRvH2hvYK04phRAEKtH7nnKCVUAs+vMZOzNWvA+Ga/ysKY7P
+	2zl0ivFj2Ebjt+umwRQLDL8wLXL364spUAF+owxMr/1SUDi8pBG3VjNmaYoA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm3; t=1706249811; x=1706336211; bh=8lgdoSvIDiCRr6hQ1g1iPHkPUjc4
+	Fdr/FoYIzZbtZC8=; b=IvOGos/qDPTlf+NWtENxCwSBzGrQvo+skHIemNF8klsC
+	3Gcfe+n0TlgFDdYiWWw4RiHvwJcPwxPs44qA8kmE9GkV9tlzOKEWXAFc6Sw0wQxR
+	IgGq2VDAQl5yhsLbBDuI46BP/nVMH8A0wTrCZhK9sHePXFcZD3rhfNNKlrSOtrFj
+	8x4xN+uTW5aS/9JGdgjeC2k7X5HhAZOlVpwqwAxvqTv/j7FGET6iNxGTXFD/cIXG
+	U4lgG0XOFg/5EhMLaA3FEyiWPN3/8IV49WGHDCkahiPsim4HqQQUEfFxMgvQSp9j
+	9hs/3pt4Lgfk8S2/5sxt0z6fLDg9pzrDCWLWbPbgSA==
+X-ME-Sender: <xms:Uk6zZW2dejTe01OAVCXOuMD8u733oPaxdBo2pmqJmD7jfTqwBpRTZw>
+    <xme:Uk6zZZERF3ClcOxNj8DRq3W7NjYlJCmIYGDCW8G2rlCfzr-Lg9FZ-P6IpopB5oyVS
+    jCI6OXn05sdIQJaKXE>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrvdeliedgledtucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
+    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
+    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
+    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
+    hrnhgusegrrhhnuggsrdguvg
+X-ME-Proxy: <xmx:Uk6zZe4Yp1okF1C4JYucisdIq20LY_P-zMWvYPrfGvBmEMgQvRvdLg>
+    <xmx:Uk6zZX3d1l0OUejuyAQUgKeHpLiwBLMmkktFgGrTYXYj-EVCMBL5kA>
+    <xmx:Uk6zZZFg-tARBEmI6xNqSoBO8RFO-i6UWHPI3h_AqikWyPJfvv7H7A>
+    <xmx:U06zZcZgYj-KYDVFq28393AFgHiuOL2lcJsHDHS4quqhlSpdzJREhg>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id 2AD2CB6008D; Fri, 26 Jan 2024 01:16:50 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-119-ga8b98d1bd8-fm-20240108.001-ga8b98d1b
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-TM-AS-Product-Ver: IMSS-9.1.0.1417-9.0.0.1002-28142.005
-X-TM-AS-User-Approved-Sender: Yes
-X-TMASE-Version: IMSS-9.1.0.1417-9.0.1002-28142.005
-X-TMASE-Result: 10--12.987700-10.000000
-X-TMASE-MatchedRID: st9CF01730Y4ibokZ3+Q0CoiRKlBVkYIBXngI6jFvpfvd49YGReckE1N
-	J2MN+nPkgxCMf8A0YpRzqfit7JyUVv+tuWXZk8lIEVuC0eNRYvLSvRkgO4EJeqyitsTk3SfXhQ6
-	YZNvnIb+UFDd5x8j8T+ZtbVQsdt0oRY1tl9vG/AZO5y1KmK5bJRSLgSFq3TnjoxCLfriDzzj3MM
-	lWBma+yBbjDpwV9/AzvCUtJ1WOqj2R9GF2J2xqMxRFJJyf5BJe3QfwsVk0UbtuRXh7bFKB7nPFQ
-	wHIksyOc5m9VFq5Q0uFqLb56tjR38LpsAIizCmH66XHIc5w+gc=
-X-TMASE-SNAP-Result: 1.821001.0001-0-1-22:0,33:0,34:0-0
+Message-Id: <57b62135-2159-493d-a6bb-47d5be55154a@app.fastmail.com>
+In-Reply-To: <20240126023630.GA1235@fastly.com>
+References: <20240125225704.12781-1-jdamato@fastly.com>
+ <20240125225704.12781-4-jdamato@fastly.com>
+ <2024012551-anyone-demeaning-867b@gregkh> <20240126001128.GC1987@fastly.com>
+ <2024012525-outdoors-district-2660@gregkh> <20240126023630.GA1235@fastly.com>
+Date: Fri, 26 Jan 2024 07:16:29 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Joe Damato" <jdamato@fastly.com>,
+ "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
+Cc: linux-kernel@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
+ "Chuck Lever" <chuck.lever@oracle.com>,
+ "Jeff Layton" <jlayton@kernel.org>, linux-api@vger.kernel.org,
+ "Christian Brauner" <brauner@kernel.org>,
+ "Eric Dumazet" <edumazet@google.com>,
+ "David S . Miller" <davem@davemloft.net>, alexander.duyck@gmail.com,
+ "Sridhar Samudrala" <sridhar.samudrala@intel.com>,
+ "Jakub Kicinski" <kuba@kernel.org>,
+ "Willem de Bruijn" <willemdebruijn.kernel@gmail.com>, weiwan@google.com,
+ "Jonathan Corbet" <corbet@lwn.net>,
+ "Alexander Viro" <viro@zeniv.linux.org.uk>, "Jan Kara" <jack@suse.cz>,
+ "Michael Ellerman" <mpe@ellerman.id.au>,
+ "Nathan Lynch" <nathanl@linux.ibm.com>,
+ "Steve French" <stfrench@microsoft.com>,
+ "Thomas Zimmermann" <tzimmermann@suse.de>,
+ "Jiri Slaby" <jirislaby@kernel.org>,
+ "Julien Panis" <jpanis@baylibre.com>,
+ "Andrew Waterman" <waterman@eecs.berkeley.edu>,
+ "Thomas Huth" <thuth@redhat.com>, "Palmer Dabbelt" <palmer@dabbelt.com>,
+ "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+ "open list:FILESYSTEMS (VFS and infrastructure)"
+ <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH net-next v3 3/3] eventpoll: Add epoll ioctl for epoll_params
+Content-Type: text/plain
 
-Per filesystems/sysfs.rst, show() should only use sysfs_emit()
-or sysfs_emit_at() when formatting the value to be returned to user space.
+On Fri, Jan 26, 2024, at 03:36, Joe Damato wrote:
+> On Thu, Jan 25, 2024 at 04:23:58PM -0800, Greg Kroah-Hartman wrote:
+>> On Thu, Jan 25, 2024 at 04:11:28PM -0800, Joe Damato wrote:
+>> > On Thu, Jan 25, 2024 at 03:21:46PM -0800, Greg Kroah-Hartman wrote:
+>> > > On Thu, Jan 25, 2024 at 10:56:59PM +0000, Joe Damato wrote:
+>> > > > +struct epoll_params {
+>> > > > +	u64 busy_poll_usecs;
+>> > > > +	u16 busy_poll_budget;
+>> > > > +
+>> > > > +	/* for future fields */
+>> > > > +	u8 data[118];
+>> > > > +} EPOLL_PACKED;
+>> > > 
+>
+> Sure, that makes sense to me. I'll remove it in the v4 alongside the other
+> changes you've requested.
+>
+> Thanks for your time and patience reviewing my code. I greatly appreciate
+> your helpful comments and feedback.
 
-coccinelle complains that there are still a couple of functions that use
-snprintf(). Convert them to sysfs_emit().
+Note that you should still pad the structure to its normal
+alignment. On non-x86 targets this would currently mean a
+multiple of 64 bits.
 
-> ./arch/x86/events/amd/core.c:1282:8-16: WARNING: please use sysfs_emit
+I would suggest dropping the EPOLL_PACKED here entirely and
+just using a fully aligned structure on all architectures, like
 
-This patch is generated by
-$ make coccicheck MODE=patch COCCI=scripts/coccinelle/api/device_attr_show.cocci M=arch/x86/events/amd | sed -n '6,$p' | patch -p1
+struct epoll_params {
+      __aligned_u64 busy_poll_usecs;
+      __u16 busy_poll_budget;
+      __u8 __pad[6];
+};
 
-No functional change intended
+The explicit padding can help avoid leaking stack data when
+a structure is copied back from kernel to userspace, so I would
+just always use it in ioctl data structures.
 
-CC: Peter Zijlstra <peterz@infradead.org>
-CC: Ingo Molnar <mingo@redhat.com>
-CC: Arnaldo Carvalho de Melo <acme@kernel.org>
-CC: Mark Rutland <mark.rutland@arm.com>
-CC: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-CC: Jiri Olsa <jolsa@kernel.org>
-CC: Namhyung Kim <namhyung@kernel.org>
-CC: Ian Rogers <irogers@google.com>
-CC: Adrian Hunter <adrian.hunter@intel.com>
-CC: Thomas Gleixner <tglx@linutronix.de>
-CC: Borislav Petkov <bp@alien8.de>
-CC: Dave Hansen <dave.hansen@linux.intel.com>
-CC: x86@kernel.org
-CC: "H. Peter Anvin" <hpa@zytor.com>
-Signed-off-by: Li Zhijian <lizhijian@fujitsu.com>
----
-V2: extract patch from the patch set[1] so that maintainer can accept it separately.
-[1] https://lore.kernel.org/lkml/20240116041129.3937800-1-lizhijian@fujitsu.com/
----
- arch/x86/events/amd/core.c  | 2 +-
- arch/x86/events/amd/iommu.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
-index 81f6d8275b6b..0d520592010c 100644
---- a/arch/x86/events/amd/core.c
-+++ b/arch/x86/events/amd/core.c
-@@ -1279,7 +1279,7 @@ static ssize_t branches_show(struct device *cdev,
- 			      struct device_attribute *attr,
- 			      char *buf)
- {
--	return snprintf(buf, PAGE_SIZE, "%d\n", x86_pmu.lbr_nr);
-+	return sysfs_emit(buf, "%d\n", x86_pmu.lbr_nr);
- }
- 
- static DEVICE_ATTR_RO(branches);
-diff --git a/arch/x86/events/amd/iommu.c b/arch/x86/events/amd/iommu.c
-index b15f7b950d2e..1126bda96d8f 100644
---- a/arch/x86/events/amd/iommu.c
-+++ b/arch/x86/events/amd/iommu.c
-@@ -89,7 +89,7 @@ static ssize_t _iommu_event_show(struct device *dev,
- {
- 	struct amd_iommu_event_desc *event =
- 		container_of(attr, struct amd_iommu_event_desc, attr);
--	return sprintf(buf, "%s\n", event->event);
-+	return sysfs_emit(buf, "%s\n", event->event);
- }
- 
- #define AMD_IOMMU_EVENT_DESC(_name, _event)			\
--- 
-2.29.2
-
+      Arnd
