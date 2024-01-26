@@ -1,79 +1,106 @@
-Received: from out162-62-58-216.mail.qq.com (out162-62-58-216.mail.qq.com [162.62.58.216])
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FCA9385
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 00:51:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.58.216
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E562F4683
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 00:53:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.88
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706230320; cv=none; b=jYrUFJ7kZW/zl4nqYUoJSeNvgyc7MCij/iaAJkF/3R/cTgPW2Qv9l3rAj8KQ2LuM59PUzkcvcKhZNb6gUdeRpsxhEmPuwN5NbOF0oXxCkvZQdJ61zVmyRGwax+wmVGgY5uyR13iEo9ikhTYA3LCe8Q1wimv3RsoAi11mGRbjFC8=
+	t=1706230409; cv=none; b=WiUgOel2Cg65wdxu4lzH7hLJPO4LXWPb7e501x1+CjihKqvTBKWydmsGR/K2dp4l1eu3Q5uA6TY1pR10rA0aPc2ieloN4EmquToTyuEd98E2WTcqvdnrKe1PtdjjKtd/ZFxo3xhUyUCL+XcvXDOQofMqoj8rvfk6fVjsmx7reW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706230320; c=relaxed/simple;
-	bh=vEh+gFEmMdUX9UP227WSXtBed/m/QQhh+3wwORgi3E4=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=b9nHaH2J6FhMgfhBKBLNqQkjsNypL2nvUK0a3LH7XCOMYkv/C7Yaa8tDpTtosceFzj0XcnyktqvPeXuVQhaZfvA/P3j0eryFRz5Kdd3BM9ozUoST7QXw1fwGoSPigsQZ4vFHVSksokP9IvZ1NaKmbIl6pnN4OjRNYi1obS/NrII=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=uSquuGR3; arc=none smtp.client-ip=162.62.58.216
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1706230409; c=relaxed/simple;
+	bh=4Q2OyuqhqVfd1/vLfYpv2M3lR42Vhr16p82c5QuxgDY=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=cz+9tYSMuDQVf20AsucjizSvRU5OdcVZx0SKs5unbSJRN39FGQY5UsT6/roU5H2VZMrDh2DLIajIOSxDG9zlcSSyUn2wHmdkqAQnz6+YI5N8Hh2AYxug+ydZhVpXJX+jH6qIzvEnLSa8LCE6rotZkhjg06iB+l62++ZGEuBztO8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dipvlT0t; arc=none smtp.client-ip=192.55.52.88
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="uSquuGR3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1706230305; bh=dsSSj5gkDCcVs1xlBOaqKLlk0NdIYeNu5G6pUUGGwVw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=uSquuGR39yuf1CRJ/l1ttZS+zTy382Gt0v0auI43NAX3pRx6Pzo/vxEPQ3GpzatyO
-	 MccRdKXeuRKZp67KEPQn8nCUKXwQnTZPlZQCbH3sVKRj4F8bXENsg7ri3utoQxxTe9
-	 xPnjAjtJGNeY6SWmHmpxR8ynQvw8Tp04SDmq1KZk=
-Received: from pek-lxu-l1.wrs.com ([111.198.225.215])
-	by newxmesmtplogicsvrszc5-1.qq.com (NewEsmtp) with SMTP
-	id ADB0DEDA; Fri, 26 Jan 2024 08:43:27 +0800
-X-QQ-mid: xmsmtpt1706229807txww7xain
-Message-ID: <tencent_295DB5DDAC196ACFF38DA625A98DFB926107@qq.com>
-X-QQ-XMAILINFO: ND42uzdxTIzrNrxs9vjXBhIyoqXYvQFCPmU6Z9Ngf8CiawKF2K5hjUTuimmmaz
-	 u90k68yOFRHoli3im0dQd2SjHgwKs0XljGeeOtHTeuLUsR7ckcMM1tE1vSxRBrvgG3RTWcBBRheu
-	 2QBZLCGufTKKOr9ga72th4dz82hYrbvwoPKve93zIYvEERUe0ktbzJ9an1Tk91SJemlK59WzF5yU
-	 rD9pPOlmPU6S75BNtVHkVv++9pcrIbXq2YKGoUKvyroslUFeOh1y6Ri3HvtZ/RuF89S3z6sXk60T
-	 E6kOlL4MB8uHfj7JHsmxIo7lNnxDQ4jeiclxmkpxAXinUWzKn68WYdeRC3B4akMK07rVCA98pPVK
-	 AVK6ymDXQ9AJk1Hmnv/oiBvC4ik9E+QYdtn1Db+/hkTvJYGAGp6UiUK39qIqkcJbXm1RkQNxT/LS
-	 GIsxnqTp+NlZYYl14b/43kT+kZGBlv405MIclkhwPM+h9CcvefKWELxniSmwFy2WLGvnuopsg7X2
-	 FgwDHQqPyQOmXb8Zmt5rvA7UQwKJ2R6eD/5Q5bg/Pq6E6pBEnfUB++BX1WbYTf7ZzSxLV4Pznjyh
-	 Eb8vliXjvK/Q3CWEFE/nxzYhKxgMkVP/ZBoaN32FXB7ofmiQhPGfYj67ktQ7avcA7qC/nodSP3Jn
-	 VDJHVqLQKkgTjujjrnRdYAdHwlg9JNSsINZ9PpdRrgxGBmzuw4FegXdKkJMgtwyLXaqO3sfh6JOY
-	 yx/HCuSu6mrj/ARfH6HYRqxWuRKL2aia2xGWPWM3AcUE3zwCgi8fvOt+YXl8bZI4/mQAs4/tpdOX
-	 TLq3Yk6iawbCpK7gY7fXTU63daWhLLYMvIYuCt11jUYOv82Jqu9rb3bpLLi1FRxK+ibbpBQQQhTo
-	 JEj7/CK9esXuBrvytNkdWorSBMt3ZGs1JJzTbDWs9AqvVbeM8eWi7oLb7drxPIQRtvSgn9uwYq
-X-QQ-XMRINFO: Nq+8W0+stu50PRdwbJxPCL0=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+d7521c1e3841ed075a42@syzkaller.appspotmail.com
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [virtualization?] KMSAN: uninit-value in virtqueue_add (4)
-Date: Fri, 26 Jan 2024 08:43:28 +0800
-X-OQ-MSGID: <20240126004327.2777797-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <000000000000fd588e060de27ef4@google.com>
-References: <000000000000fd588e060de27ef4@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dipvlT0t"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706230407; x=1737766407;
+  h=date:from:to:cc:subject:message-id;
+  bh=4Q2OyuqhqVfd1/vLfYpv2M3lR42Vhr16p82c5QuxgDY=;
+  b=dipvlT0t1HACn5947EhvkekQFdz9txoZ7MCDSmLbPCm4qAS80Z44WDpm
+   YMf/lP7CPGu9JIeUIWoSY2VNqrAvmW7LqAtT/VOENf1hujrxLqkeXKyC3
+   A8M8PmbrSXYOcn6ftrlN1IzihRcpzjoZLWVrPlm4JB/W6WMENUN51L71c
+   VetQznPvTagvwwHKFFpgKNmX+nik6oOkXxiLEeV8Jhhqyqd3a6P8KEKhL
+   h4tUSK/5lqlcd190Ixc743cUU/NlncKdxGPf/IW2ukwzoD45snAMq0RHi
+   aE40deh04JG2vtteAHfQuptftZ/U8md9/Od8hQOvHCwMGDkHOIfpxzYxj
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="433505229"
+X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
+   d="scan'208";a="433505229"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2024 16:53:27 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
+   d="scan'208";a="2525077"
+Received: from lkp-server01.sh.intel.com (HELO 370188f8dc87) ([10.239.97.150])
+  by fmviesa003.fm.intel.com with ESMTP; 25 Jan 2024 16:53:26 -0800
+Received: from kbuild by 370188f8dc87 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rTATE-0000Xa-0W;
+	Fri, 26 Jan 2024 00:53:24 +0000
+Date: Fri, 26 Jan 2024 08:53:04 +0800
+From: kernel test robot <lkp@intel.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:x86/entry] BUILD SUCCESS
+ bb998361999e79bc87dae1ebe0f5bf317f632585
+Message-ID: <202401260802.Pvmrh0xe-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-please test uninit-value in virtqueue_add (4)
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/entry
+branch HEAD: bb998361999e79bc87dae1ebe0f5bf317f632585  x86/entry: Avoid redundant CR3 write on paranoid returns
 
-#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+elapsed time: 1799m
 
-diff --git a/drivers/scsi/virtio_scsi.c b/drivers/scsi/virtio_scsi.c
-index 9d1bdcdc1331..4ca6627a7459 100644
---- a/drivers/scsi/virtio_scsi.c
-+++ b/drivers/scsi/virtio_scsi.c
-@@ -427,7 +427,7 @@ static int __virtscsi_add_cmd(struct virtqueue *vq,
- 			    size_t req_size, size_t resp_size)
- {
- 	struct scsi_cmnd *sc = cmd->sc;
--	struct scatterlist *sgs[6], req, resp;
-+	struct scatterlist *sgs[6], req = {}, resp = {};
- 	struct sg_table *out, *in;
- 	unsigned out_num = 0, in_num = 0;
- 
+configs tested: 33
+configs skipped: 132
 
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+tested configs:
+i386                             allmodconfig   clang
+i386                              allnoconfig   clang
+i386                             allyesconfig   clang
+i386         buildonly-randconfig-001-20240125   gcc  
+i386         buildonly-randconfig-002-20240125   gcc  
+i386         buildonly-randconfig-003-20240125   gcc  
+i386         buildonly-randconfig-004-20240125   gcc  
+i386         buildonly-randconfig-005-20240125   gcc  
+i386         buildonly-randconfig-006-20240125   gcc  
+i386                                defconfig   gcc  
+i386                  randconfig-001-20240125   gcc  
+i386                  randconfig-002-20240125   gcc  
+i386                  randconfig-003-20240125   gcc  
+i386                  randconfig-004-20240125   gcc  
+i386                  randconfig-005-20240125   gcc  
+i386                  randconfig-006-20240125   gcc  
+i386                  randconfig-011-20240125   clang
+i386                  randconfig-012-20240125   clang
+i386                  randconfig-013-20240125   clang
+i386                  randconfig-014-20240125   clang
+i386                  randconfig-015-20240125   clang
+i386                  randconfig-016-20240125   clang
+x86_64                            allnoconfig   gcc  
+x86_64                           allyesconfig   clang
+x86_64       buildonly-randconfig-001-20240126   clang
+x86_64       buildonly-randconfig-002-20240126   clang
+x86_64       buildonly-randconfig-003-20240126   clang
+x86_64       buildonly-randconfig-004-20240126   clang
+x86_64       buildonly-randconfig-005-20240126   clang
+x86_64       buildonly-randconfig-006-20240126   clang
+x86_64                              defconfig   gcc  
+x86_64                randconfig-001-20240126   gcc  
+x86_64                          rhel-8.3-rust   clang
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
