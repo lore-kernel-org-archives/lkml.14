@@ -1,67 +1,68 @@
-Received: from mail5.25mail.st (mail5.25mail.st [74.50.62.9])
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C1C3129A70;
-	Fri, 26 Jan 2024 08:39:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.50.62.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DA991BC4C;
+	Fri, 26 Jan 2024 08:40:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706258382; cv=none; b=Ol+Ucr/nohYTx5fqYwfJNdGN2RzOyW5eVdHYrBAemVP4E9OvLwFsZCAsXV6cfUcJraoK76JsXH9GUUZkghiCKEy2vHWGIBqycIz8MnNQ8aESbHfOs1/oY5AmxBd3EfUG3VUNGVuVbLHU9S5RONF9D/xfvgT/XfUqmvFDLYPK5C0=
+	t=1706258445; cv=none; b=uLBmEZ0NiAdr6zQ8s6I4B9Attx+0TKWcdz36xMt91FUVljvru5YhqNqIz/T3evwH1romXphpjemDdUuPNjUuRAk6gzTDlRgz1RUgR7xEvhvxHCzOME1hgc0WveJ/34j12Jdju5z7tWP75nvveL7Y/jM3LcW4fQXNf8xK4WOrMeA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706258382; c=relaxed/simple;
-	bh=4119ntIEbSWPwOmkZIPbXTBkQezHNjkv+CbBk/2069g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ilr7CjVoljIyE+aE8mLljMctx+KPUPqbgyD/tuWsDnqjUbJjU0Hs9ck4kCtK+FuD4wsG2fSKWGNSzk11+odoytvAJ7grfaDxMkLgZanEAG1ZQPzbIw8x+ddYf7dIEXXIyxG7AdK0eNHlJUs7rQVLomQC6RTt3CdTbBJj1Xp/MyI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomide.com; spf=fail smtp.mailfrom=atomide.com; dkim=pass (2048-bit key) header.d=atomide.com header.i=@atomide.com header.b=s01lj1Lg; arc=none smtp.client-ip=74.50.62.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomide.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=atomide.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=atomide.com header.i=@atomide.com header.b="s01lj1Lg"
-Received: from localhost (91-158-86-216.elisa-laajakaista.fi [91.158.86.216])
-	by mail5.25mail.st (Postfix) with ESMTPSA id 007656042F;
-	Fri, 26 Jan 2024 08:39:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=atomide.com;
-	s=25mailst; t=1706258378;
-	bh=4119ntIEbSWPwOmkZIPbXTBkQezHNjkv+CbBk/2069g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=s01lj1Lgbc+Rf0pc+azpeZ2T/04v6llGGWwxVy5IoS6wwHxkd6qTq/3tOISOWy8+q
-	 yPFdW7ZwOiVe5oMQOOvDXO65gsBuTvPzOLbOEtj5RybonI/tDkZj3RDM6D9cNSlXRb
-	 xQi5QI2E/s6A+r1AiN0thDVYMZSH703ah3vW4N+C9EbRFnQmyUOc4TWY896Tfi0Nwn
-	 ftGvCjOrQLHoEoeJj/Kb+TuECnq563bZaYkojUBuIuPk1A9e2WC16lJvflAitaLcDr
-	 Kj/4iMNQcq5NfP8KIuutIg/colSfHmcE6t+Vx4eikCsmvyc1P30nhomS5/vf/1hbeg
-	 X4MLfTK1xw6og==
-Date: Fri, 26 Jan 2024 10:39:17 +0200
-From: Tony Lindgren <tony@atomide.com>
-To: Randy Dunlap <rdunlap@infradead.org>
-Cc: linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-	Russell King <linux@armlinux.org.uk>,
-	linux-arm-kernel@lists.infradead.org, patches@armlinux.org.uk,
-	Paul Walmsley <paul@pwsan.com>,
-	=?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
-	Kevin Hilman <khilman@kernel.org>
-Subject: Re: [PATCH 00/13] ARM: OMAP2+: fix a bunch of kernel-doc warnings
-Message-ID: <20240126083917.GV5185@atomide.com>
-References: <20240117011004.22669-1-rdunlap@infradead.org>
- <20240117131305.GP5185@atomide.com>
- <e6692a04-142c-4df4-83dc-534ab27a55f6@infradead.org>
- <20240118085717.GR5185@atomide.com>
+	s=arc-20240116; t=1706258445; c=relaxed/simple;
+	bh=kb9C7u8yTsWsUe5kmCLWQKW96P4fUbGNHwszHARhCe0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Xo0vcsQ8UjQuQOw8V1iMKUtBiw2uDYdw3VyzkIQCzLFRfnoCzegWmaIWtw2twoi6vaU9YmlOd8wvWDIZeLZhF6BCqATQkAP/d/8isE/voUtfPS85HQAI2YGT41bm2emDwSYfPd2EuQgJBvR8UngDkRW7O4/tni4Iza8KxuIqZeM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.162.254])
+	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4TLrjD6VGwzNlYX;
+	Fri, 26 Jan 2024 16:39:44 +0800 (CST)
+Received: from dggpeml500001.china.huawei.com (unknown [7.185.36.227])
+	by mail.maildlp.com (Postfix) with ESMTPS id CCC5818001C;
+	Fri, 26 Jan 2024 16:40:39 +0800 (CST)
+Received: from [10.67.121.42] (10.67.121.42) by dggpeml500001.china.huawei.com
+ (7.185.36.227) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Fri, 26 Jan
+ 2024 16:40:39 +0800
+Message-ID: <273d30b3-edba-4f4c-8138-fe83dbfd83aa@huawei.com>
+Date: Fri, 26 Jan 2024 16:40:39 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240118085717.GR5185@atomide.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/4] crypto: hisilicon/sec2 - fix some cleanup issues
+To: Herbert Xu <herbert@gondor.apana.org.au>
+CC: <davem@davemloft.net>, <liulongfang@huawei.com>,
+	<linux-kernel@vger.kernel.org>, <linux-crypto@vger.kernel.org>
+References: <20231229064421.16981-1-taoqi10@huawei.com>
+ <20231229064421.16981-4-taoqi10@huawei.com>
+ <ZbIry8M6yFUAr5oL@gondor.apana.org.au>
+From: taoqi <taoqi10@huawei.com>
+In-Reply-To: <ZbIry8M6yFUAr5oL@gondor.apana.org.au>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ dggpeml500001.china.huawei.com (7.185.36.227)
 
-* Tony Lindgren <tony@atomide.com> [240118 08:57]:
-> * Randy Dunlap <rdunlap@infradead.org> [240117 16:52]:
-> > Yes, please go ahead and apply them.
+On 2024/1/25 17:37, Herbert Xu wrote:
+> On Fri, Dec 29, 2023 at 02:44:20PM +0800, Qi Tao wrote:
+>>
+>> @@ -1371,7 +1371,7 @@ static int sec_skcipher_bd_fill_v3(struct sec_ctx *ctx, struct sec_req *req)
+>>   	sec_sqe3->bd_param = cpu_to_le32(bd_param);
+>>   
+>>   	sec_sqe3->c_len_ivin |= cpu_to_le32(c_req->c_len);
+>> -	sec_sqe3->tag = cpu_to_le64(req);
+>> +	sec_sqe3->tag = cpu_to_le64((unsigned long)(uintptr_t)req);
 > 
-> OK will do after -rc1.
+> Please explain why you're casting twice.
+> 
+> Thanks,
 
-Applied now into omap-for-v6.9/soc branch thanks [0].
+I'm sorry. I made a mistake here. unsigned long and uintptr_t are the 
+same data type in linux kernel. The type cast is invalidly repeated 
+here. Can I just keep (unsigned long) one cast?
 
-Tony
 
-[0] https://git.kernel.org/pub/scm/linux/kernel/git/tmlind/linux-omap.git/log/?h=omap-for-v6.9/soc
