@@ -1,125 +1,190 @@
-Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11olkn2010.outbound.protection.outlook.com [40.92.20.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2BC81AACD;
-	Fri, 26 Jan 2024 11:30:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.152.168
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706268641; cv=none; b=jGHdAjKNi3ASs+NxNFmKz8tiLANIqecCE7iUxE59KC2K1sZzRJv8s5QYIZPeqto3HQVZKlptniqDwAemG9HayNDnRnXMJFwUTw9INmH5/I8XBLMBOlMhxc/Gqz6+Fq5l5ocrGjoeqBKsrghit2gTUBz3GZq5n/q9eV/SMas4ScY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706268641; c=relaxed/simple;
-	bh=4zbQUjsj3dgdWCURhXT0L/NIrT+3lvP4U5SKuqfZawE=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YUrcCcqzH444AvHZQSKdKrVV22GXWYa8eDt3LDpNdhmqkNMPOabT4XQqdPSJTjvhlxUSmNO5pgomjJj4xhjXS9ahb6qt0rXHehlyUjnehGzOSoKLbbbLCZAJUZ+HO5qWk8Ju3dVsjfWBjjWUhUdw0l8179GgqfmpTxnvgZr5y7w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=F0n9LrC6; arc=none smtp.client-ip=67.231.152.168
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D3D214280
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 11:32:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.20.10
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706268779; cv=fail; b=CeLWYuydiKUPFTrFI2j/wJZKVaCmzZOtGEnZivaQ36/qZdOKiMQEQ0+xJKDo/i0uUq6i8NonFtaGBVTBsPQpAZrew8Bnz1+efKr62UKDLJvYyxHM9w4LIahvNanIUCA9Rk86Mr4cYq2LZ0QRuF4GvtPfBglm8QwZWTGvnPenCtY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706268779; c=relaxed/simple;
+	bh=/yQsYmhpzglEGrVtdzUlw98YZZrGRlEaZctJbbtSmmM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=H+9UilswslVOZ1E03Yau4e9/ybHKEDx7rJskYY+1IwXL2R3IXU60j7mazklp8E/PKc7eTP6UI4xawRrhHxa3L5Dmnm7C7q3Xyj9OOGreHUiLIk8YOxRm07EzwiZicOf4qUkfs9rozXVJzmGNFMI1xYFPftwCe36fh27gRo81o1o=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=ZFovAG6d; arc=fail smtp.client-ip=40.92.20.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="F0n9LrC6"
-Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
-	by mx0b-001ae601.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40QAq09r023770;
-	Fri, 26 Jan 2024 05:30:20 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding:content-type; s=
-	PODMain02222019; bh=HrfhbL45vt5QCqOJGS84ZDQ1gvDhC+TWwuE32OZjF54=; b=
-	F0n9LrC6RyFzVtmnuZ/G3aM0DvQHqHvxbx9XCiV0ytzgDba7WsDzfSu82gZ4M09+
-	PCuWPmMPpE6Pyb822tnGEGenPeBAiEopmvuHjaq6EAcZI15qg2x+M2hYSgQOJ3iV
-	85JIDmP9/PXdO7vaaTKlyXXYS9gxB3PiFrovNxw8UTlZC2DTwT41lVRO4xi0XdX7
-	5kozm3iC+w/U9QYBX5hZ8H/IVsVgWuo7ZJepfVGI9rHNa0rD34TPpavy1RfkysiZ
-	Awy5pycT+C3V+h1nZwq47d9HuY67pXT22/frXlWpfn6X2OrE2C9EXyJb+IJiV4X4
-	1RTxLk+zphMlSkSfXR21Ag==
-Received: from ediex01.ad.cirrus.com ([84.19.233.68])
-	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 3vtmf9unnn-2
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 26 Jan 2024 05:30:19 -0600 (CST)
-Received: from ediex02.ad.cirrus.com (198.61.84.81) by ediex01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Fri, 26 Jan
- 2024 11:30:17 +0000
-Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
- anon-ediex02.ad.cirrus.com (198.61.84.81) with Microsoft SMTP Server id
- 15.2.1118.40 via Frontend Transport; Fri, 26 Jan 2024 11:30:17 +0000
-Received: from sbinding-cirrus-dsktp2.ad.cirrus.com (LONNG2L6RQ3.ad.cirrus.com [198.90.238.116])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id 3AF1A820247;
-	Fri, 26 Jan 2024 11:30:17 +0000 (UTC)
-From: Stefan Binding <sbinding@opensource.cirrus.com>
-To: Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
-CC: <alsa-devel@alsa-project.org>, <linux-sound@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <patches@opensource.cirrus.com>,
-        "Stefan
- Binding" <sbinding@opensource.cirrus.com>
-Subject: [PATCH v1 1/4] ALSA: hda: cs35l41: Set Channel Index correctly when system is missing _DSD
-Date: Fri, 26 Jan 2024 11:30:04 +0000
-Message-ID: <20240126113007.4084-2-sbinding@opensource.cirrus.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240126113007.4084-1-sbinding@opensource.cirrus.com>
-References: <20240126113007.4084-1-sbinding@opensource.cirrus.com>
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="ZFovAG6d"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=UF4uggHvSVuwTlDMgoNT9gMnMkjOzMgaZnD8xh0oL/ZS5ynFqFHHZw1Efs7l+Bct8yxzSigfjrl8rTy7tLh6BAEkkKX2dmfQZdCTwoklNLsJeSeDT/FJuiU1msLiSpXi7hUS8IXEguvd0uf6CxiSca31HcIthyPlS89sH2DO0m+rCzDTobR/iRQwEiBQ4ITFqHdFpzb5741/sacCKBid0+wMbq8mg4x6HDAwsPz8ggPNeOHKZaU3siMg3hJ/hFmpBxH3RxOhvzuFNSEBOc6Ulv5Lru0u+B8EbhwBz1H8TXv0ETDU7RspxzipDv+Jbs2eC2rgySFf8sTJAgMPVZaaIg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=iRPCH1TxfsnOzhetMeOTcGu/rbVLdrtb3UU3sZY4aIE=;
+ b=YUOUHq2AZQWmatAsKH6exKvlbzZSM9NCUfy2BDgwFlzFFthCyDthCPOWzoriY2SjCa/Gfxjf/jmIY/S+PMhpl1sT6EpjifqGpxUtaNMXTRWEEt8uN4TYCax/9i+AOhRVmn2BsFZ+9uW92R8orCkchYon9aWk2vAH+gFBObkrFN0hzGAgebdCSaZwsaSkb2LF637r7O4gcSVoIiMLU1O8Buei65Ed/I/xeLne9c8isT3Sisw8eUpDHwbD4tIrls2N9Kg0f9gmQiV/TJP6ly2dc1EkmMlWgoe8a1rVopTt2rPkSPDx9qFqOZZ9TIcrCzOJdJCBmkvDQa/GuHOWmH+YaA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=iRPCH1TxfsnOzhetMeOTcGu/rbVLdrtb3UU3sZY4aIE=;
+ b=ZFovAG6dlcMdM9OO19ZGUPk5msFSCuz4EodPkJZBF1vexLYMHz5j8VtA244zWC4LtCdsjXfEFCOGqZvmfeKa0y1jaZwlb1QZCMQx5rHNB791+GZsCz9NfSzmOIyOWKp+uYzzi31oLGud+GZx/HYYw1KwTNIoe0zDcp2VVhL61S9ypU/WGaNwBMxSa1jXVroRBDK7Sxa1OY7++uwhejWYpGLHuAGtL69tMHImLmYQ83jxhFcDUGrNh94IRMPIUy/hnM7IUQ+g8sxlQ0RmxDUduqEUxHwF2z8IZnOH81rTfNnspmfTfkoyTOx0N1b/fuBpiy+DbUCCca59eooiCrUHoQ==
+Received: from IA1PR20MB4953.namprd20.prod.outlook.com (2603:10b6:208:3af::19)
+ by PH7PR20MB5120.namprd20.prod.outlook.com (2603:10b6:510:1b3::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.22; Fri, 26 Jan
+ 2024 11:32:54 +0000
+Received: from IA1PR20MB4953.namprd20.prod.outlook.com
+ ([fe80::406a:664b:b8bc:1e6b]) by IA1PR20MB4953.namprd20.prod.outlook.com
+ ([fe80::406a:664b:b8bc:1e6b%2]) with mapi id 15.20.7228.027; Fri, 26 Jan 2024
+ 11:32:54 +0000
+From: Inochi Amaoto <inochiama@outlook.com>
+To: Inochi Amaoto <inochiama@outlook.com>
+Cc: Conor Dooley <conor.dooley@microchip.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Conor Dooley <conor@kernel.org>,
+	Chen Wang <unicorn_wang@outlook.com>,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org
+Subject: Re: [PATCH] MAINTAINERS: Setup proper info for SOPHGO vendor support
+Date: Fri, 26 Jan 2024 19:32:40 +0800
+Message-ID:
+ <IA1PR20MB4953B353554E71776D4E89DDBB792@IA1PR20MB4953.namprd20.prod.outlook.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240126-squabble-vitally-7dea14d09e18@wendy>
+References: <20240126-squabble-vitally-7dea14d09e18@wendy>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-TMN: [LmgO9Vr2/YESrHs8W2YTKyxUvD4xCpkA3C+371ybbdop2NQC04TPW5zP7TuLY7Sk]
+X-ClientProxiedBy: TYBP286CA0027.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:404:10a::15) To IA1PR20MB4953.namprd20.prod.outlook.com
+ (2603:10b6:208:3af::19)
+X-Microsoft-Original-Message-ID:
+ <20240126113241.924381-1-inochiama@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-GUID: KQncx-_J0paeHTWbhTIVOQhdMtQeq16K
-X-Proofpoint-ORIG-GUID: KQncx-_J0paeHTWbhTIVOQhdMtQeq16K
-X-Proofpoint-Spam-Reason: safe
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: IA1PR20MB4953:EE_|PH7PR20MB5120:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5c130155-1e86-43db-bb5d-08dc1e628988
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	NuBg7WabM65vMibBGTyKHOnUjCEvthxI0uCYxpQ7VLxVuEKJqOqbfq1iTpa6ypTWt6UbXGSLdZRRr4TaeMSY79RiKZKaNONR7KP6PMjdEMFbpKsXwUTklP/je+KRogumR+fuH8WKeGRyi/i4oZ83JzMGtqqrBvQJ0U9YWdH/TteJWkZ2QzjLgEzWWUs/Z1Bv5eyO1kn2XJZjDq8dJICrBL8PpG5y0pxNKBgi/BA/wfaEg/u/42GkFbr+JajJ2Ssdu7vbbzqsXsukV8uQJ0UE+Smkyc5o3WCDMPr80xXmusiAM0DVC2OsVGhHJDVmmiRjW3PHWgjGyuTxI7MszKAtbypCXZryvI7vwluzEADA70PKyIp28otss4kwPVkUwh1/LdTF59D/6ciPVz3CgW0ivpl9zWT4oea04eyjtDOMRr8hgpGnJy+g8Gc8Cpzk2Q4f0CUHJkcKNqpbj3ROTquYqCS6oSN73aIcrUOKopKIO9aiM2S7VBKonn6yMd7hKilHUtxJphJHJFqG1ztNLtixeRxcGWLPjDCQwN4a14pJXYr+Hhr/kh4YVz9NgVYo+tqrtkzS92Ytpehigl4qVjXZ2FVsvAyZcgJ2wARatZEbCeQ1eKeHCrQY+tFHOQ3kz/u+
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?oLBp6Pq+i1LYEPxNK36nZz6byddIOv3zC0Bdy0LjItHj1VdZCmn2WrnJ+H0n?=
+ =?us-ascii?Q?h/1rqUPZcGzkoCfrz62mSThIeCxoQa4+bPHrozBZpYEC/pqaS5J6lNvN0Tt2?=
+ =?us-ascii?Q?WQkpEEfERWWAGuvHZejdfggWTlMaY24jy2aTTnQXNRl/htUFJbDRI9fxDuzP?=
+ =?us-ascii?Q?dVBQUzYe46geYWmhM5Wi1CkD+qcpLpNhcPbAY4JToKkSPoPsMWpemq7Iokzf?=
+ =?us-ascii?Q?99lUCjnnqbUKmxjdo8a38lOccS4Pe2hH1ZbLy1ANQug2oGLhFhJhwYpWwbUP?=
+ =?us-ascii?Q?FRmft15ORt2o5fkRHG70Tbc2gQ7WFDQZHdK1zAX3olwgmIPgbx7gl1k5EZ+u?=
+ =?us-ascii?Q?wtLWZA/cgwhNeMhwGLSosg1I1qiRwnwqgIqdUn+31nXS1DSyIU/8pY4b4hBI?=
+ =?us-ascii?Q?RfgNtc/A4rwTn0ovIdSq7T2/H+c6zF7Gjt831ql0AZWUROwMYIzzP85yD1PJ?=
+ =?us-ascii?Q?hhSExN4aZ3U8RaUgC0kcWPITi+Aq2F8b7F48//p/QQHF8p24Is1gXQqmi/a7?=
+ =?us-ascii?Q?lPEgPwwUZy4nskW8Hy/p6Wd29UnFeteRuRYEoUAMurvJHYYrly90lSedcYpB?=
+ =?us-ascii?Q?3V44Y342V6aT3y7E2pl63jpaKI+A7iKUDv0t2pJGvQWSskeXlpX9dVFYwute?=
+ =?us-ascii?Q?WWjK9FtLR9Ax9vdgjHOyHHMFjswQ20Nv6RCtxt9XmtHaM0UKRcbSYJogN094?=
+ =?us-ascii?Q?cCAwhF1OlCeD/cPcslUrxqB2HmaPOOOwC50PYecojFhbkWFOMZQeVLgLiZzC?=
+ =?us-ascii?Q?vh4CADrc9dMhAIQo6T319QdVRLhZOjCeexR2KtQYQTdh9pwUOKUG3nZ2gQKw?=
+ =?us-ascii?Q?Y0KGjllRGvfaZGE7zVkspxGzW5I+VUmhtUv9BlaPCfpyt0TP8tcYNsajqUdT?=
+ =?us-ascii?Q?baSma8cxGC0OLAPuApnsscpiQaV9Bkd47eOTVCHKr/G+JwZIdrR324BIohJ4?=
+ =?us-ascii?Q?gDXLFQDSuOAYmVjVr4tvoeZs1iEfcgGIGnPzYKtYArR5ngIBvRwfEhWP4+aD?=
+ =?us-ascii?Q?MqTzBlEs9QVPwG8j/PmSSgGBL9Bl6Y0tieqwrWOBOmtnEPZL81bxD84+9jpA?=
+ =?us-ascii?Q?Aqet9bSfNUHwUw790XZMNjbV3pQxHTRpH86Ugzm0PwxV9Q4mkmwEyEsgL0Ds?=
+ =?us-ascii?Q?ZLBHhTkxO2yAgvIca3duZeTPtwF+emyhWe4cdedpod5lVyhi8IKbaGJwLKmx?=
+ =?us-ascii?Q?6ofSuuV8WV/dRBAVcY6UoZVNh0BK8ctdTaK5n6U3s5o5/22Rl9UOIkcvv4e1?=
+ =?us-ascii?Q?FQsDS7CuSl5ynJNEQ9kPJZvz6e0wXbs0cBttTUwJiw=3D=3D?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5c130155-1e86-43db-bb5d-08dc1e628988
+X-MS-Exchange-CrossTenant-AuthSource: IA1PR20MB4953.namprd20.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jan 2024 11:32:54.5004
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR20MB5120
 
-Current method to set Channel Index when the system is missing _DSD
-assumes that the channels alternate, which is not guaranteed.
-Instead use the same methodology as the main driver does when _DSD
-exists.
+From: Conor Dooley <conor.dooley@microchip.com>
 
-Fixes: 8c4c216db8fb ("ALSA: hda: cs35l41: Add config table to support many laptops without _DSD")
+>On Fri, Jan 26, 2024 at 02:04:50PM +0800, Inochi Amaoto wrote:
+>> Add git tree that maintaines sophgo vendor code.
+>> Also replace Chao Wei with myself, since he does not have enough time.
+>
+>Ideally Chao Wei can spare some time to ack the patch though?
+>
 
-Signed-off-by: Stefan Binding <sbinding@opensource.cirrus.com>
----
- sound/pci/hda/cs35l41_hda_property.c | 16 ++++++----------
- 1 file changed, 6 insertions(+), 10 deletions(-)
+I have asked them about acking. But sadly, he seems to have no time.
+And he agreed to remove himself from the maintainer file.
 
-diff --git a/sound/pci/hda/cs35l41_hda_property.c b/sound/pci/hda/cs35l41_hda_property.c
-index 35277ce890a4..87edf0d2fbb0 100644
---- a/sound/pci/hda/cs35l41_hda_property.c
-+++ b/sound/pci/hda/cs35l41_hda_property.c
-@@ -203,6 +203,7 @@ static int generic_dsd_config(struct cs35l41_hda *cs35l41, struct device *physde
- 	struct spi_device *spi;
- 	bool dsd_found;
- 	int ret;
-+	int i;
- 
- 	for (cfg = cs35l41_config_table; cfg->ssid; cfg++) {
- 		if (!strcasecmp(cfg->ssid, cs35l41->acpi_subsystem_id))
-@@ -288,16 +289,6 @@ static int generic_dsd_config(struct cs35l41_hda *cs35l41, struct device *physde
- 			cs35l41->index = id == 0x40 ? 0 : 1;
- 	}
- 
--	if (cfg->num_amps == 3)
--		/* 3 amps means a center channel, so no duplicate channels */
--		cs35l41->channel_index = 0;
--	else
--		/*
--		 * if 4 amps, there are duplicate channels, so they need different indexes
--		 * if 2 amps, no duplicate channels, channel_index would be 0
--		 */
--		cs35l41->channel_index = cs35l41->index / 2;
--
- 	cs35l41->reset_gpio = fwnode_gpiod_get_index(acpi_fwnode_handle(cs35l41->dacpi), "reset",
- 						     cs35l41->index, GPIOD_OUT_LOW,
- 						     "cs35l41-reset");
-@@ -305,6 +296,11 @@ static int generic_dsd_config(struct cs35l41_hda *cs35l41, struct device *physde
- 
- 	hw_cfg->spk_pos = cfg->channel[cs35l41->index];
- 
-+	cs35l41->channel_index = 0;
-+	for (i = 0; i < cs35l41->index; i++)
-+		if (cfg->channel[i] == hw_cfg->spk_pos)
-+			cs35l41->channel_index++;
-+
- 	if (cfg->boost_type == INTERNAL) {
- 		hw_cfg->bst_type = CS35L41_INT_BOOST;
- 		hw_cfg->bst_ind = cfg->boost_ind_nanohenry;
--- 
-2.34.1
+>>
+>> Signed-off-by: Inochi Amaoto <inochiama@outlook.com>
+>> ---
+>>  MAINTAINERS | 9 +++++----
+>>  1 file changed, 5 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index 39219b144c23..0dbf2882afbf 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -20446,12 +20446,13 @@ F:	drivers/char/sonypi.c
+>>  F:	drivers/platform/x86/sony-laptop.c
+>>  F:	include/linux/sony-laptop.h
+>>
+>> -SOPHGO DEVICETREES
+>> -M:	Chao Wei <chao.wei@sophgo.com>
+>> +SOPHGO DEVICETREES and DRIVERS
+>>  M:	Chen Wang <unicorn_wang@outlook.com>
+>> +M:	Inochi Amaoto <inochiama@outlook.com>
+>> +T:	git https://github.com/sophgo/linux.git
+>>  S:	Maintained
+>> -F:	arch/riscv/boot/dts/sophgo/
+>> -F:	Documentation/devicetree/bindings/riscv/sophgo.yaml
+>> +N:	sophgo
+>> +K:	[^@]sophgo
+>
+>There's a single instance of this "[^@] business in the whole file,
+>is it really needed?
+>
+>Also, you can fold in
+>
 
+It looks like I have made a mistake. "[^@]" is not necessary. I will
+remove this.
+
+>diff --git a/MAINTAINERS b/MAINTAINERS
+>index bf107c5343d3..cc8e240ba3e2 100644
+>--- a/MAINTAINERS
+>+++ b/MAINTAINERS
+>@@ -18859,6 +18859,7 @@ F:	Documentation/devicetree/bindings/riscv/
+> F:	arch/riscv/boot/dts/
+> X:	arch/riscv/boot/dts/allwinner/
+> X:	arch/riscv/boot/dts/renesas/
+>+X:	arch/riscv/boot/dts/sophgo/
+>
+> RISC-V PMU DRIVERS
+> M:	Atish Patra <atishp@atishpatra.org>
+>
+>
+>if you want. I get CC'ed on everything under the sun anyway from the DT
+>MAINTAINERS entry, so this at least might reduce some confusion about
+>who is applying what.
+>
+>Cheers,
+>Conor.
+>
+>
+
+Thanks for reminder, it is better to reduce confusion.
+I will take care of this.
+
+Regards,
+Inochi.
