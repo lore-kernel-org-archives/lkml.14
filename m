@@ -1,107 +1,139 @@
-Received: from mail-oa1-f54.google.com (mail-oa1-f54.google.com [209.85.160.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 546D610A30
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 10:20:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 280E612B9B
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 10:25:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706264442; cv=none; b=LJwUfrf61SVhKWDOgVVxcyjWaDLbV4VAq0wL8/LmDvVOeG9UsK4ZNsaywXMNV77vMsi66yxSt5ouWu5YhGsyz6iS3qiCeQqlu79kej4FDWPgnwwdqSl+Aevqp3xCs4S5FxXo4GE0x3gQSVhWV6R+hE9I/1By+CeeujMKmoaWvYI=
+	t=1706264725; cv=none; b=qFCaplvrvkyQqu54z3W2UPss9kqPBz/uGT01VBdpwjKNJHk+/DipLzoWHvZgjxEGQD+3T7EToManwSFR77KR4yAaFKjTvPZqFTmlE+pOAgOmxi/a5TzwdB8le5q+j/8u3Spy0PYCZ5kcgLlGeQkroB1AVelhXSc38llPSgd+5yo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706264442; c=relaxed/simple;
-	bh=rBGeSyPNqjhuzAEmekJshtonzu2haLkY5wb3EOsf3xE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qZkkCP3ZKL9jhL6r2BQ3vbkmLmnwPjK+36/wRyVkFOgMWTfORRt4/nIgTyIzwilFmiVbRUczUutzUIE1xF8hrX/wo3O5j+JuOIHK5rBiLgDJDT2nNYW2yWr2SkMMkALE4Ocf62DUXZjIO22BylKx81Mv/miPLM/NlT9bASbSaaE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=U+eRMMBX; arc=none smtp.client-ip=209.85.160.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1706264725; c=relaxed/simple;
+	bh=S70PRABftOqa8emToRq/SOEAjS3k4Nc2hS3M0xK6WDo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Gq2GFG/jzl2oOMEJVHcSGZtqsJ7/5GSsbxBve0xFOu74UYHld0jG6gZdXEryzoawwtpWhLH21+EhCP5Z/d6HrpxHckpwILTmRuRORV81u6x2+wjVbih1jFPuZnnYy/b5wCPr8gIrrMqr+GlydJAWxgVvIfdC8Lo27mj/cAYSn/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SL11JcaK; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="U+eRMMBX"
-Received: by mail-oa1-f54.google.com with SMTP id 586e51a60fabf-2144ce7ff41so104722fac.3
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 02:20:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1706264439; x=1706869239; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dLfeKzwR+Z8RiGM+i4K1CjO8rfuzmqOpJM35c/+oae0=;
-        b=U+eRMMBX3ao4Wh15pTZjscrNgBMdWMJ/7EZHopnFr4Lehasvb6qyhOls1apU3HMoKF
-         JWeLCsykXGb1h4nye6C5y0qDm3FKOExEuxKdq1WHNbVqRddjBe9CcHwY0D0Dif48l7Kr
-         Nbyx4vTVGL4VkrpqOqItUki6vDOVcA2BfsHAzrukXPLKLr98lu3n3nGH+hOIxdRL6+FX
-         GtjQ7B9fVx40ACCfX1ZF/d8RIbouyF9cdpYUN6IhxpXZiHOR3bKT3/zm6HRWA8K5ZoGf
-         QpeawGQ6LRvEvQ9u6zTayMuf2B4wDUvP+yPOdbsiuYVbwALe2M3S9rXt+5MkmkSylisj
-         2fpA==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SL11JcaK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1706264723;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5kQbVh0hcRgV8UMq6Vb5QM4EaBqOcOHGfTaVO2KwzEY=;
+	b=SL11JcaKI12fOXuI6xNz1451GqTi98yeiPQGzHuW190lRICXQZplsGZHBODI88PNwjH+I6
+	7zqScm8G31gWtPhxaLGUaZHotAWNdEOYp7/XHWQu3/D7Vr6RsSMsnFo0l+ter+NbPROQL2
+	860LByL5WjFXtB6Whgje4DsvDalvkWo=
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
+ [209.85.219.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-347-n6kDWOWYOSOS_ljS5n98DQ-1; Fri, 26 Jan 2024 05:25:20 -0500
+X-MC-Unique: n6kDWOWYOSOS_ljS5n98DQ-1
+Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-68694f9e037so4071676d6.2
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 02:25:20 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706264439; x=1706869239;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dLfeKzwR+Z8RiGM+i4K1CjO8rfuzmqOpJM35c/+oae0=;
-        b=V2fZkf0LQvhn5bgk2qdrs9LJTScNSactP+j4KEXvU92raNNGJnCvdYZRhZTQT70JOj
-         U3lcR488mfXL5sLDcjyrtPaEMw1+U/duU7xob2J5H6fvT7ZP4QRiHeDhz5P6n9fFf3ke
-         M4uiM0j/BfCPRqTcwdAjzkrRdSV8u4XX06Yw7raUv1K5rRroftRwWIWgHDK3E4dsYLVa
-         QPgkThxCXV+ORZpK6kO1ShmPVp2fKx86l102T8fjTNnaMzxFiELUKjFCv9R5iE+7qgBX
-         +sM5gVhoyQWyalrKstrX07I1lTlYGmObskP+/8oo06gGpG18aqzrf26Qx0aztCl1CVhQ
-         lNPA==
-X-Gm-Message-State: AOJu0YxcxbNFtfFGLisxaMoKgwGF8zPS0axuwRN56zHRWhEThJlJDoDj
-	SXTIoNSBdmn1yZjm0+ziFEh4BpPzhZwhmB/DqZAnQyBNo+de7sgnEwr0kfwgZXG4PSFq2duEZsk
-	1V+pNRpo3EFY8JDP7czRBghCBMR/dcmiN1W1c
-X-Google-Smtp-Source: AGHT+IHvbfvU3z3obD92Fj0vi9wydfzuO6UhJiuwiqh10HZe5oaVqolyaLk9ub0kUBcctwQE1vUI0HtDYfsMFMjTRD4=
-X-Received: by 2002:a05:6870:b6aa:b0:210:9bc2:a9cc with SMTP id
- cy42-20020a056870b6aa00b002109bc2a9ccmr934687oab.83.1706264439163; Fri, 26
- Jan 2024 02:20:39 -0800 (PST)
+        d=1e100.net; s=20230601; t=1706264719; x=1706869519;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=5kQbVh0hcRgV8UMq6Vb5QM4EaBqOcOHGfTaVO2KwzEY=;
+        b=rKnhvGA8JBBGo+jPvpr6ogVmyP3rD2fOtztADSVcnP/gJ+CyBNMl6fkft0ymb8164w
+         wXD3lOrQ9+FPT6st24tpOsw7YoRyNUIstQaBNgZqzQ6svT2hRt237UomxTKmTt9Mlq1i
+         XMxgF73KGfpgn5O2RFu6fIjfIH6KlGTgms2yLlxoAzRKbRJ1BfinqALd8V3SpYXFOM89
+         O1A8lQjuAj8P89CobNy80SGKlMUQNxIZIjOCG0moISIxdI8m+QWIO1dakJsEzocBYHKe
+         ZIZVpjdnddYaSIT9l5N+Dwp8Yh4ODzFuquIAI8u7R61Y4U41/spuTsiuQDq0nxetJ+uw
+         PFbQ==
+X-Gm-Message-State: AOJu0Yyk7mctGxbliP//D01/RS791/cm3wTaBVGA0gZiySG5nddMGzb/
+	Dz3lJvGSA8Lvkg5TtRj9BTAXvESyMac4I++2u89L3L7PhZIoRSRoR0mbKWLWPIqghI1HZhACWy0
+	EMWoFGaiTeelVElQsb6Sw9xtOKVkZhfJw9YpoZklXPPeJvlCaJ5XfLQtp6WN1XQ==
+X-Received: by 2002:ad4:5d6e:0:b0:686:acaa:a4b6 with SMTP id fn14-20020ad45d6e000000b00686acaaa4b6mr1400871qvb.79.1706264719641;
+        Fri, 26 Jan 2024 02:25:19 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFtHbF0GQDnaATq85JoMxKpDaeP42Xl2uBvtV9mUCapJ2bmX+Zt1/9FX/b/+a1DH1cknGoOpQ==
+X-Received: by 2002:ad4:5d6e:0:b0:686:acaa:a4b6 with SMTP id fn14-20020ad45d6e000000b00686acaaa4b6mr1400856qvb.79.1706264719347;
+        Fri, 26 Jan 2024 02:25:19 -0800 (PST)
+Received: from ?IPV6:2a01:e0a:59e:9d80:527b:9dff:feef:3874? ([2a01:e0a:59e:9d80:527b:9dff:feef:3874])
+        by smtp.gmail.com with ESMTPSA id h4-20020a0cd804000000b006869dae6edbsm398728qvj.77.2024.01.26.02.25.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 26 Jan 2024 02:25:18 -0800 (PST)
+Message-ID: <51ca8edc-81e6-4c6d-9c72-80fe59919868@redhat.com>
+Date: Fri, 26 Jan 2024 11:25:15 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <000000000000fd588e060de27ef4@google.com> <tencent_613652973C377A4AEC7507777B66C63C8309@qq.com>
-In-Reply-To: <tencent_613652973C377A4AEC7507777B66C63C8309@qq.com>
-From: Alexander Potapenko <glider@google.com>
-Date: Fri, 26 Jan 2024 11:19:58 +0100
-Message-ID: <CAG_fn=WpdcrDjxSzPxhRzEGp3jFtp==1DkfkovoF39kUgkjB6w@mail.gmail.com>
-Subject: Re: [syzbot] [virtualization?] KMSAN: uninit-value in virtqueue_add (4)
-To: Edward Adam Davis <eadavis@qq.com>
-Cc: syzbot+d7521c1e3841ed075a42@syzkaller.appspotmail.com, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 0/5] KVM: selftests: aarch64: Introduce
+ pmu_event_filter_test
+Content-Language: en-US
+To: Shaoqin Huang <shahuang@redhat.com>, Oliver Upton
+ <oliver.upton@linux.dev>, Marc Zyngier <maz@kernel.org>,
+ kvmarm@lists.linux.dev
+Cc: James Morse <james.morse@arm.com>, kvm@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+ Shuah Khan <shuah@kernel.org>, Suzuki K Poulose <suzuki.poulose@arm.com>,
+ Zenghui Yu <yuzenghui@huawei.com>
+References: <20240116060129.55473-1-shahuang@redhat.com>
+From: Eric Auger <eauger@redhat.com>
+In-Reply-To: <20240116060129.55473-1-shahuang@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jan 26, 2024 at 2:36=E2=80=AFAM 'Edward Adam Davis' via syzkaller-b=
-ugs
-<syzkaller-bugs@googlegroups.com> wrote:
->
-> please test uninit-value in virtqueue_add (4)
+Hi Shaoqin,
 
-Hi Edward,
+On 1/16/24 07:01, Shaoqin Huang wrote:
+> The test is inspired by the pmu_event_filter_test which implemented by x86. On
+> the arm64 platform, there is the same ability to set the pmu_event_filter
+> through the KVM_ARM_VCPU_PMU_V3_FILTER attribute. So add the test for arm64.
+> 
+> The series first move some pmu common code from vpmu_counter_access to
+> lib/aarch64/vpmu.c and include/aarch64/vpmu.h, which can be used by
+> pmu_event_filter_test. Then fix a bug related to the [enable|disable]_counter,
+> and at last, implement the test itself.
+which branch does it apply on? I fail to apply on top on main.
 
-KMSAN is currently broken at trunk, see
-https://lore.kernel.org/linux-mm/20240115184430.2710652-1-glider@google.com=
-/
-Therefore syzbot is unable to test patches before a couple of changes
-reach upstream.
+Or can you provide a branch?
 
-I checked your patch, and it is still triggering the same bug, which
-is expected, because there are whole uninitialized pages, and the
-patch below only initializes two instances of struct scatterlist that
-are unlikely to be cloned to fill those pages.
-There must be some non-instrumented code that fills those pages with
-data, e.g. a DMA write, an assembly routine or some VM-to-kernel
-interaction that KMSAN fails to handle.
+Eric
+> 
+> Changelog:
+> ----------
+> v2->v3:
+>   - Check the pmceid in guest code instead of pmu event count since different
+>   hardware may have different event count result, check pmceid makes it stable
+>   on different platform.                        [Eric]
+>   - Some typo fixed and commit message improved.
+> 
+> v1->v2:
+>   - Improve the commit message.                 [Eric]
+>   - Fix the bug in [enable|disable]_counter.    [Raghavendra & Marc]
+>   - Add the check if kvm has attr KVM_ARM_VCPU_PMU_V3_FILTER.
+>   - Add if host pmu support the test event throught pmceid0.
+>   - Split the test_invalid_filter() to another patch. [Eric]
+> 
+> v1: https://lore.kernel.org/all/20231123063750.2176250-1-shahuang@redhat.com/
+> v2: https://lore.kernel.org/all/20231129072712.2667337-1-shahuang@redhat.com/
+> 
+> Shaoqin Huang (5):
+>   KVM: selftests: aarch64: Make the [create|destroy]_vpmu_vm() public
+>   KVM: selftests: aarch64: Move pmu helper functions into vpmu.h
+>   KVM: selftests: aarch64: Fix the buggy [enable|disable]_counter
+>   KVM: selftests: aarch64: Introduce pmu_event_filter_test
+>   KVM: selftests: aarch64: Add invalid filter test in
+>     pmu_event_filter_test
+> 
+>  tools/testing/selftests/kvm/Makefile          |   2 +
+>  .../kvm/aarch64/pmu_event_filter_test.c       | 255 ++++++++++++++++++
+>  .../kvm/aarch64/vpmu_counter_access.c         | 218 ++-------------
+>  .../selftests/kvm/include/aarch64/vpmu.h      | 135 ++++++++++
+>  .../testing/selftests/kvm/lib/aarch64/vpmu.c  |  74 +++++
+>  5 files changed, 490 insertions(+), 194 deletions(-)
+>  create mode 100644 tools/testing/selftests/kvm/aarch64/pmu_event_filter_test.c
+>  create mode 100644 tools/testing/selftests/kvm/include/aarch64/vpmu.h
+>  create mode 100644 tools/testing/selftests/kvm/lib/aarch64/vpmu.c
+> 
 
->
-> #syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.=
-git fbafc3e621c3
->
-> diff --git a/drivers/scsi/virtio_scsi.c b/drivers/scsi/virtio_scsi.c
-> index 9d1bdcdc1331..4ca6627a7459 100644
-> --- a/drivers/scsi/virtio_scsi.c
-> +++ b/drivers/scsi/virtio_scsi.c
-> @@ -427,7 +427,7 @@ static int __virtscsi_add_cmd(struct virtqueue *vq,
->                             size_t req_size, size_t resp_size)
->  {
->         struct scsi_cmnd *sc =3D cmd->sc;
-> -       struct scatterlist *sgs[6], req, resp;
-> +       struct scatterlist *sgs[6], req =3D {}, resp =3D {};
->         struct sg_table *out, *in;
->         unsigned out_num =3D 0, in_num =3D 0;
