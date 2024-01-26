@@ -1,96 +1,80 @@
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BBCB1BF36;
-	Fri, 26 Jan 2024 09:22:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 717AA1C2A0
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 09:25:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706260936; cv=none; b=gHk5eRSZ+sVtCPeb5dc62sp3zGmvmQhX7BzuexxlwAWVhltov11crTXspG8XWASqwmws3933SGE7U8gcwfnHTFhJYAO1gveJn9SIMOqRWycKSYfSVtkK4Wuq3H1gl2lBrVLP6k9t0HqVMVnYoZuZzC3h9Gg2RQWcykWtohjmLiY=
+	t=1706261146; cv=none; b=hVjYsGH5vjMYdWJ5xmZa4dtxAuUslkN+v4/pCgSglnTMNIjrA6TbK3+/5RjZ3xiCP8X02oTgKFCDR7FDXwSBGXnHjlL4Mkuh60f3JHAESo0apYE5oOfsEAq2a31IDB1oYGyN78Nf64vObA7c5TmuXYDaKJmJowCzjDs1NWtK9ao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706260936; c=relaxed/simple;
-	bh=+PBd62Uy6Enf/+GClkZ0QPTz6bpsbkxzJUJyHuJx3ko=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NC+7Uii9UtiGf1wyIHScSQ2EHVzaOseeyhcYSSo7z8tsXpwx6/cTu/GFLHK3t3hFUt1M8aGF0GtuKKCnGyVU3Hs3nJa9DqZsFzns4SCil76zjhBZLR/nl8gsLANJhptWBktYFDtl9XT1TEuM5XrWgA/jWT1x2X7Ntzy5sYLtHKg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.194])
-	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4TLsd82Q9WzNlb4;
-	Fri, 26 Jan 2024 17:21:16 +0800 (CST)
-Received: from dggpeml500001.china.huawei.com (unknown [7.185.36.227])
-	by mail.maildlp.com (Postfix) with ESMTPS id 4580E140499;
-	Fri, 26 Jan 2024 17:22:11 +0800 (CST)
-Received: from huawei.com (10.69.192.56) by dggpeml500001.china.huawei.com
- (7.185.36.227) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Fri, 26 Jan
- 2024 17:22:11 +0800
-From: Qi Tao <taoqi10@huawei.com>
-To: <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
-	<liulongfang@huawei.com>
-CC: <linux-kernel@vger.kernel.org>, <linux-crypto@vger.kernel.org>
-Subject: [PATCH v2 2/4] crypto: hisilicon/sec2 - modify nested macro call
-Date: Fri, 26 Jan 2024 17:21:22 +0800
-Message-ID: <20240126092124.14055-3-taoqi10@huawei.com>
-X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20240126092124.14055-1-taoqi10@huawei.com>
-References: <20240126092124.14055-1-taoqi10@huawei.com>
+	s=arc-20240116; t=1706261146; c=relaxed/simple;
+	bh=yvjK49YeH3fT+kfbLz0NUAJLqFpzOT4UcCQn3OypYTY=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=Y3nn3cJen21Rr38/xqjbTl9Q8aiLzpU9sPpDgA2Vh3IBoN0Demu1PLxgiB5a7nL46mZBmqFveAWuh6YD/fSRllnadI+ckEoVLHkvjBedw1kpX4OnHyUCEbz/fNdR/no6VD9jeMJp8HttbK6L7v1nzKUnZDNfZRqf1UkksOqbX/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=BW7p7oIl; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="BW7p7oIl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A972C433C7;
+	Fri, 26 Jan 2024 09:25:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1706261145;
+	bh=yvjK49YeH3fT+kfbLz0NUAJLqFpzOT4UcCQn3OypYTY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=BW7p7oIloxclVlzTOx02Tv3FlLG1rxtCEqNHs7+Wh9/qOFES7N0VySaCmlvUEuU41
+	 MSh+XMDZ/Xzn0vrQCyZsSqiseKOJRF3Anbak14KAutEmVByDBc/cmwGZkQkJPrAYbS
+	 jADOTnxPtNlotmJD8nqKVDQs/iD5F4YV9fZs0qfs=
+Date: Fri, 26 Jan 2024 01:25:40 -0800
+From: Andrew Morton <akpm@linux-foundation.org>
+To: syzbot <syzbot+a1deb5533794ff31868e@syzkaller.appspotmail.com>
+Cc: leitao@debian.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ muchun.song@linux.dev, syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [mm?] possible deadlock in __unmap_hugepage_range
+Message-Id: <20240126012540.045d8521de02fab64f3cbf78@linux-foundation.org>
+In-Reply-To: <00000000000063895c060fd59596@google.com>
+References: <00000000000063895c060fd59596@google.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- dggpeml500001.china.huawei.com (7.185.36.227)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Nested macros are integrated into a single macro,
-making the code simpler.
+On Fri, 26 Jan 2024 01:04:29 -0800 syzbot <syzbot+a1deb5533794ff31868e@syzkaller.appspotmail.com> wrote:
 
-Signed-off-by: Qi Tao <taoqi10@huawei.com>
----
- drivers/crypto/hisilicon/sec2/sec_crypto.c | 13 ++++---------
- 1 file changed, 4 insertions(+), 9 deletions(-)
+> Hello,
+> 
+> syzbot found the following issue on:
+> 
+> HEAD commit:    8bf1262c53f5 Add linux-next specific files for 20240124
+> git tree:       linux-next
+> console+strace: https://syzkaller.appspot.com/x/log.txt?x=1218a7abe80000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=ff4b59a824278780
+> dashboard link: https://syzkaller.appspot.com/bug?extid=a1deb5533794ff31868e
+> compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=151a9cf7e80000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=164b70cfe80000
+> 
+> Downloadable assets:
+> disk image: https://storage.googleapis.com/syzbot-assets/7696d711072d/disk-8bf1262c.raw.xz
+> vmlinux: https://storage.googleapis.com/syzbot-assets/92cd47c28072/vmlinux-8bf1262c.xz
+> kernel image: https://storage.googleapis.com/syzbot-assets/add5c7493418/bzImage-8bf1262c.xz
+> 
+> The issue was bisected to:
+> 
+> commit 947b031634e7af3d265275c26ec17e2f96fdb5a1
+> Author: Breno Leitao <leitao@debian.org>
+> Date:   Wed Jan 17 17:10:57 2024 +0000
+> 
+>     mm/hugetlb: restore the reservation if needed
 
-diff --git a/drivers/crypto/hisilicon/sec2/sec_crypto.c b/drivers/crypto/hisilicon/sec2/sec_crypto.c
-index f028dcfd0ead..692ba3213cc6 100644
---- a/drivers/crypto/hisilicon/sec2/sec_crypto.c
-+++ b/drivers/crypto/hisilicon/sec2/sec_crypto.c
-@@ -2145,8 +2145,8 @@ static int sec_skcipher_decrypt(struct skcipher_request *sk_req)
- 	return sec_skcipher_crypto(sk_req, false);
- }
- 
--#define SEC_SKCIPHER_GEN_ALG(sec_cra_name, sec_set_key, sec_min_key_size, \
--	sec_max_key_size, ctx_init, ctx_exit, blk_size, iv_size)\
-+#define SEC_SKCIPHER_ALG(sec_cra_name, sec_set_key, \
-+	sec_min_key_size, sec_max_key_size, blk_size, iv_size)\
- {\
- 	.base = {\
- 		.cra_name = sec_cra_name,\
-@@ -2158,8 +2158,8 @@ static int sec_skcipher_decrypt(struct skcipher_request *sk_req)
- 		.cra_ctxsize = sizeof(struct sec_ctx),\
- 		.cra_module = THIS_MODULE,\
- 	},\
--	.init = ctx_init,\
--	.exit = ctx_exit,\
-+	.init = sec_skcipher_ctx_init,\
-+	.exit = sec_skcipher_ctx_exit,\
- 	.setkey = sec_set_key,\
- 	.decrypt = sec_skcipher_decrypt,\
- 	.encrypt = sec_skcipher_encrypt,\
-@@ -2168,11 +2168,6 @@ static int sec_skcipher_decrypt(struct skcipher_request *sk_req)
- 	.ivsize = iv_size,\
- }
- 
--#define SEC_SKCIPHER_ALG(name, key_func, min_key_size, \
--	max_key_size, blk_size, iv_size) \
--	SEC_SKCIPHER_GEN_ALG(name, key_func, min_key_size, max_key_size, \
--	sec_skcipher_ctx_init, sec_skcipher_ctx_exit, blk_size, iv_size)
--
- static struct sec_skcipher sec_skciphers[] = {
- 	{
- 		.alg_msk = BIT(0),
--- 
-2.33.0
+Thanks.  But moments after I moved this into mm.git's
+mm-hotfixes-stable branch, in preparation for upstreaming.
+
+I have fully dropped the patches titled
+
+	mm/hugetlb: restore the reservation if needed
+	selftests/mm: run_vmtests.sh: add hugetlb_madv_vs_map
 
