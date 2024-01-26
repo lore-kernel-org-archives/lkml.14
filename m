@@ -1,231 +1,156 @@
-Received: from out5-smtp.messagingengine.com (out5-smtp.messagingengine.com [66.111.4.29])
+Received: from mx1.sberdevices.ru (mx1.sberdevices.ru [37.18.73.165])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 721E918B1B
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 12:19:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.111.4.29
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 185FF13FEE;
+	Fri, 26 Jan 2024 12:23:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.18.73.165
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706271565; cv=none; b=BqRj7y9Gioxzo7UwgL1+vWuZl2clOqFYItFZiyIT796gUkoubao/UYsts4Ucu4dLLJj1JpoMWS7/P1//vPHggz7/+ryIep2p3pr1UMjOzizBbS4zctPYt9GiJCSQxJcbUeMyVKnit/D06rag8YhkUKuogvaavT9kgIVwP1uJBbk=
+	t=1706271800; cv=none; b=OaK32+v6MXUEKhu2OHnmon5jnO//OuXLdcPGVgyBHo91F45oZfaBO8BE+4qzHj+JSjuGKNRPE/I0xTkRmy76G00oSdTVDsNfgfJMxfU3Q6XC2nSmkda5Nu0EKtVdLspw2CpF/63OY7xa0iaBsNC+2hsRGFP50fmAnne1+BnrL7o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706271565; c=relaxed/simple;
-	bh=bQYRCu5f1SIav7s2qBfsJldzhFPPaxmxeMXUGttv6LY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=W8XCeCoIEISucckzF88tEHh2wpL8TeAUlN+haR4zvRI6ut+h7s4Cgq1vhj/cz7Aj4GAAAu63xZaUImgJo5korFpI2JPdmaTOeWREcSKq1kYR/+MTnMEReqFmqOSEYO0Ww1wfrDv30Ssz2l7IedoBVC8PI8CLCxpMD9bNuco9pA4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp; spf=pass smtp.mailfrom=sakamocchi.jp; dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b=Bz3idoCR; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=h5GGOEew; arc=none smtp.client-ip=66.111.4.29
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sakamocchi.jp
+	s=arc-20240116; t=1706271800; c=relaxed/simple;
+	bh=FUoOlA7SEsmZQCCCoAomLStIAwVpeVTQ+3yZ6glGOag=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PZezjzom4pSsjmmcArYWuTBaClFxZPqch+Cew8YfIO1M4kSly3SvZtJQcg0Uni/e3o688+qc/mn6lAQCx2ZH62Leka0PSqlZde2fQPzPXjPt9FvMrs8tu5ZFMFGHTshpD5oaM65+b03nEnlb+WwJExYyTjOLiD5Nr4c4jvJXs58=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=Z0nR0MNj; arc=none smtp.client-ip=37.18.73.165
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=salutedevices.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=salutedevices.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b="Bz3idoCR";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="h5GGOEew"
-Received: from compute7.internal (compute7.nyi.internal [10.202.2.48])
-	by mailout.nyi.internal (Postfix) with ESMTP id 22A5A5C01A7;
-	Fri, 26 Jan 2024 07:19:21 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute7.internal (MEProxy); Fri, 26 Jan 2024 07:19:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sakamocchi.jp;
-	 h=cc:cc:content-type:content-type:date:date:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm3; t=1706271561; x=
-	1706357961; bh=1gnexpyBBPN644lYANlOBioOt6k8t58q8rd2KJDGfqk=; b=B
-	z3idoCR/T2k2tfwvFx25weT1qdCBUEdR+9XzjPxNdBbrnb3Vm/632i+sNtlbu59J
-	w9aYVWKfy9w31LILKwpgdJZsmb0mVXytNatttHVX04kuDvd2rMnd1dd4G4Ao9oIO
-	vsDhgrxWCCvJeUa/mRFtqqtn1f92tt6b1Ef0dar9jZHC9aWHTJ3r4V6MELLXg+5b
-	0MOEpBIgdbEruevPIJwmkjueLeUzxpEu64V0RG2kIwF3QvHSqNPJ09D6CfELhQeD
-	g1YlIWJX7cM6TLW2fXQWzB51m5V7aCeiKVL0mhR6PxmovCt7hw+gVe20QqGvGdBy
-	yv3EImodNq6xINdAntshQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm3; t=1706271561; x=1706357961; bh=1gnexpyBBPN644lYANlOBioOt6k8
-	t58q8rd2KJDGfqk=; b=h5GGOEewUHdTps9f6l1Q6wiNRA5MckKd13iKvN4CgVOp
-	XAuyUZAhzXwPM+jpTIM+tdi5nT7AEkb0mKrkWQpE2g+DGn0MXeAEeStEkIdsi59t
-	VJR9jLnpghEvlP/JCjA4lQY1eAy9OdkQJLc8CSlAGk5pExs5xxGVMslVi8X50qpJ
-	sXo4NbSA6P1IUqEI9+gJfoT423eBBW5khOiGomoO3T9xwi6RVhA5x1ddWu3zbjoN
-	vc/2OKi0pPXoBKrBE/7C56X8kwV4MUXuFjPu0dR/Xz27BH/V2Zrk9V27+hnf3rrs
-	vbKaPJyLsvFefZl3J6iFTaMkDShVj67TuB1NV3pz7w==
-X-ME-Sender: <xms:SKOzZWkBSluZ4ZhULMDidtnpUkscaFtc9S-3OgmERksDCTmg3aU-Hg>
-    <xme:SKOzZd0Lif5yFfL5kxxVlBnp6ucjqUSEX3e9hBDBf-Ph-hay7nOfmDMGiOUBVpiGW
-    5jt1kfr6zqLRJyW60s>
-X-ME-Received: <xmr:SKOzZUrzHg4adg50DKBkJdlJli6lO9E73AiTP2Pzk1bDd7AQzVz6Fo5dxLpivd_tLowuZ49PYz1CHm7patprkZwaOjrhtM5JMmY>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrvdeljedgfeejucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepvfgrkhgr
-    shhhihcuufgrkhgrmhhothhouceoohdqthgrkhgrshhhihesshgrkhgrmhhotggthhhird
-    hjpheqnecuggftrfgrthhtvghrnhephefhhfettefgkedvieeuffevveeufedtlefhjeei
-    ieetvdelfedtgfefuedukeeunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpe
-    hmrghilhhfrhhomhepohdqthgrkhgrshhhihesshgrkhgrmhhotggthhhirdhjph
-X-ME-Proxy: <xmx:SaOzZal-3YqD-pN4xsslKPSB0AEHL0BVWZOcATERocRputI6YZfEew>
-    <xmx:SaOzZU2IKq6xUSC-T2UBJwulWM1MwX74MYS2lDyw2oova2wYFq1j3g>
-    <xmx:SaOzZRvTc0x8Mvv7MSPks2ltA2xg9xdrr-gDNtrUpPh-nAJh0dc52A>
-    <xmx:SaOzZR9W_Nj-4vazIZjThAOMZ5zU_qTarV_gRFbpX1WYmRfl_72TfQ>
-Feedback-ID: ie8e14432:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 26 Jan 2024 07:19:19 -0500 (EST)
-Date: Fri, 26 Jan 2024 21:19:17 +0900
-From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
-To: Adam Goldman <adamg@pobox.com>
-Cc: linux1394-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] firewire: core: mask previous entry's type bits when
- looking for leaf
-Message-ID: <20240126121917.GA99160@workstation.local>
-Mail-Followup-To: Adam Goldman <adamg@pobox.com>,
-	linux1394-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org
-References: <ZbJQ0JdbGixJouvn@iguana.24-8.net>
- <20240126011705.GA22564@workstation.local>
- <ZbNyHg3TTWpjiieI@iguana.24-8.net>
+	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="Z0nR0MNj"
+Received: from p-infra-ksmg-sc-msk01 (localhost [127.0.0.1])
+	by mx1.sberdevices.ru (Postfix) with ESMTP id 4EE99100005;
+	Fri, 26 Jan 2024 15:23:11 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 4EE99100005
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
+	s=mail; t=1706271791;
+	bh=tbL6XxsbbaDgXHm9IcCy2M+iiWgJnoaXzmTqbl73lsg=;
+	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:From;
+	b=Z0nR0MNjy5QzdW+OjnTMli4Go//StdjUKrraQJlAYKmizAXPkQiRrKEtz6ocHRkUn
+	 GhiwAsT7wim6CTv+9n8TBwVrXFH0ZuN8diV8rqf2lOFmmKGRLy+pqBKc02NuU2ZEeS
+	 /xRHveCCqugHRZ7BfO1XzKSlwoYY7iFctzQCjqjOIUrTbHIEcfQc2+g4TlbOVckxlA
+	 THMCiWj9uEpsee3hZ+TtvnK6TBQO04+kaSskbEU2SO7lAlO1x20T2ERuL8e+DWHwXf
+	 i6LpNXSoKcnQdn776cqxm9VcYvyip41gvWYySAKBEUoTsX3t3Sd3FfK8zt3ZO1RD1s
+	 sedtki/W4lZlw==
+Received: from smtp.sberdevices.ru (p-i-exch-sc-m01.sberdevices.ru [172.16.192.107])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mx1.sberdevices.ru (Postfix) with ESMTPS;
+	Fri, 26 Jan 2024 15:23:11 +0300 (MSK)
+Received: from localhost (100.64.160.123) by p-i-exch-sc-m01.sberdevices.ru
+ (172.16.192.107) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Fri, 26 Jan
+ 2024 15:23:10 +0300
+Date: Fri, 26 Jan 2024 15:23:10 +0300
+From: Dmitry Rokosov <ddrokosov@salutedevices.com>
+To: Lee Jones <lee@kernel.org>
+CC: Martin Kurbanov <mmkurbanov@salutedevices.com>, Greg Kroah-Hartman
+	<gregkh@linuxfoundation.org>, Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+	Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>, Krzysztof
+ Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
+	<conor+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Andy Shevchenko
+	<andy.shevchenko@gmail.com>, <linux-kernel@vger.kernel.org>,
+	<linux-leds@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-doc@vger.kernel.org>, <kernel@salutedevices.com>
+Subject: Re: [PATCH v1 1/2] leds: aw200xx: support for hw pattern controllers
+Message-ID: <20240126122310.hrs37vybo2wnxto3@CAB-WSD-L081021>
+References: <20231207125938.175119-1-mmkurbanov@salutedevices.com>
+ <20231207125938.175119-2-mmkurbanov@salutedevices.com>
+ <20231221161011.GO10102@google.com>
+ <85c89859-ae03-4692-9c09-5779e4c40eae@salutedevices.com>
+ <20240125130049.GF74950@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <ZbNyHg3TTWpjiieI@iguana.24-8.net>
+In-Reply-To: <20240125130049.GF74950@google.com>
+User-Agent: NeoMutt/20220415
+X-ClientProxiedBy: p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) To
+ p-i-exch-sc-m01.sberdevices.ru (172.16.192.107)
+X-KSMG-Rule-ID: 10
+X-KSMG-Message-Action: clean
+X-KSMG-AntiSpam-Lua-Profiles: 182964 [Jan 26 2024]
+X-KSMG-AntiSpam-Version: 6.1.0.3
+X-KSMG-AntiSpam-Envelope-From: ddrokosov@salutedevices.com
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Auth: dkim=none
+X-KSMG-AntiSpam-Info: LuaCore: 7 0.3.7 6d6bf5bd8eea7373134f756a2fd73e9456bb7d1a, {Track_E25351}, {Tracking_from_domain_doesnt_match_to}, smtp.sberdevices.ru:5.0.1,7.1.1;127.0.0.199:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;salutedevices.com:7.1.1;100.64.160.123:7.1.2, FromAlignment: s, ApMailHostAddress: 100.64.160.123
+X-MS-Exchange-Organization-SCL: -1
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiPhishing: Clean
+X-KSMG-LinksScanning: Clean
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/01/26 07:16:00 #23429590
+X-KSMG-AntiVirus-Status: Clean, skipped
 
-Hi,
+Hello Lee,
 
-On Fri, Jan 26, 2024 at 12:49:35AM -0800, Adam Goldman wrote:
-> On Fri, Jan 26, 2024 at 10:17:05AM +0900, Takashi Sakamoto wrote:
-> > Would I request you to update the API documentation of fw_csr_string()
-> > as well and send the renewed patch as take 2?
+On Thu, Jan 25, 2024 at 01:00:49PM +0000, Lee Jones wrote:
+> Looping in Jacek (LEDS) and Greg (SYFS) for some knowledgable input.
+> 
+> On Fri, 12 Jan 2024, Martin Kurbanov wrote:
+> > On 21.12.2023 19:10, Lee Jones wrote:
+> > > On Thu, 07 Dec 2023, Martin Kurbanov wrote:
+> > > 
+> > >> This led-controller supports 3 pattern controllers for auto breathing or
+> > >> group dimming control. Each pattern controller can work in auto
+> > >> breathing or manual control mode. All breathing parameters including
+> > >> rising/falling slope, on/off time, repeat times, min/max brightness
+> > >> and so on are configurable.
+> > >>
+> > >> Signed-off-by: Martin Kurbanov <mmkurbanov@salutedevices.com>
+> > >> ---
+> > >>  .../testing/sysfs-class-led-driver-aw200xx    | 108 +++
+> > >>  Documentation/leds/leds-aw200xx.rst           | 274 ++++++++
+> > >>  drivers/leds/leds-aw200xx.c                   | 649 ++++++++++++++++++
+> > >>  3 files changed, 1031 insertions(+)
+> > >>  create mode 100644 Documentation/leds/leds-aw200xx.rst
+> > > 
+> > > This interface is bananas.  Exposing an entire register interface to
+> > > sysfs does not sit will with me at all.  When we add support to a sysfs
+> > > class, we usually require it to be generic and work across all devices.
+> > > Adding device specific interfaces is generally decried and to be
+> > > avoided.  Don't forget, once we commit something to sysfs, it becomes
+> > > ABI and we have to support it forever.
+> > > 
+> > > A far better approach would be to add support for this in userspace
+> > > instead  You can use the standard I2C character device API to achieve
+> > > the same result.  That way we don't have the same level of commitment
+> > > and is generally a much more flexible/future-proof.
+> > > 
 > > 
-> > 
-> > I have a mixed feeling about the change, but I'll finally accept it since
-> > we face the exception against documentation.
-> > 
-> > As you know, in Annex A of document for configuration ROM of AV/C
-> > device[1], we can see the legacy layout of configuration ROM (page 22).
-> > In the layout, the descriptor leaf entry for vendor name locates after
-> > the immediate value entry for vendor ID, then the directory entry for
-> > vendor directory locates. However, in the case of Sony DVMC-DA1, the
-> > descriptor leaf entry locates after the directory entry. It is an
-> > exception.
+> > I used sysfs similarly to other LED drivers (for example, leds-lm3533).
+> > Additionally, the controller has interrupts about the completion of the pattern,
+> > which is best to handle in the kernel. In the case of implementation in user
+> > mode, there may be synchronization problems, as the controller has several
+> > memory pages that can be switched by writing the page number to register 0xF0.
 > 
-> Hi Takashi,
-> 
-> Thank you for your review and feedback.
-> 
-> After checking the 1394TA Configuration ROM document again, I agree that 
-> the leaf entry for vendor name should be after an immediate value entry 
-> according to this standard. The DVMC-DA1 does not conform. We should 
-> consider its configuration ROM format to be another variation of the 
-> legacy format. This variation is not mentioned in Annex A.
-> 
-> I will update the API documentation of fw_csr_string() and send a 
-> revised patch.
+> leds-lm3533 is a 12 year old legacy exception AND has less than half of
+> the sysfs exports proposed here.  What makes aw200xx so different it
+> needs to an incomparable interface to any other that we currently
+> support?
 
-I think we can handle the quirk of configuration ROM without changing
-the kernel API. Would you test the following patch? (not tested in my
-side).
+From my point of view, direct I2C raw requests from userspace are not a
+good solution as well due to synchronization problems, as Martin
+mentioned in the previous message.
 
-======== 8< --------
+We have honestly been attempting to integrate this functionality into
+the official LED pattern interface, but it cannot be achieved due to the
+absence of this interface's functionality:
+1) Page-based access
+2) Interrupts
 
-From 83bf1e04d308ea89c76c64e3168b9701f9d9191b Mon Sep 17 00:00:00 2001
-From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
-Date: Fri, 26 Jan 2024 20:37:21 +0900
-Subject: [PATCH] firewire: search descriptor leaf just after vendor directory
- entry in root directory
+HW patterns are very useful mechanism to draw animation faster without
+any interactions with CPU, so I think we need to find the best architect
+approach for its integration.
 
-It appears that Sony DVMC-DA1 has a quirk that the descriptor leaf entry
-locates just after the vendor directory entry in root directory. This is
-not equivalent to the legacy layout of configuration ROM described in
-Configuration ROM for AV/C Devices 1.0 (1394 Trading Association, Dec 2000,
-TA Document 1999027).
+What is an alternative way to access such a hardware pattern interface?
+Debugfs? Or perhaps we should consider extending the LED pattern
+interface?
 
-This commit changes current implementation to parse configuration ROM for
-device attributes so that the descriptor leaf entry can be detected for
-the vendor name.
-
-$ config-rom-pretty-printer < Sony-DVMC-DA1.img
-               ROM header and bus information block
-               -----------------------------------------------------------------
-1024  041ee7fb  bus_info_length 4, crc_length 30, crc 59387
-1028  31333934  bus_name "1394"
-1032  e0644000  irmc 1, cmc 1, isc 1, bmc 0, cyc_clk_acc 100, max_rec 4 (32)
-1036  08004603  company_id 080046     |
-1040  0014193c  device_id 12886219068  | EUI-64 576537731003586876
-
-               root directory
-               -----------------------------------------------------------------
-1044  0006b681  directory_length 6, crc 46721
-1048  03080046  vendor
-1052  0c0083c0  node capabilities: per IEEE 1394
-1056  8d00000a  --> eui-64 leaf at 1096
-1060  d1000003  --> unit directory at 1072
-1064  c3000005  --> vendor directory at 1084
-1068  8100000a  --> descriptor leaf at 1108
-
-               unit directory at 1072
-               -----------------------------------------------------------------
-1072  0002cdbf  directory_length 2, crc 52671
-1076  1200a02d  specifier id
-1080  13010000  version
-
-               vendor directory at 1084
-               -----------------------------------------------------------------
-1084  00020cfe  directory_length 2, crc 3326
-1088  17fa0000  model
-1092  81000008  --> descriptor leaf at 1124
-
-               eui-64 leaf at 1096
-               -----------------------------------------------------------------
-1096  0002c66e  leaf_length 2, crc 50798
-1100  08004603  company_id 080046     |
-1104  0014193c  device_id 12886219068  | EUI-64 576537731003586876
-
-               descriptor leaf at 1108
-               -----------------------------------------------------------------
-1108  00039e26  leaf_length 3, crc 40486
-1112  00000000  textual descriptor
-1116  00000000  minimal ASCII
-1120  536f6e79  "Sony"
-
-               descriptor leaf at 1124
-               -----------------------------------------------------------------
-1124  0005001d  leaf_length 5, crc 29
-1128  00000000  textual descriptor
-1132  00000000  minimal ASCII
-1136  44564d43  "DVMC"
-1140  2d444131  "-DA1"
-1144  00000000
-
-Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
----
- drivers/firewire/core-device.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/firewire/core-device.c b/drivers/firewire/core-device.c
-index 0547253d16fe..30a734ee9de9 100644
---- a/drivers/firewire/core-device.c
-+++ b/drivers/firewire/core-device.c
-@@ -368,8 +368,16 @@ static ssize_t show_text_leaf(struct device *dev,
- 	for (i = 0; i < ARRAY_SIZE(directories) && !!directories[i]; ++i) {
- 		int result = fw_csr_string(directories[i], attr->key, buf, bufsize);
- 		// Detected.
--		if (result >= 0)
-+		if (result >= 0) {
- 			ret = result;
-+		} else if (i == 0 && attr->key == CSR_VENDOR) {
-+			// Sony DVMC-DA1 has configuration ROM such that the descriptor leaf entry
-+			// in the root directory follows to the directory entry for vendor ID
-+			// instead of the immediate value for vendor ID.
-+			result = fw_csr_string(directories[i], CSR_DIRECTORY | attr->key, buf, bufsize);
-+			if (result >= 0)
-+				ret = result;
-+		}
- 	}
- 
- 	if (ret >= 0) {
 -- 
-2.40.1
-
-======== 8< --------
-
-
-Regards
-
-Takashi Sakamoto
+Thank you,
+Dmitry
