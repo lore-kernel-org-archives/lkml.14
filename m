@@ -1,473 +1,263 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 252B2C2E3;
-	Fri, 26 Jan 2024 06:44:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36EAD200A6;
+	Fri, 26 Jan 2024 06:45:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706251448; cv=none; b=RTMKwCfJRQRQZAbzjAAN6E8dOlGLETCQOivgxTWp9AMv1H6Gx6mwQvk/eJ8zZ23upchs19q9sc5PknOkliNFKLMmUIxeifbTboErIg2JK28+MfgTzBmsGeTLaqLjPylWHAEpWPUFJ60M88Pkf1mnLAPjyY+YXHpycEywSFjxYms=
+	t=1706251512; cv=none; b=D9DQTTCQhP9rV2TwFKoBFxW/SHuaenTTbfvBjEv9A487+U02fLFcR0HTHvdW5C6pjAKm9LyEt5vfS7Xz6rL5DxMkPhoQ1QEfXXwSV90pd6FvexL2zezEicqwB5tVx1VewtZRI7uKOdcwmNGNO49c0M2AgrNZOruR756iCejoGwQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706251448; c=relaxed/simple;
-	bh=y5wLNN7Z3zsHAdRNaCAGJxPKA+oPlN1uoRNwzgksWtU=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=R1Y+qJdObEP3rs6Xy9RQbdS1EzFjh7qboPLZ1ahQ7WSMZWn4nwsIjuhDMETu8sRc0fG4dRIVdow5FuzrD5NAb58L798nqFuyUGsD0BeTVNVpl7Ce+TynlIr7RdifE6R5QFWQto1r3NrnD2JtCfks8IGb4raasvaFEn3sdrkWze8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AvviNS2i; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1706251512; c=relaxed/simple;
+	bh=BOxflLzIeMNhS+RFdg54XOCOCuypggJ+q3Ri8WKOQNA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=COJu9Phvr89YyVqxiEIs7CdnVbcPNokIzXgdfGBWwfVRXj4cWirAraeB4dONZnK+JCXW/MC8ClttdAg6AkUdLdC/4rhvUk0WhstWfv3Dq9Q4ZyGWgBp1tAHPPcDy7hPnWafUXSHKGd/4FFpEv8WF1+C63071YrIZiINLAVmI/iw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=njdQswJs; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AvviNS2i"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706251446; x=1737787446;
-  h=message-id:date:mime-version:cc:subject:to:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=y5wLNN7Z3zsHAdRNaCAGJxPKA+oPlN1uoRNwzgksWtU=;
-  b=AvviNS2iywgCC0prxd78zGNbgtK5e1FLq+sPaEjToFXWn8X5yVLnQ07e
-   5gDarWXsvJQa8PT/mvs2VTYQxr6VGhjofK1gjQPN0FE/iv4DX0gMy6Pxe
-   /jHvKpSl5nW8ijbGNU/DDLIghzkjlH8PgXyCDV6Kp/v4j99C1Rx+w3i5K
-   jVDtbb7r89VXKUGPym64Ta7RjJh4RVPaFEiXTmfAnr9s2SvbO4+RDMDPD
-   qa27cSwiWGuJ0xsBhCmRD6DBNTAifVC5lARA53neL2nYwcYZvrQUY5r/w
-   EPJ7Kec3HXo8Hf2pns4MnisxfFxSBPzU5DW2qx7U7gQh0Ls+Gdkam50cN
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="9155718"
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="9155718"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2024 22:44:00 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="877304497"
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="877304497"
-Received: from blu2-mobl.ccr.corp.intel.com (HELO [10.249.174.176]) ([10.249.174.176])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2024 22:43:56 -0800
-Message-ID: <2f583fda-aebc-41c2-898c-d4f46eaa1ab4@linux.intel.com>
-Date: Fri, 26 Jan 2024 14:43:56 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="njdQswJs"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-40eacb6067dso687545e9.1;
+        Thu, 25 Jan 2024 22:45:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1706251508; x=1706856308; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3bj886cdMGlDeruMyVMMYt4Qd50oLO2t4eNJsFe4wLA=;
+        b=njdQswJsKHZsDGzzwhcRra+yfGjI6BdYJWlhOSFRM6TxafUX8uyG22Hnb7aSMGNpKE
+         FV2P9BtI0Is91CQKn/G1ZQoDxFv2jouQhaT5JsoIDSBqFKxbhxvgKqp6vphpNEKXK8J0
+         dKh/AHfSKZL+UB/TQuCNfVHzxm3ZBnAWi2AOEdF1eF/qKLEdNTpjfvYc5N0RMoE60f2q
+         pI04XGYcmLrRiuPMkKS+DbQqjS4dwm8tH+0E2ymwXaRfYBYU/MNXR0LM9nUHxTF3N9bg
+         QOZswJidAzTLBWNndZpJ9g7z13pBNQl46Xn8HIaP2psFqjqb5C5ytqegYyAr8u/elN+h
+         xfDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706251508; x=1706856308;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3bj886cdMGlDeruMyVMMYt4Qd50oLO2t4eNJsFe4wLA=;
+        b=nzPv9lW2YZcvqDTWSElMff8e5+rGWe9Y+slckznYZLHuQ4xzCIpUWzYV2x35A3hioB
+         nOLR6v4BVjnJ0qLtCAKuWVsEBIclfdv0m/yAdHIzTFAg02pbyuxV8u5e+dhxSeiisb1c
+         63VYluq0WsjMhKKkhcb/1qMtgKFbqwXVbvdtyq0WwImxJS5s4iSbMsdptPgvUQhjoaYY
+         b3Sz9rRL9//W0xl4gL6G0kp20vQedktaVQaKBOGDtBoZYIGyRqkqZEuag1HjZoYjOOb9
+         TBjJ4GbtTh4GyUosVgxTUo+bXoPROkG/wR4YcgOgCNeKQPnCQGDpGNz02MNR7mi+u6/m
+         xrXw==
+X-Gm-Message-State: AOJu0Yxtx5K+ukH5Qi2ZWg1rHt6TofZ6DRUYSntWiXwP7FYSuQTwP/I9
+	LVcDWp/r8mBjtATXmQQPl8O6OaQKijxC4bU/O5/nr0gqWeP//2ljAnufr/RrWzRvkFqHE7zUqDu
+	twghw/0iTZcw+weuzv3l1Eg8WlnxZ/dstZS00Hg==
+X-Google-Smtp-Source: AGHT+IGwFn9jkWBi6z7hbIpnvIc8UUhXAaug5oMycuE622T+gwOxMHYEeneieu3ES3qyNNlnF6tWqAzIfU5vFCVLHB4=
+X-Received: by 2002:a05:600c:1554:b0:40e:b908:30f4 with SMTP id
+ f20-20020a05600c155400b0040eb90830f4mr280657wmg.88.1706251507902; Thu, 25 Jan
+ 2024 22:45:07 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: baolu.lu@linux.intel.com, Joerg Roedel <joro@8bytes.org>,
- Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
- Jason Gunthorpe <jgg@ziepe.ca>, Kevin Tian <kevin.tian@intel.com>,
- Jean-Philippe Brucker <jean-philippe@linaro.org>,
- Nicolin Chen <nicolinc@nvidia.com>, Yi Liu <yi.l.liu@intel.com>,
- Jacob Pan <jacob.jun.pan@linux.intel.com>,
- Longfang Liu <liulongfang@huawei.com>, Yan Zhao <yan.y.zhao@intel.com>,
- iommu@lists.linux.dev, kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
- Jason Gunthorpe <jgg@nvidia.com>
-Subject: Re: [PATCH v10 15/16] iommu: Make iopf_group_response() return void
-Content-Language: en-US
-To: Joel Granados <j.granados@samsung.com>
-References: <20240122054308.23901-1-baolu.lu@linux.intel.com>
- <20240122054308.23901-16-baolu.lu@linux.intel.com>
- <CGME20240125162723eucas1p2cc7562a22b8af9b46076e1c7b616531b@eucas1p2.samsung.com>
- <20240125162721.yd2xejowbri5fg5r@localhost>
-From: Baolu Lu <baolu.lu@linux.intel.com>
-In-Reply-To: <20240125162721.yd2xejowbri5fg5r@localhost>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20240125-rk-dts-additions-v1-0-5879275db36f@gmail.com>
+ <20240125-rk-dts-additions-v1-4-5879275db36f@gmail.com> <731aac66-f698-4a1e-b9ee-46a7f24ecae5@linaro.org>
+ <ccc004cfae513195351ce0a79e12f6af@manjaro.org>
+In-Reply-To: <ccc004cfae513195351ce0a79e12f6af@manjaro.org>
+From: Alexey Charkov <alchark@gmail.com>
+Date: Fri, 26 Jan 2024 10:44:56 +0400
+Message-ID: <CABjd4YxSTLZjrnSCn0fh81US682-uhZ16-cgydzz97shhCpq4w@mail.gmail.com>
+Subject: Re: [PATCH 4/4] arm64: dts: rockchip: Add OPP data for CPU cores on RK3588
+To: Dragan Simic <dsimic@manjaro.org>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Heiko Stuebner <heiko@sntech.de>, devicetree@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, Viresh Kumar <viresh.kumar@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2024/1/26 0:27, Joel Granados wrote:
-> On Mon, Jan 22, 2024 at 01:43:07PM +0800, Lu Baolu wrote:
->> The iopf_group_response() should return void, as nothing can do anything
->> with the failure. This implies that ops->page_response() must also return
->> void; this is consistent with what the drivers do. The failure paths,
->> which are all integrity validations of the fault, should be WARN_ON'd,
->> not return codes.
->>
->> If the iommu core fails to enqueue the fault, it should respond the fault
->> directly by calling ops->page_response() instead of returning an error
->> number and relying on the iommu drivers to do so. Consolidate the error
->> fault handling code in the core.
->>
->> Co-developed-by: Jason Gunthorpe<jgg@nvidia.com>
->> Signed-off-by: Jason Gunthorpe<jgg@nvidia.com>
->> Signed-off-by: Lu Baolu<baolu.lu@linux.intel.com>
->> ---
->>   include/linux/iommu.h                       |  14 +--
->>   drivers/iommu/intel/iommu.h                 |   4 +-
->>   drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c |  50 +++-----
->>   drivers/iommu/intel/svm.c                   |  18 +--
->>   drivers/iommu/io-pgfault.c                  | 132 +++++++++++---------
->>   5 files changed, 99 insertions(+), 119 deletions(-)
->>
->> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
->> index 48196efc9327..d7b6f4017254 100644
->> --- a/include/linux/iommu.h
->> +++ b/include/linux/iommu.h
->> @@ -578,9 +578,8 @@ struct iommu_ops {
->>   	int (*dev_enable_feat)(struct device *dev, enum iommu_dev_features f);
->>   	int (*dev_disable_feat)(struct device *dev, enum iommu_dev_features f);
->>   
->> -	int (*page_response)(struct device *dev,
->> -			     struct iopf_fault *evt,
->> -			     struct iommu_page_response *msg);
->> +	void (*page_response)(struct device *dev, struct iopf_fault *evt,
->> +			      struct iommu_page_response *msg);
->>   
->>   	int (*def_domain_type)(struct device *dev);
->>   	void (*remove_dev_pasid)(struct device *dev, ioasid_t pasid);
->> @@ -1551,8 +1550,8 @@ void iopf_queue_free(struct iopf_queue *queue);
->>   int iopf_queue_discard_partial(struct iopf_queue *queue);
->>   void iopf_free_group(struct iopf_group *group);
->>   int iommu_report_device_fault(struct device *dev, struct iopf_fault *evt);
->> -int iopf_group_response(struct iopf_group *group,
->> -			enum iommu_page_response_code status);
->> +void iopf_group_response(struct iopf_group *group,
->> +			 enum iommu_page_response_code status);
->>   #else
->>   static inline int
->>   iopf_queue_add_device(struct iopf_queue *queue, struct device *dev)
->> @@ -1594,10 +1593,9 @@ iommu_report_device_fault(struct device *dev, struct iopf_fault *evt)
->>   	return -ENODEV;
->>   }
->>   
->> -static inline int iopf_group_response(struct iopf_group *group,
->> -				      enum iommu_page_response_code status)
->> +static inline void iopf_group_response(struct iopf_group *group,
->> +				       enum iommu_page_response_code status)
->>   {
->> -	return -ENODEV;
->>   }
->>   #endif /* CONFIG_IOMMU_IOPF */
->>   #endif /* __LINUX_IOMMU_H */
->> diff --git a/drivers/iommu/intel/iommu.h b/drivers/iommu/intel/iommu.h
->> index 696d95293a69..cf9a28c7fab8 100644
->> --- a/drivers/iommu/intel/iommu.h
->> +++ b/drivers/iommu/intel/iommu.h
->> @@ -1079,8 +1079,8 @@ struct iommu_domain *intel_nested_domain_alloc(struct iommu_domain *parent,
->>   void intel_svm_check(struct intel_iommu *iommu);
->>   int intel_svm_enable_prq(struct intel_iommu *iommu);
->>   int intel_svm_finish_prq(struct intel_iommu *iommu);
->> -int intel_svm_page_response(struct device *dev, struct iopf_fault *evt,
->> -			    struct iommu_page_response *msg);
->> +void intel_svm_page_response(struct device *dev, struct iopf_fault *evt,
->> +			     struct iommu_page_response *msg);
->>   struct iommu_domain *intel_svm_domain_alloc(void);
->>   void intel_svm_remove_dev_pasid(struct device *dev, ioasid_t pasid);
->>   void intel_drain_pasid_prq(struct device *dev, u32 pasid);
->> diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
->> index 4e93e845458c..42eb59cb99f4 100644
->> --- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
->> +++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
->> @@ -920,31 +920,29 @@ static int arm_smmu_cmdq_batch_submit(struct arm_smmu_device *smmu,
->>   	return arm_smmu_cmdq_issue_cmdlist(smmu, cmds->cmds, cmds->num, true);
->>   }
->>   
->> -static int arm_smmu_page_response(struct device *dev,
->> -				  struct iopf_fault *unused,
->> -				  struct iommu_page_response *resp)
->> +static void arm_smmu_page_response(struct device *dev, struct iopf_fault *unused,
->> +				   struct iommu_page_response *resp)
->>   {
->>   	struct arm_smmu_cmdq_ent cmd = {0};
->>   	struct arm_smmu_master *master = dev_iommu_priv_get(dev);
->>   	int sid = master->streams[0].id;
->>   
->> -	if (master->stall_enabled) {
->> -		cmd.opcode		= CMDQ_OP_RESUME;
->> -		cmd.resume.sid		= sid;
->> -		cmd.resume.stag		= resp->grpid;
->> -		switch (resp->code) {
->> -		case IOMMU_PAGE_RESP_INVALID:
->> -		case IOMMU_PAGE_RESP_FAILURE:
->> -			cmd.resume.resp = CMDQ_RESUME_0_RESP_ABORT;
->> -			break;
->> -		case IOMMU_PAGE_RESP_SUCCESS:
->> -			cmd.resume.resp = CMDQ_RESUME_0_RESP_RETRY;
->> -			break;
->> -		default:
->> -			return -EINVAL;
->> -		}
->> -	} else {
->> -		return -ENODEV;
->> +	if (WARN_ON(!master->stall_enabled))
->> +		return;
->> +
->> +	cmd.opcode		= CMDQ_OP_RESUME;
->> +	cmd.resume.sid		= sid;
->> +	cmd.resume.stag		= resp->grpid;
->> +	switch (resp->code) {
->> +	case IOMMU_PAGE_RESP_INVALID:
->> +	case IOMMU_PAGE_RESP_FAILURE:
->> +		cmd.resume.resp = CMDQ_RESUME_0_RESP_ABORT;
->> +		break;
->> +	case IOMMU_PAGE_RESP_SUCCESS:
->> +		cmd.resume.resp = CMDQ_RESUME_0_RESP_RETRY;
->> +		break;
->> +	default:
->> +		break;
->>   	}
->>   
->>   	arm_smmu_cmdq_issue_cmd(master->smmu, &cmd);
->> @@ -954,8 +952,6 @@ static int arm_smmu_page_response(struct device *dev,
->>   	 * terminated... at some point in the future. PRI_RESP is fire and
->>   	 * forget.
->>   	 */
->> -
->> -	return 0;
->>   }
->>   
->>   /* Context descriptor manipulation functions */
->> @@ -1516,16 +1512,6 @@ static int arm_smmu_handle_evt(struct arm_smmu_device *smmu, u64 *evt)
->>   	}
->>   
->>   	ret = iommu_report_device_fault(master->dev, &fault_evt);
->> -	if (ret && flt->type == IOMMU_FAULT_PAGE_REQ) {
->> -		/* Nobody cared, abort the access */
->> -		struct iommu_page_response resp = {
->> -			.pasid		= flt->prm.pasid,
->> -			.grpid		= flt->prm.grpid,
->> -			.code		= IOMMU_PAGE_RESP_FAILURE,
->> -		};
->> -		arm_smmu_page_response(master->dev, &fault_evt, &resp);
->> -	}
->> -
->>   out_unlock:
->>   	mutex_unlock(&smmu->streams_mutex);
->>   	return ret;
->> diff --git a/drivers/iommu/intel/svm.c b/drivers/iommu/intel/svm.c
->> index e1cbcb9515f0..2f8716636dbb 100644
->> --- a/drivers/iommu/intel/svm.c
->> +++ b/drivers/iommu/intel/svm.c
->> @@ -740,9 +740,8 @@ static irqreturn_t prq_event_thread(int irq, void *d)
->>   	return IRQ_RETVAL(handled);
->>   }
->>   
->> -int intel_svm_page_response(struct device *dev,
->> -			    struct iopf_fault *evt,
->> -			    struct iommu_page_response *msg)
->> +void intel_svm_page_response(struct device *dev, struct iopf_fault *evt,
->> +			     struct iommu_page_response *msg)
->>   {
->>   	struct device_domain_info *info = dev_iommu_priv_get(dev);
->>   	struct intel_iommu *iommu = info->iommu;
->> @@ -751,7 +750,6 @@ int intel_svm_page_response(struct device *dev,
->>   	bool private_present;
->>   	bool pasid_present;
->>   	bool last_page;
->> -	int ret = 0;
->>   	u16 sid;
->>   
->>   	prm = &evt->fault.prm;
->> @@ -760,16 +758,6 @@ int intel_svm_page_response(struct device *dev,
->>   	private_present = prm->flags & IOMMU_FAULT_PAGE_REQUEST_PRIV_DATA;
->>   	last_page = prm->flags & IOMMU_FAULT_PAGE_REQUEST_LAST_PAGE;
->>   
->> -	if (!pasid_present) {
->> -		ret = -EINVAL;
->> -		goto out;
->> -	}
->> -
->> -	if (prm->pasid == 0 || prm->pasid >= PASID_MAX) {
->> -		ret = -EINVAL;
->> -		goto out;
->> -	}
->> -
->>   	/*
->>   	 * Per VT-d spec. v3.0 ch7.7, system software must respond
->>   	 * with page group response if private data is present (PDP)
->> @@ -798,8 +786,6 @@ int intel_svm_page_response(struct device *dev,
->>   
->>   		qi_submit_sync(iommu, &desc, 1, 0);
->>   	}
->> -out:
->> -	return ret;
->>   }
->>   
->>   static int intel_svm_set_dev_pasid(struct iommu_domain *domain,
->> diff --git a/drivers/iommu/io-pgfault.c b/drivers/iommu/io-pgfault.c
->> index c22e13df84c2..6e63e5a02884 100644
->> --- a/drivers/iommu/io-pgfault.c
->> +++ b/drivers/iommu/io-pgfault.c
->> @@ -39,7 +39,7 @@ static void iopf_put_dev_fault_param(struct iommu_fault_param *fault_param)
->>   		kfree_rcu(fault_param, rcu);
->>   }
->>   
->> -void iopf_free_group(struct iopf_group *group)
->> +static void __iopf_free_group(struct iopf_group *group)
->>   {
->>   	struct iopf_fault *iopf, *next;
->>   
->> @@ -50,6 +50,11 @@ void iopf_free_group(struct iopf_group *group)
->>   
->>   	/* Pair with iommu_report_device_fault(). */
->>   	iopf_put_dev_fault_param(group->fault_param);
->> +}
->> +
->> +void iopf_free_group(struct iopf_group *group)
->> +{
->> +	__iopf_free_group(group);
->>   	kfree(group);
->>   }
->>   EXPORT_SYMBOL_GPL(iopf_free_group);
->> @@ -97,14 +102,49 @@ static int report_partial_fault(struct iommu_fault_param *fault_param,
->>   	return 0;
->>   }
->>   
->> +static struct iopf_group *iopf_group_alloc(struct iommu_fault_param *iopf_param,
->> +					   struct iopf_fault *evt,
->> +					   struct iopf_group *abort_group)
->> +{
->> +	struct iopf_fault *iopf, *next;
->> +	struct iopf_group *group;
->> +
->> +	group = kzalloc(sizeof(*group), GFP_KERNEL);
->> +	if (!group) {
->> +		/*
->> +		 * We always need to construct the group as we need it to abort
->> +		 * the request at the driver if it cfan't be handled.
->> +		 */
->> +		group = abort_group;
->> +	}
->> +
->> +	group->fault_param = iopf_param;
->> +	group->last_fault.fault = evt->fault;
->> +	INIT_LIST_HEAD(&group->faults);
->> +	INIT_LIST_HEAD(&group->pending_node);
->> +	list_add(&group->last_fault.list, &group->faults);
->> +
->> +	/* See if we have partial faults for this group */
->> +	mutex_lock(&iopf_param->lock);
->> +	list_for_each_entry_safe(iopf, next, &iopf_param->partial, list) {
->> +		if (iopf->fault.prm.grpid == evt->fault.prm.grpid)
->> +			/* Insert*before*  the last fault */
->> +			list_move(&iopf->list, &group->faults);
->> +	}
->> +	list_add(&group->pending_node, &iopf_param->faults);
->> +	mutex_unlock(&iopf_param->lock);
->> +
->> +	return group;
->> +}
->> +
->>   /**
->>    * iommu_report_device_fault() - Report fault event to device driver
->>    * @dev: the device
->>    * @evt: fault event data
->>    *
->>    * Called by IOMMU drivers when a fault is detected, typically in a threaded IRQ
->> - * handler. When this function fails and the fault is recoverable, it is the
->> - * caller's responsibility to complete the fault.
->> + * handler. If this function fails then ops->page_response() was called to
->> + * complete evt if required.
->>    *
->>    * This module doesn't handle PCI PASID Stop Marker; IOMMU drivers must discard
->>    * them before reporting faults. A PASID Stop Marker (LRW = 0b100) doesn't
->> @@ -143,22 +183,18 @@ int iommu_report_device_fault(struct device *dev, struct iopf_fault *evt)
->>   {
->>   	struct iommu_fault *fault = &evt->fault;
->>   	struct iommu_fault_param *iopf_param;
->> -	struct iopf_fault *iopf, *next;
->> -	struct iommu_domain *domain;
->> +	struct iopf_group abort_group = {};
->>   	struct iopf_group *group;
->>   	int ret;
->>   
->> -	if (fault->type != IOMMU_FAULT_PAGE_REQ)
->> -		return -EOPNOTSUPP;
->> -
->>   	iopf_param = iopf_get_dev_fault_param(dev);
->> -	if (!iopf_param)
->> +	if (WARN_ON(!iopf_param))
->>   		return -ENODEV;
->>   
->>   	if (!(fault->prm.flags & IOMMU_FAULT_PAGE_REQUEST_LAST_PAGE)) {
->>   		ret = report_partial_fault(iopf_param, fault);
->>   		iopf_put_dev_fault_param(iopf_param);
->> -
->> +		/* A request that is not the last does not need to be ack'd */
->>   		return ret;
->>   	}
->>   
->> @@ -170,56 +206,33 @@ int iommu_report_device_fault(struct device *dev, struct iopf_fault *evt)
->>   	 * will send a response to the hardware. We need to clean up before
->>   	 * leaving, otherwise partial faults will be stuck.
->>   	 */
->> -	domain = get_domain_for_iopf(dev, fault);
->> -	if (!domain) {
->> +	group = iopf_group_alloc(iopf_param, evt, &abort_group);
->> +	if (group == &abort_group) {
->> +		ret = -ENOMEM;
->> +		goto err_abort;
->> +	}
->> +
->> +	group->domain = get_domain_for_iopf(dev, fault);
->> +	if (!group->domain) {
->>   		ret = -EINVAL;
->> -		goto cleanup_partial;
->> +		goto err_abort;
->>   	}
->>   
->> -	group = kzalloc(sizeof(*group), GFP_KERNEL);
->> -	if (!group) {
->> -		ret = -ENOMEM;
->> -		goto cleanup_partial;
->> -	}
->> -
->> -	group->fault_param = iopf_param;
->> -	group->last_fault.fault = *fault;
->> -	INIT_LIST_HEAD(&group->faults);
->> -	INIT_LIST_HEAD(&group->pending_node);
->> -	group->domain = domain;
->> -	list_add(&group->last_fault.list, &group->faults);
->> -
->> -	/* See if we have partial faults for this group */
->> -	mutex_lock(&iopf_param->lock);
->> -	list_for_each_entry_safe(iopf, next, &iopf_param->partial, list) {
->> -		if (iopf->fault.prm.grpid == fault->prm.grpid)
->> -			/* Insert*before*  the last fault */
->> -			list_move(&iopf->list, &group->faults);
->> -	}
->> -	list_add(&group->pending_node, &iopf_param->faults);
->> -	mutex_unlock(&iopf_param->lock);
->> +	/*
->> +	 * On success iopf_handler must call iopf_group_response() and
->> +	 * iopf_free_group()
->> +	 */
->> +	ret = group->domain->iopf_handler(group);
->> +	if (ret)
->> +		goto err_abort;
->> +	return 0;
->>   
->> -	ret = domain->iopf_handler(group);
->> -	if (ret) {
->> -		mutex_lock(&iopf_param->lock);
->> -		list_del_init(&group->pending_node);
->> -		mutex_unlock(&iopf_param->lock);
->> +err_abort:
->> +	iopf_group_response(group, IOMMU_PAGE_RESP_FAILURE);
->> +	if (group == &abort_group)
->> +		__iopf_free_group(group);
->> +	else
->>   		iopf_free_group(group);
->> -	}
->> -
->> -	return ret;
->> -
->> -cleanup_partial:
->> -	mutex_lock(&iopf_param->lock);
->> -	list_for_each_entry_safe(iopf, next, &iopf_param->partial, list) {
->> -		if (iopf->fault.prm.grpid == fault->prm.grpid) {
->> -			list_del(&iopf->list);
->> -			kfree(iopf);
->> -		}
->> -	}
->> -	mutex_unlock(&iopf_param->lock);
->> -	iopf_put_dev_fault_param(iopf_param);
->> -
->>   	return ret;
->>   }
->>   EXPORT_SYMBOL_GPL(iommu_report_device_fault);
->> @@ -262,8 +275,8 @@ EXPORT_SYMBOL_GPL(iopf_queue_flush_dev);
->>    *
->>    * Return 0 on success and <0 on error.
->>    */
-> Should you adjust the docs as well?
+On Fri, Jan 26, 2024 at 10:32=E2=80=AFAM Dragan Simic <dsimic@manjaro.org> =
+wrote:
+>
+> Hello Daniel,
+>
+> On 2024-01-25 10:30, Daniel Lezcano wrote:
+> > On 24/01/2024 21:30, Alexey Charkov wrote:
+> >> By default the CPUs on RK3588 start up in a conservative performance
+> >> mode. Add frequency and voltage mappings to the device tree to enable
+> >> dynamic scaling via cpufreq
+> >>
+> >> Signed-off-by: Alexey Charkov <alchark@gmail.com>
+> >> ---
+> >>   arch/arm64/boot/dts/rockchip/rk3588s.dtsi | 209
+> >> ++++++++++++++++++++++++++++++
+> >>   1 file changed, 209 insertions(+)
+> >>
+> >> diff --git a/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
+> >> b/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
+> >> index 131b9eb21398..e605be531a0f 100644
+> >> --- a/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
+> >> +++ b/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
+> >> @@ -97,6 +97,7 @@ cpu_l0: cpu@0 {
+> >>                      clocks =3D <&scmi_clk SCMI_CLK_CPUL>;
+> >>                      assigned-clocks =3D <&scmi_clk SCMI_CLK_CPUL>;
+> >>                      assigned-clock-rates =3D <816000000>;
+> >> +                    operating-points-v2 =3D <&cluster0_opp_table>;
+> >>                      cpu-idle-states =3D <&CPU_SLEEP>;
+> >>                      i-cache-size =3D <32768>;
+> >>                      i-cache-line-size =3D <64>;
+> >> @@ -116,6 +117,7 @@ cpu_l1: cpu@100 {
+> >>                      enable-method =3D "psci";
+> >>                      capacity-dmips-mhz =3D <530>;
+> >>                      clocks =3D <&scmi_clk SCMI_CLK_CPUL>;
+> >> +                    operating-points-v2 =3D <&cluster0_opp_table>;
+> >>                      cpu-idle-states =3D <&CPU_SLEEP>;
+> >>                      i-cache-size =3D <32768>;
+> >>                      i-cache-line-size =3D <64>;
+> >> @@ -135,6 +137,7 @@ cpu_l2: cpu@200 {
+> >>                      enable-method =3D "psci";
+> >>                      capacity-dmips-mhz =3D <530>;
+> >>                      clocks =3D <&scmi_clk SCMI_CLK_CPUL>;
+> >> +                    operating-points-v2 =3D <&cluster0_opp_table>;
+> >>                      cpu-idle-states =3D <&CPU_SLEEP>;
+> >>                      i-cache-size =3D <32768>;
+> >>                      i-cache-line-size =3D <64>;
+> >> @@ -154,6 +157,7 @@ cpu_l3: cpu@300 {
+> >>                      enable-method =3D "psci";
+> >>                      capacity-dmips-mhz =3D <530>;
+> >>                      clocks =3D <&scmi_clk SCMI_CLK_CPUL>;
+> >> +                    operating-points-v2 =3D <&cluster0_opp_table>;
+> >>                      cpu-idle-states =3D <&CPU_SLEEP>;
+> >>                      i-cache-size =3D <32768>;
+> >>                      i-cache-line-size =3D <64>;
+> >> @@ -175,6 +179,7 @@ cpu_b0: cpu@400 {
+> >>                      clocks =3D <&scmi_clk SCMI_CLK_CPUB01>;
+> >>                      assigned-clocks =3D <&scmi_clk SCMI_CLK_CPUB01>;
+> >>                      assigned-clock-rates =3D <816000000>;
+> >> +                    operating-points-v2 =3D <&cluster1_opp_table>;
+> >>                      cpu-idle-states =3D <&CPU_SLEEP>;
+> >>                      i-cache-size =3D <65536>;
+> >>                      i-cache-line-size =3D <64>;
+> >> @@ -194,6 +199,7 @@ cpu_b1: cpu@500 {
+> >>                      enable-method =3D "psci";
+> >>                      capacity-dmips-mhz =3D <1024>;
+> >>                      clocks =3D <&scmi_clk SCMI_CLK_CPUB01>;
+> >> +                    operating-points-v2 =3D <&cluster1_opp_table>;
+> >>                      cpu-idle-states =3D <&CPU_SLEEP>;
+> >>                      i-cache-size =3D <65536>;
+> >>                      i-cache-line-size =3D <64>;
+> >> @@ -215,6 +221,7 @@ cpu_b2: cpu@600 {
+> >>                      clocks =3D <&scmi_clk SCMI_CLK_CPUB23>;
+> >>                      assigned-clocks =3D <&scmi_clk SCMI_CLK_CPUB23>;
+> >>                      assigned-clock-rates =3D <816000000>;
+> >> +                    operating-points-v2 =3D <&cluster2_opp_table>;
+> >>                      cpu-idle-states =3D <&CPU_SLEEP>;
+> >>                      i-cache-size =3D <65536>;
+> >>                      i-cache-line-size =3D <64>;
+> >> @@ -234,6 +241,7 @@ cpu_b3: cpu@700 {
+> >>                      enable-method =3D "psci";
+> >>                      capacity-dmips-mhz =3D <1024>;
+> >>                      clocks =3D <&scmi_clk SCMI_CLK_CPUB23>;
+> >> +                    operating-points-v2 =3D <&cluster2_opp_table>;
+> >>                      cpu-idle-states =3D <&CPU_SLEEP>;
+> >>                      i-cache-size =3D <65536>;
+> >>                      i-cache-line-size =3D <64>;
+> >> @@ -348,6 +356,207 @@ l3_cache: l3-cache {
+> >>              };
+> >>      };
+> >>   +  cluster0_opp_table: opp-table-cluster0 {
+> >> +            compatible =3D "operating-points-v2";
+> >> +            opp-shared;
+> >> +
+> >> +            opp-408000000 {
+> >> +                    opp-hz =3D /bits/ 64 <408000000>;
+> >> +                    opp-microvolt =3D <675000 675000 950000>;
+> >> +                    clock-latency-ns =3D <40000>;
+> >> +            };
+> >> +            opp-600000000 {
+> >> +                    opp-hz =3D /bits/ 64 <600000000>;
+> >> +                    opp-microvolt =3D <675000 675000 950000>;
+> >> +                    clock-latency-ns =3D <40000>;
+> >> +            };
+> >> +            opp-816000000 {
+> >> +                    opp-hz =3D /bits/ 64 <816000000>;
+> >> +                    opp-microvolt =3D <675000 675000 950000>;
+> >> +                    clock-latency-ns =3D <40000>;
+> >> +            };
+> >> +            opp-1008000000 {
+> >> +                    opp-hz =3D /bits/ 64 <1008000000>;
+> >> +                    opp-microvolt =3D <675000 675000 950000>;
+> >> +                    clock-latency-ns =3D <40000>;
+> >> +            };
+> >
+> > It is not useful to introduce OPP with the same voltage. There is no
+> > gain in terms of energy efficiency as the compute capacity is linearly
+> > tied with power consumption (P=3DCxFxV=C2=B2) in this case.
+> >
+> > For example, opp-408 consumes 2 bogoWatts and opp-816 consumes 4
+> > bogoWatts (because of the same voltage).
+> >
+> > For a workload, opp-408 takes 10 sec and opp-816 takes 5 sec because
+> > it is twice faster.
+> >
+> > The energy consumption is:
+> >
+> > opp-408 =3D 10 x 2 =3D 20 BogoJoules
+> > opp-816 =3D 5 x 4 =3D 20 BogoJoules
+>
+> I'd respectfully disagree that including multiple OPPs with the same
+> voltage
+> but different frequencies isn't useful.  Please allow me to explain.
+>
+> See, the total amount of consumed energy is, in general, the same for
+> such
+> OPPs and the same CPU task(s), if we ignore the static leakage current
+> and
+> such stuff, which isn't important here.  Though, the emphasis here is on
+> "total", i.e. without taking into account the actual amount of time
+> required
+> for the exemplified CPU task(s) to complete.  If the total amount of
+> time
+> is quite short, we aren't going to heat up the package and the board
+> enough
+> to hit the CPU thermal throttling;  this approach is also sometimes
+> referred
+> to as "race to idle", which is actually quite effective for
+> battery-powered
+> mobile devices that tend to load their CPU cores in bursts, while
+> remaining
+> kind of inactive for the remaining time.
+>
+> However, if the CPU task(s) last long enough to actually saturate the
+> thermal
+> capacities of the package and the board or the device, we're getting
+> into the
+> CPU throttling territory, in which running the CPU cores slower, but
+> still as
+> fast as possible, may actually be beneficial for the overall CPU
+> performance.
+> By running the CPU cores slower, we're lowering the power and
+> "spreading" the
+> total energy consumption over time, i.e. we're making some time to allow
+> the
+> generated heat to dissipate into the surroundings.  As we know, having
+> more
+> energy consumed by the SoC means more heat generated by the SoC, but the
+> resulting temperature of the SoC depends on how fast the energy is
+> consumed,
+> which equals to how fast the CPUs run;  of course, all that is valid
+> under
+> the reasonable assumption that the entire cooling setup, including the
+> board
+> surroundings, remains unchanged all the time.
 
-Yes. Will do.
+On the other hand, convective heat dissipation is approximately
+proportional to the temperature differential, therefore heating up the
+core to a higher temperature over a shorter period of time would let
+it dissipate the same joule amount faster. Given that total joules
+generated for a particular load are approximately the same for
+different frequencies as long as voltage remains the same (as Daniel
+pointed out), higher frequency seems to lead to better heat transfer
+to the environment for the same load. And also the task completes
+sooner, which is probably always good, ceteris paribus.
+
+Not sure how that all changes when throttling enters the game though :)
 
 Best regards,
-baolu
+Alexey
