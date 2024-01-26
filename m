@@ -1,45 +1,45 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24D0A604B7;
-	Fri, 26 Jan 2024 23:37:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4BE76089C;
+	Fri, 26 Jan 2024 23:37:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706312252; cv=none; b=dYLx3r0Cnj6Q6f7FWMjapy15OYuQywO3jIc2HFgRz3oRDSXHZq+fdvOantYCkquOkWYFfiBsypVoH8h0V4KsdSU7vlMnU8d/Llz8tk4VyTwVZV3kZEw4CYyXQz6q82fIHS+COMptN9V/9/3nRujWGHr1SbqKdodigfQmXeku9V8=
+	t=1706312254; cv=none; b=TvxPzsKuFWcHwR/OOIczAIZeS0e9FZQzhOxMFXEj3Ixn4EAZiU++KUb9TQUX4PGdWPmgB+HpBukdpncI0qCp0vJ40u2rOdcZO4oVNabO6s0QKb0/L03botqpaL4y5iyqCHevELcMaE5tlgo+9wiN2U532IeS8t6iRUJ8bJI62+Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706312252; c=relaxed/simple;
-	bh=+q6Ng6aZ31M15sxzv7j/zcb8dlMqz5ufayt8TldTJ+8=;
+	s=arc-20240116; t=1706312254; c=relaxed/simple;
+	bh=RLEMYdVVEnLOqM5rupdyL8vv8OyQExpN9wq5K3uinZc=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=PeidSPfO4fAfIghnNstt7OyjkeVt/3ysO+pThEEgUcsIj0/KZrOmctXsUbtSjtv1W0MDZ18lUKePCUPxtZ2Y5ob62q2WsmglaWeNrtxY260SOnUCTBxvCI/X074YdrZjBOJmdMczMnvL8+V2O/BcWkmhEGzy6TMk/UQPtY1T6Qs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PnwmklOy; arc=none smtp.client-ip=192.198.163.10
+	 MIME-Version; b=DMswAOFwrr3Hq9hlKBD8alT17miAORXamBLdCzt1YsCInEU6e4MPvHUB+8YhdQQQTgOYGPCb6jxrOZoRnW9GRlsLSB/EHnHkusx+MO8tDFzIc2ftt5VY4LMMW9+d0drHzclKUraF1SQPtPyJUGP3hmv0Ir0NgD0wm4pggIj3ynY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hLljP1ki; arc=none smtp.client-ip=192.198.163.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PnwmklOy"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hLljP1ki"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706312250; x=1737848250;
+  t=1706312252; x=1737848252;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=+q6Ng6aZ31M15sxzv7j/zcb8dlMqz5ufayt8TldTJ+8=;
-  b=PnwmklOyRsNQFMKCREY5L7G5HmXmdT9QTqlxPGy0oXPTXfUfnanU/xDs
-   KNkb12nNp07C08N536rZ7lWU6KGE5IVIBg7UnLU6WEukAbgRC4NLm9qLR
-   xOnJu1a9JasgxaXgDycT3vdwwDF2AgvxYFKeGBC52EZFqP9uBPs4raPsP
-   3xlzeCVC3ilPUQ8GdLll4WnrPAhtiv5Bq6JABMO1G+dMwTEOvF4VWLfJ3
-   leIwgpS7kiKeFjLe48jD2It+Kz80gubstdFEJnD6+kirzuu7T9imTrvko
-   XslizsZt1KbKdkMz1seR8OaTKc0LkpxreL5YzvNMdWrFCEgY9Rp+5p2/3
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="9990764"
+  bh=RLEMYdVVEnLOqM5rupdyL8vv8OyQExpN9wq5K3uinZc=;
+  b=hLljP1kichLqz/h6poVw4fiZ+htNkkGk+R2nYgfJY0zb4VWLWDxhWVja
+   GKv7VH27O7Sjd6apVqIOBP/bHDAOQgSCae6Bn9iZlGC1ygJ9KfLyYrxlQ
+   tXPx0Y0IKiGXYLqaz9FL7RA1zrkUhZTA54LGg/cBdmA/+TtvBw3JF0sHm
+   3dMO5pyjvG+vfDDnW0Cjh+JX9uokUL5JHvggQpYIYoKjXxH1SXiGUkWZ1
+   ugQWW2VPhojUuCdTyVgxW6iRbCZS1nahY95zJ+y2I5++azX7NgKcannMg
+   8gDz/5r1hvOBqS4RWhyz54COeR1n1ojkz6PYLOKGx+NUrVhP4AuPjDXrD
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="9990798"
 X-IronPort-AV: E=Sophos;i="6.05,220,1701158400"; 
-   d="scan'208";a="9990764"
+   d="scan'208";a="9990798"
 Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2024 15:37:23 -0800
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2024 15:37:24 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="821290748"
+X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="821290755"
 X-IronPort-AV: E=Sophos;i="6.05,220,1701158400"; 
-   d="scan'208";a="821290748"
+   d="scan'208";a="821290755"
 Received: from srinivas-otcpl-7600.jf.intel.com (HELO jacob-builder.jf.intel.com) ([10.54.39.116])
-  by orsmga001.jf.intel.com with ESMTP; 26 Jan 2024 15:37:22 -0800
+  by orsmga001.jf.intel.com with ESMTP; 26 Jan 2024 15:37:23 -0800
 From: Jacob Pan <jacob.jun.pan@linux.intel.com>
 To: LKML <linux-kernel@vger.kernel.org>,
 	X86 Kernel <x86@kernel.org>,
@@ -62,9 +62,9 @@ Cc: Paul Luse <paul.e.luse@intel.com>,
 	seanjc@google.com,
 	"Robin Murphy" <robin.murphy@arm.com>,
 	Jacob Pan <jacob.jun.pan@linux.intel.com>
-Subject: [PATCH 12/15] iommu/vt-d: Make posted MSI an opt-in cmdline option
-Date: Fri, 26 Jan 2024 15:42:34 -0800
-Message-Id: <20240126234237.547278-13-jacob.jun.pan@linux.intel.com>
+Subject: [PATCH 14/15] iommu/vt-d: Add a helper to retrieve PID address
+Date: Fri, 26 Jan 2024 15:42:36 -0800
+Message-Id: <20240126234237.547278-15-jacob.jun.pan@linux.intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240126234237.547278-1-jacob.jun.pan@linux.intel.com>
 References: <20240126234237.547278-1-jacob.jun.pan@linux.intel.com>
@@ -76,83 +76,55 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add a command line opt-in option for posted MSI if CONFIG_X86_POSTED_MSI=y.
+From: Thomas Gleixner <tglx@linutronix.de>
 
-Also introduce a helper function for testing if posted MSI is supported on
-the platform.
+Physical address of the Intel posted interrupt descriptor (PID) is needed
+when programming interrupt remapping table entry (IRTE) for posted mode.
 
+PID is per-CPU, this patch adds a helper function to retrieve the target
+CPU's PID address based on the effective affinity mask of the interrupt.
+
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
----
- Documentation/admin-guide/kernel-parameters.txt |  1 +
- arch/x86/include/asm/irq_remapping.h            | 11 +++++++++++
- drivers/iommu/irq_remapping.c                   | 13 ++++++++++++-
- 3 files changed, 24 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 31b3a25680d0..35feefc0bdb0 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -2212,6 +2212,7 @@
- 			no_x2apic_optout
- 				BIOS x2APIC opt-out request will be ignored
- 			nopost	disable Interrupt Posting
-+			posted_msi enable MSIs delivered as posted interrupts
+---
+v1: Added a warning if the effective affinity mask is not set up
+---
+ drivers/iommu/intel/irq_remapping.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+
+diff --git a/drivers/iommu/intel/irq_remapping.c b/drivers/iommu/intel/irq_remapping.c
+index fa719936b44e..01df65dca1d5 100644
+--- a/drivers/iommu/intel/irq_remapping.c
++++ b/drivers/iommu/intel/irq_remapping.c
+@@ -19,6 +19,7 @@
+ #include <asm/cpu.h>
+ #include <asm/irq_remapping.h>
+ #include <asm/pci-direct.h>
++#include <asm/posted_intr.h>
  
- 	iomem=		Disable strict checking of access to MMIO memory
- 		strict	regions from userspace.
-diff --git a/arch/x86/include/asm/irq_remapping.h b/arch/x86/include/asm/irq_remapping.h
-index 7a2ed154a5e1..e46bde61029b 100644
---- a/arch/x86/include/asm/irq_remapping.h
-+++ b/arch/x86/include/asm/irq_remapping.h
-@@ -50,6 +50,17 @@ static inline struct irq_domain *arch_get_ir_parent_domain(void)
- 	return x86_vector_domain;
- }
+ #include "iommu.h"
+ #include "../irq_remapping.h"
+@@ -1126,6 +1127,19 @@ struct irq_remap_ops intel_irq_remap_ops = {
+ 	.enable_faulting	= enable_drhd_fault_handling,
+ };
  
 +#ifdef CONFIG_X86_POSTED_MSI
-+extern int enable_posted_msi;
 +
-+static inline bool posted_msi_supported(void)
++static phys_addr_t get_pi_desc_addr(struct irq_data *irqd)
 +{
-+	return enable_posted_msi && irq_remapping_cap(IRQ_POSTING_CAP);
++	int cpu = cpumask_first(irq_data_get_effective_affinity_mask(irqd));
++
++	if (WARN_ON(cpu >= nr_cpu_ids))
++		return 0;
++
++	return __pa(per_cpu_ptr(&posted_interrupt_desc, cpu));
 +}
-+#else
-+static inline bool posted_msi_supported(void) { return false; };
 +#endif
 +
- #else  /* CONFIG_IRQ_REMAP */
- 
- static inline bool irq_remapping_cap(enum irq_remap_cap cap) { return 0; }
-diff --git a/drivers/iommu/irq_remapping.c b/drivers/iommu/irq_remapping.c
-index 83314b9d8f38..4047ac396728 100644
---- a/drivers/iommu/irq_remapping.c
-+++ b/drivers/iommu/irq_remapping.c
-@@ -24,6 +24,10 @@ int no_x2apic_optout;
- 
- int disable_irq_post = 0;
- 
-+#ifdef CONFIG_X86_POSTED_MSI
-+int enable_posted_msi;
-+#endif
-+
- static int disable_irq_remap;
- static struct irq_remap_ops *remap_ops;
- 
-@@ -70,7 +74,14 @@ static __init int setup_irqremap(char *str)
- 			no_x2apic_optout = 1;
- 		else if (!strncmp(str, "nopost", 6))
- 			disable_irq_post = 1;
--
-+#ifdef CONFIG_X86_POSTED_MSI
-+		else if (!strncmp(str, "posted_msi", 10)) {
-+			if (disable_irq_post || disable_irq_remap)
-+				pr_warn("Posted MSI not enabled due to conflicting options!");
-+			else
-+				enable_posted_msi = 1;
-+		}
-+#endif
- 		str += strcspn(str, ",");
- 		while (*str == ',')
- 			str++;
+ static void intel_ir_reconfigure_irte(struct irq_data *irqd, bool force)
+ {
+ 	struct intel_ir_data *ir_data = irqd->chip_data;
 -- 
 2.25.1
 
