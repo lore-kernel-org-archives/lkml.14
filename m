@@ -1,60 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DD8E51C20;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB44752F96;
 	Fri, 26 Jan 2024 22:05:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706306730; cv=none; b=Q4volL60O0azD7IwEWQ9pKrJHT3tVJpX/7RGrXGQt+zW7nIAeCrc9cI1rD8AsDdWfUDBjAaatJ2Fnd6ergwikVsWSUf0UmK+H5rl+ABW71EKIRa3nkgdbOn+3rSmosW0frXpy4y/daXWhIznO3KErrYMtfArhAfTNrZ63wJBLiA=
+	t=1706306731; cv=none; b=b+XCKCq1sojdNmWmjekr48D/B6lB3cwYnnATKnlSS5fzhdwd7IQ5WinfYVc3J+Ghow5bYvRnElJa8tIgNNzv6hpfS2tutUFiSU8WpS6Wdbk+t2eOHFLpmQ5TWmvfOYqdY7wQAtMR6dGWNppchPbI4X/n8/y6mNuArUqsP8dmtb8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706306730; c=relaxed/simple;
-	bh=Y2JuC5v1p08QFS1tJxVNDG8xj4h+nqssv7Nc+OZZCeU=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=FoMuEmvPoX2AhUnNPkQNKDeIja69X9H9Tr3Q9Zk9JqRuuan2iB+hlTdfE6nwUqAzqeCq2yUajWtGYOPJmMpr4frQUbhvKz8Zf6rLWzBS74YM4dyWr55oD7gsdbW4ngTQDFASAWffq76gT7DSzQVmjVSaaVZNNuCcgbiqXWeubk0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jpyUviXQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706306731; c=relaxed/simple;
+	bh=kRiK8lfwsy9lh9OLwGQZZQfczyEtM/lSnRydeOYhHZw=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=ftXghF9GCroG/aMyQCfUNlSGfZKTiYkjxxMmFSukwsPYNsq0b0vIABgm7H4x3waG8mrc9jRWUlveOU6ZPUR2z1LbW8gVGyfVblw5JIsZbbQQo8C3sPvSqrOYRnyQi9cNH+4I27umqZ6ZWeUbsHkkmsbP4CL72j25NzNYwCOFadk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zy3Qt/4C; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jpyUviXQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 430B7C43399;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zy3Qt/4C"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id C6278C43390;
 	Fri, 26 Jan 2024 22:05:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1706306730;
-	bh=Y2JuC5v1p08QFS1tJxVNDG8xj4h+nqssv7Nc+OZZCeU=;
+	bh=kRiK8lfwsy9lh9OLwGQZZQfczyEtM/lSnRydeOYhHZw=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=jpyUviXQhh+sylIwZj1rcUeQzcOh7eULdXaNFpZnCJMgwmf4lfFsA2wYI4vQ3ZMNr
-	 RvkW9XUWVL3anTrlkYQ/N42MQo9llwjHT2NsAAAQHCA8wczzWdR+oANlgXdPhOwSSD
-	 x/4PS9OhtqHlmP2IeZNnH2tygxdxqkAlc3DGmBlQpJo2jqooE2LRJRBrZC17KhQn3V
-	 aeMwDRAKy9QmhNFp+5BVgvBPT7l6yZf2Zwn91+tR2xr7YOwhTRBab/sNjp68yyKeLa
-	 8xVEY8lKsK/QK6YX5dwP0G56nnVcuq8NA6aywMJTYe63eRWMotZLFxce0TIKftrs1H
-	 iT1+JgWJSiEFw==
+	b=Zy3Qt/4C2dwL1ay2VLBRYL7xG6J8rNfd/hbxF2AQTjxQ3AjrImfhMbUl2yboHjIBh
+	 9i++qoYoNzPkgU0jFbbQHpteBwNGBc+6bdupI19lFAAMJSNX/IG/yEm2twFrxVcGyZ
+	 w4acEqporEbm7aSJhm5NDLhvRC6r4FWAgH6FhKjZeapGo2ddBGtVMA6QETVCeW09Gt
+	 EDje+YN2hb+zALMG68zuncjtGcfb8NNeY1H8542l4RBkBlDXuXwX4FzQkMoxx6Lj4O
+	 ug+jDqSpPLLDF5jTobcGVJ7Yspaskk9nIeoJ3Ayyl9kttmr/xvd+4xjpNsHGq10NNL
+	 h6gBr/rBRMmsw==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 2601DDFF765;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id B638BDFF760;
 	Fri, 26 Jan 2024 22:05:30 +0000 (UTC)
-Subject: Re: [GIT PULL for v6.8-rc2] media fixes
+Subject: Re: [GIT PULL] gpio: fixes for v6.8-rc2
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <20240126110338.2d1063f4@coco.lan>
-References: <20240126110338.2d1063f4@coco.lan>
-X-PR-Tracked-List-Id: <linux-media.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20240126110338.2d1063f4@coco.lan>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/mchehab/linux-media tags/media/v6.8-3
-X-PR-Tracked-Commit-Id: b32431b753217d8d45b018443b1a7aac215921fb
+In-Reply-To: <20240126123405.35367-1-brgl@bgdev.pl>
+References: <20240126123405.35367-1-brgl@bgdev.pl>
+X-PR-Tracked-List-Id: <linux-gpio.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20240126123405.35367-1-brgl@bgdev.pl>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.8-rc2
+X-PR-Tracked-Commit-Id: 84aef4ed59705585d629e81d633a83b7d416f5fb
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 4aeb083707d6a2535bfea5d16140b72a81efb62b
-Message-Id: <170630673015.20742.8308794657971173367.pr-tracker-bot@kernel.org>
+X-PR-Merge-Commit-Id: 5f91b9ba5acada5e56c874af82660d29a7f84e25
+Message-Id: <170630673074.20742.5206425869654337908.pr-tracker-bot@kernel.org>
 Date: Fri, 26 Jan 2024 22:05:30 +0000
-To: Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andrew Morton <akpm@linux-foundation.org>, Linux Media Mailing List <linux-media@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Fri, 26 Jan 2024 11:03:38 +0100:
+The pull request you sent on Fri, 26 Jan 2024 13:34:05 +0100:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/mchehab/linux-media tags/media/v6.8-3
+> git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.8-rc2
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/4aeb083707d6a2535bfea5d16140b72a81efb62b
+https://git.kernel.org/torvalds/c/5f91b9ba5acada5e56c874af82660d29a7f84e25
 
 Thank you!
 
