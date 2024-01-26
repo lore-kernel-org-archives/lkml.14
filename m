@@ -1,37 +1,38 @@
 Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4DEE134A3;
-	Fri, 26 Jan 2024 11:01:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51250134BD;
+	Fri, 26 Jan 2024 11:01:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706266910; cv=none; b=E1M4GkXCbSuVbRLRgc0OOz+pdKtfNmldP/Jy5Mq6+OYNZdDkf5jSzEdfJ/wf+RkVaXXZ/1GqdUi78gSbBEv7qusxf/kDoJr0TCW+K/hZGIR2V6Nc2rLKWuDM72okicRLFFooXjKG0qB+C4nGWfCm6JSFUQnFIy9aJbCgJL7SW2Q=
+	t=1706266912; cv=none; b=EcuRA7vtzMVNuuBtdrHjs1clC1ex0XQ5SZQAmwCLM1g95G6YGUYY1CsHNDSy9ICDb0Q0oZSnc90lhF8rkeDdYGPHOxvxR0kW/Is41NscYBglck5hfpUXlZqpRmZCYXxp3+bb3Gxyd+XcfmZbQs/CMdjpaY7IxZfFIB5v6Twn8Wo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706266910; c=relaxed/simple;
-	bh=6x9btn33raq90zH8k4DUM/aQvJRHiFqFxpsrW9aKu6A=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=YWGdmG3aBVPP2w8DDcZroi5o9xS7+VmjY9b4oIXBlWH+v3QRV8sZmTdcp5+KfLm8ydZ7dQ5Dpxlic5+bwGAg1qQBTDp9VFZyzBTq6q+2GxF/vY++TGeNgC12CN4lhsAQOIMWeXBrFd+/1KQT6VEFcYL4lU/x7uI2Qj2EG95ogj0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=dtTi3LEN; arc=none smtp.client-ip=46.235.227.194
+	s=arc-20240116; t=1706266912; c=relaxed/simple;
+	bh=qivh6TydDKfcZbVPYc7spMw2cRqVCzEb9YVNhr43HUY=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=jadX5h0VO11f0z85tOnsYtT1GLZumyemH86lxOm7OBa/Eo83RIDG1IO7tRL+3rTosPMMW9Rfj34/U+vwNj8lwn6MdiUtXLM/oyYFABAS2B0fh9Cn0VNMA1A3q+G7JovxiWcQSQYo7xp5o11wJC73g7z2MXnqVb7/e1FpOJqU+LM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=DE/A6b+M; arc=none smtp.client-ip=46.235.227.194
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="dtTi3LEN"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="DE/A6b+M"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1706266906;
-	bh=6x9btn33raq90zH8k4DUM/aQvJRHiFqFxpsrW9aKu6A=;
-	h=From:To:Cc:Subject:Date:From;
-	b=dtTi3LENmgcD1gn/PFvTtJ8kDCFWPudRUlyz756jXRuA/4EOrUVul1TBIh/t+WtgO
-	 mpjMN+RLIo35SXMOQ7YH0KunA2wDssJaxfbWF3ny4bBhcv6I97fhnAnC5MbBteZ1OI
-	 RldZNIDzzOOZ6dmQht10XEyDCGOP/kDJ7+26YDRDI1Kj8A448h9pJFGbQweN6hodF1
-	 oz8d5SEIscgBRCFNUrPi3+YcJ0chlzOkBIJ5Lx0yFWo+q55EHzYKWaJsPUMCEKCqdN
-	 4DVfc3wLc7Vrg77oxucEp2g1bvKp0eCvs2vGmjn4zx+Di3KWOCuaKDiu0WZ8j6TLyw
-	 cMsqTPMN8BXYA==
+	s=mail; t=1706266908;
+	bh=qivh6TydDKfcZbVPYc7spMw2cRqVCzEb9YVNhr43HUY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=DE/A6b+M9I/fKxelSO3AUaC3vTm4NgzNdvGB+EAsNfNFIDo1vBid49NDfN4cYxAqH
+	 Z2HNW4gqt3osCxV04/Tj7JnOa7N9kcxaQCl0qNuv8et/Fm8Omfj4EaF20oHn3dIxfB
+	 JAGP3mFxUYUAoILP9waJ2DMcitvbKpOO5zlxMD5bf17Z1kBkJ93AsIqgK7TTWwuMf0
+	 T6mSgKOSusV6e5f2CcLnlk91PDDigaLbfORRex6tqCTop2ctvWMVdq64hgbqFAD4vk
+	 2pASlsJbZZSGCU4UxXbrtJ+qHDYvHivDAZNUPBm8HMMltHZRQV0bJNZHPaqYBQE17y
+	 VazVG+2TL8tiw==
 Received: from benjamin-XPS-13-9310.. (cola.collaboradmins.com [195.201.22.229])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: benjamin.gaignard)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 81BA53782072;
-	Fri, 26 Jan 2024 11:01:46 +0000 (UTC)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 259553782077;
+	Fri, 26 Jan 2024 11:01:48 +0000 (UTC)
 From: Benjamin Gaignard <benjamin.gaignard@collabora.com>
 To: hverkuil@xs4all.nl,
 	mchehab@kernel.org
@@ -39,10 +40,12 @@ Cc: linux-kernel@vger.kernel.org,
 	linux-media@vger.kernel.org,
 	kernel@collabora.com,
 	Benjamin Gaignard <benjamin.gaignard@collabora.com>
-Subject: [PATCH v18 0/9] Add DELETE_BUF ioctl
-Date: Fri, 26 Jan 2024 12:01:32 +0100
-Message-Id: <20240126110141.135896-1-benjamin.gaignard@collabora.com>
+Subject: [PATCH v18 3/9] media: test-drivers: Set REQBUFS minimum number of buffers
+Date: Fri, 26 Jan 2024 12:01:35 +0100
+Message-Id: <20240126110141.135896-4-benjamin.gaignard@collabora.com>
 X-Mailer: git-send-email 2.40.1
+In-Reply-To: <20240126110141.135896-1-benjamin.gaignard@collabora.com>
+References: <20240126110141.135896-1-benjamin.gaignard@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,93 +54,54 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Unlike when resolution change on keyframes, dynamic resolution change
-on inter frames doesn't allow to do a stream off/on sequence because
-it is need to keep all previous references alive to decode inter frames.
-This constraint have two main problems:
-- more memory consumption.
-- more buffers in use.
-To solve these issue this series introduce DELETE_BUFS ioctl and remove
-the 32 buffers limit per queue.
+Instead of using 'min_queued_buffers' field to specify the
+minimum number of buffers to be allocated when calling REQBUF
+use 'min_reqbufs_allocation' field which is dedicated to this
+purpose.
 
-VP9 conformance tests using fluster give a score of 210/305.
-The 23 of the 24 resize inter tests (vp90-2-21-resize_inter_* files) are ok
-but require to use postprocessor.
+While at it rename vivid_create_queue() parameter.
 
-Kernel branch is available here:
-https://gitlab.collabora.com/benjamin.gaignard/for-upstream/-/commits/remove_vb2_queue_limit_v18
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard@collabora.com>
+---
+ drivers/media/test-drivers/vimc/vimc-capture.c | 2 +-
+ drivers/media/test-drivers/vivid/vivid-core.c  | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-GStreamer branch to use DELETE_BUF ioctl and testing dynamic resolution
-change is here:
-https://gitlab.freedesktop.org/benjamin.gaignard1/gstreamer/-/commits/VP9_drc
-
-changes in version 18:
-- rebased on top of:
-  https://patchwork.linuxtv.org/project/linux-media/patch/20240118121452.29151-1-benjamin.gaignard@collabora.com/
-  https://patchwork.linuxtv.org/project/linux-media/patch/92975c06-d6e1-4ba6-8d03-b2ef0b199c21@xs4all.nl/
-- Add a patch to update vb2_is_busy() logic.
-- fix __vb2_queue_alloc() parameters descriptions.
-- rework bitmap free range finding loop
-- remove per queue capability flag.
-- rework v4l_delete_bufs() to check if VIDIOC_CREATE_BUFS is enabled
-  and if vidioc_delete_bufs pointer is valid.
-- update documentation.
-- Direclty use vb2_core_delete_bufs() in v4l2_m2m_ioctl_delete_bufs().
-  Remove useless static functions.
-
-changes in version 17:
-- rebased on top of:
-  https://patchwork.linuxtv.org/project/linux-media/patch/20240118121452.29151-1-benjamin.gaignard@collabora.com/
-  https://patchwork.linuxtv.org/project/linux-media/patch/92975c06-d6e1-4ba6-8d03-b2ef0b199c21@xs4all.nl/
-- rewrite min_reqbufs_allocation field documentation.
-- rewrite vb2_core_create_bufs() first_index parameter documentation.
-- rework bitmap allocation usage in __vb2_queue_alloc().
-- remove useless i < q->max_num_buffers checks.
-- rework DELETE_BUFS documentation.
-- change split between patch 7 and patch 8
-- v4l2_m2m_delete_bufs() is now a static function.
-
-changes in version 16:
-- The 50 patches related to add helpers for queue num_bufefrs have already been merged.
-- 'min_queued_buffers' patch has been merged too.
-- Add 'min_reqbufs_allocation' field in vb2_queue structure.
-- Take care of 'min_queued_buffers' when deleting buffers
-- Add more check about buffers range limit when deleting buffers.
-
-Benjamin
-
-Benjamin Gaignard (9):
-  media: videobuf2: Update vb2_is_busy() logic
-  videobuf2: Add min_reqbufs_allocation field to vb2_queue structure
-  media: test-drivers: Set REQBUFS minimum number of buffers
-  media: core: Rework how create_buf index returned value is computed
-  media: core: Add bitmap manage bufs array entries
-  media: core: Free range of buffers
-  media: v4l2: Add DELETE_BUFS ioctl
-  media: v4l2: Add mem2mem helpers for DELETE_BUFS ioctl
-  media: verisilicon: Support deleting buffers on capture queue
-
- .../userspace-api/media/v4l/user-func.rst     |   1 +
- .../media/v4l/vidioc-delete-bufs.rst          |  78 ++++++
- .../media/common/videobuf2/videobuf2-core.c   | 225 ++++++++++++------
- .../media/common/videobuf2/videobuf2-v4l2.c   |  26 +-
- .../media/platform/verisilicon/hantro_v4l2.c  |   1 +
- .../media/test-drivers/vicodec/vicodec-core.c |   1 +
- drivers/media/test-drivers/vim2m.c            |   1 +
- .../media/test-drivers/vimc/vimc-capture.c    |   3 +-
- drivers/media/test-drivers/visl/visl-video.c  |   1 +
- drivers/media/test-drivers/vivid/vivid-core.c |   5 +-
- drivers/media/v4l2-core/v4l2-dev.c            |   1 +
- drivers/media/v4l2-core/v4l2-ioctl.c          |  28 +++
- drivers/media/v4l2-core/v4l2-mem2mem.c        |  10 +
- include/media/v4l2-ioctl.h                    |   4 +
- include/media/v4l2-mem2mem.h                  |   2 +
- include/media/videobuf2-core.h                |  52 +++-
- include/media/videobuf2-v4l2.h                |   2 +
- include/uapi/linux/videodev2.h                |  16 ++
- 18 files changed, 371 insertions(+), 86 deletions(-)
- create mode 100644 Documentation/userspace-api/media/v4l/vidioc-delete-bufs.rst
-
+diff --git a/drivers/media/test-drivers/vimc/vimc-capture.c b/drivers/media/test-drivers/vimc/vimc-capture.c
+index 2a2d19d23bab..97693561f1e4 100644
+--- a/drivers/media/test-drivers/vimc/vimc-capture.c
++++ b/drivers/media/test-drivers/vimc/vimc-capture.c
+@@ -432,7 +432,7 @@ static struct vimc_ent_device *vimc_capture_add(struct vimc_device *vimc,
+ 	q->mem_ops = vimc_allocator == VIMC_ALLOCATOR_DMA_CONTIG
+ 		   ? &vb2_dma_contig_memops : &vb2_vmalloc_memops;
+ 	q->timestamp_flags = V4L2_BUF_FLAG_TIMESTAMP_MONOTONIC;
+-	q->min_queued_buffers = 2;
++	q->min_reqbufs_allocation = 2;
+ 	q->lock = &vcapture->lock;
+ 	q->dev = v4l2_dev->dev;
+ 
+diff --git a/drivers/media/test-drivers/vivid/vivid-core.c b/drivers/media/test-drivers/vivid/vivid-core.c
+index 159c72cbb5bf..11b8520d9f57 100644
+--- a/drivers/media/test-drivers/vivid/vivid-core.c
++++ b/drivers/media/test-drivers/vivid/vivid-core.c
+@@ -861,7 +861,7 @@ static const struct media_device_ops vivid_media_ops = {
+ static int vivid_create_queue(struct vivid_dev *dev,
+ 			      struct vb2_queue *q,
+ 			      u32 buf_type,
+-			      unsigned int min_queued_buffers,
++			      unsigned int min_reqbufs_allocation,
+ 			      const struct vb2_ops *ops)
+ {
+ 	if (buf_type == V4L2_BUF_TYPE_VIDEO_CAPTURE && dev->multiplanar)
+@@ -898,7 +898,7 @@ static int vivid_create_queue(struct vivid_dev *dev,
+ 	q->mem_ops = allocators[dev->inst] == 1 ? &vb2_dma_contig_memops :
+ 						  &vb2_vmalloc_memops;
+ 	q->timestamp_flags = V4L2_BUF_FLAG_TIMESTAMP_MONOTONIC;
+-	q->min_queued_buffers = supports_requests[dev->inst] ? 0 : min_queued_buffers;
++	q->min_reqbufs_allocation = min_reqbufs_allocation;
+ 	q->lock = &dev->mutex;
+ 	q->dev = dev->v4l2_dev.dev;
+ 	q->supports_requests = supports_requests[dev->inst];
 -- 
 2.40.1
 
