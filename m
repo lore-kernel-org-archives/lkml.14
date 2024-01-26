@@ -1,184 +1,505 @@
-Received: from EUR01-HE1-obe.outbound.protection.outlook.com (mail-he1eur01on2095.outbound.protection.outlook.com [40.107.13.95])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2044.outbound.protection.outlook.com [40.107.243.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2D3B45C0D;
-	Fri, 26 Jan 2024 22:16:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.13.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7938950274
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 22:16:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.44
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706307412; cv=fail; b=YJ0F93fraHZHAvdoFWExWwmxaA5zL0iOH86qwpKTRarw1PYrKeZSDt5hvVDg/bKPSDuPQElKZeQpPZLU60BDk8URKE1sIMSkBQkNIxFLd/9Vz9pwHWzlG6zB9IsMQzIkL/busAqq/sY5nPItKXB7PDdZA+0aEMKura1rmeW8a8A=
+	t=1706307414; cv=fail; b=R6Mvm9fIHFprLcRD7f1qjBb2qA1ylrj9y0ViE34Wu9iCF3SSQ3SAi1srCIkxnh6PiZWUEVLrUuMEcNzb+cCe2bZWiop5Ir7kpOucqQj+JOvpaLJe6LJW1L0NW+h+pwsGz9OfNaJijDZc4Xb3sY96uuPpHBXtaj9pQk+N/Il+Chs=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706307412; c=relaxed/simple;
-	bh=EWOYSSyXraRdB3oMcgCuudrMGn9eWO/TPn0UO7oM+lA=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=QNEhS5dMx5oRGhCch+uFAOktYvVjzPHceCdEc9OrDdJa4y2nLKa/ZZI0t2J/CsDMRjvbIh4vAObntuq+nghQe0eUvHxmTc+WkqyPFHcKb7BwCAOLE3yiekUCjAnwX4vWuyTeRQi+AxEU3+bqpcALe+R27aueHnwYtvSU5Gv5zzM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=axentia.se; spf=pass smtp.mailfrom=axentia.se; dkim=pass (1024-bit key) header.d=axentia.se header.i=@axentia.se header.b=QfYWpqkZ; arc=fail smtp.client-ip=40.107.13.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=axentia.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=axentia.se
+	s=arc-20240116; t=1706307414; c=relaxed/simple;
+	bh=8v6dQpaOlKJgTaTV0zh7zHJzkv6Xg2BA31rSSN/0mZ0=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ocSg3FU2lpKPiyepVzg7K1UdeiSnhjQD33IchTa/srADalV2pXZq39K2S6Z4Hn3JwqY6qBJA3Ya4N7ByRWLpdMb2obEzpAffHLc7BrtXfPOhvmLhGo6qwvcfeO0jQUfwJ9Kw96PCBum8MD8pH9fVkZiZ1wqnKhkjFNs9vJPybL8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=3viWUttB; arc=fail smtp.client-ip=40.107.243.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=axentia.se header.i=@axentia.se header.b="QfYWpqkZ"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="3viWUttB"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Xq9oLZ+RPYv6r3g19u7tQqu7yDOJad4HjkkfziETa85myF9E7v3eObP8E2GSNlQrE3gqpDkBmD8jJq6WKYF1FaB02JpePjuVy3xvyzNe/MyJgtbyJ++6gWaKG5sd/A4CBfYTbsccn9wTIr57rJI6tHE31Dnh456m1b3ZhXXn6rh5P9S2SRjnb0JvVM/+mG8oKhqz4D1zOh2/LF+62z4UpmGhQMwInhAcurFXN2b/ipAZhfFqF6LUh48WJgFkygFij0KXrQSC85xEOOv8KQvKJUkmJZ/+vRDi9tWw4GbJ0kRoic1SuJXhcocC+sYCKHb/hvI7DOUe/rtGP2cDCNoCTw==
+ b=U7rVgZcCjrm/CZib9ikUesUUCuGSTvXqPTFIhLIuC4lmPIa4YhyzleIImXBCCjwOeyHSrc3RXaEMFNxJYQ4/eDL/aRM1JzTCjXK8GmqQ9758Vhi1nWTgxm7SZBliGxQyaeSiRn0HHWZm1T5v5gB2U+KP+ECmnzfySHMR/u5ibVrzjev5YhntYXES5eVRfSTQ3DakFS0UTvbVHFG6gky5Sl/9/0t4w+4uRxsiiQ+E53ccRI5OXmBSITLR9/asY+KXEE9Ci+lyhqapf7NkpRpSMur0tEDFC/fIM/hiwsB3uX/6A1i/ZmsaSIbQvI2AMn+3hel3ucI+U/x9XP/G0oFzhQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ngLWFtXXwGElJTZF2lfIph9MqLkK0vNxO8lZvKSjjWw=;
- b=PkGFOoat7uuTR04SXwKOHT8cHjz4MBtQW0K3JVCqBZXo8yor8bwgMHxs9AcE9seDHzd1/nw17mLFhclStenCbNm6Lq6KWJiVOXCUZG8jh9jqvH0wNbTRsdXVZ/sI3jSqfgeGOg4YOZw5912jhrhQHvAUSA6pON1I7B6p6jXDxwEALYqvIpzGBYqJ8AKXcxXETCoirRx4mLeL+cYjUem2+1M9CLVY54LTmoOHJQ1vdwILKBAJmFADcBGJv0oO4SfBYaZN37hEIRA8lM279eBcyLHmpbkRDt7fscuYJPAnEJbRN2ia+1SAd9eNfUxvx/AKiAGZAR5pkKnVIti321vSyg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=axentia.se; dmarc=pass action=none header.from=axentia.se;
- dkim=pass header.d=axentia.se; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axentia.se;
- s=selector2;
+ bh=LZaiXg0XOAUycPigfvWnAtcnJgY+VGJf7lJr4f4Cmwg=;
+ b=PHNu6D24h1zCbvTSVe7R7Qxb3dW1xhTOJWzsP5UvWdDriHABtARMX9MewygUjd0lXTfHlXHpKtHW0v0F/2uxmO3Xni8JulV2sF1Ikbtd/iA2eIRQM1SkqiTLkjbouXg+DGBlFtLyCYuvCFN46WHxzhk6ll8/3PHQ9HPXUQnqozqsBGNB1Vo0j02DEngleUgtqsaYaZj1h0T7W+XZ1QZV0GPR/9l1t2FgU4u/dR4O1/Z3V1Hs3+0t2IlTHNpQgVeJfLaQU2BHxRSwt/g5zuFMLmdfm3pfnybWplV0ctZH0kR95ADD26HRyqO4ZaO/PpZnaHoDWwIQB+pOd3nRLEAqNQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ngLWFtXXwGElJTZF2lfIph9MqLkK0vNxO8lZvKSjjWw=;
- b=QfYWpqkZeThkM9rnLifHj8yBm+vKLiskuS27bMlVLk2jhEjvWpTCMHZ5++ksHV0QXQ9f2slsMmQy4+WdGLyroRodUb2ozUcQunW/fWf6Q2yGIiP4ddp+X50hKwgjA3bq6MNuzIv3SfnYY43sl59QTrBq+N/hh60s5kij0fToHuc=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=axentia.se;
-Received: from DU0PR02MB8500.eurprd02.prod.outlook.com (2603:10a6:10:3e3::8)
- by AS2PR02MB8840.eurprd02.prod.outlook.com (2603:10a6:20b:554::6) with
+ bh=LZaiXg0XOAUycPigfvWnAtcnJgY+VGJf7lJr4f4Cmwg=;
+ b=3viWUttBZbA8FXM2Qy5OqtvM8DPB+Z5rHwLovjHokzqjoF53EWaXzBVOmn5V7RNRCYU6WN+DAFq8sSG1SAultk1/Xic0YZuwG9PEJm03xF5u7jZQhnfyUUACF3Ymw8K3Hz9HDnRMKudexI61uj5vel31DOQlgq8Xg4dSFWyy4JQ=
+Received: from DM5PR07CA0082.namprd07.prod.outlook.com (2603:10b6:4:ad::47) by
+ SJ0PR12MB6942.namprd12.prod.outlook.com (2603:10b6:a03:449::13) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.26; Fri, 26 Jan
- 2024 22:16:43 +0000
-Received: from DU0PR02MB8500.eurprd02.prod.outlook.com
- ([fe80::4c56:a71b:d42d:11ba]) by DU0PR02MB8500.eurprd02.prod.outlook.com
- ([fe80::4c56:a71b:d42d:11ba%3]) with mapi id 15.20.7228.027; Fri, 26 Jan 2024
- 22:16:42 +0000
-Message-ID: <5cb6d599-fa9b-a003-6fd6-c07966e283db@axentia.se>
-Date: Fri, 26 Jan 2024 23:16:40 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
-Subject: Re: [PATCH] dt-bindings: iio: afe: voltage-divider: Add
- io-channel-cells
-Content-Language: sv-SE
-To: Conor Dooley <conor@kernel.org>,
- Naresh Solanki <naresh.solanki@9elements.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen
- <lars@metafoo.de>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, mazziesaccount@gmail.com,
- linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240126115509.1459425-1-naresh.solanki@9elements.com>
- <20240126-cinnamon-flatware-e042b5773f17@spud>
-From: Peter Rosin <peda@axentia.se>
-In-Reply-To: <20240126-cinnamon-flatware-e042b5773f17@spud>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: GVYP280CA0009.SWEP280.PROD.OUTLOOK.COM
- (2603:10a6:150:fa::23) To DU0PR02MB8500.eurprd02.prod.outlook.com
- (2603:10a6:10:3e3::8)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.28; Fri, 26 Jan
+ 2024 22:16:47 +0000
+Received: from DS2PEPF00003440.namprd02.prod.outlook.com
+ (2603:10b6:4:ad:cafe::e8) by DM5PR07CA0082.outlook.office365.com
+ (2603:10b6:4:ad::47) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.27 via Frontend
+ Transport; Fri, 26 Jan 2024 22:16:47 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ DS2PEPF00003440.mail.protection.outlook.com (10.167.18.43) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7228.16 via Frontend Transport; Fri, 26 Jan 2024 22:16:47 +0000
+Received: from tlendack-t1.amdoffice.net (10.180.168.240) by
+ SATLEXMB04.amd.com (10.181.40.145) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.34; Fri, 26 Jan 2024 16:16:46 -0600
+From: Tom Lendacky <thomas.lendacky@amd.com>
+To: <linux-kernel@vger.kernel.org>, <x86@kernel.org>
+CC: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>, "Peter
+ Zijlstra" <peterz@infradead.org>, Dan Williams <dan.j.williams@intel.com>,
+	Michael Roth <michael.roth@amd.com>, Ashish Kalra <ashish.kalra@amd.com>
+Subject: [PATCH 05/11] x86/sev: Perform PVALIDATE using the SVSM when not at VMPL0
+Date: Fri, 26 Jan 2024 16:15:58 -0600
+Message-ID: <d89b9ebb592a2436a1969304f826ddf3866682bc.1706307364.git.thomas.lendacky@amd.com>
+X-Mailer: git-send-email 2.42.0
+In-Reply-To: <cover.1706307364.git.thomas.lendacky@amd.com>
+References: <cover.1706307364.git.thomas.lendacky@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DU0PR02MB8500:EE_|AS2PR02MB8840:EE_
-X-MS-Office365-Filtering-Correlation-Id: 92742699-3270-40a7-d6d7-08dc1ebc79cf
+X-MS-TrafficTypeDiagnostic: DS2PEPF00003440:EE_|SJ0PR12MB6942:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9a5753c0-cd2b-464a-b234-08dc1ebc7c9f
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	8e3pYx7+n6gX2VFD8yfFCmNNbEfgalc2yXSCzTRQ0XTZnuM5Z0kFCCJU5U0e046pS5ULdFwjqTsQcxGBMc09tQwWcMSnJiP1wCLy++PA80Y+7DdqO3+H4bUCtJnG2w40/9bMnkBWGkY9RTxG7WG3dTuMrRochCWfjFN0xxMk8Gd08y233OfSTFwGNHGEiL4mohpNUDVLvGld8e6tdCL+TP5PPf54UcUCPT9LzO39XDc7l16/KpKLtgJURC4vUhyQ6L8NNRWna856LRVgMBAdSFdYo+hd/g+f0TgnDgLNuPqkWCz+1N+Fc91/CJsAx8zH3yogo85/t8IfShwvCAOPjTZ13+7rmo1DTu1CenIpA3svs9njGex8SIRA1IYzBWnCHBznRFUfi4vMd/mppBG2iIvvZ0Smnz6QjZ62TjMPLpURaqiX7bTMaWT12P4t2eUUmCuD0wm25SktpjyHKrN0BGnVddNx53i7K/nTFK44bvCYF3sKY3JEa/UBUC9q2XkWd7UrI1s5ICoQ+a7AAFk1TA139BGq02/9wdfm7USkNSM/3penunddAG7C31rbR1IILLK+fw8y85T7VqjS/yGT586/w8yASEeZsNqoKXEkv5kXWKwCfFW3mSWtUcMUh69GaJVunl3HF8u5/jFyFvIRqQ==
+	prYiOjtjaSaIru3tqkmc7YX9CodzNQ2FOylZu+IhNz9xYlDGmyH9qHTUgvZolsS7cuSE8Yti6a9D8uZ054anKqCC3KzVqKVmvgRq4+OPhGfn0id5W/dkKH8QUoKV31mHZLTe1rLr/bmhAOgYETJmlv9SSPS7T/F285qL0aPuHmSieLaf7NnyTwjTlHfG0fYh7Tdfi6NhKcGGvPD2KcqEYTclPigP6LYCvlUaTKu9jPrGP9izZC9plRuRp+HOFRdg2/vom7Leb6DYOSgCZ7ucxEuXqcjJBcyaN0/sOTUpZunxCcfYLmZ/wXF/+Cw7eQ/cH4yuGrWRv+b0ZiFS/LfBQEhWCsmgwpcoIhm2/R0TQygtBmMhxKlCPrLaRz64/grR2ZBam0L7lnCmBQ8MrAc82JhgTZpBvyjEBMrMM+tyFZr5CBLoPBXjd2t4B9bjV5mjJ7BokuQ5+Kn0mrx0eeZ45a/J/jonptwkG+VX/ipaOXhSz+xHZflYTMFMY3Zgx+kK8W8shXr4KTgF6vY8TIzM1Ky30HHXaitkThIW/CPLy3BS27dBxv26DRIZPqDiWqI1XC0wGQOusGMeishbKMO4MN1ltoVUbhclua6m5Yict3jOZnVRtajWaYOkxkRzq4DeP8VMhfpXMOx53GqAoSw/l9m9H2SnlcmhPDlJX7wk263IG0uyCkC15NHUZpQTv8mwzaPZmifW2Zi4rlOXoaRglgOeCQNdCPlNBgT3VnQMM8oweeWQncASUhdlL0Qb/VvbjWngU/qUbZJZZYgXG+991Q==
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU0PR02MB8500.eurprd02.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(366004)(396003)(39840400004)(376002)(346002)(230922051799003)(64100799003)(186009)(1800799012)(451199024)(8936002)(8676002)(4326008)(2906002)(5660300002)(31696002)(7416002)(110136005)(86362001)(66476007)(54906003)(316002)(6486002)(66556008)(36756003)(66946007)(38100700002)(6506007)(83380400001)(6512007)(478600001)(2616005)(26005)(41300700001)(31686004)(43740500002)(45980500001);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?MHlUeVJkUExRUkNoV0VORXBjQ0VLVUpMVWZHZG5KZVlleEpUT2hRd0dpei9C?=
- =?utf-8?B?SGR4K3JaejlObFh6aWlkZHJqS1ZIbjlMSmF1a2N6L0ZBVzNKdGdEM0s0REkw?=
- =?utf-8?B?MFV5Y1V5MXkyNXBGZGV4RGRidVBrSzdIaEpCSnFiUFVpMGpoZWh0ZzE2cjl4?=
- =?utf-8?B?bDVPWjVOWkJRamRNMkNSeTZQVFMrV09sWlNMNEVOMTd5RTFHMEg1bWdqOW56?=
- =?utf-8?B?a2dzNFNPZVBNZ0YzaUhFazIvcDdOU2w3bW50bTJGc1EzYmhVSjBVd2pEb2N6?=
- =?utf-8?B?YUlBVmlidjQrelNhcU1iKzcxZTM4SDhRazI2R29ieWk1bkVOaXdKTGtjQjRT?=
- =?utf-8?B?UUxETXBMeDJUd3kvM29kTzUvWjEwRmQwYjVoOHJ1WnlrN09wc1hTZGxlemhm?=
- =?utf-8?B?R2o5RjR1S2tndVE0NFVSYVdWdzFhV0Z1N1V3bWllZm1SSWZ3cnBPaUNzeTJK?=
- =?utf-8?B?N05wT0pEZkhMTWVTTXF3U0g1dDRJMmxvbmNaUi9rb2g3Y3RiejVVZGp3Sjd0?=
- =?utf-8?B?THF0SmxrL21Id29YeVoyNzNNMGxYLzRtQ21XNzVJb3JBQjJwa2kzdlBMOWww?=
- =?utf-8?B?TlpJdDBQdzJ1WnJOcytqTHkxWFJ0ME5HSGtBamlJcUVQaFg2SGk0UmNNcW9S?=
- =?utf-8?B?VVZ2cDB6RFBuekY1WCtrOTRWWTJxVkxCc3ZWTUFFdWEvcndUQ0J0S3VQSzZ3?=
- =?utf-8?B?ZVRGODB6cnllbldxQng3SS9VSlZHREFHSXJvdFREMkRvdUFrQTkvMzZTT3J4?=
- =?utf-8?B?dW5xMkhKV0I1YkhNanpxa0d3M0V5eW8wWUw0eXZWZHNUa0U0NEUxSlloUU1E?=
- =?utf-8?B?QzFMZFZVeHlyWXp2Sm4xdWtYNlpVbGptOUlOUVJkYmdjYXFDQk1CbkNNRzhn?=
- =?utf-8?B?TEpBRkl6OVB4NmkrazVkdzdCWWg5VnhuUkNPTlB5dEpPQ3I0R3lLNzBDcEtH?=
- =?utf-8?B?UEZ3Nlg0VWJ1U0NlMVRwQXpPTUtHdUNMVit2MTRzNEthTG54T3BtKzhjSzdR?=
- =?utf-8?B?djlQS2k0WDlkRjZvUVlVMzMzMEdCZVErVVFLT0UzWHJ1K1Z0RW9jc3JSWjJ6?=
- =?utf-8?B?UjdLZUdvaDNLU1FGb0ZjMUE2dVhzV05XZk5LRytJRE9lWHZvT28waDhjR1hw?=
- =?utf-8?B?N20yczVwWGV2NElPaHFCdnRIclAxVTlYd2I5S0UwTTFhZGg3U3hhRlNBcmNx?=
- =?utf-8?B?Z0tkT1JjRXZjTzhLR004RmM4NHlpRmtHT3U1dTA4MnhZUlFkZXFkZ0EweFA4?=
- =?utf-8?B?dm9VY2dpUXRtaDhFaGVrbE1nMm1oMlNpbTBBRzVVV2MvM0d5bUN6SWpiWmF0?=
- =?utf-8?B?eXByU1AzSW0wUGg5Uy82QzdVclhyNlcwbkY2YXBlVExLRjlSQUJ1elUxb1Uz?=
- =?utf-8?B?NHZuYm10dG02WDNFZDY0ejFISXpERFgyOTdJamZ2YkJ6c0lxTmNLQ1JLWXh1?=
- =?utf-8?B?Ui9WYXd1UnJUd1IwazFxS1FmdGZ6OFpkZEVWZEhvMUV3WkIzWm9DaEg4ZkxN?=
- =?utf-8?B?U0VQY3RmYlJkTlpWSzNpZ09hdmVCSkZuVTdKdE15WVpjczVJZEZaNHo0ZkVC?=
- =?utf-8?B?QTZZbkhqb3VMQW80MDhYMk1HSnBHYU5wOXUxMzZaSmNuamY0cmpETnc0ZGJL?=
- =?utf-8?B?Z3loMkxLMkZpQ3FRT0F2MGFmd2l1N3kvYXA2Smk0Q3dta1YwR0pTdDBrQ2Qw?=
- =?utf-8?B?bWI2Y3drWFBrbmpLck5RMW03OUNTTGZyQk0xczIzeFduRGd6cS82MlpZMFY5?=
- =?utf-8?B?dDhWTW52dkcrK00xcVZNUGVXMWtScWZhWS9PSG5xNCt4M0Y4Y2lObDF3Nk9n?=
- =?utf-8?B?Sm8zOWRsUmRJM2FTOGNIYkNmMXMvbENwK1lHMFhJQW1ScDZEaXJ6ZlVGRjFU?=
- =?utf-8?B?SEw0ZGxvamN5Uk5jUFhWN3BSVHFwU3pNSyt0RXFPSHV2MmM5RjR5MjVQRWpq?=
- =?utf-8?B?RkdtUCt4R0pRcEFYQTF1dnRDZkNVbTU3WU1qc25nQzhnOG5YRHZEbDJPbDli?=
- =?utf-8?B?RGYvTlpYbzV1WkwxelRxc245bEVrclVsOWs3RWlyT3B3dG1tbDd0ZnhmdWpZ?=
- =?utf-8?B?VUNyTTFzeGFIZnF6SkhXMGJaYk95Qng0ZTI0ZnZEaElkVW1jd3p6cFhFZnpo?=
- =?utf-8?Q?JUEB2q8XpMGl3ul8G4OYPQZAC?=
-X-OriginatorOrg: axentia.se
-X-MS-Exchange-CrossTenant-Network-Message-Id: 92742699-3270-40a7-d6d7-08dc1ebc79cf
-X-MS-Exchange-CrossTenant-AuthSource: DU0PR02MB8500.eurprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jan 2024 22:16:42.7935
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(346002)(376002)(396003)(39860400002)(136003)(230922051799003)(64100799003)(82310400011)(186009)(1800799012)(451199024)(36840700001)(46966006)(40470700004)(36860700001)(478600001)(86362001)(6666004)(81166007)(356005)(47076005)(40480700001)(40460700003)(82740400003)(83380400001)(2616005)(8936002)(54906003)(4326008)(316002)(30864003)(2906002)(7416002)(5660300002)(36756003)(110136005)(70586007)(70206006)(8676002)(26005)(16526019)(426003)(336012)(41300700001)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jan 2024 22:16:47.2355
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4ee68585-03e1-4785-942a-df9c1871a234
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 1/xY9TTFZURyu6XT60Ji3DPDN/cCG4fPebATV9cVy2CEkbsmBSiOKKGEP9JzP89t
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS2PR02MB8840
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9a5753c0-cd2b-464a-b234-08dc1ebc7c9f
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DS2PEPF00003440.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB6942
 
-Hi!
+The PVALIDATE instruction can only be performed at VMPL0. An SVSM will
+be present when running at VMPL1 or a lower privilege level.
 
-2024-01-26 at 17:16, Conor Dooley wrote:
-> Hey,
-> 
-> On Fri, Jan 26, 2024 at 05:25:08PM +0530, Naresh Solanki wrote:
->> Add #io-channel-cells expected by driver. i.e., below is the message
->> seen in kernel log:
->> OF: /iio-hwmon: could not get #io-channel-cells for /voltage_divider1
->>
-> 
->> TEST=Run below command & make sure there is no error:
->> make DT_CHECKER_FLAGS=-m dt_binding_check -j1
-> 
-> This shouldn't be in the commit message.
-> 
->>
->> Signed-off-by: Naresh Solanki <naresh.solanki@9elements.com>
->> ---
->>  Documentation/devicetree/bindings/iio/afe/voltage-divider.yaml | 3 +++
->>  1 file changed, 3 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/iio/afe/voltage-divider.yaml b/Documentation/devicetree/bindings/iio/afe/voltage-divider.yaml
->> index dddf97b50549..b4b5489ad98e 100644
->> --- a/Documentation/devicetree/bindings/iio/afe/voltage-divider.yaml
->> +++ b/Documentation/devicetree/bindings/iio/afe/voltage-divider.yaml
->> @@ -39,6 +39,9 @@ properties:
->>      description: |
->>        Channel node of a voltage io-channel.
->>  
->> +  '#io-channel-cells':
->> +    const: 1
-> 
-> The example in this binding looks like the voltage-divider is intended
-> to be an "IIO consumer" but "#io-channels-cells" is an "IIO provider"
-> property.
-> 
-> Are you sure this is correct?
+When an SVSM is present, use the SVSM_CORE_PVALIDATE call to perform
+memory validation instead of issuing the PVALIDATE instruction directly.
 
-A voltage-divider is always an iio consumer. And like all iio things,
-you may access its output from user space (typically via libiio). At
-the same time a voltage-divider is optionally an iio provider for other
-in-kernel thingies, in which case you need to specify
-#io-channel-cells.
+The validation of a single 4K page is now explicitly identified as such
+in the function name, pvalidate_4k_page(). The pvalidate_pages() function
+is used for validating 1 or more pages at either 4K or 2M in size. Each
+function, however, determines whether it can issue the PVALIDATE directly
+or whether the SVSM needs to be invoked.
 
-BTW, this is the case for for all bindings handled by the iio-rescale
-driver.
+Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+---
+ arch/x86/boot/compressed/sev.c |  42 +++++++-
+ arch/x86/include/asm/sev.h     |  22 +++++
+ arch/x86/kernel/sev-shared.c   | 176 ++++++++++++++++++++++++++++++++-
+ arch/x86/kernel/sev.c          |  25 +++--
+ 4 files changed, 247 insertions(+), 18 deletions(-)
 
-Cheers,
-Peter
+diff --git a/arch/x86/boot/compressed/sev.c b/arch/x86/boot/compressed/sev.c
+index 5d2403914ceb..3fbb614c31e0 100644
+--- a/arch/x86/boot/compressed/sev.c
++++ b/arch/x86/boot/compressed/sev.c
+@@ -38,6 +38,16 @@ static u8 vmpl __section(".data");
+ static u64 boot_svsm_caa_pa __section(".data");
+ static struct svsm_ca *boot_svsm_caa __section(".data");
+ 
++static struct svsm_ca *__svsm_get_caa(void)
++{
++	return boot_svsm_caa;
++}
++
++static u64 __svsm_get_caa_pa(void)
++{
++	return boot_svsm_caa_pa;
++}
++
+ /*
+  * Copy a version of this function here - insn-eval.c can't be used in
+  * pre-decompression code.
+@@ -135,6 +145,24 @@ static bool fault_in_kernel_space(unsigned long address)
+ /* Include code for early handlers */
+ #include "../../kernel/sev-shared.c"
+ 
++static int svsm_protocol(struct svsm_call *call)
++{
++	struct ghcb *ghcb;
++	int ret;
++
++	if (boot_ghcb)
++		ghcb = boot_ghcb;
++	else
++		ghcb = NULL;
++
++	do {
++		ret = ghcb ? __svsm_ghcb_protocol(ghcb, call)
++			   : __svsm_msr_protocol(call);
++	} while (ret == SVSM_ERR_BUSY);
++
++	return ret;
++}
++
+ bool sev_snp_enabled(void)
+ {
+ 	return sev_status & MSR_AMD64_SEV_SNP_ENABLED;
+@@ -151,8 +179,8 @@ static void __page_state_change(unsigned long paddr, enum psc_op op)
+ 	 * If private -> shared then invalidate the page before requesting the
+ 	 * state change in the RMP table.
+ 	 */
+-	if (op == SNP_PAGE_STATE_SHARED && pvalidate(paddr, RMP_PG_SIZE_4K, 0))
+-		sev_es_terminate(SEV_TERM_SET_LINUX, GHCB_TERM_PVALIDATE);
++	if (op == SNP_PAGE_STATE_SHARED)
++		pvalidate_4k_page(paddr, paddr, 0);
+ 
+ 	/* Issue VMGEXIT to change the page state in RMP table. */
+ 	sev_es_wr_ghcb_msr(GHCB_MSR_PSC_REQ_GFN(paddr >> PAGE_SHIFT, op));
+@@ -167,8 +195,8 @@ static void __page_state_change(unsigned long paddr, enum psc_op op)
+ 	 * Now that page state is changed in the RMP table, validate it so that it is
+ 	 * consistent with the RMP entry.
+ 	 */
+-	if (op == SNP_PAGE_STATE_PRIVATE && pvalidate(paddr, RMP_PG_SIZE_4K, 1))
+-		sev_es_terminate(SEV_TERM_SET_LINUX, GHCB_TERM_PVALIDATE);
++	if (op == SNP_PAGE_STATE_PRIVATE)
++		pvalidate_4k_page(paddr, paddr, 1);
+ }
+ 
+ void snp_set_page_private(unsigned long paddr)
+@@ -261,6 +289,12 @@ void sev_es_shutdown_ghcb(void)
+ 	if (!sev_es_check_cpu_features())
+ 		error("SEV-ES CPU Features missing.");
+ 
++	/*
++	 * Ensure that the boot GHCB isn't used for the PVALIDATE when running
++	 * under an SVSM.
++	 */
++	boot_ghcb = NULL;
++
+ 	/*
+ 	 * GHCB Page must be flushed from the cache and mapped encrypted again.
+ 	 * Otherwise the running kernel will see strange cache effects when
+diff --git a/arch/x86/include/asm/sev.h b/arch/x86/include/asm/sev.h
+index 2f1e583769fc..dbd7fd041689 100644
+--- a/arch/x86/include/asm/sev.h
++++ b/arch/x86/include/asm/sev.h
+@@ -172,6 +172,27 @@ struct svsm_ca {
+ #define SVSM_ERR_INVALID_PARAMETER		0x80000005
+ #define SVSM_ERR_INVALID_REQUEST		0x80000006
+ #define SVSM_ERR_BUSY				0x80000007
++#define SVSM_PVALIDATE_FAIL_SIZEMISMATCH	0x80001006
++
++/*
++ * The SVSM PVALIDATE related structures
++ */
++struct svsm_pvalidate_entry {
++	u64 page_size		: 2,
++	    action		: 1,
++	    ignore_cf		: 1,
++	    rsvd		: 8,
++	    pfn			: 52;
++};
++
++struct svsm_pvalidate_call {
++	u16 entries;
++	u16 next;
++
++	u8 rsvd1[4];
++
++	struct svsm_pvalidate_entry entry[];
++};
+ 
+ /*
+  * SVSM protocol structure
+@@ -192,6 +213,7 @@ struct svsm_call {
+ 
+ #define SVSM_CORE_CALL(x)		((0ULL << 32) | (x))
+ #define SVSM_CORE_REMAP_CA		0
++#define SVSM_CORE_PVALIDATE		1
+ 
+ #ifdef CONFIG_AMD_MEM_ENCRYPT
+ extern void __sev_es_ist_enter(struct pt_regs *regs);
+diff --git a/arch/x86/kernel/sev-shared.c b/arch/x86/kernel/sev-shared.c
+index 7e9fa5d8889b..f26e872bc5d0 100644
+--- a/arch/x86/kernel/sev-shared.c
++++ b/arch/x86/kernel/sev-shared.c
+@@ -81,6 +81,8 @@ static u32 cpuid_std_range_max __ro_after_init;
+ static u32 cpuid_hyp_range_max __ro_after_init;
+ static u32 cpuid_ext_range_max __ro_after_init;
+ 
++static int svsm_protocol(struct svsm_call *call);
++
+ static bool __init sev_es_check_cpu_features(void)
+ {
+ 	if (!has_cpuflag(X86_FEATURE_RDRAND)) {
+@@ -1181,7 +1183,65 @@ static void __init setup_cpuid_table(const struct cc_blob_sev_info *cc_info)
+ 	}
+ }
+ 
+-static void pvalidate_pages(struct snp_psc_desc *desc)
++static int base_pvalidate_4k_page(unsigned long vaddr, bool validate)
++{
++	return pvalidate(vaddr, RMP_PG_SIZE_4K, validate);
++}
++
++static int svsm_pvalidate_4k_page(unsigned long paddr, bool validate)
++{
++	struct svsm_pvalidate_call *pvalidate_call;
++	struct svsm_call call = {};
++	u64 pvalidate_call_pa;
++	unsigned long flags;
++	int ret;
++
++	/*
++	 * This can be called very early in the boot, use native functions in
++	 * order to avoid paravirt issues.
++	 */
++	flags = native_save_fl();
++	if (flags & X86_EFLAGS_IF)
++		native_irq_disable();
++
++	call.caa = __svsm_get_caa();
++
++	pvalidate_call = (struct svsm_pvalidate_call *)call.caa->svsm_buffer;
++	pvalidate_call_pa = __svsm_get_caa_pa() + offsetof(struct svsm_ca, svsm_buffer);
++
++	pvalidate_call->entries = 1;
++	pvalidate_call->next    = 0;
++	pvalidate_call->entry[0].page_size = RMP_PG_SIZE_4K;
++	pvalidate_call->entry[0].action    = validate;
++	pvalidate_call->entry[0].ignore_cf = 0;
++	pvalidate_call->entry[0].pfn       = paddr >> PAGE_SHIFT;
++
++	/* Protocol 0, Call ID 1 */
++	call.rax = SVSM_CORE_CALL(SVSM_CORE_PVALIDATE);
++	call.rcx = pvalidate_call_pa;
++
++	ret = svsm_protocol(&call);
++
++	if (flags & X86_EFLAGS_IF)
++		native_irq_enable();
++
++	return ret;
++}
++
++static void pvalidate_4k_page(unsigned long vaddr, unsigned long paddr, bool validate)
++{
++	int ret;
++
++	ret = vmpl ? svsm_pvalidate_4k_page(paddr, validate)
++		   : base_pvalidate_4k_page(vaddr, validate);
++
++	if (ret) {
++		WARN(1, "Failed to validate address 0x%lx ret %d", vaddr, ret);
++		sev_es_terminate(SEV_TERM_SET_LINUX, GHCB_TERM_PVALIDATE);
++	}
++}
++
++static void base_pvalidate_pages(struct snp_psc_desc *desc)
+ {
+ 	struct psc_entry *e;
+ 	unsigned long vaddr;
+@@ -1215,6 +1275,120 @@ static void pvalidate_pages(struct snp_psc_desc *desc)
+ 	}
+ }
+ 
++static void svsm_pvalidate_pages(struct snp_psc_desc *desc)
++{
++	struct svsm_pvalidate_call *pvalidate_call;
++	struct svsm_pvalidate_entry *pe;
++	unsigned int call_count, i;
++	struct svsm_call call = {};
++	u64 pvalidate_call_pa;
++	struct psc_entry *e;
++	unsigned long flags;
++	unsigned long vaddr;
++	bool action;
++	int ret;
++
++	/*
++	 * This can be called very early in the boot, use native functions in
++	 * order to avoid paravirt issues.
++	 */
++	flags = native_save_fl();
++	if (flags & X86_EFLAGS_IF)
++		native_irq_disable();
++
++	call.caa = __svsm_get_caa();
++
++	pvalidate_call = (struct svsm_pvalidate_call *)call.caa->svsm_buffer;
++	pvalidate_call_pa = __svsm_get_caa_pa() + offsetof(struct svsm_ca, svsm_buffer);
++
++	/* Calculate how many entries the CA buffer can hold */
++	call_count = sizeof(call.caa->svsm_buffer);
++	call_count -= offsetof(struct svsm_pvalidate_call, entry);
++	call_count /= sizeof(pvalidate_call->entry[0]);
++
++	/* Protocol 0, Call ID 1 */
++	call.rax = SVSM_CORE_CALL(SVSM_CORE_PVALIDATE);
++	call.rcx = pvalidate_call_pa;
++
++	pvalidate_call->entries = 0;
++	pvalidate_call->next    = 0;
++
++	for (i = 0; i <= desc->hdr.end_entry; i++) {
++		e = &desc->entries[i];
++		pe = &pvalidate_call->entry[pvalidate_call->entries];
++
++		pe->page_size = e->pagesize ? RMP_PG_SIZE_2M : RMP_PG_SIZE_4K;
++		pe->action    = e->operation == SNP_PAGE_STATE_PRIVATE;
++		pe->ignore_cf = 0;
++		pe->pfn       = e->gfn;
++
++		pvalidate_call->entries++;
++		if (pvalidate_call->entries < call_count && i != desc->hdr.end_entry)
++			continue;
++
++		ret = svsm_protocol(&call);
++		if (ret == SVSM_PVALIDATE_FAIL_SIZEMISMATCH &&
++		    pvalidate_call->entry[pvalidate_call->next].page_size == RMP_PG_SIZE_2M) {
++			u64 pfn, pfn_end;
++
++			/*
++			 * The "next" field is the index of the failed entry. Calculate the
++			 * index of the entry after the failed entry before the fields are
++			 * cleared so that processing can continue on from that point (take
++			 * into account the for loop adding 1 to the entry).
++			 */
++			i -= pvalidate_call->entries - pvalidate_call->next;
++			i += 1;
++
++			action = pvalidate_call->entry[pvalidate_call->next].action;
++			pfn = pvalidate_call->entry[pvalidate_call->next].pfn;
++			pfn_end = pfn + 511;
++
++			pvalidate_call->entries = 0;
++			pvalidate_call->next    = 0;
++			for (; pfn <= pfn_end; pfn++) {
++				pe = &pvalidate_call->entry[pvalidate_call->entries];
++
++				pe->page_size = RMP_PG_SIZE_4K;
++				pe->action    = action;
++				pe->ignore_cf = 0;
++				pe->pfn       = pfn;
++
++				pvalidate_call->entries++;
++				if (pvalidate_call->entries < call_count && pfn != pfn_end)
++					continue;
++
++				ret = svsm_protocol(&call);
++				if (ret != SVSM_SUCCESS)
++					break;
++
++				pvalidate_call->entries = 0;
++				pvalidate_call->next    = 0;
++			}
++		}
++
++		if (ret != SVSM_SUCCESS) {
++			pe = &pvalidate_call->entry[pvalidate_call->next];
++			vaddr = (unsigned long)pfn_to_kaddr(pe->pfn);
++
++			WARN(1, "Failed to validate address %lx ret=%#x (%d)", vaddr, ret, ret);
++			sev_es_terminate(SEV_TERM_SET_LINUX, GHCB_TERM_PVALIDATE);
++		}
++
++		pvalidate_call->entries = 0;
++		pvalidate_call->next    = 0;
++	}
++
++	if (flags & X86_EFLAGS_IF)
++		native_irq_enable();
++}
++
++static void pvalidate_pages(struct snp_psc_desc *desc)
++{
++	vmpl ? svsm_pvalidate_pages(desc)
++	     : base_pvalidate_pages(desc);
++}
++
+ static int vmgexit_psc(struct ghcb *ghcb, struct snp_psc_desc *desc)
+ {
+ 	int cur_entry, end_entry, ret = 0;
+diff --git a/arch/x86/kernel/sev.c b/arch/x86/kernel/sev.c
+index 3bd7860fbfe1..2fd21090ef6b 100644
+--- a/arch/x86/kernel/sev.c
++++ b/arch/x86/kernel/sev.c
+@@ -161,6 +161,12 @@ static struct svsm_ca *__svsm_get_caa(void)
+ 				       : boot_svsm_caa;
+ }
+ 
++static u64 __svsm_get_caa_pa(void)
++{
++	return sev_cfg.cas_initialized ? this_cpu_read(svsm_caa_pa)
++				       : boot_svsm_caa_pa;
++}
++
+ static __always_inline bool on_vc_stack(struct pt_regs *regs)
+ {
+ 	unsigned long sp = regs->sp;
+@@ -777,7 +783,6 @@ static void early_set_pages_state(unsigned long vaddr, unsigned long paddr,
+ {
+ 	unsigned long paddr_end;
+ 	u64 val;
+-	int ret;
+ 
+ 	vaddr = vaddr & PAGE_MASK;
+ 
+@@ -785,12 +790,9 @@ static void early_set_pages_state(unsigned long vaddr, unsigned long paddr,
+ 	paddr_end = paddr + (npages << PAGE_SHIFT);
+ 
+ 	while (paddr < paddr_end) {
+-		if (op == SNP_PAGE_STATE_SHARED) {
+-			/* Page validation must be rescinded before changing to shared */
+-			ret = pvalidate(vaddr, RMP_PG_SIZE_4K, false);
+-			if (WARN(ret, "Failed to validate address 0x%lx ret %d", paddr, ret))
+-				goto e_term;
+-		}
++		/* Page validation must be rescinded before changing to shared */
++		if (op == SNP_PAGE_STATE_SHARED)
++			pvalidate_4k_page(vaddr, paddr, false);
+ 
+ 		/*
+ 		 * Use the MSR protocol because this function can be called before
+@@ -812,12 +814,9 @@ static void early_set_pages_state(unsigned long vaddr, unsigned long paddr,
+ 			 paddr, GHCB_MSR_PSC_RESP_VAL(val)))
+ 			goto e_term;
+ 
+-		if (op == SNP_PAGE_STATE_PRIVATE) {
+-			/* Page validation must be performed after changing to private */
+-			ret = pvalidate(vaddr, RMP_PG_SIZE_4K, true);
+-			if (WARN(ret, "Failed to validate address 0x%lx ret %d", paddr, ret))
+-				goto e_term;
+-		}
++		/* Page validation must be performed after changing to private */
++		if (op == SNP_PAGE_STATE_PRIVATE)
++			pvalidate_4k_page(vaddr, paddr, true);
+ 
+ 		vaddr += PAGE_SIZE;
+ 		paddr += PAGE_SIZE;
+-- 
+2.42.0
+
