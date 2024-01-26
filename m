@@ -1,160 +1,170 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from EUR04-HE1-obe.outbound.protection.outlook.com (mail-he1eur04on2054.outbound.protection.outlook.com [40.107.7.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 435B61EB5C;
-	Fri, 26 Jan 2024 17:28:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706290121; cv=none; b=hdH3OsG7eYdEiocAAOcO2yRBmCQz3uutr1hVo9J7hJ7jzVGvy9ik9vS3ROBzNy+4buEMK/mI4eHVgAwlCk85D+2ju6XENzycCuzGek+pAUs/jwzUAzWlLajEDJYyqkrJo7tywChWvzEQZf/DWYyezgqt/8flMaNUQgTyewdDFaA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 374801D553;
+	Fri, 26 Jan 2024 17:28:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.7.54
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706290121; cv=fail; b=mcoxJdFyRWfEUfQnEGX9Qe4kFCfh9ACjcD4eURnMD7koJ0g5SaFK+jZ+1Ho9NluV5C9VsNSnD8zj6Wz27pylUj2vt2/wWGMPi/Cj9ZnTejzkl9r8aa9LF4mIt7SOMoUzkrzrwBYzaAt+CAItb4TG4q16ugpE1SHoA8L+1w8OCfQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1706290121; c=relaxed/simple;
-	bh=yvFNWEbhdJcYieMLRciY5V8W+w9c/qsqKUENofx8bB4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VyzZhcTBmGt9GlFMWS4F8Gelfw3ChMah8WF8T+FY+odSIqUMbw8jUZC5LDyCNr1fPPFlqcZGaj70XSbGaErcYQWLs+gBx6cjpgf7FpNI9Fidij9J6IrNu9xVSFWoZvQ6jlcevpH5mFyVE+jiRzLuIKipd3Djcq2hzjw3+Z0SLZ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PkjUO1wI; arc=none smtp.client-ip=10.30.226.201
+	bh=IVMh64niZEfl6QXJoAoM3XsM/a5UZlHwxq+4aWfqMFY=;
+	h=From:Date:Subject:Content-Type:Message-Id:References:In-Reply-To:
+	 To:Cc:MIME-Version; b=FRb0adk2bSAukPg9dlkZUud5ZDB5YC8P7oTyU76Apho+2BdxpZjgHNjj4xy5kaGZA9AYUJA9s5PuMJiaJN35zuPy88vFa6mpB2ShhyYzbZ3qT/uMfkc/BW5dSIfOeTc8mtg9LtnyEzw22xzTzaJ8Vtt7DcdhWB9/wzki/nWGso8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=theobroma-systems.com; spf=pass smtp.mailfrom=theobroma-systems.com; dkim=pass (2048-bit key) header.d=theobroma-systems.com header.i=@theobroma-systems.com header.b=hAl7zSs1; arc=fail smtp.client-ip=40.107.7.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=theobroma-systems.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=theobroma-systems.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PkjUO1wI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69DEBC43390;
-	Fri, 26 Jan 2024 17:28:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706290120;
-	bh=yvFNWEbhdJcYieMLRciY5V8W+w9c/qsqKUENofx8bB4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PkjUO1wIgXb7IyEIcrXnYoa7pMzPaRB7gDKLWuLUO9CyNj93ZsqmLwpg9su2kJRYX
-	 xd3QoEAsTRT3ANfcYY/4WW1sK9P2SAQFUBIEd21uS/ysswm3NnS+ob63co2mwKtcVM
-	 xLi698RbtWMMtHM1ZSd3TpQnQwEvQE40rhasPZBJA5IR4+g6qb6dGB7WSN5Qwj6aD7
-	 6TGu20o5yRJmqsDL902uqw1xQsouwe2Sgx5hkjJkO0dwb5jM8tXBtG0i7tVR9XQhlo
-	 oFe8MHFPPAkrPFNqKy2gtU7Nxw7GLP0+J5JSg/dR9EcVKAh2g2kyXPOvFRan/6rQw4
-	 Bhz2mWnBZtsfA==
-Date: Fri, 26 Jan 2024 09:33:27 -0800
-From: Bjorn Andersson <andersson@kernel.org>
-To: Tanmay Shah <tanmay.shah@amd.com>
-Cc: mathieu.poirier@linaro.org, linux-remoteproc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Ben Levinsky <ben.levinsky@xilinx.com>
-Subject: Re: [PATCH v4 1/2] remoteproc: Make rproc_get_by_phandle() work for
- clusters
-Message-ID: <4zq5hvxmvwzk6opqggennih5zq7rsznm2omdrrow3zsy2n6rzi@yqxtogh6jz3u>
-References: <20240103221124.3063683-1-tanmay.shah@amd.com>
- <20240103221124.3063683-2-tanmay.shah@amd.com>
+	dkim=pass (2048-bit key) header.d=theobroma-systems.com header.i=@theobroma-systems.com header.b="hAl7zSs1"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=f+oLocA83A08YVuEDFL/s9BawvuBHLFpUuCe7DtRgbphdNLuC8AHVo6VvD4HuUjdWWomsmUvLzaNoPN9XAjHxeSAks6cspusTjVKgrtpmvmjcK+6JRXaoKsvjixWix4MrO7x1di7idKXvsov9j8G4DIMGMJSbgX6EPwWjp7NFzkPUUyfZgWUWcDv9Wh9XvisOw+wjE2pBS6LBKWWvb5c3vm+3KDOiNGZtiHjUR7ly6Bz/qO4yXvfX8IsnW4BOYkU3YK0JuOnYJy6ICUY6Jk8MjFzfCbdnNTX+sRm7p1N6R8EREe0osinovvqeCDGZYeXAG7A0YoEIs3ETNmNtuY6sA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=tqixvfKtPECeF4ubPvftK4PmEI+HUmvDEI7Qd1Vr3LE=;
+ b=ALscU6DxdbzHFcgu3/Rs2OeXj7vdYMAbXQkRaqKMqkyNKlmErWOcniBVV98ae+Xs4dhNfj1Te6qkSPRiNuUz6taNOVVjePPznjEdhNLavUwfEJ2oWBvM9PHipIGscuwF+S7xl0Jup2luY0AkRxba3gwhG0YEUC8QHc8U2d6UPe4RwZbYaEpQ4bBbMRomhXLzjqs7zV+Q6MsIUFmSkNWKjHxSCFylf2lBVMJIfdQXUvU7+CTOwuouzZdsvCSdift6TqrJaaO2FDmAEeUIhwyeSm/9iXw4/D7znZYe/gMAPZjiGOy+jAt/vPTf8GggHs0tOXrXaWiuZOoEvo6S8oEf+A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=theobroma-systems.com; dmarc=pass action=none
+ header.from=theobroma-systems.com; dkim=pass header.d=theobroma-systems.com;
+ arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=theobroma-systems.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tqixvfKtPECeF4ubPvftK4PmEI+HUmvDEI7Qd1Vr3LE=;
+ b=hAl7zSs1X2przdOOPNPPDPWFpRJ3c2Jzb4D3QGAwcUpFPXRfQjw9YdmZID0PQqV7xVEaq1cCDx8FGenomW6+InnmozB+ZFEaeX1dW2bs4WrtzAnHuEaBt7o28DFGoGFPciEESdkzTo5bVlPm/eMKLFc06amzDjAqbkEnchSm5RTKpy0EwZmYiIwSGm+VDuRbb4LCWiQfZv93UKHxIAHlZf/slN0REsb0VUB0+bfX0yUwtN4Mz6TrcyacjpssonlXSgXtJvRZtuxEnzWrvXFI/GkgKNIPtnOazqHdrhYnLesPhEXn85jn88FFaWX0SzPLHiDTrcaS0RZl5htbAqs8/Q==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=theobroma-systems.com;
+Received: from VE1PR04MB6382.eurprd04.prod.outlook.com (2603:10a6:803:122::31)
+ by DB9PR04MB9820.eurprd04.prod.outlook.com (2603:10a6:10:4c3::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.26; Fri, 26 Jan
+ 2024 17:28:36 +0000
+Received: from VE1PR04MB6382.eurprd04.prod.outlook.com
+ ([fe80::d4b1:cea8:7085:ec50]) by VE1PR04MB6382.eurprd04.prod.outlook.com
+ ([fe80::d4b1:cea8:7085:ec50%4]) with mapi id 15.20.7228.027; Fri, 26 Jan 2024
+ 17:28:36 +0000
+From: Farouk Bouabid <farouk.bouabid@theobroma-systems.com>
+Date: Fri, 26 Jan 2024 18:27:42 +0100
+Subject: [PATCH v5 1/6] dt-bindings: serial: Add binding for rs485 receiver
+ enable GPIO
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240126-dev-rx-enable-v5-1-5d934eda05ca@theobroma-systems.com>
+References: <20240126-dev-rx-enable-v5-0-5d934eda05ca@theobroma-systems.com>
+In-Reply-To: <20240126-dev-rx-enable-v5-0-5d934eda05ca@theobroma-systems.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Jiri Slaby <jirislaby@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>
+Cc: Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org, 
+ linux-serial@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
+ quentin.schulz@theobroma-systems.com, 
+ Heiko Stuebner <heiko.stuebner@cherry.de>, 
+ Farouk Bouabid <farouk.bouabid@theobroma-systems.com>
+X-Mailer: b4 0.12.3
+X-ClientProxiedBy: VE1PR03CA0003.eurprd03.prod.outlook.com
+ (2603:10a6:802:a0::15) To VE1PR04MB6382.eurprd04.prod.outlook.com
+ (2603:10a6:803:122::31)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240103221124.3063683-2-tanmay.shah@amd.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: VE1PR04MB6382:EE_|DB9PR04MB9820:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2f9c8eb7-398a-4276-fa57-08dc1e94393d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	5o9E5LFBYRp95t9m+MgRzyehMWnaS7cXuWzboklvn/6UT9dHi9OiMvpI1AAZQegWmyNwAzcWZXTBSun4wD1U0Vh6GY72fuyFOIms1nkXFCEaLd6/+GM2ptC7JR4zTE3zWUotXvs3zvqLIC6wxjhDrzlU1SCGnCEv/t3uZxmKlwGWYRgL5j/CqOyElCZ++u7sLOPL5mHVJaA+2YToPeBGQRtmzWkCXk2Wf8bKT9bbvy1OTsxXcZNDbMWTufhvzMjBc3hdKoCqNiIuhwWvVp89hGLpbnp8+3Ty87PYnapWN3wLSQMmS4Xt+9MzRjadDgl0UGh7GfO5e7yMGiMOvD+h02Yd/iik1rjcFfDUi3k57hfhcskzIE8ckNbJjrczgMBt9XIKqdg5fDf6IVWCV6WhV5rpg1J2wxeweevI/SL1cveM1BqpnQYHTZqcxI7tDJv8ttordKOVRlqFAcKlUgbWb6W5+dVKmkZR0jxRdzk68rGDWIA67vIU25iREjwIaZeYSFG+2AmtEhwaSYARZn9whlI6BVt+8uxNj8kkvKkKkGriR/1mabn5SVb9PFfe0AbB9B5NPwN8vp8m54fpT2qMkWXjKOTOqCvjn8reFico9AB2ztoMTjzdT8XSqoQjnHh1
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6382.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(39850400004)(136003)(376002)(366004)(396003)(230922051799003)(64100799003)(186009)(1800799012)(451199024)(36756003)(478600001)(8676002)(4326008)(7416002)(8936002)(66556008)(54906003)(5660300002)(6486002)(44832011)(66476007)(316002)(2906002)(110136005)(66946007)(86362001)(6666004)(38350700005)(52116002)(6512007)(38100700002)(6506007)(2616005)(41300700001)(26005)(107886003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?US9leEJKaDBZOTFSaDN5c1dSUnB4RWUveDdZM1FORnl0dlhaZTJkczd3ZWlh?=
+ =?utf-8?B?K2NOYjlpQVN2TGZPeCtERVRXZTlrbUk3MzFGM205aksyazNwZlRyOWVrbG54?=
+ =?utf-8?B?cUx6ZFZpdTVOV0V0NEFrUHFiRktaeXNWaG9jdlM2NjEwYWpjaDVtNFdLZlZ4?=
+ =?utf-8?B?RlV3RU91d3piNTlTRzdLcm90OEFrUWJkeU9lT0g2N1MvVlpVYmdabXc0MWVO?=
+ =?utf-8?B?dnR5ZENqdVFiZDBhV1BDbStjeXBOa1JzQXEwemtQMGlVQWF4M0xYdXppVUc0?=
+ =?utf-8?B?QnFQWUFlRk56VXdjbXVCKzkzcmY0Rk1LNjVzWTRaRVJQdzdsczR4Z3pPQ0Zq?=
+ =?utf-8?B?NXdhbW05WGxOTEN0UDk5MUxqYVpxbXpHYkxTN01sTmRaMkRIbXdsaXZrTk5I?=
+ =?utf-8?B?RFpnVk9XeGtwUVM0MEtQelhWVlcycjR3NjRKZ2x5UkJsajBYcWJQT0l2WFky?=
+ =?utf-8?B?Z1JEcVBRMUxpanB2c2Q5T09CZ0JCRDlVODBtejVSd2hPeGtBUnAzdlJ4UHBY?=
+ =?utf-8?B?VnU5SVhQSlFIRmxUYlloLzZCOXQzbkdTWlZsOXZJTTBHR1BheFJySmo3cTdM?=
+ =?utf-8?B?VW9NWWF6SWRNamNjT2NRQW9Ea2NXMGkrV3YrMGczaTdyQjBkZ3RrRjJnNlBK?=
+ =?utf-8?B?UUNhR1FGMk5kZlpRMjdkcVBmWVdxV1IrR0ZqZXY3ZGs5Wlh4VEMweGNLa3RO?=
+ =?utf-8?B?UENqZmRJdzE3Q0hZWjd6emcvLzVha2FNVmdzVEpJTmpwZXZ6RGtHa2x6ZHBh?=
+ =?utf-8?B?YlArTlZvVlFsbzVXbW00d3lpU05MWVVlRDJWRnAzTjdSQm9tTE51OC9MdWYv?=
+ =?utf-8?B?ZkhOQW9BSWdtTmZoRGgyYmJHNDBNZlhlL09HZlVaK1pEM04vZkwxeC80UFhY?=
+ =?utf-8?B?RTllMmthMXcxbndpQjloRmtQZW9KL0xDbTlWMjBESEhEYklIT3JEMkE0NENS?=
+ =?utf-8?B?aWVCK05pNWFrcHZiRnlPbXBxOEczZ2hFUTVJMklKQmo0dkJ5VVpjblNLYjBu?=
+ =?utf-8?B?ay9LTGozNnQxNHFoRXhWYU44cllQZEZFVHV3RUxQY2dWZzhFakR5WGZsTkhN?=
+ =?utf-8?B?M1YrZGVCMThraVREQmdseWRwUlFQTjRZbHE2VkRpL2tPQXFpNUZ2bkp2YmRr?=
+ =?utf-8?B?enZhWEhQK2Vtdmc5b1QrTEJya0pLMk1MUGFNZGJveVNXM0pjSzV1Y2dZdHZm?=
+ =?utf-8?B?Lytsa2piejNJWjFwUy9BRVdlKzdIS3pETitZc1FSTWtoZ25NaE02amVuTnUx?=
+ =?utf-8?B?cjJsc3hxMVdaaFd0WnRjOEQwQ3FsUzV4Tm85Vkg5dEVsV1ZnazFmYkV2dmFO?=
+ =?utf-8?B?SDQ1dWU1d3VKNTFuZ09ZN2gxdXFROWVlekVSaWR2dW0rdnJra1VlT3NEcHdQ?=
+ =?utf-8?B?cys2aGk3VFNwSG1IMUQ4Y3hCWG54M1VPWThjUTFMc0lqRGt5NUY0SVVMZDBD?=
+ =?utf-8?B?VDNkUXlRbVZ6RUlmTVpEeEY4alN0NktiMkUyWW0vOHpvVk56RThoZ2RMdEJS?=
+ =?utf-8?B?SVNJYVRVY2IyU0VvWWpnQ05MVGFWeDhINzUvbWd6bzFML1ZuVVNCNUk0UEZm?=
+ =?utf-8?B?M1YxVzZTdjR1N1Q3eHkrc2t1VzBvM3BYVFhTcWVCbExZMEVCU3JSS3E1N1pB?=
+ =?utf-8?B?VFZxWnNZNm9mSndIOWRjYkJXaEhjSjdKbElLYzQzYytoNVFUTnZxTEZOMUw4?=
+ =?utf-8?B?aFVJMWJGQlRjbkdoYUNxZ0NGdWNKZXpCT0ZZUWtHTUQyYUpJbDNvMjB1T251?=
+ =?utf-8?B?RDAwcHRmbE9UbFk1VXZBNHEyYnpRRXBoZUVqUmV3bGhyNnU5R2JzQXloOExu?=
+ =?utf-8?B?cEdOa0Z5N0ZldzRxVTdrZERvbzgzTnVNZnFLTzNJeCtnVE1MYyszZVhpYS8v?=
+ =?utf-8?B?NDk1V2ZUbWtzemhoTFhtblk4LzhxOWgyR1NtLzRoN1lSNkE0WU9PSnZUaEd3?=
+ =?utf-8?B?WE1INTJnUmxpMXVSenUxY0RNdE5oTlBxS1NQOUZRWnBJOUZGY0s5dE5hZkti?=
+ =?utf-8?B?ajkvQmpwaUoxRUxaazNCdDF5aUtKM3FpVjZXcy85RVgyRU92K3M1VTlpdE5N?=
+ =?utf-8?B?ekI2RVVTSE1RSEgxR2FzVnM2dzJrcDFkK2hWakRBdUthM0hxOWQ1eTdzaDY5?=
+ =?utf-8?B?eVBYakpsMkJrNnlPOXhza3hVdW1ab0FZd25aWEk3dlhCWUdaL2NGRks5SXJC?=
+ =?utf-8?Q?PJcnTMSsYqMZtOkCSKUEdN8=3D?=
+X-OriginatorOrg: theobroma-systems.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2f9c8eb7-398a-4276-fa57-08dc1e94393d
+X-MS-Exchange-CrossTenant-AuthSource: VE1PR04MB6382.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jan 2024 17:28:34.7293
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 5e0e1b52-21b5-4e7b-83bb-514ec460677e
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: D+CAngt6Nel6nWDlargf/bD+GlMe4HDHXyMY7YDkjknmsWsAZFpC8zUfJgo1VLsMq6d7k680zh/j6CQdiMGFnhPtCllKvjoWAUzRvvnAUIn/6zOcj7zcHHwONetX9EPI
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR04MB9820
 
-On Wed, Jan 03, 2024 at 02:11:24PM -0800, Tanmay Shah wrote:
-> From: Mathieu Poirier <mathieu.poirier@linaro.org>
-> 
-> Multi-cluster remoteproc designs typically have the following DT
-> declaration:
-> 
-> 	remoteproc_cluster {
-> 		compatible = "soc,remoteproc-cluster";
-> 
->                 core0: core0 {
-> 			compatible = "soc,remoteproc-core"
->                         memory-region;
->                         sram;
->                 };
-> 
->                 core1: core1 {
-> 			compatible = "soc,remoteproc-core"
->                         memory-region;
->                         sram;
->                 }
->         };
+From: Heiko Stuebner <heiko.stuebner@cherry.de>
 
-The indention of this snippet looks weird in my client, because it
-contains a mixture of tabs and spaces. Please clean that up, and while
-at it, '_' is not a valid character in DT node names...
+RS485 has two signals to control transmissions "driver enable" (DE) and
+"receiver enable" (RE). DE is already handled via the uarts RTS signal
+while the RE signal on most implementations doesn't get handled
+separately at all.
 
-> 
-> A driver exists for the cluster rather than the individual cores
-> themselves so that operation mode and HW specific configurations
-> applicable to the cluster can be made.
-> 
-> Because the driver exists at the cluster level and not the individual
-> core level, function rproc_get_by_phandle() fails to return the
-> remoteproc associated with the phandled it is called for.
-> 
-> This patch enhances rproc_get_by_phandle() by looking for the cluster's
-> driver when the driver for the immediate remoteproc's parent is not
-> found.
-> 
-> Reported-by: Ben Levinsky <ben.levinsky@xilinx.com>
-> Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+As there still will be cases where this is needed though add a gpio
+property for declaring this signal pin.
 
-The s-o-b is used to certify the origin of the patch, Mathieu provided
-his signature here, then as you handle the patch you need to append your
-s-o-b to provide the same certification.
+Signed-off-by: Heiko Stuebner <heiko.stuebner@cherry.de>
+Signed-off-by: Farouk Bouabid <farouk.bouabid@theobroma-systems.com>
+---
+ Documentation/devicetree/bindings/serial/rs485.yaml | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-The for appropriate tracking of reality, Mathieu should append his s-o-b
-when/if he applies the patch.
+diff --git a/Documentation/devicetree/bindings/serial/rs485.yaml b/Documentation/devicetree/bindings/serial/rs485.yaml
+index 9418fd66a8e9..b64577036b5c 100644
+--- a/Documentation/devicetree/bindings/serial/rs485.yaml
++++ b/Documentation/devicetree/bindings/serial/rs485.yaml
+@@ -51,6 +51,10 @@ properties:
+     description: enables the receiving of data even while sending data.
+     $ref: /schemas/types.yaml#/definitions/flag
+ 
++  rs485-rx-enable-gpios:
++    description: GPIO to handle a separate RS485 receive enable signal
++    maxItems: 1
++
+   rs485-term-gpios:
+     description: GPIO pin to enable RS485 bus termination.
+     maxItems: 1
 
-TL;DR please add your S-o-b after Mathieu's.
+-- 
+2.34.1
 
-
-Change itself looks good to me.
-
-Regards,
-Bjorn
-
-> ---
->  drivers/remoteproc/remoteproc_core.c | 23 ++++++++++++++++++++++-
->  1 file changed, 22 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
-> index 695cce218e8c..0b3b34085e2f 100644
-> --- a/drivers/remoteproc/remoteproc_core.c
-> +++ b/drivers/remoteproc/remoteproc_core.c
-> @@ -33,6 +33,7 @@
->  #include <linux/idr.h>
->  #include <linux/elf.h>
->  #include <linux/crc32.h>
-> +#include <linux/of_platform.h>
->  #include <linux/of_reserved_mem.h>
->  #include <linux/virtio_ids.h>
->  #include <linux/virtio_ring.h>
-> @@ -2112,6 +2113,7 @@ EXPORT_SYMBOL(rproc_detach);
->  struct rproc *rproc_get_by_phandle(phandle phandle)
->  {
->  	struct rproc *rproc = NULL, *r;
-> +	struct device_driver *driver;
->  	struct device_node *np;
->  
->  	np = of_find_node_by_phandle(phandle);
-> @@ -2122,7 +2124,26 @@ struct rproc *rproc_get_by_phandle(phandle phandle)
->  	list_for_each_entry_rcu(r, &rproc_list, node) {
->  		if (r->dev.parent && device_match_of_node(r->dev.parent, np)) {
->  			/* prevent underlying implementation from being removed */
-> -			if (!try_module_get(r->dev.parent->driver->owner)) {
-> +
-> +			/*
-> +			 * If the remoteproc's parent has a driver, the
-> +			 * remoteproc is not part of a cluster and we can use
-> +			 * that driver.
-> +			 */
-> +			driver = r->dev.parent->driver;
-> +
-> +			/*
-> +			 * If the remoteproc's parent does not have a driver,
-> +			 * look for the driver associated with the cluster.
-> +			 */
-> +			if (!driver) {
-> +				if (r->dev.parent->parent)
-> +					driver = r->dev.parent->parent->driver;
-> +				if (!driver)
-> +					break;
-> +			}
-> +
-> +			if (!try_module_get(driver->owner)) {
->  				dev_err(&r->dev, "can't get owner\n");
->  				break;
->  			}
-> -- 
-> 2.25.1
-> 
