@@ -1,45 +1,45 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C46DD60874;
-	Fri, 26 Jan 2024 23:56:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EDC960DD8;
+	Fri, 26 Jan 2024 23:56:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706313366; cv=none; b=CHY6Prdfil4BgASnF7rBzW9wJOwkNtrlJMimlOpFpVG2xFM3EbugWxgkZvZRcYanIqg6GaItYpqhP4PeSRGbKE0ydzbsi5JaqhhyH1/C7C4tedHTqWp3RacNYG8j0HL/yl0e2AlVbRCMU3BV7T8JC7SJ5J7rZev7OK2FJlWnobQ=
+	t=1706313367; cv=none; b=oUGfr0kCeUi8fSwRl11uK9ovQJ+kTHeuAXqNSKiYU6tb1asbElpB2b6ykgF1/VzjrXmQX9Gi/gzj9YzME7jMLBNse231VQG8MSF9MR1lq79J5wGWNL5Wj3KkyiCO42Nytc/CzkiQpRxGqkIeiwYvvlr7Pht3/8xUo81xQEaYeuY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706313366; c=relaxed/simple;
-	bh=CFnzipWZ6TMUFWDkFhb+oY6rrGeryUjUZKxboWcFyjA=;
+	s=arc-20240116; t=1706313367; c=relaxed/simple;
+	bh=2gwhSMH2WST7E1wV8kAthAWz8qnRpEKSM+ZjcpcQer0=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gOl0V+Uc9Aia+Lks0ZYvfHwEbnAllWrNphOWfzWnsUxOYMx5GMckknOQhybSyINWwsZmKhCwsELY+fh6Xp5Pdcm9EfWpIlb1SZ1SCXLQtq8APlYyt760Fql8vbWUIEb0iJeYsBrX9rdpn9xWzCcm2941i7JBPqUJUFXE/ksKleI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=MxiHhyAE; arc=none smtp.client-ip=205.220.168.131
+	 MIME-Version:Content-Type; b=dsuSvXwB41vpqUc1Ns1GCGskd7/WraYaPgKdR9pxO1emfdeu6Te1lOdDdnh6j8/cJRfEPXx3Lag0vm9bhfjXBXutMl75nPqA8QfZ+LvLzaZfQGvjroSzgvRDOQk+Jt03zjUf6JTy3/XobpD7/SOb8SRy2KJqxO/5KrHhjI/kCoU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Xp8mIwYj; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="MxiHhyAE"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40QNWcCA023887;
-	Fri, 26 Jan 2024 23:55:04 GMT
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Xp8mIwYj"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40QNDY5O001507;
+	Fri, 26 Jan 2024 23:55:33 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-type; s=qcppdkim1; bh=sccXe/sdIxYBN7YJuYLi
-	wtdANC45YLpyHhdyVFhG5pc=; b=MxiHhyAE7TCJZBPowgWCCZhS1ac6ZKEZYw6i
-	F0Bpzq0fr92v1JIe+wydOMDApN2wu4oP+LwrXArjbwg3MI9KSX0K+NDuYcbM49eQ
-	Sfp/mo+Wz+ip02AFsjObkL0Cvf5nXeYLbwzVRVC87qR1rqT4hFzqVvFf2J+2KBcy
-	bsb3iAbmdgtvq/mUjsie0dcTmValSX/HGfcsslUFLsQv8DNS2fCcTspVpsZL6SCw
-	HI4CXq8adiTCFv7PZAPI8YV2R8S7gj4e/obGx0OutWmAHOEVWuowmQszlCGg1ZdX
-	fmrPBTlN1P4FfLN/2fEKxwR8HGlhsienHKc/ihIllkb8RZXdgw==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vvjbg8fyx-1
+	:mime-version:content-type; s=qcppdkim1; bh=vs3VFS39EsjZIuvvSQ74
+	CwddULOtH/piipMdRYmYCvM=; b=Xp8mIwYjZBVI7ncW0sYYdsjiUUhdKW8M9sdb
+	2cAKwdcQA5Hakeo2Cvqk/vq/TG/8ohdRgFZvZzJ7LNiRqDD3Bvrmk5jX8/BAHNbt
+	HP6Wkp8aJ1Dr47TrM709jSbpyEGVrSbds73XyyD3EQVHXa8Tx16M0v4TSezGArVJ
+	29XSszsizLNNn6UPL4IskEbrhGj79W14JD4g+eD1t6E+ZkL2Q4cdac8Ve9xYChRy
+	L5mMZrvDptWt3XL5YjcYqPBx9PaB2OBf+GQaroEg76ShXK2Jj71xSCE7BnK9ZBZZ
+	yNLdu8yUWEm6c52SYndNj3CTFd8roaBslBTpa+mkwMt8KvAdVA==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vv4nrad1m-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 26 Jan 2024 23:55:03 +0000 (GMT)
+	Fri, 26 Jan 2024 23:55:33 +0000 (GMT)
 Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 40QNt2cZ009297
+	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 40QNtUwq018645
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 26 Jan 2024 23:55:02 GMT
+	Fri, 26 Jan 2024 23:55:32 GMT
 Received: from hu-obabatun-lv.qualcomm.com (10.49.16.6) by
  nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Fri, 26 Jan 2024 15:54:58 -0800
+ 15.2.1118.40; Fri, 26 Jan 2024 15:55:20 -0800
 From: Oreoluwa Babatunde <quic_obabatun@quicinc.com>
 To: <catalin.marinas@arm.com>, <will@kernel.org>, <robh+dt@kernel.org>,
         <frowand.list@gmail.com>, <vgupta@kernel.org>, <arnd@arndb.de>,
@@ -55,9 +55,9 @@ To: <catalin.marinas@arm.com>, <will@kernel.org>, <robh+dt@kernel.org>,
 CC: <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
         <kernel@quicinc.com>, Oreoluwa Babatunde <quic_obabatun@quicinc.com>
-Subject: [PATCH 05/46] arm64: reserved_mem: Implement the new processing order for reserved memory
-Date: Fri, 26 Jan 2024 15:53:44 -0800
-Message-ID: <20240126235425.12233-6-quic_obabatun@quicinc.com>
+Subject: [PATCH 45/46] xtensa: reserved_mem: Switch fdt_init_reserved_mem() to dt_init_reserved_mem()
+Date: Fri, 26 Jan 2024 15:54:24 -0800
+Message-ID: <20240126235425.12233-46-quic_obabatun@quicinc.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20240126235425.12233-1-quic_obabatun@quicinc.com>
 References: <20240126235425.12233-1-quic_obabatun@quicinc.com>
@@ -72,79 +72,39 @@ X-ClientProxiedBy: nalasex01b.na.qualcomm.com (10.47.209.197) To
  nalasex01b.na.qualcomm.com (10.47.209.197)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: ZAGFw0ueASHC3NgzxQ65JjMDpxIUTyN7
-X-Proofpoint-ORIG-GUID: ZAGFw0ueASHC3NgzxQ65JjMDpxIUTyN7
+X-Proofpoint-ORIG-GUID: tESLxkGCTWxCf6iKaX8n9Zi1Ro2lKA8K
+X-Proofpoint-GUID: tESLxkGCTWxCf6iKaX8n9Zi1Ro2lKA8K
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2024-01-25_14,2024-01-25_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 spamscore=0
- priorityscore=1501 mlxlogscore=465 phishscore=0 impostorscore=0
- malwarescore=0 bulkscore=0 lowpriorityscore=0 adultscore=0 mlxscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 adultscore=0
+ mlxlogscore=700 spamscore=0 mlxscore=0 bulkscore=0 clxscore=1015
+ priorityscore=1501 malwarescore=0 phishscore=0 impostorscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.19.0-2401190000 definitions=main-2401260176
 
-Call early_fdt_scan_reserved_mem() in place of
-early_init_fdt_scan_reserved_mem() to carry out the first stage of the
-reserved memory processing only.
-
-The early_fdt_scan_reserved_mem() function is used to scan through the
-DT and mark all the reserved memory regions as reserved or nomap as
-needed, as well as allocate the memory required by the
-dynamically-placed
+Switch from using fdt_init_reserved_mem() to dt_init_reserved_mem() to
+reflect the use of the unflatten devicetree APIs to process the
 reserved memory regions.
-
-The second stage of the reserved memory processing is done by
-fdt_init_reserved_mem(). This function is used to store the information
-of the statically-placed reserved memory nodes in the reserved_mem
-array as well as call the region specific initialization function on all
-the stored reserved memory regions.
-
-The call to fdt_init_reserved_mem() is placed after setup_arch_memory()
-in preparation for the dynamic allocation of the reserved_mem array
-using memblock. This is because memblock allocated memory is not
-writable until after the page tables have been setup on the arm64
-architecture.
 
 Signed-off-by: Oreoluwa Babatunde <quic_obabatun@quicinc.com>
 ---
- arch/arm64/kernel/setup.c | 3 +++
- arch/arm64/mm/init.c      | 2 +-
- 2 files changed, 4 insertions(+), 1 deletion(-)
+ arch/xtensa/kernel/setup.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
-index 42c690bb2d60..2a9e98104af7 100644
---- a/arch/arm64/kernel/setup.c
-+++ b/arch/arm64/kernel/setup.c
-@@ -27,6 +27,7 @@
- #include <linux/proc_fs.h>
- #include <linux/memblock.h>
- #include <linux/of_fdt.h>
-+#include <linux/of_reserved_mem.h>
- #include <linux/efi.h>
- #include <linux/psci.h>
- #include <linux/sched/task.h>
-@@ -346,6 +347,8 @@ void __init __no_sanitize_address setup_arch(char **cmdline_p)
+diff --git a/arch/xtensa/kernel/setup.c b/arch/xtensa/kernel/setup.c
+index cb2fb993de76..67479911b0ae 100644
+--- a/arch/xtensa/kernel/setup.c
++++ b/arch/xtensa/kernel/setup.c
+@@ -358,7 +358,7 @@ void __init setup_arch(char **cmdline_p)
+ 	kasan_init();
+ 	unflatten_and_copy_device_tree();
  
- 	paging_init();
- 
-+	fdt_init_reserved_mem();
-+
- 	acpi_table_upgrade();
- 
- 	/* Parse the ACPI tables for possible boot-time configuration */
-diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-index 74c1db8ce271..0fe8587e550c 100644
---- a/arch/arm64/mm/init.c
-+++ b/arch/arm64/mm/init.c
-@@ -310,7 +310,7 @@ void __init arm64_memblock_init(void)
- 		initrd_end = initrd_start + phys_initrd_size;
- 	}
- 
--	early_init_fdt_scan_reserved_mem();
-+	early_fdt_scan_reserved_mem();
- 
- 	high_memory = __va(memblock_end_of_DRAM() - 1) + 1;
- }
+-	fdt_init_reserved_mem();
++	dt_init_reserved_mem();
+ #ifdef CONFIG_SMP
+ 	smp_init_cpus();
+ #endif
 -- 
 2.17.1
 
