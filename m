@@ -1,228 +1,99 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3E8563508
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 07:56:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+Received: from azure-sdnproxy.icoremail.net (azure-sdnproxy.icoremail.net [20.231.56.155])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 349EB8820;
+	Fri, 26 Jan 2024 07:58:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=20.231.56.155
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706255818; cv=none; b=OeGg0yR3C1ksk2y8mNXxFg9dLCG6vn8ldpkFPJK1SrnNxvU1l80x+a6RLXWlgDf/64PM4eiAiqMnwQpIPcV53kD/w9EwlMPwQKj0G/gQJnGPAndrex2rVW0lJ1wrqI3E/tSUa4EN/jsQSmgnck+7QtxOIzM0FenYghPOMRBu0JY=
+	t=1706255892; cv=none; b=uWwFQ+UHxKrICE6YpEFUM8hRN/OJ/suRpPdzxU1E0PYYbSB7WOaFWOLT5lgyDAi2MKpsucoJ0Gds42q8hR59bg/5CXjdJmtlXAIlGcKkJHxQMOoXdZzFjlv9urKaj1UiiwhL8ZWat3HDDi+D2jj6ze5jl4JWnL9fQj2GkeFJSvI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706255818; c=relaxed/simple;
-	bh=GmcENEElrbmu4+qu30DqEDmtjJ2hYqL4X3elhdiKmmQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pWIxqrLTM7Tfho8g/0NHGU5s4muCKg1OLcg60yuXGpVWeNmxsDCz9z4nM15GBzMtaDOYOvoMImAH2bfV9QaetachoCYucyERnBBkZARCUB4+7UptTafupr6ghKrxuyFVFljPnJf6Lm20nEr1+vnUF1sQb0t2JlLT59f3mh7YtCU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=aDJ8guap; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aDJ8guap"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3392291b21bso132302f8f.1
-        for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 23:56:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706255815; x=1706860615; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=uPleq8v+IkwCDBo36+ymb8DinsNdEMNv1kWJ7eUs/+E=;
-        b=aDJ8guapjFvAha7QE36KWWEQAy/rVQz277PN6O/tF1W3/k9BIet3u/yv8Ze7+zSRm1
-         5utQqVMS/KWo+neGiN9mekkBb++ojpLBqcVIJV2z7cPfkaRef/KWS6W4qp8ysa1bBxeW
-         pMbnkVco1/oOmj0ibXgjJJNcPzYt3QHdrKlnT+Ohuklq28NMTipCzDtnsnAZPqZvOJOK
-         zI6sNSXkQ7iW254K5M8IcsMxMVoyknMA3xS4TgYrcQhwFTwYoAo1QVrzJV2vHaJMj8Ug
-         WdmTuiON+v0cHvcCxQbH3dJfCjNd4r2D7SghyEha2EHcD9JHmiVNtQToTnF/CUm74cjT
-         Go1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706255815; x=1706860615;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=uPleq8v+IkwCDBo36+ymb8DinsNdEMNv1kWJ7eUs/+E=;
-        b=ZYPo+P2kDwRMbO0gKojpGxW+tuDeb6QnpY5hJW/kA2tUk2yBRN/cOFZLsfrVGtg3vE
-         E1iLSGFBSNWQ7tr+QdQsf9JHSCP0TlxnmdXEU2F3vrz2RZW1vUutLIq2Zx2KKU8jnvZV
-         OIeLB2+3+cXSVOUugNNtE6psTiPJUj4h7zHUz7Rz+NtTgUosKgqm+1m+JpXD9dhUILmS
-         Egs30YQ91BoKDEvGHhZBpSc0y8JLBiS/QJ+tJ/5ouLPnnWHQh7KYmWVhjS3ZOmga8a3N
-         DFBFAxJB1RhBDVg5bKDpJRF16AcLH9Nk99IzUTVKIX1VpxvYMRsBqiYnyy9jrhVy5rqM
-         GWww==
-X-Gm-Message-State: AOJu0YwwIGQ8/61ZmMdca9fP2xE2KJVL5ZBsaFIhIuOvg/KFwYB2Yhr9
-	FglBzAhxkbF49cr+2dq7xGZNTV8lRGm9YhMHWJ0BckS6qFdHYfFKLZ3zgldCIhg=
-X-Google-Smtp-Source: AGHT+IF4ZRzpdk9B+kPkzSfTldHpKYPP1lO7tlsg8x+Bq/NbPYnjD64G1cVIyHa8s5kXAAjz+lbHLQ==
-X-Received: by 2002:a5d:4006:0:b0:337:aa99:82aa with SMTP id n6-20020a5d4006000000b00337aa9982aamr593223wrp.91.1706255815070;
-        Thu, 25 Jan 2024 23:56:55 -0800 (PST)
-Received: from [192.168.2.107] ([79.115.63.202])
-        by smtp.gmail.com with ESMTPSA id ch15-20020a5d5d0f000000b0033905a60689sm682416wrb.45.2024.01.25.23.56.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 25 Jan 2024 23:56:54 -0800 (PST)
-Message-ID: <36a664b1-666d-4fc4-90d9-35b42e56973d@linaro.org>
-Date: Fri, 26 Jan 2024 07:56:52 +0000
+	s=arc-20240116; t=1706255892; c=relaxed/simple;
+	bh=SC15Rb/PFemCDAqfyzo2GcqUMQvpP3E+9WLV00xHdyU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jyKSlZLphiL747Xiwqd+EjaRQEv7pl4wUNgQOSe3WRVLhjsnLPDD3VUCQAR2VW5lEPsuqjCZ/70Em07K2N8d5djC83HLW6tUelSoqdFyzg1VKICu84pp24dOcfcribcoOlzM2cbYdUBTRBafp3nr+ltHtZexI6a/iU008pggZCw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn; spf=pass smtp.mailfrom=zju.edu.cn; arc=none smtp.client-ip=20.231.56.155
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zju.edu.cn
+Received: from luzhipeng.223.5.5.5 (unknown [39.174.92.167])
+	by mail-app2 (Coremail) with SMTP id by_KCgDnKKjuZbNl12bZAA--.20178S2;
+	Fri, 26 Jan 2024 15:57:36 +0800 (CST)
+From: Zhipeng Lu <alexious@zju.edu.cn>
+To: alexious@zju.edu.cn
+Cc: Kalle Valo <kvalo@kernel.org>,
+	"John W. Linville" <linville@tuxdriver.com>,
+	Marcelo Tosatti <marcelo@kvack.org>,
+	libertas-dev@lists.infradead.org,
+	linux-wireless@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] libertas: fix some memleaks in lbs_allocate_cmd_buffer
+Date: Fri, 26 Jan 2024 15:53:34 +0800
+Message-Id: <20240126075336.2825608-1-alexious@zju.edu.cn>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 16/28] spi: s3c64xx: simplify s3c64xx_wait_for_pio()
-Content-Language: en-US
-To: Sam Protsenko <semen.protsenko@linaro.org>
-Cc: broonie@kernel.org, andi.shyti@kernel.org, arnd@arndb.de,
- robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
- alim.akhtar@samsung.com, linux-spi@vger.kernel.org,
- linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-arch@vger.kernel.org, andre.draszik@linaro.org,
- peter.griffin@linaro.org, kernel-team@android.com, willmcvicker@google.com
-References: <20240125145007.748295-1-tudor.ambarus@linaro.org>
- <20240125145007.748295-17-tudor.ambarus@linaro.org>
- <CAPLW+4mLWU-8H=qESe9csXm=e_ByvP=nc7MEJzknv+XAUjqUZg@mail.gmail.com>
-From: Tudor Ambarus <tudor.ambarus@linaro.org>
-In-Reply-To: <CAPLW+4mLWU-8H=qESe9csXm=e_ByvP=nc7MEJzknv+XAUjqUZg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:by_KCgDnKKjuZbNl12bZAA--.20178S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7uF43Zr4kGF18XrW8Cr4Durg_yoW8Gw4fpF
+	4Ygr18Cr15Zr4vya9xJaykGas0ga1Fq347Ka1F9w1rur98Ar1Fvr1rWF1xZrsY9FWxJaya
+	vrW2yr1UuF1kt3JanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUkl14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26rxl
+	6s0DM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
+	0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
+	jxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr
+	1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkF7I0En4kS14v26r12
+	6r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI
+	0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y
+	0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxV
+	W8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1l
+	IxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbSfO7UUUU
+	U==
+X-CM-SenderInfo: qrsrjiarszq6lmxovvfxof0/
 
+In the for statement of lbs_allocate_cmd_buffer, if the allocation of
+cmdarray[i].cmdbuf fails, both cmdarray and cmdarray[i].cmdbuf needs to
+be freed. Otherwise, there will be memleaks in lbs_allocate_cmd_buffer.
 
+Fixes: 876c9d3aeb98 ("[PATCH] Marvell Libertas 8388 802.11b/g USB driver")
+Signed-off-by: Zhipeng Lu <alexious@zju.edu.cn>
+---
+ drivers/net/wireless/marvell/libertas/cmd.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
-On 1/25/24 20:43, Sam Protsenko wrote:
-> On Thu, Jan 25, 2024 at 8:50 AM Tudor Ambarus <tudor.ambarus@linaro.org> wrote:
->>
->> s3c64xx_spi_transfer_one() makes sure that for PIO the xfer->len is
->> always smaller than the fifo size. Since we can't receive more that the
->> FIFO size, droop the loop handling, the code becomes less misleading.
-> 
-> Drop (spelling)?
+diff --git a/drivers/net/wireless/marvell/libertas/cmd.c b/drivers/net/wireless/marvell/libertas/cmd.c
+index 104d2b6dc9af..5a525da434c2 100644
+--- a/drivers/net/wireless/marvell/libertas/cmd.c
++++ b/drivers/net/wireless/marvell/libertas/cmd.c
+@@ -1132,7 +1132,7 @@ int lbs_allocate_cmd_buffer(struct lbs_private *priv)
+ 		if (!cmdarray[i].cmdbuf) {
+ 			lbs_deb_host("ALLOC_CMD_BUF: ptempvirtualaddr is NULL\n");
+ 			ret = -1;
+-			goto done;
++			goto free_cmd_array;
+ 		}
+ 	}
+ 
+@@ -1140,8 +1140,17 @@ int lbs_allocate_cmd_buffer(struct lbs_private *priv)
+ 		init_waitqueue_head(&cmdarray[i].cmdwait_q);
+ 		lbs_cleanup_and_insert_cmd(priv, &cmdarray[i]);
+ 	}
+-	ret = 0;
++	return 0;
+ 
++free_cmd_array:
++	for (i = 0; i < LBS_NUM_CMD_BUFFERS; i++) {
++		if (cmdarray[i].cmdbuf) {
++			kfree(cmdarray[i].cmdbuf);
++			cmdarray[i].cmdbuf = NULL;
++		}
++	}
++	kfree(priv->cmd_array);
++	priv->cmd_array = NULL;
+ done:
+ 	return ret;
+ }
+-- 
+2.34.1
 
-oh yeah, thanks.
-
-> 
-> For the patch: how exactly it was tested to make sure there is no regression?
-
-no regression testing for the entire patch set, I have just a gs101 on
-my hands.
-
-However, we shouldn't refrain ourselves on improving things when we
-think they're straight forward and they worth it. In this particular
-case, for PIO, s3c64xx_spi_transfer_one() does:
-	xfer->len = fifo_len - 1;
-then in s3c64xx_enable_datapath() we write xfer->len and then in
-s3c64xx_wait_for_pio() we code did the following:
-	loops = xfer->len / FIFO_DEPTH(sdd);
-loops is always zero, this is bogus and we shall remove it.
-
->>
->> Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
->> ---
->>  drivers/spi/spi-s3c64xx.c | 75 +++++++++------------------------------
->>  1 file changed, 17 insertions(+), 58 deletions(-)
->>
->> diff --git a/drivers/spi/spi-s3c64xx.c b/drivers/spi/spi-s3c64xx.c
->> index d2dd28ff00c6..00a0878aeb80 100644
->> --- a/drivers/spi/spi-s3c64xx.c
->> +++ b/drivers/spi/spi-s3c64xx.c
->> @@ -485,26 +485,6 @@ static int s3c64xx_enable_datapath(struct s3c64xx_spi_driver_data *sdd,
->>         return 0;
->>  }
->>
->> -static u32 s3c64xx_spi_wait_for_timeout(struct s3c64xx_spi_driver_data *sdd,
->> -                                       int timeout_ms)
->> -{
->> -       void __iomem *regs = sdd->regs;
->> -       unsigned long val = 1;
->> -       u32 status;
->> -       u32 max_fifo = FIFO_DEPTH(sdd);
->> -
->> -       if (timeout_ms)
->> -               val = msecs_to_loops(timeout_ms);
->> -
->> -       do {
->> -               status = readl(regs + S3C64XX_SPI_STATUS);
->> -       } while (FIELD_GET(S3C64XX_SPI_ST_RX_FIFO_LVL, status) < max_fifo &&
->> -                --val);
->> -
->> -       /* return the actual received data length */
->> -       return FIELD_GET(S3C64XX_SPI_ST_RX_FIFO_LVL, status);
->> -}
->> -
->>  static int s3c64xx_wait_for_dma(struct s3c64xx_spi_driver_data *sdd,
->>                                 struct spi_transfer *xfer)
->>  {
->> @@ -553,13 +533,11 @@ static int s3c64xx_wait_for_pio(struct s3c64xx_spi_driver_data *sdd,
->>                                 struct spi_transfer *xfer, bool use_irq)
->>  {
->>         void __iomem *regs = sdd->regs;
->> +       u8 *buf = xfer->rx_buf;
->> +       unsigned long time_us;
->>         unsigned long val;
->> -       u32 status;
->> -       int loops;
->> -       u32 cpy_len;
->> -       u8 *buf;
->> +       u32 status, len;
->>         int ms;
->> -       unsigned long time_us;
->>
->>         /* microsecs to xfer 'len' bytes @ 'cur_speed' */
->>         time_us = (xfer->len * 8 * 1000 * 1000) / sdd->cur_speed;
->> @@ -582,48 +560,29 @@ static int s3c64xx_wait_for_pio(struct s3c64xx_spi_driver_data *sdd,
->>                 status = readl(regs + S3C64XX_SPI_STATUS);
->>         } while (FIELD_GET(S3C64XX_SPI_ST_RX_FIFO_LVL, status) < xfer->len &&
->>                  --val);
->> -
->>         if (!val)
->>                 return -EIO;
->>
->>         /* If it was only Tx */
->> -       if (!xfer->rx_buf) {
->> +       if (!buf) {
->>                 sdd->state &= ~TXBUSY;
->>                 return 0;
->>         }
->>
->> -       /*
->> -        * If the receive length is bigger than the controller fifo
->> -        * size, calculate the loops and read the fifo as many times.
->> -        * loops = length / max fifo size (calculated by using the
->> -        * fifo mask).
->> -        * For any size less than the fifo size the below code is
->> -        * executed atleast once.
->> -        */
->> -       loops = xfer->len / FIFO_DEPTH(sdd);
->> -       buf = xfer->rx_buf;
->> -       do {
->> -               /* wait for data to be received in the fifo */
->> -               cpy_len = s3c64xx_spi_wait_for_timeout(sdd,
->> -                                                      (loops ? ms : 0));
->> -
->> -               switch (sdd->cur_bpw) {
->> -               case 32:
->> -                       ioread32_rep(regs + S3C64XX_SPI_RX_DATA,
->> -                                    buf, cpy_len / 4);
->> -                       break;
->> -               case 16:
->> -                       ioread16_rep(regs + S3C64XX_SPI_RX_DATA,
->> -                                    buf, cpy_len / 2);
->> -                       break;
->> -               default:
->> -                       ioread8_rep(regs + S3C64XX_SPI_RX_DATA,
->> -                                   buf, cpy_len);
->> -                       break;
->> -               }
->> +       len = FIELD_GET(S3C64XX_SPI_ST_RX_FIFO_LVL, status);
->> +
->> +       switch (sdd->cur_bpw) {
->> +       case 32:
->> +               ioread32_rep(regs + S3C64XX_SPI_RX_DATA, buf, len / 4);
->> +               break;
->> +       case 16:
->> +               ioread16_rep(regs + S3C64XX_SPI_RX_DATA, buf, len / 2);
->> +               break;
->> +       default:
->> +               ioread8_rep(regs + S3C64XX_SPI_RX_DATA, buf, len);
->> +               break;
->> +       }
->>
->> -               buf = buf + cpy_len;
->> -       } while (loops--);
->>         sdd->state &= ~RXBUSY;
->>
->>         return 0;
->> --
->> 2.43.0.429.g432eaa2c6b-goog
->>
