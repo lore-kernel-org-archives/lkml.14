@@ -1,122 +1,112 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD9C7249F8;
-	Fri, 26 Jan 2024 08:55:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 327A612DD99;
+	Fri, 26 Jan 2024 08:55:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706259351; cv=none; b=aCXOpSNhJJrzV48o/TtUKvUZsp+WSR7VW5bEnE1SkPSYmyJNI68cqCeJOvrJky2dP8JVGSJO3vF/crWeA2RUyQI7PFlz8yhoINIiqSiq4U0g+Jr0xLUAXV4VOCxxuActCdtLB0H1xqWf5KKhNjfIgtAVinrLltuGzRQYoyRkxl4=
+	t=1706259351; cv=none; b=PIb/nEbXblJIeLdTY6DiQ8gzJUW8NeFZpr0vgANDZrLlZKuTpc4TTMVDig7moRMvqjcnCVvgMEE8CEajarVC8txOiM5M3tpOSN01+mfp3PjSuQcif5AMJ7H3/f0t1B1v3ZmeKwPGa9hnPAfaF0SogEHOhEJm6QE+y8D8Q2/4eWI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1706259351; c=relaxed/simple;
-	bh=VZxsGAjSNiP+osBUIVz0o4fYISM24dYHuupYK5rxxXA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WaOEFWz2HPBCTxrCsC5GPEPxwOrFc4TiJHJfe0WONMO/81tfc/Zs+2EVcOWup+vPEvoS1fBakQwsCmldmUE6loO7+/dBuU3rXRJZrPglNqgc3wrYxoJ1mhvrcSGqQf+/lPwxj4ITPnBCC+Gle0zV7WzP7MNIurNVITZe3qjfDmA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=I50x5DUB; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	bh=j+/uxe8eBjcxhFKmmV+TNL3Gnvy6/jWawY4A6DrZz/I=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=blrLtUXYi9NxA2pLkhfQi2QVImbujXf49bmZuhKrU6iUVMuwRnIDCmXDdxc77DTfngr6o88gEL+x5C7Gh2IX+iZCWY6hY8yvekwCSaXeKdbTw8nSzFFvnmYhQqjQBCNtW28SZusIQel1hKxU1kalT2VIHPDCvxyfM5Gm/E4yhZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=I6uZZ9jo; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="I50x5DUB"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=w+WMrLX5s3l3LT1bHKgCUnIIP0Rpbnm0jHmPYs4Fo3Q=; b=I50x5DUB0iXrrBxqdgS8P0PHwi
-	s74eVAhOimTyTvGGWDNpVo2N9YkJBqwBDCz5RIAWU9pPr2hAs6DJHwQqu4jnTOIpYcyeen5qbI4WJ
-	jbKOmxbKoaLGS4iXcdf1Y3/asNY3wfc3FLgOk8YBxQsdabvJMKo+6qnBG3NaM/yN2nE8wHKPD7FNR
-	nuiOzGP0mYvr/Jn+Czdn7WyS9RqzX2IPY2B5ONEhHAT/vFBf6mdfqF96R1j+erGYbaWcUioDyA4eA
-	v/RKELBLqemXTmbhLPK5Zt4Zgrhr56p2X5WWmtjv9iBH7z2aLk/ZPX4mm8mFXvpvk509gr5K4tXdN
-	9kfhfLTA==;
-Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rTHzs-0000000D5AA-0t0T;
-	Fri, 26 Jan 2024 08:55:36 +0000
-Date: Fri, 26 Jan 2024 08:55:36 +0000
-From: Matthew Wilcox <willy@infradead.org>
-To: Zhaoyang Huang <huangzhaoyang@gmail.com>
-Cc: "zhaoyang.huang" <zhaoyang.huang@unisoc.com>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	linux-fsdevel@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jens Axboe <axboe@kernel.dk>, Yu Zhao <yuzhao@google.com>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Niklas Cassel <niklas.cassel@wdc.com>,
-	"Martin K . Petersen" <martin.petersen@oracle.com>,
-	Hannes Reinecke <hare@suse.de>,
-	Linus Walleij <linus.walleij@linaro.org>, linux-mm@kvack.org,
-	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-	steve.kang@unisoc.com
-Subject: Re: [PATCHv3 1/1] block: introduce content activity based ioprio
-Message-ID: <ZbNziLeet7TbDKEl@casper.infradead.org>
-References: <20240125071901.3223188-1-zhaoyang.huang@unisoc.com>
- <CAGWkznGpW=bUxET8yZGu4dNTBfsj7n79yXsTD23fE5-SWkdjfA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="I6uZZ9jo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706259350; x=1737795350;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=j+/uxe8eBjcxhFKmmV+TNL3Gnvy6/jWawY4A6DrZz/I=;
+  b=I6uZZ9jooCMeYjMCVqPzsdoILxcvguc4p5jjXPeF8TEnpm7RAnt1OH71
+   YPETNQqpqcCLxY+F+6dfOJWrHG/ZkIqlDMHtGhji4XCqyEADsv+R/OfEB
+   0d/x+V356ZdJJsM+5dRzQ8sYnXjAhbupZKfx1jzZQ+qGhUW/hmKUAe4Te
+   CyqDjejELDTc1BlwkUgZf5Z2LGxdS9s0kVGamyZaJyoPAPJVBpWwheP8P
+   I1vF04JXeHvF/A9RjFpe0Y6u/TymfYaV2hi4/p5NbHXOZinnUjhvgv4BQ
+   SMjhfzCK/ejkMXTQyFH+Payb1hmYKBEdWHKigQfwLM+Kc1M6AXqEu/JRv
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="9792066"
+X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
+   d="scan'208";a="9792066"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2024 00:55:50 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="930309817"
+X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
+   d="scan'208";a="930309817"
+Received: from yanli3-mobl.ccr.corp.intel.com (HELO xiongzha-desk1.ccr.corp.intel.com) ([10.254.213.178])
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2024 00:55:44 -0800
+From: Xiong Zhang <xiong.y.zhang@linux.intel.com>
+To: seanjc@google.com,
+	pbonzini@redhat.com,
+	peterz@infradead.org,
+	mizhang@google.com,
+	kan.liang@intel.com,
+	zhenyuw@linux.intel.com,
+	dapeng1.mi@linux.intel.com,
+	jmattson@google.com
+Cc: kvm@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	zhiyuan.lv@intel.com,
+	eranian@google.com,
+	irogers@google.com,
+	samantha.alt@intel.com,
+	like.xu.linux@gmail.com,
+	chao.gao@intel.com,
+	xiong.y.zhang@linux.intel.com,
+	Xiong Zhang <xiong.y.zhang@intel.com>
+Subject: [RFC PATCH 03/41] perf: Set exclude_guest onto nmi_watchdog
+Date: Fri, 26 Jan 2024 16:54:06 +0800
+Message-Id: <20240126085444.324918-4-xiong.y.zhang@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240126085444.324918-1-xiong.y.zhang@linux.intel.com>
+References: <20240126085444.324918-1-xiong.y.zhang@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAGWkznGpW=bUxET8yZGu4dNTBfsj7n79yXsTD23fE5-SWkdjfA@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jan 26, 2024 at 03:59:48PM +0800, Zhaoyang Huang wrote:
-> loop more mm and fs guys for more comments
+From: Xiong Zhang <xiong.y.zhang@intel.com>
 
-I agree with everything Damien said.  But also ...
+The perf event for NMI watchdog is per cpu pinned system wide event,
+if such event doesn't have exclude_guest flag, it will be put into
+error state once guest with passthrough PMU starts, this breaks
+NMI watchdog function totally.
 
-> > +bool BIO_ADD_FOLIO(struct bio *bio, struct folio *folio, size_t len,
-> > +               size_t off)
+This commit adds exclude_guest flag for this perf event, so this perf
+event is stopped during VM running, but it will continue working after
+VM exit. In this way the NMI watchdog can not detect hardlockups during
+VM running, it still breaks NMI watchdog function a bit. But host perf
+event must be stopped during VM with passthrough PMU running, current
+no other reliable method can be used to replace perf event for NMI
+watchdog.
 
-You don't add any users of these functions.  It's hard to assess whether
-this is the right API when there are no example users.
+Signed-off-by: Xiong Zhang <xiong.y.zhang@intel.com>
+Signed-off-by: Mingwei Zhang <mizhang@google.com>
+---
+ kernel/watchdog_perf.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-> > +       activity += (bio->bi_vcnt + 1 <= IOPRIO_NR_ACTIVITY &&
-> > +                       PageWorkingset(&folio->page)) ? 1 : 0;
-
-folio_test_workingset().
-
-> > +       return bio_add_page(bio, &folio->page, len, off) > 0;
-
-bio_add_folio().
-
-> > +int BIO_ADD_PAGE(struct bio *bio, struct page *page,
-> > +               unsigned int len, unsigned int offset)
-> > +{
-> > +       int class, level, hint, activity;
-> > +
-> > +       if (bio_add_page(bio, page, len, offset) > 0) {
-> > +               class = IOPRIO_PRIO_CLASS(bio->bi_ioprio);
-> > +               level = IOPRIO_PRIO_LEVEL(bio->bi_ioprio);
-> > +               hint = IOPRIO_PRIO_HINT(bio->bi_ioprio);
-> > +               activity = IOPRIO_PRIO_ACTIVITY(bio->bi_ioprio);
-> > +               activity += (bio->bi_vcnt <= IOPRIO_NR_ACTIVITY && PageWorkingset(page)) ? 1 : 0;
-> > +               bio->bi_ioprio = IOPRIO_PRIO_VALUE_ACTIVITY(class, level, hint, activity);
-> > +       }
-
-why are BIO_ADD_PAGE and BIO_ADD_FOLIO so very different from each
-other?
-
-> >  static __always_inline __u16 ioprio_value(int prioclass, int priolevel,
-> > -                                         int priohint)
-> > +               int priohint)
-
-why did you change this whitespace?
-
-> >  {
-> >         if (IOPRIO_BAD_VALUE(prioclass, IOPRIO_NR_CLASSES) ||
-> > -           IOPRIO_BAD_VALUE(priolevel, IOPRIO_NR_LEVELS) ||
-> > -           IOPRIO_BAD_VALUE(priohint, IOPRIO_NR_HINTS))
-> > +                       IOPRIO_BAD_VALUE(priolevel, IOPRIO_NR_LEVELS) ||
-> > +                       IOPRIO_BAD_VALUE(priohint, IOPRIO_NR_HINTS))
-
-ditto
-
-> >                 return IOPRIO_CLASS_INVALID << IOPRIO_CLASS_SHIFT;
-> >
-> >         return (prioclass << IOPRIO_CLASS_SHIFT) |
-> >                 (priohint << IOPRIO_HINT_SHIFT) | priolevel;
-> >  }
-> > -
-
-more gratuitous whitespace change
+diff --git a/kernel/watchdog_perf.c b/kernel/watchdog_perf.c
+index 8ea00c4a24b2..c8ba656ff674 100644
+--- a/kernel/watchdog_perf.c
++++ b/kernel/watchdog_perf.c
+@@ -88,6 +88,7 @@ static struct perf_event_attr wd_hw_attr = {
+ 	.size		= sizeof(struct perf_event_attr),
+ 	.pinned		= 1,
+ 	.disabled	= 1,
++	.exclude_guest  = 1,
+ };
+ 
+ /* Callback function for perf event subsystem */
+-- 
+2.34.1
 
