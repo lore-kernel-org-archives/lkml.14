@@ -1,56 +1,56 @@
-Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
+Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 785725917C
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 23:16:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B7E35A79F
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 23:16:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706310969; cv=none; b=FvIZEF1c7wPPsIUhzUEFyi6/q44urSj6ESABk0qTQRwNeRV3FrPCWL+c/DvtuP6wwfot6qsoOcDT0nACWQ5Odd+aawR2vxMs1jCF+S5qkvN8oZJEd7aMJ6emeeSCVgaWTQ/hrO4cCBNyHtGb5HdNUHwjLdI1VVAGQNnRnSB5pCM=
+	t=1706310970; cv=none; b=S3wBQK7JRp4awGN1ACwcEyg4O+0aSoTFig0uiVZrTnpleMmOem1X2SebTnyxDBpXoKxrw9nMiSdh2fCmBV/4aSQk5ZTH0Es+CgWyINRwpDLg6fp6UYbGZmZF/YjI2kq8r4EMUtSp5fLC2upJT0ZcqFT/hzuyVGv0xqw57TCzV6k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706310969; c=relaxed/simple;
-	bh=R2OIOj19CJvWbbSWmqb+lX1DvD+M2O8JbQX48DRMZGA=;
+	s=arc-20240116; t=1706310970; c=relaxed/simple;
+	bh=l9cPmoT/bWbvsJfq8x1RTaIe5o9qG8C0R9ya897fz3Y=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=qi+idZ7vteSpRlQ7pyVJR9A5L2g2VaqgTm409xCPrv9mBhj4XOl1e/GwMGFUqXO6d/4RVo6XZeV/378cSMjzs5jmZorfoOEmWXirrgdO1383SazM8Hqd6FGcSHsBi9OAUDTBeCNRnZ2CUCJ5VGzgiKNnHbJ1tEpHVybNZCDx8JE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=X6OsNMgN; arc=none smtp.client-ip=209.85.222.180
+	 In-Reply-To:To:Cc; b=op/K4IAdO5k6g4MuU7q5e+JpYByx1kpGlshH8zb7ZeiwOrSF2n6UnQgWzbs2gLC5FVke74xL5xT/OZEeQ7FdMnMy56Q+4K79awGz8K5LY+hSjVm8yO/echlECAjyUvxNAGM9nuRhO62AilI/8JabDUzQg7oUWWA+Bq3LcK/nFT4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=E0PImluj; arc=none smtp.client-ip=209.85.222.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="X6OsNMgN"
-Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-7810827e54eso67481585a.2
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 15:16:06 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="E0PImluj"
+Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-783045e88a6so102311185a.0
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 15:16:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1706310965; x=1706915765; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1706310968; x=1706915768; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Ar8mBbHXqsE1e1cRGpZMgerGImf36JANUI0hlBJjqHM=;
-        b=X6OsNMgNDSbzeQguxuNF+fl2a/YABnI6Z/YQQxitxrhaNMod9dcUbOM+rNAVSWhHZN
-         hTC2O5zT+LCq5CEpa0OYUtE7Klvwx0APwKOIaWkLZ1lObj29I/xZc4Kuggv2jZfvoeQ/
-         MJf7vi2wFyx3ZZwMdtW9MdjwtZf5HDJYeDjmU=
+        bh=QQhDPXykohcFJW0qtm5EHtuEzwLA0yzgLshaZoliDrY=;
+        b=E0PImlujKieADqQR6p2TtSt8HXExhPEc7NuUnPza2sZo1Wecc0QMNXlgGFVVFS4/Rs
+         CCRRhhK+eNUHJuEYmHjdUWQGlPdDC64dV5iUZfi5edeSjaY6qAP8bPACB62JYQe0h7/e
+         lJ2LMRa++Lwtk+PngbSGeJlFdL2geGh09b56U=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706310965; x=1706915765;
+        d=1e100.net; s=20230601; t=1706310968; x=1706915768;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Ar8mBbHXqsE1e1cRGpZMgerGImf36JANUI0hlBJjqHM=;
-        b=buZeb90LQts3M/A+CvtbHCJlyjy/bZKlme3Nq4OOycdCnAfXjvHHdoUWQJrqQqIhZM
-         gRAOaFp2LmRvIv4vSDPJxAkjeF1ELDP5cY0J6Y/pr7364mPV9kSvp9Luy+d6H0c5L0HG
-         dQSmIMk65wtcQXU/VVx6ezqt8Zm6T0n8DaynlKcF2U0ahEaCkLMAUzw9uPmLH3IwSzaR
-         9CzYynwsXLic+YmUymQ2DPwU8uJBR3bwnoUtl4bQLGPjojkPmxpfrtJZ02Pxof3bgPbu
-         qqoC3AEBbixS0RAodfiI5X4fmQYuYoSYD6u7Z5SWWk/4gUpmygeN8LiJEdBFxVBbUZ7V
-         ArqA==
-X-Gm-Message-State: AOJu0YxAZkh3KpamY7QrQvvp3wx3/jS8/AqQ1syDTztGG3FcOOc+z8bj
-	C2+tCZ8rhvqDXr00TCsIMEG46aqLs1M3YeDwgxT6o0VrKxQ0oErZN9JfwxqLpw==
-X-Google-Smtp-Source: AGHT+IEp2TplztXDP53F55JwtnOMG+m/bhamzc+Y9PQOYbhM+M8gtls3bXtKPqVmvF6K1+rXQLaydQ==
-X-Received: by 2002:a05:620a:46a6:b0:783:35f0:d03c with SMTP id bq38-20020a05620a46a600b0078335f0d03cmr626950qkb.135.1706310965318;
-        Fri, 26 Jan 2024 15:16:05 -0800 (PST)
+        bh=QQhDPXykohcFJW0qtm5EHtuEzwLA0yzgLshaZoliDrY=;
+        b=BiAr+T45C+mD7LQ6wCn28R57K3i/p0kf8VTEzw6knGfkMpfpeefdPd/BMeWvMnS2Nb
+         oKwsVPUyu5pNX+OLsgtMp1K6Yy914CjkvJiNXtS1AdNtslYhRSadGRZMkBn2bRlgN40C
+         JiFhN+d7mYb7uATeOkPCblcr2dWQKO0N5WglrQ4kLoG1OkgXoxIXRT49iYD5e6mfyf4V
+         +MbLOoXKxb0HK9Ne7Xx5w0Op/4A358KuQPI4WjV6x344FkwU5Pi3xcn+h1s7Hy5KB9Te
+         YkJJaRuETkpk+/yrp8zARN6B1KxnMW59OLXo7I+wH+u18JnR6fYLoRQcD3Uihb4LdoLd
+         D4pQ==
+X-Gm-Message-State: AOJu0YzAEc5VqU+FbKOZ8762uRhmztiTgcFFe/40bB4zjVLcYa05+MuO
+	Ar8F3snsouudJWIarbUgiG/XwswXfZA7pnzUNl6IluI+zISlnwIMzt2WDVCNKA==
+X-Google-Smtp-Source: AGHT+IEYax7waeMsYzBi1V5anUAE9029IxFY99+NqU01WUd1yOqmYKRjKVGaw0nUqApkIUGiDbz6Vw==
+X-Received: by 2002:a05:620a:19aa:b0:783:e3be:9bb5 with SMTP id bm42-20020a05620a19aa00b00783e3be9bb5mr52250qkb.21.1706310968110;
+        Fri, 26 Jan 2024 15:16:08 -0800 (PST)
 Received: from denia.c.googlers.com (240.157.150.34.bc.googleusercontent.com. [34.150.157.240])
-        by smtp.gmail.com with ESMTPSA id m4-20020a05620a290400b00783de3ddf5esm507358qkp.70.2024.01.26.15.16.04
+        by smtp.gmail.com with ESMTPSA id m4-20020a05620a290400b00783de3ddf5esm507358qkp.70.2024.01.26.15.16.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Jan 2024 15:16:04 -0800 (PST)
+        Fri, 26 Jan 2024 15:16:07 -0800 (PST)
 From: Ricardo Ribalda <ribalda@chromium.org>
-Date: Fri, 26 Jan 2024 23:16:00 +0000
-Subject: [PATCH 01/17] media: mediatek: vcodec: Fix kerneldoc warnings
+Date: Fri, 26 Jan 2024 23:16:02 +0000
+Subject: [PATCH 03/17] media: media-entity.h: Fix kerneldoc
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -59,7 +59,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240126-gix-mtk-warnings-v1-1-eed7865fce18@chromium.org>
+Message-Id: <20240126-gix-mtk-warnings-v1-3-eed7865fce18@chromium.org>
 References: <20240126-gix-mtk-warnings-v1-0-eed7865fce18@chromium.org>
 In-Reply-To: <20240126-gix-mtk-warnings-v1-0-eed7865fce18@chromium.org>
 To: Tiffany Lin <tiffany.lin@mediatek.com>, 
@@ -97,40 +97,28 @@ Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-amlogic@lists.infradead.org, Ricardo Ribalda <ribalda@chromium.org>
 X-Mailer: b4 0.12.3
 
-These fields seems to be gone:
-drivers/media/platform/mediatek/vcodec/decoder/vdec/vdec_vp8_req_if.c:57: warning: Excess struct member 'wait_key_frame' description in 'vdec_vp8_slice_info'
-drivers/media/platform/mediatek/vcodec/decoder/vdec/vdec_vp9_req_lat_if.c:166: warning: Excess struct member 'mv_joint' description in 'vdec_vp9_slice_counts_map'
+The fields seems to be documented twice.
 
 Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
 ---
- drivers/media/platform/mediatek/vcodec/decoder/vdec/vdec_vp8_req_if.c    | 1 -
- .../media/platform/mediatek/vcodec/decoder/vdec/vdec_vp9_req_lat_if.c    | 1 -
- 2 files changed, 2 deletions(-)
+ include/media/media-entity.h | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/drivers/media/platform/mediatek/vcodec/decoder/vdec/vdec_vp8_req_if.c b/drivers/media/platform/mediatek/vcodec/decoder/vdec/vdec_vp8_req_if.c
-index f64b21c07169..f677e499fefa 100644
---- a/drivers/media/platform/mediatek/vcodec/decoder/vdec/vdec_vp8_req_if.c
-+++ b/drivers/media/platform/mediatek/vcodec/decoder/vdec/vdec_vp8_req_if.c
-@@ -37,7 +37,6 @@
-  * @bs_sz:		bitstream size
-  * @resolution_changed:resolution change flag 1 - changed,  0 - not change
-  * @frame_header_type:	current frame header type
-- * @wait_key_frame:	wait key frame coming
-  * @crc:		used to check whether hardware's status is right
-  * @reserved:		reserved, currently unused
-  */
-diff --git a/drivers/media/platform/mediatek/vcodec/decoder/vdec/vdec_vp9_req_lat_if.c b/drivers/media/platform/mediatek/vcodec/decoder/vdec/vdec_vp9_req_lat_if.c
-index 69d37b93bd35..cf48d09b78d7 100644
---- a/drivers/media/platform/mediatek/vcodec/decoder/vdec/vdec_vp9_req_lat_if.c
-+++ b/drivers/media/platform/mediatek/vcodec/decoder/vdec/vdec_vp9_req_lat_if.c
-@@ -141,7 +141,6 @@ struct vdec_vp9_slice_frame_counts {
-  * @skip:	skip counts.
-  * @y_mode:	Y prediction mode counts.
-  * @filter:	interpolation filter counts.
-- * @mv_joint:	motion vector joint counts.
-  * @sign:	motion vector sign counts.
-  * @classes:	motion vector class counts.
-  * @class0:	motion vector class0 bit counts.
+diff --git a/include/media/media-entity.h b/include/media/media-entity.h
+index 2b6cd343ee9e..c79176ed6299 100644
+--- a/include/media/media-entity.h
++++ b/include/media/media-entity.h
+@@ -337,10 +337,6 @@ enum media_entity_type {
+  * @info.dev:	Contains device major and minor info.
+  * @info.dev.major: device node major, if the device is a devnode.
+  * @info.dev.minor: device node minor, if the device is a devnode.
+- * @major:	Devnode major number (zero if not applicable). Kept just
+- *		for backward compatibility.
+- * @minor:	Devnode minor number (zero if not applicable). Kept just
+- *		for backward compatibility.
+  *
+  * .. note::
+  *
 
 -- 
 2.43.0.429.g432eaa2c6b-goog
