@@ -1,56 +1,56 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E4F8224DA
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 17:16:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20BEE22338
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 17:16:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706289365; cv=none; b=A+mLLhmdp4eZ2EUfJux9m0Jg38V15PzS9xbRz5XZl+HN1Ih8ffrAbsWS2rZfhmsEomJhPQqGZUfVsK/46ag1mlkITh7YPKNNkI5ZfPr7SLAxctoxNmN7HF6s2ISZJckUJd+zh6jCs+qw/B8T2McRBIB2LRaLl0YJ3DMPnciIubc=
+	t=1706289366; cv=none; b=vE3wBlcTkNvyK+cJOByMzC77XxzAu2dBcfHkxHepIOdMOpk7PmdTQ3Vw4BTgQ3bVHJzchHf1KzMHOnXz0fqtZdhjSkH1uCxOgM02hXJkz22aENaSpthNv6JxZeduXGUS9phT7mld0hvI/UktmBhfyZWJuBdtu76/qRBHrAWWXJs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706289365; c=relaxed/simple;
-	bh=ZOMLiG8OpKK2k5js5KEUh5k6xN64DPRZwellQfidiYw=;
+	s=arc-20240116; t=1706289366; c=relaxed/simple;
+	bh=6rOo14Bz2JZpKcqmwTvyP3kn0DgWf85cl4VWFDXDtLI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Dz/iVaK/AvNuZcjLlVzLicBGESnnFe7XAY2RAuqj8NoxscQt5DQ/m5OpuHuZqK6Ax38zpOsEIGbnqs/n+NXGpOMoUa2g9dvdtIzaAfpfXLdZvKQA3AI3CHC8QsUVF00EoJWNfb2tFKw34wWbdNdYOsuRvJ7Jxa+Rrf6AtgNxhQM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HqctojUd; arc=none smtp.client-ip=209.85.128.46
+	 MIME-Version; b=nlCuy+4WNjTN6ocpFw3kKbvjR446dGwAHUU+2iFYRd1brxjkN7AJm0sZWZEhALhXAIo4Nn2VymKIKS08T/915L2d+2veL+1SAjpFrsMERcCGTipKWU7BdQ23wCbTomGMLecnp3m+53hocxiv2VGg1o/7lhYaNCUAwtPTHMk6OXk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=B2+25mnh; arc=none smtp.client-ip=209.85.128.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HqctojUd"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-40e7065b692so9308215e9.3
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 09:16:04 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="B2+25mnh"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-40e8fec0968so11079985e9.1
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 09:16:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706289362; x=1706894162; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1706289361; x=1706894161; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=JaPg9S8ljvJnMWoVxzFt5cFSPcbWvq/ipc1ZxlzFBkk=;
-        b=HqctojUdMdRyzLzKBiCc/NGuPgWigiz29JWXrj9WgiPdKiSblsUF8DjlBEkSQECi20
-         hn27Yq2Qlxg2+jWRCSPfKvRuWluTYzMOjXhaRGb+v0UnOA/2C+w2ukTGzM0GfPy+9ktR
-         Yyyy7iEKz383zLTccJ34RbRlDugNu7F5allGe5ToGP5pjMewvNxTqrxTK0ztzDZJXJO9
-         Oj6529qcjZl3w3lJ3MOf9+aWrENMdPfHWqvedSV76nmS2YAG2cnH86/iyDk6fwnV3+bC
-         AOVJAuhnsxOQ+hHr8giZHvLUTvqAF5irNP5u8DyA5aVY8A2WGOcAek0r8rWlqVpOv47V
-         Ug0g==
+        bh=OFdCZ+E7BFUbmZ2dzvoSTWD6D1fnBZ2RDi/MQ7bu2EU=;
+        b=B2+25mnhwv7LvnXiDtp4U/HAV0Dt3LrvYKzqx+d+SKrCpWNP1PxINi/nopRPBfSeIz
+         /MDGp7EZZ0+Fr/hfXV3v/2LVlTriaOj7Vjxkkj/ojXxPVyaI1QmtuI8dyNgsgDxVbHlt
+         F0BTN83SRmDWbgDvcNJiYrHdrIKnisV4uwdSRBE091wjyJYNLyuFOQ/CBh2s/X6srAHE
+         KggJs+eR7JdaPjN37WYp+lH3ildPhOtLFuh2cfwsNDbvQrLeZBK3RxLk94oLHicjBBkj
+         mwEx5w2YlE58VTAi0u7h0/a0rr41XN7gpDFjIa+lg0zwLa3OS0VMvzIPBPuWRCTsYwTW
+         B1MA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706289362; x=1706894162;
+        d=1e100.net; s=20230601; t=1706289361; x=1706894161;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=JaPg9S8ljvJnMWoVxzFt5cFSPcbWvq/ipc1ZxlzFBkk=;
-        b=DqCHOIGamOAYYZQvYl/ykJljRIt0dowFS0zBMUcoX1EaawHDHcJGTa/BzysxxJkpS8
-         jdCfNGgXtTMOb/Q0M6/c8UYrq1vTGNVScmRS9VO+EQRNkhkIxh49uVlHZB8zNolQEzf0
-         Z1VXF/J0PLYWEU3TP18hZDPxdrLyH9ZI8OfMKzD+a5K1rqoqwxnyNLAQBIc3dvieO9Ve
-         Uc+w6xsOVn+mrr2XuLjhLQgUGtYby+vq3hb7QTT1GIxSd3Wjo7gmNNkGiO0Tqd/7qDpo
-         PHVpIph16jLug6vSmKCO1Ti8EqGo/5lKFOY85Pt9H/F67vMwWBryVUnEYBwDk3D+TMY3
-         G48g==
-X-Gm-Message-State: AOJu0YwgPC+E5QHFCkVL85/ODWiBqIVb1NvWSX89xZENP6RjxbXFRguW
-	RFCexgPfP4ykMJtnDy7qgqd/l6/bUnND3nvbqfL4/BB3PGDLmY0WuzhQrb2OMZ0=
-X-Google-Smtp-Source: AGHT+IE88z6ZKihZy73X/hJ1tvJ33+pu9VU9RoQmgEehZIq7TTfq3+V7yphWkv94NZdwTEK7BUmRnw==
-X-Received: by 2002:a1c:4b10:0:b0:40e:d2fa:fbdd with SMTP id y16-20020a1c4b10000000b0040ed2fafbddmr75392wma.172.1706289362605;
-        Fri, 26 Jan 2024 09:16:02 -0800 (PST)
-Received: from ta2.c.googlers.com.com (88.140.78.34.bc.googleusercontent.com. [34.78.140.88])
-        by smtp.gmail.com with ESMTPSA id k10-20020a05600c1c8a00b0040e451fd602sm6287286wms.33.2024.01.26.09.16.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        bh=OFdCZ+E7BFUbmZ2dzvoSTWD6D1fnBZ2RDi/MQ7bu2EU=;
+        b=QElHP85HpO2FUrRtAltmlRpMMVwKXpe7nMlDmXzLV62v9OFDAN6Qajg3jsfHJkheSw
+         vcdV38puFzqT1fFED6xohyemZcokeU+W+u3NESIXPkgpfLG8bQhyGYhMo4LiVniujLNy
+         AkGFd6DE1uNUlFmH48T7r8ryY9nuQA8HsHZ42LN4MwdiUL17fNCvR78d89lzrYKG9uv4
+         0oATB/FFIeRziA/UwGl6KTT93+AsY4B0QshGoaZz/PZxdPzFi/CCOAvyLMnQh/scSnOX
+         Fmz0pCJBBF9U1r33S3gwrSKmFjRinNqiV8VRCmOADBAIcWFFo1OsXD2YjfV7QvJ7DcsO
+         Tkdw==
+X-Gm-Message-State: AOJu0YyVCGJfAjtEWKhTc5AnCTkljVZb4lHRjyJA/E3h0+DN+099WIZe
+	p0ORtc9MUi3qNa59FS9Rz+ZY4sIYsYFvWig5sl6M+PDwHSwnB7gjjytfg+mzHbs=
+X-Google-Smtp-Source: AGHT+IHAdoE7ZY9wf1qj3d+JD3BcLNSbHlFCODLChuw3+wfJAwKowp+5DxpzG8f1Cx3S5gdIKHCLrQ==
+X-Received: by 2002:a05:600c:3ca7:b0:40e:62b1:58a5 with SMTP id bg39-20020a05600c3ca700b0040e62b158a5mr90288wmb.15.1706289361429;
         Fri, 26 Jan 2024 09:16:01 -0800 (PST)
+Received: from ta2.c.googlers.com.com (88.140.78.34.bc.googleusercontent.com. [34.78.140.88])
+        by smtp.gmail.com with ESMTPSA id k10-20020a05600c1c8a00b0040e451fd602sm6287286wms.33.2024.01.26.09.15.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 26 Jan 2024 09:16:00 -0800 (PST)
 From: Tudor Ambarus <tudor.ambarus@linaro.org>
 To: broonie@kernel.org,
 	andi.shyti@kernel.org,
@@ -67,9 +67,9 @@ Cc: krzysztof.kozlowski@linaro.org,
 	kernel-team@android.com,
 	willmcvicker@google.com,
 	Tudor Ambarus <tudor.ambarus@linaro.org>
-Subject: [PATCH v3 11/17] spi: s3c64xx: rename prepare_dma() to s3c64xx_prepare_dma()
-Date: Fri, 26 Jan 2024 17:15:39 +0000
-Message-ID: <20240126171546.1233172-12-tudor.ambarus@linaro.org>
+Subject: [PATCH v3 10/17] spi: s3c64xx: propagate the dma_submit_error() error code
+Date: Fri, 26 Jan 2024 17:15:38 +0000
+Message-ID: <20240126171546.1233172-11-tudor.ambarus@linaro.org>
 X-Mailer: git-send-email 2.43.0.429.g432eaa2c6b-goog
 In-Reply-To: <20240126171546.1233172-1-tudor.ambarus@linaro.org>
 References: <20240126171546.1233172-1-tudor.ambarus@linaro.org>
@@ -81,48 +81,28 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Don't monopolize the name. Prepend the driver prefix to the function
-name.
+DMA submit should just add the dma descriptor to a queue, without firing
+it. EIO is misleading and hides what happens in DMA. Propagate the
+dma_submit_error() error code, don't overwrite it.
 
-Reviewed-by: Sam Protsenko <semen.protsenko@linaro.org>
 Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
 ---
- drivers/spi/spi-s3c64xx.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/spi/spi-s3c64xx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/spi/spi-s3c64xx.c b/drivers/spi/spi-s3c64xx.c
-index 64daf944b245..76fa378ab5ab 100644
+index 6268790bbcff..64daf944b245 100644
 --- a/drivers/spi/spi-s3c64xx.c
 +++ b/drivers/spi/spi-s3c64xx.c
-@@ -278,8 +278,8 @@ static void s3c64xx_spi_dmacb(void *data)
- 	spin_unlock_irqrestore(&sdd->lock, flags);
- }
- 
--static int prepare_dma(struct s3c64xx_spi_dma_data *dma,
--			struct sg_table *sgt)
-+static int s3c64xx_prepare_dma(struct s3c64xx_spi_dma_data *dma,
-+			       struct sg_table *sgt)
- {
- 	struct s3c64xx_spi_driver_data *sdd;
- 	struct dma_slave_config config;
-@@ -444,7 +444,7 @@ static int s3c64xx_enable_datapath(struct s3c64xx_spi_driver_data *sdd,
- 		chcfg |= S3C64XX_SPI_CH_TXCH_ON;
- 		if (dma_mode) {
- 			modecfg |= S3C64XX_SPI_MODE_TXDMA_ON;
--			ret = prepare_dma(&sdd->tx_dma, &xfer->tx_sg);
-+			ret = s3c64xx_prepare_dma(&sdd->tx_dma, &xfer->tx_sg);
- 		} else {
- 			switch (sdd->cur_bpw) {
- 			case 32:
-@@ -476,7 +476,7 @@ static int s3c64xx_enable_datapath(struct s3c64xx_spi_driver_data *sdd,
- 			writel(((xfer->len * 8 / sdd->cur_bpw) & 0xffff)
- 					| S3C64XX_SPI_PACKET_CNT_EN,
- 					regs + S3C64XX_SPI_PACKET_CNT);
--			ret = prepare_dma(&sdd->rx_dma, &xfer->rx_sg);
-+			ret = s3c64xx_prepare_dma(&sdd->rx_dma, &xfer->rx_sg);
- 		}
+@@ -321,7 +321,7 @@ static int prepare_dma(struct s3c64xx_spi_dma_data *dma,
+ 	ret = dma_submit_error(dma->cookie);
+ 	if (ret) {
+ 		dev_err(&sdd->pdev->dev, "DMA submission failed");
+-		return -EIO;
++		return ret;
  	}
  
+ 	dma_async_issue_pending(dma->ch);
 -- 
 2.43.0.429.g432eaa2c6b-goog
 
