@@ -1,212 +1,117 @@
-Received: from mail-il1-f179.google.com (mail-il1-f179.google.com [209.85.166.179])
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 835AF22EE9
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 19:31:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAE1622F17
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 19:32:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706297514; cv=none; b=VNz/NdKwmWNWQkaS151UT6vkFyoR/2AN4XbdO/3k/C0eAbD7fdgIr41hAelxCdtQtIVKHX41jYbi9h2OZOxxgDSlyYXD0I0w83iwfNpoBHrsD+lzFxA5+3E9XMrLgwFeD1V0bW8s1OQsBUH0f6KQ8s3bBg7ErrjJkk/dpfLHtzA=
+	t=1706297526; cv=none; b=PCgkxLuFCb/cRtYznFw30F7St5qTbQbN6HjEkg+4vIXWPAAB4Rco4/mq9kVgT9c2CeenBgQu9MJmBHkkeI+9lVB6mmHuSfELwv9tFkYSqYHsXU6YgHArVJ2AIVoE/73eFRB+ieeSdmsL1C8lc/FkpPuPhRu6Fsr8j4eKdNnuMpE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706297514; c=relaxed/simple;
-	bh=RY52HxmvIS0+bFhBuUK05xzxww2g7j3hiSauDU3uiGE=;
+	s=arc-20240116; t=1706297526; c=relaxed/simple;
+	bh=4bn/sB8tSLsIIPq6gl/AUEyattz3mYuuGWSOuaRmbWQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=I/gGUm0mLnmemIm+AJSqSjKHzbLhCrcpHrHgZ/IVxIdUINi8asHBldzsDokNbFXePlQMk6JIB7rYlTY2P4sVHtCcrYq6V209BSYCmxkhdjpvDJ5/BFDsHc+2ix6BxKfrNo/3xh4HJ3FG5Ug5B+9ffa9Mk2+i/deiX1z8/olTTTo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nYilvmId; arc=none smtp.client-ip=209.85.166.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=o4LHigzp05zQdpd1YGB9z3lQWkJd6Yp91HWvqsnUhl1X6NTxCbb/MKX0JnPldurHE31WOAsmq5OhMPgbYAXkzpWBwCrZZvzybHhwQusu78csb2P4FKO2C5p7I5JNqJ9L57iRkeh9CcGYMNDaPMTuwOKd/6vIJZx73Qjw8VMMr4k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DMYIKWJD; arc=none smtp.client-ip=209.85.216.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nYilvmId"
-Received: by mail-il1-f179.google.com with SMTP id e9e14a558f8ab-362a0aa2a33so1181755ab.0
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 11:31:52 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DMYIKWJD"
+Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-290ec261a61so645176a91.0
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 11:32:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706297511; x=1706902311; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1706297524; x=1706902324; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=CwIyM2FU0QQ1VJvtvKXZch6o5WvkSz5Affa1c3xEM6M=;
-        b=nYilvmIdgkDyOD9TVS+f9Ut3Ag9qf308k/IJaarI1OWnIrjcIGGWNHrnGIk6xUc1NX
-         YCpitTozXF5w7s7NoqNv+6T4vWDBJwGnf1mm/h9pOZWCtZKRpFUhgGgAZBBghpoSqyQp
-         gfyce8M6MC1M32DYrdlM+Q3dHN/cWLCKYne0PvPqDDoCtsfCeWi0FWzj//mJnQkyr55o
-         eVYIs0ZPDO0yC6fcKY8sLvQMqHrpkaEy2/q8K6JMwxqE0qqmvw/PM4Q0g42UqlSUcN1N
-         85Vh01kNwYdNB16p6g6W9kvxUvblCDoykPC7h1+UONpOehXE8uDLGmnw937dVowBMI/Z
-         NpUA==
+        bh=mq0DzuapwNb+at6/+GR6PN1NNqZZZWZopm5NTAYFnRg=;
+        b=DMYIKWJDqTAOuFhNETjb8mZC6i1h+fNlcYZMfPJgLiYKSoD8DoLO0CKUOzLcGRdG85
+         Rqewz9nU7w89gb8jlOr/KQdxN/oEdxkFOJwXrCbJmu+EjXgqgnbsBM6AbDlEQG5PtJRv
+         6aqxB6GZkMxOL2XidhUFm10q2i8Gfr5xUH7SaS5mI3eYffAcgbJahxclw31Nw66YKq4y
+         aaTh2gviG6RgOh/wduSVnrkAG/NWgjhgRzhvEjBqL3vpamU5xlDZro4EudclfLtA6B+v
+         VAlLEhNND+PNSZ/opNarHyp+DheHKLq73dUOR0nuEB5nhfs1nY6YhPDNsCoLyaSjt/6Y
+         vKXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706297511; x=1706902311;
+        d=1e100.net; s=20230601; t=1706297524; x=1706902324;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=CwIyM2FU0QQ1VJvtvKXZch6o5WvkSz5Affa1c3xEM6M=;
-        b=Toe2I3KscbEHHfxZRvupckvHOv7kDX5NmwcupGBIYWcHzkTHYklM3fiDPuxcCHRrTc
-         ChEtwnqxwjkmhIdv2+oY50qYLsHqs++xFKY/z/2yDXMVosEhJXQ11wwAkQDFksSwm3eS
-         SArh4cv6ocA1TI2d1b9oa8orgd19UCBpgKsr8HXPBDO7OvrwvDATkBKuUGT+3BJzwe2r
-         wVU+edihKoOXkSkiyGpFAxo+p6UzW7GIwgv7OuGPj/oRaoGLpZ80FcE4+BWZ6lSz3VIv
-         tkR35rCa5D4FK2JDIxxWPU4MPEVvEDbuoSsSbaX+28TgyUo6z8yqkQkAwYV9WOhJ56ZC
-         lumQ==
-X-Gm-Message-State: AOJu0Yy+MeKUD1ssPaIuN6bR/z/rSAu4WzzIoa7ezWgCzWycZhmOgu9s
-	8QsHFaD1krJpKdszfzFoUGtUc1I8ndugSYOFj6GWHH3Gfy0nyFkE0fqedZuo0UzcWY1q7XgrMpB
-	1dQq+6zwLP0rUAdtIpKckWlV1ldI=
-X-Google-Smtp-Source: AGHT+IHnokpwiyO2PEGJ0drytSWXqc8hb8A1r4TGMfX17/4JXY76I/rZuYobCRxWx17ZoIzcrqBtGL7Epl/2JLEQlhA=
-X-Received: by 2002:a92:cd09:0:b0:362:ad7c:bbdf with SMTP id
- z9-20020a92cd09000000b00362ad7cbbdfmr272383iln.16.1706297511416; Fri, 26 Jan
- 2024 11:31:51 -0800 (PST)
+        bh=mq0DzuapwNb+at6/+GR6PN1NNqZZZWZopm5NTAYFnRg=;
+        b=Ph8fW/Ef6bq+xhLVkLu57iXyOcoeoHh8tO/Y1vM8LZatT0WqekWYTLOSUpiw8SPLqQ
+         iIT0jxHhHwaEjn2FygBDiddTl8acXm6Gl11kBp064HMuuZzBxxeBvED+7IS676HFgbvf
+         +XQ+mFo30KcmRqib3b9kRyQd+/TxP4V6izmC/evwZ9USExV08s/Zjprt/ptXeh0SeCPm
+         Bn9bTnEGumhMVF9AGmepyzdCIma2/hG/l8q7Snanj+YXlrLzz2CySIEIo/u+aisYwNyO
+         g34CEul7nTb3LabnFJXaZg1YztKJOktjv4wuotG8DIQnXDFieD9gJcgmil/YcMNb6SYA
+         7V+Q==
+X-Gm-Message-State: AOJu0YwlPgV/tGFt6kU4ZWg3pJ5PAYAzAZEDWlnAUTHxrQjNDIlXew0V
+	OQLVEPlBAJEK1ZIZ5OcJzl6qxUsz0tshAdTiZdXZzQ7Wm8XSlaQv5UjTkpFz+WXOXGGoovYXYaG
+	MDvNSwgzErp4enlFYXG7bPseM+3uQ/XfFS5Jo/w==
+X-Google-Smtp-Source: AGHT+IFBa6CU0gSHmGQst+5z4PcIsnVzYeH5WRcM7mrPV+jhkrgM9ohuUe97W/fJAYEGMiqNHQkddJwK/+eLNatKOUA=
+X-Received: by 2002:a17:90b:3758:b0:290:3b83:8897 with SMTP id
+ ne24-20020a17090b375800b002903b838897mr515505pjb.40.1706297524016; Fri, 26
+ Jan 2024 11:32:04 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240126083015.3557006-1-chengming.zhou@linux.dev>
- <20240126083015.3557006-2-chengming.zhou@linux.dev> <20240126153126.GG1567330@cmpxchg.org>
-In-Reply-To: <20240126153126.GG1567330@cmpxchg.org>
-From: Nhat Pham <nphamcs@gmail.com>
-Date: Fri, 26 Jan 2024 11:31:40 -0800
-Message-ID: <CAKEwX=OOf2M0Zm50Vkv6nBUzHR1p7dSGoQ99EofBPxZpxQHKHA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] mm/zswap: fix race between lru writeback and swapoff
-To: Johannes Weiner <hannes@cmpxchg.org>
-Cc: chengming.zhou@linux.dev, yosryahmed@google.com, akpm@linux-foundation.org, 
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	Chengming Zhou <zhouchengming@bytedance.com>
+References: <20240125145007.748295-1-tudor.ambarus@linaro.org>
+ <20240125145007.748295-17-tudor.ambarus@linaro.org> <CAPLW+4mLWU-8H=qESe9csXm=e_ByvP=nc7MEJzknv+XAUjqUZg@mail.gmail.com>
+ <36a664b1-666d-4fc4-90d9-35b42e56973d@linaro.org>
+In-Reply-To: <36a664b1-666d-4fc4-90d9-35b42e56973d@linaro.org>
+From: Sam Protsenko <semen.protsenko@linaro.org>
+Date: Fri, 26 Jan 2024 13:31:53 -0600
+Message-ID: <CAPLW+4mPMBszTFcs_wUZgmksiRQ13SprQYYu3tShvkRXmZ_Mkg@mail.gmail.com>
+Subject: Re: [PATCH v2 16/28] spi: s3c64xx: simplify s3c64xx_wait_for_pio()
+To: Tudor Ambarus <tudor.ambarus@linaro.org>
+Cc: broonie@kernel.org, andi.shyti@kernel.org, arnd@arndb.de, 
+	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
+	alim.akhtar@samsung.com, linux-spi@vger.kernel.org, 
+	linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-arch@vger.kernel.org, andre.draszik@linaro.org, 
+	peter.griffin@linaro.org, kernel-team@android.com, willmcvicker@google.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jan 26, 2024 at 7:31=E2=80=AFAM Johannes Weiner <hannes@cmpxchg.org=
-> wrote:
+On Fri, Jan 26, 2024 at 1:56=E2=80=AFAM Tudor Ambarus <tudor.ambarus@linaro=
+.org> wrote:
 >
-> On Fri, Jan 26, 2024 at 08:30:15AM +0000, chengming.zhou@linux.dev wrote:
-> > From: Chengming Zhou <zhouchengming@bytedance.com>
+> On 1/25/24 20:43, Sam Protsenko wrote:
+> > On Thu, Jan 25, 2024 at 8:50=E2=80=AFAM Tudor Ambarus <tudor.ambarus@li=
+naro.org> wrote:
+> >>
+> >> s3c64xx_spi_transfer_one() makes sure that for PIO the xfer->len is
+> >> always smaller than the fifo size. Since we can't receive more that th=
+e
+> >> FIFO size, droop the loop handling, the code becomes less misleading.
 > >
-> > LRU writeback has race problem with swapoff, as spotted by Yosry[1]:
-> >
-> > CPU1                  CPU2
-> > shrink_memcg_cb               swap_off
-> >   list_lru_isolate      zswap_invalidate
-> >                         zswap_swapoff
-> >                           kfree(tree)
-> >   // UAF
-> >   spin_lock(&tree->lock)
-> >
-> > The problem is that the entry in lru list can't protect the tree from
-> > being swapoff and freed, and the entry also can be invalidated and free=
-d
-> > concurrently after we unlock the lru lock.
-> >
-> > We can fix it by moving the swap cache allocation ahead before
-> > referencing the tree, then check invalidate race with tree lock,
-> > only after that we can safely deref the entry. Note we couldn't
-> > deref entry or tree anymore after we unlock the folio, since we
-> > depend on this to hold on swapoff.
+> > Drop (spelling)?
 >
-> This is a great simplification on top of being a bug fix.
+> oh yeah, thanks.
 >
-> > So this patch moves all tree and entry usage to zswap_writeback_entry()=
-,
-> > we only use the copied swpentry on the stack to allocate swap cache
-> > and return with folio locked, after which we can reference the tree.
-> > Then check invalidate race with tree lock, the following things is
-> > much the same like zswap_load().
 > >
-> > Since we can't deref the entry after zswap_writeback_entry(), we
-> > can't use zswap_lru_putback() anymore, instead we rotate the entry
-> > in the LRU list so concurrent reclaimers have little chance to see it.
-> > Or it will be deleted from LRU list if writeback success.
-> >
-> > Another confusing part to me is the update of memcg nr_zswap_protected
-> > in zswap_lru_putback(). I'm not sure why it's needed here since
-> > if we raced with swapin, memcg nr_zswap_protected has already been
-> > updated in zswap_folio_swapin(). So not include this part for now.
+> > For the patch: how exactly it was tested to make sure there is no regre=
+ssion?
 >
-> Good observation.
+> no regression testing for the entire patch set, I have just a gs101 on
+> my hands.
 >
-> Technically, it could also fail on -ENOMEM, but in practice these size
-> allocations don't fail, especially since the shrinker runs in
-> PF_MEMALLOC context. The shrink_worker might be affected, since it
-> doesn't But the common case is -EEXIST, which indeed double counts.
+> However, we shouldn't refrain ourselves on improving things when we
+> think they're straight forward and they worth it. In this particular
 
-Yup. At the time, I was thinking more along the lines of what
-mechanisms should trigger protection size increase. "swapin" and "LRU
-list rotations" were two different mechanisms in my head. I was aware
-that there could be double counting, but deemed it OK, as the cost of
-over-shrinking (increase in swapin) was fairly serious, and if we have
-a fairly aggressive decaying strategy if we protect too much.
+This patch clearly brings a functional change. The way I see things,
+the risk of having a regression outweighs the benefits of this
+refactoring. I don't think it's even methodologically right to apply
+such changes without thoroughly testing it first. It might be ok for
+super-easy one-line cleanups, but that's not one of those.
 
-But yes, I doubt it mattered that much in hindsight :) And the case
-where it is double counted far outnumber the case where it does not,
-so I'm fine with removing it here.
+> case, for PIO, s3c64xx_spi_transfer_one() does:
+>         xfer->len =3D fifo_len - 1;
+> then in s3c64xx_enable_datapath() we write xfer->len and then in
+> s3c64xx_wait_for_pio() we code did the following:
+>         loops =3D xfer->len / FIFO_DEPTH(sdd);
+> loops is always zero, this is bogus and we shall remove it.
+>
 
->
-> To make it "correct", you'd have to grab an objcg reference with the
-> LRU lock, and also re-order the objcg put on entry freeing after the
-> LRU del. This is probably not worth doing. But it could use a comment.
->
-> I was going to ask if you could reorder objcg uncharging after LRU
-> deletion to make it more robust for future changes in that direction.
-> However, staring at this, I notice this is a second UAF bug:
->
->         if (entry->objcg) {
->                 obj_cgroup_uncharge_zswap(entry->objcg, entry->length);
->                 obj_cgroup_put(entry->objcg);
->         }
->         if (!entry->length)
->                 atomic_dec(&zswap_same_filled_pages);
->         else {
->                 zswap_lru_del(&entry->pool->list_lru, entry);
->
-> zswap_lru_del() uses entry->objcg to determine the list_lru memcg, but
-> the put may have killed it. I'll send a separate patch on top.
->
-> > @@ -860,40 +839,34 @@ static enum lru_status shrink_memcg_cb(struct lis=
-t_head *item, struct list_lru_o
-> >  {
-> >       struct zswap_entry *entry =3D container_of(item, struct zswap_ent=
-ry, lru);
-> >       bool *encountered_page_in_swapcache =3D (bool *)arg;
-> > -     struct zswap_tree *tree;
-> > -     pgoff_t swpoffset;
-> > +     swp_entry_t swpentry;
-> >       enum lru_status ret =3D LRU_REMOVED_RETRY;
-> >       int writeback_result;
-> >
-> > +     /*
-> > +      * First rotate to the tail of lru list before unlocking lru lock=
-,
-> > +      * so the concurrent reclaimers have little chance to see it.
-> > +      * It will be deleted from the lru list if writeback success.
-> > +      */
-> > +     list_move_tail(item, &l->list);
->
-> We don't hold a reference to the object, so there could also be an
-> invalidation waiting on the LRU lock, which will free the entry even
-> when writeback fails.
->
-> It would also be good to expand on the motivation, because it's not
-> clear WHY you'd want to hide it from other reclaimers.
->
-> Lastly, maybe mention the story around temporary failures? Most
-> shrinkers have a lock inversion pattern (object lock -> LRU lock for
-> linking versus LRU lock -> object trylock during reclaim) that can
-> fail and require the same object be tried again before advancing.
->
-> How about this?
->
->         /*
->          * Rotate the entry to the tail before unlocking the LRU,
->          * so that in case of an invalidation race concurrent
->          * reclaimers don't waste their time on it.
->          *
->          * If writeback succeeds, or failure is due to the entry
->          * being invalidated by the swap subsystem, the invalidation
->          * will unlink and free it.
->          *
->          * Temporary failures, where the same entry should be tried
->          * again immediately, almost never happen for this shrinker.
->          * We don't do any trylocking; -ENOMEM comes closest,
->          * but that's extremely rare and doesn't happen spuriously
->          * either. Don't bother distinguishing this case.
->          *
->          * But since they do exist in theory, the entry cannot just
->          * be unlinked, or we could leak it. Hence, rotate.
->          */
->
-> Otherwise, looks great to me.
->
-> Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+[snip]
