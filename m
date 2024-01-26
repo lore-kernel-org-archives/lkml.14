@@ -1,99 +1,154 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 799BC1E880;
-	Fri, 26 Jan 2024 17:38:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2843A1EB49;
+	Fri, 26 Jan 2024 17:39:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706290702; cv=none; b=DFg/28q3cXK9fCwrKlHEnvSnDjWs0FLlVfHCE+I4REQbDN3heh5Kk5wx5IjkSESpk3NaOi40/zPJb3q1G1gZcrL3mMJ2fG6yDhI4rfRPJgkVNT6T9t1TOJcTk8SskeIz5v+Aawq7wYMB7jgUYWT+7bj8ug55QUMfFgMI6dbzTpU=
+	t=1706290774; cv=none; b=Su9fvh21eU6yeVgfKRrsfPCiLQDvVWVuv6DxvgzoVdE0nbjyk/3epBWRYfU4JGEaCxaeJtKxaWh8+xUG80t5yVRVyUUNgG5efLyngyaGhJgd4JOZBg93bN0L9RWb5d5vs4/QN2cnxPoM3+cj/X/4ziNBLrFFFszQqMpnH8pfJK8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706290702; c=relaxed/simple;
-	bh=YwqFiORHx5l8cwgQfGcJO3Tt2+4l5IFSO5b/pgRsYD8=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=t6ZQZ5py5Z6gs93PMgFbKSV6OoPmkaYDNX2rJKON9SIERzYFrIalIfksGN17DYuy9sDfMcwSkQIwp+4TsGlaKRVrvKaKugxD4gCSxkeNwg90M9pqYv2LCk1rFtI6La7Xji1BKnBdcDk9irBHLtTKSp+qhvT9wqBTrTFCYlZBdB0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kWvkRS6P; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706290774; c=relaxed/simple;
+	bh=0I2/Kn+FW5P/KKPj6mUmkJMaL/ErP8cdilIPuLRdXFU=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=LwJseSV9cnkh1V/o7Y8oGe4UeeUd0T4Xcnw8/FqJjFYm7JYC43aOSVPGmhgt17Blim5ViarLlWLfEf3ELM+GLcD9lV9WEeaScke5JmPMGybKDCk//Xm2RfGTqG/N08+7HVhqQbV7edPtOYPjPQ/sv7/X75zSPNMiUTkKrvcCSIk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SAA9jn2b; arc=none smtp.client-ip=192.55.52.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kWvkRS6P"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05BA0C433C7;
-	Fri, 26 Jan 2024 17:38:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706290701;
-	bh=YwqFiORHx5l8cwgQfGcJO3Tt2+4l5IFSO5b/pgRsYD8=;
-	h=From:To:Cc:Subject:Date:From;
-	b=kWvkRS6PaUxLAUtiXpjrDfK8viLq885SwvRGkUCxjfNEoVxYaEYnA7Dgs6WMx/SLG
-	 xEsUoHqCD2fnYfTqPFJ264XXR/BoYhScR9AzfpB6b+sV9VuEEuleF3HL7TIqmi2oU+
-	 ZocybPRaBpo3IgGEJs17cAZGS/f5zB1Lj+R6u2gKkvhbKYvkp4NKq7/pW+13410bf7
-	 cmBaWFiA853LHx1h5W7mgQDgJfKDmzPMao2pntgEHAO9VbHyGXD1VYd7vzKoFNeTxx
-	 6IEelpsCpCjtuGSmq4XlO5dW33Mf4qF44Gxjo0RjpAQIQoIP9SqtIr5oq3DpK0hGqs
-	 BRnczeV4u4Y5A==
-From: Mark Brown <broonie@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: [GIT PULL] SPI fixes for v6.8-rc1
-Date: Fri, 26 Jan 2024 17:38:11 +0000
-Message-Id: <20240126173821.05BA0C433C7@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SAA9jn2b"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706290773; x=1737826773;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=0I2/Kn+FW5P/KKPj6mUmkJMaL/ErP8cdilIPuLRdXFU=;
+  b=SAA9jn2bAvd1DDrZCdBmvOAPEzOnHE7CVoJZbOnydIpHxu2CrFwgBmml
+   x539T0XfQd3k47Hl9oeKxD6oMEEkUsAKd2t8kcx+MlVuwrW3DlByKzYYR
+   vA5Pt6e9EsbGYBjqE9cujJWAPZcZuJALU4olO0zlGb217uC4sSWUyXzea
+   5cBMJn+Cbwkv2AwBxmBAM/F2YNlvjwkAp6LuyYh5rW2GAWemz60QREwfb
+   tzz2Y50LukruDVt4JQ0mb1X7ytA6pojs5PBJYPLgmVPSP3aepcZtOdyNM
+   PTH3g1WyO7EIIM4MsFSmMa2iLZLhWyQZwgncwU1C6XY0TtPnX3oqUWxPV
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="399686983"
+X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
+   d="scan'208";a="399686983"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2024 09:39:32 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="1118313677"
+X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
+   d="scan'208";a="1118313677"
+Received: from ppglcf2090.png.intel.com ([10.126.160.96])
+  by fmsmga005.fm.intel.com with ESMTP; 26 Jan 2024 09:39:27 -0800
+From: rohan.g.thomas@intel.com
+To: esben@geanix.com
+Cc: alexandre.torgue@foss.st.com,
+	conor+dt@kernel.org,
+	davem@davemloft.net,
+	devicetree@vger.kernel.org,
+	edumazet@google.com,
+	fancer.lancer@gmail.com,
+	joabreu@synopsys.com,
+	krzysztof.kozlowski+dt@linaro.org,
+	kuba@kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	mcoquelin.stm32@gmail.com,
+	netdev@vger.kernel.org,
+	pabeni@redhat.com,
+	peppe.cavallaro@st.com,
+	robh+dt@kernel.org,
+	rohan.g.thomas@intel.com
+Subject: RE: [PATCH net-next 2/2] net: stmmac: TBS support for platform driver
+Date: Sat, 27 Jan 2024 01:39:25 +0800
+Message-Id: <20240126173925.16794-1-rohan.g.thomas@intel.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <87v87g4hmy.fsf@geanix.com>
+References: <87v87g4hmy.fsf@geanix.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-The following changes since commit 6613476e225e090cc9aad49be7fa504e290dd33d:
+From: Rohan G Thomas <rohan.g.thomas@intel.com>
 
-  Linux 6.8-rc1 (2024-01-21 14:11:32 -0800)
+On Fri, 26 Jan 2024 09:35:01 +0100, Esben Haabendal wrote:
+Hi Esben,
 
-are available in the Git repository at:
+Thanks for your comments. Please find my reply inline.
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git tags/spi-fix-v6.8-rc1
+> > +	/* If TBS feature is supported(i.e. tbssel is true), then at least 1 Tx
+> > +	 * DMA channel supports TBS. So if tbs_ch_num is 0 and tbssel is true,
+> > +	 * assume all Tx DMA channels support TBS. TBS_CH field, which gives
+> > +	 * number of Tx DMA channels with TBS support is only available only
+> for
+> > +	 * DW xGMAC IP. For other DWMAC IPs all Tx DMA channels can
+> support TBS.
+> 
+> The Ethernet QOS controllers found in various i.MX socs does not support TBS
+> on TX queue 0. I believe this patch would break the dwmac driver for these
+> platforms.
 
-for you to fetch changes up to 8c2ae772fe08e33f3d7a83849e85539320701abd:
+AFAIU from Synopsys DWMAC5 Databook, all queues support TBS. But TBS
+cannot coexist with TSO. So all glue drivers enabling TBS feature are
+avoiding queue 0 to support TSO. Also packets requesting TSO are
+always directed to queue 0 by stmmac driver.
 
-  spi: fix finalize message on error return (2024-01-25 21:55:48 +0000)
+> 
+> > +	 */
+> > +	if (priv->dma_cap.tbssel && !priv->dma_cap.tbs_ch_num)
+> > +		priv->dma_cap.tbs_ch_num = priv-
+> >dma_cap.number_tx_channel;
+> > +
 
-----------------------------------------------------------------
-spi: Fixes for v6.8
+I don't think updating tbs_ch_num with number_tx_channel would break
+the dwmac driver for i.MX socs. tbs_ch_num is used by 'Earlier check
+for TBS' loop to set tbs flag. 
 
-As well as a few device IDs and the usual scattering of driver specific
-fixes this contains a couple of core things.  One is a missed case in
-error handling, the other patch is a change from me raising the number
-of chip selects allowed by the newly added multi chip select support
-patches to resolve problems seen on several systems that exceeded the
-limit.  This is not a real solution to the issue but rather just a
-change to avoid disruption to users, one of the options I am considering
-is just sending a revert of those changes if we can't come up with
-something sensible.
+> > --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+> > +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+> > @@ -3773,12 +3773,18 @@ stmmac_setup_dma_desc(struct stmmac_priv
+> *priv, unsigned int mtu)
+> >  		dma_conf->dma_rx_size = DMA_DEFAULT_RX_SIZE;
+> >
+> >  	/* Earlier check for TBS */
+> > -	for (chan = 0; chan < priv->plat->tx_queues_to_use; chan++) {
+> > -		struct stmmac_tx_queue *tx_q = &dma_conf-
+> >tx_queue[chan];
+> > -		int tbs_en = priv->plat->tx_queues_cfg[chan].tbs_en;
+> > +	if (priv->dma_cap.tbssel) {
+> > +		/* TBS is available only for tbs_ch_num of Tx DMA channels,
+> > +		 * starting from the highest Tx DMA channel.
+> > +		 */
+> > +		chan = priv->dma_cap.number_tx_channel - priv-
+> >dma_cap.tbs_ch_num;
 
-----------------------------------------------------------------
-Alexander Stein (1):
-      spi: spi-imx: Use dev_err_probe for failed DMA channel requests
+For IPs which don't have tbs_ch_num, this loop goes from 0 to
+number_tx_channel to check if tbs_enable is set by glue driver.
+Existing logic is also the same. Unless you set tbs_en flag of
+queue 0 from the glue driver or dts configuration this patch doesn't
+set tbs flag for queue 0. This is a sanity check to avoid wrong
+configuration for IPs which support tbs only in a few number of
+queues.
 
-Amit Kumar Mahapatra (1):
-      spi: spi-cadence: Reverse the order of interleaved write and read operations
+> > +		for (; chan < priv->plat->tx_queues_to_use; chan++) {
+> > +			struct stmmac_tx_queue *tx_q = &dma_conf-
+> >tx_queue[chan];
+> > +			int tbs_en = priv->plat->tx_queues_cfg[chan].tbs_en;
+> >
+> > -		/* Setup per-TXQ tbs flag before TX descriptor alloc */
+> > -		tx_q->tbs |= tbs_en ? STMMAC_TBS_AVAIL : 0;
+> > +			/* Setup per-TXQ tbs flag before TX descriptor alloc
+> */
+> > +			tx_q->tbs |= tbs_en ? STMMAC_TBS_AVAIL : 0;
+> > +		}
+> >  	}
 
-Charles Keepax (1):
-      spi: cs42l43: Handle error from devm_pm_runtime_enable
+Please correct me if I've misstated anything.
 
-David Lechner (1):
-      spi: fix finalize message on error return
-
-Devyn Liu (1):
-      spi: hisi-sfc-v3xx: Return IRQ_NONE if no interrupts were detected
-
-Kamal Dasu (1):
-      spi: bcm-qspi: fix SFDP BFPT read by usig mspi read
-
-Mark Brown (1):
-      spi: Raise limit on number of chip selects
-
-Mika Westerberg (2):
-      spi: intel-pci: Remove Meteor Lake-S SoC PCI ID from the list
-      spi: intel-pci: Add support for Arrow Lake SPI serial flash
-
- drivers/spi/spi-bcm-qspi.c      |  4 ++--
- drivers/spi/spi-cadence.c       | 17 +++++++++--------
- drivers/spi/spi-cs42l43.c       |  5 ++++-
- drivers/spi/spi-hisi-sfc-v3xx.c |  5 +++++
- drivers/spi/spi-imx.c           |  4 ++--
- drivers/spi/spi-intel-pci.c     |  2 +-
- drivers/spi/spi.c               |  4 ++++
- include/linux/spi/spi.h         |  2 +-
- 8 files changed, 28 insertions(+), 15 deletions(-)
+BR,
+Rohan
