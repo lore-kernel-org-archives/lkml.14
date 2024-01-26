@@ -1,129 +1,71 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AF6EBE5B;
-	Fri, 26 Jan 2024 01:40:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 251124683
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 01:43:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706233243; cv=none; b=Csoz0jTfCp3Q/nKg0seATY10r4FX5peHozRaPdseu/uxuDwylcSVYiKmdGCWSWQHxTNjKX8W3dw8HbevepK2/4lmHiF41TCDBp8tHIcHv3F3tpv9koYSn+2D1xuUKhB5nx4bUAtiwy0mqNFO8qh2z8uRAhCcWduLN17z4QNHGHQ=
+	t=1706233387; cv=none; b=Rulg8nsvxajLd0yL42veRzRNM09HY+LwezuncgUbwQ6tlI7GEhi5L+PX0IhWadYCQG/otimsf9hXhb7dvl8GrmjAPz0u62MqOVZDcpVEdy+XgKC/n2K+rY1VQ8lbZg/Pi65ut1Bml1iTEduhDa3nZ168yRsHfTqStnYc7YpnaXE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706233243; c=relaxed/simple;
-	bh=FcKQPcK9DSVvVLptnofw+fKVNv4QmsDqpMonokbwkz0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Net+WrS96aNeh2JiCbJCttvaWKEgpk+0vwdrZ/FE86UDB41qdLKI83J/o/2iZL6c3dciTPNMJj4Sve4KETuTZUQJ/klhhKsWh23E0j+6sZnxl6zGZ9zeP/8lJY89kNoK3icVXknCZvpw20wXSB7bUaKpUcs/PKVO0ioKeaeBYnY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DZsOyMVR; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DZsOyMVR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706233242; x=1737769242;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=FcKQPcK9DSVvVLptnofw+fKVNv4QmsDqpMonokbwkz0=;
-  b=DZsOyMVRFBgq6h9Ix+AhJEFRBDRy9IYt1Pq38rn6zvJK57FGsNRz7Jjn
-   2zq0FN3i09Gnu+UASLTrL0zQB1KA8I/cLSQg/TggWoWmNiyXUwAnN2rrb
-   elR+PCTFhpPlYU+xKuQBI5/Z+hZWcGOAbYDKqlqMfswtdE8Rnlj52jsfR
-   y9Ybh2BZR9Y41RaYEyg5TPYQ/OOo3Zxa/geSwdTq8TqMl6vTue/MDW4EA
-   kqGV1jUX2LaJI64zRT5G1nZgtH4IHqPZi4OCxn/wicztqCsDwfwgKt7yX
-   rbxsP5s4yUfmcrlYektoS3Hg1ZjLeqJBvnuYqu79l5D23+eOd+JOal/LV
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="15718519"
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="15718519"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2024 17:40:42 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="2533153"
-Received: from unknown (HELO ply01-vm-store.amr.corp.intel.com) ([10.238.153.201])
-  by fmviesa003.fm.intel.com with ESMTP; 25 Jan 2024 17:40:39 -0800
-From: Ethan Zhao <haifeng.zhao@linux.intel.com>
-To: baolu.lu@linux.intel.com,
-	bhelgaas@google.com,
-	robin.murphy@arm.com,
-	jgg@ziepe.ca
-Cc: kevin.tian@intel.com,
-	dwmw2@infradead.org,
-	will@kernel.org,
-	lukas@wunner.de,
-	yi.l.liu@intel.com,
-	iommu@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	Ethan Zhao <haifeng.zhao@linux.intel.com>
-Subject: [PATCH v11 5/5] iommu/vt-d: improve ITE fault handling if target device isn't present
-Date: Thu, 25 Jan 2024 20:40:02 -0500
-Message-Id: <20240126014002.481294-6-haifeng.zhao@linux.intel.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20240126014002.481294-1-haifeng.zhao@linux.intel.com>
-References: <20240126014002.481294-1-haifeng.zhao@linux.intel.com>
+	s=arc-20240116; t=1706233387; c=relaxed/simple;
+	bh=W4sKgLf37l/hG3tnz8eexsaxMPkwfwvTiafPvJkL+ZE=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=tm8jE735VvuOrCtnjoUZCvLOBr5gvqygiWK1Lj7qVVjm+j3Vsik6R9RiNGikojKbnXup395t5mfu1WxxL+xOjlGXdSNUOjtf4eBr6WU9zld1SCSde0CFpgpx5L854CIb0Ejb5yfHq/dHWpIkjbiOOpt6fDM+G+lTiKQJckBoaR8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-361aaf3f03bso52770765ab.2
+        for <linux-kernel@vger.kernel.org>; Thu, 25 Jan 2024 17:43:05 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706233385; x=1706838185;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=61lwJK50aEyzlC5X3GEgrgc10KRILCmEU5SsNvi/Amo=;
+        b=HPFGXYrif9FB01HGNyGNmJKOIPaheVVf6g1mi9HPGHedKSzcOF3GWx2DS/Rx73P5yc
+         1ip7ZoNGTaQcRXvdX43NzzidEBG9+iX3adBc4Mlccg7WG2OoFFHrePyskkY0fhA/sDeR
+         HkFcTw/vbyxTFusj78OXUVXNIQEi2qKRWdrtWijfGSbfsq6KhUURn6jEX2uneFiweUhn
+         tbCtsbaa5dA/fz/URy2IqzcuzKC2B3hbpKdF2RcUBafinzZa7uI0FNAkxrkvcaK7VDhP
+         YF6MZUfKlHoP8MtMnw6FZ0UdIp40XkxIhlQUFoa/uRVo1Ag1VtHLupPF0fjsKE7pA0uf
+         7Vng==
+X-Gm-Message-State: AOJu0Yzqg6URkIQVgy7XaWVGaQza0QimgTZQj1G/iPsKX5Y7tffeMfxE
+	94jIh0/atXFLh3pN5FDFscsaafvihxJ1to9gsXAs9IZqDvp2Gb+3sVS2+fFSgRybDsUcv/isspf
+	hDdKmCD7co6kOwgTbk4uoFnDbb42sM2Xinujd6uMJH8fKVaXOaT/G2a0=
+X-Google-Smtp-Source: AGHT+IFzHOtoyv4YKjv3Py/sXSJJzaYjUbKsh008dEE93obhGasHI5JJCjhTZUpK9RfSUCcmciOqqUg+nHZAYk89qW9131umvgs+
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:1a4a:b0:361:9322:6ae0 with SMTP id
+ u10-20020a056e021a4a00b0036193226ae0mr67103ilv.6.1706233385380; Thu, 25 Jan
+ 2024 17:43:05 -0800 (PST)
+Date: Thu, 25 Jan 2024 17:43:05 -0800
+In-Reply-To: <tencent_613652973C377A4AEC7507777B66C63C8309@qq.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000d6f6d6060fcf6ac6@google.com>
+Subject: Re: [syzbot] [mm] KMSAN: uninit-value in virtqueue_add (4)
+From: syzbot <syzbot+d7521c1e3841ed075a42@syzkaller.appspotmail.com>
+To: eadavis@qq.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Because surprise removal could happen anytime, e.g. user could request safe
-removal to EP(endpoint device) via sysfs and brings its link down to do
-surprise removal cocurrently. such aggressive cases would cause ATS 
-invalidation request issued to non-existence target device, then deadly
-loop to retry that request after ITE fault triggered in interrupt context.
-this patch aims to optimize the ITE handling by checking the target device
-presence state to avoid retrying the timeout request blindly, thus avoid
-hard lockup or system hang.
+Hello,
 
-Signed-off-by: Ethan Zhao <haifeng.zhao@linux.intel.com>
----
- drivers/iommu/intel/dmar.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+syzbot tried to test the proposed patch but the build/boot failed:
 
-diff --git a/drivers/iommu/intel/dmar.c b/drivers/iommu/intel/dmar.c
-index 814134e9aa5a..e2d5ea2b0683 100644
---- a/drivers/iommu/intel/dmar.c
-+++ b/drivers/iommu/intel/dmar.c
-@@ -1272,6 +1272,7 @@ static int qi_check_fault(struct intel_iommu *iommu, int index, int wait_index,
- {
- 	u32 fault;
- 	int head, tail;
-+	u64 iqe_err, ite_sid;
- 	struct q_inval *qi = iommu->qi;
- 	int shift = qi_shift(iommu);
- 
-@@ -1316,6 +1317,13 @@ static int qi_check_fault(struct intel_iommu *iommu, int index, int wait_index,
- 		tail = readl(iommu->reg + DMAR_IQT_REG);
- 		tail = ((tail >> shift) - 1 + QI_LENGTH) % QI_LENGTH;
- 
-+		/*
-+		 * SID field is valid only when the ITE field is Set in FSTS_REG
-+		 * see Intel VT-d spec r4.1, section 11.4.9.9
-+		 */
-+		iqe_err = dmar_readq(iommu->reg + DMAR_IQER_REG);
-+		ite_sid = DMAR_IQER_REG_ITESID(iqe_err);
-+
- 		writel(DMA_FSTS_ITE, iommu->reg + DMAR_FSTS_REG);
- 		pr_info("Invalidation Time-out Error (ITE) cleared\n");
- 
-@@ -1325,6 +1333,16 @@ static int qi_check_fault(struct intel_iommu *iommu, int index, int wait_index,
- 			head = (head - 2 + QI_LENGTH) % QI_LENGTH;
- 		} while (head != tail);
- 
-+		/*
-+		 * If got ITE, we need to check if the sid of ITE is the same as
-+		 * current ATS invalidation target device, if yes, don't try this
-+		 * request anymore if the target device isn't present.
-+		 * 0 value of ite_sid means old VT-d device, no ite_sid value.
-+		 */
-+		if (pdev && ite_sid && !pci_device_is_present(pdev) &&
-+			ite_sid == pci_dev_id(pci_physfn(pdev)))
-+			return -ETIMEDOUT;
-+
- 		if (qi->desc_status[wait_index] == QI_ABORT)
- 			return -EAGAIN;
- 	}
--- 
-2.31.1
+failed to checkout kernel repo https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git on commit fbafc3e621c3: failed to run ["git" "fetch" "--force" "--tags" "4d52a57a3858a6eee0d0b25cc3a0c9533f747d8f" "fbafc3e621c3"]: exit status 128
+fatal: couldn't find remote ref fbafc3e621c3
+
+
+
+Tested on:
+
+commit:         [unknown 
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git fbafc3e621c3
+kernel config:  https://syzkaller.appspot.com/x/.config?x=656820e61b758b15
+dashboard link: https://syzkaller.appspot.com/bug?extid=d7521c1e3841ed075a42
+compiler:       
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=132ce437e80000
 
