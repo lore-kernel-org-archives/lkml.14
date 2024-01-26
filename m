@@ -1,61 +1,59 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 843F75B200
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 10:00:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF8CD5B5CA
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 10:00:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706263243; cv=none; b=QToLzYadAD/In1JZKU+tOShR6ofw5r7clIF2mRV5gt+hSi3NUaKCUSiUJSw9vMqvG5wdNmZi6LHhTGyklT7raRg63vvCaadBJX49TL1VdSU2MHdZ541YVPBeCBUGo2jxkdb+qA2c5GwkpzvcI9cX4BiX4wWfUIB+AZoFi63LJpM=
+	t=1706263245; cv=none; b=rtPYeGdrM0kq0qB/arBc2sWmVQw3MUPwTvfVC5eBEfae4RgvOt1OPIFhF6ew7k7cd80Zht+6Ke3cg16OMSlt74ObqFvsfRes0ADCaBHPXk3n1O+w0EUGqFQyLcWcnbUS7VAGbjjBAIigLdMW3X1mhT+jp2w2y9LEaG5b//P+eJA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706263243; c=relaxed/simple;
-	bh=9lrK39yGWz+mMVNX3fo7mSMQqmbiZ6p21a+lgh38MTs=;
+	s=arc-20240116; t=1706263245; c=relaxed/simple;
+	bh=Z42Q6xkOTrQTsmOLrP2Z5e9O464q2Y3rJZ2PkdjxS0o=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=aDZ8PY5/K7WHl22mszjlZtTBEpMh4LgxQyhkMTDHDtczjJyCOHiQELbvwIwWUZbPEY0EQHA+UsyBbF6wvdZq5FEaIg5/CEp6okJ50QU9CHM4PFzN3vuN/8V/CIWVfzq1H7IGbbx7D0BTiep/uJwYfTifkGa72lwluRUcOkQq6vk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=oSsS4Hg5; arc=none smtp.client-ip=209.85.218.43
+	 In-Reply-To:To:Cc; b=qfuPzGzW51kFia+myIDRyDLVXvia5PLU62t26bIQW/+IJXDqwxj7kE5R+DSipCoNd1AHBGTLSczIrcgNKhpCWC02adGLGK0+IAaLwNQFsp/x70m1giAPbWQyZhBOAFeC4dFasrkwsCfr9q1JbZ8OklvFihyF9hzk4DhU52a+/VE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=d7YvYV34; arc=none smtp.client-ip=209.85.128.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oSsS4Hg5"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a318ccfe412so13939866b.1
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 02:00:41 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="d7YvYV34"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-40e86a9fc4bso2948275e9.2
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 02:00:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706263240; x=1706868040; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1706263241; x=1706868041; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=EOMNM1cIuCUaGhFmJAiF8twDPA35g39fPAYJ946kJ00=;
-        b=oSsS4Hg5tiNdjlELaIW98B1nKkcmFTaPlpNPmegu0diqlsTDZJKcPNnBuBgigkVWJv
-         fRZar/ktnEqf2QQOfNlnaChyP/HcCVJX85s+CzfMjs4cctcyfGSIHneugr3qxTcMMeNr
-         tiU5TDgu2NLRAy4nhL4lzE2VUjcTJRaPrL9mbliYdtxTKyl1dqnU56r0/ZZIXI6pdQRW
-         F2ELBqUPYhzE+VkbF5Nqyl2tb+MhsGd57c3tXyed1miZQaqzclKJOmbL517CdmocJfrX
-         9qJNQ1qbSIax0uCNiPs8vi/X9UYrIcHSztPtZAZNqbdDgmiMtNdLGOlQ8vKeNzleYp+K
-         EPUw==
+        bh=+nSUoAEGodpT/nnxbj3AEPT4VUq3C0Xk/xRQ9kzlaI4=;
+        b=d7YvYV34bdx+tYZ8um+e9KreHkK1NpO6GIyEW2TMGwjhPVNXb9gGuso2b+GpuWx3yP
+         K9SX8ZfkUoHJARB2JOZgs7cHjCo3qF62CYfTqvQNKdJrrNO+lH9X/q3Ek8UZ9V9jCeAv
+         4eEi7R9Slsn+8bV/utXkFp+baJXQJP92be/uI3NQ1pFzRZf7qQwjVMNTvlv0oJfmsp+j
+         ZJa7zFpxunduEFFfAW8udFYXAXMG1MWmNN6Ny+Xqk+PdmGxV0HJjLfgTmiLmAWfy2TTi
+         GgLQpmtj2RWY5Shn8qyOCMQL4z59G83Rl3hyzktHOUuRYsNA0E5Dg2jx8TWx3ASuOpBC
+         F8SA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706263240; x=1706868040;
+        d=1e100.net; s=20230601; t=1706263241; x=1706868041;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=EOMNM1cIuCUaGhFmJAiF8twDPA35g39fPAYJ946kJ00=;
-        b=Le9bj1bE/o3FzeI1gh97QN+dkgEkwMd4t6dPsFUHLPqoVbfJG0S9qfQcH61AhOUd2Q
-         i6WG4ALiGqzK3cyqp0xtqN0rnrwJdYdvvkdWejr5PWzVKiWAMCfKL9r/BAgUNBDuMTuc
-         +ZjFWC+NNptXxNqAa4aMArSBGflanD5ukSE4cBpNKv1fWLviWbsSYZLABChMbFbHHqzV
-         YnMk7TUsTcTpjidWZdZ7wjmANIT/qgB91zE9/nFNOnsO2Je7xX0kCxCtkF+BJJ+3zH2+
-         j5+OXa94vPVISjwYJr6lqlWPO1VTu9p+t+A2Hj4UZoQj9AppCi6p+a8BPDuhTggVx7GE
-         b64Q==
-X-Gm-Message-State: AOJu0YzBV3fy4zfOr1xFjJMjkKOCsiD6pCsE8h5tebdiCs1FMrEjtGo5
-	M7Z7Wc5Jm36MJ/FLU3Ikj/r31wsIi+YSn9S7uWIn5UciRlTqQorDlJ/f/prPL8hfttMul6YmN3M
-	R
-X-Google-Smtp-Source: AGHT+IHSuLkgeI7QkxXZVmksxECG2VmFCOGDlb2DX2o1Nrvx1R4dxJ8UsQan0cdBGX9tZomIMzj/4A==
-X-Received: by 2002:a17:906:13ca:b0:a2f:1466:a3e4 with SMTP id g10-20020a17090613ca00b00a2f1466a3e4mr496034ejc.25.1706263239779;
-        Fri, 26 Jan 2024 02:00:39 -0800 (PST)
+        bh=+nSUoAEGodpT/nnxbj3AEPT4VUq3C0Xk/xRQ9kzlaI4=;
+        b=M54sLUZZj8Kfa3dDPmakh8APYEvLFP9o1eiJkir9vbnRCy5a/SXEx1ijtgkZTF97CP
+         Nin+GNITKbQB2JK5LGpVjKRvj9xr/fG34+ewlHxPEXULb2nTxesgxCe8BEU/EX9h9hQZ
+         34c66Qr4hQAxzQ5Nr/sBg8/Bsrn9NoEmLVVaZ+Zir+XVBnQ/sm2nV2NgYCFFV35KuygD
+         hzD9z0B4NBC5Zej47zbsm7Iss+ecjDahzFaVwdbAEyCdAJasgB8Aqsa2gj1ZYGK58uFA
+         5YWECOJXC00W8FqGlHL/vw3+faVozZqfdSNV/zGhMjM5fM08Jt7D5gnOO5Jd+GPTEjws
+         /7Ow==
+X-Gm-Message-State: AOJu0YzTvOYUIpqlhomVTz7cMfpmiu2hCAT2ft5Ur5qpWF6TQzif/LEL
+	iSpThYx6AEHf9cpv0irV8FyDSoPOiliXvT2ijWlZgJPAQ8UOqrPjYas+E38meRY=
+X-Google-Smtp-Source: AGHT+IGF0lh/BjMDFjwiqlnPgjhfikFTSXO4GdmEqRz8dfIT3DB12kx4UNfvScOsh5Fxki4u97IH3Q==
+X-Received: by 2002:a05:600c:3b23:b0:40e:50f8:9acb with SMTP id m35-20020a05600c3b2300b0040e50f89acbmr628167wms.134.1706263241035;
+        Fri, 26 Jan 2024 02:00:41 -0800 (PST)
 Received: from [127.0.1.1] ([79.115.23.25])
-        by smtp.gmail.com with ESMTPSA id ox27-20020a170907101b00b00a3221b95ce8sm448494ejb.77.2024.01.26.02.00.38
+        by smtp.gmail.com with ESMTPSA id ox27-20020a170907101b00b00a3221b95ce8sm448494ejb.77.2024.01.26.02.00.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Jan 2024 02:00:39 -0800 (PST)
+        Fri, 26 Jan 2024 02:00:40 -0800 (PST)
 From: Abel Vesa <abel.vesa@linaro.org>
-Date: Fri, 26 Jan 2024 12:00:15 +0200
-Subject: [PATCH v5 04/11] arm64: dts: qcom: x1e80100: Add ADSP/CDSP
- remoteproc nodes
+Date: Fri, 26 Jan 2024 12:00:16 +0200
+Subject: [PATCH v5 05/11] arm64: dts: qcom: x1e80100: Add TCSR node
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,7 +62,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240126-x1e80100-dts-missing-nodes-v5-4-3bb716fb2af9@linaro.org>
+Message-Id: <20240126-x1e80100-dts-missing-nodes-v5-5-3bb716fb2af9@linaro.org>
 References: <20240126-x1e80100-dts-missing-nodes-v5-0-3bb716fb2af9@linaro.org>
 In-Reply-To: <20240126-x1e80100-dts-missing-nodes-v5-0-3bb716fb2af9@linaro.org>
 To: Andy Gross <agross@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
@@ -75,143 +73,49 @@ To: Andy Gross <agross@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
 Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
  linux-kernel@vger.kernel.org, Abel Vesa <abel.vesa@linaro.org>
 X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3499; i=abel.vesa@linaro.org;
- h=from:subject:message-id; bh=RU2sVakWDTM6FIOT1mP+9fDqahd9wnJzAdPildXmazk=;
- b=owEBbQKS/ZANAwAKARtfRMkAlRVWAcsmYgBls4K5hG4IiZx1wFkmb8aGH0l3jcqhrzb4XSnVC
- KVJEroux/iJAjMEAAEKAB0WIQRO8+4RTnqPKsqn0bgbX0TJAJUVVgUCZbOCuQAKCRAbX0TJAJUV
- VpxEEACktQWla4CcYyg90/64lfyIAzceYv7OdU3+sRNHB0sreUYRIh/1dThfAFB0JVZWBRBzSOS
- 2aHzxusCvIlVZ0zsPRQ8wy32w10xDDZYQDNCsChp+5qJadlUZqkY2EbU4GlHPf0dFKunT8fNyke
- E8Pxqy7oW8Fc+78QmiEWLbo6QP4mWyknnPMgi3FrrxBziQPpY/uxTiOwUbo8g4qGzA2tXIW9u49
- X2SY4gLOrHWzgXZBup7/LLpxeVBr6DNBvU10T2QRdDWbXxEK1Z9EeQX2gizZeeznkd5ryeeSgUr
- r0kHB8bgdQ4HmPOvn2nNkhu7qdiyLUJrTuuSu4OiOOGuIVpWNmI6PlisFqLg7OJxyuB3C6uRlKx
- s5YMl27hL0ydg1cbGTvC3/IAlZBfg+lF+Wl70oSXDgSlJuyYDYMioNzlyb1kRWp0jd/sHL/o5ri
- njXLqj+0l0JHXg01QQRRRm0LYiPfWc+GXCC8GNYIVW6ZdDVAJOsd+BYwqoIktlUARZ6cSQ2t0Me
- MXCmLkotTWcX7eH8hpbE1z3RHR9ZkhOhBghsOFo+Ge8ygFroYYJYtJG9Ekjk1cnLxoL7ReUheza
- Bvfl18JRuX57dsQ+ODkZiwSUbesXfkvuP4uPDn87Ezw2AVXOjiYiDIMoIFfh4kHGDknXtNh68um
- K7lEOp7TOuoAaaA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=873; i=abel.vesa@linaro.org;
+ h=from:subject:message-id; bh=Z42Q6xkOTrQTsmOLrP2Z5e9O464q2Y3rJZ2PkdjxS0o=;
+ b=owEBbQKS/ZANAwAKARtfRMkAlRVWAcsmYgBls4K6dFCNim0hLeFcmf4Sff0uy0/G75koMej3a
+ X9yuODi/5eJAjMEAAEKAB0WIQRO8+4RTnqPKsqn0bgbX0TJAJUVVgUCZbOCugAKCRAbX0TJAJUV
+ VmVID/439CcXx93PwIgmZjVpz2rzxQTOTof1jy22jFQr36ThZwRBwDVZFrtNDPdhwboUfXOfgv4
+ KMzF1JsuMaUVRyHhFV4t31s/WqbwZDViHNkbLauhmPpK2IeO00IuTouNj3cdpNxCq8B7KxME4uJ
+ t5hjgjm0lpwREBUVMmojJO9dkptzRTjzwpZCsCPYzP5eLdKq2xdQn9QkiTvMMdpITEJx8kWG2Em
+ bi8YLRQFiTzeykGgP4nZbUP04l+l9ngiFJtyzo7Yt+tS2JXOVpjV28Mlo7ipeIsgik/fjpOLsBp
+ lSKt3Z7dX7mgTPnbbl2w7+EadxL7nM4yomTxX1JUrFBzZPo6EP3vu+ilrNiTlvwJPViNZurdhD+
+ 6dJy6Ok8AnB4q5py6vQ3hBIat2e8/zFqu6yJsmKFUOAZH6Nrn131lxvsAGPgwPvYbzBpo4tK2Zc
+ +mEG2FyFxjyAUcf58vd4EGJatyibJJdM5wQjaUezbojnMHpLpwX5fI/8QQ7cCerIpNF6L5efIlW
+ kATfminZl8gEF4GM346L7TC9VG1SmZIMHu76+CcNqWfAJNWj/6QdqiDbMsnYO9CvSyP8Tz1F2Hb
+ jc/bgxmyGhe1ayl0+E3uu/8hFqYVCImSEYY4U4cexkJvL/bVObGAInM9+EQA9c/j9FxWXVKNQbP
+ n68y/rEHzH/h8zw==
 X-Developer-Key: i=abel.vesa@linaro.org; a=openpgp;
  fpr=6AFF162D57F4223A8770EF5AF7BF214136F41FAE
 
-From: Sibi Sankar <quic_sibis@quicinc.com>
+Add the TCSR clock controller and register space node.
 
-Add ADSP and CDSP remoteproc nodes on X1E80100 platforms.
-
-Signed-off-by: Sibi Sankar <quic_sibis@quicinc.com>
-Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
 Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
 ---
- arch/arm64/boot/dts/qcom/x1e80100.dtsi | 98 ++++++++++++++++++++++++++++++++++
- 1 file changed, 98 insertions(+)
+ arch/arm64/boot/dts/qcom/x1e80100.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/qcom/x1e80100.dtsi b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
-index 3790d99eb298..be69e71b7f53 100644
+index be69e71b7f53..2b6c55a486b2 100644
 --- a/arch/arm64/boot/dts/qcom/x1e80100.dtsi
 +++ b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
-@@ -3590,6 +3590,104 @@ system-cache-controller@25000000 {
- 				    "llcc_broadcast_base";
- 			interrupts = <GIC_SPI 266 IRQ_TYPE_LEVEL_HIGH>;
+@@ -2606,6 +2606,14 @@ tcsr_mutex: hwlock@1f40000 {
+ 			#hwlock-cells = <1>;
  		};
-+
-+		remoteproc_adsp: remoteproc@30000000 {
-+			compatible = "qcom,x1e80100-adsp-pas";
-+			reg = <0 0x30000000 0 0x100>;
-+
-+			interrupts-extended = <&pdc 6 IRQ_TYPE_EDGE_RISING>,
-+					      <&smp2p_adsp_in 0 IRQ_TYPE_EDGE_RISING>,
-+					      <&smp2p_adsp_in 1 IRQ_TYPE_EDGE_RISING>,
-+					      <&smp2p_adsp_in 2 IRQ_TYPE_EDGE_RISING>,
-+					      <&smp2p_adsp_in 3 IRQ_TYPE_EDGE_RISING>;
-+			interrupt-names = "wdog",
-+					  "fatal",
-+					  "ready",
-+					  "handover",
-+					  "stop-ack";
-+
-+			clocks = <&rpmhcc RPMH_CXO_CLK>;
-+			clock-names = "xo";
-+
-+			power-domains = <&rpmhpd RPMHPD_LCX>,
-+					<&rpmhpd RPMHPD_LMX>;
-+			power-domain-names = "lcx",
-+					     "lmx";
-+
-+			interconnects = <&lpass_lpicx_noc MASTER_LPASS_PROC QCOM_ICC_TAG_ALWAYS
-+					 &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>;
-+
-+			memory-region = <&adspslpi_mem>,
-+					<&q6_adsp_dtb_mem>;
-+
-+			qcom,qmp = <&aoss_qmp>;
-+
-+			qcom,smem-states = <&smp2p_adsp_out 0>;
-+			qcom,smem-state-names = "stop";
-+
-+			status = "disabled";
-+
-+			glink-edge {
-+				interrupts-extended = <&ipcc IPCC_CLIENT_LPASS
-+							     IPCC_MPROC_SIGNAL_GLINK_QMP
-+							     IRQ_TYPE_EDGE_RISING>;
-+				mboxes = <&ipcc IPCC_CLIENT_LPASS
-+						IPCC_MPROC_SIGNAL_GLINK_QMP>;
-+
-+				label = "lpass";
-+				qcom,remote-pid = <2>;
-+			};
-+		};
-+
-+		remoteproc_cdsp: remoteproc@32300000 {
-+			compatible = "qcom,x1e80100-cdsp-pas";
-+			reg = <0 0x32300000 0 0x1400000>;
-+
-+			interrupts-extended = <&intc GIC_SPI 578 IRQ_TYPE_EDGE_RISING>,
-+					      <&smp2p_cdsp_in 0 IRQ_TYPE_EDGE_RISING>,
-+					      <&smp2p_cdsp_in 1 IRQ_TYPE_EDGE_RISING>,
-+					      <&smp2p_cdsp_in 2 IRQ_TYPE_EDGE_RISING>,
-+					      <&smp2p_cdsp_in 3 IRQ_TYPE_EDGE_RISING>;
-+			interrupt-names = "wdog",
-+					  "fatal",
-+					  "ready",
-+					  "handover",
-+					  "stop-ack";
-+
-+			clocks = <&rpmhcc RPMH_CXO_CLK>;
-+			clock-names = "xo";
-+
-+			power-domains = <&rpmhpd RPMHPD_CX>,
-+					<&rpmhpd RPMHPD_MXC>,
-+					<&rpmhpd RPMHPD_NSP>;
-+			power-domain-names = "cx",
-+					     "mxc",
-+					     "nsp";
-+
-+			interconnects = <&nsp_noc MASTER_CDSP_PROC QCOM_ICC_TAG_ALWAYS
-+					 &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>;
-+
-+			memory-region = <&cdsp_mem>,
-+					<&q6_cdsp_dtb_mem>;
-+
-+			qcom,qmp = <&aoss_qmp>;
-+
-+			qcom,smem-states = <&smp2p_cdsp_out 0>;
-+			qcom,smem-state-names = "stop";
-+
-+			status = "disabled";
-+
-+			glink-edge {
-+				interrupts-extended = <&ipcc IPCC_CLIENT_CDSP
-+							     IPCC_MPROC_SIGNAL_GLINK_QMP
-+							     IRQ_TYPE_EDGE_RISING>;
-+				mboxes = <&ipcc IPCC_CLIENT_CDSP
-+						IPCC_MPROC_SIGNAL_GLINK_QMP>;
-+
-+				label = "cdsp";
-+				qcom,remote-pid = <5>;
-+			};
-+		};
- 	};
  
- 	timer {
++		tcsr: clock-controller@1fc0000 {
++			compatible = "qcom,x1e80100-tcsr", "syscon";
++			reg = <0 0x01fc0000 0 0x30000>;
++			clocks = <&rpmhcc RPMH_CXO_CLK>;
++			#clock-cells = <1>;
++			#reset-cells = <1>;
++		};
++
+ 		gem_noc: interconnect@26400000 {
+ 			compatible = "qcom,x1e80100-gem-noc";
+ 			reg = <0 0x26400000 0 0x311200>;
 
 -- 
 2.34.1
