@@ -1,193 +1,151 @@
-Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR01-HE1-obe.outbound.protection.outlook.com (mail-he1eur01on2084.outbound.protection.outlook.com [40.107.13.84])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BE5A6AD6;
-	Fri, 26 Jan 2024 03:31:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.180
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706239881; cv=none; b=E8cXki3ry8pFCStwVR/iTvgyu0qTm690Gn1qCwkShuTdRUCxDu+hdRnDz3X+Hy5bJcwdeba2f4wo571e5gLDotGLyYZoVkijzk0kRZJ7F1OF78cJy0PjxvoYbGGjLCUEl5bNUZxsZDISyxQYBR3U8RUHfwgyyO2YvzL5z+Xzj6Y=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706239881; c=relaxed/simple;
-	bh=QTsr8iY178qNv6DLK5SoRZtgZGa29bnsjo2XqVC4Jao=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Ak+RFWhXftZFYv7TWCOHrDi7qOcKGBykOCTM7duNHJv190a4cTbmbpbF07nu3fVlxlvBgdYNVfgqLZDC+G7mE316nz3gAZ6Uqkrz+6yqpTrWASV+86xIoqjKi9x3iBzDcHzGx9NkcRttkdEKgJYzy3CHNlU/yuWvpaDaUF3Ayo8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kcQKckUI; arc=none smtp.client-ip=209.85.219.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3A258F44;
+	Fri, 26 Jan 2024 03:36:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.13.84
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706240188; cv=fail; b=N+b6oiidXhpOie4eR5kuKivX+kRmfEnNR26T5P4sR6kzs89pIj5CeniCUKueJXxH1EbFDxSbLiK3K3TEVupnTfwwFXktFBNFCuFQDq+k8REWIBJqNRy5+5xP8zDcN3QCpfl5sMqF8LyL/SK4eRMgv3981uMKMjM5OuK0dzkzch0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706240188; c=relaxed/simple;
+	bh=AByXffH+JJqibPkmzGM3H1G+uy0WP8USylDq+TeNUQM=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=uvoTo6gaGv0Ftrvqf8xcMD3rPt9UJcTorqX3JU5vXOtBGet+ffb9mJAkih5v75dBiOOSEEkC3X+99/keLUrxEPQvlkMu/AOmz80/j2DGZEXXPPS2zEJLpJuMcOFlx0lbxAlxpfu5rds0u28wIIhkEZiJx1g3xB7PkSvOUXJejRQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=FEvW9NgR; arc=fail smtp.client-ip=40.107.13.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kcQKckUI"
-Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-dbed0710c74so6842176276.1;
-        Thu, 25 Jan 2024 19:31:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706239879; x=1706844679; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Cu5uJIW+PgmWmPkTx7ElNgWaV5SHadIfkDdLydfJ9xw=;
-        b=kcQKckUIgPszDdtiMLt/1RyKpsI7HNBHuX1pfqiKPqmfjK8oBr4qJO6/1bZCHZrlRR
-         S+gD9m1lmbD4FGR6Z0Vlc8jbqbnOWrYd0UnFOMMf079DXcX9C1tdAjnGWmc4vELODI9M
-         5/cfAutCUt50bhK0IHbG5iP3c3AlFGMoK8A8cnXOFxNDEksGy8zEgUKbM8ssFYako+Zc
-         9FIeeDh3G5tCOKJjbBAv2NDSXWW0rYAxKwsZqb3nw929HGvgr8/um2t6I/8Yc4TR5srQ
-         InCwd9/foBol8sYZ1KYzk7PH0iP9BZnshyW2FkPqdqMQmu++o2XRqcYZ87tHzCk6Q+pQ
-         6A6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706239879; x=1706844679;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Cu5uJIW+PgmWmPkTx7ElNgWaV5SHadIfkDdLydfJ9xw=;
-        b=nGRHdycNGWxrALlGmBgTE8scv9pMlHHe6Ywtu/7x0/vNbe3dT3swd6qVhkTITkWqW6
-         OrqDk2Y3UANVXNpAa6FIBKUujgqxZ+Xuz+Ilsr91rJsZPCXJFYqM3C2t/nlN7+cJxYbq
-         /hcLNATH292bNE4O4nd2I3ChokWE4ZlD8fa3wi1uK71F7jUzHU7D1Qj27nOZfBBNn+9f
-         4amiBBOiDfDFpJPa0wBhkgvmnUKWoA+0IEq7Vi/OkImgO+lBnkQnGZ8VB24JB5NDk8Bd
-         hTrH1ssiLFwl+7BEmSvz+JqF6657hRkBLBx/lDeSx2U7oKkWs8wqx8NdQ2RRo8WOjyp5
-         4qIQ==
-X-Gm-Message-State: AOJu0Yx30C5CXmletLaHAFbXs0+8kmgx6wyx/FccV5LD3hI/vpTDsmDn
-	vQuYSc/bnnjDU89ZuH8sGKx4e74en+0Nl6OOdZ3dAoEFLK1WO8eI
-X-Google-Smtp-Source: AGHT+IEcxOysEBQ87WgKxyfi1nNa59mDc0u82AOGzSYqQQM2UlemhexgEizS4szo4pFI7f9NW/PyVA==
-X-Received: by 2002:a05:690c:fd1:b0:5f3:7df:563a with SMTP id dg17-20020a05690c0fd100b005f307df563amr1055527ywb.16.1706239879226;
-        Thu, 25 Jan 2024 19:31:19 -0800 (PST)
-Received: from localhost ([129.146.253.192])
-        by smtp.gmail.com with ESMTPSA id l6-20020a170902eb0600b001d76ced199esm224183plb.31.2024.01.25.19.31.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jan 2024 19:31:18 -0800 (PST)
-Date: Fri, 26 Jan 2024 11:31:07 +0800
-From: Furong Xu <0x1207@gmail.com>
-To: Serge Semin <fancer.lancer@gmail.com>
-Cc: "David S. Miller" <davem@davemloft.net>, Alexandre Torgue
- <alexandre.torgue@foss.st.com>, Jose Abreu <joabreu@synopsys.com>, Eric
- Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
- Abeni <pabeni@redhat.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Joao Pinto <jpinto@synopsys.com>, Simon Horman <horms@kernel.org>,
- netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- xfr@outlook.com, rock.xu@nio.com
-Subject: Re: [PATCH net] net: stmmac: xgmac: fix handling of DPP safety
- error for DMA channels
-Message-ID: <20240126113107.000064dc@gmail.com>
-In-Reply-To: <czebrzszux2gdik3ey54tr3iewsxs4hjom432eb527jcpftnnr@ftiiwofakorj>
-References: <20240123095006.979437-1-0x1207@gmail.com>
-	<vsert76o6lxxc676tjiiikir577qobfonyo6sgo5eek6alzxlo@tb6hq5s2qcsp>
-	<20240125105620.000040b7@gmail.com>
-	<czebrzszux2gdik3ey54tr3iewsxs4hjom432eb527jcpftnnr@ftiiwofakorj>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.34; x86_64-w64-mingw32)
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="FEvW9NgR"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=FYoeVetwov5HI6FLKs9uJ+/kJgOkWP9Lz2UJXnhrM0lQlF9UI6Nt1aRHtCchZwUfUjL8BsCKHZoVvRv75R6rVhIHri8wscuWtE9/AA3XwK6hOcmiKkZigrmgrnafWwO4vBBRYOeey9r9eRVmrXYp6Cq5SuVuucvAJaOQFCL7Trd3JcysoFNFVkBG69Jm6DxqEABjRXLU90HLVDi1WzXRr9vsn/J6LRbycoj3AbRJbT9THl7Rm4d6/fjEvI/q76Dm4ZAjyxJE/uE8XbxRZfnus/yREeCEZFmf+dvr/qkegafv3g2p4dJPNTNZS15IAVf8TF9Oy4FbfSsEX2R8iBBEsw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=3hD0cThubNaqubj5bXEmLhzuTDMHE4C0Cx6s2iSLeoI=;
+ b=ct6LgtFwWXGjcQ1F7R0FkxS7Nww9XsQtlbsNBGM0gJyhWC8qeB9PbgVliQQRLx61KQ8b3x4kegkP9diTR/rObJaVL7SS2B4XV04JiP37l8OaqxkteCUV1FaJFBrvJkzEOgmUGU5eFWdsFeTYa05Uquq7g+NGeTs9r1qVtzwwKio7r+qbAuZ1o3/O4ZaWEpyJMGxdJJRUA1Gn1j3euhIcgE/Oxpn6x885kart5jgjm+nwqEDXdbixbPbRtXIlcURoJWyH/5jTqmQxomg8i8qdSr1nJ1L/8gWSqFuuGWbADCfTy2K8sY6B1VPVMVV5PrAhJ8CcRiBaNHd98vcvJX5eig==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3hD0cThubNaqubj5bXEmLhzuTDMHE4C0Cx6s2iSLeoI=;
+ b=FEvW9NgRGt7xidGeG2svgJe250O0Z0fM/j+QbXPiYaJmwHiskrXAt7c+lC8Gw9vnPl74JhUZbAUB7yXmKLaoLjPj4qtsQS+pxr6ssUcOxzFURhJAL+SqJNp65nDFZx8a3GEEvO32rPJ7Hxj34bnUvzCz8WAyxs2IqfOoeiTEwE0=
+Received: from DU0PR04MB9417.eurprd04.prod.outlook.com (2603:10a6:10:358::11)
+ by DBAPR04MB7287.eurprd04.prod.outlook.com (2603:10a6:10:1a4::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.27; Fri, 26 Jan
+ 2024 03:36:22 +0000
+Received: from DU0PR04MB9417.eurprd04.prod.outlook.com
+ ([fe80::c499:8cef:9bb1:ced6]) by DU0PR04MB9417.eurprd04.prod.outlook.com
+ ([fe80::c499:8cef:9bb1:ced6%3]) with mapi id 15.20.7228.022; Fri, 26 Jan 2024
+ 03:36:22 +0000
+From: Peng Fan <peng.fan@nxp.com>
+To: Martin Kaiser <martin@kaiser.cx>, Shawn Guo <shawnguo@kernel.org>, Linus
+ Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>
+CC: Andrew Lunn <andrew@lunn.ch>, "linux-gpio@vger.kernel.org"
+	<linux-gpio@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v4 0/4] gpio: vf610: allow disabling the vf610 driver
+Thread-Topic: [PATCH v4 0/4] gpio: vf610: allow disabling the vf610 driver
+Thread-Index: AQHaTwg1N1Zs40MLSkWNnYKumsdodrDrc4Hw
+Date: Fri, 26 Jan 2024 03:36:22 +0000
+Message-ID:
+ <DU0PR04MB9417CAFF57ADB1CDD468D6E488792@DU0PR04MB9417.eurprd04.prod.outlook.com>
+References: <20240124205900.14791-1-martin@kaiser.cx>
+In-Reply-To: <20240124205900.14791-1-martin@kaiser.cx>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: DU0PR04MB9417:EE_|DBAPR04MB7287:EE_
+x-ms-office365-filtering-correlation-id: 4d75e83b-7ba2-43e8-be93-08dc1e1ff763
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ uln3GAKhlKQAKAABJH/4uqc1Tct2dosZuBFsYPOYmENE3DlEbV0Mh91w/fT89eJfWXfqH+xaNsyoTQcjxd7Il7lnIJLT1rMkDoWeto7epIa9mqN4O6fArbNcw3RbdQrRizE1PThW3PJN8Qrssp+qX7wmyk20NCPhSC8SbmRV+PUtJCJC5iEU/j9n+vu6hwBtNrcFfW4QSOV0UBjHAWPsCp66k5082GYDPsjbSdcasQVExIVS6Gq0g+GBvl7w6Q3di6yxZdzXNPN25hZboFBKbSEMGeVO8OFd9YzbntSj2LKPzauPkXn/1JDr7vU5/9wI6NJrGXV2S09jn+T6Y/K3zy74Q8biYsJAzjWVKm89QCOATft7tV992FiR07vW9nLYx+9gg4Pw9YUJ/sSDlJT0NjCqhZ9FpgYDONNtj4dUI+DalayixmEL489MCs2RN1ljQpJImJvy66UK/r47NaLr+N6mLtIZcum59S47ECH3TiHb5+7JPl1LHinNWAvxAp+9d4SJazRa3NjIxLmaVse1nqo5XpOBWQ9reAlDHsSiAZjOQzwgsyr+cZ4A4KCwqKk35Qa5Dpmq9jhPi3ZUrn1rRE6v2BTdwfntUwZmJQJRyoaGsagrdrfXkEwqIsNCUiWK
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU0PR04MB9417.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(136003)(376002)(396003)(39860400002)(366004)(230922051799003)(186009)(451199024)(64100799003)(1800799012)(38100700002)(2906002)(4744005)(122000001)(52536014)(5660300002)(44832011)(41300700001)(38070700009)(86362001)(33656002)(478600001)(26005)(71200400001)(7696005)(9686003)(6506007)(8936002)(8676002)(76116006)(83380400001)(54906003)(66446008)(64756008)(66946007)(66556008)(66476007)(316002)(110136005)(4326008)(55016003);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?ks40Q/76sTR8BtIyPpI82fBqbDTwJGFF/0VQJqm/f1325J/3gKeHlA2hpn0Z?=
+ =?us-ascii?Q?3m0J15H84BONBh53bf2/qAe6JU320e6MHiEJ89mJsysAiteGCH3rJCOlkqEr?=
+ =?us-ascii?Q?XHvviWeSeq/uAHFUQQO9x0Yn99Pz2hmuzSa7tF5VrkwuhtSl6Vx5lEm4pHbu?=
+ =?us-ascii?Q?7m+Ns2vdCTgZJSeBIiF696CkliX6xCC/oR3BVIlN37soYpDnEeU3liYU358r?=
+ =?us-ascii?Q?hyKs1bx1lv08QYHRJ/jSrRofdfLimDud4N8qbfSoj+6OMUt1MGawrclst2Tt?=
+ =?us-ascii?Q?DZkZWwzX9WlQ8Eqg0yc9cWjU8DRghzJfbHqYp6Xi+gbQTfI9ZfIHksMmn9NP?=
+ =?us-ascii?Q?OwhgGbZN9uSxG8FNfa5UxYuELsJ2GB3m577M/2P1ny8uREojAU/ZebnWr2RN?=
+ =?us-ascii?Q?zbFoEVaeNmqKqlcJYjGWKp+pzD8c2Mq4uYQX2Qxv/Y2dnJBFtjj37JK+i1kH?=
+ =?us-ascii?Q?TYll5RyddykZ1oqxxcgAQib2h8CaHFzUa1yQ+Th88fKgCymxraIXesK0lhh6?=
+ =?us-ascii?Q?2+FsPTsDvj7Ck7ZUdLO7v5b7V7KEagKKDQpFnHyB96kSFrhzAIFn7+IKFgb7?=
+ =?us-ascii?Q?fyimhnzDb3J9/wrN9xiSADvhiM48mY9A8KVE+ciSHkam8zugFz2mgrYIYWKp?=
+ =?us-ascii?Q?p990/dhHUOgcoYjsIepTi1airDRuWuTCql8xtgkYC4sA6o0cJjyXPqELvTIc?=
+ =?us-ascii?Q?goRXkA5pn2lLI5kxP8T8JHkSyevA6kaN5kMdzRbnVmM1oxG3p6r4lhTZnO/M?=
+ =?us-ascii?Q?2HyLB+B+26A8uNZNlpmMnYT+f1yLHL5dnmZnTCPGIxw5vQUfaTwfJBTlPq8K?=
+ =?us-ascii?Q?9G/8z4OlGAAx3lYjxBh8bKgILsK56s5H9yBSm83Gd2Juj4DYAQYxtdXfEZtz?=
+ =?us-ascii?Q?kKUC8VYJPwVMBk4O5q2mycBz65TsdIfP+CteKRwGGj3+G883RE5uaQdQ84A8?=
+ =?us-ascii?Q?enJ7sDv/xV+tqfaZ9vvTwJo0/ihYtW3jlm/whAWhFb0nhBhTFRhGhbf9VE3E?=
+ =?us-ascii?Q?k7Bs8EO5qJ9iCNzOJcYCncUC0wJ0FTBY3eNxyKxj4ABqeSPc4k+1jKJVk6lm?=
+ =?us-ascii?Q?CYKYK+EE80H+0RK1jr0l/QDbPRvETwRHrQhLeEpZULEiCVOI4/c0sQtyUMbA?=
+ =?us-ascii?Q?zo86lGdfAg929AeMeiUpf4Cc3yxnt1uZ+zauE9nQNVUf1oXp79ItHxbb8fjE?=
+ =?us-ascii?Q?gM5k4fMGGCIOk4+koPYNgopmI8KyCpnk5ORImNcfhShRdI/+G9rxCepzk22o?=
+ =?us-ascii?Q?8lQ1TPqXVxoq0kPFYPKTFsc3Wj66Xm0vurPkw0W5EPM64QTTwgg4d5GLpl3m?=
+ =?us-ascii?Q?2aTe0JtiqdvTSRqurZKZo2XKs5hCiJ+JTghfjLVfy10T3CddLeHKDh46+Qcu?=
+ =?us-ascii?Q?8ZXwNV9LL6uzdT2LXBobpduPvgPlX0BPLKgEJfqvIMdRIXCnjtk/tmBWyBfq?=
+ =?us-ascii?Q?UJWh3dzU7kIB0I4M5NUIUz+UIik4GRDSwAvIKJDfF7hHDNfi7Brc8SBLRDMy?=
+ =?us-ascii?Q?9nyBnTCyzG7MymHwqfj4MEHAMWRAHqZnV51h4J/5Pf3EodiJoiC6p5KADSxB?=
+ =?us-ascii?Q?a/hAimp37Pj/kgt8MSI=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DU0PR04MB9417.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4d75e83b-7ba2-43e8-be93-08dc1e1ff763
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Jan 2024 03:36:22.2539
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 0NTL8i1NVRUga8bGuDISDNkl9my37TF5eIFStnd1a+PmAMxPnLvkRuky7IaKLIXMB2raDTcAYn5LDwDj0rs5WA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBAPR04MB7287
 
-On Thu, 25 Jan 2024 22:07:15 +0300
-Serge Semin <fancer.lancer@gmail.com> wrote:
+> Subject: [PATCH v4 0/4] gpio: vf610: allow disabling the vf610 driver
+>=20
+> The vf610 gpio driver is enabled by default for all i.MX machines, withou=
+t any
+> option to disable it in a board-specific config file.
+>=20
+> Change gpio's Kconfig to allow disabling this driver. Disable it by defau=
+lt
+> unless we have a vf610 soc. Enable it in the defconfigs for the i.MX chip=
+s that
+> need it.
+>=20
+> While at it, enable COMPILE_TEST for the vf610 gpio driver.
+>=20
+> Martin Kaiser (4):
+>   gpio: vf610: allow disabling the vf610 driver
+>   gpio: vf610: enable COMPILE_TEST
+>   ARM: imx_v6_v7_defconfig: enable the vf610 gpio driver
+>   arm64: defconfig: enable the vf610 gpio driver
 
-> On Thu, Jan 25, 2024 at 10:56:20AM +0800, Furong Xu wrote:
-> > On Wed, 24 Jan 2024 17:36:10 +0300
-> > Serge Semin <fancer.lancer@gmail.com> wrote:
-> >   
-> > > On Tue, Jan 23, 2024 at 05:50:06PM +0800, Furong Xu wrote:  
-> > > > Commit 56e58d6c8a56 ("net: stmmac: Implement Safety Features in
-> > > > XGMAC core") checks and reports safety errors, but leaves the
-> > > > Data Path Parity Errors for each channel in DMA unhandled at all, lead to
-> > > > a storm of interrupt.
-> > > > Fix it by checking and clearing the DMA_DPP_Interrupt_Status register.
-> > > > 
-> > > > Fixes: 56e58d6c8a56 ("net: stmmac: Implement Safety Features in XGMAC core")
-> > > > Signed-off-by: Furong Xu <0x1207@gmail.com>
-> > > > ---
-> > > >  drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h      | 1 +
-> > > >  drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c | 6 ++++++
-> > > >  2 files changed, 7 insertions(+)
-> > > > 
-> > > > diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
-> > > > index 207ff1799f2c..188e11683136 100644
-> > > > --- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
-> > > > +++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
-> > > > @@ -385,6 +385,7 @@
-> > > >  #define XGMAC_DCEIE			BIT(1)
-> > > >  #define XGMAC_TCEIE			BIT(0)
-> > > >  #define XGMAC_DMA_ECC_INT_STATUS	0x0000306c
-> > > > +#define XGMAC_DMA_DPP_INT_STATUS	0x00003074
-> > > >  #define XGMAC_DMA_CH_CONTROL(x)		(0x00003100 + (0x80 * (x)))
-> > > >  #define XGMAC_SPH			BIT(24)
-> > > >  #define XGMAC_PBLx8			BIT(16)
-> > > > diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
-> > > > index eb48211d9b0e..874e85b499e2 100644
-> > > > --- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
-> > > > +++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
-> > > > @@ -745,6 +745,12 @@ static void dwxgmac3_handle_mac_err(struct net_device *ndev,
-> > > >  
-> > > >  	dwxgmac3_log_error(ndev, value, correctable, "MAC",
-> > > >  			   dwxgmac3_mac_errors, STAT_OFF(mac_errors), stats);
-> > > > +
-> > > > +	value = readl(ioaddr + XGMAC_DMA_DPP_INT_STATUS);
-> > > > +	writel(value, ioaddr + XGMAC_DMA_DPP_INT_STATUS);
-> > > > +
-> > > > +	if (value)
-> > > > +		netdev_err(ndev, "Found DMA_DPP error, status: 0x%x\n", value);    
-> > > 
-> > > 1. Why not to implement this in the same way as the rest of the safety
-> > > errors handle code? (with the flags described by the
-> > > dwxgmac3_error_desc-based table and the respective counters being
-> > > incremented should the errors were detected)
-> > >   
-> 
-> > XGMAC_DMA_DPP_INT_STATUS is just a bitmap of DMA RX and TX channels,
-> > bottom 16 bits for 16 DMA TX channels and top 16 bits for 16 DMA RX channels.
-> > No other descriptions.
-> > 
-> > And the counters should be updated, I will send a new patch.  
-> 
-> Ok. I'll wait for this patch v2 then with the counters fixed. Please
-> also note that you are adding the _DMA_ DPP events handling support.
-> Thus the more suitable place for this change would be
-> dwmac5_handle_dma_err().
-> 
-> >   
-> > > 2. I don't see this IRQ being enabled in the dwxgmac3_safety_feat_config()
-> > > method. How come the respective event has turned to be triggered
-> > > anyway?  
-> > This error report is enabled by default, and cannot be disabled or marked(as Synopsys Databook says).
-> > What we can do is clearing it when it asserts.  
-> 
-> This sounds so strange that I can barely believe in it. The DW QoS Eth
-> MTL DPP feature can be enabled/disabled, but the DW XGMAC DMA DPP
-> can't? This doesn't look logical. What's the point in having a never
-> maskable IRQ for not that much crucial but optional feature? Moreover
-> DPP adds some data flow overhead. If we are sure that no problem with
-> the device data paths, then it seems redundant to have it always
-> enabled. So I guess it must be switchable. Are you completely sure it
-> isn't?
-
-Sorry for my bad explanation.
-
-Double checked DMA_DPP error report path on my device.
-
-XGMAC DMA_DPP is enable by DDPP bit of MTL_DPP_Control.
-DDPP bit is default to 0(Data path Parity Protection is enabled).
-When DDPP bit is set to 1(Data path Parity Protection is disabled), no DMA_DPP interrupt is reported.
-
-Once DMA_DPP interrupt is reported, there is no control bit to disable it or mask it.
-DMA_DPP error is unrecoverable type, and unrecoverable error interrupt cannot be disabled or masked,
-this is a design(as Synopsys Databook says).
-
-A explicit ops on MTL_DPP_Control to clear DDPP bit can add to dwxgmac3_safety_feat_config
-to make code looks better.
-
-> 
-> -Serge(y)
-> 
-> > > 
-> > > -Serge(y) 
-> > >   
-> > > >  }
-> > > >  
-> > > >  static const struct dwxgmac3_error_desc dwxgmac3_mtl_errors[32]= {
-> > > > -- 
-> > > > 2.34.1
-> > > > 
-> > > >     
-> >   
+Reviewed-by: Peng Fan <peng.fan@nxp.com>
+>=20
+>  arch/arm/configs/imx_v6_v7_defconfig | 1 +
+>  arch/arm64/configs/defconfig         | 1 +
+>  drivers/gpio/Kconfig                 | 5 +++--
+>  3 files changed, 5 insertions(+), 2 deletions(-)
+>=20
+> --
+> 2.39.2
 
