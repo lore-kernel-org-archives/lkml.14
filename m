@@ -1,80 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.subdimension.ro (skycaves.subdimension.ro [172.104.132.142])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 717AA1C2A0
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 09:25:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C310C1CA8D;
+	Fri, 26 Jan 2024 09:25:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=172.104.132.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706261146; cv=none; b=hVjYsGH5vjMYdWJ5xmZa4dtxAuUslkN+v4/pCgSglnTMNIjrA6TbK3+/5RjZ3xiCP8X02oTgKFCDR7FDXwSBGXnHjlL4Mkuh60f3JHAESo0apYE5oOfsEAq2a31IDB1oYGyN78Nf64vObA7c5TmuXYDaKJmJowCzjDs1NWtK9ao=
+	t=1706261149; cv=none; b=AFWKf0Ptt1HJT5lj2Uv1/gCmKwt8zbOKJZqe70xQ9zH0YxK/t4Ua2R1T7X0S0DoqufsRuPlPQCjgAQYgSBPMV9CQNY9ZE6F0qVQ/YG86zz7R/iLYtDnOdwaefEJlxCoaAt0Zn29wFaiGaf+nUZsMRYHVh6XIRe9OxgNFXh56kW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706261146; c=relaxed/simple;
-	bh=yvjK49YeH3fT+kfbLz0NUAJLqFpzOT4UcCQn3OypYTY=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=Y3nn3cJen21Rr38/xqjbTl9Q8aiLzpU9sPpDgA2Vh3IBoN0Demu1PLxgiB5a7nL46mZBmqFveAWuh6YD/fSRllnadI+ckEoVLHkvjBedw1kpX4OnHyUCEbz/fNdR/no6VD9jeMJp8HttbK6L7v1nzKUnZDNfZRqf1UkksOqbX/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=BW7p7oIl; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706261149; c=relaxed/simple;
+	bh=n1UBKAu2ZgXN3cWai6jMRx5pc8gubthvcwbKikKKg3o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mmKjgfmg4CDINBkpMc8mrTRLx0lYuoJ3EBxIO+390DYunqfeSZbmAGeqtodbmqHAaOG1esdEsvUy7T4/1iP7+oWoZ58z/adcfuBdrq1Sy/H9+yhzjMdyAWR7IfbAW2zJLfzwyXjix96pfubMQ/JOvYVO835x3jBTpQjyBE88ScE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=subdimension.ro; spf=pass smtp.mailfrom=subdimension.ro; dkim=pass (1024-bit key) header.d=subdimension.ro header.i=@subdimension.ro header.b=YttUgaxp; arc=none smtp.client-ip=172.104.132.142
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=subdimension.ro
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=subdimension.ro
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="BW7p7oIl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A972C433C7;
-	Fri, 26 Jan 2024 09:25:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1706261145;
-	bh=yvjK49YeH3fT+kfbLz0NUAJLqFpzOT4UcCQn3OypYTY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=BW7p7oIloxclVlzTOx02Tv3FlLG1rxtCEqNHs7+Wh9/qOFES7N0VySaCmlvUEuU41
-	 MSh+XMDZ/Xzn0vrQCyZsSqiseKOJRF3Anbak14KAutEmVByDBc/cmwGZkQkJPrAYbS
-	 jADOTnxPtNlotmJD8nqKVDQs/iD5F4YV9fZs0qfs=
-Date: Fri, 26 Jan 2024 01:25:40 -0800
-From: Andrew Morton <akpm@linux-foundation.org>
-To: syzbot <syzbot+a1deb5533794ff31868e@syzkaller.appspotmail.com>
-Cc: leitao@debian.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- muchun.song@linux.dev, syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [mm?] possible deadlock in __unmap_hugepage_range
-Message-Id: <20240126012540.045d8521de02fab64f3cbf78@linux-foundation.org>
-In-Reply-To: <00000000000063895c060fd59596@google.com>
-References: <00000000000063895c060fd59596@google.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=subdimension.ro header.i=@subdimension.ro header.b="YttUgaxp"
+Received: from sunspire (unknown [188.24.94.216])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.subdimension.ro (Postfix) with ESMTPSA id 13D5928B531;
+	Fri, 26 Jan 2024 09:18:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=subdimension.ro;
+	s=skycaves; t=1706260710;
+	bh=n1UBKAu2ZgXN3cWai6jMRx5pc8gubthvcwbKikKKg3o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=YttUgaxpksQHLTeHn0Hb0BPTrat5FxykCUHJwI+qKvaTADWKd+3lNkZdI9UvnCQwG
+	 hZ4aJ3ii1dpTVaU+sx7IljtS/h6lexJaEmOAr4rZ0P6F1Q4rH4byiQgKN+EEz+8d8p
+	 uSr3392UmlC/IyQdWe6rZescC3cS1AOp+Eu3w5AE=
+Date: Fri, 26 Jan 2024 11:18:28 +0200
+From: Petre Rodan <petre.rodan@subdimension.ro>
+To: Dumitru Ceclan <mitrutzceclan@gmail.com>
+Cc: Lars-Peter Clausen <lars@metafoo.de>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Ceclan Dumitru <dumitru.ceclan@analog.com>
+Subject: Re: [PATCH v4 5/5] iio: amplifiers: hmc425a: add support for LTC6373
+ Instrumentation Amplifier
+Message-ID: <ZbN45P3yAZxtb8jA@sunspire>
+References: <20240117125124.8326-1-mitrutzceclan@gmail.com>
+ <20240117125124.8326-6-mitrutzceclan@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="W4yEtjcCTOC3q2WB"
+Content-Disposition: inline
+In-Reply-To: <20240117125124.8326-6-mitrutzceclan@gmail.com>
 
-On Fri, 26 Jan 2024 01:04:29 -0800 syzbot <syzbot+a1deb5533794ff31868e@syzkaller.appspotmail.com> wrote:
 
-> Hello,
-> 
-> syzbot found the following issue on:
-> 
-> HEAD commit:    8bf1262c53f5 Add linux-next specific files for 20240124
-> git tree:       linux-next
-> console+strace: https://syzkaller.appspot.com/x/log.txt?x=1218a7abe80000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=ff4b59a824278780
-> dashboard link: https://syzkaller.appspot.com/bug?extid=a1deb5533794ff31868e
-> compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=151a9cf7e80000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=164b70cfe80000
-> 
-> Downloadable assets:
-> disk image: https://storage.googleapis.com/syzbot-assets/7696d711072d/disk-8bf1262c.raw.xz
-> vmlinux: https://storage.googleapis.com/syzbot-assets/92cd47c28072/vmlinux-8bf1262c.xz
-> kernel image: https://storage.googleapis.com/syzbot-assets/add5c7493418/bzImage-8bf1262c.xz
-> 
-> The issue was bisected to:
-> 
-> commit 947b031634e7af3d265275c26ec17e2f96fdb5a1
-> Author: Breno Leitao <leitao@debian.org>
-> Date:   Wed Jan 17 17:10:57 2024 +0000
-> 
->     mm/hugetlb: restore the reservation if needed
+--W4yEtjcCTOC3q2WB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks.  But moments after I moved this into mm.git's
-mm-hotfixes-stable branch, in preparation for upstreaming.
 
-I have fully dropped the patches titled
+hello Dumitru,
 
-	mm/hugetlb: restore the reservation if needed
-	selftests/mm: run_vmtests.sh: add hugetlb_madv_vs_map
+I know this is not part of your current patch, but you might also want to h=
+ave
+a look at ltc6373_write_powerdown():
 
+hmc425a.c:239:2: warning: Value stored to 'ret' is never read [deadcode.Dea=
+dStores]
+  239 |         ret =3D hmc425a_write(indio_dev, code);
+
+cheers,
+peter
+
+--=20
+petre rodan
+
+--W4yEtjcCTOC3q2WB
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE2Ap/wXYVGTXsPl+pzyaZmYROfzAFAmWzeN8ACgkQzyaZmYRO
+fzBf7RAAjWm86CjoHWJlT6gbM37H+Lb91tIr2zGAt8neIdjIv1TZNHv05LTbRLy5
+LQ+RdDK6GGRI17aflYYpdeauAyKr+aHnf7o5E73e0p/R9cVN5MmvWgc0oUjcIFHf
+r8IFvWpSrt9XWgUMBzoxqYkFmzKgVytqJtIUTXbpTGhFld1lZNFyEi+vRV/zSrxk
+qmRZ7Ry7xZ+BTAJuKatIFsqmCPjnV7b/5myc4U4ekKm9/6x/jL6ZtTjywBFCeb5K
+UKmQAeHQWWLdxeeUq1xGovEPLs2kgxUt5fEJcNyNiuELcfWkefXxy4xmzsieyPiB
+galm9pXqxojORHaFB5zdH1fIoyid7p/YqtxsNrvNHT6avlhPjjCD8lepI/cCD5tT
+4W/5GGwd0L0MJozkw5fR+yem4BqVFCsMlTMbB+oDU86KjpsFgWGYJ+4gUi/mAzaQ
+xBtlrMmed6X21Np8AfpXd5528PXpU5Uk2QU9+acqKjp5RM4TB4Qx2cDVkD9/wfTn
+ttCfD0cM/Q/PKViOEQlo9Iko4yVHYW9vjHupbmLAS5qgh7Pdgp5mwjqejC1qkXYc
+6QsQJ67JG7VEFcbxjR8XpjAABKcgfFPGLKZwNMDq5/1NcAi8Kkg7o3FVAlB0iHN4
+aJ7Cap9euRjp4ZXV+BYOa6vHwKegf4etzbB5BIaq9ubF4yIZ2Z8=
+=N8Nm
+-----END PGP SIGNATURE-----
+
+--W4yEtjcCTOC3q2WB--
