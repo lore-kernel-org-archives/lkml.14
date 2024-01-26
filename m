@@ -1,45 +1,45 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43D8459B49;
-	Fri, 26 Jan 2024 23:55:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 768CF605AF;
+	Fri, 26 Jan 2024 23:56:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706313359; cv=none; b=UaJVxLEkOIeMRF9HJcIxFplTXr/yo8WDhlpboXu8cbqACjfxnUogLG1uX09QBTruU0ClCwMRMdTxuCjZfmC3aE0pk+iSjkH8kUxIEzXrUkB5wQlTJaroKC3fwUwzSNRPbEmhUHTcfL+le1sFZ66LIZ26gZL6grqjAQExv5Cs8n0=
+	t=1706313362; cv=none; b=kUx95lJm6MCJDK1UYIq+QOfyYVtM/bSrF+Yx+nVJhYGqtHL25D9hc4Oc1rNtpvItpt3gQ41TbBSQjlFp2IO6LfBCxkDLdGKNpHC8HXg1TT6+FlVKCuL6RkspCKRs0TU4VrfIbGI8mrMJuXp1ytRsejg5a2t34MInEM7n8fqGgag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706313359; c=relaxed/simple;
-	bh=iLwqQEUv3xXzbAHMlo/ipltG/KfziM9wZR+CyyLS+xc=;
+	s=arc-20240116; t=1706313362; c=relaxed/simple;
+	bh=oATBYg4WZvtVhxazY83MItcqBPQxfC9ckmoF5bcehvo=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jp53MxDNeVeT8nfdmZssLkYQdoDQgWg5OcPdwYfowEEjg/nF3CEBo+SdDhrfVpQPBxkrds2DUXzge0n/vBC5a14PBEh6DWbuLMliO6w6Az282CLixtLNZkPHmkJZWOKbMkDOJTT06Jk6aabbRZZhtQ4paBGPCsk+KNOPMTG1z8Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=fI0BWdys; arc=none smtp.client-ip=205.220.180.131
+	 MIME-Version:Content-Type; b=GUOEO5VKmeKEVShpPGISTS6kVCODDbWiBqny8g8kdbM66pDu8UAOHPyxsj5PP3/JXdOSJHCn2OYc1JOeFCned0mbbc7rkaptqs3eFUPJPNVX/Wq+iQZxqNH188VOXS0qL9XjUxNBC2OqwpFIiPVDJn1JDhQ3QlwfssweOX6/uUE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=fMr+6M2D; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="fI0BWdys"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40QNBIhb031418;
-	Fri, 26 Jan 2024 23:55:08 GMT
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="fMr+6M2D"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40QNABQ2002718;
+	Fri, 26 Jan 2024 23:55:20 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-type; s=qcppdkim1; bh=WsEewaVlfB7RsqptAU4G
-	Hy3EHjeZxoaQFefGwrjCEyg=; b=fI0BWdyskI/UkLqe4ZTWGCMA5Y7lyscVOk6T
-	NAmbmPrYbYkeZAuybzur8RSZNjsBTsyOWVOWOyB4DmFlqwfNJSD3MOt7u0i4vSnd
-	0r+7fvQQGZ5XQls/g4NzWUZYklBLfQsIlUKfXdKWNA5FExRYJtJM0B5JZdkYLyYt
-	fBNMonVdrANwBRe4kxP/5v4tOJRw/F/TliPOuRU7iFgYC7o0POv/ApGxRL+SJlZ5
-	/bgEu38uwH5y8NFukvjRuxkOwuChvq/Gm7j7f6lmnw/AxtmAvzojHLvVdNBBFwWV
-	VB1GqcERrUREeMTjKyZK5qpCCWvmCzonL4/c0t9Tt9cE7XG/4w==
+	:mime-version:content-type; s=qcppdkim1; bh=9NIeVab+4KQFwJjvpVja
+	hQhcsSm6ssiCjFbQstrLKNA=; b=fMr+6M2D9JB9W03G4AclBkYHg1/U5DQfspNX
+	5yuTVgvmYEwIj8iK8EfN4MMYa67iFl+IYDwYcEJc1VEtdM93+iXz/OS4kruq0V6R
+	l/678czq8sW12SjfGN+CYEQtse7BAKFrQILPO5ZTn+BzkYFtUjmBXVC+sLAcrHrY
+	g09yy/jWWYTDBEw+ycJjfb0+8lHGKnvi3UCLsmMO5x9JuC9RgYAxSCL1IX7zHoja
+	gpyjuA9L9ngrf6eximgRRNu9o0y0OB/0rACAHmr6AuCaf4ycIT7qWIMBazEqm6Az
+	UCp/q6cFxXD0rf7/NdiBo0f4h3alKFvPmy+o3dO3GXQVMWaT6w==
 Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vv4nrad0s-1
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vvgp2gru5-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 26 Jan 2024 23:55:08 +0000 (GMT)
+	Fri, 26 Jan 2024 23:55:20 +0000 (GMT)
 Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 40QNt7M4010138
+	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 40QNtJP6010237
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 26 Jan 2024 23:55:07 GMT
+	Fri, 26 Jan 2024 23:55:19 GMT
 Received: from hu-obabatun-lv.qualcomm.com (10.49.16.6) by
  nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Fri, 26 Jan 2024 15:55:01 -0800
+ 15.2.1118.40; Fri, 26 Jan 2024 15:55:07 -0800
 From: Oreoluwa Babatunde <quic_obabatun@quicinc.com>
 To: <catalin.marinas@arm.com>, <will@kernel.org>, <robh+dt@kernel.org>,
         <frowand.list@gmail.com>, <vgupta@kernel.org>, <arnd@arndb.de>,
@@ -55,9 +55,9 @@ To: <catalin.marinas@arm.com>, <will@kernel.org>, <robh+dt@kernel.org>,
 CC: <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
         <kernel@quicinc.com>, Oreoluwa Babatunde <quic_obabatun@quicinc.com>
-Subject: [PATCH 12/46] powerpc: reserved_mem: Implement the new processing order for reserved memory
-Date: Fri, 26 Jan 2024 15:53:51 -0800
-Message-ID: <20240126235425.12233-13-quic_obabatun@quicinc.com>
+Subject: [PATCH 22/46] csky: resrved_mem: Move fdt_init_reserved_mem() below unflatten_device_tree()
+Date: Fri, 26 Jan 2024 15:54:01 -0800
+Message-ID: <20240126235425.12233-23-quic_obabatun@quicinc.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20240126235425.12233-1-quic_obabatun@quicinc.com>
 References: <20240126235425.12233-1-quic_obabatun@quicinc.com>
@@ -72,64 +72,49 @@ X-ClientProxiedBy: nalasex01b.na.qualcomm.com (10.47.209.197) To
  nalasex01b.na.qualcomm.com (10.47.209.197)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: aGKhftysxgp9oJ-6bSGDhkjVR5rqVpH_
-X-Proofpoint-GUID: aGKhftysxgp9oJ-6bSGDhkjVR5rqVpH_
+X-Proofpoint-GUID: LxtbCnVNAdzpVkcCk8ApI7GAjVIE2oTM
+X-Proofpoint-ORIG-GUID: LxtbCnVNAdzpVkcCk8ApI7GAjVIE2oTM
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2024-01-25_14,2024-01-25_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 adultscore=0
- mlxlogscore=713 spamscore=0 mlxscore=0 bulkscore=0 clxscore=1015
- priorityscore=1501 malwarescore=0 phishscore=0 impostorscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxscore=0
+ malwarescore=0 mlxlogscore=863 phishscore=0 adultscore=0 spamscore=0
+ lowpriorityscore=0 priorityscore=1501 clxscore=1015 impostorscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.19.0-2401190000 definitions=main-2401260176
 
-Call early_fdt_scan_reserved_mem() in place of
-early_init_fdt_scan_reserved_mem() to carry out the first stage of the
-reserved memory processing only.
+The unflattened devicetree structure is available to be used not long
+after the page tables have been set up on most architectures, and is
+available even before that on other architectures.
 
-The early_fdt_scan_reserved_mem() function is used to scan through the
-DT and mark all the reserved memory regions as reserved or nomap as
-needed, as well as allocate the memory required by the
-dynamically-placed
-reserved memory regions.
+Hence, move the call to fdt_init_reserved_mem() to after
+unflatten_device_tree() is called so that the reserved memory nodes can
+be accessed using the unflattened device tree APIs.
 
-The second stage of the reserved memory processing is done by
-fdt_init_reserved_mem(). This function is used to store the information
-of the statically-placed reserved memory nodes in the reserved_mem
-array as well as call the region specific initialization function on all
-the stored reserved memory regions.
-
-The call to fdt_init_reserved_mem() is placed right after
-early_fdt_scan_reserved_mem() because memblock allocated memory should
-be already writable at this point.
+Using the unflattened devicetree APIs is more efficient than using the
+flattened devicetree APIs.
 
 Signed-off-by: Oreoluwa Babatunde <quic_obabatun@quicinc.com>
 ---
- arch/powerpc/kernel/prom.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/csky/kernel/setup.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/arch/powerpc/kernel/prom.c b/arch/powerpc/kernel/prom.c
-index 0b5878c3125b..5f6307ea3069 100644
---- a/arch/powerpc/kernel/prom.c
-+++ b/arch/powerpc/kernel/prom.c
-@@ -27,6 +27,7 @@
- #include <linux/memblock.h>
- #include <linux/of.h>
- #include <linux/of_fdt.h>
-+#include <linux/of_reserved_mem.h>
- #include <linux/libfdt.h>
- #include <linux/cpu.h>
- #include <linux/pgtable.h>
-@@ -619,7 +620,8 @@ static void __init early_reserve_mem_dt(void)
- 	const __be32 *prop;
+diff --git a/arch/csky/kernel/setup.c b/arch/csky/kernel/setup.c
+index 4e2b739ac968..d8c65819877b 100644
+--- a/arch/csky/kernel/setup.c
++++ b/arch/csky/kernel/setup.c
+@@ -73,10 +73,9 @@ void __init setup_arch(char **cmdline_p)
  
- 	early_init_fdt_reserve_self();
--	early_init_fdt_scan_reserved_mem();
-+	early_fdt_scan_reserved_mem();
+ 	csky_memblock_init();
+ 
+-	fdt_init_reserved_mem();
+-
+ 	unflatten_and_copy_device_tree();
+ 
 +	fdt_init_reserved_mem();
- 
- 	dt_root = of_get_flat_dt_root();
- 
+ #ifdef CONFIG_SMP
+ 	setup_smp();
+ #endif
 -- 
 2.17.1
 
