@@ -1,151 +1,166 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-185.mta1.migadu.com (out-185.mta1.migadu.com [95.215.58.185])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C9BD1D526;
-	Fri, 26 Jan 2024 15:24:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFA061CF8C
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 15:24:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.185
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706282661; cv=none; b=fuQCAqedJZAoJ8rdaDIKjiKrs651ilD/MZPUyMv9G2cM9w8MC6Ama7Pjg4yM6+AtpATwMDavCxJEMRANAQOstcpTvQGIXsQfyaarUdlD6u7WScJ9c5YIiPF47c8uYjSn/GUPBhFjA7lqY3MO26v1ObmCfAR6VSiAKIVS+l1hJnk=
+	t=1706282698; cv=none; b=QDH8DtIi9siY4bmvzTv+JL7SFeVP9r3G/R8kUrMOStd5fFKu23SKFJc02yWsRaRxk3Q24OJ3gkoK56fRjI8z/xSEYM0Tk43ThTcSUsVxiyt1RZA1E7bm1KjIUivYHmUqiTx5+Kq5TluzDlL9dXDZJqhiP9kGcn5tzubdiUbUVBY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706282661; c=relaxed/simple;
-	bh=bgOxmLLVYSKMNC9czTxSMRA8wJQdkCUFghdAMXJg18U=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=EUGIyUQjSRMsYoHF6AsY2vYNsyUopPoZrenq00OJtT1ZXcZJcf9/VyfFLwm4INvc04pG6JGo+rmZ+A/Yn74WrRgGeIFVZdc3VC1+oB3y/basYIAKCgEzK/oj5hxQ4JyF0CSKx6FZql0zPp2/yn63+9yzIKDAZ6PhQPNc5VulqGg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uOrmoKKP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1706282698; c=relaxed/simple;
+	bh=lCrZACFRheTRgybLbHLBHBT1Wcn498DFz01Cjya20fk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=LGle3RaiVgVm9yydxBQJDCv+o0wHakq0WNIZuOCubnvyRMrHYkdr0gEtAvPsjcc3YReQCFF7hjPqpnBp3srXWX7w5ttDHNM6GLwdbHOygQBo4H9k3To16oJVxt94ipuNuuQBFu4QbajcWVYabgIk7U0VfiTqmA/miZnUSolPjRg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=I5quX/oG; arc=none smtp.client-ip=95.215.58.185
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uOrmoKKP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9A36C433C7;
-	Fri, 26 Jan 2024 15:24:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706282660;
-	bh=bgOxmLLVYSKMNC9czTxSMRA8wJQdkCUFghdAMXJg18U=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=uOrmoKKPHgHwqifQmN5xAl63YrrtrfhDpY3l3HmG5+V2gz9iqF2sng9TY4+w07UF0
-	 aPrZxn4W67F5MLikBia+9nmbJQ55880qxg7hnp07lYN5Sg8NMCFd6azVnBYpBeYDU3
-	 wAwc90yVhWeDZ5s2Y+/712MFSLf6qSfFsOkaEB+/50ztHgl6q+ci7OQ93BMa/O0WSH
-	 /9JFWLRLNyokDN80MjA2nPC5lIMyNAPR/EVriEgDaGqq2mhp5TajJzePAN2qyVEGus
-	 5j12xQLpgqcxB8wxV/Y6J6Sh4Sd9JAu3VPO1Kca1/1vltz3vP27bbdkN5yW0XxPSvX
-	 a+NkEuLuQoXFQ==
-Date: Sat, 27 Jan 2024 00:24:14 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Steven Rostedt
- <rostedt@goodmis.org>, Florent Revest <revest@chromium.org>,
- linux-trace-kernel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
- Martin KaFai Lau <martin.lau@linux.dev>, bpf <bpf@vger.kernel.org>, Sven
- Schnelle <svens@linux.ibm.com>, Alexei Starovoitov <ast@kernel.org>,
- Arnaldo Carvalho de Melo <acme@kernel.org>, Daniel Borkmann
- <daniel@iogearbox.net>, Alan Maguire <alan.maguire@oracle.com>, Mark
- Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>,
- Thomas Gleixner <tglx@linutronix.de>, Guo Ren <guoren@kernel.org>
-Subject: Re: [PATCH v6 32/36] fprobe: Rewrite fprobe on function-graph
- tracer
-Message-Id: <20240127002414.660f2e477d210bc54ca4df89@kernel.org>
-In-Reply-To: <ZbJ6NxkjWEP5adru@krava>
-References: <170505424954.459169.10630626365737237288.stgit@devnote2>
-	<170505462606.459169.1375700979988728260.stgit@devnote2>
-	<ZbJ6NxkjWEP5adru@krava>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="I5quX/oG"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1706282692;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Lgnke4sUkqUF2pP50eUrQqO/+toTU6ZkY2mCk3wiX/M=;
+	b=I5quX/oGzhc+pgrMgx4pRy9+4HXJOwjBwGTQdCMAkq42FB1gw5jMK2DSusevSGdsUNcrqw
+	ZzLYiZiG34Xz60A5MQin1gbU/V616IT6k+rln3GYBxdT1h67K9dXBOQHtoK9x/ZlF2oGg0
+	vu07KdhJEhwl7dVWBsQPSWuhyjXbW8s=
+From: Gang Li <gang.li@linux.dev>
+To: David Hildenbrand <david@redhat.com>,
+	David Rientjes <rientjes@google.com>,
+	Mike Kravetz <mike.kravetz@oracle.com>,
+	Muchun Song <muchun.song@linux.dev>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Tim Chen <tim.c.chen@linux.intel.com>
+Cc: linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	ligang.bdlg@bytedance.com,
+	Gang Li <gang.li@linux.dev>
+Subject: [PATCH v5 0/7] hugetlb: parallelize hugetlb page init on boot
+Date: Fri, 26 Jan 2024 23:24:04 +0800
+Message-Id: <20240126152411.1238072-1-gang.li@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Thu, 25 Jan 2024 16:11:51 +0100
-Jiri Olsa <olsajiri@gmail.com> wrote:
+Hi all, hugetlb init parallelization has now been updated to v5.
 
-> On Fri, Jan 12, 2024 at 07:17:06PM +0900, Masami Hiramatsu (Google) wrote:
-> 
-> SNIP
-> 
-> >   * Register @fp to ftrace for enabling the probe on the address given by @addrs.
-> > @@ -298,23 +547,27 @@ EXPORT_SYMBOL_GPL(register_fprobe);
-> >   */
-> >  int register_fprobe_ips(struct fprobe *fp, unsigned long *addrs, int num)
-> >  {
-> > -	int ret;
-> > -
-> > -	if (!fp || !addrs || num <= 0)
-> > -		return -EINVAL;
-> > -
-> > -	fprobe_init(fp);
-> > +	struct fprobe_hlist *hlist_array;
-> > +	int ret, i;
-> >  
-> > -	ret = ftrace_set_filter_ips(&fp->ops, addrs, num, 0, 0);
-> > +	ret = fprobe_init(fp, addrs, num);
-> >  	if (ret)
-> >  		return ret;
-> >  
-> > -	ret = fprobe_init_rethook(fp, num);
-> > -	if (!ret)
-> > -		ret = register_ftrace_function(&fp->ops);
-> > +	mutex_lock(&fprobe_mutex);
-> > +
-> > +	hlist_array = fp->hlist_array;
-> > +	ret = fprobe_graph_add_ips(addrs, num);
-> 
-> so fprobe_graph_add_ips registers the ftrace_ops and actually starts
-> the tracing.. and in the code below we prepare fprobe data that is
-> checked in the ftrace_ops callback.. should we do this this earlier
-> before calling fprobe_graph_add_ips/register_ftrace_graph?
+This version is tested on next-20240125.
 
-Good catch! but I think this is safe because fprobe_entry() checks
-the fprobe_ip_table[] (insert_fprobe_node updates it) at first.
-Thus until the hash table is updated, fprobe_entry() handler will
-return soon.
+Update Summary:
+- Use prep_and_add_allocated_folios in 2M hugetlb parallelization
+- Update huge_boot_pages in arch/powerpc/mm/hugetlbpage.c
+- Revise struct padata_mt_job comment
+- Add 'max_threads' section in cover letter
+- Collect more Reviewed-by
 
-----
-static int fprobe_entry(unsigned long func, unsigned long ret_ip,
-                        struct ftrace_regs *fregs, struct fgraph_ops *gops)
-{
-        struct fprobe_hlist_node *node, *first;
-        unsigned long *fgraph_data = NULL;
-        unsigned long header;
-        int reserved_words;
-        struct fprobe *fp;
-        int used, ret;
+# Introduction
+Hugetlb initialization during boot takes up a considerable amount of time.
+For instance, on a 2TB system, initializing 1,800 1GB huge pages takes 1-2
+seconds out of 10 seconds. Initializing 11,776 1GB pages on a 12TB Intel
+host takes more than 1 minute[1]. This is a noteworthy figure.
 
-        if (WARN_ON_ONCE(!fregs))
-                return 0;
+Inspired by [2] and [3], hugetlb initialization can also be accelerated
+through parallelization. Kernel already has infrastructure like
+padata_do_multithreaded, this patch uses it to achieve effective results
+by minimal modifications.
 
-        first = node = find_first_fprobe_node(func);
-        if (unlikely(!first))
-                return 0;
-----
+[1] https://lore.kernel.org/all/783f8bac-55b8-5b95-eb6a-11a583675000@google.com/
+[2] https://lore.kernel.org/all/20200527173608.2885243-1-daniel.m.jordan@oracle.com/
+[3] https://lore.kernel.org/all/20230906112605.2286994-1-usama.arif@bytedance.com/
+[4] https://lore.kernel.org/all/76becfc1-e609-e3e8-2966-4053143170b6@google.com/
 
-The fprobe_table (add_fprobe_hash updates it) is used for return handler,
-that will be used by fprobe_return().
+# max_threads
+This patch use `padata_do_multithreaded` like this:
 
-So I think it should be safe too. Or I might missed something?
+```
+job.max_threads	= num_node_state(N_MEMORY) * multiplier;
+padata_do_multithreaded(&job);
+```
 
-Thank you,
+To fully utilize the CPU, the number of parallel threads needs to be
+carefully considered. `max_threads = num_node_state(N_MEMORY)` does
+not fully utilize the CPU, so we need to multiply it by a multiplier.
 
+Tests below indicate that a multiplier of 2 significantly improves
+performance, and although larger values also provide improvements,
+the gains are marginal.
 
-> 
-> jirka
-> 
-> > +	if (!ret) {
-> > +		add_fprobe_hash(fp);
-> > +		for (i = 0; i < hlist_array->size; i++)
-> > +			insert_fprobe_node(&hlist_array->array[i]);
-> > +	}
-> > +	mutex_unlock(&fprobe_mutex);
-> >  
-> >  	if (ret)
-> >  		fprobe_fail_cleanup(fp);
-> > +
-> >  	return ret;
-> >  }
-> >  EXPORT_SYMBOL_GPL(register_fprobe_ips);
-> > @@ -352,14 +605,13 @@ EXPORT_SYMBOL_GPL(register_fprobe_syms);
-> 
-> SNIP
+  multiplier     1       2       3       4       5
+ ------------ ------- ------- ------- ------- -------
+  256G 2node   358ms   215ms   157ms   134ms   126ms
+  2T   4node   979ms   679ms   543ms   489ms   481ms
+  50G  2node   71ms    44ms    37ms    30ms    31ms
 
+Therefore, choosing 2 as the multiplier strikes a good balance between
+enhancing parallel processing capabilities and maintaining efficient
+resource management.
+
+# Test result
+      test case       no patch(ms)   patched(ms)   saved
+ ------------------- -------------- ------------- --------
+  256c2T(4 node) 1G           4745          2024   57.34%
+  128c1T(2 node) 1G           3358          1712   49.02%
+     12T         1G          77000         18300   76.23%
+
+  256c2T(4 node) 2M           3336          1051   68.52%
+  128c1T(2 node) 2M           1943           716   63.15%
+
+# Change log
+Changes in v5:
+- Use prep_and_add_allocated_folios in 2M hugetlb parallelization
+- Update huge_boot_pages in arch/powerpc/mm/hugetlbpage.c
+- Revise struct padata_mt_job comment
+- Add 'max_threads' section in cover letter
+- Collect more Reviewed-by
+
+Changes in v4:
+- https://lore.kernel.org/r/20240118123911.88833-1-gang.li@linux.dev
+- Make padata_do_multithreaded dispatch all jobs with a global iterator
+- Revise commit message
+- Rename some functions
+- Collect Tested-by and Reviewed-by
+
+Changes in v3:
+- https://lore.kernel.org/all/20240102131249.76622-1-gang.li@linux.dev/
+- Select CONFIG_PADATA as we use padata_do_multithreaded
+- Fix a race condition in h->next_nid_to_alloc
+- Fix local variable initialization issues
+- Remove RFC tag
+
+Changes in v2:
+- https://lore.kernel.org/all/20231208025240.4744-1-gang.li@linux.dev/
+- Reduce complexity with `padata_do_multithreaded`
+- Support 1G hugetlb
+
+v1:
+- https://lore.kernel.org/all/20231123133036.68540-1-gang.li@linux.dev/
+- parallelize 2M hugetlb initialization with workqueue
+
+Gang Li (7):
+  hugetlb: code clean for hugetlb_hstate_alloc_pages
+  hugetlb: split hugetlb_hstate_alloc_pages
+  padata: dispatch works on different nodes
+  hugetlb: pass *next_nid_to_alloc directly to
+    for_each_node_mask_to_alloc
+  hugetlb: have CONFIG_HUGETLBFS select CONFIG_PADATA
+  hugetlb: parallelize 2M hugetlb allocation and initialization
+  hugetlb: parallelize 1G hugetlb initialization
+
+ arch/powerpc/mm/hugetlbpage.c |   2 +-
+ fs/Kconfig                    |   1 +
+ include/linux/hugetlb.h       |   2 +-
+ include/linux/padata.h        |   2 +
+ kernel/padata.c               |  14 +-
+ mm/hugetlb.c                  | 234 +++++++++++++++++++++++-----------
+ mm/mm_init.c                  |   1 +
+ 7 files changed, 175 insertions(+), 81 deletions(-)
 
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.20.1
+
