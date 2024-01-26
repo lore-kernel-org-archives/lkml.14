@@ -1,164 +1,193 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 550CB1B970;
-	Fri, 26 Jan 2024 15:05:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61EA41B7F2
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 15:10:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706281528; cv=none; b=Qzf92lBbhU8ctDZmIHNMjZZE/kzZ4xWMLBTLy1mrIJwTyseUzRf7IZlzsgb83oDj3YQepQrGNwpkJLt3nvZqSLxfEPLWOAePDEbDVWs+GfrleWFjStGJh6kpahiUfCQ2TCT4ESY97hhdM6oUMfjPDlDJOUU5ul1yYX5cdWjWCd0=
+	t=1706281803; cv=none; b=IzUkgM0aC5LT0dbtzIpAjrth0s3kRXRKbvkj3QpUrPWMK99AkZPHZ99TnVHrdj/svyW7Zw/IphAmvhUd7AADn6n0m9bILfYD4wyGdmtbNZxYWrPof7PmcCq5TCKMhZ7dcNdCDWOoJWJzCyihzV/D9jdZc+fcB46yNRBfEru4u9E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706281528; c=relaxed/simple;
-	bh=U+99tjIt56hBCPSlbSxS/+VqtJhV/6wL04M231JSrzI=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gOKTg0xi6xqlaxaaw51wNawJHsWlN5Cp6/GuS8K8Aina7Ibd9jEgkJdu2//UFbBQT10ffXgAX78BA6DEG+5QWjWUq2h+RV+8sBDLyHFK+WR3W0OUkiSWNsqy30MB0b9MmAcEynvkNaIJQ9U2xIWI97aBpyawHk7ZH9+nu7HthU0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=FaE03Ch/; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1706281803; c=relaxed/simple;
+	bh=eVJOccb+zS20vYhXESd5lUpidtZyc+x1M67JNbou9XA=;
+	h=Subject:From:To:Cc:Date:Message-ID:Content-Type:MIME-Version; b=g+WDyoeC61VFnA0VneAfkTzixZ9cZzjQbBX2+uMQVBOWrHtqgtCVREg4tz80Bd/QNFbuFGpreq3FtYwzxnu30aVjKhQoqapabVBy73X06VH4WTjAmopdj7L9NcH5PC/AiUFbJr8mhfe3fhLe4eZ9an8fCO68tP5PxWxi0V7j3M8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=dSDx1zsx; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="FaE03Ch/"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40QDirPM006836;
-	Fri, 26 Jan 2024 15:05:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	date:from:to:cc:subject:message-id:references:mime-version
-	:content-type:in-reply-to; s=qcppdkim1; bh=jHB9hK1+IxDYTk3mHsGBs
-	lK9MjCNeNeTQmuomB3w7zM=; b=FaE03Ch/Jzfiv1T2d8ixQbSUtaq1l9MO5jj8n
-	yRFebQlkMJBdnxqtn6tchK1EdBTeT2ELjVlWC/Qdc6Jem7DazcTNPoKiA5GK1y+P
-	QqFTc8VJ3vZF+mHDkRnpgNWKBevBWtgw2ksSZx/yIxPIrC/vVTRut69wCoXhaM4d
-	2WU9VV5pc8NdWJXdnk4f/Lv6uyV21FVBosmjwYEQLt92vWF1NQDOVAZM1ujh7cSE
-	R9TCiCONAxMWHnPtXFga7TNVvHCpE3ZkeG7VIUGTKya2pBpwOvRuKvpZZHHJOD/X
-	j7d1WaQ+MKfqqlWqjlpAzLHJOtCbhCTGN2LahcOaZS01YapPw==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vv4cascjm-1
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="dSDx1zsx"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 40QEWUt0016460;
+	Fri, 26 Jan 2024 15:09:27 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : from : to : cc
+ : date : message-id : content-type : content-transfer-encoding :
+ mime-version; s=pp1; bh=EMfDROFbgJEi008tLRtRfT5S/vVzIQIrctpoV9Kn3Kk=;
+ b=dSDx1zsxQ7vx+0ifKCtclKF1SH3AuEsQzf0vjxAhom2XNuLpwk/SVB0C4lwCV+USmygd
+ twrkr745XknJkghyH0974ZZpMZ1A+EPU7l+DorkdVAU2z3Ahei88CYFyeBWzVnUIuuXB
+ TLHc0kQPGvoJbd9W9BVbFgLRgtubddA2Pg6QINrPUpyq1KIhTWwlNOuQo45YKl4BYORR
+ GV60paUIHtCOW2pb6cx5c6PAG3BrpWSm7dCxMjaXCF4/mK6pYBiKq1PfVg+T4HbVleQO
+ dTHobHKLofwZKH1JKk9WkuIsK9NMe78OkK3Wg8lpBnX7HDhsguKh7DFjYrg6TnnoPu/O zg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vvek90wjm-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 26 Jan 2024 15:05:14 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 40QF5DHx029835
+	Fri, 26 Jan 2024 15:09:26 +0000
+Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 40QF7XKX006293;
+	Fri, 26 Jan 2024 15:09:26 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3vvek90wja-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 26 Jan 2024 15:05:13 GMT
-Received: from hu-bjorande-lv.qualcomm.com (10.49.16.6) by
- nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Fri, 26 Jan 2024 07:05:12 -0800
-Date: Fri, 26 Jan 2024 07:05:11 -0800
-From: Bjorn Andersson <quic_bjorande@quicinc.com>
-To: Daniel Thompson <daniel.thompson@linaro.org>
-CC: Johan Hovold <johan@kernel.org>,
-        Dmitry Torokhov
-	<dmitry.torokhov@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof
- Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Johan Hovold
-	<johan+linaro@kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-input@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH 2/2] arm64: dts: qcom: sc8280xp-x13s: Fix/enable
- touchscreen
-Message-ID: <20240126150511.GO2936378@hu-bjorande-lv.qualcomm.com>
-References: <20240125-x13s-touchscreen-v1-0-ab8c882def9c@quicinc.com>
- <20240125-x13s-touchscreen-v1-2-ab8c882def9c@quicinc.com>
- <ZbNpdaSyFS9tYrkd@hovoldconsulting.com>
- <20240126130232.GA5506@aspen.lan>
+	Fri, 26 Jan 2024 15:09:26 +0000
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 40QD78IV028239;
+	Fri, 26 Jan 2024 15:09:25 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3vru732xwe-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 26 Jan 2024 15:09:25 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 40QF9MJK27460100
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 26 Jan 2024 15:09:22 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 348192004B;
+	Fri, 26 Jan 2024 15:09:22 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A624320049;
+	Fri, 26 Jan 2024 15:09:19 +0000 (GMT)
+Received: from ltcd48-lp2.aus.stglab.ibm.com (unknown [9.3.101.175])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Fri, 26 Jan 2024 15:09:19 +0000 (GMT)
+Subject: [PATCH v2] powerpc: iommu: Bring back table group release_ownership()
+ call
+From: Shivaprasad G Bhat <sbhat@linux.ibm.com>
+To: iommu@lists.linux.dev, linuxppc-dev@lists.ozlabs.org
+Cc: linux-kernel@vger.kernel.org, mpe@ellerman.id.au, npiggin@gmail.com,
+        christophe.leroy@csgroup.eu, aneesh.kumar@kernel.org,
+        naveen.n.rao@linux.ibm.com, jgg@ziepe.ca, jroedel@suse.de,
+        tpearson@raptorengineering.com, aik@amd.com, bgray@linux.ibm.com,
+        gregkh@linuxfoundation.org, sbhat@linux.ibm.com,
+        gbatra@linux.vnet.ibm.com, vaibhav@linux.ibm.com
+Date: Fri, 26 Jan 2024 09:09:18 -0600
+Message-ID: 
+ <170628173462.3742.18330000394415935845.stgit@ltcd48-lp2.aus.stglab.ibm.com>
+User-Agent: StGit/1.5
+Content-Type: text/plain; charset="utf-8"
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: YFJalwNzOQy4a9hjiadrOA2gTSIYVP95
+X-Proofpoint-ORIG-GUID: W4cEKw2h2TRDXchVH7azbDxp1mZ68xEa
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20240126130232.GA5506@aspen.lan>
-X-ClientProxiedBy: nalasex01c.na.qualcomm.com (10.47.97.35) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: zkWHTT7R8Yj7UAoh4kZBsPEbusf-OyKI
-X-Proofpoint-GUID: zkWHTT7R8Yj7UAoh4kZBsPEbusf-OyKI
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2024-01-25_14,2024-01-25_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 clxscore=1015
- bulkscore=0 impostorscore=0 priorityscore=1501 spamscore=0 suspectscore=0
- mlxlogscore=999 phishscore=0 lowpriorityscore=0 adultscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2401190000 definitions=main-2401260110
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 bulkscore=0
+ clxscore=1015 lowpriorityscore=0 malwarescore=0 phishscore=0 adultscore=0
+ priorityscore=1501 mlxlogscore=999 mlxscore=0 suspectscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2401260111
 
-On Fri, Jan 26, 2024 at 01:02:32PM +0000, Daniel Thompson wrote:
-> On Fri, Jan 26, 2024 at 09:12:37AM +0100, Johan Hovold wrote:
-> > On Thu, Jan 25, 2024 at 07:55:14PM -0800, Bjorn Andersson wrote:
-> > > The failing read-test in __i2c_hid_core_probe() determines that there's
-> > > nothing connected at the documented address of the touchscreen.
-> > >
-> > > Introduce the 5ms after-power and 200ms after-reset delays found in the
-> > > ACPI tables. Also wire up the reset-gpio, for good measure.
-> >
-> > As the supplies for the touchscreen are always on (and left on by the
-> > bootloader) it would seem that it is really the addition of the reset
-> > gpio which makes things work here. Unless the delay is needed for some
-> > other reason.
-> >
-> > (The power-on delay also looks a bit short compared to what is used for
-> > other devices.)
-> >
-> > Reset support was only recently added with commit 2be404486c05 ("HID:
-> > i2c-hid-of: Add reset GPIO support to i2c-hid-of") so we should not
-> > backport this one before first determining that.
-> 
-> This comment attracted my attention so I tried booting with each of the
-> three lines individually.
-> 
-> 
-> On Thu, Jan 25, 2024 at 07:55:14PM -0800, Bjorn Andersson wrote:
-> > +             reset-gpios = <&tlmm 99 GPIO_ACTIVE_LOW>;
-> 
-> This is not enough, on it's own, to get the touch screen running.
-> 
+The commit 2ad56efa80db ("powerpc/iommu: Setup a default domain and
+remove set_platform_dma_ops") refactored the code removing the
+set_platform_dma_ops(). It missed out the table group
+release_ownership() call which would have got called otherwise
+during the guest shutdown via vfio_group_detach_container(). On
+PPC64, this particular call actually sets up the 32-bit TCE table,
+and enables the 64-bit DMA bypass etc. Now after guest shutdown,
+the subsequent host driver (e.g megaraid-sas) probe post unbind
+from vfio-pci fails like,
 
-No, because pinctrl already brings the chip out of reset without this.
+megaraid_sas 0031:01:00.0: Warning: IOMMU dma not supported: mask 0x7fffffffffffffff, table unavailable
+megaraid_sas 0031:01:00.0: Warning: IOMMU dma not supported: mask 0xffffffff, table unavailable
+megaraid_sas 0031:01:00.0: Failed to set DMA mask
+megaraid_sas 0031:01:00.0: Failed from megasas_init_fw 6539
 
-> I guess that's not so much of a surprise since the rebind-the-driver
-> from userspace trick wouldn't have been touching this reset.
-> 
+The patch brings back the call to table_group release_ownership()
+call when switching back to PLATFORM domain from BLOCKED, while
+also separates the domain_ops for both.
 
-Right, it would just have been left deasserted from the first attempt.
+Fixes: 2ad56efa80db ("powerpc/iommu: Setup a default domain and remove set_platform_dma_ops")
+Signed-off-by: Shivaprasad G Bhat <sbhat@linux.ibm.com>
+---
+Changelog:
+v1: https://lore.kernel.org/linux-iommu/170618451433.3805.9015493852395837391.stgit@ltcd48-lp2.aus.stglab.ibm.com/
+ - Split the common attach_dev call to platform and blocked attach_dev
+   calls as suggested.
 
-That said, the addition of the reset means that we're now asserting
-reset in such rebind attempts. And as such the
-post-reset-deassert-delay-ms is now needed between the explicit deassert
-from the driver and the i2c read.
+ arch/powerpc/kernel/iommu.c |   37 ++++++++++++++++++++++++++++---------
+ 1 file changed, 28 insertions(+), 9 deletions(-)
 
-> 
-> > +             post-power-on-delay-ms = <5>;
-> 
-> This line alone is enough (in v6.7.1).
-> 
+diff --git a/arch/powerpc/kernel/iommu.c b/arch/powerpc/kernel/iommu.c
+index ebe259bdd462..d71eac3b2887 100644
+--- a/arch/powerpc/kernel/iommu.c
++++ b/arch/powerpc/kernel/iommu.c
+@@ -1287,20 +1287,20 @@ spapr_tce_platform_iommu_attach_dev(struct iommu_domain *platform_domain,
+ 	struct iommu_domain *domain = iommu_get_domain_for_dev(dev);
+ 	struct iommu_group *grp = iommu_group_get(dev);
+ 	struct iommu_table_group *table_group;
+-	int ret = -EINVAL;
 
-So the delay taken through really_probe() until we reach that i2c read
-is almost the entire delay needed, on your specific device.
+ 	/* At first attach the ownership is already set */
+ 	if (!domain)
+ 		return 0;
 
-> 
-> > +             post-reset-deassert-delay-ms = <200>;
-> 
-> This line alone is also enough!
-> 
-> In short it looks like the delays make the difference and, even a short
-> delay, can fix the problem.
-> 
-> Of course, regardless of the line-by-line results I also ran with all
-> the changes so, FWIW:
-> Tested-by: Daniel Thompson <daniel.thompson@linaro.org>
-> 
+-	if (!grp)
+-		return -ENODEV;
+-
+ 	table_group = iommu_group_get_iommudata(grp);
+-	ret = table_group->ops->take_ownership(table_group);
++	/*
++	 * The domain being set to PLATFORM from earlier
++	 * BLOCKED. The table_group ownership has to be released.
++	 */
++	table_group->ops->release_ownership(table_group);
+ 	iommu_group_put(grp);
 
-Thanks,
-Bjorn
+-	return ret;
++	return 0;
+ }
 
-> 
-> Daniel.
+ static const struct iommu_domain_ops spapr_tce_platform_domain_ops = {
+@@ -1312,13 +1312,32 @@ static struct iommu_domain spapr_tce_platform_domain = {
+ 	.ops = &spapr_tce_platform_domain_ops,
+ };
+
+-static struct iommu_domain spapr_tce_blocked_domain = {
+-	.type = IOMMU_DOMAIN_BLOCKED,
++static int
++spapr_tce_blocked_iommu_attach_dev(struct iommu_domain *platform_domain,
++				     struct device *dev)
++{
++	struct iommu_group *grp = iommu_group_get(dev);
++	struct iommu_table_group *table_group;
++	int ret = -EINVAL;
++
+ 	/*
+ 	 * FIXME: SPAPR mixes blocked and platform behaviors, the blocked domain
+ 	 * also sets the dma_api ops
+ 	 */
+-	.ops = &spapr_tce_platform_domain_ops,
++	table_group = iommu_group_get_iommudata(grp);
++	ret = table_group->ops->take_ownership(table_group);
++	iommu_group_put(grp);
++
++	return ret;
++}
++
++static const struct iommu_domain_ops spapr_tce_blocked_domain_ops = {
++	.attach_dev = spapr_tce_blocked_iommu_attach_dev,
++};
++
++static struct iommu_domain spapr_tce_blocked_domain = {
++	.type = IOMMU_DOMAIN_BLOCKED,
++	.ops = &spapr_tce_blocked_domain_ops,
+ };
+
+ static bool spapr_tce_iommu_capable(struct device *dev, enum iommu_cap cap)
+
+
