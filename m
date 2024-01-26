@@ -1,59 +1,33 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 086701B598
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 12:56:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 897F81B5BB
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 12:58:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706273812; cv=none; b=O4TXvxfHC4xiwuLKUYboa/0MTVG+DeOFnRJ8L9MTjM4uDQFtp5mqdD+itrjdj7N+7hU3sXILVN2RvrF/MsFTblYJwmG/qm5P7+Zb0KR3vO38l2pBHzNv+irZC92N1nj+vdgPOz+XPJx5PpGQlGgJQvl6GZ1ZE6NEf4kWYKvvL9o=
+	t=1706273911; cv=none; b=EkvhS4BNTUe3mlXstZotHYO/wEBVYra2G5W0eJbpOF/0yIVZpsEaV/OPrvibEewDREc8G7c/YZq88kt7ePtWImQDDUU/HA2aQPCJLSMBRVfVc7jVgi+x+QzuqdNTgpcclJuuk0R9UQdi9zKSp92h0h6P7n+MFSdEiTjAhRga3Fs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706273812; c=relaxed/simple;
-	bh=vEWPH3mWZOGa0t8ehdq7T5rSGfySqlrXSFtyqHnPu7o=;
+	s=arc-20240116; t=1706273911; c=relaxed/simple;
+	bh=ohUyVtWPvkgUykuwF7KLzyNhfQ8FsPPkW2hfwG05FrA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Xe9paWSjsvvQUJjHbhv92GIxrMiaL71pO4Q6CylwsQRJX8R7Fmr07AlvelA8Cuj2Msll/Wqz8OryQ8fSSPMxS+Hp1B4fA6+x6KtxBS9zBZGMZTJcCZQB+SeJGOMid/3ZoLmNZAOtvvlahdN+vcieID6u/jtN6ZBtpuIPxuD8TCY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=oLv31TpF; arc=none smtp.client-ip=209.85.221.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 In-Reply-To:Content-Type; b=mFP7COlgBco3pl2E/lGr507s9Hj047+8wjfvQF1jW6qr7WguJfD6xZLeCFFlZLJ/joeT/SFBTMDSJV7i4FPKTsPN6eDpkYGbrv6l11K+Y3gfXyjeseWHjhGEpFJlqVaq0CrK7JezNNhHO573ghdyNFFri9qXt9sElaFZY+l1UAo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MZWogIHd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oLv31TpF"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-337d32cd9c1so404263f8f.2
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 04:56:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706273809; x=1706878609; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=HNRJ344EIVqzGA3DHVgA976QKie0aE4RlEaXg0aggBQ=;
-        b=oLv31TpFgBZL2XklHjzm/7WQAzCPASK+2yulRjoMhy2Etl3OSvZq3bcR0udnaaosgn
-         L+EYcWN8p/XT/oQjzVvUHdfNJrpe1M3ohY+VhaOqHSOokv/hJ7APxOFvuQrwNxEaz2Ny
-         CVo29n68gcy6gozKBZyCgaH/FcLZUyLeOXNL70uS1cKzQb8pTpsTEWoD+5/yuEVwPrnQ
-         xrYpwSBN8FsE85koeKGTHRuA9nbB+7JEZESSLfX/uNDWC4rZXhh38Wq0Kp1gPCuxUEdP
-         8uN40QOox+hQQZXVBbU3PLMhX/vAtGPI9pgjeKGvMzhecTi9qs+l498wJ9Af8eM5TOLO
-         ScyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706273809; x=1706878609;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=HNRJ344EIVqzGA3DHVgA976QKie0aE4RlEaXg0aggBQ=;
-        b=k7ycolqg8BMusFFRNHCpS6Jp726OJ1tLlaxEo82s7/3KYjinDm/YiS3NAgar0xw1j3
-         N2LwZetn1sFN13UTPDROZbcDPcgBCreCke8cKHEwg7WZomTcYJ7p2NLUyKVYeBW7PGhy
-         LzcDvuDfK+MCVt6b3YnpDhRYZVy9AsClKvRJ49vT3KaN3Eh3iphaTxwfZO+DSjdxSczf
-         T27BWBAvRupYkU2GbSX0UswVK5OR3J2D3I4gKo2lG7ZbU8VRJbNrhdgfAJ6cOCeXyy47
-         9XvnkKsrGwat/w/EfnboPaIU578gq7LjPlY5m1nPriG3FthCC0AxCQifvd/jSVZSYvZ6
-         p7cA==
-X-Gm-Message-State: AOJu0YzUSycQ56NTfCaL5OJCNuE+wO8MyUMlQnti3a7bOH4+5kBnbqif
-	DBchi+9iWY2Jux3uvkAkD07FKMtca+YkrG6expV6bcDBxVhfTv1l2KXQkxgziVCYgn/Aes9IVTo
-	X
-X-Google-Smtp-Source: AGHT+IFW1on1e3KPvwtZV1QrTNsKMJ6DsqWgEG8INQGsIAXHxAYQSTtJKIOhhIjLHDupP5fMDN8aRQ==
-X-Received: by 2002:a05:600c:1e1d:b0:40e:d310:1cac with SMTP id ay29-20020a05600c1e1d00b0040ed3101cacmr882705wmb.133.1706273809134;
-        Fri, 26 Jan 2024 04:56:49 -0800 (PST)
-Received: from ?IPV6:2a05:6e02:1041:c10:c49e:e1a5:3210:b8c0? ([2a05:6e02:1041:c10:c49e:e1a5:3210:b8c0])
-        by smtp.googlemail.com with ESMTPSA id bg24-20020a05600c3c9800b0040d91fa270fsm1826870wmb.36.2024.01.26.04.56.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 26 Jan 2024 04:56:48 -0800 (PST)
-Message-ID: <9b72b688-be63-464e-a5dc-cf6051ccee12@linaro.org>
-Date: Fri, 26 Jan 2024 13:56:48 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MZWogIHd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BA73C433C7;
+	Fri, 26 Jan 2024 12:58:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706273911;
+	bh=ohUyVtWPvkgUykuwF7KLzyNhfQ8FsPPkW2hfwG05FrA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=MZWogIHd7VNCJlmLvnXd5FTx3xPvSoVF7a/fuy2y3wz8NkuNdvvP7vph5FvRAGpPL
+	 K6kABLU2G15sxQX/LLaUT+kLrFfmdfz9MhTIAricesCVT/q/UaRevJD3vUEE0X+cHP
+	 pQW0VAvhbybpM7JLUcX7Pg1/eKkK75W5485EhdyzblgW0W0bRrb02elY1bl2BSVWJA
+	 pkEigcd0MYFQYUXIhs3oW+uk864m0Nj4gY4qWsxM7+RJIpu7QcFiKq5lZF+XXXkysq
+	 VZmUcsfwt/Bt377l+FXJm1k7p1CHZs2VvVHZ0y/16Q2N0X7M8wclFEVFYNysKgQheD
+	 AlcKqmWl8DgRA==
+Message-ID: <537604f3-cf30-45c2-8947-4c0adf9e37b1@kernel.org>
+Date: Fri, 26 Jan 2024 20:58:31 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,100 +35,103 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/4] arm64: dts: rockchip: Add OPP data for CPU cores on
- RK3588
+Subject: Re: [PATCH] f2fs: use printk_ratelimited to avoid redundant logs
+To: Jaegeuk Kim <jaegeuk@kernel.org>
+Cc: linux-f2fs-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org
+References: <20240124144506.15052-1-chao@kernel.org>
+ <ZbNwjbXyue2-HIr_@google.com>
 Content-Language: en-US
-To: Dragan Simic <dsimic@manjaro.org>, Alexey Charkov <alchark@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
- Viresh Kumar <viresh.kumar@linaro.org>
-References: <20240125-rk-dts-additions-v1-0-5879275db36f@gmail.com>
- <20240125-rk-dts-additions-v1-4-5879275db36f@gmail.com>
- <731aac66-f698-4a1e-b9ee-46a7f24ecae5@linaro.org>
- <ccc004cfae513195351ce0a79e12f6af@manjaro.org>
- <CABjd4YxSTLZjrnSCn0fh81US682-uhZ16-cgydzz97shhCpq4w@mail.gmail.com>
- <1f0608831cfb95c80edf16cd751eee76@manjaro.org>
- <CABjd4Yx06igrZQvHA4q-mcr2oSEf7eQyUS+KEATUGbw6qLc2sg@mail.gmail.com>
- <528a37d84cdd871e717b4ebf648bb8a7@manjaro.org>
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-In-Reply-To: <528a37d84cdd871e717b4ebf648bb8a7@manjaro.org>
+From: Chao Yu <chao@kernel.org>
+Autocrypt: addr=chao@kernel.org; keydata=
+ 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
+In-Reply-To: <ZbNwjbXyue2-HIr_@google.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On 26/01/2024 08:49, Dragan Simic wrote:
-> On 2024-01-26 08:30, Alexey Charkov wrote:
->> On Fri, Jan 26, 2024 at 11:05 AM Dragan Simic <dsimic@manjaro.org> wrote:
->>> On 2024-01-26 07:44, Alexey Charkov wrote:
->>> > On Fri, Jan 26, 2024 at 10:32 AM Dragan Simic <dsimic@manjaro.org>
->>> > wrote:
->>> >> On 2024-01-25 10:30, Daniel Lezcano wrote:
->>> >> > On 24/01/2024 21:30, Alexey Charkov wrote:
->>> >> >> By default the CPUs on RK3588 start up in a conservative 
->>> performance
->>> >> >> mode. Add frequency and voltage mappings to the device tree to 
->>> enable
-
-[ ... ]
-
->> Throttling would also lower the voltage at some point, which cools it
->> down much faster!
+On 2024/1/26 16:42, Jaegeuk Kim wrote:
+> On 01/24, Chao Yu wrote:
+>> Use printk_ratelimited() instead of f2fs_err() in f2fs_record_stop_reason(),
+>> and f2fs_record_errors() to avoid redundant logs.
+>>
+>> Signed-off-by: Chao Yu <chao@kernel.org>
+>> ---
+>>   fs/f2fs/super.c | 9 ++++++---
+>>   1 file changed, 6 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+>> index e2c066fbc0fa..7e437aea268e 100644
+>> --- a/fs/f2fs/super.c
+>> +++ b/fs/f2fs/super.c
+>> @@ -4091,7 +4091,9 @@ static void f2fs_record_stop_reason(struct f2fs_sb_info *sbi)
+>>   
+>>   	f2fs_up_write(&sbi->sb_lock);
+>>   	if (err)
+>> -		f2fs_err(sbi, "f2fs_commit_super fails to record err:%d", err);
 > 
-> Of course, but the key is not to cool (and slow down) the CPU cores too
-> much, but just enough to stay within the available thermal envelope,
-> which is where the same-voltage, lower-frequency OPPs should shine.
+> Needing f2fs_err_ratelimited()?
 
-That implies the resulting power is sustainable which I doubt it is the 
-case.
+Yes, more clean, let me update in v2.
 
-The voltage scaling makes the cooling effect efficient not the frequency.
+Thanks,
 
-For example:
-	opp5 = opp(2GHz, 1V) => 2 BogoWatt
-	opp4 = opp(1.9GHz, 1V) => 1.9 BogoWatt
-	opp3 = opp(1.8GHz, 0.9V) => 1.458 BogoWatt
-	[ other states but we focus on these 3 ]
-
-opp5->opp4 => -5% compute capacity, -5% power, ratio=1
-opp4->opp3 => -5% compute capacity, -23.1% power, ratio=21,6
-
-opp5->opp3 => -10% compute capacity, -27.1% power, ratio=36.9
-
-In burst operation (no thermal throttling), opp4 is pointless we agree 
-on that.
-
-IMO the following will happen: in burst operation with thermal 
-throttling we hit the trip point and then the step wise governor reduces 
-opp5 -> opp4. We have slight power reduction but the temperature does 
-not decrease, so at the next iteration, it is throttle at opp3. And at 
-the end we have opp4 <-> opp3 back and forth instead of opp5 <-> opp3.
-
-It is probable we end up with an equivalent frequency average (or 
-compute capacity avg).
-
-opp4 <-> opp3 (longer duration in states, less transitions)
-opp5 <-> opp3 (shorter duration in states, more transitions)
-
-Some platforms had their higher OPPs with the same voltage and they 
-failed to cool down the CPU in the long run.
-
-Anyway, there is only one way to check it out :)
-
-Alexey, is it possible to compare the compute duration for 'dhrystone' 
-with these voltage OPP and without ? (with a period of cool down between 
-the test in order to start at the same thermal condition) ?
-
-
-
-> When the CPU load isn't bursty but steady and high, we don't race to
-> idle, but run a marathon instead, so to speak. :)
-
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
+> 
+>> +		printk_ratelimited(
+>> +			"%sF2FS-fs (%s): f2fs_commit_super fails to record stop_reason, err:%d\n",
+>> +			KERN_ERR, sbi->sb->s_id, err);
+>>   }
+>>   
+>>   void f2fs_save_errors(struct f2fs_sb_info *sbi, unsigned char flag)
+>> @@ -4134,8 +4136,9 @@ static void f2fs_record_errors(struct f2fs_sb_info *sbi, unsigned char error)
+>>   
+>>   	err = f2fs_commit_super(sbi, false);
+>>   	if (err)
+>> -		f2fs_err(sbi, "f2fs_commit_super fails to record errors:%u, err:%d",
+>> -								error, err);
+>> +		printk_ratelimited(
+>> +			"%sF2FS-fs (%s): f2fs_commit_super fails to record errors:%u, err:%d\n",
+>> +			KERN_ERR, sbi->sb->s_id, error, err);
+>>   out_unlock:
+>>   	f2fs_up_write(&sbi->sb_lock);
+>>   }
+>> -- 
+>> 2.40.1
