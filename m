@@ -1,151 +1,185 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 189E71FA0
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 10:47:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79AF013AC9;
+	Fri, 26 Jan 2024 10:47:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706266050; cv=none; b=V/B/FNAg/uP0noTZmXgQlLV1WwFUYR3MyBSByoyBMsR1whLZBbndfKldoILXgIsE0yHEX85u7lXw1ynzCXz9gpKOzKAf89z3+iIKj/bv26VeCdMw4qMmk3+vixYbjng9IEk09m0mUjLlB5hk7TESrDmA7pxfbTJzv7KAeZsppqM=
+	t=1706266059; cv=none; b=EbR05zPehTSUHJul/26rSq1awCVGVmk9Ut0PfnjX8/kbQzwzLnpFG/i/usVotiq0JjDCnbzwJZ2EtkuP0idRfRIABZ4EaFu1R4LFg6sMSkpKtgHBV+ujanxax9obsHCQIfydhSPLfsj9OH/5KVXPI4k7yMk6/bRSOleDqWx3Feg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706266050; c=relaxed/simple;
-	bh=7iGPgXhQzjAMgbbLMGBzDKjvZs6QBwPWWlL95HNkfuo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=dysQ4mBg3gFCTpLnCHvXkJC9zsIKcL0OAeQf1NYoGMNpQ2fMEbMwKg3U/ZNKO5S0jSkVhLinL3EVGrvNwvkCzIM8p4+zmPW2x9kySPS6zLj+kMXtwJxvDY+h7IgkW4NxTxFpCUlX9uNdDamAQTdwExFGyYwhHKBblZenjRZTpY0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=TVYwDy3F; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1706266059; c=relaxed/simple;
+	bh=kw330Rj+dvXFrcyOh21QF428FI3QNljIFnkqOGrlr70=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=b/m6552Yhz7AgZbci6KXNpFxoa78XHKBJrDb0VT+hCaYVlkGylfZ3Dn8iWDJWFBsABDDpTWIJFi1bcO/7XHLpI7jsy3wLCZ2pkschDB4V5Rl9m4SkfWr7snq2dVyj4Ae1iUP9Qp2sl92+MDc/2EC20kXMOtBAcFlalKj0oYNUa0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=uFWV5/6c; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=4nrJbFly; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=oCRuZGtD; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=neMnI5wB; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="TVYwDy3F"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40Q4OuBC002099;
-	Fri, 26 Jan 2024 10:47:13 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=Dr1b+LNasWBfDiz6qm0FOfD2D0DAEk8L38V0AafYadw=; b=TV
-	YwDy3FFHML3PaoRSDH6ATY6Zx8W/OiAu5hJwCGX0BCFHm/9m9AZ9PDCK8Vsj7pL7
-	PM7DvyMPnHcxbPpMu6VzFMzPlrryjTihMaeIvTSbI3USy4C/Wp9XAFkBY4ONDAJh
-	idzkegrFBuQA6qJowDwwUTSa9p6uuc2vE8Tg6gLGpFMolMRX1IZ7MPqJiNW0HOjJ
-	yuYYHDZTDc5GaGeK3W5OZtQ5VSmD6csC8kjTyBPBPxb1izB32D948hf3kf4idNl+
-	SRrExxssctfKIA6tRJF334X9i1LQpQUHC1e6C0Fmvx1lSuLmyxJhDQqdpypQCBuw
-	JOX2wc5OvqNxyCSgOqfg==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vv1q596vt-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 26 Jan 2024 10:47:13 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 40QAlCJW031039
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 26 Jan 2024 10:47:12 GMT
-Received: from [10.216.18.218] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Fri, 26 Jan
- 2024 02:47:08 -0800
-Message-ID: <5adb12eb-8403-5860-28eb-5f6ab12f3c04@quicinc.com>
-Date: Fri, 26 Jan 2024 16:17:04 +0530
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="uFWV5/6c";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="4nrJbFly";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="oCRuZGtD";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="neMnI5wB"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 719F721FDE;
+	Fri, 26 Jan 2024 10:47:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1706266049; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dfDYD1hkMdAR4BGYjFkj7xOSPN6n4QHzvjQQXC87In8=;
+	b=uFWV5/6c1EHGaUvzBag7+ZrIXQIiggCVI2OolOmkzhvhsKhHpuC8eOCy/0GD1Scy6wZiTx
+	ciDKNFJOeCcQudtyS0ASxoIhiOIfZUrHYcgyZ/I7l2/EkGXSJms0CTaGIe/1P5/9LLf7mm
+	JQk2IeeNtVKINRc7CutKAnonn9kB0vw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1706266049;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dfDYD1hkMdAR4BGYjFkj7xOSPN6n4QHzvjQQXC87In8=;
+	b=4nrJbFlyFc+tJTX0x97F2K5qP2hAJmeItCpQm/f4Vr+GeD/keeAnPKeddWhJ8xmpuhOfUe
+	6l9z5dZV7gbF3DDA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1706266048; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dfDYD1hkMdAR4BGYjFkj7xOSPN6n4QHzvjQQXC87In8=;
+	b=oCRuZGtDEaDojXKk77W9K6978xYhXrjBJWvilZKTV+D+mt42MLESnbDy6524QGR3rrwCJF
+	fzmDqEWIPw4O+d5/Xf3RcI3t8dAG/jQAs4zHgkzZ+3Z9hdDHg1V98phCl8aYqHA7L4PEVD
+	by1gdxoerrrY0rSD9JwVHg3smsUvpQE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1706266048;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dfDYD1hkMdAR4BGYjFkj7xOSPN6n4QHzvjQQXC87In8=;
+	b=neMnI5wBWr2bdJwNDjgxzyXSCEH8TQu/eSWTUjVZjYV7nJGDPiYlLpiH9Ruo+EPNO/P2ej
+	CFUDoNVRiYLjnbDw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 58C1513A22;
+	Fri, 26 Jan 2024 10:47:28 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id YQKiFcCNs2V9JwAAD6G6ig
+	(envelope-from <jack@suse.cz>); Fri, 26 Jan 2024 10:47:28 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 2F462A0805; Fri, 26 Jan 2024 11:47:27 +0100 (CET)
+Date: Fri, 26 Jan 2024 11:47:27 +0100
+From: Jan Kara <jack@suse.cz>
+To: Kees Cook <keescook@chromium.org>
+Cc: Kevin Locke <kevin@kevinlocke.name>, Jann Horn <jannh@google.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Eric Biederman <ebiederm@xmission.com>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+	Matthew Bobrowski <mbobrowski@mbobrowski.org>, amir73il@gmail.com,
+	Steve Grubb <sgrubb@redhat.com>
+Subject: Re: [PATCH] exec: Remove __FMODE_EXEC from uselib()
+Message-ID: <20240126104727.rzksht5mjkanvo5n@quack3>
+References: <20240124220619.work.227-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH V3 3/3] mm: page_alloc: drain pcp lists before oom kill
-Content-Language: en-US
-To: Zach O'Keefe <zokeefe@google.com>
-CC: Michal Hocko <mhocko@suse.com>, <akpm@linux-foundation.org>,
-        <mgorman@techsingularity.net>, <david@redhat.com>, <vbabka@suse.cz>,
-        <hannes@cmpxchg.org>, <quic_pkondeti@quicinc.com>,
-        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-        Axel Rasmussen <axelrasmussen@google.com>,
-        Yosry Ahmed <yosryahmed@google.com>,
-        David Rientjes <rientjes@google.com>
-References: <cover.1699104759.git.quic_charante@quicinc.com>
- <a8e16f7eb295e1843f8edaa1ae1c68325c54c896.1699104759.git.quic_charante@quicinc.com>
- <ZUy1dNvbvHc6gquo@tiehlicka>
- <5c7f25f9-f86b-8e15-8603-e212b9911cac@quicinc.com>
- <ZVNQdQKQAMjgOK9y@tiehlicka>
- <342a8854-eef5-f68a-15e5-275de70e3f01@quicinc.com>
- <CAAa6QmRnfTOCD0uaxVbbiDRWtwzC9y+gZDFOjYF2YWDTrXyMNQ@mail.gmail.com>
-From: Charan Teja Kalla <quic_charante@quicinc.com>
-In-Reply-To: <CAAa6QmRnfTOCD0uaxVbbiDRWtwzC9y+gZDFOjYF2YWDTrXyMNQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: juFkEb3_tBv4RmYroSjb6W-T0ad2YZ34
-X-Proofpoint-GUID: juFkEb3_tBv4RmYroSjb6W-T0ad2YZ34
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-25_14,2024-01-25_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 malwarescore=0
- mlxscore=0 lowpriorityscore=0 adultscore=0 priorityscore=1501 phishscore=0
- mlxlogscore=668 impostorscore=0 bulkscore=0 spamscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2401190000
- definitions=main-2401260078
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240124220619.work.227-kees@kernel.org>
+Authentication-Results: smtp-out1.suse.de;
+	none
+X-Spamd-Result: default: False [-2.60 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	 RCPT_COUNT_TWELVE(0.00)[15];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,linux-foundation.org:email];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 MID_RHS_NOT_FQDN(0.50)[];
+	 FREEMAIL_CC(0.00)[kevinlocke.name,google.com,linux-foundation.org,xmission.com,zeniv.linux.org.uk,kernel.org,suse.cz,kvack.org,vger.kernel.org,mbobrowski.org,gmail.com,redhat.com];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-3.00)[100.00%]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spam-Score: -2.60
 
-Hi Michal/Zach,
-
-On 1/25/2024 10:06 PM, Zach O'Keefe wrote:
-> Thanks for the patch, Charan, and thanks to Yosry for pointing me towards it.
+On Wed 24-01-24 14:06:23, Kees Cook wrote:
+> Path-based LSMs will bypass uselib() "open" checks since commit
+> 4759ff71f23e ("exec: Check __FMODE_EXEC instead of in_execve for LSMs"),
+> so don't set __FMODE_EXEC during uselib(). The LSM "open" and eventual
+> "mmap" hooks will be restored. (uselib() never set current->in_execve.)
 > 
-> I took a look at data from our fleet, and there are many cases on
-> high-cpu-count machines where we find multi-GiB worth of data sitting
-> on pcpu free lists at the time of system oom-kill, when free memory
-> for the relevant zones are below min watermarks. I.e. clear cases
-> where this patch could have prevented OOM.
+> Other things that checked __FMODE_EXEC:
 > 
-> This kind of issue scales with the number of cpus, so presumably this
-> patch will only become increasingly valuable to both datacenters and
-> desktops alike going forward. Can we revamp it as a standalone patch?
+> - fs/fcntl.c is just doing a bitfield sanity check.
 > 
-
-Glad to see a real world use case for this. We too have observed OOM for
- every now and then with relatively significant PCP cache, but in all
-such cases OOM is imminent.
-
-AFAICS, Your use case description to be seen like a premature OOM
-scenario despite lot of free memory sitting on the pcp lists, where this
-patch should've helped.
-
-@Michal: This usecase seems to be a practical scenario that you were
-asking below.
-Other concern of racing freeing of memory ending up in pcp lists first
--- will that be such a big issue? This patch enables, drain the current
-pcp lists now that can avoid the oom altogether. If this racing free is
-a major concern, should that be taken as a separate discussion?
-
-Will revamp this as a separate patch if no more concerns here.
-
-> Thanks,
-> Zach
+> - nfs_open_permission_mask() is only checking for the
+>   "unreadable exec" case, which is not an issue for uselib(),
+>   which sets MAY_READ, unlike execve().
 > 
+> - fsnotify would no longer see uselib() as FS_OPEN_EXEC_PERM, but
+>   rather as FS_OPEN_PERM, but this is likely a bug fix, as uselib() isn't
+>   an exec: it's more like mmap(), which fsnotify doesn't intercept.
+
+OK, I went back to the original discussion with Steve Grubb and Matthew
+Bobrowski who asked for FS_OPEN_EXEC_PERM and AFAICT this change in
+uselib() should be fine wrt usescases we discussed. That doesn't mean there
+cannot be some userspace which will get broken by this (in which case we'd
+have to revert or find some other solution) but I'm willing to try. I'm
+also CCing Steve & Matthew for input but from my side feel free to add:
+
+Acked-by: Jan Kara <jack@suse.cz>
+
+								Honza
+
 > 
-> On Tue, Nov 14, 2023 at 8:37 AM Charan Teja Kalla
-> <quic_charante@quicinc.com> wrote:
->>
->> Thanks Michal!!
->>
->> On 11/14/2023 4:18 PM, Michal Hocko wrote:
->>>> At least in my particular stress test case it just delayed the OOM as i
->>>> can see that at the time of OOM kill, there are no free pcp pages. My
->>>> understanding of the OOM is that it should be the last resort and only
->>>> after doing the enough reclaim retries. CMIW here.
->>> Yes it is a last resort but it is a heuristic as well. So the real
->>> questoin is whether this makes any practical difference outside of
->>> artificial workloads. I do not see anything particularly worrying to
->>> drain the pcp cache but it should be noted that this won't be 100%
->>> either as racing freeing of memory will end up on pcp lists first.
->>
->> Okay, I don't have any practical scenario where this helped me in
->> avoiding the OOM.  Will comeback If I ever encounter this issue in
->> practical scenario.
->>
->> Also If you have any comments on [PATCH V2 2/3] mm: page_alloc: correct
->> high atomic reserve calculations will help me.
->>
->> Thanks.
->>
+> Reported-by: Jann Horn <jannh@google.com>
+> Closes: https://lore.kernel.org/lkml/CAG48ez017tTwxXbxdZ4joVDv5i8FLWEjk=K_z1Vf=pf0v1=cTg@mail.gmail.com/
+> Fixes: 4759ff71f23e ("exec: Check __FMODE_EXEC instead of in_execve for LSMs")
+> Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+> Cc: Kevin Locke <kevin@kevinlocke.name>
+> Cc: Eric Biederman <ebiederm@xmission.com>
+> Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+> Cc: Christian Brauner <brauner@kernel.org>
+> Cc: Jan Kara <jack@suse.cz>
+> Cc: linux-mm@kvack.org
+> Cc: linux-fsdevel@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+>  fs/exec.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/fs/exec.c b/fs/exec.c
+> index d179abb78a1c..af4fbb61cd53 100644
+> --- a/fs/exec.c
+> +++ b/fs/exec.c
+> @@ -128,7 +128,7 @@ SYSCALL_DEFINE1(uselib, const char __user *, library)
+>  	struct filename *tmp = getname(library);
+>  	int error = PTR_ERR(tmp);
+>  	static const struct open_flags uselib_flags = {
+> -		.open_flag = O_LARGEFILE | O_RDONLY | __FMODE_EXEC,
+> +		.open_flag = O_LARGEFILE | O_RDONLY,
+>  		.acc_mode = MAY_READ | MAY_EXEC,
+>  		.intent = LOOKUP_OPEN,
+>  		.lookup_flags = LOOKUP_FOLLOW,
+> -- 
+> 2.34.1
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
