@@ -1,116 +1,102 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 505BA14F522;
-	Fri, 26 Jan 2024 08:58:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BB4314F522;
+	Fri, 26 Jan 2024 08:58:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706259510; cv=none; b=N5fO1D5w2UYpBWA4Kau7P9lweL1y8LQ9TNesS5V4Kvp96R5M2rcYH46oCSgQlZKHHG9AL6+oRX33cQ6iUFVFgtKrsm12MnvEgnVPTjJowbkqyLxPflp8XI8Mrx+q7oqT+9F2rWljxRB9hZVcwIi/jaVbVE4bWxIQ9Fr3OxMepvk=
+	t=1706259520; cv=none; b=SslTdIbquBOz6miXEnKCyeAtPg3v3MUxlWBXkRByPCsOcZY89DyhR7dDRIkzqe1iiUldPuytOlI5NdatuaSNeSdxefWU4h9rXHQ5FoDmdtmwpoXYly0aCoipy17MvYRwOUND+Jn0zXss/U06CkyZQt5DojQ89yh8cr0uwtEhEkA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706259510; c=relaxed/simple;
-	bh=lc30mIArQmDYKUSrlU3o4au3+PWflrmT0YtX99/0sZg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ui6KgKgyiId+kJhREXcvhWdF7gjRrET5I8SCniKuXhzmI+k+NbgYAR+lpOXy+zIJxlJ+fsQA+LuSy3PA+urmFs86vH0V+YY57zMnezQz9W3apZkQM43BvEKAm0cLX4ZzykQV056Z/MfJA1dfBEbejpEOqUxroOYHa0JLd4s4uSs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Tqs/wwmI; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Tqs/wwmI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706259509; x=1737795509;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=lc30mIArQmDYKUSrlU3o4au3+PWflrmT0YtX99/0sZg=;
-  b=Tqs/wwmI/OtgM+D4eRC89H0NlNzkGUf2/DJBkSPz8xIRB82NBE2gdZ11
-   Apev+K97+dDZngSX1Z+NBkzlVfIUzx96U0hXoI+vOo0O6WRg3n5GXizdJ
-   ZwnyBdFRuu3ohHEKDn4TJJYf6Z+4FOhFWLYfnOkkgzxEP9ZCI+ASrWIZu
-   yyyXDeDzYkLR/zxNlVyjgvfkc5maIgG4eZvgUvxgA3hYSv12H0hW8e9h8
-   1lklOh567mz/Md2oktPd2jsIGDJ4cjqmuSbHznkr8Oysmaezj3p9gp7MQ
-   /nu6f9H25YrRWqplrr7J7YuJjrNDqNo+YnzVul7941YHQctTmOUgzg1Uq
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="9792978"
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="9792978"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2024 00:58:29 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="930310425"
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="930310425"
-Received: from yanli3-mobl.ccr.corp.intel.com (HELO xiongzha-desk1.ccr.corp.intel.com) ([10.254.213.178])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2024 00:58:23 -0800
-From: Xiong Zhang <xiong.y.zhang@linux.intel.com>
-To: seanjc@google.com,
-	pbonzini@redhat.com,
-	peterz@infradead.org,
-	mizhang@google.com,
-	kan.liang@intel.com,
-	zhenyuw@linux.intel.com,
-	dapeng1.mi@linux.intel.com,
-	jmattson@google.com
-Cc: kvm@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	zhiyuan.lv@intel.com,
-	eranian@google.com,
-	irogers@google.com,
-	samantha.alt@intel.com,
-	like.xu.linux@gmail.com,
-	chao.gao@intel.com,
-	xiong.y.zhang@linux.intel.com,
-	Xiong Zhang <xiong.y.zhang@intel.com>
-Subject: [RFC PATCH 34/41] KVM: x86/pmu: Intercept EVENT_SELECT MSR
-Date: Fri, 26 Jan 2024 16:54:37 +0800
-Message-Id: <20240126085444.324918-35-xiong.y.zhang@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240126085444.324918-1-xiong.y.zhang@linux.intel.com>
-References: <20240126085444.324918-1-xiong.y.zhang@linux.intel.com>
+	s=arc-20240116; t=1706259520; c=relaxed/simple;
+	bh=wot1yPJV87tUkM8CsZ2oaB+0f3xAXpRMa/ZMlXNaja8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=efu3cpjveEOX4Xq9sY8vsqidY2lCRpiD2wZat98+cjp9ackNbpY80XIhy61N1jqy7q/zd1N8I1Np2OidEgs2hSNhrrC3FxmitGy2XnaxeuaSeacdKa46QcOUtzKUMPD/qdoJPzC/XEMkbhpZx1pB+nY0kSUnmyMmXaLsqZ3xNLE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.94.2 #2 (Debian))
+	id 1rTI2L-006EZR-QN; Fri, 26 Jan 2024 16:58:10 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Fri, 26 Jan 2024 16:58:22 +0800
+Date: Fri, 26 Jan 2024 16:58:22 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Danny Tsen <dtsen@linux.ibm.com>
+Cc: linux-crypto@vger.kernel.org, leitao@debian.org, nayna@linux.ibm.com,
+	appro@cryptogams.org, linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au,
+	ltcgcw@linux.vnet.ibm.com, dtsen@us.ibm.com
+Subject: Re: [PATCH] crypto:vmx: Move ppc vmx diirectory to
+ arch/powerpc/crypto.
+Message-ID: <ZbN0LufXZ6YZmn3E@gondor.apana.org.au>
+References: <20240102205856.370103-1-dtsen@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240102205856.370103-1-dtsen@linux.ibm.com>
 
-From: Xiong Zhang <xiong.y.zhang@intel.com>
+On Tue, Jan 02, 2024 at 03:58:56PM -0500, Danny Tsen wrote:
+> Relocate all crypto files in vmx driver to arch/powerpc/crypto directory
+> and remove vmx directory.
+> 
+> drivers/crypto/vmx/aes.c rename to arch/powerpc/crypto/aes.c
+> drivers/crypto/vmx/aes_cbc.c rename to arch/powerpc/crypto/aes_cbc.c
+> drivers/crypto/vmx/aes_ctr.c rename to arch/powerpc/crypto/aes_ctr.c
+> drivers/crypto/vmx/aes_xts.c rename to arch/powerpc/crypto/aes_xts.c
+> drivers/crypto/vmx/aesp8-ppc.h rename to arch/powerpc/crypto/aesp8-ppc.h
+> drivers/crypto/vmx/aesp8-ppc.pl rename to arch/powerpc/crypto/aesp8-ppc.pl
+> drivers/crypto/vmx/ghash.c rename to arch/powerpc/crypto/ghash.c
+> drivers/crypto/vmx/ghashp8-ppc.pl rename to arch/powerpc/crypto/ghashp8-ppc.pl
+> drivers/crypto/vmx/vmx.c rename to arch/powerpc/crypto/vmx.c
+> 
+> deleted files:
+> drivers/crypto/vmx/Makefile
+> drivers/crypto/vmx/Kconfig
+> drivers/crypto/vmx/ppc-xlate.pl
+> 
+> This patch has been tested has passed the selftest.  The patch is also tested with
+> CONFIG_CRYPTO_MANAGER_EXTRA_TESTS enabled.
+> 
+> Signed-off-by: Danny Tsen <dtsen@linux.ibm.com>
+> ---
+>  arch/powerpc/crypto/Kconfig                   |  20 ++
+>  arch/powerpc/crypto/Makefile                  |  20 +-
+>  .../crypto/vmx => arch/powerpc/crypto}/aes.c  |   0
+>  .../vmx => arch/powerpc/crypto}/aes_cbc.c     |   0
+>  .../vmx => arch/powerpc/crypto}/aes_ctr.c     |   0
+>  .../vmx => arch/powerpc/crypto}/aes_xts.c     |   0
+>  .../vmx => arch/powerpc/crypto}/aesp8-ppc.h   |   0
+>  .../vmx => arch/powerpc/crypto}/aesp8-ppc.pl  |   0
+>  .../vmx => arch/powerpc/crypto}/ghash.c       |   0
+>  .../powerpc/crypto}/ghashp8-ppc.pl            |   0
+>  .../crypto/vmx => arch/powerpc/crypto}/vmx.c  |   0
+>  drivers/crypto/Kconfig                        |  14 +-
+>  drivers/crypto/Makefile                       |   2 +-
+>  drivers/crypto/vmx/.gitignore                 |   3 -
+>  drivers/crypto/vmx/Kconfig                    |  14 --
+>  drivers/crypto/vmx/Makefile                   |  23 --
+>  drivers/crypto/vmx/ppc-xlate.pl               | 231 ------------------
+>  17 files changed, 46 insertions(+), 281 deletions(-)
+>  rename {drivers/crypto/vmx => arch/powerpc/crypto}/aes.c (100%)
+>  rename {drivers/crypto/vmx => arch/powerpc/crypto}/aes_cbc.c (100%)
+>  rename {drivers/crypto/vmx => arch/powerpc/crypto}/aes_ctr.c (100%)
+>  rename {drivers/crypto/vmx => arch/powerpc/crypto}/aes_xts.c (100%)
+>  rename {drivers/crypto/vmx => arch/powerpc/crypto}/aesp8-ppc.h (100%)
+>  rename {drivers/crypto/vmx => arch/powerpc/crypto}/aesp8-ppc.pl (100%)
+>  rename {drivers/crypto/vmx => arch/powerpc/crypto}/ghash.c (100%)
+>  rename {drivers/crypto/vmx => arch/powerpc/crypto}/ghashp8-ppc.pl (100%)
+>  rename {drivers/crypto/vmx => arch/powerpc/crypto}/vmx.c (100%)
+>  delete mode 100644 drivers/crypto/vmx/.gitignore
+>  delete mode 100644 drivers/crypto/vmx/Kconfig
+>  delete mode 100644 drivers/crypto/vmx/Makefile
+>  delete mode 100644 drivers/crypto/vmx/ppc-xlate.pl
 
-Event selectors for GP counters are still intercepted for the purpose of
-security, i.e., preventing guest from using unallowed events to steal
-information or take advantages of any CPU errata.
-
-Signed-off-by: Xiong Zhang <xiong.y.zhang@intel.com>
-Signed-off-by: Mingwei Zhang <mizhang@google.com>
----
- arch/x86/kvm/vmx/pmu_intel.c | 1 -
- arch/x86/kvm/vmx/vmx.c       | 1 -
- 2 files changed, 2 deletions(-)
-
-diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
-index 9bbd5084a766..621922005184 100644
---- a/arch/x86/kvm/vmx/pmu_intel.c
-+++ b/arch/x86/kvm/vmx/pmu_intel.c
-@@ -809,7 +809,6 @@ void intel_passthrough_pmu_msrs(struct kvm_vcpu *vcpu)
- 	int i;
- 
- 	for (i = 0; i < vcpu_to_pmu(vcpu)->nr_arch_gp_counters; i++) {
--		vmx_set_intercept_for_msr(vcpu, MSR_ARCH_PERFMON_EVENTSEL0 + i, MSR_TYPE_RW, false);
- 		vmx_set_intercept_for_msr(vcpu, MSR_IA32_PERFCTR0 + i, MSR_TYPE_RW, false);
- 		if (fw_writes_is_enabled(vcpu))
- 			vmx_set_intercept_for_msr(vcpu, MSR_IA32_PMC0 + i, MSR_TYPE_RW, false);
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index d28afa87be70..1a518800d154 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -698,7 +698,6 @@ static bool is_valid_passthrough_msr(u32 msr)
- 	case MSR_LBR_CORE_FROM ... MSR_LBR_CORE_FROM + 8:
- 	case MSR_LBR_CORE_TO ... MSR_LBR_CORE_TO + 8:
- 		/* LBR MSRs. These are handled in vmx_update_intercept_for_lbr_msrs() */
--	case MSR_ARCH_PERFMON_EVENTSEL0 ... MSR_ARCH_PERFMON_EVENTSEL0 + 7:
- 	case MSR_IA32_PMC0 ... MSR_IA32_PMC0 + 7:
- 	case MSR_IA32_PERFCTR0 ... MSR_IA32_PERFCTR0 + 7:
- 	case MSR_CORE_PERF_FIXED_CTR_CTRL:
+Patch applied.  Thanks.
 -- 
-2.34.1
-
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
