@@ -1,314 +1,135 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AA87134C4
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 11:01:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 000A8134A9;
+	Fri, 26 Jan 2024 11:01:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706266863; cv=none; b=BG/lV+ijdZbb4VFS/RfxnzOA6iu0bDu6yZQ6fQKYpw1OSBSIQeYJ9hehJ4smgxDVjPSCmf93EhoyM1CpJMqodcogJ6cmQg3RhCC9WQZBZLFA2OEO0AaPN12g5hKFtWfouof/s38IH4cZv9u07KgwLyDiYqguGS1TYQQPCslrpcc=
+	t=1706266910; cv=none; b=oxqxY9Tf5nQW/FRT6TguKeZvgauQawtOeJvW2vMnPebJOOByNFo7Zq1zDYt6Fab7rKlfh8lR6pXLkSN4bZQG4qdfCi5TH5jqQlauelUSZY1bfscndrKLWlf2hjXM3brZQSV/H8TlQ6dXfz/h9iFncwh8NU5AhykG6zzBw4VNno0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706266863; c=relaxed/simple;
-	bh=2Kk/JhDn9ums2Gl2pmtY8M5lBtSFaCH5fDViOXSC1mo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QzZCg5CqheeRnlfWmJ4+wmAK5S+TNGr5M0NxdTE5mx4hb+NyUXA9NU7jyMIjvHt4SvcmHvblsyjqcE2IkaVpwlwIhOrHLdrJ9Q3SKf6W56m4EaW8AeZ/gwLOF7MUnM5BL9HC6NXzfOHosYY4F9HYvkIoznwskH3ylnc8TKqPXzk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cduZuv0M; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1706266910; c=relaxed/simple;
+	bh=pU7ADMC9W3X1II2U5vo0mdMm3TYxbo2cFp28xo0Dtu8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=QEztv9iSgMVKJMGJNRJgat3Oj3MkwPV9AdMZ0wt89z3PF75XVZ2i2QQvT3/i2z7CMkctA0WrQU/Ls+XNLMo1kV8ON8GxXh5bXLgfjPehNW/MDifiIPgBy6h13vpNwbEhevNvGrAJWoEUqCFxKZoGveH5ug6Srffl6HKdoEWMIgc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=IXtyZgub; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cduZuv0M"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1706266859;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vz4PWAkydzxt+A7z4COEEylDr902GbpCA3qhDTN+Qeg=;
-	b=cduZuv0M4Psp1UTRkyPuFLufaaHbpUVp6kClk7L0pz/gGYWXDFEvBwYXTMqDgx4XYJrzL6
-	oJtcRsSZrWX4C+U0RoKsUkpEId1sUnt70DbaNSAhLb7LaGKmTTtMVwQLyPnGTd9J4iarfL
-	Y68eDSPDieorlPcNYSQjsIpOXZVERto=
-Received: from mail-vs1-f69.google.com (mail-vs1-f69.google.com
- [209.85.217.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-155-lPGN--FXP4mdgBFNffp5Pw-1; Fri, 26 Jan 2024 06:00:57 -0500
-X-MC-Unique: lPGN--FXP4mdgBFNffp5Pw-1
-Received: by mail-vs1-f69.google.com with SMTP id ada2fe7eead31-466ec6d33bcso50135137.3
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 03:00:57 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706266857; x=1706871657;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vz4PWAkydzxt+A7z4COEEylDr902GbpCA3qhDTN+Qeg=;
-        b=tGIDSR37UdQ2ZOfy4q/doopnRhA5eNQgPY06N+pPpVhod4Fx+OMyN/mQCIsO6T7rs+
-         CWX6km8lhiwzdBcYss3SBCjmjofCy0Z78fQFPTMIocXO40IE2p/sd8l9oAfTco/xVTYO
-         toteFFXYlHcKWqTSmJKD+5GYVTbd0DQ5+r+3NRLpEZslu8rfoQbfU5Vwk8KAQm1muyLf
-         LTMZ6i8AMMUXbfAYwoUYu/U6v3XIEJ3YH10KB8kmU/bUlOvVgKq9p5WjSCJkLip4OMye
-         x0kWQJhGZwDV1h80ii3pvg9RQgsmTW7RweeKAVKTmR8AbGTLI4AUZr+GFrj1p2C4db9t
-         4KQw==
-X-Gm-Message-State: AOJu0Yxvi6cjmavlJ5vlGOWjAV+uXzAAKvfcp9Jb8LkcKn6DIWMyL+oy
-	RnomiC45PIpl/VYdBvbCz8a0FFC7MibqtBlcHHKmUUdY78H+cPy7a7Z6C2ktToznb6tsSWBqSXc
-	1OVFYFGPx+umVRzytDFaSm3yEbc8D3V3+0v2a0Rtys/yl48L2OUz8nkXano24z4wm7U5eKoYEuo
-	RfdtKKvIuVzZDG0L/fF8R+8VJNrxDiJY9rWY8W
-X-Received: by 2002:a67:f7d3:0:b0:46b:2177:3dd5 with SMTP id a19-20020a67f7d3000000b0046b21773dd5mr813800vsp.59.1706266857208;
-        Fri, 26 Jan 2024 03:00:57 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGpXTYAbdzLiIsrnQlBUga5yJGtTPifrKZ94nSeg3N8tWU7X+J3z3U88iJcUhzqazoErnhnGdfkCOzGN9AK1kM=
-X-Received: by 2002:a67:f7d3:0:b0:46b:2177:3dd5 with SMTP id
- a19-20020a67f7d3000000b0046b21773dd5mr813761vsp.59.1706266856821; Fri, 26 Jan
- 2024 03:00:56 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="IXtyZgub"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1706266907;
+	bh=pU7ADMC9W3X1II2U5vo0mdMm3TYxbo2cFp28xo0Dtu8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=IXtyZgubZ4mT/Z2XpWBOmseONFLJb5nsg8VLZUw8SdeuiEuCklZ/iIr4rfGfjXWrd
+	 1w6PbciaVNZNALFBqNnfzQLjxmLd84x9qBGkBjj0CKmn6ZNwVYvu+sFtFneZtoALOL
+	 EYuQOZaFqCsKytKTPb4Ig3EZQVtunyQkDcZimdtC/WXs1VX4Vb2Ol6EHpCouifQAdx
+	 qB+PGnxD+7EjRGdjymN3eGi6S9cr8194j0LX5gkdAF524O3w1yajBvxSWd7MIoQcBD
+	 UneH9ws1hMfOfQ6ErY5laVikEOs97i5igyBey2bfipXXHiJhZyOYaltgdmUaqjV9wl
+	 JBj6Q5m4P7dlQ==
+Received: from benjamin-XPS-13-9310.. (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: benjamin.gaignard)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 142523782075;
+	Fri, 26 Jan 2024 11:01:47 +0000 (UTC)
+From: Benjamin Gaignard <benjamin.gaignard@collabora.com>
+To: hverkuil@xs4all.nl,
+	mchehab@kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	linux-media@vger.kernel.org,
+	kernel@collabora.com,
+	Benjamin Gaignard <benjamin.gaignard@collabora.com>
+Subject: [PATCH v18 1/9] media: videobuf2: Update vb2_is_busy() logic
+Date: Fri, 26 Jan 2024 12:01:33 +0100
+Message-Id: <20240126110141.135896-2-benjamin.gaignard@collabora.com>
+X-Mailer: git-send-email 2.40.1
+In-Reply-To: <20240126110141.135896-1-benjamin.gaignard@collabora.com>
+References: <20240126110141.135896-1-benjamin.gaignard@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240126041126.1927228-1-michael.roth@amd.com> <20240126041126.1927228-22-michael.roth@amd.com>
-In-Reply-To: <20240126041126.1927228-22-michael.roth@amd.com>
-From: Paolo Bonzini <pbonzini@redhat.com>
-Date: Fri, 26 Jan 2024 12:00:43 +0100
-Message-ID: <CABgObfaqjBBt74ZX6LtP=sQgYsu4FRTuKsDZ1ZaFkA5vK1ddCQ@mail.gmail.com>
-Subject: Re: [PATCH v2 21/25] KVM: SEV: Make AVIC backing, VMSA and VMCB
- memory allocation SNP safe
-To: Michael Roth <michael.roth@amd.com>
-Cc: x86@kernel.org, kvm@vger.kernel.org, linux-coco@lists.linux.dev, 
-	linux-mm@kvack.org, linux-crypto@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com, 
-	jroedel@suse.de, thomas.lendacky@amd.com, hpa@zytor.com, ardb@kernel.org, 
-	seanjc@google.com, vkuznets@redhat.com, jmattson@google.com, luto@kernel.org, 
-	dave.hansen@linux.intel.com, slp@redhat.com, pgonda@google.com, 
-	peterz@infradead.org, srinivas.pandruvada@linux.intel.com, 
-	rientjes@google.com, tobin@ibm.com, bp@alien8.de, vbabka@suse.cz, 
-	kirill@shutemov.name, ak@linux.intel.com, tony.luck@intel.com, 
-	sathyanarayanan.kuppuswamy@linux.intel.com, alpergun@google.com, 
-	jarkko@kernel.org, ashish.kalra@amd.com, nikunj.dadhania@amd.com, 
-	pankaj.gupta@amd.com, liam.merwick@oracle.com, 
-	Brijesh Singh <brijesh.singh@amd.com>, Marc Orr <marcorr@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jan 26, 2024 at 5:45=E2=80=AFAM Michael Roth <michael.roth@amd.com>=
- wrote:
->
-> From: Brijesh Singh <brijesh.singh@amd.com>
->
-> Implement a workaround for an SNP erratum where the CPU will incorrectly
-> signal an RMP violation #PF if a hugepage (2MB or 1GB) collides with the
-> RMP entry of a VMCB, VMSA or AVIC backing page.
->
-> When SEV-SNP is globally enabled, the CPU marks the VMCB, VMSA, and AVIC
-> backing pages as "in-use" via a reserved bit in the corresponding RMP
-> entry after a successful VMRUN. This is done for _all_ VMs, not just
-> SNP-Active VMs.
->
-> If the hypervisor accesses an in-use page through a writable
-> translation, the CPU will throw an RMP violation #PF. On early SNP
-> hardware, if an in-use page is 2MB-aligned and software accesses any
-> part of the associated 2MB region with a hugepage, the CPU will
-> incorrectly treat the entire 2MB region as in-use and signal a an RMP
-> violation #PF.
->
-> To avoid this, the recommendation is to not use a 2MB-aligned page for
-> the VMCB, VMSA or AVIC pages. Add a generic allocator that will ensure
-> that the page returned is not 2MB-aligned and is safe to be used when
-> SEV-SNP is enabled. Also implement similar handling for the VMCB/VMSA
-> pages of nested guests.
->
-> Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
-> Co-developed-by: Marc Orr <marcorr@google.com>
-> Signed-off-by: Marc Orr <marcorr@google.com>
-> Reported-by: Alper Gun <alpergun@google.com> # for nested VMSA case
-> Co-developed-by: Ashish Kalra <ashish.kalra@amd.com>
-> Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
-> Acked-by: Vlastimil Babka <vbabka@suse.cz>
-> [mdr: squash in nested guest handling from Ashish, commit msg fixups]
-> Signed-off-by: Michael Roth <michael.roth@amd.com>
+Do not rely on the number of allocated buffers to know if the
+queue is busy but on flag set when at least buffer has been allocated
+by REQBUFS or CREATE_BUFS ioctl.
+The flag is reset when REQBUFS is called with count = 0 or close the
+file handle.
+This is needed because delete buffers feature will be able to remove
+all the buffers from a queue while streaming so relying in the number
+of allocated buffers in the queue won't be possible.
 
-Acked-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard@collabora.com>
+---
+ drivers/media/common/videobuf2/videobuf2-core.c | 6 +++++-
+ include/media/videobuf2-core.h                  | 4 +++-
+ 2 files changed, 8 insertions(+), 2 deletions(-)
 
-
-> ---
->  arch/x86/include/asm/kvm-x86-ops.h |  1 +
->  arch/x86/include/asm/kvm_host.h    |  1 +
->  arch/x86/kvm/lapic.c               |  5 ++++-
->  arch/x86/kvm/svm/nested.c          |  2 +-
->  arch/x86/kvm/svm/sev.c             | 32 ++++++++++++++++++++++++++++++
->  arch/x86/kvm/svm/svm.c             | 17 +++++++++++++---
->  arch/x86/kvm/svm/svm.h             |  1 +
->  7 files changed, 54 insertions(+), 5 deletions(-)
->
-> diff --git a/arch/x86/include/asm/kvm-x86-ops.h b/arch/x86/include/asm/kv=
-m-x86-ops.h
-> index 378ed944b849..ab24ce207988 100644
-> --- a/arch/x86/include/asm/kvm-x86-ops.h
-> +++ b/arch/x86/include/asm/kvm-x86-ops.h
-> @@ -138,6 +138,7 @@ KVM_X86_OP(complete_emulated_msr)
->  KVM_X86_OP(vcpu_deliver_sipi_vector)
->  KVM_X86_OP_OPTIONAL_RET0(vcpu_get_apicv_inhibit_reasons);
->  KVM_X86_OP_OPTIONAL(get_untagged_addr)
-> +KVM_X86_OP_OPTIONAL(alloc_apic_backing_page)
->
->  #undef KVM_X86_OP
->  #undef KVM_X86_OP_OPTIONAL
-> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_h=
-ost.h
-> index b5b2d0fde579..5c12af29fd9b 100644
-> --- a/arch/x86/include/asm/kvm_host.h
-> +++ b/arch/x86/include/asm/kvm_host.h
-> @@ -1794,6 +1794,7 @@ struct kvm_x86_ops {
->         unsigned long (*vcpu_get_apicv_inhibit_reasons)(struct kvm_vcpu *=
-vcpu);
->
->         gva_t (*get_untagged_addr)(struct kvm_vcpu *vcpu, gva_t gva, unsi=
-gned int flags);
-> +       void *(*alloc_apic_backing_page)(struct kvm_vcpu *vcpu);
->  };
->
->  struct kvm_x86_nested_ops {
-> diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-> index 3242f3da2457..1edf93ee3395 100644
-> --- a/arch/x86/kvm/lapic.c
-> +++ b/arch/x86/kvm/lapic.c
-> @@ -2815,7 +2815,10 @@ int kvm_create_lapic(struct kvm_vcpu *vcpu, int ti=
-mer_advance_ns)
->
->         vcpu->arch.apic =3D apic;
->
-> -       apic->regs =3D (void *)get_zeroed_page(GFP_KERNEL_ACCOUNT);
-> +       if (kvm_x86_ops.alloc_apic_backing_page)
-> +               apic->regs =3D static_call(kvm_x86_alloc_apic_backing_pag=
-e)(vcpu);
-> +       else
-> +               apic->regs =3D (void *)get_zeroed_page(GFP_KERNEL_ACCOUNT=
-);
->         if (!apic->regs) {
->                 printk(KERN_ERR "malloc apic regs error for vcpu %x\n",
->                        vcpu->vcpu_id);
-> diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
-> index dee62362a360..55b9a6d96bcf 100644
-> --- a/arch/x86/kvm/svm/nested.c
-> +++ b/arch/x86/kvm/svm/nested.c
-> @@ -1181,7 +1181,7 @@ int svm_allocate_nested(struct vcpu_svm *svm)
->         if (svm->nested.initialized)
->                 return 0;
->
-> -       vmcb02_page =3D alloc_page(GFP_KERNEL_ACCOUNT | __GFP_ZERO);
-> +       vmcb02_page =3D snp_safe_alloc_page(&svm->vcpu);
->         if (!vmcb02_page)
->                 return -ENOMEM;
->         svm->nested.vmcb02.ptr =3D page_address(vmcb02_page);
-> diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
-> index 564091f386f7..f99435b6648f 100644
-> --- a/arch/x86/kvm/svm/sev.c
-> +++ b/arch/x86/kvm/svm/sev.c
-> @@ -3163,3 +3163,35 @@ void sev_vcpu_deliver_sipi_vector(struct kvm_vcpu =
-*vcpu, u8 vector)
->
->         ghcb_set_sw_exit_info_2(svm->sev_es.ghcb, 1);
->  }
-> +
-> +struct page *snp_safe_alloc_page(struct kvm_vcpu *vcpu)
-> +{
-> +       unsigned long pfn;
-> +       struct page *p;
-> +
-> +       if (!cpu_feature_enabled(X86_FEATURE_SEV_SNP))
-> +               return alloc_page(GFP_KERNEL_ACCOUNT | __GFP_ZERO);
-> +
-> +       /*
-> +        * Allocate an SNP-safe page to workaround the SNP erratum where
-> +        * the CPU will incorrectly signal an RMP violation #PF if a
-> +        * hugepage (2MB or 1GB) collides with the RMP entry of a
-> +        * 2MB-aligned VMCB, VMSA, or AVIC backing page.
-> +        *
-> +        * Allocate one extra page, choose a page which is not
-> +        * 2MB-aligned, and free the other.
-> +        */
-> +       p =3D alloc_pages(GFP_KERNEL_ACCOUNT | __GFP_ZERO, 1);
-> +       if (!p)
-> +               return NULL;
-> +
-> +       split_page(p, 1);
-> +
-> +       pfn =3D page_to_pfn(p);
-> +       if (IS_ALIGNED(pfn, PTRS_PER_PMD))
-> +               __free_page(p++);
-> +       else
-> +               __free_page(p + 1);
-> +
-> +       return p;
-> +}
-> diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-> index 61f2bdc9f4f8..272d5ed37ce7 100644
-> --- a/arch/x86/kvm/svm/svm.c
-> +++ b/arch/x86/kvm/svm/svm.c
-> @@ -703,7 +703,7 @@ static int svm_cpu_init(int cpu)
->         int ret =3D -ENOMEM;
->
->         memset(sd, 0, sizeof(struct svm_cpu_data));
-> -       sd->save_area =3D alloc_page(GFP_KERNEL | __GFP_ZERO);
-> +       sd->save_area =3D snp_safe_alloc_page(NULL);
->         if (!sd->save_area)
->                 return ret;
->
-> @@ -1421,7 +1421,7 @@ static int svm_vcpu_create(struct kvm_vcpu *vcpu)
->         svm =3D to_svm(vcpu);
->
->         err =3D -ENOMEM;
-> -       vmcb01_page =3D alloc_page(GFP_KERNEL_ACCOUNT | __GFP_ZERO);
-> +       vmcb01_page =3D snp_safe_alloc_page(vcpu);
->         if (!vmcb01_page)
->                 goto out;
->
-> @@ -1430,7 +1430,7 @@ static int svm_vcpu_create(struct kvm_vcpu *vcpu)
->                  * SEV-ES guests require a separate VMSA page used to con=
-tain
->                  * the encrypted register state of the guest.
->                  */
-> -               vmsa_page =3D alloc_page(GFP_KERNEL_ACCOUNT | __GFP_ZERO)=
-;
-> +               vmsa_page =3D snp_safe_alloc_page(vcpu);
->                 if (!vmsa_page)
->                         goto error_free_vmcb_page;
->
-> @@ -4900,6 +4900,16 @@ static int svm_vm_init(struct kvm *kvm)
->         return 0;
->  }
->
-> +static void *svm_alloc_apic_backing_page(struct kvm_vcpu *vcpu)
-> +{
-> +       struct page *page =3D snp_safe_alloc_page(vcpu);
-> +
-> +       if (!page)
-> +               return NULL;
-> +
-> +       return page_address(page);
-> +}
-> +
->  static struct kvm_x86_ops svm_x86_ops __initdata =3D {
->         .name =3D KBUILD_MODNAME,
->
-> @@ -5031,6 +5041,7 @@ static struct kvm_x86_ops svm_x86_ops __initdata =
-=3D {
->
->         .vcpu_deliver_sipi_vector =3D svm_vcpu_deliver_sipi_vector,
->         .vcpu_get_apicv_inhibit_reasons =3D avic_vcpu_get_apicv_inhibit_r=
-easons,
-> +       .alloc_apic_backing_page =3D svm_alloc_apic_backing_page,
->  };
->
->  /*
-> diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
-> index 8ef95139cd24..7f1fbd874c45 100644
-> --- a/arch/x86/kvm/svm/svm.h
-> +++ b/arch/x86/kvm/svm/svm.h
-> @@ -694,6 +694,7 @@ void sev_es_vcpu_reset(struct vcpu_svm *svm);
->  void sev_vcpu_deliver_sipi_vector(struct kvm_vcpu *vcpu, u8 vector);
->  void sev_es_prepare_switch_to_guest(struct sev_es_save_area *hostsa);
->  void sev_es_unmap_ghcb(struct vcpu_svm *svm);
-> +struct page *snp_safe_alloc_page(struct kvm_vcpu *vcpu);
->
->  /* vmenter.S */
->
-> --
-> 2.25.1
->
+diff --git a/drivers/media/common/videobuf2/videobuf2-core.c b/drivers/media/common/videobuf2/videobuf2-core.c
+index b6bf8f232f48..8aa6057df581 100644
+--- a/drivers/media/common/videobuf2/videobuf2-core.c
++++ b/drivers/media/common/videobuf2/videobuf2-core.c
+@@ -858,8 +858,10 @@ int vb2_core_reqbufs(struct vb2_queue *q, enum vb2_memory memory,
+ 		 * In case of REQBUFS(0) return immediately without calling
+ 		 * driver's queue_setup() callback and allocating resources.
+ 		 */
+-		if (*count == 0)
++		if (*count == 0) {
++			q->is_busy = 0;
+ 			return 0;
++		}
+ 	}
+ 
+ 	/*
+@@ -966,6 +968,7 @@ int vb2_core_reqbufs(struct vb2_queue *q, enum vb2_memory memory,
+ 	 */
+ 	*count = allocated_buffers;
+ 	q->waiting_for_buffers = !q->is_output;
++	q->is_busy = 1;
+ 
+ 	return 0;
+ 
+@@ -1091,6 +1094,7 @@ int vb2_core_create_bufs(struct vb2_queue *q, enum vb2_memory memory,
+ 	 * to the userspace.
+ 	 */
+ 	*count = allocated_buffers;
++	q->is_busy = 1;
+ 
+ 	return 0;
+ 
+diff --git a/include/media/videobuf2-core.h b/include/media/videobuf2-core.h
+index 56719a26a46c..b317286a7b08 100644
+--- a/include/media/videobuf2-core.h
++++ b/include/media/videobuf2-core.h
+@@ -579,6 +579,7 @@ struct vb2_buf_ops {
+  *		called since poll() needs to return %EPOLLERR in that situation.
+  * @is_multiplanar: set if buffer type is multiplanar
+  * @is_output:	set if buffer type is output
++ * @is_busy:	set if at least one buffer has been allocated at some time.
+  * @copy_timestamp: set if vb2-core should set timestamps
+  * @last_buffer_dequeued: used in poll() and DQBUF to immediately return if the
+  *		last decoded buffer was already dequeued. Set for capture queues
+@@ -644,6 +645,7 @@ struct vb2_queue {
+ 	unsigned int			waiting_in_dqbuf:1;
+ 	unsigned int			is_multiplanar:1;
+ 	unsigned int			is_output:1;
++	unsigned int			is_busy:1;
+ 	unsigned int			copy_timestamp:1;
+ 	unsigned int			last_buffer_dequeued:1;
+ 
+@@ -1163,7 +1165,7 @@ static inline unsigned int vb2_get_num_buffers(struct vb2_queue *q)
+  */
+ static inline bool vb2_is_busy(struct vb2_queue *q)
+ {
+-	return vb2_get_num_buffers(q) > 0;
++	return !!q->is_busy;
+ }
+ 
+ /**
+-- 
+2.40.1
 
