@@ -1,367 +1,173 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from EUR02-VI1-obe.outbound.protection.outlook.com (mail-vi1eur02on2042.outbound.protection.outlook.com [40.107.241.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6C491427A
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 07:02:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706252537; cv=none; b=mEcucGRDQOCwOJ4/n3KyajnRiQ8Zmygs8tAzRdQ/MqdVhK+TsEamQ51RBeMNChzbA5MoK00QmtS5yPf7Dr+n1XQ8F9qjD8A3OA3LV1EgNSYxW5K7WWmuToeYX41sC/gLAJlacFLsjldcIyrRvYVl9Lmus7T9fNZrby1tZnPCeL4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706252537; c=relaxed/simple;
-	bh=6A1Ec0hcAcDSXfpWqEsvksMUBmqx5jHm+qFzmWrsDGI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=J5Sm75VdPby1L4gInJ9mgT+zYWQCkskv5xnKK3B2qxvGz0hZjW38dn+KlzE4V4Gui0EhRxFsSdtajFSIVqu9/zEvgxSPcHz8Mz2yrQPeE3wRKQ0+Ytz9OFkV79tgVuenMzpcb/n99Anj51j5eiVV0wz80/WbQRpsKGCKPp7emTY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=s0M/+0Dl; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2052125CD;
+	Fri, 26 Jan 2024 07:05:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.241.42
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706252706; cv=fail; b=C4TJGPP/WclasixVUrPvPKooRGcdpMonrdxZ5o9KKMlUJA0I5vcnPWp8hnVS/CH5+vZm3x8HY2ta19FyAayqtguvbUMR5twO1z9+7SNeqmxMmokMpzCqYa8mkjdEIOpuyBTpcrZ92kOzCFKTPHdmS2GB+619pMG5RLTmwvC9mr0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706252706; c=relaxed/simple;
+	bh=gk/Qm+J25QZpiOBaQCs1blGppZFXm/yY+X9O04PzWWI=;
+	h=From:Subject:Date:Message-Id:Content-Type:To:Cc:MIME-Version; b=pkPWdUEmYM+6gTkJ/Wy3r17aISdkqRZVcyBIDFQ3NuvAzAR1RQAk2eTSqMzs6ty3hdgt5R+CpIGxvmiFhZIEzAmtNfNXhDOJY9OtJ3x4Zu0USSRFESlPqpZIIl+G/stgPqtmsY0j5ckYUz2nMp9iv5hiRPS1np6T/JLncjH+iJk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=eVRiniwI; arc=fail smtp.client-ip=40.107.241.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="s0M/+0Dl"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=l7Dw4ZucWoH6p0xVnUgKiMRWXXupBNncYxdOpylDCZI=; b=s0M/+0DlriPPYBQpc38JXKm9wr
-	rMgc6NpuZlUrG0dKXVdJVzaEQYGrPhhkeqgmMD/AwzXz16ztX3Rb6lfdLa1WT5kMwKQ6YniAI6M4n
-	zcAEIQqgixXKQ5b1N8XcSdtheJLBmkKtA0xB22fZOmdpgFrWfvf+gbXEHvkyYG6SpELLGhbLQQYL9
-	7mePUqodlvRAC5gl6nvqE7NoMFknmo1TPvhjkbM99by3MdDJ8cUw0C1c+0+9B6nYdVKsqz1fVib2i
-	H8pAGti4wQpHc+x9Mtm3JxRbTqS2xU8jfOGZmecnEFsRGkCWbjlTzcCMual/Twq/5I5phF12BOnYW
-	/ZnxKp4g==;
-Received: from willy by casper.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rTGE1-0000000Cpxb-0eiX;
-	Fri, 26 Jan 2024 07:02:05 +0000
-Date: Fri, 26 Jan 2024 07:02:05 +0000
-From: Matthew Wilcox <willy@infradead.org>
-To: linux-mtd@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org, Richard Weinberger <richard@nod.at>
-Subject: Re: [PATCH 2/2] mtd: Remove support for Carillo Ranch driver
-Message-ID: <ZbNY7Vd2l8wjIhcp@casper.infradead.org>
-References: <20231208224703.1603264-1-willy@infradead.org>
- <20231208224703.1603264-2-willy@infradead.org>
+	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="eVRiniwI"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=QxNtO+w7PeuTpOmvMpeEsoxk2FepC1ctezvnhebXV/YVpPVYJCtqq5fHRKXOMaGIr3R4lZRxCQsAaX9M/HvQ8AnaeQZ+5CfuL9QqTDsNm1blzCpRQZ+t8+ZeAht8JRFZ+EGPTtZydUvh2UQBL0LYfMWg4fFt5IAxYNp04m4wwcGruYmXkjQOvk+Pb5SUTUw6vImeTQLA0MnE+QMD5O6sr82PCwFPcz9540EtpBaDT8z4iZHKXVx/Mvrl01Ynh08jgCnfLW8AVgktg8llBP8qzwgrUX48VqBRM16wywxDcSGljPebd0CF1cNGyR7okuyDtHw8lZ3fdlRginboznjZdg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=kAaNJ0ln9XVjZhG93Q9HTLH5Y9U52JXER+ZsVgo/Vs0=;
+ b=c1qzMj4Io0O/+tpOJ08AcNK6zW33duZ+TM7bXMh/uXjPqHUA52xl0J9lZUh2jmhsyfjm9btRE9Tws6q/153TY+/Z9vjEPPRFdSH3tcfRC/VeWMa1uCYlsDGyYawl68sTa6BoRHOuQDSeuvyXo3MKjK/YykyHBAYyYXgq6EwaxDtsoCXBW0xB7lQhJwSRaLcQDnsjgDz4nkUHAfG8wJvG/1/DjC9VN66NGqXlS/stVMbQvnNvIJd8oEIMxS2zYdpHl63dGbbeU6UZHNcm/DrU4oTNnKeGBnT8c+bHHzmf+mL/PMOub4Nb2djIXUtW80o/feMI/JGrNNtodAkdsXIX+A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector2-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kAaNJ0ln9XVjZhG93Q9HTLH5Y9U52JXER+ZsVgo/Vs0=;
+ b=eVRiniwIzE0M+wGx1RCt7FpmAIrsbEWd06qx3Ler716GkCRl4NropDHf89/Ad0Uz/qfgViGC/J64wM84bIz5DpsTFUR1WM7gut1F0RRP6vdb/+LjPIhndr1r6kCGOAg95Ub//byevI+mAcKALF4CsqkP2JcpUt6vzyrc66Y9TjQ=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=oss.nxp.com;
+Received: from DU0PR04MB9417.eurprd04.prod.outlook.com (2603:10a6:10:358::11)
+ by AS5PR04MB9825.eurprd04.prod.outlook.com (2603:10a6:20b:672::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.27; Fri, 26 Jan
+ 2024 07:05:00 +0000
+Received: from DU0PR04MB9417.eurprd04.prod.outlook.com
+ ([fe80::c499:8cef:9bb1:ced6]) by DU0PR04MB9417.eurprd04.prod.outlook.com
+ ([fe80::c499:8cef:9bb1:ced6%3]) with mapi id 15.20.7228.022; Fri, 26 Jan 2024
+ 07:04:59 +0000
+From: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+Subject: [PATCH v3 0/3] clocksource: imx-sysctr: support i.MX95
+Date: Fri, 26 Jan 2024 15:09:17 +0800
+Message-Id: <20240126-imx-sysctr-v3-0-33fe801d5f31@nxp.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAJ1as2UC/23MQQ6DIBCF4auYWZeGDlqsq96jcUGQ1lkIhjEEY
+ 7h7qesu/5e87wB2kRzD0BwQXSKm4GuoSwN2Nv7jBE21ASW28oadoCUL3tluUSjTP4zsO1T6DvW
+ wRvemfGKvsfZMvIW4n3bC3/qXSSik0Ephq6WdtHFPn9erDQuMpZQvfoFemaIAAAA=
+To: Daniel Lezcano <daniel.lezcano@linaro.org>, 
+ Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Bai Ping <ping.bai@nxp.com>, 
+ Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, 
+ Marco Felsch <m.felsch@pengutronix.de>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, Peng Fan <peng.fan@nxp.com>
+X-Mailer: b4 0.12.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1706252968; l=1138;
+ i=peng.fan@nxp.com; s=20230812; h=from:subject:message-id;
+ bh=gk/Qm+J25QZpiOBaQCs1blGppZFXm/yY+X9O04PzWWI=;
+ b=SZLBC/Q+Ol2cyTxRw7e01fhLSNjLPla9SPl5Ps1zCZPXnRiXRjW6xlJ2sF5tFBcvuGqqU7hb9
+ MNJ+9D4VMDHDYLHLD/z7ECai0xkgrCL2L543bJgZ/Pt+R6uerwKOAX0
+X-Developer-Key: i=peng.fan@nxp.com; a=ed25519;
+ pk=I4sJg7atIT1g63H7bb5lDRGR2gJW14RKDD0wFL8TT1g=
+X-ClientProxiedBy: SI2PR04CA0002.apcprd04.prod.outlook.com
+ (2603:1096:4:197::17) To DU0PR04MB9417.eurprd04.prod.outlook.com
+ (2603:10a6:10:358::11)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231208224703.1603264-2-willy@infradead.org>
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DU0PR04MB9417:EE_|AS5PR04MB9825:EE_
+X-MS-Office365-Filtering-Correlation-Id: 89ce91c5-213b-4636-66f8-08dc1e3d1c58
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	hz5zeitsMO0M7SYTdb3jebiT2efMMWy9OHzFkmh4eegbyIPuA6+HjhCGAqr1/iJdrSmkXQi4l9LLKpZJJJBEM/19wWBmiyqpYSPyJJ4+CvSsF/atwuWEzuwLD4mgtTP+MLptnjqQuhcg5jyMCi0aplc69AEmt+JA2evx9DE0d0aIiu9dVvddgl5qn2vO7DT4h/YZCfqH6va1ZatxuxgOyHvQ4Ve86kYEnkyplsPK+AG3f+fP8BSpFHA42aRCV3IlZdM0oz90lR10kqw/yYuZvhQtBfQ8eVuAbcj8l1A0LsJfXH6hR3sUrZfs/+vcCg09cqU6RQZYfYzVaClajFKnBEtU2mSNo2yjZP7eZM7jyC8cI2vt8azDwpZaFPgof7/j8eYPwy7XEhDy498Bo+wlJAegoTNoTmyBoT1AMd0lfkzbG/oT6aMCJUBLT5gJmulYvicWbYKk57gbDQR3+ZZb7ygqP4MVPzrOkVDNyCO7d6YzgLiI1LRgDBhLuiKqiKXKxM2M8LcjHuZtnrgp+Id7xcmQCqVewPFvsWyAddKMIQBTiFReF3Obx5Okr13gy2GB5qKs4rhgQnL9PilUzyKGiqaanf5aYraybjDjBBUsmjchiy5RRXQ1I8IDQv6LtHhc
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU0PR04MB9417.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(396003)(346002)(366004)(136003)(39860400002)(230922051799003)(451199024)(186009)(64100799003)(1800799012)(83380400001)(921011)(110136005)(36756003)(86362001)(41300700001)(38350700005)(38100700002)(26005)(9686003)(6512007)(966005)(6486002)(52116002)(6506007)(2906002)(478600001)(66946007)(316002)(6666004)(66476007)(66556008)(5660300002)(8676002)(4326008)(7416002)(8936002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?d2E2UVVOOHRSVmZ1Y3R2TndzL0ZsWG9PQ0Q4RkVFNmt0T2ZpbU95L0h2Wjc0?=
+ =?utf-8?B?bHI2eFFMdVVob0U3aHRrcnJpU0N0VHhSWlJ0b01NaUhTL0xSYzhJSk9zb1li?=
+ =?utf-8?B?ZHltbDArNS9TeWp0RGZlTjV2Y3NQbVh2cnNLTE1rL1h2bS9sM0tIZnNvODlv?=
+ =?utf-8?B?VnVKSHNKeXIyUXozTnJuVXN2NTBKenIySlNnaS8zUWRrS3FFV00zNUM1MnJv?=
+ =?utf-8?B?NHdPMHE0SU9mYjdDVG1lSHdpN0pLOEJyMG52Ly94NUJnT3NFQytCRDVId3VR?=
+ =?utf-8?B?S1JHWFU0VUFRazR5Wkl4Qk1nZWtPbTN1Z09WRXNUNHlyWng2KzErS2ZzZjZU?=
+ =?utf-8?B?Tjc2Z05kS2VCWWYxd0ZTajFpcG1FMkswTHVhZ0lmV0UvZ3RRQmtCZlJPbGFN?=
+ =?utf-8?B?WWJIa0l5OXE0bFFld0ZZaUpDVDI5akRkZHZDSXR1RlpmSFZLRFhVYmNKdUU0?=
+ =?utf-8?B?c21NdGpHeVhlSXJ0d3hoblFXTkpPaldwYkMwVGNzamtJQm5VZnRNaTBUYzFr?=
+ =?utf-8?B?MStkSGRSSVptVmZvQTAzNS90WXZjM0tsY1FOb0Jkb25FKzNNb1YwTFBabWxq?=
+ =?utf-8?B?MTR5OWNmWU82bDRPc0FDRGg3RlBSdUJ5cFpiMW56NFlBbmlKaFI0bytnS3FO?=
+ =?utf-8?B?MHJ3QzUxMWVwNmN5cFp1T09POWZSYUVPd21IMVk4dmVlbTBkcCtYZjJDcDdY?=
+ =?utf-8?B?OXgwQTM2WU12YklnMmNWQ0ZLUkNPNGszeWxMRWVFRU5mSHR5dDR1aStjd2Fq?=
+ =?utf-8?B?QXZNeVBvZWU4bDdtM0ZDTGxRcjlQOXcxRmlxajhNMGZQMXJ1N0F3NTQ1c3hG?=
+ =?utf-8?B?YWczK2hENmNiWlZGNFNUeW1Xc3VranZubmdEM1FrR1E3djhWYlpreG9aT1VQ?=
+ =?utf-8?B?eURlay9MVjNBK1hpdW9SNjBzcjZtWHFzSnJZQmFodlhKNDAyZ1puUk9oQU1H?=
+ =?utf-8?B?dGpKNGxreEF5Slo1aFlVV2k2TFJtcDFYTStLcCtNSHNndlZ1KzNMemJXQ3dm?=
+ =?utf-8?B?bEtKTVdLOERxQ2pJMFJ5Q3ZMU3Q3VVZIbkNzVXFaeGRxVHhZeDc3SlVXR21h?=
+ =?utf-8?B?TWJRUmRFRk5nVUNxVUFaZVdZYTc1d3l1U2lTYUlhVFFGb21aQzNpUXgrSEt4?=
+ =?utf-8?B?RlJpbjJyUXVXdEg3UUgzcjlWRldJb2VlWEl5aHRpWjZKeGRjbXJvSVpyZVNq?=
+ =?utf-8?B?RFpCZEVSSDFWblRqSlJWSXNhM05TaDQ5b0hsN2hCdmdGMHRodHpvSmFsc3dF?=
+ =?utf-8?B?WGRaR1hUMCttaTM1RlVpUm5KaU5MSnBhbEZRNm1jd0c1M3JqSzFvbGZFZE5Z?=
+ =?utf-8?B?U3k3NFl4K0ZtTWdiL1NLbUNtQm50bkVJL0h2bFB3VjBGUkFaeXNKMlg1Z1pJ?=
+ =?utf-8?B?ck5nZGVESW55aUlweXdNWVkwdzEyKzBHS2ZZNVpYNkNEc0NFNFAyNDRHcnpQ?=
+ =?utf-8?B?M2lPYnlXR21YSmJ5MmZTMFcweDZOMHdaRnEyUUdFSHRBUFV4cC9ZbUh5dENW?=
+ =?utf-8?B?MkdmT2k3SFh4WG5aQklGZ3lIZ0E4NXhCZFJ2UnprUzhRdHBGREdiQjYybXpo?=
+ =?utf-8?B?M1NxNVdLRkFrVFhkNkJlVzVkd1BZZVFPZFVwZUtyY25LdThSUjl6YlpLQkxm?=
+ =?utf-8?B?V0YvbkhhOGZIbTVXY2o4SElTR2hnY3VlNzI2U295K2phMjVPNlIxakFsdHRj?=
+ =?utf-8?B?K0NEUlc1MEdiME1xUFVTU21BK3FWNFNmcUdsS1BlVGFOT0FjY2ZFdy9CbDRa?=
+ =?utf-8?B?MnZpdkNkMkFycTh4Z0tKejFlUHdQRTM4STZ3di9la1E5SjNxNXh0KzQ4QUlt?=
+ =?utf-8?B?RWVrdFBINTN5UkJnMUJQY2xmeUx2UEhwSFNscStwcHdkUVowZ1pLOTJ0UTFH?=
+ =?utf-8?B?dHN1Q0tXcmlZNlB3bGRLeURGT0p2N3RMaFdaSjcySXZYd0lUcWVyQ28wUGJv?=
+ =?utf-8?B?MHFHV3ZVUEV0S1BwT0Z0ZWt5b3BGTS9COElPMVlqRmg4WkJwbk1WOGtwVXNX?=
+ =?utf-8?B?V1B1eUNXNmlMMEZVbTFoU1pITUppWGduTUdEMUs3VVBJKys3YWtCRmN6U2Iw?=
+ =?utf-8?B?WVQzSlRYMWN5bElqUFBCWEtJNVIwRDg4VUpGUVBDTjBzTmNmZFBXa1UrSVh1?=
+ =?utf-8?Q?K1UZhBJ11vgZ7/zIVW2yfEAva?=
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 89ce91c5-213b-4636-66f8-08dc1e3d1c58
+X-MS-Exchange-CrossTenant-AuthSource: DU0PR04MB9417.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jan 2024 07:04:59.9083
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 9kGptGqzSzbjtkFIACJWEHVf9MqLuyEiWhJfihhZMEjlXzw/ZMC4qAq+nHQ4tu+jPKTJKbA/FqgLRse/OtkJzA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS5PR04MB9825
 
-Ping
+i.MX95 System Counter module control register space is blocked
+by SCMI firmware, so we use Read Register space to get the counter.
 
-On Fri, Dec 08, 2023 at 10:47:03PM +0000, Matthew Wilcox (Oracle) wrote:
-> As far as anybody can tell, this product never shipped.  If it did,
-> it shipped in 2007 and nobody has access to one any more.  Remove the
-> mtd NOR driver.
-> 
-> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-> ---
->  drivers/mtd/maps/Kconfig        |   7 -
->  drivers/mtd/maps/Makefile       |   1 -
->  drivers/mtd/maps/intel_vr_nor.c | 265 --------------------------------
->  3 files changed, 273 deletions(-)
->  delete mode 100644 drivers/mtd/maps/intel_vr_nor.c
-> 
-> diff --git a/drivers/mtd/maps/Kconfig b/drivers/mtd/maps/Kconfig
-> index e098ae937ce8..8a8b19874e23 100644
-> --- a/drivers/mtd/maps/Kconfig
-> +++ b/drivers/mtd/maps/Kconfig
-> @@ -341,13 +341,6 @@ config MTD_UCLINUX
->  	help
->  	  Map driver to support image based filesystems for uClinux.
->  
-> -config MTD_INTEL_VR_NOR
-> -	tristate "NOR flash on Intel Vermilion Range Expansion Bus CS0"
-> -	depends on PCI
-> -	help
-> -	  Map driver for a NOR flash bank located on the Expansion Bus of the
-> -	  Intel Vermilion Range chipset.
-> -
->  config MTD_PLATRAM
->  	tristate "Map driver for platform device RAM (mtd-ram)"
->  	select MTD_RAM
-> diff --git a/drivers/mtd/maps/Makefile b/drivers/mtd/maps/Makefile
-> index 094cfb244086..a9083c888e3b 100644
-> --- a/drivers/mtd/maps/Makefile
-> +++ b/drivers/mtd/maps/Makefile
-> @@ -40,6 +40,5 @@ obj-$(CONFIG_MTD_UCLINUX)	+= uclinux.o
->  obj-$(CONFIG_MTD_NETtel)	+= nettel.o
->  obj-$(CONFIG_MTD_SCB2_FLASH)	+= scb2_flash.o
->  obj-$(CONFIG_MTD_PLATRAM)	+= plat-ram.o
-> -obj-$(CONFIG_MTD_INTEL_VR_NOR)	+= intel_vr_nor.o
->  obj-$(CONFIG_MTD_VMU)		+= vmu-flash.o
->  obj-$(CONFIG_MTD_LANTIQ)	+= lantiq-flash.o
-> diff --git a/drivers/mtd/maps/intel_vr_nor.c b/drivers/mtd/maps/intel_vr_nor.c
-> deleted file mode 100644
-> index d67b845b0e89..000000000000
-> --- a/drivers/mtd/maps/intel_vr_nor.c
-> +++ /dev/null
-> @@ -1,265 +0,0 @@
-> -/*
-> - * drivers/mtd/maps/intel_vr_nor.c
-> - *
-> - * An MTD map driver for a NOR flash bank on the Expansion Bus of the Intel
-> - * Vermilion Range chipset.
-> - *
-> - * The Vermilion Range Expansion Bus supports four chip selects, each of which
-> - * has 64MiB of address space.  The 2nd BAR of the Expansion Bus PCI Device
-> - * is a 256MiB memory region containing the address spaces for all four of the
-> - * chip selects, with start addresses hardcoded on 64MiB boundaries.
-> - *
-> - * This map driver only supports NOR flash on chip select 0.  The buswidth
-> - * (either 8 bits or 16 bits) is determined by reading the Expansion Bus Timing
-> - * and Control Register for Chip Select 0 (EXP_TIMING_CS0).  This driver does
-> - * not modify the value in the EXP_TIMING_CS0 register except to enable writing
-> - * and disable boot acceleration.  The timing parameters in the register are
-> - * assumed to have been properly initialized by the BIOS.  The reset default
-> - * timing parameters are maximally conservative (slow), so access to the flash
-> - * will be slower than it should be if the BIOS has not initialized the timing
-> - * parameters.
-> - *
-> - * Author: Andy Lowe <alowe@mvista.com>
-> - *
-> - * 2006 (c) MontaVista Software, Inc. This file is licensed under
-> - * the terms of the GNU General Public License version 2. This program
-> - * is licensed "as is" without any warranty of any kind, whether express
-> - * or implied.
-> - */
-> -
-> -#include <linux/module.h>
-> -#include <linux/kernel.h>
-> -#include <linux/slab.h>
-> -#include <linux/pci.h>
-> -#include <linux/mtd/mtd.h>
-> -#include <linux/mtd/map.h>
-> -#include <linux/mtd/partitions.h>
-> -#include <linux/mtd/cfi.h>
-> -#include <linux/mtd/flashchip.h>
-> -
-> -#define DRV_NAME "vr_nor"
-> -
-> -struct vr_nor_mtd {
-> -	void __iomem *csr_base;
-> -	struct map_info map;
-> -	struct mtd_info *info;
-> -	struct pci_dev *dev;
-> -};
-> -
-> -/* Expansion Bus Configuration and Status Registers are in BAR 0 */
-> -#define EXP_CSR_MBAR 0
-> -/* Expansion Bus Memory Window is BAR 1 */
-> -#define EXP_WIN_MBAR 1
-> -/* Maximum address space for Chip Select 0 is 64MiB */
-> -#define CS0_SIZE 0x04000000
-> -/* Chip Select 0 is at offset 0 in the Memory Window */
-> -#define CS0_START 0x0
-> -/* Chip Select 0 Timing Register is at offset 0 in CSR */
-> -#define EXP_TIMING_CS0 0x00
-> -#define TIMING_CS_EN		(1 << 31)	/* Chip Select Enable */
-> -#define TIMING_BOOT_ACCEL_DIS	(1 <<  8)	/* Boot Acceleration Disable */
-> -#define TIMING_WR_EN		(1 <<  1)	/* Write Enable */
-> -#define TIMING_BYTE_EN		(1 <<  0)	/* 8-bit vs 16-bit bus */
-> -#define TIMING_MASK		0x3FFF0000
-> -
-> -static void vr_nor_destroy_partitions(struct vr_nor_mtd *p)
-> -{
-> -	mtd_device_unregister(p->info);
-> -}
-> -
-> -static int vr_nor_init_partitions(struct vr_nor_mtd *p)
-> -{
-> -	/* register the flash bank */
-> -	/* partition the flash bank */
-> -	return mtd_device_register(p->info, NULL, 0);
-> -}
-> -
-> -static void vr_nor_destroy_mtd_setup(struct vr_nor_mtd *p)
-> -{
-> -	map_destroy(p->info);
-> -}
-> -
-> -static int vr_nor_mtd_setup(struct vr_nor_mtd *p)
-> -{
-> -	static const char * const probe_types[] =
-> -	    { "cfi_probe", "jedec_probe", NULL };
-> -	const char * const *type;
-> -
-> -	for (type = probe_types; !p->info && *type; type++)
-> -		p->info = do_map_probe(*type, &p->map);
-> -	if (!p->info)
-> -		return -ENODEV;
-> -
-> -	p->info->dev.parent = &p->dev->dev;
-> -
-> -	return 0;
-> -}
-> -
-> -static void vr_nor_destroy_maps(struct vr_nor_mtd *p)
-> -{
-> -	unsigned int exp_timing_cs0;
-> -
-> -	/* write-protect the flash bank */
-> -	exp_timing_cs0 = readl(p->csr_base + EXP_TIMING_CS0);
-> -	exp_timing_cs0 &= ~TIMING_WR_EN;
-> -	writel(exp_timing_cs0, p->csr_base + EXP_TIMING_CS0);
-> -
-> -	/* unmap the flash window */
-> -	iounmap(p->map.virt);
-> -
-> -	/* unmap the csr window */
-> -	iounmap(p->csr_base);
-> -}
-> -
-> -/*
-> - * Initialize the map_info structure and map the flash.
-> - * Returns 0 on success, nonzero otherwise.
-> - */
-> -static int vr_nor_init_maps(struct vr_nor_mtd *p)
-> -{
-> -	unsigned long csr_phys, csr_len;
-> -	unsigned long win_phys, win_len;
-> -	unsigned int exp_timing_cs0;
-> -	int err;
-> -
-> -	csr_phys = pci_resource_start(p->dev, EXP_CSR_MBAR);
-> -	csr_len = pci_resource_len(p->dev, EXP_CSR_MBAR);
-> -	win_phys = pci_resource_start(p->dev, EXP_WIN_MBAR);
-> -	win_len = pci_resource_len(p->dev, EXP_WIN_MBAR);
-> -
-> -	if (!csr_phys || !csr_len || !win_phys || !win_len)
-> -		return -ENODEV;
-> -
-> -	if (win_len < (CS0_START + CS0_SIZE))
-> -		return -ENXIO;
-> -
-> -	p->csr_base = ioremap(csr_phys, csr_len);
-> -	if (!p->csr_base)
-> -		return -ENOMEM;
-> -
-> -	exp_timing_cs0 = readl(p->csr_base + EXP_TIMING_CS0);
-> -	if (!(exp_timing_cs0 & TIMING_CS_EN)) {
-> -		dev_warn(&p->dev->dev, "Expansion Bus Chip Select 0 "
-> -		       "is disabled.\n");
-> -		err = -ENODEV;
-> -		goto release;
-> -	}
-> -	if ((exp_timing_cs0 & TIMING_MASK) == TIMING_MASK) {
-> -		dev_warn(&p->dev->dev, "Expansion Bus Chip Select 0 "
-> -		       "is configured for maximally slow access times.\n");
-> -	}
-> -	p->map.name = DRV_NAME;
-> -	p->map.bankwidth = (exp_timing_cs0 & TIMING_BYTE_EN) ? 1 : 2;
-> -	p->map.phys = win_phys + CS0_START;
-> -	p->map.size = CS0_SIZE;
-> -	p->map.virt = ioremap(p->map.phys, p->map.size);
-> -	if (!p->map.virt) {
-> -		err = -ENOMEM;
-> -		goto release;
-> -	}
-> -	simple_map_init(&p->map);
-> -
-> -	/* Enable writes to flash bank */
-> -	exp_timing_cs0 |= TIMING_BOOT_ACCEL_DIS | TIMING_WR_EN;
-> -	writel(exp_timing_cs0, p->csr_base + EXP_TIMING_CS0);
-> -
-> -	return 0;
-> -
-> -      release:
-> -	iounmap(p->csr_base);
-> -	return err;
-> -}
-> -
-> -static const struct pci_device_id vr_nor_pci_ids[] = {
-> -	{PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x500D)},
-> -	{0,}
-> -};
-> -
-> -static void vr_nor_pci_remove(struct pci_dev *dev)
-> -{
-> -	struct vr_nor_mtd *p = pci_get_drvdata(dev);
-> -
-> -	vr_nor_destroy_partitions(p);
-> -	vr_nor_destroy_mtd_setup(p);
-> -	vr_nor_destroy_maps(p);
-> -	kfree(p);
-> -	pci_release_regions(dev);
-> -	pci_disable_device(dev);
-> -}
-> -
-> -static int vr_nor_pci_probe(struct pci_dev *dev, const struct pci_device_id *id)
-> -{
-> -	struct vr_nor_mtd *p = NULL;
-> -	unsigned int exp_timing_cs0;
-> -	int err;
-> -
-> -	err = pci_enable_device(dev);
-> -	if (err)
-> -		goto out;
-> -
-> -	err = pci_request_regions(dev, DRV_NAME);
-> -	if (err)
-> -		goto disable_dev;
-> -
-> -	p = kzalloc(sizeof(*p), GFP_KERNEL);
-> -	err = -ENOMEM;
-> -	if (!p)
-> -		goto release;
-> -
-> -	p->dev = dev;
-> -
-> -	err = vr_nor_init_maps(p);
-> -	if (err)
-> -		goto release;
-> -
-> -	err = vr_nor_mtd_setup(p);
-> -	if (err)
-> -		goto destroy_maps;
-> -
-> -	err = vr_nor_init_partitions(p);
-> -	if (err)
-> -		goto destroy_mtd_setup;
-> -
-> -	pci_set_drvdata(dev, p);
-> -
-> -	return 0;
-> -
-> -      destroy_mtd_setup:
-> -	map_destroy(p->info);
-> -
-> -      destroy_maps:
-> -	/* write-protect the flash bank */
-> -	exp_timing_cs0 = readl(p->csr_base + EXP_TIMING_CS0);
-> -	exp_timing_cs0 &= ~TIMING_WR_EN;
-> -	writel(exp_timing_cs0, p->csr_base + EXP_TIMING_CS0);
-> -
-> -	/* unmap the flash window */
-> -	iounmap(p->map.virt);
-> -
-> -	/* unmap the csr window */
-> -	iounmap(p->csr_base);
-> -
-> -      release:
-> -	kfree(p);
-> -	pci_release_regions(dev);
-> -
-> -      disable_dev:
-> -	pci_disable_device(dev);
-> -
-> -      out:
-> -	return err;
-> -}
-> -
-> -static struct pci_driver vr_nor_pci_driver = {
-> -	.name = DRV_NAME,
-> -	.probe = vr_nor_pci_probe,
-> -	.remove = vr_nor_pci_remove,
-> -	.id_table = vr_nor_pci_ids,
-> -};
-> -
-> -module_pci_driver(vr_nor_pci_driver);
-> -
-> -MODULE_AUTHOR("Andy Lowe");
-> -MODULE_DESCRIPTION("MTD map driver for NOR flash on Intel Vermilion Range");
-> -MODULE_LICENSE("GPL");
-> -MODULE_DEVICE_TABLE(pci, vr_nor_pci_ids);
-> -- 
-> 2.42.0
-> 
+V2:
+  - imx95 is not compatible with the existing hardware, so add a
+    seperate entry for i.MX95 in dt-binding.
+  - Per Marco's comments, the global variables was removed except
+    to_sysctr. And add a new TIMER_OF_DECLARE entry for i.MX95
+
+Signed-off-by: Peng Fan <peng.fan@nxp.com>
+---
+Changes in v3:
+- Drop items in patch 1 per Conor's comments
+- Link to v2: https://lore.kernel.org/r/20240125-imx-sysctr-v2-0-7332470cd7ae@nxp.com
+
+---
+Peng Fan (3):
+      dt-bindings: timer: nxp,sysctr-timer: support i.MX95
+      clocksource/drivers/imx-sysctr: drop use global variables
+      clocksource/drivers/imx-sysctr: support i.MX95
+
+ .../bindings/timer/nxp,sysctr-timer.yaml           |   4 +-
+ drivers/clocksource/timer-imx-sysctr.c             | 116 +++++++++++++++------
+ 2 files changed, 89 insertions(+), 31 deletions(-)
+---
+base-commit: 01af33cc9894b4489fb68fa35c40e9fe85df63dc
+change-id: 20240125-imx-sysctr-3a89a0852376
+
+Best regards,
+-- 
+Peng Fan <peng.fan@nxp.com>
+
