@@ -1,35 +1,35 @@
 Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7399A219F6;
-	Fri, 26 Jan 2024 18:39:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BC4024A15;
+	Fri, 26 Jan 2024 18:39:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706294348; cv=none; b=mBI3rgeIv4lwy9/yWzMoha1bcV28TfMrxFRyzF3cejZZjbZ9/sG3oi0q7QLPTngdVoD7LzOO9ea0wjoFy2Lfon2eI9kY3MgsXQD+ECGQS5mqOu6Ro+5FUQ30uZjAnP1nxcc2uaYNwmUBMQLFWWEPPm9aGfNTuOhSbm2Sf1zYMC0=
+	t=1706294353; cv=none; b=OAS2WYYDDJaAABtSCQ7zfrIKtQgUmHEC8xVeFtDJZkbEpLI54Qy2UcW7D82G36fhnAAPT1GAbMVs9TD1EwdF8vb/VwWfYxbH6Syg5yubp/4CsIMjuVmQ0Zuah1yYh97jgDpNsZiQTy6irui7I4GL2AP5NjLBK0BwZqKqtS32wJY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706294348; c=relaxed/simple;
-	bh=CofSQsjewpyFb8w9CmMhlBzYF5E9Mw5U3FybyDlHT+U=;
+	s=arc-20240116; t=1706294353; c=relaxed/simple;
+	bh=GKEXFBjzRvjdkY+Q1FYw1g1lQsspMWdBGKx/7/eg//I=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WgTZOZTghHZCIKqEcQ7w/iUBEg4S2qkG4S6/e/vEI5RuvW9AIYkPeWfibN1LjKWT2wp3REuObOJnOEUOGLsJrylBAAYPH5x/Wi/99UnuwDOk0adj757m5GIiaOBLgaEAaXyPhM/H6XVT7/TvwjC1EZWy94GVZF8MOtATmEiZ6V4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=K1cY11S1; arc=none smtp.client-ip=217.70.183.199
+	 MIME-Version; b=HtYQBOwkCDP6S3f1eCCAxlVCphiAShrbSE6U+XIoGnK5W5bQxEpQM4GiNJ6gZBrLTEiZu6rvScJSpklQQPr7Y1Au0QJM0V5276pSAxOhSEQd1ZdmoEd/dgcImWrqLK0bG5oryk1LZVxQYLN5xTEKUpFnXZkK6ra4aKHkgHuy8MU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=imJklIwo; arc=none smtp.client-ip=217.70.183.199
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="K1cY11S1"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id C9373FF808;
-	Fri, 26 Jan 2024 18:38:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="imJklIwo"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 6D9FAFF806;
+	Fri, 26 Jan 2024 18:39:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1706294338;
+	t=1706294349;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=6TtLjJtA9OfPwNx2FGXMuOf3z4KyBrlFotwFfAaPqco=;
-	b=K1cY11S1LCxC5G46CGRQyozhhKRbQ/S6Hb9JnnSIzPuXQL4Dhhe25/IK1kBCCOBFaIWIFX
-	+P7jvktqbO8JIekdC7yqawYXEX+j3SzcEupxEtp/llxi/AHAb38W6v1MZGIhTRI+QAXI2w
-	4m0kosYqp8xbKNKzRfmgEUjBHeAJmX1c6/nkl88R4PSqVgUHy1Bm81xFv/NYjU0FduwQ/2
-	RtH/5JZgAgc2eqPsQrYlrAAEEdSCR5arwa4+Ekgd2sytTmq5J/cZn/AOR5eIYh6alr2FN2
-	NobKjE1Pz699taqyoiROcaZVq118iAyn7DNeVj7813IxglfOAafUDTY65Q16jA==
+	bh=FnNMgoupugsdw+R23wgvwumgSeblUqTDDp2m63cNowA=;
+	b=imJklIwo0XmfvupiNEhJGnfBgTk5idU0G1wHRyIm6y5myIKW5GkSZG5j3Y4+oPtt7bUIM0
+	vPSR347dSVMUh+rAqPSs9UCTi4XdHfnsyrSrrUsGazk2iIFAXbRSybfIM7ShIP0s/nGSYq
+	jmo0i4hbu+EUDJeNxgEyoZzP5LWIefhkF9Ps3QlNzi84gPLyWP4ZLoIxjZ+uPjrug+JeMz
+	DrihNF2Mg0RwjJXMSfDrtD/p6lM+3apHu3eFlbeMa/k5vcf7QaEWfZ61i/Bub0zA3tw+1c
+	luVJ+wsb/rkccxqFvPFijzZgKuhipXfrXv64fcf5oQ2wQZRC+vJUffDiH1td2g==
 From: Maxime Chevallier <maxime.chevallier@bootlin.com>
 To: davem@davemloft.net
 Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>,
@@ -55,9 +55,9 @@ Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>,
 	Oleksij Rempel <o.rempel@pengutronix.de>,
 	=?UTF-8?q?Nicol=C3=B2=20Veronese?= <nicveronese@gmail.com>,
 	Simon Horman <horms@kernel.org>
-Subject: [PATCH net-next v6 03/13] net: phy: add helpers to handle sfp phy connect/disconnect
-Date: Fri, 26 Jan 2024 19:38:40 +0100
-Message-ID: <20240126183851.2081418-4-maxime.chevallier@bootlin.com>
+Subject: [PATCH net-next v6 12/13] net: ethtool: strset: Allow querying phy stats by index
+Date: Fri, 26 Jan 2024 19:38:49 +0100
+Message-ID: <20240126183851.2081418-13-maxime.chevallier@bootlin.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240126183851.2081418-1-maxime.chevallier@bootlin.com>
 References: <20240126183851.2081418-1-maxime.chevallier@bootlin.com>
@@ -70,161 +70,80 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-GND-Sasl: maxime.chevallier@bootlin.com
 
-There are a few PHY drivers that can handle SFP modules through their
-sfp_upstream_ops. Introduce Phylib helpers to keep track of connected
-SFP PHYs in a netdevice's namespace, by adding the SFP PHY to the
-upstream PHY's netdev's namespace.
-
-By doing so, these SFP PHYs can be enumerated and exposed to users,
-which will be able to use their capabilities.
+The ETH_SS_PHY_STATS command gets PHY statistics. Use the phydev pointer
+from the ethnl request to allow query phy stats from each PHY on the
+link.
 
 Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
 ---
-V6: Moved phy_get_link_topology() definition to this patch
-V5: No Changes
-V4: Rebased the at803x part with the newer version on net-next
-V3: Renaming
-V2: Renaming
+V6: Use dedicated policy
+V5: Added Andrew's R-b
+V4: No changes
+V3: No changes
+V2: New patch
 
- drivers/net/phy/at803x.c          |  2 ++
- drivers/net/phy/marvell-88x2222.c |  2 ++
- drivers/net/phy/marvell.c         |  2 ++
- drivers/net/phy/marvell10g.c      |  2 ++
- drivers/net/phy/phy_device.c      | 48 +++++++++++++++++++++++++++++++
- include/linux/phy.h               |  2 ++
- 6 files changed, 58 insertions(+)
+ net/ethtool/strset.c | 17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/net/phy/at803x.c b/drivers/net/phy/at803x.c
-index a62442a55774..2f50170738f3 100644
---- a/drivers/net/phy/at803x.c
-+++ b/drivers/net/phy/at803x.c
-@@ -1475,6 +1475,8 @@ static const struct sfp_upstream_ops at8031_sfp_ops = {
- 	.attach = phy_sfp_attach,
- 	.detach = phy_sfp_detach,
- 	.module_insert = at8031_sfp_insert,
-+	.connect_phy = phy_sfp_connect_phy,
-+	.disconnect_phy = phy_sfp_disconnect_phy,
+diff --git a/net/ethtool/strset.c b/net/ethtool/strset.c
+index c678b484a079..edc826407564 100644
+--- a/net/ethtool/strset.c
++++ b/net/ethtool/strset.c
+@@ -126,7 +126,7 @@ struct strset_reply_data {
+ 
+ const struct nla_policy ethnl_strset_get_policy[] = {
+ 	[ETHTOOL_A_STRSET_HEADER]	=
+-		NLA_POLICY_NESTED(ethnl_header_policy),
++		NLA_POLICY_NESTED(ethnl_header_policy_phy),
+ 	[ETHTOOL_A_STRSET_STRINGSETS]	= { .type = NLA_NESTED },
+ 	[ETHTOOL_A_STRSET_COUNTS_ONLY]	= { .type = NLA_FLAG },
  };
- 
- static int at8031_parse_dt(struct phy_device *phydev)
-diff --git a/drivers/net/phy/marvell-88x2222.c b/drivers/net/phy/marvell-88x2222.c
-index e3aa30dad2e6..3f77bbc7e04f 100644
---- a/drivers/net/phy/marvell-88x2222.c
-+++ b/drivers/net/phy/marvell-88x2222.c
-@@ -555,6 +555,8 @@ static const struct sfp_upstream_ops sfp_phy_ops = {
- 	.link_down = mv2222_sfp_link_down,
- 	.attach = phy_sfp_attach,
- 	.detach = phy_sfp_detach,
-+	.connect_phy = phy_sfp_connect_phy,
-+	.disconnect_phy = phy_sfp_disconnect_phy,
- };
- 
- static int mv2222_probe(struct phy_device *phydev)
-diff --git a/drivers/net/phy/marvell.c b/drivers/net/phy/marvell.c
-index eba652a4c1d8..674e29bce2cc 100644
---- a/drivers/net/phy/marvell.c
-+++ b/drivers/net/phy/marvell.c
-@@ -3254,6 +3254,8 @@ static const struct sfp_upstream_ops m88e1510_sfp_ops = {
- 	.module_remove = m88e1510_sfp_remove,
- 	.attach = phy_sfp_attach,
- 	.detach = phy_sfp_detach,
-+	.connect_phy = phy_sfp_connect_phy,
-+	.disconnect_phy = phy_sfp_disconnect_phy,
- };
- 
- static int m88e1510_probe(struct phy_device *phydev)
-diff --git a/drivers/net/phy/marvell10g.c b/drivers/net/phy/marvell10g.c
-index ad43e280930c..6642eb642d4b 100644
---- a/drivers/net/phy/marvell10g.c
-+++ b/drivers/net/phy/marvell10g.c
-@@ -503,6 +503,8 @@ static int mv3310_sfp_insert(void *upstream, const struct sfp_eeprom_id *id)
- static const struct sfp_upstream_ops mv3310_sfp_ops = {
- 	.attach = phy_sfp_attach,
- 	.detach = phy_sfp_detach,
-+	.connect_phy = phy_sfp_connect_phy,
-+	.disconnect_phy = phy_sfp_disconnect_phy,
- 	.module_insert = mv3310_sfp_insert,
- };
- 
-diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-index 9385a4ee9380..436c7b62d5be 100644
---- a/drivers/net/phy/phy_device.c
-+++ b/drivers/net/phy/phy_device.c
-@@ -266,6 +266,14 @@ static void phy_mdio_device_remove(struct mdio_device *mdiodev)
- 
- static struct phy_driver genphy_driver;
- 
-+static struct phy_link_topology *phy_get_link_topology(struct phy_device *phydev)
-+{
-+	if (phydev->attached_dev)
-+		return phydev->attached_dev->link_topo;
-+
-+	return NULL;
-+}
-+
- static LIST_HEAD(phy_fixup_list);
- static DEFINE_MUTEX(phy_fixup_lock);
- 
-@@ -1355,6 +1363,46 @@ phy_standalone_show(struct device *dev, struct device_attribute *attr,
+@@ -233,17 +233,18 @@ static void strset_cleanup_data(struct ethnl_reply_data *reply_base)
  }
- static DEVICE_ATTR_RO(phy_standalone);
  
-+/**
-+ * phy_sfp_connect_phy - Connect the SFP module's PHY to the upstream PHY
-+ * @upstream: pointer to the upstream phy device
-+ * @phy: pointer to the SFP module's phy device
-+ *
-+ * This helper allows keeping track of PHY devices on the link. It adds the
-+ * SFP module's phy to the phy namespace of the upstream phy
-+ */
-+int phy_sfp_connect_phy(void *upstream, struct phy_device *phy)
-+{
-+	struct phy_device *phydev = upstream;
-+	struct phy_link_topology *topo = phy_get_link_topology(phydev);
-+
-+	if (topo)
-+		return phy_link_topo_add_phy(topo, phy, PHY_UPSTREAM_PHY, phydev);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL(phy_sfp_connect_phy);
-+
-+/**
-+ * phy_sfp_disconnect_phy - Disconnect the SFP module's PHY from the upstream PHY
-+ * @upstream: pointer to the upstream phy device
-+ * @phy: pointer to the SFP module's phy device
-+ *
-+ * This helper allows keeping track of PHY devices on the link. It removes the
-+ * SFP module's phy to the phy namespace of the upstream phy. As the module phy
-+ * will be destroyed, re-inserting the same module will add a new phy with a
-+ * new index.
-+ */
-+void phy_sfp_disconnect_phy(void *upstream, struct phy_device *phy)
-+{
-+	struct phy_device *phydev = upstream;
-+	struct phy_link_topology *topo = phy_get_link_topology(phydev);
-+
-+	if (topo)
-+		phy_link_topo_del_phy(topo, phy);
-+}
-+EXPORT_SYMBOL(phy_sfp_disconnect_phy);
-+
- /**
-  * phy_sfp_attach - attach the SFP bus to the PHY upstream network device
-  * @upstream: pointer to the phy device
-diff --git a/include/linux/phy.h b/include/linux/phy.h
-index 78647b5e0c13..3637bdfc1166 100644
---- a/include/linux/phy.h
-+++ b/include/linux/phy.h
-@@ -1725,6 +1725,8 @@ int phy_suspend(struct phy_device *phydev);
- int phy_resume(struct phy_device *phydev);
- int __phy_resume(struct phy_device *phydev);
- int phy_loopback(struct phy_device *phydev, bool enable);
-+int phy_sfp_connect_phy(void *upstream, struct phy_device *phy);
-+void phy_sfp_disconnect_phy(void *upstream, struct phy_device *phy);
- void phy_sfp_attach(void *upstream, struct sfp_bus *bus);
- void phy_sfp_detach(void *upstream, struct sfp_bus *bus);
- int phy_sfp_probe(struct phy_device *phydev,
+ static int strset_prepare_set(struct strset_info *info, struct net_device *dev,
+-			      unsigned int id, bool counts_only)
++			      struct phy_device *phydev, unsigned int id,
++			      bool counts_only)
+ {
+ 	const struct ethtool_phy_ops *phy_ops = ethtool_phy_ops;
+ 	const struct ethtool_ops *ops = dev->ethtool_ops;
+ 	void *strings;
+ 	int count, ret;
+ 
+-	if (id == ETH_SS_PHY_STATS && dev->phydev &&
++	if (id == ETH_SS_PHY_STATS && phydev &&
+ 	    !ops->get_ethtool_phy_stats && phy_ops &&
+ 	    phy_ops->get_sset_count)
+-		ret = phy_ops->get_sset_count(dev->phydev);
++		ret = phy_ops->get_sset_count(phydev);
+ 	else if (ops->get_sset_count && ops->get_strings)
+ 		ret = ops->get_sset_count(dev, id);
+ 	else
+@@ -258,10 +259,10 @@ static int strset_prepare_set(struct strset_info *info, struct net_device *dev,
+ 		strings = kcalloc(count, ETH_GSTRING_LEN, GFP_KERNEL);
+ 		if (!strings)
+ 			return -ENOMEM;
+-		if (id == ETH_SS_PHY_STATS && dev->phydev &&
++		if (id == ETH_SS_PHY_STATS && phydev &&
+ 		    !ops->get_ethtool_phy_stats && phy_ops &&
+ 		    phy_ops->get_strings)
+-			phy_ops->get_strings(dev->phydev, strings);
++			phy_ops->get_strings(phydev, strings);
+ 		else
+ 			ops->get_strings(dev, id, strings);
+ 		info->strings = strings;
+@@ -305,8 +306,8 @@ static int strset_prepare_data(const struct ethnl_req_info *req_base,
+ 		    !data->sets[i].per_dev)
+ 			continue;
+ 
+-		ret = strset_prepare_set(&data->sets[i], dev, i,
+-					 req_info->counts_only);
++		ret = strset_prepare_set(&data->sets[i], dev, req_base->phydev,
++					 i, req_info->counts_only);
+ 		if (ret < 0)
+ 			goto err_ops;
+ 	}
 -- 
 2.43.0
 
