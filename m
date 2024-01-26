@@ -1,256 +1,129 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CCE31DDF5
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 16:30:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7986C13FEE;
+	Fri, 26 Jan 2024 16:32:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706286648; cv=none; b=VXfpAe7EquTF/7w8ejJxkdLxF8g3PEjoNV2xqVqfTwDQihj/bpT6M2UhgTKitiSqra1CYXgN15hqK3WBRaRgZbha0mZunxJA2vuoB4MNKolfMlJ4wtaEr/AeD3dxQaL3Bw5fJQ/sYAZivKVOlFWvAsrzg6WSSQeTAmedtOcoQag=
+	t=1706286765; cv=none; b=YVOAV7Q6CXYGS+DFLT7eWrQk0San+2es1ewlB2oDlyPkRH81uVjbjKJ2+tIY6FgbHiL7siRc+3MgQIEcCzBNL8w1te+qe204l+kLEszDAxxbVicN1nvF4yJhJ3bmupdl7e+i4ehmDGPTHeeysS28Tw7eScKAGonYUWNphWvKS+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706286648; c=relaxed/simple;
-	bh=e4P27LVIoLu447WxGDoBfB8TV0IwjkIO9iwplgiRTRA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=sTLokGLJULepUVgxAAwpe8znfIjCfPYAiRMDDsEy/aQbTTcEYkpTAagrerg96/ZTg23/B8kTOKFw9UTLXrqb1G31oGgGqnNkTUFbdrC2UCTjnry/wMSyuBrcT/tk/tBpYPksTXBYw0dOZc35xt1FLxOFDcm8fupAlI2dtjEoMxA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=smile.fr; spf=pass smtp.mailfrom=smile.fr; dkim=pass (2048-bit key) header.d=smile-fr.20230601.gappssmtp.com header.i=@smile-fr.20230601.gappssmtp.com header.b=KFoEJSn2; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=smile.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=smile.fr
+	s=arc-20240116; t=1706286765; c=relaxed/simple;
+	bh=O2GdFJ088dolrQz4phEpzEs0z4sl/H/4jK6u8SsoYxw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VyFYnJNd2oVmAHDcm5CBiHDPd0PCYFHton1M/jW0FQKvEUkKtYd4a6v444ESR9jCmQ8UZ+u0RR+XOp/zZsewR7T6exG4Z3+fBb9xTMbcjoRdiZ1SRzaIeDQEWxbqqYKVXQjiVMpUHDHEc5eZpqavPl7sAdDqkREinNH8dSvK8Og=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o6dGIpVK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=smile-fr.20230601.gappssmtp.com header.i=@smile-fr.20230601.gappssmtp.com header.b="KFoEJSn2"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-40e60e137aaso13430985e9.0
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 08:30:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=smile-fr.20230601.gappssmtp.com; s=20230601; t=1706286643; x=1706891443; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=YUy3Rwm9maFk8GP2x854tHf75dVLpNSbOLWxYX7ax5o=;
-        b=KFoEJSn2+NEXu+7uSAEIRaq3hq+MzWy0GZH54qlj+8NgLP03R9c7dJhtpHRx1VPWie
-         0qLcu+iaYrYc0ShiTf98eWcwiwuENAw8HBSKWaGpSJH3Qi1r1r91dUHl5obJJ/H0wk+I
-         UgMI31BifIvGcX0qS2HzcuaHK+m4J2GvT1TOQ3WYcOACA+UKD2dDNVMJHZvHweHgCuZW
-         yi2HuVF74dg3eJ6AenNcBklLYWa26y0XVI0GJFPaQLBerJA4H7R5WcAuVt7+yf9KW0oT
-         5zO9P3DtDByr2OsknZK426cpNz/OilgWiLHw7MNYzO50f1ritlJ7WWWbBTUL1KxC4eQB
-         orjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706286643; x=1706891443;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=YUy3Rwm9maFk8GP2x854tHf75dVLpNSbOLWxYX7ax5o=;
-        b=L5o9qd/UCpSTCTUAvZzD4V2TyxTkXRKM/zCedDxlGPSivLN7gsJ+nzi2oz0Gyl1sB8
-         fBEdXJuWAiCQmL+2YU9zKGTtExaCxqGShoFIBDlPkzXfwzWkVhcw48sL2ERevVvZDsx5
-         QW43ToHxfOSiyUeL90HdbAjAbnbI2yHoMde0MQx/ddOXSZBV8tWu68YUnRk64tjrPlri
-         mWVl1sPYShwCi/eLskiCfTBuPn4zdGyu/c3JEapIVxFtNolLxsfwWjO2mhB8ji8BSPVm
-         tAB5tKZ8HDQsXUCe9UpOJCGENiqFZ+sdWA2LcbG/qXhJAjcyIRqhAOqLT46FmeAaaLAQ
-         r/AA==
-X-Gm-Message-State: AOJu0Yzz/M6esqYHzCPInf9TKWtbTRE1QQ9uR4LkfxhAXhVGg4MRxORw
-	2CXUjkmTE8TTDUd7G/qMaVjkpuUqkHSzEpaBcbyf+ZKjvy/X8+p2Vp+xuzDXA/w=
-X-Google-Smtp-Source: AGHT+IHKrnM6QdGCuLACvBQlPCI1fRERqYVbqvlykdiDAUVmDp7BbX1i59uxODRv8YnFlIpKfqkT3g==
-X-Received: by 2002:a05:600c:a385:b0:40e:e793:8f9 with SMTP id hn5-20020a05600ca38500b0040ee79308f9mr30020wmb.134.1706286643360;
-        Fri, 26 Jan 2024 08:30:43 -0800 (PST)
-Received: from P-ASN-ECS-830T8C3.numericable.fr ([89.159.1.53])
-        by smtp.gmail.com with ESMTPSA id p14-20020a05600c358e00b0040ea875a527sm2337557wmq.26.2024.01.26.08.30.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Jan 2024 08:30:43 -0800 (PST)
-From: Yoann Congal <yoann.congal@smile.fr>
-To: x86@kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-serial@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org
-Cc: linux-kbuild@vger.kernel.org,
-	Yoann Congal <yoann.congal@smile.fr>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-	Matthew Wilcox <willy@infradead.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Darren Hart <dvhart@infradead.org>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	=?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>,
-	Masahiro Yamada <masahiroy@kernel.org>
-Subject: [PATCH] treewide: Change CONFIG_BASE_SMALL to bool type
-Date: Fri, 26 Jan 2024 17:30:32 +0100
-Message-Id: <20240126163032.1613731-1-yoann.congal@smile.fr>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o6dGIpVK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B5ACC433F1;
+	Fri, 26 Jan 2024 16:32:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706286765;
+	bh=O2GdFJ088dolrQz4phEpzEs0z4sl/H/4jK6u8SsoYxw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=o6dGIpVKtE7C1XA+I7lHIazTZ9NiJvbbUwwFafXmh25g1ytRSkE++aMo/yA5defwy
+	 oQrkn4rvgukDgRo9RVOOSUQGrb6Nx/cLC+ZIxgNCVoEe+KdYH5Ei3Y60VtWnuxyVz8
+	 UBfCm+SAZs3JWf3BkwxTCp7SGIWOCRvbT9tYLHJ9Z5ZueoE8p5llfQrgDUJ8+NJtel
+	 UsDSoDG2mYwNBdtXqElFFdE7gCdE8EmWHxHPwy+IEvaaOxUNV3snOOmegBxfMyKJE6
+	 PBqWgJMS279PW/8i/FzoWJURbuw9zBdXjVsmrSH6FabK5i44n+T+0HeVEl0POw57Zk
+	 MprieXZblzGVg==
+Date: Fri, 26 Jan 2024 16:32:39 +0000
+From: Conor Dooley <conor@kernel.org>
+To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+Cc: Jassi Brar <jassisinghbrar@gmail.com>, Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Dong Aisheng <aisheng.dong@nxp.com>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	NXP Linux Team <linux-imx@nxp.com>, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	Peng Fan <peng.fan@nxp.com>
+Subject: Re: [PATCH v5 1/4] dt-bindings: mailbox: fsl,mu: add i.MX95
+ Generic/ELE/V2X MU compatible
+Message-ID: <20240126-confirm-jawless-dca60fc9afce@spud>
+References: <20240126-imx-mailbox-v5-0-7ff3a3d53529@nxp.com>
+ <20240126-imx-mailbox-v5-1-7ff3a3d53529@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="7mFRVebTH76qyLZi"
+Content-Disposition: inline
+In-Reply-To: <20240126-imx-mailbox-v5-1-7ff3a3d53529@nxp.com>
 
-CONFIG_BASE_SMALL is currently a type int but is only used as a boolean:
-CONFIG_BASE_SMALL == 0 vs CONFIG_BASE_SMALL != 0.
 
-So change it to the more logical bool type.
+--7mFRVebTH76qyLZi
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Furthermore, recent kconfig changes (see Fixes: tags) revealed that using
-  config SOMETHING
-     default "some value" if X
-does not work as expected if X is not of type bool.
+On Fri, Jan 26, 2024 at 02:29:14PM +0800, Peng Fan (OSS) wrote:
+>  examples:
+> @@ -134,3 +159,34 @@ examples:
+>          interrupts =3D <GIC_SPI 176 IRQ_TYPE_LEVEL_HIGH>;
+>          #mbox-cells =3D <2>;
+>      };
+> +
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+> +    mu2: mailbox@445b0000 {
+> +        compatible =3D "fsl,imx95-mu";
+> +        reg =3D <0x445b0000 0x10000>;
+> +        ranges;
+> +        interrupts =3D <GIC_SPI 226 IRQ_TYPE_LEVEL_HIGH>;
+> +        #address-cells =3D <1>;
+> +        #size-cells =3D <1>;
+> +        #mbox-cells =3D <2>;
+> +
+> +        sram@445b1000 {
+> +            compatible =3D "mmio-sram";
+> +            reg =3D <0x445b1000 0x400>;
+> +            ranges =3D <0x0 0x445b1000 0x400>;
+> +            #address-cells =3D <1>;
+> +            #size-cells =3D <1>;
+> +
+> +            scmi_buf0: scmi-sram-section@0 {
 
-CONFIG_BASE_SMALL is used that way in init/Kconfig:
-  config LOG_CPU_MAX_BUF_SHIFT
-  	default 12 if !BASE_SMALL
-  	default 0 if BASE_SMALL
+If you are resending, the labels here for the section nodes are not used
+and should be dropped. Ditto the "mu2" label above.
 
-Signed-off-by: Yoann Congal <yoann.congal@smile.fr>
-Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Closes: https://lore.kernel.org/all/CAMuHMdWm6u1wX7efZQf=2XUAHascps76YQac6rdnQGhc8nop_Q@mail.gmail.com/
-Fixes: 6262afa10ef7 ("kconfig: default to zero if int/hex symbol lacks default property")
-Fixes: 4e244c10eab3 ("kconfig: remove unneeded symbol_empty variable")
+Otherwise, this looks okay to me.
 
----
-CC: Thomas Gleixner <tglx@linutronix.de>
-CC: Ingo Molnar <mingo@redhat.com>
-CC: Borislav Petkov <bp@alien8.de>
-CC: Dave Hansen <dave.hansen@linux.intel.com>
-CC: "H. Peter Anvin" <hpa@zytor.com>
-CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC: Jiri Slaby <jirislaby@kernel.org>
-CC: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-CC: Matthew Wilcox <willy@infradead.org>
-CC: Peter Zijlstra <peterz@infradead.org>
-CC: Darren Hart <dvhart@infradead.org>
-CC: Davidlohr Bueso <dave@stgolabs.net>
-CC: "André Almeida" <andrealmeid@igalia.com>
-CC: Masahiro Yamada <masahiroy@kernel.org>
-CC: x86@kernel.org
-CC: linux-kernel@vger.kernel.org
-CC: linux-serial@vger.kernel.org
-CC: linux-fsdevel@vger.kernel.org
-CC: linux-kbuild@vger.kernel.org
----
- arch/x86/include/asm/mpspec.h | 2 +-
- drivers/tty/vt/vc_screen.c    | 2 +-
- include/linux/threads.h       | 4 ++--
- include/linux/udp.h           | 2 +-
- include/linux/xarray.h        | 2 +-
- init/Kconfig                  | 6 +++---
- kernel/futex/core.c           | 2 +-
- kernel/user.c                 | 2 +-
- 8 files changed, 11 insertions(+), 11 deletions(-)
+Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
 
-diff --git a/arch/x86/include/asm/mpspec.h b/arch/x86/include/asm/mpspec.h
-index 4b0f98a8d338d..ebe4b6121b698 100644
---- a/arch/x86/include/asm/mpspec.h
-+++ b/arch/x86/include/asm/mpspec.h
-@@ -15,7 +15,7 @@ extern int pic_mode;
-  * Summit or generic (i.e. installer) kernels need lots of bus entries.
-  * Maximum 256 PCI busses, plus 1 ISA bus in each of 4 cabinets.
-  */
--#if CONFIG_BASE_SMALL == 0
-+#ifndef CONFIG_BASE_SMALL
- # define MAX_MP_BUSSES		260
- #else
- # define MAX_MP_BUSSES		32
-diff --git a/drivers/tty/vt/vc_screen.c b/drivers/tty/vt/vc_screen.c
-index 67e2cb7c96eec..da33c6c4691c0 100644
---- a/drivers/tty/vt/vc_screen.c
-+++ b/drivers/tty/vt/vc_screen.c
-@@ -51,7 +51,7 @@
- #include <asm/unaligned.h>
- 
- #define HEADER_SIZE	4u
--#define CON_BUF_SIZE (CONFIG_BASE_SMALL ? 256 : PAGE_SIZE)
-+#define CON_BUF_SIZE (IS_ENABLED(CONFIG_BASE_SMALL) ? 256 : PAGE_SIZE)
- 
- /*
-  * Our minor space:
-diff --git a/include/linux/threads.h b/include/linux/threads.h
-index c34173e6c5f18..1674a471b0b4c 100644
---- a/include/linux/threads.h
-+++ b/include/linux/threads.h
-@@ -25,13 +25,13 @@
- /*
-  * This controls the default maximum pid allocated to a process
-  */
--#define PID_MAX_DEFAULT (CONFIG_BASE_SMALL ? 0x1000 : 0x8000)
-+#define PID_MAX_DEFAULT (IS_ENABLED(CONFIG_BASE_SMALL) ? 0x1000 : 0x8000)
- 
- /*
-  * A maximum of 4 million PIDs should be enough for a while.
-  * [NOTE: PID/TIDs are limited to 2^30 ~= 1 billion, see FUTEX_TID_MASK.]
-  */
--#define PID_MAX_LIMIT (CONFIG_BASE_SMALL ? PAGE_SIZE * 8 : \
-+#define PID_MAX_LIMIT (IS_ENABLED(CONFIG_BASE_SMALL) ? PAGE_SIZE * 8 : \
- 	(sizeof(long) > 4 ? 4 * 1024 * 1024 : PID_MAX_DEFAULT))
- 
- /*
-diff --git a/include/linux/udp.h b/include/linux/udp.h
-index d04188714dca1..b456417fb4515 100644
---- a/include/linux/udp.h
-+++ b/include/linux/udp.h
-@@ -24,7 +24,7 @@ static inline struct udphdr *udp_hdr(const struct sk_buff *skb)
- }
- 
- #define UDP_HTABLE_SIZE_MIN_PERNET	128
--#define UDP_HTABLE_SIZE_MIN		(CONFIG_BASE_SMALL ? 128 : 256)
-+#define UDP_HTABLE_SIZE_MIN		(IS_ENABLED(CONFIG_BASE_SMALL) ? 128 : 256)
- #define UDP_HTABLE_SIZE_MAX		65536
- 
- static inline u32 udp_hashfn(const struct net *net, u32 num, u32 mask)
-diff --git a/include/linux/xarray.h b/include/linux/xarray.h
-index cb571dfcf4b16..3f81ee5f9fb9c 100644
---- a/include/linux/xarray.h
-+++ b/include/linux/xarray.h
-@@ -1141,7 +1141,7 @@ static inline void xa_release(struct xarray *xa, unsigned long index)
-  * doubled the number of slots per node, we'd get only 3 nodes per 4kB page.
-  */
- #ifndef XA_CHUNK_SHIFT
--#define XA_CHUNK_SHIFT		(CONFIG_BASE_SMALL ? 4 : 6)
-+#define XA_CHUNK_SHIFT		(IS_ENABLED(CONFIG_BASE_SMALL) ? 4 : 6)
- #endif
- #define XA_CHUNK_SIZE		(1UL << XA_CHUNK_SHIFT)
- #define XA_CHUNK_MASK		(XA_CHUNK_SIZE - 1)
-diff --git a/init/Kconfig b/init/Kconfig
-index 8d4e836e1b6b1..766a7ac8c5ea4 100644
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -1941,9 +1941,9 @@ config RT_MUTEXES
- 	default y if PREEMPT_RT
- 
- config BASE_SMALL
--	int
--	default 0 if BASE_FULL
--	default 1 if !BASE_FULL
-+	bool
-+	default n if BASE_FULL
-+	default y if !BASE_FULL
- 
- config MODULE_SIG_FORMAT
- 	def_bool n
-diff --git a/kernel/futex/core.c b/kernel/futex/core.c
-index e0e853412c158..5f7aa4fc2f9ee 100644
---- a/kernel/futex/core.c
-+++ b/kernel/futex/core.c
-@@ -1141,7 +1141,7 @@ static int __init futex_init(void)
- 	unsigned int futex_shift;
- 	unsigned long i;
- 
--#if CONFIG_BASE_SMALL
-+#ifdef CONFIG_BASE_SMALL
- 	futex_hashsize = 16;
- #else
- 	futex_hashsize = roundup_pow_of_two(256 * num_possible_cpus());
-diff --git a/kernel/user.c b/kernel/user.c
-index 03cedc366dc9e..aa1162deafe49 100644
---- a/kernel/user.c
-+++ b/kernel/user.c
-@@ -88,7 +88,7 @@ EXPORT_SYMBOL_GPL(init_user_ns);
-  * when changing user ID's (ie setuid() and friends).
-  */
- 
--#define UIDHASH_BITS	(CONFIG_BASE_SMALL ? 3 : 7)
-+#define UIDHASH_BITS	(IS_ENABLED(CONFIG_BASE_SMALL) ? 3 : 7)
- #define UIDHASH_SZ	(1 << UIDHASH_BITS)
- #define UIDHASH_MASK		(UIDHASH_SZ - 1)
- #define __uidhashfn(uid)	(((uid >> UIDHASH_BITS) + uid) & UIDHASH_MASK)
--- 
-2.39.2
+Thanks,
+Conor.
 
+> +                compatible =3D "arm,scmi-shmem";
+> +                reg =3D <0x0 0x80>;
+> +            };
+> +
+> +            scmi_buf1: scmi-sram-section@80 {
+> +                compatible =3D "arm,scmi-shmem";
+> +                reg =3D <0x80 0x80>;
+> +            };
+> +        };
+> +    };
+>=20
+> --=20
+> 2.37.1
+>=20
+
+--7mFRVebTH76qyLZi
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZbPepwAKCRB4tDGHoIJi
+0iznAP9CgtESW4FpxQqe75d/8cvQmVeYyQVWHwa/YljMBuNyZQEAmA2R6OTld8KG
+rRaZ/bC0Duc9RlGsPTSY6bfIdxHCpwg=
+=cCmD
+-----END PGP SIGNATURE-----
+
+--7mFRVebTH76qyLZi--
