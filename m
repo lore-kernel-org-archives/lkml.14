@@ -1,119 +1,105 @@
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D4421D54B;
-	Fri, 26 Jan 2024 17:05:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.134.136.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 938141E87E;
+	Fri, 26 Jan 2024 17:05:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706288711; cv=none; b=aP64nYi6COeJldGhi6DVyqe2ZFbrrQ6ZNtnAYIiPPJP/ftqVy2PE44+p9FobqaAi1m+mGCc265v6xra/TYCMN3dtRXdtuuIOUyv2Ujju/HA5euJiVgKSwhITlyq9MUSyG83r/jDBuY/L72bvLi2aHBQufwMNN/mMx9PfSAApBe4=
+	t=1706288737; cv=none; b=nNoA4ypc/pzZ34LnRSKsydCl4JZ1v/P56TmrpidPoHnuWn3bTSxKz9/0VTwbXznVPWV+VKeNxIOrX07IjSSkRczl9Bac3nhtcR+aerrfkNqaafQ0rsM00Dtj6S7bqoniEwnAXLqX3ka4sodyNRbhrxZpwDsqkkmW62q+MqnOnIM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706288711; c=relaxed/simple;
-	bh=B2eTgBCFVQKRYm7Y4FhNIecDMa1S3RJPllkOTJs5j3E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ls42hD7vyJ56axJNXbNFyYmZwwEiLpgsagA0faFWvowAsjYaf97hK0S/ElCInr7eGJZ+1ztvK1E1rVC/Klme1em44Yju7Lgt3i/vVXyQ/l5HTxNPkJC8Nz3h+xljTEFJCI2a0TUmmra3JbkSeuUtnPy5Er4cwgPDYtdFXY3s8qk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=An4ezcik; arc=none smtp.client-ip=134.134.136.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1706288737; c=relaxed/simple;
+	bh=xMkMfsrSpNWQZGAM70Gd7lQkYVBZgVzLEOPwbhwZxG4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=YJW4k/m05GzbQ4pMvbyogtEz4mJpdTALihpkRc+7BRhACEIKMw5cSkFd6UuGBXCD6XfOAvuHmpWgESDlI0QKp86QWqnIjapQ0bMwlL4ujmvJ65yP++YADWDRnrh8htisocMF/NA8yKhtftRfN8i5B3I1qLP5GChRTW/4qNT93nE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=I5aaFhk5; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="An4ezcik"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706288709; x=1737824709;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=B2eTgBCFVQKRYm7Y4FhNIecDMa1S3RJPllkOTJs5j3E=;
-  b=An4ezcikvMXYQbN5MQWuLr+t6fu80AA3MZFlnxhoiegDkebB84/+FN82
-   L0kIf9eBPvdj9HLw8whejN6Vojgb9M+yZrOkrDDBCTP8QSrJFsjkaeNT5
-   9UlCTGYvJfbZ+5NGZC96mI9oWJhA19FAiXpBVZt1n5Jvl6uS8nBsW/q4y
-   FwUFvAYos66P59vxpYOvL0ebyA2ImbsIltxVtArL8dd1OYVoP4Kq13Un9
-   +zp9iOggZoYd3p3nRJgIbcA6hEeOrr+s1BA5pkbziGg3U6uRT1e74FvnC
-   nakF6Kb0fDfYzZZnZbmqcPXZ0izKl0LEfWcXEJ2GepB7abmuj0/wmfxcc
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="392954082"
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="392954082"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2024 09:05:08 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="21432338"
-Received: from lkp-server01.sh.intel.com (HELO 370188f8dc87) ([10.239.97.150])
-  by fmviesa002.fm.intel.com with ESMTP; 26 Jan 2024 09:05:01 -0800
-Received: from kbuild by 370188f8dc87 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rTPdT-0001Dy-0X;
-	Fri, 26 Jan 2024 17:04:59 +0000
-Date: Sat, 27 Jan 2024 01:04:13 +0800
-From: kernel test robot <lkp@intel.com>
-To: Peter Griffin <peter.griffin@linaro.org>, arnd@arndb.de,
-	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-	linux@roeck-us.net, wim@linux-watchdog.org, conor+dt@kernel.org,
-	alim.akhtar@samsung.com, jaewon02.kim@samsung.com,
-	chanho61.park@samsung.com, semen.protsenko@linaro.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	kernel-team@android.com, peter.griffin@linaro.org,
-	tudor.ambarus@linaro.org, andre.draszik@linaro.org,
-	saravanak@google.com, willmcvicker@google.com, linux-fsd@tesla.com,
-	linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-samsung-soc@vger.kernel.org
-Subject: Re: [PATCH 3/9] watchdog: s3c2410_wdt: update to use new
- exynos_pmu_*() apis
-Message-ID: <202401270001.630IWRta-lkp@intel.com>
-References: <20240122225710.1952066-4-peter.griffin@linaro.org>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="I5aaFhk5"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40QFcBVJ024782;
+	Fri, 26 Jan 2024 17:05:29 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=RdSQHsJ3t+MiU0FH+ji6aHzNmBTJjrA4QMAmImMSrt4=; b=I5
+	aaFhk5fKxO+TRBSRcEagEkcLrlOjcmaHPbn0Z7WvntBS5WT2x6ydoidz/MMQbO/o
+	29Sp7+3jgH+r6R2ZGuHHUi+m+eDt5ZEDs57a6hbi9a7Vq65roSBe6PtPjMuQPG+R
+	HzLtOpxO1drIe6EE/FTkz6F4oGFRHW5GazBNGwJKibLooFueAfJQPeTseREND+1Y
+	R+jLnqanbnk30pa091l+AEIHx8OhAfOqeaVO3/4hy997e+tXaqsDT7KhGF0s2OMp
+	zG0TiIgkyvJvelsRSTk2XGbxwLowUuuURwQQlNiswm4tgQoVrmcHdDcBRsRHyvC3
+	TGTWLoGoaRbtItotkshg==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vuypkj7rq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 26 Jan 2024 17:05:29 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 40QH5SZi022328
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 26 Jan 2024 17:05:28 GMT
+Received: from [10.110.0.209] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Fri, 26 Jan
+ 2024 09:05:27 -0800
+Message-ID: <9c321dfc-f10d-4092-a1cd-30952e4da695@quicinc.com>
+Date: Fri, 26 Jan 2024 09:05:26 -0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240122225710.1952066-4-peter.griffin@linaro.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] wifi: ath11k: document HAL_RX_BUF_RBM_SW4_BM
+Content-Language: en-US
+To: Kalle Valo <kvalo@kernel.org>
+CC: <ath11k@lists.infradead.org>, <linux-wireless@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20240111-document-hal_rx_buf_rbm_sw4_bm-v1-1-ad277e8ab3cc@quicinc.com>
+ <874jfg7xm4.fsf@kernel.org>
+ <b4f29511-e001-4964-b88d-208dabf88121@quicinc.com>
+ <875xzq526o.fsf@kernel.org>
+ <fc6ca019-83e9-4571-bfce-2b4e5c233aef@quicinc.com>
+ <87ttn0xc9y.fsf@kernel.org>
+From: Jeff Johnson <quic_jjohnson@quicinc.com>
+In-Reply-To: <87ttn0xc9y.fsf@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: gkv8LedZGgzdaSeIP6bj1Fbt-7xPr8kz
+X-Proofpoint-GUID: gkv8LedZGgzdaSeIP6bj1Fbt-7xPr8kz
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-01-25_14,2024-01-25_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 lowpriorityscore=0
+ suspectscore=0 spamscore=0 malwarescore=0 priorityscore=1501 phishscore=0
+ adultscore=0 bulkscore=0 clxscore=1015 mlxlogscore=641 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2401190000
+ definitions=main-2401260126
 
-Hi Peter,
+On 1/26/2024 8:58 AM, Kalle Valo wrote:
+> Jeff Johnson <quic_jjohnson@quicinc.com> writes:
+>> They have the same problem I'm trying to fix ;)
+>> % scripts/kernel-doc -Werror -none \
+>> 	$(find drivers/net/wireless/intel/iwlwifi -name '*.[ch]')
+>> ...
+>> 322 warnings as Errors
+>> %
+> 
+> Ouch. But I'm surprised why nobody has reported these before? Are the
+> kernel-doc warnings ignored by everyone?
 
-kernel test robot noticed the following build errors:
+There are folks who use the kernel 'make' command to build the
+documentation, and report issues from that. But my understanding is that
+'make' only processes the source files that are referenced by the
+kernel's .rst files. So if a source file has documentation, but that
+source file is not included by one of the .rst files, it won't normally
+be processed.
 
-[auto build test ERROR on krzk/for-next]
-[also build test ERROR on robh/for-next soc/for-next linus/master v6.8-rc1 next-20240125]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+It is only by running kernel-doc directly against the sources that you
+can spot these issues.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Peter-Griffin/dt-bindings-watchdog-samsung-wdt-deprecate-samsung-syscon-phandle/20240123-070052
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux.git for-next
-patch link:    https://lore.kernel.org/r/20240122225710.1952066-4-peter.griffin%40linaro.org
-patch subject: [PATCH 3/9] watchdog: s3c2410_wdt: update to use new exynos_pmu_*() apis
-config: x86_64-allyesconfig (https://download.01.org/0day-ci/archive/20240127/202401270001.630IWRta-lkp@intel.com/config)
-compiler: clang version 17.0.6 (https://github.com/llvm/llvm-project 6009708b4367171ccdbf4b5905cb6a803753fe18)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240127/202401270001.630IWRta-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202401270001.630IWRta-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
->> drivers/soc/samsung/exynos5420-pmu.c:12:10: fatal error: 'asm/cputype.h' file not found
-      12 | #include <asm/cputype.h>
-         |          ^~~~~~~~~~~~~~~
-   1 error generated.
-
-Kconfig warnings: (for reference only)
-   WARNING: unmet direct dependencies detected for EXYNOS_PMU
-   Depends on [n]: SOC_SAMSUNG [=y] && (ARCH_EXYNOS || (ARM || ARM64) && COMPILE_TEST [=y])
-   Selected by [y]:
-   - S3C2410_WATCHDOG [=y] && WATCHDOG [=y] && (ARCH_S3C64XX || ARCH_S5PV210 || ARCH_EXYNOS || COMPILE_TEST [=y])
-
-
-vim +12 drivers/soc/samsung/exynos5420-pmu.c
-
-92c4bf04735130 arch/arm/mach-exynos/exynos5420-pmu.c Pankaj Dubey 2015-12-18  11  
-92c4bf04735130 arch/arm/mach-exynos/exynos5420-pmu.c Pankaj Dubey 2015-12-18 @12  #include <asm/cputype.h>
-92c4bf04735130 arch/arm/mach-exynos/exynos5420-pmu.c Pankaj Dubey 2015-12-18  13  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+/jeff
