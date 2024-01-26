@@ -1,35 +1,35 @@
 Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF8AB224DD;
-	Fri, 26 Jan 2024 18:39:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 059F723759;
+	Fri, 26 Jan 2024 18:39:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706294350; cv=none; b=XTFfXA5rRpMnRqbA4GRWjIwbfD0EZlpY5BHQ0m144Dqq8qAmqtyu85RzoqcWa61eW2KaEs62sU6kxONAmyBFRmdqOnG9A9p2kA4HkJlHloFqQsuIJgRori+wK0IViY7Om3lrg3bz+6K1ePl0kR1qwjt6+PNO4Rczorx8xahFz8w=
+	t=1706294352; cv=none; b=V6VrRSo3nE++dhOv6IFDrto7Fr4gQT/ZZCjaOQvQ380RVjOBJdAUDbtGcpRtmYhvXpZARmUyZFEv2XPY/xVvDTZHcz0AX9iV89JH3OuPn9ARpC3d+B9WuoINGQYdApulkbhroQ1CHJqX4IuYPWM8B67NtLSqAqJVTlbNKDpbMXw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706294350; c=relaxed/simple;
-	bh=4AMSxAQ7LwagjZ+DCgRvpx2/Yb8bl/G729kNvPySM6s=;
+	s=arc-20240116; t=1706294352; c=relaxed/simple;
+	bh=YM6q57pJRMctDvTVOS2RveTfcQhUjtlPBwQ1E+Rbvsg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=E2La5dN5p8PA9hhlrAOkHrzR/3ILs8IBz4QaqlArETLtRQk6b4E6g0Kr9S1CiUIWnjhiy7NhCuLe+DBynGQyQrxUsmlHcX3Xz5PWCMS5UqYDSBMAA20br6QFBonjyr6MaEVDW4agIts/Ad+gQmzDLZgDoBZSALvtDl9X5rxijzc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=iOqDfUDi; arc=none smtp.client-ip=217.70.183.199
+	 MIME-Version; b=j8AQKBjv8FqnaMiTz0qPSmNTLaxSMwMGc6+DdF/zYvV/yuKwphrELGgdK0eq5nP6AP1ePJba8Pgk6KkJ44RusOO7tIwcNgzp/TcEXLF+vP4fs4mwvZy/mBB0prtuycN7Ay3yCMVLvdTcpn2X0NFFRPkWY4bzUcmSDewGEzTQG98=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=n+ePvpk+; arc=none smtp.client-ip=217.70.183.199
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="iOqDfUDi"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id E4677FF80B;
-	Fri, 26 Jan 2024 18:39:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="n+ePvpk+"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 4C5C4FF80A;
+	Fri, 26 Jan 2024 18:39:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1706294346;
+	t=1706294348;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=x0q3k1Z78/CapjouX/PD0HtXmKh09Cw84tTUOf/IE+I=;
-	b=iOqDfUDiubAxYT8ULxKdmPuP+UBB7bX5CZfs4NhvUkzAhaPwkUWKEab3E1InV6eYzm9M+Z
-	E1O8vEK8HEa9L1BSYsDYlmG3I0w3+plDh8byLXgMgFEhvuhu+mI0I5mN5eACL6P/RADWoe
-	ibm1DE3aPl5Wc/EydhjKLMRo/niSstVEvOu8HUd/mSAhwvkDqWQvWjD+kVRdY2LYYvlbi9
-	s4jFOFTNHVrDhtCKVCjB+tzKhS7603KpmOdh8r2KFazs8rPcjODPtjVgjzbKwOV4UJGfr+
-	h19rNWWrmVyyirLxF2gCw/GfJQ3Sdyl/FI+sVdx3DYPm5S/MhDVosuy5rYMRww==
+	bh=CZgIWdoRIqBr6cY7Zh0tr+myspAW9cZOlS5rIeVg3R4=;
+	b=n+ePvpk+vrgp+o1QwFeoJEYp5KQVP9SUcuQCR5B8vPqCIPLbcgDkV5riLxJkFYLklh567d
+	pVFNaaPEcKbTjL5r61EX7H6oajkHC9F/E/pMtZibperorjpD0OBb8z8rAml+2iw0B/Q3Fd
+	zgj8KECq0kU0hofEyV1Nqr+8bR96dMu12LIODQn4c0ZkViiKtSZordJ4EITAueGGIsjUqR
+	q6Mnp5SibfvXooMmsdIDZoWH9kCPxgdHhIjdf6I76kFT7+wJOC/QDjxBu2BxddrHDpVZ7N
+	ZlTN7WPfHzMJBRVLavP0PO6zVTGFrdUxP+NX2R9l3tNAbWnsMk7/DIo8BF6UEA==
 From: Maxime Chevallier <maxime.chevallier@bootlin.com>
 To: davem@davemloft.net
 Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>,
@@ -55,9 +55,9 @@ Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>,
 	Oleksij Rempel <o.rempel@pengutronix.de>,
 	=?UTF-8?q?Nicol=C3=B2=20Veronese?= <nicveronese@gmail.com>,
 	Simon Horman <horms@kernel.org>
-Subject: [PATCH net-next v6 09/13] net: ethtool: plca: Target the command to the requested PHY
-Date: Fri, 26 Jan 2024 19:38:46 +0100
-Message-ID: <20240126183851.2081418-10-maxime.chevallier@bootlin.com>
+Subject: [PATCH net-next v6 11/13] net: ethtool: cable-test: Target the command to the requested PHY
+Date: Fri, 26 Jan 2024 19:38:48 +0100
+Message-ID: <20240126183851.2081418-12-maxime.chevallier@bootlin.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240126183851.2081418-1-maxime.chevallier@bootlin.com>
 References: <20240126183851.2081418-1-maxime.chevallier@bootlin.com>
@@ -70,7 +70,7 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-GND-Sasl: maxime.chevallier@bootlin.com
 
-PLCA is a PHY-specific command. Instead of targeting the command
+Cable testing is a PHY-specific command. Instead of targeting the command
 towards dev->phydev, use the request to pick the targeted PHY.
 
 Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
@@ -81,102 +81,79 @@ V4: No changes
 V3: No changes
 V2: New patch
 
- net/ethtool/plca.c | 19 +++++++++----------
- 1 file changed, 9 insertions(+), 10 deletions(-)
+ net/ethtool/cabletest.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/net/ethtool/plca.c b/net/ethtool/plca.c
-index b1e2e3b5027f..43b31a4a164e 100644
---- a/net/ethtool/plca.c
-+++ b/net/ethtool/plca.c
-@@ -25,7 +25,7 @@ struct plca_reply_data {
+diff --git a/net/ethtool/cabletest.c b/net/ethtool/cabletest.c
+index 06a151165c31..536800bbc379 100644
+--- a/net/ethtool/cabletest.c
++++ b/net/ethtool/cabletest.c
+@@ -13,7 +13,7 @@
  
- const struct nla_policy ethnl_plca_get_cfg_policy[] = {
- 	[ETHTOOL_A_PLCA_HEADER]		=
+ const struct nla_policy ethnl_cable_test_act_policy[] = {
+ 	[ETHTOOL_A_CABLE_TEST_HEADER]		=
 -		NLA_POLICY_NESTED(ethnl_header_policy),
 +		NLA_POLICY_NESTED(ethnl_header_policy_phy),
  };
  
- static void plca_update_sint(int *dst, struct nlattr **tb, u32 attrid,
-@@ -61,7 +61,7 @@ static int plca_get_cfg_prepare_data(const struct ethnl_req_info *req_base,
- 	int ret;
+ static int ethnl_cable_test_started(struct phy_device *phydev, u8 cmd)
+@@ -69,7 +69,7 @@ int ethnl_act_cable_test(struct sk_buff *skb, struct genl_info *info)
+ 		return ret;
  
- 	// check that the PHY device is available and connected
+ 	dev = req_info.dev;
 -	if (!dev->phydev) {
-+	if (!req_base->phydev) {
++	if (!req_info.phydev) {
  		ret = -EOPNOTSUPP;
- 		goto out;
+ 		goto out_dev_put;
  	}
-@@ -80,7 +80,7 @@ static int plca_get_cfg_prepare_data(const struct ethnl_req_info *req_base,
- 	memset(&data->plca_cfg, 0xff,
- 	       sizeof_field(struct plca_reply_data, plca_cfg));
+@@ -85,12 +85,12 @@ int ethnl_act_cable_test(struct sk_buff *skb, struct genl_info *info)
+ 	if (ret < 0)
+ 		goto out_rtnl;
  
--	ret = ops->get_plca_cfg(dev->phydev, &data->plca_cfg);
-+	ret = ops->get_plca_cfg(req_base->phydev, &data->plca_cfg);
+-	ret = ops->start_cable_test(dev->phydev, info->extack);
++	ret = ops->start_cable_test(req_info.phydev, info->extack);
+ 
  	ethnl_ops_complete(dev);
  
- out:
-@@ -129,7 +129,7 @@ static int plca_get_cfg_fill_reply(struct sk_buff *skb,
+ 	if (!ret)
+-		ethnl_cable_test_started(dev->phydev,
++		ethnl_cable_test_started(req_info.phydev,
+ 					 ETHTOOL_MSG_CABLE_TEST_NTF);
  
- const struct nla_policy ethnl_plca_set_cfg_policy[] = {
- 	[ETHTOOL_A_PLCA_HEADER]		=
+ out_rtnl:
+@@ -220,7 +220,7 @@ static const struct nla_policy cable_test_tdr_act_cfg_policy[] = {
+ 
+ const struct nla_policy ethnl_cable_test_tdr_act_policy[] = {
+ 	[ETHTOOL_A_CABLE_TEST_TDR_HEADER]	=
 -		NLA_POLICY_NESTED(ethnl_header_policy),
 +		NLA_POLICY_NESTED(ethnl_header_policy_phy),
- 	[ETHTOOL_A_PLCA_ENABLED]	= NLA_POLICY_MAX(NLA_U8, 1),
- 	[ETHTOOL_A_PLCA_NODE_ID]	= NLA_POLICY_MAX(NLA_U32, 255),
- 	[ETHTOOL_A_PLCA_NODE_CNT]	= NLA_POLICY_RANGE(NLA_U32, 1, 255),
-@@ -141,7 +141,6 @@ const struct nla_policy ethnl_plca_set_cfg_policy[] = {
- static int
- ethnl_set_plca(struct ethnl_req_info *req_info, struct genl_info *info)
- {
--	struct net_device *dev = req_info->dev;
- 	const struct ethtool_phy_ops *ops;
- 	struct nlattr **tb = info->attrs;
- 	struct phy_plca_cfg plca_cfg;
-@@ -149,7 +148,7 @@ ethnl_set_plca(struct ethnl_req_info *req_info, struct genl_info *info)
- 	int ret;
- 
- 	// check that the PHY device is available and connected
--	if (!dev->phydev)
-+	if (!req_info->phydev)
- 		return -EOPNOTSUPP;
- 
- 	ops = ethtool_phy_ops;
-@@ -168,7 +167,7 @@ ethnl_set_plca(struct ethnl_req_info *req_info, struct genl_info *info)
- 	if (!mod)
- 		return 0;
- 
--	ret = ops->set_plca_cfg(dev->phydev, &plca_cfg, info->extack);
-+	ret = ops->set_plca_cfg(req_info->phydev, &plca_cfg, info->extack);
- 	return ret < 0 ? ret : 1;
- }
- 
-@@ -191,7 +190,7 @@ const struct ethnl_request_ops ethnl_plca_cfg_request_ops = {
- 
- const struct nla_policy ethnl_plca_get_status_policy[] = {
- 	[ETHTOOL_A_PLCA_HEADER]		=
--		NLA_POLICY_NESTED(ethnl_header_policy),
-+		NLA_POLICY_NESTED(ethnl_header_policy_phy),
+ 	[ETHTOOL_A_CABLE_TEST_TDR_CFG]		= { .type = NLA_NESTED },
  };
  
- static int plca_get_status_prepare_data(const struct ethnl_req_info *req_base,
-@@ -204,7 +203,7 @@ static int plca_get_status_prepare_data(const struct ethnl_req_info *req_base,
- 	int ret;
+@@ -321,7 +321,7 @@ int ethnl_act_cable_test_tdr(struct sk_buff *skb, struct genl_info *info)
+ 		return ret;
  
- 	// check that the PHY device is available and connected
+ 	dev = req_info.dev;
 -	if (!dev->phydev) {
-+	if (!req_base->phydev) {
++	if (!req_info.phydev) {
  		ret = -EOPNOTSUPP;
- 		goto out;
+ 		goto out_dev_put;
  	}
-@@ -223,7 +222,7 @@ static int plca_get_status_prepare_data(const struct ethnl_req_info *req_base,
- 	memset(&data->plca_st, 0xff,
- 	       sizeof_field(struct plca_reply_data, plca_st));
+@@ -342,12 +342,12 @@ int ethnl_act_cable_test_tdr(struct sk_buff *skb, struct genl_info *info)
+ 	if (ret < 0)
+ 		goto out_rtnl;
  
--	ret = ops->get_plca_status(dev->phydev, &data->plca_st);
-+	ret = ops->get_plca_status(req_base->phydev, &data->plca_st);
+-	ret = ops->start_cable_test_tdr(dev->phydev, info->extack, &cfg);
++	ret = ops->start_cable_test_tdr(req_info.phydev, info->extack, &cfg);
+ 
  	ethnl_ops_complete(dev);
- out:
- 	return ret;
+ 
+ 	if (!ret)
+-		ethnl_cable_test_started(dev->phydev,
++		ethnl_cable_test_started(req_info.phydev,
+ 					 ETHTOOL_MSG_CABLE_TEST_TDR_NTF);
+ 
+ out_rtnl:
 -- 
 2.43.0
 
