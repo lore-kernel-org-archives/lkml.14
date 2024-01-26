@@ -1,58 +1,58 @@
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 754B61CA9C
-	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 15:11:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AC881D52B
+	for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 15:12:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706281913; cv=none; b=P08jG/n+xhaxY3z1FZZrnarLd26pXuGBeu+apKWFY5fq4W/upqaL0BXJn6AxJrihBe7ncyxU9gB9qaLd8T/BKj3EOekZETapKJZ2yVgB/I9yGjvqmfZ4BEuKFvgbUGquhfwwNZQoxjWycMUr+3nIkQqwZcULND8O+g8IeN6hcx4=
+	t=1706281936; cv=none; b=YGueBJbdSY7PEz892lvQFSxlmsbydeVMzIsrV97Ujnx0G2dBwBpII85YnNz6xgjLohKwnoEtH/coew7RMP+UM6CrkCCOe34HDVWRciSoJEWDYnQum6dKKlLQ60A62G58b3p3jSbC/O+W2jEICzB5lz+u77MZbgYy56hrlQKaB4Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706281913; c=relaxed/simple;
-	bh=xXdX+Dc78mot7kbcSoYt8oFsRKpIUc4HFhAMXUgfTto=;
+	s=arc-20240116; t=1706281936; c=relaxed/simple;
+	bh=Gahe+ilgy0UV51VonJOuKA+Z40S1X6L9UkwYRrD6D48=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=flJk8B+reL1FhoEvk/Sbb1rfHyVp1Jh+5FcOUTe/pFZkbo/hE4AdUbng676/Dcp4RnmgLVI8RMvGSQfwranCSiyEHxNxllGCUKHrSmwDwcXbsAwIicAGl/F59LEwOnVReyEzMMc7z45g0MMW4Dzupu/c1+G8mmx35D7vGCXjM+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Z2eOLFKF; arc=none smtp.client-ip=209.85.208.171
+	 In-Reply-To:Content-Type; b=sgL4/UhOk34zuLml9BmmMo1e+4SkI2xwBV9S1aMf9SzDryJYg99SEeDmwYtpbyjbleWaSS9jWH6qGsOKzkbytL25Bp4xBjeWRy3yTfkG12cXdYHLwlyQX+52y9R34LQLJadbIpPG5YaVlu83aF5lInzYrN/G51Xw/i+GSM1FZLA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=aLofyxyn; arc=none smtp.client-ip=209.85.208.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Z2eOLFKF"
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2cddb2c2b54so4739811fa.1
-        for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 07:11:50 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aLofyxyn"
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2cf296932d8so8529471fa.1
+        for <linux-kernel@vger.kernel.org>; Fri, 26 Jan 2024 07:12:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706281908; x=1706886708; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1706281933; x=1706886733; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=TroYeDCfxxp0sdt/59BZMUINvcLvNwM6VbqLaCd2vEw=;
-        b=Z2eOLFKF89WJ1MCjfFsYdEE4H1kJEmvv64BKCLypKl4QN5ZdMiKFI4u4JeeEekZA6y
-         4OraIx9hMLlxwDsv9nCpXR1TAHPMFO5fjtouNYCRP4dyREakRhfzwgTYDgqcRAw6yED5
-         W1TvuLQjvHdEAAXwEc3BdKgCpt/5X237767NwuTwP8j37CVhNyFS2STioxIV9oiusAOI
-         0TslVVDSqtieJ6cD4oZgnmG5lSHo4pteU7/QK0J1ef6QdKkLUzNKPRjfLVFdsnjvsZpb
-         2u9TMY7iq5wAQewINvgg7+0fuwKUGsdX7ts3CFUjWb3dBVEsZHjupZTXdkhphAZjkM8C
-         QkeQ==
+        bh=iYL9bSeqnWvDrf0wVv9gF1ha7moZQcSL5iboxbxlXjo=;
+        b=aLofyxynrk2Fdgt5KjSbF89Smk/zeu7PA0aV49hfuyxUi15jOLm7VV/fW7kvLh20dQ
+         8yrXrjxHJmbrGcIz4EZqsy8XtbAPr1cQqmeIOmymbL5wOOXn/hzp67/uIYqeLH2cz5ou
+         3Tz3D05Y8H/WvEk4of2IMlZbHWkdILVlDh6GHPHFWQHfb0NTKGszK9AgjqlciY6nGt6q
+         Dk9JvOzBd+8o6iMWyQQw+3uuhXzt81L5mFQXgyLhp9I0ypXtL2kSjq1/dzFTbwBX3CbM
+         2iITiotleIowRk2DUxc11d69cvYEJRZ7UJPb/AahMX5CFEr33t30zeJDOr5ni7Anovy4
+         BC7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706281908; x=1706886708;
+        d=1e100.net; s=20230601; t=1706281933; x=1706886733;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=TroYeDCfxxp0sdt/59BZMUINvcLvNwM6VbqLaCd2vEw=;
-        b=h4rebMtXUkq5poUlOht143WIew65EidOJsVRB0BMM68vPBTVHr/FiTLN+/mpw1ggz8
-         aITuAAv3lfdScQQRgN6tHlLsXoQgIJCBptXripYFI4rcsvbBMq4/Nn2/h+YCIVzA8sCZ
-         yZrrbaCPRUrQRoKhLX61y+2goD/o7rjDh8ftG+B6d2O9rHrdx9nrBl9s2ExWcKrGgIdJ
-         QYz6tNIU9SKAjgbACDVY6XOcpF/HlsVufD6OXq0BmXfSjMylTHBDgAIDLBrME+oyGg5p
-         uIrdV6fOliis5SBdn6ZMBsjyvgbCLXfkMvEFyAOILUfy+SdqFsRbkjyNHJSQQF1lMk/H
-         zowQ==
-X-Gm-Message-State: AOJu0YzNkgpxR/5E8cp8NhLK3I6ATJpibaXMzyFAk5OG0eSRs73payOE
-	8n7CSg50JHhJwzYyAYWOL7RO5gEfaJ3gS70wTCi4OMCslQ/UOoFYoBp8UQxLqQM=
-X-Google-Smtp-Source: AGHT+IFByrL//FyqNqJ63gAYPN9Ad0maBW8zW/JoGbIPFHpQoP/+j36zPZRqpDHL4SvWy+iR9QIpjg==
-X-Received: by 2002:a2e:890e:0:b0:2cf:34ce:67ed with SMTP id d14-20020a2e890e000000b002cf34ce67edmr1872546lji.44.1706281908239;
-        Fri, 26 Jan 2024 07:11:48 -0800 (PST)
+        bh=iYL9bSeqnWvDrf0wVv9gF1ha7moZQcSL5iboxbxlXjo=;
+        b=fY6M/oSfvZho0XiSQxCkQozh7W8JgalJht/C9hV+4o0upgGONRM5ZkdQ2mGR92dBBQ
+         UKncAmJFAY9tGXnpKyS7xqT+1qUUgp6YiZhXNS9xvLrIigzTAB5+/kOAK/qH3f53Z5al
+         vi8m6lObzyl4FxELkJ0ghqn2USzAXeM2Kse03ziwvNFgGKwp8I9pk29rRAR1N6/G5lyH
+         jqp7tfUYaBwg18+bjdAHm0NK8Lhh5Auvkxa0lWupqzNT1Gr2qtWyIPy6mKRK0K5Igbhj
+         DjLPdn9luBvceQP6ouVwG+9Up3A/XJhBbrO/KkxHz/yObnmzGJJxCSq0WB4Qsa5v+cjp
+         2UpA==
+X-Gm-Message-State: AOJu0YwN2GOEeznj8lXSRM6sTKKk8r4EE76bTRppIYu7kISIeynAlSyB
+	2Wlg4KvqeAJc7xPB2v+pxuzd2oSxebvTsWzDHtECj9ZKrjwMooMAMp1f4tHPpAg=
+X-Google-Smtp-Source: AGHT+IGqqMimYnKB5rUMwA7WUMOKAcK+ed0NAAsAyhbSDICoER2BwlCLiBlOJBHVyK/2eaNTmmSUYg==
+X-Received: by 2002:a2e:9382:0:b0:2cf:30c3:ef0a with SMTP id g2-20020a2e9382000000b002cf30c3ef0amr942735ljh.31.1706281932690;
+        Fri, 26 Jan 2024 07:12:12 -0800 (PST)
 Received: from [192.168.1.20] ([178.197.215.66])
-        by smtp.gmail.com with ESMTPSA id c14-20020a0564021f8e00b0055d81121180sm112820edc.38.2024.01.26.07.11.46
+        by smtp.gmail.com with ESMTPSA id c14-20020a0564021f8e00b0055d81121180sm112820edc.38.2024.01.26.07.12.11
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 26 Jan 2024 07:11:47 -0800 (PST)
-Message-ID: <0bc7081f-f279-4741-b14e-198b2d00d5d0@linaro.org>
-Date: Fri, 26 Jan 2024 16:11:46 +0100
+        Fri, 26 Jan 2024 07:12:12 -0800 (PST)
+Message-ID: <42514aad-5b2c-49bb-a6e7-af44652d9dd0@linaro.org>
+Date: Fri, 26 Jan 2024 16:12:11 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,7 +60,8 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] arm64: dts: ti: k3-am62p: add the USB sub-system
+Subject: Re: [PATCH 1/2] arm64: dts: ti: k3-am62/a/p: use sub-node for
+ USB_PHY_CTRL registers
 Content-Language: en-US
 To: Roger Quadros <rogerq@kernel.org>, nm@ti.com, vigneshr@ti.com
 Cc: afd@ti.com, kristo@kernel.org, robh+dt@kernel.org,
@@ -68,7 +69,7 @@ Cc: afd@ti.com, kristo@kernel.org, robh+dt@kernel.org,
  linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org
 References: <20240126125951.18585-1-rogerq@kernel.org>
- <20240126125951.18585-3-rogerq@kernel.org>
+ <20240126125951.18585-2-rogerq@kernel.org>
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
@@ -114,140 +115,40 @@ Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
  fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
  D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20240126125951.18585-3-rogerq@kernel.org>
+In-Reply-To: <20240126125951.18585-2-rogerq@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 26/01/2024 13:59, Roger Quadros wrote:
-> From: Vignesh Raghavendra <vigneshr@ti.com>
-> 
-> There are two USB instances available on the am62p5 starter kit. Include
-> and enable them for use on the board.
-> 
-> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
-> Signed-off-by: Roger Quadros <rogerq@kernel.org>
-> ---
->  arch/arm64/boot/dts/ti/k3-am62p-main.dtsi | 46 ++++++++++++++++
->  arch/arm64/boot/dts/ti/k3-am62p5-sk.dts   | 67 +++++++++++++++++++++++
->  2 files changed, 113 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/ti/k3-am62p-main.dtsi b/arch/arm64/boot/dts/ti/k3-am62p-main.dtsi
-> index 4c51bae06b57..7e7cd749d9a5 100644
-> --- a/arch/arm64/boot/dts/ti/k3-am62p-main.dtsi
-> +++ b/arch/arm64/boot/dts/ti/k3-am62p-main.dtsi
-> @@ -560,6 +560,52 @@ sdhci2: mmc@fa20000 {
->  		status = "disabled";
->  	};
->  
-> +	usbss0: dwc3-usb@f900000 {
-
-usb@
-
-> +		compatible = "ti,am62-usb";
-> +		reg = <0x00 0x0f900000 0x00 0x800>;
-> +		clocks = <&k3_clks 161 3>;
-> +		clock-names = "ref";
-> +		ti,syscon-phy-pll-refclk = <&usb0_phy_ctrl 0x0>;
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		power-domains = <&k3_pds 178 TI_SCI_PD_EXCLUSIVE>;
-> +		ranges;
-> +		status = "disabled";
-> +
-> +		usb0: usb@31000000 {
-> +			compatible = "snps,dwc3";
-> +			reg = <0x00 0x31000000 0x00 0x50000>;
-> +			interrupts = <GIC_SPI 188 IRQ_TYPE_LEVEL_HIGH>, /* irq.0 */
-> +			<GIC_SPI 188 IRQ_TYPE_LEVEL_HIGH>; /* irq.0 */
-> +			interrupt-names = "host", "peripheral";
-> +			maximum-speed = "high-speed";
-> +			dr_mode = "otg";
-> +		};
-> +	};
-> +
-> +	usbss1: dwc3-usb@f910000 {
-
-usb@
-
-> +		compatible = "ti,am62-usb";
-> +		reg = <0x00 0x0f910000 0x00 0x800>;
-> +		clocks = <&k3_clks 162 3>;
-> +		clock-names = "ref";
+>  		power-domains = <&k3_pds 178 TI_SCI_PD_EXCLUSIVE>;
+> @@ -648,7 +648,7 @@ usbss1: dwc3-usb@f910000 {
+>  		reg = <0x00 0x0f910000 0x00 0x800>;
+>  		clocks = <&k3_clks 162 3>;
+>  		clock-names = "ref";
+> -		ti,syscon-phy-pll-refclk = <&wkup_conf 0x4018>;
 > +		ti,syscon-phy-pll-refclk = <&usb1_phy_ctrl 0x0>;
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		power-domains = <&k3_pds 179 TI_SCI_PD_EXCLUSIVE>;
-> +		ranges;
-> +		status = "disabled";
+>  		#address-cells = <2>;
+>  		#size-cells = <2>;
+>  		power-domains = <&k3_pds 179 TI_SCI_PD_EXCLUSIVE>;
+> diff --git a/arch/arm64/boot/dts/ti/k3-am62-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-am62-wakeup.dtsi
+> index fef76f52a52e..bd09662a3c29 100644
+> --- a/arch/arm64/boot/dts/ti/k3-am62-wakeup.dtsi
+> +++ b/arch/arm64/boot/dts/ti/k3-am62-wakeup.dtsi
+> @@ -19,6 +19,16 @@ chipid: chipid@14 {
+>  			compatible = "ti,am654-chipid";
+>  			reg = <0x14 0x4>;
+>  		};
 > +
-> +		usb1: usb@31100000 {
-> +			compatible = "snps,dwc3";
-> +			reg = <0x00 0x31100000 0x00 0x50000>;
-> +			interrupts = <GIC_SPI 226 IRQ_TYPE_LEVEL_HIGH>, /* irq.0 */
-> +			<GIC_SPI 226 IRQ_TYPE_LEVEL_HIGH>; /* irq.0 */
-> +			interrupt-names = "host", "peripheral";
-> +			maximum-speed = "high-speed";
-> +			dr_mode = "otg";
-> +		};
-> +	};
-> +
->  	fss: bus@fc00000 {
->  		compatible = "simple-bus";
->  		reg = <0x00 0x0fc00000 0x00 0x70000>;
-> diff --git a/arch/arm64/boot/dts/ti/k3-am62p5-sk.dts b/arch/arm64/boot/dts/ti/k3-am62p5-sk.dts
-> index 1773c05f752c..7a16e7a8ac66 100644
-> --- a/arch/arm64/boot/dts/ti/k3-am62p5-sk.dts
-> +++ b/arch/arm64/boot/dts/ti/k3-am62p5-sk.dts
-> @@ -27,6 +27,8 @@ aliases {
->  		spi0 = &ospi0;
->  		ethernet0 = &cpsw_port1;
->  		ethernet1 = &cpsw_port2;
-> +		usb0 = &usb0;
-> +		usb1 = &usb1;
->  	};
->  
->  	chosen {
-> @@ -297,6 +299,12 @@ AM62PX_IOPAD(0x01b0, PIN_OUTPUT, 2) /* (G20) MCASP0_ACLKR.UART1_TXD */
->  		bootph-all;
->  	};
->  
-> +	main_usb1_pins_default: main-usb1-default-pins {
-> +		pinctrl-single,pins = <
-> +			AM62PX_IOPAD(0x0258, PIN_INPUT, 0) /* (G21) USB1_DRVVBUS */
-> +		>;
-> +	};
-> +
->  	main_wlirq_pins_default: main-wlirq-default-pins {
->  		pinctrl-single,pins = <
->  			AM62PX_IOPAD(0x0128, PIN_INPUT, 7) /* (K25) MMC2_SDWP.GPIO0_72 */
-> @@ -340,6 +348,36 @@ AM62PX_IOPAD(0x0124, PIN_INPUT, 7) /* (J25) MMC2_SDCD.GPIO0_71 */
->  	};
->  };
->  
-> +&main_i2c0 {
-> +	status = "okay";
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&main_i2c0_pins_default>;
-> +	clock-frequency = <400000>;
-> +
-> +	typec_pd0: tps6598x@3f {
+> +		usb0_phy_ctrl: syscon@4008 {
+> +			compatible = "syscon";
 
-Node names should be generic. See also an explanation and list of
-examples (not exhaustive) in DT specification:
-https://devicetree-specification.readthedocs.io/en/latest/chapter2-devicetree-basics.html#generic-names-recommendation
+Not allowed alone and should cause warnings.
 
-
-> +		compatible = "ti,tps6598x";
-> +		reg = <0x3f>;
-> +
-> +		connector {
-> +			compatible = "usb-c-connector";
-> +			label = "USB-C";
-> +			self-powered;
-> +			data-role = "dual";
-> +			power-role = "sink";
-> +			ports {
-
+It does not look like you tested the DTS against bindings. Please run
+`make dtbs_check W=1` (see
+Documentation/devicetree/bindings/writing-schema.rst or
+https://www.linaro.org/blog/tips-and-tricks-for-validating-devicetree-sources-with-the-devicetree-schema/
+for instructions).
 
 Best regards,
 Krzysztof
